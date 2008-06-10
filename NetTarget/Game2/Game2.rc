@@ -1,0 +1,1367 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Neutral (Default) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEUD)
+#ifdef _WIN32
+LANGUAGE LANG_NEUTRAL, SUBLANG_DEFAULT
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_HOVER_ICON          ICON                    "icon3.ico"
+IDI_WARNING2            ICON                    "warning.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+FIREBALL_MAIN_MENU MENU 
+BEGIN
+    POPUP "&Game"
+    BEGIN
+        MENUITEM "&Internet...\tF2",            ID_GAME_NETWORK_INTERNET
+        MENUITEM "&Practice...\tCtrl+N",        ID_GAME_NEW
+        MENUITEM "&Split Screen...",            ID_GAME_SPLITSCREEN
+        POPUP "&Network"
+        BEGIN
+            MENUITEM "&Connect to TCP server...",   ID_GAME_NETWORK_CONNECT
+            MENUITEM "Create a TCP &server...",     ID_GAME_NETWORK_SERVER
+            MENUITEM SEPARATOR
+            MENUITEM "&Internet Meeting Room...\tF2", 
+                                                    ID_GAME_NETWORK_INTERNET
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "&Registration info...",       ID_GAME_REGISTER
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit\tAlt+F4",               ID_APP_EXIT
+    END
+    POPUP "&View"
+    BEGIN
+        MENUITEM "&Following Camera\tF3",       ID_VIEW_3DACTION
+        MENUITEM "&Cockpit\tF4",                ID_VIEW_COCKPIT
+        MENUITEM SEPARATOR
+        MENUITEM "&Larger\t+",                  ID_VIEW_LARGER
+        MENUITEM "&Smaller\t-",                 ID_VIEW_SMALLER
+        MENUITEM SEPARATOR
+        MENUITEM "&Players list\tF5",           ID_VIEW_PLAYERSLIST
+        MENUITEM "More &messages\tF6",          ID_VIEW_MOREMESSAGES
+        MENUITEM SEPARATOR
+        MENUITEM "&Refresh colors\tF12",        ID_SETTING_REFRESHCOLORS
+    END
+    POPUP "&Setting"
+    BEGIN
+        MENUITEM "&1 320x200\tF8",              ID_SETTING_320X200
+        MENUITEM "&2 320x240\tAlt+F8",          ID_SETTING_320X240
+        MENUITEM "&3 400x300\tShift+F8",        ID_SETTING_400X300
+        MENUITEM "&4 512x384\tShift+F9",        ID_SETTING_512X384
+        MENUITEM "&5 640x400\tAlt+F9",          ID_SETTING_640X400
+        MENUITEM "&6 640x480\tF9",              ID_SETTING_640X480
+        MENUITEM "&Window\tAlt+Enter",          ID_SETTING_WINDOW
+        MENUITEM SEPARATOR
+        MENUITEM "&Properties...",              ID_SETTING_PROPERTIES
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&Contents...",                ID_HELP_CONTENTS
+        MENUITEM SEPARATOR
+        MENUITEM "&GrokkSoft's WWW site...",    ID_HELP_SITE
+        MENUITEM SEPARATOR
+        MENUITEM "&About HoverRace...",         ID_APP_ABOUT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_ACCELERATOR ACCELERATORS 
+BEGIN
+    "+",            ID_VIEW_LARGER,         ASCII,  NOINVERT
+    "-",            ID_VIEW_SMALLER,        ASCII,  NOINVERT
+    "N",            ID_GAME_NEW,            VIRTKEY, CONTROL, NOINVERT
+    VK_ESCAPE,      ID_GAME_PAUSE,          VIRTKEY, NOINVERT
+    VK_F12,         ID_SETTING_REFRESHCOLORS, VIRTKEY, NOINVERT
+    VK_F2,          ID_GAME_NETWORK_INTERNET, VIRTKEY, NOINVERT
+    VK_F3,          ID_VIEW_3DACTION,       VIRTKEY, NOINVERT
+    VK_F3,          ID_VIEW_DEBUG,          VIRTKEY, SHIFT, NOINVERT
+    VK_F4,          ID_VIEW_COCKPIT,        VIRTKEY, NOINVERT
+    VK_F5,          ID_VIEW_PLAYERSLIST,    VIRTKEY, NOINVERT
+    VK_F5,          ID_VIEW_PLAYERSLIST,    VIRTKEY, SHIFT, NOINVERT
+    VK_F6,          ID_VIEW_MOREMESSAGES,   VIRTKEY, NOINVERT
+    VK_F8,          ID_SETTING_320X200,     VIRTKEY, NOINVERT
+    VK_F8,          ID_SETTING_320X240,     VIRTKEY, ALT, NOINVERT
+    VK_F8,          ID_SETTING_400X300,     VIRTKEY, SHIFT, NOINVERT
+    VK_F9,          ID_SETTING_640X480,     VIRTKEY, NOINVERT
+    VK_F9,          ID_SETTING_640X400,     VIRTKEY, ALT, NOINVERT
+    VK_F9,          ID_SETTING_512X384,     VIRTKEY, SHIFT, NOINVERT
+    VK_RETURN,      ID_SETTING_WINDOW,      VIRTKEY, ALT, NOINVERT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x21L
+#else
+ FILEFLAGS 0x20L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "CompanyName", "GrokkSoft inc."
+            VALUE "FileDescription", "Racing game"
+            VALUE "FileVersion", "1, 0, 0, 1"
+            VALUE "InternalName", "HoverRace"
+            VALUE "LegalCopyright", "Copyright © 1996"
+            VALUE "OriginalFilename", "HRace.exe"
+            VALUE "ProductName", "HoverRace"
+            VALUE "ProductVersion", "1, 0, 0, 1"
+            VALUE "SpecialBuild", "Demo version"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_DISPLAY_INTENSITY DIALOG  0, 0, 156, 63
+STYLE DS_SETFONT | DS_3DLOOK | WS_CHILD | WS_BORDER
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "Slider2",IDC_GAMMA_SLIDER,"msctls_trackbar32",TBS_BOTH | 
+                    TBS_NOTICKS | WS_TABSTOP,48,8,100,15
+    CONTROL         "Slider3",IDC_CONTRAST_SLIDER,"msctls_trackbar32",
+                    TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,48,25,100,15
+    CONTROL         "Slider4",IDC_BRIGHTNESS_SLIDER,"msctls_trackbar32",
+                    TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,48,41,100,15
+    LTEXT           "Gamma",IDC_STATIC,13,10,33,8
+    LTEXT           "Contrast",IDC_STATIC,13,27,37,8
+    LTEXT           "Brightness",IDC_STATIC,13,44,36,8
+END
+
+IDD_TRACK_SELECT DIALOGEX 0, 0, 244, 141
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Track selection"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    LISTBOX         IDC_LIST,7,17,111,100,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | 
+                    WS_TABSTOP
+    EDITTEXT        IDC_NB_LAP,163,93,31,14,ES_NUMBER
+    CONTROL         "Spin1",IDC_NB_LAP_SPIN,"msctls_updown32",
+                    UDS_SETBUDDYINT | UDS_AUTOBUDDY | UDS_ARROWKEYS,195,93,
+                    11,14
+    CONTROL         "Weapons:",IDC_WEAPONS,"Button",BS_AUTOCHECKBOX | 
+                    BS_LEFTTEXT | WS_TABSTOP,125,107,47,10
+    DEFPUSHBUTTON   "OK",IDOK,65,120,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,128,120,50,14
+    LTEXT           "Tracks:",IDC_STATIC,7,7,24,8
+    LTEXT           "Description",IDC_STATIC,125,7,35,8
+    LTEXT           " no selection",IDC_DESCRIPTION,125,17,112,71,0,
+                    WS_EX_CLIENTEDGE
+    LTEXT           "Laps :",IDC_STATIC,125,96,19,8
+END
+
+IDD_CONTROL DIALOG  0, 0, 186, 122
+STYLE DS_SETFONT | DS_3DLOOK | WS_CHILD
+FONT 8, "MS Sans Serif"
+BEGIN
+    COMBOBOX        IDC_MOTOR_ON1,62,17,58,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_RIGHT1,62,31,58,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_LEFT1,62,44,58,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_BREAK1,62,58,58,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_JUMP1,62,72,58,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_FIRE1,62,86,58,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_SELWEAPON1,62,100,58,86,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_MOTOR_ON2,125,17,56,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_RIGHT2,125,31,56,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_LEFT2,125,44,56,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_BREAK2,125,58,56,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_JUMP2,125,72,56,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_FIRE2,125,86,56,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_SELWEAPON2,125,100,56,86,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Player 1",IDC_STATIC,62,7,26,8
+    LTEXT           "Player 2",IDC_STATIC,125,7,26,8
+    LTEXT           "Motor on :",IDC_STATIC,4,19,58,8
+    LTEXT           "Turn Right :",IDC_STATIC,4,33,58,8
+    LTEXT           "Fire wreapon",IDC_STATIC,4,88,58,8
+    LTEXT           "Turn Left :",IDC_STATIC,4,46,58,8
+    LTEXT           "Select Weapon:",IDC_STATIC,4,102,58,8
+    LTEXT           "Break:",IDC_STATIC,4,60,58,8
+    LTEXT           "Jump :",IDC_STATIC,4,74,58,8
+END
+
+IDD_BAD_MODE4 DIALOG  10, 10, 153, 41
+STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | DS_CONTROL | DS_CENTER | 
+    WS_POPUP | WS_VISIBLE
+FONT 8, "MS Sans Serif"
+BEGIN
+    CTEXT           "You must select a full screen mode because this version of the application only support 8bit/pixel display modes.",
+                    IDC_STATIC,2,1,149,26
+    DEFPUSHBUTTON   "Switch to full screen mode",IDC_FULL_MENU_MODE,22,27,
+                    109,14
+END
+
+IDD_BACK_ANIM DIALOGEX 0, 0, 228, 147
+STYLE DS_SETFONT | WS_CHILD | WS_VISIBLE
+EXSTYLE WS_EX_STATICEDGE
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+END
+
+IDD_ABOUT DIALOG  0, 0, 252, 189
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "About HoverRace"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,195,167,50,14
+    CONTROL         "",IDC_BITMAP,"Static",SS_BITMAP | SS_CENTERIMAGE | 
+                    SS_SUNKEN,7,7,238,156
+END
+
+IDD_LEGAL_NOT DIALOG  0, 0, 292, 285
+STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_POPUP | 
+    WS_CAPTION | WS_SYSMENU
+CAPTION "Legal notice"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "I do not agree",IDCANCEL,150,264,50,14
+    PUSHBUTTON      "I agree",IDOK,90,264,50,14
+    CONTROL         "",IDC_BITMAP,"Static",SS_BITMAP | SS_CENTERIMAGE | 
+                    SS_SUNKEN,7,7,278,252
+END
+
+IDD_INTERNET_MEETING DIALOG  0, 0, 388, 247
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "HoverRace Internet meeting room"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_CHAT_IN,120,230,265,14,ES_AUTOHSCROLL | 
+                    ES_WANTRETURN
+    CONTROL         "List4",IDC_GAME_LIST,"SysListView32",LVS_REPORT | 
+                    LVS_NOCOLUMNHEADER | WS_BORDER | WS_TABSTOP,3,11,113,99
+    PUSHBUTTON      "Join Game...",IDC_JOIN,328,11,57,14
+    PUSHBUTTON      "New Game...",IDC_ADD,328,26,57,14
+    PUSHBUTTON      "Quit",IDCANCEL,328,96,57,14
+    CONTROL         "List5",IDC_USER_LIST,"SysListView32",LVS_REPORT | 
+                    LVS_ALIGNLEFT | LVS_NOCOLUMNHEADER | WS_BORDER | 
+                    WS_TABSTOP,3,125,113,119
+    EDITTEXT        IDC_CHAT_OUT,120,125,265,105,ES_MULTILINE | ES_READONLY | 
+                    WS_VSCROLL | NOT WS_TABSTOP
+    LTEXT           "Chat section",IDC_STATIC,120,117,45,8
+    LTEXT           "Game list",IDC_STATIC,3,3,30,8
+    LTEXT           "Users list",IDC_STATIC,3,117,67,8
+    LTEXT           "Track name:",IDC_STATIC,120,18,44,8
+    LTEXT           "Laps:",IDC_STATIC,120,29,40,8
+    LTEXT           "Availability:",IDC_STATIC,120,44,36,8
+    EDITTEXT        IDC_PLAYER_LIST,176,55,147,55,ES_MULTILINE | ES_READONLY | 
+                    WS_VSCROLL | NOT WS_TABSTOP
+    LTEXT           "Players list:",IDC_STATIC,120,57,41,8
+    EDITTEXT        IDC_AVAIL_MESSAGE,176,41,147,14,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_TABSTOP
+    EDITTEXT        IDC_TRACK_NAME,176,11,147,14,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_TABSTOP
+    EDITTEXT        IDC_NB_LAP,176,26,27,14,ES_AUTOHSCROLL | ES_READONLY | 
+                    NOT WS_TABSTOP
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,3,114,382,1
+    LTEXT           "Game details",IDC_STATIC,120,3,64,8
+    LTEXT           "Weapons:",IDC_STATIC,219,29,38,8
+    EDITTEXT        IDC_WEAPONS,258,26,27,14,ES_AUTOHSCROLL | ES_READONLY | 
+                    NOT WS_TABSTOP
+END
+
+IDD_TCP_SERVER DIALOG  0, 0, 224, 135
+STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | WS_POPUP | WS_VISIBLE | 
+    WS_CAPTION | WS_SYSMENU
+CAPTION "TCP Connections"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Start Game",IDOK,57,114,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,117,114,50,14
+    LTEXT           "Unknown",IDC_GAME_NAME,62,27,155,8
+    CONTROL         "List1",IDC_LIST,"SysListView32",LVS_REPORT | 
+                    LVS_NOSORTHEADER | WS_BORDER,8,41,209,66
+    LTEXT           "Server addr. :",IDC_STATIC,8,7,48,8
+    LTEXT           "Server port :",IDC_STATIC,8,17,44,8
+    LTEXT           "Unknown",IDC_SERVER_ADDR,62,7,155,8
+    LTEXT           "Unknown",IDC_SERVER_PORT,62,17,39,8
+    LTEXT           "Game name :",IDC_STATIC,8,27,44,8
+END
+
+IDD_TCP_CLIENT DIALOG  0, 0, 224, 129
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "TCP Connections"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "List1",IDC_LIST,"SysListView32",LVS_REPORT | 
+                    LVS_NOSORTHEADER | WS_BORDER | WS_TABSTOP,8,41,209,66
+    PUSHBUTTON      "Cancel",IDCANCEL,167,110,50,14
+    LTEXT           "Server addr. :",IDC_STATIC,8,7,48,8
+    LTEXT           "Server port :",IDC_STATIC,8,17,44,8
+    LTEXT           "Unknown",IDC_SERVER_ADDR,62,7,155,8
+    LTEXT           "Unknown",IDC_SERVER_PORT,62,17,39,8
+    LTEXT           "Game name :",IDC_STATIC,8,27,44,8
+    LTEXT           "Unknown",IDC_GAME_NAME,62,27,155,8
+    LTEXT           "Please wait...",IDC_STATIC,11,114,106,8
+END
+
+IDD_SERVER_PORT DIALOG  0, 0, 187, 69
+STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Port selection"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_PLAYER_NAME,76,7,104,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_SERVER_PORT,76,25,45,14,ES_AUTOHSCROLL | ES_NUMBER
+    DEFPUSHBUTTON   "OK",IDOK,14,48,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,69,48,50,14
+    PUSHBUTTON      "Default",IDC_DEFAULT,124,48,50,14
+    LTEXT           "TCP Server port :",IDC_STATIC,7,30,53,8
+    LTEXT           "Your name :",IDC_STATIC,7,10,65,8
+END
+
+IDD_SERVER_ADDR DIALOG  0, 0, 187, 86
+STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Server selection"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_PLAYER_NAME,75,7,105,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_SERVER_ADDR,75,25,105,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_SERVER_PORT,75,43,45,14,ES_AUTOHSCROLL | ES_NUMBER
+    DEFPUSHBUTTON   "OK",IDOK,13,65,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,68,65,50,14
+    PUSHBUTTON      "Default",IDC_DEFAULT,123,65,50,14
+    LTEXT           "TCP Server address:",IDC_STATIC,7,28,65,8
+    LTEXT           "TCP Server port :",IDC_STATIC,7,46,68,8
+    LTEXT           "Your name :",IDC_STATIC,7,10,65,8
+END
+
+IDD_NET_PROGRESS DIALOG  0, 0, 147, 57
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Network transaction progress..."
+FONT 8, "MS Sans Serif"
+BEGIN
+    PUSHBUTTON      "Cancel",IDCANCEL,49,36,50,14
+    CTEXT           "Please, be patient...",IDC_TEXT,7,13,133,18
+END
+
+#if defined(APSTUDIO_INVOKED) || !defined(_ON_)
+IDD_INTERNET_PARAMS DIALOG  0, 0, 170, 112
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Internet Meeting Room"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_ALIAS,45,7,117,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,30,91,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,89,91,50,14
+    LTEXT           "Your alias:",IDC_STATIC,7,10,37,8
+    LTEXT           "Room:",IDC_STATIC,7,26,36,8
+    LISTBOX         IDC_ROOMLIST,45,25,117,55,LBS_NOINTEGRALHEIGHT | 
+                    WS_VSCROLL | WS_TABSTOP
+END
+#endif
+
+IDD_SET_MESSAGE DIALOG  0, 0, 187, 91
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Internet Meeting Room Message"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_MESSAGE,44,7,136,14,ES_AUTOHSCROLL
+    CONTROL         "Timer event",IDC_TIMER_CHECK,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,7,34,46,10
+    EDITTEXT        IDC_HOUR,100,32,20,14,ES_AUTOHSCROLL | ES_NUMBER | 
+                    WS_DISABLED
+    CONTROL         "Spin1",IDC_HOUR_SPIN,"msctls_updown32",UDS_WRAP | 
+                    UDS_SETBUDDYINT | UDS_AUTOBUDDY | UDS_ARROWKEYS,119,32,
+                    10,14
+    EDITTEXT        IDC_MINUTE,100,49,20,14,ES_AUTOHSCROLL | ES_NUMBER | 
+                    WS_DISABLED
+    CONTROL         "Spin1",IDC_MINUTE_SPIN,"msctls_updown32",UDS_WRAP | 
+                    UDS_SETBUDDYINT | UDS_AUTOBUDDY | UDS_ARROWKEYS,119,49,
+                    10,14
+    DEFPUSHBUTTON   "OK",IDOK,39,70,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,100,70,50,14
+    LTEXT           "Message:",IDC_STATIC,7,10,33,8
+    LTEXT           "Time left:",IDC_STATIC,63,35,30,8
+    LTEXT           "hours",IDC_STATIC,135,35,22,8
+    LTEXT           "minutes",IDC_STATIC,135,52,26,8
+END
+
+IDD_BAD_MODE1 DIALOG  10, 10, 153, 37
+STYLE DS_SETFONT | DS_3DLOOK | DS_CONTROL | DS_CENTER | WS_POPUP | 
+    WS_VISIBLE
+FONT 8, "MS Sans Serif"
+BEGIN
+    PUSHBUTTON      "You must select a full screen mode because this version of the application only support 8bit/pixel display modes.",
+                    IDC_FULL_MENU_MODE,2,1,149,35,BS_MULTILINE
+END
+
+IDD_BAD_MODE3 DIALOG  10, 10, 153, 28
+STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | DS_CONTROL | DS_CENTER | 
+    WS_POPUP | WS_VISIBLE
+FONT 8, "MS Sans Serif"
+BEGIN
+    CTEXT           "Incompatible video mode. Select a compatible video mode by pressing F8 or F9 once a game is started",
+                    IDC_STATIC,2,1,149,25
+END
+
+IDD_WAIT_ALL DIALOG  0, 0, 182, 62
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "WARNING!"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDCANCEL,36,41,50,14
+    PUSHBUTTON      "Start NOW!",IDOK,96,41,50,14
+    ICON            IDI_WARNING2,IDC_STATIC,7,7,18,20
+    LTEXT           "It is highly preferable to wait until all players have successfully conntected to the game before pressing the START buttton.",
+                    IDC_STATIC,34,7,141,30
+END
+
+IDD_CHAT_MESSAGES DIALOG  0, 0, 186, 122
+STYLE DS_SETFONT | DS_3DLOOK | WS_CHILD
+FONT 8, "MS Sans Serif"
+BEGIN
+    COMBOBOX        IDC_CHAT1,47,17,134,86,CBS_DROPDOWN | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_CHAT2,47,31,134,86,CBS_DROPDOWN | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_CHAT3,47,44,134,86,CBS_DROPDOWN | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_CHAT4,47,58,134,86,CBS_DROPDOWN | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_CHAT5,47,72,134,86,CBS_DROPDOWN | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_CHAT6,47,86,134,86,CBS_DROPDOWN | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_CHAT7,47,100,134,86,CBS_DROPDOWN | WS_VSCROLL | 
+                    WS_TABSTOP
+    LTEXT           "Key",IDC_STATIC,4,7,36,8
+    LTEXT           "Message or sound",IDC_STATIC,47,7,112,8
+    LTEXT           "Shift+F1",IDC_STATIC,4,19,36,8
+    LTEXT           "Shift+F2",IDC_STATIC,4,33,36,8
+    LTEXT           "Shift+F6",IDC_STATIC,4,88,36,8
+    LTEXT           "Shift+F3",IDC_STATIC,4,46,36,8
+    LTEXT           "Shift+F7",IDC_STATIC,4,102,36,8
+    LTEXT           "Shift+F4",IDC_STATIC,4,60,36,8
+    LTEXT           "Shift+F5",IDC_STATIC,4,74,36,8
+END
+
+IDD_REGISTER DIALOG  0, 0, 238, 173
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "HoverRace Registration Key"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_OWNER,86,63,145,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_COMPANY,86,77,145,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_ID_MAJOR,86,91,31,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_ID_MINOR,127,91,47,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_KEY1,86,105,145,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_KEY2,86,120,145,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_PASSWD,86,134,87,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,66,152,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,122,152,50,14
+    PUSHBUTTON      "See online registration page now!...",IDC_REGISTER_PAGE,
+                    95,42,136,14
+    LTEXT           "Owner:",IDC_STATIC,7,66,58,8
+    LTEXT           "User ID:",IDC_STATIC,7,94,42,8
+    LTEXT           "You must fill all the fields of this window in order to have access to all of the HoverRace features.  Registration key can be bought from GrokkSoft inc at very low price.",
+                    IDC_STATIC,7,7,224,28
+    CONTROL         "",IDC_STATIC,"Static",SS_BLACKFRAME,14,59,209,1
+    LTEXT           "Registration Key Part 1:",IDC_STATIC,7,108,78,8
+    LTEXT           "Registration Key Part 2:",IDC_STATIC,7,123,79,8
+    LTEXT           "Password (optional) :",IDC_STATIC,7,137,67,8
+    LTEXT           "--",IDC_STATIC,120,94,8,8
+    LTEXT           "Company (optional):",IDC_STATIC,7,80,72,8
+END
+
+IDD_LOGIN_PASSWD DIALOGEX 0, 0, 284, 245
+STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_POPUP | 
+    WS_CAPTION | WS_SYSMENU
+CAPTION "HoverRace(Registred version)"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    EDITTEXT        IDC_PASSWD,53,192,95,14,ES_PASSWORD | ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "Start HoverRace",IDOK,193,166,84,14
+    PUSHBUTTON      "Start Demo version",IDC_DEMO,193,182,84,14
+    LTEXT           "Password:",IDC_STATIC,14,195,35,8
+    CONTROL         "",IDC_STATIC,"Static",SS_BLACKFRAME,75,210,134,2
+    LTEXT           "This is a registred copy of HoverRace. You must supply a valid password if you want to have access to all the features of the game. Pressing ""Start Demo version"" will give you access only to the features of the Free version.",
+                    IDC_STATIC,7,214,270,27
+    LTEXT           "Owner:",IDC_STATIC,14,167,30,8
+    LTEXT           "",IDC_OWNER,53,166,128,11,0,WS_EX_STATICEDGE
+    LTEXT           "Company:",IDC_STATIC,14,179,32,8
+    LTEXT           "",IDC_COMPANY,53,178,128,11,0,WS_EX_STATICEDGE
+    CONTROL         "",IDC_BITMAP,"Static",SS_BITMAP | SS_CENTERIMAGE | 
+                    SS_SUNKEN,7,7,270,152
+END
+
+IDD_REGKEY_PASSWD DIALOG  0, 0, 209, 95
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "HoverRace login password"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_PASSWD,57,52,95,14,ES_PASSWORD | ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,7,74,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,63,74,50,14
+    LTEXT           "Password:",IDC_STATIC,18,55,35,8
+    CONTROL         "",IDC_STATIC,"Static",SS_BLACKFRAME,37,47,134,2
+    LTEXT           "Registration information have already been entered. To revise this information you must supply a valid password. If you forgot your password you can use the ""Clear Registration Key"" but you will then have to reenter the registration key.",
+                    IDC_STATIC,7,7,195,34
+    PUSHBUTTON      "Clear Registration Key",IDC_CLEAR,119,74,82,14
+END
+
+IDD_LOGIN DIALOG  0, 0, 272, 207
+STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_POPUP | 
+    WS_CAPTION | WS_SYSMENU
+CAPTION "HoverRace (Demo version)"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Start HoverRace",IDOK,182,186,83,14
+    LTEXT           "This is a non-registred copy of HoverRace. Non-registred version let you play the game but some of the features are only availlable to registred users. ",
+                    -1,7,170,167,30
+    PUSHBUTTON      "Registration info...",ID_GAME_REGISTER,182,169,83,14
+    PUSHBUTTON      "www.grokksoft.com",ID_HELP_SITE,7,155,258,11,BS_FLAT
+    CONTROL         "",IDC_BITMAP,"Static",SS_BITMAP | SS_CENTERIMAGE | 
+                    SS_SUNKEN,7,7,258,147
+END
+
+#if defined(APSTUDIO_INVOKED) || defined(_ON_)
+#if defined(APSTUDIO_INVOKED)
+IDD_INTERNET_PARAMS$(_ON_) DIALOG  0, 0, 170, 66
+#else
+IDD_INTERNET_PARAMS DIALOG  0, 0, 170, 66
+#endif
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Internet Meeting Room"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_ALIAS,45,7,118,14,ES_AUTOHSCROLL | ES_READONLY | NOT 
+                    WS_TABSTOP
+    COMBOBOX        IDC_ROOMLIST,45,22,118,61,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    DEFPUSHBUTTON   "OK",IDOK,30,45,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,89,45,50,14
+    LTEXT           "User:",IDC_STATIC,7,10,37,8
+    LTEXT           "Room URL:",IDC_STATIC,7,26,36,8
+END
+#endif
+
+IDD_INTERNET_MEETING_PUB DIALOG  0, 0, 388, 277
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "HoverRace Internet meeting room"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_CHAT_IN,120,218,265,14,ES_AUTOHSCROLL | 
+                    ES_WANTRETURN
+    CONTROL         "List4",IDC_GAME_LIST,"SysListView32",LVS_REPORT | 
+                    LVS_NOCOLUMNHEADER | WS_BORDER | WS_TABSTOP,3,9,113,88
+    PUSHBUTTON      "Join Game...",IDC_JOIN,328,9,57,14
+    PUSHBUTTON      "New Game...",IDC_ADD,328,25,57,14
+    PUSHBUTTON      "Quit",IDCANCEL,328,83,57,14
+    CONTROL         "List5",IDC_USER_LIST,"SysListView32",LVS_REPORT | 
+                    LVS_ALIGNLEFT | LVS_NOCOLUMNHEADER | WS_BORDER | 
+                    WS_TABSTOP,3,108,113,124
+    EDITTEXT        IDC_CHAT_OUT,120,108,265,110,ES_MULTILINE | ES_READONLY | 
+                    WS_VSCROLL | NOT WS_TABSTOP
+    LTEXT           "Chat section",IDC_STATIC,120,100,45,8
+    LTEXT           "Game list",IDC_STATIC,3,1,30,8
+    LTEXT           "Users list",IDC_STATIC,3,100,67,8
+    LTEXT           "Track name:",IDC_STATIC,120,13,44,8
+    LTEXT           "Laps:",IDC_STATIC,120,28,40,8
+    LTEXT           "Availability:",IDC_STATIC,120,43,36,8
+    EDITTEXT        IDC_PLAYER_LIST,176,55,147,42,ES_MULTILINE | ES_READONLY | 
+                    WS_VSCROLL | NOT WS_TABSTOP
+    LTEXT           "Players list:",IDC_STATIC,120,56,41,8
+    EDITTEXT        IDC_AVAIL_MESSAGE,176,40,147,14,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_TABSTOP
+    EDITTEXT        IDC_TRACK_NAME,176,9,147,14,ES_AUTOHSCROLL | ES_READONLY | 
+                    NOT WS_TABSTOP
+    EDITTEXT        IDC_NB_LAP,176,25,27,14,ES_AUTOHSCROLL | ES_READONLY | 
+                    NOT WS_TABSTOP
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,3,99,382,1
+    LTEXT           "Game details",IDC_STATIC,120,1,64,8
+    LTEXT           "Weapons:",IDC_STATIC,219,28,38,8
+    EDITTEXT        IDC_WEAPONS,258,25,27,14,ES_AUTOHSCROLL | ES_READONLY | 
+                    NOT WS_TABSTOP
+    PUSHBUTTON      "Button1",IDC_PUB,3,234,382,42,BS_BITMAP | BS_FLAT | NOT 
+                    WS_TABSTOP
+END
+
+IDD_LADDER_SUBMIT DIALOG  0, 0, 216, 133
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Match Result Submission Form"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_PASSWORD,58,8,69,14,ES_PASSWORD | ES_AUTOHSCROLL
+    EDITTEXT        IDC_COMMENT,7,96,144,30,ES_MULTILINE | ES_AUTOVSCROLL
+    DEFPUSHBUTTON   "Submit",IDOK,157,7,52,14
+    PUSHBUTTON      "Cancel",IDCANCEL,157,23,52,14
+    LTEXT           "Your Ladder\nPassword:",IDC_STATIC,7,7,44,17
+    LTEXT           "Comment(optional):",IDC_STATIC,7,87,61,8
+    LTEXT           "Match Result:",IDC_STATIC,7,28,46,8
+    EDITTEXT        IDC_RESULT,7,37,144,47,ES_MULTILINE | ES_READONLY | 
+                    WS_VSCROLL | NOT WS_TABSTOP
+                    IDC_STATIC,157,66,52,57
+    ICON            IDI_WARNING2,IDC_STATIC,173,45,18,20
+END
+
+IDD_LADDER_RES_3 DIALOG  0, 0, 207, 78
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Ladder Answer"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "",ID_BTN1,7,57,63,14
+    PUSHBUTTON      "",ID_BTN2,72,57,63,14
+    EDITTEXT        IDC_TEXT,33,7,141,47,ES_MULTILINE | ES_READONLY | NOT 
+                    WS_BORDER
+    PUSHBUTTON      "",ID_BTN3,137,57,63,14
+END
+
+IDD_FIRST_CHOICE DIALOG  0, 0, 208, 103
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "HoverRace"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,151,7,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,151,24,50,14
+    CTEXT           "Click OK to play on the Internet against other people",
+                    IDC_STATIC,37,15,101,19
+    LTEXT           "Make sure that you are connected to the Internet before clicking on OK. If you have any problem email to:",
+                    IDC_STATIC,14,52,178,19
+    CONTROL         "",IDC_STATIC,"Static",SS_GRAYFRAME | SS_SUNKEN,7,46,194,
+                    38
+    LTEXT           "support@grokksoft.com",IDC_STATIC,99,71,83,8
+    ICON            IDI_HOVER_ICON,IDC_STATIC,7,16,18,20
+    CONTROL         "Show this screen each time HoverRace starts",IDC_CHECK,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,86,194,10
+END
+
+IDD_SPONSOR DIALOG  0, 0, 236, 182
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "HoverRace"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Start HoverRace",IDOK,150,161,79,16
+    PUSHBUTTON      "Button1",IDC_BITMAP,7,7,222,151,BS_BITMAP | BS_FLAT | 
+                    NOT WS_TABSTOP
+END
+
+IDD_LADDER_SUBMIT_QUIT DIALOG  0, 0, 162, 73
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Match Result Submission"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "No",IDNO,85,52,50,14
+    PUSHBUTTON      "Yes",IDYES,28,52,50,14
+    CTEXT           "Are you sure that you do not want to report that match result?",
+                    IDC_STATIC,27,16,109,21
+END
+
+IDD_LADDER_RETRY DIALOG  0, 0, 162, 68
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Match Result Submission"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Retry",IDRETRY,27,47,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,85,47,50,14
+    CTEXT           "Unable to connect to the server.",IDC_STATIC,27,19,109,
+                    14
+END
+
+IDD_LADDER_RES_2 DIALOG  0, 0, 207, 78
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Ladder Answer"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "",ID_BTN1,39,57,63,14
+    PUSHBUTTON      "",ID_BTN2,105,57,63,14
+    EDITTEXT        IDC_TEXT,33,7,141,47,ES_MULTILINE | ES_READONLY | NOT 
+                    WS_BORDER
+END
+
+IDD_LADDER_RES_1 DIALOG  0, 0, 207, 78
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Ladder Answer"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "",ID_BTN1,72,57,63,14
+    EDITTEXT        IDC_TEXT,33,7,141,47,ES_MULTILINE | ES_READONLY | NOT 
+                    WS_BORDER
+END
+
+IDD_LADDER_SUBMIT_PROCESS DIALOG  0, 0, 162, 63
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Match Result Submission"
+FONT 8, "MS Sans Serif"
+BEGIN
+    PUSHBUTTON      "Cancel",IDCANCEL,56,42,50,14
+    CTEXT           "Submitting result to server...\nPlease wait",IDC_STATIC,
+                    27,13,109,21
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_DISPLAY_INTENSITY, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 148
+        TOPMARGIN, 5
+        BOTTOMMARGIN, 56
+    END
+
+    IDD_TRACK_SELECT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 237
+        VERTGUIDE, 125
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 134
+        HORZGUIDE, 17
+        HORZGUIDE, 117
+    END
+
+    IDD_CONTROL, DIALOG
+    BEGIN
+        LEFTMARGIN, 4
+        RIGHTMARGIN, 181
+        VERTGUIDE, 62
+        VERTGUIDE, 120
+        VERTGUIDE, 125
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 114
+    END
+
+    IDD_BAD_MODE4, DIALOG
+    BEGIN
+        LEFTMARGIN, 2
+        RIGHTMARGIN, 151
+        TOPMARGIN, 1
+    END
+
+    IDD_BACK_ANIM, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 221
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 140
+    END
+
+    IDD_ABOUT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 245
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 181
+        HORZGUIDE, 163
+    END
+
+    IDD_LEGAL_NOT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 285
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 278
+        HORZGUIDE, 259
+    END
+
+    IDD_INTERNET_MEETING, DIALOG
+    BEGIN
+        LEFTMARGIN, 3
+        RIGHTMARGIN, 385
+        VERTGUIDE, 116
+        VERTGUIDE, 120
+        VERTGUIDE, 171
+        VERTGUIDE, 176
+        VERTGUIDE, 323
+        VERTGUIDE, 328
+        TOPMARGIN, 3
+        BOTTOMMARGIN, 244
+        HORZGUIDE, 11
+        HORZGUIDE, 110
+        HORZGUIDE, 114
+        HORZGUIDE, 117
+        HORZGUIDE, 125
+    END
+
+    IDD_TCP_SERVER, DIALOG
+    BEGIN
+        LEFTMARGIN, 8
+        RIGHTMARGIN, 217
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 128
+    END
+
+    IDD_TCP_CLIENT, DIALOG
+    BEGIN
+        LEFTMARGIN, 8
+        RIGHTMARGIN, 217
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 126
+    END
+
+    IDD_SERVER_PORT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 180
+        VERTGUIDE, 76
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 62
+    END
+
+    IDD_SERVER_ADDR, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 180
+        VERTGUIDE, 75
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 79
+    END
+
+    IDD_NET_PROGRESS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 140
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 50
+    END
+
+    IDD_INTERNET_PARAMS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 162
+        VERTGUIDE, 45
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 105
+    END
+
+    IDD_SET_MESSAGE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 180
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 84
+    END
+
+    IDD_BAD_MODE1, DIALOG
+    BEGIN
+        LEFTMARGIN, 2
+        RIGHTMARGIN, 151
+        TOPMARGIN, 1
+    END
+
+    IDD_BAD_MODE3, DIALOG
+    BEGIN
+        LEFTMARGIN, 2
+        RIGHTMARGIN, 151
+        TOPMARGIN, 1
+        BOTTOMMARGIN, 26
+    END
+
+    IDD_WAIT_ALL, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 175
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 55
+    END
+
+    IDD_CHAT_MESSAGES, DIALOG
+    BEGIN
+        LEFTMARGIN, 4
+        RIGHTMARGIN, 181
+        VERTGUIDE, 40
+        VERTGUIDE, 47
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 114
+    END
+
+    IDD_REGISTER, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 231
+        VERTGUIDE, 86
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 166
+    END
+
+    IDD_LOGIN_PASSWD, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 277
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 241
+    END
+
+    IDD_REGKEY_PASSWD, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 202
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 88
+    END
+
+    IDD_LOGIN, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 265
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 200
+    END
+
+    "IDD_INTERNET_PARAMS$(_ON_)", DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 163
+        VERTGUIDE, 45
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 59
+    END
+
+    IDD_INTERNET_MEETING_PUB, DIALOG
+    BEGIN
+        LEFTMARGIN, 3
+        RIGHTMARGIN, 385
+        VERTGUIDE, 116
+        VERTGUIDE, 120
+        VERTGUIDE, 171
+        VERTGUIDE, 176
+        VERTGUIDE, 323
+        VERTGUIDE, 328
+        TOPMARGIN, 1
+        HORZGUIDE, 9
+        HORZGUIDE, 97
+        HORZGUIDE, 99
+        HORZGUIDE, 100
+        HORZGUIDE, 108
+        HORZGUIDE, 232
+        HORZGUIDE, 234
+    END
+
+    IDD_LADDER_SUBMIT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 209
+        VERTGUIDE, 151
+        VERTGUIDE, 157
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 126
+    END
+
+    IDD_LADDER_RES_3, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 200
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 71
+    END
+
+    IDD_FIRST_CHOICE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 201
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 96
+    END
+
+    IDD_SPONSOR, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 229
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 177
+    END
+
+    IDD_LADDER_SUBMIT_QUIT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 155
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 66
+    END
+
+    IDD_LADDER_RETRY, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 155
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 61
+    END
+
+    IDD_LADDER_RES_2, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 200
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 71
+    END
+
+    IDD_LADDER_RES_1, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 200
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 71
+    END
+
+    IDD_LADDER_SUBMIT_PROCESS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 155
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 56
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_ABOUT               BITMAP                  "About.bmp"
+IDB_INTRO               BITMAP                  "intro1.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    ID_GAME_REGISTER        "Register HoverRace"
+    IDS_DISABLE             "Disable"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_SHIFT               "Shift"
+    IDS_CTRL                "Ctrl"
+    IDS_UP                  "Up"
+    IDS_DOWN                "Down"
+    IDS_RIGHT               "Right"
+    IDS_LEFT                "Left"
+    IDS_INS                 "Ins"
+    IDS_DEL                 "Del"
+    IDS_ENTER               "Enter"
+    IDS_CAPS                "CapsLock"
+    IDS_TAB                 "Tab"
+    IDS_JOY1BTN1            "Joystick Btn1"
+    IDS_JOY1BTN2            "Joystick Btn2"
+    IDS_JOY1BTN3            "Joystick Btn3"
+    IDS_JOY1BTN4            "Joystick Btn4"
+    IDS_JOY1TOP             "Joystick Top"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_JOY1DOWN            "Joystick Down"
+    IDS_JOY1RIGHT           "Joystick Right"
+    IDS_JOY1LEFT            "Joystick Left"
+    IDS_JOY2BTN1            "Joystick2 Btn1"
+    IDS_JOY2BTN2            "Joystick2 Btn2"
+    IDS_JOY2BTN3            "Joystick2 Btn3"
+    IDS_JOY2BTN4            "Joystick2 Btn4"
+    IDS_JOY2TOP             "Joystick2 Top"
+    IDS_JOY2DOWN            "Joystick2 Down"
+    IDS_JOY2RIGHT           "Joystick2 Right"
+    IDS_JOY2LEFT            "Joystick2 Left"
+    IDS_SPACE               "Space"
+    IDS_KEY_A               "A Key"
+    IDS_KEY_B               "B Key"
+    IDS_KEY_C               "C Key"
+    IDS_KEY_D               "D Key"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_KEY_E               "E Key"
+    IDS_KEY_F               "F Key"
+    IDS_KEY_G               "G Key"
+    IDS_KEY_H               "H Key"
+    IDS_KEY_I               "I Key"
+    IDS_KEY_J               "J Key"
+    IDS_KEY_K               "K Key"
+    IDS_KEY_L               "L Key"
+    IDS_KEY_M               "M Key"
+    IDS_KEY_N               "N Key"
+    IDS_KEY_O               "O Key"
+    IDS_KEY_P               "P Key"
+    IDS_KEY_Q               "Q Key"
+    IDS_KEY_R               "R Key"
+    IDS_KEY_S               "S Key"
+    IDS_KEY_T               "T Key"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_KEY_U               "U Key"
+    IDS_KEY_V               "V Key"
+    IDS_KEY_W               "W Key"
+    IDS_KEY_X               "X Key"
+    IDS_KEY_Y               "Y Key"
+    IDS_KEY_Z               "Z Key"
+    IDS_DEFAULT_ALIAS       "your name"
+    IDS_ABORT_GAME          "Abort current game?"
+    IDS_GAME_NAME           "HoverRace"
+    IDS_HELP_REQ            "To be able to display Hover Race Help\nyou must have a Word document viewer installed\non your system\n"
+    IDS_ERROR               "HoverRace Error"
+    IDS_WWW_REQ             "Unable to activate your WebBrowser. Please start your WebBrowser and go to:\n%s"
+    IDS_CAPTION             "HoverRace v1.01"
+    IDS_REG_CAPTION         "HoverRace v1.01 [REGISTERED VERSION]"
+    IDS_DEMO_CAPTION        "HoverRace v1.01 [DEMO MODE]"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_MODE_SWITCH_TRY     "HoverRace will try to switch your screen to a 256 colors mode"
+    IDS_CANT_SWITCH_MODE    "HoverRace was unable to switch the video mode. You will need to play in full screen"
+    IDS_BAD_MODE            "Incompatible video mode. You will need to play in full screen"
+    IDS_CAR_FOR_REG         "You need to register to use this craft model"
+    IDS_COLOR_INTENSITY     "Colors intensity"
+    IDS_KEYS_SETTING        "Keys"
+    IDS_PROP_SETTING        "Properties setting"
+    IDS_READ_NOTICE         "Please take the time to read the notice"
+    IDS_BAD_PASSWD          "Wrong password"
+    IDS_NOT_HR_KEY          "Not an HoverRace Key"
+    IDS_FILL_OWNER          "Please fill the ""Owner"" field"
+    IDS_PASSWD_LEN          "Password must have at max 10 characters"
+    IDS_KEY1_LEN            "Registration Key part 1 must have 20 character long"
+    IDS_KEY2_LEN            "Registration Key part 2 must have 20 character long"
+    IDS_BAD_KEY1            "Registration Key part 1 is invalid"
+    IDS_BAD_KEY2            "Registration Key part 2 is invalid"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_BAD_USER            "Owner name does not match with the key"
+    IDS_BAD_ID              "User ID does not match with the key"
+    IDS_CLEAR_REGINFO       "Are you sure that you want to clear current registration key info?"
+    IDS_IMR_CONNECT         "Connecting to the Internet Meeting Room..."
+    IDS_UR_CONNECT          "You are Connected"
+    IDS_IMR_WELCOME         "Welcome to the HoverRace Internet Meeting Room"
+    IDS_IMR_DISCONNECT      "Disconnecting from the Internet Meeting Room..."
+    IDS_IMR_ADD_GAME        "Registering game with the Internet Meeting Room..."
+    IDS_IMR_DEL_GAME        "Unregistering game from the Internet Meeting Room..."
+    IDS_IMR_JOIN_GAME       "Registering with the Internet Meeting Room..."
+    IDS_IMR_LEAVE_GAME      "Unregistering from the Internet Meeting Room..."
+    IDS_IMR_NOSELECT        "[no selection]"
+    IDS_AVAIL               "Available"
+    IDS_TRACK_NOTINSTALL    "Track not installed on your system"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_TRACK_NOTREG        "You must register to use this track"
+    IDS_COMM_ERROR          "Communication error"
+    IDS_CANT_ADDUSER        "Unable to add user"
+    IDS_NOMORE_SHRWR        "No more Shareware user allowed"
+    IDS_NOMORE_USER         "No more user allowed"
+    IDS_INCOMPAT_VER        "Incompatible version"
+    IDS_EXP_KEY             "Expired key"
+    IDS_DUAL_USE            "Already used key  (report for investigation)"
+    IDS_CANT_REFRESH        "Unable to send refresh info"
+    IDS_NOL                 "Not on-line"
+    IDS_CANT_ADD_CHAT       "Unable to add chat message"
+    IDS_CANT_ADD_GAME       "Unable to add game"
+    IDS_NOMORE_ENTRY        "No more entry avail"
+    IDS_CANT_JOIN           "Unable to join Game"
+    IDS_GAME_NA             "Game no more availlable"
+    IDS_GAME_FULL           "Game Full"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_CANT_DEL_GAME       "Unable to delete Game"
+    IDS_NOT_OWNER           "Not owner"
+    IDS_CANT_LEAVE_GAME     "Unable to leave game"
+    IDS_MUST_JOIN           "Must join first"
+    IDS_CANT_DEL_USER       "Unable to delete user"
+    IDS_CANT_START_GAME     "Unable to Start Game"
+    IDS_CANT_ADD_MESSAGE    "Unable to add message"
+    IDS_NOT_AUTH            "Not authorized"
+    IDS_UNKNOWN_ERROR       "Unknown error code %d"
+    IDS_IMR                 "Internet Meeeting Room"
+    IDS_IMR_PASSVAL         "Password validation..."
+    IDS_ENTER_ALIAS         "You must enter an alias name"
+    IDS_SELECT_ROOM         "You must select a room"
+    IDS_WARN_TO             "Warning: communication time-out"
+    IDS_LOC_MSERVER         "Locating the main server..."
+    IDS_CANT_FIND_SERVER    "Unable to find the server\nYou must be connected to the Internet to use this function\nContact Support if the problem persist"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_TO                  "Communication timeout"
+    IDS_SERVER_ERROR        "Server error, please advise the server administrator"
+    IDS_CANT_CREATE_SOCK    "Unable to create socket( Contact Support if the problem persist)"
+    IDS_TCP_SERVER          "TCP Server"
+    IDS_CANT_USE_PORT       "Unable to use the port, try to close some WINSOCK applications"
+    IDS_PORT_RANGE          "Port value must be greater than 0"
+    IDS_CONNECTING_SERV     "Connecting to server..."
+    IDS_GET_GAMEINFO        "Retrieving game info..."
+    IDS_TCP_CLIENT          "TCP Client"
+    IDS_CANT_CONNECT        "ERROR Unable to connect to server..."
+    IDS_PLAYER              "Player"
+    IDS_LAG                 "Lag.(ms)"
+    IDS_STATUS              "Status"
+    IDS_LOCAL               "Local"
+    IDS_CONNECTED           "Connected"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_REG_BEST_LAP        "Registering your best lap time to the server"
+    IDS_DISCONNECTED        "Disconnected"
+    IDS_COMPUTING           "Computing"
+    IDS_CONNECTING          "Connecting"
+    IDS_WAITING_ACK         "Waiting Ack"
+    IDS_NO_NET_CONNECT      "(no network connection)"
+    IDS_DUAL_REG_KEY        "An other player is using your registration key"
+    IDS_F2_TORETURN         "Press F2 when ready to return to Meeting Room"
+    IDS_HAS_LEFT            " has left"
+    IDS_ALONE_F2            "You are now alone, press F2"
+    IDS_ALONE               "You are now alone"
+    IDS_TRK_NOTFOUND        "Track not found"
+    IDS_BAD_TRK_FORMAT      "Bad track file format"
+    IDS_SHOULD_REG          "You should register to play that track"
+    IDS_NO_SELECT           " no selection"
+    IDS_LAP_RANGE           "Number of laps should be between 1 and 99"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_RANK_TITLE          "Rank            Result   Best Lap "
+    IDS_FLAP_STR            "%d %-0.10s #%d%*s   --First lap--  %c"
+    IDS_CHART_FINISH        "%d %-0.10s #%d%*s %2d.%02d.%02d %2d.%02d.%02d%c"
+    IDS_CHART               "%d %-0.10s #%d%*s lap:%-2d   %2d.%02d.%02d%c"
+    IDS_COUNTDOWN           "Start in %02d.%02d sec. for %d laps"
+    IDS_FINISH              "Finish in %d.%02d.%02d  %d of %d"
+    IDS_FINISH_SINGLE       "Finish in %d.%02d.%02d"
+    IDS_BEST_LAP            "  Best lap %d.%02d.%02d  "
+    IDS_HEADER              "%d.%02d.%02d  Lap:%d/%d"
+    IDS_LAST_LAP            "Last lap %d.%02d.%02d  Best %d.%02d.%02d"
+    IDS_CUR_LAP             "Current lap %d.%02d.%02d  Best %d.%02d.%02d"
+    IDS_HIT_TITLE           "Rank                 For   Agains"
+    IDS_HIT_CHART           "%d %-0.10s #%d%*s  %2d      %2d"
+END
+
+#endif    // Neutral (Default) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

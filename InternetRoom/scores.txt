@@ -1,0 +1,113 @@
+8
+ClassicH
+0
+0 0
+none
+0 0
+none
+0 0
+none
+0 0
+none
+0 0
+none
+0 0
+none
+Steeplechase
+0
+0 0
+none
+0 0
+none
+0 0
+none
+0 0
+none
+0 0
+none
+0 0
+none
+The Alley2
+0
+0 0
+none
+0 0
+none
+0 0
+none
+0 0
+none
+0 0
+none
+0 0
+none
+Cyclodrome
+0
+0 0
+none
+0 0
+none
+0 0
+none
+0 0
+none
+0 0
+none
+0 0
+none
+The River
+0
+0 0
+none
+0 0
+none
+0 0
+none
+0 0
+none
+0 0
+none
+0 0
+none
+Pinball Fan
+0
+0 0
+none
+0 0
+none
+0 0
+none
+0 0
+none
+0 0
+none
+0 0
+none
+Head to Head
+0
+0 0
+none
+0 0
+none
+0 0
+none
+0 0
+none
+0 0
+none
+0 0
+none
+Waterway
+0
+0 0
+none
+0 0
+none
+0 0
+none
+0 0
+none
+0 0
+none
+0 0
+none

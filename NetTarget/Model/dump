@@ -1,0 +1,29 @@
+// RenderingInterface.cpp
+
+
+#include "stdafx.h"
+
+#include "RenderingInterface.h"
+
+
+void MR_SurfaceElementRenderer::RenderWallSurface( MR_3DViewPort* /*pDest*/, const MR_3DCoordinate& /*pUpperLeft*/, const MR_3DCoordinate& /*pLowerRight*/, MR_Int32 /*pLen*/ )
+{
+   // Do notting by default
+}
+
+void MR_SurfaceElementRenderer::RenderHorizontalSurface( MR_3DViewPort* /*pDest*/, int /*pNbVertex*/, const MR_2DCoordinate* /*pVertexList*/, MR_Int32 /*pLevel*/, BOOL /*pTop*/ )
+{
+   // Do notting by default
+}
+
+void MR_FreeElementRenderer::Render( MR_3DViewPort* /*pDest*/, const MR_3DCoordinate& /*pPosition*/, MR_Angle /*pOrientation*/ )
+{
+   // Do notting by default
+}
+                                                                                                          
+MR_FreeElementRendererFromFactory::MR_FreeElementRendererFromFactory( const MR_ObjectFromFactoryId& pId )
+                                  :MR_ObjectFromFactory( pId )
+{
+}
+                                                                                                          
+

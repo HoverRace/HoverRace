@@ -1,0 +1,739 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Neutral (Default) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_NEUTRAL, SUBLANG_DEFAULT
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON    DISCARDABLE     "res\\HoverCad.ico"
+IDR_HCADTYPE            ICON    DISCARDABLE     "res\\HoverCadDoc.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDR_MAINFRAME           BITMAP  MOVEABLE PURE   "res\\Toolbar.bmp"
+IDR_TOOLS_BAR           BITMAP  DISCARDABLE     "res\\tools_ba.bmp"
+IDB_SELECTITEM          BITMAP  DISCARDABLE     "res\\selectit.bmp"
+IDB_ITEM                BITMAP  DISCARDABLE     "res\\select.bmp"
+IDR_STATUS_IDS          BITMAP  DISCARDABLE     "res\\status_i.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Toolbar
+//
+
+IDR_MAINFRAME TOOLBAR DISCARDABLE  16, 15
+BEGIN
+    BUTTON      ID_FILE_NEW
+    BUTTON      ID_FILE_OPEN
+    BUTTON      ID_FILE_SAVE
+    SEPARATOR
+    BUTTON      ID_EDIT_CUT
+    BUTTON      ID_EDIT_COPY
+    BUTTON      ID_EDIT_PASTE
+    SEPARATOR
+    BUTTON      ID_FILE_PRINT
+    BUTTON      ID_HELP_HELP
+END
+
+IDR_TOOLS_BAR TOOLBAR DISCARDABLE  16, 15
+BEGIN
+    BUTTON      IDC_SELECT
+    BUTTON      IDC_HAMMER
+    BUTTON      IDC_MOVE_SELECT
+    BUTTON      IDC_ROOM
+    BUTTON      IDC_FEATURE
+    BUTTON      IDC_INSERT_OBJECT
+    BUTTON      IDC_PATH
+    SEPARATOR
+    BUTTON      IDC_CUT
+    BUTTON      IDC_INSERT_NODE
+END
+
+IDR_STATUS_IDS TOOLBAR DISCARDABLE  16, 15
+BEGIN
+    BUTTON      ID_MOUSE_POS
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MAINFRAME MENU PRELOAD DISCARDABLE 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&New\tCtrl+N",                ID_FILE_NEW
+        MENUITEM "&Open...\tCtrl+O",            ID_FILE_OPEN
+        MENUITEM SEPARATOR
+        MENUITEM "P&rint Setup...",             ID_FILE_PRINT_SETUP
+        MENUITEM SEPARATOR
+        MENUITEM "Recent File",                 ID_FILE_MRU_FILE1, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       ID_APP_EXIT
+    END
+    POPUP "&View"
+    BEGIN
+        MENUITEM "&Standard Toolbar",           ID_VIEW_TOOLBAR
+        MENUITEM "Tools",                       ID_VIEW_TOOLS
+        MENUITEM "Slection attributes",         ID_VIEW_SLECTIONATTRIBUTES
+        MENUITEM "Track Attributes",            ID_VIEW_TRACKATTRIBUTES
+        MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&Help\tF1",                   ID_HELP_HELP
+        MENUITEM "&About HoverCad...",          ID_APP_ABOUT
+    END
+END
+
+IDR_HCADTYPE MENU PRELOAD DISCARDABLE 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&New\tCtrl+N",                ID_FILE_NEW
+        MENUITEM "&Open...\tCtrl+O",            ID_FILE_OPEN
+        MENUITEM "&Close",                      ID_FILE_CLOSE
+        MENUITEM "&Save\tCtrl+S",               ID_FILE_SAVE
+        MENUITEM "Save &As...",                 ID_FILE_SAVE_AS
+        MENUITEM SEPARATOR
+        MENUITEM "Compil&e\tF7",                ID_FILE_COMPILE
+        MENUITEM SEPARATOR
+        MENUITEM "&Print...\tCtrl+P",           ID_FILE_PRINT
+        MENUITEM "Print Pre&view",              ID_FILE_PRINT_PREVIEW
+        MENUITEM "P&rint Setup...",             ID_FILE_PRINT_SETUP
+        MENUITEM SEPARATOR
+        MENUITEM "Recent File",                 ID_FILE_MRU_FILE1, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       ID_APP_EXIT
+    END
+    POPUP "&Edit"
+    BEGIN
+        MENUITEM "&Undo\tCtrl+Z",               ID_EDIT_UNDO
+        MENUITEM SEPARATOR
+        MENUITEM "Cu&t\tCtrl+X",                ID_EDIT_CUT
+        MENUITEM "&Copy\tCtrl+C",               ID_EDIT_COPY
+        MENUITEM "&Paste\tCtrl+V",              ID_EDIT_PASTE
+        MENUITEM SEPARATOR
+        MENUITEM "&Scale selection...",         ID_EDIT_SCALESELECTION
+    END
+    POPUP "&View"
+    BEGIN
+        MENUITEM "&Standard Toolbar",           ID_VIEW_TOOLBAR
+        MENUITEM "Tools",                       ID_VIEW_TOOLS
+        MENUITEM "Slection attributes",         ID_VIEW_SLECTIONATTRIBUTES
+        MENUITEM "Track Attributes",            ID_VIEW_TRACKATTRIBUTES
+        MENUITEM "&Status Bar",                 ID_VIEW_STATUS_BAR
+    END
+    POPUP "&Window"
+    BEGIN
+        MENUITEM "&New Window",                 ID_WINDOW_NEW
+        MENUITEM "&Cascade",                    ID_WINDOW_CASCADE
+        MENUITEM "&Tile",                       ID_WINDOW_TILE_HORZ
+        MENUITEM "&Arrange Icons",              ID_WINDOW_ARRANGE
+        MENUITEM "S&plit",                      ID_WINDOW_SPLIT
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&Help\tF1",                   ID_HELP_HELP
+        MENUITEM "&About HoverCad...",          ID_APP_ABOUT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 188, 55
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About HoverCad"
+FONT 8, "MS Sans Serif"
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,7,7,21,20
+    LTEXT           "HoverCAD",IDC_STATIC,40,10,101,8,SS_NOPREFIX
+    LTEXT           "Copyright ©1996,1997 GrokkSoft inc. ",IDC_STATIC,40,25,
+                    141,8
+    DEFPUSHBUTTON   "OK",IDOK,149,7,32,14,WS_GROUP
+END
+
+IDD_ATTRIB_TOOL DIALOG DISCARDABLE  0, 0, 113, 206
+STYLE WS_CHILD
+FONT 8, "MS Sans Serif"
+BEGIN
+    COMBOBOX        IDC_WALL_TEXTURE,7,18,99,83,CBS_DROPDOWNLIST | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_CEILING_TEXTURE,7,45,99,83,CBS_DROPDOWNLIST | 
+                    CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_FLOOR_TEXTURE,7,73,99,83,CBS_DROPDOWNLIST | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    EDITTEXT        IDC_CEILING_LEVEL,7,102,28,14,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_CEILING_LEVEL_SPIN,"msctls_updown32",
+                    UDS_ARROWKEYS | NOT WS_VISIBLE,35,102,10,14
+    EDITTEXT        IDC_FLOOR_LEVEL,61,102,28,14,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_FLOOR_LEVEL_SPIN,"msctls_updown32",
+                    UDS_ARROWKEYS | NOT WS_VISIBLE,90,102,10,14
+    EDITTEXT        IDC_X_POS,17,134,28,14,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_X_POS_SPIN,"msctls_updown32",UDS_ARROWKEYS | 
+                    NOT WS_VISIBLE,45,134,10,14
+    EDITTEXT        IDC_Y_POS,68,134,28,14,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_Y_POS_SPIN,"msctls_updown32",UDS_ARROWKEYS | 
+                    NOT WS_VISIBLE,96,134,10,14
+    EDITTEXT        IDC_Z_POS,17,158,28,14,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_Z_POS_SPIN,"msctls_updown32",UDS_ARROWKEYS | 
+                    NOT WS_VISIBLE,45,158,10,14
+    EDITTEXT        IDC_DEG_POS,68,158,28,14,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_DEG_POS_SPIN,"msctls_updown32",UDS_ARROWKEYS | 
+                    NOT WS_VISIBLE,96,158,10,14
+    COMBOBOX        IDC_ITEM_TYPE,7,187,99,83,CBS_DROPDOWNLIST | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Wall texture",IDC_STATIC,7,7,46,8
+    LTEXT           "Floor texture",IDC_STATIC,7,62,46,8
+    LTEXT           "Ceiling texture",IDC_STATIC,7,34,46,8
+    LTEXT           "Floor Level",IDC_STATIC,61,93,39,8
+    LTEXT           "Ceiling Level",IDC_STATIC,7,92,39,8
+    LTEXT           "Position",IDC_STATIC,7,124,39,8
+    LTEXT           "X:",IDC_STATIC,7,136,8,8
+    LTEXT           "Y:",IDC_STATIC,58,136,8,8
+    LTEXT           "Z:",IDC_STATIC,7,160,8,8
+    LTEXT           "angle:",IDC_STATIC,51,160,17,8
+    LTEXT           "Item type",IDC_STATIC,7,176,46,8
+END
+
+IDD_DIALOGBAR DIALOG DISCARDABLE  0, 0, 330, 36
+STYLE WS_CHILD
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "TODO: layout dialog bar",IDC_STATIC,126,4,77,8
+    PUSHBUTTON      "Button1",IDC_TESTBTN1,9,13,50,14
+    CONTROL         "Slider1",IDC_TESTSLD1,"msctls_trackbar32",TBS_BOTH | 
+                    TBS_NOTICKS | WS_TABSTOP,76,14,100,15
+    CONTROL         "Spin1",IDC_TESTSPIN1,"msctls_updown32",UDS_ARROWKEYS,
+                    224,10,10,14
+END
+
+IDD_ZOOM_BAR DIALOG DISCARDABLE  0, 0, 17, 83
+STYLE DS_3DLOOK | WS_CHILD
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "Slider1",IDC_ZOOM_SLIDER,"msctls_trackbar32",TBS_VERT | 
+                    TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,1,11,14,71
+    CONTROL         142,IDC_STATIC,"Static",SS_BITMAP,6,5,6,6
+END
+
+IDD_DOC_ATTR DIALOG DISCARDABLE  0, 0, 112, 110
+STYLE WS_CHILD
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_BACKGROUND_NAME,7,12,85,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_BROWSE,90,12,15,14,BS_NOTIFY | WS_GROUP
+    EDITTEXT        IDC_TRACK_DESC,7,38,98,69,ES_MULTILINE | ES_AUTOVSCROLL | 
+                    ES_WANTRETURN
+    LTEXT           "Background image:",IDC_STATIC,7,3,60,8
+    LTEXT           "Track description:",IDC_STATIC,7,28,61,8
+END
+
+IDD_SCALE_SELECTION DIALOG DISCARDABLE  0, 0, 144, 65
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Selection Scaling"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        IDC_SCALE,16,23,40,14,ES_AUTOHSCROLL | ES_NUMBER
+    DEFPUSHBUTTON   "OK",IDOK,87,7,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,87,22,50,14
+    PUSHBUTTON      "Preview",IDC_PREVIEW,87,39,50,14
+    LTEXT           "%",IDC_STATIC,63,25,8,8
+END
+
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,0
+ PRODUCTVERSION 1,0,0,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "00000000"
+        BEGIN
+            VALUE "CompanyName", "GrokkSoft inc.\0"
+            VALUE "FileDescription", "HOVERCAD MFC Application\0"
+            VALUE "FileVersion", "1, 0, 0, 0\0"
+            VALUE "InternalName", "HOVERCAD\0"
+            VALUE "LegalCopyright", "Copyright © 1996\0"
+            VALUE "OriginalFilename", "HOVERCAD.EXE\0"
+            VALUE "ProductName", "HOVERCAD Application\0"
+            VALUE "ProductVersion", "1, 0, 0, 0\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0, 0
+    END
+END
+
+#endif    // !_MAC
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 181
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 48
+    END
+
+    IDD_ATTRIB_TOOL, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 106
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 199
+    END
+
+    IDD_DIALOGBAR, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 323
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 29
+    END
+
+    IDD_ZOOM_BAR, DIALOG
+    BEGIN
+        LEFTMARGIN, 1
+        RIGHTMARGIN, 15
+        TOPMARGIN, 11
+        BOTTOMMARGIN, 82
+    END
+
+    IDD_DOC_ATTR, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 105
+        TOPMARGIN, 3
+        BOTTOMMARGIN, 107
+    END
+
+    IDD_SCALE_SELECTION, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 137
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 58
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Cursor
+//
+
+IDC_POINTER_ROOM        CURSOR  DISCARDABLE     "arrow.cur"
+IDC_POINTER_ZOOM        CURSOR  DISCARDABLE     "res\\pointer_.cur"
+IDC_POINTER_INSERT_OBJECT CURSOR  DISCARDABLE     "res\\cur00003.cur"
+IDC_POINTER_MOVE        CURSOR  DISCARDABLE     "res\\cursor1.cur"
+IDC_POINTER_HAMMER      CURSOR  DISCARDABLE     "res\\cur00005.cur"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE PRELOAD DISCARDABLE 
+BEGIN
+    IDR_MAINFRAME           "HoverCAD(v1.01)"
+    IDR_HCADTYPE            "\nHCad\nHCad\nHCad Files (*.tr)\n.TR\nHCad\nHCad Document"
+END
+
+STRINGTABLE PRELOAD DISCARDABLE 
+BEGIN
+    AFX_IDS_APP_TITLE       "HoverCad"
+    AFX_IDS_IDLEMESSAGE     "Ready"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_INDICATOR_EXT        "EXT"
+    ID_INDICATOR_CAPS       "CAP"
+    ID_INDICATOR_NUM        "NUM"
+    ID_INDICATOR_SCRL       "SCRL"
+    ID_INDICATOR_OVR        "OVR"
+    ID_INDICATOR_REC        "REC"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_FILE_NEW             "Create a new document\nNew"
+    ID_FILE_OPEN            "Open an existing document\nOpen"
+    ID_FILE_CLOSE           "Close the active document\nClose"
+    ID_FILE_SAVE            "Save the active document\nSave"
+    ID_FILE_SAVE_AS         "Save the active document with a new name\nSave As"
+    ID_FILE_PAGE_SETUP      "Change the printing options\nPage Setup"
+    ID_FILE_PRINT_SETUP     "Change the printer and printing options\nPrint Setup"
+    ID_FILE_PRINT           "Print the active document\nPrint"
+    ID_FILE_PRINT_PREVIEW   "Display full pages\nPrint Preview"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_APP_ABOUT            "Display program information, version number and copyright\nAbout"
+    ID_APP_EXIT             "Quit the application; prompts to save documents\nExit"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_FILE_MRU_FILE1       "Open this document"
+    ID_FILE_MRU_FILE2       "Open this document"
+    ID_FILE_MRU_FILE3       "Open this document"
+    ID_FILE_MRU_FILE4       "Open this document"
+    ID_FILE_MRU_FILE5       "Open this document"
+    ID_FILE_MRU_FILE6       "Open this document"
+    ID_FILE_MRU_FILE7       "Open this document"
+    ID_FILE_MRU_FILE8       "Open this document"
+    ID_FILE_MRU_FILE9       "Open this document"
+    ID_FILE_MRU_FILE10      "Open this document"
+    ID_FILE_MRU_FILE11      "Open this document"
+    ID_FILE_MRU_FILE12      "Open this document"
+    ID_FILE_MRU_FILE13      "Open this document"
+    ID_FILE_MRU_FILE14      "Open this document"
+    ID_FILE_MRU_FILE15      "Open this document"
+    ID_FILE_MRU_FILE16      "Open this document"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_NEXT_PANE            "Switch to the next window pane\nNext Pane"
+    ID_PREV_PANE            "Switch back to the previous window pane\nPrevious Pane"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_WINDOW_NEW           "Open another window for the active document\nNew Window"
+    ID_WINDOW_ARRANGE       "Arrange icons at the bottom of the window\nArrange Icons"
+    ID_WINDOW_CASCADE       "Arrange windows so they overlap\nCascade Windows"
+    ID_WINDOW_TILE_HORZ     "Arrange windows as non-overlapping tiles\nTile Windows"
+    ID_WINDOW_TILE_VERT     "Arrange windows as non-overlapping tiles\nTile Windows"
+    ID_WINDOW_SPLIT         "Split the active window into panes\nSplit"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_EDIT_CLEAR           "Erase the selection\nErase"
+    ID_EDIT_CLEAR_ALL       "Erase everything\nErase All"
+    ID_EDIT_COPY            "Copy the selection and put it on the Clipboard\nCopy"
+    ID_EDIT_CUT             "Cut the selection and put it on the Clipboard\nCut"
+    ID_EDIT_FIND            "Find the specified text\nFind"
+    ID_EDIT_PASTE           "Insert Clipboard contents\nPaste"
+    ID_EDIT_REPEAT          "Repeat the last action\nRepeat"
+    ID_EDIT_REPLACE         "Replace specific text with different text\nReplace"
+    ID_EDIT_SELECT_ALL      "Select the entire document\nSelect All"
+    ID_EDIT_UNDO            "Undo the last action\nUndo"
+    ID_EDIT_REDO            "Redo the previously undone action\nRedo"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_VIEW_TOOLBAR         "Show or hide the standard toolbar\nToggle Standard ToolBar"
+    ID_VIEW_STATUS_BAR      "Show or hide the status bar\nToggle StatusBar"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    AFX_IDS_SCSIZE          "Change the window size"
+    AFX_IDS_SCMOVE          "Change the window position"
+    AFX_IDS_SCMINIMIZE      "Reduce the window to an icon"
+    AFX_IDS_SCMAXIMIZE      "Enlarge the window to full size"
+    AFX_IDS_SCNEXTWINDOW    "Switch to the next document window"
+    AFX_IDS_SCPREVWINDOW    "Switch to the previous document window"
+    AFX_IDS_SCCLOSE         "Close the active window and prompts to save the documents"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    AFX_IDS_SCRESTORE       "Restore the window to normal size"
+    AFX_IDS_SCTASKLIST      "Activate Task List"
+    AFX_IDS_MDICHILD        "Activate this window"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    AFX_IDS_PREVIEW_CLOSE   "Close print preview mode\nCancel Preview"
+    IDS_NONE                "[none]"
+    IDS_GRAY_WALL           "Gray Wall"
+    IDS_WALL_TOP            "Wall Top"
+    IDS_RIGHT_GRAY_ARROW    "Right Gray Arrow"
+    IDS_LEFT_GRAY_ARROW     "Left Gray Arrow"
+    IDS_RIGHT_RED_ARROW     "Right Red Arrow"
+    IDS_LEFT_RED_ARROW      "Left Red Arrow"
+    IDS_RIGHT_GREEN_ARROW   "Right Green Arrow"
+    IDS_LEFT_GREEN_ARROW    "Left Green Arrow"
+    IDS_RIGHT_YELLOW_NEON   "Right Yellow Neon"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_BUTTON32771          "Select"
+    ID_BUTTON32772          "Zoom"
+    ID_BUTTON32773          "Creaate section"
+    ID_BUTTON32774          "Split section"
+    ID_BUTTON32775          "Insert node"
+    ID_INSERT_OBJECT        "Insert object"
+    IDC_SELECT              "Select"
+    IDC_ZOOM                "Zoom (Left Zoom in, Right zoom-out)"
+    IDC_ROOM                "Add track section"
+    IDC_SPLIT_ROOM          "Split track section"
+    ID_INSERT_NODE          "Inster node"
+    IDC_FEATURE             "Add 3D feature"
+    IDC_INSERT_NODE         "Insert a node on the selected wall (select only 1 wall)(INSERT)"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDC_INSERT_OBJECT       "Insert a starting position or an other object"
+    ID_MOUSE_POS            "    mouse position    "
+    IDC_MOVE_SELECT         "Move selection"
+    IDC_HAMMER              "Move, attach and detach nodes"
+    IDC_CUT                 "Cut the selection (DEL)"
+    ID_CUT_SELECTION        "Cut the selection"
+    IDC_PATH                "Trace a node path(pre-creates nodes)"
+    ID_FILE_COMPILE         "Create the playable track file"
+    ID_VIEW_TOOLS           "Show or hide the tools bar\nToggle Tools Bar"
+    ID_VIEW_SLECTIONATTRIBUTES 
+                            "Show or hide the selected attibutes window\nToggle Selected Attributes Window"
+    ID_VIEW_TRACKATTRIBUTES "Show or hide Track attributes window\nToggle Track attributes window"
+    ID_HELP_HELP            "Display the HoverCAD help file\nHoverCAD Help"
+    ID_EDIT_SCALESELECTION  "Scale the current selection"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_LEFT_YELLOW_NEON    "Left Yellow Neon"
+    IDS_STEP_SIGN           "Step Sign"
+    IDS_PASS_RIGHT          "Pass Right"
+    IDS_PASS_LEFT           "Pass Left"
+    IDS_DONOT_ENTER_S       "Do Not Enter (Small)"
+    IDS_DONOT_ENTER_L       "Do Not Enter (Large)"
+    IDS_WATER               "Water"
+    IDS_SPEED_ZONE          "Speed Zone"
+    IDS_FUEL_ZONE           "Fuel Zone"
+    IDS_YELLOW              "Yellow"
+    IDS_CHECKERS            "Checkers"
+    IDS_PIT_LABEL           "Pit Label"
+    IDS_FINISH_LABEL        "Finish Label"
+    IDS_METAL_PLATE         "Metal Plate"
+    IDS_STARTPOS_1          "Starting Position 1"
+    IDS_STARTPOS_2          "Starting Position 2"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_STARTPOS_3          "Starting Position 3"
+    IDS_STARTPOS_4          "Starting Position 4"
+    IDS_STARTPOS_5          "Starting Position 5"
+    IDS_STARTPOS_6          "Starting Position 6"
+    IDS_STARTPOS_7          "Starting Position 7"
+    IDS_STARTPOS_8          "Starting Position 8"
+    IDS_STARTPOS_9          "Starting Position 9"
+    IDS_STARTPOS_10         "Starting Position 10"
+    IDS_FINISH_LINE         "Finish Line"
+    IDS_CHKPNT_1            "CheckPoint 1"
+    IDS_CHKPNT_2            "CheckPoint 2"
+    IDS_FUEL_SOURCE         "Fuel Source"
+    IDS_SPEED_RAMP          "Speed Ramp"
+    IDS_INFL_COLUMN         "Inflating Column"
+    IDS_MINE                "Mine"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_BOOSTER             "Booster"
+    IDS_BACKGROUND_FILTER   "PCX 128colors (*.pcx)|*.pcx||"
+    IDS_CANNOTRUN_COMPILER  """Unable to run compiler or compiler error"""
+    IDS_DOC_FILTER          "HoverRace track(*.trk)|*.trk||"
+    IDS_MUST_REG            "You must register HoverRace to use this fonction"
+    IDS_STARTPOS_NOTFOUND   "WARNING: Starting position %d not found"
+    IDS_STARTPOS_NOTONTRACK "WARNING: Starting position %d not on track"
+    IDS_WORD_REQ            "To be able to display HoverCAD Help\nyou must have a Word document viewer installed\non your system\n\n"
+    IDS_HELP_ERROR          "HoverCAD Help Error"
+END
+
+#endif    // Neutral (Default) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 9, 1\r\n"
+    "#pragma code_page(1252)\r\n"
+    "#endif\r\n"
+    "#include ""res\\HoverCad.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""afxres.rc""         // Standard components\r\n"
+    "#include ""afxprint.rc""       // printing/print preview resources\r\n"
+    "#endif\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_ZOOM                BITMAP  DISCARDABLE     "res\\zoom.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Cursor
+//
+
+IDC_POINTER_SPLIT_ROOM  CURSOR  DISCARDABLE     "res\\cur00001.cur"
+IDC_POINTER_PATH        CURSOR  DISCARDABLE     "res\\cur00002.cur"
+IDC_POINTER_INSERT_FEATURE CURSOR  DISCARDABLE     "res\\cur00004.cur"
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Neutral (Sys. Default) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_NEUTRAL, SUBLANG_SYS_DEFAULT
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_MAINFRAME ACCELERATORS PRELOAD MOVEABLE PURE 
+BEGIN
+    "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
+    "N",            ID_FILE_NEW,            VIRTKEY, CONTROL, NOINVERT
+    "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL, NOINVERT
+    "P",            ID_FILE_PRINT,          VIRTKEY, CONTROL, NOINVERT
+    "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL, NOINVERT
+    "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL, NOINVERT
+    VK_BACK,        ID_EDIT_UNDO,           VIRTKEY, ALT, NOINVERT
+    VK_F1,          ID_HELP_HELP,           VIRTKEY, NOINVERT
+    VK_F6,          ID_NEXT_PANE,           VIRTKEY, NOINVERT
+    VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT, NOINVERT
+    VK_F7,          ID_FILE_COMPILE,        VIRTKEY, NOINVERT
+    VK_INSERT,      ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
+    VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY, SHIFT, NOINVERT
+    "X",            ID_EDIT_CUT,            VIRTKEY, CONTROL, NOINVERT
+    "Z",            ID_EDIT_UNDO,           VIRTKEY, CONTROL, NOINVERT
+END
+
+#endif    // Neutral (Sys. Default) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE 9, 1
+#pragma code_page(1252)
+#endif
+#include "res\HoverCad.rc2"  // non-Microsoft Visual C++ edited resources
+#include "afxres.rc"         // Standard components
+#include "afxprint.rc"       // printing/print preview resources
+#endif
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

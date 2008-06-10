@@ -1,0 +1,160 @@
+// ObjFac1.fbres
+
+BITMAP bitmaps/etalon.pcx     MR_ETALON    1   1    1
+// BITMAP bitmaps/wood1.pcx      MR_WOOD1     0.9 0.9  1
+// BITMAP bitmaps/red_brick.pcx  MR_RED_BRICK 0.3 0.3  1
+// BITMAP bitmaps/big_brick.pcx  MR_BIG_BRICK 0.7 0.7  1
+// BITMAP bitmaps/FirePat.pcx    MR_FIRE      1   1    1
+
+BITMAP bitmaps/Hyper/StdFloor.pcx          MR_STD_FLOOR            1.5   1.5     1
+BITMAP bitmaps/Hyper/Wallr.pcx             MR_STD_RIGHT_WALL       2   2     1
+BITMAP bitmaps/Hyper/Walll.pcx             MR_STD_LEFT_WALL        2   2     1
+BITMAP bitmaps/Hyper/WallrRed.pcx          MR_RED_RIGHT_WALL       2   2     1
+BITMAP bitmaps/WalllRed.pcx          MR_RED_LEFT_WALL        2   2     1
+BITMAP bitmaps/Hyper/WallrGreen.pcx        MR_GREEN_RIGHT_WALL     2   2     1
+BITMAP bitmaps/WalllGreen.pcx        MR_GREEN_LEFT_WALL      2   2     1
+BITMAP bitmaps/Hyper/WallStep.pcx          MR_STEP_WALL            2.6 2.6   1
+BITMAP bitmaps/WallPassRight.pcx     MR_PASS_RIGHT_WALL      2   2     1
+BITMAP bitmaps/WallPassLeft.pcx      MR_PASS_LEFT_WALL       2   2     1
+BITMAP bitmaps/WallDoNotEnter.pcx    MR_DO_NOT_ENTER_WALL1   1   1     1
+BITMAP bitmaps/WallDoNotEnter.pcx    MR_DO_NOT_ENTER_WALL2   2   2     1
+BITMAP bitmaps/BlueBulb.pcx          MR_BLUE_BUBBLE_FLOOR    1.5 1.5   1
+BITMAP bitmaps/SpeedZone.pcx         MR_SPEED_ZONE           1.3 1.3   1
+BITMAP bitmaps/FuelZone.pcx          MR_FUEL_ZONE            1.2 1.2   1
+// BITMAP bitmaps/StepYellow.pcx        MR_YELLOW_STEP          0.1 0.1   1
+BITMAP bitmaps/Hyper/StepYellow.pcx        MR_YELLOW_STEP          2  2   1
+BITMAP bitmaps/Checker.pcx           MR_CHECKER              0.5 0.5   1
+BITMAP bitmaps/PitWord.pcx           MR_PIT_WORD             3   3     1
+BITMAP bitmaps/FinishWord.pcx        MR_FINISH_WORD          4   4     1
+BITMAP bitmaps/Hyper/WallrRedOff.pcx       MR_RED_RIGHT_WALL_OFF   2   2     1
+BITMAP bitmaps/WalllRedOff.pcx       MR_RED_LEFT_WALL_OFF    2   2     1
+BITMAP bitmaps/Hyper/WallrGreenOff.pcx     MR_GREEN_RIGHT_WALL_OFF 2   2     1
+BITMAP bitmaps/WalllGreenOff.pcx     MR_GREEN_LEFT_WALL_OFF  2   2     1
+// BITMAP bitmaps/Hyper/YellowNeon.pcx        MR_YELLOW_NEON          1   1     1
+// BITMAP bitmaps/Hyper/YellowNeonFlash.pcx   MR_YELLOW_NEON_FLASH    1   1     1
+BITMAP bitmaps/Hyper/YellowNeon.pcx        MR_YELLOW_NEON          2   2     1
+BITMAP bitmaps/Hyper/YellowNeonFlash.pcx   MR_YELLOW_NEON_FLASH    2   2     1
+// BITMAP bitmaps/YellowNeon.pcx        MR_YELLOW_NEON          1   1     1
+BITMAP bitmaps/WallN.pcx             MR_STD_WALL             2   2     1
+BITMAP bitmaps/WallTop.pcx           MR_STD_WALL_TOP         2   2     1
+
+
+
+// BITMAP bitmaps/Ball.pcx       MR_BALL_BMP  1 1  0
+// BITMAP bitmaps/BabeHead.pcx   MR_BABE_HEAD 1 1  0
+// BITMAP bitmaps/BabeBody.pcx   MR_BABE_BODY 1 1  0
+// BITMAP bitmaps/BabeLeg.pcx    MR_BABE_LEG  1 1  0
+
+// BITMAP bitmaps/pope.pcx       MR_POPE      1 1  0
+// BITMAP bitmaps/demoleg.pcx    MR_DEMO_LEG  1 1  0
+// BITMAP bitmaps/demobody.pcx   MR_DEMO_BODY 1 1  0
+// BITMAP bitmaps/demoNose.pcx   MR_DEMO_NOSE 1 1  0
+// BITMAP bitmaps/demoarm.pcx    MR_DEMO_ARM  1 1  0
+// BITMAP bitmaps/demohead.pcx   MR_DEMO_HEAD 1 1  0
+// BITMAP bitmaps/demlfeet.pcx   MR_DEMO_LFEET 1 1 0
+// BITMAP bitmaps/demrfeet.pcx   MR_DEMO_RFEET 1 1 0
+
+BITMAP bitmaps/CarBumper.pcx      MR_CAR_BUMPER       1 1 0
+BITMAP bitmaps/CarCockpit.pcx     MR_CAR_COCKPIT      1 1 0
+BITMAP bitmaps/CarMotor.pcx       MR_CAR_MOTOR        1 1 0
+BITMAP bitmaps/CarMotorArm.pcx    MR_CAR_MOTOR_ARM    1 1 0
+BITMAP bitmaps/CarMotorFire.pcx   MR_CAR_MOTOR_FIRE   1 1 0
+BITMAP bitmaps/CarDriverHead.pcx  MR_CAR_DRIVER_HEAD  1 1 0
+BITMAP bitmaps/CarDriverNeck.pcx  MR_CAR_DRIVER_NECK  1 1 0
+BITMAP bitmaps/CarCockpit21.pcx   MR_CAR2_COCKPIT     1 1 0
+BITMAP bitmaps/CarMotor2.pcx      MR_CAR_MOTOR2       1 1 0
+BITMAP bitmaps/CarMotor3.pcx      MR_CAR_MOTOR3       1 1 0
+BITMAP bitmaps/ECarCockpit2.pcx   MR_ECAR_COCKPIT     1 1 0
+BITMAP bitmaps/ECarMotor.pcx      MR_ECAR_MOTOR       1 1 0
+
+BITMAP bitmaps/CarCockpit1.pcx    MR_CAR_COCKPIT1     1 1 0
+BITMAP bitmaps/CarCockpit2.pcx    MR_CAR_COCKPIT2     1 1 0
+BITMAP bitmaps/CarCockpit3.pcx    MR_CAR_COCKPIT3     1 1 0
+BITMAP bitmaps/CarCockpit4.pcx    MR_CAR_COCKPIT4     1 1 0
+BITMAP bitmaps/CarCockpit5.pcx    MR_CAR_COCKPIT5     1 1 0
+BITMAP bitmaps/CarCockpit6.pcx    MR_CAR_COCKPIT6     1 1 0
+BITMAP bitmaps/CarCockpit7.pcx    MR_CAR_COCKPIT7     1 1 0
+BITMAP bitmaps/CarCockpit8.pcx    MR_CAR_COCKPIT8     1 1 0
+BITMAP bitmaps/CarCockpit9.pcx    MR_CAR_COCKPIT9     1 1 0
+BITMAP bitmaps/CarCockpitX.pcx    MR_CAR_COCKPIT10    1 1 0
+
+BITMAP bitmaps/CarCockpit21.pcx    MR_CAR_COCKPIT21     1 1 0
+BITMAP bitmaps/CarCockpit22.pcx    MR_CAR_COCKPIT22     1 1 0
+BITMAP bitmaps/CarCockpit23.pcx    MR_CAR_COCKPIT23     1 1 0
+BITMAP bitmaps/CarCockpit24.pcx    MR_CAR_COCKPIT24     1 1 0
+BITMAP bitmaps/CarCockpit25.pcx    MR_CAR_COCKPIT25     1 1 0
+BITMAP bitmaps/CarCockpit26.pcx    MR_CAR_COCKPIT26     1 1 0
+BITMAP bitmaps/CarCockpit27.pcx    MR_CAR_COCKPIT27     1 1 0
+BITMAP bitmaps/CarCockpit28.pcx    MR_CAR_COCKPIT28     1 1 0
+BITMAP bitmaps/CarCockpit29.pcx    MR_CAR_COCKPIT29     1 1 0
+BITMAP bitmaps/CarCockpit2X.pcx    MR_CAR_COCKPIT2X     1 1 0
+
+BITMAP bitmaps/ECarCockpit1.pcx    MR_ECAR_COCKPIT1     1 1 0
+BITMAP bitmaps/ECarCockpit2.pcx    MR_ECAR_COCKPIT2     1 1 0
+BITMAP bitmaps/ECarCockpit3.pcx    MR_ECAR_COCKPIT3     1 1 0
+BITMAP bitmaps/ECarCockpit4.pcx    MR_ECAR_COCKPIT4     1 1 0
+BITMAP bitmaps/ECarCockpit5.pcx    MR_ECAR_COCKPIT5     1 1 0
+BITMAP bitmaps/ECarCockpit6.pcx    MR_ECAR_COCKPIT6     1 1 0
+BITMAP bitmaps/ECarCockpit7.pcx    MR_ECAR_COCKPIT7     1 1 0
+BITMAP bitmaps/ECarCockpit8.pcx    MR_ECAR_COCKPIT8     1 1 0
+BITMAP bitmaps/ECarCockpit9.pcx    MR_ECAR_COCKPIT9     1 1 0
+BITMAP bitmaps/ECarCockpitX.pcx    MR_ECAR_COCKPIT10    1 1 0
+
+
+BITMAP bitmaps/MissileBody.pcx    MR_MISSILE_BODY     1 1 0
+BITMAP bitmaps/MissileWing.pcx    MR_MISSILE_WING     1 1 0
+
+BITMAP bitmaps/powerup.pcx        MR_PWRUP_MAP     1 1 0 
+BITMAP bitmaps/mine1.pcx          MR_MINE_OFF      1 1 0 
+BITMAP bitmaps/mine2.pcx          MR_MINE_ON       1 1 0 
+BITMAP bitmaps/bumpergate.pcx     MR_BUMPERGATE_MAP  1 1 0 
+
+
+// BITMAP bitmaps/color/RED.pcx      MR_RED     1  1  0
+// BITMAP bitmaps/color/GREEN.pcx    MR_GREEN   1  1  0
+// BITMAP bitmaps/color/BLUE.pcx     MR_BLUE    1  1  0
+// BITMAP bitmaps/color/YELLOW.pcx   MR_YELLOW  1  1  0
+// BITMAP bitmaps/color/ORANGE.pcx   MR_ORANGE  1  1  0
+// BITMAP bitmaps/color/AQUA.pcx     MR_AQUA    1  1  0
+// BITMAP bitmaps/color/PINK.pcx     MR_PINK    1  1  0
+// BITMAP bitmaps/color/SKIN.pcx     MR_SKIN    1  1  0
+// BITMAP bitmaps/color/RUST.pcx     MR_RUST    1  1  0
+// BITMAP bitmaps/color/BLACK.pcx    MR_BLACK   1  1  0
+// BITMAP bitmaps/color/GRAY.pcx     MR_GRAY    1  1  0
+// BITMAP bitmaps/color/WHITE.pcx    MR_WHITE   1  1  0
+
+
+// ACTOR  objfac1/ball.msh    MR_BALL
+// ACTOR  objfac1/Babe.msh    MR_BABE
+// ACTOR  objfac1/Boxer.msh   MR_BOXER
+// ACTOR  /mesh/demo/demo.msh MR_DEMO_FIGHTER
+ACTOR  /mesh/ElectroCar/ElectroCar.msh MR_ELECTRO_CAR
+ACTOR  /mesh/HiTechCar/HiTechCar.msh   MR_HITECH_CAR
+ACTOR  /mesh/BiTurbo/BiTurbo.msh       MR_BITURBO_CAR
+ACTOR  /mesh/Missile/Missile.msh       MR_MISSILE
+ACTOR  /mesh/bumpergate/bumpergate.msh MR_BUMPERGATE
+ACTOR  /mesh/Mine/mine.msh             MR_MINE
+ACTOR  /mesh/Powerup/powerup.msh       MR_PWRUP
+ACTOR  /mesh/EOnCar/EOnCar.msh         MR_EON_CAR
+
+SPRITE bitmaps/Font1.pcx          MR_FONT1         96
+
+SPRITE bitmaps/MissileStat.pcx    MR_MISSILE_STAT  10
+SPRITE bitmaps/CarIcons.pcx       MR_HOVER_ICONS   10
+SPRITE bitmaps/MineStat.pcx       MR_MINE_STAT      5
+SPRITE bitmaps/Powerupstat.pcx    MR_PWRUP_STAT     9
+
+SHORT_SOUND sounds/CrossLine.wav  MR_SND_LINE_CROSSING     1
+SHORT_SOUND sounds/Start.wav      MR_SND_START             1
+SHORT_SOUND sounds/Finish.wav     MR_SND_FINISH            1
+SHORT_SOUND sounds/Bounce.wav     MR_SND_BUMP              3
+SHORT_SOUND sounds/Jump.wav       MR_SND_JUMP              2
+SHORT_SOUND sounds/Fire.wav       MR_SND_FIRE              2
+SHORT_SOUND sounds/MisJump.wav    MR_SND_MIS_JUMP          1
+SHORT_SOUND sounds/MisFire.wav    MR_SND_MIS_FIRE          1
+SHORT_SOUND sounds/OutOfCtrl.wav  MR_SND_OUT_OF_CTRL       1
+CONT_SOUND  sounds/Motor.wav      MR_SND_MOTOR             2
+CONT_SOUND  sounds/Wind.wav       MR_SND_FRICTION          2
+
+CONT_SOUND  sounds/MissileMotor.wav   MR_SND_MISSILE_MOTOR    1
+SHORT_SOUND sounds/MissileBounce.wav  MR_SND_MISSILE_BOUNCE   2
