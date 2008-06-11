@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding = "Windows-1252"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.00"
+	Version="7.10"
 	Name="VideoServices"
 	ProjectGUID="{158869E8-53E8-4DC1-B41F-B1C996211E2B}"
 	SccProjectName=""
@@ -23,7 +23,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="\gdk\sdk\inc"
+				AdditionalIncludeDirectories="&quot;C:\Program Files\Microsoft Visual Studio .NET 2003\SDK\v1.1\Lib&quot;;\gdk\sdk\inc"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;MR_VIDEO_SERVICES"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
@@ -35,14 +35,14 @@
 				ProgramDataBaseFileName=".\Debug/"
 				WarningLevel="4"
 				SuppressStartupBanner="TRUE"
-				DebugInformationFormat="4"
+				DebugInformationFormat="0"
 				CompileAs="0"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="\gdk\sdk\lib\ddraw.lib \gdk\sdk\lib\dsound.lib winmm.lib"
+				AdditionalDependencies="ddraw.lib dsound.lib winmm.lib"
 				OutputFile=".\..\Debug/VideoServices.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
@@ -70,7 +70,13 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
@@ -128,9 +134,17 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
+	<References>
+	</References>
 	<Files>
 		<Filter
 			Name="Source Files"
@@ -192,6 +206,37 @@
 			</File>
 			<File
 				RelativePath=".\VideoBuffer2DDraw.cpp">
+			</File>
+		</Filter>
+		<Filter
+			Name="Header Files"
+			Filter="">
+			<File
+				RelativePath=".\2DViewport.h">
+			</File>
+			<File
+				RelativePath=".\3DViewport.h">
+			</File>
+			<File
+				RelativePath=".\Bitmap.h">
+			</File>
+			<File
+				RelativePath=".\ColorPalette.h">
+			</File>
+			<File
+				RelativePath=".\Patch.h">
+			</File>
+			<File
+				RelativePath=".\SoundServer.h">
+			</File>
+			<File
+				RelativePath=".\Sprite.h">
+			</File>
+			<File
+				RelativePath=".\StdAfx.h">
+			</File>
+			<File
+				RelativePath=".\VideoBuffer.h">
 			</File>
 		</Filter>
 	</Files>

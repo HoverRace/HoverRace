@@ -172,7 +172,7 @@ BOOL MR_GetActorForceLongitude( const MR_ShapeInterface* pActor, const MR_ShapeI
    int lX1 = pObstacle->XPos();
    int lY1 = pObstacle->YPos();
 
-   pLongitude = RAD_2_MR_ANGLE( atan2( lY0-lY1, lX0-lX1 ) );
+   pLongitude = RAD_2_MR_ANGLE( atan2((double) lY0-lY1, (double) lX0-lX1 ) );
    return TRUE;
 }
 
@@ -229,7 +229,7 @@ BOOL MR_GetFeatureForceLongitude( const MR_ShapeInterface* pActor, const MR_Poly
          // TODO (Wrong method)
          int lP1 = (lForceWall+1)%lVertexCount;
 
-         pLongitude = RAD_2_MR_ANGLE( atan2( pFeature->X(lP1)-pFeature->X(lForceWall), pFeature->Y(lForceWall)-pFeature->Y(lP1) ) );
+         pLongitude = RAD_2_MR_ANGLE( atan2((double) pFeature->X(lP1)-pFeature->X(lForceWall), (double) pFeature->Y(lForceWall)-pFeature->Y(lP1) ) );
 
       }
       else
@@ -237,7 +237,7 @@ BOOL MR_GetFeatureForceLongitude( const MR_ShapeInterface* pActor, const MR_Poly
          // Compute vertor based on the hitted wall
          int lP1 = (lForceWall+1)%lVertexCount;
 
-         pLongitude = RAD_2_MR_ANGLE( atan2( pFeature->X(lP1)-pFeature->X(lForceWall), pFeature->Y(lForceWall)-pFeature->Y(lP1) ) );
+         pLongitude = RAD_2_MR_ANGLE( atan2((double) pFeature->X(lP1)-pFeature->X(lForceWall), (double) pFeature->Y(lForceWall)-pFeature->Y(lP1) ) );
       }
    }
 
@@ -249,7 +249,7 @@ BOOL MR_GetWallForceLongitude(  const MR_ShapeInterface* /*pActor*/, const MR_Po
    // return a vector perpendicular to the selected wall
    int lP1 = (pWallIndex+1)%pRoom->VertexCount();
 
-   pLongitude = RAD_2_MR_ANGLE( atan2( -(pRoom->X( lP1 )-pRoom->X( pWallIndex )), pRoom->Y( lP1 )-pRoom->Y( pWallIndex ) ) );
+   pLongitude = RAD_2_MR_ANGLE( atan2((double) -(pRoom->X( lP1 )-pRoom->X( pWallIndex )), (double) pRoom->Y( lP1 )-pRoom->Y( pWallIndex ) ) );
 
    return TRUE;
 }

@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding = "Windows-1252"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.00"
+	Version="7.10"
 	Name="ObjFac1"
 	ProjectGUID="{8BE4FCF2-13E7-4F11-8EBE-4C46F2E7BF8A}"
 	SccProjectName=""
@@ -71,7 +71,13 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
@@ -128,16 +134,21 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
+	<References>
+	</References>
 	<Files>
 		<Filter
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;hpj;bat;for;f90">
-			<File
-				RelativePath=".\BabeElement.cpp">
-			</File>
 			<File
 				RelativePath=".\BallElement.cpp">
 			</File>
@@ -163,6 +174,9 @@
 				RelativePath=".\HoverRender.cpp">
 			</File>
 			<File
+				RelativePath=".\main.cpp">
+			</File>
+			<File
 				RelativePath=".\Mine.cpp">
 			</File>
 			<File
@@ -180,10 +194,62 @@
 			<File
 				RelativePath=".\WoodSurface.cpp">
 			</File>
+		</Filter>
+		<Filter
+			Name="Header Files"
+			Filter="">
 			<File
-				RelativePath=".\main.cpp">
+				RelativePath=".\BallElement.h">
+			</File>
+			<File
+				RelativePath=".\BumperGate.h">
+			</File>
+			<File
+				RelativePath=".\DefaultSurface.h">
+			</File>
+			<File
+				RelativePath=".\DoubleSpeedSource.h">
+			</File>
+			<File
+				RelativePath=".\FinishLine.h">
+			</File>
+			<File
+				RelativePath=".\FuelSource.h">
+			</File>
+			<File
+				RelativePath=".\gate.h">
+			</File>
+			<File
+				RelativePath=".\GenericRenderer.h">
+			</File>
+			<File
+				RelativePath=".\HoverRender.h">
+			</File>
+			<File
+				RelativePath=".\Mine.h">
+			</File>
+			<File
+				RelativePath=".\Missile.h">
+			</File>
+			<File
+				RelativePath=".\ObjFac1Res.h">
+			</File>
+			<File
+				RelativePath=".\PowerUp.h">
+			</File>
+			<File
+				RelativePath=".\StdAfx.h">
+			</File>
+			<File
+				RelativePath=".\TestElement.h">
+			</File>
+			<File
+				RelativePath=".\WoodSurface.h">
 			</File>
 		</Filter>
+		<File
+			RelativePath=".\ObjFac1.fbres">
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

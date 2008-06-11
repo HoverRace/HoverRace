@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding = "Windows-1252"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.00"
+	Version="7.10"
 	Name="Model"
 	ProjectGUID="{C0254587-DA7D-4338-9ECB-B614B05E5E1A}"
 	SccProjectName=""
@@ -68,7 +68,13 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
@@ -126,9 +132,17 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
+	<References>
+	</References>
 	<Files>
 		<Filter
 			Name="Source Files"
@@ -162,6 +176,49 @@
 			</File>
 			<File
 				RelativePath=".\StdAfx.cpp">
+			</File>
+		</Filter>
+		<Filter
+			Name="Header Files"
+			Filter="">
+			<File
+				RelativePath=".\ActorPool.h">
+			</File>
+			<File
+				RelativePath=".\ConcreteShape.h">
+			</File>
+			<File
+				RelativePath=".\ContactEffect.h">
+			</File>
+			<File
+				RelativePath=".\FreeElementMovingHelper.h">
+			</File>
+			<File
+				RelativePath=".\GameSession.h">
+			</File>
+			<File
+				RelativePath=".\Level.h">
+			</File>
+			<File
+				RelativePath=".\MazeElement.h">
+			</File>
+			<File
+				RelativePath=".\ModelClass.h">
+			</File>
+			<File
+				RelativePath=".\PhysicalCollision.h">
+			</File>
+			<File
+				RelativePath=".\RaceEffects.h">
+			</File>
+			<File
+				RelativePath=".\ShapeCollisions.h">
+			</File>
+			<File
+				RelativePath=".\Shapes.h">
+			</File>
+			<File
+				RelativePath=".\StdAfx.h">
 			</File>
 		</Filter>
 	</Files>

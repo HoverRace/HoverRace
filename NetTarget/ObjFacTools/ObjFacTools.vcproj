@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding = "Windows-1252"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.00"
+	Version="7.10"
 	Name="ObjFacTools"
 	ProjectGUID="{9A391771-FAFF-4D9D-9F6A-8AD3A9F73CA3}"
 	SccProjectName=""
@@ -67,7 +67,13 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
@@ -124,9 +130,17 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
+	<References>
+	</References>
 	<Files>
 		<Filter
 			Name="Source Files"
@@ -150,19 +164,59 @@
 				RelativePath=".\ResBitmap.cpp">
 			</File>
 			<File
+				RelativePath=".\ResourceLib.cpp">
+			</File>
+			<File
 				RelativePath=".\ResSound.cpp">
 			</File>
 			<File
 				RelativePath=".\ResSprite.cpp">
 			</File>
 			<File
-				RelativePath=".\ResourceLib.cpp">
-			</File>
-			<File
 				RelativePath=".\SpriteHandle.cpp">
 			</File>
 			<File
 				RelativePath=".\StdAfx.cpp">
+			</File>
+		</Filter>
+		<Filter
+			Name="Header Files"
+			Filter="">
+			<File
+				RelativePath=".\BitmapSurface.h">
+			</File>
+			<File
+				RelativePath=".\FreeElementBase.h">
+			</File>
+			<File
+				RelativePath=".\FreeElementBaseRenderer.h">
+			</File>
+			<File
+				RelativePath=".\MovementSpec.h">
+			</File>
+			<File
+				RelativePath=".\ObjectFactoryData.h">
+			</File>
+			<File
+				RelativePath=".\ResActor.h">
+			</File>
+			<File
+				RelativePath=".\ResBitmap.h">
+			</File>
+			<File
+				RelativePath=".\ResourceLib.h">
+			</File>
+			<File
+				RelativePath=".\ResSound.h">
+			</File>
+			<File
+				RelativePath=".\ResSprite.h">
+			</File>
+			<File
+				RelativePath=".\SpriteHandle.h">
+			</File>
+			<File
+				RelativePath=".\StdAfx.h">
 			</File>
 		</Filter>
 	</Files>

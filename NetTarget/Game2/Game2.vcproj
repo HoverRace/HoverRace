@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding = "Windows-1252"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.00"
+	Version="7.10"
 	Name="Game2"
 	ProjectGUID="{CDE9F9FA-DD28-46A6-811E-EFA85A111289}"
 	SccProjectName=""
@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="\msdev\lib\Vfw32.lib vfw32.lib wsock32.lib winmm.lib"
+				AdditionalDependencies="Vfw32.lib vfw32.lib wsock32.lib winmm.lib"
 				OutputFile=".\..\Debug/Game2.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
@@ -68,7 +68,13 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
@@ -125,9 +131,17 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
+	<References>
+	</References>
 	<Files>
 		<Filter
 			Name="Source Files"
@@ -154,6 +168,9 @@
 				RelativePath=".\License.cpp">
 			</File>
 			<File
+				RelativePath=".\main.cpp">
+			</File>
+			<File
 				RelativePath=".\MatchReport.cpp">
 			</File>
 			<File
@@ -174,8 +191,51 @@
 			<File
 				RelativePath=".\TrackSelect.cpp">
 			</File>
+		</Filter>
+		<Filter
+			Name="Header Files"
+			Filter="">
 			<File
-				RelativePath=".\main.cpp">
+				RelativePath=".\Banner.h">
+			</File>
+			<File
+				RelativePath=".\ClientSession.h">
+			</File>
+			<File
+				RelativePath=".\CommonDialog.h">
+			</File>
+			<File
+				RelativePath=".\GameApp.h">
+			</File>
+			<File
+				RelativePath=".\InternetRoom.h">
+			</File>
+			<File
+				RelativePath=".\License.h">
+			</File>
+			<File
+				RelativePath=".\MatchReport.h">
+			</File>
+			<File
+				RelativePath=".\NetInterface.h">
+			</File>
+			<File
+				RelativePath=".\NetworkSession.h">
+			</File>
+			<File
+				RelativePath=".\Observer.h">
+			</File>
+			<File
+				RelativePath=".\Security.h">
+			</File>
+			<File
+				RelativePath=".\Sponsor.h">
+			</File>
+			<File
+				RelativePath=".\StdAfx.h">
+			</File>
+			<File
+				RelativePath=".\TrackSelect.h">
 			</File>
 		</Filter>
 		<File

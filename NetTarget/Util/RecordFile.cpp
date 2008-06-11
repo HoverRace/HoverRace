@@ -378,9 +378,9 @@ void MR_RecordFile::SelectRecord( int pRecordNumber )
    }
 }
 
-DWORD MR_RecordFile::GetPosition() const
+ULONGLONG MR_RecordFile::GetPosition() const
 {
-   DWORD lReturnValue = CFile::GetPosition();
+   ULONGLONG lReturnValue = CFile::GetPosition();
 
    if( (mTable != NULL)&&(mCurrentRecord >= 0 ))
    {
@@ -438,12 +438,12 @@ void MR_RecordFile::SetLength( DWORD )
    AfxThrowNotSupportedException();
 }
 
-DWORD MR_RecordFile::GetLength() const
+ULONGLONG MR_RecordFile::GetLength() const
 {
    ASSERT_VALID( this );
    ASSERT( !mConstructionMode );
 
-   DWORD lReturnValue = CFile::GetLength();
+   ULONGLONG lReturnValue = CFile::GetLength();
 
    if( mCurrentRecord >= 0 )
    {

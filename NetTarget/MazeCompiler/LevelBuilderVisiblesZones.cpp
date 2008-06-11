@@ -31,7 +31,7 @@
 // Usefull constants
 #define MR_MAX_VISIBLE_ZONES   500
 
-static const double Pi = fabs( atan2( 0, -1 ));
+static const double Pi = fabs(atan2((double) 0, (double) -1 ));
 
 // Usefull local structures
 class MR_2DFloatPos

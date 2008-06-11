@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding = "Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="7.00"
 	Name="MazeCompiler"
 	ProjectGUID="{BE113900-CEB8-4289-91A9-930B145BF0E8}"
 	SccProjectName=""
@@ -65,13 +65,7 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
 				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
@@ -125,17 +119,9 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
 				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
-	<References>
-	</References>
 	<Files>
 		<Filter
 			Name="Source Files"
@@ -145,9 +131,6 @@
 			</File>
 			<File
 				RelativePath=".\LevelBuilderVisiblesZones.cpp">
-			</File>
-			<File
-				RelativePath=".\main.cpp">
 			</File>
 			<File
 				RelativePath=".\MazeCompiler.rc">
@@ -161,27 +144,8 @@
 			<File
 				RelativePath=".\TrackMap.cpp">
 			</File>
-		</Filter>
-		<Filter
-			Name="Header Files"
-			Filter="">
 			<File
-				RelativePath=".\LevelBuilder.h">
-			</File>
-			<File
-				RelativePath=".\Parser.h">
-			</File>
-			<File
-				RelativePath=".\resource.h">
-			</File>
-			<File
-				RelativePath=".\StdAfx.h">
-			</File>
-			<File
-				RelativePath=".\TrackCommonStuff.h">
-			</File>
-			<File
-				RelativePath=".\TrackMap.h">
+				RelativePath=".\main.cpp">
 			</File>
 		</Filter>
 	</Files>

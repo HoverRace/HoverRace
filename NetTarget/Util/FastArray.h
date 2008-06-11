@@ -54,12 +54,16 @@ template <class pType> class MR_FastArrayBase
 
 };
 
-template <class pType> class FastArray:public MR_FastArrayBase< pType >
+template <class pType> class MR_FastArray : public MR_FastArrayBase<class pType>
 {
    public:
-      MR_FastArray<pType>( int pSize ):MR_FastArrayBase<pType>( pSize, new pType[ pSize ] ){};
-      ~MR_FastArray()<pType>;                                  { delete []mArray; };
-
+	  MR_FastArray(int pSize)
+	  {
+	  
+	  };
+      ~MR_FastArray() { 
+		delete []mArray; 
+	  };
 };
 
 

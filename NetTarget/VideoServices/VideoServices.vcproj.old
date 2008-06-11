@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding = "Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
-	Name="MazeCompiler"
-	ProjectGUID="{BE113900-CEB8-4289-91A9-930B145BF0E8}"
+	Version="7.00"
+	Name="VideoServices"
+	ProjectGUID="{158869E8-53E8-4DC1-B41F-B1C996211E2B}"
 	SccProjectName=""
 	SccLocalPath=""
 	Keyword="MFCProj">
@@ -16,7 +16,7 @@
 			Name="Debug|Win32"
 			OutputDirectory=".\..\Debug"
 			IntermediateDirectory=".\Debug"
-			ConfigurationType="1"
+			ConfigurationType="2"
 			UseOfMFC="2"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
 			CharacterSet="2">
@@ -24,12 +24,12 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="\gdk\sdk\inc"
-				PreprocessorDefinitions="_DEBUG;_CONSOLE;WIN32"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;MR_VIDEO_SERVICES"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="stdafx.h"
-				PrecompiledHeaderFile=".\Debug/MazeCompiler.pch"
+				PrecompiledHeaderFile=".\Debug/VideoServices.pch"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
@@ -42,16 +42,21 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				OutputFile=".\..\Debug/MazeCompiler.exe"
+				AdditionalDependencies="\gdk\sdk\lib\ddraw.lib \gdk\sdk\lib\dsound.lib winmm.lib"
+				OutputFile=".\..\Debug/VideoServices.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\..\Debug/MazeCompiler.pdb"
-				SubSystem="1"/>
+				ProgramDatabaseFile=".\..\Debug/VideoServices.pdb"
+				SubSystem="2"
+				ImportLibrary=".\..\Debug/VideoServices.lib"/>
 			<Tool
 				Name="VCMIDLTool"
+				PreprocessorDefinitions="_DEBUG"
 				MkTypLibCompatible="TRUE"
-				TypeLibraryName=".\..\Debug/MazeCompiler.tlb"/>
+				SuppressStartupBanner="TRUE"
+				TargetEnvironment="1"
+				TypeLibraryName=".\..\Debug/VideoServices.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
@@ -65,19 +70,13 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
 				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory=".\..\Release"
 			IntermediateDirectory=".\Release"
-			ConfigurationType="1"
+			ConfigurationType="2"
 			UseOfMFC="2"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
 			CharacterSet="2">
@@ -85,14 +84,12 @@
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="\gdk\sdk\inc"
-				PreprocessorDefinitions="_CONSOLE;WIN32"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;MR_VIDEO_SERVICES"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="2"
-				PrecompiledHeaderThrough="stdafx.h"
-				PrecompiledHeaderFile=".\Release/MazeCompiler.pch"
+				PrecompiledHeaderFile=".\Release/VideoServices.pch"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
@@ -104,15 +101,20 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				OutputFile=".\..\Release/MazeCompiler.exe"
-				LinkIncremental="2"
+				AdditionalDependencies="\gdk\sdk\lib\ddraw.lib \gdk\sdk\lib\dsound.lib winmm.lib"
+				OutputFile=".\..\Release/VideoServices.dll"
+				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				ProgramDatabaseFile=".\..\Release/MazeCompiler.pdb"
-				SubSystem="1"/>
+				ProgramDatabaseFile=".\..\Release/VideoServices.pdb"
+				SubSystem="2"
+				ImportLibrary=".\..\Release/VideoServices.lib"/>
 			<Tool
 				Name="VCMIDLTool"
+				PreprocessorDefinitions="NDEBUG"
 				MkTypLibCompatible="TRUE"
-				TypeLibraryName=".\..\Release/MazeCompiler.tlb"/>
+				SuppressStartupBanner="TRUE"
+				TargetEnvironment="1"
+				TypeLibraryName=".\..\Release/VideoServices.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
@@ -121,67 +123,75 @@
 				Name="VCPreLinkEventTool"/>
 			<Tool
 				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_AFXDLL;NDEBUG"
 				Culture="1033"/>
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
 				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
-	<References>
-	</References>
 	<Files>
 		<Filter
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;hpj;bat;for;f90">
 			<File
-				RelativePath=".\LevelBuilder.cpp">
+				RelativePath=".\2DViewPort.cpp">
 			</File>
 			<File
-				RelativePath=".\LevelBuilderVisiblesZones.cpp">
+				RelativePath=".\3DViewport.cpp">
 			</File>
 			<File
-				RelativePath=".\main.cpp">
+				RelativePath=".\3DViewportRendering.cpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						Optimization="3"
+						InlineFunctionExpansion="1"
+						EnableIntrinsicFunctions="TRUE"
+						FavorSizeOrSpeed="1"
+						OmitFramePointers="TRUE"
+						ExceptionHandling="FALSE"
+						RuntimeTypeInfo="FALSE"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						Optimization="3"
+						GlobalOptimizations="TRUE"
+						InlineFunctionExpansion="2"
+						EnableIntrinsicFunctions="TRUE"
+						FavorSizeOrSpeed="1"
+						OmitFramePointers="TRUE"
+						ExceptionHandling="FALSE"
+						RuntimeTypeInfo="FALSE"/>
+				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\MazeCompiler.rc">
+				RelativePath=".\Bitmap.cpp">
 			</File>
 			<File
-				RelativePath=".\Parser.cpp">
+				RelativePath=".\ColorPalette.cpp">
+			</File>
+			<File
+				RelativePath=".\ColorTab.cpp">
+			</File>
+			<File
+				RelativePath=".\SoundServer.cpp">
+			</File>
+			<File
+				RelativePath=".\Sprite.cpp">
 			</File>
 			<File
 				RelativePath=".\StdAfx.cpp">
 			</File>
 			<File
-				RelativePath=".\TrackMap.cpp">
-			</File>
-		</Filter>
-		<Filter
-			Name="Header Files"
-			Filter="">
-			<File
-				RelativePath=".\LevelBuilder.h">
+				RelativePath=".\VideoBuffer.cpp">
 			</File>
 			<File
-				RelativePath=".\Parser.h">
-			</File>
-			<File
-				RelativePath=".\resource.h">
-			</File>
-			<File
-				RelativePath=".\StdAfx.h">
-			</File>
-			<File
-				RelativePath=".\TrackCommonStuff.h">
-			</File>
-			<File
-				RelativePath=".\TrackMap.h">
+				RelativePath=".\VideoBuffer2DDraw.cpp">
 			</File>
 		</Filter>
 	</Files>

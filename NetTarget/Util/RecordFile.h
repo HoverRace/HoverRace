@@ -70,7 +70,7 @@ class MR_RecordFile: public CFile
       MR_DllDeclare int  GetCurrentRecordNumber()const;
       
       // Overrided CFile operations
-	   MR_DllDeclare DWORD GetPosition() const;
+	   MR_DllDeclare ULONGLONG GetPosition() const;
 	   MR_DllDeclare CString GetFileTitle() const;
 
       MR_DllDeclare BOOL   Open(LPCTSTR lpszFileName, UINT nOpenFlags, CFileException* pError = NULL);
@@ -78,7 +78,7 @@ class MR_RecordFile: public CFile
 
 	   MR_DllDeclare LONG Seek(LONG lOff, UINT nFrom);
 	   MR_DllDeclare void SetLength(DWORD dwNewLen);
-	   MR_DllDeclare DWORD GetLength() const;
+	   MR_DllDeclare ULONGLONG GetLength() const;
 
 	   MR_DllDeclare UINT Read(void* lpBuf, UINT nCount);
 	   MR_DllDeclare void Write( const void* lpBuf, UINT nCount);

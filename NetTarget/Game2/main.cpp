@@ -26,7 +26,7 @@
 
 
 // Entry point
-int WINAPI WinMain( HINSTANCE pInstance, HINSTANCE pPrevInstance, LPSTR /*pCmdLine*/,int pCmdShow )
+int WINAPI WinMain( HINSTANCE pInstance, HINSTANCE pPrevInstance, LPSTR /* pCmdLine */, int pCmdShow )
 {
     
     BOOL lReturnValue = TRUE;

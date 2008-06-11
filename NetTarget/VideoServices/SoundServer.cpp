@@ -203,7 +203,7 @@ BOOL MR_SoundBuffer::Init( const char* pData, int pNbCopy )
    lWaveFormat->cbSize = 0;
 
    lDesc.dwSize        = sizeof( lDesc );
-   lDesc.dwFlags       = DSBCAPS_CTRLDEFAULT|DSBCAPS_STATIC;
+   lDesc.dwFlags       = DSBCAPS_CTRLPAN | DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLFREQUENCY | DSBCAPS_STATIC;
    lDesc.dwReserved    = 0;
    lDesc.dwBufferBytes = lBufferLen;
    lDesc.lpwfxFormat   = lWaveFormat;

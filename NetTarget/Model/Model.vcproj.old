@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding = "Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
-	Name="MazeCompiler"
-	ProjectGUID="{BE113900-CEB8-4289-91A9-930B145BF0E8}"
+	Version="7.00"
+	Name="Model"
+	ProjectGUID="{C0254587-DA7D-4338-9ECB-B614B05E5E1A}"
 	SccProjectName=""
 	SccLocalPath=""
 	Keyword="MFCProj">
@@ -16,7 +16,7 @@
 			Name="Debug|Win32"
 			OutputDirectory=".\..\Debug"
 			IntermediateDirectory=".\Debug"
-			ConfigurationType="1"
+			ConfigurationType="2"
 			UseOfMFC="2"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
 			CharacterSet="2">
@@ -24,12 +24,10 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="\gdk\sdk\inc"
-				PreprocessorDefinitions="_DEBUG;_CONSOLE;WIN32"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;MR_MODEL"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="2"
-				PrecompiledHeaderThrough="stdafx.h"
-				PrecompiledHeaderFile=".\Debug/MazeCompiler.pch"
+				PrecompiledHeaderFile=".\Debug/Model.pch"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
@@ -42,16 +40,21 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				OutputFile=".\..\Debug/MazeCompiler.exe"
+				AdditionalDependencies="winmm.lib"
+				OutputFile=".\..\Debug/Model.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\..\Debug/MazeCompiler.pdb"
-				SubSystem="1"/>
+				ProgramDatabaseFile=".\..\Debug/Model.pdb"
+				SubSystem="2"
+				ImportLibrary=".\..\Debug/Model.lib"/>
 			<Tool
 				Name="VCMIDLTool"
+				PreprocessorDefinitions="_DEBUG"
 				MkTypLibCompatible="TRUE"
-				TypeLibraryName=".\..\Debug/MazeCompiler.tlb"/>
+				SuppressStartupBanner="TRUE"
+				TargetEnvironment="1"
+				TypeLibraryName=".\..\Debug/Model.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
@@ -65,19 +68,13 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
 				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory=".\..\Release"
 			IntermediateDirectory=".\Release"
-			ConfigurationType="1"
+			ConfigurationType="2"
 			UseOfMFC="2"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
 			CharacterSet="2">
@@ -85,14 +82,12 @@
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="\gdk\sdk\inc"
-				PreprocessorDefinitions="_CONSOLE;WIN32"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;MR_MODEL"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="2"
-				PrecompiledHeaderThrough="stdafx.h"
-				PrecompiledHeaderFile=".\Release/MazeCompiler.pch"
+				PrecompiledHeaderFile=".\Release/Model.pch"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
@@ -104,15 +99,20 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				OutputFile=".\..\Release/MazeCompiler.exe"
-				LinkIncremental="2"
+				AdditionalDependencies="winmm.lib"
+				OutputFile=".\..\Release/Model.dll"
+				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				ProgramDatabaseFile=".\..\Release/MazeCompiler.pdb"
-				SubSystem="1"/>
+				ProgramDatabaseFile=".\..\Release/Model.pdb"
+				SubSystem="2"
+				ImportLibrary=".\..\Release/Model.lib"/>
 			<Tool
 				Name="VCMIDLTool"
+				PreprocessorDefinitions="NDEBUG"
 				MkTypLibCompatible="TRUE"
-				TypeLibraryName=".\..\Release/MazeCompiler.tlb"/>
+				SuppressStartupBanner="TRUE"
+				TargetEnvironment="1"
+				TypeLibraryName=".\..\Release/Model.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
@@ -121,67 +121,47 @@
 				Name="VCPreLinkEventTool"/>
 			<Tool
 				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_AFXDLL;NDEBUG"
 				Culture="1033"/>
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
 				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
-	<References>
-	</References>
 	<Files>
 		<Filter
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;hpj;bat;for;f90">
 			<File
-				RelativePath=".\LevelBuilder.cpp">
+				RelativePath=".\ConcreteShape.cpp">
 			</File>
 			<File
-				RelativePath=".\LevelBuilderVisiblesZones.cpp">
+				RelativePath=".\ContactEffect.cpp">
 			</File>
 			<File
-				RelativePath=".\main.cpp">
+				RelativePath=".\FreeElementMovingHelper.cpp">
 			</File>
 			<File
-				RelativePath=".\MazeCompiler.rc">
+				RelativePath=".\GameSession.cpp">
 			</File>
 			<File
-				RelativePath=".\Parser.cpp">
+				RelativePath=".\Level.cpp">
+			</File>
+			<File
+				RelativePath=".\MazeElement.cpp">
+			</File>
+			<File
+				RelativePath=".\PhysicalCollision.cpp">
+			</File>
+			<File
+				RelativePath=".\ShapeCollisions.cpp">
+			</File>
+			<File
+				RelativePath=".\Shapes.cpp">
 			</File>
 			<File
 				RelativePath=".\StdAfx.cpp">
-			</File>
-			<File
-				RelativePath=".\TrackMap.cpp">
-			</File>
-		</Filter>
-		<Filter
-			Name="Header Files"
-			Filter="">
-			<File
-				RelativePath=".\LevelBuilder.h">
-			</File>
-			<File
-				RelativePath=".\Parser.h">
-			</File>
-			<File
-				RelativePath=".\resource.h">
-			</File>
-			<File
-				RelativePath=".\StdAfx.h">
-			</File>
-			<File
-				RelativePath=".\TrackCommonStuff.h">
-			</File>
-			<File
-				RelativePath=".\TrackMap.h">
 			</File>
 		</Filter>
 	</Files>

@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding = "Windows-1252"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.00"
+	Version="7.10"
 	Name="Util"
 	ProjectGUID="{402CDE5A-4540-4DFE-A4E0-6950C0F2CA57}"
 	SccProjectName=""
@@ -70,7 +70,13 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
@@ -128,9 +134,17 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
+	<References>
+	</References>
 	<Files>
 		<Filter
 			Name="Source Files"
@@ -155,6 +169,55 @@
 			</File>
 			<File
 				RelativePath=".\WorldCoordinates.cpp">
+			</File>
+		</Filter>
+		<Filter
+			Name="Header Files"
+			Filter="">
+			<File
+				RelativePath=".\BitPacking.h">
+			</File>
+			<File
+				RelativePath=".\Cursor.h">
+			</File>
+			<File
+				RelativePath=".\DllObjectFactory.h">
+			</File>
+			<File
+				RelativePath=".\FastArray.h">
+			</File>
+			<File
+				RelativePath=".\FastFifo.h">
+			</File>
+			<File
+				RelativePath=".\FastMemManip.h">
+			</File>
+			<File
+				RelativePath=".\FuzzyLogic.h">
+			</File>
+			<File
+				RelativePath=".\KeyHandling.h">
+			</File>
+			<File
+				RelativePath=".\MR_Types.h">
+			</File>
+			<File
+				RelativePath=".\Profiler.h">
+			</File>
+			<File
+				RelativePath=".\RecordFile.h">
+			</File>
+			<File
+				RelativePath=".\resource.h">
+			</File>
+			<File
+				RelativePath=".\StdAfx.h">
+			</File>
+			<File
+				RelativePath=".\StrRes.h">
+			</File>
+			<File
+				RelativePath=".\WorldCoordinates.h">
 			</File>
 		</Filter>
 	</Files>

@@ -41,6 +41,10 @@
 #define MR_NB_COLORS                  256
 #define MR_RESERVED_COLORS_BEGINNING   10
 #define MR_RESERVED_COLORS_END         15
+// THIS IS JUST A GUESS, IT IS PROBABLY WRONG
+// FIX ME
+// MR_RESERVED_COLORS added based on a guess
+#define MR_RESERVED_COLORS				6
 #define MR_BASIC_COLORS               100 // Includes some extra space          
 #define MR_BACK_COLORS                128
 
