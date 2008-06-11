@@ -181,7 +181,7 @@ void MR_ResActorFriend::Draw( const MR_ResActor* pActor, MR_3DViewPort* pDest, c
 
       int lBitmapResId = lPatch->mBitmap->GetResourceId();
 
-      if( (lBitmapResId == MR_CAR_COCKPIT)||(lBitmapResId == MR_CAR2_COCKPIT)||(lBitmapResId == MR_ECAR_COCKPIT) )
+      if( (lBitmapResId == MR_CAR_COCKPIT)||(lBitmapResId == MR_CAR2_COCKPIT)/*||(lBitmapResId == MR_ECAR_COCKPIT)*/ )
       {
          pDest->RenderPatch( *lPatch, pMatrix , pCockpitBitmap );
       }

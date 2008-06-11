@@ -52,7 +52,7 @@
 #define LOAD_BANNER_TIMEOUT_EVENT     8
 #define ANIM_BANNER_TIMEOUT_EVENT     9
 
-#define MR_IR_LIST "www.grokksoft.com/roomlist2.txt"
+#define MR_IR_LIST "http://www.hoverrace.com/~sirbrock/imr/rl.php"
 
 #define MR_IR_LIST_PORT 80
 
@@ -489,7 +489,7 @@ int MR_InternetRoom::ParseState( const char* pAnswer )
 
                      lLinePtr = GetNextLine( lLinePtr );
                      mGameList[ lEntry ].mTrack = GetLine( lLinePtr );
-                     mGameList[ lEntry ].mAvailCode = MR_GetTrackAvail( mGameList[ lEntry ].mTrack, mAllowRegistred );
+                     mGameList[ lEntry ].mAvailCode = MR_GetTrackAvail( mGameList[ lEntry ].mTrack);
 
                      lLinePtr = GetNextLine( lLinePtr );
                      mGameList[ lEntry ].mIPAddr = GetLine( lLinePtr );
@@ -948,10 +948,6 @@ void MR_InternetRoom::RefreshGameSelection( HWND pWindow )
 
          case eTrackNotFound:
             lAvailString.LoadString( IDS_TRACK_NOTINSTALL );
-            break;
-
-         case eMustBuy:
-            lAvailString.LoadString( IDS_TRACK_NOTREG );
             break;
       }
 
@@ -1973,7 +1969,7 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack( HWND pWindow, UINT  pMsgId, WPARAM 
                      {
                         // Try to load the track
                         // Load the track
-                        MR_RecordFile* lTrackFile = MR_TrackOpen( pWindow, mThis->mGameList[lFocus].mTrack, mThis->mAllowRegistred );
+                        MR_RecordFile* lTrackFile = MR_TrackOpen( pWindow, mThis->mGameList[lFocus].mTrack);
                         lSuccess = mThis->mSession->LoadNew( mThis->mGameList[lFocus].mTrack, lTrackFile, mThis->mGameList[lFocus].mNbLap, mThis->mGameList[lFocus].mAllowWeapons, mThis->mVideoBuffer );
 
                         if( lSuccess )
@@ -2009,12 +2005,12 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack( HWND pWindow, UINT  pMsgId, WPARAM 
                   int     lNbLap;
                   BOOL    lAllowWeapons;
 
-                  lSuccess = MR_SelectTrack( pWindow, lCurrentTrack, lNbLap, lAllowWeapons, mThis->mAllowRegistred );
+                  lSuccess = MR_SelectTrack(pWindow, lCurrentTrack, lNbLap, lAllowWeapons);
 
                   if( lSuccess )
                   {
                      // Load the track
-                     MR_RecordFile* lTrackFile = MR_TrackOpen( pWindow, lCurrentTrack, mThis->mAllowRegistred );
+                     MR_RecordFile* lTrackFile = MR_TrackOpen( pWindow, lCurrentTrack);
                      lSuccess = mThis->mSession->LoadNew( lCurrentTrack, lTrackFile, lNbLap, lAllowWeapons, mThis->mVideoBuffer );
                   }
 
@@ -2687,7 +2683,7 @@ BOOL MR_SendRaceResult( HWND pParentWindow, const char* pTrack, int pBestLapTime
    if( gScoreServer.mURL.GetLength() > 0 )
    {
       // Create the RequestStrign
-      if( pMajorID != -1 )
+      /*if( pMajorID != -1 )
       {
          gScoreRequestStr.Format( "%s?=RESULT%%%%%u%%%%%s%%%%%s[%d-%d]%%%%%u%%%%%d%%%%%d%%%%%d%%%%%d",
                                  (const char*)gScoreServer.mURL,
@@ -2705,6 +2701,7 @@ BOOL MR_SendRaceResult( HWND pParentWindow, const char* pTrack, int pBestLapTime
       }
       else
       {
+	  */
          gScoreRequestStr.Format( "%s?=RESULT%%%%%u%%%%%s%%%%%s%%%%%u%%%%%d%%%%%d%%%%%d%%%%%d",
                                  (const char*)gScoreServer.mURL,
                                  pBestLapTime,
@@ -2716,7 +2713,7 @@ BOOL MR_SendRaceResult( HWND pParentWindow, const char* pTrack, int pBestLapTime
                                  pNbLap,
                                  pNbPlayer
                                  );
-      }
+      //}
 
       lReturnValue = DialogBox( GetModuleHandle( NULL ), MAKEINTRESOURCE( IDD_NET_PROGRESS ), pParentWindow, UpdateScoresCallBack  )==IDOK;
       

@@ -122,6 +122,9 @@
 #define IDC_COMMENT                     1070
 #define ID_BTN3                         1070
 #define IDC_RESULT                      1071
+#define IDC_CHECK1                      1075
+#define IDC_LOOKBACK1						 1076
+#define IDC_LOOKBACK2						 1077
 #define ID_HELP_CONTENTS                32772
 #define ID_HELP_HOWTOORDER              32773
 #define ID_HELP_TIPOFTHEDAY             32774
@@ -132,7 +135,6 @@
 #define ID_VIEW_SMALLER                 32779
 #define ID_SETTING_1320X200             32780
 #define ID_SETTING_320X200              32780
-#define ID_SETTING_2320X240             32781
 #define ID_SETTING_320X240              32781
 #define ID_SETTING_3640X400             32782
 #define ID_SETTING_640X400              32782
@@ -142,6 +144,13 @@
 #define ID_SETTING_PROPERTIES           32785
 #define ID_GAME_MULTIPLAYER             32786
 #define ID_GAME_PAUSE                   32788
+#define ID_SETTING_800X600					 32789
+#define ID_SETTING_1024X768				 32790
+#define ID_SETTING_1280X768				 32791
+#define ID_SETTING_1280X800				 32792
+#define ID_SETTING_1280X1024				 32793
+#define ID_SETTING_1400X1050				 32794
+#define ID_SETTING_1600X1200				 32795
 #define ID_VIEW_DEBUG                   40001
 #define ID_VIEW_COCKPIT                 40002
 #define ID_GAME_SPLITSCREEN             40003
@@ -166,7 +175,7 @@
 #define IDS_INS                         40022
 #define IDS_DEL                         40023
 #define IDS_ENTER                       40024
-#define IDS_CAPS                        40025
+#define IDS_END                         40025
 #define IDS_TAB                         40026
 #define IDS_JOY1BTN1                    40027
 #define IDS_JOY1BTN2                    40028
@@ -340,8 +349,8 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        158
-#define _APS_NEXT_COMMAND_VALUE         40016
-#define _APS_NEXT_CONTROL_VALUE         1075
+#define _APS_NEXT_COMMAND_VALUE         40038
+#define _APS_NEXT_CONTROL_VALUE         1076
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

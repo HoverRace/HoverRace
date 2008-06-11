@@ -58,19 +58,18 @@ void MR_3DViewPort::OnMetricsChange( int pMetrics )
 
       mPlanDist = 200; // 20cm Fixed distance projection plan, good in most cases
 
+	  ASSERT(MR_Sin[mVAngle] != 0);
       mPlanHW = (mPlanDist*MR_Sin[mVAngle/2])/MR_Int32( MR_Cos[mVAngle/2] );
-
       mPlanVW = (mPlanHW*mYRes*mVideoBuffer->GetXPixelMeter())/(mXRes*mVideoBuffer->GetYPixelMeter());
-
       mHVarPerDInc_16384 = -(mPlanHW*2*16384 + 1)/(mPlanDist*mXRes);
-
       mVVarPerDInc_16384 = -(mPlanVW*2*16384 + 1)/(mPlanDist*mYRes);
 
       mXRes_PlanDist = mXRes * mPlanDist;
       mYRes_PlanDist = mYRes * mPlanDist;
-
+	  
       mPlanHW_PlanDist_2_XRes_16384 = 2*16384*mPlanHW/(mPlanDist*mXRes);
-      mXRes_PlanDist_2PlanHW_4096   = mXRes*mPlanDist*2048/mPlanHW;
+
+	  mXRes_PlanDist_2PlanHW_4096   = mXRes*mPlanDist*2048/mPlanHW;
 
       pMetrics |= eBuffer;
    }

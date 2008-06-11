@@ -426,7 +426,8 @@ void MR_NetworkSession::ReadNet( )
 
          case MRNM_SEND_KEYID:
             // Awfull patch, save opponent ID for ladder report
-            mOpponendMajorID = (*(MR_Int32*)&(lMessage[0]));
+            /*
+			 mOpponendMajorID = (*(MR_Int32*)&(lMessage[0]));
             mOpponendMinorID = (*(MR_Int32*)&(lMessage[4]));
 
             #ifndef _DEBUG
@@ -439,7 +440,7 @@ void MR_NetworkSession::ReadNet( )
 
             }
             #endif
-
+			*/
             break;
             
 
@@ -1044,13 +1045,19 @@ void MR_NetworkSession::BroadcastMainElementState( const MR_ElementNetState& pSt
    //       MaxSend is reach
 
    int lCurrentTime = timeGetTime();
+
+   // DEPRECATED because nobody uses 14K anymore
    int lMaxSend     = (lCurrentTime-mLastSendElemStateFuncTime)*27/1000; // 14K calibration
+
+   // Instead let's try refreshing more often
+   //int lMaxSend = (lCurrentTime - mLastSendElemStateFuncTime) * (27 / 125);
+   // That's eight times more often than Richard's original 14K calibration
 
    // TRACE( "lMaxSend:%d\n", lMaxSend );
 
    if( mSession.GetSimulationTime() <= 0 )
    {
-      lMaxSend /= 4; // relasx on refresh before game start
+      lMaxSend /= 4; // relax on refresh before game start
    }
    else
    {

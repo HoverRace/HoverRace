@@ -27,28 +27,24 @@
 #include "FreeElementMovingHelper.h"
 
 
-#define MR_SIMULATION_SLICE             25 
-#define MR_MINIMUM_SIMULATION_SLICE      5
+#define MR_SIMULATION_SLICE             15
+#define MR_MINIMUM_SIMULATION_SLICE     10
 
-MR_GameSession::MR_GameSession( BOOL pAllowRendering )
-{
+MR_GameSession::MR_GameSession(BOOL pAllowRendering) {
    mAllowRendering  = pAllowRendering;
    mCurrentMazeFile = NULL;
    mCurrentLevel    = NULL;
    mCurrentLevelNumber = -1;
 
    mSimulationTime  = -3000; // 3 sec countdown
-
 }
 
-MR_GameSession::~MR_GameSession()
-{
+MR_GameSession::~MR_GameSession() {
    Clean();
 }
 
-BOOL MR_GameSession::LoadLevel( int pLevel )
-{
-   ASSERT( mCurrentMazeFile != NULL );
+BOOL MR_GameSession::LoadLevel(int pLevel) {
+   ASSERT(mCurrentMazeFile != NULL);
 
    BOOL lReturnValue = TRUE;
 
@@ -57,27 +53,23 @@ BOOL MR_GameSession::LoadLevel( int pLevel )
    mCurrentLevelNumber = -1;
 
    // Load the new level
-   if( pLevel < mCurrentMazeFile->GetNbRecords() )
-   {
-      mCurrentLevel = new MR_Level( mAllowRendering );
-      mCurrentMazeFile->SelectRecord( pLevel );
+   if(pLevel < mCurrentMazeFile->GetNbRecords()) {
+      mCurrentLevel = new MR_Level(mAllowRendering);
+      mCurrentMazeFile->SelectRecord(pLevel);
 
-      CArchive lArchive ( mCurrentMazeFile, CArchive::load );
+	  CArchive lArchive(mCurrentMazeFile, CArchive::load);
       
-      mCurrentLevel->Serialize( lArchive );
+      mCurrentLevel->Serialize(lArchive);
 
       mCurrentLevelNumber = pLevel;
    }
    else
-   {
       lReturnValue = FALSE;
-   }
 
    return lReturnValue;
 }
 
-void MR_GameSession::Clean()
-{
+void MR_GameSession::Clean() {
    delete mCurrentMazeFile;
    mCurrentMazeFile = NULL;
 
@@ -88,56 +80,44 @@ void MR_GameSession::Clean()
    mCurrentLevelNumber = -1;
 }
 
-
-BOOL MR_GameSession::LoadNew( const char* pTitle, MR_RecordFile* pMazeFile )
-{
+BOOL MR_GameSession::LoadNew(const char* pTitle, MR_RecordFile* pMazeFile) {
    BOOL lReturnValue = FALSE;
 
    Clean();
-
-   if( pMazeFile != NULL )
+   if(pMazeFile != NULL)
    {
       mTitle = pTitle;
+      mCurrentMazeFile = pMazeFile;   
+      lReturnValue = LoadLevel(1);
 
-      mCurrentMazeFile = pMazeFile;
-   
-      lReturnValue = LoadLevel( 1 );
-
-      if( !lReturnValue )
-      {
+      if(!lReturnValue)
          Clean();
-      }
    }
 
    return lReturnValue;
 }
 
-void MR_GameSession::SetSimulationTime( MR_SimulationTime pTime )
-{
+void MR_GameSession::SetSimulationTime(MR_SimulationTime pTime) {
    mSimulationTime       = pTime;
    mLastSimulateCallTime = timeGetTime();
 }
 
-MR_SimulationTime MR_GameSession::GetSimulationTime()const
-{
+MR_SimulationTime MR_GameSession::GetSimulationTime()const {
    return mSimulationTime;
 }
 
 
-void MR_GameSession::Simulate()
-{
-   ASSERT( mCurrentLevel !=NULL );
+void MR_GameSession::Simulate() {
+   ASSERT(mCurrentLevel != NULL);
 
    DWORD             lSimulateCallTime = timeGetTime();
    MR_SimulationTime lTimeToSimulate;
 
    // Determine the duration of the simulation step
-   lTimeToSimulate = lSimulateCallTime-mLastSimulateCallTime;
+   lTimeToSimulate = lSimulateCallTime - mLastSimulateCallTime;
 
-   if( lTimeToSimulate < 0 )
-   {
+   if(lTimeToSimulate < 0)
       lTimeToSimulate = 0;
-   }
 
    /*
    if( (lTimeToSimulate < 0 )||(lTimeToSimulate>500) )
@@ -151,21 +131,19 @@ void MR_GameSession::Simulate()
    }
    */
 
-   while( lTimeToSimulate >= MR_SIMULATION_SLICE )
-   {
-      SimulateFreeElems( mSimulationTime < 0?0:MR_SIMULATION_SLICE );
+   while(lTimeToSimulate >= MR_SIMULATION_SLICE) {
+      SimulateFreeElems(mSimulationTime < 0?0:MR_SIMULATION_SLICE);
       lTimeToSimulate -= MR_SIMULATION_SLICE;
       mSimulationTime += MR_SIMULATION_SLICE;
    }
 
-   if( lTimeToSimulate >= MR_MINIMUM_SIMULATION_SLICE )
-   {
-      SimulateFreeElems( mSimulationTime < 0?0:lTimeToSimulate );
+   if(lTimeToSimulate >= MR_MINIMUM_SIMULATION_SLICE) {
+      SimulateFreeElems(mSimulationTime < 0?0:lTimeToSimulate);
       mSimulationTime += lTimeToSimulate;
       lTimeToSimulate = 0;
    }
 
-   SimulateSurfaceElems( lSimulateCallTime-lTimeToSimulate-mLastSimulateCallTime );
+   SimulateSurfaceElems(lSimulateCallTime - lTimeToSimulate - mLastSimulateCallTime);
 
    mLastSimulateCallTime = lSimulateCallTime - lTimeToSimulate;
 }
@@ -218,80 +196,55 @@ void MR_GameSession::SimulateSurfaceElems( MR_SimulationTime /*pTimeToSimulate*/
 
 }
 
-int MR_GameSession::SimulateOneFreeElem( MR_SimulationTime pTimeToSimulate, MR_FreeElementHandle pElementHandle, int pRoom )
-{
-   BOOL                 lDeleteElem = FALSE;
-   MR_FreeElement*      lElement    = mCurrentLevel->GetFreeElement( pElementHandle );
+int MR_GameSession::SimulateOneFreeElem(MR_SimulationTime pTimeToSimulate, MR_FreeElementHandle pElementHandle, int pRoom) {
+   BOOL lDeleteElem = FALSE;
+   MR_FreeElement* lElement = mCurrentLevel->GetFreeElement(pElementHandle);
 
    // Ask the element to simulate its movement
-   int lNewRoom     = lElement->Simulate( pTimeToSimulate, mCurrentLevel, pRoom );
+   int lNewRoom = lElement->Simulate(pTimeToSimulate, mCurrentLevel, pRoom);
    int lReturnValue = lNewRoom;
 
-
-   if( lNewRoom == MR_Level::eMustBeDeleted )
-   {
+   if(lNewRoom == MR_Level::eMustBeDeleted) {
         lDeleteElem = TRUE;
         lNewRoom = pRoom;
    }
 
-   if( pRoom != lNewRoom )
-   {
-      mCurrentLevel->MoveElement( pElementHandle, lNewRoom );
-   }
+   if(pRoom != lNewRoom)
+      mCurrentLevel->MoveElement(pElementHandle, lNewRoom);
 
    // Compute interaction of the element with the environment
-
    const MR_ShapeInterface* lContactShape = lElement->GetGivingContactEffectShape();
 
-   if( lContactShape != NULL )
-   {
-      // Compute contact with structural elements                  
-      MR_FixedFastArray< int, 20 > lVisitedRooms;
+   if(lContactShape != NULL) {
+      // Compute contact with structural elements
+      MR_FixedFastArray<int, 20> lVisitedRooms;
       MR_RoomContactSpec lSpec;
 
       // Do the contact treatement for that room
-      mCurrentLevel->GetRoomContact( lNewRoom,
-                                     lContactShape,
-                                     lSpec   );
+      mCurrentLevel->GetRoomContact(lNewRoom, lContactShape, lSpec);
 
-      ComputeShapeContactEffects(  lNewRoom,
-                                   lElement,
-                                   lSpec,
-                                   &lVisitedRooms,
-                                   1,
-                                   pTimeToSimulate
-                                );                    
+      ComputeShapeContactEffects(lNewRoom, lElement, lSpec, &lVisitedRooms, 1, pTimeToSimulate);                    
    }
 
-   if( lDeleteElem )
-   {
+   if(lDeleteElem)
       mCurrentLevel->DeleteElement( pElementHandle );
-   }   
    return lReturnValue;
 }
 
-void MR_GameSession::SimulateFreeElems( MR_SimulationTime pTimeToSimulate )
-{
+void MR_GameSession::SimulateFreeElems(MR_SimulationTime pTimeToSimulate) {
    // Do the simulation
    int lRoomIndex;
 
    // Interaction objects collection
 
-   // Simulation element by element
-   for( lRoomIndex = -1; lRoomIndex < mCurrentLevel->GetRoomCount(); lRoomIndex++ )
-   {
-      
+   // Simulate element by element
+   for(lRoomIndex = -1; lRoomIndex < mCurrentLevel->GetRoomCount(); lRoomIndex++) {
+      // Simulate FreeElements      
+      MR_FreeElementHandle lElementHandle = mCurrentLevel->GetFirstFreeElement(lRoomIndex);
 
-      // Simulate FreeElements
-      
-      MR_FreeElementHandle lElementHandle = mCurrentLevel->GetFirstFreeElement( lRoomIndex );
-
-      while( lElementHandle != NULL )
-      {
-         MR_FreeElementHandle lNext       = MR_Level::GetNextFreeElement(  lElementHandle );
-
-         SimulateOneFreeElem( pTimeToSimulate, lElementHandle, lRoomIndex );
-
+      while(lElementHandle != NULL) {
+         MR_FreeElementHandle lNext = MR_Level::GetNextFreeElement(lElementHandle);
+         SimulateOneFreeElem(pTimeToSimulate, lElementHandle, lRoomIndex);
          lElementHandle = lNext;
       }
    }   

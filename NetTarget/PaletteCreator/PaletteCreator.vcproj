@@ -70,13 +70,17 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			ConfigurationType="1">
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="2">
 			<Tool
-				Name="VCCLCompilerTool"/>
+				Name="VCCLCompilerTool"
+				RuntimeLibrary="0"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
-				Name="VCLinkerTool"/>
+				Name="VCLinkerTool"
+				SubSystem="2"/>
 			<Tool
 				Name="VCMIDLTool"/>
 			<Tool

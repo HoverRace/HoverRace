@@ -323,8 +323,8 @@ void CHoverCadView::SelectRegion( CPoint pStart, CPoint pEnd )
                CPoint lPrevPoint = DocToClient( CPoint( lAnchor->GetPrev()->mNode->mX, lAnchor->GetPrev()->mNode->mY ))-lNodePoint;
                CPoint lNextPoint = DocToClient( CPoint( lAnchor->GetNext()->mNode->mX, lAnchor->GetNext()->mNode->mY ))-lNodePoint;
 
-               double lPrevLen = sqrt( lPrevPoint.x*lPrevPoint.x + lPrevPoint.y*lPrevPoint.y );
-               double lNextLen = sqrt( lNextPoint.x*lNextPoint.x + lNextPoint.y*lNextPoint.y );
+               double lPrevLen = sqrt((double) lPrevPoint.x*lPrevPoint.x + lPrevPoint.y*lPrevPoint.y );
+               double lNextLen = sqrt((double) lNextPoint.x*lNextPoint.x + lNextPoint.y*lNextPoint.y );
 
                lPrevPoint.x = lPrevPoint.x/lPrevLen;
                lPrevPoint.y = lPrevPoint.y/lPrevLen;

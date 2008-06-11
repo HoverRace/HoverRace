@@ -39,7 +39,7 @@ MR_Int16 MR_Cos[ MR_2PI ];
 
 void MR_InitTrigoTables()
 {
-   double lThetaStep = 4.0*acos((double) 0 / MR_2PI);
+   double lThetaStep = 4.0*acos((double) 0) / MR_2PI;
    double lTrigoFract = MR_TRIGO_FRACT;
       
    for( int lCounter = 0; lCounter<MR_2PI; lCounter++ )

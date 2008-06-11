@@ -25,9 +25,8 @@
 #include "ClientSession.h"
 #include "../MazeCompiler/TrackCommonStuff.h"
 
-MR_ClientSession::MR_ClientSession()
-                 :mSession( TRUE )
-{
+MR_ClientSession::MR_ClientSession() 
+				:mSession(TRUE) {
    mMainCharacter1      = NULL;
    mMainCharacter2      = NULL;
    mBackImage           = NULL;
@@ -35,8 +34,7 @@ MR_ClientSession::MR_ClientSession()
    mNbLap               = 1;
    mAllowWeapons        = TRUE;
 
-  InitializeCriticalSection( &mChatMutex );
-
+   InitializeCriticalSection(&mChatMutex);
 }
 
 MR_ClientSession::~MR_ClientSession()
@@ -45,11 +43,9 @@ MR_ClientSession::~MR_ClientSession()
    delete mMap;
 
    DeleteCriticalSection( &mChatMutex );
-
 }
 
-void MR_ClientSession::Process( int pSpeedFactor )
-{
+void MR_ClientSession::Process(int pSpeedFactor) {
    mSession.Simulate();
 }
 

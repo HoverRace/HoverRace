@@ -35,11 +35,8 @@
 #endif
 
 
-
 // Class Declaration
-
-class MR_GameSession
-{
+class MR_GameSession {
    private:
       BOOL               mAllowRendering;
       CString            mCurrentMazeName;
@@ -53,41 +50,36 @@ class MR_GameSession
       DWORD              mLastSimulateCallTime; // Time in ms obtainend by timeGetTime
 
 
-      BOOL LoadLevel( int pLevelIndex ); 
+      BOOL LoadLevel(int pLevelIndex); 
       void Clean();                      // Clean up before destruction or clean-up
 
-      void SimulateFreeElems(    MR_SimulationTime pDuration );
-      int  SimulateOneFreeElem(  MR_SimulationTime pTimeToSimulate, MR_FreeElementHandle pElementHandle, int pRoom );
-      void SimulateSurfaceElems( MR_SimulationTime pDuration );      
+      void SimulateFreeElems(MR_SimulationTime pDuration);
+      int  SimulateOneFreeElem(MR_SimulationTime pTimeToSimulate, MR_FreeElementHandle pElementHandle, int pRoom);
+      void SimulateSurfaceElems(MR_SimulationTime pDuration);      
 
       // SimulateFreeElem sub-functions
-      void ComputeShapeContactEffects( int                             pCurrentRoom,
-                                       MR_FreeElement*                 pActor,
-                                       const MR_RoomContactSpec&       pLastSpec,
-                                       MR_FastArrayBase< int >*        pVisitedRooms,
-                                       int                             pMaxDepth,
-                                       MR_SimulationTime               pDuration
-                                      );
+      void ComputeShapeContactEffects(int                             pCurrentRoom,
+                                      MR_FreeElement*                 pActor,
+                                      const MR_RoomContactSpec&       pLastSpec,
+                                      MR_FastArrayBase<int>*          pVisitedRooms,
+                                      int                             pMaxDepth,
+                                      MR_SimulationTime               pDuration);
 
    public:
-
-      MR_DllDeclare MR_GameSession( BOOL pAllowRendering = FALSE );
+      MR_DllDeclare MR_GameSession(BOOL pAllowRendering = FALSE);
       MR_DllDeclare ~MR_GameSession();
 
-      MR_DllDeclare BOOL LoadNew( const char* pTitle, MR_RecordFile* pMazeFile );
+      MR_DllDeclare BOOL LoadNew(const char* pTitle, MR_RecordFile* pMazeFile);
 
-      MR_DllDeclare void SetSimulationTime( MR_SimulationTime );
+      MR_DllDeclare void SetSimulationTime(MR_SimulationTime);
       MR_DllDeclare MR_SimulationTime GetSimulationTime()const;
       MR_DllDeclare void Simulate();
-      MR_DllDeclare void SimulateLateElement( MR_FreeElementHandle pElement, MR_SimulationTime pDuration, int pRoom );
+      MR_DllDeclare void SimulateLateElement(MR_FreeElementHandle pElement, MR_SimulationTime pDuration, int pRoom);
 
       MR_DllDeclare MR_Level*      GetCurrentLevel();
       MR_DllDeclare const char*    GetTitle()const;
       MR_DllDeclare MR_RecordFile* GetCurrentMazeFile();
-
-
 };
 
 #undef MR_DllDeclare
-
 #endif

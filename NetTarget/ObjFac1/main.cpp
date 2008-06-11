@@ -106,15 +106,15 @@ MR_ObjectFromFactory* MR_GetObject( MR_UInt16 pClassId )
          break;
 
       case 3:
-         lReturnValue = new MR_BitmapSurface( lId, gObjectFactoryData->mResourceLib.GetBitmap( MR_FIRE ) );
+//         lReturnValue = new MR_BitmapSurface( lId, gObjectFactoryData->mResourceLib.GetBitmap( MR_FIRE ) );
          break;
 
       case 4:
-         lReturnValue = new MR_BitmapSurface( lId, gObjectFactoryData->mResourceLib.GetBitmap( MR_BIG_BRICK ) );
+//         lReturnValue = new MR_BitmapSurface( lId, gObjectFactoryData->mResourceLib.GetBitmap( MR_BIG_BRICK ) );
          break;
 
       case 5:
-         lReturnValue = new MR_BitmapSurface( lId, gObjectFactoryData->mResourceLib.GetBitmap( MR_RED_BRICK ) );
+//         lReturnValue = new MR_BitmapSurface( lId, gObjectFactoryData->mResourceLib.GetBitmap( MR_RED_BRICK ) );
          break;
 
       case 10:
@@ -122,7 +122,7 @@ MR_ObjectFromFactory* MR_GetObject( MR_UInt16 pClassId )
          break;
 
       case 11:
-         lReturnValue = new MR_BabeElement( lId );
+//         lReturnValue = new MR_BabeElement( lId );
          break;
 
       case 12:

@@ -115,7 +115,7 @@ void CZoomBar::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 
    // if( (nSBCode==)||(nSBCode==))
    {
-      double lScaling = pow( 10, (33-mSlider.GetPos())/33.0 );
+      double lScaling = pow((double) 10, (double) (33-mSlider.GetPos())/33.0 );
 
       if( mCurrentView != NULL )
       {

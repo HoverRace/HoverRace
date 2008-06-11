@@ -3717,6 +3717,3 @@ static unsigned short ComputeIDSum( int pMajorID, int pMinorID )
 
    return (unsigned short)lReturnValue;
 }
-
-
-

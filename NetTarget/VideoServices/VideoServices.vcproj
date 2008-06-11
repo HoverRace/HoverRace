@@ -107,7 +107,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="\gdk\sdk\lib\ddraw.lib \gdk\sdk\lib\dsound.lib winmm.lib"
+				AdditionalDependencies="ddraw.lib dsound.lib winmm.lib"
 				OutputFile=".\..\Release/VideoServices.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"

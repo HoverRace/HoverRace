@@ -113,14 +113,17 @@ void MR_Observer::Scroll( int pOffset )
 {   
    mScroll += pOffset;
 
-   if( mScroll < -10 )
-   {
-      mScroll = -10;
-   }
-   else if( mScroll > 10 )
-   {
-      mScroll = 10;
-   }
+   if(mScroll != 0)
+	   mScroll = 0;
+
+//if( mScroll < -0 )
+   //{
+     // mScroll = -0;
+   //}
+   //else if( mScroll > 1 )
+   //{
+   //   mScroll = 0;
+   //}
 }
 
 void MR_Observer::ZoomIn()
@@ -1220,6 +1223,7 @@ void MR_Observer::RenderNormalDisplay( MR_VideoBuffer* pDest, const MR_ClientSes
    if( lYMargin > 0 )
    {
    }
+
 
    if( pViewingCharacter->mRoom != -1 )
    {

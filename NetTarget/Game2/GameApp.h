@@ -19,8 +19,6 @@
 // See the License for the specific language governing permissions 
 // and limitations under the License.
 //
-
-
 #ifndef GAME_APP_H
 #define GAME_APP_H
 
@@ -29,8 +27,7 @@
 
 class MR_GameApp;
 
-class MR_GameThread
-{
+class MR_GameThread {
    private:
       MR_GameApp*       mGameApp;
       CRITICAL_SECTION  mMutex;
@@ -43,26 +40,20 @@ class MR_GameThread
       MR_GameThread( MR_GameApp* pApp );
       ~MR_GameThread();
 
-
    public:
-
       static MR_GameThread* New( MR_GameApp* pApp );
       void   Kill();
       void   Pause();
       void   Restart();
-
-      
 };
 
-
-class MR_GameApp
-{   
+class MR_GameApp {   
    friend MR_GameThread;
 
    private:
-      enum eViewMode{ e3DView, eDebugView };
+      enum eViewMode {e3DView, eDebugView};
 
-      static MR_GameApp* This; // unique instance pointer
+      static MR_GameApp*       This; // unique instance pointer
     
       HINSTANCE                mInstance;
       HWND                     mMainWindow;
@@ -90,6 +81,7 @@ class MR_GameApp
       int mFire1;
       int mBreak1;
       int mWeapon1;
+		int mLookBack1;
 
       int mMotorOn2;
       int mRight2;
@@ -98,6 +90,7 @@ class MR_GameApp
       int mFire2;
       int mBreak2;
       int mWeapon2;
+		int mLookBack2;
 
       double mGamma;
       double mContrast;
@@ -107,44 +100,44 @@ class MR_GameApp
 
       CString mOwner;
       CString mCompany;
-      int     mMajorID;
-      int     mMinorID;
+      int mMajorID;
+      int mMinorID;
       // CString mKey1;
       // CString mKey2;
 
-      BOOL   mDisplayFirstScreen;
+      BOOL mDisplayFirstScreen;
 
       // Debug data
       time_t mNbFramesStartingTime;
-      int    mNbFrames;
+      int mNbFrames;
 
-      void   SetProperties();
-      static LRESULT CALLBACK DispatchFunc( HWND pWindow, UINT  pMsgId, WPARAM  pWParam, LPARAM  pLParam );
-      static BOOL CALLBACK    DisplayIntensityDialogFunc( HWND pWindow, UINT  pMsgId, WPARAM  pWParam, LPARAM  pLParam );
-      static BOOL CALLBACK    ControlDialogFunc( HWND pWindow, UINT  pMsgId, WPARAM  pWParam, LPARAM  pLParam );
-      static BOOL CALLBACK    BadModeDialogFunc( HWND pWindow, UINT  pMsgId, WPARAM  pWParam, LPARAM  pLParam );
-      static BOOL CALLBACK    MovieDialogFunc(   HWND pWindow, UINT  pMsgId, WPARAM  pWParam, LPARAM  pLParam );
-      static BOOL CALLBACK    AboutDlgFunc(      HWND pWindow, UINT  pMsgId, WPARAM  pWParam, LPARAM  pLParam );
-      static BOOL CALLBACK    NoticeDlgFunc(     HWND pWindow, UINT  pMsgId, WPARAM  pWParam, LPARAM  pLParam );
-      static BOOL CALLBACK    LoginFunc(         HWND pWindow, UINT  pMsgId, WPARAM  pWParam, LPARAM  pLParam );
-      static BOOL CALLBACK    LoginPasswdFunc(   HWND pWindow, UINT  pMsgId, WPARAM  pWParam, LPARAM  pLParam );
-      static BOOL CALLBACK    RegistrationPasswdFunc( HWND pWindow, UINT  pMsgId, WPARAM  pWParam, LPARAM  pLParam );
-      static BOOL CALLBACK    RegistrationFunc(  HWND pWindow, UINT  pMsgId, WPARAM  pWParam, LPARAM  pLParam );
-      static BOOL CALLBACK    FirstChoiceDialogFunc(         HWND pWindow, UINT  pMsgId, WPARAM  pWParam, LPARAM  pLParam );
+      void SetProperties();
+      static LRESULT CALLBACK DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
+      static BOOL CALLBACK DisplayIntensityDialogFunc( HWND pWindow, UINT  pMsgId, WPARAM pWParam, LPARAM pLParam);
+      static BOOL CALLBACK ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
+      static BOOL CALLBACK BadModeDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
+      static BOOL CALLBACK MovieDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
+      static BOOL CALLBACK AboutDlgFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
+      static BOOL CALLBACK NoticeDlgFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
+      static BOOL CALLBACK LoginFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
+      static BOOL CALLBACK LoginPasswdFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
+      static BOOL CALLBACK RegistrationPasswdFunc(HWND pWindow, UINT  pMsgId, WPARAM  pWParam, LPARAM  pLParam );
+      static BOOL CALLBACK RegistrationFunc(HWND pWindow, UINT  pMsgId, WPARAM  pWParam, LPARAM  pLParam );
+      static BOOL CALLBACK FirstChoiceDialogFunc(HWND pWindow, UINT  pMsgId, WPARAM  pWParam, LPARAM  pLParam );
 
-      BOOL CreateMainWindow( );
+      BOOL CreateMainWindow();
 
       void RefreshView();
-      void SetVideoMode( int pX, int pY );
+      void SetVideoMode(int pX, int pY);
       void RefreshTitleBar();
 
-      void ReadAssyncInputControler(); // Get the state of the input controler (KDB, joystick, mouse)
+      void ReadAsyncInputController(); // Get the state of the input controler (KDB, joystick, mouse)
 
-      // Message treatement
+      // Message handlers
       void NewLocalSession();
       void NewSplitSession();
-      void NewNetworkSession( BOOL pIsServer );
-      void NewInternetSession( );
+      void NewNetworkSession(BOOL pIsServer);
+      void NewInternetSession();
 
       void LoadRegistry();
       void SaveRegistry();
@@ -162,12 +155,12 @@ class MR_GameApp
 
       void DeleteMovieWnd();
 
-      void DrawBackground( );
+      void DrawBackground();
 
       void DisplayHelp();
       void DisplayBetaZone();
       void DisplaySite();
-      void DisplayRegistrationInfo( HWND pWindow );
+      void DisplayRegistrationInfo(HWND pWindow);
       void DisplayRegistrationSite();
       void DisplayAbout();
 
@@ -176,8 +169,7 @@ class MR_GameApp
       int  AskUserToAbortGame(); // Return IDOK if OK
 
    public:
-
-      MR_GameApp( HINSTANCE pInstance );
+      MR_GameApp(HINSTANCE pInstance);
       ~MR_GameApp();
 
       BOOL IsFirstInstance()const;
@@ -192,14 +184,7 @@ class MR_GameApp
 
       // Helper stuff
       static void NewInternetSessionCall();
-
 };
 
-
-
 #undef MR_DllDeclare
-
 #endif
-
-
-

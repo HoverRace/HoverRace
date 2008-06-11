@@ -105,7 +105,7 @@ class MR_VideoBuffer
       MR_DllDeclare void ExitIconMode();
       MR_DllDeclare void AssignPalette();
 
-      MR_DllDeclare BOOL TryToSet256ColorMode();
+      MR_DllDeclare BOOL TryToSetColorMode(int colorBits);
 
       MR_DllDeclare BOOL IsWindowMode()const;
       MR_DllDeclare BOOL IsIconMode()const;

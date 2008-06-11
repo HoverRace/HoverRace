@@ -18,58 +18,41 @@
 // See the License for the specific language governing permissions 
 // and limitations under the License.
 //
-
-
-#include "stdafx.h"
-
+#include "stdafx.h" // likely unnecessary; can we get rid of it?
 #include "GameApp.h"
-
 
 // Entry point
 int WINAPI WinMain( HINSTANCE pInstance, HINSTANCE pPrevInstance, LPSTR /* pCmdLine */, int pCmdShow )
 {
-    
+	// initialize return variables
     BOOL lReturnValue = TRUE;
     int  lErrorCode   = -1;
 
-    MR_GameApp lGame( pInstance );
-
+    MR_GameApp lGame(pInstance);
 
     // Allow only one instance of HoverRace; press CAPS_LOCK to bypass
-    GetAsyncKeyState( VK_CAPITAL ); // Reset the function
-    if( !GetAsyncKeyState( VK_CAPITAL ) )
-    {
+    GetAsyncKeyState(VK_CAPITAL); // Reset the function
+    if(!GetAsyncKeyState(VK_CAPITAL))
        lReturnValue = lGame.IsFirstInstance();
-    }
 
-    if( lReturnValue )
-    {
-       // lReturnValue = lGame.DisplayNotice();
+    if(lReturnValue) {
+       //lReturnValue = lGame.DisplayNotice(); // seems to crash when it does this
        lReturnValue = lGame.DisplayLoginWindow();
     }    
 
-    GetAsyncKeyState( VK_CAPITAL ); // Reset the function
-    if( lReturnValue && !GetAsyncKeyState( VK_CAPITAL ) )
-    {
+    GetAsyncKeyState(VK_CAPITAL); // Reset the function
+    if(lReturnValue && !GetAsyncKeyState(VK_CAPITAL))
        lReturnValue = lGame.IsFirstInstance();
-    }
 
-    if( lReturnValue &&(pPrevInstance ==  NULL) )
-    {
+    if(lReturnValue && (pPrevInstance ==  NULL))
        lReturnValue = lGame.InitApplication();
-    }
 
-    if( lReturnValue )
-    {
+    if(lReturnValue)
        lReturnValue = lGame.InitGame();
-    }
 
-    if( lReturnValue )
-    {
+	// this is where the game actually takes control
+    if(lReturnValue)
        lErrorCode = lGame.MainLoop();
-    }
    
     return lErrorCode;
 }
-
-

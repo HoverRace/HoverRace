@@ -349,7 +349,7 @@ BOOL MR_VideoBuffer::InitDirectDraw()
    return lReturnValue;
 }
 
-BOOL MR_VideoBuffer::TryToSet256ColorMode()
+BOOL MR_VideoBuffer::TryToSetColorMode(int colorBits)
 {
 
    // do it only if it is safe
@@ -363,7 +363,7 @@ BOOL MR_VideoBuffer::TryToSet256ColorMode()
 
       if( DD_CALL(mDirectDraw->SetCooperativeLevel( mWindow, DDSCL_EXCLUSIVE | DDSCL_FULLSCREEN| DDSCL_ALLOWMODEX |DDSCL_ALLOWREBOOT|DDSCL_NOWINDOWCHANGES )) == DD_OK )
       {
-         if( DD_CALL(mDirectDraw->SetDisplayMode( mSpecialModeXRes, mSpecialModeYRes, 8 )) == DD_OK )
+         if( DD_CALL(mDirectDraw->SetDisplayMode( mSpecialModeXRes, mSpecialModeYRes, colorBits )) == DD_OK )
          {
             mSpecialWindowMode = TRUE;
 
@@ -389,7 +389,6 @@ BOOL MR_VideoBuffer::TryToSet256ColorMode()
 
    return mSpecialWindowMode;
 }
-
 
 void MR_VideoBuffer::DeleteInternalSurfaces()
 {

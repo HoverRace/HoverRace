@@ -61,9 +61,6 @@ BEGIN
         MENUITEM "&Following Camera\tF3",       ID_VIEW_3DACTION
         MENUITEM "&Cockpit\tF4",                ID_VIEW_COCKPIT
         MENUITEM SEPARATOR
-        MENUITEM "&Larger\t+",                  ID_VIEW_LARGER
-        MENUITEM "&Smaller\t-",                 ID_VIEW_SMALLER
-        MENUITEM SEPARATOR
         MENUITEM "&Players list\tF5",           ID_VIEW_PLAYERSLIST
         MENUITEM "More &messages\tF6",          ID_VIEW_MOREMESSAGES
         MENUITEM SEPARATOR
@@ -71,12 +68,15 @@ BEGIN
     END
     POPUP "&Setting"
     BEGIN
-        MENUITEM "&1 320x200\tF8",              ID_SETTING_320X200
-        MENUITEM "&2 320x240\tAlt+F8",          ID_SETTING_320X240
-        MENUITEM "&3 400x300\tShift+F8",        ID_SETTING_400X300
-        MENUITEM "&4 512x384\tShift+F9",        ID_SETTING_512X384
-        MENUITEM "&5 640x400\tAlt+F9",          ID_SETTING_640X400
-        MENUITEM "&6 640x480\tF9",              ID_SETTING_640X480
+        MENUITEM "&1 320x240\tShift+F8",        ID_SETTING_320X240
+        MENUITEM "&2 640x480\tF8",              ID_SETTING_640X480
+        MENUITEM "&3 800x600\tAlt+F8",          ID_SETTING_800X600
+        MENUITEM "&4 1024x768\tF9",             ID_SETTING_1024X768
+        MENUITEM "&5 1280x768\tShift+F9",       ID_SETTING_1280X768
+        MENUITEM "&6 1280x800\tAlt+F9",         ID_SETTING_1280X800
+        MENUITEM "&7 1280x1024\tF10",           ID_SETTING_1280X1024
+        MENUITEM "&8 1400x1050\tShift+F10",     ID_SETTING_1400X1050
+        MENUITEM "&9 1600x1200\tAlt+F10",       ID_SETTING_1600X1200
         MENUITEM "&Window\tAlt+Enter",          ID_SETTING_WINDOW
         MENUITEM SEPARATOR
         MENUITEM "&Properties...",              ID_SETTING_PROPERTIES
@@ -85,7 +85,7 @@ BEGIN
     BEGIN
         MENUITEM "&Contents...",                ID_HELP_CONTENTS
         MENUITEM SEPARATOR
-        MENUITEM "&GrokkSoft's WWW site...",    ID_HELP_SITE
+        MENUITEM "&HoverRace.com...",           ID_HELP_SITE
         MENUITEM SEPARATOR
         MENUITEM "&About HoverRace...",         ID_APP_ABOUT
     END
@@ -99,25 +99,26 @@ END
 
 IDR_ACCELERATOR ACCELERATORS 
 BEGIN
-    "+",            ID_VIEW_LARGER,         ASCII,  NOINVERT
-    "-",            ID_VIEW_SMALLER,        ASCII,  NOINVERT
+    VK_F2,          ID_GAME_NETWORK_INTERNET, VIRTKEY, NOINVERT
     "N",            ID_GAME_NEW,            VIRTKEY, CONTROL, NOINVERT
     VK_ESCAPE,      ID_GAME_PAUSE,          VIRTKEY, NOINVERT
+    VK_F9,          ID_SETTING_1024X768,    VIRTKEY, NOINVERT
+    VK_F10,         ID_SETTING_1280X1024,   VIRTKEY, NOINVERT
+    VK_F9,          ID_SETTING_1280X768,    VIRTKEY, SHIFT, NOINVERT
+    VK_F9,          ID_SETTING_1280X800,    VIRTKEY, ALT, NOINVERT
+    VK_F10,         ID_SETTING_1400X1050,   VIRTKEY, SHIFT, NOINVERT
+    VK_F10,         ID_SETTING_1600X1200,   VIRTKEY, ALT, NOINVERT
+    VK_F8,          ID_SETTING_320X240,     VIRTKEY, SHIFT, NOINVERT
+    VK_F8,          ID_SETTING_640X480,     VIRTKEY, NOINVERT
+    VK_F8,          ID_SETTING_800X600,     VIRTKEY, ALT, NOINVERT
     VK_F12,         ID_SETTING_REFRESHCOLORS, VIRTKEY, NOINVERT
-    VK_F2,          ID_GAME_NETWORK_INTERNET, VIRTKEY, NOINVERT
+    VK_RETURN,      ID_SETTING_WINDOW,      VIRTKEY, ALT, NOINVERT
     VK_F3,          ID_VIEW_3DACTION,       VIRTKEY, NOINVERT
-    VK_F3,          ID_VIEW_DEBUG,          VIRTKEY, SHIFT, NOINVERT
     VK_F4,          ID_VIEW_COCKPIT,        VIRTKEY, NOINVERT
+    VK_F3,          ID_VIEW_DEBUG,          VIRTKEY, SHIFT, NOINVERT
+    VK_F6,          ID_VIEW_MOREMESSAGES,   VIRTKEY, NOINVERT
     VK_F5,          ID_VIEW_PLAYERSLIST,    VIRTKEY, NOINVERT
     VK_F5,          ID_VIEW_PLAYERSLIST,    VIRTKEY, SHIFT, NOINVERT
-    VK_F6,          ID_VIEW_MOREMESSAGES,   VIRTKEY, NOINVERT
-    VK_F8,          ID_SETTING_320X200,     VIRTKEY, NOINVERT
-    VK_F8,          ID_SETTING_320X240,     VIRTKEY, ALT, NOINVERT
-    VK_F8,          ID_SETTING_400X300,     VIRTKEY, SHIFT, NOINVERT
-    VK_F9,          ID_SETTING_640X480,     VIRTKEY, NOINVERT
-    VK_F9,          ID_SETTING_640X400,     VIRTKEY, ALT, NOINVERT
-    VK_F9,          ID_SETTING_512X384,     VIRTKEY, SHIFT, NOINVERT
-    VK_RETURN,      ID_SETTING_WINDOW,      VIRTKEY, ALT, NOINVERT
 END
 
 
@@ -127,8 +128,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,0,1
- PRODUCTVERSION 1,0,0,1
+ FILEVERSION 1,22,0,3
+ PRODUCTVERSION 1,22,0,3
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x21L
@@ -143,14 +144,13 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "CompanyName", "GrokkSoft inc."
-            VALUE "FileDescription", "Racing game"
-            VALUE "FileVersion", "1, 0, 0, 1"
+            VALUE "FileDescription", "Online Racing Game"
+            VALUE "FileVersion", "1, 22, 0, 3"
             VALUE "InternalName", "HoverRace"
-            VALUE "LegalCopyright", "Copyright © 1996"
+            VALUE "LegalCopyright", "Copyright © 2008"
             VALUE "OriginalFilename", "HRace.exe"
             VALUE "ProductName", "HoverRace"
-            VALUE "ProductVersion", "1, 0, 0, 1"
+            VALUE "ProductVersion", "1, 22, 0, 3"
             VALUE "SpecialBuild", "Demo version"
         END
     END
@@ -203,9 +203,9 @@ BEGIN
     LTEXT           "Laps :",IDC_STATIC,125,96,19,8
 END
 
-IDD_CONTROL DIALOG  0, 0, 186, 122
+IDD_CONTROL DIALOGEX 0, 0, 186, 134
 STYLE DS_SETFONT | DS_3DLOOK | WS_CHILD
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
 BEGIN
     COMBOBOX        IDC_MOTOR_ON1,62,17,58,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
@@ -237,13 +237,18 @@ BEGIN
                     WS_VSCROLL | WS_TABSTOP
     LTEXT           "Player 1",IDC_STATIC,62,7,26,8
     LTEXT           "Player 2",IDC_STATIC,125,7,26,8
-    LTEXT           "Motor on :",IDC_STATIC,4,19,58,8
-    LTEXT           "Turn Right :",IDC_STATIC,4,33,58,8
-    LTEXT           "Fire wreapon",IDC_STATIC,4,88,58,8
-    LTEXT           "Turn Left :",IDC_STATIC,4,46,58,8
-    LTEXT           "Select Weapon:",IDC_STATIC,4,102,58,8
-    LTEXT           "Break:",IDC_STATIC,4,60,58,8
-    LTEXT           "Jump :",IDC_STATIC,4,74,58,8
+    LTEXT           "Motor On:",IDC_STATIC,4,20,58,8
+    LTEXT           "Turn Right:",IDC_STATIC,4,33,58,8
+    LTEXT           "Fire Weapon:",IDC_STATIC,4,89,58,8
+    LTEXT           "Turn Left:",IDC_STATIC,4,47,58,8
+    LTEXT           "Select Weapon:",IDC_STATIC,4,103,58,8
+    LTEXT           "Brake:",IDC_STATIC,4,60,58,8
+    LTEXT           "Jump:",IDC_STATIC,4,74,58,8
+    COMBOBOX        IDC_LOOKBACK1,62,114,58,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_LOOKBACK2,125,114,56,86,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Look Back:",IDC_STATIC,4,116,58,8
 END
 
 IDD_BAD_MODE4 DIALOG  10, 10, 153, 41
@@ -344,11 +349,11 @@ BEGIN
     LTEXT           "Game name :",IDC_STATIC,8,27,44,8
 END
 
-IDD_TCP_CLIENT DIALOG  0, 0, 224, 129
+IDD_TCP_CLIENT DIALOGEX 0, 0, 224, 129
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | 
     WS_SYSMENU
 CAPTION "TCP Connections"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
 BEGIN
     CONTROL         "List1",IDC_LIST,"SysListView32",LVS_REPORT | 
                     LVS_NOSORTHEADER | WS_BORDER | WS_TABSTOP,8,41,209,66
@@ -445,12 +450,12 @@ BEGIN
     LTEXT           "minutes",IDC_STATIC,135,52,26,8
 END
 
-IDD_BAD_MODE1 DIALOG  10, 10, 153, 37
+IDD_BAD_MODE1 DIALOGEX 10, 10, 153, 37
 STYLE DS_SETFONT | DS_3DLOOK | DS_CONTROL | DS_CENTER | WS_POPUP | 
     WS_VISIBLE
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
 BEGIN
-    PUSHBUTTON      "You must select a full screen mode because this version of the application only support 8bit/pixel display modes.",
+    PUSHBUTTON      "You must select a full screen mode because this version of the application only supports 8 bit/pixel display modes.",
                     IDC_FULL_MENU_MODE,2,1,149,35,BS_MULTILINE
 END
 
@@ -504,10 +509,10 @@ BEGIN
     LTEXT           "Shift+F5",IDC_STATIC,4,74,36,8
 END
 
-IDD_REGISTER DIALOG  0, 0, 238, 173
+IDD_REGISTER DIALOGEX 0, 0, 238, 173
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "HoverRace Registration Key"
-FONT 8, "MS Sans Serif"
+CAPTION "Registration Information"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
 BEGIN
     EDITTEXT        IDC_OWNER,86,63,145,14,ES_AUTOHSCROLL
     EDITTEXT        IDC_COMPANY,86,77,145,14,ES_AUTOHSCROLL
@@ -518,12 +523,10 @@ BEGIN
     EDITTEXT        IDC_PASSWD,86,134,87,14,ES_AUTOHSCROLL
     DEFPUSHBUTTON   "OK",IDOK,66,152,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,122,152,50,14
-    PUSHBUTTON      "See online registration page now!...",IDC_REGISTER_PAGE,
-                    95,42,136,14
     LTEXT           "Owner:",IDC_STATIC,7,66,58,8
     LTEXT           "User ID:",IDC_STATIC,7,94,42,8
-    LTEXT           "You must fill all the fields of this window in order to have access to all of the HoverRace features.  Registration key can be bought from GrokkSoft inc at very low price.",
-                    IDC_STATIC,7,7,224,28
+    LTEXT           "This feature is not currently implemented; there is currently no registration required for HoverRace.  It's free!  Plans are in the works, though, to create a registration system whereby a username is linked to a specific registration key, which is passwor???????ls_updown32",
+                    IDC_STATIC,7,7,224,50
     CONTROL         "",IDC_STATIC,"Static",SS_BLACKFRAME,14,59,209,1
     LTEXT           "Registration Key Part 1:",IDC_STATIC,7,108,78,8
     LTEXT           "Registration Key Part 2:",IDC_STATIC,7,123,79,8
@@ -657,8 +660,6 @@ BEGIN
     LTEXT           "Your Ladder\nPassword:",IDC_STATIC,7,7,44,17
     LTEXT           "Comment(optional):",IDC_STATIC,7,87,61,8
     LTEXT           "Match Result:",IDC_STATIC,7,28,46,8
-//    EDITTEXT        IDC_RESULT,7,37,144,47,ES_MULTILINE | ES_READONLY | WS_VSCROLL | NOT WS_TABSTOP | IDC_STATIC,157,66,52,57
-//    ICON            IDI_WARNING2,IDC_STATIC,173,45,18,20
 END
 
 IDD_LADDER_RES_3 DIALOG  0, 0, 207, 78
@@ -792,7 +793,7 @@ BEGIN
         VERTGUIDE, 120
         VERTGUIDE, 125
         TOPMARGIN, 7
-        BOTTOMMARGIN, 114
+        BOTTOMMARGIN, 126
     END
 
     IDD_BAD_MODE4, DIALOG
@@ -1105,10 +1106,10 @@ BEGIN
     IDS_DOWN                "Down"
     IDS_RIGHT               "Right"
     IDS_LEFT                "Left"
-    IDS_INS                 "Ins"
-    IDS_DEL                 "Del"
+    IDS_INS                 "Insert"
+    IDS_DEL                 "Delete"
     IDS_ENTER               "Enter"
-    IDS_CAPS                "CapsLock"
+    IDS_END                 "End"
     IDS_TAB                 "Tab"
     IDS_JOY1BTN1            "Joystick Btn1"
     IDS_JOY1BTN2            "Joystick Btn2"
@@ -1168,24 +1169,24 @@ BEGIN
     IDS_DEFAULT_ALIAS       "your name"
     IDS_ABORT_GAME          "Abort current game?"
     IDS_GAME_NAME           "HoverRace"
-    IDS_HELP_REQ            "To be able to display Hover Race Help\nyou must have a Word document viewer installed\non your system\n"
+    IDS_HELP_REQ            "To be able to display HoverRace Help\nyou must have a Word document viewer installed\non your system.\n"
     IDS_ERROR               "HoverRace Error"
-    IDS_WWW_REQ             "Unable to activate your WebBrowser. Please start your WebBrowser and go to:\n%s"
-    IDS_CAPTION             "HoverRace v1.01"
+    IDS_WWW_REQ             "Unable to activate your web browser. Please start your web browser and go to:\n%s"
+    IDS_CAPTION             "HoverRace v1.22b.2 (Release Build 2, TESTING)"
     IDS_REG_CAPTION         "HoverRace v1.01 [REGISTERED VERSION]"
     IDS_DEMO_CAPTION        "HoverRace v1.01 [DEMO MODE]"
 END
 
 STRINGTABLE 
 BEGIN
-    IDS_MODE_SWITCH_TRY     "HoverRace will try to switch your screen to a 256 colors mode"
-    IDS_CANT_SWITCH_MODE    "HoverRace was unable to switch the video mode. You will need to play in full screen"
-    IDS_BAD_MODE            "Incompatible video mode. You will need to play in full screen"
-    IDS_CAR_FOR_REG         "You need to register to use this craft model"
+    IDS_MODE_SWITCH_TRY     "HoverRace will try to switch your screen to 256 colors mode."
+    IDS_CANT_SWITCH_MODE    "HoverRace was unable to switch the video mode. You will need to play in full screen."
+    IDS_BAD_MODE            "Incompatible video mode. You will need to play in full screen."
+    IDS_CAR_FOR_REG         "You need to register to use this craft model."
     IDS_COLOR_INTENSITY     "Colors intensity"
     IDS_KEYS_SETTING        "Keys"
     IDS_PROP_SETTING        "Properties setting"
-    IDS_READ_NOTICE         "Please take the time to read the notice"
+    IDS_READ_NOTICE         "Please take the time to read the notice."
     IDS_BAD_PASSWD          "Wrong password"
     IDS_NOT_HR_KEY          "Not an HoverRace Key"
     IDS_FILL_OWNER          "Please fill the ""Owner"" field"
@@ -1219,7 +1220,7 @@ BEGIN
     IDS_TRACK_NOTREG        "You must register to use this track"
     IDS_COMM_ERROR          "Communication error"
     IDS_CANT_ADDUSER        "Unable to add user"
-    IDS_NOMORE_SHRWR        "No more Shareware user allowed"
+    IDS_NOMORE_SHRWR        "No more Shareware users allowed"
     IDS_NOMORE_USER         "No more user allowed"
     IDS_INCOMPAT_VER        "Incompatible version"
     IDS_EXP_KEY             "Expired key"
@@ -1228,15 +1229,15 @@ BEGIN
     IDS_NOL                 "Not on-line"
     IDS_CANT_ADD_CHAT       "Unable to add chat message"
     IDS_CANT_ADD_GAME       "Unable to add game"
-    IDS_NOMORE_ENTRY        "No more entry avail"
+    IDS_NOMORE_ENTRY        "Entry no more avail"
     IDS_CANT_JOIN           "Unable to join Game"
-    IDS_GAME_NA             "Game no more availlable"
-    IDS_GAME_FULL           "Game Full"
+    IDS_GAME_NA             "Game is no longer available"
+    IDS_GAME_FULL           "Game is full"
 END
 
 STRINGTABLE 
 BEGIN
-    IDS_CANT_DEL_GAME       "Unable to delete Game"
+    IDS_CANT_DEL_GAME       "Unable to delete game"
     IDS_NOT_OWNER           "Not owner"
     IDS_CANT_LEAVE_GAME     "Unable to leave game"
     IDS_MUST_JOIN           "Must join first"
@@ -1251,7 +1252,7 @@ BEGIN
     IDS_SELECT_ROOM         "You must select a room"
     IDS_WARN_TO             "Warning: communication time-out"
     IDS_LOC_MSERVER         "Locating the main server..."
-    IDS_CANT_FIND_SERVER    "Unable to find the server\nYou must be connected to the Internet to use this function\nContact Support if the problem persist"
+    IDS_CANT_FIND_SERVER    "Unable to find the server.\nYou must be connected to the Internet to use this function.\nIf the problem persists, you can report it to the\nHoverRace forums, in the 'Help Desk' section."
 END
 
 STRINGTABLE 
@@ -1299,14 +1300,14 @@ BEGIN
     IDS_FLAP_STR            "%d %-0.10s #%d%*s   --First lap--  %c"
     IDS_CHART_FINISH        "%d %-0.10s #%d%*s %2d.%02d.%02d %2d.%02d.%02d%c"
     IDS_CHART               "%d %-0.10s #%d%*s lap:%-2d   %2d.%02d.%02d%c"
-    IDS_COUNTDOWN           "Start in %02d.%02d sec. for %d laps"
-    IDS_FINISH              "Finish in %d.%02d.%02d  %d of %d"
-    IDS_FINISH_SINGLE       "Finish in %d.%02d.%02d"
-    IDS_BEST_LAP            "  Best lap %d.%02d.%02d  "
+    IDS_COUNTDOWN           "Starting in %02d.%02d sec. for %d laps"
+    IDS_FINISH              "Finished in %d.%02d.%02d, placed %d of %d"
+    IDS_FINISH_SINGLE       "Finished in %d.%02d.%02d"
+    IDS_BEST_LAP            "Best lap %d.%02d.%02d  "
     IDS_HEADER              "%d.%02d.%02d  Lap:%d/%d"
     IDS_LAST_LAP            "Last lap %d.%02d.%02d  Best %d.%02d.%02d"
     IDS_CUR_LAP             "Current lap %d.%02d.%02d  Best %d.%02d.%02d"
-    IDS_HIT_TITLE           "Rank                 For   Agains"
+    IDS_HIT_TITLE           "Rank                 For   Against"
     IDS_HIT_CHART           "%d %-0.10s #%d%*s  %2d      %2d"
 END
 
