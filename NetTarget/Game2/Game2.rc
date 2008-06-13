@@ -1225,7 +1225,7 @@ BEGIN
     IDS_CANT_SWITCH_MODE    "HoverRace was unable to switch the video mode. You will need to play in full screen."
     IDS_BAD_MODE            "Incompatible video mode. You will need to play in full screen."
     IDS_CAR_FOR_REG         "You need to register to use this craft model."
-    IDS_COLOR_INTENSITY     "Colors intensity"
+    IDS_COLOR_INTENSITY     "Color intensity"
     IDS_KEYS_SETTING        "Keys"
     IDS_PROP_SETTING        "Properties setting"
     IDS_READ_NOTICE         "Please take the time to read the notice."
