@@ -1233,8 +1233,8 @@ BEGIN
     IDS_NOT_HR_KEY          "Not a HoverRace Key"
     IDS_FILL_OWNER          "Please fill the ""Owner"" field"
     IDS_PASSWD_LEN          "Password must have at max 10 characters"
-    IDS_KEY1_LEN            "Registration Key part 1 must have 20 character long"
-    IDS_KEY2_LEN            "Registration Key part 2 must have 20 character long"
+    IDS_KEY1_LEN            "Registration Key part 1 must be 20 characters long"
+    IDS_KEY2_LEN            "Registration Key part 2 must be 20 characters long"
     IDS_BAD_KEY1            "Registration Key part 1 is invalid"
     IDS_BAD_KEY2            "Registration Key part 2 is invalid"
 END
