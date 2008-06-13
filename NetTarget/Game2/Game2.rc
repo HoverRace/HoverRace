@@ -1245,7 +1245,7 @@ BEGIN
     IDS_BAD_ID              "User ID does not match with the key"
     IDS_CLEAR_REGINFO       "Are you sure that you want to clear current registration key info?"
     IDS_IMR_CONNECT         "Connecting to the Internet Meeting Room..."
-    IDS_UR_CONNECT          "You are Connected"
+    IDS_UR_CONNECT          "You are connected"
     IDS_IMR_WELCOME         "Welcome to the HoverRace Internet Meeting Room"
     IDS_IMR_DISCONNECT      "Disconnecting from the Internet Meeting Room..."
     IDS_IMR_ADD_GAME        "Registering game with the Internet Meeting Room..."
