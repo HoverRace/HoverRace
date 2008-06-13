@@ -514,7 +514,7 @@ const MR_MainCharacter* MR_ClientSession::GetPlayer( int pPlayerIndex )const
          break;
 
 	  case 3:
-         lReturnValue = mMainCharacter3;
+         lReturnValue = mMainCharacter4;
          break;
    }
    ASSERT( lReturnValue != NULL );
