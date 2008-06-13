@@ -112,7 +112,7 @@ class MR_NetworkPort {
 class MR_NetworkInterface {
    public:
       enum { 
-         eMaxClient = 8
+         eMaxClient = 9
       };
    private:
       CString  mPlayer;

@@ -30,7 +30,7 @@
 #include <math.h>
 
 
-#define NB_PLAYER_PAGE 4
+#define NB_PLAYER_PAGE 10
 #define MR_CHAT_EXPIRATION     20
 
 CString gRankTitle = Ascii2Simple( MR_LoadString( IDS_RANK_TITLE ) );
@@ -704,17 +704,17 @@ void MR_Observer::Render3DView( const MR_ClientSession* pSession, const MR_MainC
 
    if( mBaseFont != NULL )
    {
-      char lStrBuffer[120];
+      char lStrBuffer[170];
 
       const MR_Sprite* lFont = mBaseFont->GetSprite();
 
       // Display chat messages
-      int lFontScaling = 1+(lFont->GetItemHeight()*12)/(lYRes);
+      int lFontScaling = 1+(lFont->GetItemHeight()*30)/(lYRes);
       int lLineSpacing = lFont->GetItemHeight()/lFontScaling;
 
       int lXMargin  = 2*lFont->GetItemWidth()/lFontScaling;
-      int lYMargin  = lYRes-lYRes/6-lLineSpacing;
-      int lPrintLen = (lXRes-lXMargin)*4/(lFont->GetItemWidth()*3/lFontScaling);
+      int lYMargin  = lYRes-lYRes/15-lLineSpacing;
+      int lPrintLen = (lXRes-lXMargin)*3.9/(lFont->GetItemWidth()*3/lFontScaling);
                        // subject to div/0
 
       pSession->GetCurrentMessage( lStrBuffer );
@@ -725,7 +725,7 @@ void MR_Observer::Render3DView( const MR_ClientSession* pSession, const MR_MainC
       }
       lYMargin -= lLineSpacing;
 
-      int lMaxDepth    = (mMoreMessages&&(mDispPlayers==0))?10:2;
+      int lMaxDepth    = (mMoreMessages&&(mDispPlayers==0))?10:6;
       int lMessageLife = (mMoreMessages&&(mDispPlayers==0))?MR_CHAT_EXPIRATION*4:MR_CHAT_EXPIRATION;
 
       int lStackLevel = 0;
@@ -770,10 +770,10 @@ void MR_Observer::Render3DView( const MR_ClientSession* pSession, const MR_MainC
          // Display rank list
          int lFirstPlayer = lCurrentPage*NB_PLAYER_PAGE;
          int lLastPlayer  = min( lFirstPlayer+ NB_PLAYER_PAGE, lNbResultAvail );
-         int lFontScaling = 1+(mBaseFont->GetSprite()->GetItemWidth()*25)/(lXRes);
+         int lFontScaling = 1+(mBaseFont->GetSprite()->GetItemHeight()*30)/(lYRes);
          int lLineSpacing = mBaseFont->GetSprite()->GetItemHeight()/lFontScaling;
 
-         int lCurrentLine = lYRes/4;
+         int lCurrentLine = lYRes/6;
 
          // Display banner
 
@@ -858,8 +858,8 @@ void MR_Observer::Render3DView( const MR_ClientSession* pSession, const MR_MainC
                   lHoverId+1,
                   10-lPlayerNameLen,
                   "",
-                  lFinishTime/60000, (lFinishTime%60000)/1000, (lFinishTime%1000)/10,
-                  lBestLap/60000, (lBestLap%60000)/1000, (lBestLap%1000)/10,
+                  lFinishTime/60000, (lFinishTime%60000)/1000, (lFinishTime%1000),
+                  lBestLap/60000, (lBestLap%60000)/1000, (lBestLap%1000),
                   lConnected?'*':'-' );
 
             }
@@ -873,7 +873,7 @@ void MR_Observer::Render3DView( const MR_ClientSession* pSession, const MR_MainC
                   10-lPlayerNameLen,
                   "",
                   lNbLap+1,
-                  lBestLap/60000, (lBestLap%60000)/1000, (lBestLap%1000)/10,
+                  lBestLap/60000, (lBestLap%60000)/1000, (lBestLap%1000),
                   lConnected?'*':'-' );
 
             }
@@ -909,13 +909,13 @@ void MR_Observer::Render3DView( const MR_ClientSession* pSession, const MR_MainC
          // Race is finish
          if( pSession->GetNbPlayers() > 1 )
          {
-            sprintf( lMainLineBuffer,    gFinishStr, lTotalTime/60000, (lTotalTime%60000)/1000, (lTotalTime%1000)/10, pSession->GetRank( pViewingCharacter ),pSession->GetNbPlayers() );
+            sprintf( lMainLineBuffer,    gFinishStr, lTotalTime/60000, (lTotalTime%60000)/1000, (lTotalTime%1000), pSession->GetRank( pViewingCharacter ),pSession->GetNbPlayers() );
          }
          else
          {
-            sprintf( lMainLineBuffer,    gFinishStrSingle, lTotalTime/60000, (lTotalTime%60000)/1000, (lTotalTime%1000)/10 );
+            sprintf( lMainLineBuffer,    gFinishStrSingle, lTotalTime/60000, (lTotalTime%60000)/1000, (lTotalTime%1000) );
          }
-         sprintf( lLapLineBuffer, gBestLapStr,  lBestLap/60000, (lBestLap%60000)/1000, (lBestLap%1000)/10 );
+         sprintf( lLapLineBuffer, gBestLapStr,  lBestLap/60000, (lBestLap%60000)/1000, (lBestLap%1000) );
 
 
       }
@@ -923,7 +923,7 @@ void MR_Observer::Render3DView( const MR_ClientSession* pSession, const MR_MainC
       {
          // First lap
          sprintf( lMainLineBuffer, gHeaderStr, pTime/60000, (pTime%60000)/1000, (pTime%1000)/10, 1, pViewingCharacter->GetTotalLap() );
-         // sprintf( lLapLineBuffer, "Current lap %d.%02d.%02d", pTime/60000, (pTime%60000)/1000, (pTime%1000)/10 );
+         // sprintf( lLapLineBuffer, "Current lap %d.%02d.%02d", pTime/60000, (pTime%60000)/1000, (pTime%1000) );
 
       }
       else if( pViewingCharacter->GetLastLapCompletion() > (pTime-8000) )
@@ -935,9 +935,8 @@ void MR_Observer::Render3DView( const MR_ClientSession* pSession, const MR_MainC
          // More than one lap completed
          sprintf( lMainLineBuffer,  gHeaderStr, pTime/60000, (pTime%60000)/1000, (pTime%1000)/10, pViewingCharacter->GetLap()+1, pViewingCharacter->GetTotalLap() );
          sprintf( lLapLineBuffer, gLastLapStr,
-                  lLastLap/60000, (lLastLap%60000)/1000, (lLastLap%1000)/10,
-                  lBestLap/60000, (lBestLap%60000)/1000, (lBestLap%1000)/10);
-
+                  lLastLap/60000, (lLastLap%60000)/1000, (lLastLap%1000),
+                  lBestLap/60000, (lBestLap%60000)/1000, (lBestLap%1000));
       }
       else
       {
@@ -947,8 +946,8 @@ void MR_Observer::Render3DView( const MR_ClientSession* pSession, const MR_MainC
          // More than one lap completed
          sprintf( lMainLineBuffer,    gHeaderStr, pTime/60000, (pTime%60000)/1000, (pTime%1000)/10, pViewingCharacter->GetLap()+1, pViewingCharacter->GetTotalLap() );
          sprintf( lLapLineBuffer, gCurLapStr,
-                  lCurrentLap/60000, (lCurrentLap%60000)/1000, (lCurrentLap%1000)/10,
-                  lBestLap/60000, (lBestLap%60000)/1000, (lBestLap%1000)/10);
+                  lCurrentLap/60000, (lCurrentLap%60000)/1000, (lCurrentLap%1000),
+                  lBestLap/60000, (lBestLap%60000)/1000, (lBestLap%1000));
 
       }
       

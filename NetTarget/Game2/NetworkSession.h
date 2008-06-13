@@ -73,7 +73,7 @@ class MR_NetworkSession: public MR_ClientSession
       PlayerResult*        mResultList;
       PlayerResult*        mHitList;
 
-      char                 mChatEditBuffer[70];
+      char                 mChatEditBuffer[120];
 
       BOOL                 mInternetGame;
       HWND                 mWindow;
