@@ -1300,8 +1300,8 @@ END
 STRINGTABLE 
 BEGIN
     IDS_TO                  "Communication timeout"
-    IDS_SERVER_ERROR        "Server error, please advise the server administrator"
-    IDS_CANT_CREATE_SOCK    "Unable to create socket( Contact Support if the problem persist)"
+    IDS_SERVER_ERROR        "Server error; please contact the server administrator"
+    IDS_CANT_CREATE_SOCK    "Unable to create socket"
     IDS_TCP_SERVER          "TCP Server"
     IDS_CANT_USE_PORT       "Unable to use the port, try to close some WINSOCK applications"
     IDS_PORT_RANGE          "Port value must be greater than 0"
