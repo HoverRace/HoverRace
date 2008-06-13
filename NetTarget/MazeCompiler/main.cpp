@@ -69,7 +69,7 @@ BOOL LoadRegistry()
    HKEY lProgramKey;
 
    int lError = RegOpenKeyEx( HKEY_LOCAL_MACHINE,
-                     "SOFTWARE\\GrokkSoft\\HoverRace",
+                     "SOFTWARE\\HoverRace.com\\HoverRace",
                      0,
                      KEY_EXECUTE,
                      &lProgramKey          );

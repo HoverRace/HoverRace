@@ -53,7 +53,7 @@ static int           CompareFunc(const void *elem1, const void *elem2);
 
 
 // Local variable
-#define MAX_TRACK_ENTRIES   200
+#define MAX_TRACK_ENTRIES   100000
 // #define MAX_TRACK_ENTRIES   5
 
 static int  gsSelectedEntry = -1;
@@ -62,7 +62,7 @@ static int  gsNbTrack       = 0;
 static TrackEntry  gsTrackList[MAX_TRACK_ENTRIES];
 static TrackEntry* gsSortedTrackList[MAX_TRACK_ENTRIES];
 static int         gsNbLaps;
-static BOOL        gsAllowWeapons = TRUE;
+static BOOL        gsAllowWeapons = FALSE;
 
 MR_RecordFile* MR_TrackOpen(HWND pWindow, const char* pFileName)
 {

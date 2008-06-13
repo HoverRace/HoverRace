@@ -35,7 +35,7 @@
 #define MRM_BIN_BUFFER_SIZE    25000 // 25 K this is BIG enough
 
 
-#define REFRESH_DELAY       1000
+#define REFRESH_DELAY        200
 #define REFRESH_TIMEOUT    11000
 #define OP_TIMEOUT         22000
 #define FAST_OP_TIMEOUT     6000
@@ -52,7 +52,7 @@
 #define LOAD_BANNER_TIMEOUT_EVENT     8
 #define ANIM_BANNER_TIMEOUT_EVENT     9
 
-#define MR_IR_LIST "http://www.hoverrace.com/~sirbrock/imr/rl.php"
+#define MR_IR_LIST "www.hoverrace.com/~sirbrock/imr/rl.php"
 
 #define MR_IR_LIST_PORT 80
 
@@ -2214,7 +2214,6 @@ BOOL CALLBACK MR_InternetRoom::GetAddrCallBack( HWND pWindow, UINT  pMsgId, WPAR
                // Fill the request
                mThis->mNetOpRequest = gMainServer;
                
-
                // Initiate the request
                mThis->mOpRequest.Send( pWindow, gServerIP, MR_IR_LIST_PORT, mThis->mNetOpRequest );
 

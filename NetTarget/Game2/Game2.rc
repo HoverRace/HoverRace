@@ -468,15 +468,15 @@ BEGIN
                     IDC_STATIC,2,1,149,25
 END
 
-IDD_WAIT_ALL DIALOG  0, 0, 182, 62
+IDD_WAIT_ALL DIALOGEX 0, 0, 182, 62
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "WARNING!"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
 BEGIN
     DEFPUSHBUTTON   "OK",IDCANCEL,36,41,50,14
     PUSHBUTTON      "Start NOW!",IDOK,96,41,50,14
-    ICON            IDI_WARNING2,IDC_STATIC,7,7,18,20
-    LTEXT           "It is highly preferable to wait until all players have successfully conntected to the game before pressing the START buttton.",
+    ICON            IDI_WARNING2,IDC_STATIC,7,7,20,20
+    LTEXT           "It is highly preferable to wait until all players have successfully connected to the game before pressing the START buttton.",
                     IDC_STATIC,34,7,141,30
 END
 
@@ -509,30 +509,30 @@ BEGIN
     LTEXT           "Shift+F5",IDC_STATIC,4,74,36,8
 END
 
-IDD_REGISTER DIALOGEX 0, 0, 238, 173
+IDD_REGISTER DIALOGEX 0, 0, 238, 143
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Registration Information"
 FONT 8, "MS Sans Serif", 0, 0, 0x0
 BEGIN
-    EDITTEXT        IDC_OWNER,86,63,145,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_COMPANY,86,77,145,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_ID_MAJOR,86,91,31,14,ES_AUTOHSCROLL | ES_NUMBER
-    EDITTEXT        IDC_ID_MINOR,127,91,47,14,ES_AUTOHSCROLL | ES_NUMBER
-    EDITTEXT        IDC_KEY1,86,105,145,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_KEY2,86,120,145,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_PASSWD,86,134,87,14,ES_AUTOHSCROLL
-    DEFPUSHBUTTON   "OK",IDOK,66,152,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,122,152,50,14
-    LTEXT           "Owner:",IDC_STATIC,7,66,58,8
-    LTEXT           "User ID:",IDC_STATIC,7,94,42,8
-    LTEXT           "This feature is not currently implemented; there is currently no registration required for HoverRace.  It's free!  Plans are in the works, though, to create a registration system whereby a username is linked to a specific registration key, which is passwor???????ls_updown32",
-                    IDC_STATIC,7,7,224,50
-    CONTROL         "",IDC_STATIC,"Static",SS_BLACKFRAME,14,59,209,1
-    LTEXT           "Registration Key Part 1:",IDC_STATIC,7,108,78,8
-    LTEXT           "Registration Key Part 2:",IDC_STATIC,7,123,79,8
-    LTEXT           "Password (optional) :",IDC_STATIC,7,137,67,8
-    LTEXT           "--",IDC_STATIC,120,94,8,8
-    LTEXT           "Company (optional):",IDC_STATIC,7,80,72,8
+    EDITTEXT        IDC_OWNER,86,34,145,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_COMPANY,86,48,145,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_ID_MAJOR,86,62,31,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_ID_MINOR,127,62,47,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_KEY1,86,76,145,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_KEY2,86,91,145,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_PASSWD,86,105,87,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,66,123,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,122,123,50,14
+    LTEXT           "Owner:",IDC_STATIC,7,37,58,8
+    LTEXT           "User ID:",IDC_STATIC,7,65,42,8
+    CONTROL         "",IDC_STATIC,"Static",SS_BLACKFRAME,7,28,209,1
+    LTEXT           "Registration Key Part 1:",IDC_STATIC,7,79,78,8
+    LTEXT           "Registration Key Part 2:",IDC_STATIC,7,94,79,8
+    LTEXT           "Password (optional) :",IDC_STATIC,7,108,67,8
+    LTEXT           "--",IDC_STATIC,120,65,8,8
+    LTEXT           "Company (optional):",IDC_STATIC,7,51,72,8
+    LTEXT           "This feature is not currently implemented; there is currently no registration required for HoverRace.  It's free!",
+                    IDC_STATIC,7,7,224,19
 END
 
 IDD_LOGIN_PASSWD DIALOGEX 0, 0, 284, 245
@@ -546,7 +546,7 @@ BEGIN
     PUSHBUTTON      "Start Demo version",IDC_DEMO,193,182,84,14
     LTEXT           "Password:",IDC_STATIC,14,195,35,8
     CONTROL         "",IDC_STATIC,"Static",SS_BLACKFRAME,75,210,134,2
-    LTEXT           "This is a registred copy of HoverRace. You must supply a valid password if you want to have access to all the features of the game. Pressing ""Start Demo version"" will give you access only to the features of the Free version.",
+    LTEXT           "This is a registered copy of HoverRace. You must supply a valid password if you want to have access to all the features of the game. Pressing ""Start Demo version"" will give you access only to the features of the Free version.",
                     IDC_STATIC,7,214,270,27
     LTEXT           "Owner:",IDC_STATIC,14,167,30,8
     LTEXT           "",IDC_OWNER,53,166,128,11,0,WS_EX_STATICEDGE
@@ -556,32 +556,32 @@ BEGIN
                     SS_SUNKEN,7,7,270,152
 END
 
-IDD_REGKEY_PASSWD DIALOG  0, 0, 209, 95
+IDD_REGKEY_PASSWD DIALOGEX 0, 0, 209, 95
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "HoverRace login password"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
 BEGIN
     EDITTEXT        IDC_PASSWD,57,52,95,14,ES_PASSWORD | ES_AUTOHSCROLL
     DEFPUSHBUTTON   "OK",IDOK,7,74,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,63,74,50,14
     LTEXT           "Password:",IDC_STATIC,18,55,35,8
     CONTROL         "",IDC_STATIC,"Static",SS_BLACKFRAME,37,47,134,2
-    LTEXT           "Registration information have already been entered. To revise this information you must supply a valid password. If you forgot your password you can use the ""Clear Registration Key"" but you will then have to reenter the registration key.",
+    LTEXT           "Registration information have already been entered. To revise this information you must supply a valid password. If you forgot your password you can use the ""Clear Registration Key"" but you will then have to re-enter the registration key.",
                     IDC_STATIC,7,7,195,34
     PUSHBUTTON      "Clear Registration Key",IDC_CLEAR,119,74,82,14
 END
 
-IDD_LOGIN DIALOG  0, 0, 272, 207
+IDD_LOGIN DIALOGEX 0, 0, 272, 207
 STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_POPUP | 
     WS_CAPTION | WS_SYSMENU
 CAPTION "HoverRace (Demo version)"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
 BEGIN
     DEFPUSHBUTTON   "Start HoverRace",IDOK,182,186,83,14
-    LTEXT           "This is a non-registred copy of HoverRace. Non-registred version let you play the game but some of the features are only availlable to registred users. ",
-                    -1,7,170,167,30
+    LTEXT           "This is a non-registered copy of HoverRace. Non-registered version let you play the game but some of the features are only available to registered users. ",
+                    -1,7,168,167,32
     PUSHBUTTON      "Registration info...",ID_GAME_REGISTER,182,169,83,14
-    PUSHBUTTON      "www.grokksoft.com",ID_HELP_SITE,7,155,258,11,BS_FLAT
+    PUSHBUTTON      "www.hoverrace.com",ID_HELP_SITE,7,155,258,11,BS_FLAT
     CONTROL         "",IDC_BITMAP,"Static",SS_BITMAP | SS_CENTERIMAGE | 
                     SS_SUNKEN,7,7,258,147
 END
@@ -945,7 +945,7 @@ BEGIN
         RIGHTMARGIN, 231
         VERTGUIDE, 86
         TOPMARGIN, 7
-        BOTTOMMARGIN, 166
+        BOTTOMMARGIN, 136
     END
 
     IDD_LOGIN_PASSWD, DIALOG
@@ -1165,20 +1165,20 @@ BEGIN
     IDS_KEY_X               "X Key"
     IDS_KEY_Y               "Y Key"
     IDS_KEY_Z               "Z Key"
-    IDS_DEFAULT_ALIAS       "your name"
+    IDS_DEFAULT_ALIAS       "Your Name"
     IDS_ABORT_GAME          "Abort current game?"
     IDS_GAME_NAME           "HoverRace"
     IDS_HELP_REQ            "To be able to display HoverRace Help\nyou must have a Word document viewer installed\non your system.\n"
     IDS_ERROR               "HoverRace Error"
     IDS_WWW_REQ             "Unable to activate your web browser. Please start your web browser and go to:\n%s"
-    IDS_CAPTION             "HoverRace v1.22b.2 (Release Build 2, TESTING)"
+    IDS_CAPTION             "HoverRace v1.22b.3 (Release Build 3, TESTING)"
     IDS_REG_CAPTION         "HoverRace v1.01 [REGISTERED VERSION]"
     IDS_DEMO_CAPTION        "HoverRace v1.01 [DEMO MODE]"
 END
 
 STRINGTABLE 
 BEGIN
-    IDS_MODE_SWITCH_TRY     "HoverRace will try to switch your screen to 256 colors mode."
+    IDS_MODE_SWITCH_TRY     "You can play HoverRace in a Window or Fullscreen; to play in a Window, HoverRace will have to switch to 256 color mode.\nIt is recommended you use Fullscreen mode instead.\n\nDo you want to play in Window mode and switch to 256 color?"
     IDS_CANT_SWITCH_MODE    "HoverRace was unable to switch the video mode. You will need to play in full screen."
     IDS_BAD_MODE            "Incompatible video mode. You will need to play in full screen."
     IDS_CAR_FOR_REG         "You need to register to use this craft model."
@@ -1187,7 +1187,7 @@ BEGIN
     IDS_PROP_SETTING        "Properties setting"
     IDS_READ_NOTICE         "Please take the time to read the notice."
     IDS_BAD_PASSWD          "Wrong password"
-    IDS_NOT_HR_KEY          "Not an HoverRace Key"
+    IDS_NOT_HR_KEY          "Not a HoverRace Key"
     IDS_FILL_OWNER          "Please fill the ""Owner"" field"
     IDS_PASSWD_LEN          "Password must have at max 10 characters"
     IDS_KEY1_LEN            "Registration Key part 1 must have 20 character long"
@@ -1245,7 +1245,7 @@ BEGIN
     IDS_CANT_ADD_MESSAGE    "Unable to add message"
     IDS_NOT_AUTH            "Not authorized"
     IDS_UNKNOWN_ERROR       "Unknown error code %d"
-    IDS_IMR                 "Internet Meeeting Room"
+    IDS_IMR                 "Internet Meeting Room"
     IDS_IMR_PASSVAL         "Password validation..."
     IDS_ENTER_ALIAS         "You must enter an alias name"
     IDS_SELECT_ROOM         "You must select a room"
@@ -1277,14 +1277,14 @@ STRINGTABLE
 BEGIN
     IDS_REG_BEST_LAP        "Registering your best lap time to the server"
     IDS_DISCONNECTED        "Disconnected"
-    IDS_COMPUTING           "Computing"
+    IDS_COMPUTING           "Computing lag"
     IDS_CONNECTING          "Connecting"
-    IDS_WAITING_ACK         "Waiting Ack"
+    IDS_WAITING_ACK         "Waiting Acknowledgement"
     IDS_NO_NET_CONNECT      "(no network connection)"
     IDS_DUAL_REG_KEY        "An other player is using your registration key"
-    IDS_F2_TORETURN         "Press F2 when ready to return to Meeting Room"
+    IDS_F2_TORETURN         "Press F2 when ready to return to the Meeting Room"
     IDS_HAS_LEFT            " has left"
-    IDS_ALONE_F2            "You are now alone, press F2"
+    IDS_ALONE_F2            "You are now alone, press F2 when ready to return to the Meeting Room"
     IDS_ALONE               "You are now alone"
     IDS_TRK_NOTFOUND        "Track not found"
     IDS_BAD_TRK_FORMAT      "Bad track file format"
@@ -1308,6 +1308,9 @@ BEGIN
     IDS_CUR_LAP             "Current lap %d.%02d.%02d  Best %d.%02d.%02d"
     IDS_HIT_TITLE           "Rank                 For   Against"
     IDS_HIT_CHART           "%d %-0.10s #%d%*s  %2d      %2d"
+    IDS_BETAZONE            "http://www.hoverrace.com"
+    IDS_WEBSITE             "http://www.hoverrace.com"
+    IDS_REGSITE             "http://www.hoverrace.com"
 END
 
 #endif    // Neutral (Default) resources

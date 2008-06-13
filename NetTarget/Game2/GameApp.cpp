@@ -452,7 +452,7 @@ void MR_GameApp::LoadRegistry() {
 	HKEY lProgramKey;
 
 	int lError = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
-									  "SOFTWARE\\GrokkSoft\\HoverRace",
+									  "SOFTWARE\\HoverRace.com\\HoverRace",
 									  // "SOFTWARE",
 									  // NULL,
 									  0,
@@ -506,13 +506,9 @@ void MR_GameApp::LoadRegistry() {
 		mOwner = "Demo Key";
 	#endif
 
-	lBufferSize = sizeof(mDisplayFirstScreen);
+	lBufferSize = sizeof( mDisplayFirstScreen );
 
-	/* Does not appear to be in use
-	if(RegQueryValueEx(lProgramKey, "DisplayFirstScreen", 0, NULL, (MR_UInt8 *) &mDisplayFirstScreen, &lBufferSize) == ERROR_SUCCESS)
-	{
-
-	} */
+    if( RegQueryValueEx(  lProgramKey, "DisplayFirstScreen", 0, NULL, (MR_UInt8*)&mDisplayFirstScreen, &lBufferSize ) == ERROR_SUCCESS )
 
 	lBufferSize = sizeof(lBuffer);
 	if(RegQueryValueEx(lProgramKey, "Company", 0, NULL, (MR_UInt8 *) lBuffer, &lBufferSize) == ERROR_SUCCESS)
@@ -553,7 +549,7 @@ void MR_GameApp::SaveRegistry() {
 
 	/*
 	int lError = RegOpenKeyEx( HKEY_LOCAL_MACHINE,
-							"SOFTWARE\\GrokkSoft\\HoverRace",
+							"SOFTWARE\\HoverRace.com\\HoverRace",
 							0,
 							KEY_WRITE,
 							&lProgramKey          );
@@ -561,7 +557,7 @@ void MR_GameApp::SaveRegistry() {
 
 	DWORD lDummy;
 	int lError = RegCreateKeyEx(HKEY_LOCAL_MACHINE,
-										 "SOFTWARE\\GrokkSoft\\HoverRace",
+										 "SOFTWARE\\HoverRace.com\\HoverRace",
 										 0,
 										 NULL,
 										 REG_OPTION_NON_VOLATILE,
@@ -613,6 +609,7 @@ void MR_GameApp::SaveRegistry() {
 			lReturnValue = FALSE;
 			ASSERT(FALSE);
 		}
+		
 
 		if(RegSetValueEx(lProgramKey, "DisplayFirstScreen", 0, REG_BINARY, (MR_UInt8 *) &mDisplayFirstScreen,
 							  sizeof(mDisplayFirstScreen)) != ERROR_SUCCESS) {
@@ -791,13 +788,13 @@ void MR_GameApp::DisplayBetaZone()
 	// first return to window mode 
 	SetVideoMode( 0, 0 );
 
-	LoadURLShortcut( mMainWindow, "BetaZone.url" );
+	LoadURLShortcut( mMainWindow, MR_LoadString( IDS_BETAZONE ) );
 }
 
 void MR_GameApp::DisplaySite() {
 	// first return to window mode 
 	SetVideoMode(0, 0);
-	LoadURLShortcut(mMainWindow, "HoverRace.url");
+	LoadURLShortcut(mMainWindow, MR_LoadString( IDS_WEBSITE ) );
 }
 
 
@@ -807,7 +804,7 @@ void MR_GameApp::DisplayRegistrationSite()
 	// first return to window mode 
 	SetVideoMode( 0, 0 );
 
-	LoadURLShortcut( mMainWindow, "Registration.url" );
+	LoadURLShortcut( mMainWindow, MR_LoadString( IDS_REGSITE ) );
 
 }
 
@@ -995,7 +992,7 @@ BOOL MR_GameApp::InitGame() {
 	if(lReturnValue) {
 	if(!mVideoBuffer->SetVideoMode()) { // try to set the video mode
 			BOOL lSwitchTo256 = FALSE;
-			if(MessageBox(mMainWindow, MR_LoadString(IDS_MODE_SWITCH_TRY), MR_LoadString(IDS_GAME_NAME), MB_ICONINFORMATION | MB_OKCANCEL) == IDOK) {
+			if(MessageBox(mMainWindow, MR_LoadString(IDS_MODE_SWITCH_TRY), MR_LoadString(IDS_GAME_NAME), MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2 ) == IDYES) {
 				if(mVideoBuffer->TryToSetColorMode(8)) {
 					if(mVideoBuffer->SetVideoMode())
 						lSwitchTo256 = TRUE;
@@ -1003,9 +1000,6 @@ BOOL MR_GameApp::InitGame() {
 			if(!lSwitchTo256) { // mode switch failed, tell the user
 					MessageBox(mMainWindow, MR_LoadString(IDS_CANT_SWITCH_MODE), MR_LoadString(IDS_GAME_NAME), MB_OK);
 				}
-			}
-			else { // tell the user they'll have to switch mode
-				MessageBox(mMainWindow, MR_LoadString(IDS_BAD_MODE), MR_LoadString(IDS_GAME_NAME), MB_OK);
 			}
 
 			if(!lSwitchTo256) { // load the "Incompatible Video Mode" dialog
@@ -2561,14 +2555,18 @@ BOOL CALLBACK MR_GameApp::FirstChoiceDialogFunc(         HWND pWindow, UINT  pMs
 					break;
 
 				case IDOK:
-					if( !IsDlgButtonChecked( pWindow, IDC_CHECK ) )
-					{
-						This->mDisplayFirstScreen = FALSE;
-						This->SaveRegistry();
-					}
+					
 					EndDialog( pWindow, IDOK );
 					lReturnValue = TRUE;
 					break;
+			}
+			if( !IsDlgButtonChecked( pWindow, IDC_CHECK ) )
+			{
+				This->mDisplayFirstScreen = FALSE;
+				This->SaveRegistry();
+			} else {
+				This->mDisplayFirstScreen = TRUE;
+				This->SaveRegistry();
 			}
 			break;
 	}
@@ -2825,7 +2823,7 @@ BOOL CALLBACK MR_GameApp::NoticeDlgFunc( HWND pWindow, UINT  pMsgId, WPARAM  pWP
 	                              
 						MessageBox( pWindow,
 									"This beta version is expired\n"
-									"Look at www.grokksoft.com for a new version",
+									"Look at www.hoverrace.com for a new version",
 									"Hover Race",
 									MB_ICONSTOP|MB_APPLMODAL|MB_OK );
 					}

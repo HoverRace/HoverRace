@@ -368,7 +368,7 @@ BOOL LoadURLShortcut( HWND pWindow, const char* pShortcut )
    {
       char lURL[300];
 
-      strcpy( lURL, "http://www.hoverrace.com" ); // Default well there is nothing that can be done
+      strcpy( lURL, "http://www.HoverRace.com" ); // Default well there is nothing that can be done
 
 
       FILE* lFile = fopen( pShortcut, "r" );
