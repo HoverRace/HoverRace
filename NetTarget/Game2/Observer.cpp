@@ -1144,6 +1144,7 @@ void MR_Observer::RenderDebugDisplay( MR_VideoBuffer* pDest, const MR_ClientSess
    int lXRes    = pDest->GetXRes();
    int lYRes    = pDest->GetYRes();
    int lYOffset = 0;
+   int lXOffset = 0;
 
    switch( mSplitMode )
    {
@@ -1181,12 +1182,14 @@ void MR_Observer::RenderNormalDisplay( MR_VideoBuffer* pDest, const MR_ClientSes
    int lXRes = pDest->GetXRes();
    int lYRes = pDest->GetYRes();
    int lYOffset = 0;
+   int lXOffset = 0;
    int lYMargin_1024 = mYMargin_1024;
+   int lXMargin_1024 = mXMargin_1024;
 
 
    switch( mSplitMode )
    {
-      case eUpperSplit:
+	  case eUpperSplit:
          lYRes /= 2;
          lYMargin_1024 -= 200;
          if( lYMargin_1024 < 0 )
@@ -1196,13 +1199,80 @@ void MR_Observer::RenderNormalDisplay( MR_VideoBuffer* pDest, const MR_ClientSes
 
          break;
 
-      case eLowerSplit:
+	  case eLowerSplit:
          lYRes /= 2;
          lYOffset = lYRes;
          lYMargin_1024 -= 200;
          if( lYMargin_1024 < 0 )
          {
             lYMargin_1024 = 0;
+         }
+
+         break;
+
+      case eUpperLeftSplit:
+         lYRes /= 2;
+		 lXRes /= 2;
+         lYMargin_1024 -= 200;
+		 lXMargin_1024 -= 200;
+         if( lYMargin_1024 < 0 )
+         {
+            lYMargin_1024 = 0;
+         }
+		 if( lXMargin_1024 < 0 )
+         {
+            lXMargin_1024 = 0;
+         }
+
+         break;
+
+	  case eUpperRightSplit:
+         lYRes /= 2;
+		 lXRes /= 2;
+		 lXOffset = lXRes;
+         lYMargin_1024 -= 200;
+		 lXMargin_1024 -= 200;
+         if( lYMargin_1024 < 0 )
+         {
+            lYMargin_1024 = 0;
+         }
+		 if( lXMargin_1024 < 0 )
+         {
+            lXMargin_1024 = 0;
+         }
+
+         break;
+
+      case eLowerLeftSplit:
+         lYRes /= 2;
+		 lXRes /= 2;
+         lYOffset = lYRes;
+         lYMargin_1024 -= 200;
+		 lXMargin_1024 -= 200;
+         if( lYMargin_1024 < 0 )
+         {
+            lYMargin_1024 = 0;
+         }
+		 if( lXMargin_1024 < 0 )
+         {
+            lXMargin_1024 = 0;
+         }
+         break;
+
+	  case eLowerRightSplit:
+         lYRes /= 2;
+		 lXRes /= 2;
+         lYOffset = lYRes;
+		 lXOffset = lXRes;
+         lYMargin_1024 -= 200;
+		 lXMargin_1024 -= 200;
+         if( lYMargin_1024 < 0 )
+         {
+            lYMargin_1024 = 0;
+         }
+		 if( lXMargin_1024 < 0 )
+         {
+            lXMargin_1024 = 0;
          }
          break;
    }
@@ -1211,7 +1281,7 @@ void MR_Observer::RenderNormalDisplay( MR_VideoBuffer* pDest, const MR_ClientSes
    int lYMargin = lYMargin_1024 * lYRes/1024;
 
 
-   m3DView.Setup( pDest, lXMargin, lYOffset+lYMargin, lXRes-2*lXMargin, lYRes-2*lYMargin, mApperture );
+   m3DView.Setup( pDest, lXOffset+lXMargin, lYOffset+lYMargin, lXRes-2*lXMargin, lYRes-2*lYMargin, mApperture );
 
    // Clear screen if needed
    if( lXMargin > 0 )

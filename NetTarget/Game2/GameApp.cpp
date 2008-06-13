@@ -1,4 +1,4 @@
-// MR_GamaeApp.cpp
+// MR_GameApp.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
@@ -70,13 +70,13 @@ void CaptureScreen( MR_VideoBuffer* pVideoBuffer );
 #define MRM_RETURN2WINDOWMODE  1
 #define MRM_EXIT_MENU_LOOP     2
 
-enum MR_InControler { MR_KDB, MR_JOY1, MR_JOY2 };
+enum MR_InControler { MR_KDB, MR_JOY1, MR_JOY2, MR_JOY3, MR_JOY4 };
 
 enum { AxeTop,
 		 AxeBottom,
 		 AxeLeft,
 		 AxeRight,
-		 Btn1, Btn2, Btn3, Btn4 };
+		 Btn1, Btn2, Btn3, Btn4, Btn5, Btn6, Btn7, Btn8 };
 
 struct ControlKey {
 	const char*    mOldKeyName;
@@ -86,74 +86,110 @@ struct ControlKey {
 };
 
 static const ControlKey KeyChoice[] = {
-	{ "Disable",	IDS_DISABLE, MR_KDB, 0          },
-	{ "Shift",		IDS_SHIFT,   MR_KDB, VK_SHIFT   },  // 1
-	{ "Ctrl",		IDS_CTRL,    MR_KDB, VK_CONTROL },  // 2
-	{ "Up",			IDS_UP,      MR_KDB, VK_UP      },  // 3
-	{ "Down",		IDS_DOWN,    MR_KDB, VK_DOWN    },  // 4
-	{ "Right",		IDS_RIGHT,   MR_KDB, VK_RIGHT   },  // 5
-	{ "Left",		IDS_LEFT,    MR_KDB, VK_LEFT    },  // 6
-	{ "Insert",		IDS_INS,     MR_KDB, VK_INSERT  },  // 7
-	{ "Delete",		IDS_DEL,     MR_KDB, VK_DELETE  },  // 8
-	{ "Enter",		IDS_ENTER,   MR_KDB, VK_RETURN  },  // 9
-	{ "End",			IDS_END,     MR_KDB, VK_END	  },  // 10
-	{ "Tab",			IDS_TAB,     MR_KDB, VK_TAB     },  // 11
+	{ "Disable",			IDS_DISABLE,	MR_KDB, 0				},
+	{ "Shift",				IDS_SHIFT,		MR_KDB, VK_SHIFT		}, // 1
+	{ "Ctrl",				IDS_CTRL,		MR_KDB, VK_CONTROL		}, // 2
+	{ "Up",					IDS_UP,			MR_KDB, VK_UP			}, // 3
+	{ "Down",				IDS_DOWN,		MR_KDB, VK_DOWN			}, // 4
+	{ "Right",				IDS_RIGHT,		MR_KDB, VK_RIGHT		}, // 5
+	{ "Left",				IDS_LEFT,		MR_KDB, VK_LEFT			}, // 6
+	{ "Insert",				IDS_INS,		MR_KDB, VK_INSERT		}, // 7
+	{ "Delete",				IDS_DEL,		MR_KDB, VK_DELETE		}, // 8
+	{ "Enter",				IDS_ENTER,		MR_KDB, VK_RETURN		}, // 9
+	{ "End",				IDS_END,		MR_KDB, VK_END			}, // 10
+	{ "Tab",				IDS_TAB,		MR_KDB,	VK_TAB			}, // 11
 	{ "Joystick Btn1",		IDS_JOY1BTN1,	MR_JOY1, Btn1			}, // 12
 	{ "Joystick Btn2",		IDS_JOY1BTN2,	MR_JOY1, Btn2			}, // 13
-	{ "Joystick Btn4",		IDS_JOY1BTN3,	MR_JOY1, Btn3			}, // 14
+	{ "Joystick Btn3",		IDS_JOY1BTN3,	MR_JOY1, Btn3			}, // 14
 	{ "Joystick Btn4",		IDS_JOY1BTN4,	MR_JOY1, Btn4			}, // 15
-	{ "Joystick Top",			IDS_JOY1TOP,	MR_JOY1, AxeTop		}, // 16
-	{ "Joystick Bottom",		IDS_JOY1DOWN,	MR_JOY1, AxeBottom	}, // 17
-	{ "Joystick Right",		IDS_JOY1RIGHT,	MR_JOY1, AxeRight		}, // 18
-	{ "Joystick Left",		IDS_JOY1LEFT,	MR_JOY1, AxeLeft		}, // 19
-	{ "Joystick2 Btn1",		IDS_JOY2BTN1,	MR_JOY2, Btn1			}, // 20
-	{ "Joystick2 Btn2",		IDS_JOY2BTN2,	MR_JOY2, Btn2			}, // 21
-	{ "Joystick2 Btn4",		IDS_JOY2BTN3,	MR_JOY2, Btn3			}, // 22
-	{ "Joystick2 Btn4",		IDS_JOY2BTN4,	MR_JOY2, Btn4			}, // 23
-	{ "Joystick2 Top",		IDS_JOY2TOP,	MR_JOY2, AxeTop		}, // 24
-	{ "Joystick2 Bottom",	IDS_JOY2DOWN,	MR_JOY2, AxeBottom	}, // 25
-	{ "Joystick2 Right",		IDS_JOY2RIGHT,	MR_JOY2, AxeRight		}, // 26
-	{ "Joystick2 Left",		IDS_JOY2LEFT,	MR_JOY2, AxeLeft		}, // 27
+	{ "Joystick Btn5",		IDS_JOY1BTN5,	MR_JOY1, Btn5			}, // 16
+	{ "Joystick Btn6",		IDS_JOY1BTN6,	MR_JOY1, Btn6			}, // 17
+	{ "Joystick Btn7",		IDS_JOY1BTN7,	MR_JOY1, Btn7			}, // 18
+	{ "Joystick Btn8",		IDS_JOY1BTN8,	MR_JOY1, Btn8			}, // 19
+	{ "Joystick Top",		IDS_JOY1TOP,	MR_JOY1, AxeTop			}, // 20
+	{ "Joystick Bottom",	IDS_JOY1DOWN,	MR_JOY1, AxeBottom		}, // 21
+	{ "Joystick Right",		IDS_JOY1RIGHT,	MR_JOY1, AxeRight		}, // 22
+	{ "Joystick Left",		IDS_JOY1LEFT,	MR_JOY1, AxeLeft		}, // 23
+	{ "Joystick2 Btn1",		IDS_JOY2BTN1,	MR_JOY2, Btn1			}, // 24
+	{ "Joystick2 Btn2",		IDS_JOY2BTN2,	MR_JOY2, Btn2			}, // 25
+	{ "Joystick2 Btn3",		IDS_JOY2BTN3,	MR_JOY2, Btn3			}, // 26
+	{ "Joystick2 Btn4",		IDS_JOY2BTN4,	MR_JOY2, Btn4			}, // 27
+	{ "Joystick2 Btn5",		IDS_JOY2BTN5,	MR_JOY2, Btn5			}, // 28
+	{ "Joystick2 Btn6",		IDS_JOY2BTN6,	MR_JOY2, Btn6			}, // 29
+	{ "Joystick2 Btn7",		IDS_JOY2BTN7,	MR_JOY2, Btn7			}, // 30
+	{ "Joystick2 Btn8",		IDS_JOY2BTN8,	MR_JOY2, Btn8			}, // 31
+	{ "Joystick2 Top",		IDS_JOY2TOP,	MR_JOY2, AxeTop			}, // 32
+	{ "Joystick2 Bottom",	IDS_JOY2DOWN,	MR_JOY2, AxeBottom		}, // 33
+	{ "Joystick2 Right",	IDS_JOY2RIGHT,	MR_JOY2, AxeRight		}, // 34
+	{ "Joystick2 Left",		IDS_JOY2LEFT,	MR_JOY2, AxeLeft		}, // 35
+	{ "Joystick3 Btn1",		IDS_JOY3BTN1,	MR_JOY3, Btn1			}, // 36
+	{ "Joystick3 Btn2",		IDS_JOY3BTN2,	MR_JOY3, Btn2			}, // 37
+	{ "Joystick3 Btn3",		IDS_JOY3BTN3,	MR_JOY3, Btn3			}, // 38
+	{ "Joystick3 Btn4",		IDS_JOY3BTN4,	MR_JOY3, Btn4			}, // 39
+	{ "Joystick3 Btn5",		IDS_JOY3BTN5,	MR_JOY3, Btn5			}, // 40
+	{ "Joystick3 Btn6",		IDS_JOY3BTN6,	MR_JOY3, Btn6			}, // 41
+	{ "Joystick3 Btn7",		IDS_JOY3BTN7,	MR_JOY3, Btn7			}, // 42
+	{ "Joystick3 Btn8",		IDS_JOY3BTN8,	MR_JOY3, Btn8			}, // 43
+	{ "Joystick3 Top",		IDS_JOY3TOP,	MR_JOY3, AxeTop			}, // 44
+	{ "Joystick3 Bottom",	IDS_JOY3DOWN,	MR_JOY3, AxeBottom		}, // 45
+	{ "Joystick3 Right",	IDS_JOY3RIGHT,	MR_JOY3, AxeRight		}, // 46
+	{ "Joystick3 Left",		IDS_JOY3LEFT,	MR_JOY3, AxeLeft		}, // 47
+	{ "Joystick4 Btn1",		IDS_JOY4BTN1,	MR_JOY4, Btn1			}, // 48
+	{ "Joystick4 Btn2",		IDS_JOY4BTN2,	MR_JOY4, Btn2			}, // 49
+	{ "Joystick4 Btn3",		IDS_JOY4BTN3,	MR_JOY4, Btn3			}, // 50
+	{ "Joystick4 Btn4",		IDS_JOY4BTN4,	MR_JOY4, Btn4			}, // 51
+	{ "Joystick4 Btn5",		IDS_JOY4BTN5,	MR_JOY4, Btn5			}, // 52
+	{ "Joystick4 Btn6",		IDS_JOY4BTN6,	MR_JOY4, Btn6			}, // 53
+	{ "Joystick4 Btn7",		IDS_JOY4BTN7,	MR_JOY4, Btn7			}, // 54
+	{ "Joystick4 Btn8",		IDS_JOY4BTN8,	MR_JOY4, Btn8			}, // 55
+	{ "Joystick4 Top",		IDS_JOY4TOP,	MR_JOY4, AxeTop			}, // 56
+	{ "Joystick4 Bottom",	IDS_JOY4DOWN,	MR_JOY4, AxeBottom		}, // 57
+	{ "Joystick4 Right",	IDS_JOY4RIGHT,	MR_JOY4, AxeRight		}, // 58
+	{ "Joystick4 Left",		IDS_JOY4LEFT,	MR_JOY4, AxeLeft		}, // 59
 
-	{ "Space"   , IDS_SPACE, MR_KDB, VK_SPACE },  // 28 Player 2 only from here
-	{ "A Key"   , IDS_KEY_A, MR_KDB, 'A'      },  // 29
-	{ "B Key"   , IDS_KEY_B, MR_KDB, 'B'      },  // 30
-	{ "C Key"   , IDS_KEY_C, MR_KDB, 'C'      },  // 31
-	{ "D Key"   , IDS_KEY_D, MR_KDB, 'D'      },  // 32
-	{ "E Key"   , IDS_KEY_E, MR_KDB, 'E'      },  // 33
-	{ "F Key"   , IDS_KEY_F, MR_KDB, 'F'      },  // 34
-	{ "G Key"   , IDS_KEY_G, MR_KDB, 'G'      },  // 35
-	{ "H Key"   , IDS_KEY_H, MR_KDB, 'H'      },  // 36
-	{ "I Key"   , IDS_KEY_I, MR_KDB, 'I'      },  // 37
-	{ "J Key"   , IDS_KEY_J, MR_KDB, 'J'      },  // 38
-	{ "K Key"   , IDS_KEY_K, MR_KDB, 'K'      },  // 39
-	{ "L Key"   , IDS_KEY_L, MR_KDB, 'L'      },  // 40
-	{ "M Key"   , IDS_KEY_M, MR_KDB, 'M'      },  // 41
-	{ "N Key"   , IDS_KEY_N, MR_KDB, 'N'      },  // 42
-	{ "O Key"   , IDS_KEY_O, MR_KDB, 'O'      },  // 43
-	{ "P Key"   , IDS_KEY_P, MR_KDB, 'P'      },  // 44
-	{ "Q Key"   , IDS_KEY_Q, MR_KDB, 'Q'      },  // 45
-	{ "R Key"   , IDS_KEY_R, MR_KDB, 'R'      },  // 46
-	{ "S Key"   , IDS_KEY_S, MR_KDB, 'S'      },  // 47
-	{ "T Key"   , IDS_KEY_T, MR_KDB, 'T'      },  // 48
-	{ "U Key"   , IDS_KEY_U, MR_KDB, 'U'      },  // 49
-	{ "V Key"   , IDS_KEY_V, MR_KDB, 'V'      },  // 50
-	{ "W Key"   , IDS_KEY_W, MR_KDB, 'W'      },  // 51
-	{ "X Key"   , IDS_KEY_X, MR_KDB, 'X'      },  // 52
-	{ "Y Key"   , IDS_KEY_Y, MR_KDB, 'Y'      },  // 53
-	{ "Z Key"   , IDS_KEY_Z, MR_KDB, 'Z'      },  // 54
+	{ "Space"   , IDS_SPACE, MR_KDB, VK_SPACE },  // 60 Player 2 only from here
+	{ "A Key"   , IDS_KEY_A, MR_KDB, 'A'      },  // 61
+	{ "B Key"   , IDS_KEY_B, MR_KDB, 'B'      },  // 62
+	{ "C Key"   , IDS_KEY_C, MR_KDB, 'C'      },  // 63
+	{ "D Key"   , IDS_KEY_D, MR_KDB, 'D'      },  // 64
+	{ "E Key"   , IDS_KEY_E, MR_KDB, 'E'      },  // 65
+	{ "F Key"   , IDS_KEY_F, MR_KDB, 'F'      },  // 66
+	{ "G Key"   , IDS_KEY_G, MR_KDB, 'G'      },  // 67
+	{ "H Key"   , IDS_KEY_H, MR_KDB, 'H'      },  // 68
+	{ "I Key"   , IDS_KEY_I, MR_KDB, 'I'      },  // 69
+	{ "J Key"   , IDS_KEY_J, MR_KDB, 'J'      },  // 70
+	{ "K Key"   , IDS_KEY_K, MR_KDB, 'K'      },  // 71
+	{ "L Key"   , IDS_KEY_L, MR_KDB, 'L'      },  // 72
+	{ "M Key"   , IDS_KEY_M, MR_KDB, 'M'      },  // 73
+	{ "N Key"   , IDS_KEY_N, MR_KDB, 'N'      },  // 74
+	{ "O Key"   , IDS_KEY_O, MR_KDB, 'O'      },  // 75
+	{ "P Key"   , IDS_KEY_P, MR_KDB, 'P'      },  // 76
+	{ "Q Key"   , IDS_KEY_Q, MR_KDB, 'Q'      },  // 77
+	{ "R Key"   , IDS_KEY_R, MR_KDB, 'R'      },  // 78
+	{ "S Key"   , IDS_KEY_S, MR_KDB, 'S'      },  // 79
+	{ "T Key"   , IDS_KEY_T, MR_KDB, 'T'      },  // 80
+	{ "U Key"   , IDS_KEY_U, MR_KDB, 'U'      },  // 81
+	{ "V Key"   , IDS_KEY_V, MR_KDB, 'V'      },  // 82
+	{ "W Key"   , IDS_KEY_W, MR_KDB, 'W'      },  // 83
+	{ "X Key"   , IDS_KEY_X, MR_KDB, 'X'      },  // 84
+	{ "Y Key"   , IDS_KEY_Y, MR_KDB, 'Y'      },  // 85
+	{ "Z Key"   , IDS_KEY_Z, MR_KDB, 'Z'      },  // 86
 	{ "Not a Key", IDS_DISABLE, MR_KDB, 0 }, 
 	{ "Not a Key", IDS_DISABLE, MR_KDB, 0 },
 	{ "Not a Key", IDS_DISABLE, MR_KDB, 0 },
 	{ "Not a Key", IDS_DISABLE, MR_KDB, 0 },
 };
 
-#define NB_KEY_PLAYER_1   28
-#define NB_KEY_PLAYER_2   55
+#define NB_KEY_PLAYER_1   60
+#define NB_KEY_PLAYER_2   87
+#define NB_KEY_PLAYER_3   87
+#define NB_KEY_PLAYER_4   87
 
 BOOL gFirstKDBCall      = TRUE; // Set to TRUE on each new game
 BOOL gFirstKDBResetJoy1 = TRUE; // Set to TRUE on each new scan
 BOOL gFirstKDBResetJoy2 = TRUE; // Set to TRUE on each new scan
+BOOL gFirstKDBResetJoy3 = TRUE; // Set to TRUE on each new scan
+BOOL gFirstKDBResetJoy4 = TRUE; // Set to TRUE on each new scan
 
 BOOL CheckKeyState(int pKeyIndex);
 
@@ -162,6 +198,8 @@ BOOL CheckKeyState(int pKeyIndex) {
 
 	static JOYINFOEX lJoystick1;
 	static JOYINFOEX lJoystick2;
+	static JOYINFOEX lJoystick3;
+	static JOYINFOEX lJoystick4;
 
 	switch(KeyChoice[pKeyIndex].mControler) {
 		case MR_KDB:
@@ -210,6 +248,18 @@ BOOL CheckKeyState(int pKeyIndex) {
 				case Btn4:
 					lReturnValue = (lJoystick1.dwButtons & 8);
 					break;
+				case Btn5:
+					lReturnValue = (lJoystick1.dwButtons & 16);
+					break;
+				case Btn6:
+					lReturnValue = (lJoystick1.dwButtons & 32);
+					break;
+				case Btn7:
+					lReturnValue = (lJoystick1.dwButtons & 64);
+					break;
+				case Btn8:
+					lReturnValue = (lJoystick1.dwButtons & 128);
+					break;
 			}
 			break;
 		case MR_JOY2:
@@ -246,8 +296,116 @@ BOOL CheckKeyState(int pKeyIndex) {
 				case Btn4:
 					lReturnValue = (lJoystick2.dwButtons & 8);
 					break;
+				case Btn5:
+					lReturnValue = (lJoystick2.dwButtons & 16);
+					break;
+				case Btn6:
+					lReturnValue = (lJoystick2.dwButtons & 32);
+					break;
+				case Btn7:
+					lReturnValue = (lJoystick2.dwButtons & 64);
+					break;
+				case Btn8:
+					lReturnValue = (lJoystick2.dwButtons & 128);
+					break;
 		}
-			break;         
+			break; 
+		case MR_JOY3:
+			if(gFirstKDBResetJoy3) {
+				gFirstKDBResetJoy3 = FALSE;
+
+				lJoystick3.dwSize  = sizeof(lJoystick3);
+				lJoystick3.dwFlags = JOY_RETURNBUTTONS | JOY_RETURNX | JOY_RETURNY;
+				joyGetPosEx(0, &lJoystick3);
+			}
+
+			switch(KeyChoice[pKeyIndex].mKeyValue) {
+				case AxeTop:
+					lReturnValue = (lJoystick3.dwYpos < 16000);
+					break;
+				case AxeBottom:
+					lReturnValue = (lJoystick3.dwYpos > 48000);
+					break;
+				case AxeLeft:
+					lReturnValue = (lJoystick3.dwXpos < 16000);
+					break;
+				case AxeRight:
+					lReturnValue = (lJoystick3.dwXpos > 48000);
+					break;
+				case Btn1:
+					lReturnValue = (lJoystick3.dwButtons & 1);
+					break;
+				case Btn2:
+					lReturnValue = (lJoystick3.dwButtons & 2);
+					break;
+				case Btn3:
+					lReturnValue = (lJoystick3.dwButtons & 4);
+					break;
+				case Btn4:
+					lReturnValue = (lJoystick3.dwButtons & 8);
+					break;
+				case Btn5:
+					lReturnValue = (lJoystick3.dwButtons & 16);
+					break;
+				case Btn6:
+					lReturnValue = (lJoystick3.dwButtons & 32);
+					break;
+				case Btn7:
+					lReturnValue = (lJoystick3.dwButtons & 64);
+					break;
+				case Btn8:
+					lReturnValue = (lJoystick3.dwButtons & 128);
+					break;
+		}
+			break;
+		case MR_JOY4:
+			if(gFirstKDBResetJoy4) {
+				gFirstKDBResetJoy4 = FALSE;
+
+				lJoystick4.dwSize  = sizeof(lJoystick4);
+				lJoystick4.dwFlags = JOY_RETURNBUTTONS | JOY_RETURNX | JOY_RETURNY;
+				joyGetPosEx(0, &lJoystick4);
+			}
+
+			switch(KeyChoice[pKeyIndex].mKeyValue) {
+				case AxeTop:
+					lReturnValue = (lJoystick4.dwYpos < 16000);
+					break;
+				case AxeBottom:
+					lReturnValue = (lJoystick4.dwYpos > 48000);
+					break;
+				case AxeLeft:
+					lReturnValue = (lJoystick4.dwXpos < 16000);
+					break;
+				case AxeRight:
+					lReturnValue = (lJoystick4.dwXpos > 48000);
+					break;
+				case Btn1:
+					lReturnValue = (lJoystick4.dwButtons & 1);
+					break;
+				case Btn2:
+					lReturnValue = (lJoystick4.dwButtons & 2);
+					break;
+				case Btn3:
+					lReturnValue = (lJoystick4.dwButtons & 4);
+					break;
+				case Btn4:
+					lReturnValue = (lJoystick4.dwButtons & 8);
+					break;
+				case Btn5:
+					lReturnValue = (lJoystick4.dwButtons & 16);
+					break;
+				case Btn6:
+					lReturnValue = (lJoystick4.dwButtons & 32);
+					break;
+				case Btn7:
+					lReturnValue = (lJoystick4.dwButtons & 64);
+					break;
+				case Btn8:
+					lReturnValue = (lJoystick4.dwButtons & 128);
+					break;
+		}
+			break;
 	}
 	return lReturnValue;
 }  
@@ -358,6 +516,8 @@ MR_GameApp::MR_GameApp( HINSTANCE pInstance )
 	mVideoBuffer     = NULL;
 	mObserver1       = NULL;
 	mObserver2       = NULL;
+	mObserver3       = NULL;
+	mObserver4       = NULL;
 	mCurrentSession  = NULL;
 	mGameThread      = NULL;
 
@@ -391,9 +551,13 @@ void MR_GameApp::Clean()
 	
 	mObserver1->Delete();
 	mObserver2->Delete();
+	mObserver3->Delete();
+	mObserver4->Delete();
 
 	mObserver1 = NULL;
 	mObserver2 = NULL;
+	mObserver3 = NULL;
+	mObserver4 = NULL;
 
 	MR_DllObjectFactory::Clean( TRUE );
 
@@ -416,14 +580,32 @@ void MR_GameApp::LoadRegistry() {
 	mWeapon1    = 11;
 	mLookBack1	= 10;
 
-	mMotorOn2   = 38;
-	mRight2     = 18;
-	mLeft2      = 31;
-	mJump2      = 17;
-	mFire2      = 13;
-	mBreak2     = 16;
-	mWeapon2    = 29;
-	mLookBack2	= 52;
+	mMotorOn2   = 66;
+	mRight2     = 64;
+	mLeft2      = 61;
+	mJump2      = 83;
+	mFire2      = 78;
+	mBreak2     = 79;
+	mWeapon2    = 77;
+	mLookBack2	= 65;
+
+	mMotorOn3   = 0;
+	mRight3     = 0;
+	mLeft3      = 0;
+	mJump3      = 0;
+	mFire3      = 0;
+	mBreak3     = 0;
+	mWeapon3    = 0;
+	mLookBack3	= 0;
+
+	mMotorOn4   = 0;
+	mRight4     = 0;
+	mLeft4      = 0;
+	mJump4      = 0;
+	mFire4      = 0;
+	mBreak4     = 0;
+	mWeapon4    = 0;
+	mLookBack4	= 0;
 
 	// Screen
 	mGamma       = 1.2;
@@ -461,7 +643,7 @@ void MR_GameApp::LoadRegistry() {
 
 
 	// if(lError == ERROR_SUCCESS) {
-	MR_UInt8 lControlBuffer[16];
+	MR_UInt8 lControlBuffer[32];
 	DWORD    lControlBufferSize = sizeof(lControlBuffer);
 
 	if(RegQueryValueEx(lProgramKey, "Control", 0, NULL, lControlBuffer, &lControlBufferSize) == ERROR_SUCCESS) {
@@ -483,6 +665,24 @@ void MR_GameApp::LoadRegistry() {
 		mBreak2     = lControlBuffer[13];
 		mWeapon2    = lControlBuffer[14];
 		mLookBack2	= lControlBuffer[15];
+
+		mMotorOn3   = lControlBuffer[16];
+		mRight3     = lControlBuffer[17];
+		mLeft3      = lControlBuffer[18];
+		mJump3      = lControlBuffer[19];
+		mFire3      = lControlBuffer[20];
+		mBreak3     = lControlBuffer[21];
+		mWeapon3    = lControlBuffer[22];
+		mLookBack3	= lControlBuffer[23];
+
+		mMotorOn4   = lControlBuffer[24];
+		mRight4     = lControlBuffer[25];
+		mLeft4      = lControlBuffer[26];
+		mJump4      = lControlBuffer[27];
+		mFire4      = lControlBuffer[28];
+		mBreak4     = lControlBuffer[29];
+		mWeapon4    = lControlBuffer[30];
+		mLookBack4	= lControlBuffer[31];
 	}
 
 	double   lVideoSetting[3];
@@ -568,7 +768,7 @@ void MR_GameApp::SaveRegistry() {
 
 
 	if(lError == ERROR_SUCCESS) {
-		MR_UInt8 lControlBuffer[16];      
+		MR_UInt8 lControlBuffer[32];      
 
 		lControlBuffer[0]  = mMotorOn1;
 		lControlBuffer[1]  = mRight1;
@@ -587,6 +787,24 @@ void MR_GameApp::SaveRegistry() {
 		lControlBuffer[13] = mBreak2;
 		lControlBuffer[14] = mWeapon2;
 		lControlBuffer[15] = mLookBack2;
+
+		lControlBuffer[16]  = mMotorOn3;
+		lControlBuffer[17]  = mRight3;
+		lControlBuffer[18] = mLeft3;
+		lControlBuffer[19] = mJump3;
+		lControlBuffer[20] = mFire3;
+		lControlBuffer[21] = mBreak3;
+		lControlBuffer[22] = mWeapon3;
+		lControlBuffer[23] = mLookBack3;
+
+		lControlBuffer[24]  = mMotorOn4;
+		lControlBuffer[25]  = mRight4;
+		lControlBuffer[26] = mLeft4;
+		lControlBuffer[27] = mJump4;
+		lControlBuffer[28] = mFire4;
+		lControlBuffer[29] = mBreak4;
+		lControlBuffer[30] = mWeapon4;
+		lControlBuffer[31] = mLookBack4;
 
 		if(RegSetValueEx(lProgramKey, "Control", 0, REG_BINARY, lControlBuffer, sizeof(lControlBuffer)) != ERROR_SUCCESS) {
 			lReturnValue = FALSE;
@@ -711,6 +929,20 @@ BOOL MR_GameApp::IsGameRunning()
 			if( !(lPlayer->GetTotalLap() <= lPlayer->GetLap()) )
 			{
 				lPlayer = mCurrentSession->GetMainCharacter2();
+
+				if( lPlayer == NULL )
+				{
+					lReturnValue = TRUE;
+				}
+
+				lPlayer = mCurrentSession->GetMainCharacter3();
+
+				if( lPlayer == NULL )
+				{
+					lReturnValue = TRUE;
+				}
+
+				lPlayer = mCurrentSession->GetMainCharacter4();
 
 				if( lPlayer == NULL )
 				{
@@ -1078,6 +1310,19 @@ void MR_GameApp::RefreshView() {
 																	  mCurrentSession->GetMainCharacter2(),
 																	  lTime,
 																	  mCurrentSession->GetBackImage());
+
+						if(mObserver3 != NULL)
+							mObserver3->RenderNormalDisplay(mVideoBuffer,
+																	  mCurrentSession,
+																	  mCurrentSession->GetMainCharacter3(),
+																	  lTime,
+																	  mCurrentSession->GetBackImage());
+						if(mObserver4 != NULL)
+							mObserver4->RenderNormalDisplay(mVideoBuffer,
+																	  mCurrentSession,
+																	  mCurrentSession->GetMainCharacter4(),
+																	  lTime,
+																	  mCurrentSession->GetBackImage());
 						break;
 
 					case eDebugView:
@@ -1091,6 +1336,18 @@ void MR_GameApp::RefreshView() {
 							mObserver2->RenderDebugDisplay(mVideoBuffer,
 																	 mCurrentSession,
 																	 mCurrentSession->GetMainCharacter2(),
+																	 lTime,
+																	 mCurrentSession->GetBackImage());
+						if(mObserver3 != NULL)
+							mObserver3->RenderDebugDisplay(mVideoBuffer,
+																	 mCurrentSession,
+																	 mCurrentSession->GetMainCharacter3(),
+																	 lTime,
+																	 mCurrentSession->GetBackImage());
+						if(mObserver4 != NULL)
+							mObserver4->RenderDebugDisplay(mVideoBuffer,
+																	 mCurrentSession,
+																	 mCurrentSession->GetMainCharacter4(),
 																	 lTime,
 																	 mCurrentSession->GetBackImage());
 						break;
@@ -1113,6 +1370,10 @@ void MR_GameApp::RefreshView() {
 			mObserver1->PlaySounds(mCurrentSession->GetCurrentLevel(), mCurrentSession->GetMainCharacter());
 		if(mObserver2 != NULL)
 			mObserver2->PlaySounds(mCurrentSession->GetCurrentLevel(), mCurrentSession->GetMainCharacter2());
+		if(mObserver3 != NULL)
+			mObserver3->PlaySounds(mCurrentSession->GetCurrentLevel(), mCurrentSession->GetMainCharacter3());
+		if(mObserver4 != NULL)
+			mObserver4->PlaySounds(mCurrentSession->GetCurrentLevel(), mCurrentSession->GetMainCharacter4());
 
 		MR_SoundServer::ApplyContinuousPlay();
 	}
@@ -1130,6 +1391,8 @@ void MR_GameApp::ReadAsyncInputController() {
 			static BOOL  lFirstCall = TRUE;
 			int lControlState1 = 0;
 			int lControlState2 = 0;
+			int lControlState3 = 0;
+			int lControlState4 = 0;
 
 			if(CheckKeyState(mMotorOn1))
 				lControlState1 |= MR_MainCharacter::eMotorOn;
@@ -1199,10 +1462,82 @@ void MR_GameApp::ReadAsyncInputController() {
 				
 			}
 
+			// If we're in three player mode we need to check those keys too
+			if(mCurrentSession->GetMainCharacter3() != NULL) {
+				if(CheckKeyState(mMotorOn3))
+					lControlState3 |= MR_MainCharacter::eMotorOn;
+				if(CheckKeyState(mJump3))
+					lControlState3 |= MR_MainCharacter::eJump;
+				if(CheckKeyState(mBreak3))
+					lControlState3 |= MR_MainCharacter::eBreakDirection;
+				if(CheckKeyState(mFire3))
+					lControlState3 |= MR_MainCharacter::eFire;
+				if(CheckKeyState(mWeapon3))
+					lControlState3 |= MR_MainCharacter::eSelectWeapon;
+				if(CheckKeyState(mLookBack3))
+					lControlState3 |= MR_MainCharacter::eLookBack;
+
+				/*
+				if( GetAsyncKeyState( KeyChoice[ mStraffle3 ].mKeyValue ) )
+				{
+					if( GetAsyncKeyState( KeyChoice[ mRight3 ].mKeyValue ) )
+					{
+						lControlState3 |= MR_MainCharacter::eStraffleRight;
+					}
+					if( GetAsyncKeyState( KeyChoice[ mLeft3 ].mKeyValue ) )
+					{
+						lControlState3 |= MR_MainCharacter::eStraffleLeft;
+					}
+				}
+				else
+				*/
+				if(CheckKeyState(mRight3))
+					lControlState3 |= MR_MainCharacter::eRight;
+				if(CheckKeyState(mLeft3))
+					lControlState3 |= MR_MainCharacter::eLeft;
+				
+			}
+
+			// If we're in four player mode we need to check those keys too
+			if(mCurrentSession->GetMainCharacter4() != NULL) {
+				if(CheckKeyState(mMotorOn4))
+					lControlState4 |= MR_MainCharacter::eMotorOn;
+				if(CheckKeyState(mJump4))
+					lControlState4 |= MR_MainCharacter::eJump;
+				if(CheckKeyState(mBreak4))
+					lControlState4 |= MR_MainCharacter::eBreakDirection;
+				if(CheckKeyState(mFire4))
+					lControlState4 |= MR_MainCharacter::eFire;
+				if(CheckKeyState(mWeapon4))
+					lControlState4 |= MR_MainCharacter::eSelectWeapon;
+				if(CheckKeyState(mLookBack4))
+					lControlState4 |= MR_MainCharacter::eLookBack;
+
+				/*
+				if( GetAsyncKeyState( KeyChoice[ mStraffle4 ].mKeyValue ) )
+				{
+					if( GetAsyncKeyState( KeyChoice[ mRight4 ].mKeyValue ) )
+					{
+						lControlState4 |= MR_MainCharacter::eStraffleRight;
+					}
+					if( GetAsyncKeyState( KeyChoice[ mLeft4 ].mKeyValue ) )
+					{
+						lControlState4 |= MR_MainCharacter::eStraffleLeft;
+					}
+				}
+				else
+				*/
+				if(CheckKeyState(mRight4))
+					lControlState4 |= MR_MainCharacter::eRight;
+				if(CheckKeyState(mLeft4))
+					lControlState4 |= MR_MainCharacter::eLeft;
+				
+			}
+
 			if(lFirstCall)
 				lFirstCall = FALSE;
 			else
-				mCurrentSession->SetControlState(lControlState1, lControlState2);
+				mCurrentSession->SetControlState(lControlState1, lControlState2, lControlState3, lControlState4);
 		}
 	}
 }
@@ -1459,7 +1794,7 @@ void MR_GameApp::NewLocalSession() {
 	AssignPalette();
 }
 
-void MR_GameApp::NewSplitSession() {
+void MR_GameApp::NewSplitSession(int pSplitPlayers) {
 	BOOL lSuccess = TRUE;
 
 	// Verify is user acknowledge
@@ -1483,9 +1818,27 @@ void MR_GameApp::NewSplitSession() {
 
 		mObserver1 = MR_Observer::New();
 		mObserver2 = MR_Observer::New();
+		if (pSplitPlayers>2) mObserver3 = MR_Observer::New();
+		if (pSplitPlayers>3) mObserver4 = MR_Observer::New();
 
-		mObserver1->SetSplitMode(MR_Observer::eUpperSplit);
-		mObserver2->SetSplitMode(MR_Observer::eLowerSplit);
+		if (pSplitPlayers==2)
+		{
+            mObserver1->SetSplitMode(MR_Observer::eUpperSplit);
+			mObserver2->SetSplitMode(MR_Observer::eLowerSplit);
+		}
+		if (pSplitPlayers==3)
+		{
+            mObserver1->SetSplitMode(MR_Observer::eUpperLeftSplit);
+			mObserver2->SetSplitMode(MR_Observer::eUpperRightSplit);
+			mObserver3->SetSplitMode(MR_Observer::eLowerLeftSplit);
+		}
+		if (pSplitPlayers==4)
+		{
+            mObserver1->SetSplitMode(MR_Observer::eUpperLeftSplit);
+			mObserver2->SetSplitMode(MR_Observer::eUpperRightSplit);
+			mObserver3->SetSplitMode(MR_Observer::eLowerLeftSplit);
+			mObserver4->SetSplitMode(MR_Observer::eLowerRightSplit);
+		}
 
 		MR_ClientSession *lCurrentSession = new MR_ClientSession;
 
@@ -1503,7 +1856,11 @@ void MR_GameApp::NewSplitSession() {
 		}
 
 		if(lSuccess)
+			{
 			lSuccess = lCurrentSession->CreateMainCharacter2();
+			if (pSplitPlayers>2) lSuccess = lCurrentSession->CreateMainCharacter3();
+			if (pSplitPlayers>3) lSuccess = lCurrentSession->CreateMainCharacter4();
+			}
 
 		if(!lSuccess) {
 			// Clean everytings
@@ -1968,7 +2325,17 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 
 				case ID_GAME_SPLITSCREEN:
 					This->SetVideoMode(0,0);
-					This->NewSplitSession();
+					This->NewSplitSession(2);
+					return 0;
+
+				case ID_GAME_SPLITSCREEN3:
+					This->SetVideoMode(0,0);
+					This->NewSplitSession(3);
+					return 0;
+
+				case ID_GAME_SPLITSCREEN4:
+					This->SetVideoMode(0,0);
+					This->NewSplitSession(4);
 					return 0;
 
 				case ID_GAME_NETWORK_SERVER:
@@ -2067,6 +2434,14 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 					{
 						This->mObserver2->SetCockpitView( FALSE );
 					}
+					if( This->mObserver3 != NULL )
+					{
+						This->mObserver3->SetCockpitView( FALSE );
+					}
+					if( This->mObserver4 != NULL )
+					{
+						This->mObserver4->SetCockpitView( FALSE );
+					}
 					return 0;
 
 				case ID_VIEW_COCKPIT:
@@ -2078,6 +2453,14 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 					if( This->mObserver2 != NULL )
 					{
 						This->mObserver2->SetCockpitView( TRUE );
+					}
+					if( This->mObserver3 != NULL )
+					{
+						This->mObserver3->SetCockpitView( TRUE );
+					}
+					if( This->mObserver4 != NULL )
+					{
+						This->mObserver4->SetCockpitView( TRUE );
 					}
 					return 0;
 
@@ -2096,6 +2479,14 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 					{
 						This->mObserver2->ReduceMargin();
 					}
+					if( This->mObserver3 != NULL )
+					{
+						This->mObserver3->ReduceMargin();
+					}
+					if( This->mObserver4 != NULL )
+					{
+						This->mObserver4->ReduceMargin();
+					}
 					return 0;
 
 				case ID_VIEW_SMALLER:
@@ -2106,6 +2497,14 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 					if( This->mObserver2 != NULL )
 					{
 						This->mObserver2->EnlargeMargin();
+					}
+					if( This->mObserver3 != NULL )
+					{
+						This->mObserver3->EnlargeMargin();
+					}
+					if( This->mObserver4 != NULL )
+					{
+						This->mObserver4->EnlargeMargin();
 					}
 					This->mClrScrTodo = 2;
 					return 0;
@@ -2120,6 +2519,14 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 					{
 						This->mObserver2->PlayersListPageDn();
 					}
+					if( This->mObserver3 != NULL )
+					{
+						This->mObserver3->PlayersListPageDn();
+					}
+					if( This->mObserver4 != NULL )
+					{
+						This->mObserver4->PlayersListPageDn();
+					}
 					return 0;
 
 				case ID_VIEW_MOREMESSAGES:
@@ -2130,6 +2537,14 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 					if( This->mObserver2 != NULL )
 					{
 						This->mObserver2->MoreMessages();
+					}
+					if( This->mObserver3 != NULL )
+					{
+						This->mObserver3->MoreMessages();
+					}
+					if( This->mObserver4 != NULL )
+					{
+						This->mObserver4->MoreMessages();
 					}
 					return 0;
 
@@ -2176,6 +2591,14 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 					{
 						This->mObserver2->Home();
 					}
+					if( This->mObserver3 != NULL )
+					{
+						This->mObserver3->Home();
+					}
+					if( This->mObserver4 != NULL )
+					{
+						This->mObserver4->Home();
+					}
 					return 0;
 
 				case VK_PRIOR:
@@ -2186,6 +2609,14 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 					if( This->mObserver2 != NULL )
 					{
 						This->mObserver2->Scroll( 1 );
+					}
+					if( This->mObserver3 != NULL )
+					{
+						This->mObserver3->Scroll( 1 );
+					}
+					if( This->mObserver4 != NULL )
+					{
+						This->mObserver4->Scroll( 1 );
 					}
 					return 0;
 
@@ -2198,6 +2629,14 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 					{
 						This->mObserver2->Scroll( -1 );
 					}
+					if( This->mObserver3 != NULL )
+					{
+						This->mObserver3->Scroll( -1 );
+					}
+					if( This->mObserver4 != NULL )
+					{
+						This->mObserver4->Scroll( -1 );
+					}
 					return 0;
 
 				case VK_INSERT:
@@ -2209,6 +2648,14 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 					{
 						This->mObserver2->ZoomIn();
 					}
+					if( This->mObserver3 != NULL )
+					{
+						This->mObserver3->ZoomIn();
+					}
+					if( This->mObserver4 != NULL )
+					{
+						This->mObserver4->ZoomIn();
+					}
 					return 0;
 
 				case VK_DELETE:
@@ -2219,6 +2666,14 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 					if( This->mObserver2 != NULL )
 					{
 						This->mObserver2->ZoomOut();
+					}
+					if( This->mObserver3 != NULL )
+					{
+						This->mObserver3->ZoomOut();
+					}
+					if( This->mObserver4 != NULL )
+					{
+						This->mObserver4->ZoomOut();
 					}
 					return 0;
 
@@ -2433,6 +2888,36 @@ BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 				SendDlgItemMessage(pWindow, IDC_LOOKBACK2, CB_ADDSTRING, 0, (LONG) lBuffer);
 			}
 
+			for(lCounter = 0; lCounter < NB_KEY_PLAYER_3; lCounter++) {
+				char lBuffer[50];
+				LoadString(NULL, KeyChoice[lCounter].mStringId, lBuffer, sizeof(lBuffer));
+
+				SendDlgItemMessage(pWindow, IDC_MOTOR_ON3, CB_ADDSTRING, 0, (LONG) lBuffer);
+				SendDlgItemMessage(pWindow, IDC_RIGHT3, CB_ADDSTRING, 0, (LONG) lBuffer);
+				SendDlgItemMessage(pWindow, IDC_LEFT3, CB_ADDSTRING, 0, (LONG) lBuffer);
+				SendDlgItemMessage(pWindow, IDC_JUMP3, CB_ADDSTRING, 0, (LONG) lBuffer);
+				SendDlgItemMessage(pWindow, IDC_FIRE3, CB_ADDSTRING, 0, (LONG) lBuffer);
+				// SendDlgItemMessage( pWindow, IDC_STRAFFLE3, CB_ADDSTRING, 0, (LONG)lBuffer );
+				SendDlgItemMessage(pWindow, IDC_BREAK3, CB_ADDSTRING, 0, (LONG) lBuffer);
+				SendDlgItemMessage(pWindow, IDC_SELWEAPON3, CB_ADDSTRING, 0, (LONG) lBuffer);
+				SendDlgItemMessage(pWindow, IDC_LOOKBACK3, CB_ADDSTRING, 0, (LONG) lBuffer);
+			}
+
+			for(lCounter = 0; lCounter < NB_KEY_PLAYER_4; lCounter++) {
+				char lBuffer[50];
+				LoadString(NULL, KeyChoice[lCounter].mStringId, lBuffer, sizeof(lBuffer));
+
+				SendDlgItemMessage(pWindow, IDC_MOTOR_ON4, CB_ADDSTRING, 0, (LONG) lBuffer);
+				SendDlgItemMessage(pWindow, IDC_RIGHT4, CB_ADDSTRING, 0, (LONG) lBuffer);
+				SendDlgItemMessage(pWindow, IDC_LEFT4, CB_ADDSTRING, 0, (LONG) lBuffer);
+				SendDlgItemMessage(pWindow, IDC_JUMP4, CB_ADDSTRING, 0, (LONG) lBuffer);
+				SendDlgItemMessage(pWindow, IDC_FIRE4, CB_ADDSTRING, 0, (LONG) lBuffer);
+				// SendDlgItemMessage( pWindow, IDC_STRAFFLE4, CB_ADDSTRING, 0, (LONG)lBuffer );
+				SendDlgItemMessage(pWindow, IDC_BREAK4, CB_ADDSTRING, 0, (LONG) lBuffer);
+				SendDlgItemMessage(pWindow, IDC_SELWEAPON4, CB_ADDSTRING, 0, (LONG) lBuffer);
+				SendDlgItemMessage(pWindow, IDC_LOOKBACK4, CB_ADDSTRING, 0, (LONG) lBuffer);
+			}
+
 			SendDlgItemMessage(pWindow, IDC_MOTOR_ON1, CB_SETCURSEL, This->mMotorOn1, 0);
 			SendDlgItemMessage(pWindow, IDC_RIGHT1, CB_SETCURSEL, This->mRight1, 0);
 			SendDlgItemMessage(pWindow, IDC_LEFT1, CB_SETCURSEL, This->mLeft1, 0);
@@ -2453,11 +2938,31 @@ BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 			SendDlgItemMessage(pWindow, IDC_SELWEAPON2, CB_SETCURSEL, This->mWeapon2, 0);
 			SendDlgItemMessage(pWindow, IDC_LOOKBACK2, CB_SETCURSEL, This->mLookBack2, 0);
 
+			SendDlgItemMessage(pWindow, IDC_MOTOR_ON3, CB_SETCURSEL, This->mMotorOn3, 0);
+			SendDlgItemMessage(pWindow, IDC_RIGHT3, CB_SETCURSEL, This->mRight3, 0);
+			SendDlgItemMessage(pWindow, IDC_LEFT3, CB_SETCURSEL, This->mLeft3, 0);
+			SendDlgItemMessage(pWindow, IDC_JUMP3, CB_SETCURSEL, This->mJump3, 0);
+			SendDlgItemMessage(pWindow, IDC_FIRE3, CB_SETCURSEL, This->mFire3, 0);
+			// SendDlgItemMessage( pWindow, IDC_STRAFFLE3, CB_SETCURSEL, This->mStraffle3,0 );
+			SendDlgItemMessage(pWindow, IDC_BREAK3, CB_SETCURSEL, This->mBreak3, 0);
+			SendDlgItemMessage(pWindow, IDC_SELWEAPON3, CB_SETCURSEL, This->mWeapon3, 0);
+			SendDlgItemMessage(pWindow, IDC_LOOKBACK3, CB_SETCURSEL, This->mLookBack3, 0);
+
+			SendDlgItemMessage(pWindow, IDC_MOTOR_ON4, CB_SETCURSEL, This->mMotorOn4, 0);
+			SendDlgItemMessage(pWindow, IDC_RIGHT4, CB_SETCURSEL, This->mRight4, 0);
+			SendDlgItemMessage(pWindow, IDC_LEFT4, CB_SETCURSEL, This->mLeft4, 0);
+			SendDlgItemMessage(pWindow, IDC_JUMP4, CB_SETCURSEL, This->mJump4, 0);
+			SendDlgItemMessage(pWindow, IDC_FIRE4, CB_SETCURSEL, This->mFire4, 0);
+			// SendDlgItemMessage( pWindow, IDC_STRAFFLE4, CB_SETCURSEL, This->mStraffle4,0 );
+			SendDlgItemMessage(pWindow, IDC_BREAK4, CB_SETCURSEL, This->mBreak4, 0);
+			SendDlgItemMessage(pWindow, IDC_SELWEAPON4, CB_SETCURSEL, This->mWeapon4, 0);
+			SendDlgItemMessage(pWindow, IDC_LOOKBACK4, CB_SETCURSEL, This->mLookBack4, 0);
+
 			break;
 		case WM_NOTIFY:
 			switch(((NMHDR FAR *) pLParam)->code) {
 				case PSN_APPLY:
-					This->mMotorOn1	= SendDlgItemMessage(pWindow, IDC_MOTOR_ON1, CB_GETCURSEL, 0, 0);
+					This->mMotorOn1		= SendDlgItemMessage(pWindow, IDC_MOTOR_ON1, CB_GETCURSEL, 0, 0);
 					This->mRight1		= SendDlgItemMessage(pWindow, IDC_RIGHT1, CB_GETCURSEL, 0, 0);
 					This->mLeft1		= SendDlgItemMessage(pWindow, IDC_LEFT1, CB_GETCURSEL, 0, 0);
 					This->mJump1		= SendDlgItemMessage(pWindow, IDC_JUMP1, CB_GETCURSEL, 0, 0);
@@ -2465,7 +2970,7 @@ BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 					This->mBreak1		= SendDlgItemMessage(pWindow, IDC_BREAK1, CB_GETCURSEL, 0, 0);
 					This->mWeapon1		= SendDlgItemMessage(pWindow, IDC_SELWEAPON1, CB_GETCURSEL, 0, 0);
 					This->mLookBack1	= SendDlgItemMessage(pWindow, IDC_LOOKBACK1, CB_GETCURSEL, 0, 0);
-					This->mMotorOn2	= SendDlgItemMessage(pWindow, IDC_MOTOR_ON2, CB_GETCURSEL, 0, 0);
+					This->mMotorOn2		= SendDlgItemMessage(pWindow, IDC_MOTOR_ON2, CB_GETCURSEL, 0, 0);
 					This->mRight2		= SendDlgItemMessage(pWindow, IDC_RIGHT2, CB_GETCURSEL, 0, 0);
 					This->mLeft2		= SendDlgItemMessage(pWindow, IDC_LEFT2, CB_GETCURSEL, 0, 0);
 					This->mJump2		= SendDlgItemMessage(pWindow, IDC_JUMP2, CB_GETCURSEL, 0, 0);
@@ -2473,6 +2978,22 @@ BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 					This->mBreak2		= SendDlgItemMessage(pWindow, IDC_BREAK2, CB_GETCURSEL, 0, 0);
 					This->mWeapon2		= SendDlgItemMessage(pWindow, IDC_SELWEAPON2, CB_GETCURSEL, 0, 0);
 					This->mLookBack2	= SendDlgItemMessage(pWindow, IDC_LOOKBACK2, CB_GETCURSEL, 0, 0);
+					This->mMotorOn3		= SendDlgItemMessage(pWindow, IDC_MOTOR_ON3, CB_GETCURSEL, 0, 0);
+					This->mRight3		= SendDlgItemMessage(pWindow, IDC_RIGHT3, CB_GETCURSEL, 0, 0);
+					This->mLeft3		= SendDlgItemMessage(pWindow, IDC_LEFT3, CB_GETCURSEL, 0, 0);
+					This->mJump3		= SendDlgItemMessage(pWindow, IDC_JUMP3, CB_GETCURSEL, 0, 0);
+					This->mFire3		= SendDlgItemMessage(pWindow, IDC_FIRE3, CB_GETCURSEL, 0, 0);
+					This->mBreak3		= SendDlgItemMessage(pWindow, IDC_BREAK3, CB_GETCURSEL, 0, 0);
+					This->mWeapon3		= SendDlgItemMessage(pWindow, IDC_SELWEAPON3, CB_GETCURSEL, 0, 0);
+					This->mLookBack3	= SendDlgItemMessage(pWindow, IDC_LOOKBACK3, CB_GETCURSEL, 0, 0);
+					This->mMotorOn4		= SendDlgItemMessage(pWindow, IDC_MOTOR_ON4, CB_GETCURSEL, 0, 0);
+					This->mRight4		= SendDlgItemMessage(pWindow, IDC_RIGHT4, CB_GETCURSEL, 0, 0);
+					This->mLeft4		= SendDlgItemMessage(pWindow, IDC_LEFT4, CB_GETCURSEL, 0, 0);
+					This->mJump4		= SendDlgItemMessage(pWindow, IDC_JUMP4, CB_GETCURSEL, 0, 0);
+					This->mFire4		= SendDlgItemMessage(pWindow, IDC_FIRE4, CB_GETCURSEL, 0, 0);
+					This->mBreak4		= SendDlgItemMessage(pWindow, IDC_BREAK4, CB_GETCURSEL, 0, 0);
+					This->mWeapon4		= SendDlgItemMessage(pWindow, IDC_SELWEAPON4, CB_GETCURSEL, 0, 0);
+					This->mLookBack4	= SendDlgItemMessage(pWindow, IDC_LOOKBACK4, CB_GETCURSEL, 0, 0);
 					This->SaveRegistry();
 					break;
 			}

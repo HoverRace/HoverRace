@@ -63,6 +63,8 @@ class MR_GameApp {
       MR_VideoBuffer*          mVideoBuffer;
       MR_Observer*             mObserver1;
       MR_Observer*             mObserver2;
+	  MR_Observer*             mObserver3;
+	  MR_Observer*             mObserver4;
       MR_ClientSession*        mCurrentSession;
       MR_GameThread*           mGameThread;
 
@@ -81,7 +83,7 @@ class MR_GameApp {
       int mFire1;
       int mBreak1;
       int mWeapon1;
-		int mLookBack1;
+	  int mLookBack1;
 
       int mMotorOn2;
       int mRight2;
@@ -90,7 +92,25 @@ class MR_GameApp {
       int mFire2;
       int mBreak2;
       int mWeapon2;
-		int mLookBack2;
+	  int mLookBack2;
+
+	  int mMotorOn3;
+      int mRight3;
+      int mLeft3;
+      int mJump3;
+      int mFire3;
+      int mBreak3;
+      int mWeapon3;
+	  int mLookBack3;
+
+	  int mMotorOn4;
+      int mRight4;
+      int mLeft4;
+      int mJump4;
+      int mFire4;
+      int mBreak4;
+      int mWeapon4;
+	  int mLookBack4;
 
       double mGamma;
       double mContrast;
@@ -135,7 +155,7 @@ class MR_GameApp {
 
       // Message handlers
       void NewLocalSession();
-      void NewSplitSession();
+      void NewSplitSession(int pSplitPlayers);
       void NewNetworkSession(BOOL pIsServer);
       void NewInternetSession();
 

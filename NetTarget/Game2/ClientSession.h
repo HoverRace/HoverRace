@@ -45,6 +45,8 @@ class MR_ClientSession {
       MR_GameSession    mSession;
       MR_MainCharacter* mMainCharacter1;
       MR_MainCharacter* mMainCharacter2;
+	  MR_MainCharacter* mMainCharacter3;
+	  MR_MainCharacter* mMainCharacter4;
 
       MR_UInt8*         mBackImage;
 
@@ -73,13 +75,17 @@ class MR_ClientSession {
       // Main character control and interrogation
       BOOL CreateMainCharacter();
       BOOL CreateMainCharacter2();
+	  BOOL CreateMainCharacter3();
+	  BOOL CreateMainCharacter4();
       
       MR_MainCharacter* GetMainCharacter()const;
       MR_MainCharacter* GetMainCharacter2()const;
+	  MR_MainCharacter* GetMainCharacter3()const;
+	  MR_MainCharacter* GetMainCharacter4()const;
 
       virtual void      SetSimulationTime(MR_SimulationTime pTime);
       MR_SimulationTime GetSimulationTime()const;
-      void              SetControlState(int pState1, int pState2);
+      void              SetControlState(int pState1, int pState2, int pState3, int pState4);
 
       const MR_UInt8*   GetBackImage()const;
 

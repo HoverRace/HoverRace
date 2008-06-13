@@ -39,6 +39,10 @@ class MR_Observer
               eNotSplit,
               eUpperSplit,
               eLowerSplit,
+			  eUpperLeftSplit,
+			  eUpperRightSplit,
+			  eLowerLeftSplit,
+			  eLowerRightSplit,
            };
 
    private:

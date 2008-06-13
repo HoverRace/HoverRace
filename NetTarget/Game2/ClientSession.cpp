@@ -29,6 +29,8 @@ MR_ClientSession::MR_ClientSession()
 				:mSession(TRUE) {
    mMainCharacter1      = NULL;
    mMainCharacter2      = NULL;
+   mMainCharacter3      = NULL;
+   mMainCharacter4      = NULL;
    mBackImage           = NULL;
    mMap                 = NULL;
    mNbLap               = 1;
@@ -207,7 +209,51 @@ BOOL MR_ClientSession::CreateMainCharacter2()
    return TRUE;
 }
 
+BOOL MR_ClientSession::CreateMainCharacter3()
+{
 
+   // Add a main character in 
+   
+   ASSERT( mMainCharacter3 == NULL ); // why creating it twice?
+   ASSERT( mSession.GetCurrentLevel() != NULL );
+
+   mMainCharacter3 = MR_MainCharacter::New( mNbLap, mAllowWeapons );
+
+   // Insert the character in the current level
+   MR_Level* lCurrentLevel = mSession.GetCurrentLevel();
+
+   mMainCharacter3->mRoom        = lCurrentLevel->GetStartingRoom( 2 );      
+   mMainCharacter3->mPosition    = lCurrentLevel->GetStartingPos( 2 );
+   mMainCharacter3->SetOrientation( lCurrentLevel->GetStartingOrientation( 2 ) );
+   mMainCharacter3->SetHoverId( 2 );
+
+   lCurrentLevel->InsertElement( mMainCharacter3, lCurrentLevel->GetStartingRoom( 2 ) );
+
+   return TRUE;
+}
+
+BOOL MR_ClientSession::CreateMainCharacter4()
+{
+
+   // Add a main character in 
+   
+   ASSERT( mMainCharacter4 == NULL ); // why creating it twice?
+   ASSERT( mSession.GetCurrentLevel() != NULL );
+
+   mMainCharacter4 = MR_MainCharacter::New( mNbLap, mAllowWeapons );
+
+   // Insert the character in the current level
+   MR_Level* lCurrentLevel = mSession.GetCurrentLevel();
+
+   mMainCharacter4->mRoom        = lCurrentLevel->GetStartingRoom( 3 );      
+   mMainCharacter4->mPosition    = lCurrentLevel->GetStartingPos( 3 );
+   mMainCharacter4->SetOrientation( lCurrentLevel->GetStartingOrientation( 3 ) );
+   mMainCharacter4->SetHoverId( 3 );
+
+   lCurrentLevel->InsertElement( mMainCharacter4, lCurrentLevel->GetStartingRoom( 3 ) );
+
+   return TRUE;
+}
 
 MR_MainCharacter*  MR_ClientSession::GetMainCharacter()const      
 {
@@ -217,6 +263,16 @@ MR_MainCharacter*  MR_ClientSession::GetMainCharacter()const
 MR_MainCharacter*  MR_ClientSession::GetMainCharacter2()const      
 {
    return mMainCharacter2; 
+}
+
+MR_MainCharacter*  MR_ClientSession::GetMainCharacter3()const      
+{
+   return mMainCharacter3; 
+}
+
+MR_MainCharacter*  MR_ClientSession::GetMainCharacter4()const      
+{
+   return mMainCharacter4; 
 }
 
 void MR_ClientSession::SetSimulationTime( MR_SimulationTime pTime )
@@ -229,7 +285,7 @@ MR_SimulationTime MR_ClientSession::GetSimulationTime( )const
    return mSession.GetSimulationTime();
 }
 
-void MR_ClientSession::SetControlState( int pState1, int pState2 )
+void MR_ClientSession::SetControlState( int pState1, int pState2, int pState3, int pState4 )
 {
    if( mMainCharacter1 != NULL )
    {
@@ -239,6 +295,16 @@ void MR_ClientSession::SetControlState( int pState1, int pState2 )
    if( mMainCharacter2 != NULL )
    {
       mMainCharacter2->SetControlState( pState2, mSession.GetSimulationTime() );
+   }
+
+   if( mMainCharacter3 != NULL )
+   {
+      mMainCharacter3->SetControlState( pState3, mSession.GetSimulationTime() );
+   }
+
+   if( mMainCharacter4 != NULL )
+   {
+      mMainCharacter4->SetControlState( pState4, mSession.GetSimulationTime() );
    }
 }
 
@@ -279,6 +345,14 @@ int MR_ClientSession::GetNbPlayers()const
    {
       lReturnValue++;
    }
+   if( mMainCharacter3 != NULL )
+   {
+      lReturnValue++;
+   }
+   if( mMainCharacter4 != NULL )
+   {
+      lReturnValue++;
+   }
    return lReturnValue;
 }
 
@@ -294,19 +368,99 @@ int MR_ClientSession::GetRank( const MR_MainCharacter* pPlayer )const
          {
             if( mMainCharacter2->GetTotalTime() <  mMainCharacter1->GetTotalTime() )
             {
-               lReturnValue = 2;
+               lReturnValue++;
+            }
+         }
+		 if( mMainCharacter3->HasFinish() )
+         {
+            if( mMainCharacter3->GetTotalTime() <  mMainCharacter1->GetTotalTime() )
+            {
+               lReturnValue++;
+            }
+         }
+		 if( mMainCharacter4->HasFinish() )
+         {
+            if( mMainCharacter4->GetTotalTime() <  mMainCharacter1->GetTotalTime() )
+            {
+               lReturnValue++;
             }
          }
       }   
-      else
+      if (pPlayer == mMainCharacter2)
       {
-         lReturnValue = 2;
+         lReturnValue = 1;
 
          if( mMainCharacter1->HasFinish() )
          {
             if( mMainCharacter1->GetTotalTime() <  mMainCharacter2->GetTotalTime() )
             {
-               lReturnValue = 1;
+               lReturnValue++;
+            }
+         }
+		 if( mMainCharacter3->HasFinish() )
+         {
+            if( mMainCharacter3->GetTotalTime() <  mMainCharacter2->GetTotalTime() )
+            {
+               lReturnValue++;
+            }
+         }
+		 if( mMainCharacter4->HasFinish() )
+         {
+            if( mMainCharacter4->GetTotalTime() <  mMainCharacter2->GetTotalTime() )
+            {
+               lReturnValue++;
+            }
+         }
+      }
+	  if (pPlayer == mMainCharacter3)
+      {
+         lReturnValue = 1;
+
+         if( mMainCharacter1->HasFinish() )
+         {
+            if( mMainCharacter1->GetTotalTime() <  mMainCharacter3->GetTotalTime() )
+            {
+               lReturnValue++;
+            }
+         }
+		 if( mMainCharacter2->HasFinish() )
+         {
+            if( mMainCharacter2->GetTotalTime() <  mMainCharacter3->GetTotalTime() )
+            {
+               lReturnValue++;
+            }
+         }
+		 if( mMainCharacter4->HasFinish() )
+         {
+            if( mMainCharacter4->GetTotalTime() <  mMainCharacter3->GetTotalTime() )
+            {
+               lReturnValue++;
+            }
+         }
+      }
+	  if (pPlayer == mMainCharacter4)
+      {
+         lReturnValue = 1;
+
+         if( mMainCharacter1->HasFinish() )
+         {
+            if( mMainCharacter1->GetTotalTime() <  mMainCharacter4->GetTotalTime() )
+            {
+               lReturnValue++;
+            }
+         }
+		 if( mMainCharacter2->HasFinish() )
+         {
+            if( mMainCharacter2->GetTotalTime() <  mMainCharacter4->GetTotalTime() )
+            {
+               lReturnValue++;
+            }
+         }
+		 if( mMainCharacter3->HasFinish() )
+         {
+            if( mMainCharacter3->GetTotalTime() <  mMainCharacter4->GetTotalTime() )
+            {
+               lReturnValue++;
             }
          }
       }
@@ -353,6 +507,14 @@ const MR_MainCharacter* MR_ClientSession::GetPlayer( int pPlayerIndex )const
 
       case 1:
          lReturnValue = mMainCharacter2;
+         break;
+
+	  case 2:
+         lReturnValue = mMainCharacter3;
+         break;
+
+	  case 3:
+         lReturnValue = mMainCharacter3;
          break;
    }
    ASSERT( lReturnValue != NULL );

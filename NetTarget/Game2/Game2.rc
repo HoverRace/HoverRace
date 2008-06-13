@@ -42,7 +42,12 @@ BEGIN
     BEGIN
         MENUITEM "&Internet...\tF2",            ID_GAME_NETWORK_INTERNET
         MENUITEM "&Practice...\tCtrl+N",        ID_GAME_NEW
-        MENUITEM "&Split Screen...",            ID_GAME_SPLITSCREEN
+        POPUP "&Split Screen..."
+        BEGIN
+            MENUITEM "2 Player",                    ID_GAME_SPLITSCREEN
+            MENUITEM "3 Player",                    ID_GAME_SPLITSCREEN3
+            MENUITEM "4 Player",                    ID_GAME_SPLITSCREEN4
+        END
         POPUP "&Network"
         BEGIN
             MENUITEM "&Connect to TCP server...",   ID_GAME_NETWORK_CONNECT
@@ -203,40 +208,38 @@ BEGIN
     LTEXT           "Laps :",IDC_STATIC,125,96,19,8
 END
 
-IDD_CONTROL DIALOGEX 0, 0, 186, 134
+IDD_CONTROL DIALOGEX 0, 0, 384, 134
 STYLE DS_SETFONT | DS_3DLOOK | WS_CHILD
 FONT 8, "MS Sans Serif", 0, 0, 0x0
 BEGIN
-    COMBOBOX        IDC_MOTOR_ON1,62,17,58,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+    COMBOBOX        IDC_MOTOR_ON1,62,17,73,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
-    COMBOBOX        IDC_RIGHT1,62,31,58,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+    COMBOBOX        IDC_RIGHT1,62,31,73,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
-    COMBOBOX        IDC_LEFT1,62,44,58,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+    COMBOBOX        IDC_LEFT1,62,44,73,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
-    COMBOBOX        IDC_BREAK1,62,58,58,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+    COMBOBOX        IDC_BREAK1,62,58,73,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
-    COMBOBOX        IDC_JUMP1,62,72,58,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+    COMBOBOX        IDC_JUMP1,62,72,73,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
-    COMBOBOX        IDC_FIRE1,62,86,58,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+    COMBOBOX        IDC_FIRE1,62,86,73,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
-    COMBOBOX        IDC_SELWEAPON1,62,100,58,86,CBS_DROPDOWNLIST | 
+    COMBOBOX        IDC_SELWEAPON1,62,100,73,86,CBS_DROPDOWNLIST | 
                     WS_VSCROLL | WS_TABSTOP
-    COMBOBOX        IDC_MOTOR_ON2,125,17,56,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+    COMBOBOX        IDC_RIGHT2,140,31,77,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
-    COMBOBOX        IDC_RIGHT2,125,31,56,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+    COMBOBOX        IDC_LEFT2,140,44,77,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
-    COMBOBOX        IDC_LEFT2,125,44,56,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+    COMBOBOX        IDC_BREAK2,140,58,77,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
-    COMBOBOX        IDC_BREAK2,125,58,56,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+    COMBOBOX        IDC_JUMP2,140,72,77,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
-    COMBOBOX        IDC_JUMP2,125,72,56,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+    COMBOBOX        IDC_FIRE2,140,86,77,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
-    COMBOBOX        IDC_FIRE2,125,86,56,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
-                    WS_TABSTOP
-    COMBOBOX        IDC_SELWEAPON2,125,100,56,86,CBS_DROPDOWNLIST | 
+    COMBOBOX        IDC_SELWEAPON2,140,100,77,86,CBS_DROPDOWNLIST | 
                     WS_VSCROLL | WS_TABSTOP
     LTEXT           "Player 1",IDC_STATIC,62,7,26,8
-    LTEXT           "Player 2",IDC_STATIC,125,7,26,8
+    LTEXT           "Player 2",IDC_STATIC,140,7,26,8
     LTEXT           "Motor On:",IDC_STATIC,4,20,58,8
     LTEXT           "Turn Right:",IDC_STATIC,4,33,58,8
     LTEXT           "Fire Weapon:",IDC_STATIC,4,89,58,8
@@ -244,11 +247,47 @@ BEGIN
     LTEXT           "Select Weapon:",IDC_STATIC,4,103,58,8
     LTEXT           "Brake:",IDC_STATIC,4,60,58,8
     LTEXT           "Jump:",IDC_STATIC,4,74,58,8
-    COMBOBOX        IDC_LOOKBACK1,62,114,58,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+    COMBOBOX        IDC_LOOKBACK1,62,114,73,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
-    COMBOBOX        IDC_LOOKBACK2,125,114,56,86,CBS_DROPDOWNLIST | 
+    COMBOBOX        IDC_LOOKBACK2,140,114,77,86,CBS_DROPDOWNLIST | 
                     WS_VSCROLL | WS_TABSTOP
     LTEXT           "Look Back:",IDC_STATIC,4,116,58,8
+    COMBOBOX        IDC_MOTOR_ON2,140,17,77,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_RIGHT3,222,31,77,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_LEFT3,222,44,77,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_BREAK3,222,58,77,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_JUMP3,222,72,77,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_FIRE3,222,86,77,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_SELWEAPON3,222,100,77,86,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Player 3",IDC_STATIC,222,7,26,8
+    COMBOBOX        IDC_LOOKBACK3,222,114,77,86,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_MOTOR_ON3,222,17,77,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_RIGHT4,304,31,73,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_LEFT4,304,44,73,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_BREAK4,304,58,73,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_JUMP4,304,72,73,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_FIRE4,304,86,73,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    COMBOBOX        IDC_SELWEAPON4,304,100,73,86,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Player 4",IDC_STATIC,304,7,26,8
+    COMBOBOX        IDC_LOOKBACK4,304,114,73,86,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_MOTOR_ON4,304,17,73,86,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
 END
 
 IDD_BAD_MODE4 DIALOG  10, 10, 153, 41
@@ -787,10 +826,14 @@ BEGIN
     IDD_CONTROL, DIALOG
     BEGIN
         LEFTMARGIN, 4
-        RIGHTMARGIN, 181
+        RIGHTMARGIN, 377
         VERTGUIDE, 62
-        VERTGUIDE, 120
-        VERTGUIDE, 125
+        VERTGUIDE, 135
+        VERTGUIDE, 140
+        VERTGUIDE, 217
+        VERTGUIDE, 222
+        VERTGUIDE, 299
+        VERTGUIDE, 304
         TOPMARGIN, 7
         BOTTOMMARGIN, 126
     END
@@ -1311,6 +1354,46 @@ BEGIN
     IDS_BETAZONE            "http://www.hoverrace.com"
     IDS_WEBSITE             "http://www.hoverrace.com"
     IDS_REGSITE             "http://www.hoverrace.com"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_JOY1BTN5            "Joystick Btn5"
+    IDS_JOY1BTN6            "Joystick Btn6"
+    IDS_JOY1BTN7            "Joystick Btn7"
+    IDS_JOY1BTN8            "Joystick Btn8"
+    IDS_JOY2BTN5            "Joystick2 Btn5"
+    IDS_JOY2BTN6            "Joystick2 Btn6"
+    IDS_JOY2BTN7            "Joystick2 Btn7"
+    IDS_JOY2BTN8            "Joystick2 Btn8"
+    IDS_JOY3BTN1            "Joystick3 Btn1"
+    IDS_JOY3BTN2            "Joystick3 Btn2"
+    IDS_JOY3BTN3            "Joystick3 Btn3"
+    IDS_JOY3BTN4            "Joystick3 Btn4"
+    IDS_JOY3BTN5            "Joystick3 Btn5"
+    IDS_JOY3BTN6            "Joystick3 Btn6"
+    IDS_JOY3BTN7            "Joystick3 Btn7"
+    IDS_JOY3BTN8            "Joystick3 Btn8"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_JOY3TOP             "Joystick3 Top"
+    IDS_JOY3DOWN            "Joystick3 Down"
+    IDS_JOY3RIGHT           "Joystick3 Right"
+    IDS_JOY3LEFT            "Joystick3 Left"
+    IDS_JOY4BTN1            "Joystick4 Btn1"
+    IDS_JOY4BTN2            "Joystick4 Btn2"
+    IDS_JOY4BTN3            "Joystick4 Btn3"
+    IDS_JOY4BTN4            "Joystick4 Btn4"
+    IDS_JOY4BTN5            "Joystick4 Btn5"
+    IDS_JOY4BTN6            "Joystick4 Btn6"
+    IDS_JOY4BTN7            "Joystick4 Btn7"
+    IDS_JOY4BTN8            "Joystick4 Btn8"
+    IDS_JOY4TOP             "Joystick4 Top"
+    IDS_JOY4DOWN            "Joystick4 Down"
+    IDS_JOY4LEFT            "Joystick4 Left"
+    IDS_JOY4RIGHT           "Joystick4 Right"
 END
 
 #endif    // Neutral (Default) resources
