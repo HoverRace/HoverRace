@@ -119,13 +119,6 @@ MR_NetworkInterface::MR_NetworkInterface() {
 
 	lCode = bind(mUDPOutShortPort, (LPSOCKADDR) &lAddr, sizeof(lAddr));
 	ASSERT(lCode != SOCKET_ERROR);
-
-	lAddr.sin_family      = AF_INET;
-	lAddr.sin_addr.s_addr = INADDR_ANY;
-	lAddr.sin_port        = 0;
-
-	lCode = bind(mUDPOutLongPort, (LPSOCKADDR) &lAddr, sizeof(lAddr));
-	ASSERT(lCode != SOCKET_ERROR);
 }
 
 MR_NetworkInterface::~MR_NetworkInterface() {
