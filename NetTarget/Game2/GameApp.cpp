@@ -2128,7 +2128,7 @@ void MR_GameApp::DrawBackground()
 		lColorIndex = lY;
 		for( int lX = 0; lX<lXRes; lX++ )
 		{
-			*lDest = (lColorIndex&16)?11:39;
+			*lDest = (lColorIndex&16)?11:11;
 
 			lColorIndex++;
 			lDest++;

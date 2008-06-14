@@ -951,8 +951,10 @@ void MR_Observer::Render3DView( const MR_ClientSession* pSession, const MR_MainC
 
       }
       
-      mBaseFont->GetSprite()->StrBlt( lXRes/2, lYRes/16, Ascii2Simple( lMainLineBuffer ), &m3DView, MR_Sprite::eCenter, MR_Sprite::eTop, 0 );
-      mBaseFont->GetSprite()->StrBlt( lXRes/2, lYRes-1,  Ascii2Simple( lLapLineBuffer ), &m3DView, MR_Sprite::eCenter, MR_Sprite::eBottom, 0 );
+	  int lFontScaling = 1+(mBaseFont->GetSprite()->GetItemHeight()*30)/(lYRes);
+
+      mBaseFont->GetSprite()->StrBlt( lXRes/2, lYRes/16, Ascii2Simple( lMainLineBuffer ), &m3DView, MR_Sprite::eCenter, MR_Sprite::eTop, lFontScaling );
+      mBaseFont->GetSprite()->StrBlt( lXRes/2, lYRes-1,  Ascii2Simple( lLapLineBuffer ), &m3DView, MR_Sprite::eCenter, MR_Sprite::eBottom, lFontScaling );
 
    }
 
