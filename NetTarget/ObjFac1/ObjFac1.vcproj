@@ -59,7 +59,8 @@
 				TargetEnvironment="1"
 				TypeLibraryName=".\..\Debug/ObjFac1.tlb"/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCPostBuildEventTool"
+				CommandLine="copy ObjFac1.dat ..\Debug\ObjFac1.dat"/>
 			<Tool
 				Name="VCPreBuildEventTool"/>
 			<Tool
@@ -122,7 +123,8 @@
 				TargetEnvironment="1"
 				TypeLibraryName=".\..\Release/ObjFac1.tlb"/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCPostBuildEventTool"
+				CommandLine="copy ObjFac1.dat ..\Release\"/>
 			<Tool
 				Name="VCPreBuildEventTool"/>
 			<Tool
