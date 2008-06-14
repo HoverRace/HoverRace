@@ -24,10 +24,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ObjFac1", "NetTarget\ObjFac
 		{158869E8-53E8-4DC1-B41F-B1C996211E2B} = {158869E8-53E8-4DC1-B41F-B1C996211E2B}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameServer", "NetTarget\GameServer\GameServer.vcproj", "{6A42E7B2-9D5C-43A9-AE14-1BD6727D9A04}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MainCharacter", "NetTarget\MainCharacter\MainCharacter.vcproj", "{A55BC265-CFB8-46A7-958B-D3A48D9477A0}"
 	ProjectSection(ProjectDependencies) = postProject
 		{402CDE5A-4540-4DFE-A4E0-6950C0F2CA57} = {402CDE5A-4540-4DFE-A4E0-6950C0F2CA57}
@@ -47,6 +43,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Game2", "NetTarget\Game2\Ga
 		{9A391771-FAFF-4D9D-9F6A-8AD3A9F73CA3} = {9A391771-FAFF-4D9D-9F6A-8AD3A9F73CA3}
 		{C0254587-DA7D-4338-9ECB-B614B05E5E1A} = {C0254587-DA7D-4338-9ECB-B614B05E5E1A}
 		{158869E8-53E8-4DC1-B41F-B1C996211E2B} = {158869E8-53E8-4DC1-B41F-B1C996211E2B}
+		{8BE4FCF2-13E7-4F11-8EBE-4C46F2E7BF8A} = {8BE4FCF2-13E7-4F11-8EBE-4C46F2E7BF8A}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PaletteCreator", "NetTarget\PaletteCreator\PaletteCreator.vcproj", "{A1D799D7-76E9-4760-88FD-13CE6B257017}"
@@ -85,8 +82,6 @@ Global
 		Debug = Debug
 		Release = Release
 	EndGlobalSection
-	GlobalSection(ProjectDependencies) = postSolution
-	EndGlobalSection
 	GlobalSection(ProjectConfiguration) = postSolution
 		{402CDE5A-4540-4DFE-A4E0-6950C0F2CA57}.Debug.ActiveCfg = Debug|Win32
 		{402CDE5A-4540-4DFE-A4E0-6950C0F2CA57}.Debug.Build.0 = Debug|Win32
@@ -101,11 +96,9 @@ Global
 		{C0254587-DA7D-4338-9ECB-B614B05E5E1A}.Release.ActiveCfg = Release|Win32
 		{C0254587-DA7D-4338-9ECB-B614B05E5E1A}.Release.Build.0 = Release|Win32
 		{8BE4FCF2-13E7-4F11-8EBE-4C46F2E7BF8A}.Debug.ActiveCfg = Debug|Win32
+		{8BE4FCF2-13E7-4F11-8EBE-4C46F2E7BF8A}.Debug.Build.0 = Debug|Win32
 		{8BE4FCF2-13E7-4F11-8EBE-4C46F2E7BF8A}.Release.ActiveCfg = Release|Win32
-		{6A42E7B2-9D5C-43A9-AE14-1BD6727D9A04}.Debug.ActiveCfg = Debug|Win32
-		{6A42E7B2-9D5C-43A9-AE14-1BD6727D9A04}.Debug.Build.0 = Debug|Win32
-		{6A42E7B2-9D5C-43A9-AE14-1BD6727D9A04}.Release.ActiveCfg = Release|Win32
-		{6A42E7B2-9D5C-43A9-AE14-1BD6727D9A04}.Release.Build.0 = Release|Win32
+		{8BE4FCF2-13E7-4F11-8EBE-4C46F2E7BF8A}.Release.Build.0 = Release|Win32
 		{A55BC265-CFB8-46A7-958B-D3A48D9477A0}.Debug.ActiveCfg = Debug|Win32
 		{A55BC265-CFB8-46A7-958B-D3A48D9477A0}.Debug.Build.0 = Debug|Win32
 		{A55BC265-CFB8-46A7-958B-D3A48D9477A0}.Release.ActiveCfg = Release|Win32
