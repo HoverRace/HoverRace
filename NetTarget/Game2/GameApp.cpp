@@ -567,7 +567,8 @@ void MR_GameApp::Clean()
 }
 
 void MR_GameApp::LoadRegistry() {
-	mDisplayFirstScreen = TRUE;
+	mDisplayFirstScreen = FALSE;
+	mIntroMovie = FALSE;
 
 	// Built-in defaults
 	// Controls
@@ -710,6 +711,10 @@ void MR_GameApp::LoadRegistry() {
 
     if( RegQueryValueEx(  lProgramKey, "DisplayFirstScreen", 0, NULL, (MR_UInt8*)&mDisplayFirstScreen, &lBufferSize ) == ERROR_SUCCESS )
 
+	lBufferSize = sizeof( mIntroMovie );
+
+	if( RegQueryValueEx(  lProgramKey, "IntroMovie", 0, NULL, (MR_UInt8*)&mIntroMovie, &lBufferSize ) == ERROR_SUCCESS )
+
 	lBufferSize = sizeof(lBuffer);
 	if(RegQueryValueEx(lProgramKey, "Company", 0, NULL, (MR_UInt8 *) lBuffer, &lBufferSize) == ERROR_SUCCESS)
 		mCompany = lBuffer;
@@ -831,6 +836,12 @@ void MR_GameApp::SaveRegistry() {
 
 		if(RegSetValueEx(lProgramKey, "DisplayFirstScreen", 0, REG_BINARY, (MR_UInt8 *) &mDisplayFirstScreen,
 							  sizeof(mDisplayFirstScreen)) != ERROR_SUCCESS) {
+			lReturnValue = FALSE;
+			ASSERT(FALSE);
+		}
+
+	    if(RegSetValueEx(lProgramKey, "IntroMovie", 0, REG_BINARY, (MR_UInt8 *) &mIntroMovie,
+							  sizeof(mIntroMovie)) != ERROR_SUCCESS) {
 			lReturnValue = FALSE;
 			ASSERT(FALSE);
 		}
@@ -1244,7 +1255,7 @@ BOOL MR_GameApp::InitGame() {
 	}
 
 	// play the opening movie
-	if(lReturnValue) {  
+	if(lReturnValue && mIntroMovie==FALSE) {  
 		mMovieWnd = MCIWndCreate(mMainWindow,
 										mInstance,
 										WS_CHILD | MCIWNDF_NOMENU | MCIWNDF_NOPLAYBAR,
@@ -1270,7 +1281,7 @@ BOOL MR_GameApp::InitGame() {
 	//}
 
 	// show "click OK to play on the internet" dialog
-	if(lReturnValue && mDisplayFirstScreen) {
+	if(lReturnValue && mDisplayFirstScreen==FALSE) {
 		if(DialogBox(mInstance,
 						MAKEINTRESOURCE(IDD_FIRST_CHOICE),
 						mMainWindow,
@@ -2077,7 +2088,7 @@ void MR_GameApp::NewInternetSession() {
 
 void MR_GameApp::SetProperties()
 {
-	PROPSHEETPAGE psp[2];
+	PROPSHEETPAGE psp[3];
 	PROPSHEETHEADER psh;
 
 	psp[0].dwSize      = sizeof(PROPSHEETPAGE);
@@ -2097,6 +2108,15 @@ void MR_GameApp::SetProperties()
 	psp[1].pszTitle    = MAKEINTRESOURCE( IDS_KEYS_SETTING );
 	psp[1].lParam      = 0;
 	psp[1].pfnCallback = NULL;
+
+	psp[2].dwSize      = sizeof(PROPSHEETPAGE);
+	psp[2].dwFlags     = PSP_USETITLE;
+	psp[2].hInstance   = mInstance;
+	psp[2].pszTemplate = MAKEINTRESOURCE(IDD_MISC);
+	psp[2].pfnDlgProc  = MiscDialogFunc;
+	psp[2].pszTitle    = MAKEINTRESOURCE( IDS_MISC );
+	psp[2].lParam      = 0;
+	psp[2].pfnCallback = NULL;
 
 	psh.dwSize         = sizeof(PROPSHEETHEADER);
 	psh.dwFlags        = PSH_PROPSHEETPAGE|PSH_NOAPPLYNOW|PSH_PROPTITLE;
@@ -3002,6 +3022,47 @@ BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 	return lReturnValue;
 }
 
+BOOL CALLBACK MR_GameApp::MiscDialogFunc( HWND pWindow, UINT  pMsgId, WPARAM  pWParam, LPARAM  pLParam )
+{
+	ASSERT( This != NULL );
+	ASSERT( This->mIntroMovie != NULL );
+
+
+	BOOL lReturnValue = FALSE;
+
+	BOOL lIntroMovie		 = FALSE;
+	BOOL lDisplayFirstScreen = FALSE;
+
+	switch( pMsgId )
+	{
+		// Catch environment modification events
+		case WM_INITDIALOG:
+			lIntroMovie = This->mIntroMovie;
+			lDisplayFirstScreen = This->mDisplayFirstScreen;
+
+			SendDlgItemMessage( pWindow, IDC_INTRO_MOVIE, BM_SETCHECK, lIntroMovie, 0 );
+			SendDlgItemMessage( pWindow, IDC_SHOW_INTERNET, BM_SETCHECK, lDisplayFirstScreen, 0 );
+
+			break;       
+
+		case WM_NOTIFY:
+			switch( ((NMHDR FAR *)pLParam)->code )
+			{
+				case PSN_APPLY:;
+					This->mIntroMovie = SendDlgItemMessage(pWindow, IDC_INTRO_MOVIE, BM_GETCHECK, 0, 0);
+					This->mDisplayFirstScreen = SendDlgItemMessage(pWindow, IDC_SHOW_INTERNET, BM_GETCHECK, 0, 0);
+					This->SaveRegistry();
+
+					break;
+	         
+			}
+			break;
+	   
+	}
+
+	return lReturnValue;
+}
+
 
 BOOL CALLBACK MR_GameApp::BadModeDialogFunc( HWND pWindow, UINT  pMsgId, WPARAM  pWParam, LPARAM  pLParam )
 {
@@ -3080,14 +3141,6 @@ BOOL CALLBACK MR_GameApp::FirstChoiceDialogFunc(         HWND pWindow, UINT  pMs
 					EndDialog( pWindow, IDOK );
 					lReturnValue = TRUE;
 					break;
-			}
-			if( !IsDlgButtonChecked( pWindow, IDC_CHECK ) )
-			{
-				This->mDisplayFirstScreen = FALSE;
-				This->SaveRegistry();
-			} else {
-				This->mDisplayFirstScreen = TRUE;
-				This->SaveRegistry();
 			}
 			break;
 	}

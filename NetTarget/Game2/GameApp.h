@@ -126,6 +126,7 @@ class MR_GameApp {
       // CString mKey2;
 
       BOOL mDisplayFirstScreen;
+	  BOOL mIntroMovie;
 
       // Debug data
       time_t mNbFramesStartingTime;
@@ -135,6 +136,7 @@ class MR_GameApp {
       static LRESULT CALLBACK DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
       static BOOL CALLBACK DisplayIntensityDialogFunc( HWND pWindow, UINT  pMsgId, WPARAM pWParam, LPARAM pLParam);
       static BOOL CALLBACK ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
+	  static BOOL CALLBACK MiscDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
       static BOOL CALLBACK BadModeDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
       static BOOL CALLBACK MovieDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
       static BOOL CALLBACK AboutDlgFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);

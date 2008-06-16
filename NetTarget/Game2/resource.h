@@ -52,6 +52,7 @@
 #define IDD_LADDER_RES_2                158
 #define IDD_LADDER_RES_1                159
 #define IDD_LADDER_SUBMIT_PROCESS       160
+#define IDD_MISC                        161
 #define IDC_GAMMA_SLIDER                1001
 #define IDC_CONTRAST_SLIDER             1002
 #define IDC_SERVER_PORT                 1002
@@ -139,7 +140,10 @@
 #define IDC_RESULT                      1071
 #define IDC_CHECK1                      1075
 #define IDC_LOOKBACK1                   1076
+#define IDC_INTRO_MOVIE                 1076
 #define IDC_LOOKBACK2                   1077
+#define IDC_SHOWINTERNET                1077
+#define IDC_SHOW_INTERNET               1077
 #define IDC_LOOKBACK3                   1078
 #define IDC_LOOKBACK4                   1079
 #define ID_HELP_CONTENTS                32772
@@ -389,6 +393,7 @@
 #define IDS_JOY4DOWN                    40221
 #define IDS_JOY4LEFT                    40222
 #define IDS_JOY4RIGHT                   40223
+#define IDS_MISC                        40224
 #define ID_GAME_NEW                     0xE100
 #define ID_GAME_LOAD                    0xE101
 #define ID_GAME_FAST_SAVE               0xE103
@@ -402,9 +407,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        158
+#define _APS_NEXT_RESOURCE_VALUE        162
 #define _APS_NEXT_COMMAND_VALUE         40042
-#define _APS_NEXT_CONTROL_VALUE         1076
+#define _APS_NEXT_CONTROL_VALUE         1078
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
