@@ -293,15 +293,22 @@ BOOL MR_InternetRequest::ProcessEvent(WPARAM pWParam, LPARAM pLParam)
 
 }
 
-    const char *MR_InternetRequest::GetBuffer() const const const {
+const char *MR_InternetRequest::GetBuffer() const {
 	return mBuffer;
-    } const char *MR_InternetRequest::GetBinBuffer(int &pSize) const const const {
+}
+
+const char *MR_InternetRequest::GetBinBuffer(int &pSize) const {
 	pSize = mBinIndex;
 	return mBinBuffer;
-    } BOOL MR_InternetRequest::IsReady() const const const {
+}
+
+BOOL MR_InternetRequest::IsReady() const {
 	return (((mBinIndex != 0) || !mBuffer.IsEmpty()) && !Working());
-    }
-// MR_InternetRoom MR_InternetRoom::MR_InternetRoom(BOOL pAllowRegistred, int pMajorID, int pMinorID, unsigned pKey2, unsigned pKey3)
+}
+
+// MR_InternetRoom 
+	
+MR_InternetRoom::MR_InternetRoom(BOOL pAllowRegistred, int pMajorID, int pMinorID, unsigned pKey2, unsigned pKey3)
 {
     int lCounter;
 

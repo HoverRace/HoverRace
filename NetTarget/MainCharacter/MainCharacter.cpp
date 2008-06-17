@@ -893,48 +893,48 @@ const MR_ShapeInterface *MR_MainCharacter::GetGivingContactEffectShape()
 }
 
 // MR_MainCharacter::Cylinder
-MR_Int32 MR_MainCharacter::Cylinder::ZMin() const const
+MR_Int32 MR_MainCharacter::Cylinder::ZMin() const
 {
     return mPosition.mZ;
 }
 
-MR_Int32 MR_MainCharacter::Cylinder::ZMax() const const
+MR_Int32 MR_MainCharacter::Cylinder::ZMax() const
 {
     return mPosition.mZ + eCharacterHeight;
 }
 
-MR_Int32 MR_MainCharacter::Cylinder::AxisX() const const
+MR_Int32 MR_MainCharacter::Cylinder::AxisX() const
 {
     return mPosition.mX;
 }
 
-MR_Int32 MR_MainCharacter::Cylinder::AxisY() const const
+MR_Int32 MR_MainCharacter::Cylinder::AxisY() const
 {
     return mPosition.mY;
 }
 
-MR_Int32 MR_MainCharacter::Cylinder::RayLen() const const
+MR_Int32 MR_MainCharacter::Cylinder::RayLen() const
 {
     return mRay;
 }
 
 // Done with the cylinder stuff
 
-MR_Angle MR_MainCharacter::GetCabinOrientation() const const
+MR_Angle MR_MainCharacter::GetCabinOrientation() const
 {
     return mCabinOrientation;
 }
 
-double MR_MainCharacter::GetFuelLevel() const const
+double MR_MainCharacter::GetFuelLevel() const
 {
     return mFuelLevel / eFuelCapacity;
 }
 
-MR_MainCharacter::eWeapon MR_MainCharacter::GetCurrentWeapon() constconst
+MR_MainCharacter::eWeapon MR_MainCharacter::GetCurrentWeapon() const
 {
     return mCurrentWeapon;
 }
-int MR_MainCharacter::GetMissileRefillLevel(int pNbLevel) const const
+int MR_MainCharacter::GetMissileRefillLevel(int pNbLevel) const
 {
     if(mAllowWeapons)
 	return (pNbLevel - 1) * (eMissileRefillTime - mMissileRefillDuration) / eMissileRefillTime;
@@ -942,16 +942,16 @@ int MR_MainCharacter::GetMissileRefillLevel(int pNbLevel) const const
 	return 0;
 }
 
-int MR_MainCharacter::GetMineCount() const const
+int MR_MainCharacter::GetMineCount() const
 {
     return mMineList.Used();
 }
 
-int MR_MainCharacter::GetPowerUpCount() const const
+int MR_MainCharacter::GetPowerUpCount() const
 {
     return mPowerUpList.Used();
 }
-int MR_MainCharacter::GetPowerUpFraction(int pNbLevel) const const
+int MR_MainCharacter::GetPowerUpFraction(int pNbLevel) const
 {
     int lReturnValue = 0;
     if(mPowerUpLeft > 0) {
@@ -962,15 +962,15 @@ int MR_MainCharacter::GetPowerUpFraction(int pNbLevel) const const
     return lReturnValue;
 }
 
-double MR_MainCharacter::GetAbsoluteSpeed() const const
+double MR_MainCharacter::GetAbsoluteSpeed() const
 {
     double lReturnValue = sqrt(mXSpeed * mXSpeed + mYSpeed * mYSpeed) / (eSteadySpeed[0] * 1.9);
     if(lReturnValue > 1.0)
-	lReturnValue = 1.0;
+		lReturnValue = 1.0;
     return lReturnValue;
 }
 
-double MR_MainCharacter::GetDirectionalSpeed() const const
+double MR_MainCharacter::GetDirectionalSpeed() const
 {
     double lReturnValue = (mXSpeed * MR_Cos[mCabinOrientation] + mYSpeed * MR_Sin[mCabinOrientation]) / (MR_TRIGO_FRACT * eSteadySpeed[0] * 1.9);
 
@@ -982,42 +982,42 @@ double MR_MainCharacter::GetDirectionalSpeed() const const
     return lReturnValue;
 }
 
-int MR_MainCharacter::GetLap() const const
+int MR_MainCharacter::GetLap() const
 {
     return mLapCount;
 }
 
-int MR_MainCharacter::GetTotalLap() const const
+int MR_MainCharacter::GetTotalLap() const
 {
     return mNbLapForRace;
 }
 
-MR_SimulationTime MR_MainCharacter::GetTotalTime() const const
+MR_SimulationTime MR_MainCharacter::GetTotalTime() const
 {
     return mLastLapCompletion;
 }
 
-MR_SimulationTime MR_MainCharacter::GetBestLapDuration() const const
+MR_SimulationTime MR_MainCharacter::GetBestLapDuration() const
 {
     return mBestLapDuration;
 }
 
-MR_SimulationTime MR_MainCharacter::GetLastLapDuration() const const
+MR_SimulationTime MR_MainCharacter::GetLastLapDuration() const
 {
     return mLastLapDuration;
 }
 
-MR_SimulationTime MR_MainCharacter::GetLastLapCompletion() const const
+MR_SimulationTime MR_MainCharacter::GetLastLapCompletion() const
 {
     return mLastLapCompletion;
 }
 
-BOOL MR_MainCharacter::HasFinish() const const
+BOOL MR_MainCharacter::HasFinish() const
 {
     return (mLapCount >= mNbLapForRace);
 }
 
-int MR_MainCharacter::HitQueueCount() const const
+int MR_MainCharacter::HitQueueCount() const
 {
     return mLastHits.Used();
 }

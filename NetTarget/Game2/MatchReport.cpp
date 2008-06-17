@@ -313,10 +313,12 @@ const char* InternetRequest::GetBuffer( int& pSize )const
 */
 
 
-    BOOL InternetRequest::IsReady() const const const {
+BOOL InternetRequest::IsReady() const {
 	return ((mBufferIndex != 0) && !Working());
-    }
-// MatchReportRequest MatchReportRequest::MatchReportRequest()
+}
+
+// MatchReportRequest
+MatchReportRequest::MatchReportRequest()
 {
     mRequest[0] = 0;
     mResultStr[0] = 0;

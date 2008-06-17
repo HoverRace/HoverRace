@@ -218,7 +218,7 @@ MR_ResActor::Patch::~Patch()
     delete[]mVertexList;
 }
 
-MR_ResActor::eComponentType MR_ResActor::Patch::GetType() constconst
+MR_ResActor::eComponentType MR_ResActor::Patch::GetType() const
 {
     return ePatch;
 }

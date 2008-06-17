@@ -238,16 +238,25 @@ BOOL MR_GifDecoder::Decode(const unsigned char *pGifStream, int pStreamLen)
     return FALSE;
 }
 
-    HPALETTE MR_GifDecoder::GetGlobalPalette() const const const {
+HPALETTE MR_GifDecoder::GetGlobalPalette() const {
 	return mGlobalPalette;
-    } int MR_GifDecoder::GetImageCount() const const const {
+}
+
+int MR_GifDecoder::GetImageCount() const {
 	return mNbImages;
-    } HBITMAP MR_GifDecoder::GetImage(int pImage) const const const {
+}
+
+HBITMAP MR_GifDecoder::GetImage(int pImage) const {
 	return mBitmap[pImage];
-    } int MR_GifDecoder::GetDelay(int pImage) const const const {
+}
+
+int MR_GifDecoder::GetDelay(int pImage) const {
 	return mDelay[pImage];
-    }
-// Link stuff BOOL LoadURL(HWND pWindow, const char *pURL)
+}
+
+// Link stuff
+	
+BOOL LoadURL(HWND pWindow, const char *pURL)
 {
     BOOL lReturnValue = FALSE;
     char lTempPath[300];

@@ -129,10 +129,13 @@ BOOL MR_ClientSession::LoadNew(const char *pTitle, MR_RecordFile * pMazeFile, in
     return lReturnValue;
 }
 
-    const MR_UInt8 *MR_ClientSession::GetBackImage() const const const {
+const MR_UInt8 *MR_ClientSession::GetBackImage() const {
 	return mBackImage;
-    }
-// Main character controll and interogation BOOL MR_ClientSession::CreateMainCharacter()
+}
+
+// Main character controll and interogation
+	
+BOOL MR_ClientSession::CreateMainCharacter()
 {
 
     // Add a main character in 
