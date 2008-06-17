@@ -134,30 +134,28 @@ MR_NetworkInterface::~MR_NetworkInterface()
     WSACleanup();
 }
 
-const char *MR_NetworkInterface::GetPlayerName(int pIndex) const const
-{
-    const char *lReturnValue = NULL;
+    const char *MR_NetworkInterface::GetPlayerName(int pIndex) const const const const {
+	const char *lReturnValue = NULL;
 
-    if(pIndex < 0)
-	lReturnValue = mPlayer;
-    else {
-	if(pIndex < eMaxClient)
-	    lReturnValue = mClientName[pIndex];
+	if(pIndex < 0)
+	    lReturnValue = mPlayer;
+	else
+{
+if(pIndex < eMaxClient)
+    lReturnValue = mClientName[pIndex];
+}
+	return lReturnValue;
     }
-    return lReturnValue;
-}
 
-BOOL MR_NetworkInterface::IsConnected(int pIndex) const const
-{
-    ASSERT(pIndex < eMaxClient);
+    BOOL MR_NetworkInterface::IsConnected(int pIndex) const const const const {
+	ASSERT(pIndex < eMaxClient);
 
-    if(pIndex == -1)
-	return TRUE;
-    else
-	return mClient[pIndex].IsConnected();
-}
-
-void MR_NetworkInterface::Disconnect()
+	if(pIndex == -1)
+	    return TRUE;
+	else
+	    return mClient[pIndex].IsConnected();
+    }
+    void MR_NetworkInterface::Disconnect()
 {
     if(mRegistrySocket != INVALID_SOCKET) {
 	closesocket(mRegistrySocket);
@@ -179,44 +177,36 @@ void MR_NetworkInterface::Disconnect()
     }
 }
 
-int MR_NetworkInterface::GetClientCount() const const
-{
-    int lReturnValue = 0;
+    int MR_NetworkInterface::GetClientCount() const const const const {
+	int lReturnValue = 0;
 
-    for(int lCounter = 0; lCounter < eMaxClient; lCounter++) {
-	if(mClient[lCounter].IsConnected())
-	    lReturnValue++;
+	for(int lCounter = 0; lCounter < eMaxClient; lCounter++)
+{
+if(mClient[lCounter].IsConnected())
+    lReturnValue++;
+}
+	return lReturnValue;
     }
-    return lReturnValue;
-}
 
-int MR_NetworkInterface::GetId() const const
-{
-    ASSERT((mId != 0) || mServerMode);
-    return mId;
-}
-
-int MR_NetworkInterface::GetLagFromServer() const const
-{
-    if(mServerMode)
-	return 0;
-    else
-	return mClient[0].GetMinLag();
-}
-
-int MR_NetworkInterface::GetMinLag(int pClient) const const
-{
-    ASSERT((pClient >= 0) && (pClient < eMaxClient));
-    return mClient[pClient].GetMinLag();
-}
-
-int MR_NetworkInterface::GetAvgLag(int pClient) const const
-{
-    ASSERT((pClient >= 0) && (pClient < eMaxClient));
-    return mClient[pClient].GetMinLag();
-}
-
-BOOL MR_NetworkInterface::UDPSend(int pClient, MR_NetMessageBuffer * pMessage, BOOL pLongPort, BOOL pResendLast)
+    int MR_NetworkInterface::GetId() const const const const {
+	ASSERT((mId != 0) || mServerMode);
+	return mId;
+    }
+    int MR_NetworkInterface::GetLagFromServer() const const const const {
+	if(mServerMode)
+	    return 0;
+	else
+	    return mClient[0].GetMinLag();
+    }
+    int MR_NetworkInterface::GetMinLag(int pClient) const const const const {
+	ASSERT((pClient >= 0) && (pClient < eMaxClient));
+	return mClient[pClient].GetMinLag();
+    }
+    int MR_NetworkInterface::GetAvgLag(int pClient) const const const const {
+	ASSERT((pClient >= 0) && (pClient < eMaxClient));
+	return mClient[pClient].GetMinLag();
+    }
+    BOOL MR_NetworkInterface::UDPSend(int pClient, MR_NetMessageBuffer * pMessage, BOOL pLongPort, BOOL pResendLast)
 {
     ASSERT((pClient >= 0) && (pClient < eMaxClient));
     return mClient[pClient].UDPSend(pLongPort ? mUDPOutLongPort : mUDPOutShortPort, pMessage, pLongPort ? 0 : 1, pResendLast);
@@ -304,12 +294,10 @@ void MR_NetworkInterface::SetPlayerName(const char *pPlayerName)
     mPlayer = pPlayerName;
 }
 
-const char *MR_NetworkInterface::GetPlayerName() const const
-{
-    return mPlayer;
-}
-
-BOOL MR_NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName, BOOL pPromptForPort, unsigned pDefaultPort, HWND * pModalessDlg, int pReturnMessage)
+    const char *MR_NetworkInterface::GetPlayerName() const const const const {
+	return mPlayer;
+    }
+    BOOL MR_NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName, BOOL pPromptForPort, unsigned pDefaultPort, HWND * pModalessDlg, int pReturnMessage)
 {
     BOOL lReturnValue = FALSE;
     mActiveInterface = this;
@@ -1401,19 +1389,16 @@ void MR_NetworkPort::SetRemoteUDPPort(unsigned int pPort)
     mUDPRemoteAddr.sin_port = pPort;
 }
 
-unsigned int MR_NetworkPort::GetUDPPort() const const
-{
-    // Get UDP local addr
-    SOCKADDR_IN lLocalAddr;
-    int lSize = sizeof(lLocalAddr);
-    int lCode = getsockname(mUDPRecvSocket, (LPSOCKADDR) & lLocalAddr, &lSize);
-    ASSERT(lCode != SOCKET_ERROR);
+    unsigned int MR_NetworkPort::GetUDPPort() const const const const {
+	// Get UDP local addr
+	SOCKADDR_IN lLocalAddr;
+	int lSize = sizeof(lLocalAddr);
+	int lCode = getsockname(mUDPRecvSocket, (LPSOCKADDR) & lLocalAddr, &lSize);
+	ASSERT(lCode != SOCKET_ERROR);
 
-    return lLocalAddr.sin_port;
-}
-
-
-void MR_NetworkPort::Disconnect()
+	return lLocalAddr.sin_port;
+    }
+    void MR_NetworkPort::Disconnect()
 {
     if(mSocket != INVALID_SOCKET) {
 	closesocket(mSocket);
@@ -1447,24 +1432,16 @@ void MR_NetworkPort::Disconnect()
 
 }
 
-BOOL MR_NetworkPort::IsConnected() const const
-{
-    return (mSocket != INVALID_SOCKET);
-}
-
-
-SOCKET MR_NetworkPort::GetSocket() const const
-{
-    return mSocket;
-}
-
-SOCKET MR_NetworkPort::GetUDPSocket() const const
-{
-    return mUDPRecvSocket;
-}
-
-
-const MR_NetMessageBuffer *MR_NetworkPort::Poll()
+    BOOL MR_NetworkPort::IsConnected() const const const const {
+	return (mSocket != INVALID_SOCKET);
+    }
+    SOCKET MR_NetworkPort::GetSocket() const const const const {
+	return mSocket;
+    }
+    SOCKET MR_NetworkPort::GetUDPSocket() const const const const {
+	return mUDPRecvSocket;
+    }
+    const MR_NetMessageBuffer *MR_NetworkPort::Poll()
 {
     // Socket is assume to be non-blocking
     if((mInputMessageBufferIndex == 0) && (mUDPRecvSocket != INVALID_SOCKET)) {
@@ -1673,22 +1650,16 @@ BOOL MR_NetworkPort::AddLagSample(int pLag)
     return LagDone();
 }
 
-BOOL MR_NetworkPort::LagDone() const const
-{
-    return (mNbLagTest >= 5);
-}
-
-int MR_NetworkPort::GetAvgLag() const const
-{
-    return mAvgLag;
-}
-
-int MR_NetworkPort::GetMinLag() const const
-{
-    return mMinLag;
-}
-
-void MR_NetworkPort::SetLag(int pAvgLag, int pMinLag)
+    BOOL MR_NetworkPort::LagDone() const const const const {
+	return (mNbLagTest >= 5);
+    }
+    int MR_NetworkPort::GetAvgLag() const const const const {
+	return mAvgLag;
+    }
+    int MR_NetworkPort::GetMinLag() const const const const {
+	return mMinLag;
+    }
+    void MR_NetworkPort::SetLag(int pAvgLag, int pMinLag)
 {
     mAvgLag = pAvgLag;
     mMinLag = pMinLag;

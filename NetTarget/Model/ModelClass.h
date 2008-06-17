@@ -27,7 +27,7 @@
 #ifndef MODEL_CLASS_H
 #define MODEL_CLASS_H
 
-class MR_Maze;   
+class MR_Maze;
 class MR_Level;
 class MR_Section;
 
@@ -36,4 +36,3 @@ class MR_FreeElement;
 
 
 #endif
-

@@ -28,84 +28,83 @@
 #include "../Model/FreeElementMovingHelper.h"
 
 
-const MR_Int32 cPowerUpRay        =  550;
-const MR_Int32 cPowerUpHalfHeight =  550;
+const MR_Int32 cPowerUpRay = 550;
+const MR_Int32 cPowerUpHalfHeight = 550;
 
 
-MR_Int32 MR_PowerUp::ZMin()const
+MR_Int32 MR_PowerUp::ZMin() const const
 {
-   return mPosition.mZ-cPowerUpHalfHeight;
+    return mPosition.mZ - cPowerUpHalfHeight;
 }
 
-MR_Int32 MR_PowerUp::ZMax()const
+MR_Int32 MR_PowerUp::ZMax() const const
 {
-   return mPosition.mZ+cPowerUpHalfHeight;
+    return mPosition.mZ + cPowerUpHalfHeight;
 }
 
-MR_Int32 MR_PowerUp::AxisX()const
+MR_Int32 MR_PowerUp::AxisX() const const
 {
-   return mPosition.mX;
+    return mPosition.mX;
 }
 
-MR_Int32 MR_PowerUp::AxisY()const
+MR_Int32 MR_PowerUp::AxisY() const const
 {
-   return mPosition.mY;
+    return mPosition.mY;
 }
 
-MR_Int32 MR_PowerUp::RayLen()const
+MR_Int32 MR_PowerUp::RayLen() const const
 {
-   return cPowerUpRay;
+    return cPowerUpRay;
 }
 
-MR_PowerUp::MR_PowerUp( const MR_ObjectFromFactoryId& pId )
-              :MR_FreeElementBase( pId )
+MR_PowerUp::MR_PowerUp(const MR_ObjectFromFactoryId & pId)
+:  MR_FreeElementBase(pId)
 {
-   mEffectList.AddTail( &mPowerUpEffect );
-   mActor = gObjectFactoryData->mResourceLib.GetActor( MR_PWRUP );
+    mEffectList.AddTail(&mPowerUpEffect);
+    mActor = gObjectFactoryData->mResourceLib.GetActor(MR_PWRUP);
 
-   mOrientation      = 0;
-   mPowerUpEffect.mElementPermId = -1;
+    mOrientation = 0;
+    mPowerUpEffect.mElementPermId = -1;
 }
 
 MR_PowerUp::~MR_PowerUp()
 {
 }
 
-BOOL MR_PowerUp::AssignPermNumber( int pNumber )
+BOOL MR_PowerUp::AssignPermNumber(int pNumber)
 {
-   mPowerUpEffect.mElementPermId = pNumber;
-   return TRUE;
+    mPowerUpEffect.mElementPermId = pNumber;
+    return TRUE;
 }
 
 
-const MR_ContactEffectList* MR_PowerUp::GetEffectList()
+const MR_ContactEffectList *MR_PowerUp::GetEffectList()
 {
-   return &mEffectList;
+    return &mEffectList;
 }
 
-const MR_ShapeInterface* MR_PowerUp::GetReceivingContactEffectShape()
+const MR_ShapeInterface *MR_PowerUp::GetReceivingContactEffectShape()
 {
-   return this;   
+    return this;
 }
 
-const MR_ShapeInterface* MR_PowerUp::GetGivingContactEffectShape()
+const MR_ShapeInterface *MR_PowerUp::GetGivingContactEffectShape()
 {
-   // return this;
-   return NULL;
+    // return this;
+    return NULL;
 }
 
 
 
 // Simulation
-int MR_PowerUp::Simulate( MR_SimulationTime pDuration, MR_Level* /*pLevel*/, int pRoom )
+int MR_PowerUp::Simulate(MR_SimulationTime pDuration, MR_Level * /*pLevel */ , int pRoom)
 {
-   // Just rotate on ourself
-   if( pDuration != 0 )
-   {
-      mOrientation = MR_NORMALIZE_ANGLE( mOrientation+pDuration );
-   }
+    // Just rotate on ourself
+    if(pDuration != 0) {
+	mOrientation = MR_NORMALIZE_ANGLE(mOrientation + pDuration);
+    }
 
-   return pRoom;
+    return pRoom;
 }
 
 /*
@@ -143,43 +142,39 @@ void MR_PowerUp::ApplyEffect( const MR_ContactEffect* pEffect,  MR_SimulationTim
 
 // State broadcast
 
-class MR_PowerUpState
-{
-   public:
-      MR_Int32                  mPosX;          // 4    4
-      MR_Int32                  mPosY;          // 4    8
-      MR_Int16                  mPosZ;          // 2   10 
+class MR_PowerUpState {
+  public:
+    MR_Int32 mPosX;		// 4    4
+    MR_Int32 mPosY;		// 4    8
+    MR_Int16 mPosZ;		// 2   10 
 
 };
 
-MR_ElementNetState MR_PowerUp::GetNetState()const
+MR_ElementNetState MR_PowerUp::GetNetState() const const
 {
-   static MR_PowerUpState lsState; // Static is ok because the variable will be used immediatly
+    static MR_PowerUpState lsState;	// Static is ok because the variable will be used immediatly
 
-   MR_ElementNetState lReturnValue;
+    MR_ElementNetState lReturnValue;
 
-   lReturnValue.mDataLen = sizeof( lsState );
-   lReturnValue.mData    = (MR_UInt8*)&lsState;
+    lReturnValue.mDataLen = sizeof(lsState);
+    lReturnValue.mData = (MR_UInt8 *) & lsState;
 
-   lsState.mPosX          = mPosition.mX;
-   lsState.mPosY          = mPosition.mY;
-   lsState.mPosZ          = mPosition.mZ;
+    lsState.mPosX = mPosition.mX;
+    lsState.mPosY = mPosition.mY;
+    lsState.mPosZ = mPosition.mZ;
 
-   return lReturnValue;
+    return lReturnValue;
 }
 
-void MR_PowerUp::SetNetState( int /*pDataLen*/, const MR_UInt8* pData )
+void MR_PowerUp::SetNetState(int /*pDataLen */ , const MR_UInt8 * pData)
 {
 
-   const MR_PowerUpState* lState = (const MR_PowerUpState*)pData;
+    const MR_PowerUpState *lState = (const MR_PowerUpState *) pData;
 
-   mPosition.mX = lState->mPosX;
-   mPosition.mY = lState->mPosY;         
-   mPosition.mZ = lState->mPosZ;         
+    mPosition.mX = lState->mPosX;
+    mPosition.mY = lState->mPosY;
+    mPosition.mZ = lState->mPosZ;
 
-   mOrientation = 0;
+    mOrientation = 0;
 
 }
-
-
-

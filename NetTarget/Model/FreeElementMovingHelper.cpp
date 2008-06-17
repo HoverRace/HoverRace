@@ -28,258 +28,214 @@
 
 // MR_ObstacleCollisionReport
 
-BOOL     MR_ObstacleCollisionReport::IsInMaze()const
+BOOL MR_ObstacleCollisionReport::IsInMaze() const const
 {
-   return mInMaze;
+    return mInMaze;
 }
 
-BOOL     MR_ObstacleCollisionReport::HaveContact()const
+BOOL MR_ObstacleCollisionReport::HaveContact() const const
 {
-   ASSERT( mInMaze );
+    ASSERT(mInMaze);
 
-   return mHaveObstacleContact || (mClosestFloor < 0) || (mClosestCeiling < 0);
-}
-
-
-
-MR_Int32 MR_ObstacleCollisionReport::StepHeight()const
-{
-   MR_Int32 lReturnValue = -mClosestFloor;
-
-   ASSERT( mInMaze );
-
-   if( mHaveObstacleContact )
-   {
-      lReturnValue = max( lReturnValue, mObstacleTop-mShapeBottom );
-   }
-   
-   return lReturnValue;
-}
-
-MR_Int32 MR_ObstacleCollisionReport::CeilingStepHeight()const
-{
-   MR_Int32 lReturnValue = -mClosestCeiling;
-
-   ASSERT( mInMaze );
-
-   if( mHaveObstacleContact )
-   {
-      lReturnValue = max( lReturnValue, mShapeTop-mObstacleBottom );
-   }   
-   return lReturnValue;
-}
-
-MR_Int32 MR_ObstacleCollisionReport::SpaceToFloor()const
-{
-   ASSERT( mInMaze );
-
-   return mClosestFloor;
-}
-
-MR_Int32 MR_ObstacleCollisionReport::SpaceToCeiling()const
-{
-   ASSERT( mInMaze );
-
-   return mClosestCeiling;
-}
-
-MR_Int32 MR_ObstacleCollisionReport::LargestHoleHeight()const
-{
-   return (mShapeTop-mShapeBottom)-(CeilingStepHeight()+StepHeight());
-}
-
-MR_Int32 MR_ObstacleCollisionReport::LargestHoleStep()const
-{
-   return StepHeight();
-}
-
-BOOL MR_ObstacleCollisionReport::AlmostCompleted()const
-{
-   return( mHaveObstacleContact &&( mObstacleTop >= mShapeTop )&&( mObstacleBottom <= mShapeBottom ) );
+    return mHaveObstacleContact || (mClosestFloor < 0) || (mClosestCeiling < 0);
 }
 
 
 
-
-
-void MR_ObstacleCollisionReport::GetContactWithObstacles( MR_Level*                   pLevel,
-                                                          const MR_ShapeInterface*    pShape,
-                                                          int                         pRoom,
-                                                          MR_FreeElement*             pElement,
-                                                          BOOL                        pIgnoreActors )
+MR_Int32 MR_ObstacleCollisionReport::StepHeight() const const
 {
-   // Compute the touched rooms and the floor limits
-   // Fort each room check collisions with the features
-   // For each actor in the rooms, check the collisions with 
-   // there part list
+    MR_Int32 lReturnValue = -mClosestFloor;
 
-   // I think that it is a really intensive calculation
-   // Hope it will be fast enough X
+    ASSERT(mInMaze);
 
-   // First test the current room
+    if(mHaveObstacleContact) {
+	lReturnValue = max(lReturnValue, mObstacleTop - mShapeBottom);
+    }
 
-
-   // First find aroom touching the shape
-  
-   mCurrentRoom = pLevel->FindRoomForPoint( MR_2DCoordinate( pShape->XPos(), pShape->YPos() ), pRoom );
-
-   if( mCurrentRoom == -1 )
-   {
-      mInMaze = FALSE;
-   }      
-   else
-   {
-      MR_RoomContactSpec lSpec;
-      pLevel->GetRoomContact( mCurrentRoom, pShape, lSpec );
-
-      ASSERT( lSpec.mTouchingRoom );
-
-
-      mInMaze = TRUE;
-      mHaveObstacleContact = FALSE;
-
-      mShapeTop    = pShape->ZMax();
-      mShapeBottom = pShape->ZMin();
-
-      mClosestFloor        = lSpec.mDistanceFromFloor;
-      mClosestCeiling      = lSpec.mDistanceFromCeiling;
-
-      // Verify if the feature and actors of this room have contacts 
-      // with the shape
-
-      GetContactWithFeaturesAndActors( pLevel,
-                                       pShape,
-                                       mCurrentRoom,
-                                       pElement,
-                                       pIgnoreActors );
-
-
-      // For each of the touched walls, 
-      // Just verify immediate rooms for the moment
-      for( int lCounter = 0; lCounter < lSpec.mNbWallContact; lCounter++ )
-      {
-         int lNextRoom = pLevel->GetNeighbor( mCurrentRoom, lSpec.mWallContact[ lCounter ] );
-
-         // If that wall have no neighbor, adjust the step height
-         if( lNextRoom == -1 )
-         {
-            mHaveObstacleContact = TRUE;
-            mObstacleTop         = mShapeTop;
-            mObstacleBottom      = mShapeBottom;
-         }
-         else
-         {
-            MR_RoomContactSpec lNextSpec;
-
-            pLevel->GetRoomContact( lNextRoom, pShape, lNextSpec );
-
-            if( lNextSpec.mTouchingRoom )
-            {
-               mClosestFloor        = min( mClosestFloor,   lNextSpec.mDistanceFromFloor );
-               mClosestCeiling      = min( mClosestCeiling, lNextSpec.mDistanceFromCeiling );
-
-               GetContactWithFeaturesAndActors( pLevel,
-                                                pShape,
-                                                lNextRoom,
-                                                pElement, 
-                                                pIgnoreActors );
-
-
-            }
-
-         }
-
-      }
-   }
+    return lReturnValue;
 }
 
-int MR_ObstacleCollisionReport::Room()const
+MR_Int32 MR_ObstacleCollisionReport::CeilingStepHeight() const const
 {
-   return mCurrentRoom;
+    MR_Int32 lReturnValue = -mClosestCeiling;
+
+    ASSERT(mInMaze);
+
+    if(mHaveObstacleContact) {
+	lReturnValue = max(lReturnValue, mShapeTop - mObstacleBottom);
+    }
+    return lReturnValue;
 }
 
-                                                                                                             
-void MR_ObstacleCollisionReport::GetContactWithFeaturesAndActors( MR_Level*                   pLevel,
-                                                                  const MR_ShapeInterface*    pShape,
-                                                                  int                         pRoom,
-                                                                  MR_FreeElement*             pElement,
-                                                                  BOOL                        pIgnoreActors          )
+MR_Int32 MR_ObstacleCollisionReport::SpaceToFloor() const const
+{
+    ASSERT(mInMaze);
+
+    return mClosestFloor;
+}
+
+MR_Int32 MR_ObstacleCollisionReport::SpaceToCeiling() const const
+{
+    ASSERT(mInMaze);
+
+    return mClosestCeiling;
+}
+
+MR_Int32 MR_ObstacleCollisionReport::LargestHoleHeight() const const
+{
+    return (mShapeTop - mShapeBottom) - (CeilingStepHeight() + StepHeight());
+}
+
+MR_Int32 MR_ObstacleCollisionReport::LargestHoleStep() const const
+{
+    return StepHeight();
+}
+
+BOOL MR_ObstacleCollisionReport::AlmostCompleted() const const
+{
+    return (mHaveObstacleContact && (mObstacleTop >= mShapeTop) && (mObstacleBottom <= mShapeBottom));
+}
+
+
+
+
+
+void MR_ObstacleCollisionReport::GetContactWithObstacles(MR_Level * pLevel, const MR_ShapeInterface * pShape, int pRoom, MR_FreeElement * pElement, BOOL pIgnoreActors)
+{
+    // Compute the touched rooms and the floor limits
+    // Fort each room check collisions with the features
+    // For each actor in the rooms, check the collisions with 
+    // there part list
+
+    // I think that it is a really intensive calculation
+    // Hope it will be fast enough X
+
+    // First test the current room
+
+
+    // First find aroom touching the shape
+
+    mCurrentRoom = pLevel->FindRoomForPoint(MR_2DCoordinate(pShape->XPos(), pShape->YPos()), pRoom);
+
+    if(mCurrentRoom == -1) {
+	mInMaze = FALSE;
+    } else {
+	MR_RoomContactSpec lSpec;
+	pLevel->GetRoomContact(mCurrentRoom, pShape, lSpec);
+
+	ASSERT(lSpec.mTouchingRoom);
+
+
+	mInMaze = TRUE;
+	mHaveObstacleContact = FALSE;
+
+	mShapeTop = pShape->ZMax();
+	mShapeBottom = pShape->ZMin();
+
+	mClosestFloor = lSpec.mDistanceFromFloor;
+	mClosestCeiling = lSpec.mDistanceFromCeiling;
+
+	// Verify if the feature and actors of this room have contacts 
+	// with the shape
+
+	GetContactWithFeaturesAndActors(pLevel, pShape, mCurrentRoom, pElement, pIgnoreActors);
+
+
+	// For each of the touched walls, 
+	// Just verify immediate rooms for the moment
+	for(int lCounter = 0; lCounter < lSpec.mNbWallContact; lCounter++) {
+	    int lNextRoom = pLevel->GetNeighbor(mCurrentRoom, lSpec.mWallContact[lCounter]);
+
+	    // If that wall have no neighbor, adjust the step height
+	    if(lNextRoom == -1) {
+		mHaveObstacleContact = TRUE;
+		mObstacleTop = mShapeTop;
+		mObstacleBottom = mShapeBottom;
+	    } else {
+		MR_RoomContactSpec lNextSpec;
+
+		pLevel->GetRoomContact(lNextRoom, pShape, lNextSpec);
+
+		if(lNextSpec.mTouchingRoom) {
+		    mClosestFloor = min(mClosestFloor, lNextSpec.mDistanceFromFloor);
+		    mClosestCeiling = min(mClosestCeiling, lNextSpec.mDistanceFromCeiling);
+
+		    GetContactWithFeaturesAndActors(pLevel, pShape, lNextRoom, pElement, pIgnoreActors);
+
+
+		}
+
+	    }
+
+	}
+    }
+}
+
+int MR_ObstacleCollisionReport::Room() const const
+{
+    return mCurrentRoom;
+}
+
+
+void MR_ObstacleCollisionReport::GetContactWithFeaturesAndActors(MR_Level * pLevel, const MR_ShapeInterface * pShape, int pRoom, MR_FreeElement * pElement, BOOL pIgnoreActors)
 {
 
-   int            lCounter;
-   MR_ContactSpec lSpec;
+    int lCounter;
+    MR_ContactSpec lSpec;
 
-   if( !AlmostCompleted() )
-   {
-      // First verify the features
-      for( lCounter = 0; lCounter < pLevel->GetFeatureCount( pRoom ); lCounter++ )
-      {
-         if( pLevel->GetFeatureContact( pLevel->GetFeature( pRoom, lCounter ),
-                                        pShape,
-                                        lSpec ) )
-         {
-            if( mHaveObstacleContact )
-            {
-               mObstacleBottom      = min( mObstacleBottom, lSpec.mZMin );
-               mObstacleTop         = max( mObstacleTop,    lSpec.mZMax );
-            }
-            else
-            {
-               mHaveObstacleContact = TRUE;
-               mObstacleBottom      = lSpec.mZMin;
-               mObstacleTop         = lSpec.mZMax;
-            }
+    if(!AlmostCompleted()) {
+	// First verify the features
+	for(lCounter = 0; lCounter < pLevel->GetFeatureCount(pRoom); lCounter++) {
+	    if(pLevel->GetFeatureContact(pLevel->GetFeature(pRoom, lCounter), pShape, lSpec)) {
+		if(mHaveObstacleContact) {
+		    mObstacleBottom = min(mObstacleBottom, lSpec.mZMin);
+		    mObstacleTop = max(mObstacleTop, lSpec.mZMax);
+		} else {
+		    mHaveObstacleContact = TRUE;
+		    mObstacleBottom = lSpec.mZMin;
+		    mObstacleTop = lSpec.mZMax;
+		}
 
-            if( AlmostCompleted() )
-            {
-               break;
-            }
-         }
-      }
-
-      
-      // Verify the actors
-      if( !AlmostCompleted() && !pIgnoreActors )
-      {
-         MR_FreeElementHandle  lObstacleHandle = pLevel->GetFirstFreeElement( pRoom );
-
-         while( lObstacleHandle != NULL )
-         {            
-            MR_FreeElement* lObstacle = MR_Level::GetFreeElement( lObstacleHandle );
+		if(AlmostCompleted()) {
+		    break;
+		}
+	    }
+	}
 
 
-            if( lObstacle != pElement  )
-            {
+	// Verify the actors
+	if(!AlmostCompleted() && !pIgnoreActors) {
+	    MR_FreeElementHandle lObstacleHandle = pLevel->GetFirstFreeElement(pRoom);
 
-               const MR_ShapeInterface* lObstacleShape = lObstacle->GetObstacleShape();
+	    while(lObstacleHandle != NULL) {
+		MR_FreeElement *lObstacle = MR_Level::GetFreeElement(lObstacleHandle);
 
-               if( lObstacleShape != NULL )
-               {
-                  if( MR_DetectActorContact( pShape, lObstacleShape, lSpec ) )
-                  {
-                     if( mHaveObstacleContact )
-                     {
-                         mObstacleBottom      = min( mObstacleBottom, lSpec.mZMin );
-                         mObstacleTop         = max( mObstacleTop,    lSpec.mZMax );
-                     }
-                     else
-                     {
-                         mHaveObstacleContact = TRUE;
-                         mObstacleBottom      = lSpec.mZMin;
-                         mObstacleTop         = lSpec.mZMax;
-                     }
 
-                     if( AlmostCompleted() )
-                     {
-                        break;
-                     }
-                  }
-               }
-            }
-            lObstacleHandle = MR_Level::GetNextFreeElement( lObstacleHandle );
-         }
-      }
-   }
+		if(lObstacle != pElement) {
+
+		    const MR_ShapeInterface *lObstacleShape = lObstacle->GetObstacleShape();
+
+		    if(lObstacleShape != NULL) {
+			if(MR_DetectActorContact(pShape, lObstacleShape, lSpec)) {
+			    if(mHaveObstacleContact) {
+				mObstacleBottom = min(mObstacleBottom, lSpec.mZMin);
+				mObstacleTop = max(mObstacleTop, lSpec.mZMax);
+			    } else {
+				mHaveObstacleContact = TRUE;
+				mObstacleBottom = lSpec.mZMin;
+				mObstacleTop = lSpec.mZMax;
+			    }
+
+			    if(AlmostCompleted()) {
+				break;
+			    }
+			}
+		    }
+		}
+		lObstacleHandle = MR_Level::GetNextFreeElement(lObstacleHandle);
+	    }
+	}
+    }
 }
 
 

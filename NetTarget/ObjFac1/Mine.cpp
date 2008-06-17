@@ -29,168 +29,154 @@
 #include "../Model/FreeElementMovingHelper.h"
 
 
-const MR_Int32 cMineRay        =  400;
-const MR_Int32 cMineHeight     =  140;
+const MR_Int32 cMineRay = 400;
+const MR_Int32 cMineHeight = 140;
 
 
-MR_Int32 MR_Mine::ZMin()const
+MR_Int32 MR_Mine::ZMin() const const
 {
-   return mPosition.mZ;
+    return mPosition.mZ;
 }
 
-MR_Int32 MR_Mine::ZMax()const
+MR_Int32 MR_Mine::ZMax() const const
 {
-   return mPosition.mZ+cMineHeight;
+    return mPosition.mZ + cMineHeight;
 }
 
-MR_Int32 MR_Mine::AxisX()const
+MR_Int32 MR_Mine::AxisX() const const
 {
-   return mPosition.mX;
+    return mPosition.mX;
 }
 
-MR_Int32 MR_Mine::AxisY()const
+MR_Int32 MR_Mine::AxisY() const const
 {
-   return mPosition.mY;
+    return mPosition.mY;
 }
 
-MR_Int32 MR_Mine::RayLen()const
+MR_Int32 MR_Mine::RayLen() const const
 {
-   return cMineRay;
+    return cMineRay;
 }
 
-MR_Mine::MR_Mine( const MR_ObjectFromFactoryId& pId )
-        :MR_FreeElementBase( pId )
+MR_Mine::MR_Mine(const MR_ObjectFromFactoryId & pId)
+:  MR_FreeElementBase(pId)
 {
-   mEffectList.AddTail( &mEffect );
-   mActor = gObjectFactoryData->mResourceLib.GetActor( MR_MINE );
+    mEffectList.AddTail(&mEffect);
+    mActor = gObjectFactoryData->mResourceLib.GetActor(MR_MINE);
 
-   mOnGround         = FALSE;
-   mOrientation      = 0;
+    mOnGround = FALSE;
+    mOrientation = 0;
 
-   mEffect.mType = MR_LostOfControl::eMine;
-   mEffect.mElementId = -1;
-   mEffect.mHoverId   = -1;
+    mEffect.mType = MR_LostOfControl::eMine;
+    mEffect.mElementId = -1;
+    mEffect.mHoverId = -1;
 }
 
 MR_Mine::~MR_Mine()
 {
 }
 
-BOOL MR_Mine::AssignPermNumber( int pNumber )
+BOOL MR_Mine::AssignPermNumber(int pNumber)
 {
-   mEffect.mElementId = pNumber;
-   return TRUE;
+    mEffect.mElementId = pNumber;
+    return TRUE;
 }
 
 
-const MR_ContactEffectList* MR_Mine::GetEffectList()
+const MR_ContactEffectList *MR_Mine::GetEffectList()
 {
-   if( mOnGround )
-   {
-      return &mEffectList;
-   }
-   else
-   {
-      return NULL;
-   }
+    if(mOnGround) {
+	return &mEffectList;
+    } else {
+	return NULL;
+    }
 }
 
-const MR_ShapeInterface* MR_Mine::GetReceivingContactEffectShape()
+const MR_ShapeInterface *MR_Mine::GetReceivingContactEffectShape()
 {
-   return this;   
+    return this;
 }
 
-const MR_ShapeInterface* MR_Mine::GetGivingContactEffectShape()
+const MR_ShapeInterface *MR_Mine::GetGivingContactEffectShape()
 {
-   // return this;
-   return NULL;
+    // return this;
+    return NULL;
 }
 
 
 
 // Simulation
-int MR_Mine::Simulate( MR_SimulationTime pDuration, MR_Level* pLevel, int pRoom )
+int MR_Mine::Simulate(MR_SimulationTime pDuration, MR_Level * pLevel, int pRoom)
 {
-   if( pRoom == -1 )
-   {
-      mOnGround = FALSE;
-   }
-   else if( !mOnGround && (pDuration>0)  )
-   {
-      // FreeFall computation
+    if(pRoom == -1) {
+	mOnGround = FALSE;
+    } else if(!mOnGround && (pDuration > 0)) {
+	// FreeFall computation
 
-      MR_ObstacleCollisionReport lReport;
+	MR_ObstacleCollisionReport lReport;
 
-      mPosition.mZ -= pDuration*0.6;
+	mPosition.mZ -= pDuration * 0.6;
 
-      lReport.GetContactWithObstacles( pLevel, this, pRoom, this );   
+	lReport.GetContactWithObstacles(pLevel, this, pRoom, this);
 
-      if( !lReport.IsInMaze() )
-      {
-         ASSERT( FALSE );
-         mOnGround = TRUE;
-      }
-      else
-      {
-         if( lReport.HaveContact() )
-         {
-            int lStepHeight = lReport.StepHeight();
-            ASSERT( lStepHeight >=0 );
-            ASSERT( lStepHeight <= 1000 );
+	if(!lReport.IsInMaze()) {
+	    ASSERT(FALSE);
+	    mOnGround = TRUE;
+	} else {
+	    if(lReport.HaveContact()) {
+		int lStepHeight = lReport.StepHeight();
+		ASSERT(lStepHeight >= 0);
+		ASSERT(lStepHeight <= 1000);
 
-            mOnGround = TRUE;
-            mPosition.mZ += lStepHeight;
-         }
-      }
-   }   
-   return pRoom;
+		mOnGround = TRUE;
+		mPosition.mZ += lStepHeight;
+	    }
+	}
+    }
+    return pRoom;
 }
 
-void MR_Mine::Render( MR_3DViewPort* pDest, MR_SimulationTime pTime )
+void MR_Mine::Render(MR_3DViewPort * pDest, MR_SimulationTime pTime)
 {
-   mCurrentFrame = (pTime>>9)&1;
-   MR_FreeElementBase::Render( pDest, pTime );
+    mCurrentFrame = (pTime >> 9) & 1;
+    MR_FreeElementBase::Render(pDest, pTime);
 }
 
 // State broadcast
 
-class MR_MineState
-{
-   public:
-      MR_Int32                  mPosX;          // 4    4
-      MR_Int32                  mPosY;          // 4    8
-      MR_Int16                  mPosZ;          // 2   10 
+class MR_MineState {
+  public:
+    MR_Int32 mPosX;		// 4    4
+    MR_Int32 mPosY;		// 4    8
+    MR_Int16 mPosZ;		// 2   10 
 
 };
 
-MR_ElementNetState MR_Mine::GetNetState()const
+MR_ElementNetState MR_Mine::GetNetState() const const
 {
-   static MR_MineState lsState; // Static is ok because the variable will be used immediatly
+    static MR_MineState lsState;	// Static is ok because the variable will be used immediatly
 
-   MR_ElementNetState lReturnValue;
+    MR_ElementNetState lReturnValue;
 
-   lReturnValue.mDataLen = sizeof( lsState );
-   lReturnValue.mData    = (MR_UInt8*)&lsState;
+    lReturnValue.mDataLen = sizeof(lsState);
+    lReturnValue.mData = (MR_UInt8 *) & lsState;
 
-   lsState.mPosX          = mPosition.mX;
-   lsState.mPosY          = mPosition.mY;
-   lsState.mPosZ          = mPosition.mZ;
+    lsState.mPosX = mPosition.mX;
+    lsState.mPosY = mPosition.mY;
+    lsState.mPosZ = mPosition.mZ;
 
-   return lReturnValue;
+    return lReturnValue;
 }
 
-void MR_Mine::SetNetState( int /*pDataLen*/, const MR_UInt8* pData )
+void MR_Mine::SetNetState(int /*pDataLen */ , const MR_UInt8 * pData)
 {
 
-   const MR_MineState* lState = (const MR_MineState*)pData;
+    const MR_MineState *lState = (const MR_MineState *) pData;
 
-   mPosition.mX = lState->mPosX;
-   mPosition.mY = lState->mPosY;         
-   mPosition.mZ = lState->mPosZ;         
+    mPosition.mX = lState->mPosX;
+    mPosition.mY = lState->mPosY;
+    mPosition.mZ = lState->mPosZ;
 
-   mOrientation = 0;
+    mOrientation = 0;
 
 }
-
-
-

@@ -27,29 +27,27 @@
 #include "../Model/Shapes.h"
 
 #ifdef MR_MODEL
-   #define MR_DllDeclare   __declspec( dllexport )
+#define MR_DllDeclare   __declspec( dllexport )
 #else
-   #define MR_DllDeclare   __declspec( dllimport )
+#define MR_DllDeclare   __declspec( dllimport )
 #endif
 
 
-class MR_DllDeclare MR_ContactEffect
-{
-   // Base class for all the contact effects
-   // you must use typeinfo to determine the real type of the effect
-   public:
-      virtual ~MR_ContactEffect();
+class MR_DllDeclare MR_ContactEffect {
+    // Base class for all the contact effects
+    // you must use typeinfo to determine the real type of the effect
+  public:
+    virtual ~ MR_ContactEffect();
 
-      virtual const MR_ContactEffect* GetAlternate()const; // If the effect is unknow, use that one instead
-                                                           // Usually return NULL
+    virtual const MR_ContactEffect *GetAlternate() const;	// If the effect is unknow, use that one instead
+    // Usually return NULL
 };
 
-class MR_DllDeclare MR_ContactEffectList: public CList< MR_ContactEffect*, MR_ContactEffect* >
-{
+class MR_DllDeclare MR_ContactEffectList:public CList < MR_ContactEffect *, MR_ContactEffect * > {
 };
 
 
 
 #undef MR_DllDeclare
-      
+
 #endif

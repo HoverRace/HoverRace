@@ -28,15 +28,13 @@
 #include "../ObjFacTools/BitmapSurface.h"
 
 
-class MR_WoodSurface:public MR_BitmapSurface
-{
+class MR_WoodSurface:public MR_BitmapSurface {
 
-   public:
-      MR_WoodSurface( const MR_ObjectFromFactoryId& pId );
-      ~MR_WoodSurface();
+  public:
+    MR_WoodSurface(const MR_ObjectFromFactoryId & pId);
+     ~MR_WoodSurface();
 
 };
 
 
 #endif
-

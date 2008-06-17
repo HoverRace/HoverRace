@@ -26,103 +26,103 @@
 
 
 
-MR_Int32 MR_CylinderShape::XPos()const
+MR_Int32 MR_CylinderShape::XPos() const const
 {
-   return AxisX();
+    return AxisX();
 }
 
-MR_Int32 MR_CylinderShape::YPos()const
+MR_Int32 MR_CylinderShape::YPos() const const
 {
-   return AxisY();
+    return AxisY();
 }
 
-MR_Int32 MR_CylinderShape::XMin()const
+MR_Int32 MR_CylinderShape::XMin() const const
 {
-   return AxisX()-RayLen();
+    return AxisX() - RayLen();
 }
 
-MR_Int32 MR_CylinderShape::XMax()const
+MR_Int32 MR_CylinderShape::XMax() const const
 {
-   return AxisX()+RayLen();
+    return AxisX() + RayLen();
 }
 
-MR_Int32 MR_CylinderShape::YMin()const
+MR_Int32 MR_CylinderShape::YMin() const const
 {
-   return AxisY()-RayLen();
+    return AxisY() - RayLen();
 }
 
-MR_Int32 MR_CylinderShape::YMax()const
+MR_Int32 MR_CylinderShape::YMax() const const
 {
-   return AxisY()+RayLen();
-}
-
-
-MR_ShapeInterface::eShape MR_CylinderShape::ShapeType()const
-{
-   return eCylinder;
-}
-
-MR_Int32 MR_LineSegmentShape::XPos()const
-{
-   return X0();
-}
-
-MR_Int32 MR_LineSegmentShape::YPos()const
-{
-   return Y0();
-}
-
-MR_Int32 MR_LineSegmentShape::XMin()const
-{
-   int lX0 = X0();
-   int lX1 = X1();
-
-   return( (lX0<lX1) ? lX0 : lX1 );
-}
-
-MR_Int32 MR_LineSegmentShape::XMax()const
-{
-   int lX0 = X0();
-   int lX1 = X1();
-
-   return( (lX0>lX1) ? lX0 : lX1 );
-}
-
-MR_Int32 MR_LineSegmentShape::YMin()const
-{
-   int lY0 = Y0();
-   int lY1 = Y1();
-
-   return( (lY0<lY1) ? lY0 : lY1 );
-}
-
-MR_Int32 MR_LineSegmentShape::YMax()const
-{
-   int lY0 = Y0();
-   int lY1 = Y1();
-
-   return( (lY0>lY1) ? lY0 : lY1 );
-}
-
-MR_ShapeInterface::eShape MR_LineSegmentShape::ShapeType()const
-{
-   return eLineSegment;
+    return AxisY() + RayLen();
 }
 
 
-MR_Int32 MR_PolygonShape::XPos()const
+MR_ShapeInterface::eShape MR_CylinderShape::ShapeType() constconst
 {
-   return (XMin()+XMax())/2;
+    return eCylinder;
 }
 
-MR_Int32 MR_PolygonShape::YPos()const
+MR_Int32 MR_LineSegmentShape::XPos() const const
 {
-   return (YMin()+YMax())/2;
+    return X0();
 }
 
-MR_ShapeInterface::eShape MR_PolygonShape::ShapeType()const
+MR_Int32 MR_LineSegmentShape::YPos() const const
 {
-   return ePolygon;
+    return Y0();
+}
+
+MR_Int32 MR_LineSegmentShape::XMin() const const
+{
+    int lX0 = X0();
+    int lX1 = X1();
+
+    return ((lX0 < lX1) ? lX0 : lX1);
+}
+
+MR_Int32 MR_LineSegmentShape::XMax() const const
+{
+    int lX0 = X0();
+    int lX1 = X1();
+
+    return ((lX0 > lX1) ? lX0 : lX1);
+}
+
+MR_Int32 MR_LineSegmentShape::YMin() const const
+{
+    int lY0 = Y0();
+    int lY1 = Y1();
+
+    return ((lY0 < lY1) ? lY0 : lY1);
+}
+
+MR_Int32 MR_LineSegmentShape::YMax() const const
+{
+    int lY0 = Y0();
+    int lY1 = Y1();
+
+    return ((lY0 > lY1) ? lY0 : lY1);
+}
+
+MR_ShapeInterface::eShape MR_LineSegmentShape::ShapeType() constconst
+{
+    return eLineSegment;
+}
+
+
+MR_Int32 MR_PolygonShape::XPos() const const
+{
+    return (XMin() + XMax()) / 2;
+}
+
+MR_Int32 MR_PolygonShape::YPos() const const
+{
+    return (YMin() + YMax()) / 2;
+}
+
+MR_ShapeInterface::eShape MR_PolygonShape::ShapeType() constconst
+{
+    return ePolygon;
 }
 
 
@@ -216,4 +216,3 @@ void MR_GetPolygonInclusion( const MR_PolygonShape&     pPolygon,
    pAnswer.mNbIntersection = 0;
 }
 */
- 

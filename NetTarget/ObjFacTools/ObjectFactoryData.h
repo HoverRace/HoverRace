@@ -26,30 +26,26 @@
 #include "ResourceLib.h"
 
 #ifdef MR_OBJ_FAC_TOOLS
-   #define MR_DllDeclare   __declspec( dllexport )
+#define MR_DllDeclare   __declspec( dllexport )
 #else
-   #define MR_DllDeclare   __declspec( dllimport )
+#define MR_DllDeclare   __declspec( dllimport )
 #endif
 
 
 
-class MR_ObjectFactoryData
-{
-   public:
-      HMODULE         mModule;      // Current module id
-      MR_ResourceLib  mResourceLib; // resource lib
+class MR_ObjectFactoryData {
+  public:
+    HMODULE mModule;		// Current module id
+    MR_ResourceLib mResourceLib;	// resource lib
 
-      MR_DllDeclare  MR_ObjectFactoryData( HMODULE pModule, const char* pResourceFile );
-      MR_DllDeclare ~MR_ObjectFactoryData();
+    MR_DllDeclare MR_ObjectFactoryData(HMODULE pModule, const char *pResourceFile);
+      MR_DllDeclare ~ MR_ObjectFactoryData();
 };
 
 
-extern MR_ObjectFactoryData* gObjectFactoryData;   // Must be implemented in each module
+extern MR_ObjectFactoryData *gObjectFactoryData;	// Must be implemented in each module
 
 
 #undef MR_DllDeclare
 
 #endif
-
-
-

@@ -22,42 +22,37 @@
 
 #include "MR_Types.h"
 
-inline void MR_Mem32Set( MR_UInt32* pDest, MR_UInt32 pValue, int pCount )
+inline void MR_Mem32Set(MR_UInt32 * pDest, MR_UInt32 pValue, int pCount)
 {
-   for( int lCounter = 0; lCounter < pCount; lCounter++ )
-   {
-      pDest[ lCounter ] = pValue;
-   }
+    for(int lCounter = 0; lCounter < pCount; lCounter++) {
+	pDest[lCounter] = pValue;
+    }
 }
 
-inline void MR_SmallMem16Set( MR_UInt16* pDest, MR_UInt16 pValue, int pCount )
+inline void MR_SmallMem16Set(MR_UInt16 * pDest, MR_UInt16 pValue, int pCount)
 {
-   for( int lCounter = 0; lCounter < pCount; lCounter++ )
-   {
-      pDest[ lCounter ] = pValue;
-   }
+    for(int lCounter = 0; lCounter < pCount; lCounter++) {
+	pDest[lCounter] = pValue;
+    }
 }
 
-inline void MR_LargeMem16Set( MR_UInt16* pDest, MR_UInt16 pValue, int pCount )
+inline void MR_LargeMem16Set(MR_UInt16 * pDest, MR_UInt16 pValue, int pCount)
 {
-   if( pCount > 0 )
-   {
-      MR_UInt32  lValue = pValue|( pValue<<16);
-      MR_UInt32* lDest  = (MR_UInt32*)(((int)pDest)&~1);
+    if(pCount > 0) {
+	MR_UInt32 lValue = pValue | (pValue << 16);
+	MR_UInt32 *lDest = (MR_UInt32 *) (((int) pDest) & ~1);
 
 
-      pDest[ pCount-1 ] = pValue;
+	pDest[pCount - 1] = pValue;
 
-      if( (int)pDest&1 )
-      {
-         *pDest = pValue; 
-         pCount--;
-      }
+	if((int) pDest & 1) {
+	    *pDest = pValue;
+	    pCount--;
+	}
 
 
-      for( int lCounter = 0; lCounter < pCount/2; lCounter++ )
-      {
-         lDest[ lCounter ] = lValue;
-      }
-   }
+	for(int lCounter = 0; lCounter < pCount / 2; lCounter++) {
+	    lDest[lCounter] = lValue;
+	}
+    }
 }

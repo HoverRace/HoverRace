@@ -28,21 +28,20 @@
 #include "../VideoServices/Sprite.h"
 
 
-class MR_MapSprite:public MR_Sprite
-{
-   protected:
-      int mXMin;
-      int mXMax;
-      int mYMin;
-      int mYMax;
+class MR_MapSprite:public MR_Sprite {
+  protected:
+    int mXMin;
+    int mXMax;
+    int mYMin;
+    int mYMax;
 
-      void ComputeMinMax( MR_Level* pLevel );
-      void DrawMap( MR_Level* pLevel );
+    void ComputeMinMax(MR_Level * pLevel);
+    void DrawMap(MR_Level * pLevel);
 
 
-   public:
+  public:
 
-      BOOL CreateMap( MR_Level* pLevel, int& pX0, int& pY0, int& pX1, int& pY1 );
+      BOOL CreateMap(MR_Level * pLevel, int &pX0, int &pY0, int &pX1, int &pY1);
 
 };
 
@@ -50,4 +49,3 @@ class MR_MapSprite:public MR_Sprite
 
 
 #endif
-

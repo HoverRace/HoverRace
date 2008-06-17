@@ -28,14 +28,11 @@
 // class MR_ContactEffect
 MR_ContactEffect::~MR_ContactEffect()
 {
-   // Only a virtual destructor
+    // Only a virtual destructor
 }
 
 
-const MR_ContactEffect* MR_ContactEffect::GetAlternate()const
+const MR_ContactEffect *MR_ContactEffect::GetAlternate() const const
 {
-   return NULL;
+    return NULL;
 }
-
-
-

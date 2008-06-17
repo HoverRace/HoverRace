@@ -28,35 +28,33 @@
 
 // Note.. finish lines are not finish lines..they are check points
 
-class MR_FinishLine:public MR_FreeElement, protected MR_CylinderShape
-{
-   protected:
+class MR_FinishLine:public MR_FreeElement, protected MR_CylinderShape {
+  protected:
 
-      // Shape interface
-      MR_Int32 ZMin()const;
-      MR_Int32 ZMax()const;
-      MR_Int32 AxisX()const;
-      MR_Int32 AxisY()const;
-      MR_Int32 RayLen()const;
-
-
-   private:
-
-      MR_CheckPoint        mEffect;
-      MR_ContactEffectList mContactEffectList;
-
-   public:
-      MR_FinishLine( const MR_ObjectFromFactoryId& pId, MR_CheckPoint::CheckPointType pType );      
-      ~MR_FinishLine();
+    // Shape interface
+    MR_Int32 ZMin() const;
+    MR_Int32 ZMax() const;
+    MR_Int32 AxisX() const;
+    MR_Int32 AxisY() const;
+    MR_Int32 RayLen() const;
 
 
-   protected:
+  private:
 
-      // ContactEffectShapeInterface
-      const MR_ContactEffectList* GetEffectList();
-      const MR_ShapeInterface* GetReceivingContactEffectShape();
+      MR_CheckPoint mEffect;
+    MR_ContactEffectList mContactEffectList;
+
+  public:
+      MR_FinishLine(const MR_ObjectFromFactoryId & pId, MR_CheckPoint::CheckPointType pType);
+     ~MR_FinishLine();
+
+
+  protected:
+
+    // ContactEffectShapeInterface
+    const MR_ContactEffectList *GetEffectList();
+    const MR_ShapeInterface *GetReceivingContactEffectShape();
 
 };
 
 #endif
-

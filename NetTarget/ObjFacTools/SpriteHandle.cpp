@@ -21,20 +21,20 @@
 
 #include "stdafx.h"
 #include "SpriteHandle.h"
-      const MR_ResSprite* mSprite;
+const MR_ResSprite *mSprite;
 
-MR_SpriteHandle::MR_SpriteHandle( const MR_ObjectFromFactoryId& pId, const MR_ResSprite* pSprite )
-                :MR_ObjectFromFactory( pId )
+MR_SpriteHandle::MR_SpriteHandle(const MR_ObjectFromFactoryId & pId, const MR_ResSprite * pSprite)
+:MR_ObjectFromFactory(pId)
 {
-   mSprite = pSprite;
+    mSprite = pSprite;
 }
 
 MR_SpriteHandle::~MR_SpriteHandle()
 {
 }
- 
 
-const MR_Sprite* MR_SpriteHandle::GetSprite()const
+
+const MR_Sprite *MR_SpriteHandle::GetSprite() const const
 {
-   return mSprite;
+    return mSprite;
 }

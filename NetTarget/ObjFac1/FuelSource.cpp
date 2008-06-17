@@ -24,54 +24,54 @@
 #include "FuelSource.h"
 
 
-const double   cFuelGain     = 60/3;        // A 60 second refill takes 3 seconds
-const MR_Int32 cSourceRay    = 20000;       // the source have a diameter of 40 meters
-const MR_Int32 cSourceHeight = 3000;        // 3 meters
+const double cFuelGain = 60 / 3;	// A 60 second refill takes 3 seconds
+const MR_Int32 cSourceRay = 20000;	// the source have a diameter of 40 meters
+const MR_Int32 cSourceHeight = 3000;	// 3 meters
 
 
 
-MR_Int32 MR_FuelSource::ZMin()const
+MR_Int32 MR_FuelSource::ZMin() const const
 {
-   return mPosition.mZ;
+    return mPosition.mZ;
 }
 
-MR_Int32 MR_FuelSource::ZMax()const
+MR_Int32 MR_FuelSource::ZMax() const const
 {
-   return mPosition.mZ+cSourceHeight;
+    return mPosition.mZ + cSourceHeight;
 }
 
-MR_Int32 MR_FuelSource::AxisX()const
+MR_Int32 MR_FuelSource::AxisX() const const
 {
-   return mPosition.mX;
+    return mPosition.mX;
 }
 
-MR_Int32 MR_FuelSource::AxisY()const
+MR_Int32 MR_FuelSource::AxisY() const const
 {
-   return mPosition.mY;
+    return mPosition.mY;
 }
 
-MR_Int32 MR_FuelSource::RayLen()const
+MR_Int32 MR_FuelSource::RayLen() const const
 {
-   return cSourceRay;
+    return cSourceRay;
 }
 
-MR_FuelSource::MR_FuelSource( const MR_ObjectFromFactoryId& pId )
-              :MR_FreeElement( pId )
+MR_FuelSource::MR_FuelSource(const MR_ObjectFromFactoryId & pId)
+:  MR_FreeElement(pId)
 {
-   mFuelEffect.mFuelQty = cFuelGain;
-   mContactEffectList.AddTail( &mFuelEffect );
+    mFuelEffect.mFuelQty = cFuelGain;
+    mContactEffectList.AddTail(&mFuelEffect);
 }
 
 MR_FuelSource::~MR_FuelSource()
 {
 }
 
-const MR_ContactEffectList* MR_FuelSource::GetEffectList()
+const MR_ContactEffectList *MR_FuelSource::GetEffectList()
 {
-   return &mContactEffectList;
+    return &mContactEffectList;
 }
 
-const MR_ShapeInterface* MR_FuelSource::GetReceivingContactEffectShape()
+const MR_ShapeInterface *MR_FuelSource::GetReceivingContactEffectShape()
 {
-   return this;
+    return this;
 }

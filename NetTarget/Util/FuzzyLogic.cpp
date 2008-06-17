@@ -25,61 +25,55 @@
 
 #define MR_RAND_TABLE_SIZE  4096
 
-static int gRandTable[ MR_RAND_TABLE_SIZE ];
+static int gRandTable[MR_RAND_TABLE_SIZE];
 static int gRandIndex;
 
 void MR_InitFuzzyModule()
 {
-   for( int lCounter = 0; lCounter < MR_RAND_TABLE_SIZE; lCounter++ )
-   {
-      gRandTable[ lCounter ] = rand();
-   }
-   gRandIndex = 0;
+    for(int lCounter = 0; lCounter < MR_RAND_TABLE_SIZE; lCounter++) {
+	gRandTable[lCounter] = rand();
+    }
+    gRandIndex = 0;
 }
 
 int MR_Rand()
 {
-   return gRandTable[ (gRandIndex++)&(MR_RAND_TABLE_SIZE-1) ];
+    return gRandTable[(gRandIndex++) & (MR_RAND_TABLE_SIZE - 1)];
 }
 
 
 
 MR_ProbTable::MR_ProbTable()
 {
-   mNbProb = 0;
-   mTotalProb = 0;
+    mNbProb = 0;
+    mTotalProb = 0;
 }
 
 void MR_ProbTable::Clear()
 {
-   mNbProb = 0;
-   mTotalProb = 0;
+    mNbProb = 0;
+    mTotalProb = 0;
 }
 
-void MR_ProbTable::AddProb( int pWeight )
+void MR_ProbTable::AddProb(int pWeight)
 {
-   if( mNbProb < NB_PROB_MAX )
-   {
-      mTotalProb += pWeight;
-      mProb[ mNbProb++ ] = mTotalProb;
-   }
-   else
-   {
-      ASSERT( FALSE );
-   }
+    if(mNbProb < NB_PROB_MAX) {
+	mTotalProb += pWeight;
+	mProb[mNbProb++] = mTotalProb;
+    } else {
+	ASSERT(FALSE);
+    }
 }
 
 int MR_ProbTable::GetVal()
 {
-   int lRand = MR_Rand()%mTotalProb;
-   int lReturnValue = 0;
+    int lRand = MR_Rand() % mTotalProb;
+    int lReturnValue = 0;
 
-   for( ;lReturnValue < mNbProb-1; lReturnValue++ )
-   {
-      if( lRand < mProb[ lReturnValue ] )
-      {
-         break;
-      }
-   }
-   return lReturnValue;
+    for(; lReturnValue < mNbProb - 1; lReturnValue++) {
+	if(lRand < mProb[lReturnValue]) {
+	    break;
+	}
+    }
+    return lReturnValue;
 }

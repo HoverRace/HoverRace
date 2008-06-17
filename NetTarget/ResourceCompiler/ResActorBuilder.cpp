@@ -29,222 +29,180 @@
 
 
 
-MR_ResActorBuilder::MR_ResActorBuilder( int pResourceId )
-                   :MR_ResActor( pResourceId )
+MR_ResActorBuilder::MR_ResActorBuilder(int pResourceId)
+:  MR_ResActor(pResourceId)
 {
-   
+
 }
 
-BOOL MR_ResActorBuilder::BuildFromFile( const char* pFile, MR_ResourceLib* pBitmapLib )
+BOOL MR_ResActorBuilder::BuildFromFile(const char *pFile, MR_ResourceLib * pBitmapLib)
 {
-   int  lCounter;
-   BOOL lReturnValue = TRUE;
+    int lCounter;
+    BOOL lReturnValue = TRUE;
 
-   FILE* lFile = fopen( pFile, "r" );
+    FILE *lFile = fopen(pFile, "r");
 
-   if( lFile == NULL )
-   {
-      fprintf( stderr, "ERROR: unable to open actor file(%s)\n", pFile );
-      lReturnValue = FALSE;
-   }
-   else
-   {
-      char  lBuffer[ 250 ];
-      char* lBufferPtr;
+    if(lFile == NULL) {
+	fprintf(stderr, "ERROR: unable to open actor file(%s)\n", pFile);
+	lReturnValue = FALSE;
+    } else {
+	char lBuffer[250];
+	char *lBufferPtr;
 
-      int lFrameCount[ MR_MAX_SEQUENCE ];
-      int lComponentCount[ MR_MAX_FRAME ];
+	int lFrameCount[MR_MAX_SEQUENCE];
+	int lComponentCount[MR_MAX_FRAME];
 
-      int lCurrentFrame = -1;
+	int lCurrentFrame = -1;
 
-      ActorComponent* lCurrentComponent = NULL;
-      CList< ActorComponent*, ActorComponent* > lComponentList;
+	ActorComponent *lCurrentComponent = NULL;
+	CList < ActorComponent *, ActorComponent * >lComponentList;
 
-      for( lCounter=0; lCounter < MR_MAX_SEQUENCE; lCounter++ )
-      {
-         lFrameCount[ lCounter ] = 0;
-      }
+	for(lCounter = 0; lCounter < MR_MAX_SEQUENCE; lCounter++) {
+	    lFrameCount[lCounter] = 0;
+	}
 
-      for( lCounter=0; lCounter < MR_MAX_FRAME; lCounter++ )
-      {
-         lComponentCount[ lCounter ] = 0;
-      }
+	for(lCounter = 0; lCounter < MR_MAX_FRAME; lCounter++) {
+	    lComponentCount[lCounter] = 0;
+	}
 
 
-      // Load the sequences
-      lBufferPtr = fgets( lBuffer, sizeof( lBuffer ), lFile );
+	// Load the sequences
+	lBufferPtr = fgets(lBuffer, sizeof(lBuffer), lFile);
 
-      while( lReturnValue && lBufferPtr )
-      {
-         if( MR_BeginByKeyword( lBuffer, "SEQUENCE" ) )
-         {
-            mNbSequence++;
+	while(lReturnValue && lBufferPtr) {
+	    if(MR_BeginByKeyword(lBuffer, "SEQUENCE")) {
+		mNbSequence++;
 
-            // Load the Frames
-            lBufferPtr = fgets( lBuffer, sizeof( lBuffer ), lFile );
+		// Load the Frames
+		lBufferPtr = fgets(lBuffer, sizeof(lBuffer), lFile);
 
-            while( lReturnValue && lBufferPtr )
-            {
-               if( MR_BeginByKeyword( lBuffer, "FRAME" ) )
-               {
-                  lFrameCount[ mNbSequence-1 ] += 1;
-                  lCurrentFrame++;
+		while(lReturnValue && lBufferPtr) {
+		    if(MR_BeginByKeyword(lBuffer, "FRAME")) {
+			lFrameCount[mNbSequence - 1] += 1;
+			lCurrentFrame++;
 
-                
-                  // Load the parts
-                  lBufferPtr = fgets( lBuffer, sizeof( lBuffer ), lFile );
 
-                  while( lReturnValue && lBufferPtr )
-                  {
+			// Load the parts
+			lBufferPtr = fgets(lBuffer, sizeof(lBuffer), lFile);
 
-                     lCurrentComponent = NULL;
+			while(lReturnValue && lBufferPtr) {
 
-                     if( MR_BeginByKeyword( lBuffer, "PATCH" ) )
-                     {
-                        lCurrentComponent = ReadPatch( lFile, pBitmapLib );
-                     }
-                     else if( MR_BeginByKeyword( lBuffer, "POLYGON" ) )
-                     {
-                        ASSERT( FALSE );
-                     }
-                     else if( MR_BeginByKeyword( lBuffer, "FRAME" ) )
-                     {
-                        break;
-                     }
-                     else if( MR_BeginByKeyword( lBuffer, "SEQUENCE" ) )
-                     {
-                        break;
-                     }
-                     else
-                     {
-                        lBufferPtr = fgets( lBuffer, sizeof( lBuffer ), lFile );
-                     }
-                     
-                     if( lCurrentComponent != NULL )
-                     {
-                        lComponentCount[ lCurrentFrame ]++;
-                        lComponentList.AddTail( lCurrentComponent );
-                        lBufferPtr = fgets( lBuffer, sizeof( lBuffer ), lFile );
-                     }                     
-                  }
-               }
+			    lCurrentComponent = NULL;
 
-               if( MR_BeginByKeyword( lBuffer, "FRAME" ) )
-               {
-               }
-               else if( MR_BeginByKeyword( lBuffer, "SEQUENCE" ) )
-               {
-                  break;               
-               }
-               else
-               {
-                  lBufferPtr = fgets( lBuffer, sizeof( lBuffer ), lFile );
-               }
-            }   
-         }
-         else
-         {
-            lBufferPtr = fgets( lBuffer, sizeof( lBuffer ), lFile );
-         }
-      }
-      fclose( lFile );
-        
-      if( lReturnValue )
-      {
-         // Construct the real actor
-         POSITION lPos = lComponentList.GetHeadPosition();
+			    if(MR_BeginByKeyword(lBuffer, "PATCH")) {
+				lCurrentComponent = ReadPatch(lFile, pBitmapLib);
+			    } else if(MR_BeginByKeyword(lBuffer, "POLYGON")) {
+				ASSERT(FALSE);
+			    } else if(MR_BeginByKeyword(lBuffer, "FRAME")) {
+				break;
+			    } else if(MR_BeginByKeyword(lBuffer, "SEQUENCE")) {
+				break;
+			    } else {
+				lBufferPtr = fgets(lBuffer, sizeof(lBuffer), lFile);
+			    }
 
-         mSequenceList = new Sequence[ mNbSequence ];
+			    if(lCurrentComponent != NULL) {
+				lComponentCount[lCurrentFrame]++;
+				lComponentList.AddTail(lCurrentComponent);
+				lBufferPtr = fgets(lBuffer, sizeof(lBuffer), lFile);
+			    }
+			}
+		    }
 
-         lCurrentFrame = 0;
+		    if(MR_BeginByKeyword(lBuffer, "FRAME")) {
+		    } else if(MR_BeginByKeyword(lBuffer, "SEQUENCE")) {
+			break;
+		    } else {
+			lBufferPtr = fgets(lBuffer, sizeof(lBuffer), lFile);
+		    }
+		}
+	    } else {
+		lBufferPtr = fgets(lBuffer, sizeof(lBuffer), lFile);
+	    }
+	}
+	fclose(lFile);
 
-         for( int lSequence = 0; lSequence < mNbSequence; lSequence++ )
-         {
-            mSequenceList[ lSequence ].mNbFrame   = lFrameCount[ lSequence ];
-            mSequenceList[ lSequence ].mFrameList = new Frame[ lFrameCount[ lSequence ] ];
+	if(lReturnValue) {
+	    // Construct the real actor
+	    POSITION lPos = lComponentList.GetHeadPosition();
 
-            for( int lFrame = 0; lFrame < lFrameCount[ lSequence ]; lFrame++ )
-            {
-               mSequenceList[ lSequence ].mFrameList[ lFrame ].mNbComponent = lComponentCount[ lCurrentFrame ];
-               mSequenceList[ lSequence ].mFrameList[ lFrame ].mComponentList = new ActorComponent*[ lComponentCount[ lCurrentFrame ] ];
+	    mSequenceList = new Sequence[mNbSequence];
 
-               for( int lComponent = 0; lComponent < lComponentCount[ lCurrentFrame ]; lComponent++ )
-               {
-                  mSequenceList[ lSequence ].mFrameList[ lFrame ].mComponentList[ lComponent ] = lComponentList.GetNext( lPos );
-               }
-               lCurrentFrame++;
-            }
-         }
-      }
-      else
-      {
-         // Delete the lists
-         POSITION lPos = lComponentList.GetHeadPosition();
+	    lCurrentFrame = 0;
 
-         while( lPos != NULL )
-         {
-            delete lComponentList.GetNext( lPos );
-         }
-      }    
-   }
+	    for(int lSequence = 0; lSequence < mNbSequence; lSequence++) {
+		mSequenceList[lSequence].mNbFrame = lFrameCount[lSequence];
+		mSequenceList[lSequence].mFrameList = new Frame[lFrameCount[lSequence]];
 
-   return lReturnValue;
+		for(int lFrame = 0; lFrame < lFrameCount[lSequence]; lFrame++) {
+		    mSequenceList[lSequence].mFrameList[lFrame].mNbComponent = lComponentCount[lCurrentFrame];
+		    mSequenceList[lSequence].mFrameList[lFrame].mComponentList = new ActorComponent *[lComponentCount[lCurrentFrame]];
+
+		    for(int lComponent = 0; lComponent < lComponentCount[lCurrentFrame]; lComponent++) {
+			mSequenceList[lSequence].mFrameList[lFrame].mComponentList[lComponent] = lComponentList.GetNext(lPos);
+		    }
+		    lCurrentFrame++;
+		}
+	    }
+	} else {
+	    // Delete the lists
+	    POSITION lPos = lComponentList.GetHeadPosition();
+
+	    while(lPos != NULL) {
+		delete lComponentList.GetNext(lPos);
+	    }
+	}
+    }
+
+    return lReturnValue;
 }
 
 
 
-MR_ResActorBuilder::Patch* MR_ResActorBuilder::ReadPatch( FILE* pFile, MR_ResourceLib* pBitmapLib )
+MR_ResActorBuilder::Patch * MR_ResActorBuilder::ReadPatch(FILE * pFile, MR_ResourceLib * pBitmapLib)
 {
-   Patch* lReturnValue = new Patch;
-   char lBuffer[ 250 ];
-   
-   fgets( lBuffer, sizeof( lBuffer ), pFile );
-   sscanf( lBuffer, " %d %d", &(lReturnValue->mURes), &(lReturnValue->mVRes) );
+    Patch *lReturnValue = new Patch;
+    char lBuffer[250];
 
-   
-   lReturnValue->mVertexList = new MR_3DCoordinate[ lReturnValue->mURes*lReturnValue->mVRes ]; 
+    fgets(lBuffer, sizeof(lBuffer), pFile);
+    sscanf(lBuffer, " %d %d", &(lReturnValue->mURes), &(lReturnValue->mVRes));
 
-   for( int lCounter = 0; lCounter < (lReturnValue->mURes*lReturnValue->mVRes); lCounter++ )
-   {
-      int lX;
-      int lY;
-      int lZ;
-         
-      fgets( lBuffer, sizeof( lBuffer ), pFile );
-      sscanf( lBuffer, " %d %d %d", &lX, &lY, &lZ );
-   
-      lReturnValue->mVertexList[ lCounter ].mX = lX;
-      lReturnValue->mVertexList[ lCounter ].mY = lY;
-      lReturnValue->mVertexList[ lCounter ].mZ = lZ;
-   }
 
-   // Load the bitmap id
-   int lBitmapId;
+    lReturnValue->mVertexList = new MR_3DCoordinate[lReturnValue->mURes * lReturnValue->mVRes];
 
-   fgets( lBuffer, sizeof( lBuffer ), pFile );
+    for(int lCounter = 0; lCounter < (lReturnValue->mURes * lReturnValue->mVRes); lCounter++) {
+	int lX;
+	int lY;
+	int lZ;
 
-   if( sscanf( MR_PreProcLine( lBuffer ), " %d ", &lBitmapId )!= 1 )
-   {
-      delete lReturnValue;
-      lReturnValue = FALSE;
+	fgets(lBuffer, sizeof(lBuffer), pFile);
+	sscanf(lBuffer, " %d %d %d", &lX, &lY, &lZ);
 
-      fprintf( stderr, "ERROR No bitmap associated to the patch\n" );
-   }
-   else
-   {
-      lReturnValue->mBitmap = pBitmapLib->GetBitmap( lBitmapId );
+	lReturnValue->mVertexList[lCounter].mX = lX;
+	lReturnValue->mVertexList[lCounter].mY = lY;
+	lReturnValue->mVertexList[lCounter].mZ = lZ;
+    }
 
-      if( lReturnValue->mBitmap == NULL )
-      {
-         delete lReturnValue;
-         lReturnValue = FALSE;
+    // Load the bitmap id
+    int lBitmapId;
 
-         fprintf( stderr, "ERROR Bad bitmap id\n" );
-      }
-   }
+    fgets(lBuffer, sizeof(lBuffer), pFile);
 
-   return lReturnValue;
+    if(sscanf(MR_PreProcLine(lBuffer), " %d ", &lBitmapId) != 1) {
+	delete lReturnValue;
+	lReturnValue = FALSE;
+
+	fprintf(stderr, "ERROR No bitmap associated to the patch\n");
+    } else {
+	lReturnValue->mBitmap = pBitmapLib->GetBitmap(lBitmapId);
+
+	if(lReturnValue->mBitmap == NULL) {
+	    delete lReturnValue;
+	    lReturnValue = FALSE;
+
+	    fprintf(stderr, "ERROR Bad bitmap id\n");
+	}
+    }
+
+    return lReturnValue;
 }
-
-
-

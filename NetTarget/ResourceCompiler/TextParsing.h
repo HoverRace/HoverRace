@@ -25,16 +25,15 @@
 #define TEXT_PARSING_H
 
 
-BOOL          MR_ReadPredefinedConstants( const char* pFileName );
+BOOL MR_ReadPredefinedConstants(const char *pFileName);
 
-CString       MR_PreProcLine( const char* pLine );
+CString MR_PreProcLine(const char *pLine);
 
-BOOL          MR_BeginByKeyword( const char* pLine, const char* pKeyword );
+BOOL MR_BeginByKeyword(const char *pLine, const char *pKeyword);
 
-int           MR_ContainsKeyword( const char* pLine, const char** pKeywordList );
+int MR_ContainsKeyword(const char *pLine, const char **pKeywordList);
 
-const char*   MR_SkipLeadingSpaces( const char* );
+const char *MR_SkipLeadingSpaces(const char *);
 
 
 #endif
-

@@ -31,14 +31,12 @@
 #include "../ObjFacTools/FreeElementBaseRenderer.h"
 
 
-class MR_GenericRenderer: public MR_FreeElementBaseRenderer
-{
+class MR_GenericRenderer:public MR_FreeElementBaseRenderer {
 
-   public:
-      MR_GenericRenderer( const MR_ObjectFromFactoryId& pId, int pActorRes );
-      ~MR_GenericRenderer();  
-      
+  public:
+    MR_GenericRenderer(const MR_ObjectFromFactoryId & pId, int pActorRes);
+     ~MR_GenericRenderer();
+
 };
 
 #endif
-

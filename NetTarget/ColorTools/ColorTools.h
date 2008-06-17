@@ -25,19 +25,18 @@
 #include "../Util/MR_Types.h"
 
 #ifdef MR_COLOR_TOOLS
-   #define MR_DllDeclare   __declspec( dllexport )
+#define MR_DllDeclare   __declspec( dllexport )
 #else
-   #define MR_DllDeclare   __declspec( dllimport )
+#define MR_DllDeclare   __declspec( dllimport )
 #endif
 
-namespace MR_ColorTools
-{
+namespace MR_ColorTools {
 
-   MR_DllDeclare void      Init();
-   MR_DllDeclare MR_UInt8  GetNearest( double pRed, double pGreen, double pBlue );
-   MR_DllDeclare void      GetComponents( MR_UInt8 pColor, double& pRed, double& pGreen, double& pBlue );
-   MR_DllDeclare void      GetIntComponents( MR_UInt8 pColor, int& pRed, int& pGreen, int& pBlue );
-   MR_DllDeclare int       GetNbColors();
+    MR_DllDeclare void Init();
+    MR_DllDeclare MR_UInt8 GetNearest(double pRed, double pGreen, double pBlue);
+    MR_DllDeclare void GetComponents(MR_UInt8 pColor, double &pRed, double &pGreen, double &pBlue);
+    MR_DllDeclare void GetIntComponents(MR_UInt8 pColor, int &pRed, int &pGreen, int &pBlue);
+    MR_DllDeclare int GetNbColors();
 
 };
 
@@ -46,6 +45,3 @@ namespace MR_ColorTools
 #undef MR_DllDeclare
 
 #endif
-
-
-

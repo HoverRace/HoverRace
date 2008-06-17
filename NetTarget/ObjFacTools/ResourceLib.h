@@ -30,42 +30,41 @@
 #include "ResSound.h"
 
 #ifdef MR_OBJ_FAC_TOOLS
-   #define MR_DllDeclare   __declspec( dllexport )
+#define MR_DllDeclare   __declspec( dllexport )
 #else
-   #define MR_DllDeclare   __declspec( dllimport )
+#define MR_DllDeclare   __declspec( dllimport )
 #endif
 
 
 
-class MR_ResourceLib
-{
-   // Each module can have its own MR_ResourceLib
+class MR_ResourceLib {
+    // Each module can have its own MR_ResourceLib
 
-   protected:
-      MR_RecordFile  mRecordFile;
+  protected:
+    MR_RecordFile mRecordFile;
 
-      CMap< int, int, MR_ResBitmap*,          MR_ResBitmap* >          mBitmapList;
-      CMap< int, int, MR_ResActor*,           MR_ResActor*  >          mActorList;
-      CMap< int, int, MR_ResSprite*,          MR_ResSprite* >          mSpriteList;
-      CMap< int, int, MR_ResShortSound*,      MR_ResShortSound* >      mShortSoundList;
-      CMap< int, int, MR_ResContinuousSound*, MR_ResContinuousSound* > mContinuousSoundList;
-      
-      void LoadBitmaps( CArchive& pArchive );
-      void LoadActors(  CArchive& pArchive );
-      void LoadSprites( CArchive& pArchive );
-      void LoadSounds(  CArchive& pArchive );
+    CMap < int, int, MR_ResBitmap *, MR_ResBitmap * >mBitmapList;
+      CMap < int, int, MR_ResActor *, MR_ResActor * >mActorList;
+      CMap < int, int, MR_ResSprite *, MR_ResSprite * >mSpriteList;
+      CMap < int, int, MR_ResShortSound *, MR_ResShortSound * >mShortSoundList;
+      CMap < int, int, MR_ResContinuousSound *, MR_ResContinuousSound * >mContinuousSoundList;
 
-      MR_DllDeclare MR_ResourceLib();
+    void LoadBitmaps(CArchive & pArchive);
+    void LoadActors(CArchive & pArchive);
+    void LoadSprites(CArchive & pArchive);
+    void LoadSounds(CArchive & pArchive);
 
-   public:
-      MR_DllDeclare MR_ResourceLib( const char* pFileName );
-      MR_DllDeclare ~MR_ResourceLib();
+    MR_DllDeclare MR_ResourceLib();
 
-      MR_DllDeclare /*const*/ MR_ResBitmap*          GetBitmap(          int pBitmapId  );
-      MR_DllDeclare const MR_ResActor*           GetActor(           int pActorId   );
-      MR_DllDeclare const MR_ResSprite*          GetSprite(          int pSpriteId  );
-      MR_DllDeclare const MR_ResShortSound*      GetShortSound(      int pSoundId   );
-      MR_DllDeclare const MR_ResContinuousSound* GetContinuousSound( int pSoundId   );
+  public:
+      MR_DllDeclare MR_ResourceLib(const char *pFileName);
+      MR_DllDeclare ~ MR_ResourceLib();
+
+      MR_DllDeclare /*const */ MR_ResBitmap * GetBitmap(int pBitmapId);
+    MR_DllDeclare const MR_ResActor *GetActor(int pActorId);
+    MR_DllDeclare const MR_ResSprite *GetSprite(int pSpriteId);
+    MR_DllDeclare const MR_ResShortSound *GetShortSound(int pSoundId);
+    MR_DllDeclare const MR_ResContinuousSound *GetContinuousSound(int pSoundId);
 
 };
 
@@ -74,6 +73,3 @@ class MR_ResourceLib
 #undef MR_DllDeclare
 
 #endif
-
-
-

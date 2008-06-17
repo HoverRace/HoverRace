@@ -26,26 +26,24 @@
 // Local prototypes
 
 
-MR_ResSpriteBuilder::MR_ResSpriteBuilder( int pResourceId )
-                    :MR_ResSprite( pResourceId )
+MR_ResSpriteBuilder::MR_ResSpriteBuilder(int pResourceId)
+:  MR_ResSprite(pResourceId)
 {
 }
 
-BOOL MR_ResSpriteBuilder::BuildFromFile( const char* pFile, int pNbItem )
+BOOL MR_ResSpriteBuilder::BuildFromFile(const char *pFile, int pNbItem)
 {
-   BOOL lReturnValue = TRUE;
+    BOOL lReturnValue = TRUE;
 
-   mNbItem = pNbItem;
+    mNbItem = pNbItem;
 
-   mData = LoadBitmap( pFile, mWidth, mTotalHeight, FALSE );
+    mData = LoadBitmap(pFile, mWidth, mTotalHeight, FALSE);
 
-   mItemHeight = mTotalHeight/mNbItem;
+    mItemHeight = mTotalHeight / mNbItem;
 
-   if( mData == NULL )
-   {
-      lReturnValue = FALSE;
-   }
+    if(mData == NULL) {
+	lReturnValue = FALSE;
+    }
 
-   return lReturnValue;
+    return lReturnValue;
 }
-

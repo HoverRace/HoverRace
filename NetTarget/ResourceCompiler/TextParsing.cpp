@@ -27,155 +27,132 @@
 static CMapStringToString gDefineMap;
 
 
-BOOL MR_ReadPredefinedConstants( const char* pFileName )
+BOOL MR_ReadPredefinedConstants(const char *pFileName)
 {
-   BOOL  lReturnValue = TRUE;
-   FILE* lFile = fopen( pFileName, "r" );
+    BOOL lReturnValue = TRUE;
+    FILE *lFile = fopen(pFileName, "r");
 
-   if( lFile == NULL )
-   {
-      lReturnValue = FALSE;
+    if(lFile == NULL) {
+	lReturnValue = FALSE;
 
-      fprintf( stderr, "ERROR: Unable to open %s(defines file)\n", pFileName );
-   }
-   else
-   {
-      char lBuffer[ 250 ];
-      while( lReturnValue && fgets( lBuffer, sizeof( lBuffer ), lFile ) )
-      {
-         CString lLine = MR_PreProcLine( lBuffer );
+	fprintf(stderr, "ERROR: Unable to open %s(defines file)\n", pFileName);
+    } else {
+	char lBuffer[250];
+	while(lReturnValue && fgets(lBuffer, sizeof(lBuffer), lFile)) {
+	    CString lLine = MR_PreProcLine(lBuffer);
 
-         if( MR_BeginByKeyword( lLine, "#define" ) )
-         {            
-            char lKey[100];
-            char lValue[100];
-             
-            if( sscanf( lLine, " #define %s %s ", lKey, &lValue ) != 2 )
-            {
-               lReturnValue = FALSE;  
+	    if(MR_BeginByKeyword(lLine, "#define")) {
+		char lKey[100];
+		char lValue[100];
 
-               fprintf( stderr, "ERROR: syntax error in defines file\n" );
+		if(sscanf(lLine, " #define %s %s ", lKey, &lValue) != 2) {
+		    lReturnValue = FALSE;
 
-            }
-            else
-            {
-               // add the define to the list
-               gDefineMap.SetAt( lKey, lValue );
-            }
-         }
-      }
+		    fprintf(stderr, "ERROR: syntax error in defines file\n");
 
-      fclose( lFile );
-   }
+		} else {
+		    // add the define to the list
+		    gDefineMap.SetAt(lKey, lValue);
+		}
+	    }
+	}
 
-   return lReturnValue;
+	fclose(lFile);
+    }
+
+    return lReturnValue;
 }
 
-CString MR_PreProcLine( const char* pLine )
+CString MR_PreProcLine(const char *pLine)
 {
-   // scan the line and seardh for predefined keyword
-   CString lReturnValue;
+    // scan the line and seardh for predefined keyword
+    CString lReturnValue;
 
-   if( pLine != NULL )
-   {
-      const char* lPtr     = pLine;
-      BOOL        lInToken = FALSE;
-      BOOL        lEnd     = FALSE;
-      const char* lTokenStart;
+    if(pLine != NULL) {
+	const char *lPtr = pLine;
+	BOOL lInToken = FALSE;
+	BOOL lEnd = FALSE;
+	const char *lTokenStart;
 
-      while( !lEnd )
-      {
-         switch( *lPtr )
-         {
-            case 0:
-               lEnd = TRUE;
-            case ' ':
-            case ',':
-            case '\n':
-            case '\r':
-            case '\t':
+	while(!lEnd) {
+	    switch (*lPtr) {
+		case 0:
+		    lEnd = TRUE;
+		case ' ':
+		case ',':
+		case '\n':
+		case '\r':
+		case '\t':
 
-               if( lInToken )
-               {
-                  CString lValue;
+		    if(lInToken) {
+			CString lValue;
 
-                  CString lKey( lTokenStart, lPtr-lTokenStart );
+			CString lKey(lTokenStart, lPtr - lTokenStart);
 
-                  lInToken = FALSE;
+			lInToken = FALSE;
 
-                  if( gDefineMap.Lookup( lKey, lValue ) )
-                  {
-                     lReturnValue += lValue;
-                  }
-                  else
-                  {
-                     lReturnValue += lKey;
-                  }
+			if(gDefineMap.Lookup(lKey, lValue)) {
+			    lReturnValue += lValue;
+			} else {
+			    lReturnValue += lKey;
+			}
 
 
-               }
+		    }
 
-               if( !lEnd )
-               {
-                  lReturnValue += *lPtr;
-               }
+		    if(!lEnd) {
+			lReturnValue += *lPtr;
+		    }
 
-               break;
+		    break;
 
-            default:
-               if( !lInToken )
-               {
-                  lInToken = TRUE;
-                  lTokenStart = lPtr;
-               }
-               break;
-         }
+		default:
+		    if(!lInToken) {
+			lInToken = TRUE;
+			lTokenStart = lPtr;
+		    }
+		    break;
+	    }
 
-         lPtr++;
-      }
-   }
-   return lReturnValue;
+	    lPtr++;
+	}
+    }
+    return lReturnValue;
 }
 
-BOOL MR_BeginByKeyword( const char* pLine, const char* pKeyword )
+BOOL MR_BeginByKeyword(const char *pLine, const char *pKeyword)
 {
-   BOOL lReturnValue = FALSE;
+    BOOL lReturnValue = FALSE;
 
-   if( !strncmp( MR_SkipLeadingSpaces( pLine ), pKeyword, strlen( pKeyword ) ) )
-   {
-      lReturnValue = TRUE;
-   }
+    if(!strncmp(MR_SkipLeadingSpaces(pLine), pKeyword, strlen(pKeyword))) {
+	lReturnValue = TRUE;
+    }
 
-   return lReturnValue;
+    return lReturnValue;
 }
 
-int MR_ContainsKeyword( const char* pLine, const char** pKeywordList )
+int MR_ContainsKeyword(const char *pLine, const char **pKeywordList)
 {
-   int lReturnValue = 0;
+    int lReturnValue = 0;
 
-   pLine = MR_SkipLeadingSpaces( pLine );
+    pLine = MR_SkipLeadingSpaces(pLine);
 
-   while( pKeywordList[ lReturnValue ] != NULL )
-   {
-      if( !strncmp( pLine, pKeywordList[ lReturnValue ], strlen( pKeywordList[ lReturnValue ] ) ) )
-      {
-         return lReturnValue;
-      }
-      lReturnValue++;
-   }
-   return -1;   
+    while(pKeywordList[lReturnValue] != NULL) {
+	if(!strncmp(pLine, pKeywordList[lReturnValue], strlen(pKeywordList[lReturnValue]))) {
+	    return lReturnValue;
+	}
+	lReturnValue++;
+    }
+    return -1;
 }
 
-const char*   MR_SkipLeadingSpaces( const char*pString )
+const char *MR_SkipLeadingSpaces(const char *pString)
 {
-   const char* lReturnValue = pString;
+    const char *lReturnValue = pString;
 
-   while( *lReturnValue == ' ' || *lReturnValue == '\t' )
-   {
-      lReturnValue++;
-   }
+    while(*lReturnValue == ' ' || *lReturnValue == '\t') {
+	lReturnValue++;
+    }
 
-   return lReturnValue;
+    return lReturnValue;
 }
-
-

@@ -27,52 +27,50 @@
 #include "../VideoServices/SoundServer.h"
 
 #ifdef MR_OBJ_FAC_TOOLS
-   #define MR_DllDeclare   __declspec( dllexport )
+#define MR_DllDeclare   __declspec( dllexport )
 #else
-   #define MR_DllDeclare   __declspec( dllimport )
+#define MR_DllDeclare   __declspec( dllimport )
 #endif
 
 
-class MR_ResShortSound
-{
-   protected:
-      int            mResourceId;
-      MR_ShortSound* mSound;
+class MR_ResShortSound {
+  protected:
+    int mResourceId;
+    MR_ShortSound *mSound;
 
-      int   mNbCopy;
-      int   mDataLen;
-      char* mData;
+    int mNbCopy;
+    int mDataLen;
+    char *mData;
 
 
-   public:
-      MR_DllDeclare MR_ResShortSound( int pResourceId );   // Only availlable for resourceLib and construction
-      MR_DllDeclare ~MR_ResShortSound();
+  public:
+      MR_DllDeclare MR_ResShortSound(int pResourceId);	// Only availlable for resourceLib and construction
+      MR_DllDeclare ~ MR_ResShortSound();
 
-      MR_DllDeclare int  GetResourceId()const;
-      MR_DllDeclare void Serialize( CArchive& pArchive );
+    MR_DllDeclare int GetResourceId() const;
+    MR_DllDeclare void Serialize(CArchive & pArchive);
 
-      MR_DllDeclare MR_ShortSound* GetSound()const;
+    MR_DllDeclare MR_ShortSound *GetSound() const;
 
 };
 
-class MR_ResContinuousSound
-{
-   protected:
-      int                 mResourceId;
-      MR_ContinuousSound* mSound;
+class MR_ResContinuousSound {
+  protected:
+    int mResourceId;
+    MR_ContinuousSound *mSound;
 
-      int   mNbCopy;
-      int   mDataLen;
-      char* mData;
+    int mNbCopy;
+    int mDataLen;
+    char *mData;
 
-   public:
-      MR_DllDeclare MR_ResContinuousSound( int pResourceId );   // Only availlable for resourceLib and construction
-      MR_DllDeclare ~MR_ResContinuousSound();
+  public:
+      MR_DllDeclare MR_ResContinuousSound(int pResourceId);	// Only availlable for resourceLib and construction
+      MR_DllDeclare ~ MR_ResContinuousSound();
 
-      MR_DllDeclare int  GetResourceId()const;
-      MR_DllDeclare void Serialize( CArchive& pArchive );
+    MR_DllDeclare int GetResourceId() const;
+    MR_DllDeclare void Serialize(CArchive & pArchive);
 
-      MR_DllDeclare MR_ContinuousSound* GetSound()const;
+    MR_DllDeclare MR_ContinuousSound *GetSound() const;
 
 };
 
@@ -81,6 +79,3 @@ class MR_ResContinuousSound
 #undef MR_DllDeclare
 
 #endif
-
-
-

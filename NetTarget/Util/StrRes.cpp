@@ -28,32 +28,30 @@
 #include "StrRes.h"
 
 
-CString MR_LoadString( int pResource )
+CString MR_LoadString(int pResource)
 {
-   CString lReturnValue;
+    CString lReturnValue;
 
-   // MFC patch
-   if( afxCurrentResourceHandle == NULL )
-   {
-      afxCurrentResourceHandle = GetModuleHandle( NULL );
-   }
+    // MFC patch
+    if(afxCurrentResourceHandle == NULL) {
+	afxCurrentResourceHandle = GetModuleHandle(NULL);
+    }
 
-   lReturnValue.LoadString( pResource );
+    lReturnValue.LoadString(pResource);
 
-   return lReturnValue;
+    return lReturnValue;
 }
 
-const char* MR_LoadStringBuffered( int pResource )
+const char *MR_LoadStringBuffered(int pResource)
 {
-   static CString lReturnValue;
+    static CString lReturnValue;
 
-   // MFC patch
-   if( afxCurrentResourceHandle == NULL )
-   {
-      afxCurrentResourceHandle = GetModuleHandle( NULL );
-   }
+    // MFC patch
+    if(afxCurrentResourceHandle == NULL) {
+	afxCurrentResourceHandle = GetModuleHandle(NULL);
+    }
 
-   lReturnValue.LoadString( pResource );
+    lReturnValue.LoadString(pResource);
 
-   return lReturnValue;
+    return lReturnValue;
 }

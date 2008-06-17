@@ -26,14 +26,13 @@
 #ifndef MR_TYPES_H
 #define MR_TYPES_H
 
-typedef signed char      MR_Int8;
-typedef unsigned char    MR_UInt8;
-typedef signed short     MR_Int16;
-typedef unsigned short   MR_UInt16;
-typedef signed int       MR_Int32;
-typedef unsigned int     MR_UInt32;
-typedef LONGLONG         MR_Int64;
-typedef DWORDLONG        MR_UInt64;
-     
+typedef signed char MR_Int8;
+typedef unsigned char MR_UInt8;
+typedef signed short MR_Int16;
+typedef unsigned short MR_UInt16;
+typedef signed int MR_Int32;
+typedef unsigned int MR_UInt32;
+typedef LONGLONG MR_Int64;
+typedef DWORDLONG MR_UInt64;
+
 #endif
-     

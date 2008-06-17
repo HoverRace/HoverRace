@@ -27,14 +27,16 @@
 
 
 
-class MR_Cursor
-{
-   private:
-      HCURSOR mOldCursor;
+class MR_Cursor {
+  private:
+    HCURSOR mOldCursor;
 
-   public:
-      MR_Cursor( HCURSOR pNewCursor ) { mOldCursor = SetCursor( pNewCursor ); }
-      ~MR_Cursor( )                   { SetCursor( mOldCursor ); }
+  public:
+    MR_Cursor(HCURSOR pNewCursor) {
+	mOldCursor = SetCursor(pNewCursor);
+    } ~MR_Cursor() {
+	SetCursor(mOldCursor);
+    }
 
 };
 
@@ -43,5 +45,3 @@ class MR_Cursor
 
 
 #endif
-
-

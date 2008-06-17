@@ -24,8 +24,8 @@
 #include "MainCharacterRenderer.h"
 
 
-MR_MainCharacterRenderer::MR_MainCharacterRenderer( const MR_ObjectFromFactoryId& pId )
-:MR_ObjectFromFactory( pId )
+MR_MainCharacterRenderer::MR_MainCharacterRenderer(const MR_ObjectFromFactoryId & pId)
+:MR_ObjectFromFactory(pId)
 {
 }
 

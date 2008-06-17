@@ -26,110 +26,100 @@
 
 // ResActor
 //
-MR_ResActor::MR_ResActor( int pResourceId )
+MR_ResActor::MR_ResActor(int pResourceId)
 {
-   mResourceId = pResourceId;
-   mNbSequence = 0;
-   mSequenceList = NULL;
+    mResourceId = pResourceId;
+    mNbSequence = 0;
+    mSequenceList = NULL;
 }
 
 MR_ResActor::~MR_ResActor()
 {
-   delete [] mSequenceList;
+    delete[]mSequenceList;
 }
 
-int MR_ResActor::GetResourceId()const
+int MR_ResActor::GetResourceId() const const
 {
-   return mResourceId;
+    return mResourceId;
 }
 
-int MR_ResActor::GetSequenceCount()const
+int MR_ResActor::GetSequenceCount() const const
 {
-   return mNbSequence;
+    return mNbSequence;
 }
 
-int MR_ResActor::GetFrameCount( int pSequence )const
+int MR_ResActor::GetFrameCount(int pSequence) const const
 {
-   return mSequenceList[ pSequence ].mNbFrame;
+    return mSequenceList[pSequence].mNbFrame;
 }
 
-void MR_ResActor::Serialize( CArchive& pArchive, MR_ResourceLib* pLib )
+void MR_ResActor::Serialize(CArchive & pArchive, MR_ResourceLib * pLib)
 {
 
-   if( pArchive.IsStoring() )
-   {
-      pArchive << mNbSequence;
-   }
-   else
-   {
-      delete []mSequenceList;
-      mSequenceList = NULL;
+    if(pArchive.IsStoring()) {
+	pArchive << mNbSequence;
+    } else {
+	delete[]mSequenceList;
+	mSequenceList = NULL;
 
-      pArchive >> mNbSequence;
+	pArchive >> mNbSequence;
 
-      if( mNbSequence != 0 )
-      {
-         mSequenceList = new Sequence[ mNbSequence ];
-      }
-   }
+	if(mNbSequence != 0) {
+	    mSequenceList = new Sequence[mNbSequence];
+	}
+    }
 
-   for( int lCounter = 0; lCounter<mNbSequence; lCounter++ )
-   {
-      mSequenceList[ lCounter ].Serialize( pArchive, pLib );
-   }
+    for(int lCounter = 0; lCounter < mNbSequence; lCounter++) {
+	mSequenceList[lCounter].Serialize(pArchive, pLib);
+    }
 
 }
 
-void MR_ResActor::Draw( MR_3DViewPort* pDest, const MR_PositionMatrix& pMatrix, int pSequence, int pFrame )const
+void MR_ResActor::Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix, int pSequence, int pFrame) const const
 {
-   ASSERT( pSequence < mNbSequence );
+    ASSERT(pSequence < mNbSequence);
 
-   mSequenceList[ pSequence ].Draw( pDest, pMatrix, pFrame );
+    mSequenceList[pSequence].Draw(pDest, pMatrix, pFrame);
 }
 
 
 // Sequence
 MR_ResActor::Sequence::Sequence()
 {
-   mNbFrame = 0;
-   mFrameList = NULL;
+    mNbFrame = 0;
+    mFrameList = NULL;
 }
 
 MR_ResActor::Sequence::~Sequence()
 {
-   delete []mFrameList;
+    delete[]mFrameList;
 }
 
-void MR_ResActor::Sequence::Serialize( CArchive& pArchive, MR_ResourceLib* pLib )
+void MR_ResActor::Sequence::Serialize(CArchive & pArchive, MR_ResourceLib * pLib)
 {
-   if( pArchive.IsStoring() )
-   {
-      pArchive << mNbFrame;
-   }
-   else
-   {
-      delete []mFrameList;
-      mFrameList = NULL;
+    if(pArchive.IsStoring()) {
+	pArchive << mNbFrame;
+    } else {
+	delete[]mFrameList;
+	mFrameList = NULL;
 
-      pArchive >> mNbFrame;
+	pArchive >> mNbFrame;
 
-      if( mNbFrame != 0 )
-      {
-         mFrameList = new Frame[ mNbFrame ];
-      }
-   }
+	if(mNbFrame != 0) {
+	    mFrameList = new Frame[mNbFrame];
+	}
+    }
 
-   for( int lCounter = 0; lCounter<mNbFrame; lCounter++ )
-   {
-      mFrameList[ lCounter ].Serialize( pArchive, pLib );
-   }
+    for(int lCounter = 0; lCounter < mNbFrame; lCounter++) {
+	mFrameList[lCounter].Serialize(pArchive, pLib);
+    }
 }
 
-void MR_ResActor::Sequence::Draw( MR_3DViewPort* pDest, const MR_PositionMatrix& pMatrix, int pFrame )const
+void MR_ResActor::Sequence::Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix, int pFrame) const const
 {
-   ASSERT( pFrame < mNbFrame );
+    ASSERT(pFrame < mNbFrame);
 
-   mFrameList[ pFrame ].Draw( pDest, pMatrix );
+    mFrameList[pFrame].Draw(pDest, pMatrix);
 }
 
 // Frame
@@ -137,166 +127,149 @@ void MR_ResActor::Sequence::Draw( MR_3DViewPort* pDest, const MR_PositionMatrix&
 
 MR_ResActor::Frame::Frame()
 {
-   mNbComponent   = 0;
-   mComponentList = NULL;
+    mNbComponent = 0;
+    mComponentList = NULL;
 
 }
 
 MR_ResActor::Frame::~Frame()
 {
-   Clean();
+    Clean();
 }
 
 void MR_ResActor::Frame::Clean()
 {
-   if( mComponentList != NULL )
-   {
-      for( int lCounter = 0; lCounter < mNbComponent; lCounter++ )
-      {
-         delete mComponentList[ lCounter ];
-      }
+    if(mComponentList != NULL) {
+	for(int lCounter = 0; lCounter < mNbComponent; lCounter++) {
+	    delete mComponentList[lCounter];
+	}
 
-      delete []mComponentList;
-      mComponentList = NULL;
-   }
+	delete[]mComponentList;
+	mComponentList = NULL;
+    }
 }
 
-void MR_ResActor::Frame::Serialize( CArchive& pArchive, MR_ResourceLib* pLib )
+void MR_ResActor::Frame::Serialize(CArchive & pArchive, MR_ResourceLib * pLib)
 {
-   int lCounter;
+    int lCounter;
 
-   if( pArchive.IsStoring() )
-   {
-      pArchive << mNbComponent;
+    if(pArchive.IsStoring()) {
+	pArchive << mNbComponent;
 
-      for( lCounter =0; lCounter < mNbComponent; lCounter++ )
-      {
-         pArchive << (int)mComponentList[ lCounter ]->GetType();
-         mComponentList[ lCounter ]->Serialize( pArchive, pLib );
-      }
-   }
-   else
-   {
-      Clean();
+	for(lCounter = 0; lCounter < mNbComponent; lCounter++) {
+	    pArchive << (int) mComponentList[lCounter]->GetType();
+	    mComponentList[lCounter]->Serialize(pArchive, pLib);
+	}
+    } else {
+	Clean();
 
-      pArchive >> mNbComponent;
+	pArchive >> mNbComponent;
 
-      if( mNbComponent != 0 )
-      {
-         mComponentList = new ActorComponent*[ mNbComponent ];
+	if(mNbComponent != 0) {
+	    mComponentList = new ActorComponent *[mNbComponent];
 
-         for( lCounter =0; lCounter < mNbComponent; lCounter++ )
-         {
-            int lType;
+	    for(lCounter = 0; lCounter < mNbComponent; lCounter++) {
+		int lType;
 
-            pArchive >> lType;
+		pArchive >> lType;
 
-            switch( (eComponentType) lType )
-            {
-               case ePatch:
-                  mComponentList[ lCounter ] = new Patch;
-                  break;
+		switch ((eComponentType) lType) {
+		    case ePatch:
+			mComponentList[lCounter] = new Patch;
+			break;
 
-               default:
-                  ASSERT( FALSE );
-                  AfxThrowArchiveException( CArchiveException::badSchema );
-            }
+		    default:
+			ASSERT(FALSE);
+			AfxThrowArchiveException(CArchiveException::badSchema);
+		}
 
-            mComponentList[ lCounter ]->Serialize( pArchive, pLib );
-         }
-      }
-   }
+		mComponentList[lCounter]->Serialize(pArchive, pLib);
+	    }
+	}
+    }
 }
 
 
-void MR_ResActor::Frame::Draw( MR_3DViewPort* pDest, const MR_PositionMatrix& pMatrix )const
+void MR_ResActor::Frame::Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix) const const
 {
-   // Draw each component of the frame
-   for( int lCounter = 0; lCounter < mNbComponent; lCounter++ )
-   {
-      mComponentList[ lCounter ]->Draw( pDest, pMatrix );
-   }
+    // Draw each component of the frame
+    for(int lCounter = 0; lCounter < mNbComponent; lCounter++) {
+	mComponentList[lCounter]->Draw(pDest, pMatrix);
+    }
 }
 
 
 // class ActorComponent
 MR_ResActor::ActorComponent::~ActorComponent()
 {
-   // Notting to do
+    // Notting to do
 }
 
 // Patch
 //
 MR_ResActor::Patch::Patch()
 {
-   mBitmap     = NULL;
-   mVertexList = NULL;
+    mBitmap = NULL;
+    mVertexList = NULL;
 }
 
 MR_ResActor::Patch::~Patch()
 {
-   delete []mVertexList;
+    delete[]mVertexList;
 }
 
-MR_ResActor::eComponentType MR_ResActor::Patch::GetType()const
+MR_ResActor::eComponentType MR_ResActor::Patch::GetType() constconst
 {
-   return ePatch;
+    return ePatch;
 }
 
-void MR_ResActor::Patch::Serialize( CArchive& pArchive, MR_ResourceLib* pLib )
+void MR_ResActor::Patch::Serialize(CArchive & pArchive, MR_ResourceLib * pLib)
 {
-   int lCounter;
+    int lCounter;
 
-   if( pArchive.IsStoring() )
-   {
-      pArchive << mURes;
-      pArchive << mVRes;      
-      pArchive << mBitmap->GetResourceId(); //bitmaptype is serialize using the Id of the bitmap
+    if(pArchive.IsStoring()) {
+	pArchive << mURes;
+	pArchive << mVRes;
+	pArchive << mBitmap->GetResourceId();	//bitmaptype is serialize using the Id of the bitmap
 
-      for( lCounter =0; lCounter < mURes*mVRes; lCounter++ )
-      {
-         mVertexList[ lCounter ].Serialize( pArchive );
-      }
-   }
-   else
-   {
-      int lBitmapId;
+	for(lCounter = 0; lCounter < mURes * mVRes; lCounter++) {
+	    mVertexList[lCounter].Serialize(pArchive);
+	}
+    } else {
+	int lBitmapId;
 
-      delete [] mVertexList;      
+	delete[]mVertexList;
 
-      pArchive >> mURes;
-      pArchive >> mVRes;      
-      pArchive >> lBitmapId;
-      
-      mBitmap = pLib->GetBitmap( lBitmapId );
-      
-      mVertexList = new MR_3DCoordinate[ mURes*mVRes ];
+	pArchive >> mURes;
+	pArchive >> mVRes;
+	pArchive >> lBitmapId;
 
-      for( lCounter =0; lCounter < mURes*mVRes; lCounter++ )
-      {
-         mVertexList[ lCounter ].Serialize( pArchive );
-      }
-   }
+	mBitmap = pLib->GetBitmap(lBitmapId);
+
+	mVertexList = new MR_3DCoordinate[mURes * mVRes];
+
+	for(lCounter = 0; lCounter < mURes * mVRes; lCounter++) {
+	    mVertexList[lCounter].Serialize(pArchive);
+	}
+    }
 }
 
-void MR_ResActor::Patch::Draw( MR_3DViewPort* pDest, const MR_PositionMatrix& pMatrix )const
+void MR_ResActor::Patch::Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix) const const
 {
-   pDest->RenderPatch( *this, pMatrix , mBitmap );
+    pDest->RenderPatch(*this, pMatrix, mBitmap);
 }
 
-int MR_ResActor::Patch::GetURes()const
+int MR_ResActor::Patch::GetURes() const const
 {
-   return mURes;
+    return mURes;
 }
 
-int MR_ResActor::Patch::GetVRes()const
+int MR_ResActor::Patch::GetVRes() const const
 {
-   return mVRes;
+    return mVRes;
 }
 
-const MR_3DCoordinate* MR_ResActor::Patch::GetNodeList( )const
+const MR_3DCoordinate *MR_ResActor::Patch::GetNodeList() const const
 {
-   return mVertexList;
+    return mVertexList;
 }
-
-

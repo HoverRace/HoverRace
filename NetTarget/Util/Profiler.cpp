@@ -28,182 +28,165 @@
 
 #ifdef _DEBUG
 
-class MR_ProfilerMaster
-{
-   public:
-      int mPauseStart;
-      int mTimeOffset;
+class MR_ProfilerMaster {
+  public:
+    int mPauseStart;
+    int mTimeOffset;
 
-      // TimerFunctions
-      int  GetTime();
-      int  PauseTime();   // Same as GetTime but it also stop the timer
-      void UnPauseTime();
+    // TimerFunctions
+    int GetTime();
+    int PauseTime();		// Same as GetTime but it also stop the timer
+    void UnPauseTime();
 
-      void Reset();
-      void PrintStats();
+    void Reset();
+    void PrintStats();
 };
 
 
-static MR_ProfilerSampler*  gProfilerSamplerList = NULL;
-static MR_ProfilerMaster    gProfilerMaster;
+static MR_ProfilerSampler *gProfilerSamplerList = NULL;
+static MR_ProfilerMaster gProfilerMaster;
 
 
 void MR_ResetProfilerStats()
 {
-   gProfilerMaster.Reset();
+    gProfilerMaster.Reset();
 }
 
 void MR_OutputProfilerStats()
 {
-   gProfilerMaster.PrintStats();
+    gProfilerMaster.PrintStats();
 }
 
 
 // MR_ProfilerSampler      
-MR_ProfilerSampler::MR_ProfilerSampler( const char* pName )
+MR_ProfilerSampler::MR_ProfilerSampler(const char *pName)
 {
-   mName = pName;
-   mNext = gProfilerSamplerList;
-   gProfilerSamplerList = this;
+    mName = pName;
+    mNext = gProfilerSamplerList;
+    gProfilerSamplerList = this;
 
-   Reset();
+    Reset();
 }
 
 void MR_ProfilerSampler::Reset()
 {
-   mNbCall    = 0;
-   mTotalTime = 0;
-   mMinPeriod = 10000000;
-   mMaxPeriod = 0;
+    mNbCall = 0;
+    mTotalTime = 0;
+    mMinPeriod = 10000000;
+    mMaxPeriod = 0;
 
-   mLastPeriodStart = 0;
+    mLastPeriodStart = 0;
 }
 
 
 
 void MR_ProfilerSampler::StartSample()
 {
-   mLastPeriodStart = gProfilerMaster.GetTime();
+    mLastPeriodStart = gProfilerMaster.GetTime();
 }
 
 void MR_ProfilerSampler::EndSample()
 {
-   int lDuration = gProfilerMaster.PauseTime()-mLastPeriodStart;
+    int lDuration = gProfilerMaster.PauseTime() - mLastPeriodStart;
 
-   mNbCall++;
-   mTotalTime += lDuration;
+    mNbCall++;
+    mTotalTime += lDuration;
 
-   if( lDuration < mMinPeriod )
-   {
-      mMinPeriod = lDuration;
-   }
-   
-   if( lDuration > mMaxPeriod )
-   {
-      mMaxPeriod = lDuration;
-   }
-   
-   gProfilerMaster.UnPauseTime();
+    if(lDuration < mMinPeriod) {
+	mMinPeriod = lDuration;
+    }
+
+    if(lDuration > mMaxPeriod) {
+	mMaxPeriod = lDuration;
+    }
+
+    gProfilerMaster.UnPauseTime();
 }
 
 // MR_ProfilerMaster
 int MR_ProfilerMaster::GetTime()
 {
-   return timeGetTime()-mTimeOffset;
+    return timeGetTime() - mTimeOffset;
 }
 
 int MR_ProfilerMaster::PauseTime()
 {
-   mPauseStart = GetTime();
+    mPauseStart = GetTime();
 
-   return mPauseStart;
+    return mPauseStart;
 }
 
 void MR_ProfilerMaster::UnPauseTime()
 {
-   mTimeOffset += GetTime()- mPauseStart;
+    mTimeOffset += GetTime() - mPauseStart;
 }
 
 void MR_ProfilerMaster::Reset()
 {
-   // Reset all the Samplers
-   MR_ProfilerSampler* lCurrent = gProfilerSamplerList;
+    // Reset all the Samplers
+    MR_ProfilerSampler *lCurrent = gProfilerSamplerList;
 
-   while( lCurrent != NULL )
-   {
-      lCurrent->Reset();
-      lCurrent = lCurrent->mNext;
-   }
+    while(lCurrent != NULL) {
+	lCurrent->Reset();
+	lCurrent = lCurrent->mNext;
+    }
 }
 
 void MR_ProfilerMaster::PrintStats()
 {
-   PauseTime();
-   /*
-   TRACE( " Hit    Total  Avg    Min    Max   Name\n" );
+    PauseTime();
+    /*
+       TRACE( " Hit    Total  Avg    Min    Max   Name\n" );
 
-   MR_ProfilerSampler* lCurrent = gProfilerSamplerList;
+       MR_ProfilerSampler* lCurrent = gProfilerSamplerList;
 
-   while( lCurrent != NULL )
-   {
-      int lAvg = 0;
+       while( lCurrent != NULL )
+       {
+       int lAvg = 0;
 
-      if(lCurrent->mNbCall > 0 )
-      {
-         lAvg = lCurrent->mTotalTime/lCurrent->mNbCall;
-      }
+       if(lCurrent->mNbCall > 0 )
+       {
+       lAvg = lCurrent->mTotalTime/lCurrent->mNbCall;
+       }
 
-      TRACE
-      (
-         "%-6d %-6d %-6d %-6d %-6d %s\n",
-         lCurrent->mNbCall,
-         lCurrent->mTotalTime,
-         lAvg,
-         lCurrent->mMinPeriod,
-         lCurrent->mMaxPeriod,
-         lCurrent->mName
-      );
-      
-      lCurrent = lCurrent->mNext;
-   }
-   */
+       TRACE
+       (
+       "%-6d %-6d %-6d %-6d %-6d %s\n",
+       lCurrent->mNbCall,
+       lCurrent->mTotalTime,
+       lAvg,
+       lCurrent->mMinPeriod,
+       lCurrent->mMaxPeriod,
+       lCurrent->mName
+       );
 
-   FILE* lFile = fopen("Stat.out", "a" );
+       lCurrent = lCurrent->mNext;
+       }
+     */
 
-   if( lFile != NULL )
-   {
-      fprintf( lFile, " Hit    Total  Avg    Min    Max   Name\n" );
+    FILE *lFile = fopen("Stat.out", "a");
 
-      MR_ProfilerSampler* lCurrent = gProfilerSamplerList;
+    if(lFile != NULL) {
+	fprintf(lFile, " Hit    Total  Avg    Min    Max   Name\n");
 
-      while( lCurrent != NULL )
-      {
-         int lAvg = 0;
+	MR_ProfilerSampler *lCurrent = gProfilerSamplerList;
 
-         if( lCurrent->mNbCall > 0 ) 
-         {
-            lAvg = lCurrent->mTotalTime/lCurrent->mNbCall;
-         }
+	while(lCurrent != NULL) {
+	    int lAvg = 0;
 
-         fprintf
-         (
-            lFile,
-            "%-6d %-6d %-6d %-6d %-6d %s\n",
-            lCurrent->mNbCall,
-            lCurrent->mTotalTime,
-            lAvg,
-            lCurrent->mMinPeriod,
-            lCurrent->mMaxPeriod,
-            lCurrent->mName
-         );
-      
-         lCurrent = lCurrent->mNext;
-      }
+	    if(lCurrent->mNbCall > 0) {
+		lAvg = lCurrent->mTotalTime / lCurrent->mNbCall;
+	    }
 
-      fclose( lFile );
-   }
+	    fprintf(lFile, "%-6d %-6d %-6d %-6d %-6d %s\n", lCurrent->mNbCall, lCurrent->mTotalTime, lAvg, lCurrent->mMinPeriod, lCurrent->mMaxPeriod, lCurrent->mName);
 
-   UnPauseTime();
+	    lCurrent = lCurrent->mNext;
+	}
+
+	fclose(lFile);
+    }
+
+    UnPauseTime();
 }
 
 #endif

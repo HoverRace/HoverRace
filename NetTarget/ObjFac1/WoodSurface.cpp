@@ -26,14 +26,13 @@
 #include "ObjFac1Res.h"
 
 
-MR_WoodSurface::MR_WoodSurface( const MR_ObjectFromFactoryId& pId )
-               :MR_BitmapSurface( pId )
+MR_WoodSurface::MR_WoodSurface(const MR_ObjectFromFactoryId & pId)
+:  MR_BitmapSurface(pId)
 {
-   mBitmap = gObjectFactoryData->mResourceLib.GetBitmap( MR_WOOD1 );
+    mBitmap = gObjectFactoryData->mResourceLib.GetBitmap(MR_WOOD1);
 }
 
 MR_WoodSurface::~MR_WoodSurface()
 {
 
 }
-

@@ -27,9 +27,9 @@
 #include "Shapes.h"
 
 #ifdef MR_MODEL
-   #define MR_DllDeclare   __declspec( dllexport )
+#define MR_DllDeclare   __declspec( dllexport )
 #else
-   #define MR_DllDeclare   __declspec( dllimport )
+#define MR_DllDeclare   __declspec( dllimport )
 #endif
 
 // Collisions vs Movement
@@ -54,44 +54,41 @@
 
 // Collisions description
 
-class MR_ContactSpec
-{
-   public:
-      MR_Int32 mZMin;
-      MR_Int32 mZMax;
+class MR_ContactSpec {
+  public:
+    MR_Int32 mZMin;
+    MR_Int32 mZMax;
 };
 
 
-class MR_RoomContactSpec
-{
-   public:
-      enum{ eMaxWallContact = 6 };
+class MR_RoomContactSpec {
+  public:
+    enum { eMaxWallContact = 6 };
 
-      BOOL mTouchingRoom;
+    BOOL mTouchingRoom;
 
-      MR_Int32 mDistanceFromFloor;   // Can be negative
-      MR_Int32 mDistanceFromCeiling; // Can be negative
+    MR_Int32 mDistanceFromFloor;	// Can be negative
+    MR_Int32 mDistanceFromCeiling;	// Can be negative
 
-      int  mNbWallContact; // 0 mean no collision
-      int  mWallContact[ eMaxWallContact ];
+    int mNbWallContact;		// 0 mean no collision
+    int mWallContact[eMaxWallContact];
 };
 
 
-BOOL MR_DllDeclare MR_GetPolygonInclusion( const MR_PolygonShape&     pPolygon,
-                                           const MR_2DCoordinate&     pPosition );
-                                          
+BOOL MR_DllDeclare MR_GetPolygonInclusion(const MR_PolygonShape & pPolygon, const MR_2DCoordinate & pPosition);
+
 
 // High level oontact function
-BOOL MR_DllDeclare MR_DetectActorContact(    const MR_ShapeInterface* pActor, const MR_ShapeInterface*   pObstacle, MR_ContactSpec&     pAnswer );
-BOOL MR_DllDeclare MR_DetectFeatureContact(  const MR_ShapeInterface* pActor, const MR_PolygonShape*     pFeature,  MR_ContactSpec&     pAnswer );
-void MR_DllDeclare MR_DetectRoomContact(     const MR_ShapeInterface* pActor, const MR_PolygonShape*     pRoom,     MR_RoomContactSpec& pAnswer );
+BOOL MR_DllDeclare MR_DetectActorContact(const MR_ShapeInterface * pActor, const MR_ShapeInterface * pObstacle, MR_ContactSpec & pAnswer);
+BOOL MR_DllDeclare MR_DetectFeatureContact(const MR_ShapeInterface * pActor, const MR_PolygonShape * pFeature, MR_ContactSpec & pAnswer);
+void MR_DllDeclare MR_DetectRoomContact(const MR_ShapeInterface * pActor, const MR_PolygonShape * pRoom, MR_RoomContactSpec & pAnswer);
 
-BOOL MR_DllDeclare MR_GetActorForceLongitude(   const MR_ShapeInterface* pActor, const MR_ShapeInterface* pObstacle,             MR_Angle& pLongitude );
-BOOL MR_DllDeclare MR_GetFeatureForceLongitude( const MR_ShapeInterface* pActor, const MR_PolygonShape*   pFeature,              MR_Angle& pLongitude );
-BOOL MR_DllDeclare MR_GetWallForceLongitude(    const MR_ShapeInterface* pActor, const MR_PolygonShape*   pRoom, int pWallIndex, MR_Angle& pLongitude );
+BOOL MR_DllDeclare MR_GetActorForceLongitude(const MR_ShapeInterface * pActor, const MR_ShapeInterface * pObstacle, MR_Angle & pLongitude);
+BOOL MR_DllDeclare MR_GetFeatureForceLongitude(const MR_ShapeInterface * pActor, const MR_PolygonShape * pFeature, MR_Angle & pLongitude);
+BOOL MR_DllDeclare MR_GetWallForceLongitude(const MR_ShapeInterface * pActor, const MR_PolygonShape * pRoom, int pWallIndex, MR_Angle & pLongitude);
 
 
 
-#undef MR_DllDeclare 
+#undef MR_DllDeclare
 
 #endif

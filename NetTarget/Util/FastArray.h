@@ -24,60 +24,82 @@
 #define FAST_ARRAY_H
 
 #ifdef MR_UTIL
-   #define MR_DllDeclare   __declspec( dllexport )
+#define MR_DllDeclare   __declspec( dllexport )
 #else
-   #define MR_DllDeclare   __declspec( dllimport )
+#define MR_DllDeclare   __declspec( dllimport )
 #endif
 
-template <class pType> class MR_FastArrayBase
-{
-   protected:
-      int    mNbItem;
-      int    mArraySize;
-      pType* mArray;
-    
-   public:
-      MR_FastArrayBase<pType>( int pSize, pType* pData ) { mNbItem = 0; mArraySize = pSize; mArray = pData; };
+template < class pType > class MR_FastArrayBase {
+  protected:
+    int mNbItem;
+    int mArraySize;
+    pType *mArray;
 
-      void   Add( pType pData )    { ASSERT( mNbItem<mArraySize ); mArray[ mNbItem++ ]=pData; };
-      void   Use( int pCount = 1 ) { mNbItem+=pCount; ASSERT( mNbItem <= mArraySize ); };
-      void   Clean()               { mNbItem = 0; }
-      int    Used()const           { return mNbItem; }
-      int    TotalSize()const      { return mArraySize; }
-      int    Full()const           { return mNbItem==mArraySize; }
-      BOOL   CanAdd( int pCount=1 ){ return mNbItem+pCount<=mArraySize; }
+  public:
+    MR_FastArrayBase < pType > (int pSize, pType * pData) {
+	mNbItem = 0;
+	mArraySize = pSize;
+	mArray = pData;
+    };
 
-      BOOL   Contains( pType pData )const { for( int lCounter = 0; lCounter<mNbItem; lCounter++ ){ if( mArray[ lCounter ]==pData )return TRUE; }return FALSE;};
+    void Add(pType pData) {
+	ASSERT(mNbItem < mArraySize);
+	mArray[mNbItem++] = pData;
+    };
+    void Use(int pCount = 1) {
+	mNbItem += pCount;
+	ASSERT(mNbItem <= mArraySize);
+    };
+    void Clean() {
+	mNbItem = 0;
+    }
+    int Used() const {
+	return mNbItem;
+    } int TotalSize() const {
+	return mArraySize;
+    } int Full() const {
+	return mNbItem == mArraySize;
+    } BOOL CanAdd(int pCount = 1) {
+	return mNbItem + pCount <= mArraySize;
+    }
 
-      const pType  operator[]( int pIndex )const { return mArray[ pIndex ]; }
-      const pType& operator[]( int pIndex )      { return mArray[ pIndex ]; }
+    BOOL Contains(pType pData) const {
+	for(int lCounter = 0; lCounter < mNbItem; lCounter++) {
+	    if(mArray[lCounter] == pData)
+		return TRUE;
+	}
+	return FALSE;
+    };
+
+    const pType operator[] (int pIndex) const {
+	return mArray[pIndex];
+    } const pType & operator[] (int pIndex) {
+	return mArray[pIndex];
+    }
 
 };
 
-template <class pType> class MR_FastArray : public MR_FastArrayBase<class pType>
-{
-   public:
-	  MR_FastArray(int pSize)
-	  {
-	  
-	  };
-      ~MR_FastArray() { 
-		delete []mArray; 
-	  };
+template < class pType > class MR_FastArray:public MR_FastArrayBase < class pType > {
+  public:
+    MR_FastArray(int pSize) {
+
+    };
+    ~MR_FastArray() {
+	delete[]mArray;
+    };
 };
 
 
-template <class pType, int pSize> class MR_FixedFastArray:public MR_FastArrayBase< pType >
-{
-   protected:
-      pType mData[ pSize ];
+template < class pType, int pSize > class MR_FixedFastArray:public MR_FastArrayBase < pType > {
+  protected:
+    pType mData[pSize];
 
-   public:
-      MR_FixedFastArray< pType, pSize>():MR_FastArrayBase<pType>( pSize, mData ){};
+  public:
+    MR_FixedFastArray < pType, pSize > ():MR_FastArrayBase < pType > (pSize, mData) {
+    };
 
 };
 
 #undef MR_DllDeclare
 
 #endif
-

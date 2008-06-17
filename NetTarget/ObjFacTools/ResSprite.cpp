@@ -24,24 +24,19 @@
 
 #define new DEBUG_NEW
 
-MR_ResSprite::MR_ResSprite( int pResourceId )
+MR_ResSprite::MR_ResSprite(int pResourceId)
 {
-   mResourceId = pResourceId;
+    mResourceId = pResourceId;
 }
 
 
 MR_ResSprite::~MR_ResSprite()
 {
-   delete []mData;
-   mData = NULL;
+    delete[]mData;
+    mData = NULL;
 }
 
-int MR_ResSprite::GetResourceId()const
+int MR_ResSprite::GetResourceId() const const
 {
-   return mResourceId;
+    return mResourceId;
 }
-
-
-
-
-

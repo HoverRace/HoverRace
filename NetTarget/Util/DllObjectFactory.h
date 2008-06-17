@@ -35,82 +35,79 @@
 #include "MR_Types.h"
 
 #ifdef MR_UTIL
-   #define MR_DllDeclare   __declspec( dllexport )
+#define MR_DllDeclare   __declspec( dllexport )
 #else
-   #define MR_DllDeclare   __declspec( dllimport )
+#define MR_DllDeclare   __declspec( dllimport )
 #endif
 
 // Class decalration
-class MR_ObjectFromFactoryId
-{
-   // Simple structure that hold the necessary information
-   // tu uniquely identify a Factory Object
-   public:
-      MR_UInt16 mDllId;
-      MR_UInt16 mClassId;
+class MR_ObjectFromFactoryId {
+    // Simple structure that hold the necessary information
+    // tu uniquely identify a Factory Object
+  public:
+    MR_UInt16 mDllId;
+    MR_UInt16 mClassId;
 
-      void Serialize( CArchive& pArchive );
+    void Serialize(CArchive & pArchive);
 
-      MR_DllDeclare int operator == ( const MR_ObjectFromFactoryId& pId )const;
+    MR_DllDeclare int operator ==(const MR_ObjectFromFactoryId & pId) const;
 };
 
 
-class MR_DllDeclare MR_ObjectFromFactory: public CObject
-{   
-   // Base class for object created with a Dll Factory
+class MR_DllDeclare MR_ObjectFromFactory:public CObject {
+    // Base class for object created with a Dll Factory
 
-   private:
-      
-      MR_ObjectFromFactoryId mId;
+  private:
 
-   public:
+    MR_ObjectFromFactoryId mId;
 
-      // Construction and destruction
-      MR_ObjectFromFactory( const MR_ObjectFromFactoryId& pId );
-      virtual ~MR_ObjectFromFactory();
+  public:
+
+    // Construction and destruction
+    MR_ObjectFromFactory(const MR_ObjectFromFactoryId & pId);
+      virtual ~ MR_ObjectFromFactory();
 
 
-      const MR_ObjectFromFactoryId& GetTypeId()const;
+    const MR_ObjectFromFactoryId & GetTypeId() const;
 
-      // Serialisation functions
-      //
-      // Warning this module do not support multiple references to objects
-      // or looped structures
-      //
-      // You can avoid this problem by calling CArchive::MapObject after aving call
-      // SerializePtr. Then use CArchive operator << or >> CObject* the next time
-      // you will have to serialize the object.(To use this technique, the first time 
-      // you serialize the object, you must know that the object hav not been serialize yet)
-      // 
-      static  void SerializePtr( CArchive& pArchive, MR_ObjectFromFactory*& pPtr );
-      virtual void Serialize( CArchive& pArchive );
+    // Serialisation functions
+    //
+    // Warning this module do not support multiple references to objects
+    // or looped structures
+    //
+    // You can avoid this problem by calling CArchive::MapObject after aving call
+    // SerializePtr. Then use CArchive operator << or >> CObject* the next time
+    // you will have to serialize the object.(To use this technique, the first time 
+    // you serialize the object, you must know that the object hav not been serialize yet)
+    // 
+    static void SerializePtr(CArchive & pArchive, MR_ObjectFromFactory * &pPtr);
+    virtual void Serialize(CArchive & pArchive);
 
 };
 
-namespace MR_DllObjectFactory
-{
-   MR_DllDeclare void Init();                      // Must be called at the begining of the program
-   MR_DllDeclare void Clean( BOOL pOnlyDynamic );  // Must be called at the end of the program
-                                                   // Can also be called to remove unused DLL
+namespace MR_DllObjectFactory {
+    MR_DllDeclare void Init();	// Must be called at the begining of the program
+    MR_DllDeclare void Clean(BOOL pOnlyDynamic);	// Must be called at the end of the program
+    // Can also be called to remove unused DLL
 
-   // Low level function
-   MR_DllDeclare BOOL OpenDll( MR_UInt16 pDllId );                   // Usually don't need to be called
-   MR_DllDeclare void IncrementReferenceCount( MR_UInt16 pDllId );   // Usually don't need to be called
-   MR_DllDeclare void DecrementReferenceCount( MR_UInt16 pDllId );   // Usually don't need to be called
+    // Low level function
+    MR_DllDeclare BOOL OpenDll(MR_UInt16 pDllId);	// Usually don't need to be called
+    MR_DllDeclare void IncrementReferenceCount(MR_UInt16 pDllId);	// Usually don't need to be called
+    MR_DllDeclare void DecrementReferenceCount(MR_UInt16 pDllId);	// Usually don't need to be called
 
-   // Slow interrocation functions
-   MR_DllDeclare MR_UInt16 GetObjectTypeCount( MR_UInt16 pDllId );
-   MR_DllDeclare CString   GetObjectFamily   ( const MR_ObjectFromFactoryId& pId );
-   MR_DllDeclare CString   GetObjectDescription( const MR_ObjectFromFactoryId& pId );
-                                                 
+    // Slow interrocation functions
+    MR_DllDeclare MR_UInt16 GetObjectTypeCount(MR_UInt16 pDllId);
+    MR_DllDeclare CString GetObjectFamily(const MR_ObjectFromFactoryId & pId);
+    MR_DllDeclare CString GetObjectDescription(const MR_ObjectFromFactoryId & pId);
 
 
-   // Fast Object Creation function
-   MR_DllDeclare MR_ObjectFromFactory* CreateObject( const MR_ObjectFromFactoryId& pId );
+
+    // Fast Object Creation function
+    MR_DllDeclare MR_ObjectFromFactory *CreateObject(const MR_ObjectFromFactoryId & pId);
 
 
-   // Local Dll 
-   MR_DllDeclare void RegisterLocalDll( MR_UInt16 pDLLId, MR_ObjectFromFactory* (*pFunc)(MR_UInt16) );
+    // Local Dll 
+    MR_DllDeclare void RegisterLocalDll(MR_UInt16 pDLLId, MR_ObjectFromFactory * (*pFunc) (MR_UInt16));
 
 };
 

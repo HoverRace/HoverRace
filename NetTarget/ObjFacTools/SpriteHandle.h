@@ -31,26 +31,24 @@
 #include "ResourceLib.h"
 
 #ifdef MR_OBJ_FAC_TOOLS
-   #define MR_DllDeclare   __declspec( dllexport )
+#define MR_DllDeclare   __declspec( dllexport )
 #else
-   #define MR_DllDeclare   __declspec( dllimport )
+#define MR_DllDeclare   __declspec( dllimport )
 #endif
 
 
-class MR_SpriteHandle: public MR_ObjectFromFactory
-{
-   protected:
-      const MR_ResSprite* mSprite;
+class MR_SpriteHandle:public MR_ObjectFromFactory {
+  protected:
+    const MR_ResSprite *mSprite;
 
-   public:
-      MR_DllDeclare  MR_SpriteHandle( const MR_ObjectFromFactoryId& pId, const MR_ResSprite* pSprite );
-      MR_DllDeclare ~MR_SpriteHandle();
-   
-      MR_DllDeclare const MR_Sprite* GetSprite()const;
+  public:
+      MR_DllDeclare MR_SpriteHandle(const MR_ObjectFromFactoryId & pId, const MR_ResSprite * pSprite);
+      MR_DllDeclare ~ MR_SpriteHandle();
+
+    MR_DllDeclare const MR_Sprite *GetSprite() const;
 
 };
 
 #undef MR_DllDeclare
 
 #endif
-

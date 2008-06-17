@@ -28,13 +28,11 @@
 #include "../ObjFacTools/BitmapSurface.h"
 
 
-class MR_DefaultSurface:public MR_BitmapSurface
-{
-   public:
-      MR_DefaultSurface( const MR_ObjectFromFactoryId& pId );
-      ~MR_DefaultSurface();
+class MR_DefaultSurface:public MR_BitmapSurface {
+  public:
+    MR_DefaultSurface(const MR_ObjectFromFactoryId & pId);
+     ~MR_DefaultSurface();
 };
 
 
 #endif
-

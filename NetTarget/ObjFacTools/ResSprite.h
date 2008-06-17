@@ -27,21 +27,20 @@
 #include "../VideoServices/Sprite.h"
 
 #ifdef MR_OBJ_FAC_TOOLS
-   #define MR_DllDeclare   __declspec( dllexport )
+#define MR_DllDeclare   __declspec( dllexport )
 #else
-   #define MR_DllDeclare   __declspec( dllimport )
+#define MR_DllDeclare   __declspec( dllimport )
 #endif
 
-class MR_ResSprite: public MR_Sprite
-{
-   protected:
-      int mResourceId;
+class MR_ResSprite:public MR_Sprite {
+  protected:
+    int mResourceId;
 
-   public:
-      MR_DllDeclare MR_ResSprite( int pResourceId );   // Only availlable for resourceLib and construction
-      MR_DllDeclare ~MR_ResSprite();
+  public:
+      MR_DllDeclare MR_ResSprite(int pResourceId);	// Only availlable for resourceLib and construction
+      MR_DllDeclare ~ MR_ResSprite();
 
-      MR_DllDeclare int  GetResourceId()const;
+    MR_DllDeclare int GetResourceId() const;
 
 };
 
@@ -50,6 +49,3 @@ class MR_ResSprite: public MR_Sprite
 #undef MR_DllDeclare
 
 #endif
-
-
-

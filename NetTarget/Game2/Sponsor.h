@@ -24,10 +24,9 @@
 #define SPONSOR_H
 
 
-void DisplaySponsorWindow( HWND pWindow );
+void DisplaySponsorWindow(HWND pWindow);
 
 
 
 
 #endif
-

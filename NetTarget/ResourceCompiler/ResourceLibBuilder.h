@@ -29,27 +29,26 @@
 
 
 
-class MR_ResourceLibBuilder: public MR_ResourceLib
-{
-   // Each module can have its own MR_BitmapLib
-   protected:
+class MR_ResourceLibBuilder:public MR_ResourceLib {
+    // Each module can have its own MR_BitmapLib
+  protected:
 
-      void WriteBitmaps( CArchive& pArchive );
-      void WriteActors(  CArchive& pArchive );
-      void WriteSprites( CArchive& pArchive );
-      void WriteSounds(  CArchive& pArchive );
+    void WriteBitmaps(CArchive & pArchive);
+    void WriteActors(CArchive & pArchive);
+    void WriteSprites(CArchive & pArchive);
+    void WriteSounds(CArchive & pArchive);
 
-   public:
+  public:
       MR_ResourceLibBuilder();
-      ~MR_ResourceLibBuilder();
+     ~MR_ResourceLibBuilder();
 
-      void AddBitmap( MR_ResBitmap* pBitmap );
-      void AddActor(  MR_ResActor*  pActor  );
-      void AddSprite( MR_ResSprite* pSprite );
-      void AddSound( MR_ResShortSound* pSound );
-      void AddSound( MR_ResContinuousSound* pSound );
+    void AddBitmap(MR_ResBitmap * pBitmap);
+    void AddActor(MR_ResActor * pActor);
+    void AddSprite(MR_ResSprite * pSprite);
+    void AddSound(MR_ResShortSound * pSound);
+    void AddSound(MR_ResContinuousSound * pSound);
 
-      BOOL Export( const char* pFileName );
+    BOOL Export(const char *pFileName);
 
 };
 
@@ -57,6 +56,3 @@ class MR_ResourceLibBuilder: public MR_ResourceLib
 #undef MR_DllDeclare
 
 #endif
-
-
-

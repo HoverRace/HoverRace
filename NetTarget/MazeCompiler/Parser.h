@@ -26,39 +26,37 @@
 #define PARSER_H
 
 
-class MR_Parser
-{
+class MR_Parser {
 
-   protected:
+  protected:
 
-      FILE* mFile;
+    FILE * mFile;
 
-      char  mLineBuffer[150];
-      char  mReturnBuffer[30];
-      char* mParsePtr;
-      int   mLineNumber;
-
-
-      BOOL        ReadNewLine();
-      const char *InternalGetNextClass();
+    char mLineBuffer[150];
+    char mReturnBuffer[30];
+    char *mParsePtr;
+    int mLineNumber;
 
 
-   public:
-      MR_Parser( FILE* pFile );
-      ~MR_Parser();
-      
-      void Reset();
+    BOOL ReadNewLine();
+    const char *InternalGetNextClass();
 
-      const char* GetNextClass( const char* pClassType = NULL );
-      const char* GetNextAttrib( const char* pAttrib=NULL ); // If the line does'nt begin by an attrib, you should use GetNextLine
-      BOOL        GetNextLine();
-      const char* GetNextStrParam( const char *pDefaultValue = NULL );
-      double      GetNextNumParam( double DefaultValue = 0.0 );
-      const char* GetParams();
 
-      int  GetErrorLine()const;
+  public:
+      MR_Parser(FILE * pFile);
+     ~MR_Parser();
+
+    void Reset();
+
+    const char *GetNextClass(const char *pClassType = NULL);
+    const char *GetNextAttrib(const char *pAttrib = NULL);	// If the line does'nt begin by an attrib, you should use GetNextLine
+    BOOL GetNextLine();
+    const char *GetNextStrParam(const char *pDefaultValue = NULL);
+    double GetNextNumParam(double DefaultValue = 0.0);
+    const char *GetParams();
+
+    int GetErrorLine() const;
 
 };
 
 #endif
-

@@ -27,10 +27,7 @@
 
 #include "../Util/MR_Types.h"
 
-MR_UInt8*  LoadBitmap( const char* lFileName, int& pXRes, int& pYRes, BOOL pReverse );
+MR_UInt8 *LoadBitmap(const char *lFileName, int &pXRes, int &pYRes, BOOL pReverse);
 
 
 #endif
-
-
-

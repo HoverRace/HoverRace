@@ -32,60 +32,51 @@
 
 
 // Data intanciation
-MR_Int16 MR_Sin[ MR_2PI ];
-MR_Int16 MR_Cos[ MR_2PI ];
+MR_Int16 MR_Sin[MR_2PI];
+MR_Int16 MR_Cos[MR_2PI];
 
 
 
 void MR_InitTrigoTables()
 {
-   double lThetaStep = 4.0*acos((double) 0) / MR_2PI;
-   double lTrigoFract = MR_TRIGO_FRACT;
-      
-   for( int lCounter = 0; lCounter<MR_2PI; lCounter++ )
-   {
-      MR_Sin[ lCounter ] = MR_Int16(sin( lCounter*lThetaStep )*lTrigoFract);
-      MR_Cos[ lCounter ] = MR_Int16(cos( lCounter*lThetaStep )*lTrigoFract);
-   }  
+    double lThetaStep = 4.0 * acos((double) 0) / MR_2PI;
+    double lTrigoFract = MR_TRIGO_FRACT;
+
+    for(int lCounter = 0; lCounter < MR_2PI; lCounter++) {
+	MR_Sin[lCounter] = MR_Int16(sin(lCounter * lThetaStep) * lTrigoFract);
+	MR_Cos[lCounter] = MR_Int16(cos(lCounter * lThetaStep) * lTrigoFract);
+    }
 
 }
 
 
-void MR_2DCoordinate::Serialize( CArchive& pArchive )
+void MR_2DCoordinate::Serialize(CArchive & pArchive)
 {
-   
-   if( pArchive.IsStoring() )
-   {
-      pArchive << mX
-               << mY;
-   }
-   else
-   {
-      pArchive >> mX
-               >> mY;
-   }
+
+    if(pArchive.IsStoring()) {
+	pArchive << mX << mY;
+    } else {
+	pArchive >> mX >> mY;
+    }
 }
 
-BOOL MR_2DCoordinate::operator ==( const MR_2DCoordinate& pCoordinate )const
+BOOL MR_2DCoordinate::operator ==(const MR_2DCoordinate & pCoordinate) const const
 {
-   return (mX == pCoordinate.mX)&&(mY == pCoordinate.mY);
+    return (mX == pCoordinate.mX) && (mY == pCoordinate.mY);
 }
 
-BOOL MR_2DCoordinate::operator !=( const MR_2DCoordinate& pCoordinate )const
+BOOL MR_2DCoordinate::operator !=(const MR_2DCoordinate & pCoordinate) const const
 {
-   return (mX != pCoordinate.mX)||(mY != pCoordinate.mY);
+    return (mX != pCoordinate.mX) || (mY != pCoordinate.mY);
 }
 
-void MR_3DCoordinate::Serialize( CArchive& pArchive )
+void MR_3DCoordinate::Serialize(CArchive & pArchive)
 {
-   MR_2DCoordinate::Serialize( pArchive );
+    MR_2DCoordinate::Serialize(pArchive);
 
-   if( pArchive.IsStoring() )
-   {
-      pArchive << mZ;
-   }
-   else
-   {
-      pArchive >> mZ;
-   }
+    if(pArchive.IsStoring()) {
+	pArchive << mZ;
+    } else {
+	pArchive >> mZ;
+    }
 }

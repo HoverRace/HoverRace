@@ -27,16 +27,16 @@
 #include "../Util/RecordFile.h"
 
 enum MR_TrackAvail {
-   eTrackAvail,
-   eTrackNotFound
+    eTrackAvail,
+    eTrackNotFound
 };
 
 
-BOOL MR_SelectTrack(HWND pParentWindow, CString& pTrackFile, int& pNbLap, BOOL& pAllowWeapons);
+BOOL MR_SelectTrack(HWND pParentWindow, CString & pTrackFile, int &pNbLap, BOOL & pAllowWeapons);
 
 // pFile name must contains no path and no extension
-MR_RecordFile *MR_TrackOpen(HWND pWindow, const char* pFileName);
+MR_RecordFile *MR_TrackOpen(HWND pWindow, const char *pFileName);
 
-MR_TrackAvail MR_GetTrackAvail(const char* pFileName);
+MR_TrackAvail MR_GetTrackAvail(const char *pFileName);
 
 #endif

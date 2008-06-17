@@ -35,50 +35,47 @@
 #include "../Model/MazeElement.h"
 
 #ifdef MR_OBJ_FAC_TOOLS
-   #define MR_DllDeclare   __declspec( dllexport )
+#define MR_DllDeclare   __declspec( dllexport )
 #else
-   #define MR_DllDeclare   __declspec( dllimport )
+#define MR_DllDeclare   __declspec( dllimport )
 #endif
 
 
-class MR_DllDeclare MR_BitmapSurface:public MR_SurfaceElement
-{
-   protected:      
-      MR_ResBitmap* mBitmap;     
-      MR_ResBitmap* mBitmap2;     
-      int mRotationSpeed;     // negative values mean left to right rotation
-      int mRotationLen;
+class MR_DllDeclare MR_BitmapSurface:public MR_SurfaceElement {
+  protected:
+    MR_ResBitmap * mBitmap;
+    MR_ResBitmap *mBitmap2;
+    int mRotationSpeed;		// negative values mean left to right rotation
+    int mRotationLen;
 
-   public:
-      MR_BitmapSurface( const MR_ObjectFromFactoryId& pId ); // old constructor..obsolete
-      MR_BitmapSurface( const MR_ObjectFromFactoryId& pId, /*const*/ MR_ResBitmap* pBitmap );
-      MR_BitmapSurface( const MR_ObjectFromFactoryId& pId, MR_ResBitmap* pBitmap1, MR_ResBitmap* pBitmap2, int pRotationSpeed, int pRotationLen );
-      ~MR_BitmapSurface();
-
-
-      // Rendering stuff
-      void RenderWallSurface( MR_3DViewPort* pDest, const MR_3DCoordinate& pUpperLeft, const MR_3DCoordinate& pLowerRight, MR_Int32 pLen, MR_SimulationTime pTime );
-      void RenderHorizontalSurface( MR_3DViewPort* pDest, int pNbVertex, const MR_2DCoordinate* pVertexList, MR_Int32 pLevel, BOOL pTop, MR_SimulationTime pTime );
+  public:
+      MR_BitmapSurface(const MR_ObjectFromFactoryId & pId);	// old constructor..obsolete
+      MR_BitmapSurface(const MR_ObjectFromFactoryId & pId, /*const */ MR_ResBitmap * pBitmap);
+      MR_BitmapSurface(const MR_ObjectFromFactoryId & pId, MR_ResBitmap * pBitmap1, MR_ResBitmap * pBitmap2, int pRotationSpeed, int pRotationLen);
+     ~MR_BitmapSurface();
 
 
-      // Logic stuff
-      const MR_ContactEffectList* GetEffectList();
+    // Rendering stuff
+    void RenderWallSurface(MR_3DViewPort * pDest, const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, MR_SimulationTime pTime);
+    void RenderHorizontalSurface(MR_3DViewPort * pDest, int pNbVertex, const MR_2DCoordinate * pVertexList, MR_Int32 pLevel, BOOL pTop, MR_SimulationTime pTime);
+
+
+    // Logic stuff
+    const MR_ContactEffectList *GetEffectList();
 
 };
 
-class MR_DllDeclare MR_VStretchBitmapSurface:public MR_BitmapSurface
-{   
-   private:
-      int mMaxHeight;
+class MR_DllDeclare MR_VStretchBitmapSurface:public MR_BitmapSurface {
+  private:
+    int mMaxHeight;
 
-   public:
+  public:
 
-      MR_VStretchBitmapSurface( const MR_ObjectFromFactoryId& pId, /*const*/ MR_ResBitmap* pBitmap, int pMaxHeight );
-      MR_VStretchBitmapSurface( const MR_ObjectFromFactoryId& pId, MR_ResBitmap* pBitmap1, MR_ResBitmap* pBitmap2, int pRotationSpeed, int pRotationLen, int pMaxHeight );
-      void RenderWallSurface( MR_3DViewPort* pDest, const MR_3DCoordinate& pUpperLeft, const MR_3DCoordinate& pLowerRight, MR_Int32 pLen, MR_SimulationTime pTime );
+      MR_VStretchBitmapSurface(const MR_ObjectFromFactoryId & pId, /*const */ MR_ResBitmap * pBitmap, int pMaxHeight);
+      MR_VStretchBitmapSurface(const MR_ObjectFromFactoryId & pId, MR_ResBitmap * pBitmap1, MR_ResBitmap * pBitmap2, int pRotationSpeed, int pRotationLen, int pMaxHeight);
+    void RenderWallSurface(MR_3DViewPort * pDest, const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, MR_SimulationTime pTime);
 };
 
 #undef MR_DllDeclare
 
 #endif
-

@@ -34,29 +34,27 @@
 #include "ResourceLib.h"
 
 #ifdef MR_OBJ_FAC_TOOLS
-   #define MR_DllDeclare   __declspec( dllexport )
+#define MR_DllDeclare   __declspec( dllexport )
 #else
-   #define MR_DllDeclare   __declspec( dllimport )
+#define MR_DllDeclare   __declspec( dllimport )
 #endif
 
 
-class MR_FreeElementBaseRenderer: public MR_ObjectFromFactory
-{
-   protected:
-      const MR_ResActor* mActor;
-      int                mCurrentSequence;
-      int                mCurrentFrame;    
+class MR_FreeElementBaseRenderer:public MR_ObjectFromFactory {
+  protected:
+    const MR_ResActor *mActor;
+    int mCurrentSequence;
+    int mCurrentFrame;
 
-   public:
-      MR_DllDeclare  MR_FreeElementBaseRenderer( const MR_ObjectFromFactoryId& pId );
-      MR_DllDeclare ~MR_FreeElementBaseRenderer();
-   
-      // Rendering stuff
-      MR_DllDeclare void Render( MR_3DViewPort* pDest, const MR_3DCoordinate& pPosition, MR_Angle pOrientation );
+  public:
+      MR_DllDeclare MR_FreeElementBaseRenderer(const MR_ObjectFromFactoryId & pId);
+      MR_DllDeclare ~ MR_FreeElementBaseRenderer();
+
+    // Rendering stuff
+    MR_DllDeclare void Render(MR_3DViewPort * pDest, const MR_3DCoordinate & pPosition, MR_Angle pOrientation);
 
 };
 
 #undef MR_DllDeclare
 
 #endif
-

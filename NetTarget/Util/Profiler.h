@@ -27,48 +27,50 @@
 
 
 #ifdef MR_UTIL
-   #define MR_DllDeclare   __declspec( dllexport )
+#define MR_DllDeclare   __declspec( dllexport )
 #else
-   #define MR_DllDeclare   __declspec( dllimport )
+#define MR_DllDeclare   __declspec( dllimport )
 #endif
 
 #ifdef _DEBUG
 
 // Required declaration
-class MR_DllDeclare MR_ProfilerSampler
-{
-   // Theses objects must always be declared staticly
-   friend class MR_ProfilerMaster;
+class MR_DllDeclare MR_ProfilerSampler {
+    // Theses objects must always be declared staticly
+    friend class MR_ProfilerMaster;
 
-   private:
-      MR_ProfilerSampler* mNext;
-      const char*         mName;  // Name or comment, used during outputs
-      int                 mNbCall;
-      int                 mTotalTime;
-      int                 mMinPeriod;
-      int                 mMaxPeriod;
+  private:
+      MR_ProfilerSampler * mNext;
+    const char *mName;		// Name or comment, used during outputs
+    int mNbCall;
+    int mTotalTime;
+    int mMinPeriod;
+    int mMaxPeriod;
 
-      int                 mLastPeriodStart;
+    int mLastPeriodStart;
 
-      void Reset();
+    void Reset();
 
-   public:
-      MR_ProfilerSampler( const char* pName );
+  public:
+      MR_ProfilerSampler(const char *pName);
 
-      void StartSample();
-      void EndSample();
+    void StartSample();
+    void EndSample();
 
 
 };
 
-class MR_ContextSampler
-{
-   private:
-      MR_ProfilerSampler* mSampler;
+class MR_ContextSampler {
+  private:
+    MR_ProfilerSampler * mSampler;
 
-   public:
-      MR_ContextSampler( MR_ProfilerSampler* pSampler ){ mSampler = pSampler; mSampler->StartSample(); }
-      ~MR_ContextSampler(){ mSampler->EndSample(); }
+  public:
+    MR_ContextSampler(MR_ProfilerSampler * pSampler) {
+	mSampler = pSampler;
+	mSampler->StartSample();
+    } ~MR_ContextSampler() {
+	mSampler->EndSample();
+    }
 
 };
 

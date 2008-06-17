@@ -25,180 +25,169 @@
 
 MR_ResourceLibBuilder::MR_ResourceLibBuilder()
 {
-   // Notting to do
+    // Notting to do
 }
- 
+
 MR_ResourceLibBuilder::~MR_ResourceLibBuilder()
 {
-   // Notting to do
+    // Notting to do
 }
 
-void MR_ResourceLibBuilder::AddBitmap( MR_ResBitmap* pBitmap )
+void MR_ResourceLibBuilder::AddBitmap(MR_ResBitmap * pBitmap)
 {
-   mBitmapList.SetAt( pBitmap->GetResourceId(), pBitmap );   
+    mBitmapList.SetAt(pBitmap->GetResourceId(), pBitmap);
 }
- 
-void MR_ResourceLibBuilder::AddActor(  MR_ResActor*  pActor  )
+
+void MR_ResourceLibBuilder::AddActor(MR_ResActor * pActor)
 {
-   mActorList.SetAt( pActor->GetResourceId(), pActor );
+    mActorList.SetAt(pActor->GetResourceId(), pActor);
 }
 
-void MR_ResourceLibBuilder::AddSprite(  MR_ResSprite*  pSprite  )
+void MR_ResourceLibBuilder::AddSprite(MR_ResSprite * pSprite)
 {
-   mSpriteList.SetAt( pSprite->GetResourceId(), pSprite );
+    mSpriteList.SetAt(pSprite->GetResourceId(), pSprite);
 }
 
-void MR_ResourceLibBuilder::AddSound(  MR_ResShortSound*  pSound )
+void MR_ResourceLibBuilder::AddSound(MR_ResShortSound * pSound)
 {
-   mShortSoundList.SetAt( pSound->GetResourceId(), pSound );
+    mShortSoundList.SetAt(pSound->GetResourceId(), pSound);
 }
 
-void MR_ResourceLibBuilder::AddSound(  MR_ResContinuousSound*  pSound )
+void MR_ResourceLibBuilder::AddSound(MR_ResContinuousSound * pSound)
 {
-   mContinuousSoundList.SetAt( pSound->GetResourceId(), pSound );
+    mContinuousSoundList.SetAt(pSound->GetResourceId(), pSound);
 }
 
-BOOL MR_ResourceLibBuilder::Export( const char* pFileName )
+BOOL MR_ResourceLibBuilder::Export(const char *pFileName)
 {
-   BOOL lReturnValue = TRUE;
+    BOOL lReturnValue = TRUE;
 
-   MR_RecordFile lFile;
+    MR_RecordFile lFile;
 
-   lReturnValue = lFile.CreateForWrite( pFileName,
-                                        1,
-                                        "\x8\rFireball object factory resource file, (c)GrokkSoft 1996\n\x1a" );
+    lReturnValue = lFile.CreateForWrite(pFileName, 1, "\x8\rFireball object factory resource file, (c)GrokkSoft 1996\n\x1a");
 
 
-   if( !lReturnValue )
-   {
-      fprintf( stderr, "ERROR: Unable to create output file\n" );
-   }
-   else
-   {
-      lFile.BeginANewRecord();
+    if(!lReturnValue) {
+	fprintf(stderr, "ERROR: Unable to create output file\n");
+    } else {
+	lFile.BeginANewRecord();
 
-      {
+	{
 
-         // Write the magic number
-         int lMagicNumber = MR_RESOURCE_FILE_MAGIC;
+	    // Write the magic number
+	    int lMagicNumber = MR_RESOURCE_FILE_MAGIC;
 
-         CArchive lArchive( &lFile, CArchive::store );
+	    CArchive lArchive(&lFile, CArchive::store);
 
-         lArchive << lMagicNumber;
+	    lArchive << lMagicNumber;
 
-         WriteBitmaps( lArchive );
+	    WriteBitmaps(lArchive);
 
-         WriteActors(  lArchive );
-      
-         WriteSprites( lArchive );
+	    WriteActors(lArchive);
 
-         WriteSounds(  lArchive );
-         
-      }
-   }
+	    WriteSprites(lArchive);
 
-   return lReturnValue;
+	    WriteSounds(lArchive);
+
+	}
+    }
+
+    return lReturnValue;
 }
 
-void MR_ResourceLibBuilder::WriteBitmaps( CArchive& pArchive )
+void MR_ResourceLibBuilder::WriteBitmaps(CArchive & pArchive)
 {
-   int       lNbBitmap = mBitmapList.GetCount();
-   POSITION  lPos      = mBitmapList.GetStartPosition();
+    int lNbBitmap = mBitmapList.GetCount();
+    POSITION lPos = mBitmapList.GetStartPosition();
 
-   pArchive << lNbBitmap;
+    pArchive << lNbBitmap;
 
 
 
-   while( lPos != NULL )
-   {
-      int           lKey;
-      MR_ResBitmap* lValue;
+    while(lPos != NULL) {
+	int lKey;
+	MR_ResBitmap *lValue;
 
-      mBitmapList.GetNextAssoc( lPos, lKey, lValue );
+	mBitmapList.GetNextAssoc(lPos, lKey, lValue);
 
-      pArchive << lKey;      
-      lValue->Serialize( pArchive );
-   }  
+	pArchive << lKey;
+	lValue->Serialize(pArchive);
+    }
 
 }
 
-void MR_ResourceLibBuilder::WriteActors(  CArchive& pArchive )
+void MR_ResourceLibBuilder::WriteActors(CArchive & pArchive)
 {
-   int       lNbActor  = mActorList.GetCount();
-   POSITION  lPos      = mActorList.GetStartPosition();
+    int lNbActor = mActorList.GetCount();
+    POSITION lPos = mActorList.GetStartPosition();
 
-   pArchive << lNbActor;
+    pArchive << lNbActor;
 
-   while( lPos != NULL )
-   {
-      int           lKey;
-      MR_ResActor*  lValue;
+    while(lPos != NULL) {
+	int lKey;
+	MR_ResActor *lValue;
 
-      mActorList.GetNextAssoc( lPos, lKey, lValue );
+	mActorList.GetNextAssoc(lPos, lKey, lValue);
 
-      pArchive << lKey;      
-      lValue->Serialize( pArchive );
-   }  
+	pArchive << lKey;
+	lValue->Serialize(pArchive);
+    }
 }
 
-void MR_ResourceLibBuilder::WriteSprites( CArchive& pArchive )
+void MR_ResourceLibBuilder::WriteSprites(CArchive & pArchive)
 {
-   int       lNbSprite = mSpriteList.GetCount();
-   POSITION  lPos      = mSpriteList.GetStartPosition();
+    int lNbSprite = mSpriteList.GetCount();
+    POSITION lPos = mSpriteList.GetStartPosition();
 
-   pArchive << lNbSprite;
+    pArchive << lNbSprite;
 
 
-   while( lPos != NULL )
-   {
-      int           lKey;
-      MR_ResSprite* lValue;
+    while(lPos != NULL) {
+	int lKey;
+	MR_ResSprite *lValue;
 
-      mSpriteList.GetNextAssoc( lPos, lKey, lValue );
+	mSpriteList.GetNextAssoc(lPos, lKey, lValue);
 
-      pArchive << lKey;      
-      lValue->Serialize( pArchive );
-   }  
+	pArchive << lKey;
+	lValue->Serialize(pArchive);
+    }
 }
 
-void MR_ResourceLibBuilder::WriteSounds( CArchive& pArchive )
+void MR_ResourceLibBuilder::WriteSounds(CArchive & pArchive)
 {
-   int       lNbSound;
-   POSITION  lPos;
+    int lNbSound;
+    POSITION lPos;
 
 
-   lNbSound = mShortSoundList.GetCount();
-   lPos     = mShortSoundList.GetStartPosition();  
-   
-   pArchive << lNbSound;
+    lNbSound = mShortSoundList.GetCount();
+    lPos = mShortSoundList.GetStartPosition();
 
-   while( lPos != NULL )
-   {
-      int               lKey;
-      MR_ResShortSound* lValue;
+    pArchive << lNbSound;
 
-      mShortSoundList.GetNextAssoc( lPos, lKey, lValue );
+    while(lPos != NULL) {
+	int lKey;
+	MR_ResShortSound *lValue;
 
-      pArchive << lKey;      
-      lValue->Serialize( pArchive );
-   }  
+	mShortSoundList.GetNextAssoc(lPos, lKey, lValue);
 
-   lNbSound = mContinuousSoundList.GetCount();
-   lPos     = mContinuousSoundList.GetStartPosition();  
-   
-   pArchive << lNbSound;
+	pArchive << lKey;
+	lValue->Serialize(pArchive);
+    }
 
-   while( lPos != NULL )
-   {
-      int                    lKey;
-      MR_ResContinuousSound* lValue;
+    lNbSound = mContinuousSoundList.GetCount();
+    lPos = mContinuousSoundList.GetStartPosition();
 
-      mContinuousSoundList.GetNextAssoc( lPos, lKey, lValue );
+    pArchive << lNbSound;
 
-      pArchive << lKey;      
-      lValue->Serialize( pArchive );
-   }  
+    while(lPos != NULL) {
+	int lKey;
+	MR_ResContinuousSound *lValue;
+
+	mContinuousSoundList.GetNextAssoc(lPos, lKey, lValue);
+
+	pArchive << lKey;
+	lValue->Serialize(pArchive);
+    }
 
 
 }
-

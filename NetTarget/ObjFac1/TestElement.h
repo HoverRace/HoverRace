@@ -33,56 +33,53 @@
 #include "../Model/PhysicalCollision.h"
 
 
-class MR_TestElement: public MR_FreeElementBase
-{
-      class Cylinder:public MR_CylinderShape
-      {
-         public:
+class MR_TestElement:public MR_FreeElementBase {
+    class Cylinder:public MR_CylinderShape {
+      public:
 
-            MR_Int32        mRay;
-            MR_3DCoordinate mPosition;
+	MR_Int32 mRay;
+	MR_3DCoordinate mPosition;
 
-            MR_Int32 ZMin()const;
-            MR_Int32 ZMax()const;
-            MR_Int32 AxisX()const;
-            MR_Int32 AxisY()const;
-            MR_Int32 RayLen()const;
-      };
+	MR_Int32 ZMin() const;
+	MR_Int32 ZMax() const;
+	MR_Int32 AxisX() const;
+	MR_Int32 AxisY() const;
+	MR_Int32 RayLen() const;
+    };
 
-   
-   private:
+
+  private:
       MR_SimulationTime mElapsedFrameTime;
 
-      // Logic part (Always present.. who cares it is a test
-      int  mXSpeed;
-      int  mYSpeed;
+    // Logic part (Always present.. who cares it is a test
+    int mXSpeed;
+    int mYSpeed;
 
-      Cylinder      mCollisionShape;                 
-      Cylinder      mContactShape;
+    Cylinder mCollisionShape;
+    Cylinder mContactShape;
 
-      MR_PhysicalCollision mContactEffect;
-      MR_ContactEffectList mContactEffectList;
+    MR_PhysicalCollision mContactEffect;
+    MR_ContactEffectList mContactEffectList;
 
-   public:
-      MR_TestElement( const MR_ObjectFromFactoryId& pId, int pActorRes );
-      ~MR_TestElement();  
-      
-      int Simulate( MR_SimulationTime pDuration, MR_Level* pLevel, int pRoom );
+  public:
+      MR_TestElement(const MR_ObjectFromFactoryId & pId, int pActorRes);
+     ~MR_TestElement();
 
-
-   protected:
+    int Simulate(MR_SimulationTime pDuration, MR_Level * pLevel, int pRoom);
 
 
-      // ContactEffectShapeInterface
-      void ApplyEffect( const MR_ContactEffect* pEffect,  MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 pZMin, MR_Int32 pZMax, MR_Level* pLevel );
+  protected:
 
-      const MR_ContactEffectList* GetEffectList();
 
-      const MR_ShapeInterface* GetObstacleShape( );
-      const MR_ShapeInterface* GetReceivingContactEffectShape();
-      const MR_ShapeInterface* GetGivingContactEffectShape();
+    // ContactEffectShapeInterface
+    void ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 pZMin, MR_Int32 pZMax, MR_Level * pLevel);
+
+    const MR_ContactEffectList *GetEffectList();
+
+    const MR_ShapeInterface *GetObstacleShape();
+    const MR_ShapeInterface *GetReceivingContactEffectShape();
+    const MR_ShapeInterface *GetGivingContactEffectShape();
 
 };
 
 #endif
-

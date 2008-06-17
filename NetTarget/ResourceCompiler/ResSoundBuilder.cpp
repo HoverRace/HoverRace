@@ -28,88 +28,81 @@
 
 
 // Local prototypes
-BOOL ParseFile( const char* pFile, const char*& pData, int& pDataLen );
-BOOL DSParseWaveResource(void *pvRes, WAVEFORMATEX **ppWaveHeader, BYTE **ppbWaveData,DWORD *pcbWaveSize);
+BOOL ParseFile(const char *pFile, const char *&pData, int &pDataLen);
+BOOL DSParseWaveResource(void *pvRes, WAVEFORMATEX ** ppWaveHeader, BYTE ** ppbWaveData, DWORD * pcbWaveSize);
 
 
 
 
-MR_ResShortSoundBuilder::MR_ResShortSoundBuilder( int pResourceId )
-                        :MR_ResShortSound( pResourceId )
+MR_ResShortSoundBuilder::MR_ResShortSoundBuilder(int pResourceId)
+:MR_ResShortSound(pResourceId)
 {
 
 }
 
-BOOL MR_ResShortSoundBuilder::BuildFromFile( const char* pFile, int pNbCopy )
+BOOL MR_ResShortSoundBuilder::BuildFromFile(const char *pFile, int pNbCopy)
 {
-   mNbCopy = pNbCopy;
-   return ParseFile( pFile, mData, mDataLen );
+    mNbCopy = pNbCopy;
+    return ParseFile(pFile, mData, mDataLen);
 }
 
 
-MR_ResContinuousSoundBuilder::MR_ResContinuousSoundBuilder( int pResourceId )
-                             :MR_ResContinuousSound( pResourceId )
+MR_ResContinuousSoundBuilder::MR_ResContinuousSoundBuilder(int pResourceId)
+:  MR_ResContinuousSound(pResourceId)
 {
 
 }
 
 
-BOOL MR_ResContinuousSoundBuilder::BuildFromFile( const char* pFile, int pNbCopy )
+BOOL MR_ResContinuousSoundBuilder::BuildFromFile(const char *pFile, int pNbCopy)
 {
-   mNbCopy = pNbCopy;
-   return ParseFile( pFile, mData, mDataLen );
+    mNbCopy = pNbCopy;
+    return ParseFile(pFile, mData, mDataLen);
 }
 
 
-BOOL ParseFile( const char* pFile, const char*& pData, int& pDataLen )
+BOOL ParseFile(const char *pFile, const char *&pData, int &pDataLen)
 {
-   static char lFileBuffer[ 1000000 ];
+    static char lFileBuffer[1000000];
 
-   BOOL  lReturnValue = TRUE;
-   FILE* lFile        = fopen( pFile, "rb" );
+    BOOL lReturnValue = TRUE;
+    FILE *lFile = fopen(pFile, "rb");
 
 
-   pData = NULL;
-   pDataLen = 0;
+    pData = NULL;
+    pDataLen = 0;
 
-   if( lFile == NULL )
-   {
-      lReturnValue = FALSE;
-   }
-   else
-   {
-      if( fread( lFileBuffer, 1, sizeof( lFileBuffer ), lFile ) > 20 )
-      {
-         WAVEFORMATEX* lWaveFormat;
-         BYTE*         lWaveData;
-         DWORD         lWaveSize;
+    if(lFile == NULL) {
+	lReturnValue = FALSE;
+    } else {
+	if(fread(lFileBuffer, 1, sizeof(lFileBuffer), lFile) > 20) {
+	    WAVEFORMATEX *lWaveFormat;
+	    BYTE *lWaveData;
+	    DWORD lWaveSize;
 
-         lReturnValue = DSParseWaveResource( (void *)lFileBuffer, &lWaveFormat, &lWaveData, &lWaveSize );
+	    lReturnValue = DSParseWaveResource((void *) lFileBuffer, &lWaveFormat, &lWaveData, &lWaveSize);
 
-         if( lReturnValue )
-         {
-            pDataLen = sizeof( MR_UInt32 )+sizeof( WAVEFORMATEX )+lWaveSize;
-            pData    = new char[ pDataLen ];
+	    if(lReturnValue) {
+		pDataLen = sizeof(MR_UInt32) + sizeof(WAVEFORMATEX) + lWaveSize;
+		pData = new char[pDataLen];
 
-            *(MR_UInt32*)(pData+0) = lWaveSize;
-            *(WAVEFORMATEX*)(pData+sizeof(MR_UInt32)) = *lWaveFormat;
-            memcpy( (void*)(pData+sizeof( MR_UInt32 ) + sizeof( WAVEFORMATEX )), lWaveData, lWaveSize );
-         }
-      }
-      else
-      {
-         lReturnValue = FALSE;
-      }
-      fclose( lFile );
-   }
+		*(MR_UInt32 *) (pData + 0) = lWaveSize;
+		*(WAVEFORMATEX *) (pData + sizeof(MR_UInt32)) = *lWaveFormat;
+		memcpy((void *) (pData + sizeof(MR_UInt32) + sizeof(WAVEFORMATEX)), lWaveData, lWaveSize);
+	    }
+	} else {
+	    lReturnValue = FALSE;
+	}
+	fclose(lFile);
+    }
 
-   return lReturnValue;
+    return lReturnValue;
 }
 
 
 // Ugly code Copied from a microsoft example
 // Hoping that it works (remember.. if it works.. don't touch it)
-BOOL DSParseWaveResource(void *pvRes, WAVEFORMATEX **ppWaveHeader, BYTE **ppbWaveData,DWORD *pcbWaveSize)
+BOOL DSParseWaveResource(void *pvRes, WAVEFORMATEX ** ppWaveHeader, BYTE ** ppbWaveData, DWORD * pcbWaveSize)
 {
     DWORD *pdw;
     DWORD *pdwEnd;
@@ -117,71 +110,63 @@ BOOL DSParseWaveResource(void *pvRes, WAVEFORMATEX **ppWaveHeader, BYTE **ppbWav
     DWORD dwType;
     DWORD dwLength;
 
-    if (ppWaveHeader)
-        *ppWaveHeader = NULL;
+    if(ppWaveHeader)
+	*ppWaveHeader = NULL;
 
-    if (ppbWaveData)
-        *ppbWaveData = NULL;
+    if(ppbWaveData)
+	*ppbWaveData = NULL;
 
-    if (pcbWaveSize)
-        *pcbWaveSize = 0;
+    if(pcbWaveSize)
+	*pcbWaveSize = 0;
 
-    pdw = (DWORD *)pvRes;
+    pdw = (DWORD *) pvRes;
     dwRiff = *pdw++;
     dwLength = *pdw++;
     dwType = *pdw++;
 
-    if (dwRiff != mmioFOURCC('R', 'I', 'F', 'F'))
-        goto exit;      // not even RIFF
+    if(dwRiff != mmioFOURCC('R', 'I', 'F', 'F'))
+	goto exit;		// not even RIFF
 
-    if (dwType != mmioFOURCC('W', 'A', 'V', 'E'))
-        goto exit;      // not a WAV
+    if(dwType != mmioFOURCC('W', 'A', 'V', 'E'))
+	goto exit;		// not a WAV
 
-    pdwEnd = (DWORD *)((BYTE *)pdw + dwLength-4);
+    pdwEnd = (DWORD *) ((BYTE *) pdw + dwLength - 4);
 
-    while (pdw < pdwEnd)
-    {
-        dwType = *pdw++;
-        dwLength = *pdw++;
+    while(pdw < pdwEnd) {
+	dwType = *pdw++;
+	dwLength = *pdw++;
 
-        switch (dwType)
-        {
-        case mmioFOURCC('f', 'm', 't', ' '):
-            if (ppWaveHeader && !*ppWaveHeader)
-            {
-                if (dwLength < sizeof(WAVEFORMAT))
-                    goto exit;      // not a WAV
+	switch (dwType) {
+	    case mmioFOURCC('f', 'm', 't', ' '):
+		if(ppWaveHeader && !*ppWaveHeader) {
+		    if(dwLength < sizeof(WAVEFORMAT))
+			goto exit;	// not a WAV
 
-                *ppWaveHeader = (WAVEFORMATEX *)pdw;
+		    *ppWaveHeader = (WAVEFORMATEX *) pdw;
 
-                if ((!ppbWaveData || *ppbWaveData) &&
-                    (!pcbWaveSize || *pcbWaveSize))
-                {
-                    return TRUE;
-                }
-            }
-            break;
+		    if((!ppbWaveData || *ppbWaveData) && (!pcbWaveSize || *pcbWaveSize)) {
+			return TRUE;
+		    }
+		}
+		break;
 
-        case mmioFOURCC('d', 'a', 't', 'a'):
-            if ((ppbWaveData && !*ppbWaveData) ||
-                (pcbWaveSize && !*pcbWaveSize))
-            {
-                if (ppbWaveData)
-                    *ppbWaveData = (LPBYTE)pdw;
+	    case mmioFOURCC('d', 'a', 't', 'a'):
+		if((ppbWaveData && !*ppbWaveData) || (pcbWaveSize && !*pcbWaveSize)) {
+		    if(ppbWaveData)
+			*ppbWaveData = (LPBYTE) pdw;
 
-                if (pcbWaveSize)
-                    *pcbWaveSize = dwLength;
+		    if(pcbWaveSize)
+			*pcbWaveSize = dwLength;
 
-                if (!ppWaveHeader || *ppWaveHeader)
-                    return TRUE;
-            }
-            break;
-        }
+		    if(!ppWaveHeader || *ppWaveHeader)
+			return TRUE;
+		}
+		break;
+	}
 
-        pdw = (DWORD *)((BYTE *)pdw + ((dwLength+1)&~1));
+	pdw = (DWORD *) ((BYTE *) pdw + ((dwLength + 1) & ~1));
     }
 
-exit:
+  exit:
     return FALSE;
 }
-

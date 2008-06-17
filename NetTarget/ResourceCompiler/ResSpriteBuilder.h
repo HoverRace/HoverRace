@@ -27,18 +27,14 @@
 
 #include "../ObjFacTools/ResSprite.h"
 
-class MR_ResSpriteBuilder: public MR_ResSprite
-{
-   protected:
+class MR_ResSpriteBuilder:public MR_ResSprite {
+  protected:
 
-   public:
-      MR_ResSpriteBuilder( int pResourceId );
+  public:
+    MR_ResSpriteBuilder(int pResourceId);
 
-      BOOL BuildFromFile( const char* pFile, int pNbItem );
+    BOOL BuildFromFile(const char *pFile, int pNbItem);
 
 };
 
 #endif
-
-
-

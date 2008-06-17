@@ -24,13 +24,13 @@
 #include "FreeElementBaseRenderer.h"
 
 
-MR_FreeElementBaseRenderer::MR_FreeElementBaseRenderer( const MR_ObjectFromFactoryId& pId )
-                           :MR_ObjectFromFactory( pId )
+MR_FreeElementBaseRenderer::MR_FreeElementBaseRenderer(const MR_ObjectFromFactoryId & pId)
+:MR_ObjectFromFactory(pId)
 {
-   // The task of initialising the data members is done by the superclass
-   mActor           = NULL;
-   mCurrentSequence = 0;
-   mCurrentFrame    = 0;
+    // The task of initialising the data members is done by the superclass
+    mActor = NULL;
+    mCurrentSequence = 0;
+    mCurrentFrame = 0;
 
 }
 
@@ -39,16 +39,12 @@ MR_FreeElementBaseRenderer::~MR_FreeElementBaseRenderer()
 }
 
 
-void MR_FreeElementBaseRenderer::Render( MR_3DViewPort* pDest, const MR_3DCoordinate& pPosition, MR_Angle pOrientation )
+void MR_FreeElementBaseRenderer::Render(MR_3DViewPort * pDest, const MR_3DCoordinate & pPosition, MR_Angle pOrientation)
 {
-   // Compute the required rotation matrix
-   MR_PositionMatrix lMatrix;
+    // Compute the required rotation matrix
+    MR_PositionMatrix lMatrix;
 
-   if( pDest->ComputePositionMatrix( lMatrix, pPosition, pOrientation, 1000 /* TODO Object ray must be precomputed at compilation*/ ) )
-   {
-      mActor->Draw( pDest, lMatrix, mCurrentSequence, mCurrentFrame );
-   } 
+    if(pDest->ComputePositionMatrix(lMatrix, pPosition, pOrientation, 1000 /* TODO Object ray must be precomputed at compilation */ )) {
+	mActor->Draw(pDest, lMatrix, mCurrentSequence, mCurrentFrame);
+    }
 }
-
-
-

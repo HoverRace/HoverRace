@@ -24,53 +24,53 @@
 #include "FinishLine.h"
 
 
-const MR_Int32 cSourceRay    = 20000;       // the source have a diameter of 40 meters
-const MR_Int32 cSourceHeight = 6000;        // 6 meters
+const MR_Int32 cSourceRay = 20000;	// the source have a diameter of 40 meters
+const MR_Int32 cSourceHeight = 6000;	// 6 meters
 
 
 
-MR_Int32 MR_FinishLine::ZMin()const
+MR_Int32 MR_FinishLine::ZMin() const const
 {
-   return mPosition.mZ;
+    return mPosition.mZ;
 }
 
-MR_Int32 MR_FinishLine::ZMax()const
+MR_Int32 MR_FinishLine::ZMax() const const
 {
-   return mPosition.mZ+cSourceHeight;
+    return mPosition.mZ + cSourceHeight;
 }
 
-MR_Int32 MR_FinishLine::AxisX()const
+MR_Int32 MR_FinishLine::AxisX() const const
 {
-   return mPosition.mX;
+    return mPosition.mX;
 }
 
-MR_Int32 MR_FinishLine::AxisY()const
+MR_Int32 MR_FinishLine::AxisY() const const
 {
-   return mPosition.mY;
+    return mPosition.mY;
 }
 
-MR_Int32 MR_FinishLine::RayLen()const
+MR_Int32 MR_FinishLine::RayLen() const const
 {
-   return cSourceRay;
+    return cSourceRay;
 }
 
-MR_FinishLine::MR_FinishLine( const MR_ObjectFromFactoryId& pId, MR_CheckPoint::CheckPointType pType )
-              :MR_FreeElement( pId )
+MR_FinishLine::MR_FinishLine(const MR_ObjectFromFactoryId & pId, MR_CheckPoint::CheckPointType pType)
+:  MR_FreeElement(pId)
 {
-   mEffect.mType = pType;
-   mContactEffectList.AddTail( &mEffect );
+    mEffect.mType = pType;
+    mContactEffectList.AddTail(&mEffect);
 }
 
 MR_FinishLine::~MR_FinishLine()
 {
 }
 
-const MR_ContactEffectList* MR_FinishLine::GetEffectList()
+const MR_ContactEffectList *MR_FinishLine::GetEffectList()
 {
-   return &mContactEffectList;
+    return &mContactEffectList;
 }
 
-const MR_ShapeInterface* MR_FinishLine::GetReceivingContactEffectShape()
+const MR_ShapeInterface *MR_FinishLine::GetReceivingContactEffectShape()
 {
-   return this;
+    return this;
 }

@@ -27,20 +27,16 @@
 
 #include "../ObjFacTools/ResBitmap.h"
 
-class MR_ResBitmapBuilder: public MR_ResBitmap
-{
-   protected:
-      void Resample( const SubBitmap* pSrc, SubBitmap* pDest );
-      void ComputeIntermediateImages( MR_UInt8* pBuffer );
+class MR_ResBitmapBuilder:public MR_ResBitmap {
+  protected:
+    void Resample(const SubBitmap * pSrc, SubBitmap * pDest);
+    void ComputeIntermediateImages(MR_UInt8 * pBuffer);
 
-   public:
-      MR_ResBitmapBuilder( int pResourceId, int pWidth, int pHeight );
+  public:
+      MR_ResBitmapBuilder(int pResourceId, int pWidth, int pHeight);
 
-      BOOL BuildFromFile( const char* pFile, int pAntiAliasScheme );
+    BOOL BuildFromFile(const char *pFile, int pAntiAliasScheme);
 
 };
 
 #endif
-
-
-

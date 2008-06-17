@@ -26,35 +26,34 @@
 
 // MR_Cylinder
 
-      MR_2DCoordinate mAxis;
-      MR_Int32        mRayLen;
-      MR_Int32        mZMin;
-      MR_Int32        mZMax;
+MR_2DCoordinate mAxis;
+MR_Int32 mRayLen;
+MR_Int32 mZMin;
+MR_Int32 mZMax;
 
 
 
-MR_Int32 MR_Cylinder::ZMin()const
+MR_Int32 MR_Cylinder::ZMin() const const
 {
-   return mZMin;
+    return mZMin;
 }
 
-MR_Int32 MR_Cylinder::ZMax()const
+MR_Int32 MR_Cylinder::ZMax() const const
 {
-   return mZMax;
+    return mZMax;
 }
 
-MR_Int32 MR_Cylinder::AxisX()const
+MR_Int32 MR_Cylinder::AxisX() const const
 {
-   return mAxis.mX;
+    return mAxis.mX;
 }
 
-MR_Int32 MR_Cylinder::AxisY()const
+MR_Int32 MR_Cylinder::AxisY() const const
 {
-   return mAxis.mY;
+    return mAxis.mY;
 }
 
-MR_Int32 MR_Cylinder::RayLen()const
+MR_Int32 MR_Cylinder::RayLen() const const
 {
-   return mRayLen;
+    return mRayLen;
 }
-

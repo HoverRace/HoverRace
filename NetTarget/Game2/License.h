@@ -27,7 +27,7 @@
 
 
 BOOL MR_IsShareware();
-BOOL MR_VerifyKey( const char* pKey );
+BOOL MR_VerifyKey(const char *pKey);
 
 
 #endif

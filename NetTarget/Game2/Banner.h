@@ -26,35 +26,34 @@
 
 #define MR_MAX_IMAGES  32
 
-class MR_GifDecoder
-{
-   private:
-      int mNbImages;
-      // int mXRes;
-      // int mYRes;
+class MR_GifDecoder {
+  private:
+    int mNbImages;
+    // int mXRes;
+    // int mYRes;
 
-      HPALETTE mGlobalPalette;
-      HBITMAP  mBitmap[MR_MAX_IMAGES];
-      int      mDelay[MR_MAX_IMAGES];
+    HPALETTE mGlobalPalette;
+    HBITMAP mBitmap[MR_MAX_IMAGES];
+    int mDelay[MR_MAX_IMAGES];
 
-      void Clean();
+    void Clean();
 
-   public:
+  public:
       MR_GifDecoder();
-      ~MR_GifDecoder();
+     ~MR_GifDecoder();
 
-      BOOL Decode( const unsigned char* pGifStream, int pStreamLen );
+    BOOL Decode(const unsigned char *pGifStream, int pStreamLen);
 
-      HPALETTE GetGlobalPalette()const;
-      int      GetImageCount()const;
-      HBITMAP  GetImage(   int pImage )const;
-      int      GetDelay(   int pImage )const;
+    HPALETTE GetGlobalPalette() const;
+    int GetImageCount() const;
+    HBITMAP GetImage(int pImage) const;
+    int GetDelay(int pImage) const;
 
 };
 
 
-BOOL LoadURL( HWND pWindow, const char* pURL );
-BOOL LoadURLShortcut( HWND pWindow, const char* pShortcut );
+BOOL LoadURL(HWND pWindow, const char *pURL);
+BOOL LoadURLShortcut(HWND pWindow, const char *pShortcut);
 
 
 #endif

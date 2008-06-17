@@ -29,26 +29,25 @@
 #include "Shapes.h"
 
 #ifdef MR_MODEL
-   #define MR_DllDeclare   __declspec( dllexport )
+#define MR_DllDeclare   __declspec( dllexport )
 #else
-   #define MR_DllDeclare   __declspec( dllimport )
+#define MR_DllDeclare   __declspec( dllimport )
 #endif
 
 
-class MR_DllDeclare MR_Cylinder:public MR_CylinderShape
-{
-   public:
-      MR_2DCoordinate mAxis;
-      MR_Int32        mRayLen;
-      MR_Int32        mZMin;
-      MR_Int32        mZMax;
+class MR_DllDeclare MR_Cylinder:public MR_CylinderShape {
+  public:
+    MR_2DCoordinate mAxis;
+    MR_Int32 mRayLen;
+    MR_Int32 mZMin;
+    MR_Int32 mZMax;
 
 
-      MR_Int32 ZMin()const;
-      MR_Int32 ZMax()const;
-      MR_Int32 AxisX()const;
-      MR_Int32 AxisY()const;
-      MR_Int32 RayLen()const;
+    MR_Int32 ZMin() const;
+    MR_Int32 ZMax() const;
+    MR_Int32 AxisX() const;
+    MR_Int32 AxisY() const;
+    MR_Int32 RayLen() const;
 
 
 };
@@ -57,4 +56,3 @@ class MR_DllDeclare MR_Cylinder:public MR_CylinderShape
 #undef MR_DllDeclare
 
 #endif
-

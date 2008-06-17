@@ -27,42 +27,40 @@
 #include "../Model/RaceEffects.h"
 #include "../Model/PhysicalCollision.h"
 
-class MR_BumperGate:public MR_FreeElementBase, protected MR_CylinderShape
-{
-   protected:
+class MR_BumperGate:public MR_FreeElementBase, protected MR_CylinderShape {
+  protected:
 
-      // Shape interface
-      MR_Int32 ZMin()const;
-      MR_Int32 ZMax()const;
-      MR_Int32 AxisX()const;
-      MR_Int32 AxisY()const;
-      MR_Int32 RayLen()const;
-
-
-   private:
-
-      MR_SimulationTime    mTimeSinceLastCollision;
-      int                  mLastState;
-      MR_PhysicalCollision mCollisionEffect;
-      MR_ContactEffectList mEffectList;
-
-   public:
-      MR_BumperGate( const MR_ObjectFromFactoryId& pId );      
-      ~MR_BumperGate();
+    // Shape interface
+    MR_Int32 ZMin() const;
+    MR_Int32 ZMax() const;
+    MR_Int32 AxisX() const;
+    MR_Int32 AxisY() const;
+    MR_Int32 RayLen() const;
 
 
-   protected:
+  private:
 
-      // ContactEffectShapeInterface
-      const MR_ContactEffectList* GetEffectList();
-      const MR_ShapeInterface*    GetGivingContactEffectShape();
-      const MR_ShapeInterface*    GetReceivingContactEffectShape();
+      MR_SimulationTime mTimeSinceLastCollision;
+    int mLastState;
+    MR_PhysicalCollision mCollisionEffect;
+    MR_ContactEffectList mEffectList;
 
-      int   Simulate( MR_SimulationTime pTimeSlice, MR_Level* pLevel, int pRoom );
+  public:
+      MR_BumperGate(const MR_ObjectFromFactoryId & pId);
+     ~MR_BumperGate();
 
-      void  ApplyEffect( const MR_ContactEffect* pEffect,  MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 pZMin, MR_Int32 pZMax, MR_Level* pLevel );
+
+  protected:
+
+    // ContactEffectShapeInterface
+    const MR_ContactEffectList *GetEffectList();
+    const MR_ShapeInterface *GetGivingContactEffectShape();
+    const MR_ShapeInterface *GetReceivingContactEffectShape();
+
+    int Simulate(MR_SimulationTime pTimeSlice, MR_Level * pLevel, int pRoom);
+
+    void ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 pZMin, MR_Int32 pZMax, MR_Level * pLevel);
 
 };
 
 #endif
-

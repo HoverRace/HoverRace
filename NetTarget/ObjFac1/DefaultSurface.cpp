@@ -26,14 +26,13 @@
 #include "../ObjFacTools/ObjectFactoryData.h"
 
 
-MR_DefaultSurface::MR_DefaultSurface( const MR_ObjectFromFactoryId& pId )
-                  :MR_BitmapSurface( pId )
+MR_DefaultSurface::MR_DefaultSurface(const MR_ObjectFromFactoryId & pId)
+:MR_BitmapSurface(pId)
 {
-   mBitmap = gObjectFactoryData->mResourceLib.GetBitmap( MR_ETALON );
+    mBitmap = gObjectFactoryData->mResourceLib.GetBitmap(MR_ETALON);
 }
 
 MR_DefaultSurface::~MR_DefaultSurface()
 {
-   
-}
 
+}

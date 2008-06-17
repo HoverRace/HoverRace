@@ -30,113 +30,110 @@
 
 
 
-class MR_NetworkSession: public MR_ClientSession
-{
+class MR_NetworkSession:public MR_ClientSession {
 
-   protected:
-      class PlayerResult
-      {
+  protected:
+    class PlayerResult {
       public:
-         int                 mPlayerIndex;       // -1 = CurrentPlayer
-         int                 mPlayerId;
-         int                 mCraftModel;
-         int                 mNbCompletedLap;
-         MR_SimulationTime   mFinishTime;
-         MR_SimulationTime   mBestLap;
+	int mPlayerIndex;	// -1 = CurrentPlayer
+	int mPlayerId;
+	int mCraftModel;
+	int mNbCompletedLap;
+	MR_SimulationTime mFinishTime;
+	MR_SimulationTime mBestLap;
 
-         PlayerResult*       mNext;
+	PlayerResult *mNext;
 
-         // Hit Result
-         int                 mNbTimeHit;    // Nb of missiles and mines hit
-         int                 mNbGoodShot;   // nb of missiles that hit someone else
+	// Hit Result
+	int mNbTimeHit;		// Nb of missiles and mines hit
+	int mNbGoodShot;	// nb of missiles that hit someone else
 
-         PlayerResult*       mNextHitResult; // Create a second list from the initial structure
+	PlayerResult *mNextHitResult;	// Create a second list from the initial structure
 
-      };
-
-
-      BOOL                  mMasterMode;
-      MR_NetworkInterface   mNetInterface;
-      BOOL                  mTimeToSendCharacterCreation; // 0 mean sended
-      BOOL                  mSended12SecClockUpdate; // User by server to adjust client clock
-      BOOL                  mSended8SecClockUpdate;
-      int                   mMajorID;
-      int                   mMinorID;
-
-      int                   mSendedPlayerStats;
-      MR_FreeElementHandle  mClient[ MR_NetworkInterface::eMaxClient ];
-      MR_MainCharacter*     mClientCharacter[ MR_NetworkInterface::eMaxClient ];
-
-      int                   mLastSendElemStateFuncTime;
-      int                   mLastSendElemStateTime[ MR_NetworkInterface::eMaxClient ];
-
-      PlayerResult*        mResultList;
-      PlayerResult*        mHitList;
-
-      char                 mChatEditBuffer[120];
-
-      BOOL                 mInternetGame;
-      HWND                 mWindow;
-
-      // Awfull Ladder patch
-      int mOpponendMajorID;
-      int mOpponendMinorID;
+    };
 
 
-      // Network functions
-      void BroadcastMainElementCreation(    const MR_ObjectFromFactoryId& pId, const MR_ElementNetState& pState, int pRoom, int pHoverId ); // Must be called only once
-      void BroadcastAutoElementCreation(    const MR_ObjectFromFactoryId& pId, const MR_ElementNetState& pState, int pRoom ); // Creation of autonomous elements
-      void BroadcastPermElementState(       int pPermId, const MR_ElementNetState& pState, int pRoom );
-      void BroadcastMainElementState(       const MR_ElementNetState& pState );
-      void BroadcastMainElementStats(       MR_SimulationTime pFinishTime, MR_SimulationTime pBestLap, int pNbLap );
-      void BroadcastChatMessage(            const char* pMessage );
-      void BroadcastTime();
-      void BroadcastHit(                    int pHoverIdSrc );
+    BOOL mMasterMode;
+    MR_NetworkInterface mNetInterface;
+    BOOL mTimeToSendCharacterCreation;	// 0 mean sended
+    BOOL mSended12SecClockUpdate;	// User by server to adjust client clock
+    BOOL mSended8SecClockUpdate;
+    int mMajorID;
+    int mMinorID;
 
-      void AddChatMessage( int pPlayerIndex, const char* Message, int pMessageLen );
-      void AddResultEntry( int pPlayerIndex, MR_SimulationTime pFinishTime, MR_SimulationTime pBestLap, int pNbLap );
-      void AddHitEntry(    int pPlayerIndex, int pPlayerFromID );
-      void InsertHitEntry( PlayerResult* pEntry ); // helper
+    int mSendedPlayerStats;
+    MR_FreeElementHandle mClient[MR_NetworkInterface::eMaxClient];
+    MR_MainCharacter *mClientCharacter[MR_NetworkInterface::eMaxClient];
 
-      void ReadNet();
-      void WriteNet();
+    int mLastSendElemStateFuncTime;
+    int mLastSendElemStateTime[MR_NetworkInterface::eMaxClient];
 
-      static void ElementCreationHook( MR_FreeElement* pElement, int pRoom, void* pThis );
-      static void PermElementStateHook( MR_FreeElement* pElement, int pRoom, int pPermId, void* pThis );
+    PlayerResult *mResultList;
+    PlayerResult *mHitList;
 
-   public:
-      // Creation and destruction
-      MR_NetworkSession( BOOL pInternetGame, int pMajorID, int pMinorID, HWND pWindow );
-      ~MR_NetworkSession();
+    char mChatEditBuffer[120];
 
-      // Simulation control
-      void Process( int pSpeedFactor = 1 );    // Simulation, speed factor can be used to reduce processing speed to create AVI files
+    BOOL mInternetGame;
+    HWND mWindow;
 
-      BOOL LoadNew( const char* pTitle, MR_RecordFile* pMazeFile, int pNbLap, BOOL pAllowWeapons, MR_VideoBuffer* pVideo );
+    // Awfull Ladder patch
+    int mOpponendMajorID;
+    int mOpponendMinorID;
 
-      BOOL CreateMainCharacter();
 
-      void SetSimulationTime( MR_SimulationTime pTime );
+    // Network functions
+    void BroadcastMainElementCreation(const MR_ObjectFromFactoryId & pId, const MR_ElementNetState & pState, int pRoom, int pHoverId);	// Must be called only once
+    void BroadcastAutoElementCreation(const MR_ObjectFromFactoryId & pId, const MR_ElementNetState & pState, int pRoom);	// Creation of autonomous elements
+    void BroadcastPermElementState(int pPermId, const MR_ElementNetState & pState, int pRoom);
+    void BroadcastMainElementState(const MR_ElementNetState & pState);
+    void BroadcastMainElementStats(MR_SimulationTime pFinishTime, MR_SimulationTime pBestLap, int pNbLap);
+    void BroadcastChatMessage(const char *pMessage);
+    void BroadcastTime();
+    void BroadcastHit(int pHoverIdSrc);
 
-      void        SetPlayerName( const char* pPlayerName );
-      const char* GetPlayerName()const;
-      BOOL WaitConnections( HWND pWindow, const char* pTrackName, BOOL pPromptForPort = TRUE, unsigned pDefaultPort = MR_DEFAULT_NET_PORT, HWND* pModalessDlg = NULL, int pReturnMessage = 0 );
-      BOOL PreConnectToServer( HWND pWindow, CString& pTrackName );
-      BOOL ConnectToServer( HWND pWindow, const char* pServerIP=NULL, unsigned pPort = MR_DEFAULT_NET_PORT, const char* pGameName = NULL, HWND* pModalessDlg = NULL, int pReturnMessage = 0 );
+    void AddChatMessage(int pPlayerIndex, const char *Message, int pMessageLen);
+    void AddResultEntry(int pPlayerIndex, MR_SimulationTime pFinishTime, MR_SimulationTime pBestLap, int pNbLap);
+    void AddHitEntry(int pPlayerIndex, int pPlayerFromID);
+    void InsertHitEntry(PlayerResult * pEntry);	// helper
 
-      int   ResultAvaillable()const; // Return the number of players desc avail
-      void  GetResult( int pPosition, const char*& pPlayerName, int& pId, BOOL& pConnected, int& pNbLap, MR_SimulationTime& pFinishTime, MR_SimulationTime& pBestLap )const;
-      void  GetHitResult( int pPosition, const char*& pPlayerName, int& pId, BOOL& pConnected, int& pNbHitOther, int& pNbHitHimself )const;
+    void ReadNet();
+    void WriteNet();
 
-      int  GetNbPlayers()const;
-      int  GetRank( const MR_MainCharacter* pPlayer )const;
+    static void ElementCreationHook(MR_FreeElement * pElement, int pRoom, void *pThis);
+    static void PermElementStateHook(MR_FreeElement * pElement, int pRoom, int pPermId, void *pThis);
 
-      void AddMessageKey( char pKey );
-      void GetCurrentMessage( char* pDest )const;
+  public:
+    // Creation and destruction
+    MR_NetworkSession(BOOL pInternetGame, int pMajorID, int pMinorID, HWND pWindow);
+    ~MR_NetworkSession();
 
-      const MR_MainCharacter* GetPlayer( int pPlayerIndex )const;
+    // Simulation control
+    void Process(int pSpeedFactor = 1);	// Simulation, speed factor can be used to reduce processing speed to create AVI files
+
+    BOOL LoadNew(const char *pTitle, MR_RecordFile * pMazeFile, int pNbLap, BOOL pAllowWeapons, MR_VideoBuffer * pVideo);
+
+    BOOL CreateMainCharacter();
+
+    void SetSimulationTime(MR_SimulationTime pTime);
+
+    void SetPlayerName(const char *pPlayerName);
+    const char *GetPlayerName() const;
+    BOOL WaitConnections(HWND pWindow, const char *pTrackName, BOOL pPromptForPort = TRUE, unsigned pDefaultPort = MR_DEFAULT_NET_PORT, HWND * pModalessDlg = NULL, int pReturnMessage = 0);
+    BOOL PreConnectToServer(HWND pWindow, CString & pTrackName);
+    BOOL ConnectToServer(HWND pWindow, const char *pServerIP = NULL, unsigned pPort = MR_DEFAULT_NET_PORT, const char *pGameName = NULL, HWND * pModalessDlg = NULL, int pReturnMessage = 0);
+
+    int ResultAvaillable() const;	// Return the number of players desc avail
+    void GetResult(int pPosition, const char *&pPlayerName, int &pId, BOOL & pConnected, int &pNbLap, MR_SimulationTime & pFinishTime, MR_SimulationTime & pBestLap) const;
+    void GetHitResult(int pPosition, const char *&pPlayerName, int &pId, BOOL & pConnected, int &pNbHitOther, int &pNbHitHimself) const;
+
+    int GetNbPlayers() const;
+    int GetRank(const MR_MainCharacter * pPlayer) const;
+
+    void AddMessageKey(char pKey);
+    void GetCurrentMessage(char *pDest) const;
+
+    const MR_MainCharacter *GetPlayer(int pPlayerIndex) const;
 
 };
 
 #endif
-

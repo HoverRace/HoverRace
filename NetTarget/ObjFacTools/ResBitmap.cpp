@@ -24,198 +24,185 @@
 
 #define new DEBUG_NEW
 
-MR_ResBitmap::MR_ResBitmap( int pResourceId )
+MR_ResBitmap::MR_ResBitmap(int pResourceId)
 {
-   mResourceId     = pResourceId;
-   mWidth          = 1;         
-   mHeight         = 1;        
-   mXRes           = 1;
-   mYRes           = 1;
-   mSubBitmapCount = 0;
-   mPlainColor     = 255;    
-   mSubBitmapList  = NULL;
+    mResourceId = pResourceId;
+    mWidth = 1;
+    mHeight = 1;
+    mXRes = 1;
+    mYRes = 1;
+    mSubBitmapCount = 0;
+    mPlainColor = 255;
+    mSubBitmapList = NULL;
 }
 
 
 MR_ResBitmap::~MR_ResBitmap()
 {
-   delete []mSubBitmapList;
+    delete[]mSubBitmapList;
 }
 
-int MR_ResBitmap::GetResourceId()const
+int MR_ResBitmap::GetResourceId() const const
 {
-   return mResourceId;
+    return mResourceId;
 }
 
-void MR_ResBitmap::Serialize( CArchive& pArchive )
+void MR_ResBitmap::Serialize(CArchive & pArchive)
 {
-   int lCounter;
+    int lCounter;
 
-   if( pArchive.IsStoring() )
-   {
-      pArchive << mWidth;         
-      pArchive << mHeight;        
-      pArchive << mXRes;
-      pArchive << mYRes;
-      pArchive << mSubBitmapCount;
-      pArchive << mPlainColor;    
+    if(pArchive.IsStoring()) {
+	pArchive << mWidth;
+	pArchive << mHeight;
+	pArchive << mXRes;
+	pArchive << mYRes;
+	pArchive << mSubBitmapCount;
+	pArchive << mPlainColor;
 
-   }
-   else
-   {
-      delete []mSubBitmapList;
-      mSubBitmapList = NULL;
+    } else {
+	delete[]mSubBitmapList;
+	mSubBitmapList = NULL;
 
-      pArchive >> mWidth;         
-      pArchive >> mHeight;        
-      pArchive >> mXRes;
-      pArchive >> mYRes;
-      pArchive >> mSubBitmapCount;
-      pArchive >> mPlainColor;    
+	pArchive >> mWidth;
+	pArchive >> mHeight;
+	pArchive >> mXRes;
+	pArchive >> mYRes;
+	pArchive >> mSubBitmapCount;
+	pArchive >> mPlainColor;
 
 
-      if( mSubBitmapCount > 0 )
-      {
-         mSubBitmapList = new SubBitmap[ mSubBitmapCount ];
-      }
+	if(mSubBitmapCount > 0) {
+	    mSubBitmapList = new SubBitmap[mSubBitmapCount];
+	}
 
-   }
+    }
 
 
-   for( lCounter = 0; lCounter< mSubBitmapCount; lCounter++ )
-   {
-      mSubBitmapList[ lCounter ].Serialize( pArchive );
-   }
+    for(lCounter = 0; lCounter < mSubBitmapCount; lCounter++) {
+	mSubBitmapList[lCounter].Serialize(pArchive);
+    }
 
 
 
 }
 
 
-void MR_ResBitmap::SetWidthHeight( int pWidth, int pHeight )
+void MR_ResBitmap::SetWidthHeight(int pWidth, int pHeight)
 {
-   mWidth = pWidth;
-   mHeight = pHeight;
+    mWidth = pWidth;
+    mHeight = pHeight;
 }
 
 
 // MR_Bitmap overloaded functions
-int MR_ResBitmap::GetWidth()const
+int MR_ResBitmap::GetWidth() const const
 {
-   return mWidth;
+    return mWidth;
 }
 
-int MR_ResBitmap::GetHeight()const
+int MR_ResBitmap::GetHeight() const const
 {
-   return mHeight;
+    return mHeight;
 }
 
-int MR_ResBitmap::GetMaxXRes()const
+int MR_ResBitmap::GetMaxXRes() const const
 {
-   return mXRes;
+    return mXRes;
 }
 
-int MR_ResBitmap::GetMaxYRes()const
+int MR_ResBitmap::GetMaxYRes() const const
 {
-   return mYRes;
+    return mYRes;
 }
 
-MR_UInt8 MR_ResBitmap::GetPlainColor()const
+MR_UInt8 MR_ResBitmap::GetPlainColor() const const
 {
-   return mPlainColor;
+    return mPlainColor;
 }
 
-int MR_ResBitmap::GetNbSubBitmap()const
+int MR_ResBitmap::GetNbSubBitmap() const const
 {
-   return mSubBitmapCount;   
+    return mSubBitmapCount;
 }
 
-int MR_ResBitmap::GetXRes( int pSubBitmap )const
+int MR_ResBitmap::GetXRes(int pSubBitmap) const const
 {
-   return mSubBitmapList[ pSubBitmap ].mXRes;
+    return mSubBitmapList[pSubBitmap].mXRes;
 }
 
-int MR_ResBitmap::GetYRes( int pSubBitmap )const
+int MR_ResBitmap::GetYRes(int pSubBitmap) const const
 {
-   return mSubBitmapList[ pSubBitmap ].mYRes;
+    return mSubBitmapList[pSubBitmap].mYRes;
 }
 
-int MR_ResBitmap::GetXResShiftFactor( int pSubBitmap )const
+int MR_ResBitmap::GetXResShiftFactor(int pSubBitmap) const const
 {
-   return mSubBitmapList[ pSubBitmap ].mXResShiftFactor;
+    return mSubBitmapList[pSubBitmap].mXResShiftFactor;
 }
 
-int MR_ResBitmap::GetYResShiftFactor( int pSubBitmap )const
+int MR_ResBitmap::GetYResShiftFactor(int pSubBitmap) const const
 {
-   return mSubBitmapList[ pSubBitmap ].mYResShiftFactor;
+    return mSubBitmapList[pSubBitmap].mYResShiftFactor;
 }
 
 
-MR_UInt8* MR_ResBitmap::GetBuffer( int pSubBitmap )const
+MR_UInt8 *MR_ResBitmap::GetBuffer(int pSubBitmap) const const
 {
-   return mSubBitmapList[ pSubBitmap ].mBuffer;
+    return mSubBitmapList[pSubBitmap].mBuffer;
 }
 
-MR_UInt8* MR_ResBitmap::GetColumnBuffer( int pSubBitmap, int pColumn )const
+MR_UInt8 *MR_ResBitmap::GetColumnBuffer(int pSubBitmap, int pColumn) const const
 {
-   return mSubBitmapList[ pSubBitmap ].mColumnPtr[ pColumn ];
+    return mSubBitmapList[pSubBitmap].mColumnPtr[pColumn];
 }
 
-MR_UInt8** MR_ResBitmap::GetColumnBufferTable( int pSubBitmap )const
+MR_UInt8 **MR_ResBitmap::GetColumnBufferTable(int pSubBitmap) const const
 {
-   return mSubBitmapList[ pSubBitmap ].mColumnPtr;
+    return mSubBitmapList[pSubBitmap].mColumnPtr;
 }
 
 MR_ResBitmap::SubBitmap::SubBitmap()
 {
-   mBuffer    = NULL;
-   mColumnPtr = NULL;
+    mBuffer = NULL;
+    mColumnPtr = NULL;
 }
 
 MR_ResBitmap::SubBitmap::~SubBitmap()
 {
-   delete []mBuffer;
-   delete []mColumnPtr;
+    delete[]mBuffer;
+    delete[]mColumnPtr;
 }
 
-void MR_ResBitmap::SubBitmap::Serialize( CArchive& pArchive )
+void MR_ResBitmap::SubBitmap::Serialize(CArchive & pArchive)
 {
-   if( pArchive.IsStoring() )
-   {
+    if(pArchive.IsStoring()) {
 
-      pArchive << mXRes;
-      pArchive << mYRes;
-      pArchive << mXResShiftFactor;
-      pArchive << mYResShiftFactor;
-      pArchive << mHaveTransparent;
+	pArchive << mXRes;
+	pArchive << mYRes;
+	pArchive << mXResShiftFactor;
+	pArchive << mYResShiftFactor;
+	pArchive << mHaveTransparent;
 
-      pArchive.Write( mBuffer, mXRes*mYRes );
-   }
-   else
-   {
-      delete []mBuffer;
-      delete []mColumnPtr;
+	pArchive.Write(mBuffer, mXRes * mYRes);
+    } else {
+	delete[]mBuffer;
+	delete[]mColumnPtr;
 
-      pArchive >> mXRes;
-      pArchive >> mYRes;
-      pArchive >> mXResShiftFactor;
-      pArchive >> mYResShiftFactor;
-      pArchive >> mHaveTransparent;
+	pArchive >> mXRes;
+	pArchive >> mYRes;
+	pArchive >> mXResShiftFactor;
+	pArchive >> mYResShiftFactor;
+	pArchive >> mHaveTransparent;
 
-      mBuffer    = new MR_UInt8[ mXRes*mYRes ];
-      mColumnPtr = new MR_UInt8*[ mXRes ];
+	mBuffer = new MR_UInt8[mXRes * mYRes];
+	mColumnPtr = new MR_UInt8 *[mXRes];
 
-      MR_UInt8* lPtr = mBuffer;
+	MR_UInt8 *lPtr = mBuffer;
 
-      for( int lCounter = 0; lCounter < mXRes; lCounter++ )
-      {
-         mColumnPtr[ lCounter ] = lPtr;
-         lPtr += mYRes;
-      }
-      pArchive.Read( mBuffer, mXRes*mYRes );
-   }
+	for(int lCounter = 0; lCounter < mXRes; lCounter++) {
+	    mColumnPtr[lCounter] = lPtr;
+	    lPtr += mYRes;
+	}
+	pArchive.Read(mBuffer, mXRes * mYRes);
+    }
 }
-
-
-
-

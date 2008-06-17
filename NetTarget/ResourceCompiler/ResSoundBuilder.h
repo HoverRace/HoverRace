@@ -29,26 +29,21 @@
 
 
 
-class MR_ResShortSoundBuilder: public MR_ResShortSound
-{
-   public:
-      MR_ResShortSoundBuilder( int pResourceId );
+class MR_ResShortSoundBuilder:public MR_ResShortSound {
+  public:
+    MR_ResShortSoundBuilder(int pResourceId);
 
-      BOOL BuildFromFile( const char* pFile, int pNbCopy );
+    BOOL BuildFromFile(const char *pFile, int pNbCopy);
 
 };
 
-class MR_ResContinuousSoundBuilder: public MR_ResContinuousSound
-{
-   public:
-      MR_ResContinuousSoundBuilder( int pResourceId );
+class MR_ResContinuousSoundBuilder:public MR_ResContinuousSound {
+  public:
+    MR_ResContinuousSoundBuilder(int pResourceId);
 
-      BOOL BuildFromFile( const char* pFile, int pNbCopy );
+    BOOL BuildFromFile(const char *pFile, int pNbCopy);
 
 };
 
 
 #endif
-
-
-

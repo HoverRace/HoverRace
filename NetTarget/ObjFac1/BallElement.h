@@ -28,18 +28,14 @@
 #include "../ObjFacTools/FreeElementBase.h"
 
 
-class MR_BallElement: public MR_FreeElementBase
-{
+class MR_BallElement:public MR_FreeElementBase {
 
-   public:
-      MR_BallElement( const MR_ObjectFromFactoryId& pId );
-      ~MR_BallElement();   
+  public:
+    MR_BallElement(const MR_ObjectFromFactoryId & pId);
+     ~MR_BallElement();
 
 };
 
 
 
 #endif
-
-
-

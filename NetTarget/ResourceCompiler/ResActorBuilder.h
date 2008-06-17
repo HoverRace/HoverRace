@@ -26,19 +26,16 @@
 #include "../ObjFacTools/ResourceLib.h"
 
 
-class MR_ResActorBuilder: public MR_ResActor
-{
-   protected:
+class MR_ResActorBuilder:public MR_ResActor {
+  protected:
 
-      Patch* ReadPatch( FILE* pFile, MR_ResourceLib* pBitmapLib );
+    Patch * ReadPatch(FILE * pFile, MR_ResourceLib * pBitmapLib);
 
-   public:
-      MR_ResActorBuilder( int pResourceId );
+  public:
+    MR_ResActorBuilder(int pResourceId);
 
-      BOOL BuildFromFile( const char* pFile, MR_ResourceLib* pBitmapLib );
+    BOOL BuildFromFile(const char *pFile, MR_ResourceLib * pBitmapLib);
 
 };
 
 #endif
-
-

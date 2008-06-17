@@ -25,8 +25,6 @@
 #ifndef COMMON_DIALOG_H
 #define COMMON_DIALOG_H
 
-CString GetFileName( HWND pParent, BOOL pFileMustExist );
+CString GetFileName(HWND pParent, BOOL pFileMustExist);
 
 #endif
-
-

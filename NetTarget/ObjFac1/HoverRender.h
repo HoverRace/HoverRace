@@ -28,53 +28,47 @@
 #include "../MainCharacter/MainCharacterRenderer.h"
 
 
-class MR_HoverRender: public MR_MainCharacterRenderer
-{
-   protected:
-      const MR_ResActor* mActor0;
-      const MR_ResActor* mActor1;
-      const MR_ResActor* mActor2;
+class MR_HoverRender:public MR_MainCharacterRenderer {
+  protected:
+    const MR_ResActor *mActor0;
+    const MR_ResActor *mActor1;
+    const MR_ResActor *mActor2;
 
 
-      int   mFrame;
+    int mFrame;
 
-      MR_ShortSound*      mLineCrossingSound;
-      MR_ShortSound*      mStartSound;
-      MR_ShortSound*      mFinishSound;
-      MR_ShortSound*      mBumpSound;
-      MR_ShortSound*      mJumpSound;
-      MR_ShortSound*      mFireSound;
-      MR_ShortSound*      mMisJumpSound;
-      MR_ShortSound*      mMisFireSound;
-      MR_ShortSound*      mOutOfCtrlSound;
-      MR_ContinuousSound* mMotorSound;
-      MR_ContinuousSound* mFrictionSound;
+    MR_ShortSound *mLineCrossingSound;
+    MR_ShortSound *mStartSound;
+    MR_ShortSound *mFinishSound;
+    MR_ShortSound *mBumpSound;
+    MR_ShortSound *mJumpSound;
+    MR_ShortSound *mFireSound;
+    MR_ShortSound *mMisJumpSound;
+    MR_ShortSound *mMisFireSound;
+    MR_ShortSound *mOutOfCtrlSound;
+    MR_ContinuousSound *mMotorSound;
+    MR_ContinuousSound *mFrictionSound;
 
-      const MR_ResBitmap* mCockpitBitmap[10];
-      const MR_ResBitmap* mCockpitBitmap2[10];
+    const MR_ResBitmap *mCockpitBitmap[10];
+    const MR_ResBitmap *mCockpitBitmap2[10];
 
-   public:
-      MR_HoverRender( const MR_ObjectFromFactoryId& pId );
-      ~MR_HoverRender();   
+  public:
+      MR_HoverRender(const MR_ObjectFromFactoryId & pId);
+     ~MR_HoverRender();
 
-      void Render( MR_3DViewPort* pDest, 
-                   const MR_3DCoordinate& pPosition, 
-                   MR_Angle pOrientation,
-                   BOOL     pMotorOn,
-                   int      pHoverId,
-                   int      pModel                   );
+    void Render(MR_3DViewPort * pDest, const MR_3DCoordinate & pPosition, MR_Angle pOrientation, BOOL pMotorOn, int pHoverId, int pModel);
 
-      MR_ShortSound*      GetLineCrossingSound();
-      MR_ShortSound*      GetStartSound();
-      MR_ShortSound*      GetFinishSound();
-      MR_ShortSound*      GetBumpSound();
-      MR_ShortSound*      GetJumpSound();
-      MR_ShortSound*      GetFireSound();
-      MR_ShortSound*      GetMisJumpSound();
-      MR_ShortSound*      GetMisFireSound();
-      MR_ShortSound*      GetOutOfCtrlSound();
-      MR_ContinuousSound* GetMotorSound();
-      MR_ContinuousSound* GetFrictionSound();
+    MR_ShortSound *GetLineCrossingSound();
+    MR_ShortSound *GetStartSound();
+    MR_ShortSound *GetFinishSound();
+    MR_ShortSound *GetBumpSound();
+    MR_ShortSound *GetJumpSound();
+    MR_ShortSound *GetFireSound();
+    MR_ShortSound *GetMisJumpSound();
+    MR_ShortSound *GetMisFireSound();
+    MR_ShortSound *GetOutOfCtrlSound();
+    MR_ContinuousSound *GetMotorSound();
+    MR_ContinuousSound *GetFrictionSound();
 
 
 };
@@ -82,6 +76,3 @@ class MR_HoverRender: public MR_MainCharacterRenderer
 
 
 #endif
-
-
-

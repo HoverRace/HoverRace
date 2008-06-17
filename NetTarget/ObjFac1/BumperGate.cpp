@@ -36,128 +36,114 @@ const MR_Int32 cGateRayMax = 2500;
 const MR_Int32 cGateHeightMin = 1500;
 const MR_Int32 cGateHeightMax = 3000;
 
-const MR_Int32 cGateWeight     = MR_PhysicalCollision::eInfiniteWeight;
+const MR_Int32 cGateWeight = MR_PhysicalCollision::eInfiniteWeight;
 
 
 
 
-MR_Int32 MR_BumperGate::ZMin()const
+MR_Int32 MR_BumperGate::ZMin() const const
 {
-   return mPosition.mZ+2; // the 2 reduce computing because the shape dont touch the floor 
+    return mPosition.mZ + 2;	// the 2 reduce computing because the shape dont touch the floor 
 }
 
-MR_Int32 MR_BumperGate::ZMax()const
+MR_Int32 MR_BumperGate::ZMax() const const
 {
-   return mPosition.mZ+cGateHeightMin+mCurrentFrame*(cGateHeightMax-cGateHeightMin)/(mLastState);
+    return mPosition.mZ + cGateHeightMin + mCurrentFrame * (cGateHeightMax - cGateHeightMin) / (mLastState);
 }
 
-MR_Int32 MR_BumperGate::AxisX()const
+MR_Int32 MR_BumperGate::AxisX() const const
 {
-   return mPosition.mX;
+    return mPosition.mX;
 }
 
-MR_Int32 MR_BumperGate::AxisY()const
+MR_Int32 MR_BumperGate::AxisY() const const
 {
-   return mPosition.mY;
+    return mPosition.mY;
 }
 
-MR_Int32 MR_BumperGate::RayLen()const
+MR_Int32 MR_BumperGate::RayLen() const const
 {
-   return cGateRayMin + mCurrentFrame*(cGateRayMax-cGateRayMin)/(mLastState);
+    return cGateRayMin + mCurrentFrame * (cGateRayMax - cGateRayMin) / (mLastState);
 }
 
-MR_BumperGate::MR_BumperGate( const MR_ObjectFromFactoryId& pId )
-              :MR_FreeElementBase( pId )
+MR_BumperGate::MR_BumperGate(const MR_ObjectFromFactoryId & pId)
+:  MR_FreeElementBase(pId)
 {
-   mActor = gObjectFactoryData->mResourceLib.GetActor( MR_BUMPERGATE );
+    mActor = gObjectFactoryData->mResourceLib.GetActor(MR_BUMPERGATE);
 
-   mTimeSinceLastCollision = +1000000;
-   mLastState              = mActor->GetFrameCount( 0 )-1;
+    mTimeSinceLastCollision = +1000000;
+    mLastState = mActor->GetFrameCount(0) - 1;
 
-   mCurrentFrame           = mLastState;
-   mCurrentSequence        = 0;   
+    mCurrentFrame = mLastState;
+    mCurrentSequence = 0;
 
-   mEffectList.AddTail( &mCollisionEffect );
+    mEffectList.AddTail(&mCollisionEffect);
 
- 
+
 }
 
 MR_BumperGate::~MR_BumperGate()
 {
 }
 
-const MR_ContactEffectList* MR_BumperGate::GetEffectList()
+const MR_ContactEffectList *MR_BumperGate::GetEffectList()
 {
 
-   mCollisionEffect.mWeight = cGateWeight;
-   mCollisionEffect.mXSpeed = 0;
-   mCollisionEffect.mYSpeed = 0;
-   mCollisionEffect.mZSpeed = 0;      
+    mCollisionEffect.mWeight = cGateWeight;
+    mCollisionEffect.mXSpeed = 0;
+    mCollisionEffect.mYSpeed = 0;
+    mCollisionEffect.mZSpeed = 0;
 
-   return &mEffectList;
+    return &mEffectList;
 }
 
-const MR_ShapeInterface* MR_BumperGate::GetReceivingContactEffectShape()
+const MR_ShapeInterface *MR_BumperGate::GetReceivingContactEffectShape()
 {
-   return this;
+    return this;
 }
 
-const MR_ShapeInterface* MR_BumperGate::GetGivingContactEffectShape()
+const MR_ShapeInterface *MR_BumperGate::GetGivingContactEffectShape()
 {
-   // return this;
-   // ASSERT( FALSE );
-   return NULL;
+    // return this;
+    // ASSERT( FALSE );
+    return NULL;
 }
 
 
 
 // Simulation
-int MR_BumperGate::Simulate( MR_SimulationTime pDuration, MR_Level* pLevel, int pRoom )
-{   
-
-   if( pDuration >= 0 )
-   {
-      mTimeSinceLastCollision += pDuration;
-
-      if( mTimeSinceLastCollision < 1500 )
-      {
-         mCurrentFrame  = (1500-mTimeSinceLastCollision)*mLastState/1500;
-      }
-      else if( mTimeSinceLastCollision < 9000 )
-      {
-         mCurrentFrame = 0;
-      }
-      else if( mTimeSinceLastCollision < 13000 )
-      {
-         mCurrentFrame  = (mTimeSinceLastCollision-9000)*mLastState/4000;
-      }
-      else
-      {
-         mCurrentFrame = mLastState;
-      }
-   }
-
-
-   return pRoom;
-}
-
-
-void MR_BumperGate::ApplyEffect( const MR_ContactEffect* pEffect,  MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 /*pZMin*/, MR_Int32 /*pZMax*/, MR_Level* /*pLevel*/ )
+int MR_BumperGate::Simulate(MR_SimulationTime pDuration, MR_Level * pLevel, int pRoom)
 {
-   MR_ContactEffect* lEffect = (MR_ContactEffect*)pEffect;
-   const MR_PhysicalCollision* lPhysCollision = dynamic_cast<MR_PhysicalCollision*>(lEffect);
-      
-   if( lPhysCollision != NULL )
-   {
-      if( mCurrentFrame >= mLastState )
-      {
-         mTimeSinceLastCollision = 0;
-      }
-      else
-      {
-         mTimeSinceLastCollision = 1500 - 1500*mCurrentFrame/mLastState;
-      }
-   }
+
+    if(pDuration >= 0) {
+	mTimeSinceLastCollision += pDuration;
+
+	if(mTimeSinceLastCollision < 1500) {
+	    mCurrentFrame = (1500 - mTimeSinceLastCollision) * mLastState / 1500;
+	} else if(mTimeSinceLastCollision < 9000) {
+	    mCurrentFrame = 0;
+	} else if(mTimeSinceLastCollision < 13000) {
+	    mCurrentFrame = (mTimeSinceLastCollision - 9000) * mLastState / 4000;
+	} else {
+	    mCurrentFrame = mLastState;
+	}
+    }
+
+
+    return pRoom;
 }
 
 
+void MR_BumperGate::ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 /*pZMin */ , MR_Int32 /*pZMax */ , MR_Level * /*pLevel */ )
+{
+    MR_ContactEffect *lEffect = (MR_ContactEffect *) pEffect;
+    const MR_PhysicalCollision *lPhysCollision = dynamic_cast < MR_PhysicalCollision * >(lEffect);
+
+    if(lPhysCollision != NULL) {
+	if(mCurrentFrame >= mLastState) {
+	    mTimeSinceLastCollision = 0;
+	} else {
+	    mTimeSinceLastCollision = 1500 - 1500 * mCurrentFrame / mLastState;
+	}
+    }
+}

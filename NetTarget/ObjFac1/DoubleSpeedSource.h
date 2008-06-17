@@ -26,35 +26,33 @@
 #include "../Model/MazeElement.h"
 #include "../Model/RaceEffects.h"
 
-class MR_DoubleSpeedSource:public MR_FreeElement, protected MR_CylinderShape
-{
-   protected:
+class MR_DoubleSpeedSource:public MR_FreeElement, protected MR_CylinderShape {
+  protected:
 
-      // Shape interface
-      MR_Int32 ZMin()const;
-      MR_Int32 ZMax()const;
-      MR_Int32 AxisX()const;
-      MR_Int32 AxisY()const;
-      MR_Int32 RayLen()const;
-
-
-   private:
-
-      MR_SpeedDoubler      mSpeedEffect;
-      MR_ContactEffectList mContactEffectList;
-
-   public:
-      MR_DoubleSpeedSource( const MR_ObjectFromFactoryId& pId );      
-      ~MR_DoubleSpeedSource();
+    // Shape interface
+    MR_Int32 ZMin() const;
+    MR_Int32 ZMax() const;
+    MR_Int32 AxisX() const;
+    MR_Int32 AxisY() const;
+    MR_Int32 RayLen() const;
 
 
-   protected:
+  private:
 
-      // ContactEffectShapeInterface
-      const MR_ContactEffectList* GetEffectList();
-      const MR_ShapeInterface* GetReceivingContactEffectShape();
+      MR_SpeedDoubler mSpeedEffect;
+    MR_ContactEffectList mContactEffectList;
+
+  public:
+      MR_DoubleSpeedSource(const MR_ObjectFromFactoryId & pId);
+     ~MR_DoubleSpeedSource();
+
+
+  protected:
+
+    // ContactEffectShapeInterface
+    const MR_ContactEffectList *GetEffectList();
+    const MR_ShapeInterface *GetReceivingContactEffectShape();
 
 };
 
 #endif
-

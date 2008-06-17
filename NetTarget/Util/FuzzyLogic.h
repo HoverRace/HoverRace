@@ -26,37 +26,34 @@
 
 
 #ifdef MR_UTIL
-   #define MR_DllDeclare   __declspec( dllexport )
+#define MR_DllDeclare   __declspec( dllexport )
 #else
-   #define MR_DllDeclare   __declspec( dllimport )
+#define MR_DllDeclare   __declspec( dllimport )
 #endif
 
 
 
 void MR_DllDeclare MR_InitFuzzyModule();
-int  MR_DllDeclare MR_Rand();
+int MR_DllDeclare MR_Rand();
 
-class MR_DllDeclare MR_ProbTable
-{
-   private:
-      enum { NB_PROB_MAX = 16 };
-      int mNbProb;
-      int mTotalProb;
-      int mProb[ NB_PROB_MAX ];
+class MR_DllDeclare MR_ProbTable {
+  private:
+    enum { NB_PROB_MAX = 16 };
+    int mNbProb;
+    int mTotalProb;
+    int mProb[NB_PROB_MAX];
 
-   public:
+  public:
       MR_ProbTable();
-      void Clear();
+    void Clear();
 
-      void AddProb( int pWeight );
-      int  GetVal();
+    void AddProb(int pWeight);
+    int GetVal();
 };
 
 
 
 
 #undef MR_DllDeclare
-      
+
 #endif
-
-

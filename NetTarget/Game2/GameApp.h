@@ -28,184 +28,184 @@
 class MR_GameApp;
 
 class MR_GameThread {
-   private:
-      MR_GameApp*       mGameApp;
-      CRITICAL_SECTION  mMutex;
-      HANDLE            mThread;
-      BOOL              mTerminate;
-      int               mPauseLevel;
+  private:
+    MR_GameApp * mGameApp;
+    CRITICAL_SECTION mMutex;
+    HANDLE mThread;
+    BOOL mTerminate;
+    int mPauseLevel;
 
-      static unsigned long __stdcall Loop( LPVOID pThread );
+    static unsigned long __stdcall Loop(LPVOID pThread);
 
-      MR_GameThread( MR_GameApp* pApp );
-      ~MR_GameThread();
+      MR_GameThread(MR_GameApp * pApp);
+     ~MR_GameThread();
 
-   public:
-      static MR_GameThread* New( MR_GameApp* pApp );
-      void   Kill();
-      void   Pause();
-      void   Restart();
+  public:
+    static MR_GameThread *New(MR_GameApp * pApp);
+    void Kill();
+    void Pause();
+    void Restart();
 };
 
-class MR_GameApp {   
-   friend MR_GameThread;
+class MR_GameApp {
+    friend MR_GameThread;
 
-   private:
-      enum eViewMode {e3DView, eDebugView};
+  private:
+    enum eViewMode { e3DView, eDebugView };
 
-      static MR_GameApp*       This; // unique instance pointer
-    
-      HINSTANCE                mInstance;
-      HWND                     mMainWindow;
-      HWND                     mBadVideoModeDlg;
-      HWND                     mMovieWnd;
-      HACCEL                   mAccelerators;
-      MR_VideoBuffer*          mVideoBuffer;
-      MR_Observer*             mObserver1;
-      MR_Observer*             mObserver2;
-	  MR_Observer*             mObserver3;
-	  MR_Observer*             mObserver4;
-      MR_ClientSession*        mCurrentSession;
-      MR_GameThread*           mGameThread;
+    static MR_GameApp *This;	// unique instance pointer
 
-      eViewMode                mCurrentMode;
-      // int                      mMenuStack;
+    HINSTANCE mInstance;
+    HWND mMainWindow;
+    HWND mBadVideoModeDlg;
+    HWND mMovieWnd;
+    HACCEL mAccelerators;
+    MR_VideoBuffer *mVideoBuffer;
+    MR_Observer *mObserver1;
+    MR_Observer *mObserver2;
+    MR_Observer *mObserver3;
+    MR_Observer *mObserver4;
+    MR_ClientSession *mCurrentSession;
+    MR_GameThread *mGameThread;
 
-      int                      mClrScrTodo;
+    eViewMode mCurrentMode;
+    // int                      mMenuStack;
 
-      BOOL                     mPaletteChangeAllowed;
+    int mClrScrTodo;
 
-      // Keyboard configuration
-      int mMotorOn1;
-      int mRight1;
-      int mLeft1;
-      int mJump1;
-      int mFire1;
-      int mBreak1;
-      int mWeapon1;
-	  int mLookBack1;
+    BOOL mPaletteChangeAllowed;
 
-      int mMotorOn2;
-      int mRight2;
-      int mLeft2;
-      int mJump2;
-      int mFire2;
-      int mBreak2;
-      int mWeapon2;
-	  int mLookBack2;
+    // Keyboard configuration
+    int mMotorOn1;
+    int mRight1;
+    int mLeft1;
+    int mJump1;
+    int mFire1;
+    int mBreak1;
+    int mWeapon1;
+    int mLookBack1;
 
-	  int mMotorOn3;
-      int mRight3;
-      int mLeft3;
-      int mJump3;
-      int mFire3;
-      int mBreak3;
-      int mWeapon3;
-	  int mLookBack3;
+    int mMotorOn2;
+    int mRight2;
+    int mLeft2;
+    int mJump2;
+    int mFire2;
+    int mBreak2;
+    int mWeapon2;
+    int mLookBack2;
 
-	  int mMotorOn4;
-      int mRight4;
-      int mLeft4;
-      int mJump4;
-      int mFire4;
-      int mBreak4;
-      int mWeapon4;
-	  int mLookBack4;
+    int mMotorOn3;
+    int mRight3;
+    int mLeft3;
+    int mJump3;
+    int mFire3;
+    int mBreak3;
+    int mWeapon3;
+    int mLookBack3;
 
-      double mGamma;
-      double mContrast;
-      double mBrightness;
+    int mMotorOn4;
+    int mRight4;
+    int mLeft4;
+    int mJump4;
+    int mFire4;
+    int mBreak4;
+    int mWeapon4;
+    int mLookBack4;
 
-      CString mNickName;
+    double mGamma;
+    double mContrast;
+    double mBrightness;
 
-      CString mOwner;
-      CString mCompany;
-      int mMajorID;
-      int mMinorID;
-      // CString mKey1;
-      // CString mKey2;
+    CString mNickName;
 
-      BOOL mDisplayFirstScreen;
-	  BOOL mIntroMovie;
+    CString mOwner;
+    CString mCompany;
+    int mMajorID;
+    int mMinorID;
+    // CString mKey1;
+    // CString mKey2;
 
-      // Debug data
-      time_t mNbFramesStartingTime;
-      int mNbFrames;
+    BOOL mDisplayFirstScreen;
+    BOOL mIntroMovie;
 
-      void SetProperties();
-      static LRESULT CALLBACK DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
-      static BOOL CALLBACK DisplayIntensityDialogFunc( HWND pWindow, UINT  pMsgId, WPARAM pWParam, LPARAM pLParam);
-      static BOOL CALLBACK ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
-	  static BOOL CALLBACK MiscDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
-      static BOOL CALLBACK BadModeDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
-      static BOOL CALLBACK MovieDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
-      static BOOL CALLBACK AboutDlgFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
-      static BOOL CALLBACK NoticeDlgFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
-      static BOOL CALLBACK LoginFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
-      static BOOL CALLBACK LoginPasswdFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
-      static BOOL CALLBACK RegistrationPasswdFunc(HWND pWindow, UINT  pMsgId, WPARAM  pWParam, LPARAM  pLParam );
-      static BOOL CALLBACK RegistrationFunc(HWND pWindow, UINT  pMsgId, WPARAM  pWParam, LPARAM  pLParam );
-      static BOOL CALLBACK FirstChoiceDialogFunc(HWND pWindow, UINT  pMsgId, WPARAM  pWParam, LPARAM  pLParam );
+    // Debug data
+    time_t mNbFramesStartingTime;
+    int mNbFrames;
 
-      BOOL CreateMainWindow();
+    void SetProperties();
+    static LRESULT CALLBACK DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
+    static BOOL CALLBACK DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
+    static BOOL CALLBACK ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
+    static BOOL CALLBACK MiscDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
+    static BOOL CALLBACK BadModeDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
+    static BOOL CALLBACK MovieDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
+    static BOOL CALLBACK AboutDlgFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
+    static BOOL CALLBACK NoticeDlgFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
+    static BOOL CALLBACK LoginFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
+    static BOOL CALLBACK LoginPasswdFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
+    static BOOL CALLBACK RegistrationPasswdFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
+    static BOOL CALLBACK RegistrationFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
+    static BOOL CALLBACK FirstChoiceDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 
-      void RefreshView();
-      void SetVideoMode(int pX, int pY);
-      void RefreshTitleBar();
+    BOOL CreateMainWindow();
 
-      void ReadAsyncInputController(); // Get the state of the input controler (KDB, joystick, mouse)
+    void RefreshView();
+    void SetVideoMode(int pX, int pY);
+    void RefreshTitleBar();
 
-      // Message handlers
-      void NewLocalSession();
-      void NewSplitSession(int pSplitPlayers);
-      void NewNetworkSession(BOOL pIsServer);
-      void NewInternetSession();
+    void ReadAsyncInputController();	// Get the state of the input controler (KDB, joystick, mouse)
 
-      void LoadRegistry();
-      void SaveRegistry();
+    // Message handlers
+    void NewLocalSession();
+    void NewSplitSession(int pSplitPlayers);
+    void NewNetworkSession(BOOL pIsServer);
+    void NewInternetSession();
 
-      void Clean();
+    void LoadRegistry();
+    void SaveRegistry();
 
-      void OnDisplayChange();
-      void AssignPalette();
+    void Clean();
 
-      void PauseGameThread();
-      void RestartGameThread();
+    void OnDisplayChange();
+    void AssignPalette();
 
-      // void EnterMenuLoop();
-      // void EndMenuLoop();
+    void PauseGameThread();
+    void RestartGameThread();
 
-      void DeleteMovieWnd();
+    // void EnterMenuLoop();
+    // void EndMenuLoop();
 
-      void DrawBackground();
+    void DeleteMovieWnd();
 
-      void DisplayHelp();
-      void DisplayBetaZone();
-      void DisplaySite();
-      void DisplayRegistrationInfo(HWND pWindow);
-      void DisplayRegistrationSite();
-      void DisplayAbout();
+    void DrawBackground();
+
+    void DisplayHelp();
+    void DisplayBetaZone();
+    void DisplaySite();
+    void DisplayRegistrationInfo(HWND pWindow);
+    void DisplayRegistrationSite();
+    void DisplayAbout();
 
 
-      BOOL IsGameRunning(); // return TRUE if a not terminated game is running
-      int  AskUserToAbortGame(); // Return IDOK if OK
+    BOOL IsGameRunning();	// return TRUE if a not terminated game is running
+    int AskUserToAbortGame();	// Return IDOK if OK
 
-   public:
+  public:
       MR_GameApp(HINSTANCE pInstance);
-      ~MR_GameApp();
+     ~MR_GameApp();
 
-      BOOL IsFirstInstance()const;
+    BOOL IsFirstInstance() const;
 
-      BOOL DisplayNotice();
-      BOOL DisplayLoginWindow();
-      BOOL InitApplication();
-      BOOL InitGame();
+    BOOL DisplayNotice();
+    BOOL DisplayLoginWindow();
+    BOOL InitApplication();
+    BOOL InitGame();
 
-      int  MainLoop();
+    int MainLoop();
 
 
-      // Helper stuff
-      static void NewInternetSessionCall();
+    // Helper stuff
+    static void NewInternetSessionCall();
 };
 
 #undef MR_DllDeclare

@@ -52,9 +52,9 @@
 #include "../VideoServices/3DViewPort.h"
 
 #ifdef MR_MODEL
-   #define MR_DllDeclare   __declspec( dllexport )
+#define MR_DllDeclare   __declspec( dllexport )
 #else
-   #define MR_DllDeclare   __declspec( dllimport )
+#define MR_DllDeclare   __declspec( dllimport )
 #endif
 
 
@@ -63,101 +63,76 @@
 class MR_Level;
 
 // Renderer bases
-class MR_SurfaceElementRenderer; // used and defines by the Observer module
-class MR_FreeElementRenderer;    // used and defines by the Observer module
+class MR_SurfaceElementRenderer;	// used and defines by the Observer module
+class MR_FreeElementRenderer;	// used and defines by the Observer module
 
 class MR_FreeElementMovingInterface;
 
-class MR_ElementNetState
-{
-   public:
-      int             mDataLen;
-      const MR_UInt8* mData;
+class MR_ElementNetState {
+  public:
+    int mDataLen;
+    const MR_UInt8 *mData;
 };
 
 
-class MR_DllDeclare MR_Element : public MR_ObjectFromFactory {
-   public:
-      MR_Element(const MR_ObjectFromFactoryId &pId);
+class MR_DllDeclare MR_Element:public MR_ObjectFromFactory {
+  public:
+    MR_Element(const MR_ObjectFromFactoryId & pId);
 
-      virtual void AddRenderer();
-      virtual BOOL InitString(const char *pInitStr = NULL); // Initialisation string used during maze creation
+    virtual void AddRenderer();
+    virtual BOOL InitString(const char *pInitStr = NULL);	// Initialisation string used during maze creation
 
-      virtual void SerializeLogicState(CArchive &pArchive); // Serialize the logic component and the body of the component
+    virtual void SerializeLogicState(CArchive & pArchive);	// Serialize the logic component and the body of the component
 
-      // Contact effect interface
-      virtual void ApplyEffect(const MR_ContactEffect* pEffect, 
-		                       MR_SimulationTime pTime, 
-							   MR_SimulationTime pDuration, 
-							   BOOL pValidDirection, 
-							   MR_Angle pHorizontalDirection, 
-							   MR_Int32 pZMin, 
-							   MR_Int32 pZMax, 
-							   MR_Level* pLevel);
+    // Contact effect interface
+    virtual void ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 pZMin, MR_Int32 pZMax, MR_Level * pLevel);
 
-      virtual const MR_ContactEffectList* GetEffectList();
+    virtual const MR_ContactEffectList *GetEffectList();
 
 
-      // Helper functions
-      void ApplyEffects(const MR_ContactEffectList *pList,
-		                MR_SimulationTime pTime,
-						MR_SimulationTime pDuration,
-						BOOL pValidDirection,
-						MR_Angle pHorizontalDirection,
-						MR_Int32 pZMin,
-						MR_Int32 pZMax,
-						MR_Level *pLevel);
+    // Helper functions
+    void ApplyEffects(const MR_ContactEffectList * pList, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 pZMin, MR_Int32 pZMax, MR_Level * pLevel);
 
 
-   private:
-      virtual void Serialize(CArchive &pArchive); // Prevent overriding of the Serialize function
+  private:
+      virtual void Serialize(CArchive & pArchive);	// Prevent overriding of the Serialize function
 };
 
-class MR_DllDeclare MR_SurfaceElement : public MR_Element {
-   public:
-      MR_SurfaceElement(const MR_ObjectFromFactoryId &pId);
+class MR_DllDeclare MR_SurfaceElement:public MR_Element {
+  public:
+    MR_SurfaceElement(const MR_ObjectFromFactoryId & pId);
 
-      virtual void RenderWallSurface(MR_3DViewPort *pDest,
-		                             const MR_3DCoordinate &pUpperLeft, 
-									 const MR_3DCoordinate &pLowerRight,
-									 MR_Int32 pLen,
-									 MR_SimulationTime pTime);
+    virtual void RenderWallSurface(MR_3DViewPort * pDest, const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, MR_SimulationTime pTime);
 
-      virtual void RenderHorizontalSurface(MR_3DViewPort* pDest, 
-		                                   int pNbVertex,
-										   const MR_2DCoordinate *pVertexList,
-										   MR_Int32 pLevel,
-										   BOOL pTop,
-										   MR_SimulationTime pTime);
+    virtual void RenderHorizontalSurface(MR_3DViewPort * pDest, int pNbVertex, const MR_2DCoordinate * pVertexList, MR_Int32 pLevel, BOOL pTop, MR_SimulationTime pTime);
 };
 
-class MR_DllDeclare MR_FreeElement : public MR_Element
-{
-   public: 
-      MR_3DCoordinate     mPosition;
-      MR_Angle            mOrientation;
+class MR_DllDeclare MR_FreeElement:public MR_Element {
+  public:
+    MR_3DCoordinate mPosition;
+    MR_Angle mOrientation;
 
-   public:
-      MR_FreeElement(const MR_ObjectFromFactoryId &pId);
+  public:
+      MR_FreeElement(const MR_ObjectFromFactoryId & pId);
 
-      virtual void Render(MR_3DViewPort* pDest, MR_SimulationTime pTime);
+    virtual void Render(MR_3DViewPort * pDest, MR_SimulationTime pTime);
 
-      virtual void PlayInternalSounds();
-      virtual void PlayExternalSounds(int pDB, int pPan);
+    virtual void PlayInternalSounds();
+    virtual void PlayExternalSounds(int pDB, int pPan);
 
-      virtual MR_ElementNetState GetNetState()const;
-      virtual void SetNetState(int pDataLen, const MR_UInt8* pData);
+    virtual MR_ElementNetState GetNetState() const;
+    virtual void SetNetState(int pDataLen, const MR_UInt8 * pData);
 
-      // Logic interface (For simulation)
-      virtual int Simulate(MR_SimulationTime pTimeSlice, MR_Level* pLevel, int pRoom); // shoud return new room number
+    // Logic interface (For simulation)
+    virtual int Simulate(MR_SimulationTime pTimeSlice, MR_Level * pLevel, int pRoom);	// shoud return new room number
 
-      virtual const MR_ShapeInterface* GetObstacleShape();               // Shape that stop other elements movement
-      virtual const MR_ShapeInterface* GetReceivingContactEffectShape(); // Shape that give an effect when touched by a moving element
-      virtual const MR_ShapeInterface* GetGivingContactEffectShape();    // Shape that give an effect when touching while moving
+    virtual const MR_ShapeInterface *GetObstacleShape();	// Shape that stop other elements movement
+    virtual const MR_ShapeInterface *GetReceivingContactEffectShape();	// Shape that give an effect when touched by a moving element
+    virtual const MR_ShapeInterface *GetGivingContactEffectShape();	// Shape that give an effect when touching while moving
 
-      // Perm state hook
-      virtual BOOL AssignPermNumber(int pNumber); // object must return TRUE only if it accept the permanent hook number
-      virtual void SetOwnerId(int pOwnerId);
+    // Perm state hook
+    virtual BOOL AssignPermNumber(int pNumber);	// object must return TRUE only if it accept the permanent hook number
+    virtual void SetOwnerId(int pOwnerId);
 };
 
 #undef MR_DllDeclare

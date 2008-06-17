@@ -25,14 +25,11 @@
 
 // Exported functions (Ansi C style for portability and DLL creation)
 
-void        MReport_Clear             ( BOOL pKeepPassword = FALSE );
-BOOL        MReport_AddResultString   ( const char* pString );
-BOOL        MReport_AddVariable       ( const char*pVar, const char* pValue, const char*pLabel = NULL );
-void        MReport_SetDefaultPassword( const char* pPassword );
-BOOL        MReport_Process           ( HWND pWindow, unsigned long pIP, unsigned int pPort, const char* pURLPath );
-const char* MReport_GetPassword       ( ); // To be able to reuse password from one call to an other
+void MReport_Clear(BOOL pKeepPassword = FALSE);
+BOOL MReport_AddResultString(const char *pString);
+BOOL MReport_AddVariable(const char *pVar, const char *pValue, const char *pLabel = NULL);
+void MReport_SetDefaultPassword(const char *pPassword);
+BOOL MReport_Process(HWND pWindow, unsigned long pIP, unsigned int pPort, const char *pURLPath);
+const char *MReport_GetPassword();	// To be able to reuse password from one call to an other
 
 #endif
-
-
-

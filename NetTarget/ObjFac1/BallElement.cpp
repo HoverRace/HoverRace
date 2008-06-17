@@ -26,15 +26,12 @@
 #include "../ObjFacTools/ObjectFactoryData.h"
 
 
-MR_BallElement::MR_BallElement( const MR_ObjectFromFactoryId& pId )
-                  :MR_FreeElementBase( pId )
+MR_BallElement::MR_BallElement(const MR_ObjectFromFactoryId & pId)
+:  MR_FreeElementBase(pId)
 {
-   mActor = gObjectFactoryData->mResourceLib.GetActor( MR_BALL );
+    mActor = gObjectFactoryData->mResourceLib.GetActor(MR_BALL);
 }
 
 MR_BallElement::~MR_BallElement()
 {
 }
-
-
-   

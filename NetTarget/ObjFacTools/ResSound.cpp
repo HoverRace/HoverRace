@@ -24,130 +24,118 @@
 
 #define new DEBUG_NEW
 
-MR_ResShortSound::MR_ResShortSound( int pResourceId )
+MR_ResShortSound::MR_ResShortSound(int pResourceId)
 {
-   mResourceId = pResourceId;
-   mNbCopy     = 0;
-   mDataLen    = 0;
-   mData       = NULL;
-   mSound      = NULL;
+    mResourceId = pResourceId;
+    mNbCopy = 0;
+    mDataLen = 0;
+    mData = NULL;
+    mSound = NULL;
 
 }
 
 
 MR_ResShortSound::~MR_ResShortSound()
 {
-   MR_SoundServer::DeleteShortSound( mSound );
-   mSound = NULL;
+    MR_SoundServer::DeleteShortSound(mSound);
+    mSound = NULL;
 
-   delete []mData;
-   mData = NULL;
+    delete[]mData;
+    mData = NULL;
 }
 
-int MR_ResShortSound::GetResourceId()const
+int MR_ResShortSound::GetResourceId() const const
 {
-   return mResourceId;
+    return mResourceId;
 }
 
-void MR_ResShortSound::Serialize( CArchive& pArchive )
+void MR_ResShortSound::Serialize(CArchive & pArchive)
 {
-   if( pArchive.IsStoring() )
-   {
-      pArchive << mNbCopy;
-      pArchive << mDataLen;         
-      pArchive.Write( mData, mDataLen );
+    if(pArchive.IsStoring()) {
+	pArchive << mNbCopy;
+	pArchive << mDataLen;
+	pArchive.Write(mData, mDataLen);
 
-   }
-   else
-   {
+    } else {
 
-      MR_SoundServer::DeleteShortSound( mSound );
-      mSound = NULL;
+	MR_SoundServer::DeleteShortSound(mSound);
+	mSound = NULL;
 
-      delete []mData;
-      mData = NULL;
+	delete[]mData;
+	mData = NULL;
 
-      pArchive >> mNbCopy;
-      pArchive >> mDataLen;         
+	pArchive >> mNbCopy;
+	pArchive >> mDataLen;
 
-      mData = new char[ mDataLen ];
+	mData = new char[mDataLen];
 
-      pArchive.Read( mData, mDataLen );
+	pArchive.Read(mData, mDataLen);
 
-      mSound = MR_SoundServer::CreateShortSound( mData, mNbCopy );
+	mSound = MR_SoundServer::CreateShortSound(mData, mNbCopy);
 
-   }
+    }
 }
 
-MR_ShortSound* MR_ResShortSound::GetSound()const
+MR_ShortSound *MR_ResShortSound::GetSound() const const
 {
-   return mSound;
+    return mSound;
 }
 
 
 
 
 
-MR_ResContinuousSound::MR_ResContinuousSound( int pResourceId )
+MR_ResContinuousSound::MR_ResContinuousSound(int pResourceId)
 {
-   mResourceId = pResourceId;
-   mNbCopy     = 0;
-   mDataLen    = 0;
-   mData       = NULL;
-   mSound      = NULL;
+    mResourceId = pResourceId;
+    mNbCopy = 0;
+    mDataLen = 0;
+    mData = NULL;
+    mSound = NULL;
 }
 
 
 MR_ResContinuousSound::~MR_ResContinuousSound()
 {
-   MR_SoundServer::DeleteContinuousSound( mSound );
-   mSound = NULL;
+    MR_SoundServer::DeleteContinuousSound(mSound);
+    mSound = NULL;
 
-   delete []mData;
-   mData = NULL;
+    delete[]mData;
+    mData = NULL;
 }
 
-int MR_ResContinuousSound::GetResourceId()const
+int MR_ResContinuousSound::GetResourceId() const const
 {
-   return mResourceId;
+    return mResourceId;
 }
 
-void MR_ResContinuousSound::Serialize( CArchive& pArchive )
+void MR_ResContinuousSound::Serialize(CArchive & pArchive)
 {
-   if( pArchive.IsStoring() )
-   {
-      pArchive << mNbCopy;
-      pArchive << mDataLen;         
-      pArchive.Write( mData, mDataLen );
+    if(pArchive.IsStoring()) {
+	pArchive << mNbCopy;
+	pArchive << mDataLen;
+	pArchive.Write(mData, mDataLen);
 
-   }
-   else
-   {
-      MR_SoundServer::DeleteContinuousSound( mSound );
-      mSound = NULL;
+    } else {
+	MR_SoundServer::DeleteContinuousSound(mSound);
+	mSound = NULL;
 
-      delete []mData;
-      mData = NULL;
+	delete[]mData;
+	mData = NULL;
 
-      pArchive >> mNbCopy;
-      pArchive >> mDataLen;         
+	pArchive >> mNbCopy;
+	pArchive >> mDataLen;
 
-      mData = new char[ mDataLen ];
+	mData = new char[mDataLen];
 
-      pArchive.Read( mData, mDataLen );
+	pArchive.Read(mData, mDataLen);
 
-      mSound = MR_SoundServer::CreateContinuousSound( mData, mNbCopy );
+	mSound = MR_SoundServer::CreateContinuousSound(mData, mNbCopy);
 
-   }
+    }
 }
 
-MR_ContinuousSound* MR_ResContinuousSound::GetSound()const
+MR_ContinuousSound *MR_ResContinuousSound::GetSound() const const
 {
-   return mSound;
+    return mSound;
 }
-
-
-
-
-
-

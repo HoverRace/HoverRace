@@ -23,30 +23,28 @@
 #include "stdafx.h"
 #include "CommonDialog.h"
 
-CString GetFileName( HWND pParent, BOOL pFileMustExist )
+CString GetFileName(HWND pParent, BOOL pFileMustExist)
 {
-   CString      lReturnValue;
-   OPENFILENAME lParam;
-   char         lBuffer[300];
+    CString lReturnValue;
+    OPENFILENAME lParam;
+    char lBuffer[300];
 
-   lBuffer[0] = 0;
+    lBuffer[0] = 0;
 
-   memset( &lParam, 0, sizeof( lParam ) );
-   lParam.lStructSize = sizeof( lParam );
-   lParam.hwndOwner   = pParent;
-   lParam.lpstrFile   = lBuffer;
-   lParam.nMaxFile    = sizeof( lBuffer );
+    memset(&lParam, 0, sizeof(lParam));
+    lParam.lStructSize = sizeof(lParam);
+    lParam.hwndOwner = pParent;
+    lParam.lpstrFile = lBuffer;
+    lParam.nMaxFile = sizeof(lBuffer);
 
 
-   lParam.Flags       = OFN_LONGNAMES|OFN_NOCHANGEDIR;
-   if( pFileMustExist )
-   {
-      lParam.Flags |= OFN_FILEMUSTEXIST;
-   }
+    lParam.Flags = OFN_LONGNAMES | OFN_NOCHANGEDIR;
+    if(pFileMustExist) {
+	lParam.Flags |= OFN_FILEMUSTEXIST;
+    }
 
-   if( GetOpenFileName( &lParam ) )
-   {
-      lReturnValue = lParam.lpstrFile;
-   }
-   return lReturnValue;
+    if(GetOpenFileName(&lParam)) {
+	lReturnValue = lParam.lpstrFile;
+    }
+    return lReturnValue;
 }

@@ -28,52 +28,47 @@
 #include "ContactEffect.h"
 
 #ifdef MR_MODEL
-   #define MR_DllDeclare   __declspec( dllexport )
+#define MR_DllDeclare   __declspec( dllexport )
 #else
-   #define MR_DllDeclare   __declspec( dllimport )
+#define MR_DllDeclare   __declspec( dllimport )
 #endif
 
 
 
-class MR_SpeedDoubler: public MR_ContactEffect
-{
-   public:
-      // No parameter
+class MR_SpeedDoubler:public MR_ContactEffect {
+  public:
+    // No parameter
 };
 
-class MR_FuelGain: public MR_ContactEffect
-{
-   public:
-      double mFuelQty; // in seconds per millisecond at the pump
-};
-
-
-class MR_LostOfControl: public MR_ContactEffect
-{
-   public:
-      enum mType { eMissile, eMine };
-      int mType;
-      int mElementId; // Used for mines only
-      int mHoverId;   // Craft that created the effect
+class MR_FuelGain:public MR_ContactEffect {
+  public:
+    double mFuelQty;		// in seconds per millisecond at the pump
 };
 
 
-class MR_CheckPoint: public MR_ContactEffect
-{
-   public:
-      enum CheckPointType   { eFinishLine, eCheck1, eCheck2 };
-      CheckPointType mType;
+class MR_LostOfControl:public MR_ContactEffect {
+  public:
+    enum mType { eMissile, eMine };
+    int mType;
+    int mElementId;		// Used for mines only
+    int mHoverId;		// Craft that created the effect
 };
 
-class MR_PowerUpEffect: public MR_ContactEffect
-{
-   public:
-      int mElementPermId;
+
+class MR_CheckPoint:public MR_ContactEffect {
+  public:
+    enum CheckPointType { eFinishLine, eCheck1, eCheck2 };
+    CheckPointType mType;
+};
+
+class MR_PowerUpEffect:public MR_ContactEffect {
+  public:
+    int mElementPermId;
 };
 
 
 
 
 #undef MR_DllDeclare
-      
+
 #endif

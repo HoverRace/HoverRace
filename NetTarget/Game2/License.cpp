@@ -25,21 +25,18 @@
 
 BOOL MR_IsShareware()
 {
-   return TRUE;
+    return TRUE;
 }
 
-BOOL MR_VerifyKey( const char* pKey )
+BOOL MR_VerifyKey(const char *pKey)
 {
-   BOOL lReturnValue = FALSE;
+    BOOL lReturnValue = FALSE;
 
-   if( !strcmp(pKey, "SOUND" ) )
-   {
-      lReturnValue = TRUE;
-   }
-   else
-   {
+    if(!strcmp(pKey, "SOUND")) {
+	lReturnValue = TRUE;
+    } else {
 
-   }
+    }
 
-   return lReturnValue;
+    return lReturnValue;
 }
