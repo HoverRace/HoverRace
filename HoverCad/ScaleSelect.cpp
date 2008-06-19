@@ -6,8 +6,8 @@
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
 //
-// A copy of the license should have been attached to the package from which 
-// you have taken this file. If you can not find the license you can not use 
+// A copy of the license should have been attached to the package from which
+// you have taken this file. If you can not find the license you can not use
 // this file.
 //
 //
@@ -16,7 +16,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
 // implied.
 //
-// See the License for the specific language governing permissions 
+// See the License for the specific language governing permissions
 // and limitations under the License.
 //
 //
@@ -36,79 +36,69 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CScaleSelect dialog
 
-
-CScaleSelect::CScaleSelect( CHoverCadDoc* pDoc, CWnd* pParent /*=NULL*/)
-	: CDialog(CScaleSelect::IDD, pParent)
+CScaleSelect::CScaleSelect(CHoverCadDoc * pDoc, CWnd * pParent /*=NULL*/ )
+:CDialog(CScaleSelect::IDD, pParent)
 {
-   mDoc          = pDoc;
-   mCurrentScale = 100.0;
+	mDoc = pDoc;
+	mCurrentScale = 100.0;
 	//{{AFX_DATA_INIT(CScaleSelect)
-		// NOTE: the ClassWizard will add member initialization here
+	// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
 }
 
-
-void CScaleSelect::DoDataExchange(CDataExchange* pDX)
+void CScaleSelect::DoDataExchange(CDataExchange * pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CScaleSelect)
-		// NOTE: the ClassWizard will add DDX and DDV calls here
+	// NOTE: the ClassWizard will add DDX and DDV calls here
 	//}}AFX_DATA_MAP
 }
 
-
 BEGIN_MESSAGE_MAP(CScaleSelect, CDialog)
-	//{{AFX_MSG_MAP(CScaleSelect)
-	ON_BN_CLICKED(IDC_PREVIEW, OnPreview)
-	//}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CScaleSelect)
+ON_BN_CLICKED(IDC_PREVIEW, OnPreview)
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
-
 /////////////////////////////////////////////////////////////////////////////
 // CScaleSelect message handlers
-
-void CScaleSelect::OnPreview() 
+void CScaleSelect::OnPreview()
 {
-   double lScale = GetDlgItemInt( IDC_SCALE );	
+	double lScale = GetDlgItemInt(IDC_SCALE);
 
-   if( (lScale > 10) && (lScale < 1000) )
-   {
-      if( lScale != mCurrentScale )
-      {        
-         double lScaleToApply = (lScale/mCurrentScale);
+	if((lScale > 10) && (lScale < 1000)) {
+		if(lScale != mCurrentScale) {
+			double lScaleToApply = (lScale / mCurrentScale);
 
-         mCurrentScale = lScale;
+			mCurrentScale = lScale;
 
-         mDoc->ScaleSelection( lScaleToApply );
-      }
-   }	
+			mDoc->ScaleSelection(lScaleToApply);
+		}
+	}
 }
 
-void CScaleSelect::OnCancel() 
+void CScaleSelect::OnCancel()
 {
 	// TODO: Add extra cleanup here
-   if( mCurrentScale != 100 )
-   {
-      double lScaleToApply = (100.0/mCurrentScale);
+	if(mCurrentScale != 100) {
+		double lScaleToApply = (100.0 / mCurrentScale);
 
-      mDoc->ScaleSelection( lScaleToApply );
-   }	
-	
+		mDoc->ScaleSelection(lScaleToApply);
+	}
+
 	CDialog::OnCancel();
 
 }
 
-void CScaleSelect::OnOK() 
+void CScaleSelect::OnOK()
 {
-   double lScale = GetDlgItemInt( IDC_SCALE );	
+	double lScale = GetDlgItemInt(IDC_SCALE);
 
-   if( (lScale > 10) && (lScale < 1000) )
-   {
-      if( lScale != mCurrentScale )
-      {
-         double lScaleToApply = (lScale/mCurrentScale);
+	if((lScale > 10) && (lScale < 1000)) {
+		if(lScale != mCurrentScale) {
+			double lScaleToApply = (lScale / mCurrentScale);
 
-         mDoc->ScaleSelection( lScaleToApply );
-      }
-    	CDialog::OnOK();
-   }		
+			mDoc->ScaleSelection(lScaleToApply);
+		}
+		CDialog::OnOK();
+	}
 }

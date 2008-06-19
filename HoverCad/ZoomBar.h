@@ -6,8 +6,8 @@
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
 //
-// A copy of the license should have been attached to the package from which 
-// you have taken this file. If you can not find the license you can not use 
+// A copy of the license should have been attached to the package from which
+// you have taken this file. If you can not find the license you can not use
 // this file.
 //
 //
@@ -16,7 +16,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
 // implied.
 //
-// See the License for the specific language governing permissions 
+// See the License for the specific language governing permissions
 // and limitations under the License.
 //
 //
@@ -26,41 +26,40 @@
 // CZoomBar dialog
 class CHoverCadView;
 
-class CZoomBar : public CDialogBar
+class CZoomBar:public CDialogBar
 {
-private:
-   // Widgets
-   CSliderCtrl mSlider;
+	private:
+		// Widgets
+		CSliderCtrl mSlider;
 
-   // Attributes
-   CHoverCadView* mCurrentView;
+		// Attributes
+		CHoverCadView *mCurrentView;
 
-// Construction
-public:
-   CZoomBar();
-	BOOL Create(CWnd* pParent, UINT pStyle );
+		// Construction
+	public:
+		CZoomBar();
+		BOOL Create(CWnd * pParent, UINT pStyle);
 
-   void AttachView( CHoverCadView* pView );
-   void DetachView( CHoverCadView* pView );
+		void AttachView(CHoverCadView * pView);
+		void DetachView(CHoverCadView * pView);
 
-// Dialog Data
-	//{{AFX_DATA(CZoomBar)
+		// Dialog Data
+		//{{AFX_DATA(CZoomBar)
 		// NOTE: the ClassWizard will add data members here
-	//}}AFX_DATA
+		//}}AFX_DATA
 
-
-// Overrides
-	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CZoomBar)
+		// Overrides
+		// ClassWizard generated virtual function overrides
+		//{{AFX_VIRTUAL(CZoomBar)
 	protected:
-	//}}AFX_VIRTUAL
+		//}}AFX_VIRTUAL
 
-// Implementation
-protected:
+		// Implementation
+	protected:
 
-	// Generated message map functions
-	//{{AFX_MSG(CZoomBar)
-	afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+		// Generated message map functions
+		//{{AFX_MSG(CZoomBar)
+		afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar * pScrollBar);
+		//}}AFX_MSG
+		DECLARE_MESSAGE_MAP()
 };

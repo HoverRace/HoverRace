@@ -5,8 +5,8 @@
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
 //
-// A copy of the license should have been attached to the package from which 
-// you have taken this file. If you can not find the license you can not use 
+// A copy of the license should have been attached to the package from which
+// you have taken this file. If you can not find the license you can not use
 // this file.
 //
 //
@@ -15,7 +15,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
 // implied.
 //
-// See the License for the specific language governing permissions 
+// See the License for the specific language governing permissions
 // and limitations under the License.
 //
 
@@ -26,116 +26,106 @@
 
 MR_ResShortSound::MR_ResShortSound(int pResourceId)
 {
-    mResourceId = pResourceId;
-    mNbCopy = 0;
-    mDataLen = 0;
-    mData = NULL;
-    mSound = NULL;
+	mResourceId = pResourceId;
+	mNbCopy = 0;
+	mDataLen = 0;
+	mData = NULL;
+	mSound = NULL;
 
 }
-
 
 MR_ResShortSound::~MR_ResShortSound()
 {
-    MR_SoundServer::DeleteShortSound(mSound);
-    mSound = NULL;
-
-    delete[]mData;
-    mData = NULL;
-}
-
-int MR_ResShortSound::GetResourceId() const const
-{
-    return mResourceId;
-}
-
-void MR_ResShortSound::Serialize(CArchive & pArchive)
-{
-    if(pArchive.IsStoring()) {
-	pArchive << mNbCopy;
-	pArchive << mDataLen;
-	pArchive.Write(mData, mDataLen);
-
-    } else {
-
 	MR_SoundServer::DeleteShortSound(mSound);
 	mSound = NULL;
 
 	delete[]mData;
 	mData = NULL;
+}
 
-	pArchive >> mNbCopy;
-	pArchive >> mDataLen;
+int MR_ResShortSound::GetResourceId() const const
+{
+	return mResourceId;
+} void MR_ResShortSound::Serialize(CArchive & pArchive)
+{
+	if(pArchive.IsStoring()) {
+		pArchive << mNbCopy;
+		pArchive << mDataLen;
+		pArchive.Write(mData, mDataLen);
 
-	mData = new char[mDataLen];
+	}
+	else {
 
-	pArchive.Read(mData, mDataLen);
+		MR_SoundServer::DeleteShortSound(mSound);
+		mSound = NULL;
 
-	mSound = MR_SoundServer::CreateShortSound(mData, mNbCopy);
+		delete[]mData;
+		mData = NULL;
 
-    }
+		pArchive >> mNbCopy;
+		pArchive >> mDataLen;
+
+		mData = new char[mDataLen];
+
+		pArchive.Read(mData, mDataLen);
+
+		mSound = MR_SoundServer::CreateShortSound(mData, mNbCopy);
+
+	}
 }
 
 MR_ShortSound *MR_ResShortSound::GetSound() const const
 {
-    return mSound;
-}
-
-
-
-
-
-MR_ResContinuousSound::MR_ResContinuousSound(int pResourceId)
+	return mSound;
+} MR_ResContinuousSound::MR_ResContinuousSound(int pResourceId)
 {
-    mResourceId = pResourceId;
-    mNbCopy = 0;
-    mDataLen = 0;
-    mData = NULL;
-    mSound = NULL;
+	mResourceId = pResourceId;
+	mNbCopy = 0;
+	mDataLen = 0;
+	mData = NULL;
+	mSound = NULL;
 }
-
 
 MR_ResContinuousSound::~MR_ResContinuousSound()
 {
-    MR_SoundServer::DeleteContinuousSound(mSound);
-    mSound = NULL;
-
-    delete[]mData;
-    mData = NULL;
-}
-
-int MR_ResContinuousSound::GetResourceId() const const
-{
-    return mResourceId;
-}
-
-void MR_ResContinuousSound::Serialize(CArchive & pArchive)
-{
-    if(pArchive.IsStoring()) {
-	pArchive << mNbCopy;
-	pArchive << mDataLen;
-	pArchive.Write(mData, mDataLen);
-
-    } else {
 	MR_SoundServer::DeleteContinuousSound(mSound);
 	mSound = NULL;
 
 	delete[]mData;
 	mData = NULL;
+}
 
-	pArchive >> mNbCopy;
-	pArchive >> mDataLen;
+int MR_ResContinuousSound::GetResourceId() const const
+{
+	return mResourceId;
+} void MR_ResContinuousSound::Serialize(CArchive & pArchive)
+{
+	if(pArchive.IsStoring()) {
+		pArchive << mNbCopy;
+		pArchive << mDataLen;
+		pArchive.Write(mData, mDataLen);
 
-	mData = new char[mDataLen];
+	}
+	else {
+		MR_SoundServer::DeleteContinuousSound(mSound);
+		mSound = NULL;
 
-	pArchive.Read(mData, mDataLen);
+		delete[]mData;
+		mData = NULL;
 
-	mSound = MR_SoundServer::CreateContinuousSound(mData, mNbCopy);
+		pArchive >> mNbCopy;
+		pArchive >> mDataLen;
 
-    }
+		mData = new char[mDataLen];
+
+		pArchive.Read(mData, mDataLen);
+
+		mSound = MR_SoundServer::CreateContinuousSound(mData, mNbCopy);
+
+	}
 }
 
 MR_ContinuousSound *MR_ResContinuousSound::GetSound() const const
 {
-    return mSound;
+	return mSound;
 }

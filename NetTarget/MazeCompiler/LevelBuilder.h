@@ -7,8 +7,8 @@
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
 //
-// A copy of the license should have been attached to the package from which 
-// you have taken this file. If you can not find the license you can not use 
+// A copy of the license should have been attached to the package from which
+// you have taken this file. If you can not find the license you can not use
 // this file.
 //
 //
@@ -17,7 +17,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
 // implied.
 //
-// See the License for the specific language governing permissions 
+// See the License for the specific language governing permissions
 // and limitations under the License.
 //
 
@@ -26,35 +26,32 @@
 
 #include "../Model/Level.h"
 
-
 class MR_VisibleStep;
 
-class MR_LevelBuilder:public MR_Level {
-  protected:
+class MR_LevelBuilder:public MR_Level
+{
+	protected:
 
-    // Implementation helpers
-    static double ComputeShapeConst(Section * pSection);
+		// Implementation helpers
+		static double ComputeShapeConst(Section * pSection);
 
-    // Main methods
+		// Main methods
 
-    BOOL Parse(FILE * pFile);
-    BOOL ComputeVisibleZones();
-    BOOL ComputeAudibleZones();
+		BOOL Parse(FILE * pFile);
+		BOOL ComputeVisibleZones();
+		BOOL ComputeAudibleZones();
 
-    void OrderVisibleSurfaces();
+		void OrderVisibleSurfaces();
 
-  private:
-    void TestForVisibility(MR_VisibleStep * pPreviousStep, int *pDestArray, int &pDestIndex, int pNewLeftNodeIndex);
+	private:
+		void TestForVisibility(MR_VisibleStep * pPreviousStep, int *pDestArray, int &pDestIndex, int pNewLeftNodeIndex);
 
-    static int OrderFloor(const void *pSurface0, const void *pSurface1);
-    static int OrderCeiling(const void *pSurface0, const void *pSurface1);
+		static int OrderFloor(const void *pSurface0, const void *pSurface1);
+		static int OrderCeiling(const void *pSurface0, const void *pSurface1);
 
+	public:
 
-  public:
-
-      BOOL InitFromFile(FILE * pFile);
+		BOOL InitFromFile(FILE * pFile);
 
 };
-
-
 #endif

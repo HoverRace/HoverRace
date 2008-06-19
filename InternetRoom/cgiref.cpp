@@ -7,8 +7,8 @@
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
 //
-// A copy of the license should have been attached to the package from which 
-// you have taken this file. If you can not find the license you can not use 
+// A copy of the license should have been attached to the package from which
+// you have taken this file. If you can not find the license you can not use
 // this file.
 //
 //
@@ -17,11 +17,11 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
 // implied.
 //
-// See the License for the specific language governing permissions 
+// See the License for the specific language governing permissions
 // and limitations under the License.
 //
 //
-// This program return the url passed as a parameter and log tho origin of 
+// This program return the url passed as a parameter and log tho origin of
 // the caller in a log file
 
 #include <stdlib.h>
@@ -37,109 +37,86 @@
 
 #define LOG_FILE "log/cgiref"
 
-static const char* chk( const char* pSrc );
+static const char *chk(const char *pSrc);
 
-
-int main( int pArgc, char** pArgs )
+int main(int pArgc, char **pArgs)
 {
-   char lLineBuffer[2048];
+	char lLineBuffer[2048];
 
-   if( pArgc < 2 )
-   {
-      printf( "Content-type: text/plain%c%c", 10, 10);
-      printf( "Error" );     
-   }
-   else
-   {
-      const char* lLocation = strchr( pArgs[1], '^' );
+	if(pArgc < 2) {
+		printf("Content-type: text/plain%c%c", 10, 10);
+		printf("Error");
+	}
+	else {
+		const char *lLocation = strchr(pArgs[1], '^');
 
-      if( lLocation != NULL )
-      {
-         lLocation++;
-      }
-      else
-      {
-         lLocation = pArgs[1];
-      }
+		if(lLocation != NULL) {
+			lLocation++;
+		}
+		else {
+			lLocation = pArgs[1];
+		}
 
-      // Return the location string
-      printf("Location: %s%c%c", lLocation,10, 10);
+		// Return the location string
+		printf("Location: %s%c%c", lLocation, 10, 10);
 
+		// Retrieve time
+		char lTimeBuffer[256];
+		time_t lTimer;
 
-      // Retrieve time
-      char lTimeBuffer[256];
-      time_t lTimer;
-      
-      lTimer = time( NULL );
+		lTimer = time(NULL);
 
-      struct tm* lTime = localtime( &lTimer );
+		struct tm *lTime = localtime(&lTimer);
 
-      strcpy( lTimeBuffer, "error" );
-      strftime( lTimeBuffer, sizeof( lTimeBuffer ), "%y-%m-%d_%H:%M:%S", lTime );
+		strcpy(lTimeBuffer, "error");
+		strftime(lTimeBuffer, sizeof(lTimeBuffer), "%y-%m-%d_%H:%M:%S", lTime);
 
+		// Log the request
+		char *lPathEnd = strrchr(pArgs[0], '/');
 
-      // Log the request
-      char* lPathEnd = strrchr( pArgs[0], '/' );
+		if(lPathEnd != NULL) {
+			*lPathEnd = 0;
+			chdir(pArgs[0]);
+		}
 
-      if( lPathEnd != NULL )
-      {
-         *lPathEnd = 0;
-         chdir( pArgs[0] );
-      }
+		sprintf(lLineBuffer, "* %s %s %s %s %s\n", lTimeBuffer, pArgs[1], chk(getenv("REMOTE_ADDR")), chk(getenv("REMOTE_HOST")), chk(getenv("REMOTE_USER"))
+			);
 
-      sprintf( lLineBuffer, "* %s %s %s %s %s\n",
-               lTimeBuffer,
-               pArgs[1],
-               chk( getenv( "REMOTE_ADDR" )),
-               chk( getenv( "REMOTE_HOST" )),
-               chk( getenv("REMOTE_USER" ))
-               );
+		// output the string
+		FILE *lFile = fopen(LOG_FILE, "a");
 
-      // output the string
-      FILE* lFile = fopen( LOG_FILE, "a" );
+		if(lFile != NULL) {
+			fprintf(lFile, lLineBuffer);
+			fclose(lFile);
+		}
 
-      if( lFile != NULL )
-      {
-         fprintf( lFile, lLineBuffer );
-         fclose( lFile );
-      }
+	}
 
-   }
-
-
-
-   return 0;
+	return 0;
 }
 
-const char* chk( const char* pSrc )
+const char *chk(const char *pSrc)
 {
-   if( pSrc == NULL )
-   {
-      return "null";
-   }
-   else
-   {
-      return pSrc;
-   }
+	if(pSrc == NULL) {
+		return "null";
+	}
+	else {
+		return pSrc;
+	}
 }
 
-
-void Append( char* pDest, const char* pStr, int pEoL )
+void Append(char *pDest, const char *pStr, int pEoL)
 {
-   if( pStr == NULL )
-   {
-      pStr = "null";
-   }
+	if(pStr == NULL) {
+		pStr = "null";
+	}
 
-   strcat( pDest, pStr );
+	strcat(pDest, pStr);
 
-   if( pEoL )
-   {
-      strcat( pDest, "\n" );
-   }
-   else
-   {
-      strcat( pDest, " " );
-   }
+	if(pEoL) {
+		strcat(pDest, "\n");
+	}
+	else {
+		strcat(pDest, " ");
+	}
 }
-

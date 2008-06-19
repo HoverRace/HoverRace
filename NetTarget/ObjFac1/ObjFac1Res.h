@@ -5,8 +5,8 @@
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
 //
-// A copy of the license should have been attached to the package from which 
-// you have taken this file. If you can not find the license you can not use 
+// A copy of the license should have been attached to the package from which
+// you have taken this file. If you can not find the license you can not use
 // this file.
 //
 //
@@ -15,7 +15,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
 // implied.
 //
-// See the License for the specific language governing permissions 
+// See the License for the specific language governing permissions
 // and limitations under the License.
 //
 
@@ -52,8 +52,6 @@
 #define MR_STD_WALL           1076
 #define MR_STD_WALL_TOP       1077
 
-
-
 #define MR_CAR_BUMPER      20
 #define MR_CAR_COCKPIT     21
 #define MR_CAR_MOTOR       22
@@ -65,9 +63,6 @@
 #define MR_CAR2_COCKPIT    27
 #define MR_CAR_MOTOR2      28
 #define MR_CAR_MOTOR3      29
-
-
-
 
 #define MR_CAR_COCKPIT1    40
 #define MR_CAR_COCKPIT2    41
@@ -91,16 +86,12 @@
 #define MR_CAR_COCKPIT29    58
 #define MR_CAR_COCKPIT2X    59
 
-
-
 #define MR_MISSILE_BODY    80
 #define MR_MISSILE_WING    81
 #define MR_PWRUP_MAP       85
 #define MR_MINE_OFF        86
 #define MR_MINE_ON         87
 #define MR_BUMPERGATE_MAP  88
-
-
 
 #define MR_RED      100
 #define MR_GREEN    101
@@ -128,7 +119,6 @@
 #define MR_MINE         21
 #define MR_PWRUP        22
 #define MR_BUMPERGATE   23
-
 
 // Sprites
 #define MR_FONT1          1

@@ -5,8 +5,8 @@
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
 //
-// A copy of the license should have been attached to the package from which 
-// you have taken this file. If you can not find the license you can not use 
+// A copy of the license should have been attached to the package from which
+// you have taken this file. If you can not find the license you can not use
 // this file.
 //
 //
@@ -15,7 +15,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
 // implied.
 //
-// See the License for the specific language governing permissions 
+// See the License for the specific language governing permissions
 // and limitations under the License.
 //
 
@@ -23,170 +23,164 @@
 
 #include <Mmsystem.h>
 
-
 #include "Profiler.h"
 
 #ifdef _DEBUG
 
-class MR_ProfilerMaster {
-  public:
-    int mPauseStart;
-    int mTimeOffset;
+class MR_ProfilerMaster
+{
+	public:
+		int mPauseStart;
+		int mTimeOffset;
 
-    // TimerFunctions
-    int GetTime();
-    int PauseTime();		// Same as GetTime but it also stop the timer
-    void UnPauseTime();
+		// TimerFunctions
+		int GetTime();
+		int PauseTime();						  // Same as GetTime but it also stop the timer
+		void UnPauseTime();
 
-    void Reset();
-    void PrintStats();
+		void Reset();
+		void PrintStats();
 };
-
 
 static MR_ProfilerSampler *gProfilerSamplerList = NULL;
 static MR_ProfilerMaster gProfilerMaster;
 
-
 void MR_ResetProfilerStats()
 {
-    gProfilerMaster.Reset();
+	gProfilerMaster.Reset();
 }
 
 void MR_OutputProfilerStats()
 {
-    gProfilerMaster.PrintStats();
+	gProfilerMaster.PrintStats();
 }
 
-
-// MR_ProfilerSampler      
+// MR_ProfilerSampler
 MR_ProfilerSampler::MR_ProfilerSampler(const char *pName)
 {
-    mName = pName;
-    mNext = gProfilerSamplerList;
-    gProfilerSamplerList = this;
+	mName = pName;
+	mNext = gProfilerSamplerList;
+	gProfilerSamplerList = this;
 
-    Reset();
+	Reset();
 }
 
 void MR_ProfilerSampler::Reset()
 {
-    mNbCall = 0;
-    mTotalTime = 0;
-    mMinPeriod = 10000000;
-    mMaxPeriod = 0;
+	mNbCall = 0;
+	mTotalTime = 0;
+	mMinPeriod = 10000000;
+	mMaxPeriod = 0;
 
-    mLastPeriodStart = 0;
+	mLastPeriodStart = 0;
 }
-
-
 
 void MR_ProfilerSampler::StartSample()
 {
-    mLastPeriodStart = gProfilerMaster.GetTime();
+	mLastPeriodStart = gProfilerMaster.GetTime();
 }
 
 void MR_ProfilerSampler::EndSample()
 {
-    int lDuration = gProfilerMaster.PauseTime() - mLastPeriodStart;
+	int lDuration = gProfilerMaster.PauseTime() - mLastPeriodStart;
 
-    mNbCall++;
-    mTotalTime += lDuration;
+	mNbCall++;
+	mTotalTime += lDuration;
 
-    if(lDuration < mMinPeriod) {
-	mMinPeriod = lDuration;
-    }
+	if(lDuration < mMinPeriod) {
+		mMinPeriod = lDuration;
+	}
 
-    if(lDuration > mMaxPeriod) {
-	mMaxPeriod = lDuration;
-    }
+	if(lDuration > mMaxPeriod) {
+		mMaxPeriod = lDuration;
+	}
 
-    gProfilerMaster.UnPauseTime();
+	gProfilerMaster.UnPauseTime();
 }
 
 // MR_ProfilerMaster
 int MR_ProfilerMaster::GetTime()
 {
-    return timeGetTime() - mTimeOffset;
+	return timeGetTime() - mTimeOffset;
 }
 
 int MR_ProfilerMaster::PauseTime()
 {
-    mPauseStart = GetTime();
+	mPauseStart = GetTime();
 
-    return mPauseStart;
+	return mPauseStart;
 }
 
 void MR_ProfilerMaster::UnPauseTime()
 {
-    mTimeOffset += GetTime() - mPauseStart;
+	mTimeOffset += GetTime() - mPauseStart;
 }
 
 void MR_ProfilerMaster::Reset()
 {
-    // Reset all the Samplers
-    MR_ProfilerSampler *lCurrent = gProfilerSamplerList;
+	// Reset all the Samplers
+	MR_ProfilerSampler *lCurrent = gProfilerSamplerList;
 
-    while(lCurrent != NULL) {
-	lCurrent->Reset();
-	lCurrent = lCurrent->mNext;
-    }
+	while(lCurrent != NULL) {
+		lCurrent->Reset();
+		lCurrent = lCurrent->mNext;
+	}
 }
 
 void MR_ProfilerMaster::PrintStats()
 {
-    PauseTime();
-    /*
-       TRACE( " Hit    Total  Avg    Min    Max   Name\n" );
+	PauseTime();
+	/*
+	   TRACE( " Hit    Total  Avg    Min    Max   Name\n" );
 
-       MR_ProfilerSampler* lCurrent = gProfilerSamplerList;
+	   MR_ProfilerSampler* lCurrent = gProfilerSamplerList;
 
-       while( lCurrent != NULL )
-       {
-       int lAvg = 0;
+	   while( lCurrent != NULL )
+	   {
+	   int lAvg = 0;
 
-       if(lCurrent->mNbCall > 0 )
-       {
-       lAvg = lCurrent->mTotalTime/lCurrent->mNbCall;
-       }
+	   if(lCurrent->mNbCall > 0 )
+	   {
+	   lAvg = lCurrent->mTotalTime/lCurrent->mNbCall;
+	   }
 
-       TRACE
-       (
-       "%-6d %-6d %-6d %-6d %-6d %s\n",
-       lCurrent->mNbCall,
-       lCurrent->mTotalTime,
-       lAvg,
-       lCurrent->mMinPeriod,
-       lCurrent->mMaxPeriod,
-       lCurrent->mName
-       );
+	   TRACE
+	   (
+	   "%-6d %-6d %-6d %-6d %-6d %s\n",
+	   lCurrent->mNbCall,
+	   lCurrent->mTotalTime,
+	   lAvg,
+	   lCurrent->mMinPeriod,
+	   lCurrent->mMaxPeriod,
+	   lCurrent->mName
+	   );
 
-       lCurrent = lCurrent->mNext;
-       }
-     */
+	   lCurrent = lCurrent->mNext;
+	   }
+	 */
 
-    FILE *lFile = fopen("Stat.out", "a");
+	FILE *lFile = fopen("Stat.out", "a");
 
-    if(lFile != NULL) {
-	fprintf(lFile, " Hit    Total  Avg    Min    Max   Name\n");
+	if(lFile != NULL) {
+		fprintf(lFile, " Hit    Total  Avg    Min    Max   Name\n");
 
-	MR_ProfilerSampler *lCurrent = gProfilerSamplerList;
+		MR_ProfilerSampler *lCurrent = gProfilerSamplerList;
 
-	while(lCurrent != NULL) {
-	    int lAvg = 0;
+		while(lCurrent != NULL) {
+			int lAvg = 0;
 
-	    if(lCurrent->mNbCall > 0) {
-		lAvg = lCurrent->mTotalTime / lCurrent->mNbCall;
-	    }
+			if(lCurrent->mNbCall > 0) {
+				lAvg = lCurrent->mTotalTime / lCurrent->mNbCall;
+			}
 
-	    fprintf(lFile, "%-6d %-6d %-6d %-6d %-6d %s\n", lCurrent->mNbCall, lCurrent->mTotalTime, lAvg, lCurrent->mMinPeriod, lCurrent->mMaxPeriod, lCurrent->mName);
+			fprintf(lFile, "%-6d %-6d %-6d %-6d %-6d %s\n", lCurrent->mNbCall, lCurrent->mTotalTime, lAvg, lCurrent->mMinPeriod, lCurrent->mMaxPeriod, lCurrent->mName);
 
-	    lCurrent = lCurrent->mNext;
+			lCurrent = lCurrent->mNext;
+		}
+
+		fclose(lFile);
 	}
 
-	fclose(lFile);
-    }
-
-    UnPauseTime();
+	UnPauseTime();
 }
-
 #endif

@@ -5,8 +5,8 @@
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
 //
-// A copy of the license should have been attached to the package from which 
-// you have taken this file. If you can not find the license you can not use 
+// A copy of the license should have been attached to the package from which
+// you have taken this file. If you can not find the license you can not use
 // this file.
 //
 //
@@ -15,10 +15,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
 // implied.
 //
-// See the License for the specific language governing permissions 
+// See the License for the specific language governing permissions
 // and limitations under the License.
 //
-
 
 #ifndef MR_OBJ_FAC_DATA_H
 #define MR_OBJ_FAC_DATA_H
@@ -31,21 +30,17 @@
 #define MR_DllDeclare   __declspec( dllimport )
 #endif
 
+class MR_ObjectFactoryData
+{
+	public:
+		HMODULE mModule;						  // Current module id
+		MR_ResourceLib mResourceLib;			  // resource lib
 
-
-class MR_ObjectFactoryData {
-  public:
-    HMODULE mModule;		// Current module id
-    MR_ResourceLib mResourceLib;	// resource lib
-
-    MR_DllDeclare MR_ObjectFactoryData(HMODULE pModule, const char *pResourceFile);
-      MR_DllDeclare ~ MR_ObjectFactoryData();
+		MR_DllDeclare MR_ObjectFactoryData(HMODULE pModule, const char *pResourceFile);
+		MR_DllDeclare ~ MR_ObjectFactoryData();
 };
 
-
-extern MR_ObjectFactoryData *gObjectFactoryData;	// Must be implemented in each module
-
+extern MR_ObjectFactoryData *gObjectFactoryData;  // Must be implemented in each module
 
 #undef MR_DllDeclare
-
 #endif

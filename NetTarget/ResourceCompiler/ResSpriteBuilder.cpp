@@ -5,8 +5,8 @@
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
 //
-// A copy of the license should have been attached to the package from which 
-// you have taken this file. If you can not find the license you can not use 
+// A copy of the license should have been attached to the package from which
+// you have taken this file. If you can not find the license you can not use
 // this file.
 //
 //
@@ -15,7 +15,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
 // implied.
 //
-// See the License for the specific language governing permissions 
+// See the License for the specific language governing permissions
 // and limitations under the License.
 //
 
@@ -25,25 +25,24 @@
 
 // Local prototypes
 
-
 MR_ResSpriteBuilder::MR_ResSpriteBuilder(int pResourceId)
-:  MR_ResSprite(pResourceId)
+:MR_ResSprite(pResourceId)
 {
 }
 
 BOOL MR_ResSpriteBuilder::BuildFromFile(const char *pFile, int pNbItem)
 {
-    BOOL lReturnValue = TRUE;
+	BOOL lReturnValue = TRUE;
 
-    mNbItem = pNbItem;
+	mNbItem = pNbItem;
 
-    mData = LoadBitmap(pFile, mWidth, mTotalHeight, FALSE);
+	mData = LoadBitmap(pFile, mWidth, mTotalHeight, FALSE);
 
-    mItemHeight = mTotalHeight / mNbItem;
+	mItemHeight = mTotalHeight / mNbItem;
 
-    if(mData == NULL) {
-	lReturnValue = FALSE;
-    }
+	if(mData == NULL) {
+		lReturnValue = FALSE;
+	}
 
-    return lReturnValue;
+	return lReturnValue;
 }

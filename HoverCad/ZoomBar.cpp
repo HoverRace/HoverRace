@@ -6,8 +6,8 @@
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
 //
-// A copy of the license should have been attached to the package from which 
-// you have taken this file. If you can not find the license you can not use 
+// A copy of the license should have been attached to the package from which
+// you have taken this file. If you can not find the license you can not use
 // this file.
 //
 //
@@ -16,7 +16,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
 // implied.
 //
-// See the License for the specific language governing permissions 
+// See the License for the specific language governing permissions
 // and limitations under the License.
 //
 //
@@ -40,54 +40,47 @@ static char THIS_FILE[] = __FILE__;
 
 CZoomBar::CZoomBar()
 {
-   mCurrentView = NULL;
+	mCurrentView = NULL;
 }
 
-BOOL CZoomBar::Create(CWnd* pParent, UINT pStyle )
+BOOL CZoomBar::Create(CWnd * pParent, UINT pStyle)
 {
-   BOOL lReturnValue = CDialogBar::Create( pParent, IDD_ZOOM_BAR, pStyle, IDD_ZOOM_BAR );
+	BOOL lReturnValue = CDialogBar::Create(pParent, IDD_ZOOM_BAR, pStyle, IDD_ZOOM_BAR);
 
-   if( lReturnValue )
-   {
-      mSlider.SubclassWindow( *GetDlgItem( IDC_ZOOM_SLIDER ));
-      mSlider.EnableWindow( FALSE );
-   }
+	if(lReturnValue) {
+		mSlider.SubclassWindow(*GetDlgItem(IDC_ZOOM_SLIDER));
+		mSlider.EnableWindow(FALSE);
+	}
 
-   return lReturnValue;
+	return lReturnValue;
 }
 
-
-void CZoomBar::AttachView( CHoverCadView* pView )
+void CZoomBar::AttachView(CHoverCadView * pView)
 {
-   if( pView!=mCurrentView )
-   {
-      mCurrentView = pView;
+	if(pView != mCurrentView) {
+		mCurrentView = pView;
 
-      // Update current state
-     if( pView != NULL )
-     {
-         mSlider.EnableWindow( TRUE );
+		// Update current state
+		if(pView != NULL) {
+			mSlider.EnableWindow(TRUE);
 
-        int lSliderValue = 33.0-33.0*log10( pView->GetDisplayRatio() );
+			int lSliderValue = 33.0 - 33.0 * log10(pView->GetDisplayRatio());
 
-        mSlider.SetPos( lSliderValue );
-     }
-     else
-     {
-        mSlider.EnableWindow( FALSE );
-     }
-   }
+			mSlider.SetPos(lSliderValue);
+		}
+		else {
+			mSlider.EnableWindow(FALSE);
+		}
+	}
 }
 
-void CZoomBar::DetachView( CHoverCadView* pView )
+void CZoomBar::DetachView(CHoverCadView * pView)
 {
-   if( pView == mCurrentView )
-   {
-      mSlider.EnableWindow( FALSE );
-      mCurrentView = NULL;
-   }
+	if(pView == mCurrentView) {
+		mSlider.EnableWindow(FALSE);
+		mCurrentView = NULL;
+	}
 }
-
 
 /*
 void CZoomBar::DoDataExchange(CDataExchange* pDX)
@@ -100,28 +93,25 @@ void CZoomBar::DoDataExchange(CDataExchange* pDX)
 */
 
 BEGIN_MESSAGE_MAP(CZoomBar, CDialogBar)
-	//{{AFX_MSG_MAP(CZoomBar)
-	ON_WM_VSCROLL()
-	//}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CZoomBar)
+ON_WM_VSCROLL()
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
-
 /////////////////////////////////////////////////////////////////////////////
 // CZoomBar message handlers
-
-void CZoomBar::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar) 
+void CZoomBar::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar * pScrollBar)
 {
 	// TODO: Add your message handler code here and/or call default
-	TRACE( "Zoom move %d %d\n", (int)nSBCode, (int)nPos );
+	TRACE("Zoom move %d %d\n", (int) nSBCode, (int) nPos);
 
-   // if( (nSBCode==)||(nSBCode==))
-   {
-      double lScaling = pow((double) 10, (double) (33-mSlider.GetPos())/33.0 );
+	// if( (nSBCode==)||(nSBCode==))
+	{
+		double lScaling = pow((double) 10, (double) (33 - mSlider.GetPos()) / 33.0);
 
-      if( mCurrentView != NULL )
-      {
-         mCurrentView->SetDisplayRatio( lScaling );
-         mCurrentView->OnUpdate( NULL, NULL, NULL );
-      }
-   }
+		if(mCurrentView != NULL) {
+			mCurrentView->SetDisplayRatio(lScaling);
+			mCurrentView->OnUpdate(NULL, NULL, NULL);
+		}
+	}
 	CDialogBar::OnVScroll(nSBCode, nPos, pScrollBar);
 }

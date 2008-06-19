@@ -6,8 +6,8 @@
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
 //
-// A copy of the license should have been attached to the package from which 
-// you have taken this file. If you can not find the license you can not use 
+// A copy of the license should have been attached to the package from which
+// you have taken this file. If you can not find the license you can not use
 // this file.
 //
 //
@@ -16,31 +16,30 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
 // implied.
 //
-// See the License for the specific language governing permissions 
+// See the License for the specific language governing permissions
 // and limitations under the License.
 //
 //
 
 class CHoverType
 {
-   public:
-      int         mSerialId; // ID used when serializing the file
-      int         mDllId;
-      int         mTypeId;
-      int         mStringId;
-      const char* mOldLabel;
+	public:
+		int mSerialId;							  // ID used when serializing the file
+		int mDllId;
+		int mTypeId;
+		int mStringId;
+		const char *mOldLabel;
 };
 
 extern CHoverType WallTextureList[];
-extern int        WallTextureListSize;
+extern int WallTextureListSize;
 extern CHoverType FloorTextureList[];
-extern int        FloorTextureListSize;
+extern int FloorTextureListSize;
 extern CHoverType CeilingTextureList[];
-extern int        CeilingTextureListSize;
+extern int CeilingTextureListSize;
 extern CHoverType ObjectList[];
-extern int        ObjectListSize;
+extern int ObjectListSize;
 
-int MR_GetTypeIndex( int pId, CHoverType* pList, int pListSize );
+int MR_GetTypeIndex(int pId, CHoverType * pList, int pListSize);
 
 #define GetTypeIndex( pId, pListName )  MR_GetTypeIndex( pId, pListName##List, pListName##ListSize )
-

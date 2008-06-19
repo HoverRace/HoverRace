@@ -9,5 +9,4 @@
 
 #define MR_NOBITMAP  0
 #define MR_RAWBITMAP 1
-
 #endif

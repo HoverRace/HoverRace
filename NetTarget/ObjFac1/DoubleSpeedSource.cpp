@@ -5,8 +5,8 @@
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
 //
-// A copy of the license should have been attached to the package from which 
-// you have taken this file. If you can not find the license you can not use 
+// A copy of the license should have been attached to the package from which
+// you have taken this file. If you can not find the license you can not use
 // this file.
 //
 //
@@ -15,7 +15,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
 // implied.
 //
-// See the License for the specific language governing permissions 
+// See the License for the specific language governing permissions
 // and limitations under the License.
 //
 
@@ -23,41 +23,36 @@
 
 #include "DoubleSpeedSource.h"
 
-
-const MR_Int32 cSourceRay = 20000;	// the source have a diameter of 40 meters
-const MR_Int32 cSourceHeight = 2000;	// 2 meters
-
-
+const MR_Int32 cSourceRay = 20000;				  // the source have a diameter of 40 meters
+const MR_Int32 cSourceHeight = 2000;			  // 2 meters
 
 MR_Int32 MR_DoubleSpeedSource::ZMin() const const
 {
-    return mPosition.mZ;
+	return mPosition.mZ;
 }
 
 MR_Int32 MR_DoubleSpeedSource::ZMax() const const
 {
-    return mPosition.mZ + cSourceHeight;
+	return mPosition.mZ + cSourceHeight;
 }
 
 MR_Int32 MR_DoubleSpeedSource::AxisX() const const
 {
-    return mPosition.mX;
+	return mPosition.mX;
 }
 
 MR_Int32 MR_DoubleSpeedSource::AxisY() const const
 {
-    return mPosition.mY;
+	return mPosition.mY;
 }
 
 MR_Int32 MR_DoubleSpeedSource::RayLen() const const
 {
-    return cSourceRay;
-}
-
-MR_DoubleSpeedSource::MR_DoubleSpeedSource(const MR_ObjectFromFactoryId & pId)
-:  MR_FreeElement(pId)
+	return cSourceRay;
+} MR_DoubleSpeedSource::MR_DoubleSpeedSource(const MR_ObjectFromFactoryId & pId)
+:MR_FreeElement(pId)
 {
-    mContactEffectList.AddTail(&mSpeedEffect);
+	mContactEffectList.AddTail(&mSpeedEffect);
 }
 
 MR_DoubleSpeedSource::~MR_DoubleSpeedSource()
@@ -66,10 +61,10 @@ MR_DoubleSpeedSource::~MR_DoubleSpeedSource()
 
 const MR_ContactEffectList *MR_DoubleSpeedSource::GetEffectList()
 {
-    return &mContactEffectList;
+	return &mContactEffectList;
 }
 
 const MR_ShapeInterface *MR_DoubleSpeedSource::GetReceivingContactEffectShape()
 {
-    return this;
+	return this;
 }

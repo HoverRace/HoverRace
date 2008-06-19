@@ -6,8 +6,8 @@
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
 //
-// A copy of the license should have been attached to the package from which 
-// you have taken this file. If you can not find the license you can not use 
+// A copy of the license should have been attached to the package from which
+// you have taken this file. If you can not find the license you can not use
 // this file.
 //
 //
@@ -16,10 +16,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
 // implied.
 //
-// See the License for the specific language governing permissions 
+// See the License for the specific language governing permissions
 // and limitations under the License.
 //
-
 
 #ifndef WOOD_SURFACE_H
 #define WOOD_SURFACE_H
@@ -27,14 +26,12 @@
 #include "../Model/MazeElement.h"
 #include "../ObjFacTools/BitmapSurface.h"
 
+class MR_WoodSurface:public MR_BitmapSurface
+{
 
-class MR_WoodSurface:public MR_BitmapSurface {
-
-  public:
-    MR_WoodSurface(const MR_ObjectFromFactoryId & pId);
-     ~MR_WoodSurface();
+	public:
+		MR_WoodSurface(const MR_ObjectFromFactoryId & pId);
+		~MR_WoodSurface();
 
 };
-
-
 #endif

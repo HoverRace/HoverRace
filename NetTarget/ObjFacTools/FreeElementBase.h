@@ -6,8 +6,8 @@
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
 //
-// A copy of the license should have been attached to the package from which 
-// you have taken this file. If you can not find the license you can not use 
+// A copy of the license should have been attached to the package from which
+// you have taken this file. If you can not find the license you can not use
 // this file.
 //
 //
@@ -16,13 +16,12 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
 // implied.
 //
-// See the License for the specific language governing permissions 
+// See the License for the specific language governing permissions
 // and limitations under the License.
 //
 
-
 //
-// The class defined in this file can be used as a base class for 
+// The class defined in this file can be used as a base class for
 // free elements
 //
 //
@@ -39,22 +38,21 @@
 #define MR_DllDeclare   __declspec( dllimport )
 #endif
 
+class MR_FreeElementBase:public MR_FreeElement
+{
+	protected:
+		const MR_ResActor *mActor;
+		int mCurrentSequence;
+		int mCurrentFrame;
 
-class MR_FreeElementBase:public MR_FreeElement {
-  protected:
-    const MR_ResActor *mActor;
-    int mCurrentSequence;
-    int mCurrentFrame;
+	public:
+		MR_DllDeclare MR_FreeElementBase(const MR_ObjectFromFactoryId & pId);
+		MR_DllDeclare ~ MR_FreeElementBase();
 
-  public:
-      MR_DllDeclare MR_FreeElementBase(const MR_ObjectFromFactoryId & pId);
-      MR_DllDeclare ~ MR_FreeElementBase();
-
-    // Rendering stuff
-    MR_DllDeclare void Render(MR_3DViewPort * pDest, MR_SimulationTime pTime);
+		// Rendering stuff
+		MR_DllDeclare void Render(MR_3DViewPort * pDest, MR_SimulationTime pTime);
 
 };
 
 #undef MR_DllDeclare
-
 #endif

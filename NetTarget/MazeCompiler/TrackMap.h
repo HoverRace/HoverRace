@@ -7,8 +7,8 @@
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
 //
-// A copy of the license should have been attached to the package from which 
-// you have taken this file. If you can not find the license you can not use 
+// A copy of the license should have been attached to the package from which
+// you have taken this file. If you can not find the license you can not use
 // this file.
 //
 //
@@ -17,7 +17,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
 // implied.
 //
-// See the License for the specific language governing permissions 
+// See the License for the specific language governing permissions
 // and limitations under the License.
 //
 
@@ -27,25 +27,20 @@
 #include "../Model/Level.h"
 #include "../VideoServices/Sprite.h"
 
+class MR_MapSprite:public MR_Sprite
+{
+	protected:
+		int mXMin;
+		int mXMax;
+		int mYMin;
+		int mYMax;
 
-class MR_MapSprite:public MR_Sprite {
-  protected:
-    int mXMin;
-    int mXMax;
-    int mYMin;
-    int mYMax;
+		void ComputeMinMax(MR_Level * pLevel);
+		void DrawMap(MR_Level * pLevel);
 
-    void ComputeMinMax(MR_Level * pLevel);
-    void DrawMap(MR_Level * pLevel);
+	public:
 
-
-  public:
-
-      BOOL CreateMap(MR_Level * pLevel, int &pX0, int &pY0, int &pX1, int &pY1);
+		BOOL CreateMap(MR_Level * pLevel, int &pX0, int &pY0, int &pX1, int &pY1);
 
 };
-
-
-
-
 #endif

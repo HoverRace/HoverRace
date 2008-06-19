@@ -6,8 +6,8 @@
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
 //
-// A copy of the license should have been attached to the package from which 
-// you have taken this file. If you can not find the license you can not use 
+// A copy of the license should have been attached to the package from which
+// you have taken this file. If you can not find the license you can not use
 // this file.
 //
 //
@@ -16,7 +16,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
 // implied.
 //
-// See the License for the specific language governing permissions 
+// See the License for the specific language governing permissions
 // and limitations under the License.
 //
 
@@ -28,33 +28,31 @@
 
 // Note.. finish lines are not finish lines..they are check points
 
-class MR_FinishLine:public MR_FreeElement, protected MR_CylinderShape {
-  protected:
+class MR_FinishLine:public MR_FreeElement, protected MR_CylinderShape
+{
+	protected:
 
-    // Shape interface
-    MR_Int32 ZMin() const;
-    MR_Int32 ZMax() const;
-    MR_Int32 AxisX() const;
-    MR_Int32 AxisY() const;
-    MR_Int32 RayLen() const;
+		// Shape interface
+		MR_Int32 ZMin() const;
+		MR_Int32 ZMax() const;
+		MR_Int32 AxisX() const;
+		MR_Int32 AxisY() const;
+		MR_Int32 RayLen() const;
 
+	private:
 
-  private:
+		MR_CheckPoint mEffect;
+		MR_ContactEffectList mContactEffectList;
 
-      MR_CheckPoint mEffect;
-    MR_ContactEffectList mContactEffectList;
+	public:
+		MR_FinishLine(const MR_ObjectFromFactoryId & pId, MR_CheckPoint::CheckPointType pType);
+		~MR_FinishLine();
 
-  public:
-      MR_FinishLine(const MR_ObjectFromFactoryId & pId, MR_CheckPoint::CheckPointType pType);
-     ~MR_FinishLine();
+	protected:
 
-
-  protected:
-
-    // ContactEffectShapeInterface
-    const MR_ContactEffectList *GetEffectList();
-    const MR_ShapeInterface *GetReceivingContactEffectShape();
+		// ContactEffectShapeInterface
+		const MR_ContactEffectList *GetEffectList();
+		const MR_ShapeInterface *GetReceivingContactEffectShape();
 
 };
-
 #endif

@@ -6,8 +6,8 @@
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
 //
-// A copy of the license should have been attached to the package from which 
-// you have taken this file. If you can not find the license you can not use 
+// A copy of the license should have been attached to the package from which
+// you have taken this file. If you can not find the license you can not use
 // this file.
 //
 //
@@ -16,11 +16,11 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
 // implied.
 //
-// See the License for the specific language governing permissions 
+// See the License for the specific language governing permissions
 // and limitations under the License.
 //
 //
-// This file contains non-abstact class that can be used 
+// This file contains non-abstact class that can be used
 // to create stand alone MR_ShapeInterface derived objects
 
 #ifndef CONCRETE_SHAPE_H
@@ -34,25 +34,21 @@
 #define MR_DllDeclare   __declspec( dllimport )
 #endif
 
+class MR_DllDeclare MR_Cylinder:public MR_CylinderShape
+{
+	public:
+		MR_2DCoordinate mAxis;
+		MR_Int32 mRayLen;
+		MR_Int32 mZMin;
+		MR_Int32 mZMax;
 
-class MR_DllDeclare MR_Cylinder:public MR_CylinderShape {
-  public:
-    MR_2DCoordinate mAxis;
-    MR_Int32 mRayLen;
-    MR_Int32 mZMin;
-    MR_Int32 mZMax;
-
-
-    MR_Int32 ZMin() const;
-    MR_Int32 ZMax() const;
-    MR_Int32 AxisX() const;
-    MR_Int32 AxisY() const;
-    MR_Int32 RayLen() const;
-
+		MR_Int32 ZMin() const;
+		MR_Int32 ZMax() const;
+		MR_Int32 AxisX() const;
+		MR_Int32 AxisY() const;
+		MR_Int32 RayLen() const;
 
 };
 
-
 #undef MR_DllDeclare
-
 #endif
