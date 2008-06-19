@@ -292,7 +292,9 @@ int MR_ObjectFromFactoryId::operator ==(const MR_ObjectFromFactoryId & pId) cons
 	return ((mDllId == pId.mDllId) && (mClassId == pId.mClassId));
 }
 
-// class MR_FactoryDll methods MR_FactoryDll::MR_FactoryDll()
+
+// class MR_FactoryDll methods 
+MR_FactoryDll::MR_FactoryDll()
 {
 	mDynamic = FALSE;
 	mRefCount = 0;

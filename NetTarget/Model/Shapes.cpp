@@ -53,7 +53,7 @@ MR_Int32 MR_CylinderShape::YMax() const
 	return AxisY() + RayLen();
 }
 
-MR_ShapeInterface::eShape MR_CylinderShape::ShapeType() constconst
+MR_ShapeInterface::eShape MR_CylinderShape::ShapeType() const
 {
 	return eCylinder;
 }
@@ -100,7 +100,7 @@ MR_Int32 MR_LineSegmentShape::YMax() const
 	return ((lY0 > lY1) ? lY0 : lY1);
 }
 
-MR_ShapeInterface::eShape MR_LineSegmentShape::ShapeType() constconst
+MR_ShapeInterface::eShape MR_LineSegmentShape::ShapeType() const
 {
 	return eLineSegment;
 }
@@ -115,7 +115,7 @@ MR_Int32 MR_PolygonShape::YPos() const
 	return (YMin() + YMax()) / 2;
 }
 
-MR_ShapeInterface::eShape MR_PolygonShape::ShapeType() constconst
+MR_ShapeInterface::eShape MR_PolygonShape::ShapeType() const
 {
 	return ePolygon;
 }

@@ -81,7 +81,8 @@ void MR_ResActor::Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix,
 	mSequenceList[pSequence].Draw(pDest, pMatrix, pFrame);
 }
 
-// Sequence MR_ResActor::Sequence::Sequence()
+// Sequence 
+MR_ResActor::Sequence::Sequence()
 {
 	mNbFrame = 0;
 	mFrameList = NULL;
@@ -120,7 +121,8 @@ void MR_ResActor::Sequence::Draw(MR_3DViewPort * pDest, const MR_PositionMatrix 
 	mFrameList[pFrame].Draw(pDest, pMatrix);
 }
 
-// Frame// MR_ResActor::Frame::Frame()
+// Frame 
+MR_ResActor::Frame::Frame()
 {
 	mNbComponent = 0;
 	mComponentList = NULL;
@@ -193,7 +195,8 @@ void MR_ResActor::Frame::Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & p
 	}
 }
 
-// class ActorComponent MR_ResActor::ActorComponent::~ActorComponent()
+// class ActorComponent 
+MR_ResActor::ActorComponent::~ActorComponent()
 {
 	// Notting to do
 }
@@ -211,7 +214,7 @@ MR_ResActor::Patch::~Patch()
 	delete[]mVertexList;
 }
 
-MR_ResActor::eComponentType MR_ResActor::Patch::GetType() constconst
+MR_ResActor::eComponentType MR_ResActor::Patch::GetType() const
 {
 	return ePatch;
 }

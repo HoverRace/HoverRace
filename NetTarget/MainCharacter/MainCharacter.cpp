@@ -948,7 +948,7 @@ MR_ElementNetState MR_MainCharacter::GetNetState() const const
 		return mFuelLevel / eFuelCapacity;
 	}
 
-	MR_MainCharacter::eWeapon MR_MainCharacter::GetCurrentWeapon() constconst
+	MR_MainCharacter::eWeapon MR_MainCharacter::GetCurrentWeapon() const
 	{
 		return mCurrentWeapon;
 	}

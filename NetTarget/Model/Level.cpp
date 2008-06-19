@@ -340,7 +340,8 @@ MR_SurfaceElement *MR_Level::GetFeatureTopElement(int pFeatureId) const const
 	return mFeatureList[pFeatureId].mCeilingTexture;
 }
 
-// FreeElements manipulation MR_FreeElementHandle MR_Level::GetFirstFreeElement(int pRoom) const const {
+// FreeElements manipulation 
+MR_FreeElementHandle MR_Level::GetFirstFreeElement(int pRoom) const {
 FreeElement *lReturnValue;
 
 if(pRoom == eNonClassified)
@@ -528,7 +529,8 @@ MR_Int32 MR_Level::SectionShape::SideLen(int pIndex) const const
 	return mSection->mWallLen[pIndex];
 }
 
-// class MR_Level::Section::AudibleRoom MR_Level::Room::AudibleRoom::AudibleRoom()
+// class MR_Level::Section::AudibleRoom 
+MR_Level::Room::AudibleRoom::AudibleRoom()
 {
 	mSectionSource = -1;
 	mNbVertexSources = 0;
