@@ -28,7 +28,6 @@
 
 #include "../Util/Profiler.h"
 
-
 // Debug flag
 #ifdef _DEBUG
 static const BOOL gDebugMode = TRUE;
@@ -254,6 +253,35 @@ void PrintLog( const char* pFormat, ... );
 
 #endif
 
+// Computes the run length and shift of the block of ones in a bitmask.
+// Example: If the mask is "00011100" then mSize=3 and mShift=2.
+void MR_VideoBuffer::Channel::SetMask(DWORD mask)
+{
+	mShift = 0;
+	mSize = 0;
+
+	// Count the zeros on right hand side.
+	while (!(mask & 1L))
+	{
+		mask >>= 1;
+		mShift++;
+	}
+
+	// Count the ones.
+	while (mask & 1L)
+	{
+		mask >>= 1;
+		mSize++;
+	}
+}
+
+// Packs a value into the bitmask for this channel.
+DWORD MR_VideoBuffer::Channel::Pack(DWORD intensity)
+{
+	intensity >>= (8 - mSize);
+	intensity <<= mShift;
+	return intensity;
+}
 
 MR_VideoBuffer::MR_VideoBuffer( HWND pWindow, double pGamma, double pContrast, double pBrightness )
 {
@@ -271,6 +299,7 @@ MR_VideoBuffer::MR_VideoBuffer( HWND pWindow, double pGamma, double pContrast, d
    mBuffer      = NULL;
    mClipper     = NULL;
    mBackPalette = NULL;
+   mPackedPalette = NULL;
 
    mModeSettingInProgress = FALSE;
    mFullScreen            = FALSE;
@@ -310,12 +339,17 @@ MR_VideoBuffer::~MR_VideoBuffer()
    }
 
    delete []mBackPalette;
+   delete []mPackedPalette;
 
    PRINT_LOG( "VIDEO_BUFFER_DESTRUCTION\n\n" );
    CLOSE_LOG();
 
 }
 
+DWORD MR_VideoBuffer::PackRGB(DWORD r, DWORD g, DWORD b)
+{
+	return mRChan.Pack(r) | mGChan.Pack(g) | mBChan.Pack(b);
+}
 
 BOOL MR_VideoBuffer::InitDirectDraw()
 {
@@ -515,7 +549,22 @@ void MR_VideoBuffer::CreatePalette( double pGamma, double pContrast, double pBri
          lPalette[ lCounter ].peFlags = 0; //PC_NOCOLLAPSE; //lPalette[ 0 ].peFlags;
       }
       
-
+      // Generate the packed palette.
+	  if (mBpp > 8)
+	  {
+		  if (mPackedPalette == NULL)
+		  {
+			  mPackedPalette = new DWORD[256];
+		  }
+		  for (int i = 0; i < 256; i++)
+		  {
+			  mPackedPalette[i] = PackRGB(
+				  lPalette[i].peRed,
+				  lPalette[i].peGreen,
+				  lPalette[i].peBlue);
+			  PRINT_LOG("Palette entry %d is %08xd",i,mPackedPalette[i]);
+		  }
+	  }
 
       // Create the palette
       if( DD_CALL( mDirectDraw->CreatePalette(DDPCAPS_8BIT /*|DDPCAPS_ALLOW256*/, lPalette, &mPalette, NULL)) != DD_OK )
@@ -716,7 +765,7 @@ BOOL MR_VideoBuffer::SetVideoMode()
       }
       else
       {
-         // Verify that the surface is a 8 bit surface
+         // Keep track of the pixel format so we can blit later.
          DDPIXELFORMAT lFormat;
 
          memset( &lFormat, 0, sizeof( lFormat ) );
@@ -727,11 +776,30 @@ BOOL MR_VideoBuffer::SetVideoMode()
          {
             lReturnValue = FALSE;
          }
-         else if( !( lFormat.dwFlags&DDPF_PALETTEINDEXED8) )
+         else if( lFormat.dwFlags&DDPF_PALETTEINDEXED8 )
          {
-            PRINT_LOG( "BadPixelFormat %d", (int)lFormat.dwFlags );
-            lReturnValue = FALSE;
+			mBpp = 8;
+			PRINT_LOG("BPP: Indexed");
+			// Don't need to process the pixel format since we
+			// can just copy the bits.
          }
+		 else
+		 {
+			mBpp = lFormat.dwRGBBitCount;
+			PRINT_LOG("BPP: %d", mBpp);
+			if (mBpp < 8 || mBpp > 32)
+			{
+				// Interesting!  Not quite sure how to deal with this.
+				PRINT_LOG("Unhandled RGB bpp: %d", mBpp);
+				lReturnValue = FALSE;
+			}
+			else
+			{
+				mRChan.SetMask(lFormat.dwRBitMask);
+				mGChan.SetMask(lFormat.dwGBitMask);
+				mBChan.SetMask(lFormat.dwBBitMask);
+			}
+		 }
       }
    }
 
@@ -929,6 +997,11 @@ BOOL MR_VideoBuffer::SetVideoMode( int pXRes, int pYRes )
             lReturnValue = FALSE;
          }
       }
+
+	  if( lReturnValue )
+	  {
+		  mBpp = 8;
+	  }
    }
 
 
@@ -1030,7 +1103,6 @@ BOOL MR_VideoBuffer::Lock()
 
    MR_SAMPLE_CONTEXT( "LockVideoBuffer" );
 
-   HRESULT lErrorCode;
    BOOL lReturnValue = TRUE;
 
    ASSERT( mBuffer == NULL );
@@ -1073,7 +1145,7 @@ BOOL MR_VideoBuffer::Lock()
    // Do the lock
    if( lReturnValue )
    {
-      if( !gDebugMode )
+      if( !gDebugMode && (mBpp == 8) )
       {
          DDSURFACEDESC   lSurfaceDesc;
 
@@ -1092,7 +1164,7 @@ BOOL MR_VideoBuffer::Lock()
       }
       else
       {
-         // Debug lock type
+         // Render indirectly if debugging or not in 256-color mode.
          mBuffer    = new MR_UInt8[ mXRes*mYRes ];
          mLineLen   = mXRes;
       }
@@ -1111,7 +1183,7 @@ void MR_VideoBuffer::Unlock()
    ASSERT( mDirectDraw != NULL );
    ASSERT( mBackBuffer != NULL );
 
-   if( !gDebugMode )
+   if( !gDebugMode && (mBpp == 8) )
    {
       if( DD_CALL(mBackBuffer->Unlock( NULL )) != DD_OK )
       {
@@ -1153,12 +1225,58 @@ void MR_VideoBuffer::Unlock()
 
          MR_SAMPLE_START( CopyVideoBuffer, "CopyVideoBuffer" );
 
-         for( int lCounter = 0; lCounter < mYRes; lCounter++ )
-         {
-            memcpy( lDest, lSrc, mXRes );
-            lDest += lLineLen;
-            lSrc  += mLineLen;
-         }
+		 if (mBpp <= 8)
+		 {
+			for( int lCounter = 0; lCounter < mYRes; lCounter++ )
+			{
+				memcpy( lDest, lSrc, mXRes );
+				lDest += lLineLen;
+				lSrc  += mLineLen;
+			}
+		 }
+		 else if (mBpp <= 16)
+		 {
+			for( int lCounter = 0; lCounter < mYRes; lCounter++ )
+			{
+				MR_UInt16* lRDest = reinterpret_cast<MR_UInt16*>(lDest);
+				for (int lx = 0; lx < mXRes; ++lx)
+				{
+					*lRDest++ = static_cast<MR_UInt16>(mPackedPalette[lSrc[lx]]);
+				}
+				lDest += lLineLen;
+				lSrc  += mLineLen;
+			}
+		 }
+		 else if (mBpp <= 24)
+		 {
+			// Note: Untested!
+			for( int lCounter = 0; lCounter < mYRes; lCounter++ )
+			{
+				MR_UInt8* lRDest = lDest;
+				for (int lx = 0; lx < mXRes; ++lx)
+				{
+					DWORD lColor = mPackedPalette[lSrc[lx]];
+					*lRDest++ = static_cast<MR_UInt8>((lColor >> 16) & 0xff);
+					*lRDest++ = static_cast<MR_UInt8>((lColor >> 8) & 0xff);
+					*lRDest++ = static_cast<MR_UInt8>(lColor & 0xff);
+				}
+				lDest += lLineLen;
+				lSrc  += mLineLen;
+			}
+		 }
+		 else if (mBpp <= 32)
+		 {
+			for( int lCounter = 0; lCounter < mYRes; lCounter++ )
+			{
+				MR_UInt32* lRDest = reinterpret_cast<MR_UInt32*>(lDest);
+				for (int lx = 0; lx < mXRes; ++lx)
+				{
+					*lRDest++ = mPackedPalette[lSrc[lx]];
+				}
+				lDest += lLineLen;
+				lSrc  += mLineLen;
+			}
+		 }
 
          MR_SAMPLE_END( CopyVideoBuffer );
 
@@ -1170,7 +1288,7 @@ void MR_VideoBuffer::Unlock()
          // ASSERT( FALSE );
       }
 
-      delete mBuffer;
+      delete [] mBuffer;
       mBuffer = NULL;
    }
 

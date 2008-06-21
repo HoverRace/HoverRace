@@ -66,6 +66,17 @@ class MR_VideoBuffer
       int                  mYRes;
       int                  mLineLen;
 
+      DWORD                mBpp;   // bits per pixel (when windowed)
+      struct Channel {
+         DWORD mShift;
+         DWORD mSize;
+         Channel() : mShift(0), mSize(0) { }
+         void SetMask(DWORD mask);
+         DWORD Pack(DWORD intensity);
+      };
+      Channel              mRChan, mGChan, mBChan;
+      DWORD*               mPackedPalette;
+
       MR_UInt16*           mZBuffer;
       MR_UInt8*            mBuffer;
 
@@ -82,7 +93,7 @@ class MR_VideoBuffer
       double mContrast;
       double mBrightness;
 
-
+      DWORD PackRGB(DWORD r, DWORD g, DWORD b);
 
       BOOL  InitDirectDraw();
       void  DeleteInternalSurfaces();
