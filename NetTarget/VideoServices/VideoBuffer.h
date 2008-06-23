@@ -66,13 +66,14 @@ class MR_VideoBuffer
       int                  mYRes;
       int                  mLineLen;
 
-      DWORD                mBpp;   // bits per pixel (when windowed)
+      DWORD                mBpp;   // current bits per pixel
+	  DWORD                mNativeBpp; // native (desktop) bits per pixel
       struct Channel {
          DWORD mShift;
          DWORD mSize;
          Channel() : mShift(0), mSize(0) { }
          void SetMask(DWORD mask);
-         DWORD Pack(DWORD intensity);
+         DWORD Pack(DWORD intensity) const;
       };
       Channel              mRChan, mGChan, mBChan;
       DWORD*               mPackedPalette;
@@ -96,6 +97,7 @@ class MR_VideoBuffer
       DWORD PackRGB(DWORD r, DWORD g, DWORD b);
 
       BOOL  InitDirectDraw();
+	  BOOL  ProcessCurrentBpp(const DDPIXELFORMAT& lFormat);
       void  DeleteInternalSurfaces();
       void  ReturnToWindowsResolution(); //Automaticly call DeleteInternalSurfaces
 

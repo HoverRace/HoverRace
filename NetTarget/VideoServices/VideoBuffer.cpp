@@ -276,7 +276,7 @@ void MR_VideoBuffer::Channel::SetMask(DWORD mask)
 }
 
 // Packs a value into the bitmask for this channel.
-DWORD MR_VideoBuffer::Channel::Pack(DWORD intensity)
+DWORD MR_VideoBuffer::Channel::Pack(DWORD intensity) const
 {
 	intensity >>= (8 - mSize);
 	intensity <<= mShift;
@@ -303,6 +303,9 @@ MR_VideoBuffer::MR_VideoBuffer( HWND pWindow, double pGamma, double pContrast, d
 
    mModeSettingInProgress = FALSE;
    mFullScreen            = FALSE;
+
+   mBpp       = 0;
+   mNativeBpp = 0;
 
    mIconMode       = IsIconic( pWindow );
 
@@ -374,6 +377,27 @@ BOOL MR_VideoBuffer::InitDirectDraw()
       }
    }
 
+    if (lReturnValue) {
+		// Keep track of the native pixel format so we can blit later.
+		DDSURFACEDESC lSurfaceDesc;
+		memset(&lSurfaceDesc, 0, sizeof(lSurfaceDesc));
+		lSurfaceDesc.dwSize = sizeof(lSurfaceDesc);
+
+		if( DD_CALL( mDirectDraw->GetDisplayMode( &lSurfaceDesc )) != DD_OK )
+		{
+			lReturnValue = FALSE;
+		}
+		else
+		{
+			if (lReturnValue = ProcessCurrentBpp(lSurfaceDesc.ddpfPixelFormat))
+			{
+				// We make the assumption that the desktop color depth
+				// won't change while we're running.
+				if (mNativeBpp == 0) mNativeBpp = mBpp;
+			}
+		}
+    }
+
    if( mPalette == NULL )
    {
       // Create a palette
@@ -381,6 +405,35 @@ BOOL MR_VideoBuffer::InitDirectDraw()
    }
 
    return lReturnValue;
+}
+
+BOOL MR_VideoBuffer::ProcessCurrentBpp(const DDPIXELFORMAT& lFormat)
+{
+	if( lFormat.dwFlags&DDPF_PALETTEINDEXED8 )
+	{
+		mBpp = 8;
+		PRINT_LOG("BPP: Indexed");
+		// Don't need to process the pixel format since we
+		// can just copy the bits.
+	}
+	else
+	{
+		mBpp = lFormat.dwRGBBitCount;
+		PRINT_LOG("BPP: %d", mBpp);
+		if (mBpp < 8 || mBpp > 32)
+		{
+			// Interesting!  Not quite sure how to deal with this.
+			PRINT_LOG("Unhandled RGB bpp: %d", mBpp);
+			return FALSE;
+		}
+		else
+		{
+			mRChan.SetMask(lFormat.dwRBitMask);
+			mGChan.SetMask(lFormat.dwGBitMask);
+			mBChan.SetMask(lFormat.dwBBitMask);
+		}
+	}
+	return TRUE;
 }
 
 BOOL MR_VideoBuffer::TryToSetColorMode(int colorBits)
@@ -688,6 +741,9 @@ void MR_VideoBuffer::ReturnToWindowsResolution()
                     mOriginalPos.right-mOriginalPos.left,
                     mOriginalPos.bottom-mOriginalPos.top,
                     SWP_SHOWWINDOW /*SWP_NOACTIVATE*/    );
+
+	  // We're back in windowed mode, so use native color depth.
+	  mBpp = mNativeBpp;
    
       CreatePalette( mGamma, mContrast, mBrightness );      
       }
@@ -763,44 +819,12 @@ BOOL MR_VideoBuffer::SetVideoMode()
          // ASSERT( FALSE );
          lReturnValue =FALSE;
       }
-      else
-      {
-         // Keep track of the pixel format so we can blit later.
-         DDPIXELFORMAT lFormat;
-
-         memset( &lFormat, 0, sizeof( lFormat ) );
-
-         lFormat.dwSize = sizeof( lFormat );
-
-         if( DD_CALL( mFrontBuffer->GetPixelFormat( &lFormat )) != DD_OK )
-         {
-            lReturnValue = FALSE;
-         }
-         else if( lFormat.dwFlags&DDPF_PALETTEINDEXED8 )
-         {
-			mBpp = 8;
-			PRINT_LOG("BPP: Indexed");
-			// Don't need to process the pixel format since we
-			// can just copy the bits.
-         }
-		 else
-		 {
-			mBpp = lFormat.dwRGBBitCount;
-			PRINT_LOG("BPP: %d", mBpp);
-			if (mBpp < 8 || mBpp > 32)
-			{
-				// Interesting!  Not quite sure how to deal with this.
-				PRINT_LOG("Unhandled RGB bpp: %d", mBpp);
-				lReturnValue = FALSE;
-			}
-			else
-			{
-				mRChan.SetMask(lFormat.dwRBitMask);
-				mGChan.SetMask(lFormat.dwGBitMask);
-				mBChan.SetMask(lFormat.dwBBitMask);
-			}
-		 }
-      }
+	  else
+	  {
+		  // We're running windowed now, so we need to use the
+		  // native color depth.
+		  mBpp = mNativeBpp;
+	  }
    }
 
    if( lReturnValue )
