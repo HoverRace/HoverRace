@@ -129,6 +129,7 @@ class MR_GameApp
 
 		BOOL mDisplayFirstScreen;
 		BOOL mIntroMovie;
+		BOOL mNativeBppFullscreen;
 
 		// Debug data
 		time_t mNbFramesStartingTime;

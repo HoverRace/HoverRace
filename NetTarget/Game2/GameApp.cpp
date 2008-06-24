@@ -891,14 +891,18 @@ void MR_GameApp::LoadRegistry()
 #endif
 
 	lBufferSize = sizeof(mDisplayFirstScreen);
+	if(RegQueryValueEx(lProgramKey, "DisplayFirstScreen", 0, NULL, (MR_UInt8 *) & mDisplayFirstScreen, &lBufferSize) != ERROR_SUCCESS)
+		mDisplayFirstScreen = FALSE;
 
-	if(RegQueryValueEx(lProgramKey, "DisplayFirstScreen", 0, NULL, (MR_UInt8 *) & mDisplayFirstScreen, &lBufferSize) == ERROR_SUCCESS)
+	lBufferSize = sizeof(mIntroMovie);
+	if(RegQueryValueEx(lProgramKey, "IntroMovie", 0, NULL, (MR_UInt8 *) & mIntroMovie, &lBufferSize) != ERROR_SUCCESS)
+		mIntroMovie = FALSE;
 
-		lBufferSize = sizeof(mIntroMovie);
+	lBufferSize = sizeof(mNativeBppFullscreen);
+	if(RegQueryValueEx(lProgramKey, "NativeBppFullscreen", 0, NULL, (MR_UInt8 *) &mNativeBppFullscreen, &lBufferSize) != ERROR_SUCCESS)
+		mNativeBppFullscreen = FALSE;
 
-	if(RegQueryValueEx(lProgramKey, "IntroMovie", 0, NULL, (MR_UInt8 *) & mIntroMovie, &lBufferSize) == ERROR_SUCCESS)
-
-		lBufferSize = sizeof(lBuffer);
+	lBufferSize = sizeof(lBuffer);
 	if(RegQueryValueEx(lProgramKey, "Company", 0, NULL, (MR_UInt8 *) lBuffer, &lBufferSize) == ERROR_SUCCESS)
 		mCompany = lBuffer;
 
@@ -1023,6 +1027,11 @@ void MR_GameApp::SaveRegistry()
 		}
 
 		if(RegSetValueEx(lProgramKey, "IntroMovie", 0, REG_BINARY, (MR_UInt8 *) & mIntroMovie, sizeof(mIntroMovie)) != ERROR_SUCCESS) {
+			lReturnValue = FALSE;
+			ASSERT(FALSE);
+		}
+
+		if(RegSetValueEx(lProgramKey, "NativeBppFullscreen", 0, REG_BINARY, (MR_UInt8 *) &mNativeBppFullscreen, sizeof(mNativeBppFullscreen)) != ERROR_SUCCESS) {
 			lReturnValue = FALSE;
 			ASSERT(FALSE);
 		}
@@ -1378,8 +1387,10 @@ BOOL MR_GameApp::InitGame()
 
 	lReturnValue = CreateMainWindow();
 
-	if(lReturnValue)
+	if(lReturnValue) {
 		mVideoBuffer = new MR_VideoBuffer(mMainWindow, mGamma, mContrast, mBrightness);
+		mVideoBuffer->SetNativeBppFullscreen(mNativeBppFullscreen);
+	}
 
 	// attempt to set the video mode
 	if(lReturnValue) {
@@ -3018,32 +3029,37 @@ BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 BOOL CALLBACK MR_GameApp::MiscDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
 {
 	ASSERT(This != NULL);
-	ASSERT(This->mIntroMovie != NULL);
 
 	BOOL lReturnValue = FALSE;
 
 	BOOL lIntroMovie = FALSE;
 	BOOL lDisplayFirstScreen = FALSE;
+	BOOL lNativeBppFullscreen = FALSE;
 
 	switch (pMsgId) {
 		// Catch environment modification events
 		case WM_INITDIALOG:
 			lIntroMovie = This->mIntroMovie;
 			lDisplayFirstScreen = This->mDisplayFirstScreen;
+			lNativeBppFullscreen = This->mNativeBppFullscreen;
 
 			SendDlgItemMessage(pWindow, IDC_INTRO_MOVIE, BM_SETCHECK, lIntroMovie, 0);
 			SendDlgItemMessage(pWindow, IDC_SHOW_INTERNET, BM_SETCHECK, lDisplayFirstScreen, 0);
+			SendDlgItemMessage(pWindow, IDC_NATIVE_BPP_FULLSCREEN, BM_SETCHECK, lNativeBppFullscreen, 0);
 
 			break;
 
 		case WM_NOTIFY:
 			switch (((NMHDR FAR *) pLParam)->code) {
-				case PSN_APPLY:;
-				This->mIntroMovie = SendDlgItemMessage(pWindow, IDC_INTRO_MOVIE, BM_GETCHECK, 0, 0);
-				This->mDisplayFirstScreen = SendDlgItemMessage(pWindow, IDC_SHOW_INTERNET, BM_GETCHECK, 0, 0);
-				This->SaveRegistry();
+				case PSN_APPLY:
+					This->mIntroMovie = SendDlgItemMessage(pWindow, IDC_INTRO_MOVIE, BM_GETCHECK, 0, 0);
+					This->mDisplayFirstScreen = SendDlgItemMessage(pWindow, IDC_SHOW_INTERNET, BM_GETCHECK, 0, 0);
+					This->mNativeBppFullscreen = SendDlgItemMessage(pWindow, IDC_NATIVE_BPP_FULLSCREEN, BM_GETCHECK, 0, 0);
 
-				break;
+					This->mVideoBuffer->SetNativeBppFullscreen(This->mNativeBppFullscreen);
+
+					This->SaveRegistry();
+					break;
 
 			}
 			break;

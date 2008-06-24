@@ -303,6 +303,7 @@ MR_VideoBuffer::MR_VideoBuffer( HWND pWindow, double pGamma, double pContrast, d
 
    mModeSettingInProgress = FALSE;
    mFullScreen            = FALSE;
+   mNativeBppFullscreen   = FALSE;
 
    mBpp       = 0;
    mNativeBpp = 0;
@@ -668,6 +669,11 @@ void MR_VideoBuffer::AssignPalette()
    
 }
 
+void MR_VideoBuffer::SetNativeBppFullscreen(BOOL pEnabled)
+{
+	mNativeBppFullscreen = pEnabled;
+}
+
 
 void MR_VideoBuffer::ReturnToWindowsResolution()
 {
@@ -923,6 +929,7 @@ BOOL MR_VideoBuffer::SetVideoMode( int pXRes, int pYRes )
    DDSURFACEDESC   lSurfaceDesc;
    // DDCAPS          lDDCaps;
 
+   DWORD lReqBpp = mNativeBppFullscreen ? mNativeBpp : 8;
 
    ASSERT( !mModeSettingInProgress );
 
@@ -970,7 +977,7 @@ BOOL MR_VideoBuffer::SetVideoMode( int pXRes, int pYRes )
    {
       // ASSERT( FALSE );
 
-      if( DD_CALL(mDirectDraw->SetDisplayMode( pXRes, pYRes, 8 )) != DD_OK )
+      if( DD_CALL(mDirectDraw->SetDisplayMode( pXRes, pYRes, lReqBpp )) != DD_OK )
       {
          lReturnValue = FALSE;
          ASSERT( FALSE );
@@ -1024,7 +1031,7 @@ BOOL MR_VideoBuffer::SetVideoMode( int pXRes, int pYRes )
 
 	  if( lReturnValue )
 	  {
-		  mBpp = 8;
+		  mBpp = lReqBpp;
 	  }
    }
 

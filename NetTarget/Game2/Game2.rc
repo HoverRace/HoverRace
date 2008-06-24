@@ -793,7 +793,7 @@ BEGIN
                     27,13,109,21
 END
 
-IDD_MISC DIALOGEX 0, 0, 277, 41
+IDD_MISC DIALOGEX 0, 0, 277, 66
 STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
 FONT 8, "MS Shell Dlg", 0, 0, 0x0
 BEGIN
@@ -802,6 +802,9 @@ BEGIN
     CONTROL         "Disable the prompt to connect to the Internet each time HoverRace starts",
                     IDC_SHOW_INTERNET,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
                     7,19,250,10
+    CONTROL         "Use desktop &color depth when switching to fullscreen",
+                    IDC_NATIVE_BPP_FULLSCREEN,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,7,32,185,10
 END
 
 
@@ -1132,7 +1135,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 268
         TOPMARGIN, 7
-        BOTTOMMARGIN, 34
+        BOTTOMMARGIN, 59
     END
 END
 #endif    // APSTUDIO_INVOKED

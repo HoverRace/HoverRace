@@ -145,7 +145,9 @@
 #define IDC_SHOWINTERNET                1077
 #define IDC_SHOW_INTERNET               1077
 #define IDC_LOOKBACK3                   1078
+#define IDC_NATIVE_BPP                  1078
 #define IDC_LOOKBACK4                   1079
+#define IDC_NATIVE_BPP_FULLSCREEN       1079
 #define ID_HELP_CONTENTS                32772
 #define ID_HELP_HOWTOORDER              32773
 #define ID_HELP_TIPOFTHEDAY             32774
@@ -403,13 +405,13 @@
 #define ID_APP_EXIT                     0xE141
 
 // Next default values for new objects
-//
+// 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        162
 #define _APS_NEXT_COMMAND_VALUE         40042
-#define _APS_NEXT_CONTROL_VALUE         1078
+#define _APS_NEXT_CONTROL_VALUE         1080
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
