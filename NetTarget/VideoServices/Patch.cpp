@@ -1,13 +1,11 @@
 // Patch.cpp
 
-const MR_Patch::MR_3DCoordinate& GetNodePos( int pU, int pV )const
+const MR_Patch::MR_3DCoordinate & GetNodePos(int pU, int pV) const
 {
-   return GetNodePos( pU+pV*GetURes() );
+	return GetNodePos(pU + pV * GetURes());
 }
 
-const MR_3DCoordinate& MR_Patch::GetNodePos( int pIndex )const
+const MR_3DCoordinate & MR_Patch::GetNodePos(int pIndex) const
 {
-   return GetNodeList()[ pIndex ];
+	return GetNodeList()[pIndex];
 }
-
-
