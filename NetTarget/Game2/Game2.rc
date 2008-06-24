@@ -82,6 +82,7 @@ BEGIN
         MENUITEM "&7 1280x1024\tF10",           ID_SETTING_1280X1024
         MENUITEM "&8 1400x1050\tShift+F10",     ID_SETTING_1400X1050
         MENUITEM "&9 1600x1200\tAlt+F10",       ID_SETTING_1600X1200
+        MENUITEM "&0 Desktop",                  ID_SETTING_DESKTOP
         MENUITEM "&Window\tAlt+Enter",          ID_SETTING_WINDOW
         MENUITEM SEPARATOR
         MENUITEM "&Properties...",              ID_SETTING_PROPERTIES

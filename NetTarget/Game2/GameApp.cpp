@@ -1356,6 +1356,7 @@ BOOL MR_GameApp::CreateMainWindow()
 	}
 
 	RefreshTitleBar();
+	UpdateMenuItems();
 
 	return lReturnValue;
 }
@@ -1790,6 +1791,15 @@ void MR_GameApp::AssignPalette()
 				This->mVideoBuffer->AssignPalette();
 		}
 	}
+}
+
+// Find the desktop resolution of the primary monitor.
+// Returns FALSE if the operation failed.
+BOOL MR_GameApp::GetDesktopResolution(POINT* lpPoint)
+{
+	lpPoint->x = GetSystemMetrics(SM_CXSCREEN);
+	lpPoint->y = GetSystemMetrics(SM_CYSCREEN);
+	return (lpPoint->x != 0 && lpPoint->y != 0);
 }
 
 //void MR_GameApp::EnterMenuLoop()
@@ -2228,6 +2238,44 @@ void MR_GameApp::DrawBackground()
 	}
 }
 
+// Attempt to switch fullscreen, using the current desktop resolution.
+void MR_GameApp::SwitchToDesktopFullscreen()
+{
+	POINT lRes;
+	if (GetDesktopResolution(&lRes)) {
+		SetVideoMode(lRes.x, lRes.y);
+	}
+}
+
+void MR_GameApp::UpdateMenuItems()
+{
+	MENUITEMINFO lMenuInfo;
+	memset(&lMenuInfo, 0, sizeof(lMenuInfo));
+	lMenuInfo.cbSize = sizeof(lMenuInfo);
+
+	POINT lRes;
+	if (GetDesktopResolution(&lRes)) {
+		char s[256] = {0};
+		int lLen = _snprintf(s, 255, "&0 Desktop (%dx%d)", lRes.x, lRes.y);
+		if (lLen < 0) {
+			strcpy(s, "&0 Desktop");
+		}
+
+		lMenuInfo.fMask = MIIM_STATE | MIIM_STRING;
+		lMenuInfo.fState = MFS_ENABLED;
+		lMenuInfo.dwTypeData = s;
+		lMenuInfo.cch = lLen;
+	} else {
+		lMenuInfo.fMask = MIIM_STATE | MIIM_STRING;
+		lMenuInfo.fState = MFS_GRAYED;
+		lMenuInfo.dwTypeData = "&0 Desktop";
+		lMenuInfo.cch = strlen(lMenuInfo.dwTypeData);
+	}
+
+	HMENU lMenu = GetMenu(mMainWindow);
+	SetMenuItemInfo(lMenu, ID_SETTING_DESKTOP, FALSE, &lMenuInfo);
+}
+
 LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
 {
 	// Catch environment modification events
@@ -2267,6 +2315,7 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 
 		case WM_ENTERMENULOOP:
 			This->SetVideoMode(0, 0);
+			This->UpdateMenuItems();
 			break;
 
 			/*
@@ -2488,6 +2537,10 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 
 				case ID_SETTING_1600X1200:
 					This->SetVideoMode(1600, 1200);
+					return 0;
+
+				case ID_SETTING_DESKTOP:
+					This->SwitchToDesktopFullscreen();
 					return 0;
 
 				case ID_SETTING_PROPERTIES:

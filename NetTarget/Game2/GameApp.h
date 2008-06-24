@@ -171,6 +171,7 @@ class MR_GameApp
 
 		void OnDisplayChange();
 		void AssignPalette();
+		BOOL GetDesktopResolution(POINT* lpPoint);
 
 		void PauseGameThread();
 		void RestartGameThread();
@@ -181,6 +182,10 @@ class MR_GameApp
 		void DeleteMovieWnd();
 
 		void DrawBackground();
+
+		void SwitchToDesktopFullscreen();
+
+		void UpdateMenuItems();
 
 		void DisplayHelp();
 		void DisplayBetaZone();
