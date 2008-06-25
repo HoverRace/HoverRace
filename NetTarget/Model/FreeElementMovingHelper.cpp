@@ -26,19 +26,19 @@
 
 // MR_ObstacleCollisionReport
 
-BOOL MR_ObstacleCollisionReport::IsInMaze() const const
+BOOL MR_ObstacleCollisionReport::IsInMaze() const
 {
 	return mInMaze;
 }
 
-BOOL MR_ObstacleCollisionReport::HaveContact() const const
+BOOL MR_ObstacleCollisionReport::HaveContact() const
 {
 	ASSERT(mInMaze);
 
 	return mHaveObstacleContact || (mClosestFloor < 0) || (mClosestCeiling < 0);
 }
 
-MR_Int32 MR_ObstacleCollisionReport::StepHeight() const const
+MR_Int32 MR_ObstacleCollisionReport::StepHeight() const
 {
 	MR_Int32 lReturnValue = -mClosestFloor;
 
@@ -51,7 +51,7 @@ MR_Int32 MR_ObstacleCollisionReport::StepHeight() const const
 	return lReturnValue;
 }
 
-MR_Int32 MR_ObstacleCollisionReport::CeilingStepHeight() const const
+MR_Int32 MR_ObstacleCollisionReport::CeilingStepHeight() const
 {
 	MR_Int32 lReturnValue = -mClosestCeiling;
 
@@ -63,31 +63,31 @@ MR_Int32 MR_ObstacleCollisionReport::CeilingStepHeight() const const
 	return lReturnValue;
 }
 
-MR_Int32 MR_ObstacleCollisionReport::SpaceToFloor() const const
+MR_Int32 MR_ObstacleCollisionReport::SpaceToFloor() const
 {
 	ASSERT(mInMaze);
 
 	return mClosestFloor;
 }
 
-MR_Int32 MR_ObstacleCollisionReport::SpaceToCeiling() const const
+MR_Int32 MR_ObstacleCollisionReport::SpaceToCeiling() const
 {
 	ASSERT(mInMaze);
 
 	return mClosestCeiling;
 }
 
-MR_Int32 MR_ObstacleCollisionReport::LargestHoleHeight() const const
+MR_Int32 MR_ObstacleCollisionReport::LargestHoleHeight() const
 {
 	return (mShapeTop - mShapeBottom) - (CeilingStepHeight() + StepHeight());
 }
 
-MR_Int32 MR_ObstacleCollisionReport::LargestHoleStep() const const
+MR_Int32 MR_ObstacleCollisionReport::LargestHoleStep() const
 {
 	return StepHeight();
 }
 
-BOOL MR_ObstacleCollisionReport::AlmostCompleted() const const
+BOOL MR_ObstacleCollisionReport::AlmostCompleted() const
 {
 	return (mHaveObstacleContact && (mObstacleTop >= mShapeTop) && (mObstacleBottom <= mShapeBottom));
 } void MR_ObstacleCollisionReport::GetContactWithObstacles(MR_Level * pLevel, const MR_ShapeInterface * pShape, int pRoom, MR_FreeElement * pElement, BOOL pIgnoreActors)
@@ -159,7 +159,7 @@ BOOL MR_ObstacleCollisionReport::AlmostCompleted() const const
 	}
 }
 
-int MR_ObstacleCollisionReport::Room() const const
+int MR_ObstacleCollisionReport::Room() const
 {
 	return mCurrentRoom;
 } void MR_ObstacleCollisionReport::GetContactWithFeaturesAndActors(MR_Level * pLevel, const MR_ShapeInterface * pShape, int pRoom, MR_FreeElement * pElement, BOOL pIgnoreActors)

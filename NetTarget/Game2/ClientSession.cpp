@@ -243,22 +243,22 @@ BOOL MR_ClientSession::CreateMainCharacter4()
 	return TRUE;
 }
 
-MR_MainCharacter *MR_ClientSession::GetMainCharacter() const const const
+MR_MainCharacter *MR_ClientSession::GetMainCharacter() const
 {
 	return mMainCharacter1;
 }
 
-MR_MainCharacter *MR_ClientSession::GetMainCharacter2() const const const
+MR_MainCharacter *MR_ClientSession::GetMainCharacter2() const
 {
 	return mMainCharacter2;
 }
 
-MR_MainCharacter *MR_ClientSession::GetMainCharacter3() const const const
+MR_MainCharacter *MR_ClientSession::GetMainCharacter3() const
 {
 	return mMainCharacter3;
 }
 
-MR_MainCharacter *MR_ClientSession::GetMainCharacter4() const const const
+MR_MainCharacter *MR_ClientSession::GetMainCharacter4() const
 {
 	return mMainCharacter4;
 }
@@ -268,7 +268,7 @@ void MR_ClientSession::SetSimulationTime(MR_SimulationTime pTime)
 	mSession.SetSimulationTime(pTime);
 }
 
-MR_SimulationTime MR_ClientSession::GetSimulationTime() const const const
+MR_SimulationTime MR_ClientSession::GetSimulationTime() const
 {
 	return mSession.GetSimulationTime();
 }
@@ -292,31 +292,31 @@ void MR_ClientSession::SetControlState(int pState1, int pState2, int pState3, in
 	}
 }
 
-const MR_Level *MR_ClientSession::GetCurrentLevel() const const const
+const MR_Level *MR_ClientSession::GetCurrentLevel() const
 {
 	MR_GameSession *lSession = (MR_GameSession *) & mSession;
 
 	return lSession->GetCurrentLevel();
 }
 
-int MR_ClientSession::ResultAvaillable() const const const
+int MR_ClientSession::ResultAvaillable() const
 {
 	return 0;
 }
 
-void MR_ClientSession::GetResult(int, const char *&pPlayerName, int &, BOOL &, int &, MR_SimulationTime &, MR_SimulationTime &) const const const
+void MR_ClientSession::GetResult(int, const char *&pPlayerName, int &, BOOL &, int &, MR_SimulationTime &, MR_SimulationTime &) const
 {
 	pPlayerName = "?";
 	ASSERT(FALSE);
 }
 
-void MR_ClientSession::GetHitResult(int pPosition, const char *&pPlayerName, int &pId, BOOL & pConnected, int &pNbHitOther, int &pNbHitHimself) const const const
+void MR_ClientSession::GetHitResult(int pPosition, const char *&pPlayerName, int &pId, BOOL & pConnected, int &pNbHitOther, int &pNbHitHimself) const
 {
 	pPlayerName = "?";
 	ASSERT(FALSE);
 }
 
-int MR_ClientSession::GetNbPlayers() const const const
+int MR_ClientSession::GetNbPlayers() const
 {
 	BOOL lReturnValue = 0;
 
@@ -335,7 +335,7 @@ int MR_ClientSession::GetNbPlayers() const const const
 	return lReturnValue;
 }
 
-int MR_ClientSession::GetRank(const MR_MainCharacter * pPlayer) const const const
+int MR_ClientSession::GetRank(const MR_MainCharacter * pPlayer) const
 {
 	int lReturnValue = 1;
 
@@ -434,18 +434,18 @@ void MR_ClientSession::SetMap(MR_Sprite * pMap, int pX0, int pY0, int pX1, int p
 
 }
 
-const MR_Sprite *MR_ClientSession::GetMap() const const const
+const MR_Sprite *MR_ClientSession::GetMap() const
 {
 	return mMap;
 }
 
-void MR_ClientSession::ConvertMapCoordinate(int &pX, int &pY, int pRatio) const const const
+void MR_ClientSession::ConvertMapCoordinate(int &pX, int &pY, int pRatio) const
 {
 	pX = (pX - mX0Map) * mWidthSprite / (mWidthMap * pRatio);
 	pY = (mHeightSprite - 1 - (pY - mY0Map) * mHeightSprite / mHeightMap) / pRatio;
 }
 
-const MR_MainCharacter *MR_ClientSession::GetPlayer(int pPlayerIndex) const const const
+const MR_MainCharacter *MR_ClientSession::GetPlayer(int pPlayerIndex) const
 {
 	const MR_MainCharacter *lReturnValue = NULL;
 
@@ -473,12 +473,12 @@ void MR_ClientSession::AddMessageKey(char /*pKey */ )
 
 }
 
-void MR_ClientSession::GetCurrentMessage(char *pDest) const const const
+void MR_ClientSession::GetCurrentMessage(char *pDest) const
 {
 	pDest[0] = 0;
 }
 
-BOOL MR_ClientSession::GetMessageStack(int pLevel, char *pDest, int pExpiration) const const const
+BOOL MR_ClientSession::GetMessageStack(int pLevel, char *pDest, int pExpiration) const
 {
 	BOOL lReturnValue = FALSE;
 

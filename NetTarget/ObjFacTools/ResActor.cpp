@@ -38,17 +38,17 @@ MR_ResActor::~MR_ResActor()
 	delete[]mSequenceList;
 }
 
-int MR_ResActor::GetResourceId() const const
+int MR_ResActor::GetResourceId() const
 {
 	return mResourceId;
 }
 
-int MR_ResActor::GetSequenceCount() const const
+int MR_ResActor::GetSequenceCount() const
 {
 	return mNbSequence;
 }
 
-int MR_ResActor::GetFrameCount(int pSequence) const const
+int MR_ResActor::GetFrameCount(int pSequence) const
 {
 	return mSequenceList[pSequence].mNbFrame;
 } void MR_ResActor::Serialize(CArchive & pArchive, MR_ResourceLib * pLib)
@@ -74,7 +74,7 @@ int MR_ResActor::GetFrameCount(int pSequence) const const
 
 }
 
-void MR_ResActor::Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix, int pSequence, int pFrame) const const
+void MR_ResActor::Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix, int pSequence, int pFrame) const
 {
 	ASSERT(pSequence < mNbSequence);
 
@@ -114,7 +114,7 @@ void MR_ResActor::Sequence::Serialize(CArchive & pArchive, MR_ResourceLib * pLib
 	}
 }
 
-void MR_ResActor::Sequence::Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix, int pFrame) const const
+void MR_ResActor::Sequence::Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix, int pFrame) const
 {
 	ASSERT(pFrame < mNbFrame);
 
@@ -187,7 +187,7 @@ void MR_ResActor::Frame::Serialize(CArchive & pArchive, MR_ResourceLib * pLib)
 	}
 }
 
-void MR_ResActor::Frame::Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix) const const
+void MR_ResActor::Frame::Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix) const
 {
 	// Draw each component of the frame
 	for(int lCounter = 0; lCounter < mNbComponent; lCounter++) {
@@ -251,22 +251,22 @@ void MR_ResActor::Patch::Serialize(CArchive & pArchive, MR_ResourceLib * pLib)
 	}
 }
 
-void MR_ResActor::Patch::Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix) const const
+void MR_ResActor::Patch::Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix) const
 {
 	pDest->RenderPatch(*this, pMatrix, mBitmap);
 }
 
-int MR_ResActor::Patch::GetURes() const const
+int MR_ResActor::Patch::GetURes() const
 {
 	return mURes;
 }
 
-int MR_ResActor::Patch::GetVRes() const const
+int MR_ResActor::Patch::GetVRes() const
 {
 	return mVRes;
 }
 
-const MR_3DCoordinate *MR_ResActor::Patch::GetNodeList() const const
+const MR_3DCoordinate *MR_ResActor::Patch::GetNodeList() const
 {
 	return mVertexList;
 }

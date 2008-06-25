@@ -29,7 +29,7 @@ MR_ContactEffect::~MR_ContactEffect()
 	// Only a virtual destructor
 }
 
-const MR_ContactEffect *MR_ContactEffect::GetAlternate() const const
+const MR_ContactEffect *MR_ContactEffect::GetAlternate() const
 {
 	return NULL;
 }

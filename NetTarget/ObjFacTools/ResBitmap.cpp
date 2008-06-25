@@ -41,7 +41,7 @@ MR_ResBitmap::~MR_ResBitmap()
 	delete[]mSubBitmapList;
 }
 
-int MR_ResBitmap::GetResourceId() const const
+int MR_ResBitmap::GetResourceId() const
 {
 	return mResourceId;
 } void MR_ResBitmap::Serialize(CArchive & pArchive)
@@ -87,67 +87,67 @@ void MR_ResBitmap::SetWidthHeight(int pWidth, int pHeight)
 }
 
 // MR_Bitmap overloaded functions
-int MR_ResBitmap::GetWidth() const const
+int MR_ResBitmap::GetWidth() const
 {
 	return mWidth;
 }
 
-int MR_ResBitmap::GetHeight() const const
+int MR_ResBitmap::GetHeight() const
 {
 	return mHeight;
 }
 
-int MR_ResBitmap::GetMaxXRes() const const
+int MR_ResBitmap::GetMaxXRes() const
 {
 	return mXRes;
 }
 
-int MR_ResBitmap::GetMaxYRes() const const
+int MR_ResBitmap::GetMaxYRes() const
 {
 	return mYRes;
 }
 
-MR_UInt8 MR_ResBitmap::GetPlainColor() const const
+MR_UInt8 MR_ResBitmap::GetPlainColor() const
 {
 	return mPlainColor;
 }
 
-int MR_ResBitmap::GetNbSubBitmap() const const
+int MR_ResBitmap::GetNbSubBitmap() const
 {
 	return mSubBitmapCount;
 }
 
-int MR_ResBitmap::GetXRes(int pSubBitmap) const const
+int MR_ResBitmap::GetXRes(int pSubBitmap) const
 {
 	return mSubBitmapList[pSubBitmap].mXRes;
 }
 
-int MR_ResBitmap::GetYRes(int pSubBitmap) const const
+int MR_ResBitmap::GetYRes(int pSubBitmap) const
 {
 	return mSubBitmapList[pSubBitmap].mYRes;
 }
 
-int MR_ResBitmap::GetXResShiftFactor(int pSubBitmap) const const
+int MR_ResBitmap::GetXResShiftFactor(int pSubBitmap) const
 {
 	return mSubBitmapList[pSubBitmap].mXResShiftFactor;
 }
 
-int MR_ResBitmap::GetYResShiftFactor(int pSubBitmap) const const
+int MR_ResBitmap::GetYResShiftFactor(int pSubBitmap) const
 {
 	return mSubBitmapList[pSubBitmap].mYResShiftFactor;
 }
 
-MR_UInt8 *MR_ResBitmap::GetBuffer(int pSubBitmap) const const
+MR_UInt8 *MR_ResBitmap::GetBuffer(int pSubBitmap) const
 {
 	return mSubBitmapList[pSubBitmap].mBuffer;
 }
 
-MR_UInt8 *MR_ResBitmap::GetColumnBuffer(int pSubBitmap, int pColumn) const const
+MR_UInt8 *MR_ResBitmap::GetColumnBuffer(int pSubBitmap, int pColumn) const
 {
 	return mSubBitmapList[pSubBitmap].mColumnPtr[pColumn];
 }
 
-MR_UInt8 **MR_ResBitmap::GetColumnBufferTable(int pSubBitmap) const const
+MR_UInt8 **MR_ResBitmap::GetColumnBufferTable(int pSubBitmap) const
 {
 	return mSubBitmapList[pSubBitmap].mColumnPtr;
 } MR_ResBitmap::SubBitmap::SubBitmap()

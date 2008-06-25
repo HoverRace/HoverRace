@@ -26,27 +26,27 @@
 const MR_Int32 cSourceRay = 20000;				  // the source have a diameter of 40 meters
 const MR_Int32 cSourceHeight = 6000;			  // 6 meters
 
-MR_Int32 MR_FinishLine::ZMin() const const
+MR_Int32 MR_FinishLine::ZMin() const
 {
 	return mPosition.mZ;
 }
 
-MR_Int32 MR_FinishLine::ZMax() const const
+MR_Int32 MR_FinishLine::ZMax() const
 {
 	return mPosition.mZ + cSourceHeight;
 }
 
-MR_Int32 MR_FinishLine::AxisX() const const
+MR_Int32 MR_FinishLine::AxisX() const
 {
 	return mPosition.mX;
 }
 
-MR_Int32 MR_FinishLine::AxisY() const const
+MR_Int32 MR_FinishLine::AxisY() const
 {
 	return mPosition.mY;
 }
 
-MR_Int32 MR_FinishLine::RayLen() const const
+MR_Int32 MR_FinishLine::RayLen() const
 {
 	return cSourceRay;
 } MR_FinishLine::MR_FinishLine(const MR_ObjectFromFactoryId & pId, MR_CheckPoint::CheckPointType pType)

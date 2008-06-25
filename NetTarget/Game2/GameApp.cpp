@@ -1294,7 +1294,7 @@ int MR_GameApp::MainLoop()
 	return lMessage.wParam;
 }
 
-BOOL MR_GameApp::IsFirstInstance() const const const
+BOOL MR_GameApp::IsFirstInstance() const
 {
 	HWND lPrevAppWnd = FindWindow(MR_APP_CLASS_NAME, NULL);
 	HWND lChildAppWnd = NULL;

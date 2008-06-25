@@ -30,27 +30,27 @@
 const MR_Int32 cPowerUpRay = 550;
 const MR_Int32 cPowerUpHalfHeight = 550;
 
-MR_Int32 MR_PowerUp::ZMin() const const
+MR_Int32 MR_PowerUp::ZMin() const
 {
 	return mPosition.mZ - cPowerUpHalfHeight;
 }
 
-MR_Int32 MR_PowerUp::ZMax() const const
+MR_Int32 MR_PowerUp::ZMax() const
 {
 	return mPosition.mZ + cPowerUpHalfHeight;
 }
 
-MR_Int32 MR_PowerUp::AxisX() const const
+MR_Int32 MR_PowerUp::AxisX() const
 {
 	return mPosition.mX;
 }
 
-MR_Int32 MR_PowerUp::AxisY() const const
+MR_Int32 MR_PowerUp::AxisY() const
 {
 	return mPosition.mY;
 }
 
-MR_Int32 MR_PowerUp::RayLen() const const
+MR_Int32 MR_PowerUp::RayLen() const
 {
 	return cPowerUpRay;
 } MR_PowerUp::MR_PowerUp(const MR_ObjectFromFactoryId & pId)
@@ -144,7 +144,7 @@ class MR_PowerUpState
 
 };
 
-MR_ElementNetState MR_PowerUp::GetNetState() const const
+MR_ElementNetState MR_PowerUp::GetNetState() const
 {
 	static MR_PowerUpState lsState;				  // Static is ok because the variable will be used immediatly
 

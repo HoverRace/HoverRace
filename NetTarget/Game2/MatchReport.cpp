@@ -211,7 +211,7 @@ void InternetRequest::Close()
 	}
 }
 
-BOOL InternetRequest::Working() const const const
+BOOL InternetRequest::Working() const
 {
 	return (mSocket != INVALID_SOCKET);
 }

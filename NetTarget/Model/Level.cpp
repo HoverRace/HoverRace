@@ -177,97 +177,97 @@ void MR_Level::Serialize(CArchive & pArchive)
 
 // Internal helper functions
 
-int MR_Level::GetRoomCount() const const
+int MR_Level::GetRoomCount() const
 {
 	return mNbRoom;
 }
 
-int MR_Level::GetPlayerCount() const const
+int MR_Level::GetPlayerCount() const
 {
 	return mNbPlayer;
 }
 
-int MR_Level::GetPlayerTeam(int pPlayerId) const const
+int MR_Level::GetPlayerTeam(int pPlayerId) const
 {
 	return mPlayerTeam[pPlayerId];
 }
 
-int MR_Level::GetStartingRoom(int pPlayerId) const const
+int MR_Level::GetStartingRoom(int pPlayerId) const
 {
 	return mStartingRoom[pPlayerId];
 }
 
-const MR_3DCoordinate & MR_Level::GetStartingPos(int pPlayerId) const const
+const MR_3DCoordinate & MR_Level::GetStartingPos(int pPlayerId) const
 {
 	return mStartingPosition[pPlayerId];
 }
 
-MR_Angle MR_Level::GetStartingOrientation(int pPlayerId) const const
+MR_Angle MR_Level::GetStartingOrientation(int pPlayerId) const
 {
 	return mStartingOrientation[pPlayerId];
 }
 
-MR_PolygonShape *MR_Level::GetRoomShape(int pRoomId) const const
+MR_PolygonShape *MR_Level::GetRoomShape(int pRoomId) const
 {
 	return new SectionShape(&mRoomList[pRoomId]);
 }
 
-MR_PolygonShape *MR_Level::GetFeatureShape(int pFeatureId) const const
+MR_PolygonShape *MR_Level::GetFeatureShape(int pFeatureId) const
 {
 	return new SectionShape(&mFeatureList[pFeatureId]);
 }
 
-MR_Int32 MR_Level::GetRoomWallLen(int pRoomId, int pVertex) const const
+MR_Int32 MR_Level::GetRoomWallLen(int pRoomId, int pVertex) const
 {
 	return mRoomList[pRoomId].mWallLen[pVertex];
 }
 
-MR_Int32 MR_Level::GetFeatureWallLen(int pFeatureId, int pVertex) const const
+MR_Int32 MR_Level::GetFeatureWallLen(int pFeatureId, int pVertex) const
 {
 	return mFeatureList[pFeatureId].mWallLen[pVertex];
 }
 
-const MR_2DCoordinate & MR_Level::GetRoomVertex(int pRoomId, int pVertex) const const
+const MR_2DCoordinate & MR_Level::GetRoomVertex(int pRoomId, int pVertex) const
 {
 	return mRoomList[pRoomId].mVertexList[pVertex];
 }
 
-const MR_2DCoordinate & MR_Level::GetFeatureVertex(int pFeatureId, int pVertex) const const
+const MR_2DCoordinate & MR_Level::GetFeatureVertex(int pFeatureId, int pVertex) const
 {
 	return mFeatureList[pFeatureId].mVertexList[pVertex];
 }
 
-int MR_Level::GetRoomVertexCount(int pRoomId) const const
+int MR_Level::GetRoomVertexCount(int pRoomId) const
 {
 	return mRoomList[pRoomId].mNbVertex;
 }
 
-int MR_Level::GetFeatureVertexCount(int pFeatureId) const const
+int MR_Level::GetFeatureVertexCount(int pFeatureId) const
 {
 	return mFeatureList[pFeatureId].mNbVertex;
 }
 
-MR_Int32 MR_Level::GetRoomBottomLevel(int pRoomId) const const
+MR_Int32 MR_Level::GetRoomBottomLevel(int pRoomId) const
 {
 	return mRoomList[pRoomId].mFloorLevel;
 }
 
-MR_Int32 MR_Level::GetFeatureBottomLevel(int pFeatureId) const const
+MR_Int32 MR_Level::GetFeatureBottomLevel(int pFeatureId) const
 {
 	return mFeatureList[pFeatureId].mFloorLevel;
 }
 
-MR_Int32 MR_Level::GetRoomTopLevel(int pRoomId) const const
+MR_Int32 MR_Level::GetRoomTopLevel(int pRoomId) const
 {
 	return mRoomList[pRoomId].mCeilingLevel;
 }
 
-MR_Int32 MR_Level::GetFeatureTopLevel(int pFeatureId) const const
+MR_Int32 MR_Level::GetFeatureTopLevel(int pFeatureId) const
 {
 	return mFeatureList[pFeatureId].mCeilingLevel;
 }
 
-const int *MR_Level::GetVisibleZones(int pRoomId, int &pNbVisibleZones) const const
+const int *MR_Level::GetVisibleZones(int pRoomId, int &pNbVisibleZones) const
 {
 
 	pNbVisibleZones = mRoomList[pRoomId].mNbVisibleRoom;
@@ -275,67 +275,67 @@ const int *MR_Level::GetVisibleZones(int pRoomId, int &pNbVisibleZones) const co
 	return mRoomList[pRoomId].mVisibleRoomList;
 }
 
-int MR_Level::GetNbVisibleSurface(int pRoomId) const const
+int MR_Level::GetNbVisibleSurface(int pRoomId) const
 {
 	return mRoomList[pRoomId].mNbVisibleSurface;
 }
 
-const MR_SectionId *MR_Level::GetVisibleFloorList(int pRoomId) const const
+const MR_SectionId *MR_Level::GetVisibleFloorList(int pRoomId) const
 {
 	return mRoomList[pRoomId].mVisibleFloorList;
 }
 
-const MR_SectionId *MR_Level::GetVisibleCeilingList(int pRoomId) const const
+const MR_SectionId *MR_Level::GetVisibleCeilingList(int pRoomId) const
 {
 	return mRoomList[pRoomId].mVisibleCeilingList;
 }
 
-int MR_Level::GetNeighbor(int pRoomId, int pVertex) const const
+int MR_Level::GetNeighbor(int pRoomId, int pVertex) const
 {
 	return mRoomList[pRoomId].mNeighborList[pVertex];
 }
 
-int MR_Level::GetParent(int pFeatureId) const const
+int MR_Level::GetParent(int pFeatureId) const
 {
 	return mFeatureList[pFeatureId].mParentSectionIndex;
 }
 
-int MR_Level::GetFeatureCount(int pRoomId) const const
+int MR_Level::GetFeatureCount(int pRoomId) const
 {
 	return mRoomList[pRoomId].mNbChild;
 }
 
-int MR_Level::GetFeature(int pRoomId, int pChildIndex) const const
+int MR_Level::GetFeature(int pRoomId, int pChildIndex) const
 {
 	return mRoomList[pRoomId].mChildList[pChildIndex];
 }
 
-MR_SurfaceElement *MR_Level::GetRoomWallElement(int pRoomId, int pVertex) const const
+MR_SurfaceElement *MR_Level::GetRoomWallElement(int pRoomId, int pVertex) const
 {
 	return mRoomList[pRoomId].mWallTexture[pVertex];
 }
 
-MR_SurfaceElement *MR_Level::GetFeatureWallElement(int pFeatureId, int pVertex) const const
+MR_SurfaceElement *MR_Level::GetFeatureWallElement(int pFeatureId, int pVertex) const
 {
 	return mFeatureList[pFeatureId].mWallTexture[pVertex];
 }
 
-MR_SurfaceElement *MR_Level::GetRoomBottomElement(int pRoomId) const const
+MR_SurfaceElement *MR_Level::GetRoomBottomElement(int pRoomId) const
 {
 	return mRoomList[pRoomId].mFloorTexture;
 }
 
-MR_SurfaceElement *MR_Level::GetFeatureBottomElement(int pFeatureId) const const
+MR_SurfaceElement *MR_Level::GetFeatureBottomElement(int pFeatureId) const
 {
 	return mFeatureList[pFeatureId].mFloorTexture;
 }
 
-MR_SurfaceElement *MR_Level::GetRoomTopElement(int pRoomId) const const
+MR_SurfaceElement *MR_Level::GetRoomTopElement(int pRoomId) const
 {
 	return mRoomList[pRoomId].mCeilingTexture;
 }
 
-MR_SurfaceElement *MR_Level::GetFeatureTopElement(int pFeatureId) const const
+MR_SurfaceElement *MR_Level::GetFeatureTopElement(int pFeatureId) const
 {
 	return mFeatureList[pFeatureId].mCeilingTexture;
 }
@@ -401,7 +401,7 @@ void MR_Level::DeleteElement(MR_FreeElementHandle pHandle)
 	delete((FreeElement *) pHandle);
 }
 
-MR_FreeElementHandle MR_Level::GetPermanentElementHandle(int pElem) const const
+MR_FreeElementHandle MR_Level::GetPermanentElementHandle(int pElem) const
 {
 
 	ASSERT(pElem >= 0);
@@ -467,64 +467,64 @@ MR_Level::SectionShape::SectionShape(MR_Level::Section * pSection)
 	mSection = pSection;
 }
 
-MR_Int32 MR_Level::SectionShape::XMin() const const
+MR_Int32 MR_Level::SectionShape::XMin() const
 {
 	return mSection->mMin.mX;
 }
 
-MR_Int32 MR_Level::SectionShape::XMax() const const
+MR_Int32 MR_Level::SectionShape::XMax() const
 {
 	return mSection->mMax.mX;
 }
 
-MR_Int32 MR_Level::SectionShape::YMin() const const
+MR_Int32 MR_Level::SectionShape::YMin() const
 {
 	return mSection->mMin.mY;
 }
 
-MR_Int32 MR_Level::SectionShape::YMax() const const
+MR_Int32 MR_Level::SectionShape::YMax() const
 {
 	return mSection->mMax.mY;
 }
 
-MR_Int32 MR_Level::SectionShape::ZMin() const const
+MR_Int32 MR_Level::SectionShape::ZMin() const
 {
 	return mSection->mFloorLevel;
 }
 
-MR_Int32 MR_Level::SectionShape::ZMax() const const
+MR_Int32 MR_Level::SectionShape::ZMax() const
 {
 	return mSection->mCeilingLevel;
 }
 
-int MR_Level::SectionShape::VertexCount() const const
+int MR_Level::SectionShape::VertexCount() const
 {
 	return mSection->mNbVertex;
 }
 
-MR_Int32 MR_Level::SectionShape::XCenter() const const
+MR_Int32 MR_Level::SectionShape::XCenter() const
 {
 	ASSERT(FALSE);								  // Why do you need that???
 	return 0;
 }
 
-MR_Int32 MR_Level::SectionShape::YCenter() const const
+MR_Int32 MR_Level::SectionShape::YCenter() const
 {
 	ASSERT(FALSE);								  // Why do you need that???
 	return 0;
 }
 
-MR_Int32 MR_Level::SectionShape::X(int pIndex) const const
+MR_Int32 MR_Level::SectionShape::X(int pIndex) const
 {
 	return mSection->mVertexList[pIndex].mX;
 }
 
-MR_Int32 MR_Level::SectionShape::Y(int pIndex) const const
+MR_Int32 MR_Level::SectionShape::Y(int pIndex) const
 {
 	return mSection->mVertexList[pIndex].mY;
 }
 
-MR_Int32 MR_Level::SectionShape::SideLen(int pIndex) const const
+MR_Int32 MR_Level::SectionShape::SideLen(int pIndex) const
 {
 	return mSection->mWallLen[pIndex];
 }
@@ -573,7 +573,7 @@ void MR_Level::Room::AudibleRoom::Serialize(CArchive & pArchive)
 
 }
 
-int MR_Level::FindRoomForPoint(const MR_2DCoordinate & pPosition, int pStartingRoom) const const
+int MR_Level::FindRoomForPoint(const MR_2DCoordinate & pPosition, int pStartingRoom) const
 {
 	int lReturnValue = -1;
 

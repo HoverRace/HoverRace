@@ -121,7 +121,7 @@ MR_RecordFile::~MR_RecordFile()
 	}
 }
 
-int MR_RecordFile::GetNbRecords() const const
+int MR_RecordFile::GetNbRecords() const
 {
 	int lReturnValue = 0;
 
@@ -131,7 +131,7 @@ int MR_RecordFile::GetNbRecords() const const
 	return lReturnValue;
 }
 
-int MR_RecordFile::GetNbRecordsMax() const const
+int MR_RecordFile::GetNbRecordsMax() const
 {
 	int lReturnValue = 0;
 
@@ -141,7 +141,7 @@ int MR_RecordFile::GetNbRecordsMax() const const
 	return lReturnValue;
 }
 
-int MR_RecordFile::GetCurrentRecordNumber() const const
+int MR_RecordFile::GetCurrentRecordNumber() const
 {
 	return mCurrentRecord;
 } BOOL MR_RecordFile::CreateForWrite(const char *pFileName, int pNbRecords, const char *pTitle)
@@ -312,7 +312,7 @@ void MR_RecordFile::SelectRecord(int pRecordNumber)
 	}
 }
 
-ULONGLONG MR_RecordFile::GetPosition() const const
+ULONGLONG MR_RecordFile::GetPosition() const
 {
 	ULONGLONG lReturnValue = CFile::GetPosition();
 
@@ -322,7 +322,7 @@ ULONGLONG MR_RecordFile::GetPosition() const const
 	return lReturnValue;
 }
 
-CString MR_RecordFile::GetFileTitle() const const
+CString MR_RecordFile::GetFileTitle() const
 {
 	if(mTable != NULL) {
 		return mTable->mFileTitle;
@@ -341,7 +341,7 @@ BOOL MR_RecordFile::Open(LPCTSTR, UINT, CFileException *)
 	return FALSE;
 }
 
-CFile *MR_RecordFile::Duplicate() const const
+CFile *MR_RecordFile::Duplicate() const
 {
 	ASSERT(FALSE);
 	AfxThrowNotSupportedException();
@@ -366,7 +366,7 @@ void MR_RecordFile::SetLength(DWORD)
 	AfxThrowNotSupportedException();
 }
 
-ULONGLONG MR_RecordFile::GetLength() const const
+ULONGLONG MR_RecordFile::GetLength() const
 {
 	ASSERT_VALID(this);
 	ASSERT(!mConstructionMode);
@@ -483,7 +483,7 @@ DWORD ComputeSum(const char *pFileName)
 
 #ifdef _DEBUG
 
-void MR_RecordFile::AssertValid() const const
+void MR_RecordFile::AssertValid() const
 {
 	CFile::AssertValid;
 
@@ -500,7 +500,7 @@ void MR_RecordFile::AssertValid() const const
 	}
 }
 
-void MR_RecordFile::Dump(CDumpContext & dc) const const
+void MR_RecordFile::Dump(CDumpContext & dc) const
 {
 	CFile::Dump(dc);
 

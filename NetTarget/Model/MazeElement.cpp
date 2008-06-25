@@ -114,7 +114,7 @@ MR_FreeElement::MR_FreeElement(const MR_ObjectFromFactoryId & pId)
 {
 }
 
-MR_ElementNetState MR_FreeElement::GetNetState() const const
+MR_ElementNetState MR_FreeElement::GetNetState() const
 {
 	MR_ElementNetState lReturnValue = { 0, NULL };
 	return lReturnValue;

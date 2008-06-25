@@ -235,7 +235,7 @@ MR_ObjectFromFactory::~MR_ObjectFromFactory()
 
 }
 
-const MR_ObjectFromFactoryId & MR_ObjectFromFactory::GetTypeId() const const
+const MR_ObjectFromFactoryId & MR_ObjectFromFactory::GetTypeId() const
 {
 	return mId;
 } void MR_ObjectFromFactory::SerializePtr(CArchive & pArchive, MR_ObjectFromFactory * &pPtr)
@@ -287,7 +287,7 @@ void MR_ObjectFromFactoryId::Serialize(CArchive & pArchive)
 	}
 }
 
-int MR_ObjectFromFactoryId::operator ==(const MR_ObjectFromFactoryId & pId) const const
+int MR_ObjectFromFactoryId::operator ==(const MR_ObjectFromFactoryId & pId) const
 {
 	return ((mDllId == pId.mDllId) && (mClassId == pId.mClassId));
 }

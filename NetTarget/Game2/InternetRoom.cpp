@@ -151,7 +151,7 @@ void MR_InternetRequest::Close()
 	}
 }
 
-BOOL MR_InternetRequest::Working() const const const
+BOOL MR_InternetRequest::Working() const
 {
 	return (mSocket != INVALID_SOCKET);
 }

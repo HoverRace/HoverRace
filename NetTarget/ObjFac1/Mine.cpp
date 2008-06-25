@@ -31,27 +31,27 @@
 const MR_Int32 cMineRay = 400;
 const MR_Int32 cMineHeight = 140;
 
-MR_Int32 MR_Mine::ZMin() const const
+MR_Int32 MR_Mine::ZMin() const
 {
 	return mPosition.mZ;
 }
 
-MR_Int32 MR_Mine::ZMax() const const
+MR_Int32 MR_Mine::ZMax() const
 {
 	return mPosition.mZ + cMineHeight;
 }
 
-MR_Int32 MR_Mine::AxisX() const const
+MR_Int32 MR_Mine::AxisX() const
 {
 	return mPosition.mX;
 }
 
-MR_Int32 MR_Mine::AxisY() const const
+MR_Int32 MR_Mine::AxisY() const
 {
 	return mPosition.mY;
 }
 
-MR_Int32 MR_Mine::RayLen() const const
+MR_Int32 MR_Mine::RayLen() const
 {
 	return cMineRay;
 } MR_Mine::MR_Mine(const MR_ObjectFromFactoryId & pId)
@@ -149,7 +149,7 @@ class MR_MineState
 
 };
 
-MR_ElementNetState MR_Mine::GetNetState() const const
+MR_ElementNetState MR_Mine::GetNetState() const
 {
 	static MR_MineState lsState;				  // Static is ok because the variable will be used immediatly
 

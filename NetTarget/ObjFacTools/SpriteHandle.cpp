@@ -33,7 +33,7 @@ MR_SpriteHandle::~MR_SpriteHandle()
 {
 }
 
-const MR_Sprite *MR_SpriteHandle::GetSprite() const const
+const MR_Sprite *MR_SpriteHandle::GetSprite() const
 {
 	return mSprite;
 }

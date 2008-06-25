@@ -182,7 +182,7 @@ WORD ByteStream::GetWord()
 	}
 }
 
-unsigned char ByteStream::Peek() const const const
+unsigned char ByteStream::Peek() const
 {
 	if(mIndex < mSize) {
 		return mData[mIndex];
@@ -192,7 +192,7 @@ unsigned char ByteStream::Peek() const const const
 	}
 }
 
-BOOL ByteStream::Empty() const const const
+BOOL ByteStream::Empty() const
 {
 	return (mIndex >= mSize);
 }

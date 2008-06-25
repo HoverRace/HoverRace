@@ -35,7 +35,7 @@ MR_ResSprite::~MR_ResSprite()
 	mData = NULL;
 }
 
-int MR_ResSprite::GetResourceId() const const
+int MR_ResSprite::GetResourceId() const
 {
 	return mResourceId;
 }

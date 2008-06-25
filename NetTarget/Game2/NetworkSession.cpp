@@ -153,7 +153,7 @@ MR_NetworkSession::~MR_NetworkSession()
 
 }
 
-int MR_NetworkSession::ResultAvaillable() const const const
+int MR_NetworkSession::ResultAvaillable() const
 {
 	int lReturnValue = 0;
 
@@ -166,7 +166,7 @@ int MR_NetworkSession::ResultAvaillable() const const const
 	return lReturnValue;
 }
 
-void MR_NetworkSession::GetResult(int pPosition, const char *&pPlayerName, int &pId, BOOL & pConnected, int &pNbLap, MR_SimulationTime & pFinishTime, MR_SimulationTime & pBestLap) const const const
+void MR_NetworkSession::GetResult(int pPosition, const char *&pPlayerName, int &pId, BOOL & pConnected, int &pNbLap, MR_SimulationTime & pFinishTime, MR_SimulationTime & pBestLap) const
 {
 	PlayerResult *lCurrent = mResultList;
 
@@ -193,7 +193,7 @@ void MR_NetworkSession::GetResult(int pPosition, const char *&pPlayerName, int &
 	}
 }
 
-void MR_NetworkSession::GetHitResult(int pPosition, const char *&pPlayerName, int &pId, BOOL & pConnected, int &pNbHitOther, int &pNbHitHimself) const const const
+void MR_NetworkSession::GetHitResult(int pPosition, const char *&pPlayerName, int &pId, BOOL & pConnected, int &pNbHitOther, int &pNbHitHimself) const
 {
 	PlayerResult *lCurrent = mHitList;
 
@@ -258,14 +258,14 @@ BOOL MR_NetworkSession::ResultAvaillable()const
 }
 */
 
-int MR_NetworkSession::GetNbPlayers() const const const
+int MR_NetworkSession::GetNbPlayers() const
 {
 	// Return the number of players still playing???
 	// return mNetInterface.GetClientCount()+1;
 	return ResultAvaillable();
 }
 
-const MR_MainCharacter *MR_NetworkSession::GetPlayer(int pPlayerIndex) const const const
+const MR_MainCharacter *MR_NetworkSession::GetPlayer(int pPlayerIndex) const
 {
 	const MR_MainCharacter *lReturnValue = NULL;
 
@@ -278,7 +278,7 @@ const MR_MainCharacter *MR_NetworkSession::GetPlayer(int pPlayerIndex) const con
 	return lReturnValue;
 }
 
-int MR_NetworkSession::GetRank(const MR_MainCharacter * /*pPlayer */ ) const const const {
+int MR_NetworkSession::GetRank(const MR_MainCharacter * /*pPlayer */ ) const {
 // We assume that we are looking for the main character
 int lReturnValue = 0;
 
@@ -606,7 +606,7 @@ void MR_NetworkSession::SetPlayerName(const char *pPlayerName)
 	mNetInterface.SetPlayerName(pPlayerName);
 }
 
-const char *MR_NetworkSession::GetPlayerName() const const const
+const char *MR_NetworkSession::GetPlayerName() const
 {
 	return mNetInterface.GetPlayerName();
 }
@@ -1248,7 +1248,7 @@ void MR_NetworkSession::AddMessageKey(char pKey)
 	LeaveCriticalSection(&mChatMutex);
 }
 
-void MR_NetworkSession::GetCurrentMessage(char *pDest) const const const
+void MR_NetworkSession::GetCurrentMessage(char *pDest) const
 {
 	EnterCriticalSection(&((MR_NetworkSession *) this)->mChatMutex);
 

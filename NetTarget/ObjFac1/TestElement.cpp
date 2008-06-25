@@ -169,27 +169,27 @@ const MR_ShapeInterface *MR_TestElement::GetGivingContactEffectShape()
 	return &mContactShape;
 }
 
-MR_Int32 MR_TestElement::Cylinder::ZMin() const const
+MR_Int32 MR_TestElement::Cylinder::ZMin() const
 {
 	return mPosition.mZ;
 }
 
-MR_Int32 MR_TestElement::Cylinder::ZMax() const const
+MR_Int32 MR_TestElement::Cylinder::ZMax() const
 {
 	return mPosition.mZ + 1800;
 }
 
-MR_Int32 MR_TestElement::Cylinder::AxisX() const const
+MR_Int32 MR_TestElement::Cylinder::AxisX() const
 {
 	return mPosition.mX;
 }
 
-MR_Int32 MR_TestElement::Cylinder::AxisY() const const
+MR_Int32 MR_TestElement::Cylinder::AxisY() const
 {
 	return mPosition.mY;
 }
 
-MR_Int32 MR_TestElement::Cylinder::RayLen() const const
+MR_Int32 MR_TestElement::Cylinder::RayLen() const
 {
 	return mRay;
 }

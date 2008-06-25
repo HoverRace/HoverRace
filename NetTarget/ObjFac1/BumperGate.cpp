@@ -37,27 +37,27 @@ const MR_Int32 cGateHeightMax = 3000;
 
 const MR_Int32 cGateWeight = MR_PhysicalCollision::eInfiniteWeight;
 
-MR_Int32 MR_BumperGate::ZMin() const const
+MR_Int32 MR_BumperGate::ZMin() const
 {
 	return mPosition.mZ + 2;					  // the 2 reduce computing because the shape dont touch the floor
 }
 
-MR_Int32 MR_BumperGate::ZMax() const const
+MR_Int32 MR_BumperGate::ZMax() const
 {
 	return mPosition.mZ + cGateHeightMin + mCurrentFrame * (cGateHeightMax - cGateHeightMin) / (mLastState);
 }
 
-MR_Int32 MR_BumperGate::AxisX() const const
+MR_Int32 MR_BumperGate::AxisX() const
 {
 	return mPosition.mX;
 }
 
-MR_Int32 MR_BumperGate::AxisY() const const
+MR_Int32 MR_BumperGate::AxisY() const
 {
 	return mPosition.mY;
 }
 
-MR_Int32 MR_BumperGate::RayLen() const const
+MR_Int32 MR_BumperGate::RayLen() const
 {
 	return cGateRayMin + mCurrentFrame * (cGateRayMax - cGateRayMin) / (mLastState);
 } MR_BumperGate::MR_BumperGate(const MR_ObjectFromFactoryId & pId)

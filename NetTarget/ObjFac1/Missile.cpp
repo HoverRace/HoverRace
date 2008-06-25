@@ -45,27 +45,27 @@ const MR_Int32 cIgnitionTime  = 110;       // 0.175 sec
 #define MINIMUM_SPLITTABLE_TIME_SLICE  6
 const double eSteadySpeed = 21.0 * 2222.0 / 1000.0;
 
-MR_Int32 MR_Missile::ZMin() const const
+MR_Int32 MR_Missile::ZMin() const
 {
 	return mPosition.mZ - cMissileRay;
 }
 
-MR_Int32 MR_Missile::ZMax() const const
+MR_Int32 MR_Missile::ZMax() const
 {
 	return mPosition.mZ + cMissileRay;
 }
 
-MR_Int32 MR_Missile::AxisX() const const
+MR_Int32 MR_Missile::AxisX() const
 {
 	return mPosition.mX;
 }
 
-MR_Int32 MR_Missile::AxisY() const const
+MR_Int32 MR_Missile::AxisY() const
 {
 	return mPosition.mY;
 }
 
-MR_Int32 MR_Missile::RayLen() const const
+MR_Int32 MR_Missile::RayLen() const
 {
 	return cMissileRay;
 } MR_Missile::MR_Missile(const MR_ObjectFromFactoryId & pId)
@@ -305,7 +305,7 @@ class MR_MissileState
 		MR_Int8 mHoverId;						  // 1   14
 };
 
-MR_ElementNetState MR_Missile::GetNetState() const const
+MR_ElementNetState MR_Missile::GetNetState() const
 {
 	static MR_MissileState lsState;				  // Static is ok because the variable will be used immediatly
 

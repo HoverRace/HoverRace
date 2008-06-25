@@ -26,27 +26,27 @@
 const MR_Int32 cSourceRay = 20000;				  // the source have a diameter of 40 meters
 const MR_Int32 cSourceHeight = 2000;			  // 2 meters
 
-MR_Int32 MR_DoubleSpeedSource::ZMin() const const
+MR_Int32 MR_DoubleSpeedSource::ZMin() const
 {
 	return mPosition.mZ;
 }
 
-MR_Int32 MR_DoubleSpeedSource::ZMax() const const
+MR_Int32 MR_DoubleSpeedSource::ZMax() const
 {
 	return mPosition.mZ + cSourceHeight;
 }
 
-MR_Int32 MR_DoubleSpeedSource::AxisX() const const
+MR_Int32 MR_DoubleSpeedSource::AxisX() const
 {
 	return mPosition.mX;
 }
 
-MR_Int32 MR_DoubleSpeedSource::AxisY() const const
+MR_Int32 MR_DoubleSpeedSource::AxisY() const
 {
 	return mPosition.mY;
 }
 
-MR_Int32 MR_DoubleSpeedSource::RayLen() const const
+MR_Int32 MR_DoubleSpeedSource::RayLen() const
 {
 	return cSourceRay;
 } MR_DoubleSpeedSource::MR_DoubleSpeedSource(const MR_ObjectFromFactoryId & pId)

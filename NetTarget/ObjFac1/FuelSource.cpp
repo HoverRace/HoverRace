@@ -27,27 +27,27 @@ const double cFuelGain = 60 / 3;				  // A 60 second refill takes 3 seconds
 const MR_Int32 cSourceRay = 20000;				  // the source have a diameter of 40 meters
 const MR_Int32 cSourceHeight = 3000;			  // 3 meters
 
-MR_Int32 MR_FuelSource::ZMin() const const
+MR_Int32 MR_FuelSource::ZMin() const
 {
 	return mPosition.mZ;
 }
 
-MR_Int32 MR_FuelSource::ZMax() const const
+MR_Int32 MR_FuelSource::ZMax() const
 {
 	return mPosition.mZ + cSourceHeight;
 }
 
-MR_Int32 MR_FuelSource::AxisX() const const
+MR_Int32 MR_FuelSource::AxisX() const
 {
 	return mPosition.mX;
 }
 
-MR_Int32 MR_FuelSource::AxisY() const const
+MR_Int32 MR_FuelSource::AxisY() const
 {
 	return mPosition.mY;
 }
 
-MR_Int32 MR_FuelSource::RayLen() const const
+MR_Int32 MR_FuelSource::RayLen() const
 {
 	return cSourceRay;
 } MR_FuelSource::MR_FuelSource(const MR_ObjectFromFactoryId & pId)

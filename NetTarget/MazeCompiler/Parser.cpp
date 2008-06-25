@@ -252,7 +252,7 @@ double MR_Parser::GetNextNumParam(double pDefaultValue)
 
 }
 
-int MR_Parser::GetErrorLine() const const
+int MR_Parser::GetErrorLine() const
 {
 	return mLineNumber;
 }

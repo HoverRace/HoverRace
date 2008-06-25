@@ -26,7 +26,7 @@ class MR_BitPack
 };
 
 // Inlined because good performances are needed
-inline MR_Int32 MR_BitPack::Get(int pOffset, int pLen, int pPrecision) const const
+inline MR_Int32 MR_BitPack::Get(int pOffset, int pLen, int pPrecision) const
 {
 	union
 	{
@@ -44,7 +44,7 @@ inline MR_Int32 MR_BitPack::Get(int pOffset, int pLen, int pPrecision) const con
 	return lReturnValue.s << pPrecision;
 }
 
-inline MR_UInt32 MR_BitPack::Getu(int pOffset, int pLen, int pPrecision) const const
+inline MR_UInt32 MR_BitPack::Getu(int pOffset, int pLen, int pPrecision) const
 {
 	MR_UInt32 lReturnValue;
 

@@ -226,7 +226,7 @@ void MR_MainCharacter::SetHoverModel(int pModel)
 	mHoverModel = pModel;
 }
 
-int MR_MainCharacter::GetHoverModel() const const
+int MR_MainCharacter::GetHoverModel() const
 {
 	return mHoverModel;
 } void MR_MainCharacter::SetOrientation(MR_Angle pOrientation)
@@ -235,7 +235,7 @@ int MR_MainCharacter::GetHoverModel() const const
 	mCabinOrientation = pOrientation;
 }
 
-int MR_MainCharacter::GetHoverId() const const
+int MR_MainCharacter::GetHoverId() const
 {
 	return mHoverId;
 } void MR_MainCharacter::AddRenderer()
@@ -277,7 +277,7 @@ MR_MainCharacter *MR_MainCharacter::New(int pNbLap, BOOL pAllowWeapons)
 	return lReturnValue;
 }
 
-MR_ElementNetState MR_MainCharacter::GetNetState() const const
+MR_ElementNetState MR_MainCharacter::GetNetState() const
 {
 	static MR_MainCharacterState lsState;		  // Static is ok because the variable will be used immediatly
 

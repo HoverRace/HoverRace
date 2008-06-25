@@ -43,7 +43,7 @@ MR_ResShortSound::~MR_ResShortSound()
 	mData = NULL;
 }
 
-int MR_ResShortSound::GetResourceId() const const
+int MR_ResShortSound::GetResourceId() const
 {
 	return mResourceId;
 } void MR_ResShortSound::Serialize(CArchive & pArchive)
@@ -74,7 +74,7 @@ int MR_ResShortSound::GetResourceId() const const
 	}
 }
 
-MR_ShortSound *MR_ResShortSound::GetSound() const const
+MR_ShortSound *MR_ResShortSound::GetSound() const
 {
 	return mSound;
 } MR_ResContinuousSound::MR_ResContinuousSound(int pResourceId)
@@ -95,7 +95,7 @@ MR_ResContinuousSound::~MR_ResContinuousSound()
 	mData = NULL;
 }
 
-int MR_ResContinuousSound::GetResourceId() const const
+int MR_ResContinuousSound::GetResourceId() const
 {
 	return mResourceId;
 } void MR_ResContinuousSound::Serialize(CArchive & pArchive)
@@ -125,7 +125,7 @@ int MR_ResContinuousSound::GetResourceId() const const
 	}
 }
 
-MR_ContinuousSound *MR_ResContinuousSound::GetSound() const const
+MR_ContinuousSound *MR_ResContinuousSound::GetSound() const
 {
 	return mSound;
 }

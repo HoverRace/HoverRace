@@ -134,7 +134,7 @@ MR_NetworkInterface::~MR_NetworkInterface()
 	WSACleanup();
 }
 
-const char *MR_NetworkInterface::GetPlayerName(int pIndex) const const const const
+const char *MR_NetworkInterface::GetPlayerName(int pIndex) const
 {
 	const char *lReturnValue = NULL;
 
@@ -146,7 +146,7 @@ const char *MR_NetworkInterface::GetPlayerName(int pIndex) const const const con
 	} return lReturnValue;
 }
 
-BOOL MR_NetworkInterface::IsConnected(int pIndex) const const const const
+BOOL MR_NetworkInterface::IsConnected(int pIndex) const
 {
 	ASSERT(pIndex < eMaxClient);
 
@@ -176,7 +176,7 @@ BOOL MR_NetworkInterface::IsConnected(int pIndex) const const const const
 	}
 }
 
-int MR_NetworkInterface::GetClientCount() const const const const
+int MR_NetworkInterface::GetClientCount() const
 {
 	int lReturnValue = 0;
 
@@ -186,13 +186,13 @@ int MR_NetworkInterface::GetClientCount() const const const const
 	} return lReturnValue;
 }
 
-int MR_NetworkInterface::GetId() const const const const
+int MR_NetworkInterface::GetId() const
 {
 	ASSERT((mId != 0) || mServerMode);
 	return mId;
 }
 
-int MR_NetworkInterface::GetLagFromServer() const const const const
+int MR_NetworkInterface::GetLagFromServer() const
 {
 	if(mServerMode)
 		return 0;
@@ -200,13 +200,13 @@ int MR_NetworkInterface::GetLagFromServer() const const const const
 		return mClient[0].GetMinLag();
 }
 
-int MR_NetworkInterface::GetMinLag(int pClient) const const const const
+int MR_NetworkInterface::GetMinLag(int pClient) const
 {
 	ASSERT((pClient >= 0) && (pClient < eMaxClient));
 	return mClient[pClient].GetMinLag();
 }
 
-int MR_NetworkInterface::GetAvgLag(int pClient) const const const const
+int MR_NetworkInterface::GetAvgLag(int pClient) const
 {
 	ASSERT((pClient >= 0) && (pClient < eMaxClient));
 	return mClient[pClient].GetMinLag();
@@ -298,7 +298,7 @@ void MR_NetworkInterface::SetPlayerName(const char *pPlayerName)
 	mPlayer = pPlayerName;
 }
 
-const char *MR_NetworkInterface::GetPlayerName() const const const const
+const char *MR_NetworkInterface::GetPlayerName() const
 {
 	return mPlayer;
 } BOOL MR_NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName, BOOL pPromptForPort, unsigned pDefaultPort, HWND * pModalessDlg, int pReturnMessage)
@@ -1387,7 +1387,7 @@ void MR_NetworkPort::SetRemoteUDPPort(unsigned int pPort)
 	mUDPRemoteAddr.sin_port = pPort;
 }
 
-unsigned int MR_NetworkPort::GetUDPPort() const const const const
+unsigned int MR_NetworkPort::GetUDPPort() const
 {
 	// Get UDP local addr
 	SOCKADDR_IN lLocalAddr;
@@ -1430,17 +1430,17 @@ unsigned int MR_NetworkPort::GetUDPPort() const const const const
 
 }
 
-BOOL MR_NetworkPort::IsConnected() const const const const
+BOOL MR_NetworkPort::IsConnected() const
 {
 	return (mSocket != INVALID_SOCKET);
 }
 
-SOCKET MR_NetworkPort::GetSocket() const const const const
+SOCKET MR_NetworkPort::GetSocket() const
 {
 	return mSocket;
 }
 
-SOCKET MR_NetworkPort::GetUDPSocket() const const const const
+SOCKET MR_NetworkPort::GetUDPSocket() const
 {
 	return mUDPRecvSocket;
 } const MR_NetMessageBuffer *MR_NetworkPort::Poll()
@@ -1656,17 +1656,17 @@ BOOL MR_NetworkPort::AddLagSample(int pLag)
 	return LagDone();
 }
 
-BOOL MR_NetworkPort::LagDone() const const const const
+BOOL MR_NetworkPort::LagDone() const
 {
 	return (mNbLagTest >= 5);
 }
 
-int MR_NetworkPort::GetAvgLag() const const const const
+int MR_NetworkPort::GetAvgLag() const
 {
 	return mAvgLag;
 }
 
-int MR_NetworkPort::GetMinLag() const const const const
+int MR_NetworkPort::GetMinLag() const
 {
 	return mMinLag;
 } void MR_NetworkPort::SetLag(int pAvgLag, int pMinLag)

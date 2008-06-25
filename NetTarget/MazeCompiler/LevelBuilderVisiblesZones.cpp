@@ -267,12 +267,12 @@ const MR_2DFloatPos & MR_2DFloatPos::operator=(const MR_2DCoordinate & pPos)
 	return *this;
 }
 
-BOOL MR_2DFloatPos::operator==(const MR_2DFloatPos & pPos) const const
+BOOL MR_2DFloatPos::operator==(const MR_2DFloatPos & pPos) const
 {
 	return ((mX == pPos.mX) && (mY == pPos.mY));
 }
 
-BOOL MR_2DFloatPos::operator!=(const MR_2DFloatPos & pPos) const const
+BOOL MR_2DFloatPos::operator!=(const MR_2DFloatPos & pPos) const
 {
 	return !(operator==(pPos));
 } MR_VisibleStep::MR_VisibleStep()
