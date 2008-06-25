@@ -49,7 +49,7 @@
 #define LOAD_BANNER_TIMEOUT_EVENT     8
 #define ANIM_BANNER_TIMEOUT_EVENT     9
 
-#define MR_IR_LIST "www.hoverrace.com/~sirbrock/imr/rl.php"
+#define MR_IR_LIST "66.197.183.245/~sirbrock/imr/rl.php"
 
 #define MR_IR_LIST_PORT 80
 
