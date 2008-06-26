@@ -812,6 +812,9 @@ void MR_GameApp::LoadRegistry()
 	mMajorID = -1;
 	mMinorID = -1;
 
+	mMainServer = "66.197.183.245/~sirbrock/imr/rl.php";
+
+
 	// Prerecorded messages
 	// Joystick stuff
 
@@ -935,6 +938,11 @@ void MR_GameApp::LoadRegistry()
 		gKeyEncriptFilled = TRUE;
 	}
 #endif
+
+	// Get the address of the server
+	if(RegQueryValueEx(lProgramKey, "MainServer", 0, NULL, (MR_UInt8 *) lBuffer, &lBufferSize) == ERROR_SUCCESS) {
+		mMainServer = lBuffer;
+	}
 }
 
 void MR_GameApp::SaveRegistry()
@@ -964,41 +972,41 @@ void MR_GameApp::SaveRegistry()
 	if(lError == ERROR_SUCCESS) {
 		MR_UInt8 lControlBuffer[32];
 
-		lControlBuffer[0] = (MR_UInt8)mMotorOn1;
-		lControlBuffer[1] = (MR_UInt8)mRight1;
-		lControlBuffer[2] = (MR_UInt8)mLeft1;
-		lControlBuffer[3] = (MR_UInt8)mJump1;
-		lControlBuffer[4] = (MR_UInt8)mFire1;
-		lControlBuffer[5] = (MR_UInt8)mBreak1;
-		lControlBuffer[6] = (MR_UInt8)mWeapon1;
-		lControlBuffer[7] = (MR_UInt8)mLookBack1;
+		lControlBuffer[0] = (MR_UInt8) mMotorOn1;
+		lControlBuffer[1] = (MR_UInt8) mRight1;
+		lControlBuffer[2] = (MR_UInt8) mLeft1;
+		lControlBuffer[3] = (MR_UInt8) mJump1;
+		lControlBuffer[4] = (MR_UInt8) mFire1;
+		lControlBuffer[5] = (MR_UInt8) mBreak1;
+		lControlBuffer[6] = (MR_UInt8) mWeapon1;
+		lControlBuffer[7] = (MR_UInt8) mLookBack1;
 
-		lControlBuffer[8] = (MR_UInt8)mMotorOn2;
-		lControlBuffer[9] = (MR_UInt8)mRight2;
-		lControlBuffer[10] = (MR_UInt8)mLeft2;
-		lControlBuffer[11] = (MR_UInt8)mJump2;
-		lControlBuffer[12] = (MR_UInt8)mFire2;
-		lControlBuffer[13] = (MR_UInt8)mBreak2;
-		lControlBuffer[14] = (MR_UInt8)mWeapon2;
-		lControlBuffer[15] = (MR_UInt8)mLookBack2;
+		lControlBuffer[8] = (MR_UInt8) mMotorOn2;
+		lControlBuffer[9] = (MR_UInt8) mRight2;
+		lControlBuffer[10] = (MR_UInt8) mLeft2;
+		lControlBuffer[11] = (MR_UInt8) mJump2;
+		lControlBuffer[12] = (MR_UInt8) mFire2;
+		lControlBuffer[13] = (MR_UInt8) mBreak2;
+		lControlBuffer[14] = (MR_UInt8) mWeapon2;
+		lControlBuffer[15] = (MR_UInt8) mLookBack2;
 
-		lControlBuffer[16] = (MR_UInt8)mMotorOn3;
-		lControlBuffer[17] = (MR_UInt8)mRight3;
-		lControlBuffer[18] = (MR_UInt8)mLeft3;
-		lControlBuffer[19] = (MR_UInt8)mJump3;
-		lControlBuffer[20] = (MR_UInt8)mFire3;
-		lControlBuffer[21] = (MR_UInt8)mBreak3;
-		lControlBuffer[22] = (MR_UInt8)mWeapon3;
-		lControlBuffer[23] = (MR_UInt8)mLookBack3;
+		lControlBuffer[16] = (MR_UInt8) mMotorOn3;
+		lControlBuffer[17] = (MR_UInt8) mRight3;
+		lControlBuffer[18] = (MR_UInt8) mLeft3;
+		lControlBuffer[19] = (MR_UInt8) mJump3;
+		lControlBuffer[20] = (MR_UInt8) mFire3;
+		lControlBuffer[21] = (MR_UInt8) mBreak3;
+		lControlBuffer[22] = (MR_UInt8) mWeapon3;
+		lControlBuffer[23] = (MR_UInt8) mLookBack3;
 
-		lControlBuffer[24] = (MR_UInt8)mMotorOn4;
-		lControlBuffer[25] = (MR_UInt8)mRight4;
-		lControlBuffer[26] = (MR_UInt8)mLeft4;
-		lControlBuffer[27] = (MR_UInt8)mJump4;
-		lControlBuffer[28] = (MR_UInt8)mFire4;
-		lControlBuffer[29] = (MR_UInt8)mBreak4;
-		lControlBuffer[30] = (MR_UInt8)mWeapon4;
-		lControlBuffer[31] = (MR_UInt8)mLookBack4;
+		lControlBuffer[24] = (MR_UInt8) mMotorOn4;
+		lControlBuffer[25] = (MR_UInt8) mRight4;
+		lControlBuffer[26] = (MR_UInt8) mLeft4;
+		lControlBuffer[27] = (MR_UInt8) mJump4;
+		lControlBuffer[28] = (MR_UInt8) mFire4;
+		lControlBuffer[29] = (MR_UInt8) mBreak4;
+		lControlBuffer[30] = (MR_UInt8) mWeapon4;
+		lControlBuffer[31] = (MR_UInt8) mLookBack4;
 
 		if(RegSetValueEx(lProgramKey, "Control", 0, REG_BINARY, lControlBuffer, sizeof(lControlBuffer)) != ERROR_SUCCESS) {
 			lReturnValue = FALSE;
@@ -1061,6 +1069,12 @@ void MR_GameApp::SaveRegistry()
 				lReturnValue = FALSE;
 				ASSERT(FALSE);
 			}
+		}
+
+		// Save the main server key
+		if(RegSetValueEx(lProgramKey, "MainServer", 0, REG_SZ, (const unsigned char *) (const char *) mMainServer, mMainServer.GetLength() + 1) != ERROR_SUCCESS) {
+			lReturnValue = FALSE;
+			ASSERT(FALSE);
 		}
 	}
 }
@@ -1490,7 +1504,7 @@ void MR_GameApp::RefreshView()
 #endif
 
 			} else
-			mVideoBuffer->Clear((MR_UInt8)(lColor++));
+			mVideoBuffer->Clear((MR_UInt8) (lColor++));
 			mVideoBuffer->Unlock();
 		}
 	}
@@ -2118,7 +2132,7 @@ void MR_GameApp::NewInternetSession()
 	BOOL lSuccess = TRUE;
 	MR_NetworkSession *lCurrentSession = NULL;
 	// MR_InternetRoom    lInternetRoom( gKeyFilled, gKeyFilled?mMajorID:-1, gKeyFilled?mMinorID:-1, gKeyFilled?gKey.mKeySumHard2:0, gKeyFilled?gKey.mKeySumHard3:0 );
-	MR_InternetRoom lInternetRoom(gKeyFilled, gKeyFilled ? mMajorID : -1, gKeyFilled ? mMinorID : -1, gKeyFilled ? gKey.mIDSum : 0, 0);
+	MR_InternetRoom lInternetRoom(gKeyFilled, gKeyFilled ? mMajorID : -1, gKeyFilled ? mMinorID : -1, gKeyFilled ? gKey.mIDSum : 0, 0, mMainServer);
 
 	// Verify is user acknowledge
 	if(AskUserToAbortGame() != IDOK)
@@ -3085,20 +3099,15 @@ BOOL CALLBACK MR_GameApp::MiscDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWPar
 
 	BOOL lReturnValue = FALSE;
 
-	BOOL lIntroMovie = FALSE;
-	BOOL lDisplayFirstScreen = FALSE;
-	BOOL lNativeBppFullscreen = FALSE;
-
 	switch (pMsgId) {
 		// Catch environment modification events
 		case WM_INITDIALOG:
-			lIntroMovie = This->mIntroMovie;
-			lDisplayFirstScreen = This->mDisplayFirstScreen;
-			lNativeBppFullscreen = This->mNativeBppFullscreen;
+			// Set default values correctly
+			SendDlgItemMessage(pWindow, IDC_INTRO_MOVIE, BM_SETCHECK, This->mIntroMovie, 0);
+			SendDlgItemMessage(pWindow, IDC_SHOW_INTERNET, BM_SETCHECK, This->mDisplayFirstScreen, 0);
+			SendDlgItemMessage(pWindow, IDC_NATIVE_BPP_FULLSCREEN, BM_SETCHECK, This->mNativeBppFullscreen, 0);
 
-			SendDlgItemMessage(pWindow, IDC_INTRO_MOVIE, BM_SETCHECK, lIntroMovie, 0);
-			SendDlgItemMessage(pWindow, IDC_SHOW_INTERNET, BM_SETCHECK, lDisplayFirstScreen, 0);
-			SendDlgItemMessage(pWindow, IDC_NATIVE_BPP_FULLSCREEN, BM_SETCHECK, lNativeBppFullscreen, 0);
+			SetDlgItemText(pWindow, IDC_MAINSERVER, This->mMainServer);
 
 			break;
 
@@ -3110,6 +3119,14 @@ BOOL CALLBACK MR_GameApp::MiscDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWPar
 					This->mNativeBppFullscreen = SendDlgItemMessage(pWindow, IDC_NATIVE_BPP_FULLSCREEN, BM_GETCHECK, 0, 0);
 
 					This->mVideoBuffer->SetNativeBppFullscreen(This->mNativeBppFullscreen);
+
+					{
+						char lBuffer[80];
+						if(GetDlgItemText(pWindow, IDC_MAINSERVER, lBuffer, sizeof(lBuffer)) == 0)
+							ASSERT(FALSE);
+
+						This->mMainServer = lBuffer;
+					}
 
 					This->SaveRegistry();
 					break;

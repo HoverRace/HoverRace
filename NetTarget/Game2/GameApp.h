@@ -127,6 +127,8 @@ class MR_GameApp
 		// CString mKey1;
 		// CString mKey2;
 
+		CString mMainServer;
+
 		BOOL mDisplayFirstScreen;
 		BOOL mIntroMovie;
 		BOOL mNativeBppFullscreen;

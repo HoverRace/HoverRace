@@ -794,7 +794,7 @@ BEGIN
                     27,13,109,21
 END
 
-IDD_MISC DIALOGEX 0, 0, 277, 66
+IDD_MISC DIALOGEX 0, 0, 277, 80
 STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
 FONT 8, "MS Shell Dlg", 0, 0, 0x0
 BEGIN
@@ -806,6 +806,8 @@ BEGIN
     CONTROL         "Use desktop &color depth when switching to fullscreen",
                     IDC_NATIVE_BPP_FULLSCREEN,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,7,32,185,10
+    LTEXT           "Address of Server Roomlist:",IDC_STATIC,7,51,169,8
+    EDITTEXT        IDC_MAINSERVER,7,62,218,11,ES_AUTOHSCROLL
 END
 
 
@@ -1136,7 +1138,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 268
         TOPMARGIN, 7
-        BOTTOMMARGIN, 59
+        BOTTOMMARGIN, 73
     END
 END
 #endif    // APSTUDIO_INVOKED
