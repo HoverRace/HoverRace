@@ -139,7 +139,7 @@ MR_UInt16 MR_DllObjectFactory::GetObjectTypeCount(MR_UInt16 pDllId)
 
 	MR_FactoryDll *lDllPtr = GetDll(pDllId, TRUE);
 
-	if(lDllPtr->mGetObjectTypeCount != NULL);
+	if(lDllPtr->mGetObjectTypeCount != NULL)
 	{
 		lReturnValue = lDllPtr->mGetObjectTypeCount();
 	}
@@ -154,7 +154,7 @@ CString MR_DllObjectFactory::GetObjectFamily(const MR_ObjectFromFactoryId & pId)
 
 	MR_FactoryDll *lDllPtr = GetDll(pId.mDllId, TRUE);
 
-	if(lDllPtr->mGetObjectFamily != NULL);
+	if(lDllPtr->mGetObjectFamily != NULL)
 	{
 		lReturnValue = lDllPtr->mGetObjectFamily(pId.mClassId);
 	}
@@ -168,7 +168,7 @@ CString MR_DllObjectFactory::GetObjectDescription(const MR_ObjectFromFactoryId &
 
 	MR_FactoryDll *lDllPtr = GetDll(pId.mDllId, TRUE);
 
-	if(lDllPtr->mGetObjectDescription != NULL);
+	if(lDllPtr->mGetObjectDescription != NULL)
 	{
 		lReturnValue = lDllPtr->mGetObjectDescription(pId.mClassId);
 	}

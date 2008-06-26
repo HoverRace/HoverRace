@@ -211,7 +211,7 @@ BOOL MR_RecordFile::BeginANewRecord()
 		if(mTable->mRecordUsed < mTable->mRecordMax) {
 			mCurrentRecord = mTable->mRecordUsed;
 			CFile::Seek(0, end);
-			mTable->mRecordList[mCurrentRecord] = CFile::GetPosition();
+			mTable->mRecordList[mCurrentRecord] = static_cast<DWORD>(CFile::GetPosition());
 			mTable->mRecordUsed = mCurrentRecord + 1;
 
 			lReturnValue = TRUE;
@@ -346,7 +346,9 @@ CFile *MR_RecordFile::Duplicate() const
 	ASSERT(FALSE);
 	AfxThrowNotSupportedException();
 	return NULL;
-} LONG MR_RecordFile::Seek(LONG pOff, UINT pFrom)
+}
+
+LONG MR_RecordFile::Seek(LONG pOff, UINT pFrom)
 {
 	// BUG This function do not check for record overflow
 	LONG lLocalOffset = 0;
@@ -357,7 +359,7 @@ CFile *MR_RecordFile::Duplicate() const
 		lLocalOffset = mTable->mRecordList[mCurrentRecord];
 	}
 
-	return CFile::Seek(pOff + lLocalOffset, pFrom) - lLocalOffset;
+	return static_cast<LONG>(CFile::Seek(pOff + lLocalOffset, pFrom)) - lLocalOffset;
 }
 
 void MR_RecordFile::SetLength(DWORD)
@@ -397,7 +399,7 @@ UINT MR_RecordFile::Read(void *pBuf, UINT pCount)
 				- mTable->mRecordList[mCurrentRecord];
 
 			if(GetPosition() + pCount > lRecordLen) {
-				pCount = lRecordLen - GetPosition();
+				pCount = lRecordLen - static_cast<UINT>(GetPosition());
 				ASSERT((int) pCount >= 0);
 			}
 		}
@@ -485,7 +487,7 @@ DWORD ComputeSum(const char *pFileName)
 
 void MR_RecordFile::AssertValid() const
 {
-	CFile::AssertValid;
+	CFile::AssertValid();
 
 	ASSERT(mCurrentRecord >= -1);
 	if(mTable != NULL) {
