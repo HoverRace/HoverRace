@@ -54,23 +54,23 @@ static unsigned short TextToInt(const char *pText)
 {
 	unsigned short lReturnValue = 0;
 
-	lReturnValue += (toupper(pText[0]) - 'A') * (26 * 10 * 10);
-	lReturnValue += (toupper(pText[1]) - 'A') * (10 * 10);
-	lReturnValue += (toupper(pText[2]) - '0') * 10;
-	lReturnValue += (toupper(pText[3]) - '0');
+	lReturnValue += (static_cast<unsigned short>(toupper(pText[0])) - 'A') * (26 * 10 * 10);
+	lReturnValue += (static_cast<unsigned short>(toupper(pText[1])) - 'A') * (10 * 10);
+	lReturnValue += (static_cast<unsigned short>(toupper(pText[2])) - '0') * 10;
+	lReturnValue += static_cast<unsigned short>(toupper(pText[3])) - '0';
 
 	return lReturnValue;
 }
 
 static void IntToText(unsigned short pValue, unsigned char *pDest)
 {
-	pDest[3] = '0' + (pValue % 10);
+	pDest[3] = static_cast<unsigned char>('0' + (pValue % 10));
 	pValue /= 10;
-	pDest[2] = '0' + (pValue % 10);
+	pDest[2] = static_cast<unsigned char>('0' + (pValue % 10));
 	pValue /= 10;
-	pDest[1] = 'A' + (pValue % 26);
+	pDest[1] = static_cast<unsigned char>('A' + (pValue % 26));
 	pValue /= 26;
-	pDest[0] = 'A' + (pValue % 26);
+	pDest[0] = static_cast<unsigned char>('A' + (pValue % 26));
 	pDest[4] = 0;
 }
 
@@ -166,9 +166,9 @@ static unsigned char GetKey1Sum(KeyStructure * pStructure)
 	unsigned char *lKey = (unsigned char *) pStructure;
 
 	for(int lCounter = 1; lCounter < 10; lCounter++) {
-		lSum += lKey[lCounter];
+		lSum = static_cast<unsigned short>(lKey[lCounter]) + lSum;
 	}
-	return lSum;
+	return static_cast<unsigned char>(lSum);
 }
 
 static unsigned char GetKey2Sum(KeyStructure * pStructure)
@@ -178,9 +178,9 @@ static unsigned char GetKey2Sum(KeyStructure * pStructure)
 	unsigned char *lKey = (unsigned char *) pStructure;
 
 	for(int lCounter = 10; lCounter < 20; lCounter++) {
-		lSum += lKey[lCounter];
+		lSum = static_cast<unsigned short>(lKey[lCounter]) + lSum;
 	}
-	return lSum;
+	return static_cast<unsigned char>(lSum);
 }
 
 static const char *NormalizeUser(const char *pName)
@@ -190,7 +190,7 @@ static const char *NormalizeUser(const char *pName)
 	int lIndex = 0;
 
 	while((*pName != 0) && (lIndex < 40)) {
-		char lChar = toupper(*pName);
+		char lChar = (char)toupper(*pName);
 
 		if((lChar >= 'A') && (lChar <= 'Z')) {
 			lReturnValue[lIndex++] = lChar;

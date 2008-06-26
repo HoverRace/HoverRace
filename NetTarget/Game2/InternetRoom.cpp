@@ -1948,10 +1948,10 @@ BOOL CALLBACK MR_InternetRoom::GetAddrCallBack(HWND pWindow, UINT pMsgId, WPARAM
 					while(lData != NULL) {
 						char lNameBuffer[40];
 						char lURLBuffer[120];
-						char lURLLadderReport[120];
+						//char lURLLadderReport[120];
 						char lClickURLBuffer[220];
 						unsigned lNibble[4];
-						unsigned lNibble2[4];
+						//unsigned lNibble2[4];
 						int lServerType = -1;
 
 						sscanf(lData, "%d", &lServerType);

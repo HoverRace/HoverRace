@@ -518,10 +518,10 @@ void MR_Observer::Render3DView(const MR_ClientSession * pSession, const MR_MainC
 	int lXMargin = lXRes / 32;
 	int lYMargin = lMeterHight;
 
-	int lAbsSpeedLen = lAbsSpeedRatio * lSpeedMeterLen;
-	int lDirSpeedLen = pViewingCharacter->GetDirectionalSpeed() * lSpeedMeterLen;
+	int lAbsSpeedLen = (int)(lAbsSpeedRatio * lSpeedMeterLen);
+	int lDirSpeedLen = (int)(pViewingCharacter->GetDirectionalSpeed() * lSpeedMeterLen);
 	double lFuelLevel = pViewingCharacter->GetFuelLevel();
-	int lFuelLen = lFuelLevel * lFuelMeterLen;
+	int lFuelLen = (int)(lFuelLevel * lFuelMeterLen);
 
 	m3DView.DrawHorizontalMeter(lXMargin, lSpeedMeterLen, lYMargin, lMeterHight, lAbsSpeedLen, 54, 56);
 	if(lDirSpeedLen < 0) {
@@ -614,7 +614,7 @@ void MR_Observer::Render3DView(const MR_ClientSession * pSession, const MR_MainC
 
 		int lXMargin = 2 * lFont->GetItemWidth() / lFontScaling;
 		int lYMargin = lYRes - lYRes / 15 - lLineSpacing;
-		int lPrintLen = (lXRes - lXMargin) * 3.9 / (lFont->GetItemWidth() * 3 / lFontScaling);
+		int lPrintLen = (int)((lXRes - lXMargin) * 3.9 / (lFont->GetItemWidth() * 3 / lFontScaling));
 		// subject to div/0
 
 		pSession->GetCurrentMessage(lStrBuffer);
@@ -1107,7 +1107,7 @@ void MR_Observer::PlaySounds(const MR_Level * pLevel, MR_MainCharacter * pViewin
 					double lXDist = pViewingCharacter->mPosition.mX - lElement->mPosition.mX;
 					double lYDist = pViewingCharacter->mPosition.mY - lElement->mPosition.mY;
 
-					int lDB = -sqrt(lXDist * lXDist + lYDist * lYDist) / 15.0;
+					int lDB = (int)(-sqrt(lXDist * lXDist + lYDist * lYDist) / 15.0);
 
 					lElement->PlayExternalSounds(lDB, 0);
 				}

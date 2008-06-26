@@ -964,41 +964,41 @@ void MR_GameApp::SaveRegistry()
 	if(lError == ERROR_SUCCESS) {
 		MR_UInt8 lControlBuffer[32];
 
-		lControlBuffer[0] = mMotorOn1;
-		lControlBuffer[1] = mRight1;
-		lControlBuffer[2] = mLeft1;
-		lControlBuffer[3] = mJump1;
-		lControlBuffer[4] = mFire1;
-		lControlBuffer[5] = mBreak1;
-		lControlBuffer[6] = mWeapon1;
-		lControlBuffer[7] = mLookBack1;
+		lControlBuffer[0] = (MR_UInt8)mMotorOn1;
+		lControlBuffer[1] = (MR_UInt8)mRight1;
+		lControlBuffer[2] = (MR_UInt8)mLeft1;
+		lControlBuffer[3] = (MR_UInt8)mJump1;
+		lControlBuffer[4] = (MR_UInt8)mFire1;
+		lControlBuffer[5] = (MR_UInt8)mBreak1;
+		lControlBuffer[6] = (MR_UInt8)mWeapon1;
+		lControlBuffer[7] = (MR_UInt8)mLookBack1;
 
-		lControlBuffer[8] = mMotorOn2;
-		lControlBuffer[9] = mRight2;
-		lControlBuffer[10] = mLeft2;
-		lControlBuffer[11] = mJump2;
-		lControlBuffer[12] = mFire2;
-		lControlBuffer[13] = mBreak2;
-		lControlBuffer[14] = mWeapon2;
-		lControlBuffer[15] = mLookBack2;
+		lControlBuffer[8] = (MR_UInt8)mMotorOn2;
+		lControlBuffer[9] = (MR_UInt8)mRight2;
+		lControlBuffer[10] = (MR_UInt8)mLeft2;
+		lControlBuffer[11] = (MR_UInt8)mJump2;
+		lControlBuffer[12] = (MR_UInt8)mFire2;
+		lControlBuffer[13] = (MR_UInt8)mBreak2;
+		lControlBuffer[14] = (MR_UInt8)mWeapon2;
+		lControlBuffer[15] = (MR_UInt8)mLookBack2;
 
-		lControlBuffer[16] = mMotorOn3;
-		lControlBuffer[17] = mRight3;
-		lControlBuffer[18] = mLeft3;
-		lControlBuffer[19] = mJump3;
-		lControlBuffer[20] = mFire3;
-		lControlBuffer[21] = mBreak3;
-		lControlBuffer[22] = mWeapon3;
-		lControlBuffer[23] = mLookBack3;
+		lControlBuffer[16] = (MR_UInt8)mMotorOn3;
+		lControlBuffer[17] = (MR_UInt8)mRight3;
+		lControlBuffer[18] = (MR_UInt8)mLeft3;
+		lControlBuffer[19] = (MR_UInt8)mJump3;
+		lControlBuffer[20] = (MR_UInt8)mFire3;
+		lControlBuffer[21] = (MR_UInt8)mBreak3;
+		lControlBuffer[22] = (MR_UInt8)mWeapon3;
+		lControlBuffer[23] = (MR_UInt8)mLookBack3;
 
-		lControlBuffer[24] = mMotorOn4;
-		lControlBuffer[25] = mRight4;
-		lControlBuffer[26] = mLeft4;
-		lControlBuffer[27] = mJump4;
-		lControlBuffer[28] = mFire4;
-		lControlBuffer[29] = mBreak4;
-		lControlBuffer[30] = mWeapon4;
-		lControlBuffer[31] = mLookBack4;
+		lControlBuffer[24] = (MR_UInt8)mMotorOn4;
+		lControlBuffer[25] = (MR_UInt8)mRight4;
+		lControlBuffer[26] = (MR_UInt8)mLeft4;
+		lControlBuffer[27] = (MR_UInt8)mJump4;
+		lControlBuffer[28] = (MR_UInt8)mFire4;
+		lControlBuffer[29] = (MR_UInt8)mBreak4;
+		lControlBuffer[30] = (MR_UInt8)mWeapon4;
+		lControlBuffer[31] = (MR_UInt8)mLookBack4;
 
 		if(RegSetValueEx(lProgramKey, "Control", 0, REG_BINARY, lControlBuffer, sizeof(lControlBuffer)) != ERROR_SUCCESS) {
 			lReturnValue = FALSE;
@@ -1490,7 +1490,7 @@ void MR_GameApp::RefreshView()
 #endif
 
 			} else
-			mVideoBuffer->Clear(lColor++);
+			mVideoBuffer->Clear((MR_UInt8)(lColor++));
 			mVideoBuffer->Unlock();
 		}
 	}
