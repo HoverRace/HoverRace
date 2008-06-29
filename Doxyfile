@@ -103,6 +103,7 @@ INPUT                  = NetTarget/ColorTools \
                          NetTarget/PaletteCreator \
                          NetTarget/ResourceCompiler \
                          NetTarget/Util \
+                         NetTarget/Util/yaml \
                          NetTarget/VideoServices
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.c \
