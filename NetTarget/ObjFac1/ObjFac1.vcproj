@@ -37,10 +37,7 @@
 				DebugInformationFormat="4"
 				CompileAs="0"/>
 			<Tool
-				Name="VCCustomBuildTool"
-				CommandLine="F:\project\NetTarget\Debug\ResourceCompiler ObjFac1\ObjFac1.fbres                                                                                                                                                                                                                                                    $(TargetDir)ObjFac1.dat ObjFac1\ObjFac1Res.h
-"
-				Outputs="$(TargetDir)ObjFac1.dat"/>
+				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
