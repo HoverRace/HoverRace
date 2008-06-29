@@ -23,8 +23,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="\gdk\sdk\inc"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;MR_UTIL"
+				AdditionalIncludeDirectories="\gdk\sdk\inc;..\..\include"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;MR_UTIL;YAML_DECLARE_STATIC"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="2"
@@ -33,7 +33,7 @@
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
-				WarningLevel="4"
+				WarningLevel="3"
 				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="4"
 				CompileAs="0"/>
@@ -42,10 +42,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="winmm.lib"
+				AdditionalDependencies="winmm.lib yamlD.lib"
 				OutputFile=".\..\Debug/Util.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
+				AdditionalLibraryDirectories="..\..\lib"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\..\Debug/Util.pdb"
 				SubSystem="2"
@@ -89,8 +90,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="\gdk\sdk\inc"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;MR_UTIL"
+				AdditionalIncludeDirectories="\gdk\sdk\inc;..\..\include"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;MR_UTIL;YAML_DECLARE_STATIC"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
@@ -99,7 +100,7 @@
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
-				WarningLevel="4"
+				WarningLevel="3"
 				SuppressStartupBanner="TRUE"
 				CompileAs="0"/>
 			<Tool
@@ -107,10 +108,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="winmm.lib"
+				AdditionalDependencies="winmm.lib yaml.lib"
 				OutputFile=".\..\Release/Util.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
+				AdditionalLibraryDirectories="..\..\lib"
 				ProgramDatabaseFile=".\..\Release/Util.pdb"
 				SubSystem="2"
 				ImportLibrary=".\..\Release/Util.lib"/>
@@ -150,6 +152,9 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;hpj;bat;for;f90">
 			<File
+				RelativePath=".\Config.cpp">
+			</File>
+			<File
 				RelativePath=".\DllObjectFactory.cpp">
 			</File>
 			<File
@@ -176,6 +181,9 @@
 			Filter="">
 			<File
 				RelativePath=".\BitPacking.h">
+			</File>
+			<File
+				RelativePath=".\Config.h">
 			</File>
 			<File
 				RelativePath=".\Cursor.h">
@@ -218,6 +226,16 @@
 			</File>
 			<File
 				RelativePath=".\WorldCoordinates.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="yaml"
+			Filter="">
+			<File
+				RelativePath=".\yaml\Emitter.cpp">
+			</File>
+			<File
+				RelativePath=".\yaml\Emitter.h">
 			</File>
 		</Filter>
 	</Files>
