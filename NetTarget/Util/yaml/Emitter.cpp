@@ -103,7 +103,36 @@ void Emitter::EndMap()
 	yaml_event_t event;
 	yaml_mapping_end_event_initialize(&event);
 	if(!yaml_emitter_emit(&emitter, &event)) {
-		throw EmitterExn("Unable to start map");
+		throw EmitterExn("Unable to end map");
+	}
+}
+
+/**
+ * Start a sequence.
+ * Writing a sequence involves:
+ * - First, call StartSeq().
+ * - For each element: call Value() for a single scalar value, or add
+ *   a map or a sub-sequence.
+ * - Finally, call EndSeq() to close the sequence.
+ */
+void Emitter::StartSeq()
+{
+	yaml_event_t event;
+	yaml_sequence_start_event_initialize(&event, NULL, NULL, 1, YAML_BLOCK_SEQUENCE_STYLE);
+	if(!yaml_emitter_emit(&emitter, &event)) {
+		throw EmitterExn("Unable to start sequence");
+	}
+}
+
+/**
+ * End the current sequence.
+ */
+void Emitter::EndSeq()
+{
+	yaml_event_t event;
+	yaml_sequence_end_event_initialize(&event);
+	if(!yaml_emitter_emit(&emitter, &event)) {
+		throw EmitterExn("Unable to end sequence");
 	}
 }
 

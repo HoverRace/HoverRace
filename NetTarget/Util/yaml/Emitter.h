@@ -34,6 +34,9 @@ namespace yaml
 			void MapKey(const std::string &s);
 			void EndMap();
 
+			void StartSeq();
+			void EndSeq();
+
 			void Value(const std::string &val);
 			void Value(const char *val);
 			void Value(bool val);
