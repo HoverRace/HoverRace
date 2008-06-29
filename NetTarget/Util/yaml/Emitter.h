@@ -11,7 +11,7 @@
 
 namespace yaml
 {
-	// Standard exception thrown for emitter errors.
+	/// Standard exception thrown for emitter errors.
 	class EmitterExn : public std::exception
 	{
 		typedef std::exception SUPER;
