@@ -28,6 +28,12 @@
 #endif
 #define CONFIG_FILENAME "config.yml"
 
+#define READ_BOOL(root,name) \
+	{\
+		yaml::ScalarNode *_scalar = dynamic_cast<yaml::ScalarNode*>((root)->Get(#name)); \
+		if (_scalar != NULL) (name) = _scalar->AsBool(name); \
+	}
+
 #define EMIT_VAR(emitter,name) \
 	(emitter)->MapKey(#name); \
 	(emitter)->Value(name);
@@ -233,13 +239,9 @@ void MR_Config::SaveVersion(yaml::Emitter *emitter)
 void MR_Config::cfg_misc_t::Load(yaml::MapNode* root)
 {
 	if (root == NULL) return;
-	yaml::ScalarNode *scalar;
-	
-	scalar = dynamic_cast<yaml::ScalarNode*>(root->Get("displayFirstScreen"));
-	if (scalar != NULL) displayFirstScreen = scalar->AsBool(displayFirstScreen);
-	
-	scalar = dynamic_cast<yaml::ScalarNode*>(root->Get("introMovie"));
-	if (scalar != NULL) introMovie = scalar->AsBool(introMovie);
+
+	READ_BOOL(root, displayFirstScreen);
+	READ_BOOL(root, introMovie);
 }
 
 void MR_Config::cfg_misc_t::Save(yaml::Emitter *emitter)
