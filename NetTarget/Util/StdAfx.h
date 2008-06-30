@@ -20,4 +20,6 @@
 
 // Commonly-used STL headers.
 #include <exception>
+#include <map>
+#include <sstream>
 #include <string>

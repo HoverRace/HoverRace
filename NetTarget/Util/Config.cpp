@@ -15,6 +15,9 @@
 #endif
 
 #include "yaml/Emitter.h"
+#include "yaml/MapNode.h"
+#include "yaml/ScalarNode.h"
+#include "yaml/Parser.h"
 
 #include "Config.h"
 
@@ -139,8 +142,37 @@ void MR_Config::ResetToDefaults()
  */
 void MR_Config::Load()
 {
-	const std::string &retv = GetConfigFilename();
-	//TODO
+	const std::string &cfgfile = GetConfigFilename();
+	
+	FILE *in = fopen(cfgfile.c_str(), "rb");
+	if (in == NULL) {
+		// File doesn't exist.
+		// That's perfectly fine; we'll use the defaults.
+		return;
+	}
+
+	yaml::Parser *parser = NULL;
+	try {
+		parser = new yaml::Parser(in);
+		yaml::Node *node = parser->GetRootNode();
+
+		yaml::MapNode *root = dynamic_cast<yaml::MapNode*>(node);
+		if (root != NULL) {
+			misc.Load(dynamic_cast<yaml::MapNode*>(root->Get("misc")));
+		}
+
+		delete parser;
+	}
+	catch (yaml::EmptyDocParserExn&) {
+		// Ignore.
+	}
+	catch (yaml::ParserExn &ex) {
+		if (parser != NULL) delete parser;
+		fclose(in);
+		throw std::exception(ex);
+	}
+
+	fclose(in);
 }
 
 /**
@@ -181,7 +213,8 @@ void MR_Config::Save()
 
 		emitter->EndMap();
 		delete emitter;
-	} catch (yaml::EmitterExn &ex) {
+	}
+	catch (yaml::EmitterExn &ex) {
 		if (emitter != NULL) delete emitter;
 		fclose(out);
 		throw std::exception(ex);
@@ -195,6 +228,18 @@ void MR_Config::SaveVersion(yaml::Emitter *emitter)
 	emitter->MapKey("version");
 	//TODO: Use real HoverRace version.
 	emitter->Value("1.0");
+}
+
+void MR_Config::cfg_misc_t::Load(yaml::MapNode* root)
+{
+	if (root == NULL) return;
+	yaml::ScalarNode *scalar;
+	
+	scalar = dynamic_cast<yaml::ScalarNode*>(root->Get("displayFirstScreen"));
+	if (scalar != NULL) displayFirstScreen = scalar->AsBool(displayFirstScreen);
+	
+	scalar = dynamic_cast<yaml::ScalarNode*>(root->Get("introMovie"));
+	if (scalar != NULL) introMovie = scalar->AsBool(introMovie);
 }
 
 void MR_Config::cfg_misc_t::Save(yaml::Emitter *emitter)

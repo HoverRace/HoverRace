@@ -15,6 +15,7 @@
 // Forward declarations.
 namespace yaml {
 	class Emitter;
+	class MapNode;
 }
 
 /**
@@ -53,6 +54,7 @@ class MR_Config
 			bool displayFirstScreen;
 			bool introMovie;
 
+			MR_DllDeclare void Load(yaml::MapNode*);
 			MR_DllDeclare void Save(yaml::Emitter*);
 		} misc;
 };
