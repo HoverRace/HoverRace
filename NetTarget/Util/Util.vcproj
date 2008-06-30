@@ -237,6 +237,33 @@
 			<File
 				RelativePath=".\yaml\Emitter.h">
 			</File>
+			<File
+				RelativePath=".\yaml\MapNode.cpp">
+			</File>
+			<File
+				RelativePath=".\yaml\MapNode.h">
+			</File>
+			<File
+				RelativePath=".\yaml\Node.h">
+			</File>
+			<File
+				RelativePath=".\yaml\NodeFactory.cpp">
+			</File>
+			<File
+				RelativePath=".\yaml\NodeFactory.h">
+			</File>
+			<File
+				RelativePath=".\yaml\Parser.cpp">
+			</File>
+			<File
+				RelativePath=".\yaml\Parser.h">
+			</File>
+			<File
+				RelativePath=".\yaml\ScalarNode.cpp">
+			</File>
+			<File
+				RelativePath=".\yaml\ScalarNode.h">
+			</File>
 		</Filter>
 	</Files>
 	<Globals>
