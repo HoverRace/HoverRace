@@ -17,7 +17,9 @@ namespace yaml
 			virtual ~ScalarNode();
 
 		public:
+			std::string AsString() const;
 			bool AsBool(bool def) const;
+			double AsDouble(double def, double min, double max) const;
 			int AsInt(int def, int min=INT_MIN, int max=INT_MAX) const;
 
 		private:

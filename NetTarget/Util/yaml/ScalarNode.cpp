@@ -27,6 +27,15 @@ ScalarNode::~ScalarNode()
 }
 
 /**
+ * Returns the string value.
+ * @return The value.
+ */
+std::string ScalarNode::AsString() const
+{
+	return value;
+}
+
+/**
  * Convert this scalar to a boolean value.
  * @param def The default value if the value cannot be converted to a boolean.
  * @return The converted value.
@@ -49,6 +58,23 @@ bool ScalarNode::AsBool(bool def) const
 		return false;
 	}
 	return def;
+}
+
+/**
+ * Convert this scalar to a double floating-point value.
+ * @param def The default value if the value cannot be converted to a double.
+ * @param min Minimum clamp value.
+ * @param max Maximum clamp value.
+ * @return The converted value.
+ */
+double ScalarNode::AsDouble(double def, double min, double max) const
+{
+	std::istringstream iss(value);
+	double retv;
+	if ((iss >> retv).fail()) return def;
+	if (retv < min) return min;
+	if (retv > max) return max;
+	return retv;
 }
 
 /**
