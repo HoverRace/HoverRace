@@ -50,6 +50,17 @@ class MR_Config
 		MR_DllDeclare void SaveVersion(yaml::Emitter*);
 
 	public:
+		struct cfg_video_t {
+			double gamma;
+			double contrast;
+			double brightness;
+
+			bool nativeBppFullscreen;
+
+			MR_DllDeclare void Load(yaml::MapNode*);
+			MR_DllDeclare void Save(yaml::Emitter*);
+		} video;
+
 		struct cfg_misc_t {
 			bool displayFirstScreen;
 			bool introMovie;
@@ -57,4 +68,11 @@ class MR_Config
 			MR_DllDeclare void Load(yaml::MapNode*);
 			MR_DllDeclare void Save(yaml::Emitter*);
 		} misc;
+
+		struct cfg_player_t {
+			std::string nickName;
+
+			MR_DllDeclare void Load(yaml::MapNode*);
+			MR_DllDeclare void Save(yaml::Emitter*);
+		} player;
 };

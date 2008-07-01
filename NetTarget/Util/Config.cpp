@@ -1,6 +1,6 @@
 
 /* Config.cpp
-     Global configuration reader and writer. */
+	Global configuration reader and writer. */
 
 #include "stdafx.h"
 
@@ -12,6 +12,9 @@
 #ifdef _WIN32
 	#include <windows.h>
 	#include <shlobj.h>
+	#include <lmcons.h>
+#else
+	#include <unistd.h>
 #endif
 
 #include "yaml/Emitter.h"
@@ -28,10 +31,24 @@
 #endif
 #define CONFIG_FILENAME "config.yml"
 
+#define DEFAULT_NICKNAME "Player"
+
 #define READ_BOOL(root,name) \
 	{\
 		yaml::ScalarNode *_scalar = dynamic_cast<yaml::ScalarNode*>((root)->Get(#name)); \
 		if (_scalar != NULL) (name) = _scalar->AsBool(name); \
+	}
+
+#define READ_DOUBLE(root,name,min,max) \
+	{\
+		yaml::ScalarNode *_scalar = dynamic_cast<yaml::ScalarNode*>((root)->Get(#name)); \
+		if (_scalar != NULL) (name) = _scalar->AsDouble(name, min, max); \
+	}
+
+#define READ_STRING(root,name) \
+	{\
+		yaml::ScalarNode *_scalar = dynamic_cast<yaml::ScalarNode*>((root)->Get(#name)); \
+		if (_scalar != NULL) (name) = _scalar->AsString(); \
 	}
 
 #define EMIT_VAR(emitter,name) \
@@ -130,15 +147,35 @@ std::string MR_Config::GetConfigFilename() const
  */
 void MR_Config::ResetToDefaults()
 {
-	/*
-	graphics.brightness = 1.2;
-	graphics.contrast = 0.95;
-	graphics.gamma = 0.95;
-	graphics.nativeBppFullscreen = false;
-	*/
+	video.gamma = 1.2;
+	video.contrast = 0.95;
+	video.brightness = 0.95;
+	video.nativeBppFullscreen = false;
 
 	misc.displayFirstScreen = true;
 	misc.introMovie = true;
+
+	// Get current user name as default nickname.
+#ifdef _WIN32
+	char buf[UNLEN + 1];
+	DWORD bsize = sizeof(buf);
+	if (GetUserName(buf, &bsize)) {
+		buf[UNLEN] = '\0';
+		player.nickName = buf;
+	}
+	else {
+		player.nickName = DEFAULT_NICKNAME;
+	}
+#else
+	char *buf = getlogin();
+	if (buf != NULL) {
+		player.nickName = buf;
+	}
+	else {
+		player.nickName = DEFAULT_NICKNAME;
+	}
+#endif
+
 }
 
 /**
@@ -165,6 +202,8 @@ void MR_Config::Load()
 		yaml::MapNode *root = dynamic_cast<yaml::MapNode*>(node);
 		if (root != NULL) {
 			misc.Load(dynamic_cast<yaml::MapNode*>(root->Get("misc")));
+			video.Load(dynamic_cast<yaml::MapNode*>(root->Get("video")));
+			player.Load(dynamic_cast<yaml::MapNode*>(root->Get("player")));
 		}
 
 		delete parser;
@@ -215,7 +254,9 @@ void MR_Config::Save()
 		emitter->StartMap();
 
 		SaveVersion(emitter);
+		video.Save(emitter);
 		misc.Save(emitter);
+		player.Save(emitter);
 
 		emitter->EndMap();
 		delete emitter;
@@ -236,7 +277,36 @@ void MR_Config::SaveVersion(yaml::Emitter *emitter)
 	emitter->Value("1.0");
 }
 
-void MR_Config::cfg_misc_t::Load(yaml::MapNode* root)
+// video ///////////////////////////////////////////////////////////////////////
+
+void MR_Config::cfg_video_t::Load(yaml::MapNode *root)
+{
+	if (root == NULL) return;
+
+	READ_DOUBLE(root, gamma, 0.0, 2.0);
+	READ_DOUBLE(root, contrast, 0.0, 1.0);
+	READ_DOUBLE(root, brightness, 0.0, 1.0);
+
+	READ_BOOL(root, nativeBppFullscreen);
+}
+
+void MR_Config::cfg_video_t::Save(yaml::Emitter *emitter)
+{
+	emitter->MapKey("video");
+	emitter->StartMap();
+
+	EMIT_VAR(emitter, gamma);
+	EMIT_VAR(emitter, contrast);
+	EMIT_VAR(emitter, brightness);
+
+	EMIT_VAR(emitter, nativeBppFullscreen);
+
+	emitter->EndMap();
+}
+
+// misc ////////////////////////////////////////////////////////////////////////
+
+void MR_Config::cfg_misc_t::Load(yaml::MapNode *root)
 {
 	if (root == NULL) return;
 
@@ -251,6 +321,25 @@ void MR_Config::cfg_misc_t::Save(yaml::Emitter *emitter)
 
 	EMIT_VAR(emitter, displayFirstScreen);
 	EMIT_VAR(emitter, introMovie);
+
+	emitter->EndMap();
+}
+
+// player //////////////////////////////////////////////////////////////////////
+
+void MR_Config::cfg_player_t::Load(yaml::MapNode *root)
+{
+	if (root == NULL) return;
+
+	READ_STRING(root, nickName);
+}
+
+void MR_Config::cfg_player_t::Save(yaml::Emitter *emitter)
+{
+	emitter->MapKey("player");
+	emitter->StartMap();
+
+	EMIT_VAR(emitter, nickName);
 
 	emitter->EndMap();
 }
