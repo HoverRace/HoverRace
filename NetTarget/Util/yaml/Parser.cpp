@@ -60,6 +60,8 @@ Parser::~Parser()
 
 void Parser::Cleanup()
 {
+	delete root;
+
 	if (doc != NULL) {
 		yaml_document_delete(doc);
 		free(doc);
