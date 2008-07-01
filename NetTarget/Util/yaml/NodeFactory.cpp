@@ -7,6 +7,7 @@
 #include "Node.h"
 #include "MapNode.h"
 #include "ScalarNode.h"
+#include "SeqNode.h"
 
 #include "NodeFactory.h"
 
@@ -27,6 +28,8 @@ Node *NodeFactory::MakeNode(yaml_document_t *doc, yaml_node_t *node)
 			return new ScalarNode(doc, node);
 		case YAML_MAPPING_NODE:
 			return new MapNode(doc, node);
+		case YAML_SEQUENCE_NODE:
+			return new SeqNode(doc, node);
 		default:
 			return new Node(doc, node);
 	}

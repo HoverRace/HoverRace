@@ -264,6 +264,12 @@
 			<File
 				RelativePath=".\yaml\ScalarNode.h">
 			</File>
+			<File
+				RelativePath=".\yaml\SeqNode.cpp">
+			</File>
+			<File
+				RelativePath=".\yaml\SeqNode.h">
+			</File>
 		</Filter>
 	</Files>
 	<Globals>
