@@ -91,270 +91,97 @@ struct ControlKey
 
 static const ControlKey KeyChoice[] =
 {
-	{"Disable", IDS_DISABLE, MR_KDB, 0},
-	{											  // 1
-		"Shift", IDS_SHIFT, MR_KDB, VK_SHIFT
-	},
-	{											  // 2
-		"Ctrl", IDS_CTRL, MR_KDB, VK_CONTROL
-	},
-	{											  // 3
-		"Up", IDS_UP, MR_KDB, VK_UP
-	},
-	{											  // 4
-		"Down", IDS_DOWN, MR_KDB, VK_DOWN
-	},
-	{											  // 5
-		"Right", IDS_RIGHT, MR_KDB, VK_RIGHT
-	},
-	{											  // 6
-		"Left", IDS_LEFT, MR_KDB, VK_LEFT
-	},
-	{											  // 7
-		"Insert", IDS_INS, MR_KDB, VK_INSERT
-	},
-	{											  // 8
-		"Delete", IDS_DEL, MR_KDB, VK_DELETE
-	},
-	{											  // 9
-		"Enter", IDS_ENTER, MR_KDB, VK_RETURN
-	},
-	{											  // 10
-		"End", IDS_END, MR_KDB, VK_END
-	},
-	{											  // 11
-		"Tab", IDS_TAB, MR_KDB, VK_TAB
-	},
-	{											  // 12
-		"Joystick Btn1", IDS_JOY1BTN1, MR_JOY1, Btn1
-	},
-	{											  // 13
-		"Joystick Btn2", IDS_JOY1BTN2, MR_JOY1, Btn2
-	},
-	{											  // 14
-		"Joystick Btn3", IDS_JOY1BTN3, MR_JOY1, Btn3
-	},
-	{											  // 15
-		"Joystick Btn4", IDS_JOY1BTN4, MR_JOY1, Btn4
-	},
-	{											  // 16
-		"Joystick Btn5", IDS_JOY1BTN5, MR_JOY1, Btn5
-	},
-	{											  // 17
-		"Joystick Btn6", IDS_JOY1BTN6, MR_JOY1, Btn6
-	},
-	{											  // 18
-		"Joystick Btn7", IDS_JOY1BTN7, MR_JOY1, Btn7
-	},
-	{											  // 19
-		"Joystick Btn8", IDS_JOY1BTN8, MR_JOY1, Btn8
-	},
-	{											  // 20
-		"Joystick Top", IDS_JOY1TOP, MR_JOY1, AxeTop
-	},
-	{											  // 21
-		"Joystick Bottom", IDS_JOY1DOWN, MR_JOY1, AxeBottom
-	},
-	{											  // 22
-		"Joystick Right", IDS_JOY1RIGHT, MR_JOY1, AxeRight
-	},
-	{											  // 23
-		"Joystick Left", IDS_JOY1LEFT, MR_JOY1, AxeLeft
-	},
-	{											  // 24
-		"Joystick2 Btn1", IDS_JOY2BTN1, MR_JOY2, Btn1
-	},
-	{											  // 25
-		"Joystick2 Btn2", IDS_JOY2BTN2, MR_JOY2, Btn2
-	},
-	{											  // 26
-		"Joystick2 Btn3", IDS_JOY2BTN3, MR_JOY2, Btn3
-	},
-	{											  // 27
-		"Joystick2 Btn4", IDS_JOY2BTN4, MR_JOY2, Btn4
-	},
-	{											  // 28
-		"Joystick2 Btn5", IDS_JOY2BTN5, MR_JOY2, Btn5
-	},
-	{											  // 29
-		"Joystick2 Btn6", IDS_JOY2BTN6, MR_JOY2, Btn6
-	},
-	{											  // 30
-		"Joystick2 Btn7", IDS_JOY2BTN7, MR_JOY2, Btn7
-	},
-	{											  // 31
-		"Joystick2 Btn8", IDS_JOY2BTN8, MR_JOY2, Btn8
-	},
-	{											  // 32
-		"Joystick2 Top", IDS_JOY2TOP, MR_JOY2, AxeTop
-	},
-	{											  // 33
-		"Joystick2 Bottom", IDS_JOY2DOWN, MR_JOY2, AxeBottom
-	},
-	{											  // 34
-		"Joystick2 Right", IDS_JOY2RIGHT, MR_JOY2, AxeRight
-	},
-	{											  // 35
-		"Joystick2 Left", IDS_JOY2LEFT, MR_JOY2, AxeLeft
-	},
-	{											  // 36
-		"Joystick3 Btn1", IDS_JOY3BTN1, MR_JOY3, Btn1
-	},
-	{											  // 37
-		"Joystick3 Btn2", IDS_JOY3BTN2, MR_JOY3, Btn2
-	},
-	{											  // 38
-		"Joystick3 Btn3", IDS_JOY3BTN3, MR_JOY3, Btn3
-	},
-	{											  // 39
-		"Joystick3 Btn4", IDS_JOY3BTN4, MR_JOY3, Btn4
-	},
-	{											  // 40
-		"Joystick3 Btn5", IDS_JOY3BTN5, MR_JOY3, Btn5
-	},
-	{											  // 41
-		"Joystick3 Btn6", IDS_JOY3BTN6, MR_JOY3, Btn6
-	},
-	{											  // 42
-		"Joystick3 Btn7", IDS_JOY3BTN7, MR_JOY3, Btn7
-	},
-	{											  // 43
-		"Joystick3 Btn8", IDS_JOY3BTN8, MR_JOY3, Btn8
-	},
-	{											  // 44
-		"Joystick3 Top", IDS_JOY3TOP, MR_JOY3, AxeTop
-	},
-	{											  // 45
-		"Joystick3 Bottom", IDS_JOY3DOWN, MR_JOY3, AxeBottom
-	},
-	{											  // 46
-		"Joystick3 Right", IDS_JOY3RIGHT, MR_JOY3, AxeRight
-	},
-	{											  // 47
-		"Joystick3 Left", IDS_JOY3LEFT, MR_JOY3, AxeLeft
-	},
-	{											  // 48
-		"Joystick4 Btn1", IDS_JOY4BTN1, MR_JOY4, Btn1
-	},
-	{											  // 49
-		"Joystick4 Btn2", IDS_JOY4BTN2, MR_JOY4, Btn2
-	},
-	{											  // 50
-		"Joystick4 Btn3", IDS_JOY4BTN3, MR_JOY4, Btn3
-	},
-	{											  // 51
-		"Joystick4 Btn4", IDS_JOY4BTN4, MR_JOY4, Btn4
-	},
-	{											  // 52
-		"Joystick4 Btn5", IDS_JOY4BTN5, MR_JOY4, Btn5
-	},
-	{											  // 53
-		"Joystick4 Btn6", IDS_JOY4BTN6, MR_JOY4, Btn6
-	},
-	{											  // 54
-		"Joystick4 Btn7", IDS_JOY4BTN7, MR_JOY4, Btn7
-	},
-	{											  // 55
-		"Joystick4 Btn8", IDS_JOY4BTN8, MR_JOY4, Btn8
-	},
-	{											  // 56
-		"Joystick4 Top", IDS_JOY4TOP, MR_JOY4, AxeTop
-	},
-	{											  // 57
-		"Joystick4 Bottom", IDS_JOY4DOWN, MR_JOY4, AxeBottom
-	},
-	{											  // 58
-		"Joystick4 Right", IDS_JOY4RIGHT, MR_JOY4, AxeRight
-	},
-	{											  // 59
-		"Joystick4 Left", IDS_JOY4LEFT, MR_JOY4, AxeLeft
-	},
-
-	{											  // 60 Player 2 only from here
-		"Space", IDS_SPACE, MR_KDB, VK_SPACE
-	},
-	{											  // 61
-		"A Key", IDS_KEY_A, MR_KDB, 'A'
-	},
-	{											  // 62
-		"B Key", IDS_KEY_B, MR_KDB, 'B'
-	},
-	{											  // 63
-		"C Key", IDS_KEY_C, MR_KDB, 'C'
-	},
-	{											  // 64
-		"D Key", IDS_KEY_D, MR_KDB, 'D'
-	},
-	{											  // 65
-		"E Key", IDS_KEY_E, MR_KDB, 'E'
-	},
-	{											  // 66
-		"F Key", IDS_KEY_F, MR_KDB, 'F'
-	},
-	{											  // 67
-		"G Key", IDS_KEY_G, MR_KDB, 'G'
-	},
-	{											  // 68
-		"H Key", IDS_KEY_H, MR_KDB, 'H'
-	},
-	{											  // 69
-		"I Key", IDS_KEY_I, MR_KDB, 'I'
-	},
-	{											  // 70
-		"J Key", IDS_KEY_J, MR_KDB, 'J'
-	},
-	{											  // 71
-		"K Key", IDS_KEY_K, MR_KDB, 'K'
-	},
-	{											  // 72
-		"L Key", IDS_KEY_L, MR_KDB, 'L'
-	},
-	{											  // 73
-		"M Key", IDS_KEY_M, MR_KDB, 'M'
-	},
-	{											  // 74
-		"N Key", IDS_KEY_N, MR_KDB, 'N'
-	},
-	{											  // 75
-		"O Key", IDS_KEY_O, MR_KDB, 'O'
-	},
-	{											  // 76
-		"P Key", IDS_KEY_P, MR_KDB, 'P'
-	},
-	{											  // 77
-		"Q Key", IDS_KEY_Q, MR_KDB, 'Q'
-	},
-	{											  // 78
-		"R Key", IDS_KEY_R, MR_KDB, 'R'
-	},
-	{											  // 79
-		"S Key", IDS_KEY_S, MR_KDB, 'S'
-	},
-	{											  // 80
-		"T Key", IDS_KEY_T, MR_KDB, 'T'
-	},
-	{											  // 81
-		"U Key", IDS_KEY_U, MR_KDB, 'U'
-	},
-	{											  // 82
-		"V Key", IDS_KEY_V, MR_KDB, 'V'
-	},
-	{											  // 83
-		"W Key", IDS_KEY_W, MR_KDB, 'W'
-	},
-	{											  // 84
-		"X Key", IDS_KEY_X, MR_KDB, 'X'
-	},
-	{											  // 85
-		"Y Key", IDS_KEY_Y, MR_KDB, 'Y'
-	},
-	{											  // 86
-		"Z Key", IDS_KEY_Z, MR_KDB, 'Z'
-	},
-	{"Not a Key", IDS_DISABLE, MR_KDB, 0},
-	{"Not a Key", IDS_DISABLE, MR_KDB, 0},
-	{"Not a Key", IDS_DISABLE, MR_KDB, 0},
-	{"Not a Key", IDS_DISABLE, MR_KDB, 0},
+	{	"Disable",			IDS_DISABLE,	MR_KDB,		0			},	// 0
+	{	"Shift",			IDS_SHIFT,		MR_KDB,		VK_SHIFT	},	// 1
+	{	"Ctrl",				IDS_CTRL,		MR_KDB,		VK_CONTROL	},	// 2
+	{	"Up",				IDS_UP,			MR_KDB,		VK_UP		},	// 3
+	{	"Down",				IDS_DOWN,		MR_KDB,		VK_DOWN		},	// 4
+	{	"Right",			IDS_RIGHT,		MR_KDB,		VK_RIGHT	},	// 5
+	{	"Left",				IDS_LEFT,		MR_KDB,		VK_LEFT		},	// 6
+	{	"Insert",			IDS_INS,		MR_KDB,		VK_INSERT	},	// 7
+	{	"Delete",			IDS_DEL,		MR_KDB,		VK_DELETE	},	// 8
+	{	"Enter",			IDS_ENTER,		MR_KDB,		VK_RETURN	},	// 9
+	{	"End",				IDS_END,		MR_KDB,		VK_END		},	// 10
+	{	"Tab",				IDS_TAB,		MR_KDB,		VK_TAB		},	// 11
+	{	"Joystick Btn1",	IDS_JOY1BTN1,	MR_JOY1,	Btn1		},	// 12
+	{	"Joystick Btn2",	IDS_JOY1BTN2,	MR_JOY1,	Btn2		},	// 13
+	{	"Joystick Btn3",	IDS_JOY1BTN3,	MR_JOY1,	Btn3		},	// 14
+	{	"Joystick Btn4",	IDS_JOY1BTN4,	MR_JOY1,	Btn4		},	// 15
+	{	"Joystick Btn5",	IDS_JOY1BTN5,	MR_JOY1,	Btn5		},	// 16
+	{	"Joystick Btn6",	IDS_JOY1BTN6,	MR_JOY1,	Btn6		},	// 17
+	{	"Joystick Btn7",	IDS_JOY1BTN7,	MR_JOY1,	Btn7		},	// 18
+	{	"Joystick Btn8",	IDS_JOY1BTN8,	MR_JOY1,	Btn8		},	// 19
+	{	"Joystick Top",		IDS_JOY1TOP,	MR_JOY1,	AxeTop		},	// 20
+	{	"Joystick Bottom",	IDS_JOY1DOWN,	MR_JOY1,	AxeBottom	},	// 21
+	{	"Joystick Right",	IDS_JOY1RIGHT,	MR_JOY1,	AxeRight	},	// 22
+	{	"Joystick Left",	IDS_JOY1LEFT,	MR_JOY1,	AxeLeft		},	// 23
+	{	"Joystick2 Btn1",	IDS_JOY2BTN1,	MR_JOY2,	Btn1		},	// 24
+	{	"Joystick2 Btn2",	IDS_JOY2BTN2,	MR_JOY2,	Btn2		},	// 25
+	{	"Joystick2 Btn3",	IDS_JOY2BTN3,	MR_JOY2,	Btn3		},	// 26
+	{	"Joystick2 Btn4",	IDS_JOY2BTN4,	MR_JOY2,	Btn4		},	// 27
+	{	"Joystick2 Btn5",	IDS_JOY2BTN5,	MR_JOY2,	Btn5		},	// 28
+	{	"Joystick2 Btn6",	IDS_JOY2BTN6,	MR_JOY2,	Btn6		},	// 29
+	{	"Joystick2 Btn7",	IDS_JOY2BTN7,	MR_JOY2,	Btn7		},	// 30
+	{	"Joystick2 Btn8",	IDS_JOY2BTN8,	MR_JOY2,	Btn8		},	// 31
+	{	"Joystick2 Top",	IDS_JOY2TOP,	MR_JOY2,	AxeTop		},	// 32
+	{	"Joystick2 Bottom",	IDS_JOY2DOWN,	MR_JOY2,	AxeBottom	},	// 33
+	{	"Joystick2 Right",	IDS_JOY2RIGHT,	MR_JOY2,	AxeRight	},	// 34
+	{	"Joystick2 Left",	IDS_JOY2LEFT,	MR_JOY2,	AxeLeft		},	// 35
+	{	"Joystick3 Btn1",	IDS_JOY3BTN1,	MR_JOY3,	Btn1		},	// 36
+	{	"Joystick3 Btn2",	IDS_JOY3BTN2,	MR_JOY3,	Btn2		},	// 37
+	{	"Joystick3 Btn3",	IDS_JOY3BTN3,	MR_JOY3,	Btn3		},	// 38
+	{	"Joystick3 Btn4",	IDS_JOY3BTN4,	MR_JOY3,	Btn4		},	// 39
+	{	"Joystick3 Btn5",	IDS_JOY3BTN5,	MR_JOY3,	Btn5		},	// 40
+	{	"Joystick3 Btn6",	IDS_JOY3BTN6,	MR_JOY3,	Btn6		},	// 41
+	{	"Joystick3 Btn7",	IDS_JOY3BTN7,	MR_JOY3,	Btn7		},	// 42
+	{	"Joystick3 Btn8",	IDS_JOY3BTN8,	MR_JOY3,	Btn8		},	// 43
+	{	"Joystick3 Top",	IDS_JOY3TOP,	MR_JOY3,	AxeTop		},	// 44
+	{	"Joystick3 Bottom",	IDS_JOY3DOWN,	MR_JOY3,	AxeBottom	},	// 45
+	{	"Joystick3 Right",	IDS_JOY3RIGHT,	MR_JOY3,	AxeRight	},	// 46
+	{	"Joystick3 Left",	IDS_JOY3LEFT,	MR_JOY3,	AxeLeft		},	// 47
+	{	"Joystick4 Btn1",	IDS_JOY4BTN1,	MR_JOY4,	Btn1		},	// 48
+	{	"Joystick4 Btn2",	IDS_JOY4BTN2,	MR_JOY4,	Btn2		},	// 49
+	{	"Joystick4 Btn3",	IDS_JOY4BTN3,	MR_JOY4,	Btn3		},	// 50
+	{	"Joystick4 Btn4",	IDS_JOY4BTN4,	MR_JOY4,	Btn4		},	// 51
+	{	"Joystick4 Btn5",	IDS_JOY4BTN5,	MR_JOY4,	Btn5		},	// 52
+	{	"Joystick4 Btn6",	IDS_JOY4BTN6,	MR_JOY4,	Btn6		},	// 53
+	{	"Joystick4 Btn7",	IDS_JOY4BTN7,	MR_JOY4,	Btn7		},	// 54
+	{	"Joystick4 Btn8",	IDS_JOY4BTN8,	MR_JOY4,	Btn8		},	// 55
+	{	"Joystick4 Top",	IDS_JOY4TOP,	MR_JOY4,	AxeTop		},	// 56
+	{	"Joystick4 Bottom",	IDS_JOY4DOWN,	MR_JOY4,	AxeBottom	},	// 57
+	{	"Joystick4 Right",	IDS_JOY4RIGHT,	MR_JOY4,	AxeRight	},	// 58
+	{	"Joystick4 Left",	IDS_JOY4LEFT,	MR_JOY4,	AxeLeft		},	// 59
+	{	"Space",			IDS_SPACE,		MR_KDB,		VK_SPACE	},  // 60, player 2 only from here
+	{	"A Key",			IDS_KEY_A,		MR_KDB,		'A'			},	// 61
+	{	"B Key",			IDS_KEY_B,		MR_KDB,		'B'			},	// 62
+	{	"C Key",			IDS_KEY_C,		MR_KDB,		'C'			},	// 63
+	{	"D Key",			IDS_KEY_D,		MR_KDB,		'D'			},	// 64
+	{	"E Key",			IDS_KEY_E,		MR_KDB,		'E'			},	// 65
+	{	"F Key",			IDS_KEY_F,		MR_KDB,		'F'			},	// 66
+	{	"G Key",			IDS_KEY_G,		MR_KDB,		'G'			},	// 67
+	{	"H Key",			IDS_KEY_H,		MR_KDB,		'H'			},	// 68
+	{	"I Key",			IDS_KEY_I,		MR_KDB,		'I'			},	// 69
+	{	"J Key",			IDS_KEY_J,		MR_KDB,		'J'			},	// 70
+	{	"K Key",			IDS_KEY_K,		MR_KDB,		'K'			},	// 71
+	{	"L Key",			IDS_KEY_L,		MR_KDB,		'L'			},	// 72
+	{	"M Key",			IDS_KEY_M,		MR_KDB,		'M'			},	// 73
+	{	"N Key",			IDS_KEY_N,		MR_KDB,		'N'			},	// 74
+	{	"O Key",			IDS_KEY_O,		MR_KDB,		'O'			},	// 75
+	{	"P Key",			IDS_KEY_P,		MR_KDB,		'P'			},	// 76
+	{	"Q Key",			IDS_KEY_Q,		MR_KDB,		'Q'			},	// 77
+	{	"R Key",			IDS_KEY_R,		MR_KDB,		'R'			},	// 78
+	{	"S Key",			IDS_KEY_S,		MR_KDB,		'S'			},	// 79
+	{	"T Key",			IDS_KEY_T,		MR_KDB,		'T'			},	// 80
+	{	"U Key",			IDS_KEY_U,		MR_KDB,		'U'			},	// 81
+	{	"V Key",			IDS_KEY_V,		MR_KDB,		'V'			},	// 82
+	{	"W Key",			IDS_KEY_W,		MR_KDB,		'W'			},	// 83
+	{	"X Key",			IDS_KEY_X,		MR_KDB,		'X'			},	// 84
+	{	"Y Key",			IDS_KEY_Y,		MR_KDB,		'Y'			},	// 85
+	{	"Z Key",			IDS_KEY_Z,		MR_KDB,		'Z'			},	// 86
+	{	"Not a Key",		IDS_DISABLE,	MR_KDB,		0			},
+	{	"Not a Key",		IDS_DISABLE,	MR_KDB,		0			},
+	{	"Not a Key",		IDS_DISABLE,	MR_KDB,		0			},
+	{	"Not a Key",		IDS_DISABLE,	MR_KDB,		0			},
 };
 
 #define NB_KEY_PLAYER_1   60
@@ -939,9 +766,13 @@ void MR_GameApp::LoadRegistry()
 	}
 #endif
 
-	// Get the address of the server
-	if(RegQueryValueEx(lProgramKey, "MainServer", 0, NULL, (MR_UInt8 *) lBuffer, &lBufferSize) == ERROR_SUCCESS) {
-		mMainServer = lBuffer;
+	// Get the address of the server (we need a larger buffer)
+	{
+		char  lServerBuffer[500];
+		DWORD lServerBufferSize = sizeof(lServerBuffer);
+		if(RegQueryValueEx(lProgramKey, "MainServer", 0, NULL, (MR_UInt8 *) lServerBuffer, &lServerBufferSize) == ERROR_SUCCESS) {
+			mMainServer = lServerBuffer;
+		}
 	}
 }
 
