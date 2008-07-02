@@ -26,10 +26,10 @@
 #include "resource.h"
 #include "../Util/StrRes.h"
 
-#define MRM_DNS_ANSWER        (WM_USER+1)
-#define MRM_NET_EVENT         (WM_USER+7)
-#define MRM_DLG_END_ADD       (WM_USER+10)
-#define MRM_DLG_END_JOIN      (WM_USER+11)
+#define MRM_DNS_ANSWER        (WM_USER + 1)
+#define MRM_NET_EVENT         (WM_USER + 7)
+#define MRM_DLG_END_ADD       (WM_USER + 10)
+#define MRM_DLG_END_JOIN      (WM_USER + 11)
 
 #define MRM_BIN_BUFFER_SIZE    25000			  // 25 K this is BIG enough
 
@@ -48,8 +48,6 @@
 
 #define LOAD_BANNER_TIMEOUT_EVENT     8
 #define ANIM_BANNER_TIMEOUT_EVENT     9
-
-#define MR_IR_LIST "66.197.183.245/~sirbrock/imr/rl.php"
 
 #define MR_IR_LIST_PORT 80
 
@@ -75,10 +73,9 @@ class MR_InternetServerEntry
 		unsigned long mLadderIP;
 		unsigned mLadderPort;
 		CString mLadderReportURL;
-
 };
 
-class MR_BannerServerEntry:public MR_InternetServerEntry
+class MR_BannerServerEntry : public MR_InternetServerEntry
 {
 	public:
 		int mDelay;								  //in sec
@@ -108,10 +105,9 @@ static const char *GetNextLine(const char *pSrc);
 static int FindFocusItem(HWND pWindow);
 
 // DNS Cache
-
 static CString gUserNameCache;
-static CString gsServerAlias;
-unsigned long gsServerIP;
+static CString gsServerAlias; // this appears to never actually be used
+unsigned long gsServerIP; // this appears to never actually be used
 
 // MR_InternetRequest
 
@@ -128,7 +124,7 @@ MR_InternetRequest::~MR_InternetRequest()
 	Close();
 
 	if(mBinBuffer != NULL) {
-		delete[]mBinBuffer;
+		delete[] mBinBuffer;
 	}
 }
 
@@ -489,15 +485,26 @@ int MR_InternetRoom::ParseState(const char *pAnswer)
 
 }
 
-BOOL MR_InternetRoom::LocateServers(HWND pParentWindow)
+BOOL MR_InternetRoom::LocateServers(HWND pParentWindow, BOOL pShouldRecheckServer)
 {
 	BOOL lReturnValue = FALSE;
 	mThis = this;
 
-	if(gNbServerEntries > 0) {
+	if((gNbServerEntries > 0) && !pShouldRecheckServer) {
 		lReturnValue = TRUE;
 	}
 	else {
+		/* make sure global server list values are reset */
+		gScoreServer = MR_InternetServerEntry();
+		for(int lCounter = 0; lCounter < gNbServerEntries; lCounter++)
+			gServerList[lCounter] = MR_InternetServerEntry();
+		for(int lCounter = 0; lCounter < gNbBannerEntries; lCounter++)
+			gBannerList[lCounter] = MR_BannerServerEntry();
+
+		gNbServerEntries = 0;
+		gCurrentServerEntry = -1;
+		gNbBannerEntries = 0;
+		gCurrentBannerEntry = 0;
 
 		if(DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_NET_PROGRESS), pParentWindow, GetAddrCallBack) == IDOK) {
 			lReturnValue = TRUE;
@@ -668,12 +675,12 @@ BOOL MR_InternetRoom::AddMessageOp(HWND pParentWindow, const char *pMessage, int
 	return lReturnValue;
 }
 
-BOOL MR_InternetRoom::AskRoomParams(HWND pParentWindow)
+BOOL MR_InternetRoom::AskRoomParams(HWND pParentWindow, BOOL pShouldRecheckServer)
 {
 	BOOL lReturnValue = FALSE;
 	mThis = this;
 
-	lReturnValue = mThis->LocateServers(pParentWindow);
+	lReturnValue = mThis->LocateServers(pParentWindow, pShouldRecheckServer);
 
 	if(lReturnValue) {
 		lReturnValue = DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_INTERNET_PARAMS), pParentWindow, AskParamsCallBack) == IDOK;
@@ -682,11 +689,15 @@ BOOL MR_InternetRoom::AskRoomParams(HWND pParentWindow)
 	return lReturnValue;
 }
 
-BOOL MR_InternetRoom::DisplayChatRoom(HWND pParentWindow, MR_NetworkSession * pSession, MR_VideoBuffer * pVideoBuffer)
+
+/**
+ * This function is called to initiate the connection to the IMR
+ */
+BOOL MR_InternetRoom::DisplayChatRoom(HWND pParentWindow, MR_NetworkSession *pSession, MR_VideoBuffer *pVideoBuffer, BOOL pShouldRecheckServer)
 {
 	mUser = pSession->GetPlayerName();
 
-	BOOL lReturnValue = AskRoomParams(pParentWindow);
+	BOOL lReturnValue = AskRoomParams(pParentWindow, pShouldRecheckServer);
 
 	if(lReturnValue) {
 		mThis = this;

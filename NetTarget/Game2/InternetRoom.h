@@ -163,8 +163,8 @@ class MR_InternetRoom
 		static BOOL CALLBACK FastNetOpCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 		static BOOL CALLBACK GetAddrCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 
-		BOOL AskRoomParams(HWND pParentWindow);
-		BOOL LocateServers(HWND pWindow);
+		BOOL AskRoomParams(HWND pParentWindow, BOOL pShouldRecheckServer);
+		BOOL LocateServers(HWND pWindow, BOOL pShouldRecheckServer);
 		BOOL AddUserOp(HWND pParentWindow);
 		BOOL DelUserOp(HWND pParentWindow, BOOL pFastMode = FALSE);
 		BOOL AddGameOp(HWND pParentWindow, const char *pGameName, const char *pTrackName, int pNbLap, BOOL pAlllowWeapons, unsigned pPort);
@@ -192,7 +192,7 @@ class MR_InternetRoom
 		MR_InternetRoom(BOOL pAllowRegistred, int pMajorID, int pMinorID, unsigned pKey2, unsigned pKey3, CString pMainServer);
 		~MR_InternetRoom();
 
-		BOOL DisplayChatRoom(HWND pParentWindow, MR_NetworkSession * pSession, MR_VideoBuffer * pVideoBuffer);
+		BOOL DisplayChatRoom(HWND pParentWindow, MR_NetworkSession *pSession, MR_VideoBuffer *pVideoBuffer, BOOL pShouldRecheckServer);
 
 		// Modelless.. do not use for the moment
 		/*

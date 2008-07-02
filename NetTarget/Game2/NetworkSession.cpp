@@ -78,12 +78,10 @@ MR_NetworkSession::MR_NetworkSession(BOOL pInternetGame, int pMajorID, int pMino
 	// Awful Ladder patch
 	mOpponendMajorID = -1;
 	mOpponendMinorID = -1;
-
 }
 
 MR_NetworkSession::~MR_NetworkSession()
 {
-
 	if(mInternetGame && (mMainCharacter1 != NULL)) {
 		int lCurrentModel = mMainCharacter1->GetHoverModel();
 

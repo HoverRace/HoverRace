@@ -539,7 +539,7 @@ MR_GameApp::MR_GameApp(HINSTANCE pInstance)
 	mPaletteChangeAllowed = TRUE;
 
 	LoadRegistry();
-
+	mServerHasChanged = FALSE;
 }
 
 MR_GameApp::~MR_GameApp()
@@ -1979,7 +1979,8 @@ void MR_GameApp::NewInternetSession()
 	if(lSuccess) {
 		lCurrentSession->SetPlayerName(mNickName);
 
-		lSuccess = lInternetRoom.DisplayChatRoom(mMainWindow, lCurrentSession, mVideoBuffer);
+		lSuccess = lInternetRoom.DisplayChatRoom(mMainWindow, lCurrentSession, mVideoBuffer, mServerHasChanged);
+		mServerHasChanged = FALSE;
 
 		if(mNickName != lCurrentSession->GetPlayerName()) {
 			mNickName = lCurrentSession->GetPlayerName();
@@ -2957,6 +2958,7 @@ BOOL CALLBACK MR_GameApp::MiscDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWPar
 							ASSERT(FALSE);
 
 						This->mMainServer = lBuffer;
+						This->mServerHasChanged = TRUE;
 					}
 
 					This->SaveRegistry();

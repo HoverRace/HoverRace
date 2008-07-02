@@ -27,9 +27,8 @@
 #include "ClientSession.h"
 #include "NetInterface.h"
 
-class MR_NetworkSession:public MR_ClientSession
+class MR_NetworkSession : public MR_ClientSession
 {
-
 	protected:
 		class PlayerResult
 		{
@@ -48,7 +47,6 @@ class MR_NetworkSession:public MR_ClientSession
 				int mNbGoodShot;				  // nb of missiles that hit someone else
 
 				PlayerResult *mNextHitResult;	  // Create a second list from the initial structure
-
 		};
 
 		BOOL mMasterMode;
@@ -123,8 +121,8 @@ class MR_NetworkSession:public MR_ClientSession
 		BOOL ConnectToServer(HWND pWindow, const char *pServerIP = NULL, unsigned pPort = MR_DEFAULT_NET_PORT, const char *pGameName = NULL, HWND * pModalessDlg = NULL, int pReturnMessage = 0);
 
 		int ResultAvaillable() const;			  // Return the number of players desc avail
-		void GetResult(int pPosition, const char *&pPlayerName, int &pId, BOOL & pConnected, int &pNbLap, MR_SimulationTime & pFinishTime, MR_SimulationTime & pBestLap) const;
-		void GetHitResult(int pPosition, const char *&pPlayerName, int &pId, BOOL & pConnected, int &pNbHitOther, int &pNbHitHimself) const;
+		void GetResult(int pPosition, const char *&pPlayerName, int &pId, BOOL &pConnected, int &pNbLap, MR_SimulationTime & pFinishTime, MR_SimulationTime & pBestLap) const;
+		void GetHitResult(int pPosition, const char *&pPlayerName, int &pId, BOOL &pConnected, int &pNbHitOther, int &pNbHitHimself) const;
 
 		int GetNbPlayers() const;
 		int GetRank(const MR_MainCharacter * pPlayer) const;
@@ -133,6 +131,5 @@ class MR_NetworkSession:public MR_ClientSession
 		void GetCurrentMessage(char *pDest) const;
 
 		const MR_MainCharacter *GetPlayer(int pPlayerIndex) const;
-
 };
 #endif

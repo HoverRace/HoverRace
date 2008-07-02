@@ -128,6 +128,7 @@ class MR_GameApp
 		// CString mKey2;
 
 		CString mMainServer;
+		BOOL mServerHasChanged;
 
 		BOOL mDisplayFirstScreen;
 		BOOL mIntroMovie;
