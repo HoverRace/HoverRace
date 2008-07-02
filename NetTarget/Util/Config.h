@@ -75,4 +75,19 @@ class MR_Config
 			MR_DllDeclare void Load(yaml::MapNode*);
 			MR_DllDeclare void Save(yaml::Emitter*);
 		} player;
+
+		const static int MAX_PLAYERS = 4;
+		struct cfg_controls_t {
+			int motorOn;
+			int right;
+			int left;
+			int jump;
+			int fire;
+			int brake;
+			int weapon;
+			int lookBack;
+
+			MR_DllDeclare void Load(yaml::MapNode*, int);
+			MR_DllDeclare void Save(yaml::Emitter*);
+		} controls[MAX_PLAYERS];
 };

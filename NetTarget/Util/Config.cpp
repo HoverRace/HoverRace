@@ -20,6 +20,7 @@
 #include "yaml/Emitter.h"
 #include "yaml/MapNode.h"
 #include "yaml/ScalarNode.h"
+#include "yaml/SeqNode.h"
 #include "yaml/Parser.h"
 
 #include "Config.h"
@@ -37,6 +38,12 @@
 	{\
 		yaml::ScalarNode *_scalar = dynamic_cast<yaml::ScalarNode*>((root)->Get(#name)); \
 		if (_scalar != NULL) (name) = _scalar->AsBool(name); \
+	}
+
+#define READ_INT(root,name,min,max) \
+	{\
+		yaml::ScalarNode *_scalar = dynamic_cast<yaml::ScalarNode*>((root)->Get(#name)); \
+		if (_scalar != NULL) (name) = _scalar->AsInt(name, min, max); \
 	}
 
 #define READ_DOUBLE(root,name,min,max) \
@@ -176,6 +183,28 @@ void MR_Config::ResetToDefaults()
 	}
 #endif
 
+	// Default controls.
+	controls[0].motorOn = 1;
+	controls[0].right = 5;
+	controls[0].left = 6;
+	controls[0].jump = 3;
+	controls[0].fire = 2;
+	controls[0].brake = 4;
+	controls[0].weapon = 11;
+	controls[0].lookBack = 10;
+
+	controls[1].motorOn = 66;
+	controls[1].right = 64;
+	controls[1].left = 61;
+	controls[1].jump = 83;
+	controls[1].fire = 78;
+	controls[1].brake = 79;
+	controls[1].weapon = 77;
+	controls[1].lookBack = 65;
+
+	memset(&controls[2], 0, sizeof(cfg_controls_t));
+	memset(&controls[3], 0, sizeof(cfg_controls_t));
+
 }
 
 /**
@@ -204,6 +233,18 @@ void MR_Config::Load()
 			misc.Load(dynamic_cast<yaml::MapNode*>(root->Get("misc")));
 			video.Load(dynamic_cast<yaml::MapNode*>(root->Get("video")));
 			player.Load(dynamic_cast<yaml::MapNode*>(root->Get("player")));
+
+			// Get the controls.
+			yaml::SeqNode *ctlseq = dynamic_cast<yaml::SeqNode*>(root->Get("controls"));
+			if (ctlseq != NULL) {
+				int i = 0;
+				yaml::SeqNode::children_t *children = ctlseq->GetChildren();
+				for (yaml::SeqNode::children_t::iterator iter = children->begin();
+					iter != children->end() && i < MAX_PLAYERS; ++iter, ++i)
+				{
+					controls[i].Load(dynamic_cast<yaml::MapNode*>(*iter), i);
+				}
+			}
 		}
 
 		delete parser;
@@ -257,6 +298,14 @@ void MR_Config::Save()
 		video.Save(emitter);
 		misc.Save(emitter);
 		player.Save(emitter);
+		
+		// Save list of controls.
+		emitter->MapKey("controls");
+		emitter->StartSeq();
+		for (int i = 0; i < MAX_PLAYERS; ++i) {
+			controls[i].Save(emitter);
+		}
+		emitter->EndSeq();
 
 		emitter->EndMap();
 		delete emitter;
@@ -343,3 +392,39 @@ void MR_Config::cfg_player_t::Save(yaml::Emitter *emitter)
 
 	emitter->EndMap();
 }
+
+// controls ////////////////////////////////////////////////////////////////////
+
+void MR_Config::cfg_controls_t::Load(yaml::MapNode *root, int playerNum)
+{
+	if (root == NULL) return;
+
+	// The first player is limited to a certain set of keys for some reason.
+	int max = (playerNum == 0) ? 59 : 86;
+
+	READ_INT(root, motorOn, 0, max);
+	READ_INT(root, right, 0, max);
+	READ_INT(root, left, 0, max);
+	READ_INT(root, jump, 0, max);
+	READ_INT(root, fire, 0, max);
+	READ_INT(root, brake, 0, max);
+	READ_INT(root, weapon, 0, max);
+	READ_INT(root, lookBack, 0, max);
+}
+
+void MR_Config::cfg_controls_t::Save(yaml::Emitter *emitter)
+{
+	emitter->StartMap();
+
+	EMIT_VAR(emitter, motorOn);
+	EMIT_VAR(emitter, right);
+	EMIT_VAR(emitter, left);
+	EMIT_VAR(emitter, jump);
+	EMIT_VAR(emitter, fire);
+	EMIT_VAR(emitter, brake);
+	EMIT_VAR(emitter, weapon);
+	EMIT_VAR(emitter, lookBack);
+
+	emitter->EndMap();
+}
+
