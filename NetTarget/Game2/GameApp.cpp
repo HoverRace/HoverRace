@@ -3914,11 +3914,11 @@ void MR_GameApp::UpdateIntensityDialogLabels(HWND pWindow)
 	long contrast = SendDlgItemMessage(pWindow, IDC_CONTRAST_SLIDER, TBM_GETPOS, 0, 0);
 	long brightness = SendDlgItemMessage(pWindow, IDC_BRIGHTNESS_SLIDER, TBM_GETPOS, 0, 0);
 
-	_snprintf(buf, 4, "%d.%d", gamma / 100, gamma % 100);
+	_snprintf(buf, 4, "%01d.%02d", gamma / 100, gamma % 100);
 	SetDlgItemText(pWindow, IDC_GAMMA_TXT, buf);
-	_snprintf(buf, 4, "%d.%d", contrast / 100, contrast % 100);
+	_snprintf(buf, 4, "%01d.%02d", contrast / 100, contrast % 100);
 	SetDlgItemText(pWindow, IDC_CONTRAST_TXT, buf);
-	_snprintf(buf, 4, "%d.%d", brightness / 100, brightness % 100);
+	_snprintf(buf, 4, "%01d.%02d", brightness / 100, brightness % 100);
 	SetDlgItemText(pWindow, IDC_BRIGHTNESS_TXT, buf);
 }
 
