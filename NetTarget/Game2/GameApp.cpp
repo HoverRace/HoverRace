@@ -33,6 +33,7 @@
 #include "../Util/FuzzyLogic.h"
 #include "../Util/Profiler.h"
 #include "../Util/StrRes.h"
+#include "../Util/Config.h"
 #include "InternetRoom.h"
 #include "Security.h"
 
@@ -538,7 +539,14 @@ MR_GameApp::MR_GameApp(HINSTANCE pInstance)
 
 	mPaletteChangeAllowed = TRUE;
 
+	//TODO: If LoadRegistry found registry entries, then ask to migrate later.
 	LoadRegistry();
+	
+	// Load the configuration, using the default OS-specific path.
+	MR_Config::Init();
+	MR_Config *cfg = MR_Config::GetInstance();
+	OutputDebugString("Loaded config.\n");
+
 	mServerHasChanged = FALSE;
 }
 
@@ -549,6 +557,7 @@ MR_GameApp::~MR_GameApp()
 	MR_SoundServer::Close();
 	delete mVideoBuffer;
 
+	MR_Config::Shutdown();
 }
 
 void MR_GameApp::Clean()
@@ -908,6 +917,8 @@ void MR_GameApp::SaveRegistry()
 			ASSERT(FALSE);
 		}
 	}
+
+	MR_Config::GetInstance()->Save();
 }
 
 BOOL MR_GameApp::DisplayNotice()
@@ -1837,6 +1848,7 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 {
 	BOOL lSuccess = TRUE;
 	MR_NetworkSession *lCurrentSession = NULL;
+	MR_Config *cfg = MR_Config::GetInstance();
 
 	// Verify is user acknowledge
 	if(AskUserToAbortGame() != IDOK)
@@ -1867,7 +1879,7 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 		lSuccess = lCurrentSession->PreConnectToServer(mMainWindow, lCurrentTrack);
 
 		if(mNickName != lCurrentSession->GetPlayerName()) {
-			mNickName = lCurrentSession->GetPlayerName();
+			cfg->player.nickName = mNickName = lCurrentSession->GetPlayerName();
 			SaveRegistry();
 		}
 		// Extract the lap count from the track name and weapon use
@@ -1916,7 +1928,7 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 
 			lSuccess = lCurrentSession->WaitConnections(mMainWindow, lNameBuffer);
 			if(mNickName != lCurrentSession->GetPlayerName()) {
-				mNickName = lCurrentSession->GetPlayerName();
+				cfg->player.nickName = mNickName = lCurrentSession->GetPlayerName();
 				SaveRegistry();
 			}
 		} else
@@ -1962,6 +1974,7 @@ void MR_GameApp::NewInternetSession()
 {
 	BOOL lSuccess = TRUE;
 	MR_NetworkSession *lCurrentSession = NULL;
+	MR_Config *cfg = MR_Config::GetInstance();
 	// MR_InternetRoom    lInternetRoom( gKeyFilled, gKeyFilled?mMajorID:-1, gKeyFilled?mMinorID:-1, gKeyFilled?gKey.mKeySumHard2:0, gKeyFilled?gKey.mKeySumHard3:0 );
 	MR_InternetRoom lInternetRoom(gKeyFilled, gKeyFilled ? mMajorID : -1, gKeyFilled ? mMinorID : -1, gKeyFilled ? gKey.mIDSum : 0, 0, mMainServer);
 
@@ -1983,7 +1996,7 @@ void MR_GameApp::NewInternetSession()
 		mServerHasChanged = FALSE;
 
 		if(mNickName != lCurrentSession->GetPlayerName()) {
-			mNickName = lCurrentSession->GetPlayerName();
+			cfg->player.nickName = mNickName = lCurrentSession->GetPlayerName();
 			SaveRegistry();
 		}
 	}
@@ -2686,6 +2699,7 @@ BOOL CALLBACK MR_GameApp::DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, 
 {
 	ASSERT(This != NULL);
 	ASSERT(This->mVideoBuffer != NULL);
+	MR_Config *cfg = MR_Config::GetInstance();
 
 	BOOL lReturnValue = FALSE;
 
@@ -2709,8 +2723,14 @@ BOOL CALLBACK MR_GameApp::DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, 
 			break;
 
 		case WM_HSCROLL:
-			This->mVideoBuffer->CreatePalette(SendDlgItemMessage(pWindow, IDC_GAMMA_SLIDER, TBM_GETPOS, 0, 0) / 100.0, SendDlgItemMessage(pWindow, IDC_CONTRAST_SLIDER, TBM_GETPOS, 0, 0) / 100.0, SendDlgItemMessage(pWindow, IDC_BRIGHTNESS_SLIDER, TBM_GETPOS, 0, 0) / 100.0);
-			This->AssignPalette();
+			{
+				cfg->video.gamma = SendDlgItemMessage(pWindow, IDC_GAMMA_SLIDER, TBM_GETPOS, 0, 0) / 100.0;
+				cfg->video.contrast = SendDlgItemMessage(pWindow, IDC_CONTRAST_SLIDER, TBM_GETPOS, 0, 0) / 100.0;
+				cfg->video.brightness = SendDlgItemMessage(pWindow, IDC_BRIGHTNESS_SLIDER, TBM_GETPOS, 0, 0) / 100.0;
+
+				This->mVideoBuffer->CreatePalette(cfg->video.gamma, cfg->video.contrast, cfg->video.brightness);
+				This->AssignPalette();
+			}
 			break;
 
 		case TB_ENDTRACK:
@@ -2773,6 +2793,7 @@ BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 {
 	ASSERT(This != NULL);
 	ASSERT(This->mVideoBuffer != NULL);
+	MR_Config *cfg = MR_Config::GetInstance();
 
 	BOOL lReturnValue = FALSE;
 	int lCounter;
@@ -2885,38 +2906,42 @@ BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 		case WM_NOTIFY:
 			switch (((NMHDR FAR *) pLParam)->code) {
 				case PSN_APPLY:
-					This->mMotorOn1 = SendDlgItemMessage(pWindow, IDC_MOTOR_ON1, CB_GETCURSEL, 0, 0);
-					This->mRight1 = SendDlgItemMessage(pWindow, IDC_RIGHT1, CB_GETCURSEL, 0, 0);
-					This->mLeft1 = SendDlgItemMessage(pWindow, IDC_LEFT1, CB_GETCURSEL, 0, 0);
-					This->mJump1 = SendDlgItemMessage(pWindow, IDC_JUMP1, CB_GETCURSEL, 0, 0);
-					This->mFire1 = SendDlgItemMessage(pWindow, IDC_FIRE1, CB_GETCURSEL, 0, 0);
-					This->mBreak1 = SendDlgItemMessage(pWindow, IDC_BREAK1, CB_GETCURSEL, 0, 0);
-					This->mWeapon1 = SendDlgItemMessage(pWindow, IDC_SELWEAPON1, CB_GETCURSEL, 0, 0);
-					This->mLookBack1 = SendDlgItemMessage(pWindow, IDC_LOOKBACK1, CB_GETCURSEL, 0, 0);
-					This->mMotorOn2 = SendDlgItemMessage(pWindow, IDC_MOTOR_ON2, CB_GETCURSEL, 0, 0);
-					This->mRight2 = SendDlgItemMessage(pWindow, IDC_RIGHT2, CB_GETCURSEL, 0, 0);
-					This->mLeft2 = SendDlgItemMessage(pWindow, IDC_LEFT2, CB_GETCURSEL, 0, 0);
-					This->mJump2 = SendDlgItemMessage(pWindow, IDC_JUMP2, CB_GETCURSEL, 0, 0);
-					This->mFire2 = SendDlgItemMessage(pWindow, IDC_FIRE2, CB_GETCURSEL, 0, 0);
-					This->mBreak2 = SendDlgItemMessage(pWindow, IDC_BREAK2, CB_GETCURSEL, 0, 0);
-					This->mWeapon2 = SendDlgItemMessage(pWindow, IDC_SELWEAPON2, CB_GETCURSEL, 0, 0);
-					This->mLookBack2 = SendDlgItemMessage(pWindow, IDC_LOOKBACK2, CB_GETCURSEL, 0, 0);
-					This->mMotorOn3 = SendDlgItemMessage(pWindow, IDC_MOTOR_ON3, CB_GETCURSEL, 0, 0);
-					This->mRight3 = SendDlgItemMessage(pWindow, IDC_RIGHT3, CB_GETCURSEL, 0, 0);
-					This->mLeft3 = SendDlgItemMessage(pWindow, IDC_LEFT3, CB_GETCURSEL, 0, 0);
-					This->mJump3 = SendDlgItemMessage(pWindow, IDC_JUMP3, CB_GETCURSEL, 0, 0);
-					This->mFire3 = SendDlgItemMessage(pWindow, IDC_FIRE3, CB_GETCURSEL, 0, 0);
-					This->mBreak3 = SendDlgItemMessage(pWindow, IDC_BREAK3, CB_GETCURSEL, 0, 0);
-					This->mWeapon3 = SendDlgItemMessage(pWindow, IDC_SELWEAPON3, CB_GETCURSEL, 0, 0);
-					This->mLookBack3 = SendDlgItemMessage(pWindow, IDC_LOOKBACK3, CB_GETCURSEL, 0, 0);
-					This->mMotorOn4 = SendDlgItemMessage(pWindow, IDC_MOTOR_ON4, CB_GETCURSEL, 0, 0);
-					This->mRight4 = SendDlgItemMessage(pWindow, IDC_RIGHT4, CB_GETCURSEL, 0, 0);
-					This->mLeft4 = SendDlgItemMessage(pWindow, IDC_LEFT4, CB_GETCURSEL, 0, 0);
-					This->mJump4 = SendDlgItemMessage(pWindow, IDC_JUMP4, CB_GETCURSEL, 0, 0);
-					This->mFire4 = SendDlgItemMessage(pWindow, IDC_FIRE4, CB_GETCURSEL, 0, 0);
-					This->mBreak4 = SendDlgItemMessage(pWindow, IDC_BREAK4, CB_GETCURSEL, 0, 0);
-					This->mWeapon4 = SendDlgItemMessage(pWindow, IDC_SELWEAPON4, CB_GETCURSEL, 0, 0);
-					This->mLookBack4 = SendDlgItemMessage(pWindow, IDC_LOOKBACK4, CB_GETCURSEL, 0, 0);
+					cfg->controls[0].motorOn  = This->mMotorOn1 = SendDlgItemMessage(pWindow, IDC_MOTOR_ON1, CB_GETCURSEL, 0, 0);
+					cfg->controls[0].right    = This->mRight1 = SendDlgItemMessage(pWindow, IDC_RIGHT1, CB_GETCURSEL, 0, 0);
+					cfg->controls[0].left     = This->mLeft1 = SendDlgItemMessage(pWindow, IDC_LEFT1, CB_GETCURSEL, 0, 0);
+					cfg->controls[0].motorOn  = This->mJump1 = SendDlgItemMessage(pWindow, IDC_JUMP1, CB_GETCURSEL, 0, 0);
+					cfg->controls[0].fire     = This->mFire1 = SendDlgItemMessage(pWindow, IDC_FIRE1, CB_GETCURSEL, 0, 0);
+					cfg->controls[0].brake    = This->mBreak1 = SendDlgItemMessage(pWindow, IDC_BREAK1, CB_GETCURSEL, 0, 0);
+					cfg->controls[0].weapon   = This->mWeapon1 = SendDlgItemMessage(pWindow, IDC_SELWEAPON1, CB_GETCURSEL, 0, 0);
+					cfg->controls[0].lookBack = This->mLookBack1 = SendDlgItemMessage(pWindow, IDC_LOOKBACK1, CB_GETCURSEL, 0, 0);
+
+					cfg->controls[1].motorOn  = This->mMotorOn2 = SendDlgItemMessage(pWindow, IDC_MOTOR_ON2, CB_GETCURSEL, 0, 0);
+					cfg->controls[1].right    = This->mRight2 = SendDlgItemMessage(pWindow, IDC_RIGHT2, CB_GETCURSEL, 0, 0);
+					cfg->controls[1].left     = This->mLeft2 = SendDlgItemMessage(pWindow, IDC_LEFT2, CB_GETCURSEL, 0, 0);
+					cfg->controls[1].motorOn  = This->mJump2 = SendDlgItemMessage(pWindow, IDC_JUMP2, CB_GETCURSEL, 0, 0);
+					cfg->controls[1].fire     = This->mFire2 = SendDlgItemMessage(pWindow, IDC_FIRE2, CB_GETCURSEL, 0, 0);
+					cfg->controls[1].brake    = This->mBreak2 = SendDlgItemMessage(pWindow, IDC_BREAK2, CB_GETCURSEL, 0, 0);
+					cfg->controls[1].weapon   = This->mWeapon2 = SendDlgItemMessage(pWindow, IDC_SELWEAPON2, CB_GETCURSEL, 0, 0);
+					cfg->controls[1].lookBack = This->mLookBack2 = SendDlgItemMessage(pWindow, IDC_LOOKBACK2, CB_GETCURSEL, 0, 0);
+
+					cfg->controls[2].motorOn  = This->mMotorOn3 = SendDlgItemMessage(pWindow, IDC_MOTOR_ON3, CB_GETCURSEL, 0, 0);
+					cfg->controls[2].right    = This->mRight3 = SendDlgItemMessage(pWindow, IDC_RIGHT3, CB_GETCURSEL, 0, 0);
+					cfg->controls[2].left     = This->mLeft3 = SendDlgItemMessage(pWindow, IDC_LEFT3, CB_GETCURSEL, 0, 0);
+					cfg->controls[2].motorOn  = This->mJump3 = SendDlgItemMessage(pWindow, IDC_JUMP3, CB_GETCURSEL, 0, 0);
+					cfg->controls[2].fire     = This->mFire3 = SendDlgItemMessage(pWindow, IDC_FIRE3, CB_GETCURSEL, 0, 0);
+					cfg->controls[2].brake    = This->mBreak3 = SendDlgItemMessage(pWindow, IDC_BREAK3, CB_GETCURSEL, 0, 0);
+					cfg->controls[2].weapon   = This->mWeapon3 = SendDlgItemMessage(pWindow, IDC_SELWEAPON3, CB_GETCURSEL, 0, 0);
+					cfg->controls[2].lookBack = This->mLookBack3 = SendDlgItemMessage(pWindow, IDC_LOOKBACK3, CB_GETCURSEL, 0, 0);
+
+					cfg->controls[3].motorOn  = This->mMotorOn4 = SendDlgItemMessage(pWindow, IDC_MOTOR_ON4, CB_GETCURSEL, 0, 0);
+					cfg->controls[3].right    = This->mRight4 = SendDlgItemMessage(pWindow, IDC_RIGHT4, CB_GETCURSEL, 0, 0);
+					cfg->controls[3].left     = This->mLeft4 = SendDlgItemMessage(pWindow, IDC_LEFT4, CB_GETCURSEL, 0, 0);
+					cfg->controls[3].motorOn  = This->mJump4 = SendDlgItemMessage(pWindow, IDC_JUMP4, CB_GETCURSEL, 0, 0);
+					cfg->controls[3].fire     = This->mFire4 = SendDlgItemMessage(pWindow, IDC_FIRE4, CB_GETCURSEL, 0, 0);
+					cfg->controls[3].brake    = This->mBreak4 = SendDlgItemMessage(pWindow, IDC_BREAK4, CB_GETCURSEL, 0, 0);
+					cfg->controls[3].weapon   = This->mWeapon4 = SendDlgItemMessage(pWindow, IDC_SELWEAPON4, CB_GETCURSEL, 0, 0);
+					cfg->controls[3].lookBack = This->mLookBack4 = SendDlgItemMessage(pWindow, IDC_LOOKBACK4, CB_GETCURSEL, 0, 0);
+
 					This->SaveRegistry();
 					break;
 			}
@@ -2928,6 +2953,7 @@ BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 BOOL CALLBACK MR_GameApp::MiscDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
 {
 	ASSERT(This != NULL);
+	MR_Config *cfg = MR_Config::GetInstance();
 
 	BOOL lReturnValue = FALSE;
 
@@ -2946,9 +2972,9 @@ BOOL CALLBACK MR_GameApp::MiscDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWPar
 		case WM_NOTIFY:
 			switch (((NMHDR FAR *) pLParam)->code) {
 				case PSN_APPLY:
-					This->mIntroMovie = SendDlgItemMessage(pWindow, IDC_INTRO_MOVIE, BM_GETCHECK, 0, 0);
-					This->mDisplayFirstScreen = SendDlgItemMessage(pWindow, IDC_SHOW_INTERNET, BM_GETCHECK, 0, 0);
-					This->mNativeBppFullscreen = SendDlgItemMessage(pWindow, IDC_NATIVE_BPP_FULLSCREEN, BM_GETCHECK, 0, 0);
+					cfg->misc.introMovie = This->mIntroMovie = SendDlgItemMessage(pWindow, IDC_INTRO_MOVIE, BM_GETCHECK, 0, 0);
+					cfg->misc.displayFirstScreen = This->mDisplayFirstScreen = SendDlgItemMessage(pWindow, IDC_SHOW_INTERNET, BM_GETCHECK, 0, 0);
+					cfg->video.nativeBppFullscreen = This->mNativeBppFullscreen = SendDlgItemMessage(pWindow, IDC_NATIVE_BPP_FULLSCREEN, BM_GETCHECK, 0, 0);
 
 					This->mVideoBuffer->SetNativeBppFullscreen(This->mNativeBppFullscreen);
 
@@ -2957,7 +2983,7 @@ BOOL CALLBACK MR_GameApp::MiscDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWPar
 						if(GetDlgItemText(pWindow, IDC_MAINSERVER, lBuffer, sizeof(lBuffer)) == 0)
 							ASSERT(FALSE);
 
-						This->mMainServer = lBuffer;
+						cfg->net.mainServer = This->mMainServer = lBuffer;
 						This->mServerHasChanged = TRUE;
 					}
 
