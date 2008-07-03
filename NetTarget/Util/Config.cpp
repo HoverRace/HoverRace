@@ -33,6 +33,7 @@
 #define CONFIG_FILENAME "config.yml"
 
 #define DEFAULT_NICKNAME "Player"
+#define DEFAULT_MAIN_SERVER "66.197.183.245/~sirbrock/imr/rl.php"
 
 #define READ_BOOL(root,name) \
 	{\
@@ -183,6 +184,8 @@ void MR_Config::ResetToDefaults()
 	}
 #endif
 
+	net.mainServer = DEFAULT_MAIN_SERVER;
+
 	// Default controls.
 	controls[0].motorOn = 1;
 	controls[0].right = 5;
@@ -233,6 +236,7 @@ void MR_Config::Load()
 			misc.Load(dynamic_cast<yaml::MapNode*>(root->Get("misc")));
 			video.Load(dynamic_cast<yaml::MapNode*>(root->Get("video")));
 			player.Load(dynamic_cast<yaml::MapNode*>(root->Get("player")));
+			net.Load(dynamic_cast<yaml::MapNode*>(root->Get("net")));
 
 			// Get the controls.
 			yaml::SeqNode *ctlseq = dynamic_cast<yaml::SeqNode*>(root->Get("controls"));
@@ -298,6 +302,7 @@ void MR_Config::Save()
 		video.Save(emitter);
 		misc.Save(emitter);
 		player.Save(emitter);
+		net.Save(emitter);
 		
 		// Save list of controls.
 		emitter->MapKey("controls");
@@ -389,6 +394,25 @@ void MR_Config::cfg_player_t::Save(yaml::Emitter *emitter)
 	emitter->StartMap();
 
 	EMIT_VAR(emitter, nickName);
+
+	emitter->EndMap();
+}
+
+// net /////////////////////////////////////////////////////////////////////////
+
+void MR_Config::cfg_net_t::Load(yaml::MapNode *root)
+{
+	if (root == NULL) return;
+
+	READ_STRING(root, mainServer);
+}
+
+void MR_Config::cfg_net_t::Save(yaml::Emitter *emitter)
+{
+	emitter->MapKey("net");
+	emitter->StartMap();
+
+	EMIT_VAR(emitter, mainServer);
 
 	emitter->EndMap();
 }

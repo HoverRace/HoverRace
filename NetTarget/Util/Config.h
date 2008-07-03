@@ -76,7 +76,15 @@ class MR_Config
 			MR_DllDeclare void Save(yaml::Emitter*);
 		} player;
 
-		const static int MAX_PLAYERS = 4;
+		struct cfg_net_t {
+			std::string mainServer;
+			//TODO: Proxy server settings.
+
+			MR_DllDeclare void Load(yaml::MapNode*);
+			MR_DllDeclare void Save(yaml::Emitter*);
+		} net;
+
+		static const int MAX_PLAYERS = 4;
 		struct cfg_controls_t {
 			int motorOn;
 			int right;
