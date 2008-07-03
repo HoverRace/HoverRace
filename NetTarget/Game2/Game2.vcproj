@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="Vfw32.lib vfw32.lib wsock32.lib winmm.lib"
+				AdditionalDependencies="Vfw32.lib vfw32.lib wsock32.lib winmm.lib version.lib"
 				OutputFile=".\..\Debug/Game2.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
@@ -106,7 +106,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="vfw32.lib wsock32.lib winmm.lib"
+				AdditionalDependencies="vfw32.lib wsock32.lib winmm.lib version.lib"
 				OutputFile=".\..\Release/Game2.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"

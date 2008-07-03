@@ -67,18 +67,17 @@ MR_Config *MR_Config::instance = NULL;
 
 /**
  * Create a new instance using the specified directory.
+ * @param version The app version.
  * @param path (Optional) The directory for storing configuration data.
  *             The default is to use {@link #GetDefaultPath()}.
  */
-MR_Config::MR_Config(const std::string &path)
+MR_Config::MR_Config(const std::string &version, const std::string &path) :
+	version(version)
 {
 	this->path = (path.length() == 0) ? GetDefaultPath() : path;
 
 	// Set initial defaults.
 	ResetToDefaults();
-
-	// Load and parse the YAML file.
-	Load();
 }
 
 MR_Config::~MR_Config()
@@ -88,14 +87,17 @@ MR_Config::~MR_Config()
 
 /**
  * Initialize the singleton instance.
+ * @param version The app version.
  * @param path (Optional) The directory for storing configuration data.
  *             The default is to use {@link #GetDefaultPath()}.
+ * @return The config instance.
  */
-void MR_Config::Init(const std::string &path)
+MR_Config *MR_Config::Init(const std::string &version, const std::string &path)
 {
 	if (instance == NULL) {
-		instance = new MR_Config(path);
+		instance = new MR_Config(version, path);
 	}
+	return instance;
 }
 
 /**
@@ -326,9 +328,7 @@ void MR_Config::Save()
 
 void MR_Config::SaveVersion(yaml::Emitter *emitter)
 {
-	emitter->MapKey("version");
-	//TODO: Use real HoverRace version.
-	emitter->Value("1.0");
+	EMIT_VAR(emitter, version);
 }
 
 // video ///////////////////////////////////////////////////////////////////////

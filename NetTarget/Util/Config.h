@@ -26,13 +26,14 @@ class MR_Config
 	private:
 		static MR_Config *instance;
 		std::string path;
+		std::string version;
 
 	protected:
-		MR_DllDeclare MR_Config(const std::string &file="");
+		MR_DllDeclare MR_Config(const std::string &version, const std::string &file="");
 	public:
 		MR_DllDeclare virtual ~MR_Config();
 	
-		MR_DllDeclare static void Init(const std::string &path="");
+		MR_DllDeclare static MR_Config *Init(const std::string &version, const std::string &path="");
 		MR_DllDeclare static void Shutdown();
 
 		MR_DllDeclare static std::string GetDefaultPath();

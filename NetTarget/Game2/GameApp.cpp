@@ -21,6 +21,8 @@
 
 #include "stdafx.h"
 
+#include <sstream>
+
 #include "GameApp.h"
 #include "resource.h"
 #include "CommonDialog.h"
@@ -539,12 +541,44 @@ MR_GameApp::MR_GameApp(HINSTANCE pInstance)
 
 	mPaletteChangeAllowed = TRUE;
 
+	// Load our own version info so we can pass it along to the config.
+	long verMajor = 0;
+	long verMinor = 0;
+	long verPatch = 0;
+	long verBuild = 0;
+	char exePath[MAX_PATH];
+	GetModuleFileName(NULL, exePath, MAX_PATH - 1);
+	DWORD dummyHandle;
+	DWORD verInfoSize = GetFileVersionInfoSize(exePath, &dummyHandle);
+	void *verInfo = malloc(verInfoSize);
+	if (GetFileVersionInfo(exePath, 0, verInfoSize, verInfo)) {
+		UINT outSize;
+		void *outPtr;
+		if (VerQueryValue(verInfo, "\\", (LPVOID*)&outPtr, &outSize)) {
+			VS_FIXEDFILEINFO *fixedInfo = (VS_FIXEDFILEINFO*)outPtr;
+			verMajor = (fixedInfo->dwProductVersionMS >> 16) & 0xffff;
+			verMinor = fixedInfo->dwProductVersionMS & 0xffff;
+			verPatch = (fixedInfo->dwProductVersionLS >> 16) & 0xffff;
+			verBuild = fixedInfo->dwProductVersionLS & 0xffff;
+		}
+	}
+	free(verInfo);
+
+	// Format the version.
+	if (verMajor == 0 && verMinor == 0 && verPatch == 0 && verBuild == 0) {
+		//FIXME: Oh bother, this means the .exe was compiled without
+		//       version resources.  What do we do now?
+	}
+	std::ostringstream verOss;
+	verOss << verMajor << '.' << verMinor << '.' << verPatch << '.' << verBuild;
+	std::string appVer = verOss.str();
+
 	//TODO: If LoadRegistry found registry entries, then ask to migrate later.
 	LoadRegistry();
 	
 	// Load the configuration, using the default OS-specific path.
-	MR_Config::Init();
-	MR_Config *cfg = MR_Config::GetInstance();
+	MR_Config *cfg = MR_Config::Init(appVer);
+	cfg->Load();
 	OutputDebugString("Loaded config.\n");
 
 	mServerHasChanged = FALSE;
