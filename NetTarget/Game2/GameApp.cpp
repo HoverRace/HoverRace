@@ -2720,6 +2720,7 @@ BOOL CALLBACK MR_GameApp::DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, 
 			SendDlgItemMessage(pWindow, IDC_CONTRAST_SLIDER, TBM_SETPOS, TRUE, long (lOriginalContrast * 100));
 			SendDlgItemMessage(pWindow, IDC_BRIGHTNESS_SLIDER, TBM_SETPOS, TRUE, long (lOriginalBrightness * 100));
 
+			UpdateIntensityDialogLabels(pWindow);
 			break;
 
 		case WM_HSCROLL:
@@ -2727,6 +2728,8 @@ BOOL CALLBACK MR_GameApp::DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, 
 				cfg->video.gamma = SendDlgItemMessage(pWindow, IDC_GAMMA_SLIDER, TBM_GETPOS, 0, 0) / 100.0;
 				cfg->video.contrast = SendDlgItemMessage(pWindow, IDC_CONTRAST_SLIDER, TBM_GETPOS, 0, 0) / 100.0;
 				cfg->video.brightness = SendDlgItemMessage(pWindow, IDC_BRIGHTNESS_SLIDER, TBM_GETPOS, 0, 0) / 100.0;
+
+				UpdateIntensityDialogLabels(pWindow);
 
 				This->mVideoBuffer->CreatePalette(cfg->video.gamma, cfg->video.contrast, cfg->video.brightness);
 				This->AssignPalette();
@@ -3862,6 +3865,27 @@ HPALETTE CreateDIBPalette(LPBITMAPINFO lpbmi, LPINT lpiNumColors)
 		GlobalFree(hLogPal);
 	}
 	return hPal;
+}
+
+/**
+ * Update the labels for the intensity sliders.
+ * @param pWindow Dialog handle.
+ */
+void MR_GameApp::UpdateIntensityDialogLabels(HWND pWindow)
+{
+	char buf[5];
+	buf[4] = '\0';
+
+	long gamma = SendDlgItemMessage(pWindow, IDC_GAMMA_SLIDER, TBM_GETPOS, 0, 0);
+	long contrast = SendDlgItemMessage(pWindow, IDC_CONTRAST_SLIDER, TBM_GETPOS, 0, 0);
+	long brightness = SendDlgItemMessage(pWindow, IDC_BRIGHTNESS_SLIDER, TBM_GETPOS, 0, 0);
+
+	_snprintf(buf, 4, "%d.%d", gamma / 100, gamma % 100);
+	SetDlgItemText(pWindow, IDC_GAMMA_TXT, buf);
+	_snprintf(buf, 4, "%d.%d", contrast / 100, contrast % 100);
+	SetDlgItemText(pWindow, IDC_CONTRAST_TXT, buf);
+	_snprintf(buf, 4, "%d.%d", brightness / 100, brightness % 100);
+	SetDlgItemText(pWindow, IDC_BRIGHTNESS_TXT, buf);
 }
 
 /////////////////////////////////   AVI SECTION  //////////////////////////////////////

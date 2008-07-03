@@ -153,6 +153,8 @@ class MR_GameApp
 		static BOOL CALLBACK RegistrationFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 		static BOOL CALLBACK FirstChoiceDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 
+		static void UpdateIntensityDialogLabels(HWND pWindow);
+
 		BOOL CreateMainWindow();
 
 		void RefreshView();

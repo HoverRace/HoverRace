@@ -149,6 +149,10 @@
 #define IDC_NATIVE_BPP_FULLSCREEN       1079
 #define IDC_EDIT1                       1081
 #define IDC_MAINSERVER                  1081
+#define IDC_BRIGHTNESS_TXT              1081
+#define IDC_CONTRAST_TXT                1082
+#define IDC_CONTRAST_TXT2               1084
+#define IDC_GAMMA_TXT                   1084
 #define ID_HELP_CONTENTS                32772
 #define ID_HELP_HOWTOORDER              32773
 #define ID_HELP_TIPOFTHEDAY             32774
