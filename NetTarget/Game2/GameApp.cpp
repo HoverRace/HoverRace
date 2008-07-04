@@ -198,9 +198,7 @@ BOOL gFirstKDBResetJoy2 = TRUE;					  // Set to TRUE on each new scan
 BOOL gFirstKDBResetJoy3 = TRUE;					  // Set to TRUE on each new scan
 BOOL gFirstKDBResetJoy4 = TRUE;					  // Set to TRUE on each new scan
 
-BOOL CheckKeyState(int pKeyIndex);
-
-BOOL CheckKeyState(int pKeyIndex)
+static BOOL CheckKeyState(int pKeyIndex)
 {
 	BOOL lReturnValue = FALSE;
 
@@ -1405,9 +1403,7 @@ void MR_GameApp::ReadAsyncInputController()
 	gFirstKDBResetJoy2 = TRUE;
 
 	if(mCurrentSession != NULL) {
-#ifdef _DEBUG
 		if(GetForegroundWindow() == mMainWindow)
-#endif
 		{
 			static BOOL lFirstCall = TRUE;
 			int lControlState1 = 0;
