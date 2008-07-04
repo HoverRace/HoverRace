@@ -23,10 +23,29 @@
 #include "stdafx.h"
 #include "SoundServer.h"
 #include "../Util/MR_Types.h"
+#include "../Util/Config.h"
+#include <math.h>
 #include <mmreg.h>
 #include <dsound.h>
 
 #define MR_MAX_SOUND_COPY 6
+
+// Adapted from http://www.gamedev.net/community/forums/topic.asp?topic_id=337397
+//   and http://en.wikipedia.org/wiki/Decibel
+
+/// Convert linear (0.0 - 1.0) to millibels.
+static int LinearToDirectX(double value)
+{
+	return (value <= 0.01) ? DSBVOLUME_MIN :
+		static_cast<int>(floor(2000.0 * log10(value) + 0.5));
+}
+/// Convert millibels to linear.
+static double DirectXToLinear(int value)
+{
+	return (value == DSBVOLUME_MIN) ? 0.0 : 
+		pow(10.0, (double)value / 2000.0);
+} 
+
 
 class MR_SoundBuffer
 {
@@ -237,13 +256,24 @@ void MR_SoundBuffer::SetParams(int pCopy, int pDB, double pSpeed, int pPan)
 		pCopy = mNbCopy - 1;
 	}
 
+	// Global sound effect volume setting.
+	double vol = MR_Config::GetInstance()->audio.sfxVolume;
+
+	long attenuatedVolume;
+	if (vol >= 0.99) {
+		attenuatedVolume = pDB;
+	}
+	else {
+		attenuatedVolume = LinearToDirectX(vol * DirectXToLinear(pDB));
+	}
+
 	if(mSoundBuffer[pCopy] != NULL) {
-		unsigned long lFreq = mNormalFreq * pSpeed;
+		unsigned long lFreq = static_cast<unsigned long>(mNormalFreq * pSpeed);
 
 		if(lFreq > 100000) {
 			lFreq = 100000;
 		}
-		mSoundBuffer[pCopy]->SetVolume(pDB);
+		mSoundBuffer[pCopy]->SetVolume(attenuatedVolume);
 		mSoundBuffer[pCopy]->SetFrequency(lFreq);
 		mSoundBuffer[pCopy]->SetPan(pPan);
 	}

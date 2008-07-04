@@ -172,7 +172,7 @@ END
 // Dialog
 //
 
-IDD_DISPLAY_INTENSITY DIALOGEX 0, 0, 206, 63
+IDD_DISPLAY_INTENSITY DIALOGEX 0, 0, 241, 108
 STYLE DS_SETFONT | DS_3DLOOK | WS_CHILD | WS_BORDER
 FONT 8, "MS Sans Serif", 0, 0, 0x0
 BEGIN
@@ -181,16 +181,21 @@ BEGIN
     CONTROL         "Slider3",IDC_CONTRAST_SLIDER,"msctls_trackbar32",
                     TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,57,25,100,15
     CONTROL         "Slider4",IDC_BRIGHTNESS_SLIDER,"msctls_trackbar32",
-                    TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,57,41,100,15
+                    TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,57,43,100,15
     LTEXT           "Gamma",IDC_STATIC,13,10,33,8
     LTEXT           "Contrast",IDC_STATIC,13,27,37,8
     LTEXT           "Brightness",IDC_STATIC,13,44,36,8
-    EDITTEXT        IDC_BRIGHTNESS_TXT,158,44,40,12,ES_AUTOHSCROLL | 
+    EDITTEXT        IDC_BRIGHTNESS_TXT,158,46,40,12,ES_AUTOHSCROLL | 
                     ES_READONLY | NOT WS_BORDER
     EDITTEXT        IDC_CONTRAST_TXT,158,28,40,12,ES_AUTOHSCROLL | 
                     ES_READONLY | NOT WS_BORDER
-    EDITTEXT        IDC_GAMMA_TXT,158,12,40,12,ES_AUTOHSCROLL | ES_READONLY | 
+    EDITTEXT        IDC_GAMMA_TXT,158,11,40,12,ES_AUTOHSCROLL | ES_READONLY | 
                     NOT WS_BORDER
+    CONTROL         "",IDC_SFX_VOLUME_SLIDER,"msctls_trackbar32",TBS_BOTH | 
+                    TBS_NOTICKS | WS_TABSTOP,57,73,100,15
+    LTEXT           "Volume",IDC_STATIC,13,74,36,8
+    EDITTEXT        IDC_SFX_VOLUME_TXT,158,76,40,12,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_BORDER
 END
 
 IDD_TRACK_SELECT DIALOGEX 0, 0, 244, 141
@@ -828,9 +833,9 @@ BEGIN
     IDD_DISPLAY_INTENSITY, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 198
+        RIGHTMARGIN, 233
         TOPMARGIN, 5
-        BOTTOMMARGIN, 56
+        BOTTOMMARGIN, 101
     END
 
     IDD_TRACK_SELECT, DIALOG
@@ -1254,7 +1259,7 @@ BEGIN
     IDS_CANT_SWITCH_MODE    "HoverRace was unable to switch the video mode. You will need to play in full screen."
     IDS_BAD_MODE            "Incompatible video mode. You will need to play in full screen."
     IDS_CAR_FOR_REG         "You need to register to use this craft model."
-    IDS_COLOR_INTENSITY     "Color intensity"
+    IDS_COLOR_INTENSITY     "Video and Audio"
     IDS_KEYS_SETTING        "Controls"
     IDS_PROP_SETTING        "Properties setting"
     IDS_READ_NOTICE         "Please take the time to read the notice."

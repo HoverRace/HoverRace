@@ -62,6 +62,13 @@ class MR_Config
 			MR_DllDeclare void Save(yaml::Emitter*);
 		} video;
 
+		struct cfg_audio_t {
+			double sfxVolume;
+
+			MR_DllDeclare void Load(yaml::MapNode*);
+			MR_DllDeclare void Save(yaml::Emitter*);
+		} audio;
+
 		struct cfg_misc_t {
 			bool displayFirstScreen;
 			bool introMovie;

@@ -162,6 +162,8 @@ void MR_Config::ResetToDefaults()
 	video.brightness = 0.95;
 	video.nativeBppFullscreen = false;
 
+	audio.sfxVolume = 1.0;
+
 	misc.displayFirstScreen = true;
 	misc.introMovie = true;
 
@@ -235,8 +237,9 @@ void MR_Config::Load()
 
 		yaml::MapNode *root = dynamic_cast<yaml::MapNode*>(node);
 		if (root != NULL) {
-			misc.Load(dynamic_cast<yaml::MapNode*>(root->Get("misc")));
 			video.Load(dynamic_cast<yaml::MapNode*>(root->Get("video")));
+			audio.Load(dynamic_cast<yaml::MapNode*>(root->Get("audio")));
+			misc.Load(dynamic_cast<yaml::MapNode*>(root->Get("misc")));
 			player.Load(dynamic_cast<yaml::MapNode*>(root->Get("player")));
 			net.Load(dynamic_cast<yaml::MapNode*>(root->Get("net")));
 
@@ -302,6 +305,7 @@ void MR_Config::Save()
 
 		SaveVersion(emitter);
 		video.Save(emitter);
+		audio.Save(emitter);
 		misc.Save(emitter);
 		player.Save(emitter);
 		net.Save(emitter);
@@ -354,6 +358,25 @@ void MR_Config::cfg_video_t::Save(yaml::Emitter *emitter)
 	EMIT_VAR(emitter, brightness);
 
 	EMIT_VAR(emitter, nativeBppFullscreen);
+
+	emitter->EndMap();
+}
+
+// audio ///////////////////////////////////////////////////////////////////////
+
+void MR_Config::cfg_audio_t::Load(yaml::MapNode *root)
+{
+	if (root == NULL) return;
+
+	READ_DOUBLE(root, sfxVolume, 0.0, 1.0);
+}
+
+void MR_Config::cfg_audio_t::Save(yaml::Emitter *emitter)
+{
+	emitter->MapKey("audio");
+	emitter->StartMap();
+
+	EMIT_VAR(emitter, sfxVolume);
 
 	emitter->EndMap();
 }

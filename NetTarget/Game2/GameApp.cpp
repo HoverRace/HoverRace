@@ -2740,19 +2740,23 @@ BOOL CALLBACK MR_GameApp::DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, 
 	static double lOriginalGamma;
 	static double lOriginalContrast;
 	static double lOriginalBrightness;
+	static double lOriginalSfxVolume;
 
 	switch (pMsgId) {
 		// Catch environment modification events
 		case WM_INITDIALOG:
 			This->mVideoBuffer->GetPaletteAttrib(lOriginalGamma, lOriginalContrast, lOriginalBrightness);
+			lOriginalSfxVolume = cfg->audio.sfxVolume;
 
 			SendDlgItemMessage(pWindow, IDC_GAMMA_SLIDER, TBM_SETRANGE, 0, MAKELONG(0, 200));
 			SendDlgItemMessage(pWindow, IDC_CONTRAST_SLIDER, TBM_SETRANGE, 0, MAKELONG(0, 100));
 			SendDlgItemMessage(pWindow, IDC_BRIGHTNESS_SLIDER, TBM_SETRANGE, 0, MAKELONG(0, 100));
+			SendDlgItemMessage(pWindow, IDC_SFX_VOLUME_SLIDER, TBM_SETRANGE, 0, MAKELONG(0, 100));
 
 			SendDlgItemMessage(pWindow, IDC_GAMMA_SLIDER, TBM_SETPOS, TRUE, long (lOriginalGamma * 100));
 			SendDlgItemMessage(pWindow, IDC_CONTRAST_SLIDER, TBM_SETPOS, TRUE, long (lOriginalContrast * 100));
 			SendDlgItemMessage(pWindow, IDC_BRIGHTNESS_SLIDER, TBM_SETPOS, TRUE, long (lOriginalBrightness * 100));
+			SendDlgItemMessage(pWindow, IDC_SFX_VOLUME_SLIDER, TBM_SETPOS, TRUE, long (lOriginalSfxVolume * 100));
 
 			UpdateIntensityDialogLabels(pWindow);
 			break;
@@ -2762,6 +2766,7 @@ BOOL CALLBACK MR_GameApp::DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, 
 				cfg->video.gamma = SendDlgItemMessage(pWindow, IDC_GAMMA_SLIDER, TBM_GETPOS, 0, 0) / 100.0;
 				cfg->video.contrast = SendDlgItemMessage(pWindow, IDC_CONTRAST_SLIDER, TBM_GETPOS, 0, 0) / 100.0;
 				cfg->video.brightness = SendDlgItemMessage(pWindow, IDC_BRIGHTNESS_SLIDER, TBM_GETPOS, 0, 0) / 100.0;
+				cfg->audio.sfxVolume = SendDlgItemMessage(pWindow, IDC_SFX_VOLUME_SLIDER, TBM_GETPOS, 0, 0) / 100.0;
 
 				UpdateIntensityDialogLabels(pWindow);
 
@@ -2807,6 +2812,7 @@ BOOL CALLBACK MR_GameApp::DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, 
 		case WM_NOTIFY:
 			switch (((NMHDR FAR *) pLParam)->code) {
 				case PSN_RESET:
+					cfg->audio.sfxVolume = lOriginalSfxVolume;
 					This->mVideoBuffer->CreatePalette(lOriginalGamma, lOriginalContrast, lOriginalBrightness);
 					This->AssignPalette();
 					break;
@@ -3913,6 +3919,7 @@ void MR_GameApp::UpdateIntensityDialogLabels(HWND pWindow)
 	long gamma = SendDlgItemMessage(pWindow, IDC_GAMMA_SLIDER, TBM_GETPOS, 0, 0);
 	long contrast = SendDlgItemMessage(pWindow, IDC_CONTRAST_SLIDER, TBM_GETPOS, 0, 0);
 	long brightness = SendDlgItemMessage(pWindow, IDC_BRIGHTNESS_SLIDER, TBM_GETPOS, 0, 0);
+	long sfxVolume = SendDlgItemMessage(pWindow, IDC_SFX_VOLUME_SLIDER, TBM_GETPOS, 0, 0);
 
 	_snprintf(buf, 4, "%01d.%02d", gamma / 100, gamma % 100);
 	SetDlgItemText(pWindow, IDC_GAMMA_TXT, buf);
@@ -3920,6 +3927,8 @@ void MR_GameApp::UpdateIntensityDialogLabels(HWND pWindow)
 	SetDlgItemText(pWindow, IDC_CONTRAST_TXT, buf);
 	_snprintf(buf, 4, "%01d.%02d", brightness / 100, brightness % 100);
 	SetDlgItemText(pWindow, IDC_BRIGHTNESS_TXT, buf);
+	_snprintf(buf, 4, "%01d.%02d", sfxVolume / 100, sfxVolume % 100);
+	SetDlgItemText(pWindow, IDC_SFX_VOLUME_TXT, buf);
 }
 
 /////////////////////////////////   AVI SECTION  //////////////////////////////////////
