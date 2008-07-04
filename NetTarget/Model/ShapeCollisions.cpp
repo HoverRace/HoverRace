@@ -177,7 +177,7 @@ BOOL MR_GetFeatureForceLongitude(const MR_ShapeInterface * pActor, const MR_Poly
 
 	int lVertexCount = pFeature->VertexCount();
 
-	for(int lCounter = 0; lReturnValue && (lCounter < lVertexCount); lCounter++) {
+	for(int lCounter = 0; lCounter < lVertexCount; lCounter++) {
 		int lP1 = (lCounter + 1) % lVertexCount;
 
 		MR_Int32 lLeftDistance = -(pFeature->Y(lP1) - pFeature->Y(lCounter)) * (lXMassCenter - pFeature->X(lCounter))
