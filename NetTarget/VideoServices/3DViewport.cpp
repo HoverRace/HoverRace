@@ -127,8 +127,16 @@ void MR_3DViewPort::ComputeBackgroundConst()
 	mBackgroundConst = new BackColumn[mXRes];
 
 	for(int lCounter = 0; lCounter < mXRes; lCounter++) {
-		mBackgroundConst[lCounter].mBitmapColumn = (atan((double) (256 * (lCounter - mXRes / 2) * mPlanHW / (mPlanDist * mXRes / 2)) / 256.0) * (double) MR_BACK_X_RES) / 6.28318530718;
-		mBackgroundConst[lCounter].mLineIncrement_1024 = 1024 * MR_BACK_Y_RES * mPlanVW / (sqrt(pow(mPlanDist, 2) + pow((lCounter - mXRes / 2) * mPlanHW / (mXRes / 2), 2)) * (mYRes / 2));
+		mBackgroundConst[lCounter].mBitmapColumn =
+			static_cast<MR_Int32>(
+				(atan((double) (256 * (lCounter - mXRes / 2) * mPlanHW / (mPlanDist * mXRes / 2)) / 256.0) * (double) MR_BACK_X_RES) / 6.28318530718
+				);
+
+		mBackgroundConst[lCounter].mLineIncrement_1024 =
+			static_cast<MR_Int32>(
+				1024 * MR_BACK_Y_RES * mPlanVW /
+				(sqrt(pow(mPlanDist, 2) + pow((lCounter - mXRes / 2) * mPlanHW / (mXRes / 2), 2)) * (mYRes / 2))
+				);
 	}
 }
 

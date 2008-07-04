@@ -27,13 +27,13 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;MR_VIDEO_SERVICES"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="2"
-				PrecompiledHeaderThrough="stdafx.h"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="StdAfx.h"
 				PrecompiledHeaderFile=".\Debug/VideoServices.pch"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
-				WarningLevel="4"
+				WarningLevel="3"
 				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="0"
 				CompileAs="0"/>
@@ -95,11 +95,12 @@
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
 				PrecompiledHeaderFile=".\Release/VideoServices.pch"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
 				ProgramDataBaseFileName=".\Release/"
-				WarningLevel="4"
+				WarningLevel="3"
 				SuppressStartupBanner="TRUE"
 				CompileAs="0"/>
 			<Tool
@@ -167,7 +168,8 @@
 						FavorSizeOrSpeed="1"
 						OmitFramePointers="TRUE"
 						ExceptionHandling="FALSE"
-						RuntimeTypeInfo="FALSE"/>
+						RuntimeTypeInfo="FALSE"
+						UsePrecompiledHeader="0"/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Win32">
@@ -180,7 +182,8 @@
 						FavorSizeOrSpeed="1"
 						OmitFramePointers="TRUE"
 						ExceptionHandling="FALSE"
-						RuntimeTypeInfo="FALSE"/>
+						RuntimeTypeInfo="FALSE"
+						UsePrecompiledHeader="0"/>
 				</FileConfiguration>
 			</File>
 			<File
@@ -200,6 +203,18 @@
 			</File>
 			<File
 				RelativePath=".\StdAfx.cpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\VideoBuffer.cpp">

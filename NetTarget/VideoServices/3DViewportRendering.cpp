@@ -368,7 +368,7 @@ for(int lColumn = lScreenX0; lColumn < lScreenX1; lColumn++) {
 		}
 
 		// Depth computation
-		int lDepth = lRotated0.mX + Int64ShraMod32(Int32x32To64(lLen_4, lXWallVariationPerMM_16384), 16 /*1024*16384 */ );
+		int lDepth = static_cast<int>(lRotated0.mX + Int64ShraMod32(Int32x32To64(lLen_4, lXWallVariationPerMM_16384), 16 /*1024*16384 */ ));
 
 		if(lDepth < mPlanDist) {
 			lDepth = mPlanDist;

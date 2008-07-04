@@ -371,7 +371,8 @@ if(lReturnValue) {
 		lReturnValue = FALSE;
 	}
 	else {
-		if(lReturnValue = ProcessCurrentBpp(lSurfaceDesc.ddpfPixelFormat)) {
+		lReturnValue = ProcessCurrentBpp(lSurfaceDesc.ddpfPixelFormat);
+		if(lReturnValue) {
 			// We make the assumption that the desktop color depth
 			// won't change while we're running.
 			if(mNativeBpp == 0)

@@ -74,7 +74,7 @@ PALETTEENTRY *MR_GetColors(double pGamma, double pIntensity, double pIntensityBa
 
 		lReturnValue[lColorIndex].peRed = 255;
 		lReturnValue[lColorIndex].peGreen = 255;
-		lReturnValue[lColorIndex].peBlue = lColorIndex - 15;
+		lReturnValue[lColorIndex].peBlue = static_cast<byte>(lColorIndex - 15);
 
 		lReturnValue[lColorIndex].peFlags = 0;	  //PC_EXPLICIT;
 
