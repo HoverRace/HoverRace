@@ -72,15 +72,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ResourceCompiler", "NetTarg
 		{158869E8-53E8-4DC1-B41F-B1C996211E2B} = {158869E8-53E8-4DC1-B41F-B1C996211E2B}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FireBall", "NetTarget\NetTarget.vcproj", "{2FC6949D-2681-4423-8CB9-F98D6F2B33EE}"
-	ProjectSection(ProjectDependencies) = postProject
-		{DDC913AD-31C6-481A-BD31-3949CBF06FE3} = {DDC913AD-31C6-481A-BD31-3949CBF06FE3}
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
 		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectDependencies) = postSolution
 	EndGlobalSection
 	GlobalSection(ProjectConfiguration) = postSolution
 		{402CDE5A-4540-4DFE-A4E0-6950C0F2CA57}.Debug.ActiveCfg = Debug|Win32
@@ -127,10 +124,6 @@ Global
 		{DDC913AD-31C6-481A-BD31-3949CBF06FE3}.Debug.Build.0 = Debug|Win32
 		{DDC913AD-31C6-481A-BD31-3949CBF06FE3}.Release.ActiveCfg = Release|Win32
 		{DDC913AD-31C6-481A-BD31-3949CBF06FE3}.Release.Build.0 = Release|Win32
-		{2FC6949D-2681-4423-8CB9-F98D6F2B33EE}.Debug.ActiveCfg = Debug|Win32
-		{2FC6949D-2681-4423-8CB9-F98D6F2B33EE}.Debug.Build.0 = Debug|Win32
-		{2FC6949D-2681-4423-8CB9-F98D6F2B33EE}.Release.ActiveCfg = Release|Win32
-		{2FC6949D-2681-4423-8CB9-F98D6F2B33EE}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
