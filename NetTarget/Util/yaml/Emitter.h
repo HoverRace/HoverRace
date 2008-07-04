@@ -42,6 +42,7 @@ namespace yaml
 			void Value(bool val);
 			void Value(int val);
 			void Value(double val);
+			void Value(float val);
 
 		private:
 			yaml_emitter_t emitter;

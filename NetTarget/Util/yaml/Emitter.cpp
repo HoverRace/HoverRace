@@ -196,3 +196,12 @@ void Emitter::Value(double val)
 	buf[255] = 0;
 	Value(buf);
 }
+
+/**
+ * Write a single floating-point value.
+ * @param val The value.
+ */
+void Emitter::Value(float val)
+{
+	Value(static_cast<double>(val));
+}

@@ -78,6 +78,23 @@ double ScalarNode::AsDouble(double def, double min, double max) const
 }
 
 /**
+ * Convert this scalar to a floating-point value.
+ * @param def The default value if the value cannot be converted to a float.
+ * @param min Minimum clamp value.
+ * @param max Maximum clamp value.
+ * @return The converted value.
+ */
+float ScalarNode::AsFloat(float def, float min, float max) const
+{
+	std::istringstream iss(value);
+	float retv;
+	if ((iss >> retv).fail()) return def;
+	if (retv < min) return min;
+	if (retv > max) return max;
+	return retv;
+}
+
+/**
  * Convert this scalar to an integer value.
  * @param def The default value if the value cannot be converted to a integer.
  * @param min (Optional) Minimum clamp value.
