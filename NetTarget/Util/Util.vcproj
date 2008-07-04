@@ -27,8 +27,8 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;MR_UTIL;YAML_DECLARE_STATIC"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="2"
-				PrecompiledHeaderThrough="stdafx.h"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="StdAfx.h"
 				PrecompiledHeaderFile=".\Debug/Util.pch"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
@@ -96,6 +96,7 @@
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
 				PrecompiledHeaderFile=".\Release/Util.pch"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
@@ -168,6 +169,19 @@
 			</File>
 			<File
 				RelativePath=".\StdAfx.cpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+						PrecompiledHeaderThrough="StdAfx.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\StrRes.cpp">
@@ -233,12 +247,36 @@
 			Filter="">
 			<File
 				RelativePath=".\yaml\Emitter.cpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						PrecompiledHeaderThrough="../StdAfx.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						PrecompiledHeaderThrough="../StdAfx.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\yaml\Emitter.h">
 			</File>
 			<File
 				RelativePath=".\yaml\MapNode.cpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						PrecompiledHeaderThrough="../StdAfx.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						PrecompiledHeaderThrough="../StdAfx.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\yaml\MapNode.h">
@@ -248,24 +286,72 @@
 			</File>
 			<File
 				RelativePath=".\yaml\NodeFactory.cpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						PrecompiledHeaderThrough="../StdAfx.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						PrecompiledHeaderThrough="../StdAfx.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\yaml\NodeFactory.h">
 			</File>
 			<File
 				RelativePath=".\yaml\Parser.cpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						PrecompiledHeaderThrough="../StdAfx.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						PrecompiledHeaderThrough="../StdAfx.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\yaml\Parser.h">
 			</File>
 			<File
 				RelativePath=".\yaml\ScalarNode.cpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						PrecompiledHeaderThrough="../StdAfx.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						PrecompiledHeaderThrough="../StdAfx.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\yaml\ScalarNode.h">
 			</File>
 			<File
 				RelativePath=".\yaml\SeqNode.cpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						PrecompiledHeaderThrough="../StdAfx.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						PrecompiledHeaderThrough="../StdAfx.h"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\yaml\SeqNode.h">
