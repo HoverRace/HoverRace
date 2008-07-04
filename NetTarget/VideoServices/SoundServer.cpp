@@ -34,16 +34,16 @@
 //   and http://en.wikipedia.org/wiki/Decibel
 
 /// Convert linear (0.0 - 1.0) to millibels.
-static int LinearToDirectX(double value)
+static int LinearToDirectX(float value)
 {
-	return (value <= 0.01) ? DSBVOLUME_MIN :
-		static_cast<int>(floor(2000.0 * log10(value) + 0.5));
+	return (value <= 0.01f) ? DSBVOLUME_MIN :
+		static_cast<int>(floorf(2000.0f * log10f(value) + 0.5f));
 }
 /// Convert millibels to linear.
-static double DirectXToLinear(int value)
+static float DirectXToLinear(int value)
 {
-	return (value == DSBVOLUME_MIN) ? 0.0 : 
-		pow(10.0, (double)value / 2000.0);
+	return (value == DSBVOLUME_MIN) ? 0.0f : 
+		powf(10.0f, (float)value / 2000.0f);
 } 
 
 
@@ -257,10 +257,10 @@ void MR_SoundBuffer::SetParams(int pCopy, int pDB, double pSpeed, int pPan)
 	}
 
 	// Global sound effect volume setting.
-	double vol = MR_Config::GetInstance()->audio.sfxVolume;
+	float vol = MR_Config::GetInstance()->audio.sfxVolume;
 
 	long attenuatedVolume;
-	if (vol >= 0.99) {
+	if (vol >= 0.99f) {
 		attenuatedVolume = pDB;
 	}
 	else {

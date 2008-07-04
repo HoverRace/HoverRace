@@ -2740,7 +2740,7 @@ BOOL CALLBACK MR_GameApp::DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, 
 	static double lOriginalGamma;
 	static double lOriginalContrast;
 	static double lOriginalBrightness;
-	static double lOriginalSfxVolume;
+	static float lOriginalSfxVolume;
 
 	switch (pMsgId) {
 		// Catch environment modification events
@@ -2766,7 +2766,7 @@ BOOL CALLBACK MR_GameApp::DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, 
 				cfg->video.gamma = SendDlgItemMessage(pWindow, IDC_GAMMA_SLIDER, TBM_GETPOS, 0, 0) / 100.0;
 				cfg->video.contrast = SendDlgItemMessage(pWindow, IDC_CONTRAST_SLIDER, TBM_GETPOS, 0, 0) / 100.0;
 				cfg->video.brightness = SendDlgItemMessage(pWindow, IDC_BRIGHTNESS_SLIDER, TBM_GETPOS, 0, 0) / 100.0;
-				cfg->audio.sfxVolume = SendDlgItemMessage(pWindow, IDC_SFX_VOLUME_SLIDER, TBM_GETPOS, 0, 0) / 100.0;
+				cfg->audio.sfxVolume = SendDlgItemMessage(pWindow, IDC_SFX_VOLUME_SLIDER, TBM_GETPOS, 0, 0) / 100.0f;
 
 				UpdateIntensityDialogLabels(pWindow);
 

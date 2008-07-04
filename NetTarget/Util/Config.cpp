@@ -47,6 +47,12 @@
 		if (_scalar != NULL) (name) = _scalar->AsInt(name, min, max); \
 	}
 
+#define READ_FLOAT(root,name,min,max) \
+	{\
+		yaml::ScalarNode *_scalar = dynamic_cast<yaml::ScalarNode*>((root)->Get(#name)); \
+		if (_scalar != NULL) (name) = _scalar->AsFloat(name, min, max); \
+	}
+
 #define READ_DOUBLE(root,name,min,max) \
 	{\
 		yaml::ScalarNode *_scalar = dynamic_cast<yaml::ScalarNode*>((root)->Get(#name)); \
@@ -368,7 +374,7 @@ void MR_Config::cfg_audio_t::Load(yaml::MapNode *root)
 {
 	if (root == NULL) return;
 
-	READ_DOUBLE(root, sfxVolume, 0.0, 1.0);
+	READ_FLOAT(root, sfxVolume, 0.0f, 1.0f);
 }
 
 void MR_Config::cfg_audio_t::Save(yaml::Emitter *emitter)
