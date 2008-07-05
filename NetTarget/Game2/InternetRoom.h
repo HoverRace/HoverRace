@@ -25,6 +25,8 @@
 
 #include <WINSOCK.h>
 
+#include <string>
+
 #include "TrackSelect.h"
 #include "NetworkSession.h"
 #include "Banner.h"
@@ -111,7 +113,7 @@ class MR_InternetRoom
 
 		static MR_InternetRoom *mThis;
 
-		CString mMainServer;
+		std::string mMainServer;
 
 		int mCurrentUserIndex;
 		int mCurrentUserId;
@@ -189,7 +191,7 @@ class MR_InternetRoom
 		int RefreshBanner(HWND pWindow);		  // Return next refresh time
 
 	public:
-		MR_InternetRoom(BOOL pAllowRegistred, int pMajorID, int pMinorID, unsigned pKey2, unsigned pKey3, CString pMainServer);
+		MR_InternetRoom(BOOL pAllowRegistred, int pMajorID, int pMinorID, unsigned pKey2, unsigned pKey3, const std::string &pMainServer);
 		~MR_InternetRoom();
 
 		BOOL DisplayChatRoom(HWND pParentWindow, MR_NetworkSession *pSession, MR_VideoBuffer *pVideoBuffer, BOOL pShouldRecheckServer);

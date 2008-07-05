@@ -303,7 +303,8 @@ BOOL MR_InternetRequest::IsReady() const
 
 // MR_InternetRoom
 
-MR_InternetRoom::MR_InternetRoom(BOOL pAllowRegistred, int pMajorID, int pMinorID, unsigned pKey2, unsigned pKey3, CString pMainServer)
+MR_InternetRoom::MR_InternetRoom(BOOL pAllowRegistred, int pMajorID, int pMinorID, unsigned pKey2, unsigned pKey3, const std::string &pMainServer) :
+	mMainServer(pMainServer)
 {
 	int lCounter;
 
@@ -325,9 +326,6 @@ MR_InternetRoom::MR_InternetRoom(BOOL pAllowRegistred, int pMajorID, int pMinorI
 
 	mCurrentLocateRequest = NULL;
 	mModelessDlg = NULL;
-
-	// Set location of roomlist
-	mMainServer = pMainServer;
 
 	// Init WinSock
 	WORD lVersionRequested = MAKEWORD(1, 1);
@@ -1837,16 +1835,16 @@ BOOL CALLBACK MR_InternetRoom::GetAddrCallBack(HWND pWindow, UINT pMsgId, WPARAM
 				// Try to find the IP addr of the Internet Room
 				char lServer[40];
 	
-				int lLen = mThis->mMainServer.Find('/');
+				int lLen = mThis->mMainServer.find('/', 0);
 	
 				if(lLen < 0) {
-					lLen = mThis->mMainServer.GetLength();
+					lLen = mThis->mMainServer.length();
 				}
 				else if(lLen > (sizeof(lServer) - 1)) {
 					lLen = sizeof(lServer) - 1;
 				}
 	
-				memcpy(lServer, mThis->mMainServer, lLen);
+				memcpy(lServer, mThis->mMainServer.c_str(), lLen);
 				lServer[lLen] = 0;
 	
 				mThis->mCurrentLocateRequest = WSAAsyncGetHostByName(pWindow, MRM_DNS_ANSWER, lServer, mThis->mHostEnt, MAXGETHOSTSTRUCT);
@@ -1901,7 +1899,7 @@ BOOL CALLBACK MR_InternetRoom::GetAddrCallBack(HWND pWindow, UINT pMsgId, WPARAM
 					// Now fetch the server list file
 	
 					// Fill the request
-					mThis->mNetOpRequest = mThis->mMainServer;
+					mThis->mNetOpRequest = mThis->mMainServer.c_str();
 	
 					// Initiate the request
 					mThis->mOpRequest.Send(pWindow, gServerIP, MR_IR_LIST_PORT, mThis->mNetOpRequest);

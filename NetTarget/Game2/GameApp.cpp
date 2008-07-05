@@ -571,11 +571,9 @@ MR_GameApp::MR_GameApp(HINSTANCE pInstance)
 	verOss << verMajor << '.' << verMinor << '.' << verPatch << '.' << verBuild;
 	std::string appVer = verOss.str();
 
-	//TODO: If LoadRegistry found registry entries, then ask to migrate later.
-	LoadRegistry();
-	
 	// Load the configuration, using the default OS-specific path.
 	MR_Config *cfg = MR_Config::Init(appVer);
+	LoadRegistry();
 	cfg->Load();
 	OutputDebugString("Loaded config.\n");
 
@@ -620,6 +618,8 @@ void MR_GameApp::Clean()
 
 void MR_GameApp::LoadRegistry()
 {
+	MR_Config *cfg = MR_Config::GetInstance();
+
 	mDisplayFirstScreen = FALSE;
 	mIntroMovie = FALSE;
 
@@ -679,8 +679,6 @@ void MR_GameApp::LoadRegistry()
 	// Registration info
 	mMajorID = -1;
 	mMinorID = -1;
-
-	mMainServer = "66.197.183.245/~sirbrock/imr/rl.php";
 
 
 	// Prerecorded messages
@@ -812,7 +810,7 @@ void MR_GameApp::LoadRegistry()
 		char  lServerBuffer[500];
 		DWORD lServerBufferSize = sizeof(lServerBuffer);
 		if(RegQueryValueEx(lProgramKey, "MainServer", 0, NULL, (MR_UInt8 *) lServerBuffer, &lServerBufferSize) == ERROR_SUCCESS) {
-			mMainServer = lServerBuffer;
+			cfg->net.mainServer = lServerBuffer;
 		}
 	}
 }
@@ -941,12 +939,6 @@ void MR_GameApp::SaveRegistry()
 				lReturnValue = FALSE;
 				ASSERT(FALSE);
 			}
-		}
-
-		// Save the main server key
-		if(RegSetValueEx(lProgramKey, "MainServer", 0, REG_SZ, (const unsigned char *) (const char *) mMainServer, mMainServer.GetLength() + 1) != ERROR_SUCCESS) {
-			lReturnValue = FALSE;
-			ASSERT(FALSE);
 		}
 	}
 
@@ -2006,7 +1998,7 @@ void MR_GameApp::NewInternetSession()
 	MR_NetworkSession *lCurrentSession = NULL;
 	MR_Config *cfg = MR_Config::GetInstance();
 	// MR_InternetRoom    lInternetRoom( gKeyFilled, gKeyFilled?mMajorID:-1, gKeyFilled?mMinorID:-1, gKeyFilled?gKey.mKeySumHard2:0, gKeyFilled?gKey.mKeySumHard3:0 );
-	MR_InternetRoom lInternetRoom(gKeyFilled, gKeyFilled ? mMajorID : -1, gKeyFilled ? mMinorID : -1, gKeyFilled ? gKey.mIDSum : 0, 0, mMainServer);
+	MR_InternetRoom lInternetRoom(gKeyFilled, gKeyFilled ? mMajorID : -1, gKeyFilled ? mMinorID : -1, gKeyFilled ? gKey.mIDSum : 0, 0, cfg->net.mainServer);
 
 	// Verify is user acknowledge
 	if(AskUserToAbortGame() != IDOK)
@@ -3004,7 +2996,7 @@ BOOL CALLBACK MR_GameApp::MiscDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWPar
 			SendDlgItemMessage(pWindow, IDC_SHOW_INTERNET, BM_SETCHECK, This->mDisplayFirstScreen, 0);
 			SendDlgItemMessage(pWindow, IDC_NATIVE_BPP_FULLSCREEN, BM_SETCHECK, This->mNativeBppFullscreen, 0);
 
-			SetDlgItemText(pWindow, IDC_MAINSERVER, This->mMainServer);
+			SetDlgItemText(pWindow, IDC_MAINSERVER, cfg->net.mainServer.c_str());
 
 			break;
 
@@ -3022,7 +3014,7 @@ BOOL CALLBACK MR_GameApp::MiscDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWPar
 						if(GetDlgItemText(pWindow, IDC_MAINSERVER, lBuffer, sizeof(lBuffer)) == 0)
 							ASSERT(FALSE);
 
-						cfg->net.mainServer = This->mMainServer = lBuffer;
+						cfg->net.mainServer = lBuffer;
 						This->mServerHasChanged = TRUE;
 					}
 

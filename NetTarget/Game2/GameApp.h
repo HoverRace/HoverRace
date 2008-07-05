@@ -124,10 +124,7 @@ class MR_GameApp
 		CString mCompany;
 		int mMajorID;
 		int mMinorID;
-		// CString mKey1;
-		// CString mKey2;
 
-		CString mMainServer;
 		BOOL mServerHasChanged;
 
 		BOOL mDisplayFirstScreen;
