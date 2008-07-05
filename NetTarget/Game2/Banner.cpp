@@ -26,6 +26,8 @@
 #include "../Util/StrRes.h"
 #include "resource.h"
 
+#include <olectl.h>
+
 // Local functions
 
 BOOL decoder(short linewidth);
@@ -240,7 +242,28 @@ void MR_GifDecoder::Clean()
 
 BOOL MR_GifDecoder::Decode(const unsigned char *pGifStream, int pStreamLen)
 {
-	return FALSE;
+	BOOL retv = FALSE;
+	HGLOBAL buf = GlobalAlloc(GPTR, pStreamLen);
+	memcpy((void*)buf, pGifStream, pStreamLen);
+
+	IStream *stream = NULL;
+	IPicture *pic = NULL;
+
+	// Use OleLoadPicture() to convert the GIF stream to an HBITMAP.
+	if (SUCCEEDED(CreateStreamOnHGlobal(buf, false, &stream))) {
+		if (SUCCEEDED(OleLoadPicture(stream, 0, false, IID_IPicture, (void**)&pic))) {
+			HBITMAP hb = NULL;
+			pic->get_Handle((OLE_HANDLE*)&hb);
+			mBitmap[mNbImages++] = (HBITMAP)CopyImage(hb, IMAGE_BITMAP, 0, 0, LR_COPYRETURNORG);
+			retv = TRUE;
+		}
+	}
+
+	if (pic != NULL) pic->Release();
+	if (stream != NULL) stream->Release();
+	GlobalFree(buf);
+
+	return retv;
 }
 
 HPALETTE MR_GifDecoder::GetGlobalPalette() const
