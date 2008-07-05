@@ -1294,8 +1294,21 @@ BOOL MR_GameApp::InitGame()
 	}
 	// play the opening movie
 	if(lReturnValue && mIntroMovie == FALSE) {
-		mMovieWnd = MCIWndCreate(mMainWindow, mInstance, WS_CHILD | MCIWNDF_NOMENU | MCIWNDF_NOPLAYBAR, "Intro.avi");
+		mMovieWnd = MCIWndCreate(
+			mMainWindow, mInstance, 
+			WS_CHILD | MCIWNDF_NOMENU | MCIWNDF_NOPLAYBAR, 
+			"Intro.avi");
+
+		// Fill the client area.
+		RECT clientRect;
+		GetClientRect(mMainWindow, &clientRect);
+		MoveWindow(mMovieWnd, 0, 0,
+			clientRect.right - clientRect.left,
+			clientRect.bottom - clientRect.top,
+			TRUE);
+		
 		MCIWndPlay(mMovieWnd);
+
 		// the function of this is currently unknown but it was not being used
 		/* CreateDialog( mInstance,
 		   MAKEINTRESOURCE( IDD_BACK_ANIM ),
@@ -1617,8 +1630,11 @@ void MR_GameApp::OnDisplayChange()
 			}
 
 			if(GetWindowRect(mMovieWnd, &lMovieRect)) {
-				SetWindowPos(mMovieWnd, HWND_TOP, (lClientRect.right - (lMovieRect.right - lMovieRect.left)) / 2, (lClientRect.bottom - (lMovieRect.bottom - lMovieRect.top)) / 2, 0, 0, SWP_NOSIZE | SWP_SHOWWINDOW);
-
+				SetWindowPos(mMovieWnd, HWND_TOP,
+					0, 0,
+					lClientRect.right - lClientRect.left,
+					lClientRect.bottom - lClientRect.top,
+					SWP_SHOWWINDOW);
 			}
 		}
 	}
