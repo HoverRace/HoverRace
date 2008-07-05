@@ -28,6 +28,7 @@
 				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;_MBNET_"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
 				PrecompiledHeaderFile=".\Debug/Game2.pch"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
@@ -94,6 +95,7 @@
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="3"
 				PrecompiledHeaderFile=".\Release/Game2.pch"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
@@ -188,6 +190,18 @@
 			</File>
 			<File
 				RelativePath=".\StdAfx.cpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\TrackSelect.cpp">
