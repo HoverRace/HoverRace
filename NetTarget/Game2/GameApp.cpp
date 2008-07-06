@@ -3008,9 +3008,9 @@ BOOL CALLBACK MR_GameApp::MiscDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWPar
 		case WM_NOTIFY:
 			switch (((NMHDR FAR *) pLParam)->code) {
 				case PSN_APPLY:
-					cfg->misc.introMovie = This->mIntroMovie = SendDlgItemMessage(pWindow, IDC_INTRO_MOVIE, BM_GETCHECK, 0, 0);
-					cfg->misc.displayFirstScreen = This->mDisplayFirstScreen = SendDlgItemMessage(pWindow, IDC_SHOW_INTERNET, BM_GETCHECK, 0, 0);
-					cfg->video.nativeBppFullscreen = This->mNativeBppFullscreen = SendDlgItemMessage(pWindow, IDC_NATIVE_BPP_FULLSCREEN, BM_GETCHECK, 0, 0);
+					cfg->misc.introMovie = !(This->mIntroMovie = SendDlgItemMessage(pWindow, IDC_INTRO_MOVIE, BM_GETCHECK, 0, 0));
+					cfg->misc.displayFirstScreen = !(This->mDisplayFirstScreen = SendDlgItemMessage(pWindow, IDC_SHOW_INTERNET, BM_GETCHECK, 0, 0));
+					cfg->video.nativeBppFullscreen = ((This->mNativeBppFullscreen = SendDlgItemMessage(pWindow, IDC_NATIVE_BPP_FULLSCREEN, BM_GETCHECK, 0, 0)) == TRUE);
 
 					This->mVideoBuffer->SetNativeBppFullscreen(This->mNativeBppFullscreen);
 
