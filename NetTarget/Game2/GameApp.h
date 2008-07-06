@@ -118,8 +118,6 @@ class MR_GameApp
 		double mContrast;
 		double mBrightness;
 
-		CString mNickName;
-
 		CString mOwner;
 		CString mCompany;
 		int mMajorID;

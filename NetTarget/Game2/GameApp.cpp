@@ -670,12 +670,6 @@ void MR_GameApp::LoadRegistry()
 	char lBuffer[80];
 	DWORD lBufferSize = sizeof(lBuffer);
 
-	if(GetUserName(lBuffer, &lBufferSize)) {
-		lBuffer[30] = 0;
-		mNickName = lBuffer;
-	} else
-	mNickName.LoadString(IDS_DEFAULT_ALIAS);
-
 	// Registration info
 	mMajorID = -1;
 	mMinorID = -1;
@@ -749,7 +743,7 @@ void MR_GameApp::LoadRegistry()
 
 	lBufferSize = sizeof(lBuffer);
 	if(RegQueryValueEx(lProgramKey, "Alias", 0, NULL, (MR_UInt8 *) lBuffer, &lBufferSize) == ERROR_SUCCESS)
-		mNickName = lBuffer;
+		cfg->player.nickName = lBuffer;
 
 	lBufferSize = sizeof(lBuffer);
 	if(RegQueryValueEx(lProgramKey, "Owner", 0, NULL, (MR_UInt8 *) lBuffer, &lBufferSize) == ERROR_SUCCESS)
@@ -890,11 +884,6 @@ void MR_GameApp::SaveRegistry()
 		lVideoSetting[2] = mBrightness;
 
 		if(RegSetValueEx(lProgramKey, "VideoColors", 0, REG_BINARY, (MR_UInt8 *) lVideoSetting, sizeof(lVideoSetting)) != ERROR_SUCCESS) {
-			lReturnValue = FALSE;
-			ASSERT(FALSE);
-		}
-
-		if(RegSetValueEx(lProgramKey, "Alias", 0, REG_SZ, (const unsigned char *) (const char *) mNickName, mNickName.GetLength() + 1) != ERROR_SUCCESS) {
 			lReturnValue = FALSE;
 			ASSERT(FALSE);
 		}
@@ -1912,12 +1901,12 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 		MR_SoundServer::Init(mMainWindow);
 
 		lCurrentSession = new MR_NetworkSession(FALSE, gKeyFilled ? mMajorID : -1, gKeyFilled ? mMinorID : -1, mMainWindow);
-		lCurrentSession->SetPlayerName(mNickName);
+		lCurrentSession->SetPlayerName(cfg->player.nickName.c_str());
 
 		lSuccess = lCurrentSession->PreConnectToServer(mMainWindow, lCurrentTrack);
 
-		if(mNickName != lCurrentSession->GetPlayerName()) {
-			cfg->player.nickName = mNickName = lCurrentSession->GetPlayerName();
+		if(cfg->player.nickName != lCurrentSession->GetPlayerName()) {
+			cfg->player.nickName = lCurrentSession->GetPlayerName();
 			SaveRegistry();
 		}
 		// Extract the lap count from the track name and weapon use
@@ -1962,11 +1951,11 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 			lNameBuffer.Format("%s %d %s %s", (const char *) lCurrentTrack, lNbLap, lNbLap > 1 ? "laps" : "lap", lAllowWeapons ? "with weapons" : "no weapons");
 
 			// Create a net server
-			lCurrentSession->SetPlayerName(mNickName);
+			lCurrentSession->SetPlayerName(cfg->player.nickName.c_str());
 
 			lSuccess = lCurrentSession->WaitConnections(mMainWindow, lNameBuffer);
-			if(mNickName != lCurrentSession->GetPlayerName()) {
-				cfg->player.nickName = mNickName = lCurrentSession->GetPlayerName();
+			if(cfg->player.nickName != lCurrentSession->GetPlayerName()) {
+				cfg->player.nickName = lCurrentSession->GetPlayerName();
 				SaveRegistry();
 			}
 		} else
@@ -2028,13 +2017,13 @@ void MR_GameApp::NewInternetSession()
 	lCurrentSession = new MR_NetworkSession(TRUE, gKeyFilled ? mMajorID : -1, gKeyFilled ? mMinorID : -1, mMainWindow);
 
 	if(lSuccess) {
-		lCurrentSession->SetPlayerName(mNickName);
+		lCurrentSession->SetPlayerName(cfg->player.nickName.c_str());
 
 		lSuccess = lInternetRoom.DisplayChatRoom(mMainWindow, lCurrentSession, mVideoBuffer, mServerHasChanged);
 		mServerHasChanged = FALSE;
 
-		if(mNickName != lCurrentSession->GetPlayerName()) {
-			cfg->player.nickName = mNickName = lCurrentSession->GetPlayerName();
+		if(cfg->player.nickName != lCurrentSession->GetPlayerName()) {
+			cfg->player.nickName = lCurrentSession->GetPlayerName();
 			SaveRegistry();
 		}
 	}
