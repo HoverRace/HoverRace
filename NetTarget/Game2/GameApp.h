@@ -77,43 +77,6 @@ class MR_GameApp
 
 		BOOL mPaletteChangeAllowed;
 
-		// Keyboard configuration
-		int mMotorOn1;
-		int mRight1;
-		int mLeft1;
-		int mJump1;
-		int mFire1;
-		int mBreak1;
-		int mWeapon1;
-		int mLookBack1;
-
-		int mMotorOn2;
-		int mRight2;
-		int mLeft2;
-		int mJump2;
-		int mFire2;
-		int mBreak2;
-		int mWeapon2;
-		int mLookBack2;
-
-		int mMotorOn3;
-		int mRight3;
-		int mLeft3;
-		int mJump3;
-		int mFire3;
-		int mBreak3;
-		int mWeapon3;
-		int mLookBack3;
-
-		int mMotorOn4;
-		int mRight4;
-		int mLeft4;
-		int mJump4;
-		int mFire4;
-		int mBreak4;
-		int mWeapon4;
-		int mLookBack4;
-
 		CString mOwner;
 		CString mCompany;
 		int mMajorID;
@@ -148,6 +111,7 @@ class MR_GameApp
 		void SetVideoMode(int pX, int pY);
 		void RefreshTitleBar();
 
+		int ReadAsyncInputControllerPlayer(int playerIdx);
 		void ReadAsyncInputController();		  // Get the state of the input controler (KDB, joystick, mouse)
 
 		// Message handlers

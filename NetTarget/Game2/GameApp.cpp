@@ -620,44 +620,6 @@ void MR_GameApp::LoadRegistry()
 {
 	MR_Config *cfg = MR_Config::GetInstance();
 
-	// Built-in defaults
-	// Controls
-	mMotorOn1 = 1;
-	mRight1 = 5;
-	mLeft1 = 6;
-	mJump1 = 3;
-	mFire1 = 2;
-	mBreak1 = 4;
-	mWeapon1 = 11;
-	mLookBack1 = 10;
-
-	mMotorOn2 = 66;
-	mRight2 = 64;
-	mLeft2 = 61;
-	mJump2 = 83;
-	mFire2 = 78;
-	mBreak2 = 79;
-	mWeapon2 = 77;
-	mLookBack2 = 65;
-
-	mMotorOn3 = 0;
-	mRight3 = 0;
-	mLeft3 = 0;
-	mJump3 = 0;
-	mFire3 = 0;
-	mBreak3 = 0;
-	mWeapon3 = 0;
-	mLookBack3 = 0;
-
-	mMotorOn4 = 0;
-	mRight4 = 0;
-	mLeft4 = 0;
-	mJump4 = 0;
-	mFire4 = 0;
-	mBreak4 = 0;
-	mWeapon4 = 0;
-	mLookBack4 = 0;
-
 	// Nickname
 	char lBuffer[80];
 	DWORD lBufferSize = sizeof(lBuffer);
@@ -686,42 +648,17 @@ void MR_GameApp::LoadRegistry()
 	DWORD lControlBufferSize = sizeof(lControlBuffer);
 
 	if(RegQueryValueEx(lProgramKey, "Control", 0, NULL, lControlBuffer, &lControlBufferSize) == ERROR_SUCCESS) {
-		// mLookBack1 and mLookBack2 added 12/1/2006
-		mMotorOn1 = lControlBuffer[0];
-		mRight1 = lControlBuffer[1];
-		mLeft1 = lControlBuffer[2];
-		mJump1 = lControlBuffer[3];
-		mFire1 = lControlBuffer[4];
-		mBreak1 = lControlBuffer[5];
-		mWeapon1 = lControlBuffer[6];
-		mLookBack1 = lControlBuffer[7];
-
-		mMotorOn2 = lControlBuffer[8];
-		mRight2 = lControlBuffer[9];
-		mLeft2 = lControlBuffer[10];
-		mJump2 = lControlBuffer[11];
-		mFire2 = lControlBuffer[12];
-		mBreak2 = lControlBuffer[13];
-		mWeapon2 = lControlBuffer[14];
-		mLookBack2 = lControlBuffer[15];
-
-		mMotorOn3 = lControlBuffer[16];
-		mRight3 = lControlBuffer[17];
-		mLeft3 = lControlBuffer[18];
-		mJump3 = lControlBuffer[19];
-		mFire3 = lControlBuffer[20];
-		mBreak3 = lControlBuffer[21];
-		mWeapon3 = lControlBuffer[22];
-		mLookBack3 = lControlBuffer[23];
-
-		mMotorOn4 = lControlBuffer[24];
-		mRight4 = lControlBuffer[25];
-		mLeft4 = lControlBuffer[26];
-		mJump4 = lControlBuffer[27];
-		mFire4 = lControlBuffer[28];
-		mBreak4 = lControlBuffer[29];
-		mWeapon4 = lControlBuffer[30];
-		mLookBack4 = lControlBuffer[31];
+		for (int p = 0, i = 0; p < MR_Config::MAX_PLAYERS; ++p) {
+			MR_Config::cfg_controls_t &ctl = cfg->controls[p];
+			ctl.motorOn = lControlBuffer[i++];
+			ctl.right = lControlBuffer[i++];
+			ctl.left = lControlBuffer[i++];
+			ctl.jump = lControlBuffer[i++];
+			ctl.fire = lControlBuffer[i++];
+			ctl.brake = lControlBuffer[i++];
+			ctl.weapon = lControlBuffer[i++];
+			ctl.lookBack = lControlBuffer[i++];
+		}
 	}
 
 	double lVideoSetting[3];
@@ -808,14 +745,6 @@ void MR_GameApp::SaveRegistry()
 	BOOL lReturnValue = TRUE;
 	HKEY lProgramKey;
 
-	/*
-	   int lError = RegOpenKeyEx( HKEY_LOCAL_MACHINE,
-	   "SOFTWARE\\HoverRace.com\\HoverRace",
-	   0,
-	   KEY_WRITE,
-	   &lProgramKey          );
-	 */
-
 	DWORD lDummy;
 	int lError = RegCreateKeyEx(HKEY_LOCAL_MACHINE,
 		"SOFTWARE\\HoverRace.com\\HoverRace",
@@ -828,49 +757,6 @@ void MR_GameApp::SaveRegistry()
 		&lDummy);
 
 	if(lError == ERROR_SUCCESS) {
-		MR_UInt8 lControlBuffer[32];
-
-		lControlBuffer[0] = (MR_UInt8) mMotorOn1;
-		lControlBuffer[1] = (MR_UInt8) mRight1;
-		lControlBuffer[2] = (MR_UInt8) mLeft1;
-		lControlBuffer[3] = (MR_UInt8) mJump1;
-		lControlBuffer[4] = (MR_UInt8) mFire1;
-		lControlBuffer[5] = (MR_UInt8) mBreak1;
-		lControlBuffer[6] = (MR_UInt8) mWeapon1;
-		lControlBuffer[7] = (MR_UInt8) mLookBack1;
-
-		lControlBuffer[8] = (MR_UInt8) mMotorOn2;
-		lControlBuffer[9] = (MR_UInt8) mRight2;
-		lControlBuffer[10] = (MR_UInt8) mLeft2;
-		lControlBuffer[11] = (MR_UInt8) mJump2;
-		lControlBuffer[12] = (MR_UInt8) mFire2;
-		lControlBuffer[13] = (MR_UInt8) mBreak2;
-		lControlBuffer[14] = (MR_UInt8) mWeapon2;
-		lControlBuffer[15] = (MR_UInt8) mLookBack2;
-
-		lControlBuffer[16] = (MR_UInt8) mMotorOn3;
-		lControlBuffer[17] = (MR_UInt8) mRight3;
-		lControlBuffer[18] = (MR_UInt8) mLeft3;
-		lControlBuffer[19] = (MR_UInt8) mJump3;
-		lControlBuffer[20] = (MR_UInt8) mFire3;
-		lControlBuffer[21] = (MR_UInt8) mBreak3;
-		lControlBuffer[22] = (MR_UInt8) mWeapon3;
-		lControlBuffer[23] = (MR_UInt8) mLookBack3;
-
-		lControlBuffer[24] = (MR_UInt8) mMotorOn4;
-		lControlBuffer[25] = (MR_UInt8) mRight4;
-		lControlBuffer[26] = (MR_UInt8) mLeft4;
-		lControlBuffer[27] = (MR_UInt8) mJump4;
-		lControlBuffer[28] = (MR_UInt8) mFire4;
-		lControlBuffer[29] = (MR_UInt8) mBreak4;
-		lControlBuffer[30] = (MR_UInt8) mWeapon4;
-		lControlBuffer[31] = (MR_UInt8) mLookBack4;
-
-		if(RegSetValueEx(lProgramKey, "Control", 0, REG_BINARY, lControlBuffer, sizeof(lControlBuffer)) != ERROR_SUCCESS) {
-			lReturnValue = FALSE;
-			ASSERT(FALSE);
-		}
-
 		if(RegSetValueEx(lProgramKey, "Owner", 0, REG_SZ, (const unsigned char *) (const char *) mOwner, mOwner.GetLength() + 1) != ERROR_SUCCESS) {
 			lReturnValue = FALSE;
 			ASSERT(FALSE);
@@ -1361,6 +1247,28 @@ void MR_GameApp::RefreshView()
 	}
 }
 
+/**
+ * Read the control state for a specific player.
+ * @param playerIdx The player index (0 = first player, 1 = second, etc.).
+ * @return The control state.
+ */
+int MR_GameApp::ReadAsyncInputControllerPlayer(int playerIdx)
+{
+	const MR_Config::cfg_controls_t &ctl = MR_Config::GetInstance()->controls[playerIdx];
+	int retv = 0;
+
+	if (CheckKeyState(ctl.motorOn))  retv |= MR_MainCharacter::eMotorOn;
+	if (CheckKeyState(ctl.jump))     retv |= MR_MainCharacter::eJump;
+	if (CheckKeyState(ctl.brake))    retv |= MR_MainCharacter::eBreakDirection;
+	if (CheckKeyState(ctl.fire))     retv |= MR_MainCharacter::eFire;
+	if (CheckKeyState(ctl.weapon))   retv |= MR_MainCharacter::eSelectWeapon;
+	if (CheckKeyState(ctl.lookBack)) retv |= MR_MainCharacter::eLookBack;
+	if (CheckKeyState(ctl.right))    retv |= MR_MainCharacter::eRight;
+	if (CheckKeyState(ctl.left))     retv |= MR_MainCharacter::eLeft;
+
+	return retv;
+}
+
 void MR_GameApp::ReadAsyncInputController()
 {
 	gFirstKDBResetJoy1 = TRUE;
@@ -1375,142 +1283,17 @@ void MR_GameApp::ReadAsyncInputController()
 			int lControlState3 = 0;
 			int lControlState4 = 0;
 
-			if(CheckKeyState(mMotorOn1))
-				lControlState1 |= MR_MainCharacter::eMotorOn;
-			if(CheckKeyState(mJump1))
-				lControlState1 |= MR_MainCharacter::eJump;
-			if(CheckKeyState(mBreak1))
-				lControlState1 |= MR_MainCharacter::eBreakDirection;
-			if(CheckKeyState(mFire1))
-				lControlState1 |= MR_MainCharacter::eFire;
-			if(CheckKeyState(mWeapon1))
-				lControlState1 |= MR_MainCharacter::eSelectWeapon;
-			if(CheckKeyState(mLookBack1))
-				lControlState1 |= MR_MainCharacter::eLookBack;
+			lControlState1 = ReadAsyncInputControllerPlayer(0);
 
-			/*
-			   if( GetAsyncKeyState( KeyChoice[ mStraffle1 ].mKeyValue ) )
-			   {
-			   if( GetAsyncKeyState( KeyChoice[ mRight1 ].mKeyValue ) )
-			   {
-			   lControlState1 |= MR_MainCharacter::eStraffleRight;
-			   }
-			   if( GetAsyncKeyState( KeyChoice[ mLeft1 ].mKeyValue ) )
-			   {
-			   lControlState1 |= MR_MainCharacter::eStraffleLeft;
-			   }
-			   }
-			   else
-			 */
-			if(CheckKeyState(mRight1))
-				lControlState1 |= MR_MainCharacter::eRight;
-			if(CheckKeyState(mLeft1))
-				lControlState1 |= MR_MainCharacter::eLeft;
-
-			// If we're in two player mode we need to check those keys too
+			// If we're in multiplayer mode we need to check those keys too
 			if(mCurrentSession->GetMainCharacter2() != NULL) {
-				if(CheckKeyState(mMotorOn2))
-					lControlState2 |= MR_MainCharacter::eMotorOn;
-				if(CheckKeyState(mJump2))
-					lControlState2 |= MR_MainCharacter::eJump;
-				if(CheckKeyState(mBreak2))
-					lControlState2 |= MR_MainCharacter::eBreakDirection;
-				if(CheckKeyState(mFire2))
-					lControlState2 |= MR_MainCharacter::eFire;
-				if(CheckKeyState(mWeapon2))
-					lControlState2 |= MR_MainCharacter::eSelectWeapon;
-				if(CheckKeyState(mLookBack2))
-					lControlState2 |= MR_MainCharacter::eLookBack;
-
-				/*
-				   if( GetAsyncKeyState( KeyChoice[ mStraffle2 ].mKeyValue ) )
-				   {
-				   if( GetAsyncKeyState( KeyChoice[ mRight2 ].mKeyValue ) )
-				   {
-				   lControlState2 |= MR_MainCharacter::eStraffleRight;
-				   }
-				   if( GetAsyncKeyState( KeyChoice[ mLeft2 ].mKeyValue ) )
-				   {
-				   lControlState2 |= MR_MainCharacter::eStraffleLeft;
-				   }
-				   }
-				   else
-				 */
-				if(CheckKeyState(mRight2))
-					lControlState2 |= MR_MainCharacter::eRight;
-				if(CheckKeyState(mLeft2))
-					lControlState2 |= MR_MainCharacter::eLeft;
-
+				lControlState2 = ReadAsyncInputControllerPlayer(1);
 			}
-			// If we're in three player mode we need to check those keys too
 			if(mCurrentSession->GetMainCharacter3() != NULL) {
-				if(CheckKeyState(mMotorOn3))
-					lControlState3 |= MR_MainCharacter::eMotorOn;
-				if(CheckKeyState(mJump3))
-					lControlState3 |= MR_MainCharacter::eJump;
-				if(CheckKeyState(mBreak3))
-					lControlState3 |= MR_MainCharacter::eBreakDirection;
-				if(CheckKeyState(mFire3))
-					lControlState3 |= MR_MainCharacter::eFire;
-				if(CheckKeyState(mWeapon3))
-					lControlState3 |= MR_MainCharacter::eSelectWeapon;
-				if(CheckKeyState(mLookBack3))
-					lControlState3 |= MR_MainCharacter::eLookBack;
-
-				/*
-				   if( GetAsyncKeyState( KeyChoice[ mStraffle3 ].mKeyValue ) )
-				   {
-				   if( GetAsyncKeyState( KeyChoice[ mRight3 ].mKeyValue ) )
-				   {
-				   lControlState3 |= MR_MainCharacter::eStraffleRight;
-				   }
-				   if( GetAsyncKeyState( KeyChoice[ mLeft3 ].mKeyValue ) )
-				   {
-				   lControlState3 |= MR_MainCharacter::eStraffleLeft;
-				   }
-				   }
-				   else
-				 */
-				if(CheckKeyState(mRight3))
-					lControlState3 |= MR_MainCharacter::eRight;
-				if(CheckKeyState(mLeft3))
-					lControlState3 |= MR_MainCharacter::eLeft;
-
+				lControlState2 = ReadAsyncInputControllerPlayer(2);
 			}
-			// If we're in four player mode we need to check those keys too
 			if(mCurrentSession->GetMainCharacter4() != NULL) {
-				if(CheckKeyState(mMotorOn4))
-					lControlState4 |= MR_MainCharacter::eMotorOn;
-				if(CheckKeyState(mJump4))
-					lControlState4 |= MR_MainCharacter::eJump;
-				if(CheckKeyState(mBreak4))
-					lControlState4 |= MR_MainCharacter::eBreakDirection;
-				if(CheckKeyState(mFire4))
-					lControlState4 |= MR_MainCharacter::eFire;
-				if(CheckKeyState(mWeapon4))
-					lControlState4 |= MR_MainCharacter::eSelectWeapon;
-				if(CheckKeyState(mLookBack4))
-					lControlState4 |= MR_MainCharacter::eLookBack;
-
-				/*
-				   if( GetAsyncKeyState( KeyChoice[ mStraffle4 ].mKeyValue ) )
-				   {
-				   if( GetAsyncKeyState( KeyChoice[ mRight4 ].mKeyValue ) )
-				   {
-				   lControlState4 |= MR_MainCharacter::eStraffleRight;
-				   }
-				   if( GetAsyncKeyState( KeyChoice[ mLeft4 ].mKeyValue ) )
-				   {
-				   lControlState4 |= MR_MainCharacter::eStraffleLeft;
-				   }
-				   }
-				   else
-				 */
-				if(CheckKeyState(mRight4))
-					lControlState4 |= MR_MainCharacter::eRight;
-				if(CheckKeyState(mLeft4))
-					lControlState4 |= MR_MainCharacter::eLeft;
-
+				lControlState3 = ReadAsyncInputControllerPlayer(3);
 			}
 
 			if(lFirstCall)
@@ -2725,17 +2508,15 @@ BOOL CALLBACK MR_GameApp::DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, 
 			break;
 
 		case WM_HSCROLL:
-			{
-				cfg->video.gamma = SendDlgItemMessage(pWindow, IDC_GAMMA_SLIDER, TBM_GETPOS, 0, 0) / 100.0;
-				cfg->video.contrast = SendDlgItemMessage(pWindow, IDC_CONTRAST_SLIDER, TBM_GETPOS, 0, 0) / 100.0;
-				cfg->video.brightness = SendDlgItemMessage(pWindow, IDC_BRIGHTNESS_SLIDER, TBM_GETPOS, 0, 0) / 100.0;
-				cfg->audio.sfxVolume = SendDlgItemMessage(pWindow, IDC_SFX_VOLUME_SLIDER, TBM_GETPOS, 0, 0) / 100.0f;
+			cfg->video.gamma = SendDlgItemMessage(pWindow, IDC_GAMMA_SLIDER, TBM_GETPOS, 0, 0) / 100.0;
+			cfg->video.contrast = SendDlgItemMessage(pWindow, IDC_CONTRAST_SLIDER, TBM_GETPOS, 0, 0) / 100.0;
+			cfg->video.brightness = SendDlgItemMessage(pWindow, IDC_BRIGHTNESS_SLIDER, TBM_GETPOS, 0, 0) / 100.0;
+			cfg->audio.sfxVolume = SendDlgItemMessage(pWindow, IDC_SFX_VOLUME_SLIDER, TBM_GETPOS, 0, 0) / 100.0f;
 
-				UpdateIntensityDialogLabels(pWindow);
+			UpdateIntensityDialogLabels(pWindow);
 
-				This->mVideoBuffer->CreatePalette(cfg->video.gamma, cfg->video.contrast, cfg->video.brightness);
-				This->AssignPalette();
-			}
+			This->mVideoBuffer->CreatePalette(cfg->video.gamma, cfg->video.contrast, cfg->video.brightness);
+			This->AssignPalette();
 			break;
 
 		case TB_ENDTRACK:
@@ -2816,7 +2597,6 @@ BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 				SendDlgItemMessage(pWindow, IDC_LEFT1, CB_ADDSTRING, 0, (LONG) lBuffer);
 				SendDlgItemMessage(pWindow, IDC_JUMP1, CB_ADDSTRING, 0, (LONG) lBuffer);
 				SendDlgItemMessage(pWindow, IDC_FIRE1, CB_ADDSTRING, 0, (LONG) lBuffer);
-				// SendDlgItemMessage( pWindow, IDC_STRAFFLE1, CB_ADDSTRING, 0, (LONG)lBuffer );
 				SendDlgItemMessage(pWindow, IDC_BREAK1, CB_ADDSTRING, 0, (LONG) lBuffer);
 				SendDlgItemMessage(pWindow, IDC_SELWEAPON1, CB_ADDSTRING, 0, (LONG) lBuffer);
 				SendDlgItemMessage(pWindow, IDC_LOOKBACK1, CB_ADDSTRING, 0, (LONG) lBuffer);
@@ -2831,7 +2611,6 @@ BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 				SendDlgItemMessage(pWindow, IDC_LEFT2, CB_ADDSTRING, 0, (LONG) lBuffer);
 				SendDlgItemMessage(pWindow, IDC_JUMP2, CB_ADDSTRING, 0, (LONG) lBuffer);
 				SendDlgItemMessage(pWindow, IDC_FIRE2, CB_ADDSTRING, 0, (LONG) lBuffer);
-				// SendDlgItemMessage( pWindow, IDC_STRAFFLE2, CB_ADDSTRING, 0, (LONG)lBuffer );
 				SendDlgItemMessage(pWindow, IDC_BREAK2, CB_ADDSTRING, 0, (LONG) lBuffer);
 				SendDlgItemMessage(pWindow, IDC_SELWEAPON2, CB_ADDSTRING, 0, (LONG) lBuffer);
 				SendDlgItemMessage(pWindow, IDC_LOOKBACK2, CB_ADDSTRING, 0, (LONG) lBuffer);
@@ -2846,7 +2625,6 @@ BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 				SendDlgItemMessage(pWindow, IDC_LEFT3, CB_ADDSTRING, 0, (LONG) lBuffer);
 				SendDlgItemMessage(pWindow, IDC_JUMP3, CB_ADDSTRING, 0, (LONG) lBuffer);
 				SendDlgItemMessage(pWindow, IDC_FIRE3, CB_ADDSTRING, 0, (LONG) lBuffer);
-				// SendDlgItemMessage( pWindow, IDC_STRAFFLE3, CB_ADDSTRING, 0, (LONG)lBuffer );
 				SendDlgItemMessage(pWindow, IDC_BREAK3, CB_ADDSTRING, 0, (LONG) lBuffer);
 				SendDlgItemMessage(pWindow, IDC_SELWEAPON3, CB_ADDSTRING, 0, (LONG) lBuffer);
 				SendDlgItemMessage(pWindow, IDC_LOOKBACK3, CB_ADDSTRING, 0, (LONG) lBuffer);
@@ -2861,91 +2639,87 @@ BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 				SendDlgItemMessage(pWindow, IDC_LEFT4, CB_ADDSTRING, 0, (LONG) lBuffer);
 				SendDlgItemMessage(pWindow, IDC_JUMP4, CB_ADDSTRING, 0, (LONG) lBuffer);
 				SendDlgItemMessage(pWindow, IDC_FIRE4, CB_ADDSTRING, 0, (LONG) lBuffer);
-				// SendDlgItemMessage( pWindow, IDC_STRAFFLE4, CB_ADDSTRING, 0, (LONG)lBuffer );
 				SendDlgItemMessage(pWindow, IDC_BREAK4, CB_ADDSTRING, 0, (LONG) lBuffer);
 				SendDlgItemMessage(pWindow, IDC_SELWEAPON4, CB_ADDSTRING, 0, (LONG) lBuffer);
 				SendDlgItemMessage(pWindow, IDC_LOOKBACK4, CB_ADDSTRING, 0, (LONG) lBuffer);
 			}
 
-			SendDlgItemMessage(pWindow, IDC_MOTOR_ON1, CB_SETCURSEL, This->mMotorOn1, 0);
-			SendDlgItemMessage(pWindow, IDC_RIGHT1, CB_SETCURSEL, This->mRight1, 0);
-			SendDlgItemMessage(pWindow, IDC_LEFT1, CB_SETCURSEL, This->mLeft1, 0);
-			SendDlgItemMessage(pWindow, IDC_JUMP1, CB_SETCURSEL, This->mJump1, 0);
-			SendDlgItemMessage(pWindow, IDC_FIRE1, CB_SETCURSEL, This->mFire1, 0);
-			// SendDlgItemMessage( pWindow, IDC_STRAFFLE1, CB_SETCURSEL, This->mStraffle1,0 );
-			SendDlgItemMessage(pWindow, IDC_BREAK1, CB_SETCURSEL, This->mBreak1, 0);
-			SendDlgItemMessage(pWindow, IDC_SELWEAPON1, CB_SETCURSEL, This->mWeapon1, 0);
-			SendDlgItemMessage(pWindow, IDC_LOOKBACK1, CB_SETCURSEL, This->mLookBack1, 0);
+			SendDlgItemMessage(pWindow, IDC_MOTOR_ON1, CB_SETCURSEL, cfg->controls[0].motorOn, 0);
+			SendDlgItemMessage(pWindow, IDC_RIGHT1, CB_SETCURSEL, cfg->controls[0].right, 0);
+			SendDlgItemMessage(pWindow, IDC_LEFT1, CB_SETCURSEL, cfg->controls[0].left, 0);
+			SendDlgItemMessage(pWindow, IDC_JUMP1, CB_SETCURSEL, cfg->controls[0].jump, 0);
+			SendDlgItemMessage(pWindow, IDC_FIRE1, CB_SETCURSEL, cfg->controls[0].fire, 0);
+			SendDlgItemMessage(pWindow, IDC_BREAK1, CB_SETCURSEL, cfg->controls[0].brake, 0);
+			SendDlgItemMessage(pWindow, IDC_SELWEAPON1, CB_SETCURSEL, cfg->controls[0].weapon, 0);
+			SendDlgItemMessage(pWindow, IDC_LOOKBACK1, CB_SETCURSEL, cfg->controls[0].lookBack, 0);
 
-			SendDlgItemMessage(pWindow, IDC_MOTOR_ON2, CB_SETCURSEL, This->mMotorOn2, 0);
-			SendDlgItemMessage(pWindow, IDC_RIGHT2, CB_SETCURSEL, This->mRight2, 0);
-			SendDlgItemMessage(pWindow, IDC_LEFT2, CB_SETCURSEL, This->mLeft2, 0);
-			SendDlgItemMessage(pWindow, IDC_JUMP2, CB_SETCURSEL, This->mJump2, 0);
-			SendDlgItemMessage(pWindow, IDC_FIRE2, CB_SETCURSEL, This->mFire2, 0);
-			// SendDlgItemMessage( pWindow, IDC_STRAFFLE2, CB_SETCURSEL, This->mStraffle2,0 );
-			SendDlgItemMessage(pWindow, IDC_BREAK2, CB_SETCURSEL, This->mBreak2, 0);
-			SendDlgItemMessage(pWindow, IDC_SELWEAPON2, CB_SETCURSEL, This->mWeapon2, 0);
-			SendDlgItemMessage(pWindow, IDC_LOOKBACK2, CB_SETCURSEL, This->mLookBack2, 0);
+			SendDlgItemMessage(pWindow, IDC_MOTOR_ON2, CB_SETCURSEL, cfg->controls[1].motorOn, 0);
+			SendDlgItemMessage(pWindow, IDC_RIGHT2, CB_SETCURSEL, cfg->controls[1].right, 0);
+			SendDlgItemMessage(pWindow, IDC_LEFT2, CB_SETCURSEL, cfg->controls[1].left, 0);
+			SendDlgItemMessage(pWindow, IDC_JUMP2, CB_SETCURSEL, cfg->controls[1].jump, 0);
+			SendDlgItemMessage(pWindow, IDC_FIRE2, CB_SETCURSEL, cfg->controls[1].fire, 0);
+			SendDlgItemMessage(pWindow, IDC_BREAK2, CB_SETCURSEL, cfg->controls[1].brake, 0);
+			SendDlgItemMessage(pWindow, IDC_SELWEAPON2, CB_SETCURSEL, cfg->controls[1].weapon, 0);
+			SendDlgItemMessage(pWindow, IDC_LOOKBACK2, CB_SETCURSEL, cfg->controls[1].lookBack, 0);
 
-			SendDlgItemMessage(pWindow, IDC_MOTOR_ON3, CB_SETCURSEL, This->mMotorOn3, 0);
-			SendDlgItemMessage(pWindow, IDC_RIGHT3, CB_SETCURSEL, This->mRight3, 0);
-			SendDlgItemMessage(pWindow, IDC_LEFT3, CB_SETCURSEL, This->mLeft3, 0);
-			SendDlgItemMessage(pWindow, IDC_JUMP3, CB_SETCURSEL, This->mJump3, 0);
-			SendDlgItemMessage(pWindow, IDC_FIRE3, CB_SETCURSEL, This->mFire3, 0);
-			// SendDlgItemMessage( pWindow, IDC_STRAFFLE3, CB_SETCURSEL, This->mStraffle3,0 );
-			SendDlgItemMessage(pWindow, IDC_BREAK3, CB_SETCURSEL, This->mBreak3, 0);
-			SendDlgItemMessage(pWindow, IDC_SELWEAPON3, CB_SETCURSEL, This->mWeapon3, 0);
-			SendDlgItemMessage(pWindow, IDC_LOOKBACK3, CB_SETCURSEL, This->mLookBack3, 0);
+			SendDlgItemMessage(pWindow, IDC_MOTOR_ON3, CB_SETCURSEL, cfg->controls[2].motorOn, 0);
+			SendDlgItemMessage(pWindow, IDC_RIGHT3, CB_SETCURSEL, cfg->controls[2].right, 0);
+			SendDlgItemMessage(pWindow, IDC_LEFT3, CB_SETCURSEL, cfg->controls[2].left, 0);
+			SendDlgItemMessage(pWindow, IDC_JUMP3, CB_SETCURSEL, cfg->controls[2].jump, 0);
+			SendDlgItemMessage(pWindow, IDC_FIRE3, CB_SETCURSEL, cfg->controls[2].fire, 0);
+			SendDlgItemMessage(pWindow, IDC_BREAK3, CB_SETCURSEL, cfg->controls[2].brake, 0);
+			SendDlgItemMessage(pWindow, IDC_SELWEAPON3, CB_SETCURSEL, cfg->controls[2].weapon, 0);
+			SendDlgItemMessage(pWindow, IDC_LOOKBACK3, CB_SETCURSEL, cfg->controls[2].lookBack, 0);
 
-			SendDlgItemMessage(pWindow, IDC_MOTOR_ON4, CB_SETCURSEL, This->mMotorOn4, 0);
-			SendDlgItemMessage(pWindow, IDC_RIGHT4, CB_SETCURSEL, This->mRight4, 0);
-			SendDlgItemMessage(pWindow, IDC_LEFT4, CB_SETCURSEL, This->mLeft4, 0);
-			SendDlgItemMessage(pWindow, IDC_JUMP4, CB_SETCURSEL, This->mJump4, 0);
-			SendDlgItemMessage(pWindow, IDC_FIRE4, CB_SETCURSEL, This->mFire4, 0);
-			// SendDlgItemMessage( pWindow, IDC_STRAFFLE4, CB_SETCURSEL, This->mStraffle4,0 );
-			SendDlgItemMessage(pWindow, IDC_BREAK4, CB_SETCURSEL, This->mBreak4, 0);
-			SendDlgItemMessage(pWindow, IDC_SELWEAPON4, CB_SETCURSEL, This->mWeapon4, 0);
-			SendDlgItemMessage(pWindow, IDC_LOOKBACK4, CB_SETCURSEL, This->mLookBack4, 0);
+			SendDlgItemMessage(pWindow, IDC_MOTOR_ON4, CB_SETCURSEL, cfg->controls[3].motorOn, 0);
+			SendDlgItemMessage(pWindow, IDC_RIGHT4, CB_SETCURSEL, cfg->controls[3].right, 0);
+			SendDlgItemMessage(pWindow, IDC_LEFT4, CB_SETCURSEL, cfg->controls[3].left, 0);
+			SendDlgItemMessage(pWindow, IDC_JUMP4, CB_SETCURSEL, cfg->controls[3].jump, 0);
+			SendDlgItemMessage(pWindow, IDC_FIRE4, CB_SETCURSEL, cfg->controls[3].fire, 0);
+			SendDlgItemMessage(pWindow, IDC_BREAK4, CB_SETCURSEL, cfg->controls[3].brake, 0);
+			SendDlgItemMessage(pWindow, IDC_SELWEAPON4, CB_SETCURSEL, cfg->controls[3].weapon, 0);
+			SendDlgItemMessage(pWindow, IDC_LOOKBACK4, CB_SETCURSEL, cfg->controls[3].lookBack, 0);
 
 			break;
+
 		case WM_NOTIFY:
 			switch (((NMHDR FAR *) pLParam)->code) {
 				case PSN_APPLY:
-					cfg->controls[0].motorOn  = This->mMotorOn1 = SendDlgItemMessage(pWindow, IDC_MOTOR_ON1, CB_GETCURSEL, 0, 0);
-					cfg->controls[0].right    = This->mRight1 = SendDlgItemMessage(pWindow, IDC_RIGHT1, CB_GETCURSEL, 0, 0);
-					cfg->controls[0].left     = This->mLeft1 = SendDlgItemMessage(pWindow, IDC_LEFT1, CB_GETCURSEL, 0, 0);
-					cfg->controls[0].motorOn  = This->mJump1 = SendDlgItemMessage(pWindow, IDC_JUMP1, CB_GETCURSEL, 0, 0);
-					cfg->controls[0].fire     = This->mFire1 = SendDlgItemMessage(pWindow, IDC_FIRE1, CB_GETCURSEL, 0, 0);
-					cfg->controls[0].brake    = This->mBreak1 = SendDlgItemMessage(pWindow, IDC_BREAK1, CB_GETCURSEL, 0, 0);
-					cfg->controls[0].weapon   = This->mWeapon1 = SendDlgItemMessage(pWindow, IDC_SELWEAPON1, CB_GETCURSEL, 0, 0);
-					cfg->controls[0].lookBack = This->mLookBack1 = SendDlgItemMessage(pWindow, IDC_LOOKBACK1, CB_GETCURSEL, 0, 0);
+					cfg->controls[0].motorOn  = SendDlgItemMessage(pWindow, IDC_MOTOR_ON1, CB_GETCURSEL, 0, 0);
+					cfg->controls[0].right    = SendDlgItemMessage(pWindow, IDC_RIGHT1, CB_GETCURSEL, 0, 0);
+					cfg->controls[0].left     = SendDlgItemMessage(pWindow, IDC_LEFT1, CB_GETCURSEL, 0, 0);
+					cfg->controls[0].jump     = SendDlgItemMessage(pWindow, IDC_JUMP1, CB_GETCURSEL, 0, 0);
+					cfg->controls[0].fire     = SendDlgItemMessage(pWindow, IDC_FIRE1, CB_GETCURSEL, 0, 0);
+					cfg->controls[0].brake    = SendDlgItemMessage(pWindow, IDC_BREAK1, CB_GETCURSEL, 0, 0);
+					cfg->controls[0].weapon   = SendDlgItemMessage(pWindow, IDC_SELWEAPON1, CB_GETCURSEL, 0, 0);
+					cfg->controls[0].lookBack = SendDlgItemMessage(pWindow, IDC_LOOKBACK1, CB_GETCURSEL, 0, 0);
 
-					cfg->controls[1].motorOn  = This->mMotorOn2 = SendDlgItemMessage(pWindow, IDC_MOTOR_ON2, CB_GETCURSEL, 0, 0);
-					cfg->controls[1].right    = This->mRight2 = SendDlgItemMessage(pWindow, IDC_RIGHT2, CB_GETCURSEL, 0, 0);
-					cfg->controls[1].left     = This->mLeft2 = SendDlgItemMessage(pWindow, IDC_LEFT2, CB_GETCURSEL, 0, 0);
-					cfg->controls[1].motorOn  = This->mJump2 = SendDlgItemMessage(pWindow, IDC_JUMP2, CB_GETCURSEL, 0, 0);
-					cfg->controls[1].fire     = This->mFire2 = SendDlgItemMessage(pWindow, IDC_FIRE2, CB_GETCURSEL, 0, 0);
-					cfg->controls[1].brake    = This->mBreak2 = SendDlgItemMessage(pWindow, IDC_BREAK2, CB_GETCURSEL, 0, 0);
-					cfg->controls[1].weapon   = This->mWeapon2 = SendDlgItemMessage(pWindow, IDC_SELWEAPON2, CB_GETCURSEL, 0, 0);
-					cfg->controls[1].lookBack = This->mLookBack2 = SendDlgItemMessage(pWindow, IDC_LOOKBACK2, CB_GETCURSEL, 0, 0);
+					cfg->controls[1].motorOn  = SendDlgItemMessage(pWindow, IDC_MOTOR_ON2, CB_GETCURSEL, 0, 0);
+					cfg->controls[1].right    = SendDlgItemMessage(pWindow, IDC_RIGHT2, CB_GETCURSEL, 0, 0);
+					cfg->controls[1].left     = SendDlgItemMessage(pWindow, IDC_LEFT2, CB_GETCURSEL, 0, 0);
+					cfg->controls[1].jump     = SendDlgItemMessage(pWindow, IDC_JUMP2, CB_GETCURSEL, 0, 0);
+					cfg->controls[1].fire     = SendDlgItemMessage(pWindow, IDC_FIRE2, CB_GETCURSEL, 0, 0);
+					cfg->controls[1].brake    = SendDlgItemMessage(pWindow, IDC_BREAK2, CB_GETCURSEL, 0, 0);
+					cfg->controls[1].weapon   = SendDlgItemMessage(pWindow, IDC_SELWEAPON2, CB_GETCURSEL, 0, 0);
+					cfg->controls[1].lookBack = SendDlgItemMessage(pWindow, IDC_LOOKBACK2, CB_GETCURSEL, 0, 0);
 
-					cfg->controls[2].motorOn  = This->mMotorOn3 = SendDlgItemMessage(pWindow, IDC_MOTOR_ON3, CB_GETCURSEL, 0, 0);
-					cfg->controls[2].right    = This->mRight3 = SendDlgItemMessage(pWindow, IDC_RIGHT3, CB_GETCURSEL, 0, 0);
-					cfg->controls[2].left     = This->mLeft3 = SendDlgItemMessage(pWindow, IDC_LEFT3, CB_GETCURSEL, 0, 0);
-					cfg->controls[2].motorOn  = This->mJump3 = SendDlgItemMessage(pWindow, IDC_JUMP3, CB_GETCURSEL, 0, 0);
-					cfg->controls[2].fire     = This->mFire3 = SendDlgItemMessage(pWindow, IDC_FIRE3, CB_GETCURSEL, 0, 0);
-					cfg->controls[2].brake    = This->mBreak3 = SendDlgItemMessage(pWindow, IDC_BREAK3, CB_GETCURSEL, 0, 0);
-					cfg->controls[2].weapon   = This->mWeapon3 = SendDlgItemMessage(pWindow, IDC_SELWEAPON3, CB_GETCURSEL, 0, 0);
-					cfg->controls[2].lookBack = This->mLookBack3 = SendDlgItemMessage(pWindow, IDC_LOOKBACK3, CB_GETCURSEL, 0, 0);
+					cfg->controls[2].motorOn  = SendDlgItemMessage(pWindow, IDC_MOTOR_ON3, CB_GETCURSEL, 0, 0);
+					cfg->controls[2].right    = SendDlgItemMessage(pWindow, IDC_RIGHT3, CB_GETCURSEL, 0, 0);
+					cfg->controls[2].left     = SendDlgItemMessage(pWindow, IDC_LEFT3, CB_GETCURSEL, 0, 0);
+					cfg->controls[2].jump     = SendDlgItemMessage(pWindow, IDC_JUMP3, CB_GETCURSEL, 0, 0);
+					cfg->controls[2].fire     = SendDlgItemMessage(pWindow, IDC_FIRE3, CB_GETCURSEL, 0, 0);
+					cfg->controls[2].brake    = SendDlgItemMessage(pWindow, IDC_BREAK3, CB_GETCURSEL, 0, 0);
+					cfg->controls[2].weapon   = SendDlgItemMessage(pWindow, IDC_SELWEAPON3, CB_GETCURSEL, 0, 0);
+					cfg->controls[2].lookBack = SendDlgItemMessage(pWindow, IDC_LOOKBACK3, CB_GETCURSEL, 0, 0);
 
-					cfg->controls[3].motorOn  = This->mMotorOn4 = SendDlgItemMessage(pWindow, IDC_MOTOR_ON4, CB_GETCURSEL, 0, 0);
-					cfg->controls[3].right    = This->mRight4 = SendDlgItemMessage(pWindow, IDC_RIGHT4, CB_GETCURSEL, 0, 0);
-					cfg->controls[3].left     = This->mLeft4 = SendDlgItemMessage(pWindow, IDC_LEFT4, CB_GETCURSEL, 0, 0);
-					cfg->controls[3].motorOn  = This->mJump4 = SendDlgItemMessage(pWindow, IDC_JUMP4, CB_GETCURSEL, 0, 0);
-					cfg->controls[3].fire     = This->mFire4 = SendDlgItemMessage(pWindow, IDC_FIRE4, CB_GETCURSEL, 0, 0);
-					cfg->controls[3].brake    = This->mBreak4 = SendDlgItemMessage(pWindow, IDC_BREAK4, CB_GETCURSEL, 0, 0);
-					cfg->controls[3].weapon   = This->mWeapon4 = SendDlgItemMessage(pWindow, IDC_SELWEAPON4, CB_GETCURSEL, 0, 0);
-					cfg->controls[3].lookBack = This->mLookBack4 = SendDlgItemMessage(pWindow, IDC_LOOKBACK4, CB_GETCURSEL, 0, 0);
+					cfg->controls[3].motorOn  = SendDlgItemMessage(pWindow, IDC_MOTOR_ON4, CB_GETCURSEL, 0, 0);
+					cfg->controls[3].right    = SendDlgItemMessage(pWindow, IDC_RIGHT4, CB_GETCURSEL, 0, 0);
+					cfg->controls[3].left     = SendDlgItemMessage(pWindow, IDC_LEFT4, CB_GETCURSEL, 0, 0);
+					cfg->controls[3].jump     = SendDlgItemMessage(pWindow, IDC_JUMP4, CB_GETCURSEL, 0, 0);
+					cfg->controls[3].fire     = SendDlgItemMessage(pWindow, IDC_FIRE4, CB_GETCURSEL, 0, 0);
+					cfg->controls[3].brake    = SendDlgItemMessage(pWindow, IDC_BREAK4, CB_GETCURSEL, 0, 0);
+					cfg->controls[3].weapon   = SendDlgItemMessage(pWindow, IDC_SELWEAPON4, CB_GETCURSEL, 0, 0);
+					cfg->controls[3].lookBack = SendDlgItemMessage(pWindow, IDC_LOOKBACK4, CB_GETCURSEL, 0, 0);
 
 					This->SaveRegistry();
 					break;
