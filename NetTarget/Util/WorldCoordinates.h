@@ -33,6 +33,8 @@
 
 // All geometrical coordinates are in milimeters,
 
+class CArchive;
+
 class MR_DllDeclare MR_2DCoordinate
 {
 	public:

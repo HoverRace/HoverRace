@@ -20,8 +20,6 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
-
 #include "3DViewport.h"
 #include "../Util/Profiler.h"
 
@@ -540,7 +538,7 @@ void MR_3DViewPort::RenderHorizontalSurface(int pNbVertex, const MR_2DCoordinate
 	// - Render each slice individually
 	//
 
-	ASSERT(pNbVertex <= MR_MAX_POLYGON_VERTEX);
+	//ASSERT(pNbVertex <= MR_MAX_POLYGON_VERTEX);
 
 	int lCounter;
 	MR_Int32 lLevel;
