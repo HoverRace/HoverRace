@@ -114,10 +114,6 @@ class MR_GameApp
 		int mWeapon4;
 		int mLookBack4;
 
-		double mGamma;
-		double mContrast;
-		double mBrightness;
-
 		CString mOwner;
 		CString mCompany;
 		int mMajorID;

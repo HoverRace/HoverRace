@@ -658,11 +658,6 @@ void MR_GameApp::LoadRegistry()
 	mWeapon4 = 0;
 	mLookBack4 = 0;
 
-	// Screen
-	mGamma = 1.2;
-	mContrast = 0.95;
-	mBrightness = 0.95;
-
 	// Nickname
 	char lBuffer[80];
 	DWORD lBufferSize = sizeof(lBuffer);
@@ -733,9 +728,9 @@ void MR_GameApp::LoadRegistry()
 	DWORD lVideoSettingSize = sizeof(lVideoSetting);
 
 	if(RegQueryValueEx(lProgramKey, "VideoColors", 0, NULL, (MR_UInt8 *) lVideoSetting, &lVideoSettingSize) == ERROR_SUCCESS) {
-		mGamma = lVideoSetting[0];
-		mContrast = lVideoSetting[1];
-		mBrightness = lVideoSetting[2];
+		cfg->video.gamma = lVideoSetting[0];
+		cfg->video.contrast = lVideoSetting[1];
+		cfg->video.brightness = lVideoSetting[2];
 	}
 
 	lBufferSize = sizeof(lBuffer);
@@ -872,17 +867,6 @@ void MR_GameApp::SaveRegistry()
 		lControlBuffer[31] = (MR_UInt8) mLookBack4;
 
 		if(RegSetValueEx(lProgramKey, "Control", 0, REG_BINARY, lControlBuffer, sizeof(lControlBuffer)) != ERROR_SUCCESS) {
-			lReturnValue = FALSE;
-			ASSERT(FALSE);
-		}
-
-		double lVideoSetting[3];
-
-		lVideoSetting[0] = mGamma;
-		lVideoSetting[1] = mContrast;
-		lVideoSetting[2] = mBrightness;
-
-		if(RegSetValueEx(lProgramKey, "VideoColors", 0, REG_BINARY, (MR_UInt8 *) lVideoSetting, sizeof(lVideoSetting)) != ERROR_SUCCESS) {
 			lReturnValue = FALSE;
 			ASSERT(FALSE);
 		}
@@ -1243,7 +1227,8 @@ BOOL MR_GameApp::InitGame()
 	lReturnValue = CreateMainWindow();
 
 	if(lReturnValue) {
-		mVideoBuffer = new MR_VideoBuffer(mMainWindow, mGamma, mContrast, mBrightness);
+		mVideoBuffer = new MR_VideoBuffer(mMainWindow,
+			cfg->video.gamma, cfg->video.contrast, cfg->video.brightness);
 	}
 
 	// attempt to set the video mode
@@ -2796,7 +2781,6 @@ BOOL CALLBACK MR_GameApp::DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, 
 					break;
 
 				case PSN_APPLY:
-					This->mVideoBuffer->GetPaletteAttrib(This->mGamma, This->mContrast, This->mBrightness);
 					This->SaveRegistry();
 
 					// SetWindowLong( ((NMHDR FAR *) lParam)->hwndFrom,  , );
