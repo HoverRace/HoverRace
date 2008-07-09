@@ -26,6 +26,7 @@
 #include "ColorPalette.h"
 
 #include "../Util/Profiler.h"
+#include "../Util/Config.h"
 
 // Debug flag
 #ifdef _DEBUG
@@ -293,7 +294,6 @@ MR_VideoBuffer::MR_VideoBuffer(HWND pWindow, double pGamma, double pContrast, do
 
 	mModeSettingInProgress = FALSE;
 	mFullScreen = FALSE;
-	mNativeBppFullscreen = FALSE;
 
 	mBpp = 0;
 	mNativeBpp = 0;
@@ -605,11 +605,6 @@ void MR_VideoBuffer::AssignPalette()
 
 }
 
-void MR_VideoBuffer::SetNativeBppFullscreen(BOOL pEnabled)
-{
-	mNativeBppFullscreen = pEnabled;
-}
-
 void MR_VideoBuffer::ReturnToWindowsResolution()
 {
 	PRINT_LOG("ReturnToWindowsResolution");
@@ -823,8 +818,9 @@ BOOL MR_VideoBuffer::SetVideoMode(int pXRes, int pYRes)
 	BOOL lReturnValue;
 	DDSURFACEDESC lSurfaceDesc;
 	// DDCAPS          lDDCaps;
+	MR_Config *cfg = MR_Config::GetInstance();
 
-	DWORD lReqBpp = mNativeBppFullscreen ? mNativeBpp : 8;
+	DWORD lReqBpp = cfg->video.nativeBppFullscreen ? mNativeBpp : 8;
 
 	ASSERT(!mModeSettingInProgress);
 

@@ -39,7 +39,6 @@ class MR_VideoBuffer
 	private:
 		HWND mWindow;
 		BOOL mFullScreen;
-		BOOL mNativeBppFullscreen;
 		LPDIRECTDRAW mDirectDraw;
 		LPDIRECTDRAWSURFACE mFrontBuffer;
 		LPDIRECTDRAWSURFACE mBackBuffer;
@@ -113,8 +112,6 @@ class MR_VideoBuffer
 		MR_DllDeclare void EnterIconMode();
 		MR_DllDeclare void ExitIconMode();
 		MR_DllDeclare void AssignPalette();
-
-		MR_DllDeclare void SetNativeBppFullscreen(BOOL pEnabled);
 
 		MR_DllDeclare BOOL TryToSetColorMode(int colorBits);
 

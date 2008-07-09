@@ -125,10 +125,6 @@ class MR_GameApp
 
 		BOOL mServerHasChanged;
 
-		BOOL mDisplayFirstScreen;
-		BOOL mIntroMovie;
-		BOOL mNativeBppFullscreen;
-
 		// Debug data
 		time_t mNbFramesStartingTime;
 		int mNbFrames;
