@@ -801,7 +801,6 @@ BOOL MR_GameApp::DisplayLoginWindow()
 
 	// the old function, no longer necessary
 	//BOOL lReturnValue = FALSE;
-	//DisplaySponsorWindow(NULL);
 	//if(gKeyEncriptFilled) {
 	//   gKey = gKeyEncript;
 	//   lReturnValue = (DialogBox(mInstance, MAKEINTRESOURCE(IDD_LOGIN_PASSWD), NULL, LoginPasswdFunc) != IDCANCEL );
