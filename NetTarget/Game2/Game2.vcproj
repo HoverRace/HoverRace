@@ -168,9 +168,6 @@
 				RelativePath=".\InternetRoom.cpp">
 			</File>
 			<File
-				RelativePath=".\License.cpp">
-			</File>
-			<File
 				RelativePath=".\main.cpp">
 			</File>
 			<File
@@ -184,9 +181,6 @@
 			</File>
 			<File
 				RelativePath=".\Observer.cpp">
-			</File>
-			<File
-				RelativePath=".\Sponsor.cpp">
 			</File>
 			<File
 				RelativePath=".\StdAfx.cpp">
@@ -226,9 +220,6 @@
 				RelativePath=".\InternetRoom.h">
 			</File>
 			<File
-				RelativePath=".\License.h">
-			</File>
-			<File
 				RelativePath=".\MatchReport.h">
 			</File>
 			<File
@@ -242,9 +233,6 @@
 			</File>
 			<File
 				RelativePath=".\Security.h">
-			</File>
-			<File
-				RelativePath=".\Sponsor.h">
 			</File>
 			<File
 				RelativePath=".\StdAfx.h">

@@ -23,7 +23,6 @@
 #include "TrackSelect.h"
 #include "../Util/Cursor.h"
 #include "resource.h"
-#include "License.h"
 #include "io.h"
 #include "../MazeCompiler/TrackCommonStuff.h"
 #include "../Util/StrRes.h"
