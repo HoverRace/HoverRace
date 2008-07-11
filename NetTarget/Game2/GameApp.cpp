@@ -629,53 +629,54 @@ void MR_GameApp::LoadRegistry()
 		KEY_EXECUTE,
 		&lProgramKey);
 
-	// if(lError == ERROR_SUCCESS) {
-	MR_UInt8 lControlBuffer[32];
-	DWORD lControlBufferSize = sizeof(lControlBuffer);
+	if(lError == ERROR_SUCCESS) { // opened key successfully
+		MR_UInt8 lControlBuffer[32];
+		DWORD lControlBufferSize = sizeof(lControlBuffer);
 
-	if(RegQueryValueEx(lProgramKey, "Control", 0, NULL, lControlBuffer, &lControlBufferSize) == ERROR_SUCCESS) {
-		for (int p = 0, i = 0; p < MR_Config::MAX_PLAYERS; ++p) {
-			MR_Config::cfg_controls_t &ctl = cfg->controls[p];
-			ctl.motorOn = lControlBuffer[i++];
-			ctl.right = lControlBuffer[i++];
-			ctl.left = lControlBuffer[i++];
-			ctl.jump = lControlBuffer[i++];
-			ctl.fire = lControlBuffer[i++];
-			ctl.brake = lControlBuffer[i++];
-			ctl.weapon = lControlBuffer[i++];
-			ctl.lookBack = lControlBuffer[i++];
+		if(RegQueryValueEx(lProgramKey, "Control", 0, NULL, lControlBuffer, &lControlBufferSize) == ERROR_SUCCESS) {
+			for (int p = 0, i = 0; p < MR_Config::MAX_PLAYERS; ++p) {
+				MR_Config::cfg_controls_t &ctl = cfg->controls[p];
+				ctl.motorOn = lControlBuffer[i++];
+				ctl.right = lControlBuffer[i++];
+				ctl.left = lControlBuffer[i++];
+				ctl.jump = lControlBuffer[i++];
+				ctl.fire = lControlBuffer[i++];
+				ctl.brake = lControlBuffer[i++];
+				ctl.weapon = lControlBuffer[i++];
+				ctl.lookBack = lControlBuffer[i++];
+			}
 		}
-	}
 
-	double lVideoSetting[3];
-	DWORD lVideoSettingSize = sizeof(lVideoSetting);
+		double lVideoSetting[3];
+		DWORD lVideoSettingSize = sizeof(lVideoSetting);
 
-	if(RegQueryValueEx(lProgramKey, "VideoColors", 0, NULL, (MR_UInt8 *) lVideoSetting, &lVideoSettingSize) == ERROR_SUCCESS) {
-		cfg->video.gamma = lVideoSetting[0];
-		cfg->video.contrast = lVideoSetting[1];
-		cfg->video.brightness = lVideoSetting[2];
-	}
+		if(RegQueryValueEx(lProgramKey, "VideoColors", 0, NULL, (MR_UInt8 *) lVideoSetting, &lVideoSettingSize) == ERROR_SUCCESS) {
+			cfg->video.gamma = lVideoSetting[0];
+			cfg->video.contrast = lVideoSetting[1];
+			cfg->video.brightness = lVideoSetting[2];
+		}
 
-	lBufferSize = sizeof(lBuffer);
-	if(RegQueryValueEx(lProgramKey, "Alias", 0, NULL, (MR_UInt8 *) lBuffer, &lBufferSize) == ERROR_SUCCESS)
-		cfg->player.nickName = lBuffer;
+		lBufferSize = sizeof(lBuffer);
+		if(RegQueryValueEx(lProgramKey, "Alias", 0, NULL, (MR_UInt8 *) lBuffer, &lBufferSize) == ERROR_SUCCESS)
+			cfg->player.nickName = lBuffer;
 
-	BOOL lBool;
+		BOOL lBool;
 
-	lBufferSize = sizeof(lBool);
-	if(RegQueryValueEx(lProgramKey, "DisplayFirstScreen", 0, NULL, (MR_UInt8 *)&lBool, &lBufferSize) != ERROR_SUCCESS)
-		cfg->misc.displayFirstScreen = !lBool;
+		lBufferSize = sizeof(lBool);
+		if(RegQueryValueEx(lProgramKey, "DisplayFirstScreen", 0, NULL, (MR_UInt8 *) &lBool, &lBufferSize) != ERROR_SUCCESS)
+			cfg->misc.displayFirstScreen = !lBool;
 
-	lBufferSize = sizeof(lBool);
-	if(RegQueryValueEx(lProgramKey, "IntroMovie", 0, NULL, (MR_UInt8 *)&lBool, &lBufferSize) != ERROR_SUCCESS)
-		cfg->misc.introMovie = !lBool;
+		lBufferSize = sizeof(lBool);
+		if(RegQueryValueEx(lProgramKey, "IntroMovie", 0, NULL, (MR_UInt8 *) &lBool, &lBufferSize) != ERROR_SUCCESS)
+			cfg->misc.introMovie = !lBool;
 
-	// Get the address of the server (we need a larger buffer)
-	{
-		char  lServerBuffer[500];
-		DWORD lServerBufferSize = sizeof(lServerBuffer);
-		if(RegQueryValueEx(lProgramKey, "MainServer", 0, NULL, (MR_UInt8 *) lServerBuffer, &lServerBufferSize) == ERROR_SUCCESS) {
-			cfg->net.mainServer = lServerBuffer;
+		// Get the address of the server (we need a larger buffer)
+		{
+			char  lServerBuffer[500];
+			DWORD lServerBufferSize = sizeof(lServerBuffer);
+			if(RegQueryValueEx(lProgramKey, "MainServer", 0, NULL, (MR_UInt8 *) lServerBuffer, &lServerBufferSize) == ERROR_SUCCESS) {
+				cfg->net.mainServer = lServerBuffer;
+			}
 		}
 	}
 }
