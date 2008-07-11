@@ -86,7 +86,8 @@ MR_NetworkSession::~MR_NetworkSession()
 		int lCurrentModel = mMainCharacter1->GetHoverModel();
 
 		// Send results to the record server
-		if(mMajorID != -1) {
+		// regardless of registration info
+		//if(mMajorID != -1) {
 			/*
 			   PlayerResult* lBest    = NULL;
 			   PlayerResult* lCurrent = mResultList;
@@ -135,7 +136,7 @@ MR_NetworkSession::~MR_NetworkSession()
 					}
 				}
 			}
-		}
+		//}
 	}
 
 	PlayerResult *lCurrent = mResultList;
