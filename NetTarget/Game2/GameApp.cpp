@@ -28,7 +28,6 @@
 #include "CommonDialog.h"
 #include "NetworkSession.h"
 #include "TrackSelect.h"
-#include "Sponsor.h"
 #include "../Util/DllObjectFactory.h"
 #include "../VideoServices/ColorPalette.h"
 #include "../MainCharacter/MainCharacter.h"
@@ -40,13 +39,6 @@
 #include "Security.h"
 
 #include <vfw.h>
-
-// global registration variables
-static BOOL gKeyEncriptFilled = FALSE;
-static BOOL gKeyFilled = FALSE;
-static KeyStructure gKeyEncript;
-static KeyStructure gKey;
-static char gKeyPassword[20];
 
 // If MR_AVI_CAPTURE is defined
 // #define MR_AVI_CAPTUREh
@@ -620,14 +612,8 @@ void MR_GameApp::LoadRegistry()
 {
 	MR_Config *cfg = MR_Config::GetInstance();
 
-	// Nickname
 	char lBuffer[80];
 	DWORD lBufferSize = sizeof(lBuffer);
-
-	// Registration info
-	mMajorID = -1;
-	mMinorID = -1;
-
 
 	// Prerecorded messages
 	// Joystick stuff
@@ -674,14 +660,6 @@ void MR_GameApp::LoadRegistry()
 	if(RegQueryValueEx(lProgramKey, "Alias", 0, NULL, (MR_UInt8 *) lBuffer, &lBufferSize) == ERROR_SUCCESS)
 		cfg->player.nickName = lBuffer;
 
-	lBufferSize = sizeof(lBuffer);
-	if(RegQueryValueEx(lProgramKey, "Owner", 0, NULL, (MR_UInt8 *) lBuffer, &lBufferSize) == ERROR_SUCCESS)
-		mOwner = lBuffer;
-#ifdef _DEMO_
-	else
-		mOwner = "Demo Key";
-#endif
-
 	BOOL lBool;
 
 	lBufferSize = sizeof(lBool);
@@ -691,44 +669,6 @@ void MR_GameApp::LoadRegistry()
 	lBufferSize = sizeof(lBool);
 	if(RegQueryValueEx(lProgramKey, "IntroMovie", 0, NULL, (MR_UInt8 *)&lBool, &lBufferSize) != ERROR_SUCCESS)
 		cfg->misc.introMovie = !lBool;
-
-	lBufferSize = sizeof(lBool);
-	if(RegQueryValueEx(lProgramKey, "NativeBppFullscreen", 0, NULL, (MR_UInt8 *)&lBool, &lBufferSize) != ERROR_SUCCESS)
-		cfg->video.nativeBppFullscreen = (lBool != FALSE);
-
-	lBufferSize = sizeof(lBuffer);
-	if(RegQueryValueEx(lProgramKey, "Company", 0, NULL, (MR_UInt8 *) lBuffer, &lBufferSize) == ERROR_SUCCESS)
-		mCompany = lBuffer;
-
-	int lID[3];
-	DWORD lIDSize = sizeof(lID);
-
-	if(RegQueryValueEx(lProgramKey, "RegistrationID", 0, NULL, (MR_UInt8 *) lID, &lIDSize) == ERROR_SUCCESS) {
-		mMajorID = lID[0];
-		mMinorID = lID[1];
-	}
-#ifdef _DEMO_
-	else {
-		mMajorID = 1;
-		mMinorID = 1138;
-	}
-#endif
-
-	lBufferSize = sizeof(gKeyEncript);
-	if(RegQueryValueEx(lProgramKey, "Key", 0, NULL, (MR_UInt8 *) & gKeyEncript, &lBufferSize) == ERROR_SUCCESS)
-		gKeyEncriptFilled = TRUE;
-#ifdef _DEMO_
-	else {
-		static unsigned char sKeyBuffer[20] = {
-			0x57, 0xCC, 0x3D, 0x21, 0xCC,
-			0x20, 0xD7, 0x34, 0x62, 0x01,
-			0x50, 0x0E, 0x65, 0x90, 0xE9,
-			0x9B, 0x39, 0x70, 0x5B, 0x99
-		};
-		memcpy(&gKeyEncript, sKeyBuffer, sizeof(sKeyBuffer));
-		gKeyEncriptFilled = TRUE;
-	}
-#endif
 
 	// Get the address of the server (we need a larger buffer)
 	{
@@ -742,49 +682,6 @@ void MR_GameApp::LoadRegistry()
 
 void MR_GameApp::SaveRegistry()
 {
-	BOOL lReturnValue = TRUE;
-	HKEY lProgramKey;
-
-	DWORD lDummy;
-	int lError = RegCreateKeyEx(HKEY_LOCAL_MACHINE,
-		"SOFTWARE\\HoverRace.com\\HoverRace",
-		0,
-		NULL,
-		REG_OPTION_NON_VOLATILE,
-		KEY_WRITE,
-		NULL,
-		&lProgramKey,
-		&lDummy);
-
-	if(lError == ERROR_SUCCESS) {
-		if(RegSetValueEx(lProgramKey, "Owner", 0, REG_SZ, (const unsigned char *) (const char *) mOwner, mOwner.GetLength() + 1) != ERROR_SUCCESS) {
-			lReturnValue = FALSE;
-			ASSERT(FALSE);
-		}
-
-		if(RegSetValueEx(lProgramKey, "Company", 0, REG_SZ, (const unsigned char *) (const char *) mCompany, mCompany.GetLength() + 1) != ERROR_SUCCESS) {
-			lReturnValue = FALSE;
-			ASSERT(FALSE);
-		}
-
-		int lID[2];
-
-		lID[0] = mMajorID;
-		lID[1] = mMinorID;
-
-		if(RegSetValueEx(lProgramKey, "RegistrationID", 0, REG_BINARY, (MR_UInt8 *) lID, sizeof(lID)) != ERROR_SUCCESS) {
-			lReturnValue = FALSE;
-			ASSERT(FALSE);
-		}
-
-		if(gKeyEncriptFilled) {
-			if(RegSetValueEx(lProgramKey, "Key", 0, REG_BINARY, (const unsigned char *) &gKeyEncript, sizeof(gKeyEncript)) != ERROR_SUCCESS) {
-				lReturnValue = FALSE;
-				ASSERT(FALSE);
-			}
-		}
-	}
-
 	MR_Config::GetInstance()->Save();
 }
 
@@ -798,39 +695,6 @@ BOOL MR_GameApp::DisplayLoginWindow()
 	// The demo/registered versions are no longer necessary, as HoverRace is
 	// now free.  Therefore we just tell the game that we're registered.
 	return TRUE;
-
-	// the old function, no longer necessary
-	//BOOL lReturnValue = FALSE;
-	//if(gKeyEncriptFilled) {
-	//   gKey = gKeyEncript;
-	//   lReturnValue = (DialogBox(mInstance, MAKEINTRESOURCE(IDD_LOGIN_PASSWD), NULL, LoginPasswdFunc) != IDCANCEL );
-	//}
-	//else {
-	//   lReturnValue = (DialogBox(mInstance, MAKEINTRESOURCE(IDD_LOGIN), NULL, LoginFunc) != IDCANCEL);
-	//}
-	//return lReturnValue;
-}
-
-void MR_GameApp::DisplayRegistrationInfo(HWND pWindow)
-{
-	BOOL lDisplayIt = TRUE;
-
-	// first return to window mode
-	SetVideoMode(0, 0);
-
-	gKeyPassword[0] = 0;
-
-	if(gKeyEncriptFilled) {
-		if(DialogBox(mInstance, MAKEINTRESOURCE(IDD_REGKEY_PASSWD), pWindow, RegistrationPasswdFunc) == IDCANCEL) {
-			lDisplayIt = FALSE;
-		}
-	}
-
-	if(lDisplayIt) {
-		DialogBox(mInstance, MAKEINTRESOURCE(IDD_REGISTER), pWindow, RegistrationFunc);
-	}
-	gKeyPassword[0] = 0;
-
 }
 
 BOOL MR_GameApp::IsGameRunning()
@@ -928,16 +792,6 @@ void MR_GameApp::DisplaySite()
 	// first return to window mode
 	SetVideoMode(0, 0);
 	LoadURLShortcut(mMainWindow, MR_LoadString(IDS_WEBSITE));
-}
-
-void MR_GameApp::DisplayRegistrationSite()
-{
-
-	// first return to window mode
-	SetVideoMode(0, 0);
-
-	LoadURLShortcut(mMainWindow, MR_LoadString(IDS_REGSITE));
-
 }
 
 void MR_GameApp::DisplayAbout()
@@ -1177,7 +1031,6 @@ BOOL MR_GameApp::InitGame()
 		if(DialogBox(mInstance, MAKEINTRESOURCE(IDD_FIRST_CHOICE), mMainWindow, FirstChoiceDialogFunc) == IDOK)
 			SendMessage(mMainWindow, WM_COMMAND, ID_GAME_NETWORK_INTERNET, 0);
 	}
-	gKeyFilled = TRUE;
 
 	return lReturnValue;
 }
@@ -1646,13 +1499,13 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 
 		DeleteMovieWnd();
 		MR_SoundServer::Init(mMainWindow);
-		lCurrentSession = new MR_NetworkSession(FALSE, gKeyFilled ? mMajorID : -1, gKeyFilled ? mMinorID : -1, mMainWindow);
+		lCurrentSession = new MR_NetworkSession(FALSE, -1, -1, mMainWindow);
 	}
 	else {
 		DeleteMovieWnd();
 		MR_SoundServer::Init(mMainWindow);
 
-		lCurrentSession = new MR_NetworkSession(FALSE, gKeyFilled ? mMajorID : -1, gKeyFilled ? mMinorID : -1, mMainWindow);
+		lCurrentSession = new MR_NetworkSession(FALSE, -1, -1, mMainWindow);
 		lCurrentSession->SetPlayerName(cfg->player.nickName.c_str());
 
 		lSuccess = lCurrentSession->PreConnectToServer(mMainWindow, lCurrentTrack);
@@ -1755,7 +1608,7 @@ void MR_GameApp::NewInternetSession()
 	MR_NetworkSession *lCurrentSession = NULL;
 	MR_Config *cfg = MR_Config::GetInstance();
 	// MR_InternetRoom    lInternetRoom( gKeyFilled, gKeyFilled?mMajorID:-1, gKeyFilled?mMinorID:-1, gKeyFilled?gKey.mKeySumHard2:0, gKeyFilled?gKey.mKeySumHard3:0 );
-	MR_InternetRoom lInternetRoom(gKeyFilled, gKeyFilled ? mMajorID : -1, gKeyFilled ? mMinorID : -1, gKeyFilled ? gKey.mIDSum : 0, 0, cfg->net.mainServer);
+	MR_InternetRoom lInternetRoom(TRUE, -1, -1, 0, 0, cfg->net.mainServer);
 
 	// Verify is user acknowledge
 	if(AskUserToAbortGame() != IDOK)
@@ -1766,7 +1619,7 @@ void MR_GameApp::NewInternetSession()
 	DeleteMovieWnd();
 	MR_SoundServer::Init(mMainWindow);
 
-	lCurrentSession = new MR_NetworkSession(TRUE, gKeyFilled ? mMajorID : -1, gKeyFilled ? mMinorID : -1, mMainWindow);
+	lCurrentSession = new MR_NetworkSession(TRUE, -1, -1, mMainWindow);
 
 	if(lSuccess) {
 		lCurrentSession->SetPlayerName(cfg->player.nickName.c_str());
@@ -2298,10 +2151,6 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 						}
 						return 0;
 	
-					case ID_GAME_REGISTER:
-						This->DisplayRegistrationInfo(pWindow);
-						break;
-
 				case ID_HELP_CONTENTS:
 					This->DisplayHelp();
 					break;
@@ -3170,407 +3019,9 @@ BOOL CALLBACK MR_GameApp::LoginFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, L
 					EndDialog(pWindow, IDOK);
 					lReturnValue = TRUE;
 					break;
-				case ID_GAME_REGISTER:
-					// Nothing to do here for now
-					/*This->DisplayRegistrationInfo(pWindow);
-					   if(gKeyFilled)
-					   EndDialog(pWindow, IDOK);
-					   lReturnValue = TRUE; */
-					break;
 				case ID_HELP_SITE:
 					This->DisplaySite();
 					break;
-			}
-			break;
-	}
-	return lReturnValue;
-}
-
-BOOL CALLBACK MR_GameApp::LoginPasswdFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
-{
-	static HBITMAP lBitmap = NULL;
-	static HPALETTE lPalette = NULL;
-
-	BOOL lReturnValue = FALSE;
-
-	switch (pMsgId) {
-		// Catch environment modification events
-
-		case WM_INITDIALOG:
-			{
-				// Fill the fields
-				SetDlgItemText(pWindow, IDC_OWNER, This->mOwner);
-				SetDlgItemText(pWindow, IDC_COMPANY, This->mCompany);
-				lReturnValue = TRUE;
-	
-				// Image setting
-				HWND lBitmapCtl = GetDlgItem(pWindow, IDC_BITMAP);
-	
-				if(lBitmapCtl != NULL) {
-					HDC hdc = GetDC(lBitmapCtl);
-	
-					lBitmap = LoadResourceBitmap(This->mInstance, MAKEINTRESOURCE(IDB_INTRO), &lPalette);
-	
-					ASSERT(lBitmap != NULL);
-	
-					SelectPalette(hdc, lPalette, FALSE);
-					int lNbColors = RealizePalette(hdc);
-					TRACE("Colors0 %d\n", lNbColors);
-					ReleaseDC(lBitmapCtl, hdc);
-	
-					HANDLE lOldHandle = (HANDLE) SendMessage(lBitmapCtl, STM_SETIMAGE, IMAGE_BITMAP, (long) lBitmap);
-				}
-				else {
-					lBitmap = NULL;
-					lPalette = NULL;
-				}
-	
-			}
-			break;
-
-		case WM_DESTROY:
-			if(lBitmap != NULL) {
-				DeleteObject(lBitmap);
-				lBitmap = NULL;
-			}
-
-			if(lPalette != NULL) {
-				UnrealizeObject(lPalette);
-				DeleteObject(lPalette);
-				lPalette = NULL;
-			}
-
-		case WM_QUERYNEWPALETTE:
-			if(lPalette != NULL) {
-				HWND lBitmapCtl = GetDlgItem(pWindow, IDC_BITMAP);
-
-				if(lBitmapCtl != NULL) {
-					HDC hdc = GetDC(lBitmapCtl);
-
-					// SelectPalette( hdc, NULL, FALSE );
-					// UnrealizeObject( lPalette );
-					HPALETTE lOldPalette = SelectPalette(hdc, lPalette, FALSE);
-					RealizePalette(hdc);
-
-					// UpdateColors( hdc );
-					InvalidateRgn(pWindow, NULL, TRUE);
-					InvalidateRgn(lBitmapCtl, NULL, TRUE);
-					UpdateWindow(pWindow);
-					UpdateWindow(lBitmapCtl);
-
-					if(lOldPalette != NULL) {
-						// SelectPalette( hdc, lOldPalette, FALSE );
-					}
-					ReleaseDC(lBitmapCtl, hdc);
-
-					TRACE("PAL_SET\n");
-
-				}
-				lReturnValue = TRUE;
-			}
-			break;
-
-		case WM_PALETTECHANGED:
-			if((lPalette != NULL) && ((HWND) pWParam != pWindow)) {
-				HWND lBitmapCtl = GetDlgItem(pWindow, IDC_BITMAP);
-
-				if((lBitmapCtl != NULL) && ((HWND) pWParam != lBitmapCtl)) {
-					HDC hdc = GetDC(lBitmapCtl);
-
-					// SelectPalette( hdc, NULL, TRUE );
-					// UnrealizeObject( lPalette );
-					HPALETTE lOldPalette = SelectPalette(hdc, lPalette, FALSE);
-					// UnrealizeObject( lPalette );
-					RealizePalette(hdc);
-
-					// InvalidateRgn( lBitmapCtl, NULL, TRUE );
-					// UpdateWindow( lBitmapCtl );
-					UpdateColors(hdc);
-
-					if(lOldPalette != NULL) {
-						// SelectPalette( hdc, lOldPalette, FALSE );
-					}
-					ReleaseDC(lBitmapCtl, hdc);
-
-					TRACE("PAL_CHANGE\n");
-				}
-				lReturnValue = TRUE;
-			}
-			break;
-
-		case WM_COMMAND:
-			switch (LOWORD(pWParam)) {
-
-				case IDCANCEL:
-					EndDialog(pWindow, IDCANCEL);
-					lReturnValue = TRUE;
-					break;
-
-				case IDC_DEMO:
-					EndDialog(pWindow, IDOK);
-					lReturnValue = TRUE;
-					break;
-
-				case IDOK:
-					{
-						lReturnValue = TRUE;
-	
-						char lBuffer[20];
-						lBuffer[0] = 0;
-	
-						if(GetDlgItemText(pWindow, IDC_PASSWD, lBuffer, sizeof(lBuffer)) >= 0) {
-							gKey = gKeyEncript;
-							PasswordApply(lBuffer, &gKey);
-	
-							// now verify that the key is valid
-							if(gKey.mKeySumK1 == GetKey1Sum(&gKey)) {
-								if(gKey.mKeySumK2 == GetKey2Sum(&gKey)) {
-									gKeyFilled = TRUE;
-								}
-							}
-						}
-	
-						if(!gKeyFilled) {
-							MessageBox(pWindow, MR_LoadString(IDS_BAD_PASSWD), MR_LoadString(IDS_GAME_NAME), MB_OK);
-							This->RefreshTitleBar();
-						}
-						else {
-							gKeyFilled = FALSE;
-							This->RefreshTitleBar();
-	
-							// Verify that the owner name fit with the key
-							// Verify that the IDS fits
-							// verify that the product fit
-							// Should normally be ok if the registry have not been moodified by hand
-	
-							if(gKey.mNameSum != ComputeUserNameSum(NormalizeUser(This->mOwner))) {
-								MessageBox(pWindow, MR_LoadString(IDS_BAD_PASSWD), MR_LoadString(IDS_GAME_NAME), MB_OK);
-								// MessageBox( pWindow, "Owner name does not match with the key", "HoverRace", MB_OK );
-								break;
-						}
-
-						if(gKey.mIDSum != ComputeIDSum(This->mMajorID, This->mMinorID)) {
-							MessageBox(pWindow, MR_LoadString(IDS_BAD_PASSWD), MR_LoadString(IDS_GAME_NAME), MB_OK);
-							// MessageBox( pWindow, "User ID does not match with the key", "HoverRace", MB_OK );
-							break;
-						}
-
-						if(gKey.mProduct != HOVERRACE_ID) {
-							// MessageBox( pWindow, "Wrong password", "HoverRace", MB_OK );
-							MessageBox(pWindow, MR_LoadString(IDS_NOT_HR_KEY), MR_LoadString(IDS_GAME_NAME), MB_OK);
-							break;
-						}
-
-						gKeyFilled = TRUE;
-						This->RefreshTitleBar();
-
-						EndDialog(pWindow, IDOK);
-					}
-				}
-				break;
-
-				case ID_GAME_REGISTER:
-					This->DisplayRegistrationInfo(pWindow);
-					lReturnValue = TRUE;
-					break;
-
-			}
-			break;
-	}
-	return lReturnValue;
-}
-
-BOOL CALLBACK MR_GameApp::RegistrationFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
-{
-	BOOL lReturnValue = FALSE;
-
-	switch (pMsgId) {
-		// Catch environment modification events
-		case WM_INITDIALOG:
-			char lKey1[21];
-			char lKey2[21];
-
-			GetToKeys(lKey1, lKey2, &gKey);
-
-			SetDlgItemText(pWindow, IDC_OWNER, This->mOwner);
-			SetDlgItemText(pWindow, IDC_COMPANY, This->mCompany);
-			SetDlgItemInt(pWindow, IDC_ID_MAJOR, This->mMajorID, TRUE);
-			SetDlgItemInt(pWindow, IDC_ID_MINOR, This->mMinorID, TRUE);
-			SetDlgItemText(pWindow, IDC_KEY1, lKey1);
-			SetDlgItemText(pWindow, IDC_KEY2, lKey2);
-			SetDlgItemText(pWindow, IDC_PASSWD, gKeyPassword);
-
-			lReturnValue = TRUE;
-			break;
-		case WM_COMMAND:
-			switch (LOWORD(pWParam)) {
-				case IDCANCEL:
-					EndDialog(pWindow, IDCANCEL);
-					break;
-				case IDOK:
-					lReturnValue = TRUE;
-
-					// Verify that all fields have correctly be filled
-					char lOwner[60];
-					char lCompany[60];
-					int lMajorID;
-					int lMinorID;
-					char lKey1[21];
-					char lKey2[21];
-					char lPassword[20];
-					KeyStructure lStruct;
-
-					if(GetDlgItemText(pWindow, IDC_OWNER, lOwner, sizeof(lOwner)) <= 0) {
-						MessageBox(pWindow, MR_LoadString(IDS_FILL_OWNER), MR_LoadString(IDS_GAME_NAME), MB_OK);
-						break;
-					}
-
-					if(GetDlgItemText(pWindow, IDC_COMPANY, lCompany, sizeof(lCompany)) <= 0)
-						lCompany[0] = 0;
-
-					lMajorID = GetDlgItemInt(pWindow, IDC_ID_MAJOR, NULL, FALSE);
-					lMinorID = GetDlgItemInt(pWindow, IDC_ID_MINOR, NULL, FALSE);
-
-					if(GetDlgItemText(pWindow, IDC_PASSWD, lPassword, sizeof(lPassword)) <= 0) {
-						// MessageBox( pWindow, "Password must be at least 4 character long", "HoverRace", MB_OK );
-						// break;
-						lPassword[0] = 0;
-					}
-					else if(strlen(lPassword) > 10) {
-						MessageBox(pWindow, MR_LoadString(IDS_PASSWD_LEN), MR_LoadString(IDS_GAME_NAME), MB_OK);
-						break;
-					}
-
-					if(GetDlgItemText(pWindow, IDC_KEY1, lKey1, sizeof(lKey1)) != 20) {
-						MessageBox(pWindow, MR_LoadString(IDS_KEY1_LEN), MR_LoadString(IDS_GAME_NAME), MB_OK);
-						break;
-					}
-
-					if(GetDlgItemText(pWindow, IDC_KEY2, lKey2, sizeof(lKey2)) != 20) {
-						MessageBox(pWindow, MR_LoadString(IDS_KEY2_LEN), MR_LoadString(IDS_GAME_NAME), MB_OK);
-						break;
-					}
-					// Verify that the keys have correctly been entered
-					SetFromKeys(lKey1, lKey2, &lStruct);
-
-					// Verify that the user name fit with the key
-					if(lStruct.mKeySumK1 != GetKey1Sum(&lStruct)) {
-						MessageBox(pWindow, MR_LoadString(IDS_BAD_KEY1), MR_LoadString(IDS_GAME_NAME), MB_OK);
-						break;
-					}
-
-					if(lStruct.mKeySumK2 != GetKey2Sum(&lStruct)) {
-						MessageBox(pWindow, MR_LoadString(IDS_BAD_KEY2), MR_LoadString(IDS_GAME_NAME), MB_OK);
-						break;
-					}
-
-					if(lStruct.mNameSum != ComputeUserNameSum(NormalizeUser(lOwner))) {
-						MessageBox(pWindow, MR_LoadString(IDS_BAD_USER), MR_LoadString(IDS_GAME_NAME), MB_OK);
-						break;
-					}
-
-					if(lStruct.mIDSum != ComputeIDSum(lMajorID, lMinorID)) {
-						MessageBox(pWindow, MR_LoadString(IDS_BAD_ID), MR_LoadString(IDS_GAME_NAME), MB_OK);
-						break;
-					}
-
-					if(lStruct.mProduct != HOVERRACE_ID) {
-						MessageBox(pWindow, MR_LoadString(IDS_NOT_HR_KEY), MR_LoadString(IDS_GAME_NAME), MB_OK);
-						break;
-					}
-					// Make the new key the current key and save it
-					gKey = lStruct;
-					gKeyEncript = lStruct;
-					gKeyFilled = TRUE;
-					gKeyEncriptFilled = TRUE;
-					PasswordApply(lPassword, &gKeyEncript);
-
-					This->mOwner = lOwner;
-					This->mCompany = lCompany;
-					This->mMajorID = lMajorID;
-					This->mMinorID = lMinorID;
-
-					This->RefreshTitleBar();
-					This->SaveRegistry();
-					EndDialog(pWindow, IDOK);
-					break;
-			}
-			break;
-		case IDC_REGISTER_PAGE:
-			This->DisplayRegistrationSite();
-			lReturnValue = TRUE;
-			break;
-	}
-	return lReturnValue;
-}
-
-BOOL CALLBACK MR_GameApp::RegistrationPasswdFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
-{
-
-	BOOL lReturnValue = FALSE;
-
-	switch (pMsgId) {
-		// Catch environment modification events
-
-		case WM_INITDIALOG:
-			{
-				lReturnValue = TRUE;
-			}
-			break;
-
-		case WM_COMMAND:
-			switch (LOWORD(pWParam)) {
-
-				case IDCANCEL:
-					EndDialog(pWindow, IDCANCEL);
-					break;
-
-				case IDOK:
-					{
-						lReturnValue = TRUE;
-	
-						// Verify that all fields have correctly be filled
-						KeyStructure lStruct = gKeyEncript;
-	
-						if(GetDlgItemText(pWindow, IDC_PASSWD, gKeyPassword, sizeof(gKeyPassword)) <= 0) {
-							gKeyPassword[0] = 0;
-						}
-	
-						PasswordApply(gKeyPassword, &lStruct);
-	
-						if((lStruct.mKeySumK1 == GetKey1Sum(&lStruct)) && (lStruct.mKeySumK2 == GetKey2Sum(&lStruct))) {
-							// Verify that the owner name fit with the key
-							// Verify that the IDS fits
-							// verify that the product fit
-							// Should normally be ok if the registry have not been moodified by hand
-	
-							if((lStruct.mNameSum == ComputeUserNameSum(NormalizeUser(This->mOwner))) && (lStruct.mIDSum == ComputeIDSum(This->mMajorID, This->mMinorID)) && (lStruct.mProduct == HOVERRACE_ID)) {
-								gKey = lStruct;
-								gKeyFilled = TRUE;
-								This->RefreshTitleBar();
-	
-								EndDialog(pWindow, IDOK);
-								break;
-						}
-					}
-					// Wrong password or corrupted key
-					MessageBox(pWindow, MR_LoadString(IDS_BAD_PASSWD), MR_LoadString(IDS_GAME_NAME), MB_OK);
-				}
-				break;
-
-				case IDC_CLEAR:
-					{
-						lReturnValue = TRUE;
-						if(MessageBox(pWindow, MR_LoadString(IDS_CLEAR_REGINFO), MR_LoadString(IDS_GAME_NAME), MB_OKCANCEL) == IDOK) {
-							gKeyFilled = FALSE;
-							gKeyEncriptFilled = FALSE;
-							This->RefreshTitleBar();
-							EndDialog(pWindow, IDOK);
-	
-						}
-					}
-					break;
-
 			}
 			break;
 	}

@@ -57,8 +57,6 @@ BEGIN
                                                     ID_GAME_NETWORK_INTERNET
         END
         MENUITEM SEPARATOR
-        MENUITEM "&Registration info...",       ID_GAME_REGISTER
-        MENUITEM SEPARATOR
         MENUITEM "E&xit\tAlt+F4",               ID_APP_EXIT
     END
     POPUP "&View"
@@ -560,32 +558,6 @@ BEGIN
     LTEXT           "Shift+F5",IDC_STATIC,4,74,36,8
 END
 
-IDD_REGISTER DIALOGEX 0, 0, 238, 143
-STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Registration Information"
-FONT 8, "MS Sans Serif", 0, 0, 0x0
-BEGIN
-    EDITTEXT        IDC_OWNER,86,34,145,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_COMPANY,86,48,145,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_ID_MAJOR,86,62,31,14,ES_AUTOHSCROLL | ES_NUMBER
-    EDITTEXT        IDC_ID_MINOR,127,62,47,14,ES_AUTOHSCROLL | ES_NUMBER
-    EDITTEXT        IDC_KEY1,86,76,145,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_KEY2,86,91,145,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_PASSWD,86,105,87,14,ES_AUTOHSCROLL
-    DEFPUSHBUTTON   "OK",IDOK,66,123,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,122,123,50,14
-    LTEXT           "Owner:",IDC_STATIC,7,37,58,8
-    LTEXT           "User ID:",IDC_STATIC,7,65,42,8
-    CONTROL         "",IDC_STATIC,"Static",SS_BLACKFRAME,7,28,209,1
-    LTEXT           "Registration Key Part 1:",IDC_STATIC,7,79,78,8
-    LTEXT           "Registration Key Part 2:",IDC_STATIC,7,94,79,8
-    LTEXT           "Password (optional) :",IDC_STATIC,7,108,67,8
-    LTEXT           "--",IDC_STATIC,120,65,8,8
-    LTEXT           "Company (optional):",IDC_STATIC,7,51,72,8
-    LTEXT           "This feature is not currently implemented; there is currently no registration required for HoverRace.  It's free!",
-                    IDC_STATIC,7,7,224,19
-END
-
 IDD_LOGIN_PASSWD DIALOGEX 0, 0, 284, 245
 STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_POPUP | 
     WS_CAPTION | WS_SYSMENU
@@ -605,21 +577,6 @@ BEGIN
     LTEXT           "",IDC_COMPANY,53,178,128,11,0,WS_EX_STATICEDGE
     CONTROL         "",IDC_BITMAP,"Static",SS_BITMAP | SS_CENTERIMAGE | 
                     SS_SUNKEN,7,7,270,152
-END
-
-IDD_REGKEY_PASSWD DIALOGEX 0, 0, 209, 95
-STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "HoverRace login password"
-FONT 8, "MS Sans Serif", 0, 0, 0x0
-BEGIN
-    EDITTEXT        IDC_PASSWD,57,52,95,14,ES_PASSWORD | ES_AUTOHSCROLL
-    DEFPUSHBUTTON   "OK",IDOK,7,74,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,63,74,50,14
-    LTEXT           "Password:",IDC_STATIC,18,55,35,8
-    CONTROL         "",IDC_STATIC,"Static",SS_BLACKFRAME,37,47,134,2
-    LTEXT           "Registration information have already been entered. To revise this information you must supply a valid password. If you forgot your password you can use the ""Clear Registration Key"" but you will then have to re-enter the registration key.",
-                    IDC_STATIC,7,7,195,34
-    PUSHBUTTON      "Clear Registration Key",IDC_CLEAR,119,74,82,14
 END
 
 IDD_LOGIN DIALOGEX 0, 0, 272, 207
@@ -658,10 +615,10 @@ BEGIN
 END
 #endif
 
-IDD_INTERNET_MEETING_PUB DIALOG  0, 0, 388, 277
+IDD_INTERNET_MEETING_PUB DIALOGEX 0, 0, 388, 277
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "HoverRace Internet meeting room"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
 BEGIN
     EDITTEXT        IDC_CHAT_IN,120,218,265,14,ES_AUTOHSCROLL | 
                     ES_WANTRETURN
@@ -1008,29 +965,12 @@ BEGIN
         BOTTOMMARGIN, 114
     END
 
-    IDD_REGISTER, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 231
-        VERTGUIDE, 86
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 136
-    END
-
     IDD_LOGIN_PASSWD, DIALOG
     BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 277
         TOPMARGIN, 7
         BOTTOMMARGIN, 241
-    END
-
-    IDD_REGKEY_PASSWD, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 202
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 88
     END
 
     IDD_LOGIN, DIALOG

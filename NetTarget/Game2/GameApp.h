@@ -77,11 +77,6 @@ class MR_GameApp
 
 		BOOL mPaletteChangeAllowed;
 
-		CString mOwner;
-		CString mCompany;
-		int mMajorID;
-		int mMinorID;
-
 		BOOL mServerHasChanged;
 
 		// Debug data
@@ -98,9 +93,7 @@ class MR_GameApp
 		static BOOL CALLBACK AboutDlgFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 		static BOOL CALLBACK NoticeDlgFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 		static BOOL CALLBACK LoginFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
-		static BOOL CALLBACK LoginPasswdFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
-		static BOOL CALLBACK RegistrationPasswdFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
-		static BOOL CALLBACK RegistrationFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
+		//static BOOL CALLBACK LoginPasswdFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 		static BOOL CALLBACK FirstChoiceDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 
 		static void UpdateIntensityDialogLabels(HWND pWindow);
@@ -146,8 +139,6 @@ class MR_GameApp
 		void DisplayHelp();
 		void DisplayBetaZone();
 		void DisplaySite();
-		void DisplayRegistrationInfo(HWND pWindow);
-		void DisplayRegistrationSite();
 		void DisplayAbout();
 
 		BOOL IsGameRunning();					  // return TRUE if a not terminated game is running

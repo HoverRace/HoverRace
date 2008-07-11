@@ -37,9 +37,7 @@
 #define IDD_WAIT_ALL                    142
 #define IDI_WARNING2                    143
 #define IDD_CHAT_MESSAGES               143
-#define IDD_REGISTER                    144
 #define IDD_LOGIN_PASSWD                145
-#define IDD_REGKEY_PASSWD               146
 #define IDB_INTRO                       146
 #define IDD_LOGIN                       147
 #define IDD_INTERNET_MEETING_PUB        150
@@ -152,7 +150,6 @@
 #define IDC_MAINSERVER                  1081
 #define IDC_BRIGHTNESS_TXT              1081
 #define IDC_CONTRAST_TXT                1082
-#define IDC_VOLUME_TXT                  1083
 #define IDC_SFX_VOLUME_TXT              1083
 #define IDC_GAMMA_TXT                   1084
 #define ID_HELP_CONTENTS                32772
