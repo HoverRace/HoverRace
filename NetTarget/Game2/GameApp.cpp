@@ -663,11 +663,11 @@ void MR_GameApp::LoadRegistry()
 		BOOL lBool;
 
 		lBufferSize = sizeof(lBool);
-		if(RegQueryValueEx(lProgramKey, "DisplayFirstScreen", 0, NULL, (MR_UInt8 *) &lBool, &lBufferSize) != ERROR_SUCCESS)
+		if(RegQueryValueEx(lProgramKey, "DisplayFirstScreen", 0, NULL, (MR_UInt8 *) &lBool, &lBufferSize) == ERROR_SUCCESS)
 			cfg->misc.displayFirstScreen = !lBool;
 
 		lBufferSize = sizeof(lBool);
-		if(RegQueryValueEx(lProgramKey, "IntroMovie", 0, NULL, (MR_UInt8 *) &lBool, &lBufferSize) != ERROR_SUCCESS)
+		if(RegQueryValueEx(lProgramKey, "IntroMovie", 0, NULL, (MR_UInt8 *) &lBool, &lBufferSize) == ERROR_SUCCESS)
 			cfg->misc.introMovie = !lBool;
 
 		// Get the address of the server (we need a larger buffer)
