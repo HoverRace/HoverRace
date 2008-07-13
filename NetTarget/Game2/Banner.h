@@ -25,12 +25,11 @@
 
 #define MR_MAX_IMAGES  32
 
+/// GIF image loader.
 class MR_GifDecoder
 {
 	private:
 		int mNbImages;
-		// int mXRes;
-		// int mYRes;
 
 		HPALETTE mGlobalPalette;
 		HBITMAP mBitmap[MR_MAX_IMAGES];
@@ -42,7 +41,7 @@ class MR_GifDecoder
 		MR_GifDecoder();
 		~MR_GifDecoder();
 
-		BOOL Decode(const unsigned char *pGifStream, int pStreamLen);
+		bool Decode(const unsigned char *pGifStream, int pStreamLen);
 
 		HPALETTE GetGlobalPalette() const;
 		int GetImageCount() const;
