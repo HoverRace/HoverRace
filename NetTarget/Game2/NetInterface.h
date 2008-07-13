@@ -28,7 +28,8 @@
 
 #include "../Util/MR_Types.h"
 
-#define MR_DEFAULT_NET_PORT  9530
+#define MR_DEFAULT_NET_PORT			9530
+#define MR_DEFAULT_UDP_RECV_PORT	9531
 
 #define MR_OUT_QUEUE_LEN       2048
 #define MR_MAX_NET_MESSAGE_LEN 255
@@ -46,6 +47,7 @@ class MR_NetMessageBuffer
 		MR_UInt16 mDatagramNumber:8;			  // used only for datagram
 		MR_UInt16 mDatagramQueue:2;				  // used only for datagram
 		MR_UInt16 mMessageType:6;
+		//MR_UInt8 mClient;
 		MR_UInt8 mDataLen;
 		MR_UInt8 mData[MR_MAX_NET_MESSAGE_LEN];
 
@@ -129,6 +131,7 @@ class MR_NetworkInterface
 		// UDP port
 		SOCKET mUDPOutShortPort;
 		SOCKET mUDPOutLongPort;
+		SOCKET mUDPRecvSocket;
 
 		// Data
 		MR_NetworkPort mClient[eMaxClient];
