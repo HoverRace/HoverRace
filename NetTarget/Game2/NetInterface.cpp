@@ -653,7 +653,7 @@ BOOL CALLBACK MR_NetworkInterface::ServerPortCallBack(HWND pWindow, UINT pMsgId,
 }
 
 /**
- * Called when the "Server selection" dialog box is completed (IDD_SERVER_ADDR).  If the user hit OK, the entered player name, server address, and
+ * Callback for the "Server selection" dialog box (IDD_SERVER_ADDR).  If the user hit OK, the entered player name, server address, and
  * port are saved.  Then, a new modal dialog is created (IDD_NET_PROGRESS) which calls WaitGameNameCallBack().
  *
  * @param pWindow Parent window
@@ -1524,7 +1524,9 @@ void MR_NetworkInterface::SendConnectionDoneIfNeeded()
 	}
 }
 
-// class MR_NetworkPort
+/**
+ * Initialize the sockets to INVALID_SOCKETs.  Also run Disconnect().
+ */
 MR_NetworkPort::MR_NetworkPort()
 {
 	mSocket = INVALID_SOCKET;
@@ -1533,11 +1535,20 @@ MR_NetworkPort::MR_NetworkPort()
 	Disconnect();
 }
 
+/**
+ * Disconnect before destruction.
+ */
 MR_NetworkPort::~MR_NetworkPort()
 {
 	Disconnect();
 }
 
+/**
+ * Connects to the socket passed as a parameter.  The socket passed should already be set up and connected to the client.  Also sets up the
+ * UDP receive socket to receive messages from the client.
+ *
+ * @param pSocket An already-connected socket.
+ */
 void MR_NetworkPort::Connect(SOCKET pSocket)
 {
 	Disconnect();
@@ -1555,16 +1566,20 @@ void MR_NetworkPort::Connect(SOCKET pSocket)
 	int lCode = ioctlsocket(mUDPRecvSocket, FIONBIO, &lNonBlock);
 	ASSERT(lCode != SOCKET_ERROR);
 
-	// Bind the socket to any availlable address
+	// Bind the socket to any available address
 	SOCKADDR_IN lLocalAddr;
 	lLocalAddr.sin_family = AF_INET;
 	lLocalAddr.sin_addr.s_addr = INADDR_ANY;
 	lLocalAddr.sin_port = 0;
-	lCode = bind(mUDPRecvSocket, (LPSOCKADDR) & lLocalAddr, sizeof(lLocalAddr));
+	lCode = bind(mUDPRecvSocket, (LPSOCKADDR) &lLocalAddr, sizeof(lLocalAddr));
 	ASSERT(lCode != SOCKET_ERROR);
-
 }
 
+/**
+ * Set the remote UDP port.
+ *
+ * @param pPort Remote port to use for UDP
+ */
 void MR_NetworkPort::SetRemoteUDPPort(unsigned int pPort)
 {
 	// Determine remote address and port based on the TCP port
@@ -1575,6 +1590,9 @@ void MR_NetworkPort::SetRemoteUDPPort(unsigned int pPort)
 	mUDPRemoteAddr.sin_port = pPort;
 }
 
+/**
+ * Returns the UDP port we are listening on (with mUDPRecvSocket).
+ */
 unsigned int MR_NetworkPort::GetUDPPort() const
 {
 	// Get UDP local addr
@@ -1584,7 +1602,12 @@ unsigned int MR_NetworkPort::GetUDPPort() const
 	ASSERT(lCode != SOCKET_ERROR);
 
 	return lLocalAddr.sin_port;
-} void MR_NetworkPort::Disconnect()
+} 
+
+/**
+ * Close the main socket and UDP receive socket, and reset variables.  Default lag is 300.  Not sure why.
+ */
+void MR_NetworkPort::Disconnect()
 {
 	if(mSocket != INVALID_SOCKET) {
 		closesocket(mSocket);
@@ -1615,28 +1638,41 @@ unsigned int MR_NetworkPort::GetUDPPort() const
 	mOutQueueHead = 0;
 
 	mInputMessageBufferIndex = 0;
-
 }
 
+/**
+ * Tests if the port is connected (with mSocket).
+ */
 BOOL MR_NetworkPort::IsConnected() const
 {
 	return (mSocket != INVALID_SOCKET);
 }
 
+/**
+ * Returns the TCP socket used for communication with the client.
+ */
 SOCKET MR_NetworkPort::GetSocket() const
 {
 	return mSocket;
 }
 
+/**
+ * Returns the UDP socket that is being used for listening.
+ */
 SOCKET MR_NetworkPort::GetUDPSocket() const
 {
 	return mUDPRecvSocket;
-} const MR_NetMessageBuffer *MR_NetworkPort::Poll()
+}
+
+/**
+ * Check if any new messages have been recieved.  If not, NULL is returned.  Otherwise the first message in the queue is returned.  The UDP socket is
+ * checked before the TCP socket (TCP messages are not as time-critical).
+ */
+const MR_NetMessageBuffer *MR_NetworkPort::Poll()
 {
-	// Socket is assume to be non-blocking
+	// Socket is assumed to be non-blocking, but it damn well better be because we set it that way
 	if((mInputMessageBufferIndex == 0) && (mUDPRecvSocket != INVALID_SOCKET)) {
 		while(1) {
-
 			int lLen = recv(mUDPRecvSocket, ((char *) &mInputMessageBuffer), sizeof(mInputMessageBuffer), 0);
 
 			if(lLen > 0) {
@@ -1644,7 +1680,7 @@ SOCKET MR_NetworkPort::GetUDPSocket() const
 				// We have received a datagram
 				ASSERT(lLen == mInputMessageBuffer.mDataLen + MR_NET_HEADER_LEN);
 
-				// Eliminate double and late datagram
+				// Eliminate duplicate and late datagrams
 				if((MR_Int8) ((MR_Int8) (MR_UInt8) mInputMessageBuffer.mDatagramNumber - (MR_Int8) mLastReceivedDatagramNumber[lQueueId]) > 0) {
 					// TRACE( "UDP recv\n" );
 					mLastReceivedDatagramNumber[lQueueId] = mInputMessageBuffer.mDatagramNumber;
@@ -1656,12 +1692,13 @@ SOCKET MR_NetworkPort::GetUDPSocket() const
 				}
 			}
 			else {
-				// No data.. continue with TCP
+				// No data... try TCP
 				break;
 			}
 		}
 	}
 
+	// check for TCP packets
 	if(mSocket != INVALID_SOCKET) {
 		if(mInputMessageBufferIndex < MR_NET_HEADER_LEN) {
 			// Try to read message header
@@ -1689,7 +1726,7 @@ SOCKET MR_NetworkPort::GetUDPSocket() const
 		if((mLastSendedDatagramNumber[1] > 16) && (timeGetTime() - mWatchdog) > MR_CONNECTION_TIMEOUT) {
 			// (mLastSendedDatagramNumber[1]>16) -- this condition avoid disconnecting
 			//                                   -- before game start
-			TRACE("Reception TimeOut %d %d\n", timeGetTime() - mWatchdog, mInputMessageBufferIndex);
+			TRACE("Reception Timeout %d %d\n", timeGetTime() - mWatchdog, mInputMessageBufferIndex);
 
 			if(mInputMessageBufferIndex != 0) {
 				TRACE("Message: %d %d\n", mInputMessageBuffer.mMessageType, mInputMessageBuffer.mDataLen);
@@ -1702,7 +1739,15 @@ SOCKET MR_NetworkPort::GetUDPSocket() const
 	return NULL;
 }
 
-BOOL MR_NetworkPort::UDPSend(SOCKET pSocket, MR_NetMessageBuffer * pMessage, unsigned pQueueId, BOOL pResendLast)
+/**
+ * Send a packet via UDP, using the supplied socket.
+ *
+ * @param pSocket The socket the packet will be sent from (generally MR_NetworkInterface::mUDPOutLongPort or MR_NetworkInterface::mUDPOutShortPort)
+ * @param pMessage The message to be sent
+ * @param pQueueId The queue ID of the message
+ * @param pResendLast TRUE if this is a re-send of the last packet
+ */
+BOOL MR_NetworkPort::UDPSend(SOCKET pSocket, MR_NetMessageBuffer *pMessage, unsigned pQueueId, BOOL pResendLast)
 {
 	BOOL lReturnValue = TRUE;
 
@@ -1731,16 +1776,21 @@ BOOL MR_NetworkPort::UDPSend(SOCKET pSocket, MR_NetMessageBuffer * pMessage, uns
 	return lReturnValue;
 }
 
-void MR_NetworkPort::Send(const MR_NetMessageBuffer * pMessage, int pReqLevel)
+/**
+ * Send the given message via TCP.
+ *
+ * @param pMessage The message to be sent
+ * @param pReqLevel Should be set to MR_NET_REQUIRED
+ */
+void MR_NetworkPort::Send(const MR_NetMessageBuffer *pMessage, int pReqLevel)
 {
 	// First try to send buffered data
 	if(mSocket != INVALID_SOCKET) {
 		BOOL lEndQueueLoop = (mOutQueueLen == 0);
 
 		while(!lEndQueueLoop) {
-
 			// Determine first batch to send
-			int lToSend;;
+			int lToSend;
 
 			if((mOutQueueHead + mOutQueueLen) > MR_OUT_QUEUE_LEN) {
 				lToSend = MR_OUT_QUEUE_LEN - mOutQueueHead;
@@ -1765,7 +1815,7 @@ void MR_NetworkPort::Send(const MR_NetMessageBuffer * pMessage, int pReqLevel)
 				lEndQueueLoop = TRUE;
 
 				if(WSAGetLastError() == WSAEWOULDBLOCK) {
-					// notting to do
+					// nothing to do
 				}
 				else {
 					TRACE("Communication error A %d\n", WSAGetLastError());
@@ -1798,9 +1848,7 @@ void MR_NetworkPort::Send(const MR_NetMessageBuffer * pMessage, int pReqLevel)
 			Disconnect();
 		}
 		else if(lReturnValue != lToSend) {
-			if((lReturnValue > 0) || (pReqLevel == MR_NET_REQUIRED) || ((pReqLevel == MR_NET_TRY) && (mOutQueueLen < (MR_OUT_QUEUE_LEN / 4)))
-			) {
-
+			if((lReturnValue > 0) || (pReqLevel == MR_NET_REQUIRED) || ((pReqLevel == MR_NET_TRY) && (mOutQueueLen < (MR_OUT_QUEUE_LEN / 4)))) {
 				lToSend -= lReturnValue;
 
 				if(lToSend > (MR_OUT_QUEUE_LEN - mOutQueueLen)) {
@@ -1831,6 +1879,11 @@ void MR_NetworkPort::Send(const MR_NetMessageBuffer * pMessage, int pReqLevel)
 	}
 }
 
+/**
+ * Adds an observed lag sample to the lag.  Used in lag testing (if you hadn't guessed).
+ *
+ * @param pLag Observed lag
+ */
 BOOL MR_NetworkPort::AddLagSample(int pLag)
 {
 	mNbLagTest++;
@@ -1844,20 +1897,37 @@ BOOL MR_NetworkPort::AddLagSample(int pLag)
 	return LagDone();
 }
 
+/**
+ * Returns whether or not five lag tests have been performed.
+ */
 BOOL MR_NetworkPort::LagDone() const
 {
 	return (mNbLagTest >= 5);
 }
 
+/**
+ * Returns the calculated average lag.
+ */
 int MR_NetworkPort::GetAvgLag() const
 {
 	return mAvgLag;
 }
 
+/**
+ * Returns the minimum observed lag.
+ */
 int MR_NetworkPort::GetMinLag() const
 {
 	return mMinLag;
-} void MR_NetworkPort::SetLag(int pAvgLag, int pMinLag)
+} 
+
+/**
+ * Sets the lag.
+ *
+ * @param pAvgLag The average lag
+ * @param pMinLag The minimum lag
+ */
+void MR_NetworkPort::SetLag(int pAvgLag, int pMinLag)
 {
 	mAvgLag = pAvgLag;
 	mMinLag = pMinLag;
@@ -1868,6 +1938,9 @@ int MR_NetworkPort::GetMinLag() const
 
 // Helper functions
 
+/**
+ * Returns the local IP in a CString.
+ */
 CString GetLocalAddrStr()
 {
 	CString lReturnValue;
@@ -1901,24 +1974,29 @@ CString GetLocalAddrStr()
 	return lReturnValue;
 }
 
+/**
+ * Return a 32-bit integer denoting the IP of the passed parameter string.
+ *
+ * @param pName IP in string form ( %d.%d.%d.%d)
+ */
 MR_UInt32 GetAddrFromStr(const char *pName)
 {
 
 	MR_UInt32 lReturnValue;
-	unsigned int lNible[4];
+	unsigned int lNibble[4];
 
 	// Verify if the given string is not a numeric addr
 
-	int lNbField = sscanf(pName, " %d.%d.%d.%d", &(lNible[0]),
-		&(lNible[1]),
-		&(lNible[2]),
-		&(lNible[3]));
+	int lNbField = sscanf(pName, " %d.%d.%d.%d", &(lNibble[0]),
+		&(lNibble[1]),
+		&(lNibble[2]),
+		&(lNibble[3]));
 
-	if((lNbField == 4) && (lNible[0] != 0)) {
-		lReturnValue = lNible[0]
-			+ (lNible[1] << 8)
-			+ (lNible[2] << 16)
-			+ (lNible[3] << 24);
+	if((lNbField == 4) && (lNibble[0] != 0)) {
+		lReturnValue = lNibble[0]
+			+ (lNibble[1] << 8)
+			+ (lNibble[2] << 16)
+			+ (lNibble[3] << 24);
 
 	}
 	else {
@@ -1927,6 +2005,14 @@ MR_UInt32 GetAddrFromStr(const char *pName)
 	return lReturnValue;
 }
 
+/**
+ * Callback for generic dialogs.
+ *
+ * @param pWindow Parent window
+ * @param pMsgId ID of the message sent by the dialog
+ * @param pWParam ID denoting a selected option (for pMsgId WM_COMMAND) 
+ * @param pLParam not used but required for MFC callback
+ */
 static BOOL CALLBACK DialogProc(HWND pWindow, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg) {
