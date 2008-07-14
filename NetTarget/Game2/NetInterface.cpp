@@ -717,8 +717,11 @@ BOOL CALLBACK MR_NetworkInterface::ServerAddrCallBack(HWND pWindow, UINT pMsgId,
 
 /**
  * This is the callback for the "Connecting to server" dialog box (IDD_NET_PROGRESS).  It actually gets called three times:
+ *
  *   1. When the dialog is initialized.  Set up the new socket to connect to the server.
+ *
  *   2. When the new socket is connected to the server.  Ask the server for the game name.
+ *
  *   3. When the server responds.  Save the game name, 
  *
  * @param pWindow Parent window
@@ -873,37 +876,60 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
  * and another for a client being connected to by another client.  A basic flowchart:
  *
  * Server:
+ *
  *  1.  Dialog is initialized.  Set up the main socket for reception and wait for a new client to connect (MRM_NEW_CLIENT).
+ *
  *  2.  A new client has connected: find a place in the list for them, add them to the list, and wait for another message (MRNM_CONN_NAME_GET_SET)
+ *
  *  3.  Client has responded (MRNM_CONN_NAME_GET_SET) with player name and UDP recv port; add it to the list and respond with our name and UDP
  *      receive port (MRNM_CONN_NAME_SET) and then send the list of other client IPs and names (MRNM_CLIENT_ADDR).  Wait for client to initiate lag
  *      test (MRNM_LAG_TEST).
+ *
  *  4.  Lag test initiation received (MRNM_LAG_TEST); respond with current time (MRNM_LAG_ANSWER).  The client will repeat the lag test 5 times, then
  *      inform us of the lag info.
+ *
  *  5.  Lag info received (MRNM_LAG_INFO).  Wait for more connections (go to step 2) or user input to start the race.
+ *
  *  6.  User started the race.  If some connections aren't done, ask the user if they really want to continue.  If they do, send an MRNM_READY
  *      message to all clients.  Remove the dialog and send mReturnMessage to the parent window (pWindow).
  *
+ *
  * Client connecting to server:
+ *
  *  1.  Dialog is initialized.  Set up sockets for reception and ask the server for the game name (MRNM_CONN_NAME_GET_SET), sending the player name
- *      and UDP receive port..
+ *      and UDP receive port.
+ *
  *  2.  Server responded with their name and UDP receive port (MRNM_CONN_NAME_SET); initiate a lag test (MRNM_LAG_TEST), sending the current time.
  *      Wait for the response.
+ *
  *  3.  Server responded with lag (MRNM_LAG_ANSWER).  Do 4 more lag tests (totaling 5 tests).
+ *
  *  4.  Send the server lag info (MRNM_LAG_INFO).  Mark this connection as done, update the dialog box as such.
+ *
  *  5.  Wait for the MRNM_READY message from the server to start the game.
  *
+ *
+ *
  * Client connecting to another client:
+ *
  *  1.  The server gave us the info to connect to the new client with the MRNM_CLIENT_ADDR message.  Set up the socket and try to connect to the new
  *      client.
+ *
  *  2.  (jump to the first step of the "Client connecting to server:" section)
+ *
  *  3.  When the lag tests are done, call SendConnectionDoneIfNeeded() to send the MRNM_CONNECTION_DONE message to the server if we are connected to
  *      all the other clients.
+ *      
  *  4.  Wait for the MRNM_READY message.
  *
+ *
+ *
  * Client being connected to by another client:
+ *
  *  1.  We received a connection request from a client.
+ *
  *  2.  (jump to "Server:", step 2, follow until step 5)
+ *
  *  3.  Wait for the MRNM_READY message.
  *
  * @param pWindow Parent window
