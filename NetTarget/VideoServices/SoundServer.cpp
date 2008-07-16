@@ -267,6 +267,10 @@ void MR_SoundBuffer::SetParams(int pCopy, int pDB, double pSpeed, int pPan)
 		attenuatedVolume = LinearToDirectX(vol * DirectXToLinear(pDB));
 	}
 
+	// Clamp volume to accepted range.
+	if (attenuatedVolume > DSBVOLUME_MAX) attenuatedVolume = DSBVOLUME_MAX;
+	else if (attenuatedVolume < DSBVOLUME_MIN) attenuatedVolume = DSBVOLUME_MIN;
+
 	if(mSoundBuffer[pCopy] != NULL) {
 		unsigned long lFreq = static_cast<unsigned long>(mNormalFreq * pSpeed);
 
