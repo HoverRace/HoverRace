@@ -525,6 +525,8 @@ MR_GameApp::MR_GameApp(HINSTANCE pInstance)
 	mCurrentSession = NULL;
 	mGameThread = NULL;
 
+	safeMode = false;
+
 	mCurrentMode = e3DView;
 
 	mClrScrTodo = 2;
@@ -563,11 +565,16 @@ MR_GameApp::MR_GameApp(HINSTANCE pInstance)
 	verOss << verMajor << '.' << verMinor << '.' << verPatch << '.' << verBuild;
 	std::string appVer = verOss.str();
 
+	// Process command-line options.
+	ProcessCmdLine(__argc, __argv);
+
 	// Load the configuration, using the default OS-specific path.
 	MR_Config *cfg = MR_Config::Init(appVer);
-	LoadRegistry();
-	cfg->Load();
-	OutputDebugString("Loaded config.\n");
+	if (!safeMode) {
+		LoadRegistry();
+		cfg->Load();
+		OutputDebugString("Loaded config.\n");
+	}
 
 	mServerHasChanged = FALSE;
 }
@@ -606,6 +613,22 @@ void MR_GameApp::Clean()
 	mClrScrTodo = 2;
 	gFirstKDBCall = TRUE;						  // Set to TRUE on each new game
 
+}
+
+/**
+ * Process command-line options.
+ * @param argc The arg count.
+ * @param argv The original argument list.
+ */
+void MR_GameApp::ProcessCmdLine(int argc, char **argv)
+{
+	for (int i = 1; i < argc; ++i) {
+		const char *arg = argv[i];
+
+		if (strcmp("-s", arg) == 0) {
+			safeMode = true;
+		}
+	}
 }
 
 void MR_GameApp::LoadRegistry()
