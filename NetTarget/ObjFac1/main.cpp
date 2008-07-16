@@ -39,6 +39,7 @@
 #include "ObjFac1Res.h"
 #include "../ObjFacTools/ObjectFactoryData.h"
 #include "../ObjFacTools/SpriteHandle.h"
+#include "../Util/Config.h"
 
 #define new DEBUG_NEW
 
@@ -64,7 +65,8 @@ MR_ObjectFactoryData *gObjectFactoryData = NULL;
 void MR_InitModule(HMODULE pModule)
 {
 	delete gObjectFactoryData;
-	gObjectFactoryData = new MR_ObjectFactoryData(pModule, "ObjFac1.dat");
+	gObjectFactoryData = new MR_ObjectFactoryData(pModule,
+		MR_Config::GetInstance()->GetMediaPath("ObjFac1.dat").c_str());
 }
 
 void MR_CleanModule()

@@ -1029,7 +1029,7 @@ BOOL MR_GameApp::InitGame()
 		mMovieWnd = MCIWndCreate(
 			mMainWindow, mInstance, 
 			WS_CHILD | MCIWNDF_NOMENU | MCIWNDF_NOPLAYBAR, 
-			"Intro.avi");
+			cfg->GetMediaPath("Intro.avi").c_str());
 
 		// Fill the client area.
 		RECT clientRect;

@@ -159,6 +159,25 @@ std::string MR_Config::GetConfigFilename() const
 }
 
 /**
+ * Retrieve the directory for media files.
+ * @return The directory path (may be relative).
+ */
+std::string MR_Config::GetMediaPath() const
+{
+	return ".." DIRSEP "share";
+}
+
+/**
+ * Retrieve the path to a media file.
+ * @param file The media filename (may not be blank).
+ * @return The file path (may be relative).
+ */
+std::string MR_Config::GetMediaPath(const std::string &file) const
+{
+	return (".." DIRSEP "share" DIRSEP) + file;
+}
+
+/**
  * Resets the configuration to the default "factory" settings.
  */
 void MR_Config::ResetToDefaults()
