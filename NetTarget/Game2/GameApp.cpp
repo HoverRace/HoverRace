@@ -40,6 +40,8 @@
 
 #include <vfw.h>
 
+#include <direct.h>
+
 // If MR_AVI_CAPTURE is defined
 // #define MR_AVI_CAPTUREh
 
@@ -533,13 +535,21 @@ MR_GameApp::MR_GameApp(HINSTANCE pInstance)
 
 	mPaletteChangeAllowed = TRUE;
 
+	char exePath[MAX_PATH];
+	GetModuleFileName(NULL, exePath, MAX_PATH - 1);
+
+	// Change the working directory to the app's directory.
+	char *appPath = strdup(exePath);
+	char *appDiv = strrchr(appPath, '\\');
+	*appDiv = '\0';
+	chdir(appPath);
+	free(appPath);
+
 	// Load our own version info so we can pass it along to the config.
 	long verMajor = 0;
 	long verMinor = 0;
 	long verPatch = 0;
 	long verBuild = 0;
-	char exePath[MAX_PATH];
-	GetModuleFileName(NULL, exePath, MAX_PATH - 1);
 	DWORD dummyHandle;
 	DWORD verInfoSize = GetFileVersionInfoSize(exePath, &dummyHandle);
 	void *verInfo = malloc(verInfoSize);
