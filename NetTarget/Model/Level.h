@@ -34,7 +34,7 @@
 
 // Defines
 #define MR_NB_MAX_PLAYER    32
-#define MR_NB_PERNET_ACTORS 64
+#define MR_NB_PERNET_ACTORS 128
 
 // Class declaration
 class MR_FreeElementHandleClass;
