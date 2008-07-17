@@ -5,6 +5,9 @@
 
 #define VC_EXTRALEAN							  // Exclude rarely-used stuff from Windows headers
 
+// Minimum Windows version: XP
+#define WINVER 0x0501
+
 #include <afxwin.h>								  // MFC core and standard components
 #include <afxext.h>								  // MFC extensions
 #include <afxtempl.h>

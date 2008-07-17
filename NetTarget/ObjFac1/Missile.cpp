@@ -104,8 +104,8 @@ const MR_ContactEffectList *MR_Missile::GetEffectList()
 
 	if(mLived > cIgnitionTime) {
 		mCollisionEffect.mWeight = cMissileWeight;
-		mCollisionEffect.mXSpeed = mXSpeed * 256;
-		mCollisionEffect.mYSpeed = mYSpeed * 256;
+		mCollisionEffect.mXSpeed = static_cast<int>(mXSpeed * 256);
+		mCollisionEffect.mYSpeed = static_cast<int>(mYSpeed * 256);
 		mCollisionEffect.mZSpeed = 0;
 
 		return &mEffectList;
@@ -212,8 +212,8 @@ int MR_Missile::InternalSimulate(MR_SimulationTime pDuration, MR_Level * pLevel,
 	mXSpeed = lSpeed * MR_Cos[mOrientation] / MR_TRIGO_FRACT;
 	mYSpeed = lSpeed * MR_Sin[mOrientation] / MR_TRIGO_FRACT;
 
-	lTranslation.mX = pDuration * mXSpeed;
-	lTranslation.mY = pDuration * mYSpeed;
+	lTranslation.mX = static_cast<int>(pDuration * mXSpeed);
+	lTranslation.mY = static_cast<int>(pDuration * mYSpeed);
 
 	// Verify if the move is valid
 	MR_ObstacleCollisionReport lReport;

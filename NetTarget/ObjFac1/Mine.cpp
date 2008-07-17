@@ -110,7 +110,7 @@ int MR_Mine::Simulate(MR_SimulationTime pDuration, MR_Level * pLevel, int pRoom)
 
 		MR_ObstacleCollisionReport lReport;
 
-		mPosition.mZ -= pDuration * 0.6;
+		mPosition.mZ -= static_cast<int>(pDuration * 0.6);
 
 		lReport.GetContactWithObstacles(pLevel, this, pRoom, this);
 

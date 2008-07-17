@@ -43,6 +43,9 @@
 
 #define new DEBUG_NEW
 
+#ifdef MR_DllDeclare
+	#undef MR_DllDeclare
+#endif
 #define MR_DllDeclare   __declspec( dllexport )
 
 // Functions declaration
@@ -53,8 +56,12 @@ extern "C"
 	MR_DllDeclare void MR_CleanModule();
 	MR_DllDeclare MR_UInt16 MR_GetObjectTypeCount();
 	MR_DllDeclare MR_UInt16 MR_GetObjectTypeCount();
-	MR_DllDeclare CString MR_GetObjectFamily(MR_UInt16 pClassId);
-	MR_DllDeclare CString MR_GetObjectDescription(MR_UInt16 pClassId);
+	#pragma warning(push)
+		// Ignore warning about CString not compatible with C.
+		#pragma warning(disable:4190)
+		MR_DllDeclare CString MR_GetObjectFamily(MR_UInt16 pClassId);
+		MR_DllDeclare CString MR_GetObjectDescription(MR_UInt16 pClassId);
+	#pragma warning(pop)
 	MR_DllDeclare MR_ObjectFromFactory *MR_GetObject(MR_UInt16 pClassId);
 };
 
