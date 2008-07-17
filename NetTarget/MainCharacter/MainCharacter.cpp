@@ -296,9 +296,9 @@ MR_ElementNetState MR_MainCharacter::GetNetState() const
 
 	lsState.Set(MC_ORIENTATION, mOrientation);
 
-	lsState.Set(MC_SPEED_X_256, mXSpeedBeforeCollision * 256);
-	lsState.Set(MC_SPEED_Y_256, mYSpeedBeforeCollision * 256);
-	lsState.Set(MC_SPEED_Z_256, mZSpeed * 256);
+	lsState.Set(MC_SPEED_X_256, static_cast<int>(mXSpeedBeforeCollision * 256));
+	lsState.Set(MC_SPEED_Y_256, static_cast<int>(mYSpeedBeforeCollision * 256));
+	lsState.Set(MC_SPEED_Z_256, static_cast<int>(mZSpeed * 256));
 
 	lsState.Set(MC_CONTROL_ST, mControlState);
 	lsState.Set(MC_ON_FLOOR, mOnFloor);
@@ -323,7 +323,9 @@ MR_ElementNetState MR_MainCharacter::GetNetState() const
 	   lsState.mOnFloor       = mOnFloor;
 	 */
 	return lReturnValue;
-	} void MR_MainCharacter::SetNetState(int /*pDataLen */ , const MR_UInt8 * pData)
+}
+
+void MR_MainCharacter::SetNetState(int /*pDataLen */ , const MR_UInt8 * pData)
 	{
 
 		const MR_MainCharacterState *lState = (const MR_MainCharacterState *) pData;
@@ -493,7 +495,7 @@ MR_ElementNetState MR_MainCharacter::GetNetState() const
 			if(mMissileRefillDuration <= 0)
 				mMissileRefillDuration = 0;
 
-			mPowerUpLeft -= pDuration * eFuelConsuming[mHoverModel];
+			mPowerUpLeft -= static_cast<MR_SimulationTime>(pDuration * eFuelConsuming[mHoverModel]);
 			if(mPowerUpLeft < 0)
 				mPowerUpLeft = 0;
 
