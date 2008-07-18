@@ -1723,32 +1723,32 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 					lReturnValue = TRUE;
 
 					if(mThis->mModelessDlg == NULL) {
-						BOOL lSuccess = FALSE;
+						bool lSuccess = false;
 
 						// Ask the user to select a track
-						CString lCurrentTrack;
+						std::string lCurrentTrack;
 						int lNbLap;
-						BOOL lAllowWeapons;
+						bool lAllowWeapons;
 
 						lSuccess = MR_SelectTrack(pWindow, lCurrentTrack, lNbLap, lAllowWeapons);
 
 						if(lSuccess) {
 							// Load the track
-							MR_RecordFile *lTrackFile = MR_TrackOpen(pWindow, lCurrentTrack);
-							lSuccess = mThis->mSession->LoadNew(lCurrentTrack, lTrackFile, lNbLap, lAllowWeapons, mThis->mVideoBuffer);
+							MR_RecordFile *lTrackFile = MR_TrackOpen(pWindow, lCurrentTrack.c_str());
+							lSuccess = (mThis->mSession->LoadNew(lCurrentTrack.c_str(), lTrackFile, lNbLap, lAllowWeapons, mThis->mVideoBuffer) != FALSE);
 						}
 
 						if(lSuccess) {
 							// Register to the InternetServer
-							lSuccess = mThis->AddGameOp(pWindow, lCurrentTrack, lCurrentTrack, lNbLap, lAllowWeapons, MR_DEFAULT_NET_PORT);
+							lSuccess = (mThis->AddGameOp(pWindow, lCurrentTrack.c_str(), lCurrentTrack.c_str(), lNbLap, lAllowWeapons, MR_DEFAULT_NET_PORT) != FALSE);
 
 							if(lSuccess) {
 								// Wait client registration
 								CString lTrackName;
 
-								lTrackName.Format("%s  %d laps %s", (const char *) lCurrentTrack, lNbLap, lAllowWeapons ? "with weapons" : "no weapons");
+								lTrackName.Format("%s  %d laps %s", lCurrentTrack.c_str(), lNbLap, lAllowWeapons ? "with weapons" : "no weapons");
 
-								lSuccess = mThis->mSession->WaitConnections(pWindow, lTrackName, FALSE, MR_DEFAULT_NET_PORT, &mThis->mModelessDlg, MRM_DLG_END_ADD);
+								lSuccess = (mThis->mSession->WaitConnections(pWindow, lTrackName, FALSE, MR_DEFAULT_NET_PORT, &mThis->mModelessDlg, MRM_DLG_END_ADD) != FALSE);
 
 								if(!lSuccess) {
 									// Unregister Game

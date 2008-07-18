@@ -27,13 +27,26 @@
 #include "../MazeCompiler/TrackCommonStuff.h"
 #include "../Util/StrRes.h"
 
+#include <algorithm>
+
 class TrackEntry
 {
 	public:
-		CString mFileName;
-		CString mDescription;
+		std::string mFileName;
+		std::string mDescription;
 		int mRegistrationMode;
 		int mSortingIndex;
+
+		friend operator<(const TrackEntry &elem1, const TrackEntry &elem2)
+		{
+			int diff = elem1.mSortingIndex - elem2.mSortingIndex;
+			if (diff == 0) {
+				return elem1.mFileName < elem2.mFileName;
+			}
+			else {
+				return (diff < 0);
+			}
+		}
 };
 
 #define TRACK_PATH1 "..\\Tracks\\"
@@ -47,17 +60,16 @@ static void SortList();
 static void ReadTrackList();
 static void CleanList();
 
-static int CompareFunc(const void *elem1, const void *elem2);
-
-// Local variable
-#define MAX_TRACK_ENTRIES   100000
-// #define MAX_TRACK_ENTRIES   5
+// Initial reserve size for track list.
+#define INIT_TRACK_ENTRIES 1000
 
 static int gsSelectedEntry = -1;
-static int gsNbTrack = 0;
 
-static TrackEntry gsTrackList[MAX_TRACK_ENTRIES];
-static TrackEntry *gsSortedTrackList[MAX_TRACK_ENTRIES];
+typedef std::vector<TrackEntry> tracklist_t;
+typedef std::vector<TrackEntry*> sorted_t;
+
+static tracklist_t gsTrackList;
+static sorted_t gsSortedTrackList;
 static int gsNbLaps;
 static BOOL gsAllowWeapons = FALSE;
 
@@ -67,13 +79,13 @@ MR_RecordFile *MR_TrackOpen(HWND pWindow, const char *pFileName)
 
 	long lHandle;
 	struct _finddata_t lFileInfo;
-	CString lPath = TRACK_PATH1;
+	std::string lPath = TRACK_PATH1;
 
-	lHandle = _findfirst(lPath + pFileName + TRACK_EXT, &lFileInfo);
+	lHandle = _findfirst((lPath + pFileName + TRACK_EXT).c_str(), &lFileInfo);
 
 	if(lHandle == -1) {
 		lPath = TRACK_PATH2;
-		lHandle = _findfirst(lPath + pFileName + TRACK_EXT, &lFileInfo);
+		lHandle = _findfirst((lPath + pFileName + TRACK_EXT).c_str(), &lFileInfo);
 	}
 
 	if(lHandle == -1)							  // because it may have changed
@@ -82,7 +94,7 @@ MR_RecordFile *MR_TrackOpen(HWND pWindow, const char *pFileName)
 		_findclose(lHandle);
 
 		lReturnValue = new MR_RecordFile;
-		if(!lReturnValue->OpenForRead(lPath + pFileName + TRACK_EXT, TRUE)) {
+		if(!lReturnValue->OpenForRead((lPath + pFileName + TRACK_EXT).c_str(), TRUE)) {
 			delete lReturnValue;
 			lReturnValue = NULL;
 			MessageBox(pWindow, MR_LoadString(IDS_BAD_TRK_FORMAT), MR_LoadString(IDS_GAME_NAME), MB_ICONERROR | MB_OK | MB_APPLMODAL);
@@ -103,9 +115,19 @@ MR_RecordFile *MR_TrackOpen(HWND pWindow, const char *pFileName)
 	return lReturnValue;
 }
 
-BOOL MR_SelectTrack(HWND pParentWindow, CString & pTrackFile, int &pNbLap, BOOL & pAllowWeapons)
+/**
+ * Open the track selection dialog.
+ * @param pParentWindow The parent window handle.
+ * @param pTrackFile [out] The name of the track.
+ * @param pNbLap [out] The number of laps in the race.
+ * @param pAllowWeapons [out] Whether weapons are allowed or not.
+ * @return @c true if the user selected a track (@p pTrackFile, @p pNbLap, and
+ *         @p pAllowWeapons will be filled in), @c false if the user canceled
+ *         the dialog.
+ */
+bool MR_SelectTrack(HWND pParentWindow, std::string &pTrackFile, int &pNbLap, bool &pAllowWeapons)
 {
-	BOOL lReturnValue = TRUE;
+	bool lReturnValue = true;
 	gsSelectedEntry = -1;
 
 	// Load the entry list
@@ -113,15 +135,15 @@ BOOL MR_SelectTrack(HWND pParentWindow, CString & pTrackFile, int &pNbLap, BOOL 
 	SortList();
 
 	gsNbLaps = 5;								  // Default value
-	gsAllowWeapons = FALSE;
+	gsAllowWeapons = false;
 
 	if(DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_TRACK_SELECT), pParentWindow, TrackSelectCallBack) == IDOK) {
 		pTrackFile = gsSortedTrackList[gsSelectedEntry]->mFileName;
 		pNbLap = gsNbLaps;
-		pAllowWeapons = gsAllowWeapons;
-		lReturnValue = TRUE;
+		pAllowWeapons = (gsAllowWeapons != FALSE);
+		lReturnValue = true;
 	} else
-	lReturnValue = FALSE;
+	lReturnValue = false;
 	CleanList();
 
 	return lReturnValue;
@@ -130,23 +152,27 @@ BOOL MR_SelectTrack(HWND pParentWindow, CString & pTrackFile, int &pNbLap, BOOL 
 static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
 {
 	BOOL lReturnValue = FALSE;
-	int lCounter;
+	//int lCounter;
 
 	switch (pMsgId) {
 		// Catch environment modification events
 		case WM_INITDIALOG:
 			// Init track file list
-			for(lCounter = 0; lCounter < gsNbTrack; lCounter++)
-				SendDlgItemMessage(pWindow, IDC_LIST, LB_ADDSTRING, 0, (LPARAM) (const char *) (gsSortedTrackList[lCounter]->mFileName));
+			for (sorted_t::iterator iter = gsSortedTrackList.begin();
+				iter != gsSortedTrackList.end(); ++iter)
+			{
+				SendDlgItemMessage(pWindow, IDC_LIST, LB_ADDSTRING, 0,
+					(LPARAM) ((*iter)->mFileName.c_str()));
+			}
 
 			SetDlgItemInt(pWindow, IDC_NB_LAP, gsNbLaps, FALSE);
 			SendDlgItemMessage(pWindow, IDC_WEAPONS, BM_SETCHECK, BST_CHECKED, 0);
 			SendDlgItemMessage(pWindow, IDC_NB_LAP_SPIN, UDM_SETRANGE, 0, MAKELONG(99, 1));
 
-			if(gsNbTrack > 0) {
+			if (!gsSortedTrackList.empty()) {
 				gsSelectedEntry = 0;
 				SendDlgItemMessage(pWindow, IDOK, WM_ENABLE, TRUE, 0);
-				SetDlgItemText(pWindow, IDC_DESCRIPTION, gsSortedTrackList[gsSelectedEntry]->mDescription);
+				SetDlgItemText(pWindow, IDC_DESCRIPTION, gsSortedTrackList[gsSelectedEntry]->mDescription.c_str());
 				SendDlgItemMessage(pWindow, IDC_LIST, LB_SETCURSEL, 0, 0);
 			}
 			else {
@@ -163,13 +189,13 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 					switch (HIWORD(pWParam)) {
 						case LBN_SELCHANGE:
 							gsSelectedEntry = SendDlgItemMessage(pWindow, IDC_LIST, LB_GETCURSEL, 0, 0);
-							if((gsNbTrack == 0) || (gsSelectedEntry == -1)) {
+							if (gsSortedTrackList.empty() || (gsSelectedEntry == -1)) {
 								SendDlgItemMessage(pWindow, IDOK, WM_ENABLE, FALSE, 0);
 								SetDlgItemText(pWindow, IDC_DESCRIPTION, MR_LoadString(IDS_NO_SELECT));
 							}
 							else {
 								SendDlgItemMessage(pWindow, IDOK, WM_ENABLE, TRUE, 0);
-								SetDlgItemText(pWindow, IDC_DESCRIPTION, gsSortedTrackList[gsSelectedEntry]->mDescription);
+								SetDlgItemText(pWindow, IDC_DESCRIPTION, gsSortedTrackList[gsSelectedEntry]->mDescription.c_str());
 							}
 							break;
 					}
@@ -202,13 +228,13 @@ MR_TrackAvail MR_GetTrackAvail(const char *pFileName)
 
 	long lHandle;
 	struct _finddata_t lFileInfo;
-	CString lPath = TRACK_PATH1;
+	std::string lPath = TRACK_PATH1;
 
-	lHandle = _findfirst(lPath + pFileName + TRACK_EXT, &lFileInfo);
+	lHandle = _findfirst((lPath + pFileName + TRACK_EXT).c_str(), &lFileInfo);
 
 	if(lHandle == -1) {
 		lPath = TRACK_PATH2;
-		lHandle = _findfirst(lPath + pFileName + TRACK_EXT, &lFileInfo);
+		lHandle = _findfirst((lPath + pFileName + TRACK_EXT).c_str(), &lFileInfo);
 	}
 
 	if(lHandle != -1) {
@@ -216,7 +242,7 @@ MR_TrackAvail MR_GetTrackAvail(const char *pFileName)
 
 		MR_RecordFile lFile;
 
-		if(!lFile.OpenForRead(lPath + pFileName + TRACK_EXT))
+		if(!lFile.OpenForRead((lPath + pFileName + TRACK_EXT).c_str()))
 			ASSERT(FALSE);
 		else {
 			TrackEntry lCurrentEntry;
@@ -246,7 +272,9 @@ BOOL ReadTrackEntry(MR_RecordFile * pRecordFile, TrackEntry * pDest, const char 
 			int lMinorID;
 			int lMajorID;
 
-			lArchive >> pDest->mDescription;
+			CString cs;
+			lArchive >> cs;
+			pDest->mDescription = cs;
 			lArchive >> lMinorID;
 			lArchive >> lMajorID;
 
@@ -290,55 +318,45 @@ BOOL ReadTrackEntry(MR_RecordFile * pRecordFile, TrackEntry * pDest, const char 
 void SortList()
 {
 	// Init pointer list
-	if(gsNbTrack > 0) {
-		for(int lCounter = 0; lCounter < gsNbTrack; lCounter++)
+	if (!gsTrackList.empty()) {
+		gsSortedTrackList.resize(gsTrackList.size(), NULL);
+		for(unsigned int lCounter = 0; lCounter < gsTrackList.size(); lCounter++)
 			gsSortedTrackList[lCounter] = &(gsTrackList[lCounter]);
 
-		qsort(gsSortedTrackList, gsNbTrack, sizeof(gsSortedTrackList[0]), CompareFunc);
+		std::sort(gsSortedTrackList.begin(), gsSortedTrackList.end());
 	}
-}
-
-int CompareFunc(const void *elem1, const void *elem2)
-{
-	int lReturnValue = 0;
-	const TrackEntry **lElem1 = (const TrackEntry **) elem1;
-	const TrackEntry **lElem2 = (const TrackEntry **) elem2;
-
-	lReturnValue = (*lElem1)->mSortingIndex - (*lElem2)->mSortingIndex;
-
-	if(lReturnValue == 0)
-		lReturnValue = strcmp((*lElem1)->mFileName, (*lElem2)->mFileName);
-
-	return lReturnValue;
 }
 
 void ReadTrackList()
 {
 	long lHandle;
 	struct _finddata_t lFileInfo;
-	CString lPath = TRACK_PATH1;
+	std::string lPath = TRACK_PATH1;
 
 	CleanList();
 
-	lHandle = _findfirst(lPath + "*" + TRACK_EXT, &lFileInfo);
+	lHandle = _findfirst((lPath + "*" TRACK_EXT).c_str(), &lFileInfo);
 
 	if(lHandle == -1) {
 		lPath = TRACK_PATH2;
-		lHandle = _findfirst(lPath + "*" + TRACK_EXT, &lFileInfo);
+		lHandle = _findfirst((lPath + "*" TRACK_EXT).c_str(), &lFileInfo);
 	}
 
 	if(lHandle != -1) {
+		gsTrackList.reserve(INIT_TRACK_ENTRIES);
+
 		do {
-			gsTrackList[gsNbTrack].mFileName = CString(lFileInfo.name, strlen(lFileInfo.name) - strlen(TRACK_EXT));
+			TrackEntry ent;
+			ent.mFileName = std::string(lFileInfo.name, 0, strlen(lFileInfo.name) - strlen(TRACK_EXT));
 
 			// Open the file and read aditionnal info
 			MR_RecordFile lRecordFile;
 
-			if(!lRecordFile.OpenForRead(lPath + gsTrackList[gsNbTrack].mFileName + TRACK_EXT))
+			if(!lRecordFile.OpenForRead((lPath + ent.mFileName + TRACK_EXT).c_str()))
 				ASSERT(FALSE);
 			else {
-				if(ReadTrackEntry(&lRecordFile, &(gsTrackList[gsNbTrack]), NULL))
-					gsNbTrack++;
+				if(ReadTrackEntry(&lRecordFile, &ent, NULL))
+					gsTrackList.push_back(ent);
 				else
 					ASSERT(FALSE);
 			}
@@ -351,9 +369,6 @@ void ReadTrackList()
 
 void CleanList()
 {
-	for(int lCounter = 0; lCounter < gsNbTrack; lCounter++) {
-		gsTrackList[lCounter].mFileName = "";
-		gsTrackList[lCounter].mDescription = "";
-	}
-	gsNbTrack = 0;
+	gsTrackList.clear();
+	gsSortedTrackList.clear();
 }

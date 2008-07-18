@@ -1366,7 +1366,7 @@ void MR_GameApp::DeleteMovieWnd()
 
 void MR_GameApp::NewLocalSession()
 {
-	BOOL lSuccess = TRUE;
+	bool lSuccess = true;
 
 	// Verify is user acknowledge
 	if(AskUserToAbortGame() != IDOK)
@@ -1376,9 +1376,9 @@ void MR_GameApp::NewLocalSession()
 	Clean();
 
 	// Prompt the user for a track name
-	CString lCurrentTrack;
+	std::string lCurrentTrack;
 	int lNbLap;
-	BOOL lAllowWeapons;
+	bool lAllowWeapons;
 
 	lSuccess = MR_SelectTrack(mMainWindow, lCurrentTrack, lNbLap, lAllowWeapons);
 
@@ -1392,8 +1392,8 @@ void MR_GameApp::NewLocalSession()
 
 		// Load the selected track
 		if(lSuccess) {
-			MR_RecordFile *lTrackFile = MR_TrackOpen(mMainWindow, lCurrentTrack);
-			lSuccess = lCurrentSession->LoadNew(lCurrentTrack, lTrackFile, lNbLap, lAllowWeapons, mVideoBuffer);
+			MR_RecordFile *lTrackFile = MR_TrackOpen(mMainWindow, lCurrentTrack.c_str());
+			lSuccess = (lCurrentSession->LoadNew(lCurrentTrack.c_str(), lTrackFile, lNbLap, lAllowWeapons, mVideoBuffer) != FALSE);
 		}
 		// Create the main character
 		if(lSuccess)
@@ -1401,7 +1401,7 @@ void MR_GameApp::NewLocalSession()
 
 		// Create the main character
 		if(lSuccess)
-			lSuccess = lCurrentSession->CreateMainCharacter();
+			lSuccess = (lCurrentSession->CreateMainCharacter() != FALSE);
 
 		if(lSuccess) {
 			mCurrentSession = lCurrentSession;
@@ -1424,7 +1424,7 @@ void MR_GameApp::NewLocalSession()
 
 void MR_GameApp::NewSplitSession(int pSplitPlayers)
 {
-	BOOL lSuccess = TRUE;
+	bool lSuccess = true;
 
 	// Verify is user acknowledge
 	if(AskUserToAbortGame() != IDOK)
@@ -1434,9 +1434,9 @@ void MR_GameApp::NewSplitSession(int pSplitPlayers)
 	Clean();
 
 	// Prompt the user for a maze name
-	CString lCurrentTrack;
+	std::string lCurrentTrack;
 	int lNbLap;
-	BOOL lAllowWeapons;
+	bool lAllowWeapons;
 
 	lSuccess = MR_SelectTrack(mMainWindow, lCurrentTrack, lNbLap, lAllowWeapons);
 
@@ -1472,23 +1472,23 @@ void MR_GameApp::NewSplitSession(int pSplitPlayers)
 
 		// Load the selected maze
 		if(lSuccess) {
-			MR_RecordFile *lTrackFile = MR_TrackOpen(mMainWindow, lCurrentTrack);
-			lSuccess = lCurrentSession->LoadNew(lCurrentTrack, lTrackFile, lNbLap, lAllowWeapons, mVideoBuffer);
+			MR_RecordFile *lTrackFile = MR_TrackOpen(mMainWindow, lCurrentTrack.c_str());
+			lSuccess = (lCurrentSession->LoadNew(lCurrentTrack.c_str(), lTrackFile, lNbLap, lAllowWeapons, mVideoBuffer) != FALSE);
 		}
 
 		if(lSuccess) {
 			lCurrentSession->SetSimulationTime(-8000);
 
 			// Create the main character2
-			lSuccess = lCurrentSession->CreateMainCharacter();
+			lSuccess = (lCurrentSession->CreateMainCharacter() != FALSE);
 		}
 
 		if(lSuccess) {
-			lSuccess = lCurrentSession->CreateMainCharacter2();
+			lSuccess = (lCurrentSession->CreateMainCharacter2() != FALSE);
 			if(pSplitPlayers > 2)
-				lSuccess = lCurrentSession->CreateMainCharacter3();
+				lSuccess = (lCurrentSession->CreateMainCharacter3() != FALSE);
 			if(pSplitPlayers > 3)
-				lSuccess = lCurrentSession->CreateMainCharacter4();
+				lSuccess = (lCurrentSession->CreateMainCharacter4() != FALSE);
 		}
 
 		if(!lSuccess) {
@@ -1512,7 +1512,7 @@ void MR_GameApp::NewSplitSession(int pSplitPlayers)
 
 void MR_GameApp::NewNetworkSession(BOOL pServer)
 {
-	BOOL lSuccess = TRUE;
+	bool lSuccess = true;
 	MR_NetworkSession *lCurrentSession = NULL;
 	MR_Config *cfg = MR_Config::GetInstance();
 
@@ -1523,9 +1523,9 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 	// Delete the current session
 	Clean();
 
-	CString lCurrentTrack;
+	std::string lCurrentTrack;
 	int lNbLap;
-	BOOL lAllowWeapons;
+	bool lAllowWeapons;
 	// Prompt the user for a maze name fbm extensions
 
 	if(pServer) {
@@ -1542,7 +1542,9 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 		lCurrentSession = new MR_NetworkSession(FALSE, -1, -1, mMainWindow);
 		lCurrentSession->SetPlayerName(cfg->player.nickName.c_str());
 
-		lSuccess = lCurrentSession->PreConnectToServer(mMainWindow, lCurrentTrack);
+		CString lTrack;
+		lSuccess = (lCurrentSession->PreConnectToServer(mMainWindow, lTrack) != FALSE);
+		lCurrentTrack = static_cast<const char*>(lTrack);
 
 		if(cfg->player.nickName != lCurrentSession->GetPlayerName()) {
 			cfg->player.nickName = lCurrentSession->GetPlayerName();
@@ -1555,20 +1557,21 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 		lNbLap = 5;								  // Default
 		lAllowWeapons = FALSE;
 
-		for(int lCounter = lCurrentTrack.GetLength() - 1; lCounter >= 0; lCounter--) {
+		for(int lCounter = lCurrentTrack.length() - 1; lCounter >= 0; lCounter--) {
 			if(lCurrentTrack[lCounter] == ' ') {
 				lSpaceCount++;
 
 				if(lSpaceCount == 2)
-					lAllowWeapons = strncmp(((const char *) lCurrentTrack) + lCounter + 1, "no", 2);
+					lAllowWeapons = (strncmp(lCurrentTrack.c_str() + lCounter + 1, "no", 2) != 0);
 
 				if(lSpaceCount == 4) {
-					lNbLap = atoi(((const char *) lCurrentTrack) + lCounter + 1);
+					lNbLap = atoi(lCurrentTrack.c_str() + lCounter + 1);
 
 					if(lNbLap < 1)
 						lNbLap = 5;
 
-					lCurrentTrack = CString(lCurrentTrack, lCounter);
+					//lCurrentTrack = CString(lCurrentTrack, lCounter);
+					lCurrentTrack.resize(lCounter);
 					break;
 				}
 			}
@@ -1579,32 +1582,32 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 		mObserver1 = MR_Observer::New();
 
 		// Load the track
-		MR_RecordFile *lTrackFile = MR_TrackOpen(mMainWindow, lCurrentTrack);
-		lSuccess = lCurrentSession->LoadNew(lCurrentTrack, lTrackFile, lNbLap, lAllowWeapons, mVideoBuffer);
+		MR_RecordFile *lTrackFile = MR_TrackOpen(mMainWindow, lCurrentTrack.c_str());
+		lSuccess = (lCurrentSession->LoadNew(lCurrentTrack.c_str(), lTrackFile, lNbLap, lAllowWeapons, mVideoBuffer) != FALSE);
 	}
 
 	if(lSuccess) {
 		if(pServer) {
 			CString lNameBuffer;
 
-			lNameBuffer.Format("%s %d %s %s", (const char *) lCurrentTrack, lNbLap, lNbLap > 1 ? "laps" : "lap", lAllowWeapons ? "with weapons" : "no weapons");
+			lNameBuffer.Format("%s %d %s %s", lCurrentTrack.c_str(), lNbLap, lNbLap > 1 ? "laps" : "lap", lAllowWeapons ? "with weapons" : "no weapons");
 
 			// Create a net server
 			lCurrentSession->SetPlayerName(cfg->player.nickName.c_str());
 
-			lSuccess = lCurrentSession->WaitConnections(mMainWindow, lNameBuffer);
+			lSuccess = (lCurrentSession->WaitConnections(mMainWindow, lNameBuffer) != FALSE);
 			if(cfg->player.nickName != lCurrentSession->GetPlayerName()) {
 				cfg->player.nickName = lCurrentSession->GetPlayerName();
 				SaveRegistry();
 			}
 		} else
-		lSuccess = lCurrentSession->ConnectToServer(mMainWindow);
+		lSuccess = (lCurrentSession->ConnectToServer(mMainWindow) != FALSE);
 	}
 
 	if(lSuccess) {
 												  // start in 13 seconds
 		lCurrentSession->SetSimulationTime(-13000);
-		lSuccess = lCurrentSession->CreateMainCharacter();
+		lSuccess = (lCurrentSession->CreateMainCharacter() != FALSE);
 	}
 
 	if(!lSuccess) {

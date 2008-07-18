@@ -18,6 +18,7 @@
 #include <afxcmn.h>								  // MFC support for Windows 95 Common Controls
 #endif											  // _AFX_NO_AFXCMN_SUPPORT
 
+#include <algorithm>
 #include <exception>
 #include <map>
 #include <sstream>
