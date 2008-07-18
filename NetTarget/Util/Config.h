@@ -28,10 +28,10 @@ class MR_Config
 		std::string path;
 		std::string version;
 
-	protected:
-		MR_DllDeclare MR_Config(const std::string &version, const std::string &file="");
+	private:
+		MR_DllDeclare MR_Config(const std::string &version="0.0.0.0", const std::string &file="");
 	public:
-		MR_DllDeclare virtual ~MR_Config();
+		MR_DllDeclare ~MR_Config();
 	
 		MR_DllDeclare static MR_Config *Init(const std::string &version, const std::string &path="");
 		MR_DllDeclare static void Shutdown();
