@@ -37,11 +37,11 @@ class TrackEntry
 		int mRegistrationMode;
 		int mSortingIndex;
 
-		friend operator<(const TrackEntry &elem1, const TrackEntry &elem2)
+		bool operator<(const TrackEntry &elem2) const
 		{
-			int diff = elem1.mSortingIndex - elem2.mSortingIndex;
+			int diff = mSortingIndex - elem2.mSortingIndex;
 			if (diff == 0) {
-				return elem1.mFileName < elem2.mFileName;
+				return mFileName < elem2.mFileName;
 			}
 			else {
 				return (diff < 0);
@@ -56,8 +56,10 @@ class TrackEntry
 // Local functions
 static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 static BOOL ReadTrackEntry(MR_RecordFile * pRecordFile, TrackEntry * pDest, const char *pFileName);
+static bool CompareFunc(const TrackEntry *ent1, const TrackEntry *ent2);
 static void SortList();
 static void ReadTrackList();
+static void ReadTrackListDir(const std::string &dir);
 static void CleanList();
 
 // Initial reserve size for track list.
@@ -315,6 +317,12 @@ BOOL ReadTrackEntry(MR_RecordFile * pRecordFile, TrackEntry * pDest, const char 
 	return lReturnValue;
 }
 
+// Comparison function for SortList().
+bool CompareFunc(const TrackEntry *ent1, const TrackEntry *ent2)
+{
+	return (*ent1) < (*ent2);
+}
+
 void SortList()
 {
 	// Init pointer list
@@ -323,27 +331,32 @@ void SortList()
 		for(unsigned int lCounter = 0; lCounter < gsTrackList.size(); lCounter++)
 			gsSortedTrackList[lCounter] = &(gsTrackList[lCounter]);
 
-		std::sort(gsSortedTrackList.begin(), gsSortedTrackList.end());
+		std::sort(gsSortedTrackList.begin(), gsSortedTrackList.end(), CompareFunc);
 	}
 }
 
+/// Read the list of tracks from all search directories.
 void ReadTrackList()
+{
+	CleanList();
+	gsTrackList.reserve(INIT_TRACK_ENTRIES);
+
+	ReadTrackListDir(TRACK_PATH1);
+	ReadTrackListDir(TRACK_PATH2);
+}
+
+/**
+ * Read the list of tracks from a directory and add them to the global list.
+ * @param dir The directory (does not need to exist).
+ */
+void ReadTrackListDir(const std::string &dir)
 {
 	long lHandle;
 	struct _finddata_t lFileInfo;
-	std::string lPath = TRACK_PATH1;
 
-	CleanList();
-
-	lHandle = _findfirst((lPath + "*" TRACK_EXT).c_str(), &lFileInfo);
-
-	if(lHandle == -1) {
-		lPath = TRACK_PATH2;
-		lHandle = _findfirst((lPath + "*" TRACK_EXT).c_str(), &lFileInfo);
-	}
+	lHandle = _findfirst((dir + "\\*" TRACK_EXT).c_str(), &lFileInfo);
 
 	if(lHandle != -1) {
-		gsTrackList.reserve(INIT_TRACK_ENTRIES);
 
 		do {
 			TrackEntry ent;
@@ -352,7 +365,7 @@ void ReadTrackList()
 			// Open the file and read aditionnal info
 			MR_RecordFile lRecordFile;
 
-			if(!lRecordFile.OpenForRead((lPath + ent.mFileName + TRACK_EXT).c_str()))
+			if(!lRecordFile.OpenForRead((dir + ent.mFileName + TRACK_EXT).c_str()))
 				ASSERT(FALSE);
 			else {
 				if(ReadTrackEntry(&lRecordFile, &ent, NULL))
@@ -367,6 +380,7 @@ void ReadTrackList()
 	}
 }
 
+/// Clear the track list.
 void CleanList()
 {
 	gsTrackList.clear();
