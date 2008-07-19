@@ -719,18 +719,6 @@ void MR_GameApp::SaveRegistry()
 	MR_Config::GetInstance()->Save();
 }
 
-BOOL MR_GameApp::DisplayNotice()
-{
-	return (DialogBox(mInstance, MAKEINTRESOURCE(IDD_LEGAL_NOT), NULL, NoticeDlgFunc) == IDOK);
-}
-
-BOOL MR_GameApp::DisplayLoginWindow()
-{
-	// The demo/registered versions are no longer necessary, as HoverRace is
-	// now free.  Therefore we just tell the game that we're registered.
-	return TRUE;
-}
-
 BOOL MR_GameApp::IsGameRunning()
 {
 	BOOL lReturnValue = FALSE;
@@ -1041,11 +1029,6 @@ BOOL MR_GameApp::InitGame()
 		
 		MCIWndPlay(mMovieWnd);
 
-		// the function of this is currently unknown but it was not being used
-		/* CreateDialog( mInstance,
-		   MAKEINTRESOURCE( IDD_BACK_ANIM ),
-		   mMainWindow,
-		   MovieDialogFunc ); */
 	}
 
 	if(lReturnValue)
@@ -2687,24 +2670,6 @@ BOOL CALLBACK MR_GameApp::BadModeDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 	return FALSE;
 }
 
-BOOL CALLBACK MR_GameApp::MovieDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
-{
-	/*
-	   switch( pMsgId )
-	   {
-	   // Catch environment modification events
-	   case WM_INITDIALOG:
-	   // Create a MCIWnd
-	   HWND lMCIWindow = MCIWndCreate( pWindow, This->mInstance, WS_CHILD|WS_VISIBLE, "Intro.avi" );
-	   // Load the Intro video
-	   // Animate_Open( GetDlgItem( pWindow, IDC_BACK_ANIM ) , "Intro.avi" );
-	   return TRUE;
-	   }
-	 */
-
-	return FALSE;
-}
-
 BOOL CALLBACK MR_GameApp::FirstChoiceDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
 	{
 		BOOL lReturnValue = FALSE;
@@ -2844,114 +2809,6 @@ BOOL CALLBACK MR_GameApp::AboutDlgFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam
 
 				case IDOK:
 					EndDialog(pWindow, IDOK);
-					lReturnValue = TRUE;
-					break;
-			}
-			break;
-	}
-	return lReturnValue;
-}
-
-BOOL CALLBACK MR_GameApp::NoticeDlgFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
-{
-	static HBITMAP lBitmap = NULL;
-	static HPALETTE lPalette = NULL;
-	static time_t lInitTime = 0;
-
-	BOOL lReturnValue = FALSE;
-
-	switch (pMsgId) {
-		// Catch environment modification events
-
-		case WM_INITDIALOG:
-			{
-				lInitTime = time(NULL);
-	
-				HWND lBitmapCtl = GetDlgItem(pWindow, IDC_BITMAP);
-	
-				if(lBitmapCtl != NULL) {
-					HDC hdc = GetDC(lBitmapCtl);
-	
-					lBitmap = LoadResourceBitmap(This->mInstance, MAKEINTRESOURCE(IDB_LEGAL_NOT), &lPalette);
-	
-					ASSERT(lBitmap != NULL);
-	
-					SelectPalette(hdc, lPalette, FALSE);
-					RealizePalette(hdc);
-	
-					HANDLE lOldHandle = (HANDLE) SendMessage(lBitmapCtl, STM_SETIMAGE, IMAGE_BITMAP, (long) lBitmap);
-				}
-				else {
-					lBitmap = NULL;
-					lPalette = NULL;
-				}
-				lReturnValue = TRUE;
-			}
-			break;
-
-		case WM_DESTROY:
-			if(lBitmap != NULL) {
-				DeleteObject(lBitmap);
-				lBitmap = NULL;
-			}
-
-			if(lPalette != NULL) {
-				DeleteObject(lPalette);
-				lPalette = NULL;
-			}
-
-		case WM_QUERYNEWPALETTE:
-			if(lPalette != NULL) {
-				HWND lBitmapCtl = GetDlgItem(pWindow, IDC_BITMAP);
-
-				if(lBitmapCtl != NULL) {
-					HDC hdc = GetDC(lBitmapCtl);
-
-					SelectPalette(hdc, lPalette, FALSE);
-					RealizePalette(hdc);
-				}
-				lReturnValue = TRUE;
-			}
-			break;
-
-		case WM_PALETTECHANGED:
-			if((lPalette != NULL) && ((HWND) pWParam != pWindow)) {
-				HWND lBitmapCtl = GetDlgItem(pWindow, IDC_BITMAP);
-
-				if(lBitmapCtl != NULL) {
-					HDC hdc = GetDC(lBitmapCtl);
-
-					SelectPalette(hdc, lPalette, TRUE);
-					RealizePalette(hdc);
-				}
-				lReturnValue = TRUE;
-			}
-			break;
-
-		case WM_COMMAND:
-			switch (LOWORD(pWParam)) {
-
-				case IDCANCEL:
-					EndDialog(pWindow, IDCANCEL);
-					lReturnValue = TRUE;
-					break;
-
-				case IDOK:
-					struct tm *lTime;
-
-					lTime = localtime(&lInitTime);
-
-					if((lInitTime + 1) > time(NULL)) {
-						MessageBox(pWindow, MR_LoadString(IDS_READ_NOTICE), MR_LoadString(IDS_GAME_NAME), MB_ICONWARNING | MB_APPLMODAL | MB_OK);
-					} else if(!(((lTime->tm_year == 96) && (lTime->tm_mon == 11)) || ((lTime->tm_year == 97) && (lTime->tm_mon == 0))
-						)
-					) {
-
-						MessageBox(pWindow, "This beta version is expired\n" "Look at www.hoverrace.com for a new version", "Hover Race", MB_ICONSTOP | MB_APPLMODAL | MB_OK);
-					}
-					else {
-						EndDialog(pWindow, IDOK);
-					}
 					lReturnValue = TRUE;
 					break;
 			}

@@ -20,9 +20,7 @@
 #define IDD_CONTROL                     110
 #define IDD_BAD_MODE                    111
 #define IDD_BAD_MODE3                   111
-#define IDD_BACK_ANIM                   112
 #define IDD_ABOUT                       114
-#define IDD_LEGAL_NOT                   115
 #define IDD_INTERNET_MEETING            124
 #define IDD_INTERNET_PARAMS             125
 #define IDB_LEGAL_NOT                   126

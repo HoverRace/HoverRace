@@ -35,15 +35,6 @@ int WINAPI WinMain(HINSTANCE pInstance, HINSTANCE pPrevInstance, LPSTR /* pCmdLi
 	if(!GetAsyncKeyState(VK_CAPITAL))
 		lReturnValue = lGame.IsFirstInstance();
 
-	if(lReturnValue) {
-		//lReturnValue = lGame.DisplayNotice(); // seems to crash when it does this
-		lReturnValue = lGame.DisplayLoginWindow();
-	}
-
-	GetAsyncKeyState(VK_CAPITAL);				  // Reset the function
-	if(lReturnValue && !GetAsyncKeyState(VK_CAPITAL))
-		lReturnValue = lGame.IsFirstInstance();
-
 	if(lReturnValue && (pPrevInstance == NULL))
 		lReturnValue = lGame.InitApplication();
 
