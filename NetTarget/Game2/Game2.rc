@@ -539,42 +539,6 @@ BEGIN
     LTEXT           "Shift+F5",IDC_STATIC,4,74,36,8
 END
 
-IDD_LOGIN_PASSWD DIALOGEX 0, 0, 284, 245
-STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_POPUP | 
-    WS_CAPTION | WS_SYSMENU
-CAPTION "HoverRace(Registred version)"
-FONT 8, "MS Sans Serif", 0, 0, 0x1
-BEGIN
-    EDITTEXT        IDC_PASSWD,53,192,95,14,ES_PASSWORD | ES_AUTOHSCROLL
-    DEFPUSHBUTTON   "Start HoverRace",IDOK,193,166,84,14
-    PUSHBUTTON      "Start Demo version",IDC_DEMO,193,182,84,14
-    LTEXT           "Password:",IDC_STATIC,14,195,35,8
-    CONTROL         "",IDC_STATIC,"Static",SS_BLACKFRAME,75,210,134,2
-    LTEXT           "This is a registered copy of HoverRace. You must supply a valid password if you want to have access to all the features of the game. Pressing ""Start Demo version"" will give you access only to the features of the Free version.",
-                    IDC_STATIC,7,214,270,27
-    LTEXT           "Owner:",IDC_STATIC,14,167,30,8
-    LTEXT           "",IDC_OWNER,53,166,128,11,0,WS_EX_STATICEDGE
-    LTEXT           "Company:",IDC_STATIC,14,179,32,8
-    LTEXT           "",IDC_COMPANY,53,178,128,11,0,WS_EX_STATICEDGE
-    CONTROL         "",IDC_BITMAP,"Static",SS_BITMAP | SS_CENTERIMAGE | 
-                    SS_SUNKEN,7,7,270,152
-END
-
-IDD_LOGIN DIALOGEX 0, 0, 272, 207
-STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | DS_CENTER | WS_POPUP | 
-    WS_CAPTION | WS_SYSMENU
-CAPTION "HoverRace (Demo version)"
-FONT 8, "MS Sans Serif", 0, 0, 0x0
-BEGIN
-    DEFPUSHBUTTON   "Start HoverRace",IDOK,182,186,83,14
-    LTEXT           "This is a non-registered copy of HoverRace. Non-registered version let you play the game but some of the features are only available to registered users. ",
-                    -1,7,168,167,32
-    PUSHBUTTON      "Registration info...",ID_GAME_REGISTER,182,169,83,14
-    PUSHBUTTON      "www.hoverrace.com",ID_HELP_SITE,7,155,258,11,BS_FLAT
-    CONTROL         "",IDC_BITMAP,"Static",SS_BITMAP | SS_CENTERIMAGE | 
-                    SS_SUNKEN,7,7,258,147
-END
-
 #if defined(APSTUDIO_INVOKED) || defined(_ON_)
 #if defined(APSTUDIO_INVOKED)
 IDD_INTERNET_PARAMS$(_ON_) DIALOG  0, 0, 170, 66
@@ -677,17 +641,6 @@ BEGIN
     CONTROL         "",IDC_STATIC,"Static",SS_GRAYFRAME | SS_SUNKEN,7,46,194,
                     38
     ICON            IDI_HOVER_ICON,IDC_STATIC,7,16,21,20
-END
-
-IDD_SPONSOR DIALOG  0, 0, 236, 182
-STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | 
-    WS_SYSMENU
-CAPTION "HoverRace"
-FONT 8, "MS Sans Serif"
-BEGIN
-    DEFPUSHBUTTON   "Start HoverRace",IDOK,150,161,79,16
-    PUSHBUTTON      "Button1",IDC_BITMAP,7,7,222,151,BS_BITMAP | BS_FLAT | 
-                    NOT WS_TABSTOP
 END
 
 IDD_LADDER_SUBMIT_QUIT DIALOG  0, 0, 162, 73
@@ -929,22 +882,6 @@ BEGIN
         BOTTOMMARGIN, 114
     END
 
-    IDD_LOGIN_PASSWD, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 277
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 241
-    END
-
-    IDD_LOGIN, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 265
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 200
-    END
-
     "IDD_INTERNET_PARAMS$(_ON_)", DIALOG
     BEGIN
         LEFTMARGIN, 7
@@ -998,14 +935,6 @@ BEGIN
         RIGHTMARGIN, 201
         TOPMARGIN, 7
         BOTTOMMARGIN, 85
-    END
-
-    IDD_SPONSOR, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 229
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 177
     END
 
     IDD_LADDER_SUBMIT_QUIT, DIALOG
