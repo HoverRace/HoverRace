@@ -245,20 +245,22 @@ BOOL MR_RecordFile::OpenForRead(const char *pFileName, BOOL pValidateChkSum)
 			mTable->Serialize(lArchive);
 		}
 
-		if(mTable == NULL) {
-			lReturnValue = FALSE;
-			CFile::Close();
-		}
-		else if(pValidateChkSum && (lSum != mTable->mChkSum)) {
-			// Wrong file sum
-			lReturnValue = FALSE;
-			CFile::Close();
-		}
-		else {
-			// Select the first record if availlable
-			if(mTable->mRecordList != NULL) {
-				mCurrentRecord = 0;
-				Seek(0, begin);
+		if(lReturnValue) {
+			if(mTable == NULL) {
+				lReturnValue = FALSE;
+				CFile::Close();
+			}
+			else if(pValidateChkSum && (lSum != mTable->mChkSum)) {
+				// Wrong file sum
+				lReturnValue = FALSE;
+				CFile::Close();
+			}
+			else {
+				// Select the first record if availlable
+				if(mTable->mRecordList != NULL) {
+					mCurrentRecord = 0;
+					Seek(0, begin);
+				}
 			}
 		}
 	}
