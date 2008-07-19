@@ -35,7 +35,6 @@
 #define IDD_WAIT_ALL                    142
 #define IDI_WARNING2                    143
 #define IDD_CHAT_MESSAGES               143
-#define IDB_INTRO                       146
 #define IDD_INTERNET_MEETING_PUB        150
 #define IDD_LADDER_SUBMIT               152
 #define IDD_LADDER_RES_3                153
