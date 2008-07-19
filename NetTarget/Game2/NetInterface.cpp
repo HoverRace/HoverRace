@@ -980,7 +980,7 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 					ListView_InsertColumn(lListHandle, 1, &lSpec);
 	
 					CString lStatusLabel;
-					lStatusLabel.LoadString(IDS_LAG);
+					lStatusLabel.LoadString(IDS_STATUS);
 					lSpec.fmt = LVCFMT_LEFT;
 					lSpec.cx = lWidth / 4;
 					lSpec.pszText = (char *) (const char *) lStatusLabel;
