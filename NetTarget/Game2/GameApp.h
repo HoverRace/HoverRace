@@ -73,6 +73,7 @@ class MR_GameApp
 		eViewMode mCurrentMode;
 
 		bool safeMode;
+		bool allowMultipleInstances;
 
 		int mClrScrTodo;
 

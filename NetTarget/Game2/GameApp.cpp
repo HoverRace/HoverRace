@@ -528,6 +528,7 @@ MR_GameApp::MR_GameApp(HINSTANCE pInstance)
 	mGameThread = NULL;
 
 	safeMode = false;
+	allowMultipleInstances = false;
 
 	mCurrentMode = e3DView;
 
@@ -638,6 +639,9 @@ void MR_GameApp::ProcessCmdLine(int argc, char **argv)
 		if (strcmp("-s", arg) == 0) {
 			safeMode = true;
 		}
+		else if (strcmp("-m", arg) == 0) {
+			allowMultipleInstances = true;
+		}
 	}
 }
 
@@ -648,16 +652,11 @@ void MR_GameApp::LoadRegistry()
 	char lBuffer[80];
 	DWORD lBufferSize = sizeof(lBuffer);
 
-	// Prerecorded messages
-	// Joystick stuff
-
 	// Now verify in the registry if this information can not be retrieved
 	HKEY lProgramKey;
 
 	int lError = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
 		"SOFTWARE\\HoverRace.com\\HoverRace",
-	// "SOFTWARE",
-	// NULL,
 		0,
 		KEY_EXECUTE,
 		&lProgramKey);
@@ -894,6 +893,8 @@ int MR_GameApp::MainLoop()
 
 BOOL MR_GameApp::IsFirstInstance() const
 {
+	if (allowMultipleInstances) return TRUE;
+
 	HWND lPrevAppWnd = FindWindow(MR_APP_CLASS_NAME, NULL);
 	HWND lChildAppWnd = NULL;
 
