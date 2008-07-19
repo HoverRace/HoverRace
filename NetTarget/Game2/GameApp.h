@@ -91,7 +91,6 @@ class MR_GameApp
 		static BOOL CALLBACK MiscDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 		static BOOL CALLBACK BadModeDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 		static BOOL CALLBACK AboutDlgFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
-		static BOOL CALLBACK LoginFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 		static BOOL CALLBACK FirstChoiceDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 
 		static void UpdateIntensityDialogLabels(HWND pWindow);
@@ -123,9 +122,6 @@ class MR_GameApp
 
 		void PauseGameThread();
 		void RestartGameThread();
-
-		// void EnterMenuLoop();
-		// void EndMenuLoop();
 
 		void DeleteMovieWnd();
 

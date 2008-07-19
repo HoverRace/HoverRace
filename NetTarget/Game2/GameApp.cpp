@@ -1307,33 +1307,6 @@ BOOL MR_GameApp::GetDesktopResolution(POINT* lpPoint)
 	return (lpPoint->x != 0 && lpPoint->y != 0);
 }
 
-//void MR_GameApp::EnterMenuLoop()
-//{
-//   mMenuStack++;
-//   if( /*(mMenuStack==1)&&*/(mVideoBuffer != NULL)&&!mVideoBuffer->IsWindowMode() )
-//   {
-//      PauseGameThread();
-//      mClrScrTodo = 2;
-//      mVideoBuffer->PushMenuMode();
-//      AssignPalette();
-//      RestartGameThread();
-//   }
-//}
-
-//void MR_GameApp::EndMenuLoop()
-//{
-//   mMenuStack--;
-//   if( (mMenuStack<=0)&&(mVideoBuffer != NULL)&&!mVideoBuffer->IsWindowMode() )
-//   {
-//      mMenuStack = 0;
-//      PauseGameThread();
-//      mClrScrTodo = 2;
-//      mVideoBuffer->PopMenuMode();
-//      AssignPalette();
-//      RestartGameThread();
-//   }
-//}
-
 void MR_GameApp::DeleteMovieWnd()
 {
 	if(mMovieWnd != NULL) {
@@ -1829,13 +1802,6 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 			This->UpdateMenuItems();
 			break;
 
-			/*
-			   case WM_EXITMENULOOP:
-			   SetTimer( pWindow, MRM_EXIT_MENU_LOOP, 1000, NULL );
-			   // This->EndMenuLoop();
-			   break;
-			 */
-
 		case WM_TIMER:
 			switch (pWParam) {
 				case MRM_RETURN2WINDOWMODE:
@@ -1848,14 +1814,6 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 					}
 
 					return 0;
-
-					/*
-					   case MRM_EXIT_MENU_LOOP:
-					   KillTimer( pWindow, MRM_EXIT_MENU_LOOP );
-					   This->EndMenuLoop();
-					   return 0;
-					 */
-
 			}
 			break;
 
@@ -2810,111 +2768,6 @@ BOOL CALLBACK MR_GameApp::AboutDlgFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam
 				case IDOK:
 					EndDialog(pWindow, IDOK);
 					lReturnValue = TRUE;
-					break;
-			}
-			break;
-	}
-	return lReturnValue;
-}
-
-BOOL CALLBACK MR_GameApp::LoginFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
-{
-	static HBITMAP lBitmap = NULL;
-	static HPALETTE lPalette = NULL;
-
-	BOOL lReturnValue = FALSE;
-
-	switch (pMsgId) {
-		// Catch environment modification events
-		case WM_INITDIALOG:
-			{
-				// Image setting
-				HWND lBitmapCtl = GetDlgItem(pWindow, IDC_BITMAP);
-	
-				if(lBitmapCtl != NULL) {
-					HDC hdc = GetDC(lBitmapCtl);
-	
-					lBitmap = LoadResourceBitmap(This->mInstance, MAKEINTRESOURCE(IDB_INTRO), &lPalette);
-					ASSERT(lBitmap != NULL);
-	
-					SelectPalette(hdc, lPalette, FALSE);
-					int lNbColors = RealizePalette(hdc);
-					ReleaseDC(lBitmapCtl, hdc);
-	
-					TRACE("Colors0 %d  %d\n", lNbColors, GetLastError());
-	
-					HANDLE lOldHandle = (HANDLE) SendMessage(lBitmapCtl, STM_SETIMAGE, IMAGE_BITMAP, (long) lBitmap);
-				}
-				else {
-					lBitmap = NULL;
-					lPalette = NULL;
-				}
-			}
-			lReturnValue = TRUE;
-			break;
-		case WM_DESTROY:
-			if(lBitmap != NULL) {
-				DeleteObject(lBitmap);
-				lBitmap = NULL;
-			}
-			if(lPalette != NULL) {
-				UnrealizeObject(lPalette);
-				DeleteObject(lPalette);
-				lPalette = NULL;
-			}
-			break;
-		case WM_QUERYNEWPALETTE:
-			if(lPalette != NULL) {
-				HWND lBitmapCtl = GetDlgItem(pWindow, IDC_BITMAP);
-				if(lBitmapCtl != NULL) {
-					HDC hdc = GetDC(lBitmapCtl);
-
-					HPALETTE lOldPalette = SelectPalette(hdc, lPalette, FALSE);
-					RealizePalette(hdc);
-
-					InvalidateRgn(pWindow, NULL, TRUE);
-					InvalidateRgn(lBitmapCtl, NULL, TRUE);
-					UpdateWindow(pWindow);
-					UpdateWindow(lBitmapCtl);
-
-					ReleaseDC(lBitmapCtl, hdc);
-
-					TRACE("PAL_SET\n");
-				}
-				lReturnValue = TRUE;
-			}
-			break;
-		case WM_PALETTECHANGED:
-			if((lPalette != NULL) && ((HWND) pWParam != pWindow)) {
-				HWND lBitmapCtl = GetDlgItem(pWindow, IDC_BITMAP);
-
-				if((lBitmapCtl != NULL) && ((HWND) pWParam != lBitmapCtl)) {
-					HDC hdc = GetDC(lBitmapCtl);
-
-					HPALETTE lOldPalette = SelectPalette(hdc, lPalette, FALSE);
-					RealizePalette(hdc);
-
-					UpdateColors(hdc);
-
-					ReleaseDC(lBitmapCtl, hdc);
-
-					TRACE("PAL_CHANGE\n");
-				}
-				lReturnValue = TRUE;
-			}
-			break;
-		case WM_COMMAND:
-			switch (LOWORD(pWParam)) {
-				case IDCANCEL:
-					EndDialog(pWindow, IDCANCEL);
-					lReturnValue = TRUE;
-					break;
-				case IDOK:
-					EndDialog(pWindow, IDOK);
-					lReturnValue = TRUE;
-					break;
-				case ID_HELP_SITE:
-					This->DisplaySite();
 					break;
 			}
 			break;
