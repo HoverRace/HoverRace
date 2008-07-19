@@ -26,6 +26,7 @@
 #include "io.h"
 #include "../MazeCompiler/TrackCommonStuff.h"
 #include "../Util/StrRes.h"
+#include "../Util/Config.h"
 
 #include <algorithm>
 
@@ -49,8 +50,14 @@ class TrackEntry
 		}
 };
 
-#define TRACK_PATH1 "..\\Tracks\\"
-#define TRACK_PATH2 ".\\Tracks\\"
+/// Search path for tracks (not including download path from config).
+static const char *TRACK_PATHS[] = {
+	".\\track_source\\",
+	".\\Tracks\\",
+	"..\\Tracks\\",
+};
+#define NUM_TRACK_PATHS 3
+
 #define TRACK_EXT   ".trk"
 
 // Local functions
@@ -61,6 +68,7 @@ static void SortList();
 static void ReadTrackList();
 static void ReadTrackListDir(const std::string &dir);
 static void CleanList();
+static std::string FindTrack(const std::string &name);
 
 // Initial reserve size for track list.
 #define INIT_TRACK_ENTRIES 1000
@@ -75,28 +83,24 @@ static sorted_t gsSortedTrackList;
 static int gsNbLaps;
 static BOOL gsAllowWeapons = FALSE;
 
+/**
+ * Open a track file.
+ * @param pWindow The window to use as the parent for dialog boxes.
+ * @param pFileName The track name (without the ".trk" extension).
+ * @return The opened track file, or NULL if the track could not be opened.
+ */
 MR_RecordFile *MR_TrackOpen(HWND pWindow, const char *pFileName)
 {
 	MR_RecordFile *lReturnValue = NULL;
 
-	long lHandle;
-	struct _finddata_t lFileInfo;
-	std::string lPath = TRACK_PATH1;
+	std::string filename = FindTrack(pFileName);
 
-	lHandle = _findfirst((lPath + pFileName + TRACK_EXT).c_str(), &lFileInfo);
-
-	if(lHandle == -1) {
-		lPath = TRACK_PATH2;
-		lHandle = _findfirst((lPath + pFileName + TRACK_EXT).c_str(), &lFileInfo);
-	}
-
-	if(lHandle == -1)							  // because it may have changed
+	if (filename.empty()) {
 		MessageBox(pWindow, MR_LoadString(IDS_TRK_NOTFOUND), MR_LoadString(IDS_GAME_NAME), MB_ICONERROR | MB_OK | MB_APPLMODAL);
+	}
 	else {
-		_findclose(lHandle);
-
 		lReturnValue = new MR_RecordFile;
-		if(!lReturnValue->OpenForRead((lPath + pFileName + TRACK_EXT).c_str(), TRUE)) {
+		if(!lReturnValue->OpenForRead(filename.c_str(), TRUE)) {
 			delete lReturnValue;
 			lReturnValue = NULL;
 			MessageBox(pWindow, MR_LoadString(IDS_BAD_TRK_FORMAT), MR_LoadString(IDS_GAME_NAME), MB_ICONERROR | MB_OK | MB_APPLMODAL);
@@ -224,27 +228,22 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 	return lReturnValue;
 }
 
+/**
+ * Check if a track is available locally.
+ * @param pFileName The track name (without the ".trk" extension).
+ * @return @c eTrackAvail if the track can be loaded,
+ *         @c eTrackNotFound if the track is unavailable.
+ */
 MR_TrackAvail MR_GetTrackAvail(const char *pFileName)
 {
 	MR_TrackAvail lReturnValue = eTrackNotFound;
 
-	long lHandle;
-	struct _finddata_t lFileInfo;
-	std::string lPath = TRACK_PATH1;
+	std::string path = FindTrack(pFileName);
 
-	lHandle = _findfirst((lPath + pFileName + TRACK_EXT).c_str(), &lFileInfo);
-
-	if(lHandle == -1) {
-		lPath = TRACK_PATH2;
-		lHandle = _findfirst((lPath + pFileName + TRACK_EXT).c_str(), &lFileInfo);
-	}
-
-	if(lHandle != -1) {
-		_findclose(lHandle);
-
+	if (!path.empty()) {
 		MR_RecordFile lFile;
 
-		if(!lFile.OpenForRead((lPath + pFileName + TRACK_EXT).c_str()))
+		if(!lFile.OpenForRead(path.c_str()))
 			ASSERT(FALSE);
 		else {
 			TrackEntry lCurrentEntry;
@@ -341,20 +340,22 @@ void ReadTrackList()
 	CleanList();
 	gsTrackList.reserve(INIT_TRACK_ENTRIES);
 
-	ReadTrackListDir(TRACK_PATH1);
-	ReadTrackListDir(TRACK_PATH2);
+	for (int i = 0; i < NUM_TRACK_PATHS; ++i) {
+		ReadTrackListDir(TRACK_PATHS[i]);
+	}
+	ReadTrackListDir(MR_Config::GetInstance()->GetTrackPath() + '\\');
 }
 
 /**
  * Read the list of tracks from a directory and add them to the global list.
- * @param dir The directory (does not need to exist).
+ * @param dir The directory (must end with directory separator) (does not need to exist).
  */
 void ReadTrackListDir(const std::string &dir)
 {
 	long lHandle;
 	struct _finddata_t lFileInfo;
 
-	lHandle = _findfirst((dir + "\\*" TRACK_EXT).c_str(), &lFileInfo);
+	lHandle = _findfirst((dir + "*" TRACK_EXT).c_str(), &lFileInfo);
 
 	if(lHandle != -1) {
 
@@ -385,4 +386,28 @@ void CleanList()
 {
 	gsTrackList.clear();
 	gsSortedTrackList.clear();
+}
+
+/**
+ * Search the directory list for a filename that matches a track name.
+ * @param name The track name (may not be null).
+ * @return The file path (may be relative).  Empty string if track not found.
+ */
+std::string FindTrack(const std::string &name)
+{
+	std::string path;
+
+	// Check the configurable download dir first (the extension will be
+	// added automatically).
+	path = MR_Config::GetInstance()->GetTrackPath(name);
+	if (_access(path.c_str(), 4) == 0) return path;
+
+	for (int i = 0; i < NUM_TRACK_PATHS; ++i) {
+		path = TRACK_PATHS[i];
+		path += name;
+		path += TRACK_EXT;
+		if (_access(path.c_str(), 4) == 0) return path;
+	}
+
+	return "";
 }

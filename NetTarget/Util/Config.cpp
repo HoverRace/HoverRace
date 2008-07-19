@@ -178,6 +178,33 @@ std::string MR_Config::GetMediaPath(const std::string &file) const
 }
 
 /**
+ * Retrieve the directory for downloaded tracks.
+ * @return The directory path (may be relative).
+ */
+std::string MR_Config::GetTrackPath() const
+{
+	return path + (DIRSEP "Tracks");
+}
+
+/**
+ * Retrieve the path to a downloaded track.
+ * @param file The track filename (may not be blank).
+ *             If the filename does not end in ".trk", it will be appended
+ *             automatically.
+ * @return The directory path (may be relative).
+ */
+std::string MR_Config::GetTrackPath(const std::string &file) const
+{
+	std::string retv(path);
+	retv += (DIRSEP "Tracks" DIRSEP);
+	retv += file;
+	if (file.length() < 4 || file.rfind(".trk") != (file.length() - 4)) {
+		retv += ".trk";
+	}
+	return retv;
+}
+
+/**
  * Resets the configuration to the default "factory" settings.
  */
 void MR_Config::ResetToDefaults()

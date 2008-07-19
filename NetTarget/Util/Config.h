@@ -42,6 +42,9 @@ class MR_Config
 		MR_DllDeclare std::string GetMediaPath() const;
 		MR_DllDeclare std::string GetMediaPath(const std::string &file) const;
 
+		MR_DllDeclare std::string GetTrackPath() const;
+		MR_DllDeclare std::string GetTrackPath(const std::string &file) const;
+
 	public:
 		MR_DllDeclare static MR_Config *GetInstance() { return instance; }
 
