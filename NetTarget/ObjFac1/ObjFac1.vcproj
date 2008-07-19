@@ -58,7 +58,7 @@
 				TypeLibraryName=".\..\Debug/ObjFac1.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy ObjFac1.dat ..\Debug\ObjFac1.dat"/>
+				CommandLine="copy ObjFac1.dat ..\Share\ObjFac1.dat"/>
 			<Tool
 				Name="VCPreBuildEventTool"/>
 			<Tool
