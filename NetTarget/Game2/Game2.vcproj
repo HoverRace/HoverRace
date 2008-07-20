@@ -4,6 +4,7 @@
 	Version="7.10"
 	Name="Game2"
 	ProjectGUID="{CDE9F9FA-DD28-46A6-811E-EFA85A111289}"
+	RootNamespace="Game2"
 	SccProjectName=""
 	SccLocalPath=""
 	Keyword="MFCProj">
@@ -43,10 +44,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="Vfw32.lib vfw32.lib wsock32.lib winmm.lib version.lib comctl32.lib"
+				AdditionalDependencies="Vfw32.lib vfw32.lib wsock32.lib winmm.lib version.lib comctl32.lib libcurl.lib"
 				OutputFile=".\..\Debug/Game2.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
+				AdditionalLibraryDirectories="..\..\lib"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\..\Debug/Game2.pdb"
 				SubSystem="2"/>
@@ -108,10 +110,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="vfw32.lib wsock32.lib winmm.lib version.lib comctl32.lib"
+				AdditionalDependencies="vfw32.lib wsock32.lib winmm.lib version.lib comctl32.lib libcurl.lib"
 				OutputFile=".\..\Release/Game2.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
+				AdditionalLibraryDirectories="..\..\lib"
 				ProgramDatabaseFile=".\..\Release/Game2.pdb"
 				SubSystem="2"/>
 			<Tool
@@ -239,6 +242,31 @@
 			</File>
 			<File
 				RelativePath=".\TrackSelect.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="Dist"
+			Filter="">
+			<File
+				RelativePath="..\..\lib\libcurl.dll">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; &quot;$(OutDir)&quot;
+"
+						Outputs="&quot;$(OutDir)\$(InputFileName)&quot;"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; &quot;$(OutDir)&quot;
+"
+						Outputs="&quot;$(OutDir)\$(InputFileName)&quot;"/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<File
