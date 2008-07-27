@@ -203,6 +203,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\TrackDownloadDialog.cpp">
+			</File>
+			<File
 				RelativePath=".\TrackSelect.cpp">
 			</File>
 		</Filter>
@@ -241,6 +244,9 @@
 			</File>
 			<File
 				RelativePath=".\StdAfx.h">
+			</File>
+			<File
+				RelativePath=".\TrackDownloadDialog.h">
 			</File>
 			<File
 				RelativePath=".\TrackSelect.h">

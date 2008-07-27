@@ -24,3 +24,6 @@
 #include <sstream>
 #include <string>
 #include <vector>
+
+#include <boost/bind.hpp>
+#include <boost/thread/thread.hpp>

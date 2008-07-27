@@ -28,6 +28,7 @@
 #include "CommonDialog.h"
 #include "NetworkSession.h"
 #include "TrackSelect.h"
+#include "TrackDownloadDialog.h"
 #include "../Util/DllObjectFactory.h"
 #include "../VideoServices/ColorPalette.h"
 #include "../MainCharacter/MainCharacter.h"
@@ -1535,11 +1536,30 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 		}
 	}
 
+	MR_RecordFile *lTrackFile;
 	if(lSuccess) {
 		mObserver1 = MR_Observer::New();
 
 		// Load the track
-		MR_RecordFile *lTrackFile = MR_TrackOpen(mMainWindow, lCurrentTrack.c_str());
+		lTrackFile = MR_TrackOpen(mMainWindow, lCurrentTrack.c_str());
+		if (lTrackFile == NULL) {
+			// Ask to download the track.
+			std::ostringstream oss;
+			oss << "Would you like to download the track \"" << lCurrentTrack <<
+				"\" now?";
+			if (MessageBox(mMainWindow, oss.str().c_str(), "Track Download", MB_YESNO) == IDYES) {
+				lSuccess = TrackDownloadDialog(lCurrentTrack).ShowModal(mInstance, mMainWindow);
+				if (lSuccess) {
+					lTrackFile = MR_TrackOpen(mMainWindow, lCurrentTrack.c_str());
+					if (lTrackFile == NULL) {
+						lSuccess = FALSE;
+					}
+				}
+			}
+		}
+	}
+
+	if(lSuccess) {
 		lSuccess = (lCurrentSession->LoadNew(lCurrentTrack.c_str(), lTrackFile, lNbLap, lAllowWeapons, mVideoBuffer) != FALSE);
 	}
 

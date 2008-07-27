@@ -96,7 +96,7 @@ MR_RecordFile *MR_TrackOpen(HWND pWindow, const char *pFileName)
 	std::string filename = FindTrack(pFileName);
 
 	if (filename.empty()) {
-		MessageBox(pWindow, MR_LoadString(IDS_TRK_NOTFOUND), MR_LoadString(IDS_GAME_NAME), MB_ICONERROR | MB_OK | MB_APPLMODAL);
+		//MessageBox(pWindow, MR_LoadString(IDS_TRK_NOTFOUND), MR_LoadString(IDS_GAME_NAME), MB_ICONERROR | MB_OK | MB_APPLMODAL);
 	}
 	else {
 		lReturnValue = new MR_RecordFile;

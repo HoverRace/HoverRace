@@ -21,12 +21,17 @@
 #include "stdafx.h"								  // likely unnecessary; can we get rid of it?
 #include "GameApp.h"
 
+#include <curl/curl.h>
+
 // Entry point
 int WINAPI WinMain(HINSTANCE pInstance, HINSTANCE pPrevInstance, LPSTR /* pCmdLine */ , int pCmdShow)
 {
 	// initialize return variables
 	BOOL lReturnValue = TRUE;
 	int lErrorCode = -1;
+
+	// Library initialization.
+	curl_global_init(CURL_GLOBAL_ALL);
 
 	MR_GameApp lGame(pInstance);
 
@@ -44,6 +49,9 @@ int WINAPI WinMain(HINSTANCE pInstance, HINSTANCE pPrevInstance, LPSTR /* pCmdLi
 	// this is where the game actually takes control
 	if(lReturnValue)
 		lErrorCode = lGame.MainLoop();
+
+	// Library cleanup.
+	curl_global_cleanup();
 
 	return lErrorCode;
 }

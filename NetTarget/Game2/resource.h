@@ -45,6 +45,7 @@
 #define IDD_LADDER_RES_1                159
 #define IDD_LADDER_SUBMIT_PROCESS       160
 #define IDD_MISC                        161
+#define IDD_TRACK_DOWNLOAD              163
 #define IDC_GAMMA_SLIDER                1001
 #define IDC_CONTRAST_SLIDER             1002
 #define IDC_SERVER_PORT                 1002
@@ -145,6 +146,7 @@
 #define IDC_BRIGHTNESS_TXT              1081
 #define IDC_CONTRAST_TXT                1082
 #define IDC_SFX_VOLUME_TXT              1083
+#define IDC_STATE                       1083
 #define IDC_GAMMA_TXT                   1084
 #define ID_HELP_CONTENTS                32772
 #define ID_HELP_HOWTOORDER              32773
@@ -408,9 +410,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        162
+#define _APS_NEXT_RESOURCE_VALUE        164
 #define _APS_NEXT_COMMAND_VALUE         40044
-#define _APS_NEXT_CONTROL_VALUE         1082
+#define _APS_NEXT_CONTROL_VALUE         1084
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
