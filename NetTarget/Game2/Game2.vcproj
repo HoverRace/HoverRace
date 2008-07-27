@@ -24,6 +24,7 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/Zm1000"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\include"
 				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;_MBNET_"
@@ -44,7 +45,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="Vfw32.lib vfw32.lib wsock32.lib winmm.lib version.lib comctl32.lib libcurl.lib"
+				AdditionalDependencies="Vfw32.lib vfw32.lib wsock32.lib winmm.lib version.lib comctl32.lib libcurl.lib LiteUnzip.lib"
 				OutputFile=".\..\Debug/Game2.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
@@ -90,6 +91,7 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/Zm1000"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="..\..\include"
 				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_MBNET_"
@@ -110,7 +112,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="vfw32.lib wsock32.lib winmm.lib version.lib comctl32.lib libcurl.lib"
+				AdditionalDependencies="vfw32.lib wsock32.lib winmm.lib version.lib comctl32.lib libcurl.lib LiteUnzip.lib"
 				OutputFile=".\..\Release/Game2.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
@@ -269,7 +271,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\lib\zlib1.dll">
+				RelativePath="..\..\lib\LiteUnzip.dll">
 				<FileConfiguration
 					Name="Debug|Win32">
 					<Tool
@@ -284,6 +286,27 @@
 						Name="VCCustomBuildTool"
 						Description="$(InputFileName)"
 						CommandLine="copy &quot;$(InputPath)&quot; &quot;$(OutDir)&quot;"
+						Outputs="&quot;$(OutDir)\$(InputFileName)&quot;"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\lib\zlib1.dll">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; &quot;$(OutDir)&quot;
+"
+						Outputs="&quot;$(OutDir)\$(InputFileName)&quot;"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; &quot;$(OutDir)&quot;
+"
 						Outputs="&quot;$(OutDir)\$(InputFileName)&quot;"/>
 				</FileConfiguration>
 			</File>
