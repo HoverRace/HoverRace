@@ -1543,17 +1543,11 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 		// Load the track
 		lTrackFile = MR_TrackOpen(mMainWindow, lCurrentTrack.c_str());
 		if (lTrackFile == NULL) {
-			// Ask to download the track.
-			std::ostringstream oss;
-			oss << "Would you like to download the track \"" << lCurrentTrack <<
-				"\" now?";
-			if (MessageBox(mMainWindow, oss.str().c_str(), "Track Download", MB_YESNO) == IDYES) {
-				lSuccess = TrackDownloadDialog(lCurrentTrack).ShowModal(mInstance, mMainWindow);
-				if (lSuccess) {
-					lTrackFile = MR_TrackOpen(mMainWindow, lCurrentTrack.c_str());
-					if (lTrackFile == NULL) {
-						lSuccess = FALSE;
-					}
+			lSuccess = TrackDownloadDialog(lCurrentTrack).ShowModal(mInstance, mMainWindow);
+			if (lSuccess) {
+				lTrackFile = MR_TrackOpen(mMainWindow, lCurrentTrack.c_str());
+				if (lTrackFile == NULL) {
+					lSuccess = FALSE;
 				}
 			}
 		}

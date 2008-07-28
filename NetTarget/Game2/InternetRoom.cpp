@@ -23,6 +23,7 @@
 
 #include "InternetRoom.h"
 #include "MatchReport.h"
+#include "TrackDownloadDialog.h"
 #include "resource.h"
 #include "../Util/StrRes.h"
 
@@ -1688,7 +1689,7 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 						// First verify if the selected track can be played
 						int lFocus = FindFocusItem(GetDlgItem(pWindow, IDC_GAME_LIST));
 
-						if((lFocus != -1) && (mThis->mGameList[lFocus].mAvailCode == eTrackAvail)) {
+						if(lFocus != -1) {
 							BOOL lSuccess = FALSE;
 
 							// Register to the InternetServer
@@ -1697,8 +1698,21 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 							if(lSuccess) {
 								// Try to load the track
 								// Load the track
-								MR_RecordFile *lTrackFile = MR_TrackOpen(pWindow, mThis->mGameList[lFocus].mTrack);
-								lSuccess = mThis->mSession->LoadNew(mThis->mGameList[lFocus].mTrack, lTrackFile, mThis->mGameList[lFocus].mNbLap, mThis->mGameList[lFocus].mAllowWeapons, mThis->mVideoBuffer);
+								std::string lCurrentTrack((const char*)mThis->mGameList[lFocus].mTrack);
+								MR_RecordFile *lTrackFile = MR_TrackOpen(pWindow, lCurrentTrack.c_str());
+								if (lTrackFile == NULL) {
+									lSuccess = TrackDownloadDialog(lCurrentTrack).ShowModal(GetModuleHandle(NULL), pWindow);
+									if (lSuccess) {
+										lTrackFile = MR_TrackOpen(pWindow, lCurrentTrack.c_str());
+										if (lTrackFile == NULL) {
+											lSuccess = FALSE;
+										}
+									}
+								}
+
+								if (lSuccess) {
+									lSuccess = mThis->mSession->LoadNew(mThis->mGameList[lFocus].mTrack, lTrackFile, mThis->mGameList[lFocus].mNbLap, mThis->mGameList[lFocus].mAllowWeapons, mThis->mVideoBuffer);
+								}
 
 								if(lSuccess) {
 									// connect to the game server

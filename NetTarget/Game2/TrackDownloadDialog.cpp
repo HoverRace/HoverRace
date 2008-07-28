@@ -71,6 +71,13 @@ bool TrackDownloadDialog::ShowModal(HINSTANCE hinst, HWND parent)
 	bufTotal = 0;
 	cancel = false;
 
+	// Ask to download the track.
+	std::ostringstream oss;
+	oss << "Would you like to download the track \"" << name << "\" now?";
+	if (MessageBox(parent, oss.str().c_str(), "Track Download", MB_YESNO) == IDNO) {
+		return false;
+	}
+
 	boost::thread thread(boost::bind(&TrackDownloadDialog::ThreadProc, this));
 
 	DWORD dlgRetv = DialogBoxParam(hinst, MAKEINTRESOURCE(IDD_TRACK_DOWNLOAD),
