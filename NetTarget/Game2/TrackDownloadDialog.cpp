@@ -138,9 +138,17 @@ void TrackDownloadDialog::UpdateDialogProgress(HWND hwnd)
 	if (curState < 0 || curState >= ST_LAST) {
 		SetDlgItemText(hwnd, IDC_STATE, "Processing...");
 	} else {
-		std::string stateStr(STATE_NAMES[curState]);
-		stateStr += "...";
-		SetDlgItemText(hwnd, IDC_STATE, stateStr.c_str());
+		std::ostringstream stateStr;
+		if (curState == ST_DOWNLOADING) {
+			stateStr << "Downloading (" << pos << '%';
+			if (curTotal > 0) {
+				stateStr << " of " << (curTotal / 1024) << " KB";
+			}
+			stateStr << ")...";
+		} else {
+			stateStr << STATE_NAMES[curState] << "...";
+		}
+		SetDlgItemText(hwnd, IDC_STATE, stateStr.str().c_str());
 	}
 }
 
@@ -157,12 +165,15 @@ void TrackDownloadDialog::ThreadProc()
 	curl_easy_setopt(trackDl, CURLOPT_WRITEDATA, this);
 	curl_easy_setopt(trackDl, CURLOPT_PROGRESSFUNCTION, ProgressFunc);
 	curl_easy_setopt(trackDl, CURLOPT_PROGRESSDATA, this);
+	curl_easy_setopt(trackDl, CURLOPT_NOPROGRESS, 0);
 
 	// Misc HTTP options.
 	curl_easy_setopt(trackDl, CURLOPT_FOLLOWLOCATION, 1);
 	curl_easy_setopt(trackDl, CURLOPT_FAILONERROR, 1);
+	/* Enabling content encoding makes the Content-Length not work currently.
 	curl_easy_setopt(trackDl, CURLOPT_ENCODING, "");  // Enable all encodings.
 	curl_easy_setopt(trackDl, CURLOPT_HTTP_CONTENT_DECODING, 1);
+	*/
 
 	// TODO: Add version and platform.
 	curl_easy_setopt(trackDl, CURLOPT_USERAGENT, "HoverRace (Win32)");
@@ -176,7 +187,7 @@ void TrackDownloadDialog::ThreadProc()
 	if (!cancel) {
 		SetState(ST_DOWNLOADING);
 		int curlRetv = curl_easy_perform(trackDl);
-		if (curlRetv != 0) {
+		if (curlRetv != 0 && curlRetv != CURLE_ABORTED_BY_CALLBACK) {
 			MessageBox(dlgHwnd, curlErrorBuf, "HoverRace", MB_ICONWARNING | MB_OK);
 			cancel = true;
 		}
@@ -304,7 +315,7 @@ size_t TrackDownloadDialog::ProgressProc(double dlTotal, double dlNow)
 		PostMessage(dlgHwnd, WM_APP, state, 0);
 	}
 
-	return 0;
+	return cancel ? 1 : 0;
 }
 
 /// Global progress callback dispatcher.
