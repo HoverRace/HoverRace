@@ -68,6 +68,7 @@ TrackDownloadDialog::~TrackDownloadDialog()
 bool TrackDownloadDialog::ShowModal(HINSTANCE hinst, HWND parent)
 {
 	bufSize = 0;
+	bufTotal = 0;
 	cancel = false;
 
 	boost::thread thread(boost::bind(&TrackDownloadDialog::ThreadProc, this));
@@ -95,6 +96,47 @@ void TrackDownloadDialog::SetState(state_t st)
 	}
 }
 
+/// Update the dialog with the current status.
+void TrackDownloadDialog::UpdateDialogProgress(HWND hwnd)
+{
+	state_t curState = state;
+	size_t curTotal = bufTotal;
+	size_t curSize = bufSize;
+
+	// Update progress bar.
+	int pos;
+	switch (curState) {
+		case ST_INITIALIZING:
+			pos = 0;
+			break;
+
+		case ST_DOWNLOADING:
+			if (curTotal <= 0 || curSize <= 0) {
+				pos = 0;
+			} else if (curSize >= curTotal) {
+				pos = 100;
+			} else {
+				pos = (curSize * 100) / (curTotal);
+			}
+			break;
+
+		case ST_EXTRACTING:
+		case ST_FINISHED:
+			pos = 100;
+			break;
+	}
+	SendDlgItemMessage(hwnd, IDC_DLPROGRESS, PBM_SETPOS, (WPARAM)pos, 0);
+
+	// Update status text.
+	if (curState < 0 || curState >= ST_LAST) {
+		SetDlgItemText(hwnd, IDC_STATE, "Processing...");
+	} else {
+		std::string stateStr(STATE_NAMES[curState]);
+		stateStr += "...";
+		SetDlgItemText(hwnd, IDC_STATE, stateStr.c_str());
+	}
+}
+
 // Thread function.
 void TrackDownloadDialog::ThreadProc()
 {
@@ -106,6 +148,8 @@ void TrackDownloadDialog::ThreadProc()
 	// Callback functions.
 	curl_easy_setopt(trackDl, CURLOPT_WRITEFUNCTION, WriteFunc);
 	curl_easy_setopt(trackDl, CURLOPT_WRITEDATA, this);
+	curl_easy_setopt(trackDl, CURLOPT_PROGRESSFUNCTION, ProgressFunc);
+	curl_easy_setopt(trackDl, CURLOPT_PROGRESSDATA, this);
 
 	// Misc HTTP options.
 	curl_easy_setopt(trackDl, CURLOPT_FOLLOWLOCATION, 1);
@@ -162,8 +206,9 @@ BOOL TrackDownloadDialog::DlgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM
 	switch (message) {
 
 		case WM_INITDIALOG:
-			SetDlgItemText(hwnd, IDC_TRACK_NAME, name.c_str());
 			dlgHwnd = hwnd;
+			SetDlgItemText(hwnd, IDC_TRACK_NAME, name.c_str());
+			UpdateDialogProgress(hwnd);
 			retv = TRUE;
 			break;
 
@@ -181,26 +226,9 @@ BOOL TrackDownloadDialog::DlgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM
 			}
 			break;
 
-			
-		case WM_APP: // State changed.  wparam is the new state.
-			if (wparam < 0 || wparam >= ST_LAST) {
-				SetDlgItemText(hwnd, IDC_STATE, "Processing...");
-			} else {
-				std::string stateStr;
-				/*
-				switch (wparam) {
-					default:
-				*/
-						stateStr = STATE_NAMES[wparam];
-						stateStr += "...";
-				/*
-				}
-				*/
-				SetDlgItemText(hwnd, IDC_STATE, stateStr.c_str());
-			}
+		case WM_APP: // State changed.
+			UpdateDialogProgress(hwnd);
 			break;
-
-
 	}
 
 	return retv;
@@ -255,6 +283,25 @@ size_t TrackDownloadDialog::WriteProc(void *ptr, size_t size, size_t nmemb)
 size_t TrackDownloadDialog::WriteFunc(void *ptr, size_t size, size_t nmemb, void *stream)
 {
 	return reinterpret_cast<TrackDownloadDialog*>(stream)->WriteProc(ptr, size, nmemb);
+}
+
+/// Progress callback for libcurl.
+size_t TrackDownloadDialog::ProgressProc(double dlTotal, double dlNow)
+{
+	bufTotal = static_cast<size_t>(dlTotal);
+
+	// Notify dialog of progress change.
+	if (dlgHwnd != NULL) {
+		PostMessage(dlgHwnd, WM_APP, state, 0);
+	}
+
+	return 0;
+}
+
+/// Global progress callback dispatcher.
+size_t TrackDownloadDialog::ProgressFunc(void *clientp, double dlTotal, double dlNow, double, double)
+{
+	return reinterpret_cast<TrackDownloadDialog*>(clientp)->ProgressProc(dlTotal, dlNow);
 }
 
 /**

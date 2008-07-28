@@ -148,6 +148,8 @@
 #define IDC_SFX_VOLUME_TXT              1083
 #define IDC_STATE                       1083
 #define IDC_GAMMA_TXT                   1084
+#define IDC_PROGRESS2                   1085
+#define IDC_DLPROGRESS                  1085
 #define ID_HELP_CONTENTS                32772
 #define ID_HELP_HOWTOORDER              32773
 #define ID_HELP_TIPOFTHEDAY             32774
@@ -412,7 +414,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        164
 #define _APS_NEXT_COMMAND_VALUE         40044
-#define _APS_NEXT_CONTROL_VALUE         1084
+#define _APS_NEXT_CONTROL_VALUE         1086
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

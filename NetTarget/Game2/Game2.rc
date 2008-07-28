@@ -1292,7 +1292,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // Dialog
 //
 
-IDD_TRACK_DOWNLOAD DIALOGEX 0, 0, 170, 72
+IDD_TRACK_DOWNLOAD DIALOGEX 0, 0, 170, 83
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
     WS_SYSMENU
 CAPTION "Track Download"
@@ -1301,7 +1301,9 @@ BEGIN
     LTEXT           "Downloading Track:",IDC_STATIC,7,20,64,8
     EDITTEXT        IDC_TRACK_NAME,73,20,90,12,ES_AUTOHSCROLL | ES_READONLY | 
                     NOT WS_BORDER
-    LTEXT           "Initializing...",IDC_STATE,7,37,40,8
+    LTEXT           "Initializing...",IDC_STATE,7,51,156,8
+    CONTROL         "",IDC_DLPROGRESS,"msctls_progress32",WS_BORDER,7,38,156,
+                    11
 END
 
 
@@ -1318,7 +1320,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 163
         TOPMARGIN, 7
-        BOTTOMMARGIN, 64
+        BOTTOMMARGIN, 75
     END
 END
 #endif    // APSTUDIO_INVOKED

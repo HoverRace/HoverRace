@@ -30,6 +30,7 @@ class TrackDownloadDialog
 			ST_LAST
 		};
 		void SetState(state_t st);
+		void UpdateDialogProgress(HWND hwnd);
 
 		void ThreadProc();
 
@@ -38,6 +39,8 @@ class TrackDownloadDialog
 
 		size_t WriteProc(void *ptr, size_t size, size_t nmemb);
 		static size_t WriteFunc(void *ptr, size_t size, size_t nmemb, void *stream);
+		size_t ProgressProc(double dlTotal, double dlNow);
+		static size_t ProgressFunc(void *clientp, double dlTotal, double dlNow, double, double);
 
 		bool ExtractTrackFile();
 
@@ -47,11 +50,12 @@ class TrackDownloadDialog
 		HWND dlgHwnd;
 		CURL *trackDl;
 		char *curlErrorBuf;
-		state_t state;
-		bool cancel;
+		volatile state_t state;
+		volatile bool cancel;
 
 		typedef unsigned char dlBuf_t;
 		dlBuf_t *dlBuf;
-		size_t bufSize;
+		volatile size_t bufSize;
 		size_t bufCapacity;
+		volatile size_t bufTotal;
 };
