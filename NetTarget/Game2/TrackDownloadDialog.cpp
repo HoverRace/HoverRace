@@ -161,6 +161,8 @@ void TrackDownloadDialog::ThreadProc()
 	// Misc HTTP options.
 	curl_easy_setopt(trackDl, CURLOPT_FOLLOWLOCATION, 1);
 	curl_easy_setopt(trackDl, CURLOPT_FAILONERROR, 1);
+	curl_easy_setopt(trackDl, CURLOPT_ENCODING, "");  // Enable all encodings.
+	curl_easy_setopt(trackDl, CURLOPT_HTTP_CONTENT_DECODING, 1);
 
 	// TODO: Add version and platform.
 	curl_easy_setopt(trackDl, CURLOPT_USERAGENT, "HoverRace (Win32)");
