@@ -140,14 +140,18 @@ void TrackDownloadDialog::UpdateDialogProgress(HWND hwnd)
 	} else {
 		std::ostringstream stateStr;
 		if (curState == ST_DOWNLOADING) {
-			stateStr << "Downloading (" << pos << '%';
-			if (curTotal > 0) {
-				stateStr << " of " << (curTotal / 1024) << " KB";
+			stateStr << "Downloading";
+			if (curTotal <= 0) {
+				if (curSize > 0) {
+					stateStr << " (" << (curSize / 1024) << " KB)";
+				}
+			} else if (curTotal > 0) {
+				stateStr << " (" << pos << "% of " << (curTotal / 1024) << " KB)";
 			}
-			stateStr << ")...";
 		} else {
-			stateStr << STATE_NAMES[curState] << "...";
+			stateStr << STATE_NAMES[curState];
 		}
+		stateStr << "...";
 		SetDlgItemText(hwnd, IDC_STATE, stateStr.str().c_str());
 	}
 }
@@ -196,7 +200,7 @@ void TrackDownloadDialog::ThreadProc()
 	if (!cancel) {
 		SetState(ST_EXTRACTING);
 
-		if (bufSize == 0) {
+		if (bufSize <= 128) {
 			std::ostringstream oss;
 			oss << "Sorry, track \"" << name << "\" is not available from " TRACK_HOST;
 			MessageBox(dlgHwnd, oss.str().c_str(), "HoverRace", MB_ICONINFORMATION | MB_OK);
@@ -280,21 +284,23 @@ size_t TrackDownloadDialog::WriteProc(void *ptr, size_t size, size_t nmemb)
 	size_t bytesToAdd = size * nmemb;  // We trust that this won't overflow.
 	if (bufSize + bytesToAdd > bufCapacity) {
 		while (bufSize + bytesToAdd > bufCapacity) bufCapacity *= 2;
-		if (bufCapacity > MAX_CAPACITY) {
-			MessageBox(dlgHwnd, "Requested track is too large.", "HoverRace", MB_OK);
+
+		// If we've downloaded this much but haven't gotten a Content-Length,
+		// then chances are we're just endlessly streaming junk and wasting
+		// precious bandwidth.
+		if (bufTotal <= 0 && bufCapacity > MAX_CAPACITY) {
+			MessageBox(dlgHwnd,
+				"There was a problem downloading the track from " TRACK_HOST "\n"
+				"Please visit " TRACK_HOST " and download the track manually.",
+				"HoverRace", MB_OK);
 			return 0;
 		}
+
 		dlBuf = (dlBuf_t*)realloc(dlBuf, bufCapacity * sizeof(dlBuf_t));
 	}
 
 	memcpy(dlBuf + bufSize, ptr, bytesToAdd);
 	bufSize += bytesToAdd;
-
-	/*
-	std::ostringstream oss;
-	oss << "Downloaded " << bufSize << " bytes." << std::endl;
-	OutputDebugString(oss.str().c_str());
-	*/
 
 	return bytesToAdd;
 }
@@ -330,25 +336,36 @@ size_t TrackDownloadDialog::ProgressFunc(void *clientp, double dlTotal, double d
  */
 bool TrackDownloadDialog::ExtractTrackFile()
 {
-	HUNZIP huz;
-	ZIPENTRY zent;
-	bool retv = true;
+	std::string destFilename = MR_Config::GetInstance()->GetTrackPath(name);
+	bool retv = false;
 
-	UnzipOpenBuffer(&huz, dlBuf, bufSize, 0);
+	if (dlBuf[0] == 0x50 && dlBuf[1] == 0x4b) {
+		// Extract from ZIP archive.
+		HUNZIP huz;
+		ZIPENTRY zent;
 
-	memset(&zent, 0, sizeof(zent));
-	lstrcpy(zent.Name, trackFilename.c_str());
-	DWORD unzRetv = UnzipFindItem(huz, &zent, 1);
-	retv = (unzRetv == ZR_OK);
+		UnzipOpenBuffer(&huz, dlBuf, bufSize, 0);
 
-	if (retv) {
-		std::string destFilename = MR_Config::GetInstance()->GetTrackPath(name);
-		MR_Config *cfg = MR_Config::GetInstance();
-		unzRetv = UnzipItemToFile(huz, destFilename.c_str(), &zent);
+		memset(&zent, 0, sizeof(zent));
+		lstrcpy(zent.Name, trackFilename.c_str());
+		DWORD unzRetv = UnzipFindItem(huz, &zent, 1);
 		retv = (unzRetv == ZR_OK);
-	}
 
-	UnzipClose(huz);
+		if (retv) {
+			unzRetv = UnzipItemToFile(huz, destFilename.c_str(), &zent);
+			retv = (unzRetv == ZR_OK);
+		}
+
+		UnzipClose(huz);
+	}
+	else {
+		// Raw file.
+		FILE *outFile = fopen(destFilename.c_str(), "wb");
+		if (outFile != NULL) {
+			fwrite(dlBuf, bufSize, 1, outFile);
+			fclose(outFile);
+		}
+	}
 
 	return retv;
 }
