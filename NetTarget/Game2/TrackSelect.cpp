@@ -360,19 +360,18 @@ void ReadTrackListDir(const std::string &dir)
 	if(lHandle != -1) {
 
 		do {
-			TrackEntry ent;
+			gsTrackList.push_back(TrackEntry());
+			TrackEntry &ent = gsTrackList.back();
 			ent.mFileName = std::string(lFileInfo.name, 0, strlen(lFileInfo.name) - strlen(TRACK_EXT));
 
-			// Open the file and read aditionnal info
+			// Open the file and read additional info
 			MR_RecordFile lRecordFile;
 
-			if(!lRecordFile.OpenForRead((dir + ent.mFileName + TRACK_EXT).c_str()))
-				ASSERT(FALSE);
+			if(!lRecordFile.OpenForRead((dir + lFileInfo.name).c_str()))
+				gsTrackList.pop_back();
 			else {
-				if(ReadTrackEntry(&lRecordFile, &ent, NULL))
-					gsTrackList.push_back(ent);
-				else
-					ASSERT(FALSE);
+				if(!ReadTrackEntry(&lRecordFile, &ent, NULL))
+					gsTrackList.pop_back();
 			}
 		}
 		while(_findnext(lHandle, &lFileInfo) == 0);
