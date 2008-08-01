@@ -1572,7 +1572,7 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 				SaveRegistry();
 			}
 		} else
-		lSuccess = (lCurrentSession->ConnectToServer(mMainWindow) != FALSE);
+			lSuccess = (lCurrentSession->ConnectToServer(mMainWindow) != FALSE);
 	}
 
 	if(lSuccess) {

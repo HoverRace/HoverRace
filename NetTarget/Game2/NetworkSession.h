@@ -27,6 +27,11 @@
 #include "ClientSession.h"
 #include "NetInterface.h"
 
+/**
+ * The MR_NetworkSession is a child of the MR_ClientSession; it is a networked
+ * game session.  The MR_NetworkSession class itself manages the network
+ * interface, connected clients, scores, and general game data.
+ */
 class MR_NetworkSession : public MR_ClientSession
 {
 	protected:
