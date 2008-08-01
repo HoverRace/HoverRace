@@ -90,7 +90,11 @@ MR_Int32 MR_ObstacleCollisionReport::LargestHoleStep() const
 BOOL MR_ObstacleCollisionReport::AlmostCompleted() const
 {
 	return (mHaveObstacleContact && (mObstacleTop >= mShapeTop) && (mObstacleBottom <= mShapeBottom));
-} void MR_ObstacleCollisionReport::GetContactWithObstacles(MR_Level * pLevel, const MR_ShapeInterface * pShape, int pRoom, MR_FreeElement * pElement, BOOL pIgnoreActors)
+}
+
+void MR_ObstacleCollisionReport::GetContactWithObstacles(
+	MR_Level * pLevel, const MR_ShapeInterface * pShape, int pRoom,
+	MR_FreeElement * pElement, BOOL pIgnoreActors)
 {
 	// Compute the touched rooms and the floor limits
 	// Fort each room check collisions with the features
@@ -162,7 +166,11 @@ BOOL MR_ObstacleCollisionReport::AlmostCompleted() const
 int MR_ObstacleCollisionReport::Room() const
 {
 	return mCurrentRoom;
-} void MR_ObstacleCollisionReport::GetContactWithFeaturesAndActors(MR_Level * pLevel, const MR_ShapeInterface * pShape, int pRoom, MR_FreeElement * pElement, BOOL pIgnoreActors)
+}
+
+void MR_ObstacleCollisionReport::GetContactWithFeaturesAndActors(
+	MR_Level * pLevel, const MR_ShapeInterface * pShape, int pRoom,
+	MR_FreeElement * pElement, BOOL pIgnoreActors)
 {
 
 	int lCounter;
