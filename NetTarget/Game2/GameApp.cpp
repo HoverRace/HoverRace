@@ -1879,11 +1879,11 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 			 */
 
 		case WM_ACTIVATEAPP:
-			TRACE("WM_ACTIVATE %d\n", pWParam);
+			//TRACE("WM_ACTIVATE %d\n", pWParam);
 			if(pWParam && (This->mVideoBuffer != NULL) && (This->mMainWindow == GetForegroundWindow())) {
 				if(!This->mVideoBuffer->IsModeSettingInProgress()) {
 					if(This->mVideoBuffer->IsWindowMode()) {
-						TRACE("SetMode\n");
+						//TRACE("SetMode\n");
 
 						This->SetVideoMode(0, 0);
 						This->AssignPalette();
