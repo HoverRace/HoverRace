@@ -157,6 +157,9 @@ MR_NetworkSession::~MR_NetworkSession()
 
 }
 
+/**
+ * Return the number of results that are available.  Richard can't spell.
+ */
 int MR_NetworkSession::ResultAvaillable() const
 {
 	int lReturnValue = 0;
@@ -295,7 +298,7 @@ int MR_NetworkSession::GetNbPlayers() const
 {
 	// Return the number of players still playing???
 	// return mNetInterface.GetClientCount()+1;
-	return ResultAvaillable();
+	return ResultAvaillable(); // what an ugly hack, Richard
 }
 
 /**
@@ -337,13 +340,15 @@ int MR_NetworkSession::GetRank(const MR_MainCharacter * /*pPlayer */ ) const {
 	return lReturnValue;
 }
 
+/**
+ * The main game loop.  Read, process, write, read.  I wonder why we read twice.
+ */
 void MR_NetworkSession::Process(int pSpeedFactor)
 {
 	ReadNet();
 	MR_ClientSession::Process(pSpeedFactor);
 	WriteNet();
 	ReadNet();
-
 }
 
 /**
@@ -361,12 +366,18 @@ BOOL MR_NetworkSession::LoadNew(const char *pTitle, MR_RecordFile *pMazeFile, in
 	return lReturnValue;
 }
 
-void MR_NetworkSession::ElementCreationHook(MR_FreeElement * pElement, int pRoom, void *pThis)
+/**
+ * A hook called when a free element is created.  We need to broadcast it once it is created.
+ */
+void MR_NetworkSession::ElementCreationHook(MR_FreeElement *pElement, int pRoom, void *pThis)
 {
 	((MR_NetworkSession *) pThis)->BroadcastAutoElementCreation(pElement->GetTypeId(), pElement->GetNetState(), pRoom);
 }
 
-void MR_NetworkSession::PermElementStateHook(MR_FreeElement * pElement, int pRoom, int pPermId, void *pThis)
+/**
+ * A hook called when a permanent element is created.  We need to broadcast it once it is created.
+ */
+void MR_NetworkSession::PermElementStateHook(MR_FreeElement *pElement, int pRoom, int pPermId, void *pThis)
 {
 	((MR_NetworkSession *) pThis)->BroadcastPermElementState(pPermId, pElement->GetNetState(), pRoom);
 }
@@ -566,22 +577,32 @@ void MR_NetworkSession::ReadNet()
 	}
 }
 
+/**
+ * Send all necessary data to clients.  This is called by MR_NetworkSession::Process() as part of the game loop.
+ *
+ * If we are the server, we must send clock updates 12 and 8 seconds before the game starts.
+ *
+ * If our hovercraft has been created, we must broadcast that.  Otherwise, we broadcast its state and statistics.
+ *
+ * Then, we check if any clients are disconnected and remove them if necessary.
+ */
 void MR_NetworkSession::WriteNet()
 {
 	static unsigned int sClientToCheck = 0;	// verified ok even if it may seen weird
 
+	// if we are the server we must send clock updates before the game
 	if(mMasterMode) {
 		if(!mSended8SecClockUpdate) {
 			MR_SimulationTime lCurrentTime = mSession.GetSimulationTime();
 
-			if(!mSended12SecClockUpdate) {
+			if(!mSended12SecClockUpdate) { // send an update at ~-12 seconds
 				if(lCurrentTime >= -11500) {
 					BroadcastTime();
 					mSended12SecClockUpdate = TRUE;
 				}
 			}
 			else {
-				if(lCurrentTime >= -8500) {
+				if(lCurrentTime >= -8500) { // send an update at ~-8 seconds
 					BroadcastTime();
 					mSended8SecClockUpdate = TRUE;
 				}
@@ -591,17 +612,17 @@ void MR_NetworkSession::WriteNet()
 	}
 
 	if(mTimeToSendCharacterCreation != 0) {
-		if(mSession.GetSimulationTime() >= mTimeToSendCharacterCreation) {
+		if(mSession.GetSimulationTime() >= mTimeToSendCharacterCreation) { // it is time to broadcast the created hovercraft
 			BroadcastMainElementCreation(mMainCharacter1->GetTypeId(), mMainCharacter1->GetNetState(), mMainCharacter1->mRoom, mMainCharacter1->GetHoverId());
-			mTimeToSendCharacterCreation = 0;
+			mTimeToSendCharacterCreation = 0; // set to 0 so we don't broadcast it again
 		}
 	}
-	else if(mMainCharacter1 != NULL) {
-		BroadcastMainElementState(mMainCharacter1->GetNetState());
+	else if(mMainCharacter1 != NULL) { // it has already been broadcast
+		BroadcastMainElementState(mMainCharacter1->GetNetState()); // send state
 
-		if(mSendedPlayerStats != -1) {
+		if(mSendedPlayerStats != -1) { // send statistics if necessary
 			if(mMainCharacter1->GetLap() >= mSendedPlayerStats) {
-				if(mMainCharacter1->HasFinish()) {
+				if(mMainCharacter1->HasFinish()) { // race is finished
 					BroadcastMainElementStats(mMainCharacter1->GetTotalTime(), mMainCharacter1->GetBestLapDuration(), -1);
 					mSendedPlayerStats = -1;
 
@@ -610,24 +631,25 @@ void MR_NetworkSession::WriteNet()
 					}
 
 				}
-				else if(mMainCharacter1->GetLap() == 0) {
+				else if(mMainCharacter1->GetLap() == 0) { // race has not yet started
 					BroadcastMainElementStats(mMainCharacter1->GetHoverId(), -1, 0);
 					mSendedPlayerStats = 1;
 				}
-				else {
+				else { // send statistics (lap number, total time, best lap)
 					mSendedPlayerStats = mMainCharacter1->GetLap();
 					BroadcastMainElementStats(mMainCharacter1->GetTotalTime(), mMainCharacter1->GetBestLapDuration(), mSendedPlayerStats);
 					mSendedPlayerStats++;
 				}
 			}
 		}
-		//Broadcast hits
+
+		// Broadcast hits
 		while(mMainCharacter1->HitQueueCount() > 0) {
 			BroadcastHit(mMainCharacter1->GetHitQueue());
 		}
 	}
-	// Remove disconnected opponents
 
+	// Remove disconnected opponents
 	sClientToCheck++;
 	if(sClientToCheck >= MR_NetworkInterface::eMaxClient) {
 		sClientToCheck = 0;
@@ -654,19 +676,37 @@ void MR_NetworkSession::WriteNet()
 		mSession.GetCurrentLevel()->DeleteElement(mClient[sClientToCheck]);
 		mClientCharacter[sClientToCheck] = NULL;
 	}
-
 }
 
+/**
+ * Set the local player's name.
+ *
+ * @param pPlayerName The local player's name
+ */
 void MR_NetworkSession::SetPlayerName(const char *pPlayerName)
 {
 	mNetInterface.SetPlayerName(pPlayerName);
 }
 
+/**
+ * Get the local player's name.
+ */
 const char *MR_NetworkSession::GetPlayerName() const
 {
 	return mNetInterface.GetPlayerName();
 }
 
+/**
+ * Wait for other clients to connect.  This is only used in server mode.
+ *
+ * This method is blocking, until the user either cancels the game or starts the game (or some bizarre fatal error is encountered).
+ *
+ * @param pWindow Parent window
+ * @param pTrackName Track name
+ * @param pPromptForPort Should we use the default port or choose our own?
+ * @param pDefaultPort The default port (MR_DEFAULT_NET_PORT)
+ * @param pModalessDlg If this is NULL, the "TCP Connections" dialog is modal
+ */
 BOOL MR_NetworkSession::WaitConnections(HWND pWindow, const char *pTrackName, BOOL pPromptForPort, unsigned pDefaultPort, HWND *pModalessDlg, int pReturnMessage)
 {
 	mMasterMode = TRUE;
@@ -1205,6 +1245,12 @@ void MR_NetworkSession::BroadcastHit(int pHoverIdSrc)
 	AddHitEntry(-1, pHoverIdSrc);
 }
 
+/**
+ * Record a hit.
+ *
+ * @param pPlayerIndex Player that was hit
+ * @param pPlayerFromId Player who shot him
+ */
 void MR_NetworkSession::AddHitEntry(int pPlayerIndex, int pPlayerFromId)
 {
 	// We assume that a result entry exist for both players
@@ -1246,9 +1292,13 @@ void MR_NetworkSession::AddHitEntry(int pPlayerIndex, int pPlayerFromId)
 	}
 }
 
-void MR_NetworkSession::InsertHitEntry(PlayerResult * pEntry)
+/**
+ * Insert a PlayerResult object into the list, sorting correctly by hit statistics.
+ *
+ * @param pEntry PlayerResult object pointer to be inserted into the list
+ */
+void MR_NetworkSession::InsertHitEntry(PlayerResult *pEntry)
 {
-
 	PlayerResult **lPtr;
 
 	lPtr = &mHitList;
@@ -1264,15 +1314,22 @@ void MR_NetworkSession::InsertHitEntry(PlayerResult * pEntry)
 	*lPtr = pEntry;
 }
 
+/**
+ * Add or update player result entries for the given player and data.
+ *
+ * @param pPlayerIndex Index of the player
+ * @param pFinishTime Finish time of the player
+ * @param pBestLap Best lap time of the player
+ * @param pNbLap Lap number that the player is on (-1 means they have finished the race)
+ */
 void MR_NetworkSession::AddResultEntry(int pPlayerIndex, MR_SimulationTime pFinishTime, MR_SimulationTime pBestLap, int pNbLap)
 {
 	// If nbLap == -1 that mean that the race is completed
-
 	PlayerResult *lEntry;
 	PlayerResult **lPtr;
 
-	// First look if the entry do not already exist
-
+	// First look if the entry do not already exist; try to make lPtr point to
+	// an existing older record of this player
 	lPtr = &mResultList;
 
 	while((*lPtr != NULL) && ((*lPtr)->mPlayerIndex != pPlayerIndex)) {
@@ -1282,7 +1339,7 @@ void MR_NetworkSession::AddResultEntry(int pPlayerIndex, MR_SimulationTime pFini
 	if(*lPtr != NULL) {
 		lEntry = *lPtr;
 
-		// Remove the entry from the list
+		// Remove the entry from the list (we will re-add it later)
 		*lPtr = (*lPtr)->mNext;
 
 		if(pPlayerIndex >= 0) {
@@ -1333,7 +1390,6 @@ void MR_NetworkSession::AddResultEntry(int pPlayerIndex, MR_SimulationTime pFini
 	lPtr = &mResultList;
 
 	while(*lPtr != NULL) {
-
 		if(((unsigned) pNbLap) == ((unsigned) (*lPtr)->mNbCompletedLap)) {
 			if(pFinishTime < (*lPtr)->mFinishTime) {
 				break;
@@ -1387,6 +1443,11 @@ void MR_NetworkSession::AddMessageKey(char pKey)
 	LeaveCriticalSection(&mChatMutex);
 }
 
+/**
+ * Copies the currently entered string from the chat buffer into pDest.
+ *
+ * @param pDest Destination string for the text entered into the chat buffer
+ */
 void MR_NetworkSession::GetCurrentMessage(char *pDest) const
 {
 	EnterCriticalSection(&((MR_NetworkSession *) this)->mChatMutex);
