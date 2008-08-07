@@ -270,7 +270,8 @@ void MR_3DViewPort::RenderAlternateWallSurface(const MR_3DCoordinate & pUpperLef
 		lDYTop_4096 = ((lScreenY1Top - lScreenY0Top) * 4096) / (lScreenX1 - lScreenX0 /*-1*/ );
 		lDYBottom_4096 = ((lScreenY1Bottom - lScreenY0Bottom) * 4096) / (lScreenX1 - lScreenX0 /*-1*/ );
 
-		lRatioVariationPerColumn_16384 = ((lScreenY0Bottom - lScreenY0Top) - (lScreenY1Bottom - lScreenY1Top)) * 16384 / ((lScreenY0Bottom - lScreenY0Top) * (lScreenX1 - lScreenX0));
+		int variationX = ((lScreenY0Bottom - lScreenY0Top) * (lScreenX1 - lScreenX0));
+		lRatioVariationPerColumn_16384 = (variationX == 0) ? 0 : (((lScreenY0Bottom - lScreenY0Top) - (lScreenY1Bottom - lScreenY1Top)) * 16384 / variationX);
 	}
 	else {
 		lDYTop_4096 = 0;
@@ -283,153 +284,153 @@ void MR_3DViewPort::RenderAlternateWallSurface(const MR_3DCoordinate & pUpperLef
 
 	if(lScreenX0 < 0) {
 		if((-lScreenX0 <= 2 * lScreenX1) /*|| (lScreenX1>mXRes) */ ) {
-		lYTop_4096 += (0 - lScreenX0) * lDYTop_4096;
-		lYBottom_4096 += (0 - lScreenX0) * lDYBottom_4096;
-	}
-	else {
-		lYTop_4096 = (lScreenY1Top * 4096) - (lScreenX1) * lDYTop_4096;
-		lYBottom_4096 = (lScreenY1Bottom * 4096) - (lScreenX1) * lDYBottom_4096;
-	}
-	lScreenX0 = 0;
-}
-
-if(lScreenX1 > mXRes) {
-	lScreenX1 = mXRes;
-}
-
-// Precompute rendering constants
-
-// lLen = (lColumn*mXVariationPerYInc*lY0Wall - lX0Wall)
-//        /(lXWallVariationPerMM - lColumn*mXVariationPerYInc*lYWallVariationPerMM)
-//
-// lDepth = lLen*lYWallVariationPerMM
-//
-// lBitmapColumn = lLen*mBitmapXRes/mBitmapWidth
-//
-MR_Int32 lXWallVariationPerMM_16384 = (16384 * (lRotated1.mX - lRotated0.mX)) / pLen;
-MR_Int32 lYWallVariationPerMM_16384 = (16384 * (lRotated1.mY - lRotated0.mY)) / pLen;
-
-MR_Int32 lHVarPerDInc_X0Wall_16384 = (mHVarPerDInc_16384 * lRotated0.mX);
-MR_Int32 lHVarPerDInc_XWallVarPerMM_16384 = -(mHVarPerDInc_16384 * lXWallVariationPerMM_16384) / (16384);
-
-MR_Int32 lColumn_HVarPerDInc_X0Wall_Y0Wall_16384 = (lScreenX0 - mXRes / 2) * lHVarPerDInc_X0Wall_16384 - lRotated0.mY * 16384;
-MR_Int32 lColumn_HVarPerDInc_XWallVarPerMM_YWallVarPerMM_16384 = (lScreenX0 - mXRes / 2) * lHVarPerDInc_XWallVarPerMM_16384 + lYWallVariationPerMM_16384;
-
-if(lDYTop_4096 < 0) {
-	lYTop_4096 += lDYTop_4096;
-}
-
-if(lDYBottom_4096 > 0) {
-	lYBottom_4096 += lDYBottom_4096;
-}
-
-// Bitmap attributes
-int lBitmapXRes = pBitmap->GetMaxXRes();
-int lBitmapYRes = pBitmap->GetMaxYRes();
-
-// Prefill the rendering structure
-gsColumnBltParam.mBuffer = mBufferLine;
-gsColumnBltParam.mColumn = lScreenX0;
-gsColumnBltParam.mBufferLen = mYRes;
-gsColumnBltParam.mBufferStep = mLineLen;
-gsColumnBltParam.mZBuffer = mZBufferLine;
-gsColumnBltParam.mZBufferStep = mZLineLen;
-gsColumnBltParam.mColor = pBitmap->GetPlainColor();
-
-MR_Int32 lBitmapXRes_BitmapWidth = (lBitmapXRes * MR_PIXEL_FRACT) / pBitmap->GetWidth();
-MR_Int32 lNbBitmapInHeight_4096 = ((pUpperLeft.mZ - pLowerRight.mZ) * 4096) / pBitmap->GetHeight();
-MR_Int32 lNbBitmapInHeight_BitmapYRes = (lBitmapYRes * MR_PIXEL_FRACT * (pUpperLeft.mZ - pLowerRight.mZ)) / pBitmap->GetHeight();
-MR_Int32 lBitmapHeight_256 = MulDiv(lYBottom_4096 - lYTop_4096, 256, lNbBitmapInHeight_4096);
-MR_Int32 lBitmapHeightVar_256 = (lDYBottom_4096 - lDYTop_4096) * 256 / lNbBitmapInHeight_4096;
-
-int lPrevColumn = -1;
-
-for(int lColumn = lScreenX0; lColumn < lScreenX1; lColumn++) {
-
-	// Screen coordinate
-	if((lYBottom_4096 > 0) && ((lYTop_4096 / 4096) < mYRes) && ((lYBottom_4096 - lYTop_4096) / 4096 != 0)) {
-
-		MR_Int32 lLen_4;
-
-		if(lColumn_HVarPerDInc_XWallVarPerMM_YWallVarPerMM_16384 / 4 != 0) {
-			lLen_4 = lColumn_HVarPerDInc_X0Wall_Y0Wall_16384 / (lColumn_HVarPerDInc_XWallVarPerMM_YWallVarPerMM_16384 / 4);
-
-			if(lLen_4 < 0) {
-				lLen_4 = 0;
-			}
-			else if(lLen_4 > pLen * 4) {
-				lLen_4 = pLen * 4;
-			}
+			lYTop_4096 += (0 - lScreenX0) * lDYTop_4096;
+			lYBottom_4096 += (0 - lScreenX0) * lDYBottom_4096;
 		}
 		else {
-			lLen_4 = pLen * 2;
+			lYTop_4096 = (lScreenY1Top * 4096) - (lScreenX1) * lDYTop_4096;
+			lYBottom_4096 = (lScreenY1Bottom * 4096) - (lScreenX1) * lDYBottom_4096;
 		}
+		lScreenX0 = 0;
+	}
 
-		// Depth computation
-		int lDepth = static_cast<int>(lRotated0.mX + Int64ShraMod32(Int32x32To64(lLen_4, lXWallVariationPerMM_16384), 16 /*1024*16384 */ ));
+	if(lScreenX1 > mXRes) {
+		lScreenX1 = mXRes;
+	}
 
-		if(lDepth < mPlanDist) {
-			lDepth = mPlanDist;
-		}
+	// Precompute rendering constants
 
-		lDepth /= MR_ZBUFFER_UNIT;
+	// lLen = (lColumn*mXVariationPerYInc*lY0Wall - lX0Wall)
+	//        /(lXWallVariationPerMM - lColumn*mXVariationPerYInc*lYWallVariationPerMM)
+	//
+	// lDepth = lLen*lYWallVariationPerMM
+	//
+	// lBitmapColumn = lLen*mBitmapXRes/mBitmapWidth
+	//
+	MR_Int32 lXWallVariationPerMM_16384 = (16384 * (lRotated1.mX - lRotated0.mX)) / pLen;
+	MR_Int32 lYWallVariationPerMM_16384 = (16384 * (lRotated1.mY - lRotated0.mY)) / pLen;
 
-		if(lDepth > MR_ZBUFFER_LIMIT) {
-			lDepth = MR_ZBUFFER_LIMIT;
-		}
+	MR_Int32 lHVarPerDInc_X0Wall_16384 = (mHVarPerDInc_16384 * lRotated0.mX);
+	MR_Int32 lHVarPerDInc_XWallVarPerMM_16384 = -(mHVarPerDInc_16384 * lXWallVariationPerMM_16384) / (16384);
 
-		// Bitmap selection
-		// int lSelectedBitmap = pBitmap->GetBestBitmapForYRes( (lYBottom_4096-lYTop_4096)/lNbBitmapInHeight_4096 );
-		int lSelectedBitmap = pBitmap->GetBestBitmapForYRes(lBitmapHeight_256 / 256);
+	MR_Int32 lColumn_HVarPerDInc_X0Wall_Y0Wall_16384 = (lScreenX0 - mXRes / 2) * lHVarPerDInc_X0Wall_16384 - lRotated0.mY * 16384;
+	MR_Int32 lColumn_HVarPerDInc_XWallVarPerMM_YWallVarPerMM_16384 = (lScreenX0 - mXRes / 2) * lHVarPerDInc_XWallVarPerMM_16384 + lYWallVariationPerMM_16384;
 
-		gsColumnBltParam.mColumn = lColumn;
-		gsColumnBltParam.mYScreenStart_4096 = lYTop_4096;
-		gsColumnBltParam.mYScreenEnd_4096 = lYBottom_4096 + 2 * 4096;
-												  //-(lDepth/256);
-		gsColumnBltParam.mLightIntensity = MR_NORMAL_INTENSITY;
-		gsColumnBltParam.mZ = (MR_UInt16) lDepth;
+	if(lDYTop_4096 < 0) {
+		lYTop_4096 += lDYTop_4096;
+	}
 
-		if(lSelectedBitmap == -1) {
-			BltPlainColumn();
-		}
-		else {
-			int lBitmapColumn = lBitmapXRes_BitmapWidth * lLen_4 / (4 * MR_PIXEL_FRACT);
+	if(lDYBottom_4096 > 0) {
+		lYBottom_4096 += lDYBottom_4096;
+	}
 
-			lBitmapColumn &= (lBitmapXRes - 1);	  // Fast but work only with pow of 2
+	// Bitmap attributes
+	int lBitmapXRes = pBitmap->GetMaxXRes();
+	int lBitmapYRes = pBitmap->GetMaxYRes();
 
-			if(lBitmapColumn < lPrevColumn) {
-				pSerialStart--;
-				if(pSerialStart < 0) {
-					pSerialStart = pSerialLen - 1;
+	// Prefill the rendering structure
+	gsColumnBltParam.mBuffer = mBufferLine;
+	gsColumnBltParam.mColumn = lScreenX0;
+	gsColumnBltParam.mBufferLen = mYRes;
+	gsColumnBltParam.mBufferStep = mLineLen;
+	gsColumnBltParam.mZBuffer = mZBufferLine;
+	gsColumnBltParam.mZBufferStep = mZLineLen;
+	gsColumnBltParam.mColor = pBitmap->GetPlainColor();
+
+	MR_Int32 lBitmapXRes_BitmapWidth = (lBitmapXRes * MR_PIXEL_FRACT) / pBitmap->GetWidth();
+	MR_Int32 lNbBitmapInHeight_4096 = ((pUpperLeft.mZ - pLowerRight.mZ) * 4096) / pBitmap->GetHeight();
+	MR_Int32 lNbBitmapInHeight_BitmapYRes = (lBitmapYRes * MR_PIXEL_FRACT * (pUpperLeft.mZ - pLowerRight.mZ)) / pBitmap->GetHeight();
+	MR_Int32 lBitmapHeight_256 = MulDiv(lYBottom_4096 - lYTop_4096, 256, lNbBitmapInHeight_4096);
+	MR_Int32 lBitmapHeightVar_256 = (lDYBottom_4096 - lDYTop_4096) * 256 / lNbBitmapInHeight_4096;
+
+	int lPrevColumn = -1;
+
+	for(int lColumn = lScreenX0; lColumn < lScreenX1; lColumn++) {
+
+		// Screen coordinate
+		if((lYBottom_4096 > 0) && ((lYTop_4096 / 4096) < mYRes) && ((lYBottom_4096 - lYTop_4096) / 4096 != 0)) {
+
+			MR_Int32 lLen_4;
+
+			if(lColumn_HVarPerDInc_XWallVarPerMM_YWallVarPerMM_16384 / 4 != 0) {
+				lLen_4 = lColumn_HVarPerDInc_X0Wall_Y0Wall_16384 / (lColumn_HVarPerDInc_XWallVarPerMM_YWallVarPerMM_16384 / 4);
+
+				if(lLen_4 < 0) {
+					lLen_4 = 0;
+				}
+				else if(lLen_4 > pLen * 4) {
+					lLen_4 = pLen * 4;
 				}
 			}
-			lPrevColumn = lBitmapColumn;
+			else {
+				lLen_4 = pLen * 2;
+			}
 
-			lBitmapColumn >>= pBitmap->GetXResShiftFactor(lSelectedBitmap);
+			// Depth computation
+			int lDepth = static_cast<int>(lRotated0.mX + Int64ShraMod32(Int32x32To64(lLen_4, lXWallVariationPerMM_16384), 16 /*1024*16384 */ ));
 
-			if(pSerialStart == 0) {
-				gsColumnBltParam.mBitmap = pBitmap2->GetColumnBuffer(lSelectedBitmap, lBitmapColumn);
+			if(lDepth < mPlanDist) {
+				lDepth = mPlanDist;
+			}
+
+			lDepth /= MR_ZBUFFER_UNIT;
+
+			if(lDepth > MR_ZBUFFER_LIMIT) {
+				lDepth = MR_ZBUFFER_LIMIT;
+			}
+
+			// Bitmap selection
+			// int lSelectedBitmap = pBitmap->GetBestBitmapForYRes( (lYBottom_4096-lYTop_4096)/lNbBitmapInHeight_4096 );
+			int lSelectedBitmap = pBitmap->GetBestBitmapForYRes(lBitmapHeight_256 / 256);
+
+			gsColumnBltParam.mColumn = lColumn;
+			gsColumnBltParam.mYScreenStart_4096 = lYTop_4096;
+			gsColumnBltParam.mYScreenEnd_4096 = lYBottom_4096 + 2 * 4096;
+													//-(lDepth/256);
+			gsColumnBltParam.mLightIntensity = MR_NORMAL_INTENSITY;
+			gsColumnBltParam.mZ = (MR_UInt16) lDepth;
+
+			if(lSelectedBitmap == -1) {
+				BltPlainColumn();
 			}
 			else {
-				gsColumnBltParam.mBitmap = pBitmap->GetColumnBuffer(lSelectedBitmap, lBitmapColumn);
+				int lBitmapColumn = lBitmapXRes_BitmapWidth * lLen_4 / (4 * MR_PIXEL_FRACT);
+
+				lBitmapColumn &= (lBitmapXRes - 1);	  // Fast but work only with pow of 2
+
+				if(lBitmapColumn < lPrevColumn) {
+					pSerialStart--;
+					if(pSerialStart < 0) {
+						pSerialStart = pSerialLen - 1;
+					}
+				}
+				lPrevColumn = lBitmapColumn;
+
+				lBitmapColumn >>= pBitmap->GetXResShiftFactor(lSelectedBitmap);
+
+				if(pSerialStart == 0) {
+					gsColumnBltParam.mBitmap = pBitmap2->GetColumnBuffer(lSelectedBitmap, lBitmapColumn);
+				}
+				else {
+					gsColumnBltParam.mBitmap = pBitmap->GetColumnBuffer(lSelectedBitmap, lBitmapColumn);
+				}
+
+				gsColumnBltParam.mPixelStep = (lNbBitmapInHeight_BitmapYRes * 64 / ((lYBottom_4096 - lYTop_4096) / 64)) >> pBitmap->GetYResShiftFactor(lSelectedBitmap);
+				gsColumnBltParam.mBitmapColMask = pBitmap->GetXRes(lSelectedBitmap) - 1;
+				BltColumn();
 			}
 
-			gsColumnBltParam.mPixelStep = (lNbBitmapInHeight_BitmapYRes * 64 / ((lYBottom_4096 - lYTop_4096) / 64)) >> pBitmap->GetYResShiftFactor(lSelectedBitmap);
-			gsColumnBltParam.mBitmapColMask = pBitmap->GetXRes(lSelectedBitmap) - 1;
-			BltColumn();
 		}
+		// Prepare the next column
 
+		lYTop_4096 += lDYTop_4096;
+		lYBottom_4096 += lDYBottom_4096;
+
+		lColumn_HVarPerDInc_X0Wall_Y0Wall_16384 += lHVarPerDInc_X0Wall_16384;
+		lColumn_HVarPerDInc_XWallVarPerMM_YWallVarPerMM_16384 += lHVarPerDInc_XWallVarPerMM_16384;
+
+		lBitmapHeight_256 += lBitmapHeightVar_256;
 	}
-	// Prepare the next column
-
-	lYTop_4096 += lDYTop_4096;
-	lYBottom_4096 += lDYBottom_4096;
-
-	lColumn_HVarPerDInc_X0Wall_Y0Wall_16384 += lHVarPerDInc_X0Wall_16384;
-	lColumn_HVarPerDInc_XWallVarPerMM_YWallVarPerMM_16384 += lHVarPerDInc_XWallVarPerMM_16384;
-
-	lBitmapHeight_256 += lBitmapHeightVar_256;
-}
 
 }
 
@@ -1393,6 +1394,9 @@ void BltTriangle()
 
 	for(lCounter = 0; lCounter < 3; lCounter++) {
 		if(lDiffY[lCounter] != 0) {
+			// Check for potential overflow.
+			if (lDiffX[lCounter] >= 524288 || lDiffX[lCounter] < -524288) return;
+
 			lDXDY_4096[lCounter] = lDiffX[lCounter] * 4096 / lDiffY[lCounter];
 		}
 		else {
