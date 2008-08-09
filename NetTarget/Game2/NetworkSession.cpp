@@ -403,7 +403,7 @@ void MR_NetworkSession::ReadNet()
 	lTimeStamp = mSession.GetSimulationTime();
 
 	while(mNetInterface.FetchMessage(lTimeStamp, lMessageType, lMessageLen, lMessage, lClientId)) {
-		switch (lMessageType) {
+		switch(lMessageType) {
 			case MRNM_SET_TIME: // reset the simulation time to what we are told to
 				{
 					MR_SimulationTime lNewTime = *(MR_Int32 *) & (lMessage[0]);
@@ -823,7 +823,6 @@ void MR_NetworkSession::BroadcastMainElementCreation(const MR_ObjectFromFactoryI
 		*(MR_Int32 *) & (lMessage.mData[4]) = mMinorID;
 
 		mNetInterface.BroadcastMessage(&lMessage, MR_NET_REQUIRED);
-
 	}
 }
 

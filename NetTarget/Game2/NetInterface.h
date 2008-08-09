@@ -39,15 +39,18 @@
 #define MR_NOT_REQUIRED         0
 #define MR_NET_DATAGRAM        -1
 
+/**
+ * The MR_NetMessageBuffer class is a wrapper for data being transmitted over the network.
+ */
 class MR_NetMessageBuffer
 {
 	public:
 		// MR_UInt16  mSendingTime:10; // 4ms of precision on a +-2sec range (if a datagram take more than 2 sec to travel..it will be droped (UDP only)
 		// Not used yet
-		MR_UInt16 mDatagramNumber:8;			  // used only for datagram
-		MR_UInt16 mDatagramQueue:2;				  // used only for datagram
+		MR_UInt16 mDatagramNumber:8;			  /// used only for datagrams (UDP)
+		MR_UInt16 mDatagramQueue:2;				  /// used only for datagrams (UDP)
 		MR_UInt16 mMessageType:6;
-		//MR_UInt8 mClient;
+		MR_UInt8 mClient;
 		MR_UInt8 mDataLen;
 		MR_UInt8 mData[MR_MAX_NET_MESSAGE_LEN];
 
@@ -56,6 +59,9 @@ class MR_NetMessageBuffer
 
 #define MR_NET_HEADER_LEN  (sizeof(MR_NetMessageBuffer) - MR_MAX_NET_MESSAGE_LEN)
 
+/**
+ * The MR_NetworkPort class is the backbone for a single connection to a peer.
+ */
 class MR_NetworkPort
 {
 	private:
@@ -64,26 +70,25 @@ class MR_NetworkPort
 		SOCKET mSocket;
 
 		// UDP Information
-		SOCKET mUDPRecvSocket;
-		SOCKADDR_IN mUDPRemoteAddr;
+		SOCKET mUDPRecvSocket;				/// the UDP socket we listen on
+		SOCKADDR_IN mUDPRemoteAddr;			/// address information for the peer
 
 		MR_UInt8 mLastSendedDatagramNumber[4];
 		MR_UInt8 mLastReceivedDatagramNumber[4];
 
 		int mWatchdog;
 
-		// Lag computation
-		int mAvgLag;
-		int mMinLag;
-		int mNbLagTest;
-		int mTotalLag;
+		int mAvgLag;		/// for lag computation
+		int mMinLag;		/// for lag computation
+		int mNbLagTest;		/// counts the number of lag tests that have been done
+		int mTotalLag;		/// for lag computation
 
 		int mInputMessageBufferIndex;
 		MR_NetMessageBuffer mInputMessageBuffer;
 
 		// Output queue
-		// This queue is only used for messages that must absolutly be sent
-		// or those that are parially sended
+		// This queue is only used for messages that must absolutely be sent
+		// or those that are partially sent
 		MR_UInt8 mOutQueue[MR_OUT_QUEUE_LEN];
 		int mOutQueueLen;
 		int mOutQueueHead;
@@ -91,7 +96,7 @@ class MR_NetworkPort
 		MR_NetworkPort();
 		~MR_NetworkPort();
 
-		void Connect(SOCKET pSocket);
+		void Connect(SOCKET pSocket, SOCKET pUDPRecvSocket);
 		void SetRemoteUDPPort(unsigned int pPort);
 		unsigned int GetUDPPort() const;
 		void Disconnect();
@@ -113,6 +118,15 @@ class MR_NetworkPort
 		void SetLag(int pAvgLag, int pMinLag);
 };
 
+/**
+ * The MR_NetworkInterface is the top-level controller for connecting and communicating with other clients.  The tough part to understand about
+ * this class is the connection initiations.
+ *
+ * The start of the connection process begins in MasterConnect() for the server, SlavePreConnect() for a client connecting not through the IMR, and
+ * SlaveConnect() for a client connecting through the IMR.  SlaveConnect() is also called after SlavePreConnect() (if a pre-connect phase was needed).
+ * 
+ * The "guts" of the connection establishing process can be found in the ListCallBack() dialog callback function.
+ */
 class MR_NetworkInterface
 {
 	public:
@@ -120,30 +134,30 @@ class MR_NetworkInterface
 			eMaxClient = 9
 		};
 	private:
-		CString mPlayer;
-		int mId;
+		CString mPlayer;			/// player name
+		int mId;					/// player id
 		BOOL mServerMode;
 		SOCKET mRegistrySocket;
 		int mServerPort;
 		CString mServerAddr;
-		CString mGameName;
+		CString mGameName;			/// just the track name
 
 		// UDP port
 		SOCKET mUDPOutShortPort;
 		SOCKET mUDPOutLongPort;
-		SOCKET mUDPRecvSocket;
+		SOCKET mUDPRecvSocket;		/// for one-port UDP hack
 
 		// Data
 		MR_NetworkPort mClient[eMaxClient];
 		CString mClientName[eMaxClient];
-		BOOL mAllPreLoguedRecv;					  // Used by client to know if all prelogued have been received
+		BOOL mAllPreLoguedRecv;					  /// Used by client to know if all prelogued have been received
 		BOOL mCanBePreLogued[eMaxClient];
 		BOOL mPreLoguedClient[eMaxClient];
-		BOOL mConnected[eMaxClient];			  // Correctly connected state used by the server
-		DWORD mClientAddr[eMaxClient];			  // Used only in server mode
-		int mClientPort[eMaxClient];			  // Used only in server mode
+		BOOL mConnected[eMaxClient];			  /// Correctly connected state used by the server
+		DWORD mClientAddr[eMaxClient];			  /// Used only in server mode
+		int mClientPort[eMaxClient];			  /// Used only in server mode
 
-		int mReturnMessage;						  // Message to return to the parent window in modeless mode
+		int mReturnMessage;						  /// Message to return to the parent window in modeless mode
 
 		// Dialog functions
 		static MR_NetworkInterface *mActiveInterface;
@@ -152,7 +166,7 @@ class MR_NetworkInterface
 		static BOOL CALLBACK WaitGameNameCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 		static BOOL CALLBACK ListCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 
-		// Helper func
+		// Helper function
 		void SendConnectionDoneIfNeeded();
 
 	public:
@@ -176,7 +190,10 @@ class MR_NetworkInterface
 		int GetAvgLag(int pClient) const;
 		int GetMinLag(int pClient) const;
 
-												  // return TRUE if queue not full
+		// helper function
+		BOOL CreateUDPRecvSocket(int pPort);
+
+		// return TRUE if queue not full
 		BOOL UDPSend(int pClient, MR_NetMessageBuffer * pMessage, BOOL pLongPort, BOOL pResendLast = FALSE);
 		BOOL BroadcastMessage(MR_NetMessageBuffer * pMessage, int pReqLevel);
 		// BOOL BroadcastMessage( DWORD  pTimeStamp, int  pMessageType, int pMessageLen, const MR_UInt8* pMessage );

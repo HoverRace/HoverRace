@@ -1272,6 +1272,7 @@ END
 STRINGTABLE 
 BEGIN
     IDS_MISC                "Miscellaneous"
+    IDS_CANT_USE_UDP_PORT   "Unable to use UDP recv port; choose a different port or close some Winsock applications."
 END
 
 #endif    // Neutral (Default) resources

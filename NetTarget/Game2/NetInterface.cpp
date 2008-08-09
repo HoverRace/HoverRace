@@ -62,7 +62,7 @@ MR_NetworkInterface *MR_NetworkInterface::mActiveInterface = NULL;
  */
 MR_NetworkInterface::MR_NetworkInterface()
 {
-	ASSERT(MR_NET_HEADER_LEN == 3);
+	ASSERT(MR_NET_HEADER_LEN == 5);
 
 	WORD lVersionRequested = MAKEWORD(1, 1);
 	WSADATA lWsaData;
@@ -196,6 +196,12 @@ void MR_NetworkInterface::Disconnect()
 		mConnected[lCounter] = FALSE;
 		mCanBePreLogued[lCounter] = FALSE;
 	}
+
+	// disconnect UDP recv socket
+	if(mUDPRecvSocket != INVALID_SOCKET) {
+		closesocket(mUDPRecvSocket);
+		mUDPRecvSocket = INVALID_SOCKET;
+	}
 }
 
 /**
@@ -232,6 +238,37 @@ int MR_NetworkInterface::GetLagFromServer() const
 }
 
 /**
+ * Create the UDP receive port, set the port to be non-blocking, and bind it.  Returns TRUE on success (and FALSE on error).
+ *
+ * @param pPort The port to use
+ */
+BOOL MR_NetworkInterface::CreateUDPRecvSocket(int pPort)
+{
+	// this assert can be removed; early debugging artifact
+	ASSERT(mUDPRecvSocket == INVALID_SOCKET);
+
+	mUDPRecvSocket = socket(PF_INET, SOCK_DGRAM, 0);
+	ASSERT(mUDPRecvSocket != INVALID_SOCKET);
+
+	// make it non-blocking
+	int lCode;
+	unsigned long lNonBlock = TRUE;
+	lCode = ioctlsocket(mUDPRecvSocket, FIONBIO, &lNonBlock);
+	ASSERT(lCode != SOCKET_ERROR);
+
+	// Bind the socket to the default port
+	SOCKADDR_IN lLocalAddr;
+	lLocalAddr.sin_family = AF_INET;
+	lLocalAddr.sin_addr.s_addr = INADDR_ANY;
+	lLocalAddr.sin_port = pPort;
+	lCode = bind(mUDPRecvSocket, (LPSOCKADDR) &lLocalAddr, sizeof(lLocalAddr));
+	ASSERT(lCode != SOCKET_ERROR);
+
+	// bind() success code is 0
+	return (lCode == 0);
+}
+
+/**
  * Return the smallest lag sample to the given client.
  *
  * @param pClient Index of the client
@@ -265,6 +302,7 @@ int MR_NetworkInterface::GetAvgLag(int pClient) const
 BOOL MR_NetworkInterface::UDPSend(int pClient, MR_NetMessageBuffer *pMessage, BOOL pLongPort, BOOL pResendLast)
 {
 	ASSERT((pClient >= 0) && (pClient < eMaxClient));
+	pMessage->mClient = mId;
 	return mClient[pClient].UDPSend(pLongPort ? mUDPOutLongPort : mUDPOutShortPort, pMessage, pLongPort ? 0 : 1, pResendLast);
 }
 
@@ -276,6 +314,7 @@ BOOL MR_NetworkInterface::UDPSend(int pClient, MR_NetMessageBuffer *pMessage, BO
  */
 BOOL MR_NetworkInterface::BroadcastMessage(MR_NetMessageBuffer *pMessage, int pReqLevel)
 {
+	pMessage->mClient = mId; // must ensure this
 	for(int lCounter = 0; lCounter < eMaxClient; lCounter++) {
 		if(pReqLevel == MR_NET_DATAGRAM)
 			mClient[lCounter].UDPSend(mUDPOutLongPort, pMessage, 0, FALSE);
@@ -325,7 +364,7 @@ BOOL MR_NetworkInterface::FetchMessage(DWORD &pTimeStamp, int &pMessageType, int
 
 		if(lMessage != NULL) {
 			lReturnValue = TRUE;
-			sLastClient = lClient;
+			sLastClient = lMessage->mClient;
 
 			if(&pMessage != NULL) {
 				pMessage = lMessage->mData;
@@ -353,7 +392,13 @@ BOOL MR_NetworkInterface::FetchMessage(DWORD &pTimeStamp, int &pMessageType, int
 			 */
 			pTimeStamp = 0;
 
-			pClientId = lClient;
+			pClientId = lMessage->mClient;
+
+			// We need to modify pClientId.  If we are player #1, player #2 should be client 0, player #3 should be client 1,
+			// and so on.  If we are player #2, player #1 is client 0, player #3 is client 1, and so on.
+			// What this boils down to is that if pClientId is greater than our own ID, we have to decrement it
+			if(pClientId > mId)
+				pClientId--;
 
 		}
 	}
@@ -429,6 +474,13 @@ BOOL MR_NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName, BOO
 			}
 		}
 
+		// set up UDP receive port
+		lReturnValue = CreateUDPRecvSocket(htons(MR_DEFAULT_UDP_RECV_PORT));
+
+		if(!lReturnValue) {
+			MessageBox(pWindow, MR_LoadString(IDS_CANT_USE_UDP_PORT), MR_LoadString(IDS_TCP_SERVER), MB_ICONERROR | MB_OK | MB_APPLMODAL);
+		}
+
 		if(lReturnValue) {
 			// Determine server addr
 			mServerAddr = GetLocalAddrStr();
@@ -487,13 +539,21 @@ BOOL MR_NetworkInterface::SlavePreConnect(HWND pWindow, CString &pGameName)
 		MessageBox(pWindow, MR_LoadString(IDS_CANT_CREATE_SOCK), MR_LoadString(IDS_TCP_SERVER), MB_ICONERROR | MB_OK | MB_APPLMODAL);
 	}
 	else {
-		// Ask server port addr and number
-		HMODULE lModuleHandle = GetModuleHandle(NULL /*"util.dll" */ );
+		// set up UDP receive socket
+		lReturnValue = CreateUDPRecvSocket(htons(MR_DEFAULT_UDP_RECV_PORT));
 
-		if(DialogBox(lModuleHandle, MAKEINTRESOURCE(IDD_SERVER_ADDR), pWindow, ServerAddrCallBack) == IDOK) {
-			lReturnValue = TRUE;
+		if(lReturnValue) {
+			// Ask server port addr and number
+			HMODULE lModuleHandle = GetModuleHandle(NULL /*"util.dll" */ );
 
-			pGameName = mGameName;
+			if(DialogBox(lModuleHandle, MAKEINTRESOURCE(IDD_SERVER_ADDR), pWindow, ServerAddrCallBack) == IDOK) {
+				lReturnValue = TRUE;
+
+				pGameName = mGameName;
+			}
+		}
+		else {
+			MessageBox(pWindow, MR_LoadString(IDS_CANT_USE_UDP_PORT), MR_LoadString(IDS_TCP_SERVER), MB_ICONERROR | MB_OK | MB_APPLMODAL);
 		}
 	}
 
@@ -544,6 +604,12 @@ BOOL MR_NetworkInterface::SlaveConnect(HWND pWindow, const char *pServerIP, unsi
 			mServerPort = pDefaultPort;
 			mActiveInterface = this;
 
+			lReturnValue = CreateUDPRecvSocket(htons(MR_DEFAULT_UDP_RECV_PORT));
+
+			if(!lReturnValue) {
+				MessageBox(pWindow, MR_LoadString(IDS_CANT_USE_UDP_PORT), MR_LoadString(IDS_TCP_SERVER), MB_ICONERROR | MB_OK | MB_APPLMODAL);
+			}
+
 			// figure out the game information
 			lReturnValue = (DialogBox(lModuleHandle, MAKEINTRESOURCE(IDD_NET_PROGRESS), pWindow, WaitGameNameCallBack) == IDOK);
 		}
@@ -574,7 +640,6 @@ BOOL MR_NetworkInterface::SlaveConnect(HWND pWindow, const char *pServerIP, unsi
 				lReturnValue = FALSE;
 			}
 		}
-
 	}
 
 	if(!lReturnValue) {
@@ -788,7 +853,7 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 					SetDlgItemText(pWindow, IDC_TEXT, MR_LoadString(IDS_GET_GAMEINFO));
 	
 					// mClient[0] is the server (if we're not the server)
-					mActiveInterface->mClient[0].Connect(sNewSocket);
+					mActiveInterface->mClient[0].Connect(sNewSocket, mActiveInterface->mUDPRecvSocket);
 	
 					// callback with MRM_CLIENT message once the socket reads data
 					WSAAsyncSelect(sNewSocket, pWindow, MRM_CLIENT, FD_READ);
@@ -1120,7 +1185,7 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 
 					ASSERT(lCode != SOCKET_ERROR);
 
-					mActiveInterface->mClient[lNewSlot].Connect(lNewSocket);
+					mActiveInterface->mClient[lNewSlot].Connect(lNewSocket, mActiveInterface->mUDPRecvSocket);
 
 					// wait for new message (MRM_CLIENT + lNewSlot)
 					WSAAsyncSelect(lNewSocket, pWindow, MRM_CLIENT + lNewSlot, FD_READ | FD_CLOSE);
@@ -1339,7 +1404,7 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 									}
 									ASSERT(lSlot != -1);
 
-									mActiveInterface->mClient[lSlot].Connect(lNewSocket);
+									mActiveInterface->mClient[lSlot].Connect(lNewSocket, mActiveInterface->mUDPRecvSocket);
 									mActiveInterface->mPreLoguedClient[lSlot] = TRUE;
 
 									SOCKADDR_IN lAddr;
@@ -1554,12 +1619,15 @@ MR_NetworkPort::~MR_NetworkPort()
  *
  * @param pSocket An already-connected socket.
  */
-void MR_NetworkPort::Connect(SOCKET pSocket)
+void MR_NetworkPort::Connect(SOCKET pSocket, SOCKET pUDPRecvSocket)
 {
 	Disconnect();
 	mSocket = pSocket;
 	mWatchdog = timeGetTime();
 
+	mUDPRecvSocket = pUDPRecvSocket;
+
+	/*
 	// Create UDPPort
 
 	// Create a new UDP Socket for the reception
@@ -1578,6 +1646,7 @@ void MR_NetworkPort::Connect(SOCKET pSocket)
 	lLocalAddr.sin_port = 0;
 	lCode = bind(mUDPRecvSocket, (LPSOCKADDR) &lLocalAddr, sizeof(lLocalAddr));
 	ASSERT(lCode != SOCKET_ERROR);
+	*/
 }
 
 /**
@@ -1603,7 +1672,7 @@ unsigned int MR_NetworkPort::GetUDPPort() const
 	// Get UDP local addr
 	SOCKADDR_IN lLocalAddr;
 	int lSize = sizeof(lLocalAddr);
-	int lCode = getsockname(mUDPRecvSocket, (LPSOCKADDR) & lLocalAddr, &lSize);
+	int lCode = getsockname(mUDPRecvSocket, (LPSOCKADDR) &lLocalAddr, &lSize);
 	ASSERT(lCode != SOCKET_ERROR);
 
 	return lLocalAddr.sin_port;
