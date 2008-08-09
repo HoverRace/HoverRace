@@ -32,18 +32,19 @@
 #define MRM_NEW_CLIENT     (WM_USER + 2)
 #define MRM_CLIENT         (WM_USER + 10)		  // 64 next reserved
 
-#define MRNM_GET_GAME_NAME     40
-#define MRNM_REMOVE_ENTRY      41
-#define MRNM_GAME_NAME         42
-#define MRNM_CONN_NAME_GET_SET 43
-#define MRNM_CONN_NAME_SET     44
-#define MRNM_CLIENT_ADDR_REQ   45
-#define MRNM_CLIENT_ADDR       46
-#define MRNM_LAG_TEST          47
-#define MRNM_LAG_ANSWER        48
-#define MRNM_LAG_INFO          49
-#define MRNM_CONNECTION_DONE   50
-#define MRNM_READY             51
+#define MRNM_GET_GAME_NAME		40
+#define MRNM_REMOVE_ENTRY		41
+#define MRNM_GAME_NAME			42
+#define MRNM_CONN_NAME_GET_SET	43
+#define MRNM_CONN_NAME_SET		44
+#define MRNM_CLIENT_ADDR_REQ	45
+#define MRNM_CLIENT_ADDR		46
+#define MRNM_LAG_TEST			47
+#define MRNM_LAG_ANSWER			48
+#define MRNM_LAG_INFO			49
+#define MRNM_CONNECTION_DONE	50
+#define MRNM_READY				51
+#define MRNM_CANCEL_GAME		52
 
 #define MR_CONNECTION_TIMEOUT   21000			  // 21 sec
 
@@ -1083,6 +1084,14 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 		case WM_COMMAND:
 			switch (LOWORD(pWParam)) {
 				case IDCANCEL:
+					// if we are the server we must tell the other clients to disconnect
+					if(mActiveInterface->mServerMode) {
+						// technically this is not an answer but lAnswer is already declared so I will use it
+						lAnswer.mMessageType = MRNM_CANCEL_GAME;
+						lAnswer.mDataLen = 1;
+						mActiveInterface->BroadcastMessage(&lAnswer, MR_NET_REQUIRED); // tell everyone
+					}
+
 					mActiveInterface->Disconnect();
 					lReturnValue = TRUE;
 
@@ -1534,6 +1543,22 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 							}
 
 							return TRUE;
+
+						case MRNM_CANCEL_GAME: // game has been cancelled
+							// notify the user that the game ended
+							MessageBox(pWindow, MR_LoadString(IDS_GAME_CANCELLED), MR_LoadString(IDS_TCP_SERVER), MB_ICONERROR | MB_OK | MB_APPLMODAL);
+
+							mActiveInterface->Disconnect();
+							lReturnValue = TRUE;
+
+							if(mActiveInterface->mReturnMessage == 0) {
+								EndDialog(pWindow, IDCANCEL);
+							}
+							else {
+								SendMessage(GetParent(pWindow), mActiveInterface->mReturnMessage, IDCANCEL, 0);
+								DestroyWindow(pWindow);
+							}
+							break;
 					}
 				}
 

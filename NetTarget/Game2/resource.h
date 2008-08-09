@@ -399,6 +399,8 @@
 #define IDS_JOY4LEFT                    40222
 #define IDS_JOY4RIGHT                   40223
 #define IDS_MISC                        40224
+#define IDS_CANT_USE_UDP_PORT           40225
+#define IDS_GAME_CANCELLED              40226
 #define ID_GAME_NEW                     0xE100
 #define ID_GAME_LOAD                    0xE101
 #define ID_GAME_FAST_SAVE               0xE103

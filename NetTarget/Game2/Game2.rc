@@ -1273,6 +1273,7 @@ STRINGTABLE
 BEGIN
     IDS_MISC                "Miscellaneous"
     IDS_CANT_USE_UDP_PORT   "Unable to use UDP recv port; choose a different port or close some Winsock applications."
+    IDS_GAME_CANCELLED      "Game cancelled by server"
 END
 
 #endif    // Neutral (Default) resources
