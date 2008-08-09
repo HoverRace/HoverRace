@@ -47,6 +47,7 @@
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\..\Debug/ObjFacTools.pdb"
 				SubSystem="2"
+				BaseAddress="0x64000000"
 				ImportLibrary=".\..\Debug/ObjFacTools.lib"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -111,6 +112,7 @@
 				SuppressStartupBanner="TRUE"
 				ProgramDatabaseFile=".\..\Release/ObjFacTools.pdb"
 				SubSystem="2"
+				BaseAddress="0x60000000"
 				ImportLibrary=".\..\Release/ObjFacTools.lib"/>
 			<Tool
 				Name="VCMIDLTool"

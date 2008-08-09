@@ -50,6 +50,7 @@
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\..\Debug/Util.pdb"
 				SubSystem="2"
+				BaseAddress="0x61000000"
 				ImportLibrary=".\..\Debug/Util.lib"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -116,6 +117,7 @@
 				AdditionalLibraryDirectories="..\..\lib"
 				ProgramDatabaseFile=".\..\Release/Util.pdb"
 				SubSystem="2"
+				BaseAddress="0x61000000"
 				ImportLibrary=".\..\Release/Util.lib"/>
 			<Tool
 				Name="VCMIDLTool"

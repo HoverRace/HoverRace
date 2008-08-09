@@ -47,6 +47,7 @@
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\..\Debug/MainCharacter.pdb"
 				SubSystem="2"
+				BaseAddress="0x63000000"
 				ImportLibrary=".\..\Debug/MainCharacter.lib"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -111,6 +112,7 @@
 				SuppressStartupBanner="TRUE"
 				ProgramDatabaseFile=".\..\Release/MainCharacter.pdb"
 				SubSystem="2"
+				BaseAddress="0x63000000"
 				ImportLibrary=".\..\Release/MainCharacter.lib"/>
 			<Tool
 				Name="VCMIDLTool"

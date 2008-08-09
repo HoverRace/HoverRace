@@ -35,7 +35,7 @@
 				ProgramDataBaseFileName=".\Debug/"
 				WarningLevel="3"
 				SuppressStartupBanner="TRUE"
-				DebugInformationFormat="0"
+				DebugInformationFormat="4"
 				CompileAs="0"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
@@ -49,6 +49,7 @@
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\..\Debug/VideoServices.pdb"
 				SubSystem="2"
+				BaseAddress="0x60000000"
 				ImportLibrary=".\..\Debug/VideoServices.lib"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -114,6 +115,7 @@
 				SuppressStartupBanner="TRUE"
 				ProgramDatabaseFile=".\..\Release/VideoServices.pdb"
 				SubSystem="2"
+				BaseAddress="0x60000000"
 				ImportLibrary=".\..\Release/VideoServices.lib"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -162,11 +164,6 @@
 					Name="Debug|Win32">
 					<Tool
 						Name="VCCLCompilerTool"
-						Optimization="3"
-						InlineFunctionExpansion="1"
-						EnableIntrinsicFunctions="TRUE"
-						FavorSizeOrSpeed="1"
-						OmitFramePointers="TRUE"
 						ExceptionHandling="FALSE"
 						RuntimeTypeInfo="FALSE"
 						UsePrecompiledHeader="0"/>

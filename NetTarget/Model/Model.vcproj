@@ -48,6 +48,7 @@
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\..\Debug/Model.pdb"
 				SubSystem="2"
+				BaseAddress="0x62000000"
 				ImportLibrary=".\..\Debug/Model.lib"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -113,6 +114,7 @@
 				SuppressStartupBanner="TRUE"
 				ProgramDatabaseFile=".\..\Release/Model.pdb"
 				SubSystem="2"
+				BaseAddress="0x62000000"
 				ImportLibrary=".\..\Release/Model.lib"/>
 			<Tool
 				Name="VCMIDLTool"
