@@ -50,7 +50,7 @@ class MR_NetMessageBuffer
 		MR_UInt16 mDatagramNumber:8;			  /// used only for datagrams (UDP)
 		MR_UInt16 mDatagramQueue:2;				  /// used only for datagrams (UDP)
 		MR_UInt16 mMessageType:6;
-		MR_UInt8 mClient;
+//		MR_UInt8 mClient;
 		MR_UInt8 mDataLen;
 		MR_UInt8 mData[MR_MAX_NET_MESSAGE_LEN];
 
@@ -96,7 +96,7 @@ class MR_NetworkPort
 		MR_NetworkPort();
 		~MR_NetworkPort();
 
-		void Connect(SOCKET pSocket, SOCKET pUDPRecvSocket);
+		void Connect(SOCKET pSocket); //, SOCKET pUDPRecvSocket);
 		void SetRemoteUDPPort(unsigned int pPort);
 		unsigned int GetUDPPort() const;
 		void Disconnect();
@@ -145,7 +145,7 @@ class MR_NetworkInterface
 		// UDP port
 		SOCKET mUDPOutShortPort;
 		SOCKET mUDPOutLongPort;
-		SOCKET mUDPRecvSocket;		/// for one-port UDP hack
+		//SOCKET mUDPRecvSocket;		/// for one-port UDP hack
 
 		// Data
 		MR_NetworkPort mClient[eMaxClient];
@@ -191,7 +191,7 @@ class MR_NetworkInterface
 		int GetMinLag(int pClient) const;
 
 		// helper function
-		BOOL CreateUDPRecvSocket(int pPort);
+//		BOOL CreateUDPRecvSocket(int pPort);
 
 		// return TRUE if queue not full
 		BOOL UDPSend(int pClient, MR_NetMessageBuffer * pMessage, BOOL pLongPort, BOOL pResendLast = FALSE);
