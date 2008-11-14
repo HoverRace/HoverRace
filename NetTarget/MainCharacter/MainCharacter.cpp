@@ -37,22 +37,22 @@ class MR_MainCharacterState:private MR_BitPack
 
 	// Packing description
 	//                     Offset  len   Prec
-#define  MC_POSX           0,   26,     5
-#define  MC_POSY          26,   26,     5
-#define  MC_POSZ          52,   15,     0
-#define  MC_ROOM          67,   11,     0
-#define  MC_ORIENTATION   78,    9,     3
-#define  MC_SPEED_X_256   87,   13,     2
-#define  MC_SPEED_Y_256  100,   13,     2
-#define  MC_SPEED_Z_256  113,    9,     2
-#define  MC_CONTROL_ST   122,   15,     0
-#define  MC_ON_FLOOR     137,    1,     0
-#define  MC_HOVER_MODEL  138,    3,     0
-#define  MC_PADDING      141,   11,     0
+#define  MC_POSX           0,   32,     5
+#define  MC_POSY          32,   32,     5
+#define  MC_POSZ          64,   27,     0
+#define  MC_ROOM          91,   11,     0
+#define  MC_ORIENTATION  102,    9,     3
+#define  MC_SPEED_X_256  111,   13,     2
+#define  MC_SPEED_Y_256  124,   13,     2
+#define  MC_SPEED_Z_256  137,    9,     2
+#define  MC_CONTROL_ST   146,   15,     0
+#define  MC_ON_FLOOR     161,    1,     0
+#define  MC_HOVER_MODEL  162,    3,     0
+#define  MC_PADDING      165,   11,     0
 	//   #define  MC_SOUNDFX      141,    5,     0
 
-	// Total                 146  = 19 bytes
-	MR_UInt8 mFieldList[18];
+	// Total                 176  = 22 bytes
+	MR_UInt8 mFieldList[21];
 
 	public:
 
