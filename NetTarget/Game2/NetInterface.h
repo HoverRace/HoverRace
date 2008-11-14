@@ -102,7 +102,6 @@ class MR_NetworkPort
 
 		void Connect(SOCKET pSocket, SOCKET pUDPRecvSocket);
 		void SetRemoteUDPPort(unsigned int pPort);
-		unsigned int GetUDPPort() const;
 		void Disconnect();
 		BOOL IsConnected() const;
 
