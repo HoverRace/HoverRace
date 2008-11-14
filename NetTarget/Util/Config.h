@@ -92,6 +92,8 @@ class MR_Config
 
 		struct cfg_net_t {
 			std::string mainServer;
+			int udpRecvPort;
+			int tcpRecvPort;
 			//TODO: Proxy server settings.
 
 			MR_DllDeclare void Load(yaml::MapNode*);

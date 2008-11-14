@@ -30,14 +30,17 @@
 
 #define MR_DEFAULT_NET_PORT			9530
 #define MR_DEFAULT_UDP_RECV_PORT	9531
+#define MR_DEFAULT_TCP_RECV_PORT	9531
 
-#define MR_OUT_QUEUE_LEN       2048
-#define MR_MAX_NET_MESSAGE_LEN 255
+#define MR_ID_NOT_SET				255
 
-#define MR_NET_REQUIRED         1
-#define MR_NET_TRY              2
-#define MR_NOT_REQUIRED         0
-#define MR_NET_DATAGRAM        -1
+#define MR_OUT_QUEUE_LEN			2048
+#define MR_MAX_NET_MESSAGE_LEN		255
+
+#define MR_NET_REQUIRED				1
+#define MR_NET_TRY					2
+#define MR_NOT_REQUIRED				0
+#define MR_NET_DATAGRAM				-1
 
 /**
  * The MR_NetMessageBuffer class is a wrapper for data being transmitted over the network.
@@ -50,7 +53,7 @@ class MR_NetMessageBuffer
 		MR_UInt16 mDatagramNumber:8;			  /// used only for datagrams (UDP)
 		MR_UInt16 mDatagramQueue:2;				  /// used only for datagrams (UDP)
 		MR_UInt16 mMessageType:6;
-//		MR_UInt8 mClient;
+		MR_UInt8 mClient;
 		MR_UInt8 mDataLen;
 		MR_UInt8 mData[MR_MAX_NET_MESSAGE_LEN];
 
@@ -75,6 +78,7 @@ class MR_NetworkPort
 
 		MR_UInt8 mLastSendedDatagramNumber[4];
 		MR_UInt8 mLastReceivedDatagramNumber[4];
+		MR_UInt8 mLastClient[4];
 
 		int mWatchdog;
 
@@ -96,7 +100,7 @@ class MR_NetworkPort
 		MR_NetworkPort();
 		~MR_NetworkPort();
 
-		void Connect(SOCKET pSocket); //, SOCKET pUDPRecvSocket);
+		void Connect(SOCKET pSocket, SOCKET pUDPRecvSocket);
 		void SetRemoteUDPPort(unsigned int pPort);
 		unsigned int GetUDPPort() const;
 		void Disconnect();
@@ -105,9 +109,9 @@ class MR_NetworkPort
 		SOCKET GetSocket() const;
 		SOCKET GetUDPSocket() const;
 
-		const MR_NetMessageBuffer *Poll();
-		void Send(const MR_NetMessageBuffer * pMessage, int pReqLevel);
-		BOOL UDPSend(SOCKET pSocket, MR_NetMessageBuffer * pMessage, unsigned pQueueId, BOOL pResendLast);
+		const MR_NetMessageBuffer *Poll(int pClientId, BOOL pCheckClientId); // parameters are hacks
+		void Send(const MR_NetMessageBuffer *pMessage, int pReqLevel);
+		BOOL UDPSend(SOCKET pSocket, MR_NetMessageBuffer *pMessage, unsigned pQueueId, BOOL pResendLast);
 
 		// Time related stuff
 		BOOL AddLagSample(int pLag);
@@ -139,13 +143,15 @@ class MR_NetworkInterface
 		BOOL mServerMode;
 		SOCKET mRegistrySocket;
 		int mServerPort;
+		int mUDPRecvPort;
+		int mTCPRecvPort;
 		CString mServerAddr;
 		CString mGameName;			/// just the track name
 
 		// UDP port
 		SOCKET mUDPOutShortPort;
 		SOCKET mUDPOutLongPort;
-		//SOCKET mUDPRecvSocket;		/// for one-port UDP hack
+		SOCKET mUDPRecvSocket;		/// for one-port UDP hack
 
 		// Data
 		MR_NetworkPort mClient[eMaxClient];
@@ -191,7 +197,8 @@ class MR_NetworkInterface
 		int GetMinLag(int pClient) const;
 
 		// helper function
-//		BOOL CreateUDPRecvSocket(int pPort);
+		BOOL CreateUDPRecvSocket(int pPort);
+		void SetRecvPorts(int pUDPRecvPort, int pTCPRecvPort);
 
 		// return TRUE if queue not full
 		BOOL UDPSend(int pClient, MR_NetMessageBuffer * pMessage, BOOL pLongPort, BOOL pResendLast = FALSE);

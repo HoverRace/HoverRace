@@ -107,7 +107,7 @@ class MR_NetworkSession : public MR_ClientSession
 
 	public:
 		// Creation and destruction
-		MR_NetworkSession(BOOL pInternetGame, int pMajorID, int pMinorID, HWND pWindow);
+		MR_NetworkSession(BOOL pInternetGame, int pMajorID, int pMinorID, HWND pWindow, int pUDPRecvPort, int pTCPRecvPort);
 		~MR_NetworkSession();
 
 		// Simulation control

@@ -150,6 +150,9 @@
 #define IDC_GAMMA_TXT                   1084
 #define IDC_DLPROGRESS                  1085
 #define IDC_BUTTON1                     1086
+#define IDC_UDP_RECV_PORT               1087
+#define IDC_UDP_RECV_PORT2              1088
+#define IDC_TCP_RECV_PORT               1088
 #define ID_HELP_CONTENTS                32772
 #define ID_HELP_HOWTOORDER              32773
 #define ID_HELP_TIPOFTHEDAY             32774
@@ -416,7 +419,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        164
 #define _APS_NEXT_COMMAND_VALUE         40044
-#define _APS_NEXT_CONTROL_VALUE         1087
+#define _APS_NEXT_CONTROL_VALUE         1088
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

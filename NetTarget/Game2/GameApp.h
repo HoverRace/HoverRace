@@ -30,7 +30,7 @@ class MR_GameApp;
 class MR_GameThread
 {
 	private:
-		MR_GameApp * mGameApp;
+		MR_GameApp *mGameApp;
 		CRITICAL_SECTION mMutex;
 		HANDLE mThread;
 		BOOL mTerminate;

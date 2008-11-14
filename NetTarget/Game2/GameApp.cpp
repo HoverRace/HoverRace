@@ -1491,13 +1491,13 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 
 		DeleteMovieWnd();
 		MR_SoundServer::Init(mMainWindow);
-		lCurrentSession = new MR_NetworkSession(FALSE, -1, -1, mMainWindow);
+		lCurrentSession = new MR_NetworkSession(FALSE, -1, -1, mMainWindow, cfg->net.udpRecvPort, cfg->net.tcpRecvPort);
 	}
 	else {
 		DeleteMovieWnd();
 		MR_SoundServer::Init(mMainWindow);
 
-		lCurrentSession = new MR_NetworkSession(FALSE, -1, -1, mMainWindow);
+		lCurrentSession = new MR_NetworkSession(FALSE, -1, -1, mMainWindow, cfg->net.udpRecvPort, cfg->net.tcpRecvPort);
 		lCurrentSession->SetPlayerName(cfg->player.nickName.c_str());
 
 		CString lTrack;
@@ -1627,7 +1627,7 @@ void MR_GameApp::NewInternetSession()
 	DeleteMovieWnd();
 	MR_SoundServer::Init(mMainWindow);
 
-	lCurrentSession = new MR_NetworkSession(TRUE, -1, -1, mMainWindow);
+	lCurrentSession = new MR_NetworkSession(TRUE, -1, -1, mMainWindow, cfg->net.udpRecvPort, cfg->net.tcpRecvPort);
 
 	if(lSuccess) {
 		lCurrentSession->SetPlayerName(cfg->player.nickName.c_str());
@@ -2586,6 +2586,14 @@ BOOL CALLBACK MR_GameApp::MiscDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWPar
 			SendDlgItemMessage(pWindow, IDC_NATIVE_BPP_FULLSCREEN, BM_SETCHECK, cfg->video.nativeBppFullscreen, 0);
 
 			SetDlgItemText(pWindow, IDC_MAINSERVER, cfg->net.mainServer.c_str());
+			{
+				char lBuffer[20];
+				sprintf(lBuffer, "%d", cfg->net.udpRecvPort);
+				SetDlgItemText(pWindow, IDC_UDP_RECV_PORT, lBuffer);
+
+				sprintf(lBuffer, "%d", cfg->net.tcpRecvPort);
+				SetDlgItemText(pWindow, IDC_TCP_RECV_PORT, lBuffer);
+			}
 
 			break;
 
@@ -2603,6 +2611,16 @@ BOOL CALLBACK MR_GameApp::MiscDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWPar
 
 						cfg->net.mainServer = lBuffer;
 						This->mServerHasChanged = TRUE;
+
+						if(GetDlgItemText(pWindow, IDC_UDP_RECV_PORT, lBuffer, sizeof(lBuffer)) == 0)
+							ASSERT(FALSE);
+
+						cfg->net.udpRecvPort = atoi(lBuffer);
+
+						if(GetDlgItemText(pWindow, IDC_TCP_RECV_PORT, lBuffer, sizeof(lBuffer)) == 0)
+							ASSERT(FALSE);
+
+						cfg->net.tcpRecvPort = atoi(lBuffer);
 					}
 
 					This->SaveRegistry();
