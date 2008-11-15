@@ -1,0 +1,29 @@
+HoverRace 1.23 is brought to you by:
+
+Richard Langlois (original author)
+  Grokksoft Inc.
+  
+with contributions from (in alphabetical order):
+
+Austin L. Brock
+Ryan Curtin
+Michael Imamura
+
+and with the help of the many testers willing to put up with bugs and other strange happenings.
+
+Visit us at http://www.hoverrace.com/
+
+HoverRace is copyright (c) Richard Langlois and Grokksoft Inc.
+
+Thanks also to the following projects:
+
+The Boost C++ Libraries
+  http://www.boost.org/
+
+libcurl - Daniel Stenberg and contributors.
+  http://curl.haxx.se/
+
+LibYAML - Kirill Simonov and contributors.
+  http://pyyaml.org/wiki/LibYAML
+
+LiteUnzip - Jeff Glatt, based on work by Lucian Wischik, based on work by Jean-Loup Gailly and Mark Adler.

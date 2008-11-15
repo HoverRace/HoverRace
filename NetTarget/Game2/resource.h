@@ -144,6 +144,7 @@
 #define IDC_EDIT1                       1081
 #define IDC_MAINSERVER                  1081
 #define IDC_BRIGHTNESS_TXT              1081
+#define IDC_ABOUT_TXT                   1081
 #define IDC_CONTRAST_TXT                1082
 #define IDC_SFX_VOLUME_TXT              1083
 #define IDC_STATE                       1083
@@ -153,6 +154,7 @@
 #define IDC_UDP_RECV_PORT               1087
 #define IDC_UDP_RECV_PORT2              1088
 #define IDC_TCP_RECV_PORT               1088
+#define IDC_ABOUT_RTF                   1088
 #define ID_HELP_CONTENTS                32772
 #define ID_HELP_HOWTOORDER              32773
 #define ID_HELP_TIPOFTHEDAY             32774
@@ -404,6 +406,7 @@
 #define IDS_MISC                        40224
 #define IDS_CANT_USE_UDP_PORT           40225
 #define IDS_GAME_CANCELLED              40226
+#define IDS_ABOUT                       40227
 #define ID_GAME_NEW                     0xE100
 #define ID_GAME_LOAD                    0xE101
 #define ID_GAME_FAST_SAVE               0xE103
@@ -419,7 +422,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        164
 #define _APS_NEXT_COMMAND_VALUE         40044
-#define _APS_NEXT_CONTROL_VALUE         1088
+#define _APS_NEXT_CONTROL_VALUE         1089
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
