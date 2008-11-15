@@ -1587,6 +1587,17 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 		delete lCurrentSession;
 	}
 	else {
+		if(GetActiveWindow() != mMainWindow) {
+			FLASHWINFO lFlash;
+			lFlash.cbSize = sizeof(lFlash);
+			lFlash.hwnd = mMainWindow;
+			lFlash.dwFlags = FLASHW_ALL | FLASHW_TIMERNOFG;
+			lFlash.uCount = 5;
+			lFlash.dwTimeout = 0;
+
+			FlashWindowEx(&lFlash);
+		}
+
 		mCurrentSession = lCurrentSession;
 		mGameThread = MR_GameThread::New(this);
 
@@ -1880,6 +1891,7 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 
 		case WM_ACTIVATEAPP:
 			//TRACE("WM_ACTIVATE %d\n", pWParam);
+
 			if(pWParam && (This->mVideoBuffer != NULL) && (This->mMainWindow == GetForegroundWindow())) {
 				if(!This->mVideoBuffer->IsModeSettingInProgress()) {
 					if(This->mVideoBuffer->IsWindowMode()) {

@@ -1803,6 +1803,18 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 
 				// Quit with a success
 				EndDialog(pWindow, IDOK);
+
+				// Blink for user notification
+				if(GetForegroundWindow() != GetParent(pWindow)) {
+					FLASHWINFO lFlash;
+					lFlash.cbSize = sizeof(lFlash);
+					lFlash.hwnd = GetParent(pWindow);
+					lFlash.dwFlags = FLASHW_ALL | FLASHW_TIMERNOFG;
+					lFlash.uCount = 5;
+					lFlash.dwTimeout = 0;
+
+					FlashWindowEx(&lFlash);
+				}
 			}
 			else {
 				// Unregister Game
