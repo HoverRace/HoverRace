@@ -569,6 +569,9 @@ BOOL MR_NetworkInterface::SlavePreConnect(HWND pWindow, CString &pGameName)
 
 				pGameName = mGameName;
 			}
+			else {
+				lReturnValue = FALSE;
+			}
 		}
 		else {
 			MessageBox(pWindow, MR_LoadString(IDS_CANT_USE_UDP_PORT), MR_LoadString(IDS_TCP_SERVER), MB_ICONERROR | MB_OK | MB_APPLMODAL);
