@@ -569,9 +569,6 @@ BOOL MR_NetworkInterface::SlavePreConnect(HWND pWindow, CString &pGameName)
 
 				pGameName = mGameName;
 			}
-			else {
-				lReturnValue = FALSE;
-			}
 		}
 		else {
 			MessageBox(pWindow, MR_LoadString(IDS_CANT_USE_UDP_PORT), MR_LoadString(IDS_TCP_SERVER), MB_ICONERROR | MB_OK | MB_APPLMODAL);
@@ -840,6 +837,10 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 					lAddr.sin_addr.s_addr = GetAddrFromStr(mActiveInterface->mServerAddr);
 					lAddr.sin_port = htons(mActiveInterface->mServerPort);
 
+					mActiveInterface->mClientAddr[0] = GetAddrFromStr(mActiveInterface->mServerAddr);
+					mActiveInterface->mClientBkAddr[0] = GetAddrFromStr(mActiveInterface->mServerAddr);
+					mActiveInterface->mClientPort[0] = htons(mActiveInterface->mServerPort);
+
 					// call this callback again when the socket successfully connects
 					WSAAsyncSelect(sNewSocket, pWindow, MRM_SERVER_CONNECT, FD_CONNECT);
 	
@@ -1097,7 +1098,7 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 					// also include UDP port number in the request
 					lAnswer.mMessageType = MRNM_CONN_NAME_GET_SET;
 					lAnswer.mDataLen = mActiveInterface->mPlayer.GetLength() + 4;
-					*(unsigned int *) (lAnswer.mData) = htons(mActiveInterface->mUDPRecvPort);
+					*(unsigned int *) (lAnswer.mData) = mActiveInterface->mClient[0].GetUDPPort();
 					memcpy(lAnswer.mData + 4, mActiveInterface->mPlayer, lAnswer.mDataLen - 4);
 	
 					mActiveInterface->mClient[0].Send(&lAnswer, MR_NET_REQUIRED);
@@ -1313,7 +1314,19 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 						case MRNM_GET_GAME_NAME: // can only occur in server mode: client asked for game name
 							ASSERT(mActiveInterface->mServerMode);
 
-							mActiveInterface->mClientAddr[lClient] = *(int *) &(lBuffer->mData[0]);
+							// we want to get the IP ourselves instead of from the client
+							// but we want to save what they said
+							mActiveInterface->mClientBkAddr[lClient] = *(int *) &(lBuffer->mData[0]);
+							{
+								SOCKADDR_IN lClientAddr;
+								int lSize = sizeof(lClientAddr);
+								if(getpeername(mActiveInterface->mClient[lClient].GetSocket(), (SOCKADDR *) &lClientAddr, &lSize) != 0) {
+									ASSERT(FALSE);
+								} else {
+									mActiveInterface->mClientAddr[lClient] = *(int *) &(lClientAddr.sin_addr);
+								}
+								TRACE("Client addr: %08x (id %d)\n", mActiveInterface->mClientAddr[lClient], lClient);
+							}
 							mActiveInterface->mClientPort[lClient] = *(int *) &(lBuffer->mData[4]);
 
 							lAnswer.mMessageType = MRNM_GAME_NAME;
@@ -1351,7 +1364,7 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 								// also include UDP port number in the request
 								lAnswer.mMessageType = MRNM_CONN_NAME_SET;
 								lAnswer.mDataLen = mActiveInterface->mPlayer.GetLength() + 4;
-								*(unsigned int *) (lAnswer.mData) = htons(mActiveInterface->mUDPRecvPort);
+								*(unsigned int *) (lAnswer.mData) = mActiveInterface->mClient[lClient].GetUDPPort();
 								memcpy(lAnswer.mData + 4, mActiveInterface->mPlayer, lAnswer.mDataLen - 4);
 	
 								mActiveInterface->mClient[lClient].Send(&lAnswer, MR_NET_REQUIRED);
@@ -1368,7 +1381,7 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 									// now send the client list
 									lAnswer.mMessageType = MRNM_CLIENT_ADDR;
 									lAnswer.mClient = 0;
-									lAnswer.mDataLen = 8;
+									lAnswer.mDataLen = 12;
 	
 									// Send the actual client list
 									for(int lCounter = 0; lCounter < eMaxClient; lCounter++) {
@@ -1376,7 +1389,8 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 											&& (mActiveInterface->mClient[lCounter].IsConnected())
 											&& (mActiveInterface->mCanBePreLogued[lCounter])) {
 											*(int *) &(lAnswer.mData[0]) = mActiveInterface->mClientAddr[lCounter];
-											*(int *) &(lAnswer.mData[4]) = mActiveInterface->mClientPort[lCounter];
+											*(int *) &(lAnswer.mData[4]) = mActiveInterface->mClientBkAddr[lCounter];
+											*(int *) &(lAnswer.mData[8]) = mActiveInterface->mClientPort[lCounter];
 	
 											mActiveInterface->mClient[lClient].Send(&lAnswer, MR_NET_REQUIRED);
 	
@@ -1475,7 +1489,13 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 
 									lAddr.sin_family = AF_INET;
 									lAddr.sin_addr.s_addr = *(int *) &(lBuffer->mData[0]);
-									lAddr.sin_port = *(int *) &(lBuffer->mData[4]);
+									lAddr.sin_port = *(int *) &(lBuffer->mData[8]);
+									
+									// save info
+									// backup address will be attempted to be used if connection fails
+									mActiveInterface->mClientAddr[lSlot] = *(int *) &(lBuffer->mData[0]);
+									mActiveInterface->mClientBkAddr[lSlot] = *(int *) &(lBuffer->mData[4]);
+									mActiveInterface->mClientPort[lSlot] = *(int *) &(lBuffer->mData[8]);
 
 									// allow messages from the new client (under FD_CONNECT)
 									WSAAsyncSelect(lNewSocket, pWindow, MRM_CLIENT + lSlot, FD_CONNECT | FD_READ | FD_CLOSE);
@@ -1630,14 +1650,111 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 			case FD_CONNECT: // we have successfully connected to the server or another client
 				if(WSAGETSELECTERROR(pLParam)) {
 					// Connection error with a client
-					ASSERT(FALSE);
+					//ASSERT(FALSE);
+					TRACE("Connection error with client %d: ", lClient);
+
+					switch(WSAGETSELECTERROR(pLParam)) {
+						case WSAECONNREFUSED:
+							TRACE("connection refused\n");
+							// assemble our message
+							{
+								char *lErrorString = new char[120]; // max player length is 40
+								sprintf(lErrorString, "%s%s%s", 
+									MR_LoadString(IDS_CONN_REFUSED1),
+									mActiveInterface->mClientName[lClient],
+									MR_LoadString(IDS_CONN_REFUSED2));
+
+                                MessageBox(pWindow, lErrorString, MR_LoadString(IDS_TCP_CLIENT), MB_ICONERROR | MB_OK | MB_APPLMODAL);
+
+								delete lErrorString;
+							}
+							break;
+						case WSAENETUNREACH:
+						case WSAETIMEDOUT:
+							/* try a different IP if possible */
+							/* but not if connecting to server */
+							TRACE("timeout or unreachable\n");
+							if(!mActiveInterface->mClient[lClient].mTriedBackupIP && lClient != 0) {
+								mActiveInterface->mClient[lClient].Disconnect();
+								mActiveInterface->mClient[lClient].mTriedBackupIP = TRUE;
+
+								SOCKET lNewSocket = socket(PF_INET, SOCK_STREAM, 0);
+
+								ASSERT(lNewSocket != INVALID_SOCKET);
+
+								SOCKADDR_IN lAddr;
+								lAddr.sin_family = AF_INET;
+
+								mActiveInterface->mClient[lClient].Connect(lNewSocket, mActiveInterface->mUDPRecvSocket);
+
+								if(((mActiveInterface->mClientAddr[lClient] & 0x0000FFFF) == 0x0000A8C0) ||
+								   ((mActiveInterface->mClientAddr[lClient] & 0x000000FF) == 0x0000000A)) {
+									/* Our server reported an internal address:
+									 * This probably means that the server and this client are on the
+									 * same internal network.  If this is the case, we need to use the IP
+									 * we used for the server, but make sure we are connecting on a different
+									 * port.
+									 */
+									if(mActiveInterface->mClientPort[0] != mActiveInterface->mClientPort[lClient]) {
+										lAddr.sin_addr.s_addr = *(int *) &(mActiveInterface->mClientAddr[0]);
+										lAddr.sin_port = *(int *) &(mActiveInterface->mClientPort[lClient]);
+									} else {
+										/* assemble error message */
+										char *lErrorMessage = new char[120]; // max length of character name is 40
+										sprintf(lErrorMessage, "%s%s%s",
+											MR_LoadString(IDS_SAMEADDRPORT1),
+											mActiveInterface->mClientName[lClient],
+											MR_LoadString(IDS_SAMEADDRPORT2));
+
+										MessageBox(pWindow, lErrorMessage, MR_LoadString(IDS_TCP_CLIENT), MB_ICONERROR | MB_OK | MB_APPLMODAL);
+
+										delete lErrorMessage;
+									}
+								} else {
+									lAddr.sin_addr.s_addr = *(int *) &(mActiveInterface->mClientBkAddr[lClient]);
+									// we try to use the address at lBuffer->mData[4] if we can't connect with the IP the server saw
+									lAddr.sin_port = *(int *) &(mActiveInterface->mClientPort[lClient]);
+								}
+
+								TRACE("Trying new IP %08x, port %d\n", lAddr.sin_addr.s_addr, lAddr.sin_port);
+
+								// allow messages from the new client (under FD_CONNECT)
+								WSAAsyncSelect(lNewSocket, pWindow, MRM_CLIENT + lClient, FD_CONNECT | FD_READ | FD_CLOSE);
+								WSAAsyncSelect(mActiveInterface->mClient[lClient].GetUDPSocket(), pWindow, MRM_CLIENT + lClient, FD_READ | FD_CLOSE);
+
+								// connect to the new client
+								int lCode = connect(lNewSocket, (struct sockaddr *) &lAddr, sizeof(lAddr));
+							} else {
+								char *lErrorString = new char[120]; // max player length is 40
+								sprintf(lErrorString, "%s%s%s",
+									MR_LoadString(IDS_CONN_TIMEOUT1),
+									mActiveInterface->mClientName[lClient],
+									MR_LoadString(IDS_CONN_TIMEOUT2));
+
+								MessageBox(pWindow, lErrorString, MR_LoadString(IDS_TCP_CLIENT), MB_ICONERROR | MB_OK | MB_APPLMODAL);
+
+								delete lErrorString;
+							}
+							break;
+						default:
+							TRACE("Unknown error");
+							{
+								char *lError = new char[120];
+								sprintf(lError, "%s%s.",
+									MR_LoadString(IDS_CONN_ERROR),
+									mActiveInterface->mClientName[lClient]);
+                                MessageBox(pWindow, lError, MR_LoadString(IDS_TCP_CLIENT), MB_ICONERROR | MB_OK | MB_APPLMODAL);
+								delete lError;
+							}
+							break;
+					}
 				}
 				else {
 					// request client name to start the connection sequence
 					// also include UDP port number in the request
 					lAnswer.mMessageType = MRNM_CONN_NAME_GET_SET;
 					lAnswer.mDataLen = mActiveInterface->mPlayer.GetLength() + 4;
-					*(unsigned int *) (lAnswer.mData) = htons(mActiveInterface->mUDPRecvPort);
+					*(unsigned int *) (lAnswer.mData) = mActiveInterface->mClient[lClient].GetUDPPort();
 
 					memcpy(lAnswer.mData + 4, mActiveInterface->mPlayer, lAnswer.mDataLen - 4);
 
@@ -1687,6 +1804,7 @@ MR_NetworkPort::MR_NetworkPort()
 {
 	mSocket = INVALID_SOCKET;
 	mUDPRecvSocket = INVALID_SOCKET;
+	mTriedBackupIP = FALSE;
 
 	Disconnect();
 }
@@ -1751,6 +1869,20 @@ void MR_NetworkPort::SetRemoteUDPPort(unsigned int pPort)
 }
 
 /**
+ * Returns the UDP port we are listening on (with mUDPRecvSocket).
+ */
+unsigned int MR_NetworkPort::GetUDPPort() const
+{
+	// Get UDP local addr
+	SOCKADDR_IN lLocalAddr;
+	int lSize = sizeof(lLocalAddr);
+	int lCode = getsockname(mUDPRecvSocket, (LPSOCKADDR) &lLocalAddr, &lSize);
+	ASSERT(lCode != SOCKET_ERROR);
+
+	return lLocalAddr.sin_port;
+} 
+
+/**
  * Close the main socket and UDP receive socket, and reset variables.  Default lag is 300.  Not sure why.
  */
 void MR_NetworkPort::Disconnect()
@@ -1758,12 +1890,9 @@ void MR_NetworkPort::Disconnect()
 	if(mSocket != INVALID_SOCKET) {
 		closesocket(mSocket);
 	}
-
-	// Don't close the UDP recv socket!
-
-	//if(mUDPRecvSocket != INVALID_SOCKET) {
-	//	closesocket(mUDPRecvSocket);
-	//}
+	if(mUDPRecvSocket != INVALID_SOCKET) {
+		closesocket(mUDPRecvSocket);
+	}
 
 	mSocket = INVALID_SOCKET;
 
@@ -1791,6 +1920,8 @@ void MR_NetworkPort::Disconnect()
 	mOutQueueHead = 0;
 
 	mInputMessageBufferIndex = 0;
+
+	mTriedBackupIP = FALSE;
 }
 
 /**

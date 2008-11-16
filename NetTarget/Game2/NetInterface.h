@@ -102,6 +102,7 @@ class MR_NetworkPort
 
 		void Connect(SOCKET pSocket, SOCKET pUDPRecvSocket);
 		void SetRemoteUDPPort(unsigned int pPort);
+		unsigned int GetUDPPort() const;
 		void Disconnect();
 		BOOL IsConnected() const;
 
@@ -119,6 +120,8 @@ class MR_NetworkPort
 		int GetAvgLag() const;
 		int GetMinLag() const;
 		void SetLag(int pAvgLag, int pMinLag);
+
+		BOOL mTriedBackupIP;	/// if the first connection attempt fails we must try another
 };
 
 /**
@@ -159,8 +162,9 @@ class MR_NetworkInterface
 		BOOL mCanBePreLogued[eMaxClient];
 		BOOL mPreLoguedClient[eMaxClient];
 		BOOL mConnected[eMaxClient];			  /// Correctly connected state used by the server
-		DWORD mClientAddr[eMaxClient];			  /// Used only in server mode
-		int mClientPort[eMaxClient];			  /// Used only in server mode
+		DWORD mClientAddr[eMaxClient];
+		DWORD mClientBkAddr[eMaxClient];
+		int mClientPort[eMaxClient];
 
 		int mReturnMessage;						  /// Message to return to the parent window in modeless mode
 
