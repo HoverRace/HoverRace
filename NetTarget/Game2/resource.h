@@ -407,6 +407,13 @@
 #define IDS_CANT_USE_UDP_PORT           40225
 #define IDS_GAME_CANCELLED              40226
 #define IDS_ABOUT                       40227
+#define IDS_CONN_REFUSED1               40228
+#define IDS_CONN_REFUSED2               40229
+#define IDS_CONN_TIMEOUT1               40230
+#define IDS_CONN_TIMEOUT2               40231
+#define IDS_SAMEADDRPORT1               40232
+#define IDS_SAMEADDRPORT2               40233
+#define IDS_CONN_ERROR                  40234
 #define ID_GAME_NEW                     0xE100
 #define ID_GAME_LOAD                    0xE101
 #define ID_GAME_FAST_SAVE               0xE103
@@ -421,7 +428,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        164
-#define _APS_NEXT_COMMAND_VALUE         40044
+#define _APS_NEXT_COMMAND_VALUE         40046
 #define _APS_NEXT_CONTROL_VALUE         1089
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
