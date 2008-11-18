@@ -568,6 +568,8 @@ BOOL MR_NetworkInterface::SlavePreConnect(HWND pWindow, CString &pGameName)
 				lReturnValue = TRUE;
 
 				pGameName = mGameName;
+			} else {
+				lReturnValue = FALSE;
 			}
 		}
 		else {
@@ -1098,7 +1100,7 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 					// also include UDP port number in the request
 					lAnswer.mMessageType = MRNM_CONN_NAME_GET_SET;
 					lAnswer.mDataLen = mActiveInterface->mPlayer.GetLength() + 4;
-					*(unsigned int *) (lAnswer.mData) = mActiveInterface->mClient[0].GetUDPPort();
+					*(unsigned int *) (lAnswer.mData) = htons(mActiveInterface->mUDPRecvPort);
 					memcpy(lAnswer.mData + 4, mActiveInterface->mPlayer, lAnswer.mDataLen - 4);
 	
 					mActiveInterface->mClient[0].Send(&lAnswer, MR_NET_REQUIRED);
@@ -1364,7 +1366,7 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 								// also include UDP port number in the request
 								lAnswer.mMessageType = MRNM_CONN_NAME_SET;
 								lAnswer.mDataLen = mActiveInterface->mPlayer.GetLength() + 4;
-								*(unsigned int *) (lAnswer.mData) = mActiveInterface->mClient[lClient].GetUDPPort();
+								*(unsigned int *) (lAnswer.mData) = htons(mActiveInterface->mUDPRecvPort);
 								memcpy(lAnswer.mData + 4, mActiveInterface->mPlayer, lAnswer.mDataLen - 4);
 	
 								mActiveInterface->mClient[lClient].Send(&lAnswer, MR_NET_REQUIRED);
@@ -1754,7 +1756,7 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 					// also include UDP port number in the request
 					lAnswer.mMessageType = MRNM_CONN_NAME_GET_SET;
 					lAnswer.mDataLen = mActiveInterface->mPlayer.GetLength() + 4;
-					*(unsigned int *) (lAnswer.mData) = mActiveInterface->mClient[lClient].GetUDPPort();
+					*(unsigned int *) (lAnswer.mData) = htons(mActiveInterface->mUDPRecvPort);
 
 					memcpy(lAnswer.mData + 4, mActiveInterface->mPlayer, lAnswer.mDataLen - 4);
 
@@ -1869,20 +1871,6 @@ void MR_NetworkPort::SetRemoteUDPPort(unsigned int pPort)
 }
 
 /**
- * Returns the UDP port we are listening on (with mUDPRecvSocket).
- */
-unsigned int MR_NetworkPort::GetUDPPort() const
-{
-	// Get UDP local addr
-	SOCKADDR_IN lLocalAddr;
-	int lSize = sizeof(lLocalAddr);
-	int lCode = getsockname(mUDPRecvSocket, (LPSOCKADDR) &lLocalAddr, &lSize);
-	ASSERT(lCode != SOCKET_ERROR);
-
-	return lLocalAddr.sin_port;
-} 
-
-/**
  * Close the main socket and UDP receive socket, and reset variables.  Default lag is 300.  Not sure why.
  */
 void MR_NetworkPort::Disconnect()
@@ -1890,9 +1878,12 @@ void MR_NetworkPort::Disconnect()
 	if(mSocket != INVALID_SOCKET) {
 		closesocket(mSocket);
 	}
-	if(mUDPRecvSocket != INVALID_SOCKET) {
-		closesocket(mUDPRecvSocket);
-	}
+
+	// Don't close the UDP recv socket!
+	
+	//if(mUDPRecvSocket != INVALID_SOCKET) {
+	//	closesocket(mUDPRecvSocket);
+	//}
 
 	mSocket = INVALID_SOCKET;
 
