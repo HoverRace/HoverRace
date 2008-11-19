@@ -50,6 +50,7 @@
 #define MR_CONNECTION_TIMEOUT   21000			  // 21 sec
 
 #define MR_PING_RETRY_TIME		750
+#define MR_CLIENT_RETRY_TIME	5000
 
 // Local prototypes
 static CString GetLocalAddrStr();
@@ -1235,25 +1236,56 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 
 		case WM_TIMER: // used for lag tests
 			{
-				KillTimer(pWindow, pWParam);
+				if(pWParam - 10 > 0) { // client connect attempt timed out
+					// retry
+					KillTimer(pWindow, pWParam);
+
+					int lClient = pWParam - 20;
+
+					// try to connect again
+					TRACE("attempting reconnect with client %d\n", lClient);
+					WSAAsyncSelect(mActiveInterface->mClient[lClient].GetSocket(), pWindow, MRM_CLIENT + lClient, 0);
+					
+					mActiveInterface->mClient[lClient].Disconnect();
+					SOCKET lNewSocket = socket(PF_INET, SOCK_STREAM, 0);
+
+					mActiveInterface->mClient[lClient].Connect(lNewSocket, mActiveInterface->mUDPRecvSocket);
+					mActiveInterface->mPreLoguedClient[lClient] = TRUE;
+
+					SOCKADDR_IN lAddr;
+
+					lAddr.sin_family = AF_INET;
+					lAddr.sin_addr.s_addr = mActiveInterface->mClientAddr[lClient];
+					lAddr.sin_port = mActiveInterface->mClientPort[lClient];
+
+					// connect to the new client
+					WSAAsyncSelect(lNewSocket, pWindow, MRM_CLIENT + lClient, FD_CONNECT | FD_READ | FD_CLOSE);
+					int lCode = connect(lNewSocket, (struct sockaddr *) &lAddr, sizeof(lAddr));
+
+					// set timeout timer
+					SetTimer(pWindow, lClient + 20, MR_CLIENT_RETRY_TIME, NULL);
+
+				} else {
+					KillTimer(pWindow, pWParam);
 	
-				int lClient = pWParam - 10;
+					int lClient = pWParam - 10;
 	
-				if((lClient >= 0) && (lClient < eMaxClient)) {
-					if(mActiveInterface->mClient[lClient].LagDone()) {
-						// That is a late time-out.. probably stuck in the queue
-						TRACE("Late ping message A %d\n", lClient);
-					}
-					else {
-						// Start a time-out timer because the request may fail
-						SetTimer(pWindow, lClient + 10, MR_PING_RETRY_TIME, NULL);
+					if((lClient >= 0) && (lClient < eMaxClient)) {
+						if(mActiveInterface->mClient[lClient].LagDone()) {
+							// That is a late time-out.. probably stuck in the queue
+							TRACE("Late ping message A %d\n", lClient);
+						}
+						else {
+							// Start a time-out timer because the request may fail
+							SetTimer(pWindow, lClient + 10, MR_PING_RETRY_TIME, NULL);
 	
-						// send a new request
-						lAnswer.mMessageType = MRNM_LAG_TEST;
-						lAnswer.mDataLen = 4;
-						*(int *) &(lAnswer.mData[0]) = timeGetTime();
+							// send a new request
+							lAnswer.mMessageType = MRNM_LAG_TEST;
+							lAnswer.mDataLen = 4;
+							*(int *) &(lAnswer.mData[0]) = timeGetTime();
 	
-						mActiveInterface->UDPSend(lClient, &lAnswer, TRUE);
+							mActiveInterface->UDPSend(lClient, &lAnswer, TRUE);
+						}
 					}
 				}
 			}
@@ -1505,6 +1537,9 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 
 									// connect to the new client
 									int lCode = connect(lNewSocket, (struct sockaddr *) &lAddr, sizeof(lAddr));
+
+									// set timeout timer
+									SetTimer(pWindow, lSlot + 20, MR_CLIENT_RETRY_TIME, NULL);
 								}
 							}
 							break;
@@ -1650,6 +1685,8 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 				break;
 
 			case FD_CONNECT: // we have successfully connected to the server or another client
+				TRACE("received FD_CONNECT message");
+				KillTimer(pWindow, lClient + 20); // kill timeout timer
 				if(WSAGETSELECTERROR(pLParam)) {
 					// Connection error with a client
 					//ASSERT(FALSE);
@@ -2147,6 +2184,7 @@ void MR_NetworkPort::Send(const MR_NetMessageBuffer *pMessage, int pReqLevel)
 			// TRACE( "Send %d %d %d\n", lToSend, lToSend-lSent, lReturnValue );
 
 			if((lReturnValue == -1) && (WSAGetLastError() == WSAEWOULDBLOCK)) {
+				ASSERT(FALSE);
 				lReturnValue = 0;
 			}
 		}
