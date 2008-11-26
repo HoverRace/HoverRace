@@ -1093,7 +1093,7 @@ BEGIN
     IDS_HELP_REQ            "To be able to display HoverRace Help\nyou must have a Word document viewer installed\non your system.\n"
     IDS_ERROR               "HoverRace Error"
     IDS_WWW_REQ             "Unable to activate your web browser. Please start your web browser and go to:\n%s"
-    IDS_CAPTION             "HoverRace v1.23 (TESTING)"
+    IDS_CAPTION             "HoverRace v1.24 (testing)"
     IDS_REG_CAPTION         "HoverRace v1.01 [REGISTERED VERSION]"
     IDS_DEMO_CAPTION        "HoverRace v1.01 [DEMO MODE]"
 END
