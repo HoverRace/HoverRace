@@ -17,6 +17,9 @@
 	#include <unistd.h>
 #endif
 
+#include <boost/filesystem/convenience.hpp>
+#include <boost/filesystem/path.hpp>
+
 #include "yaml/Emitter.h"
 #include "yaml/MapNode.h"
 #include "yaml/ScalarNode.h"
@@ -24,6 +27,8 @@
 #include "yaml/Parser.h"
 
 #include "Config.h"
+
+namespace fs = boost::filesystem;
 
 #ifdef _WIN32
 	#define DIRSEP "\\"
@@ -335,18 +340,13 @@ void MR_Config::Save()
 	const std::string &cfgfile = GetConfigFilename();
 
 	// Create the config directory.
-#ifdef _WIN32
-	int cdr = SHCreateDirectoryEx(NULL, path.c_str(), NULL);
-	if(cdr != ERROR_SUCCESS) {
-		if(cdr != ERROR_FILE_EXISTS && cdr != ERROR_ALREADY_EXISTS) {
+	fs::path dirpath(path);
+	if (!fs::exists(dirpath)) {
+		if (!fs::create_directories(dirpath)) {
 			throw std::exception(
 				(std::string("Unable to create directory: ") + path).c_str());
 		}
 	}
-#else
-	//TODO: Unimplemented.
-	abort();
-#endif
 
 	FILE *out = fopen(cfgfile.c_str(), "wb");
 	if(out == NULL) {
