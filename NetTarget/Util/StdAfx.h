@@ -20,6 +20,10 @@
 #include <afxcmn.h>								  // MFC support for Windows 95 Common Controls
 #endif											  // _AFX_NO_AFXCMN_SUPPORT
 
+#else
+
+#	include "../../include/compat/unix.h"
+
 #endif
 
 // Commonly-used STL headers.
