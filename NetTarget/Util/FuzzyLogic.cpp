@@ -19,9 +19,8 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "FuzzyLogic.h"
-// Local variables
 
 #define MR_RAND_TABLE_SIZE  4096
 

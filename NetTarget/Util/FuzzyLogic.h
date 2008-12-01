@@ -23,10 +23,14 @@
 #ifndef FUZZY_LOGIC_H
 #define FUZZY_LOGIC_H
 
-#ifdef MR_UTIL
-#define MR_DllDeclare   __declspec( dllexport )
+#ifdef _WIN32
+#	ifdef MR_UTIL
+#		define MR_DllDeclare   __declspec( dllexport )
+#	else
+#		define MR_DllDeclare   __declspec( dllimport )
+#	endif
 #else
-#define MR_DllDeclare   __declspec( dllimport )
+#	define MR_DllDeclare
 #endif
 
 void MR_DllDeclare MR_InitFuzzyModule();
@@ -35,7 +39,7 @@ int MR_DllDeclare MR_Rand();
 class MR_DllDeclare MR_ProbTable
 {
 	private:
-		enum { NB_PROB_MAX = 16 };
+		static const int NB_PROB_MAX = 16;
 		int mNbProb;
 		int mTotalProb;
 		int mProb[NB_PROB_MAX];
