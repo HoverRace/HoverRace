@@ -26,6 +26,8 @@
 
 #endif
 
+#include <stdlib.h>
+
 // Commonly-used STL headers.
 #include <exception>
 #include <map>
