@@ -155,6 +155,7 @@
 #define IDC_UDP_RECV_PORT2              1088
 #define IDC_TCP_RECV_PORT               1088
 #define IDC_ABOUT_RTF                   1088
+#define IDC_TCP_SERV_PORT               1089
 #define ID_HELP_CONTENTS                32772
 #define ID_HELP_HOWTOORDER              32773
 #define ID_HELP_TIPOFTHEDAY             32774

@@ -107,7 +107,7 @@ class MR_NetworkSession : public MR_ClientSession
 
 	public:
 		// Creation and destruction
-		MR_NetworkSession(BOOL pInternetGame, int pMajorID, int pMinorID, HWND pWindow, int pUDPRecvPort, int pTCPRecvPort);
+		MR_NetworkSession(BOOL pInternetGame, int pMajorID, int pMinorID, HWND pWindow);
 		~MR_NetworkSession();
 
 		// Simulation control
@@ -121,9 +121,9 @@ class MR_NetworkSession : public MR_ClientSession
 
 		void SetPlayerName(const char *pPlayerName);
 		const char *GetPlayerName() const;
-		BOOL WaitConnections(HWND pWindow, const char *pTrackName, BOOL pPromptForPort = TRUE, unsigned pDefaultPort = MR_DEFAULT_NET_PORT, HWND * pModalessDlg = NULL, int pReturnMessage = 0);
+		BOOL WaitConnections(HWND pWindow, const char *pTrackName, BOOL pPromptForPort = TRUE, unsigned pDefaultPort = MR_Config::GetInstance()->net.tcpServPort, HWND * pModalessDlg = NULL, int pReturnMessage = 0);
 		BOOL PreConnectToServer(HWND pWindow, CString & pTrackName);
-		BOOL ConnectToServer(HWND pWindow, const char *pServerIP = NULL, unsigned pPort = MR_DEFAULT_NET_PORT, const char *pGameName = NULL, HWND * pModalessDlg = NULL, int pReturnMessage = 0);
+		BOOL ConnectToServer(HWND pWindow, const char *pServerIP = NULL, unsigned pPort = MR_Config::GetInstance()->net.tcpServPort, const char *pGameName = NULL, HWND * pModalessDlg = NULL, int pReturnMessage = 0);
 
 		int ResultAvaillable() const;			  // Return the number of players desc avail
 		void GetResult(int pPosition, const char *&pPlayerName, int &pId, BOOL &pConnected, int &pNbLap, MR_SimulationTime & pFinishTime, MR_SimulationTime & pBestLap) const;

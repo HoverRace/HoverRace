@@ -27,10 +27,7 @@
 #include <WINSOCK.h>
 
 #include "../Util/MR_Types.h"
-
-#define MR_DEFAULT_NET_PORT			9530
-#define MR_DEFAULT_UDP_RECV_PORT	9531
-#define MR_DEFAULT_TCP_RECV_PORT	9531
+#include "../Util/Config.h"
 
 #define MR_ID_NOT_SET				255
 
@@ -185,9 +182,9 @@ class MR_NetworkInterface
 		void SetPlayerName(const char *pPlayerName);
 		const char *GetPlayerName() const;
 
-		BOOL MasterConnect(HWND pWindow, const char *pGameName, BOOL pPromptForPort = TRUE, unsigned pDefaultPort = MR_DEFAULT_NET_PORT, HWND * pModalessDlg = NULL, int pReturnMessage = 0);
+		BOOL MasterConnect(HWND pWindow, const char *pGameName, BOOL pPromptForPort = TRUE, unsigned pDefaultPort = MR_Config::GetInstance()->net.tcpServPort, HWND * pModalessDlg = NULL, int pReturnMessage = 0);
 		BOOL SlavePreConnect(HWND pWindow, CString & pGameName);
-		BOOL SlaveConnect(HWND pWindow, const char *pServerIP = NULL, unsigned pPort = MR_DEFAULT_NET_PORT, const char *pGameName = NULL, HWND * pModalessDlg = NULL, int pReturnMessage = 0);
+		BOOL SlaveConnect(HWND pWindow, const char *pServerIP = NULL, unsigned pPort = MR_Config::GetInstance()->net.tcpServPort, const char *pGameName = NULL, HWND * pModalessDlg = NULL, int pReturnMessage = 0);
 
 		void Disconnect();
 
@@ -200,7 +197,6 @@ class MR_NetworkInterface
 
 		// helper function
 		BOOL CreateUDPRecvSocket(int pPort);
-		void SetRecvPorts(int pUDPRecvPort, int pTCPRecvPort);
 
 		// return TRUE if queue not full
 		BOOL UDPSend(int pClient, MR_NetMessageBuffer * pMessage, BOOL pLongPort, BOOL pResendLast = FALSE);

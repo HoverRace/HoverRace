@@ -128,8 +128,8 @@ MR_NetworkInterface::MR_NetworkInterface()
 	lCode = bind(mUDPOutShortPort, (LPSOCKADDR) & lAddr, sizeof(lAddr));
 	ASSERT(lCode != SOCKET_ERROR);
 
-	mUDPRecvPort = MR_DEFAULT_UDP_RECV_PORT;
-	mTCPRecvPort = MR_DEFAULT_TCP_RECV_PORT;
+	mUDPRecvPort = MR_Config::GetInstance()->net.udpRecvPort;
+	mTCPRecvPort = MR_Config::GetInstance()->net.tcpRecvPort;
 }
 
 /**
@@ -273,17 +273,6 @@ BOOL MR_NetworkInterface::CreateUDPRecvSocket(int pPort)
 
 	// bind() success code is 0
 	return (lCode == 0);
-}
-
-/**
- * Set the ports to be used for listening (TCP and UDP).
- *
- * @param pUDPRecvPort The new UDP port to use
- * @param pTCPRecvPort The new TCP port to use
- */
-void MR_NetworkInterface::SetRecvPorts(int pUDPRecvPort, int pTCPRecvPort) {
-	mUDPRecvPort = pUDPRecvPort;
-	mTCPRecvPort = pTCPRecvPort;
 }
 
 /**
@@ -448,7 +437,7 @@ const char *MR_NetworkInterface::GetPlayerName() const
  * @param pWindow Parent window
  * @param pGameName Track name
  * @param pPromptForPort Should we use the default port or choose our own?
- * @param pDefaultPort The default port (MR_DEFAULT_NET_PORT)
+ * @param pDefaultPort The default port
  * @param pModalessDlg If this is NULL, the "TCP Connections" dialog is modal
  */
 BOOL MR_NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName, BOOL pPromptForPort, unsigned pDefaultPort, HWND *pModalessDlg, int pReturnMessage)
@@ -687,18 +676,12 @@ BOOL CALLBACK MR_NetworkInterface::ServerPortCallBack(HWND pWindow, UINT pMsgId,
 		// Catch environment modification events
 		case WM_INITDIALOG: // set up the dialog
 			SetDlgItemText(pWindow, IDC_PLAYER_NAME, mActiveInterface->mPlayer);
-			SetDlgItemInt(pWindow, IDC_SERVER_PORT, MR_DEFAULT_NET_PORT, FALSE);
 
 			lReturnValue = TRUE;
 			break;
 
 		case WM_COMMAND:
 			switch (LOWORD(pWParam)) {
-				case IDC_DEFAULT: // set to the default port
-					SetDlgItemInt(pWindow, IDC_SERVER_PORT, MR_DEFAULT_NET_PORT, FALSE);
-					lReturnValue = TRUE;
-					break;
-
 				case IDCANCEL:
 					EndDialog(pWindow, IDCANCEL);
 					lReturnValue = TRUE;
@@ -711,7 +694,7 @@ BOOL CALLBACK MR_NetworkInterface::ServerPortCallBack(HWND pWindow, UINT pMsgId,
 					mActiveInterface->mPlayer = lNameBuffer;
 
 					// Try to bind the socket to the addr
-					mActiveInterface->mServerPort = GetDlgItemInt(pWindow, IDC_SERVER_PORT, NULL, FALSE);
+					mActiveInterface->mServerPort = MR_Config::GetInstance()->net.tcpServPort;
 
 					if(mActiveInterface->mServerPort <= 0) { // luser check
 						MessageBox(pWindow, MR_LoadString(IDS_PORT_RANGE), MR_LoadString(IDS_TCP_SERVER), MB_ICONERROR | MB_OK | MB_APPLMODAL);
@@ -755,15 +738,14 @@ BOOL CALLBACK MR_NetworkInterface::ServerAddrCallBack(HWND pWindow, UINT pMsgId,
 		// Catch environment modification events
 		case WM_INITDIALOG: // set up the dialog
 			SetDlgItemText(pWindow, IDC_PLAYER_NAME, mActiveInterface->mPlayer);
-
-			SetDlgItemInt(pWindow, IDC_SERVER_PORT, MR_DEFAULT_NET_PORT, FALSE);
+			SetDlgItemInt(pWindow, IDC_SERVER_PORT, 9530, FALSE); // 9530 is the default port
 			lReturnValue = TRUE;
 			break;
 
 		case WM_COMMAND: // command was given
 			switch (LOWORD(pWParam)) {
 				case IDC_DEFAULT: // set the default port
-					SetDlgItemInt(pWindow, IDC_SERVER_PORT, MR_DEFAULT_NET_PORT, FALSE);
+					SetDlgItemInt(pWindow, IDC_SERVER_PORT, 9530, FALSE);
 					lReturnValue = TRUE;
 					break;
 
@@ -1997,7 +1979,6 @@ const MR_NetMessageBuffer *MR_NetworkPort::Poll(int pClientId, BOOL pCheckClient
 			if(pCheckClientId == TRUE) {
 				lLen = recv(mUDPRecvSocket, ((char *) &mInputMessageBuffer), sizeof(mInputMessageBuffer), MSG_PEEK);
 				if((mInputMessageBuffer.mClient != pClientId) && (mInputMessageBuffer.mClient != MR_ID_NOT_SET)) {
-					char lErrorBuffer[500];
 					/* disable this for intensive testing
 					sprintf(lErrorBuffer, "Ignoring packet from client %d (looking for %d), message %d\n",
 								mInputMessageBuffer.mClient,
