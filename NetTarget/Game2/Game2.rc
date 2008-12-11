@@ -140,8 +140,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,23,0,0
- PRODUCTVERSION 1,23,0,0
+ FILEVERSION 1,24,0,0
+ PRODUCTVERSION 1,24,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x21L
@@ -157,12 +157,12 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "FileDescription", "Online Racing Game"
-            VALUE "FileVersion", "1, 23, 0, 0"
+            VALUE "FileVersion", "1, 24, 0, 0"
             VALUE "InternalName", "HoverRace"
             VALUE "LegalCopyright", "Copyright © 2008"
             VALUE "OriginalFilename", "HRace.exe"
             VALUE "ProductName", "HoverRace"
-            VALUE "ProductVersion", "1, 23, 0, 0"
+            VALUE "ProductVersion", "1, 24, 0, 0"
             VALUE "SpecialBuild", "Demo version"
         END
     END
