@@ -21,7 +21,7 @@ namespace yaml {
 /**
  * Global configuration manager, shared by all aspects of the system.
  */
-class MR_Config
+class MR_DllDeclare MR_Config
 {
 	private:
 		static MR_Config *instance;
@@ -29,32 +29,32 @@ class MR_Config
 		std::string version;
 
 	private:
-		MR_DllDeclare MR_Config(const std::string &version="0.0.0.0", const std::string &file="");
+		MR_Config(const std::string &version="0.0.0.0", const std::string &file="");
 	public:
-		MR_DllDeclare ~MR_Config();
+		~MR_Config();
 	
-		MR_DllDeclare static MR_Config *Init(const std::string &version, const std::string &path="");
-		MR_DllDeclare static void Shutdown();
+		static MR_Config *Init(const std::string &version, const std::string &path="");
+		static void Shutdown();
 
-		MR_DllDeclare static std::string GetDefaultPath();
-		MR_DllDeclare std::string GetConfigFilename() const;
+		static std::string GetDefaultPath();
+		std::string GetConfigFilename() const;
 
-		MR_DllDeclare std::string GetMediaPath() const;
-		MR_DllDeclare std::string GetMediaPath(const std::string &file) const;
+		std::string GetMediaPath() const;
+		std::string GetMediaPath(const std::string &file) const;
 
-		MR_DllDeclare std::string GetTrackPath() const;
-		MR_DllDeclare std::string GetTrackPath(const std::string &file) const;
+		std::string GetTrackPath() const;
+		std::string GetTrackPath(const std::string &file) const;
 
 	public:
-		MR_DllDeclare static MR_Config *GetInstance() { return instance; }
+		static MR_Config *GetInstance() { return instance; }
 
-		MR_DllDeclare void ResetToDefaults();
+		void ResetToDefaults();
 
-		MR_DllDeclare void Load();
-		MR_DllDeclare void Save();
+		void Load();
+		void Save();
 
 	private:
-		MR_DllDeclare void SaveVersion(yaml::Emitter*);
+		void SaveVersion(yaml::Emitter*);
 
 	public:
 		struct cfg_video_t {
@@ -64,30 +64,30 @@ class MR_Config
 
 			bool nativeBppFullscreen;
 
-			MR_DllDeclare void Load(yaml::MapNode*);
-			MR_DllDeclare void Save(yaml::Emitter*);
+			void Load(yaml::MapNode*);
+			void Save(yaml::Emitter*);
 		} video;
 
 		struct cfg_audio_t {
 			float sfxVolume;
 
-			MR_DllDeclare void Load(yaml::MapNode*);
-			MR_DllDeclare void Save(yaml::Emitter*);
+			void Load(yaml::MapNode*);
+			void Save(yaml::Emitter*);
 		} audio;
 
 		struct cfg_misc_t {
 			bool displayFirstScreen;
 			bool introMovie;
 
-			MR_DllDeclare void Load(yaml::MapNode*);
-			MR_DllDeclare void Save(yaml::Emitter*);
+			void Load(yaml::MapNode*);
+			void Save(yaml::Emitter*);
 		} misc;
 
 		struct cfg_player_t {
 			std::string nickName;
 
-			MR_DllDeclare void Load(yaml::MapNode*);
-			MR_DllDeclare void Save(yaml::Emitter*);
+			void Load(yaml::MapNode*);
+			void Save(yaml::Emitter*);
 		} player;
 
 		struct cfg_net_t {
@@ -96,8 +96,8 @@ class MR_Config
 			int tcpRecvPort;
 			//TODO: Proxy server settings.
 
-			MR_DllDeclare void Load(yaml::MapNode*);
-			MR_DllDeclare void Save(yaml::Emitter*);
+			void Load(yaml::MapNode*);
+			void Save(yaml::Emitter*);
 		} net;
 
 		static const int MAX_PLAYERS = 4;
@@ -111,7 +111,7 @@ class MR_Config
 			int weapon;
 			int lookBack;
 
-			MR_DllDeclare void Load(yaml::MapNode*, int);
-			MR_DllDeclare void Save(yaml::Emitter*);
+			void Load(yaml::MapNode*, int);
+			void Save(yaml::Emitter*);
 		} controls[MAX_PLAYERS];
 };
