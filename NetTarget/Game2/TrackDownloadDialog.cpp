@@ -159,6 +159,8 @@ void TrackDownloadDialog::UpdateDialogProgress(HWND hwnd)
 // Thread function.
 void TrackDownloadDialog::ThreadProc()
 {
+	MR_Config *cfg = MR_Config::GetInstance();
+
 	SetState(ST_INITIALIZING);
 
 	// Error buffer.
@@ -179,8 +181,10 @@ void TrackDownloadDialog::ThreadProc()
 	curl_easy_setopt(trackDl, CURLOPT_HTTP_CONTENT_DECODING, 1);
 	*/
 
-	// TODO: Add version and platform.
-	curl_easy_setopt(trackDl, CURLOPT_USERAGENT, "HoverRace (Win32)");
+	// TODO: Add platform.
+	std::ostringstream oss;
+	oss << "HoverRace/" << cfg->GetVersion() << " (Win32)";
+	curl_easy_setopt(trackDl, CURLOPT_USERAGENT, oss.str().c_str());
 
 	std::string url(TRACK_HOST "tracks/download.php?name=");
 	char *param = curl_easy_escape(trackDl, name.c_str(), name.length());
