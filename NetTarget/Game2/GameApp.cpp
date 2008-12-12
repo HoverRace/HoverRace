@@ -956,7 +956,7 @@ BOOL MR_GameApp::CreateMainWindow()
 	BOOL lReturnValue = TRUE;
 
 	// attempt to make the main window
-	mMainWindow = CreateWindowEx(WS_EX_APPWINDOW, MR_APP_CLASS_NAME, MR_LoadString(IDS_CAPTION), (WS_VISIBLE | WS_OVERLAPPEDWINDOW | WS_EX_CLIENTEDGE) & ~WS_MAXIMIZEBOX, CW_USEDEFAULT, CW_USEDEFAULT, 480, 320, NULL, NULL, mInstance, NULL);
+	mMainWindow = CreateWindowEx(WS_EX_APPWINDOW, MR_APP_CLASS_NAME, MR_LoadString(IDS_GAME_NAME), (WS_VISIBLE | WS_OVERLAPPEDWINDOW | WS_EX_CLIENTEDGE) & ~WS_MAXIMIZEBOX, CW_USEDEFAULT, CW_USEDEFAULT, 480, 320, NULL, NULL, mInstance, NULL);
 
 	if(mMainWindow == NULL)
 		lReturnValue = FALSE;					  // making of window failed
@@ -974,9 +974,14 @@ BOOL MR_GameApp::CreateMainWindow()
 
 void MR_GameApp::RefreshTitleBar()
 {
+	MR_Config *cfg = MR_Config::GetInstance();
+
 	// fixed to get rid of registration
-	if(mMainWindow != NULL)
-		SetWindowText(mMainWindow, MR_LoadString(IDS_CAPTION));
+	if(mMainWindow != NULL) {
+		std::string caption(MR_LoadStringBuffered(IDS_CAPTION));
+		caption.replace(caption.find("%s"), 2, cfg->GetVersion());
+		SetWindowText(mMainWindow, caption.c_str());
+	}
 }
 
 BOOL MR_GameApp::InitGame()
@@ -2717,101 +2722,16 @@ BOOL CALLBACK MR_GameApp::FirstChoiceDialogFunc(HWND pWindow, UINT pMsgId, WPARA
 
 BOOL CALLBACK MR_GameApp::AboutDlgFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
 {
-	static HBITMAP lBitmap = NULL;
-	static HPALETTE lPalette = NULL;
-
 	BOOL lReturnValue = FALSE;
 
 	switch (pMsgId) {
-		// Catch environment modification events
 
 		case WM_INITDIALOG:
 			{
+				std::string verStr("HoverRace version ");
+				verStr += MR_Config::GetInstance()->GetVersion();
+				SetDlgItemText(pWindow, IDC_VER_TXT, verStr.c_str());
 				SetDlgItemText(pWindow, IDC_ABOUT_TXT, (const char*)MR_LoadString(IDS_ABOUT));
-				/*
-				This->mPaletteChangeAllowed = FALSE;
-	
-				HWND lBitmapCtl = GetDlgItem(pWindow, IDC_BITMAP);
-	
-				if(lBitmapCtl != NULL) {
-					HDC hdc = GetDC(lBitmapCtl);
-	
-					lBitmap = LoadResourceBitmap(This->mInstance, MAKEINTRESOURCE(IDB_ABOUT), &lPalette);
-	
-					ASSERT(lBitmap != NULL);
-	
-					SelectPalette(hdc, lPalette, FALSE);
-					int lNbColors = RealizePalette(hdc);
-					TRACE("Colors0 %d  %d\n", lNbColors, GetLastError());
-					ReleaseDC(lBitmapCtl, hdc);
-					// SelectPalette(hMemDC,hPalette,FALSE);
-					// RealizePalette(hMemDC);
-	
-					HANDLE lOldHandle = (HANDLE) SendMessage(lBitmapCtl, STM_SETIMAGE, IMAGE_BITMAP, (long) lBitmap);
-				}
-				else {
-					lBitmap = NULL;
-					lPalette = NULL;
-				}
-				*/
-				lReturnValue = TRUE;
-			}
-			break;
-
-		case WM_DESTROY:
-			if(lBitmap != NULL) {
-				DeleteObject(lBitmap);
-				lBitmap = NULL;
-			}
-
-			if(lPalette != NULL) {
-				UnrealizeObject(lPalette);
-				DeleteObject(lPalette);
-				lPalette = NULL;
-			}
-			This->mPaletteChangeAllowed = TRUE;
-			break;
-
-		case WM_QUERYNEWPALETTE:
-			if(lPalette != NULL) {
-				HWND lBitmapCtl = GetDlgItem(pWindow, IDC_BITMAP);
-
-				if(lBitmapCtl != NULL) {
-					HDC hdc = GetDC(lBitmapCtl);
-
-					HPALETTE lOldPalette = SelectPalette(hdc, lPalette, FALSE);
-					RealizePalette(hdc);
-
-					InvalidateRgn(pWindow, NULL, TRUE);
-					InvalidateRgn(lBitmapCtl, NULL, TRUE);
-					UpdateWindow(pWindow);
-					UpdateWindow(lBitmapCtl);
-
-					ReleaseDC(lBitmapCtl, hdc);
-
-					TRACE("PAL_SET\n");
-
-				}
-				lReturnValue = TRUE;
-			}
-			break;
-
-		case WM_PALETTECHANGED:
-			if((lPalette != NULL) && ((HWND) pWParam != pWindow)) {
-				HWND lBitmapCtl = GetDlgItem(pWindow, IDC_BITMAP);
-
-				if((lBitmapCtl != NULL) && ((HWND) pWParam != lBitmapCtl)) {
-					HDC hdc = GetDC(lBitmapCtl);
-
-					HPALETTE lOldPalette = SelectPalette(hdc, lPalette, FALSE);
-					RealizePalette(hdc);
-
-					UpdateColors(hdc);
-
-					ReleaseDC(lBitmapCtl, hdc);
-
-					TRACE("PAL_CHANGE\n");
-				}
 				lReturnValue = TRUE;
 			}
 			break;

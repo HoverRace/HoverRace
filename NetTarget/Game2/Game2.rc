@@ -326,7 +326,9 @@ CAPTION "About HoverRace"
 FONT 8, "MS Sans Serif", 0, 0, 0x0
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,144,150,68,14
-    EDITTEXT        IDC_ABOUT_TXT,7,7,208,133,ES_MULTILINE | ES_AUTOVSCROLL | 
+    EDITTEXT        IDC_VER_TXT,7,7,208,14,ES_AUTOHSCROLL | ES_READONLY | 
+                    NOT WS_BORDER
+    EDITTEXT        IDC_ABOUT_TXT,7,26,208,114,ES_MULTILINE | ES_AUTOVSCROLL | 
                     ES_READONLY | WS_VSCROLL
 END
 
@@ -1093,7 +1095,7 @@ BEGIN
     IDS_HELP_REQ            "To be able to display HoverRace Help\nyou must have a Word document viewer installed\non your system.\n"
     IDS_ERROR               "HoverRace Error"
     IDS_WWW_REQ             "Unable to activate your web browser. Please start your web browser and go to:\n%s"
-    IDS_CAPTION             "HoverRace v1.24 (testing)"
+    IDS_CAPTION             "HoverRace %s (testing)"
     IDS_REG_CAPTION         "HoverRace v1.01 [REGISTERED VERSION]"
     IDS_DEMO_CAPTION        "HoverRace v1.01 [DEMO MODE]"
 END
@@ -1280,7 +1282,7 @@ BEGIN
     IDS_MISC                "Miscellaneous"
     IDS_CANT_USE_UDP_PORT   "Unable to use UDP recv port; choose a different port or close some Winsock applications."
     IDS_GAME_CANCELLED      "Game cancelled by server"
-    IDS_ABOUT               "HoverRace 1.23 is brought to you by:\r\n\r\nRichard Langlois (original author)\r\n  Grokksoft Inc.\r\n  \r\nwith contributions from (in alphabetical order):\r\n\r\nAustin L. Brock\r\nRyan Curtin\r\nMichael Imamura\r\n\r\nand with the help of the many testers willing to put up with bugs and other strange happenings.\r\n\r\nVisit us at http://www.hoverrace.com/\r\n\r\nHoverRace is copyright (c) Richard Langlois and Grokksoft Inc.\r\n\r\nThanks also to the following projects:\r\n\r\nThe Boost C++ Libraries\r\n  http://www.boost.org/\r\n\r\nlibcurl - Daniel Stenberg and contributors.\r\n  http://curl.haxx.se/\r\n\r\nLibYAML - Kirill Simonov and contributors.\r\n  http://pyyaml.org/wiki/LibYAML\r\n\r\nLiteUnzip - Jeff Glatt, based on work by Lucian Wischik, based on work by Jean-Loup Gailly and Mark Adler.\r\n"
+    IDS_ABOUT               "HoverRace is brought to you by:\r\n\r\nRichard Langlois (original author)\r\n  Grokksoft Inc.\r\n  \r\nwith contributions from (in alphabetical order):\r\n\r\nAustin L. Brock\r\nRyan Curtin\r\nMichael Imamura\r\n\r\nand with the help of the many testers willing to put up with bugs and other strange happenings.\r\n\r\nVisit us at http://www.hoverrace.com/\r\n\r\nHoverRace is copyright (c) Richard Langlois and Grokksoft Inc.\r\n\r\nThanks also to the following projects:\r\n\r\nThe Boost C++ Libraries\r\n  http://www.boost.org/\r\n\r\nlibcurl - Daniel Stenberg and contributors.\r\n  http://curl.haxx.se/\r\n\r\nLibYAML - Kirill Simonov and contributors.\r\n  http://pyyaml.org/wiki/LibYAML\r\n\r\nLiteUnzip - Jeff Glatt, based on work by Lucian Wischik, based on work by Jean-Loup Gailly and Mark Adler.\r\n"
     IDS_CONN_REFUSED1       "Connection refused by peer "
     IDS_CONN_REFUSED2       "; perhaps they are behind a firewall and need to forward ports 9530 and 9531 TCP and UDP?"
     IDS_CONN_TIMEOUT1       "Cannot connect to peer "
