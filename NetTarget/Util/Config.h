@@ -94,6 +94,7 @@ class MR_Config
 			std::string mainServer;
 			int udpRecvPort;
 			int tcpRecvPort;
+			int tcpServPort;
 			//TODO: Proxy server settings.
 
 			MR_DllDeclare void Load(yaml::MapNode*);
