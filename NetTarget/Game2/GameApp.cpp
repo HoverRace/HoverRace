@@ -573,15 +573,12 @@ MR_GameApp::MR_GameApp(HINSTANCE pInstance)
 		//FIXME: Oh bother, this means the .exe was compiled without
 		//       version resources.  What do we do now?
 	}
-	std::ostringstream verOss;
-	verOss << verMajor << '.' << verMinor << '.' << verPatch << '.' << verBuild;
-	std::string appVer = verOss.str();
 
 	// Process command-line options.
 	ProcessCmdLine(__argc, __argv);
 
 	// Load the configuration, using the default OS-specific path.
-	MR_Config *cfg = MR_Config::Init(appVer);
+	MR_Config *cfg = MR_Config::Init(verMajor, verMinor, verPatch, verBuild);
 	if (!safeMode) {
 		LoadRegistry();
 		cfg->Load();

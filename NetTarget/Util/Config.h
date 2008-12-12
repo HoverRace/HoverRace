@@ -26,15 +26,23 @@ class MR_DllDeclare MR_Config
 	private:
 		static MR_Config *instance;
 		std::string path;
-		std::string version;
+		int verMajor;
+		int verMinor;
+		int verPatch;
+		int verBuild;
+		std::string shortVersion;
+		std::string fullVersion;
 
 	private:
-		MR_Config(const std::string &version="0.0.0.0", const std::string &file="");
+		MR_Config(int verMajor, int verMinor, int verPatch, int verBuild, const std::string &file="");
 	public:
 		~MR_Config();
 	
-		static MR_Config *Init(const std::string &version, const std::string &path="");
+		static MR_Config *Init(int verMajor, int verMinor, int verPatch, int verBuild, const std::string &path="");
 		static void Shutdown();
+
+		std::string GetVersion() const;
+		std::string GetFullVersion() const;
 
 		static std::string GetDefaultPath();
 		std::string GetConfigFilename() const;

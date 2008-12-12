@@ -84,10 +84,22 @@ MR_Config *MR_Config::instance = NULL;
  * @param path (Optional) The directory for storing configuration data.
  *             The default is to use {@link #GetDefaultPath()}.
  */
-MR_Config::MR_Config(const std::string &version, const std::string &path) :
-	version(version)
+MR_Config::MR_Config(int verMajor, int verMinor, int verPatch, int verBuild, const std::string &path) :
+	verMajor(verMajor), verMinor(verMinor), verPatch(verPatch), verBuild(verBuild)
 {
 	this->path = (path.length() == 0) ? GetDefaultPath() : path;
+
+	std::ostringstream oss;
+	oss << verMajor << '.' << verMinor;
+	if (verPatch == 0) {
+		shortVersion = oss.str();
+		oss << '.' << verPatch;
+	} else {
+		oss << '.' << verPatch;
+		shortVersion = oss.str();
+	}
+	oss << '.' << verBuild;
+	fullVersion = oss.str();
 
 	// Set initial defaults.
 	ResetToDefaults();
@@ -105,10 +117,10 @@ MR_Config::~MR_Config()
  *             The default is to use {@link #GetDefaultPath()}.
  * @return The config instance.
  */
-MR_Config *MR_Config::Init(const std::string &version, const std::string &path)
+MR_Config *MR_Config::Init(int verMajor, int verMinor, int verPatch, int verBuild, const std::string &path)
 {
 	if (instance == NULL) {
-		instance = new MR_Config(version, path);
+		instance = new MR_Config(verMajor, verMinor, verPatch, verBuild, path);
 	}
 	return instance;
 }
@@ -122,6 +134,24 @@ void MR_Config::Shutdown()
 		delete instance;
 		instance = NULL;
 	}
+}
+
+/**
+ * Retrieve the short form (x.x or x.x.x) of the version number.
+ * @return The version number (always at least two components).
+ */
+std::string MR_Config::GetVersion() const
+{
+	return shortVersion;
+}
+
+/**
+ * Retrieve the long form (x.x.x.x) of the version number.
+ * @return The version number (the same that was passed to the constructor).
+ */
+std::string MR_Config::GetFullVersion() const
+{
+	return fullVersion;
 }
 
 /**
@@ -388,6 +418,7 @@ void MR_Config::Save()
 
 void MR_Config::SaveVersion(yaml::Emitter *emitter)
 {
+	std::string &version = shortVersion;
 	EMIT_VAR(emitter, version);
 }
 
