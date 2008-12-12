@@ -1344,6 +1344,12 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 						mThis->RefreshChatOut(pWindow);
 					}
 				}
+
+				// Subclass the banner button so we can control the behavior.
+				mThis->oldBannerProc = (WNDPROC)SetWindowLong(
+					GetDlgItem(pWindow, IDC_PUB),
+					GWL_WNDPROC,
+					(LONG)BannerCallBack);
 	
 			}
 			lReturnValue = TRUE;
@@ -1841,6 +1847,20 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 	}
 
 	return lReturnValue;
+}
+
+BOOL CALLBACK MR_InternetRoom::BannerCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
+{
+	switch (pMsgId) {
+		case WM_SETCURSOR:
+			if (LOWORD(pLParam) == HTCLIENT) {
+				SetCursor(LoadCursor(NULL, IDC_HAND));
+			}
+			return TRUE;
+
+		default:
+			return CallWindowProc(mThis->oldBannerProc, pWindow, pMsgId, pWParam, pLParam);
+	}
 }
 
 BOOL CALLBACK MR_InternetRoom::GetAddrCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
