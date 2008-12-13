@@ -2,7 +2,7 @@ AC_PREREQ(2.59)
 AC_INIT(HoverRace,1.24,[http://svn.igglybob.com/hoverrace/])
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_MACRO_DIR(config/m4)
-AC_CONFIG_SRCDIR([NetTarget/Util/Config.cpp])
+AC_CONFIG_SRCDIR([client/Game2/main.cpp])
 AM_CONFIG_HEADER([config.h])
 AM_INIT_AUTOMAKE
 
@@ -34,8 +34,10 @@ AC_C_CONST
 
 
 AC_CONFIG_FILES([
-    Makefile
-    NetTarget/Makefile
-    NetTarget/Util/Makefile
+	Makefile
+	client/Makefile
+	client/Game2/Makefile
+	engine/Makefile
+	engine/Util/Makefile
 ])
 AC_OUTPUT
