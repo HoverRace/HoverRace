@@ -54,7 +54,7 @@ class MR_PlayerStats
  * Initializes the MR_NetworkSession.  Sets default values; main character
  * creation will be sent at least 5 seconds before the game starts.
  */
-MR_NetworkSession::MR_NetworkSession(BOOL pInternetGame, int pMajorID, int pMinorID, HWND pWindow, int pUDPRecvPort, int pTCPRecvPort)
+MR_NetworkSession::MR_NetworkSession(BOOL pInternetGame, int pMajorID, int pMinorID, HWND pWindow)
 :MR_ClientSession()
 {
 	mMasterMode = FALSE;
@@ -80,8 +80,6 @@ MR_NetworkSession::MR_NetworkSession(BOOL pInternetGame, int pMajorID, int pMino
 	// Awful Ladder patch
 	mOpponendMajorID = -1;
 	mOpponendMinorID = -1;
-
-	mNetInterface.SetRecvPorts(pUDPRecvPort, pTCPRecvPort);
 }
 
 /**

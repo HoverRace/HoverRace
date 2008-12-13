@@ -41,6 +41,7 @@ namespace fs = boost::filesystem;
 #define DEFAULT_MAIN_SERVER		"66.197.183.245/~sirbrock/imr/rl.php"
 #define DEFAULT_UDP_RECV_PORT	9531
 #define DEFAULT_TCP_RECV_PORT	9531
+#define DEFAULT_TCP_SERV_PORT	9530
 
 #define READ_BOOL(root,name) \
 	{\
@@ -280,6 +281,7 @@ void MR_Config::ResetToDefaults()
 	net.mainServer = DEFAULT_MAIN_SERVER;
 	net.udpRecvPort = DEFAULT_UDP_RECV_PORT;
 	net.tcpRecvPort = DEFAULT_TCP_RECV_PORT;
+	net.tcpServPort = DEFAULT_TCP_SERV_PORT;
 
 	// Default controls.
 	controls[0].motorOn = 1;
@@ -517,6 +519,7 @@ void MR_Config::cfg_net_t::Load(yaml::MapNode *root)
 	READ_STRING(root, mainServer);
 	READ_INT(root, udpRecvPort, 0, 65535);
 	READ_INT(root, tcpRecvPort, 0, 65535);
+	READ_INT(root, tcpServPort, 0, 65535);
 }
 
 void MR_Config::cfg_net_t::Save(yaml::Emitter *emitter)
@@ -527,6 +530,7 @@ void MR_Config::cfg_net_t::Save(yaml::Emitter *emitter)
 	EMIT_VAR(emitter, mainServer);
 	EMIT_VAR(emitter, udpRecvPort);
 	EMIT_VAR(emitter, tcpRecvPort);
+	EMIT_VAR(emitter, tcpServPort);
 
 	emitter->EndMap();
 }

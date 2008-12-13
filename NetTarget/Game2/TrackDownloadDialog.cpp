@@ -15,6 +15,8 @@
 #include <boost/bind.hpp>
 #include <boost/thread/thread.hpp>
 
+#include <io.h>
+
 #include "../Util/Config.h"
 
 static const char *STATE_NAMES[] = {
@@ -43,7 +45,7 @@ TrackDownloadDialog::TrackDownloadDialog(const std::string &name) :
 	curlErrorBuf = new char[CURL_ERROR_SIZE];
 	curlErrorBuf[0] = 0;
 
-	dlBuf = (dlBuf_t*)malloc(INIT_CAPACITY * sizeof(dlBuf_t));
+	dlBuf = (dlBuf_t *) malloc(INIT_CAPACITY * sizeof(dlBuf_t));
 }
 
 /// Destructor.
@@ -370,6 +372,34 @@ bool TrackDownloadDialog::ExtractTrackFile()
 			fclose(outFile);
 		}
 	}
+
+#ifdef _WIN32
+	/* fix modification time and creation time */
+
+	/* what the fuck? "CreateFile()" opens existing files?  Misnomer much? */
+	HANDLE file = CreateFile(destFilename.c_str(),
+								FILE_WRITE_ATTRIBUTES,
+								FILE_SHARE_READ | FILE_SHARE_WRITE,
+								NULL,
+								OPEN_EXISTING,
+								FILE_ATTRIBUTE_NORMAL,
+								NULL);
+	/* that was WAY too hard */
+	FILETIME ft;
+	SYSTEMTIME st;
+
+	GetSystemTime(&st);
+	SystemTimeToFileTime(&st, &ft);
+
+	if(SetFileTime(file, &ft, &ft, &ft) == 0) {
+		/* error */
+		ASSERT(FALSE);
+	}
+
+	CloseHandle(file);
+	/* I swear, that was ten times harder than it should have been */
+#endif
+
 
 	return retv;
 }

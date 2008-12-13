@@ -1760,7 +1760,7 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 
 						if(lSuccess) {
 							// Register to the InternetServer
-							lSuccess = (mThis->AddGameOp(pWindow, lCurrentTrack.c_str(), lCurrentTrack.c_str(), lNbLap, lAllowWeapons, MR_DEFAULT_NET_PORT) != FALSE);
+							lSuccess = (mThis->AddGameOp(pWindow, lCurrentTrack.c_str(), lCurrentTrack.c_str(), lNbLap, lAllowWeapons, MR_Config::GetInstance()->net.tcpServPort) != FALSE);
 
 							if(lSuccess) {
 								// Wait client registration
@@ -1768,7 +1768,7 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 
 								lTrackName.Format("%s  %d laps %s", lCurrentTrack.c_str(), lNbLap, lAllowWeapons ? "with weapons" : "no weapons");
 
-								lSuccess = (mThis->mSession->WaitConnections(pWindow, lTrackName, FALSE, MR_DEFAULT_NET_PORT, &mThis->mModelessDlg, MRM_DLG_END_ADD) != FALSE);
+								lSuccess = (mThis->mSession->WaitConnections(pWindow, lTrackName, FALSE, MR_Config::GetInstance()->net.tcpServPort, &mThis->mModelessDlg, MRM_DLG_END_ADD) != FALSE);
 
 								if(!lSuccess) {
 									// Unregister Game

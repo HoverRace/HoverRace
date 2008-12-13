@@ -358,6 +358,29 @@ void ReadTrackListDir(const std::string &dir)
 	lHandle = _findfirst((dir + "*" TRACK_EXT).c_str(), &lFileInfo);
 
 	if(lHandle != -1) {
+		if(lFileInfo.time_access == -1 || lFileInfo.time_create == -1 || lFileInfo.time_write == -1) {
+			/* file times are botched, let's fix them */
+			HANDLE file = CreateFile((dir + lFileInfo.name).c_str(),
+										FILE_WRITE_ATTRIBUTES,
+										FILE_SHARE_READ | FILE_SHARE_WRITE,
+										NULL,
+										OPEN_EXISTING,
+										FILE_ATTRIBUTE_NORMAL,
+										NULL);
+			/* that was WAY too hard */
+			FILETIME ft;
+			SYSTEMTIME st;
+
+			GetSystemTime(&st);
+			SystemTimeToFileTime(&st, &ft);
+
+			if(SetFileTime(file, &ft, &ft, &ft) == 0) {
+				/* error */
+				ASSERT(FALSE);
+			}
+
+			CloseHandle(file);
+		}
 
 		do {
 			gsTrackList.push_back(TrackEntry());
