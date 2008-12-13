@@ -25,7 +25,7 @@
 
 #include "../VideoServices/Sprite.h"
 
-#ifdef MR_OBJ_FAC_TOOLS
+#ifdef MR_ENGINE
 #define MR_DllDeclare   __declspec( dllexport )
 #else
 #define MR_DllDeclare   __declspec( dllimport )

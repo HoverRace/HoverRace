@@ -2,7 +2,7 @@
 /* yaml/ScalarNode.cpp
 	Wrapper for LibYAML scalar nodes. */
 
-#include "../stdafx.h"
+#include "stdafx.h"
 
 #include <sstream>
 

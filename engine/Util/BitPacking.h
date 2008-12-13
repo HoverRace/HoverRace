@@ -3,7 +3,7 @@
 #ifndef BIT_PACKING_H
 #define BIT_PACKING_H
 
-#ifdef MR_UTIL
+#ifdef MR_ENGINE
 #define MR_DllDeclare   __declspec(dllexport)
 #else
 #define MR_DllDeclare   __declspec(dllimport)

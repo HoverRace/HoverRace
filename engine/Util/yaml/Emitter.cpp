@@ -2,7 +2,7 @@
 /* yaml/Emitter.cpp
 	Implementation for the LibYAML emitter wrapper. */
 
-#include "../stdafx.h"
+#include "stdafx.h"
 
 #include "Emitter.h"
 

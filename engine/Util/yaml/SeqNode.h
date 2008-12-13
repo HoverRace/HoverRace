@@ -6,6 +6,8 @@
 
 #include "Node.h"
 
+#include <vector>
+
 namespace yaml
 {
 	class SeqNode : public Node

@@ -29,7 +29,7 @@
 #include "../Util/FastFifo.h"
 #include "../Util/BitPacking.h"
 
-#ifdef MR_MAIN_CHARACTER
+#ifdef MR_ENGINE
 #define MR_DllDeclare   __declspec( dllexport )
 #else
 #define MR_DllDeclare   __declspec( dllimport )

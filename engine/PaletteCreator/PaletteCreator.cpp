@@ -18,6 +18,7 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 //
+#include "stdafx.h"
 
 #define VC_EXTRALEAN							  // Exclude rarely-used stuff from Windows headers
 

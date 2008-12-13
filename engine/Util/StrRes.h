@@ -25,7 +25,7 @@
 #ifndef STR_RES_H
 #define STR_RES_H
 
-#ifdef MR_UTIL
+#ifdef MR_ENGINE
 #define MR_DllDeclare   __declspec( dllexport )
 #else
 #define MR_DllDeclare   __declspec( dllimport )

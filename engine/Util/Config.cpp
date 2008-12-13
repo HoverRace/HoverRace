@@ -7,6 +7,7 @@
 #include <stdlib.h>
 
 #include <string>
+#include <sstream>
 #include <exception>
 
 #ifdef _WIN32

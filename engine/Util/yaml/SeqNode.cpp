@@ -2,7 +2,7 @@
 /* yaml/SeqNode.cpp
 	Wrapper for LibYAML sequence nodes. */
 
-#include "../stdafx.h"
+#include "stdafx.h"
 
 #include "NodeFactory.h"
 

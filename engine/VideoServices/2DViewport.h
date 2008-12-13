@@ -25,7 +25,7 @@
 
 #include "VideoBuffer.h"
 
-#ifdef MR_VIDEO_SERVICES
+#ifdef MR_ENGINE
 #define MR_DllDeclare   __declspec( dllexport )
 #else
 #define MR_DllDeclare   __declspec( dllimport )

@@ -27,7 +27,7 @@
 #include "../VideoServices/SoundServer.h"
 #include "../Util/DllObjectFactory.h"
 
-#ifdef MR_MAIN_CHARACTER
+#ifdef MR_ENGINE
 #define MR_DllDeclare   __declspec( dllexport )
 #else
 #define MR_DllDeclare   __declspec( dllimport )
