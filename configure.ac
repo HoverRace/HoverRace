@@ -38,6 +38,5 @@ AC_CONFIG_FILES([
 	client/Makefile
 	client/Game2/Makefile
 	engine/Makefile
-	engine/Util/Makefile
 ])
 AC_OUTPUT

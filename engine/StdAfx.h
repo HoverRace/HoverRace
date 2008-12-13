@@ -21,7 +21,7 @@
 
 #else
 
-#	include "../../include/compat/unix.h"
+#	include "../include/compat/unix.h"
 
 #endif
 
