@@ -482,36 +482,38 @@ BOOL MR_NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName, BOO
 			}
 		}
 
-		// set up UDP receive port
-		lReturnValue = CreateUDPRecvSocket(htons(mUDPRecvPort));
-
-		if(!lReturnValue) {
-			MessageBox(pWindow, MR_LoadString(IDS_CANT_USE_UDP_PORT), MR_LoadString(IDS_TCP_SERVER), MB_ICONERROR | MB_OK | MB_APPLMODAL);
-		}
-
 		if(lReturnValue) {
-			// Determine server addr
-			mServerAddr = GetLocalAddrStr();
+			// set up UDP receive port
+			lReturnValue = CreateUDPRecvSocket(htons(mUDPRecvPort));
 
-			// Pop the Bit dialog
-			if(pModalessDlg == NULL) {
-				mReturnMessage = 0;
-
-				// Normal mode (Modal)
-				if(DialogBox(lModuleHandle, MAKEINTRESOURCE(IDD_TCP_SERVER), pWindow, ListCallBack) != IDOK) {
-					lReturnValue = FALSE;
-				}
+			if(!lReturnValue) {
+				MessageBox(pWindow, MR_LoadString(IDS_CANT_USE_UDP_PORT), MR_LoadString(IDS_TCP_SERVER), MB_ICONERROR | MB_OK | MB_APPLMODAL);
 			}
-			else {
-				ASSERT(pReturnMessage != 0);
 
-				mReturnMessage = pReturnMessage;
+			if(lReturnValue) {
+				// Determine server addr
+				mServerAddr = GetLocalAddrStr();
 
-				// Modaless mode
-				*pModalessDlg = CreateDialog(lModuleHandle, MAKEINTRESOURCE(IDD_TCP_SERVER), pWindow, ListCallBack);
+				// Pop the Bit dialog
+				if(pModalessDlg == NULL) {
+					mReturnMessage = 0;
 
-				if(*pModalessDlg == NULL) {
-					lReturnValue = FALSE;
+					// Normal mode (Modal)
+					if(DialogBox(lModuleHandle, MAKEINTRESOURCE(IDD_TCP_SERVER), pWindow, ListCallBack) != IDOK) {
+						lReturnValue = FALSE;
+					}
+				}
+				else {
+					ASSERT(pReturnMessage != 0);
+
+					mReturnMessage = pReturnMessage;
+
+					// Modaless mode
+					*pModalessDlg = CreateDialog(lModuleHandle, MAKEINTRESOURCE(IDD_TCP_SERVER), pWindow, ListCallBack);
+
+					if(*pModalessDlg == NULL) {
+						lReturnValue = FALSE;
+					}
 				}
 			}
 		}
