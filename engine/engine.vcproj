@@ -83,7 +83,6 @@
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="1"
-				PrecompiledHeaderFile=".\Release\engine.pch"
 				WarningLevel="3"
 				DebugInformationFormat="0"/>
 			<Tool
@@ -134,12 +133,6 @@
 			<File
 				RelativePath=".\ColorTools\ColorTools.h">
 			</File>
-			<File
-				RelativePath=".\ColorTools\StdAfx.cpp">
-			</File>
-			<File
-				RelativePath=".\ColorTools\StdAfx.h">
-			</File>
 		</Filter>
 		<Filter
 			Name="MainCharacter"
@@ -155,24 +148,6 @@
 			</File>
 			<File
 				RelativePath=".\MainCharacter\MainCharacterRenderer.h">
-			</File>
-			<File
-				RelativePath=".\MainCharacter\StdAfx.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)2.obj"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)2.obj"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\MainCharacter\StdAfx.h">
 			</File>
 		</Filter>
 		<Filter
@@ -240,24 +215,6 @@
 			</File>
 			<File
 				RelativePath=".\Model\Shapes.h">
-			</File>
-			<File
-				RelativePath=".\Model\StdAfx.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\Model\StdAfx.h">
 			</File>
 		</Filter>
 		<Filter
@@ -339,24 +296,6 @@
 				RelativePath=".\ObjFac1\PowerUp.h">
 			</File>
 			<File
-				RelativePath=".\ObjFac1\StdAfx.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)3.obj"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)3.obj"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\ObjFac1\StdAfx.h">
-			</File>
-			<File
 				RelativePath=".\ObjFac1\TestElement.cpp">
 			</File>
 			<File
@@ -435,33 +374,12 @@
 			<File
 				RelativePath=".\ObjFacTools\SpriteHandle.h">
 			</File>
-			<File
-				RelativePath=".\ObjFacTools\StdAfx.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)4.obj"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)4.obj"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\ObjFacTools\StdAfx.h">
-			</File>
 		</Filter>
 		<Filter
 			Name="PaletteCreator"
 			Filter="">
 			<File
 				RelativePath=".\PaletteCreator\PaletteCreator.cpp">
-			</File>
-			<File
-				RelativePath=".\PaletteCreator\StdAfx.h">
 			</File>
 		</Filter>
 		<Filter
@@ -523,24 +441,6 @@
 			</File>
 			<File
 				RelativePath=".\Util\resource.h">
-			</File>
-			<File
-				RelativePath=".\Util\StdAfx.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)5.obj"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)5.obj"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\Util\StdAfx.h">
 			</File>
 			<File
 				RelativePath=".\Util\StrRes.cpp">
@@ -607,24 +507,6 @@
 				RelativePath=".\VideoServices\Sprite.h">
 			</File>
 			<File
-				RelativePath=".\VideoServices\StdAfx.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)6.obj"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)6.obj"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\VideoServices\StdAfx.h">
-			</File>
-			<File
 				RelativePath=".\VideoServices\VideoBuffer.cpp">
 			</File>
 			<File
@@ -676,10 +558,25 @@
 			<File
 				RelativePath=".\Util\yaml\SeqNode.h">
 			</File>
-			<File
-				RelativePath=".\Util\yaml\StdAfx.h">
-			</File>
 		</Filter>
+		<File
+			RelativePath=".\StdAfx.cpp">
+			<FileConfiguration
+				Name="Debug|Win32">
+				<Tool
+					Name="VCCLCompilerTool"
+					ObjectFile="$(IntDir)/$(InputName)5.obj"/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release|Win32">
+				<Tool
+					Name="VCCLCompilerTool"
+					ObjectFile="$(IntDir)/$(InputName)5.obj"/>
+			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\StdAfx.h">
+		</File>
 	</Files>
 	<Globals>
 	</Globals>
