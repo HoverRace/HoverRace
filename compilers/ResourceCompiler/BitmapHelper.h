@@ -23,7 +23,7 @@
 #ifndef MR_BITMAP_HELPER_H
 #define MR_BITMAP_HELPER_H
 
-#include "../Util/MR_Types.h"
+#include "../../engine/Util/MR_Types.h"
 
 MR_UInt8 *LoadBitmap(const char *lFileName, int &pXRes, int &pYRes, BOOL pReverse);
 #endif

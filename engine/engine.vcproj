@@ -91,6 +91,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="FALSE"
+				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="winmm.lib yaml.lib ddraw.lib dsound.lib"
 				OutputFile=".\..\Release\engine.dll"
 				LinkIncremental="1"

@@ -24,8 +24,8 @@
 #ifndef TRACKMAP_H
 #define TRACKMAP_H
 
-#include "../Model/Level.h"
-#include "../VideoServices/Sprite.h"
+#include "../../engine/Model/Level.h"
+#include "../../engine/VideoServices/Sprite.h"
 
 class MR_MapSprite:public MR_Sprite
 {

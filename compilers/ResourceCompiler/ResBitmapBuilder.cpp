@@ -23,8 +23,8 @@
 #include "ResBitmapBuilder.h"
 #include "BitmapHelper.h"
 
-#include "../ColorTools/ColorTools.h"
-#include "../VideoServices/ColorPalette.h"
+#include "../../engine/ColorTools/ColorTools.h"
+#include "../../engine/VideoServices/ColorPalette.h"
 
 // Local prototypes
 static MR_UInt8 GetBestColor(MR_UInt8 * pSrc, int pStripeLenToScan, int pNbStripeToScan, int pStripeLen, BOOL & pTransparentFlag);

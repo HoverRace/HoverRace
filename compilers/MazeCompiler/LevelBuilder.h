@@ -24,7 +24,7 @@
 #ifndef LEVELBUILDER_H
 #define LEVELBUILDER_H
 
-#include "../Model/Level.h"
+#include "../../engine/Model/Level.h"
 
 class MR_VisibleStep;
 

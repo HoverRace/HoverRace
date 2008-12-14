@@ -23,7 +23,7 @@
 #ifndef MR_RES_BITMAP_BUILDER_H
 #define MR_RES_BITMAP_BUILDER_H
 
-#include "../ObjFacTools/ResBitmap.h"
+#include "../../engine/ObjFacTools/ResBitmap.h"
 
 class MR_ResBitmapBuilder:public MR_ResBitmap
 {

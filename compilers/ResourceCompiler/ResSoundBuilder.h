@@ -23,7 +23,7 @@
 #ifndef MR_RES_SOUND_BUILDER_H
 #define MR_RES_SOUND_BUILDER_H
 
-#include "../ObjFacTools/ResSound.h"
+#include "../../engine/ObjFacTools/ResSound.h"
 
 class MR_ResShortSoundBuilder:public MR_ResShortSound
 {

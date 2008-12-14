@@ -14,7 +14,7 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\..\NetTarget\Release"
+			OutputDirectory=".\..\Release"
 			IntermediateDirectory=".\Release"
 			ConfigurationType="1"
 			UseOfMFC="2"
@@ -39,10 +39,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile=".\..\NetTarget\Release/HoverCad.exe"
+				OutputFile=".\..\Release/HoverCad.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				ProgramDatabaseFile=".\..\NetTarget\Release/HoverCad.pdb"
+				ProgramDatabaseFile=".\..\Release/HoverCad.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -76,7 +76,7 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\..\NetTarget\Debug"
+			OutputDirectory=".\..\Debug"
 			IntermediateDirectory=".\Debug"
 			ConfigurationType="1"
 			UseOfMFC="2"
@@ -99,11 +99,11 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile=".\..\NetTarget\Debug/HoverCad.exe"
+				OutputFile=".\..\Debug/HoverCad.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\..\NetTarget\Debug/HoverCad.pdb"
+				ProgramDatabaseFile=".\..\Debug/HoverCad.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool

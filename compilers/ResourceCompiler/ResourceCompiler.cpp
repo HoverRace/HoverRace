@@ -57,7 +57,7 @@
 #include "ResSpriteBuilder.h"
 #include "ResSoundBuilder.h"
 #include "ResourceLibBuilder.h"
-#include "../ColorTools/ColorTools.h"
+#include "../../engine/ColorTools/ColorTools.h"
 
 // Local functions prototypes
 static BOOL ParseInputFile(const char *pFileName);

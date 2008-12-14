@@ -20,12 +20,12 @@
 //
 
 #include "stdafx.h"
-#include "../Util/RecordFile.h"
+#include "../../engine/Util/RecordFile.h"
 #include "LevelBuilder.h"
 #include "TrackMap.h"
 #include "Parser.h"
 #include "TrackCommonStuff.h"
-#include "../Util/StrRes.h"
+#include "../../engine/Util/StrRes.h"
 #include "resource.h"
 
 #include <stdio.h>

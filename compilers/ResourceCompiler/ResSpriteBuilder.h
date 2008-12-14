@@ -23,7 +23,7 @@
 #ifndef MR_RES_SPRITE_BUILDER_H
 #define MR_RES_SPRITE_BUILDER_H
 
-#include "../ObjFacTools/ResSprite.h"
+#include "../../engine/ObjFacTools/ResSprite.h"
 
 class MR_ResSpriteBuilder:public MR_ResSprite
 {

@@ -23,7 +23,7 @@
 #ifndef MR_RES_ACTOR_BUILDER_H
 #define MR_RES_ACTOR_BUILDER_H
 
-#include "../ObjFacTools/ResourceLib.h"
+#include "../../engine/ObjFacTools/ResourceLib.h"
 
 class MR_ResActorBuilder:public MR_ResActor
 {

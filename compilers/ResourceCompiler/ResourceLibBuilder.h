@@ -24,7 +24,7 @@
 #ifndef MR_RESOURCE_LIB_BUILDER_H
 #define MR_RESOURCE_LIB_BUILDER_H
 
-#include "../ObjFacTools/ResourceLib.h"
+#include "../../engine/ObjFacTools/ResourceLib.h"
 
 class MR_ResourceLibBuilder:public MR_ResourceLib
 {

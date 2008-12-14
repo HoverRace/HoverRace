@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="MazeCompiler"
+	Name="mazecompiler"
 	ProjectGUID="{BE113900-CEB8-4289-91A9-930B145BF0E8}"
 	SccProjectName=""
 	SccLocalPath=""
