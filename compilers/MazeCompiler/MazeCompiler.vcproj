@@ -14,12 +14,13 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\..\Debug"
+			OutputDirectory=".\..\..\Debug"
 			IntermediateDirectory=".\Debug"
 			ConfigurationType="1"
 			UseOfMFC="2"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			CharacterSet="2">
+			CharacterSet="2"
+			DeleteExtensionsOnClean="*.obj;*.ilk;*.pdb;*.tlb;*.tli;*.tlh;*.tmp;*.rsp;*.bat;$(TargetPath)">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
@@ -42,11 +43,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				OutputFile=".\..\Debug/MazeCompiler.exe"
+				OutputFile=".\..\..\Debug/MazeCompiler.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\..\Debug/MazeCompiler.pdb"
+				ProgramDatabaseFile=".\..\..\Debug/MazeCompiler.pdb"
 				SubSystem="1"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -75,7 +76,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\..\Release"
+			OutputDirectory=".\..\..\Release"
 			IntermediateDirectory=".\Release"
 			ConfigurationType="1"
 			UseOfMFC="2"
@@ -104,10 +105,10 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				OutputFile=".\..\Release/MazeCompiler.exe"
+				OutputFile=".\..\..\Release/MazeCompiler.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
-				ProgramDatabaseFile=".\..\Release/MazeCompiler.pdb"
+				ProgramDatabaseFile=".\..\..\Release/MazeCompiler.pdb"
 				SubSystem="1"/>
 			<Tool
 				Name="VCMIDLTool"
