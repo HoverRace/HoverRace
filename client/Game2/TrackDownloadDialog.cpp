@@ -17,7 +17,7 @@
 
 #include <io.h>
 
-#include "../Util/Config.h"
+#include "../../engine/Util/Config.h"
 
 static const char *STATE_NAMES[] = {
 	"Initializing",

@@ -25,7 +25,7 @@
 #include "NetworkSession.h"
 #include "InternetRoom.h"
 #include "resource.h"
-#include "../Util/StrRes.h"
+#include "../../engine/Util/StrRes.h"
 
 // Messages
 #define MRNM_SET_TIME                 1

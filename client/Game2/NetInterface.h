@@ -26,8 +26,8 @@
 
 #include <WINSOCK.h>
 
-#include "../Util/MR_Types.h"
-#include "../Util/Config.h"
+#include "../../engine/Util/MR_Types.h"
+#include "../../engine/Util/Config.h"
 
 #define MR_ID_NOT_SET				255
 

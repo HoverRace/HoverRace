@@ -25,7 +25,7 @@
 
 #include "NetInterface.h"
 #include "resource.h"
-#include "../Util/StrRes.h"
+#include "../../engine/Util/StrRes.h"
 
 // Private window messages
 #define MRM_SERVER_CONNECT (WM_USER + 1)

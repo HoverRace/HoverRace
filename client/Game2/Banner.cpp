@@ -23,7 +23,7 @@
 #include "stdafx.h"
 
 #include "Banner.h"
-#include "../Util/StrRes.h"
+#include "../../engine/Util/StrRes.h"
 #include "resource.h"
 
 #include <olectl.h>

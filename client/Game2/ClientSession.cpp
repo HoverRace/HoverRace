@@ -22,7 +22,7 @@
 #include "stdafx.h"
 
 #include "ClientSession.h"
-#include "../MazeCompiler/TrackCommonStuff.h"
+#include "../../compilers/MazeCompiler/TrackCommonStuff.h"
 
 MR_ClientSession::MR_ClientSession()
 :mSession(TRUE)

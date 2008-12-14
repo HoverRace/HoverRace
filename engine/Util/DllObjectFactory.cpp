@@ -26,7 +26,7 @@
 #define new DEBUG_NEW
 
 // DllObjectFactory file name prefix
-static const char gsFilePrefix[] = ".\\ObjFac";
+static const char gsFilePrefix[] = ".\\engine";
 
 // Local class declaration
 class MR_FactoryDll
@@ -48,7 +48,7 @@ class MR_FactoryDll
 		MR_FactoryDll();
 		~MR_FactoryDll();
 
-		BOOL Open(MR_UInt16 pDllId);			  // Must be called only once
+		BOOL Open();			  // Must be called only once
 
 };
 
@@ -162,7 +162,7 @@ CString MR_DllObjectFactory::GetObjectFamily(const MR_ObjectFromFactoryId & pId)
 	return lReturnValue;
 }
 
-CString MR_DllObjectFactory::GetObjectDescription(const MR_ObjectFromFactoryId & pId)
+CString MR_DllObjectFactory::GetObjectDescription(const MR_ObjectFromFactoryId &pId)
 {
 	CString lReturnValue;
 
@@ -176,7 +176,7 @@ CString MR_DllObjectFactory::GetObjectDescription(const MR_ObjectFromFactoryId &
 	return lReturnValue;
 }
 
-MR_ObjectFromFactory *MR_DllObjectFactory::CreateObject(const MR_ObjectFromFactoryId & pId)
+MR_ObjectFromFactory *MR_DllObjectFactory::CreateObject(const MR_ObjectFromFactoryId &pId)
 {
 	MR_ObjectFromFactory *lReturnValue;
 
@@ -189,7 +189,10 @@ MR_ObjectFromFactory *MR_DllObjectFactory::CreateObject(const MR_ObjectFromFacto
 	return lReturnValue;
 }
 
-MR_FactoryDll *GetDll(MR_UInt16 pDllId, BOOL pTrowOnError)
+/**
+ * Get a handle to the factory DLL.  The option of choosing which DLL has been deprecated.
+ */
+MR_FactoryDll *GetDll(MR_UInt16 pDllId, BOOL pThrowOnError)
 {
 	MR_FactoryDll *lDllPtr;
 
@@ -199,10 +202,10 @@ MR_FactoryDll *GetDll(MR_UInt16 pDllId, BOOL pTrowOnError)
 	if(!gsDllList.Lookup(pDllId, lDllPtr)) {
 		lDllPtr = new MR_FactoryDll;
 
-		if(!lDllPtr->Open(pDllId)) {
+		if(!lDllPtr->Open()) {
 			delete lDllPtr;
 
-			if(pTrowOnError) {
+			if(pThrowOnError) {
 				ASSERT(FALSE);					  // Unable to open the DLL
 				AfxThrowNotSupportedException();
 			}
@@ -322,13 +325,18 @@ MR_FactoryDll::~MR_FactoryDll()
 	}
 }
 
-BOOL MR_FactoryDll::Open(MR_UInt16 pDllId)
+/**
+ * Open the DLL containing the factory functions.
+ * The option to choose which DLL to open has been deprecated and removed.
+ */
+BOOL MR_FactoryDll::Open()
 {
 	ASSERT(mHandle == NULL);
 
 	char lNameBuffer[40];
 
-	sprintf(lNameBuffer, "%s%u.dll", gsFilePrefix, pDllId);
+	//sprintf(lNameBuffer, "%s%u.dll", gsFilePrefix, pDllId);
+	sprintf(lNameBuffer, "%s.dll", gsFilePrefix);
 
 	mDynamic = TRUE;
 

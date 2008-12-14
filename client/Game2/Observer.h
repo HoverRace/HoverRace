@@ -23,10 +23,10 @@
 #ifndef OBSERVER_H
 #define OBSERVER_H
 
-#include "../VideoServices/3DViewPort.h"
+#include "../../engine/VideoServices/3DViewPort.h"
 #include "ClientSession.h"
-#include "../MainCharacter/MainCharacter.h"
-#include "../ObjFacTools/SpriteHandle.h"
+#include "../../engine/MainCharacter/MainCharacter.h"
+#include "../../engine/ObjFacTools/SpriteHandle.h"
 
 class MR_Observer
 {

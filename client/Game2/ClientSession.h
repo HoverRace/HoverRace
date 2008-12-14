@@ -24,9 +24,9 @@
 #ifndef CLIENT_SESSION_H
 #define CLIENT_SESSION_H
 
-#include "../Model/GameSession.h"
-#include "../MainCharacter/MainCharacter.h"
-#include "../VideoServices/Sprite.h"
+#include "../../engine/Model/GameSession.h"
+#include "../../engine/MainCharacter/MainCharacter.h"
+#include "../../engine/VideoServices/Sprite.h"
 
 #define MR_CHAT_MESSAGE_STACK   8
 

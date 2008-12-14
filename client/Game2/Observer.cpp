@@ -22,10 +22,10 @@
 #include "StdAfx.h"
 
 #include "Observer.h"
-#include "../Model/MazeElement.h"
-#include "../Util/Profiler.h"
+#include "../../engine/Model/MazeElement.h"
+#include "../../engine/Util/Profiler.h"
 #include "resource.h"
-#include "../Util/StrRes.h"
+#include "../../engine/Util/StrRes.h"
 
 #include <math.h>
 

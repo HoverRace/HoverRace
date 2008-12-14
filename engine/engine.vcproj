@@ -46,7 +46,8 @@
 			<Tool
 				Name="VCMIDLTool"/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCPostBuildEventTool"
+				CommandLine="copy ObjFac1\ObjFac1.dat ..\share"/>
 			<Tool
 				Name="VCPreBuildEventTool"/>
 			<Tool
@@ -102,7 +103,8 @@
 			<Tool
 				Name="VCMIDLTool"/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCPostBuildEventTool"
+				CommandLine="copy ObjFac1\ObjFac1.dat ..\share"/>
 			<Tool
 				Name="VCPreBuildEventTool"/>
 			<Tool

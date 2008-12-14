@@ -21,12 +21,12 @@
 
 #include "stdafx.h"
 #include "TrackSelect.h"
-#include "../Util/Cursor.h"
+#include "../../engine/Util/Cursor.h"
 #include "resource.h"
 #include "io.h"
-#include "../MazeCompiler/TrackCommonStuff.h"
-#include "../Util/StrRes.h"
-#include "../Util/Config.h"
+#include "../../compilers/MazeCompiler/TrackCommonStuff.h"
+#include "../../engine/Util/StrRes.h"
+#include "../../engine/Util/Config.h"
 
 #include <algorithm>
 

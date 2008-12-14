@@ -25,7 +25,7 @@
 #include "MatchReport.h"
 #include "TrackDownloadDialog.h"
 #include "resource.h"
-#include "../Util/StrRes.h"
+#include "../../engine/Util/StrRes.h"
 
 #define MRM_DNS_ANSWER        (WM_USER + 1)
 #define MRM_NET_EVENT         (WM_USER + 7)
