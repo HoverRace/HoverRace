@@ -93,18 +93,20 @@ WARN_LOGFILE           = srcdoc/warnings.txt
 #---------------------------------------------------------------------------
 # configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = NetTarget/ColorTools \
-                         NetTarget/Game2 \
-                         NetTarget/MainCharacter \
-                         NetTarget/MazeCompiler \
-                         NetTarget/Model \
-                         NetTarget/ObjFac1 \
-                         NetTarget/ObjFacTools \
-                         NetTarget/PaletteCreator \
-                         NetTarget/ResourceCompiler \
-                         NetTarget/Util \
-                         NetTarget/Util/yaml \
-                         NetTarget/VideoServices
+INPUT                  = client/Game2 \
+                         engine/ColorTools \
+                         engine/MainCharacter \
+                         engine/Model \
+                         engine/ObjFac1 \
+                         engine/ObjFacTools \
+                         engine/PaletteCreator \
+                         engine/Util \
+                         engine/Util/yaml \
+                         engine/VideoServices \
+                         compilers/MazeCompiler \
+                         compilers/ResourceCompiler \
+                         hovercad/ \
+                         imr/ 
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.c \
                          *.cc \
