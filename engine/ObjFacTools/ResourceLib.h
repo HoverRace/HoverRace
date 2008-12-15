@@ -41,22 +41,22 @@ class MR_ResourceLib
 	protected:
 		MR_RecordFile mRecordFile;
 
-		CMap < int, int, MR_ResBitmap *, MR_ResBitmap * >mBitmapList;
-		CMap < int, int, MR_ResActor *, MR_ResActor * >mActorList;
-		CMap < int, int, MR_ResSprite *, MR_ResSprite * >mSpriteList;
-		CMap < int, int, MR_ResShortSound *, MR_ResShortSound * >mShortSoundList;
-		CMap < int, int, MR_ResContinuousSound *, MR_ResContinuousSound * >mContinuousSoundList;
+		CMap <int, int, MR_ResBitmap *, MR_ResBitmap *> mBitmapList;
+		CMap <int, int, MR_ResActor *, MR_ResActor *> mActorList;
+		CMap <int, int, MR_ResSprite *, MR_ResSprite *> mSpriteList;
+		CMap <int, int, MR_ResShortSound *, MR_ResShortSound *> mShortSoundList;
+		CMap <int, int, MR_ResContinuousSound *, MR_ResContinuousSound *> mContinuousSoundList;
 
-		void LoadBitmaps(CArchive & pArchive);
-		void LoadActors(CArchive & pArchive);
-		void LoadSprites(CArchive & pArchive);
-		void LoadSounds(CArchive & pArchive);
+		void LoadBitmaps(CArchive &pArchive);
+		void LoadActors(CArchive &pArchive);
+		void LoadSprites(CArchive &pArchive);
+		void LoadSounds(CArchive &pArchive);
 
 		MR_DllDeclare MR_ResourceLib();
 
 	public:
 		MR_DllDeclare MR_ResourceLib(const char *pFileName);
-		MR_DllDeclare ~ MR_ResourceLib();
+		MR_DllDeclare ~MR_ResourceLib();
 
 		MR_DllDeclare /*const */ MR_ResBitmap * GetBitmap(int pBitmapId);
 		MR_DllDeclare const MR_ResActor *GetActor(int pActorId);

@@ -25,6 +25,11 @@
 
 #define new DEBUG_NEW
 
+/**
+ * Create a new MR_ResourceLib object, reading from the specified filename.
+ *
+ * @param pResFile Filename of object
+ */
 MR_ResourceLib::MR_ResourceLib(const char *pResFile)
 {
 	if(mRecordFile.OpenForRead(pResFile)) {
@@ -48,7 +53,7 @@ MR_ResourceLib::MR_ResourceLib(const char *pResFile)
 				// Load the sprites
 				LoadSprites(lArchive);
 
-				// Load the sprites
+				// Load the sounds
 				LoadSounds(lArchive);
 
 			}
@@ -64,10 +69,14 @@ MR_ResourceLib::MR_ResourceLib(const char *pResFile)
 	}
 }
 
-MR_ResourceLib::MR_ResourceLib()
-{
-}
+/**
+ * Empty constructor
+ */
+MR_ResourceLib::MR_ResourceLib() { }
 
+/**
+ * Close the MR_ResourceLib, deleting all of the objects that were created.
+ */
 MR_ResourceLib::~MR_ResourceLib()
 {
 	POSITION lPos;
@@ -175,6 +184,11 @@ const MR_ResContinuousSound *MR_ResourceLib::GetContinuousSound(int pSoundId)
 	return lValue;
 }
 
+/**
+ * Load each bitmap from the archive, inserting it into mBitmapList.
+ *
+ * @param pArchive The archive to read from
+ */
 void MR_ResourceLib::LoadBitmaps(CArchive & pArchive)
 {
 	int lNbBitmap;
@@ -195,6 +209,11 @@ void MR_ResourceLib::LoadBitmaps(CArchive & pArchive)
 	}
 }
 
+/**
+ * Load each actor (mesh) from the archive, inserting it into mActorList.
+ *
+ * @param pArchive The archive to read from
+ */
 void MR_ResourceLib::LoadActors(CArchive & pArchive)
 {
 	int lNbActor;
@@ -214,6 +233,11 @@ void MR_ResourceLib::LoadActors(CArchive & pArchive)
 	}
 }
 
+/**
+ * Load each sprite from the archive, inserting it into mSpriteList.
+ *
+ * @param pArchive The archive to read from
+ */
 void MR_ResourceLib::LoadSprites(CArchive & pArchive)
 {
 	int lNbSprite;
@@ -233,6 +257,12 @@ void MR_ResourceLib::LoadSprites(CArchive & pArchive)
 	}
 }
 
+/**
+ * Load each sound (ShortSounds and then ContinuousSounds) and insert them into
+ * the mShortSoundList and mContinuousSoundList objects.
+ *
+ * @param pArchive The archive to read from
+ */
 void MR_ResourceLib::LoadSounds(CArchive & pArchive)
 {
 	int lNbSound;

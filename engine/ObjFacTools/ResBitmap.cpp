@@ -44,7 +44,16 @@ MR_ResBitmap::~MR_ResBitmap()
 int MR_ResBitmap::GetResourceId() const
 {
 	return mResourceId;
-} void MR_ResBitmap::Serialize(CArchive & pArchive)
+} 
+
+/**
+ * The Serialize() function either writes this object into a CArchive or reads
+ * the object from the CArchive, depending on the output of
+ * CArchive::IsStoring().
+ *
+ * @param pArchive The archive to write to / read from
+ */
+void MR_ResBitmap::Serialize(CArchive &pArchive)
 {
 	int lCounter;
 

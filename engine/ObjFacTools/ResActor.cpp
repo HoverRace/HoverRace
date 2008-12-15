@@ -51,7 +51,9 @@ int MR_ResActor::GetSequenceCount() const
 int MR_ResActor::GetFrameCount(int pSequence) const
 {
 	return mSequenceList[pSequence].mNbFrame;
-} void MR_ResActor::Serialize(CArchive & pArchive, MR_ResourceLib * pLib)
+} 
+
+void MR_ResActor::Serialize(CArchive & pArchive, MR_ResourceLib * pLib)
 {
 
 	if(pArchive.IsStoring()) {
