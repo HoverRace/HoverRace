@@ -58,6 +58,17 @@ void MR_ResourceLibBuilder::AddSound(MR_ResContinuousSound * pSound)
 	mContinuousSoundList.SetAt(pSound->GetResourceId(), pSound);
 }
 
+/**
+ * This is the function that is called when the file is being written.
+ * It creates the output file, then writes (in this order):
+ * - bitmaps
+ * - actors (meshes)
+ * - sprites
+ * - sounds
+ *
+ * @param pFileName Filename of output file
+ * @return BOOL indicating the success of the operation
+ */
 BOOL MR_ResourceLibBuilder::Export(const char *pFileName)
 {
 	BOOL lReturnValue = TRUE;
@@ -73,7 +84,6 @@ BOOL MR_ResourceLibBuilder::Export(const char *pFileName)
 		lFile.BeginANewRecord();
 
 		{
-
 			// Write the magic number
 			int lMagicNumber = MR_RESOURCE_FILE_MAGIC;
 
@@ -95,7 +105,12 @@ BOOL MR_ResourceLibBuilder::Export(const char *pFileName)
 	return lReturnValue;
 }
 
-void MR_ResourceLibBuilder::WriteBitmaps(CArchive & pArchive)
+/**
+ * Traverse the bitmap list, writing each into the output archive with Serialize().
+ *
+ * @param pArchive The output archive
+ */
+void MR_ResourceLibBuilder::WriteBitmaps(CArchive &pArchive)
 {
 	int lNbBitmap = mBitmapList.GetCount();
 	POSITION lPos = mBitmapList.GetStartPosition();
@@ -114,6 +129,12 @@ void MR_ResourceLibBuilder::WriteBitmaps(CArchive & pArchive)
 
 }
 
+/**
+ * Traverse the actor list, writing each into the output archive with
+ * Serialize().
+ *
+ * @param pArchive The output archive
+ */
 void MR_ResourceLibBuilder::WriteActors(CArchive & pArchive)
 {
 	int lNbActor = mActorList.GetCount();
@@ -132,6 +153,12 @@ void MR_ResourceLibBuilder::WriteActors(CArchive & pArchive)
 	}
 }
 
+/**
+ * Traverse the sprite list, writing each into the output archive with
+ * Serialize().
+ *
+ * @param pArchive The output archive
+ */
 void MR_ResourceLibBuilder::WriteSprites(CArchive & pArchive)
 {
 	int lNbSprite = mSpriteList.GetCount();
@@ -150,6 +177,12 @@ void MR_ResourceLibBuilder::WriteSprites(CArchive & pArchive)
 	}
 }
 
+/**
+ * Traverse the short sound list, then the continuous sound list, writing them
+ * each into the output archive with Serialize().
+ *
+ * @param pArchive The output archive
+ */
 void MR_ResourceLibBuilder::WriteSounds(CArchive & pArchive)
 {
 	int lNbSound;
