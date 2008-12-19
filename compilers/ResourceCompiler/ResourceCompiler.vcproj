@@ -27,9 +27,7 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="2"
-				PrecompiledHeaderThrough="stdafx.h"
-				PrecompiledHeaderFile=".\Debug/ResourceCompiler.pch"
+				UsePrecompiledHeader="3"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
 				ProgramDataBaseFileName=".\Debug/"
@@ -80,7 +78,8 @@
 			ConfigurationType="1">
 			<Tool
 				Name="VCCLCompilerTool"
-				RuntimeLibrary="0"/>
+				RuntimeLibrary="0"
+				UsePrecompiledHeader="3"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
@@ -137,6 +136,18 @@
 			</File>
 			<File
 				RelativePath=".\StdAfx.cpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\TextParsing.cpp">
