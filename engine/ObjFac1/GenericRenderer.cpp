@@ -22,7 +22,6 @@
 #include "stdafx.h"
 
 #include "GenericRenderer.h"
-#include "../ObjFacTools/ObjectFactoryData.h"
 
 MR_GenericRenderer::MR_GenericRenderer(const MR_ObjectFromFactoryId & pId, MR_ResourceLib* resourceLib, int pActorRes)
 	: MR_FreeElementBaseRenderer(pId)

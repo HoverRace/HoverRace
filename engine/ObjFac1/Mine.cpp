@@ -24,7 +24,6 @@
 
 #include "Mine.h"
 #include "ObjFac1Res.h"
-#include "../ObjFacTools/ObjectFactoryData.h"
 #include "../Model/ConcreteShape.h"
 #include "../Model/FreeElementMovingHelper.h"
 

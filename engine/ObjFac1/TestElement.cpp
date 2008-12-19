@@ -22,7 +22,6 @@
 #include "stdafx.h"
 
 #include "TestElement.h"
-#include "../ObjFacTools/ObjectFactoryData.h"
 #include "../Model/FreeElementMovingHelper.h"
 
 MR_TestElement::MR_TestElement(const MR_ObjectFromFactoryId & pId, MR_ResourceLib* resourceLib, int pActorRes)

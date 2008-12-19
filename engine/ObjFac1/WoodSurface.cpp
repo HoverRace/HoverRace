@@ -22,7 +22,6 @@
 #include "stdafx.h"
 
 #include "WoodSurface.h"
-#include "../ObjFacTools/ObjectFactoryData.h"
 #include "ObjFac1Res.h"
 
 MR_WoodSurface::MR_WoodSurface(const MR_ObjectFromFactoryId & pId, MR_ResourceLib* resourceLib)

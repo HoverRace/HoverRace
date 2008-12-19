@@ -339,12 +339,6 @@
 				RelativePath=".\ObjFacTools\MovementSpec.h">
 			</File>
 			<File
-				RelativePath=".\ObjFacTools\ObjectFactoryData.cpp">
-			</File>
-			<File
-				RelativePath=".\ObjFacTools\ObjectFactoryData.h">
-			</File>
-			<File
 				RelativePath=".\ObjFacTools\ResActor.cpp">
 			</File>
 			<File

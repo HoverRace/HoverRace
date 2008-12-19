@@ -23,7 +23,6 @@
 
 #include "HoverRender.h"
 #include "ObjFac1Res.h"
-#include "../ObjFacTools/ObjectFactoryData.h"
 #include "../Util/FuzzyLogic.h"
 
 // Local stuff

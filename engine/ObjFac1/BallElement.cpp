@@ -23,7 +23,6 @@
 
 #include "BallElement.h"
 #include "ObjFac1Res.h"
-#include "../ObjFacTools/ObjectFactoryData.h"
 
 MR_BallElement::MR_BallElement(const MR_ObjectFromFactoryId & pId, MR_ResourceLib* resourceLib)
 	: MR_FreeElementBase(pId)
