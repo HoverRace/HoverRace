@@ -95,15 +95,15 @@ namespace MR_DllObjectFactory
 	// Low level function
 	//MR_DllDeclare BOOL OpenDll(MR_UInt16 pDllId);  // Usually don't need to be called
 												  // Usually don't need to be called
-	MR_DllDeclare void IncrementReferenceCount(MR_UInt16 pDllId);
+	MR_DllDeclare void IncrementReferenceCount(int pDllId);
 												  // Usually don't need to be called
-	MR_DllDeclare void DecrementReferenceCount(MR_UInt16 pDllId);
+	MR_DllDeclare void DecrementReferenceCount(int pDllId);
 
 	// Fast Object Creation function
 	MR_DllDeclare MR_ObjectFromFactory *CreateObject(const MR_ObjectFromFactoryId & pId);
 
 	// Local Dll
-	MR_DllDeclare void RegisterLocalDll(MR_UInt16 pDLLId, getObject_t pFunc);
+	MR_DllDeclare void RegisterLocalDll(int pDLLId, getObject_t pFunc);
 
 };
 

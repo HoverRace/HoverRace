@@ -21,6 +21,8 @@
 
 #include "stdafx.h"
 
+#include <map>
+
 #include "../ObjFac1/ObjFac1.h"
 
 #include "DllObjectFactory.h"
@@ -82,30 +84,27 @@ static MR_FactoryDll *GetDll(MR_UInt16 pDllId, BOOL pTrowOnError);
 
 // Module variables
 //TODO: Use a std::map instead.
-static CMap < MR_UInt16, MR_UInt16, MR_FactoryDll *, MR_FactoryDll * >gsDllList;
+typedef std::map<int,MR_FactoryDll*> gsDllList_t;
+static gsDllList_t gsDllList;
 
 // Module functions
 void MR_DllObjectFactory::Init()
 {
-	// Notting to do
+	// Nothing to do
 }
 
 void MR_DllObjectFactory::Clean(BOOL pOnlyDynamic)
 {
-	POSITION lNextPos = gsDllList.GetStartPosition();
+	for (gsDllList_t::iterator iter = gsDllList.begin(); iter != gsDllList.end(); ) {
+		int dllId = iter->first;
+		MR_FactoryDll* dllPtr = iter->second;
 
-	while(lNextPos != NULL) {
-		MR_UInt16 lDllId;
-		MR_FactoryDll *lDllPtr;
-
-		gsDllList.GetNextAssoc(lNextPos, lDllId, lDllPtr);
-
-		if((lDllPtr->mRefCount <= 0) && (lDllPtr->mDynamic || !pOnlyDynamic)) {
-			// Remove the entry from the dictionnary
-			gsDllList.RemoveKey(lDllId);
-
-			// Free the dll
-			delete lDllPtr;
+		if ((dllPtr->mRefCount <= 0) && (dllPtr->mDynamic || !pOnlyDynamic)) {
+			gsDllList.erase(iter++);
+			delete dllPtr;
+		}
+		else {
+			++iter;
 		}
 	}
 }
@@ -117,7 +116,7 @@ BOOL MR_DllObjectFactory::OpenDll(MR_UInt16 pDllId)
 }
 */
 
-void MR_DllObjectFactory::RegisterLocalDll(MR_UInt16 pDllId, getObject_t pFunc)
+void MR_DllObjectFactory::RegisterLocalDll(int pDllId, getObject_t pFunc)
 {
 
 	MR_FactoryDll *lDllPtr;
@@ -126,37 +125,31 @@ void MR_DllObjectFactory::RegisterLocalDll(MR_UInt16 pDllId, getObject_t pFunc)
 	ASSERT(pDllId != 1);						  // Number 1 is reserved for ObjFac1
 	ASSERT(pFunc != NULL);
 
-	// Verify if the entry do not already exist
-	ASSERT(!gsDllList.Lookup(pDllId, lDllPtr));
-
 	lDllPtr = new LocalFactoryDll(pFunc);
 
-	gsDllList.SetAt(pDllId, lDllPtr);
-
+	bool inserted = gsDllList.insert(gsDllList_t::value_type(pDllId, lDllPtr)).second;
+	ASSERT(inserted);
 }
 
-void MR_DllObjectFactory::IncrementReferenceCount(MR_UInt16 pDllId)
+void MR_DllObjectFactory::IncrementReferenceCount(int pDllId)
 {
-	MR_FactoryDll *lDllPtr;
-
-	if(gsDllList.Lookup(pDllId, lDllPtr)) {
-		lDllPtr->mRefCount++;
+	gsDllList_t::iterator iter = gsDllList.find(pDllId);
+	if (iter != gsDllList.end()) {
+		iter->second->mRefCount++;
 	}
 	else {
 		ASSERT(FALSE);							  // Dll not loaded
 	}
-
 }
 
-void MR_DllObjectFactory::DecrementReferenceCount(MR_UInt16 pDllId)
+void MR_DllObjectFactory::DecrementReferenceCount(int pDllId)
 {
-	MR_FactoryDll *lDllPtr;
-
-	if(gsDllList.Lookup(pDllId, lDllPtr)) {
-		lDllPtr->mRefCount--;
+	gsDllList_t::iterator iter = gsDllList.find(pDllId);
+	if (iter != gsDllList.end()) {
+		iter->second->mRefCount--;
 	}
 	else {
-		ASSERT(FALSE);							  // Dll discarted
+		ASSERT(FALSE);							  // Dll discarded
 	}
 }
 
@@ -181,10 +174,14 @@ MR_FactoryDll *GetDll(MR_UInt16 pDllId, BOOL pThrowOnError)
 	ASSERT(pDllId != 0);						  // Number 0 is reserved for NULL entry
 
 	// Create the factory DLL if it doesn't exist already.
-	if(!gsDllList.Lookup(pDllId, lDllPtr)) {
+	gsDllList_t::iterator iter = gsDllList.find(pDllId);
+	if (iter == gsDllList.end()) {
 		ASSERT(pDllId == 1);  // Number 1 is the package (ObjFac1) by convention from original code.
 		lDllPtr = new PackageFactoryDll();
-		gsDllList.SetAt(pDllId, lDllPtr);
+		gsDllList.insert(gsDllList_t::value_type(pDllId, lDllPtr));
+	}
+	else {
+		return iter->second;
 	}
 
 	return lDllPtr;
