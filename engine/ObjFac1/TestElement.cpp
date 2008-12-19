@@ -25,11 +25,11 @@
 #include "../ObjFacTools/ObjectFactoryData.h"
 #include "../Model/FreeElementMovingHelper.h"
 
-MR_TestElement::MR_TestElement(const MR_ObjectFromFactoryId & pId, int pActorRes)
-:MR_FreeElementBase(pId)
+MR_TestElement::MR_TestElement(const MR_ObjectFromFactoryId & pId, MR_ResourceLib* resourceLib, int pActorRes)
+	: MR_FreeElementBase(pId)
 {
 	mElapsedFrameTime = 0;
-	mActor = gObjectFactoryData->mResourceLib.GetActor(pActorRes);
+	mActor = resourceLib->GetActor(pActorRes);
 
 	// Init the state of the logic part
 	mXSpeed = 0;

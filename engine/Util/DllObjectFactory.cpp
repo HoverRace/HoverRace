@@ -21,41 +21,73 @@
 
 #include "stdafx.h"
 
+#include "../ObjFac1/ObjFac1.h"
+
 #include "DllObjectFactory.h"
 
 #define new DEBUG_NEW
 
-// DllObjectFactory file name prefix
-static const char gsFilePrefix[] = ".\\engine";
+using HoverRace::ObjFac1::ObjFac1;
 
-// Local class declaration
+// Base class for object factory "DLLs".
+// (Originally, these were real DLLs which were loaded at runtime).
 class MR_FactoryDll
 {
-	// This class is used to kepp information about a loaded dll
 	public:
 		BOOL mDynamic;
 		int mRefCount;
-		HMODULE mHandle;
 
-		void (*mInitModule) (HMODULE pModule);
-		void (*mCleanModule) ();
+		/*
 		MR_UInt16(*mGetObjectTypeCount) ();
 		CString(*mGetObjectFamily) (MR_UInt16 pClassId);
 		CString(*mGetObjectDescription) (MR_UInt16 pClassId);
-		MR_ObjectFromFactory *(*mGetObject) (MR_UInt16 pClassId);
+		*/
+
+		virtual MR_ObjectFromFactory* GetObject(int classId) const = 0;
 
 		// Initialisation
 		MR_FactoryDll();
-		~MR_FactoryDll();
+		virtual ~MR_FactoryDll();
 
-		BOOL Open();			  // Must be called only once
+};
 
+// Using ObjFac1 (read from package file).
+class PackageFactoryDll : public MR_FactoryDll
+{
+	typedef MR_FactoryDll SUPER;
+
+	public:
+		PackageFactoryDll();
+		virtual ~PackageFactoryDll();
+
+		virtual MR_ObjectFromFactory* GetObject(int classId) const;
+
+	private:
+		ObjFac1 *package;
+};
+
+// Using function pointer callback.
+class LocalFactoryDll : public MR_FactoryDll
+{
+	typedef MR_FactoryDll SUPER;
+
+	private:
+		LocalFactoryDll() {}
+	public:
+		LocalFactoryDll(MR_DllObjectFactory::getObject_t getObject);
+		virtual ~LocalFactoryDll();
+
+		virtual MR_ObjectFromFactory* GetObject(int classId) const;
+
+	private:
+		MR_DllObjectFactory::getObject_t getObject;
 };
 
 // Local functions declarations
 static MR_FactoryDll *GetDll(MR_UInt16 pDllId, BOOL pTrowOnError);
 
 // Module variables
+//TODO: Use a std::map instead.
 static CMap < MR_UInt16, MR_UInt16, MR_FactoryDll *, MR_FactoryDll * >gsDllList;
 
 // Module functions
@@ -84,25 +116,26 @@ void MR_DllObjectFactory::Clean(BOOL pOnlyDynamic)
 	}
 }
 
+/*
 BOOL MR_DllObjectFactory::OpenDll(MR_UInt16 pDllId)
 {
 	return (GetDll(pDllId, FALSE) != NULL);
 }
+*/
 
-void MR_DllObjectFactory::RegisterLocalDll(MR_UInt16 pDllId, MR_ObjectFromFactory * (*pFunc) (MR_UInt16))
+void MR_DllObjectFactory::RegisterLocalDll(MR_UInt16 pDllId, getObject_t pFunc)
 {
 
 	MR_FactoryDll *lDllPtr;
 
 	ASSERT(pDllId != 0);						  // Number 0 is reserved for NULL entry
+	ASSERT(pDllId != 1);						  // Number 1 is reserved for ObjFac1
 	ASSERT(pFunc != NULL);
 
 	// Verify if the entry do not already exist
 	ASSERT(!gsDllList.Lookup(pDllId, lDllPtr));
 
-	lDllPtr = new MR_FactoryDll;
-
-	lDllPtr->mGetObject = pFunc;
+	lDllPtr = new LocalFactoryDll(pFunc);
 
 	gsDllList.SetAt(pDllId, lDllPtr);
 
@@ -133,6 +166,7 @@ void MR_DllObjectFactory::DecrementReferenceCount(MR_UInt16 pDllId)
 	}
 }
 
+/*
 MR_UInt16 MR_DllObjectFactory::GetObjectTypeCount(MR_UInt16 pDllId)
 {
 	MR_UInt16 lReturnValue = 0;
@@ -175,6 +209,7 @@ CString MR_DllObjectFactory::GetObjectDescription(const MR_ObjectFromFactoryId &
 
 	return lReturnValue;
 }
+*/
 
 MR_ObjectFromFactory *MR_DllObjectFactory::CreateObject(const MR_ObjectFromFactoryId &pId)
 {
@@ -182,9 +217,7 @@ MR_ObjectFromFactory *MR_DllObjectFactory::CreateObject(const MR_ObjectFromFacto
 
 	MR_FactoryDll *lDllPtr = GetDll(pId.mDllId, TRUE);
 
-	ASSERT(lDllPtr->mGetObject != NULL);
-
-	lReturnValue = lDllPtr->mGetObject(pId.mClassId);
+	lReturnValue = lDllPtr->GetObject(pId.mClassId);
 
 	return lReturnValue;
 }
@@ -198,21 +231,11 @@ MR_FactoryDll *GetDll(MR_UInt16 pDllId, BOOL pThrowOnError)
 
 	ASSERT(pDllId != 0);						  // Number 0 is reserved for NULL entry
 
-	// Verify if the entry do not already exist
+	// Create the factory DLL if it doesn't exist already.
 	if(!gsDllList.Lookup(pDllId, lDllPtr)) {
-		lDllPtr = new MR_FactoryDll;
-
-		if(!lDllPtr->Open()) {
-			delete lDllPtr;
-
-			if(pThrowOnError) {
-				ASSERT(FALSE);					  // Unable to open the DLL
-				AfxThrowNotSupportedException();
-			}
-		}
-		else {
-			gsDllList.SetAt(pDllId, lDllPtr);
-		}
+		ASSERT(pDllId == 1);  // Number 1 is the package (ObjFac1) by convention from original code.
+		lDllPtr = new PackageFactoryDll();
+		gsDllList.SetAt(pDllId, lDllPtr);
 	}
 
 	return lDllPtr;
@@ -241,7 +264,9 @@ MR_ObjectFromFactory::~MR_ObjectFromFactory()
 const MR_ObjectFromFactoryId & MR_ObjectFromFactory::GetTypeId() const
 {
 	return mId;
-} void MR_ObjectFromFactory::SerializePtr(CArchive & pArchive, MR_ObjectFromFactory * &pPtr)
+}
+
+void MR_ObjectFromFactory::SerializePtr(CArchive & pArchive, MR_ObjectFromFactory * &pPtr)
 {
 	MR_ObjectFromFactoryId lId = { 0, 0 };
 
@@ -301,66 +326,47 @@ MR_FactoryDll::MR_FactoryDll()
 {
 	mDynamic = FALSE;
 	mRefCount = 0;
-	mHandle = NULL;
 
-	mInitModule = NULL;
-	mCleanModule = NULL;
+	/*
 	mGetObjectTypeCount = NULL;
 	mGetObjectFamily = NULL;
 	mGetObjectDescription = NULL;
-	mGetObject = NULL;
-
+	*/
 }
 
 MR_FactoryDll::~MR_FactoryDll()
 {
 	ASSERT(mRefCount == 0);
-
-	// Release the Dll
-	if(mHandle != NULL) {
-		if(mCleanModule != NULL) {
-			mCleanModule();
-		}
-		FreeLibrary(mHandle);
-	}
 }
 
-/**
- * Open the DLL containing the factory functions.
- * The option to choose which DLL to open has been deprecated and removed.
- */
-BOOL MR_FactoryDll::Open()
+PackageFactoryDll::PackageFactoryDll() :
+	SUPER()
 {
-	ASSERT(mHandle == NULL);
-
-	char lNameBuffer[40];
-
-	//sprintf(lNameBuffer, "%s%u.dll", gsFilePrefix, pDllId);
-	sprintf(lNameBuffer, "%s.dll", gsFilePrefix);
-
 	mDynamic = TRUE;
-
-	mHandle = LoadLibrary(lNameBuffer);
-
-	if(mHandle != NULL) {
-		mInitModule = (void (*)(HMODULE))
-			GetProcAddress(mHandle, "MR_InitModule");
-		mCleanModule = (void (*)())
-			GetProcAddress(mHandle, "MR_CleanModule");
-		mGetObjectTypeCount = (MR_UInt16(*)())
-			GetProcAddress(mHandle, "MR_GetObjectTypeCount");
-		mGetObjectFamily = (CString(*)(MR_UInt16))
-			GetProcAddress(mHandle, "MR_GetObjectFamily");
-		mGetObjectDescription = (CString(*)(MR_UInt16))
-			GetProcAddress(mHandle, "MR_GetObjectDescription");
-		mGetObject = (MR_ObjectFromFactory * (*)(MR_UInt16))
-			GetProcAddress(mHandle, "MR_GetObject");
-
-		if(mInitModule != NULL) {
-			mInitModule(mHandle);
-		}
-
-	}
-
-	return (mHandle != NULL);
+	package = new ObjFac1();
 }
+
+PackageFactoryDll::~PackageFactoryDll()
+{
+	delete package;
+}
+
+MR_ObjectFromFactory* PackageFactoryDll::GetObject(int classId) const
+{
+	return package->GetObject(classId);
+}
+
+LocalFactoryDll::LocalFactoryDll(MR_DllObjectFactory::getObject_t getObject) :
+	SUPER(), getObject(getObject)
+{
+}
+
+LocalFactoryDll::~LocalFactoryDll()
+{
+}
+
+MR_ObjectFromFactory* LocalFactoryDll::GetObject(int classId) const
+{
+	return getObject(classId);
+}
+

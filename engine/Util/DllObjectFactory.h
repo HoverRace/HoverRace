@@ -86,27 +86,31 @@ class MR_DllDeclare MR_ObjectFromFactory:public CObject
 
 namespace MR_DllObjectFactory
 {
+	typedef MR_ObjectFromFactory* (*getObject_t) (MR_UInt16);
+
 	MR_DllDeclare void Init();					  // Must be called at the begining of the program
 	MR_DllDeclare void Clean(BOOL pOnlyDynamic);  // Must be called at the end of the program
 	// Can also be called to remove unused DLL
 
 	// Low level function
-	MR_DllDeclare BOOL OpenDll(MR_UInt16 pDllId);  // Usually don't need to be called
+	//MR_DllDeclare BOOL OpenDll(MR_UInt16 pDllId);  // Usually don't need to be called
 												  // Usually don't need to be called
 	MR_DllDeclare void IncrementReferenceCount(MR_UInt16 pDllId);
 												  // Usually don't need to be called
 	MR_DllDeclare void DecrementReferenceCount(MR_UInt16 pDllId);
 
+	/*
 	// Slow interrocation functions
 	MR_DllDeclare MR_UInt16 GetObjectTypeCount(MR_UInt16 pDllId);
 	MR_DllDeclare CString GetObjectFamily(const MR_ObjectFromFactoryId & pId);
 	MR_DllDeclare CString GetObjectDescription(const MR_ObjectFromFactoryId & pId);
+	*/
 
 	// Fast Object Creation function
 	MR_DllDeclare MR_ObjectFromFactory *CreateObject(const MR_ObjectFromFactoryId & pId);
 
 	// Local Dll
-	MR_DllDeclare void RegisterLocalDll(MR_UInt16 pDLLId, MR_ObjectFromFactory * (*pFunc) (MR_UInt16));
+	MR_DllDeclare void RegisterLocalDll(MR_UInt16 pDLLId, getObject_t pFunc);
 
 };
 

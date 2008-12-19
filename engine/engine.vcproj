@@ -290,6 +290,9 @@
 				RelativePath=".\ObjFac1\Missile.h">
 			</File>
 			<File
+				RelativePath=".\ObjFac1\ObjFac1.h">
+			</File>
+			<File
 				RelativePath=".\ObjFac1\ObjFac1Res.h">
 			</File>
 			<File

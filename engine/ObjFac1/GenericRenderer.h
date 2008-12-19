@@ -33,7 +33,7 @@ class MR_GenericRenderer:public MR_FreeElementBaseRenderer
 {
 
 	public:
-		MR_GenericRenderer(const MR_ObjectFromFactoryId & pId, int pActorRes);
+		MR_GenericRenderer(const MR_ObjectFromFactoryId & pId, MR_ResourceLib* resourceLib, int pActorRes);
 		~MR_GenericRenderer();
 
 };

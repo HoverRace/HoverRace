@@ -30,7 +30,7 @@ class MR_BallElement:public MR_FreeElementBase
 {
 
 	public:
-		MR_BallElement(const MR_ObjectFromFactoryId & pId);
+		MR_BallElement(const MR_ObjectFromFactoryId & pId, MR_ResourceLib* resourceLib);
 		~MR_BallElement();
 
 };

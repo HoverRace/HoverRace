@@ -23,10 +23,9 @@
 
 #include "ObjectFactoryData.h"
 
-MR_ObjectFactoryData::MR_ObjectFactoryData(HMODULE pModule, const char *pResourceFile)
+MR_ObjectFactoryData::MR_ObjectFactoryData(const char *pResourceFile)
 :mResourceLib(pResourceFile)
 {
-	mModule = pModule;
 
 }
 

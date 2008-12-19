@@ -24,10 +24,10 @@
 #include "GenericRenderer.h"
 #include "../ObjFacTools/ObjectFactoryData.h"
 
-MR_GenericRenderer::MR_GenericRenderer(const MR_ObjectFromFactoryId & pId, int pActorRes)
-:MR_FreeElementBaseRenderer(pId)
+MR_GenericRenderer::MR_GenericRenderer(const MR_ObjectFromFactoryId & pId, MR_ResourceLib* resourceLib, int pActorRes)
+	: MR_FreeElementBaseRenderer(pId)
 {
-	mActor = gObjectFactoryData->mResourceLib.GetActor(pActorRes);
+	mActor = resourceLib->GetActor(pActorRes);
 }
 
 MR_GenericRenderer::~MR_GenericRenderer()

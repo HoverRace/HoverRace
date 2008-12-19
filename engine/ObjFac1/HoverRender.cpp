@@ -34,29 +34,29 @@ class MR_ResActorFriend
 		static void Draw(const MR_ResActor * pActor, MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix, int pSequence, int pFrame, const MR_Bitmap * pCockpitBitmap);
 };
 
-MR_HoverRender::MR_HoverRender(const MR_ObjectFromFactoryId & pId)
+MR_HoverRender::MR_HoverRender(const MR_ObjectFromFactoryId & pId, MR_ResourceLib* resourceLib)
 :MR_MainCharacterRenderer(pId)
 {
 	mFrame = 0;
-	mActor0 = gObjectFactoryData->mResourceLib.GetActor(MR_ELECTRO_CAR);
-	mActor1 = gObjectFactoryData->mResourceLib.GetActor(MR_HITECH_CAR);
-	mActor2 = gObjectFactoryData->mResourceLib.GetActor(MR_BITURBO_CAR);
+	mActor0 = resourceLib->GetActor(MR_ELECTRO_CAR);
+	mActor1 = resourceLib->GetActor(MR_HITECH_CAR);
+	mActor2 = resourceLib->GetActor(MR_BITURBO_CAR);
 
-	mLineCrossingSound = gObjectFactoryData->mResourceLib.GetShortSound(MR_SND_LINE_CROSSING)->GetSound();
-	mStartSound = gObjectFactoryData->mResourceLib.GetShortSound(MR_SND_START)->GetSound();
-	mFinishSound = gObjectFactoryData->mResourceLib.GetShortSound(MR_SND_FINISH)->GetSound();
-	mBumpSound = gObjectFactoryData->mResourceLib.GetShortSound(MR_SND_BUMP)->GetSound();
-	mJumpSound = gObjectFactoryData->mResourceLib.GetShortSound(MR_SND_JUMP)->GetSound();
-	mFireSound = gObjectFactoryData->mResourceLib.GetShortSound(MR_SND_FIRE)->GetSound();
-	mMisJumpSound = gObjectFactoryData->mResourceLib.GetShortSound(MR_SND_MIS_JUMP)->GetSound();
-	mMisFireSound = gObjectFactoryData->mResourceLib.GetShortSound(MR_SND_MIS_FIRE)->GetSound();
-	mOutOfCtrlSound = gObjectFactoryData->mResourceLib.GetShortSound(MR_SND_OUT_OF_CTRL)->GetSound();
-	mMotorSound = gObjectFactoryData->mResourceLib.GetContinuousSound(MR_SND_MOTOR)->GetSound();
-	mFrictionSound = gObjectFactoryData->mResourceLib.GetContinuousSound(MR_SND_FRICTION)->GetSound();
+	mLineCrossingSound = resourceLib->GetShortSound(MR_SND_LINE_CROSSING)->GetSound();
+	mStartSound = resourceLib->GetShortSound(MR_SND_START)->GetSound();
+	mFinishSound = resourceLib->GetShortSound(MR_SND_FINISH)->GetSound();
+	mBumpSound = resourceLib->GetShortSound(MR_SND_BUMP)->GetSound();
+	mJumpSound = resourceLib->GetShortSound(MR_SND_JUMP)->GetSound();
+	mFireSound = resourceLib->GetShortSound(MR_SND_FIRE)->GetSound();
+	mMisJumpSound = resourceLib->GetShortSound(MR_SND_MIS_JUMP)->GetSound();
+	mMisFireSound = resourceLib->GetShortSound(MR_SND_MIS_FIRE)->GetSound();
+	mOutOfCtrlSound = resourceLib->GetShortSound(MR_SND_OUT_OF_CTRL)->GetSound();
+	mMotorSound = resourceLib->GetContinuousSound(MR_SND_MOTOR)->GetSound();
+	mFrictionSound = resourceLib->GetContinuousSound(MR_SND_FRICTION)->GetSound();
 
 	for(int lCounter = 0; lCounter < 10; lCounter++) {
-		mCockpitBitmap[lCounter] = gObjectFactoryData->mResourceLib.GetBitmap(MR_CAR_COCKPIT1 + lCounter);
-		mCockpitBitmap2[lCounter] = gObjectFactoryData->mResourceLib.GetBitmap(MR_CAR_COCKPIT21 + lCounter);
+		mCockpitBitmap[lCounter] = resourceLib->GetBitmap(MR_CAR_COCKPIT1 + lCounter);
+		mCockpitBitmap2[lCounter] = resourceLib->GetBitmap(MR_CAR_COCKPIT21 + lCounter);
 	}
 
 }

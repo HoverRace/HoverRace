@@ -33,10 +33,10 @@
 class MR_ObjectFactoryData
 {
 	public:
-		HMODULE mModule;						  // Current module id
+		//HMODULE mModule;						  // Current module id
 		MR_ResourceLib mResourceLib;			  // resource lib
 
-		MR_DllDeclare MR_ObjectFactoryData(HMODULE pModule, const char *pResourceFile);
+		MR_DllDeclare MR_ObjectFactoryData(const char *pResourceFile);
 		MR_DllDeclare ~ MR_ObjectFactoryData();
 };
 

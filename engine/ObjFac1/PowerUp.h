@@ -43,7 +43,7 @@ class MR_PowerUp:public MR_FreeElementBase, protected MR_CylinderShape
 		MR_ContactEffectList mEffectList;
 
 	public:
-		MR_PowerUp(const MR_ObjectFromFactoryId & pId);
+		MR_PowerUp(const MR_ObjectFromFactoryId & pId, MR_ResourceLib* resourceLib);
 		~MR_PowerUp();
 
 	protected:

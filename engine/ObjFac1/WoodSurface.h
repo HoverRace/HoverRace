@@ -30,7 +30,7 @@ class MR_WoodSurface:public MR_BitmapSurface
 {
 
 	public:
-		MR_WoodSurface(const MR_ObjectFromFactoryId & pId);
+		MR_WoodSurface(const MR_ObjectFromFactoryId & pId, MR_ResourceLib* resourceLib);
 		~MR_WoodSurface();
 
 };

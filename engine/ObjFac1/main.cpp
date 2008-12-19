@@ -37,94 +37,69 @@
 #include "PowerUp.h"
 #include "Mine.h"
 #include "ObjFac1Res.h"
-#include "../ObjFacTools/ObjectFactoryData.h"
 #include "../ObjFacTools/SpriteHandle.h"
 #include "../Util/Config.h"
 
+#include "ObjFac1.h"
+
 #define new DEBUG_NEW
 
-#ifdef MR_DllDeclare
-	#undef MR_DllDeclare
-#endif
-#define MR_DllDeclare   __declspec( dllexport )
+using namespace HoverRace::ObjFac1;
 
-// Functions declaration
-
-extern "C"
+ObjFac1::ObjFac1()
 {
-	MR_DllDeclare void MR_InitModule(HMODULE pModule);
-	MR_DllDeclare void MR_CleanModule();
-	MR_DllDeclare MR_UInt16 MR_GetObjectTypeCount();
-	MR_DllDeclare MR_UInt16 MR_GetObjectTypeCount();
-	#pragma warning(push)
-		// Ignore warning about CString not compatible with C.
-		#pragma warning(disable:4190)
-		MR_DllDeclare CString MR_GetObjectFamily(MR_UInt16 pClassId);
-		MR_DllDeclare CString MR_GetObjectDescription(MR_UInt16 pClassId);
-	#pragma warning(pop)
-	MR_DllDeclare MR_ObjectFromFactory *MR_GetObject(MR_UInt16 pClassId);
-};
-
-// Data declaration
-MR_ObjectFactoryData *gObjectFactoryData = NULL;
-
-// Functions implementations
-void MR_InitModule(HMODULE pModule)
-{
-	delete gObjectFactoryData;
-	gObjectFactoryData = new MR_ObjectFactoryData(pModule,
-		MR_Config::GetInstance()->GetMediaPath("ObjFac1.dat").c_str());
+	MR_Config *cfg = MR_Config::GetInstance();
+	resourceLib = new MR_ResourceLib(cfg->GetMediaPath("ObjFac1.dat").c_str());
 }
 
-void MR_CleanModule()
+ObjFac1::~ObjFac1()
 {
-	delete gObjectFactoryData;
-	gObjectFactoryData = NULL;
+	delete resourceLib;
 }
 
-MR_UInt16 MR_GetObjectTypeCount()
+int ObjFac1::GetObjectTypeCount()
 {
 	return 0;
 }
 
-CString MR_GetObjectFamily(MR_UInt16 /*pClassId */ )
+std::string ObjFac1::GetObjectFamily(int /*pClassId */ )
 {
 	return "n/a";
 }
 
-CString MR_GetObjectDescription(MR_UInt16 /*pClassId */ )
+std::string ObjFac1::GetObjectDescription(int /*pClassId */ )
 {
 	return "n/a";
 }
 
-MR_ObjectFromFactory *MR_GetObject(MR_UInt16 pClassId)
+MR_ObjectFromFactory *ObjFac1::GetObject(int pClassId)
 {
 	MR_ObjectFromFactory *lReturnValue = NULL;
 	MR_ObjectFromFactoryId lId = { 1, pClassId };
 
 	switch (pClassId) {
 		case 1:
-			lReturnValue = new MR_DefaultSurface(lId);
+			lReturnValue = new MR_DefaultSurface(lId, resourceLib);
 			break;
 
 		case 2:
-			lReturnValue = new MR_WoodSurface(lId);
+			lReturnValue = new MR_WoodSurface(lId, resourceLib);
 			break;
 
 		case 3:
-			//         lReturnValue = new MR_BitmapSurface( lId, gObjectFactoryData->mResourceLib.GetBitmap( MR_FIRE ) );
+			//         lReturnValue = new MR_BitmapSurface( lId, resourceLib->GetBitmap( MR_FIRE ) );
 			break;
 
 		case 4:
-			//         lReturnValue = new MR_BitmapSurface( lId, gObjectFactoryData->mResourceLib.GetBitmap( MR_BIG_BRICK ) );
+			//         lReturnValue = new MR_BitmapSurface( lId, resourceLib->GetBitmap( MR_BIG_BRICK ) );
 			break;
 
 		case 5:
-			//         lReturnValue = new MR_BitmapSurface( lId, gObjectFactoryData->mResourceLib.GetBitmap( MR_RED_BRICK ) );
+			//         lReturnValue = new MR_BitmapSurface( lId, resourceLib->GetBitmap( MR_RED_BRICK ) );
 			break;
 
 		case 10:
-			lReturnValue = new MR_TestElement(lId, MR_DEMO_FIGHTER);
+			lReturnValue = new MR_TestElement(lId, resourceLib, MR_DEMO_FIGHTER);
 			break;
 
 		case 11:
@@ -132,11 +107,11 @@ MR_ObjectFromFactory *MR_GetObject(MR_UInt16 pClassId)
 			break;
 
 		case 12:
-			lReturnValue = new MR_BallElement(lId);
+			lReturnValue = new MR_BallElement(lId, resourceLib);
 			break;
 
 		case 13:
-			lReturnValue = new MR_TestElement(lId, MR_ELECTRO_CAR);
+			lReturnValue = new MR_TestElement(lId, resourceLib, MR_ELECTRO_CAR);
 			break;
 
 		case 50:
@@ -144,115 +119,115 @@ MR_ObjectFromFactory *MR_GetObject(MR_UInt16 pClassId)
 			break;
 
 		case 51:
-			lReturnValue = new MR_BitmapSurface(lId, gObjectFactoryData->mResourceLib.GetBitmap(MR_STD_FLOOR));
+			lReturnValue = new MR_BitmapSurface(lId, resourceLib->GetBitmap(MR_STD_FLOOR));
 			break;
 
 		case 52:
-			lReturnValue = new MR_VStretchBitmapSurface(lId, gObjectFactoryData->mResourceLib.GetBitmap(MR_STD_RIGHT_WALL), 4000);
+			lReturnValue = new MR_VStretchBitmapSurface(lId, resourceLib->GetBitmap(MR_STD_RIGHT_WALL), 4000);
 			break;
 
 		case 53:
-			lReturnValue = new MR_VStretchBitmapSurface(lId, gObjectFactoryData->mResourceLib.GetBitmap(MR_STD_LEFT_WALL), 4000);
+			lReturnValue = new MR_VStretchBitmapSurface(lId, resourceLib->GetBitmap(MR_STD_LEFT_WALL), 4000);
 			break;
 
 		case 54:
-			lReturnValue = new MR_VStretchBitmapSurface(lId, gObjectFactoryData->mResourceLib.GetBitmap(MR_RED_RIGHT_WALL_OFF), gObjectFactoryData->mResourceLib.GetBitmap(MR_RED_RIGHT_WALL), 200, 4, 4000);
+			lReturnValue = new MR_VStretchBitmapSurface(lId, resourceLib->GetBitmap(MR_RED_RIGHT_WALL_OFF), resourceLib->GetBitmap(MR_RED_RIGHT_WALL), 200, 4, 4000);
 			break;
 
 		case 55:
-			lReturnValue = new MR_VStretchBitmapSurface(lId, gObjectFactoryData->mResourceLib.GetBitmap(MR_RED_LEFT_WALL_OFF), gObjectFactoryData->mResourceLib.GetBitmap(MR_RED_LEFT_WALL), -200, 4, 4000);
+			lReturnValue = new MR_VStretchBitmapSurface(lId, resourceLib->GetBitmap(MR_RED_LEFT_WALL_OFF), resourceLib->GetBitmap(MR_RED_LEFT_WALL), -200, 4, 4000);
 			break;
 
 		case 56:
-			lReturnValue = new MR_VStretchBitmapSurface(lId, gObjectFactoryData->mResourceLib.GetBitmap(MR_GREEN_RIGHT_WALL_OFF), gObjectFactoryData->mResourceLib.GetBitmap(MR_GREEN_RIGHT_WALL), 200, 4, 4000);
+			lReturnValue = new MR_VStretchBitmapSurface(lId, resourceLib->GetBitmap(MR_GREEN_RIGHT_WALL_OFF), resourceLib->GetBitmap(MR_GREEN_RIGHT_WALL), 200, 4, 4000);
 			break;
 
 		case 57:
-			lReturnValue = new MR_VStretchBitmapSurface(lId, gObjectFactoryData->mResourceLib.GetBitmap(MR_GREEN_LEFT_WALL_OFF), gObjectFactoryData->mResourceLib.GetBitmap(MR_GREEN_LEFT_WALL), -200, 4, 4000);
+			lReturnValue = new MR_VStretchBitmapSurface(lId, resourceLib->GetBitmap(MR_GREEN_LEFT_WALL_OFF), resourceLib->GetBitmap(MR_GREEN_LEFT_WALL), -200, 4, 4000);
 			break;
 
 		case 58:
-			lReturnValue = new MR_BitmapSurface(lId, gObjectFactoryData->mResourceLib.GetBitmap(MR_STEP_WALL));
+			lReturnValue = new MR_BitmapSurface(lId, resourceLib->GetBitmap(MR_STEP_WALL));
 			break;
 
 		case 59:
-			lReturnValue = new MR_BitmapSurface(lId, gObjectFactoryData->mResourceLib.GetBitmap(MR_PASS_RIGHT_WALL));
+			lReturnValue = new MR_BitmapSurface(lId, resourceLib->GetBitmap(MR_PASS_RIGHT_WALL));
 			break;
 
 		case 60:
-			lReturnValue = new MR_BitmapSurface(lId, gObjectFactoryData->mResourceLib.GetBitmap(MR_PASS_LEFT_WALL));
+			lReturnValue = new MR_BitmapSurface(lId, resourceLib->GetBitmap(MR_PASS_LEFT_WALL));
 			break;
 
 		case 61:
-			lReturnValue = new MR_BitmapSurface(lId, gObjectFactoryData->mResourceLib.GetBitmap(MR_DO_NOT_ENTER_WALL1));
+			lReturnValue = new MR_BitmapSurface(lId, resourceLib->GetBitmap(MR_DO_NOT_ENTER_WALL1));
 			break;
 
 		case 62:
-			lReturnValue = new MR_BitmapSurface(lId, gObjectFactoryData->mResourceLib.GetBitmap(MR_DO_NOT_ENTER_WALL2));
+			lReturnValue = new MR_BitmapSurface(lId, resourceLib->GetBitmap(MR_DO_NOT_ENTER_WALL2));
 			break;
 
 		case 63:
-			lReturnValue = new MR_BitmapSurface(lId, gObjectFactoryData->mResourceLib.GetBitmap(MR_BLUE_BUBBLE_FLOOR));
+			lReturnValue = new MR_BitmapSurface(lId, resourceLib->GetBitmap(MR_BLUE_BUBBLE_FLOOR));
 			break;
 
 		case 64:
-			lReturnValue = new MR_BitmapSurface(lId, gObjectFactoryData->mResourceLib.GetBitmap(MR_SPEED_ZONE));
+			lReturnValue = new MR_BitmapSurface(lId, resourceLib->GetBitmap(MR_SPEED_ZONE));
 			break;
 
 		case 65:
-			lReturnValue = new MR_BitmapSurface(lId, gObjectFactoryData->mResourceLib.GetBitmap(MR_FUEL_ZONE));
+			lReturnValue = new MR_BitmapSurface(lId, resourceLib->GetBitmap(MR_FUEL_ZONE));
 			break;
 
 		case 66:
-			lReturnValue = new MR_BitmapSurface(lId, gObjectFactoryData->mResourceLib.GetBitmap(MR_YELLOW_STEP));
+			lReturnValue = new MR_BitmapSurface(lId, resourceLib->GetBitmap(MR_YELLOW_STEP));
 			break;
 
 		case 67:
-			lReturnValue = new MR_BitmapSurface(lId, gObjectFactoryData->mResourceLib.GetBitmap(MR_CHECKER));
+			lReturnValue = new MR_BitmapSurface(lId, resourceLib->GetBitmap(MR_CHECKER));
 			break;
 
 		case 68:
-			lReturnValue = new MR_BitmapSurface(lId, gObjectFactoryData->mResourceLib.GetBitmap(MR_PIT_WORD));
+			lReturnValue = new MR_BitmapSurface(lId, resourceLib->GetBitmap(MR_PIT_WORD));
 			break;
 
 		case 69:
-			lReturnValue = new MR_BitmapSurface(lId, gObjectFactoryData->mResourceLib.GetBitmap(MR_FINISH_WORD));
+			lReturnValue = new MR_BitmapSurface(lId, resourceLib->GetBitmap(MR_FINISH_WORD));
 			break;
 
 		case 70:
-			lReturnValue = new MR_BitmapSurface(lId, gObjectFactoryData->mResourceLib.GetBitmap(MR_YELLOW_NEON), gObjectFactoryData->mResourceLib.GetBitmap(MR_YELLOW_NEON_FLASH), 50, 20);
+			lReturnValue = new MR_BitmapSurface(lId, resourceLib->GetBitmap(MR_YELLOW_NEON), resourceLib->GetBitmap(MR_YELLOW_NEON_FLASH), 50, 20);
 			break;
 
 		case 71:
-			lReturnValue = new MR_BitmapSurface(lId, gObjectFactoryData->mResourceLib.GetBitmap(MR_YELLOW_NEON), gObjectFactoryData->mResourceLib.GetBitmap(MR_YELLOW_NEON_FLASH), -50, 20);
+			lReturnValue = new MR_BitmapSurface(lId, resourceLib->GetBitmap(MR_YELLOW_NEON), resourceLib->GetBitmap(MR_YELLOW_NEON_FLASH), -50, 20);
 			break;
 
 		case 72:
-			lReturnValue = new MR_VStretchBitmapSurface(lId, gObjectFactoryData->mResourceLib.GetBitmap(MR_STD_WALL), 4000);
+			lReturnValue = new MR_VStretchBitmapSurface(lId, resourceLib->GetBitmap(MR_STD_WALL), 4000);
 			break;
 
 		case 73:
-			lReturnValue = new MR_VStretchBitmapSurface(lId, gObjectFactoryData->mResourceLib.GetBitmap(MR_STD_WALL_TOP), 6000);
+			lReturnValue = new MR_VStretchBitmapSurface(lId, resourceLib->GetBitmap(MR_STD_WALL_TOP), 6000);
 			break;
 
 		case 100:
-			lReturnValue = new MR_HoverRender(lId);
+			lReturnValue = new MR_HoverRender(lId, resourceLib);
 			break;
 
 		case 150:
-			lReturnValue = new MR_Missile(lId);
+			lReturnValue = new MR_Missile(lId, resourceLib);
 			break;
 
 		case 151:
-			lReturnValue = new MR_Mine(lId);
+			lReturnValue = new MR_Mine(lId, resourceLib);
 			break;
 
 		case 152:
-			lReturnValue = new MR_PowerUp(lId);
+			lReturnValue = new MR_PowerUp(lId, resourceLib);
 			break;
 
 		case 170:
-			lReturnValue = new MR_BumperGate(lId);
+			lReturnValue = new MR_BumperGate(lId, resourceLib);
 			break;
 
 		case 200:
@@ -276,23 +251,23 @@ MR_ObjectFromFactory *MR_GetObject(MR_UInt16 pClassId)
 			break;
 
 		case 1000:
-			lReturnValue = new MR_SpriteHandle(lId, gObjectFactoryData->mResourceLib.GetSprite(MR_FONT1));
+			lReturnValue = new MR_SpriteHandle(lId, resourceLib->GetSprite(MR_FONT1));
 			break;
 
 		case 1100:
-			lReturnValue = new MR_SpriteHandle(lId, gObjectFactoryData->mResourceLib.GetSprite(MR_MISSILE_STAT));
+			lReturnValue = new MR_SpriteHandle(lId, resourceLib->GetSprite(MR_MISSILE_STAT));
 			break;
 
 		case 1101:
-			lReturnValue = new MR_SpriteHandle(lId, gObjectFactoryData->mResourceLib.GetSprite(MR_HOVER_ICONS));
+			lReturnValue = new MR_SpriteHandle(lId, resourceLib->GetSprite(MR_HOVER_ICONS));
 			break;
 
 		case 1102:
-			lReturnValue = new MR_SpriteHandle(lId, gObjectFactoryData->mResourceLib.GetSprite(MR_MINE_STAT));
+			lReturnValue = new MR_SpriteHandle(lId, resourceLib->GetSprite(MR_MINE_STAT));
 			break;
 
 		case 1103:
-			lReturnValue = new MR_SpriteHandle(lId, gObjectFactoryData->mResourceLib.GetSprite(MR_PWRUP_STAT));
+			lReturnValue = new MR_SpriteHandle(lId, resourceLib->GetSprite(MR_PWRUP_STAT));
 			break;
 
 	}

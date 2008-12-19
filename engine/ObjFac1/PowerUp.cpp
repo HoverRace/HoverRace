@@ -53,11 +53,13 @@ MR_Int32 MR_PowerUp::AxisY() const
 MR_Int32 MR_PowerUp::RayLen() const
 {
 	return cPowerUpRay;
-} MR_PowerUp::MR_PowerUp(const MR_ObjectFromFactoryId & pId)
-:MR_FreeElementBase(pId)
+}
+
+MR_PowerUp::MR_PowerUp(const MR_ObjectFromFactoryId & pId, MR_ResourceLib* resourceLib)
+	:MR_FreeElementBase(pId)
 {
 	mEffectList.AddTail(&mPowerUpEffect);
-	mActor = gObjectFactoryData->mResourceLib.GetActor(MR_PWRUP);
+	mActor = resourceLib->GetActor(MR_PWRUP);
 
 	mOrientation = 0;
 	mPowerUpEffect.mElementPermId = -1;

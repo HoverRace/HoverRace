@@ -60,10 +60,12 @@ MR_Int32 MR_BumperGate::AxisY() const
 MR_Int32 MR_BumperGate::RayLen() const
 {
 	return cGateRayMin + mCurrentFrame * (cGateRayMax - cGateRayMin) / (mLastState);
-} MR_BumperGate::MR_BumperGate(const MR_ObjectFromFactoryId & pId)
-:MR_FreeElementBase(pId)
+}
+
+MR_BumperGate::MR_BumperGate(const MR_ObjectFromFactoryId & pId, MR_ResourceLib* resourceLib)
+	: MR_FreeElementBase(pId)
 {
-	mActor = gObjectFactoryData->mResourceLib.GetActor(MR_BUMPERGATE);
+	mActor = resourceLib->GetActor(MR_BUMPERGATE);
 
 	mTimeSinceLastCollision = +1000000;
 	mLastState = mActor->GetFrameCount(0) - 1;

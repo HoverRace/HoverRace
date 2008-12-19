@@ -60,7 +60,7 @@ class MR_TestElement:public MR_FreeElementBase
 		MR_ContactEffectList mContactEffectList;
 
 	public:
-		MR_TestElement(const MR_ObjectFromFactoryId & pId, int pActorRes);
+		MR_TestElement(const MR_ObjectFromFactoryId & pId, MR_ResourceLib* resourceLib, int pActorRes);
 		~MR_TestElement();
 
 		int Simulate(MR_SimulationTime pDuration, MR_Level * pLevel, int pRoom);

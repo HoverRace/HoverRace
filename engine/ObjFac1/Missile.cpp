@@ -68,8 +68,10 @@ MR_Int32 MR_Missile::AxisY() const
 MR_Int32 MR_Missile::RayLen() const
 {
 	return cMissileRay;
-} MR_Missile::MR_Missile(const MR_ObjectFromFactoryId & pId)
-:MR_FreeElementBase(pId)
+}
+
+MR_Missile::MR_Missile(const MR_ObjectFromFactoryId & pId, MR_ResourceLib* resourceLib)
+	: MR_FreeElementBase(pId)
 {
 	mHoverId = -1;
 	mLived = 0;
@@ -78,10 +80,10 @@ MR_Int32 MR_Missile::RayLen() const
 	mBounceSoundEvent = FALSE;
 	mEffectList.AddTail(&mCollisionEffect);
 	mEffectList.AddTail(&mLostOfControlEffect);
-	mActor = gObjectFactoryData->mResourceLib.GetActor(MR_MISSILE);
+	mActor = resourceLib->GetActor(MR_MISSILE);
 
-	mBounceSound = gObjectFactoryData->mResourceLib.GetShortSound(MR_SND_MISSILE_BOUNCE)->GetSound();
-	mMotorSound = gObjectFactoryData->mResourceLib.GetContinuousSound(MR_SND_MISSILE_MOTOR)->GetSound();
+	mBounceSound = resourceLib->GetShortSound(MR_SND_MISSILE_BOUNCE)->GetSound();
+	mMotorSound = resourceLib->GetContinuousSound(MR_SND_MISSILE_MOTOR)->GetSound();
 
 	mLostOfControlEffect.mType = MR_LostOfControl::eMissile;
 	mLostOfControlEffect.mElementId = -1;

@@ -54,7 +54,7 @@ class MR_Missile:public MR_FreeElementBase, protected MR_CylinderShape
 		MR_ContinuousSound *mMotorSound;
 
 	public:
-		MR_Missile(const MR_ObjectFromFactoryId & pId);
+		MR_Missile(const MR_ObjectFromFactoryId & pId, MR_ResourceLib* resourceLib);
 		~MR_Missile();
 
 	protected:
