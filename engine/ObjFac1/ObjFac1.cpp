@@ -57,21 +57,6 @@ ObjFac1::~ObjFac1()
 	delete resourceLib;
 }
 
-int ObjFac1::GetObjectTypeCount()
-{
-	return 0;
-}
-
-std::string ObjFac1::GetObjectFamily(int /*pClassId */ )
-{
-	return "n/a";
-}
-
-std::string ObjFac1::GetObjectDescription(int /*pClassId */ )
-{
-	return "n/a";
-}
-
 MR_ObjectFromFactory *ObjFac1::GetObject(int pClassId)
 {
 	MR_ObjectFromFactory *lReturnValue = NULL;

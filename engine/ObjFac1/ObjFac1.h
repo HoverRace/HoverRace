@@ -17,9 +17,6 @@ namespace HoverRace
 				ObjFac1();
 				~ObjFac1();
 
-				int GetObjectTypeCount();
-				std::string GetObjectFamily(int pClassId);
-				std::string GetObjectDescription(int pClassId);
 				MR_ObjectFromFactory *GetObject(int pClassId);
 
 			private:

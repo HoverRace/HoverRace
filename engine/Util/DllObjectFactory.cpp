@@ -37,12 +37,6 @@ class MR_FactoryDll
 		BOOL mDynamic;
 		int mRefCount;
 
-		/*
-		MR_UInt16(*mGetObjectTypeCount) ();
-		CString(*mGetObjectFamily) (MR_UInt16 pClassId);
-		CString(*mGetObjectDescription) (MR_UInt16 pClassId);
-		*/
-
 		virtual MR_ObjectFromFactory* GetObject(int classId) const = 0;
 
 		// Initialisation
@@ -166,51 +160,6 @@ void MR_DllObjectFactory::DecrementReferenceCount(MR_UInt16 pDllId)
 	}
 }
 
-/*
-MR_UInt16 MR_DllObjectFactory::GetObjectTypeCount(MR_UInt16 pDllId)
-{
-	MR_UInt16 lReturnValue = 0;
-
-	MR_FactoryDll *lDllPtr = GetDll(pDllId, TRUE);
-
-	if(lDllPtr->mGetObjectTypeCount != NULL)
-	{
-		lReturnValue = lDllPtr->mGetObjectTypeCount();
-	}
-
-	return lReturnValue;
-
-}
-
-CString MR_DllObjectFactory::GetObjectFamily(const MR_ObjectFromFactoryId & pId)
-{
-	CString lReturnValue;
-
-	MR_FactoryDll *lDllPtr = GetDll(pId.mDllId, TRUE);
-
-	if(lDllPtr->mGetObjectFamily != NULL)
-	{
-		lReturnValue = lDllPtr->mGetObjectFamily(pId.mClassId);
-	}
-
-	return lReturnValue;
-}
-
-CString MR_DllObjectFactory::GetObjectDescription(const MR_ObjectFromFactoryId &pId)
-{
-	CString lReturnValue;
-
-	MR_FactoryDll *lDllPtr = GetDll(pId.mDllId, TRUE);
-
-	if(lDllPtr->mGetObjectDescription != NULL)
-	{
-		lReturnValue = lDllPtr->mGetObjectDescription(pId.mClassId);
-	}
-
-	return lReturnValue;
-}
-*/
-
 MR_ObjectFromFactory *MR_DllObjectFactory::CreateObject(const MR_ObjectFromFactoryId &pId)
 {
 	MR_ObjectFromFactory *lReturnValue;
@@ -322,16 +271,9 @@ int MR_ObjectFromFactoryId::operator ==(const MR_ObjectFromFactoryId & pId) cons
 
 
 // class MR_FactoryDll methods 
-MR_FactoryDll::MR_FactoryDll()
+MR_FactoryDll::MR_FactoryDll() :
+	mDynamic(FALSE), mRefCount(0)
 {
-	mDynamic = FALSE;
-	mRefCount = 0;
-
-	/*
-	mGetObjectTypeCount = NULL;
-	mGetObjectFamily = NULL;
-	mGetObjectDescription = NULL;
-	*/
 }
 
 MR_FactoryDll::~MR_FactoryDll()
