@@ -29,7 +29,7 @@
 				RuntimeLibrary="3"
 				BufferSecurityCheck="FALSE"
 				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="1"
+				UsePrecompiledHeader="3"
 				BrowseInformation="1"
 				WarningLevel="3"
 				DebugInformationFormat="4"/>
@@ -87,7 +87,7 @@
 				MinimalRebuild="FALSE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
-				UsePrecompiledHeader="1"
+				UsePrecompiledHeader="3"
 				WarningLevel="3"
 				DebugInformationFormat="0"/>
 			<Tool
@@ -198,6 +198,18 @@
 			</File>
 			<File
 				RelativePath=".\Game2\StdAfx.cpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Game2\StdAfx.h">
