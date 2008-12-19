@@ -275,9 +275,6 @@
 				RelativePath=".\ObjFac1\HoverRender.h">
 			</File>
 			<File
-				RelativePath=".\ObjFac1\main.cpp">
-			</File>
-			<File
 				RelativePath=".\ObjFac1\Mine.cpp">
 			</File>
 			<File
@@ -288,6 +285,9 @@
 			</File>
 			<File
 				RelativePath=".\ObjFac1\Missile.h">
+			</File>
+			<File
+				RelativePath=".\ObjFac1\ObjFac1.cpp">
 			</File>
 			<File
 				RelativePath=".\ObjFac1\ObjFac1.h">
