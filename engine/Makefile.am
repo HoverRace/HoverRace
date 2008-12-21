@@ -1,6 +1,6 @@
 
-lib_LTLIBRARIES = libengine.la
-libengine_la_SOURCES = \
+lib_LTLIBRARIES = libhoverrace-engine.la
+libhoverrace_engine_la_SOURCES = \
 	Util/FuzzyLogic.cpp
 
 AM_CXXFLAGS = -Winvalid-pch
