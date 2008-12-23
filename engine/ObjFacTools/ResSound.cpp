@@ -46,7 +46,9 @@ MR_ResShortSound::~MR_ResShortSound()
 int MR_ResShortSound::GetResourceId() const
 {
 	return mResourceId;
-} void MR_ResShortSound::Serialize(CArchive & pArchive)
+}
+
+void MR_ResShortSound::Serialize(CArchive &pArchive)
 {
 	if(pArchive.IsStoring()) {
 		pArchive << mNbCopy;
@@ -55,7 +57,6 @@ int MR_ResShortSound::GetResourceId() const
 
 	}
 	else {
-
 		MR_SoundServer::DeleteShortSound(mSound);
 		mSound = NULL;
 
@@ -77,7 +78,9 @@ int MR_ResShortSound::GetResourceId() const
 MR_ShortSound *MR_ResShortSound::GetSound() const
 {
 	return mSound;
-} MR_ResContinuousSound::MR_ResContinuousSound(int pResourceId)
+}
+
+MR_ResContinuousSound::MR_ResContinuousSound(int pResourceId)
 {
 	mResourceId = pResourceId;
 	mNbCopy = 0;
@@ -98,7 +101,9 @@ MR_ResContinuousSound::~MR_ResContinuousSound()
 int MR_ResContinuousSound::GetResourceId() const
 {
 	return mResourceId;
-} void MR_ResContinuousSound::Serialize(CArchive & pArchive)
+}
+
+void MR_ResContinuousSound::Serialize(CArchive & pArchive)
 {
 	if(pArchive.IsStoring()) {
 		pArchive << mNbCopy;

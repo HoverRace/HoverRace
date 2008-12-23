@@ -44,7 +44,7 @@ class MR_ResShortSound
 	public:
 												  // Only availlable for resourceLib and construction
 		MR_DllDeclare MR_ResShortSound(int pResourceId);
-		MR_DllDeclare ~ MR_ResShortSound();
+		MR_DllDeclare ~MR_ResShortSound();
 
 		MR_DllDeclare int GetResourceId() const;
 		MR_DllDeclare void Serialize(CArchive & pArchive);
