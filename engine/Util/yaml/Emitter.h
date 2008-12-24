@@ -18,7 +18,13 @@ namespace yaml
 
 		public:
 			EmitterExn() : SUPER() { }
-			EmitterExn(const char *const &s) : SUPER(s) { }
+			EmitterExn(const char *const &msg) : SUPER(), msg(msg)  { }
+			virtual ~EmitterExn() throw() { }
+
+			virtual const char* what() const throw() { return msg.c_str(); }
+
+		private:
+			std::string msg;
 	};
 
 	/// Wrapper for the LibYAML emitter.
