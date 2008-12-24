@@ -3,12 +3,14 @@ lib_LTLIBRARIES = libhoverrace-engine.la
 libhoverrace_engine_la_SOURCES = \
 	ColorTools/ColorTools.cpp \
 	ColorTools/ColorTools.h \
+	Util/Config.cpp \
+	Util/Config.h \
 	Util/FuzzyLogic.cpp \
 	Util/FuzzyLogic.h \
 	Util/MR_Types.h \
 	StdAfx.h
 
-AM_CXXFLAGS = -Winvalid-pch
+AM_CXXFLAGS = -Winvalid-pch $(BOOST_CPPFLAGS)
 
 BUILT_SOURCES = StdAfx.h.gch
 CLEANFILES = $(BUILT_SOURCES)

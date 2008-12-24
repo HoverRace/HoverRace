@@ -2,8 +2,9 @@
 /* Config.cpp
 	Global configuration reader and writer. */
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
+#include <limits.h>
 #include <stdlib.h>
 
 #include <string>
@@ -159,7 +160,7 @@ std::string MR_Config::GetFullVersion() const
 /**
  * Retrieve the OS-specific default configuration directory.
  * @return The fully-qualified path.
- * @throws std::exception if unable to retrieve the default directory.
+ * @throws ConfigExn if unable to retrieve the default directory.
  */
 std::string MR_Config::GetDefaultPath()
 {
@@ -173,7 +174,7 @@ std::string MR_Config::GetDefaultPath()
 		return retv;
 	}
 	else {
-		throw std::exception("Unable to determine configuration directory");
+		throw ConfigExn("Unable to determine configuration directory");
 	}
 #else
 	char *home = getenv("HOME");
@@ -183,7 +184,7 @@ std::string MR_Config::GetDefaultPath()
 		return retv;
 	}
 	else {
-		throw std::exception(
+		throw ConfigExn(
 			"Unable to determine configuration directory "
 			"(HOME environment variable not set)");
 	}
@@ -311,7 +312,7 @@ void MR_Config::ResetToDefaults()
 /**
  * Load the configuration.
  * Does nothing if the configuration file doesn't exist.
- * @throws std::exception If an error occurs while reading.
+ * @throws ConfigExn If an error occurs while reading.
  */
 void MR_Config::Load()
 {
@@ -358,7 +359,7 @@ void MR_Config::Load()
 	catch (yaml::ParserExn &ex) {
 		if (parser != NULL) delete parser;
 		fclose(in);
-		throw std::exception(ex);
+		throw ConfigExn(ex.what());
 	}
 
 	fclose(in);
@@ -376,14 +377,14 @@ void MR_Config::Save()
 	fs::path dirpath(path);
 	if (!fs::exists(dirpath)) {
 		if (!fs::create_directories(dirpath)) {
-			throw std::exception(
+			throw ConfigExn(
 				(std::string("Unable to create directory: ") + path).c_str());
 		}
 	}
 
 	FILE *out = fopen(cfgfile.c_str(), "wb");
 	if(out == NULL) {
-		throw std::exception(
+		throw ConfigExn(
 			(std::string("Unable to create configuration file: ") + cfgfile).c_str());
 	}
 

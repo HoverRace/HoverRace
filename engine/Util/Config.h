@@ -6,10 +6,14 @@
 
 #include <string>
 
-#ifdef MR_ENGINE
-#define MR_DllDeclare   __declspec( dllexport )
+#ifdef _WIN32
+#	ifdef MR_ENGINE
+#		define MR_DllDeclare   __declspec( dllexport )
+#	else
+#		define MR_DllDeclare   __declspec( dllimport )
+#	endif
 #else
-#define MR_DllDeclare   __declspec( dllimport )
+#	define MR_DllDeclare
 #endif
 
 // Forward declarations.
@@ -18,6 +22,22 @@ namespace yaml {
 	class MapNode;
 }
 
+class ConfigExn : public std::exception
+{
+	typedef std::exception SUPER;
+
+	public:
+		ConfigExn() : SUPER() { }
+		ConfigExn(const char* const &msg) : SUPER(), msg(msg) { }
+		ConfigExn(const std::string &msg) : SUPER(), msg(msg) { }
+		virtual ~ConfigExn() throw() { }
+
+		virtual const char* what() const throw() { return msg.c_str(); }
+
+	private:
+		std::string msg;
+};
+	
 /**
  * Global configuration manager, shared by all aspects of the system.
  */
