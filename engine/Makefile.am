@@ -1,6 +1,8 @@
 
 lib_LTLIBRARIES = libhoverrace-engine.la
 libhoverrace_engine_la_SOURCES = \
+	ColorTools/ColorTools.cpp \
+	ColorTools/ColorTools.h \
 	Util/FuzzyLogic.cpp \
 	Util/FuzzyLogic.h \
 	Util/MR_Types.h \
