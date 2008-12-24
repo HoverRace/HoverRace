@@ -20,18 +20,34 @@
 // and limitations under the License.
 //
 
-#include <windows.h>
-#include <winnt.h>
-
 #ifndef MR_TYPES_H
 #define MR_TYPES_H
 
-typedef signed char MR_Int8;
-typedef unsigned char MR_UInt8;
-typedef signed short MR_Int16;
-typedef unsigned short MR_UInt16;
-typedef signed int MR_Int32;
-typedef unsigned int MR_UInt32;
-typedef LONGLONG MR_Int64;
-typedef DWORDLONG MR_UInt64;
+#ifdef _WIN32
+#	include <windows.h>
+#	include <winnt.h>
+
+	typedef signed char MR_Int8;
+	typedef unsigned char MR_UInt8;
+	typedef signed short MR_Int16;
+	typedef unsigned short MR_UInt16;
+	typedef signed int MR_Int32;
+	typedef unsigned int MR_UInt32;
+	typedef LONGLONG MR_Int64;
+	typedef DWORDLONG MR_UInt64;
+
+#else
+#  include <inttypes.h>
+	
+	typedef int8_t MR_Int8;
+	typedef uint8_t MR_UInt8;
+	typedef int16_t MR_Int16;
+	typedef uint16_t MR_UInt16;
+	typedef int32_t MR_Int32;
+	typedef uint32_t MR_UInt32;
+	typedef int64_t MR_Int64;
+	typedef uint64_t MR_UInt64;
+
+#endif
+
 #endif

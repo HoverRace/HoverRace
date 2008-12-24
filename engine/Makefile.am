@@ -3,6 +3,7 @@ lib_LTLIBRARIES = libhoverrace-engine.la
 libhoverrace_engine_la_SOURCES = \
 	Util/FuzzyLogic.cpp \
 	Util/FuzzyLogic.h \
+	Util/MR_Types.h \
 	StdAfx.h
 
 AM_CXXFLAGS = -Winvalid-pch
