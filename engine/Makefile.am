@@ -1,7 +1,9 @@
 
 lib_LTLIBRARIES = libhoverrace-engine.la
 libhoverrace_engine_la_SOURCES = \
-	Util/FuzzyLogic.cpp
+	Util/FuzzyLogic.cpp \
+	Util/FuzzyLogic.h \
+	StdAfx.h
 
 AM_CXXFLAGS = -Winvalid-pch
 
@@ -13,5 +15,5 @@ CLEANFILES = $(BUILT_SOURCES)
 # otherwise GCC will complain that the PCH was built with different
 # options.
 StdAfx.h.gch: StdAfx.h
-	$(CXXCOMPILE) -x c++-header -fPIC -DPIC -c $<
+	$(CXXCOMPILE) -x c++-header -fPIC -DPIC -c -o $@ $<
 

@@ -5,7 +5,7 @@ AC_INIT(
 	[http://svn.igglybob.com/hoverrace/])
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_MACRO_DIR(config/m4)
-AC_CONFIG_SRCDIR([client/Game2/main.cpp])
+AC_CONFIG_SRCDIR([engine/Util/FuzzyLogic.h])
 AM_CONFIG_HEADER([config.h])
 AM_INIT_AUTOMAKE
 
