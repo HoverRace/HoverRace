@@ -9,17 +9,19 @@
 #include <exception>
 
 #include "Node.h"
+#include "YamlExn.h"
 
 namespace yaml
 {
 	/// Standard exception thrown for parser errors.
-	class ParserExn : public std::exception
+	class ParserExn : public YamlExn
 	{
-		typedef std::exception SUPER;
+		typedef YamlExn SUPER;
 
 		public:
 			ParserExn() : SUPER() { }
 			ParserExn(const char *const &s) : SUPER(s) { }
+			virtual ~ParserExn() throw() { }
 	};
 
 	/// Exception for when the document is empty or missing the header.
@@ -30,6 +32,7 @@ namespace yaml
 		public:
 			EmptyDocParserExn() : SUPER() { }
 			EmptyDocParserExn(const char *const &s) : SUPER(s) { }
+			virtual ~EmptyDocParserExn() throw() { }
 	};
 
 	/// Wrapper for the LibYAML parser.
