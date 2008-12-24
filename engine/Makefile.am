@@ -13,6 +13,10 @@ AM_CXXFLAGS = -Winvalid-pch
 BUILT_SOURCES = StdAfx.h.gch
 CLEANFILES = $(BUILT_SOURCES)
 
+EXTRA_DIST = \
+	StdAfx.cpp \
+	engine.vcproj
+
 # Build the precompiled header.
 # It may not be correct to explicitly set -fPIC, but it's required
 # otherwise GCC will complain that the PCH was built with different

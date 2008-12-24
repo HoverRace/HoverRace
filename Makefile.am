@@ -3,7 +3,12 @@ ACLOCAL_FLAGS = -I config/m4
 AUTOMAKE_OPTIONS = foreign
 
 EXTRA_DIST = \
-	include/compat/unix.h
+	imr \
+	include \
+	lib \
+	Doxyfile \
+	credits.txt \
+	hoverrace.sln
 
 SUBDIRS = client engine
 
