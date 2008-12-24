@@ -2,13 +2,18 @@
 /* yaml/ScalarNode.cpp
 	Wrapper for LibYAML scalar nodes. */
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
 #include <sstream>
 
 #include "ScalarNode.h"
 
 using namespace yaml;
+
+#ifndef _WIN32
+#	include <strings.h>
+#	define stricmp strcasecmp
+#endif
 
 /**
  * Constructor.

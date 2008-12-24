@@ -2,7 +2,7 @@
 /* yaml/Parser.cpp
 	Implementation for the LibYAML parser wrapper. */
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
 #include "NodeFactory.h"
 

@@ -8,6 +8,20 @@ libhoverrace_engine_la_SOURCES = \
 	Util/FuzzyLogic.cpp \
 	Util/FuzzyLogic.h \
 	Util/MR_Types.h \
+	Util/yaml/Emitter.cpp \
+	Util/yaml/Emitter.h \
+	Util/yaml/MapNode.cpp \
+	Util/yaml/MapNode.h \
+	Util/yaml/Node.h \
+	Util/yaml/NodeFactory.cpp \
+	Util/yaml/NodeFactory.h \
+	Util/yaml/Parser.cpp \
+	Util/yaml/Parser.h \
+	Util/yaml/ScalarNode.cpp \
+	Util/yaml/ScalarNode.h \
+	Util/yaml/SeqNode.cpp \
+	Util/yaml/SeqNode.h \
+	Util/yaml/YamlExn.h \
 	StdAfx.h
 
 AM_CXXFLAGS = -Winvalid-pch $(BOOST_CPPFLAGS)

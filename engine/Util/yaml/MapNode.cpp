@@ -2,7 +2,7 @@
 /* yaml/MapNode.cpp
 	Wrapper for LibYAML mapping nodes. */
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
 #include "NodeFactory.h"
 

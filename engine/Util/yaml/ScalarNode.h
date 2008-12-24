@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <limits.h>
+
 #include "Node.h"
 
 namespace yaml

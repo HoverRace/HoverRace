@@ -2,7 +2,7 @@
 /* yaml/NodeFactory.cpp
 	Generates wrapper instances for LibYAML nodes. */
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
 #include "Node.h"
 #include "MapNode.h"

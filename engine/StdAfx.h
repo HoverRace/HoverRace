@@ -23,8 +23,12 @@
 
 #	include "../include/compat/unix.h"
 
+#	include <strings.h>
+
 #endif
 
+#include <limits.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 // Commonly-used STL headers.
