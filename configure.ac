@@ -1,5 +1,8 @@
 AC_PREREQ(2.59)
-AC_INIT(HoverRace,1.24,[http://svn.igglybob.com/hoverrace/])
+AC_INIT(
+	HoverRace,
+	[esyscmd(build/mkversion.sh)],
+	[http://svn.igglybob.com/hoverrace/])
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_MACRO_DIR(config/m4)
 AC_CONFIG_SRCDIR([client/Game2/main.cpp])
