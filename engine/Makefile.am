@@ -11,6 +11,7 @@ libhoverrace_engine_la_SOURCES = \
 	Util/FuzzyLogic.cpp \
 	Util/FuzzyLogic.h \
 	Util/MR_Types.h \
+	Util/Pixel.h \
 	Util/yaml/Emitter.cpp \
 	Util/yaml/Emitter.h \
 	Util/yaml/MapNode.cpp \
