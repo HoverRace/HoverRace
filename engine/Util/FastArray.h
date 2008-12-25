@@ -23,13 +23,10 @@
 #ifndef FAST_ARRAY_H
 #define FAST_ARRAY_H
 
-#ifdef MR_ENGINE
-#define MR_DllDeclare   __declspec( dllexport )
-#else
-#define MR_DllDeclare   __declspec( dllimport )
-#endif
+#include "MR_Types.h"
 
-template < class pType > class MR_FastArrayBase
+template <class pType>
+class MR_FastArrayBase
 {
 	protected:
 		int mNbItem;
@@ -88,27 +85,30 @@ template < class pType > class MR_FastArrayBase
 
 };
 
-template < class pType > class MR_FastArray:public MR_FastArrayBase < class pType >
+template <class pType>
+class MR_FastArray : public MR_FastArrayBase<pType>
 {
 	public:
 		MR_FastArray(int pSize) {
 
 		};
 		~MR_FastArray() {
-			delete[]mArray;
+			delete[] MR_FastArrayBase<pType>::mArray;
 		};
 };
 
-template < class pType, int pSize > class MR_FixedFastArray:public MR_FastArrayBase < pType >
+template <class pType, int pSize>
+class MR_FixedFastArray : public MR_FastArrayBase<pType>
 {
 	protected:
 		pType mData[pSize];
 
 	public:
-		MR_FixedFastArray < pType, pSize > ():MR_FastArrayBase < pType > (pSize, mData) {
+		MR_FixedFastArray<pType, pSize>() :
+			MR_FastArrayBase<pType>(pSize, mData)
+		{
 		};
 
 };
 
-#undef MR_DllDeclare
 #endif

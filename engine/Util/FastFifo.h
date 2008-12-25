@@ -23,13 +23,10 @@
 #ifndef FAST_FIFO_H
 #define FAST_FIFO_H
 
-#ifdef MR_ENGINE
-#define MR_DllDeclare   __declspec( dllexport )
-#else
-#define MR_DllDeclare   __declspec( dllimport )
-#endif
+#include "MR_Types.h"
 
-template < class pType > class MR_FastFifoBase
+template <class pType>
+class MR_FastFifoBase
 {
 
 	protected:
@@ -40,7 +37,7 @@ template < class pType > class MR_FastFifoBase
 
 	public:
 
-		MR_FastFifoBase < pType > (int pSize, pType * pData) {
+		MR_FastFifoBase<pType>(int pSize, pType * pData) {
 			mNbItem = 0;
 			mHead = 0;
 			mArraySize = pSize;
@@ -111,23 +108,29 @@ template < class pType > class MR_FastFifoBase
 
 };
 
-template < class pType > class MR_FastFifo:public MR_FastFifoBase < pType >
+template <class pType>
+class MR_FastFifo : public MR_FastFifoBase<pType>
 {
 	public:
-		MR_FastFifo < pType > (int pSize):MR_FastFifoBase < pType > (pSize, new pType[pSize]) {
+		MR_FastFifo<pType>(int pSize) :
+			MR_FastFifoBase<pType>(pSize, new pType[pSize])
+		{
 		};
 		~MR_FastFifo < pType > () {
-			delete[]mArray;
+			delete[] MR_FastFifoBase<pType>::mArray;
 		};
 };
 
-template < class pType, int pSize > class MR_FixedFastFifo:public MR_FastFifoBase < pType >
+template <class pType, int pSize>
+class MR_FixedFastFifo : public MR_FastFifoBase<pType>
 {
 	protected:
 		pType mData[pSize];
 
 	public:
-		MR_FixedFastFifo < pType, pSize > ():MR_FastFifoBase < pType > (pSize, mData) {
+		MR_FixedFastFifo<pType, pSize>() :
+			MR_FastFifoBase<pType>(pSize, mData)
+		{
 		};
 
 };

@@ -8,6 +8,8 @@ libhoverrace_engine_la_SOURCES = \
 	ColorTools/ColorTools.h \
 	Util/Config.cpp \
 	Util/Config.h \
+	Util/FastArray.h \
+	Util/FastFifo.h \
 	Util/FuzzyLogic.cpp \
 	Util/FuzzyLogic.h \
 	Util/MR_Types.h \
