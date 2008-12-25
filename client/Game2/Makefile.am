@@ -1,5 +1,9 @@
 
 bin_PROGRAMS = hoverrace
+hoverrace_LDADD = \
+	../../engine/libhoverrace-engine.la \
+	$(BOOST_FILESYSTEM_LDFLAGS) $(BOOST_FILESYSTEM_LIBS) \
+	$(BOOST_THREADS_LDFLAGS) $(BOOST_THREADS_LIBS)
 hoverrace_SOURCES = \
 	StdAfx.h \
 	main-unix.cpp \

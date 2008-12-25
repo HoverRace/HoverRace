@@ -1,5 +1,8 @@
 
 lib_LTLIBRARIES = libhoverrace-engine.la
+libhoverrace_engine_la_LDFLAGS = \
+	-lyaml \
+	$(BOOST_FILESYSTEM_LDFLAGS) $(BOOST_FILESYSTEM_LIBS)
 libhoverrace_engine_la_SOURCES = \
 	ColorTools/ColorTools.cpp \
 	ColorTools/ColorTools.h \

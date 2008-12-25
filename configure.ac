@@ -28,6 +28,9 @@ PKG_CHECK_MODULES(DEPS, [
 AC_SUBST(DEPS_CFLAGS)
 AC_SUBST(DEPS_LIBS)
 
+dnl TODO: Make LibYAML location configurable.
+AC_CHECK_LIB(yaml, yaml_get_version)
+
 # Checks for header files.
 
 # Checks for typedefs, structures, and compiler characteristics.
