@@ -3,13 +3,14 @@ bin_PROGRAMS = hoverrace
 hoverrace_LDADD = \
 	../../engine/libhoverrace-engine.la \
 	$(BOOST_FILESYSTEM_LDFLAGS) $(BOOST_FILESYSTEM_LIBS) \
-	$(BOOST_THREADS_LDFLAGS) $(BOOST_THREADS_LIBS)
+	$(BOOST_THREADS_LDFLAGS) $(BOOST_THREADS_LIBS) \
+	$(DEPS_LIBS)
 hoverrace_SOURCES = \
 	StdAfx.h \
 	main-unix.cpp \
 	version.h
 
-AM_CXXFLAGS = -Winvalid-pch $(BOOST_CPPFLAGS)
+AM_CXXFLAGS = -Winvalid-pch $(BOOST_CPPFLAGS) $(DEPS_CFLAGS)
 
 BUILT_SOURCES = StdAfx.h.gch
 CLEANFILES = $(BUILT_SOURCES)

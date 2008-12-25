@@ -2,7 +2,8 @@
 lib_LTLIBRARIES = libhoverrace-engine.la
 libhoverrace_engine_la_LDFLAGS = \
 	-lyaml \
-	$(BOOST_FILESYSTEM_LDFLAGS) $(BOOST_FILESYSTEM_LIBS)
+	$(BOOST_FILESYSTEM_LDFLAGS) $(BOOST_FILESYSTEM_LIBS) \
+	$(DEPS_LIBS)
 libhoverrace_engine_la_SOURCES = \
 	ColorTools/ColorTools.cpp \
 	ColorTools/ColorTools.h \
@@ -30,7 +31,7 @@ libhoverrace_engine_la_SOURCES = \
 	Util/yaml/YamlExn.h \
 	StdAfx.h
 
-AM_CXXFLAGS = -Winvalid-pch $(BOOST_CPPFLAGS)
+AM_CXXFLAGS = -Winvalid-pch $(BOOST_CPPFLAGS) $(DEPS_CFLAGS)
 
 BUILT_SOURCES = StdAfx.h.gch
 CLEANFILES = $(BUILT_SOURCES)
