@@ -14,5 +14,5 @@ EXTRA_DIST = \
 	hoverrace.sln \
 	license.txt
 
-SUBDIRS = client engine
+SUBDIRS = engine client
 
