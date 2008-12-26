@@ -46,5 +46,8 @@ AC_CONFIG_FILES([
 	client/Makefile
 	client/Game2/Makefile
 	engine/Makefile
+	engine/ColorTools/Makefile
+	engine/Util/Makefile
+	engine/Util/yaml/Makefile
 ])
 AC_OUTPUT
