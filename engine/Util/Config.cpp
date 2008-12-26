@@ -30,6 +30,10 @@
 
 #include "Config.h"
 
+#ifndef _WIN32
+#	include "../../config.h"
+#endif
+
 namespace fs = boost::filesystem;
 
 #ifdef _WIN32
@@ -204,7 +208,11 @@ std::string MR_Config::GetConfigFilename() const
  */
 std::string MR_Config::GetMediaPath() const
 {
-	return ".." DIRSEP "share";
+#	ifdef _WIN32
+		return ".." DIRSEP "share";
+#	else
+		return ".." DIRSEP "share" DIRSEP PACKAGE DIRSEP;
+#	endif
 }
 
 /**
@@ -214,7 +222,11 @@ std::string MR_Config::GetMediaPath() const
  */
 std::string MR_Config::GetMediaPath(const std::string &file) const
 {
-	return (".." DIRSEP "share" DIRSEP) + file;
+#	ifdef _WIN32
+		return (".." DIRSEP "share" DIRSEP) + file;
+#	else
+		return (".." DIRSEP "share" DIRSEP PACKAGE DIRSEP) + file;
+#	endif
 }
 
 /**
