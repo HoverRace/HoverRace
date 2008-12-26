@@ -37,3 +37,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+
+#include <boost/filesystem/convenience.hpp>
+#include <boost/filesystem/path.hpp>
+
