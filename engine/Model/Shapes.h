@@ -33,12 +33,16 @@
 #ifndef SHAPES_H
 #define SHAPES_H
 
-#include "../util/WorldCoordinates.h"
+#include "../Util/WorldCoordinates.h"
 
-#ifdef MR_ENGINE
-#define MR_DllDeclare   __declspec( dllexport )
+#ifdef _WIN32
+#	ifdef MR_ENGINE
+#		define MR_DllDeclare   __declspec( dllexport )
+#	else
+#		define MR_DllDeclare   __declspec( dllimport )
+#	endif
 #else
-#define MR_DllDeclare   __declspec( dllimport )
+#	define MR_DllDeclare
 #endif
 
 class MR_DllDeclare MR_ShapeInterface
