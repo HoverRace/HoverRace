@@ -53,6 +53,10 @@ AC_CONFIG_FILES([
 	client/Game2/Makefile
 	engine/Makefile
 	engine/ColorTools/Makefile
+	engine/MainCharacter/Makefile
+	engine/Model/Makefile
+	engine/ObjFac1/Makefile
+	engine/ObjFacTools/Makefile
 	engine/Util/Makefile
 	engine/Util/yaml/Makefile
 	engine/VideoServices/Makefile
