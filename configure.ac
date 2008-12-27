@@ -55,5 +55,6 @@ AC_CONFIG_FILES([
 	engine/ColorTools/Makefile
 	engine/Util/Makefile
 	engine/Util/yaml/Makefile
+	engine/VideoServices/Makefile
 ])
 AC_OUTPUT

@@ -1,14 +1,15 @@
 
 BUILT_SOURCES = StdAfx.h.gch
 
-SUBDIRS = ColorTools Util
+SUBDIRS = ColorTools Util VideoServices
 
 lib_LTLIBRARIES = libhoverrace-engine.la
 libhoverrace_engine_la_CPPFLAGS = $(HR_CPPFLAGS)
 libhoverrace_engine_la_CXXFLAGS = $(HR_CXXFLAGS)
 libhoverrace_engine_la_LIBADD = \
 	ColorTools/libcolortools.la \
-	Util/libutil.la
+	Util/libutil.la \
+	VideoServices/libvideosvc.la
 libhoverrace_engine_la_LDFLAGS = \
 	$(BOOST_FILESYSTEM_LDFLAGS) $(BOOST_FILESYSTEM_LIBS) \
 	$(DEPS_LIBS)
