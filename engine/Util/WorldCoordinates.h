@@ -20,20 +20,26 @@
 // and limitations under the License.
 //
 
-#include "MR_Types.h"
-
 #ifndef WORLD_COORDINATES_H
 #define WORLD_COORDINATES_H
 
-#ifdef MR_ENGINE
-#define MR_DllDeclare   __declspec( dllexport )
+#include "MR_Types.h"
+
+#ifdef _WIN32
+#	ifdef MR_ENGINE
+#		define MR_DllDeclare   __declspec( dllexport )
+#	else
+#		define MR_DllDeclare   __declspec( dllimport )
+#	endif
 #else
-#define MR_DllDeclare   __declspec( dllimport )
+#	define MR_DllDeclare
 #endif
 
 // All geometrical coordinates are in milimeters,
 
+#ifndef NO_SERIALIZE
 class CArchive;
+#endif
 
 class MR_DllDeclare MR_2DCoordinate
 {
@@ -41,7 +47,9 @@ class MR_DllDeclare MR_2DCoordinate
 		MR_Int32 mX;
 		MR_Int32 mY;
 
+#ifndef NO_SERIALIZE
 		void Serialize(CArchive & pArchive);
+#endif
 
 		// Comparaison operator
 		BOOL operator ==(const MR_2DCoordinate & pCoordinate) const;
@@ -61,7 +69,9 @@ class MR_DllDeclare MR_3DCoordinate:public MR_2DCoordinate
 	public:
 		MR_Int32 mZ;
 
+#ifndef NO_SERIALIZE
 		void Serialize(CArchive & pArchive);
+#endif
 
 		// Comparaison operator
 

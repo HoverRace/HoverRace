@@ -20,7 +20,7 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
 // System includes
 #include <math.h>
@@ -44,6 +44,7 @@ void MR_InitTrigoTables()
 
 }
 
+#ifndef NO_SERIALIZE
 void MR_2DCoordinate::Serialize(CArchive & pArchive)
 {
 
@@ -54,6 +55,7 @@ void MR_2DCoordinate::Serialize(CArchive & pArchive)
 		pArchive >> mX >> mY;
 	}
 }
+#endif
 
 BOOL MR_2DCoordinate::operator ==(const MR_2DCoordinate & pCoordinate) const
 {
@@ -65,6 +67,7 @@ BOOL MR_2DCoordinate::operator !=(const MR_2DCoordinate & pCoordinate) const
 	return (mX != pCoordinate.mX) || (mY != pCoordinate.mY);
 }
 
+#ifndef NO_SERIALIZE
 void MR_3DCoordinate::Serialize(CArchive & pArchive)
 {
 	MR_2DCoordinate::Serialize(pArchive);
@@ -76,3 +79,4 @@ void MR_3DCoordinate::Serialize(CArchive & pArchive)
 		pArchive >> mZ;
 	}
 }
+#endif
