@@ -127,9 +127,11 @@ class MR_DllDeclare MR_PolygonShape:public MR_ShapeInterface
 
 };
 
+/*
 class MR_ShapeList:public CList < MR_ShapeInterface *, MR_ShapeInterface * >
 {
 };
+*/
 
 #undef MR_DllDeclare
 #endif
