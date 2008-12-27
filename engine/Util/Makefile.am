@@ -6,6 +6,7 @@ libutil_la_CPPFLAGS = -I.. $(HR_CPPFLAGS)
 libutil_la_CXXFLAGS = $(HR_CXXFLAGS)
 libutil_la_LIBADD = yaml/libutil-yaml.la
 libutil_la_SOURCES = \
+	BitPacking.h \
 	Config.cpp \
 	Config.h \
 	FastArray.h \
