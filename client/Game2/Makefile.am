@@ -1,5 +1,7 @@
 
 bin_PROGRAMS = hoverrace
+hoverrace_CPPFLAGS = $(HR_CPPFLAGS)
+hoverrace_CXXFLAGS = $(HR_CXXFLAGS)
 hoverrace_LDADD = \
 	../../engine/libhoverrace-engine.la \
 	$(BOOST_FILESYSTEM_LDFLAGS) $(BOOST_FILESYSTEM_LIBS) \
@@ -9,8 +11,6 @@ hoverrace_SOURCES = \
 	StdAfx.h \
 	main-unix.cpp \
 	version.h
-
-AM_CXXFLAGS = -Winvalid-pch $(BOOST_CPPFLAGS) $(DEPS_CFLAGS)
 
 BUILT_SOURCES = StdAfx.h.gch
 CLEANFILES = $(BUILT_SOURCES)
@@ -25,5 +25,5 @@ EXTRA_DIST = \
 
 # Build the precompiled header.
 StdAfx.h.gch: StdAfx.h
-	$(CXXCOMPILE) -x c++-header -c -o $@ $<
+	$(CXXCOMPILE) $(HR_CPPFLAGS) $(HR_CXXFLAGS) -x c++-header -c -o $@ $<
 

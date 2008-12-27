@@ -41,6 +41,12 @@ AC_C_CONST
 # Checks for library functions.
 
 
+# Additional global flags.
+HR_CPPFLAGS="-DNO_SERIALIZE $BOOST_CPPFLAGS $DEPS_CFLAGS"
+AC_SUBST(HR_CPPFLAGS)
+HR_CXXFLAGS="-Winvalid-pch"
+AC_SUBST(HR_CXXFLAGS)
+
 AC_CONFIG_FILES([
 	Makefile
 	client/Makefile

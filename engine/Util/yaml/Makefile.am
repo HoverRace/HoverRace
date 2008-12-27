@@ -1,6 +1,7 @@
 
 noinst_LTLIBRARIES = libutil-yaml.la
-libutil_yaml_la_CPPFLAGS = -I../..
+libutil_yaml_la_CPPFLAGS = -I../.. $(HR_CPPFLAGS)
+libutil_yaml_la_CXXFLAGS = $(HR_CXXFLAGS)
 libutil_yaml_la_LDFLAGS = -lyaml
 libutil_yaml_la_SOURCES = \
 	Emitter.cpp \
@@ -17,6 +18,4 @@ libutil_yaml_la_SOURCES = \
 	SeqNode.cpp \
 	SeqNode.h \
 	YamlExn.h
-
-AM_CXXFLAGS = -Winvalid-pch $(BOOST_CPPFLAGS) $(DEPS_CFLAGS)
 
