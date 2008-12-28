@@ -18,21 +18,31 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 //
-#include "stdafx.h"								  // likely unnecessary; can we get rid of it?
+#include "StdAfx.h"
+
+#ifdef _WIN32
 #include "GameApp.h"
+#endif
+
+#include <iostream>
 
 #include <curl/curl.h>
 
 // Entry point
+#ifdef _WIN32
 int WINAPI WinMain(HINSTANCE pInstance, HINSTANCE pPrevInstance, LPSTR /* pCmdLine */ , int pCmdShow)
+#else
+int main(int argc, char** argv)
+#endif
 {
 	// initialize return variables
 	BOOL lReturnValue = TRUE;
-	int lErrorCode = -1;
+	int lErrorCode = EXIT_SUCCESS;
 
 	// Library initialization.
 	curl_global_init(CURL_GLOBAL_ALL);
 
+#ifdef _WIN32
 	MR_GameApp lGame(pInstance);
 
 	// Allow only one instance of HoverRace; press CAPS_LOCK to bypass
@@ -49,6 +59,11 @@ int WINAPI WinMain(HINSTANCE pInstance, HINSTANCE pPrevInstance, LPSTR /* pCmdLi
 	// this is where the game actually takes control
 	if(lReturnValue)
 		lErrorCode = lGame.MainLoop();
+#else
+	std::cout << "HoverRace for Linux is under development!\n"
+		"Please visit http://svn.igglybob.com/hoverrace/ to learn how to\n"
+		"contribute to this project." << std::endl;
+#endif
 
 	// Library cleanup.
 	curl_global_cleanup();

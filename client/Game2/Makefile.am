@@ -9,7 +9,7 @@ hoverrace_LDADD = \
 	$(DEPS_LIBS)
 hoverrace_SOURCES = \
 	StdAfx.h \
-	main-unix.cpp \
+	main.cpp \
 	version.h
 
 BUILT_SOURCES = StdAfx.h.gch
