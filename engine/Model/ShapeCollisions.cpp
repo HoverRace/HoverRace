@@ -19,10 +19,19 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
 #include <math.h>
 #include "ShapeCollisions.h"
+
+#ifdef max
+#	undef max
+#endif
+#ifdef min
+#	undef min
+#endif
+using std::max;
+using std::min;
 
 // Local prototypes
 typedef BOOL(*MR_ActorActorContactFunc) (const MR_ShapeInterface * pActor0, const MR_ShapeInterface * pActor1, MR_ContactSpec & pAnswer);

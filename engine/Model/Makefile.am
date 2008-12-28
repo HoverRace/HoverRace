@@ -5,6 +5,8 @@ libmodel_la_CXXFLAGS = $(HR_CXXFLAGS)
 libmodel_la_SOURCES = \
 	ConcreteShape.cpp \
 	ConcreteShape.h \
+	ShapeCollisions.cpp \
+	ShapeCollisions.h \
 	Shapes.cpp \
 	Shapes.h
 
