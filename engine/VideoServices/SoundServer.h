@@ -23,10 +23,14 @@
 #ifndef SOUND_SERVER_H
 #define SOUND_SERVER_H
 
-#ifdef MR_ENGINE
-#define MR_DllDeclare   __declspec( dllexport )
+#ifdef _WIN32
+#	ifdef MR_ENGINE
+#		define MR_DllDeclare   __declspec( dllexport )
+#	else
+#		define MR_DllDeclare   __declspec( dllimport )
+#	endif
 #else
-#define MR_DllDeclare   __declspec( dllimport )
+#	define MR_DllDeclare
 #endif
 
 class MR_ShortSound;
@@ -35,7 +39,11 @@ class MR_ContinuousSound;
 namespace MR_SoundServer
 {
 
-	MR_DllDeclare BOOL Init(HWND pWindow);
+	MR_DllDeclare bool Init(
+#		ifndef WITH_OPENAL
+			HWND pWindow
+#		endif
+		);
 	MR_DllDeclare void Close();
 
 	MR_DllDeclare MR_ShortSound *CreateShortSound(const char *pData, int pNbCopy);

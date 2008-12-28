@@ -20,16 +20,25 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
-#include "SoundServer.h"
+#include "StdAfx.h"
+
+#include <math.h>
+
+#ifdef WITH_OPENAL
+#	include <AL/alut.h>
+#else
+#	include <mmreg.h>
+#	include <dsound.h>
+#endif
+
 #include "../Util/MR_Types.h"
 #include "../Util/Config.h"
-#include <math.h>
-#include <mmreg.h>
-#include <dsound.h>
+
+#include "SoundServer.h"
 
 #define MR_MAX_SOUND_COPY 6
 
+#ifndef WITH_OPENAL
 // Adapted from http://www.gamedev.net/community/forums/topic.asp?topic_id=337397
 //   and http://en.wikipedia.org/wiki/Decibel
 
@@ -45,7 +54,7 @@ static float DirectXToLinear(int value)
 	return (value == DSBVOLUME_MIN) ? 0.0f : 
 		powf(10.0f, (float)value / 2000.0f);
 } 
-
+#endif
 
 class MR_SoundBuffer
 {
@@ -56,7 +65,11 @@ class MR_SoundBuffer
 	protected:
 
 		int mNbCopy;
-		IDirectSoundBuffer *mSoundBuffer[MR_MAX_SOUND_COPY];
+#		ifdef WITH_ALUT
+			ALuint mSoundBuffer[MR_MAX_SOUND_COPY];
+#		else
+			IDirectSoundBuffer *mSoundBuffer[MR_MAX_SOUND_COPY];
+#		endif
 
 		int mNormalFreq;
 
@@ -115,7 +128,9 @@ class MR_ContinuousSound:public MR_SoundBuffer
 // Variables
 MR_SoundBuffer *MR_SoundBuffer::mList = NULL;
 
+#ifndef WITH_OPENAL
 IDirectSound *gDirectSound = NULL;
+#endif
 
 // Implementation
 MR_SoundBuffer::MR_SoundBuffer()
@@ -183,6 +198,12 @@ void MR_SoundBuffer::DeleteAll()
 	}
 }
 
+/**
+ * Fill the buffer with sound data.
+ * @param pData WAV data buffer.  First 32 bits are the data length.
+ * @param pNbCopy The number of copies to make.
+ * @return @c TRUE if successful.
+ */
 BOOL MR_SoundBuffer::Init(const char *pData, int pNbCopy)
 {
 	BOOL lReturnValue = TRUE;
@@ -199,6 +220,17 @@ BOOL MR_SoundBuffer::Init(const char *pData, int pNbCopy)
 	// Parse pData
 	DSBUFFERDESC lDesc;
 	MR_UInt32 lBufferLen = *(MR_UInt32 *) pData;
+#ifdef WITH_OPENAL
+	const char *lSoundData = pData + sizeof(MR_UInt32);
+	mSoundBuffer[0] = alutCreateBufferFromFileImage(pData, lBufferLen);
+	if (mSoundBuffer[0] == AL_NONE) {
+		lReturnValue = FALSE;
+	} else {
+		for (int i = 1; i < mNbCopy; ++i) {
+			mSoundBuffer[i] = mSoundBuffer[0];
+		}
+	}
+#else
 	WAVEFORMATEX *lWaveFormat = (WAVEFORMATEX *) (pData + sizeof(MR_UInt32));
 	const char *lSoundData = pData + sizeof(MR_UInt32) + sizeof(WAVEFORMATEX);
 
@@ -246,6 +278,7 @@ BOOL MR_SoundBuffer::Init(const char *pData, int pNbCopy)
 			lReturnValue = FALSE;
 		}
 	}
+#endif // WITH_OPENAL
 
 	return lReturnValue;
 }
@@ -377,22 +410,30 @@ void MR_ContinuousSound::CumPlay(int pCopy, int pDB, double pSpeed)
 
 // namespace MR_SoundServer
 
-BOOL MR_SoundServer::Init(HWND pWindow)
+BOOL MR_SoundServer::Init(
+#	ifndef WITH_OPENAL
+		HWND pWindow
+#	endif
+	)
 {
-	BOOL lReturnValue = TRUE;
+	bool lReturnValue = true;
 
+#ifdef WITH_OPENAL
+	lReturnValue = (alutInit(NULL, NULL) == AL_TRUE);
+#else
 	if(gDirectSound == NULL) {
 		if(DirectSoundCreate(NULL, &gDirectSound, NULL) == DS_OK) {
 
 			if(gDirectSound->SetCooperativeLevel(pWindow, DSSCL_NORMAL) != DS_OK) {
 				ASSERT(FALSE);
-				lReturnValue = FALSE;
+				lReturnValue = false;
 			}
 		}
 		else {
-			lReturnValue = FALSE;
+			lReturnValue = false;
 		}
 	}
+#endif
 
 	return lReturnValue;
 }
@@ -401,10 +442,14 @@ void MR_SoundServer::Close()
 {
 	MR_SoundBuffer::DeleteAll();
 
+#ifdef WITH_OPENAL
+	alutExit();
+#else
 	if(gDirectSound != NULL) {
 		gDirectSound->Release();
 		gDirectSound = NULL;
 	}
+#endif
 }
 
 MR_ShortSound *MR_SoundServer::CreateShortSound(const char *pData, int pNbCopy)
