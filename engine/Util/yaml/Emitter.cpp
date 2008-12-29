@@ -180,7 +180,7 @@ void Emitter::Value(bool val)
 void Emitter::Value(int val)
 {
 	char buf[256];
-	snprintf(buf, 255, "%d", val);
+	_snprintf(buf, 255, "%d", val);
 	buf[255] = 0;
 	Value(buf);
 }
@@ -192,7 +192,7 @@ void Emitter::Value(int val)
 void Emitter::Value(double val)
 {
 	char buf[256];
-	snprintf(buf, 255, "%g", val);
+	_snprintf(buf, 255, "%g", val);
 	buf[255] = 0;
 	Value(buf);
 }

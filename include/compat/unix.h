@@ -10,6 +10,8 @@
 #define TRUE 1
 #define FALSE 0
 
+#define _snprintf snprintf
+
 #define Int32x32To64(x,y) \
 	static_cast<int64_t>( \
 		static_cast<int64_t>(x) * static_cast<int64_t>(y));
