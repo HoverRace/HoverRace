@@ -410,7 +410,7 @@ void MR_ContinuousSound::CumPlay(int pCopy, int pDB, double pSpeed)
 
 // namespace MR_SoundServer
 
-BOOL MR_SoundServer::Init(
+bool MR_SoundServer::Init(
 #	ifndef WITH_OPENAL
 		HWND pWindow
 #	endif
