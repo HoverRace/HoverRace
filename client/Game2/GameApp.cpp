@@ -37,7 +37,6 @@
 #include "../../engine/Util/StrRes.h"
 #include "../../engine/Util/Config.h"
 #include "InternetRoom.h"
-#include "Security.h"
 
 #include <vfw.h>
 
