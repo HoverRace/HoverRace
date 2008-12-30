@@ -194,9 +194,6 @@
 				RelativePath=".\Game2\resource.h">
 			</File>
 			<File
-				RelativePath=".\Game2\Security.h">
-			</File>
-			<File
 				RelativePath=".\Game2\StdAfx.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">

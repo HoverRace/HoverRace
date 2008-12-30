@@ -196,9 +196,6 @@
 				RelativePath=".\Model\MazeElement.h">
 			</File>
 			<File
-				RelativePath=".\Model\ModelClass.h">
-			</File>
-			<File
 				RelativePath=".\Model\PhysicalCollision.cpp">
 			</File>
 			<File
