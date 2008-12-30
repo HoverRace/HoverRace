@@ -28,7 +28,7 @@
 				BasicRuntimeChecks="0"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="1"
+				UsePrecompiledHeader="3"
 				WarningLevel="3"
 				DebugInformationFormat="3"/>
 			<Tool
@@ -83,7 +83,7 @@
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
 				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="1"
+				UsePrecompiledHeader="3"
 				WarningLevel="3"
 				DebugInformationFormat="0"/>
 			<Tool
@@ -568,12 +568,14 @@
 				Name="Debug|Win32">
 				<Tool
 					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="1"
 					ObjectFile="$(IntDir)/$(InputName)5.obj"/>
 			</FileConfiguration>
 			<FileConfiguration
 				Name="Release|Win32">
 				<Tool
 					Name="VCCLCompilerTool"
+					UsePrecompiledHeader="1"
 					ObjectFile="$(IntDir)/$(InputName)5.obj"/>
 			</FileConfiguration>
 		</File>
