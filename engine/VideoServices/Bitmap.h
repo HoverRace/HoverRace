@@ -41,7 +41,7 @@ class MR_DllDeclare MR_Bitmap
 		virtual int GetHeight() const = 0;		  // in mm
 		virtual int GetMaxXRes() const = 0;
 		virtual int GetMaxYRes() const = 0;
-		virtual Pixel24 GetPlainColor() const = 0;
+		virtual MR_UInt8 GetPlainColor() const = 0;
 
 		// Subbitmap related functions
 		virtual int GetNbSubBitmap() const = 0;
@@ -54,9 +54,9 @@ class MR_DllDeclare MR_Bitmap
 		virtual int GetYRes(int pSubBitmap) const = 0;
 		virtual int GetXResShiftFactor(int pSubBitmap) const = 0;
 		virtual int GetYResShiftFactor(int pSubBitmap) const = 0;
-		virtual Pixel24 *GetBuffer(int pSubBitmap) const = 0;
-		virtual Pixel24 *GetColumnBuffer(int pSubBitmap, int pColumn) const = 0;
-		virtual Pixel24 **GetColumnBufferTable(int pSubBitmap) const = 0;
+		virtual MR_UInt8 *GetBuffer(int pSubBitmap) const = 0;
+		virtual MR_UInt8 *GetColumnBuffer(int pSubBitmap, int pColumn) const = 0;
+		virtual MR_UInt8 **GetColumnBufferTable(int pSubBitmap) const = 0;
 };
 
 #undef MR_DllDeclare

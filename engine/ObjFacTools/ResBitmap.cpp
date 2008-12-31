@@ -32,15 +32,13 @@ MR_ResBitmap::MR_ResBitmap(int pResourceId)
 	mXRes = 1;
 	mYRes = 1;
 	mSubBitmapCount = 0;
-	mPlainColor.r = 255;
-	mPlainColor.g = 255;
-	mPlainColor.b = 255;
+	mPlainColor = 255;
 	mSubBitmapList = NULL;
 }
 
 MR_ResBitmap::~MR_ResBitmap()
 {
-	delete[]mSubBitmapList;
+	delete[] mSubBitmapList;
 }
 
 int MR_ResBitmap::GetResourceId() const
@@ -118,7 +116,7 @@ int MR_ResBitmap::GetMaxYRes() const
 	return mYRes;
 }
 
-Pixel24 MR_ResBitmap::GetPlainColor() const
+MR_UInt8 MR_ResBitmap::GetPlainColor() const
 {
 	return mPlainColor;
 }
@@ -148,20 +146,22 @@ int MR_ResBitmap::GetYResShiftFactor(int pSubBitmap) const
 	return mSubBitmapList[pSubBitmap].mYResShiftFactor;
 }
 
-Pixel24 *MR_ResBitmap::GetBuffer(int pSubBitmap) const
+MR_UInt8 *MR_ResBitmap::GetBuffer(int pSubBitmap) const
 {
 	return mSubBitmapList[pSubBitmap].mBuffer;
 }
 
-Pixel24 *MR_ResBitmap::GetColumnBuffer(int pSubBitmap, int pColumn) const
+MR_UInt8 *MR_ResBitmap::GetColumnBuffer(int pSubBitmap, int pColumn) const
 {
 	return mSubBitmapList[pSubBitmap].mColumnPtr[pColumn];
 }
 
-Pixel24 **MR_ResBitmap::GetColumnBufferTable(int pSubBitmap) const
+MR_UInt8 **MR_ResBitmap::GetColumnBufferTable(int pSubBitmap) const
 {
 	return mSubBitmapList[pSubBitmap].mColumnPtr;
-} MR_ResBitmap::SubBitmap::SubBitmap()
+} 
+
+MR_ResBitmap::SubBitmap::SubBitmap()
 {
 	mBuffer = NULL;
 	mColumnPtr = NULL;
@@ -169,8 +169,8 @@ Pixel24 **MR_ResBitmap::GetColumnBufferTable(int pSubBitmap) const
 
 MR_ResBitmap::SubBitmap::~SubBitmap()
 {
-	delete[]mBuffer;
-	delete[]mColumnPtr;
+	delete[] mBuffer;
+	delete[] mColumnPtr;
 }
 
 void MR_ResBitmap::SubBitmap::Serialize(CArchive & pArchive)
@@ -198,7 +198,7 @@ void MR_ResBitmap::SubBitmap::Serialize(CArchive & pArchive)
 		mBuffer = new MR_UInt8[mXRes * mYRes];
 		mColumnPtr = new MR_UInt8 *[mXRes];
 
-		Pixel24 *lPtr = mBuffer;
+		MR_UInt8 *lPtr = mBuffer;
 
 		for(int lCounter = 0; lCounter < mXRes; lCounter++) {
 			mColumnPtr[lCounter] = lPtr;

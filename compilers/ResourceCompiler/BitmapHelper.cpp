@@ -23,15 +23,13 @@
 #include "BitmapHelper.h"
 
 // Local prototypes
-static Pixel24 *BMPRead(FILE *pFile, int &pXRes, int &pYRes);
-static Pixel24 *IMGRead(FILE *pFile, int &pXRes, int &pYRes);
-static Pixel24 *PCXRead(FILE *pFile, int &pXRes, int &pYRes);
+static MR_UInt8 *BMPRead(FILE *pFile, int &pXRes, int &pYRes);
+static MR_UInt8 *IMGRead(FILE *pFile, int &pXRes, int &pYRes);
+static MR_UInt8 *PCXRead(FILE *pFile, int &pXRes, int &pYRes);
 
-Pixel24 *LoadBitmap(const char *lFileName, int &pXRes, int &pYRes, BOOL pReverse)
+MR_UInt8 *LoadBitmap(const char *lFileName, int &pXRes, int &pYRes, BOOL pReverse)
 {
-	ASSERT(sizeof(Pixel24) == 3);
-
-	Pixel24 *lReturnValue = NULL;
+	MR_UInt8 *lReturnValue = NULL;
 
 	FILE *lFile = fopen(lFileName, "rb");
 
@@ -59,14 +57,14 @@ Pixel24 *LoadBitmap(const char *lFileName, int &pXRes, int &pYRes, BOOL pReverse
 
 	if((lReturnValue != NULL) && pReverse) {
 		// Make the invertion of the image pixels
-		Pixel24 *lOldBuffer = lReturnValue;
+		MR_UInt8 *lOldBuffer = lReturnValue;
 
-		lReturnValue = new Pixel24[pXRes * pYRes];
+		lReturnValue = new MR_UInt8[pXRes * pYRes];
 
 		int lDestIndex = 0;
 
 		for(int lX = 0; lX < pXRes; lX++) {
-			Pixel24 *lSource = lOldBuffer + lX;
+			MR_UInt8 *lSource = lOldBuffer + lX;
 
 			for(int lY = 0; lY < pYRes; lY++) {
 				lReturnValue[lDestIndex] = *lSource;
@@ -80,10 +78,10 @@ Pixel24 *LoadBitmap(const char *lFileName, int &pXRes, int &pYRes, BOOL pReverse
 	return lReturnValue;
 }
 
-Pixel24 *BMPRead(FILE * pFile, int &pXRes, int &pYRes)
+MR_UInt8 *BMPRead(FILE * pFile, int &pXRes, int &pYRes)
 {
 	MR_Int32 lDataPos;
-	Pixel24 *lReturnValue = NULL;
+	MR_UInt8 *lReturnValue = NULL;
 
 	// Read Header
 	fseek(pFile, 10, SEEK_SET);
@@ -98,9 +96,9 @@ Pixel24 *BMPRead(FILE * pFile, int &pXRes, int &pYRes)
 	ASSERT(pXRes > 0);
 	ASSERT(pYRes > 0);
 
-	lReturnValue = new Pixel24[pXRes * pYRes];
+	lReturnValue = new MR_UInt8[pXRes * pYRes];
 
-	fread(lReturnValue, pXRes * pYRes, 3, pFile);
+	fread(lReturnValue, pXRes * pYRes, 1, pFile);
 
 	return lReturnValue;
 
@@ -116,11 +114,6 @@ MR_UInt8 *IMGRead(FILE * /*pFile */ , int & /*pXRes */ , int & /*pYRes */ )
 
 MR_UInt8 *PCXRead(FILE * pFile, int &pXRes, int &pYRes)
 {
-	printf("ERROR: Unsupported format\n");
-
-	return NULL;
-
-	/*
 	MR_UInt8 *lReturnValue = NULL;
 
 	MR_Int16 lStartX;
@@ -167,7 +160,7 @@ MR_UInt8 *PCXRead(FILE * pFile, int &pXRes, int &pYRes)
 				   }
 				 */
 
-	/*			for(int lCounter = 0; lCounter < (lBuffer & 0x3f); lCounter++) {
+				for(int lCounter = 0; lCounter < (lBuffer & 0x3f); lCounter++) {
 					if(lColNb < pXRes) {
 						lReturnValue[lOffset++] = lBuffer2;
 					}
@@ -183,12 +176,12 @@ MR_UInt8 *PCXRead(FILE * pFile, int &pXRes, int &pYRes)
 					   lBuffer2 = 0;
 					   }
 					 */
-	/*				lReturnValue[lOffset++] = lBuffer;
+					lReturnValue[lOffset++] = lBuffer;
 				}
 				lColNb++;
 			}
 		}
 	}
 
-	return lReturnValue;*/
+	return lReturnValue;
 }

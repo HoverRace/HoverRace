@@ -23,14 +23,7 @@
 #ifndef MR_BITMAP_HELPER_H
 #define MR_BITMAP_HELPER_H
 
-#include "../../engine/Util/Pixel.h"
+#include "../../engine/Util/MR_Types.h"
 
-/**
- * LoadBitmap returns a loaded bitmap (can be format PCX, IMG, or BMP).  However, only
- * BMPs should be used, since it loads 24-bit BMPs and the PCX loading code does 8-bit
- * (and the IMG loading code was never written).
- *
- * Returns a Pixel24 buffer to the loaded bitmap; 3 bytes per pixel (rgb).
- */
-Pixel24 *LoadBitmap(const char *lFileName, int &pXRes, int &pYRes, BOOL pReverse);
+MR_UInt8 *LoadBitmap(const char *lFileName, int &pXRes, int &pYRes, BOOL pReverse);
 #endif

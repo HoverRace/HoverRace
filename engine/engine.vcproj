@@ -425,9 +425,6 @@
 				RelativePath=".\Util\NET.rc">
 			</File>
 			<File
-				RelativePath=".\Util\Pixel.h">
-			</File>
-			<File
 				RelativePath=".\Util\Profiler.cpp">
 			</File>
 			<File
