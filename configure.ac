@@ -25,7 +25,7 @@ BOOST_THREADS
 PKG_CHECK_MODULES(DEPS, [
 	freealut >= 1.1
 	libcurl >= 7.18
-	openal >= 1.3
+	openal >= 0.0.8
 ])
 AC_SUBST(DEPS_CFLAGS)
 AC_SUBST(DEPS_LIBS)
