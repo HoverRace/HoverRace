@@ -47,7 +47,7 @@
 				Name="VCMIDLTool"/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy ObjFac1\ObjFac1.dat ..\share"/>
+				CommandLine="copy ..\res\ObjFac1.dat ..\share"/>
 			<Tool
 				Name="VCPreBuildEventTool"/>
 			<Tool
