@@ -63,6 +63,7 @@
 #define MR_CAR2_COCKPIT    27
 #define MR_CAR_MOTOR2      28
 #define MR_CAR_MOTOR3      29
+#define MR_EON_COCKPIT	   30
 
 #define MR_CAR_COCKPIT1    40
 #define MR_CAR_COCKPIT2    41

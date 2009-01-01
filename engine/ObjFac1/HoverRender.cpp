@@ -57,6 +57,7 @@ MR_HoverRender::MR_HoverRender(const MR_ObjectFromFactoryId &pId, MR_ResourceLib
 	for(int lCounter = 0; lCounter < 10; lCounter++) {
 		mCockpitBitmap[lCounter] = resourceLib->GetBitmap(MR_CAR_COCKPIT1 + lCounter);
 		mCockpitBitmap2[lCounter] = resourceLib->GetBitmap(MR_CAR_COCKPIT21 + lCounter);
+		mEonCockpitBitmap[lCounter] = resourceLib->GetBitmap(MR_CAR_COCKPIT31 + lCounter);
 	}
 }
 
@@ -85,7 +86,7 @@ void MR_HoverRender::Render(MR_3DViewPort *pDest, const MR_3DCoordinate &pPositi
 	} else if(pModel == 2) {
 		MR_ResActorFriend::Draw(mActor2, pDest, lMatrix, lSeq, mFrame, mCockpitBitmap[pHoverId % 10]);
 	} else if(pModel == 3) {
-		MR_ResActorFriend::Draw(mActor3, pDest, lMatrix, lSeq, mFrame, mCockpitBitmap[pHoverId % 10]);
+		MR_ResActorFriend::Draw(mActor3, pDest, lMatrix, lSeq, mFrame, mEonCockpitBitmap[pHoverId % 10]);
 	} else {
 		MR_ResActorFriend::Draw(mActor0, pDest, lMatrix, lSeq, mFrame, mCockpitBitmap[pHoverId % 10]);
 	}
@@ -148,23 +149,22 @@ MR_ContinuousSound *MR_HoverRender::GetFrictionSound()
 	return mFrictionSound;
 }
 
-void MR_ResActorFriend::Draw(const MR_ResActor * pActor, MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix, int pSequence, int pFrame, const MR_Bitmap * pCockpitBitmap)
+void MR_ResActorFriend::Draw(const MR_ResActor *pActor, MR_3DViewPort *pDest, const MR_PositionMatrix &pMatrix, int pSequence, int pFrame, const MR_Bitmap *pCockpitBitmap)
 {
 	MR_ResActor::Frame * lFrame = &(pActor->mSequenceList[pSequence].mFrameList[pFrame]);
 
 	ASSERT(lFrame != NULL);
 
 	for(int lCounter = 0; lCounter < lFrame->mNbComponent; lCounter++) {
-		MR_ResActor::Patch * lPatch = (MR_ResActor::Patch *) lFrame->mComponentList[lCounter];
+		MR_ResActor::Patch *lPatch = (MR_ResActor::Patch *) lFrame->mComponentList[lCounter];
 
 		int lBitmapResId = lPatch->mBitmap->GetResourceId();
 
-		if((lBitmapResId == MR_CAR_COCKPIT) || (lBitmapResId == MR_CAR2_COCKPIT) /*||(lBitmapResId == MR_ECAR_COCKPIT) */ ) {
-		pDest->RenderPatch(*lPatch, pMatrix, pCockpitBitmap);
+		if((lBitmapResId == MR_CAR_COCKPIT) || (lBitmapResId == MR_CAR2_COCKPIT) ||(lBitmapResId == MR_EON_COCKPIT)) {
+			pDest->RenderPatch(*lPatch, pMatrix, pCockpitBitmap);
+		}
+		else {
+			pDest->RenderPatch(*lPatch, pMatrix, lPatch->mBitmap);
+		}
 	}
-	else {
-		pDest->RenderPatch(*lPatch, pMatrix, lPatch->mBitmap);
-	}
-}
-
 }
