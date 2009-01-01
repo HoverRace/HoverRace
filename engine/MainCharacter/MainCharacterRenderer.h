@@ -28,22 +28,19 @@
 #include "../Util/DllObjectFactory.h"
 
 #ifdef MR_ENGINE
-#define MR_DllDeclare   __declspec( dllexport )
+#define MR_DllDeclare   __declspec(dllexport)
 #else
-#define MR_DllDeclare   __declspec( dllimport )
+#define MR_DllDeclare   __declspec(dllimport)
 #endif
 
-class MR_DllDeclare MR_MainCharacterRenderer:public MR_ObjectFromFactory
+class MR_DllDeclare MR_MainCharacterRenderer : public MR_ObjectFromFactory
 {
-
-	private:
-
 	public:
 		// Construction
 		MR_MainCharacterRenderer(const MR_ObjectFromFactoryId & pId);
 		~MR_MainCharacterRenderer();
 
-		virtual void Render(MR_3DViewPort * pDest, const MR_3DCoordinate & pPosition, MR_Angle pOrientation, BOOL pMotorOn, int pHoverId, int pModel) = 0;
+		virtual void Render(MR_3DViewPort *pDest, const MR_3DCoordinate &pPosition, MR_Angle pOrientation, BOOL pMotorOn, int pHoverId, int pModel) = 0;
 
 		// Sound list
 		virtual MR_ShortSound *GetLineCrossingSound() = 0;

@@ -229,7 +229,9 @@ void MR_MainCharacter::SetHoverModel(int pModel)
 int MR_MainCharacter::GetHoverModel() const
 {
 	return mHoverModel;
-} void MR_MainCharacter::SetOrientation(MR_Angle pOrientation)
+} 
+
+void MR_MainCharacter::SetOrientation(MR_Angle pOrientation)
 {
 	mOrientation = pOrientation;
 	mCabinOrientation = pOrientation;
@@ -326,377 +328,359 @@ MR_ElementNetState MR_MainCharacter::GetNetState() const
 }
 
 void MR_MainCharacter::SetNetState(int /*pDataLen */ , const MR_UInt8 * pData)
-	{
+{
+	const MR_MainCharacterState *lState = (const MR_MainCharacterState *) pData;
 
-		const MR_MainCharacterState *lState = (const MR_MainCharacterState *) pData;
+	mPosition.mX = lState->Get(MC_POSX);
+	mPosition.mY = lState->Get(MC_POSY);
+	mPosition.mZ = lState->Get(MC_POSZ);
 
-		mPosition.mX = lState->Get(MC_POSX);
-		mPosition.mY = lState->Get(MC_POSY);
-		mPosition.mZ = lState->Get(MC_POSZ);
+	mRoom = lState->Get(MC_ROOM);
 
-		mRoom = lState->Get(MC_ROOM);
+	if(mRoom < -1)
+		mRoom = lState->Getu(MC_ROOM);
 
-		if(mRoom < -1)
-			mRoom = lState->Getu(MC_ROOM);
+	mOrientation = lState->Getu(MC_ORIENTATION);
 
-		mOrientation = lState->Getu(MC_ORIENTATION);
+	mXSpeed = lState->Get(MC_SPEED_X_256) / 256.0;
+	mYSpeed = lState->Get(MC_SPEED_Y_256) / 256.0;
+	mZSpeed = lState->Get(MC_SPEED_Z_256) / 256.0;
 
-		mXSpeed = lState->Get(MC_SPEED_X_256) / 256.0;
-		mYSpeed = lState->Get(MC_SPEED_Y_256) / 256.0;
-		mZSpeed = lState->Get(MC_SPEED_Z_256) / 256.0;
+	mControlState = lState->Getu(MC_CONTROL_ST);
+	mOnFloor = lState->Get(MC_ON_FLOOR);
+	mHoverModel = lState->Getu(MC_HOVER_MODEL);
 
-		mControlState = lState->Getu(MC_CONTROL_ST);
-		mOnFloor = lState->Get(MC_ON_FLOOR);
-		mHoverModel = lState->Getu(MC_HOVER_MODEL);
+	/*
+	   mPosition.mX = lState->mPosX;
+	   mPosition.mY = lState->mPosY;
+	   mPosition.mZ = lState->mPosZ;
 
-		/*
-		   mPosition.mX = lState->mPosX;
-		   mPosition.mY = lState->mPosY;
-		   mPosition.mZ = lState->mPosZ;
+	   // mRoom        = lState->mRoom;
 
-		   // mRoom        = lState->mRoom;
+	   mOrientation = lState->mOrientation;
 
-		   mOrientation = lState->mOrientation;
+	   mXSpeed      = lState->mXSpeed_256/256.0;
+	   mYSpeed      = lState->mYSpeed_256/256.0;
+	   mZSpeed      = lState->mZSpeed_256/256.0;
 
-		   mXSpeed      = lState->mXSpeed_256/256.0;
-		   mYSpeed      = lState->mYSpeed_256/256.0;
-		   mZSpeed      = lState->mZSpeed_256/256.0;
+	   mControlState= lState->mControlState;
 
-		   mControlState= lState->mControlState;
+	   mOnFloor     = lState->mOnFloor;
+	 */
 
-		   mOnFloor     = lState->mOnFloor;
-		 */
+	// Determine cabin orientation
+	if(mControlState & eBreakDirection)
+		mCabinOrientation = MR_NORMALIZE_ANGLE(RAD_2_MR_ANGLE(atan2(mYSpeed, mXSpeed)) + MR_PI);
+	//else if( (mControlState & eStraffleRight)^(mControlState & eStraffleLeft)) {
+	//      if(mControlState & eStraffleRight)
+	//              mCabinOrientation = MR_NORMALIZE_ANGLE(mOrientation - MR_PI / 2);
+	//      else
+	//              mCabinOrientation = MR_NORMALIZE_ANGLE(mOrientation + MR_PI / 2);
+	//}
+}
 
-		// Determine cabin orientation
-		if(mControlState & eBreakDirection)
-			mCabinOrientation = MR_NORMALIZE_ANGLE(RAD_2_MR_ANGLE(atan2(mYSpeed, mXSpeed)) + MR_PI);
-		//else if( (mControlState & eStraffleRight)^(mControlState & eStraffleLeft)) {
-		//      if(mControlState & eStraffleRight)
-		//              mCabinOrientation = MR_NORMALIZE_ANGLE(mOrientation - MR_PI / 2);
-		//      else
-		//              mCabinOrientation = MR_NORMALIZE_ANGLE(mOrientation + MR_PI / 2);
-		//}
+void MR_MainCharacter::SetNbLapForRace(int pNbLap)
+{
+	mNbLapForRace = pNbLap;
+}
+
+void MR_MainCharacter::SetControlState(int pState, MR_SimulationTime pTime)
+{
+	int lState = pState;
+
+	// Set HoverType if race not started
+	if(pTime < 0) {
+		if(!(mControlState & (eRight | eLeft))) {
+			if(pState & eRight)
+				mHoverModel++;
+			if(pState & eLeft)
+				mHoverModel--;
+
+			mHoverModel = (mHoverModel + 4) % 4;
+		}
 	}
-
-	void MR_MainCharacter::SetNbLapForRace(int pNbLap)
-	{
-		mNbLapForRace = pNbLap;
+	// First verify transition states
+	if(!(mControlState & eSelectWeapon) && (lState & eSelectWeapon)) {
+		(*(int *) &mCurrentWeapon)++;
+		if(mCurrentWeapon == eNotAWeapon)
+			(*(int *) &mCurrentWeapon) = 0;
 	}
+	if(!(mControlState & eFire) && (lState & eFire))
+		mFireDone = FALSE;
 
-	void MR_MainCharacter::SetControlState(int pState, MR_SimulationTime pTime)
-	{
-		int lState = pState;
-
-		// Set HoverType if race not started
-		if(pTime < 0) {
-			if(!(mControlState & (eRight | eLeft))) {
-				if(pState & eRight)
-					mHoverModel++;
-				if(pState & eLeft)
-					mHoverModel--;
-
-				mHoverModel = (mHoverModel + 3) % 3;
-			}
-		}
-		// First verify transition states
-		if(!(mControlState & eSelectWeapon) && (lState & eSelectWeapon)) {
-			(*(int *) &mCurrentWeapon)++;
-			if(mCurrentWeapon == eNotAWeapon)
-				(*(int *) &mCurrentWeapon) = 0;
-		}
-		if(!(mControlState & eFire) && (lState & eFire))
-			mFireDone = FALSE;
-
-		if(!(mControlState & eJump) && (lState & eJump)) {
-			if(mOnFloor) {
-				mZSpeed = 1.1 * eMaxZSpeed[mHoverModel];
-				if(mRenderer != NULL)
-					mInternalSoundList.Add(mRenderer->GetJumpSound());
-			}
-			else {
-				if(mRenderer != NULL)
-					mInternalSoundList.Add(mRenderer->GetMisJumpSound());
-			}
-		}
-												  // We're no longer looking behind us
-		if((mControlState & eLookBack) && !(lState & eLookBack))
-			mOrientation = mCabinOrientation;
-
-		if(!(mControlState & (eRight | eLeft)))
-			lState |= eSlowRotation;
-
-		// Now verify continous states
-		if(mFuelLevel <= 0.0) {
-			if((!mMotorOnState) && (lState & eMotorOn))
-				mFuelLevel = 120;
-			else
-				lState &= ~eMotorOn;
-		}
-		mMotorOnState = pState & eMotorOn;
-		mControlState = lState;
-	}
-
-	int MR_MainCharacter::Simulate(MR_SimulationTime pDuration, MR_Level * pLevel, int pRoom)
-	{
-		mRoom = pRoom;
-
-		if(pDuration > 0) {
-			if(mMasterMode) {
-				if((mControlState & eMotorOn) && (mFuelLevel > 0.0))
-					mMotorDisplay = 250;
-			}
-			else {
-				if(mControlState & eMotorOn)
-					mMotorDisplay = 250;
-			}
-		}
-
-		mMotorDisplay -= pDuration;
-
-		if(mMotorDisplay < 0)
-			mMotorDisplay = 0;
-
-		// Orient the cabin if a special move have been made
-
-		if(mControlState & eBreakDirection) {
-			double lAbsoluteSpeed = sqrt(mXSpeed * mXSpeed + mYSpeed * mYSpeed);
-			if(lAbsoluteSpeed > (eSteadySpeed[mHoverModel] / 20.0))
-				mCabinOrientation = MR_NORMALIZE_ANGLE(RAD_2_MR_ANGLE(atan2(mYSpeed, mXSpeed)) + MR_PI);
-		}
-		else if(mControlState & eLookBack) {
-			if(mCabinOrientation - mOrientation < (MR_PI / 2));
-			mOrientation = MR_NORMALIZE_ANGLE(mCabinOrientation - MR_PI);
-		}
-		//else if((mControlState & eStraffleRight) ^ (mControlState & eStraffleLeft)) {
-		//      if(mControlState & eStraffleRight)
-		//              mCabinOrientation = MR_NORMALIZE_ANGLE(mOrientation - MR_PI / 2);
-		//      else
-		//              mCabinOrientation = MR_NORMALIZE_ANGLE(mOrientation + MR_PI / 2);
-		//}
-		else
-			mCabinOrientation = mOrientation;
-
-		if(mMasterMode) {
-			MR_SimulationTime lDuration = pDuration;
-
-			while(lDuration > 0) {
-				if(lDuration > TIME_SLICE)
-					pRoom = InternalSimulate(TIME_SLICE, pLevel, pRoom);
-				else
-					pRoom = InternalSimulate(lDuration, pLevel, pRoom);
-				lDuration -= TIME_SLICE;
-			}
-
-			mXSpeedBeforeCollision = mXSpeed;
-			mYSpeedBeforeCollision = mYSpeed;
-
-			// If the user pressed fire, launch a missile
-			mMissileRefillDuration -= pDuration;
-			if(mMissileRefillDuration <= 0)
-				mMissileRefillDuration = 0;
-
-			mPowerUpLeft -= static_cast<MR_SimulationTime>(pDuration * eFuelConsuming[mHoverModel]);
-			if(mPowerUpLeft < 0)
-				mPowerUpLeft = 0;
-
-			if((mControlState & eFire) && !mFireDone) {
-				mFireDone = TRUE;
-
-				if(mCurrentWeapon == eMissile) {
-					if((mMissileRefillDuration == 0) && mAllowWeapons) {
-						mMissileRefillDuration = eMissileRefillTime;
-
-						MR_ObjectFromFactoryId lObjectId = { 1, 150 };
-						// Create a new missile
-						MR_FreeElement *lMissile = (MR_FreeElement *) MR_DllObjectFactory::CreateObject(lObjectId);
-
-						if(lMissile != NULL) {
-							lMissile->SetOwnerId(mHoverId);
-							lMissile->mPosition = mPosition;
-							lMissile->mPosition.mZ += 1100;
-							lMissile->mOrientation = mCabinOrientation;
-
-							pLevel->InsertElement(lMissile, mRoom, TRUE);
-
-							if(mRenderer != NULL) {
-								mInternalSoundList.Add(mRenderer->GetFireSound());
-								mExternalSoundList.Add(mRenderer->GetFireSound());
-							}
-						}
-					}
-				}
-				else if(mCurrentWeapon == eMine) {
-					if(!mMineList.IsEmpty()) {
-						MR_3DCoordinate lPos = mPosition;
-						lPos.mZ += 800;
-						pLevel->SetPermElementPos(mMineList.GetHead(), mRoom, lPos);
-						mMineList.Remove();
-					}
-				}
-				else if(mCurrentWeapon == ePowerUp) {
-					if(!mPowerUpList.IsEmpty()) {
-						MR_3DCoordinate lPos = mPosition;
-						lPos.mZ += 1200;
-
-						pLevel->SetPermElementPos(mPowerUpList.GetHead(), mRoom, lPos);
-						mPowerUpList.Remove();
-
-						mPowerUpLeft = ePwrUpDuration;
-					}
-				}
-			}
-		} else									  // Slave mode
-		pRoom = InternalSimulate(pDuration, pLevel, pRoom);
-		return pRoom;
-	}
-
-	int MR_MainCharacter::InternalSimulate(MR_SimulationTime pDuration, MR_Level * pLevel, int pRoom)
-	{
-		// Determine new speed (PosVar and OrientationVar
-		double lAbsoluteSpeed = sqrt(mXSpeed * mXSpeed + mYSpeed * mYSpeed);
-
-		if(mOutOfControlDuration <= 0) {		  // No friction when out of control..it's just more cool
-			if(lAbsoluteSpeed <= -pDuration * eFrictionAccell[mHoverModel]) {
-				mXSpeed = 0;
-				mYSpeed = 0;
-			}
-			else {
-				double lFrictionAmplifier = 1.0;
-
-				if(lAbsoluteSpeed < eSteadySpeed[mHoverModel] / 3)
-					lFrictionAmplifier = 0.4;
-				else if((lAbsoluteSpeed > eSteadySpeed[mHoverModel]) && (lAbsoluteSpeed < 2.5 * eSteadySpeed[mHoverModel]))
-					lFrictionAmplifier = min(1.7, 1.1 + 2.5 * (lAbsoluteSpeed / eSteadySpeed[0] - 1.0));
-
-				double lConstantPart = pDuration * lFrictionAmplifier * eFrictionAccell[mHoverModel] / lAbsoluteSpeed;
-
-				mXSpeed += lConstantPart * mXSpeed;
-				mYSpeed += lConstantPart * mYSpeed;
-			}
-		}
-
-		mZSpeed += pDuration * eZAccell[mHoverModel];
-
-		if(mZSpeed < -eMaxZSpeed[mHoverModel])
-			mZSpeed = -eMaxZSpeed[mHoverModel];
-
-		// Apply rotation
-		if(mOutOfControlDuration > 0) {
-			mOutOfControlDuration -= pDuration;
-
-			mOrientation = MR_NORMALIZE_ANGLE((int) (mOrientation + pDuration * 8 * eRotationSpeed));
+	if(!(mControlState & eJump) && (lState & eJump)) {
+		if(mOnFloor) {
+			mZSpeed = 1.1 * eMaxZSpeed[mHoverModel];
+			if(mRenderer != NULL)
+				mInternalSoundList.Add(mRenderer->GetJumpSound());
 		}
 		else {
-			if((mControlState & eRight) ^ (mControlState & eLeft)) {
-				double lRotation;
-
-				if(mControlState & eRight)
-					lRotation = -pDuration * eRotationSpeed;
-				else
-					lRotation = pDuration * eRotationSpeed;
-
-				if(mControlState & eSlowRotation)
-					lRotation /= 4;
-
-				if(mControlState & eLookBack)
-					mCabinOrientation = MR_NORMALIZE_ANGLE(mCabinOrientation + (int) lRotation);
-				else
-					mOrientation = MR_NORMALIZE_ANGLE(mOrientation + (int) lRotation);
-			}
+			if(mRenderer != NULL)
+				mInternalSoundList.Add(mRenderer->GetMisJumpSound());
 		}
+	}
 
-		// MotorEffect
-		if(mControlState & eMotorOn) {
-			double lDirectionalSpeed = (mXSpeed * MR_Cos[mCabinOrientation] + mYSpeed * MR_Sin[mCabinOrientation]) / MR_TRIGO_FRACT;
+	// We're no longer looking behind us
+	if((mControlState & eLookBack) && !(lState & eLookBack))
+		mOrientation = mCabinOrientation;
 
-			double lMaxSpeedFactor = 1.3;
+	if(!(mControlState & (eRight | eLeft)))
+		lState |= eSlowRotation;
 
-			if(mPowerUpLeft > 0)
-				lMaxSpeedFactor = 1.9;
+	// Now verify continous states
+	if(mFuelLevel <= 0.0) {
+		if((!mMotorOnState) && (lState & eMotorOn))
+			mFuelLevel = 120;
+		else
+			lState &= ~eMotorOn;
+	}
+	mMotorOnState = pState & eMotorOn;
+	mControlState = lState;
+}
 
-			if(lDirectionalSpeed < (lMaxSpeedFactor * eSteadySpeed[mHoverModel])) {
-				double lAccelerationFactor = 1.0 - lDirectionalSpeed / (lMaxSpeedFactor * 1.25 * eSteadySpeed[mHoverModel]);
+int MR_MainCharacter::Simulate(MR_SimulationTime pDuration, MR_Level * pLevel, int pRoom)
+{
+	mRoom = pRoom;
 
-				if(lAccelerationFactor < 0)
-					lAccelerationFactor = 0;
-				else if(lAccelerationFactor > 0.8)
-					lAccelerationFactor = 0.8;
-
-				if(mPowerUpLeft > 0)
-					lAccelerationFactor *= 3.2;
-				else
-					lAccelerationFactor *= 1.8;
-
-				mXSpeed += (pDuration * lAccelerationFactor * eMotorAccell[mHoverModel] * MR_Cos[mCabinOrientation]) / MR_TRIGO_FRACT;
-				mYSpeed += (pDuration * lAccelerationFactor * eMotorAccell[mHoverModel] * MR_Sin[mCabinOrientation]) / MR_TRIGO_FRACT;
-			}
-
-			mFuelLevel -= pDuration * eFuelConsuming[mHoverModel];
+	if(pDuration > 0) {
+		if(mMasterMode) {
+			if((mControlState & eMotorOn) && (mFuelLevel > 0.0))
+				mMotorDisplay = 250;
 		}
-		// Determine new dispacement
-		Cylinder lShape;
+		else {
+			if(mControlState & eMotorOn)
+				mMotorDisplay = 250;
+		}
+	}
 
-		lShape.mRay = eCharacterMovementRay;	  //eCharacterRay;
+	mMotorDisplay -= pDuration;
 
-		// Compute speed objectives
-		MR_3DCoordinate lTranslation((mXSpeed * (int) pDuration), (mYSpeed * (int) pDuration), (mZSpeed * (int) pDuration));
+	if(mMotorDisplay < 0)
+		mMotorDisplay = 0;
 
-		// This avoid continious jumping
-		if(lTranslation.mZ == 0)
-			lTranslation.mZ = -1;
+	// Orient the cabin if a special move have been made
+	if(mControlState & eBreakDirection) {
+		double lAbsoluteSpeed = sqrt(mXSpeed * mXSpeed + mYSpeed * mYSpeed);
+		if(lAbsoluteSpeed > (eSteadySpeed[mHoverModel] / 20.0))
+			mCabinOrientation = MR_NORMALIZE_ANGLE(RAD_2_MR_ANGLE(atan2(mYSpeed, mXSpeed)) + MR_PI);
+	}
+	else if(mControlState & eLookBack) {
+		if(mCabinOrientation - mOrientation < (MR_PI / 2));
+		mOrientation = MR_NORMALIZE_ANGLE(mCabinOrientation - MR_PI);
+	}
+	//else if((mControlState & eStraffleRight) ^ (mControlState & eStraffleLeft)) {
+	//      if(mControlState & eStraffleRight)
+	//              mCabinOrientation = MR_NORMALIZE_ANGLE(mOrientation - MR_PI / 2);
+	//      else
+	//              mCabinOrientation = MR_NORMALIZE_ANGLE(mOrientation + MR_PI / 2);
+	//}
+	else
+		mCabinOrientation = mOrientation;
 
-		// Verify if the move is valid
-		MR_ObstacleCollisionReport lReport;
-
-		BOOL lSuccessfullTry;
+	if(mMasterMode) {
 		MR_SimulationTime lDuration = pDuration;
 
-		lShape.mPosition.mX = mPosition.mX + lTranslation.mX;
-		lShape.mPosition.mY = mPosition.mY + lTranslation.mY;
-		lShape.mPosition.mZ = mPosition.mZ + lTranslation.mZ;
+		while(lDuration > 0) {
+			if(lDuration > TIME_SLICE)
+				pRoom = InternalSimulate(TIME_SLICE, pLevel, pRoom);
+			else
+				pRoom = InternalSimulate(lDuration, pLevel, pRoom);
+			lDuration -= TIME_SLICE;
+		}
 
-		while(1) {
-			lSuccessfullTry = FALSE;
+		mXSpeedBeforeCollision = mXSpeed;
+		mYSpeedBeforeCollision = mYSpeed;
 
-			lReport.GetContactWithObstacles(pLevel, &lShape, pRoom, this);
-			if(lReport.IsInMaze()) {
-				if(!lReport.HaveContact()) {
-					mPosition = lShape.mPosition;
-					pRoom = lReport.Room();
-					mOnFloor = FALSE;
+		// If the user pressed fire, launch a missile
+		mMissileRefillDuration -= pDuration;
+		if(mMissileRefillDuration <= 0)
+			mMissileRefillDuration = 0;
 
-					lSuccessfullTry = TRUE;
-				}
-				else {
-					// Determine if we can go on the object
-					if((lReport.SpaceToCeiling() > 0) && (lReport.StepHeight() <= 1 - lTranslation.mZ)) {
-						lShape.mPosition.mZ += lReport.StepHeight();
-						lReport.GetContactWithObstacles(pLevel, &lShape, pRoom, this);
+		mPowerUpLeft -= static_cast<MR_SimulationTime>(pDuration * eFuelConsuming[mHoverModel]);
+		if(mPowerUpLeft < 0)
+			mPowerUpLeft = 0;
 
-						if(lReport.IsInMaze()) {
-							if(!lReport.HaveContact()) {
-								if((mRenderer != NULL) && (!mOnFloor))
-									mInternalSoundList.Add(mRenderer->GetBumpSound());
+		if((mControlState & eFire) && !mFireDone) {
+			mFireDone = TRUE;
 
-								mZSpeed = 0;
-								mOnFloor = TRUE;
+			if(mCurrentWeapon == eMissile) {
+				if((mMissileRefillDuration == 0) && mAllowWeapons) {
+					mMissileRefillDuration = eMissileRefillTime;
 
-								mPosition = lShape.mPosition;
-								pRoom = lReport.Room();
+					MR_ObjectFromFactoryId lObjectId = { 1, 150 };
+					// Create a new missile
+					MR_FreeElement *lMissile = (MR_FreeElement *) MR_DllObjectFactory::CreateObject(lObjectId);
 
-								lSuccessfullTry = TRUE;
-							}
+					if(lMissile != NULL) {
+						lMissile->SetOwnerId(mHoverId);
+						lMissile->mPosition = mPosition;
+						lMissile->mPosition.mZ += 1100;
+						lMissile->mOrientation = mCabinOrientation;
+
+						pLevel->InsertElement(lMissile, mRoom, TRUE);
+
+						if(mRenderer != NULL) {
+							mInternalSoundList.Add(mRenderer->GetFireSound());
+							mExternalSoundList.Add(mRenderer->GetFireSound());
 						}
 					}
-					else if((mZSpeed > 0) && (lReport.SpaceToFloor() > 0) && (lReport.CeilingStepHeight() <= lTranslation.mZ)) {
-						lShape.mPosition.mZ -= lReport.CeilingStepHeight() + 1;
+				}
+			}
+			else if(mCurrentWeapon == eMine) {
+				if(!mMineList.IsEmpty()) {
+					MR_3DCoordinate lPos = mPosition;
+					lPos.mZ += 800;
+					pLevel->SetPermElementPos(mMineList.GetHead(), mRoom, lPos);
+					mMineList.Remove();
+				}
+			}
+			else if(mCurrentWeapon == ePowerUp) {
+				if(!mPowerUpList.IsEmpty()) {
+					MR_3DCoordinate lPos = mPosition;
+					lPos.mZ += 1200;
 
-						lReport.GetContactWithObstacles(pLevel, &lShape, pRoom, this);
+					pLevel->SetPermElementPos(mPowerUpList.GetHead(), mRoom, lPos);
+					mPowerUpList.Remove();
 
-						if(lReport.IsInMaze()) {
-							if(!lReport.HaveContact())
-								mZSpeed = 0;
-							mOnFloor = FALSE;
+					mPowerUpLeft = ePwrUpDuration;
+				}
+			}
+		}
+	} else									  // Slave mode
+		pRoom = InternalSimulate(pDuration, pLevel, pRoom);
+	
+	return pRoom;
+}
+
+int MR_MainCharacter::InternalSimulate(MR_SimulationTime pDuration, MR_Level * pLevel, int pRoom)
+{
+	// Determine new speed (PosVar and OrientationVar
+	double lAbsoluteSpeed = sqrt(mXSpeed * mXSpeed + mYSpeed * mYSpeed);
+
+	if(mOutOfControlDuration <= 0) {		  // No friction when out of control..it's just more cool
+		if(lAbsoluteSpeed <= -pDuration * eFrictionAccell[mHoverModel]) {
+			mXSpeed = 0;
+			mYSpeed = 0;
+		}
+		else {
+			double lFrictionAmplifier = 1.0;
+
+			if(lAbsoluteSpeed < eSteadySpeed[mHoverModel] / 3)
+				lFrictionAmplifier = 0.4;
+			else if((lAbsoluteSpeed > eSteadySpeed[mHoverModel]) && (lAbsoluteSpeed < 2.5 * eSteadySpeed[mHoverModel]))
+				lFrictionAmplifier = min(1.7, 1.1 + 2.5 * (lAbsoluteSpeed / eSteadySpeed[0] - 1.0));
+
+			double lConstantPart = pDuration * lFrictionAmplifier * eFrictionAccell[mHoverModel] / lAbsoluteSpeed;
+
+			mXSpeed += lConstantPart * mXSpeed;
+			mYSpeed += lConstantPart * mYSpeed;
+		}
+	}
+
+	mZSpeed += pDuration * eZAccell[mHoverModel];
+
+	if(mZSpeed < -eMaxZSpeed[mHoverModel])
+		mZSpeed = -eMaxZSpeed[mHoverModel];
+
+	// Apply rotation
+	if(mOutOfControlDuration > 0) {
+		mOutOfControlDuration -= pDuration;
+
+		mOrientation = MR_NORMALIZE_ANGLE((int) (mOrientation + pDuration * 8 * eRotationSpeed));
+	}
+	else {
+		if((mControlState & eRight) ^ (mControlState & eLeft)) {
+			double lRotation;
+
+			if(mControlState & eRight)
+				lRotation = -pDuration * eRotationSpeed;
+			else
+				lRotation = pDuration * eRotationSpeed;
+
+			if(mControlState & eSlowRotation)
+				lRotation /= 4;
+
+			if(mControlState & eLookBack)
+				mCabinOrientation = MR_NORMALIZE_ANGLE(mCabinOrientation + (int) lRotation);
+			else
+				mOrientation = MR_NORMALIZE_ANGLE(mOrientation + (int) lRotation);
+		}
+	}
+
+	// MotorEffect
+	if(mControlState & eMotorOn) {
+		double lDirectionalSpeed = (mXSpeed * MR_Cos[mCabinOrientation] + mYSpeed * MR_Sin[mCabinOrientation]) / MR_TRIGO_FRACT;
+
+		double lMaxSpeedFactor = 1.3;
+
+		if(mPowerUpLeft > 0)
+			lMaxSpeedFactor = 1.9;
+
+		if(lDirectionalSpeed < (lMaxSpeedFactor * eSteadySpeed[mHoverModel])) {
+			double lAccelerationFactor = 1.0 - lDirectionalSpeed / (lMaxSpeedFactor * 1.25 * eSteadySpeed[mHoverModel]);
+
+			if(lAccelerationFactor < 0)
+				lAccelerationFactor = 0;
+			else if(lAccelerationFactor > 0.8)
+				lAccelerationFactor = 0.8;
+
+			if(mPowerUpLeft > 0)
+				lAccelerationFactor *= 3.2;
+			else
+				lAccelerationFactor *= 1.8;
+
+			mXSpeed += (pDuration * lAccelerationFactor * eMotorAccell[mHoverModel] * MR_Cos[mCabinOrientation]) / MR_TRIGO_FRACT;
+			mYSpeed += (pDuration * lAccelerationFactor * eMotorAccell[mHoverModel] * MR_Sin[mCabinOrientation]) / MR_TRIGO_FRACT;
+		}
+
+		mFuelLevel -= pDuration * eFuelConsuming[mHoverModel];
+	}
+	// Determine new dispacement
+	Cylinder lShape;
+
+	lShape.mRay = eCharacterMovementRay;	  //eCharacterRay;
+
+	// Compute speed objectives
+	MR_3DCoordinate lTranslation((mXSpeed * (int) pDuration), (mYSpeed * (int) pDuration), (mZSpeed * (int) pDuration));
+
+	// This avoid continious jumping
+	if(lTranslation.mZ == 0)
+		lTranslation.mZ = -1;
+
+	// Verify if the move is valid
+	MR_ObstacleCollisionReport lReport;
+
+	BOOL lSuccessfullTry;
+	MR_SimulationTime lDuration = pDuration;
+
+	lShape.mPosition.mX = mPosition.mX + lTranslation.mX;
+	lShape.mPosition.mY = mPosition.mY + lTranslation.mY;
+	lShape.mPosition.mZ = mPosition.mZ + lTranslation.mZ;
+
+	while(1) {
+		lSuccessfullTry = FALSE;
+
+		lReport.GetContactWithObstacles(pLevel, &lShape, pRoom, this);
+		if(lReport.IsInMaze()) {
+			if(!lReport.HaveContact()) {
+				mPosition = lShape.mPosition;
+				pRoom = lReport.Room();
+				mOnFloor = FALSE;
+
+				lSuccessfullTry = TRUE;
+			} else {
+				// Determine if we can go on the object
+				if((lReport.SpaceToCeiling() > 0) && (lReport.StepHeight() <= 1 - lTranslation.mZ)) {
+					lShape.mPosition.mZ += lReport.StepHeight();
+					lReport.GetContactWithObstacles(pLevel, &lShape, pRoom, this);
+
+					if(lReport.IsInMaze()) {
+						if(!lReport.HaveContact()) {
+							if((mRenderer != NULL) && (!mOnFloor))
+								mInternalSoundList.Add(mRenderer->GetBumpSound());
+
+							mZSpeed = 0;
+							mOnFloor = TRUE;
 
 							mPosition = lShape.mPosition;
 							pRoom = lReport.Room();
@@ -705,388 +689,404 @@ void MR_MainCharacter::SetNetState(int /*pDataLen */ , const MR_UInt8 * pData)
 						}
 					}
 				}
-			}
+				else if((mZSpeed > 0) && (lReport.SpaceToFloor() > 0) && (lReport.CeilingStepHeight() <= lTranslation.mZ)) {
+					lShape.mPosition.mZ -= lReport.CeilingStepHeight() + 1;
 
-			if(lDuration < MINIMUM_SPLITTABLE_TIME_SLICE)
-				break;
-			else {
-				if(lSuccessfullTry) {
-					if(lDuration == pDuration)
-						break;					  // success on first attempt
+					lReport.GetContactWithObstacles(pLevel, &lShape, pRoom, this);
 
-					lDuration /= 2;
+					if(lReport.IsInMaze()) {
+						if(!lReport.HaveContact())
+							mZSpeed = 0;
+						mOnFloor = FALSE;
 
-					lShape.mPosition.mX += lDuration * lTranslation.mX / pDuration;
-					lShape.mPosition.mY += lDuration * lTranslation.mY / pDuration;
-					lShape.mPosition.mZ += lDuration * lTranslation.mZ / pDuration;
-				}
-				else {
-					lDuration /= 2;
+						mPosition = lShape.mPosition;
+						pRoom = lReport.Room();
 
-					lShape.mPosition.mX -= lDuration * lTranslation.mX / pDuration;
-					lShape.mPosition.mY -= lDuration * lTranslation.mY / pDuration;
-					lShape.mPosition.mZ -= lDuration * lTranslation.mZ / pDuration;
+						lSuccessfullTry = TRUE;
+					}
 				}
 			}
 		}
 
-		if((mFuelLevel < 0.0) && mMasterMode)
-			mControlState &= ~eMotorOn;
+		if(lDuration < MINIMUM_SPLITTABLE_TIME_SLICE)
+			break;
+		else {
+			if(lSuccessfullTry) {
+				if(lDuration == pDuration)
+					break;					  // success on first attempt
 
-		mRoom = pRoom;
-		return pRoom;
+				lDuration /= 2;
+
+				lShape.mPosition.mX += lDuration * lTranslation.mX / pDuration;
+				lShape.mPosition.mY += lDuration * lTranslation.mY / pDuration;
+				lShape.mPosition.mZ += lDuration * lTranslation.mZ / pDuration;
+			} else {
+				lDuration /= 2;
+
+				lShape.mPosition.mX -= lDuration * lTranslation.mX / pDuration;
+				lShape.mPosition.mY -= lDuration * lTranslation.mY / pDuration;
+				lShape.mPosition.mZ -= lDuration * lTranslation.mZ / pDuration;
+			}
+		}
 	}
 
-	const MR_ShapeInterface *MR_MainCharacter::GetObstacleShape()
-	{
-		return NULL;
-		mCollisionShape.mPosition = mPosition;
-		return &mCollisionShape;
-	}
+	if((mFuelLevel < 0.0) && mMasterMode)
+		mControlState &= ~eMotorOn;
 
-	void MR_MainCharacter::ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 /*pZMin */ ,
+	mRoom = pRoom;
+	return pRoom;
+}
+
+const MR_ShapeInterface *MR_MainCharacter::GetObstacleShape()
+{
+	return NULL;
+	mCollisionShape.mPosition = mPosition;
+	return &mCollisionShape;
+}
+
+void MR_MainCharacter::ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 /*pZMin */ ,
 	MR_Int32 pZMax, MR_Level * pLevel)
-	{
-		MR_ContactEffect *lEffect = (MR_ContactEffect *) pEffect;
-		const MR_PhysicalCollision *lPhysCollision = dynamic_cast < MR_PhysicalCollision * >(lEffect);
-		const MR_SpeedDoubler *lSpeedDoubler = dynamic_cast < MR_SpeedDoubler * >(lEffect);
-		const MR_FuelGain *lFuelGain = dynamic_cast < MR_FuelGain * >(lEffect);
-		const MR_LostOfControl *lLostOfControl = dynamic_cast < MR_LostOfControl * >(lEffect);
-		const MR_CheckPoint *lLapCompleted = dynamic_cast < MR_CheckPoint * >(lEffect);
-		const MR_PowerUpEffect *lPowerUp = dynamic_cast < MR_PowerUpEffect * >(lEffect);
+{
+	MR_ContactEffect *lEffect = (MR_ContactEffect *) pEffect;
+	const MR_PhysicalCollision *lPhysCollision = dynamic_cast < MR_PhysicalCollision * >(lEffect);
+	const MR_SpeedDoubler *lSpeedDoubler = dynamic_cast < MR_SpeedDoubler * >(lEffect);
+	const MR_FuelGain *lFuelGain = dynamic_cast < MR_FuelGain * >(lEffect);
+	const MR_LostOfControl *lLostOfControl = dynamic_cast < MR_LostOfControl * >(lEffect);
+	const MR_CheckPoint *lLapCompleted = dynamic_cast < MR_CheckPoint * >(lEffect);
+	const MR_PowerUpEffect *lPowerUp = dynamic_cast < MR_PowerUpEffect * >(lEffect);
 
-		if((lPhysCollision != NULL) && pValidDirection) {
-			/*
-			   double lInvertDampingFactor = 1.0;
-			   double lDampingFactor       = 0.0;
+	if((lPhysCollision != NULL) && pValidDirection) {
+		/*
+		   double lInvertDampingFactor = 1.0;
+		   double lDampingFactor       = 0.0;
 
-			   if( pZMax-210 < mPosition.mZ )
-			   {
-			   lInvertDampingFactor = (pZMax-mPosition.mZ)/210;
-			   lDampingFactor       = 1.0-lInvertDampingFactor;
+		   if( pZMax-210 < mPosition.mZ )
+		   {
+		   lInvertDampingFactor = (pZMax-mPosition.mZ)/210;
+		   lDampingFactor       = 1.0-lInvertDampingFactor;
 
-			   mZSpeed = max( mZSpeed, 512*lDampingFactor*-eZAccell[mHoverModel] );
-			   }
-			 */
+		   mZSpeed = max( mZSpeed, 512*lDampingFactor*-eZAccell[mHoverModel] );
+		   }
+		 */
 
-			if(pValidDirection) {
-				MR_InertialMoment lMoment;
+		if(pValidDirection) {
+			MR_InertialMoment lMoment;
 
-				lMoment.mWeight = eCharacterWeight[mHoverModel];
-				lMoment.mXSpeed = mXSpeed * 256;
-				lMoment.mYSpeed = mYSpeed * 256;
-				lMoment.mZSpeed = 0;
+			lMoment.mWeight = eCharacterWeight[mHoverModel];
+			lMoment.mXSpeed = mXSpeed * 256;
+			lMoment.mYSpeed = mYSpeed * 256;
+			lMoment.mZSpeed = 0;
 
-				lMoment.ComputeCollision(lPhysCollision, pHorizontalDirection);
+			lMoment.ComputeCollision(lPhysCollision, pHorizontalDirection);
 
-				// mXSpeed = (lInvertDampingFactor*lMoment.mXSpeed/256.0)+lDampingFactor*mXSpeed;
-				// mYSpeed = (lInvertDampingFactor*lMoment.mYSpeed/256.0)+lDampingFactor*mYSpeed;
-				mXSpeed = lMoment.mXSpeed / 256.0;
-				mYSpeed = lMoment.mYSpeed / 256.0;
+			// mXSpeed = (lInvertDampingFactor*lMoment.mXSpeed/256.0)+lDampingFactor*mXSpeed;
+			// mYSpeed = (lInvertDampingFactor*lMoment.mYSpeed/256.0)+lDampingFactor*mYSpeed;
+			mXSpeed = lMoment.mXSpeed / 256.0;
+			mYSpeed = lMoment.mYSpeed / 256.0;
 
-				if((mRenderer != NULL) && !((lMoment.mXSpeed == 0) && (lMoment.mYSpeed == 0))) {
-					mInternalSoundList.Add(mRenderer->GetBumpSound());
-					mExternalSoundList.Add(mRenderer->GetBumpSound());
-				}
-
-				if((lPhysCollision->mXSpeed != 0 || lPhysCollision->mYSpeed != 0)) {
-					TRACE("Net priority increase %d\n", mMasterMode);
-					mNetPriority = TRUE;
-					mLastCollisionTime = pTime;
-				}
-			}
-		}
-
-		if(lSpeedDoubler != NULL) {
-			/*
-			   mXSpeed *= 2;
-			   mYSpeed *= 2;
-
-			   double lAbsSpeed =  sqrt( mXSpeed*mXSpeed+mYSpeed*mYSpeed );
-
-			   if( lAbsSpeed > eSteadySpeed/4 )
-			   {
-			   mXSpeed = eSteadySpeed*2*mXSpeed/lAbsSpeed;
-			   mYSpeed = eSteadySpeed*2*mYSpeed/lAbsSpeed;
-			   }
-			 */
-
-			mXSpeed = (4 * eSteadySpeed[0] * MR_Cos[mCabinOrientation]) / MR_TRIGO_FRACT;
-			mYSpeed = (4 * eSteadySpeed[0] * MR_Sin[mCabinOrientation]) / MR_TRIGO_FRACT;
-		}
-
-		if((lFuelGain != NULL) && mMasterMode) {
-			mFuelLevel += pDuration * lFuelGain->mFuelQty;
-
-			if(mFuelLevel > eFuelCapacity) {
-				mFuelLevel = eFuelCapacity;
-			}
-		}
-
-		if((lLostOfControl != NULL) && mMasterMode) {
-			if(mOutOfControlDuration < 1750)
-				mLastHits.Add(lLostOfControl->mHoverId);
-
-			mOutOfControlDuration = 2000;
-
-			if(mRenderer != NULL) {
-				mInternalSoundList.Add(mRenderer->GetOutOfCtrlSound());
-				mExternalSoundList.Add(mRenderer->GetOutOfCtrlSound());
+			if((mRenderer != NULL) && !((lMoment.mXSpeed == 0) && (lMoment.mYSpeed == 0))) {
+				mInternalSoundList.Add(mRenderer->GetBumpSound());
+				mExternalSoundList.Add(mRenderer->GetBumpSound());
 			}
 
-			if(lLostOfControl->mType == MR_LostOfControl::eMine) {
-				mZSpeed = 1.1 * eMaxZSpeed[0];
-
-				if((lLostOfControl->mElementId != -1) && !mMineList.Full()) {
-					mMineList.Add(lLostOfControl->mElementId);
-					pLevel->SetPermElementPos(lLostOfControl->mElementId, -1, mPosition);
-				}
+			if((lPhysCollision->mXSpeed != 0 || lPhysCollision->mYSpeed != 0)) {
+				TRACE("Net priority increase %d\n", mMasterMode);
+				mNetPriority = TRUE;
+				mLastCollisionTime = pTime;
 			}
 		}
+	}
 
-		if((lPowerUp != NULL) && mMasterMode) {
-			// TODO Add sound
-			if((mPowerUpLeft == 0) && (lPowerUp->mElementPermId != -1) && !mPowerUpList.Full()) {
-				mPowerUpList.Add(lPowerUp->mElementPermId);
-				pLevel->SetPermElementPos(lPowerUp->mElementPermId, -1, mPosition);
-			}
+	if(lSpeedDoubler != NULL) {
+		/*
+		   mXSpeed *= 2;
+		   mYSpeed *= 2;
+
+		   double lAbsSpeed =  sqrt( mXSpeed*mXSpeed+mYSpeed*mYSpeed );
+
+		   if( lAbsSpeed > eSteadySpeed/4 )
+		   {
+		mXSpeed = eSteadySpeed*2*mXSpeed/lAbsSpeed;
+		mYSpeed = eSteadySpeed*2*mYSpeed/lAbsSpeed;
+		   }
+		 */
+
+		mXSpeed = (4 * eSteadySpeed[0] * MR_Cos[mCabinOrientation]) / MR_TRIGO_FRACT;
+		mYSpeed = (4 * eSteadySpeed[0] * MR_Sin[mCabinOrientation]) / MR_TRIGO_FRACT;
+	}
+
+	if((lFuelGain != NULL) && mMasterMode) {
+		mFuelLevel += pDuration * lFuelGain->mFuelQty;
+
+		if(mFuelLevel > eFuelCapacity) {
+			mFuelLevel = eFuelCapacity;
+		}
+	}
+
+	if((lLostOfControl != NULL) && mMasterMode) {
+		if(mOutOfControlDuration < 1750)
+			mLastHits.Add(lLostOfControl->mHoverId);
+
+		mOutOfControlDuration = 2000;
+
+		if(mRenderer != NULL) {
+			mInternalSoundList.Add(mRenderer->GetOutOfCtrlSound());
+			mExternalSoundList.Add(mRenderer->GetOutOfCtrlSound());
 		}
 
-		if((lLapCompleted != NULL) && mMasterMode && (mLapCount < mNbLapForRace)) {
-			switch (lLapCompleted->mType) {
-				case MR_CheckPoint::eCheck1:
-					mCheckPoint1 = TRUE;
+		if(lLostOfControl->mType == MR_LostOfControl::eMine) {
+			mZSpeed = 1.1 * eMaxZSpeed[0];
+
+			if((lLostOfControl->mElementId != -1) && !mMineList.Full()) {
+				mMineList.Add(lLostOfControl->mElementId);
+				pLevel->SetPermElementPos(lLostOfControl->mElementId, -1, mPosition);
+			}
+		}
+	}
+
+	if((lPowerUp != NULL) && mMasterMode) {
+		// TODO Add sound
+		if((mPowerUpLeft == 0) && (lPowerUp->mElementPermId != -1) && !mPowerUpList.Full()) {
+			mPowerUpList.Add(lPowerUp->mElementPermId);
+			pLevel->SetPermElementPos(lPowerUp->mElementPermId, -1, mPosition);
+		}
+	}
+
+	if((lLapCompleted != NULL) && mMasterMode && (mLapCount < mNbLapForRace)) {
+		switch (lLapCompleted->mType) {
+			case MR_CheckPoint::eCheck1:
+				mCheckPoint1 = TRUE;
+				mCheckPoint2 = FALSE;
+				break;
+			case MR_CheckPoint::eCheck2:
+				if(mCheckPoint1)
+					mCheckPoint2 = TRUE;
+				break;
+			case MR_CheckPoint::eFinishLine:
+				if(mCheckPoint2) {
+					mCheckPoint1 = FALSE;
 					mCheckPoint2 = FALSE;
-					break;
-				case MR_CheckPoint::eCheck2:
-					if(mCheckPoint1)
-						mCheckPoint2 = TRUE;
-					break;
-				case MR_CheckPoint::eFinishLine:
-					if(mCheckPoint2) {
-						mCheckPoint1 = FALSE;
-						mCheckPoint2 = FALSE;
 
-						mLapCount++;
-						mLastLapDuration = pTime - mLastLapCompletion;
-						mLastLapCompletion = pTime;
+					mLapCount++;
+					mLastLapDuration = pTime - mLastLapCompletion;
+					mLastLapCompletion = pTime;
 
-						if((mLastLapDuration < mBestLapDuration) || (mLapCount == 1))
-							mBestLapDuration = mLastLapDuration;
+					if((mLastLapDuration < mBestLapDuration) || (mLapCount == 1))
+						mBestLapDuration = mLastLapDuration;
 
-						if(mRenderer != NULL) {
-							if(mLapCount == mNbLapForRace) {
-								mInternalSoundList.Add(mRenderer->GetFinishSound());
-								mExternalSoundList.Add(mRenderer->GetFinishSound());
-							}
-							else {
-								mInternalSoundList.Add(mRenderer->GetLineCrossingSound());
-								mExternalSoundList.Add(mRenderer->GetLineCrossingSound());
-							}
+					if(mRenderer != NULL) {
+						if(mLapCount == mNbLapForRace) {
+							mInternalSoundList.Add(mRenderer->GetFinishSound());
+							mExternalSoundList.Add(mRenderer->GetFinishSound());
+						} else {
+							mInternalSoundList.Add(mRenderer->GetLineCrossingSound());
+							mExternalSoundList.Add(mRenderer->GetLineCrossingSound());
 						}
 					}
-					break;
-			}
+				}
+				break;
 		}
 	}
+}
 
-	const MR_ContactEffectList *MR_MainCharacter::GetEffectList()
-	{
-		mContactEffect.mWeight = eCharacterWeight[mHoverModel];
-		mContactEffect.mXSpeed = mXSpeed * 256;
-		mContactEffect.mYSpeed = mYSpeed * 256;
-		mContactEffect.mZSpeed = 0;
+const MR_ContactEffectList *MR_MainCharacter::GetEffectList()
+{
+	mContactEffect.mWeight = eCharacterWeight[mHoverModel];
+	mContactEffect.mXSpeed = mXSpeed * 256;
+	mContactEffect.mYSpeed = mYSpeed * 256;
+	mContactEffect.mZSpeed = 0;
 
-		return &mContactEffectList;
+	return &mContactEffectList;
+}
+
+const MR_ShapeInterface *MR_MainCharacter::GetReceivingContactEffectShape()
+{
+	mCollisionShape.mPosition = mPosition;
+	return &mCollisionShape;
+}
+
+const MR_ShapeInterface *MR_MainCharacter::GetGivingContactEffectShape()
+{
+	mContactShape.mPosition = mPosition;
+	return &mContactShape;
+}
+
+// MR_MainCharacter::Cylinder
+MR_Int32 MR_MainCharacter::Cylinder::ZMin() const
+{
+	return mPosition.mZ;
+}
+
+MR_Int32 MR_MainCharacter::Cylinder::ZMax() const
+{
+	return mPosition.mZ + eCharacterHeight;
+}
+
+MR_Int32 MR_MainCharacter::Cylinder::AxisX() const
+{
+	return mPosition.mX;
+}
+
+MR_Int32 MR_MainCharacter::Cylinder::AxisY() const
+{
+	return mPosition.mY;
+}
+
+MR_Int32 MR_MainCharacter::Cylinder::RayLen() const
+{
+	return mRay;
+}
+
+// Done with the cylinder stuff
+MR_Angle MR_MainCharacter::GetCabinOrientation() const
+{
+	return mCabinOrientation;
+}
+
+double MR_MainCharacter::GetFuelLevel() const
+{
+	return mFuelLevel / eFuelCapacity;
+}
+
+MR_MainCharacter::eWeapon MR_MainCharacter::GetCurrentWeapon() const
+{
+	return mCurrentWeapon;
+}
+
+int MR_MainCharacter::GetMissileRefillLevel(int pNbLevel) const
+{
+	if(mAllowWeapons)
+		return (pNbLevel - 1) * (eMissileRefillTime - mMissileRefillDuration) / eMissileRefillTime;
+	else
+		return 0;
+}
+
+int MR_MainCharacter::GetMineCount() const
+{
+	return mMineList.Used();
+}
+
+int MR_MainCharacter::GetPowerUpCount() const
+{
+	return mPowerUpList.Used();
+}
+
+int MR_MainCharacter::GetPowerUpFraction(int pNbLevel) const
+{
+	int lReturnValue = 0;
+	if(mPowerUpLeft > 0) {
+		lReturnValue = 1 + ((mPowerUpLeft - 1) * pNbLevel / ePwrUpDuration);
+		if(lReturnValue > pNbLevel)
+			lReturnValue = pNbLevel;
 	}
+	return lReturnValue;
+}
 
-	const MR_ShapeInterface *MR_MainCharacter::GetReceivingContactEffectShape()
-	{
-		mCollisionShape.mPosition = mPosition;
-		return &mCollisionShape;
-	}
+double MR_MainCharacter::GetAbsoluteSpeed() const
+{
+	double lReturnValue = sqrt(mXSpeed * mXSpeed + mYSpeed * mYSpeed) / (eSteadySpeed[0] * 1.9);
+	if(lReturnValue > 1.0)
+		lReturnValue = 1.0;
+	return lReturnValue;
+}
 
-	const MR_ShapeInterface *MR_MainCharacter::GetGivingContactEffectShape()
-	{
-		mContactShape.mPosition = mPosition;
-		return &mContactShape;
-	}
+double MR_MainCharacter::GetDirectionalSpeed() const
+{
+	double lReturnValue = (mXSpeed * MR_Cos[mCabinOrientation] + mYSpeed * MR_Sin[mCabinOrientation]) / (MR_TRIGO_FRACT * eSteadySpeed[0] * 1.9);
 
-	// MR_MainCharacter::Cylinder
-	MR_Int32 MR_MainCharacter::Cylinder::ZMin() const
-	{
-		return mPosition.mZ;
-	}
+	if(lReturnValue > 1.0)
+		lReturnValue = 1.0;
+	else if(lReturnValue < -1.0)
+		lReturnValue = -1.0;
 
-	MR_Int32 MR_MainCharacter::Cylinder::ZMax() const
-	{
-		return mPosition.mZ + eCharacterHeight;
-	}
+	return lReturnValue;
+}
 
-	MR_Int32 MR_MainCharacter::Cylinder::AxisX() const
-	{
-		return mPosition.mX;
-	}
+int MR_MainCharacter::GetLap() const
+{
+	return mLapCount;
+}
 
-	MR_Int32 MR_MainCharacter::Cylinder::AxisY() const
-	{
-		return mPosition.mY;
-	}
+int MR_MainCharacter::GetTotalLap() const
+{
+	return mNbLapForRace;
+}
 
-	MR_Int32 MR_MainCharacter::Cylinder::RayLen() const
-	{
-		return mRay;
-	}
+MR_SimulationTime MR_MainCharacter::GetTotalTime() const
+{
+	return mLastLapCompletion;
+}
 
-	// Done with the cylinder stuff
+MR_SimulationTime MR_MainCharacter::GetBestLapDuration() const
+{
+	return mBestLapDuration;
+}
 
-	MR_Angle MR_MainCharacter::GetCabinOrientation() const
-	{
-		return mCabinOrientation;
-	}
+MR_SimulationTime MR_MainCharacter::GetLastLapDuration() const
+{
+	return mLastLapDuration;
+}
 
-	double MR_MainCharacter::GetFuelLevel() const
-	{
-		return mFuelLevel / eFuelCapacity;
-	}
+MR_SimulationTime MR_MainCharacter::GetLastLapCompletion() const
+{
+	return mLastLapCompletion;
+}
 
-	MR_MainCharacter::eWeapon MR_MainCharacter::GetCurrentWeapon() const
-	{
-		return mCurrentWeapon;
-	}
-	int MR_MainCharacter::GetMissileRefillLevel(int pNbLevel) const
-	{
-		if(mAllowWeapons)
-			return (pNbLevel - 1) * (eMissileRefillTime - mMissileRefillDuration) / eMissileRefillTime;
-		else
-			return 0;
-	}
+BOOL MR_MainCharacter::HasFinish() const
+{
+	return (mLapCount >= mNbLapForRace);
+}
 
-	int MR_MainCharacter::GetMineCount() const
-	{
-		return mMineList.Used();
-	}
+int MR_MainCharacter::HitQueueCount() const
+{
+	return mLastHits.Used();
+}
 
-	int MR_MainCharacter::GetPowerUpCount() const
-	{
-		return mPowerUpList.Used();
-	}
-	int MR_MainCharacter::GetPowerUpFraction(int pNbLevel) const
-	{
-		int lReturnValue = 0;
-		if(mPowerUpLeft > 0) {
-			lReturnValue = 1 + ((mPowerUpLeft - 1) * pNbLevel / ePwrUpDuration);
-			if(lReturnValue > pNbLevel)
-				lReturnValue = pNbLevel;
+int MR_MainCharacter::GetHitQueue()
+{
+	int lReturnValue = mLastHits.GetHead();
+	mLastHits.Remove();
+	return lReturnValue;
+}
+
+void MR_MainCharacter::PlayInternalSounds()
+{
+	if(mRenderer != NULL) {
+		// Sound events
+		while(!mInternalSoundList.IsEmpty()) {
+			MR_SoundServer::Play(mInternalSoundList.GetHead());
+			mInternalSoundList.Remove();
 		}
-		return lReturnValue;
+
+		// Continuous sounds
+		MR_ContinuousSound *lWindSound = mRenderer->GetFrictionSound();
+		MR_ContinuousSound *lMotorSound = mRenderer->GetMotorSound();
+		double lAbsSpeed = sqrt(mXSpeed * mXSpeed + mYSpeed * mYSpeed) / (eSteadySpeed[0]);
+
+		if(lAbsSpeed > 0.02)
+			MR_SoundServer::Play(lWindSound, 0, 0, 1.5 * lAbsSpeed);
+		if(mControlState & eMotorOn)
+			MR_SoundServer::Play(lMotorSound, 0);
 	}
+}
 
-	double MR_MainCharacter::GetAbsoluteSpeed() const
-	{
-		double lReturnValue = sqrt(mXSpeed * mXSpeed + mYSpeed * mYSpeed) / (eSteadySpeed[0] * 1.9);
-		if(lReturnValue > 1.0)
-			lReturnValue = 1.0;
-		return lReturnValue;
-	}
-
-	double MR_MainCharacter::GetDirectionalSpeed() const
-	{
-		double lReturnValue = (mXSpeed * MR_Cos[mCabinOrientation] + mYSpeed * MR_Sin[mCabinOrientation]) / (MR_TRIGO_FRACT * eSteadySpeed[0] * 1.9);
-
-		if(lReturnValue > 1.0)
-			lReturnValue = 1.0;
-		else if(lReturnValue < -1.0)
-			lReturnValue = -1.0;
-
-		return lReturnValue;
-	}
-
-	int MR_MainCharacter::GetLap() const
-	{
-		return mLapCount;
-	}
-
-	int MR_MainCharacter::GetTotalLap() const
-	{
-		return mNbLapForRace;
-	}
-
-	MR_SimulationTime MR_MainCharacter::GetTotalTime() const
-	{
-		return mLastLapCompletion;
-	}
-
-	MR_SimulationTime MR_MainCharacter::GetBestLapDuration() const
-	{
-		return mBestLapDuration;
-	}
-
-	MR_SimulationTime MR_MainCharacter::GetLastLapDuration() const
-	{
-		return mLastLapDuration;
-	}
-
-	MR_SimulationTime MR_MainCharacter::GetLastLapCompletion() const
-	{
-		return mLastLapCompletion;
-	}
-
-	BOOL MR_MainCharacter::HasFinish() const
-	{
-		return (mLapCount >= mNbLapForRace);
-	}
-
-	int MR_MainCharacter::HitQueueCount() const
-	{
-		return mLastHits.Used();
-	}
-
-	int MR_MainCharacter::GetHitQueue()
-	{
-		int lReturnValue = mLastHits.GetHead();
-		mLastHits.Remove();
-		return lReturnValue;
-	}
-
-	void MR_MainCharacter::PlayInternalSounds()
-	{
-		if(mRenderer != NULL) {
-			// Sound events
-			while(!mInternalSoundList.IsEmpty()) {
-				MR_SoundServer::Play(mInternalSoundList.GetHead());
-				mInternalSoundList.Remove();
-			}
-
-			// Continuous sounds
-			MR_ContinuousSound *lWindSound = mRenderer->GetFrictionSound();
-			MR_ContinuousSound *lMotorSound = mRenderer->GetMotorSound();
-			double lAbsSpeed = sqrt(mXSpeed * mXSpeed + mYSpeed * mYSpeed) / (eSteadySpeed[0]);
-
-			if(lAbsSpeed > 0.02)
-				MR_SoundServer::Play(lWindSound, 0, 0, 1.5 * lAbsSpeed);
-			if(mControlState & eMotorOn)
-				MR_SoundServer::Play(lMotorSound, 0);
+void MR_MainCharacter::PlayExternalSounds(int pDB, int pPan)
+{
+	if(mRenderer != NULL) {
+		// Sound events
+		while(!mExternalSoundList.IsEmpty()) {
+			MR_SoundServer::Play(mExternalSoundList.GetHead(), pDB, 1.0, pPan);
+			mExternalSoundList.Remove();
 		}
+
+		// Continuous sounds
+		MR_ContinuousSound *lWindSound = mRenderer->GetFrictionSound();
+		MR_ContinuousSound *lMotorSound = mRenderer->GetMotorSound();
+		double lAbsSpeed = sqrt(mXSpeed * mXSpeed + mYSpeed * mYSpeed) / (eSteadySpeed[0]);
+
+		if(lAbsSpeed > 0.02)
+			MR_SoundServer::Play(lWindSound, 1, pDB, 1.5 * lAbsSpeed, pPan);
+		if(mControlState & eMotorOn)
+			MR_SoundServer::Play(lMotorSound, 1, pDB, 1.0, pPan);
 	}
-
-	void MR_MainCharacter::PlayExternalSounds(int pDB, int pPan)
-	{
-		if(mRenderer != NULL) {
-			// Sound events
-			while(!mExternalSoundList.IsEmpty()) {
-				MR_SoundServer::Play(mExternalSoundList.GetHead(), pDB, 1.0, pPan);
-				mExternalSoundList.Remove();
-			}
-
-			// Continuous sounds
-			MR_ContinuousSound *lWindSound = mRenderer->GetFrictionSound();
-			MR_ContinuousSound *lMotorSound = mRenderer->GetMotorSound();
-			double lAbsSpeed = sqrt(mXSpeed * mXSpeed + mYSpeed * mYSpeed) / (eSteadySpeed[0]);
-
-			if(lAbsSpeed > 0.02)
-				MR_SoundServer::Play(lWindSound, 1, pDB, 1.5 * lAbsSpeed, pPan);
-			if(mControlState & eMotorOn)
-				MR_SoundServer::Play(lMotorSound, 1, pDB, 1.0, pPan);
-		}
-	}
+}

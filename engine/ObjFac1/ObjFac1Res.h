@@ -86,6 +86,17 @@
 #define MR_CAR_COCKPIT29    58
 #define MR_CAR_COCKPIT2X    59
 
+#define MR_CAR_COCKPIT31	70
+#define MR_CAR_COCKPIT32	71
+#define MR_CAR_COCKPIT33	72
+#define MR_CAR_COCKPIT34	73
+#define MR_CAR_COCKPIT35	74
+#define MR_CAR_COCKPIT36	75
+#define MR_CAR_COCKPIT37	76
+#define MR_CAR_COCKPIT38	77
+#define MR_CAR_COCKPIT39	78
+#define MR_CAR_COCKPIT3X	79
+
 #define MR_MISSILE_BODY    80
 #define MR_MISSILE_WING    81
 #define MR_PWRUP_MAP       85
@@ -114,6 +125,7 @@
 #define MR_ELECTRO_CAR  10
 #define MR_HITECH_CAR   11
 #define MR_BITURBO_CAR  12
+#define MR_EON_CRAFT	19
 
 #define MR_MISSILE      20
 #define MR_MINE         21

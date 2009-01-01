@@ -33,6 +33,7 @@ class MR_HoverRender:public MR_MainCharacterRenderer
 		const MR_ResActor *mActor0;
 		const MR_ResActor *mActor1;
 		const MR_ResActor *mActor2;
+		const MR_ResActor *mActor3;
 
 		int mFrame;
 
@@ -52,10 +53,10 @@ class MR_HoverRender:public MR_MainCharacterRenderer
 		const MR_ResBitmap *mCockpitBitmap2[10];
 
 	public:
-		MR_HoverRender(const MR_ObjectFromFactoryId & pId, MR_ResourceLib* resourceLib);
+		MR_HoverRender(const MR_ObjectFromFactoryId &pId, MR_ResourceLib *resourceLib);
 		~MR_HoverRender();
 
-		void Render(MR_3DViewPort * pDest, const MR_3DCoordinate & pPosition, MR_Angle pOrientation, BOOL pMotorOn, int pHoverId, int pModel);
+		void Render(MR_3DViewPort *pDest, const MR_3DCoordinate &pPosition, MR_Angle pOrientation, BOOL pMotorOn, int pHoverId, int pModel);
 
 		MR_ShortSound *GetLineCrossingSound();
 		MR_ShortSound *GetStartSound();
