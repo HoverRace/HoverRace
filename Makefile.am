@@ -18,5 +18,6 @@ EXTRA_DIST = \
 SUBDIRS = engine client
 
 pkgdata_DATA = \
-	res/Intro.avi
+	res/Intro.avi \
+	res/ObjFac1.dat
 
