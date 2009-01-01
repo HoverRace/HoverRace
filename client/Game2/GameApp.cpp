@@ -955,7 +955,15 @@ BOOL MR_GameApp::CreateMainWindow()
 	BOOL lReturnValue = TRUE;
 
 	// attempt to make the main window
-	mMainWindow = CreateWindowEx(WS_EX_APPWINDOW, MR_APP_CLASS_NAME, MR_LoadString(IDS_GAME_NAME), (WS_VISIBLE | WS_OVERLAPPEDWINDOW | WS_EX_CLIENTEDGE) & ~WS_MAXIMIZEBOX, CW_USEDEFAULT, CW_USEDEFAULT, 480, 320, NULL, NULL, mInstance, NULL);
+	mMainWindow = CreateWindowEx(
+		WS_EX_APPWINDOW,
+		MR_APP_CLASS_NAME,
+		MR_LoadString(IDS_GAME_NAME),
+		(WS_VISIBLE | WS_OVERLAPPEDWINDOW | WS_EX_CLIENTEDGE) & ~WS_MAXIMIZEBOX,
+		CW_USEDEFAULT,
+		CW_USEDEFAULT,
+		800, 600,
+		NULL, NULL, mInstance, NULL);
 
 	if(mMainWindow == NULL)
 		lReturnValue = FALSE;					  // making of window failed
