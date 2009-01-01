@@ -47,59 +47,9 @@ static MR_UInt8 *LoadBitmap(FILE * pFile);
 static MR_UInt8 *LoadPalette(FILE * pFile);
 
 static char gOwner[81];
-static int gMajorID = 100;
-static int gMinorID = -1;
+static int gMajorID = 0;
+static int gMinorID = 0;
 static unsigned char gKey[50];
-
-BOOL LoadRegistry()
-{
-	BOOL lReturnValue = FALSE;
-
-	// Registration info
-	gOwner[0] = 0;
-	gMajorID = -1;
-	gMinorID = -1;
-
-	// Now verify in the registry if this information can not be retrieved
-	HKEY lProgramKey;
-
-	int lError = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
-		"SOFTWARE\\HoverRace.com\\HoverRace",
-		0,
-		KEY_EXECUTE,
-		&lProgramKey);
-
-	if(lError == ERROR_SUCCESS) {
-		lReturnValue = TRUE;
-
-		unsigned long lBufferSize = sizeof(gOwner);
-
-		if(RegQueryValueEx(lProgramKey, "Owner", 0, NULL, (MR_UInt8 *) gOwner, &lBufferSize) != ERROR_SUCCESS) {
-			lReturnValue = FALSE;
-		}
-
-		lBufferSize = sizeof(gKey);
-
-		if(RegQueryValueEx(lProgramKey, "Key", 0, NULL, (MR_UInt8 *) gKey, &lBufferSize) != ERROR_SUCCESS) {
-			lReturnValue = FALSE;
-		}
-		else if(lBufferSize != 20) {
-			lReturnValue = FALSE;
-		}
-
-		int lID[3];
-		DWORD lIDSize = sizeof(lID);
-
-		if(RegQueryValueEx(lProgramKey, "RegistrationID", 0, NULL, (MR_UInt8 *) lID, &lIDSize) == ERROR_SUCCESS) {
-			gMajorID = lID[0];
-			gMinorID = lID[1];
-		}
-		else {
-			lReturnValue = FALSE;
-		}
-	}
-	return lReturnValue;
-}
 
 int main(int pArgCount, const char **pArgStrings)
 {
@@ -116,10 +66,6 @@ int main(int pArgCount, const char **pArgStrings)
 		lPrintUsage = TRUE;
 		printf(MR_LoadString(IDS_BAD_PARAM_COUNT));
 		Sleep(4000);
-	}
-	else if(!LoadRegistry()) {
-		lError = TRUE;
-		printf(MR_LoadString(IDS_NO_REGINFO));
 	}
 
 	if(!lError && !lPrintUsage) {

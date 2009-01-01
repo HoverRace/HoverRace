@@ -1,4 +1,4 @@
-//Microsoft Developer Studio generated resource script.
+// Microsoft Visual C++ generated resource script.
 //
 #include "resource.h"
 
@@ -27,18 +27,18 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE DISCARDABLE 
+1 TEXTINCLUDE 
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE DISCARDABLE 
+2 TEXTINCLUDE 
 BEGIN
     "#include ""afxres.h""\r\n"
     "\0"
 END
 
-3 TEXTINCLUDE DISCARDABLE 
+3 TEXTINCLUDE 
 BEGIN
     "\r\n"
     "\0"
@@ -52,7 +52,7 @@ END
 // String Table
 //
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     IDS_MISS_SEC_ID         "Section Id missing on line %d\n"
     IDS_DUP_SEC_ID          "Duplicate section Id(%d) on line %d\n"
@@ -71,12 +71,11 @@ BEGIN
     IDS_SAME_POS            "Two node with same position\n"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     IDS_USAGE               "Usage: MazeCompiler outputfile inputfile\n\n"
     IDS_INTRO               "HoverRace Track Compiler                     (c)1996-1997 GrokkSoft inc.\n\n"
     IDS_BAD_PARAM_COUNT     "Wrong parameter count\n"
-    IDS_NO_REGINFO          "ERROR: Unable to retrieve registration informations\n       You must be a registred user to use the compiler \n "
     IDS_NO_REGID            "ERROR: Track name must contain your registraction number ID\n"
     IDS_CANT_CREATE_OUT     "Unable to create the output file\n"
     IDS_COMP_TRACK          "Compiling track(%s)\n"
@@ -91,7 +90,7 @@ BEGIN
     IDS_NO_DESC             "Unable to find description\n"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     IDS_NO_HEADER           "Unable to find [HEADER] section\n"
     IDS_NO_BACKGROUND       "Unable to find Background label\n"

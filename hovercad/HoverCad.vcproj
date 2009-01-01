@@ -349,6 +349,54 @@
 				</FileConfiguration>
 			</File>
 		</Filter>
+		<File
+			RelativePath=".\arrow.cur">
+		</File>
+		<File
+			RelativePath=".\res\cur00001.cur">
+		</File>
+		<File
+			RelativePath=".\res\cur00002.cur">
+		</File>
+		<File
+			RelativePath=".\res\cur00003.cur">
+		</File>
+		<File
+			RelativePath=".\res\cur00004.cur">
+		</File>
+		<File
+			RelativePath=".\res\cur00005.cur">
+		</File>
+		<File
+			RelativePath=".\res\cursor1.cur">
+		</File>
+		<File
+			RelativePath=".\res\HoverCad.ico">
+		</File>
+		<File
+			RelativePath=".\res\HoverCadDoc.ico">
+		</File>
+		<File
+			RelativePath=".\res\pointer_.cur">
+		</File>
+		<File
+			RelativePath=".\res\select.bmp">
+		</File>
+		<File
+			RelativePath=".\res\selectit.bmp">
+		</File>
+		<File
+			RelativePath=".\res\status_i.bmp">
+		</File>
+		<File
+			RelativePath=".\res\Toolbar.bmp">
+		</File>
+		<File
+			RelativePath=".\res\tools_ba.bmp">
+		</File>
+		<File
+			RelativePath=".\res\zoom.bmp">
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

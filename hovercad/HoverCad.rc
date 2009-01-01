@@ -1,4 +1,4 @@
-//Microsoft Developer Studio generated resource script.
+// Microsoft Visual C++ generated resource script.
 //
 #include "resource.h"
 
@@ -15,7 +15,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // Neutral (Default) resources
 
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEUD)
 #ifdef _WIN32
 LANGUAGE LANG_NEUTRAL, SUBLANG_DEFAULT
 #pragma code_page(1252)
@@ -28,26 +28,26 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_DEFAULT
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDR_MAINFRAME           ICON    DISCARDABLE     "res\\HoverCad.ico"
-IDR_HCADTYPE            ICON    DISCARDABLE     "res\\HoverCadDoc.ico"
+IDR_MAINFRAME           ICON                    "res\\HoverCad.ico"
+IDR_HCADTYPE            ICON                    "res\\HoverCadDoc.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Bitmap
 //
 
-IDR_MAINFRAME           BITMAP  MOVEABLE PURE   "res\\Toolbar.bmp"
-IDR_TOOLS_BAR           BITMAP  DISCARDABLE     "res\\tools_ba.bmp"
-IDB_SELECTITEM          BITMAP  DISCARDABLE     "res\\selectit.bmp"
-IDB_ITEM                BITMAP  DISCARDABLE     "res\\select.bmp"
-IDR_STATUS_IDS          BITMAP  DISCARDABLE     "res\\status_i.bmp"
+IDR_MAINFRAME           BITMAP                  "res\\Toolbar.bmp"
+IDR_TOOLS_BAR           BITMAP                  "res\\tools_ba.bmp"
+IDB_SELECTITEM          BITMAP                  "res\\selectit.bmp"
+IDB_ITEM                BITMAP                  "res\\select.bmp"
+IDR_STATUS_IDS          BITMAP                  "res\\status_i.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Toolbar
 //
 
-IDR_MAINFRAME TOOLBAR DISCARDABLE  16, 15
+IDR_MAINFRAME TOOLBAR  16, 15
 BEGIN
     BUTTON      ID_FILE_NEW
     BUTTON      ID_FILE_OPEN
@@ -61,7 +61,7 @@ BEGIN
     BUTTON      ID_HELP_HELP
 END
 
-IDR_TOOLS_BAR TOOLBAR DISCARDABLE  16, 15
+IDR_TOOLS_BAR TOOLBAR  16, 15
 BEGIN
     BUTTON      IDC_SELECT
     BUTTON      IDC_HAMMER
@@ -75,7 +75,7 @@ BEGIN
     BUTTON      IDC_INSERT_NODE
 END
 
-IDR_STATUS_IDS TOOLBAR DISCARDABLE  16, 15
+IDR_STATUS_IDS TOOLBAR  16, 15
 BEGIN
     BUTTON      ID_MOUSE_POS
 END
@@ -86,7 +86,7 @@ END
 // Menu
 //
 
-IDR_MAINFRAME MENU PRELOAD DISCARDABLE 
+IDR_MAINFRAME MENU 
 BEGIN
     POPUP "&File"
     BEGIN
@@ -114,7 +114,7 @@ BEGIN
     END
 END
 
-IDR_HCADTYPE MENU PRELOAD DISCARDABLE 
+IDR_HCADTYPE MENU 
 BEGIN
     POPUP "&File"
     BEGIN
@@ -173,8 +173,8 @@ END
 // Dialog
 //
 
-IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 188, 55
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_ABOUTBOX DIALOG  0, 0, 188, 55
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "About HoverCad"
 FONT 8, "MS Sans Serif"
 BEGIN
@@ -185,8 +185,8 @@ BEGIN
     DEFPUSHBUTTON   "OK",IDOK,149,7,32,14,WS_GROUP
 END
 
-IDD_ATTRIB_TOOL DIALOG DISCARDABLE  0, 0, 113, 206
-STYLE WS_CHILD
+IDD_ATTRIB_TOOL DIALOG  0, 0, 113, 206
+STYLE DS_SETFONT | WS_CHILD
 FONT 8, "MS Sans Serif"
 BEGIN
     COMBOBOX        IDC_WALL_TEXTURE,7,18,99,83,CBS_DROPDOWNLIST | CBS_SORT | 
@@ -228,8 +228,8 @@ BEGIN
     LTEXT           "Item type",IDC_STATIC,7,176,46,8
 END
 
-IDD_DIALOGBAR DIALOG DISCARDABLE  0, 0, 330, 36
-STYLE WS_CHILD
+IDD_DIALOGBAR DIALOG  0, 0, 330, 36
+STYLE DS_SETFONT | WS_CHILD
 FONT 8, "MS Sans Serif"
 BEGIN
     LTEXT           "TODO: layout dialog bar",IDC_STATIC,126,4,77,8
@@ -240,8 +240,8 @@ BEGIN
                     224,10,10,14
 END
 
-IDD_ZOOM_BAR DIALOG DISCARDABLE  0, 0, 17, 83
-STYLE DS_3DLOOK | WS_CHILD
+IDD_ZOOM_BAR DIALOG  0, 0, 17, 83
+STYLE DS_SETFONT | DS_3DLOOK | WS_CHILD
 FONT 8, "MS Sans Serif"
 BEGIN
     CONTROL         "Slider1",IDC_ZOOM_SLIDER,"msctls_trackbar32",TBS_VERT | 
@@ -249,8 +249,8 @@ BEGIN
     CONTROL         142,IDC_STATIC,"Static",SS_BITMAP,6,5,6,6
 END
 
-IDD_DOC_ATTR DIALOG DISCARDABLE  0, 0, 112, 110
-STYLE WS_CHILD
+IDD_DOC_ATTR DIALOG  0, 0, 112, 110
+STYLE DS_SETFONT | WS_CHILD
 FONT 8, "MS Sans Serif"
 BEGIN
     EDITTEXT        IDC_BACKGROUND_NAME,7,12,85,14,ES_AUTOHSCROLL
@@ -261,8 +261,9 @@ BEGIN
     LTEXT           "Track description:",IDC_STATIC,7,28,61,8
 END
 
-IDD_SCALE_SELECTION DIALOG DISCARDABLE  0, 0, 144, 65
-STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+IDD_SCALE_SELECTION DIALOG  0, 0, 144, 65
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | 
+    WS_SYSMENU
 CAPTION "Selection Scaling"
 FONT 8, "MS Sans Serif"
 BEGIN
@@ -274,7 +275,6 @@ BEGIN
 END
 
 
-#ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
 //
 // Version
@@ -297,14 +297,14 @@ BEGIN
     BEGIN
         BLOCK "00000000"
         BEGIN
-            VALUE "CompanyName", "GrokkSoft inc.\0"
-            VALUE "FileDescription", "HOVERCAD MFC Application\0"
-            VALUE "FileVersion", "1, 0, 0, 0\0"
-            VALUE "InternalName", "HOVERCAD\0"
-            VALUE "LegalCopyright", "Copyright © 1996\0"
-            VALUE "OriginalFilename", "HOVERCAD.EXE\0"
-            VALUE "ProductName", "HOVERCAD Application\0"
-            VALUE "ProductVersion", "1, 0, 0, 0\0"
+            VALUE "CompanyName", "GrokkSoft inc."
+            VALUE "FileDescription", "HOVERCAD MFC Application"
+            VALUE "FileVersion", "1, 0, 0, 0"
+            VALUE "InternalName", "HOVERCAD"
+            VALUE "LegalCopyright", "Copyright © 1996"
+            VALUE "OriginalFilename", "HOVERCAD.EXE"
+            VALUE "ProductName", "HOVERCAD Application"
+            VALUE "ProductVersion", "1, 0, 0, 0"
         END
     END
     BLOCK "VarFileInfo"
@@ -313,8 +313,6 @@ BEGIN
     END
 END
 
-#endif    // !_MAC
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -322,7 +320,7 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO DISCARDABLE 
+GUIDELINES DESIGNINFO 
 BEGIN
     IDD_ABOUTBOX, DIALOG
     BEGIN
@@ -380,30 +378,30 @@ END
 // Cursor
 //
 
-IDC_POINTER_ROOM        CURSOR  DISCARDABLE     "arrow.cur"
-IDC_POINTER_ZOOM        CURSOR  DISCARDABLE     "res\\pointer_.cur"
-IDC_POINTER_INSERT_OBJECT CURSOR  DISCARDABLE     "res\\cur00003.cur"
-IDC_POINTER_MOVE        CURSOR  DISCARDABLE     "res\\cursor1.cur"
-IDC_POINTER_HAMMER      CURSOR  DISCARDABLE     "res\\cur00005.cur"
+IDC_POINTER_ROOM        CURSOR                  "arrow.cur"
+IDC_POINTER_ZOOM        CURSOR                  "res\\pointer_.cur"
+IDC_POINTER_INSERT_OBJECT CURSOR                  "res\\cur00003.cur"
+IDC_POINTER_MOVE        CURSOR                  "res\\cursor1.cur"
+IDC_POINTER_HAMMER      CURSOR                  "res\\cur00005.cur"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // String Table
 //
 
-STRINGTABLE PRELOAD DISCARDABLE 
+STRINGTABLE 
 BEGIN
     IDR_MAINFRAME           "HoverCAD(v1.01)"
     IDR_HCADTYPE            "\nHCad\nHCad\nHCad Files (*.tr)\n.TR\nHCad\nHCad Document"
 END
 
-STRINGTABLE PRELOAD DISCARDABLE 
+STRINGTABLE 
 BEGIN
     AFX_IDS_APP_TITLE       "HoverCad"
     AFX_IDS_IDLEMESSAGE     "Ready"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     ID_INDICATOR_EXT        "EXT"
     ID_INDICATOR_CAPS       "CAP"
@@ -413,7 +411,7 @@ BEGIN
     ID_INDICATOR_REC        "REC"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     ID_FILE_NEW             "Create a new document\nNew"
     ID_FILE_OPEN            "Open an existing document\nOpen"
@@ -426,13 +424,13 @@ BEGIN
     ID_FILE_PRINT_PREVIEW   "Display full pages\nPrint Preview"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     ID_APP_ABOUT            "Display program information, version number and copyright\nAbout"
     ID_APP_EXIT             "Quit the application; prompts to save documents\nExit"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     ID_FILE_MRU_FILE1       "Open this document"
     ID_FILE_MRU_FILE2       "Open this document"
@@ -452,13 +450,13 @@ BEGIN
     ID_FILE_MRU_FILE16      "Open this document"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     ID_NEXT_PANE            "Switch to the next window pane\nNext Pane"
     ID_PREV_PANE            "Switch back to the previous window pane\nPrevious Pane"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     ID_WINDOW_NEW           "Open another window for the active document\nNew Window"
     ID_WINDOW_ARRANGE       "Arrange icons at the bottom of the window\nArrange Icons"
@@ -468,7 +466,7 @@ BEGIN
     ID_WINDOW_SPLIT         "Split the active window into panes\nSplit"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     ID_EDIT_CLEAR           "Erase the selection\nErase"
     ID_EDIT_CLEAR_ALL       "Erase everything\nErase All"
@@ -483,13 +481,13 @@ BEGIN
     ID_EDIT_REDO            "Redo the previously undone action\nRedo"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     ID_VIEW_TOOLBAR         "Show or hide the standard toolbar\nToggle Standard ToolBar"
     ID_VIEW_STATUS_BAR      "Show or hide the status bar\nToggle StatusBar"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     AFX_IDS_SCSIZE          "Change the window size"
     AFX_IDS_SCMOVE          "Change the window position"
@@ -500,14 +498,14 @@ BEGIN
     AFX_IDS_SCCLOSE         "Close the active window and prompts to save the documents"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     AFX_IDS_SCRESTORE       "Restore the window to normal size"
     AFX_IDS_SCTASKLIST      "Activate Task List"
     AFX_IDS_MDICHILD        "Activate this window"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     AFX_IDS_PREVIEW_CLOSE   "Close print preview mode\nCancel Preview"
     IDS_NONE                "[none]"
@@ -522,7 +520,7 @@ BEGIN
     IDS_RIGHT_YELLOW_NEON   "Right Yellow Neon"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     ID_BUTTON32771          "Select"
     ID_BUTTON32772          "Zoom"
@@ -539,7 +537,7 @@ BEGIN
     IDC_INSERT_NODE         "Insert a node on the selected wall (select only 1 wall)(INSERT)"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     IDC_INSERT_OBJECT       "Insert a starting position or an other object"
     ID_MOUSE_POS            "    mouse position    "
@@ -557,7 +555,7 @@ BEGIN
     ID_EDIT_SCALESELECTION  "Scale the current selection"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     IDS_LEFT_YELLOW_NEON    "Left Yellow Neon"
     IDS_STEP_SIGN           "Step Sign"
@@ -577,7 +575,7 @@ BEGIN
     IDS_STARTPOS_2          "Starting Position 2"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     IDS_STARTPOS_3          "Starting Position 3"
     IDS_STARTPOS_4          "Starting Position 4"
@@ -596,13 +594,12 @@ BEGIN
     IDS_MINE                "Mine"
 END
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     IDS_BOOSTER             "Booster"
     IDS_BACKGROUND_FILTER   "PCX 128colors (*.pcx)|*.pcx||"
     IDS_CANNOTRUN_COMPILER  """Unable to run compiler or compiler error"""
     IDS_DOC_FILTER          "HoverRace track(*.trk)|*.trk||"
-    IDS_MUST_REG            "You must register HoverRace to use this fonction"
     IDS_STARTPOS_NOTFOUND   "WARNING: Starting position %d not found"
     IDS_STARTPOS_NOTONTRACK "WARNING: Starting position %d not on track"
     IDS_WORD_REQ            "To be able to display HoverCAD Help\nyou must have a Word document viewer installed\non your system\n\n"
@@ -622,24 +619,40 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
 #endif //_WIN32
 
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_ZOOM                BITMAP                  "res\\zoom.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Cursor
+//
+
+IDC_POINTER_SPLIT_ROOM  CURSOR                  "res\\cur00001.cur"
+IDC_POINTER_PATH        CURSOR                  "res\\cur00002.cur"
+IDC_POINTER_INSERT_FEATURE CURSOR                  "res\\cur00004.cur"
+
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
 //
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE DISCARDABLE 
+1 TEXTINCLUDE 
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE DISCARDABLE 
+2 TEXTINCLUDE 
 BEGIN
     "#include ""afxres.h""\r\n"
     "\0"
 END
 
-3 TEXTINCLUDE DISCARDABLE 
+3 TEXTINCLUDE 
 BEGIN
     "#define _AFX_NO_OLE_RESOURCES\r\n"
     "#define _AFX_NO_TRACKER_RESOURCES\r\n"
@@ -658,22 +671,6 @@ END
 
 #endif    // APSTUDIO_INVOKED
 
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Bitmap
-//
-
-IDB_ZOOM                BITMAP  DISCARDABLE     "res\\zoom.bmp"
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Cursor
-//
-
-IDC_POINTER_SPLIT_ROOM  CURSOR  DISCARDABLE     "res\\cur00001.cur"
-IDC_POINTER_PATH        CURSOR  DISCARDABLE     "res\\cur00002.cur"
-IDC_POINTER_INSERT_FEATURE CURSOR  DISCARDABLE     "res\\cur00004.cur"
 #endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////
 
@@ -681,7 +678,7 @@ IDC_POINTER_INSERT_FEATURE CURSOR  DISCARDABLE     "res\\cur00004.cur"
 /////////////////////////////////////////////////////////////////////////////
 // Neutral (Sys. Default) resources
 
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEUSD)
 #ifdef _WIN32
 LANGUAGE LANG_NEUTRAL, SUBLANG_SYS_DEFAULT
 #pragma code_page(1252)
@@ -692,7 +689,7 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_SYS_DEFAULT
 // Accelerator
 //
 
-IDR_MAINFRAME ACCELERATORS PRELOAD MOVEABLE PURE 
+IDR_MAINFRAME ACCELERATORS 
 BEGIN
     "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
     "N",            ID_FILE_NEW,            VIRTKEY, CONTROL, NOINVERT

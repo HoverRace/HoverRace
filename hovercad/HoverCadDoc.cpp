@@ -44,58 +44,6 @@ static int gMajorID;
 static int gMinorID;
 static unsigned char gKey[50];
 
-BOOL LoadRegistry()
-{
-	BOOL lReturnValue = FALSE;
-
-	// Registration info
-	gOwner[0] = 0;
-	gMajorID = -1;
-	gMinorID = -1;
-
-	// Now verify in the registry if this information can not be retrieved
-	HKEY lProgramKey;
-
-	int lError = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
-		"SOFTWARE\\GrokkSoft\\HoverRace",
-		0,
-		KEY_EXECUTE,
-		&lProgramKey);
-
-	if(lError == ERROR_SUCCESS) {
-		lReturnValue = TRUE;
-
-		unsigned long lBufferSize = sizeof(gOwner);
-
-		if(RegQueryValueEx(lProgramKey, "Owner", 0, NULL, (unsigned char *) gOwner, &lBufferSize) != ERROR_SUCCESS) {
-			lReturnValue = FALSE;
-		}
-
-		lBufferSize = sizeof(gKey);
-
-		if(RegQueryValueEx(lProgramKey, "Key", 0, NULL, (unsigned char *) gKey, &lBufferSize) == ERROR_SUCCESS) {
-			if(lBufferSize != 20) {
-				lReturnValue = FALSE;
-			}
-		}
-		else {
-			lReturnValue = FALSE;
-		}
-
-		int lID[3];
-		DWORD lIDSize = sizeof(lID);
-
-		if(RegQueryValueEx(lProgramKey, "RegistrationID", 0, NULL, (unsigned char *) lID, &lIDSize) == ERROR_SUCCESS) {
-			gMajorID = lID[0];
-			gMinorID = lID[1];
-		}
-		else {
-			lReturnValue = FALSE;
-		}
-	}
-	return lReturnValue;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // CHoverCadDoc
 
@@ -1570,7 +1518,7 @@ HCItem::HCItem()
 HCItem::~HCItem()
 {
 	if(mNode != NULL) {
-		ASSERT(mNode->mItem = this);
+		ASSERT(mNode->mItem == this);
 		mNode->mItem = NULL;
 	}
 }
@@ -1596,90 +1544,77 @@ void HCItem::Serialize(CArchive & pArchive)
 
 void CHoverCadDoc::OnFileCompile()
 {
-	// Verify if it is a registred version
-	BOOL lRegistred = TRUE;
 
-	if(!LoadRegistry()) {
-		// Pop registration box
-		// ASSERT( FALSE );
-		CString lErrorMessage;
-		lErrorMessage.LoadString(IDS_MUST_REG);
-		AfxMessageBox(lErrorMessage);
+	CString szFilter;
+	szFilter.LoadString(IDS_DOC_FILTER);
+	// static char BASED_CODE szFilter[] = "HoverRace track(*.trk)|*.trk||";
+	// Ask for a destination file name
+	CString lTitle = GetTitle();
 
+	if(lTitle.ReverseFind('.') != -1) {
+		lTitle = lTitle.Left(lTitle.ReverseFind('.'));
 	}
-	else {
 
-		CString szFilter;
-		szFilter.LoadString(IDS_DOC_FILTER);
-		// static char BASED_CODE szFilter[] = "HoverRace track(*.trk)|*.trk||";
-		// Ask for a destination file name
-		CString lTitle = GetTitle();
+	if(lTitle.ReverseFind('[') != -1) {
+		lTitle = lTitle.Left(lTitle.ReverseFind('['));
+	}
 
-		if(lTitle.ReverseFind('.') != -1) {
-			lTitle = lTitle.Left(lTitle.ReverseFind('.'));
-		}
+	if(gMajorID != 0) {
+		CString lExt;
+		lExt.Format("[%d-%d]", gMajorID, gMinorID);
 
-		if(lTitle.ReverseFind('[') != -1) {
-			lTitle = lTitle.Left(lTitle.ReverseFind('['));
-		}
+		lTitle += lExt;
+	}
 
-		if(gMajorID != 0) {
-			CString lExt;
-			lExt.Format("[%d-%d]", gMajorID, gMinorID);
+	lTitle += ".trk";
 
-			lTitle += lExt;
-		}
+	CFileDialog lDialog(FALSE, ".trk", lTitle, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, szFilter, NULL);
 
-		lTitle += ".trk";
+	if(lDialog.DoModal() == IDOK) {
 
-		CFileDialog lDialog(FALSE, ".trk", lTitle, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, szFilter, NULL);
+		// Create the temporary file
+		char lTempPath[300];
+		char lTempFileName[320];
 
-		if(lDialog.DoModal() == IDOK) {
+		if(GetTempPath(sizeof(lTempPath), lTempPath)
+		&& GetTempFileName(lTempPath, "HC", 0, lTempFileName)) {
+			FILE *lFile = fopen(lTempFileName, "w");
 
-			// Create the temporary file
-			char lTempPath[300];
-			char lTempFileName[320];
+			if(lFile != NULL) {
+				// Generate output
+				BOOL lSuccess = GenerateOutputFile(lFile);
 
-			if(GetTempPath(sizeof(lTempPath), lTempPath)
-			&& GetTempFileName(lTempPath, "HC", 0, lTempFileName)) {
-				FILE *lFile = fopen(lTempFileName, "w");
+				fclose(lFile);
 
-				if(lFile != NULL) {
-					// Generate output
-					BOOL lSuccess = GenerateOutputFile(lFile);
+				// Call the compiler
+				if(lSuccess) {
+					char lExecPath[260];
+					char lCurrentDir[260];
 
-					fclose(lFile);
+					GetModuleFileName(NULL, lExecPath, sizeof(lExecPath));
 
-					// Call the compiler
-					if(lSuccess) {
-						char lExecPath[260];
-						char lCurrentDir[260];
+					getcwd(lCurrentDir, sizeof(lCurrentDir));
 
-						GetModuleFileName(NULL, lExecPath, sizeof(lExecPath));
+					if(strrchr(lExecPath, '\\') != NULL) {
+						strrchr(lExecPath, '\\')[1] = 0;
 
-						getcwd(lCurrentDir, sizeof(lCurrentDir));
-
-						if(strrchr(lExecPath, '\\') != NULL) {
-							strrchr(lExecPath, '\\')[1] = 0;
-
-							chdir(lExecPath);
-						}
-
-						CString lCommand = CString("MazeCompiler \"") + lDialog.GetPathName() + "\" \"" + lTempFileName + '\"';
-
-						if(system(lCommand) != 0) {
-							CString lErrorMessage;
-							lErrorMessage.LoadString(IDS_CANNOTRUN_COMPILER);
-							AfxMessageBox(lErrorMessage);
-						}
-
-						chdir(lCurrentDir);
-
+						chdir(lExecPath);
 					}
 
-					// Delete temp file
-					unlink(lTempFileName);
+					CString lCommand = CString("MazeCompiler \"") + lDialog.GetPathName() + "\" \"" + lTempFileName + '\"';
+
+					if(system(lCommand) != 0) {
+						CString lErrorMessage;
+						lErrorMessage.LoadString(IDS_CANNOTRUN_COMPILER);
+						AfxMessageBox(lErrorMessage);
+					}
+
+					chdir(lCurrentDir);
+
 				}
+
+				// Delete temp file
+				unlink(lTempFileName);
 			}
 		}
 	}
