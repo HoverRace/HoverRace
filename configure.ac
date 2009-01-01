@@ -31,7 +31,8 @@ AC_SUBST(DEPS_CFLAGS)
 AC_SUBST(DEPS_LIBS)
 
 dnl TODO: Make LibYAML location configurable.
-AC_CHECK_LIB(yaml, yaml_get_version)
+AC_CHECK_LIB(yaml, yaml_get_version, [],
+	[AC_ERROR([LibYAML not found.])])
 
 # Checks for header files.
 
