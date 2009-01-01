@@ -62,6 +62,7 @@ static const char *TRACK_PATHS[] = {
 
 // Local functions
 static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
+static BOOL CALLBACK ListCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 static BOOL ReadTrackEntry(MR_RecordFile * pRecordFile, TrackEntry * pDest, const char *pFileName);
 static bool CompareFunc(const TrackEntry *ent1, const TrackEntry *ent2);
 static void SortList();
@@ -82,6 +83,8 @@ static tracklist_t gsTrackList;
 static sorted_t gsSortedTrackList;
 static int gsNbLaps;
 static BOOL gsAllowWeapons = FALSE;
+static HWND trackSelDlg;
+static WNDPROC oldListProc;
 
 /**
  * Open a track file.
@@ -163,6 +166,8 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 	switch (pMsgId) {
 		// Catch environment modification events
 		case WM_INITDIALOG:
+			trackSelDlg = pWindow;
+
 			// Init track file list
 			for (sorted_t::iterator iter = gsSortedTrackList.begin();
 				iter != gsSortedTrackList.end(); ++iter)
@@ -187,6 +192,12 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 				SetDlgItemText(pWindow, IDC_DESCRIPTION, MR_LoadString(IDS_NO_SELECT));
 				SendDlgItemMessage(pWindow, IDC_LIST, LB_SETCURSEL, -1, 0);
 			}
+
+			oldListProc = (WNDPROC)SetWindowLong(
+				GetDlgItem(pWindow, IDC_LIST),
+				GWL_WNDPROC,
+				(LONG)ListCallBack);
+
 			lReturnValue = TRUE;
 			break;
 		case WM_COMMAND:
@@ -226,6 +237,18 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 			break;
 	}
 	return lReturnValue;
+}
+
+BOOL CALLBACK ListCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
+{
+	switch (pMsgId) {
+		case WM_LBUTTONDBLCLK:
+			SendMessage(trackSelDlg, WM_COMMAND, IDOK, 0);
+			return TRUE;
+
+		default:
+			return CallWindowProc(oldListProc, pWindow, pMsgId, pWParam, pLParam);
+	}
 }
 
 /**
