@@ -31,8 +31,7 @@ AC_SUBST(DEPS_CFLAGS)
 AC_SUBST(DEPS_LIBS)
 
 dnl TODO: Make LibYAML location configurable.
-AC_CHECK_LIB(yaml, yaml_get_version, [],
-	[AC_ERROR([LibYAML not found.])])
+YAML_REQUIRE(0.1.1)
 
 # Checks for header files.
 
@@ -43,7 +42,7 @@ AC_C_CONST
 
 
 # Additional global flags.
-HR_CPPFLAGS="-DNO_SERIALIZE -DWITH_OPENAL $BOOST_CPPFLAGS $DEPS_CFLAGS"
+HR_CPPFLAGS="-DNO_SERIALIZE -DWITH_OPENAL $BOOST_CPPFLAGS $DEPS_CFLAGS $YAML_CPPFLAGS"
 AC_SUBST(HR_CPPFLAGS)
 HR_CXXFLAGS="-Winvalid-pch"
 AC_SUBST(HR_CXXFLAGS)
