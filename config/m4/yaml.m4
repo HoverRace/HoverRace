@@ -64,6 +64,7 @@ AC_CACHE_CHECK([for LibYAML version >= $yaml_ver_str], [yaml_cv_path],
 			yaml_save_LDFLAGS="$LDFLAGS"
 			if test x"$yaml_dir" != x
 			then
+				test -e "$yaml_dir/include/yaml.h" || continue
 				CPPFLAGS="$CPPFLAGS -I$yaml_dir/include"
 				LDFLAGS="$LDFLAGS -L$yaml_dir/lib -Wl,-rpath,$yaml_dir/lib -lyaml"
 			fi
