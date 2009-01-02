@@ -67,7 +67,9 @@ AC_CACHE_CHECK([for LibYAML version >= $yaml_ver_str], [yaml_cv_path],
 			then
 				test -e "$yaml_dir/include/yaml.h" || continue
 				CPPFLAGS="$CPPFLAGS -I$yaml_dir/include"
-				LDFLAGS="$LDFLAGS -L$yaml_dir/lib -Wl,-rpath,$yaml_dir/lib"
+				_YAML_DETECT_LIB([$yaml_dir], [yaml_dir_lib])
+				test x"$yaml_dir_lib" = x && continue
+				LDFLAGS="$LDFLAGS -L$yaml_dir_lib -Wl,-rpath,$yaml_dir_lib"
 			fi
 			LIBS="$LIBS -lyaml"
 			dnl Unfortunately, there doesn't seem to be a way to check
@@ -108,9 +110,32 @@ then
 	YAML_LDFLAGS="-lyaml"
 else
 	YAML_CPPFLAGS="-I$yaml_cv_path/include"
-	YAML_LDFLAGS="-L$yaml_cv_path/lib -lyaml"
+	_YAML_DETECT_LIB([$yaml_cv_path], [yaml_dir_lib])
+	if test x"$yaml_dir_lib" = x
+	then
+		AC_MSG_ERROR([Internal error: Could not determine LibYAML library directory])
+	else
+		YAML_LDFLAGS="-L$yaml_dir_lib -lyaml"
+	fi
 fi
 AC_SUBST([YAML_CPPFLAGS])
 AC_SUBST([YAML_LDFLAGS])
+])
+
+dnl _YAML_DETECT_LIB(prefix, varname)
+dnl Attempt to determine the name of the library directory for a prefix.
+dnl Result is stored in vername.  If no known library path exists, then
+dnl varname will be set to the empty string.
+AC_DEFUN([_YAML_DETECT_LIB],
+[
+	$2=
+	for yaml_detect_dir in "$1/lib64" "$1/lib" "$1/lib32"
+	do
+		if test -d "$yaml_detect_dir"
+		then
+			$2="$yaml_detect_dir"
+			break
+		fi
+	done
 ])
 
