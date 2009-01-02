@@ -62,12 +62,14 @@ AC_CACHE_CHECK([for LibYAML version >= $yaml_ver_str], [yaml_cv_path],
 		do
 			yaml_save_CPPFLAGS="$CPPFLAGS"
 			yaml_save_LDFLAGS="$LDFLAGS"
+			yaml_save_LIBS="$LIBS"
 			if test x"$yaml_dir" != x
 			then
 				test -e "$yaml_dir/include/yaml.h" || continue
 				CPPFLAGS="$CPPFLAGS -I$yaml_dir/include"
-				LDFLAGS="$LDFLAGS -L$yaml_dir/lib -Wl,-rpath,$yaml_dir/lib -lyaml"
+				LDFLAGS="$LDFLAGS -L$yaml_dir/lib -Wl,-rpath,$yaml_dir/lib"
 			fi
+			LIBS="$LIBS -lyaml"
 			dnl Unfortunately, there doesn't seem to be a way to check
 			dnl the library version other than to actually run a test
 			dnl program.
@@ -85,9 +87,13 @@ if (ver_patch < $yaml_ver_patch) return 1;
 				[yaml_cv_path=no])
 			CPPFLAGS="$yaml_save_CPPFLAGS"
 			LDFLAGS="$yaml_save_LDFLAGS"
+			LIBS="$yaml_save_LIBS"
 			if test x"$yaml_cv_path" = xyes
 			then
-				yaml_cv_path="$yaml_dir"
+				if test x"$yaml_dir" != x
+				then
+					yaml_cv_path="$yaml_dir"
+				fi
 				break
 			fi
 		done
@@ -96,10 +102,10 @@ if (ver_patch < $yaml_ver_patch) return 1;
 if test x"$yaml_cv_path" = xno
 then
 	AC_MSG_ERROR([Could not find LibYAML version >= $yaml_ver_str; try using --with-yaml=/path/to/libyaml])
-elif test x"$yaml_cv_path" = x
+elif test x"$yaml_cv_path" = xyes
 then
 	YAML_CPPFLAGS=
-	YAML_LDFLAGS=
+	YAML_LDFLAGS="-lyaml"
 else
 	YAML_CPPFLAGS="-I$yaml_cv_path/include"
 	YAML_LDFLAGS="-L$yaml_cv_path/lib -lyaml"
