@@ -42,17 +42,17 @@ class MR_MainCharacterState:private MR_BitPack
 #define  MC_POSZ          64,   27,     0
 #define  MC_ROOM          91,   11,     0
 #define  MC_ORIENTATION  102,    9,     3
-#define  MC_SPEED_X_256  111,   13,     2
-#define  MC_SPEED_Y_256  124,   13,     2
-#define  MC_SPEED_Z_256  137,    9,     2
-#define  MC_CONTROL_ST   146,   15,     0
-#define  MC_ON_FLOOR     161,    1,     0
-#define  MC_HOVER_MODEL  162,    3,     0
-#define  MC_PADDING      165,   11,     0
+#define  MC_SPEED_X_256  111,   17,     2
+#define  MC_SPEED_Y_256  128,   17,     2
+#define  MC_SPEED_Z_256  145,    9,     2
+#define  MC_CONTROL_ST   154,   15,     0
+#define  MC_ON_FLOOR     169,    1,     0
+#define  MC_HOVER_MODEL  170,    3,     0
+#define  MC_PADDING      173,   11,     0
 	//   #define  MC_SOUNDFX      141,    5,     0
 
-	// Total                 176  = 22 bytes
-	MR_UInt8 mFieldList[21];
+	// Total                 184  = 23 bytes
+	MR_UInt8 mFieldList[22];
 
 	public:
 
@@ -300,9 +300,9 @@ MR_ElementNetState MR_MainCharacter::GetNetState() const
 
 	lsState.Set(MC_ORIENTATION, mOrientation);
 
-	lsState.Set(MC_SPEED_X_256, static_cast<int>(mXSpeedBeforeCollision * 256));
-	lsState.Set(MC_SPEED_Y_256, static_cast<int>(mYSpeedBeforeCollision * 256));
-	lsState.Set(MC_SPEED_Z_256, static_cast<int>(mZSpeed * 256));
+	lsState.Set(MC_SPEED_X_256, static_cast<unsigned int>(mXSpeedBeforeCollision * 256));
+	lsState.Set(MC_SPEED_Y_256, static_cast<unsigned int>(mYSpeedBeforeCollision * 256));
+	lsState.Set(MC_SPEED_Z_256, static_cast<unsigned int>(mZSpeed * 256));
 
 	lsState.Set(MC_CONTROL_ST, mControlState);
 	lsState.Set(MC_ON_FLOOR, mOnFloor);
@@ -347,6 +347,10 @@ void MR_MainCharacter::SetNetState(int /*pDataLen */ , const MR_UInt8 * pData)
 	mXSpeed = lState->Get(MC_SPEED_X_256) / 256.0;
 	mYSpeed = lState->Get(MC_SPEED_Y_256) / 256.0;
 	mZSpeed = lState->Get(MC_SPEED_Z_256) / 256.0;
+
+	// calculate actual speed
+	double totalSpeed = sqrt(mXSpeed * mXSpeed + mYSpeed * mYSpeed);
+	//TRACE("set player %d speed to %lf\n", this->GetHoverId(), totalSpeed);
 
 	mControlState = lState->Getu(MC_CONTROL_ST);
 	mOnFloor = lState->Get(MC_ON_FLOOR);
