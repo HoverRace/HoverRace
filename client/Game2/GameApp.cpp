@@ -67,6 +67,12 @@ void CaptureScreen( MR_VideoBuffer* pVideoBuffer );
 #define MRM_RETURN2WINDOWMODE  1
 #define MRM_EXIT_MENU_LOOP     2
 
+#ifdef WITH_OPENAL
+#	define SOUNDSERVER_INIT(s) MR_SoundServer::Init()
+#else
+#	define SOUNDSERVER_INIT(s) MR_SoundServer::Init(s)
+#endif
+
 enum MR_InControler { MR_KDB, MR_JOY1, MR_JOY2, MR_JOY3, MR_JOY4 };
 
 enum
@@ -1365,7 +1371,7 @@ void MR_GameApp::NewLocalSession()
 
 	if(lSuccess) {
 		DeleteMovieWnd();
-		MR_SoundServer::Init(mMainWindow);
+		SOUNDSERVER_INIT(mMainWindow);
 		mObserver1 = MR_Observer::New();
 
 		// Create the new session
@@ -1424,7 +1430,7 @@ void MR_GameApp::NewSplitSession(int pSplitPlayers)
 	if(lSuccess) {
 		// Create the new session
 		DeleteMovieWnd();
-		MR_SoundServer::Init(mMainWindow);
+		SOUNDSERVER_INIT(mMainWindow);
 
 		mObserver1 = MR_Observer::New();
 		mObserver2 = MR_Observer::New();
@@ -1513,12 +1519,12 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 		lSuccess = MR_SelectTrack(mMainWindow, lCurrentTrack, lNbLap, lAllowWeapons);
 
 		DeleteMovieWnd();
-		MR_SoundServer::Init(mMainWindow);
+		SOUNDSERVER_INIT(mMainWindow);
 		lCurrentSession = new MR_NetworkSession(FALSE, -1, -1, mMainWindow);
 	}
 	else {
 		DeleteMovieWnd();
-		MR_SoundServer::Init(mMainWindow);
+		SOUNDSERVER_INIT(mMainWindow);
 
 		lCurrentSession = new MR_NetworkSession(FALSE, -1, -1, mMainWindow);
 		lCurrentSession->SetPlayerName(cfg->player.nickName.c_str());
@@ -1659,7 +1665,7 @@ void MR_GameApp::NewInternetSession()
 	// Delete the current session
 	Clean();
 	DeleteMovieWnd();
-	MR_SoundServer::Init(mMainWindow);
+	SOUNDSERVER_INIT(mMainWindow);
 
 	lCurrentSession = new MR_NetworkSession(TRUE, -1, -1, mMainWindow);
 

@@ -26,6 +26,10 @@
 
 #ifdef WITH_OPENAL
 #	include <AL/alut.h>
+#	ifdef _MSC_VER
+#		pragma comment(lib, "OpenAL32.lib")
+#		pragma comment(lib, "alut.lib")
+#	endif
 #else
 #	include <mmreg.h>
 #	include <dsound.h>
@@ -65,8 +69,9 @@ class MR_SoundBuffer
 	protected:
 
 		int mNbCopy;
-#		ifdef WITH_ALUT
-			ALuint mSoundBuffer[MR_MAX_SOUND_COPY];
+#		ifdef WITH_OPENAL
+			ALuint mBuffer;
+			ALuint mSoundBuffer[MR_MAX_SOUND_COPY];  // Actually the sources.
 #		else
 			IDirectSoundBuffer *mSoundBuffer[MR_MAX_SOUND_COPY];
 #		endif
@@ -132,10 +137,20 @@ MR_SoundBuffer *MR_SoundBuffer::mList = NULL;
 IDirectSound *gDirectSound = NULL;
 #endif
 
+#ifdef WITH_OPENAL
+static const char* const waveHeader =
+	"RIFF----WAVE"
+	"fmt \022\0\0\0" "----" "----" "----" "----\0\0"
+	"data----";
+#endif
+
 // Implementation
 MR_SoundBuffer::MR_SoundBuffer()
 {
 	mNbCopy = 0;
+#ifdef WITH_OPENAL
+	mBuffer = 0;
+#endif
 
 	for(int lCounter = 0; lCounter < MR_MAX_SOUND_COPY; lCounter++) {
 		mSoundBuffer[lCounter] = NULL;
@@ -168,12 +183,17 @@ MR_SoundBuffer::~MR_SoundBuffer()
 	}
 
 	// Delete the sound buffers
+#ifdef WITH_OPENAL
+	alDeleteSources(mNbCopy, mSoundBuffer);
+	alDeleteBuffers(1, &mBuffer);
+#else
 	for(int lCounter = 0; lCounter < mNbCopy; lCounter++) {
 		if(mSoundBuffer[lCounter] != NULL) {
 			mSoundBuffer[lCounter]->Release();
 			mSoundBuffer[lCounter] = NULL;
 		}
 	}
+#endif
 }
 
 void MR_SoundBuffer::ApplyCumCommand()
@@ -200,7 +220,8 @@ void MR_SoundBuffer::DeleteAll()
 
 /**
  * Fill the buffer with sound data.
- * @param pData WAV data buffer.  First 32 bits are the data length.
+ * @param pData Data buffer.  First 32 bits are the data length, followed by
+ *              a WAVEFORMATEX describing the data, followed by the data itself.
  * @param pNbCopy The number of copies to make.
  * @return @c TRUE if successful.
  */
@@ -218,19 +239,37 @@ BOOL MR_SoundBuffer::Init(const char *pData, int pNbCopy)
 	mNbCopy = pNbCopy;
 
 	// Parse pData
-	DSBUFFERDESC lDesc;
 	MR_UInt32 lBufferLen = *(MR_UInt32 *) pData;
 #ifdef WITH_OPENAL
 	const char *lSoundData = pData + sizeof(MR_UInt32);
-	mSoundBuffer[0] = alutCreateBufferFromFileImage(pData, lBufferLen);
-	if (mSoundBuffer[0] == AL_NONE) {
+	
+	// Temporary WAV format buffer to pass to ALUT.
+	int bufSize = 12 + (8 + 18) + (8 + lBufferLen);
+	MR_UInt32 chunkSize = bufSize - 8;
+	char *buf = (char*)malloc(bufSize);
+	memcpy(buf, waveHeader, 12 + (8 + 18) + 8);
+	memcpy(buf + 0x04, &chunkSize, 4);
+	memcpy(buf + 0x14, lSoundData, 16);
+	memcpy(buf + 0x2a, &lBufferLen, 4);
+	lSoundData += 18;  // sizeof(WAVEFORMATEX)
+	memcpy(buf + 0x2e, lSoundData, lBufferLen);
+
+	mBuffer = alutCreateBufferFromFileImage(buf, bufSize);
+	//mBuffer = alutCreateBufferHelloWorld();
+	if (mBuffer == AL_NONE) {
+		MessageBox(NULL, alutGetErrorString(alutGetError()), "AIEEE", MB_OK);
+		ASSERT(FALSE);
 		lReturnValue = FALSE;
 	} else {
-		for (int i = 1; i < mNbCopy; ++i) {
-			mSoundBuffer[i] = mSoundBuffer[0];
+		alGenSources(mNbCopy, mSoundBuffer);
+		for (int i = 0; i < mNbCopy; ++i) {
+			alSourcei(mSoundBuffer[i], AL_BUFFER, mBuffer);
 		}
 	}
+
+	free(buf);
 #else
+	DSBUFFERDESC lDesc;
 	WAVEFORMATEX *lWaveFormat = (WAVEFORMATEX *) (pData + sizeof(MR_UInt32));
 	const char *lSoundData = pData + sizeof(MR_UInt32) + sizeof(WAVEFORMATEX);
 
@@ -292,6 +331,9 @@ void MR_SoundBuffer::SetParams(int pCopy, int pDB, double pSpeed, int pPan)
 	// Global sound effect volume setting.
 	float vol = MR_Config::GetInstance()->audio.sfxVolume;
 
+#ifdef WITH_OPENAL
+	//TODO
+#else
 	long attenuatedVolume;
 	if (vol >= 0.99f) {
 		attenuatedVolume = pDB;
@@ -314,6 +356,7 @@ void MR_SoundBuffer::SetParams(int pCopy, int pDB, double pSpeed, int pPan)
 		mSoundBuffer[pCopy]->SetFrequency(lFreq);
 		mSoundBuffer[pCopy]->SetPan(pPan);
 	}
+#endif
 }
 
 int MR_SoundBuffer::GetNbCopy() const
@@ -333,9 +376,14 @@ MR_ShortSound::~MR_ShortSound()
 
 void MR_ShortSound::Play(int pDB, double pSpeed, int pPan)
 {
+#ifdef WITH_OPENAL
+	SetParams(mCurrentCopy, pDB, pSpeed, pPan);
+	alSourcePlay(mSoundBuffer[mCurrentCopy]);
+#else
 	mSoundBuffer[mCurrentCopy]->SetCurrentPosition(0);
 	SetParams(mCurrentCopy, pDB, pSpeed, pPan);
 	mSoundBuffer[mCurrentCopy]->Play(0, 0, 0);
+#endif
 
 	mCurrentCopy++;
 	if(mCurrentCopy >= mNbCopy) {
@@ -368,7 +416,11 @@ void MR_ContinuousSound::Pause(int pCopy)
 		pCopy = mNbCopy - 1;
 	}
 
+#ifdef WITH_OPENAL
+	alSourcePause(mSoundBuffer[pCopy]);
+#else
 	mSoundBuffer[pCopy]->Stop();
+#endif
 
 }
 
@@ -377,7 +429,13 @@ void MR_ContinuousSound::Restart(int pCopy)
 	if(pCopy >= mNbCopy) {
 		pCopy = mNbCopy - 1;
 	}
+#ifdef WITH_OPENAL
+	alSourceRewind(mSoundBuffer[pCopy]);
+	alSourcei(mSoundBuffer[pCopy], AL_LOOPING, AL_TRUE);
+	alSourcePlay(mSoundBuffer[pCopy]);
+#else
 	mSoundBuffer[pCopy]->Play(0, 0, DSBPLAY_LOOPING);
+#endif
 }
 
 void MR_ContinuousSound::ApplyCumCommand()
@@ -454,17 +512,21 @@ void MR_SoundServer::Close()
 
 MR_ShortSound *MR_SoundServer::CreateShortSound(const char *pData, int pNbCopy)
 {
+#ifndef WITH_OPENAL
 	if(gDirectSound != NULL) {
+#endif
 		MR_ShortSound *lReturnValue = new MR_ShortSound;
 
 		if(!lReturnValue->Init(pData, pNbCopy)) {
 			lReturnValue = NULL;
 		}
 		return lReturnValue;
+#ifndef WITH_OPENAL
 	}
 	else {
 		return NULL;
 	}
+#endif
 }
 
 void MR_SoundServer::DeleteShortSound(MR_ShortSound * pSound)
@@ -491,17 +553,21 @@ int MR_SoundServer::GetNbCopy(MR_ShortSound * pSound)
 
 MR_ContinuousSound *MR_SoundServer::CreateContinuousSound(const char *pData, int pNbCopy)
 {
+#ifndef WITH_OPENAL
 	if(gDirectSound != NULL) {
+#endif
 		MR_ContinuousSound *lReturnValue = new MR_ContinuousSound;
 
 		if(!lReturnValue->Init(pData, pNbCopy)) {
 			lReturnValue = NULL;
 		}
 		return lReturnValue;
+#ifndef WITH_OPENAL
 	}
 	else {
 		return NULL;
 	}
+#endif
 }
 
 void MR_SoundServer::DeleteContinuousSound(MR_ContinuousSound * pSound)
@@ -518,9 +584,13 @@ void MR_SoundServer::Play(MR_ContinuousSound * pSound, int pCopy, int pDB, doubl
 
 void MR_SoundServer::ApplyContinuousPlay()
 {
+#ifndef WITH_OPENAL
 	if(gDirectSound != NULL) {
+#endif
 		MR_SoundBuffer::ApplyCumCommandForAll();
+#ifndef WITH_OPENAL
 	}
+#endif
 }
 
 /*
