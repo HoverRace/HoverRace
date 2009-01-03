@@ -470,7 +470,8 @@ void MR_NetworkSession::ReadNet()
 					// Drop the message if there was a recent collision on that item
 					int lLastCollisionAge = mSession.GetSimulationTime() - mClientCharacter[lClientId]->mLastCollisionTime;
 
-					if(lLastCollisionAge < (mNetInterface.GetAvgLag(lClientId) + 40)) {
+					// do not drop packets before game starts (craft changing)
+					if(lLastCollisionAge < (mNetInterface.GetAvgLag(lClientId) + 40) && mSession.GetSimulationTime() >= 0) {
 						// Drop this message
 					}
 					else {

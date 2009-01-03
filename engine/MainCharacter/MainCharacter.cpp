@@ -240,7 +240,9 @@ void MR_MainCharacter::SetOrientation(MR_Angle pOrientation)
 int MR_MainCharacter::GetHoverId() const
 {
 	return mHoverId;
-} void MR_MainCharacter::AddRenderer()
+} 
+
+void MR_MainCharacter::AddRenderer()
 {
 	if(mRenderer == NULL) {
 		MR_ObjectFromFactoryId lId = { 1, 100 };
@@ -286,7 +288,7 @@ MR_ElementNetState MR_MainCharacter::GetNetState() const
 	MR_ElementNetState lReturnValue;
 
 	lReturnValue.mDataLen = sizeof(lsState);
-	lReturnValue.mData = (MR_UInt8 *) & lsState;
+	lReturnValue.mData = (MR_UInt8 *) &lsState;
 
 	lsState.Clear(sizeof(lsState));
 

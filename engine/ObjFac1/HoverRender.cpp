@@ -72,26 +72,25 @@ void MR_HoverRender::Render(MR_3DViewPort *pDest, const MR_3DCoordinate &pPositi
 	MR_PositionMatrix lMatrix;
 
 	if(pDest->ComputePositionMatrix(lMatrix, pPosition, pOrientation, 1000 /* TODO Object ray must be precomputed at compilation */ )) {
-	int lSeq = pMotorOn ? 1 : 0;
+		int lSeq = pMotorOn ? 1 : 0;
 
-	if(pMotorOn) {
-		mFrame = (mFrame + 1) % 2;
-	}
-	else {
-		mFrame = 0;
-	}
+		if(pMotorOn) {
+			mFrame = (mFrame + 1) % 2;
+		}
+		else {
+			mFrame = 0;
+		}
 
-	if(pModel == 1) {
-		MR_ResActorFriend::Draw(mActor1, pDest, lMatrix, lSeq, mFrame, mCockpitBitmap2[pHoverId % 10]);
-	} else if(pModel == 2) {
-		MR_ResActorFriend::Draw(mActor2, pDest, lMatrix, lSeq, mFrame, mCockpitBitmap[pHoverId % 10]);
-	} else if(pModel == 3) {
-		MR_ResActorFriend::Draw(mActor3, pDest, lMatrix, lSeq, mFrame, mEonCockpitBitmap[pHoverId % 10]);
-	} else {
-		MR_ResActorFriend::Draw(mActor0, pDest, lMatrix, lSeq, mFrame, mCockpitBitmap[pHoverId % 10]);
+		if(pModel == 1) {
+			MR_ResActorFriend::Draw(mActor1, pDest, lMatrix, lSeq, mFrame, mCockpitBitmap2[pHoverId % 10]);
+		} else if(pModel == 2) {
+			MR_ResActorFriend::Draw(mActor2, pDest, lMatrix, lSeq, mFrame, mCockpitBitmap[pHoverId % 10]);
+		} else if(pModel == 3) {
+			MR_ResActorFriend::Draw(mActor3, pDest, lMatrix, lSeq, mFrame, mEonCockpitBitmap[pHoverId % 10]);
+		} else {
+			MR_ResActorFriend::Draw(mActor0, pDest, lMatrix, lSeq, mFrame, mCockpitBitmap[pHoverId % 10]);
+		}
 	}
-}
-
 }
 
 MR_ShortSound *MR_HoverRender::GetLineCrossingSound()
