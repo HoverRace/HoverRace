@@ -51,7 +51,7 @@ namespace MR_SoundServer
 
 	MR_DllDeclare void Play(MR_ShortSound * pSound, int pDB = 0, double pSpeed = 1.0, int pPan = 0);
 
-	//MR_DllDeclare int GetNbCopy(MR_ShortSound * pSound);
+	MR_DllDeclare int GetNbCopy(MR_ShortSound * pSound);
 
 	// Continous play
 	MR_DllDeclare MR_ContinuousSound *CreateContinuousSound(const char *pData, int pNbCopy);
@@ -65,7 +65,7 @@ namespace MR_SoundServer
 
 	   MR_DllDeclare void                SetParams( MR_ContinuousSound* pSound, int pCopy, int pDB, double pSpeed = 1.0, int pPan = 0 );
 	 */
-	//MR_DllDeclare int GetNbCopy(MR_ContinuousSound * pSound);
+	MR_DllDeclare int GetNbCopy(MR_ContinuousSound * pSound);
 
 	MR_DllDeclare void ApplyContinuousPlay();
 
