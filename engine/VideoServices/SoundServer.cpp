@@ -52,13 +52,15 @@ static int LinearToDirectX(float value)
 	return (value <= 0.01f) ? DSBVOLUME_MIN :
 		static_cast<int>(floorf(2000.0f * log10f(value) + 0.5f));
 }
+#else
+#	define DSBVOLUME_MIN -10000
+#endif
 /// Convert millibels to linear.
 static float DirectXToLinear(int value)
 {
 	return (value == DSBVOLUME_MIN) ? 0.0f : 
 		powf(10.0f, (float)value / 2000.0f);
 } 
-#endif
 
 class MR_SoundBuffer
 {
@@ -332,7 +334,20 @@ void MR_SoundBuffer::SetParams(int pCopy, int pDB, double pSpeed, int pPan)
 	float vol = MR_Config::GetInstance()->audio.sfxVolume;
 
 #ifdef WITH_OPENAL
-	//TODO
+	float attenuatedVolume = vol * DirectXToLinear(pDB);
+
+	// Clamp volume to accepted range.
+	if (attenuatedVolume < 0.0f) attenuatedVolume = 0.0f;
+	else if (attenuatedVolume > 1.0f) attenuatedVolume = 1.0f;
+
+	if (pSpeed < 0.01f) pSpeed = 0.01f;
+
+	ALuint src = mSoundBuffer[pCopy];
+	if (src != NULL) {
+		alSourcef(mSoundBuffer[pCopy], AL_GAIN, attenuatedVolume);
+		alSourcef(mSoundBuffer[pCopy], AL_PITCH, static_cast<float>(pSpeed));
+		//TODO: Simulate panning by changing position.
+	}
 #else
 	long attenuatedVolume;
 	if (vol >= 0.99f) {
