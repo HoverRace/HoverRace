@@ -155,8 +155,8 @@
 #define IDC_UDP_RECV_PORT2              1088
 #define IDC_TCP_RECV_PORT               1088
 #define IDC_ABOUT_RTF                   1088
-#define IDC_VER_TXT                     1090
 #define IDC_TCP_SERV_PORT               1089
+#define IDC_VER_TXT                     1090
 #define ID_HELP_CONTENTS                32772
 #define ID_HELP_HOWTOORDER              32773
 #define ID_HELP_TIPOFTHEDAY             32774
@@ -416,6 +416,11 @@
 #define IDS_SAMEADDRPORT1               40232
 #define IDS_SAMEADDRPORT2               40233
 #define IDS_CONN_ERROR                  40234
+#define IDS_SELECT_CRAFT                40235
+#define IDS_BASIC_CRAFT_DESC            40236
+#define IDS_BI_TURBO_CRAFT_DESC         40237
+#define IDS_CX_CRAFT_DESC               40238
+#define IDS_EON_CRAFT_DESC              40239
 #define ID_GAME_NEW                     0xE100
 #define ID_GAME_LOAD                    0xE101
 #define ID_GAME_FAST_SAVE               0xE103

@@ -48,6 +48,12 @@ CString gHeaderStr = MR_LoadString(IDS_HEADER);
 CString gLastLapStr = MR_LoadString(IDS_LAST_LAP);
 CString gCurLapStr = MR_LoadString(IDS_CUR_LAP);
 
+CString gChooseCraft = MR_LoadString(IDS_SELECT_CRAFT);
+CString gBasicStr = MR_LoadString(IDS_BASIC_CRAFT_DESC);
+CString gBiStr = MR_LoadString(IDS_BI_TURBO_CRAFT_DESC);
+CString gCXStr = MR_LoadString(IDS_CX_CRAFT_DESC);
+CString gEonStr = MR_LoadString(IDS_EON_CRAFT_DESC);
+
 MR_Observer::MR_Observer()
 {
 	mLastCameraPosValid = FALSE;
@@ -734,6 +740,24 @@ void MR_Observer::Render3DView(const MR_ClientSession * pSession, const MR_MainC
 		if(pTime < 0) {
 			pTime = -pTime;
 			sprintf(lMainLineBuffer, gCountdownStr, (pTime % 60000) / 1000, (pTime % 1000) / 10, pViewingCharacter->GetTotalLap());
+			
+			// craft info -- not added below since this is the only time this line is used
+			char lCraftInfoBuffer[80];
+
+			int lFontScaling = 1 + (mBaseFont->GetSprite()->GetItemHeight() * 30) / (lYRes);
+			int lLineHeight = (mBaseFont->GetSprite()->GetItemHeight() / lFontScaling);
+
+			if(pSession->GetMainCharacter()->GetHoverModel() == 0) // basic
+				sprintf(lCraftInfoBuffer, gBasicStr);
+			else if(pSession->GetMainCharacter()->GetHoverModel() == 1) // cx
+				sprintf(lCraftInfoBuffer, gCXStr);
+			else if(pSession->GetMainCharacter()->GetHoverModel() == 2) // bi-turbo
+				sprintf(lCraftInfoBuffer, gBiStr);
+			else if(pSession->GetMainCharacter()->GetHoverModel() == 3) // eon
+				sprintf(lCraftInfoBuffer, gEonStr);
+
+			mBaseFont->GetSprite()->StrBlt(lXRes / 2, lYRes / 16 + lLineHeight, Ascii2Simple(gChooseCraft), &m3DView, MR_Sprite::eCenter, MR_Sprite::eTop, lFontScaling);
+			mBaseFont->GetSprite()->StrBlt(lXRes / 2, lYRes / 16 + 2 * lLineHeight, Ascii2Simple(lCraftInfoBuffer), &m3DView, MR_Sprite::eCenter, MR_Sprite::eTop, lFontScaling);
 		}
 		else if(pViewingCharacter->GetTotalLap() <= pViewingCharacter->GetLap()) {
 			MR_SimulationTime lTotalTime = pViewingCharacter->GetTotalTime();

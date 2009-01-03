@@ -91,7 +91,7 @@ class MR_ClientSession
 
 		const MR_UInt8 *GetBackImage() const;
 
-		void SetMap(MR_Sprite * pMap, int pX0, int pY0, int pX1, int pY1);
+		void SetMap(MR_Sprite *pMap, int pX0, int pY0, int pX1, int pY1);
 		const MR_Sprite *GetMap() const;
 		void ConvertMapCoordinate(int &pX, int &pY, int pRatio) const;
 

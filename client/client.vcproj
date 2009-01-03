@@ -224,6 +224,18 @@
 				RelativePath=".\Game2\TrackSelect.h">
 			</File>
 		</Filter>
+		<File
+			RelativePath=".\Game2\About.bmp">
+		</File>
+		<File
+			RelativePath=".\Game2\Game2.exe.manifest">
+		</File>
+		<File
+			RelativePath=".\Game2\icon3.ico">
+		</File>
+		<File
+			RelativePath=".\Game2\warning.ico">
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

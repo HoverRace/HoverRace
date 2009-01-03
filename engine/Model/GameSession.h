@@ -28,9 +28,9 @@
 #include "../Util/RecordFile.h"
 
 #ifdef MR_ENGINE
-#define MR_DllDeclare   __declspec( dllexport )
+#define MR_DllDeclare   __declspec(dllexport)
 #else
-#define MR_DllDeclare   __declspec( dllimport )
+#define MR_DllDeclare   __declspec(dllimport)
 #endif
 
 // Class Declaration
@@ -56,13 +56,13 @@ class MR_GameSession
 		void SimulateSurfaceElems(MR_SimulationTime pDuration);
 
 		// SimulateFreeElem sub-functions
-		void ComputeShapeContactEffects(int pCurrentRoom, MR_FreeElement * pActor, const MR_RoomContactSpec & pLastSpec, MR_FastArrayBase < int >*pVisitedRooms, int pMaxDepth, MR_SimulationTime pDuration);
+		void ComputeShapeContactEffects(int pCurrentRoom, MR_FreeElement *pActor, const MR_RoomContactSpec &pLastSpec, MR_FastArrayBase<int> *pVisitedRooms, int pMaxDepth, MR_SimulationTime pDuration);
 
 	public:
 		MR_DllDeclare MR_GameSession(BOOL pAllowRendering = FALSE);
-		MR_DllDeclare ~ MR_GameSession();
+		MR_DllDeclare ~MR_GameSession();
 
-		MR_DllDeclare BOOL LoadNew(const char *pTitle, MR_RecordFile * pMazeFile);
+		MR_DllDeclare BOOL LoadNew(const char *pTitle, MR_RecordFile *pMazeFile);
 
 		MR_DllDeclare void SetSimulationTime(MR_SimulationTime);
 		MR_DllDeclare MR_SimulationTime GetSimulationTime() const;
