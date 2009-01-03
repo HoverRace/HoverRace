@@ -300,10 +300,10 @@ class MR_MissileState
 	public:
 		MR_Int32 mPosX;							  // 4    4
 		MR_Int32 mPosY;							  // 4    8
-		MR_Int16 mPosZ;							  // 2   10
+		MR_Int32 mPosZ;							  // 4   12
 
-		MR_Angle mOrientation;					  // 2   12
-		MR_Int8 mHoverId;						  // 1   14
+		MR_Angle mOrientation;					  // 2   14
+		MR_Int8 mHoverId;						  // 1   16
 };
 
 MR_ElementNetState MR_Missile::GetNetState() const

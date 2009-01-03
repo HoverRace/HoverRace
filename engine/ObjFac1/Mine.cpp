@@ -144,7 +144,7 @@ class MR_MineState
 	public:
 		MR_Int32 mPosX;							  // 4    4
 		MR_Int32 mPosY;							  // 4    8
-		MR_Int16 mPosZ;							  // 2   10
+		MR_Int32 mPosZ;							  // 4   12
 
 };
 

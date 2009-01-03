@@ -30,7 +30,6 @@
 class MR_Missile:public MR_FreeElementBase, protected MR_CylinderShape
 {
 	protected:
-
 		// Shape interface
 		MR_Int32 ZMin() const;
 		MR_Int32 ZMax() const;
