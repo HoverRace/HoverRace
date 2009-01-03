@@ -82,8 +82,8 @@ AC_CACHE_CHECK([for LibYAML version >= $yaml_ver_str], [yaml_cv_path],
 int ver_major = 0, ver_minor = 0, ver_patch = 0;
 yaml_get_version(&ver_major, &ver_minor, &ver_patch);
 if (ver_major < $yaml_ver_major) return 1;
-if (ver_minor < $yaml_ver_minor) return 1;
-if (ver_patch < $yaml_ver_patch) return 1;
+if (ver_minor < $yaml_ver_minor && ver_major == $yaml_ver_major) return 1;
+if (ver_patch < $yaml_ver_patch && ver_minor == $yaml_ver_minor && ver_major == $yaml_ver_major) return 1;
 				]])],
 				[yaml_cv_path=yes],
 				[yaml_cv_path=no])
