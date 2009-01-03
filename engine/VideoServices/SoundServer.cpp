@@ -479,6 +479,7 @@ void MR_SoundServer::Play(MR_ShortSound * pSound, int pDB, double pSpeed, int pP
 	}
 }
 
+/*
 int MR_SoundServer::GetNbCopy(MR_ShortSound * pSound)
 {
 	if(pSound != NULL) {
@@ -488,6 +489,7 @@ int MR_SoundServer::GetNbCopy(MR_ShortSound * pSound)
 		return 1;
 	}
 }
+*/
 
 MR_ContinuousSound *MR_SoundServer::CreateContinuousSound(const char *pData, int pNbCopy)
 {
@@ -549,6 +551,7 @@ void MR_SoundServer::SetParams( MR_ContinuousSound* pSound, int pCopy, int pDB, 
 }
 */
 
+/*
 int MR_SoundServer::GetNbCopy(MR_ContinuousSound * pSound)
 {
 	if(pSound != NULL) {
@@ -558,3 +561,4 @@ int MR_SoundServer::GetNbCopy(MR_ContinuousSound * pSound)
 		return 1;
 	}
 }
+*/
