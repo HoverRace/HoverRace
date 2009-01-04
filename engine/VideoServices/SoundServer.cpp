@@ -445,9 +445,12 @@ void MR_ContinuousSound::Restart(int pCopy)
 		pCopy = mNbCopy - 1;
 	}
 #ifdef WITH_OPENAL
-	alSourceRewind(mSoundBuffer[pCopy]);
 	alSourcei(mSoundBuffer[pCopy], AL_LOOPING, AL_TRUE);
-	alSourcePlay(mSoundBuffer[pCopy]);
+	ALint state;
+	alGetSourcei(mSoundBuffer[pCopy], AL_SOURCE_STATE, &state);
+	if (state != AL_PLAYING) {
+		alSourcePlay(mSoundBuffer[pCopy]);
+	}
 #else
 	mSoundBuffer[pCopy]->Play(0, 0, DSBPLAY_LOOPING);
 #endif
