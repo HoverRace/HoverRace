@@ -40,6 +40,12 @@
 
 #include "SoundServer.h"
 
+#ifdef max
+#	undef max
+#endif
+
+using std::max;
+
 #define MR_MAX_SOUND_COPY 6
 
 #ifndef WITH_OPENAL
@@ -259,7 +265,7 @@ BOOL MR_SoundBuffer::Init(const char *pData, int pNbCopy)
 	mBuffer = alutCreateBufferFromFileImage(buf, bufSize);
 	//mBuffer = alutCreateBufferHelloWorld();
 	if (mBuffer == AL_NONE) {
-		MessageBox(NULL, alutGetErrorString(alutGetError()), "AIEEE", MB_OK);
+		//MessageBox(NULL, alutGetErrorString(alutGetError()), "AIEEE", MB_OK);
 		ASSERT(FALSE);
 		lReturnValue = FALSE;
 	} else {
