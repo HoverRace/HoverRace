@@ -34,6 +34,7 @@
 #include <string.h>
 
 // Commonly-used STL headers.
+#include <algorithm>
 #include <exception>
 #include <map>
 #include <sstream>
@@ -43,3 +44,12 @@
 #include <boost/filesystem/convenience.hpp>
 #include <boost/filesystem/path.hpp>
 
+// Don't use the min/max macros; use std::min and std::max from the STL.
+#ifdef min
+#	undef min
+#endif
+#ifdef max
+#	undef max
+#endif
+using std::min;
+using std::max;

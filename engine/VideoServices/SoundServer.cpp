@@ -40,12 +40,6 @@
 
 #include "SoundServer.h"
 
-#ifdef max
-#	undef max
-#endif
-
-using std::max;
-
 #define MR_MAX_SOUND_COPY 6
 
 #ifndef WITH_OPENAL
