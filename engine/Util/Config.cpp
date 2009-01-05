@@ -269,8 +269,17 @@ void MR_Config::ResetToDefaults()
 	video.yPos = 150;
 	video.xRes = 800;
 	video.yRes = 600;
+
+	// set current resolution to default
+#ifdef _WIN32
+	// use the primary monitor resolution (don't default to multiple monitors)
+	video.xResFullscreen = GetSystemMetrics(SM_CXSCREEN);
+	video.yResFullscreen = GetSystemMetrics(SM_CYSCREEN);
+#else
+	// I'm sure there's an X call that would do this, but that's for another day
 	video.xResFullscreen = 800;
 	video.yResFullscreen = 600;
+#endif
 
 	audio.sfxVolume = 1.0;
 
