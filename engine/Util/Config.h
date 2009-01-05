@@ -92,6 +92,13 @@ class MR_DllDeclare MR_Config
 
 			bool nativeBppFullscreen;
 
+			int xPos;
+			int yPos;
+			int xRes;
+			int yRes;
+			int xResFullscreen; /// for fullscreen
+			int yResFullscreen; /// for fullscreen
+
 			void Load(yaml::MapNode*);
 			void Save(yaml::Emitter*);
 		} video;

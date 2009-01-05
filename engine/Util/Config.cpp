@@ -265,6 +265,12 @@ void MR_Config::ResetToDefaults()
 	video.contrast = 0.95;
 	video.brightness = 0.95;
 	video.nativeBppFullscreen = false;
+	video.xPos = 150;
+	video.yPos = 150;
+	video.xRes = 800;
+	video.yRes = 600;
+	video.xResFullscreen = 800;
+	video.yResFullscreen = 600;
 
 	audio.sfxVolume = 1.0;
 
@@ -318,7 +324,6 @@ void MR_Config::ResetToDefaults()
 
 	memset(&controls[2], 0, sizeof(cfg_controls_t));
 	memset(&controls[3], 0, sizeof(cfg_controls_t));
-
 }
 
 /**
@@ -449,6 +454,13 @@ void MR_Config::cfg_video_t::Load(yaml::MapNode *root)
 	READ_DOUBLE(root, brightness, 0.0, 1.0);
 
 	READ_BOOL(root, nativeBppFullscreen);
+
+	READ_INT(root, xPos, -32768, 32768);
+	READ_INT(root, yPos, -32768, 32768);
+	READ_INT(root, xRes, 0, 32768);
+	READ_INT(root, yRes, 0, 32768);
+	READ_INT(root, xResFullscreen, 0, 32768);
+	READ_INT(root, yResFullscreen, 0, 32768);
 }
 
 void MR_Config::cfg_video_t::Save(yaml::Emitter *emitter)
@@ -461,6 +473,13 @@ void MR_Config::cfg_video_t::Save(yaml::Emitter *emitter)
 	EMIT_VAR(emitter, brightness);
 
 	EMIT_VAR(emitter, nativeBppFullscreen);
+
+	EMIT_VAR(emitter, xPos);
+	EMIT_VAR(emitter, yPos);
+	EMIT_VAR(emitter, xRes);
+	EMIT_VAR(emitter, yRes);
+	EMIT_VAR(emitter, xResFullscreen);
+	EMIT_VAR(emitter, yResFullscreen);
 
 	emitter->EndMap();
 }
