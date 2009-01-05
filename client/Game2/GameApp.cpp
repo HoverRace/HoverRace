@@ -1353,15 +1353,6 @@ void MR_GameApp::AssignPalette()
 	}
 }
 
-// Find the desktop resolution of the primary monitor.
-// Returns FALSE if the operation failed.
-BOOL MR_GameApp::GetDesktopResolution(POINT* lpPoint)
-{
-	lpPoint->x = GetSystemMetrics(SM_CXSCREEN);
-	lpPoint->y = GetSystemMetrics(SM_CYSCREEN);
-	return (lpPoint->x != 0 && lpPoint->y != 0);
-}
-
 void MR_GameApp::DeleteMovieWnd()
 {
 	if(mMovieWnd != NULL) {
@@ -1801,42 +1792,26 @@ void MR_GameApp::DrawBackground()
 	}
 }
 
-// Attempt to switch fullscreen, using the current desktop resolution.
-void MR_GameApp::SwitchToDesktopFullscreen()
-{
-	POINT lRes;
-	if (GetDesktopResolution(&lRes)) {
-		SetVideoMode(lRes.x, lRes.y);
-	}
-}
-
 void MR_GameApp::UpdateMenuItems()
 {
 	MENUITEMINFO lMenuInfo;
 	memset(&lMenuInfo, 0, sizeof(lMenuInfo));
 	lMenuInfo.cbSize = sizeof(lMenuInfo);
 
-	POINT lRes;
-	if (GetDesktopResolution(&lRes)) {
-		char s[256] = {0};
-		int lLen = _snprintf(s, 255, "&0 Desktop (%dx%d)", lRes.x, lRes.y);
-		if (lLen < 0) {
-			strcpy(s, "&0 Desktop");
-		}
-
-		lMenuInfo.fMask = MIIM_STATE | MIIM_STRING;
-		lMenuInfo.fState = MFS_ENABLED;
-		lMenuInfo.dwTypeData = s;
-		lMenuInfo.cch = lLen;
-	} else {
-		lMenuInfo.fMask = MIIM_STATE | MIIM_STRING;
-		lMenuInfo.fState = MFS_GRAYED;
-		lMenuInfo.dwTypeData = "&0 Desktop";
-		lMenuInfo.cch = strlen(lMenuInfo.dwTypeData);
+	MR_Config *cfg = MR_Config::GetInstance();
+	char s[256] = {0};
+	int lLen = _snprintf(s, 255, "&Fullscreen (%dx%d) \tF9", cfg->video.xResFullscreen, cfg->video.yResFullscreen);
+	if (lLen < 0) {
+		strcpy(s, "&Fullscreen \tF9");
 	}
 
+	lMenuInfo.fMask = MIIM_STATE | MIIM_STRING;
+	lMenuInfo.fState = MFS_ENABLED;
+	lMenuInfo.dwTypeData = s;
+	lMenuInfo.cch = lLen;
+
 	HMENU lMenu = GetMenu(mMainWindow);
-	SetMenuItemInfo(lMenu, ID_SETTING_DESKTOP, FALSE, &lMenuInfo);
+	SetMenuItemInfo(lMenu, ID_SETTING_FULLSCREEN, FALSE, &lMenuInfo);
 }
 
 LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
@@ -2032,64 +2007,12 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 						This->AssignPalette();
 					break;
 
-					// Video mode setting
-				case ID_SETTING_320X200:
-					This->SetVideoMode(320, 200);
-					return 0;
-
-					/* -- DEPRECATED, 09/19/06 --
-					   case ID_SETTING_320X240:
-					   This->SetVideoMode(320, 240);
-					   return 0;
-
-					   case ID_SETTING_400X300:
-					   This->SetVideoMode(400, 300);
-					   return 0;
-
-					   case ID_SETTING_512X384:
-					   This->SetVideoMode(512, 384);
-					   return 0;
-
-					   case ID_SETTING_640X400:
-					   This->SetVideoMode(600, 400);
-					   return 0;
-					 */
-
-				case ID_SETTING_640X480:
-					This->SetVideoMode(640, 480);
-					return 0;
-
-					// Higher resolutions added to keep up with the world
-				case ID_SETTING_800X600:
-					This->SetVideoMode(800, 600);
-					return 0;
-
-				case ID_SETTING_1024X768:
-					This->SetVideoMode(1024, 768);
-					return 0;
-
-				case ID_SETTING_1280X768:
-					This->SetVideoMode(1280, 768);
-					return 0;
-
-				case ID_SETTING_1280X800:
-					This->SetVideoMode(1280, 800);
-					return 0;
-
-				case ID_SETTING_1280X1024:
-					This->SetVideoMode(1280, 1024);
-					return 0;
-
-				case ID_SETTING_1400X1050:
-					This->SetVideoMode(1400, 1050);
-					return 0;
-
-				case ID_SETTING_1600X1200:
-					This->SetVideoMode(1600, 1200);
-					return 0;
-
-				case ID_SETTING_DESKTOP:
-					This->SwitchToDesktopFullscreen();
+				// Video mode setting
+				case ID_SETTING_FULLSCREEN:
+					{
+						MR_Config *cfg = MR_Config::GetInstance();
+						This->SetVideoMode(cfg->video.xResFullscreen, cfg->video.yResFullscreen);
+					}
 					return 0;
 
 				case ID_SETTING_PROPERTIES:
@@ -2421,6 +2344,12 @@ BOOL CALLBACK MR_GameApp::DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, 
 			SendDlgItemMessage(pWindow, IDC_BRIGHTNESS_SLIDER, TBM_SETPOS, TRUE, long (lOriginalBrightness * 100));
 			SendDlgItemMessage(pWindow, IDC_SFX_VOLUME_SLIDER, TBM_SETPOS, TRUE, long (lOriginalSfxVolume * 100));
 
+			char lBuffer[10]; // maybe someone has a really big resolution
+			sprintf(lBuffer, "%d\0", cfg->video.xResFullscreen);
+			SetDlgItemText(pWindow, IDC_FS_RES_X, lBuffer);
+			sprintf(lBuffer, "%d\0", cfg->video.yResFullscreen);
+			SetDlgItemText(pWindow, IDC_FS_RES_Y, lBuffer);
+
 			UpdateIntensityDialogLabels(pWindow);
 			break;
 
@@ -2479,6 +2408,27 @@ BOOL CALLBACK MR_GameApp::DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, 
 					break;
 
 				case PSN_APPLY:
+					// check new resolution values
+					BOOL lSuccess = TRUE;
+					int newXRes = GetDlgItemInt(pWindow, IDC_FS_RES_X, &lSuccess, FALSE);
+					int newYRes = 0;
+					if(lSuccess) // so we don't destroy a FALSE value
+						newYRes = GetDlgItemInt(pWindow, IDC_FS_RES_Y, &lSuccess, FALSE);						
+
+					if(newXRes <= 0 || newYRes <= 0 || !lSuccess) { // invalid
+						char lErrorBuffer[500];
+						char lCaptionBuffer[50];
+						sprintf(lErrorBuffer, MR_LoadString(IDS_INVALID_RESOLUTION), GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
+						sprintf(lCaptionBuffer, MR_LoadString(IDS_CAPTION), cfg->GetVersion().c_str());
+						MessageBox(pWindow, lErrorBuffer, lCaptionBuffer, MB_OK);
+
+						cfg->video.xResFullscreen = GetSystemMetrics(SM_CXSCREEN);
+						cfg->video.yResFullscreen = GetSystemMetrics(SM_CYSCREEN);
+					} else { // valid change
+						cfg->video.xResFullscreen = newXRes;
+						cfg->video.yResFullscreen = newYRes;
+					}
+
 					This->SaveRegistry();
 
 					// SetWindowLong( ((NMHDR FAR *) lParam)->hwndFrom,  , );

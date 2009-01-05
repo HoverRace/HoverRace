@@ -157,6 +157,8 @@
 #define IDC_ABOUT_RTF                   1088
 #define IDC_TCP_SERV_PORT               1089
 #define IDC_VER_TXT                     1090
+#define IDC_FS_RES_X                    1094
+#define IDC_FS_RES_Y                    1095
 #define ID_HELP_CONTENTS                32772
 #define ID_HELP_HOWTOORDER              32773
 #define ID_HELP_TIPOFTHEDAY             32774
@@ -230,6 +232,7 @@
 #define IDS_KEY_A                       40044
 #define IDS_KEY_B                       40045
 #define IDS_KEY_C                       40046
+#define ID_SETTING_FULLSCREEN           40046
 #define IDS_KEY_D                       40047
 #define IDS_KEY_E                       40048
 #define IDS_KEY_F                       40049
@@ -421,6 +424,7 @@
 #define IDS_BI_TURBO_CRAFT_DESC         40237
 #define IDS_CX_CRAFT_DESC               40238
 #define IDS_EON_CRAFT_DESC              40239
+#define IDS_INVALID_RESOLUTION          40240
 #define ID_GAME_NEW                     0xE100
 #define ID_GAME_LOAD                    0xE101
 #define ID_GAME_FAST_SAVE               0xE103
@@ -435,8 +439,8 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        164
-#define _APS_NEXT_COMMAND_VALUE         40046
-#define _APS_NEXT_CONTROL_VALUE         1091
+#define _APS_NEXT_COMMAND_VALUE         40047
+#define _APS_NEXT_CONTROL_VALUE         1095
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
