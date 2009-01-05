@@ -960,15 +960,39 @@ BOOL MR_GameApp::CreateMainWindow()
 {
 	BOOL lReturnValue = TRUE;
 
+	// check our position
+	MR_Config *cfg = MR_Config::GetInstance();
+	int xPos = cfg->video.xPos;
+	int yPos = cfg->video.yPos;
+	int xRes = cfg->video.xRes;
+	int yRes = cfg->video.yRes;
+	int winXRes = GetSystemMetrics(SM_CXVIRTUALSCREEN);
+	int winYRes = GetSystemMetrics(SM_CYVIRTUALSCREEN);
+
+	// verify a valid size
+	if(xRes > winXRes)
+		xRes = winXRes;
+	if(yRes > winYRes)
+		yRes = winYRes;
+
+	// verify a valid position
+	if(xPos > winXRes)
+		xPos = winXRes - xRes;
+	if(xPos < 0)
+		xPos = 0;
+	if(yPos > winYRes)
+		yPos = winYRes - yRes;
+	if(yPos < 0)
+		yPos = 0;
+
 	// attempt to make the main window
 	mMainWindow = CreateWindowEx(
 		WS_EX_APPWINDOW,
 		MR_APP_CLASS_NAME,
 		MR_LoadString(IDS_GAME_NAME),
 		(WS_VISIBLE | WS_OVERLAPPEDWINDOW | WS_EX_CLIENTEDGE) & ~WS_MAXIMIZEBOX,
-		CW_USEDEFAULT,
-		CW_USEDEFAULT,
-		800, 600,
+		xPos, yPos,
+		xRes, yRes,
 		NULL, NULL, mInstance, NULL);
 
 	if(mMainWindow == NULL)
@@ -2344,6 +2368,17 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 			This->Clean();
 			delete This->mVideoBuffer;
 			This->mVideoBuffer = NULL;
+			// save resolution information
+			{
+				MR_Config *cfg = MR_Config::GetInstance();
+				RECT size = {0};
+				GetWindowRect(This->mMainWindow, &size);
+				cfg->video.xPos = size.left;
+				cfg->video.yPos = size.top;
+				cfg->video.xRes = size.right - size.left;
+				cfg->video.yRes = size.bottom - size.top;
+				cfg->Save();
+			}
 			DestroyWindow(This->mMainWindow);
 			return 0;
 
