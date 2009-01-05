@@ -1276,7 +1276,7 @@ BEGIN
     IDS_SAMEADDRPORT1       "Main server and peer "
     IDS_SAMEADDRPORT2       " are using the same IP and port!"
     IDS_CONN_ERROR          "Connection error with "
-    IDS_SELECT_CRAFT        "<==                    Select your craft                    ==>"
+    IDS_SELECT_CRAFT        "<==   Select your craft with the arrow keys   ==>"
     IDS_BASIC_CRAFT_DESC    "Basic craft"
     IDS_BI_TURBO_CRAFT_DESC "Bi-Turbo craft"
     IDS_CX_CRAFT_DESC       "CX craft"
@@ -1285,7 +1285,10 @@ END
 
 STRINGTABLE 
 BEGIN
-    IDS_INVALID_RESOLUTION  "Invalid resolution; reverting to default %d x %d"
+    IDS_INVALID_RESOLUTION  "Invalid resolution; reverting to default %dx%d"
+    IDS_TEST_RESOLUTION     "Hit OK to test new resolution"
+    IDS_SET_RESOLUTION      "Resolution successfully set to %dx%d"
+    IDS_INVALID_RESOLUTION2 "Invalid resolution; reverting to %dx%d"
 END
 
 #endif    // Neutral (Default) resources

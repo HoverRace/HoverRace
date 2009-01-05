@@ -1228,7 +1228,7 @@ void MR_GameApp::ReadAsyncInputController()
 	}
 }
 
-void MR_GameApp::SetVideoMode(int pX, int pY)
+BOOL MR_GameApp::SetVideoMode(int pX, int pY)
 {
 	if(mVideoBuffer != NULL) {
 		BOOL lSuccess;
@@ -1250,7 +1250,9 @@ void MR_GameApp::SetVideoMode(int pX, int pY)
 		RestartGameThread();
 
 		// OnDisplayChange();
-	}
+		return lSuccess;
+	} else
+		return FALSE;
 }
 
 void MR_GameApp::PauseGameThread()
@@ -2425,8 +2427,35 @@ BOOL CALLBACK MR_GameApp::DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, 
 						cfg->video.xResFullscreen = GetSystemMetrics(SM_CXSCREEN);
 						cfg->video.yResFullscreen = GetSystemMetrics(SM_CYSCREEN);
 					} else { // valid change
-						cfg->video.xResFullscreen = newXRes;
-						cfg->video.yResFullscreen = newYRes;
+
+						// test new resolution
+						char lCaptionBuffer[50];
+						sprintf(lCaptionBuffer, MR_LoadString(IDS_CAPTION), cfg->GetVersion().c_str());
+						int lAction = MessageBox(pWindow, MR_LoadString(IDS_TEST_RESOLUTION), lCaptionBuffer, MB_OKCANCEL);
+
+						if(lAction == IDOK) {
+							BOOL lOkRes = TRUE;
+							if(!This->SetVideoMode(newXRes, newYRes)) {
+								// fails test
+								lOkRes = FALSE;
+							}
+							This->SetVideoMode(0, 0);
+
+							if(!lOkRes) {
+								char lErrorBuffer[500];
+								sprintf(lErrorBuffer, MR_LoadString(IDS_INVALID_RESOLUTION2), cfg->video.xResFullscreen, cfg->video.yResFullscreen);
+								MessageBox(pWindow, lErrorBuffer, lCaptionBuffer, MB_OK);
+							} else {
+								char lSuccessBuffer[500];
+								sprintf(lSuccessBuffer, MR_LoadString(IDS_SET_RESOLUTION), newXRes, newYRes);
+								MessageBox(pWindow, lSuccessBuffer, lCaptionBuffer, MB_OK);
+
+								cfg->video.xResFullscreen = newXRes;
+								cfg->video.yResFullscreen = newYRes;
+							}
+						} else {
+							// ignore change
+						}
 					}
 
 					This->SaveRegistry();

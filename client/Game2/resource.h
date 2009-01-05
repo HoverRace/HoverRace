@@ -425,6 +425,9 @@
 #define IDS_CX_CRAFT_DESC               40238
 #define IDS_EON_CRAFT_DESC              40239
 #define IDS_INVALID_RESOLUTION          40240
+#define IDS_TEST_RESOLUTION             40241
+#define IDS_SET_RESOLUTION              40242
+#define IDS_INVALID_RESOLUTION2         40243
 #define ID_GAME_NEW                     0xE100
 #define ID_GAME_LOAD                    0xE101
 #define ID_GAME_FAST_SAVE               0xE103
@@ -438,7 +441,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        164
+#define _APS_NEXT_RESOURCE_VALUE        166
 #define _APS_NEXT_COMMAND_VALUE         40047
 #define _APS_NEXT_CONTROL_VALUE         1095
 #define _APS_NEXT_SYMED_VALUE           101

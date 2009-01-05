@@ -99,7 +99,7 @@ class MR_GameApp
 		BOOL CreateMainWindow();
 
 		void RefreshView();
-		void SetVideoMode(int pX, int pY);
+		BOOL SetVideoMode(int pX, int pY);
 		void RefreshTitleBar();
 
 		int ReadAsyncInputControllerPlayer(int playerIdx);
