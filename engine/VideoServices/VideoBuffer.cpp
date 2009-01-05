@@ -350,43 +350,43 @@ BOOL MR_VideoBuffer::InitDirectDraw()
 
 	if(mDirectDraw == NULL) {
 		if(DD_CALL(DirectDrawCreate( /*(LPGUID) DDCREATE_EMULATIONONLY */ NULL, &mDirectDraw, NULL)) != DD_OK) {
-		ASSERT(FALSE);
-		lReturnValue = FALSE;
-	}
-	else {
-		if(DD_CALL(mDirectDraw->SetCooperativeLevel(mWindow, DDSCL_NORMAL)) != DD_OK) {
 			ASSERT(FALSE);
 			lReturnValue = FALSE;
 		}
-	}
-}
-
-if(lReturnValue) {
-	// Keep track of the native pixel format so we can blit later.
-	DDSURFACEDESC lSurfaceDesc;
-	memset(&lSurfaceDesc, 0, sizeof(lSurfaceDesc));
-	lSurfaceDesc.dwSize = sizeof(lSurfaceDesc);
-
-	if(DD_CALL(mDirectDraw->GetDisplayMode(&lSurfaceDesc)) != DD_OK) {
-		lReturnValue = FALSE;
-	}
-	else {
-		lReturnValue = ProcessCurrentBpp(lSurfaceDesc.ddpfPixelFormat);
-		if(lReturnValue) {
-			// We make the assumption that the desktop color depth
-			// won't change while we're running.
-			if(mNativeBpp == 0)
-				mNativeBpp = mBpp;
+		else {
+			if(DD_CALL(mDirectDraw->SetCooperativeLevel(mWindow, DDSCL_NORMAL)) != DD_OK) {
+				ASSERT(FALSE);
+				lReturnValue = FALSE;
+			}
 		}
 	}
-}
 
-if(mPalette == NULL) {
-	// Create a palette
-	CreatePalette(mGamma, mContrast, mBrightness);
-}
+	if(lReturnValue) {
+		// Keep track of the native pixel format so we can blit later.
+		DDSURFACEDESC lSurfaceDesc;
+		memset(&lSurfaceDesc, 0, sizeof(lSurfaceDesc));
+		lSurfaceDesc.dwSize = sizeof(lSurfaceDesc);
 
-return lReturnValue;
+		if(DD_CALL(mDirectDraw->GetDisplayMode(&lSurfaceDesc)) != DD_OK) {
+			lReturnValue = FALSE;
+		}
+		else {
+			lReturnValue = ProcessCurrentBpp(lSurfaceDesc.ddpfPixelFormat);
+			if(lReturnValue) {
+				// We make the assumption that the desktop color depth
+				// won't change while we're running.
+				if(mNativeBpp == 0)
+					mNativeBpp = mBpp;
+			}
+		}
+	}
+
+	if(mPalette == NULL) {
+		// Create a palette
+		CreatePalette(mGamma, mContrast, mBrightness);
+	}
+
+	return lReturnValue;
 }
 
 BOOL MR_VideoBuffer::ProcessCurrentBpp(const DDPIXELFORMAT & lFormat)
@@ -842,89 +842,87 @@ BOOL MR_VideoBuffer::SetVideoMode(int pXRes, int pYRes)
 		// SetWindowLong( mWindow, GWL_STYLE, mOriginalStyle & ~(WS_THICKFRAME ) );
 
 		if(DD_CALL(mDirectDraw->SetCooperativeLevel(mWindow, DDSCL_EXCLUSIVE | DDSCL_FULLSCREEN | DDSCL_ALLOWMODEX | DDSCL_ALLOWREBOOT /*|DDSCL_NOWINDOWCHANGES */ )) != DD_OK) {
-		ASSERT(FALSE);
-		lReturnValue = FALSE;
+			//ASSERT(FALSE);
+			lReturnValue = FALSE;
+		}
 	}
-}
 
-// Retrieve the window size
-if(lReturnValue) {
-	mXRes = pXRes;
-	mYRes = pYRes;
-	mLineLen = mXRes;
+	// Retrieve the window size
+	if(lReturnValue) {
+		mXRes = pXRes;
+		mYRes = pYRes;
+		mLineLen = mXRes;
 
-	mFullScreen = TRUE;
-}
-
-if(lReturnValue) {
-	// ASSERT( FALSE );
-
-	if(DD_CALL(mDirectDraw->SetDisplayMode(pXRes, pYRes, lReqBpp)) != DD_OK) {
-		lReturnValue = FALSE;
-		ASSERT(FALSE);
+		mFullScreen = TRUE;
 	}
-}
 
-if(lReturnValue) {
-	// Resize to full screen
-	ShowWindow(mWindow, SW_MAXIMIZE);
+	if(lReturnValue) {
+		// ASSERT( FALSE );
 
-}
+		if(DD_CALL(mDirectDraw->SetDisplayMode(pXRes, pYRes, lReqBpp)) != DD_OK) {
+			lReturnValue = FALSE;
+		//	ASSERT(FALSE);
+		}
+	}
 
-// Create a front buffer
-if(lReturnValue) {
-	memset(&lSurfaceDesc, 0, sizeof(lSurfaceDesc));
-	lSurfaceDesc.dwSize = sizeof(lSurfaceDesc);
+	if(lReturnValue) {
+		// Resize to full screen
+		ShowWindow(mWindow, SW_MAXIMIZE);
 
-	lSurfaceDesc.dwFlags = DDSD_CAPS | DDSD_BACKBUFFERCOUNT;
-	lSurfaceDesc.dwBackBufferCount = 1;
-	lSurfaceDesc.ddsCaps.dwCaps = DDSCAPS_PRIMARYSURFACE | DDSCAPS_FLIP | DDSCAPS_COMPLEX | DDSCAPS_SYSTEMMEMORY;
+	}
 
-	if((lErrorCode = DD_CALL(mDirectDraw->CreateSurface(&lSurfaceDesc, &mFrontBuffer, NULL))) != DD_OK) {
-		ASSERT(FALSE);
+	// Create a front buffer
+	if(lReturnValue) {
+		memset(&lSurfaceDesc, 0, sizeof(lSurfaceDesc));
+		lSurfaceDesc.dwSize = sizeof(lSurfaceDesc);
 
-		lSurfaceDesc.ddsCaps.dwCaps = DDSCAPS_PRIMARYSURFACE | DDSCAPS_FLIP | DDSCAPS_COMPLEX /*|DDSCAPS_SYSTEMMEMORY */ ;
+		lSurfaceDesc.dwFlags = DDSD_CAPS | DDSD_BACKBUFFERCOUNT;
+		lSurfaceDesc.dwBackBufferCount = 1;
+		lSurfaceDesc.ddsCaps.dwCaps = DDSCAPS_PRIMARYSURFACE | DDSCAPS_FLIP | DDSCAPS_COMPLEX | DDSCAPS_SYSTEMMEMORY;
 
 		if((lErrorCode = DD_CALL(mDirectDraw->CreateSurface(&lSurfaceDesc, &mFrontBuffer, NULL))) != DD_OK) {
 			ASSERT(FALSE);
-			lReturnValue = FALSE;
+
+			lSurfaceDesc.ddsCaps.dwCaps = DDSCAPS_PRIMARYSURFACE | DDSCAPS_FLIP | DDSCAPS_COMPLEX /*|DDSCAPS_SYSTEMMEMORY */ ;
+
+			if((lErrorCode = DD_CALL(mDirectDraw->CreateSurface(&lSurfaceDesc, &mFrontBuffer, NULL))) != DD_OK) {
+				ASSERT(FALSE);
+				lReturnValue = FALSE;
+			}
+		}
+
+		if(lReturnValue) {
+			// Create (retrieve already created) the working surface
+			DDSCAPS lDDSCaps;
+
+			lDDSCaps.dwCaps = DDSCAPS_BACKBUFFER;
+
+			if(DD_CALL(mFrontBuffer->GetAttachedSurface(&lDDSCaps, &mBackBuffer)) != DD_OK) {
+				ASSERT(FALSE);
+				lReturnValue = FALSE;
+			}
+		}
+
+		if(lReturnValue) {
+			mBpp = lReqBpp;
 		}
 	}
 
 	if(lReturnValue) {
-		// Create (retrieve already created) the working surface
-		DDSCAPS lDDSCaps;
-
-		lDDSCaps.dwCaps = DDSCAPS_BACKBUFFER;
-
-		if(DD_CALL(mFrontBuffer->GetAttachedSurface(&lDDSCaps, &mBackBuffer)) != DD_OK) {
-			ASSERT(FALSE);
-			lReturnValue = FALSE;
-		}
+		// Create a local memory ZBuffer
+		// We do not use DirectDrawZBuffer for now
+		mZBuffer = new MR_UInt16[mXRes * mYRes];
 	}
 
-	if(lReturnValue) {
-		mBpp = lReqBpp;
+	if(!lReturnValue) {
+		ReturnToWindowsResolution();
 	}
-}
 
-if(lReturnValue) {
-	// Create a local memory ZBuffer
-	// We do not use DirectDrawZBuffer for now
+	// AssignPalette();
 
-	mZBuffer = new MR_UInt16[mXRes * mYRes];
+	mModeSettingInProgress = FALSE;
 
-}
-
-if(!lReturnValue) {
-	ReturnToWindowsResolution();
-}
-
-// AssignPalette();
-
-mModeSettingInProgress = FALSE;
-
-return lReturnValue;
+	return lReturnValue;
 }
 
 BOOL MR_VideoBuffer::IsWindowMode() const
