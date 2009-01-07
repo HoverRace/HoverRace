@@ -49,8 +49,7 @@
 			<Tool
 				Name="VCMIDLTool"/>
 			<Tool
-				Name="VCPostBuildEventTool"
-				CommandLine="copy ..\lib\*.dll ..\Debug"/>
+				Name="VCPostBuildEventTool"/>
 			<Tool
 				Name="VCPreBuildEventTool"/>
 			<Tool
@@ -104,8 +103,7 @@
 			<Tool
 				Name="VCMIDLTool"/>
 			<Tool
-				Name="VCPostBuildEventTool"
-				CommandLine="copy ..\lib\*.dll ..\Release\"/>
+				Name="VCPostBuildEventTool"/>
 			<Tool
 				Name="VCPreBuildEventTool"/>
 			<Tool
@@ -222,6 +220,86 @@
 			</File>
 			<File
 				RelativePath=".\Game2\TrackSelect.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="Libraries"
+			Filter="">
+			<File
+				RelativePath="..\lib\alut.dll">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
+						Outputs="$(OutDir)\$(InputFileName)"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
+						Outputs="$(OutDir)\$(InputFileName)"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\lib\libcurl.dll">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
+						Outputs="$(OutDir)\$(InputFileName)"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
+						Outputs="$(OutDir)\$(InputFileName)"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\lib\LiteUnzip.dll">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
+						Outputs="$(OutDir)\$(InputFileName)"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
+						Outputs="$(OutDir)\$(InputFileName)"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\lib\zlib1.dll">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
+						Outputs="$(OutDir)\$(InputFileName)"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
+						Outputs="$(OutDir)\$(InputFileName)"/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<File
