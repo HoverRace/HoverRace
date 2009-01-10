@@ -1062,7 +1062,7 @@ BOOL MR_GameApp::InitGame()
 			}
 
 			if(!lSwitchTo256) {					  // load the "Incompatible Video Mode" dialog
-				mBadVideoModeDlg = CreateDialog(mInstance, MAKEINTRESOURCE(IDD_BAD_MODE), mMainWindow, BadModeDialogFunc);
+				mBadVideoModeDlg = CreateDialog(mInstance, MAKEINTRESOURCE(IDD_BAD_MODE3), mMainWindow, BadModeDialogFunc);
 			}
 		}
 	}
@@ -2138,9 +2138,11 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 					This->DisplayHelp();
 					break;
 
+				/*
 				case ID_HELP_THEBETAZONE:
 					This->DisplayBetaZone();
 					break;
+				*/
 
 				case ID_HELP_SITE:
 					This->DisplaySite();
@@ -2731,7 +2733,9 @@ BOOL CALLBACK MR_GameApp::FirstChoiceDialogFunc(HWND pWindow, UINT pMsgId, WPARA
 		switch (pMsgId) {
 			// Catch environment modification events
 			case WM_INITDIALOG:
+				/*
 				CheckDlgButton(pWindow, IDC_CHECK, BST_CHECKED);
+				*/
 				lReturnValue = TRUE;
 				break;
 

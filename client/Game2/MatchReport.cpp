@@ -115,6 +115,7 @@ class MatchReportRequest
 
 };
 
+
 // Local variables
 char MatchReportRequest::mPassword[13] = { 0 };
 
@@ -465,7 +466,9 @@ BOOL CALLBACK MatchReportRequest::SubmitCallBack(HWND pWindow, UINT pMsgId, WPAR
 		case WM_INITDIALOG:
 			// Setup window content
 			SetDlgItemText(pWindow, IDC_PASSWORD, gThis->mPassword);
+			/*
 			SetDlgItemText(pWindow, IDC_RESULT, gThis->mResultStr);
+			*/
 			lReturnValue = TRUE;
 			break;
 

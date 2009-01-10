@@ -159,7 +159,9 @@ class MR_InternetRoom
 		MR_GifDecoder mBanner;
 		int mCurrentBannerIndex;
 
+		/*
 		static BOOL CALLBACK AskPasswordCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
+		*/
 		static BOOL CALLBACK AskParamsCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 		static BOOL CALLBACK RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 		static BOOL CALLBACK BannerCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);

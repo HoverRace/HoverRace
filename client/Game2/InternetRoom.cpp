@@ -1171,6 +1171,7 @@ int MR_InternetRoom::RefreshBanner(HWND pWindow)
 
 }
 
+/*
 BOOL CALLBACK MR_InternetRoom::AskPasswordCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
 {
 	BOOL lReturnValue = FALSE;
@@ -1224,6 +1225,7 @@ BOOL CALLBACK MR_InternetRoom::AskPasswordCallBack(HWND pWindow, UINT pMsgId, WP
 
 	return lReturnValue;
 }
+*/
 
 BOOL CALLBACK MR_InternetRoom::AskParamsCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
 {
@@ -1259,9 +1261,11 @@ BOOL CALLBACK MR_InternetRoom::AskParamsCallBack(HWND pWindow, UINT pMsgId, WPAR
 				case IDOK:
 					{
 						char lBuffer[30];
+						/*
 						char lURLBuffer[80];
 	
 						GetDlgItemText(pWindow, IDC_URL, lURLBuffer, sizeof(lURLBuffer));
+						*/
 	
 						gCurrentServerEntry = SendDlgItemMessage(pWindow, IDC_ROOMLIST, LB_GETCURSEL, 0, 0);
 	
