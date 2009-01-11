@@ -713,6 +713,21 @@ BEGIN
     LTEXT           "TCP Server Port:",IDC_STATIC,7,81,59,10
 END
 
+IDD_TRACK_DOWNLOAD DIALOGEX 0, 0, 229, 96
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Track Download"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "Cancel",IDCANCEL,158,73,64,15
+    EDITTEXT        IDC_TRACK_NAME,76,20,146,12,ES_AUTOHSCROLL | ES_READONLY | 
+                    NOT WS_BORDER
+    LTEXT           "Downloading Track:",IDC_STATIC,7,20,64,8
+    LTEXT           "Initializing...",IDC_STATE,7,51,215,8
+    CONTROL         "",IDC_DLPROGRESS,"msctls_progress32",WS_BORDER,7,38,215,
+                    11
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -984,6 +999,14 @@ BEGIN
         RIGHTMARGIN, 268
         TOPMARGIN, 7
         BOTTOMMARGIN, 119
+    END
+
+    IDD_TRACK_DOWNLOAD, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 222
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 88
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -1287,46 +1310,6 @@ END
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
 #endif //_WIN32
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Dialog
-//
-
-IDD_TRACK_DOWNLOAD DIALOGEX 0, 0, 229, 96
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
-    WS_SYSMENU
-CAPTION "Track Download"
-FONT 8, "MS Shell Dlg", 400, 0, 0x1
-BEGIN
-    DEFPUSHBUTTON   "Cancel",IDCANCEL,158,73,64,15
-    EDITTEXT        IDC_TRACK_NAME,76,20,146,12,ES_AUTOHSCROLL | ES_READONLY | 
-                    NOT WS_BORDER
-    LTEXT           "Downloading Track:",IDC_STATIC,7,20,64,8
-    LTEXT           "Initializing...",IDC_STATE,7,51,215,8
-    CONTROL         "",IDC_DLPROGRESS,"msctls_progress32",WS_BORDER,7,38,215,
-                    11
-END
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// DESIGNINFO
-//
-
-#ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO 
-BEGIN
-    IDD_TRACK_DOWNLOAD, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 222
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 88
-    END
-END
-#endif    // APSTUDIO_INVOKED
-
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
