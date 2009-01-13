@@ -24,7 +24,9 @@
 #include "GameApp.h"
 #endif
 
-#include <direct.h>
+#ifdef _WIN32
+#	include <direct.h>
+#endif
 
 #include <iostream>
 
