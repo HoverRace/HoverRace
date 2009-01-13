@@ -24,6 +24,8 @@
 #include "GameApp.h"
 #endif
 
+#include <direct.h>
+
 #include <iostream>
 
 #include <curl/curl.h>
@@ -38,6 +40,18 @@ int main(int argc, char** argv)
 	// initialize return variables
 	BOOL lReturnValue = TRUE;
 	int lErrorCode = EXIT_SUCCESS;
+
+#ifdef _WIN32
+	char exePath[MAX_PATH];
+	GetModuleFileName(NULL, exePath, MAX_PATH - 1);
+
+	// Change the working directory to the app's directory.
+	char *appPath = strdup(exePath);
+	char *appDiv = strrchr(appPath, '\\');
+	*appDiv = '\0';
+	chdir(appPath);
+	free(appPath);
+#endif
 
 	// Gettext initialization.
 	setlocale(LC_ALL, "");
