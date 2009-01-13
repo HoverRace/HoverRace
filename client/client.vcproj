@@ -332,6 +332,9 @@
 			RelativePath=".\Game2\About.bmp">
 		</File>
 		<File
+			RelativePath="..\include\config-win32.h">
+		</File>
+		<File
 			RelativePath=".\Game2\Game2.exe.manifest">
 		</File>
 		<File

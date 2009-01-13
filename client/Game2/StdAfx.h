@@ -19,9 +19,12 @@
 #		include <afxcmn.h>							// MFC support for Windows 95 Common Controls
 #	endif											// _AFX_NO_AFXCMN_SUPPORT
 
+#	include "../../include/config-win32.h"
+
 #else
 
 #	include "../../include/compat/unix.h"
+#	include "../../config.h"
 
 #	include <strings.h>
 
