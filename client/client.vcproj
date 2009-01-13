@@ -23,14 +23,13 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_MBNET_;WITH_OPENAL"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_MBNET_;WITH_OPENAL;WITH_GETTEXT"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="0"
 				RuntimeLibrary="3"
 				BufferSecurityCheck="FALSE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="3"
-				BrowseInformation="1"
 				WarningLevel="3"
 				DebugInformationFormat="4"/>
 			<Tool
@@ -38,7 +37,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="Vfw32.lib vfw32.lib wsock32.lib winmm.lib version.lib comctl32.lib libcurl.lib LiteUnzip.lib"
+				AdditionalDependencies="Vfw32.lib vfw32.lib wsock32.lib winmm.lib version.lib comctl32.lib libcurl.lib LiteUnzip.lib intl.lib"
 				OutputFile="..\Debug\HoverRace.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
@@ -81,7 +80,7 @@
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="..\include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_MBNET_;WITH_OPENAL"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_MBNET_;WITH_OPENAL;WITH_GETTEXT"
 				StringPooling="TRUE"
 				MinimalRebuild="FALSE"
 				RuntimeLibrary="2"
@@ -93,7 +92,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vfw32.lib wsock32.lib winmm.lib version.lib comctl32.lib libcurl.lib LiteUnzip.lib"
+				AdditionalDependencies="vfw32.lib wsock32.lib winmm.lib version.lib comctl32.lib libcurl.lib LiteUnzip.lib intl.lib"
 				OutputFile=".\..\Release\HoverRace.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
@@ -232,6 +231,27 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
+"
+						Outputs="$(OutDir)\$(InputFileName)"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
+"
+						Outputs="$(OutDir)\$(InputFileName)"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\lib\intl.dll">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
 						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
 						Outputs="$(OutDir)\$(InputFileName)"/>
 				</FileConfiguration>
@@ -251,7 +271,8 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
+"
 						Outputs="$(OutDir)\$(InputFileName)"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -259,7 +280,8 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
+"
 						Outputs="$(OutDir)\$(InputFileName)"/>
 				</FileConfiguration>
 			</File>
@@ -270,7 +292,8 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
+"
 						Outputs="$(OutDir)\$(InputFileName)"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -278,7 +301,8 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
+"
 						Outputs="$(OutDir)\$(InputFileName)"/>
 				</FileConfiguration>
 			</File>
@@ -289,7 +313,8 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
+"
 						Outputs="$(OutDir)\$(InputFileName)"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -297,7 +322,8 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
+"
 						Outputs="$(OutDir)\$(InputFileName)"/>
 				</FileConfiguration>
 			</File>

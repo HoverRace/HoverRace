@@ -27,8 +27,9 @@
 
 #endif
 
-#include "stdio.h"
-#include "stdlib.h"
+#include <locale.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #include <algorithm>
 #include <exception>
@@ -38,4 +39,19 @@
 #include <vector>
 
 #include <boost/bind.hpp>
+#include <boost/format.hpp>
 #include <boost/thread/thread.hpp>
+
+#include <libintl.h>
+
+#ifdef _
+#	undef _
+#endif
+#ifdef WITH_GETTEXT
+#	define _(x) gettext(x)
+#else
+#	define _(x) (x)
+#	define gettext(x) (x)
+#	define dgettext(d,x) (x)
+#	define dcgettext(d,x,c) (x)
+#endif

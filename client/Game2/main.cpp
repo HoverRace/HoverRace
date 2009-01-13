@@ -39,6 +39,11 @@ int main(int argc, char** argv)
 	BOOL lReturnValue = TRUE;
 	int lErrorCode = EXIT_SUCCESS;
 
+	// Gettext initialization.
+	setlocale(LC_ALL, "");
+	bindtextdomain("hoverrace", "../share/locale");
+	textdomain("hoverrace");
+
 	// Library initialization.
 	curl_global_init(CURL_GLOBAL_ALL);
 
@@ -60,9 +65,10 @@ int main(int argc, char** argv)
 	if(lReturnValue)
 		lErrorCode = lGame.MainLoop();
 #else
-	std::cout << "HoverRace for Linux is under development!\n"
-		"Please visit http://svn.igglybob.com/hoverrace/ to learn how to\n"
-		"contribute to this project." << std::endl;
+	std::cout << boost::format(_("HoverRace for Linux is under development!\n"
+		"Please visit %s to learn how to\n"
+		"contribute to this project.")) % "http://svn.igglybob.com/hoverrace/" <<
+		std::endl;
 #endif
 
 	// Library cleanup.

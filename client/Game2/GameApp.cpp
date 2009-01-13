@@ -19,7 +19,7 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
 #include <sstream>
 
@@ -72,6 +72,9 @@ void CaptureScreen( MR_VideoBuffer* pVideoBuffer );
 #else
 #	define SOUNDSERVER_INIT(s) MR_SoundServer::Init(s)
 #endif
+
+using boost::format;
+using boost::str;
 
 enum MR_InControler { MR_KDB, MR_JOY1, MR_JOY2, MR_JOY3, MR_JOY4 };
 
@@ -763,7 +766,7 @@ int MR_GameApp::AskUserToAbortGame()
 	int lReturnValue = IDOK;
 
 	if(IsGameRunning()) {
-		lReturnValue = MessageBox(mMainWindow, MR_LoadString(IDS_ABORT_GAME), MR_LoadString(IDS_GAME_NAME), MB_OKCANCEL | MB_ICONWARNING);
+		lReturnValue = MessageBox(mMainWindow, _("Abort current game?"), MR_LoadString(IDS_GAME_NAME), MB_OKCANCEL | MB_ICONWARNING);
 
 		if(lReturnValue == 0) {
 			lReturnValue = IDOK;
@@ -1015,8 +1018,11 @@ void MR_GameApp::RefreshTitleBar()
 
 	// fixed to get rid of registration
 	if(mMainWindow != NULL) {
+		std::string caption = str(format(_("HoverRace %s (testing)")) % cfg->GetVersion());
+		/*
 		std::string caption(MR_LoadStringBuffered(IDS_CAPTION));
 		caption.replace(caption.find("%s"), 2, cfg->GetVersion());
+		*/
 		SetWindowText(mMainWindow, caption.c_str());
 	}
 }
@@ -2767,7 +2773,7 @@ BOOL CALLBACK MR_GameApp::AboutDlgFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam
 
 		case WM_INITDIALOG:
 			{
-				std::string verStr("HoverRace version ");
+				std::string verStr(_("HoverRace version "));
 				verStr += MR_Config::GetInstance()->GetVersion();
 				SetDlgItemText(pWindow, IDC_VER_TXT, verStr.c_str());
 				SetDlgItemText(pWindow, IDC_ABOUT_TXT, (const char*)MR_LoadString(IDS_ABOUT));

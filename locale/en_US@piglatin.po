@@ -1,0 +1,42 @@
+# English translations for hoverrace package.
+# Copyright (C) 2009 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the hoverrace package.
+# <EMAIL@ADDRESS>, 2009.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-01-12 21:09-0500\n"
+"PO-Revision-Date: 2009-01-11 19:54-0500\n"
+"Last-Translator: <EMAIL@ADDRESS>\n"
+"Language-Team: English\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: client/Game2/GameApp.cpp:769
+msgid "Abort current game?"
+msgstr "Bortay urrentcay amegay"
+
+#: client/Game2/GameApp.cpp:1021
+#, c-format, boost-format
+msgid "HoverRace %s (testing)"
+msgstr "HoverRace %s (estingtay)"
+
+#: client/Game2/GameApp.cpp:2776
+msgid "HoverRace version "
+msgstr "HoverRace ersionvay "
+
+#: client/Game2/main.cpp:68
+#, c-format, boost-format
+msgid ""
+"HoverRace for Linux is under development!\n"
+"Please visit %s to learn how to\n"
+"contribute to this project."
+msgstr ""
+"HoverRace orfay Inuxlay isway underway evelopmentday!\n"
+"Easeplay isitvay %s otay earnlay owhay otay\n"
+"ontributcay otay isthay ojectpray."
