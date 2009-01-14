@@ -9,7 +9,7 @@ if not exist hoverrace.sln (
 	exit /b
 )
 
-for %%F in (locale\*.po) do (
+for %%F in (po\*.po) do (
 	echo Generating %%~nF.mo...
 	md share\locale\%%~nF\LC_MESSAGES 2> NUL
 	msgfmt --statistics -o share\locale\%%~nF\LC_MESSAGES\hoverrace.mo "%%F"
