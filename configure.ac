@@ -17,6 +17,8 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 AC_PROG_LIBTOOL
+AM_GNU_GETTEXT_VERSION(0.17)
+AM_GNU_GETTEXT([external])
 
 # Checks for libraries.
 BOOST_REQUIRE(1.34)
@@ -60,5 +62,6 @@ AC_CONFIG_FILES([
 	engine/Util/Makefile
 	engine/Util/yaml/Makefile
 	engine/VideoServices/Makefile
+	po/Makefile.in
 ])
 AC_OUTPUT
