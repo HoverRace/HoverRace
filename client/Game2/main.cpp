@@ -55,10 +55,12 @@ int main(int argc, char** argv)
 	free(appPath);
 #endif
 
+#ifdef ENABLE_NLS
 	// Gettext initialization.
 	setlocale(LC_ALL, "");
 	bindtextdomain("hoverrace", "../share/locale");
 	textdomain("hoverrace");
+#endif
 
 	// Library initialization.
 	curl_global_init(CURL_GLOBAL_ALL);
