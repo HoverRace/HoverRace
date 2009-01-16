@@ -23,7 +23,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_MBNET_;WITH_OPENAL;WITH_GETTEXT"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_MBNET_;WITH_OPENAL"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="0"
 				RuntimeLibrary="3"
@@ -80,7 +80,7 @@
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="..\include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_MBNET_;WITH_OPENAL;WITH_GETTEXT"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_MBNET_;WITH_OPENAL"
 				StringPooling="TRUE"
 				MinimalRebuild="FALSE"
 				RuntimeLibrary="2"
@@ -252,7 +252,8 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
+"
 						Outputs="$(OutDir)\$(InputFileName)"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -260,7 +261,8 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
+"
 						Outputs="$(OutDir)\$(InputFileName)"/>
 				</FileConfiguration>
 			</File>

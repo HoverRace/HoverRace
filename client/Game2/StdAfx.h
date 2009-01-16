@@ -45,12 +45,11 @@
 #include <boost/format.hpp>
 #include <boost/thread/thread.hpp>
 
-#include <libintl.h>
-
 #ifdef _
 #	undef _
 #endif
-#ifdef WITH_GETTEXT
+#ifdef ENABLE_NLS
+#	include <libintl.h>
 #	define _(x) gettext(x)
 #else
 #	define _(x) (x)
