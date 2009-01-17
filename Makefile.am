@@ -21,5 +21,3 @@ pkgdata_DATA = \
 	res/Intro.avi \
 	res/ObjFac1.dat
 
-
-ACLOCAL_AMFLAGS = -I m4
