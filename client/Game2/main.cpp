@@ -58,8 +58,8 @@ int main(int argc, char** argv)
 #ifdef ENABLE_NLS
 	// Gettext initialization.
 	setlocale(LC_ALL, "");
-	bindtextdomain("hoverrace", "../share/locale");
-	textdomain("hoverrace");
+	bindtextdomain(PACKAGE, LOCALEDIR);
+	textdomain(PACKAGE);
 #endif
 
 	// Library initialization.

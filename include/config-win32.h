@@ -6,3 +6,5 @@
 #define PACKAGE_NAME "HoverRace"
 
 #define ENABLE_NLS 1
+
+#define LOCALEDIR "../share/locale"

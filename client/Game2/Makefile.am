@@ -1,6 +1,6 @@
 
 bin_PROGRAMS = hoverrace
-hoverrace_CPPFLAGS = $(HR_CPPFLAGS)
+hoverrace_CPPFLAGS = $(HR_CPPFLAGS) -DLOCALEDIR=\"$(localedir)\"
 hoverrace_CXXFLAGS = $(HR_CXXFLAGS)
 hoverrace_LDADD = \
 	../../engine/libhoverrace-engine.la \
