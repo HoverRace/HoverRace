@@ -2764,10 +2764,43 @@ BOOL CALLBACK MR_GameApp::AboutDlgFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam
 
 		case WM_INITDIALOG:
 			{
+				SetWindowText(pWindow, _("About HoverRace"));
 				std::string verStr(_("HoverRace version "));
 				verStr += MR_Config::GetInstance()->GetVersion();
 				SetDlgItemText(pWindow, IDC_VER_TXT, verStr.c_str());
-				SetDlgItemText(pWindow, IDC_ABOUT_TXT, (const char*)MR_LoadString(IDS_ABOUT));
+				std::ostringstream oss;
+				oss <<
+					_("HoverRace is brought to you by:") << "\r\n"
+					"\r\n"
+					"Ricard Langlois (" << _("original author") << ")\r\n"
+					"  Grokksoft Inc.\r\n"
+					"\r\n" <<
+					_("with contributions from (in alphabetical order)") << ":\r\n"
+					"\r\n"
+					"Austin L. Brock\r\n"
+					"Ryan Curtin\r\n"
+					"Michael Imamura\r\n"
+					"\r\n" <<
+					_("and with the help of the many testers willing to put up with bugs and other strange happenings.") << "\r\n"
+					"\r\n" <<
+					_("visit us at") << " http://www.hoverrace.com/\r\n"
+					"\r\n"
+					"HoverRace © Richard Langlois, Grokksoft Inc.\r\n"
+					"\r\n" <<
+					_("Thanks also to the following projects") << ":\r\n"
+					"\r\n"
+					"Boost C++ Libraries\r\n"
+					"  http://www.boost.org/\r\n"
+					"\r\n"
+					"libcurl - Daniel Stenberg and contributors.\r\n"
+					"  http://curl.haxx.se/\r\n"
+					"\r\n"
+					"LibYAML - Kirill Simonov and contributors.\r\n"
+					"  http://pyyaml.org/wiki/LibYAML\r\n"
+					"\r\n"
+					"LiteUnzip - Jeff Glatt, based on work by Lucian Wischik, based on work by Jean-Loup Gailly and Mark Adler.\r\n"
+					;
+				SetDlgItemText(pWindow, IDC_ABOUT_TXT, oss.str().c_str());
 				lReturnValue = TRUE;
 			}
 			break;
