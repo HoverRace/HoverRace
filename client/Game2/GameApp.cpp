@@ -796,15 +796,6 @@ void MR_GameApp::DisplayHelp()
 
 }
 
-void MR_GameApp::DisplayBetaZone()
-{
-
-	// first return to window mode
-	SetVideoMode(0, 0);
-
-	LoadURLShortcut(mMainWindow, MR_LoadString(IDS_BETAZONE));
-}
-
 void MR_GameApp::DisplaySite()
 {
 	// first return to window mode
@@ -2134,12 +2125,6 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 				case ID_HELP_CONTENTS:
 					This->DisplayHelp();
 					break;
-
-				/*
-				case ID_HELP_THEBETAZONE:
-					This->DisplayBetaZone();
-					break;
-				*/
 
 				case ID_HELP_SITE:
 					This->DisplaySite();

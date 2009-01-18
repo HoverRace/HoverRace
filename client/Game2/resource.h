@@ -302,7 +302,6 @@
 #define IDS_CUR_LAP                     40186
 #define IDS_HIT_TITLE                   40187
 #define IDS_HIT_CHART                   40188
-#define IDS_BETAZONE                    40189
 #define IDS_WEBSITE                     40190
 #define ID_GAME_SPLITSCREEN3            40192
 #define IDS_JOY1BTN5                    40192

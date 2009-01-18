@@ -1226,7 +1226,6 @@ BEGIN
     IDS_CUR_LAP             "Current lap %d.%02d.%03d  Best %d.%02d.%03d"
     IDS_HIT_TITLE           "Rank                 For   Against"
     IDS_HIT_CHART           "%d %-0.10s #%d%*s  %2d      %2d"
-    IDS_BETAZONE            "http://www.hoverrace.com"
     IDS_WEBSITE             "http://www.hoverrace.com"
 END
 
