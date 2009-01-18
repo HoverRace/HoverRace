@@ -1274,7 +1274,6 @@ BEGIN
     IDS_MISC                "Miscellaneous"
     IDS_CANT_USE_UDP_PORT   "Unable to use UDP recv port; choose a different port or close some Winsock applications."
     IDS_GAME_CANCELLED      "Game cancelled by server"
-    IDS_ABOUT               "HoverRace is brought to you by:\r\n\r\nRichard Langlois (original author)\r\n  Grokksoft Inc.\r\n  \r\nwith contributions from (in alphabetical order):\r\n\r\nAustin L. Brock\r\nRyan Curtin\r\nMichael Imamura\r\n\r\nand with the help of the many testers willing to put up with bugs and other strange happenings.\r\n\r\nVisit us at http://www.hoverrace.com/\r\n\r\nHoverRace is copyright (c) Richard Langlois and Grokksoft Inc.\r\n\r\nThanks also to the following projects:\r\n\r\nThe Boost C++ Libraries\r\n  http://www.boost.org/\r\n\r\nlibcurl - Daniel Stenberg and contributors.\r\n  http://curl.haxx.se/\r\n\r\nLibYAML - Kirill Simonov and contributors.\r\n  http://pyyaml.org/wiki/LibYAML\r\n\r\nLiteUnzip - Jeff Glatt, based on work by Lucian Wischik, based on work by Jean-Loup Gailly and Mark Adler.\r\n"
     IDS_CONN_REFUSED1       "Connection refused by peer "
     IDS_CONN_REFUSED2       "; perhaps they are behind a firewall and need to forward ports 9530 and 9531 TCP and UDP?"
     IDS_CONN_TIMEOUT1       "Cannot connect to peer "

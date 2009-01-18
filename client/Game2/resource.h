@@ -340,7 +340,6 @@
 #define IDS_MISC                        40224
 #define IDS_CANT_USE_UDP_PORT           40225
 #define IDS_GAME_CANCELLED              40226
-#define IDS_ABOUT                       40227
 #define IDS_CONN_REFUSED1               40228
 #define IDS_CONN_REFUSED2               40229
 #define IDS_CONN_TIMEOUT1               40230
