@@ -518,7 +518,7 @@ void MR_GameThread::Restart()
 	}
 }
 
-MR_GameApp::MR_GameApp(HINSTANCE pInstance)
+MR_GameApp::MR_GameApp(HINSTANCE pInstance, bool safeMode)
 {
 	This = this;
 	mInstance = pInstance;
@@ -533,9 +533,6 @@ MR_GameApp::MR_GameApp(HINSTANCE pInstance)
 	mObserver4 = NULL;
 	mCurrentSession = NULL;
 	mGameThread = NULL;
-
-	safeMode = false;
-	allowMultipleInstances = false;
 
 	mCurrentMode = e3DView;
 
@@ -572,9 +569,6 @@ MR_GameApp::MR_GameApp(HINSTANCE pInstance)
 		//FIXME: Oh bother, this means the .exe was compiled without
 		//       version resources.  What do we do now?
 	}
-
-	// Process command-line options.
-	ProcessCmdLine(__argc, __argv);
 
 	// Load the configuration, using the default OS-specific path.
 	MR_Config *cfg = MR_Config::Init(verMajor, verMinor, verPatch, verBuild);
@@ -621,25 +615,6 @@ void MR_GameApp::Clean()
 	mClrScrTodo = 2;
 	gFirstKDBCall = TRUE;						  // Set to TRUE on each new game
 
-}
-
-/**
- * Process command-line options.
- * @param argc The arg count.
- * @param argv The original argument list.
- */
-void MR_GameApp::ProcessCmdLine(int argc, char **argv)
-{
-	for (int i = 1; i < argc; ++i) {
-		const char *arg = argv[i];
-
-		if (strcmp("-s", arg) == 0) {
-			safeMode = true;
-		}
-		else if (strcmp("-m", arg) == 0) {
-			allowMultipleInstances = true;
-		}
-	}
 }
 
 void MR_GameApp::LoadRegistry()
@@ -895,8 +870,6 @@ int MR_GameApp::MainLoop()
 
 BOOL MR_GameApp::IsFirstInstance() const
 {
-	if (allowMultipleInstances) return TRUE;
-
 	HWND lPrevAppWnd = FindWindow(MR_APP_CLASS_NAME, NULL);
 	HWND lChildAppWnd = NULL;
 

@@ -32,6 +32,28 @@
 
 #include <curl/curl.h>
 
+static bool safeMode = false;
+static bool allowMultipleInstances = false;
+
+/**
+ * Process command-line options.
+ * @param argc The arg count.
+ * @param argv The original argument list.
+ */
+static void ProcessCmdLine(int argc, char **argv)
+{
+	for (int i = 1; i < argc; ++i) {
+		const char *arg = argv[i];
+
+		if (strcmp("-s", arg) == 0) {
+			safeMode = true;
+		}
+		else if (strcmp("-m", arg) == 0) {
+			allowMultipleInstances = true;
+		}
+	}
+}
+
 // Entry point
 #ifdef _WIN32
 int WINAPI WinMain(HINSTANCE pInstance, HINSTANCE pPrevInstance, LPSTR /* pCmdLine */ , int pCmdShow)
@@ -55,6 +77,13 @@ int main(int argc, char** argv)
 	free(appPath);
 #endif
 
+	// Process command-line options.
+#ifdef _WIN32
+	int argc = __argc;
+	char** argv = __argv;
+#endif
+	ProcessCmdLine(argc, argv);
+
 #ifdef ENABLE_NLS
 	// Gettext initialization.
 	setlocale(LC_ALL, "");
@@ -66,12 +95,15 @@ int main(int argc, char** argv)
 	curl_global_init(CURL_GLOBAL_ALL);
 
 #ifdef _WIN32
-	MR_GameApp lGame(pInstance);
+	MR_GameApp lGame(pInstance, safeMode);
 
-	// Allow only one instance of HoverRace; press CAPS_LOCK to bypass
-	GetAsyncKeyState(VK_CAPITAL);				  // Reset the function
-	if(!GetAsyncKeyState(VK_CAPITAL))
-		lReturnValue = lGame.IsFirstInstance();
+	// Allow only one instance of HoverRace; press CAPS_LOCK to bypass or
+	// use the "-m" command-line option.
+	if (!allowMultipleInstances) {
+		GetAsyncKeyState(VK_CAPITAL);				  // Reset the function
+		if(!GetAsyncKeyState(VK_CAPITAL))
+			lReturnValue = lGame.IsFirstInstance();
+	}
 
 	if(lReturnValue && (pPrevInstance == NULL))
 		lReturnValue = lGame.InitApplication();

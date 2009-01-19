@@ -72,9 +72,6 @@ class MR_GameApp
 
 		eViewMode mCurrentMode;
 
-		bool safeMode;
-		bool allowMultipleInstances;
-
 		int mClrScrTodo;
 
 		BOOL mPaletteChangeAllowed;
@@ -111,7 +108,6 @@ class MR_GameApp
 		void NewNetworkSession(BOOL pIsServer);
 		void NewInternetSession();
 
-		void ProcessCmdLine(int argc, char **argv);
 		void LoadRegistry();
 		void SaveRegistry();
 
@@ -138,7 +134,7 @@ class MR_GameApp
 		int AskUserToAbortGame();				  // Return IDOK if OK
 
 	public:
-		MR_GameApp(HINSTANCE pInstance);
+		MR_GameApp(HINSTANCE pInstance, bool safeMode);
 		~MR_GameApp();
 
 		BOOL IsFirstInstance() const;
