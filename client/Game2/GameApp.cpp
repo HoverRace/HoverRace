@@ -548,6 +548,7 @@ MR_GameApp::MR_GameApp(HINSTANCE pInstance, bool safeMode)
 	long verMinor = 0;
 	long verPatch = 0;
 	long verBuild = 0;
+	bool prerelease = true;
 	DWORD dummyHandle;
 	DWORD verInfoSize = GetFileVersionInfoSize(exePath, &dummyHandle);
 	void *verInfo = malloc(verInfoSize);
@@ -560,6 +561,7 @@ MR_GameApp::MR_GameApp(HINSTANCE pInstance, bool safeMode)
 			verMinor = fixedInfo->dwProductVersionMS & 0xffff;
 			verPatch = (fixedInfo->dwProductVersionLS >> 16) & 0xffff;
 			verBuild = fixedInfo->dwProductVersionLS & 0xffff;
+			prerelease = (fixedInfo->dwFileFlagsMask & VS_FF_PRERELEASE & fixedInfo->dwFileFlags) > 0;
 		}
 	}
 	free(verInfo);
@@ -571,7 +573,7 @@ MR_GameApp::MR_GameApp(HINSTANCE pInstance, bool safeMode)
 	}
 
 	// Load the configuration, using the default OS-specific path.
-	MR_Config *cfg = MR_Config::Init(verMajor, verMinor, verPatch, verBuild);
+	MR_Config *cfg = MR_Config::Init(verMajor, verMinor, verPatch, verBuild, prerelease);
 	if (!safeMode) {
 		LoadRegistry();
 		cfg->Load();
@@ -973,12 +975,12 @@ void MR_GameApp::RefreshTitleBar()
 
 	// fixed to get rid of registration
 	if(mMainWindow != NULL) {
-		std::string caption = str(format(_("HoverRace %s (testing)")) % cfg->GetVersion());
-		/*
-		std::string caption(MR_LoadStringBuffered(IDS_CAPTION));
-		caption.replace(caption.find("%s"), 2, cfg->GetVersion());
-		*/
-		SetWindowText(mMainWindow, caption.c_str());
+		std::ostringstream oss;
+		oss << PACKAGE_NAME " " << cfg->GetVersion();
+		if (cfg->IsPrerelease()) {
+			oss << " (" << _("testing") << ')';
+		}
+		SetWindowText(mMainWindow, oss.str().c_str());
 	}
 }
 

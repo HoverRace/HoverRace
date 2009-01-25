@@ -87,12 +87,18 @@ MR_Config *MR_Config::instance = NULL;
 
 /**
  * Create a new instance using the specified directory.
- * @param version The app version.
+ * @param verMajor The major (first) component of the version number.
+ * @param verMinor The minor (second) component of the version number.
+ * @param verPatch The patch (third) component of the version number.
+ * @param verBuild The build (fourth) component of the version number.
+ * @param prerelease Whether this build is a development version.
  * @param path (Optional) The directory for storing configuration data.
  *             The default is to use {@link #GetDefaultPath()}.
  */
-MR_Config::MR_Config(int verMajor, int verMinor, int verPatch, int verBuild, const std::string &path) :
-	verMajor(verMajor), verMinor(verMinor), verPatch(verPatch), verBuild(verBuild)
+MR_Config::MR_Config(int verMajor, int verMinor, int verPatch, int verBuild,
+					 bool prerelease, const std::string &path) :
+	verMajor(verMajor), verMinor(verMinor), verPatch(verPatch), verBuild(verBuild),
+	prerelease(prerelease)
 {
 	this->path = (path.length() == 0) ? GetDefaultPath() : path;
 
@@ -119,15 +125,20 @@ MR_Config::~MR_Config()
 
 /**
  * Initialize the singleton instance.
- * @param version The app version.
+ * @param verMajor The major (first) component of the version number.
+ * @param verMinor The minor (second) component of the version number.
+ * @param verPatch The patch (third) component of the version number.
+ * @param verBuild The build (fourth) component of the version number.
+ * @param prerelease Whether this build is a development version.
  * @param path (Optional) The directory for storing configuration data.
  *             The default is to use {@link #GetDefaultPath()}.
  * @return The config instance.
  */
-MR_Config *MR_Config::Init(int verMajor, int verMinor, int verPatch, int verBuild, const std::string &path)
+MR_Config *MR_Config::Init(int verMajor, int verMinor, int verPatch, int verBuild,
+						   bool prerelease, const std::string &path)
 {
 	if (instance == NULL) {
-		instance = new MR_Config(verMajor, verMinor, verPatch, verBuild, path);
+		instance = new MR_Config(verMajor, verMinor, verPatch, verBuild, prerelease, path);
 	}
 	return instance;
 }
@@ -141,6 +152,15 @@ void MR_Config::Shutdown()
 		delete instance;
 		instance = NULL;
 	}
+}
+
+/**
+ * Check if this build is a prerelease (development) version.
+ * @return @c true if prerelease.
+ */
+bool MR_Config::IsPrerelease() const
+{
+	return prerelease;
 }
 
 /**

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-17 18:26-0500\n"
-"PO-Revision-Date: 2009-01-17 18:32-0500\n"
+"POT-Creation-Date: 2009-01-25 17:12-0500\n"
+"PO-Revision-Date: 2009-01-25 17:15-0500\n"
 "Last-Translator: Michael Imamura <zoogie@lugatgt.org>\n"
 "Language-Team: English\n"
 "MIME-Version: 1.0\n"
@@ -16,48 +16,47 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: client/Game2/GameApp.cpp:760
+#: client/Game2/GameApp.cpp:737
 msgid "Abort current game?"
 msgstr "Ixnay on the urrentcay amegay?"
 
-#: client/Game2/GameApp.cpp:1012
-#, c-format, boost-format
-msgid "HoverRace %s (testing)"
-msgstr "HoverRace %s (estingtay)"
+#: client/Game2/GameApp.cpp:981
+msgid "testing"
+msgstr "estingtay"
 
-#: client/Game2/GameApp.cpp:2767
+#: client/Game2/GameApp.cpp:2727
 msgid "About HoverRace"
 msgstr "Aboutlay HoverRace"
 
-#: client/Game2/GameApp.cpp:2768
+#: client/Game2/GameApp.cpp:2728
 msgid "HoverRace version "
 msgstr "HoverRace ersionvay "
 
-#: client/Game2/GameApp.cpp:2773
+#: client/Game2/GameApp.cpp:2733
 msgid "HoverRace is brought to you by:"
 msgstr "HoverRace is oughtbray otay ouyay ybay:"
 
-#: client/Game2/GameApp.cpp:2775
+#: client/Game2/GameApp.cpp:2735
 msgid "original author"
 msgstr "originalway authorway"
 
-#: client/Game2/GameApp.cpp:2778
+#: client/Game2/GameApp.cpp:2738
 msgid "with contributions from (in alphabetical order)"
 msgstr "ithway ontributionscay omfray (in alphabeticalay orderway)"
 
-#: client/Game2/GameApp.cpp:2784
+#: client/Game2/GameApp.cpp:2744
 msgid "and with the help of the many testers willing to put up with bugs and other strange happenings."
 msgstr "andway ithway ethay elphay ofway ethay anymay esterstay illingway otay utpay upway ithway ugsbay andway otherway angestray appeningshay."
 
-#: client/Game2/GameApp.cpp:2786
+#: client/Game2/GameApp.cpp:2746
 msgid "visit us at"
 msgstr "isitvay us at"
 
-#: client/Game2/GameApp.cpp:2790
+#: client/Game2/GameApp.cpp:2750
 msgid "Thanks also to the following projects"
 msgstr "Anksthay also otay the ollowingfay ojectspray"
 
-#: client/Game2/main.cpp:86
+#: client/Game2/main.cpp:118
 #, c-format, boost-format
 msgid ""
 "HoverRace for Linux is under development!\n"

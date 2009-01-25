@@ -50,17 +50,21 @@ class MR_DllDeclare MR_Config
 		int verMinor;
 		int verPatch;
 		int verBuild;
+		bool prerelease;
 		std::string shortVersion;
 		std::string fullVersion;
 
 	private:
-		MR_Config(int verMajor, int verMinor, int verPatch, int verBuild, const std::string &file="");
+		MR_Config(int verMajor, int verMinor, int verPatch, int verBuild,
+			bool prerelease, const std::string &file="");
 	public:
 		~MR_Config();
 	
-		static MR_Config *Init(int verMajor, int verMinor, int verPatch, int verBuild, const std::string &path="");
+		static MR_Config *Init(int verMajor, int verMinor, int verPatch, int verBuild,
+			bool prerelease, const std::string &path="");
 		static void Shutdown();
 
+		bool IsPrerelease() const;
 		std::string GetVersion() const;
 		std::string GetFullVersion() const;
 
