@@ -631,7 +631,7 @@ BOOL MR_InternetRoom::JoinGameOp(HWND pParentWindow, int pGameIndex)
 	mCurrentGameIndex = pGameIndex;
 	mCurrentGameId = mGameList[pGameIndex].mId;
 
-	mNetOpRequest.Format("%s?=JOIN_GAME%%%%%d-%u%%%%%d-%u-%u-%u", (const char *) gServerList[gCurrentServerEntry].mURL, mCurrentGameIndex, mCurrentGameId, mCurrentUserIndex, mCurrentUserId, MR_Config::GetInstance()->net.tcpRecvPort, MR_Config::GetInstance()->net.udpRecvPort);
+	mNetOpRequest.Format("%s?=JOIN_GAME%%%%%d-%u%%%%%d-%u%%%%%u%%%%%u", (const char *) gServerList[gCurrentServerEntry].mURL, mCurrentGameIndex, mCurrentGameId, mCurrentUserIndex, mCurrentUserId, MR_Config::GetInstance()->net.tcpRecvPort, MR_Config::GetInstance()->net.udpRecvPort);
 
 	lReturnValue = DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_NET_PROGRESS), pParentWindow, NetOpCallBack) == IDOK;
 
