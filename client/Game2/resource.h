@@ -130,6 +130,10 @@
 #define IDC_VER_TXT                     1090
 #define IDC_FS_RES_X                    1094
 #define IDC_FS_RES_Y                    1095
+#define IDC_TRACKS_LBL                  1095
+#define IDC_DESC_LBL                    1096
+#define IDC_LAPS_LBL                    1097
+#define IDC_WEAPONS_CHK                 1099
 #define ID_HELP_CONTENTS                32772
 #define ID_VIEW_3DACTION                32775
 #define ID_SETTING_WINDOW               32784
@@ -204,7 +208,6 @@
 #define IDS_DEFAULT_ALIAS               40070
 #define IDS_ABORT_GAME                  40071
 #define IDS_GAME_NAME                   40072
-#define IDS_HELP_REQ                    40073
 #define IDS_ERROR                       40074
 #define IDS_WWW_REQ                     40075
 #define IDS_CAPTION                     40077
@@ -284,11 +287,7 @@
 #define IDS_HAS_LEFT                    40168
 #define IDS_ALONE_F2                    40169
 #define IDS_ALONE                       40170
-#define IDS_TRK_NOTFOUND                40171
-#define IDS_BAD_TRK_FORMAT              40172
 #define IDS_SHOULD_REG                  40173
-#define IDS_NO_SELECT                   40174
-#define IDS_LAP_RANGE                   40175
 #define IDS_RANK_TITLE                  40176
 #define IDS_FLAP_STR                    40177
 #define IDS_CHART_FINISH                40178
@@ -367,7 +366,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        166
 #define _APS_NEXT_COMMAND_VALUE         40047
-#define _APS_NEXT_CONTROL_VALUE         1095
+#define _APS_NEXT_CONTROL_VALUE         1100
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

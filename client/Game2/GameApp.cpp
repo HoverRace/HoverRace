@@ -734,7 +734,7 @@ int MR_GameApp::AskUserToAbortGame()
 	int lReturnValue = IDOK;
 
 	if(IsGameRunning()) {
-		lReturnValue = MessageBox(mMainWindow, _("Abort current game?"), MR_LoadString(IDS_GAME_NAME), MB_OKCANCEL | MB_ICONWARNING);
+		lReturnValue = MessageBox(mMainWindow, _("Abort current game?"), PACKAGE_NAME, MB_OKCANCEL | MB_ICONWARNING);
 
 		if(lReturnValue == 0) {
 			lReturnValue = IDOK;
@@ -757,18 +757,11 @@ void MR_GameApp::DisplayHelp()
 		SW_SHOWNORMAL);
 
 	if(lReturnCode <= 32) {
-
-		MessageBox(mMainWindow, MR_LoadString(IDS_HELP_REQ), MR_LoadString(IDS_ERROR), MB_ICONERROR | MB_APPLMODAL | MB_OK);
-
-		/*
-		   MessageBox( mMainWindow,
-		   "To be able to display Hover Race Help page\n"
-		   "you must have a WWW browser installed on\n"
-		   "your system",
-		   "Hover Race Help Error",
-		   MB_ICONERROR|MB_APPLMODAL|MB_OK );
-		 */
-
+		MessageBox(mMainWindow,
+			_("To be able to display HoverRace Help\n"
+			"you must have a Word document viewer installed\n"
+			"on your system."),
+			PACKAGE_NAME, MB_ICONERROR | MB_APPLMODAL | MB_OK);
 	}
 
 }
@@ -809,8 +802,6 @@ int MR_GameApp::MainLoop()
 	while(!lEofGame) {
 		WaitMessage();
 
-		// Documentation can't be found on any of the *Message() methods.
-		// They must be built-in or inherited.
 		while(PeekMessage(&lMessage, NULL, 0, 0, PM_NOREMOVE)) {
 			if(GetMessage(&lMessage, NULL, 0, 0)) {
 				if(!TranslateAccelerator(mMainWindow, mAccelerators, &lMessage)) {
@@ -949,7 +940,7 @@ BOOL MR_GameApp::CreateMainWindow()
 	mMainWindow = CreateWindowEx(
 		WS_EX_APPWINDOW,
 		MR_APP_CLASS_NAME,
-		MR_LoadString(IDS_GAME_NAME),
+		PACKAGE_NAME,
 		(WS_VISIBLE | WS_OVERLAPPEDWINDOW | WS_EX_CLIENTEDGE) & ~WS_MAXIMIZEBOX,
 		xPos, yPos,
 		xRes, yRes,
@@ -978,7 +969,7 @@ void MR_GameApp::RefreshTitleBar()
 		std::ostringstream oss;
 		oss << PACKAGE_NAME " " << cfg->GetVersion();
 		if (cfg->IsPrerelease()) {
-			oss << " (" << _("testing") << ')';
+			oss << " (" << pgettext("Version", "testing") << ')';
 		}
 		SetWindowText(mMainWindow, oss.str().c_str());
 	}
@@ -1325,10 +1316,8 @@ void MR_GameApp::DeleteMovieWnd()
 		MCIWndClose(mMovieWnd);
 		Sleep(1000);
 		MCIWndDestroy(mMovieWnd);
-		// DestroyWindow( mMovieWnd );
 		mMovieWnd = NULL;
 	}
-	// MR_SoundServer::Init( mMainWindow );
 }
 
 void MR_GameApp::NewLocalSession()

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-25 17:12-0500\n"
-"PO-Revision-Date: 2009-01-25 17:15-0500\n"
+"POT-Creation-Date: 2009-01-26 00:30-0500\n"
+"PO-Revision-Date: 2009-01-26 00:30-0500\n"
 "Last-Translator: Michael Imamura <zoogie@lugatgt.org>\n"
 "Language-Team: English\n"
 "MIME-Version: 1.0\n"
@@ -20,41 +20,83 @@ msgstr ""
 msgid "Abort current game?"
 msgstr "Ixnay on the urrentcay amegay?"
 
-#: client/Game2/GameApp.cpp:981
+#: client/Game2/GameApp.cpp:761
+msgid ""
+"To be able to display HoverRace Help\n"
+"you must have a Word document viewer installed\n"
+"on your system."
+msgstr ""
+
+#: client/Game2/GameApp.cpp:972
+msgctxt "Version"
 msgid "testing"
 msgstr "estingtay"
 
-#: client/Game2/GameApp.cpp:2727
+#: client/Game2/GameApp.cpp:2716
 msgid "About HoverRace"
 msgstr "Aboutlay HoverRace"
 
-#: client/Game2/GameApp.cpp:2728
+#: client/Game2/GameApp.cpp:2717
 msgid "HoverRace version "
 msgstr "HoverRace ersionvay "
 
-#: client/Game2/GameApp.cpp:2733
+#: client/Game2/GameApp.cpp:2722
 msgid "HoverRace is brought to you by:"
 msgstr "HoverRace is oughtbray otay ouyay ybay:"
 
-#: client/Game2/GameApp.cpp:2735
+#: client/Game2/GameApp.cpp:2724
 msgid "original author"
 msgstr "originalway authorway"
 
-#: client/Game2/GameApp.cpp:2738
+#: client/Game2/GameApp.cpp:2727
 msgid "with contributions from (in alphabetical order)"
 msgstr "ithway ontributionscay omfray (in alphabeticalay orderway)"
 
-#: client/Game2/GameApp.cpp:2744
+#: client/Game2/GameApp.cpp:2733
 msgid "and with the help of the many testers willing to put up with bugs and other strange happenings."
 msgstr "andway ithway ethay elphay ofway ethay anymay esterstay illingway otay utpay upway ithway ugsbay andway otherway angestray appeningshay."
 
-#: client/Game2/GameApp.cpp:2746
+#: client/Game2/GameApp.cpp:2735
 msgid "visit us at"
 msgstr "isitvay us at"
 
-#: client/Game2/GameApp.cpp:2750
+#: client/Game2/GameApp.cpp:2739
 msgid "Thanks also to the following projects"
 msgstr "Anksthay also otay the ollowingfay ojectspray"
+
+#: client/Game2/TrackSelect.cpp:109
+#: client/Game2/TrackSelect.cpp:119
+msgid "Bad track file format"
+msgstr "Adbay acktray ilefay ormatfay"
+
+#: client/Game2/TrackSelect.cpp:172
+msgid "Track selection"
+msgstr "Acktray electionsay"
+
+#: client/Game2/TrackSelect.cpp:173
+msgid "Tracks"
+msgstr "Rackstay"
+
+#: client/Game2/TrackSelect.cpp:174
+msgid "Description"
+msgstr "Escriptionday"
+
+#: client/Game2/TrackSelect.cpp:175
+msgid "Laps"
+msgstr "Apslay"
+
+#: client/Game2/TrackSelect.cpp:176
+msgid "Weapons"
+msgstr "Eaponsway"
+
+#: client/Game2/TrackSelect.cpp:199
+#: client/Game2/TrackSelect.cpp:218
+msgid " no selection"
+msgstr " onay electionsay"
+
+#: client/Game2/TrackSelect.cpp:238
+msgid "Number of laps should be between 1 and 99"
+msgstr "Umbernay of apslay ouldshay ebay etweenbay 1 and 99"
 
 #: client/Game2/main.cpp:118
 #, c-format, boost-format

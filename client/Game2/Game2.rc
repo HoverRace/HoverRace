@@ -189,26 +189,26 @@ BEGIN
     LTEXT           "x",IDC_STATIC,43,107,8,8
 END
 
-IDD_TRACK_SELECT DIALOGEX 0, 0, 244, 141
+IDD_TRACK_SELECT DIALOGEX 0, 0, 244, 147
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Track selection"
 FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     LISTBOX         IDC_LIST,7,17,111,100,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | 
                     WS_TABSTOP
-    EDITTEXT        IDC_NB_LAP,163,93,31,14,ES_NUMBER
+    EDITTEXT        IDC_NB_LAP,125,92,19,14,ES_NUMBER
     CONTROL         "Spin1",IDC_NB_LAP_SPIN,"msctls_updown32",
-                    UDS_SETBUDDYINT | UDS_AUTOBUDDY | UDS_ARROWKEYS,195,93,
+                    UDS_SETBUDDYINT | UDS_AUTOBUDDY | UDS_ARROWKEYS,145,92,
                     11,14
-    CONTROL         "Weapons:",IDC_WEAPONS,"Button",BS_AUTOCHECKBOX | 
-                    BS_LEFTTEXT | WS_TABSTOP,125,107,47,10
-    DEFPUSHBUTTON   "OK",IDOK,65,120,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,128,120,50,14
-    LTEXT           "Tracks:",IDC_STATIC,7,7,24,8
-    LTEXT           "Description",IDC_STATIC,125,7,35,8
+    CONTROL         "Weapons",IDC_WEAPONS_CHK,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,146,107,91,10
+    DEFPUSHBUTTON   "OK",IDOK,65,126,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,128,126,50,14
+    LTEXT           "Tracks:",IDC_TRACKS_LBL,7,7,64,8
+    LTEXT           "Description",IDC_DESC_LBL,125,7,70,8
     LTEXT           " no selection",IDC_DESCRIPTION,125,17,112,71,0,
                     WS_EX_CLIENTEDGE
-    LTEXT           "Laps :",IDC_STATIC,125,96,19,8
+    LTEXT           "Laps",IDC_LAPS_LBL,158,96,79,8
 END
 
 IDD_CONTROL DIALOGEX 0, 0, 384, 134
@@ -750,7 +750,7 @@ BEGIN
         RIGHTMARGIN, 237
         VERTGUIDE, 125
         TOPMARGIN, 7
-        BOTTOMMARGIN, 134
+        BOTTOMMARGIN, 140
         HORZGUIDE, 17
         HORZGUIDE, 117
     END
@@ -1099,7 +1099,6 @@ BEGIN
     IDS_DEFAULT_ALIAS       "Your Name"
     IDS_ABORT_GAME          "Abort current game?"
     IDS_GAME_NAME           "HoverRace"
-    IDS_HELP_REQ            "To be able to display HoverRace Help\nyou must have a Word document viewer installed\non your system.\n"
     IDS_ERROR               "HoverRace Error"
     IDS_WWW_REQ             "Unable to activate your web browser. Please start your web browser and go to:\n%s"
     IDS_CAPTION             "HoverRace %s (testing)"
@@ -1203,11 +1202,7 @@ BEGIN
     IDS_HAS_LEFT            " has left"
     IDS_ALONE_F2            "You are now alone, press F2 when ready to return to the Meeting Room"
     IDS_ALONE               "You are now alone"
-    IDS_TRK_NOTFOUND        "Track not found"
-    IDS_BAD_TRK_FORMAT      "Bad track file format"
     IDS_SHOULD_REG          "You should register to play that track"
-    IDS_NO_SELECT           " no selection"
-    IDS_LAP_RANGE           "Number of laps should be between 1 and 99"
 END
 
 STRINGTABLE 

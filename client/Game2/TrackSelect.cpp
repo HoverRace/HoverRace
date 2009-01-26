@@ -99,14 +99,14 @@ MR_RecordFile *MR_TrackOpen(HWND pWindow, const char *pFileName)
 	std::string filename = FindTrack(pFileName);
 
 	if (filename.empty()) {
-		//MessageBox(pWindow, MR_LoadString(IDS_TRK_NOTFOUND), MR_LoadString(IDS_GAME_NAME), MB_ICONERROR | MB_OK | MB_APPLMODAL);
+		//MessageBox(pWindow, _("Track not found"), PACKAGE_NAME, MB_ICONERROR | MB_OK | MB_APPLMODAL);
 	}
 	else {
 		lReturnValue = new MR_RecordFile;
 		if(!lReturnValue->OpenForRead(filename.c_str(), TRUE)) {
 			delete lReturnValue;
 			lReturnValue = NULL;
-			MessageBox(pWindow, MR_LoadString(IDS_BAD_TRK_FORMAT), MR_LoadString(IDS_GAME_NAME), MB_ICONERROR | MB_OK | MB_APPLMODAL);
+			MessageBox(pWindow, _("Bad track file format"), PACKAGE_NAME, MB_ICONERROR | MB_OK | MB_APPLMODAL);
 			ASSERT(FALSE);
 		}
 		else {
@@ -116,7 +116,7 @@ MR_RecordFile *MR_TrackOpen(HWND pWindow, const char *pFileName)
 				delete lReturnValue;
 				lReturnValue = NULL;
 
-				MessageBox(pWindow, MR_LoadString(IDS_BAD_TRK_FORMAT), MR_LoadString(IDS_GAME_NAME), MB_ICONERROR | MB_OK | MB_APPLMODAL);
+				MessageBox(pWindow, _("Bad track file format"), PACKAGE_NAME, MB_ICONERROR | MB_OK | MB_APPLMODAL);
 			}
 		}
 
@@ -168,6 +168,13 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 		case WM_INITDIALOG:
 			trackSelDlg = pWindow;
 
+			// i18n for labels, etc.
+			SetWindowText(pWindow, _("Track selection"));
+			SetDlgItemText(pWindow, IDC_TRACKS_LBL, _("Tracks"));
+			SetDlgItemText(pWindow, IDC_DESC_LBL, _("Description"));
+			SetDlgItemText(pWindow, IDC_LAPS_LBL, _("Laps"));
+			SetDlgItemText(pWindow, IDC_WEAPONS_CHK, _("Weapons"));
+
 			// Init track file list
 			for (sorted_t::iterator iter = gsSortedTrackList.begin();
 				iter != gsSortedTrackList.end(); ++iter)
@@ -189,7 +196,7 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 			else {
 				gsSelectedEntry = -1;
 				SendDlgItemMessage(pWindow, IDOK, WM_ENABLE, FALSE, 0);
-				SetDlgItemText(pWindow, IDC_DESCRIPTION, MR_LoadString(IDS_NO_SELECT));
+				SetDlgItemText(pWindow, IDC_DESCRIPTION, _(" no selection"));
 				SendDlgItemMessage(pWindow, IDC_LIST, LB_SETCURSEL, -1, 0);
 			}
 
@@ -208,7 +215,7 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 							gsSelectedEntry = SendDlgItemMessage(pWindow, IDC_LIST, LB_GETCURSEL, 0, 0);
 							if (gsSortedTrackList.empty() || (gsSelectedEntry == -1)) {
 								SendDlgItemMessage(pWindow, IDOK, WM_ENABLE, FALSE, 0);
-								SetDlgItemText(pWindow, IDC_DESCRIPTION, MR_LoadString(IDS_NO_SELECT));
+								SetDlgItemText(pWindow, IDC_DESCRIPTION, _(" no selection"));
 							}
 							else {
 								SendDlgItemMessage(pWindow, IDOK, WM_ENABLE, TRUE, 0);
@@ -227,7 +234,9 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 						gsAllowWeapons = (SendDlgItemMessage(pWindow, IDC_WEAPONS, BM_GETCHECK, 0, 0) == BST_CHECKED);
 
 						if(gsNbLaps < 1)
-							MessageBox(pWindow, MR_LoadString(IDS_LAP_RANGE), MR_LoadString(IDS_GAME_NAME), MB_ICONINFORMATION | MB_OK | MB_APPLMODAL);
+							MessageBox(pWindow,
+								_("Number of laps should be between 1 and 99"),
+								PACKAGE_NAME, MB_ICONINFORMATION | MB_OK | MB_APPLMODAL);
 						else
 							EndDialog(pWindow, IDOK);
 					}
