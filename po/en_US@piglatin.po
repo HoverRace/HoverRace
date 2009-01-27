@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-01-26 00:30-0500\n"
-"PO-Revision-Date: 2009-01-26 00:30-0500\n"
+"PO-Revision-Date: 2009-01-26 20:04-0500\n"
 "Last-Translator: Michael Imamura <zoogie@lugatgt.org>\n"
 "Language-Team: English\n"
 "MIME-Version: 1.0\n"
@@ -26,6 +26,9 @@ msgid ""
 "you must have a Word document viewer installed\n"
 "on your system."
 msgstr ""
+"Otay ebay ableway otay isplayday HoverRace Elphay\n"
+"ouyay ustmay avehay a Word ocumentday iewervay installedway\n"
+"onway ouryay ystemsay."
 
 #: client/Game2/GameApp.cpp:972
 msgctxt "Version"
@@ -75,7 +78,7 @@ msgstr "Acktray electionsay"
 
 #: client/Game2/TrackSelect.cpp:173
 msgid "Tracks"
-msgstr "Rackstay"
+msgstr "Ackstray"
 
 #: client/Game2/TrackSelect.cpp:174
 msgid "Description"
