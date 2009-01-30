@@ -43,7 +43,8 @@ static bool allowMultipleInstances = false;
 static bool showVersion = false;
 
 /**
- *
+ * Display a message to the user.
+ * On Windows, this will pop up a 
  */
 static void ShowMessage(const std::string &s)
 {
@@ -64,11 +65,11 @@ static void ProcessCmdLine(int argc, char **argv)
 	for (int i = 1; i < argc; ++i) {
 		const char *arg = argv[i];
 
-		if (strcmp("-s", arg) == 0) {
-			safeMode = true;
-		}
-		else if (strcmp("-m", arg) == 0) {
+		if (strcmp("-m", arg) == 0) {
 			allowMultipleInstances = true;
+		}
+		else if (strcmp("-s", arg) == 0) {
+			safeMode = true;
 		}
 		else if (strcmp("-v", arg) == 0 || strcmp("--version", arg) == 0) {
 			showVersion = true;
