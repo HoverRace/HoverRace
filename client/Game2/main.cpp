@@ -40,6 +40,19 @@
 
 static bool safeMode = false;
 static bool allowMultipleInstances = false;
+static bool showVersion = false;
+
+/**
+ *
+ */
+static void ShowMessage(const std::string &s)
+{
+#ifdef _WIN32
+	MessageBox(NULL, s.c_str(), PACKAGE_NAME, MB_OK);
+#else
+	std::cout << s << std::endl;
+#endif
+}
 
 /**
  * Process command-line options.
@@ -57,11 +70,14 @@ static void ProcessCmdLine(int argc, char **argv)
 		else if (strcmp("-m", arg) == 0) {
 			allowMultipleInstances = true;
 		}
+		else if (strcmp("-v", arg) == 0 || strcmp("--version", arg) == 0) {
+			showVersion = true;
+		}
 	}
 }
 
 // Initialize (but not load) the config system.
-static void InitConfig(
+static MR_Config *InitConfig(
 #ifdef _WIN32
 	const char *exePath
 #endif
@@ -98,12 +114,12 @@ static void InitConfig(
 	}
 
 	// Load the configuration, using the default OS-specific path.
-	MR_Config::Init(verMajor, verMinor, verPatch, verBuild, prerelease);
+	return MR_Config::Init(verMajor, verMinor, verPatch, verBuild, prerelease);
 
 #else
 	
 	//FIXME: Extract prerelease flag from ver resource at build time.
-	MR_Config::Init(HR_APP_VERSION, true);
+	return MR_Config::Init(HR_APP_VERSION, true);
 
 #endif
 }
@@ -138,11 +154,11 @@ int main(int argc, char** argv)
 #endif
 	ProcessCmdLine(argc, argv);
 
+	MR_Config *cfg = InitConfig(
 #ifdef _WIN32
-	InitConfig(exePath);
-#else
-	InitConfig();
+		exePath
 #endif
+		);
 
 #ifdef ENABLE_NLS
 	// Gettext initialization.
@@ -150,6 +166,14 @@ int main(int argc, char** argv)
 	bindtextdomain(PACKAGE, LOCALEDIR);
 	textdomain(PACKAGE);
 #endif
+
+	// If --version was passed, output the version and exit.
+	if (showVersion) {
+		// We intentionally do not localize this string since scripts
+		// may want to parse it (for whatever reason).
+		ShowMessage(PACKAGE_NAME " version " + cfg->GetVersion());
+		return EXIT_SUCCESS;
+	}
 
 	// Library initialization.
 	curl_global_init(CURL_GLOBAL_ALL);
