@@ -40,7 +40,9 @@ YAML_REQUIRE(0.1.1)
 AC_C_CONST
 
 # Checks for library functions.
-
+AC_CHECK_FUNC(setenv,
+	[AC_DEFINE([HAVE_SETENV], [1],
+		[Define to 1 if you have the setenv() function.])])
 
 # Additional global flags.
 HR_CPPFLAGS="-DNO_SERIALIZE -DWITH_OPENAL $BOOST_CPPFLAGS $DEPS_CFLAGS $YAML_CPPFLAGS"
