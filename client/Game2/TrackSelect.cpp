@@ -48,6 +48,12 @@ class TrackEntry
 				return (diff < 0);
 			}
 		}
+
+		bool operator==(const TrackEntry &elem2) const
+		{
+			return ((mFileName == elem2.mFileName) && 
+					(mDescription == elem2.mDescription));
+		}
 };
 
 /// Search path for tracks (not including download path from config).
@@ -65,6 +71,7 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 static BOOL CALLBACK ListCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 static BOOL ReadTrackEntry(MR_RecordFile * pRecordFile, TrackEntry * pDest, const char *pFileName);
 static bool CompareFunc(const TrackEntry *ent1, const TrackEntry *ent2);
+static bool EqualityFunc(const TrackEntry *ent1, const TrackEntry *ent2);
 static void SortList();
 static void ReadTrackList();
 static void ReadTrackListDir(const std::string &dir);
@@ -200,7 +207,7 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 				SendDlgItemMessage(pWindow, IDC_LIST, LB_SETCURSEL, -1, 0);
 			}
 
-			oldListProc = (WNDPROC)SetWindowLong(
+			oldListProc = (WNDPROC) SetWindowLong(
 				GetDlgItem(pWindow, IDC_LIST),
 				GWL_WNDPROC,
 				(LONG)ListCallBack);
@@ -354,6 +361,12 @@ bool CompareFunc(const TrackEntry *ent1, const TrackEntry *ent2)
 	return (*ent1) < (*ent2);
 }
 
+// Equality function for SortList().
+bool EqualityFunc(const TrackEntry *ent1, const TrackEntry *ent2)
+{
+	return (*ent1) == (*ent2);
+}
+
 void SortList()
 {
 	// Init pointer list
@@ -364,6 +377,9 @@ void SortList()
 
 		std::sort(gsSortedTrackList.begin(), gsSortedTrackList.end(), CompareFunc);
 	}
+
+	// prune duplicates (but do not delete them)
+	std::unique(gsSortedTrackList.begin(), gsSortedTrackList.end(), EqualityFunc);
 }
 
 /// Read the list of tracks from all search directories.
