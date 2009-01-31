@@ -27,11 +27,9 @@ void OS::SetEnv(const char *key, const char *val)
 	combined += '=';
 	combined += val;
 
-	// Common between UNIX and Windows.
-	putenv(combined.c_str());
-
-	// Windows has several environments; we need to update them all.
 #	ifdef _WIN32
+		// Windows has several environments; we need to update them all.
+		_putenv(combined.c_str());
 		SetEnvironmentVariable(key, val);
 
 		// MSVC6-linked libraries have a separate environment.
@@ -44,5 +42,11 @@ void OS::SetEnv(const char *key, const char *val)
 			if (privPutEnv == NULL) return;
 		}
 		privPutEnv(combined.c_str());
+#	else
+#		ifdef HAVE_SETENV
+			setenv(key, val, 1);
+#		else
+			putenv(strdup(combined.c_str()));
+#		endif
 #	endif
 }
