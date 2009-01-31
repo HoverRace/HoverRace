@@ -1,7 +1,7 @@
 AC_PREREQ(2.59)
 AC_INIT(
 	HoverRace,
-	[esyscmd(build/mkversion.sh)],
+	[m4_normalize(esyscmd(build/mkversion.sh))],
 	[http://svn.igglybob.com/hoverrace/])
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_MACRO_DIR(config/m4)
