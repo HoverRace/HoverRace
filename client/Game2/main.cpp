@@ -90,7 +90,7 @@ static bool ProcessCmdLine(int argc, char **argv)
 		else if (strcmp("-s", arg) == 0) {
 			safeMode = true;
 		}
-		else if (strcmp("-v", arg) == 0 || strcmp("--version", arg) == 0) {
+		else if (strcmp("-V", arg) == 0 || strcmp("--version", arg) == 0) {
 			showVersion = true;
 		}
 	}
