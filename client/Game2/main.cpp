@@ -33,10 +33,16 @@
 #include <curl/curl.h>
 
 #include "../../engine/Util/Config.h"
+#include "../../engine/Util/OS.h"
 
 #ifndef _WIN32
 #	include "version.h"
 #endif
+
+using boost::format;
+using boost::str;
+
+using HoverRace::Util::OS;
 
 static bool safeMode = false;
 static bool allowMultipleInstances = false;
@@ -59,13 +65,26 @@ static void ShowMessage(const std::string &s)
  * Process command-line options.
  * @param argc The arg count.
  * @param argv The original argument list.
+ * @return @c true if successful.
  */
-static void ProcessCmdLine(int argc, char **argv)
+static bool ProcessCmdLine(int argc, char **argv)
 {
-	for (int i = 1; i < argc; ++i) {
-		const char *arg = argv[i];
+	for (int i = 1; i < argc; ) {
+		const char *arg = argv[i++];
 
-		if (strcmp("-m", arg) == 0) {
+		if (strcmp("-L", arg) == 0) {
+			if (i < argc) {
+				arg = argv[i++];
+				// Set the language by updating the environment.
+				// This may allow for more languages than setlocale() allows.
+				OS::SetEnv("LC_ALL", arg);
+			}
+			else {
+				ShowMessage("Expected: -L (language)");
+				return false;
+			}
+		}
+		else if (strcmp("-m", arg) == 0) {
 			allowMultipleInstances = true;
 		}
 		else if (strcmp("-s", arg) == 0) {
@@ -75,6 +94,7 @@ static void ProcessCmdLine(int argc, char **argv)
 			showVersion = true;
 		}
 	}
+	return true;
 }
 
 // Initialize (but not load) the config system.
@@ -153,7 +173,8 @@ int main(int argc, char** argv)
 	int argc = __argc;
 	char** argv = __argv;
 #endif
-	ProcessCmdLine(argc, argv);
+	if (!ProcessCmdLine(argc, argv))
+		return EXIT_FAILURE;
 
 	MR_Config *cfg = InitConfig(
 #ifdef _WIN32
