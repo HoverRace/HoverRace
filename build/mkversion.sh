@@ -19,10 +19,20 @@ if [ "$PATCH" != '0' ]; then
 	fi
 fi
 
+# Extract the "prerelease" flag.
+FLAGS=`grep '^ FILEFLAGS 0x[0-9]*L' "$INFILE" | head -1 | grep -o '0x[0-9]*'`
+fltest=$(( FLAGS & 2 ))
+if [ $fltest -gt 0 ]; then
+	PRERELEASE=true
+else
+	PRERELEASE=false
+fi
+
 # Generate version.h,
 cat <<EOD > "$OUTFILE"
 #pragma once
 #define HR_APP_VERSION $VER
+#define HR_APP_VERSION_PRERELEASE $PRERELEASE
 EOD
 
 # Echo it out so it can be captured when generating configure.

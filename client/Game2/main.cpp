@@ -140,7 +140,7 @@ static MR_Config *InitConfig(
 #else
 	
 	//FIXME: Extract prerelease flag from ver resource at build time.
-	return MR_Config::Init(HR_APP_VERSION, true);
+	return MR_Config::Init(HR_APP_VERSION, HR_APP_VERSION_PRERELEASE);
 
 #endif
 }
