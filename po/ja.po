@@ -1,0 +1,106 @@
+# Japanese translations for HoverRace package.
+# Copyright (C) 2009 HoverRace contributors
+# This file is distributed under the same license as the HoverRace package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: hoverrace 1.24\n"
+"Report-Msgid-Bugs-To: bugs@hoverrace.com\n"
+"POT-Creation-Date: 2009-01-31 18:07-0500\n"
+"PO-Revision-Date: 2009-01-31 18:08-0500\n"
+"Last-Translator: nobody@example.com\n"
+"Language-Team: Japanese\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ASCII\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: client/Game2/GameApp.cpp:702
+msgid "Abort current game?"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:726
+msgid ""
+"To be able to display HoverRace Help\n"
+"you must have a Word document viewer installed\n"
+"on your system."
+msgstr ""
+
+#: client/Game2/GameApp.cpp:937
+msgctxt "Version"
+msgid "testing"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2681
+msgid "About HoverRace"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2682
+msgid "HoverRace version "
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2687
+msgid "HoverRace is brought to you by:"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2689
+msgid "original author"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2692
+msgid "with contributions from (in alphabetical order)"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2698
+msgid ""
+"and with the help of the many testers willing to put up with bugs and other "
+"strange happenings."
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2700
+msgid "visit us at"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2704
+msgid "Thanks also to the following projects"
+msgstr ""
+
+#: client/Game2/TrackSelect.cpp:109 client/Game2/TrackSelect.cpp:119
+msgid "Bad track file format"
+msgstr ""
+
+#: client/Game2/TrackSelect.cpp:172
+msgid "Track selection"
+msgstr ""
+
+#: client/Game2/TrackSelect.cpp:173
+msgid "Tracks"
+msgstr ""
+
+#: client/Game2/TrackSelect.cpp:174
+msgid "Description"
+msgstr ""
+
+#: client/Game2/TrackSelect.cpp:175
+msgid "Laps"
+msgstr ""
+
+#: client/Game2/TrackSelect.cpp:176
+msgid "Weapons"
+msgstr ""
+
+#: client/Game2/TrackSelect.cpp:199 client/Game2/TrackSelect.cpp:218
+msgid " no selection"
+msgstr ""
+
+#: client/Game2/TrackSelect.cpp:238
+msgid "Number of laps should be between 1 and 99"
+msgstr ""
+
+#: client/Game2/main.cpp:224
+#, c-format, boost-format
+msgid ""
+"HoverRace for Linux is under development!\n"
+"Please visit %s to learn how to\n"
+"contribute to this project."
+msgstr ""
