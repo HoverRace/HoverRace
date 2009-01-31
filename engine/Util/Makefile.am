@@ -14,6 +14,8 @@ libutil_la_SOURCES = \
 	FuzzyLogic.cpp \
 	FuzzyLogic.h \
 	MR_Types.h \
+	OS.cpp \
+	OS.h \
 	WorldCoordinates.cpp \
 	WorldCoordinates.h
 
