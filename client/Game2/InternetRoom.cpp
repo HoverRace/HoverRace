@@ -2379,19 +2379,14 @@ CString MR_Pad(const char *pStr)
 	CString lReturnValue;
 
 	while(*pStr != 0) {
-		if(isalnum(*pStr)) {
+		if(isalnum(*(const unsigned char *) pStr)) {
 			lReturnValue += *pStr;
-
 		}
 		else if((*(const unsigned char *) pStr) <= 32) {
 			lReturnValue += "%20";
 		}
 		else {
 			switch (*(const unsigned char *) pStr) {
-				case 187:
-					// Reserved character for prompt »
-					break;
-
 				case '$':
 				case '-':
 				case '_':
@@ -2407,6 +2402,7 @@ CString MR_Pad(const char *pStr)
 				case '@':
 				case '&':
 				case '=':
+				case 187: // don't strip the prompt character anymore
 
 					lReturnValue += *pStr;
 					break;
