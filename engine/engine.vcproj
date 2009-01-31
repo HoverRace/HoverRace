@@ -425,6 +425,12 @@
 				RelativePath=".\Util\NET.rc">
 			</File>
 			<File
+				RelativePath=".\Util\OS.cpp">
+			</File>
+			<File
+				RelativePath=".\Util\OS.h">
+			</File>
+			<File
 				RelativePath=".\Util\Profiler.cpp">
 			</File>
 			<File
