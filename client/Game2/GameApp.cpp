@@ -36,6 +36,7 @@
 #include "../../engine/Util/Profiler.h"
 #include "../../engine/Util/StrRes.h"
 #include "../../engine/Util/Config.h"
+#include "../../engine/Util/OS.h"
 #include "InternetRoom.h"
 
 #include <vfw.h>
@@ -60,7 +61,7 @@ void CaptureScreen( MR_VideoBuffer* pVideoBuffer );
 #endif
 */
 
-#define MR_APP_CLASS_NAME "HoverRaceClass"
+#define MR_APP_CLASS_NAME L"HoverRaceClass"
 
 #define MRM_RETURN2WINDOWMODE  1
 #define MRM_EXIT_MENU_LOOP     2
@@ -73,6 +74,8 @@ void CaptureScreen( MR_VideoBuffer* pVideoBuffer );
 
 using boost::format;
 using boost::str;
+
+using HoverRace::Util::OS;
 
 enum MR_InControler { MR_KDB, MR_JOY1, MR_JOY2, MR_JOY3, MR_JOY4 };
 
@@ -828,7 +831,7 @@ int MR_GameApp::MainLoop()
 
 BOOL MR_GameApp::IsFirstInstance() const
 {
-	HWND lPrevAppWnd = FindWindow(MR_APP_CLASS_NAME, NULL);
+	HWND lPrevAppWnd = FindWindowW(MR_APP_CLASS_NAME, NULL);
 	HWND lChildAppWnd = NULL;
 
 	// Determine if another window with our class name exists...
@@ -852,7 +855,7 @@ BOOL MR_GameApp::InitApplication()
 {
 	BOOL lReturnValue = TRUE;
 
-	WNDCLASS lWinClass;
+	WNDCLASSW lWinClass;
 
 	lWinClass.style = CS_DBLCLKS;
 	lWinClass.lpfnWndProc = DispatchFunc;
@@ -862,10 +865,10 @@ BOOL MR_GameApp::InitApplication()
 	lWinClass.hIcon = LoadIcon(mInstance, MAKEINTRESOURCE(IDI_HOVER_ICON));
 	lWinClass.hCursor = LoadCursor(NULL, IDC_ARROW);
 	lWinClass.hbrBackground = (HBRUSH) COLOR_APPWORKSPACE + 1;
-	lWinClass.lpszMenuName = MAKEINTRESOURCE(FIREBALL_MAIN_MENU);
+	lWinClass.lpszMenuName = MAKEINTRESOURCEW(FIREBALL_MAIN_MENU);
 	lWinClass.lpszClassName = MR_APP_CLASS_NAME;
 
-	lReturnValue = RegisterClass(&lWinClass);
+	lReturnValue = RegisterClassW(&lWinClass);
 
 	ASSERT(lReturnValue);
 
@@ -902,10 +905,10 @@ BOOL MR_GameApp::CreateMainWindow()
 		yPos = 0;
 
 	// attempt to make the main window
-	mMainWindow = CreateWindowEx(
+	mMainWindow = CreateWindowExW(
 		WS_EX_APPWINDOW,
 		MR_APP_CLASS_NAME,
-		PACKAGE_NAME,
+		L"HoverRace",
 		(WS_VISIBLE | WS_OVERLAPPEDWINDOW | WS_EX_CLIENTEDGE) & ~WS_MAXIMIZEBOX,
 		xPos, yPos,
 		xRes, yRes,
@@ -929,14 +932,15 @@ void MR_GameApp::RefreshTitleBar()
 {
 	MR_Config *cfg = MR_Config::GetInstance();
 
-	// fixed to get rid of registration
 	if(mMainWindow != NULL) {
 		std::ostringstream oss;
 		oss << PACKAGE_NAME " " << cfg->GetVersion();
 		if (cfg->IsPrerelease()) {
 			oss << " (" << pgettext("Version", "testing") << ')';
 		}
-		SetWindowText(mMainWindow, oss.str().c_str());
+		wchar_t *ws;
+		SetWindowTextW(mMainWindow, (ws = OS::Utf8ToWide(oss.str().c_str())));
+		OS::Free(ws);
 	}
 }
 
@@ -2227,7 +2231,7 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 	}
 
 	// Default return value
-	return DefWindowProc(pWindow, pMsgId, pWParam, pLParam);
+	return DefWindowProcW(pWindow, pMsgId, pWParam, pLParam);
 }
 
 BOOL CALLBACK MR_GameApp::DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
