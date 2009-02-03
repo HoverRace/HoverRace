@@ -184,7 +184,7 @@ int main(int argc, char** argv)
 
 #ifdef ENABLE_NLS
 	// Gettext initialization.
-	setlocale(LC_ALL, "");
+	OS::SetLocale();
 	bindtextdomain(PACKAGE, LOCALEDIR);
 	textdomain(PACKAGE);
 #endif

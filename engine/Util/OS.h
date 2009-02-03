@@ -22,6 +22,7 @@ class MR_DllDeclare OS {
 
 	public:
 		static void SetEnv(const char *key, const char *val);
+		static void SetLocale();
 
 };
 
