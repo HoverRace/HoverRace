@@ -7,13 +7,14 @@ msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
 "Report-Msgid-Bugs-To: bugs@hoverrace.com\n"
 "POT-Creation-Date: 2009-01-31 18:07-0500\n"
-"PO-Revision-Date: 2009-01-31 18:09-0500\n"
-"Last-Translator: nobody@example.com\n"
+"PO-Revision-Date: 2009-02-02 23:59-0500\n"
+"Last-Translator: Michael Imamura <zoogie@lugatgt.org>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ASCII\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Language: German\n"
 
 #: client/Game2/GameApp.cpp:702
 msgid "Abort current game?"
@@ -29,11 +30,11 @@ msgstr ""
 #: client/Game2/GameApp.cpp:937
 msgctxt "Version"
 msgid "testing"
-msgstr ""
+msgstr "prüfung"
 
 #: client/Game2/GameApp.cpp:2681
 msgid "About HoverRace"
-msgstr ""
+msgstr "Über HoverRace"
 
 #: client/Game2/GameApp.cpp:2682
 msgid "HoverRace version "
@@ -52,9 +53,7 @@ msgid "with contributions from (in alphabetical order)"
 msgstr ""
 
 #: client/Game2/GameApp.cpp:2698
-msgid ""
-"and with the help of the many testers willing to put up with bugs and other "
-"strange happenings."
+msgid "and with the help of the many testers willing to put up with bugs and other strange happenings."
 msgstr ""
 
 #: client/Game2/GameApp.cpp:2700
@@ -65,7 +64,8 @@ msgstr ""
 msgid "Thanks also to the following projects"
 msgstr ""
 
-#: client/Game2/TrackSelect.cpp:109 client/Game2/TrackSelect.cpp:119
+#: client/Game2/TrackSelect.cpp:109
+#: client/Game2/TrackSelect.cpp:119
 msgid "Bad track file format"
 msgstr ""
 
@@ -89,7 +89,8 @@ msgstr ""
 msgid "Weapons"
 msgstr ""
 
-#: client/Game2/TrackSelect.cpp:199 client/Game2/TrackSelect.cpp:218
+#: client/Game2/TrackSelect.cpp:199
+#: client/Game2/TrackSelect.cpp:218
 msgid " no selection"
 msgstr ""
 
@@ -104,3 +105,4 @@ msgid ""
 "Please visit %s to learn how to\n"
 "contribute to this project."
 msgstr ""
+
