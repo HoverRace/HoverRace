@@ -908,7 +908,7 @@ BOOL MR_GameApp::CreateMainWindow()
 	mMainWindow = CreateWindowExW(
 		WS_EX_APPWINDOW,
 		MR_APP_CLASS_NAME,
-		L"HoverRace",
+		PACKAGE_NAME_L,
 		(WS_VISIBLE | WS_OVERLAPPEDWINDOW | WS_EX_CLIENTEDGE) & ~WS_MAXIMIZEBOX,
 		xPos, yPos,
 		xRes, yRes,
