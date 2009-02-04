@@ -745,7 +745,7 @@ void MR_GameApp::DisplayAbout()
 {
 	SetVideoMode(0, 0);
 	int retv;
-	if ((retv = DialogBox(mInstance, MAKEINTRESOURCE(IDD_ABOUT), mMainWindow, AboutDlgFunc)) <= 0) {
+	if ((retv = DialogBoxW(mInstance, MAKEINTRESOURCEW(IDD_ABOUT), mMainWindow, AboutDlgFunc)) <= 0) {
 		DWORD err = GetLastError();
 		LPVOID errMsg;
 		FormatMessage(
@@ -2682,10 +2682,13 @@ BOOL CALLBACK MR_GameApp::AboutDlgFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam
 
 		case WM_INITDIALOG:
 			{
-				SetWindowText(pWindow, _("About HoverRace"));
+				wchar_t *ws;
+				SetWindowTextW(pWindow, (ws = OS::Utf8ToWide(_("About HoverRace"))));
+				OS::Free(ws);
 				std::string verStr(_("HoverRace version "));
 				verStr += MR_Config::GetInstance()->GetVersion();
-				SetDlgItemText(pWindow, IDC_VER_TXT, verStr.c_str());
+				SetDlgItemTextW(pWindow, IDC_VER_TXT, (ws = OS::Utf8ToWide(verStr.c_str())));
+				OS::Free(ws);
 				std::ostringstream oss;
 				oss <<
 					_("HoverRace is brought to you by:") << "\r\n"
@@ -2718,7 +2721,8 @@ BOOL CALLBACK MR_GameApp::AboutDlgFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam
 					"\r\n"
 					"LiteUnzip - Jeff Glatt, based on work by Lucian Wischik, based on work by Jean-Loup Gailly and Mark Adler.\r\n"
 					;
-				SetDlgItemText(pWindow, IDC_ABOUT_TXT, oss.str().c_str());
+				SetDlgItemTextW(pWindow, IDC_ABOUT_TXT, (ws = OS::Utf8ToWide(oss.str().c_str())));
+				OS::Free(ws);
 				lReturnValue = TRUE;
 			}
 			break;
