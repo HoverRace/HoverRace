@@ -5,9 +5,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
-"Report-Msgid-Bugs-To: bugs@hoverrace.com\n"
-"POT-Creation-Date: 2009-01-31 18:07-0500\n"
-"PO-Revision-Date: 2009-02-02 23:59-0500\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-02-03 22:32-0500\n"
+"PO-Revision-Date: 2009-02-03 22:34-0500\n"
 "Last-Translator: Michael Imamura <zoogie@lugatgt.org>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -16,89 +16,101 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-Language: German\n"
 
-#: client/Game2/GameApp.cpp:702
+#: client/Game2/GameApp.cpp:705
 msgid "Abort current game?"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:726
+#: client/Game2/GameApp.cpp:729
 msgid ""
 "To be able to display HoverRace Help\n"
 "you must have a Word document viewer installed\n"
 "on your system."
 msgstr ""
 
-#: client/Game2/GameApp.cpp:937
+#: client/Game2/GameApp.cpp:939
 msgctxt "Version"
 msgid "testing"
 msgstr "prüfung"
 
-#: client/Game2/GameApp.cpp:2681
+#: client/Game2/GameApp.cpp:2686
 msgid "About HoverRace"
 msgstr "Über HoverRace"
 
-#: client/Game2/GameApp.cpp:2682
+#: client/Game2/GameApp.cpp:2688
 msgid "HoverRace version "
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2687
+#: client/Game2/GameApp.cpp:2694
 msgid "HoverRace is brought to you by:"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2689
+#: client/Game2/GameApp.cpp:2696
 msgid "original author"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2692
+#: client/Game2/GameApp.cpp:2699
 msgid "with contributions from (in alphabetical order)"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2698
+#: client/Game2/GameApp.cpp:2705
 msgid "and with the help of the many testers willing to put up with bugs and other strange happenings."
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2700
+#: client/Game2/GameApp.cpp:2707
 msgid "visit us at"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2704
+#: client/Game2/GameApp.cpp:2711
 msgid "Thanks also to the following projects"
 msgstr ""
 
-#: client/Game2/TrackSelect.cpp:109
-#: client/Game2/TrackSelect.cpp:119
+#: client/Game2/GameApp.cpp:2726
+msgid "Close"
+msgstr "Schließen"
+
+#: client/Game2/TrackSelect.cpp:116
+#: client/Game2/TrackSelect.cpp:126
 msgid "Bad track file format"
 msgstr ""
 
-#: client/Game2/TrackSelect.cpp:172
+#: client/Game2/TrackSelect.cpp:179
 msgid "Track selection"
 msgstr ""
 
-#: client/Game2/TrackSelect.cpp:173
+#: client/Game2/TrackSelect.cpp:180
 msgid "Tracks"
 msgstr ""
 
-#: client/Game2/TrackSelect.cpp:174
+#: client/Game2/TrackSelect.cpp:181
 msgid "Description"
 msgstr ""
 
-#: client/Game2/TrackSelect.cpp:175
+#: client/Game2/TrackSelect.cpp:182
 msgid "Laps"
 msgstr ""
 
-#: client/Game2/TrackSelect.cpp:176
+#: client/Game2/TrackSelect.cpp:183
 msgid "Weapons"
 msgstr ""
 
-#: client/Game2/TrackSelect.cpp:199
-#: client/Game2/TrackSelect.cpp:218
+#: client/Game2/TrackSelect.cpp:184
+msgid "OK"
+msgstr "OK"
+
+#: client/Game2/TrackSelect.cpp:185
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: client/Game2/TrackSelect.cpp:208
+#: client/Game2/TrackSelect.cpp:227
 msgid " no selection"
 msgstr ""
 
-#: client/Game2/TrackSelect.cpp:238
+#: client/Game2/TrackSelect.cpp:247
 msgid "Number of laps should be between 1 and 99"
 msgstr ""
 
-#: client/Game2/main.cpp:224
+#: client/Game2/main.cpp:225
 #, c-format, boost-format
 msgid ""
 "HoverRace for Linux is under development!\n"

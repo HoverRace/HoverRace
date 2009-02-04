@@ -2723,6 +2723,8 @@ BOOL CALLBACK MR_GameApp::AboutDlgFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam
 					;
 				SetDlgItemTextW(pWindow, IDC_ABOUT_TXT, (ws = OS::Utf8ToWide(oss.str().c_str())));
 				OS::Free(ws);
+				SetDlgItemTextW(pWindow, IDOK, (ws = OS::Utf8ToWide(_("Close"))));
+				OS::Free(ws);
 				lReturnValue = TRUE;
 			}
 			break;

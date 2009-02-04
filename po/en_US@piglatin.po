@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-26 00:30-0500\n"
-"PO-Revision-Date: 2009-01-26 20:04-0500\n"
+"POT-Creation-Date: 2009-02-03 22:32-0500\n"
+"PO-Revision-Date: 2009-02-03 22:33-0500\n"
 "Last-Translator: Michael Imamura <zoogie@lugatgt.org>\n"
 "Language-Team: English\n"
 "MIME-Version: 1.0\n"
@@ -16,11 +16,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: client/Game2/GameApp.cpp:737
+#: client/Game2/GameApp.cpp:705
 msgid "Abort current game?"
 msgstr "Ixnay on the urrentcay amegay?"
 
-#: client/Game2/GameApp.cpp:761
+#: client/Game2/GameApp.cpp:729
 msgid ""
 "To be able to display HoverRace Help\n"
 "you must have a Word document viewer installed\n"
@@ -30,78 +30,90 @@ msgstr ""
 "ouyay ustmay avehay a Word ocumentday iewervay installedway\n"
 "onway ouryay ystemsay."
 
-#: client/Game2/GameApp.cpp:972
+#: client/Game2/GameApp.cpp:939
 msgctxt "Version"
 msgid "testing"
 msgstr "estingtay"
 
-#: client/Game2/GameApp.cpp:2716
+#: client/Game2/GameApp.cpp:2686
 msgid "About HoverRace"
 msgstr "Aboutlay HoverRace"
 
-#: client/Game2/GameApp.cpp:2717
+#: client/Game2/GameApp.cpp:2688
 msgid "HoverRace version "
 msgstr "HoverRace ersionvay "
 
-#: client/Game2/GameApp.cpp:2722
+#: client/Game2/GameApp.cpp:2694
 msgid "HoverRace is brought to you by:"
 msgstr "HoverRace is oughtbray otay ouyay ybay:"
 
-#: client/Game2/GameApp.cpp:2724
+#: client/Game2/GameApp.cpp:2696
 msgid "original author"
 msgstr "originalway authorway"
 
-#: client/Game2/GameApp.cpp:2727
+#: client/Game2/GameApp.cpp:2699
 msgid "with contributions from (in alphabetical order)"
 msgstr "ithway ontributionscay omfray (in alphabeticalay orderway)"
 
-#: client/Game2/GameApp.cpp:2733
+#: client/Game2/GameApp.cpp:2705
 msgid "and with the help of the many testers willing to put up with bugs and other strange happenings."
 msgstr "andway ithway ethay elphay ofway ethay anymay esterstay illingway otay utpay upway ithway ugsbay andway otherway angestray appeningshay."
 
-#: client/Game2/GameApp.cpp:2735
+#: client/Game2/GameApp.cpp:2707
 msgid "visit us at"
 msgstr "isitvay us at"
 
-#: client/Game2/GameApp.cpp:2739
+#: client/Game2/GameApp.cpp:2711
 msgid "Thanks also to the following projects"
 msgstr "Anksthay also otay the ollowingfay ojectspray"
 
-#: client/Game2/TrackSelect.cpp:109
-#: client/Game2/TrackSelect.cpp:119
+#: client/Game2/GameApp.cpp:2726
+msgid "Close"
+msgstr "Oseclay"
+
+#: client/Game2/TrackSelect.cpp:116
+#: client/Game2/TrackSelect.cpp:126
 msgid "Bad track file format"
 msgstr "Adbay acktray ilefay ormatfay"
 
-#: client/Game2/TrackSelect.cpp:172
+#: client/Game2/TrackSelect.cpp:179
 msgid "Track selection"
 msgstr "Acktray electionsay"
 
-#: client/Game2/TrackSelect.cpp:173
+#: client/Game2/TrackSelect.cpp:180
 msgid "Tracks"
 msgstr "Ackstray"
 
-#: client/Game2/TrackSelect.cpp:174
+#: client/Game2/TrackSelect.cpp:181
 msgid "Description"
 msgstr "Escriptionday"
 
-#: client/Game2/TrackSelect.cpp:175
+#: client/Game2/TrackSelect.cpp:182
 msgid "Laps"
 msgstr "Apslay"
 
-#: client/Game2/TrackSelect.cpp:176
+#: client/Game2/TrackSelect.cpp:183
 msgid "Weapons"
 msgstr "Eaponsway"
 
-#: client/Game2/TrackSelect.cpp:199
-#: client/Game2/TrackSelect.cpp:218
+#: client/Game2/TrackSelect.cpp:184
+msgid "OK"
+msgstr "OK"
+
+#: client/Game2/TrackSelect.cpp:185
+msgid "Cancel"
+msgstr "Ancelcay"
+
+#: client/Game2/TrackSelect.cpp:208
+#: client/Game2/TrackSelect.cpp:227
 msgid " no selection"
 msgstr " onay electionsay"
 
-#: client/Game2/TrackSelect.cpp:238
+#: client/Game2/TrackSelect.cpp:247
 msgid "Number of laps should be between 1 and 99"
 msgstr "Umbernay of apslay ouldshay ebay etweenbay 1 and 99"
 
-#: client/Game2/main.cpp:118
+#: client/Game2/main.cpp:225
 #, c-format, boost-format
 msgid ""
 "HoverRace for Linux is under development!\n"

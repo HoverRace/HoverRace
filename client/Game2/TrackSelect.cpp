@@ -181,6 +181,8 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 			SetDlgItemText(pWindow, IDC_DESC_LBL, _("Description"));
 			SetDlgItemText(pWindow, IDC_LAPS_LBL, _("Laps"));
 			SetDlgItemText(pWindow, IDC_WEAPONS_CHK, _("Weapons"));
+			SetDlgItemText(pWindow, IDOK, _("OK"));
+			SetDlgItemText(pWindow, IDCANCEL, _("Cancel"));
 
 			// Init track file list
 			for (sorted_t::iterator iter = gsSortedTrackList.begin();
