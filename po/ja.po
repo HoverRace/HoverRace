@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-02-03 22:32-0500\n"
-"PO-Revision-Date: 2009-02-03 22:34-0500\n"
+"PO-Revision-Date: 2009-02-04 00:10-0500\n"
 "Last-Translator: Michael Imamura <zoogie@lugatgt.org>\n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -38,7 +38,7 @@ msgstr "〜について HoverRace"
 
 #: client/Game2/GameApp.cpp:2688
 msgid "HoverRace version "
-msgstr ""
+msgstr "HoverRace バージョン "
 
 #: client/Game2/GameApp.cpp:2694
 msgid "HoverRace is brought to you by:"
@@ -46,7 +46,7 @@ msgstr ""
 
 #: client/Game2/GameApp.cpp:2696
 msgid "original author"
-msgstr ""
+msgstr "オリジナルの作者"
 
 #: client/Game2/GameApp.cpp:2699
 msgid "with contributions from (in alphabetical order)"
@@ -83,7 +83,7 @@ msgstr ""
 
 #: client/Game2/TrackSelect.cpp:181
 msgid "Description"
-msgstr ""
+msgstr "説明"
 
 #: client/Game2/TrackSelect.cpp:182
 msgid "Laps"
