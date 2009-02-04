@@ -27,8 +27,11 @@
 #include "../../compilers/MazeCompiler/TrackCommonStuff.h"
 #include "../../engine/Util/StrRes.h"
 #include "../../engine/Util/Config.h"
+#include "../../engine/Util/OS.h"
 
 #include <algorithm>
+
+using HoverRace::Util::OS;
 
 class TrackEntry
 {
@@ -153,7 +156,7 @@ bool MR_SelectTrack(HWND pParentWindow, std::string &pTrackFile, int &pNbLap, bo
 	gsNbLaps = 5;								  // Default value
 	gsAllowWeapons = false;
 
-	if(DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_TRACK_SELECT), pParentWindow, TrackSelectCallBack) == IDOK) {
+	if(DialogBoxW(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDD_TRACK_SELECT), pParentWindow, TrackSelectCallBack) == IDOK) {
 		pTrackFile = gsSortedTrackList[gsSelectedEntry]->mFileName;
 		pNbLap = gsNbLaps;
 		pAllowWeapons = (gsAllowWeapons != FALSE);
@@ -168,6 +171,7 @@ bool MR_SelectTrack(HWND pParentWindow, std::string &pTrackFile, int &pNbLap, bo
 static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
 {
 	BOOL lReturnValue = FALSE;
+	wchar_t *ws;
 	//int lCounter;
 
 	switch (pMsgId) {
@@ -176,13 +180,13 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 			trackSelDlg = pWindow;
 
 			// i18n for labels, etc.
-			SetWindowText(pWindow, _("Track selection"));
-			SetDlgItemText(pWindow, IDC_TRACKS_LBL, _("Tracks"));
-			SetDlgItemText(pWindow, IDC_DESC_LBL, _("Description"));
-			SetDlgItemText(pWindow, IDC_LAPS_LBL, _("Laps"));
-			SetDlgItemText(pWindow, IDC_WEAPONS_CHK, _("Weapons"));
-			SetDlgItemText(pWindow, IDOK, _("OK"));
-			SetDlgItemText(pWindow, IDCANCEL, _("Cancel"));
+			SetWindowTextW(pWindow, (ws = OS::Utf8ToWide(_("Track selection")))); OS::Free(ws);
+			SetDlgItemTextW(pWindow, IDC_TRACKS_LBL, (ws = OS::Utf8ToWide(_("Tracks")))); OS::Free(ws);
+			SetDlgItemTextW(pWindow, IDC_DESC_LBL, (ws = OS::Utf8ToWide(_("Description")))); OS::Free(ws);
+			SetDlgItemTextW(pWindow, IDC_LAPS_LBL, (ws = OS::Utf8ToWide(_("Laps")))); OS::Free(ws);
+			SetDlgItemTextW(pWindow, IDC_WEAPONS_CHK, (ws = OS::Utf8ToWide(_("Weapons")))); OS::Free(ws);
+			SetDlgItemTextW(pWindow, IDOK, (ws = OS::Utf8ToWide(_("OK")))); OS::Free(ws);
+			SetDlgItemTextW(pWindow, IDCANCEL, (ws = OS::Utf8ToWide(_("Cancel")))); OS::Free(ws);
 
 			// Init track file list
 			for (sorted_t::iterator iter = gsSortedTrackList.begin();
@@ -205,7 +209,7 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 			else {
 				gsSelectedEntry = -1;
 				SendDlgItemMessage(pWindow, IDOK, WM_ENABLE, FALSE, 0);
-				SetDlgItemText(pWindow, IDC_DESCRIPTION, _(" no selection"));
+				SetDlgItemTextW(pWindow, IDC_DESCRIPTION, (ws = OS::Utf8ToWide(_(" no selection")))); OS::Free(ws);
 				SendDlgItemMessage(pWindow, IDC_LIST, LB_SETCURSEL, -1, 0);
 			}
 
@@ -224,7 +228,7 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 							gsSelectedEntry = SendDlgItemMessage(pWindow, IDC_LIST, LB_GETCURSEL, 0, 0);
 							if (gsSortedTrackList.empty() || (gsSelectedEntry == -1)) {
 								SendDlgItemMessage(pWindow, IDOK, WM_ENABLE, FALSE, 0);
-								SetDlgItemText(pWindow, IDC_DESCRIPTION, _(" no selection"));
+								SetDlgItemTextW(pWindow, IDC_DESCRIPTION, (ws = OS::Utf8ToWide(_(" no selection"))));  OS::Free(ws);
 							}
 							else {
 								SendDlgItemMessage(pWindow, IDOK, WM_ENABLE, TRUE, 0);
@@ -242,10 +246,12 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 						gsNbLaps = GetDlgItemInt(pWindow, IDC_NB_LAP, NULL, FALSE);
 						gsAllowWeapons = (SendDlgItemMessage(pWindow, IDC_WEAPONS, BM_GETCHECK, 0, 0) == BST_CHECKED);
 
-						if(gsNbLaps < 1)
-							MessageBox(pWindow,
-								_("Number of laps should be between 1 and 99"),
-								PACKAGE_NAME, MB_ICONINFORMATION | MB_OK | MB_APPLMODAL);
+						if(gsNbLaps < 1) {
+							MessageBoxW(pWindow,
+								(ws = OS::Utf8ToWide(_("Number of laps should be between 1 and 99"))),
+								PACKAGE_NAME_L, MB_ICONINFORMATION | MB_OK | MB_APPLMODAL);
+							OS::Free(ws);
+						}
 						else
 							EndDialog(pWindow, IDOK);
 					}
