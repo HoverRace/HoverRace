@@ -446,6 +446,12 @@
 				RelativePath=".\Util\resource.h">
 			</File>
 			<File
+				RelativePath=".\Util\Str.cpp">
+			</File>
+			<File
+				RelativePath=".\Util\Str.h">
+			</File>
+			<File
 				RelativePath=".\Util\StrRes.cpp">
 			</File>
 			<File

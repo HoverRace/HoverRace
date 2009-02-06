@@ -37,6 +37,7 @@
 #include "../../engine/Util/StrRes.h"
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/OS.h"
+#include "../../engine/Util/Str.h"
 #include "InternetRoom.h"
 
 #include <vfw.h>
@@ -76,6 +77,7 @@ using boost::format;
 using boost::str;
 
 using HoverRace::Util::OS;
+using namespace HoverRace::Util;
 
 enum MR_InControler { MR_KDB, MR_JOY1, MR_JOY2, MR_JOY3, MR_JOY4 };
 
@@ -702,7 +704,10 @@ int MR_GameApp::AskUserToAbortGame()
 	int lReturnValue = IDOK;
 
 	if(IsGameRunning()) {
-		lReturnValue = MessageBox(mMainWindow, _("Abort current game?"), PACKAGE_NAME, MB_OKCANCEL | MB_ICONWARNING);
+		lReturnValue = MessageBoxW(mMainWindow,
+			Str::UW(_("Abort current game?")),
+			PACKAGE_NAME_L,
+			MB_OKCANCEL | MB_ICONWARNING);
 
 		if(lReturnValue == 0) {
 			lReturnValue = IDOK;
@@ -938,9 +943,7 @@ void MR_GameApp::RefreshTitleBar()
 		if (cfg->IsPrerelease()) {
 			oss << " (" << pgettext("Version", "testing") << ')';
 		}
-		wchar_t *ws;
-		SetWindowTextW(mMainWindow, (ws = OS::Utf8ToWide(oss.str().c_str())));
-		OS::Free(ws);
+		SetWindowTextW(mMainWindow, Str::UW(oss.str().c_str()));
 	}
 }
 
@@ -2682,13 +2685,10 @@ BOOL CALLBACK MR_GameApp::AboutDlgFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam
 
 		case WM_INITDIALOG:
 			{
-				wchar_t *ws;
-				SetWindowTextW(pWindow, (ws = OS::Utf8ToWide(_("About HoverRace"))));
-				OS::Free(ws);
+				SetWindowTextW(pWindow, Str::UW(_("About HoverRace")));
 				std::string verStr(_("HoverRace version "));
 				verStr += MR_Config::GetInstance()->GetVersion();
-				SetDlgItemTextW(pWindow, IDC_VER_TXT, (ws = OS::Utf8ToWide(verStr.c_str())));
-				OS::Free(ws);
+				SetDlgItemTextW(pWindow, IDC_VER_TXT, Str::UW(verStr.c_str()));
 				std::ostringstream oss;
 				oss <<
 					_("HoverRace is brought to you by:") << "\r\n"
@@ -2721,10 +2721,8 @@ BOOL CALLBACK MR_GameApp::AboutDlgFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam
 					"\r\n"
 					"LiteUnzip - Jeff Glatt, based on work by Lucian Wischik, based on work by Jean-Loup Gailly and Mark Adler.\r\n"
 					;
-				SetDlgItemTextW(pWindow, IDC_ABOUT_TXT, (ws = OS::Utf8ToWide(oss.str().c_str())));
-				OS::Free(ws);
-				SetDlgItemTextW(pWindow, IDOK, (ws = OS::Utf8ToWide(_("Close"))));
-				OS::Free(ws);
+				SetDlgItemTextW(pWindow, IDC_ABOUT_TXT, Str::UW(oss.str().c_str()));
+				SetDlgItemTextW(pWindow, IDOK, Str::UW(_("Close")));
 				lReturnValue = TRUE;
 			}
 			break;

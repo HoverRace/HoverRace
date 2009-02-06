@@ -27,11 +27,11 @@
 #include "../../compilers/MazeCompiler/TrackCommonStuff.h"
 #include "../../engine/Util/StrRes.h"
 #include "../../engine/Util/Config.h"
-#include "../../engine/Util/OS.h"
+#include "../../engine/Util/Str.h"
 
 #include <algorithm>
 
-using HoverRace::Util::OS;
+using namespace HoverRace::Util;
 
 class TrackEntry
 {
@@ -171,7 +171,6 @@ bool MR_SelectTrack(HWND pParentWindow, std::string &pTrackFile, int &pNbLap, bo
 static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
 {
 	BOOL lReturnValue = FALSE;
-	wchar_t *ws;
 	//int lCounter;
 
 	switch (pMsgId) {
@@ -180,13 +179,13 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 			trackSelDlg = pWindow;
 
 			// i18n for labels, etc.
-			SetWindowTextW(pWindow, (ws = OS::Utf8ToWide(_("Track selection")))); OS::Free(ws);
-			SetDlgItemTextW(pWindow, IDC_TRACKS_LBL, (ws = OS::Utf8ToWide(_("Tracks")))); OS::Free(ws);
-			SetDlgItemTextW(pWindow, IDC_DESC_LBL, (ws = OS::Utf8ToWide(_("Description")))); OS::Free(ws);
-			SetDlgItemTextW(pWindow, IDC_LAPS_LBL, (ws = OS::Utf8ToWide(_("Laps")))); OS::Free(ws);
-			SetDlgItemTextW(pWindow, IDC_WEAPONS_CHK, (ws = OS::Utf8ToWide(_("Weapons")))); OS::Free(ws);
-			SetDlgItemTextW(pWindow, IDOK, (ws = OS::Utf8ToWide(_("OK")))); OS::Free(ws);
-			SetDlgItemTextW(pWindow, IDCANCEL, (ws = OS::Utf8ToWide(_("Cancel")))); OS::Free(ws);
+			SetWindowTextW(pWindow, Str::UW(_("Track selection")));
+			SetDlgItemTextW(pWindow, IDC_TRACKS_LBL, Str::UW(_("Tracks")));
+			SetDlgItemTextW(pWindow, IDC_DESC_LBL, Str::UW(_("Description")));
+			SetDlgItemTextW(pWindow, IDC_LAPS_LBL, Str::UW(_("Laps")));
+			SetDlgItemTextW(pWindow, IDC_WEAPONS_CHK, Str::UW(_("Weapons")));
+			SetDlgItemTextW(pWindow, IDOK, Str::UW(_("OK")));
+			SetDlgItemTextW(pWindow, IDCANCEL, Str::UW(_("Cancel")));
 
 			// Init track file list
 			for (sorted_t::iterator iter = gsSortedTrackList.begin();
@@ -209,7 +208,7 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 			else {
 				gsSelectedEntry = -1;
 				SendDlgItemMessage(pWindow, IDOK, WM_ENABLE, FALSE, 0);
-				SetDlgItemTextW(pWindow, IDC_DESCRIPTION, (ws = OS::Utf8ToWide(_(" no selection")))); OS::Free(ws);
+				SetDlgItemTextW(pWindow, IDC_DESCRIPTION, Str::UW(_(" no selection")));
 				SendDlgItemMessage(pWindow, IDC_LIST, LB_SETCURSEL, -1, 0);
 			}
 
@@ -228,7 +227,7 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 							gsSelectedEntry = SendDlgItemMessage(pWindow, IDC_LIST, LB_GETCURSEL, 0, 0);
 							if (gsSortedTrackList.empty() || (gsSelectedEntry == -1)) {
 								SendDlgItemMessage(pWindow, IDOK, WM_ENABLE, FALSE, 0);
-								SetDlgItemTextW(pWindow, IDC_DESCRIPTION, (ws = OS::Utf8ToWide(_(" no selection"))));  OS::Free(ws);
+								SetDlgItemTextW(pWindow, IDC_DESCRIPTION, Str::UW(_(" no selection")));
 							}
 							else {
 								SendDlgItemMessage(pWindow, IDOK, WM_ENABLE, TRUE, 0);
@@ -248,9 +247,8 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 
 						if(gsNbLaps < 1) {
 							MessageBoxW(pWindow,
-								(ws = OS::Utf8ToWide(_("Number of laps should be between 1 and 99"))),
+								Str::UW(_("Number of laps should be between 1 and 99")),
 								PACKAGE_NAME_L, MB_ICONINFORMATION | MB_OK | MB_APPLMODAL);
-							OS::Free(ws);
 						}
 						else
 							EndDialog(pWindow, IDOK);

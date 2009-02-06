@@ -24,8 +24,6 @@ class MR_DllDeclare OS {
 		static void SetEnv(const char *key, const char *val);
 		static void SetLocale();
 
-		static wchar_t *Utf8ToWide(const char *s);
-
 		static void Free(void *buf);
 
 };
