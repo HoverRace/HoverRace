@@ -16,6 +16,8 @@ libutil_la_SOURCES = \
 	MR_Types.h \
 	OS.cpp \
 	OS.h \
+	Str.cpp \
+	Str.h \
 	WorldCoordinates.cpp \
 	WorldCoordinates.h
 
