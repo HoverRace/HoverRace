@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-03 22:32-0500\n"
-"PO-Revision-Date: 2009-02-07 14:54-0500\n"
+"POT-Creation-Date: 2009-02-07 16:35-0500\n"
+"PO-Revision-Date: 2009-02-07 17:07-0500\n"
 "Last-Translator: Ryan Curtin <ryan@igglybob.com>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -16,11 +16,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-Language: German\n"
 
-#: client/Game2/GameApp.cpp:705
+#: client/Game2/GameApp.cpp:708
 msgid "Abort current game?"
 msgstr "Schließ das derzeitige Spiel ab?"
 
-#: client/Game2/GameApp.cpp:729
+#: client/Game2/GameApp.cpp:734
 msgid ""
 "To be able to display HoverRace Help\n"
 "you must have a Word document viewer installed\n"
@@ -30,87 +30,164 @@ msgstr ""
 "müssen Sie einen MS-Word-Dokumentbeschauer\n"
 "an deinem Computer installiert."
 
-#: client/Game2/GameApp.cpp:939
+#: client/Game2/GameApp.cpp:930
 msgctxt "Version"
 msgid "testing"
 msgstr "prüfung"
 
-#: client/Game2/GameApp.cpp:2686
+#: client/Game2/GameApp.cpp:2674
 msgid "About HoverRace"
 msgstr "Über HoverRace"
 
-#: client/Game2/GameApp.cpp:2688
+#: client/Game2/GameApp.cpp:2675
 msgid "HoverRace version "
-msgstr "HoverRace Version"
+msgstr "HoverRace Version "
 
-#: client/Game2/GameApp.cpp:2694
+#: client/Game2/GameApp.cpp:2680
 #, fuzzy
 msgid "HoverRace is brought to you by:"
 msgstr "HoverRace gebracht wird, die Sie von:"
 
-#: client/Game2/GameApp.cpp:2696
+#: client/Game2/GameApp.cpp:2682
 msgid "original author"
 msgstr "der Urheber"
 
-#: client/Game2/GameApp.cpp:2699
+#: client/Game2/GameApp.cpp:2685
 msgid "with contributions from (in alphabetical order)"
 msgstr "unter Mitwirkung von (in alphabetischer Reihenfolge)"
 
-#: client/Game2/GameApp.cpp:2705
+#: client/Game2/GameApp.cpp:2691
 msgid "and with the help of the many testers willing to put up with bugs and other strange happenings."
 msgstr "und mit der Hilfe vieler Prüfern, die Fehler und Merkwürdigen tolerieren."
 
-#: client/Game2/GameApp.cpp:2707
+#: client/Game2/GameApp.cpp:2693
 msgid "visit us at"
 msgstr "besuchen Sie uns auf"
 
-#: client/Game2/GameApp.cpp:2711
+#: client/Game2/GameApp.cpp:2697
 msgid "Thanks also to the following projects"
 msgstr "Dank gebührt auch die folgenden Projekten"
 
-#: client/Game2/GameApp.cpp:2726
+#: client/Game2/GameApp.cpp:2711
 msgid "Close"
 msgstr "Schließen"
 
-#: client/Game2/TrackSelect.cpp:116
-#: client/Game2/TrackSelect.cpp:126
+#: client/Game2/NetInterface.cpp:463
+#: client/Game2/NetInterface.cpp:484
+#: client/Game2/NetInterface.cpp:496
+#: client/Game2/NetInterface.cpp:554
+#: client/Game2/NetInterface.cpp:574
+#: client/Game2/NetInterface.cpp:629
+#: client/Game2/NetInterface.cpp:709
+#: client/Game2/NetInterface.cpp:719
+#: client/Game2/NetInterface.cpp:890
+#: client/Game2/NetInterface.cpp:1652
+msgid "TCP Server"
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:463
+#: client/Game2/NetInterface.cpp:554
+#: client/Game2/NetInterface.cpp:890
+msgid "Unable to create socket"
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:483
+#: client/Game2/NetInterface.cpp:719
+msgid "Unable to use the port, try to close some WINSOCK applications"
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:495
+#: client/Game2/NetInterface.cpp:573
+#: client/Game2/NetInterface.cpp:628
+msgid "Unable to use UDP recv port; choose a different port or close some Winsock applications."
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:709
+msgid "Port value must be greater than 0"
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:911
+msgid "ERROR Unable to connect to server..."
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:1652
+msgid "Game cancelled by server"
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:1692
+msgid "Connection refused by peer "
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:1694
+msgid "; perhaps they are behind a firewall and need to forward ports 9530 and 9531 TCP and UDP?"
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:1696
+#: client/Game2/NetInterface.cpp:1735
+#: client/Game2/NetInterface.cpp:1761
+#: client/Game2/NetInterface.cpp:1771
+msgid "TCP Client"
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:1731
+msgid "Main server and peer "
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:1733
+msgid " are using the same IP and port!"
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:1756
+msgid "Cannot connect to peer "
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:1758
+msgid " at IP "
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:1768
+msgid "Connection error with "
+msgstr ""
+
+#: client/Game2/TrackSelect.cpp:119
+#: client/Game2/TrackSelect.cpp:129
 msgid "Bad track file format"
 msgstr "Falsches Strecke Dateiformat"
 
-#: client/Game2/TrackSelect.cpp:179
+#: client/Game2/TrackSelect.cpp:182
 msgid "Track selection"
 msgstr "Strecke Auswahl"
 
-#: client/Game2/TrackSelect.cpp:180
+#: client/Game2/TrackSelect.cpp:183
 msgid "Tracks"
 msgstr "Strecken"
 
-#: client/Game2/TrackSelect.cpp:181
+#: client/Game2/TrackSelect.cpp:184
 msgid "Description"
 msgstr "Beschreibung"
 
-#: client/Game2/TrackSelect.cpp:182
+#: client/Game2/TrackSelect.cpp:185
 msgid "Laps"
 msgstr "Runden"
 
-#: client/Game2/TrackSelect.cpp:183
+#: client/Game2/TrackSelect.cpp:186
 msgid "Weapons"
 msgstr "Waffen"
 
-#: client/Game2/TrackSelect.cpp:184
+#: client/Game2/TrackSelect.cpp:187
 msgid "OK"
 msgstr "OK"
 
-#: client/Game2/TrackSelect.cpp:185
+#: client/Game2/TrackSelect.cpp:188
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: client/Game2/TrackSelect.cpp:208
-#: client/Game2/TrackSelect.cpp:227
+#: client/Game2/TrackSelect.cpp:211
+#: client/Game2/TrackSelect.cpp:230
 msgid " no selection"
 msgstr " nichts ist ausgewählt"
 
-#: client/Game2/TrackSelect.cpp:247
+#: client/Game2/TrackSelect.cpp:250
 msgid "Number of laps should be between 1 and 99"
 msgstr "Die Anzahl von Runden soll zwischen 1 und 99"
 
