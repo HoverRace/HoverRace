@@ -455,7 +455,7 @@ BOOL MR_NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName, BOO
 	mRegistrySocket = socket(PF_INET, SOCK_STREAM, 0);
 
 	if(mRegistrySocket == INVALID_SOCKET) {
-		MessageBox(pWindow, MR_LoadString(IDS_CANT_CREATE_SOCK), MR_LoadString(IDS_TCP_SERVER), MB_ICONERROR | MB_OK | MB_APPLMODAL);
+		MessageBoxW(pWindow, Str::UW(_("Unable to create socket")), Str::UW(_("TCP Server")), MB_ICONERROR | MB_OK | MB_APPLMODAL);
 	}
 	else {
 		// Ask server port number
@@ -475,7 +475,8 @@ BOOL MR_NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName, BOO
 
 			if(bind(mRegistrySocket, (LPSOCKADDR) &lAddr, sizeof(lAddr)) != 0) {
 				lReturnValue = FALSE;
-				MessageBox(pWindow, MR_LoadString(IDS_CANT_USE_PORT), MR_LoadString(IDS_TCP_SERVER), MB_ICONERROR | MB_OK | MB_APPLMODAL);
+				MessageBoxW(pWindow, Str::UW(_("Unable to use the port, try to close some WINSOCK applications")),
+                 Str::UW(_("TCP Server")), MB_ICONERROR | MB_OK | MB_APPLMODAL);
 			}
 			else {
 				lReturnValue = TRUE;
@@ -486,7 +487,8 @@ BOOL MR_NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName, BOO
 		lReturnValue = CreateUDPRecvSocket(htons(mUDPRecvPort));
 
 		if(!lReturnValue) {
-			MessageBox(pWindow, MR_LoadString(IDS_CANT_USE_UDP_PORT), MR_LoadString(IDS_TCP_SERVER), MB_ICONERROR | MB_OK | MB_APPLMODAL);
+			MessageBoxW(pWindow, Str::UW(_("Unable to use UDP recv port; choose a different port or close some Winsock applications.")),
+              Str::UW(_("TCP Server")), MB_ICONERROR | MB_OK | MB_APPLMODAL);
 		}
 
 		if(lReturnValue) {
@@ -544,7 +546,7 @@ BOOL MR_NetworkInterface::SlavePreConnect(HWND pWindow, CString &pGameName)
 	mRegistrySocket = socket(PF_INET, SOCK_STREAM, 0);
 
 	if(mRegistrySocket == INVALID_SOCKET) {
-		MessageBox(pWindow, MR_LoadString(IDS_CANT_CREATE_SOCK), MR_LoadString(IDS_TCP_SERVER), MB_ICONERROR | MB_OK | MB_APPLMODAL);
+		MessageBoxW(pWindow, Str::UW(_("Unable to create socket")), Str::UW(_("TCP Server")), MB_ICONERROR | MB_OK | MB_APPLMODAL);
 	}
 	else {
 		// set up UDP receive socket
@@ -563,7 +565,8 @@ BOOL MR_NetworkInterface::SlavePreConnect(HWND pWindow, CString &pGameName)
 			}
 		}
 		else {
-			MessageBox(pWindow, MR_LoadString(IDS_CANT_USE_UDP_PORT), MR_LoadString(IDS_TCP_SERVER), MB_ICONERROR | MB_OK | MB_APPLMODAL);
+			MessageBoxW(pWindow, Str::UW(_("Unable to use UDP recv port; choose a different port or close some Winsock applications.")),
+              Str::UW(_("TCP Server")), MB_ICONERROR | MB_OK | MB_APPLMODAL);
 		}
 	}
 
@@ -617,7 +620,8 @@ BOOL MR_NetworkInterface::SlaveConnect(HWND pWindow, const char *pServerIP, unsi
 			lReturnValue = CreateUDPRecvSocket(htons(mUDPRecvPort));
 
 			if(!lReturnValue) {
-				MessageBox(pWindow, MR_LoadString(IDS_CANT_USE_UDP_PORT), MR_LoadString(IDS_TCP_SERVER), MB_ICONERROR | MB_OK | MB_APPLMODAL);
+				MessageBoxW(pWindow, Str::UW(_("Unable to use UDP recv port; choose a different port or close some Winsock applications.")),
+                 Str::UW(_("TCP Server")), MB_ICONERROR | MB_OK | MB_APPLMODAL);
 			}
 
 			// figure out the game information
@@ -697,7 +701,7 @@ BOOL CALLBACK MR_NetworkInterface::ServerPortCallBack(HWND pWindow, UINT pMsgId,
 					mActiveInterface->mServerPort = MR_Config::GetInstance()->net.tcpServPort;
 
 					if(mActiveInterface->mServerPort <= 0) { // luser check
-						MessageBox(pWindow, MR_LoadString(IDS_PORT_RANGE), MR_LoadString(IDS_TCP_SERVER), MB_ICONERROR | MB_OK | MB_APPLMODAL);
+						MessageBoxW(pWindow, Str::UW(_("Port value must be greater than 0")), Str::UW(_("TCP Server")), MB_ICONERROR | MB_OK | MB_APPLMODAL);
 					}
 					else {
 						SOCKADDR_IN lAddr;
@@ -707,7 +711,7 @@ BOOL CALLBACK MR_NetworkInterface::ServerPortCallBack(HWND pWindow, UINT pMsgId,
 						lAddr.sin_port = htons(mActiveInterface->mServerPort);
 
 						if(bind(mActiveInterface->mRegistrySocket, (LPSOCKADDR) &lAddr, sizeof(lAddr)) != 0) {
-							MessageBox(pWindow, MR_LoadString(IDS_CANT_USE_PORT), MR_LoadString(IDS_TCP_SERVER), MB_ICONERROR | MB_OK | MB_APPLMODAL);
+							MessageBoxW(pWindow, Str::UW(_("Unable to use the port, try to close some WINSOCK applications")), Str::UW(_("TCP Server")), MB_ICONERROR | MB_OK | MB_APPLMODAL);
 						}
 						else {
 							EndDialog(pWindow, IDOK);
@@ -878,7 +882,7 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 					lAddr.sin_port = htons(mActiveInterface->mTCPRecvPort);
 	
 					if(bind(mActiveInterface->mRegistrySocket, (LPSOCKADDR) &lAddr, sizeof(lAddr)) != 0) {
-						MessageBox(pWindow, MR_LoadString(IDS_CANT_CREATE_SOCK), MR_LoadString(IDS_TCP_CLIENT), MB_ICONERROR | MB_OK | MB_APPLMODAL);
+						MessageBoxW(pWindow, Str::UW(_("Unable to create socket")), Str::UW(_("TCP Server")), MB_ICONERROR | MB_OK | MB_APPLMODAL);
 					}
 
 					unsigned int lOpt = 1;
@@ -899,7 +903,7 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 					mActiveInterface->mClient[0].Send(&lOutputBuffer, MR_NET_REQUIRED);
 				}
 				else {
-					SetDlgItemText(pWindow, IDC_TEXT, MR_LoadString(IDS_CANT_CONNECT));
+					SetDlgItemTextW(pWindow, IDC_TEXT, Str::UW(_("ERROR Unable to connect to server...")));
 				}
 			}
 			lReturnValue = TRUE;
@@ -1640,7 +1644,7 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 
 						case MRNM_CANCEL_GAME: // game has been cancelled
 							// notify the user that the game ended
-							MessageBox(pWindow, MR_LoadString(IDS_GAME_CANCELLED), MR_LoadString(IDS_TCP_SERVER), MB_ICONERROR | MB_OK | MB_APPLMODAL);
+							MessageBoxW(pWindow, Str::UW(_("Game cancelled by server")), Str::UW(_("TCP Server")), MB_ICONERROR | MB_OK | MB_APPLMODAL);
 
 							mActiveInterface->Disconnect();
 							lReturnValue = TRUE;
@@ -1679,15 +1683,12 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 							TRACE("connection refused\n");
 							// assemble our message
 							{
-								char *lErrorString = new char[120]; // max player length is 40
-								sprintf(lErrorString, "%s%s%s", 
-									MR_LoadString(IDS_CONN_REFUSED1),
-									mActiveInterface->mClientName[lClient],
-									MR_LoadString(IDS_CONN_REFUSED2));
-
-                                MessageBox(pWindow, lErrorString, MR_LoadString(IDS_TCP_CLIENT), MB_ICONERROR | MB_OK | MB_APPLMODAL);
-
-								delete lErrorString;
+                        std::string lErrorString = boost::str(boost::format("%s%s%s") %
+                              _("Connection refused by peer ") %
+                              mActiveInterface->mClientName[lClient] %
+                              _("; perhaps they are behind a firewall and need to forward ports 9530 and 9531 TCP and UDP?"));
+                                
+                        MessageBoxW(pWindow, Str::UW(lErrorString.c_str()), Str::UW(_("TCP Client")), MB_ICONERROR | MB_OK | MB_APPLMODAL);
 							}
 							break;
 						case WSAENETUNREACH:
@@ -1721,15 +1722,12 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 										lAddr.sin_port = *(int *) &(mActiveInterface->mClientPort[lClient]);
 									} else {
 										/* assemble error message */
-										char *lErrorMessage = new char[120]; // max length of character name is 40
-										sprintf(lErrorMessage, "%s%s%s",
-											MR_LoadString(IDS_SAMEADDRPORT1),
-											mActiveInterface->mClientName[lClient],
-											MR_LoadString(IDS_SAMEADDRPORT2));
+                              std::string lErrorMessage = boost::str(boost::format("%s%s%s") %
+                                    _("Main server and peer ") %
+                                    mActiveInterface->mClientName[lClient] %
+                                    _(" are using the same IP and port!"));
 
-										MessageBox(pWindow, lErrorMessage, MR_LoadString(IDS_TCP_CLIENT), MB_ICONERROR | MB_OK | MB_APPLMODAL);
-
-										delete lErrorMessage;
+										MessageBoxW(pWindow, Str::UW(lErrorMessage.c_str()), Str::UW(_("TCP Client")), MB_ICONERROR | MB_OK | MB_APPLMODAL);
 									}
 								} else {
 									lAddr.sin_addr.s_addr = *(int *) &(mActiveInterface->mClientBkAddr[lClient]);
@@ -1746,26 +1744,23 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 								// connect to the new client
 								int lCode = connect(lNewSocket, (struct sockaddr *) &lAddr, sizeof(lAddr));
 							} else {
-								char *lErrorString = new char[120]; // max player length is 40
-								sprintf(lErrorString, "%s%s%s",
-									MR_LoadString(IDS_CONN_TIMEOUT1),
-									mActiveInterface->mClientName[lClient],
-									MR_LoadString(IDS_CONN_TIMEOUT2));
+                        std::string lErrorString = boost::str(boost::format("%s%s%s%s") %
+                              _("Cannot connect to peer ") %
+                              mActiveInterface->mClientName[lClient] %
+                              _(" at IP ") %
+                              inet_ntoa(lAddr.sin_addr));
 
-								MessageBox(pWindow, lErrorString, MR_LoadString(IDS_TCP_CLIENT), MB_ICONERROR | MB_OK | MB_APPLMODAL);
-
-								delete lErrorString;
+								MessageBoxW(pWindow, Str::UW(lErrorString.c_str()), Str::UW(_("TCP Client")), MB_ICONERROR | MB_OK | MB_APPLMODAL);
 							}
 							break;
 						default:
 							TRACE("Unknown error");
 							{
-								char *lError = new char[120];
-								sprintf(lError, "%s%s.",
-									MR_LoadString(IDS_CONN_ERROR),
-									mActiveInterface->mClientName[lClient]);
-                                MessageBox(pWindow, lError, MR_LoadString(IDS_TCP_CLIENT), MB_ICONERROR | MB_OK | MB_APPLMODAL);
-								delete lError;
+                        std::string lError = boost::str(boost::format("%s%s.") %
+                              _("Connection error with ") %
+                              mActiveInterface->mClientName[lClient]);
+                                
+                        MessageBoxW(pWindow, Str::UW(lError.c_str()), Str::UW(_("TCP Client")), MB_ICONERROR | MB_OK | MB_APPLMODAL);
 							}
 							break;
 					}
