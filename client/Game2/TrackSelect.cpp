@@ -116,7 +116,7 @@ MR_RecordFile *MR_TrackOpen(HWND pWindow, const char *pFileName)
 		if(!lReturnValue->OpenForRead(filename.c_str(), TRUE)) {
 			delete lReturnValue;
 			lReturnValue = NULL;
-			MessageBox(pWindow, _("Bad track file format"), PACKAGE_NAME, MB_ICONERROR | MB_OK | MB_APPLMODAL);
+			MessageBoxW(pWindow, Str::UW(_("Bad track file format")), Str::UW(PACKAGE_NAME), MB_ICONERROR | MB_OK | MB_APPLMODAL);
 			ASSERT(FALSE);
 		}
 		else {
@@ -126,7 +126,7 @@ MR_RecordFile *MR_TrackOpen(HWND pWindow, const char *pFileName)
 				delete lReturnValue;
 				lReturnValue = NULL;
 
-				MessageBox(pWindow, _("Bad track file format"), PACKAGE_NAME, MB_ICONERROR | MB_OK | MB_APPLMODAL);
+				MessageBoxW(pWindow, Str::UW(_("Bad track file format")), Str::UW(PACKAGE_NAME), MB_ICONERROR | MB_OK | MB_APPLMODAL);
 			}
 		}
 

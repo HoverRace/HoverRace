@@ -26,6 +26,8 @@
 #include "NetInterface.h"
 #include "resource.h"
 #include "../../engine/Util/StrRes.h"
+#include "../../engine/Util/OS.h"
+#include "../../engine/Util/Str.h"
 
 // Private window messages
 #define MRM_SERVER_CONNECT (WM_USER + 1)
@@ -56,6 +58,8 @@
 static CString GetLocalAddrStr();
 static MR_UInt32 GetAddrFromStr(const char *pName);
 static BOOL CALLBACK DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+using namespace HoverRace::Util;
 
 MR_NetworkInterface *MR_NetworkInterface::mActiveInterface = NULL;
 
@@ -221,7 +225,8 @@ int MR_NetworkInterface::GetClientCount() const
 	for(int lCounter = 0; lCounter < eMaxClient; lCounter++) {
 		if(mClient[lCounter].IsConnected())
 			lReturnValue++;
-	} return lReturnValue;
+	}
+	return lReturnValue;
 }
 
 /**
@@ -1683,12 +1688,12 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 							TRACE("connection refused\n");
 							// assemble our message
 							{
-                        std::string lErrorString = boost::str(boost::format("%s%s%s") %
-                              _("Connection refused by peer ") %
-                              mActiveInterface->mClientName[lClient] %
-                              _("; perhaps they are behind a firewall and need to forward ports 9530 and 9531 TCP and UDP?"));
+					            std::string lErrorString = boost::str(boost::format("%s%s%s") %
+									_("Connection refused by peer ") %
+									mActiveInterface->mClientName[lClient] %
+									_("; perhaps they are behind a firewall and need to forward ports 9530 and 9531 TCP and UDP?"));
                                 
-                        MessageBoxW(pWindow, Str::UW(lErrorString.c_str()), Str::UW(_("TCP Client")), MB_ICONERROR | MB_OK | MB_APPLMODAL);
+								MessageBoxW(pWindow, Str::UW(lErrorString.c_str()), Str::UW(_("TCP Client")), MB_ICONERROR | MB_OK | MB_APPLMODAL);
 							}
 							break;
 						case WSAENETUNREACH:
@@ -1722,10 +1727,10 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 										lAddr.sin_port = *(int *) &(mActiveInterface->mClientPort[lClient]);
 									} else {
 										/* assemble error message */
-                              std::string lErrorMessage = boost::str(boost::format("%s%s%s") %
-                                    _("Main server and peer ") %
-                                    mActiveInterface->mClientName[lClient] %
-                                    _(" are using the same IP and port!"));
+										std::string lErrorMessage = boost::str(boost::format("%s%s%s") %
+											_("Main server and peer ") %
+											mActiveInterface->mClientName[lClient] %
+											_(" are using the same IP and port!"));
 
 										MessageBoxW(pWindow, Str::UW(lErrorMessage.c_str()), Str::UW(_("TCP Client")), MB_ICONERROR | MB_OK | MB_APPLMODAL);
 									}
@@ -1744,11 +1749,14 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 								// connect to the new client
 								int lCode = connect(lNewSocket, (struct sockaddr *) &lAddr, sizeof(lAddr));
 							} else {
-                        std::string lErrorString = boost::str(boost::format("%s%s%s%s") %
-                              _("Cannot connect to peer ") %
-                              mActiveInterface->mClientName[lClient] %
-                              _(" at IP ") %
-                              inet_ntoa(lAddr.sin_addr));
+								SOCKADDR_IN lAddr;
+								lAddr.sin_addr.s_addr = *(int *) &(mActiveInterface->mClientAddr[lClient]);
+
+								std::string lErrorString = boost::str(boost::format("%s%s%s%s") %
+									_("Cannot connect to peer ") %
+									mActiveInterface->mClientName[lClient] %
+									_(" at IP ") %
+									inet_ntoa(lAddr.sin_addr));
 
 								MessageBoxW(pWindow, Str::UW(lErrorString.c_str()), Str::UW(_("TCP Client")), MB_ICONERROR | MB_OK | MB_APPLMODAL);
 							}
@@ -1756,11 +1764,11 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 						default:
 							TRACE("Unknown error");
 							{
-                        std::string lError = boost::str(boost::format("%s%s.") %
-                              _("Connection error with ") %
-                              mActiveInterface->mClientName[lClient]);
+								std::string lError = boost::str(boost::format("%s%s.") %
+									_("Connection error with ") %
+									mActiveInterface->mClientName[lClient]);
                                 
-                        MessageBoxW(pWindow, Str::UW(lError.c_str()), Str::UW(_("TCP Client")), MB_ICONERROR | MB_OK | MB_APPLMODAL);
+								MessageBoxW(pWindow, Str::UW(lError.c_str()), Str::UW(_("TCP Client")), MB_ICONERROR | MB_OK | MB_APPLMODAL);
 							}
 							break;
 					}
