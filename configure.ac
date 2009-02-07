@@ -63,6 +63,7 @@ AC_CONFIG_FILES([
 	engine/Util/Makefile
 	engine/Util/yaml/Makefile
 	engine/VideoServices/Makefile
+	share/Makefile
 	po/Makefile.in
 ])
 AC_OUTPUT
