@@ -184,5 +184,5 @@ void OS::SetLocale()
  */
 void OS::Free(void *buf)
 {
-	if (buf != NULL) free(buf);
+	free(buf);
 }
