@@ -749,21 +749,7 @@ void MR_GameApp::DisplaySite()
 void MR_GameApp::DisplayAbout()
 {
 	SetVideoMode(0, 0);
-	int retv;
-	if ((retv = DialogBoxW(mInstance, MAKEINTRESOURCEW(IDD_ABOUT), mMainWindow, AboutDlgFunc)) <= 0) {
-		DWORD err = GetLastError();
-		LPVOID errMsg;
-		FormatMessage(
-			FORMAT_MESSAGE_ALLOCATE_BUFFER |
-			FORMAT_MESSAGE_FROM_SYSTEM,
-			NULL,
-			err,
-			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-			(LPTSTR)&errMsg,
-			0, NULL );
-		MessageBox(mMainWindow, (const char*)errMsg, "AIEEE", MB_ICONERROR | MB_APPLMODAL | MB_OK);
-		LocalFree(errMsg);
-	}
+	DialogBoxW(mInstance, MAKEINTRESOURCEW(IDD_ABOUT), mMainWindow, AboutDlgFunc);
 	AssignPalette();
 }
 
