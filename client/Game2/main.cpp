@@ -44,6 +44,7 @@ using boost::str;
 
 using HoverRace::Util::OS;
 
+static bool debugMode = false;
 static bool safeMode = false;
 static bool allowMultipleInstances = false;
 static bool showVersion = false;
@@ -72,7 +73,10 @@ static bool ProcessCmdLine(int argc, char **argv)
 	for (int i = 1; i < argc; ) {
 		const char *arg = argv[i++];
 
-		if (strcmp("-L", arg) == 0) {
+		if (strcmp("-D", arg) == 0) {
+			debugMode = true;
+		}
+		else if (strcmp("-L", arg) == 0) {
 			if (i < argc) {
 				arg = argv[i++];
 				// Set the language by updating the environment.
@@ -186,7 +190,7 @@ int main(int argc, char** argv)
 	// Gettext initialization.
 	OS::SetLocale();
 	bind_textdomain_codeset(PACKAGE, "UTF-8");
-	bindtextdomain(PACKAGE, LOCALEDIR);
+	bindtextdomain(PACKAGE, debugMode ? "share/locale" : LOCALEDIR);
 	textdomain(PACKAGE);
 #endif
 
