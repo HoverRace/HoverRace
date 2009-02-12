@@ -12,7 +12,7 @@ for lingua in "$@"; do
 		mkdir "locale/$lingua"
 		mkdir "locale/$lingua/LC_MESSAGES"
 		ln -s \
-			"$gmofile" \
+			"../../../$gmofile" \
 			"locale/$lingua/LC_MESSAGES/hoverrace.mo"
 	fi
 done
