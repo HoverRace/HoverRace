@@ -516,6 +516,12 @@
 				RelativePath=".\VideoServices\Sprite.h">
 			</File>
 			<File
+				RelativePath=".\VideoServices\StaticText.cpp">
+			</File>
+			<File
+				RelativePath=".\VideoServices\StaticText.h">
+			</File>
+			<File
 				RelativePath=".\VideoServices\VideoBuffer.cpp">
 			</File>
 			<File
