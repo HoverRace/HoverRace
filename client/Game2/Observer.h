@@ -28,6 +28,8 @@
 #include "../../engine/MainCharacter/MainCharacter.h"
 #include "../../engine/ObjFacTools/SpriteHandle.h"
 
+namespace HoverRace { namespace VideoServices { class StaticText; } }
+
 class MR_Observer
 {
 
@@ -68,6 +70,9 @@ class MR_Observer
 		MR_SpriteHandle *mMineDisp;
 		MR_SpriteHandle *mPowerUpDisp;
 		MR_SpriteHandle *mHoverIcons;
+
+		HoverRace::VideoServices::StaticText *selectCraftTxt;
+		HoverRace::VideoServices::StaticText *craftTxt;
 
 		MR_Observer();
 		~MR_Observer();

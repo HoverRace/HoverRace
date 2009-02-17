@@ -345,11 +345,6 @@
 #define IDS_SAMEADDRPORT1               40232
 #define IDS_SAMEADDRPORT2               40233
 #define IDS_CONN_ERROR                  40234
-#define IDS_SELECT_CRAFT                40235
-#define IDS_BASIC_CRAFT_DESC            40236
-#define IDS_BI_TURBO_CRAFT_DESC         40237
-#define IDS_CX_CRAFT_DESC               40238
-#define IDS_EON_CRAFT_DESC              40239
 #define IDS_INVALID_RESOLUTION          40240
 #define IDS_TEST_RESOLUTION             40241
 #define IDS_SET_RESOLUTION              40242

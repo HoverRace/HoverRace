@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-07 16:35-0500\n"
+"POT-Creation-Date: 2009-02-16 21:55-0500\n"
 "PO-Revision-Date: 2009-02-07 17:07-0500\n"
 "Last-Translator: Ryan Curtin <ryan@igglybob.com>\n"
 "Language-Team: German\n"
@@ -57,8 +57,11 @@ msgid "with contributions from (in alphabetical order)"
 msgstr "unter Mitwirkung von (in alphabetischer Reihenfolge)"
 
 #: client/Game2/GameApp.cpp:2691
-msgid "and with the help of the many testers willing to put up with bugs and other strange happenings."
-msgstr "und mit der Hilfe vieler Prüfern, die Fehler und Merkwürdigen tolerieren."
+msgid ""
+"and with the help of the many testers willing to put up with bugs and other "
+"strange happenings."
+msgstr ""
+"und mit der Hilfe vieler Prüfern, die Fehler und Merkwürdigen tolerieren."
 
 #: client/Game2/GameApp.cpp:2693
 msgid "visit us at"
@@ -72,34 +75,28 @@ msgstr "Dank gebührt auch die folgenden Projekten"
 msgid "Close"
 msgstr "Schließen"
 
-#: client/Game2/NetInterface.cpp:463
-#: client/Game2/NetInterface.cpp:484
-#: client/Game2/NetInterface.cpp:496
-#: client/Game2/NetInterface.cpp:554
-#: client/Game2/NetInterface.cpp:574
-#: client/Game2/NetInterface.cpp:629
-#: client/Game2/NetInterface.cpp:709
-#: client/Game2/NetInterface.cpp:719
-#: client/Game2/NetInterface.cpp:890
-#: client/Game2/NetInterface.cpp:1652
+#: client/Game2/NetInterface.cpp:463 client/Game2/NetInterface.cpp:484
+#: client/Game2/NetInterface.cpp:496 client/Game2/NetInterface.cpp:554
+#: client/Game2/NetInterface.cpp:574 client/Game2/NetInterface.cpp:629
+#: client/Game2/NetInterface.cpp:709 client/Game2/NetInterface.cpp:719
+#: client/Game2/NetInterface.cpp:890 client/Game2/NetInterface.cpp:1652
 msgid "TCP Server"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:463
-#: client/Game2/NetInterface.cpp:554
+#: client/Game2/NetInterface.cpp:463 client/Game2/NetInterface.cpp:554
 #: client/Game2/NetInterface.cpp:890
 msgid "Unable to create socket"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:483
-#: client/Game2/NetInterface.cpp:719
+#: client/Game2/NetInterface.cpp:483 client/Game2/NetInterface.cpp:719
 msgid "Unable to use the port, try to close some WINSOCK applications"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:495
-#: client/Game2/NetInterface.cpp:573
+#: client/Game2/NetInterface.cpp:495 client/Game2/NetInterface.cpp:573
 #: client/Game2/NetInterface.cpp:628
-msgid "Unable to use UDP recv port; choose a different port or close some Winsock applications."
+msgid ""
+"Unable to use UDP recv port; choose a different port or close some Winsock "
+"applications."
 msgstr ""
 
 #: client/Game2/NetInterface.cpp:709
@@ -119,13 +116,13 @@ msgid "Connection refused by peer "
 msgstr ""
 
 #: client/Game2/NetInterface.cpp:1694
-msgid "; perhaps they are behind a firewall and need to forward ports 9530 and 9531 TCP and UDP?"
+msgid ""
+"; perhaps they are behind a firewall and need to forward ports 9530 and 9531 "
+"TCP and UDP?"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:1696
-#: client/Game2/NetInterface.cpp:1735
-#: client/Game2/NetInterface.cpp:1761
-#: client/Game2/NetInterface.cpp:1771
+#: client/Game2/NetInterface.cpp:1696 client/Game2/NetInterface.cpp:1735
+#: client/Game2/NetInterface.cpp:1761 client/Game2/NetInterface.cpp:1771
 msgid "TCP Client"
 msgstr ""
 
@@ -149,8 +146,31 @@ msgstr ""
 msgid "Connection error with "
 msgstr ""
 
-#: client/Game2/TrackSelect.cpp:119
-#: client/Game2/TrackSelect.cpp:129
+#: client/Game2/Observer.cpp:58
+msgid "Basic craft"
+msgstr ""
+
+#: client/Game2/Observer.cpp:59
+msgid "CX craft"
+msgstr ""
+
+#: client/Game2/Observer.cpp:60
+msgid "Bi-Turbo craft"
+msgstr ""
+
+#: client/Game2/Observer.cpp:61
+msgid "Eon craft"
+msgstr ""
+
+#: client/Game2/Observer.cpp:63
+msgid "Unknown craft"
+msgstr ""
+
+#: client/Game2/Observer.cpp:101
+msgid "Select your craft with the arrow keys"
+msgstr ""
+
+#: client/Game2/TrackSelect.cpp:119 client/Game2/TrackSelect.cpp:129
 msgid "Bad track file format"
 msgstr "Falsches Strecke Dateiformat"
 
@@ -182,8 +202,7 @@ msgstr "OK"
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: client/Game2/TrackSelect.cpp:211
-#: client/Game2/TrackSelect.cpp:230
+#: client/Game2/TrackSelect.cpp:211 client/Game2/TrackSelect.cpp:230
 msgid " no selection"
 msgstr " nichts ist ausgewählt"
 
@@ -191,7 +210,7 @@ msgstr " nichts ist ausgewählt"
 msgid "Number of laps should be between 1 and 99"
 msgstr "Die Anzahl von Runden soll zwischen 1 und 99"
 
-#: client/Game2/main.cpp:225
+#: client/Game2/main.cpp:229
 #, fuzzy, c-format, boost-format
 msgid ""
 "HoverRace for Linux is under development!\n"
@@ -201,4 +220,3 @@ msgstr ""
 "HoverRace für Linux ist in der Entwicklung!\n"
 "Bitte besuchen Sie %s zu lernen, wie man\n"
 "diesem Projekt mitwirken kann."
-

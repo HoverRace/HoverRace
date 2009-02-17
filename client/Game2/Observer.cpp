@@ -26,8 +26,11 @@
 #include "../../engine/Util/Profiler.h"
 #include "resource.h"
 #include "../../engine/Util/StrRes.h"
+#include "../../engine/VideoServices/StaticText.h"
 
 #include <math.h>
+
+using HoverRace::VideoServices::StaticText;
 
 #define NB_PLAYER_PAGE 10
 #define MR_CHAT_EXPIRATION     20
@@ -48,11 +51,17 @@ CString gHeaderStr = MR_LoadString(IDS_HEADER);
 CString gLastLapStr = MR_LoadString(IDS_LAST_LAP);
 CString gCurLapStr = MR_LoadString(IDS_CUR_LAP);
 
-CString gChooseCraft = MR_LoadString(IDS_SELECT_CRAFT);
-CString gBasicStr = MR_LoadString(IDS_BASIC_CRAFT_DESC);
-CString gBiStr = MR_LoadString(IDS_BI_TURBO_CRAFT_DESC);
-CString gCXStr = MR_LoadString(IDS_CX_CRAFT_DESC);
-CString gEonStr = MR_LoadString(IDS_EON_CRAFT_DESC);
+static const char *GetCraftName(int id)
+{
+	static const char *names[4] = {
+		_("Basic craft"),
+		_("CX craft"),
+		_("Bi-Turbo craft"),
+		_("Eon craft"),
+		};
+	static const char *unknown = _("Unknown craft");
+	return (id >= 0 && id < 4) ? names[id] : unknown;
+}
 
 MR_Observer::MR_Observer()
 {
@@ -85,10 +94,19 @@ MR_Observer::MR_Observer()
 	MR_ObjectFromFactoryId lHoverIconsId = { 1, 1101 };
 	mHoverIcons = (MR_SpriteHandle *) MR_DllObjectFactory::CreateObject(lHoverIconsId);
 
+	std::string selectStr("<==   ");
+	selectStr += _("Select your craft with the arrow keys");
+	selectStr += "   ==>";
+	selectCraftTxt = new StaticText(selectStr, "Arial", 16, true, true, 0x2c);
+
+	craftTxt = new StaticText("", "Arial", 20, true, false, 0x47);
 }
 
 MR_Observer::~MR_Observer()
 {
+	delete craftTxt;
+	delete selectCraftTxt;
+
 	delete mBaseFont;
 	delete mMissileLevel;
 	delete mMineDisp;
@@ -741,23 +759,13 @@ void MR_Observer::Render3DView(const MR_ClientSession * pSession, const MR_MainC
 			pTime = -pTime;
 			sprintf(lMainLineBuffer, gCountdownStr, (pTime % 60000) / 1000, (pTime % 1000) / 10, pViewingCharacter->GetTotalLap());
 			
-			// craft info -- not added below since this is the only time this line is used
-			char lCraftInfoBuffer[80];
-
 			int lFontScaling = 1 + (mBaseFont->GetSprite()->GetItemHeight() * 30) / (lYRes);
 			int lLineHeight = (mBaseFont->GetSprite()->GetItemHeight() / lFontScaling);
 
-			if(pSession->GetMainCharacter()->GetHoverModel() == 0) // basic
-				sprintf(lCraftInfoBuffer, gBasicStr);
-			else if(pSession->GetMainCharacter()->GetHoverModel() == 1) // cx
-				sprintf(lCraftInfoBuffer, gCXStr);
-			else if(pSession->GetMainCharacter()->GetHoverModel() == 2) // bi-turbo
-				sprintf(lCraftInfoBuffer, gBiStr);
-			else if(pSession->GetMainCharacter()->GetHoverModel() == 3) // eon
-				sprintf(lCraftInfoBuffer, gEonStr);
+			selectCraftTxt->Blt(lXRes / 2, lYRes / 16 + lLineHeight, &m3DView, true);
 
-			mBaseFont->GetSprite()->StrBlt(lXRes / 2, lYRes / 16 + lLineHeight, Ascii2Simple(gChooseCraft), &m3DView, MR_Sprite::eCenter, MR_Sprite::eTop, lFontScaling);
-			mBaseFont->GetSprite()->StrBlt(lXRes / 2, lYRes / 16 + 2 * lLineHeight, Ascii2Simple(lCraftInfoBuffer), &m3DView, MR_Sprite::eCenter, MR_Sprite::eTop, lFontScaling);
+			craftTxt->SetText(GetCraftName(pSession->GetMainCharacter()->GetHoverModel()));
+			craftTxt->Blt(lXRes / 2, lYRes / 16 + lLineHeight + selectCraftTxt->GetHeight(), &m3DView, true);
 		}
 		else if(pViewingCharacter->GetTotalLap() <= pViewingCharacter->GetLap()) {
 			MR_SimulationTime lTotalTime = pViewingCharacter->GetTotalTime();
