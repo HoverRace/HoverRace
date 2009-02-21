@@ -72,5 +72,6 @@
 #	define dgettext(d,x) (x)
 #	define dcgettext(d,x,c) (x)
 #	define pgettext(p,x) (x)
+#	define pgettextImpl(f,x) (x)
 
 #endif  // ENABLE_NLS
