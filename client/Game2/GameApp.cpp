@@ -62,6 +62,26 @@ void CaptureScreen( MR_VideoBuffer* pVideoBuffer );
 #endif
 */
 
+// Constants for menu.
+// Some of these are shared by accelerator keys in the resources.
+#define ID_GAME_SPLITSCREEN             40003
+#define ID_GAME_SPLITSCREEN3            40192
+#define ID_GAME_SPLITSCREEN4            40193
+#define ID_GAME_NETWORK_CONNECT         40005
+#define ID_GAME_NETWORK_SERVER          40006
+#define ID_GAME_NETWORK_INTERNET        40008
+#define ID_GAME_NEW                     0xE100
+#define ID_VIEW_3DACTION                32775
+#define ID_VIEW_COCKPIT                 40002
+#define ID_VIEW_PLAYERSLIST             40009
+#define ID_VIEW_MOREMESSAGES            40010
+#define ID_SETTING_REFRESHCOLORS        40013
+#define ID_SETTING_FULLSCREEN           40046
+#define ID_SETTING_WINDOW               32784
+#define ID_SETTING_PROPERTIES           40048
+#define ID_HELP_CONTENTS                32772
+#define ID_HELP_SITE                    40007
+
 #define MR_APP_CLASS_NAME L"HoverRaceClass"
 
 #define MRM_RETURN2WINDOWMODE  1
@@ -856,7 +876,8 @@ BOOL MR_GameApp::InitApplication()
 	lWinClass.hIcon = LoadIcon(mInstance, MAKEINTRESOURCE(IDI_HOVER_ICON));
 	lWinClass.hCursor = LoadCursor(NULL, IDC_ARROW);
 	lWinClass.hbrBackground = (HBRUSH) COLOR_APPWORKSPACE + 1;
-	lWinClass.lpszMenuName = MAKEINTRESOURCEW(FIREBALL_MAIN_MENU);
+	//lWinClass.lpszMenuName = MAKEINTRESOURCEW(FIREBALL_MAIN_MENU);
+	lWinClass.lpszMenuName = NULL;
 	lWinClass.lpszClassName = MR_APP_CLASS_NAME;
 
 	lReturnValue = RegisterClassW(&lWinClass);
@@ -914,9 +935,114 @@ BOOL MR_GameApp::CreateMainWindow()
 	}
 
 	RefreshTitleBar();
+	CreateMainMenu();
 	UpdateMenuItems();
 
 	return lReturnValue;
+}
+
+#define MENUFMT(ctx, txt, more, key) MenuFmt(ctx "\004" txt, txt, more, key)
+static std::string MenuFmt(const char *ctx, const char *txt, bool more,
+                           const char *key)
+{
+#ifdef ENABLE_NLS
+	txt = pgettextImpl(ctx, txt);
+#endif
+	std::string s = txt;
+	s.reserve(64);
+
+	if (more) s += "\xe2\x80\xa6";  // Ellipsis in UTF-8.
+	if (key != NULL) {
+		s += '\t';
+		s += key;
+	}
+
+	return s;
+}
+
+bool MR_GameApp::CreateMainMenu()
+{
+	HMENU splitScreenMenu = CreatePopupMenu();
+	if (splitScreenMenu == NULL) return false;
+	if (!AppendMenuW(splitScreenMenu, MF_STRING, ID_GAME_SPLITSCREEN,
+		Str::UW(MENUFMT("Menu|File|Split Screen", "&2 Player", true, NULL).c_str()))) return false;
+	if (!AppendMenuW(splitScreenMenu, MF_STRING, ID_GAME_SPLITSCREEN3,
+		Str::UW(MENUFMT("Menu|File|Split Screen", "&3 Player", true, NULL).c_str()))) return false;
+	if (!AppendMenuW(splitScreenMenu, MF_STRING, ID_GAME_SPLITSCREEN4,
+		Str::UW(MENUFMT("Menu|File|Split Screen", "&4 Player", true, NULL).c_str()))) return false;
+
+	HMENU netMenu = CreatePopupMenu();
+	if (netMenu == NULL) return false;
+	if (!AppendMenuW(netMenu, MF_STRING, ID_GAME_NETWORK_CONNECT,
+		Str::UW(MENUFMT("Menu|File|Network", "&Connect to server", true, NULL).c_str()))) return false;
+	if (!AppendMenuW(netMenu, MF_STRING, ID_GAME_NETWORK_SERVER,
+		Str::UW(MENUFMT("Menu|File|Network", "Create a &server", true, NULL).c_str()))) return false;
+	if (!AppendMenuW(netMenu, MF_SEPARATOR, NULL, NULL)) return false;
+	if (!AppendMenuW(netMenu, MF_STRING, ID_GAME_NETWORK_INTERNET,
+		Str::UW(MENUFMT("Menu|File|Network", "&Internet Meeting Room", true, "F2").c_str()))) return false;
+
+	HMENU fileMenu = CreatePopupMenu();
+	if (fileMenu == NULL) return false;
+	if (!AppendMenuW(fileMenu, MF_STRING, ID_GAME_NETWORK_INTERNET,
+		Str::UW(MENUFMT("Menu|File", "&Internet", true, "F2").c_str()))) return false;
+	if (!AppendMenuW(fileMenu, MF_STRING, ID_GAME_NEW,
+		Str::UW(MENUFMT("Menu|File", "&Practice", true, "Ctrl+N").c_str()))) return false;
+	if (!AppendMenuW(fileMenu, MF_POPUP | MF_STRING, (UINT_PTR)splitScreenMenu,
+		Str::UW(pgettext("Menu|File","&Split Screen")))) return false;
+	if (!AppendMenuW(fileMenu, MF_POPUP | MF_STRING, (UINT_PTR)netMenu,
+		Str::UW(pgettext("Menu|File","&Network")))) return false;
+	if (!AppendMenuW(fileMenu, MF_SEPARATOR, NULL, NULL)) return false;
+	if (!AppendMenuW(fileMenu, MF_STRING, ID_APP_EXIT,
+		Str::UW(MENUFMT("Menu|File", "E&xit", false, "Alt+F4").c_str()))) return false;
+	
+	HMENU viewMenu = CreatePopupMenu();
+	if (viewMenu == NULL) return false;
+	if (!AppendMenuW(viewMenu, MF_STRING, ID_VIEW_3DACTION,
+		Str::UW(MENUFMT("Menu|View", "&Following Camera", false, "F3").c_str()))) return false;
+	if (!AppendMenuW(viewMenu, MF_STRING, ID_VIEW_COCKPIT,
+		Str::UW(MENUFMT("Menu|View", "&Cockpit", false, "F4").c_str()))) return false;
+	if (!AppendMenuW(viewMenu, MF_SEPARATOR, NULL, NULL)) return false;
+	if (!AppendMenuW(viewMenu, MF_STRING, ID_VIEW_PLAYERSLIST,
+		Str::UW(MENUFMT("Menu|View", "&Players list", false, "F5").c_str()))) return false;
+	if (!AppendMenuW(viewMenu, MF_STRING, ID_VIEW_MOREMESSAGES,
+		Str::UW(MENUFMT("Menu|View", "More &messages", false, "F6").c_str()))) return false;
+	if (!AppendMenuW(viewMenu, MF_SEPARATOR, NULL, NULL)) return false;
+	if (!AppendMenuW(viewMenu, MF_STRING, ID_SETTING_REFRESHCOLORS,
+		Str::UW(MENUFMT("Menu|View", "&Refresh colors", false, "F12").c_str()))) return false;
+
+	HMENU settingMenu = CreatePopupMenu();
+	if (settingMenu == NULL) return false;
+	if (!AppendMenuW(settingMenu, MF_STRING, ID_SETTING_FULLSCREEN,
+		Str::UW(MENUFMT("Menu|Setting", "&Fullscreen", false, "F9").c_str()))) return false;
+	if (!AppendMenuW(settingMenu, MF_STRING, ID_SETTING_WINDOW,
+		Str::UW(MENUFMT("Menu|Setting", "&Window", false, "Alt+Enter").c_str()))) return false;
+	if (!AppendMenuW(settingMenu, MF_SEPARATOR, NULL, NULL)) return false;
+	if (!AppendMenuW(settingMenu, MF_STRING, ID_SETTING_PROPERTIES,
+		Str::UW(MENUFMT("Menu|Setting", "&Properties", true, NULL).c_str()))) return false;
+
+	HMENU helpMenu = CreatePopupMenu();
+	if (helpMenu == NULL) return false;
+	if (!AppendMenuW(helpMenu, MF_STRING, ID_HELP_CONTENTS,
+		Str::UW(MENUFMT("Menu|Help", "&Contents", false, NULL).c_str()))) return false;
+	if (!AppendMenuW(helpMenu, MF_SEPARATOR, NULL, NULL)) return false;
+	if (!AppendMenuW(helpMenu, MF_STRING, ID_HELP_SITE,
+		Str::UW("&HoverRace.com"))) return false;
+	if (!AppendMenuW(helpMenu, MF_SEPARATOR, NULL, NULL)) return false;
+	if (!AppendMenuW(helpMenu, MF_STRING, ID_APP_ABOUT,
+		Str::UW(MENUFMT("Menu|Help", "&About HoverRace", false, NULL).c_str()))) return false;
+
+	HMENU menu = CreateMenu();
+	if (menu == NULL) return false;
+	if (!AppendMenuW(menu, MF_POPUP | MF_STRING, (UINT_PTR)fileMenu,
+		Str::UW(pgettext("Menu","&File")))) return false;
+	if (!AppendMenuW(menu, MF_POPUP | MF_STRING, (UINT_PTR)viewMenu,
+		Str::UW(pgettext("Menu","&View")))) return false;
+	if (!AppendMenuW(menu, MF_POPUP | MF_STRING, (UINT_PTR)settingMenu,
+		Str::UW(pgettext("Menu","&Setting")))) return false;
+	if (!AppendMenuW(menu, MF_POPUP | MF_STRING, (UINT_PTR)helpMenu,
+		Str::UW(pgettext("Menu","&Help")))) return false;
+
+	return SetMenu(mMainWindow, menu) == TRUE;
 }
 
 void MR_GameApp::RefreshTitleBar()
@@ -1706,6 +1832,7 @@ void MR_GameApp::DrawBackground()
 
 void MR_GameApp::UpdateMenuItems()
 {
+	/*
 	MENUITEMINFO lMenuInfo;
 	memset(&lMenuInfo, 0, sizeof(lMenuInfo));
 	lMenuInfo.cbSize = sizeof(lMenuInfo);
@@ -1724,6 +1851,7 @@ void MR_GameApp::UpdateMenuItems()
 
 	HMENU lMenu = GetMenu(mMainWindow);
 	SetMenuItemInfo(lMenu, ID_SETTING_FULLSCREEN, FALSE, &lMenuInfo);
+	*/
 }
 
 LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)

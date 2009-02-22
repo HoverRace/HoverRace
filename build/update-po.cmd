@@ -14,10 +14,10 @@ echo Generating template...
 :: matches what gets generated via the shell script.
 type nul > srcfiles.tmp
 for %%F in (client\Game2\*.cpp) do echo ./client/Game2/%%~nxF >> srcfiles.tmp
-xgettext -f srcfiles.tmp -o po/hoverrace.pot --sort-by-file --c++ --boost -k_
+xgettext -f srcfiles.tmp -o po/hoverrace.pot --sort-by-file --no-wrap --c++ --boost -k_ -kMENUFMT:1c,2
 del srcfiles.tmp
 
 for /r po %%F in (*.po) do (
  	echo Merging %%~nF...
- 	msgmerge --sort-by-file --update "%%F" po/hoverrace.pot
+ 	msgmerge --sort-by-file --update --no-wrap "%%F" po/hoverrace.pot
 )

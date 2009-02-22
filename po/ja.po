@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-16 21:55-0500\n"
-"PO-Revision-Date: 2009-02-16 21:59-0500\n"
+"POT-Creation-Date: 2009-02-21 18:32-0500\n"
+"PO-Revision-Date: 2009-02-21 18:34-0500\n"
 "Last-Translator: Michael Imamura <zoogie@lugatgt.org>\n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -27,44 +27,169 @@ msgid ""
 "on your system."
 msgstr ""
 
-#: client/Game2/GameApp.cpp:930
+#: client/Game2/GameApp.cpp:948
+msgctxt "Menu|File|Split Screen"
+msgid "&2 Player"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:950
+msgctxt "Menu|File|Split Screen"
+msgid "&3 Player"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:952
+msgctxt "Menu|File|Split Screen"
+msgid "&4 Player"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:957
+msgctxt "Menu|File|Network"
+msgid "&Connect to server"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:959
+msgctxt "Menu|File|Network"
+msgid "Create a &server"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:962
+msgctxt "Menu|File|Network"
+msgid "&Internet Meeting Room"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:967
+msgctxt "Menu|File"
+msgid "&Internet"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:969
+msgctxt "Menu|File"
+msgid "&Practice"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:971
+msgctxt "Menu|File"
+msgid "&Split Screen"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:973
+msgctxt "Menu|File"
+msgid "&Network"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:976
+msgctxt "Menu|File"
+msgid "E&xit"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:981
+msgctxt "Menu|View"
+msgid "&Following Camera"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:983
+msgctxt "Menu|View"
+msgid "&Cockpit"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:986
+msgctxt "Menu|View"
+msgid "&Players list"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:988
+msgctxt "Menu|View"
+msgid "More &messages"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:991
+msgctxt "Menu|View"
+msgid "&Refresh colors"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:996
+msgctxt "Menu|Setting"
+msgid "&Fullscreen"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:998
+msgctxt "Menu|Setting"
+msgid "&Window"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:1001
+msgctxt "Menu|Setting"
+msgid "&Properties"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:1006
+msgctxt "Menu|Help"
+msgid "&Contents"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:1012
+msgctxt "Menu|Help"
+msgid "&About HoverRace"
+msgstr "情報(&A)"
+
+#: client/Game2/GameApp.cpp:1017
+msgctxt "Menu"
+msgid "&File"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:1019
+msgctxt "Menu"
+msgid "&View"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:1021
+msgctxt "Menu"
+msgid "&Setting"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:1023
+msgctxt "Menu"
+msgid "&Help"
+msgstr "ヘルプ(&H)"
+
+#: client/Game2/GameApp.cpp:1036
 msgctxt "Version"
 msgid "testing"
 msgstr "テスト"
 
-#: client/Game2/GameApp.cpp:2674
+#: client/Game2/GameApp.cpp:2782
 msgid "About HoverRace"
 msgstr "〜について HoverRace"
 
-#: client/Game2/GameApp.cpp:2675
+#: client/Game2/GameApp.cpp:2783
 msgid "HoverRace version "
 msgstr "HoverRace バージョン "
 
-#: client/Game2/GameApp.cpp:2680
+#: client/Game2/GameApp.cpp:2788
 msgid "HoverRace is brought to you by:"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2682
+#: client/Game2/GameApp.cpp:2790
 msgid "original author"
 msgstr "オリジナルの作者"
 
-#: client/Game2/GameApp.cpp:2685
+#: client/Game2/GameApp.cpp:2793
 msgid "with contributions from (in alphabetical order)"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2691
+#: client/Game2/GameApp.cpp:2799
 msgid "and with the help of the many testers willing to put up with bugs and other strange happenings."
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2693
+#: client/Game2/GameApp.cpp:2801
 msgid "visit us at"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2697
+#: client/Game2/GameApp.cpp:2805
 msgid "Thanks also to the following projects"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2711
+#: client/Game2/GameApp.cpp:2819
 msgid "Close"
 msgstr "閉じる"
 
@@ -145,27 +270,27 @@ msgstr ""
 msgid "Connection error with "
 msgstr ""
 
-#: client/Game2/Observer.cpp:58
+#: client/Game2/Observer.cpp:57
 msgid "Basic craft"
 msgstr "基本的な車両"
 
-#: client/Game2/Observer.cpp:59
+#: client/Game2/Observer.cpp:58
 msgid "CX craft"
 msgstr "CX 車両"
 
-#: client/Game2/Observer.cpp:60
+#: client/Game2/Observer.cpp:59
 msgid "Bi-Turbo craft"
 msgstr "Bi-Turbo 車両"
 
-#: client/Game2/Observer.cpp:61
+#: client/Game2/Observer.cpp:60
 msgid "Eon craft"
 msgstr "Eon 車両"
 
-#: client/Game2/Observer.cpp:63
+#: client/Game2/Observer.cpp:62
 msgid "Unknown craft"
 msgstr "無名車両"
 
-#: client/Game2/Observer.cpp:101
+#: client/Game2/Observer.cpp:98
 msgid "Select your craft with the arrow keys"
 msgstr "車両は、矢印キーで選択してください"
 

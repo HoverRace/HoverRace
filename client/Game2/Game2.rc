@@ -40,62 +40,6 @@ IDI_WARNING2            ICON                    "warning.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// Menu
-//
-
-FIREBALL_MAIN_MENU MENU 
-BEGIN
-    POPUP "&Game"
-    BEGIN
-        MENUITEM "&Internet...\tF2",            ID_GAME_NETWORK_INTERNET
-        MENUITEM "&Practice...\tCtrl+N",        ID_GAME_NEW
-        POPUP "&Split Screen..."
-        BEGIN
-            MENUITEM "2 Player",                    ID_GAME_SPLITSCREEN
-            MENUITEM "3 Player",                    ID_GAME_SPLITSCREEN3
-            MENUITEM "4 Player",                    ID_GAME_SPLITSCREEN4
-        END
-        POPUP "&Network"
-        BEGIN
-            MENUITEM "&Connect to TCP server...",   ID_GAME_NETWORK_CONNECT
-            MENUITEM "Create a TCP &server...",     ID_GAME_NETWORK_SERVER
-            MENUITEM SEPARATOR
-            MENUITEM "&Internet Meeting Room...\tF2", 
-                                                    ID_GAME_NETWORK_INTERNET
-        END
-        MENUITEM SEPARATOR
-        MENUITEM "E&xit\tAlt+F4",               ID_APP_EXIT
-    END
-    POPUP "&View"
-    BEGIN
-        MENUITEM "&Following Camera\tF3",       ID_VIEW_3DACTION
-        MENUITEM "&Cockpit\tF4",                ID_VIEW_COCKPIT
-        MENUITEM SEPARATOR
-        MENUITEM "&Players list\tF5",           ID_VIEW_PLAYERSLIST
-        MENUITEM "More &messages\tF6",          ID_VIEW_MOREMESSAGES
-        MENUITEM SEPARATOR
-        MENUITEM "&Refresh colors\tF12",        ID_SETTING_REFRESHCOLORS
-    END
-    POPUP "&Setting"
-    BEGIN
-        MENUITEM "&Fullscreen\tF9",             ID_SETTING_FULLSCREEN
-        MENUITEM "&Window\tAlt+Enter",          ID_SETTING_WINDOW
-        MENUITEM SEPARATOR
-        MENUITEM "&Properties...",              ID_SETTING_PROPERTIES
-    END
-    POPUP "&Help"
-    BEGIN
-        MENUITEM "&Contents...",                ID_HELP_CONTENTS
-        MENUITEM SEPARATOR
-        MENUITEM "&HoverRace.com...",           ID_HELP_SITE
-        MENUITEM SEPARATOR
-        MENUITEM "&About HoverRace...",         ID_APP_ABOUT
-    END
-END
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
 // Accelerator
 //
 

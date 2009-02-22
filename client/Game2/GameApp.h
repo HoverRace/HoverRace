@@ -94,6 +94,7 @@ class MR_GameApp
 		static void UpdateIntensityDialogLabels(HWND pWindow);
 
 		BOOL CreateMainWindow();
+		bool CreateMainMenu();
 
 		void RefreshView();
 		BOOL SetVideoMode(int pX, int pY);

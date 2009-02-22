@@ -19,7 +19,6 @@
 #define IDD_ABOUT                       114
 #define IDD_INTERNET_MEETING            124
 #define IDD_INTERNET_PARAMS             125
-#define FIREBALL_MAIN_MENU              128
 #define IDD_SET_MESSAGE                 129
 #define IDD_BAD_MODE1                   130
 #define IDD_BAD_MODE4                   132
@@ -133,17 +132,11 @@
 #define IDC_DESC_LBL                    1096
 #define IDC_LAPS_LBL                    1097
 #define IDC_WEAPONS_CHK                 1099
-#define ID_HELP_CONTENTS                32772
 #define ID_VIEW_3DACTION                32775
 #define ID_SETTING_WINDOW               32784
-#define ID_SETTING_PROPERTIES           32785
 #define ID_GAME_PAUSE                   32788
 #define ID_VIEW_DEBUG                   40001
 #define ID_VIEW_COCKPIT                 40002
-#define ID_GAME_SPLITSCREEN             40003
-#define ID_GAME_NETWORK_CONNECT         40005
-#define ID_GAME_NETWORK_SERVER          40006
-#define ID_HELP_SITE                    40007
 #define ID_GAME_NETWORK_INTERNET        40008
 #define ID_VIEW_PLAYERSLIST             40009
 #define ID_VIEW_MOREMESSAGES            40010
@@ -301,9 +294,7 @@
 #define IDS_HIT_TITLE                   40187
 #define IDS_HIT_CHART                   40188
 #define IDS_WEBSITE                     40190
-#define ID_GAME_SPLITSCREEN3            40192
 #define IDS_JOY1BTN5                    40192
-#define ID_GAME_SPLITSCREEN4            40193
 #define IDS_JOY1BTN6                    40193
 #define IDS_JOY1BTN7                    40194
 #define IDS_JOY1BTN8                    40195
@@ -350,8 +341,6 @@
 #define IDS_SET_RESOLUTION              40242
 #define IDS_INVALID_RESOLUTION2         40243
 #define ID_GAME_NEW                     0xE100
-#define ID_APP_ABOUT                    0xE140
-#define ID_APP_EXIT                     0xE141
 
 // Next default values for new objects
 // 
@@ -359,7 +348,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        166
-#define _APS_NEXT_COMMAND_VALUE         40048
+#define _APS_NEXT_COMMAND_VALUE         40049
 #define _APS_NEXT_CONTROL_VALUE         1100
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
