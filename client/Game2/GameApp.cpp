@@ -750,11 +750,11 @@ void MR_GameApp::DisplayHelp()
 		SW_SHOWNORMAL);
 
 	if(lReturnCode <= 32) {
-		MessageBox(mMainWindow,
-			_("To be able to display HoverRace Help\n"
+		MessageBoxW(mMainWindow,
+			Str::UW(_("To be able to display HoverRace Help\n"
 			"you must have a Word document viewer installed\n"
-			"on your system."),
-			PACKAGE_NAME, MB_ICONERROR | MB_APPLMODAL | MB_OK);
+			"on your system.")),
+			PACKAGE_NAME_L, MB_ICONERROR | MB_APPLMODAL | MB_OK);
 	}
 
 }
