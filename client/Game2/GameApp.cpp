@@ -1832,26 +1832,30 @@ void MR_GameApp::DrawBackground()
 
 void MR_GameApp::UpdateMenuItems()
 {
-	/*
-	MENUITEMINFO lMenuInfo;
+	MENUITEMINFOW lMenuInfo;
 	memset(&lMenuInfo, 0, sizeof(lMenuInfo));
 	lMenuInfo.cbSize = sizeof(lMenuInfo);
 
 	MR_Config *cfg = MR_Config::GetInstance();
-	char s[256] = {0};
-	int lLen = _snprintf(s, 255, "&Fullscreen (%dx%d) \tF9", cfg->video.xResFullscreen, cfg->video.yResFullscreen);
-	if (lLen < 0) {
-		strcpy(s, "&Fullscreen \tF9");
+	std::ostringstream oss;
+	oss << pgettext("Menu|Setting", "&Fullscreen");
+	int xres = cfg->video.xResFullscreen;
+	int yres = cfg->video.yResFullscreen;
+	if (xres > 0 && yres > 0) {
+		oss << " (" << xres << 'x' << yres << ')';
 	}
+	oss << "\tF9";
+	wchar_t *ws = Str::Utf8ToWide(oss.str().c_str());
 
 	lMenuInfo.fMask = MIIM_STATE | MIIM_STRING;
 	lMenuInfo.fState = MFS_ENABLED;
-	lMenuInfo.dwTypeData = s;
-	lMenuInfo.cch = lLen;
+	lMenuInfo.dwTypeData = ws;
+	lMenuInfo.cch = wcslen(ws);
 
 	HMENU lMenu = GetMenu(mMainWindow);
-	SetMenuItemInfo(lMenu, ID_SETTING_FULLSCREEN, FALSE, &lMenuInfo);
-	*/
+	SetMenuItemInfoW(lMenu, ID_SETTING_FULLSCREEN, FALSE, &lMenuInfo);
+
+	free(ws);
 }
 
 LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
