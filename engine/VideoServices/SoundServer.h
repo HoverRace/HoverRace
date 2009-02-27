@@ -1,5 +1,6 @@
-// SoundServer.h // DirectSound encapsulation module
-//
+
+// SoundServer.h
+// DirectSound / OpenAL encapsulation module
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //

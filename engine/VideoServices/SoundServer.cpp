@@ -1,5 +1,6 @@
+
 // SoundServer.cpp
-//
+// DirectSound / OpenAL encapsulation module
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
