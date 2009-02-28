@@ -186,21 +186,28 @@ BOOL MR_InternetRequest::Send(HWND pWindow, unsigned long pIP, unsigned pPort, c
 			lURL = pURL;
 		}
 
+		std::string ua = Config::GetInstance()->GetUserAgentId();
 		if(pCookie == NULL) {
 			sprintf(lReqBuffer, "GET %s HTTP/1.0\n\r"
 			// "Connection: Keep-Alive\n\r"
-				"Accept: */*\n\r" "User-Agent: HoverRace/0.1\n\r"
+				"Accept: */*\n\r"
+				"User-Agent: %s\n\r"
 			// "User-Agent: Mozilla/3.0 (Win95; I)\n\r"
 			// "Host: 205.181.206.67:80\n\r"
 			// "Accept: image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, */*\n\r"
-				"\n\r" "\n\r", lURL);
+				"\n\r" "\n\r",
+				lURL, ua.c_str());
 		}
 		else {
 			sprintf(lReqBuffer, "GET %s HTTP/1.0\n\r"
 			// "User-Agent: Mozilla/3.0 (Win95; I)\n\r"
 			// "Host: 205.181.206.67:80\n\r"
 			// "Accept: image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, */*\n\r"
-				"Accept: */*\n\r" "User-Agent: HoverRace/0.1\n\r" "Cookie: %s\n\r" "\n\r" "\n\r", lURL, pCookie);
+				"Accept: */*\n\r"
+				"User-Agent: %s\n\r"
+				"Cookie: %s\n\r"
+				"\n\r" "\n\r",
+				lURL, ua.c_str(), pCookie);
 		}
 
 		mRequest = lReqBuffer;

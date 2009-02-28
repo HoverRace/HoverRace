@@ -134,6 +134,10 @@ Config::Config(int verMajor, int verMinor, int verPatch, int verBuild,
 	oss << '.' << verBuild;
 	fullVersion = oss.str();
 
+	userAgentId = PACKAGE_NAME "/";
+	userAgentId += shortVersion;
+	userAgentId += " (" PLATFORM_NAME ")";
+
 	// Set initial defaults.
 	ResetToDefaults();
 }
@@ -199,6 +203,15 @@ std::string Config::GetVersion() const
 std::string Config::GetFullVersion() const
 {
 	return fullVersion;
+}
+
+/**
+ * Retrieve the user agent identifier used for HTTP requests.
+ * @return The user agent string.
+ */
+std::string Config::GetUserAgentId() const
+{
+	return userAgentId;
 }
 
 /**

@@ -202,11 +202,7 @@ void TrackDownloadDialog::ThreadProc()
 	curl_easy_setopt(trackDl, CURLOPT_ENCODING, "");  // Enable all encodings.
 	curl_easy_setopt(trackDl, CURLOPT_HTTP_CONTENT_DECODING, 1);
 	*/
-
-	// TODO: Add platform.
-	std::ostringstream oss;
-	oss << "HoverRace/" << cfg->GetVersion() << " (Win32)";
-	curl_easy_setopt(trackDl, CURLOPT_USERAGENT, oss.str().c_str());
+	curl_easy_setopt(trackDl, CURLOPT_USERAGENT, cfg->GetUserAgentId().c_str());
 
 	std::string url(TRACK_HOST "tracks/download.php?name=");
 	char *param = curl_easy_escape(trackDl, name.c_str(), name.length());

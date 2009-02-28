@@ -74,6 +74,7 @@ class MR_DllDeclare Config
 		bool prerelease;
 		std::string shortVersion;
 		std::string fullVersion;
+		std::string userAgentId;
 
 	private:
 		Config(int verMajor, int verMinor, int verPatch, int verBuild,
@@ -88,6 +89,7 @@ class MR_DllDeclare Config
 		bool IsPrerelease() const;
 		std::string GetVersion() const;
 		std::string GetFullVersion() const;
+		std::string GetUserAgentId() const;
 
 		static std::string GetDefaultPath();
 		std::string GetConfigFilename() const;
