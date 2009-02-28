@@ -96,6 +96,7 @@ void CaptureScreen( MR_VideoBuffer* pVideoBuffer );
 using boost::format;
 using boost::str;
 
+using HoverRace::Util::Config;
 using HoverRace::Util::OS;
 using namespace HoverRace::Util;
 
@@ -568,7 +569,7 @@ MR_GameApp::MR_GameApp(HINSTANCE pInstance, bool safeMode)
 	// Load the configuration.
 	if (!safeMode) {
 		LoadRegistry();
-		MR_Config::GetInstance()->Load();
+		Config::GetInstance()->Load();
 		OutputDebugString("Loaded config.\n");
 	}
 
@@ -611,7 +612,7 @@ void MR_GameApp::Clean()
 
 void MR_GameApp::LoadRegistry()
 {
-	MR_Config *cfg = MR_Config::GetInstance();
+	Config *cfg = Config::GetInstance();
 
 	char lBuffer[80];
 	DWORD lBufferSize = sizeof(lBuffer);
@@ -630,8 +631,8 @@ void MR_GameApp::LoadRegistry()
 		DWORD lControlBufferSize = sizeof(lControlBuffer);
 
 		if(RegQueryValueEx(lProgramKey, "Control", 0, NULL, lControlBuffer, &lControlBufferSize) == ERROR_SUCCESS) {
-			for (int p = 0, i = 0; p < MR_Config::MAX_PLAYERS; ++p) {
-				MR_Config::cfg_controls_t &ctl = cfg->controls[p];
+			for (int p = 0, i = 0; p < Config::MAX_PLAYERS; ++p) {
+				Config::cfg_controls_t &ctl = cfg->controls[p];
 				ctl.motorOn = lControlBuffer[i++];
 				ctl.right = lControlBuffer[i++];
 				ctl.left = lControlBuffer[i++];
@@ -679,7 +680,7 @@ void MR_GameApp::LoadRegistry()
 
 void MR_GameApp::SaveRegistry()
 {
-	MR_Config::GetInstance()->Save();
+	Config::GetInstance()->Save();
 }
 
 BOOL MR_GameApp::IsGameRunning()
@@ -892,7 +893,7 @@ BOOL MR_GameApp::CreateMainWindow()
 	BOOL lReturnValue = TRUE;
 
 	// check our position
-	MR_Config *cfg = MR_Config::GetInstance();
+	Config *cfg = Config::GetInstance();
 	int xPos = cfg->video.xPos;
 	int yPos = cfg->video.yPos;
 	int xRes = cfg->video.xRes;
@@ -1047,7 +1048,7 @@ bool MR_GameApp::CreateMainMenu()
 
 void MR_GameApp::RefreshTitleBar()
 {
-	MR_Config *cfg = MR_Config::GetInstance();
+	Config *cfg = Config::GetInstance();
 
 	if(mMainWindow != NULL) {
 		std::ostringstream oss;
@@ -1062,7 +1063,7 @@ void MR_GameApp::RefreshTitleBar()
 BOOL MR_GameApp::InitGame()
 {
 	BOOL lReturnValue = TRUE;
-	MR_Config *cfg = MR_Config::GetInstance();
+	Config *cfg = Config::GetInstance();
 
 	InitCommonControls();						  // Allow some special and complex controls
 
@@ -1216,7 +1217,7 @@ void MR_GameApp::RefreshView()
  */
 int MR_GameApp::ReadAsyncInputControllerPlayer(int playerIdx)
 {
-	const MR_Config::cfg_controls_t &ctl = MR_Config::GetInstance()->controls[playerIdx];
+	const Config::cfg_controls_t &ctl = Config::GetInstance()->controls[playerIdx];
 	int retv = 0;
 
 	if (CheckKeyState(ctl.motorOn))  retv |= MR_MainCharacter::eMotorOn;
@@ -1554,7 +1555,7 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 {
 	bool lSuccess = true;
 	MR_NetworkSession *lCurrentSession = NULL;
-	MR_Config *cfg = MR_Config::GetInstance();
+	Config *cfg = Config::GetInstance();
 
 	// Verify is user acknowledge
 	if(AskUserToAbortGame() != IDOK)
@@ -1707,7 +1708,7 @@ void MR_GameApp::NewInternetSession()
 {
 	BOOL lSuccess = TRUE;
 	MR_NetworkSession *lCurrentSession = NULL;
-	MR_Config *cfg = MR_Config::GetInstance();
+	Config *cfg = Config::GetInstance();
 	// MR_InternetRoom    lInternetRoom( gKeyFilled, gKeyFilled?mMajorID:-1, gKeyFilled?mMinorID:-1, gKeyFilled?gKey.mKeySumHard2:0, gKeyFilled?gKey.mKeySumHard3:0 );
 	MR_InternetRoom lInternetRoom(TRUE, -1, -1, 0, 0, cfg->net.mainServer);
 
@@ -1836,7 +1837,7 @@ void MR_GameApp::UpdateMenuItems()
 	memset(&lMenuInfo, 0, sizeof(lMenuInfo));
 	lMenuInfo.cbSize = sizeof(lMenuInfo);
 
-	MR_Config *cfg = MR_Config::GetInstance();
+	Config *cfg = Config::GetInstance();
 	std::ostringstream oss;
 	oss << pgettext("Menu|Setting", "&Fullscreen");
 	int xres = cfg->video.xResFullscreen;
@@ -2054,7 +2055,7 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 				// Video mode setting
 				case ID_SETTING_FULLSCREEN:
 					{
-						MR_Config *cfg = MR_Config::GetInstance();
+						Config *cfg = Config::GetInstance();
 						This->SetVideoMode(cfg->video.xResFullscreen, cfg->video.yResFullscreen);
 					}
 					return 0;
@@ -2333,7 +2334,7 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 			This->mVideoBuffer = NULL;
 			// save resolution information
 			{
-				MR_Config *cfg = MR_Config::GetInstance();
+				Config *cfg = Config::GetInstance();
 				RECT size = {0};
 				GetWindowRect(This->mMainWindow, &size);
 				cfg->video.xPos = size.left;
@@ -2359,7 +2360,7 @@ BOOL CALLBACK MR_GameApp::DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, 
 {
 	ASSERT(This != NULL);
 	ASSERT(This->mVideoBuffer != NULL);
-	MR_Config *cfg = MR_Config::GetInstance();
+	Config *cfg = Config::GetInstance();
 
 	BOOL lReturnValue = FALSE;
 
@@ -2513,7 +2514,7 @@ BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 {
 	ASSERT(This != NULL);
 	ASSERT(This->mVideoBuffer != NULL);
-	MR_Config *cfg = MR_Config::GetInstance();
+	Config *cfg = Config::GetInstance();
 
 	BOOL lReturnValue = FALSE;
 	int lCounter;
@@ -2666,7 +2667,7 @@ BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 BOOL CALLBACK MR_GameApp::MiscDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
 {
 	ASSERT(This != NULL);
-	MR_Config *cfg = MR_Config::GetInstance();
+	Config *cfg = Config::GetInstance();
 
 	BOOL lReturnValue = FALSE;
 
@@ -2805,7 +2806,7 @@ BOOL CALLBACK MR_GameApp::AboutDlgFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam
 			{
 				SetWindowTextW(pWindow, Str::UW(_("About HoverRace")));
 				std::string verStr(_("HoverRace version "));
-				verStr += MR_Config::GetInstance()->GetVersion();
+				verStr += Config::GetInstance()->GetVersion();
 				SetDlgItemTextW(pWindow, IDC_VER_TXT, Str::UW(verStr.c_str()));
 				std::ostringstream oss;
 				oss <<

@@ -121,9 +121,14 @@ class MR_NetworkSession : public MR_ClientSession
 
 		void SetPlayerName(const char *pPlayerName);
 		const char *GetPlayerName() const;
-		BOOL WaitConnections(HWND pWindow, const char *pTrackName, BOOL pPromptForPort = TRUE, unsigned pDefaultPort = MR_Config::GetInstance()->net.tcpServPort, HWND * pModalessDlg = NULL, int pReturnMessage = 0);
+		BOOL WaitConnections(HWND pWindow, const char *pTrackName, BOOL pPromptForPort = TRUE,
+			unsigned pDefaultPort = HoverRace::Util::Config::GetInstance()->net.tcpServPort,
+			HWND * pModalessDlg = NULL, int pReturnMessage = 0);
 		BOOL PreConnectToServer(HWND pWindow, CString & pTrackName);
-		BOOL ConnectToServer(HWND pWindow, const char *pServerIP = NULL, unsigned pPort = MR_Config::GetInstance()->net.tcpServPort, const char *pGameName = NULL, HWND * pModalessDlg = NULL, int pReturnMessage = 0);
+		BOOL ConnectToServer(HWND pWindow, const char *pServerIP = NULL,
+			unsigned pPort = HoverRace::Util::Config::GetInstance()->net.tcpServPort,
+			const char *pGameName = NULL, HWND * pModalessDlg = NULL,
+			int pReturnMessage = 0);
 
 		int ResultAvaillable() const;			  // Return the number of players desc avail
 		void GetResult(int pPosition, const char *&pPlayerName, int &pId, BOOL &pConnected, int &pNbLap, MR_SimulationTime & pFinishTime, MR_SimulationTime & pBestLap) const;

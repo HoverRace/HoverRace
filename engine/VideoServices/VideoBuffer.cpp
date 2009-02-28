@@ -35,6 +35,8 @@ static const BOOL gDebugMode = TRUE;
 static const BOOL gDebugMode = FALSE;
 #endif
 
+using HoverRace::Util::Config;
+
 // Video card debuging traces
 
 // #define _CARD_DEBUG
@@ -818,7 +820,7 @@ BOOL MR_VideoBuffer::SetVideoMode(int pXRes, int pYRes)
 	BOOL lReturnValue;
 	DDSURFACEDESC lSurfaceDesc;
 	// DDCAPS          lDDCaps;
-	MR_Config *cfg = MR_Config::GetInstance();
+	Config *cfg = Config::GetInstance();
 
 	DWORD lReqBpp = cfg->video.nativeBppFullscreen ? mNativeBpp : 8;
 

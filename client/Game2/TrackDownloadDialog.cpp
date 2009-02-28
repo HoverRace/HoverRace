@@ -37,6 +37,8 @@
 
 #include "../../engine/Util/Config.h"
 
+using HoverRace::Util::Config;
+
 static const char *STATE_NAMES[] = {
 	"Initializing",
 	"Downloading",
@@ -179,7 +181,7 @@ void TrackDownloadDialog::UpdateDialogProgress(HWND hwnd)
 // Thread function.
 void TrackDownloadDialog::ThreadProc()
 {
-	MR_Config *cfg = MR_Config::GetInstance();
+	Config *cfg = Config::GetInstance();
 
 	SetState(ST_INITIALIZING);
 
@@ -360,7 +362,7 @@ size_t TrackDownloadDialog::ProgressFunc(void *clientp, double dlTotal, double d
  */
 bool TrackDownloadDialog::ExtractTrackFile()
 {
-	std::string destFilename = MR_Config::GetInstance()->GetTrackPath(name);
+	std::string destFilename = Config::GetInstance()->GetTrackPath(name);
 	bool retv = false;
 
 	if (dlBuf[0] == 0x50 && dlBuf[1] == 0x4b) {

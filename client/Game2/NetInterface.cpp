@@ -29,6 +29,8 @@
 #include "../../engine/Util/OS.h"
 #include "../../engine/Util/Str.h"
 
+using HoverRace::Util::Config;
+
 // Private window messages
 #define MRM_SERVER_CONNECT (WM_USER + 1)
 #define MRM_NEW_CLIENT     (WM_USER + 2)
@@ -132,8 +134,8 @@ MR_NetworkInterface::MR_NetworkInterface()
 	lCode = bind(mUDPOutShortPort, (LPSOCKADDR) & lAddr, sizeof(lAddr));
 	ASSERT(lCode != SOCKET_ERROR);
 
-	mUDPRecvPort = MR_Config::GetInstance()->net.udpRecvPort;
-	mTCPRecvPort = MR_Config::GetInstance()->net.tcpRecvPort;
+	mUDPRecvPort = Config::GetInstance()->net.udpRecvPort;
+	mTCPRecvPort = Config::GetInstance()->net.tcpRecvPort;
 }
 
 /**
@@ -703,7 +705,7 @@ BOOL CALLBACK MR_NetworkInterface::ServerPortCallBack(HWND pWindow, UINT pMsgId,
 					mActiveInterface->mPlayer = lNameBuffer;
 
 					// Try to bind the socket to the addr
-					mActiveInterface->mServerPort = MR_Config::GetInstance()->net.tcpServPort;
+					mActiveInterface->mServerPort = Config::GetInstance()->net.tcpServPort;
 
 					if(mActiveInterface->mServerPort <= 0) { // luser check
 						MessageBoxW(pWindow, Str::UW(_("Port value must be greater than 0")), Str::UW(_("TCP Server")), MB_ICONERROR | MB_OK | MB_APPLMODAL);

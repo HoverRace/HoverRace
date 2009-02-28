@@ -101,7 +101,9 @@ namespace fs = boost::filesystem;
 	(emitter)->MapKey(#name); \
 	(emitter)->Value(name);
 
-MR_Config *MR_Config::instance = NULL;
+using namespace HoverRace::Util;
+
+Config *Config::instance = NULL;
 
 /**
  * Create a new instance using the specified directory.
@@ -113,7 +115,7 @@ MR_Config *MR_Config::instance = NULL;
  * @param path (Optional) The directory for storing configuration data.
  *             The default is to use {@link #GetDefaultPath()}.
  */
-MR_Config::MR_Config(int verMajor, int verMinor, int verPatch, int verBuild,
+Config::Config(int verMajor, int verMinor, int verPatch, int verBuild,
 					 bool prerelease, const std::string &path) :
 	verMajor(verMajor), verMinor(verMinor), verPatch(verPatch), verBuild(verBuild),
 	prerelease(prerelease)
@@ -136,7 +138,7 @@ MR_Config::MR_Config(int verMajor, int verMinor, int verPatch, int verBuild,
 	ResetToDefaults();
 }
 
-MR_Config::~MR_Config()
+Config::~Config()
 {
 }
 
@@ -152,11 +154,11 @@ MR_Config::~MR_Config()
  *             The default is to use {@link #GetDefaultPath()}.
  * @return The config instance.
  */
-MR_Config *MR_Config::Init(int verMajor, int verMinor, int verPatch, int verBuild,
+Config *Config::Init(int verMajor, int verMinor, int verPatch, int verBuild,
 						   bool prerelease, const std::string &path)
 {
 	if (instance == NULL) {
-		instance = new MR_Config(verMajor, verMinor, verPatch, verBuild, prerelease, path);
+		instance = new Config(verMajor, verMinor, verPatch, verBuild, prerelease, path);
 	}
 	return instance;
 }
@@ -164,7 +166,7 @@ MR_Config *MR_Config::Init(int verMajor, int verMinor, int verPatch, int verBuil
 /**
  * Destroy the singleton instance.
  */
-void MR_Config::Shutdown()
+void Config::Shutdown()
 {
 	if (instance != NULL) {
 		delete instance;
@@ -176,7 +178,7 @@ void MR_Config::Shutdown()
  * Check if this build is a prerelease (development) version.
  * @return @c true if prerelease.
  */
-bool MR_Config::IsPrerelease() const
+bool Config::IsPrerelease() const
 {
 	return prerelease;
 }
@@ -185,7 +187,7 @@ bool MR_Config::IsPrerelease() const
  * Retrieve the short form (x.x or x.x.x) of the version number.
  * @return The version number (always at least two components).
  */
-std::string MR_Config::GetVersion() const
+std::string Config::GetVersion() const
 {
 	return shortVersion;
 }
@@ -194,7 +196,7 @@ std::string MR_Config::GetVersion() const
  * Retrieve the long form (x.x.x.x) of the version number.
  * @return The version number (the same that was passed to the constructor).
  */
-std::string MR_Config::GetFullVersion() const
+std::string Config::GetFullVersion() const
 {
 	return fullVersion;
 }
@@ -204,7 +206,7 @@ std::string MR_Config::GetFullVersion() const
  * @return The fully-qualified path.
  * @throws ConfigExn if unable to retrieve the default directory.
  */
-std::string MR_Config::GetDefaultPath()
+std::string Config::GetDefaultPath()
 {
 #ifdef _WIN32
 	char dpath[MAX_PATH] = {0};
@@ -233,7 +235,7 @@ std::string MR_Config::GetDefaultPath()
 #endif
 }
 
-std::string MR_Config::GetConfigFilename() const
+std::string Config::GetConfigFilename() const
 {
 	std::string retv(path);
 	retv += DIRSEP CONFIG_FILENAME;
@@ -244,7 +246,7 @@ std::string MR_Config::GetConfigFilename() const
  * Retrieve the directory for media files.
  * @return The directory path (may be relative).
  */
-std::string MR_Config::GetMediaPath() const
+std::string Config::GetMediaPath() const
 {
 #	ifdef _WIN32
 		return ".." DIRSEP "share";
@@ -258,7 +260,7 @@ std::string MR_Config::GetMediaPath() const
  * @param file The media filename (may not be blank).
  * @return The file path (may be relative).
  */
-std::string MR_Config::GetMediaPath(const std::string &file) const
+std::string Config::GetMediaPath(const std::string &file) const
 {
 #	ifdef _WIN32
 		return (".." DIRSEP "share" DIRSEP) + file;
@@ -271,7 +273,7 @@ std::string MR_Config::GetMediaPath(const std::string &file) const
  * Retrieve the directory for downloaded tracks.
  * @return The directory path (may be relative).
  */
-std::string MR_Config::GetTrackPath() const
+std::string Config::GetTrackPath() const
 {
 	return path + (DIRSEP "Tracks");
 }
@@ -283,7 +285,7 @@ std::string MR_Config::GetTrackPath() const
  *             automatically.
  * @return The directory path (may be relative).
  */
-std::string MR_Config::GetTrackPath(const std::string &file) const
+std::string Config::GetTrackPath(const std::string &file) const
 {
 	std::string retv(path);
 	retv += (DIRSEP "Tracks" DIRSEP);
@@ -297,7 +299,7 @@ std::string MR_Config::GetTrackPath(const std::string &file) const
 /**
  * Resets the configuration to the default "factory" settings.
  */
-void MR_Config::ResetToDefaults()
+void Config::ResetToDefaults()
 {
 	video.gamma = 1.2;
 	video.contrast = 0.95;
@@ -378,7 +380,7 @@ void MR_Config::ResetToDefaults()
  * Does nothing if the configuration file doesn't exist.
  * @throws ConfigExn If an error occurs while reading.
  */
-void MR_Config::Load()
+void Config::Load()
 {
 	const std::string &cfgfile = GetConfigFilename();
 	
@@ -433,7 +435,7 @@ void MR_Config::Load()
  * Save the configuration.
  * @throws std::exception If an error occurs while saving.
  */
-void MR_Config::Save()
+void Config::Save()
 {
 	const std::string &cfgfile = GetConfigFilename();
 
@@ -484,7 +486,7 @@ void MR_Config::Save()
 	fclose(out);
 }
 
-void MR_Config::SaveVersion(yaml::Emitter *emitter)
+void Config::SaveVersion(yaml::Emitter *emitter)
 {
 	std::string &version = shortVersion;
 	EMIT_VAR(emitter, version);
@@ -492,7 +494,7 @@ void MR_Config::SaveVersion(yaml::Emitter *emitter)
 
 // video ///////////////////////////////////////////////////////////////////////
 
-void MR_Config::cfg_video_t::Load(yaml::MapNode *root)
+void Config::cfg_video_t::Load(yaml::MapNode *root)
 {
 	if (root == NULL) return;
 
@@ -510,7 +512,7 @@ void MR_Config::cfg_video_t::Load(yaml::MapNode *root)
 	READ_INT(root, yResFullscreen, 0, 32768);
 }
 
-void MR_Config::cfg_video_t::Save(yaml::Emitter *emitter)
+void Config::cfg_video_t::Save(yaml::Emitter *emitter)
 {
 	emitter->MapKey("video");
 	emitter->StartMap();
@@ -533,14 +535,14 @@ void MR_Config::cfg_video_t::Save(yaml::Emitter *emitter)
 
 // audio ///////////////////////////////////////////////////////////////////////
 
-void MR_Config::cfg_audio_t::Load(yaml::MapNode *root)
+void Config::cfg_audio_t::Load(yaml::MapNode *root)
 {
 	if (root == NULL) return;
 
 	READ_FLOAT(root, sfxVolume, 0.0f, 1.0f);
 }
 
-void MR_Config::cfg_audio_t::Save(yaml::Emitter *emitter)
+void Config::cfg_audio_t::Save(yaml::Emitter *emitter)
 {
 	emitter->MapKey("audio");
 	emitter->StartMap();
@@ -552,7 +554,7 @@ void MR_Config::cfg_audio_t::Save(yaml::Emitter *emitter)
 
 // misc ////////////////////////////////////////////////////////////////////////
 
-void MR_Config::cfg_misc_t::Load(yaml::MapNode *root)
+void Config::cfg_misc_t::Load(yaml::MapNode *root)
 {
 	if (root == NULL) return;
 
@@ -560,7 +562,7 @@ void MR_Config::cfg_misc_t::Load(yaml::MapNode *root)
 	READ_BOOL(root, introMovie);
 }
 
-void MR_Config::cfg_misc_t::Save(yaml::Emitter *emitter)
+void Config::cfg_misc_t::Save(yaml::Emitter *emitter)
 {
 	emitter->MapKey("misc");
 	emitter->StartMap();
@@ -573,14 +575,14 @@ void MR_Config::cfg_misc_t::Save(yaml::Emitter *emitter)
 
 // player //////////////////////////////////////////////////////////////////////
 
-void MR_Config::cfg_player_t::Load(yaml::MapNode *root)
+void Config::cfg_player_t::Load(yaml::MapNode *root)
 {
 	if (root == NULL) return;
 
 	READ_STRING(root, nickName);
 }
 
-void MR_Config::cfg_player_t::Save(yaml::Emitter *emitter)
+void Config::cfg_player_t::Save(yaml::Emitter *emitter)
 {
 	emitter->MapKey("player");
 	emitter->StartMap();
@@ -592,7 +594,7 @@ void MR_Config::cfg_player_t::Save(yaml::Emitter *emitter)
 
 // net /////////////////////////////////////////////////////////////////////////
 
-void MR_Config::cfg_net_t::Load(yaml::MapNode *root)
+void Config::cfg_net_t::Load(yaml::MapNode *root)
 {
 	if (root == NULL) return;
 
@@ -602,7 +604,7 @@ void MR_Config::cfg_net_t::Load(yaml::MapNode *root)
 	READ_INT(root, tcpServPort, 0, 65535);
 }
 
-void MR_Config::cfg_net_t::Save(yaml::Emitter *emitter)
+void Config::cfg_net_t::Save(yaml::Emitter *emitter)
 {
 	emitter->MapKey("net");
 	emitter->StartMap();
@@ -617,7 +619,7 @@ void MR_Config::cfg_net_t::Save(yaml::Emitter *emitter)
 
 // controls ////////////////////////////////////////////////////////////////////
 
-void MR_Config::cfg_controls_t::Load(yaml::MapNode *root, int playerNum)
+void Config::cfg_controls_t::Load(yaml::MapNode *root, int playerNum)
 {
 	if (root == NULL) return;
 
@@ -634,7 +636,7 @@ void MR_Config::cfg_controls_t::Load(yaml::MapNode *root, int playerNum)
 	READ_INT(root, lookBack, 0, max);
 }
 
-void MR_Config::cfg_controls_t::Save(yaml::Emitter *emitter)
+void Config::cfg_controls_t::Save(yaml::Emitter *emitter)
 {
 	emitter->StartMap();
 

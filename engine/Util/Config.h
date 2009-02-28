@@ -40,6 +40,9 @@ namespace yaml {
 	class MapNode;
 }
 
+namespace HoverRace {
+namespace Util {
+
 class ConfigExn : public std::exception
 {
 	typedef std::exception SUPER;
@@ -59,10 +62,10 @@ class ConfigExn : public std::exception
 /**
  * Global configuration manager, shared by all aspects of the system.
  */
-class MR_DllDeclare MR_Config
+class MR_DllDeclare Config
 {
 	private:
-		static MR_Config *instance;
+		static Config *instance;
 		std::string path;
 		int verMajor;
 		int verMinor;
@@ -73,12 +76,12 @@ class MR_DllDeclare MR_Config
 		std::string fullVersion;
 
 	private:
-		MR_Config(int verMajor, int verMinor, int verPatch, int verBuild,
+		Config(int verMajor, int verMinor, int verPatch, int verBuild,
 			bool prerelease, const std::string &file="");
 	public:
-		~MR_Config();
+		~Config();
 	
-		static MR_Config *Init(int verMajor, int verMinor, int verPatch, int verBuild,
+		static Config *Init(int verMajor, int verMinor, int verPatch, int verBuild,
 			bool prerelease, const std::string &path="");
 		static void Shutdown();
 
@@ -96,7 +99,7 @@ class MR_DllDeclare MR_Config
 		std::string GetTrackPath(const std::string &file) const;
 
 	public:
-		static MR_Config *GetInstance() { return instance; }
+		static Config *GetInstance() { return instance; }
 
 		void ResetToDefaults();
 
@@ -173,3 +176,6 @@ class MR_DllDeclare MR_Config
 			void Save(yaml::Emitter*);
 		} controls[MAX_PLAYERS];
 };
+
+}  // namespace Util
+}  // namespace HoverRace

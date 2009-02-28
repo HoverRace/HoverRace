@@ -32,6 +32,7 @@
 #include <algorithm>
 
 using namespace HoverRace::Util;
+using HoverRace::Util::Config;
 
 class TrackEntry
 {
@@ -397,7 +398,7 @@ void ReadTrackList()
 	for (int i = 0; i < NUM_TRACK_PATHS; ++i) {
 		ReadTrackListDir(TRACK_PATHS[i]);
 	}
-	ReadTrackListDir(MR_Config::GetInstance()->GetTrackPath() + '\\');
+	ReadTrackListDir(Config::GetInstance()->GetTrackPath() + '\\');
 }
 
 /**
@@ -475,7 +476,7 @@ std::string FindTrack(const std::string &name)
 
 	// Check the configurable download dir first (the extension will be
 	// added automatically).
-	path = MR_Config::GetInstance()->GetTrackPath(name);
+	path = Config::GetInstance()->GetTrackPath(name);
 	if (_access(path.c_str(), 4) == 0) return path;
 
 	for (int i = 0; i < NUM_TRACK_PATHS; ++i) {

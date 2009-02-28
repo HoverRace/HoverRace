@@ -42,6 +42,7 @@
 using boost::format;
 using boost::str;
 
+using HoverRace::Util::Config;
 using HoverRace::Util::OS;
 
 static bool debugMode = false;
@@ -102,7 +103,7 @@ static bool ProcessCmdLine(int argc, char **argv)
 }
 
 // Initialize (but not load) the config system.
-static MR_Config *InitConfig(
+static Config *InitConfig(
 #ifdef _WIN32
 	const char *exePath
 #endif
@@ -139,12 +140,12 @@ static MR_Config *InitConfig(
 	}
 
 	// Load the configuration, using the default OS-specific path.
-	return MR_Config::Init(verMajor, verMinor, verPatch, verBuild, prerelease);
+	return Config::Init(verMajor, verMinor, verPatch, verBuild, prerelease);
 
 #else
 	
 	//FIXME: Extract prerelease flag from ver resource at build time.
-	return MR_Config::Init(HR_APP_VERSION, HR_APP_VERSION_PRERELEASE);
+	return Config::Init(HR_APP_VERSION, HR_APP_VERSION_PRERELEASE);
 
 #endif
 }
@@ -180,7 +181,7 @@ int main(int argc, char** argv)
 	if (!ProcessCmdLine(argc, argv))
 		return EXIT_FAILURE;
 
-	MR_Config *cfg = InitConfig(
+	Config *cfg = InitConfig(
 #ifdef _WIN32
 		exePath
 #endif
@@ -235,7 +236,7 @@ int main(int argc, char** argv)
 	// Library cleanup.
 	curl_global_cleanup();
 
-	MR_Config::Shutdown();
+	Config::Shutdown();
 
 	return lErrorCode;
 }

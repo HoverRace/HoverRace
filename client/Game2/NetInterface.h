@@ -182,9 +182,15 @@ class MR_NetworkInterface
 		void SetPlayerName(const char *pPlayerName);
 		const char *GetPlayerName() const;
 
-		BOOL MasterConnect(HWND pWindow, const char *pGameName, BOOL pPromptForPort = TRUE, unsigned pDefaultPort = MR_Config::GetInstance()->net.tcpServPort, HWND * pModalessDlg = NULL, int pReturnMessage = 0);
+		BOOL MasterConnect(HWND pWindow, const char *pGameName,
+			BOOL pPromptForPort = TRUE,
+			unsigned pDefaultPort = HoverRace::Util::Config::GetInstance()->net.tcpServPort,
+			HWND * pModalessDlg = NULL, int pReturnMessage = 0);
 		BOOL SlavePreConnect(HWND pWindow, CString & pGameName);
-		BOOL SlaveConnect(HWND pWindow, const char *pServerIP = NULL, unsigned pPort = MR_Config::GetInstance()->net.tcpServPort, const char *pGameName = NULL, HWND * pModalessDlg = NULL, int pReturnMessage = 0);
+		BOOL SlaveConnect(HWND pWindow, const char *pServerIP = NULL,
+			unsigned pPort = HoverRace::Util::Config::GetInstance()->net.tcpServPort,
+			const char *pGameName = NULL, HWND * pModalessDlg = NULL,
+			int pReturnMessage = 0);
 
 		void Disconnect();
 

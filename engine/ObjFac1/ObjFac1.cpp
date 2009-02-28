@@ -45,10 +45,11 @@
 #define new DEBUG_NEW
 
 using namespace HoverRace::ObjFac1;
+using HoverRace::Util::Config;
 
 ObjFac1::ObjFac1()
 {
-	MR_Config *cfg = MR_Config::GetInstance();
+	Config *cfg = Config::GetInstance();
 	resourceLib = new MR_ResourceLib(cfg->GetMediaPath("ObjFac1.dat").c_str());
 }
 

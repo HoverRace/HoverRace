@@ -25,7 +25,10 @@
 #include "MatchReport.h"
 #include "TrackDownloadDialog.h"
 #include "resource.h"
+#include "../../engine/Util/Config.h"
 #include "../../engine/Util/StrRes.h"
+
+using HoverRace::Util::Config;
 
 #define MRM_DNS_ANSWER        (WM_USER + 1)
 #define MRM_NET_EVENT         (WM_USER + 7)
@@ -631,7 +634,11 @@ BOOL MR_InternetRoom::JoinGameOp(HWND pParentWindow, int pGameIndex)
 	mCurrentGameIndex = pGameIndex;
 	mCurrentGameId = mGameList[pGameIndex].mId;
 
-	mNetOpRequest.Format("%s?=JOIN_GAME%%%%%d-%u%%%%%d-%u%%%%%u%%%%%u", (const char *) gServerList[gCurrentServerEntry].mURL, mCurrentGameIndex, mCurrentGameId, mCurrentUserIndex, mCurrentUserId, MR_Config::GetInstance()->net.tcpRecvPort, MR_Config::GetInstance()->net.udpRecvPort);
+	mNetOpRequest.Format("%s?=JOIN_GAME%%%%%d-%u%%%%%d-%u%%%%%u%%%%%u",
+		(const char *) gServerList[gCurrentServerEntry].mURL,
+		mCurrentGameIndex, mCurrentGameId, mCurrentUserIndex, mCurrentUserId,
+		Config::GetInstance()->net.tcpRecvPort,
+		Config::GetInstance()->net.udpRecvPort);
 
 	lReturnValue = DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_NET_PROGRESS), pParentWindow, NetOpCallBack) == IDOK;
 
@@ -1764,7 +1771,10 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 
 						if(lSuccess) {
 							// Register to the InternetServer
-							lSuccess = (mThis->AddGameOp(pWindow, lCurrentTrack.c_str(), lCurrentTrack.c_str(), lNbLap, lAllowWeapons, MR_Config::GetInstance()->net.tcpServPort) != FALSE);
+							lSuccess = (mThis->AddGameOp(pWindow,
+								lCurrentTrack.c_str(), lCurrentTrack.c_str(),
+								lNbLap, lAllowWeapons,
+								Config::GetInstance()->net.tcpServPort) != FALSE);
 
 							if(lSuccess) {
 								// Wait client registration
@@ -1772,7 +1782,10 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 
 								lTrackName.Format("%s  %d laps %s", lCurrentTrack.c_str(), lNbLap, lAllowWeapons ? "with weapons" : "no weapons");
 
-								lSuccess = (mThis->mSession->WaitConnections(pWindow, lTrackName, FALSE, MR_Config::GetInstance()->net.tcpServPort, &mThis->mModelessDlg, MRM_DLG_END_ADD) != FALSE);
+								lSuccess = (mThis->mSession->WaitConnections(pWindow,
+									lTrackName, FALSE,
+									Config::GetInstance()->net.tcpServPort,
+									&mThis->mModelessDlg, MRM_DLG_END_ADD) != FALSE);
 
 								if(!lSuccess) {
 									// Unregister Game

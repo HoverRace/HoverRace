@@ -41,6 +41,8 @@
 
 #include "SoundServer.h"
 
+using HoverRace::Util::Config;
+
 #define MR_MAX_SOUND_COPY 6
 
 #ifndef WITH_OPENAL
@@ -332,7 +334,7 @@ void MR_SoundBuffer::SetParams(int pCopy, int pDB, double pSpeed, int pPan)
 	}
 
 	// Global sound effect volume setting.
-	float vol = MR_Config::GetInstance()->audio.sfxVolume;
+	float vol = Config::GetInstance()->audio.sfxVolume;
 
 #ifdef WITH_OPENAL
 	float attenuatedVolume = vol * DirectXToLinear(pDB);
