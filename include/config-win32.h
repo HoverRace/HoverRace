@@ -4,6 +4,7 @@
 
 #define PACKAGE "hoverrace"
 #define PACKAGE_NAME "HoverRace"
+#define PLATFORM_NAME "Win32"
 
 #define ENABLE_NLS 1
 
