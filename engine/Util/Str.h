@@ -40,6 +40,7 @@ namespace Util {
 namespace Str {
 
 	MR_DllDeclare wchar_t *Utf8ToWide(const char *s);
+	MR_DllDeclare char *WideToUtf8(const wchar_t *ws);
 
 	/** Utility class for easy conversion of UTF-8 to wide strings. */
 	class MR_DllDeclare UW
@@ -49,6 +50,16 @@ namespace Str {
 			UW(const char *s=NULL) throw() : cs(Utf8ToWide(s)) { }
 			~UW() throw() { OS::Free(cs); }
 			operator const wchar_t*() const throw() { return cs; }
+	};
+
+	/** Utility class for easy conversion of wide strings to UTF-8. */
+	class MR_DllDeclare WU
+	{
+		char *cs;
+		public:
+			WU(const wchar_t *ws=NULL) throw() : cs(WideToUtf8(ws)) { }
+			~WU() throw() { OS::Free(cs); }
+			operator const char*() const throw() { return cs; }
 	};
 
 }  // namespace Str

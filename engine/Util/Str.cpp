@@ -65,3 +65,42 @@ wchar_t *Str::Utf8ToWide(const char *s)
 #	endif
 }
 
+/**
+ * Convert a wide string to a UTF-8 string.
+ * The caller must use OS::Free() on the result.
+ * @param s The wide string (may not be NULL).
+ * @return A UTF-8-encoded string (must be freed by the caller) (never NULL).
+ */
+char *Str::WideToUtf8(const wchar_t *ws)
+{
+	ASSERT(ws != NULL);
+
+#	ifdef _WIN32
+		if (*ws == '\0') {
+			char *retv = (char*)malloc(1);
+			*retv = '\0';
+			return retv;
+		}
+
+		size_t sz = wcslen(ws) * 3 + 1;  // Initial guess.
+		char *retv = (char*)malloc(sz);
+		int ct = WideCharToMultiByte(CP_UTF8, 0, ws, -1, retv, sz, NULL, NULL);
+		while (ct == 0 && GetLastError() == ERROR_INSUFFICIENT_BUFFER) {
+			if (GetLastError() == ERROR_INSUFFICIENT_BUFFER) {
+				sz *= 2;
+				retv = (char*)realloc(retv, sz);
+				ct = WideCharToMultiByte(CP_UTF8, 0, ws, -1, retv, sz, NULL, NULL);
+			}
+			else {
+				ASSERT(FALSE);
+				*retv = '\0';
+				break;
+			}
+		}
+
+		return retv;
+#	else
+		//TODO: Use iconv.
+		throw std::exception();
+#	endif
+}
