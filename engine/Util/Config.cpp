@@ -191,7 +191,7 @@ bool Config::IsPrerelease() const
  * Retrieve the short form (x.x or x.x.x) of the version number.
  * @return The version number (always at least two components).
  */
-std::string Config::GetVersion() const
+const std::string &Config::GetVersion() const
 {
 	return shortVersion;
 }
@@ -200,7 +200,7 @@ std::string Config::GetVersion() const
  * Retrieve the long form (x.x.x.x) of the version number.
  * @return The version number (the same that was passed to the constructor).
  */
-std::string Config::GetFullVersion() const
+const std::string &Config::GetFullVersion() const
 {
 	return fullVersion;
 }
@@ -209,7 +209,7 @@ std::string Config::GetFullVersion() const
  * Retrieve the user agent identifier used for HTTP requests.
  * @return The user agent string.
  */
-std::string Config::GetUserAgentId() const
+const std::string &Config::GetUserAgentId() const
 {
 	return userAgentId;
 }

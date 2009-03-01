@@ -186,7 +186,7 @@ BOOL MR_InternetRequest::Send(HWND pWindow, unsigned long pIP, unsigned pPort, c
 			lURL = pURL;
 		}
 
-		std::string ua = Config::GetInstance()->GetUserAgentId();
+		const std::string &ua = Config::GetInstance()->GetUserAgentId();
 		if(pCookie == NULL) {
 			sprintf(lReqBuffer, "GET %s HTTP/1.0\n\r"
 			// "Connection: Keep-Alive\n\r"

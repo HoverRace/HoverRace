@@ -87,9 +87,9 @@ class MR_DllDeclare Config
 		static void Shutdown();
 
 		bool IsPrerelease() const;
-		std::string GetVersion() const;
-		std::string GetFullVersion() const;
-		std::string GetUserAgentId() const;
+		const std::string &GetVersion() const;
+		const std::string &GetFullVersion() const;
+		const std::string &GetUserAgentId() const;
 
 		static std::string GetDefaultPath();
 		std::string GetConfigFilename() const;
