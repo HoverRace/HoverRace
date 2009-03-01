@@ -26,9 +26,10 @@
 #include "TrackDownloadDialog.h"
 #include "resource.h"
 #include "../../engine/Util/Config.h"
+#include "../../engine/Util/Str.h"
 #include "../../engine/Util/StrRes.h"
 
-using HoverRace::Util::Config;
+using namespace HoverRace::Util;
 
 #define MRM_DNS_ANSWER        (WM_USER + 1)
 #define MRM_NET_EVENT         (WM_USER + 7)
@@ -721,10 +722,10 @@ BOOL MR_InternetRoom::DisplayChatRoom(HWND pParentWindow, MR_NetworkSession *pSe
 		mSession->SetPlayerName(mUser);
 
 		if(gNbBannerEntries == 0) {
-			lReturnValue = DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_INTERNET_MEETING), pParentWindow, RoomCallBack) == IDOK;
+			lReturnValue = DialogBoxW(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDD_INTERNET_MEETING), pParentWindow, RoomCallBack) == IDOK;
 		}
 		else {
-			lReturnValue = DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_INTERNET_MEETING_PUB), pParentWindow, RoomCallBack) == IDOK;
+			lReturnValue = DialogBoxW(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDD_INTERNET_MEETING_PUB), pParentWindow, RoomCallBack) == IDOK;
 		}
 
 	}
@@ -935,7 +936,7 @@ void MR_InternetRoom::RefreshChatOut(HWND pWindow)
 {
 	HWND pDest = GetDlgItem(pWindow, IDC_CHAT_OUT);
 
-	SetWindowText(pDest, mChatBuffer);
+	SetWindowTextW(pDest, Str::UW(mChatBuffer));
 
 	SendMessage(pDest, EM_LINESCROLL, 0, 1000);
 	// SendMessage( pDest, WM_VSCROLL, SB_BOTTOM, 0 );
@@ -1156,7 +1157,7 @@ int MR_InternetRoom::LoadBanner(HWND pWindow, const char *pBuffer, int pBufferLe
 
 		ReleaseDC(lWindow, hdc);
 
-		TRACE("Colors2 %d  %d\n", lNbColors, GetLastError());
+		//TRACE("Colors2 %d  %d\n", lNbColors, GetLastError());
 
 		mCurrentBannerIndex = 0;
 		SendMessage(lWindow, BM_SETIMAGE, IMAGE_BITMAP, (long) mBanner.GetImage(0));
@@ -1568,7 +1569,7 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 			}
 
 			if(mThis->mBannerRequest.ProcessEvent(pWParam, pLParam)) {
-				TRACE("LoadBanner\n");
+				//TRACE("LoadBanner\n");
 
 				if(mThis->mBannerRequest.IsReady()) {
 					int lBufferSize;
@@ -1680,15 +1681,18 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 			switch (LOWORD(pWParam)) {
 				case IDOK:
 					if(GetFocus() == GetDlgItem(pWindow, IDC_CHAT_IN)) {
-						char lBuffer[200];
+						wchar_t lBuffer[200];
 
 						lReturnValue = TRUE;
 
-						GetDlgItemText(pWindow, IDC_CHAT_IN, lBuffer, sizeof(lBuffer));
+						GetDlgItemTextW(pWindow, IDC_CHAT_IN, lBuffer, sizeof(lBuffer));
 
 						CString lRequest;
 
-						lRequest.Format("%s?=ADD_CHAT%%%%%d-%u%%%%%s", (const char *) gServerList[gCurrentServerEntry].mURL, mThis->mCurrentUserIndex, mThis->mCurrentUserId, (const char *) MR_Pad(lBuffer));
+						lRequest.Format("%s?=ADD_CHAT%%%%%d-%u%%%%%s",
+							(const char *) gServerList[gCurrentServerEntry].mURL,
+							mThis->mCurrentUserIndex, mThis->mCurrentUserId,
+							(const char *) MR_Pad(Str::WU(lBuffer)));
 
 						if(mThis->mChatRequest.Send(pWindow, gServerList[gCurrentServerEntry].mAddress, gServerList[gCurrentServerEntry].mPort, lRequest)) {
 							SetDlgItemText(pWindow, IDC_CHAT_IN, "");
@@ -2399,13 +2403,20 @@ CString MR_Pad(const char *pStr)
 	CString lReturnValue;
 
 	while(*pStr != 0) {
+		/*
 		if(isalnum(*(const unsigned char *) pStr)) {
 			lReturnValue += *pStr;
 		}
+		*/
+		/*
 		else if((*(const unsigned char *) pStr) <= 32) {
 			lReturnValue += "%20";
 		}
+		*/
+		/*
 		else {
+		*/
+			/*
 			switch (*(const unsigned char *) pStr) {
 				case '$':
 				case '-':
@@ -2429,14 +2440,20 @@ CString MR_Pad(const char *pStr)
 
 				default:
 				{
+					*/
 					CString lNumber;
 
-					lNumber.Format("%%%02x", *pStr);
+					unsigned char c = *pStr;
+					lNumber.Format("%%%02x", c);
 
 					lReturnValue += lNumber;
+					/*
 				}
 			}
+			*/
+		/*
 		}
+		*/
 		pStr++;
 	}
 
