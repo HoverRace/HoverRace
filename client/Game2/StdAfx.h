@@ -37,12 +37,14 @@
 #include <algorithm>
 #include <exception>
 #include <map>
+#include <set>
 #include <sstream>
 #include <string>
 #include <vector>
 
 #include <boost/bind.hpp>
 #include <boost/format.hpp>
+#include <boost/shared_ptr.hpp>
 #include <boost/thread/thread.hpp>
 
 #define PACKAGE_NAME_WIDEN(x) L ## x
