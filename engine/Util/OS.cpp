@@ -27,7 +27,12 @@
 
 #include <string>
 
+#include <boost/format.hpp>
+
 #include "OS.h"
+
+using boost::format;
+using boost::str;
 
 using namespace HoverRace::Util;
 
@@ -192,6 +197,47 @@ void OS::SetLocale()
 		}
 
 		free(lang);
+#	endif
+}
+
+/**
+ * Retrieve the list of monitors.
+ * @return A shared pointer of monitor info (never @c NULL, never empty).
+ */
+boost::shared_ptr<OS::monitors_t> OS::GetMonitors()
+{
+	boost::shared_ptr<monitors_t> retv(new monitors_t());
+#	ifdef _WIN32
+		for (int i = 0; ; ++i) {
+			DISPLAY_DEVICE devInfo;
+			memset(&devInfo, 0, sizeof(devInfo));
+			devInfo.cb = sizeof(devInfo);
+			if (!EnumDisplayDevices(NULL, i, &devInfo, 0)) break;
+			
+			DISPLAY_DEVICE monInfo;
+			memset(&monInfo, 0, sizeof(monInfo));
+			monInfo.cb = sizeof(monInfo);
+			if (EnumDisplayDevices(devInfo.DeviceName, 0, &monInfo, 0)) {
+				retv->push_back(Monitor());
+				Monitor &monitor = retv->back();
+				monitor.primary = (devInfo.StateFlags & DISPLAY_DEVICE_PRIMARY_DEVICE) > 0;
+				monitor.name = str(format("%d. %s") % (i + 1) % monInfo.DeviceString);
+				
+				// Retrieve the supported resolutions.
+				for (int j = 0; ; ++j) {
+					DEVMODE modeInfo;
+					memset(&modeInfo, 0, sizeof(modeInfo));
+					modeInfo.dmSize = sizeof(modeInfo);
+					if (!EnumDisplaySettings(devInfo.DeviceName, j, &modeInfo)) break;
+					monitor.resolutions.insert(Resolution(modeInfo.dmPelsWidth, modeInfo.dmPelsHeight));
+				}
+			}
+		}
+
+		return retv;
+#	else
+		//TODO
+		throw std::exception();
 #	endif
 }
 
