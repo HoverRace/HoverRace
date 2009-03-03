@@ -51,14 +51,16 @@ class MR_DllDeclare OS {
 		static void SetEnv(const char *key, const char *val);
 		static void SetLocale();
 		
-		struct Resolution
+		struct MR_DllDeclare Resolution
 		{
 			int w;
 			int h;
 			Resolution(int w, int h) : w(w), h(h) { }
+			Resolution(const std::string &s);
+			std::string AsString() const;
 		};
 		typedef std::set<Resolution> resolutions_t;
-		struct Monitor
+		struct MR_DllDeclare Monitor
 		{
 			bool primary;
 			std::string name;

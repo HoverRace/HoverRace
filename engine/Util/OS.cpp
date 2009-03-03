@@ -37,6 +37,27 @@ using boost::str;
 using namespace HoverRace::Util;
 
 /**
+ * Parse the resolution from a string.
+ * @param s The string (e.g. "1024x768").
+ */
+OS::Resolution::Resolution(const std::string &s)
+{
+	const char *cs = s.c_str();
+	w = atoi(cs);
+	size_t div = s.find('x');
+	h = (div == std::string::npos) ? 0 : atoi(cs + div + 1);
+}
+
+/**
+ * Render the resolution as a string.
+ * @return The string (ASCII).
+ */
+std::string OS::Resolution::AsString() const
+{
+	return str(format("%dx%d") % w % h);
+}
+
+/**
  * Set an environment variable.
  * @param key The variable name (may not be NULL).
  * @param val The variable value (may not be NULL).
