@@ -7,14 +7,15 @@ msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-02-21 18:32-0500\n"
-"PO-Revision-Date: 2009-03-03 16:11-0500\n"
-"Last-Translator: Ryan Curtin <ryan@igglybob.com>\n"
+"PO-Revision-Date: 2009-03-04 11:34-0700\n"
+"Last-Translator: Ryan Curtin <ryan@tortoise.igglybob.com>\n"
 "Language-Team: German\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 1.1.0\n"
+"X-Generator: Pootle 1.2.1\n"
 "X-Poedit-Language: German\n"
 
 #: client/Game2/GameApp.cpp:708
@@ -119,7 +120,7 @@ msgstr ""
 #: client/Game2/GameApp.cpp:998
 msgctxt "Menu|Setting"
 msgid "&Window"
-msgstr ""
+msgstr "&Fenster"
 
 #: client/Game2/GameApp.cpp:1001
 msgctxt "Menu|Setting"
