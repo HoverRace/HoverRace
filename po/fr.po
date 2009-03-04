@@ -1,26 +1,24 @@
-# German translations for HoverRace package.
+# French translations for HoverRace package.
 # Copyright (C) 2009 HoverRace contributors
 # This file is distributed under the same license as the HoverRace package.
+#  <ryan@igglybob.com>, 2009.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
 "Report-Msgid-Bugs-To: bugs@hoverrace.com\n"
 "POT-Creation-Date: 2009-03-04 17:53-0500\n"
-"PO-Revision-Date: 2009-03-04 11:46-0700\n"
-"Last-Translator: Ryan Curtin <ryan@tortoise.igglybob.com>\n"
-"Language-Team: German\n"
+"PO-Revision-Date: 2009-03-04 17:54-0500\n"
+"Last-Translator:  <ryan@igglybob.com>\n"
+"Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=ASCII\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: de\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 1.2.1\n"
-"X-Poedit-Language: German\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: client/Game2/GameApp.cpp:729
 msgid "Abort current game?"
-msgstr "Schließ das derzeitige Spiel ab?"
+msgstr ""
 
 #: client/Game2/GameApp.cpp:755
 msgid ""
@@ -28,9 +26,6 @@ msgid ""
 "you must have a Word document viewer installed\n"
 "on your system."
 msgstr ""
-"Wenn Sie die HoverRace-Hilfe sehen wollen,\n"
-"müssen Sie einen MS-Word-Dokumentbeschauer\n"
-"an deinem Computer installiert."
 
 #: client/Game2/GameApp.cpp:992
 msgctxt "Menu|File"
@@ -45,7 +40,7 @@ msgstr ""
 #: client/Game2/GameApp.cpp:1038
 msgctxt "Menu"
 msgid "&File"
-msgstr "&Datei"
+msgstr ""
 
 #: client/Game2/GameApp.cpp:1040
 msgctxt "Menu"
@@ -60,12 +55,12 @@ msgstr ""
 #: client/Game2/GameApp.cpp:1044
 msgctxt "Menu"
 msgid "&Help"
-msgstr "&Hilfe"
+msgstr ""
 
 #: client/Game2/GameApp.cpp:1057
 msgctxt "Version"
 msgid "testing"
-msgstr "prüfung"
+msgstr ""
 
 #: client/Game2/GameApp.cpp:1842
 msgctxt "Menu|Setting"
@@ -74,43 +69,41 @@ msgstr ""
 
 #: client/Game2/GameApp.cpp:2807
 msgid "About HoverRace"
-msgstr "Über HoverRace"
+msgstr ""
 
 #: client/Game2/GameApp.cpp:2808
 msgid "HoverRace version "
-msgstr "HoverRace Version "
+msgstr ""
 
 #: client/Game2/GameApp.cpp:2813
-#, fuzzy
 msgid "HoverRace is brought to you by:"
-msgstr "HoverRace gebracht wird, die Sie von:"
+msgstr ""
 
 #: client/Game2/GameApp.cpp:2815
 msgid "original author"
-msgstr "der Urheber"
+msgstr ""
 
 #: client/Game2/GameApp.cpp:2818
 msgid "with contributions from (in alphabetical order)"
-msgstr "unter Mitwirkung von (in alphabetischer Reihenfolge)"
+msgstr ""
 
 #: client/Game2/GameApp.cpp:2824
 msgid ""
 "and with the help of the many testers willing to put up with bugs and other "
 "strange happenings."
 msgstr ""
-"und mit der Hilfe vieler Prüfern, die Fehler und Merkwürdigen tolerieren."
 
 #: client/Game2/GameApp.cpp:2826
 msgid "visit us at"
-msgstr "besuchen Sie uns auf"
+msgstr ""
 
 #: client/Game2/GameApp.cpp:2830
 msgid "Thanks also to the following projects"
-msgstr "Dank gebührt auch die folgenden Projekten"
+msgstr ""
 
 #: client/Game2/GameApp.cpp:2844
 msgid "Close"
-msgstr "Schließen"
+msgstr ""
 
 #: client/Game2/NetInterface.cpp:465 client/Game2/NetInterface.cpp:486
 #: client/Game2/NetInterface.cpp:498 client/Game2/NetInterface.cpp:556
@@ -185,19 +178,19 @@ msgstr ""
 
 #: client/Game2/Observer.cpp:57
 msgid "Basic craft"
-msgstr "Basic-Schiff"
+msgstr ""
 
 #: client/Game2/Observer.cpp:58
 msgid "CX craft"
-msgstr "CX-Schiff"
+msgstr ""
 
 #: client/Game2/Observer.cpp:59
 msgid "Bi-Turbo craft"
-msgstr "Bi-Turbo-Schiff"
+msgstr ""
 
 #: client/Game2/Observer.cpp:60
 msgid "Eon craft"
-msgstr "Eon-Schiff"
+msgstr ""
 
 #: client/Game2/Observer.cpp:62
 msgid "Unknown craft"
@@ -209,79 +202,48 @@ msgstr ""
 
 #: client/Game2/TrackSelect.cpp:120 client/Game2/TrackSelect.cpp:130
 msgid "Bad track file format"
-msgstr "Falsches Strecke Dateiformat"
+msgstr ""
 
 #: client/Game2/TrackSelect.cpp:183
 msgid "Track selection"
-msgstr "Strecke Auswahl"
+msgstr ""
 
 #: client/Game2/TrackSelect.cpp:184
 msgid "Tracks"
-msgstr "Strecken"
+msgstr ""
 
 #: client/Game2/TrackSelect.cpp:185
 msgid "Description"
-msgstr "Beschreibung"
+msgstr ""
 
 #: client/Game2/TrackSelect.cpp:186
 msgid "Laps"
-msgstr "Runden"
+msgstr ""
 
 #: client/Game2/TrackSelect.cpp:187
 msgid "Weapons"
-msgstr "Waffen"
+msgstr ""
 
 #: client/Game2/TrackSelect.cpp:188
 msgid "OK"
-msgstr "OK"
+msgstr ""
 
 #: client/Game2/TrackSelect.cpp:189
 msgid "Cancel"
-msgstr "Abbrechen"
+msgstr ""
 
 #: client/Game2/TrackSelect.cpp:212 client/Game2/TrackSelect.cpp:231
 msgid " no selection"
-msgstr " nichts ist ausgewählt"
+msgstr ""
 
 #: client/Game2/TrackSelect.cpp:251
 msgid "Number of laps should be between 1 and 99"
-msgstr "Die Anzahl von Runden soll zwischen 1 und 99"
+msgstr ""
 
 #: client/Game2/main.cpp:230
-#, fuzzy, c-format, boost-format
+#, c-format, boost-format
 msgid ""
 "HoverRace for Linux is under development!\n"
 "Please visit %s to learn how to\n"
 "contribute to this project."
 msgstr ""
-"HoverRace für Linux ist in der Entwicklung!\n"
-"Bitte besuchen Sie %s zu lernen, wie man\n"
-"diesem Projekt mitwirken kann."
-
-#~ msgctxt "Menu|File|Split Screen"
-#~ msgid "&2 Player"
-#~ msgstr "&2 Spielern"
-
-#~ msgctxt "Menu|File|Split Screen"
-#~ msgid "&3 Player"
-#~ msgstr "&3 Spielern"
-
-#~ msgctxt "Menu|File|Split Screen"
-#~ msgid "&4 Player"
-#~ msgstr "&4 Spielern"
-
-#~ msgctxt "Menu|File"
-#~ msgid "&Internet"
-#~ msgstr "&Internet"
-
-#~ msgctxt "Menu|File"
-#~ msgid "&Practice"
-#~ msgstr "&Training"
-
-#~ msgctxt "Menu|Setting"
-#~ msgid "&Window"
-#~ msgstr "&Fenster"
-
-#~ msgctxt "Menu|Help"
-#~ msgid "&About HoverRace"
-#~ msgstr "&Info zu HoverRace"
