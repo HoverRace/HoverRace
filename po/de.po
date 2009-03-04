@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-02-21 18:32-0500\n"
-"PO-Revision-Date: 2009-03-04 11:34-0700\n"
+"PO-Revision-Date: 2009-03-04 11:46-0700\n"
 "Last-Translator: Ryan Curtin <ryan@tortoise.igglybob.com>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -278,19 +278,19 @@ msgstr ""
 
 #: client/Game2/Observer.cpp:57
 msgid "Basic craft"
-msgstr ""
+msgstr "Basic-Schiff"
 
 #: client/Game2/Observer.cpp:58
 msgid "CX craft"
-msgstr ""
+msgstr "CX-Schiff"
 
 #: client/Game2/Observer.cpp:59
 msgid "Bi-Turbo craft"
-msgstr ""
+msgstr "Bi-Turbo-Schiff"
 
 #: client/Game2/Observer.cpp:60
 msgid "Eon craft"
-msgstr ""
+msgstr "Eon-Schiff"
 
 #: client/Game2/Observer.cpp:62
 msgid "Unknown craft"
