@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
 "Report-Msgid-Bugs-To: bugs@hoverrace.com\n"
 "POT-Creation-Date: 2009-03-04 23:00-0500\n"
-"PO-Revision-Date: 2009-03-05 06:29-0700\n"
+"PO-Revision-Date: 2009-03-05 06:57-0700\n"
 "Last-Translator: <ryan@igglybob.com>\n"
 "Language-Team: Dutch\n"
 "Language: nl\n"
@@ -21,7 +21,7 @@ msgstr ""
 #: client/Game2/Banner.cpp:356 client/Game2/Banner.cpp:401
 msgid ""
 "Unable to activate your web browser. Please start your web browser and go to:"
-msgstr ""
+msgstr "Activeren van webbrowser mislukt. Start je webbrowser en ga naar:"
 
 #: client/Game2/Banner.cpp:359 client/Game2/Banner.cpp:404
 msgid "HoverRace Error"
@@ -37,21 +37,24 @@ msgid ""
 "you must have a Word document viewer installed\n"
 "on your system."
 msgstr ""
+"Je moet een lezer voor Word-documenten op\n"
+"je systeem hebben om HoverRace Help\n"
+"te kunnen weergeven."
 
 #: client/Game2/GameApp.cpp:969
 msgctxt "Menu|File|Split Screen"
 msgid "&2 Player"
-msgstr ""
+msgstr "&2 spelers"
 
 #: client/Game2/GameApp.cpp:971
 msgctxt "Menu|File|Split Screen"
 msgid "&3 Player"
-msgstr ""
+msgstr "&3 spelers"
 
 #: client/Game2/GameApp.cpp:973
 msgctxt "Menu|File|Split Screen"
 msgid "&4 Player"
-msgstr ""
+msgstr "&4 spelers"
 
 #: client/Game2/GameApp.cpp:978
 msgctxt "Menu|File|Network"
@@ -214,16 +217,16 @@ msgstr "Sluiten"
 #: client/Game2/NetInterface.cpp:711 client/Game2/NetInterface.cpp:721
 #: client/Game2/NetInterface.cpp:892 client/Game2/NetInterface.cpp:1654
 msgid "TCP Server"
-msgstr ""
+msgstr "TCP Server"
 
 #: client/Game2/NetInterface.cpp:465 client/Game2/NetInterface.cpp:556
 #: client/Game2/NetInterface.cpp:892
 msgid "Unable to create socket"
-msgstr ""
+msgstr "Kan geen socket creëren"
 
 #: client/Game2/NetInterface.cpp:485 client/Game2/NetInterface.cpp:721
 msgid "Unable to use the port, try to close some WINSOCK applications"
-msgstr ""
+msgstr "Kan de poort niet gebruiken, probeer wat WINSOCK applicaties te sluiten"
 
 #: client/Game2/NetInterface.cpp:497 client/Game2/NetInterface.cpp:575
 #: client/Game2/NetInterface.cpp:630
@@ -231,117 +234,121 @@ msgid ""
 "Unable to use UDP recv port; choose a different port or close some Winsock "
 "applications."
 msgstr ""
+"Kan de UDP ontvangstpoort niet gebruiken; kies een andere poort of sluit wat "
+"Winsock applicaties."
 
 #: client/Game2/NetInterface.cpp:711
 msgid "Port value must be greater than 0"
-msgstr ""
+msgstr "Poortwaarde moet groter dan 0 zijn"
 
 #: client/Game2/NetInterface.cpp:913
 msgid "ERROR Unable to connect to server..."
-msgstr ""
+msgstr "FOUT Kan geen verbinding maken met de server..."
 
 #: client/Game2/NetInterface.cpp:1654
 msgid "Game cancelled by server"
-msgstr ""
+msgstr "Spel geannuleerd door de server"
 
 #: client/Game2/NetInterface.cpp:1694
 msgid "Connection refused by peer "
-msgstr ""
+msgstr "Verbinding geweigerd door gelijke"
 
 #: client/Game2/NetInterface.cpp:1696
 msgid ""
 "; perhaps they are behind a firewall and need to forward ports 9530 and 9531 "
 "TCP and UDP?"
 msgstr ""
+"; misschien zit hij achter een firewall waardoor hij poorten 9530 en 9531 "
+"TCP en UDP moet doorsturen?"
 
 #: client/Game2/NetInterface.cpp:1698 client/Game2/NetInterface.cpp:1737
 #: client/Game2/NetInterface.cpp:1763 client/Game2/NetInterface.cpp:1773
 msgid "TCP Client"
-msgstr ""
+msgstr "TCP Client"
 
 #: client/Game2/NetInterface.cpp:1733
 msgid "Main server and peer "
-msgstr ""
+msgstr "Hoofdserver en gelijke"
 
 #: client/Game2/NetInterface.cpp:1735
 msgid " are using the same IP and port!"
-msgstr ""
+msgstr "gebruiken dezelfde IP en poort!"
 
 #: client/Game2/NetInterface.cpp:1758
 msgid "Cannot connect to peer "
-msgstr ""
+msgstr "Kan geen verbinding maken met gelijke"
 
 #: client/Game2/NetInterface.cpp:1760
 msgid " at IP "
-msgstr ""
+msgstr "op het IP"
 
 #: client/Game2/NetInterface.cpp:1770
 msgid "Connection error with "
-msgstr ""
+msgstr "Verbindingsfout met"
 
 #: client/Game2/Observer.cpp:57
 msgid "Basic craft"
-msgstr ""
+msgstr "Basic voertuig"
 
 #: client/Game2/Observer.cpp:58
 msgid "CX craft"
-msgstr ""
+msgstr "CX voertuig"
 
 #: client/Game2/Observer.cpp:59
 msgid "Bi-Turbo craft"
-msgstr ""
+msgstr "Bi-Turbo voertuig"
 
 #: client/Game2/Observer.cpp:60
 msgid "Eon craft"
-msgstr ""
+msgstr "Eon voertuig"
 
 #: client/Game2/Observer.cpp:62
 msgid "Unknown craft"
-msgstr ""
+msgstr "Onbekend voertuig"
 
 #: client/Game2/Observer.cpp:98
 msgid "Select your craft with the arrow keys"
-msgstr ""
+msgstr "Selecteer je voertuig met de pijltjestoetsen"
 
 #: client/Game2/TrackSelect.cpp:120 client/Game2/TrackSelect.cpp:130
 msgid "Bad track file format"
-msgstr ""
+msgstr "Ongeldig baanbestandsformaat"
 
 #: client/Game2/TrackSelect.cpp:183
 msgid "Track selection"
-msgstr ""
+msgstr "Baanselectie"
 
 #: client/Game2/TrackSelect.cpp:184
 msgid "Tracks"
-msgstr ""
+msgstr "Banen"
 
 #: client/Game2/TrackSelect.cpp:185
 msgid "Description"
-msgstr ""
+msgstr "Omschrijving"
 
 #: client/Game2/TrackSelect.cpp:186
 msgid "Laps"
-msgstr ""
+msgstr "Rondes"
 
 #: client/Game2/TrackSelect.cpp:187
 msgid "Weapons"
-msgstr ""
+msgstr "Wapens"
 
 #: client/Game2/TrackSelect.cpp:188
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: client/Game2/TrackSelect.cpp:189
 msgid "Cancel"
-msgstr ""
+msgstr "Annuleren"
 
 #: client/Game2/TrackSelect.cpp:212 client/Game2/TrackSelect.cpp:231
 msgid " no selection"
-msgstr ""
+msgstr "geen selectie"
 
 #: client/Game2/TrackSelect.cpp:251
 msgid "Number of laps should be between 1 and 99"
-msgstr ""
+msgstr "Het aantal rondes moet tussen 1 en 99 zijn"
 
 #: client/Game2/main.cpp:230
 #, c-format, boost-format
@@ -350,3 +357,6 @@ msgid ""
 "Please visit %s to learn how to\n"
 "contribute to this project."
 msgstr ""
+"HoverRace voor Linux is in ontwikkeling!\n"
+"Bezoek alsjeblieft %s om te leren hoe\n"
+"je aan dit project kunt bijdragen."
