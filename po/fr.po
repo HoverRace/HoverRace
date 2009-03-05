@@ -27,7 +27,7 @@ msgstr ""
 
 #: client/Game2/GameApp.cpp:729
 msgid "Abort current game?"
-msgstr ""
+msgstr "Abandonner la partie actuelle?"
 
 #: client/Game2/GameApp.cpp:755
 msgid ""
@@ -35,140 +35,53 @@ msgid ""
 "you must have a Word document viewer installed\n"
 "on your system."
 msgstr ""
-
-#: client/Game2/GameApp.cpp:969
-msgctxt "Menu|File|Split Screen"
-msgid "&2 Player"
-msgstr ""
-
-#: client/Game2/GameApp.cpp:971
-msgctxt "Menu|File|Split Screen"
-msgid "&3 Player"
-msgstr ""
-
-#: client/Game2/GameApp.cpp:973
-msgctxt "Menu|File|Split Screen"
-msgid "&4 Player"
-msgstr ""
-
-#: client/Game2/GameApp.cpp:978
-msgctxt "Menu|File|Network"
-msgid "&Connect to server"
-msgstr ""
-
-#: client/Game2/GameApp.cpp:980
-msgctxt "Menu|File|Network"
-msgid "Create a &server"
-msgstr ""
-
-#: client/Game2/GameApp.cpp:983
-msgctxt "Menu|File|Network"
-msgid "&Internet Meeting Room"
-msgstr ""
-
-#: client/Game2/GameApp.cpp:988
-msgctxt "Menu|File"
-msgid "&Internet"
-msgstr ""
-
-#: client/Game2/GameApp.cpp:990
-msgctxt "Menu|File"
-msgid "&Practice"
-msgstr ""
+"Pour pouvoir afficher l'aide d'HoverRace\n"
+"vous devez posséder une application capable de lire les documents Word\n"
+"sur votre ordinateur."
 
 #: client/Game2/GameApp.cpp:992
 msgctxt "Menu|File"
 msgid "&Split Screen"
-msgstr ""
+msgstr "&Écran partagé"
 
 #: client/Game2/GameApp.cpp:994
 msgctxt "Menu|File"
 msgid "&Network"
-msgstr ""
-
-#: client/Game2/GameApp.cpp:997
-msgctxt "Menu|File"
-msgid "E&xit"
-msgstr ""
-
-#: client/Game2/GameApp.cpp:1002
-msgctxt "Menu|View"
-msgid "&Following Camera"
-msgstr ""
-
-#: client/Game2/GameApp.cpp:1004
-msgctxt "Menu|View"
-msgid "&Cockpit"
-msgstr ""
-
-#: client/Game2/GameApp.cpp:1007
-msgctxt "Menu|View"
-msgid "&Players list"
-msgstr ""
-
-#: client/Game2/GameApp.cpp:1009
-msgctxt "Menu|View"
-msgid "More &messages"
-msgstr ""
-
-#: client/Game2/GameApp.cpp:1012
-msgctxt "Menu|View"
-msgid "&Refresh colors"
-msgstr ""
-
-#: client/Game2/GameApp.cpp:1017 client/Game2/GameApp.cpp:1842
-msgctxt "Menu|Setting"
-msgid "&Fullscreen"
-msgstr ""
-
-#: client/Game2/GameApp.cpp:1019
-msgctxt "Menu|Setting"
-msgid "&Window"
-msgstr ""
-
-#: client/Game2/GameApp.cpp:1022
-msgctxt "Menu|Setting"
-msgid "&Properties"
-msgstr ""
-
-#: client/Game2/GameApp.cpp:1027
-msgctxt "Menu|Help"
-msgid "&Contents"
-msgstr ""
-
-#: client/Game2/GameApp.cpp:1033
-msgctxt "Menu|Help"
-msgid "&About HoverRace"
-msgstr ""
+msgstr "&Réseau"
 
 #: client/Game2/GameApp.cpp:1038
 msgctxt "Menu"
 msgid "&File"
-msgstr ""
+msgstr "&Fichier"
 
 #: client/Game2/GameApp.cpp:1040
 msgctxt "Menu"
 msgid "&View"
-msgstr ""
+msgstr "&Affichage"
 
 #: client/Game2/GameApp.cpp:1042
 msgctxt "Menu"
 msgid "&Setting"
-msgstr ""
+msgstr "&Paramètres"
 
 #: client/Game2/GameApp.cpp:1044
 msgctxt "Menu"
 msgid "&Help"
-msgstr ""
+msgstr "&Aide"
 
 #: client/Game2/GameApp.cpp:1057
 msgctxt "Version"
 msgid "testing"
 msgstr ""
 
+#: client/Game2/GameApp.cpp:1842
+msgctxt "Menu|Setting"
+msgid "&Fullscreen"
+msgstr "&Plein Écran"
+
 #: client/Game2/GameApp.cpp:2807
 msgid "About HoverRace"
-msgstr ""
+msgstr "À Propos d'HoverRace"
 
 #: client/Game2/GameApp.cpp:2808
 msgid "HoverRace version "
@@ -176,33 +89,35 @@ msgstr ""
 
 #: client/Game2/GameApp.cpp:2813
 msgid "HoverRace is brought to you by:"
-msgstr ""
+msgstr "HoverRace vous est présenté par:"
 
 #: client/Game2/GameApp.cpp:2815
 msgid "original author"
-msgstr ""
+msgstr "Auteur original"
 
 #: client/Game2/GameApp.cpp:2818
 msgid "with contributions from (in alphabetical order)"
-msgstr ""
+msgstr "avec l'aide de (en ordre alphabétique)"
 
 #: client/Game2/GameApp.cpp:2824
 msgid ""
 "and with the help of the many testers willing to put up with bugs and other "
 "strange happenings."
 msgstr ""
+"ainsi que des nombreux testeurs qui ont supporté les bogues et autres "
+"phénomènes étranges."
 
 #: client/Game2/GameApp.cpp:2826
 msgid "visit us at"
-msgstr ""
+msgstr "visitez-nous à"
 
 #: client/Game2/GameApp.cpp:2830
 msgid "Thanks also to the following projects"
-msgstr ""
+msgstr "Remerciements aux projets suivants également"
 
 #: client/Game2/GameApp.cpp:2844
 msgid "Close"
-msgstr ""
+msgstr "Fermer"
 
 #: client/Game2/NetInterface.cpp:465 client/Game2/NetInterface.cpp:486
 #: client/Game2/NetInterface.cpp:498 client/Game2/NetInterface.cpp:556
@@ -210,7 +125,7 @@ msgstr ""
 #: client/Game2/NetInterface.cpp:711 client/Game2/NetInterface.cpp:721
 #: client/Game2/NetInterface.cpp:892 client/Game2/NetInterface.cpp:1654
 msgid "TCP Server"
-msgstr ""
+msgstr "Serveur TCP"
 
 #: client/Game2/NetInterface.cpp:465 client/Game2/NetInterface.cpp:556
 #: client/Game2/NetInterface.cpp:892
@@ -220,6 +135,8 @@ msgstr ""
 #: client/Game2/NetInterface.cpp:485 client/Game2/NetInterface.cpp:721
 msgid "Unable to use the port, try to close some WINSOCK applications"
 msgstr ""
+"Impossible d'utiliser le port, essayez de fermer quelques applications "
+"WINSOCK"
 
 #: client/Game2/NetInterface.cpp:497 client/Game2/NetInterface.cpp:575
 #: client/Game2/NetInterface.cpp:630
@@ -227,89 +144,93 @@ msgid ""
 "Unable to use UDP recv port; choose a different port or close some Winsock "
 "applications."
 msgstr ""
+"Impossible d'utiliser le port UDP; sélectionnez un autre port ou fermez "
+"quelques applications WINSOCK"
 
 #: client/Game2/NetInterface.cpp:711
 msgid "Port value must be greater than 0"
-msgstr ""
+msgstr "La valeur du port doit être plus élevée que 0"
 
 #: client/Game2/NetInterface.cpp:913
 msgid "ERROR Unable to connect to server..."
-msgstr ""
+msgstr "ERREUR Impossible de se connecter au serveur..."
 
 #: client/Game2/NetInterface.cpp:1654
 msgid "Game cancelled by server"
-msgstr ""
+msgstr "La partie a été annulée par le serveur"
 
 #: client/Game2/NetInterface.cpp:1694
 msgid "Connection refused by peer "
-msgstr ""
+msgstr "La connexion a été refusée par le pair "
 
 #: client/Game2/NetInterface.cpp:1696
 msgid ""
 "; perhaps they are behind a firewall and need to forward ports 9530 and 9531 "
 "TCP and UDP?"
 msgstr ""
+"; ils pourraient être derrière un coupe-feu et devoir ouvrir les ports TCP "
+"et UDP 9530 et 9531."
 
 #: client/Game2/NetInterface.cpp:1698 client/Game2/NetInterface.cpp:1737
 #: client/Game2/NetInterface.cpp:1763 client/Game2/NetInterface.cpp:1773
 msgid "TCP Client"
-msgstr ""
+msgstr "Client TCP"
 
 #: client/Game2/NetInterface.cpp:1733
 msgid "Main server and peer "
-msgstr ""
+msgstr "Le serveur principal et le pair "
 
 #: client/Game2/NetInterface.cpp:1735
 msgid " are using the same IP and port!"
-msgstr ""
+msgstr " utilisent la même adresse IP et le même port!"
 
 #: client/Game2/NetInterface.cpp:1758
 msgid "Cannot connect to peer "
-msgstr ""
+msgstr "Impossible de se connecter au pair "
 
 #: client/Game2/NetInterface.cpp:1760
 msgid " at IP "
-msgstr ""
+msgstr "utilisant l'IP "
 
 #: client/Game2/NetInterface.cpp:1770
 msgid "Connection error with "
-msgstr ""
+msgstr "Erreur de connexion avec "
 
 #: client/Game2/Observer.cpp:57
 msgid "Basic craft"
-msgstr ""
+msgstr "Aéroglisseur basique"
 
 #: client/Game2/Observer.cpp:58
 msgid "CX craft"
-msgstr ""
+msgstr "Aéroglisseur CX"
 
 #: client/Game2/Observer.cpp:59
 msgid "Bi-Turbo craft"
-msgstr ""
+msgstr "Aéroglisseur Bi-Turbo"
 
 #: client/Game2/Observer.cpp:60
 msgid "Eon craft"
-msgstr ""
+msgstr "Aéroglisseur Eon"
 
 #: client/Game2/Observer.cpp:62
 msgid "Unknown craft"
-msgstr ""
+msgstr "Aéroglisseur Inconnu"
 
 #: client/Game2/Observer.cpp:98
 msgid "Select your craft with the arrow keys"
-msgstr ""
+msgstr "Sélectionnez votre aéroglisseur avec les flèches de votre clavier"
 
 #: client/Game2/TrackSelect.cpp:120 client/Game2/TrackSelect.cpp:130
 msgid "Bad track file format"
-msgstr ""
+msgstr "Mauvais format de fichier de piste"
 
 #: client/Game2/TrackSelect.cpp:183
 msgid "Track selection"
-msgstr ""
+msgstr "Sélection de la piste"
 
 #: client/Game2/TrackSelect.cpp:184
 msgid "Tracks"
-msgstr ""
+msgstr "Pistes"
 
 #: client/Game2/TrackSelect.cpp:185
 msgid "Description"
@@ -317,11 +238,11 @@ msgstr ""
 
 #: client/Game2/TrackSelect.cpp:186
 msgid "Laps"
-msgstr ""
+msgstr "Tours"
 
 #: client/Game2/TrackSelect.cpp:187
 msgid "Weapons"
-msgstr ""
+msgstr "Armes"
 
 #: client/Game2/TrackSelect.cpp:188
 msgid "OK"
@@ -329,15 +250,15 @@ msgstr ""
 
 #: client/Game2/TrackSelect.cpp:189
 msgid "Cancel"
-msgstr ""
+msgstr "Annuler"
 
 #: client/Game2/TrackSelect.cpp:212 client/Game2/TrackSelect.cpp:231
 msgid " no selection"
-msgstr ""
+msgstr "Aucune sélection"
 
 #: client/Game2/TrackSelect.cpp:251
 msgid "Number of laps should be between 1 and 99"
-msgstr ""
+msgstr "Le nombre de tours doit être situé entre 1 et 99"
 
 #: client/Game2/main.cpp:230
 #, c-format, boost-format
@@ -346,3 +267,6 @@ msgid ""
 "Please visit %s to learn how to\n"
 "contribute to this project."
 msgstr ""
+"HoverRace pour Linux est en développement!\n"
+"Visitez %s pour apprendre comment\n"
+" contribuer au projet."
