@@ -1,0 +1,249 @@
+# Norwegian Bokmal translations for HoverRace package.
+# Copyright (C) 2009 HoverRace contributors
+# This file is distributed under the same license as the HoverRace package.
+#  <ryan@igglybob.com>, 2009.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: hoverrace 1.24\n"
+"Report-Msgid-Bugs-To: bugs@hoverrace.com\n"
+"POT-Creation-Date: 2009-03-04 17:53-0500\n"
+"PO-Revision-Date: 2009-03-04 22:15-0500\n"
+"Last-Translator:  <ryan@igglybob.com>\n"
+"Language-Team: Norwegian Bokmal\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ASCII\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: client/Game2/GameApp.cpp:729
+msgid "Abort current game?"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:755
+msgid ""
+"To be able to display HoverRace Help\n"
+"you must have a Word document viewer installed\n"
+"on your system."
+msgstr ""
+
+#: client/Game2/GameApp.cpp:992
+msgctxt "Menu|File"
+msgid "&Split Screen"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:994
+msgctxt "Menu|File"
+msgid "&Network"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:1038
+msgctxt "Menu"
+msgid "&File"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:1040
+msgctxt "Menu"
+msgid "&View"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:1042
+msgctxt "Menu"
+msgid "&Setting"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:1044
+msgctxt "Menu"
+msgid "&Help"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:1057
+msgctxt "Version"
+msgid "testing"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:1842
+msgctxt "Menu|Setting"
+msgid "&Fullscreen"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2807
+msgid "About HoverRace"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2808
+msgid "HoverRace version "
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2813
+msgid "HoverRace is brought to you by:"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2815
+msgid "original author"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2818
+msgid "with contributions from (in alphabetical order)"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2824
+msgid ""
+"and with the help of the many testers willing to put up with bugs and other "
+"strange happenings."
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2826
+msgid "visit us at"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2830
+msgid "Thanks also to the following projects"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2844
+msgid "Close"
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:465 client/Game2/NetInterface.cpp:486
+#: client/Game2/NetInterface.cpp:498 client/Game2/NetInterface.cpp:556
+#: client/Game2/NetInterface.cpp:576 client/Game2/NetInterface.cpp:631
+#: client/Game2/NetInterface.cpp:711 client/Game2/NetInterface.cpp:721
+#: client/Game2/NetInterface.cpp:892 client/Game2/NetInterface.cpp:1654
+msgid "TCP Server"
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:465 client/Game2/NetInterface.cpp:556
+#: client/Game2/NetInterface.cpp:892
+msgid "Unable to create socket"
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:485 client/Game2/NetInterface.cpp:721
+msgid "Unable to use the port, try to close some WINSOCK applications"
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:497 client/Game2/NetInterface.cpp:575
+#: client/Game2/NetInterface.cpp:630
+msgid ""
+"Unable to use UDP recv port; choose a different port or close some Winsock "
+"applications."
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:711
+msgid "Port value must be greater than 0"
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:913
+msgid "ERROR Unable to connect to server..."
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:1654
+msgid "Game cancelled by server"
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:1694
+msgid "Connection refused by peer "
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:1696
+msgid ""
+"; perhaps they are behind a firewall and need to forward ports 9530 and 9531 "
+"TCP and UDP?"
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:1698 client/Game2/NetInterface.cpp:1737
+#: client/Game2/NetInterface.cpp:1763 client/Game2/NetInterface.cpp:1773
+msgid "TCP Client"
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:1733
+msgid "Main server and peer "
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:1735
+msgid " are using the same IP and port!"
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:1758
+msgid "Cannot connect to peer "
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:1760
+msgid " at IP "
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:1770
+msgid "Connection error with "
+msgstr ""
+
+#: client/Game2/Observer.cpp:57
+msgid "Basic craft"
+msgstr ""
+
+#: client/Game2/Observer.cpp:58
+msgid "CX craft"
+msgstr ""
+
+#: client/Game2/Observer.cpp:59
+msgid "Bi-Turbo craft"
+msgstr ""
+
+#: client/Game2/Observer.cpp:60
+msgid "Eon craft"
+msgstr ""
+
+#: client/Game2/Observer.cpp:62
+msgid "Unknown craft"
+msgstr ""
+
+#: client/Game2/Observer.cpp:98
+msgid "Select your craft with the arrow keys"
+msgstr ""
+
+#: client/Game2/TrackSelect.cpp:120 client/Game2/TrackSelect.cpp:130
+msgid "Bad track file format"
+msgstr ""
+
+#: client/Game2/TrackSelect.cpp:183
+msgid "Track selection"
+msgstr ""
+
+#: client/Game2/TrackSelect.cpp:184
+msgid "Tracks"
+msgstr ""
+
+#: client/Game2/TrackSelect.cpp:185
+msgid "Description"
+msgstr ""
+
+#: client/Game2/TrackSelect.cpp:186
+msgid "Laps"
+msgstr ""
+
+#: client/Game2/TrackSelect.cpp:187
+msgid "Weapons"
+msgstr ""
+
+#: client/Game2/TrackSelect.cpp:188
+msgid "OK"
+msgstr ""
+
+#: client/Game2/TrackSelect.cpp:189
+msgid "Cancel"
+msgstr ""
+
+#: client/Game2/TrackSelect.cpp:212 client/Game2/TrackSelect.cpp:231
+msgid " no selection"
+msgstr ""
+
+#: client/Game2/TrackSelect.cpp:251
+msgid "Number of laps should be between 1 and 99"
+msgstr ""
+
+#: client/Game2/main.cpp:230
+#, c-format, boost-format
+msgid ""
+"HoverRace for Linux is under development!\n"
+"Please visit %s to learn how to\n"
+"contribute to this project."
+msgstr ""
