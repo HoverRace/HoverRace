@@ -4,7 +4,7 @@ DOMAIN = $(PACKAGE)
 subdir = po
 top_builddir = ..
 
-XGETTEXT_OPTIONS = --sort-by-file --c++ --boost -k_
+XGETTEXT_OPTIONS = --sort-by-file --c++ --boost -k_ -kMENUFMT:1c,2
 
 COPYRIGHT_HOLDER = HoverRace contributors
 MSGID_BUGS_ADDRESS = bugs@hoverrace.com
