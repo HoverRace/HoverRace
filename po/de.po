@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
 "Report-Msgid-Bugs-To: bugs@hoverrace.com\n"
 "POT-Creation-Date: 2009-03-04 23:00-0500\n"
-"PO-Revision-Date: 2009-03-04 11:46-0700\n"
+"PO-Revision-Date: 2009-03-05 11:08-0700\n"
 "Last-Translator: Ryan Curtin <ryan@tortoise.igglybob.com>\n"
 "Language-Team: German\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 1.2.1\n"
 "X-Poedit-Language: German\n"
@@ -24,9 +24,8 @@ msgid ""
 msgstr ""
 
 #: client/Game2/Banner.cpp:359 client/Game2/Banner.cpp:404
-#, fuzzy
 msgid "HoverRace Error"
-msgstr "HoverRace Version "
+msgstr "HoverRace Fehler"
 
 #: client/Game2/GameApp.cpp:729
 msgid "Abort current game?"
@@ -60,17 +59,17 @@ msgstr "&4 Spielern"
 #: client/Game2/GameApp.cpp:978
 msgctxt "Menu|File|Network"
 msgid "&Connect to server"
-msgstr ""
+msgstr "&Verbund mit dem Server"
 
 #: client/Game2/GameApp.cpp:980
 msgctxt "Menu|File|Network"
 msgid "Create a &server"
-msgstr ""
+msgstr "Erstell ein &Server"
 
 #: client/Game2/GameApp.cpp:983
 msgctxt "Menu|File|Network"
 msgid "&Internet Meeting Room"
-msgstr ""
+msgstr "&Internet Besprechungsraum"
 
 #: client/Game2/GameApp.cpp:988
 msgctxt "Menu|File"
@@ -85,17 +84,17 @@ msgstr "&Training"
 #: client/Game2/GameApp.cpp:992
 msgctxt "Menu|File"
 msgid "&Split Screen"
-msgstr ""
+msgstr "&Geteilter Bildschirm"
 
 #: client/Game2/GameApp.cpp:994
 msgctxt "Menu|File"
 msgid "&Network"
-msgstr ""
+msgstr "&Netzwerk"
 
 #: client/Game2/GameApp.cpp:997
 msgctxt "Menu|File"
 msgid "E&xit"
-msgstr ""
+msgstr "&Beenden"
 
 #: client/Game2/GameApp.cpp:1002
 msgctxt "Menu|View"
