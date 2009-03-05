@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
 "Report-Msgid-Bugs-To: bugs@hoverrace.com\n"
-"POT-Creation-Date: 2009-03-04 17:53-0500\n"
+"POT-Creation-Date: 2009-03-04 23:00-0500\n"
 "PO-Revision-Date: 2009-03-04 22:19-0500\n"
 "Last-Translator:  <ryan@igglybob.com>\n"
 "Language-Team: Dutch\n"
@@ -15,6 +15,15 @@ msgstr ""
 "Content-Type: text/plain; charset=ASCII\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: client/Game2/Banner.cpp:356 client/Game2/Banner.cpp:401
+msgid ""
+"Unable to activate your web browser. Please start your web browser and go to:"
+msgstr ""
+
+#: client/Game2/Banner.cpp:359 client/Game2/Banner.cpp:404
+msgid "HoverRace Error"
+msgstr ""
 
 #: client/Game2/GameApp.cpp:729
 msgid "Abort current game?"
@@ -27,6 +36,46 @@ msgid ""
 "on your system."
 msgstr ""
 
+#: client/Game2/GameApp.cpp:969
+msgctxt "Menu|File|Split Screen"
+msgid "&2 Player"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:971
+msgctxt "Menu|File|Split Screen"
+msgid "&3 Player"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:973
+msgctxt "Menu|File|Split Screen"
+msgid "&4 Player"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:978
+msgctxt "Menu|File|Network"
+msgid "&Connect to server"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:980
+msgctxt "Menu|File|Network"
+msgid "Create a &server"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:983
+msgctxt "Menu|File|Network"
+msgid "&Internet Meeting Room"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:988
+msgctxt "Menu|File"
+msgid "&Internet"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:990
+msgctxt "Menu|File"
+msgid "&Practice"
+msgstr ""
+
 #: client/Game2/GameApp.cpp:992
 msgctxt "Menu|File"
 msgid "&Split Screen"
@@ -35,6 +84,61 @@ msgstr ""
 #: client/Game2/GameApp.cpp:994
 msgctxt "Menu|File"
 msgid "&Network"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:997
+msgctxt "Menu|File"
+msgid "E&xit"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:1002
+msgctxt "Menu|View"
+msgid "&Following Camera"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:1004
+msgctxt "Menu|View"
+msgid "&Cockpit"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:1007
+msgctxt "Menu|View"
+msgid "&Players list"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:1009
+msgctxt "Menu|View"
+msgid "More &messages"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:1012
+msgctxt "Menu|View"
+msgid "&Refresh colors"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:1017 client/Game2/GameApp.cpp:1842
+msgctxt "Menu|Setting"
+msgid "&Fullscreen"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:1019
+msgctxt "Menu|Setting"
+msgid "&Window"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:1022
+msgctxt "Menu|Setting"
+msgid "&Properties"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:1027
+msgctxt "Menu|Help"
+msgid "&Contents"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:1033
+msgctxt "Menu|Help"
+msgid "&About HoverRace"
 msgstr ""
 
 #: client/Game2/GameApp.cpp:1038
@@ -60,11 +164,6 @@ msgstr ""
 #: client/Game2/GameApp.cpp:1057
 msgctxt "Version"
 msgid "testing"
-msgstr ""
-
-#: client/Game2/GameApp.cpp:1842
-msgctxt "Menu|Setting"
-msgid "&Fullscreen"
 msgstr ""
 
 #: client/Game2/GameApp.cpp:2807
