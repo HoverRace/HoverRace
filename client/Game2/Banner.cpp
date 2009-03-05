@@ -24,9 +24,13 @@
 
 #include "Banner.h"
 #include "../../engine/Util/StrRes.h"
+#include "../../engine/Util/OS.h"
+#include "../../engine/Util/Str.h"
 #include "resource.h"
 
 #include <olectl.h>
+
+using namespace HoverRace::Util;
 
 // Local functions
 
@@ -348,10 +352,11 @@ BOOL LoadURL(HWND pWindow, const char *pURL)
 			SW_SHOWNORMAL);
 
 		if(lReturnCode <= 32) {
-			CString lMessage;
+			std::string message = boost::str(boost::format("%s\n%s") %
+				_("Unable to activate your web browser. Please start your web browser and go to:") %
+				pURL);
 
-			lMessage.Format(IDS_WWW_REQ, pURL);
-			MessageBox(pWindow, lMessage, MR_LoadString(IDS_ERROR), MB_ICONERROR | MB_APPLMODAL | MB_OK);
+			MessageBoxW(pWindow, Str::UW(message.c_str()), Str::UW(_("HoverRace Error")), MB_ICONERROR | MB_APPLMODAL | MB_OK);
 		}
 		else {
 			lReturnValue = TRUE;
@@ -392,10 +397,11 @@ BOOL LoadURLShortcut(HWND pWindow, const char *pShortcut)
 			fclose(lFile);
 		}
 
-		CString lMessage;
+		std::string message = boost::str(boost::format("%s\n%s") %
+			_("Unable to activate your web browser. Please start your web browser and go to:") %
+			lURL);
 
-		lMessage.Format(IDS_WWW_REQ, lURL);
-		MessageBox(pWindow, lMessage, MR_LoadString(IDS_ERROR), MB_ICONERROR | MB_APPLMODAL | MB_OK);
+		MessageBoxW(pWindow, Str::UW(message.c_str()), Str::UW(_("HoverRace Error")), MB_ICONERROR | MB_APPLMODAL | MB_OK);
 	}
 
 	return lReturnValue;
