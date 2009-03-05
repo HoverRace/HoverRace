@@ -8,13 +8,15 @@ msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
 "Report-Msgid-Bugs-To: bugs@hoverrace.com\n"
 "POT-Creation-Date: 2009-03-04 23:00-0500\n"
-"PO-Revision-Date: 2009-03-04 22:19-0500\n"
-"Last-Translator:  <ryan@igglybob.com>\n"
+"PO-Revision-Date: 2009-03-05 06:29-0700\n"
+"Last-Translator: <ryan@igglybob.com>\n"
 "Language-Team: Dutch\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ASCII\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 1.2.1\n"
 
 #: client/Game2/Banner.cpp:356 client/Game2/Banner.cpp:401
 msgid ""
@@ -23,11 +25,11 @@ msgstr ""
 
 #: client/Game2/Banner.cpp:359 client/Game2/Banner.cpp:404
 msgid "HoverRace Error"
-msgstr ""
+msgstr "HoverRace Fout"
 
 #: client/Game2/GameApp.cpp:729
 msgid "Abort current game?"
-msgstr ""
+msgstr "Huidige spel stoppen?"
 
 #: client/Game2/GameApp.cpp:755
 msgid ""
@@ -54,155 +56,157 @@ msgstr ""
 #: client/Game2/GameApp.cpp:978
 msgctxt "Menu|File|Network"
 msgid "&Connect to server"
-msgstr ""
+msgstr "&Verbind met een server"
 
 #: client/Game2/GameApp.cpp:980
 msgctxt "Menu|File|Network"
 msgid "Create a &server"
-msgstr ""
+msgstr "Maak een &server"
 
 #: client/Game2/GameApp.cpp:983
 msgctxt "Menu|File|Network"
 msgid "&Internet Meeting Room"
-msgstr ""
+msgstr "&Internet-ontmoetingsruimte"
 
 #: client/Game2/GameApp.cpp:988
 msgctxt "Menu|File"
 msgid "&Internet"
-msgstr ""
+msgstr "&Internet"
 
 #: client/Game2/GameApp.cpp:990
 msgctxt "Menu|File"
 msgid "&Practice"
-msgstr ""
+msgstr "&Oefenen"
 
 #: client/Game2/GameApp.cpp:992
 msgctxt "Menu|File"
 msgid "&Split Screen"
-msgstr ""
+msgstr "Ge&splitst scherm"
 
 #: client/Game2/GameApp.cpp:994
 msgctxt "Menu|File"
 msgid "&Network"
-msgstr ""
+msgstr "&Netwerk"
 
 #: client/Game2/GameApp.cpp:997
 msgctxt "Menu|File"
 msgid "E&xit"
-msgstr ""
+msgstr "&Afsluiten"
 
 #: client/Game2/GameApp.cpp:1002
 msgctxt "Menu|View"
 msgid "&Following Camera"
-msgstr ""
+msgstr "&Volgcamera"
 
 #: client/Game2/GameApp.cpp:1004
 msgctxt "Menu|View"
 msgid "&Cockpit"
-msgstr ""
+msgstr "&Cockpitcamera"
 
 #: client/Game2/GameApp.cpp:1007
 msgctxt "Menu|View"
 msgid "&Players list"
-msgstr ""
+msgstr "&Spelerslijst"
 
 #: client/Game2/GameApp.cpp:1009
 msgctxt "Menu|View"
 msgid "More &messages"
-msgstr ""
+msgstr "Meer &berichten"
 
 #: client/Game2/GameApp.cpp:1012
 msgctxt "Menu|View"
 msgid "&Refresh colors"
-msgstr ""
+msgstr "&Kleuren verversen"
 
 #: client/Game2/GameApp.cpp:1017 client/Game2/GameApp.cpp:1842
 msgctxt "Menu|Setting"
 msgid "&Fullscreen"
-msgstr ""
+msgstr "Volledig &scherm"
 
 #: client/Game2/GameApp.cpp:1019
 msgctxt "Menu|Setting"
 msgid "&Window"
-msgstr ""
+msgstr "&Venster"
 
 #: client/Game2/GameApp.cpp:1022
 msgctxt "Menu|Setting"
 msgid "&Properties"
-msgstr ""
+msgstr "&Eigenschappen"
 
 #: client/Game2/GameApp.cpp:1027
 msgctxt "Menu|Help"
 msgid "&Contents"
-msgstr ""
+msgstr "&Inhoud"
 
 #: client/Game2/GameApp.cpp:1033
 msgctxt "Menu|Help"
 msgid "&About HoverRace"
-msgstr ""
+msgstr "&Over HoverRace"
 
 #: client/Game2/GameApp.cpp:1038
 msgctxt "Menu"
 msgid "&File"
-msgstr ""
+msgstr "&Bestand"
 
 #: client/Game2/GameApp.cpp:1040
 msgctxt "Menu"
 msgid "&View"
-msgstr ""
+msgstr "&Zicht"
 
 #: client/Game2/GameApp.cpp:1042
 msgctxt "Menu"
 msgid "&Setting"
-msgstr ""
+msgstr "&Instelling"
 
 #: client/Game2/GameApp.cpp:1044
 msgctxt "Menu"
 msgid "&Help"
-msgstr ""
+msgstr "&Help"
 
 #: client/Game2/GameApp.cpp:1057
 msgctxt "Version"
 msgid "testing"
-msgstr ""
+msgstr "test"
 
 #: client/Game2/GameApp.cpp:2807
 msgid "About HoverRace"
-msgstr ""
+msgstr "Over HoverRace"
 
 #: client/Game2/GameApp.cpp:2808
 msgid "HoverRace version "
-msgstr ""
+msgstr "HoverRace versie"
 
 #: client/Game2/GameApp.cpp:2813
 msgid "HoverRace is brought to you by:"
-msgstr ""
+msgstr "HoverRace is mogelijk gemaakt door:"
 
 #: client/Game2/GameApp.cpp:2815
 msgid "original author"
-msgstr ""
+msgstr "oorspronkelijke maker"
 
 #: client/Game2/GameApp.cpp:2818
 msgid "with contributions from (in alphabetical order)"
-msgstr ""
+msgstr "met bijdragen van (in alfabetische volgorde)"
 
 #: client/Game2/GameApp.cpp:2824
 msgid ""
 "and with the help of the many testers willing to put up with bugs and other "
 "strange happenings."
 msgstr ""
+"en dankzij de hulp van de vele testers die bereid waren bugs en andere "
+"vreemde zaken te trotseren."
 
 #: client/Game2/GameApp.cpp:2826
 msgid "visit us at"
-msgstr ""
+msgstr "bezoek ons op"
 
 #: client/Game2/GameApp.cpp:2830
 msgid "Thanks also to the following projects"
-msgstr ""
+msgstr "Ook dank aan de volgende projecten"
 
 #: client/Game2/GameApp.cpp:2844
 msgid "Close"
-msgstr ""
+msgstr "Sluiten"
 
 #: client/Game2/NetInterface.cpp:465 client/Game2/NetInterface.cpp:486
 #: client/Game2/NetInterface.cpp:498 client/Game2/NetInterface.cpp:556
