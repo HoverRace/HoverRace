@@ -236,7 +236,7 @@ boost::shared_ptr<OS::monitors_t> OS::GetMonitors()
 			if (!EnumDisplayDevices(NULL, i, &devInfo, 0)) break;
 
 			// Ignore mirroring pseudo-devices.
-			if (devInfo.StateFlags & DISPLAY_DEVICE_MIRRORING_DRIVER) break;
+			if (devInfo.StateFlags & DISPLAY_DEVICE_MIRRORING_DRIVER) continue;
 			
 			DISPLAY_DEVICE monInfo;
 			memset(&monInfo, 0, sizeof(monInfo));
