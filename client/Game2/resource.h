@@ -154,6 +154,17 @@
 #define IDC_UDP_RECV_PORT_C             1119
 #define IDC_CLICK_OK                    1120
 #define IDC_MAKE_SURE                   1121
+#define IDC_YOUR_ALIAS                  1122
+#define IDC_ROOM_C                      1123
+#define IDC_GAME_LIST_C                 1124
+#define IDC_GAME_DETAILS_C              1125
+#define IDC_TRACK_NAME_C                1126
+#define IDC_LAPS_C                      1127
+#define IDC_AVAILABILITY_C              1128
+#define IDC_PLAYERS_LIST_C              1129
+#define IDC_USERS_LIST_C                1130
+#define IDC_CHAT_SECTION_C              1131
+#define IDC_WEAPONS_C                   1132
 #define ID_VIEW_3DACTION                32775
 #define ID_SETTING_WINDOW               32784
 #define ID_GAME_PAUSE                   32788
@@ -371,7 +382,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        166
 #define _APS_NEXT_COMMAND_VALUE         40049
-#define _APS_NEXT_CONTROL_VALUE         1122
+#define _APS_NEXT_CONTROL_VALUE         1133
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

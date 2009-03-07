@@ -279,16 +279,16 @@ BOOL MR_InternetRequest::ProcessEvent(WPARAM pWParam, LPARAM pLParam)
 					if(lNbRead > 0) {
 						lReadBuffer[lNbRead] = 0;
 
-							{
-								mBuffer += lReadBuffer;
-							}
+						{
+							mBuffer += lReadBuffer;
 						}
 					}
+				}
 	
-					if(WSAGETSELECTEVENT(pLParam) == FD_CLOSE) {
-						Close();
-					}
-					break;
+				if(WSAGETSELECTEVENT(pLParam) == FD_CLOSE) {
+					Close();
+				}
+				break;
 
 		}
 	}
@@ -516,7 +516,7 @@ BOOL MR_InternetRoom::LocateServers(HWND pParentWindow, BOOL pShouldRecheckServe
 		gNbBannerEntries = 0;
 		gCurrentBannerEntry = 0;
 
-		if(DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_NET_PROGRESS), pParentWindow, GetAddrCallBack) == IDOK) {
+		if(DialogBoxW(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDD_NET_PROGRESS), pParentWindow, GetAddrCallBack) == IDOK) {
 			lReturnValue = TRUE;
 		}
 	}
@@ -530,11 +530,11 @@ BOOL MR_InternetRoom::AddUserOp(HWND pParentWindow)
 
 	mThis = this;
 
-	mNetOpString.LoadString(IDS_IMR_CONNECT);
+	mNetOpString = _("Connecting to the Internet Meeting Room...");
 
 	mNetOpRequest.Format("%s?=ADD_USER%%%%%d-%d%%%%1%%%%%u%%%%%u%%%%%s", (const char *) gServerList[gCurrentServerEntry].mURL, mMajorID, (mMinorID == -1) ? -2 : mMinorID, mKey2, mKey3, (const char *) MR_Pad(mUser));
 
-	lReturnValue = DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_NET_PROGRESS), pParentWindow, NetOpCallBack) == IDOK;
+	lReturnValue = DialogBoxW(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDD_NET_PROGRESS), pParentWindow, NetOpCallBack) == IDOK;
 
 	if(lReturnValue) {
 		const char *lData = mOpRequest.GetBuffer();
@@ -551,8 +551,8 @@ BOOL MR_InternetRoom::AddUserOp(HWND pParentWindow)
 
 			sscanf(lData, "USER_ID %d-%u", &mCurrentUserIndex, &mCurrentUserId);
 
-			AddChatLine(MR_LoadString(IDS_UR_CONNECT));
-			AddChatLine(MR_LoadString(IDS_IMR_WELCOME));
+			AddChatLine(_("You are connected"));
+			AddChatLine(_("Welcome to the HoverRace Internet Meeting Room"));
 
 			ParseState(lData);
 		}
@@ -569,11 +569,11 @@ BOOL MR_InternetRoom::DelUserOp(HWND pParentWindow, BOOL pFastMode)
 
 	mThis = this;
 
-	mNetOpString.LoadString(IDS_IMR_DISCONNECT);
+	mNetOpString = _("Disconnecting from the Internet Meeting Room...");
 
 	mNetOpRequest.Format("%s?=DEL_USER%%%%%d-%u", (const char *) gServerList[gCurrentServerEntry].mURL, mCurrentUserIndex, mCurrentUserId);
 
-	lReturnValue = DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_NET_PROGRESS), pParentWindow, pFastMode ? FastNetOpCallBack : NetOpCallBack) == IDOK;
+	lReturnValue = DialogBoxW(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDD_NET_PROGRESS), pParentWindow, pFastMode ? FastNetOpCallBack : NetOpCallBack) == IDOK;
 
 	mOpRequest.Clear();
 
@@ -586,11 +586,11 @@ BOOL MR_InternetRoom::AddGameOp(HWND pParentWindow, const char *pGameName, const
 
 	mThis = this;
 
-	mNetOpString.LoadString(IDS_IMR_ADD_GAME);
+	mNetOpString = _("Registering game with the Internet Meeting Room...");
 
 	mNetOpRequest.Format("%s?=ADD_GAME%%%%%d-%u%%%%%s%%%%%s%%%%%d%%%%%d%%%%%d", (const char *) gServerList[gCurrentServerEntry].mURL, mCurrentUserIndex, mCurrentUserId, (const char *) MR_Pad(pGameName), (const char *) MR_Pad(pTrackName), pNbLap, pWeapons ? 1 : 0, pPort);
 
-	lReturnValue = DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_NET_PROGRESS), pParentWindow, NetOpCallBack) == IDOK;
+	lReturnValue = DialogBoxW(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDD_NET_PROGRESS), pParentWindow, NetOpCallBack) == IDOK;
 
 	if(lReturnValue) {
 		const char *lData = mOpRequest.GetBuffer();
@@ -620,11 +620,11 @@ BOOL MR_InternetRoom::DelGameOp(HWND pParentWindow)
 
 	mThis = this;
 
-	mNetOpString.LoadString(IDS_IMR_DEL_GAME);
+	mNetOpString = _("Unregistering game from the Internet Meeting Room...");
 
 	mNetOpRequest.Format("%s?=DEL_GAME%%%%%d-%u%%%%%d-%u", (const char *) gServerList[gCurrentServerEntry].mURL, mCurrentGameIndex, mCurrentGameId, mCurrentUserIndex, mCurrentUserId);
 
-	lReturnValue = DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_NET_PROGRESS), pParentWindow, NetOpCallBack) == IDOK;
+	lReturnValue = DialogBoxW(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDD_NET_PROGRESS), pParentWindow, NetOpCallBack) == IDOK;
 
 	mOpRequest.Clear();
 
@@ -637,7 +637,7 @@ BOOL MR_InternetRoom::JoinGameOp(HWND pParentWindow, int pGameIndex)
 
 	mThis = this;
 
-	mNetOpString.LoadString(IDS_IMR_JOIN_GAME);
+	mNetOpString = _("Registering with the Internet Meeting Room...");
 
 	mCurrentGameIndex = pGameIndex;
 	mCurrentGameId = mGameList[pGameIndex].mId;
@@ -648,7 +648,7 @@ BOOL MR_InternetRoom::JoinGameOp(HWND pParentWindow, int pGameIndex)
 		Config::GetInstance()->net.tcpRecvPort,
 		Config::GetInstance()->net.udpRecvPort);
 
-	lReturnValue = DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_NET_PROGRESS), pParentWindow, NetOpCallBack) == IDOK;
+	lReturnValue = DialogBoxW(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDD_NET_PROGRESS), pParentWindow, NetOpCallBack) == IDOK;
 
 	mOpRequest.Clear();
 
@@ -661,11 +661,11 @@ BOOL MR_InternetRoom::LeaveGameOp(HWND pParentWindow)
 
 	mThis = this;
 
-	mNetOpString.LoadString(IDS_IMR_LEAVE_GAME);
+	mNetOpString = _("Unregistering from the Internet Meeting Room...");
 
 	mNetOpRequest.Format("%s?=LEAVE_GAME%%%%%d-%u%%%%%d-%u", (const char *) gServerList[gCurrentServerEntry].mURL, mCurrentGameIndex, mCurrentGameId, mCurrentUserIndex, mCurrentUserId);
 
-	lReturnValue = DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_NET_PROGRESS), pParentWindow, NetOpCallBack) == IDOK;
+	lReturnValue = DialogBoxW(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDD_NET_PROGRESS), pParentWindow, NetOpCallBack) == IDOK;
 
 	mOpRequest.Clear();
 
@@ -678,11 +678,11 @@ BOOL MR_InternetRoom::AddMessageOp(HWND pParentWindow, const char *pMessage, int
 
 	mThis = this;
 
-	mNetOpString = "Sending message to the Meeting Room...";
+	mNetOpString = _("Sending message to the Internet Meeting Room...");
 
 	mNetOpRequest.Format("%s?=MESSAGE%%%%%d-%u%%%%%d:%d%%%%%s", (const char *) gServerList[gCurrentServerEntry].mURL, mCurrentUserIndex, mCurrentUserId, pHours, pMinutes, (const char *) MR_Pad(pMessage));
 
-	lReturnValue = DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_NET_PROGRESS), pParentWindow, NetOpCallBack) == IDOK;
+	lReturnValue = DialogBoxW(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDD_NET_PROGRESS), pParentWindow, NetOpCallBack) == IDOK;
 
 	mOpRequest.Clear();
 
@@ -697,7 +697,7 @@ BOOL MR_InternetRoom::AskRoomParams(HWND pParentWindow, BOOL pShouldRecheckServe
 	lReturnValue = mThis->LocateServers(pParentWindow, pShouldRecheckServer);
 
 	if(lReturnValue) {
-		lReturnValue = DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_INTERNET_PARAMS), pParentWindow, AskParamsCallBack) == IDOK;
+		lReturnValue = DialogBoxW(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDD_INTERNET_PARAMS), pParentWindow, AskParamsCallBack) == IDOK;
 	}
 
 	return lReturnValue;
@@ -804,7 +804,7 @@ void MR_InternetRoom::RefreshGameSelection(HWND pWindow)
 	int lGameIndex = FindFocusItem(GetDlgItem(pWindow, IDC_GAME_LIST));
 
 	if(lGameIndex == -1) {
-		SetDlgItemText(pWindow, IDC_TRACK_NAME, MR_LoadString(IDS_IMR_NOSELECT));
+		SetDlgItemTextW(pWindow, IDC_TRACK_NAME, Str::UW(_("[no selection]")));
 		SetDlgItemText(pWindow, IDC_NB_LAP, "");
 		SetDlgItemText(pWindow, IDC_WEAPONS, "");
 		SetDlgItemText(pWindow, IDC_AVAIL_MESSAGE, "");
@@ -818,11 +818,11 @@ void MR_InternetRoom::RefreshGameSelection(HWND pWindow)
 
 		switch (mGameList[lGameIndex].mAvailCode) {
 			case eTrackAvail:
-				lAvailString.LoadString(IDS_AVAIL);
+				lAvailString = _("Available");
 				break;
 
 			case eTrackNotFound:
-				lAvailString.LoadString(IDS_TRACK_NOTINSTALL);
+				lAvailString = _("Join game to download from hoverrace.com");
 				break;
 		}
 
@@ -932,6 +932,10 @@ void MR_InternetRoom::RefreshUserList(HWND pWindow)
 
 }
 
+/***
+ * Refresh the chat buffer.
+ * Keep in mind that mChatBuffer is internally UTF-8 (not wide), so Str::UW must be used before displaying.
+ */
 void MR_InternetRoom::RefreshChatOut(HWND pWindow)
 {
 	HWND pDest = GetDlgItem(pWindow, IDC_CHAT_OUT);
@@ -968,156 +972,158 @@ BOOL MR_InternetRoom::VerifyError(HWND pParentWindow, const char *pAnswer)
 
 		if(lCode == -1) {
 			ASSERT(FALSE);
-			lMessage.LoadString(IDS_COMM_ERROR);
+			lMessage = _("Communication error");
 		}
 
 		while(lMessage.IsEmpty()) {
 			switch (lCode) {
 				case 100:
-					lMessage.LoadString(IDS_CANT_ADDUSER);
+					lMessage = _("Unable to add user");
 					break;
 
 				case 101:
-					lMessage.LoadString(IDS_NOMORE_SHRWR);
+					lMessage = _("No more Shareware users allowed");
 					break;
 
 				case 102:
-					lMessage.LoadString(IDS_NOMORE_USER);
+					lMessage = _("No more user allowed");
 					break;
 
 				case 103:
-					lMessage.LoadString(IDS_INCOMPAT_VER);
+					lMessage = _("Incompatible version");
 					break;
 
 				case 104:
-					lMessage.LoadString(IDS_EXP_KEY);
+					lMessage = _("Expired key");
 					break;
 
 				case 105:
-					lMessage.LoadString(IDS_DUAL_USE);
+					lMessage = _("Already used key (report for investigation)");
 					break;
 
 				case 200:
-					lMessage.LoadString(IDS_CANT_REFRESH);
+					lMessage = _("Unable to send refresh info");
 					break;
 
 				case 201:
-					lMessage.LoadString(IDS_NOL);
+					lMessage = _("Not online");
 					break;
 
 				case 300:
-					lMessage.LoadString(IDS_CANT_ADD_CHAT);
+					lMessage = _("Unable to add chat message");
 					break;
 
 				case 301:
-					lMessage.LoadString(IDS_NOL);
+					lMessage = _("Not online");
 					break;
 
 				case 400:
-					lMessage.LoadString(IDS_CANT_ADD_GAME);
+					lMessage = _("Unable to add game");
 					break;
 
 				case 401:
-					lMessage.LoadString(IDS_NOL);
+					lMessage = _("Not online");
 					break;
 
 				case 402:
-					lMessage.LoadString(IDS_NOMORE_ENTRY);
+					lMessage = _("Entry is no longer available");
 					break;
 
 				case 500:
-					lMessage.LoadString(IDS_CANT_JOIN);
+					lMessage = _("Unable to add user");
 					break;
 
 				case 501:
-					lMessage.LoadString(IDS_NOL);
+					lMessage = _("Not online");
 					break;
 
 				case 502:
-					lMessage.LoadString(IDS_GAME_NA);
+					lMessage = _("Game is no longer available");
 					break;
 
 				case 503:
-					lMessage.LoadString(IDS_GAME_FULL);
+					lMessage = _("Game is full");
 					break;
 
 				case 600:
-					lMessage.LoadString(IDS_CANT_DEL_GAME);
+					lMessage = _("Unable to delete game");
 					break;
 
 				case 601:
-					lMessage.LoadString(IDS_NOL);
+					lMessage = _("Not online");
 					lPopDlg = FALSE;
 					break;
 
 				case 602:
-					lMessage.LoadString(IDS_GAME_NA);
+					lMessage = _("Game is no longer available");
 					break;
 
 				case 603:
-					lMessage.LoadString(IDS_NOT_OWNER);
+					lMessage = _("Not owner");
 					break;
 
 				case 700:
-					lMessage.LoadString(IDS_CANT_LEAVE_GAME);
+					lMessage = _("Unable to leave game");
 					break;
 
 				case 701:
-					lMessage.LoadString(IDS_NOL);
+					lMessage = _("Not online");
 					lPopDlg = FALSE;
 					break;
 
 				case 702:
-					lMessage.LoadString(IDS_GAME_NA);
+					lMessage = _("Game is no longer available");
 					lPopDlg = FALSE;
 					break;
 
 				case 703:
-					lMessage.LoadString(IDS_MUST_JOIN);
+					lMessage = _("Must join first");
 					break;
 
 				case 800:
-					lMessage.LoadString(IDS_CANT_DEL_USER);
+					lMessage = _("Unable to delete user");
 					break;
 
 				case 801:
-					lMessage.LoadString(IDS_NOL);
+					lMessage = _("Not online");
 					lPopDlg = FALSE;
 					break;
 
 				case 900:
-					lMessage.LoadString(IDS_CANT_START_GAME);
+					lMessage = _("Unable to start game");
 					break;
 
 				case 901:
-					lMessage.LoadString(IDS_NOL);
+					lMessage = _("Not online");
 					break;
 
 				case 902:
-					lMessage.LoadString(IDS_GAME_NA);
+					lMessage = _("Game is no longer available");
 					break;
 
 				case 903:
-					lMessage.LoadString(IDS_NOT_OWNER);
+					lMessage = _("Not owner");
 					break;
 
 				case 1000:
-					lMessage.LoadString(IDS_CANT_ADD_MESSAGE);
+					lMessage = _("Unable to add message");
 					break;
 
 				case 1001:
-					lMessage.LoadString(IDS_NOL);
+					lMessage = _("Not online");
 					break;
 
 				case 1002:
-					lMessage.LoadString(IDS_NOT_AUTH);
+					lMessage = _("Not authorized");
 					break;
 
 			}
 
 			if(lMessage.IsEmpty()) {
 				if((lCode % 100) == 0) {
-					lMessage.Format(IDS_UNKNOWN_ERROR, lCode);
+					lMessage = boost::str(boost::format("%s %d") %
+						_("Unknown error code") %
+						lCode).c_str();
 				}
 				else {
 					// Restart the sequence but only with the genic number
@@ -1127,7 +1133,7 @@ BOOL MR_InternetRoom::VerifyError(HWND pParentWindow, const char *pAnswer)
 		}
 
 		if(lPopDlg) {
-			MessageBox(pParentWindow, lMessage, MR_LoadString(IDS_IMR), MB_ICONSTOP | MB_OK | MB_APPLMODAL);
+			MessageBoxW(pParentWindow, Str::UW(lMessage), Str::UW(_("Internet Meeting Room")), MB_ICONSTOP | MB_OK | MB_APPLMODAL);
 		}
 	}
 	return lReturnValue;
@@ -1251,7 +1257,10 @@ BOOL CALLBACK MR_InternetRoom::AskParamsCallBack(HWND pWindow, UINT pMsgId, WPAR
 		case WM_INITDIALOG:
 			{
 				lReturnValue = TRUE;
-				SetDlgItemText(pWindow, IDC_ALIAS, mThis->mUser);
+				SetWindowTextW(pWindow, Str::UW(_("Internet Meeting Room")));
+				SetDlgItemTextW(pWindow, IDC_YOUR_ALIAS, Str::UW(_("Your alias:")));
+				SetDlgItemTextW(pWindow, IDC_ROOM_C, Str::UW(_("Room:")));
+				SetDlgItemTextW(pWindow, IDC_ALIAS, Str::UW(mThis->mUser));
 	
 				if(gCurrentServerEntry == -1) {
 					gCurrentServerEntry = 0;
@@ -1285,11 +1294,13 @@ BOOL CALLBACK MR_InternetRoom::AskParamsCallBack(HWND pWindow, UINT pMsgId, WPAR
 						gCurrentServerEntry = SendDlgItemMessage(pWindow, IDC_ROOMLIST, LB_GETCURSEL, 0, 0);
 	
 						if(GetDlgItemText(pWindow, IDC_ALIAS, lBuffer, sizeof(lBuffer)) <= 0) {
-							MessageBox(pWindow, MR_LoadString(IDS_ENTER_ALIAS), MR_LoadString(IDS_IMR), MB_ICONINFORMATION | MB_OK | MB_APPLMODAL);
+							MessageBoxW(pWindow, Str::UW(_("You must enter an alias")), 
+								Str::UW(_("Internet Meeting Room")), MB_ICONINFORMATION | MB_OK | MB_APPLMODAL);
 						}
 						else if((gCurrentServerEntry < 0) || (gCurrentServerEntry >= gNbServerEntries)) {
 							gCurrentServerEntry = -1;
-							MessageBox(pWindow, MR_LoadString(IDS_SELECT_ROOM), MR_LoadString(IDS_IMR), MB_ICONINFORMATION | MB_OK | MB_APPLMODAL);
+							MessageBoxW(pWindow, Str::UW(_("You must select a room")), 
+								Str::UW(_("Internet Meeting Room")), MB_ICONINFORMATION | MB_OK | MB_APPLMODAL);
 						}
 						else {
 							EndDialog(pWindow, IDOK);
@@ -1316,6 +1327,26 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 		// Catch environment modification events
 		case WM_INITDIALOG:
 			{
+				// i18n
+				// so we don't need to have things translated multiple times
+				std::string title = boost::str(boost::format("%s %s") %
+					_("HoverRace") %
+					_("Internet Meeting Room"));
+				
+				SetWindowTextW(pWindow, Str::UW(title.c_str()));
+				SetDlgItemTextW(pWindow, IDC_GAME_LIST_C, Str::UW(_("Game list")));
+				SetDlgItemTextW(pWindow, IDC_USERS_LIST_C, Str::UW(_("User list")));
+				SetDlgItemTextW(pWindow, IDC_GAME_DETAILS_C, Str::UW(_("Game details")));
+				SetDlgItemTextW(pWindow, IDC_TRACK_NAME_C, Str::UW(_("Track name:")));
+				SetDlgItemTextW(pWindow, IDC_LAPS_C, Str::UW(_("Laps:")));
+				SetDlgItemTextW(pWindow, IDC_WEAPONS_C, Str::UW(_("Weapons:")));
+				SetDlgItemTextW(pWindow, IDC_AVAILABILITY_C, Str::UW(_("Availability:")));
+				SetDlgItemTextW(pWindow, IDC_PLAYERS_LIST_C, Str::UW(_("Player list:")));
+				SetDlgItemTextW(pWindow, IDC_CHAT_SECTION_C, Str::UW(_("Chat section")));
+				SetDlgItemTextW(pWindow, IDC_JOIN, Str::UW(_("Join Game...")));
+				SetDlgItemTextW(pWindow, IDC_ADD, Str::UW(_("New Game...")));
+				SetDlgItemTextW(pWindow, IDCANCEL, Str::UW(_("Quit")));
+
 				RECT lRect;
 				HWND lList;
 				LV_COLUMN lSpec;
@@ -1458,7 +1489,7 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 	
 						// Warn the user
 						if(mThis->mNbSuccessiveRefreshTimeOut >= 2) {
-							mThis->AddChatLine(MR_LoadString(IDS_WARN_TO));
+							mThis->AddChatLine(_("Warning: communication timeout"));
 							mThis->RefreshChatOut(pWindow);
 						}
 						// Initiate a new refresh
@@ -1485,7 +1516,7 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 						mThis->mChatRequest.Clear();
 	
 						// Warn the user
-						mThis->AddChatLine(MR_LoadString(IDS_WARN_TO));
+						mThis->AddChatLine(_("Warning: communication timeout"));
 						mThis->RefreshChatOut(pWindow);
 					}
 					break;
@@ -1901,10 +1932,12 @@ BOOL CALLBACK MR_InternetRoom::GetAddrCallBack(HWND pWindow, UINT pMsgId, WPARAM
 		// Catch environment modification events
 		case WM_INITDIALOG:
 			{
+				SetWindowTextW(pWindow, Str::UW(_("Network Transaction Progress")));
+
 				gServerIP = 0;
 	
 				// Setup message
-				SetDlgItemText(pWindow, IDC_TEXT, MR_LoadString(IDS_LOC_MSERVER));
+				SetDlgItemTextW(pWindow, IDC_TEXT, Str::UW(_("Locating the main server...")));
 	
 				// Try to find the IP addr of the Internet Room
 				char lServer[40];
@@ -1936,30 +1969,34 @@ BOOL CALLBACK MR_InternetRoom::GetAddrCallBack(HWND pWindow, UINT pMsgId, WPARAM
 	
 				switch (pWParam) {
 					case 1:
-	
 						if(gServerIP == 0) {
-							MessageBox(pWindow, MR_LoadString(IDS_CANT_FIND_SERVER), MR_LoadString(IDS_IMR), MB_ICONSTOP | MB_OK | MB_APPLMODAL);
-	
+							MessageBoxW(pWindow, 
+								Str::UW(_("Unable to find the server.\n"
+									"You must be connected to the Internet to use this function.\n"
+									"If the problem persists, you can report it to the\n"
+									"HoverRace forums, in the 'Help Desk' section.")),
+								Str::UW(_("Internet Meeting Room")),
+								MB_ICONSTOP | MB_OK | MB_APPLMODAL);
+							
 							EndDialog(pWindow, IDCANCEL);
 	
 							WSACancelAsyncRequest(mThis->mCurrentLocateRequest);
 						}
 						break;
 
-				case 2:
+					case 2:
+						MessageBoxW(pWindow, Str::UW(_("Connection timeout")), 
+							Str::UW(_("Internet Meeting Room")), MB_ICONSTOP | MB_OK | MB_APPLMODAL);
 
-					MessageBox(pWindow, MR_LoadString(IDS_TO), MR_LoadString(IDS_IMR), MB_ICONSTOP | MB_OK | MB_APPLMODAL);
+						EndDialog(pWindow, IDCANCEL);
 
-					EndDialog(pWindow, IDCANCEL);
+						mThis->mOpRequest.Clear();
+						break;
 
-					mThis->mOpRequest.Clear();
-					break;
-
+				}
+				break;
 			}
 			break;
-		}
-
-		break;
 
 		case MRM_DNS_ANSWER:
 			{
@@ -2021,7 +2058,8 @@ BOOL CALLBACK MR_InternetRoom::GetAddrCallBack(HWND pWindow, UINT pMsgId, WPARAM
 
 				if(lData == NULL) {
 					// Server down or fine not found :(
-					MessageBox(pWindow, MR_LoadString(IDS_SERVER_ERROR), MR_LoadString(IDS_IMR), MB_ICONSTOP | MB_OK | MB_APPLMODAL);
+					MessageBoxW(pWindow, Str::UW(_("Server error; please contact the server administrator")),
+						Str::UW(_("Internet Meeting Room")), MB_ICONSTOP | MB_OK | MB_APPLMODAL);
 
 					EndDialog(pWindow, IDCANCEL);
 				}
@@ -2160,7 +2198,8 @@ BOOL CALLBACK MR_InternetRoom::NetOpCallBack(HWND pWindow, UINT pMsgId, WPARAM p
 		case WM_INITDIALOG:
 			{
 				// Setup message
-				SetDlgItemText(pWindow, IDC_TEXT, mThis->mNetOpString);
+				SetWindowTextW(pWindow, Str::UW(_("Network Transaction Progress")));
+				SetDlgItemTextW(pWindow, IDC_TEXT, Str::UW(mThis->mNetOpString));
 	
 				// Initiate the request
 				mThis->mOpRequest.Send(pWindow, gServerList[gCurrentServerEntry].mAddress, gServerList[gCurrentServerEntry].mPort, mThis->mNetOpRequest);
@@ -2175,7 +2214,8 @@ BOOL CALLBACK MR_InternetRoom::NetOpCallBack(HWND pWindow, UINT pMsgId, WPARAM p
 				KillTimer(pWindow, pWParam);
 				lReturnValue = TRUE;
 	
-				MessageBox(pWindow, MR_LoadString(IDS_TO), MR_LoadString(IDS_IMR), MB_ICONSTOP | MB_OK | MB_APPLMODAL);
+				MessageBoxW(pWindow, Str::UW(_("Connection timeout")), 
+					Str::UW(_("Internet Meeting Room")), MB_ICONSTOP | MB_OK | MB_APPLMODAL);
 	
 				EndDialog(pWindow, IDCANCEL);
 	
@@ -2222,7 +2262,8 @@ BOOL CALLBACK MR_InternetRoom::FastNetOpCallBack(HWND pWindow, UINT pMsgId, WPAR
 		case WM_INITDIALOG:
 			{
 				// Setup message
-				SetDlgItemText(pWindow, IDC_TEXT, mThis->mNetOpString);
+				SetWindowTextW(pWindow, Str::UW(_("Network Transaction Progress")));
+				SetDlgItemTextW(pWindow, IDC_TEXT, Str::UW(mThis->mNetOpString));
 	
 				// Initiate the request
 				mThis->mOpRequest.Send(pWindow, gServerList[gCurrentServerEntry].mAddress, gServerList[gCurrentServerEntry].mPort, mThis->mNetOpRequest);
@@ -2280,7 +2321,8 @@ BOOL CALLBACK UpdateScoresCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LP
 		case WM_INITDIALOG:
 			{
 				// Setup message
-				SetDlgItemText(pWindow, IDC_TEXT, MR_LoadString(IDS_REG_BEST_LAP));
+				SetWindowTextW(pWindow, Str::UW(_("Network Transaction Progress")));
+				SetDlgItemTextW(pWindow, IDC_TEXT, Str::UW(_("Registering your best lap time to the server")));
 	
 				// Initiate the request
 				gScoreRequest.Send(pWindow, gScoreServer.mAddress, gScoreServer.mPort, gScoreRequestStr);
@@ -2297,7 +2339,8 @@ BOOL CALLBACK UpdateScoresCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LP
 				KillTimer(pWindow, pWParam);
 	
 				// Ask the user if he want to retry
-				if(MessageBox(pWindow, MR_LoadString(IDS_TO), MR_LoadString(IDS_GAME_NAME), MB_ICONSTOP | MB_RETRYCANCEL | MB_APPLMODAL) == IDRETRY) {
+				if(MessageBoxW(pWindow, Str::UW(_("Connection timeout")), Str::UW(_("HoverRace")), 
+					MB_ICONSTOP | MB_RETRYCANCEL | MB_APPLMODAL) == IDRETRY) {
 					// Initiate the request
 					gScoreRequest.Send(pWindow, gScoreServer.mAddress, gScoreServer.mPort, gScoreRequestStr);
 					// start a timeout timer
@@ -2392,7 +2435,7 @@ BOOL MR_SendRaceResult(HWND pParentWindow, const char *pTrack, int pBestLapTime,
 		gScoreRequestStr.Format("%s?=RESULT%%%%%u%%%%%s%%%%%s%%%%%u%%%%%d%%%%%d%%%%%d%%%%%d", (const char *) gScoreServer.mURL, pBestLapTime, (const char *) MR_Pad(pTrack), (const char *) MR_Pad(pAlias), pTrackSum, pHoverModel, pTotalTime, pNbLap, pNbPlayer);
 		//}
 
-		lReturnValue = DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_NET_PROGRESS), pParentWindow, UpdateScoresCallBack) == IDOK;
+		lReturnValue = DialogBoxW(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDD_NET_PROGRESS), pParentWindow, UpdateScoresCallBack) == IDOK;
 
 	}
 	return lReturnValue;

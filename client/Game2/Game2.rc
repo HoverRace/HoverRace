@@ -388,8 +388,8 @@ BEGIN
     EDITTEXT        IDC_ALIAS,45,7,117,14,ES_AUTOHSCROLL
     DEFPUSHBUTTON   "OK",IDOK,30,91,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,89,91,50,14
-    LTEXT           "Your alias:",IDC_STATIC,7,10,37,8
-    LTEXT           "Room:",IDC_STATIC,7,26,36,8
+    LTEXT           "Your alias:",IDC_YOUR_ALIAS,7,10,37,8
+    LTEXT           "Room:",IDC_ROOM_C,7,26,36,8
     LISTBOX         IDC_ROOMLIST,45,25,117,55,LBS_NOINTEGRALHEIGHT | 
                     WS_VSCROLL | WS_TABSTOP
 END
@@ -521,15 +521,15 @@ BEGIN
                     WS_TABSTOP,3,108,113,124
     EDITTEXT        IDC_CHAT_OUT,120,108,265,110,ES_MULTILINE | ES_READONLY | 
                     WS_VSCROLL | NOT WS_TABSTOP
-    LTEXT           "Chat section",IDC_STATIC,120,100,45,8
-    LTEXT           "Game list",IDC_STATIC,3,1,30,8
-    LTEXT           "Users list",IDC_STATIC,3,100,67,8
-    LTEXT           "Track name:",IDC_STATIC,120,13,44,8
-    LTEXT           "Laps:",IDC_STATIC,120,28,40,8
-    LTEXT           "Availability:",IDC_STATIC,120,43,36,8
+    LTEXT           "Chat section",IDC_CHAT_SECTION_C,120,100,45,8
+    LTEXT           "Game list",IDC_GAME_LIST_C,3,1,30,8
+    LTEXT           "Users list",IDC_USERS_LIST_C,3,100,67,8
+    LTEXT           "Track name:",IDC_TRACK_NAME_C,120,13,44,8
+    LTEXT           "Laps:",IDC_LAPS_C,120,28,40,8
+    LTEXT           "Availability:",IDC_AVAILABILITY_C,120,43,36,8
     EDITTEXT        IDC_PLAYER_LIST,176,55,147,42,ES_MULTILINE | ES_READONLY | 
                     WS_VSCROLL | NOT WS_TABSTOP
-    LTEXT           "Players list:",IDC_STATIC,120,56,41,8
+    LTEXT           "Players list:",IDC_PLAYERS_LIST_C,120,56,41,8
     EDITTEXT        IDC_AVAIL_MESSAGE,176,40,147,14,ES_AUTOHSCROLL | 
                     ES_READONLY | NOT WS_TABSTOP
     EDITTEXT        IDC_TRACK_NAME,176,9,147,14,ES_AUTOHSCROLL | ES_READONLY | 
@@ -537,8 +537,8 @@ BEGIN
     EDITTEXT        IDC_NB_LAP,176,25,27,14,ES_AUTOHSCROLL | ES_READONLY | 
                     NOT WS_TABSTOP
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,3,99,382,1
-    LTEXT           "Game details",IDC_STATIC,120,1,64,8
-    LTEXT           "Weapons:",IDC_STATIC,219,28,38,8
+    LTEXT           "Game details",IDC_GAME_DETAILS_C,120,1,64,8
+    LTEXT           "Weapons:",IDC_WEAPONS_C,219,28,38,8
     EDITTEXT        IDC_WEAPONS,258,25,27,14,ES_AUTOHSCROLL | ES_READONLY | 
                     NOT WS_TABSTOP
     PUSHBUTTON      "",IDC_PUB,3,234,382,42,BS_BITMAP | BS_FLAT | NOT 

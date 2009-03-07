@@ -52,7 +52,7 @@ static bool showVersion = false;
 
 /**
  * Display a message to the user.
- * On Windows, this will pop up a 
+ * On Windows, this will pop up a message box
  */
 static void ShowMessage(const std::string &s)
 {
