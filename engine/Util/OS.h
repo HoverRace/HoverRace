@@ -63,11 +63,16 @@ class MR_DllDeclare OS {
 		struct MR_DllDeclare Monitor
 		{
 			bool primary;
+			std::string id;
 			std::string name;
 			resolutions_t resolutions;
 		};
 		typedef std::vector<Monitor> monitors_t;
 		static boost::shared_ptr<monitors_t> GetMonitors();
+
+#		ifdef _WIN32
+			static std::string GuidToString(const GUID &guid);
+#		endif
 
 		static void Free(void *buf);
 };

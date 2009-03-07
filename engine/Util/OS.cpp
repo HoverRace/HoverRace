@@ -27,6 +27,10 @@
 
 #include <string>
 
+#ifdef _WIN32
+#	include <ddraw.h>
+#endif
+
 #include <boost/format.hpp>
 
 #include "OS.h"
@@ -221,6 +225,21 @@ void OS::SetLocale()
 #	endif
 }
 
+#ifdef _WIN32
+typedef std::map<std::string, GUID> monGuids_t;
+
+// Callback for DirectDrawEnumerateEx(), used by OS::GetMonitors().
+static BOOL CALLBACK GetMonitorsProc(GUID *guid, LPSTR /*desc*/,
+                                     LPSTR name, LPVOID ctx, HMONITOR /*mon*/)
+{
+	// If guid is NULL, then it's the entry for "default".
+	if (guid != NULL && name != NULL) {
+		((monGuids_t*)ctx)->insert(monGuids_t::value_type(name, *guid));
+	}
+	return TRUE;
+}
+#endif
+
 /**
  * Retrieve the list of monitors.
  * @return A shared pointer of monitor info (never @c NULL, never empty).
@@ -229,6 +248,11 @@ boost::shared_ptr<OS::monitors_t> OS::GetMonitors()
 {
 	boost::shared_ptr<monitors_t> retv(new monitors_t());
 #	ifdef _WIN32
+		// Use DirectDraw enumeration to map device names to GUIDs.
+		monGuids_t monGuids;
+		DirectDrawEnumerateEx(GetMonitorsProc, (void*)&monGuids,
+			DDENUM_ATTACHEDSECONDARYDEVICES | DDENUM_DETACHEDSECONDARYDEVICES);
+
 		for (int i = 0; ; ++i) {
 			DISPLAY_DEVICE devInfo;
 			memset(&devInfo, 0, sizeof(devInfo));
@@ -237,6 +261,12 @@ boost::shared_ptr<OS::monitors_t> OS::GetMonitors()
 
 			// Ignore mirroring pseudo-devices.
 			if (devInfo.StateFlags & DISPLAY_DEVICE_MIRRORING_DRIVER) continue;
+
+			// Only add the device if it was included in the DirectDraw
+			// enumeration.  If DirectDraw couldn't enumerate it, it can't
+			// draw to it.
+			monGuids_t::iterator monEnt = monGuids.find(devInfo.DeviceName);
+			if (monEnt == monGuids.end()) continue;
 			
 			DISPLAY_DEVICE monInfo;
 			memset(&monInfo, 0, sizeof(monInfo));
@@ -246,6 +276,9 @@ boost::shared_ptr<OS::monitors_t> OS::GetMonitors()
 				Monitor &monitor = retv->back();
 				monitor.primary = (devInfo.StateFlags & DISPLAY_DEVICE_PRIMARY_DEVICE) > 0;
 				monitor.name = str(format("%d. %s") % (i + 1) % monInfo.DeviceString);
+				monitor.id = GuidToString(monEnt->second);
+				OutputDebugString(monitor.id.c_str());
+				OutputDebugString("\n");
 				
 				// Retrieve the supported resolutions.
 				for (int j = 0; ; ++j) {
@@ -264,6 +297,16 @@ boost::shared_ptr<OS::monitors_t> OS::GetMonitors()
 		throw std::exception();
 #	endif
 }
+
+#ifdef _WIN32
+std::string OS::GuidToString(const GUID &guid)
+{
+	return str(format("{%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x}") %
+		guid.Data1 % guid.Data2 % guid.Data3 %
+		(int)guid.Data4[0] % (int)guid.Data4[1] %
+		(int)guid.Data4[2] % (int)guid.Data4[3] % (int)guid.Data4[4] % (int)guid.Data4[5] % (int)guid.Data4[6] % (int)guid.Data4[7]);
+}
+#endif
 
 /**
  * Free a memory buffer created by a function from this class.
