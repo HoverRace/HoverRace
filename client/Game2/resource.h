@@ -132,6 +132,28 @@
 #define IDC_DESC_LBL                    1096
 #define IDC_LAPS_LBL                    1097
 #define IDC_WEAPONS_CHK                 1099
+#define IDC_GAMMA                       1100
+#define IDC_CONTRAST                    1101
+#define IDC_BRIGHTNESS                  1102
+#define IDC_VOLUME                      1103
+#define IDC_FS_RES                      1104
+#define IDC_PLAYER1                     1105
+#define IDC_PLAYER2                     1106
+#define IDC_PLAYER3                     1107
+#define IDC_PLAYER4                     1108
+#define IDC_MOTOR_ON                    1109
+#define IDC_TURN_RIGHT                  1110
+#define IDC_TURN_LEFT                   1111
+#define IDC_BRAKE                       1112
+#define IDC_JUMP                        1113
+#define IDC_FIRE_WEAPON                 1114
+#define IDC_SELECT_WEAPON               1115
+#define IDC_LOOK_BACK                   1116
+#define IDC_TCP_SERV_PORT_C             1117
+#define IDC_TCP_RECV_PORT_C             1118
+#define IDC_UDP_RECV_PORT_C             1119
+#define IDC_CLICK_OK                    1120
+#define IDC_MAKE_SURE                   1121
 #define ID_VIEW_3DACTION                32775
 #define ID_SETTING_WINDOW               32784
 #define ID_GAME_PAUSE                   32788
@@ -349,7 +371,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        166
 #define _APS_NEXT_COMMAND_VALUE         40049
-#define _APS_NEXT_CONTROL_VALUE         1100
+#define _APS_NEXT_CONTROL_VALUE         1122
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

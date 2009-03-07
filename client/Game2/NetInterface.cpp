@@ -1690,8 +1690,8 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 							TRACE("connection refused\n");
 							// assemble our message
 							{
-					            std::string lErrorString = boost::str(boost::format("%s%s%s") %
-									_("Connection refused by peer ") %
+					            std::string lErrorString = boost::str(boost::format("%s %s%s") %
+									_("Connection refused by peer") %
 									mActiveInterface->mClientName[lClient] %
 									_("; perhaps they are behind a firewall and need to forward ports 9530 and 9531 TCP and UDP?"));
                                 

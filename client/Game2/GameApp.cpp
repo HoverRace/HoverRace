@@ -1090,13 +1090,23 @@ BOOL MR_GameApp::InitGame()
 	if(lReturnValue) {
 		if(!mVideoBuffer->SetVideoMode()) {		  // try to set the video mode
 			BOOL lSwitchTo256 = FALSE;
-			if(MessageBox(mMainWindow, MR_LoadString(IDS_MODE_SWITCH_TRY), MR_LoadString(IDS_GAME_NAME), MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2) == IDYES) {
+			if(MessageBoxW(mMainWindow, 
+				Str::UW(_("You can play HoverRace in a Window or Fullscreen;\n"
+				"to play in a Window, HoverRace will have to switch to 256 color mode.\n"
+				"It is recommended you use Fullscreen mode instead.\n\n"
+				"Do you want to play in Window mode and switch to 256 color?")), 
+				Str::UW(_("HoverRace")), 
+				MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2) == IDYES) {
+
 				if(mVideoBuffer->TryToSetColorMode(8)) {
 					if(mVideoBuffer->SetVideoMode())
 						lSwitchTo256 = TRUE;
 				}
 				if(!lSwitchTo256) {				  // mode switch failed, tell the user
-					MessageBox(mMainWindow, MR_LoadString(IDS_CANT_SWITCH_MODE), MR_LoadString(IDS_GAME_NAME), MB_OK);
+					MessageBoxW(mMainWindow,
+						Str::UW(_("HoverRace was unable to switch the video mode. You will need to play in full screen.")), 
+						Str::UW(_("HoverRace")),
+						MB_OK);
 				}
 			}
 
@@ -1736,7 +1746,7 @@ void MR_GameApp::NewInternetSession()
 	}
 
 	if(lSuccess) {
-												  // start in 20 seconds (this time may be readjusted by the server)
+		// start in 20 seconds (this time may be readjusted by the server)
 		lCurrentSession->SetSimulationTime(-20000);
 	}
 
@@ -2375,6 +2385,14 @@ BOOL CALLBACK MR_GameApp::DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, 
 			This->mVideoBuffer->GetPaletteAttrib(lOriginalGamma, lOriginalContrast, lOriginalBrightness);
 			lOriginalSfxVolume = cfg->audio.sfxVolume;
 
+			// i18n of buttons and stuff
+			// what if the field is not wide enough?
+			SetDlgItemTextW(pWindow, IDC_GAMMA, Str::UW(_("Gamma")));
+			SetDlgItemTextW(pWindow, IDC_CONTRAST, Str::UW(_("Contrast")));
+			SetDlgItemTextW(pWindow, IDC_BRIGHTNESS, Str::UW(_("Brightness")));
+			SetDlgItemTextW(pWindow, IDC_VOLUME, Str::UW(_("Volume")));
+			SetDlgItemTextW(pWindow, IDC_FS_RES, Str::UW(_("Fullscreen Resolution")));
+
 			SendDlgItemMessage(pWindow, IDC_GAMMA_SLIDER, TBM_SETRANGE, 0, MAKELONG(0, 200));
 			SendDlgItemMessage(pWindow, IDC_CONTRAST_SLIDER, TBM_SETRANGE, 0, MAKELONG(0, 100));
 			SendDlgItemMessage(pWindow, IDC_BRIGHTNESS_SLIDER, TBM_SETRANGE, 0, MAKELONG(0, 100));
@@ -2456,21 +2474,24 @@ BOOL CALLBACK MR_GameApp::DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, 
 					if(lSuccess) // so we don't destroy a FALSE value
 						newYRes = GetDlgItemInt(pWindow, IDC_FS_RES_Y, &lSuccess, FALSE);						
 
+					std::string lCaptionBuffer = boost::str(boost::format("%s %s") %
+						_("HoverRace") %
+						cfg->GetVersion().c_str());
+
 					if(newXRes <= 0 || newYRes <= 0 || !lSuccess) { // invalid
-						char lErrorBuffer[500];
-						char lCaptionBuffer[50];
-						sprintf(lErrorBuffer, MR_LoadString(IDS_INVALID_RESOLUTION), GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
-						sprintf(lCaptionBuffer, MR_LoadString(IDS_CAPTION), cfg->GetVersion().c_str());
-						MessageBox(pWindow, lErrorBuffer, lCaptionBuffer, MB_OK);
+						std::string lErrorBuffer = boost::str(boost::format("%s %dx%d") %
+							_("Invalid resolution; reverting to default") %
+							GetSystemMetrics(SM_CXSCREEN) %
+							GetSystemMetrics(SM_CYSCREEN));
+	
+						MessageBoxW(pWindow, Str::UW(lErrorBuffer.c_str()), Str::UW(lCaptionBuffer.c_str()), MB_OK);
 
 						cfg->video.xResFullscreen = GetSystemMetrics(SM_CXSCREEN);
 						cfg->video.yResFullscreen = GetSystemMetrics(SM_CYSCREEN);
 					} else { // valid change
-
 						// test new resolution
-						char lCaptionBuffer[50];
-						sprintf(lCaptionBuffer, MR_LoadString(IDS_CAPTION), cfg->GetVersion().c_str());
-						int lAction = MessageBox(pWindow, MR_LoadString(IDS_TEST_RESOLUTION), lCaptionBuffer, MB_OKCANCEL);
+						int lAction = MessageBoxW(pWindow, Str::UW(_("Hit OK to test new resolution")), 
+							Str::UW(lCaptionBuffer.c_str()), MB_OKCANCEL);
 
 						if(lAction == IDOK) {
 							BOOL lOkRes = TRUE;
@@ -2481,13 +2502,19 @@ BOOL CALLBACK MR_GameApp::DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, 
 							This->SetVideoMode(0, 0);
 
 							if(!lOkRes) {
-								char lErrorBuffer[500];
-								sprintf(lErrorBuffer, MR_LoadString(IDS_INVALID_RESOLUTION2), cfg->video.xResFullscreen, cfg->video.yResFullscreen);
-								MessageBox(pWindow, lErrorBuffer, lCaptionBuffer, MB_OK);
+								std::string lErrorBuffer = boost::str(boost::format("%s %dx%d") %
+									_("Invalid resolution; reverting to") %
+									cfg->video.xResFullscreen %
+									cfg->video.yResFullscreen);
+								
+								MessageBoxW(pWindow, Str::UW(lErrorBuffer.c_str()), Str::UW(lCaptionBuffer.c_str()), MB_OK);
 							} else {
-								char lSuccessBuffer[500];
-								sprintf(lSuccessBuffer, MR_LoadString(IDS_SET_RESOLUTION), newXRes, newYRes);
-								MessageBox(pWindow, lSuccessBuffer, lCaptionBuffer, MB_OK);
+								std::string lSuccessBuffer = boost::str(boost::format("%s %dx%d") %
+									_("Resolution successfully set to") %
+									newXRes %
+									newYRes);
+								
+								MessageBoxW(pWindow, Str::UW(lSuccessBuffer.c_str()), Str::UW(lCaptionBuffer.c_str()), MB_OK);
 
 								cfg->video.xResFullscreen = newXRes;
 								cfg->video.yResFullscreen = newYRes;
@@ -2521,6 +2548,20 @@ BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 	switch (pMsgId) {
 		// Catch environment modification events
 		case WM_INITDIALOG:
+			// i18nize the choices
+			SetDlgItemTextW(pWindow, IDC_PLAYER1, Str::UW(_("Player 1")));
+			SetDlgItemTextW(pWindow, IDC_PLAYER2, Str::UW(_("Player 2")));
+			SetDlgItemTextW(pWindow, IDC_PLAYER3, Str::UW(_("Player 3")));
+			SetDlgItemTextW(pWindow, IDC_PLAYER4, Str::UW(_("Player 4")));
+			SetDlgItemTextW(pWindow, IDC_MOTOR_ON, Str::UW(_("Motor On:")));
+			SetDlgItemTextW(pWindow, IDC_TURN_RIGHT, Str::UW(_("Turn Right:")));
+			SetDlgItemTextW(pWindow, IDC_TURN_LEFT, Str::UW(_("Turn Left:")));
+			SetDlgItemTextW(pWindow, IDC_BRAKE, Str::UW(_("Brake:")));
+			SetDlgItemTextW(pWindow, IDC_JUMP, Str::UW(_("Jump:")));
+			SetDlgItemTextW(pWindow, IDC_FIRE_WEAPON, Str::UW(_("Fire Weapon:")));
+			SetDlgItemTextW(pWindow, IDC_SELECT_WEAPON, Str::UW(_("Select Weapon:")));
+			SetDlgItemTextW(pWindow, IDC_LOOK_BACK, Str::UW(_("Look Back:")));
+
 			// Initialize the lists
 			for(lCounter = 0; lCounter < NB_KEY_PLAYER_1; lCounter++) {
 				char lBuffer[50];
@@ -2674,6 +2715,18 @@ BOOL CALLBACK MR_GameApp::MiscDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWPar
 	switch (pMsgId) {
 		// Catch environment modification events
 		case WM_INITDIALOG:
+			// i18nize text fields
+			SetDlgItemTextW(pWindow, IDC_INTRO_MOVIE, Str::UW(_("Disable Intro Movie")));
+			SetDlgItemTextW(pWindow, IDC_SHOW_INTERNET,
+				Str::UW(_("Disable the prompt to connect to the Internet each time HoverRace starts")));
+			SetDlgItemTextW(pWindow, IDC_NATIVE_BPP_FULLSCREEN,
+				Str::UW(_("Use desktop &color depth when switching to fullscreen")));
+			SetDlgItemTextW(pWindow, IDC_SERVER_ADDR,
+				Str::UW(_("Address of Server Roomlist:")));
+			SetDlgItemTextW(pWindow, IDC_TCP_SERV_PORT_C, Str::UW(_("TCP Server Port:")));
+			SetDlgItemTextW(pWindow, IDC_TCP_RECV_PORT_C, Str::UW(_("TCP Receive Port:")));
+			SetDlgItemTextW(pWindow, IDC_UDP_RECV_PORT_C, Str::UW(_("UDP Receive Port:")));~
+
 			// Set default values correctly
 			SendDlgItemMessage(pWindow, IDC_INTRO_MOVIE, BM_SETCHECK, !cfg->misc.introMovie, 0);
 			SendDlgItemMessage(pWindow, IDC_SHOW_INTERNET, BM_SETCHECK, !cfg->misc.displayFirstScreen, 0);
@@ -2738,9 +2791,13 @@ BOOL CALLBACK MR_GameApp::MiscDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWPar
 
 BOOL CALLBACK MR_GameApp::BadModeDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
 {
+	// theoretically this dialog should never be shown
 	switch (pMsgId) {
 		// Catch environment modification events
 		case WM_INITDIALOG:
+			// i18n
+			SetDlgItemTextW(pWindow, IDC_STATIC, Str::UW(_("Incompatible video mode. Select a compatible video mode by pressing F8 or F9 once a game is started")));
+
 			return TRUE;
 
 		case WM_COMMAND:
@@ -2770,6 +2827,15 @@ BOOL CALLBACK MR_GameApp::FirstChoiceDialogFunc(HWND pWindow, UINT pMsgId, WPARA
 		switch (pMsgId) {
 			// Catch environment modification events
 			case WM_INITDIALOG:
+				// i18n
+				SetWindowTextW(pWindow, Str::UW(_("HoverRace")));
+				SetDlgItemTextW(pWindow, IDC_CLICK_OK,
+					Str::UW(_("Click OK to play on the Internet against other people")));
+				SetDlgItemTextW(pWindow, IDOK, Str::UW(_("OK")));
+				SetDlgItemTextW(pWindow, IDCANCEL, Str::UW(_("Cancel")));
+				SetDlgItemTextW(pWindow, IDC_MAKE_SURE,
+					Str::UW(_("Make sure that you are connected to the Internet before clicking on OK.  If you have any problems, visit our forums at http://www.hoverrace.com/bb for help.")));
+
 				/*
 				CheckDlgButton(pWindow, IDC_CHECK, BST_CHECKED);
 				*/
