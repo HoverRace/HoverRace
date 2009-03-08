@@ -49,6 +49,8 @@ static bool debugMode = false;
 static bool safeMode = false;
 static bool allowMultipleInstances = false;
 static bool showVersion = false;
+static bool silentMode = false;
+static bool experimentalMode = false;
 
 /**
  * Display a message to the user.
@@ -95,8 +97,14 @@ static bool ProcessCmdLine(int argc, char **argv)
 		else if (strcmp("-s", arg) == 0) {
 			safeMode = true;
 		}
+		else if (strcmp("--silent", arg) == 0) {
+			silentMode = true;
+		}
 		else if (strcmp("-V", arg) == 0 || strcmp("--version", arg) == 0) {
 			showVersion = true;
+		}
+		else if (strcmp("--yes-i-totally-want-to-break-my-system", arg) == 0) {
+			experimentalMode = true;
 		}
 	}
 	return true;
@@ -186,6 +194,8 @@ int main(int argc, char** argv)
 		exePath
 #endif
 		);
+	cfg->runtime.silent = true;
+	cfg->runtime.ohMyGodItsAllBroken = true;
 
 #ifdef ENABLE_NLS
 	// Gettext initialization.

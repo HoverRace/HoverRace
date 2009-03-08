@@ -178,6 +178,11 @@ class MR_DllDeclare Config
 			void Load(yaml::MapNode*, int);
 			void Save(yaml::Emitter*);
 		} controls[MAX_PLAYERS];
+
+		struct cfg_runtime_t {
+			bool silent;
+			bool ohMyGodItsAllBroken;
+		} runtime;
 };
 
 }  // namespace Util

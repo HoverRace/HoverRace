@@ -45,6 +45,8 @@ using HoverRace::Util::Config;
 
 #define MR_MAX_SOUND_COPY 6
 
+static soundDisabled = false;
+
 #ifndef WITH_OPENAL
 // Adapted from http://www.gamedev.net/community/forums/topic.asp?topic_id=337397
 //   and http://en.wikipedia.org/wiki/Decibel
@@ -232,6 +234,8 @@ void MR_SoundBuffer::DeleteAll()
  */
 BOOL MR_SoundBuffer::Init(const char *pData, int pNbCopy)
 {
+	if (soundDisabled) return TRUE;
+
 	BOOL lReturnValue = TRUE;
 
 	ASSERT(mSoundBuffer[0] == NULL);			  // Already initialized
@@ -329,6 +333,8 @@ BOOL MR_SoundBuffer::Init(const char *pData, int pNbCopy)
 
 void MR_SoundBuffer::SetParams(int pCopy, int pDB, double pSpeed, int pPan)
 {
+	if (soundDisabled) return;
+
 	if(pCopy >= mNbCopy) {
 		pCopy = mNbCopy - 1;
 	}
@@ -394,6 +400,8 @@ MR_ShortSound::~MR_ShortSound()
 
 void MR_ShortSound::Play(int pDB, double pSpeed, int pPan)
 {
+	if (soundDisabled) return;
+
 #ifdef WITH_OPENAL
 	SetParams(mCurrentCopy, pDB, pSpeed, pPan);
 	alSourcePlay(mSoundBuffer[mCurrentCopy]);
@@ -430,6 +438,8 @@ void MR_ContinuousSound::ResetCumStat()
 
 void MR_ContinuousSound::Pause(int pCopy)
 {
+	if (soundDisabled) return;
+
 	if(pCopy >= mNbCopy) {
 		pCopy = mNbCopy - 1;
 	}
@@ -444,6 +454,8 @@ void MR_ContinuousSound::Pause(int pCopy)
 
 void MR_ContinuousSound::Restart(int pCopy)
 {
+	if (soundDisabled) return;
+
 	if(pCopy >= mNbCopy) {
 		pCopy = mNbCopy - 1;
 	}
@@ -495,6 +507,9 @@ bool MR_SoundServer::Init(
 #	endif
 	)
 {
+	soundDisabled = Config::GetInstance()->runtime.silent;
+	if (soundDisabled) return true;
+
 	bool lReturnValue = true;
 
 #ifdef WITH_OPENAL
@@ -520,6 +535,8 @@ bool MR_SoundServer::Init(
 void MR_SoundServer::Close()
 {
 	MR_SoundBuffer::DeleteAll();
+
+	if (soundDisabled) return;
 
 #ifdef WITH_OPENAL
 	alutExit();
