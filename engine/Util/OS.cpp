@@ -277,8 +277,6 @@ boost::shared_ptr<OS::monitors_t> OS::GetMonitors()
 				monitor.primary = (devInfo.StateFlags & DISPLAY_DEVICE_PRIMARY_DEVICE) > 0;
 				monitor.name = str(format("%d. %s") % (i + 1) % monInfo.DeviceString);
 				monitor.id = GuidToString(monEnt->second);
-				OutputDebugString(monitor.id.c_str());
-				OutputDebugString("\n");
 				
 				// Retrieve the supported resolutions.
 				for (int j = 0; ; ++j) {
