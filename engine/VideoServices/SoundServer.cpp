@@ -45,7 +45,7 @@ using HoverRace::Util::Config;
 
 #define MR_MAX_SOUND_COPY 6
 
-static soundDisabled = false;
+static bool soundDisabled = false;
 
 #ifndef WITH_OPENAL
 // Adapted from http://www.gamedev.net/community/forums/topic.asp?topic_id=337397
