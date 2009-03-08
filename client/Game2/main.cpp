@@ -194,8 +194,8 @@ int main(int argc, char** argv)
 		exePath
 #endif
 		);
-	cfg->runtime.silent = true;
-	cfg->runtime.ohMyGodItsAllBroken = true;
+	cfg->runtime.silent = silentMode;
+	cfg->runtime.ohMyGodItsAllBroken = experimentalMode;
 
 #ifdef ENABLE_NLS
 	// Gettext initialization.
