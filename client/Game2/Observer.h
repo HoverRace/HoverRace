@@ -32,7 +32,6 @@ namespace HoverRace { namespace VideoServices { class StaticText; } }
 
 class MR_Observer
 {
-
 	public:
 		enum eSplitMode
 		{

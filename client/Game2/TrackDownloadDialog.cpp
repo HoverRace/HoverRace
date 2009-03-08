@@ -36,14 +36,17 @@
 #include <io.h>
 
 #include "../../engine/Util/Config.h"
+#include "../../engine/Util/Str.h"
 
 using HoverRace::Util::Config;
 
+using namespace HoverRace::Util;
+
 static const char *STATE_NAMES[] = {
-	"Initializing",
-	"Downloading",
-	"Extracting",
-	"Finished",
+	_("Initializing"),
+	_("Downloading"),
+	_("Extracting"),
+	_("Finished"),
 };
 
 #define INIT_CAPACITY (5 * 1024 * 1024)
@@ -95,14 +98,14 @@ bool TrackDownloadDialog::ShowModal(HINSTANCE hinst, HWND parent)
 
 	// Ask to download the track.
 	std::ostringstream oss;
-	oss << "Would you like to download the track \"" << name << "\" now?";
-	if (MessageBox(parent, oss.str().c_str(), "Track Download", MB_YESNO) == IDNO) {
+	oss << _("Would you like to download the track") << "\"" << name << "\"" << _("now?");
+	if (MessageBoxW(parent, Str::UW(oss.str().c_str()), Str::UW(_("Track Download")), MB_YESNO) == IDNO) {
 		return false;
 	}
 
 	boost::thread thread(boost::bind(&TrackDownloadDialog::ThreadProc, this));
 
-	DWORD dlgRetv = DialogBoxParam(hinst, MAKEINTRESOURCE(IDD_TRACK_DOWNLOAD),
+	DWORD dlgRetv = DialogBoxParamW(hinst, MAKEINTRESOURCEW(IDD_TRACK_DOWNLOAD),
 		parent, DlgFunc, reinterpret_cast<LPARAM>(this));
 	if (dlgRetv == IDCANCEL) cancel = true;
 
@@ -158,11 +161,11 @@ void TrackDownloadDialog::UpdateDialogProgress(HWND hwnd)
 
 	// Update status text.
 	if (curState < 0 || curState >= ST_LAST) {
-		SetDlgItemText(hwnd, IDC_STATE, "Processing...");
+		SetDlgItemTextW(hwnd, IDC_STATE, Str::UW(_("Processing...")));
 	} else {
 		std::ostringstream stateStr;
 		if (curState == ST_DOWNLOADING) {
-			stateStr << "Downloading";
+			stateStr << _("Downloading");
 			if (curTotal <= 0) {
 				if (curSize > 0) {
 					stateStr << " (" << (curSize / 1024) << " KB)";
@@ -174,7 +177,7 @@ void TrackDownloadDialog::UpdateDialogProgress(HWND hwnd)
 			stateStr << STATE_NAMES[curState];
 		}
 		stateStr << "...";
-		SetDlgItemText(hwnd, IDC_STATE, stateStr.str().c_str());
+		SetDlgItemTextW(hwnd, IDC_STATE, Str::UW(stateStr.str().c_str()));
 	}
 }
 
@@ -214,7 +217,7 @@ void TrackDownloadDialog::ThreadProc()
 		SetState(ST_DOWNLOADING);
 		int curlRetv = curl_easy_perform(trackDl);
 		if (curlRetv != 0 && curlRetv != CURLE_ABORTED_BY_CALLBACK) {
-			MessageBox(dlgHwnd, curlErrorBuf, "HoverRace", MB_ICONWARNING | MB_OK);
+			MessageBoxW(dlgHwnd, Str::UW(curlErrorBuf), Str::UW(_("HoverRace")), MB_ICONWARNING | MB_OK);
 			cancel = true;
 		}
 	}
@@ -223,16 +226,17 @@ void TrackDownloadDialog::ThreadProc()
 		SetState(ST_EXTRACTING);
 
 		if (bufSize <= 128) {
-			std::ostringstream oss;
-			oss << "Sorry, track \"" << name << "\" is not available from " TRACK_HOST;
-			MessageBox(dlgHwnd, oss.str().c_str(), "HoverRace", MB_ICONINFORMATION | MB_OK);
+			std::string message = boost::str(boost::format(
+				_("Sorry, track \"%s\" is not available from %s")) % name % TRACK_HOST);
+			MessageBoxW(dlgHwnd, Str::UW(message.c_str()), Str::UW(_("HoverRace")), MB_ICONINFORMATION | MB_OK);
 			cancel = true;
 		} else {
 			if (!ExtractTrackFile()) {
-				std::ostringstream oss;
-				oss << "Track download failed: The file \"" << trackFilename <<
-					"\" was not found in the archive downloaded from " TRACK_HOST;
-				MessageBox(dlgHwnd, oss.str().c_str(), "HoverRace", MB_ICONWARNING | MB_OK);
+				std::string message = boost::str(boost::format(
+					_("Track download failed: The file \"%s\" was not found in the archive downloaded from %s")) %
+					trackFilename %
+					TRACK_HOST);
+				MessageBoxW(dlgHwnd, Str::UW(message.c_str()), Str::UW(_("HoverRace")), MB_ICONWARNING | MB_OK);
 			}
 		}
 	}
@@ -253,7 +257,9 @@ BOOL TrackDownloadDialog::DlgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM
 
 		case WM_INITDIALOG:
 			dlgHwnd = hwnd;
-			SetDlgItemText(hwnd, IDC_TRACK_NAME, name.c_str());
+			SetWindowTextW(hwnd, Str::UW(_("Track Download")));
+			SetDlgItemTextW(hwnd, IDC_DLTRACK, Str::UW(_("Downloading Track:")));
+			SetDlgItemTextW(hwnd, IDC_TRACK_NAME, Str::UW(name.c_str()));
 			UpdateDialogProgress(hwnd);
 			retv = TRUE;
 			break;
@@ -311,14 +317,16 @@ size_t TrackDownloadDialog::WriteProc(void *ptr, size_t size, size_t nmemb)
 		// then chances are we're just endlessly streaming junk and wasting
 		// precious bandwidth.
 		if (bufTotal <= 0 && bufCapacity > MAX_CAPACITY) {
-			MessageBox(dlgHwnd,
-				"There was a problem downloading the track from " TRACK_HOST "\n"
-				"Please visit " TRACK_HOST " and download the track manually.",
-				"HoverRace", MB_OK);
+			std::string message = boost::str(boost::format(
+				_("There was a problem downloading the track from %s\n"
+				  "Please visit %s and download the track manually.")) %
+				  TRACK_HOST %
+				  TRACK_HOST);
+			MessageBoxW(dlgHwnd, Str::UW(message.c_str()), Str::UW(_("HoverRace")), MB_OK);
 			return 0;
 		}
 
-		dlBuf = (dlBuf_t*)realloc(dlBuf, bufCapacity * sizeof(dlBuf_t));
+		dlBuf = (dlBuf_t *) realloc(dlBuf, bufCapacity * sizeof(dlBuf_t));
 	}
 
 	memcpy(dlBuf + bufSize, ptr, bytesToAdd);
@@ -415,7 +423,6 @@ bool TrackDownloadDialog::ExtractTrackFile()
 	CloseHandle(file);
 	/* I swear, that was ten times harder than it should have been */
 #endif
-
 
 	return retv;
 }

@@ -471,7 +471,7 @@ BOOL MR_NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName, BOO
 		mServerPort = pDefaultPort;
 
 		if(pPromptForPort) {
-			lReturnValue = (DialogBox(lModuleHandle, MAKEINTRESOURCE(IDD_SERVER_PORT), pWindow, ServerPortCallBack) == IDOK);
+			lReturnValue = (DialogBoxW(lModuleHandle, MAKEINTRESOURCEW(IDD_SERVER_PORT), pWindow, ServerPortCallBack) == IDOK);
 		}
 		else {
 			SOCKADDR_IN lAddr;
@@ -507,7 +507,7 @@ BOOL MR_NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName, BOO
 				mReturnMessage = 0;
 
 				// Normal mode (Modal)
-				if(DialogBox(lModuleHandle, MAKEINTRESOURCE(IDD_TCP_SERVER), pWindow, ListCallBack) != IDOK) {
+				if(DialogBoxW(lModuleHandle, MAKEINTRESOURCEW(IDD_TCP_SERVER), pWindow, ListCallBack) != IDOK) {
 					lReturnValue = FALSE;
 				}
 			}
@@ -517,7 +517,7 @@ BOOL MR_NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName, BOO
 				mReturnMessage = pReturnMessage;
 
 				// Modaless mode
-				*pModalessDlg = CreateDialog(lModuleHandle, MAKEINTRESOURCE(IDD_TCP_SERVER), pWindow, ListCallBack);
+				*pModalessDlg = CreateDialogW(lModuleHandle, MAKEINTRESOURCEW(IDD_TCP_SERVER), pWindow, ListCallBack);
 
 				if(*pModalessDlg == NULL) {
 					lReturnValue = FALSE;
@@ -563,7 +563,7 @@ BOOL MR_NetworkInterface::SlavePreConnect(HWND pWindow, CString &pGameName)
 			// Ask server port addr and number
 			HMODULE lModuleHandle = GetModuleHandle(NULL /*"util.dll" */ );
 
-			if(DialogBox(lModuleHandle, MAKEINTRESOURCE(IDD_SERVER_ADDR), pWindow, ServerAddrCallBack) == IDOK) {
+			if(DialogBoxW(lModuleHandle, MAKEINTRESOURCEW(IDD_SERVER_ADDR), pWindow, ServerAddrCallBack) == IDOK) {
 				lReturnValue = TRUE;
 
 				pGameName = mGameName;
@@ -615,7 +615,7 @@ BOOL MR_NetworkInterface::SlaveConnect(HWND pWindow, const char *pServerIP, unsi
 		mRegistrySocket = socket(PF_INET, SOCK_STREAM, 0);
 
 		if(mRegistrySocket == INVALID_SOCKET) {
-			MessageBox(pWindow, MR_LoadString(IDS_CANT_CREATE_SOCK), MR_LoadString(IDS_TCP_SERVER), MB_ICONERROR | MB_OK | MB_APPLMODAL);
+			MessageBoxW(pWindow, Str::UW(_("Unable to create socket")), Str::UW(_("TCP Server")), MB_ICONERROR | MB_OK | MB_APPLMODAL);
 			lReturnValue = FALSE;
 		}
 		else {
@@ -632,7 +632,7 @@ BOOL MR_NetworkInterface::SlaveConnect(HWND pWindow, const char *pServerIP, unsi
 			}
 
 			// figure out the game information
-			lReturnValue = (DialogBox(lModuleHandle, MAKEINTRESOURCE(IDD_NET_PROGRESS), pWindow, WaitGameNameCallBack) == IDOK);
+			lReturnValue = (DialogBoxW(lModuleHandle, MAKEINTRESOURCEW(IDD_NET_PROGRESS), pWindow, WaitGameNameCallBack) == IDOK);
 		}
 	}
 
@@ -645,7 +645,7 @@ BOOL MR_NetworkInterface::SlaveConnect(HWND pWindow, const char *pServerIP, unsi
 			mReturnMessage = 0;
 
 			// Normal mode (Modal)
-			if(DialogBox(lModuleHandle, MAKEINTRESOURCE(IDD_TCP_CLIENT), pWindow, ListCallBack) != IDOK) {
+			if(DialogBoxW(lModuleHandle, MAKEINTRESOURCEW(IDD_TCP_CLIENT), pWindow, ListCallBack) != IDOK) {
 				lReturnValue = FALSE;
 			}
 		}
@@ -655,7 +655,7 @@ BOOL MR_NetworkInterface::SlaveConnect(HWND pWindow, const char *pServerIP, unsi
 			mReturnMessage = pReturnMessage;
 
 			// Modaless mode (Modal)
-			*pModalessDlg = CreateDialog(lModuleHandle, MAKEINTRESOURCE(IDD_TCP_CLIENT), pWindow, ListCallBack);
+			*pModalessDlg = CreateDialogW(lModuleHandle, MAKEINTRESOURCEW(IDD_TCP_CLIENT), pWindow, ListCallBack);
 
 			if(*pModalessDlg == NULL) {
 				lReturnValue = FALSE;
@@ -781,7 +781,7 @@ BOOL CALLBACK MR_NetworkInterface::ServerAddrCallBack(HWND pWindow, UINT pMsgId,
 						mActiveInterface->mServerAddr = lBuffer;
 						mActiveInterface->mServerPort = GetDlgItemInt(pWindow, IDC_SERVER_PORT, NULL, FALSE);
 	
-						if(DialogBox(lModuleHandle, MAKEINTRESOURCE(IDD_NET_PROGRESS), pWindow, WaitGameNameCallBack) == IDOK) {
+						if(DialogBoxW(lModuleHandle, MAKEINTRESOURCEW(IDD_NET_PROGRESS), pWindow, WaitGameNameCallBack) == IDOK) {
 							EndDialog(pWindow, IDOK);
 						}
 						lReturnValue = TRUE;
@@ -817,15 +817,17 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 		// Catch environment modification events
 		case WM_INITDIALOG: // set up the dialog
 			{	
+				SetWindowTextW(pWindow, Str::UW(_("Network Transaction Progress")));
+
 				// set up the static socket used to connect to the server
 				sNewSocket = socket(PF_INET, SOCK_STREAM, 0);
 	
 				if(sNewSocket == INVALID_SOCKET) { // socket creation failed
-					SetDlgItemText(pWindow, IDC_TEXT, MR_LoadString(IDS_CANT_CREATE_SOCK));
+					SetDlgItemTextW(pWindow, IDC_TEXT, Str::UW(_("Unable to create socket")));
 				}
 				else {
 					// "Connecting to server..."
-					SetDlgItemText(pWindow, IDC_TEXT, MR_LoadString(IDS_CONNECTING_SERV));
+					SetDlgItemTextW(pWindow, IDC_TEXT, Str::UW(_("Connecting to server...")));
 
 					SOCKADDR_IN lAddr;
 	
@@ -868,7 +870,7 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 				MR_NetMessageBuffer lOutputBuffer;
 	
 				if(WSAGETSELECTERROR(pLParam) == 0) {
-					SetDlgItemText(pWindow, IDC_TEXT, MR_LoadString(IDS_GET_GAMEINFO));
+					SetDlgItemText(pWindow, IDC_TEXT, _("Retrieving game info..."));
 	
 					// mClient[0] is the server (if we're not the server)
 					mActiveInterface->mClient[0].Connect(sNewSocket, mActiveInterface->mUDPRecvSocket);
@@ -1029,7 +1031,7 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 					lSpec.mask = LVCF_SUBITEM | LVCF_TEXT | LVCF_WIDTH | LVCF_FMT;
 	
 					CString lPlayerLabel;
-					lPlayerLabel.LoadString(IDS_PLAYER);
+					lPlayerLabel = _("Player");
 					lSpec.fmt = LVCFMT_LEFT;
 					lSpec.cx = lWidth - (lWidth / 6) - (lWidth / 4) - GetSystemMetrics(SM_CXVSCROLL);
 					lSpec.pszText = (char *) (const char *) lPlayerLabel;
@@ -1038,7 +1040,7 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 					ListView_InsertColumn(lListHandle, 0, &lSpec);
 	
 					CString lLagLabel;
-					lLagLabel.LoadString(IDS_LAG);
+					lLagLabel = _("Lag (ms)");
 					lSpec.fmt = LVCFMT_RIGHT;
 					lSpec.cx = lWidth / 6;
 					lSpec.pszText = (char *) (const char *) lLagLabel;
@@ -1047,7 +1049,7 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 					ListView_InsertColumn(lListHandle, 1, &lSpec);
 	
 					CString lStatusLabel;
-					lStatusLabel.LoadString(IDS_STATUS);
+					lStatusLabel = _("Status");
 					lSpec.fmt = LVCFMT_LEFT;
 					lSpec.cx = lWidth / 4;
 					lSpec.pszText = (char *) (const char *) lStatusLabel;
@@ -1071,8 +1073,8 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 	
 				ListView_InsertItem(lListHandle, &lItem);
 				ListView_SetItemText(lListHandle, 0, 0, (char *) ((const char *) mActiveInterface->mPlayer));
-				ListView_SetItemText(lListHandle, 0, 1, (char *) MR_LoadStringBuffered(IDS_LOCAL));
-				ListView_SetItemText(lListHandle, 0, 2, (char *) MR_LoadStringBuffered(IDS_CONNECTED));
+				ListView_SetItemText(lListHandle, 0, 1, _("Local"));
+				ListView_SetItemText(lListHandle, 0, 2, _("Connected"));
 	
 				for(int lCounter = 1; lCounter < eMaxClient; lCounter++) {
 					// Add empty entries
@@ -1142,7 +1144,7 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 						if(!lOk) {
 							HMODULE lModuleHandle = GetModuleHandle(NULL /*"util.dll" */ );
 	
-							if(DialogBox(lModuleHandle, MAKEINTRESOURCE(IDD_WAIT_ALL), pWindow, DialogProc) == IDOK) {
+							if(DialogBoxW(lModuleHandle, MAKEINTRESOURCEW(IDD_WAIT_ALL), pWindow, DialogProc) == IDOK) {
 								lOk = TRUE;
 							}
 						}
@@ -1312,7 +1314,7 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 				mActiveInterface->mConnected[lClient] = FALSE;
 
 				ListView_SetItemText(lListHandle, lClient + 1, 1, "");
-				ListView_SetItemText(lListHandle, lClient + 1, 2, (char *) MR_LoadStringBuffered(IDS_DISCONNECTED));
+				ListView_SetItemText(lListHandle, lClient + 1, 2, _("Disconnected"));
 
 				break;
 
@@ -1384,8 +1386,8 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 								else {
 									ListView_InsertItem(lListHandle, &lItem);
 								}
-								ListView_SetItemText(lListHandle, lClient + 1, 1, (char *) MR_LoadStringBuffered(IDS_COMPUTING));
-								ListView_SetItemText(lListHandle, lClient + 1, 2, (char *) MR_LoadStringBuffered(IDS_CONNECTING));
+								ListView_SetItemText(lListHandle, lClient + 1, 1, _("Computing lag"));
+								ListView_SetItemText(lListHandle, lClient + 1, 2, _("Connecting"));
 	
 								// return local name as an answer
 								// also include UDP port number in the request
@@ -1454,8 +1456,8 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 								}
 	
 								// Begin lag test
-								ListView_SetItemText(lListHandle, lClient + 1, 1, (char *) MR_LoadStringBuffered(IDS_COMPUTING));
-								ListView_SetItemText(lListHandle, lClient + 1, 2, (char *) MR_LoadStringBuffered(IDS_CONNECTING));
+								ListView_SetItemText(lListHandle, lClient + 1, 1, _("Computing lag"));
+								ListView_SetItemText(lListHandle, lClient + 1, 2, _("Connecting"));
 	
 								// Start lag test with that connection
 								lAnswer.mMessageType = MRNM_LAG_TEST;
@@ -1588,7 +1590,7 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 									char lStrBuffer[20];
 
 									ListView_SetItemText(lListHandle, lClient + 1, 1, _itoa(mActiveInterface->mClient[lClient].GetAvgLag(), lStrBuffer, 10));
-									ListView_SetItemText(lListHandle, lClient + 1, 2, (char *) MR_LoadStringBuffered(IDS_CONNECTED));
+									ListView_SetItemText(lListHandle, lClient + 1, 2, _("Connected"));
 
 									// Verify if weconnected with all the client that we were suppose to
 									mActiveInterface->SendConnectionDoneIfNeeded();
@@ -1605,10 +1607,10 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 	
 								ListView_SetItemText(lListHandle, lClient + 1, 1, _itoa(mActiveInterface->mClient[lClient].GetAvgLag(), lStrBuffer, 10));
 								if(mActiveInterface->mServerMode) {
-									ListView_SetItemText(lListHandle, lClient + 1, 2, (char *) MR_LoadStringBuffered(IDS_WAITING_ACK));
+									ListView_SetItemText(lListHandle, lClient + 1, 2, _("Waiting acknowledgement"));
 								}
 								else {
-									ListView_SetItemText(lListHandle, lClient + 1, 2, (char *) MR_LoadStringBuffered(IDS_CONNECTED));
+									ListView_SetItemText(lListHandle, lClient + 1, 2, _("Connected"));
 								}
 							}
 							break;
@@ -1618,7 +1620,7 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 								ASSERT(mActiveInterface->mServerMode);
 	
 								// Mark the connection as completed
-								ListView_SetItemText(lListHandle, lClient + 1, 2, (char *) MR_LoadStringBuffered(IDS_CONNECTED));
+								ListView_SetItemText(lListHandle, lClient + 1, 2, _("Connected"));
 								mActiveInterface->mConnected[lClient] = TRUE;
 							}
 							break;
@@ -2299,8 +2301,9 @@ CString GetLocalAddrStr()
 	}
 
 	if(lAdapter == 0) {
-		lReturnValue += " ";
-		lReturnValue += MR_LoadString(IDS_NO_NET_CONNECT);
+		lReturnValue += " (";
+		lReturnValue += _("no network connection");
+		lReturnValue += ")";
 	}
 
 	return lReturnValue;

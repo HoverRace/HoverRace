@@ -679,7 +679,7 @@ BEGIN
     DEFPUSHBUTTON   "Cancel",IDCANCEL,158,73,64,15
     EDITTEXT        IDC_TRACK_NAME,76,20,146,12,ES_AUTOHSCROLL | ES_READONLY | 
                     NOT WS_BORDER
-    LTEXT           "Downloading Track:",IDC_STATIC,7,20,64,8
+    LTEXT           "Downloading Track:",IDC_DLTRACK,7,20,64,8
     LTEXT           "Initializing...",IDC_STATE,7,51,215,8
     CONTROL         "",IDC_DLPROGRESS,"msctls_progress32",WS_BORDER,7,38,215,
                     11

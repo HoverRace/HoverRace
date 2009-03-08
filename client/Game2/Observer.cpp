@@ -35,21 +35,22 @@ using HoverRace::VideoServices::StaticText;
 #define NB_PLAYER_PAGE 10
 #define MR_CHAT_EXPIRATION     20
 
-CString gRankTitle = Ascii2Simple(MR_LoadString(IDS_RANK_TITLE));
-CString gHitTitle = Ascii2Simple(MR_LoadString(IDS_HIT_TITLE));
+CString gRankTitle = Ascii2Simple(_("Rank            Result   Best Lap "));
+CString gHitTitle = Ascii2Simple(_("Rank                 For   Against"));
 
-CString gFirstLapStr = MR_LoadString(IDS_FLAP_STR);
+// most of this string is control codes
+CString gFirstLapStr = _("%d %-0.10s #%d%*s   --First lap--  %c");
 
-CString gChartFinish = MR_LoadString(IDS_CHART_FINISH);
-CString gChart = MR_LoadString(IDS_CHART);
-CString gHitChart = MR_LoadString(IDS_HIT_CHART);
-CString gCountdownStr = MR_LoadString(IDS_COUNTDOWN);
-CString gFinishStr = MR_LoadString(IDS_FINISH);
-CString gFinishStrSingle = MR_LoadString(IDS_FINISH_SINGLE);
-CString gBestLapStr = MR_LoadString(IDS_BEST_LAP);
-CString gHeaderStr = MR_LoadString(IDS_HEADER);
-CString gLastLapStr = MR_LoadString(IDS_LAST_LAP);
-CString gCurLapStr = MR_LoadString(IDS_CUR_LAP);
+CString gChartFinish = _("%d %-0.10s #%d%*s %2d.%02d.%03d %2d.%02d.%03d%c");
+CString gChart = _("%d %-0.10s #%d%*s lap:%-2d   %2d.%02d.%03d%c");
+CString gHitChart = _("%d %-0.10s #%d%*s lap:%-2d   %2d.%02d.%03d%c");
+CString gCountdownStr = _("Starting in %02d.%02d sec. for %d laps");
+CString gFinishStr = _("Finished in %d.%02d.%03d, placed %d of %d");
+CString gFinishStrSingle = _("Finished in %d.%02d.%03d");
+CString gBestLapStr = _("Best lap %d.%02d.%03d");
+CString gHeaderStr = _("%d.%02d.%02d  Lap:%d/%d");
+CString gLastLapStr = _("Last lap %d.%02d.%03d  Best %d.%02d.%03d");
+CString gCurLapStr = _("Current lap %d.%02d.%03d  Best %d.%02d.%03d");
 
 static const char *GetCraftName(int id)
 {

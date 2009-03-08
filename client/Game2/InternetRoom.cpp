@@ -757,9 +757,12 @@ BOOL MR_InternetRoom::IsDisplayed( )const
 }
 */
 
+/***
+ * Add a line to the chat dialog (but this does not refresh that dialog).
+ * The text should be in UTF-8 formatting (not wide).
+ */
 void MR_InternetRoom::AddChatLine(const char *pText)
 {
-
 	if(!mChatBuffer.IsEmpty()) {
 		mChatBuffer += "\r\n";
 	}
@@ -1556,7 +1559,6 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 			break;
 
 		case MRM_NET_EVENT:
-
 			if(mThis->mChatRequest.ProcessEvent(pWParam, pLParam)) {
 				if(mThis->mChatRequest.IsReady()) {
 					// Simply reset

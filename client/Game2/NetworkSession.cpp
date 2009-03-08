@@ -634,7 +634,7 @@ void MR_NetworkSession::WriteNet()
 					mSendedPlayerStats = -1;
 
 					if(mInternetGame) {
-						AddMessage(MR_LoadString(IDS_F2_TORETURN));
+						AddMessage(_("Press F2 when ready to return to the Meeting Room"));
 					}
 
 				}
@@ -666,17 +666,18 @@ void MR_NetworkSession::WriteNet()
 		CString lMessage;
 		// Add a message indicating the the guy disconnected
 		lMessage = mNetInterface.GetPlayerName(sClientToCheck);
-		lMessage += MR_LoadString(IDS_HAS_LEFT);
+		lMessage += " ";
+		lMessage += _("has left");
 
 		AddMessage(lMessage);
 
 		// If only one player left, add an other message to indicate it
 		if(mNetInterface.GetClientCount() == 0) {
 			if(mInternetGame) {
-				AddMessage(MR_LoadString(IDS_ALONE_F2));
+				AddMessage(_("Press F2 when ready to return to the Meeting Room"));
 			}
 			else {
-				AddMessage(MR_LoadString(IDS_ALONE));
+				AddMessage(_("You are now alone"));
 			}
 		}
 		// Delete the client character
