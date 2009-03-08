@@ -388,7 +388,7 @@ void Config::ResetToDefaults()
 	memset(&controls[3], 0, sizeof(cfg_controls_t));
 
 	runtime.silent = false;
-	runtime.ohMyGodItsAllBroken = false;
+	runtime.aieeee = false;
 }
 
 /**

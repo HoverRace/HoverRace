@@ -181,7 +181,7 @@ class MR_DllDeclare Config
 
 		struct cfg_runtime_t {
 			bool silent;
-			bool ohMyGodItsAllBroken;
+			bool aieeee;
 		} runtime;
 };
 

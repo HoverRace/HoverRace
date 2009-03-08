@@ -195,7 +195,7 @@ int main(int argc, char** argv)
 #endif
 		);
 	cfg->runtime.silent = silentMode;
-	cfg->runtime.ohMyGodItsAllBroken = experimentalMode;
+	cfg->runtime.aieeee = experimentalMode;
 
 #ifdef ENABLE_NLS
 	// Gettext initialization.
