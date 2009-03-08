@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
 "Report-Msgid-Bugs-To: bugs@hoverrace.com\n"
-"POT-Creation-Date: 2009-03-04 23:00-0500\n"
+"POT-Creation-Date: 2009-03-08 14:07-0400\n"
 "PO-Revision-Date: 2009-03-04 22:20-0500\n"
 "Last-Translator:  <ryan@igglybob.com>\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -116,7 +116,7 @@ msgctxt "Menu|View"
 msgid "&Refresh colors"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:1017 client/Game2/GameApp.cpp:1842
+#: client/Game2/GameApp.cpp:1017 client/Game2/GameApp.cpp:1852
 msgctxt "Menu|Setting"
 msgid "&Fullscreen"
 msgstr ""
@@ -166,54 +166,475 @@ msgctxt "Version"
 msgid "testing"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2807
+#: client/Game2/GameApp.cpp:1094
+msgid ""
+"You can play HoverRace in a Window or Fullscreen;\n"
+"to play in a Window, HoverRace will have to switch to 256 color mode.\n"
+"It is recommended you use Fullscreen mode instead.\n"
+"\n"
+"Do you want to play in Window mode and switch to 256 color?"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:1098 client/Game2/GameApp.cpp:1108
+#: client/Game2/GameApp.cpp:2609 client/Game2/GameApp.cpp:2962
+#: client/Game2/InternetRoom.cpp:1336 client/Game2/InternetRoom.cpp:2344
+#: client/Game2/TrackDownloadDialog.cpp:220
+#: client/Game2/TrackDownloadDialog.cpp:231
+#: client/Game2/TrackDownloadDialog.cpp:239
+#: client/Game2/TrackDownloadDialog.cpp:325
+msgid "HoverRace"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:1107
+msgid ""
+"HoverRace was unable to switch the video mode. You will need to play in full "
+"screen."
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2462
+msgid "Default Monitor"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2506
+msgid "Gamma"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2507
+msgid "Contrast"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2508
+msgid "Brightness"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2509
+msgid "Volume"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2510
+msgid "Fullscreen Resolution"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2614
+msgid "Invalid resolution; reverting to default"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2624
+msgid "Hit OK to test new resolution"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2637
+msgid "Invalid resolution; reverting to"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2644
+msgid "Resolution successfully set to"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2683
+msgid "Player 1"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2684
+msgid "Player 2"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2685
+msgid "Player 3"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2686
+msgid "Player 4"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2687
+msgid "Motor On:"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2688
+msgid "Turn Right:"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2689
+msgid "Turn Left:"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2690
+msgid "Brake:"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2691
+msgid "Jump:"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2692
+msgid "Fire Weapon:"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2693
+msgid "Select Weapon:"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2694
+msgid "Look Back:"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2850
+msgid "Disable Intro Movie"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2852
+msgid ""
+"Disable the prompt to connect to the Internet each time HoverRace starts"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2854
+msgid "Use desktop &color depth when switching to fullscreen"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2856
+msgid "Address of Server Roomlist:"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2857
+msgid "TCP Server Port:"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2858
+msgid "TCP Receive Port:"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2859
+msgid "UDP Receive Port:"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2930
+msgid ""
+"Incompatible video mode. Select a compatible video mode by pressing F8 or F9 "
+"once a game is started"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2964
+msgid "Click OK to play on the Internet against other people"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2965 client/Game2/TrackSelect.cpp:188
+msgid "OK"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2966 client/Game2/TrackSelect.cpp:189
+msgid "Cancel"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2968
+msgid ""
+"Make sure that you are connected to the Internet before clicking on OK.  If "
+"you have any problems, visit our forums at http://www.hoverrace.com/bb for "
+"help."
+msgstr ""
+
+#: client/Game2/GameApp.cpp:3004
 msgid "About HoverRace"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2808
+#: client/Game2/GameApp.cpp:3005
 msgid "HoverRace version "
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2813
+#: client/Game2/GameApp.cpp:3010
 msgid "HoverRace is brought to you by:"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2815
+#: client/Game2/GameApp.cpp:3012
 msgid "original author"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2818
+#: client/Game2/GameApp.cpp:3015
 msgid "with contributions from (in alphabetical order)"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2824
+#: client/Game2/GameApp.cpp:3021
 msgid ""
 "and with the help of the many testers willing to put up with bugs and other "
 "strange happenings."
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2826
+#: client/Game2/GameApp.cpp:3023
 msgid "visit us at"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2830
+#: client/Game2/GameApp.cpp:3027
 msgid "Thanks also to the following projects"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2844
+#: client/Game2/GameApp.cpp:3041
 msgid "Close"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:533
+msgid "Connecting to the Internet Meeting Room..."
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:554
+msgid "You are connected"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:555
+msgid "Welcome to the HoverRace Internet Meeting Room"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:572
+msgid "Disconnecting from the Internet Meeting Room..."
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:589
+msgid "Registering game with the Internet Meeting Room..."
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:623
+msgid "Unregistering game from the Internet Meeting Room..."
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:640
+msgid "Registering with the Internet Meeting Room..."
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:664
+msgid "Unregistering from the Internet Meeting Room..."
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:681
+msgid "Sending message to the Internet Meeting Room..."
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:810
+msgid "[no selection]"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:824
+msgid "Available"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:828
+msgid "Join game to download from hoverrace.com"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:978
+msgid "Communication error"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:984 client/Game2/InternetRoom.cpp:1036
+msgid "Unable to add user"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:988
+msgid "No more Shareware users allowed"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:992
+msgid "No more user allowed"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:996
+msgid "Incompatible version"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1000
+msgid "Expired key"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1004
+msgid "Already used key (report for investigation)"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1008
+msgid "Unable to send refresh info"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1012 client/Game2/InternetRoom.cpp:1020
+#: client/Game2/InternetRoom.cpp:1028 client/Game2/InternetRoom.cpp:1040
+#: client/Game2/InternetRoom.cpp:1056 client/Game2/InternetRoom.cpp:1073
+#: client/Game2/InternetRoom.cpp:1091 client/Game2/InternetRoom.cpp:1100
+#: client/Game2/InternetRoom.cpp:1116
+msgid "Not online"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1016
+msgid "Unable to add chat message"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1024
+msgid "Unable to add game"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1032
+msgid "Entry is no longer available"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1044 client/Game2/InternetRoom.cpp:1061
+#: client/Game2/InternetRoom.cpp:1078 client/Game2/InternetRoom.cpp:1104
+msgid "Game is no longer available"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1048
+msgid "Game is full"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1052
+msgid "Unable to delete game"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1065 client/Game2/InternetRoom.cpp:1108
+msgid "Not owner"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1069
+msgid "Unable to leave game"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1083
+msgid "Must join first"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1087
+msgid "Unable to delete user"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1096
+msgid "Unable to start game"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1112
+msgid "Unable to add message"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1120
+msgid "Not authorized"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1128
+msgid "Unknown error code"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1139 client/Game2/InternetRoom.cpp:1263
+#: client/Game2/InternetRoom.cpp:1301 client/Game2/InternetRoom.cpp:1306
+#: client/Game2/InternetRoom.cpp:1337 client/Game2/InternetRoom.cpp:1980
+#: client/Game2/InternetRoom.cpp:1991 client/Game2/InternetRoom.cpp:2064
+#: client/Game2/InternetRoom.cpp:2220
+msgid "Internet Meeting Room"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1264
+msgid "Your alias:"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1265
+msgid "Room:"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1300
+msgid "You must enter an alias"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1305
+msgid "You must select a room"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1340
+msgid "Game list"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1341
+msgid "User list"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1342
+msgid "Game details"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1343
+msgid "Track name:"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1344
+msgid "Laps:"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1345
+msgid "Weapons:"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1346
+msgid "Availability:"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1347
+msgid "Player list:"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1348
+msgid "Chat section"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1349
+msgid "Join Game..."
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1350
+msgid "New Game..."
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1351
+msgid "Quit"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1495 client/Game2/InternetRoom.cpp:1522
+msgid "Warning: communication timeout"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1937 client/Game2/InternetRoom.cpp:2203
+#: client/Game2/InternetRoom.cpp:2267 client/Game2/InternetRoom.cpp:2326
+#: client/Game2/NetInterface.cpp:820
+msgid "Network Transaction Progress"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1942
+msgid "Locating the main server..."
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1976
+msgid ""
+"Unable to find the server.\n"
+"You must be connected to the Internet to use this function.\n"
+"If the problem persists, you can report it to the\n"
+"HoverRace forums, in the 'Help Desk' section."
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:1990 client/Game2/InternetRoom.cpp:2219
+#: client/Game2/InternetRoom.cpp:2344
+msgid "Connection timeout"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:2063
+msgid "Server error; please contact the server administrator"
+msgstr ""
+
+#: client/Game2/InternetRoom.cpp:2327
+msgid "Registering your best lap time to the server"
 msgstr ""
 
 #: client/Game2/NetInterface.cpp:465 client/Game2/NetInterface.cpp:486
 #: client/Game2/NetInterface.cpp:498 client/Game2/NetInterface.cpp:556
-#: client/Game2/NetInterface.cpp:576 client/Game2/NetInterface.cpp:631
-#: client/Game2/NetInterface.cpp:711 client/Game2/NetInterface.cpp:721
-#: client/Game2/NetInterface.cpp:892 client/Game2/NetInterface.cpp:1654
+#: client/Game2/NetInterface.cpp:576 client/Game2/NetInterface.cpp:618
+#: client/Game2/NetInterface.cpp:631 client/Game2/NetInterface.cpp:711
+#: client/Game2/NetInterface.cpp:721 client/Game2/NetInterface.cpp:894
+#: client/Game2/NetInterface.cpp:1656
 msgid "TCP Server"
 msgstr ""
 
 #: client/Game2/NetInterface.cpp:465 client/Game2/NetInterface.cpp:556
-#: client/Game2/NetInterface.cpp:892
+#: client/Game2/NetInterface.cpp:618 client/Game2/NetInterface.cpp:826
+#: client/Game2/NetInterface.cpp:894
 msgid "Unable to create socket"
 msgstr ""
 
@@ -232,71 +653,247 @@ msgstr ""
 msgid "Port value must be greater than 0"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:913
+#: client/Game2/NetInterface.cpp:830
+msgid "Connecting to server..."
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:873
+msgid "Retrieving game info..."
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:915
 msgid "ERROR Unable to connect to server..."
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:1654
+#: client/Game2/NetInterface.cpp:1034
+msgid "Player"
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:1043
+msgid "Lag (ms)"
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:1052
+msgid "Status"
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:1076
+msgid "Local"
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:1077 client/Game2/NetInterface.cpp:1593
+#: client/Game2/NetInterface.cpp:1613 client/Game2/NetInterface.cpp:1623
+msgid "Connected"
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:1317
+msgid "Disconnected"
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:1389 client/Game2/NetInterface.cpp:1459
+msgid "Computing lag"
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:1390 client/Game2/NetInterface.cpp:1460
+msgid "Connecting"
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:1610
+msgid "Waiting acknowledgement"
+msgstr ""
+
+#: client/Game2/NetInterface.cpp:1656
 msgid "Game cancelled by server"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:1694
-msgid "Connection refused by peer "
+#: client/Game2/NetInterface.cpp:1696
+msgid "Connection refused by peer"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:1696
+#: client/Game2/NetInterface.cpp:1698
 msgid ""
 "; perhaps they are behind a firewall and need to forward ports 9530 and 9531 "
 "TCP and UDP?"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:1698 client/Game2/NetInterface.cpp:1737
-#: client/Game2/NetInterface.cpp:1763 client/Game2/NetInterface.cpp:1773
+#: client/Game2/NetInterface.cpp:1700 client/Game2/NetInterface.cpp:1739
+#: client/Game2/NetInterface.cpp:1765 client/Game2/NetInterface.cpp:1775
 msgid "TCP Client"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:1733
+#: client/Game2/NetInterface.cpp:1735
 msgid "Main server and peer "
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:1735
+#: client/Game2/NetInterface.cpp:1737
 msgid " are using the same IP and port!"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:1758
+#: client/Game2/NetInterface.cpp:1760
 msgid "Cannot connect to peer "
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:1760
+#: client/Game2/NetInterface.cpp:1762
 msgid " at IP "
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:1770
+#: client/Game2/NetInterface.cpp:1772
 msgid "Connection error with "
 msgstr ""
 
-#: client/Game2/Observer.cpp:57
-msgid "Basic craft"
+#: client/Game2/NetInterface.cpp:2305
+msgid "no network connection"
+msgstr ""
+
+#: client/Game2/NetworkSession.cpp:637 client/Game2/NetworkSession.cpp:677
+msgid "Press F2 when ready to return to the Meeting Room"
+msgstr ""
+
+#: client/Game2/NetworkSession.cpp:670
+msgid "has left"
+msgstr ""
+
+#: client/Game2/NetworkSession.cpp:680
+msgid "You are now alone"
+msgstr ""
+
+#: client/Game2/Observer.cpp:38
+msgid "Rank            Result   Best Lap "
+msgstr ""
+
+#: client/Game2/Observer.cpp:39
+msgid "Rank                 For   Against"
+msgstr ""
+
+#: client/Game2/Observer.cpp:42
+#, c-format, boost-format
+msgid "%d %-0.10s #%d%*s   --First lap--  %c"
+msgstr ""
+
+#: client/Game2/Observer.cpp:44
+#, c-format, boost-format
+msgid "%d %-0.10s #%d%*s %2d.%02d.%03d %2d.%02d.%03d%c"
+msgstr ""
+
+#: client/Game2/Observer.cpp:45 client/Game2/Observer.cpp:46
+#, c-format, boost-format
+msgid "%d %-0.10s #%d%*s lap:%-2d   %2d.%02d.%03d%c"
+msgstr ""
+
+#: client/Game2/Observer.cpp:47
+#, c-format, boost-format
+msgid "Starting in %02d.%02d sec. for %d laps"
+msgstr ""
+
+#: client/Game2/Observer.cpp:48
+#, c-format, boost-format
+msgid "Finished in %d.%02d.%03d, placed %d of %d"
+msgstr ""
+
+#: client/Game2/Observer.cpp:49
+#, c-format, boost-format
+msgid "Finished in %d.%02d.%03d"
+msgstr ""
+
+#: client/Game2/Observer.cpp:50
+#, c-format, boost-format
+msgid "Best lap %d.%02d.%03d"
+msgstr ""
+
+#: client/Game2/Observer.cpp:51
+#, c-format, boost-format
+msgid "%d.%02d.%02d  Lap:%d/%d"
+msgstr ""
+
+#: client/Game2/Observer.cpp:52
+#, c-format, boost-format
+msgid "Last lap %d.%02d.%03d  Best %d.%02d.%03d"
+msgstr ""
+
+#: client/Game2/Observer.cpp:53
+#, c-format, boost-format
+msgid "Current lap %d.%02d.%03d  Best %d.%02d.%03d"
 msgstr ""
 
 #: client/Game2/Observer.cpp:58
-msgid "CX craft"
+msgid "Basic craft"
 msgstr ""
 
 #: client/Game2/Observer.cpp:59
-msgid "Bi-Turbo craft"
+msgid "CX craft"
 msgstr ""
 
 #: client/Game2/Observer.cpp:60
+msgid "Bi-Turbo craft"
+msgstr ""
+
+#: client/Game2/Observer.cpp:61
 msgid "Eon craft"
 msgstr ""
 
-#: client/Game2/Observer.cpp:62
+#: client/Game2/Observer.cpp:63
 msgid "Unknown craft"
 msgstr ""
 
-#: client/Game2/Observer.cpp:98
+#: client/Game2/Observer.cpp:99
 msgid "Select your craft with the arrow keys"
+msgstr ""
+
+#: client/Game2/TrackDownloadDialog.cpp:46
+msgid "Initializing"
+msgstr ""
+
+#: client/Game2/TrackDownloadDialog.cpp:47
+#: client/Game2/TrackDownloadDialog.cpp:168
+msgid "Downloading"
+msgstr ""
+
+#: client/Game2/TrackDownloadDialog.cpp:48
+msgid "Extracting"
+msgstr ""
+
+#: client/Game2/TrackDownloadDialog.cpp:49
+msgid "Finished"
+msgstr ""
+
+#: client/Game2/TrackDownloadDialog.cpp:101
+msgid "Would you like to download the track"
+msgstr ""
+
+#: client/Game2/TrackDownloadDialog.cpp:101
+msgid "now?"
+msgstr ""
+
+#: client/Game2/TrackDownloadDialog.cpp:102
+#: client/Game2/TrackDownloadDialog.cpp:260
+msgid "Track Download"
+msgstr ""
+
+#: client/Game2/TrackDownloadDialog.cpp:164
+msgid "Processing..."
+msgstr ""
+
+#: client/Game2/TrackDownloadDialog.cpp:230
+#, c-format, boost-format
+msgid "Sorry, track \"%s\" is not available from %s"
+msgstr ""
+
+#: client/Game2/TrackDownloadDialog.cpp:236
+#, c-format, boost-format
+msgid ""
+"Track download failed: The file \"%s\" was not found in the archive "
+"downloaded from %s"
+msgstr ""
+
+#: client/Game2/TrackDownloadDialog.cpp:261
+msgid "Downloading Track:"
+msgstr ""
+
+#: client/Game2/TrackDownloadDialog.cpp:321
+#, c-format, boost-format
+msgid ""
+"There was a problem downloading the track from %s\n"
+"Please visit %s and download the track manually."
 msgstr ""
 
 #: client/Game2/TrackSelect.cpp:120 client/Game2/TrackSelect.cpp:130
@@ -323,14 +920,6 @@ msgstr ""
 msgid "Weapons"
 msgstr ""
 
-#: client/Game2/TrackSelect.cpp:188
-msgid "OK"
-msgstr ""
-
-#: client/Game2/TrackSelect.cpp:189
-msgid "Cancel"
-msgstr ""
-
 #: client/Game2/TrackSelect.cpp:212 client/Game2/TrackSelect.cpp:231
 msgid " no selection"
 msgstr ""
@@ -339,7 +928,7 @@ msgstr ""
 msgid "Number of laps should be between 1 and 99"
 msgstr ""
 
-#: client/Game2/main.cpp:230
+#: client/Game2/main.cpp:240
 #, c-format, boost-format
 msgid ""
 "HoverRace for Linux is under development!\n"
