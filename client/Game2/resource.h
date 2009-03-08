@@ -165,6 +165,19 @@
 #define IDC_USERS_LIST_C                1130
 #define IDC_CHAT_SECTION_C              1131
 #define IDC_WEAPONS_C                   1132
+#define IDC_AUDIO_GROUP                 1233
+#define IDC_VIDEO_GROUP                 1234
+#define IDC_FULLSCREEN_GROUP            1235
+#define IDC_MONITOR                     1236
+#define IDC_TEST_FULLSCREEN             1237
+#define IDC_RES                         1238
+#define IDC_MONITOR_LBL                 1239
+#define IDC_RES_TXT                     1240
+#define IDC_RES_LBL                     1241
+#define IDC_VOL_LBL                     1242
+#define IDC_BRIGHTNESS_LBL              1243
+#define IDC_CONTRAST_LBL                1244
+#define IDC_GAMMA_LBL                   1245
 #define ID_VIEW_3DACTION                32775
 #define ID_SETTING_WINDOW               32784
 #define ID_GAME_PAUSE                   32788
@@ -376,13 +389,13 @@
 #define ID_GAME_NEW                     0xE100
 
 // Next default values for new objects
-// 
+//
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        166
 #define _APS_NEXT_COMMAND_VALUE         40049
-#define _APS_NEXT_CONTROL_VALUE         1133
+#define _APS_NEXT_CONTROL_VALUE         1333
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

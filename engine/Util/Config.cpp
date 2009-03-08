@@ -521,6 +521,7 @@ void Config::cfg_video_t::Load(yaml::MapNode *root)
 	READ_INT(root, yPos, -32768, 32768);
 	READ_INT(root, xRes, 0, 32768);
 	READ_INT(root, yRes, 0, 32768);
+	READ_STRING(root, fullscreenMonitor);
 	READ_INT(root, xResFullscreen, 0, 32768);
 	READ_INT(root, yResFullscreen, 0, 32768);
 }
@@ -540,6 +541,7 @@ void Config::cfg_video_t::Save(yaml::Emitter *emitter)
 	EMIT_VAR(emitter, yPos);
 	EMIT_VAR(emitter, xRes);
 	EMIT_VAR(emitter, yRes);
+	EMIT_VAR(emitter, fullscreenMonitor);
 	EMIT_VAR(emitter, xResFullscreen);
 	EMIT_VAR(emitter, yResFullscreen);
 

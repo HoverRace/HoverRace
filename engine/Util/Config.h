@@ -123,6 +123,7 @@ class MR_DllDeclare Config
 			int yPos;
 			int xRes;
 			int yRes;
+			std::string fullscreenMonitor;
 			int xResFullscreen; /// for fullscreen
 			int yResFullscreen; /// for fullscreen
 

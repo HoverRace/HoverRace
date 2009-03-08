@@ -2366,6 +2366,121 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 	return DefWindowProcW(pWindow, pMsgId, pWParam, pLParam);
 }
 
+/**
+ * Retrieve the selected monitor.
+ * @param hwnd The parent dialog.
+ * @param monitors The list of monitors.
+ * @return The selected monitor from the list of monitors, or @c NULL if the
+ *         default monitor is selected.
+ */
+static const OS::Monitor *GetSelectedMonitor(HWND hwnd, OS::monitors_t *monitors)
+{
+	int idx = SendDlgItemMessage(hwnd, IDC_MONITOR, CB_GETCURSEL, 0, 0);
+	return (idx == 0) ? NULL : &((*monitors)[idx - 1]);
+}
+
+/**
+ * Retrieve the selected resolution.
+ * @param hwnd The parent dialog.
+ * @return The resolution or @c NULL if no resolution is selected.
+ *         It is up to the caller to delete the object.
+ */
+static OS::Resolution *GetSelectedResolution(HWND hwnd)
+{
+	OS::Resolution *oldRes = NULL;
+	int oldResIdx = SendDlgItemMessage(hwnd, IDC_RES, CB_GETCURSEL, 0, 0);
+	if (oldResIdx != CB_ERR) {
+		size_t sz = (size_t)SendDlgItemMessage(hwnd, IDC_RES, CB_GETLBTEXTLEN, oldResIdx, 0);
+		char *buf = (char*)malloc(sz + 1);
+		buf[sz] = '\0';
+		SendDlgItemMessage(hwnd, IDC_RES, CB_GETLBTEXT, oldResIdx, (LPARAM)buf);
+		oldRes = new OS::Resolution(buf);
+		free(buf);
+	}
+	return oldRes;
+}
+
+/**
+ * Populate the resolution selector based on the selected monitor.
+ * @param hwnd The parent dialog.
+ * @param monitors The list of monitors.
+ */
+static void UpdateResolutionList(HWND hwnd, OS::monitors_t *monitors)
+{
+	const OS::Monitor *sel = GetSelectedMonitor(hwnd, monitors);
+	if (sel == NULL) {
+		// Find the primary monitor.
+		for (OS::monitors_t::const_iterator iter = monitors->begin();
+			iter != monitors->end(); ++iter)
+		{
+			if (iter->primary) {
+				sel = &(*iter);
+				break;
+			}
+		}
+		if (sel == NULL) {
+			// No monitors are marked as primary (shouldn't happen).
+			sel = &((*monitors)[1]);
+		}
+	}
+	if (sel->resolutions.empty()) {
+		ASSERT(FALSE);
+		return;
+	}
+
+	// Retrieve the currently selected resolution so we can try
+	// to find a matching one in the new list.
+	const OS::Resolution *oldRes = GetSelectedResolution(hwnd);
+
+	SendDlgItemMessage(hwnd, IDC_RES, CB_RESETCONTENT, 0, 0);
+
+	int i = 0;
+	int selIdx = -1;
+	for (OS::resolutions_t::const_iterator iter = sel->resolutions.begin();
+		iter != sel->resolutions.end(); ++iter, ++i)
+	{
+		SendDlgItemMessage(hwnd, IDC_RES, CB_ADDSTRING, 0, (LPARAM)iter->AsString().c_str());
+		if (oldRes != NULL && selIdx == -1 && *oldRes < *iter) {
+			selIdx = (i == 0) ? 0 : i - 1;
+		}
+	}
+	if (selIdx == -1) selIdx = sel->resolutions.size() - 1;
+	SendDlgItemMessage(hwnd, IDC_RES, CB_SETCURSEL, selIdx, 0);
+
+	delete oldRes;
+}
+
+/**
+ * Populate the monitor selector with the list of monitors.
+ * @param hwnd The parent dialog.
+ * @param monitors The list of monitors.
+ */
+static void InitMonitorList(HWND hwnd, OS::monitors_t *monitors) {
+	Config *cfg = Config::GetInstance();
+
+	SendDlgItemMessageW(hwnd, IDC_MONITOR, CB_ADDSTRING, 0,
+		(LPARAM)(const wchar_t*)Str::UW(_("Default Monitor")));
+
+	int i = 1;
+	int sel = 0;
+	const std::string &cfgSelMon = cfg->video.fullscreenMonitor;
+	for (OS::monitors_t::const_iterator iter = monitors->begin();
+		iter != monitors->end(); ++iter, ++i)
+	{
+		SendDlgItemMessage(hwnd, IDC_MONITOR, CB_ADDSTRING, 0, (LPARAM)iter->name.c_str());
+		if (cfgSelMon == iter->id) sel = i;
+	}
+	SendDlgItemMessage(hwnd, IDC_MONITOR, CB_SETCURSEL, sel, 0);
+
+	// Init the current resolution from config so that UpdateResolutionList()
+	// will pick the nearest one.
+	SendDlgItemMessage(hwnd, IDC_RES, CB_ADDSTRING, 0,
+		(LPARAM)OS::Resolution(cfg->video.xResFullscreen, cfg->video.yResFullscreen).AsString().c_str());
+	SendDlgItemMessage(hwnd, IDC_RES, CB_SETCURSEL, 0, 0);
+
+	UpdateResolutionList(hwnd, monitors);
+}
+
 BOOL CALLBACK MR_GameApp::DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
 {
 	ASSERT(This != NULL);
@@ -2378,6 +2493,7 @@ BOOL CALLBACK MR_GameApp::DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, 
 	static double lOriginalContrast;
 	static double lOriginalBrightness;
 	static float lOriginalSfxVolume;
+	static boost::shared_ptr<OS::monitors_t> monitors;
 
 	switch (pMsgId) {
 		// Catch environment modification events
@@ -2403,11 +2519,17 @@ BOOL CALLBACK MR_GameApp::DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, 
 			SendDlgItemMessage(pWindow, IDC_BRIGHTNESS_SLIDER, TBM_SETPOS, TRUE, long (lOriginalBrightness * 100));
 			SendDlgItemMessage(pWindow, IDC_SFX_VOLUME_SLIDER, TBM_SETPOS, TRUE, long (lOriginalSfxVolume * 100));
 
+			// Populate the monitors dropdown.
+			monitors = OS::GetMonitors();
+			InitMonitorList(pWindow, monitors.get());
+			
+			/*
 			char lBuffer[10]; // maybe someone has a really big resolution
 			sprintf(lBuffer, "%d\0", cfg->video.xResFullscreen);
 			SetDlgItemText(pWindow, IDC_FS_RES_X, lBuffer);
 			sprintf(lBuffer, "%d\0", cfg->video.yResFullscreen);
 			SetDlgItemText(pWindow, IDC_FS_RES_Y, lBuffer);
+			*/
 
 			UpdateIntensityDialogLabels(pWindow);
 			break;
@@ -2457,6 +2579,15 @@ BOOL CALLBACK MR_GameApp::DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, 
 		   }
 		   break;
 		 */
+		case WM_COMMAND:
+			switch (LOWORD(pWParam)) {
+				case IDC_MONITOR:
+					if (HIWORD(pWParam) == CBN_SELCHANGE) {
+						UpdateResolutionList(pWindow, monitors.get());
+					}
+					break;
+			}
+			break;
 
 		case WM_NOTIFY:
 			switch (((NMHDR FAR *) pLParam)->code) {
