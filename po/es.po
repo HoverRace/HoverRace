@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
 "Report-Msgid-Bugs-To: bugs@hoverrace.com\n"
 "POT-Creation-Date: 2009-03-08 14:07-0400\n"
-"PO-Revision-Date: 2009-03-10 04:03-0700\n"
+"PO-Revision-Date: 2009-03-10 06:29-0700\n"
 "Last-Translator: Austin Brock <sir_brock@hotmail.com>\n"
 "Language-Team: Spanish\n"
 "Language: es\n"
@@ -179,10 +179,6 @@ msgid ""
 "\n"
 "Do you want to play in Window mode and switch to 256 color?"
 msgstr ""
-"You can play HoverRace in a Window or Fullscreen;\n"
-"to play in a Window, HoverRace will have to switch to 256 color mode.It is "
-"recommended you use Fullscreen mode instead.Do you want to play in Window "
-"mode and switch to 256 color?"
 
 #: client/Game2/GameApp.cpp:1098 client/Game2/GameApp.cpp:1108
 #: client/Game2/GameApp.cpp:2609 client/Game2/GameApp.cpp:2962
@@ -199,8 +195,6 @@ msgid ""
 "HoverRace was unable to switch the video mode. You will need to play in full "
 "screen."
 msgstr ""
-"HoverRace was unable to switch the video mode. You will need to play in full "
-"screen."
 
 #: client/Game2/GameApp.cpp:2462
 msgid "Default Monitor"
