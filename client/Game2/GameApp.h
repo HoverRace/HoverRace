@@ -97,7 +97,7 @@ class MR_GameApp
 		bool CreateMainMenu();
 
 		void RefreshView();
-		BOOL SetVideoMode(int pX, int pY);
+		bool SetVideoMode(int pX, int pY, const std::string *monitor=NULL);
 		void RefreshTitleBar();
 
 		int ReadAsyncInputControllerPlayer(int playerIdx);

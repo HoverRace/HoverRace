@@ -27,6 +27,7 @@
 
 #include "../Util/Profiler.h"
 #include "../Util/Config.h"
+#include "../Util/OS.h"
 
 // Debug flag
 #ifdef _DEBUG
@@ -36,6 +37,7 @@ static const BOOL gDebugMode = FALSE;
 #endif
 
 using HoverRace::Util::Config;
+using HoverRace::Util::OS;
 
 // Video card debuging traces
 
@@ -248,6 +250,8 @@ void PrintLog(const char *pFormat, ...);
 #define DD_CALL( pFunc )   pFunc
 #endif
 
+static GUID zeroGuid = { 0, 0, 0, { 0, 0, 0, 0, 0, 0, 0, 0 } };
+
 // Computes the run length and shift of the block of ones in a bitmask.
 // Example: If the mask is "00011100" then mSize=3 and mShift=2.
 void MR_VideoBuffer::Channel::SetMask(DWORD mask)
@@ -284,6 +288,7 @@ MR_VideoBuffer::MR_VideoBuffer(HWND pWindow, double pGamma, double pContrast, do
 	ASSERT(pWindow != NULL);
 
 	mWindow = pWindow;
+	memset(&curMonitor, 0, sizeof(curMonitor));
 	mDirectDraw = NULL;
 	mFrontBuffer = NULL;
 	mBackBuffer = NULL;
@@ -295,7 +300,7 @@ MR_VideoBuffer::MR_VideoBuffer(HWND pWindow, double pGamma, double pContrast, do
 	mPackedPalette = NULL;
 
 	mModeSettingInProgress = FALSE;
-	mFullScreen = FALSE;
+	mFullScreen = false;
 
 	mBpp = 0;
 	mNativeBpp = 0;
@@ -344,21 +349,59 @@ DWORD MR_VideoBuffer::PackRGB(DWORD r, DWORD g, DWORD b)
 	return mRChan.Pack(r) | mGChan.Pack(g) | mBChan.Pack(b);
 }
 
-BOOL MR_VideoBuffer::InitDirectDraw()
+static inline bool guidEqual(const GUID &a, const GUID &b)
 {
-	PRINT_LOG("InitDirectDraw");
+	if (a.Data1 != b.Data1 ||
+		a.Data2 != b.Data2 ||
+		a.Data3 != b.Data3) return false;
+	for (int i = 0; i < 8; ++i)
+		if (a.Data4[i] != b.Data4[i]) return false;
+	return true;
+}
 
-	BOOL lReturnValue = TRUE;
+/**
+ * Initialize DirectDraw.
+ * This should be called whenever the monitor or fullscreen state changes.
+ * @param monitor The GUID of the monitor to output to.
+ *                If in windowed mode, this should be NULL so that DirectDraw
+ *                can automatically decide if emulation mode is necessary.
+ * @param newFullscreen @c true if switching to fullscreen mode,
+ *                      @c false if switching to windowed mode.
+ * @return @c true if successful.
+ */
+bool MR_VideoBuffer::InitDirectDraw(GUID *monitor, bool newFullscreen)
+{
+	//OutputDebugString("InitDirectDraw\n");
+
+	bool lReturnValue = true;
+
+	if (mDirectDraw != NULL) {
+		const GUID &newGuid = (monitor == NULL) ? zeroGuid : *monitor;
+
+		// Check if the monitor or fullscreen setting has changed.
+		// If so, then we need to re-initialize DirectDraw.
+		if (mFullScreen != newFullscreen || !guidEqual(curMonitor, newGuid)) {
+			DeleteInternalSurfaces();
+			if (mPalette != NULL) {
+				mPalette->Release();
+				mPalette = NULL;
+			}
+			mDirectDraw->Release();
+			mDirectDraw = NULL;
+			memcpy(&curMonitor, &newGuid, sizeof(GUID));
+			// mFullScreen will be updated by the caller.
+		}
+	}
 
 	if(mDirectDraw == NULL) {
-		if(DD_CALL(DirectDrawCreate( /*(LPGUID) DDCREATE_EMULATIONONLY */ NULL, &mDirectDraw, NULL)) != DD_OK) {
+		if(DD_CALL(DirectDrawCreate(monitor, &mDirectDraw, NULL)) != DD_OK) {
 			ASSERT(FALSE);
-			lReturnValue = FALSE;
+			lReturnValue = false;
 		}
 		else {
 			if(DD_CALL(mDirectDraw->SetCooperativeLevel(mWindow, DDSCL_NORMAL)) != DD_OK) {
 				ASSERT(FALSE);
-				lReturnValue = FALSE;
+				lReturnValue = false;
 			}
 		}
 	}
@@ -370,10 +413,10 @@ BOOL MR_VideoBuffer::InitDirectDraw()
 		lSurfaceDesc.dwSize = sizeof(lSurfaceDesc);
 
 		if(DD_CALL(mDirectDraw->GetDisplayMode(&lSurfaceDesc)) != DD_OK) {
-			lReturnValue = FALSE;
+			lReturnValue = false;
 		}
 		else {
-			lReturnValue = ProcessCurrentBpp(lSurfaceDesc.ddpfPixelFormat);
+			lReturnValue = (ProcessCurrentBpp(lSurfaceDesc.ddpfPixelFormat) != FALSE);
 			if(lReturnValue) {
 				// We make the assumption that the desktop color depth
 				// won't change while we're running.
@@ -621,7 +664,7 @@ void MR_VideoBuffer::ReturnToWindowsResolution()
 	 */
 
 	if(mDirectDraw && mFullScreen) {
-		mFullScreen = FALSE;
+		mFullScreen = false;
 
 		if(!mSpecialWindowMode) {
 			DD_CALL(mDirectDraw->RestoreDisplayMode());
@@ -674,18 +717,22 @@ void MR_VideoBuffer::ReturnToWindowsResolution()
 	}
 }
 
-BOOL MR_VideoBuffer::SetVideoMode()
+/**
+ * Switch to windowed mode.
+ * @return @c true if successful.
+ */
+bool MR_VideoBuffer::SetVideoMode()
 {
 	PRINT_LOG("SetVideoMode(Window)");
 
-	BOOL lReturnValue;
+	bool lReturnValue;
 	DDSURFACEDESC lSurfaceDesc;
 
 	ASSERT(!mModeSettingInProgress);
 
 	mModeSettingInProgress = TRUE;
 
-	lReturnValue = InitDirectDraw();
+	lReturnValue = InitDirectDraw(NULL, false);
 
 	if(lReturnValue) {
 		ReturnToWindowsResolution();
@@ -694,7 +741,7 @@ BOOL MR_VideoBuffer::SetVideoMode()
 	if(lReturnValue) {
 		RECT lRect;
 
-		lReturnValue = GetClientRect(mWindow, &lRect);
+		lReturnValue = (GetClientRect(mWindow, &lRect) != FALSE);
 
 		ASSERT(lReturnValue);
 
@@ -706,7 +753,7 @@ BOOL MR_VideoBuffer::SetVideoMode()
 	if(lReturnValue) {
 		POINT lPoint = { 0, 0 };
 
-		lReturnValue = ClientToScreen(mWindow, &lPoint);
+		lReturnValue = (ClientToScreen(mWindow, &lPoint) != FALSE);
 
 		mX0 = lPoint.x;
 		mY0 = lPoint.y;
@@ -731,7 +778,7 @@ BOOL MR_VideoBuffer::SetVideoMode()
 
 		if(DD_CALL(mDirectDraw->CreateSurface(&lSurfaceDesc, &mFrontBuffer, NULL)) != DD_OK) {
 			// ASSERT( FALSE );
-			lReturnValue = FALSE;
+			lReturnValue = false;
 		}
 		else {
 			// We're running windowed now, so we need to use the
@@ -764,7 +811,7 @@ BOOL MR_VideoBuffer::SetVideoMode()
 
 			if(DD_CALL(mDirectDraw->CreateSurface(&lSurfaceDesc, &mBackBuffer, NULL)) != DD_OK) {
 				// ASSERT( FALSE ); // Probably a bad video mode (not 8bit/pixel)
-				lReturnValue = FALSE;
+				lReturnValue = false;
 			}
 		}
 	}
@@ -773,7 +820,7 @@ BOOL MR_VideoBuffer::SetVideoMode()
 		// Create a clipper
 		if(DD_CALL(mDirectDraw->CreateClipper(0, &mClipper, NULL)) != DD_OK) {
 			ASSERT(FALSE);
-			lReturnValue = FALSE;
+			lReturnValue = false;
 		}
 	}
 
@@ -781,7 +828,7 @@ BOOL MR_VideoBuffer::SetVideoMode()
 		// Attatch it to the current window
 		if(DD_CALL(mClipper->SetHWnd(0, mWindow)) != DD_OK) {
 			ASSERT(FALSE);
-			lReturnValue = FALSE;
+			lReturnValue = false;
 		}
 	}
 
@@ -789,7 +836,7 @@ BOOL MR_VideoBuffer::SetVideoMode()
 		// Attatch it to the current window
 		if(DD_CALL(mFrontBuffer->SetClipper(mClipper)) != DD_OK) {
 			ASSERT(FALSE);
-			lReturnValue = FALSE;
+			lReturnValue = false;
 		}
 	}
 
@@ -811,13 +858,21 @@ BOOL MR_VideoBuffer::SetVideoMode()
 	return lReturnValue;
 }
 
-BOOL MR_VideoBuffer::SetVideoMode(int pXRes, int pYRes)
+/**
+ * Switch to fullscreen mode.
+ * @param pXRes The resolution width.
+ * @param pYRes The resolution height.
+ * @param monitor The GUID of the monitor to use for fullscreen.
+ *                May be @c NULL to use the primary monitor.
+ * @return @c true if successful.
+ */
+bool MR_VideoBuffer::SetVideoMode(int pXRes, int pYRes, GUID *monitor)
 {
 	PRINT_LOG("SetVideoMode %dx%d", pXRes, pYRes);
 
 	// Set afull screen video mode
 	HRESULT lErrorCode;
-	BOOL lReturnValue;
+	bool lReturnValue;
 	DDSURFACEDESC lSurfaceDesc;
 	// DDCAPS          lDDCaps;
 	Config *cfg = Config::GetInstance();
@@ -828,7 +883,7 @@ BOOL MR_VideoBuffer::SetVideoMode(int pXRes, int pYRes)
 
 	mModeSettingInProgress = TRUE;
 
-	lReturnValue = InitDirectDraw();
+	lReturnValue = InitDirectDraw(monitor, true);
 
 	if(lReturnValue) {
 		DeleteInternalSurfaces();
@@ -845,7 +900,7 @@ BOOL MR_VideoBuffer::SetVideoMode(int pXRes, int pYRes)
 
 		if(DD_CALL(mDirectDraw->SetCooperativeLevel(mWindow, DDSCL_EXCLUSIVE | DDSCL_FULLSCREEN | DDSCL_ALLOWMODEX | DDSCL_ALLOWREBOOT /*|DDSCL_NOWINDOWCHANGES */ )) != DD_OK) {
 			//ASSERT(FALSE);
-			lReturnValue = FALSE;
+			lReturnValue = false;
 		}
 	}
 
@@ -855,14 +910,14 @@ BOOL MR_VideoBuffer::SetVideoMode(int pXRes, int pYRes)
 		mYRes = pYRes;
 		mLineLen = mXRes;
 
-		mFullScreen = TRUE;
+		mFullScreen = true;
 	}
 
 	if(lReturnValue) {
 		// ASSERT( FALSE );
 
 		if(DD_CALL(mDirectDraw->SetDisplayMode(pXRes, pYRes, lReqBpp)) != DD_OK) {
-			lReturnValue = FALSE;
+			lReturnValue = false;
 		//	ASSERT(FALSE);
 		}
 	}
@@ -889,7 +944,7 @@ BOOL MR_VideoBuffer::SetVideoMode(int pXRes, int pYRes)
 
 			if((lErrorCode = DD_CALL(mDirectDraw->CreateSurface(&lSurfaceDesc, &mFrontBuffer, NULL))) != DD_OK) {
 				ASSERT(FALSE);
-				lReturnValue = FALSE;
+				lReturnValue = false;
 			}
 		}
 
@@ -901,7 +956,7 @@ BOOL MR_VideoBuffer::SetVideoMode(int pXRes, int pYRes)
 
 			if(DD_CALL(mFrontBuffer->GetAttachedSurface(&lDDSCaps, &mBackBuffer)) != DD_OK) {
 				ASSERT(FALSE);
-				lReturnValue = FALSE;
+				lReturnValue = false;
 			}
 		}
 

@@ -38,7 +38,8 @@ class MR_VideoBuffer
 
 	private:
 		HWND mWindow;
-		BOOL mFullScreen;
+		GUID curMonitor;
+		bool mFullScreen;
 		LPDIRECTDRAW mDirectDraw;
 		LPDIRECTDRAWSURFACE mFrontBuffer;
 		LPDIRECTDRAWSURFACE mBackBuffer;
@@ -92,7 +93,7 @@ class MR_VideoBuffer
 
 		DWORD PackRGB(DWORD r, DWORD g, DWORD b);
 
-		BOOL InitDirectDraw();
+		bool InitDirectDraw(GUID *monitor, bool newFullscreen);
 		BOOL ProcessCurrentBpp(const DDPIXELFORMAT & lFormat);
 		void DeleteInternalSurfaces();
 		void ReturnToWindowsResolution();		  //Automaticly call DeleteInternalSurfaces
@@ -102,12 +103,12 @@ class MR_VideoBuffer
 	public:
 
 		MR_DllDeclare MR_VideoBuffer(HWND pWindow, double lGamma, double lContrast, double mBrightness);
-		MR_DllDeclare ~ MR_VideoBuffer();
+		MR_DllDeclare ~MR_VideoBuffer();
 
 		// Video mode selection
-		MR_DllDeclare BOOL SetVideoMode();		  // In a window mode
+		MR_DllDeclare bool SetVideoMode();		  // In a window mode
 												  // Full screen mode
-		MR_DllDeclare BOOL SetVideoMode(int pXRes, int pYRes);
+		MR_DllDeclare bool SetVideoMode(int pXRes, int pYRes, GUID *monitor);
 		MR_DllDeclare BOOL SetMenuVideoMode();	  // slow full screen mode for menus
 		MR_DllDeclare void EnterIconMode();
 		MR_DllDeclare void ExitIconMode();

@@ -35,7 +35,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="winmm.lib yamlD.lib ddraw.lib dsound.lib"
+				AdditionalDependencies="winmm.lib yamlD.lib ddraw.lib dxguid.lib dsound.lib"
 				OutputFile="$(OutDir)\$(ProjectName).dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../lib"
@@ -92,7 +92,7 @@
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="FALSE"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="winmm.lib yaml.lib ddraw.lib dsound.lib"
+				AdditionalDependencies="winmm.lib yaml.lib ddraw.lib dxguid.lib dsound.lib"
 				OutputFile=".\..\Release\engine.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"

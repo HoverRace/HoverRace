@@ -1277,10 +1277,10 @@ void MR_GameApp::ReadAsyncInputController()
 	}
 }
 
-BOOL MR_GameApp::SetVideoMode(int pX, int pY)
+bool MR_GameApp::SetVideoMode(int pX, int pY, const std::string *monitor)
 {
 	if(mVideoBuffer != NULL) {
-		BOOL lSuccess;
+		bool lSuccess;
 
 		PauseGameThread();
 
@@ -1292,7 +1292,18 @@ BOOL MR_GameApp::SetVideoMode(int pX, int pY)
 			SetTimer(mMainWindow, MRM_RETURN2WINDOWMODE, 3000, NULL);
 		}
 		else {
-			lSuccess = mVideoBuffer->SetVideoMode(pX, pY);
+			GUID *guid = NULL;
+			if (monitor != NULL) {
+				guid = (GUID*)malloc(sizeof(GUID));
+				OS::StringToGuid(*monitor, *guid);
+				if (guid->Data1 == 0) {
+					OutputDebugString("Invalid monitor GUID: ");
+					OutputDebugString(monitor->c_str());
+					OutputDebugString("\n");
+				}
+			}
+			lSuccess = mVideoBuffer->SetVideoMode(pX, pY, guid);
+			free(guid);
 			AssignPalette();
 		}
 
@@ -1301,7 +1312,7 @@ BOOL MR_GameApp::SetVideoMode(int pX, int pY)
 		// OnDisplayChange();
 		return lSuccess;
 	} else
-		return FALSE;
+		return false;
 }
 
 void MR_GameApp::PauseGameThread()
@@ -2066,7 +2077,7 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 				case ID_SETTING_FULLSCREEN:
 					{
 						Config *cfg = Config::GetInstance();
-						This->SetVideoMode(cfg->video.xResFullscreen, cfg->video.yResFullscreen);
+						This->SetVideoMode(cfg->video.xResFullscreen, cfg->video.yResFullscreen, &cfg->video.fullscreenMonitor);
 					}
 					return 0;
 
@@ -2373,7 +2384,7 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
  * @return The selected monitor from the list of monitors, or @c NULL if the
  *         default monitor is selected.
  */
-static const OS::Monitor *GetSelectedMonitor(HWND hwnd, OS::monitors_t *monitors)
+static const OS::Monitor *GetSelectedMonitor(HWND hwnd, const OS::monitors_t *monitors)
 {
 	int idx = SendDlgItemMessage(hwnd, IDC_MONITOR, CB_GETCURSEL, 0, 0);
 	return (idx == 0) ? NULL : &((*monitors)[idx - 1]);
@@ -2595,11 +2606,31 @@ BOOL CALLBACK MR_GameApp::DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, 
 					cfg->audio.sfxVolume = lOriginalSfxVolume;
 					This->mVideoBuffer->CreatePalette(lOriginalGamma, lOriginalContrast, lOriginalBrightness);
 					This->AssignPalette();
+					monitors.reset();
 					break;
 
 				case PSN_APPLY:
 					// check new resolution values
 					BOOL lSuccess = TRUE;
+					const OS::Monitor *mon = GetSelectedMonitor(pWindow, monitors.get());
+					cfg->video.fullscreenMonitor = (mon == NULL) ? "" : mon->id;
+					OS::Resolution *res = GetSelectedResolution(pWindow);
+					if (res != NULL) {
+						cfg->video.xResFullscreen = res->w;
+						cfg->video.yResFullscreen = res->h;
+						delete res;
+					} else {
+						cfg->video.xResFullscreen = GetSystemMetrics(SM_CXSCREEN);
+						cfg->video.yResFullscreen = GetSystemMetrics(SM_CYSCREEN);
+
+						std::string lErrorBuffer = str(format("%s %dx%d") %
+							_("Invalid resolution; reverting to default") %
+							cfg->video.xResFullscreen %
+							cfg->video.yResFullscreen);
+						MessageBoxW(pWindow, Str::UW(lErrorBuffer.c_str()), PACKAGE_NAME_L, MB_OK);
+					}
+					monitors.reset();
+					/*
 					int newXRes = GetDlgItemInt(pWindow, IDC_FS_RES_X, &lSuccess, FALSE);
 					int newYRes = 0;
 					if(lSuccess) // so we don't destroy a FALSE value
@@ -2654,6 +2685,7 @@ BOOL CALLBACK MR_GameApp::DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, 
 							// ignore change
 						}
 					}
+					*/
 
 					This->SaveRegistry();
 
@@ -2856,7 +2888,7 @@ BOOL CALLBACK MR_GameApp::MiscDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWPar
 				Str::UW(_("Address of Server Roomlist:")));
 			SetDlgItemTextW(pWindow, IDC_TCP_SERV_PORT_C, Str::UW(_("TCP Server Port:")));
 			SetDlgItemTextW(pWindow, IDC_TCP_RECV_PORT_C, Str::UW(_("TCP Receive Port:")));
-			SetDlgItemTextW(pWindow, IDC_UDP_RECV_PORT_C, Str::UW(_("UDP Receive Port:")));~
+			SetDlgItemTextW(pWindow, IDC_UDP_RECV_PORT_C, Str::UW(_("UDP Receive Port:")));
 
 			// Set default values correctly
 			SendDlgItemMessage(pWindow, IDC_INTRO_MOVIE, BM_SETCHECK, !cfg->misc.introMovie, 0);

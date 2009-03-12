@@ -133,7 +133,8 @@ BEGIN
     COMBOBOX        IDC_MONITOR,229,32,127,30,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
     LTEXT           "Fullscreen Monitor",IDC_MONITOR_LBL,229,22,128,8
-    PUSHBUTTON      "&Test Fullscreen",IDC_TEST_FULLSCREEN,229,86,80,14
+    PUSHBUTTON      "&Test Fullscreen",IDC_TEST_FULLSCREEN,229,86,80,14,NOT 
+                    WS_VISIBLE
     GROUPBOX        "Fullscreen Settings",IDC_FULLSCREEN_GROUP,217,5,154,113
     COMBOBOX        IDC_RES,229,63,127,30,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
