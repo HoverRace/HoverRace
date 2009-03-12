@@ -40,6 +40,26 @@ using boost::str;
 
 using namespace HoverRace::Util;
 
+/// Lookup table for converting from hex.
+int OS::nibbles[256] = {
+	 0,  0,  0,  0,  0,  0,  0,  0,   0,  0,  0,  0,  0,  0,  0,  0, // 00
+	 0,  0,  0,  0,  0,  0,  0,  0,   0,  0,  0,  0,  0,  0,  0,  0, // 10
+	 0,  0,  0,  0,  0,  0,  0,  0,   0,  0,  0,  0,  0,  0,  0,  0, // 20
+	 0,  1,  2,  3,  4,  5,  6,  7,   8,  9,  0,  0,  0,  0,  0,  0, // 30
+	 0, 10, 11, 12, 13, 14, 15,  0,   0,  0,  0,  0,  0,  0,  0,  0, // 40
+	 0,  0,  0,  0,  0,  0,  0,  0,   0,  0,  0,  0,  0,  0,  0,  0, // 50
+	 0, 10, 11, 12, 13, 14, 15,  0,   0,  0,  0,  0,  0,  0,  0,  0, // 60
+	 0,  0,  0,  0,  0,  0,  0,  0,   0,  0,  0,  0,  0,  0,  0,  0, // 70
+	};
+
+static inline bool isHex(const char &c)
+{
+	return 
+		(c >= '0' && c <= '9') ||
+		(c >= 'A' && c <= 'F') ||
+		(c >= 'a' && c <= 'f');
+}
+
 /**
  * Parse the resolution from a string.
  * @param s The string (e.g. "1024x768").
@@ -277,6 +297,10 @@ boost::shared_ptr<OS::monitors_t> OS::GetMonitors()
 				monitor.primary = (devInfo.StateFlags & DISPLAY_DEVICE_PRIMARY_DEVICE) > 0;
 				monitor.name = str(format("%d. %s") % (i + 1) % monInfo.DeviceString);
 				monitor.id = GuidToString(monEnt->second);
+				/*
+				OutputDebugString(monitor.id.c_str());
+				OutputDebugString("\n");
+				*/
 				
 				// Retrieve the supported resolutions.
 				for (int j = 0; ; ++j) {
@@ -303,6 +327,49 @@ std::string OS::GuidToString(const GUID &guid)
 		guid.Data1 % guid.Data2 % guid.Data3 %
 		(int)guid.Data4[0] % (int)guid.Data4[1] %
 		(int)guid.Data4[2] % (int)guid.Data4[3] % (int)guid.Data4[4] % (int)guid.Data4[5] % (int)guid.Data4[6] % (int)guid.Data4[7]);
+}
+
+//           1         2         3
+// 01234567890123456789012345678901234567
+// {3F2504E0-4F89-11D3-9A0C-0305E82C3301}
+
+void OS::StringToGuid(const std::string &s, GUID &guid)
+{
+	memset(&guid, 0, sizeof(guid));
+	if (s.length() < 38) return;
+	const char *w = s.c_str();
+
+	// Validation.
+	if (*w++ != '{') return;
+	for (int i = 1;  i <= 8;  ++i) if (!isHex(*w++)) return;
+	if (*w++ != '-') return;
+	for (int i = 10; i <= 13; ++i) if (!isHex(*w++)) return;
+	if (*w++ != '-') return;
+	for (int i = 15; i <= 18; ++i) if (!isHex(*w++)) return;
+	if (*w++ != '-') return;
+	for (int i = 20; i <= 23; ++i) if (!isHex(*w++)) return;
+	if (*w++ != '-') return;
+	for (int i = 25; i <= 36; ++i) if (!isHex(*w++)) return;
+	if (*w++ != '}') return;
+
+	w = s.c_str();
+	
+	guid.Data1 =
+		(nibbles[w[ 1]] << 28) + (nibbles[w[ 2]] << 24) +
+		(nibbles[w[ 3]] << 20) + (nibbles[w[ 4]] << 16) +
+		(nibbles[w[ 5]] << 12) + (nibbles[w[ 6]] <<  8) +
+		(nibbles[w[ 7]] <<  4) +  nibbles[w[ 8]];
+	guid.Data2 =
+		(nibbles[w[10]] << 12) + (nibbles[w[11]] <<  8) +
+		(nibbles[w[12]] <<  4) +  nibbles[w[13]];
+	guid.Data3 =
+		(nibbles[w[15]] << 12) + (nibbles[w[16]] <<  8) +
+		(nibbles[w[17]] <<  4) +  nibbles[w[18]];
+	guid.Data4[0] = (nibbles[w[20]] << 4) + nibbles[w[21]];
+	guid.Data4[1] = (nibbles[w[22]] << 4) + nibbles[w[23]];
+	for (int i = 2, j = 25; i < 8; ++i, j += 2) {
+		guid.Data4[i] = (nibbles[w[j]] << 4) + nibbles[w[j + 1]];
+	}
 }
 #endif
 

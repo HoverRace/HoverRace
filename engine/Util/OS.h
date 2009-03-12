@@ -48,9 +48,11 @@ namespace Util {
 class MR_DllDeclare OS {
 
 	public:
+		static int nibbles[256];
+		
 		static void SetEnv(const char *key, const char *val);
 		static void SetLocale();
-		
+
 		struct MR_DllDeclare Resolution
 		{
 			int w;
@@ -72,6 +74,7 @@ class MR_DllDeclare OS {
 
 #		ifdef _WIN32
 			static std::string GuidToString(const GUID &guid);
+			static void StringToGuid(const std::string &s, GUID &guid);
 #		endif
 
 		static void Free(void *buf);
