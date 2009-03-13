@@ -1,4 +1,4 @@
-# Klingon translations for HoverRace package.
+# Romanian translations for HoverRace package.
 # Copyright (C) 2009 HoverRace contributors
 # This file is distributed under the same license as the HoverRace package.
 #  <ryan@igglybob.com>, 2009.
@@ -8,12 +8,14 @@ msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
 "Report-Msgid-Bugs-To: bugs@hoverrace.com\n"
 "POT-Creation-Date: 2009-03-13 15:30-0400\n"
-"PO-Revision-Date: 2009-03-05 15:28-0500\n"
+"PO-Revision-Date: 2009-03-13 17:06-0400\n"
 "Last-Translator:  <ryan@igglybob.com>\n"
-"Language-Team: Language tlh\n"
+"Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
 
 #: client/Game2/Banner.cpp:356 client/Game2/Banner.cpp:401
 msgid ""
