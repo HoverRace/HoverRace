@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
 "Report-Msgid-Bugs-To: bugs@hoverrace.com\n"
 "POT-Creation-Date: 2009-03-08 14:07-0400\n"
-"PO-Revision-Date: 2009-03-09 07:47-0700\n"
-"Last-Translator: Ryan Curtin <ryan@tortoise.igglybob.com>\n"
+"PO-Revision-Date: 2009-03-13 08:52-0700\n"
+"Last-Translator: lorenz bischof <lorenzroswin@hotmail.com>\n"
 "Language-Team: German\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -29,7 +29,7 @@ msgstr "HoverRace Fehler"
 
 #: client/Game2/GameApp.cpp:729
 msgid "Abort current game?"
-msgstr "Schließ das derzeitige Spiel ab?"
+msgstr "Spiel abrechen?"
 
 #: client/Game2/GameApp.cpp:755
 msgid ""
@@ -38,8 +38,8 @@ msgid ""
 "on your system."
 msgstr ""
 "Wenn Sie die HoverRace-Hilfe sehen wollen,\n"
-"müssen Sie einen MS-Word-Dokumentbeschauer\n"
-"an deinem Computer installiert."
+"müssen Sie ein MS-Word-Dokumentbeschauer\n"
+"auf ihrem Computer installiert haben."
 
 #: client/Game2/GameApp.cpp:969
 msgctxt "Menu|File|Split Screen"
@@ -59,12 +59,12 @@ msgstr "&4 Spielern"
 #: client/Game2/GameApp.cpp:978
 msgctxt "Menu|File|Network"
 msgid "&Connect to server"
-msgstr "&Verbund mit dem Server"
+msgstr "&mit dem Server verbinden"
 
 #: client/Game2/GameApp.cpp:980
 msgctxt "Menu|File|Network"
 msgid "Create a &server"
-msgstr "Erstell ein &Server"
+msgstr "ein &Server erstellen"
 
 #: client/Game2/GameApp.cpp:983
 msgctxt "Menu|File|Network"
@@ -79,7 +79,7 @@ msgstr "&Internet"
 #: client/Game2/GameApp.cpp:990
 msgctxt "Menu|File"
 msgid "&Practice"
-msgstr "&Training"
+msgstr "&üben"
 
 #: client/Game2/GameApp.cpp:992
 msgctxt "Menu|File"
@@ -119,7 +119,7 @@ msgstr "Mehr &Nachrichten"
 #: client/Game2/GameApp.cpp:1012
 msgctxt "Menu|View"
 msgid "&Refresh colors"
-msgstr "&Nachladen Farben"
+msgstr "Farben &Nachladen "
 
 #: client/Game2/GameApp.cpp:1017 client/Game2/GameApp.cpp:1852
 msgctxt "Menu|Setting"
@@ -144,7 +144,7 @@ msgstr "&Inhalt"
 #: client/Game2/GameApp.cpp:1033
 msgctxt "Menu|Help"
 msgid "&About HoverRace"
-msgstr "&Info zu HoverRace"
+msgstr "&über HoverRace"
 
 #: client/Game2/GameApp.cpp:1038
 msgctxt "Menu"
@@ -169,7 +169,7 @@ msgstr "&Hilfe"
 #: client/Game2/GameApp.cpp:1057
 msgctxt "Version"
 msgid "testing"
-msgstr "prüfung"
+msgstr "prüfen"
 
 #: client/Game2/GameApp.cpp:1094
 msgid ""
@@ -179,6 +179,11 @@ msgid ""
 "\n"
 "Do you want to play in Window mode and switch to 256 color?"
 msgstr ""
+"Sie können HoverRace in einem Fenster oder im Vollbild modus\n"
+"spielen; um in einem Fenster zu spielen müssen sie auf 256 farben wechseln.\n"
+"Es ist empfohlen im Vollbild modus zu spielen\n"
+"\n"
+"Wollen sie im Fenster modus spielen und farben wechseln?"
 
 #: client/Game2/GameApp.cpp:1098 client/Game2/GameApp.cpp:1108
 #: client/Game2/GameApp.cpp:2609 client/Game2/GameApp.cpp:2962
@@ -195,8 +200,8 @@ msgid ""
 "HoverRace was unable to switch the video mode. You will need to play in full "
 "screen."
 msgstr ""
-"HoverRace könnte nicht den Anzeige-Modus wechseln.  Sie müssen im Vollbild-"
-"Modus spielen."
+"Ein fehler ist beim wechseln des Anzeige-Modus vorgekommen.\n"
+"Sie müssen im Vollbild-Modus spielen."
 
 #: client/Game2/GameApp.cpp:2462
 msgid "Default Monitor"
@@ -208,11 +213,11 @@ msgstr ""
 
 #: client/Game2/GameApp.cpp:2507
 msgid "Contrast"
-msgstr ""
+msgstr "Kontrast"
 
 #: client/Game2/GameApp.cpp:2508
 msgid "Brightness"
-msgstr ""
+msgstr "Helligkeit"
 
 #: client/Game2/GameApp.cpp:2509
 msgid "Volume"
@@ -220,115 +225,115 @@ msgstr ""
 
 #: client/Game2/GameApp.cpp:2510
 msgid "Fullscreen Resolution"
-msgstr ""
+msgstr "Vollbild auflösung"
 
 #: client/Game2/GameApp.cpp:2614
 msgid "Invalid resolution; reverting to default"
-msgstr ""
+msgstr "ungültige auflösung; wechselt zum standard"
 
 #: client/Game2/GameApp.cpp:2624
 msgid "Hit OK to test new resolution"
-msgstr ""
+msgstr "OK drücken um die neue auflösung zu testen"
 
 #: client/Game2/GameApp.cpp:2637
 msgid "Invalid resolution; reverting to"
-msgstr ""
+msgstr "ungültige auflösung; zurück stellen auf"
 
 #: client/Game2/GameApp.cpp:2644
 msgid "Resolution successfully set to"
-msgstr ""
+msgstr "Auflösung erfolgreich umgestellt auf"
 
 #: client/Game2/GameApp.cpp:2683
-#, fuzzy
 msgid "Player 1"
-msgstr "&2 Spielern"
+msgstr "Spieler &1"
 
 #: client/Game2/GameApp.cpp:2684
-#, fuzzy
 msgid "Player 2"
-msgstr "&2 Spielern"
+msgstr "Spieler &2 "
 
 #: client/Game2/GameApp.cpp:2685
-#, fuzzy
 msgid "Player 3"
-msgstr "&2 Spielern"
+msgstr "Spieler &3 "
 
 #: client/Game2/GameApp.cpp:2686
-#, fuzzy
 msgid "Player 4"
-msgstr "&2 Spielern"
+msgstr "Spieler &4"
 
 #: client/Game2/GameApp.cpp:2687
 msgid "Motor On:"
-msgstr ""
+msgstr "Motor an:"
 
 #: client/Game2/GameApp.cpp:2688
 msgid "Turn Right:"
-msgstr ""
+msgstr "Rechts drehen:"
 
 #: client/Game2/GameApp.cpp:2689
 msgid "Turn Left:"
-msgstr ""
+msgstr "Links drehen:"
 
 #: client/Game2/GameApp.cpp:2690
 msgid "Brake:"
-msgstr ""
+msgstr "Bremse:"
 
 #: client/Game2/GameApp.cpp:2691
 msgid "Jump:"
-msgstr ""
+msgstr "Springen:"
 
 #: client/Game2/GameApp.cpp:2692
-#, fuzzy
 msgid "Fire Weapon:"
-msgstr "Waffen"
+msgstr "Waffen abschiessen:"
 
 #: client/Game2/GameApp.cpp:2693
 msgid "Select Weapon:"
-msgstr ""
+msgstr "Waffe Auswählen:"
 
 #: client/Game2/GameApp.cpp:2694
 msgid "Look Back:"
-msgstr ""
+msgstr "zurück schauen:"
 
 #: client/Game2/GameApp.cpp:2850
 msgid "Disable Intro Movie"
-msgstr ""
+msgstr "intro (film) abstellen"
 
 #: client/Game2/GameApp.cpp:2852
 msgid ""
 "Disable the prompt to connect to the Internet each time HoverRace starts"
 msgstr ""
+"die aufforderung ob man mit dem internet verbinden will, dass jedes mal wenn "
+"man das program aufstartet kommt, deaktiviren "
 
 #: client/Game2/GameApp.cpp:2854
 msgid "Use desktop &color depth when switching to fullscreen"
-msgstr ""
+msgstr "desktop farbtiefe, im vollbild modus, benutzen"
 
 #: client/Game2/GameApp.cpp:2856
 msgid "Address of Server Roomlist:"
-msgstr ""
+msgstr "addresse vom Server raumliste:"
 
+# its the same but i think any normal german would understand that lol...
 #: client/Game2/GameApp.cpp:2857
 msgid "TCP Server Port:"
-msgstr ""
+msgstr "TCP Server Port:"
 
 #: client/Game2/GameApp.cpp:2858
 msgid "TCP Receive Port:"
-msgstr ""
+msgstr "TCP empfangs Port:"
 
 #: client/Game2/GameApp.cpp:2859
 msgid "UDP Receive Port:"
-msgstr ""
+msgstr "UDP empfangs Port:"
 
 #: client/Game2/GameApp.cpp:2930
 msgid ""
 "Incompatible video mode. Select a compatible video mode by pressing F8 or F9 "
 "once a game is started"
 msgstr ""
+"nicht kompatibele abspiel modus. wählen sie eine bessere abspiel modus mit "
+"F8 oder F9 während einem laufendem Spiel"
 
 #: client/Game2/GameApp.cpp:2964
 msgid "Click OK to play on the Internet against other people"
-msgstr ""
+msgstr "OK wählem um mit anderen menschen über das internet zu spielen"
 
 #: client/Game2/GameApp.cpp:2965 client/Game2/TrackSelect.cpp:188
 msgid "OK"
@@ -344,6 +349,9 @@ msgid ""
 "you have any problems, visit our forums at http://www.hoverrace.com/bb for "
 "help."
 msgstr ""
+"sicherstellen dass sie Internet verbindung haben vor sie auf OK drücken. "
+"Wenn sie probleme haben, besuchen Sie die forumen: "
+"http://www.hoverrace.com/bb für hilfe"
 
 #: client/Game2/GameApp.cpp:3004
 msgid "About HoverRace"
@@ -354,9 +362,8 @@ msgid "HoverRace version "
 msgstr "HoverRace Version "
 
 #: client/Game2/GameApp.cpp:3010
-#, fuzzy
 msgid "HoverRace is brought to you by:"
-msgstr "HoverRace gebracht wird, die Sie von:"
+msgstr "HoverRace von: "
 
 #: client/Game2/GameApp.cpp:3012
 msgid "original author"
@@ -371,7 +378,8 @@ msgid ""
 "and with the help of the many testers willing to put up with bugs and other "
 "strange happenings."
 msgstr ""
-"und mit der Hilfe vieler Prüfern, die Fehler und Merkwürdigen tolerieren."
+"und mit der Hilfe vielen Prüfer, die Fehler und Merkwürdigkeiten toleriert "
+"haben."
 
 #: client/Game2/GameApp.cpp:3023
 msgid "visit us at"
@@ -386,46 +394,40 @@ msgid "Close"
 msgstr "Schließen"
 
 #: client/Game2/InternetRoom.cpp:533
-#, fuzzy
 msgid "Connecting to the Internet Meeting Room..."
-msgstr "&Internet Besprechungsraum"
+msgstr "Verbindet mit einem &Internet Besprechungsraum..."
 
 #: client/Game2/InternetRoom.cpp:554
 msgid "You are connected"
-msgstr ""
+msgstr "Sie sind verbunden"
 
 #: client/Game2/InternetRoom.cpp:555
-#, fuzzy
 msgid "Welcome to the HoverRace Internet Meeting Room"
-msgstr "&Internet Besprechungsraum"
+msgstr "Wilkommen in dem &Internet Besprechungsraum"
 
 #: client/Game2/InternetRoom.cpp:572
-#, fuzzy
 msgid "Disconnecting from the Internet Meeting Room..."
-msgstr "&Internet Besprechungsraum"
+msgstr "verbinden vom &Internet Besprechungsraum..."
 
 #: client/Game2/InternetRoom.cpp:589
 msgid "Registering game with the Internet Meeting Room..."
-msgstr ""
+msgstr "meldet das spiel dem Internet Besprechungsraum..."
 
 #: client/Game2/InternetRoom.cpp:623
 msgid "Unregistering game from the Internet Meeting Room..."
-msgstr ""
+msgstr "meldet das Spiel vom Internet Besprechungsraum ab..."
 
 #: client/Game2/InternetRoom.cpp:640
-#, fuzzy
 msgid "Registering with the Internet Meeting Room..."
-msgstr "&Internet Besprechungsraum"
+msgstr "den &Internet Besprechungsraum anmelden..."
 
 #: client/Game2/InternetRoom.cpp:664
-#, fuzzy
 msgid "Unregistering from the Internet Meeting Room..."
-msgstr "&Internet Besprechungsraum"
+msgstr "den &Internet Besprechungsraum abmelden..."
 
 #: client/Game2/InternetRoom.cpp:681
-#, fuzzy
 msgid "Sending message to the Internet Meeting Room..."
-msgstr "&Internet Besprechungsraum"
+msgstr "Schickt nachricht zum &Internet Besprechungsraum"
 
 #: client/Game2/InternetRoom.cpp:810
 #, fuzzy
@@ -434,7 +436,7 @@ msgstr " nichts ist ausgewählt"
 
 #: client/Game2/InternetRoom.cpp:824
 msgid "Available"
-msgstr ""
+msgstr "verfügbar"
 
 #: client/Game2/InternetRoom.cpp:828
 msgid "Join game to download from hoverrace.com"
@@ -442,11 +444,11 @@ msgstr ""
 
 #: client/Game2/InternetRoom.cpp:978
 msgid "Communication error"
-msgstr ""
+msgstr "Kommunikations fehler"
 
 #: client/Game2/InternetRoom.cpp:984 client/Game2/InternetRoom.cpp:1036
 msgid "Unable to add user"
-msgstr ""
+msgstr "fehler beim hinzufügen vom User"
 
 #: client/Game2/InternetRoom.cpp:988
 msgid "No more Shareware users allowed"
@@ -454,15 +456,15 @@ msgstr ""
 
 #: client/Game2/InternetRoom.cpp:992
 msgid "No more user allowed"
-msgstr ""
+msgstr "keine users mehr erlaubt"
 
 #: client/Game2/InternetRoom.cpp:996
 msgid "Incompatible version"
-msgstr ""
+msgstr "die Version ist nicht kompatibel"
 
 #: client/Game2/InternetRoom.cpp:1000
 msgid "Expired key"
-msgstr ""
+msgstr "abgelaufener schlüssel"
 
 #: client/Game2/InternetRoom.cpp:1004
 msgid "Already used key (report for investigation)"
