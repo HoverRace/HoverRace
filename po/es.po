@@ -8,13 +8,14 @@ msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
 "Report-Msgid-Bugs-To: bugs@hoverrace.com\n"
 "POT-Creation-Date: 2009-03-13 15:30-0400\n"
-"PO-Revision-Date: 2009-03-10 06:46-0700\n"
-"Last-Translator: Ryan Curtin <ryan@tortoise.igglybob.com>\n"
+"PO-Revision-Date: 2009-03-16 14:24-0700\n"
+"Last-Translator: Jorge Antonio Gutiérrez Martínez "
+"<Loquillo_el_original@yahoo.es>\n"
 "Language-Team: Spanish\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 1.2.1\n"
 
@@ -25,11 +26,12 @@ msgstr "Imposible de activar su navegador web. Por favor inicielo y valla a:"
 
 #: client/Game2/Banner.cpp:359 client/Game2/Banner.cpp:404
 msgid "HoverRace Error"
-msgstr "HoverRace Error"
+msgstr "Error de HoverRace"
 
+# Falta mencionar si lo que va a hacer, es lo que quiere realizar, en inglés no se ocupa, por usan lógica para pensar en lo que se esta hablando, mientras esto debe ser más específico.
 #: client/Game2/GameApp.cpp:729
 msgid "Abort current game?"
-msgstr "Abortar juego actual?"
+msgstr "Desea abortar la jugada actual?"
 
 #: client/Game2/GameApp.cpp:755
 msgid ""
@@ -37,24 +39,25 @@ msgid ""
 "you must have a Word document viewer installed\n"
 "on your system."
 msgstr ""
-"Para poder ver la ayuda de HoverRace\n"
-"Debe tener un visor de documentos Word instalado\n"
+"Para poder ver el manual de ayuda de HoverRace\n"
+"Debe tener un visor de documentos de Word instalado\n"
 "En su sistema."
 
+# Aquí volvemos con la misma situación, nosotros podríamos poner lo mismo que en inglés, pero nosotros debemos ser más específicos que solo dando la idea, en este caso el "De a" y "Jugadores" es una forma de completar la coherencia.
 #: client/Game2/GameApp.cpp:969
 msgctxt "Menu|File|Split Screen"
 msgid "&2 Player"
-msgstr "&2 Jugador"
+msgstr "&De a 2 Jugadores"
 
 #: client/Game2/GameApp.cpp:971
 msgctxt "Menu|File|Split Screen"
 msgid "&3 Player"
-msgstr "&3 Jugador"
+msgstr "&De 3 Jugadores"
 
 #: client/Game2/GameApp.cpp:973
 msgctxt "Menu|File|Split Screen"
 msgid "&4 Player"
-msgstr "&4 Jugador"
+msgstr "&De 4 Jugadores"
 
 #: client/Game2/GameApp.cpp:978
 msgctxt "Menu|File|Network"
@@ -64,7 +67,7 @@ msgstr "&Conectar al servidor"
 #: client/Game2/GameApp.cpp:980
 msgctxt "Menu|File|Network"
 msgid "Create a &server"
-msgstr "Crear a &servidor"
+msgstr "Crear un &servidor"
 
 #: client/Game2/GameApp.cpp:983
 msgctxt "Menu|File|Network"
@@ -79,7 +82,7 @@ msgstr "&Internet"
 #: client/Game2/GameApp.cpp:990
 msgctxt "Menu|File"
 msgid "&Practice"
-msgstr "&Practica"
+msgstr "&Practicar"
 
 #: client/Game2/GameApp.cpp:992
 msgctxt "Menu|File"
@@ -89,7 +92,7 @@ msgstr "&Pantalla dividida"
 #: client/Game2/GameApp.cpp:994
 msgctxt "Menu|File"
 msgid "&Network"
-msgstr "&Red"
+msgstr "&En la Red"
 
 #: client/Game2/GameApp.cpp:997
 msgctxt "Menu|File"
@@ -99,7 +102,7 @@ msgstr "S&alir"
 #: client/Game2/GameApp.cpp:1002
 msgctxt "Menu|View"
 msgid "&Following Camera"
-msgstr "&Camara perseguidora"
+msgstr "&Cámara rastreadora"
 
 #: client/Game2/GameApp.cpp:1004
 msgctxt "Menu|View"
@@ -114,7 +117,7 @@ msgstr "&Lista de jugadores"
 #: client/Game2/GameApp.cpp:1009
 msgctxt "Menu|View"
 msgid "More &messages"
-msgstr "Mas &mensajes"
+msgstr "Más &mensajes"
 
 #: client/Game2/GameApp.cpp:1012
 msgctxt "Menu|View"
@@ -124,7 +127,7 @@ msgstr "&Actualizar colores"
 #: client/Game2/GameApp.cpp:1017 client/Game2/GameApp.cpp:1863
 msgctxt "Menu|Setting"
 msgid "&Fullscreen"
-msgstr "&Pantalla Completa"
+msgstr "&Pantalla completa"
 
 #: client/Game2/GameApp.cpp:1019
 msgctxt "Menu|Setting"
@@ -144,7 +147,7 @@ msgstr "&Contenidos"
 #: client/Game2/GameApp.cpp:1033
 msgctxt "Menu|Help"
 msgid "&About HoverRace"
-msgstr "&Sobre HoverRace"
+msgstr "&Acerca de HoverRace"
 
 #: client/Game2/GameApp.cpp:1038
 msgctxt "Menu"
@@ -164,7 +167,7 @@ msgstr "&Configuración"
 #: client/Game2/GameApp.cpp:1044
 msgctxt "Menu"
 msgid "&Help"
-msgstr "&Ayuda"
+msgstr "&¡¡Ayuda!!"
 
 #: client/Game2/GameApp.cpp:1057
 msgctxt "Version"
@@ -179,6 +182,11 @@ msgid ""
 "\n"
 "Do you want to play in Window mode and switch to 256 color?"
 msgstr ""
+"Tú puedes jugar HoverRace en una ventana o en pantalla completa; \n"
+"Al jugar en una ventana, HoverRace va tener que jugar con solo 256 colores. \n"
+"Recomendamos que use \"Pantalla completa\" en su lugar. \n"
+"¿Quieres jugar en ventana y habilitar los 256 colores?dato: el computador "
+"actual usaría más de 32 bits mucho más que los 256 colores del juego."
 
 #: client/Game2/GameApp.cpp:1098 client/Game2/GameApp.cpp:1108
 #: client/Game2/GameApp.cpp:2994 client/Game2/InternetRoom.cpp:1336
@@ -187,17 +195,19 @@ msgstr ""
 #: client/Game2/TrackDownloadDialog.cpp:239
 #: client/Game2/TrackDownloadDialog.cpp:325
 msgid "HoverRace"
-msgstr "HoverRace"
+msgstr "HoverRace (Carrera de deslizadores)"
 
 #: client/Game2/GameApp.cpp:1107
 msgid ""
 "HoverRace was unable to switch the video mode. You will need to play in full "
 "screen."
 msgstr ""
+"HoverRace esta habilitado para usar el modo de video. Pero necesitarás "
+"jugarlo en pantalla completa."
 
 #: client/Game2/GameApp.cpp:2473
 msgid "Default Monitor"
-msgstr "Monitor por default"
+msgstr "Monitor por defecto"
 
 #: client/Game2/GameApp.cpp:2517
 msgid "Gamma"
@@ -891,7 +901,7 @@ msgid ""
 "Track download failed: The file \"%s\" was not found in the archive "
 "downloaded from %s"
 msgstr ""
-"La descarga de pista ha fallado: El archivo \"%s\" no fue encontrado en el "
+"La descarga de la pista ha fallado: El archivo \"%s\" no fue encontrado en el "
 "archivo descargado desde %s"
 
 #: client/Game2/TrackDownloadDialog.cpp:261
@@ -909,7 +919,7 @@ msgstr ""
 
 #: client/Game2/TrackSelect.cpp:120 client/Game2/TrackSelect.cpp:130
 msgid "Bad track file format"
-msgstr "Formato de archivo de pista malo"
+msgstr "Esta mal el Formato del archivo de la pista"
 
 #: client/Game2/TrackSelect.cpp:183
 msgid "Track selection"
