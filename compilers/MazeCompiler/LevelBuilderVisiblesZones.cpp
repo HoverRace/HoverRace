@@ -79,7 +79,7 @@ BOOL MR_LevelBuilder::ComputeVisibleZones()
 	int lDestIndex;
 	int lDestArray[MR_MAX_VISIBLE_ZONES];
 
-	printf(MR_LoadString(IDS_COMP_VISZONES));
+	puts(_("Computing visible zones... be patient"));
 
 	MR_VisibleStep lStep;
 
@@ -316,7 +316,7 @@ double GetAngle(const MR_2DFloatPos & pPoint0, const MR_2DFloatPos & pPoint1, do
 
 	}
 	else {
-		fprintf(stderr, MR_LoadString(IDS_SAME_POS));
+		puts(_("Two nodes with same position"));
 		lReturnValue = Pi;
 		exit(0);
 	}

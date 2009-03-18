@@ -86,7 +86,8 @@ BOOL MR_LevelBuilder::Parse(FILE * pFile)
 		if(lParser.GetNextAttrib("Id") == NULL) {
 			lReturnValue = FALSE;
 
-			printf(MR_LoadString(IDS_MISS_SEC_ID), lParser.GetErrorLine());
+			printf(_("Section ID missing on line %d"), lParser.GetErrorLine());
+			printf("\n");
 		}
 		else {
 			int lDummy;
@@ -94,7 +95,8 @@ BOOL MR_LevelBuilder::Parse(FILE * pFile)
 
 			if(lRoomList.Lookup(lRoomId, lDummy)) {
 				lReturnValue = FALSE;
-				printf(MR_LoadString(IDS_DUP_SEC_ID), lRoomId, lParser.GetErrorLine());
+				printf(_("Duplicate section ID (%d) on line %d"), lRoomId, lParser.GetErrorLine());
+				printf("\n");
 			}
 			else {
 				lRoomList.SetAt(lRoomId, lRoomList.GetCount());
@@ -107,7 +109,8 @@ BOOL MR_LevelBuilder::Parse(FILE * pFile)
 	while(lReturnValue && (lParser.GetNextClass("Feature") != NULL)) {
 		if(lParser.GetNextAttrib("Id") == NULL) {
 			lReturnValue = FALSE;
-			printf(MR_LoadString(IDS_MISS_SEC_ID), lParser.GetErrorLine());
+			printf(_("Section ID missing on line %d"), lParser.GetErrorLine());
+			printf("\n");
 		}
 		else {
 			int lDummy;
@@ -115,7 +118,8 @@ BOOL MR_LevelBuilder::Parse(FILE * pFile)
 
 			if(lFeatureList.Lookup(lFeatureId, lDummy)) {
 				lReturnValue = FALSE;
-				printf(MR_LoadString(IDS_DUP_SEC_ID), lFeatureId, lParser.GetErrorLine());
+				printf(_("Duplicate section ID (%d) on line %d"), lFeatureId, lParser.GetErrorLine());
+				printf("\n");
 			}
 			else {
 				lFeatureList.SetAt(lFeatureId, lFeatureList.GetCount());
@@ -241,7 +245,7 @@ BOOL MR_LevelBuilder::Parse(FILE * pFile)
 
 						if(!lRoomList.Lookup(lParentId, mFeatureList[lFeatureIndex].mParentSectionIndex)) {
 							lReturnValue = FALSE;
-							printf("Invalid parent ref on line %d\n", lParser.GetErrorLine());
+							printf(_("Invalid parent room reference on line %d\n"), lParser.GetErrorLine());
 						}
 						else {
 							mRoomList[mFeatureList[lFeatureIndex].mParentSectionIndex].mNbChild++;
@@ -370,7 +374,7 @@ BOOL MR_LevelBuilder::Parse(FILE * pFile)
 
 	if(lParser.GetNextClass("Connection_List") == NULL) {
 		lReturnValue = FALSE;
-		printf(MR_LoadString(IDS_MISS_CONNECT_LIST));
+		puts(_("Connection list not found"));
 	}
 	else {
 		while(lParser.GetNextLine()) {
@@ -395,15 +399,17 @@ BOOL MR_LevelBuilder::Parse(FILE * pFile)
 
 			if(!lRoomList.Lookup(lConnection.mRoom0, lRoom0)) {
 				// lReturnValue = FALSE;
-				printf(MR_LoadString(IDS_BAD_CONNECT1), lConnection.mRoom0);
+				printf(_("Connection to a nonexistent section %d"), lConnection.mRoom0);
+				printf("\n");
 			}
 			else if(!lRoomList.Lookup(lConnection.mRoom1, lRoom1)) {
 				// lReturnValue = FALSE;
-				printf(MR_LoadString(IDS_BAD_CONNECT1), lConnection.mRoom1);
+				printf(_("Connection to a nonexistent section %d"), lConnection.mRoom1);
 			}
 			else if((mRoomList[lRoom0].mVertexList[lConnection.mWall0] != mRoomList[lRoom1].mVertexList[(lConnection.mWall1 + 1) % mRoomList[lRoom1].mNbVertex]) || (mRoomList[lRoom1].mVertexList[lConnection.mWall1] != mRoomList[lRoom0].mVertexList[(lConnection.mWall0 + 1) % mRoomList[lRoom0].mNbVertex])) {
 				// lReturnValue = FALSE;
-				printf(MR_LoadString(IDS_BAD_CONNECT2), lConnection.mRoom0, lConnection.mRoom1);
+				printf(_("Connection between sections %d and %d do not match"), lConnection.mRoom0, lConnection.mRoom1);
+				printf("\n");
 				printf("%3dA: %5d, %5d\n", lConnection.mRoom0, mRoomList[lRoom0].mVertexList[lConnection.mWall0].mX, mRoomList[lRoom0].mVertexList[lConnection.mWall0].mY);
 				printf("%3dB: %5d, %5d\n", lConnection.mRoom0, mRoomList[lRoom0].mVertexList[(lConnection.mWall0 + 1) % mRoomList[lRoom0].mNbVertex].mX, mRoomList[lRoom0].mVertexList[(lConnection.mWall0 + 1) % mRoomList[lRoom0].mNbVertex].mY);
 
@@ -431,11 +437,13 @@ BOOL MR_LevelBuilder::Parse(FILE * pFile)
 			double lDiagSize = ComputeShapeConst(&(mRoomList[lRoomIndex]));
 
 			if(lDiagSize < 10.0) {
-				printf(MR_LoadString(IDS_SMALL_ROOM), lRoomId);
+				printf(_("Warning: room %d seems to be very small"), lRoomId);
+				printf("\n");
 			}
 
 			if(lDiagSize > 100.0) {
-				printf(MR_LoadString(IDS_LARGE_ROOM), lRoomId);
+				printf(_("Warning: room %d seems to be very large"), lRoomId);
+				printf("\n");
 			}
 		}
 	}
@@ -452,11 +460,13 @@ BOOL MR_LevelBuilder::Parse(FILE * pFile)
 			double lDiagSize = ComputeShapeConst(&(mFeatureList[lFeatureIndex]));
 
 			if(lDiagSize < 1.0) {
-				printf(MR_LoadString(IDS_SMALL_FEATURE), lFeatureId);
+				printf(_("Warning: feature %d seems to be very small"), lFeatureId);
+				printf("\n");
 			}
 
 			if(lDiagSize > 25.0) {
-				printf(MR_LoadString(IDS_LARGE_FEATURE), lFeatureId);
+				printf(_("Warning: feature %d seems to be very large"), lFeatureId);
+				printf("\n");
 			}
 		}
 	}
@@ -476,7 +486,8 @@ BOOL MR_LevelBuilder::Parse(FILE * pFile)
 
 					if(!lRoomList.Lookup(lRoomId, mStartingRoom[lNbStartingPosition])) {
 						lReturnValue = FALSE;
-						printf(MR_LoadString(IDS_BAD_STARTPOS), lRoomId);
+						printf(_("Invalid starting position room %d"), lRoomId);
+						printf("\n");
 					}
 				}
 				else if(!stricmp(lAttrib, "Position")) {
@@ -500,7 +511,7 @@ BOOL MR_LevelBuilder::Parse(FILE * pFile)
 		if(lReturnValue) {
 			if(lNbStartingPosition == 0) {
 				lReturnValue = FALSE;
-				printf(MR_LoadString(IDS_NO_STARTPOS));
+				puts(_("No starting positions found"));
 			}
 		}
 		mNbPlayer = lNbStartingPosition;
@@ -527,7 +538,8 @@ BOOL MR_LevelBuilder::Parse(FILE * pFile)
 
 				if(!lRoomList.Lookup(lRoomId, lRoomIndex)) {
 					lReturnValue = FALSE;
-					printf(MR_LoadString(IDS_INVALID_INDEX), lParser.GetErrorLine());
+					printf(_("Invalid room index on line %d"), lParser.GetErrorLine());
+					printf("\n");
 				}
 			}
 			else if(!stricmp(lAttrib, "Position")) {
@@ -550,7 +562,7 @@ BOOL MR_LevelBuilder::Parse(FILE * pFile)
 
 			if(lElement == NULL) {
 				lReturnValue = FALSE;
-				printf("Unable to create free element on line %d\n", lParser.GetErrorLine());
+				printf(_("Unable to create free element on line %d\n"), lParser.GetErrorLine());
 			}
 			else {
 				// Initialise element position
@@ -567,7 +579,19 @@ BOOL MR_LevelBuilder::Parse(FILE * pFile)
 
 	// Print some statistics
 	if(lReturnValue) {
-		printf(MR_LoadString(IDS_RESUME), lRoomList.GetCount(), lFeatureList.GetCount(), lConnectionList.GetCount(), lFreeElementCount, mNbPlayer);
+		printf("   ");
+		printf(_("   This level contains:"));
+		printf("\n %6d ", lRoomList.GetCount());
+		printf(_("rooms"));
+		printf("\n %6d ", lFeatureList.GetCount());
+		printf(_("features"));
+		printf("\n %6d ", lConnectionList.GetCount());
+		printf(_("connections"));
+		printf("\n %6d ", lFreeElementCount);
+		printf(_("elements"));
+		printf("\n %6d ", mNbPlayer);
+		printf(_("starting positions"));
+		printf("\n");
 	}
 
 	return lReturnValue;
@@ -754,7 +778,7 @@ MR_SurfaceElement *sLoadTexture(MR_Parser * pParser)
 	}
 
 	if(lReturnValue == NULL) {
-		printf("Unable to load texture %d %d on line %d\n", lType.mDllId, lType.mClassId, pParser->GetErrorLine());
+		printf(_("Unable to load texture %d %d on line %d\n"), lType.mDllId, lType.mClassId, pParser->GetErrorLine());
 	}
 
 	return lReturnValue;

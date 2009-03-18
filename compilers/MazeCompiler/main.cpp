@@ -34,8 +34,8 @@
 
 static void PrintUsage()
 {
-	printf(MR_LoadString(IDS_USAGE)
-		);
+	// this should be redone, it's horrible
+	puts(_("Usage: MazeCompiler <outputfile> <inputfile>"));
 }
 
 static BOOL CreateHeader(FILE * pInputFile, CArchive & pDestination);
@@ -56,7 +56,11 @@ int main(int pArgCount, const char **pArgStrings)
 	BOOL lPrintUsage = FALSE;
 	BOOL lError = FALSE;
 
-	printf(MR_LoadString(IDS_INTRO));
+	
+	printf(_("HoverRace Track Compiler"));
+	printf("      ");
+	printf(_("(c)1996-1997 GrokkSoft Inc."));
+	printf("\n");
 
 	Sleep(1000);
 	MR_DllObjectFactory::Init();
@@ -64,7 +68,7 @@ int main(int pArgCount, const char **pArgStrings)
 	// Analyse the input parameters
 	if(pArgCount != 3) {
 		lPrintUsage = TRUE;
-		printf(MR_LoadString(IDS_BAD_PARAM_COUNT));
+		puts(_("Wrong argument count"));
 		Sleep(4000);
 	}
 
@@ -86,7 +90,7 @@ int main(int pArgCount, const char **pArgStrings)
 			}
 
 			if(lError) {
-				printf(MR_LoadString(IDS_NO_REGID));
+				puts(_("Track name must contain your registration number"));
 			}
 		}
 	}
@@ -95,18 +99,19 @@ int main(int pArgCount, const char **pArgStrings)
 		MR_RecordFile lOutputFile;
 
 		// Verify that there is at least one ofhtr parameter
-		CString lCopyrightNotice = "\x8\rHoverRace track file, (c)GrokkSoft 1997\n\x1a";
+		CString lCopyrightNotice = "\x8\r" + CString(_("HoverRace track file")) + ", " + "(c)GrokkSoft 1997\n\x1a";
 
 		if((gMajorID != 0) && (gMajorID != 100)) {
-			lCopyrightNotice.Format("\x8\rHoverRace track file designed by %s(%d-%d)\n\x1a", gOwner, gMajorID, gMinorID);
+			lCopyrightNotice.Format("\x8\r" + CString(_("HoverRace track file designed by %s(%d-%d)")) + "\n\x1a", gOwner, gMajorID, gMinorID);
 		}
 		// Try to create the output file
 		if(!lOutputFile.CreateForWrite(pArgStrings[1], 4, lCopyrightNotice)) {
 			lError = TRUE;
-			printf(MR_LoadString(IDS_CANT_CREATE_OUT));
+			puts(_("Unable to create the output file"));
 		}
 		// Compile each level
-		printf(MR_LoadString(IDS_COMP_TRACK), pArgStrings[2]);
+		printf(_("Compiling track (%s)"), pArgStrings[2]);
+		printf("\n");
 
 		// Open the input file
 		FILE *lFile = fopen(pArgStrings[2], "r");
@@ -114,7 +119,7 @@ int main(int pArgCount, const char **pArgStrings)
 		if(lFile == NULL) {
 			lError = TRUE;
 
-			printf(MR_LoadString(IDS_CANT_OPEN_IN));
+			puts(_("Unable to open the input file"));
 		}
 		// Compile the level
 		MR_LevelBuilder *lNewLevel = new MR_LevelBuilder;
@@ -122,7 +127,7 @@ int main(int pArgCount, const char **pArgStrings)
 		if(!lError) {
 			if(!lOutputFile.BeginANewRecord()) {
 				lError = TRUE;
-				printf(MR_LoadString(IDS_CANT_WRITE_HEADER));
+				puts(_("Unable to add a header to the output file"));
 			}
 			else {
 				CArchive lArchive(&lOutputFile, CArchive::store);
@@ -137,7 +142,7 @@ int main(int pArgCount, const char **pArgStrings)
 			// and amze the preprocessing
 			if(!lNewLevel->InitFromFile(lFile)) {
 				lError = TRUE;
-				printf(MR_LoadString(IDS_TRACK_CREATION_ERROR));
+				puts(_("Track creation error"));
 			}
 			rewind(lFile);
 		}
@@ -145,7 +150,7 @@ int main(int pArgCount, const char **pArgStrings)
 		if(!lError) {
 			if(!lOutputFile.BeginANewRecord()) {
 				lError = TRUE;
-				printf(MR_LoadString(IDS_CANT_ADD_TRACK));
+				puts(_("Unable to add the track to the output file"));
 			}
 			else {
 				CArchive lArchive(&lOutputFile, CArchive::store);
@@ -158,7 +163,7 @@ int main(int pArgCount, const char **pArgStrings)
 			// Add the background file
 			if(!lOutputFile.BeginANewRecord()) {
 				lError = TRUE;
-				printf(MR_LoadString(IDS_CANT_ADD_IMAGE));
+				puts(_("Unable to add a background image record"));
 			}
 			else {
 				CArchive lArchive(&lOutputFile, CArchive::store);
@@ -172,7 +177,7 @@ int main(int pArgCount, const char **pArgStrings)
 			// Add the Map
 			if(!lOutputFile.BeginANewRecord()) {
 				lError = TRUE;
-				printf(MR_LoadString(IDS_CANT_ADD_MAP));
+				puts(_("Unable to add a map record"));
 			}
 			else {
 				CArchive lArchive(&lOutputFile, CArchive::store);
@@ -200,7 +205,8 @@ int main(int pArgCount, const char **pArgStrings)
 
 		if(!lError) {
 			// Print the statistics on the output file
-			printf(MR_LoadString(IDS_REC_COUNT), lOutputFile.GetNbRecords());
+			printf(_("The output file now contains %d records"), lOutputFile.GetNbRecords());
+			printf("\n");
 		}
 
 		if(lFile != NULL) {
@@ -216,7 +222,7 @@ int main(int pArgCount, const char **pArgStrings)
 
 	if(lPrintUsage) {
 		if(lError) {
-			printf(MR_LoadString(IDS_BAD_CMDLN));
+			puts(_("Command line error"));
 		}
 		PrintUsage();
 	}
@@ -255,12 +261,13 @@ BOOL CreateHeader(FILE * pInputFile, CArchive & pArchive)
 
 	if(lParser.GetNextClass("HEADER") == NULL) {
 		lReturnValue = FALSE;
-		printf("Unable to find [HEADER] section\n");
+		puts(_("Unable to find [HEADER] section"));
 	}
 	else {
 		if(!lParser.GetNextAttrib("Description")) {
-			lReturnValue = FALSE;
-			printf(MR_LoadString(IDS_NO_DESC));
+			// don't crash, use empty description
+			lDescription = "";
+			puts(_("Warning: unable to find description"));
 		}
 		else {
 			lDescription = FormatStr(lParser.GetParams());
@@ -328,12 +335,12 @@ BOOL AddBackgroundImage(FILE * pInputFile, CArchive & pDestination)
 
 	if(lParser.GetNextClass("HEADER") == NULL) {
 		lReturnValue = FALSE;
-		printf(MR_LoadString(IDS_NO_HEADER));
+		puts(_("Unable to find [HEADER] section"));
 	}
 	else {
 		if(!lParser.GetNextAttrib("Background")) {
 			lReturnValue = FALSE;
-			printf(MR_LoadString(IDS_NO_BACKGROUND));
+			puts(_("Unable to find background image"));
 		}
 		else {
 			lBackFileName = lParser.GetParams();
@@ -346,7 +353,7 @@ BOOL AddBackgroundImage(FILE * pInputFile, CArchive & pDestination)
 
 		if(lBackFile == NULL) {
 			lReturnValue = FALSE;
-			printf(MR_LoadString(IDS_NO_BACKGROUND));
+			puts(_("Unable to find background image"));
 		}
 		else {
 			// Extract the palette and image from the input file
@@ -359,7 +366,7 @@ BOOL AddBackgroundImage(FILE * pInputFile, CArchive & pDestination)
 				pDestination.Write(lBitmap, MR_BACK_X_RES * MR_BACK_Y_RES);
 			}
 			else {
-				printf(MR_LoadString(IDS_NO_BACKGROUND));
+				puts(_("Unable to find background image"));
 			}
 
 			delete[]lBitmap;
@@ -382,7 +389,7 @@ MR_UInt8 *LoadPalette(FILE * pFile)
 	fread(&lMagicNumber, 1, 1, pFile);
 
 	if(lMagicNumber != 12) {
-		printf(MR_LoadString(IDS_BAD_PAL));
+		puts(_("Bad palette format for background file"));
 		delete[]lReturnValue;
 		lReturnValue = NULL;
 	}
@@ -404,7 +411,7 @@ MR_UInt8 *LoadBitmap(FILE * pFile)
 
 	if(lReturnValue) {
 		if((pXRes != MR_BACK_X_RES) || (pYRes != MR_BACK_Y_RES)) {
-			printf(MR_LoadString(IDS_BAD_RES));
+			puts(_("Incorrect background resolution"));
 			delete[]lReturnValue;
 			lReturnValue = NULL;
 		}

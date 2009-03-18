@@ -147,9 +147,6 @@
 				RelativePath=".\main.cpp">
 			</File>
 			<File
-				RelativePath=".\MazeCompiler.rc">
-			</File>
-			<File
 				RelativePath=".\Parser.cpp">
 			</File>
 			<File

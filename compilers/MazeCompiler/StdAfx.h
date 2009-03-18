@@ -1,4 +1,3 @@
-
 /* StdAfx.h
 	Precompiled header for mazecompiler. */
 
@@ -20,6 +19,34 @@
 #	endif										// _AFX_NO_AFXCMN_SUPPORT
 
 #endif
+
+#ifdef _
+#	undef _
+#endif
+#ifdef ENABLE_NLS
+#	include <libintl.h>
+#	define _(x) gettext(x)
+
+    // Our own little version of pgettext() so we don't need all of gettext.h.
+#	define pgettext(p,x) pgettextImpl(p "\004" x, x)
+    static inline const char *pgettextImpl(const char *full, const char *msg)
+	{
+		const char *retv = _(full);
+		return (retv == full) ? msg : retv;
+	}
+
+#else
+
+#	define _(x) (x)
+#	define gettext(x) (x)
+#	define dgettext(d,x) (x)
+#	define dcgettext(d,x,c) (x)
+#	define pgettext(p,x) (x)
+#	define pgettextImpl(f,x) (x)
+
+
+
+#endif  // ENABLE_NLS
 
 #include <math.h>
 #include <stdio.h>

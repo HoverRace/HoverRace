@@ -44,7 +44,7 @@ class MR_LevelBuilder:public MR_Level
 		void OrderVisibleSurfaces();
 
 	private:
-		void TestForVisibility(MR_VisibleStep * pPreviousStep, int *pDestArray, int &pDestIndex, int pNewLeftNodeIndex);
+		void TestForVisibility(MR_VisibleStep *pPreviousStep, int *pDestArray, int &pDestIndex, int pNewLeftNodeIndex);
 
 		static int OrderFloor(const void *pSurface0, const void *pSurface1);
 		static int OrderCeiling(const void *pSurface0, const void *pSurface1);
