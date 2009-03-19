@@ -764,7 +764,7 @@ void MR_GameApp::DisplaySite()
 {
 	// first return to window mode
 	SetVideoMode(0, 0);
-	LoadURLShortcut(mMainWindow, MR_LoadString(IDS_WEBSITE));
+	LoadURLShortcut(mMainWindow, _("http://www.hoverrace.com"));
 }
 
 void MR_GameApp::DisplayAbout()
@@ -1786,48 +1786,52 @@ void MR_GameApp::NewInternetSession()
 
 void MR_GameApp::SetProperties()
 {
-	PROPSHEETPAGE psp[3];
-	PROPSHEETHEADER psh;
+	PROPSHEETPAGEW psp[3];
+	PROPSHEETHEADERW psh;
 
-	psp[0].dwSize = sizeof(PROPSHEETPAGE);
+	psp[0].dwSize = sizeof(PROPSHEETPAGEW);
 	psp[0].dwFlags = PSP_USETITLE;
 	psp[0].hInstance = mInstance;
-	psp[0].pszTemplate = MAKEINTRESOURCE(IDD_DISPLAY_INTENSITY);
+	psp[0].pszTemplate = MAKEINTRESOURCEW(IDD_DISPLAY_INTENSITY);
 	psp[0].pfnDlgProc = DisplayIntensityDialogFunc;
-	psp[0].pszTitle = MAKEINTRESOURCE(IDS_COLOR_INTENSITY);
+	psp[0].pszTitle = Str::Utf8ToWide(_("Video and Audio"));
 	psp[0].lParam = 0;
 	psp[0].pfnCallback = NULL;
 
-	psp[1].dwSize = sizeof(PROPSHEETPAGE);
+	psp[1].dwSize = sizeof(PROPSHEETPAGEW);
 	psp[1].dwFlags = PSP_USETITLE;
 	psp[1].hInstance = mInstance;
-	psp[1].pszTemplate = MAKEINTRESOURCE(IDD_CONTROL);
+	psp[1].pszTemplate = MAKEINTRESOURCEW(IDD_CONTROL);
 	psp[1].pfnDlgProc = ControlDialogFunc;
-	psp[1].pszTitle = MAKEINTRESOURCE(IDS_KEYS_SETTING);
+	psp[1].pszTitle = Str::Utf8ToWide(_("Controls"));
 	psp[1].lParam = 0;
 	psp[1].pfnCallback = NULL;
 
-	psp[2].dwSize = sizeof(PROPSHEETPAGE);
+	psp[2].dwSize = sizeof(PROPSHEETPAGEW);
 	psp[2].dwFlags = PSP_USETITLE;
 	psp[2].hInstance = mInstance;
-	psp[2].pszTemplate = MAKEINTRESOURCE(IDD_MISC);
+	psp[2].pszTemplate = MAKEINTRESOURCEW(IDD_MISC);
 	psp[2].pfnDlgProc = MiscDialogFunc;
-	psp[2].pszTitle = MAKEINTRESOURCE(IDS_MISC);
+	psp[2].pszTitle = Str::Utf8ToWide(_("Miscellaneous"));
 	psp[2].lParam = 0;
 	psp[2].pfnCallback = NULL;
 
-	psh.dwSize = sizeof(PROPSHEETHEADER);
+	psh.dwSize = sizeof(PROPSHEETHEADERW);
 	psh.dwFlags = PSH_PROPSHEETPAGE | PSH_NOAPPLYNOW | PSH_PROPTITLE;
 	psh.hwndParent = mMainWindow;
 	psh.hInstance = mInstance;
-	psh.pszCaption = MAKEINTRESOURCE(IDS_PROP_SETTING);
+	psh.pszCaption = Str::Utf8ToWide(_("Properties setting"));
 	psh.nPages = sizeof(psp) / sizeof(PROPSHEETPAGE);
 	psh.nStartPage = 0;
-	psh.ppsp = (LPCPROPSHEETPAGE) & psp;
+	psh.ppsp = (LPCPROPSHEETPAGEW) & psp;
 	psh.pfnCallback = NULL;
 
-	PropertySheet(&psh);
+	PropertySheetW(&psh);
 
+	delete psp[0].pszTitle;
+	delete psp[1].pszTitle;
+	delete psp[2].pszTitle;
+	delete psh.pszCaption;
 }
 
 void MR_GameApp::DrawBackground()
@@ -2533,14 +2537,6 @@ BOOL CALLBACK MR_GameApp::DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, 
 			// Populate the monitors dropdown.
 			monitors = OS::GetMonitors();
 			InitMonitorList(pWindow, monitors.get());
-			
-			/*
-			char lBuffer[10]; // maybe someone has a really big resolution
-			sprintf(lBuffer, "%d\0", cfg->video.xResFullscreen);
-			SetDlgItemText(pWindow, IDC_FS_RES_X, lBuffer);
-			sprintf(lBuffer, "%d\0", cfg->video.yResFullscreen);
-			SetDlgItemText(pWindow, IDC_FS_RES_Y, lBuffer);
-			*/
 
 			UpdateIntensityDialogLabels(pWindow);
 			break;
@@ -2593,8 +2589,19 @@ BOOL CALLBACK MR_GameApp::DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, 
 		case WM_COMMAND:
 			switch (LOWORD(pWParam)) {
 				case IDC_MONITOR:
-					if (HIWORD(pWParam) == CBN_SELCHANGE) {
+					if(HIWORD(pWParam) == CBN_SELCHANGE) {
 						UpdateResolutionList(pWindow, monitors.get());
+					}
+					break;
+
+				case IDC_RES:
+					if(HIWORD(pWParam) == CBN_SELCHANGE) {
+						// set our new resolution
+						OS::Resolution *newres = GetSelectedResolution(pWindow);
+						cfg->video.xResFullscreen = newres->w;
+						cfg->video.yResFullscreen = newres->h;
+
+						delete newres;
 					}
 					break;
 			}
@@ -2610,83 +2617,6 @@ BOOL CALLBACK MR_GameApp::DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, 
 					break;
 
 				case PSN_APPLY:
-					// check new resolution values
-					BOOL lSuccess = TRUE;
-					const OS::Monitor *mon = GetSelectedMonitor(pWindow, monitors.get());
-					cfg->video.fullscreenMonitor = (mon == NULL) ? "" : mon->id;
-					OS::Resolution *res = GetSelectedResolution(pWindow);
-					if (res != NULL) {
-						cfg->video.xResFullscreen = res->w;
-						cfg->video.yResFullscreen = res->h;
-						delete res;
-					} else {
-						cfg->video.xResFullscreen = GetSystemMetrics(SM_CXSCREEN);
-						cfg->video.yResFullscreen = GetSystemMetrics(SM_CYSCREEN);
-
-						std::string lErrorBuffer = str(format("%s %dx%d") %
-							_("Invalid resolution; reverting to default") %
-							cfg->video.xResFullscreen %
-							cfg->video.yResFullscreen);
-						MessageBoxW(pWindow, Str::UW(lErrorBuffer.c_str()), PACKAGE_NAME_L, MB_OK);
-					}
-					monitors.reset();
-					/*
-					int newXRes = GetDlgItemInt(pWindow, IDC_FS_RES_X, &lSuccess, FALSE);
-					int newYRes = 0;
-					if(lSuccess) // so we don't destroy a FALSE value
-						newYRes = GetDlgItemInt(pWindow, IDC_FS_RES_Y, &lSuccess, FALSE);						
-
-					std::string lCaptionBuffer = boost::str(boost::format("%s %s") %
-						_("HoverRace") %
-						cfg->GetVersion().c_str());
-
-					if(newXRes <= 0 || newYRes <= 0 || !lSuccess) { // invalid
-						std::string lErrorBuffer = boost::str(boost::format("%s %dx%d") %
-							_("Invalid resolution; reverting to default") %
-							GetSystemMetrics(SM_CXSCREEN) %
-							GetSystemMetrics(SM_CYSCREEN));
-	
-						MessageBoxW(pWindow, Str::UW(lErrorBuffer.c_str()), Str::UW(lCaptionBuffer.c_str()), MB_OK);
-
-						cfg->video.xResFullscreen = GetSystemMetrics(SM_CXSCREEN);
-						cfg->video.yResFullscreen = GetSystemMetrics(SM_CYSCREEN);
-					} else { // valid change
-						// test new resolution
-						int lAction = MessageBoxW(pWindow, Str::UW(_("Hit OK to test new resolution")), 
-							Str::UW(lCaptionBuffer.c_str()), MB_OKCANCEL);
-
-						if(lAction == IDOK) {
-							BOOL lOkRes = TRUE;
-							if(!This->SetVideoMode(newXRes, newYRes)) {
-								// fails test
-								lOkRes = FALSE;
-							}
-							This->SetVideoMode(0, 0);
-
-							if(!lOkRes) {
-								std::string lErrorBuffer = boost::str(boost::format("%s %dx%d") %
-									_("Invalid resolution; reverting to") %
-									cfg->video.xResFullscreen %
-									cfg->video.yResFullscreen);
-								
-								MessageBoxW(pWindow, Str::UW(lErrorBuffer.c_str()), Str::UW(lCaptionBuffer.c_str()), MB_OK);
-							} else {
-								std::string lSuccessBuffer = boost::str(boost::format("%s %dx%d") %
-									_("Resolution successfully set to") %
-									newXRes %
-									newYRes);
-								
-								MessageBoxW(pWindow, Str::UW(lSuccessBuffer.c_str()), Str::UW(lCaptionBuffer.c_str()), MB_OK);
-
-								cfg->video.xResFullscreen = newXRes;
-								cfg->video.yResFullscreen = newYRes;
-							}
-						} else {
-							// ignore change
-						}
-					}
-					*/
-
 					This->SaveRegistry();
 
 					// SetWindowLong( ((NMHDR FAR *) lParam)->hwndFrom,  , );
