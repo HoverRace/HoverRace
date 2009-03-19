@@ -764,7 +764,7 @@ void MR_GameApp::DisplaySite()
 {
 	// first return to window mode
 	SetVideoMode(0, 0);
-	LoadURLShortcut(mMainWindow, _("http://www.hoverrace.com"));
+	LoadURLShortcut(mMainWindow, HR_WEBSITE);
 }
 
 void MR_GameApp::DisplayAbout()
@@ -2982,7 +2982,7 @@ BOOL CALLBACK MR_GameApp::AboutDlgFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam
 					"\r\n" <<
 					_("and with the help of the many testers willing to put up with bugs and other strange happenings.") << "\r\n"
 					"\r\n" <<
-					_("visit us at") << " http://www.hoverrace.com/\r\n"
+					_("visit us at") << " " << HR_WEBSITE << "\r\n"
 					"\r\n"
 					"HoverRace © Richard Langlois, Grokksoft Inc.\r\n"
 					"\r\n" <<

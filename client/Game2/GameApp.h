@@ -25,6 +25,8 @@
 #include "Observer.h"
 #include "ClientSession.h"
 
+#define HR_WEBSITE "http://www.hoverrace.com/"
+
 class MR_GameApp;
 
 class MR_GameThread
