@@ -23,6 +23,7 @@
 #include "stdafx.h"
 
 #include "Banner.h"
+#include "GameApp.h"
 #include "../../engine/Util/StrRes.h"
 #include "../../engine/Util/OS.h"
 #include "../../engine/Util/Str.h"
@@ -383,7 +384,7 @@ BOOL LoadURLShortcut(HWND pWindow, const char *pShortcut)
 	else {
 		char lURL[300];
 
-		strcpy(lURL, "http://www.HoverRace.com");  // Default well there is nothing that can be done
+		strcpy(lURL, HR_WEBSITE);  // Default well there is nothing that can be done
 
 		FILE *lFile = fopen(pShortcut, "r");
 
