@@ -1263,10 +1263,10 @@ void MR_GameApp::ReadAsyncInputController()
 				lControlState2 = ReadAsyncInputControllerPlayer(1);
 			}
 			if(mCurrentSession->GetMainCharacter3() != NULL) {
-				lControlState2 = ReadAsyncInputControllerPlayer(2);
+				lControlState3 = ReadAsyncInputControllerPlayer(2);
 			}
 			if(mCurrentSession->GetMainCharacter4() != NULL) {
-				lControlState3 = ReadAsyncInputControllerPlayer(3);
+				lControlState4 = ReadAsyncInputControllerPlayer(3);
 			}
 
 			if(lFirstCall)
