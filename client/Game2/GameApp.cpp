@@ -1817,10 +1817,10 @@ void MR_GameApp::SetProperties()
 	psp[2].pfnCallback = NULL;
 
 	psh.dwSize = sizeof(PROPSHEETHEADERW);
-	psh.dwFlags = PSH_PROPSHEETPAGE | PSH_NOAPPLYNOW | PSH_PROPTITLE;
+	psh.dwFlags = PSH_PROPSHEETPAGE | PSH_NOAPPLYNOW;
 	psh.hwndParent = mMainWindow;
 	psh.hInstance = mInstance;
-	psh.pszCaption = Str::Utf8ToWide(_("Properties setting"));
+	psh.pszCaption = Str::Utf8ToWide(_("Properties"));
 	psh.nPages = sizeof(psp) / sizeof(PROPSHEETPAGE);
 	psh.nStartPage = 0;
 	psh.ppsp = (LPCPROPSHEETPAGEW) & psp;
