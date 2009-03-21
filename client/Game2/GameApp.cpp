@@ -2593,17 +2593,6 @@ BOOL CALLBACK MR_GameApp::DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, 
 						UpdateResolutionList(pWindow, monitors.get());
 					}
 					break;
-
-				case IDC_RES:
-					if(HIWORD(pWParam) == CBN_SELCHANGE) {
-						// set our new resolution
-						OS::Resolution *newres = GetSelectedResolution(pWindow);
-						cfg->video.xResFullscreen = newres->w;
-						cfg->video.yResFullscreen = newres->h;
-
-						delete newres;
-					}
-					break;
 			}
 			break;
 
@@ -2617,7 +2606,25 @@ BOOL CALLBACK MR_GameApp::DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, 
 					break;
 
 				case PSN_APPLY:
+					const OS::Monitor *mon = GetSelectedMonitor(pWindow, monitors.get());
+					cfg->video.fullscreenMonitor = (mon == NULL) ? "" : mon->id;
+					OS::Resolution *res = GetSelectedResolution(pWindow);
+					if (res != NULL) {
+						cfg->video.xResFullscreen = res->w;
+						cfg->video.yResFullscreen = res->h;
+						delete res;
+					} else {
+						cfg->video.xResFullscreen = GetSystemMetrics(SM_CXSCREEN);
+						cfg->video.yResFullscreen = GetSystemMetrics(SM_CYSCREEN);
+
+						std::string lErrorBuffer = str(format("%s %dx%d") %
+							_("Invalid resolution; reverting to default") %
+							cfg->video.xResFullscreen %
+							cfg->video.yResFullscreen);
+						MessageBoxW(pWindow, Str::UW(lErrorBuffer.c_str()), PACKAGE_NAME_L, MB_OK);
+					}
 					This->SaveRegistry();
+					monitors.reset();
 
 					// SetWindowLong( ((NMHDR FAR *) lParam)->hwndFrom,  , );
 					break;
