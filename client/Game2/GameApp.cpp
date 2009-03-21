@@ -1828,10 +1828,11 @@ void MR_GameApp::SetProperties()
 
 	PropertySheetW(&psh);
 
-	delete psp[0].pszTitle;
-	delete psp[1].pszTitle;
-	delete psp[2].pszTitle;
-	delete psh.pszCaption;
+	// const_cast is safe here since we know they came from Utf8ToWide().
+	OS::Free(const_cast<wchar_t*>(psp[0].pszTitle));
+	OS::Free(const_cast<wchar_t*>(psp[1].pszTitle));
+	OS::Free(const_cast<wchar_t*>(psp[2].pszTitle));
+	OS::Free(const_cast<wchar_t*>(psh.pszCaption));
 }
 
 void MR_GameApp::DrawBackground()
