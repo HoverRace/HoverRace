@@ -1019,7 +1019,7 @@ bool MR_GameApp::CreateMainMenu()
 		Str::UW(MENUFMT("Menu|Setting", "&Window", false, "Alt+Enter").c_str()))) return false;
 	if (!AppendMenuW(settingMenu, MF_SEPARATOR, NULL, NULL)) return false;
 	if (!AppendMenuW(settingMenu, MF_STRING, ID_SETTING_PROPERTIES,
-		Str::UW(MENUFMT("Menu|Setting", "&Properties", true, NULL).c_str()))) return false;
+		Str::UW(MENUFMT("Menu|Setting", "&Preferences", true, NULL).c_str()))) return false;
 
 	HMENU helpMenu = CreatePopupMenu();
 	if (helpMenu == NULL) return false;
@@ -1820,7 +1820,7 @@ void MR_GameApp::SetProperties()
 	psh.dwFlags = PSH_PROPSHEETPAGE | PSH_NOAPPLYNOW;
 	psh.hwndParent = mMainWindow;
 	psh.hInstance = mInstance;
-	psh.pszCaption = Str::Utf8ToWide(_("Properties"));
+	psh.pszCaption = Str::Utf8ToWide(_("Preferences"));
 	psh.nPages = sizeof(psp) / sizeof(PROPSHEETPAGE);
 	psh.nStartPage = 0;
 	psh.ppsp = (LPCPROPSHEETPAGEW) & psp;
