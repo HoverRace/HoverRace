@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
-"Report-Msgid-Bugs-To: bugs@hoverrace.com\n"
-"POT-Creation-Date: 2009-03-13 15:30-0400\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-03-22 02:33-0400\n"
 "PO-Revision-Date: 2009-03-07 15:05-0500\n"
 "Last-Translator:  <ryan@igglybob.com>\n"
 "Language-Team: Estonian <linux-ee@lists.eenet.ee>\n"
@@ -16,12 +16,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: client/Game2/Banner.cpp:356 client/Game2/Banner.cpp:401
-msgid ""
-"Unable to activate your web browser. Please start your web browser and go to:"
+#: client/Game2/Banner.cpp:357 client/Game2/Banner.cpp:402
+msgid "Unable to activate your web browser. Please start your web browser and go to:"
 msgstr ""
 
-#: client/Game2/Banner.cpp:359 client/Game2/Banner.cpp:404
+#: client/Game2/Banner.cpp:360 client/Game2/Banner.cpp:405
 msgid "HoverRace Error"
 msgstr ""
 
@@ -116,7 +115,7 @@ msgctxt "Menu|View"
 msgid "&Refresh colors"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:1017 client/Game2/GameApp.cpp:1863
+#: client/Game2/GameApp.cpp:1017 client/Game2/GameApp.cpp:1868
 msgctxt "Menu|Setting"
 msgid "&Fullscreen"
 msgstr ""
@@ -128,7 +127,7 @@ msgstr ""
 
 #: client/Game2/GameApp.cpp:1022
 msgctxt "Menu|Setting"
-msgid "&Properties"
+msgid "&Preferences"
 msgstr ""
 
 #: client/Game2/GameApp.cpp:1027
@@ -176,185 +175,207 @@ msgid ""
 msgstr ""
 
 #: client/Game2/GameApp.cpp:1098 client/Game2/GameApp.cpp:1108
-#: client/Game2/GameApp.cpp:2994 client/Game2/InternetRoom.cpp:1336
-#: client/Game2/InternetRoom.cpp:2344 client/Game2/TrackDownloadDialog.cpp:220
-#: client/Game2/TrackDownloadDialog.cpp:231
+#: client/Game2/GameApp.cpp:2938 client/Game2/InternetRoom.cpp:1336
+#: client/Game2/InternetRoom.cpp:2344 client/Game2/TrackDownloadDialog.cpp:228
 #: client/Game2/TrackDownloadDialog.cpp:239
-#: client/Game2/TrackDownloadDialog.cpp:325
+#: client/Game2/TrackDownloadDialog.cpp:247
+#: client/Game2/TrackDownloadDialog.cpp:333
 msgid "HoverRace"
 msgstr ""
 
 #: client/Game2/GameApp.cpp:1107
-msgid ""
-"HoverRace was unable to switch the video mode. You will need to play in full "
-"screen."
+msgid "HoverRace was unable to switch the video mode. You will need to play in full screen."
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2473
+#: client/Game2/GameApp.cpp:1797
+msgid "Video and Audio"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:1806
+msgid "Controls"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:1815
+msgid "Miscellaneous"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:1823
+msgid "Preferences"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2478
 msgid "Default Monitor"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2517
+#: client/Game2/GameApp.cpp:2522
+msgid "Video"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2523
 msgid "Gamma"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2518
+#: client/Game2/GameApp.cpp:2524
 msgid "Contrast"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2519
+#: client/Game2/GameApp.cpp:2525
 msgid "Brightness"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2520
+#: client/Game2/GameApp.cpp:2527
+msgid "Audio"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2528
 msgid "Volume"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2521
+#: client/Game2/GameApp.cpp:2530
+msgid "Fullscreen Settings"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2531
+msgid "Fullscreen Monitor"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:2532
 msgid "Fullscreen Resolution"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2627
+#: client/Game2/GameApp.cpp:2628
 msgid "Invalid resolution; reverting to default"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2715
+#: client/Game2/GameApp.cpp:2659
 msgid "Player 1"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2716
+#: client/Game2/GameApp.cpp:2660
 msgid "Player 2"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2717
+#: client/Game2/GameApp.cpp:2661
 msgid "Player 3"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2718
+#: client/Game2/GameApp.cpp:2662
 msgid "Player 4"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2719
+#: client/Game2/GameApp.cpp:2663
 msgid "Motor On:"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2720
+#: client/Game2/GameApp.cpp:2664
 msgid "Turn Right:"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2721
+#: client/Game2/GameApp.cpp:2665
 msgid "Turn Left:"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2722
+#: client/Game2/GameApp.cpp:2666
 msgid "Brake:"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2723
+#: client/Game2/GameApp.cpp:2667
 msgid "Jump:"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2724
+#: client/Game2/GameApp.cpp:2668
 msgid "Fire Weapon:"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2725
+#: client/Game2/GameApp.cpp:2669
 msgid "Select Weapon:"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2726
+#: client/Game2/GameApp.cpp:2670
 msgid "Look Back:"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2882
+#: client/Game2/GameApp.cpp:2826
 msgid "Disable Intro Movie"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2884
-msgid ""
-"Disable the prompt to connect to the Internet each time HoverRace starts"
+#: client/Game2/GameApp.cpp:2828
+msgid "Disable the prompt to connect to the Internet each time HoverRace starts"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2886
+#: client/Game2/GameApp.cpp:2830
 msgid "Use desktop &color depth when switching to fullscreen"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2888
+#: client/Game2/GameApp.cpp:2832
 msgid "Address of Server Roomlist:"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2889
+#: client/Game2/GameApp.cpp:2833
 msgid "TCP Server Port:"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2890
+#: client/Game2/GameApp.cpp:2834
 msgid "TCP Receive Port:"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2891
+#: client/Game2/GameApp.cpp:2835
 msgid "UDP Receive Port:"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2962
-msgid ""
-"Incompatible video mode. Select a compatible video mode by pressing F8 or F9 "
-"once a game is started"
+#: client/Game2/GameApp.cpp:2906
+msgid "Incompatible video mode. Select a compatible video mode by pressing F8 or F9 once a game is started"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2996
+#: client/Game2/GameApp.cpp:2940
 msgid "Click OK to play on the Internet against other people"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2997 client/Game2/TrackSelect.cpp:188
+#: client/Game2/GameApp.cpp:2941 client/Game2/TrackSelect.cpp:188
 msgid "OK"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2998 client/Game2/TrackSelect.cpp:189
+#: client/Game2/GameApp.cpp:2942 client/Game2/TrackSelect.cpp:189
 msgid "Cancel"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:3000
-msgid ""
-"Make sure that you are connected to the Internet before clicking on OK.  If "
-"you have any problems, visit our forums at http://www.hoverrace.com/bb for "
-"help."
+#: client/Game2/GameApp.cpp:2944
+msgid "Make sure that you are connected to the Internet before clicking on OK.  If you have any problems, visit our forums at http://www.hoverrace.com/bb for help."
 msgstr ""
 
-#: client/Game2/GameApp.cpp:3036
+#: client/Game2/GameApp.cpp:2980
 msgid "About HoverRace"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:3037
+#: client/Game2/GameApp.cpp:2981
 msgid "HoverRace version "
 msgstr ""
 
-#: client/Game2/GameApp.cpp:3042
+#: client/Game2/GameApp.cpp:2986
 msgid "HoverRace is brought to you by:"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:3044
+#: client/Game2/GameApp.cpp:2988
 msgid "original author"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:3047
+#: client/Game2/GameApp.cpp:2991
 msgid "with contributions from (in alphabetical order)"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:3053
-msgid ""
-"and with the help of the many testers willing to put up with bugs and other "
-"strange happenings."
+#: client/Game2/GameApp.cpp:2997
+msgid "and with the help of the many testers willing to put up with bugs and other strange happenings."
 msgstr ""
 
-#: client/Game2/GameApp.cpp:3055
+#: client/Game2/GameApp.cpp:2999
 msgid "visit us at"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:3059
+#: client/Game2/GameApp.cpp:3003
 msgid "Thanks also to the following projects"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:3073
+#: client/Game2/GameApp.cpp:3017
 msgid "Close"
 msgstr ""
 
@@ -631,9 +652,7 @@ msgstr ""
 
 #: client/Game2/NetInterface.cpp:497 client/Game2/NetInterface.cpp:575
 #: client/Game2/NetInterface.cpp:630
-msgid ""
-"Unable to use UDP recv port; choose a different port or close some Winsock "
-"applications."
+msgid "Unable to use UDP recv port; choose a different port or close some Winsock applications."
 msgstr ""
 
 #: client/Game2/NetInterface.cpp:711
@@ -698,9 +717,7 @@ msgid "Connection refused by peer"
 msgstr ""
 
 #: client/Game2/NetInterface.cpp:1698
-msgid ""
-"; perhaps they are behind a firewall and need to forward ports 9530 and 9531 "
-"TCP and UDP?"
+msgid "; perhaps they are behind a firewall and need to forward ports 9530 and 9531 TCP and UDP?"
 msgstr ""
 
 #: client/Game2/NetInterface.cpp:1700 client/Game2/NetInterface.cpp:1739
@@ -826,57 +843,52 @@ msgstr ""
 msgid "Select your craft with the arrow keys"
 msgstr ""
 
-#: client/Game2/TrackDownloadDialog.cpp:46
-msgid "Initializing"
+#: client/Game2/TrackDownloadDialog.cpp:97
+#, c-format, boost-format
+msgid "Would you like to download the track \"%s\" now?"
 msgstr ""
 
-#: client/Game2/TrackDownloadDialog.cpp:47
-#: client/Game2/TrackDownloadDialog.cpp:168
-msgid "Downloading"
-msgstr ""
-
-#: client/Game2/TrackDownloadDialog.cpp:48
-msgid "Extracting"
-msgstr ""
-
-#: client/Game2/TrackDownloadDialog.cpp:49
-msgid "Finished"
-msgstr ""
-
-#: client/Game2/TrackDownloadDialog.cpp:101
-msgid "Would you like to download the track"
-msgstr ""
-
-#: client/Game2/TrackDownloadDialog.cpp:101
-msgid "now?"
-msgstr ""
-
-#: client/Game2/TrackDownloadDialog.cpp:102
-#: client/Game2/TrackDownloadDialog.cpp:260
+#: client/Game2/TrackDownloadDialog.cpp:99
+#: client/Game2/TrackDownloadDialog.cpp:268
 msgid "Track Download"
 msgstr ""
 
-#: client/Game2/TrackDownloadDialog.cpp:164
+#: client/Game2/TrackDownloadDialog.cpp:117
+msgid "Initializing"
+msgstr ""
+
+#: client/Game2/TrackDownloadDialog.cpp:118
+#: client/Game2/TrackDownloadDialog.cpp:176
+msgid "Downloading"
+msgstr ""
+
+#: client/Game2/TrackDownloadDialog.cpp:119
+msgid "Extracting"
+msgstr ""
+
+#: client/Game2/TrackDownloadDialog.cpp:120
+msgid "Finished"
+msgstr ""
+
+#: client/Game2/TrackDownloadDialog.cpp:172
 msgid "Processing..."
 msgstr ""
 
-#: client/Game2/TrackDownloadDialog.cpp:230
+#: client/Game2/TrackDownloadDialog.cpp:238
 #, c-format, boost-format
 msgid "Sorry, track \"%s\" is not available from %s"
 msgstr ""
 
-#: client/Game2/TrackDownloadDialog.cpp:236
+#: client/Game2/TrackDownloadDialog.cpp:244
 #, c-format, boost-format
-msgid ""
-"Track download failed: The file \"%s\" was not found in the archive "
-"downloaded from %s"
+msgid "Track download failed: The file \"%s\" was not found in the archive downloaded from %s"
 msgstr ""
 
-#: client/Game2/TrackDownloadDialog.cpp:261
+#: client/Game2/TrackDownloadDialog.cpp:269
 msgid "Downloading Track:"
 msgstr ""
 
-#: client/Game2/TrackDownloadDialog.cpp:321
+#: client/Game2/TrackDownloadDialog.cpp:329
 #, c-format, boost-format
 msgid ""
 "There was a problem downloading the track from %s\n"
