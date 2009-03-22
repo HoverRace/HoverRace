@@ -2519,10 +2519,16 @@ BOOL CALLBACK MR_GameApp::DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, 
 
 			// i18n of buttons and stuff
 			// what if the field is not wide enough?
+			SetDlgItemTextW(pWindow, IDC_VIDEO_GROUP, Str::UW(_("Video")));
 			SetDlgItemTextW(pWindow, IDC_GAMMA, Str::UW(_("Gamma")));
 			SetDlgItemTextW(pWindow, IDC_CONTRAST, Str::UW(_("Contrast")));
 			SetDlgItemTextW(pWindow, IDC_BRIGHTNESS, Str::UW(_("Brightness")));
+
+			SetDlgItemTextW(pWindow, IDC_AUDIO_GROUP, Str::UW(_("Audio")));
 			SetDlgItemTextW(pWindow, IDC_VOLUME, Str::UW(_("Volume")));
+
+			SetDlgItemTextW(pWindow, IDC_FULLSCREEN_GROUP, Str::UW(_("Fullscreen Settings")));
+			SetDlgItemTextW(pWindow, IDC_MONITOR_LBL, Str::UW(_("Fullscreen Monitor")));
 			SetDlgItemTextW(pWindow, IDC_FS_RES, Str::UW(_("Fullscreen Resolution")));
 
 			SendDlgItemMessage(pWindow, IDC_GAMMA_SLIDER, TBM_SETRANGE, 0, MAKELONG(0, 200));
