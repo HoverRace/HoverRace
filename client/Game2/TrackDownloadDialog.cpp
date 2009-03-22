@@ -38,6 +38,9 @@
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/Str.h"
 
+using boost::str;
+using boost::format;
+
 using HoverRace::Util::Config;
 
 using namespace HoverRace::Util;
@@ -90,9 +93,10 @@ bool TrackDownloadDialog::ShowModal(HINSTANCE hinst, HWND parent)
 	cancel = false;
 
 	// Ask to download the track.
+	std::string msg =
+		str(format(_("Would you like to download the track \"%s\" now?")) % name);
 	std::ostringstream oss;
-	oss << _("Would you like to download the track") << "\"" << name << "\"" << _("now?");
-	if (MessageBoxW(parent, Str::UW(oss.str().c_str()), Str::UW(_("Track Download")), MB_YESNO) == IDNO) {
+	if (MessageBoxW(parent, Str::UW(msg.c_str()), Str::UW(_("Track Download")), MB_YESNO) == IDNO) {
 		return false;
 	}
 
