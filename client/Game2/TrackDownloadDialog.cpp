@@ -42,13 +42,6 @@ using HoverRace::Util::Config;
 
 using namespace HoverRace::Util;
 
-static const char *STATE_NAMES[] = {
-	_("Initializing"),
-	_("Downloading"),
-	_("Extracting"),
-	_("Finished"),
-};
-
 #define INIT_CAPACITY (5 * 1024 * 1024)
 #define MAX_CAPACITY (20 * 1024 * 1024)
 
@@ -114,12 +107,23 @@ bool TrackDownloadDialog::ShowModal(HINSTANCE hinst, HWND parent)
 	return !cancel;
 }
 
+const char **TrackDownloadDialog::GetStateNames()
+{
+	static const char *STATE_NAMES[] = {
+		_("Initializing"),
+		_("Downloading"),
+		_("Extracting"),
+		_("Finished"),
+		};
+	return STATE_NAMES;
+}
+
 void TrackDownloadDialog::SetState(state_t st)
 {
 	state = st;
 
 	OutputDebugString("State is now: ");
-	OutputDebugString(STATE_NAMES[st]);
+	OutputDebugString(GetStateNames()[st]);
 	OutputDebugString("\n");
 
 	// Notify dialog of state change.
@@ -174,7 +178,7 @@ void TrackDownloadDialog::UpdateDialogProgress(HWND hwnd)
 				stateStr << " (" << pos << "% of " << (curTotal / 1024) << " KB)";
 			}
 		} else {
-			stateStr << STATE_NAMES[curState];
+			stateStr << GetStateNames()[curState];
 		}
 		stateStr << "...";
 		SetDlgItemTextW(hwnd, IDC_STATE, Str::UW(stateStr.str().c_str()));

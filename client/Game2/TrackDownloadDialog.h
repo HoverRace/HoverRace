@@ -48,6 +48,7 @@ class TrackDownloadDialog
 			ST_FINISHED,
 			ST_LAST
 		};
+		const char **GetStateNames();
 		void SetState(state_t st);
 		void UpdateDialogProgress(HWND hwnd);
 
