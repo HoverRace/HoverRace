@@ -2,14 +2,15 @@
 # Copyright (C) 2009 HoverRace contributors
 # This file is distributed under the same license as the HoverRace package.
 #  <ryan@igglybob.com>, 2009.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-22 02:46-0400\n"
+"Report-Msgid-Bugs-To: bugs@hoverrace.com\n"
+"POT-Creation-Date: 2009-03-31 11:24-0400\n"
 "PO-Revision-Date: 2009-03-16 14:24-0700\n"
-"Last-Translator: Jorge Antonio Gutiérrez Martínez <Loquillo_el_original@yahoo.es>\n"
+"Last-Translator: Jorge Antonio Gutiérrez Martínez "
+"<Loquillo_el_original@yahoo.es>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -19,7 +20,8 @@ msgstr ""
 "X-Generator: Pootle 1.2.1\n"
 
 #: client/Game2/Banner.cpp:357 client/Game2/Banner.cpp:402
-msgid "Unable to activate your web browser. Please start your web browser and go to:"
+msgid ""
+"Unable to activate your web browser. Please start your web browser and go to:"
 msgstr "Imposible de activar su navegador web. Por favor inicielo y valla a:"
 
 #: client/Game2/Banner.cpp:360 client/Game2/Banner.cpp:405
@@ -182,9 +184,11 @@ msgid ""
 "Do you want to play in Window mode and switch to 256 color?"
 msgstr ""
 "Tú puedes jugar HoverRace en una ventana o en pantalla completa; \n"
-"Al jugar en una ventana, HoverRace va tener que jugar con solo 256 colores. \n"
+"Al jugar en una ventana, HoverRace va tener que jugar con solo 256 "
+"colores. \n"
 "Recomendamos que use \"Pantalla completa\" en su lugar. \n"
-"¿Quieres jugar en ventana y habilitar los 256 colores?dato: el computador actual usaría más de 32 bits mucho más que los 256 colores del juego."
+"¿Quieres jugar en ventana y habilitar los 256 colores?dato: el computador "
+"actual usaría más de 32 bits mucho más que los 256 colores del juego."
 
 #: client/Game2/GameApp.cpp:1098 client/Game2/GameApp.cpp:1108
 #: client/Game2/GameApp.cpp:2938 client/Game2/InternetRoom.cpp:1336
@@ -196,8 +200,12 @@ msgid "HoverRace"
 msgstr "HoverRace (Carrera de deslizadores)"
 
 #: client/Game2/GameApp.cpp:1107
-msgid "HoverRace was unable to switch the video mode. You will need to play in full screen."
-msgstr "HoverRace esta habilitado para usar el modo de video. Pero necesitarás jugarlo en pantalla completa."
+msgid ""
+"HoverRace was unable to switch the video mode. You will need to play in full "
+"screen."
+msgstr ""
+"HoverRace esta habilitado para usar el modo de video. Pero necesitarás "
+"jugarlo en pantalla completa."
 
 #: client/Game2/GameApp.cpp:1797
 msgid "Video and Audio"
@@ -315,8 +323,10 @@ msgid "Disable Intro Movie"
 msgstr "Desactivar escena de introducción"
 
 #: client/Game2/GameApp.cpp:2828
-msgid "Disable the prompt to connect to the Internet each time HoverRace starts"
-msgstr "Desactivar la pregunta de conectarse a Internet cada vez que HoverRace inicia"
+msgid ""
+"Disable the prompt to connect to the Internet each time HoverRace starts"
+msgstr ""
+"Desactivar la pregunta de conectarse a Internet cada vez que HoverRace inicia"
 
 #: client/Game2/GameApp.cpp:2830
 msgid "Use desktop &color depth when switching to fullscreen"
@@ -339,7 +349,9 @@ msgid "UDP Receive Port:"
 msgstr "Puerto receptor UDP:"
 
 #: client/Game2/GameApp.cpp:2906
-msgid "Incompatible video mode. Select a compatible video mode by pressing F8 or F9 once a game is started"
+msgid ""
+"Incompatible video mode. Select a compatible video mode by pressing F8 or F9 "
+"once a game is started"
 msgstr ""
 
 #: client/Game2/GameApp.cpp:2940
@@ -355,8 +367,14 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #: client/Game2/GameApp.cpp:2944
-msgid "Make sure that you are connected to the Internet before clicking on OK.  If you have any problems, visit our forums at http://www.hoverrace.com/bb for help."
-msgstr "Asegúrese de estar conectado a Internet antes de clickear en OK. Si usted tiene algún problema visite nuestros foros en http://www.hoverrace.com/bb para ayuda."
+msgid ""
+"Make sure that you are connected to the Internet before clicking on OK.  If "
+"you have any problems, visit our forums at http://www.hoverrace.com/bb for "
+"help."
+msgstr ""
+"Asegúrese de estar conectado a Internet antes de clickear en OK. Si usted "
+"tiene algún problema visite nuestros foros en http://www.hoverrace.com/bb "
+"para ayuda."
 
 #: client/Game2/GameApp.cpp:2980
 msgid "About HoverRace"
@@ -379,8 +397,12 @@ msgid "with contributions from (in alphabetical order)"
 msgstr "Con contribuciones de (En orden alfabético)"
 
 #: client/Game2/GameApp.cpp:2997
-msgid "and with the help of the many testers willing to put up with bugs and other strange happenings."
-msgstr "Y con ayuda de los muchos testers dispuestos a arreglar bugs y otras cosas raras que suceden."
+msgid ""
+"and with the help of the many testers willing to put up with bugs and other "
+"strange happenings."
+msgstr ""
+"Y con ayuda de los muchos testers dispuestos a arreglar bugs y otras cosas "
+"raras que suceden."
 
 #: client/Game2/GameApp.cpp:2999
 msgid "visit us at"
@@ -667,12 +689,17 @@ msgstr "Imposible de crear Socket"
 
 #: client/Game2/NetInterface.cpp:485 client/Game2/NetInterface.cpp:721
 msgid "Unable to use the port, try to close some WINSOCK applications"
-msgstr "Imposible de usar ese puerto, pruebe cerrando alguna aplicación WINSOCK"
+msgstr ""
+"Imposible de usar ese puerto, pruebe cerrando alguna aplicación WINSOCK"
 
 #: client/Game2/NetInterface.cpp:497 client/Game2/NetInterface.cpp:575
 #: client/Game2/NetInterface.cpp:630
-msgid "Unable to use UDP recv port; choose a different port or close some Winsock applications."
-msgstr "Imposible de usar el puerto receptor UDP; Elija otro puerto o cierre algunas aplicaciones Winsock."
+msgid ""
+"Unable to use UDP recv port; choose a different port or close some Winsock "
+"applications."
+msgstr ""
+"Imposible de usar el puerto receptor UDP; Elija otro puerto o cierre algunas "
+"aplicaciones Winsock."
 
 #: client/Game2/NetInterface.cpp:711
 msgid "Port value must be greater than 0"
@@ -736,8 +763,12 @@ msgid "Connection refused by peer"
 msgstr "Conexión rechazada por el muelle"
 
 #: client/Game2/NetInterface.cpp:1698
-msgid "; perhaps they are behind a firewall and need to forward ports 9530 and 9531 TCP and UDP?"
-msgstr "; Quizás estén detrás de un Contrafuego y necesitan Forwardear los puertos 9530 y 9531 TCP y UDP?"
+msgid ""
+"; perhaps they are behind a firewall and need to forward ports 9530 and 9531 "
+"TCP and UDP?"
+msgstr ""
+"; Quizás estén detrás de un Contrafuego y necesitan Forwardear los puertos "
+"9530 y 9531 TCP y UDP?"
 
 #: client/Game2/NetInterface.cpp:1700 client/Game2/NetInterface.cpp:1739
 #: client/Game2/NetInterface.cpp:1765 client/Game2/NetInterface.cpp:1775
@@ -900,8 +931,12 @@ msgstr "Disculpas, la pista \"%s\" no esta disponible desde %s"
 
 #: client/Game2/TrackDownloadDialog.cpp:244
 #, c-format, boost-format
-msgid "Track download failed: The file \"%s\" was not found in the archive downloaded from %s"
-msgstr "La descarga de la pista ha fallado: El archivo \"%s\" no fue encontrado en el archivo descargado desde %s"
+msgid ""
+"Track download failed: The file \"%s\" was not found in the archive "
+"downloaded from %s"
+msgstr ""
+"La descarga de la pista ha fallado: El archivo \"%s\" no fue encontrado en "
+"el archivo descargado desde %s"
 
 #: client/Game2/TrackDownloadDialog.cpp:269
 msgid "Downloading Track:"

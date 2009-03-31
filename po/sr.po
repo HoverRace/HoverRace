@@ -2,12 +2,12 @@
 # Copyright (C) 2009 HoverRace contributors
 # This file is distributed under the same license as the HoverRace package.
 #  <ryan@igglybob.com>, 2009.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-22 02:33-0400\n"
+"Report-Msgid-Bugs-To: bugs@hoverrace.com\n"
+"POT-Creation-Date: 2009-03-31 11:24-0400\n"
 "PO-Revision-Date: 2009-03-04 19:42-0700\n"
 "Last-Translator: Austin Brock <sir_brock@hotmail.com>\n"
 "Language-Team: Serbian <gnu@prevod.org>\n"
@@ -15,11 +15,13 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: sr\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
+"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Pootle 1.2.1\n"
 
 #: client/Game2/Banner.cpp:357 client/Game2/Banner.cpp:402
-msgid "Unable to activate your web browser. Please start your web browser and go to:"
+msgid ""
+"Unable to activate your web browser. Please start your web browser and go to:"
 msgstr ""
 
 #: client/Game2/Banner.cpp:360 client/Game2/Banner.cpp:405
@@ -187,7 +189,9 @@ msgid "HoverRace"
 msgstr ""
 
 #: client/Game2/GameApp.cpp:1107
-msgid "HoverRace was unable to switch the video mode. You will need to play in full screen."
+msgid ""
+"HoverRace was unable to switch the video mode. You will need to play in full "
+"screen."
 msgstr ""
 
 #: client/Game2/GameApp.cpp:1797
@@ -303,7 +307,8 @@ msgid "Disable Intro Movie"
 msgstr ""
 
 #: client/Game2/GameApp.cpp:2828
-msgid "Disable the prompt to connect to the Internet each time HoverRace starts"
+msgid ""
+"Disable the prompt to connect to the Internet each time HoverRace starts"
 msgstr ""
 
 #: client/Game2/GameApp.cpp:2830
@@ -327,7 +332,9 @@ msgid "UDP Receive Port:"
 msgstr ""
 
 #: client/Game2/GameApp.cpp:2906
-msgid "Incompatible video mode. Select a compatible video mode by pressing F8 or F9 once a game is started"
+msgid ""
+"Incompatible video mode. Select a compatible video mode by pressing F8 or F9 "
+"once a game is started"
 msgstr ""
 
 #: client/Game2/GameApp.cpp:2940
@@ -343,7 +350,10 @@ msgid "Cancel"
 msgstr ""
 
 #: client/Game2/GameApp.cpp:2944
-msgid "Make sure that you are connected to the Internet before clicking on OK.  If you have any problems, visit our forums at http://www.hoverrace.com/bb for help."
+msgid ""
+"Make sure that you are connected to the Internet before clicking on OK.  If "
+"you have any problems, visit our forums at http://www.hoverrace.com/bb for "
+"help."
 msgstr ""
 
 #: client/Game2/GameApp.cpp:2980
@@ -367,7 +377,9 @@ msgid "with contributions from (in alphabetical order)"
 msgstr ""
 
 #: client/Game2/GameApp.cpp:2997
-msgid "and with the help of the many testers willing to put up with bugs and other strange happenings."
+msgid ""
+"and with the help of the many testers willing to put up with bugs and other "
+"strange happenings."
 msgstr ""
 
 #: client/Game2/GameApp.cpp:2999
@@ -655,7 +667,9 @@ msgstr ""
 
 #: client/Game2/NetInterface.cpp:497 client/Game2/NetInterface.cpp:575
 #: client/Game2/NetInterface.cpp:630
-msgid "Unable to use UDP recv port; choose a different port or close some Winsock applications."
+msgid ""
+"Unable to use UDP recv port; choose a different port or close some Winsock "
+"applications."
 msgstr ""
 
 #: client/Game2/NetInterface.cpp:711
@@ -720,7 +734,9 @@ msgid "Connection refused by peer"
 msgstr ""
 
 #: client/Game2/NetInterface.cpp:1698
-msgid "; perhaps they are behind a firewall and need to forward ports 9530 and 9531 TCP and UDP?"
+msgid ""
+"; perhaps they are behind a firewall and need to forward ports 9530 and 9531 "
+"TCP and UDP?"
 msgstr ""
 
 #: client/Game2/NetInterface.cpp:1700 client/Game2/NetInterface.cpp:1739
@@ -884,7 +900,9 @@ msgstr ""
 
 #: client/Game2/TrackDownloadDialog.cpp:244
 #, c-format, boost-format
-msgid "Track download failed: The file \"%s\" was not found in the archive downloaded from %s"
+msgid ""
+"Track download failed: The file \"%s\" was not found in the archive "
+"downloaded from %s"
 msgstr ""
 
 #: client/Game2/TrackDownloadDialog.cpp:269
