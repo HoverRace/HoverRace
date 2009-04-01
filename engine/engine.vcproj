@@ -498,6 +498,12 @@
 				RelativePath=".\VideoServices\ColorTab.cpp">
 			</File>
 			<File
+				RelativePath=".\VideoServices\Font.cpp">
+			</File>
+			<File
+				RelativePath=".\VideoServices\Font.h">
+			</File>
+			<File
 				RelativePath=".\VideoServices\Patch.cpp">
 			</File>
 			<File

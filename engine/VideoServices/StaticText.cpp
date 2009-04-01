@@ -48,11 +48,26 @@ StaticText::StaticText(const std::string &s,
                        int size, bool bold, bool italic,
                        MR_UInt8 color) :
 	s(s), ws(Str::Utf8ToWide(s.c_str())), wsLen(wcslen(ws)),
-	font(font), size(size), bold(bold), italic(italic), color(color),
+	font(font, size, bold, italic), color(color),
 	bitmap(NULL), width(0), height(0)
 {
 	Update();
 }
+
+/**
+ * Constructor.
+ * @param s The text (UTF-8).
+ * @param font The font.
+ * @param color The color index.
+ */
+StaticText::StaticText(const std::string &s,
+                       const HoverRace::VideoServices::Font &font,
+                       MR_UInt8 color) :
+	s(s), font(font), color(color)
+{
+	Update();
+}
+
 
 StaticText::~StaticText()
 {
@@ -88,12 +103,12 @@ void StaticText::Update()
 	HDC hdc = CreateCompatibleDC(NULL);
 
 	HFONT stdFont = CreateFont(
-		size,
+		font.size,
 		0, 0, 0,
-		bold ? FW_BOLD : FW_NORMAL,
-		italic ? TRUE : FALSE,
+		font.bold ? FW_BOLD : FW_NORMAL,
+		font.italic ? TRUE : FALSE,
 		0, 0, 0, 0, 0, 0, 0,
-		font.c_str());
+		font.name.c_str());
 	HFONT oldFont = (HFONT)SelectObject(hdc, stdFont);
 
 	// Get the dimensions required for the font.
