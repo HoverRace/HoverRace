@@ -504,6 +504,12 @@
 				RelativePath=".\VideoServices\Font.h">
 			</File>
 			<File
+				RelativePath=".\VideoServices\NumericGlyphs.cpp">
+			</File>
+			<File
+				RelativePath=".\VideoServices\NumericGlyphs.h">
+			</File>
+			<File
 				RelativePath=".\VideoServices\Patch.cpp">
 			</File>
 			<File
