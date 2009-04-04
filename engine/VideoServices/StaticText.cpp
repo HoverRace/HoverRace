@@ -23,7 +23,7 @@
 #include "StdAfx.h"
 
 #include "../Util/Str.h"
-#include "2DViewport.h"
+#include "2DViewPort.h"
 
 #include "StaticText.h"
 
@@ -31,8 +31,10 @@ using namespace HoverRace::Util;
 
 using namespace HoverRace::VideoServices;
 
+#ifdef _WIN32
 static RGBQUAD RGB_BLACK = { 0, 0, 0, 0 };
 static RGBQUAD RGB_WHITE = { 0xff, 0xff, 0xff, 0 };
+#endif
 
 /**
  * Constructor.
@@ -113,6 +115,7 @@ void StaticText::Update()
 {
 	free(bitmap);
 
+#ifdef _WIN32
 	HDC hdc = CreateCompatibleDC(NULL);
 
 	HFONT stdFont = CreateFont(
@@ -183,6 +186,7 @@ void StaticText::Update()
 	DeleteObject(stdFont);
 
 	DeleteDC(hdc);
+#endif
 }
 
 /**
@@ -195,6 +199,7 @@ void StaticText::Update()
  */
 void StaticText::Blt(int x, int y, MR_2DViewPort *vp, bool centerX)
 {
+#ifdef _WIN32
 	if (centerX) x -= width / 2;
 
 	int dw = vp->GetXRes();
@@ -221,5 +226,6 @@ void StaticText::Blt(int x, int y, MR_2DViewPort *vp, bool centerX)
 		}
 		dest = (destRow += rowLen);
 	}
+#endif
 }
 
