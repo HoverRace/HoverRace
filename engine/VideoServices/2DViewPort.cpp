@@ -22,6 +22,8 @@
 
 #include "stdafx.h"
 
+#include "VideoBuffer.h"
+
 #include "2DViewport.h"
 
 MR_2DViewPort::MR_2DViewPort()

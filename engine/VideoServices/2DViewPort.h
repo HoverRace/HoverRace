@@ -23,13 +23,19 @@
 #ifndef _2D_VIEWPORT_H
 #define _2D_VIEWPORT_H
 
-#include "VideoBuffer.h"
-
-#ifdef MR_ENGINE
-#define MR_DllDeclare   __declspec( dllexport )
+#ifdef _WIN32
+#	ifdef MR_ENGINE
+#		define MR_DllDeclare   __declspec( dllexport )
+#	else
+#		define MR_DllDeclare   __declspec( dllimport )
+#	endif
 #else
-#define MR_DllDeclare   __declspec( dllimport )
+#	define MR_DllDeclare
 #endif
+
+#include "../Util/MR_Types.h"
+
+class MR_VideoBuffer;
 
 class MR_2DViewPort
 {
