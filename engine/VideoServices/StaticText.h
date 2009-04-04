@@ -61,6 +61,8 @@ class MR_DllDeclare StaticText {
 		int GetHeight() const;
 
 		void SetText(const std::string &s);
+		void SetFont(const HoverRace::VideoServices::Font &font);
+		void SetColor(MR_UInt8 color);
 
 	private:
 		void Update();

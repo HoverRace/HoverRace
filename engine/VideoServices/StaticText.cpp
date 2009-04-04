@@ -96,6 +96,19 @@ void StaticText::SetText(const std::string &s)
 	}
 }
 
+void StaticText::SetFont(const HoverRace::VideoServices::Font &font)
+{
+	if (!(this->font == font)) {
+		this->font = font;
+		Update();
+	}
+}
+
+void StaticText::SetColor(MR_UInt8 color)
+{
+	this->color = color;
+}
+
 void StaticText::Update()
 {
 	free(bitmap);
