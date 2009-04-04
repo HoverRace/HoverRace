@@ -53,5 +53,14 @@ struct MR_DllDeclare Font {
 	bool italic;
 };
 
+MR_DllDeclare inline bool operator==(const Font &a, const Font &b)
+{
+	return
+		a.size == b.size &&
+		a.bold == b.bold &&
+		a.italic == b.italic &&
+		a.name == b.name;
+}
+
 }  // namespace VideoServices
 }  // namespace HoverRace
