@@ -22,6 +22,7 @@
 
 #include "stdafx.h"
 
+#include "VideoBuffer.h"
 #include "3DViewport.h"
 #include "../Util/FastMemManip.h"
 

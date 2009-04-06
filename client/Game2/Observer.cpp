@@ -21,6 +21,7 @@
 
 #include "StdAfx.h"
 
+#include "../../engine/VideoServices/VideoBuffer.h"
 #include "Observer.h"
 #include "../../engine/Model/MazeElement.h"
 #include "../../engine/Util/Profiler.h"

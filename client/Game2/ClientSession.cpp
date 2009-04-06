@@ -22,6 +22,7 @@
 #include "stdafx.h"
 
 #include "ClientSession.h"
+#include "../../engine/VideoServices/VideoBuffer.h"
 #include "../../compilers/MazeCompiler/TrackCommonStuff.h"
 
 MR_ClientSession::MR_ClientSession()

@@ -31,6 +31,7 @@
 #include "TrackDownloadDialog.h"
 #include "../../engine/Util/DllObjectFactory.h"
 #include "../../engine/VideoServices/ColorPalette.h"
+#include "../../engine/VideoServices/VideoBuffer.h"
 #include "../../engine/MainCharacter/MainCharacter.h"
 #include "../../engine/Util/FuzzyLogic.h"
 #include "../../engine/Util/Profiler.h"
