@@ -52,6 +52,12 @@ int OS::nibbles[256] = {
 	 0,  0,  0,  0,  0,  0,  0,  0,   0,  0,  0,  0,  0,  0,  0,  0, // 70
 	};
 
+/**
+ * Global reference to the current locale.
+ * Defaults to "C" until OS::SetLocale() is called.
+ */
+std::locale OS::locale("C");
+
 static inline bool isHex(const char &c)
 {
 	return 
@@ -243,6 +249,9 @@ void OS::SetLocale()
 
 		free(lang);
 #	endif
+
+	// Update the current locale instance.
+	locale = std::locale("");
 }
 
 #ifdef _WIN32

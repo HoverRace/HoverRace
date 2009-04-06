@@ -32,6 +32,7 @@
 #	define MR_DllDeclare
 #endif
 
+#include <locale>
 #include <set>
 #include <string>
 #include <vector>
@@ -49,6 +50,7 @@ class MR_DllDeclare OS {
 
 	public:
 		static int nibbles[256];
+		static std::locale locale;
 		
 		static void SetEnv(const char *key, const char *val);
 		static void SetLocale();
