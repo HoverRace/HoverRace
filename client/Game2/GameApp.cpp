@@ -1790,50 +1790,48 @@ void MR_GameApp::SetProperties()
 	PROPSHEETPAGEW psp[3];
 	PROPSHEETHEADERW psh;
 
+	Str::UW videoTabTitle(_("Video and Audio"));
 	psp[0].dwSize = sizeof(PROPSHEETPAGEW);
 	psp[0].dwFlags = PSP_USETITLE;
 	psp[0].hInstance = mInstance;
 	psp[0].pszTemplate = MAKEINTRESOURCEW(IDD_DISPLAY_INTENSITY);
 	psp[0].pfnDlgProc = DisplayIntensityDialogFunc;
-	psp[0].pszTitle = Str::Utf8ToWide(_("Video and Audio"));
+	psp[0].pszTitle = videoTabTitle;
 	psp[0].lParam = 0;
 	psp[0].pfnCallback = NULL;
 
+	Str::UW controlsTabTitle(_("Controls"));
 	psp[1].dwSize = sizeof(PROPSHEETPAGEW);
 	psp[1].dwFlags = PSP_USETITLE;
 	psp[1].hInstance = mInstance;
 	psp[1].pszTemplate = MAKEINTRESOURCEW(IDD_CONTROL);
 	psp[1].pfnDlgProc = ControlDialogFunc;
-	psp[1].pszTitle = Str::Utf8ToWide(_("Controls"));
+	psp[1].pszTitle = controlsTabTitle;
 	psp[1].lParam = 0;
 	psp[1].pfnCallback = NULL;
 
+	Str::UW miscTabTitle(_("Miscellaneous"));
 	psp[2].dwSize = sizeof(PROPSHEETPAGEW);
 	psp[2].dwFlags = PSP_USETITLE;
 	psp[2].hInstance = mInstance;
 	psp[2].pszTemplate = MAKEINTRESOURCEW(IDD_MISC);
 	psp[2].pfnDlgProc = MiscDialogFunc;
-	psp[2].pszTitle = Str::Utf8ToWide(_("Miscellaneous"));
+	psp[2].pszTitle = miscTabTitle;
 	psp[2].lParam = 0;
 	psp[2].pfnCallback = NULL;
 
+	Str::UW title(_("Preferences"));
 	psh.dwSize = sizeof(PROPSHEETHEADERW);
 	psh.dwFlags = PSH_PROPSHEETPAGE | PSH_NOAPPLYNOW;
 	psh.hwndParent = mMainWindow;
 	psh.hInstance = mInstance;
-	psh.pszCaption = Str::Utf8ToWide(_("Preferences"));
+	psh.pszCaption = title;
 	psh.nPages = sizeof(psp) / sizeof(PROPSHEETPAGE);
 	psh.nStartPage = 0;
 	psh.ppsp = (LPCPROPSHEETPAGEW) & psp;
 	psh.pfnCallback = NULL;
 
 	PropertySheetW(&psh);
-
-	// const_cast is safe here since we know they came from Utf8ToWide().
-	OS::Free(const_cast<wchar_t*>(psp[0].pszTitle));
-	OS::Free(const_cast<wchar_t*>(psp[1].pszTitle));
-	OS::Free(const_cast<wchar_t*>(psp[2].pszTitle));
-	OS::Free(const_cast<wchar_t*>(psh.pszCaption));
 }
 
 void MR_GameApp::DrawBackground()
