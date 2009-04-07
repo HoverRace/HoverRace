@@ -32,10 +32,12 @@
 #	define MR_DllDeclare
 #endif
 
+#include "../Util/MR_Types.h"
+#include "Font.h"
+
 namespace HoverRace {
 namespace VideoServices {
 
-struct Font;
 class StaticText;
 
 /**
@@ -45,17 +47,16 @@ class StaticText;
 class MR_DllDeclare NumericGlyphs
 {
 	public:
-		NumericGlyphs(const HoverRace::VideoServices::Font &font,
-			MR_UInt8 color=43);
+		NumericGlyphs(const Font &font, MR_UInt8 color=43);
 		virtual ~NumericGlyphs();
 
-		void SetFont(const HoverRace::VideoServices::Font &font);
+		void SetFont(const Font &font);
 		void SetColor(MR_UInt8 color);
 
-		const HoverRace::VideoServices::StaticText *GetGlyph(char c);
+		const StaticText *GetGlyph(char c);
 
 	private:
-		HoverRace::VideoServices::StaticText *glyphs[32];
+		StaticText *glyphs[32];
 };
 
 }  // namespace VideoServices
