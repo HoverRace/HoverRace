@@ -68,7 +68,7 @@ wchar_t *Str::Utf8ToWide(const char *s)
 /**
  * Convert a wide string to a UTF-8 string.
  * The caller must use OS::Free() on the result.
- * @param s The wide string (may not be NULL).
+ * @param ws The wide string (may not be NULL).
  * @return A UTF-8-encoded string (must be freed by the caller) (never NULL).
  */
 char *Str::WideToUtf8(const wchar_t *ws)

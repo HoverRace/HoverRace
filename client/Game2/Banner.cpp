@@ -316,7 +316,7 @@ HBITMAP MR_GifDecoder::GetImage(int pImage) const
  * Retrieve the amount of time to display the frame before
  * the next frame should be displayed.
  * @param pImage The frame index (zero is the first frame).
- * @retrun The delay (in ms) (never negative).
+ * @return The delay (in ms) (never negative).
  */
 int MR_GifDecoder::GetDelay(int pImage) const
 {
