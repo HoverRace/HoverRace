@@ -504,6 +504,12 @@
 				RelativePath=".\VideoServices\Font.h">
 			</File>
 			<File
+				RelativePath=".\VideoServices\MultipartText.cpp">
+			</File>
+			<File
+				RelativePath=".\VideoServices\MultipartText.h">
+			</File>
+			<File
 				RelativePath=".\VideoServices\NumericGlyphs.cpp">
 			</File>
 			<File
