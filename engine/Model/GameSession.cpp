@@ -108,7 +108,9 @@ void MR_GameSession::SetSimulationTime(MR_SimulationTime pTime)
 MR_SimulationTime MR_GameSession::GetSimulationTime() const
 {
 	return mSimulationTime;
-} void MR_GameSession::Simulate()
+}
+
+void MR_GameSession::Simulate()
 {
 	ASSERT(mCurrentLevel != NULL);
 
@@ -403,7 +405,9 @@ MR_Level *MR_GameSession::GetCurrentLevel()
 const char *MR_GameSession::GetTitle() const
 {
 	return mTitle;
-} MR_RecordFile *MR_GameSession::GetCurrentMazeFile()
+}
+
+MR_RecordFile *MR_GameSession::GetCurrentMazeFile()
 {
 	return mCurrentMazeFile;
 }
