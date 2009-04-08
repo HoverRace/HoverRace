@@ -68,7 +68,7 @@ class MR_DllDeclare StaticText {
 		void Update();
 
 	public:
-		void Blt(int x, int y, MR_2DViewPort *pDest, bool centerX=false);
+		void Blt(int x, int y, MR_2DViewPort *pDest, bool centerX=false) const;
 
 	private:
 		std::string s;

@@ -65,7 +65,9 @@ StaticText::StaticText(const std::string &s,
 StaticText::StaticText(const std::string &s,
                        const HoverRace::VideoServices::Font &font,
                        MR_UInt8 color) :
-	s(s), font(font), color(color)
+	s(s), ws(Str::Utf8ToWide(s.c_str())), wsLen(wcslen(ws)),
+	font(font), color(color),
+	bitmap(NULL), width(0), height(0)
 {
 	Update();
 }
@@ -197,7 +199,7 @@ void StaticText::Update()
  * @param centerX Center the text on the X coordinate.
  * @param vp The viewport (may not be @c NULL).
  */
-void StaticText::Blt(int x, int y, MR_2DViewPort *vp, bool centerX)
+void StaticText::Blt(int x, int y, MR_2DViewPort *vp, bool centerX) const
 {
 #ifdef _WIN32
 	if (centerX) x -= width / 2;
