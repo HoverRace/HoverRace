@@ -75,7 +75,7 @@ void NumericGlyphs::SetColor(MR_UInt8 color)
  * @param c The ASCII character.
  * @return The StaticText instance for the character or NULL if not available.
  */
-const StaticText *NumericGlyphs::GetGlyph(char c)
+const StaticText *NumericGlyphs::GetGlyph(char c) const
 {
 	return (c < 32 || c >= 64) ? NULL : glyphs[c - 32];
 }

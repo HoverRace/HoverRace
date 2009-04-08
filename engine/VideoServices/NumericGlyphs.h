@@ -53,7 +53,7 @@ class MR_DllDeclare NumericGlyphs
 		void SetFont(const Font &font);
 		void SetColor(MR_UInt8 color);
 
-		const StaticText *GetGlyph(char c);
+		const StaticText *GetGlyph(char c) const;
 
 	private:
 		StaticText *glyphs[32];
