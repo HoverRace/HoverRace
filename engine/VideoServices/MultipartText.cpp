@@ -22,6 +22,10 @@
 
 #include "StdAfx.h"
 
+#ifndef _WIN32
+#	include <stdarg.h>
+#endif
+
 #include <boost/format.hpp>
 
 #include "Font.h"

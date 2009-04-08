@@ -5,6 +5,8 @@ libvideosvc_la_CXXFLAGS = $(HR_CXXFLAGS)
 libvideosvc_la_SOURCES = \
 	Font.cpp \
 	Font.h \
+	MultipartText.cpp \
+	MultipartText.h \
 	NumericGlyphs.cpp \
 	NumericGlyphs.h \
 	Patch.cpp \
