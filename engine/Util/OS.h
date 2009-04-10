@@ -51,6 +51,12 @@ class MR_DllDeclare OS {
 	public:
 		static int nibbles[256];
 		static std::locale locale;
+
+#		ifdef _WIN32
+			typedef DWORD timestamp_t;
+#		else
+			typedef unsigned long long timestamp_t;
+#		endif
 		
 		static void SetEnv(const char *key, const char *val);
 		static void SetLocale();
@@ -78,6 +84,10 @@ class MR_DllDeclare OS {
 			static std::string GuidToString(const GUID &guid);
 			static void StringToGuid(const std::string &s, GUID &guid);
 #		endif
+
+		static void TimeInit();
+		static timestamp_t Time();
+		static void TimeShutdown();
 
 		static void Free(void *buf);
 };

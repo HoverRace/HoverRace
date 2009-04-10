@@ -216,6 +216,8 @@ int main(int argc, char** argv)
 	// Library initialization.
 	curl_global_init(CURL_GLOBAL_ALL);
 
+	OS::TimeInit();
+
 #ifdef _WIN32
 	MR_GameApp lGame(pInstance, safeMode);
 
@@ -242,6 +244,8 @@ int main(int argc, char** argv)
 		"contribute to this project.")) % "http://svn.igglybob.com/hoverrace/" <<
 		std::endl;
 #endif
+
+	OS::TimeShutdown();
 
 	// Library cleanup.
 	curl_global_cleanup();

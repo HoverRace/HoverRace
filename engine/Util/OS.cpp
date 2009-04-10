@@ -25,10 +25,16 @@
 #include <locale.h>
 #include <stdlib.h>
 
+#ifndef _WIN32
+#	include <sys/time.h>
+#	include <time.h>
+#endif
+
 #include <string>
 
 #ifdef _WIN32
 #	include <ddraw.h>
+#	include <mmsystem.h>
 #endif
 
 #include <boost/format.hpp>
@@ -381,6 +387,44 @@ void OS::StringToGuid(const std::string &s, GUID &guid)
 	}
 }
 #endif
+
+/**
+ * Initialize the OS time source.
+ * On Win32, this attempts to increase the precision to 1 ms.
+ */
+void OS::TimeInit()
+{
+#	ifdef _WIN32
+		timeBeginPeriod(1);
+#	endif
+}
+
+/**
+ * Retrieve a timestamp.
+ * The value returned is OS-dependent and should only be used for relative
+ * calculations.
+ * @return A relative timestamp, in milliseconds.
+ */
+OS::timestamp_t OS::Time()
+{
+#	ifdef _WIN32
+		return timeGetTime();
+#	else
+		timeval tv;
+		gettimeofday(&tv, NULL);
+		return (((timestamp_t)tv.tv_sec) * 1000) + (tv.tv_usec / 1000);
+#	endif
+}
+
+/**
+ * Shutdown the OS time source.
+ */
+void OS::TimeShutdown()
+{
+#	ifdef _WIN32
+		timeEndPeriod(1);
+#	endif
+}
 
 /**
  * Free a memory buffer created by a function from this class.
