@@ -27,6 +27,7 @@
 #include "resource.h"
 #include "CommonDialog.h"
 #include "NetworkSession.h"
+#include "HighObserver.h"
 #include "TrackSelect.h"
 #include "TrackDownloadDialog.h"
 #include "../../engine/Util/DllObjectFactory.h"
@@ -558,6 +559,7 @@ MR_GameApp::MR_GameApp(HINSTANCE pInstance, bool safeMode)
 	mObserver2 = NULL;
 	mObserver3 = NULL;
 	mObserver4 = NULL;
+	highObserver = NULL;
 	mCurrentSession = NULL;
 	mGameThread = NULL;
 
@@ -594,11 +596,13 @@ void MR_GameApp::Clean()
 	delete mCurrentSession;
 	mCurrentSession = NULL;
 
+	delete highObserver;
 	mObserver1->Delete();
 	mObserver2->Delete();
 	mObserver3->Delete();
 	mObserver4->Delete();
 
+	highObserver = NULL;
 	mObserver1 = NULL;
 	mObserver2 = NULL;
 	mObserver3 = NULL;
@@ -1195,6 +1199,9 @@ void MR_GameApp::RefreshView()
 							mObserver4->RenderDebugDisplay(mVideoBuffer, mCurrentSession, mCurrentSession->GetMainCharacter4(), lTime, mCurrentSession->GetBackImage());
 						break;
 				}
+				if (highObserver != NULL) {
+					highObserver->Render(mVideoBuffer, mCurrentSession);
+				}
 
 				mCurrentSession->IncFrameCount();
 
@@ -1450,6 +1457,7 @@ void MR_GameApp::NewLocalSession()
 		DeleteMovieWnd();
 		SOUNDSERVER_INIT(mMainWindow);
 		mObserver1 = MR_Observer::New();
+		highObserver = new HighObserver();
 
 		// Create the new session
 		MR_ClientSession *lCurrentSession = new MR_ClientSession();
@@ -1531,6 +1539,8 @@ void MR_GameApp::NewSplitSession(int pSplitPlayers)
 			mObserver3->SetSplitMode(MR_Observer::eLowerLeftSplit);
 			mObserver4->SetSplitMode(MR_Observer::eLowerRightSplit);
 		}
+
+		highObserver = new HighObserver();
 
 		MR_ClientSession *lCurrentSession = new MR_ClientSession;
 
@@ -1645,6 +1655,7 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 	MR_RecordFile *lTrackFile;
 	if(lSuccess) {
 		mObserver1 = MR_Observer::New();
+		highObserver = new HighObserver();
 
 		// Load the track
 		lTrackFile = MR_TrackOpen(mMainWindow, lCurrentTrack.c_str());
@@ -1765,6 +1776,7 @@ void MR_GameApp::NewInternetSession()
 
 	if(lSuccess) {
 		mObserver1 = MR_Observer::New();
+		highObserver = new HighObserver();
 		lSuccess = lCurrentSession->CreateMainCharacter();
 	}
 

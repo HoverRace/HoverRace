@@ -155,6 +155,12 @@
 				RelativePath=".\Game2\GameApp.h">
 			</File>
 			<File
+				RelativePath=".\Game2\HighObserver.cpp">
+			</File>
+			<File
+				RelativePath=".\Game2\HighObserver.h">
+			</File>
+			<File
 				RelativePath=".\Game2\InternetRoom.cpp">
 			</File>
 			<File

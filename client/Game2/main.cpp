@@ -51,6 +51,7 @@ static bool allowMultipleInstances = false;
 static bool showVersion = false;
 static bool silentMode = false;
 static bool experimentalMode = false;
+static bool showFramerate = false;
 
 /**
  * Display a message to the user.
@@ -90,6 +91,9 @@ static bool ProcessCmdLine(int argc, char **argv)
 				ShowMessage("Expected: -L (language)");
 				return false;
 			}
+		}
+		else if (strcmp("--fps", arg) == 0) {
+			showFramerate = true;
 		}
 		else if (strcmp("-m", arg) == 0) {
 			allowMultipleInstances = true;
@@ -196,6 +200,7 @@ int main(int argc, char** argv)
 		);
 	cfg->runtime.silent = silentMode;
 	cfg->runtime.aieeee = experimentalMode;
+	cfg->runtime.showFramerate = showFramerate;
 
 #ifdef ENABLE_NLS
 	// Gettext initialization.

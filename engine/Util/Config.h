@@ -182,6 +182,7 @@ class MR_DllDeclare Config
 		struct cfg_runtime_t {
 			bool silent;
 			bool aieeee;
+			bool showFramerate;
 		} runtime;
 };
 

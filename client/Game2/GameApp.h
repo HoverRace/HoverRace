@@ -28,6 +28,7 @@
 #define HR_WEBSITE "http://www.hoverrace.com/"
 
 class MR_GameApp;
+class HighObserver;
 
 class MR_GameThread
 {
@@ -69,6 +70,7 @@ class MR_GameApp
 		MR_Observer *mObserver2;
 		MR_Observer *mObserver3;
 		MR_Observer *mObserver4;
+		HighObserver *highObserver;
 		MR_ClientSession *mCurrentSession;
 		MR_GameThread *mGameThread;
 
