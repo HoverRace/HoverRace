@@ -40,7 +40,7 @@ NumericGlyphs::NumericGlyphs(const Font &font, MR_UInt8 color)
 		glyphs[i] = NULL;
 	}
 
-	const char *s = " ,-0123456789";
+	const char *s = " ',-.0123456789";
 	char bf[2] = { 0, 0 };
 	while (*s) {
 		bf[0] = *s;
