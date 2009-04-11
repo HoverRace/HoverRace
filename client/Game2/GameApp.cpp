@@ -1178,7 +1178,6 @@ void MR_GameApp::RefreshView()
 							mObserver1->RenderNormalDisplay(mVideoBuffer, mCurrentSession, mCurrentSession->GetMainCharacter(), lTime, mCurrentSession->GetBackImage());
 						if(mObserver2 != NULL)
 							mObserver2->RenderNormalDisplay(mVideoBuffer, mCurrentSession, mCurrentSession->GetMainCharacter2(), lTime, mCurrentSession->GetBackImage());
-
 						if(mObserver3 != NULL)
 							mObserver3->RenderNormalDisplay(mVideoBuffer, mCurrentSession, mCurrentSession->GetMainCharacter3(), lTime, mCurrentSession->GetBackImage());
 						if(mObserver4 != NULL)
@@ -1196,6 +1195,8 @@ void MR_GameApp::RefreshView()
 							mObserver4->RenderDebugDisplay(mVideoBuffer, mCurrentSession, mCurrentSession->GetMainCharacter4(), lTime, mCurrentSession->GetBackImage());
 						break;
 				}
+
+				mCurrentSession->IncFrameCount();
 
 #ifdef MR_AVI_CAPTURE
 				CaptureScreen(mVideoBuffer);

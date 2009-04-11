@@ -27,6 +27,7 @@
 #include "../../engine/Model/GameSession.h"
 #include "../../engine/MainCharacter/MainCharacter.h"
 #include "../../engine/VideoServices/Sprite.h"
+#include "../../engine/Util/OS.h"
 
 #define MR_CHAT_MESSAGE_STACK   8
 
@@ -61,6 +62,11 @@ class MR_ClientSession
 
 		int mNbLap;
 		BOOL mAllowWeapons;
+
+		// Stats counters.
+		unsigned int frameCount;
+		HoverRace::Util::OS::timestamp_t lastTimestamp;
+		double fps;
 
 		void ReadLevelAttrib(MR_RecordFile * pFile, MR_VideoBuffer * pVideo);
 	public:
@@ -111,5 +117,9 @@ class MR_ClientSession
 
 		// Rendering access to level
 		const MR_Level *GetCurrentLevel() const;
+
+		// Client stats.
+		void IncFrameCount();
+		double GetCurrentFrameRate();
 };
 #endif

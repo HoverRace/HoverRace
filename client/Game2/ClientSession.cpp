@@ -25,8 +25,11 @@
 #include "../../engine/VideoServices/VideoBuffer.h"
 #include "../../compilers/MazeCompiler/TrackCommonStuff.h"
 
-MR_ClientSession::MR_ClientSession()
-:mSession(TRUE)
+using HoverRace::Util::OS;
+
+MR_ClientSession::MR_ClientSession() :
+	mSession(TRUE),
+	frameCount(0), lastTimestamp(OS::Time()), fps(0.0)
 {
 	mMainCharacter1 = NULL;
 	mMainCharacter2 = NULL;
@@ -510,4 +513,37 @@ void MR_ClientSession::AddMessage(const char *pMessage)
 
 	LeaveCriticalSection(&mChatMutex);
 
+}
+
+/**
+ * Increment the frame counter for stats purposes.
+ * This should be called once after rendering each frame.
+ */
+void MR_ClientSession::IncFrameCount()
+{
+	++frameCount;
+	OS::timestamp_t curTimestamp = OS::Time();
+	OS::timestamp_t diff = curTimestamp - lastTimestamp;
+	if (diff > 1000) {
+		fps = ((double)frameCount) / (diff / 1000.0);
+		lastTimestamp = curTimestamp;
+		frameCount = 0;
+		/*
+		OutputDebugString("FPS: ");
+		OutputDebugString(boost::str(boost::format("%0.2f") % fps).c_str());
+		OutputDebugString("\n");
+		*/
+	}
+}
+
+/**
+ * Retrieve the current framerate.
+ * The framerate is calculated about once per second, as long as IncFrameCount
+ * is called.
+ * @return The framerate in frames per second (may be zero if a second
+ *         hasn't passed yet).
+ */
+double MR_ClientSession::GetCurrentFrameRate()
+{
+	return fps;
 }
