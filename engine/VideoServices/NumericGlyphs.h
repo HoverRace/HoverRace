@@ -22,6 +22,9 @@
 
 #pragma once
 
+#include "../Util/MR_Types.h"
+#include "Font.h"
+
 #ifdef _WIN32
 #	ifdef MR_ENGINE
 #		define MR_DllDeclare   __declspec( dllexport )
@@ -31,9 +34,6 @@
 #else
 #	define MR_DllDeclare
 #endif
-
-#include "../Util/MR_Types.h"
-#include "Font.h"
 
 namespace HoverRace {
 namespace VideoServices {
@@ -61,3 +61,5 @@ class MR_DllDeclare NumericGlyphs
 
 }  // namespace VideoServices
 }  // namespace HoverRace
+
+#undef MR_DllDeclare

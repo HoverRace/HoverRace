@@ -22,6 +22,11 @@
 
 #pragma once
 
+#include <string>
+
+#include "../Util/MR_Types.h"
+#include "../VideoServices/Font.h"
+
 #ifdef _WIN32
 #	ifdef MR_ENGINE
 #		define MR_DllDeclare   __declspec( dllexport )
@@ -31,11 +36,6 @@
 #else
 #	define MR_DllDeclare
 #endif
-
-#include <string>
-
-#include "../Util/MR_Types.h"
-#include "../VideoServices/Font.h"
 
 class MR_2DViewPort;
 
@@ -85,3 +85,5 @@ class MR_DllDeclare StaticText {
 
 }  // namespace VideoServices
 }  // namespace HoverRace
+
+#undef MR_DllDeclare

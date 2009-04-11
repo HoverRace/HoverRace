@@ -22,6 +22,8 @@
 
 #pragma once
 
+#include "OS.h"
+
 #ifdef _WIN32
 #	ifdef MR_ENGINE
 #		define MR_DllDeclare   __declspec( dllexport )
@@ -31,8 +33,6 @@
 #else
 #	define MR_DllDeclare
 #endif
-
-#include "OS.h"
 
 namespace HoverRace {
 namespace Util {
@@ -66,3 +66,5 @@ namespace Str {
 
 }  // namespace Util
 }  // namespace HoverRace
+
+#undef MR_DllDeclare

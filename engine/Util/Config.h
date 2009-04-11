@@ -187,3 +187,5 @@ class MR_DllDeclare Config
 
 }  // namespace Util
 }  // namespace HoverRace
+
+#undef MR_DllDeclare

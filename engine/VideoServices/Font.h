@@ -22,6 +22,8 @@
 
 #pragma once
 
+#include <string>
+
 #ifdef _WIN32
 #	ifdef MR_ENGINE
 #		define MR_DllDeclare   __declspec( dllexport )
@@ -31,8 +33,6 @@
 #else
 #	define MR_DllDeclare
 #endif
-
-#include <string>
 
 namespace HoverRace {
 namespace VideoServices {
@@ -64,3 +64,5 @@ MR_DllDeclare inline bool operator==(const Font &a, const Font &b)
 
 }  // namespace VideoServices
 }  // namespace HoverRace
+
+#undef MR_DllDeclare

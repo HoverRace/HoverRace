@@ -22,6 +22,13 @@
 
 #pragma once
 
+#include <locale>
+#include <set>
+#include <string>
+#include <vector>
+
+#include <boost/shared_ptr.hpp>
+
 #ifdef _WIN32
 #	ifdef MR_ENGINE
 #		define MR_DllDeclare   __declspec( dllexport )
@@ -31,13 +38,6 @@
 #else
 #	define MR_DllDeclare
 #endif
-
-#include <locale>
-#include <set>
-#include <string>
-#include <vector>
-
-#include <boost/shared_ptr.hpp>
 
 namespace HoverRace {
 namespace Util {
@@ -104,3 +104,5 @@ MR_DllDeclare inline bool operator<(const OS::Resolution &l, const OS::Resolutio
 
 }  // namespace Util
 }  // namespace HoverRace
+
+#undef MR_DllDeclare
