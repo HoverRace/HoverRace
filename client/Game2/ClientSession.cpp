@@ -543,7 +543,7 @@ void MR_ClientSession::IncFrameCount()
  * @return The framerate in frames per second (may be zero if a second
  *         hasn't passed yet).
  */
-double MR_ClientSession::GetCurrentFrameRate()
+double MR_ClientSession::GetCurrentFramerate() const
 {
 	return fps;
 }

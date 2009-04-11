@@ -120,6 +120,6 @@ class MR_ClientSession
 
 		// Client stats.
 		void IncFrameCount();
-		double GetCurrentFrameRate();
+		double GetCurrentFramerate() const;
 };
 #endif
