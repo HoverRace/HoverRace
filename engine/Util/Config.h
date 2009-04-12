@@ -75,6 +75,7 @@ class MR_DllDeclare Config
 		std::string shortVersion;
 		std::string fullVersion;
 		std::string userAgentId;
+		std::string defaultFontName;
 
 	private:
 		Config(int verMajor, int verMinor, int verPatch, int verBuild,
@@ -99,6 +100,8 @@ class MR_DllDeclare Config
 
 		std::string GetTrackPath() const;
 		std::string GetTrackPath(const std::string &file) const;
+
+		const std::string &GetDefaultFontName() const;
 
 	public:
 		static Config *GetInstance() { return instance; }

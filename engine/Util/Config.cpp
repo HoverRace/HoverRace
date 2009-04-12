@@ -138,6 +138,13 @@ Config::Config(int verMajor, int verMinor, int verPatch, int verBuild,
 	userAgentId += shortVersion;
 	userAgentId += " (" PLATFORM_NAME ")";
 
+#	ifdef _WIN32
+		defaultFontName = "Arial";
+#	else
+		defaultFontName = "sans";
+#	endif
+	//TODO: Check if we successfully loaded our private fonts.
+
 	// Set initial defaults.
 	ResetToDefaults();
 }
@@ -307,6 +314,15 @@ std::string Config::GetTrackPath(const std::string &file) const
 		retv += ".trk";
 	}
 	return retv;
+}
+
+/**
+ * Retrieve the default UI font name.
+ * @return The font name (never empty).
+ */
+const std::string &Config::GetDefaultFontName() const
+{
+	return defaultFontName;
 }
 
 /**
