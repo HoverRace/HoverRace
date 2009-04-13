@@ -417,6 +417,27 @@ OS::timestamp_t OS::Time()
 }
 
 /**
+ * Calculate the difference between two timestamps.
+ * This properly handles wraparound in timestamps.
+ * @param a The later timestamp.
+ * @param b The earlier timestamp.
+ * @return @p a - @p b
+ */
+OS::timestamp_t OS::TimeDiff(timestamp_t a, timestamp_t b)
+{
+	if (a >= b) {
+		return a - b;
+	}
+	else {
+#		ifdef _WIN32
+			return 0xfffffffful - (b - a) + 1;
+#		else
+			return 0xffffffffffffffffull - (b - a) + 1;
+#		endif
+	}
+}
+
+/**
  * Shutdown the OS time source.
  */
 void OS::TimeShutdown()
