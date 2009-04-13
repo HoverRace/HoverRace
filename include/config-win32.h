@@ -7,5 +7,7 @@
 #define PLATFORM_NAME "Win32"
 
 #define ENABLE_NLS 1
-
 #define LOCALEDIR "../share/locale"
+
+#define HAVE_LONG_LONG_INT 1
+

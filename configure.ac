@@ -38,6 +38,7 @@ YAML_REQUIRE(0.1.1)
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
+AC_TYPE_LONG_LONG_INT
 
 # Checks for library functions.
 AC_CHECK_FUNC(setenv,
