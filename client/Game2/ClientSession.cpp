@@ -29,7 +29,7 @@ using HoverRace::Util::OS;
 
 MR_ClientSession::MR_ClientSession() :
 	mSession(TRUE),
-	frameCount(0), lastTimestamp(OS::Time()), fps(0.0)
+	frameCount(0), lastTimestamp(0), fps(0.0)
 {
 	mMainCharacter1 = NULL;
 	mMainCharacter2 = NULL;
@@ -521,17 +521,19 @@ void MR_ClientSession::AddMessage(const char *pMessage)
  */
 void MR_ClientSession::IncFrameCount()
 {
+	// Don't start counting the first frame.
+	if (lastTimestamp == 0) lastTimestamp = OS::Time();
+
 	++frameCount;
 	OS::timestamp_t curTimestamp = OS::Time();
-	OS::timestamp_t diff = curTimestamp - lastTimestamp;
+	OS::timestamp_t diff = OS::TimeDiff(curTimestamp, lastTimestamp);
+
 	if (diff > 1000) {
 		fps = ((double)frameCount) / (diff / 1000.0);
 		lastTimestamp = curTimestamp;
 		frameCount = 0;
 		/*
-		OutputDebugString("FPS: ");
-		OutputDebugString(boost::str(boost::format("%0.2f") % fps).c_str());
-		OutputDebugString("\n");
+		OutputDebugString(boost::str(boost::format("FPS: %0.2f\n") % fps).c_str());
 		*/
 	}
 }
