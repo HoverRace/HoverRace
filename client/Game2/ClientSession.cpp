@@ -521,7 +521,7 @@ void MR_ClientSession::AddMessage(const char *pMessage)
  */
 void MR_ClientSession::IncFrameCount()
 {
-	// Don't start counting the first frame.
+	// Don't start counting until the first frame.
 	if (lastTimestamp == 0) lastTimestamp = OS::Time();
 
 	++frameCount;
