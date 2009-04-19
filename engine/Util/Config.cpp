@@ -60,6 +60,7 @@ namespace fs = boost::filesystem;
 	#define DIRSEP "/"
 #endif
 #define CONFIG_FILENAME			"config.yml"
+#define PREREL_CONFIG_FILENAME	"config-testing.yml"
 
 #define DEFAULT_NICKNAME		"Player"
 #define DEFAULT_MAIN_SERVER		"66.197.183.245/~sirbrock/imr/rl.php"
@@ -258,7 +259,12 @@ std::string Config::GetDefaultPath()
 std::string Config::GetConfigFilename() const
 {
 	std::string retv(path);
-	retv += DIRSEP CONFIG_FILENAME;
+	if (prerelease) {
+		retv += DIRSEP PREREL_CONFIG_FILENAME;
+	}
+	else {
+		retv += DIRSEP CONFIG_FILENAME;
+	}
 	return retv;
 }
 
