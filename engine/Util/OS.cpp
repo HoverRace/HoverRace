@@ -258,6 +258,7 @@ void OS::SetLocale()
 
 	// Update the current locale instance.
 	locale = std::locale("");
+	std::locale::global(locale);
 }
 
 #ifdef _WIN32
