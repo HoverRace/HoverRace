@@ -30,6 +30,7 @@
 #	include <time.h>
 #endif
 
+#include <iostream>
 #include <string>
 
 #ifdef _WIN32
@@ -257,7 +258,14 @@ void OS::SetLocale()
 #	endif
 
 	// Update the current locale instance.
-	locale = std::locale("");
+	try {
+		locale = std::locale("");
+	}
+	catch (std::runtime_error &ex) {
+		std::cerr << "Unsupported locale (falling back to default)." <<
+			std::endl;
+		locale = std::locale("C");
+	}
 	std::locale::global(locale);
 }
 
