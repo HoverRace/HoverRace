@@ -7,23 +7,23 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
 "Report-Msgid-Bugs-To: bugs@hoverrace.com\n"
-"POT-Creation-Date: 2009-03-31 11:24-0400\n"
-"PO-Revision-Date: 2009-03-25 11:45-0700\n"
-"Last-Translator: Luc <lucb1e@hotmail.com>\n"
+"POT-Creation-Date: 2009-03-13 15:30-0400\n"
+"PO-Revision-Date: 2009-03-31 11:28-0700\n"
+"Last-Translator: Ryan Curtin <ryan@tortoise.igglybob.com>\n"
 "Language-Team: Dutch\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 1.2.1\n"
 
-#: client/Game2/Banner.cpp:357 client/Game2/Banner.cpp:402
+#: client/Game2/Banner.cpp:356 client/Game2/Banner.cpp:401
 msgid ""
 "Unable to activate your web browser. Please start your web browser and go to:"
 msgstr "Activeren van webbrowser mislukt. Start je webbrowser en ga naar:"
 
-#: client/Game2/Banner.cpp:360 client/Game2/Banner.cpp:405
+#: client/Game2/Banner.cpp:359 client/Game2/Banner.cpp:404
 msgid "HoverRace Error"
 msgstr "HoverRace Fout"
 
@@ -121,7 +121,7 @@ msgctxt "Menu|View"
 msgid "&Refresh colors"
 msgstr "&Kleuren verversen"
 
-#: client/Game2/GameApp.cpp:1017 client/Game2/GameApp.cpp:1868
+#: client/Game2/GameApp.cpp:1017 client/Game2/GameApp.cpp:1863
 msgctxt "Menu|Setting"
 msgid "&Fullscreen"
 msgstr "Volledig &scherm"
@@ -132,9 +132,8 @@ msgid "&Window"
 msgstr "&Venster"
 
 #: client/Game2/GameApp.cpp:1022
-#, fuzzy
 msgctxt "Menu|Setting"
-msgid "&Preferences"
+msgid "&Properties"
 msgstr "&Eigenschappen"
 
 #: client/Game2/GameApp.cpp:1027
@@ -182,14 +181,13 @@ msgid ""
 msgstr ""
 
 #: client/Game2/GameApp.cpp:1098 client/Game2/GameApp.cpp:1108
-#: client/Game2/GameApp.cpp:2938 client/Game2/InternetRoom.cpp:1336
-#: client/Game2/InternetRoom.cpp:2344 client/Game2/TrackDownloadDialog.cpp:228
+#: client/Game2/GameApp.cpp:2994 client/Game2/InternetRoom.cpp:1336
+#: client/Game2/InternetRoom.cpp:2344 client/Game2/TrackDownloadDialog.cpp:220
+#: client/Game2/TrackDownloadDialog.cpp:231
 #: client/Game2/TrackDownloadDialog.cpp:239
-#: client/Game2/TrackDownloadDialog.cpp:247
-#: client/Game2/TrackDownloadDialog.cpp:333
-#, fuzzy
+#: client/Game2/TrackDownloadDialog.cpp:325
 msgid "HoverRace"
-msgstr "HoverRace Fout"
+msgstr "HoverRace"
 
 #: client/Game2/GameApp.cpp:1107
 msgid ""
@@ -197,152 +195,118 @@ msgid ""
 "screen."
 msgstr ""
 
-#: client/Game2/GameApp.cpp:1797
-msgid "Video and Audio"
-msgstr ""
-
-#: client/Game2/GameApp.cpp:1806
-msgid "Controls"
-msgstr ""
-
-#: client/Game2/GameApp.cpp:1815
-msgid "Miscellaneous"
-msgstr ""
-
-#: client/Game2/GameApp.cpp:1823
-msgid "Preferences"
-msgstr ""
-
-#: client/Game2/GameApp.cpp:2478
+#: client/Game2/GameApp.cpp:2473
 msgid "Default Monitor"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2522
-msgid "Video"
-msgstr ""
-
-#: client/Game2/GameApp.cpp:2523
+#: client/Game2/GameApp.cpp:2517
 msgid "Gamma"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2524
+#: client/Game2/GameApp.cpp:2518
 msgid "Contrast"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2525
+#: client/Game2/GameApp.cpp:2519
 msgid "Brightness"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2527
-msgid "Audio"
-msgstr ""
-
-#: client/Game2/GameApp.cpp:2528
+#: client/Game2/GameApp.cpp:2520
 msgid "Volume"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2530
-#, fuzzy
-msgid "Fullscreen Settings"
-msgstr "Volledig &scherm"
-
-#: client/Game2/GameApp.cpp:2531
-#, fuzzy
-msgid "Fullscreen Monitor"
-msgstr "Volledig &scherm"
-
-#: client/Game2/GameApp.cpp:2532
+#: client/Game2/GameApp.cpp:2521
 #, fuzzy
 msgid "Fullscreen Resolution"
 msgstr "Volledig &scherm"
 
-#: client/Game2/GameApp.cpp:2628
+#: client/Game2/GameApp.cpp:2627
 msgid "Invalid resolution; reverting to default"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2659
+#: client/Game2/GameApp.cpp:2715
 #, fuzzy
 msgid "Player 1"
 msgstr "&2 spelers"
 
-#: client/Game2/GameApp.cpp:2660
+#: client/Game2/GameApp.cpp:2716
 #, fuzzy
 msgid "Player 2"
 msgstr "&2 spelers"
 
-#: client/Game2/GameApp.cpp:2661
+#: client/Game2/GameApp.cpp:2717
 #, fuzzy
 msgid "Player 3"
 msgstr "&2 spelers"
 
-#: client/Game2/GameApp.cpp:2662
+#: client/Game2/GameApp.cpp:2718
 #, fuzzy
 msgid "Player 4"
 msgstr "&2 spelers"
 
-#: client/Game2/GameApp.cpp:2663
+#: client/Game2/GameApp.cpp:2719
 msgid "Motor On:"
 msgstr "Gas geven:"
 
-#: client/Game2/GameApp.cpp:2664
+#: client/Game2/GameApp.cpp:2720
 msgid "Turn Right:"
 msgstr "Naar rechts:"
 
-#: client/Game2/GameApp.cpp:2665
+#: client/Game2/GameApp.cpp:2721
 msgid "Turn Left:"
 msgstr "Naar links:"
 
-#: client/Game2/GameApp.cpp:2666
+#: client/Game2/GameApp.cpp:2722
 msgid "Brake:"
 msgstr "Remmen:"
 
-#: client/Game2/GameApp.cpp:2667
+#: client/Game2/GameApp.cpp:2723
 msgid "Jump:"
 msgstr "Springen:"
 
-#: client/Game2/GameApp.cpp:2668
+#: client/Game2/GameApp.cpp:2724
 msgid "Fire Weapon:"
 msgstr "Schiet:"
 
-#: client/Game2/GameApp.cpp:2669
+#: client/Game2/GameApp.cpp:2725
 msgid "Select Weapon:"
 msgstr "Selecteer wapen:"
 
-#: client/Game2/GameApp.cpp:2670
+#: client/Game2/GameApp.cpp:2726
 msgid "Look Back:"
 msgstr "Kijk achterom:"
 
-#: client/Game2/GameApp.cpp:2826
+#: client/Game2/GameApp.cpp:2882
 msgid "Disable Intro Movie"
 msgstr "Verberg intro filmpje"
 
-#: client/Game2/GameApp.cpp:2828
+#: client/Game2/GameApp.cpp:2884
 msgid ""
 "Disable the prompt to connect to the Internet each time HoverRace starts"
 msgstr "Verberg de vraag om op internet te spelen als HoverRace start"
 
-#: client/Game2/GameApp.cpp:2830
+#: client/Game2/GameApp.cpp:2886
 msgid "Use desktop &color depth when switching to fullscreen"
 msgstr "Gebruik standaard kleurendiepte bij het wisselen naar volledig scherm"
 
-#: client/Game2/GameApp.cpp:2832
+#: client/Game2/GameApp.cpp:2888
 #, fuzzy
 msgid "Address of Server Roomlist:"
 msgstr "Adres van kamerlijst-server"
 
-#: client/Game2/GameApp.cpp:2833
+#: client/Game2/GameApp.cpp:2889
 msgid "TCP Server Port:"
 msgstr "TCP Server poort:"
 
-#: client/Game2/GameApp.cpp:2834
+#: client/Game2/GameApp.cpp:2890
 msgid "TCP Receive Port:"
 msgstr "TCP ontvangstpoort:"
 
-#: client/Game2/GameApp.cpp:2835
+#: client/Game2/GameApp.cpp:2891
 msgid "UDP Receive Port:"
 msgstr "UDP ontvangstpoort:"
 
-#: client/Game2/GameApp.cpp:2906
+#: client/Game2/GameApp.cpp:2962
 msgid ""
 "Incompatible video mode. Select a compatible video mode by pressing F8 or F9 "
 "once a game is started"
@@ -350,19 +314,19 @@ msgstr ""
 "Ongeschikte videomodus. Selecteer een modus door op F8 of F9 te drukken "
 "zodra een spel start"
 
-#: client/Game2/GameApp.cpp:2940
+#: client/Game2/GameApp.cpp:2996
 msgid "Click OK to play on the Internet against other people"
 msgstr "Klik op OK om tegen andere mensen te spelen op internet"
 
-#: client/Game2/GameApp.cpp:2941 client/Game2/TrackSelect.cpp:188
+#: client/Game2/GameApp.cpp:2997 client/Game2/TrackSelect.cpp:188
 msgid "OK"
 msgstr "OK"
 
-#: client/Game2/GameApp.cpp:2942 client/Game2/TrackSelect.cpp:189
+#: client/Game2/GameApp.cpp:2998 client/Game2/TrackSelect.cpp:189
 msgid "Cancel"
 msgstr "Annuleren"
 
-#: client/Game2/GameApp.cpp:2944
+#: client/Game2/GameApp.cpp:3000
 msgid ""
 "Make sure that you are connected to the Internet before clicking on OK.  If "
 "you have any problems, visit our forums at http://www.hoverrace.com/bb for "
@@ -371,27 +335,27 @@ msgstr ""
 "Zorg dat je verbonden bent met het internet voor je op OK klikt. Als je "
 "problemen hebt, bezoek onze fora op http://www.hoverrace.com/bb voor hulp."
 
-#: client/Game2/GameApp.cpp:2980
+#: client/Game2/GameApp.cpp:3036
 msgid "About HoverRace"
 msgstr "Over HoverRace"
 
-#: client/Game2/GameApp.cpp:2981
+#: client/Game2/GameApp.cpp:3037
 msgid "HoverRace version "
 msgstr "HoverRace versie"
 
-#: client/Game2/GameApp.cpp:2986
+#: client/Game2/GameApp.cpp:3042
 msgid "HoverRace is brought to you by:"
 msgstr "HoverRace is mogelijk gemaakt door:"
 
-#: client/Game2/GameApp.cpp:2988
+#: client/Game2/GameApp.cpp:3044
 msgid "original author"
 msgstr "oorspronkelijke maker"
 
-#: client/Game2/GameApp.cpp:2991
+#: client/Game2/GameApp.cpp:3047
 msgid "with contributions from (in alphabetical order)"
 msgstr "met bijdragen van (in alfabetische volgorde)"
 
-#: client/Game2/GameApp.cpp:2997
+#: client/Game2/GameApp.cpp:3053
 msgid ""
 "and with the help of the many testers willing to put up with bugs and other "
 "strange happenings."
@@ -399,15 +363,15 @@ msgstr ""
 "en dankzij de hulp van de vele testers die bereid waren bugs en andere "
 "vreemde zaken te trotseren."
 
-#: client/Game2/GameApp.cpp:2999
+#: client/Game2/GameApp.cpp:3055
 msgid "visit us at"
 msgstr "bezoek ons op"
 
-#: client/Game2/GameApp.cpp:3003
+#: client/Game2/GameApp.cpp:3059
 msgid "Thanks also to the following projects"
 msgstr "Ook dank aan de volgende projecten"
 
-#: client/Game2/GameApp.cpp:3017
+#: client/Game2/GameApp.cpp:3073
 msgid "Close"
 msgstr "Sluiten"
 
@@ -696,8 +660,7 @@ msgstr "Kan geen socket creëren"
 
 #: client/Game2/NetInterface.cpp:485 client/Game2/NetInterface.cpp:721
 msgid "Unable to use the port, try to close some WINSOCK applications"
-msgstr ""
-"Kan de poort niet gebruiken, probeer wat WINSOCK applicaties te sluiten"
+msgstr "Kan de poort niet gebruiken, probeer wat WINSOCK applicaties te sluiten"
 
 #: client/Game2/NetInterface.cpp:497 client/Game2/NetInterface.cpp:575
 #: client/Game2/NetInterface.cpp:630
@@ -907,43 +870,46 @@ msgstr "Onbekend voertuig"
 msgid "Select your craft with the arrow keys"
 msgstr "Selecteer je voertuig met de pijltjestoetsen"
 
-#: client/Game2/TrackDownloadDialog.cpp:97
-#, fuzzy, c-format, boost-format
-msgid "Would you like to download the track \"%s\" now?"
-msgstr "Wil je de baan downloaden"
-
-#: client/Game2/TrackDownloadDialog.cpp:99
-#: client/Game2/TrackDownloadDialog.cpp:268
-msgid "Track Download"
-msgstr "Baan downloaden"
-
-#: client/Game2/TrackDownloadDialog.cpp:117
+#: client/Game2/TrackDownloadDialog.cpp:46
 msgid "Initializing"
 msgstr "Initialiseren"
 
-#: client/Game2/TrackDownloadDialog.cpp:118
-#: client/Game2/TrackDownloadDialog.cpp:176
+#: client/Game2/TrackDownloadDialog.cpp:47
+#: client/Game2/TrackDownloadDialog.cpp:168
 msgid "Downloading"
 msgstr "Downloaden"
 
-#: client/Game2/TrackDownloadDialog.cpp:119
+#: client/Game2/TrackDownloadDialog.cpp:48
 msgid "Extracting"
 msgstr "Uitpakken"
 
-#: client/Game2/TrackDownloadDialog.cpp:120
+#: client/Game2/TrackDownloadDialog.cpp:49
 msgid "Finished"
 msgstr "Klaar"
 
-#: client/Game2/TrackDownloadDialog.cpp:172
+#: client/Game2/TrackDownloadDialog.cpp:101
+msgid "Would you like to download the track"
+msgstr "Wil je de baan downloaden"
+
+#: client/Game2/TrackDownloadDialog.cpp:101
+msgid "now?"
+msgstr "nu?"
+
+#: client/Game2/TrackDownloadDialog.cpp:102
+#: client/Game2/TrackDownloadDialog.cpp:260
+msgid "Track Download"
+msgstr "Baan downloaden"
+
+#: client/Game2/TrackDownloadDialog.cpp:164
 msgid "Processing..."
 msgstr "Verwerken..."
 
-#: client/Game2/TrackDownloadDialog.cpp:238
+#: client/Game2/TrackDownloadDialog.cpp:230
 #, c-format, boost-format
 msgid "Sorry, track \"%s\" is not available from %s"
 msgstr "Sorry, de baan \"%s\" is niet beschikbaar vanaf %s"
 
-#: client/Game2/TrackDownloadDialog.cpp:244
+#: client/Game2/TrackDownloadDialog.cpp:236
 #, c-format, boost-format
 msgid ""
 "Track download failed: The file \"%s\" was not found in the archive "
@@ -952,11 +918,11 @@ msgstr ""
 "Baan downloaden mislukt: Het bestand \"%s\" is niet gevonden in het archief "
 "gedownload van %s"
 
-#: client/Game2/TrackDownloadDialog.cpp:269
+#: client/Game2/TrackDownloadDialog.cpp:261
 msgid "Downloading Track:"
 msgstr "Baan downloaden:"
 
-#: client/Game2/TrackDownloadDialog.cpp:329
+#: client/Game2/TrackDownloadDialog.cpp:321
 #, c-format, boost-format
 msgid ""
 "There was a problem downloading the track from %s\n"
@@ -1007,6 +973,3 @@ msgstr ""
 "HoverRace voor Linux is in ontwikkeling!\n"
 "Bezoek alsjeblieft %s om te leren hoe\n"
 "je aan dit project kunt bijdragen."
-
-#~ msgid "now?"
-#~ msgstr "nu?"
