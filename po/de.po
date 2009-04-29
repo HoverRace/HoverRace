@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
 "Report-Msgid-Bugs-To: bugs@hoverrace.com\n"
 "POT-Creation-Date: 2009-03-31 11:24-0400\n"
-"PO-Revision-Date: 2009-04-29 02:07-0400\n"
+"PO-Revision-Date: 2009-04-29 02:11-0400\n"
 "Last-Translator: Ryan Curtin <ryan@tortoise.igglybob.com>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -120,7 +120,7 @@ msgstr "Mehr &Nachrichten"
 #: client/Game2/GameApp.cpp:1012
 msgctxt "Menu|View"
 msgid "&Refresh colors"
-msgstr "Farben &Nachladen "
+msgstr "Farben &Nachladen"
 
 #: client/Game2/GameApp.cpp:1017
 #: client/Game2/GameApp.cpp:1868
@@ -1013,6 +1013,8 @@ msgstr ""
 #~ msgid ""
 #~ msgstr "Auflösung erfolgreich umgestellt auf"
 
-#~ "
+#~ msgid ""
+#~ msgstr ""
 
-#~ "
+#~ msgid ""
+#~ msgstr ""
