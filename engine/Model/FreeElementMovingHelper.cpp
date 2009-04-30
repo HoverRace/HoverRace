@@ -237,8 +237,6 @@ void MR_FreeElementMovingInterface::AbsoluteMove( const MR_3DCoordinate& pNewPos
 												  MR_Angle               pNewAngle     )
 {
    // Find the section containing the new position
-   //
-
    int pNewSection = mLevel->FindRoomForPoint( pNewPosition, mSection );
 
    if( pNewSection != -1 )
@@ -249,7 +247,6 @@ void MR_FreeElementMovingInterface::AbsoluteMove( const MR_3DCoordinate& pNewPos
 						   pNewPosition,
 						   pNewAngle       );
    }
-
 }
 
 void MR_FreeElementMovingInterface::RelativeMove( const MR_3DCoordinate& pOffset, MR_Angle pRotation )
