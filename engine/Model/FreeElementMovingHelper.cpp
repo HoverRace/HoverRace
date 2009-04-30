@@ -163,7 +163,7 @@ void MR_ObstacleCollisionReport::GetContactWithObstacles(
 	}
 }
 
-/***
+/**
  * Return the current room that this MR_ObstaceCollisionReport refers to.
  */
 int MR_ObstacleCollisionReport::Room() const
