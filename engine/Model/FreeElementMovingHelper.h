@@ -24,8 +24,6 @@
 #ifndef FREE_ELEMENT_MOVING_HELPER_H
 #define FREE_ELEMENT_MOVING_HELPER_H
 
-// Includes
-
 #include "Level.h"
 
 #ifdef MR_ENGINE
