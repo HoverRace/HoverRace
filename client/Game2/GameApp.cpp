@@ -1072,6 +1072,16 @@ BOOL MR_GameApp::InitGame()
 
 	InitCommonControls();						  // Allow some special and complex controls
 
+	// Load the latest Rich Edit control.
+	//TODO: Create Rich Edit controls manually so we always try to
+	//      use the latest version.
+	if (LoadLibrary("riched20.dll") == NULL) {
+		MessageBoxW(mMainWindow,
+			Str::UW(_("Unable to initialize: Unable to find suitable rich text DLL.")),
+			PACKAGE_NAME_L, MB_ICONERROR);
+		return FALSE;
+	}
+
 	// Display a Flash window
 	// TODO
 
