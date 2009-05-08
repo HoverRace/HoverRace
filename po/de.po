@@ -1005,12 +1005,3 @@ msgstr ""
 
 #~ msgid "Hit OK to test new resolution"
 #~ msgstr "OK drücken um die neue auflösung zu testen"
-#~ msgid ""
-#~ msgstr "ungültige auflösung; zurück stellen auf"
-#~ msgid ""
-#~ msgstr "Auflösung erfolgreich umgestellt auf"
-#~ msgid ""
-#~ msgstr ""
-#~ msgid ""
-#~ msgstr ""
-
