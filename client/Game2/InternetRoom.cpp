@@ -2540,18 +2540,22 @@ CString GetLine(const char *pSrc)
 	return CString(pSrc, GetLineLen(pSrc));
 }
 
+/**
+ * Count the number of characters in the line up to the first newline.
+ * @param pSrc The string (may by @c NULL).
+ * @return The number of characters (never negative).
+ */
 int GetLineLen(const char *pSrc)
 {
 	int lReturnValue = 0;
 
 	if(pSrc != NULL) {
-		const char *lEoL = strchr(pSrc, '\n');
-
-		if(lEoL != NULL) {
-			lReturnValue = lEoL - pSrc;
-		}
-		else {
-			lReturnValue = strlen(pSrc);
+		const char *s = pSrc;
+		for (;;) {
+			char c = *s;
+			if (c == '\0' || c == '\r' || c == '\n') break;
+			++lReturnValue;
+			++s;
 		}
 	}
 	return lReturnValue;
