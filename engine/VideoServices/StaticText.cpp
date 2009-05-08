@@ -48,9 +48,9 @@ static RGBQUAD RGB_WHITE = { 0xff, 0xff, 0xff, 0 };
 StaticText::StaticText(const std::string &s,
                        const std::string &font,
                        int size, bool bold, bool italic,
-                       MR_UInt8 color) :
+                       MR_UInt8 color, effect_t effect) :
 	s(s), ws(Str::Utf8ToWide(s.c_str())), wsLen(wcslen(ws)),
-	font(font, size, bold, italic), color(color),
+	font(font, size, bold, italic), color(color), effect(effect),
 	bitmap(NULL), width(0), height(0)
 {
 	Update();
@@ -64,10 +64,10 @@ StaticText::StaticText(const std::string &s,
  */
 StaticText::StaticText(const std::string &s,
                        const HoverRace::VideoServices::Font &font,
-                       MR_UInt8 color) :
+                       MR_UInt8 color, effect_t effect) :
 	s(s), ws(Str::Utf8ToWide(s.c_str())), wsLen(wcslen(ws)),
-	font(font), color(color),
-	bitmap(NULL), width(0), height(0)
+	font(font), color(color), effect(effect),
+	bitmap(NULL), width(0), height(0), realWidth(0), realHeight(0)
 {
 	Update();
 }
@@ -87,6 +87,16 @@ int StaticText::GetWidth() const
 int StaticText::GetHeight() const
 {
 	return height;
+}
+
+int StaticText::GetRealWidth() const
+{
+	return realWidth;
+}
+
+int StaticText::GetRealHeight() const
+{
+	return realHeight;
 }
 
 void StaticText::SetText(const std::string &s)
@@ -163,21 +173,31 @@ void StaticText::Update()
 	SetBkMode(hdc, OPAQUE);
 	DrawTextW(hdc, ws, wsLen, &sz, DT_NOCLIP | DT_NOPREFIX);
 
+	switch (effect) {
+		case StaticText::EFFECT_SHADOW:
+			realWidth = width + 1;
+			realHeight = height + 1;
+			break;
+		default:
+			realWidth = width;
+			realHeight = height;
+	}
+
 	// Now copy from the bitmap into our image buffer.
 	// DIB rows are 32-bit word-aligned.
-	bitmap = (MR_UInt8*)malloc(width * height);
-	memset(bitmap, 0, width * height);
+	bitmap = (MR_UInt8*)malloc(realWidth * realHeight);
+	memset(bitmap, 0, realWidth * realHeight);
 	int padding = 4 - (width & 3);
 	if (padding == 4) padding = 0;
+	int destSkip = realWidth - width;
 	MR_UInt8 *src = bits;
 	MR_UInt8 *dest = bitmap;
 	for (int y = 0; y < height; ++y) {
 		for (int x = 0; x < width; ++x) {
 			*dest++ = (*src++ > 0) ? 0xff : 0x00;
-			//OutputDebugString(bitmap[y * width + x] ? "8" : "1");
 		}
+		dest += destSkip;
 		src += padding;
-		//OutputDebugString("\n");
 	}
 
 	SelectObject(hdc, oldBmp);
@@ -189,6 +209,33 @@ void StaticText::Update()
 
 	DeleteDC(hdc);
 #endif
+
+	// Apply effect (we might refactor this out).
+	switch (effect) {
+		case EFFECT_SHADOW: ApplyShadow(); break;
+	}
+}
+
+/// Apply the drop shadow effect.
+void StaticText::ApplyShadow()
+{
+	int skip = realWidth - width;
+	MR_UInt8 *src = bitmap;
+	MR_UInt8 *dest = bitmap + realWidth + 1;
+
+	for (int y = 1; y < height; ++y) {
+		for (int x = 0; x < width; ++x) {
+			if (*dest == 0 && *src == 0xff) {
+				*dest++ = 0x01;
+			}
+			else {
+				++dest;
+			}
+			++src;
+		}
+		dest += skip;
+		src += skip;
+	}
 }
 
 /**
@@ -210,20 +257,24 @@ void StaticText::Blt(int x, int y, MR_2DViewPort *vp, bool centerX) const
 	int dx1, dy1;
 
 	// Check if the text is completely off the screen.
-	if (x >= dw || y >= dh || x + width <= 0 || y + height <= 0) return;
+	if (x >= dw || y >= dh || x + realWidth <= 0 || y + realHeight <= 0) return;
 
 	// Clip the text to the viewport.
 	if (x < 0) { sx1 = -x; dx1 = 0; } else { sx1 = 0; dx1 = x; }
 	if (y < 0) { sy1 = -y; dy1 = 0; } else { sy1 = 0; dy1 = y; }
-	sx2 = (width - sx1 + dx1 >= dw) ? (sx1 + dw - dx1) : width;
-	sy2 = (height - sy1 + dy1 >= dh) ? (sy1 + dh - dy1) : height;
+	sx2 = (realWidth - sx1 + dx1 >= dw) ? (sx1 + dw - dx1) : realWidth;
+	sy2 = (realHeight - sy1 + dy1 >= dh) ? (sy1 + dh - dy1) : realHeight;
 
 	int rowLen = vp->GetLineLen();
 	MR_UInt8 *destRow = vp->GetBuffer() + (rowLen * dy1 + dx1);
 	MR_UInt8 *dest = destRow;
 	for (int y = sy1; y < sy2; ++y) {
 		for (int x = sx1; x < sx2; ++x) {
-			if (bitmap[y * width + x] > 0) *dest = color;
+			switch (bitmap[y * realWidth + x]) {
+				case 0x00: break;
+				case 0x01: *dest = 0x1a; break;
+				default:   *dest = color; break;
+			}
 			++dest;
 		}
 		dest = (destRow += rowLen);

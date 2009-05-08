@@ -48,17 +48,24 @@ namespace VideoServices {
  */
 class MR_DllDeclare StaticText {
 	public:
+		enum effect_t {
+			EFFECT_NONE,
+			EFFECT_SHADOW,
+		};
+
 		StaticText(const std::string &s="",
 			const std::string &font="Arial",
 			int size=20, bool bold=false, bool italic=false,
-			MR_UInt8 color=43);
+			MR_UInt8 color=43, effect_t effect=EFFECT_NONE);
 		StaticText(const std::string &s,
 			const HoverRace::VideoServices::Font &font,
-			MR_UInt8 color=43);
+			MR_UInt8 color=43, effect_t effect=EFFECT_NONE);
 		virtual ~StaticText();
 
 		int GetWidth() const;
 		int GetHeight() const;
+		int GetRealWidth() const;
+		int GetRealHeight() const;
 
 		void SetText(const std::string &s);
 		void SetFont(const HoverRace::VideoServices::Font &font);
@@ -66,6 +73,8 @@ class MR_DllDeclare StaticText {
 
 	private:
 		void Update();
+
+		void ApplyShadow();
 
 	public:
 		void Blt(int x, int y, MR_2DViewPort *pDest, bool centerX=false) const;
@@ -77,10 +86,13 @@ class MR_DllDeclare StaticText {
 
 		HoverRace::VideoServices::Font font;
 		MR_UInt8 color;
+		effect_t effect;
 
 		MR_UInt8 *bitmap;
 		int width;
 		int height;
+		int realWidth;
+		int realHeight;
 };
 
 }  // namespace VideoServices
