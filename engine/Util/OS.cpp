@@ -182,6 +182,26 @@ static BOOL CALLBACK SetLocaleProc(LPTSTR locale)
 		*/
 		ASSERT(FALSE);
 	}
+
+	// Now set the global locale using the Win32-formatted name.
+	char fullLang[64];
+	if (GetLocaleInfo(lcid, LOCALE_SENGLANGUAGE, fullLang, 64) == 0) return TRUE;
+	std::string fullLocale = fullLang;
+	char fullRegion[64];
+	if (GetLocaleInfo(lcid, LOCALE_SENGCOUNTRY, fullRegion, 64) != 0) {
+		fullLocale.append("_").append(fullRegion);
+	}
+	OutputDebugString("Full locale name: ");
+	OutputDebugString(fullLocale.c_str());
+	OutputDebugString("\n");
+	try {
+		OS::locale = std::locale(fullLocale.c_str());
+	}
+	catch (std::runtime_error&) {
+		ASSERT(FALSE);
+		return TRUE;
+	}
+
 	locMatched = true;
 	return FALSE;
 }
@@ -251,21 +271,23 @@ void OS::SetLocale()
 				//TODO: Log that we didn't find any matching language.
 				ASSERT(FALSE);
 				SetThreadLocale(LOCALE_SYSTEM_DEFAULT);
+				locale = std::locale("C");
 			}
 		}
 
 		free(lang);
+#	else
+		try {
+			locale = std::locale("");
+		}
+		catch (std::runtime_error&) {
+			std::cerr << "Unsupported locale (falling back to default)." <<
+				std::endl;
+			locale = std::locale("C");
+		}
 #	endif
 
 	// Update the current locale instance.
-	try {
-		locale = std::locale("");
-	}
-	catch (std::runtime_error &ex) {
-		std::cerr << "Unsupported locale (falling back to default)." <<
-			std::endl;
-		locale = std::locale("C");
-	}
 	std::locale::global(locale);
 }
 
