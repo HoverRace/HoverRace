@@ -25,12 +25,14 @@
 #include "Observer.h"
 #include "../../engine/Model/MazeElement.h"
 #include "../../engine/Util/Profiler.h"
+#include "../../engine/Util/Config.h"
 #include "resource.h"
 #include "../../engine/Util/StrRes.h"
 #include "../../engine/VideoServices/StaticText.h"
 
 #include <math.h>
 
+using HoverRace::Util::Config;
 using HoverRace::VideoServices::StaticText;
 
 #define NB_PLAYER_PAGE 10
@@ -53,20 +55,22 @@ CString gHeaderStr = _("%d.%02d.%02d  Lap:%d/%d");
 CString gLastLapStr = _("Last lap %d.%02d.%03d  Best %d.%02d.%03d");
 CString gCurLapStr = _("Current lap %d.%02d.%03d  Best %d.%02d.%03d");
 
-static const char *GetCraftName(int id)
+static const std::string &GetCraftName(int id)
 {
-	static const char *names[4] = {
-		_("Basic craft"),
-		_("CX craft"),
-		_("Bi-Turbo craft"),
-		_("Eon craft"),
+	static const std::string names[4] = {
+		std::string(_("Basic craft")),
+		std::string(_("CX craft")),
+		std::string(_("Bi-Turbo craft")),
+		std::string(_("Eon craft")),
 		};
-	static const char *unknown = _("Unknown craft");
+	static const std::string unknown = std::string(_("Unknown craft"));
 	return (id >= 0 && id < 4) ? names[id] : unknown;
 }
 
 MR_Observer::MR_Observer()
 {
+	const Config *cfg = Config::GetInstance();
+
 	mLastCameraPosValid = FALSE;
 	mScroll = 0;
 	mApperture = MR_PI / 2;
@@ -99,9 +103,11 @@ MR_Observer::MR_Observer()
 	std::string selectStr("<==   ");
 	selectStr += _("Select your craft with the arrow keys");
 	selectStr += "   ==>";
-	selectCraftTxt = new StaticText(selectStr, "Arial", 16, true, true, 0x2c);
+	selectCraftTxt = new StaticText(selectStr, cfg->GetDefaultFontName(), 16,
+		true, true, 0x2c, StaticText::EFFECT_SHADOW);
 
-	craftTxt = new StaticText("", "Arial", 20, true, false, 0x47);
+	craftTxt = new StaticText("", cfg->GetDefaultFontName(), 20, true, false,
+		0x47, StaticText::EFFECT_SHADOW);
 }
 
 MR_Observer::~MR_Observer()
@@ -766,7 +772,7 @@ void MR_Observer::Render3DView(const MR_ClientSession * pSession, const MR_MainC
 
 			selectCraftTxt->Blt(lXRes / 2, lYRes / 16 + lLineHeight, &m3DView, true);
 
-			craftTxt->SetText(GetCraftName(pSession->GetMainCharacter()->GetHoverModel()));
+			craftTxt->SetText(GetCraftName(pViewingCharacter->GetHoverModel()));
 			craftTxt->Blt(lXRes / 2, lYRes / 16 + lLineHeight + selectCraftTxt->GetHeight(), &m3DView, true);
 		}
 		else if(pViewingCharacter->GetTotalLap() <= pViewingCharacter->GetLap()) {
