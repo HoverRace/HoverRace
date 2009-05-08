@@ -526,8 +526,6 @@ BEGIN
     CONTROL         "List5",IDC_USER_LIST,"SysListView32",LVS_REPORT | 
                     LVS_ALIGNLEFT | LVS_NOCOLUMNHEADER | WS_BORDER | 
                     WS_TABSTOP,3,108,113,124
-    EDITTEXT        IDC_CHAT_OUT,120,108,265,110,ES_MULTILINE | ES_READONLY | 
-                    WS_VSCROLL | NOT WS_TABSTOP
     LTEXT           "Chat section",IDC_CHAT_SECTION_C,120,100,45,8
     LTEXT           "Game list",IDC_GAME_LIST_C,3,1,30,8
     LTEXT           "Users list",IDC_USERS_LIST_C,3,100,67,8
@@ -550,6 +548,8 @@ BEGIN
                     NOT WS_TABSTOP
     PUSHBUTTON      "",IDC_PUB,3,234,382,42,BS_BITMAP | BS_FLAT | NOT 
                     WS_TABSTOP,WS_EX_TRANSPARENT
+    CONTROL         "",IDC_CHAT_OUT,"RichEdit20W",WS_BORDER | WS_VSCROLL | 
+                    WS_TABSTOP | 0x8c4,120,108,265,108
 END
 
 IDD_LADDER_SUBMIT DIALOG  0, 0, 216, 133

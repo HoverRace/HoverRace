@@ -179,6 +179,7 @@
 #define IDC_CONTRAST_LBL                1244
 #define IDC_GAMMA_LBL                   1245
 #define IDC_DLTRACK                     1333
+#define IDC_CHAT_TXT                    1335
 #define ID_VIEW_3DACTION                32775
 #define ID_SETTING_WINDOW               32784
 #define ID_GAME_PAUSE                   32788
@@ -396,7 +397,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        166
 #define _APS_NEXT_COMMAND_VALUE         40049
-#define _APS_NEXT_CONTROL_VALUE         1334
+#define _APS_NEXT_CONTROL_VALUE         1336
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -945,8 +945,8 @@ void MR_InternetRoom::RefreshChatOut(HWND pWindow)
 
 	SetWindowTextW(pDest, Str::UW(mChatBuffer));
 
-	SendMessage(pDest, EM_LINESCROLL, 0, 1000);
-	// SendMessage( pDest, WM_VSCROLL, SB_BOTTOM, 0 );
+	//SendMessage(pDest, EM_LINESCROLL, 0, 1000);
+	SendMessage(pDest, WM_VSCROLL, SB_BOTTOM, 0);
 }
 
 BOOL MR_InternetRoom::VerifyError(HWND pParentWindow, const char *pAnswer)
@@ -1350,6 +1350,10 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 				SetDlgItemTextW(pWindow, IDC_ADD, Str::UW(_("New Game...")));
 				SetDlgItemTextW(pWindow, IDCANCEL, Str::UW(_("Quit")));
 
+				DWORD mask = SendDlgItemMessageW(pWindow, IDC_CHAT_OUT, EM_GETEVENTMASK, 0, 0);
+				SendDlgItemMessageW(pWindow, IDC_CHAT_OUT, EM_SETEVENTMASK, 0, mask | ENM_LINK);
+				SendDlgItemMessageW(pWindow, IDC_CHAT_OUT, EM_AUTOURLDETECT, TRUE, 0);
+
 				RECT lRect;
 				HWND lList;
 				LV_COLUMN lSpec;
@@ -1698,17 +1702,42 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 						}
 						break;
 
-				case IDC_USER_LIST:
-					if(lNotMessage->code == LVN_ITEMCHANGED) {
-						lReturnValue = TRUE;
+					case IDC_USER_LIST:
+						if(lNotMessage->code == LVN_ITEMCHANGED) {
+							lReturnValue = TRUE;
 
-						// Select the game corresponding to the selected
-						mThis->SelectGameForUser(pWindow);
-					}
-					break;
+							// Select the game corresponding to the selected
+							mThis->SelectGameForUser(pWindow);
+						}
+						break;
+
+					case IDC_CHAT_OUT:
+						// User clicked on a link.
+						if (lNotMessage->code == EN_LINK) {
+							ENLINK *linkInfo = (ENLINK*)pLParam;
+							if (linkInfo->msg == WM_LBUTTONUP) {
+								CHARRANGE *chrg = &linkInfo->chrg;
+								int len = chrg->cpMax - chrg->cpMin;
+								wchar_t url[512] = { 0 };
+								TEXTRANGEW range;
+								range.chrg.cpMin = chrg->cpMin;
+								range.chrg.cpMax = (len > 511) ? chrg->cpMin + 511 : chrg->cpMax;
+								range.lpstrText = url;
+								SendDlgItemMessageW(pWindow, IDC_CHAT_OUT, EM_GETTEXTRANGE, 0, (LPARAM)&range);
+
+								// Open the URL in the browser.
+								//TODO: Move this to Util::OS.
+								//FIXME: Need to make sure we're only handling "http:", "https:", and "ftp:".
+								OutputDebugStringW(L"Opening URL: ");
+								OutputDebugStringW(range.lpstrText);
+								OutputDebugStringW(L"\n");
+								ShellExecuteW(NULL, L"open", range.lpstrText, NULL, NULL, SW_SHOWNORMAL);
+							}
+						}
+						break;
+				}
 			}
-		}
-		break;
+			break;
 
 		case WM_COMMAND:
 			switch (LOWORD(pWParam)) {
