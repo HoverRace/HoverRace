@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
 "Report-Msgid-Bugs-To: bugs@hoverrace.com\n"
 "POT-Creation-Date: 2009-03-31 11:24-0400\n"
-"PO-Revision-Date: 2009-04-29 02:11-0400\n"
-"Last-Translator: Ryan Curtin <ryan@tortoise.igglybob.com>\n"
+"PO-Revision-Date: 2009-05-08 02:46-0500\n"
+"Last-Translator: Michael Imamura <zoogie@lugatgt.org>\n"
 "Language-Team: German\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -406,7 +406,7 @@ msgstr "Schließen"
 
 #: client/Game2/InternetRoom.cpp:533
 msgid "Connecting to the Internet Meeting Room..."
-msgstr "Verbindet mit einem &Internet Besprechungsraum..."
+msgstr "Verbindet mit einem Internet Besprechungsraum..."
 
 #: client/Game2/InternetRoom.cpp:554
 msgid "You are connected"
@@ -414,11 +414,11 @@ msgstr "Sie sind verbunden"
 
 #: client/Game2/InternetRoom.cpp:555
 msgid "Welcome to the HoverRace Internet Meeting Room"
-msgstr "Wilkommen in dem &Internet Besprechungsraum"
+msgstr "Wilkommen in dem Internet Besprechungsraum"
 
 #: client/Game2/InternetRoom.cpp:572
 msgid "Disconnecting from the Internet Meeting Room..."
-msgstr "Verbinden vom &Internet Besprechungsraum..."
+msgstr "Verbinden vom Internet Besprechungsraum..."
 
 #: client/Game2/InternetRoom.cpp:589
 msgid "Registering game with the Internet Meeting Room..."
@@ -438,7 +438,7 @@ msgstr "Den Internet Besprechungsraum abmelden..."
 
 #: client/Game2/InternetRoom.cpp:681
 msgid "Sending message to the Internet Meeting Room..."
-msgstr "Schickt nachricht zum &Internet Besprechungsraum"
+msgstr "Schickt nachricht zum Internet Besprechungsraum"
 
 #: client/Game2/InternetRoom.cpp:810
 msgid "[no selection]"
@@ -566,9 +566,8 @@ msgstr ""
 #: client/Game2/InternetRoom.cpp:1991
 #: client/Game2/InternetRoom.cpp:2064
 #: client/Game2/InternetRoom.cpp:2220
-#, fuzzy
 msgid "Internet Meeting Room"
-msgstr "&Internet Besprechungsraum"
+msgstr "Internet Besprechungsraum"
 
 #: client/Game2/InternetRoom.cpp:1264
 msgid "Your alias:"
@@ -1006,15 +1005,12 @@ msgstr ""
 
 #~ msgid "Hit OK to test new resolution"
 #~ msgstr "OK drücken um die neue auflösung zu testen"
-
 #~ msgid ""
 #~ msgstr "ungültige auflösung; zurück stellen auf"
-
 #~ msgid ""
 #~ msgstr "Auflösung erfolgreich umgestellt auf"
-
+#~ msgid ""
+#~ msgstr ""
 #~ msgid ""
 #~ msgstr ""
 
-#~ msgid ""
-#~ msgstr ""
