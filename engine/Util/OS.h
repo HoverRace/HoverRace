@@ -90,6 +90,8 @@ class MR_DllDeclare OS {
 		static timestamp_t TimeDiff(timestamp_t a, timestamp_t b);
 		static void TimeShutdown();
 
+		static bool OpenLink(const std::string &url);
+
 		static void Free(void *buf);
 };
 

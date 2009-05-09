@@ -40,6 +40,8 @@
 
 #include <boost/format.hpp>
 
+#include "Str.h"
+
 #include "OS.h"
 
 using boost::format;
@@ -485,4 +487,21 @@ void OS::TimeShutdown()
 void OS::Free(void *buf)
 {
 	free(buf);
+}
+
+/**
+ * Open a URL.
+ * @param url The URL (UTF-8 encoded).
+ * @return @c true if successful, @c false otherwise.
+ */
+bool OS::OpenLink(const std::string &url)
+{
+	//FIXME: Need to make sure we're only handling "http:", "https:", and "ftp:".
+#	ifdef _WIN32
+		Str::UW urlw(url.c_str());
+		OutputDebugStringW(L"Opening URL: ");
+		OutputDebugStringW(urlw);
+		OutputDebugStringW(L"\n");
+		return (int)ShellExecuteW(NULL, L"open", urlw, NULL, NULL, SW_SHOWNORMAL) > 32;
+#	endif
 }

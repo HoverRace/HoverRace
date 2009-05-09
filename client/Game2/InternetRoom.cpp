@@ -1726,12 +1726,7 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 								SendDlgItemMessageW(pWindow, IDC_CHAT_OUT, EM_GETTEXTRANGE, 0, (LPARAM)&range);
 
 								// Open the URL in the browser.
-								//TODO: Move this to Util::OS.
-								//FIXME: Need to make sure we're only handling "http:", "https:", and "ftp:".
-								OutputDebugStringW(L"Opening URL: ");
-								OutputDebugStringW(range.lpstrText);
-								OutputDebugStringW(L"\n");
-								ShellExecuteW(NULL, L"open", range.lpstrText, NULL, NULL, SW_SHOWNORMAL);
+								OS::OpenLink(Str::WU(range.lpstrText));
 							}
 						}
 						break;
