@@ -19,13 +19,17 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
 #include "MatchReport.h"
 #include "Banner.h"
 
 #include <WINSOCK.h>
 #include "resource.h"
+
+#include "../../engine/Util/OS.h"
+
+using HoverRace::Util::OS;
 
 // Local constants
 #define MODULE_NAME           NULL				  // For ressources loading
@@ -605,7 +609,7 @@ BOOL CALLBACK MatchReportRequest::ResultCallBack(HWND pWindow, UINT pMsgId, WPAR
 
 					case URL_BTN_TYPE:
 						// Start the Browser
-						LoadURL(pWindow, gThis->mButtonURL[lButton]);
+						OS::OpenLink(gThis->mButtonURL[lButton]);
 						break;
 				}
 				lReturnValue = TRUE;

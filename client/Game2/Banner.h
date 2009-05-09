@@ -49,7 +49,4 @@ class MR_GifDecoder
 		int GetDelay(int pImage) const;
 
 };
-
-BOOL LoadURL(HWND pWindow, const char *pURL);
-BOOL LoadURLShortcut(HWND pWindow, const char *pShortcut);
 #endif

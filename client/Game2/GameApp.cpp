@@ -769,7 +769,7 @@ void MR_GameApp::DisplaySite()
 {
 	// first return to window mode
 	SetVideoMode(0, 0);
-	LoadURLShortcut(mMainWindow, HR_WEBSITE);
+	OS::OpenLink(HR_WEBSITE);
 }
 
 void MR_GameApp::DisplayAbout()

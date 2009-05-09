@@ -1681,7 +1681,7 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 						lURLBuffer[299] = 0;
 
 						if(strlen(lURLBuffer) > 0) {
-							LoadURL(pWindow, lURLBuffer);
+							OS::OpenLink(lURLBuffer);
 						}
 					}
 					mThis->mClickRequest.Clear();
@@ -1873,7 +1873,7 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 	
 							}
 							else {
-								LoadURL(pWindow, gBannerList[gCurrentBannerEntry].mClickURL);
+								OS::OpenLink((const char*)gBannerList[gCurrentBannerEntry].mClickURL);
 							}
 						}
 					}
