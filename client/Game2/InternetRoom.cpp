@@ -1350,6 +1350,10 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 				SetDlgItemTextW(pWindow, IDC_ADD, Str::UW(_("New Game...")));
 				SetDlgItemTextW(pWindow, IDCANCEL, Str::UW(_("Quit")));
 
+				// Enable word-wrapping in chat box.
+				SendDlgItemMessageW(pWindow, IDC_CHAT_OUT, EM_SETTARGETDEVICE, NULL, 0);
+
+				// Enable link handling in chat box.
 				DWORD mask = SendDlgItemMessageW(pWindow, IDC_CHAT_OUT, EM_GETEVENTMASK, 0, 0);
 				SendDlgItemMessageW(pWindow, IDC_CHAT_OUT, EM_SETEVENTMASK, 0, mask | ENM_LINK);
 				SendDlgItemMessageW(pWindow, IDC_CHAT_OUT, EM_AUTOURLDETECT, TRUE, 0);
