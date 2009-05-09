@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
 "Report-Msgid-Bugs-To: bugs@hoverrace.com\n"
 "POT-Creation-Date: 2009-03-31 11:24-0400\n"
-"PO-Revision-Date: 2009-05-08 02:46-0500\n"
+"PO-Revision-Date: 2009-05-09 00:23-0500\n"
 "Last-Translator: Michael Imamura <zoogie@lugatgt.org>\n"
 "Language-Team: German\n"
 "Language: de\n"
@@ -80,7 +80,7 @@ msgstr "&Internet"
 #: client/Game2/GameApp.cpp:990
 msgctxt "Menu|File"
 msgid "&Practice"
-msgstr "&üben"
+msgstr "Üb&en"
 
 #: client/Game2/GameApp.cpp:992
 msgctxt "Menu|File"
@@ -120,7 +120,7 @@ msgstr "Mehr &Nachrichten"
 #: client/Game2/GameApp.cpp:1012
 msgctxt "Menu|View"
 msgid "&Refresh colors"
-msgstr "Farben &Nachladen"
+msgstr "&Farben Nachladen"
 
 #: client/Game2/GameApp.cpp:1017
 #: client/Game2/GameApp.cpp:1868
@@ -147,7 +147,7 @@ msgstr "&Inhalt"
 #: client/Game2/GameApp.cpp:1033
 msgctxt "Menu|Help"
 msgid "&About HoverRace"
-msgstr "&über HoverRace"
+msgstr "Ü&ber HoverRace"
 
 #: client/Game2/GameApp.cpp:1038
 msgctxt "Menu"
@@ -1005,3 +1005,4 @@ msgstr ""
 
 #~ msgid "Hit OK to test new resolution"
 #~ msgstr "OK drücken um die neue auflösung zu testen"
+
