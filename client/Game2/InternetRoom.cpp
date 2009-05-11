@@ -943,7 +943,9 @@ void MR_InternetRoom::RefreshChatOut(HWND pWindow)
 {
 	HWND pDest = GetDlgItem(pWindow, IDC_CHAT_OUT);
 
-	SetWindowTextW(pDest, Str::UW(mChatBuffer));
+	static SETTEXTEX textInfo = { ST_DEFAULT, 1200 };  // Replace all using Unicode.
+	SendMessage(pDest, EM_SETTEXTEX, (WPARAM)&textInfo,
+		(LPARAM)(const wchar_t*)Str::UW((const char*)mChatBuffer));
 
 	//SendMessage(pDest, EM_LINESCROLL, 0, 1000);
 	SendMessage(pDest, WM_VSCROLL, SB_BOTTOM, 0);
