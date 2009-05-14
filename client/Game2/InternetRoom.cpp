@@ -1354,6 +1354,11 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 
 				// Enable word-wrapping in chat box.
 				SendDlgItemMessageW(pWindow, IDC_CHAT_OUT, EM_SETTARGETDEVICE, NULL, 0);
+				
+				// Set the color to the same as the old control
+				// I suppose this isn't always guaranteed to be gray but it's the best I can find...
+				// there's no COLOR_DISABLEDTEXTBOX or something
+				SendDlgItemMessageW(pWindow, IDC_CHAT_OUT, EM_SETBKGNDCOLOR, 0, GetSysColor(COLOR_BTNFACE));
 
 				// Enable link handling in chat box.
 				DWORD mask = SendDlgItemMessageW(pWindow, IDC_CHAT_OUT, EM_GETEVENTMASK, 0, 0);
