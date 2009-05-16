@@ -207,7 +207,7 @@ MR_ObjectFromFactory::~MR_ObjectFromFactory()
 
 }
 
-const MR_ObjectFromFactoryId & MR_ObjectFromFactory::GetTypeId() const
+const MR_ObjectFromFactoryId &MR_ObjectFromFactory::GetTypeId() const
 {
 	return mId;
 }
