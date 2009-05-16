@@ -26,7 +26,7 @@
 #define new DEBUG_NEW
 
 // MR_Level implementation
-MR_Level::MR_Level(BOOL pAllowRendering)
+MR_Level::MR_Level(BOOL pAllowRendering, char pGameOpts)
 {
 	// Initialisation of an empty level
 	mAllowRendering = pAllowRendering;
@@ -38,6 +38,8 @@ MR_Level::MR_Level(BOOL pAllowRendering)
 	mFreeElementNonClassifiedList = NULL;
 	mFreeElementClassifiedByRoomList = NULL;
 	mNbPlayer = 0;
+
+	mGameOpts = pGameOpts;
 
 	mElementCreationBroadcastHook = NULL;
 	mPermElementStateBroadcastHook = NULL;
@@ -158,6 +160,28 @@ void MR_Level::Serialize(CArchive & pArchive)
 					ASSERT(FALSE);
 				}
 				lCurrentElem = lCurrentElem->mNext;
+			}
+		}
+	}
+
+	// remove unwanted elements
+	for(lCounter = 0; lCounter < mNbRoom; lCounter++) {
+		if(!pArchive.IsStoring()) {
+			FreeElement *lCurrentElem = mFreeElementClassifiedByRoomList[lCounter];
+			
+
+			while(lCurrentElem != NULL) {
+				FreeElement *lNext = lCurrentElem->mNext;
+
+				// check if the element is allowed
+				if((lCurrentElem->mElement->GetTypeId().mClassId == 151 /* mine */) && !(mGameOpts & OPT_ALLOW_MINES)) {
+					// move to unusable place
+					lCurrentElem->LinkTo(&mFreeElementNonClassifiedList);
+				} else if((lCurrentElem->mElement->GetTypeId().mClassId == 152 /* can */) && !(mGameOpts & OPT_ALLOW_CANS)) {
+					lCurrentElem->LinkTo(&mFreeElementNonClassifiedList);
+				}
+
+				lCurrentElem = lNext;
 			}
 		}
 	}
@@ -341,20 +365,16 @@ MR_SurfaceElement *MR_Level::GetFeatureTopElement(int pFeatureId) const
 }
 
 // FreeElements manipulation 
-MR_FreeElementHandle MR_Level::GetFirstFreeElement(int pRoom) const {
-FreeElement *lReturnValue;
-
-if(pRoom == eNonClassified)
+MR_FreeElementHandle MR_Level::GetFirstFreeElement(int pRoom) const 
 {
-	lReturnValue = mFreeElementNonClassifiedList;
-}
+	FreeElement *lReturnValue;
 
-else
-{
-	lReturnValue = mFreeElementClassifiedByRoomList[pRoom];
-}
+	if(pRoom == eNonClassified)
+		lReturnValue = mFreeElementNonClassifiedList;
+	else
+		lReturnValue = mFreeElementClassifiedByRoomList[pRoom];
 
-return (MR_FreeElementHandle) lReturnValue;
+	return (MR_FreeElementHandle) lReturnValue;
 }
 
 MR_FreeElementHandle MR_Level::GetNextFreeElement(MR_FreeElementHandle pHandle)
@@ -408,7 +428,9 @@ MR_FreeElementHandle MR_Level::GetPermanentElementHandle(int pElem) const
 	ASSERT(pElem < mNbPermNetActor);
 
 	return (MR_FreeElementHandle) mPermNetActor[pElem];
-} void MR_Level::SetPermElementPos(int pPermElement, int pRoom, const MR_3DCoordinate & pNewPos)
+}
+
+void MR_Level::SetPermElementPos(int pPermElement, int pRoom, const MR_3DCoordinate & pNewPos)
 {
 	if(pPermElement >= 0) {
 		ASSERT(pPermElement < mNbPermNetActor);

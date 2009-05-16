@@ -44,7 +44,7 @@ MR_GameSession::~MR_GameSession()
 	Clean();
 }
 
-BOOL MR_GameSession::LoadLevel(int pLevel)
+BOOL MR_GameSession::LoadLevel(int pLevel, char pGameOpts)
 {
 	ASSERT(mCurrentMazeFile != NULL);
 
@@ -56,7 +56,7 @@ BOOL MR_GameSession::LoadLevel(int pLevel)
 
 	// Load the new level
 	if(pLevel < mCurrentMazeFile->GetNbRecords()) {
-		mCurrentLevel = new MR_Level(mAllowRendering);
+		mCurrentLevel = new MR_Level(mAllowRendering, pGameOpts);
 		mCurrentMazeFile->SelectRecord(pLevel);
 
 		CArchive lArchive(mCurrentMazeFile, CArchive::load);
@@ -65,7 +65,7 @@ BOOL MR_GameSession::LoadLevel(int pLevel)
 
 		mCurrentLevelNumber = pLevel;
 	} else
-	lReturnValue = FALSE;
+		lReturnValue = FALSE;
 
 	return lReturnValue;
 }
@@ -82,7 +82,7 @@ void MR_GameSession::Clean()
 	mCurrentLevelNumber = -1;
 }
 
-BOOL MR_GameSession::LoadNew(const char *pTitle, MR_RecordFile * pMazeFile)
+BOOL MR_GameSession::LoadNew(const char *pTitle, MR_RecordFile *pMazeFile, char pGameOpts)
 {
 	BOOL lReturnValue = FALSE;
 
@@ -90,7 +90,7 @@ BOOL MR_GameSession::LoadNew(const char *pTitle, MR_RecordFile * pMazeFile)
 	if(pMazeFile != NULL) {
 		mTitle = pTitle;
 		mCurrentMazeFile = pMazeFile;
-		lReturnValue = LoadLevel(1);
+		lReturnValue = LoadLevel(1, pGameOpts);
 
 		if(!lReturnValue)
 			Clean();

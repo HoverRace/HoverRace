@@ -36,6 +36,15 @@
 #define MR_NB_MAX_PLAYER    32
 #define MR_NB_PERNET_ACTORS 128
 
+// for game options (also found in TrackSelect.h)
+#define OPT_ALLOW_WEAPONS	0x40
+#define OPT_ALLOW_MINES		0x20
+#define OPT_ALLOW_CANS		0x10
+#define OPT_ALLOW_BASIC		0x08
+#define OPT_ALLOW_BI		0x02
+#define OPT_ALLOW_CX		0x04
+#define OPT_ALLOW_EON		0x01
+
 // Class declaration
 class MR_FreeElementHandleClass;
 typedef MR_FreeElementHandleClass *MR_FreeElementHandle;
@@ -122,12 +131,12 @@ class MR_DllDeclare MR_Level
 				Section();
 				~Section();
 
-				void SerializeStructure(CArchive & pArchive);
-				void SerializeSurfacesLogicState(CArchive & pArchive);
+				void SerializeStructure(CArchive &pArchive);
+				void SerializeSurfacesLogicState(CArchive &pArchive);
 
 		};
 
-		class Feature:public Section
+		class Feature : public Section
 		{
 			public:
 				// Connectivity
@@ -136,7 +145,7 @@ class MR_DllDeclare MR_Level
 				void SerializeStructure(CArchive & pArchive);
 		};
 
-		class MR_DllDeclare Room:public Section
+		class MR_DllDeclare Room : public Section
 		{
 			public:
 				// Local structures
@@ -213,6 +222,8 @@ class MR_DllDeclare MR_Level
 		int mNbFeature;							  // Number of features in the level
 		Feature *mFeatureList;
 
+		char mGameOpts;
+
 		// Main character starting position and references
 		int mNbPlayer;
 		int mPlayerTeam[MR_NB_MAX_PLAYER];
@@ -241,7 +252,7 @@ class MR_DllDeclare MR_Level
 		int GetRealRoomRecursive(const MR_2DCoordinate & pPosition, int pOriginalSection, int = -1) const;
 
 	public:
-		MR_Level(BOOL pAllowRendering = FALSE);
+		MR_Level(BOOL pAllowRendering = FALSE, char pGameOpts = 1);
 		~MR_Level();
 
 		// Network stuff
