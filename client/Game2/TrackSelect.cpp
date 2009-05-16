@@ -93,7 +93,9 @@ typedef std::vector<TrackEntry*> sorted_t;
 static tracklist_t gsTrackList;
 static sorted_t gsSortedTrackList;
 static int gsNbLaps;
-static BOOL gsAllowWeapons = FALSE;
+// constants defined in TrackSelect.h
+static char gsGameOpts = 0; // bits: (unused)(weapons)(mines)(cans)(basic)(bi)(cx)(eon)
+
 static HWND trackSelDlg;
 static WNDPROC oldListProc;
 
@@ -145,7 +147,7 @@ MR_RecordFile *MR_TrackOpen(HWND pWindow, const char *pFileName)
  *         @p pAllowWeapons will be filled in), @c false if the user canceled
  *         the dialog.
  */
-bool MR_SelectTrack(HWND pParentWindow, std::string &pTrackFile, int &pNbLap, bool &pAllowWeapons)
+bool MR_SelectTrack(HWND pParentWindow, std::string &pTrackFile, int &pNbLap, char &pGameOpts)
 {
 	bool lReturnValue = true;
 	gsSelectedEntry = -1;
@@ -155,12 +157,12 @@ bool MR_SelectTrack(HWND pParentWindow, std::string &pTrackFile, int &pNbLap, bo
 	SortList();
 
 	gsNbLaps = 5;								  // Default value
-	gsAllowWeapons = false;
+	gsGameOpts = 0;
 
 	if(DialogBoxW(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDD_TRACK_SELECT), pParentWindow, TrackSelectCallBack) == IDOK) {
 		pTrackFile = gsSortedTrackList[gsSelectedEntry]->mFileName;
 		pNbLap = gsNbLaps;
-		pAllowWeapons = (gsAllowWeapons != FALSE);
+		pGameOpts = gsGameOpts;
 		lReturnValue = true;
 	} else
 	lReturnValue = false;
@@ -187,6 +189,15 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 			SetDlgItemTextW(pWindow, IDC_WEAPONS_CHK, Str::UW(_("Weapons")));
 			SetDlgItemTextW(pWindow, IDOK, Str::UW(_("OK")));
 			SetDlgItemTextW(pWindow, IDCANCEL, Str::UW(_("Cancel")));
+			SetDlgItemTextW(pWindow, IDC_CRAFTS_BOX, Str::UW(_("Crafts")));
+			SetDlgItemTextW(pWindow, IDC_OPTIONS_BOX, Str::UW(_("Options")));
+			// this may require re-thinking if more crafts are to be added
+			SetDlgItemTextW(pWindow, IDC_BASIC_CHK, Str::UW(_("Basic")));
+			SetDlgItemTextW(pWindow, IDC_BI_CHK, Str::UW(_("Bi-Turbo")));
+			SetDlgItemTextW(pWindow, IDC_CX_CHK, Str::UW(_("Low CX")));
+			SetDlgItemTextW(pWindow, IDC_EON_CHK, Str::UW(_("Eon")));
+			SetDlgItemTextW(pWindow, IDC_MINES_CHK, Str::UW(_("Mines")));
+			SetDlgItemTextW(pWindow, IDC_CANS_CHK, Str::UW(_("Boost Cans")));
 
 			// Init track file list
 			for (sorted_t::iterator iter = gsSortedTrackList.begin();
@@ -197,7 +208,14 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 			}
 
 			SetDlgItemInt(pWindow, IDC_NB_LAP, gsNbLaps, FALSE);
-			SendDlgItemMessage(pWindow, IDC_WEAPONS, BM_SETCHECK, BST_CHECKED, 0);
+			// defaults
+			SendDlgItemMessage(pWindow, IDC_WEAPONS_CHK, BM_SETCHECK, BST_CHECKED, 0);
+			SendDlgItemMessage(pWindow, IDC_MINES_CHK, BM_SETCHECK, BST_CHECKED, 0);
+			SendDlgItemMessage(pWindow, IDC_CANS_CHK, BM_SETCHECK, BST_CHECKED, 0);
+			SendDlgItemMessage(pWindow, IDC_BASIC_CHK, BM_SETCHECK, BST_CHECKED, 0);
+			SendDlgItemMessage(pWindow, IDC_BI_CHK, BM_SETCHECK, BST_CHECKED, 0);
+			SendDlgItemMessage(pWindow, IDC_CX_CHK, BM_SETCHECK, BST_CHECKED, 0);
+			SendDlgItemMessage(pWindow, IDC_EON_CHK, BM_SETCHECK, BST_CHECKED, 0);
 			SendDlgItemMessage(pWindow, IDC_NB_LAP_SPIN, UDM_SETRANGE, 0, MAKELONG(99, 1));
 
 			if (!gsSortedTrackList.empty()) {
@@ -244,11 +262,21 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 				case IDOK:
 					if(gsSelectedEntry != -1) {
 						gsNbLaps = GetDlgItemInt(pWindow, IDC_NB_LAP, NULL, FALSE);
-						gsAllowWeapons = (SendDlgItemMessage(pWindow, IDC_WEAPONS, BM_GETCHECK, 0, 0) == BST_CHECKED);
+						gsGameOpts = 0; // reset in case something odd happened... shouldn't be necessary
+						gsGameOpts |= (SendDlgItemMessage(pWindow, IDC_WEAPONS_CHK, BM_GETCHECK, 0, 0) == BST_CHECKED) ? OPT_ALLOW_WEAPONS : 0;
+						gsGameOpts |= (SendDlgItemMessage(pWindow, IDC_MINES_CHK, BM_GETCHECK, 0, 0) == BST_CHECKED) ? OPT_ALLOW_MINES : 0;
+						gsGameOpts |= (SendDlgItemMessage(pWindow, IDC_CANS_CHK, BM_GETCHECK, 0, 0) == BST_CHECKED) ? OPT_ALLOW_CANS : 0;
+						gsGameOpts |= (SendDlgItemMessage(pWindow, IDC_BASIC_CHK, BM_GETCHECK, 0, 0) == BST_CHECKED) ? OPT_ALLOW_BASIC : 0;
+						gsGameOpts |= (SendDlgItemMessage(pWindow, IDC_BI_CHK, BM_GETCHECK, 0, 0) == BST_CHECKED) ? OPT_ALLOW_BI : 0;
+						gsGameOpts |= (SendDlgItemMessage(pWindow, IDC_CX_CHK, BM_GETCHECK, 0, 0) == BST_CHECKED) ? OPT_ALLOW_CX : 0;
+						gsGameOpts |= (SendDlgItemMessage(pWindow, IDC_EON_CHK, BM_GETCHECK, 0, 0) == BST_CHECKED) ? OPT_ALLOW_EON : 0;
 
 						if(gsNbLaps < 1) {
-							MessageBoxW(pWindow,
-								Str::UW(_("Number of laps should be between 1 and 99")),
+							MessageBoxW(pWindow, Str::UW(_("Number of laps should be greater than 1")),
+								PACKAGE_NAME_L, MB_ICONINFORMATION | MB_OK | MB_APPLMODAL);
+						}
+						else if((gsGameOpts & 0x0F) == 0) {
+							MessageBoxW(pWindow, Str::UW(_("At least one craft must be selected")),
 								PACKAGE_NAME_L, MB_ICONINFORMATION | MB_OK | MB_APPLMODAL);
 						}
 						else

@@ -173,7 +173,7 @@ class MR_InternetRoom
 		BOOL LocateServers(HWND pWindow, BOOL pShouldRecheckServer);
 		BOOL AddUserOp(HWND pParentWindow);
 		BOOL DelUserOp(HWND pParentWindow, BOOL pFastMode = FALSE);
-		BOOL AddGameOp(HWND pParentWindow, const char *pGameName, const char *pTrackName, int pNbLap, BOOL pAlllowWeapons, unsigned pPort);
+		BOOL AddGameOp(HWND pParentWindow, const char *pGameName, const char *pTrackName, int pNbLap, char pGameOpts, unsigned pPort);
 		BOOL DelGameOp(HWND pParentWindow);
 		BOOL JoinGameOp(HWND pParentWindow, int pGameIndex);
 		BOOL LeaveGameOp(HWND pParentWindow);

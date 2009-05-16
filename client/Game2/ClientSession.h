@@ -61,14 +61,14 @@ class MR_ClientSession
 		int mHeightSprite;
 
 		int mNbLap;
-		BOOL mAllowWeapons;
+		char mGameOpts;
 
 		// Stats counters.
 		unsigned int frameCount;
 		HoverRace::Util::OS::timestamp_t lastTimestamp;
 		double fps;
 
-		void ReadLevelAttrib(MR_RecordFile * pFile, MR_VideoBuffer * pVideo);
+		void ReadLevelAttrib(MR_RecordFile *pFile, MR_VideoBuffer *pVideo);
 	public:
 		// Creation and destruction
 		MR_ClientSession();
@@ -78,7 +78,7 @@ class MR_ClientSession
 												  // Simulation, speed factor can be used to reduce processing speed to create AVI files
 		virtual void Process(int pSpeedFactor = 1);
 
-		virtual BOOL LoadNew(const char *pTitle, MR_RecordFile * pMazeFile, int pNbLap, BOOL pAllowWeapons, MR_VideoBuffer * pVideo);
+		virtual BOOL LoadNew(const char *pTitle, MR_RecordFile *pMazeFile, int pNbLap, char pGameOpts, MR_VideoBuffer *pVideo);
 
 		// Main character control and interrogation
 		BOOL CreateMainCharacter();
@@ -102,7 +102,7 @@ class MR_ClientSession
 		void ConvertMapCoordinate(int &pX, int &pY, int pRatio) const;
 
 		virtual int ResultAvaillable() const;	  // Return the number of players desc avail
-		virtual void GetResult(int pPosition, const char *&pPlayerName, int &pId, BOOL & pConnected, int &pNbLap, MR_SimulationTime & pFinishTime, MR_SimulationTime & pBestLap) const;
+		virtual void GetResult(int pPosition, const char *&pPlayerName, int &pId, BOOL & pConnected, int &pNbLap, MR_SimulationTime &pFinishTime, MR_SimulationTime &pBestLap) const;
 		virtual void GetHitResult(int pPosition, const char *&pPlayerName, int &pId, BOOL & pConnected, int &pNbHitOther, int &pNbHitHimself) const;
 
 		virtual int GetNbPlayers() const;

@@ -27,13 +27,22 @@
 
 #include "../../engine/Util/RecordFile.h"
 
+// for gsGameOpts
+#define OPT_ALLOW_WEAPONS	0x40
+#define OPT_ALLOW_MINES		0x20
+#define OPT_ALLOW_CANS		0x10
+#define OPT_ALLOW_BASIC		0x08
+#define OPT_ALLOW_BI		0x02
+#define OPT_ALLOW_CX		0x04
+#define OPT_ALLOW_EON		0x01
+
 enum MR_TrackAvail
 {
 	eTrackAvail,
 	eTrackNotFound
 };
 
-bool MR_SelectTrack(HWND pParentWindow, std::string &pTrackFile, int &pNbLap, bool &pAllowWeapons);
+bool MR_SelectTrack(HWND pParentWindow, std::string &pTrackFile, int &pNbLap, char &pGameOpts);
 
 // pFile name must contains no path and no extension
 MR_RecordFile *MR_TrackOpen(HWND pWindow, const char *pFileName);

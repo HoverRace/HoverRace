@@ -83,11 +83,11 @@ class MR_NetworkSession : public MR_ClientSession
 
 		// Network functions
 												  // Must be called only once
-		void BroadcastMainElementCreation(const MR_ObjectFromFactoryId & pId, const MR_ElementNetState & pState, int pRoom, int pHoverId);
+		void BroadcastMainElementCreation(const MR_ObjectFromFactoryId &pId, const MR_ElementNetState &pState, int pRoom, int pHoverId);
 												  // Creation of autonomous elements
-		void BroadcastAutoElementCreation(const MR_ObjectFromFactoryId & pId, const MR_ElementNetState & pState, int pRoom);
-		void BroadcastPermElementState(int pPermId, const MR_ElementNetState & pState, int pRoom);
-		void BroadcastMainElementState(const MR_ElementNetState & pState);
+		void BroadcastAutoElementCreation(const MR_ObjectFromFactoryId &pId, const MR_ElementNetState &pState, int pRoom);
+		void BroadcastPermElementState(int pPermId, const MR_ElementNetState &pState, int pRoom);
+		void BroadcastMainElementState(const MR_ElementNetState &pState);
 		void BroadcastMainElementStats(MR_SimulationTime pFinishTime, MR_SimulationTime pBestLap, int pNbLap);
 		void BroadcastChatMessage(const char *pMessage);
 		void BroadcastTime();
@@ -97,7 +97,7 @@ class MR_NetworkSession : public MR_ClientSession
 		void AddResultEntry(int pPlayerIndex, MR_SimulationTime pFinishTime, MR_SimulationTime pBestLap, int pNbLap);
 		void AddHitEntry(int pPlayerIndex, int pPlayerFromID);
 												  // helper
-		void InsertHitEntry(PlayerResult * pEntry);
+		void InsertHitEntry(PlayerResult *pEntry);
 
 		void ReadNet();
 		void WriteNet();
@@ -113,7 +113,7 @@ class MR_NetworkSession : public MR_ClientSession
 		// Simulation control
 		void Process(int pSpeedFactor = 1);		  // Simulation, speed factor can be used to reduce processing speed to create AVI files
 
-		BOOL LoadNew(const char *pTitle, MR_RecordFile * pMazeFile, int pNbLap, BOOL pAllowWeapons, MR_VideoBuffer * pVideo);
+		BOOL LoadNew(const char *pTitle, MR_RecordFile * pMazeFile, int pNbLap, char pGameOpts, MR_VideoBuffer * pVideo);
 
 		BOOL CreateMainCharacter();
 

@@ -580,7 +580,7 @@ BOOL MR_InternetRoom::DelUserOp(HWND pParentWindow, BOOL pFastMode)
 	return lReturnValue;
 }
 
-BOOL MR_InternetRoom::AddGameOp(HWND pParentWindow, const char *pGameName, const char *pTrackName, int pNbLap, BOOL pWeapons, unsigned pPort)
+BOOL MR_InternetRoom::AddGameOp(HWND pParentWindow, const char *pGameName, const char *pTrackName, int pNbLap, char pGameOpts, unsigned pPort)
 {
 	BOOL lReturnValue = FALSE;
 
@@ -588,7 +588,7 @@ BOOL MR_InternetRoom::AddGameOp(HWND pParentWindow, const char *pGameName, const
 
 	mNetOpString = _("Registering game with the Internet Meeting Room...");
 
-	mNetOpRequest.Format("%s?=ADD_GAME%%%%%d-%u%%%%%s%%%%%s%%%%%d%%%%%d%%%%%d", (const char *) gServerList[gCurrentServerEntry].mURL, mCurrentUserIndex, mCurrentUserId, (const char *) MR_Pad(pGameName), (const char *) MR_Pad(pTrackName), pNbLap, pWeapons ? 1 : 0, pPort);
+	mNetOpRequest.Format("%s?=ADD_GAME%%%%%d-%u%%%%%s%%%%%s%%%%%d%%%%%d%%%%%d", (const char *) gServerList[gCurrentServerEntry].mURL, mCurrentUserIndex, mCurrentUserId, (const char *) MR_Pad(pGameName), (const char *) MR_Pad(pTrackName), pNbLap, pGameOpts, pPort);
 
 	lReturnValue = DialogBoxW(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDD_NET_PROGRESS), pParentWindow, NetOpCallBack) == IDOK;
 
@@ -1838,28 +1838,36 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 						// Ask the user to select a track
 						std::string lCurrentTrack;
 						int lNbLap;
-						bool lAllowWeapons;
+						char lGameOpts;
 
-						lSuccess = MR_SelectTrack(pWindow, lCurrentTrack, lNbLap, lAllowWeapons);
+						lSuccess = MR_SelectTrack(pWindow, lCurrentTrack, lNbLap, lGameOpts);
 
 						if(lSuccess) {
 							// Load the track
 							MR_RecordFile *lTrackFile = MR_TrackOpen(pWindow, lCurrentTrack.c_str());
-							lSuccess = (mThis->mSession->LoadNew(lCurrentTrack.c_str(), lTrackFile, lNbLap, lAllowWeapons, mThis->mVideoBuffer) != FALSE);
+							lSuccess = (mThis->mSession->LoadNew(lCurrentTrack.c_str(), lTrackFile, lNbLap, lGameOpts, mThis->mVideoBuffer) != FALSE);
 						}
 
 						if(lSuccess) {
 							// Register to the InternetServer
 							lSuccess = (mThis->AddGameOp(pWindow,
 								lCurrentTrack.c_str(), lCurrentTrack.c_str(),
-								lNbLap, lAllowWeapons,
+								lNbLap, lGameOpts,
 								Config::GetInstance()->net.tcpServPort) != FALSE);
 
 							if(lSuccess) {
 								// Wait client registration
 								CString lTrackName;
 
-								lTrackName.Format("%s  %d laps %s", lCurrentTrack.c_str(), lNbLap, lAllowWeapons ? "with weapons" : "no weapons");
+								lTrackName.Format("%s  %d %s; options %c%c%c, %c%c%c%c", lCurrentTrack.c_str(), lNbLap,
+									(lNbLap == 1) ? "lap" : "laps",
+									(lGameOpts & OPT_ALLOW_WEAPONS) ? 'W' : '_',
+									(lGameOpts & OPT_ALLOW_MINES)   ? 'M' : '_',
+									(lGameOpts & OPT_ALLOW_CANS)    ? 'C' : '_',
+									(lGameOpts & OPT_ALLOW_BASIC)   ? 'B' : '_',
+									(lGameOpts & OPT_ALLOW_BI)		? '2' : '_',
+									(lGameOpts & OPT_ALLOW_CX)		? 'C' : '_',
+									(lGameOpts & OPT_ALLOW_EON)		? 'E' : '_');
 
 								lSuccess = (mThis->mSession->WaitConnections(pWindow,
 									lTrackName, FALSE,

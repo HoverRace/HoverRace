@@ -355,9 +355,9 @@ void MR_NetworkSession::Process(int pSpeedFactor)
  * Load a new level.  This function calls MR_ClientSession::LoadNew() and then tells the level to notify call ElementCreationHook() and PermElementStateHook() when
  * elements are created.
  */
-BOOL MR_NetworkSession::LoadNew(const char *pTitle, MR_RecordFile *pMazeFile, int pNbLap, BOOL pAllowWeapons, MR_VideoBuffer *pVideo)
+BOOL MR_NetworkSession::LoadNew(const char *pTitle, MR_RecordFile *pMazeFile, int pNbLap, char pGameOpts, MR_VideoBuffer *pVideo)
 {
-	BOOL lReturnValue = MR_ClientSession::LoadNew(pTitle, pMazeFile, pNbLap, pAllowWeapons, pVideo);
+	BOOL lReturnValue = MR_ClientSession::LoadNew(pTitle, pMazeFile, pNbLap, pGameOpts, pVideo);
 
 	if(lReturnValue) {
 		mSession.GetCurrentLevel()->SetBroadcastHook(ElementCreationHook, PermElementStateHook, this);
@@ -781,7 +781,7 @@ BOOL MR_NetworkSession::CreateMainCharacter()
 	ASSERT(mMainCharacter1 == NULL);			  // make sure we are not creating it twice
 	ASSERT(mSession.GetCurrentLevel() != NULL);
 
-	mMainCharacter1 = MR_MainCharacter::New(mNbLap, mAllowWeapons);
+	mMainCharacter1 = MR_MainCharacter::New(mNbLap, mGameOpts);
 
 	// Insert the character in the current level
 	MR_Level *lCurrentLevel = mSession.GetCurrentLevel();

@@ -1459,9 +1459,9 @@ void MR_GameApp::NewLocalSession()
 	// Prompt the user for a track name
 	std::string lCurrentTrack;
 	int lNbLap;
-	bool lAllowWeapons;
+	char lGameOpts;
 
-	lSuccess = MR_SelectTrack(mMainWindow, lCurrentTrack, lNbLap, lAllowWeapons);
+	lSuccess = MR_SelectTrack(mMainWindow, lCurrentTrack, lNbLap, lGameOpts);
 
 	if(lSuccess) {
 		DeleteMovieWnd();
@@ -1475,7 +1475,7 @@ void MR_GameApp::NewLocalSession()
 		// Load the selected track
 		if(lSuccess) {
 			MR_RecordFile *lTrackFile = MR_TrackOpen(mMainWindow, lCurrentTrack.c_str());
-			lSuccess = (lCurrentSession->LoadNew(lCurrentTrack.c_str(), lTrackFile, lNbLap, lAllowWeapons, mVideoBuffer) != FALSE);
+			lSuccess = (lCurrentSession->LoadNew(lCurrentTrack.c_str(), lTrackFile, lNbLap, lGameOpts, mVideoBuffer) != FALSE);
 		}
 		// Create the main character
 		if(lSuccess)
@@ -1518,9 +1518,9 @@ void MR_GameApp::NewSplitSession(int pSplitPlayers)
 	// Prompt the user for a maze name
 	std::string lCurrentTrack;
 	int lNbLap;
-	bool lAllowWeapons;
+	char lGameOpts;
 
-	lSuccess = MR_SelectTrack(mMainWindow, lCurrentTrack, lNbLap, lAllowWeapons);
+	lSuccess = MR_SelectTrack(mMainWindow, lCurrentTrack, lNbLap, lGameOpts);
 
 	if(lSuccess) {
 		// Create the new session
@@ -1557,7 +1557,7 @@ void MR_GameApp::NewSplitSession(int pSplitPlayers)
 		// Load the selected maze
 		if(lSuccess) {
 			MR_RecordFile *lTrackFile = MR_TrackOpen(mMainWindow, lCurrentTrack.c_str());
-			lSuccess = (lCurrentSession->LoadNew(lCurrentTrack.c_str(), lTrackFile, lNbLap, lAllowWeapons, mVideoBuffer) != FALSE);
+			lSuccess = (lCurrentSession->LoadNew(lCurrentTrack.c_str(), lTrackFile, lNbLap, lGameOpts, mVideoBuffer) != FALSE);
 		}
 
 		if(lSuccess) {
@@ -1609,11 +1609,11 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 
 	std::string lCurrentTrack;
 	int lNbLap;
-	bool lAllowWeapons;
+	char lGameOpts;
 	// Prompt the user for a maze name fbm extensions
 
 	if(pServer) {
-		lSuccess = MR_SelectTrack(mMainWindow, lCurrentTrack, lNbLap, lAllowWeapons);
+		lSuccess = MR_SelectTrack(mMainWindow, lCurrentTrack, lNbLap, lGameOpts);
 
 		DeleteMovieWnd();
 		SOUNDSERVER_INIT(mMainWindow);
@@ -1634,21 +1634,33 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 			cfg->player.nickName = lCurrentSession->GetPlayerName();
 			SaveRegistry();
 		}
-		// Extract the lap count from the track name and weapon use
+		// Extract the lap count from the track name and gameplay options
 		// From the end of the string find the two last space
 		int lSpaceCount = 0;
 
 		lNbLap = 5;								  // Default
-		lAllowWeapons = FALSE;
+		lGameOpts = 0;
 
 		for(int lCounter = lCurrentTrack.length() - 1; lCounter >= 0; lCounter--) {
 			if(lCurrentTrack[lCounter] == ' ') {
 				lSpaceCount++;
 
-				if(lSpaceCount == 2)
-					lAllowWeapons = (strncmp(lCurrentTrack.c_str() + lCounter + 1, "no", 2) != 0);
+				if(lSpaceCount == 1) { 
+					/* extract crafts allowed */
+					lGameOpts |= ((lCurrentTrack.c_str())[lCounter + 1] == 'B') ? OPT_ALLOW_BASIC : 0;
+					lGameOpts |= ((lCurrentTrack.c_str())[lCounter + 2] == '2') ? OPT_ALLOW_BI : 0;
+					lGameOpts |= ((lCurrentTrack.c_str())[lCounter + 3] == 'C') ? OPT_ALLOW_CX : 0;
+					lGameOpts |= ((lCurrentTrack.c_str())[lCounter + 4] == 'E') ? OPT_ALLOW_EON : 0;
+				}
 
-				if(lSpaceCount == 4) {
+				if(lSpaceCount == 2) {
+					/* extract game options */
+					lGameOpts |= ((lCurrentTrack.c_str())[lCounter + 1] == 'W') ? OPT_ALLOW_WEAPONS : 0;
+					lGameOpts |= ((lCurrentTrack.c_str())[lCounter + 2] == 'M') ? OPT_ALLOW_MINES : 0;
+					lGameOpts |= ((lCurrentTrack.c_str())[lCounter + 3] == 'C') ? OPT_ALLOW_CANS : 0;
+				}
+
+				if(lSpaceCount == 5) {
 					lNbLap = atoi(lCurrentTrack.c_str() + lCounter + 1);
 
 					if(lNbLap < 1)
@@ -1681,14 +1693,21 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 	}
 
 	if(lSuccess) {
-		lSuccess = (lCurrentSession->LoadNew(lCurrentTrack.c_str(), lTrackFile, lNbLap, lAllowWeapons, mVideoBuffer) != FALSE);
+		lSuccess = (lCurrentSession->LoadNew(lCurrentTrack.c_str(), lTrackFile, lNbLap, lGameOpts, mVideoBuffer) != FALSE);
 	}
 
 	if(lSuccess) {
 		if(pServer) {
 			CString lNameBuffer;
 
-			lNameBuffer.Format("%s %d %s %s", lCurrentTrack.c_str(), lNbLap, lNbLap > 1 ? "laps" : "lap", lAllowWeapons ? "with weapons" : "no weapons");
+			lNameBuffer.Format("%s %d %s; options %c%c%c, %c%c%c%c", lCurrentTrack.c_str(), lNbLap, lNbLap > 1 ? "laps" : "lap", 
+				(lGameOpts & OPT_ALLOW_WEAPONS) ? 'W' : '_',
+				(lGameOpts & OPT_ALLOW_MINES)   ? 'M' : '_',
+				(lGameOpts & OPT_ALLOW_CANS)    ? 'C' : '_',
+				(lGameOpts & OPT_ALLOW_BASIC)   ? 'B' : '_',
+				(lGameOpts & OPT_ALLOW_BI)		? '2' : '_',
+				(lGameOpts & OPT_ALLOW_CX)		? 'C' : '_',
+				(lGameOpts & OPT_ALLOW_EON)		? 'E' : '_');
 
 			// Create a net server
 			lCurrentSession->SetPlayerName(cfg->player.nickName.c_str());
