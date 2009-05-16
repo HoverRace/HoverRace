@@ -46,7 +46,7 @@ CString gFirstLapStr = _("%d %-0.10s #%d%*s   --First lap--  %c");
 
 CString gChartFinish = _("%d %-0.10s #%d%*s %2d.%02d.%03d %2d.%02d.%03d%c");
 CString gChart = _("%d %-0.10s #%d%*s lap:%-2d   %2d.%02d.%03d%c");
-CString gHitChart = _("%d %-0.10s #%d%*s lap:%-2d   %2d.%02d.%03d%c");
+CString gHitChart = _("%d %-0.10s #%d%*s  %2d      %2d");
 CString gCountdownStr = _("Starting in %02d.%02d sec. for %d laps");
 CString gFinishStr = _("Finished in %d.%02d.%03d, placed %d of %d");
 CString gFinishStrSingle = _("Finished in %d.%02d.%03d");
