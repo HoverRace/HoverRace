@@ -38,6 +38,15 @@
 #define MR_MAIN_CHARACTER_DLL_ID     5000
 #define MR_MAIN_CHARACTER_CLASS_ID      1
 
+// for game options (also found in TrackSelect.h)
+#define OPT_ALLOW_WEAPONS	0x40
+#define OPT_ALLOW_MINES		0x20
+#define OPT_ALLOW_CANS		0x10
+#define OPT_ALLOW_BASIC		0x08
+#define OPT_ALLOW_BI		0x02
+#define OPT_ALLOW_CX		0x04
+#define OPT_ALLOW_EON		0x01
+
 class MR_MainCharacter:public MR_FreeElement
 {
 	public:
@@ -96,7 +105,7 @@ class MR_MainCharacter:public MR_FreeElement
 		unsigned int mControlState;
 		BOOL mMotorOnState;
 		int mMotorDisplay;
-		BOOL mAllowWeapons;
+		char mGameOpts;
 
 		double mXSpeed;
 		double mYSpeed;
@@ -150,7 +159,7 @@ class MR_MainCharacter:public MR_FreeElement
 	public:
 		// Construction
 		MR_DllDeclare static void RegisterFactory();
-		MR_DllDeclare static MR_MainCharacter *New(int pNbLap, BOOL pAllowWeapons);
+		MR_DllDeclare static MR_MainCharacter *New(int pNbLap, char pGameOpts);
 
 		~MR_MainCharacter();
 

@@ -268,7 +268,7 @@ void MR_MainCharacter::RegisterFactory()
 	MR_DllObjectFactory::RegisterLocalDll(MR_MAIN_CHARACTER_DLL_ID, FactoryFunc);
 }
 
-MR_MainCharacter *MR_MainCharacter::New(int pNbLap, BOOL pAllowWeapons)
+MR_MainCharacter *MR_MainCharacter::New(int pNbLap, char pGameOpts)
 {
 	MR_ObjectFromFactoryId lId = { MR_MAIN_CHARACTER_DLL_ID, MR_MAIN_CHARACTER_CLASS_ID };
 
@@ -276,8 +276,12 @@ MR_MainCharacter *MR_MainCharacter::New(int pNbLap, BOOL pAllowWeapons)
 
 	if(lReturnValue != NULL) {
 		lReturnValue->mNbLapForRace = pNbLap;
-		lReturnValue->mAllowWeapons = pAllowWeapons;
+		lReturnValue->mGameOpts = pGameOpts;
 	}
+	// if mGameOpts now outlaw basic craft, we must update
+	while(!(lReturnValue->mGameOpts & ((int) pow(2, 3 - ((lReturnValue->mHoverModel + 4) % 4)))))
+		lReturnValue->mHoverModel++;
+
 	return lReturnValue;
 }
 
@@ -329,7 +333,7 @@ MR_ElementNetState MR_MainCharacter::GetNetState() const
 	return lReturnValue;
 }
 
-void MR_MainCharacter::SetNetState(int /*pDataLen */ , const MR_UInt8 * pData)
+void MR_MainCharacter::SetNetState(int /*pDataLen */ , const MR_UInt8 *pData)
 {
 	const MR_MainCharacterState *lState = (const MR_MainCharacterState *) pData;
 
@@ -397,10 +401,21 @@ void MR_MainCharacter::SetControlState(int pState, MR_SimulationTime pTime)
 	// Set HoverType if race not started
 	if(pTime < 0) {
 		if(!(mControlState & (eRight | eLeft))) {
-			if(pState & eRight)
+			if(pState & eRight) {
 				mHoverModel++;
-			if(pState & eLeft)
+				
+				// ensure we are using an allowed craft
+				while(!(mGameOpts & ((int) pow(2, 3 - ((mHoverModel + 4) % 4)))))
+					mHoverModel++;
+			}
+
+			if(pState & eLeft) {
 				mHoverModel--;
+
+				// ensure we are using an allowed craft
+				while(!(mGameOpts & ((int) pow(2, 3 - ((mHoverModel + 4) % 4)))))
+					mHoverModel--;
+			}
 
 			mHoverModel = (mHoverModel + 4) % 4;
 		}
@@ -444,7 +459,7 @@ void MR_MainCharacter::SetControlState(int pState, MR_SimulationTime pTime)
 	mControlState = lState;
 }
 
-int MR_MainCharacter::Simulate(MR_SimulationTime pDuration, MR_Level * pLevel, int pRoom)
+int MR_MainCharacter::Simulate(MR_SimulationTime pDuration, MR_Level *pLevel, int pRoom)
 {
 	mRoom = pRoom;
 
@@ -471,8 +486,8 @@ int MR_MainCharacter::Simulate(MR_SimulationTime pDuration, MR_Level * pLevel, i
 			mCabinOrientation = MR_NORMALIZE_ANGLE(RAD_2_MR_ANGLE(atan2(mYSpeed, mXSpeed)) + MR_PI);
 	}
 	else if(mControlState & eLookBack) {
-		if(mCabinOrientation - mOrientation < (MR_PI / 2));
-		mOrientation = MR_NORMALIZE_ANGLE(mCabinOrientation - MR_PI);
+		if(mCabinOrientation - mOrientation < (MR_PI / 2))
+			mOrientation = MR_NORMALIZE_ANGLE(mCabinOrientation - MR_PI);
 	}
 	//else if((mControlState & eStraffleRight) ^ (mControlState & eStraffleLeft)) {
 	//      if(mControlState & eStraffleRight)
@@ -510,7 +525,7 @@ int MR_MainCharacter::Simulate(MR_SimulationTime pDuration, MR_Level * pLevel, i
 			mFireDone = TRUE;
 
 			if(mCurrentWeapon == eMissile) {
-				if((mMissileRefillDuration == 0) && mAllowWeapons) {
+				if((mMissileRefillDuration == 0) && (mGameOpts & OPT_ALLOW_WEAPONS)) {
 					mMissileRefillDuration = eMissileRefillTime;
 
 					MR_ObjectFromFactoryId lObjectId = { 1, 150 };
@@ -533,7 +548,7 @@ int MR_MainCharacter::Simulate(MR_SimulationTime pDuration, MR_Level * pLevel, i
 				}
 			}
 			else if(mCurrentWeapon == eMine) {
-				if(!mMineList.IsEmpty()) {
+				if(!mMineList.IsEmpty() && (mGameOpts & OPT_ALLOW_MINES)) {
 					MR_3DCoordinate lPos = mPosition;
 					lPos.mZ += 800;
 					pLevel->SetPermElementPos(mMineList.GetHead(), mRoom, lPos);
@@ -541,7 +556,7 @@ int MR_MainCharacter::Simulate(MR_SimulationTime pDuration, MR_Level * pLevel, i
 				}
 			}
 			else if(mCurrentWeapon == ePowerUp) {
-				if(!mPowerUpList.IsEmpty()) {
+				if(!mPowerUpList.IsEmpty() && (mGameOpts & OPT_ALLOW_CANS)) {
 					MR_3DCoordinate lPos = mPosition;
 					lPos.mZ += 1200;
 
@@ -558,7 +573,7 @@ int MR_MainCharacter::Simulate(MR_SimulationTime pDuration, MR_Level * pLevel, i
 	return pRoom;
 }
 
-int MR_MainCharacter::InternalSimulate(MR_SimulationTime pDuration, MR_Level * pLevel, int pRoom)
+int MR_MainCharacter::InternalSimulate(MR_SimulationTime pDuration, MR_Level *pLevel, int pRoom)
 {
 	// Determine new speed (PosVar and OrientationVar
 	double lAbsoluteSpeed = sqrt(mXSpeed * mXSpeed + mYSpeed * mYSpeed);
@@ -843,14 +858,14 @@ void MR_MainCharacter::ApplyEffect(const MR_ContactEffect * pEffect, MR_Simulati
 		if(lLostOfControl->mType == MR_LostOfControl::eMine) {
 			mZSpeed = 1.1 * eMaxZSpeed[0];
 
-			if((lLostOfControl->mElementId != -1) && !mMineList.Full()) {
+			if((lLostOfControl->mElementId != -1) && !mMineList.Full() && (mGameOpts & OPT_ALLOW_MINES)) {
 				mMineList.Add(lLostOfControl->mElementId);
 				pLevel->SetPermElementPos(lLostOfControl->mElementId, -1, mPosition);
 			}
 		}
 	}
 
-	if((lPowerUp != NULL) && mMasterMode) {
+	if(((lPowerUp != NULL) && mMasterMode) && (mGameOpts & OPT_ALLOW_CANS)) {
 		// TODO Add sound
 		if((mPowerUpLeft == 0) && (lPowerUp->mElementPermId != -1) && !mPowerUpList.Full()) {
 			mPowerUpList.Add(lPowerUp->mElementPermId);
@@ -961,7 +976,7 @@ MR_MainCharacter::eWeapon MR_MainCharacter::GetCurrentWeapon() const
 
 int MR_MainCharacter::GetMissileRefillLevel(int pNbLevel) const
 {
-	if(mAllowWeapons)
+	if(mGameOpts & OPT_ALLOW_WEAPONS)
 		return (pNbLevel - 1) * (eMissileRefillTime - mMissileRefillDuration) / eMissileRefillTime;
 	else
 		return 0;
