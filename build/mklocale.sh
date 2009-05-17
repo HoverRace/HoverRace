@@ -8,7 +8,7 @@ for lingua in "$@"; do
 	lingua=`basename "$lingua" .gmo`
 	gmofile="../po/$lingua.gmo"
 	if [ -f "$gmofile" ]; then
-		echo "$lingua"
+		echo -n "$lingua "
 		mkdir "locale/$lingua"
 		mkdir "locale/$lingua/LC_MESSAGES"
 		ln -s \
@@ -16,4 +16,5 @@ for lingua in "$@"; do
 			"locale/$lingua/LC_MESSAGES/hoverrace.mo"
 	fi
 done
+echo
 
