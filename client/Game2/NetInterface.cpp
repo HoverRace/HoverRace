@@ -59,7 +59,6 @@ using HoverRace::Util::Config;
 // Local prototypes
 static CString GetLocalAddrStr();
 static MR_UInt32 GetAddrFromStr(const char *pName);
-static BOOL CALLBACK DialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 using namespace HoverRace::Util;
 
@@ -1144,44 +1143,65 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 						if(!lOk) {
 							HMODULE lModuleHandle = GetModuleHandle(NULL /*"util.dll" */ );
 	
-							if(DialogBoxW(lModuleHandle, MAKEINTRESOURCEW(IDD_WAIT_ALL), pWindow, DialogProc) == IDOK) {
+							if(DialogBoxW(lModuleHandle, MAKEINTRESOURCEW(IDD_WAIT_ALL), pWindow, WaitConnCallback) == IDOK) {
 								lOk = TRUE;
 							}
 						}
 	
 						if(lOk) {
-							MR_NetMessageBuffer lMessage;
-	
-							lMessage.mMessageType = MRNM_READY;
-							lMessage.mClient = mActiveInterface->mId;
-							lMessage.mDataLen = 1;
-	
-							// Send a READY message to all the clients
-							for(lCounter = 0; lCounter < eMaxClient; lCounter++) {
-								lMessage.mData[0] = lCounter + 1;
-	
-								mActiveInterface->mClient[lCounter].Send(&lMessage, MR_NET_REQUIRED);
-							}
-	
-							// Disable all callbacks
-							for(lCounter = 0; lCounter < eMaxClient; lCounter++) {
-								if(mActiveInterface->mClient[lCounter].IsConnected()) {
-									WSAAsyncSelect(mActiveInterface->mClient[lCounter].GetSocket(), pWindow, MRM_CLIENT + lCounter, 0);
-									WSAAsyncSelect(mActiveInterface->mClient[lCounter].GetUDPSocket(), pWindow, MRM_CLIENT + lCounter, 0);
+							Config *cfg = Config::GetInstance();
+							if(cfg->misc.aloneWarning) {
+								// check that we have any opponents
+								int opponents = 0;
+								for(int i = 0; i < eMaxClient; i++) {
+									if(mActiveInterface->mClient[i].IsConnected())
+										opponents++;
+								}
+
+								if(opponents == 0) {
+									lOk = FALSE;
+									HMODULE lModuleHandle = GetModuleHandle(NULL /*"util.dll" */ );
+									// warn
+									if(DialogBoxW(lModuleHandle, MAKEINTRESOURCEW(IDD_WARN_ALONE), pWindow, WarnAloneCallback) == IDOK) {
+										lOk = TRUE;
+									}
 								}
 							}
-							WSAAsyncSelect(mActiveInterface->mRegistrySocket, pWindow, MRM_CLIENT, 0);
+
+							if(lOk) {
+								MR_NetMessageBuffer lMessage;
 	
-							if(mActiveInterface->mReturnMessage == 0) {
-								EndDialog(pWindow, IDOK);
+								lMessage.mMessageType = MRNM_READY;
+								lMessage.mClient = mActiveInterface->mId;
+								lMessage.mDataLen = 1;
+	
+								// Send a READY message to all the clients
+								for(lCounter = 0; lCounter < eMaxClient; lCounter++) {
+									lMessage.mData[0] = lCounter + 1;
+	
+									mActiveInterface->mClient[lCounter].Send(&lMessage, MR_NET_REQUIRED);
+								}
+	
+								// Disable all callbacks
+								for(lCounter = 0; lCounter < eMaxClient; lCounter++) {
+									if(mActiveInterface->mClient[lCounter].IsConnected()) {
+										WSAAsyncSelect(mActiveInterface->mClient[lCounter].GetSocket(), pWindow, MRM_CLIENT + lCounter, 0);
+										WSAAsyncSelect(mActiveInterface->mClient[lCounter].GetUDPSocket(), pWindow, MRM_CLIENT + lCounter, 0);
+									}
+								}
+								WSAAsyncSelect(mActiveInterface->mRegistrySocket, pWindow, MRM_CLIENT, 0);
+	
+								if(mActiveInterface->mReturnMessage == 0) {
+									EndDialog(pWindow, IDOK);
+								}
+								else {
+									SendMessage(GetParent(pWindow), mActiveInterface->mReturnMessage, IDOK, 0);
+									DestroyWindow(pWindow);
+								}
 							}
 							else {
-								SendMessage(GetParent(pWindow), mActiveInterface->mReturnMessage, IDOK, 0);
-								DestroyWindow(pWindow);
+								// MessageBox( pWindow, "Please wait until all clients have all successfully connected", "TCP Server", MB_ICONINFORMATION|MB_OK|MB_APPLMODAL );
 							}
-						}
-						else {
-							// MessageBox( pWindow, "Please wait until all clients have all successfully connected", "TCP Server", MB_ICONINFORMATION|MB_OK|MB_APPLMODAL );
 						}
 					}
 					break;
@@ -1798,6 +1818,75 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 }
 
 /**
+ * This function is the callback for the "Warning, about to launch alone" dialog requested in #101.
+ *
+ * Its function is to warn the user if they are launching a game alone.
+ */
+BOOL CALLBACK MR_NetworkInterface::WarnAloneCallback(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam) {
+	switch (pMsgId) {
+		case WM_INITDIALOG: // set up the window
+			// do i18n
+			SetWindowTextW(pWindow, Str::UW(_("Warning!")));
+			//SetDlgItemTextW(pWindow, IDC_TEXT_WARNING, 
+			//	Str::UW(_("It is highly preferable to wait until all players have successfully connected to the game before pressing the START buttton.")));
+			SetDlgItemTextW(pWindow, IDC_TEXT_WARNING,
+				Str::UW(_("You are about to launch the race without any opponents.  You will be on your own.  It is preferable to wait for other players to join your game.  Are you sure?")));
+			SetDlgItemTextW(pWindow, IDC_ASK_AGAIN, Str::UW(_("Ask me this each time I launch a game alone")));
+			SetDlgItemTextW(pWindow, IDOK, Str::UW(_("OK")));
+			SetDlgItemTextW(pWindow, IDCANCEL, Str::UW(_("Cancel")));
+			SendDlgItemMessage(pWindow, IDC_ASK_AGAIN, BM_SETCHECK, BST_CHECKED, 0);
+			break;
+
+		case WM_COMMAND:
+			switch (LOWORD(pWParam)) {
+				case IDCANCEL:
+					EndDialog(pWindow, IDCANCEL);
+					return TRUE;
+
+				case IDOK:
+					EndDialog(pWindow, IDOK);
+
+					Config *cfg = Config::GetInstance();
+					cfg->misc.aloneWarning = (SendDlgItemMessage(pWindow, IDC_ASK_AGAIN, BM_GETCHECK, 0, 0) == BST_CHECKED);
+
+					return TRUE;
+			}
+	}
+
+	return FALSE;
+}
+
+/***
+ * This callback is used for the dialog displayed if not all players have connected successfully.
+ * It is rather simple.
+ */
+BOOL CALLBACK MR_NetworkInterface::WaitConnCallback(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam) {
+	switch (pMsgId) {
+		case WM_INITDIALOG: // set up the window
+			// do i18n
+			SetWindowTextW(pWindow, Str::UW(_("Warning!")));
+			SetDlgItemTextW(pWindow, IDC_WARN_TEXT, 
+				Str::UW(_("It is highly preferable to wait until all players have successfully connected to the game before pressing the start button.")));
+			SetDlgItemTextW(pWindow, IDOK, Str::UW(_("Start NOW!")));
+			SetDlgItemTextW(pWindow, IDCANCEL, Str::UW(_("OK")));
+			break;
+
+		case WM_COMMAND:
+			switch (LOWORD(pWParam)) {
+				case IDCANCEL:
+					EndDialog(pWindow, IDCANCEL);
+					return TRUE;
+
+				case IDOK:
+					EndDialog(pWindow, IDOK);
+					return TRUE;
+			}
+	}
+
+	return FALSE;
+}
+
+/**
  * This function sends the MRNM_CONNECTION_DONE message to the server, if we have successfully connected to all other clients.  The message is not
  * sent if any clients are not yet finished with connecting.
  */
@@ -2338,30 +2427,4 @@ MR_UInt32 GetAddrFromStr(const char *pName)
 		lReturnValue = INADDR_ANY;
 	}
 	return lReturnValue;
-}
-
-/**
- * Callback for generic dialogs.
- *
- * @param pWindow Parent window
- * @param pMsgId ID of the message sent by the dialog
- * @param pWParam ID denoting a selected option (for pMsgId WM_COMMAND) 
- * @param pLParam not used but required for MFC callback
- */
-static BOOL CALLBACK DialogProc(HWND pWindow, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-	switch (uMsg) {
-		case WM_COMMAND:
-			switch (LOWORD(wParam)) {
-				case IDCANCEL:
-					EndDialog(pWindow, IDCANCEL);
-					return TRUE;
-
-				case IDOK:
-					EndDialog(pWindow, IDOK);
-					return TRUE;
-			}
-	}
-
-	return FALSE;
 }

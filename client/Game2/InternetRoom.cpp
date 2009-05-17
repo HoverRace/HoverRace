@@ -721,13 +721,7 @@ BOOL MR_InternetRoom::DisplayChatRoom(HWND pParentWindow, MR_NetworkSession *pSe
 
 		mSession->SetPlayerName(mUser);
 
-		if(gNbBannerEntries == 0) {
-			lReturnValue = DialogBoxW(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDD_INTERNET_MEETING), pParentWindow, RoomCallBack) == IDOK;
-		}
-		else {
-			lReturnValue = DialogBoxW(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDD_INTERNET_MEETING_PUB), pParentWindow, RoomCallBack) == IDOK;
-		}
-
+		lReturnValue = DialogBoxW(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDD_INTERNET_MEETING_PUB), pParentWindow, RoomCallBack) == IDOK;
 	}
 	return lReturnValue;
 }

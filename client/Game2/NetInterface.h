@@ -170,6 +170,8 @@ class MR_NetworkInterface
 		static BOOL CALLBACK ServerAddrCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 		static BOOL CALLBACK WaitGameNameCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 		static BOOL CALLBACK ListCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
+		static BOOL CALLBACK WarnAloneCallback(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
+		static BOOL CALLBACK WaitConnCallback(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 
 		// Helper function
 		void SendConnectionDoneIfNeeded();

@@ -428,7 +428,7 @@ BEGIN
     PUSHBUTTON      "Start NOW!",IDOK,96,41,50,14
     ICON            IDI_WARNING2,IDC_STATIC,7,7,20,20
     LTEXT           "It is highly preferable to wait until all players have successfully connected to the game before pressing the START buttton.",
-                    IDC_STATIC,34,7,141,30
+                    IDC_WARN_TEXT,34,7,141,30
 END
 
 IDD_CHAT_MESSAGES DIALOG  0, 0, 186, 122
@@ -1179,6 +1179,47 @@ END
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
 #endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_WARN_ALONE DIALOGEX 0, 0, 186, 78
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Warning!"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,46,57,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,97,57,50,14
+    CONTROL         "Ask me this each time I launch a game alone",
+                    IDC_ASK_AGAIN,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,45,
+                    172,10
+    LTEXT           "You are about to launch the race without any opponents.  You will be on your own.  It is preferable to wait for other players to join your game.  Are you sure?",
+                    IDC_TEXT_WARNING,37,7,142,34
+    ICON            IDI_WARNING2,IDC_STATIC,7,7,21,20
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_WARN_ALONE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 71
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
