@@ -144,6 +144,7 @@ class MR_DllDeclare Config
 		struct cfg_misc_t {
 			bool displayFirstScreen;
 			bool introMovie;
+			bool aloneWarning; /// warn a player if he launches a game alone
 
 			void Load(yaml::MapNode*);
 			void Save(yaml::Emitter*);
