@@ -1832,8 +1832,8 @@ BOOL CALLBACK MR_NetworkInterface::WarnAloneCallback(HWND pWindow, UINT pMsgId, 
 			SetDlgItemTextW(pWindow, IDC_TEXT_WARNING,
 				Str::UW(_("You are about to launch the race without any opponents.  You will be on your own.  It is preferable to wait for other players to join your game.  Are you sure?")));
 			SetDlgItemTextW(pWindow, IDC_ASK_AGAIN, Str::UW(_("Ask me this each time I launch a game alone")));
-			SetDlgItemTextW(pWindow, IDOK, Str::UW(_("OK")));
-			SetDlgItemTextW(pWindow, IDCANCEL, Str::UW(_("Cancel")));
+			SetDlgItemTextW(pWindow, IDOK, Str::UW(_("Yes")));
+			SetDlgItemTextW(pWindow, IDCANCEL, Str::UW(_("No")));
 			SendDlgItemMessage(pWindow, IDC_ASK_AGAIN, BM_SETCHECK, BST_CHECKED, 0);
 			break;
 
