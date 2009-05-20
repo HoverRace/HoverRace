@@ -111,8 +111,6 @@ static int FindFocusItem(HWND pWindow);
 
 // DNS Cache
 static CString gUserNameCache;
-static CString gsServerAlias; // this appears to never actually be used
-unsigned long gsServerIP; // this appears to never actually be used
 
 // MR_InternetRequest
 
@@ -1391,9 +1389,6 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 	
 				{
 					if(!mThis->AddUserOp(pWindow)) {
-						// Clear IP cache
-						gsServerAlias = "";
-	
 						EndDialog(pWindow, IDCANCEL);
 					}
 					else {
