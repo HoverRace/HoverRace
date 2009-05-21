@@ -76,6 +76,23 @@ Hope you get some use out of this!
 // MYSQL CONFIG FILE : dbconnect.php
 include "dbconnect.php";
 
+// GETTING THEIR IP
+$playerip = isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
+$useragent = $_SERVER['HTTP_USER_AGENT'];
+
+if(!$useragent)
+{
+	$useragent = "1.23";
+	$os = "(Win32)";
+	$cc = "»";
+} else {
+	$useragent = split(" ", $useragent);
+	$os = $useragent[1];
+	$useragent = split("/", $useragent[0]);
+	$useragent = $useragent[1];
+	$cc = utf8_encode("»");
+}
+
 // CURRENT TIME FOR IMR SHOWING (Comment out to not include this
 $currenttime = "<" . date("H:i:s") . "> ";
 
@@ -83,7 +100,7 @@ $currenttime = "<" . date("H:i:s") . "> ";
 $link = mysql_connect("$serverip", "$serverusername", "$serverpassword");
 if (mysql_errno() == 1203) {
   // 1203 == ER_TOO_MANY_USER_CONNECTIONS (mysqld_error.h)
-  print_imr("CHAT\nIMR» There are currently too many connections to the database, hold tight, once ");
+  print_imr("CHAT\nIMR$cc There are currently too many connections to the database, hold tight, once ");
   print_imr("these message stops repeating itself, the IMR should be fine.\n");
   exit;
 }
@@ -102,21 +119,6 @@ $olduserrem= time();
 $olduserrem-= 60*60*24;     // HOW MANY SECONDS TO REMOVE OLD USERS FROM THE OLDUSERLIST TABLE (60*60*24=A DAY)
 
 $weburl="http://www.hoverrace.com";     // WEBSITE ADDRESS
-
-// GETTING THEIR IP
-$playerip = isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
-$useragent = $_SERVER['HTTP_USER_AGENT'];
-
-if(!$useragent)
-{
-	$useragent = "1.23";
-	$os = "(Win32)";
-} else {
-	$useragent = split(" ", $useragent);
-	$os = $useragent[1];
-	$useragent = split("/", $useragent[0]);
-	$useragent = $useragent[1];
-}
 
 // DEBUG ERRORS WITH : $result = mysql_query("INSERT INTO debug (string) VALUES ('$_SERVER[QUERY_STRING]')",$db);
 
@@ -274,14 +276,14 @@ if ($command[0]=="=REFRESH") {
         	do {
         	    // SEND A PRIVATE MESSAGE
         	    if ($myrowshowmess["ToUser"]==TRUE and $refreshid[0]==$myrowshowmess["ToUser"]) {
-				print_imr("CHAT\n" . urldecode($myrowshowmess["UserName"]) . " <private>» ");
+				print_imr("CHAT\n" . urldecode($myrowshowmess["UserName"]) . " <private>$cc ");
                 $message = $myrowshowmess["Message"];
 				$message = str_replace("+","%2B",$message);
 				$message = str_replace("\'","'",$message);
 				print_imr(urldecode($message). "\n");
         	    } elseif ($myrowshowmess["ToUser"]==FALSE) {
         	    // PRINTS OFF THE NEW MESSAGE AND WHO IT IS BY
-             	print_imr("CHAT\n" . urldecode($myrowshowmess["UserName"]) . "» ");
+             	print_imr("CHAT\n" . urldecode($myrowshowmess["UserName"]) . "$cc ");
                 $message = $myrowshowmess["Message"];
 				$message = str_replace("+","%2B",$message);
 				$message = str_replace("\'","'",$message);
