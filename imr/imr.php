@@ -376,9 +376,9 @@ function ADD_GAME($db, $CMD) {
     if ($myrow = mysql_fetch_array($result))
     {
         do {
-            if ($myrow["GameID"] - $GameID > 1) $GameSlot = TRUE;
+            if ($myrow["GameID"] - $GameID > 1) break;
             else $GameID = $myrow["GameID"];
-        } while ($myrow = mysql_fetch_array($result) OR $GameSlot == FALSE);
+        } while ($myrow = mysql_fetch_array($result));
     }
     $GameID++;
     
@@ -390,7 +390,7 @@ function ADD_GAME($db, $CMD) {
 		$myrowmts = mysql_fetch_array($resultmts);
 		$ip = $myrowmts["IPAddress"];
 
-	    mysql_query("INSERT INTO `gamelist` (`GameID`,`UserID`,`GameName`,`Track`,`Laps`,`Weapons`,`GameIP`,`Port`,`Version`) VALUES ('$GameID','$CMD[1]','" . addslashes($CMD[2]) ."','" . addslashes($CMD[3]) ."','$CMD[4]','$CMD[5]','$ip','$CMD[6]', '$ua')",$db);
+	    mysql_query("INSERT INTO `gamelist` (`GameID`,`UserID`,`GameName`,`Track`,`Laps`,`Weapons`,`GameIP`,`Port`,`Version`) VALUES ('$GameID','$CMD[1]','" . addslashes($CMD[2]) ."','" . addslashes($CMD[3]) ."','$CMD[4]','$CMD[5]','$ip','$CMD[6]', '" . GetUserAgent() . "')",$db);
 	    mysql_query("INSERT INTO `gameleave` (`GameID`,`HostName`,`GameName`,`Laps`,`Weapons`) VALUES ('$GameID','$myrowmts[UserName]','" . addslashes($CMD[2]) ."','$CMD[4]','$CMD[5]')",$db);
 	    mysql_query("INSERT INTO `gameplayers` (`GameID`,`UserID`,`JoinOrder`) VALUES ('$GameID','$CMD[1]','1')",$db);
 	    // THIS TELLS THE GAMELIST TO UPDATE ON REFRESH
@@ -464,9 +464,9 @@ function JOIN_GAME($db, $CMD) {
 		$resultmts = mysql_query("SELECT * FROM `gameplayers` WHERE `GameID` = '$CMD[1]' ORDER BY `JoinOrder`",$db);
 		if ($myrow = mysql_fetch_array($resultmts)) {
 			do {
-			    if ($myrow["JoinOrder"] - $oldpid > 1) $GotPid = TRUE;
+			    if ($myrow["JoinOrder"] - $oldpid > 1) break;
 			    else $oldpid = $myrow["JoinOrder"];
-			} while (mysql_fetch_array($resultmts) OR $GotPid == FALSE);
+			} while (mysql_fetch_array($resultmts));
 		}
 		$oldpid++;
 		
@@ -620,10 +620,11 @@ function GameListUpdate($UserID)
 	        }
 		    // COUNTS THE PLAYERS IN THE GAME, AND MAKES THE PRINT FOR LATER
 		    $playercount=0;
-		    $resultshowpl = mysql_query("SELECT * FROM `gameplayers` WHERE `GameID` = '$gamescount' ORDER BY `JoinOrder`",$db);
+		    $playerlist=FALSE;
+		    $resultshowpl = mysql_query("SELECT * FROM `gameplayers` WHERE `GameID` = '$myrow[GameID]' ORDER BY `JoinOrder`",$db);
 	    	if ($myrowshowpl = mysql_fetch_array($resultshowpl)) {
 	    	    do {
-	    			$playerlist = "$myrowshowpl[UserID] ";
+	    			$playerlist .= "$myrowshowpl[UserID] ";
 	    			$playercount++;
 	    	    } while ($myrowshowpl = mysql_fetch_array($resultshowpl));
 	    	}
