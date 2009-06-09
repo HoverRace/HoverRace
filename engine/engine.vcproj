@@ -591,6 +591,9 @@
 			<File
 				RelativePath=".\Util\yaml\SeqNode.h">
 			</File>
+			<File
+				RelativePath=".\Util\yaml\YamlExn.h">
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\StdAfx.cpp">
