@@ -104,6 +104,7 @@ class MR_GameApp
 		bool SetVideoMode(int pX, int pY, const std::string *monitor=NULL);
 		void RefreshTitleBar();
 
+		void OnChar(char c);
 		int ReadAsyncInputControllerPlayer(int playerIdx);
 		void ReadAsyncInputController();		  // Get the state of the input controler (KDB, joystick, mouse)
 

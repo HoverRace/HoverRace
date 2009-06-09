@@ -187,6 +187,7 @@ class MR_DllDeclare Config
 			bool silent;
 			bool aieeee;
 			bool showFramerate;
+			bool enableConsole;
 		} runtime;
 };
 

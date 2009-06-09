@@ -412,6 +412,8 @@ void Config::ResetToDefaults()
 
 	runtime.silent = false;
 	runtime.aieeee = false;
+	runtime.showFramerate = false;
+	runtime.enableConsole = true;
 }
 
 /**

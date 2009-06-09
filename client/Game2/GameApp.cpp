@@ -465,10 +465,16 @@ unsigned long MR_GameThread::Loop(LPVOID pThread)
 
 		ASSERT(lThis->mGameApp->mCurrentSession != NULL);
 
+		OS::timestamp_t tick = OS::Time();
+
 		// Game processing
 		MR_SAMPLE_START(ReadInputs, "ReadInputs");
 		lThis->mGameApp->ReadAsyncInputController();
 		MR_SAMPLE_END(ReadInputs);
+
+		if (lThis->mGameApp->highObserver != NULL)
+			lThis->mGameApp->highObserver->Advance(tick);
+
 		MR_SAMPLE_START(Process, "Process");
 
 #ifdef MR_AVI_CAPTURE
@@ -1236,6 +1242,16 @@ void MR_GameApp::RefreshView()
 			mObserver4->PlaySounds(mCurrentSession->GetCurrentLevel(), mCurrentSession->GetMainCharacter4());
 
 		MR_SoundServer::ApplyContinuousPlay();
+	}
+}
+
+void MR_GameApp::OnChar(char c)
+{
+	if (highObserver != NULL && highObserver->OnChar(c)) {
+		return;
+	}
+	else if (mCurrentSession != NULL) {
+		mCurrentSession->AddMessageKey(c);
 	}
 }
 
@@ -2260,9 +2276,7 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 			break;
 
 		case WM_CHAR:
-			if(This->mCurrentSession != NULL) {
-				This->mCurrentSession->AddMessageKey((char) pWParam);
-			}
+			This->OnChar((char)pWParam);
 			return 0;
 
 		case WM_KEYDOWN:
