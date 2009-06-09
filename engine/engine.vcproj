@@ -22,7 +22,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\include"
+				AdditionalIncludeDirectories="../include;../include/lua"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;MR_ENGINE;YAML_DECLARE_STATIC;WITH_OPENAL"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="0"
@@ -35,7 +35,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="winmm.lib yamlD.lib ddraw.lib dxguid.lib dsound.lib"
+				AdditionalDependencies="winmm.lib yamlD.lib ddraw.lib dxguid.lib dsound.lib lua5.1D.lib"
 				OutputFile="$(OutDir)\$(ProjectName).dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../lib"
@@ -76,7 +76,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="\gdk\sdk\inc;..\include"
+				AdditionalIncludeDirectories="../include;../include/lua"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;MR_ENGINE;YAML_DECLARE_STATIC;WITH_OPENAL"
 				StringPooling="TRUE"
 				MinimalRebuild="FALSE"
@@ -92,7 +92,7 @@
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="FALSE"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="winmm.lib yaml.lib ddraw.lib dxguid.lib dsound.lib"
+				AdditionalDependencies="winmm.lib yaml.lib ddraw.lib dxguid.lib dsound.lib  lua5.1.lib"
 				OutputFile=".\..\Release\engine.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
@@ -593,6 +593,19 @@
 			</File>
 			<File
 				RelativePath=".\Util\yaml\YamlExn.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="Script"
+			Filter="">
+			<File
+				RelativePath=".\Script\Env.cpp">
+			</File>
+			<File
+				RelativePath=".\Script\Env.h">
+			</File>
+			<File
+				RelativePath=".\Script\ScriptExn.h">
 			</File>
 		</Filter>
 		<File
