@@ -4,14 +4,23 @@
 
 #include "StdAfx.h"
 
+#include <boost/format.hpp>
+
 #include "Emitter.h"
 
 using namespace yaml;
 
 #define YAML_STR(s) ((yaml_char_t*)(s))
 
-static const std::string trueStr("true");
-static const std::string falseStr("false");
+namespace {
+	const std::string trueStr("true");
+	const std::string falseStr("false");
+
+	// Always use the "C" locale for writing numbers.
+	const std::locale stdLocale("C");
+	boost::format intFmt("%d", stdLocale);
+	boost::format floatFmt("%g", stdLocale);
+}
 
 /**
  * Create a new emitter.
@@ -179,10 +188,13 @@ void Emitter::Value(bool val)
  */
 void Emitter::Value(int val)
 {
+	Value(boost::str(intFmt % val));
+	/*
 	char buf[256];
 	_snprintf(buf, 255, "%d", val);
 	buf[255] = 0;
 	Value(buf);
+	*/
 }
 
 /**
@@ -191,10 +203,13 @@ void Emitter::Value(int val)
  */
 void Emitter::Value(double val)
 {
+	Value(boost::str(floatFmt % val));
+	/*
 	char buf[256];
 	_snprintf(buf, 255, "%g", val);
 	buf[255] = 0;
 	Value(buf);
+	*/
 }
 
 /**

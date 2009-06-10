@@ -47,6 +47,7 @@
 
 #include <boost/filesystem/convenience.hpp>
 #include <boost/filesystem/path.hpp>
+#include <boost/format.hpp>
 #include <boost/shared_ptr.hpp>
 
 // Don't use the min/max macros; use std::min and std::max from the STL.

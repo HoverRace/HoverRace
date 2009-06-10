@@ -15,6 +15,11 @@ using namespace yaml;
 #	define stricmp strcasecmp
 #endif
 
+namespace {
+	// Always use the "C" locale for reading numbers.
+	const std::locale stdLocale("C");
+}
+
 /**
  * Constructor.
  * @param doc The containing document.
@@ -75,6 +80,7 @@ bool ScalarNode::AsBool(bool def) const
 double ScalarNode::AsDouble(double def, double min, double max) const
 {
 	std::istringstream iss(value);
+	iss.imbue(stdLocale);
 	double retv;
 	if ((iss >> retv).fail()) return def;
 	if (retv < min) return min;
@@ -92,6 +98,7 @@ double ScalarNode::AsDouble(double def, double min, double max) const
 float ScalarNode::AsFloat(float def, float min, float max) const
 {
 	std::istringstream iss(value);
+	iss.imbue(stdLocale);
 	float retv;
 	if ((iss >> retv).fail()) return def;
 	if (retv < min) return min;
@@ -109,6 +116,7 @@ float ScalarNode::AsFloat(float def, float min, float max) const
 int ScalarNode::AsInt(int def, int min, int max) const
 {
 	std::istringstream iss(value);
+	iss.imbue(stdLocale);
 	int retv;
 	if ((iss >> retv).fail()) return def;
 	if (retv < min) return min;
