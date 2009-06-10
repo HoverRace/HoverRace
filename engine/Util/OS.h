@@ -51,6 +51,7 @@ class MR_DllDeclare OS {
 	public:
 		static int nibbles[256];
 		static std::locale locale;
+		static const std::locale stdLocale;
 
 #		ifdef _WIN32
 			typedef DWORD timestamp_t;
