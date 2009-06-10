@@ -24,9 +24,7 @@
 
 #include <queue>
 
-#ifdef HAVE_LUA
-#	include <lua.hpp>
-#endif
+#include <lua.hpp>
 
 #include "ScriptExn.h"
 
@@ -62,14 +60,10 @@ class MR_DllDeclare Env
 	private:
 		std::string PopError();
 
-#		ifdef HAVE_LUA
-			static int LPrint(lua_State *state);
-#		endif
+		static int LPrint(lua_State *state);
 
 	private:
-#		ifdef HAVE_LUA
-			lua_State *state;
-#		endif
+		lua_State *state;
 };
 
 }  // namespace Script

@@ -28,50 +28,44 @@ using namespace HoverRace::Script;
 
 Env::Env()
 {
-#	ifdef HAVE_LUA
-		state = luaL_newstate();
+	state = luaL_newstate();
 
-		//TODO: Set panic handler.
+	//TODO: Set panic handler.
 
-#		ifdef _WIN32
-			// Register a print function for debugging.
-			lua_pushcfunction(state, &Env::LPrint);
-			lua_setglobal(state, "print");
-#		endif
+#	ifdef _WIN32
+		// Register a print function for debugging.
+		lua_pushcfunction(state, &Env::LPrint);
+		lua_setglobal(state, "print");
 #	endif
 }
 
 Env::~Env()
 {
-#	ifdef HAVE_LUA
-		lua_close(state);
-#	endif
+	lua_close(state);
 }
 
 void Env::Execute(const std::string &chunk)
 {
-#	ifdef HAVE_LUA
-		// Compile the chunk.
-		int status = luaL_loadbuffer(state, chunk.c_str(), chunk.length(), "=lua");
-		if (status != 0) {
-			std::string msg = PopError();
-			if (msg.find("<eof>") != std::string::npos) {
-				// Incomplete chunk.
-				// Callers can use this to keep reading more data.
-				throw IncompleteExn();
-			}
-			else {
-				// Other compilation error.
-				throw ScriptExn(msg);
-			}
+	// Compile the chunk.
+	int status = luaL_loadbuffer(state, chunk.c_str(), chunk.length(), "=lua");
+	if (status != 0) {
+		std::string msg = PopError();
+		if (msg.find("<eof>") != std::string::npos) {
+			// Incomplete chunk.
+			// Callers can use this to keep reading more data.
+			throw IncompleteExn();
 		}
+		else {
+			// Other compilation error.
+			throw ScriptExn(msg);
+		}
+	}
 
-		// Execute the chunk.
-		status = lua_pcall(state, 0, /*LUA_MULTRET*/0, 0);
-		if (status != 0) {
-			throw ScriptExn(PopError());
-		}
-#	endif
+	// Execute the chunk.
+	status = lua_pcall(state, 0, /*LUA_MULTRET*/0, 0);
+	if (status != 0) {
+		throw ScriptExn(PopError());
+	}
 }
 
 /**
@@ -81,18 +75,13 @@ void Env::Execute(const std::string &chunk)
  */
 std::string Env::PopError()
 {
-#	ifdef HAVE_LUA
-		size_t len;
-		const char *s = lua_tolstring(state, -1, &len);
-		std::string msg(s, len);
-		lua_pop(state, 1);
-		return msg;
-#	else
-		return "";
-#	endif
+	size_t len;
+	const char *s = lua_tolstring(state, -1, &len);
+	std::string msg(s, len);
+	lua_pop(state, 1);
+	return msg;
 }
 
-#ifdef HAVE_LUA
 int Env::LPrint(lua_State *state)
 {
 	int numParams = lua_gettop(state);
@@ -110,4 +99,3 @@ int Env::LPrint(lua_State *state)
 
 	return 0;
 }
-#endif
