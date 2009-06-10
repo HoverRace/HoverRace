@@ -59,6 +59,9 @@ class Console
 		Script::Env *scripting;
 		std::string chunk;
 		inputState_t inputState;
+
+		class LogStreamBuf;
+		class LogStream;
 };
 
 }  // namespace HoverRace

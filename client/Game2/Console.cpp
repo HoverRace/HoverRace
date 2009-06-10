@@ -29,11 +29,43 @@
 using namespace HoverRace;
 using namespace HoverRace::Script;
 
+namespace HoverRace {
+
+// Stream bits to redirect output to the console log.
+
+class Console::LogStreamBuf : public std::stringbuf
+{
+	typedef std::stringbuf SUPER;
+	public:
+		LogStreamBuf(Console *console);
+		virtual ~LogStreamBuf();
+
+	protected:
+		virtual int sync();
+
+	private:
+		Console *console;
+};
+
+class Console::LogStream : public std::ostream
+{
+	typedef std::ostream SUPER;
+	public:
+		LogStream(Console *console) :
+			SUPER(new LogStreamBuf(console)) { }
+		virtual ~LogStream() { delete rdbuf(); }
+};
+
+}
+
 Console::Console() :
 	inputState(ISTATE_COMMAND)
 {
 	chunk.reserve(1024);
+
 	scripting = new Env();
+	boost::shared_ptr<std::ostream> logStream(new LogStream(this));
+	scripting->setOutput(logStream);
 }
 
 Console::~Console()
@@ -72,4 +104,40 @@ void Console::SetInputState(inputState_t newState)
 Console::inputState_t Console::GetInputState() const
 {
 	return inputState;
+}
+
+Console::LogStreamBuf::LogStreamBuf(Console *console) :
+	SUPER(), console(console)
+{
+}
+
+Console::LogStreamBuf::~LogStreamBuf()
+{
+	sync();
+}
+
+int Console::LogStreamBuf::sync()
+{
+	std::string s = str();
+
+	// Write each line to the log.
+	std::string line;
+	line.reserve(1024);
+	for (std::string::iterator iter = s.begin();
+		iter != s.end(); ++iter)
+	{
+		if (*iter == '\n') {
+			console->LogInfo(line);
+			line.clear();
+		}
+		else {
+			line += *iter;
+		}
+	}
+	if (!line.empty()) console->LogInfo(line);
+
+	// Reset the string buffer.
+	str(std::string());
+
+	return 0;
 }
