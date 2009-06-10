@@ -96,7 +96,7 @@ OS::Resolution::Resolution(const std::string &s)
  */
 std::string OS::Resolution::AsString() const
 {
-	return str(format("%dx%d") % w % h);
+	return str(format("%dx%d", stdLocale) % w % h);
 }
 
 /**
