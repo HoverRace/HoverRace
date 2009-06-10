@@ -28,13 +28,22 @@
 
 using namespace HoverRace::Script;
 
+#define REG_LUA_LIB(st, name, fn) \
+	lua_pushcfunction((st), (fn)); \
+	lua_pushstring((st), (name)); \
+	lua_call((st), 1, 0)
+
 Env::Env()
 {
 	state = luaL_newstate();
 
 	//TODO: Set panic handler.
 
-	//TODO: Load base library.
+	// Register a "safe" set of standard libraries.
+	REG_LUA_LIB(state, "", luaopen_base);
+	REG_LUA_LIB(state, LUA_MATHLIBNAME, luaopen_math);
+	REG_LUA_LIB(state, LUA_STRLIBNAME, luaopen_string);
+	REG_LUA_LIB(state, LUA_TABLIBNAME, luaopen_table);
 
 	// Override the print function so we can reroute the output.
 	lua_pushlightuserdata(state, this);
@@ -110,11 +119,27 @@ int Env::LPrint(lua_State *state)
 	std::ostream &oss = (self->out == NULL) ? std::cout : *(self->out);
 
 	int numParams = lua_gettop(state);
+
+	lua_getglobal(state, "tostring");
+
 	for (int i = 1; i <= numParams; ++i) {
+		// Call the global "tostring" function 
+		lua_pushvalue(state, -1);
+		lua_pushvalue(state, i);
+		lua_call(state, 1, 1);
+
+		// Get the result.
+		const char *s = lua_tostring(state, -1);
+		if (s == NULL) {
+			// tostring return a non-string result.
+			// This can happen if the tostring function is replaced.
+			ASSERT(false);
+			lua_pop(state, 1);
+			continue;
+		}
 		if (i > 1) oss << '\t';
-		
-		const char *param = lua_tostring(state, i);
-		if (param != NULL) oss << param;
+		oss << s;
+		lua_pop(state, 1);
 	}
 	oss << std::endl;
 
