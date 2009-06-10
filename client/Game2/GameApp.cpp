@@ -3161,6 +3161,8 @@ HPALETTE CreateDIBPalette(LPBITMAPINFO lpbmi, LPINT lpiNumColors)
  */
 void MR_GameApp::UpdateIntensityDialogLabels(HWND pWindow)
 {
+	static format lblFmt("%0.2f");
+
 	char buf[5];
 	buf[4] = '\0';
 
@@ -3169,14 +3171,10 @@ void MR_GameApp::UpdateIntensityDialogLabels(HWND pWindow)
 	long brightness = SendDlgItemMessage(pWindow, IDC_BRIGHTNESS_SLIDER, TBM_GETPOS, 0, 0);
 	long sfxVolume = SendDlgItemMessage(pWindow, IDC_SFX_VOLUME_SLIDER, TBM_GETPOS, 0, 0);
 
-	_snprintf(buf, 4, "%01d.%02d", gamma / 100, gamma % 100);
-	SetDlgItemText(pWindow, IDC_GAMMA_TXT, buf);
-	_snprintf(buf, 4, "%01d.%02d", contrast / 100, contrast % 100);
-	SetDlgItemText(pWindow, IDC_CONTRAST_TXT, buf);
-	_snprintf(buf, 4, "%01d.%02d", brightness / 100, brightness % 100);
-	SetDlgItemText(pWindow, IDC_BRIGHTNESS_TXT, buf);
-	_snprintf(buf, 4, "%01d.%02d", sfxVolume / 100, sfxVolume % 100);
-	SetDlgItemText(pWindow, IDC_SFX_VOLUME_TXT, buf);
+	SetDlgItemText(pWindow, IDC_GAMMA_TXT, str(lblFmt % (gamma / 100.0)).c_str());
+	SetDlgItemText(pWindow, IDC_CONTRAST_TXT, str(lblFmt % (contrast / 100.0)).c_str());
+	SetDlgItemText(pWindow, IDC_BRIGHTNESS_TXT, str(lblFmt % (brightness / 100.0)).c_str());
+	SetDlgItemText(pWindow, IDC_SFX_VOLUME_TXT, str(lblFmt % (sfxVolume / 100.0)).c_str());
 }
 
 /////////////////////////////////   AVI SECTION  //////////////////////////////////////
