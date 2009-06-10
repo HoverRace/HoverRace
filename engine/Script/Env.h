@@ -55,6 +55,9 @@ class MR_DllDeclare Env
 		~Env();
 
 	public:
+		void setOutput(boost::shared_ptr<std::ostream> out);
+
+	public:
 		void Execute(const std::string &chunk);
 
 	private:
@@ -63,6 +66,7 @@ class MR_DllDeclare Env
 		static int LPrint(lua_State *state);
 
 	private:
+		boost::shared_ptr<std::ostream> out;
 		lua_State *state;
 };
 

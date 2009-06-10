@@ -22,6 +22,8 @@
 
 #include "StdAfx.h"
 
+#include <iostream>
+
 #include "Env.h"
 
 using namespace HoverRace::Script;
@@ -32,11 +34,12 @@ Env::Env()
 
 	//TODO: Set panic handler.
 
-#	ifdef _WIN32
-		// Register a print function for debugging.
-		lua_pushcfunction(state, &Env::LPrint);
-		lua_setglobal(state, "print");
-#	endif
+	//TODO: Load base library.
+
+	// Override the print function so we can reroute the output.
+	lua_pushlightuserdata(state, this);
+	lua_pushcclosure(state, Env::LPrint, 1);
+	lua_setglobal(state, "print");
 }
 
 Env::~Env()
@@ -44,6 +47,25 @@ Env::~Env()
 	lua_close(state);
 }
 
+/**
+ * Redirect output to a stream.
+ * @param out The output stream (wrapped in a shared pointer).
+ *            May be @c NULL to use the system default.
+ */
+void Env::setOutput(boost::shared_ptr<std::ostream> out)
+{
+	this->out = out;
+}
+
+/**
+ * Execute a chunk of code.
+ * @param chunk The code to execute.
+ * @throw IncompleteExn If the code does not complete a statement; i.e.,
+ *                      expecting more tokens.  Callers can catch this
+ *                      to keep reading more data to finish the statement.
+ * @throw ScriptExn The code either failed to compile or signaled an error
+ *                  while executing.
+ */
 void Env::Execute(const std::string &chunk)
 {
 	// Compile the chunk.
@@ -84,18 +106,17 @@ std::string Env::PopError()
 
 int Env::LPrint(lua_State *state)
 {
-	int numParams = lua_gettop(state);
+	Env *self = static_cast<Env*>(lua_touserdata(state, lua_upvalueindex(1)));
+	std::ostream &oss = (self->out == NULL) ? std::cout : *(self->out);
 
-	std::string s;
+	int numParams = lua_gettop(state);
 	for (int i = 1; i <= numParams; ++i) {
-		if (i > 1) s += '\t';
+		if (i > 1) oss << '\t';
 		
 		const char *param = lua_tostring(state, i);
-		if (param != NULL) s += param;
+		if (param != NULL) oss << param;
 	}
-	s += '\n';
-
-	OutputDebugString(s.c_str());
+	oss << std::endl;
 
 	return 0;
 }
