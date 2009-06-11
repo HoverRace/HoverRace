@@ -226,10 +226,10 @@ void HighConsole::Render(MR_2DViewPort *vp)
 	{
 		vp->DrawHorizontalLine(ly, 0, viewWidth - 1, 0x18);
 	}
-	for (int ly = viewHeight - commandLineHeight - PADDING_BOTTOM;
-		ly < viewHeight; ++ly)
+	for (int i = 0, ly = viewHeight - commandLineHeight - PADDING_BOTTOM;
+		ly < viewHeight; ++i, ++ly)
 	{
-		vp->DrawHorizontalLine(ly, 0, viewWidth - 1, 0x1a);
+		vp->DrawHorizontalLine(ly, 0, viewWidth - 1, 0x1a - ((i >= 5) ? 5 : i));
 	}
 
 	int x = 0;
@@ -237,7 +237,7 @@ void HighConsole::Render(MR_2DViewPort *vp)
 
 	// Render the log lines.
 	logLines->Render(vp, PADDING_LEFT, y);
-	y += logLines->GetHeight();
+	y += logLines->GetHeight() + (PADDING_BOTTOM / 2);
 
 	// Render the command line.
 	x = PADDING_LEFT;
