@@ -120,6 +120,10 @@ int Env::LPrint(lua_State *state)
 
 	int numParams = lua_gettop(state);
 
+	// Note: This aims to be pretty close to the print() function from the Lua
+	//       base lib, including allowing the global tostring() to be
+	//       replaced (e.g. to support additional types).
+
 	lua_getglobal(state, "tostring");
 
 	for (int i = 1; i <= numParams; ++i) {
@@ -131,7 +135,7 @@ int Env::LPrint(lua_State *state)
 		// Get the result.
 		const char *s = lua_tostring(state, -1);
 		if (s == NULL) {
-			// tostring return a non-string result.
+			// tostring() returned a non-string result.
 			// This can happen if the tostring function is replaced.
 			ASSERT(false);
 			lua_pop(state, 1);
