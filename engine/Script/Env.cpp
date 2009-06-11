@@ -93,10 +93,23 @@ void Env::Execute(const std::string &chunk)
 	}
 
 	// Execute the chunk.
-	status = lua_pcall(state, 0, /*LUA_MULTRET*/0, 0);
+	status = lua_pcall(state, 0, LUA_MULTRET, 0);
 	if (status != 0) {
 		throw ScriptExn(PopError());
 	}
+
+	// If there were any return values, pass them to print().
+	if (lua_gettop(state) > 0) {
+		lua_getglobal(state, "print");
+		lua_insert(state, 1);
+		status = lua_pcall(state, lua_gettop(state) - 1, 0, 0);
+		if (status != 0) {
+			throw ScriptExn(PopError());
+		}
+	}
+
+	// Ensure that the stack is now empty for the next run.
+	lua_settop(state, 0);
 }
 
 /**
