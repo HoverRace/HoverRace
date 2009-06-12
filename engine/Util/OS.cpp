@@ -374,7 +374,7 @@ boost::shared_ptr<OS::monitors_t> OS::GetMonitors()
 #ifdef _WIN32
 std::string OS::GuidToString(const GUID &guid)
 {
-	return str(format("{%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x}") %
+	return str(format("{%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x}", stdLocale) %
 		guid.Data1 % guid.Data2 % guid.Data3 %
 		(int)guid.Data4[0] % (int)guid.Data4[1] %
 		(int)guid.Data4[2] % (int)guid.Data4[3] % (int)guid.Data4[4] % (int)guid.Data4[5] % (int)guid.Data4[6] % (int)guid.Data4[7]);
