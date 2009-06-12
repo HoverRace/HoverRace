@@ -42,7 +42,12 @@ namespace HoverRace {
 namespace Script {
 
 /// Exception to signal that the current chunk is incomplete.
-class IncompleteExn : public ScriptExn { };
+class IncompleteExn : public ScriptExn
+{
+	typedef ScriptExn SUPER;
+	public:
+		IncompleteExn(const std::string &s) : SUPER(s) { }
+};
 
 /**
  * A script environment.

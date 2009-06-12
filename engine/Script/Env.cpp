@@ -84,7 +84,7 @@ void Env::Execute(const std::string &chunk)
 		if (msg.find("<eof>") != std::string::npos) {
 			// Incomplete chunk.
 			// Callers can use this to keep reading more data.
-			throw IncompleteExn();
+			throw IncompleteExn(msg);
 		}
 		else {
 			// Other compilation error.
