@@ -439,6 +439,12 @@ void Config::Load()
 
 		yaml::MapNode *root = dynamic_cast<yaml::MapNode*>(node);
 		if (root != NULL) {
+			// Read the config's reported version so we can pass it to the
+			// section loaders, so they can translate if necessary.
+			// If no version, then assume the latest version.
+			yaml::ScalarNode *verNode = dynamic_cast<yaml::ScalarNode*>(root->Get("version"));
+			std::string cfgVer((verNode == NULL) ? shortVersion : verNode->AsString());
+
 			video.Load(dynamic_cast<yaml::MapNode*>(root->Get("video")));
 			audio.Load(dynamic_cast<yaml::MapNode*>(root->Get("audio")));
 			misc.Load(dynamic_cast<yaml::MapNode*>(root->Get("misc")));
