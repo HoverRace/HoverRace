@@ -29,6 +29,7 @@
 #include "../../engine/Util/Config.h"
 #include "../../engine/VideoServices/2DViewPort.h"
 #include "../../engine/VideoServices/StaticText.h"
+#include "../../engine/VideoServices/VideoBuffer.h"
 
 #include "HighConsole.h"
 
@@ -73,8 +74,10 @@ class HighConsole::LogLines
 }
 
 HighConsole::HighConsole() :
-	SUPER(), cursorOn(true), cursorTick(0)
+	SUPER(), visible(false), cursorOn(true), cursorTick(0)
 {
+	vp = new MR_2DViewPort();
+
 	logFont = new Font("Courier New", 16);
 
 	commandPrompt = new StaticText(COMMAND_PROMPT, *logFont, 0x0a, StaticText::EFFECT_SHADOW);
@@ -105,6 +108,8 @@ HighConsole::~HighConsole()
 	delete commandLineDisplay;
 
 	delete logFont;
+
+	delete vp;
 }
 
 void HighConsole::Advance(OS::timestamp_t tick)
@@ -197,8 +202,12 @@ void HighConsole::OnChar(char c)
  * Renders the console.
  * @param vp The destination viewport (may not be @c NULL).
  */
-void HighConsole::Render(MR_2DViewPort *vp)
+void HighConsole::Render(MR_VideoBuffer *dest)
 {
+	if (!visible) return;
+
+	vp->Setup(dest, 0, 0, dest->GetXRes(), dest->GetYRes());
+
 	const int viewHeight = vp->GetYRes();
 	const int viewWidth = vp->GetXRes();
 

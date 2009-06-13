@@ -26,6 +26,8 @@
 
 #include "Console.h"
 
+class MR_VideoBuffer;
+
 namespace HoverRace {
 
 namespace VideoServices {
@@ -51,10 +53,17 @@ class HighConsole : public Console
 		virtual void LogError(const std::string &s);
 
 	public:
+		void toggleVisible() { visible = !visible; }
+		bool isVisible() const { return visible; }
+
+	public:
 		void OnChar(char c);
-		void Render(MR_2DViewPort *vp);
+		void Render(MR_VideoBuffer *dest);
 
 	private:
+		bool visible;
+		MR_2DViewPort *vp;
+
 		std::string submitBuffer;
 		std::string historyBuffer;
 		boost::mutex submitBufferMutex;

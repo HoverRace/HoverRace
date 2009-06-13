@@ -33,7 +33,6 @@
 #include "../../engine/VideoServices/VideoBuffer.h"
 
 #include "ClientSession.h"
-#include "HighConsole.h"
 
 #include "HighObserver.h"
 
@@ -44,8 +43,7 @@ using namespace HoverRace::VideoServices;
 
 #define STATS_COLOR 0x47
 
-HighObserver::HighObserver() :
-	showConsole(false)
+HighObserver::HighObserver()
 {
 	const Config *cfg = cfg->GetInstance();
 
@@ -57,51 +55,16 @@ HighObserver::HighObserver() :
 	fpsTxt = new MultipartText(*statsFont, statsNumGlyphs, STATS_COLOR);
 	*fpsTxt << pgettext("HUD|Frames Per Second","FPS") << ": " <<
 		boost::format("%0.2f", OS::locale);
-
-	console = cfg->runtime.enableConsole ? new HighConsole() : NULL;
 }
 
 HighObserver::~HighObserver()
 {
-	delete console;
-
 	delete fpsTxt;
 
 	delete statsNumGlyphs;
 	delete statsFont;
 
 	delete viewport;
-}
-
-void HighObserver::Advance(HoverRace::Util::OS::timestamp_t tick)
-{
-	if (console != NULL && showConsole)
-		console->Advance(tick);
-}
-
-/**
- * Send a character keypress to the observer.
- * @param c The character.
- * @return @c true if the keypress was consumed, @c false otherwise.
- */
-bool HighObserver::OnChar(char c)
-{
-	const Config *cfg = Config::GetInstance();
-
-	if (console != NULL) {
-		if (c == '`') {
-			// Toggle console.
-			showConsole = !showConsole;
-			return true;
-		}
-		else if (showConsole) {
-			// Send the key to the console.
-			console->OnChar(c);
-			return true;
-		}
-	}
-
-	return false;
 }
 
 /**
@@ -117,17 +80,6 @@ void HighObserver::RenderStats(const MR_ClientSession *session) const
 }
 
 /**
- * Render the console layer.
- */
-void HighObserver::RenderConsole() const
-{
-	const Config *cfg = Config::GetInstance();
-
-	if (console != NULL && showConsole)
-		console->Render(viewport);
-}
-
-/**
  * Render into the video buffer.
  * @param dest The target video buffer.
  * @param session The current client session.
@@ -137,5 +89,4 @@ void HighObserver::Render(MR_VideoBuffer *dest, const MR_ClientSession *session)
 	viewport->Setup(dest, 0, 0, dest->GetXRes(), dest->GetYRes());
 
 	RenderStats(session);
-	RenderConsole();
 }

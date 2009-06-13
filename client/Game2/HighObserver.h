@@ -25,7 +25,6 @@
 #include "../../engine/Util/OS.h"
 
 namespace HoverRace {
-	class HighConsole;
 	namespace VideoServices {
 		struct Font;
 		class MultipartText;
@@ -54,13 +53,8 @@ class HighObserver
 		HighObserver();
 		~HighObserver();
 
-	public:
-		void Advance(HoverRace::Util::OS::timestamp_t tick);
-		bool OnChar(char c);
-
 	private:
 		void RenderStats(const MR_ClientSession *session) const;
-		void RenderConsole() const;
 	public:
 		void Render(MR_VideoBuffer *dest, const MR_ClientSession *session);
 
@@ -69,7 +63,4 @@ class HighObserver
 		HoverRace::VideoServices::Font *statsFont; ///< Font used for stats HUD text.
 		HoverRace::VideoServices::NumericGlyphs *statsNumGlyphs;
 		HoverRace::VideoServices::MultipartText *fpsTxt;
-
-		HoverRace::HighConsole *console;
-		bool showConsole;
 };

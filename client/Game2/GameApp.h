@@ -29,6 +29,9 @@
 
 class MR_GameApp;
 class HighObserver;
+namespace HoverRace {
+	class HighConsole;
+}
 
 class MR_GameThread
 {
@@ -71,6 +74,7 @@ class MR_GameApp
 		MR_Observer *mObserver3;
 		MR_Observer *mObserver4;
 		HighObserver *highObserver;
+		HoverRace::HighConsole *highConsole;
 		MR_ClientSession *mCurrentSession;
 		MR_GameThread *mGameThread;
 

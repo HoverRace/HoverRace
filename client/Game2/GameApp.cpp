@@ -27,6 +27,7 @@
 #include "resource.h"
 #include "CommonDialog.h"
 #include "NetworkSession.h"
+#include "HighConsole.h"
 #include "HighObserver.h"
 #include "TrackSelect.h"
 #include "TrackDownloadDialog.h"
@@ -98,8 +99,7 @@ void CaptureScreen( MR_VideoBuffer* pVideoBuffer );
 using boost::format;
 using boost::str;
 
-using HoverRace::Util::Config;
-using HoverRace::Util::OS;
+using namespace HoverRace;
 using namespace HoverRace::Util;
 
 enum MR_InControler { MR_KDB, MR_JOY1, MR_JOY2, MR_JOY3, MR_JOY4 };
@@ -459,6 +459,7 @@ unsigned long MR_GameThread::Loop(LPVOID pThread)
 
 	while(true) {
 		EnterCriticalSection(&lThis->mMutex);
+		MR_GameApp *gameApp = lThis->mGameApp;
 
 		if(lThis->mTerminate)
 			break;
@@ -469,24 +470,25 @@ unsigned long MR_GameThread::Loop(LPVOID pThread)
 
 		// Game processing
 		MR_SAMPLE_START(ReadInputs, "ReadInputs");
-		lThis->mGameApp->ReadAsyncInputController();
+		gameApp->ReadAsyncInputController();
 		MR_SAMPLE_END(ReadInputs);
 
-		if (lThis->mGameApp->highObserver != NULL)
-			lThis->mGameApp->highObserver->Advance(tick);
+		HighConsole *highConsole = gameApp->highConsole;
+		if (highConsole != NULL && highConsole->isVisible())
+			highConsole->Advance(tick);
 
 		MR_SAMPLE_START(Process, "Process");
 
 #ifdef MR_AVI_CAPTURE
-		lThis->mGameApp->mCurrentSession->Process(1000 / gCaptureFrameRate);
+		gameApp->mCurrentSession->Process(1000 / gCaptureFrameRate);
 #else
-		lThis->mGameApp->mCurrentSession->Process();
+		gameApp->mCurrentSession->Process();
 #endif
 
 		MR_SAMPLE_END(Process);
 		MR_SAMPLE_START(Refresh, "Refresh");
-		lThis->mGameApp->RefreshView();
-		lThis->mGameApp->mNbFrames++;
+		gameApp->RefreshView();
+		gameApp->mNbFrames++;
 		MR_SAMPLE_END(Refresh);
 
 		MR_PRINT_STATS(10);						  // Print and reset profiling statistics every 5 seconds
@@ -566,6 +568,7 @@ MR_GameApp::MR_GameApp(HINSTANCE pInstance, bool safeMode)
 	mObserver3 = NULL;
 	mObserver4 = NULL;
 	highObserver = NULL;
+	highConsole = NULL;
 	mCurrentSession = NULL;
 	mGameThread = NULL;
 
@@ -602,12 +605,14 @@ void MR_GameApp::Clean()
 	delete mCurrentSession;
 	mCurrentSession = NULL;
 
+	delete highConsole;
 	delete highObserver;
 	mObserver1->Delete();
 	mObserver2->Delete();
 	mObserver3->Delete();
 	mObserver4->Delete();
 
+	highConsole = NULL;
 	highObserver = NULL;
 	mObserver1 = NULL;
 	mObserver2 = NULL;
@@ -1218,6 +1223,9 @@ void MR_GameApp::RefreshView()
 				if (highObserver != NULL) {
 					highObserver->Render(mVideoBuffer, mCurrentSession);
 				}
+				if (highConsole != NULL) {
+					highConsole->Render(mVideoBuffer);
+				}
 
 				mCurrentSession->IncFrameCount();
 
@@ -1247,8 +1255,13 @@ void MR_GameApp::RefreshView()
 
 void MR_GameApp::OnChar(char c)
 {
-	if (highObserver != NULL && highObserver->OnChar(c)) {
-		return;
+	if (highConsole != NULL) {
+		if (c == '`') {
+			highConsole->toggleVisible();
+		}
+		else if (highConsole->isVisible()) {
+			highConsole->OnChar(c);
+		}
 	}
 	else if (mCurrentSession != NULL) {
 		mCurrentSession->AddMessageKey(c);
@@ -1484,6 +1497,9 @@ void MR_GameApp::NewLocalSession()
 		SOUNDSERVER_INIT(mMainWindow);
 		mObserver1 = MR_Observer::New();
 		highObserver = new HighObserver();
+		if (Config::GetInstance()->runtime.enableConsole) {
+			highConsole = new HighConsole();
+		}
 
 		// Create the new session
 		MR_ClientSession *lCurrentSession = new MR_ClientSession();
