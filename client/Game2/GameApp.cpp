@@ -469,13 +469,13 @@ unsigned long MR_GameThread::Loop(LPVOID pThread)
 		OS::timestamp_t tick = OS::Time();
 
 		// Game processing
-		MR_SAMPLE_START(ReadInputs, "ReadInputs");
-		gameApp->ReadAsyncInputController();
-		MR_SAMPLE_END(ReadInputs);
-
 		HighConsole *highConsole = gameApp->highConsole;
-		if (highConsole != NULL && highConsole->isVisible())
+		if (highConsole != NULL && highConsole->isVisible()) {
 			highConsole->Advance(tick);
+		}
+		else {
+			gameApp->ReadAsyncInputController();
+		}
 
 		MR_SAMPLE_START(Process, "Process");
 
