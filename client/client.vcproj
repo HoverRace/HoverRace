@@ -37,7 +37,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="Vfw32.lib vfw32.lib wsock32.lib winmm.lib version.lib comctl32.lib libcurl.lib LiteUnzip.lib intl.lib"
+				AdditionalDependencies="Vfw32.lib vfw32.lib wsock32.lib winmm.lib version.lib comctl32.lib libcurl.lib LiteUnzip.lib intl.lib OIS_d.lib"
 				OutputFile="..\Debug\HoverRace.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
@@ -150,6 +150,12 @@
 			</File>
 			<File
 				RelativePath=".\Game2\Console.h">
+			</File>
+			<File
+				RelativePath=".\Game2\Controller.cpp">
+			</File>
+			<File
+				RelativePath=".\Game2\Controller.h">
 			</File>
 			<File
 				RelativePath=".\Game2\Game2.rc">

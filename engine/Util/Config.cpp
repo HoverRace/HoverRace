@@ -389,26 +389,46 @@ void Config::ResetToDefaults()
 	net.tcpServPort = DEFAULT_TCP_SERV_PORT;
 
 	// Default controls.
-	controls[0].motorOn = 1;
-	controls[0].right = 5;
-	controls[0].left = 6;
-	controls[0].jump = 3;
-	controls[0].fire = 2;
-	controls[0].brake = 4;
-	controls[0].weapon = 11;
-	controls[0].lookBack = 10;
-
-	controls[1].motorOn = 66;
-	controls[1].right = 64;
-	controls[1].left = 61;
-	controls[1].jump = 83;
-	controls[1].fire = 78;
-	controls[1].brake = 79;
-	controls[1].weapon = 77;
-	controls[1].lookBack = 65;
-
+	// values pulled from OIS
+	memset(&controls[0], 0, sizeof(cfg_controls_t));
+	memset(&controls[1], 0, sizeof(cfg_controls_t));
 	memset(&controls[2], 0, sizeof(cfg_controls_t));
 	memset(&controls[3], 0, sizeof(cfg_controls_t));
+
+	controls[0].motorOn.inputType = 
+		controls[0].left.inputType =
+		controls[0].right.inputType = 
+		controls[0].jump.inputType = 
+		controls[0].fire.inputType = 
+		controls[0].brake.inputType = 
+		controls[0].weapon.inputType =
+		controls[0].lookBack.inputType = 
+		controls[1].motorOn.inputType =
+		controls[1].left.inputType =
+		controls[1].right.inputType =
+		controls[1].jump.inputType =
+		controls[1].fire.inputType =
+		controls[1].brake.inputType =
+		controls[1].weapon.inputType =
+		controls[1].lookBack.inputType = OIS::OISKeyboard;
+
+	controls[0].motorOn.kbdBinding = OIS::KC_LSHIFT;
+	controls[0].right.kbdBinding = OIS::KC_RIGHT;
+	controls[0].left.kbdBinding = OIS::KC_LEFT;
+	controls[0].jump.kbdBinding = OIS::KC_UP;
+	controls[0].fire.kbdBinding = OIS::KC_LCONTROL;
+	controls[0].brake.kbdBinding = OIS::KC_DOWN;
+	controls[0].weapon.kbdBinding = OIS::KC_TAB;
+	controls[0].lookBack.kbdBinding = OIS::KC_END;
+
+	controls[1].motorOn.kbdBinding = OIS::KC_F;
+	controls[1].right.kbdBinding = OIS::KC_D;
+	controls[1].left.kbdBinding = OIS::KC_A;
+	controls[1].jump.kbdBinding = OIS::KC_S;
+	controls[1].fire.kbdBinding = OIS::KC_R;
+	controls[1].brake.kbdBinding = OIS::KC_W;
+	controls[1].weapon.kbdBinding = OIS::KC_Q;
+	controls[1].lookBack.kbdBinding = OIS::KC_I;
 
 	runtime.silent = false;
 	runtime.aieeee = false;
@@ -459,7 +479,7 @@ void Config::Load()
 				for (yaml::SeqNode::children_t::iterator iter = children->begin();
 					iter != children->end() && i < MAX_PLAYERS; ++iter, ++i)
 				{
-					controls[i].Load(dynamic_cast<yaml::MapNode*>(*iter), i);
+					controls[i].Load(dynamic_cast<yaml::MapNode*>(*iter));
 				}
 			}
 		}
@@ -670,35 +690,68 @@ void Config::cfg_net_t::Save(yaml::Emitter *emitter)
 
 // controls ////////////////////////////////////////////////////////////////////
 
-void Config::cfg_controls_t::Load(yaml::MapNode *root, int playerNum)
+void Config::cfg_controls_t::Load(yaml::MapNode *root)
 {
 	if (root == NULL) return;
 
-	// The first player is limited to a certain set of keys for some reason.
-	int max = (playerNum == 0) ? 59 : 86;
-
-	READ_INT(root, motorOn, 0, max);
-	READ_INT(root, right, 0, max);
-	READ_INT(root, left, 0, max);
-	READ_INT(root, jump, 0, max);
-	READ_INT(root, fire, 0, max);
-	READ_INT(root, brake, 0, max);
-	READ_INT(root, weapon, 0, max);
-	READ_INT(root, lookBack, 0, max);
+	motorOn.Load(dynamic_cast<yaml::MapNode*>(root->Get("motorOn")));
+	right.Load(dynamic_cast<yaml::MapNode*>(root->Get("right")));
+	left.Load(dynamic_cast<yaml::MapNode*>(root->Get("left")));
+	jump.Load(dynamic_cast<yaml::MapNode*>(root->Get("jump")));
+	fire.Load(dynamic_cast<yaml::MapNode*>(root->Get("fire")));
+	brake.Load(dynamic_cast<yaml::MapNode*>(root->Get("brake")));
+	weapon.Load(dynamic_cast<yaml::MapNode*>(root->Get("weapon")));
+	lookBack.Load(dynamic_cast<yaml::MapNode*>(root->Get("lookBack")));
 }
 
 void Config::cfg_controls_t::Save(yaml::Emitter *emitter)
 {
 	emitter->StartMap();
 
-	EMIT_VAR(emitter, motorOn);
-	EMIT_VAR(emitter, right);
-	EMIT_VAR(emitter, left);
-	EMIT_VAR(emitter, jump);
-	EMIT_VAR(emitter, fire);
-	EMIT_VAR(emitter, brake);
-	EMIT_VAR(emitter, weapon);
-	EMIT_VAR(emitter, lookBack);
+	emitter->MapKey("motorOn");
+	motorOn.Save(emitter);
+	emitter->MapKey("right");
+	right.Save(emitter);
+	emitter->MapKey("left");
+	left.Save(emitter);
+	emitter->MapKey("jump");
+	jump.Save(emitter);
+	emitter->MapKey("fire");
+	fire.Save(emitter);
+	emitter->MapKey("brake");
+	brake.Save(emitter);
+	emitter->MapKey("weapon");
+	weapon.Save(emitter);
+	emitter->MapKey("lookBack");
+	lookBack.Save(emitter);
+
+	emitter->EndMap();
+}
+
+void Config::cfg_controls_t::cfg_control_t::Load(yaml::MapNode *root)
+{
+	if (root == NULL) return;
+
+	READ_INT(root, inputType, 0, 4);
+	READ_INT(root, kbdBinding, 0, 65535);
+	READ_INT(root, button, 0, 65535);
+	READ_INT(root, axis, 0, 65535);
+	READ_INT(root, pov, 0, 65535);
+	READ_INT(root, slider, 0, 65535);
+	READ_INT(root, sensitivity, -32768, 32767);
+}
+
+void Config::cfg_controls_t::cfg_control_t::Save(yaml::Emitter *emitter)
+{
+	emitter->StartMap();
+
+	EMIT_VAR(emitter, inputType);
+	EMIT_VAR(emitter, kbdBinding);
+	EMIT_VAR(emitter, button);
+	EMIT_VAR(emitter, axis);
+	EMIT_VAR(emitter, pov);
+	EMIT_VAR(emitter, slider);
+	EMIT_VAR(emitter, sensitivity);
 
 	emitter->EndMap();
 }

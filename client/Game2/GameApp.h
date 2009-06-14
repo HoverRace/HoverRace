@@ -22,6 +22,7 @@
 #ifndef GAME_APP_H
 #define GAME_APP_H
 
+#include "Controller.h"
 #include "Observer.h"
 #include "ClientSession.h"
 
@@ -98,6 +99,7 @@ class MR_GameApp
 		static BOOL CALLBACK BadModeDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 		static BOOL CALLBACK AboutDlgFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 		static BOOL CALLBACK FirstChoiceDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
+		static BOOL CALLBACK PressKeyDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 
 		static void UpdateIntensityDialogLabels(HWND pWindow);
 
@@ -142,6 +144,8 @@ class MR_GameApp
 
 		BOOL IsGameRunning();					  // return TRUE if a not terminated game is running
 		int AskUserToAbortGame();				  // Return IDOK if OK
+
+		HoverRace::Client::Control::Controller *controller;
 
 	public:
 		MR_GameApp(HINSTANCE pInstance, bool safeMode);

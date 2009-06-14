@@ -182,7 +182,7 @@ int main(int argc, char** argv)
 	char *appDiv = strrchr(appPath, '\\');
 	*appDiv = '\0';
 	chdir(appPath);
-	free(appPath);
+	//free(appPath);
 #endif
 
 	// Process command-line options.

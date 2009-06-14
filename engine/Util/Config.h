@@ -23,6 +23,8 @@
 #pragma once
 
 #include <string>
+#include "OIS/OISPrereqs.h"
+#include "OIS/OISKeyboard.h"
 
 #ifdef _WIN32
 #	ifdef MR_ENGINE
@@ -170,16 +172,33 @@ class MR_DllDeclare Config
 
 		static const int MAX_PLAYERS = 4;
 		struct cfg_controls_t {
-			int motorOn;
-			int right;
-			int left;
-			int jump;
-			int fire;
-			int brake;
-			int weapon;
-			int lookBack;
+			struct cfg_control_t {
+				int inputType; /// OISKeyboard, OISMouse, OISJoyStick
 
-			void Load(yaml::MapNode*, int);
+				// keyboard
+				int kbdBinding; // see OIS KeyCode class
+
+				// mouse or joystick
+				int button;
+				int axis;
+				int pov; // joystick only
+				int slider; // joystick only
+				int sensitivity; // defines how quickly we get to the maximum value
+
+				void Load(yaml::MapNode *);
+				void Save(yaml::Emitter *);
+			};
+
+			cfg_control_t motorOn;
+			cfg_control_t right;
+			cfg_control_t left;
+			cfg_control_t jump;
+			cfg_control_t fire;
+			cfg_control_t brake;
+			cfg_control_t weapon;
+			cfg_control_t lookBack;
+
+			void Load(yaml::MapNode*);
 			void Save(yaml::Emitter*);
 		} controls[MAX_PLAYERS];
 

@@ -24,6 +24,7 @@
 #include <sstream>
 
 #include "GameApp.h"
+#include "Controller.h"
 #include "resource.h"
 #include "CommonDialog.h"
 #include "NetworkSession.h"
@@ -44,6 +45,8 @@
 #include "InternetRoom.h"
 
 #include <vfw.h>
+
+using namespace HoverRace::Client;
 
 // If MR_AVI_CAPTURE is defined
 // #define MR_AVI_CAPTUREh
@@ -646,6 +649,7 @@ void MR_GameApp::LoadRegistry()
 		MR_UInt8 lControlBuffer[32];
 		DWORD lControlBufferSize = sizeof(lControlBuffer);
 
+		/*
 		if(RegQueryValueEx(lProgramKey, "Control", 0, NULL, lControlBuffer, &lControlBufferSize) == ERROR_SUCCESS) {
 			for (int p = 0, i = 0; p < Config::MAX_PLAYERS; ++p) {
 				Config::cfg_controls_t &ctl = cfg->controls[p];
@@ -659,6 +663,7 @@ void MR_GameApp::LoadRegistry()
 				ctl.lookBack = lControlBuffer[i++];
 			}
 		}
+		*/
 
 		double lVideoSetting[3];
 		DWORD lVideoSettingSize = sizeof(lVideoSetting);
@@ -803,6 +808,7 @@ int MR_GameApp::MainLoop()
 				if(!TranslateAccelerator(mMainWindow, mAccelerators, &lMessage)) {
 					TranslateMessage(&lMessage);
 					DispatchMessage(&lMessage);
+					controller->poll();
 				}
 			}
 			else {
@@ -954,6 +960,9 @@ BOOL MR_GameApp::CreateMainWindow()
 	RefreshTitleBar();
 	CreateMainMenu();
 	UpdateMenuItems();
+
+	// set up controller
+	controller = new HoverRace::Client::Control::Controller(mMainWindow);
 
 	return lReturnValue;
 }
@@ -1137,7 +1146,7 @@ BOOL MR_GameApp::InitGame()
 			}
 
 			if(!lSwitchTo256) {					  // load the "Incompatible Video Mode" dialog
-				mBadVideoModeDlg = CreateDialog(mInstance, MAKEINTRESOURCE(IDD_BAD_MODE3), mMainWindow, BadModeDialogFunc);
+				mBadVideoModeDlg = CreateDialogW(mInstance, MAKEINTRESOURCEW(IDD_BAD_MODE3), mMainWindow, BadModeDialogFunc);
 			}
 		}
 	}
@@ -1275,17 +1284,21 @@ void MR_GameApp::OnChar(char c)
  */
 int MR_GameApp::ReadAsyncInputControllerPlayer(int playerIdx)
 {
-	const Config::cfg_controls_t &ctl = Config::GetInstance()->controls[playerIdx];
 	int retv = 0;
 
-	if (CheckKeyState(ctl.motorOn))  retv |= MR_MainCharacter::eMotorOn;
-	if (CheckKeyState(ctl.jump))     retv |= MR_MainCharacter::eJump;
-	if (CheckKeyState(ctl.brake))    retv |= MR_MainCharacter::eBreakDirection;
-	if (CheckKeyState(ctl.fire))     retv |= MR_MainCharacter::eFire;
-	if (CheckKeyState(ctl.weapon))   retv |= MR_MainCharacter::eSelectWeapon;
-	if (CheckKeyState(ctl.lookBack)) retv |= MR_MainCharacter::eLookBack;
-	if (CheckKeyState(ctl.right))    retv |= MR_MainCharacter::eRight;
-	if (CheckKeyState(ctl.left))     retv |= MR_MainCharacter::eLeft;
+	// hack in for now
+	Control::ControlState cur = controller->getState(playerIdx);
+
+	if (cur.motorOn)  retv |= MR_MainCharacter::eMotorOn;
+	if (cur.jump)     retv |= MR_MainCharacter::eJump;
+	if (cur.brake)    retv |= MR_MainCharacter::eBreakDirection;
+	if (cur.fire)     retv |= MR_MainCharacter::eFire;
+	if (cur.weapon)   retv |= MR_MainCharacter::eSelectWeapon;
+	if (cur.lookBack) retv |= MR_MainCharacter::eLookBack;
+	if (cur.right)    retv |= MR_MainCharacter::eRight;
+	if (cur.left)     retv |= MR_MainCharacter::eLeft;
+
+	//controller->poll();
 
 	return retv;
 }
@@ -2715,17 +2728,30 @@ BOOL CALLBACK MR_GameApp::DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, 
 	return lReturnValue;
 }
 
+/***
+ * Dialog callback for the controls property page.
+ * We need to make a separate Controller object for this HWND.
+ *
+ * @param pWindow Handle of our window
+ */
 BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
 {
 	ASSERT(This != NULL);
 	ASSERT(This->mVideoBuffer != NULL);
 	Config *cfg = Config::GetInstance();
 
+	static Config::cfg_controls_t *oldcontrols;
+	static HoverRace::Client::Control::Controller *controller = NULL;
+
 	BOOL lReturnValue = FALSE;
 	int lCounter;
 	switch (pMsgId) {
 		// Catch environment modification events
 		case WM_INITDIALOG:
+			// set up our controller, after destroying the current one
+//			delete This->controller;
+//			controller = new HoverRace::Client::Control::Controller(pWindow);
+
 			// i18nize the choices
 			SetDlgItemTextW(pWindow, IDC_PLAYER1, Str::UW(_("Player 1")));
 			SetDlgItemTextW(pWindow, IDC_PLAYER2, Str::UW(_("Player 2")));
@@ -2740,145 +2766,186 @@ BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 			SetDlgItemTextW(pWindow, IDC_SELECT_WEAPON, Str::UW(_("Select Weapon:")));
 			SetDlgItemTextW(pWindow, IDC_LOOK_BACK, Str::UW(_("Look Back:")));
 
-			// Initialize the lists
-			for(lCounter = 0; lCounter < NB_KEY_PLAYER_1; lCounter++) {
-				char lBuffer[50];
+			SetDlgItemTextW(pWindow, IDC_MOTOR_ON1, Str::UW(This->controller->toString(cfg->controls[0].motorOn).c_str()));
+			SetDlgItemTextW(pWindow, IDC_RIGHT1, Str::UW(This->controller->toString(cfg->controls[0].right).c_str()));
+			SetDlgItemTextW(pWindow, IDC_LEFT1, Str::UW(This->controller->toString(cfg->controls[0].left).c_str()));
+			SetDlgItemTextW(pWindow, IDC_JUMP1, Str::UW(This->controller->toString(cfg->controls[0].jump).c_str()));
+			SetDlgItemTextW(pWindow, IDC_FIRE1, Str::UW(This->controller->toString(cfg->controls[0].fire).c_str()));
+			SetDlgItemTextW(pWindow, IDC_BRAKE1, Str::UW(This->controller->toString(cfg->controls[0].brake).c_str()));
+			SetDlgItemTextW(pWindow, IDC_SELWEAPON1, Str::UW(This->controller->toString(cfg->controls[0].weapon).c_str()));
+			SetDlgItemTextW(pWindow, IDC_LOOKBACK1, Str::UW(This->controller->toString(cfg->controls[0].lookBack).c_str()));
 
-				LoadString(NULL, KeyChoice[lCounter].mStringId, lBuffer, sizeof(lBuffer));
+			SetDlgItemTextW(pWindow, IDC_MOTOR_ON2, Str::UW(This->controller->toString(cfg->controls[1].motorOn).c_str()));
+			SetDlgItemTextW(pWindow, IDC_RIGHT2, Str::UW(This->controller->toString(cfg->controls[1].right).c_str()));
+			SetDlgItemTextW(pWindow, IDC_LEFT2, Str::UW(This->controller->toString(cfg->controls[1].left).c_str()));
+			SetDlgItemTextW(pWindow, IDC_JUMP2, Str::UW(This->controller->toString(cfg->controls[1].jump).c_str()));
+			SetDlgItemTextW(pWindow, IDC_FIRE2, Str::UW(This->controller->toString(cfg->controls[1].fire).c_str()));
+			SetDlgItemTextW(pWindow, IDC_BRAKE2, Str::UW(This->controller->toString(cfg->controls[1].brake).c_str()));
+			SetDlgItemTextW(pWindow, IDC_SELWEAPON2, Str::UW(This->controller->toString(cfg->controls[1].weapon).c_str()));
+			SetDlgItemTextW(pWindow, IDC_LOOKBACK2, Str::UW(This->controller->toString(cfg->controls[1].lookBack).c_str()));
 
-				SendDlgItemMessage(pWindow, IDC_MOTOR_ON1, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_RIGHT1, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_LEFT1, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_JUMP1, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_FIRE1, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_BREAK1, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_SELWEAPON1, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_LOOKBACK1, CB_ADDSTRING, 0, (LONG) lBuffer);
+			SetDlgItemTextW(pWindow, IDC_MOTOR_ON3, Str::UW(This->controller->toString(cfg->controls[2].motorOn).c_str()));
+			SetDlgItemTextW(pWindow, IDC_RIGHT3, Str::UW(This->controller->toString(cfg->controls[2].right).c_str()));
+			SetDlgItemTextW(pWindow, IDC_LEFT3, Str::UW(This->controller->toString(cfg->controls[2].left).c_str()));
+			SetDlgItemTextW(pWindow, IDC_JUMP3, Str::UW(This->controller->toString(cfg->controls[2].jump).c_str()));
+			SetDlgItemTextW(pWindow, IDC_FIRE3, Str::UW(This->controller->toString(cfg->controls[2].fire).c_str()));
+			SetDlgItemTextW(pWindow, IDC_BRAKE3, Str::UW(This->controller->toString(cfg->controls[2].brake).c_str()));
+			SetDlgItemTextW(pWindow, IDC_SELWEAPON3, Str::UW(This->controller->toString(cfg->controls[2].weapon).c_str()));
+			SetDlgItemTextW(pWindow, IDC_LOOKBACK3, Str::UW(This->controller->toString(cfg->controls[2].lookBack).c_str()));
+
+			SetDlgItemTextW(pWindow, IDC_MOTOR_ON4, Str::UW(This->controller->toString(cfg->controls[3].motorOn).c_str()));
+			SetDlgItemTextW(pWindow, IDC_RIGHT4, Str::UW(This->controller->toString(cfg->controls[3].right).c_str()));
+			SetDlgItemTextW(pWindow, IDC_LEFT4, Str::UW(This->controller->toString(cfg->controls[3].left).c_str()));
+			SetDlgItemTextW(pWindow, IDC_JUMP4, Str::UW(This->controller->toString(cfg->controls[3].jump).c_str()));
+			SetDlgItemTextW(pWindow, IDC_FIRE4, Str::UW(This->controller->toString(cfg->controls[3].fire).c_str()));
+			SetDlgItemTextW(pWindow, IDC_BRAKE4, Str::UW(This->controller->toString(cfg->controls[3].brake).c_str()));
+			SetDlgItemTextW(pWindow, IDC_SELWEAPON4, Str::UW(This->controller->toString(cfg->controls[3].weapon).c_str()));
+			SetDlgItemTextW(pWindow, IDC_LOOKBACK4, Str::UW(This->controller->toString(cfg->controls[3].lookBack).c_str()));
+
+			// set up new controls
+			oldcontrols = new Config::cfg_controls_t[cfg->MAX_PLAYERS];
+			memcpy((void *) oldcontrols, (void *) cfg->controls, sizeof(cfg->controls));
+			break;
+
+		case WM_COMMAND:
+			{
+				int control = 0;
+				int player = 0;
+				switch(LOWORD(pWParam)) {
+					case IDC_MOTOR_ON1:
+					case IDC_MOTOR_ON2:
+					case IDC_MOTOR_ON3:
+					case IDC_MOTOR_ON4:
+						control = CTL_MOTOR_ON;
+						break;
+
+					case IDC_LEFT1:
+					case IDC_LEFT2:
+					case IDC_LEFT3:
+					case IDC_LEFT4:
+						control = CTL_LEFT;
+						break;
+
+					case IDC_RIGHT1:
+					case IDC_RIGHT2:
+					case IDC_RIGHT3:
+					case IDC_RIGHT4:
+						control = CTL_RIGHT;
+						break;
+
+					case IDC_JUMP1:
+					case IDC_JUMP2:
+					case IDC_JUMP3:
+					case IDC_JUMP4:
+						control = CTL_JUMP;
+						break;
+					
+					case IDC_FIRE1:
+					case IDC_FIRE2:
+					case IDC_FIRE3:
+					case IDC_FIRE4:
+						control = CTL_FIRE;
+						break;
+					
+					case IDC_BRAKE1:
+					case IDC_BRAKE2:
+					case IDC_BRAKE3:
+					case IDC_BRAKE4:
+						control = CTL_BRAKE;
+						break;
+					
+					case IDC_SELWEAPON1:
+					case IDC_SELWEAPON2:
+					case IDC_SELWEAPON3:
+					case IDC_SELWEAPON4:
+						control = CTL_WEAPON;
+						break;
+
+					case IDC_LOOKBACK1:
+					case IDC_LOOKBACK2:
+					case IDC_LOOKBACK3:
+					case IDC_LOOKBACK4:
+						control = CTL_LOOKBACK;
+						break;
+				}
+
+				switch(LOWORD(pLParam)) {
+					case IDC_MOTOR_ON1:
+					case IDC_LEFT1:
+					case IDC_RIGHT1:
+					case IDC_JUMP1:
+					case IDC_FIRE1:
+					case IDC_BRAKE1:
+					case IDC_SELWEAPON1:
+					case IDC_LOOKBACK1:
+						player = 0;
+						break;
+
+					case IDC_MOTOR_ON2:
+					case IDC_LEFT2:
+					case IDC_RIGHT2:
+					case IDC_JUMP2:
+					case IDC_FIRE2:
+					case IDC_BRAKE2:
+					case IDC_SELWEAPON2:
+					case IDC_LOOKBACK2:
+						player = 1;
+						break;
+
+					case IDC_MOTOR_ON3:
+					case IDC_LEFT3:
+					case IDC_RIGHT3:
+					case IDC_JUMP3:
+					case IDC_FIRE3:
+					case IDC_BRAKE3:
+					case IDC_SELWEAPON3:
+					case IDC_LOOKBACK3:
+						player = 2;
+						break;
+
+					case IDC_MOTOR_ON4:
+					case IDC_LEFT4:
+					case IDC_RIGHT4:
+					case IDC_JUMP4:
+					case IDC_FIRE4:
+					case IDC_BRAKE4:
+					case IDC_SELWEAPON4:
+					case IDC_LOOKBACK4:
+						player = 3;
+						break;
+				}
+
+				// now launch dialog to capture that key
+				This->controller->captureNextInput(control, player, pWindow);
+				if(DialogBoxW(This->mInstance, MAKEINTRESOURCEW(IDD_PRESS_ANY_KEY), pWindow, PressKeyDialogFunc) == IDC_DISABLE) {
+					// the control needs to be disabled
+					This->controller->disableInput(control, player);
+				}
 			}
+			break;
 
-			for(lCounter = 0; lCounter < NB_KEY_PLAYER_2; lCounter++) {
-				char lBuffer[50];
-				LoadString(NULL, KeyChoice[lCounter].mStringId, lBuffer, sizeof(lBuffer));
-
-				SendDlgItemMessage(pWindow, IDC_MOTOR_ON2, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_RIGHT2, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_LEFT2, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_JUMP2, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_FIRE2, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_BREAK2, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_SELWEAPON2, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_LOOKBACK2, CB_ADDSTRING, 0, (LONG) lBuffer);
-			}
-
-			for(lCounter = 0; lCounter < NB_KEY_PLAYER_3; lCounter++) {
-				char lBuffer[50];
-				LoadString(NULL, KeyChoice[lCounter].mStringId, lBuffer, sizeof(lBuffer));
-
-				SendDlgItemMessage(pWindow, IDC_MOTOR_ON3, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_RIGHT3, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_LEFT3, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_JUMP3, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_FIRE3, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_BREAK3, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_SELWEAPON3, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_LOOKBACK3, CB_ADDSTRING, 0, (LONG) lBuffer);
-			}
-
-			for(lCounter = 0; lCounter < NB_KEY_PLAYER_4; lCounter++) {
-				char lBuffer[50];
-				LoadString(NULL, KeyChoice[lCounter].mStringId, lBuffer, sizeof(lBuffer));
-
-				SendDlgItemMessage(pWindow, IDC_MOTOR_ON4, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_RIGHT4, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_LEFT4, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_JUMP4, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_FIRE4, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_BREAK4, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_SELWEAPON4, CB_ADDSTRING, 0, (LONG) lBuffer);
-				SendDlgItemMessage(pWindow, IDC_LOOKBACK4, CB_ADDSTRING, 0, (LONG) lBuffer);
-			}
-
-			SendDlgItemMessage(pWindow, IDC_MOTOR_ON1, CB_SETCURSEL, cfg->controls[0].motorOn, 0);
-			SendDlgItemMessage(pWindow, IDC_RIGHT1, CB_SETCURSEL, cfg->controls[0].right, 0);
-			SendDlgItemMessage(pWindow, IDC_LEFT1, CB_SETCURSEL, cfg->controls[0].left, 0);
-			SendDlgItemMessage(pWindow, IDC_JUMP1, CB_SETCURSEL, cfg->controls[0].jump, 0);
-			SendDlgItemMessage(pWindow, IDC_FIRE1, CB_SETCURSEL, cfg->controls[0].fire, 0);
-			SendDlgItemMessage(pWindow, IDC_BREAK1, CB_SETCURSEL, cfg->controls[0].brake, 0);
-			SendDlgItemMessage(pWindow, IDC_SELWEAPON1, CB_SETCURSEL, cfg->controls[0].weapon, 0);
-			SendDlgItemMessage(pWindow, IDC_LOOKBACK1, CB_SETCURSEL, cfg->controls[0].lookBack, 0);
-
-			SendDlgItemMessage(pWindow, IDC_MOTOR_ON2, CB_SETCURSEL, cfg->controls[1].motorOn, 0);
-			SendDlgItemMessage(pWindow, IDC_RIGHT2, CB_SETCURSEL, cfg->controls[1].right, 0);
-			SendDlgItemMessage(pWindow, IDC_LEFT2, CB_SETCURSEL, cfg->controls[1].left, 0);
-			SendDlgItemMessage(pWindow, IDC_JUMP2, CB_SETCURSEL, cfg->controls[1].jump, 0);
-			SendDlgItemMessage(pWindow, IDC_FIRE2, CB_SETCURSEL, cfg->controls[1].fire, 0);
-			SendDlgItemMessage(pWindow, IDC_BREAK2, CB_SETCURSEL, cfg->controls[1].brake, 0);
-			SendDlgItemMessage(pWindow, IDC_SELWEAPON2, CB_SETCURSEL, cfg->controls[1].weapon, 0);
-			SendDlgItemMessage(pWindow, IDC_LOOKBACK2, CB_SETCURSEL, cfg->controls[1].lookBack, 0);
-
-			SendDlgItemMessage(pWindow, IDC_MOTOR_ON3, CB_SETCURSEL, cfg->controls[2].motorOn, 0);
-			SendDlgItemMessage(pWindow, IDC_RIGHT3, CB_SETCURSEL, cfg->controls[2].right, 0);
-			SendDlgItemMessage(pWindow, IDC_LEFT3, CB_SETCURSEL, cfg->controls[2].left, 0);
-			SendDlgItemMessage(pWindow, IDC_JUMP3, CB_SETCURSEL, cfg->controls[2].jump, 0);
-			SendDlgItemMessage(pWindow, IDC_FIRE3, CB_SETCURSEL, cfg->controls[2].fire, 0);
-			SendDlgItemMessage(pWindow, IDC_BREAK3, CB_SETCURSEL, cfg->controls[2].brake, 0);
-			SendDlgItemMessage(pWindow, IDC_SELWEAPON3, CB_SETCURSEL, cfg->controls[2].weapon, 0);
-			SendDlgItemMessage(pWindow, IDC_LOOKBACK3, CB_SETCURSEL, cfg->controls[2].lookBack, 0);
-
-			SendDlgItemMessage(pWindow, IDC_MOTOR_ON4, CB_SETCURSEL, cfg->controls[3].motorOn, 0);
-			SendDlgItemMessage(pWindow, IDC_RIGHT4, CB_SETCURSEL, cfg->controls[3].right, 0);
-			SendDlgItemMessage(pWindow, IDC_LEFT4, CB_SETCURSEL, cfg->controls[3].left, 0);
-			SendDlgItemMessage(pWindow, IDC_JUMP4, CB_SETCURSEL, cfg->controls[3].jump, 0);
-			SendDlgItemMessage(pWindow, IDC_FIRE4, CB_SETCURSEL, cfg->controls[3].fire, 0);
-			SendDlgItemMessage(pWindow, IDC_BREAK4, CB_SETCURSEL, cfg->controls[3].brake, 0);
-			SendDlgItemMessage(pWindow, IDC_SELWEAPON4, CB_SETCURSEL, cfg->controls[3].weapon, 0);
-			SendDlgItemMessage(pWindow, IDC_LOOKBACK4, CB_SETCURSEL, cfg->controls[3].lookBack, 0);
-
+		case WM_CHAR:
+		case WM_KEYDOWN:
+		case WM_KEYUP:
+		case WM_SYSDEADCHAR:
+		case WM_UNICHAR:
+			EndDialog(pWindow, IDOK);
 			break;
 
 		case WM_NOTIFY:
 			switch (((NMHDR FAR *) pLParam)->code) {
 				case PSN_APPLY:
-					cfg->controls[0].motorOn  = SendDlgItemMessage(pWindow, IDC_MOTOR_ON1, CB_GETCURSEL, 0, 0);
-					cfg->controls[0].right    = SendDlgItemMessage(pWindow, IDC_RIGHT1, CB_GETCURSEL, 0, 0);
-					cfg->controls[0].left     = SendDlgItemMessage(pWindow, IDC_LEFT1, CB_GETCURSEL, 0, 0);
-					cfg->controls[0].jump     = SendDlgItemMessage(pWindow, IDC_JUMP1, CB_GETCURSEL, 0, 0);
-					cfg->controls[0].fire     = SendDlgItemMessage(pWindow, IDC_FIRE1, CB_GETCURSEL, 0, 0);
-					cfg->controls[0].brake    = SendDlgItemMessage(pWindow, IDC_BREAK1, CB_GETCURSEL, 0, 0);
-					cfg->controls[0].weapon   = SendDlgItemMessage(pWindow, IDC_SELWEAPON1, CB_GETCURSEL, 0, 0);
-					cfg->controls[0].lookBack = SendDlgItemMessage(pWindow, IDC_LOOKBACK1, CB_GETCURSEL, 0, 0);
-
-					cfg->controls[1].motorOn  = SendDlgItemMessage(pWindow, IDC_MOTOR_ON2, CB_GETCURSEL, 0, 0);
-					cfg->controls[1].right    = SendDlgItemMessage(pWindow, IDC_RIGHT2, CB_GETCURSEL, 0, 0);
-					cfg->controls[1].left     = SendDlgItemMessage(pWindow, IDC_LEFT2, CB_GETCURSEL, 0, 0);
-					cfg->controls[1].jump     = SendDlgItemMessage(pWindow, IDC_JUMP2, CB_GETCURSEL, 0, 0);
-					cfg->controls[1].fire     = SendDlgItemMessage(pWindow, IDC_FIRE2, CB_GETCURSEL, 0, 0);
-					cfg->controls[1].brake    = SendDlgItemMessage(pWindow, IDC_BREAK2, CB_GETCURSEL, 0, 0);
-					cfg->controls[1].weapon   = SendDlgItemMessage(pWindow, IDC_SELWEAPON2, CB_GETCURSEL, 0, 0);
-					cfg->controls[1].lookBack = SendDlgItemMessage(pWindow, IDC_LOOKBACK2, CB_GETCURSEL, 0, 0);
-
-					cfg->controls[2].motorOn  = SendDlgItemMessage(pWindow, IDC_MOTOR_ON3, CB_GETCURSEL, 0, 0);
-					cfg->controls[2].right    = SendDlgItemMessage(pWindow, IDC_RIGHT3, CB_GETCURSEL, 0, 0);
-					cfg->controls[2].left     = SendDlgItemMessage(pWindow, IDC_LEFT3, CB_GETCURSEL, 0, 0);
-					cfg->controls[2].jump     = SendDlgItemMessage(pWindow, IDC_JUMP3, CB_GETCURSEL, 0, 0);
-					cfg->controls[2].fire     = SendDlgItemMessage(pWindow, IDC_FIRE3, CB_GETCURSEL, 0, 0);
-					cfg->controls[2].brake    = SendDlgItemMessage(pWindow, IDC_BREAK3, CB_GETCURSEL, 0, 0);
-					cfg->controls[2].weapon   = SendDlgItemMessage(pWindow, IDC_SELWEAPON3, CB_GETCURSEL, 0, 0);
-					cfg->controls[2].lookBack = SendDlgItemMessage(pWindow, IDC_LOOKBACK3, CB_GETCURSEL, 0, 0);
-
-					cfg->controls[3].motorOn  = SendDlgItemMessage(pWindow, IDC_MOTOR_ON4, CB_GETCURSEL, 0, 0);
-					cfg->controls[3].right    = SendDlgItemMessage(pWindow, IDC_RIGHT4, CB_GETCURSEL, 0, 0);
-					cfg->controls[3].left     = SendDlgItemMessage(pWindow, IDC_LEFT4, CB_GETCURSEL, 0, 0);
-					cfg->controls[3].jump     = SendDlgItemMessage(pWindow, IDC_JUMP4, CB_GETCURSEL, 0, 0);
-					cfg->controls[3].fire     = SendDlgItemMessage(pWindow, IDC_FIRE4, CB_GETCURSEL, 0, 0);
-					cfg->controls[3].brake    = SendDlgItemMessage(pWindow, IDC_BREAK4, CB_GETCURSEL, 0, 0);
-					cfg->controls[3].weapon   = SendDlgItemMessage(pWindow, IDC_SELWEAPON4, CB_GETCURSEL, 0, 0);
-					cfg->controls[3].lookBack = SendDlgItemMessage(pWindow, IDC_LOOKBACK4, CB_GETCURSEL, 0, 0);
+					delete oldcontrols;
+//					delete controller;
 
 					This->SaveRegistry();
+					cfg->Save();
 					break;
 			}
 	}
+
+	if(This->controller != NULL)
+		This->controller->poll();
 
 	return lReturnValue;
 }
@@ -3112,6 +3179,41 @@ BOOL CALLBACK MR_GameApp::AboutDlgFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam
 			break;
 	}
 	return lReturnValue;
+}
+
+BOOL CALLBACK MR_GameApp::PressKeyDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam) {
+	BOOL lReturnValue = FALSE;
+
+	This->controller->poll();
+	
+	switch (pMsgId) {
+		// Catch environment modification events
+		case WM_INITDIALOG:
+			// i18n
+			SetWindowTextW(pWindow, Str::UW(_("Control Assignment")));
+			SetDlgItemTextW(pWindow, IDC_DISABLE, Str::UW(_("Disable")));
+			SetDlgItemTextW(pWindow, IDCANCEL, Str::UW(_("Cancel")));
+			
+			lReturnValue = TRUE;
+			break;
+
+		case WM_COMMAND:
+			switch (LOWORD(pWParam)) {
+				// Game control
+				case IDCANCEL:
+					EndDialog(pWindow, IDCANCEL);
+					lReturnValue = TRUE;
+					break;
+
+				case IDC_DISABLE:
+					EndDialog(pWindow, IDC_DISABLE);
+					lReturnValue = TRUE;
+					break;
+			}
+			break;
+	}
+
+	return FALSE;
 }
 
 // Microsoft bitmap stuff

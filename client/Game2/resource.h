@@ -36,6 +36,8 @@
 #define IDD_MISC                        161
 #define IDD_TRACK_DOWNLOAD              163
 #define IDD_WARN_ALONE                  166
+#define IDD_DIALOG1                     167
+#define IDD_PRESS_ANY_KEY               167
 #define IDC_GAMMA_SLIDER                1001
 #define IDC_CONTRAST_SLIDER             1002
 #define IDC_SERVER_PORT                 1002
@@ -191,6 +193,12 @@
 #define IDC_ASK_AGAIN                   1338
 #define IDC_TEXT_WARNING                1339
 #define IDC_WARN_TEXT                   1340
+#define IDC_DISABLE                     1344
+#define IDC_PRESS_ANY_KEY               1345
+#define IDC_BRAKE1                      1346
+#define IDC_BRAKE2                      1347
+#define IDC_BRAKE3                      1348
+#define IDC_BRAKE4                      1349
 #define ID_VIEW_3DACTION                32775
 #define ID_SETTING_WINDOW               32784
 #define ID_GAME_PAUSE                   32788
@@ -406,9 +414,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        167
+#define _APS_NEXT_RESOURCE_VALUE        168
 #define _APS_NEXT_COMMAND_VALUE         40049
-#define _APS_NEXT_CONTROL_VALUE         1341
+#define _APS_NEXT_CONTROL_VALUE         1346
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
