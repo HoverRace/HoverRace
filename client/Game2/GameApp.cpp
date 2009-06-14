@@ -2999,26 +2999,26 @@ BOOL CALLBACK MR_GameApp::BadModeDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 }
 
 BOOL CALLBACK MR_GameApp::FirstChoiceDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
-	{
-		BOOL lReturnValue = FALSE;
-	
-		switch (pMsgId) {
-			// Catch environment modification events
-			case WM_INITDIALOG:
-				// i18n
-				SetWindowTextW(pWindow, Str::UW(_("HoverRace")));
-				SetDlgItemTextW(pWindow, IDC_CLICK_OK,
-					Str::UW(_("Click OK to play on the Internet against other people")));
-				SetDlgItemTextW(pWindow, IDOK, Str::UW(_("OK")));
-				SetDlgItemTextW(pWindow, IDCANCEL, Str::UW(_("Cancel")));
-				SetDlgItemTextW(pWindow, IDC_MAKE_SURE,
-					Str::UW(_("Make sure that you are connected to the Internet before clicking on OK.  If you have any problems, visit our forums at http://www.hoverrace.com/bb for help.")));
+{
+	BOOL lReturnValue = FALSE;
 
-				/*
-				CheckDlgButton(pWindow, IDC_CHECK, BST_CHECKED);
-				*/
-				lReturnValue = TRUE;
-				break;
+	switch (pMsgId) {
+		// Catch environment modification events
+		case WM_INITDIALOG:
+			// i18n
+			SetWindowTextW(pWindow, Str::UW(_("HoverRace")));
+			SetDlgItemTextW(pWindow, IDC_CLICK_OK,
+				Str::UW(_("Click OK to play on the Internet against other people")));
+			SetDlgItemTextW(pWindow, IDOK, Str::UW(_("OK")));
+			SetDlgItemTextW(pWindow, IDCANCEL, Str::UW(_("Cancel")));
+			SetDlgItemTextW(pWindow, IDC_MAKE_SURE,
+				Str::UW(_("Make sure that you are connected to the Internet before clicking on OK.  If you have any problems, visit our forums at http://www.hoverrace.com/bb for help.")));
+
+			/*
+			CheckDlgButton(pWindow, IDC_CHECK, BST_CHECKED);
+			*/
+			lReturnValue = TRUE;
+			break;
 
 		case WM_COMMAND:
 			switch (LOWORD(pWParam)) {
@@ -3083,6 +3083,12 @@ BOOL CALLBACK MR_GameApp::AboutDlgFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam
 					"  http://pyyaml.org/wiki/LibYAML\r\n"
 					"\r\n"
 					"LiteUnzip - Jeff Glatt, based on work by Lucian Wischik, based on work by Jean-Loup Gailly and Mark Adler.\r\n"
+					"\r\n"
+					"Lua -- Copyright (c) 1994-2008 Lua.org, PUC-Rio.\r\n"
+					"  http://www.lua.org/\r\n"
+					"\r\n"
+					"Luabind -- Copyright (c) 2003 Daniel Wallin and Arvid Norberg\r\n"
+					"  http://www.rasterbar.com/products/luabind.html\r\n"
 					;
 				SetDlgItemTextW(pWindow, IDC_ABOUT_TXT, Str::UW(oss.str().c_str()));
 				SetDlgItemTextW(pWindow, IDOK, Str::UW(_("Close")));
