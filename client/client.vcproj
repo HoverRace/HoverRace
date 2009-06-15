@@ -92,7 +92,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vfw32.lib wsock32.lib winmm.lib version.lib comctl32.lib libcurl.lib LiteUnzip.lib intl.lib"
+				AdditionalDependencies="vfw32.lib wsock32.lib winmm.lib version.lib comctl32.lib libcurl.lib LiteUnzip.lib intl.lib OIS.lib"
 				OutputFile=".\..\Release\HoverRace.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
