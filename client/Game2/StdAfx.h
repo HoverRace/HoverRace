@@ -77,3 +77,5 @@
 #	define pgettextImpl(f,x) (x)
 
 #endif  // ENABLE_NLS
+
+#define HR_WEBSITE "http://www.hoverrace.com/"
