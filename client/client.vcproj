@@ -128,6 +128,12 @@
 			Name="Game2"
 			Filter="">
 			<File
+				RelativePath=".\Game2\AboutDialog.cpp">
+			</File>
+			<File
+				RelativePath=".\Game2\AboutDialog.h">
+			</File>
+			<File
 				RelativePath=".\Game2\Banner.cpp">
 			</File>
 			<File
@@ -329,6 +335,46 @@
 						Description="$(InputFileName)"
 						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
 "
+						Outputs="$(OutDir)\$(InputFileName)"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\lib\OIS.dll">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
+						Outputs="$(OutDir)\$(InputFileName)"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
+						Outputs="$(OutDir)\$(InputFileName)"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\lib\OIS_d.dll">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
+						Outputs="$(OutDir)\$(InputFileName)"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
 						Outputs="$(OutDir)\$(InputFileName)"/>
 				</FileConfiguration>
 			</File>
