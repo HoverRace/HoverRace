@@ -70,6 +70,8 @@ std::locale OS::locale("C");
 /// The standard "C" locale for things that should be not be affected by locale.
 const std::locale OS::stdLocale("C");
 
+static GUID zeroGuid = { 0, 0, 0, { 0, 0, 0, 0, 0, 0, 0, 0 } };
+
 static inline bool isHex(const char &c)
 {
 	return 
@@ -311,6 +313,14 @@ static BOOL CALLBACK GetMonitorsProc(GUID *guid, LPSTR /*desc*/,
 }
 #endif
 
+// Predicate to check the "primary" field.
+namespace {
+	struct isNotPrimary
+	{
+		bool operator() (const OS::Monitor &mon) { return !mon.primary; }
+	};
+}
+
 /**
  * Retrieve the list of monitors.
  * @return A shared pointer of monitor info (never @c NULL, never empty).
@@ -324,6 +334,7 @@ boost::shared_ptr<OS::monitors_t> OS::GetMonitors()
 		DirectDrawEnumerateEx(GetMonitorsProc, (void*)&monGuids,
 			DDENUM_ATTACHEDSECONDARYDEVICES | DDENUM_DETACHEDSECONDARYDEVICES);
 
+		bool foundPrimary = false;
 		for (int i = 0; ; ++i) {
 			DISPLAY_DEVICE devInfo;
 			memset(&devInfo, 0, sizeof(devInfo));
@@ -333,11 +344,20 @@ boost::shared_ptr<OS::monitors_t> OS::GetMonitors()
 			// Ignore mirroring pseudo-devices.
 			if (devInfo.StateFlags & DISPLAY_DEVICE_MIRRORING_DRIVER) continue;
 
-			// Only add the device if it was included in the DirectDraw
-			// enumeration.  If DirectDraw couldn't enumerate it, it can't
-			// draw to it.
-			monGuids_t::iterator monEnt = monGuids.find(devInfo.DeviceName);
-			if (monEnt == monGuids.end()) continue;
+			const GUID *guid;
+			if (!monGuids.empty()) {
+				// Add the device if it was included in the DirectDraw
+				// enumeration.
+				monGuids_t::iterator monEnt = monGuids.find(devInfo.DeviceName);
+				if (monEnt == monGuids.end()) continue;
+				guid = &(monEnt->second);
+			}
+			else {
+				// If the DirectDraw enumeration only enumerated a single NULL
+				// device (or no device at all), then assume there's only one
+				// monitor.
+				guid = NULL;
+			}
 			
 			DISPLAY_DEVICE monInfo;
 			memset(&monInfo, 0, sizeof(monInfo));
@@ -346,8 +366,11 @@ boost::shared_ptr<OS::monitors_t> OS::GetMonitors()
 				retv->push_back(Monitor());
 				Monitor &monitor = retv->back();
 				monitor.primary = (devInfo.StateFlags & DISPLAY_DEVICE_PRIMARY_DEVICE) > 0;
+				foundPrimary = foundPrimary || monitor.primary;
 				monitor.name = str(format("%d. %s") % (i + 1) % monInfo.DeviceString);
-				monitor.id = GuidToString(monEnt->second);
+				monitor.id = (guid == NULL) ?
+					"{00000000-0000-0000-0000-000000000000}" :
+					GuidToString(*guid);
 				/*
 				OutputDebugString(monitor.id.c_str());
 				OutputDebugString("\n");
@@ -361,6 +384,34 @@ boost::shared_ptr<OS::monitors_t> OS::GetMonitors()
 					if (!EnumDisplaySettings(devInfo.DeviceName, j, &modeInfo)) break;
 					monitor.resolutions.insert(Resolution(modeInfo.dmPelsWidth, modeInfo.dmPelsHeight));
 				}
+			}
+		}
+
+		// No monitors found?  Fill out a default list and hope for the best!
+		if (retv->empty()) {
+			retv->push_back(Monitor());
+			Monitor &monitor = retv->back();
+			monitor.primary = true;
+			monitor.name = "1.";
+			monitor.id = "{00000000-0000-0000-0000-000000000000}";
+			monitor.resolutions.insert(Resolution(640, 480));
+			monitor.resolutions.insert(Resolution(800, 600));
+			monitor.resolutions.insert(Resolution(1024, 768));
+		}
+		else {
+			// No monitor was marked as primary?  Mark the first one.
+			if (!foundPrimary) {
+				retv->front().primary = true;
+			}
+
+			// If the DirectDraw enumeration only enumerated a single NULL
+			// device (or no device at all), then remove all monitors other
+			// than the primary (since we won't be able to pass a GUID to
+			// DirectDraw for the others).
+			if (monGuids.empty() && retv->size() > 1) {
+				retv->erase(
+					std::remove_if(retv->begin(), retv->end(), isNotPrimary()),
+					retv->end());
 			}
 		}
 
