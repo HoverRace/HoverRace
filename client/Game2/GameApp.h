@@ -149,6 +149,7 @@ class MR_GameApp
 		int setControlPlayer;
 		int setControlControl;
 		HWND preferencesDialog;
+		HWND pressAnyKeyDialog;
 
 	public:
 		MR_GameApp(HINSTANCE pInstance, bool safeMode);

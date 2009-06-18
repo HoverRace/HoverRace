@@ -958,6 +958,8 @@ BOOL MR_GameApp::CreateMainWindow()
 		SetFocus(mMainWindow);
 	}
 
+	pressAnyKeyDialog = NULL;
+
 	RefreshTitleBar();
 	CreateMainMenu();
 	UpdateMenuItems();
@@ -2918,7 +2920,7 @@ BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 				}
 
 				// create dialog window by hand, the hard way
-				{
+				if(This->pressAnyKeyDialog == NULL) {
 					WNDCLASSW lWinClass;
 
 					lWinClass.style = CS_DBLCLKS;
@@ -2941,7 +2943,7 @@ BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 					RECT size = {0};
 					GetWindowRect(This->mMainWindow, &size);
 
-					HWND tmp = CreateWindowW(
+					This->pressAnyKeyDialog = CreateWindowW(
 						L"IDD_PRESS_ANY_KEY",
 						PACKAGE_NAME_L,
 						(WS_POPUPWINDOW | WS_VISIBLE),
@@ -2954,8 +2956,7 @@ BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 						This->mInstance,
 						NULL);
 
-					if(tmp == NULL) { // report error if necessary
-		//				MessageBox(NULL, "SHIT", "SHIT", MB_OK);
+					if(This->pressAnyKeyDialog == NULL) { // report error if necessary
 						DWORD err = GetLastError();
 						LPVOID errMsg;
 					
@@ -2966,10 +2967,14 @@ BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 							err,
 							MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 							(LPTSTR)&errMsg,
-							0, NULL );
+							0, NULL);
 						MessageBox(NULL, (const char*)errMsg, "AIEEE", MB_ICONERROR | MB_APPLMODAL | MB_OK);
 						LocalFree(errMsg);
 					}
+				} else {
+					// put focus back to already existing window
+					EnableWindow(pWindow, false);
+					EnableWindow(This->pressAnyKeyDialog, true);
 				}
 			}
 			break;
@@ -3202,9 +3207,13 @@ LRESULT CALLBACK MR_GameApp::PressKeyDialogFunc(HWND pWindow, UINT pMsgId, WPARA
 			delete tmpControl;
 			tmpControl = NULL;
 
+			// unset the handle
+			This->pressAnyKeyDialog = NULL;
+
 			// now we have to tell the preferences dialog to refresh itself
 			SendMessage(This->preferencesDialog, WM_INITDIALOG /* misuse, but works */, 0, 0);
-
+			KillTimer(pWindow, MRM_CONTROL_TIMER);
+			EnableWindow(This->preferencesDialog, TRUE);
 			DestroyWindow(pWindow);
 			break;
 	}
@@ -3220,8 +3229,9 @@ LRESULT CALLBACK MR_GameApp::PressKeyDialogFunc(HWND pWindow, UINT pMsgId, WPARA
 			tmpControl = NULL;
 
 			SendMessage(This->preferencesDialog, WM_INITDIALOG /* misuse, but works */, 0, 0);
-
+			This->pressAnyKeyDialog = NULL;
 			KillTimer(pWindow, MRM_CONTROL_TIMER);
+			EnableWindow(This->preferencesDialog, TRUE);
 			DestroyWindow(pWindow);
 		}
 	}
