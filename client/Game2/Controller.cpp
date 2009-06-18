@@ -38,19 +38,26 @@ Controller::~Controller() {
 }
 
 /***
+ * Save any control bindings that may have changed.
+ */
+void Controller::saveControls() {
+	handler.saveControls();
+}
+
+/***
  * Poll the inputs for new input.  If there is input, it will call the correct handler.
  */
 void Controller::poll() {
 	try {
-	if(kbd)
-		kbd->capture();
-	if(mouse)
-		mouse->capture();
-	if(joys) {
-		for(int i = 0; i < numJoys; i++)
-			joys[i]->capture();
-	}
-	} catch(Exception &ex) {
+		if(kbd)
+			kbd->capture();
+		if(mouse)
+			mouse->capture();
+		if(joys) {
+			for(int i = 0; i < numJoys; i++)
+				joys[i]->capture();
+		}
+	} catch(Exception &ex) { // this should not happen, hence our error message
 		MessageBox(NULL, "EXCEPTION YO SHIT", "SHIT SHIT", MB_OK);
 	}
 }
@@ -71,6 +78,13 @@ ControlState Controller::getState(int player) const {
  */
 void Controller::captureNextInput(int control, int player, HWND hwnd) {
 	handler.captureNextInput(control, player, hwnd);
+}
+
+/***
+ * Stop waiting to capture the next input.
+ */
+void Controller::stopCapture() {
+	handler.stopCapture();
 }
 
 /***
@@ -172,6 +186,15 @@ void Controller::LoadControllerConfig() {
 }
 
 /***
+ * Check whether or not the controls have been updated (for setting new controls)
+ *
+ * @return whether the controls have been updated
+ */
+bool Controller::controlsUpdated() {
+	return handler.controlsUpdated();
+}
+
+/***
  * Set up the internal EventHandler class.
  */
 Controller::EventHandler::EventHandler() {
@@ -214,6 +237,8 @@ Controller::EventHandler::EventHandler() {
 	captureNext = false;
 	captureControl = 0;
 	capturePlayerId = 0;
+
+	updated = false;
 }
 
 Controller::EventHandler::~EventHandler() {
@@ -322,14 +347,16 @@ void Controller::EventHandler::updateControlState(int keyCode, bool pressed) {
 
 		if((*input).kbdBinding != keyCode) {
 			(*input).kbdBinding = keyCode;
+			(*input).inputType = OISKeyboard;
 			(*cfg_input).kbdBinding = keyCode;
+			(*cfg_input).inputType = OISKeyboard;
 			updated = true;
 		}
 
 		captureNext = false;
 		captureControl = 0;
 		capturePlayerId = 0;
-		SendMessage(captureHwnd, WM_COMMAND, SET_CONTROL, 0);
+		captureHwnd = NULL;
 	} else {
 		// TODO: make mouse and joystick input work
 		if(keyCode == brake[0].kbdBinding) {
@@ -408,41 +435,34 @@ void Controller::EventHandler::updateControlState(int keyCode, bool pressed) {
  * The name of each parameter is the control it denotes.
  */
 void Controller::EventHandler::setControls(HoverRace::Util::Config::cfg_controls_t *controls) {
-	this->brake[0] = toInputControl(controls[0].brake);
-	this->fire[0] = toInputControl(controls[0].fire);
-	this->jump[0] = toInputControl(controls[0].jump);
-	this->left[0] = toInputControl(controls[0].left);
-	this->lookBack[0] = toInputControl(controls[0].lookBack);
-	this->motorOn[0] = toInputControl(controls[0].motorOn);
-	this->right[0] = toInputControl(controls[0].right);
-	this->weapon[0] = toInputControl(controls[0].weapon);
+	for(int i = 0; i < 4; i++) {
+		this->brake[i] = toInputControl(controls[i].brake);
+		this->fire[i] = toInputControl(controls[i].fire);
+		this->jump[i] = toInputControl(controls[i].jump);
+		this->left[i] = toInputControl(controls[i].left);
+		this->lookBack[i] = toInputControl(controls[i].lookBack);
+		this->motorOn[i] = toInputControl(controls[i].motorOn);
+		this->right[i] = toInputControl(controls[i].right);
+		this->weapon[i] = toInputControl(controls[i].weapon);
+	}
+}
 
-	this->brake[1] = toInputControl(controls[1].brake);
-	this->fire[1] = toInputControl(controls[1].fire);
-	this->jump[1] = toInputControl(controls[1].jump);
-	this->left[1] = toInputControl(controls[1].left);
-	this->lookBack[1] = toInputControl(controls[1].lookBack);
-	this->motorOn[1] = toInputControl(controls[1].motorOn);
-	this->right[1] = toInputControl(controls[1].right);
-	this->weapon[1] = toInputControl(controls[1].weapon);
+/***
+ * Store our controls back to the Config object
+ */
+void Controller::EventHandler::saveControls() {
+	Config *cfg = Config::GetInstance();
 
-	this->brake[2] = toInputControl(controls[2].brake);
-	this->fire[2] = toInputControl(controls[2].fire);
-	this->jump[2] = toInputControl(controls[2].jump);
-	this->left[2] = toInputControl(controls[2].left);
-	this->lookBack[2] = toInputControl(controls[2].lookBack);
-	this->motorOn[2] = toInputControl(controls[2].motorOn);
-	this->right[2] = toInputControl(controls[2].right);
-	this->weapon[2] = toInputControl(controls[2].weapon);
-
-	this->brake[3] = toInputControl(controls[3].brake);
-	this->fire[3] = toInputControl(controls[3].fire);
-	this->jump[3] = toInputControl(controls[3].jump);
-	this->left[3] = toInputControl(controls[3].left);
-	this->lookBack[3] = toInputControl(controls[3].lookBack);
-	this->motorOn[3] = toInputControl(controls[3].motorOn);
-	this->right[3] = toInputControl(controls[3].right);
-	this->weapon[3] = toInputControl(controls[3].weapon);
+	for(int i = 0; i < 4; i++) {
+		cfg->controls[i].brake = toCfgControl(this->brake[i]);
+		cfg->controls[i].fire = toCfgControl(this->fire[i]);
+		cfg->controls[i].jump = toCfgControl(this->jump[i]);
+		cfg->controls[i].left = toCfgControl(this->left[i]);
+		cfg->controls[i].lookBack = toCfgControl(this->lookBack[i]);
+		cfg->controls[i].motorOn = toCfgControl(this->motorOn[i]);
+		cfg->controls[i].right = toCfgControl(this->right[i]);
+		cfg->controls[i].weapon = toCfgControl(this->weapon[i]);
+	}
 }
 
 /***
@@ -457,6 +477,16 @@ void Controller::EventHandler::captureNextInput(int control, int player, HWND hw
 	captureControl = control;
 	capturePlayerId = player;
 	captureHwnd = hwnd;
+}
+
+/***
+ * Stop listening to capture the next input.
+ */
+void Controller::EventHandler::stopCapture() {
+	captureNext = false;
+	captureControl = 0;
+	capturePlayerId = 0;
+	captureHwnd = NULL;
 }
 
 /***
@@ -511,6 +541,20 @@ bool Controller::EventHandler::controlsUpdated() {
 
 InputControl Controller::EventHandler::toInputControl(HoverRace::Util::Config::cfg_controls_t::cfg_control_t control) {
 	InputControl ret;
+
+	ret.axis = control.axis;
+	ret.button = control.button;
+	ret.inputType = control.inputType;
+	ret.kbdBinding = control.kbdBinding;
+	ret.pov = control.pov;
+	ret.sensitivity = control.sensitivity;
+	ret.slider = control.slider;
+
+	return ret;
+}
+
+HoverRace::Util::Config::cfg_controls_t::cfg_control_t Controller::EventHandler::toCfgControl(InputControl control) {
+	HoverRace::Util::Config::cfg_controls_t::cfg_control_t ret;
 
 	ret.axis = control.axis;
 	ret.button = control.button;

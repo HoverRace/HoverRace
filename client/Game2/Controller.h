@@ -86,8 +86,10 @@ class Controller {
 		void poll();
 		ControlState getState(int player) const;
 		void captureNextInput(int control, int player, HWND hwnd);
+		void stopCapture();
 		void disableInput(int control, int player);
 		bool controlsUpdated();
+		void saveControls();
 		std::string toString(HoverRace::Util::Config::cfg_controls_t::cfg_control_t control);
 
 	private:
@@ -132,7 +134,9 @@ class Controller {
 				void updateControlState(int keyCode, bool pressed); // accepts only keycodes for now
 
 				void setControls(HoverRace::Util::Config::cfg_controls_t *controls);
+				void saveControls();
 				void captureNextInput(int control, int player, HWND hwnd);
+				void stopCapture();
 				void disableControl(int control, int player);
 				bool controlsUpdated();
 
@@ -150,6 +154,7 @@ class Controller {
 				InputControl weapon[HoverRace::Util::Config::MAX_PLAYERS];
 
 				InputControl toInputControl(HoverRace::Util::Config::cfg_controls_t::cfg_control_t control);
+				HoverRace::Util::Config::cfg_controls_t::cfg_control_t Controller::EventHandler::toCfgControl(InputControl control);
 
 				bool captureNext;
 				int captureControl;

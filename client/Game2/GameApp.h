@@ -96,7 +96,7 @@ class MR_GameApp
 		static BOOL CALLBACK MiscDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 		static BOOL CALLBACK BadModeDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 		static BOOL CALLBACK FirstChoiceDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
-		static BOOL CALLBACK PressKeyDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
+		static LRESULT CALLBACK PressKeyDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 
 		static void UpdateIntensityDialogLabels(HWND pWindow);
 
@@ -143,6 +143,12 @@ class MR_GameApp
 		int AskUserToAbortGame();				  // Return IDOK if OK
 
 		HoverRace::Client::Control::Controller *controller;
+
+		// unfortunate variables required to hold which control and player we might
+		// be setting a control for
+		int setControlPlayer;
+		int setControlControl;
+		HWND preferencesDialog;
 
 	public:
 		MR_GameApp(HINSTANCE pInstance, bool safeMode);

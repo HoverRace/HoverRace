@@ -93,6 +93,7 @@ void CaptureScreen( MR_VideoBuffer* pVideoBuffer );
 
 #define MRM_RETURN2WINDOWMODE  1
 #define MRM_EXIT_MENU_LOOP     2
+#define MRM_CONTROL_TIMER	   3
 
 #ifdef WITH_OPENAL
 #	define SOUNDSERVER_INIT(s) MR_SoundServer::Init()
@@ -809,7 +810,6 @@ int MR_GameApp::MainLoop()
 				if(!TranslateAccelerator(mMainWindow, mAccelerators, &lMessage)) {
 					TranslateMessage(&lMessage);
 					DispatchMessage(&lMessage);
-					controller->poll();
 				}
 			}
 			else {
@@ -1299,7 +1299,7 @@ int MR_GameApp::ReadAsyncInputControllerPlayer(int playerIdx)
 	if (cur.right)    retv |= MR_MainCharacter::eRight;
 	if (cur.left)     retv |= MR_MainCharacter::eLeft;
 
-	//controller->poll();
+	controller->poll();
 
 	return retv;
 }
@@ -2742,7 +2742,6 @@ BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 	Config *cfg = Config::GetInstance();
 
 	static Config::cfg_controls_t *oldcontrols;
-	static HoverRace::Client::Control::Controller *controller = NULL;
 
 	BOOL lReturnValue = FALSE;
 	int lCounter;
@@ -2810,67 +2809,69 @@ BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 
 		case WM_COMMAND:
 			{
-				int control = 0;
-				int player = 0;
+				// reset
+				This->setControlControl = 0;
+				This->setControlPlayer = 0;
+
 				switch(LOWORD(pWParam)) {
 					case IDC_MOTOR_ON1:
 					case IDC_MOTOR_ON2:
 					case IDC_MOTOR_ON3:
 					case IDC_MOTOR_ON4:
-						control = CTL_MOTOR_ON;
+						This->setControlControl = CTL_MOTOR_ON;
 						break;
 
 					case IDC_LEFT1:
 					case IDC_LEFT2:
 					case IDC_LEFT3:
 					case IDC_LEFT4:
-						control = CTL_LEFT;
+						This->setControlControl = CTL_LEFT;
 						break;
 
 					case IDC_RIGHT1:
 					case IDC_RIGHT2:
 					case IDC_RIGHT3:
 					case IDC_RIGHT4:
-						control = CTL_RIGHT;
+						This->setControlControl = CTL_RIGHT;
 						break;
 
 					case IDC_JUMP1:
 					case IDC_JUMP2:
 					case IDC_JUMP3:
 					case IDC_JUMP4:
-						control = CTL_JUMP;
+						This->setControlControl = CTL_JUMP;
 						break;
 					
 					case IDC_FIRE1:
 					case IDC_FIRE2:
 					case IDC_FIRE3:
 					case IDC_FIRE4:
-						control = CTL_FIRE;
+						This->setControlControl = CTL_FIRE;
 						break;
 					
 					case IDC_BRAKE1:
 					case IDC_BRAKE2:
 					case IDC_BRAKE3:
 					case IDC_BRAKE4:
-						control = CTL_BRAKE;
+						This->setControlControl = CTL_BRAKE;
 						break;
 					
 					case IDC_SELWEAPON1:
 					case IDC_SELWEAPON2:
 					case IDC_SELWEAPON3:
 					case IDC_SELWEAPON4:
-						control = CTL_WEAPON;
+						This->setControlControl = CTL_WEAPON;
 						break;
 
 					case IDC_LOOKBACK1:
 					case IDC_LOOKBACK2:
 					case IDC_LOOKBACK3:
 					case IDC_LOOKBACK4:
-						control = CTL_LOOKBACK;
+						This->setControlControl = CTL_LOOKBACK;
 						break;
 				}
 
-				switch(LOWORD(pLParam)) {
+				switch(LOWORD(pWParam)) {
 					case IDC_MOTOR_ON1:
 					case IDC_LEFT1:
 					case IDC_RIGHT1:
@@ -2879,7 +2880,7 @@ BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 					case IDC_BRAKE1:
 					case IDC_SELWEAPON1:
 					case IDC_LOOKBACK1:
-						player = 0;
+						This->setControlPlayer = 0;
 						break;
 
 					case IDC_MOTOR_ON2:
@@ -2890,7 +2891,7 @@ BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 					case IDC_BRAKE2:
 					case IDC_SELWEAPON2:
 					case IDC_LOOKBACK2:
-						player = 1;
+						This->setControlPlayer = 1;
 						break;
 
 					case IDC_MOTOR_ON3:
@@ -2901,7 +2902,7 @@ BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 					case IDC_BRAKE3:
 					case IDC_SELWEAPON3:
 					case IDC_LOOKBACK3:
-						player = 2;
+						This->setControlPlayer = 2;
 						break;
 
 					case IDC_MOTOR_ON4:
@@ -2912,41 +2913,86 @@ BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 					case IDC_BRAKE4:
 					case IDC_SELWEAPON4:
 					case IDC_LOOKBACK4:
-						player = 3;
+						This->setControlPlayer = 3;
 						break;
 				}
 
-				// now launch dialog to capture that key
-				This->controller->captureNextInput(control, player, pWindow);
-				if(DialogBoxW(This->mInstance, MAKEINTRESOURCEW(IDD_PRESS_ANY_KEY), pWindow, PressKeyDialogFunc) == IDC_DISABLE) {
-					// the control needs to be disabled
-					This->controller->disableInput(control, player);
+				// create dialog window by hand, the hard way
+				{
+					WNDCLASSW lWinClass;
+
+					lWinClass.style = CS_DBLCLKS;
+					lWinClass.lpfnWndProc = PressKeyDialogFunc;
+					lWinClass.cbClsExtra = 0;
+					lWinClass.cbWndExtra = 0;
+					lWinClass.hInstance = This->mInstance;
+					lWinClass.hIcon = NULL;
+					lWinClass.hCursor = LoadCursor(NULL, IDC_ARROW);
+					lWinClass.hbrBackground = (HBRUSH) COLOR_APPWORKSPACE + 1;
+					//lWinClass.lpszMenuName = MAKEINTRESOURCEW(FIREBALL_MAIN_MENU);
+					lWinClass.lpszMenuName = NULL;
+					lWinClass.lpszClassName = L"IDD_PRESS_ANY_KEY";
+
+					lReturnValue = RegisterClassW(&lWinClass);
+
+					// set HWND for when we get called back
+					This->preferencesDialog = pWindow;
+
+					RECT size = {0};
+					GetWindowRect(This->mMainWindow, &size);
+
+					HWND tmp = CreateWindowW(
+						L"IDD_PRESS_ANY_KEY",
+						PACKAGE_NAME_L,
+						(WS_POPUPWINDOW | WS_VISIBLE),
+						size.left + 30,
+						size.top + 30,
+						160,
+						100,
+						This->mMainWindow,
+						NULL,
+						This->mInstance,
+						NULL);
+
+					if(tmp == NULL) { // report error if necessary
+		//				MessageBox(NULL, "SHIT", "SHIT", MB_OK);
+						DWORD err = GetLastError();
+						LPVOID errMsg;
+					
+						FormatMessage(
+							FORMAT_MESSAGE_ALLOCATE_BUFFER |
+							FORMAT_MESSAGE_FROM_SYSTEM,
+							NULL,
+							err,
+							MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+							(LPTSTR)&errMsg,
+							0, NULL );
+						MessageBox(NULL, (const char*)errMsg, "AIEEE", MB_ICONERROR | MB_APPLMODAL | MB_OK);
+						LocalFree(errMsg);
+					}
 				}
 			}
-			break;
-
-		case WM_CHAR:
-		case WM_KEYDOWN:
-		case WM_KEYUP:
-		case WM_SYSDEADCHAR:
-		case WM_UNICHAR:
-			EndDialog(pWindow, IDOK);
 			break;
 
 		case WM_NOTIFY:
 			switch (((NMHDR FAR *) pLParam)->code) {
 				case PSN_APPLY:
 					delete oldcontrols;
-//					delete controller;
+
+					// reload controller
+					delete This->controller;
+					This->controller = new HoverRace::Client::Control::Controller(This->mMainWindow);
 
 					This->SaveRegistry();
 					cfg->Save();
 					break;
+
+				case PSN_KILLACTIVE:
+					// for receipt of PSN_APPLY
+					SetWindowLong(pWindow, DWL_MSGRESULT, FALSE);
+					break;
 			}
 	}
-
-	if(This->controller != NULL)
-		This->controller->poll();
 
 	return lReturnValue;
 }
@@ -3108,20 +3154,30 @@ BOOL CALLBACK MR_GameApp::FirstChoiceDialogFunc(HWND pWindow, UINT pMsgId, WPARA
 	return FALSE;
 }
 
-BOOL CALLBACK MR_GameApp::PressKeyDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam) {
-	BOOL lReturnValue = FALSE;
+LRESULT CALLBACK MR_GameApp::PressKeyDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam) {	
+	static HoverRace::Client::Control::Controller *tmpControl = NULL;
 
-	This->controller->poll();
-	
 	switch (pMsgId) {
 		// Catch environment modification events
-		case WM_INITDIALOG:
+		case WM_CREATE:
 			// i18n
 			SetWindowTextW(pWindow, Str::UW(_("Control Assignment")));
-			SetDlgItemTextW(pWindow, IDC_DISABLE, Str::UW(_("Disable")));
-			SetDlgItemTextW(pWindow, IDCANCEL, Str::UW(_("Cancel")));
-			
-			lReturnValue = TRUE;
+
+			// add a static control
+			CreateWindowExW(0, L"STATIC", Str::UW(_("Press a control or wait 3 seconds to disable...")),
+					WS_CHILD | WS_VISIBLE,
+					5, 5, 150, 100,
+					pWindow, 0, 0, 0);
+
+			// disable main window
+			EnableWindow(This->mMainWindow, false);
+			EnableWindow(pWindow, true);
+
+			tmpControl = new HoverRace::Client::Control::Controller(pWindow);
+			tmpControl->captureNextInput(This->setControlControl, This->setControlPlayer, pWindow);
+
+			// set timer for 3 seconds
+			SetTimer(pWindow, MRM_CONTROL_TIMER, 3000, NULL);
 			break;
 
 		case WM_COMMAND:
@@ -3129,18 +3185,48 @@ BOOL CALLBACK MR_GameApp::PressKeyDialogFunc(HWND pWindow, UINT pMsgId, WPARAM p
 				// Game control
 				case IDCANCEL:
 					EndDialog(pWindow, IDCANCEL);
-					lReturnValue = TRUE;
 					break;
 
 				case IDC_DISABLE:
 					EndDialog(pWindow, IDC_DISABLE);
-					lReturnValue = TRUE;
 					break;
 			}
 			break;
+
+		case WM_TIMER:
+			// 3 seconds are up, disable input
+			tmpControl->disableInput(This->setControlControl, This->setControlPlayer);
+			tmpControl->stopCapture();
+			
+			// save new controls
+			delete tmpControl;
+			tmpControl = NULL;
+
+			// now we have to tell the preferences dialog to refresh itself
+			SendMessage(This->preferencesDialog, WM_INITDIALOG /* misuse, but works */, 0, 0);
+
+			DestroyWindow(pWindow);
+			break;
 	}
 
-	return FALSE;
+	if(tmpControl != NULL) {
+		tmpControl->poll();
+
+		// check if things are updated
+		if(tmpControl->controlsUpdated()) {
+			// the new key binding is set, now it's time to close the window
+			tmpControl->saveControls();
+			delete tmpControl;
+			tmpControl = NULL;
+
+			SendMessage(This->preferencesDialog, WM_INITDIALOG /* misuse, but works */, 0, 0);
+
+			KillTimer(pWindow, MRM_CONTROL_TIMER);
+			DestroyWindow(pWindow);
+		}
+	}
+
+	return DefWindowProc(pWindow, pMsgId, pWParam, pLParam);
 }
 
 // Microsoft bitmap stuff
