@@ -583,6 +583,8 @@ MR_GameApp::MR_GameApp(HINSTANCE pInstance, bool safeMode)
 
 	mPaletteChangeAllowed = TRUE;
 
+	controller = NULL;
+
 	// Load the configuration.
 	if (!safeMode) {
 		LoadRegistry();
@@ -595,6 +597,8 @@ MR_GameApp::MR_GameApp(HINSTANCE pInstance, bool safeMode)
 
 MR_GameApp::~MR_GameApp()
 {
+	delete controller;
+
 	Clean();
 	MR_DllObjectFactory::Clean(FALSE);
 	MR_SoundServer::Close();
@@ -2743,7 +2747,7 @@ BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 	ASSERT(This->mVideoBuffer != NULL);
 	Config *cfg = Config::GetInstance();
 
-	static Config::cfg_controls_t *oldcontrols;
+	static Config::cfg_controls_t *oldcontrols = NULL;
 
 	BOOL lReturnValue = FALSE;
 	int lCounter;
@@ -2805,8 +2809,10 @@ BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 			SetDlgItemTextW(pWindow, IDC_LOOKBACK4, Str::UW(This->controller->toString(cfg->controls[3].lookBack).c_str()));
 
 			// set up new controls
-			oldcontrols = new Config::cfg_controls_t[cfg->MAX_PLAYERS];
-			memcpy((void *) oldcontrols, (void *) cfg->controls, sizeof(cfg->controls));
+			if (oldcontrols == NULL) {
+				oldcontrols = new Config::cfg_controls_t[cfg->MAX_PLAYERS];
+				memcpy((void *) oldcontrols, (void *) cfg->controls, sizeof(cfg->controls));
+			}
 			break;
 
 		case WM_COMMAND:
@@ -2982,7 +2988,8 @@ BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 		case WM_NOTIFY:
 			switch (((NMHDR FAR *) pLParam)->code) {
 				case PSN_APPLY:
-					delete oldcontrols;
+					delete[] oldcontrols;
+					oldcontrols = NULL;
 
 					// reload controller
 					delete This->controller;
@@ -2990,6 +2997,11 @@ BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 
 					This->SaveRegistry();
 					cfg->Save();
+					break;
+
+				case PSN_RESET:
+					delete[] oldcontrols;
+					oldcontrols = NULL;
 					break;
 
 				case PSN_KILLACTIVE:
