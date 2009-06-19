@@ -23,8 +23,6 @@ Controller::Controller(HWND mainWindow) {
 	mouse = NULL;
 	joys = NULL;
 
-	handler = EventHandler();
-
 	InitInputManager(mainWindow);
 	LoadControllerConfig();
 }
@@ -35,6 +33,7 @@ Controller::Controller(HWND mainWindow) {
 Controller::~Controller() {
 	// simple cleanup... I like OIS
 	InputManager::destroyInputSystem(mgr);
+	delete[] joys;
 }
 
 /***
