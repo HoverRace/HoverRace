@@ -384,6 +384,14 @@ boost::shared_ptr<OS::monitors_t> OS::GetMonitors()
 					if (!EnumDisplaySettings(devInfo.DeviceName, j, &modeInfo)) break;
 					monitor.resolutions.insert(Resolution(modeInfo.dmPelsWidth, modeInfo.dmPelsHeight));
 				}
+
+				// In the unlikely event that there were no resolutions
+				// to enumerate, fill in some defaults.
+				if (monitor.resolutions.empty()) {
+					monitor.resolutions.insert(Resolution(640, 480));
+					monitor.resolutions.insert(Resolution(800, 600));
+					monitor.resolutions.insert(Resolution(1024, 768));
+				}
 			}
 		}
 
@@ -392,7 +400,7 @@ boost::shared_ptr<OS::monitors_t> OS::GetMonitors()
 			retv->push_back(Monitor());
 			Monitor &monitor = retv->back();
 			monitor.primary = true;
-			monitor.name = "1.";
+			monitor.name = "1. Plug and Play Monitor";
 			monitor.id = "{00000000-0000-0000-0000-000000000000}";
 			monitor.resolutions.insert(Resolution(640, 480));
 			monitor.resolutions.insert(Resolution(800, 600));
