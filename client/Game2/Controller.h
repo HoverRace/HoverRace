@@ -78,7 +78,7 @@ struct InputControl {
  * current control state when it is asked for.  It is meant to replace Richard's old
  * system that was pretty ugly.
  */
-class Controller {
+class Controller : public KeyListener, public MouseListener, public JoyStickListener {
 	public:
 		Controller(HWND mainWindow);
 		~Controller();
@@ -106,64 +106,45 @@ class Controller {
 		int numJoys;
 		JoyStick **joys; /// we can have over 9000 joysticks, depending on how much RAM we have
 
-		// of course... I have to write my own freaking handler... argh
+		// event handler
+		bool keyPressed(const KeyEvent &arg);
+		bool keyReleased(const KeyEvent &arg);
+		bool mouseMoved(const MouseEvent &arg);
+		bool mousePressed(const MouseEvent &arg, MouseButtonID id);
+		bool mouseReleased(const MouseEvent &arg, MouseButtonID id);
+		bool buttonPressed(const JoyStickEvent &arg, int button);
+		bool buttonReleased(const JoyStickEvent &arg, int button);
+		bool axisMoved(const JoyStickEvent &arg, int axis);
+		bool povMoved(const JoyStickEvent &arg, int pov);
+		bool vector3Moved(const JoyStickEvent &arg, int index);
 
-		/***
-		 * The Controller::EventHandler class is an internal class that listens for any 
-		 * events.  When an event is received, it modifies the current ControlState, which
-		 * is returned when the getControlState() function is called.
-		 */
-		class EventHandler : public KeyListener, public MouseListener, public JoyStickListener {
-			public:
-				EventHandler();
-				~EventHandler();
+		// for polling
+		void clearControlState(); // clear the control state before each poll
+		ControlState getControlState(int player) const;
+		void updateControlState(InputControl event); // accepts only keycodes for now
 
-				bool keyPressed(const KeyEvent &arg);
-				bool keyReleased(const KeyEvent &arg);
-				bool mouseMoved(const MouseEvent &arg);
-				bool mousePressed(const MouseEvent &arg, MouseButtonID id);
-				bool mouseReleased(const MouseEvent &arg, MouseButtonID id);
-				bool buttonPressed(const JoyStickEvent &arg, int button);
-				bool buttonReleased(const JoyStickEvent &arg, int button);
-				bool axisMoved(const JoyStickEvent &arg, int axis);
-				bool povMoved(const JoyStickEvent &arg, int pov);
-				bool vector3Moved(const JoyStickEvent &arg, int index);
+		void setControls(HoverRace::Util::Config::cfg_controls_t *controls);
 
-				// for polling
-				ControlState getControlState(int player) const;
-				void updateControlState(int keyCode, bool pressed); // accepts only keycodes for now
+		ControlState curState[HoverRace::Util::Config::MAX_PLAYERS];
 
-				void setControls(HoverRace::Util::Config::cfg_controls_t *controls);
-				void saveControls();
-				void captureNextInput(int control, int player, HWND hwnd);
-				void stopCapture();
-				void disableControl(int control, int player);
-				bool controlsUpdated();
+		// kept locally to make things a bit quicker
+		InputControl brake[HoverRace::Util::Config::MAX_PLAYERS];
+		InputControl fire[HoverRace::Util::Config::MAX_PLAYERS];
+		InputControl jump[HoverRace::Util::Config::MAX_PLAYERS];
+		InputControl left[HoverRace::Util::Config::MAX_PLAYERS];
+		InputControl lookBack[HoverRace::Util::Config::MAX_PLAYERS];
+		InputControl motorOn[HoverRace::Util::Config::MAX_PLAYERS];
+		InputControl right[HoverRace::Util::Config::MAX_PLAYERS];
+		InputControl weapon[HoverRace::Util::Config::MAX_PLAYERS];
 
-			private:
-				ControlState curState[HoverRace::Util::Config::MAX_PLAYERS];
+		InputControl toInputControl(HoverRace::Util::Config::cfg_controls_t::cfg_control_t control);
+		HoverRace::Util::Config::cfg_controls_t::cfg_control_t toCfgControl(InputControl control);
 
-				// kept locally to make things a bit quicker
-				InputControl brake[HoverRace::Util::Config::MAX_PLAYERS];
-				InputControl fire[HoverRace::Util::Config::MAX_PLAYERS];
-				InputControl jump[HoverRace::Util::Config::MAX_PLAYERS];
-				InputControl left[HoverRace::Util::Config::MAX_PLAYERS];
-				InputControl lookBack[HoverRace::Util::Config::MAX_PLAYERS];
-				InputControl motorOn[HoverRace::Util::Config::MAX_PLAYERS];
-				InputControl right[HoverRace::Util::Config::MAX_PLAYERS];
-				InputControl weapon[HoverRace::Util::Config::MAX_PLAYERS];
-
-				InputControl toInputControl(HoverRace::Util::Config::cfg_controls_t::cfg_control_t control);
-				HoverRace::Util::Config::cfg_controls_t::cfg_control_t Controller::EventHandler::toCfgControl(InputControl control);
-
-				bool captureNext;
-				int captureControl;
-				int capturePlayerId;
-				HWND captureHwnd;
-				bool updated;
-		};
-
-		EventHandler handler;
+		bool captureNext;
+		int captureControl;
+		int capturePlayerId;
+		HWND captureHwnd;
+		bool updated;
 };
 
 } // namespace Control

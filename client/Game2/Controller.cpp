@@ -23,6 +23,14 @@ Controller::Controller(HWND mainWindow) {
 	mouse = NULL;
 	joys = NULL;
 
+	captureNext = false;
+	captureControl = 0;
+	capturePlayerId = 0;
+
+	updated = false;
+
+	clearControlState(); // initialize to all false
+
 	InitInputManager(mainWindow);
 	LoadControllerConfig();
 }
@@ -40,7 +48,18 @@ Controller::~Controller() {
  * Save any control bindings that may have changed.
  */
 void Controller::saveControls() {
-	handler.saveControls();
+	Config *cfg = Config::GetInstance();
+
+	for(int i = 0; i < 4; i++) {
+		cfg->controls[i].brake = toCfgControl(this->brake[i]);
+		cfg->controls[i].fire = toCfgControl(this->fire[i]);
+		cfg->controls[i].jump = toCfgControl(this->jump[i]);
+		cfg->controls[i].left = toCfgControl(this->left[i]);
+		cfg->controls[i].lookBack = toCfgControl(this->lookBack[i]);
+		cfg->controls[i].motorOn = toCfgControl(this->motorOn[i]);
+		cfg->controls[i].right = toCfgControl(this->right[i]);
+		cfg->controls[i].weapon = toCfgControl(this->weapon[i]);
+	}
 }
 
 /***
@@ -65,7 +84,7 @@ void Controller::poll() {
  * Return the current control state.
  */
 ControlState Controller::getState(int player) const {
-	return handler.getControlState(player);
+	return (const ControlState) curState[player];
 }
 
 /***
@@ -76,14 +95,20 @@ ControlState Controller::getState(int player) const {
  * @param hwnd Handle to the window we should contact when we are done
  */
 void Controller::captureNextInput(int control, int player, HWND hwnd) {
-	handler.captureNextInput(control, player, hwnd);
+	captureNext = true;
+	captureControl = control;
+	capturePlayerId = player;
+	captureHwnd = hwnd;
 }
 
 /***
  * Stop waiting to capture the next input.
  */
 void Controller::stopCapture() {
-	handler.stopCapture();
+	captureNext = false;
+	captureControl = 0;
+	capturePlayerId = 0;
+	captureHwnd = NULL;
 }
 
 /***
@@ -93,7 +118,42 @@ void Controller::stopCapture() {
  * @param player ID of the player; 0-3
  */
 void Controller::disableInput(int control, int player) {
-	handler.disableControl(control, player);
+	Config *cfg = Config::GetInstance();
+
+	switch(control) {
+		case CTL_MOTOR_ON:
+			motorOn[player].inputType = OISUnknown;
+			cfg->controls[player].motorOn.inputType = OISUnknown;
+			break;
+		case CTL_LEFT:
+			left[player].inputType = OISUnknown;
+			cfg->controls[player].left.inputType = OISUnknown;
+			break;
+		case CTL_RIGHT:
+			right[player].inputType = OISUnknown;
+			cfg->controls[player].right.inputType = OISUnknown;
+			break;
+		case CTL_JUMP:
+			jump[player].inputType = OISUnknown;
+			cfg->controls[player].jump.inputType = OISUnknown;
+			break;
+		case CTL_BRAKE:
+			brake[player].inputType = OISUnknown;
+			cfg->controls[player].brake.inputType = OISUnknown;
+			break;
+		case CTL_FIRE:
+			fire[player].inputType = OISUnknown;
+			cfg->controls[player].fire.inputType = OISUnknown;
+			break;
+		case CTL_WEAPON:
+			weapon[player].inputType = OISUnknown;
+			cfg->controls[player].weapon.inputType = OISUnknown;
+			break;
+		case CTL_LOOKBACK:
+			lookBack[player].inputType = OISUnknown;
+			cfg->controls[player].lookBack.inputType = OISUnknown;
+			break;
+	}
 }
 
 /***
@@ -152,18 +212,18 @@ void Controller::InitInputManager(HWND mainWindow) {
 
 	// it is very nice that OIS does this for us!
 	if(kbd)
-		kbd->setEventCallback(&handler);
+		kbd->setEventCallback(this);
 	else
 		ASSERT(false); // this should be logged... wait until #105 is done
 
 	if(mouse)
-		kbd->setEventCallback(&handler);
+		kbd->setEventCallback(this);
 	else
 		ASSERT(false); // this should be logged... wait until #105 is done
 	
 	for(int i = 0; i < numJoys; i++) {
 		if(joys[i])
-			joys[i]->setEventCallback(&handler);
+			joys[i]->setEventCallback(this);
 		else
 			ASSERT(false); // this should be logged... wait until #105 is done
 	}
@@ -181,7 +241,16 @@ void Controller::LoadControllerConfig() {
 	Config *cfg = Config::GetInstance();
 
 	/* now we need to load the values */
-	handler.setControls(cfg->controls);
+	for(int i = 0; i < 4; i++) {
+		this->brake[i] = toInputControl(cfg->controls[i].brake);
+		this->fire[i] = toInputControl(cfg->controls[i].fire);
+		this->jump[i] = toInputControl(cfg->controls[i].jump);
+		this->left[i] = toInputControl(cfg->controls[i].left);
+		this->lookBack[i] = toInputControl(cfg->controls[i].lookBack);
+		this->motorOn[i] = toInputControl(cfg->controls[i].motorOn);
+		this->right[i] = toInputControl(cfg->controls[i].right);
+		this->weapon[i] = toInputControl(cfg->controls[i].weapon);
+	}
 }
 
 /***
@@ -190,119 +259,12 @@ void Controller::LoadControllerConfig() {
  * @return whether the controls have been updated
  */
 bool Controller::controlsUpdated() {
-	return handler.controlsUpdated();
+	return updated;
+	updated = false;	
 }
 
-/***
- * Set up the internal EventHandler class.
- */
-Controller::EventHandler::EventHandler() {
-	curState[0].brake = false;
-	curState[0].fire = false;
-	curState[0].jump = false;
-	curState[0].left = false;
-	curState[0].lookBack = false;
-	curState[0].motorOn = false;
-	curState[0].right = false;
-	curState[0].weapon = false;
-
-	curState[1].brake = false;
-	curState[1].fire = false;
-	curState[1].jump = false;
-	curState[1].left = false;
-	curState[1].lookBack = false;
-	curState[1].motorOn = false;
-	curState[1].right = false;
-	curState[1].weapon = false;
-
-	curState[2].brake = false;
-	curState[2].fire = false;
-	curState[2].jump = false;
-	curState[2].left = false;
-	curState[2].lookBack = false;
-	curState[2].motorOn = false;
-	curState[2].right = false;
-	curState[2].weapon = false;
-
-	curState[3].brake = false;
-	curState[3].fire = false;
-	curState[3].jump = false;
-	curState[3].left = false;
-	curState[3].lookBack = false;
-	curState[3].motorOn = false;
-	curState[3].right = false;
-	curState[3].weapon = false;
-
-	captureNext = false;
-	captureControl = 0;
-	capturePlayerId = 0;
-
-	updated = false;
-}
-
-Controller::EventHandler::~EventHandler() {
-
-}
-
-bool Controller::EventHandler::keyPressed(const KeyEvent &arg) {
-	updateControlState(arg.key, true);
-	return true;
-}
-
-bool Controller::EventHandler::keyReleased(const KeyEvent &arg) {
-	updateControlState(arg.key, false);
-	return true;
-}
-
-bool Controller::EventHandler::mouseMoved(const MouseEvent &arg) {
-	return true;
-}
-
-bool Controller::EventHandler::mousePressed(const MouseEvent &arg, MouseButtonID id) {
-	return true;
-}
-
-bool Controller::EventHandler::mouseReleased(const MouseEvent &arg, MouseButtonID id) {
-	return true;
-}
-
-bool Controller::EventHandler::buttonPressed(const JoyStickEvent &arg, int button) {
-	return true;
-}
-
-bool Controller::EventHandler::buttonReleased(const JoyStickEvent &arg, int button) {
-	return true;
-}
-
-bool Controller::EventHandler::axisMoved(const JoyStickEvent &arg, int axis) {
-	return true;
-}
-
-bool Controller::EventHandler::povMoved(const JoyStickEvent &arg, int pov) {
-	return true;
-}
-
-bool Controller::EventHandler::vector3Moved(const JoyStickEvent &arg, int index) {
-	return true;
-}
-
-/***
- * Return the current control state.
- */
-ControlState Controller::EventHandler::getControlState(int player) const {
-	return (const ControlState) curState[player];
-}
-
-/***
- * Update the current control state, given the current key code and whether
- * or not the key just went down or up.
- *
- * @param keyCode Key code in question, that has just been pressed or released
- * @param pressed True if the key has been pressed, false if released (no other possibility)
- */
-void Controller::EventHandler::updateControlState(int keyCode, bool pressed) {
-	//MessageBox(NULL, "GOT SHIT", "YO", MB_OK);
- 	if(captureNext) {
+bool Controller::keyPressed(const KeyEvent &arg) {
+	if(captureNext) {
 		// capture this input as a keycode
 		Config *cfg = Config::GetInstance();
 
@@ -344,201 +306,112 @@ void Controller::EventHandler::updateControlState(int keyCode, bool pressed) {
 				break;
 		}
 
-		if((*input).kbdBinding != keyCode) {
-			(*input).kbdBinding = keyCode;
+		// if it is a new key, set the binding
+		if((*input).kbdBinding != arg.key) {
+			(*input).kbdBinding = arg.key;
 			(*input).inputType = OISKeyboard;
-			(*cfg_input).kbdBinding = keyCode;
+			(*cfg_input).kbdBinding = arg.key;
 			(*cfg_input).inputType = OISKeyboard;
-			updated = true;
+			updated = true; // so we know if we need to say
 		}
 
+		// disable capture hook
 		captureNext = false;
 		captureControl = 0;
 		capturePlayerId = 0;
 		captureHwnd = NULL;
 	} else {
-		// TODO: make mouse and joystick input work
-		if(keyCode == brake[0].kbdBinding) {
-			curState[0].brake = pressed;
-		} else if(keyCode == fire[0].kbdBinding) {
-			curState[0].fire = pressed;
-		} else if(keyCode == jump[0].kbdBinding) {
-			curState[0].jump = pressed;
-		} else if(keyCode == left[0].kbdBinding) {
-			curState[0].left = pressed;
-		} else if(keyCode == lookBack[0].kbdBinding) {
-			curState[0].lookBack = pressed;
-		} else if(keyCode == motorOn[0].kbdBinding) {
-			curState[0].motorOn = pressed;
-		} else if(keyCode == right[0].kbdBinding) {
-			curState[0].right = pressed;
-		} else if(keyCode == weapon[0].kbdBinding) {
-			curState[0].weapon = pressed;
-		} else if(keyCode == brake[1].kbdBinding) {
-			curState[1].brake = pressed;
-		} else if(keyCode == fire[1].kbdBinding) {
-			curState[1].fire = pressed;
-		} else if(keyCode == jump[1].kbdBinding) {
-			curState[1].jump = pressed;
-		} else if(keyCode == left[1].kbdBinding) {
-			curState[1].left = pressed;
-		} else if(keyCode == lookBack[1].kbdBinding) {
-			curState[1].lookBack = pressed;
-		} else if(keyCode == motorOn[1].kbdBinding) {
-			curState[1].motorOn = pressed;
-		} else if(keyCode == right[1].kbdBinding) {
-			curState[1].right = pressed;
-		} else if(keyCode == weapon[1].kbdBinding) {
-			curState[1].weapon = pressed;
-		} else if(keyCode == brake[2].kbdBinding) {
-			curState[2].brake = pressed;
-		} else if(keyCode == fire[2].kbdBinding) {
-			curState[2].fire = pressed;
-		} else if(keyCode == jump[2].kbdBinding) {
-			curState[2].jump = pressed;
-		} else if(keyCode == left[2].kbdBinding) {
-			curState[2].left = pressed;
-		} else if(keyCode == lookBack[2].kbdBinding) {
-			curState[2].lookBack = pressed;
-		} else if(keyCode == motorOn[2].kbdBinding) {
-			curState[2].motorOn = pressed;
-		} else if(keyCode == right[2].kbdBinding) {
-			curState[2].right = pressed;
-		} else if(keyCode == weapon[2].kbdBinding) {
-			curState[2].weapon = pressed;
-		} else if(keyCode == brake[3].kbdBinding) {
-			curState[3].brake = pressed;
-		} else if(keyCode == fire[3].kbdBinding) {
-			curState[3].fire = pressed;
-		} else if(keyCode == jump[3].kbdBinding) {
-			curState[3].jump = pressed;
-		} else if(keyCode == left[3].kbdBinding) {
-			curState[3].left = pressed;
-		} else if(keyCode == lookBack[3].kbdBinding) {
-			curState[3].lookBack = pressed;
-		} else if(keyCode == motorOn[3].kbdBinding) {
-			curState[3].motorOn = pressed;
-		} else if(keyCode == right[3].kbdBinding) {
-			curState[3].right = pressed;
-		} else if(keyCode == weapon[3].kbdBinding) {
-			curState[3].weapon = pressed;
-		} else {
-			// not a relevant event
+		for(int i = 0; i < 4; i++) {
+			if(arg.key == brake[i].kbdBinding) {
+				curState[i].brake = true;
+			} else if(arg.key == fire[i].kbdBinding) {
+				curState[i].fire = true;
+			} else if(arg.key == jump[i].kbdBinding) {
+				curState[i].jump = true;
+			} else if(arg.key == left[i].kbdBinding) {
+				curState[i].left = true;
+			} else if(arg.key == lookBack[i].kbdBinding) {
+				curState[i].lookBack = true;
+			} else if(arg.key == motorOn[i].kbdBinding) {
+				curState[i].motorOn = true;
+			} else if(arg.key == right[i].kbdBinding) {
+				curState[i].right = true;
+			} else if(arg.key == weapon[i].kbdBinding) {
+				curState[i].weapon = true;
+			}
 		}
 	}
+
+	return true;
 }
 
-/***
- * Set the controls recognized by the EventHandler to a certain set of controls.
- * For now it only recognizes keyboard input, so the parameters are key codes.
- * The name of each parameter is the control it denotes.
- */
-void Controller::EventHandler::setControls(HoverRace::Util::Config::cfg_controls_t *controls) {
-	for(int i = 0; i < 4; i++) {
-		this->brake[i] = toInputControl(controls[i].brake);
-		this->fire[i] = toInputControl(controls[i].fire);
-		this->jump[i] = toInputControl(controls[i].jump);
-		this->left[i] = toInputControl(controls[i].left);
-		this->lookBack[i] = toInputControl(controls[i].lookBack);
-		this->motorOn[i] = toInputControl(controls[i].motorOn);
-		this->right[i] = toInputControl(controls[i].right);
-		this->weapon[i] = toInputControl(controls[i].weapon);
+bool Controller::keyReleased(const KeyEvent &arg) {
+	if(!captureNext) {
+		for(int i = 0; i < 4; i++) {
+			if(arg.key == brake[i].kbdBinding) {
+				curState[i].brake = false;
+			} else if(arg.key == fire[i].kbdBinding) {
+				curState[i].fire = false;
+			} else if(arg.key == jump[i].kbdBinding) {
+				curState[i].jump = false;
+			} else if(arg.key == left[i].kbdBinding) {
+				curState[i].left = false;
+			} else if(arg.key == lookBack[i].kbdBinding) {
+				curState[i].lookBack = false;
+			} else if(arg.key == motorOn[i].kbdBinding) {
+				curState[i].motorOn = false;
+			} else if(arg.key == right[i].kbdBinding) {
+				curState[i].right = false;
+			} else if(arg.key == weapon[i].kbdBinding) {
+				curState[i].weapon = false;
+			}
+		}
 	}
+
+	return true;	
+}
+
+bool Controller::mouseMoved(const MouseEvent &arg) {
+	return true;
+}
+
+bool Controller::mousePressed(const MouseEvent &arg, MouseButtonID id) {
+	return true;
+}
+
+bool Controller::mouseReleased(const MouseEvent &arg, MouseButtonID id) {
+	return true;
+}
+
+bool Controller::buttonPressed(const JoyStickEvent &arg, int button) {
+	return true;
+}
+
+bool Controller::buttonReleased(const JoyStickEvent &arg, int button) {
+	return true;
+}
+
+bool Controller::axisMoved(const JoyStickEvent &arg, int axis) {
+	return true;
+}
+
+bool Controller::povMoved(const JoyStickEvent &arg, int pov) {
+	return true;
+}
+
+bool Controller::vector3Moved(const JoyStickEvent &arg, int index) {
+	return true;
 }
 
 /***
- * Store our controls back to the Config object
+ * Clear the control state of each player.  This is done each time Controller::poll() is
+ * called.
  */
-void Controller::EventHandler::saveControls() {
-	Config *cfg = Config::GetInstance();
-
-	for(int i = 0; i < 4; i++) {
-		cfg->controls[i].brake = toCfgControl(this->brake[i]);
-		cfg->controls[i].fire = toCfgControl(this->fire[i]);
-		cfg->controls[i].jump = toCfgControl(this->jump[i]);
-		cfg->controls[i].left = toCfgControl(this->left[i]);
-		cfg->controls[i].lookBack = toCfgControl(this->lookBack[i]);
-		cfg->controls[i].motorOn = toCfgControl(this->motorOn[i]);
-		cfg->controls[i].right = toCfgControl(this->right[i]);
-		cfg->controls[i].weapon = toCfgControl(this->weapon[i]);
-	}
+void Controller::clearControlState() {
+	memset(curState, 0, sizeof(ControlState));
 }
 
-/***
- * Tell the Controller to take the next input and assign it to a control.
- *
- * @param control ID of the control (CTL_MOTOR_ON, ...)
- * @param player ID of the player; 0-3
- * @param hwnd HWND to send a message to when the input is captured
- */
-void Controller::EventHandler::captureNextInput(int control, int player, HWND hwnd) {
-	captureNext = true;
-	captureControl = control;
-	capturePlayerId = player;
-	captureHwnd = hwnd;
-}
-
-/***
- * Stop listening to capture the next input.
- */
-void Controller::EventHandler::stopCapture() {
-	captureNext = false;
-	captureControl = 0;
-	capturePlayerId = 0;
-	captureHwnd = NULL;
-}
-
-/***
- * Tell the EventHandler to disable the given control for the given player.
- *
- * @param control ID of the control (CTL_MOTOR_ON, ...)
- * @param player ID of the player; 0-3
- */
-void Controller::EventHandler::disableControl(int control, int player) {
-	Config *cfg = Config::GetInstance();
-
-	switch(control) {
-		case CTL_MOTOR_ON:
-			motorOn[player].inputType = OISUnknown;
-			cfg->controls[player].motorOn.inputType = OISUnknown;
-			break;
-		case CTL_LEFT:
-			left[player].inputType = OISUnknown;
-			cfg->controls[player].left.inputType = OISUnknown;
-			break;
-		case CTL_RIGHT:
-			right[player].inputType = OISUnknown;
-			cfg->controls[player].right.inputType = OISUnknown;
-			break;
-		case CTL_JUMP:
-			jump[player].inputType = OISUnknown;
-			cfg->controls[player].jump.inputType = OISUnknown;
-			break;
-		case CTL_BRAKE:
-			brake[player].inputType = OISUnknown;
-			cfg->controls[player].brake.inputType = OISUnknown;
-			break;
-		case CTL_FIRE:
-			fire[player].inputType = OISUnknown;
-			cfg->controls[player].fire.inputType = OISUnknown;
-			break;
-		case CTL_WEAPON:
-			weapon[player].inputType = OISUnknown;
-			cfg->controls[player].weapon.inputType = OISUnknown;
-			break;
-		case CTL_LOOKBACK:
-			lookBack[player].inputType = OISUnknown;
-			cfg->controls[player].lookBack.inputType = OISUnknown;
-			break;
-	}
-}
-
-bool Controller::EventHandler::controlsUpdated() {
-	return updated;
-	updated = false;
-}
-
-InputControl Controller::EventHandler::toInputControl(HoverRace::Util::Config::cfg_controls_t::cfg_control_t control) {
+InputControl Controller::toInputControl(HoverRace::Util::Config::cfg_controls_t::cfg_control_t control) {
 	InputControl ret;
 
 	ret.axis = control.axis;
@@ -552,7 +425,7 @@ InputControl Controller::EventHandler::toInputControl(HoverRace::Util::Config::c
 	return ret;
 }
 
-HoverRace::Util::Config::cfg_controls_t::cfg_control_t Controller::EventHandler::toCfgControl(InputControl control) {
+HoverRace::Util::Config::cfg_controls_t::cfg_control_t Controller::toCfgControl(InputControl control) {
 	HoverRace::Util::Config::cfg_controls_t::cfg_control_t ret;
 
 	ret.axis = control.axis;
