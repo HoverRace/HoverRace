@@ -24,9 +24,12 @@
 
 #include <iostream>
 
+#include "../Util/OS.h"
+
 #include "Env.h"
 
 using namespace HoverRace::Script;
+using HoverRace::Util::OS;
 
 #define REG_LUA_LIB(st, name, fn) \
 	lua_pushcfunction((st), (fn)); \
