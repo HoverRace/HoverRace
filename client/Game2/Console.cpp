@@ -65,7 +65,7 @@ Console::Console() :
 
 	scripting = new Env();
 	boost::shared_ptr<std::ostream> logStream(new LogStream(this));
-	scripting->setOutput(logStream);
+	scripting->SetOutput(logStream);
 
 	lua_State *state = scripting->GetState();
 	lua_pushlightuserdata(state, this);

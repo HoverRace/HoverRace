@@ -64,7 +64,7 @@ Env::~Env()
  * @param out The output stream (wrapped in a shared pointer).
  *            May be @c NULL to use the system default.
  */
-void Env::setOutput(boost::shared_ptr<std::ostream> out)
+void Env::SetOutput(boost::shared_ptr<std::ostream> out)
 {
 	this->out = out;
 }
