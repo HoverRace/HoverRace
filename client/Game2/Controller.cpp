@@ -292,6 +292,15 @@ bool Controller::controlsUpdated() {
 }
 
 bool Controller::keyPressed(const KeyEvent &arg) {
+	// modify modifier keys to reflect the same keycode; LShift == RShift, etc.
+	KeyCode kc = arg.key;
+	if(kc == KC_RSHIFT)
+		kc = KC_LSHIFT;
+	else if(kc == KC_RCONTROL)
+		kc = KC_LCONTROL;
+	else if(arg.key == KC_RMENU)
+		kc = KC_LMENU;
+
 	if(captureNext) {
 		// capture this input as a keycode
 		InputControl *input = NULL;
@@ -300,10 +309,10 @@ bool Controller::keyPressed(const KeyEvent &arg) {
 		getCaptureControl(captureControl, &input, &cfg_input);
 		
 		// if it is a new key, set the binding
-		if(((*input).inputType != OISKeyboard) || ((*input).kbdBinding != arg.key)) {
-			(*input).kbdBinding = arg.key;
+		if(((*input).inputType != OISKeyboard) || ((*input).kbdBinding != kc)) {
+			(*input).kbdBinding = kc;
 			(*input).inputType = OISKeyboard;
-			(*cfg_input).kbdBinding = arg.key;
+			(*cfg_input).kbdBinding = kc;
 			(*cfg_input).inputType = OISKeyboard;
 			updated = true; // so we know if we need to say
 		}
@@ -315,21 +324,21 @@ bool Controller::keyPressed(const KeyEvent &arg) {
 		captureHwnd = NULL;
 	} else {
 		for(int i = 0; i < 4; i++) {
-			if((brake[i].inputType == OISKeyboard) && (arg.key == brake[i].kbdBinding)) {
+			if((brake[i].inputType == OISKeyboard) && (kc == brake[i].kbdBinding)) {
 				curState[i].brake = true;
-			} else if((fire[i].inputType == OISKeyboard) && (arg.key == fire[i].kbdBinding)) {
+			} else if((fire[i].inputType == OISKeyboard) && (kc == fire[i].kbdBinding)) {
 				curState[i].fire = true;
-			} else if((jump[i].inputType == OISKeyboard) && (arg.key == jump[i].kbdBinding)) {
+			} else if((jump[i].inputType == OISKeyboard) && (kc == jump[i].kbdBinding)) {
 				curState[i].jump = true;
-			} else if((left[i].inputType == OISKeyboard) && (arg.key == left[i].kbdBinding)) {
+			} else if((left[i].inputType == OISKeyboard) && (kc == left[i].kbdBinding)) {
 				curState[i].left = true;
-			} else if((lookBack[i].inputType == OISKeyboard) && (arg.key == lookBack[i].kbdBinding)) {
+			} else if((lookBack[i].inputType == OISKeyboard) && (kc == lookBack[i].kbdBinding)) {
 				curState[i].lookBack = true;
-			} else if((motorOn[i].inputType == OISKeyboard) && (arg.key == motorOn[i].kbdBinding)) {
+			} else if((motorOn[i].inputType == OISKeyboard) && (kc == motorOn[i].kbdBinding)) {
 				curState[i].motorOn = true;
-			} else if((right[i].inputType == OISKeyboard) && (arg.key == right[i].kbdBinding)) {
+			} else if((right[i].inputType == OISKeyboard) && (kc == right[i].kbdBinding)) {
 				curState[i].right = true;
-			} else if((weapon[i].inputType == OISKeyboard) && (arg.key == weapon[i].kbdBinding)) {
+			} else if((weapon[i].inputType == OISKeyboard) && (kc == weapon[i].kbdBinding)) {
 				curState[i].weapon = true;
 			}
 		}
@@ -339,23 +348,32 @@ bool Controller::keyPressed(const KeyEvent &arg) {
 }
 
 bool Controller::keyReleased(const KeyEvent &arg) {
+	// modify modifier keys to reflect the same keycode; LShift == RShift, etc.
+	KeyCode kc = arg.key;
+	if(kc == KC_RSHIFT)
+		kc = KC_LSHIFT;
+	else if(kc == KC_RCONTROL)
+		kc = KC_LCONTROL;
+	else if(arg.key == KC_RMENU)
+		kc = KC_LMENU;
+
 	if(!captureNext) {
 		for(int i = 0; i < 4; i++) {
-			if((brake[i].inputType == OISKeyboard) && (arg.key == brake[i].kbdBinding)) {
+			if((brake[i].inputType == OISKeyboard) && (kc == brake[i].kbdBinding)) {
 				curState[i].brake = false;
-			} else if((fire[i].inputType == OISKeyboard) && (arg.key == fire[i].kbdBinding)) {
+			} else if((fire[i].inputType == OISKeyboard) && (kc == fire[i].kbdBinding)) {
 				curState[i].fire = false;
-			} else if((jump[i].inputType == OISKeyboard) && (arg.key == jump[i].kbdBinding)) {
+			} else if((jump[i].inputType == OISKeyboard) && (kc == jump[i].kbdBinding)) {
 				curState[i].jump = false;
-			} else if((left[i].inputType == OISKeyboard) && (arg.key == left[i].kbdBinding)) {
+			} else if((left[i].inputType == OISKeyboard) && (kc == left[i].kbdBinding)) {
 				curState[i].left = false;
-			} else if((lookBack[i].inputType == OISKeyboard) && (arg.key == lookBack[i].kbdBinding)) {
+			} else if((lookBack[i].inputType == OISKeyboard) && (kc == lookBack[i].kbdBinding)) {
 				curState[i].lookBack = false;
-			} else if((motorOn[i].inputType == OISKeyboard) && (arg.key == motorOn[i].kbdBinding)) {
+			} else if((motorOn[i].inputType == OISKeyboard) && (kc == motorOn[i].kbdBinding)) {
 				curState[i].motorOn = false;
-			} else if((right[i].inputType == OISKeyboard) && (arg.key == right[i].kbdBinding)) {
+			} else if((right[i].inputType == OISKeyboard) && (kc == right[i].kbdBinding)) {
 				curState[i].right = false;
-			} else if((weapon[i].inputType == OISKeyboard) && (arg.key == weapon[i].kbdBinding)) {
+			} else if((weapon[i].inputType == OISKeyboard) && (kc == weapon[i].kbdBinding)) {
 				curState[i].weapon = false;
 			}
 		}
