@@ -27,6 +27,7 @@ PKG_CHECK_MODULES(DEPS, [
 	freealut >= 1.1
 	libcurl >= 7.18
 	openal >= 0.0.8
+	OIS >= 1.2.0
 ])
 AC_SUBST(DEPS_CFLAGS)
 AC_SUBST(DEPS_LIBS)
