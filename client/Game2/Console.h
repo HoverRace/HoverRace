@@ -22,6 +22,8 @@
 
 #pragma once
 
+#include <lua.hpp>
+
 #include "../../engine/Util/OS.h"
 
 namespace HoverRace {
@@ -44,6 +46,9 @@ class Console
 
 		void SubmitChunk(const std::string &s);
 
+		/// Clear the console.
+		virtual void Clear() = 0;
+
 	protected:
 		virtual void LogInfo(const std::string &s) = 0;
 		virtual void LogError(const std::string &s) = 0;
@@ -54,6 +59,9 @@ class Console
 		};
 		void SetInputState(inputState_t newState);
 		inputState_t GetInputState() const;
+
+	private:
+		static int LClear(lua_State *state);
 
 	private:
 		Script::Env *scripting;

@@ -66,6 +66,11 @@ Console::Console() :
 	scripting = new Env();
 	boost::shared_ptr<std::ostream> logStream(new LogStream(this));
 	scripting->setOutput(logStream);
+
+	lua_State *state = scripting->GetState();
+	lua_pushlightuserdata(state, this);
+	lua_pushcclosure(state, Console::LClear, 1);
+	lua_setglobal(state, "clear");
 }
 
 Console::~Console()
@@ -105,6 +110,17 @@ Console::inputState_t Console::GetInputState() const
 {
 	return inputState;
 }
+
+// Lua bindings.
+
+int Console::LClear(lua_State *state)
+{
+	Console *self = static_cast<Console*>(lua_touserdata(state, lua_upvalueindex(1)));
+	self->Clear();
+	return 0;
+}
+
+// Console::LogStreamBuf
 
 Console::LogStreamBuf::LogStreamBuf(Console *console) :
 	SUPER(), console(console)

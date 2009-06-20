@@ -48,6 +48,8 @@ class HighConsole : public Console
 
 		virtual void Advance(Util::OS::timestamp_t tick);
 
+		virtual void Clear();
+
 	protected:
 		virtual void LogInfo(const std::string &s);
 		virtual void LogError(const std::string &s);

@@ -152,6 +152,11 @@ void HighConsole::Advance(OS::timestamp_t tick)
 	SubmitChunk(chunk);
 }
 
+void HighConsole::Clear()
+{
+	logLines->Clear();
+}
+
 void HighConsole::LogInfo(const std::string &s)
 {
 	logLines->Add(s, *logFont, 0x0a);
@@ -292,6 +297,7 @@ void HighConsole::LogLines::Clear()
 		delete *iter;
 	}
 	lines.clear();
+	height = 0;
 }
 
 void HighConsole::LogLines::Render(MR_2DViewPort *vp, int x, int y)
