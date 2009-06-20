@@ -137,6 +137,8 @@ class Controller : public KeyListener, public MouseListener, public JoyStickList
 		InputControl right[HoverRace::Util::Config::MAX_PLAYERS];
 		InputControl weapon[HoverRace::Util::Config::MAX_PLAYERS];
 
+		void getCaptureControl(int captureControl, InputControl **input, HoverRace::Util::Config::cfg_controls_t::cfg_control_t **cfg_input);
+
 		InputControl toInputControl(HoverRace::Util::Config::cfg_controls_t::cfg_control_t control);
 		HoverRace::Util::Config::cfg_controls_t::cfg_control_t toCfgControl(InputControl control);
 
