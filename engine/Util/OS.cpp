@@ -70,8 +70,6 @@ std::locale OS::locale("C");
 /// The standard "C" locale for things that should be not be affected by locale.
 const std::locale OS::stdLocale("C");
 
-static GUID zeroGuid = { 0, 0, 0, { 0, 0, 0, 0, 0, 0, 0, 0 } };
-
 static inline bool isHex(const char &c)
 {
 	return 
