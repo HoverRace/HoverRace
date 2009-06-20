@@ -57,7 +57,7 @@ void Controller::poll() {
 				joys[i]->capture();
 		}
 	} catch(Exception&) { // this should not happen, hence our error message
-		MessageBox(NULL, "EXCEPTION YO SHIT", "SHIT SHIT", MB_OK);
+		ASSERT(FALSE);
 	}
 }
 
