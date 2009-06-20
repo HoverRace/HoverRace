@@ -37,7 +37,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="Vfw32.lib vfw32.lib wsock32.lib winmm.lib version.lib comctl32.lib libcurl.lib LiteUnzip.lib intl.lib OIS_d.lib"
+				AdditionalDependencies="Vfw32.lib vfw32.lib wsock32.lib winmm.lib version.lib comctl32.lib libcurl.lib LiteUnzip.lib intl.lib lua5.1D.lib OIS_d.lib"
 				OutputFile="..\Debug\HoverRace.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
@@ -92,7 +92,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vfw32.lib wsock32.lib winmm.lib version.lib comctl32.lib libcurl.lib LiteUnzip.lib intl.lib OIS.lib"
+				AdditionalDependencies="vfw32.lib wsock32.lib winmm.lib version.lib comctl32.lib libcurl.lib LiteUnzip.lib intl.lib lua5.1.lib OIS.lib"
 				OutputFile=".\..\Release\HoverRace.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
@@ -339,7 +339,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\lib\OIS.dll">
+				RelativePath="..\lib\lua5.1.dll">
 				<FileConfiguration
 					Name="Debug|Win32"
 					ExcludedFromBuild="TRUE">
@@ -359,7 +359,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\lib\OIS_d.dll">
+				RelativePath="..\lib\lua5.1D.dll">
 				<FileConfiguration
 					Name="Debug|Win32">
 					<Tool
@@ -375,6 +375,50 @@
 						Name="VCCustomBuildTool"
 						Description="$(InputFileName)"
 						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
+						Outputs="$(OutDir)\$(InputFileName)"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\lib\OIS.dll">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
+"
+						Outputs="$(OutDir)\$(InputFileName)"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
+"
+						Outputs="$(OutDir)\$(InputFileName)"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\lib\OIS_d.dll">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
+"
+						Outputs="$(OutDir)\$(InputFileName)"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
+"
 						Outputs="$(OutDir)\$(InputFileName)"/>
 				</FileConfiguration>
 			</File>
