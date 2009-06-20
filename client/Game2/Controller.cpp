@@ -56,7 +56,7 @@ void Controller::poll() {
 			for(int i = 0; i < numJoys; i++)
 				joys[i]->capture();
 		}
-	} catch(Exception &ex) { // this should not happen, hence our error message
+	} catch(Exception&) { // this should not happen, hence our error message
 		MessageBox(NULL, "EXCEPTION YO SHIT", "SHIT SHIT", MB_OK);
 	}
 }
@@ -145,7 +145,7 @@ void Controller::InitInputManager(HWND mainWindow) {
 
 		try {
 			joys[i] = (JoyStick *) mgr->createInputObject(OISJoyStick, true);
-		} catch(OIS::Exception &ex) {
+		} catch(OIS::Exception&) {
 			ASSERT(false); // maybe some logging would be good here... #105
 		}
 	}

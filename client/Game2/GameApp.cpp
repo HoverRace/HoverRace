@@ -2750,7 +2750,6 @@ BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 	static Config::cfg_controls_t *oldcontrols = NULL;
 
 	BOOL lReturnValue = FALSE;
-	int lCounter;
 	switch (pMsgId) {
 		// Catch environment modification events
 		case WM_INITDIALOG:
