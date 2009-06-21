@@ -27,6 +27,10 @@
 #define CTL_WEAPON		7
 #define CTL_LOOKBACK	8
 
+#define AXIS_X			1
+#define AXIS_Y			2
+#define AXIS_Z			3
+
 #define SET_CONTROL		(WM_USER + 1)
 
 // maybe later... TODO
@@ -67,6 +71,7 @@ struct InputControl {
 	// mouse or joystick
 	int button;
 	int axis;
+	int direction; // for the axis
 	int pov; // joystick only
 	int slider; // joystick only
 	int sensitivity; // defines how quickly we get to the maximum value
@@ -121,7 +126,7 @@ class Controller : public KeyListener, public MouseListener, public JoyStickList
 		// for polling
 		void clearControlState(); // clear the control state before each poll
 		ControlState getControlState(int player) const;
-		void updateControlState(InputControl event); // accepts only keycodes for now
+		void updateMouseControl(bool &ctlState, InputControl &ctl, int x, int y, int z);
 
 		void setControls(HoverRace::Util::Config::cfg_controls_t *controls);
 

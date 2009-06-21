@@ -69,8 +69,28 @@ void Controller::poll() {
 	try {
 		if(kbd)
 			kbd->capture();
-		if(mouse)
+		if(mouse) {
+			// clear mouse inputs
+			for(int i = 0; i < 4; i++) {
+				if((brake[i].inputType == OISMouse) && (brake[i].axis != 0))
+					curState[i].brake = false;
+				if((fire[i].inputType == OISMouse) && (fire[i].axis != 0))
+					curState[i].fire = false;
+				if((jump[i].inputType == OISMouse) && (jump[i].axis != 0))
+					curState[i].jump = false;
+				if((left[i].inputType == OISMouse) && (left[i].axis != 0))
+					curState[i].left = false;
+				if((lookBack[i].inputType == OISMouse) && (lookBack[i].axis != 0))
+					curState[i].lookBack = false;
+				if((motorOn[i].inputType == OISMouse) && (motorOn[i].axis != 0))
+					curState[i].motorOn = false;
+				if((right[i].inputType == OISMouse) && (right[i].axis != 0))
+					curState[i].right = false;
+				if((weapon[i].inputType == OISMouse) && (weapon[i].axis != 0))
+					curState[i].weapon = false;
+			}
 			mouse->capture();
+		}
 		if(joys) {
 			for(int i = 0; i < numJoys; i++)
 				joys[i]->capture();
@@ -163,7 +183,7 @@ std::string Controller::toString(HoverRace::Util::Config::cfg_controls_t::cfg_co
 	if(control.inputType == OISKeyboard) {
 		return kbd->getAsString((KeyCode) control.kbdBinding);
 	} else if(control.inputType == OISMouse) {
-		if(control.button != -1) {
+		if(control.axis == 0) {
 			// OIS has no nice "getAsString" for mice so we have to do it by hand
 			switch(control.button) {
 				case MB_Left:
@@ -187,7 +207,28 @@ std::string Controller::toString(HoverRace::Util::Config::cfg_controls_t::cfg_co
 					return _("Unknown Mouse Button");
 			}
 		} else {
-			return "Some weird mouse axis";
+			switch(control.axis) {
+				case AXIS_X:
+					if(control.direction == 1)
+						return _("Mouse X+ Axis");
+					else
+						return _("Mouse X- Axis");
+				case AXIS_Y:
+					if(control.direction == 1)
+						return _("Mouse Y+ Axis");
+					else
+						return _("Mouse Y- Axis");
+				case AXIS_Z:
+					if(control.direction == 1)
+						return _("Mouse Z+ Axis");
+					else
+						return _("Mouse Z- Axis");
+				default:
+					if(control.direction == 1)
+						return _("Unknown Mouse Axis +");
+					else
+						return _("Unknown Mouse Axis -");
+			}
 		}
 	} else if(control.inputType == OISUnknown) { // cfg_control_t is set entirely to 0: disabled
 		return "Disabled";
@@ -324,23 +365,22 @@ bool Controller::keyPressed(const KeyEvent &arg) {
 		captureHwnd = NULL;
 	} else {
 		for(int i = 0; i < 4; i++) {
-			if((brake[i].inputType == OISKeyboard) && (kc == brake[i].kbdBinding)) {
+			if((brake[i].inputType == OISKeyboard) && (kc == brake[i].kbdBinding))
 				curState[i].brake = true;
-			} else if((fire[i].inputType == OISKeyboard) && (kc == fire[i].kbdBinding)) {
+			if((fire[i].inputType == OISKeyboard) && (kc == fire[i].kbdBinding))
 				curState[i].fire = true;
-			} else if((jump[i].inputType == OISKeyboard) && (kc == jump[i].kbdBinding)) {
+			if((jump[i].inputType == OISKeyboard) && (kc == jump[i].kbdBinding))
 				curState[i].jump = true;
-			} else if((left[i].inputType == OISKeyboard) && (kc == left[i].kbdBinding)) {
+			if((left[i].inputType == OISKeyboard) && (kc == left[i].kbdBinding))
 				curState[i].left = true;
-			} else if((lookBack[i].inputType == OISKeyboard) && (kc == lookBack[i].kbdBinding)) {
+			if((lookBack[i].inputType == OISKeyboard) && (kc == lookBack[i].kbdBinding))
 				curState[i].lookBack = true;
-			} else if((motorOn[i].inputType == OISKeyboard) && (kc == motorOn[i].kbdBinding)) {
+			if((motorOn[i].inputType == OISKeyboard) && (kc == motorOn[i].kbdBinding))
 				curState[i].motorOn = true;
-			} else if((right[i].inputType == OISKeyboard) && (kc == right[i].kbdBinding)) {
+			if((right[i].inputType == OISKeyboard) && (kc == right[i].kbdBinding))
 				curState[i].right = true;
-			} else if((weapon[i].inputType == OISKeyboard) && (kc == weapon[i].kbdBinding)) {
+			if((weapon[i].inputType == OISKeyboard) && (kc == weapon[i].kbdBinding))
 				curState[i].weapon = true;
-			}
 		}
 	}
 
@@ -359,23 +399,22 @@ bool Controller::keyReleased(const KeyEvent &arg) {
 
 	if(!captureNext) {
 		for(int i = 0; i < 4; i++) {
-			if((brake[i].inputType == OISKeyboard) && (kc == brake[i].kbdBinding)) {
+			if((brake[i].inputType == OISKeyboard) && (kc == brake[i].kbdBinding))
 				curState[i].brake = false;
-			} else if((fire[i].inputType == OISKeyboard) && (kc == fire[i].kbdBinding)) {
+			if((fire[i].inputType == OISKeyboard) && (kc == fire[i].kbdBinding))
 				curState[i].fire = false;
-			} else if((jump[i].inputType == OISKeyboard) && (kc == jump[i].kbdBinding)) {
+			if((jump[i].inputType == OISKeyboard) && (kc == jump[i].kbdBinding))
 				curState[i].jump = false;
-			} else if((left[i].inputType == OISKeyboard) && (kc == left[i].kbdBinding)) {
+			if((left[i].inputType == OISKeyboard) && (kc == left[i].kbdBinding))
 				curState[i].left = false;
-			} else if((lookBack[i].inputType == OISKeyboard) && (kc == lookBack[i].kbdBinding)) {
+			if((lookBack[i].inputType == OISKeyboard) && (kc == lookBack[i].kbdBinding))
 				curState[i].lookBack = false;
-			} else if((motorOn[i].inputType == OISKeyboard) && (kc == motorOn[i].kbdBinding)) {
+			if((motorOn[i].inputType == OISKeyboard) && (kc == motorOn[i].kbdBinding))
 				curState[i].motorOn = false;
-			} else if((right[i].inputType == OISKeyboard) && (kc == right[i].kbdBinding)) {
+			if((right[i].inputType == OISKeyboard) && (kc == right[i].kbdBinding))
 				curState[i].right = false;
-			} else if((weapon[i].inputType == OISKeyboard) && (kc == weapon[i].kbdBinding)) {
+			if((weapon[i].inputType == OISKeyboard) && (kc == weapon[i].kbdBinding))
 				curState[i].weapon = false;
-			}
 		}
 	}
 
@@ -383,6 +422,98 @@ bool Controller::keyReleased(const KeyEvent &arg) {
 }
 
 bool Controller::mouseMoved(const MouseEvent &arg) {
+	// examine the axes to find the maximum
+	int x, y, z, ax, ay, az;
+
+	if(arg.state.X.absOnly)
+		x = arg.state.X.abs;
+	else
+		x = arg.state.X.rel;
+
+	if(arg.state.Y.absOnly)
+		y = arg.state.Y.abs;
+	else
+		y = arg.state.Y.rel;
+
+	if(arg.state.Z.absOnly)
+		z = arg.state.Z.abs;
+	else
+		z = arg.state.Z.rel;
+
+	// find magnitudes
+	ax = abs(x);
+	ay = abs(y);
+	az = abs(z);
+
+	if(captureNext) {
+		InputControl *input = NULL;
+		Util::Config::cfg_controls_t::cfg_control_t *cfg_input = NULL;
+
+		getCaptureControl(captureControl, &input, &cfg_input);
+
+		(*input).inputType = OISMouse;
+		(*input).button = 0;
+		(*input).sensitivity = 1; // not touching this for now
+
+		if((ax >= ay) && (ax >= az)) {
+			// x axis is being set
+			(*input).axis = AXIS_X;
+			if(x > 0) {
+				(*input).direction = 1;
+				(*cfg_input).direction = 1;
+			} else {
+				(*input).direction = -1;
+				(*cfg_input).direction = -1;
+			}
+		} else if((ay >= ax) && (ay >= az)) {
+			// y axis
+			(*input).axis = AXIS_Y;
+			if(y > 0) {
+				(*input).direction = 1;
+				(*cfg_input).direction = 1;
+			} else {
+				(*input).direction = -1;
+				(*cfg_input).direction = -1;
+			}
+		} else if((az >= ax) && (az >= ay)) {
+			// z axis
+			(*input).axis = AXIS_Z;
+			if(z > 0) {
+				(*input).direction = 1;
+				(*cfg_input).direction = 1;
+			} else {
+				(*input).direction = -1;
+				(*cfg_input).direction = -1;
+			}
+		}
+
+		(*cfg_input).inputType = OISMouse;
+		(*cfg_input).axis = (*input).axis;
+		(*cfg_input).sensitivity = (*input).sensitivity;
+		(*cfg_input).button = 0;
+
+		updated = true;
+	} else {
+		for(int i = 0; i < 4; i++) {
+			if((brake[i].inputType == OISMouse) && (brake[i].axis != 0))
+				updateMouseControl(curState[i].brake, brake[i], x, y, z);
+			if((fire[i].inputType == OISMouse) && (fire[i].axis != 0))
+				updateMouseControl(curState[i].fire, fire[i], x, y, z);
+			if((jump[i].inputType == OISMouse) && (jump[i].axis != 0))
+				updateMouseControl(curState[i].jump, jump[i], x, y, z);
+			if((left[i].inputType == OISMouse) && (left[i].axis != 0))
+				updateMouseControl(curState[i].left, left[i], x, y, z);
+			if((lookBack[i].inputType == OISMouse) && (lookBack[i].axis != 0))
+				updateMouseControl(curState[i].lookBack, lookBack[i], x, y, z);
+			if((motorOn[i].inputType == OISMouse) && (motorOn[i].axis != 0))
+				updateMouseControl(curState[i].motorOn, motorOn[i], x, y, z);
+			if((right[i].inputType == OISMouse) && (right[i].axis != 0))
+				updateMouseControl(curState[i].right, right[i], x, y, z);
+			if((weapon[i].inputType == OISMouse) && (weapon[i].axis != 0))
+				updateMouseControl(curState[i].weapon, weapon[i], x, y, z);
+		}
+	}
+
 	return true;
 }
 
@@ -397,11 +528,11 @@ bool Controller::mousePressed(const MouseEvent &arg, MouseButtonID id) {
 		// if it is a new key, set the binding
 		if(((*input).inputType != OISMouse) || ((*input).button != id)) {
 			(*input).inputType = OISMouse;
-			(*input).axis = -1;
+			(*input).axis = 0;
 			(*input).button = id;
 			(*input).sensitivity = 0;
 			(*cfg_input).inputType = OISMouse;
-			(*cfg_input).axis = -1;
+			(*cfg_input).axis = 0;
 			(*cfg_input).button = id;
 			(*cfg_input).sensitivity = 0;
 			updated = true; // so we know if we need to say
@@ -414,23 +545,22 @@ bool Controller::mousePressed(const MouseEvent &arg, MouseButtonID id) {
 		captureHwnd = NULL;
 	} else {
 		for(int i = 0; i < 4; i++) {
-			if((brake[i].inputType == OISMouse) && (brake[i].button == id)) {
+			if((brake[i].inputType == OISMouse) && (brake[i].button == id))
 				curState[i].brake = true;
-			} else if((fire[i].inputType == OISMouse) && (fire[i].button == id)) {
+			if((fire[i].inputType == OISMouse) && (fire[i].button == id))
 				curState[i].fire = true;
-			} else if((jump[i].inputType == OISMouse) && (jump[i].button == id)) {
+			if((jump[i].inputType == OISMouse) && (jump[i].button == id))
 				curState[i].jump = true;
-			} else if((left[i].inputType == OISMouse) && (left[i].button == id)) {
+			if((left[i].inputType == OISMouse) && (left[i].button == id))
 				curState[i].left = true;
-			} else if((lookBack[i].inputType == OISMouse) && (lookBack[i].button == id)) {
+			if((lookBack[i].inputType == OISMouse) && (lookBack[i].button == id))
 				curState[i].lookBack = true;
-			} else if((motorOn[i].inputType == OISMouse) && (motorOn[i].button == id)) {
+			if((motorOn[i].inputType == OISMouse) && (motorOn[i].button == id))
 				curState[i].motorOn = true;
-			} else if((right[i].inputType == OISMouse) && (right[i].button == id)) {
+			if((right[i].inputType == OISMouse) && (right[i].button == id))
 				curState[i].right = true;
-			} else if((weapon[i].inputType == OISMouse) && (weapon[i].button == id)) {
+			if((weapon[i].inputType == OISMouse) && (weapon[i].button == id))
 				curState[i].weapon = true;
-			}
 		}
 	}
 
@@ -440,23 +570,22 @@ bool Controller::mousePressed(const MouseEvent &arg, MouseButtonID id) {
 bool Controller::mouseReleased(const MouseEvent &arg, MouseButtonID id) {
 	if(!captureNext) {
 		for(int i = 0; i < 4; i++) {
-			if((brake[i].inputType == OISMouse) && (brake[i].button == id)) {
+			if((brake[i].inputType == OISMouse) && (brake[i].button == id))
 				curState[i].brake = false;
-			} else if((fire[i].inputType == OISMouse) && (fire[i].button == id)) {
+			if((fire[i].inputType == OISMouse) && (fire[i].button == id))
 				curState[i].fire = false;
-			} else if((jump[i].inputType == OISMouse) && (jump[i].button == id)) {
+			if((jump[i].inputType == OISMouse) && (jump[i].button == id))
 				curState[i].jump = false;
-			} else if((left[i].inputType == OISMouse) && (left[i].button == id)) {
+			if((left[i].inputType == OISMouse) && (left[i].button == id))
 				curState[i].left = false;
-			} else if((lookBack[i].inputType == OISMouse) && (lookBack[i].button == id)) {
+			if((lookBack[i].inputType == OISMouse) && (lookBack[i].button == id))
 				curState[i].lookBack = false;
-			} else if((motorOn[i].inputType == OISMouse) && (motorOn[i].button == id)) {
+			if((motorOn[i].inputType == OISMouse) && (motorOn[i].button == id))
 				curState[i].motorOn = false;
-			} else if((right[i].inputType == OISMouse) && (right[i].button == id)) {
+			if((right[i].inputType == OISMouse) && (right[i].button == id))
 				curState[i].right = false;
-			} else if((weapon[i].inputType == OISMouse) && (weapon[i].button == id)) {
+			if((weapon[i].inputType == OISMouse) && (weapon[i].button == id))
 				curState[i].weapon = false;
-			}
 		}
 	}
 
@@ -537,11 +666,32 @@ void Controller::getCaptureControl(int captureControl, InputControl **input, Hov
 	}
 }
 
+void Controller::updateMouseControl(bool &ctlState, InputControl &ctl, int x, int y, int z) {
+	if(ctl.direction == 1) {
+		if(ctl.axis == AXIS_X) {
+			ctlState = (x > 0);
+		} else if(ctl.axis == AXIS_Y) {
+			ctlState = (y > 0);
+		} else if(ctl.axis == AXIS_Z) {
+			ctlState = (z > 0);
+		}
+	} else {
+		if(ctl.axis == AXIS_X) {
+			ctlState = (x < 0);
+		} else if(ctl.axis == AXIS_Y) {
+			ctlState = (y < 0);
+		} else if(ctl.axis == AXIS_Z) {
+			ctlState = (z < 0);
+		}
+	}
+}
+
 InputControl Controller::toInputControl(HoverRace::Util::Config::cfg_controls_t::cfg_control_t control) {
 	InputControl ret;
 
 	ret.axis = control.axis;
 	ret.button = control.button;
+	ret.direction = control.direction;
 	ret.inputType = control.inputType;
 	ret.kbdBinding = control.kbdBinding;
 	ret.pov = control.pov;
@@ -556,6 +706,7 @@ HoverRace::Util::Config::cfg_controls_t::cfg_control_t Controller::toCfgControl(
 
 	ret.axis = control.axis;
 	ret.button = control.button;
+	ret.direction = control.direction;
 	ret.inputType = control.inputType;
 	ret.kbdBinding = control.kbdBinding;
 	ret.pov = control.pov;
