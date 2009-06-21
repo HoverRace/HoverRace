@@ -230,6 +230,89 @@ std::string Controller::toString(HoverRace::Util::Config::cfg_controls_t::cfg_co
 						return _("Unknown Mouse Axis -");
 			}
 		}
+	} else if(control.inputType == OISJoyStick) {
+		if(control.axis != 0) {
+			// joystick axis
+			char joyax[150];
+			sprintf(joyax, "%s %d%c",
+				_("Joystick Axis"),
+				control.axis,
+				(control.direction == 1) ? '+' : '-');
+			return joyax;
+		} else if(control.pov != 0) {
+			// joystick pov
+			char *povnum;
+			switch(control.pov) { // try to use longer gettext phrases
+				case 1:
+					povnum = _("Joystick POV 1");
+					break;
+				case 2:
+					povnum = _("Joystick POV 2");
+					break;
+				case 3:
+					povnum = _("Joystick POV 3");
+					break;
+				case 4:
+					povnum = _("Joystick POV 4");
+					break;
+			}
+			// now the direction
+			char *dir;
+			switch(control.direction) {
+				case Pov::Centered:
+					dir = _("Center");
+					break;
+				case Pov::North:
+					dir = _("North");
+					break;
+				case Pov::East:
+					dir = _("East");
+					break;
+				case Pov::West:
+					dir = _("West");
+					break;
+				case Pov::South:
+					dir = _("South");
+					break;
+				case Pov::NorthEast:
+					dir = _("Northeast");
+					break;
+				case Pov::NorthWest:
+					dir = _("Northwest");
+					break;
+				case Pov::SouthEast:
+					dir = _("Southeast");
+					break;
+				case Pov::SouthWest:
+					dir = _("Southwest");
+					break;
+				default:
+					dir = _("Unknown direction");
+					break;
+			}
+			char ret[150];
+			sprintf(ret, "%s %s\0", povnum, dir);
+			return ret;
+		} else if(control.slider != 0) {
+			// joystick slider
+			switch(control.slider) { // try to use longer gettext phrases
+				case 1:
+					return _("Joystick Slider 1");
+				case 2:
+					return _("Joystick Slider 2");
+				case 3:
+					return _("Joystick Slider 3");
+				case 4:
+					return _("Joystick Slider 4"); // only 4 sliders allowed
+				default:
+					return _("Unknown Joystick Slider");
+			}
+		} else {
+			// joystick button
+			char ret[100];
+			sprintf(ret, "%s %d\0", _("Joystick Button"), control.button);
+			return ret;
+		}
 	} else if(control.inputType == OISUnknown) { // cfg_control_t is set entirely to 0: disabled
 		return "Disabled";
 	} else {
@@ -519,7 +602,6 @@ bool Controller::mouseMoved(const MouseEvent &arg) {
 
 bool Controller::mousePressed(const MouseEvent &arg, MouseButtonID id) {
 	if(captureNext) {
-		// capture this input as a keycode
 		InputControl *input = NULL;
 		Util::Config::cfg_controls_t::cfg_control_t *cfg_input = NULL;
 
@@ -593,10 +675,77 @@ bool Controller::mouseReleased(const MouseEvent &arg, MouseButtonID id) {
 }
 
 bool Controller::buttonPressed(const JoyStickEvent &arg, int button) {
+	if(captureNext) {
+		// capture this input as a key binding
+		InputControl *input = NULL;
+		Util::Config::cfg_controls_t::cfg_control_t *cfg_input = NULL;
+
+		getCaptureControl(captureControl, &input, &cfg_input);
+		
+		// if it is a new key, set the binding
+		if(((*input).inputType != OISJoyStick) || ((*input).button != button)) {
+			(*input).inputType = OISJoyStick;
+			(*input).axis = 0;
+			(*input).button = button;
+			(*input).sensitivity = 0;
+			(*input).pov = 0;
+			(*cfg_input).inputType = OISJoyStick;
+			(*cfg_input).axis = 0;
+			(*cfg_input).button = button;
+			(*cfg_input).sensitivity = 0;
+			(*cfg_input).pov = 0;
+			updated = true; // so we know if we need to say
+		}
+
+		// disable capture hook
+		captureNext = false;
+		captureControl = 0;
+		capturePlayerId = 0;
+		captureHwnd = NULL;
+	} else {
+		for(int i = 0; i < 4; i++) {
+			if((brake[i].inputType == OISJoyStick) && (brake[i].button == button))
+				curState[i].brake = true;
+			if((fire[i].inputType == OISJoyStick) && (fire[i].button == button))
+				curState[i].fire = true;
+			if((jump[i].inputType == OISJoyStick) && (jump[i].button == button))
+				curState[i].jump = true;
+			if((left[i].inputType == OISJoyStick) && (left[i].button == button))
+				curState[i].left = true;
+			if((lookBack[i].inputType == OISJoyStick) && (lookBack[i].button == button))
+				curState[i].lookBack = true;
+			if((motorOn[i].inputType == OISJoyStick) && (motorOn[i].button == button))
+				curState[i].motorOn = true;
+			if((right[i].inputType == OISJoyStick) && (right[i].button == button))
+				curState[i].right = true;
+			if((weapon[i].inputType == OISJoyStick) && (weapon[i].button == button))
+				curState[i].weapon = true;
+		}
+	}
 	return true;
 }
 
 bool Controller::buttonReleased(const JoyStickEvent &arg, int button) {
+	if(!captureNext) {
+		for(int i = 0; i < 4; i++) {
+			if((brake[i].inputType == OISJoyStick) && (brake[i].button == button))
+				curState[i].brake = false;
+			if((fire[i].inputType == OISJoyStick) && (fire[i].button == button))
+				curState[i].fire = false;
+			if((jump[i].inputType == OISJoyStick) && (jump[i].button == button))
+				curState[i].jump = false;
+			if((left[i].inputType == OISJoyStick) && (left[i].button == button))
+				curState[i].left = false;
+			if((lookBack[i].inputType == OISJoyStick) && (lookBack[i].button == button))
+				curState[i].lookBack = false;
+			if((motorOn[i].inputType == OISJoyStick) && (motorOn[i].button == button))
+				curState[i].motorOn = false;
+			if((right[i].inputType == OISJoyStick) && (right[i].button == button))
+				curState[i].right = false;
+			if((weapon[i].inputType == OISJoyStick) && (weapon[i].button == button))
+				curState[i].weapon = false;
+		}
+	}
 	return true;
 }
 
@@ -605,10 +754,88 @@ bool Controller::axisMoved(const JoyStickEvent &arg, int axis) {
 }
 
 bool Controller::povMoved(const JoyStickEvent &arg, int pov) {
-	return true;
-}
+	pov++; // increment pov by one
+	if(captureNext) {
+		// capture this input as a key binding
+		InputControl *input = NULL;
+		Util::Config::cfg_controls_t::cfg_control_t *cfg_input = NULL;
 
-bool Controller::vector3Moved(const JoyStickEvent &arg, int index) {
+		getCaptureControl(captureControl, &input, &cfg_input);
+		
+		// if it is a new key, set the binding
+		if(((*input).inputType != OISJoyStick) || ((*input).pov != pov) || ((*input).direction != arg.state.mPOV[pov - 1].direction)) {
+			(*input).inputType = OISJoyStick;
+			(*input).axis = 0;
+			(*input).button = -1;
+			(*input).sensitivity = 0;
+			(*input).pov = pov;
+			(*input).direction = arg.state.mPOV[pov - 1].direction;
+			(*cfg_input).inputType = OISJoyStick;
+			(*cfg_input).axis = 0;
+			(*cfg_input).button = -1;
+			(*cfg_input).sensitivity = 0;
+			(*cfg_input).pov = pov;
+			(*cfg_input).direction = arg.state.mPOV[pov - 1].direction;
+			updated = true; // so we know if we need to say
+		}
+
+		// disable capture hook
+		captureNext = false;
+		captureControl = 0;
+		capturePlayerId = 0;
+		captureHwnd = NULL;
+	} else {
+		for(int i = 0; i < 4; i++) {
+			if((brake[i].inputType == OISJoyStick) && (brake[i].pov == pov)) {
+				if(brake[i].direction == arg.state.mPOV[pov - 1].direction)
+					curState[i].brake = true;
+				else
+					curState[i].brake = false;
+			}
+			if((fire[i].inputType == OISJoyStick) && (fire[i].pov == pov)) {
+				if(fire[i].direction == arg.state.mPOV[pov - 1].direction)
+					curState[i].fire = true;
+				else
+					curState[i].fire = false;
+			}
+			if((jump[i].inputType == OISJoyStick) && (jump[i].pov == pov)) {
+				if(jump[i].direction == arg.state.mPOV[pov - 1].direction)
+					curState[i].jump = true;
+				else
+					curState[i].jump = false;
+			}
+			if((left[i].inputType == OISJoyStick) && (left[i].pov == pov)) {
+				if(left[i].direction == arg.state.mPOV[pov - 1].direction)
+					curState[i].left = true;
+				else
+					curState[i].left = false;
+			}
+			if((lookBack[i].inputType == OISJoyStick) && (lookBack[i].pov == pov)) {
+				if(lookBack[i].direction == arg.state.mPOV[pov - 1].direction)
+					curState[i].lookBack = true;
+				else
+					curState[i].lookBack = false;
+			}
+			if((motorOn[i].inputType == OISJoyStick) && (motorOn[i].pov == pov)) {
+				if(motorOn[i].direction == arg.state.mPOV[pov - 1].direction)
+					curState[i].motorOn = true;
+				else
+					curState[i].motorOn = false;
+			}
+			if((right[i].inputType == OISJoyStick) && (right[i].pov == pov)) {
+				if(right[i].direction == arg.state.mPOV[pov - 1].direction)
+					curState[i].right = true;
+				else
+					curState[i].right = false;
+			}
+			if((weapon[i].inputType == OISJoyStick) && (weapon[i].pov == pov)) {
+				if(weapon[i].direction == arg.state.mPOV[pov - 1].direction)
+					curState[i].weapon = true;
+				else
+					curState[i].weapon = false;
+			}
+		}
+	}
 	return true;
 }
 

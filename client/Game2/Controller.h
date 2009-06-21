@@ -71,7 +71,7 @@ struct InputControl {
 	// mouse or joystick
 	int button;
 	int axis;
-	int direction; // for the axis
+	int direction; // for the axis and joystick povs; axis is -1 or 1 while pov can be a larger set
 	int pov; // joystick only
 	int slider; // joystick only
 	int sensitivity; // defines how quickly we get to the maximum value
@@ -121,7 +121,6 @@ class Controller : public KeyListener, public MouseListener, public JoyStickList
 		bool buttonReleased(const JoyStickEvent &arg, int button);
 		bool axisMoved(const JoyStickEvent &arg, int axis);
 		bool povMoved(const JoyStickEvent &arg, int pov);
-		bool vector3Moved(const JoyStickEvent &arg, int index);
 
 		// for polling
 		void clearControlState(); // clear the control state before each poll
