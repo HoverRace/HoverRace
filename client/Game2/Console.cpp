@@ -181,6 +181,7 @@ int Console::LReset(lua_State *state)
 	Console *self = static_cast<Console*>(lua_touserdata(state, lua_upvalueindex(1)));
 	self->scripting->Reset();
 	self->InitGlobals(self->scripting);
+	self->LogInfo("Console script environment reset complete.");
 	return 0;
 }
 
@@ -194,6 +195,7 @@ int Console::LReinit(lua_State *state)
 	Console *self = static_cast<Console*>(lua_touserdata(state, lua_upvalueindex(1)));
 	self->oldScriptings.push_back(self->scripting);  // Will be cleaned up later.
 	self->Init();
+	self->LogInfo("Console script environment reinitialization complete.");
 	return 0;
 }
 
