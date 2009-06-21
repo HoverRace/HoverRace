@@ -94,6 +94,7 @@ void CaptureScreen( MR_VideoBuffer* pVideoBuffer );
 #define MRM_RETURN2WINDOWMODE  1
 #define MRM_EXIT_MENU_LOOP     2
 #define MRM_CONTROL_TIMER	   3
+#define MRM_CONTROL_POLL	   4
 
 #ifdef WITH_OPENAL
 #	define SOUNDSERVER_INIT(s) MR_SoundServer::Init()
@@ -2753,10 +2754,6 @@ BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 	switch (pMsgId) {
 		// Catch environment modification events
 		case WM_INITDIALOG:
-			// set up our controller, after destroying the current one
-//			delete This->controller;
-//			controller = new HoverRace::Client::Control::Controller(pWindow);
-
 			// i18nize the choices
 			SetDlgItemTextW(pWindow, IDC_PLAYER1, Str::UW(_("Player 1")));
 			SetDlgItemTextW(pWindow, IDC_PLAYER2, Str::UW(_("Player 2")));
@@ -3194,6 +3191,10 @@ LRESULT CALLBACK MR_GameApp::PressKeyDialogFunc(HWND pWindow, UINT pMsgId, WPARA
 
 			// set timer for 3 seconds
 			SetTimer(pWindow, MRM_CONTROL_TIMER, 3000, NULL);
+
+			// set polling timer since joystick events do not trigger a message
+			// and the controller will not be polled otherwise
+			SetTimer(pWindow, MRM_CONTROL_POLL, 100, NULL);
 			break;
 
 		case WM_COMMAND:
@@ -3210,22 +3211,32 @@ LRESULT CALLBACK MR_GameApp::PressKeyDialogFunc(HWND pWindow, UINT pMsgId, WPARA
 			break;
 
 		case WM_TIMER:
-			// 3 seconds are up, disable input
-			tmpControl->disableInput(This->setControlControl, This->setControlPlayer);
-			tmpControl->stopCapture();
+			switch (pWParam) {
+				case MRM_CONTROL_TIMER:
+					// 3 seconds are up, disable input
+					tmpControl->disableInput(This->setControlControl, This->setControlPlayer);
+					tmpControl->stopCapture();
 			
-			// save new controls
-			delete tmpControl;
-			tmpControl = NULL;
+					// save new controls
+					delete tmpControl;
+					tmpControl = NULL;
 
-			// unset the handle
-			This->pressAnyKeyDialog = NULL;
 
-			// now we have to tell the preferences dialog to refresh itself
-			SendMessage(This->preferencesDialog, WM_INITDIALOG /* misuse, but works */, 0, 0);
-			KillTimer(pWindow, MRM_CONTROL_TIMER);
-			EnableWindow(This->preferencesDialog, TRUE);
-			DestroyWindow(pWindow);
+					// unset the handle
+					This->pressAnyKeyDialog = NULL;
+
+					// now we have to tell the preferences dialog to refresh itself
+					SendMessage(This->preferencesDialog, WM_INITDIALOG /* misuse, but works */, 0, 0);
+					KillTimer(pWindow, MRM_CONTROL_TIMER);
+					KillTimer(pWindow, MRM_CONTROL_POLL);
+					EnableWindow(This->preferencesDialog, TRUE);
+					DestroyWindow(pWindow);
+					break;
+				case MRM_CONTROL_POLL:
+					KillTimer(pWindow, MRM_CONTROL_POLL);
+					tmpControl->poll();
+					SetTimer(pWindow, MRM_CONTROL_POLL, 100, NULL);
+			}
 			break;
 	}
 
