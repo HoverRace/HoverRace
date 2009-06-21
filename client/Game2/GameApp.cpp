@@ -2947,6 +2947,7 @@ BOOL CALLBACK MR_GameApp::ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 
 					RECT size = {0};
 					GetWindowRect(This->mMainWindow, &size);
+					SetCursorPos(size.left + 110, size.top + 80); // move to center of new window
 
 					This->pressAnyKeyDialog = CreateWindowW(
 						L"IDD_PRESS_ANY_KEY",
@@ -3159,7 +3160,6 @@ BOOL CALLBACK MR_GameApp::FirstChoiceDialogFunc(HWND pWindow, UINT pMsgId, WPARA
 					break;
 
 				case IDOK:
-
 					EndDialog(pWindow, IDOK);
 					lReturnValue = TRUE;
 					break;
