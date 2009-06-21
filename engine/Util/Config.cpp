@@ -734,8 +734,9 @@ void Config::cfg_controls_t::cfg_control_t::Load(yaml::MapNode *root)
 
 	READ_INT(root, inputType, 0, 4);
 	READ_INT(root, kbdBinding, 0, 65535);
-	READ_INT(root, button, 0, 65535);
+	READ_INT(root, button, -32768, 32767);
 	READ_INT(root, axis, 0, 65535);
+	READ_INT(root, direction, -1, 1);
 	READ_INT(root, pov, 0, 65535);
 	READ_INT(root, slider, 0, 65535);
 	READ_INT(root, sensitivity, -32768, 32767);
@@ -749,6 +750,7 @@ void Config::cfg_controls_t::cfg_control_t::Save(yaml::Emitter *emitter)
 	EMIT_VAR(emitter, kbdBinding);
 	EMIT_VAR(emitter, button);
 	EMIT_VAR(emitter, axis);
+	EMIT_VAR(emitter, direction);
 	EMIT_VAR(emitter, pov);
 	EMIT_VAR(emitter, slider);
 	EMIT_VAR(emitter, sensitivity);
