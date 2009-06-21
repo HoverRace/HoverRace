@@ -42,6 +42,15 @@ class Console
 		Console();
 		virtual ~Console();
 
+	private:
+		void Init();
+	protected:
+		virtual void InitEnv(Script::Env *scripting);
+		virtual void InitGlobals(Script::Env *scripting);
+
+		virtual void Cleanup();
+
+	public:
 		virtual void Advance(Util::OS::timestamp_t tick) = 0;
 
 		void SubmitChunk(const std::string &s);
@@ -62,9 +71,14 @@ class Console
 
 	private:
 		static int LClear(lua_State *state);
+		static int LReset(lua_State *state);
+		static int LReinit(lua_State *state);
 
 	private:
 		Script::Env *scripting;
+		typedef std::list<Script::Env*> oldScriptings_t;
+		oldScriptings_t oldScriptings;
+		boost::shared_ptr<std::ostream> logStream;
 		std::string chunk;
 		inputState_t inputState;
 

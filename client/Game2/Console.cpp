@@ -62,20 +62,69 @@ Console::Console() :
 	inputState(ISTATE_COMMAND)
 {
 	chunk.reserve(1024);
-
-	scripting = new Env();
-	boost::shared_ptr<std::ostream> logStream(new LogStream(this));
-	scripting->SetOutput(logStream);
-
-	lua_State *state = scripting->GetState();
-	lua_pushlightuserdata(state, this);
-	lua_pushcclosure(state, Console::LClear, 1);
-	lua_setglobal(state, "clear");
+	logStream = boost::shared_ptr<std::ostream>(new LogStream(this));
+	Init();
 }
 
 Console::~Console()
 {
+	Cleanup();
 	delete scripting;
+}
+
+void Console::Init()
+{
+	scripting = new Env();
+	InitEnv(scripting);
+	InitGlobals(scripting);
+}
+
+/**
+ * Set intial settings on the scripting environment.
+ * @param scripting The environment to initialize (may not be @c NULL).
+ */
+void Console::InitEnv(Script::Env *scripting)
+{
+	scripting->SetOutput(logStream);
+}
+
+/**
+ * Populate the globals in the environment.
+ * @param scripting The environment to initialize (may not be @c NULL).
+ */
+void Console::InitGlobals(Script::Env *scripting)
+{
+	lua_State *state = scripting->GetState();
+
+	lua_pushlightuserdata(state, this);
+	lua_pushcclosure(state, Console::LClear, 1);
+	lua_setglobal(state, "clear");
+
+	lua_pushlightuserdata(state, this);
+	lua_pushcclosure(state, Console::LReinit, 1);
+	lua_setglobal(state, "reinit");
+
+	lua_pushlightuserdata(state, this);
+	lua_pushcclosure(state, Console::LReset, 1);
+	lua_setglobal(state, "reset");
+}
+
+/**
+ * Clean up any resources invalidated during script execution.
+ * Note that this is not the same as invoking the garbage collector for the
+ * scripting environment; this is for console-specific resources which
+ * have been invalidated but could not be freed while the script was executing.
+ */
+void Console::Cleanup()
+{
+	if (!oldScriptings.empty()) {
+		for (oldScriptings_t::iterator iter = oldScriptings.begin();
+			iter != oldScriptings.end(); ++iter)
+		{
+			delete *iter;
+		}
+		oldScriptings.clear();
+	}
 }
 
 /**
@@ -97,6 +146,8 @@ void Console::SubmitChunk(const std::string &s)
 		LogError(exn.GetMessage());
 	}
 
+	Cleanup();
+
 	chunk.clear();
 	SetInputState(ISTATE_COMMAND);
 }
@@ -115,8 +166,34 @@ Console::inputState_t Console::GetInputState() const
 
 int Console::LClear(lua_State *state)
 {
+	// function clear()
+	// Clear the console.
 	Console *self = static_cast<Console*>(lua_touserdata(state, lua_upvalueindex(1)));
 	self->Clear();
+	return 0;
+}
+
+int Console::LReset(lua_State *state)
+{
+	// function reset()
+	// Repopulate the global environment (standard functions, variables, etc.).
+	// This is useful if global functions are accidentally overwritten or deleted.
+	Console *self = static_cast<Console*>(lua_touserdata(state, lua_upvalueindex(1)));
+	self->scripting->Reset();
+	self->InitGlobals(self->scripting);
+	return 0;
+}
+
+int Console::LReinit(lua_State *state)
+{
+	// function reinit()
+	// Complete reinitialize the environment.
+	// This is a last-resort call for fixing an environment that is very
+	// messed up.  reset() does not need to be called afterwards; this function
+	// is a superset of what reset() does.
+	Console *self = static_cast<Console*>(lua_touserdata(state, lua_upvalueindex(1)));
+	self->oldScriptings.push_back(self->scripting);  // Will be cleaned up later.
+	self->Init();
 	return 0;
 }
 
