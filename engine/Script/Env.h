@@ -61,6 +61,7 @@ class MR_DllDeclare Env
 
 	public:
 		lua_State *GetState() const { return state; }
+		void Reset();
 		void SetOutput(boost::shared_ptr<std::ostream> out);
 
 	public:

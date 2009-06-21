@@ -42,6 +42,21 @@ Env::Env()
 
 	//TODO: Set panic handler.
 
+	Reset();
+}
+
+Env::~Env()
+{
+	lua_close(state);
+}
+
+/**
+ * Reset changes to the global environment.
+ * This is used for fixing accidental changes to globals.
+ * The state returned by GetState() is otherwise unchanged.
+ */
+void Env::Reset()
+{
 	// Register a "safe" set of standard libraries.
 	REG_LUA_LIB(state, "", luaopen_base);
 	REG_LUA_LIB(state, LUA_MATHLIBNAME, luaopen_math);
@@ -52,11 +67,6 @@ Env::Env()
 	lua_pushlightuserdata(state, this);
 	lua_pushcclosure(state, Env::LPrint, 1);
 	lua_setglobal(state, "print");
-}
-
-Env::~Env()
-{
-	lua_close(state);
 }
 
 /**
