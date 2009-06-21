@@ -125,7 +125,7 @@ class Controller : public KeyListener, public MouseListener, public JoyStickList
 		// for polling
 		void clearControlState(); // clear the control state before each poll
 		ControlState getControlState(int player) const;
-		void updateMouseControl(bool &ctlState, InputControl &ctl, int x, int y, int z);
+		void updateAxisControl(bool &ctlState, InputControl &ctl, int *axes, int numAxes);
 
 		void setControls(HoverRace::Util::Config::cfg_controls_t *controls);
 

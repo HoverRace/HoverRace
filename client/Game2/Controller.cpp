@@ -578,22 +578,23 @@ bool Controller::mouseMoved(const MouseEvent &arg) {
 		updated = true;
 	} else {
 		for(int i = 0; i < 4; i++) {
+			int axes[3] = { x, y, z };
 			if((brake[i].inputType == OISMouse) && (brake[i].axis != 0))
-				updateMouseControl(curState[i].brake, brake[i], x, y, z);
+				updateAxisControl(curState[i].brake, brake[i], axes, 3);
 			if((fire[i].inputType == OISMouse) && (fire[i].axis != 0))
-				updateMouseControl(curState[i].fire, fire[i], x, y, z);
+				updateAxisControl(curState[i].fire, fire[i], axes, 3);
 			if((jump[i].inputType == OISMouse) && (jump[i].axis != 0))
-				updateMouseControl(curState[i].jump, jump[i], x, y, z);
+				updateAxisControl(curState[i].jump, jump[i], axes, 3);
 			if((left[i].inputType == OISMouse) && (left[i].axis != 0))
-				updateMouseControl(curState[i].left, left[i], x, y, z);
+				updateAxisControl(curState[i].left, left[i], axes, 3);
 			if((lookBack[i].inputType == OISMouse) && (lookBack[i].axis != 0))
-				updateMouseControl(curState[i].lookBack, lookBack[i], x, y, z);
+				updateAxisControl(curState[i].lookBack, lookBack[i], axes, 3);
 			if((motorOn[i].inputType == OISMouse) && (motorOn[i].axis != 0))
-				updateMouseControl(curState[i].motorOn, motorOn[i], x, y, z);
+				updateAxisControl(curState[i].motorOn, motorOn[i], axes, 3);
 			if((right[i].inputType == OISMouse) && (right[i].axis != 0))
-				updateMouseControl(curState[i].right, right[i], x, y, z);
+				updateAxisControl(curState[i].right, right[i], axes, 3);
 			if((weapon[i].inputType == OISMouse) && (weapon[i].axis != 0))
-				updateMouseControl(curState[i].weapon, weapon[i], x, y, z);
+				updateAxisControl(curState[i].weapon, weapon[i], axes, 3);
 		}
 	}
 
@@ -750,6 +751,94 @@ bool Controller::buttonReleased(const JoyStickEvent &arg, int button) {
 }
 
 bool Controller::axisMoved(const JoyStickEvent &arg, int axis) {
+	// examine the axes to find the maximum
+	int numAxes = arg.state.mAxes.size();
+	int *axes = new int[numAxes];
+	int *absAxes = new int[numAxes];
+
+	for(int i = 0; i < numAxes; i++) {
+		if(arg.state.mAxes.at(i).absOnly)
+			axes[i] = arg.state.mAxes.at(i).abs;
+		else
+			axes[i] = arg.state.mAxes.at(i).rel;
+
+		absAxes[i] = abs(axes[i]);
+
+		// offset so that there is actually a dead zone somewhere
+		// this should be configurable someday
+		if(absAxes[i] < 5000) {
+			axes[i] = 0;
+			absAxes[i] = 0;
+		}
+	}
+
+	if(captureNext) {
+		int axisIndex = 0;
+		for(int i = 1; i < numAxes; i++) {
+			if(absAxes[i] >= absAxes[axisIndex])
+				axisIndex = i;
+		}
+
+		if(axes[axisIndex] != 0) { // make sure we actually got usable input
+			InputControl *input = NULL;
+			Util::Config::cfg_controls_t::cfg_control_t *cfg_input = NULL;
+
+			getCaptureControl(captureControl, &input, &cfg_input);
+
+			(*input).inputType = OISJoyStick;
+			(*input).button = 0;
+			(*input).sensitivity = 1; // not touching this for now
+			(*input).pov = 0;
+			(*input).slider = 0;
+			(*input).axis = axisIndex + 1;
+
+			if(axes[axisIndex] > 0) {
+				(*input).direction = 1;
+				(*cfg_input).direction = 1;
+			} else {
+				(*input).direction = -1;
+				(*cfg_input).direction = -1;
+			}
+
+			(*cfg_input).inputType = OISJoyStick;
+			(*cfg_input).axis = (*input).axis;
+			(*cfg_input).sensitivity = (*input).sensitivity;
+			(*cfg_input).button = 0;
+			(*cfg_input).slider = 0;
+			(*cfg_input).pov = 0;
+
+			updated = true;
+			
+			// disable capture hook
+			captureNext = false;
+			captureControl = 0;
+			capturePlayerId = 0;
+			captureHwnd = NULL;
+		}
+	} else {
+		for(int i = 0; i < 4; i++) {
+			if((brake[i].inputType == OISJoyStick) && (brake[i].axis != 0))
+				updateAxisControl(curState[i].brake, brake[i], axes, numAxes);
+			if((fire[i].inputType == OISJoyStick) && (fire[i].axis != 0))
+				updateAxisControl(curState[i].fire, fire[i], axes, numAxes);
+			if((jump[i].inputType == OISJoyStick) && (jump[i].axis != 0))
+				updateAxisControl(curState[i].jump, jump[i], axes, numAxes);
+			if((left[i].inputType == OISJoyStick) && (left[i].axis != 0))
+				updateAxisControl(curState[i].left, left[i], axes, numAxes);
+			if((lookBack[i].inputType == OISJoyStick) && (lookBack[i].axis != 0))
+				updateAxisControl(curState[i].lookBack, lookBack[i], axes, numAxes);
+			if((motorOn[i].inputType == OISJoyStick) && (motorOn[i].axis != 0))
+				updateAxisControl(curState[i].motorOn, motorOn[i], axes, numAxes);
+			if((right[i].inputType == OISJoyStick) && (right[i].axis != 0))
+				updateAxisControl(curState[i].right, right[i], axes, numAxes);
+			if((weapon[i].inputType == OISJoyStick) && (weapon[i].axis != 0))
+				updateAxisControl(curState[i].weapon, weapon[i], axes, numAxes);
+		}
+	}
+
+	delete[] axes;
+	delete[] absAxes;
+
 	return true;
 }
 
@@ -893,23 +982,18 @@ void Controller::getCaptureControl(int captureControl, InputControl **input, Hov
 	}
 }
 
-void Controller::updateMouseControl(bool &ctlState, InputControl &ctl, int x, int y, int z) {
-	if(ctl.direction == 1) {
-		if(ctl.axis == AXIS_X) {
-			ctlState = (x > 0);
-		} else if(ctl.axis == AXIS_Y) {
-			ctlState = (y > 0);
-		} else if(ctl.axis == AXIS_Z) {
-			ctlState = (z > 0);
-		}
-	} else {
-		if(ctl.axis == AXIS_X) {
-			ctlState = (x < 0);
-		} else if(ctl.axis == AXIS_Y) {
-			ctlState = (y < 0);
-		} else if(ctl.axis == AXIS_Z) {
-			ctlState = (z < 0);
-		}
+/**
+ * Update the control state given the variable to update, the input control to inspect, and the axes measurements.
+ *
+ * @param ctlState The variable to modify given whether the input is on or off
+ * @param ctl The InputControl to inspect
+ * @param axes An array of axes measurements
+ * @param numAxes The number of axes
+ */
+void Controller::updateAxisControl(bool &ctlState, InputControl &ctl, int *axes, int numAxes) {
+	for(int i = 0; i < numAxes; i++) {
+		if((ctl.axis - 1) == i)
+			ctlState = ((ctl.direction == 1) ? (axes[i] > 0) : (axes[i] < 0));
 	}
 }
 
