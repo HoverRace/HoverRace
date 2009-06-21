@@ -100,6 +100,7 @@ INPUT                  = client/Game2 \
                          engine/ObjFac1 \
                          engine/ObjFacTools \
                          engine/PaletteCreator \
+                         engine/Script \
                          engine/Util \
                          engine/Util/yaml \
                          engine/VideoServices \
