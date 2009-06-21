@@ -736,7 +736,7 @@ void Config::cfg_controls_t::cfg_control_t::Load(yaml::MapNode *root)
 	READ_INT(root, kbdBinding, 0, 65535);
 	READ_INT(root, button, -32768, 32767);
 	READ_INT(root, axis, 0, 65535);
-	READ_INT(root, direction, -1, 1);
+	READ_INT(root, direction, -32768, 32767);
 	READ_INT(root, pov, 0, 65535);
 	READ_INT(root, slider, 0, 65535);
 	READ_INT(root, sensitivity, -32768, 32767);

@@ -181,7 +181,7 @@ class MR_DllDeclare Config
 				// mouse or joystick
 				int button;
 				int axis;
-				int direction; // for axis
+				int direction; // for axis as well as POV
 				int pov; // joystick only
 				int slider; // joystick only
 				int sensitivity; // defines how quickly we get to the maximum value
