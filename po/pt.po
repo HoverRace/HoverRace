@@ -8,17 +8,19 @@ msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
 "Report-Msgid-Bugs-To: bugs@hoverrace.com\n"
 "POT-Creation-Date: 2009-05-17 18:19-0400\n"
-"PO-Revision-Date: 2009-03-04 22:19-0500\n"
-"Last-Translator:  <ryan@igglybob.com>\n"
+"PO-Revision-Date: 2009-05-23 16:23-0400\n"
+"Last-Translator: Diogo Silva <mail@anarki99.net>\n"
 "Language-Team: Portuguese\n"
+"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 1.2.1\n"
 
 #: client/Game2/GameApp.cpp:734
 msgid "Abort current game?"
-msgstr ""
+msgstr "Terminar o jogo actual?"
 
 #: client/Game2/GameApp.cpp:760
 msgid ""
@@ -26,61 +28,64 @@ msgid ""
 "you must have a Word document viewer installed\n"
 "on your system."
 msgstr ""
+"Para a a Ajuda do HoverRace puder ser mostrada\n"
+" terás que ter um visualizador de documentos Word instalado\n"
+" no teu sistema."
 
 #: client/Game2/GameApp.cpp:974
 msgctxt "Menu|File|Split Screen"
 msgid "&2 Player"
-msgstr ""
+msgstr "&2 Jogadores"
 
 #: client/Game2/GameApp.cpp:976
 msgctxt "Menu|File|Split Screen"
 msgid "&3 Player"
-msgstr ""
+msgstr "&3 Jogadores"
 
 #: client/Game2/GameApp.cpp:978
 msgctxt "Menu|File|Split Screen"
 msgid "&4 Player"
-msgstr ""
+msgstr "&4 Jogadores"
 
 #: client/Game2/GameApp.cpp:983
 msgctxt "Menu|File|Network"
 msgid "&Connect to server"
-msgstr ""
+msgstr "&Conectar ao Servidor"
 
 #: client/Game2/GameApp.cpp:985
 msgctxt "Menu|File|Network"
 msgid "Create a &server"
-msgstr ""
+msgstr "Criar um &servidor"
 
 #: client/Game2/GameApp.cpp:988
 msgctxt "Menu|File|Network"
 msgid "&Internet Meeting Room"
-msgstr ""
+msgstr "&Sala de Encontro da Internet"
 
 #: client/Game2/GameApp.cpp:993
 msgctxt "Menu|File"
 msgid "&Internet"
-msgstr ""
+msgstr "&Internet"
 
 #: client/Game2/GameApp.cpp:995
 msgctxt "Menu|File"
 msgid "&Practice"
-msgstr ""
+msgstr "&Praticar"
 
 #: client/Game2/GameApp.cpp:997
 msgctxt "Menu|File"
 msgid "&Split Screen"
-msgstr ""
+msgstr "&Dividir Ecrã"
 
 #: client/Game2/GameApp.cpp:999
 msgctxt "Menu|File"
 msgid "&Network"
-msgstr ""
+msgstr "&Rede"
 
 #: client/Game2/GameApp.cpp:1002
 msgctxt "Menu|File"
 msgid "E&xit"
-msgstr ""
+msgstr "S&air"
 
 #: client/Game2/GameApp.cpp:1007
 msgctxt "Menu|View"
