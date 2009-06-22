@@ -185,6 +185,7 @@ class MR_DllDeclare Config
 				int pov; // joystick only
 				int slider; // joystick only
 				int sensitivity; // defines how quickly we get to the maximum value
+				int joystickId;
 
 				void Load(yaml::MapNode *);
 				void Save(yaml::Emitter *);

@@ -22,6 +22,7 @@ Controller::Controller(HWND mainWindow) {
 	kbd = NULL;
 	mouse = NULL;
 	joys = NULL;
+	joyIds = NULL;
 
 	captureNext = false;
 	captureControl = 0;
@@ -42,6 +43,7 @@ Controller::~Controller() {
 	// simple cleanup... I like OIS
 	InputManager::destroyInputSystem(mgr);
 	delete[] joys;
+	delete[] joyIds;
 }
 
 /***
@@ -231,11 +233,15 @@ std::string Controller::toString(HoverRace::Util::Config::cfg_controls_t::cfg_co
 			}
 		}
 	} else if(control.inputType == OISJoyStick) {
+		char joynum[100];
+		sprintf(joynum, "%s %d", _("Joystick"), control.joystickId);
+
 		if(control.axis != 0) {
 			// joystick axis
 			char joyax[150];
-			sprintf(joyax, "%s %d%c",
-				_("Joystick Axis"),
+			sprintf(joyax, "%s %s %d%c",
+				joynum,
+				_("Axis"),
 				control.axis,
 				(control.direction == 1) ? '+' : '-');
 			return joyax;
@@ -244,16 +250,16 @@ std::string Controller::toString(HoverRace::Util::Config::cfg_controls_t::cfg_co
 			char *povnum;
 			switch(control.pov) { // try to use longer gettext phrases
 				case 1:
-					povnum = _("Joystick POV 1");
+					povnum = _("POV 1");
 					break;
 				case 2:
-					povnum = _("Joystick POV 2");
+					povnum = _("POV 2");
 					break;
 				case 3:
-					povnum = _("Joystick POV 3");
+					povnum = _("POV 3");
 					break;
 				case 4:
-					povnum = _("Joystick POV 4");
+					povnum = _("POV 4");
 					break;
 			}
 			// now the direction
@@ -291,32 +297,23 @@ std::string Controller::toString(HoverRace::Util::Config::cfg_controls_t::cfg_co
 					break;
 			}
 			char ret[150];
-			sprintf(ret, "%s %s\0", povnum, dir);
+			sprintf(ret, "%s %s %s\0", joynum, povnum, dir);
 			return ret;
 		} else if(control.slider != 0) {
 			// joystick slider
-			switch(control.slider) { // try to use longer gettext phrases
-				case 1:
-					return _("Joystick Slider 1");
-				case 2:
-					return _("Joystick Slider 2");
-				case 3:
-					return _("Joystick Slider 3");
-				case 4:
-					return _("Joystick Slider 4"); // only 4 sliders allowed
-				default:
-					return _("Unknown Joystick Slider");
-			}
+			char slider[100];
+			sprintf(slider, "%s %s %d", joynum, _("Slider"), control.slider);
+			return slider;
 		} else {
 			// joystick button
 			char ret[100];
-			sprintf(ret, "%s %d\0", _("Joystick Button"), control.button);
+			sprintf(ret, "%s %s %d\0", joynum, _("Button"), control.button);
 			return ret;
 		}
 	} else if(control.inputType == OISUnknown) { // cfg_control_t is set entirely to 0: disabled
-		return "Disabled";
+		return _("Disabled");
 	} else {
-		return "Something crazy"; // a joystick: TODO
+		return "Something crazy"; // ??? should not happen
 	}
 }
 
@@ -351,12 +348,14 @@ void Controller::InitInputManager(HWND mainWindow) {
 	// we can have more than one joystick
 	numJoys = mgr->getNumberOfDevices(OISJoyStick);
 	joys = new JoyStick *[numJoys];
+	joyIds = new int[numJoys];
 
 	for(int i = 0; i < numJoys; i++) {
 		joys[i] = NULL;
 
 		try {
 			joys[i] = (JoyStick *) mgr->createInputObject(OISJoyStick, true);
+			joyIds[i] = ((Object *) joys[i])->getID();
 		} catch(OIS::Exception&) {
 			ASSERT(false); // maybe some logging would be good here... #105
 		}
@@ -690,11 +689,13 @@ bool Controller::buttonPressed(const JoyStickEvent &arg, int button) {
 			(*input).button = button;
 			(*input).sensitivity = 0;
 			(*input).pov = 0;
+			(*input).joystickId = arg.device->getID();
 			(*cfg_input).inputType = OISJoyStick;
 			(*cfg_input).axis = 0;
 			(*cfg_input).button = button;
 			(*cfg_input).sensitivity = 0;
 			(*cfg_input).pov = 0;
+			(*cfg_input).joystickId = arg.device->getID();
 			updated = true; // so we know if we need to say
 		}
 
@@ -705,21 +706,21 @@ bool Controller::buttonPressed(const JoyStickEvent &arg, int button) {
 		captureHwnd = NULL;
 	} else {
 		for(int i = 0; i < 4; i++) {
-			if((brake[i].inputType == OISJoyStick) && (brake[i].button == button))
+			if((brake[i].inputType == OISJoyStick) && (brake[i].joystickId == arg.device->getID()) && (brake[i].button == button))
 				curState[i].brake = true;
-			if((fire[i].inputType == OISJoyStick) && (fire[i].button == button))
+			if((fire[i].inputType == OISJoyStick) && (fire[i].joystickId == arg.device->getID()) && (fire[i].button == button))
 				curState[i].fire = true;
-			if((jump[i].inputType == OISJoyStick) && (jump[i].button == button))
+			if((jump[i].inputType == OISJoyStick) && (jump[i].joystickId == arg.device->getID()) && (jump[i].button == button))
 				curState[i].jump = true;
-			if((left[i].inputType == OISJoyStick) && (left[i].button == button))
+			if((left[i].inputType == OISJoyStick) && (left[i].joystickId == arg.device->getID()) && (left[i].button == button))
 				curState[i].left = true;
-			if((lookBack[i].inputType == OISJoyStick) && (lookBack[i].button == button))
+			if((lookBack[i].inputType == OISJoyStick) && (lookBack[i].joystickId == arg.device->getID()) && (lookBack[i].button == button))
 				curState[i].lookBack = true;
-			if((motorOn[i].inputType == OISJoyStick) && (motorOn[i].button == button))
+			if((motorOn[i].inputType == OISJoyStick) && (motorOn[i].joystickId == arg.device->getID()) && (motorOn[i].button == button))
 				curState[i].motorOn = true;
-			if((right[i].inputType == OISJoyStick) && (right[i].button == button))
+			if((right[i].inputType == OISJoyStick) && (right[i].joystickId == arg.device->getID()) && (right[i].button == button))
 				curState[i].right = true;
-			if((weapon[i].inputType == OISJoyStick) && (weapon[i].button == button))
+			if((weapon[i].inputType == OISJoyStick) && (weapon[i].joystickId == arg.device->getID()) && (weapon[i].button == button))
 				curState[i].weapon = true;
 		}
 	}
@@ -729,21 +730,21 @@ bool Controller::buttonPressed(const JoyStickEvent &arg, int button) {
 bool Controller::buttonReleased(const JoyStickEvent &arg, int button) {
 	if(!captureNext) {
 		for(int i = 0; i < 4; i++) {
-			if((brake[i].inputType == OISJoyStick) && (brake[i].button == button))
+			if((brake[i].inputType == OISJoyStick) && (brake[i].joystickId == arg.device->getID()) && (brake[i].button == button))
 				curState[i].brake = false;
-			if((fire[i].inputType == OISJoyStick) && (fire[i].button == button))
+			if((fire[i].inputType == OISJoyStick) && (fire[i].joystickId == arg.device->getID()) && (fire[i].button == button))
 				curState[i].fire = false;
-			if((jump[i].inputType == OISJoyStick) && (jump[i].button == button))
+			if((jump[i].inputType == OISJoyStick) && (jump[i].joystickId == arg.device->getID()) && (jump[i].button == button))
 				curState[i].jump = false;
-			if((left[i].inputType == OISJoyStick) && (left[i].button == button))
+			if((left[i].inputType == OISJoyStick) && (left[i].joystickId == arg.device->getID()) && (left[i].button == button))
 				curState[i].left = false;
-			if((lookBack[i].inputType == OISJoyStick) && (lookBack[i].button == button))
+			if((lookBack[i].inputType == OISJoyStick) && (lookBack[i].joystickId == arg.device->getID()) && (lookBack[i].button == button))
 				curState[i].lookBack = false;
-			if((motorOn[i].inputType == OISJoyStick) && (motorOn[i].button == button))
+			if((motorOn[i].inputType == OISJoyStick) && (motorOn[i].joystickId == arg.device->getID()) && (motorOn[i].button == button))
 				curState[i].motorOn = false;
-			if((right[i].inputType == OISJoyStick) && (right[i].button == button))
+			if((right[i].inputType == OISJoyStick) && (right[i].joystickId == arg.device->getID()) && (right[i].button == button))
 				curState[i].right = false;
-			if((weapon[i].inputType == OISJoyStick) && (weapon[i].button == button))
+			if((weapon[i].inputType == OISJoyStick) && (weapon[i].joystickId == arg.device->getID()) && (weapon[i].button == button))
 				curState[i].weapon = false;
 		}
 	}
@@ -791,6 +792,7 @@ bool Controller::axisMoved(const JoyStickEvent &arg, int axis) {
 			(*input).pov = 0;
 			(*input).slider = 0;
 			(*input).axis = axisIndex + 1;
+			(*input).joystickId = arg.device->getID();
 
 			if(axes[axisIndex] > 0) {
 				(*input).direction = 1;
@@ -806,6 +808,7 @@ bool Controller::axisMoved(const JoyStickEvent &arg, int axis) {
 			(*cfg_input).button = 0;
 			(*cfg_input).slider = 0;
 			(*cfg_input).pov = 0;
+			(*cfg_input).joystickId = (*input).joystickId;
 
 			updated = true;
 			
@@ -817,21 +820,21 @@ bool Controller::axisMoved(const JoyStickEvent &arg, int axis) {
 		}
 	} else {
 		for(int i = 0; i < 4; i++) {
-			if((brake[i].inputType == OISJoyStick) && (brake[i].axis != 0))
+			if((brake[i].inputType == OISJoyStick) && (brake[i].joystickId == arg.device->getID()) && (brake[i].axis != 0))
 				updateAxisControl(curState[i].brake, brake[i], axes, numAxes);
-			if((fire[i].inputType == OISJoyStick) && (fire[i].axis != 0))
+			if((fire[i].inputType == OISJoyStick) && (fire[i].joystickId == arg.device->getID()) && (fire[i].axis != 0))
 				updateAxisControl(curState[i].fire, fire[i], axes, numAxes);
-			if((jump[i].inputType == OISJoyStick) && (jump[i].axis != 0))
+			if((jump[i].inputType == OISJoyStick) && (jump[i].joystickId == arg.device->getID()) && (jump[i].axis != 0))
 				updateAxisControl(curState[i].jump, jump[i], axes, numAxes);
-			if((left[i].inputType == OISJoyStick) && (left[i].axis != 0))
+			if((left[i].inputType == OISJoyStick) && (left[i].joystickId == arg.device->getID()) && (left[i].axis != 0))
 				updateAxisControl(curState[i].left, left[i], axes, numAxes);
-			if((lookBack[i].inputType == OISJoyStick) && (lookBack[i].axis != 0))
+			if((lookBack[i].inputType == OISJoyStick) && (lookBack[i].joystickId == arg.device->getID()) && (lookBack[i].axis != 0))
 				updateAxisControl(curState[i].lookBack, lookBack[i], axes, numAxes);
-			if((motorOn[i].inputType == OISJoyStick) && (motorOn[i].axis != 0))
+			if((motorOn[i].inputType == OISJoyStick) && (motorOn[i].joystickId == arg.device->getID()) && (motorOn[i].axis != 0))
 				updateAxisControl(curState[i].motorOn, motorOn[i], axes, numAxes);
-			if((right[i].inputType == OISJoyStick) && (right[i].axis != 0))
+			if((right[i].inputType == OISJoyStick) && (right[i].joystickId == arg.device->getID()) && (right[i].axis != 0))
 				updateAxisControl(curState[i].right, right[i], axes, numAxes);
-			if((weapon[i].inputType == OISJoyStick) && (weapon[i].axis != 0))
+			if((weapon[i].inputType == OISJoyStick) && (weapon[i].joystickId == arg.device->getID()) && (weapon[i].axis != 0))
 				updateAxisControl(curState[i].weapon, weapon[i], axes, numAxes);
 		}
 	}
@@ -859,12 +862,14 @@ bool Controller::povMoved(const JoyStickEvent &arg, int pov) {
 			(*input).sensitivity = 0;
 			(*input).pov = pov;
 			(*input).direction = arg.state.mPOV[pov - 1].direction;
+			(*input).joystickId = arg.device->getID();
 			(*cfg_input).inputType = OISJoyStick;
 			(*cfg_input).axis = 0;
 			(*cfg_input).button = -1;
 			(*cfg_input).sensitivity = 0;
 			(*cfg_input).pov = pov;
 			(*cfg_input).direction = arg.state.mPOV[pov - 1].direction;
+			(*cfg_input).joystickId = arg.device->getID();
 			updated = true; // so we know if we need to say
 		}
 
@@ -875,49 +880,49 @@ bool Controller::povMoved(const JoyStickEvent &arg, int pov) {
 		captureHwnd = NULL;
 	} else {
 		for(int i = 0; i < 4; i++) {
-			if((brake[i].inputType == OISJoyStick) && (brake[i].pov == pov)) {
+			if((brake[i].inputType == OISJoyStick) && (brake[i].joystickId == arg.device->getID()) && (brake[i].pov == pov)) {
 				if(brake[i].direction == arg.state.mPOV[pov - 1].direction)
 					curState[i].brake = true;
 				else
 					curState[i].brake = false;
 			}
-			if((fire[i].inputType == OISJoyStick) && (fire[i].pov == pov)) {
+			if((fire[i].inputType == OISJoyStick) && (fire[i].joystickId == arg.device->getID()) && (fire[i].pov == pov)) {
 				if(fire[i].direction == arg.state.mPOV[pov - 1].direction)
 					curState[i].fire = true;
 				else
 					curState[i].fire = false;
 			}
-			if((jump[i].inputType == OISJoyStick) && (jump[i].pov == pov)) {
+			if((jump[i].inputType == OISJoyStick) && (jump[i].joystickId == arg.device->getID()) && (jump[i].pov == pov)) {
 				if(jump[i].direction == arg.state.mPOV[pov - 1].direction)
 					curState[i].jump = true;
 				else
 					curState[i].jump = false;
 			}
-			if((left[i].inputType == OISJoyStick) && (left[i].pov == pov)) {
+			if((left[i].inputType == OISJoyStick) && (left[i].joystickId == arg.device->getID()) && (left[i].pov == pov)) {
 				if(left[i].direction == arg.state.mPOV[pov - 1].direction)
 					curState[i].left = true;
 				else
 					curState[i].left = false;
 			}
-			if((lookBack[i].inputType == OISJoyStick) && (lookBack[i].pov == pov)) {
+			if((lookBack[i].inputType == OISJoyStick) && (lookBack[i].joystickId == arg.device->getID()) && (lookBack[i].pov == pov)) {
 				if(lookBack[i].direction == arg.state.mPOV[pov - 1].direction)
 					curState[i].lookBack = true;
 				else
 					curState[i].lookBack = false;
 			}
-			if((motorOn[i].inputType == OISJoyStick) && (motorOn[i].pov == pov)) {
+			if((motorOn[i].inputType == OISJoyStick) && (motorOn[i].joystickId == arg.device->getID()) && (motorOn[i].pov == pov)) {
 				if(motorOn[i].direction == arg.state.mPOV[pov - 1].direction)
 					curState[i].motorOn = true;
 				else
 					curState[i].motorOn = false;
 			}
-			if((right[i].inputType == OISJoyStick) && (right[i].pov == pov)) {
+			if((right[i].inputType == OISJoyStick) && (right[i].joystickId == arg.device->getID()) && (right[i].pov == pov)) {
 				if(right[i].direction == arg.state.mPOV[pov - 1].direction)
 					curState[i].right = true;
 				else
 					curState[i].right = false;
 			}
-			if((weapon[i].inputType == OISJoyStick) && (weapon[i].pov == pov)) {
+			if((weapon[i].inputType == OISJoyStick) && (weapon[i].joystickId == arg.device->getID()) && (weapon[i].pov == pov)) {
 				if(weapon[i].direction == arg.state.mPOV[pov - 1].direction)
 					curState[i].weapon = true;
 				else
@@ -1008,6 +1013,7 @@ InputControl Controller::toInputControl(HoverRace::Util::Config::cfg_controls_t:
 	ret.pov = control.pov;
 	ret.sensitivity = control.sensitivity;
 	ret.slider = control.slider;
+	ret.joystickId = control.joystickId;
 
 	return ret;
 }
@@ -1023,6 +1029,7 @@ HoverRace::Util::Config::cfg_controls_t::cfg_control_t Controller::toCfgControl(
 	ret.pov = control.pov;
 	ret.sensitivity = control.sensitivity;
 	ret.slider = control.slider;
+	ret.joystickId = control.joystickId;
 
 	return ret;
 }

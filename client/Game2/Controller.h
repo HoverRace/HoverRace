@@ -75,6 +75,7 @@ struct InputControl {
 	int pov; // joystick only
 	int slider; // joystick only
 	int sensitivity; // defines how quickly we get to the maximum value
+	int joystickId;
 };
 
 /***
@@ -110,6 +111,7 @@ class Controller : public KeyListener, public MouseListener, public JoyStickList
 
 		int numJoys;
 		JoyStick **joys; /// we can have over 9000 joysticks, depending on how much RAM we have
+		int *joyIds;
 
 		// event handler
 		bool keyPressed(const KeyEvent &arg);

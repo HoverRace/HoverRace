@@ -740,6 +740,7 @@ void Config::cfg_controls_t::cfg_control_t::Load(yaml::MapNode *root)
 	READ_INT(root, pov, 0, 65535);
 	READ_INT(root, slider, 0, 65535);
 	READ_INT(root, sensitivity, -32768, 32767);
+	READ_INT(root, joystickId, -32768, 32767);
 }
 
 void Config::cfg_controls_t::cfg_control_t::Save(yaml::Emitter *emitter)
@@ -754,6 +755,7 @@ void Config::cfg_controls_t::cfg_control_t::Save(yaml::Emitter *emitter)
 	EMIT_VAR(emitter, pov);
 	EMIT_VAR(emitter, slider);
 	EMIT_VAR(emitter, sensitivity);
+	EMIT_VAR(emitter, joystickId);
 
 	emitter->EndMap();
 }
