@@ -193,10 +193,17 @@ int Console::LReinit(lua_State *state)
 	// messed up.  reset() does not need to be called afterwards; this function
 	// is a superset of what reset() does.
 	Console *self = static_cast<Console*>(lua_touserdata(state, lua_upvalueindex(1)));
-	self->oldScriptings.push_back(self->scripting);  // Will be cleaned up later.
+
+	// Save the current environment to be cleaned up later (in Clean()).
+	// We can't destroy it just yet -- we were called from it!
+	self->oldScriptings.push_back(self->scripting);
+
 	self->Init();
-	self->LogInfo("Console script environment reinitialization complete.");
-	return 0;
+
+	// Cause an error in order to terminate execution in the current environment
+	// immediately.
+	lua_pushstring(state, "Console script environment reinitialization complete.");
+	return lua_error(state);
 }
 
 // Console::LogStreamBuf
