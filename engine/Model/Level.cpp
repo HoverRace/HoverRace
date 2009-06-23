@@ -616,6 +616,8 @@ int MR_Level::FindRoomForPoint(const MR_2DCoordinate & pPosition, int pStartingR
 					for(int lNCounter = 0; lNCounter < mRoomList[lNeighbor].mNbVertex; lNCounter++) {
 						int lNeighborsNeighbor = mRoomList[lNeighbor].mNeighborList[lNCounter];
 
+						if(lNeighborsNeighbor == pStartingRoom) continue;
+
 						if(lNeighborsNeighbor != -1) {
 							if(MR_GetPolygonInclusion(SectionShape(&mRoomList[lNeighborsNeighbor]), pPosition)) {
 								lReturnValue = lNeighborsNeighbor;
