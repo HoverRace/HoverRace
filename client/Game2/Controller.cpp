@@ -417,6 +417,7 @@ bool Controller::controlsUpdated() {
 bool Controller::keyPressed(const KeyEvent &arg) {
 	// modify modifier keys to reflect the same keycode; LShift == RShift, etc.
 	KeyCode kc = arg.key;
+
 	if(kc == KC_RSHIFT)
 		kc = KC_LSHIFT;
 	else if(kc == KC_RCONTROL)
@@ -472,8 +473,25 @@ bool Controller::keyPressed(const KeyEvent &arg) {
 bool Controller::keyReleased(const KeyEvent &arg) {
 	// modify modifier keys to reflect the same keycode; LShift == RShift, etc.
 	KeyCode kc = arg.key;
-	if(kc == KC_RSHIFT)
+
+	if(kc == KC_RSHIFT) {
+
+		/**
+		 * Combat absolutely bizarre DirectInput bug where pressing an arrow key when right shift is down
+		 * causes a key-up notification for right shift to be sent; while DirectInput lies about this,
+		 * GetKeyState() does not;
+		 * References:
+		 * 
+		 * http://ogre3d.org/forums/viewtopic.php?f=2&t=17229
+		 * http://forum.teamspeak.com/archive/index.php/t-90.html
+		 * http://www.wreckedgames.com/forum/index.php?topic=893.0
+		 */
+#ifdef WIN32
+		if((GetKeyState(VK_RSHIFT) & 0x80) > 0)
+			return true; // ignore faulty event
+#endif
 		kc = KC_LSHIFT;
+	}
 	else if(kc == KC_RCONTROL)
 		kc = KC_LCONTROL;
 	else if(arg.key == KC_RMENU)
