@@ -164,6 +164,12 @@
 				RelativePath=".\Game2\Controller.h">
 			</File>
 			<File
+				RelativePath=".\Game2\FirstChoiceDialog.cpp">
+			</File>
+			<File
+				RelativePath=".\Game2\FirstChoiceDialog.h">
+			</File>
+			<File
 				RelativePath=".\Game2\Game2.rc">
 			</File>
 			<File
@@ -346,7 +352,8 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
+"
 						Outputs="$(OutDir)\$(InputFileName)"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -354,7 +361,8 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
+"
 						Outputs="$(OutDir)\$(InputFileName)"/>
 				</FileConfiguration>
 			</File>
@@ -365,7 +373,8 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
+"
 						Outputs="$(OutDir)\$(InputFileName)"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -374,7 +383,8 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
+"
 						Outputs="$(OutDir)\$(InputFileName)"/>
 				</FileConfiguration>
 			</File>

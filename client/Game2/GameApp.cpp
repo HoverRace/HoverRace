@@ -25,6 +25,7 @@
 
 #include "GameApp.h"
 #include "AboutDialog.h"
+#include "FirstChoiceDialog.h"
 #include "Controller.h"
 #include "resource.h"
 #include "CommonDialog.h"
@@ -1150,7 +1151,7 @@ BOOL MR_GameApp::InitGame()
 
 	// show "click OK to play on the internet" dialog
 	if(lReturnValue && cfg->misc.displayFirstScreen) {
-		if(DialogBox(mInstance, MAKEINTRESOURCE(IDD_FIRST_CHOICE), mMainWindow, FirstChoiceDialogFunc) == IDOK)
+		if (FirstChoiceDialog().ShowModal(mInstance, mMainWindow))
 			SendMessage(mMainWindow, WM_COMMAND, ID_GAME_NETWORK_INTERNET, 0);
 	}
 
@@ -3045,47 +3046,6 @@ BOOL CALLBACK MR_GameApp::BadModeDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pW
 					break;
 			}
 
-	}
-
-	return FALSE;
-}
-
-BOOL CALLBACK MR_GameApp::FirstChoiceDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
-{
-	BOOL lReturnValue = FALSE;
-
-	switch (pMsgId) {
-		// Catch environment modification events
-		case WM_INITDIALOG:
-			// i18n
-			SetWindowTextW(pWindow, Str::UW(_("HoverRace")));
-			SetDlgItemTextW(pWindow, IDC_CLICK_OK,
-				Str::UW(_("Click OK to play on the Internet against other people")));
-			SetDlgItemTextW(pWindow, IDOK, Str::UW(_("OK")));
-			SetDlgItemTextW(pWindow, IDCANCEL, Str::UW(_("Cancel")));
-			SetDlgItemTextW(pWindow, IDC_MAKE_SURE,
-				Str::UW(_("Make sure that you are connected to the Internet before clicking on OK.  If you have any problems, visit our forums at http://www.hoverrace.com/bb for help.")));
-
-			/*
-			CheckDlgButton(pWindow, IDC_CHECK, BST_CHECKED);
-			*/
-			lReturnValue = TRUE;
-			break;
-
-		case WM_COMMAND:
-			switch (LOWORD(pWParam)) {
-				// Game control
-				case IDCANCEL:
-					EndDialog(pWindow, IDCANCEL);
-					lReturnValue = TRUE;
-					break;
-
-				case IDOK:
-					EndDialog(pWindow, IDOK);
-					lReturnValue = TRUE;
-					break;
-			}
-			break;
 	}
 
 	return FALSE;
