@@ -188,7 +188,7 @@ int Console::LReset(lua_State *state)
 int Console::LReinit(lua_State *state)
 {
 	// function reinit()
-	// Complete reinitialize the environment.
+	// Completely reinitialize the environment.
 	// This is a last-resort call for fixing an environment that is very
 	// messed up.  reset() does not need to be called afterwards; this function
 	// is a superset of what reset() does.
