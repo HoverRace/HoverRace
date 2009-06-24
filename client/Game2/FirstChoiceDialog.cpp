@@ -23,7 +23,6 @@
 
 #include "StdAfx.h"
 
-#include "../../engine/Util/Config.h"
 #include "../../engine/Util/Str.h"
 
 #include "resource.h"
