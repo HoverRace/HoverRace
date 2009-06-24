@@ -824,48 +824,6 @@ int MR_GameApp::MainLoop()
 	}
 	Clean();
 
-	/*
-	   // Idle section
-	   if( !lEofGame )
-	   {
-	   // WARNING: This main loop section will have to be tuned
-
-	   if( mCurrentSession == NULL )
-	   {
-	   WaitMessage();
-	   }
-	   else
-	   {
-
-	   // Game processing
-	   MR_SAMPLE_START( ReadInputs, "ReadInputs" );
-
-	   ReadAsyncInputController();
-
-	   MR_SAMPLE_END( ReadInputs );
-
-	   MR_SAMPLE_START( Process, "Process" );
-
-	   #ifdef MR_AVI_CAPTURE
-	   mCurrentSession->Process( 1000/gCaptureFrameRate );
-	   #else
-	   mCurrentSession->Process( );
-	   #endif
-
-	   MR_SAMPLE_END( Process );
-
-	   MR_SAMPLE_START( Refresh, "Refresh" );
-	   RefreshView();
-	   mNbFrames++;
-	   MR_SAMPLE_END( Refresh );
-
-	   MR_PRINT_STATS( 10 ); // Print and reset profiling statistics every 5 seconds
-
-	   }
-	   }
-	   }
-	 */
-
 	return lMessage.wParam;
 }
 
@@ -2396,20 +2354,6 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 
 					// Debug keys
 					/*
-					   case VK_F6:
-					   SetWindowPos( This->mMainWindow,
-					   HWND_TOPMOST,
-					   0,0,0,0,
-					   SWP_NOSIZE|SWP_NOMOVE );
-					   return 0;
-
-					   case VK_F7:
-					   SetWindowPos( This->mMainWindow,
-					   HWND_NOTOPMOST,
-					   0,0,0,0,
-					   SWP_NOSIZE|SWP_NOMOVE );
-					   return 0;
-
 					   case VK_F8:
 					   #ifdef MR_AVI_CAPTURE
 					   InitCapture( "demo.avi", This->mVideoBuffer );
@@ -2434,7 +2378,7 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 			break;
 
 		case WM_PAINT:
-			// Nottng to paint (All done by video or DirectX
+			// Nothing to paint (all done by video or DirectX)
 			PAINTSTRUCT lPs;
 			BeginPaint(pWindow, &lPs);
 			EndPaint(pWindow, &lPs);
@@ -2667,24 +2611,6 @@ BOOL CALLBACK MR_GameApp::DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, 
 			break;
 
 		// Menu options
-		/*
-		   case WM_COMMAND:
-		   switch(LOWORD( pWParam))
-			   {
-			   // Game control
-			   case IDCANCEL:
-			   This->mVideoBuffer->CreatePalette( lOriginalGamma, lOriginalContrast, lOriginalBrightness );
-			   EndDialog( pWindow, IDCANCEL );
-			   lReturnValue = TRUE;
-			   break;
-
-		   case IDOK:
-		   EndDialog( pWindow, IDOK );
-		   lReturnValue = TRUE;
-		   break;
-		   }
-		   break;
-		 */
 		case WM_COMMAND:
 			switch (LOWORD(pWParam)) {
 				case IDC_MONITOR:
@@ -2724,8 +2650,6 @@ BOOL CALLBACK MR_GameApp::DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, 
 					}
 					This->SaveRegistry();
 					monitors.reset();
-
-					// SetWindowLong( ((NMHDR FAR *) lParam)->hwndFrom,  , );
 					break;
 
 			}
