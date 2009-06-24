@@ -8,6 +8,7 @@
 
 #include "Controller.h"
 #include "../../engine/Util/Config.h"
+#include "../../engine/Util/OS.h"
 
 using namespace HoverRace::Client::Control;
 using namespace HoverRace::Util;
@@ -326,6 +327,7 @@ void Controller::InitInputManager(HWND mainWindow) {
 	// collect parameters to give to init InputManager
 	// just following the example here... I'm not 100% on this
 	std::ostringstream wnd;
+	wnd.imbue(OS::stdLocale);
 	wnd << (size_t) mainWindow;
 
 	ParamList pl;
