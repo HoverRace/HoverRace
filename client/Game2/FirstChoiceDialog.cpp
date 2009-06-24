@@ -52,7 +52,7 @@ BOOL CALLBACK FirstChoiceDialog::DlgFunc(HWND pWindow, UINT pMsgId, WPARAM pWPar
 	switch (pMsgId) {
 		case WM_INITDIALOG:
 			// i18n
-			SetWindowTextW(pWindow, Str::UW(_("HoverRace")));
+			SetWindowTextW(pWindow, PACKAGE_NAME_L);
 			SetDlgItemTextW(pWindow, IDC_CLICK_OK,
 				Str::UW(_("Click OK to play on the Internet against other people")));
 			SetDlgItemTextW(pWindow, IDOK, Str::UW(_("OK")));
