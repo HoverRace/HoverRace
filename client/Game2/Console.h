@@ -45,6 +45,7 @@ class Console
 	private:
 		void Init();
 	protected:
+		Script::Env *GetScripting() const { return scripting; }
 		virtual void InitEnv(Script::Env *scripting);
 		virtual void InitGlobals(Script::Env *scripting);
 

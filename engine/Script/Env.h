@@ -64,6 +64,8 @@ class MR_DllDeclare Env
 		void Reset();
 		void SetOutput(boost::shared_ptr<std::ostream> out);
 
+		std::string GetVersionString() const;
+
 	public:
 		void Execute(const std::string &chunk);
 

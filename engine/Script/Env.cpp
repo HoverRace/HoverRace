@@ -80,6 +80,15 @@ void Env::SetOutput(boost::shared_ptr<std::ostream> out)
 }
 
 /**
+ * Retrieve the full scripting version string (name and version).
+ * @return The string (never empty).
+ */
+std::string Env::GetVersionString() const
+{
+	return LUA_VERSION;
+}
+
+/**
  * Execute a chunk of code.
  * @param chunk The code to execute.
  * @throw IncompleteExn If the code does not complete a statement; i.e.,
