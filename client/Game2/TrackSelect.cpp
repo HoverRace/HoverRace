@@ -165,7 +165,7 @@ bool MR_SelectTrack(HWND pParentWindow, std::string &pTrackFile, int &pNbLap, ch
 		pGameOpts = gsGameOpts;
 		lReturnValue = true;
 	} else
-	lReturnValue = false;
+		lReturnValue = false;
 	CleanList();
 
 	return lReturnValue;
