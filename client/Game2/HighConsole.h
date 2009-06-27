@@ -77,6 +77,9 @@ class HighConsole : public Console
 		VideoServices::StaticText *commandPrompt, *continuePrompt;
 		VideoServices::StaticText *commandLineDisplay;
 
+		unsigned int charWidth;  ///< Guessed fixed character width, in pixels.
+		unsigned int consoleWidth;  ///< Console text width, in pixels.
+
 		bool cursorOn;
 		Util::OS::timestamp_t cursorTick;
 		VideoServices::StaticText *cursor;

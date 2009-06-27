@@ -85,6 +85,9 @@ HighConsole::HighConsole() :
 	continuePrompt = new StaticText(CONTINUE_PROMPT, *logFont, 0x0a, StaticText::EFFECT_SHADOW);
 	cursor = new StaticText("_", *logFont, 0x0e, StaticText::EFFECT_SHADOW);
 
+	charWidth = commandPrompt->GetWidth() / COMMAND_PROMPT.length();
+	consoleWidth = 800;  // Will be corrected on first rendered frame.
+
 	submitBuffer.reserve(1024);
 	historyBuffer.reserve(1024);
 	commandLine.reserve(1024);
@@ -150,10 +153,6 @@ void HighConsole::Advance(OS::timestamp_t tick)
 		}
 	}
 
-	/*
-	OutputDebugString("Process: ");
-	OutputDebugString(chunk.c_str());
-	*/
 	SubmitChunk(chunk);
 }
 
@@ -175,7 +174,6 @@ void HighConsole::AddLogEntry(const std::string &s, MR_UInt8 color)
 	for (std::string::const_iterator iter = s.begin(); iter != s.end();
 		++iter, ++i)
 	{
-		//TODO: Line-wrapping.
 		char c = *iter;
 		switch (c) {
 			case '\t':
@@ -189,6 +187,11 @@ void HighConsole::AddLogEntry(const std::string &s, MR_UInt8 color)
 
 			default:
 				if (c >= 32 && c < 127) {
+					// Line wrap if necessary.
+					if ((buf.length() + 1) * charWidth > consoleWidth) {
+						logLines->Add(buf, *logFont, color);
+						buf.clear();
+					}
 					buf += c;
 				}
 		}
@@ -218,8 +221,10 @@ void HighConsole::OnChar(char c)
 	switch (c) {
 		case 8:   // Backspace.
 		case 127: // DEL.
-			if (commandLine.length() > 0)
+			if (commandLine.length() > 0) {
 				commandLine.resize(commandLine.length() - 1);
+				//TODO: Update wrapped version of line.
+			}
 			break;
 		case 13:  // CR.
 			commandLine += '\n';
@@ -237,8 +242,10 @@ void HighConsole::OnChar(char c)
 			commandLine.clear();
 			break;
 		default:
-			if (c >= 32 && c <= 126)
+			if (c >= 32 && c <= 126) {
 				commandLine += c;
+				//TODO: Update wrapped version of line.
+			}
 	}
 }
 
@@ -255,8 +262,10 @@ void HighConsole::Render(MR_VideoBuffer *dest)
 	const int viewHeight = vp->GetYRes();
 	const int viewWidth = vp->GetXRes();
 
+	consoleWidth = viewWidth - (PADDING_LEFT * 2);
+
 	// Prepare the command-line.
-	//TODO: Select prompt based on state.
+	// Select prompt based on state.
 	const StaticText *prompt =
 		(GetInputState() == ISTATE_COMMAND) ?
 		commandPrompt :
