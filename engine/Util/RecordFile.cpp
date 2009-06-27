@@ -97,10 +97,22 @@ void MR_RecordFileTable::Serialize(CArchive & pArchive)
 
 		pArchive >> mFileTitle >> lDummy >> lDummy >> mSumValid >> mChkSum >> mRecordUsed >> mRecordMax >> lDummy >> lDummy;
 
-		if(mRecordMax > 0) {
-			mRecordList = new DWORD[mRecordMax];
+		// check that file type is correct
+		// the file title may contain either "HoverRace track file, (c)GrokkSoft 1997" or
+		// "HoverRace track file designed by <REGISTERED NAME>(reg key)" or
+		// "Fireball object factory resource file, (c)GrokkSoft 1996" (since this method also opens
+		// .dats as well as .trks
+		if((mFileTitle.Find("HoverRace track file") == -1) &&
+		   (mFileTitle.Find("Fireball object factory resource file") == -1)) {
+			char error[200];
+			sprintf(error, "Corrupt file: %s\n", pArchive.GetFile()->GetFileName());
+			OutputDebugString(error);
+		} else {
+			if(mRecordMax > 0) {
+				mRecordList = new DWORD[mRecordMax];
 
-			pArchive.Read(mRecordList, sizeof(mRecordList[0]) * mRecordMax);
+				pArchive.Read(mRecordList, sizeof(mRecordList[0]) * mRecordMax);
+			}
 		}
 	}
 }
@@ -144,7 +156,9 @@ int MR_RecordFile::GetNbRecordsMax() const
 int MR_RecordFile::GetCurrentRecordNumber() const
 {
 	return mCurrentRecord;
-} BOOL MR_RecordFile::CreateForWrite(const char *pFileName, int pNbRecords, const char *pTitle)
+}
+
+BOOL MR_RecordFile::CreateForWrite(const char *pFileName, int pNbRecords, const char *pTitle)
 {
 	BOOL lReturnValue = FALSE;
 	ASSERT(mTable == NULL);						  // Open function must be called only once
@@ -243,6 +257,9 @@ BOOL MR_RecordFile::OpenForRead(const char *pFileName, BOOL pValidateChkSum)
 
 			mTable = new MR_RecordFileTable;
 			mTable->Serialize(lArchive);
+
+			if(mTable->mRecordList == NULL) // file did not read correctly
+				lReturnValue = FALSE;
 		}
 
 		if(lReturnValue) {
