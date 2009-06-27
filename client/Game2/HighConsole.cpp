@@ -162,14 +162,48 @@ void HighConsole::Clear()
 	logLines->Clear();
 }
 
+/**
+ * Add a log entry, pre-processing the string for display purposes.
+ * @param s The log string.  We assume that the trailing "\n" has been stripped.
+ * @param color The color.
+ */
+void HighConsole::AddLogEntry(const std::string &s, MR_UInt8 color)
+{
+	std::string buf;
+	buf.reserve(1024);
+	int i = 0;
+	for (std::string::const_iterator iter = s.begin(); iter != s.end();
+		++iter, ++i)
+	{
+		//TODO: Line-wrapping.
+		char c = *iter;
+		switch (c) {
+			case '\t':
+				buf.resize(buf.length() + (8 - (buf.length() % 8)), ' ');
+				break;
+
+			case '\n':
+				logLines->Add(buf, *logFont, color);
+				buf.clear();
+				break;
+
+			default:
+				if (c >= 32 && c < 127) {
+					buf += c;
+				}
+		}
+	}
+	logLines->Add(buf, *logFont, color);
+}
+
 void HighConsole::LogInfo(const std::string &s)
 {
-	logLines->Add(s, *logFont, 0x0a);
+	AddLogEntry(s, 0x0a);
 }
 
 void HighConsole::LogError(const std::string &s)
 {
-	logLines->Add(s, *logFont, 0x23);
+	AddLogEntry(s, 0x23);
 }
 
 /**

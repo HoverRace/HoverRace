@@ -50,6 +50,8 @@ class HighConsole : public Console
 
 		virtual void Clear();
 
+	private:
+		void AddLogEntry(const std::string &s, MR_UInt8 color);
 	protected:
 		virtual void LogInfo(const std::string &s);
 		virtual void LogError(const std::string &s);
