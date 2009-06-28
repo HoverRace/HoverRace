@@ -1,7 +1,15 @@
 
 BUILT_SOURCES = StdAfx.h.gch
 
-SUBDIRS = ColorTools MainCharacter Model ObjFac1 ObjFacTools Util VideoServices
+SUBDIRS = \
+	ColorTools \
+	MainCharacter \
+	Model \
+	ObjFac1 \
+	ObjFacTools \
+	Script \
+	Util \
+	VideoServices
 
 lib_LTLIBRARIES = libhoverrace-engine.la
 libhoverrace_engine_la_CPPFLAGS = $(HR_CPPFLAGS)
@@ -12,6 +20,7 @@ libhoverrace_engine_la_LIBADD = \
 	Model/libmodel.la \
 	ObjFac1/libobjfac1.la \
 	ObjFacTools/libobjfactools.la \
+	Script/libscript.la \
 	Util/libutil.la \
 	VideoServices/libvideosvc.la
 libhoverrace_engine_la_LDFLAGS = \

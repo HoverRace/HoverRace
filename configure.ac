@@ -69,6 +69,7 @@ AC_CONFIG_FILES([
 	engine/Model/Makefile
 	engine/ObjFac1/Makefile
 	engine/ObjFacTools/Makefile
+	engine/Script/Makefile
 	engine/Util/Makefile
 	engine/Util/yaml/Makefile
 	engine/VideoServices/Makefile
