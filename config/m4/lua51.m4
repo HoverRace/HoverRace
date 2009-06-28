@@ -41,13 +41,13 @@ PKG_CHECK_EXISTS([lua >= 5.1], [
 ])
 if test x"$lua_found" = xyes
 then
-	LUA_CFLAGS=Lua_CFLAGS
-	LUA_LIBS=Lua_LIBS
+	LUA_CFLAGS="$Lua_CFLAGS"
+	LUA_LIBS="$Lua_LIBS"
 else
 	LUA_CFLAGS=
 	LUA_LIBS=
 fi
-AC_SUBST([LUA_CFLAGS])
-AC_SUBST([LUA_LIBS])
+AC_SUBST(LUA_CFLAGS)
+AC_SUBST(LUA_LIBS)
 ])
 
