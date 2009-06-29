@@ -23,8 +23,13 @@ $CMD = split("%%", $_SERVER["QUERY_STRING"]);
 // IF NO QUERY STRING, THEN STOP WITH ERROR 201: Not on-line
 if(!$_SERVER["QUERY_STRING"]) ErrorCode(201);
 
-// STRIP THE = AND PERFORM THE FUNCTION
+// STRIP THE =
 $CMD[0] = substr($CMD[0], 1, strlen($CMD[0])-1);
+
+// IF THE CLIENT IS NOT HOVERRACE AND THEY ARE NOT ACCESSING THE USERLIST, TURN THEM AWAY
+if(GetClient() != "HoverRace" AND $CMD[0] != "WWW_ULIST") exit;
+
+// PERFORM THE FUNCTION
 $CMD[0]($db, $CMD);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -92,7 +97,7 @@ function REFRESH($db, $CMD) {
              	PrintIMR("CHAT\n" . urldecode($myrow["UserName"]) . "$priv" . GetChatCode() . " ");
              	$message = $myrow["Message"];
 				$message = str_replace("+","%2B",$message);
-				$message = str_replace("\'","'",$message);
+				//$message = str_replace("\'","'",$message);
 				PrintIMR(urldecode($message). "\n");
         	}
         	
@@ -541,6 +546,16 @@ function PrintIMR($str)
 	print $str;
 }
 
+function GetClient()
+{
+	if(GetUserAgent() == "1.23") return "HoverRace";
+	else {
+	    $u = $_SERVER['HTTP_USER_AGENT'];
+		$u = split("/", $u);
+		return $u[0];
+	}
+}
+
 function GetUserAgent()
 {
 	$u = $_SERVER['HTTP_USER_AGENT'];
@@ -683,8 +698,9 @@ function PlayerListUpdate()
 	for ( $x = $oldid+1; $x <= $GLOBALS["MAX_PLAYERS"]; $x++ ) PrintIMR("USER $x DEL\n");
 }
 
-function ChatMessage($UserID, $UserName, $Message, $ToUser, $ToUserName)
+function ChatMessage($UserID, $UserName, $Message, $ToUser = FALSE, $ToUserName = FALSE)
 {
-    mysql_query("INSERT INTO `chat` (`UserID`,`UserName`,`Message`,`TimeStamp`,`ToUser`,`ToUserName`) VALUES ('$UserID','$UserName','$Message','". time() ."','$ToUser','$ToUserName')",$GLOBALS["db"]);
+	// if(GetUserAgent() == "1.23") $Message = url_encode($Message);
+    mysql_query("INSERT INTO `chat` (`UserID`,`UserName`,`Message`,`TimeStamp`,`ToUser`,`ToUserName`) VALUES ('$UserID','$UserName','" . $Message . "','". time() ."','$ToUser','$ToUserName')",$GLOBALS["db"]);
 }
 ?>
