@@ -1,6 +1,6 @@
 
-// PrefsDialog.h
-// Header for the "Preferences" dialog.
+// NetworkPrefsPage.h
+// Header for the "Network" preferences page.
 //
 // Copyright (c) 2009 Michael Imamura.
 //
@@ -23,32 +23,25 @@
 
 #pragma once
 
+#include "PrefsPage.h"
+
 class MR_GameApp;
 
 namespace HoverRace {
 namespace Client {
 
-class PrefsPage;
-
-class PrefsDialog
+class NetworkPrefsPage : public PrefsPage
 {
+	typedef PrefsPage SUPER;
 	public:
-		PrefsDialog(MR_GameApp *app);
-		~PrefsDialog();
+		NetworkPrefsPage(MR_GameApp *app);
+		virtual ~NetworkPrefsPage();
 
-		void AddPage(PrefsPage *page);
-
-		void ShowModal(HINSTANCE hinst, HWND parent);
+	protected:
+		virtual BOOL DlgProc(HWND pWindow, UINT message, WPARAM wparam, LPARAM lparam);
 
 	private:
 		MR_GameApp *app;
-		typedef std::vector<PrefsPage*> pages_t;
-		pages_t pages;
-
-		PrefsPage *videoAudioPage;
-		PrefsPage *controlsPage;
-		PrefsPage *networkPage;
-		PrefsPage *miscPage;
 };
 
 }  // namespace Client

@@ -27,6 +27,7 @@
 #include "GameApp.h"
 #include "ControlPrefsPage.h"
 #include "MiscPrefsPage.h"
+#include "NetworkPrefsPage.h"
 #include "VideoAudioPrefsPage.h"
 
 #include "PrefsDialog.h"
@@ -39,12 +40,14 @@ PrefsDialog::PrefsDialog(MR_GameApp *app) :
 {
 	AddPage(videoAudioPage = new VideoAudioPrefsPage(app));
 	AddPage(controlsPage = new ControlPrefsPage(app));
+	AddPage(networkPage = new NetworkPrefsPage(app));
 	AddPage(miscPage = new MiscPrefsPage(app));
 }
 
 PrefsDialog::~PrefsDialog()
 {
 	delete miscPage;
+	delete networkPage;
 	delete controlsPage;
 	delete videoAudioPage;
 }

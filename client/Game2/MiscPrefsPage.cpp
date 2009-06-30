@@ -60,29 +60,11 @@ BOOL MiscPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pL
 				Str::UW(_("Disable the prompt to connect to the Internet each time HoverRace starts")));
 			SetDlgItemTextW(pWindow, IDC_NATIVE_BPP_FULLSCREEN,
 				Str::UW(_("Use desktop &color depth when switching to fullscreen")));
-			SetDlgItemTextW(pWindow, IDC_SERVER_ADDR,
-				Str::UW(_("Address of Server Roomlist:")));
-			SetDlgItemTextW(pWindow, IDC_TCP_SERV_PORT_C, Str::UW(_("TCP Server Port:")));
-			SetDlgItemTextW(pWindow, IDC_TCP_RECV_PORT_C, Str::UW(_("TCP Receive Port:")));
-			SetDlgItemTextW(pWindow, IDC_UDP_RECV_PORT_C, Str::UW(_("UDP Receive Port:")));
 
 			// Set default values correctly
 			SendDlgItemMessage(pWindow, IDC_INTRO_MOVIE, BM_SETCHECK, !cfg->misc.introMovie, 0);
 			SendDlgItemMessage(pWindow, IDC_SHOW_INTERNET, BM_SETCHECK, !cfg->misc.displayFirstScreen, 0);
 			SendDlgItemMessage(pWindow, IDC_NATIVE_BPP_FULLSCREEN, BM_SETCHECK, cfg->video.nativeBppFullscreen, 0);
-
-			SetDlgItemText(pWindow, IDC_MAINSERVER, cfg->net.mainServer.c_str());
-			{
-				char lBuffer[20];
-				sprintf(lBuffer, "%d", cfg->net.tcpServPort);
-				SetDlgItemText(pWindow, IDC_TCP_SERV_PORT, lBuffer);
-				
-				sprintf(lBuffer, "%d", cfg->net.tcpRecvPort);
-				SetDlgItemText(pWindow, IDC_TCP_RECV_PORT, lBuffer);
-
-				sprintf(lBuffer, "%d", cfg->net.udpRecvPort);
-				SetDlgItemText(pWindow, IDC_UDP_RECV_PORT, lBuffer);
-			}
 
 			break;
 
@@ -92,30 +74,6 @@ BOOL MiscPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pL
 					cfg->misc.introMovie = !SendDlgItemMessage(pWindow, IDC_INTRO_MOVIE, BM_GETCHECK, 0, 0);
 					cfg->misc.displayFirstScreen = !SendDlgItemMessage(pWindow, IDC_SHOW_INTERNET, BM_GETCHECK, 0, 0);
 					cfg->video.nativeBppFullscreen = (SendDlgItemMessage(pWindow, IDC_NATIVE_BPP_FULLSCREEN, BM_GETCHECK, 0, 0) != FALSE);
-
-					{
-						char lBuffer[80];
-						if(GetDlgItemText(pWindow, IDC_MAINSERVER, lBuffer, sizeof(lBuffer)) == 0)
-							ASSERT(FALSE);
-
-						cfg->net.mainServer = lBuffer;
-						app->SignalServerHasChanged();
-
-						if(GetDlgItemText(pWindow, IDC_TCP_SERV_PORT, lBuffer, sizeof(lBuffer)) == 0)
-							ASSERT(FALSE);
-
-						cfg->net.tcpServPort = atoi(lBuffer);
-
-						if(GetDlgItemText(pWindow, IDC_TCP_RECV_PORT, lBuffer, sizeof(lBuffer)) == 0)
-							ASSERT(FALSE);
-
-						cfg->net.tcpRecvPort = atoi(lBuffer);
-						
-						if(GetDlgItemText(pWindow, IDC_UDP_RECV_PORT, lBuffer, sizeof(lBuffer)) == 0)
-							ASSERT(FALSE);
-
-						cfg->net.udpRecvPort = atoi(lBuffer);
-					}
 
 					cfg->Save();
 					break;
@@ -127,4 +85,3 @@ BOOL MiscPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pL
 
 	return lReturnValue;
 }
-

@@ -224,6 +224,12 @@
 				RelativePath=".\Game2\NetInterface.h">
 			</File>
 			<File
+				RelativePath=".\Game2\NetworkPrefsPage.cpp">
+			</File>
+			<File
+				RelativePath=".\Game2\NetworkPrefsPage.h">
+			</File>
+			<File
 				RelativePath=".\Game2\NetworkSession.cpp">
 			</File>
 			<File
