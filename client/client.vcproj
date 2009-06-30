@@ -164,6 +164,12 @@
 				RelativePath=".\Game2\Controller.h">
 			</File>
 			<File
+				RelativePath=".\Game2\ControlPrefsPage.cpp">
+			</File>
+			<File
+				RelativePath=".\Game2\ControlPrefsPage.h">
+			</File>
+			<File
 				RelativePath=".\Game2\FirstChoiceDialog.cpp">
 			</File>
 			<File
@@ -206,6 +212,12 @@
 				RelativePath=".\Game2\MatchReport.h">
 			</File>
 			<File
+				RelativePath=".\Game2\MiscPrefsPage.cpp">
+			</File>
+			<File
+				RelativePath=".\Game2\MiscPrefsPage.h">
+			</File>
+			<File
 				RelativePath=".\Game2\NetInterface.cpp">
 			</File>
 			<File
@@ -222,6 +234,18 @@
 			</File>
 			<File
 				RelativePath=".\Game2\Observer.h">
+			</File>
+			<File
+				RelativePath=".\Game2\PrefsDialog.cpp">
+			</File>
+			<File
+				RelativePath=".\Game2\PrefsDialog.h">
+			</File>
+			<File
+				RelativePath=".\Game2\PrefsPage.cpp">
+			</File>
+			<File
+				RelativePath=".\Game2\PrefsPage.h">
 			</File>
 			<File
 				RelativePath=".\Game2\resource.h">
@@ -255,6 +279,12 @@
 			</File>
 			<File
 				RelativePath=".\Game2\TrackSelect.h">
+			</File>
+			<File
+				RelativePath=".\Game2\VideoAudioPrefsPage.cpp">
+			</File>
+			<File
+				RelativePath=".\Game2\VideoAudioPrefsPage.h">
 			</File>
 		</Filter>
 		<Filter

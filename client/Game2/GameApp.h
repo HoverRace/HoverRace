@@ -91,13 +91,9 @@ class MR_GameApp
 
 		void SetProperties();
 		static LRESULT CALLBACK DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
-		static BOOL CALLBACK DisplayIntensityDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 		static BOOL CALLBACK ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
-		static BOOL CALLBACK MiscDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 		static BOOL CALLBACK BadModeDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 		static LRESULT CALLBACK PressKeyDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
-
-		static void UpdateIntensityDialogLabels(HWND pWindow);
 
 		BOOL CreateMainWindow();
 		bool CreateMainMenu();
@@ -122,8 +118,10 @@ class MR_GameApp
 		void Clean();
 
 		void OnDisplayChange();
+	public:
 		void AssignPalette();
 
+	private:
 		void PauseGameThread();
 		void RestartGameThread();
 
@@ -145,10 +143,7 @@ class MR_GameApp
 
 		// unfortunate variables required to hold which control and player we might
 		// be setting a control for
-		int setControlPlayer;
-		int setControlControl;
 		HWND preferencesDialog;
-		HWND pressAnyKeyDialog;
 
 	public:
 		MR_GameApp(HINSTANCE pInstance, bool safeMode);
@@ -160,6 +155,16 @@ class MR_GameApp
 		BOOL InitGame();
 
 		int MainLoop();
+
+		/// Signal that the selected IMR server has (possibly) changed.
+		void SignalServerHasChanged() { mServerHasChanged = TRUE; }
+
+		MR_VideoBuffer *GetVideoBuffer() const { return mVideoBuffer; }
+
+		HoverRace::Client::Control::Controller *GetController() const { return controller; }
+		HoverRace::Client::Control::Controller *ReloadController();
+
+		HWND GetWindowHandle() const { return mMainWindow; }
 
 		// Helper stuff
 		static void NewInternetSessionCall();
