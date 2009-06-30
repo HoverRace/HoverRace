@@ -14,6 +14,7 @@ client/Game2/InternetRoom.cpp
 client/Game2/MatchReport.cpp
 client/Game2/MiscPrefsPage.cpp
 client/Game2/NetInterface.cpp
+client/Game2/NetworkPrefsPage.cpp
 client/Game2/NetworkSession.cpp
 client/Game2/Observer.cpp
 client/Game2/PrefsDialog.cpp
