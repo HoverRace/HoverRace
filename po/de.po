@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
 "Report-Msgid-Bugs-To: bugs@hoverrace.com\n"
-"POT-Creation-Date: 2009-06-27 21:28-0400\n"
+"POT-Creation-Date: 2009-06-30 15:50-0400\n"
 "PO-Revision-Date: 2009-06-26 22:52-0500\n"
 "Last-Translator: Michael Imamura <zoogie@lugatgt.org>\n"
 "Language-Team: German\n"
@@ -18,11 +18,280 @@ msgstr ""
 "X-Generator: Pootle 1.2.1\n"
 "X-Poedit-Language: German\n"
 
-#: client/Game2/GameApp.cpp:758
+#: client/Game2/AboutDialog.cpp:62
+msgid "About HoverRace"
+msgstr "Über HoverRace"
+
+#: client/Game2/AboutDialog.cpp:63
+msgid "HoverRace version "
+msgstr "HoverRace Version "
+
+#: client/Game2/AboutDialog.cpp:68
+msgid "HoverRace is brought to you by:"
+msgstr "HoverRace von: "
+
+#: client/Game2/AboutDialog.cpp:70
+msgid "original author"
+msgstr "der Urheber"
+
+#: client/Game2/AboutDialog.cpp:73
+msgid "with contributions from (in alphabetical order)"
+msgstr "unter Mitwirkung von (in alphabetischer Reihenfolge)"
+
+#: client/Game2/AboutDialog.cpp:79
+msgid ""
+"and with the help of the many testers willing to put up with bugs and other "
+"strange happenings."
+msgstr ""
+"und mit der Hilfe vielen Prüfer, die Fehler und Merkwürdigkeiten toleriert "
+"haben."
+
+#: client/Game2/AboutDialog.cpp:81
+msgid "visit us at"
+msgstr "besuchen Sie uns auf"
+
+#: client/Game2/AboutDialog.cpp:85
+msgid "Thanks also to the following projects"
+msgstr "Dank gebührt auch die folgenden Projekten"
+
+#: client/Game2/AboutDialog.cpp:105
+msgid "Close"
+msgstr "Schließen"
+
+#: client/Game2/ControlPrefsPage.cpp:48
+msgid "Controls"
+msgstr ""
+
+#: client/Game2/ControlPrefsPage.cpp:118
+msgid "Player 1"
+msgstr "Spieler &1"
+
+#: client/Game2/ControlPrefsPage.cpp:119
+msgid "Player 2"
+msgstr "Spieler &2"
+
+#: client/Game2/ControlPrefsPage.cpp:120
+msgid "Player 3"
+msgstr "Spieler &3"
+
+#: client/Game2/ControlPrefsPage.cpp:121
+msgid "Player 4"
+msgstr "Spieler &4 "
+
+#: client/Game2/ControlPrefsPage.cpp:122
+msgid "Motor On:"
+msgstr "Motor an:"
+
+#: client/Game2/ControlPrefsPage.cpp:123
+msgid "Turn Right:"
+msgstr "Rechts drehen:"
+
+#: client/Game2/ControlPrefsPage.cpp:124
+msgid "Turn Left:"
+msgstr "Links drehen:"
+
+#: client/Game2/ControlPrefsPage.cpp:125
+msgid "Brake:"
+msgstr "Bremse:"
+
+#: client/Game2/ControlPrefsPage.cpp:126
+msgid "Jump:"
+msgstr "Springen:"
+
+#: client/Game2/ControlPrefsPage.cpp:127
+msgid "Fire Weapon:"
+msgstr "Waffen abschiessen:"
+
+#: client/Game2/ControlPrefsPage.cpp:128
+msgid "Select Weapon:"
+msgstr "Waffe Auswählen:"
+
+#: client/Game2/ControlPrefsPage.cpp:129
+msgid "Look Back:"
+msgstr "Zurück Schauen:"
+
+#: client/Game2/ControlPrefsPage.cpp:349
+#, fuzzy
+msgid "Control Assignment"
+msgstr "Kontrast"
+
+#: client/Game2/ControlPrefsPage.cpp:352
+msgid "Press a control or wait 3 seconds to disable..."
+msgstr ""
+
+#: client/Game2/Controller.cpp:193
+msgid "Left Mouse Btn"
+msgstr ""
+
+#: client/Game2/Controller.cpp:195
+msgid "Right Mouse Btn"
+msgstr ""
+
+#: client/Game2/Controller.cpp:197
+msgid "Middle Mouse Btn"
+msgstr ""
+
+#: client/Game2/Controller.cpp:199
+msgid "Mouse Button 3"
+msgstr ""
+
+#: client/Game2/Controller.cpp:201
+msgid "Mouse Button 4"
+msgstr ""
+
+#: client/Game2/Controller.cpp:203
+msgid "Mouse Button 5"
+msgstr ""
+
+#: client/Game2/Controller.cpp:205
+msgid "Mouse Button 6"
+msgstr ""
+
+#: client/Game2/Controller.cpp:207
+msgid "Mouse Button 7"
+msgstr ""
+
+#: client/Game2/Controller.cpp:210
+msgid "Unknown Mouse Button"
+msgstr ""
+
+#: client/Game2/Controller.cpp:216
+msgid "Mouse X+ Axis"
+msgstr ""
+
+#: client/Game2/Controller.cpp:218
+msgid "Mouse X- Axis"
+msgstr ""
+
+#: client/Game2/Controller.cpp:221
+msgid "Mouse Y+ Axis"
+msgstr ""
+
+#: client/Game2/Controller.cpp:223
+msgid "Mouse Y- Axis"
+msgstr ""
+
+#: client/Game2/Controller.cpp:226
+msgid "Mouse Z+ Axis"
+msgstr ""
+
+#: client/Game2/Controller.cpp:228
+msgid "Mouse Z- Axis"
+msgstr ""
+
+#: client/Game2/Controller.cpp:231
+msgid "Unknown Mouse Axis +"
+msgstr ""
+
+#: client/Game2/Controller.cpp:233
+msgid "Unknown Mouse Axis -"
+msgstr ""
+
+#: client/Game2/Controller.cpp:238
+msgid "Joystick"
+msgstr ""
+
+#: client/Game2/Controller.cpp:245
+msgid "Axis"
+msgstr ""
+
+#: client/Game2/Controller.cpp:254
+msgid "POV 1"
+msgstr ""
+
+#: client/Game2/Controller.cpp:257
+msgid "POV 2"
+msgstr ""
+
+#: client/Game2/Controller.cpp:260
+msgid "POV 3"
+msgstr ""
+
+#: client/Game2/Controller.cpp:263
+msgid "POV 4"
+msgstr ""
+
+#: client/Game2/Controller.cpp:270
+msgid "Center"
+msgstr ""
+
+#: client/Game2/Controller.cpp:273
+msgid "North"
+msgstr ""
+
+#: client/Game2/Controller.cpp:276
+msgid "East"
+msgstr ""
+
+#: client/Game2/Controller.cpp:279
+msgid "West"
+msgstr ""
+
+#: client/Game2/Controller.cpp:282
+msgid "South"
+msgstr ""
+
+#: client/Game2/Controller.cpp:285
+msgid "Northeast"
+msgstr ""
+
+#: client/Game2/Controller.cpp:288
+msgid "Northwest"
+msgstr ""
+
+#: client/Game2/Controller.cpp:291
+msgid "Southeast"
+msgstr ""
+
+#: client/Game2/Controller.cpp:294
+msgid "Southwest"
+msgstr ""
+
+#: client/Game2/Controller.cpp:297
+#, fuzzy
+msgid "Unknown direction"
+msgstr " nichts ist ausgewählt"
+
+#: client/Game2/Controller.cpp:306
+msgid "Slider"
+msgstr ""
+
+#: client/Game2/Controller.cpp:311
+msgid "Button"
+msgstr ""
+
+#: client/Game2/Controller.cpp:315
+msgid "Disabled"
+msgstr ""
+
+#: client/Game2/FirstChoiceDialog.cpp:56
+msgid "Click OK to play on the Internet against other people"
+msgstr "OK wählem um mit anderen menschen über das internet zu spielen"
+
+#: client/Game2/FirstChoiceDialog.cpp:57 client/Game2/NetInterface.cpp:1871
+#: client/Game2/TrackSelect.cpp:190
+msgid "OK"
+msgstr "OK"
+
+#: client/Game2/FirstChoiceDialog.cpp:58 client/Game2/TrackSelect.cpp:191
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: client/Game2/FirstChoiceDialog.cpp:60
+msgid ""
+"Make sure that you are connected to the Internet before clicking on OK.  If "
+"you have any problems, visit our forums at http://www.hoverrace.com/bb for "
+"help."
+msgstr ""
+"Sicherstellen dass sie Internet verbindung haben vor sie auf OK drücken. "
+"Wenn sie probleme haben, besuchen Sie die forumen: http://www.hoverrace.com/"
+"bb für hilfe"
+
+#: client/Game2/GameApp.cpp:757
 msgid "Abort current game?"
 msgstr "Spiel abrechen?"
 
-#: client/Game2/GameApp.cpp:784
+#: client/Game2/GameApp.cpp:783
 msgid ""
 "To be able to display HoverRace Help\n"
 "you must have a Word document viewer installed\n"
@@ -32,141 +301,141 @@ msgstr ""
 "müssen Sie ein MS-Word-Dokumentbeschauer\n"
 "auf ihrem Computer installiert haben."
 
-#: client/Game2/GameApp.cpp:961
+#: client/Game2/GameApp.cpp:958
 msgctxt "Menu|File|Split Screen"
 msgid "&2 Player"
 msgstr "&2 Spielern"
 
-#: client/Game2/GameApp.cpp:963
+#: client/Game2/GameApp.cpp:960
 msgctxt "Menu|File|Split Screen"
 msgid "&3 Player"
 msgstr "&3 Spielern"
 
-#: client/Game2/GameApp.cpp:965
+#: client/Game2/GameApp.cpp:962
 msgctxt "Menu|File|Split Screen"
 msgid "&4 Player"
 msgstr "&4 Spielern"
 
-#: client/Game2/GameApp.cpp:970
+#: client/Game2/GameApp.cpp:967
 msgctxt "Menu|File|Network"
 msgid "&Connect to server"
 msgstr "&mit dem Server verbinden"
 
-#: client/Game2/GameApp.cpp:972
+#: client/Game2/GameApp.cpp:969
 msgctxt "Menu|File|Network"
 msgid "Create a &server"
 msgstr "ein &Server erstellen"
 
-#: client/Game2/GameApp.cpp:975
+#: client/Game2/GameApp.cpp:972
 msgctxt "Menu|File|Network"
 msgid "&Internet Meeting Room"
 msgstr "&Internet Besprechungsraum"
 
-#: client/Game2/GameApp.cpp:980
+#: client/Game2/GameApp.cpp:977
 msgctxt "Menu|File"
 msgid "&Internet"
 msgstr "&Internet"
 
-#: client/Game2/GameApp.cpp:982
+#: client/Game2/GameApp.cpp:979
 msgctxt "Menu|File"
 msgid "&Practice"
 msgstr "Üb&en"
 
-#: client/Game2/GameApp.cpp:984
+#: client/Game2/GameApp.cpp:981
 msgctxt "Menu|File"
 msgid "&Split Screen"
 msgstr "&Geteilter Bildschirm"
 
-#: client/Game2/GameApp.cpp:986
+#: client/Game2/GameApp.cpp:983
 msgctxt "Menu|File"
 msgid "&Network"
 msgstr "&Netzwerk"
 
-#: client/Game2/GameApp.cpp:989
+#: client/Game2/GameApp.cpp:986
 msgctxt "Menu|File"
 msgid "E&xit"
 msgstr "&Beenden"
 
-#: client/Game2/GameApp.cpp:994
+#: client/Game2/GameApp.cpp:991
 msgctxt "Menu|View"
 msgid "&Following Camera"
 msgstr "&Außenansicht"
 
-#: client/Game2/GameApp.cpp:996
+#: client/Game2/GameApp.cpp:993
 msgctxt "Menu|View"
 msgid "&Cockpit"
 msgstr "&Cockpitansicht"
 
-#: client/Game2/GameApp.cpp:999
+#: client/Game2/GameApp.cpp:996
 msgctxt "Menu|View"
 msgid "&Players list"
 msgstr "&Spielerliste"
 
-#: client/Game2/GameApp.cpp:1001
+#: client/Game2/GameApp.cpp:998
 msgctxt "Menu|View"
 msgid "More &messages"
 msgstr "Mehr &Nachrichten"
 
-#: client/Game2/GameApp.cpp:1004
+#: client/Game2/GameApp.cpp:1001
 msgctxt "Menu|View"
 msgid "&Refresh colors"
 msgstr "&Farben Nachladen"
 
-#: client/Game2/GameApp.cpp:1009 client/Game2/GameApp.cpp:1921
+#: client/Game2/GameApp.cpp:1006 client/Game2/GameApp.cpp:1931
 msgctxt "Menu|Setting"
 msgid "&Fullscreen"
 msgstr "&Vollbild"
 
-#: client/Game2/GameApp.cpp:1011
+#: client/Game2/GameApp.cpp:1008
 msgctxt "Menu|Setting"
 msgid "&Window"
 msgstr "&Fenster"
 
-#: client/Game2/GameApp.cpp:1014
+#: client/Game2/GameApp.cpp:1011
 msgctxt "Menu|Setting"
 msgid "&Preferences"
 msgstr "&Einstellungen"
 
-#: client/Game2/GameApp.cpp:1019
+#: client/Game2/GameApp.cpp:1016
 msgctxt "Menu|Help"
 msgid "&Contents"
 msgstr "&Inhalt"
 
-#: client/Game2/GameApp.cpp:1025
+#: client/Game2/GameApp.cpp:1022
 msgctxt "Menu|Help"
 msgid "&About HoverRace"
 msgstr "Ü&ber HoverRace"
 
-#: client/Game2/GameApp.cpp:1030
+#: client/Game2/GameApp.cpp:1027
 msgctxt "Menu"
 msgid "&File"
 msgstr "&Datei"
 
-#: client/Game2/GameApp.cpp:1032
+#: client/Game2/GameApp.cpp:1029
 msgctxt "Menu"
 msgid "&View"
 msgstr "&Ansicht"
 
-#: client/Game2/GameApp.cpp:1034
+#: client/Game2/GameApp.cpp:1031
 msgctxt "Menu"
 msgid "&Setting"
 msgstr "&Einstellung"
 
-#: client/Game2/GameApp.cpp:1036
+#: client/Game2/GameApp.cpp:1033
 msgctxt "Menu"
 msgid "&Help"
 msgstr "&Hilfe"
 
-#: client/Game2/GameApp.cpp:1049
+#: client/Game2/GameApp.cpp:1046
 msgctxt "Version"
 msgid "testing"
 msgstr "prüfen"
 
-#: client/Game2/GameApp.cpp:1067
+#: client/Game2/GameApp.cpp:1064
 msgid "Unable to initialize: Unable to find suitable rich text DLL."
 msgstr ""
 
-#: client/Game2/GameApp.cpp:1096
+#: client/Game2/GameApp.cpp:1093
 msgid ""
 "You can play HoverRace in a Window or Fullscreen;\n"
 "to play in a Window, HoverRace will have to switch to 256 color mode.\n"
@@ -180,7 +449,7 @@ msgstr ""
 "\n"
 "Wollen sie im Fenster modus spielen und farben wechseln?"
 
-#: client/Game2/GameApp.cpp:1100 client/Game2/GameApp.cpp:1110
+#: client/Game2/GameApp.cpp:1097 client/Game2/GameApp.cpp:1107
 #: client/Game2/InternetRoom.cpp:1330 client/Game2/InternetRoom.cpp:2376
 #: client/Game2/TrackDownloadDialog.cpp:228
 #: client/Game2/TrackDownloadDialog.cpp:239
@@ -189,7 +458,7 @@ msgstr ""
 msgid "HoverRace"
 msgstr "HoverRace"
 
-#: client/Game2/GameApp.cpp:1109
+#: client/Game2/GameApp.cpp:1106
 msgid ""
 "HoverRace was unable to switch the video mode. You will need to play in full "
 "screen."
@@ -197,149 +466,7 @@ msgstr ""
 "Ein fehler ist beim wechseln des Anzeige-Modus vorgekommen.\n"
 "Sie müssen im Vollbild-Modus spielen."
 
-#: client/Game2/GameApp.cpp:1847
-msgid "Video and Audio"
-msgstr ""
-
-#: client/Game2/GameApp.cpp:1857
-msgid "Controls"
-msgstr ""
-
-#: client/Game2/GameApp.cpp:1867
-msgid "Miscellaneous"
-msgstr ""
-
-#: client/Game2/GameApp.cpp:1877
-msgid "Preferences"
-msgstr "Einstellungen"
-
-#: client/Game2/GameApp.cpp:2515
-msgid "Default Monitor"
-msgstr ""
-
-#: client/Game2/GameApp.cpp:2559
-msgid "Video"
-msgstr ""
-
-#: client/Game2/GameApp.cpp:2560
-msgid "Gamma"
-msgstr ""
-
-#: client/Game2/GameApp.cpp:2561
-msgid "Contrast"
-msgstr "Kontrast"
-
-#: client/Game2/GameApp.cpp:2562
-msgid "Brightness"
-msgstr "Helligkeit"
-
-#: client/Game2/GameApp.cpp:2564
-msgid "Audio"
-msgstr ""
-
-#: client/Game2/GameApp.cpp:2565
-msgid "Volume"
-msgstr "Lautstärke"
-
-#: client/Game2/GameApp.cpp:2567
-#, fuzzy
-msgid "Fullscreen Settings"
-msgstr "Vollbild auflösung"
-
-#: client/Game2/GameApp.cpp:2568
-#, fuzzy
-msgid "Fullscreen Monitor"
-msgstr "Vollbild auflösung"
-
-#: client/Game2/GameApp.cpp:2569
-msgid "Fullscreen Resolution"
-msgstr "Vollbild auflösung"
-
-#: client/Game2/GameApp.cpp:2647
-msgid "Invalid resolution; reverting to default"
-msgstr "Ungültige auflösung; wechselt zum standard"
-
-#: client/Game2/GameApp.cpp:2683
-msgid "Player 1"
-msgstr "Spieler &1"
-
-#: client/Game2/GameApp.cpp:2684
-msgid "Player 2"
-msgstr "Spieler &2"
-
-#: client/Game2/GameApp.cpp:2685
-msgid "Player 3"
-msgstr "Spieler &3"
-
-#: client/Game2/GameApp.cpp:2686
-msgid "Player 4"
-msgstr "Spieler &4 "
-
-#: client/Game2/GameApp.cpp:2687
-msgid "Motor On:"
-msgstr "Motor an:"
-
-#: client/Game2/GameApp.cpp:2688
-msgid "Turn Right:"
-msgstr "Rechts drehen:"
-
-#: client/Game2/GameApp.cpp:2689
-msgid "Turn Left:"
-msgstr "Links drehen:"
-
-#: client/Game2/GameApp.cpp:2690
-msgid "Brake:"
-msgstr "Bremse:"
-
-#: client/Game2/GameApp.cpp:2691
-msgid "Jump:"
-msgstr "Springen:"
-
-#: client/Game2/GameApp.cpp:2692
-msgid "Fire Weapon:"
-msgstr "Waffen abschiessen:"
-
-#: client/Game2/GameApp.cpp:2693
-msgid "Select Weapon:"
-msgstr "Waffe Auswählen:"
-
-#: client/Game2/GameApp.cpp:2694
-msgid "Look Back:"
-msgstr "Zurück Schauen:"
-
-#: client/Game2/GameApp.cpp:2950
-msgid "Disable Intro Movie"
-msgstr "Intro (film) abstellen"
-
-#: client/Game2/GameApp.cpp:2952
-msgid ""
-"Disable the prompt to connect to the Internet each time HoverRace starts"
-msgstr ""
-"Die aufforderung ob man mit dem internet verbinden will, dass jedes mal wenn "
-"man das program aufstartet kommt, deaktiviren "
-
-#: client/Game2/GameApp.cpp:2954
-msgid "Use desktop &color depth when switching to fullscreen"
-msgstr "Desktop farbtiefe, im vollbild modus, benutzen"
-
-#: client/Game2/GameApp.cpp:2956
-msgid "Address of Server Roomlist:"
-msgstr "Addresse vom Server raumliste:"
-
-# its the same but i think any normal german would understand that lol...
-#: client/Game2/GameApp.cpp:2957
-msgid "TCP Server Port:"
-msgstr "TCP Server Port:"
-
-#: client/Game2/GameApp.cpp:2958
-msgid "TCP Receive Port:"
-msgstr "TCP empfangs Port:"
-
-#: client/Game2/GameApp.cpp:2959
-msgid "UDP Receive Port:"
-msgstr "UDP empfangs Port:"
-
-#: client/Game2/GameApp.cpp:3030
+#: client/Game2/GameApp.cpp:2439
 msgid ""
 "Incompatible video mode. Select a compatible video mode by pressing F8 or F9 "
 "once a game is started"
@@ -347,13 +474,9 @@ msgstr ""
 "Nicht kompatibele abspiel modus. wählen sie eine bessere abspiel modus mit "
 "F8 oder F9 während einem laufendem Spiel"
 
-#: client/Game2/GameApp.cpp:3061
-#, fuzzy
-msgid "Control Assignment"
-msgstr "Kontrast"
-
-#: client/Game2/GameApp.cpp:3064
-msgid "Press a control or wait 3 seconds to disable..."
+#: client/Game2/HighObserver.cpp:56
+msgctxt "HUD|Frames Per Second"
+msgid "FPS"
 msgstr ""
 
 #: client/Game2/InternetRoom.cpp:531
@@ -611,6 +734,25 @@ msgstr ""
 msgid "Registering your best lap time to the server"
 msgstr ""
 
+#: client/Game2/MiscPrefsPage.cpp:40
+msgid "Miscellaneous"
+msgstr ""
+
+#: client/Game2/MiscPrefsPage.cpp:58
+msgid "Disable Intro Movie"
+msgstr "Intro (film) abstellen"
+
+#: client/Game2/MiscPrefsPage.cpp:60
+msgid ""
+"Disable the prompt to connect to the Internet each time HoverRace starts"
+msgstr ""
+"Die aufforderung ob man mit dem internet verbinden will, dass jedes mal wenn "
+"man das program aufstartet kommt, deaktiviren "
+
+#: client/Game2/MiscPrefsPage.cpp:62
+msgid "Use desktop &color depth when switching to fullscreen"
+msgstr "Desktop farbtiefe, im vollbild modus, benutzen"
+
 #: client/Game2/NetInterface.cpp:464 client/Game2/NetInterface.cpp:485
 #: client/Game2/NetInterface.cpp:497 client/Game2/NetInterface.cpp:555
 #: client/Game2/NetInterface.cpp:575 client/Game2/NetInterface.cpp:617
@@ -764,13 +906,31 @@ msgstr ""
 msgid "Start NOW!"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:1871 client/Game2/TrackSelect.cpp:190
-msgid "OK"
-msgstr "OK"
-
 #: client/Game2/NetInterface.cpp:2394
 msgid "no network connection"
 msgstr ""
+
+#: client/Game2/NetworkPrefsPage.cpp:40
+#, fuzzy
+msgid "Network"
+msgstr "&Netzwerk"
+
+#: client/Game2/NetworkPrefsPage.cpp:59
+msgid "Address of Server Roomlist:"
+msgstr "Addresse vom Server raumliste:"
+
+# its the same but i think any normal german would understand that lol...
+#: client/Game2/NetworkPrefsPage.cpp:60
+msgid "TCP Server Port:"
+msgstr "TCP Server Port:"
+
+#: client/Game2/NetworkPrefsPage.cpp:61
+msgid "TCP Receive Port:"
+msgstr "TCP empfangs Port:"
+
+#: client/Game2/NetworkPrefsPage.cpp:62
+msgid "UDP Receive Port:"
+msgstr "UDP empfangs Port:"
 
 #: client/Game2/NetworkSession.cpp:637 client/Game2/NetworkSession.cpp:677
 msgid "Press F2 when ready to return to the Meeting Room"
@@ -871,6 +1031,10 @@ msgstr ""
 msgid "Select your craft with the arrow keys"
 msgstr ""
 
+#: client/Game2/PrefsDialog.cpp:82
+msgid "Preferences"
+msgstr "Einstellungen"
+
 #: client/Game2/TrackDownloadDialog.cpp:97
 #, c-format, boost-format
 msgid "Would you like to download the track \"%s\" now?"
@@ -949,10 +1113,6 @@ msgstr "Runden"
 msgid "Weapons"
 msgstr "Waffen"
 
-#: client/Game2/TrackSelect.cpp:191
-msgid "Cancel"
-msgstr "Abbrechen"
-
 #: client/Game2/TrackSelect.cpp:192
 msgid "Crafts"
 msgstr ""
@@ -1001,6 +1161,56 @@ msgstr "Die Anzahl von Runden soll zwischen 1 und 99"
 msgid "At least one craft must be selected"
 msgstr ""
 
+#: client/Game2/VideoAudioPrefsPage.cpp:44
+msgid "Video and Audio"
+msgstr ""
+
+#: client/Game2/VideoAudioPrefsPage.cpp:146
+msgid "Default Monitor"
+msgstr ""
+
+#: client/Game2/VideoAudioPrefsPage.cpp:189
+msgid "Video"
+msgstr ""
+
+#: client/Game2/VideoAudioPrefsPage.cpp:190
+msgid "Gamma"
+msgstr ""
+
+#: client/Game2/VideoAudioPrefsPage.cpp:191
+msgid "Contrast"
+msgstr "Kontrast"
+
+#: client/Game2/VideoAudioPrefsPage.cpp:192
+msgid "Brightness"
+msgstr "Helligkeit"
+
+#: client/Game2/VideoAudioPrefsPage.cpp:194
+msgid "Audio"
+msgstr ""
+
+#: client/Game2/VideoAudioPrefsPage.cpp:195
+msgid "Volume"
+msgstr "Lautstärke"
+
+#: client/Game2/VideoAudioPrefsPage.cpp:197
+#, fuzzy
+msgid "Fullscreen Settings"
+msgstr "Vollbild auflösung"
+
+#: client/Game2/VideoAudioPrefsPage.cpp:198
+#, fuzzy
+msgid "Fullscreen Monitor"
+msgstr "Vollbild auflösung"
+
+#: client/Game2/VideoAudioPrefsPage.cpp:199
+msgid "Fullscreen Resolution"
+msgstr "Vollbild auflösung"
+
+#: client/Game2/VideoAudioPrefsPage.cpp:277
+msgid "Invalid resolution; reverting to default"
+msgstr "Ungültige auflösung; wechselt zum standard"
+
 #: client/Game2/main.cpp:247
 #, fuzzy, c-format, boost-format
 msgid ""
@@ -1011,49 +1221,6 @@ msgstr ""
 "HoverRace für Linux ist in der Entwicklung!\n"
 "Bitte besuchen Sie %s zu lernen, wie man\n"
 "diesem Projekt mitwirken kann."
-
-#~ msgid "Click OK to play on the Internet against other people"
-#~ msgstr "OK wählem um mit anderen menschen über das internet zu spielen"
-
-#~ msgid ""
-#~ "Make sure that you are connected to the Internet before clicking on OK.  "
-#~ "If you have any problems, visit our forums at http://www.hoverrace.com/bb "
-#~ "for help."
-#~ msgstr ""
-#~ "Sicherstellen dass sie Internet verbindung haben vor sie auf OK drücken. "
-#~ "Wenn sie probleme haben, besuchen Sie die forumen: http://www.hoverrace."
-#~ "com/bb für hilfe"
-
-#~ msgid "About HoverRace"
-#~ msgstr "Über HoverRace"
-
-#~ msgid "HoverRace version "
-#~ msgstr "HoverRace Version "
-
-#~ msgid "HoverRace is brought to you by:"
-#~ msgstr "HoverRace von: "
-
-#~ msgid "original author"
-#~ msgstr "der Urheber"
-
-#~ msgid "with contributions from (in alphabetical order)"
-#~ msgstr "unter Mitwirkung von (in alphabetischer Reihenfolge)"
-
-#~ msgid ""
-#~ "and with the help of the many testers willing to put up with bugs and "
-#~ "other strange happenings."
-#~ msgstr ""
-#~ "und mit der Hilfe vielen Prüfer, die Fehler und Merkwürdigkeiten "
-#~ "toleriert haben."
-
-#~ msgid "visit us at"
-#~ msgstr "besuchen Sie uns auf"
-
-#~ msgid "Thanks also to the following projects"
-#~ msgstr "Dank gebührt auch die folgenden Projekten"
-
-#~ msgid "Close"
-#~ msgstr "Schließen"
 
 #~ msgid "HoverRace Error"
 #~ msgstr "HoverRace Fehler"
