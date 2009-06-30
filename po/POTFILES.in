@@ -1,14 +1,25 @@
 # List of source files which contain translatable strings.
+client/Game2/AboutDialog.cpp
 client/Game2/Banner.cpp
 client/Game2/ClientSession.cpp
 client/Game2/CommonDialog.cpp
+client/Game2/Console.cpp
+client/Game2/ControlPrefsPage.cpp
+client/Game2/Controller.cpp
+client/Game2/FirstChoiceDialog.cpp
 client/Game2/GameApp.cpp
+client/Game2/HighConsole.cpp
+client/Game2/HighObserver.cpp
 client/Game2/InternetRoom.cpp
 client/Game2/MatchReport.cpp
+client/Game2/MiscPrefsPage.cpp
 client/Game2/NetInterface.cpp
 client/Game2/NetworkSession.cpp
 client/Game2/Observer.cpp
+client/Game2/PrefsDialog.cpp
+client/Game2/PrefsPage.cpp
 client/Game2/StdAfx.cpp
 client/Game2/TrackDownloadDialog.cpp
 client/Game2/TrackSelect.cpp
+client/Game2/VideoAudioPrefsPage.cpp
 client/Game2/main.cpp
