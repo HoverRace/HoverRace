@@ -55,8 +55,10 @@ class MR_DllDeclare OS {
 
 #		ifdef _WIN32
 			typedef DWORD timestamp_t;
+			typedef HWND wnd_t;
 #		else
 			typedef unsigned long long timestamp_t;
+			typedef Window wnd_t;
 #		endif
 		
 		static void SetEnv(const char *key, const char *val);

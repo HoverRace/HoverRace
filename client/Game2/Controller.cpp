@@ -10,6 +10,7 @@
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/OS.h"
 
+using namespace HoverRace;
 using namespace HoverRace::Client::Control;
 using namespace HoverRace::Util;
 using namespace OIS;
@@ -19,7 +20,7 @@ using namespace OIS;
  *
  * @param mainWindow Handle to the main HR window
  */
-Controller::Controller(HWND mainWindow) {
+Controller::Controller(Util::OS::wnd_t mainWindow) {
 	kbd = NULL;
 	mouse = NULL;
 	joys = NULL;
