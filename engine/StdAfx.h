@@ -23,6 +23,8 @@
 
 #else
 
+#	include <X11/Xlib.h>
+
 #	include "../include/compat/unix.h"
 #	include "../config.h"
 
