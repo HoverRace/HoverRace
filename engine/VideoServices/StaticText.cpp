@@ -44,6 +44,7 @@ static RGBQUAD RGB_WHITE = { 0xff, 0xff, 0xff, 0 };
  * @param bold @c true for bold text.
  * @param italic @c true for italic text.
  * @param color The color index.
+ * @param effect Effect to apply.
  */
 StaticText::StaticText(const std::string &s,
                        const std::string &font,
@@ -61,6 +62,7 @@ StaticText::StaticText(const std::string &s,
  * @param s The text (UTF-8).
  * @param font The font.
  * @param color The color index.
+ * @param effect Effect to apply.
  */
 StaticText::StaticText(const std::string &s,
                        const HoverRace::VideoServices::Font &font,

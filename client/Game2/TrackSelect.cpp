@@ -103,7 +103,7 @@ static WNDPROC oldListProc;
  * Open a track file.
  * @param pWindow The window to use as the parent for dialog boxes.
  * @param pFileName The track name (without the ".trk" extension).
- * @return The opened track file, or NULL if the track could not be opened.
+ * @return The opened track file, or @c NULL if the track could not be opened.
  */
 MR_RecordFile *MR_TrackOpen(HWND pWindow, const char *pFileName)
 {
@@ -140,11 +140,11 @@ MR_RecordFile *MR_TrackOpen(HWND pWindow, const char *pFileName)
 /**
  * Open the track selection dialog.
  * @param pParentWindow The parent window handle.
- * @param pTrackFile [out] The name of the track.
- * @param pNbLap [out] The number of laps in the race.
- * @param pAllowWeapons [out] Whether weapons are allowed or not.
+ * @param[out] pTrackFile The name of the track.
+ * @param[out] pNbLap The number of laps in the race.
+ * @param[out] pGameOpts Game options (bitfield).
  * @return @c true if the user selected a track (@p pTrackFile, @p pNbLap, and
- *         @p pAllowWeapons will be filled in), @c false if the user canceled
+ *         @p pGameOpts will be filled in), @c false if the user canceled
  *         the dialog.
  */
 bool MR_SelectTrack(HWND pParentWindow, std::string &pTrackFile, int &pNbLap, char &pGameOpts)
@@ -495,7 +495,7 @@ void CleanList()
 
 /**
  * Search the directory list for a filename that matches a track name.
- * @param name The track name (may not be null).
+ * @param name The track name (may not be @c NULL).
  * @return The file path (may be relative).  Empty string if track not found.
  */
 std::string FindTrack(const std::string &name)

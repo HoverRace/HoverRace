@@ -445,6 +445,7 @@ const char *MR_NetworkInterface::GetPlayerName() const
  * @param pPromptForPort Should we use the default port or choose our own?
  * @param pDefaultPort The default port
  * @param pModalessDlg If this is NULL, the "TCP Connections" dialog is modal
+ * @param pReturnMessage Callback message (see ListCallBack())
  */
 BOOL MR_NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName, BOOL pPromptForPort, unsigned pDefaultPort, HWND *pModalessDlg, int pReturnMessage)
 {
@@ -594,6 +595,7 @@ BOOL MR_NetworkInterface::SlavePreConnect(HWND pWindow, CString &pGameName)
  * @param pDefaultPort Default port for the server (MR_DEFAULT_NET_PORT)
  * @param pGameName Name of the game (title of the track)
  * @param pModalessDlg If this is NULL, the "TCP Connections" dialog is modal
+ * @param pReturnMessage Callback message (see ListCallBack())
  */
 BOOL MR_NetworkInterface::SlaveConnect(HWND pWindow, const char *pServerIP, unsigned pDefaultPort, const char *pGameName, HWND *pModalessDlg, int pReturnMessage)
 {
@@ -1939,6 +1941,7 @@ MR_NetworkPort::~MR_NetworkPort()
  * UDP receive socket to receive messages from the client.
  *
  * @param pSocket An already-connected socket.
+ * @param pUDPRecvSocket UDP receive socket.
  */
 void MR_NetworkPort::Connect(SOCKET pSocket, SOCKET pUDPRecvSocket)
 {
@@ -2055,13 +2058,18 @@ SOCKET MR_NetworkPort::GetUDPSocket() const
 }
 
 /**
- * Check if any new messages have been recieved.  If not, NULL is returned.  Otherwise the first message in the queue is returned.  The UDP socket is
- * checked before the TCP socket (TCP messages are not as time-critical).
+ * Check if any new messages have been recieved.
+ * If not, @c NULL is returned.  Otherwise the first message in the queue is
+ * returned.  The UDP socket is checked before the TCP socket (TCP messages
+ * are not as time-critical).
  *
- * The parameter pClientId is a dirty hack for the one-port UDP hack.  Since this polls the global UDP receive port it is possible we could receive a
- * message not addressed to this particular port; therefore, we peek at the message and make sure it has the same ID as pClientId, or, we ignore it.
+ * The parameter @p pClientId is a dirty hack for the one-port UDP hack.
+ * Since this polls the global UDP receive port it is possible we could receive
+ * a message not addressed to this particular port; therefore, we peek at the
+ * message and make sure it has the same ID as @p pClientId, or, we ignore it.
  *
  * @param pClientId Id of the client a packet should be from
+ * @param pCheckClientId Enable client ID checking.
  */
 const MR_NetMessageBuffer *MR_NetworkPort::Poll(int pClientId, BOOL pCheckClientId)
 {

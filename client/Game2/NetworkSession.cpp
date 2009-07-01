@@ -712,8 +712,9 @@ const char *MR_NetworkSession::GetPlayerName() const
  * @param pWindow Parent window
  * @param pTrackName Track name
  * @param pPromptForPort Should we use the default port or choose our own?
- * @param pDefaultPort The default port (MR_DEFAULT_NET_PORT)
- * @param pModalessDlg If this is NULL, the "TCP Connections" dialog is modal
+ * @param pDefaultPort The default port (@c MR_DEFAULT_NET_PORT)
+ * @param pModalessDlg If this is @c NULL, the "TCP Connections" dialog is modal
+ * @param pReturnMessage Callback message (see MR_NetworkInterface::ListCallBack);
  */
 BOOL MR_NetworkSession::WaitConnections(HWND pWindow, const char *pTrackName, BOOL pPromptForPort, unsigned pDefaultPort, HWND *pModalessDlg, int pReturnMessage)
 {
@@ -748,6 +749,7 @@ BOOL MR_NetworkSession::PreConnectToServer(HWND pWindow, CString &pTrackName)
  * @param pPort Server port number
  * @param pGameName String representing the name of the game (track name)
  * @param pModalessDlg If this is NULL, the "TCP Connections" dialog is modal
+ * @param pReturnMessage Callback message (see MR_NetworkInterface::ListCallBack);
  */
 BOOL MR_NetworkSession::ConnectToServer(HWND pWindow, const char *pServerIP, unsigned pPort, const char *pGameName, HWND *pModalessDlg, int pReturnMessage)
 {
@@ -1415,8 +1417,8 @@ void MR_NetworkSession::AddResultEntry(int pPlayerIndex, MR_SimulationTime pFini
 }
 
 /**
- * Add a typed character into our message composition display.  If it is '\n' or
- * '\r' the user hit the enter key and we send it, after running it through the
+ * Add a typed character into our message composition display.  If it is @c \\n or
+ * @c \\r the user hit the enter key and we send it, after running it through the
  * Ascii2Simple() function.
  *
  * @param pKey The key the user pressed

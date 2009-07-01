@@ -46,7 +46,7 @@ PrefsPage::~PrefsPage()
 
 /**
  * Initialize a PROPSHEETPAGEW struct for this property page.
- * @param page [out] The struct to fill.
+ * @param[out] page The struct to fill.
  * @param hinst The application instance handle.
  */
 void PrefsPage::InitPropPage(PROPSHEETPAGEW &page, HINSTANCE hinst)

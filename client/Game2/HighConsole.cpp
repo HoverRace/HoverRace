@@ -120,7 +120,7 @@ HighConsole::~HighConsole()
 	delete vp;
 }
 
-void HighConsole::Advance(OS::timestamp_t tick)
+void HighConsole::Advance(Util::OS::timestamp_t tick)
 {
 	// Cursor visibility is based on the last character typed
 	// (so that the cursor stays visible while typing).
@@ -251,7 +251,7 @@ void HighConsole::OnChar(char c)
 
 /**
  * Renders the console.
- * @param vp The destination viewport (may not be @c NULL).
+ * @param dest The destination viewport (may not be @c NULL).
  */
 void HighConsole::Render(MR_VideoBuffer *dest)
 {
