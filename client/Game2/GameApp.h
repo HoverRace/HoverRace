@@ -113,7 +113,6 @@ class MR_GameApp
 		void NewInternetSession();
 
 		void LoadRegistry();
-		void SaveRegistry();
 
 		void Clean();
 

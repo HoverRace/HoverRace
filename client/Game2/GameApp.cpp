@@ -706,11 +706,6 @@ void MR_GameApp::LoadRegistry()
 	}
 }
 
-void MR_GameApp::SaveRegistry()
-{
-	Config::GetInstance()->Save();
-}
-
 BOOL MR_GameApp::IsGameRunning()
 {
 	BOOL lReturnValue = FALSE;
@@ -1641,7 +1636,7 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 
 		if(cfg->player.nickName != lCurrentSession->GetPlayerName()) {
 			cfg->player.nickName = lCurrentSession->GetPlayerName();
-			SaveRegistry();
+			cfg->Save();
 		}
 		// Extract the lap count from the track name and gameplay options
 		// From the end of the string find the two last space
@@ -1724,7 +1719,7 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 			lSuccess = (lCurrentSession->WaitConnections(mMainWindow, lNameBuffer) != FALSE);
 			if(cfg->player.nickName != lCurrentSession->GetPlayerName()) {
 				cfg->player.nickName = lCurrentSession->GetPlayerName();
-				SaveRegistry();
+				cfg->Save();
 			}
 		} else
 			lSuccess = (lCurrentSession->ConnectToServer(mMainWindow) != FALSE);
@@ -1813,7 +1808,7 @@ void MR_GameApp::NewInternetSession()
 
 		if(cfg->player.nickName != lCurrentSession->GetPlayerName()) {
 			cfg->player.nickName = lCurrentSession->GetPlayerName();
-			SaveRegistry();
+			cfg->Save();
 		}
 	}
 
