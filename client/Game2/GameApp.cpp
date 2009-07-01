@@ -28,7 +28,6 @@
 #include "FirstChoiceDialog.h"
 #include "Controller.h"
 #include "resource.h"
-#include "CommonDialog.h"
 #include "NetworkSession.h"
 #include "PrefsDialog.h"
 #include "HighConsole.h"

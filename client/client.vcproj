@@ -146,12 +146,6 @@
 				RelativePath=".\Game2\ClientSession.h">
 			</File>
 			<File
-				RelativePath=".\Game2\CommonDialog.cpp">
-			</File>
-			<File
-				RelativePath=".\Game2\CommonDialog.h">
-			</File>
-			<File
 				RelativePath=".\Game2\Console.cpp">
 			</File>
 			<File
