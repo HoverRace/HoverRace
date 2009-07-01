@@ -2082,19 +2082,6 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 					This->SetVideoMode(0, 0);
 					return 0;
 
-					// just pop the menu
-					/*
-					   if( This->mVideoBuffer != NULL )
-						   {
-						   if( This->mVideoBuffer->IsFullScreen() )
-						   {
-						   SendMessage( pWindow, WM_SYSCOMMAND, SC_KEYMENU, 0 );
-						   return 0;
-						   }
-						   }
-						 */
-						break;
-
 				case ID_GAME_NEW:
 					This->SetVideoMode(0, 0);
 					This->NewLocalSession();
