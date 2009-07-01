@@ -131,7 +131,6 @@ class MR_GameApp
 		void UpdateMenuItems();
 
 		void DisplayHelp();
-		void DisplayBetaZone();
 		void DisplaySite();
 		void DisplayAbout();
 
@@ -139,10 +138,6 @@ class MR_GameApp
 		int AskUserToAbortGame();				  // Return IDOK if OK
 
 		HoverRace::Client::Control::Controller *controller;
-
-		// unfortunate variables required to hold which control and player we might
-		// be setting a control for
-		HWND preferencesDialog;
 
 	public:
 		MR_GameApp(HINSTANCE pInstance, bool safeMode);
