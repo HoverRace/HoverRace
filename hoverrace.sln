@@ -18,6 +18,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "resourcecompiler", "compile
 		{1CCF897B-2194-4646-9F09-C307664F6193} = {1CCF897B-2194-4646-9F09-C307664F6193}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "updater", "updater\updater.vcproj", "{2453907E-2872-409E-A1E9-49279F8D0B7A}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -40,6 +44,10 @@ Global
 		{DDC913AD-31C6-481A-BD31-3949CBF06FE3}.Debug.Build.0 = Debug|Win32
 		{DDC913AD-31C6-481A-BD31-3949CBF06FE3}.Release.ActiveCfg = Release|Win32
 		{DDC913AD-31C6-481A-BD31-3949CBF06FE3}.Release.Build.0 = Release|Win32
+		{2453907E-2872-409E-A1E9-49279F8D0B7A}.Debug.ActiveCfg = Debug|Win32
+		{2453907E-2872-409E-A1E9-49279F8D0B7A}.Debug.Build.0 = Debug|Win32
+		{2453907E-2872-409E-A1E9-49279F8D0B7A}.Release.ActiveCfg = Release|Win32
+		{2453907E-2872-409E-A1E9-49279F8D0B7A}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
