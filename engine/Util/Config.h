@@ -23,8 +23,6 @@
 #pragma once
 
 #include <string>
-#include "OIS/OISPrereqs.h"
-#include "OIS/OISKeyboard.h"
 
 #ifdef _WIN32
 #	ifdef MR_ENGINE

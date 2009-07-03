@@ -40,6 +40,9 @@
 #include <boost/filesystem/convenience.hpp>
 #include <boost/filesystem/path.hpp>
 
+#include <OIS/OISPrereqs.h>
+#include <OIS/OISKeyboard.h>
+
 #include "yaml/Emitter.h"
 #include "yaml/MapNode.h"
 #include "yaml/ScalarNode.h"
