@@ -675,7 +675,7 @@ BEGIN
     LTEXT           "Address of server roomlist:",IDC_SERVER_ADDR,19,22,197,
                     8
     EDITTEXT        IDC_MAINSERVER,19,33,197,12,ES_AUTOHSCROLL
-    CONTROL         "Log all chats to:",IDC_LOG_CHATS,"Button",
+    CONTROL         "&Log all chats to:",IDC_LOG_CHATS,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,19,54,197,10
     EDITTEXT        IDC_LOG_CHATS_TXT,19,66,180,14,ES_AUTOHSCROLL | 
                     ES_READONLY
@@ -690,6 +690,7 @@ BEGIN
     LTEXT           "UDP Receive Port:",IDC_UDP_RECV_PORT_C,249,48,69,10
     EDITTEXT        IDC_UDP_RECV_PORT,322,48,30,12,ES_AUTOHSCROLL | 
                     ES_NUMBER
+    PUSHBUTTON      "&Reset to Defaults",IDC_RESET_DEFAULT,266,64,86,14
 END
 
 
@@ -960,6 +961,7 @@ BEGIN
         VERTGUIDE, 19
         VERTGUIDE, 216
         VERTGUIDE, 249
+        VERTGUIDE, 352
         TOPMARGIN, 7
         BOTTOMMARGIN, 135
         HORZGUIDE, 22

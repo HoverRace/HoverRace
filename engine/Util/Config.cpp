@@ -64,9 +64,6 @@ namespace fs = boost::filesystem;
 
 #define DEFAULT_NICKNAME		"Player"
 #define DEFAULT_MAIN_SERVER		"66.197.183.245/~sirbrock/imr/rl.php"
-#define DEFAULT_UDP_RECV_PORT	9531
-#define DEFAULT_TCP_RECV_PORT	9531
-#define DEFAULT_TCP_SERV_PORT	9530
 
 #define READ_BOOL(root,name) \
 	{\
@@ -385,9 +382,9 @@ void Config::ResetToDefaults()
 
 	net.mainServer = DEFAULT_MAIN_SERVER;
 	net.logChats = false;
-	net.udpRecvPort = DEFAULT_UDP_RECV_PORT;
-	net.tcpRecvPort = DEFAULT_TCP_RECV_PORT;
-	net.tcpServPort = DEFAULT_TCP_SERV_PORT;
+	net.udpRecvPort = cfg_net_t::DEFAULT_UDP_RECV_PORT;
+	net.tcpRecvPort = cfg_net_t::DEFAULT_TCP_RECV_PORT;
+	net.tcpServPort = cfg_net_t::DEFAULT_TCP_SERV_PORT;
 
 	// Default controls.
 	// values pulled from OIS

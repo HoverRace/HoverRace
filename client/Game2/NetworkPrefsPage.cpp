@@ -34,6 +34,9 @@
 
 #include "NetworkPrefsPage.h"
 
+using boost::format;
+using boost::str;
+
 using namespace HoverRace::Client;
 using namespace HoverRace::Util;
 
@@ -45,6 +48,15 @@ NetworkPrefsPage::NetworkPrefsPage(MR_GameApp *app) :
 
 NetworkPrefsPage::~NetworkPrefsPage()
 {
+}
+
+void NetworkPrefsPage::SetPortFields(HWND hwnd, int tcpServ, int tcpRecv, int udpRecv)
+{
+	static format portFmt("%d", OS::stdLocale);
+
+	SetDlgItemText(hwnd, IDC_TCP_SERV_PORT, str(portFmt % tcpServ).c_str());
+	SetDlgItemText(hwnd, IDC_TCP_RECV_PORT, str(portFmt % tcpRecv).c_str());
+	SetDlgItemText(hwnd, IDC_UDP_RECV_PORT, str(portFmt % udpRecv).c_str());
 }
 
 BOOL NetworkPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
@@ -61,7 +73,7 @@ BOOL NetworkPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 				Str::UW(_("Address of Server Roomlist:")));
 			SetDlgItemText(pWindow, IDC_MAINSERVER, cfg->net.mainServer.c_str());
 
-			SetDlgItemTextW(pWindow, IDC_LOG_CHATS, Str::UW(_("Log all chats to:")));
+			SetDlgItemTextW(pWindow, IDC_LOG_CHATS, Str::UW(_("&Log all chats to:")));
 			SendDlgItemMessage(pWindow, IDC_LOG_CHATS, BM_SETCHECK, cfg->net.logChats, 0);
 			SetDlgItemText(pWindow, IDC_LOG_CHATS_TXT, cfg->net.logChatsPath.c_str());
 
@@ -70,18 +82,9 @@ BOOL NetworkPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 			SetDlgItemTextW(pWindow, IDC_TCP_SERV_PORT_C, Str::UW(_("TCP Server Port:")));
 			SetDlgItemTextW(pWindow, IDC_TCP_RECV_PORT_C, Str::UW(_("TCP Receive Port:")));
 			SetDlgItemTextW(pWindow, IDC_UDP_RECV_PORT_C, Str::UW(_("UDP Receive Port:")));
-			{
-				char lBuffer[20];
-				sprintf(lBuffer, "%d", cfg->net.tcpServPort);
-				SetDlgItemText(pWindow, IDC_TCP_SERV_PORT, lBuffer);
-				
-				sprintf(lBuffer, "%d", cfg->net.tcpRecvPort);
-				SetDlgItemText(pWindow, IDC_TCP_RECV_PORT, lBuffer);
+			SetPortFields(pWindow, cfg->net.tcpServPort, cfg->net.tcpRecvPort, cfg->net.udpRecvPort);
 
-				sprintf(lBuffer, "%d", cfg->net.udpRecvPort);
-				SetDlgItemText(pWindow, IDC_UDP_RECV_PORT, lBuffer);
-			}
-
+			SetDlgItemTextW(pWindow, IDC_RESET_DEFAULT, Str::UW("&Reset to Defaults"));
 			break;
 
 		case WM_COMMAND:
@@ -97,6 +100,14 @@ BOOL NetworkPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 							SetDlgItemText(pWindow, IDC_LOG_CHATS_TXT, curPath.c_str());
 						}
 					}
+					break;
+
+				case IDC_RESET_DEFAULT:
+					SetPortFields(pWindow,
+						Config::cfg_net_t::DEFAULT_TCP_SERV_PORT,
+						Config::cfg_net_t::DEFAULT_TCP_RECV_PORT,
+						Config::cfg_net_t::DEFAULT_UDP_RECV_PORT
+						);
 					break;
 			}
 			break;

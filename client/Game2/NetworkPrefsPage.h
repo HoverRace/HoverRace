@@ -38,6 +38,7 @@ class NetworkPrefsPage : public PrefsPage
 		virtual ~NetworkPrefsPage();
 
 	protected:
+		void SetPortFields(HWND hwnd, int tcpServ, int tcpRecv, int udpRecv);
 		virtual BOOL DlgProc(HWND pWindow, UINT message, WPARAM wparam, LPARAM lparam);
 
 	private:

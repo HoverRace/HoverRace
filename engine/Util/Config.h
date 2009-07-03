@@ -168,6 +168,9 @@ class MR_DllDeclare Config
 			int udpRecvPort;
 			int tcpRecvPort;
 			int tcpServPort;
+			static const int DEFAULT_UDP_RECV_PORT = 9531;
+			static const int DEFAULT_TCP_RECV_PORT = 9531;
+			static const int DEFAULT_TCP_SERV_PORT = 9530;
 			//TODO: Proxy server settings.
 
 			void Load(yaml::MapNode*);
