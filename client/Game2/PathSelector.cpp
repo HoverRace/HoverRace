@@ -50,7 +50,7 @@ PathSelector::~PathSelector()
 /**
  * Display the path selector.
  * @param parent The parent window.
- * @param[in,out] path In: the initiall-selected path.
+ * @param[in,out] path In: the initially-selected path.
  *                     Out: The selected path.
  * @return @c true if the user selected a valid path,
  *         @c false if the user canceled the dialog or the path was invalid.
