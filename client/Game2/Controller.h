@@ -92,7 +92,7 @@ class Controller : public KeyListener, public MouseListener, public JoyStickList
 
 		void poll();
 		ControlState getState(int player) const;
-		void captureNextInput(int control, int player, HWND hwnd);
+		void captureNextInput(int control, int player, Util::OS::wnd_t hwnd);
 		void stopCapture();
 		void disableInput(int control, int player);
 		bool controlsUpdated();
@@ -100,7 +100,7 @@ class Controller : public KeyListener, public MouseListener, public JoyStickList
 		std::string toString(HoverRace::Util::Config::cfg_controls_t::cfg_control_t control);
 
 	private:
-		void InitInputManager(HWND mainWindow);
+		void InitInputManager(Util::OS::wnd_t mainWindow);
 		void LoadControllerConfig();
 
 		/// OIS input manager does most of the work for us
@@ -152,7 +152,7 @@ class Controller : public KeyListener, public MouseListener, public JoyStickList
 		bool captureNext;
 		int captureControl;
 		int capturePlayerId;
-		HWND captureHwnd;
+		Util::OS::wnd_t captureHwnd;
 		bool updated;
 };
 

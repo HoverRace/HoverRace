@@ -118,7 +118,7 @@ ControlState Controller::getState(int player) const {
  * @param player ID of the player; 0-3
  * @param hwnd Handle to the window we should contact when we are done
  */
-void Controller::captureNextInput(int control, int player, HWND hwnd) {
+void Controller::captureNextInput(int control, int player, Util::OS::wnd_t hwnd) {
 	captureNext = true;
 	captureControl = control;
 	capturePlayerId = player;
@@ -185,7 +185,7 @@ void Controller::disableInput(int control, int player) {
  */
 std::string Controller::toString(HoverRace::Util::Config::cfg_controls_t::cfg_control_t control) {
 	if(control.inputType == OISKeyboard) {
-		return kbd->getAsString((KeyCode) control.kbdBinding);
+		return kbd->getAsString((OIS::KeyCode) control.kbdBinding);
 	} else if(control.inputType == OISMouse) {
 		if(control.axis == 0) {
 			// OIS has no nice "getAsString" for mice so we have to do it by hand
@@ -324,7 +324,7 @@ std::string Controller::toString(HoverRace::Util::Config::cfg_controls_t::cfg_co
  *
  * @param mainWindow Handle to the main HR window
  */
-void Controller::InitInputManager(HWND mainWindow) {
+void Controller::InitInputManager(Util::OS::wnd_t mainWindow) {
 	// collect parameters to give to init InputManager
 	// just following the example here... I'm not 100% on this
 	std::ostringstream wnd;
@@ -419,7 +419,7 @@ bool Controller::controlsUpdated() {
 
 bool Controller::keyPressed(const KeyEvent &arg) {
 	// modify modifier keys to reflect the same keycode; LShift == RShift, etc.
-	KeyCode kc = arg.key;
+	OIS::KeyCode kc = arg.key;
 
 	if(kc == KC_RSHIFT)
 		kc = KC_LSHIFT;
@@ -475,7 +475,7 @@ bool Controller::keyPressed(const KeyEvent &arg) {
 
 bool Controller::keyReleased(const KeyEvent &arg) {
 	// modify modifier keys to reflect the same keycode; LShift == RShift, etc.
-	KeyCode kc = arg.key;
+	OIS::KeyCode kc = arg.key;
 
 	if(kc == KC_RSHIFT) {
 
