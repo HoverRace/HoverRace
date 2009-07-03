@@ -320,6 +320,39 @@ std::string Config::GetTrackPath(const std::string &file) const
 }
 
 /**
+ * Retrieve the default path for the chat log.
+ * @return The fully-qualified path (may be empty if base path could not
+ *         be retrieved from the system).
+ */
+std::string Config::GetDefaultChatLogPath()
+{
+#ifdef _WIN32
+	char dpath[MAX_PATH] = {0};
+	HRESULT hr = 
+		SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, dpath);
+	if (SUCCEEDED(hr)) {
+		std::string retv(dpath);
+		retv += "\\HoverRace Chat";
+		return retv;
+	}
+	else {
+		ASSERT(FALSE);
+		return "";
+	}
+#else
+	char *home = getenv("HOME");
+	if (home != NULL) {
+		std::string retv(home);
+		retv += "/HoverRace Chat";
+		return retv;
+	}
+	else {
+		return "";
+	}
+#endif
+}
+
+/**
  * Retrieve the default UI font name.
  * @return The font name (never empty).
  */
@@ -382,6 +415,7 @@ void Config::ResetToDefaults()
 
 	net.mainServer = DEFAULT_MAIN_SERVER;
 	net.logChats = false;
+	net.logChatsPath = GetDefaultChatLogPath();
 	net.udpRecvPort = cfg_net_t::DEFAULT_UDP_RECV_PORT;
 	net.tcpRecvPort = cfg_net_t::DEFAULT_TCP_RECV_PORT;
 	net.tcpServPort = cfg_net_t::DEFAULT_TCP_SERV_PORT;
