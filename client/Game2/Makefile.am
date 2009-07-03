@@ -9,6 +9,10 @@ hoverrace_LDADD = \
 	$(DEPS_LIBS)
 hoverrace_SOURCES = \
 	StdAfx.h \
+	Console.cpp \
+	Console.h \
+	Controller.cpp \
+	Controller.h \
 	main.cpp \
 	version.h
 
