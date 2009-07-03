@@ -34,8 +34,13 @@ class PathSelector
 
 		bool ShowModal(HWND parent, std::string &path);
 
+	protected:
+		int DlgProc(HWND hwnd, UINT message, LPARAM lparam);
+		static int CALLBACK DlgFunc(HWND hwnd, UINT message, LPARAM lparam, LPARAM data);
+
 	private:
 		std::wstring title;
+		std::wstring initialPath;
 };
 
 }  // namespace Client

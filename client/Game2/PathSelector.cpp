@@ -50,22 +50,24 @@ PathSelector::~PathSelector()
 /**
  * Display the path selector.
  * @param parent The parent window.
- * @param[out] path The selected path.
+ * @param[in,out] path In: the initiall-selected path.
+ *                     Out: The selected path.
  * @return @c true if the user selected a valid path,
  *         @c false if the user canceled the dialog or the path was invalid.
  */
 bool PathSelector::ShowModal(HWND parent, std::string &path)
 {
-	wchar_t browsePath[MAX_PATH];
+	wchar_t browsePath[MAX_PATH] = { 0 };
+	initialPath = (const wchar_t *)Str::UW(path.c_str());
 	BROWSEINFOW browseInfo;
 	memset(&browseInfo, 0, sizeof(browseInfo));
 	browseInfo.hwndOwner = parent;
 	browseInfo.pidlRoot = NULL;
 	browseInfo.pszDisplayName = browsePath;
 	browseInfo.lpszTitle = title.c_str();
-	browseInfo.ulFlags = BIF_NEWDIALOGSTYLE;
-	browseInfo.lpfn = NULL;
-	browseInfo.lParam = NULL;
+	browseInfo.ulFlags = BIF_USENEWUI | BIF_RETURNONLYFSDIRS;
+	browseInfo.lpfn = DlgFunc;
+	browseInfo.lParam = reinterpret_cast<LPARAM>(this);
 	browseInfo.iImage = 0;
 	LPITEMIDLIST pidl = SHBrowseForFolderW(&browseInfo);
 	if (pidl == NULL) {
@@ -79,6 +81,28 @@ bool PathSelector::ShowModal(HWND parent, std::string &path)
 		CoTaskMemFree(pidl);
 		return retv;
 	}
+}
+
+int PathSelector::DlgProc(HWND hwnd, UINT message, LPARAM lparam)
+{
+	switch (message) {
+		case BFFM_INITIALIZED:
+			// Set the only localized string we can.
+			SendMessage(hwnd, BFFM_SETOKTEXT, 0, (LPARAM)(const wchar_t*)Str::UW(_("OK")));
+			// Set the initially-selected item.
+			if (initialPath.length() > 0) {
+				SendMessage(hwnd, BFFM_SETEXPANDED, TRUE, (LPARAM)initialPath.c_str());
+			}
+			break;
+	}
+
+	return 0;
+}
+
+int CALLBACK PathSelector::DlgFunc(HWND hwnd, UINT message, LPARAM lparam, LPARAM data)
+{
+	PathSelector *dlg = reinterpret_cast<PathSelector*>(data);
+	return (dlg == NULL) ? 0 : dlg->DlgProc(hwnd, message, lparam);
 }
 
 // PIDL-to-path conversion utilities (from MSDN).
