@@ -236,6 +236,12 @@
 				RelativePath=".\Game2\Observer.h">
 			</File>
 			<File
+				RelativePath=".\Game2\PathSelector.cpp">
+			</File>
+			<File
+				RelativePath=".\Game2\PathSelector.h">
+			</File>
+			<File
 				RelativePath=".\Game2\PrefsDialog.cpp">
 			</File>
 			<File
