@@ -320,6 +320,15 @@ std::string Config::GetTrackPath(const std::string &file) const
 }
 
 /**
+ * Retrieve the default URL for the IMR room list.
+ * @return The URL (without the initial "http://").
+ */
+std::string Config::GetDefaultRoomListUrl()
+{
+	return DEFAULT_MAIN_SERVER;
+}
+
+/**
  * Retrieve the default path for the chat log.
  * @return The fully-qualified path (may be empty if base path could not
  *         be retrieved from the system).

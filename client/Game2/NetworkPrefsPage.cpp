@@ -73,7 +73,7 @@ BOOL NetworkPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 				Str::UW(_("Address of Server Roomlist:")));
 			SetDlgItemText(pWindow, IDC_MAINSERVER, cfg->net.mainServer.c_str());
 
-			SetDlgItemTextW(pWindow, IDC_LOG_CHATS, Str::UW(_("&Log all chats to:")));
+			SetDlgItemTextW(pWindow, IDC_LOG_CHATS, Str::UW(_("&Log all chat sessions to:")));
 			SendDlgItemMessage(pWindow, IDC_LOG_CHATS, BM_SETCHECK, cfg->net.logChats, 0);
 			SetDlgItemText(pWindow, IDC_LOG_CHATS_TXT, cfg->net.logChatsPath.c_str());
 
@@ -84,7 +84,8 @@ BOOL NetworkPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 			SetDlgItemTextW(pWindow, IDC_UDP_RECV_PORT_C, Str::UW(_("UDP Receive Port:")));
 			SetPortFields(pWindow, cfg->net.tcpServPort, cfg->net.tcpRecvPort, cfg->net.udpRecvPort);
 
-			SetDlgItemTextW(pWindow, IDC_RESET_DEFAULT, Str::UW("&Reset to Defaults"));
+			SetDlgItemTextW(pWindow, IDC_SERVER_RESET_DEFAULT, Str::UW("Reset to Default"));
+			SetDlgItemTextW(pWindow, IDC_CONNECTION_RESET_DEFAULT, Str::UW("Reset to Defaults"));
 			break;
 
 		case WM_COMMAND:
@@ -102,7 +103,11 @@ BOOL NetworkPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 					}
 					break;
 
-				case IDC_RESET_DEFAULT:
+				case IDC_SERVER_RESET_DEFAULT:
+					SetDlgItemText(pWindow, IDC_MAINSERVER, Config::GetDefaultRoomListUrl().c_str());
+					break;
+
+				case IDC_CONNECTION_RESET_DEFAULT:
 					SetPortFields(pWindow,
 						Config::cfg_net_t::DEFAULT_TCP_SERV_PORT,
 						Config::cfg_net_t::DEFAULT_TCP_RECV_PORT,

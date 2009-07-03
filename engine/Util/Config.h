@@ -103,6 +103,7 @@ class MR_DllDeclare Config
 		std::string GetTrackPath() const;
 		std::string GetTrackPath(const std::string &file) const;
 
+		static std::string GetDefaultRoomListUrl();
 		static std::string GetDefaultChatLogPath();
 
 		const std::string &GetDefaultFontName() const;

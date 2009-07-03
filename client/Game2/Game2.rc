@@ -675,11 +675,12 @@ BEGIN
     LTEXT           "Address of server roomlist:",IDC_SERVER_ADDR,19,22,197,
                     8
     EDITTEXT        IDC_MAINSERVER,19,33,197,12,ES_AUTOHSCROLL
-    CONTROL         "&Log all chats to:",IDC_LOG_CHATS,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,19,54,197,10
-    EDITTEXT        IDC_LOG_CHATS_TXT,19,66,180,14,ES_AUTOHSCROLL | 
+    PUSHBUTTON      "Reset to Default",IDC_SERVER_RESET_DEFAULT,135,47,81,14
+    CONTROL         "&Log all chat sessions to:",IDC_LOG_CHATS,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,19,70,197,10
+    EDITTEXT        IDC_LOG_CHATS_TXT,19,82,180,14,ES_AUTOHSCROLL | 
                     ES_READONLY
-    PUSHBUTTON      "…",IDC_LOG_CHATS_BROWSE,200,65,16,14
+    PUSHBUTTON      "…",IDC_LOG_CHATS_BROWSE,200,81,16,14
     GROUPBOX        "Connection",IDC_CONNECTION_GROUP,239,7,128,128
     LTEXT           "TCP Server Port:",IDC_TCP_SERV_PORT_C,249,22,69,10
     EDITTEXT        IDC_TCP_SERV_PORT,322,22,30,12,ES_AUTOHSCROLL | 
@@ -690,7 +691,8 @@ BEGIN
     LTEXT           "UDP Receive Port:",IDC_UDP_RECV_PORT_C,249,48,69,10
     EDITTEXT        IDC_UDP_RECV_PORT,322,48,30,12,ES_AUTOHSCROLL | 
                     ES_NUMBER
-    PUSHBUTTON      "&Reset to Defaults",IDC_RESET_DEFAULT,266,64,86,14
+    PUSHBUTTON      "Reset to Defaults",IDC_CONNECTION_RESET_DEFAULT,266,64,
+                    86,14
 END
 
 
@@ -959,13 +961,13 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 367
         VERTGUIDE, 19
+        VERTGUIDE, 135
         VERTGUIDE, 216
         VERTGUIDE, 249
         VERTGUIDE, 352
         TOPMARGIN, 7
         BOTTOMMARGIN, 135
         HORZGUIDE, 22
-        HORZGUIDE, 64
     END
 END
 #endif    // APSTUDIO_INVOKED
