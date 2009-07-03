@@ -28,6 +28,7 @@
 #include "../../engine/Util/Str.h"
 
 #include "GameApp.h"
+#include "PathSelector.h"
 
 #include "resource.h"
 
@@ -54,14 +55,21 @@ BOOL NetworkPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 
 	switch (pMsgId) {
 		case WM_INITDIALOG:
-			// i18nize text fields
+			SetDlgItemTextW(pWindow, IDC_IMR_GROUP, Str::UW(_("Internet Meeting Room")));
+
 			SetDlgItemTextW(pWindow, IDC_SERVER_ADDR,
 				Str::UW(_("Address of Server Roomlist:")));
+			SetDlgItemText(pWindow, IDC_MAINSERVER, cfg->net.mainServer.c_str());
+
+			SetDlgItemTextW(pWindow, IDC_LOG_CHATS, Str::UW(_("Log all chats to:")));
+			SendDlgItemMessage(pWindow, IDC_LOG_CHATS, BM_SETCHECK, cfg->net.logChats, 0);
+			SetDlgItemText(pWindow, IDC_LOG_CHATS_TXT, cfg->net.logChatsPath.c_str());
+
+			SetDlgItemTextW(pWindow, IDC_CONNECTION_GROUP, Str::UW(_("Connection")));
+
 			SetDlgItemTextW(pWindow, IDC_TCP_SERV_PORT_C, Str::UW(_("TCP Server Port:")));
 			SetDlgItemTextW(pWindow, IDC_TCP_RECV_PORT_C, Str::UW(_("TCP Receive Port:")));
 			SetDlgItemTextW(pWindow, IDC_UDP_RECV_PORT_C, Str::UW(_("UDP Receive Port:")));
-
-			SetDlgItemText(pWindow, IDC_MAINSERVER, cfg->net.mainServer.c_str());
 			{
 				char lBuffer[20];
 				sprintf(lBuffer, "%d", cfg->net.tcpServPort);
@@ -76,16 +84,38 @@ BOOL NetworkPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 
 			break;
 
+		case WM_COMMAND:
+			switch (LOWORD(pWParam)) {
+				case IDC_LOG_CHATS_BROWSE:
+					{
+						char buf[MAX_PATH];
+						GetDlgItemText(pWindow, IDC_LOG_CHATS_TXT, buf, sizeof(buf));
+						std::string curPath = buf;
+						if (PathSelector(_("Select a destination folder for saved chat sessions.")).
+							ShowModal(pWindow, curPath))
+						{
+							SetDlgItemText(pWindow, IDC_LOG_CHATS_TXT, curPath.c_str());
+						}
+					}
+					break;
+			}
+			break;
+
 		case WM_NOTIFY:
 			switch (((NMHDR FAR *) pLParam)->code) {
 				case PSN_APPLY:
 					{
-						char lBuffer[80];
+						char lBuffer[MAX_PATH];
 						if(GetDlgItemText(pWindow, IDC_MAINSERVER, lBuffer, sizeof(lBuffer)) == 0)
 							ASSERT(FALSE);
 
 						cfg->net.mainServer = lBuffer;
 						app->SignalServerHasChanged();
+
+						cfg->net.logChats = (SendDlgItemMessage(pWindow, IDC_LOG_CHATS, BM_GETCHECK, 0, 0) != FALSE);
+						if(GetDlgItemText(pWindow, IDC_LOG_CHATS_TXT, lBuffer, sizeof(lBuffer)) == 0)
+							ASSERT(FALSE);
+						cfg->net.logChatsPath = lBuffer;
 
 						if(GetDlgItemText(pWindow, IDC_TCP_SERV_PORT, lBuffer, sizeof(lBuffer)) == 0)
 							ASSERT(FALSE);

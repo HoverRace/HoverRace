@@ -197,9 +197,15 @@
 #define IDC_DISABLE                     1344
 #define IDC_PRESS_ANY_KEY               1345
 #define IDC_BRAKE1                      1346
+#define IDC_IMR_GROUP                   1346
 #define IDC_BRAKE2                      1347
+#define IDC_CONNECTION_GROUP            1347
 #define IDC_BRAKE3                      1348
 #define IDC_BRAKE4                      1349
+#define IDC_LOG_CHATS_TXT               1349
+#define IDC_BUTTON1                     1350
+#define IDC_LOG_CHATS_BROWSE            1350
+#define IDC_LOG_CHATS                   1351
 #define ID_VIEW_3DACTION                32775
 #define ID_SETTING_WINDOW               32784
 #define ID_GAME_PAUSE                   32788
@@ -417,7 +423,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        169
 #define _APS_NEXT_COMMAND_VALUE         40049
-#define _APS_NEXT_CONTROL_VALUE         1346
+#define _APS_NEXT_CONTROL_VALUE         1352
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
