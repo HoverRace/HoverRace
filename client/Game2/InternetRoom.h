@@ -159,6 +159,8 @@ class MR_InternetRoom
 		MR_GifDecoder mBanner;
 		int mCurrentBannerIndex;
 
+		std::ofstream *chatLog;
+
 		/*
 		static BOOL CALLBACK AskPasswordCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 		*/
@@ -189,7 +191,8 @@ class MR_InternetRoom
 
 		BOOL ParseState(const char *pAnswer);
 
-		void AddChatLine(const char *pText);
+		void OpenChatLog();
+		void AddChatLine(const char *pText, bool neverLog=false);
 
 		int LoadBanner(HWND pWindow, const char *pBuffer, int pBufferLen);
 		int RefreshBanner(HWND pWindow);		  // Return next refresh time

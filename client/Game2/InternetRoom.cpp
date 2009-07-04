@@ -21,6 +21,9 @@
 
 #include "stdafx.h"
 
+#include <boost/filesystem.hpp>
+#include <boost/filesystem/fstream.hpp>
+
 #include "InternetRoom.h"
 #include "MatchReport.h"
 #include "TrackDownloadDialog.h"
@@ -314,7 +317,7 @@ BOOL MR_InternetRequest::IsReady() const
 // MR_InternetRoom
 
 MR_InternetRoom::MR_InternetRoom(BOOL pAllowRegistred, int pMajorID, int pMinorID, unsigned pKey2, unsigned pKey3, const std::string &pMainServer) :
-	mMainServer(pMainServer)
+	mMainServer(pMainServer), chatLog(NULL)
 {
 	int lCounter;
 
@@ -354,6 +357,11 @@ MR_InternetRoom::~MR_InternetRoom()
 {
 	// Close WinSock
 	WSACleanup();
+
+	if (chatLog != NULL) {
+		chatLog->close();
+		delete chatLog;
+	}
 
 	ASSERT(mModelessDlg == NULL);
 }
@@ -749,16 +757,83 @@ BOOL MR_InternetRoom::IsDisplayed( )const
 }
 */
 
+/**
+ * Initialize the chat log.
+ * If the chat log could not be opened, then an error message is written to
+ * the the message window.
+ */
+void MR_InternetRoom::OpenChatLog()
+{
+	namespace fs = boost::filesystem;
+
+	const Config *cfg = Config::GetInstance();
+	if (!cfg->net.logChats) return;
+
+	const std::string &logChatsPath = cfg->net.logChatsPath;
+	if (logChatsPath.length() == 0) return;
+
+	fs::path logPath(logChatsPath);
+	try {
+		if (!fs::exists(logPath)) {
+			fs::create_directories(logPath);
+		}
+	}
+	catch (fs::basic_filesystem_error<fs::path> &ex) {
+		AddChatLine(_("Unable to create chat log file:"));
+		AddChatLine(_("Unable to create directory:"));
+		AddChatLine(logPath.string().c_str());
+		AddChatLine(ex.what());
+		return;
+	}
+
+	tm now;
+	const time_t curTime = time(NULL);
+	memcpy(&now, localtime(&curTime), sizeof(now));
+	char filename[128] = { 0 };
+	strftime(filename, 128, "Chat %Y-%m-%d %H%M %z.txt", &now);
+	char timestamp[128] = { 0 };
+	strftime(timestamp, 128, "%Y-%m-%d %H:%M:%S %z", &now);
+
+	logPath /= filename;
+
+	chatLog = new fs::ofstream(logPath, std::ios_base::app | std::ios_base::out);
+	if (chatLog->fail()) {
+		delete chatLog;
+		chatLog = NULL;
+		AddChatLine(_("Unable to create chat log file:"));
+		AddChatLine(_("Unable to open file for writing:"));
+		AddChatLine(logPath.string().c_str());
+		return;
+	}
+
+	// Shouldn't actually be necessary, but better to be safe.
+	chatLog->imbue(OS::stdLocale);
+
+	// We intentionally include some UTF-8 text in the header so that
+	// Windows apps (such as Notepad) can try to auto-detect the encoding.
+	// The first bit is equivalent to HTML: &raquo;&rsaquo;
+	*chatLog << "\302\273\342\200\272 " << _("Chat log started at:") << " " <<
+		timestamp << std::endl << std::endl;
+
+	AddChatLine(_("Saving chat session to:"), true);
+	AddChatLine(logPath.string().c_str(), true);
+}
+
 /***
  * Add a line to the chat dialog (but this does not refresh that dialog).
- * The text should be in UTF-8 formatting (not wide).
+ * @param pText The text (UTF-8).
+ * @param neverLog @c true to prevent writing to the chat log file.
  */
-void MR_InternetRoom::AddChatLine(const char *pText)
+void MR_InternetRoom::AddChatLine(const char *pText, bool neverLog)
 {
 	if(!mChatBuffer.IsEmpty()) {
 		mChatBuffer += "\r\n";
 	}
 	mChatBuffer += pText;
+
+	if (!neverLog && chatLog != NULL) {
+		*chatLog << pText << std::endl;
+	}
 
 	// Determine if we must cut some lines from the buffer
 	while(mChatBuffer.GetLength() > (40 * 40)) {
@@ -1384,6 +1459,9 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 				lSpec.iSubItem = 0;
 	
 				ListView_InsertColumn(lList, 0, &lSpec);
+
+				// Start chat logging.
+				mThis->OpenChatLog();
 	
 				// Connect to server
 	
@@ -1407,7 +1485,7 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 					GetDlgItem(pWindow, IDC_PUB),
 					GWL_WNDPROC,
 					(LONG)BannerCallBack);
-	
+				
 			}
 			lReturnValue = TRUE;
 	
