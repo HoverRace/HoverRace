@@ -693,6 +693,7 @@ BEGIN
                     ES_NUMBER
     PUSHBUTTON      "Reset to Defaults",IDC_CONNECTION_RESET_DEFAULT,266,64,
                     86,14
+    PUSHBUTTON      "Open Folder",IDC_OPEN_FOLDER,19,98,71,14
 END
 
 
