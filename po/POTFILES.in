@@ -17,9 +17,9 @@ client/Game2/NetInterface.cpp
 client/Game2/NetworkPrefsPage.cpp
 client/Game2/NetworkSession.cpp
 client/Game2/Observer.cpp
+client/Game2/PathSelector.cpp
 client/Game2/PrefsDialog.cpp
 client/Game2/PrefsPage.cpp
-client/Game2/StdAfx.cpp
 client/Game2/TrackDownloadDialog.cpp
 client/Game2/TrackSelect.cpp
 client/Game2/VideoAudioPrefsPage.cpp
