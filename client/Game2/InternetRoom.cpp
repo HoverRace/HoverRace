@@ -173,13 +173,6 @@ BOOL MR_InternetRequest::Send(HWND pWindow, unsigned long pIP, unsigned int pPor
 		Clear();
 
 		mStartTime = time(NULL);
-		/*
-		   mRequest.Format( "GET http://%s HTTP/1.0\n\r"
-		   "Accept: text/plain\n\r"
-		   "UserAgent:  HoverRace/0.1\n\r"
-		   "\n\r",
-		   pURL                             );
-		 */
 
 		const char *lURL = strchr(pURL, '/');
 		char lReqBuffer[1024];
@@ -191,20 +184,13 @@ BOOL MR_InternetRequest::Send(HWND pWindow, unsigned long pIP, unsigned int pPor
 		const std::string &ua = Config::GetInstance()->GetUserAgentId();
 		if(pCookie == NULL) {
 			sprintf(lReqBuffer, "GET %s HTTP/1.0\r\n"
-			// "Connection: Keep-Alive\n\r"
 				"Accept: */*\r\n"
 				"User-Agent: %s\r\n"
-			// "User-Agent: Mozilla/3.0 (Win95; I)\n\r"
-			// "Host: 205.181.206.67:80\n\r"
-			// "Accept: image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, */*\n\r"
 				"\r\n" "\r\n",
 				lURL, ua.c_str());
 		}
 		else {
 			sprintf(lReqBuffer, "GET %s HTTP/1.0\r\n"
-			// "User-Agent: Mozilla/3.0 (Win95; I)\n\r"
-			// "Host: 205.181.206.67:80\n\r"
-			// "Accept: image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, */*\n\r"
 				"Accept: */*\r\n"
 				"User-Agent: %s\r\n"
 				"Cookie: %s\r\n"
