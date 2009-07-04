@@ -27,8 +27,10 @@
 #include <WINSOCK.h>
 #include "resource.h"
 
+#include "../../engine/Util/Config.h"
 #include "../../engine/Util/OS.h"
 
+using HoverRace::Util::Config;
 using HoverRace::Util::OS;
 
 // Local constants
@@ -237,7 +239,13 @@ BOOL InternetRequest::Send(HWND pWindow, unsigned long pIP, unsigned int pPort, 
 
 		mStartTime = time(NULL);
 
-		sprintf(mRequest, "GET %s?%s HTTP/1.0\n\r" "Accept: */*\n\r" "UserAgent:  Custom(by GrokkSoft)/0.1\n\r" "\n\r", pURLPath, pRequest);
+		const std::string &ua = Config::GetInstance()->GetUserAgentId();
+		sprintf(mRequest,
+			"GET %s?%s HTTP/1.0\r\n"
+			"Accept: */*\r\n"
+			"UserAgent: %s\r\n"
+			"\r\n",
+			pURLPath, pRequest, ua.c_str());
 
 		mSocket = socket(PF_INET, SOCK_STREAM, 0);
 
