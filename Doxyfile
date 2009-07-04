@@ -106,8 +106,7 @@ INPUT                  = client/Game2 \
                          engine/VideoServices \
                          compilers/MazeCompiler \
                          compilers/ResourceCompiler \
-                         hovercad/ \
-                         imr/ 
+                         hovercad/
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.c \
                          *.cc \
