@@ -165,7 +165,7 @@ void MR_InternetRequest::Clear()
 
 }
 
-BOOL MR_InternetRequest::Send(HWND pWindow, unsigned long pIP, unsigned pPort, const char *pURL, const char *pCookie)
+BOOL MR_InternetRequest::Send(HWND pWindow, unsigned long pIP, unsigned int pPort, const char *pURL, const char *pCookie)
 {
 	BOOL lReturnValue = FALSE;
 

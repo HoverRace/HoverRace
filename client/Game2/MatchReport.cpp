@@ -228,7 +228,7 @@ void InternetRequest::Clear()
 	mBufferIndex = 0;
 }
 
-BOOL InternetRequest::Send(HWND pWindow, unsigned long pIP, unsigned pPort, const char *pURLPath, const char *pRequest)
+BOOL InternetRequest::Send(HWND pWindow, unsigned long pIP, unsigned int pPort, const char *pURLPath, const char *pRequest)
 {
 	BOOL lReturnValue = FALSE;
 
