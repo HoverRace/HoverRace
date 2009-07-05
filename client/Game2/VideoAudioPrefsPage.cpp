@@ -193,6 +193,10 @@ BOOL VideoAudioPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPA
 
 			SetDlgItemTextW(pWindow, IDC_AUDIO_GROUP, Str::UW(_("Audio")));
 			SetDlgItemTextW(pWindow, IDC_VOLUME, Str::UW(_("Volume")));
+			SetDlgItemTextW(pWindow, IDC_AUDIO_STATUS,
+				cfg->runtime.silent ?
+				Str::UW(_("HoverRace is currently in silent mode.")) :
+				"");
 
 			SetDlgItemTextW(pWindow, IDC_FULLSCREEN_GROUP, Str::UW(_("Fullscreen Settings")));
 			SetDlgItemTextW(pWindow, IDC_MONITOR_LBL, Str::UW(_("Fullscreen Monitor")));

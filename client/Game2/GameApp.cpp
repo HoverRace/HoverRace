@@ -1039,6 +1039,9 @@ void MR_GameApp::RefreshTitleBar()
 		if (cfg->IsPrerelease()) {
 			oss << " (" << pgettext("Version", "testing") << ')';
 		}
+		if (cfg->runtime.silent) {
+			oss << " (" << _("silent mode") << ')';
+		}
 		SetWindowTextW(mMainWindow, Str::UW(oss.str().c_str()));
 	}
 }
