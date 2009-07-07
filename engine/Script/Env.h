@@ -62,6 +62,7 @@ class MR_DllDeclare Env
 	public:
 		lua_State *GetState() const { return state; }
 		void Reset();
+		void ActivateSandbox();
 		void SetOutput(boost::shared_ptr<std::ostream> out);
 
 		std::string GetVersionString() const;
@@ -73,6 +74,7 @@ class MR_DllDeclare Env
 		std::string PopError();
 
 		static int LPrint(lua_State *state);
+		static int LSandboxedFunction(lua_State *state);
 
 	private:
 		boost::shared_ptr<std::ostream> out;

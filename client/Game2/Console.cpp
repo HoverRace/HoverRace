@@ -107,6 +107,10 @@ void Console::InitGlobals(Script::Env *scripting)
 	lua_pushlightuserdata(state, this);
 	lua_pushcclosure(state, Console::LReset, 1);
 	lua_setglobal(state, "reset");
+
+	lua_pushlightuserdata(state, this);
+	lua_pushcclosure(state, Console::LSandbox, 1);
+	lua_setglobal(state, "sandbox");
 }
 
 /**
@@ -204,6 +208,20 @@ int Console::LReinit(lua_State *state)
 	// immediately.
 	lua_pushstring(state, "Console script environment reinitialization complete.");
 	return lua_error(state);
+}
+
+int Console::LSandbox(lua_State *state)
+{
+	// function sandbox()
+	// Activate the security sandbox.
+	// In the context of the console, this is mainly just for testing purposes.
+	// This protects critical tables from metatable modification and
+	// deactivates functions that could break out of the sandbox.
+	Console *self = static_cast<Console*>(lua_touserdata(state, lua_upvalueindex(1)));
+	self->scripting->ActivateSandbox();
+	self->LogInfo("Security sandbox activated.");
+	self->LogInfo("Call reset() to deactivate the sandbox.");
+	return 0;
 }
 
 // Console::LogStreamBuf

@@ -74,6 +74,7 @@ class Console
 		static int LClear(lua_State *state);
 		static int LReset(lua_State *state);
 		static int LReinit(lua_State *state);
+		static int LSandbox(lua_State *state);
 
 	private:
 		Script::Env *scripting;

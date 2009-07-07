@@ -36,6 +36,15 @@ using HoverRace::Util::OS;
 	lua_pushstring((st), (name)); \
 	lua_call((st), 1, 0)
 
+#define UNDEF_LUA_GLOBAL(state, name) \
+	lua_pushnil(state); \
+	lua_setglobal((state), (name))
+
+#define DISALLOW_LUA_GLOBAL(state, name) \
+	lua_pushstring((state), (name)); \
+	lua_pushcclosure((state), Env::LSandboxedFunction, 1); \
+	lua_setglobal((state), (name))
+
 Env::Env()
 {
 	state = luaL_newstate();
@@ -53,6 +62,8 @@ Env::~Env()
 /**
  * Reset changes to the global environment.
  * This is used for fixing accidental changes to globals.
+ * Note that this will effectively deactivate the security sandbox.
+ * Call ActivateSandbox() to reactivate if necessary.
  * The state returned by GetState() is otherwise unchanged.
  */
 void Env::Reset()
@@ -67,6 +78,61 @@ void Env::Reset()
 	lua_pushlightuserdata(state, this);
 	lua_pushcclosure(state, Env::LPrint, 1);
 	lua_setglobal(state, "print");
+
+	// Remove the metatable protection from the global table.
+	// We don't need to do the same to the string metatable, since
+	// luaopen_string handles that for us.
+	lua_getglobal(state, "_G");
+	lua_pushnil(state);
+	lua_setmetatable(state, 1);
+	lua_pop(state, 1);
+}
+
+/**
+ * Activate the security sandbox.
+ * This guards against methods a script may use to access the filesystem
+ * or break out of the sandbox.
+ */
+void Env::ActivateSandbox()
+{
+	// Create a reusable metatable protector.
+	// This prevents modification of the metatable.
+	lua_newtable(state);
+	lua_pushboolean(state, 1);
+	lua_setfield(state, 1, "__metatable");
+	int metatableProtector = luaL_ref(state, LUA_REGISTRYINDEX);
+
+	// Protect the metatable for the global table.
+	// We do this instead of just destroying/replacing the "_G" global so that
+	// users can still query the table for a list of keys, etc.
+	lua_getglobal(state, "_G");
+	lua_rawgeti(state, LUA_REGISTRYINDEX, metatableProtector);
+	lua_setmetatable(state, 1);
+	lua_pop(state, 1);
+
+	// Protect the shared metatable for strings.
+	lua_pushstring(state, "");
+	lua_getmetatable(state, 1);
+	lua_pushboolean(state, 1);
+	lua_setfield(state, 2, "__metatable");
+	lua_pop(state, 2);
+
+	// Clean up the registry.
+	luaL_unref(state, LUA_REGISTRYINDEX, metatableProtector);
+
+	// Mostly based on the list at: http://lua-users.org/wiki/SandBoxes
+	DISALLOW_LUA_GLOBAL(state, "collectgarbage");
+	DISALLOW_LUA_GLOBAL(state, "dofile");
+	DISALLOW_LUA_GLOBAL(state, "getfenv");
+	DISALLOW_LUA_GLOBAL(state, "load");
+	DISALLOW_LUA_GLOBAL(state, "loadfile");
+	DISALLOW_LUA_GLOBAL(state, "loadstring");
+	DISALLOW_LUA_GLOBAL(state, "module");
+	DISALLOW_LUA_GLOBAL(state, "rawequal");
+	DISALLOW_LUA_GLOBAL(state, "rawget");
+	DISALLOW_LUA_GLOBAL(state, "rawset");
+	DISALLOW_LUA_GLOBAL(state, "require");
+	DISALLOW_LUA_GLOBAL(state, "setfenv");
 }
 
 /**
@@ -183,4 +249,10 @@ int Env::LPrint(lua_State *state)
 	oss << std::endl;
 
 	return 0;
+}
+
+int Env::LSandboxedFunction(lua_State *state)
+{
+	const char *name = lua_tostring(state, lua_upvalueindex(1));
+	return luaL_error(state, "Disallowed access to protected function: %s", name);
 }
