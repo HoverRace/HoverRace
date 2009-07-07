@@ -189,6 +189,7 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 			SetDlgItemTextW(pWindow, IDC_WEAPONS_CHK, Str::UW(_("Weapons")));
 			SetDlgItemTextW(pWindow, IDOK, Str::UW(_("OK")));
 			SetDlgItemTextW(pWindow, IDCANCEL, Str::UW(_("Cancel")));
+			SetDlgItemTextW(pWindow, IDC_OPEN_FOLDER, Str::UW(_("Open Download Folder")));
 			SetDlgItemTextW(pWindow, IDC_CRAFTS_BOX, Str::UW(_("Crafts")));
 			SetDlgItemTextW(pWindow, IDC_OPTIONS_BOX, Str::UW(_("Options")));
 			// this may require re-thinking if more crafts are to be added
