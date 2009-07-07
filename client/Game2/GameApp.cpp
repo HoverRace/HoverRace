@@ -1080,6 +1080,29 @@ BOOL MR_GameApp::InitGame()
 	if(lReturnValue) {
 		mVideoBuffer = new MR_VideoBuffer(mMainWindow,
 			cfg->video.gamma, cfg->video.contrast, cfg->video.brightness);
+
+		// Attempt to create the sound service.
+		// We do this early so we can notify the user of any errors
+		// and let it switch to silent mode.
+		if (!SOUNDSERVER_INIT(mMainWindow)) {
+			std::string errMsg;
+			errMsg += _("There was a problem setting up the sound device.");
+			errMsg += "\r\n";
+			errMsg += _("Sound will be disabled for this session.");
+			errMsg += "\r\n\r\n";
+			errMsg += _("If this is your first time running HoverRace, try restarting your computer.");
+			errMsg += "\r\n\r\n";
+			errMsg += _("The specific error was:");
+			errMsg += "\r\n";
+			errMsg += MR_SoundServer::GetInitError();
+			MessageBoxW(mMainWindow, Str::UW(errMsg.c_str()), PACKAGE_NAME_L, MB_ICONWARNING);
+			RefreshTitleBar();  // To add the "silent mode" marker.
+		}
+		else {
+			// Stop the sound service so it doesn't interfere with the
+			// intro movie.
+			MR_SoundServer::Close();
+		}
 	}
 
 	// attempt to set the video mode

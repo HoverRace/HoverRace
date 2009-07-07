@@ -27,6 +27,7 @@
 #include "../../engine/Util/OS.h"
 #include "../../engine/Util/Str.h"
 #include "../../engine/VideoServices/VideoBuffer.h"
+#include "../../engine/VideoServices/SoundServer.h"
 
 #include "GameApp.h"
 
@@ -193,10 +194,7 @@ BOOL VideoAudioPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPA
 
 			SetDlgItemTextW(pWindow, IDC_AUDIO_GROUP, Str::UW(_("Audio")));
 			SetDlgItemTextW(pWindow, IDC_VOLUME, Str::UW(_("Volume")));
-			SetDlgItemTextW(pWindow, IDC_AUDIO_STATUS,
-				cfg->runtime.silent ?
-				Str::UW(_("HoverRace is currently in silent mode.")) :
-				"");
+			UpdateAudioStatus(pWindow);
 
 			SetDlgItemTextW(pWindow, IDC_FULLSCREEN_GROUP, Str::UW(_("Fullscreen Settings")));
 			SetDlgItemTextW(pWindow, IDC_MONITOR_LBL, Str::UW(_("Fullscreen Monitor")));
@@ -315,4 +313,19 @@ void VideoAudioPrefsPage::UpdateIntensityDialogLabels(HWND pWindow)
 	SetDlgItemText(pWindow, IDC_CONTRAST_TXT, str(lblFmt % (contrast / 100.0)).c_str());
 	SetDlgItemText(pWindow, IDC_BRIGHTNESS_TXT, str(lblFmt % (brightness / 100.0)).c_str());
 	SetDlgItemText(pWindow, IDC_SFX_VOLUME_TXT, str(lblFmt % (sfxVolume / 100.0)).c_str());
+}
+
+/**
+ * Update the audio status label.
+ * The status label is used to explain to the user why there is no sound,
+ * so they don't keep trying to fiddle with the volume slider.
+ * @param hwnd Dialog handle.
+ */
+void VideoAudioPrefsPage::UpdateAudioStatus(HWND hwnd)
+{
+	std::string status = MR_SoundServer::GetInitError();
+	if (status.length() == 0 && Config::GetInstance()->runtime.silent) {
+		status = _("HoverRace is currently in silent mode.");
+	}
+	SetDlgItemTextW(hwnd, IDC_AUDIO_STATUS, Str::UW(status.c_str()));
 }

@@ -51,6 +51,7 @@ class VideoAudioPrefsPage : public PrefsPage
 
 	private:
 		static void UpdateIntensityDialogLabels(HWND pWindow);
+		static void UpdateAudioStatus(HWND hwnd);
 
 	private:
 		MR_GameApp *app;

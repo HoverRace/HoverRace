@@ -46,6 +46,9 @@ using HoverRace::Util::Config;
 #define MR_MAX_SOUND_COPY 6
 
 static bool soundDisabled = false;
+#ifdef WITH_OPENAL
+	static ALenum initErrorCode = ALUT_ERROR_NO_ERROR;
+#endif
 
 #ifndef WITH_OPENAL
 // Adapted from http://www.gamedev.net/community/forums/topic.asp?topic_id=337397
@@ -514,6 +517,10 @@ bool MR_SoundServer::Init(
 
 #ifdef WITH_OPENAL
 	lReturnValue = (alutInit(NULL, NULL) == AL_TRUE);
+	if (!lReturnValue) {
+		initErrorCode = alutGetError();
+		Config::GetInstance()->runtime.silent = soundDisabled = true;
+	}
 #else
 	if(gDirectSound == NULL) {
 		if(DirectSoundCreate(NULL, &gDirectSound, NULL) == DS_OK) {
@@ -545,6 +552,21 @@ void MR_SoundServer::Close()
 		gDirectSound->Release();
 		gDirectSound = NULL;
 	}
+#endif
+}
+
+/**
+ * Retrieve the error message from the initialization.
+ * Use this function to get details if MR_SoundServer::Init() failed.
+ * @return The error message (will be empty if there was no error).
+ */
+std::string MR_SoundServer::GetInitError()
+{
+#ifdef WITH_OPENAL
+	return (initErrorCode == ALUT_ERROR_NO_ERROR) ? "" :
+		alutGetErrorString(initErrorCode);
+#else
+	return "";
 #endif
 }
 

@@ -24,6 +24,8 @@
 #ifndef SOUND_SERVER_H
 #define SOUND_SERVER_H
 
+#include <string>
+
 #ifdef _WIN32
 #	ifdef MR_ENGINE
 #		define MR_DllDeclare   __declspec( dllexport )
@@ -46,6 +48,8 @@ namespace MR_SoundServer
 #		endif
 		);
 	MR_DllDeclare void Close();
+
+	MR_DllDeclare std::string GetInitError();
 
 	MR_DllDeclare MR_ShortSound *CreateShortSound(const char *pData, int pNbCopy);
 	MR_DllDeclare void DeleteShortSound(MR_ShortSound * pSound);
