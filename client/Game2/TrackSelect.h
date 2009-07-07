@@ -25,7 +25,7 @@
 
 #include <string>
 
-#include "../../engine/Util/RecordFile.h"
+class MR_RecordFile;
 
 // for gsGameOpts
 #define OPT_ALLOW_WEAPONS	0x40
