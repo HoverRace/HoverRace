@@ -82,7 +82,7 @@ void Env::Reset()
 	// Remove the metatable protection from the global table.
 	// We don't need to do the same to the string metatable, since
 	// luaopen_string handles that for us.
-	lua_getglobal(state, "_G");
+	lua_pushvalue(state, LUA_GLOBALSINDEX);
 	lua_pushnil(state);
 	lua_setmetatable(state, 1);
 	lua_pop(state, 1);
@@ -108,7 +108,7 @@ void Env::ActivateSandbox()
 	// Protect the metatable for the global table.
 	// We do this instead of just destroying/replacing the "_G" global so that
 	// users can still query the table for a list of keys, etc.
-	lua_getglobal(state, "_G");
+	lua_pushvalue(state, LUA_GLOBALSINDEX);
 	lua_rawgeti(state, LUA_REGISTRYINDEX, metatableProtector);
 	lua_setmetatable(state, -2);
 	lua_pop(state, 1);
