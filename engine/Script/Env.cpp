@@ -95,11 +95,14 @@ void Env::Reset()
  */
 void Env::ActivateSandbox()
 {
+	if (!lua_checkstack(state, 2))
+		throw ScriptExn("Out of stack space.");
+
 	// Create a reusable metatable protector.
 	// This prevents modification of the metatable.
 	lua_newtable(state);
 	lua_pushboolean(state, 1);
-	lua_setfield(state, 1, "__metatable");
+	lua_setfield(state, -2, "__metatable");
 	int metatableProtector = luaL_ref(state, LUA_REGISTRYINDEX);
 
 	// Protect the metatable for the global table.
@@ -107,14 +110,14 @@ void Env::ActivateSandbox()
 	// users can still query the table for a list of keys, etc.
 	lua_getglobal(state, "_G");
 	lua_rawgeti(state, LUA_REGISTRYINDEX, metatableProtector);
-	lua_setmetatable(state, 1);
+	lua_setmetatable(state, -2);
 	lua_pop(state, 1);
 
 	// Protect the shared metatable for strings.
 	lua_pushstring(state, "");
-	lua_getmetatable(state, 1);
+	lua_getmetatable(state, -1);
 	lua_pushboolean(state, 1);
-	lua_setfield(state, 2, "__metatable");
+	lua_setfield(state, -2, "__metatable");
 	lua_pop(state, 2);
 
 	// Clean up the registry.
