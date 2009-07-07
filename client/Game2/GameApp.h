@@ -89,11 +89,8 @@ class MR_GameApp
 		time_t mNbFramesStartingTime;
 		int mNbFrames;
 
-		void SetProperties();
 		static LRESULT CALLBACK DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
-		static BOOL CALLBACK ControlDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 		static BOOL CALLBACK BadModeDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
-		static LRESULT CALLBACK PressKeyDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 
 		BOOL CreateMainWindow();
 		bool CreateMainMenu();
