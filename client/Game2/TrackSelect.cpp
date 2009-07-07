@@ -27,12 +27,12 @@
 #include "../../compilers/MazeCompiler/TrackCommonStuff.h"
 #include "../../engine/Util/StrRes.h"
 #include "../../engine/Util/Config.h"
+#include "../../engine/Util/OS.h"
 #include "../../engine/Util/Str.h"
 
 #include <algorithm>
 
 using namespace HoverRace::Util;
-using HoverRace::Util::Config;
 
 class TrackEntry
 {
@@ -255,6 +255,12 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 							break;
 					}
 					break;
+
+				case IDC_OPEN_FOLDER:
+					OS::OpenLink(Config::GetInstance()->GetTrackPath());
+					EndDialog(pWindow, IDCANCEL);
+					break;
+
 				case IDCANCEL:
 					EndDialog(pWindow, IDCANCEL);
 					lReturnValue = TRUE;
