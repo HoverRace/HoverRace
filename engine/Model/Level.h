@@ -34,7 +34,7 @@
 
 // Defines
 #define MR_NB_MAX_PLAYER    32
-#define MR_NB_PERNET_ACTORS 128
+#define MR_NB_PERNET_ACTORS 512
 
 // for game options (also found in TrackSelect.h)
 #define OPT_ALLOW_WEAPONS	0x40
