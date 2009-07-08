@@ -229,7 +229,7 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 			else {
 				gsSelectedEntry = -1;
 				SendDlgItemMessage(pWindow, IDOK, WM_ENABLE, FALSE, 0);
-				SetDlgItemTextW(pWindow, IDC_DESCRIPTION, Str::UW(_(" no selection")));
+				SetDlgItemTextW(pWindow, IDC_DESCRIPTION, Str::UW(_("no selection")));
 				SendDlgItemMessage(pWindow, IDC_LIST, LB_SETCURSEL, -1, 0);
 			}
 
@@ -248,7 +248,7 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 							gsSelectedEntry = SendDlgItemMessage(pWindow, IDC_LIST, LB_GETCURSEL, 0, 0);
 							if (gsSortedTrackList.empty() || (gsSelectedEntry == -1)) {
 								SendDlgItemMessage(pWindow, IDOK, WM_ENABLE, FALSE, 0);
-								SetDlgItemTextW(pWindow, IDC_DESCRIPTION, Str::UW(_(" no selection")));
+								SetDlgItemTextW(pWindow, IDC_DESCRIPTION, Str::UW(_("no selection")));
 							}
 							else {
 								SendDlgItemMessage(pWindow, IDOK, WM_ENABLE, TRUE, 0);
@@ -357,6 +357,7 @@ BOOL ReadTrackEntry(MR_RecordFile * pRecordFile, TrackEntry * pDest, const char 
 
 			CString cs;
 			lArchive >> cs;
+			cs.Replace("\n", "\r\n");
 			pDest->mDescription = cs;
 			lArchive >> lMinorID;
 			lArchive >> lMajorID;

@@ -224,9 +224,8 @@ BEGIN
     LISTBOX         IDC_LIST,7,17,111,137,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | 
                     WS_TABSTOP
     LTEXT           "Description",IDC_DESC_LBL,125,7,173,8
-    CONTROL         "no selection",IDC_DESCRIPTION,"Static",
-                    SS_LEFTNOWORDWRAP | WS_GROUP,125,17,173,71,
-                    WS_EX_CLIENTEDGE
+    EDITTEXT        IDC_DESCRIPTION,125,17,173,71,ES_MULTILINE | ES_READONLY | 
+                    WS_VSCROLL
     GROUPBOX        "Crafts",IDC_CRAFTS_BOX,125,92,78,62
     CONTROL         "Basic",IDC_BASIC_CHK,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,132,101,65,12
@@ -739,6 +738,7 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 177
         HORZGUIDE, 17
+        HORZGUIDE, 88
         HORZGUIDE, 154
     END
 
