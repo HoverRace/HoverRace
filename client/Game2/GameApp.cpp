@@ -1896,6 +1896,7 @@ void MR_GameApp::UpdateMenuItems()
 
 	Config *cfg = Config::GetInstance();
 	std::ostringstream oss;
+	oss.imbue(OS::stdLocale);
 	oss << pgettext("Menu|Setting", "&Fullscreen");
 	int xres = cfg->video.xResFullscreen;
 	int yres = cfg->video.yResFullscreen;
