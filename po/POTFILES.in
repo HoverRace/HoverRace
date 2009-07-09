@@ -2,7 +2,6 @@
 client/Game2/AboutDialog.cpp
 client/Game2/Banner.cpp
 client/Game2/ClientSession.cpp
-client/Game2/CommonDialog.cpp
 client/Game2/Console.cpp
 client/Game2/ControlPrefsPage.cpp
 client/Game2/Controller.cpp
