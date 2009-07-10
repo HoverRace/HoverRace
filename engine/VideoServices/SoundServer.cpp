@@ -518,8 +518,15 @@ bool MR_SoundServer::Init(
 #ifdef WITH_OPENAL
 	lReturnValue = (alutInit(NULL, NULL) == AL_TRUE);
 	if (!lReturnValue) {
-		initErrorCode = alutGetError();
-		Config::GetInstance()->runtime.silent = soundDisabled = true;
+		ALenum code = alutGetError();
+		if (code == ALUT_ERROR_INVALID_OPERATION) {
+			// OpenAL already initialized.
+			lReturnValue = true;
+		}
+		else {
+			initErrorCode = code;
+			Config::GetInstance()->runtime.silent = soundDisabled = true;
+		}
 	}
 #else
 	if(gDirectSound == NULL) {
