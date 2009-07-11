@@ -210,8 +210,6 @@ BEGIN
     LTEXT           "Fullscreen Resolution",IDC_FS_RES,229,52,128,8
     COMBOBOX        IDC_RES,229,63,127,30,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
-    PUSHBUTTON      "&Test Fullscreen",IDC_TEST_FULLSCREEN,229,86,80,14,NOT 
-                    WS_VISIBLE
 END
 
 IDD_TRACK_SELECT DIALOGEX 0, 0, 305, 184
