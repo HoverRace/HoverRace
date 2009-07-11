@@ -1890,16 +1890,27 @@ void MR_GameApp::DrawBackground()
 
 void MR_GameApp::UpdateMenuItems()
 {
+	// Only update the menu if the fullscreen resolution actually changed.
+	static int curX = 0;
+	static int curY = 0;
+	Config *cfg = Config::GetInstance();
+	int xres = cfg->video.xResFullscreen;
+	int yres = cfg->video.yResFullscreen;
+	if (xres == curX && yres == curY) {
+		return;
+	}
+	else {
+		curX = xres;
+		curY = yres;
+	}
+
 	MENUITEMINFOW lMenuInfo;
 	memset(&lMenuInfo, 0, sizeof(lMenuInfo));
 	lMenuInfo.cbSize = sizeof(lMenuInfo);
 
-	Config *cfg = Config::GetInstance();
 	std::ostringstream oss;
 	oss.imbue(OS::stdLocale);
 	oss << pgettext("Menu|Setting", "&Fullscreen");
-	int xres = cfg->video.xResFullscreen;
-	int yres = cfg->video.yResFullscreen;
 	if (xres > 0 && yres > 0) {
 		oss << " (" << xres << 'x' << yres << ')';
 	}
@@ -1914,7 +1925,7 @@ void MR_GameApp::UpdateMenuItems()
 	HMENU lMenu = GetMenu(mMainWindow);
 	SetMenuItemInfoW(lMenu, ID_SETTING_FULLSCREEN, FALSE, &lMenuInfo);
 
-	free(ws);
+	OS::Free(ws);
 }
 
 LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
