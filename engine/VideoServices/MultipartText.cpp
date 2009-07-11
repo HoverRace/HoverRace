@@ -188,7 +188,7 @@ MultipartText::~MultipartText()
 	}
 }
 
-const Font &MultipartText::GetFont() const
+const HoverRace::VideoServices::Font &MultipartText::GetFont() const
 {
 	return font;
 }
