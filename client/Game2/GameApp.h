@@ -30,6 +30,9 @@ class MR_GameApp;
 class HighObserver;
 namespace HoverRace {
 	class HighConsole;
+	namespace Client {
+		class FullscreenTest;
+	}
 }
 
 class MR_GameThread
@@ -74,6 +77,7 @@ class MR_GameApp
 		MR_Observer *mObserver4;
 		HighObserver *highObserver;
 		HoverRace::HighConsole *highConsole;
+		HoverRace::Client::FullscreenTest *fullscreenTest;
 		MR_ClientSession *mCurrentSession;
 		MR_GameThread *mGameThread;
 
@@ -96,7 +100,8 @@ class MR_GameApp
 		bool CreateMainMenu();
 
 		void RefreshView();
-		bool SetVideoMode(int pX, int pY, const std::string *monitor=NULL);
+		bool SetVideoMode(int pX, int pY, const std::string *monitor=NULL,
+			bool testing=false);
 		void RefreshTitleBar();
 
 		void OnChar(char c);
@@ -130,6 +135,7 @@ class MR_GameApp
 		void DisplayHelp();
 		void DisplaySite();
 		void DisplayAbout();
+		void DisplayPrefs();
 
 		BOOL IsGameRunning();					  // return TRUE if a not terminated game is running
 		int AskUserToAbortGame();				  // Return IDOK if OK

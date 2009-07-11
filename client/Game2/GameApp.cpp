@@ -26,6 +26,7 @@
 #include "GameApp.h"
 #include "AboutDialog.h"
 #include "FirstChoiceDialog.h"
+#include "FullscreenTest.h"
 #include "Controller.h"
 #include "resource.h"
 #include "NetworkSession.h"
@@ -574,6 +575,7 @@ MR_GameApp::MR_GameApp(HINSTANCE pInstance, bool safeMode)
 	mObserver4 = NULL;
 	highObserver = NULL;
 	highConsole = NULL;
+	fullscreenTest = NULL;
 	mCurrentSession = NULL;
 	mGameThread = NULL;
 
@@ -794,6 +796,40 @@ void MR_GameApp::DisplayAbout()
 	SetVideoMode(0, 0);
 	AboutDialog().ShowModal(mInstance, mMainWindow);
 	AssignPalette();
+}
+
+void MR_GameApp::DisplayPrefs()
+{
+	const Config *cfg = Config::GetInstance();
+	FullscreenTest *ftest =
+		new FullscreenTest(
+			cfg->video.xResFullscreen,
+			cfg->video.yResFullscreen,
+			cfg->video.fullscreenMonitor);
+
+	SetVideoMode(0, 0);
+	PrefsDialog(This).ShowModal(mInstance, mMainWindow);
+	
+	if (ftest->ShouldActivateTest(mMainWindow)) {
+		DeleteMovieWnd();
+
+		fullscreenTest = ftest;
+		SetVideoMode(cfg->video.xResFullscreen,
+			cfg->video.yResFullscreen,
+			&cfg->video.fullscreenMonitor,
+			true);
+
+		if (mVideoBuffer != NULL) {
+			while (mVideoBuffer->IsModeSettingInProgress()) {
+				Sleep(0);
+			}
+			AssignPalette();
+			fullscreenTest->Render(mVideoBuffer);
+		}
+	}
+	else {
+		delete ftest;
+	}
 }
 
 int MR_GameApp::MainLoop()
@@ -1322,10 +1358,11 @@ void MR_GameApp::ReadAsyncInputController()
 	}
 }
 
-bool MR_GameApp::SetVideoMode(int pX, int pY, const std::string *monitor)
+bool MR_GameApp::SetVideoMode(int pX, int pY, const std::string *monitor, bool testing)
 {
 	if(mVideoBuffer != NULL) {
 		bool lSuccess;
+		bool stayPaused = false;
 
 		PauseGameThread();
 
@@ -1333,8 +1370,6 @@ bool MR_GameApp::SetVideoMode(int pX, int pY, const std::string *monitor)
 
 		if(pX == 0) {
 			lSuccess = mVideoBuffer->SetVideoMode();
-
-			SetTimer(mMainWindow, MRM_RETURN2WINDOWMODE, 3000, NULL);
 		}
 		else {
 			GUID *guid = NULL;
@@ -1350,11 +1385,18 @@ bool MR_GameApp::SetVideoMode(int pX, int pY, const std::string *monitor)
 			lSuccess = mVideoBuffer->SetVideoMode(pX, pY, guid);
 			free(guid);
 			AssignPalette();
+
+			if (testing) {
+				SetTimer(mMainWindow, MRM_RETURN2WINDOWMODE, 1000, NULL);
+				stayPaused = true;
+			}
 		}
 
-		RestartGameThread();
+		if (!stayPaused) {
+			RestartGameThread();
+		}
 
-		// OnDisplayChange();
+		//OnDisplayChange();
 		return lSuccess;
 	} else
 		return false;
@@ -1795,15 +1837,19 @@ HoverRace::Client::Control::Controller *MR_GameApp::ReloadController()
 	return (controller = new HoverRace::Client::Control::Controller(This->mMainWindow));
 }
 
+/*
 void MR_GameApp::NewInternetSessionCall()
 {
 	This->NewInternetSession();
 }
+*/
 
 // void* gNewInternetSessionPtr = (void*)(unsigned int)((unsigned int)MR_GameApp::NewInternetSessionCall-112);
+/*
 unsigned int gNewInternetSessionPtrZ = (unsigned int) MR_GameApp::NewInternetSessionCall;
 int gDummyPadding = 125;
 unsigned int gNewInternetSessionPtr = gNewInternetSessionPtrZ - 112;
+*/
 // void* gNewInternetSessionPtr = (void*)MR_GameApp::NewInternetSessionCall;
 
 void MR_GameApp::NewInternetSession()
@@ -1973,12 +2019,27 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 		case WM_TIMER:
 			switch (pWParam) {
 				case MRM_RETURN2WINDOWMODE:
-					KillTimer(pWindow, MRM_RETURN2WINDOWMODE);
-					SetWindowPos(This->mMainWindow, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE);
+					if (This->fullscreenTest == NULL) {
+						KillTimer(pWindow, MRM_RETURN2WINDOWMODE);
+					}
+					else if (This->fullscreenTest->TickTimer()) {
+						KillTimer(pWindow, MRM_RETURN2WINDOWMODE);
+						This->SetVideoMode(0, 0);
+						SetWindowPos(This->mMainWindow, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE);
 
-					// Patch, sometime the palette is lost??
-					if(GetFocus() != NULL) {
+						// Patch, sometime the palette is lost??
+						if(GetFocus() != NULL) {
+							This->AssignPalette();
+						}
+
+						delete This->fullscreenTest;
+						This->fullscreenTest = NULL;
+
+						This->RestartGameThread();
+					}
+					else {
 						This->AssignPalette();
+						This->fullscreenTest->Render(This->mVideoBuffer);
 					}
 
 					return 0;
@@ -2117,8 +2178,7 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 					return 0;
 
 				case ID_SETTING_PROPERTIES:
-					This->SetVideoMode(0, 0);
-					PrefsDialog(This).ShowModal(This->mInstance, This->mMainWindow);
+					This->DisplayPrefs();
 					break;
 
 				case ID_SETTING_WINDOW:

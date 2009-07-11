@@ -170,6 +170,12 @@
 				RelativePath=".\Game2\FirstChoiceDialog.h">
 			</File>
 			<File
+				RelativePath=".\Game2\FullscreenTest.cpp">
+			</File>
+			<File
+				RelativePath=".\Game2\FullscreenTest.h">
+			</File>
+			<File
 				RelativePath=".\Game2\Game2.rc">
 			</File>
 			<File

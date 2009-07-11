@@ -6,6 +6,7 @@ client/Game2/Console.cpp
 client/Game2/ControlPrefsPage.cpp
 client/Game2/Controller.cpp
 client/Game2/FirstChoiceDialog.cpp
+client/Game2/FullscreenTest.cpp
 client/Game2/GameApp.cpp
 client/Game2/HighConsole.cpp
 client/Game2/HighObserver.cpp
