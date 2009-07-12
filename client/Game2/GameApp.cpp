@@ -1837,21 +1837,6 @@ HoverRace::Client::Control::Controller *MR_GameApp::ReloadController()
 	return (controller = new HoverRace::Client::Control::Controller(This->mMainWindow));
 }
 
-/*
-void MR_GameApp::NewInternetSessionCall()
-{
-	This->NewInternetSession();
-}
-*/
-
-// void* gNewInternetSessionPtr = (void*)(unsigned int)((unsigned int)MR_GameApp::NewInternetSessionCall-112);
-/*
-unsigned int gNewInternetSessionPtrZ = (unsigned int) MR_GameApp::NewInternetSessionCall;
-int gDummyPadding = 125;
-unsigned int gNewInternetSessionPtr = gNewInternetSessionPtrZ - 112;
-*/
-// void* gNewInternetSessionPtr = (void*)MR_GameApp::NewInternetSessionCall;
-
 void MR_GameApp::NewInternetSession()
 {
 	BOOL lSuccess = TRUE;
