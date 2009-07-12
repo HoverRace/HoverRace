@@ -33,6 +33,9 @@
 
 #include "FullscreenTest.h"
 
+using boost::format;
+using boost::str;
+
 using namespace HoverRace::Client;
 using namespace HoverRace::Util;
 using namespace HoverRace::VideoServices;
@@ -46,13 +49,14 @@ using namespace HoverRace::VideoServices;
 FullscreenTest::FullscreenTest(int oldX, int oldY, const std::string &oldMonitor) :
 	oldX(oldX), oldY(oldY), oldMonitor(oldMonitor),
 	viewport(new MR_2DViewPort()), widgetsInitialized(false),
-	heading(NULL),
+	heading(NULL), subheading(NULL),
 	timeRemaining(5)
 {
 }
 
 FullscreenTest::~FullscreenTest()
 {
+	delete subheading;
 	delete heading;
 	delete viewport;
 }
@@ -91,11 +95,38 @@ bool FullscreenTest::TickTimer()
 	return timeRemaining == 0;
 }
 
-void FullscreenTest::InitWidgets(int resY)
+int FullscreenTest::ScaleFont(int i, int resY)
 {
-	Font headingFont("Arial", 20 * resY / 480, true);
+	// Assume that font sizes given are relative to a 640x480 screen.
+	return i * resY / 480;
+}
+
+void FullscreenTest::UpdateSubheading(int resY)
+{
+	// Keep these translations short -- the user doesn't have much time to read them!
+	const char *text = ngettext(
+		"Returning in %d second.",
+		"Returning in %d seconds.",
+		timeRemaining);
+	std::string subheadingStr = str(format(text) % timeRemaining);
+	if (subheading == NULL) {
+		Font subheadingFont("Arial", ScaleFont(16, resY), true);
+		subheading = new StaticText(subheadingStr, subheadingFont, 0x10);
+	}
+	else {
+		subheading->SetText(subheadingStr);
+	}
+}
+
+void FullscreenTest::InitWidgets(int resX, int resY)
+{
+	Font headingFont("Arial", ScaleFont(20, resY), true);
 	
-	heading = new StaticText(_("HoverRace fullscreen settings test"), headingFont, 0x08);
+	// Keep these translations short -- the user doesn't have much time to read them!
+	std::string headingStr = _("HoverRace fullscreen test");
+	headingStr += ": ";
+	headingStr += str(format("%dx%d", OS::stdLocale) % resX % resY);
+	heading = new StaticText(headingStr, headingFont, 0x0c);
 }
 
 /**
@@ -109,9 +140,10 @@ void FullscreenTest::Render(MR_VideoBuffer *dest)
 	int resX = dest->GetXRes();
 	int resY = dest->GetYRes();
 	if (!widgetsInitialized) {
-		InitWidgets(resY);
+		InitWidgets(resX, resY);
 		widgetsInitialized = true;
 	}
+	UpdateSubheading(resY);
 
 	dest->Lock();
 	dest->Clear(0);
@@ -120,8 +152,9 @@ void FullscreenTest::Render(MR_VideoBuffer *dest)
 	int leftMargin = resX / 20;
 	int curY = resY / 2 - heading->GetHeight();
 	heading->Blt(leftMargin, curY, viewport);
-	//curY += heading->GetHeight();
+	curY += heading->GetHeight();
+
+	subheading->Blt(leftMargin, curY, viewport);
 
 	dest->Unlock();
 }
-

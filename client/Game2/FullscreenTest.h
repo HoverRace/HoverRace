@@ -48,7 +48,9 @@ class FullscreenTest {
 		bool TickTimer();
 
 	private:
-		void InitWidgets(int resY);
+		static int ScaleFont(int i, int resY);
+		void UpdateSubheading(int resY);
+		void InitWidgets(int resX, int resY);
 	public:
 		void Render(MR_VideoBuffer *dest);
 
@@ -59,6 +61,7 @@ class FullscreenTest {
 		MR_2DViewPort *viewport;
 		bool widgetsInitialized;
 		VideoServices::StaticText *heading;
+		VideoServices::StaticText *subheading;
 
 		int timeRemaining;
 };
