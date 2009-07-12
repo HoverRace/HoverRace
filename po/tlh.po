@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
 "Report-Msgid-Bugs-To: bugs@hoverrace.com\n"
-"POT-Creation-Date: 2009-07-08 23:16-0400\n"
+"POT-Creation-Date: 2009-07-12 05:08-0400\n"
 "PO-Revision-Date: 2009-03-05 15:28-0500\n"
 "Last-Translator:  <ryan@igglybob.com>\n"
 "Language-Team: Language tlh\n"
@@ -277,173 +277,189 @@ msgid ""
 "help."
 msgstr ""
 
-#: client/Game2/GameApp.cpp:751
+#: client/Game2/FullscreenTest.cpp:78
+msgid ""
+"Fullscreen settings have changed.  Would you like to test these changes?"
+msgstr ""
+
+#: client/Game2/FullscreenTest.cpp:108
+#, c-format, boost-format
+msgid "Returning in %d second."
+msgid_plural "Returning in %d seconds."
+msgstr[0] ""
+msgstr[1] ""
+
+#: client/Game2/FullscreenTest.cpp:126
+msgid "HoverRace fullscreen test"
+msgstr ""
+
+#: client/Game2/GameApp.cpp:753
 msgid "Abort current game?"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:777
+#: client/Game2/GameApp.cpp:779
 msgid ""
 "To be able to display HoverRace Help\n"
 "you must have a Word document viewer installed\n"
 "on your system."
 msgstr ""
 
-#: client/Game2/GameApp.cpp:952
+#: client/Game2/GameApp.cpp:988
 msgctxt "Menu|File|Split Screen"
 msgid "&2 Player"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:954
+#: client/Game2/GameApp.cpp:990
 msgctxt "Menu|File|Split Screen"
 msgid "&3 Player"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:956
+#: client/Game2/GameApp.cpp:992
 msgctxt "Menu|File|Split Screen"
 msgid "&4 Player"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:961
+#: client/Game2/GameApp.cpp:997
 msgctxt "Menu|File|Network"
 msgid "&Connect to server"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:963
+#: client/Game2/GameApp.cpp:999
 msgctxt "Menu|File|Network"
 msgid "Create a &server"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:966
+#: client/Game2/GameApp.cpp:1002
 msgctxt "Menu|File|Network"
 msgid "&Internet Meeting Room"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:971
+#: client/Game2/GameApp.cpp:1007
 msgctxt "Menu|File"
 msgid "&Internet"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:973
+#: client/Game2/GameApp.cpp:1009
 msgctxt "Menu|File"
 msgid "&Practice"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:975
+#: client/Game2/GameApp.cpp:1011
 msgctxt "Menu|File"
 msgid "&Split Screen"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:977
+#: client/Game2/GameApp.cpp:1013
 msgctxt "Menu|File"
 msgid "&Network"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:980
+#: client/Game2/GameApp.cpp:1016
 msgctxt "Menu|File"
 msgid "E&xit"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:985
+#: client/Game2/GameApp.cpp:1021
 msgctxt "Menu|View"
 msgid "&Following Camera"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:987
+#: client/Game2/GameApp.cpp:1023
 msgctxt "Menu|View"
 msgid "&Cockpit"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:990
+#: client/Game2/GameApp.cpp:1026
 msgctxt "Menu|View"
 msgid "&Players list"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:992
+#: client/Game2/GameApp.cpp:1028
 msgctxt "Menu|View"
 msgid "More &messages"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:995
+#: client/Game2/GameApp.cpp:1031
 msgctxt "Menu|View"
 msgid "&Refresh colors"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:1000 client/Game2/GameApp.cpp:1900
+#: client/Game2/GameApp.cpp:1036 client/Game2/GameApp.cpp:1944
 msgctxt "Menu|Setting"
 msgid "&Fullscreen"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:1002
+#: client/Game2/GameApp.cpp:1038
 msgctxt "Menu|Setting"
 msgid "&Window"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:1005
+#: client/Game2/GameApp.cpp:1041
 msgctxt "Menu|Setting"
 msgid "&Preferences"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:1010
+#: client/Game2/GameApp.cpp:1046
 msgctxt "Menu|Help"
 msgid "&Contents"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:1016
+#: client/Game2/GameApp.cpp:1052
 msgctxt "Menu|Help"
 msgid "&About HoverRace"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:1021
+#: client/Game2/GameApp.cpp:1057
 msgctxt "Menu"
 msgid "&File"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:1023
+#: client/Game2/GameApp.cpp:1059
 msgctxt "Menu"
 msgid "&View"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:1025
+#: client/Game2/GameApp.cpp:1061
 msgctxt "Menu"
 msgid "&Setting"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:1027
+#: client/Game2/GameApp.cpp:1063
 msgctxt "Menu"
 msgid "&Help"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:1040
+#: client/Game2/GameApp.cpp:1076
 msgctxt "Version"
 msgid "testing"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:1043
+#: client/Game2/GameApp.cpp:1079
 msgid "silent mode"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:1061
+#: client/Game2/GameApp.cpp:1097
 msgid "Unable to initialize: Unable to find suitable rich text DLL."
 msgstr ""
 
-#: client/Game2/GameApp.cpp:1089
+#: client/Game2/GameApp.cpp:1125
 msgid "There was a problem setting up the sound device."
 msgstr ""
 
-#: client/Game2/GameApp.cpp:1091
+#: client/Game2/GameApp.cpp:1127
 msgid "Sound will be disabled for this session."
 msgstr ""
 
-#: client/Game2/GameApp.cpp:1093
+#: client/Game2/GameApp.cpp:1129
 msgid ""
 "If this is your first time running HoverRace, try restarting your computer."
 msgstr ""
 
-#: client/Game2/GameApp.cpp:1095
+#: client/Game2/GameApp.cpp:1131
 msgid "The specific error was:"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:1113
+#: client/Game2/GameApp.cpp:1149
 msgid ""
 "You can play HoverRace in a Window or Fullscreen;\n"
 "to play in a Window, HoverRace will have to switch to 256 color mode.\n"
@@ -452,7 +468,7 @@ msgid ""
 "Do you want to play in Window mode and switch to 256 color?"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:1117 client/Game2/GameApp.cpp:1127
+#: client/Game2/GameApp.cpp:1153 client/Game2/GameApp.cpp:1163
 #: client/Game2/InternetRoom.cpp:1391 client/Game2/InternetRoom.cpp:2440
 #: client/Game2/TrackDownloadDialog.cpp:228
 #: client/Game2/TrackDownloadDialog.cpp:239
@@ -461,13 +477,13 @@ msgstr ""
 msgid "HoverRace"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:1126
+#: client/Game2/GameApp.cpp:1162
 msgid ""
 "HoverRace was unable to switch the video mode. You will need to play in full "
 "screen."
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2395
+#: client/Game2/GameApp.cpp:2454
 msgid ""
 "Incompatible video mode. Select a compatible video mode by pressing F8 or F9 "
 "once a game is started"
