@@ -823,7 +823,7 @@ void MR_GameApp::DisplayPrefs()
 			while (mVideoBuffer->IsModeSettingInProgress()) {
 				Sleep(0);
 			}
-			AssignPalette();
+			mVideoBuffer->AssignPalette();
 			fullscreenTest->Render(mVideoBuffer);
 		}
 	}
@@ -2038,7 +2038,10 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 						This->RestartGameThread();
 					}
 					else {
-						This->AssignPalette();
+						// Re-apply the palette before rendering.
+						// (it doesn't always take when we first switch mode).
+						This->mVideoBuffer->AssignPalette();
+
 						This->fullscreenTest->Render(This->mVideoBuffer);
 					}
 
