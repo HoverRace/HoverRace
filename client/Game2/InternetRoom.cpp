@@ -302,18 +302,12 @@ BOOL MR_InternetRequest::IsReady() const
 
 // MR_InternetRoom
 
-MR_InternetRoom::MR_InternetRoom(BOOL pAllowRegistred, int pMajorID, int pMinorID, unsigned pKey2, unsigned pKey3, const std::string &pMainServer) :
+MR_InternetRoom::MR_InternetRoom(const std::string &pMainServer) :
 	mMainServer(pMainServer), chatLog(NULL)
 {
 	int lCounter;
 
 	mBannerRequest.SetBin();
-
-	mAllowRegistred = pAllowRegistred;
-	mMajorID = pMajorID;
-	mMinorID = pMinorID;
-	mKey2 = pKey2;
-	mKey3 = pKey3;
 
 	for(lCounter = 0; lCounter < eMaxClient; lCounter++) {
 		mClientList[lCounter].mValid = FALSE;
@@ -524,7 +518,7 @@ BOOL MR_InternetRoom::AddUserOp(HWND pParentWindow)
 
 	mNetOpString = _("Connecting to the Internet Meeting Room...");
 
-	mNetOpRequest.Format("%s?=ADD_USER%%%%%d-%d%%%%1%%%%%u%%%%%u%%%%%s", (const char *) gServerList[gCurrentServerEntry].mURL, mMajorID, (mMinorID == -1) ? -2 : mMinorID, mKey2, mKey3, (const char *) MR_Pad(mUser));
+	mNetOpRequest.Format("%s?=ADD_USER%%%%%d-%d%%%%1%%%%%u%%%%%u%%%%%s", (const char *) gServerList[gCurrentServerEntry].mURL, -1, -2, 0, 0, (const char *) MR_Pad(mUser));
 
 	lReturnValue = DialogBoxW(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDD_NET_PROGRESS), pParentWindow, NetOpCallBack) == IDOK;
 
@@ -2175,6 +2169,8 @@ BOOL CALLBACK MR_InternetRoom::GetAddrCallBack(HWND pWindow, UINT pMsgId, WPARAM
 						// unsigned lNibble2[4];
 						int lServerType = -1;
 
+						OutputDebugString(lData);
+						OutputDebugString("\n");
 						sscanf(lData, "%d", &lServerType);
 
 						switch (lServerType) {
@@ -2247,14 +2243,6 @@ BOOL CALLBACK MR_InternetRoom::GetAddrCallBack(HWND pWindow, UINT pMsgId, WPARAM
 									break;
 
 							case 8:
-							case 9:
-								if((lServerType == 8) && (mThis->mMajorID >= 0)) {
-									break;
-								}
-								if((lServerType == 9) && (mThis->mMajorID < 0)) {
-									break;
-								}
-
 								if(gNbBannerEntries < MR_MAX_BANNER_ENTRIES) {
 									if(sscanf(lData, "%d %40s %u.%u.%u.%u %u %120s %d %220s", &gBannerList[gNbServerEntries].mType, lNameBuffer, &lNibble[0], &lNibble[1], &lNibble[2], &lNibble[3], &gBannerList[gNbBannerEntries].mPort, lURLBuffer, &gBannerList[gNbBannerEntries].mDelay, lClickURLBuffer) == 10) {
 										gBannerList[gNbBannerEntries].mName = lNameBuffer;
@@ -2271,6 +2259,10 @@ BOOL CALLBACK MR_InternetRoom::GetAddrCallBack(HWND pWindow, UINT pMsgId, WPARAM
 									}
 								}
 
+								break;
+
+							case 9:
+								// Ignored.
 								break;
 						}
 

@@ -120,11 +120,7 @@ class MR_InternetRoom
 		int mCurrentGameIndex;
 		int mCurrentGameId;
 
-		int mMajorID;
-		int mMinorID;
 		CString mUser;
-		unsigned mKey2;
-		unsigned mKey3;
 		// CString       mServerURL;
 		// unsigned long mServerIP;
 		// CString       mURLPath;
@@ -137,8 +133,6 @@ class MR_InternetRoom
 		int mLastRefreshTimeStamp;
 
 		HWND mModelessDlg;
-
-		BOOL mAllowRegistred;
 
 		// Temporary data
 		HANDLE mCurrentLocateRequest;
@@ -198,7 +192,7 @@ class MR_InternetRoom
 		int RefreshBanner(HWND pWindow);		  // Return next refresh time
 
 	public:
-		MR_InternetRoom(BOOL pAllowRegistred, int pMajorID, int pMinorID, unsigned pKey2, unsigned pKey3, const std::string &pMainServer);
+		MR_InternetRoom(const std::string &pMainServer);
 		~MR_InternetRoom();
 
 		BOOL DisplayChatRoom(HWND pParentWindow, MR_NetworkSession *pSession, MR_VideoBuffer *pVideoBuffer, BOOL pShouldRecheckServer);

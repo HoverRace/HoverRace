@@ -1842,8 +1842,7 @@ void MR_GameApp::NewInternetSession()
 	BOOL lSuccess = TRUE;
 	MR_NetworkSession *lCurrentSession = NULL;
 	Config *cfg = Config::GetInstance();
-	// MR_InternetRoom    lInternetRoom( gKeyFilled, gKeyFilled?mMajorID:-1, gKeyFilled?mMinorID:-1, gKeyFilled?gKey.mKeySumHard2:0, gKeyFilled?gKey.mKeySumHard3:0 );
-	MR_InternetRoom lInternetRoom(TRUE, -1, -1, 0, 0, cfg->net.mainServer);
+	MR_InternetRoom lInternetRoom(cfg->net.mainServer);
 
 	// Verify is user acknowledge
 	if(AskUserToAbortGame() != IDOK)
