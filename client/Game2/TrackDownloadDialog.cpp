@@ -225,7 +225,7 @@ void TrackDownloadDialog::ThreadProc()
 		SetState(ST_DOWNLOADING);
 		int curlRetv = curl_easy_perform(trackDl);
 		if (curlRetv != 0 && curlRetv != CURLE_ABORTED_BY_CALLBACK) {
-			MessageBoxW(dlgHwnd, Str::UW(curlErrorBuf), Str::UW(_("HoverRace")), MB_ICONWARNING | MB_OK);
+			MessageBoxW(dlgHwnd, Str::UW(curlErrorBuf), PACKAGE_NAME_L, MB_ICONWARNING | MB_OK);
 			cancel = true;
 		}
 	}
@@ -236,7 +236,7 @@ void TrackDownloadDialog::ThreadProc()
 		if (bufSize <= 128) {
 			std::string message = boost::str(boost::format(
 				_("Sorry, track \"%s\" is not available from %s")) % name % TRACK_HOST);
-			MessageBoxW(dlgHwnd, Str::UW(message.c_str()), Str::UW(_("HoverRace")), MB_ICONINFORMATION | MB_OK);
+			MessageBoxW(dlgHwnd, Str::UW(message.c_str()), PACKAGE_NAME_L, MB_ICONINFORMATION | MB_OK);
 			cancel = true;
 		} else {
 			if (!ExtractTrackFile()) {
@@ -244,7 +244,7 @@ void TrackDownloadDialog::ThreadProc()
 					_("Track download failed: The file \"%s\" was not found in the archive downloaded from %s")) %
 					trackFilename %
 					TRACK_HOST);
-				MessageBoxW(dlgHwnd, Str::UW(message.c_str()), Str::UW(_("HoverRace")), MB_ICONWARNING | MB_OK);
+				MessageBoxW(dlgHwnd, Str::UW(message.c_str()), PACKAGE_NAME_L, MB_ICONWARNING | MB_OK);
 			}
 		}
 	}
@@ -330,7 +330,7 @@ size_t TrackDownloadDialog::WriteProc(void *ptr, size_t size, size_t nmemb)
 				  "Please visit %s and download the track manually.")) %
 				  TRACK_HOST %
 				  TRACK_HOST);
-			MessageBoxW(dlgHwnd, Str::UW(message.c_str()), Str::UW(_("HoverRace")), MB_OK);
+			MessageBoxW(dlgHwnd, Str::UW(message.c_str()), PACKAGE_NAME_L, MB_OK);
 			return 0;
 		}
 
