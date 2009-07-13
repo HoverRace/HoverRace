@@ -1031,12 +1031,6 @@ BEGIN
     IDS_KEY_X               "X Key"
     IDS_KEY_Y               "Y Key"
     IDS_KEY_Z               "Z Key"
-    IDS_DEFAULT_ALIAS       "Your Name"
-    IDS_ABORT_GAME          "Abort current game?"
-    IDS_GAME_NAME           "HoverRace"
-    IDS_ERROR               "HoverRace Error"
-    IDS_WWW_REQ             "Unable to activate your web browser. Please start your web browser and go to:\n%s"
-    IDS_CAPTION             "HoverRace %s (testing)"
 END
 
 STRINGTABLE 
@@ -1133,7 +1127,6 @@ BEGIN
     IDS_CUR_LAP             "Current lap %d.%02d.%03d  Best %d.%02d.%03d"
     IDS_HIT_TITLE           "Rank                 For   Against"
     IDS_HIT_CHART           "%d %-0.10s #%d%*s  %2d      %2d"
-    IDS_WEBSITE             "http://www.hoverrace.com"
 END
 
 STRINGTABLE 

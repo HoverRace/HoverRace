@@ -36,7 +36,6 @@
 #define IDD_MISC                        161
 #define IDD_TRACK_DOWNLOAD              163
 #define IDD_WARN_ALONE                  166
-#define IDD_DIALOG1                     167
 #define IDD_PRESS_ANY_KEY               167
 #define IDD_NETWORK                     168
 #define IDC_GAMMA_SLIDER                1001
@@ -56,7 +55,6 @@
 #define IDC_LEFT1                       1014
 #define IDC_FIRE1                       1015
 #define IDC_SELWEAPON1                  1016
-#define IDC_BREAK1                      1017
 #define IDC_MOTOR_ON2                   1018
 #define IDC_RIGHT2                      1019
 #define IDC_LEFT2                       1020
@@ -64,14 +62,12 @@
 #define IDC_FIRE2                       1021
 #define IDC_CHAT_IN                     1022
 #define IDC_SELWEAPON2                  1022
-#define IDC_BREAK2                      1023
 #define IDC_JUMP1                       1024
 #define IDC_JUMP2                       1025
 #define IDC_GAME_LIST                   1026
 #define IDC_RIGHT3                      1026
 #define IDC_USER_LIST                   1027
 #define IDC_LEFT3                       1027
-#define IDC_BREAK3                      1028
 #define IDC_PLAYER_LIST                 1029
 #define IDC_JUMP3                       1029
 #define IDC_AVAIL_MESSAGE               1030
@@ -86,7 +82,6 @@
 #define IDC_MESSAGE                     1034
 #define IDC_LEFT4                       1034
 #define IDC_TIMER_CHECK                 1035
-#define IDC_BREAK4                      1035
 #define IDC_HOUR                        1036
 #define IDC_JUMP4                       1036
 #define IDC_HOUR_SPIN                   1037
@@ -129,8 +124,6 @@
 #define IDC_TCP_RECV_PORT               1088
 #define IDC_TCP_SERV_PORT               1089
 #define IDC_VER_TXT                     1090
-#define IDC_FS_RES_X                    1094
-#define IDC_FS_RES_Y                    1095
 #define IDC_TRACKS_LBL                  1095
 #define IDC_DESC_LBL                    1096
 #define IDC_LAPS_LBL                    1097
@@ -178,17 +171,9 @@
 #define IDC_VIDEO_GROUP                 1234
 #define IDC_FULLSCREEN_GROUP            1235
 #define IDC_MONITOR                     1236
-#define IDC_TEST_FULLSCREEN             1237
 #define IDC_RES                         1238
 #define IDC_MONITOR_LBL                 1239
-#define IDC_RES_TXT                     1240
-#define IDC_RES_LBL                     1241
-#define IDC_VOL_LBL                     1242
-#define IDC_BRIGHTNESS_LBL              1243
-#define IDC_CONTRAST_LBL                1244
-#define IDC_GAMMA_LBL                   1245
 #define IDC_DLTRACK                     1333
-#define IDC_CHAT_TXT                    1335
 #define IDC_CRAFTS_BOX                  1336
 #define IDC_OPTIONS_BOX                 1337
 #define IDC_ASK_AGAIN                   1338
@@ -209,7 +194,6 @@
 #define IDC_CONNECTION_RESET_DEFAULT    1354
 #define IDC_OPEN_FOLDER                 1355
 #define IDC_AUDIO_STATUS                1356
-#define IDC_EDIT1                       1358
 #define ID_VIEW_3DACTION                32775
 #define ID_SETTING_WINDOW               32784
 #define ID_GAME_PAUSE                   32788
@@ -275,12 +259,6 @@
 #define IDS_KEY_X                       40067
 #define IDS_KEY_Y                       40068
 #define IDS_KEY_Z                       40069
-#define IDS_DEFAULT_ALIAS               40070
-#define IDS_ABORT_GAME                  40071
-#define IDS_GAME_NAME                   40072
-#define IDS_ERROR                       40074
-#define IDS_WWW_REQ                     40075
-#define IDS_CAPTION                     40077
 #define IDS_MODE_SWITCH_TRY             40080
 #define IDS_CANT_SWITCH_MODE            40081
 #define IDS_BAD_MODE                    40082
@@ -353,7 +331,6 @@
 #define IDS_CUR_LAP                     40186
 #define IDS_HIT_TITLE                   40187
 #define IDS_HIT_CHART                   40188
-#define IDS_WEBSITE                     40190
 #define IDS_JOY1BTN5                    40192
 #define IDS_JOY1BTN6                    40193
 #define IDS_JOY1BTN7                    40194
