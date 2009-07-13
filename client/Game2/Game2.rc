@@ -1038,17 +1038,13 @@ BEGIN
     IDS_MODE_SWITCH_TRY     "You can play HoverRace in a Window or Fullscreen; to play in a Window, HoverRace will have to switch to 256 color mode.\nIt is recommended you use Fullscreen mode instead.\n\nDo you want to play in Window mode and switch to 256 color?"
     IDS_CANT_SWITCH_MODE    "HoverRace was unable to switch the video mode. You will need to play in full screen."
     IDS_BAD_MODE            "Incompatible video mode. You will need to play in full screen."
-    IDS_CAR_FOR_REG         "You need to register to use this craft model."
 END
 
 STRINGTABLE 
 BEGIN
-    IDS_TRACK_NOTREG        "You must register to use this track"
     IDS_COMM_ERROR          "Communication error"
     IDS_CANT_ADDUSER        "Unable to add user"
-    IDS_NOMORE_SHRWR        "No more Shareware users allowed"
     IDS_NOMORE_USER         "No more user allowed"
-    IDS_INCOMPAT_VER        "Incompatible version"
     IDS_CANT_REFRESH        "Unable to send refresh info"
     IDS_NOL                 "Not on-line"
     IDS_CANT_ADD_CHAT       "Unable to add chat message"
@@ -1109,7 +1105,6 @@ BEGIN
     IDS_HAS_LEFT            " has left"
     IDS_ALONE_F2            "You are now alone, press F2 when ready to return to the Meeting Room"
     IDS_ALONE               "You are now alone"
-    IDS_SHOULD_REG          "You should register to play that track"
 END
 
 STRINGTABLE 
@@ -1171,7 +1166,6 @@ END
 
 STRINGTABLE 
 BEGIN
-    IDS_MISC                "Miscellaneous"
     IDS_CANT_USE_UDP_PORT   "Unable to use UDP recv port; choose a different port or close some Winsock applications."
     IDS_GAME_CANCELLED      "Game cancelled by server"
     IDS_CONN_REFUSED1       "Connection refused by peer "

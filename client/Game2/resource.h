@@ -262,13 +262,9 @@
 #define IDS_MODE_SWITCH_TRY             40080
 #define IDS_CANT_SWITCH_MODE            40081
 #define IDS_BAD_MODE                    40082
-#define IDS_CAR_FOR_REG                 40083
-#define IDS_TRACK_NOTREG                40112
 #define IDS_COMM_ERROR                  40113
 #define IDS_CANT_ADDUSER                40114
-#define IDS_NOMORE_SHRWR                40115
 #define IDS_NOMORE_USER                 40116
-#define IDS_INCOMPAT_VER                40117
 #define IDS_CANT_REFRESH                40120
 #define IDS_NOL                         40121
 #define IDS_CANT_ADD_CHAT               40122
@@ -317,7 +313,6 @@
 #define IDS_HAS_LEFT                    40168
 #define IDS_ALONE_F2                    40169
 #define IDS_ALONE                       40170
-#define IDS_SHOULD_REG                  40173
 #define IDS_RANK_TITLE                  40176
 #define IDS_FLAP_STR                    40177
 #define IDS_CHART_FINISH                40178
@@ -363,7 +358,6 @@
 #define IDS_JOY4DOWN                    40221
 #define IDS_JOY4LEFT                    40222
 #define IDS_JOY4RIGHT                   40223
-#define IDS_MISC                        40224
 #define IDS_CANT_USE_UDP_PORT           40225
 #define IDS_GAME_CANCELLED              40226
 #define IDS_CONN_REFUSED1               40228
