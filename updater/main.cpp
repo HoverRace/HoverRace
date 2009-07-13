@@ -20,9 +20,20 @@
 // and limitations under the License.
 
 #include "StdAfx.h"
-#include <string.h>
+#include <string>
 #include <stdio.h>
 #include <stdlib.h>
+
+#ifdef _WIN32
+	#include <io.h>
+#else
+	#include <unistd.h>
+#endif
+
+#include <sys/stat.h>
+
+#include "PatchHoverRace.h"
+#include "CreatePatch.h"
 
 #define new DEBUG_NEW
 
@@ -57,18 +68,18 @@ int main(int argc, const char **argv) {
 				return -1;
 			} else {
 				// no gettext here... this should not ever be used by users
-				fprintf(stderr, "Unknown option %s\n", argc[i]);
+				fprintf(stderr, "Unknown option %s\n", argv[i]);
 				return -1;
 			}
 		} else {
 			// must be our working directory
-			targetDir = argc[i];
+			targetDir = argv[i];
 
 			if(i == argc - 1) { // missing an argument
 				fprintf(stderr, "No bsdiff file supplied!\n");
 				return -1;
 			} else {
-				patchFile = argc[i + 1];
+				patchFile = argv[i + 1];
 			}
 
 			break;
@@ -95,13 +106,16 @@ int main(int argc, const char **argv) {
 	// now that all the setup is done, begin the actual work
 	if(createUpdate) {
 		// diff source and target
-
+		CreatePatch(sourceDir, targetDir, patchFile);
 	} else {
 		// check that patch exists
-		
+		if(!fileExists(patchFile)) {
+			fprintf(stderr, "Patch file %s does not exist!\n", patchFile.c_str());
+			return -1;
+		}
 
 		// check that HoverRace is not running
-		HWND hrWin = FindWindowW("HoverRaceClass", NULL);
+		HWND hrWin = FindWindowW(L"HoverRaceClass", NULL);
 
 		if(hrWin != NULL) {
 			// kill it, with user confirmation
