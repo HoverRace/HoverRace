@@ -1045,9 +1045,6 @@ BEGIN
     IDS_CANT_SWITCH_MODE    "HoverRace was unable to switch the video mode. You will need to play in full screen."
     IDS_BAD_MODE            "Incompatible video mode. You will need to play in full screen."
     IDS_CAR_FOR_REG         "You need to register to use this craft model."
-    IDS_COLOR_INTENSITY     "Video and Audio"
-    IDS_KEYS_SETTING        "Controls"
-    IDS_PROP_SETTING        "Properties setting"
 END
 
 STRINGTABLE 
@@ -1073,8 +1070,6 @@ BEGIN
     IDS_NOMORE_SHRWR        "No more Shareware users allowed"
     IDS_NOMORE_USER         "No more user allowed"
     IDS_INCOMPAT_VER        "Incompatible version"
-    IDS_EXP_KEY             "Expired key"
-    IDS_DUAL_USE            "Already used key  (report for investigation)"
     IDS_CANT_REFRESH        "Unable to send refresh info"
     IDS_NOL                 "Not on-line"
     IDS_CANT_ADD_CHAT       "Unable to add chat message"

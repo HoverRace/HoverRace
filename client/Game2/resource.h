@@ -285,9 +285,6 @@
 #define IDS_CANT_SWITCH_MODE            40081
 #define IDS_BAD_MODE                    40082
 #define IDS_CAR_FOR_REG                 40083
-#define IDS_COLOR_INTENSITY             40084
-#define IDS_KEYS_SETTING                40085
-#define IDS_PROP_SETTING                40086
 #define IDS_IMR_CONNECT                 40101
 #define IDS_UR_CONNECT                  40102
 #define IDS_IMR_WELCOME                 40103
@@ -305,8 +302,6 @@
 #define IDS_NOMORE_SHRWR                40115
 #define IDS_NOMORE_USER                 40116
 #define IDS_INCOMPAT_VER                40117
-#define IDS_EXP_KEY                     40118
-#define IDS_DUAL_USE                    40119
 #define IDS_CANT_REFRESH                40120
 #define IDS_NOL                         40121
 #define IDS_CANT_ADD_CHAT               40122
