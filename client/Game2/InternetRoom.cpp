@@ -1244,62 +1244,6 @@ int MR_InternetRoom::RefreshBanner(HWND pWindow)
 
 }
 
-/*
-BOOL CALLBACK MR_InternetRoom::AskPasswordCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
-{
-	BOOL lReturnValue = FALSE;
-
-	switch (pMsgId) {
-		// Catch environment modification events
-		case WM_INITDIALOG:
-			{
-				lReturnValue = TRUE;
-				SetDlgItemText(pWindow, IDC_ALIAS, mThis->mUser);
-	
-			}
-			break;
-
-		case WM_COMMAND:
-			switch (LOWORD(pWParam)) {
-				case IDCANCEL:
-					EndDialog(pWindow, IDCANCEL);
-					lReturnValue = TRUE;
-					break;
-
-				case IDOK:
-					{
-						char lBuffer[40];
-						char lPassword[40];
-	
-						GetDlgItemText(pWindow, IDC_ALIAS, lBuffer, sizeof(lBuffer));
-						GetDlgItemText(pWindow, IDC_PASSWD, lPassword, sizeof(lPassword));
-	
-						// Verify the validity of the password
-						mThis->mNetOpString.LoadString(IDS_IMR_PASSVAL);
-	
-						mThis->mNetOpRequest.Format("%s,%s,hover", lBuffer, lPassword);
-	
-						int lCode = DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_NET_PROGRESS), pWindow, NULL) == IDOK;
-	
-						mThis->mOpRequest.Clear();
-	
-						if(lCode) {
-							EndDialog(pWindow, IDOK);
-							mThis->mUser = lBuffer;
-							gUserNameCache = lBuffer;
-						}
-	
-						lReturnValue = TRUE;
-					}
-					break;
-			}
-			break;
-	}
-
-	return lReturnValue;
-}
-*/
-
 BOOL CALLBACK MR_InternetRoom::AskParamsCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
 {
 	BOOL lReturnValue = FALSE;
@@ -2169,8 +2113,6 @@ BOOL CALLBACK MR_InternetRoom::GetAddrCallBack(HWND pWindow, UINT pMsgId, WPARAM
 						// unsigned lNibble2[4];
 						int lServerType = -1;
 
-						OutputDebugString(lData);
-						OutputDebugString("\n");
 						sscanf(lData, "%d", &lServerType);
 
 						switch (lServerType) {

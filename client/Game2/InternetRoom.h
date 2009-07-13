@@ -155,9 +155,6 @@ class MR_InternetRoom
 
 		std::ofstream *chatLog;
 
-		/*
-		static BOOL CALLBACK AskPasswordCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
-		*/
 		static BOOL CALLBACK AskParamsCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 		static BOOL CALLBACK RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 		static BOOL CALLBACK BannerCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
