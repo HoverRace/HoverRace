@@ -26,8 +26,6 @@
 #include "../../engine/Util/Str.h"
 #include "../../engine/VideoServices/2DViewPort.h"
 #include "../../engine/VideoServices/Font.h"
-#include "../../engine/VideoServices/MultipartText.h"
-#include "../../engine/VideoServices/NumericGlyphs.h"
 #include "../../engine/VideoServices/StaticText.h"
 #include "../../engine/VideoServices/VideoBuffer.h"
 
