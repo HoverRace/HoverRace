@@ -285,17 +285,6 @@
 #define IDS_CANT_SWITCH_MODE            40081
 #define IDS_BAD_MODE                    40082
 #define IDS_CAR_FOR_REG                 40083
-#define IDS_IMR_CONNECT                 40101
-#define IDS_UR_CONNECT                  40102
-#define IDS_IMR_WELCOME                 40103
-#define IDS_IMR_DISCONNECT              40104
-#define IDS_IMR_ADD_GAME                40105
-#define IDS_IMR_DEL_GAME                40106
-#define IDS_IMR_JOIN_GAME               40107
-#define IDS_IMR_LEAVE_GAME              40108
-#define IDS_IMR_NOSELECT                40109
-#define IDS_AVAIL                       40110
-#define IDS_TRACK_NOTINSTALL            40111
 #define IDS_TRACK_NOTREG                40112
 #define IDS_COMM_ERROR                  40113
 #define IDS_CANT_ADDUSER                40114
@@ -319,8 +308,6 @@
 #define IDS_CANT_ADD_MESSAGE            40134
 #define IDS_NOT_AUTH                    40135
 #define IDS_UNKNOWN_ERROR               40136
-#define IDS_IMR                         40137
-#define IDS_IMR_PASSVAL                 40138
 #define IDS_ENTER_ALIAS                 40139
 #define IDS_SELECT_ROOM                 40140
 #define IDS_WARN_TO                     40141

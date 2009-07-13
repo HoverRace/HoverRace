@@ -1049,21 +1049,6 @@ END
 
 STRINGTABLE 
 BEGIN
-    IDS_IMR_CONNECT         "Connecting to the Internet Meeting Room..."
-    IDS_UR_CONNECT          "You are connected"
-    IDS_IMR_WELCOME         "Welcome to the HoverRace Internet Meeting Room"
-    IDS_IMR_DISCONNECT      "Disconnecting from the Internet Meeting Room..."
-    IDS_IMR_ADD_GAME        "Registering game with the Internet Meeting Room..."
-    IDS_IMR_DEL_GAME        "Unregistering game from the Internet Meeting Room..."
-    IDS_IMR_JOIN_GAME       "Registering with the Internet Meeting Room..."
-    IDS_IMR_LEAVE_GAME      "Unregistering from the Internet Meeting Room..."
-    IDS_IMR_NOSELECT        "[no selection]"
-    IDS_AVAIL               "Available"
-    IDS_TRACK_NOTINSTALL    "Join game to download from hoverrace.com"
-END
-
-STRINGTABLE 
-BEGIN
     IDS_TRACK_NOTREG        "You must register to use this track"
     IDS_COMM_ERROR          "Communication error"
     IDS_CANT_ADDUSER        "Unable to add user"
@@ -1091,8 +1076,6 @@ BEGIN
     IDS_CANT_ADD_MESSAGE    "Unable to add message"
     IDS_NOT_AUTH            "Not authorized"
     IDS_UNKNOWN_ERROR       "Unknown error code %d"
-    IDS_IMR                 "Internet Meeting Room"
-    IDS_IMR_PASSVAL         "Password validation..."
     IDS_ENTER_ALIAS         "You must enter an alias name"
     IDS_SELECT_ROOM         "You must select a room"
     IDS_WARN_TO             "Warning: communication time-out"
