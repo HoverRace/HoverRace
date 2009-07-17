@@ -19,6 +19,10 @@
 
 #include "CreatePatch.h"
 
+#include <boost/filesystem.hpp>
+
+using namespace boost::filesystem;
+
 int CreatePatch(string oldDir, string newDir, string patchFile) {
 	// list all the files we will need to look at
 	vector<string> dirListing = EnumerateDirectory(newDir);
@@ -29,8 +33,14 @@ int CreatePatch(string oldDir, string newDir, string patchFile) {
  */
 vector<string> EnumerateDirectory(string directory) {
 	vector<string> ret;
-
-	ret.push_back("unimplemented");
+	
+	recursive_directory_iterator it_end;
+	recursive_directory_iterator it((path(directory)));
+	
+	while(it != it_end) {
+		// check if file is directory or not
+		// then do stuff with it
+	}
 
 	return ret;
 }
