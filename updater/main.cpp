@@ -31,6 +31,9 @@
 #endif
 
 #include <sys/stat.h>
+#include <errno.h>
+
+extern int errno;
 
 #include "PatchHoverRace.h"
 #include "CreatePatch.h"
@@ -48,6 +51,8 @@ int main(int argc, const char **argv) {
 	string targetDir = "";
 	string sourceDir = "";
 	string patchFile = "";
+
+	printf("Holy shit we begin!\n");
 
 	// Windows has no getopt() therefore we must do it by hand and as a result my implementation is not the best or the
 	// cleanest but it does work
@@ -86,10 +91,32 @@ int main(int argc, const char **argv) {
 		}
 	}
 
+	if(sourceDir == "") {
+		fprintf(stderr, "No source directory supplied!\n");
+		return -1;
+	} 
+#ifdef WIN32
+	// due to Win32 limitations we must strip the trailing slash from directory names, or stat() will fail
+	else {
+		// we could have many trailing slashes; we will clean up for retarded users
+		while(sourceDir[sourceDir.length() - 1] == '/' ||
+			  sourceDir[sourceDir.length() - 1] == '\\')
+			  sourceDir = sourceDir.substr(0, sourceDir.length() - 1);
+	}
+#endif
+
 	if(targetDir == "") {
-		fprintf(stderr, "No directory supplied!\n");
+		fprintf(stderr, "No target directory supplied!\n");
 		return -1;
 	}
+#ifdef WIN32
+	else {
+		// we could have many trailing slashes; we will clean up for retarded users
+		while(targetDir[targetDir.length() - 1] == '/' ||
+			  targetDir[targetDir.length() - 1] == '\\')
+			  targetDir = targetDir.substr(0, targetDir.length() - 1);
+	}
+#endif	
 
 	// check that updated directory is valid
 	if(createUpdate && !dirExists(sourceDir)) {
@@ -131,8 +158,24 @@ int main(int argc, const char **argv) {
 bool dirExists(string dir) {
 	if(access(dir.c_str(), 0) == 0) {
 		struct stat dirStatus;
-		stat(dir.c_str(), &dirStatus);
-		return (dirStatus.st_mode & S_IFDIR);
+		if(stat(dir.c_str(), &dirStatus) != -1)
+			return (dirStatus.st_mode & S_IFDIR);
+		else {
+			switch(errno) {
+				case EACCES:
+					break;
+				case EFAULT:
+					break;
+				case ENAMETOOLONG:
+					break;
+				case ENOENT:
+					break;
+				case ENOMEM:
+					break;
+				case ENOTDIR:
+					break;
+			}
+		}
 	}
 	
 	return false;
