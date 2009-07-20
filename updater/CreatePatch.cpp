@@ -40,6 +40,10 @@ vector<string> EnumerateDirectory(string directory) {
 	while(it != it_end) {
 		// check if file is directory or not
 		// then do stuff with it
+		if(is_regular(it->status())) {
+			// we have a file... now we must add it to our list
+			ret.push_back(it->path().file_string());
+		}
 	}
 
 	return ret;
