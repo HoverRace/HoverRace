@@ -5,6 +5,7 @@ SUBDIRS = \
 	ColorTools \
 	MainCharacter \
 	Model \
+	Net \
 	ObjFac1 \
 	ObjFacTools \
 	Script \
@@ -18,6 +19,7 @@ libhoverrace_engine_la_LIBADD = \
 	ColorTools/libcolortools.la \
 	MainCharacter/libmainchar.la \
 	Model/libmodel.la \
+	Net/libnet.la \
 	ObjFac1/libobjfac1.la \
 	ObjFacTools/libobjfactools.la \
 	Script/libscript.la \
