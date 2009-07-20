@@ -30,10 +30,7 @@
 	#include <unistd.h>
 #endif
 
-#include <sys/stat.h>
-#include <errno.h>
-
-extern int errno;
+#include <boost/filesystem.hpp>
 
 #include "PatchHoverRace.h"
 #include "CreatePatch.h"
@@ -41,6 +38,7 @@ extern int errno;
 #define new DEBUG_NEW
 
 using namespace std;
+using namespace boost::filesystem;
 
 bool dirExists(string dir); /// check if a directory exists; auxiliary function
 bool fileExists(string dir); /// check if a file exists; auxiliary function
@@ -51,8 +49,6 @@ int main(int argc, const char **argv) {
 	string targetDir = "";
 	string sourceDir = "";
 	string patchFile = "";
-
-	printf("Holy shit we begin!\n");
 
 	// Windows has no getopt() therefore we must do it by hand and as a result my implementation is not the best or the
 	// cleanest but it does work
@@ -95,37 +91,20 @@ int main(int argc, const char **argv) {
 		fprintf(stderr, "No source directory supplied!\n");
 		return -1;
 	} 
-#ifdef WIN32
-	// due to Win32 limitations we must strip the trailing slash from directory names, or stat() will fail
-	else {
-		// we could have many trailing slashes; we will clean up for retarded users
-		while(sourceDir[sourceDir.length() - 1] == '/' ||
-			  sourceDir[sourceDir.length() - 1] == '\\')
-			  sourceDir = sourceDir.substr(0, sourceDir.length() - 1);
-	}
-#endif
 
 	if(targetDir == "") {
 		fprintf(stderr, "No target directory supplied!\n");
 		return -1;
 	}
-#ifdef WIN32
-	else {
-		// we could have many trailing slashes; we will clean up for retarded users
-		while(targetDir[targetDir.length() - 1] == '/' ||
-			  targetDir[targetDir.length() - 1] == '\\')
-			  targetDir = targetDir.substr(0, targetDir.length() - 1);
-	}
-#endif	
 
 	// check that updated directory is valid
-	if(createUpdate && !dirExists(sourceDir)) {
+	if(createUpdate && !is_directory(sourceDir)) {
 		fprintf(stderr, "Source directory %s does not exist!\n", sourceDir.c_str());
 		return -1;
 	}
 
 	// check that directory is valid
-	if(!dirExists(targetDir)) {
+	if(!is_directory(targetDir)) {
 		fprintf(stderr, "Target directory %s does not exist!\n", targetDir.c_str());
 		return -1;
 	}
@@ -136,7 +115,7 @@ int main(int argc, const char **argv) {
 		CreatePatch(sourceDir, targetDir, patchFile);
 	} else {
 		// check that patch exists
-		if(!fileExists(patchFile)) {
+		if(!exists(patchFile)) {
 			fprintf(stderr, "Patch file %s does not exist!\n", patchFile.c_str());
 			return -1;
 		}
@@ -153,40 +132,4 @@ int main(int argc, const char **argv) {
 		// now, HoverRace is closed; do the patching
 		PatchHoverRace(targetDir, patchFile);
 	}
-}
-
-bool dirExists(string dir) {
-	if(access(dir.c_str(), 0) == 0) {
-		struct stat dirStatus;
-		if(stat(dir.c_str(), &dirStatus) != -1)
-			return (dirStatus.st_mode & S_IFDIR);
-		else {
-			switch(errno) {
-				case EACCES:
-					break;
-				case EFAULT:
-					break;
-				case ENAMETOOLONG:
-					break;
-				case ENOENT:
-					break;
-				case ENOMEM:
-					break;
-				case ENOTDIR:
-					break;
-			}
-		}
-	}
-	
-	return false;
-}
-
-bool fileExists(string file) {
-	if(access(file.c_str(), 0) == 0) {
-		struct stat fileStatus;
-		stat(file.c_str(), &fileStatus);
-		return (fileStatus.st_mode & S_IFREG);
-	}
-
-	return false;
 }
