@@ -35,7 +35,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="winmm.lib yamlD.lib ddraw.lib dxguid.lib dsound.lib lua5.1D.lib"
+				AdditionalDependencies="winmm.lib yamlD.lib ddraw.lib dxguid.lib dsound.lib lua5.1D.lib libcurld.lib"
 				OutputFile="$(OutDir)\$(ProjectName).dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../lib"
@@ -92,7 +92,7 @@
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="FALSE"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="winmm.lib yaml.lib ddraw.lib dxguid.lib dsound.lib  lua5.1.lib"
+				AdditionalDependencies="winmm.lib yaml.lib ddraw.lib dxguid.lib dsound.lib  lua5.1.lib libcurl.lib"
 				OutputFile=".\..\Release\engine.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
@@ -606,6 +606,31 @@
 			</File>
 			<File
 				RelativePath=".\Script\ScriptExn.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="Net"
+			Filter="">
+			<File
+				RelativePath=".\Net\Agent.cpp">
+			</File>
+			<File
+				RelativePath=".\Net\Agent.h">
+			</File>
+			<File
+				RelativePath=".\Net\BaseTransfer.cpp">
+			</File>
+			<File
+				RelativePath=".\Net\BaseTransfer.h">
+			</File>
+			<File
+				RelativePath=".\Net\BlockingTransfer.cpp">
+			</File>
+			<File
+				RelativePath=".\Net\BlockingTransfer.h">
+			</File>
+			<File
+				RelativePath=".\Net\Transfer.h">
 			</File>
 		</Filter>
 		<File
