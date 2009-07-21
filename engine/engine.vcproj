@@ -630,6 +630,9 @@
 				RelativePath=".\Net\BlockingTransfer.h">
 			</File>
 			<File
+				RelativePath=".\Net\NetExn.h">
+			</File>
+			<File
 				RelativePath=".\Net\Transfer.h">
 			</File>
 		</Filter>
