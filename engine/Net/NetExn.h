@@ -1,6 +1,6 @@
 
-// BaseTransfer.h
-// Header for base class of standard transfers.
+// NetExn.h
+// The base network exception.
 //
 // Copyright (c) 2009 Michael Imamura.
 //
@@ -22,12 +22,6 @@
 
 #pragma once
 
-#include <curl/curl.h>
-
-#include "Agent.h"
-#include "NetExn.h"
-#include "Transfer.h"
-
 #ifdef _WIN32
 #	ifdef MR_ENGINE
 #		define MR_DllDeclare   __declspec( dllexport )
@@ -42,25 +36,23 @@ namespace HoverRace {
 namespace Net {
 
 /**
- * Base class for standard Agent transfers.
+ * A network exception.
  * @author Michael Imamura
  */
-class MR_DllDeclare BaseTransfer : public Transfer
+class MR_DllDeclare NetExn : public std::exception
 {
-	typedef Transfer SUPER;
-	private:
-		BaseTransfer() { };
+	typedef std::exception SUPER;
+
 	public:
-		BaseTransfer(const Agent &agent);
-		virtual ~BaseTransfer();
+		NetExn() : SUPER() { }
+		NetExn(const char* const &msg) : SUPER(), msg(msg) { }
+		NetExn(const std::string &msg) : SUPER(), msg(msg) { }
+		virtual ~NetExn() { }
 
-	protected:
-		void AssertCurlSuccess(CURLcode code);
+		virtual const char* what() const { return msg.c_str(); }
 
 	private:
-		char errorBuf[CURL_ERROR_SIZE];
-	protected:
-		CURL *curl;
+		std::string msg;
 };
 
 }  // namespace Net

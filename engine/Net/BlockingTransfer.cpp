@@ -59,11 +59,11 @@ void BlockingTransfer::Init()
 
 /**
  * Start the transfer and return when the transfer is complete.
+ * @throw NetExn If an error occurs during the transfer.
  */
 void BlockingTransfer::Go()
 {
-	//TODO: Eval error and throw if necessary.
-	curl_easy_perform(curl);
+	AssertCurlSuccess(curl_easy_perform(curl));
 }
 
 size_t BlockingTransfer::StringWriteFunc(void *ptr, size_t size, size_t nmemb, void *stream)

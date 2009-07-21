@@ -38,6 +38,9 @@ BaseTransfer::BaseTransfer(const Agent &agent) :
 {
 	const Config *cfg = Config::GetInstance();
 
+	errorBuf[0] = '\0';
+	curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, errorBuf);
+
 	curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
 	curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1);
 	curl_easy_setopt(curl, CURLOPT_MAXREDIRS, 5);
@@ -52,3 +55,7 @@ BaseTransfer::~BaseTransfer()
 	curl_easy_cleanup(curl);
 }
 
+void BaseTransfer::AssertCurlSuccess(CURLcode code)
+{
+	if (code != 0) throw NetExn(errorBuf);
+}
