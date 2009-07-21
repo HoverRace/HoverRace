@@ -121,9 +121,6 @@ class MR_InternetRoom
 		int mCurrentGameId;
 
 		CString mUser;
-		// CString       mServerURL;
-		// unsigned long mServerIP;
-		// CString       mURLPath;
 
 		Client mClientList[eMaxClient];
 		Game mGameList[eMaxGame];
