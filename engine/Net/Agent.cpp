@@ -56,18 +56,20 @@ void Agent::SetUrl(const std::string &url)
  * Easy URL retrieval to a string.
  * This method blocks until the transfer is complete.
  * @param buf The string to store to.
+ * @param cancelFlag Optional control to check for cancellation (may be @c NULL).
  */
-void Agent::Get(std::string &buf)
+void Agent::Get(std::string &buf, CancelFlagPtr cancelFlag)
 {
-	BlockingTransfer(*this, buf).Go();
+	BlockingTransfer(*this, buf, cancelFlag).Go();
 }
 
 /**
  * Easy URL retrieval to a stream.
  * This method blocks until the transfer is complete.
  * @param buf The stream to write to.
+ * @param cancelFlag Optional control to check for cancellation (may be @c NULL).
  */
-void Agent::Get(std::ostream &buf)
+void Agent::Get(std::ostream &buf, CancelFlagPtr cancelFlag)
 {
-	BlockingTransfer(*this, buf).Go();
+	BlockingTransfer(*this, buf, cancelFlag).Go();
 }

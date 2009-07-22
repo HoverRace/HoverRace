@@ -30,9 +30,11 @@ using namespace HoverRace::Net;
  * Constructor (for storing to a string).
  * @param agent The transfer agent (request parameters).
  * @param buf The string to store to.
+ * @param cancelFlag Control object to check for cancellation (may be @c NULL).
  */
-BlockingTransfer::BlockingTransfer(const Agent &agent, std::string &buf) :
-	SUPER(agent)
+BlockingTransfer::BlockingTransfer(const Agent &agent, std::string &buf,
+                                   CancelFlagPtr cancelFlag) :
+	SUPER(agent), cancelFlag(cancelFlag)
 {
 	Init();
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, StringWriteFunc);
@@ -43,9 +45,11 @@ BlockingTransfer::BlockingTransfer(const Agent &agent, std::string &buf) :
  * Constructor (for storing to a stream).
  * @param agent The transfer agent (request parameters).
  * @param buf The stream to write to.
+ * @param cancelFlag Control object to check for cancellation (may be @c NULL).
  */
-BlockingTransfer::BlockingTransfer(const Agent &agent, std::ostream &buf) :
-	SUPER(agent)
+BlockingTransfer::BlockingTransfer(const Agent &agent, std::ostream &buf,
+                                   CancelFlagPtr cancelFlag) :
+	SUPER(agent), cancelFlag(cancelFlag)
 {
 	Init();
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, StreamWriteFunc);
@@ -54,7 +58,14 @@ BlockingTransfer::BlockingTransfer(const Agent &agent, std::ostream &buf) :
 
 void BlockingTransfer::Init()
 {
-	curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1);
+	if (cancelFlag == NULL) {
+		curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1);
+	}
+	else {
+		curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0);
+		curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, ProgressFunc);
+		curl_easy_setopt(curl, CURLOPT_PROGRESSDATA, cancelFlag.get());
+	}
 }
 
 /**
@@ -80,4 +91,11 @@ size_t BlockingTransfer::StreamWriteFunc(void *ptr, size_t size, size_t nmemb, v
 	size_t sz = size * nmemb;
 	if (sz > 0) out->write((const char*)ptr, size * nmemb);
 	return sz;
+}
+
+size_t BlockingTransfer::ProgressFunc(void *cancelFlag, double, double, double, double)
+{
+	// Abort transfer if cancel flag is set.
+	CancelFlag *cf = (CancelFlag*)cancelFlag;
+	return cf->IsCanceled() ? 1 : 0;
 }

@@ -1,6 +1,6 @@
 
-// BlockingTransfer.h
-// Header for the simple blocking transfer.
+// CancelFlag.h
+// Interface for cancel checking.
 //
 // Copyright (c) 2009 Michael Imamura.
 //
@@ -22,51 +22,31 @@
 
 #pragma once
 
-#include "BaseTransfer.h"
-
 #ifdef _WIN32
 #	ifdef MR_ENGINE
 #		define MR_DllDeclare   __declspec( dllexport )
 #	else
 #		define MR_DllDeclare   __declspec( dllimport )
 #	endif
+#	define MR_PureVirtual __declspec(novtable)
 #else
 #	define MR_DllDeclare
+#	define MR_PureVirtual
 #endif
 
 namespace HoverRace {
 namespace Net {
 
 /**
- * This is used for the simple forms of transfer, only used in Agent::Get.
+ * Interface for cancel checking.
  * @author Michael Imamura
  */
-class MR_DllDeclare BlockingTransfer : public BaseTransfer
+class MR_DllDeclare MR_PureVirtual CancelFlag
 {
-	typedef BaseTransfer SUPER;
 	public:
-		BlockingTransfer(const Agent &agent, std::string &buf,
-			CancelFlagPtr cancelFlag);
-		BlockingTransfer(const Agent &agent, std::ostream &buf,
-			CancelFlagPtr cancelFlag);
-		virtual ~BlockingTransfer() { }
-	private:
-		void Init();
-
-	public:
-		virtual bool IsComplete() const { return true; }
-
-	public:
-		void Go();
-
-	private:
-		static size_t StringWriteFunc(void *ptr, size_t size, size_t nmemb, void *stream);
-		static size_t StreamWriteFunc(void *ptr, size_t size, size_t nmemb, void *stream);
-		static size_t ProgressFunc(void *cancelFlag, double, double, double, double);
-
-	private:
-		CancelFlagPtr cancelFlag;
+		virtual bool IsCanceled() = 0;
 };
+typedef boost::shared_ptr<CancelFlag> CancelFlagPtr;
 
 }  // namespace Net
 }  // namespace HoverRace

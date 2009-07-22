@@ -24,6 +24,7 @@
 
 #include <string>
 
+#include "CancelFlag.h"
 #include "Transfer.h"
 
 #ifdef _WIN32
@@ -54,8 +55,8 @@ class MR_DllDeclare Agent
 		const std::string &GetUrl() const { return url; };
 
 	public:
-		void Get(std::string &buf);
-		void Get(std::ostream &buf);
+		void Get(std::string &buf, CancelFlagPtr cancelFlag=CancelFlagPtr());
+		void Get(std::ostream &buf, CancelFlagPtr cancelFlag=CancelFlagPtr());
 
 	private:
 		std::string url;
