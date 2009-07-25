@@ -57,5 +57,9 @@ BaseTransfer::~BaseTransfer()
 
 void BaseTransfer::AssertCurlSuccess(CURLcode code)
 {
-	if (code != 0) throw NetExn(errorBuf);
+	switch (code) {
+		case 0: break;
+		case CURLE_ABORTED_BY_CALLBACK: throw CanceledExn();
+		default: throw NetExn(errorBuf);
+	}
 }

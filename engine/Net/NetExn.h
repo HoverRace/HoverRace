@@ -55,6 +55,19 @@ class MR_DllDeclare NetExn : public std::exception
 		std::string msg;
 };
 
+/**
+ * Thrown when the transfer is intentionally aborted (usually by CancelFlag).
+ * This allows the catcher to treat it as an error or ignore it (while
+ * treating other NetExn as errors).
+ * @author Michael Imamura
+ */
+class MR_DllDeclare CanceledExn : public NetExn
+{
+	public:
+		CanceledExn() : NetExn("Transfer canceled") { }
+		virtual ~CanceledExn() { }
+};
+
 }  // namespace Net
 }  // namespace HoverRace
 
