@@ -9,5 +9,7 @@ libnet_la_SOURCES = \
 	BaseTransfer.h \
 	BlockingTransfer.cpp \
 	BlockingTransfer.h \
+	CancelFlag.h \
+	NetExn.h \
 	Transfer.h
 
