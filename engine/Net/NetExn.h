@@ -47,9 +47,9 @@ class MR_DllDeclare NetExn : public std::exception
 		NetExn() : SUPER() { }
 		NetExn(const char* const &msg) : SUPER(), msg(msg) { }
 		NetExn(const std::string &msg) : SUPER(), msg(msg) { }
-		virtual ~NetExn() { }
+		virtual ~NetExn() throw() { }
 
-		virtual const char* what() const { return msg.c_str(); }
+		virtual const char* what() const throw() { return msg.c_str(); }
 
 	private:
 		std::string msg;
@@ -65,7 +65,7 @@ class MR_DllDeclare CanceledExn : public NetExn
 {
 	public:
 		CanceledExn() : NetExn("Transfer canceled") { }
-		virtual ~CanceledExn() { }
+		virtual ~CanceledExn() throw() { }
 };
 
 }  // namespace Net
