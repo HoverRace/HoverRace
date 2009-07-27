@@ -74,7 +74,7 @@ void BlockingTransfer::Init()
  */
 void BlockingTransfer::Go()
 {
-	AssertCurlSuccess(curl_easy_perform(curl));
+	AssertCurlSuccess(curl_easy_perform(curl), cancelFlag);
 }
 
 size_t BlockingTransfer::StringWriteFunc(void *ptr, size_t size, size_t nmemb, void *stream)

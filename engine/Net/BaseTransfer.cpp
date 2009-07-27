@@ -55,8 +55,12 @@ BaseTransfer::~BaseTransfer()
 	curl_easy_cleanup(curl);
 }
 
-void BaseTransfer::AssertCurlSuccess(CURLcode code)
+void BaseTransfer::AssertCurlSuccess(CURLcode code, CancelFlagPtr cancelFlag)
 {
+	// One last check of the cancel flag.
+	if (cancelFlag != NULL && cancelFlag->IsCanceled()) {
+		code = CURLE_ABORTED_BY_CALLBACK;
+	}
 	switch (code) {
 		case 0: break;
 		case CURLE_ABORTED_BY_CALLBACK: throw CanceledExn();

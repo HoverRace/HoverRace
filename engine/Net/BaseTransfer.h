@@ -55,7 +55,7 @@ class MR_DllDeclare BaseTransfer : public Transfer
 		virtual ~BaseTransfer();
 
 	protected:
-		void AssertCurlSuccess(CURLcode code);
+		void AssertCurlSuccess(CURLcode code, CancelFlagPtr cancelFlag=CancelFlagPtr());
 
 	private:
 		char errorBuf[CURL_ERROR_SIZE];
