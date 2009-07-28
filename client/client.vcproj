@@ -140,6 +140,12 @@
 				RelativePath=".\Game2\Banner.h">
 			</File>
 			<File
+				RelativePath=".\Game2\CheckRoomListDialog.cpp">
+			</File>
+			<File
+				RelativePath=".\Game2\CheckRoomListDialog.h">
+			</File>
+			<File
 				RelativePath=".\Game2\ClientSession.cpp">
 			</File>
 			<File
@@ -263,6 +269,18 @@
 				RelativePath=".\Game2\resource.h">
 			</File>
 			<File
+				RelativePath=".\Game2\RoomList.cpp">
+			</File>
+			<File
+				RelativePath=".\Game2\RoomList.h">
+			</File>
+			<File
+				RelativePath=".\Game2\RoomListDialog.cpp">
+			</File>
+			<File
+				RelativePath=".\Game2\RoomListDialog.h">
+			</File>
+			<File
 				RelativePath=".\Game2\StdAfx.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -373,7 +391,8 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
+"
 						Outputs="$(OutDir)\$(InputFileName)"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -382,7 +401,8 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
+"
 						Outputs="$(OutDir)\$(InputFileName)"/>
 				</FileConfiguration>
 			</File>

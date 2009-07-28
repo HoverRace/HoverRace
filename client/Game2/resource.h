@@ -38,6 +38,7 @@
 #define IDD_WARN_ALONE                  166
 #define IDD_PRESS_ANY_KEY               167
 #define IDD_NETWORK                     168
+#define IDD_CHECK_ROOMLIST              170
 #define IDC_GAMMA_SLIDER                1001
 #define IDC_CONTRAST_SLIDER             1002
 #define IDC_SERVER_PORT                 1002
@@ -194,6 +195,9 @@
 #define IDC_CONNECTION_RESET_DEFAULT    1354
 #define IDC_OPEN_FOLDER                 1355
 #define IDC_AUDIO_STATUS                1356
+#define IDC_MSG_LBL                     1359
+#define IDC_CHECK_URL_BTN               1360
+#define IDC_CHECK_URL                   1360
 #define ID_VIEW_3DACTION                32775
 #define ID_SETTING_WINDOW               32784
 #define ID_GAME_PAUSE                   32788
@@ -378,9 +382,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        169
+#define _APS_NEXT_RESOURCE_VALUE        171
 #define _APS_NEXT_COMMAND_VALUE         40049
-#define _APS_NEXT_CONTROL_VALUE         1359
+#define _APS_NEXT_CONTROL_VALUE         1361
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

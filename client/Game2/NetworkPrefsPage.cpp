@@ -27,6 +27,7 @@
 #include "../../engine/Util/OS.h"
 #include "../../engine/Util/Str.h"
 
+#include "CheckRoomListDialog.h"
 #include "GameApp.h"
 #include "PathSelector.h"
 
@@ -101,6 +102,14 @@ BOOL NetworkPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 						{
 							SetDlgItemText(pWindow, IDC_LOG_CHATS_TXT, curPath.c_str());
 						}
+					}
+					break;
+
+				case IDC_CHECK_URL:
+					{
+						char buf[MAX_PATH];
+						GetDlgItemText(pWindow, IDC_MAINSERVER, buf, sizeof(buf));
+						CheckRoomListDialog(buf).ShowModal(NULL, pWindow);
 					}
 					break;
 
