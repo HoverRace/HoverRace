@@ -248,7 +248,8 @@ int bsdiff_create_patch(char *patchFile, char *oldFile, char *newFile)
 	dblen=0;
 	eblen=0;
 
-	if((fd=fopen(patchFile,"wb"))<0)
+	fd = fopen(patchFile, "wb");
+	if(fd == NULL)
 		err(1,"%s",patchFile);
 
 	/* Header is
