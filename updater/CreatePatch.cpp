@@ -92,15 +92,15 @@ int CreatePatch(string oldDir, string newDir, string patchFile) {
 
 	// write files to patch to digest
 	for(vector<string>::iterator it = patchFiles.begin(); it != patchFiles.end(); it++)
-		fprintf(digest, "PAT %s\n", (*it).c_str());
+		fprintf(digest, "P %s\n", (*it).c_str());
 
 	// write files to add to digest
 	for(vector<string>::iterator it = newFiles.begin(); it != newFiles.end(); it++)
-		fprintf(digest, "ADD %s\n", (*it).c_str());
+		fprintf(digest, "A %s\n", (*it).c_str());
 
 	// write files to remove to digest
 	for(vector<string>::iterator it = oldListing.begin(); it != oldListing.end(); it++)
-		fprintf(digest, "DEL %s\n", (*it).c_str());
+		fprintf(digest, "D %s\n", (*it).c_str());
 
 	fclose(digest);
 
