@@ -54,11 +54,11 @@ int CreatePatch(string oldDir, string newDir, string patchFile) {
 		if(index == oldListing.end()) {
 			// file does not exist in old directory
 			// so we have to copy the file over directly
-			string oldFile = path(oldDir).file_string() + "/" + *index;
-			string patchName = "/temp_patch/" + *index; // same filename
+			string oldFile = path(newDir).file_string() + "\\" + *it;
+			string patchName = "\\temp_patch\\" + *it; // same filename
 			string newFile = current_path().file_string() + patchName;
 
-			copy_file(oldFile, newFile);
+			copy_file(path(oldFile), path(newFile));
 
 			newFiles.push_back(patchName);
 		} else {
@@ -70,7 +70,7 @@ int CreatePatch(string oldDir, string newDir, string patchFile) {
 
 			// remove from vector
 			index = oldListing.erase(index);
-			it = dirListing.erase(it);
+			//it = dirListing.erase(it);
 
 			// now create the patch
 			bsdiff_create_patch((char *) curPatchFile.c_str(), (char *) oldFile.c_str(), (char *) newFile.c_str());
@@ -124,7 +124,6 @@ int CreatePatch(string oldDir, string newDir, string patchFile) {
 
 	// remove all our temporary files
 	remove_all("temp_patch");
-	remove("temp_patch");
 
 	return 0;
 }

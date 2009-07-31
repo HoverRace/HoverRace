@@ -112,7 +112,7 @@ int main(int argc, const char **argv) {
 	// now that all the setup is done, begin the actual work
 	if(createUpdate) {
 		// diff source and target
-		return (CreatePatch(sourceDir, targetDir, patchFile));
+		return (CreatePatch(targetDir, sourceDir, patchFile));
 	} else {
 		// check that patch exists
 		if(!exists(patchFile)) {
