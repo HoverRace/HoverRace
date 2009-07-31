@@ -62,15 +62,19 @@ int CreatePatch(string oldDir, string newDir, string patchFile) {
 
 			newFiles.push_back(patchName);
 		} else {
+			// we must create a patch
 			string oldFile = path(oldDir).file_string() + "/" + *index;
 			string newFile = path(newDir).file_string() + "/" + *it;
 			// separate the actual filename to construct the patch filename and add '.bsdiff'
-			string patchName = path(newFile).leaf() + ".bsdiff";
+			string patchName = *it + ".bsdiff";
 			string curPatchFile = current_path().file_string() + "/temp_patch/" + patchName;
 
-			// remove from vector
+			// remove from old listing vector (not necessary to remove from new listing vector)
 			index = oldListing.erase(index);
-			//it = dirListing.erase(it);
+
+			// ensure directory exists
+			if(!exists("temp_patch/" + path(patchName).branch_path().file_string()))
+				create_directory("temp_patch/" + path(patchName).branch_path().file_string());
 
 			// now create the patch
 			bsdiff_create_patch((char *) curPatchFile.c_str(), (char *) oldFile.c_str(), (char *) newFile.c_str());
