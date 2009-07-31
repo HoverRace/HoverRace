@@ -1831,12 +1831,16 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 						int lNbLap;
 						char lGameOpts;
 
-						lSuccess = MR_SelectTrack(pWindow, lCurrentTrack, lNbLap, lGameOpts);
+						lSuccess = MR_SelectTrack(pWindow, lCurrentTrack,
+							lNbLap, lGameOpts);
 
 						if(lSuccess) {
 							// Load the track
-							MR_RecordFile *lTrackFile = MR_TrackOpen(pWindow, lCurrentTrack.c_str());
-							lSuccess = (mThis->mSession->LoadNew(lCurrentTrack.c_str(), lTrackFile, lNbLap, lGameOpts, mThis->mVideoBuffer) != FALSE);
+							MR_RecordFile *lTrackFile = MR_TrackOpen(pWindow,
+								lCurrentTrack.c_str());
+							lSuccess = (mThis->mSession->LoadNew(
+								lCurrentTrack.c_str(), lTrackFile, lNbLap,
+								lGameOpts, mThis->mVideoBuffer) != FALSE);
 						}
 
 						if(lSuccess) {
@@ -1850,7 +1854,8 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 								// Wait client registration
 								CString lTrackName;
 
-								lTrackName.Format("%s  %d %s; options %c%c%c, %c%c%c%c", lCurrentTrack.c_str(), lNbLap,
+								lTrackName.Format("%s  %d %s; options %c%c%c, %c%c%c%c",
+									lCurrentTrack.c_str(), lNbLap,
 									(lNbLap == 1) ? "lap" : "laps",
 									(lGameOpts & OPT_ALLOW_WEAPONS) ? 'W' : '_',
 									(lGameOpts & OPT_ALLOW_MINES)   ? 'M' : '_',
@@ -1879,7 +1884,11 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 						if(!gBannerList[gCurrentBannerEntry].mClickURL.IsEmpty()) {
 							if(gBannerList[gCurrentBannerEntry].mIndirectClick) {
 								mThis->mClickRequest.Clear();
-								mThis->mClickRequest.Send(pWindow, gBannerList[gCurrentBannerEntry].mAddress, gBannerList[gCurrentBannerEntry].mPort, gBannerList[gCurrentBannerEntry].mClickURL, gBannerList[gCurrentBannerEntry].mLastCookie);
+								mThis->mClickRequest.Send(pWindow,
+									gBannerList[gCurrentBannerEntry].mAddress,
+									gBannerList[gCurrentBannerEntry].mPort,
+									gBannerList[gCurrentBannerEntry].mClickURL,
+									gBannerList[gCurrentBannerEntry].mLastCookie);
 	
 							}
 							else {
@@ -2416,7 +2425,11 @@ BOOL MR_SendLadderResult(HWND pParentWindow, const char *pWinAlias, int pWinMajo
 	BOOL lReturnValue = FALSE;
 
 	// First verify that both user are regs and the room is a ladder room
-	if((gCurrentServerEntry != -1) && (gServerList[gCurrentServerEntry].mType == 2) && (pWinMajorID != -1) && (pLoseMajorID != -1)) {
+	if((gCurrentServerEntry != -1) &&
+		(gServerList[gCurrentServerEntry].mType == 2) &&
+		(pWinMajorID != -1) &&
+		(pLoseMajorID != -1))
+	{
 		CString lWinID;
 		CString lLoseID;
 		CString lLaps;
@@ -2432,14 +2445,21 @@ BOOL MR_SendLadderResult(HWND pParentWindow, const char *pWinAlias, int pWinMajo
 		MReport_AddVariable("track", pTrack);
 		MReport_AddVariable("laps", lLaps, "Laps");
 
-		lReturnValue = MReport_Process(pParentWindow, gServerList[gCurrentServerEntry].mLadderIP, gServerList[gCurrentServerEntry].mLadderPort, gServerList[gCurrentServerEntry].mLadderReportURL);
+		lReturnValue = MReport_Process(pParentWindow,
+			gServerList[gCurrentServerEntry].mLadderIP,
+			gServerList[gCurrentServerEntry].mLadderPort,
+			gServerList[gCurrentServerEntry].mLadderReportURL);
 
 		MReport_Clear(TRUE);
 	}
 	return lReturnValue;
 }
 
-BOOL MR_SendRaceResult(HWND pParentWindow, const char *pTrack, int pBestLapTime, int pMajorID, int pMinorID, const char *pAlias, unsigned int pTrackSum, int pHoverModel, int pTotalTime, int pNbLap, int pNbPlayer)
+BOOL MR_SendRaceResult(HWND pParentWindow, const char *pTrack,
+                       int pBestLapTime, int pMajorID, int pMinorID,
+                       const char *pAlias, unsigned int pTrackSum,
+                       int pHoverModel, int pTotalTime,
+                       int pNbLap, int pNbPlayer)
 {
 	BOOL lReturnValue = FALSE;
 
@@ -2464,7 +2484,11 @@ BOOL MR_SendRaceResult(HWND pParentWindow, const char *pTrack, int pBestLapTime,
 		   else
 		   {
 		 */
-		gScoreRequestStr.Format("%s?=RESULT%%%%%u%%%%%s%%%%%s%%%%%u%%%%%d%%%%%d%%%%%d%%%%%d", (const char *) gScoreServer.mURL, pBestLapTime, (const char *) MR_Pad(pTrack), (const char *) MR_Pad(pAlias), pTrackSum, pHoverModel, pTotalTime, pNbLap, pNbPlayer);
+		gScoreRequestStr.Format(
+			"%s?=RESULT%%%%%u%%%%%s%%%%%s%%%%%u%%%%%d%%%%%d%%%%%d%%%%%d",
+			(const char *) gScoreServer.mURL, pBestLapTime,
+			(const char *) MR_Pad(pTrack), (const char *) MR_Pad(pAlias),
+			pTrackSum, pHoverModel, pTotalTime, pNbLap, pNbPlayer);
 		//}
 
 		lReturnValue = DialogBoxW(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDD_NET_PROGRESS), pParentWindow, UpdateScoresCallBack) == IDOK;
