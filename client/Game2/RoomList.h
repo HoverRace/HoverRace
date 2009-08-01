@@ -72,6 +72,7 @@ class RoomList
 		typedef std::vector<Banner*> banners_t;
 		banners_t banners;
 };
+typedef boost::shared_ptr<RoomList> RoomListPtr;
 
 std::istream &operator>>(std::istream &in, RoomList::IpAddr &ip);
 std::istream &operator>>(std::istream &in, RoomList::Server &server);
