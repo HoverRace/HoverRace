@@ -23,12 +23,41 @@
 #include "StdAfx.h"
 
 #include "../../engine/Net/Agent.h"
+#include "../../engine/Net/NetExn.h"
+#include "../../engine/Util/OS.h"
 
 #include "RoomList.h"
 
 using namespace HoverRace;
 using namespace HoverRace::Client;
+using HoverRace::Util::OS;
 
+RoomList::RoomList()
+{
+}
+
+RoomList::~RoomList()
+{
+	for (rooms_t::iterator iter = rooms.begin();
+		iter != rooms.end(); ++iter)
+	{
+		delete *iter;
+	}
+
+	for (banners_t::iterator iter = banners.begin();
+		iter != banners.end(); ++iter)
+	{
+		delete *iter;
+	}
+}
+
+/**
+ * Load the roomlist from a URL.
+ * @param url The URL.
+ * @param cancelFlag Optional callback to cancel the transfer.
+ * @throw NetExn An error occurred during the transfer.
+ * @throw CanceledExn The transfer was canceled.
+ */
 void RoomList::LoadFromUrl(const std::string &url, Net::CancelFlagPtr cancelFlag)
 {
 	Net::Agent agent(url);
@@ -37,5 +66,99 @@ void RoomList::LoadFromUrl(const std::string &url, Net::CancelFlagPtr cancelFlag
 	std::stringstream io;
 	agent.Get(io, cancelFlag);
 
-	//TODO: Parse lines.
+	LoadFromStream(io);
+}
+
+void RoomList::LoadFromStream(std::istream &in)
+{
+	std::string ris;
+
+	std::getline(in, ris);
+	if (ris != "SERVER LIST") throw Net::NetExn("Invalid format: Missing preamble");
+
+	in.exceptions(std::istream::badbit | std::istream::failbit);
+
+	for (;;) {
+		int type;
+		try {
+			in >> type;
+		}
+		catch (std::istream::failure&) {
+			// End of stream.
+			break;
+		}
+
+		try {
+			switch (type) {
+				case 0:  // Score server
+					in >> scoreServer;
+					break;
+
+				case 1:  // Room entry
+					rooms.push_back(new Server());
+					in >> *(rooms.back());
+					break;
+
+				case 2:  // Room w/ ladder server.
+					// Currently unused.
+					break;
+
+				case 8:  // Public banner
+					banners.push_back(new Banner());
+					in >> *(banners.back());
+					break;
+
+				case 9:  // Registered banner
+					// Currently ignored.
+					break;
+			}
+			// Consume trailing characters in line.
+			std::getline(in, ris);
+		}
+		catch (std::istream::failure&) {
+			throw Net::NetExn("Parse error");
+		}
+	}
+}
+
+std::istream &HoverRace::Client::operator>>(std::istream &in, RoomList::IpAddr &ip)
+{
+	std::string ris;
+	in >> ris;
+	
+	unsigned int i = 0;
+	unsigned int nibble = 0;
+	unsigned int components = 1;
+	for (std::string::iterator iter = ris.begin();
+		iter != ris.end(); ++iter)
+	{
+		char c = *iter;
+		if (c >= '0' && c <= '9') {
+			nibble = (nibble * 10) + (c - '0');
+		}
+		else if (c == '.') {
+			i = (i << 8) + nibble;
+			nibble = 0;
+		}
+		else {
+			in.setstate(std::istream::failbit);
+		}
+	}
+	i = (i << 8) + nibble;
+
+	ip.ud = i;
+
+	return in;
+}
+
+std::istream &HoverRace::Client::operator>>(std::istream &in, RoomList::Server &server)
+{
+	in >> server.name >> server.addr >> server.port >> server.path;
+	return in;
+}
+
+std::istream &HoverRace::Client::operator>>(std::istream &in, RoomList::Banner &banner)
+{
+	in >> (RoomList::Server&)banner >> banner.delay >> banner.clickUrl;
+	return in;
 }

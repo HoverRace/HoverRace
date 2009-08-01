@@ -27,15 +27,56 @@
 namespace HoverRace {
 namespace Client {
 
-class RoomList {
+class RoomList
+{
 	public:
-		RoomList() { }
-		~RoomList() { }
+		RoomList();
+		~RoomList();
 
 	public:
 		void LoadFromUrl(const std::string &url,
 			Net::CancelFlagPtr cancelFlag=Net::CancelFlagPtr());
+		void LoadFromStream(std::istream &in);
+
+	public:
+		class IpAddr
+		{
+			unsigned int ud;
+			public:
+				operator unsigned int() { return ud; }
+				friend std::istream &operator>>(std::istream &in, IpAddr &ip);
+		};
+		struct Server
+		{
+			std::string name;  ///< Server name
+			IpAddr addr;       ///< IPv4 packed address
+			int port;
+			std::string path;  ///< Request URI (formerly @c mURL)
+
+			friend std::istream &operator>>(std::istream &in, Server &server);
+		};
+		struct Banner : public Server
+		{
+			int delay;             ///< Delay in seconds (formerly @c mDelay)
+			std::string clickUrl;  ///< Banner click URL
+			bool indirectClick;    ///< Load location first (formerly @c mIndirectClick)
+			std::string cookie;    ///< Storage for cookie info after banner is loaded (formerly @c mLastCookie).
+
+			friend std::istream &operator>>(std::istream &in, Banner &server);
+		};
+
+	private:
+		Server scoreServer;
+		typedef std::vector<Server*> rooms_t;
+		rooms_t rooms;
+		typedef std::vector<Banner*> banners_t;
+		banners_t banners;
 };
+
+std::istream &operator>>(std::istream &in, RoomList::IpAddr &ip);
+std::istream &operator>>(std::istream &in, RoomList::Server &server);
+std::istream &operator>>(std::istream &in, RoomList::Banner &banner);
 
 }  // namespace Client
 }  // namespace HoverRace
+

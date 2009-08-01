@@ -2127,7 +2127,12 @@ BOOL CALLBACK MR_InternetRoom::GetAddrCallBack(HWND pWindow, UINT pMsgId, WPARAM
 						switch (lServerType) {
 							case 0:
 								{
-									if(sscanf(lData, "%d %40s %u.%u.%u.%u %u %120s", &gScoreServer.mType, lNameBuffer, &lNibble[0], &lNibble[1], &lNibble[2], &lNibble[3], &gScoreServer.mPort, lURLBuffer) == 8) {
+									if(sscanf(lData, "%d %40s %u.%u.%u.%u %u %120s",
+										&gScoreServer.mType,
+										lNameBuffer,
+										&lNibble[0], &lNibble[1], &lNibble[2], &lNibble[3],
+										&gScoreServer.mPort, lURLBuffer) == 8)
+									{
 										gScoreServer.mName = lNameBuffer;
 										gScoreServer.mURL = lURLBuffer;
 										gScoreServer.mAddress = lNibble[0]
