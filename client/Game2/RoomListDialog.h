@@ -22,6 +22,8 @@
 
 #pragma once
 
+#include "RoomList.h"
+
 namespace HoverRace {
 namespace Client {
 
@@ -46,6 +48,7 @@ class RoomListDialog {
 	protected:
 		const std::string &GetUrl() const { return url; }
 		const std::string &GetErrorMessage() const { return errMsg; }
+		RoomListPtr GetRoomList() const { return roomList; }
 
 	protected:
 		enum result_t {
@@ -67,6 +70,7 @@ class RoomListDialog {
 		std::string url;
 		boost::thread loadThread;
 		std::string errMsg;
+		RoomListPtr roomList;
 
 	protected:
 		static const WM_APP_LOAD_COMPLETE = WM_APP + 20;

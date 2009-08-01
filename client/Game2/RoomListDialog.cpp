@@ -79,7 +79,8 @@ void RoomListDialog::ThreadProc(HWND hwnd)
 	result_t result;
 	Net::CancelFlagPtr cancelFlag((Net::CancelFlag*)new ThreadInterruptedCancelFlag());
 	try {
-		RoomList().LoadFromUrl(url, cancelFlag);
+		roomList = RoomListPtr(new RoomList());
+		roomList->LoadFromUrl(url, cancelFlag);
 		result = RESULT_SUCCESS;
 	}
 	catch (Net::CanceledExn&) {
