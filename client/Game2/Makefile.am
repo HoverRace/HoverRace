@@ -13,6 +13,8 @@ hoverrace_SOURCES = \
 	Console.h \
 	Controller.cpp \
 	Controller.h \
+	RoomList.cpp \
+	RoomList.h \
 	main.cpp \
 	version.h
 
