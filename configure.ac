@@ -67,6 +67,7 @@ AC_CONFIG_FILES([
 	engine/ColorTools/Makefile
 	engine/MainCharacter/Makefile
 	engine/Model/Makefile
+	engine/Net/Makefile
 	engine/ObjFac1/Makefile
 	engine/ObjFacTools/Makefile
 	engine/Script/Makefile
