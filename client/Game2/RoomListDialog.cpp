@@ -35,7 +35,7 @@ using namespace HoverRace::Client;
 namespace {
 	// CancelFlag that checks if the thread has been interrupted.
 	// Note: This cannot be moved to the engine since it must be in the same
-	//       module as where the thread was created, due to limitatinos of
+	//       module as where the thread was created, due to limitations of
 	//       boost::thread.
 	class ThreadInterruptedCancelFlag : public Net::CancelFlag
 	{
