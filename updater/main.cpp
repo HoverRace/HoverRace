@@ -87,7 +87,7 @@ int main(int argc, const char **argv) {
 		}
 	}
 
-	if(sourceDir == "") {
+	if(createUpdate && sourceDir == "") {
 		fprintf(stderr, "No source directory supplied!\n");
 		return -1;
 	} 

@@ -60,7 +60,7 @@ int CreatePatch(string oldDir, string newDir, string patchFile) {
 
 			copy_file(path(oldFile), path(newFile));
 
-			newFiles.push_back(patchName);
+			newFiles.push_back(*it);
 		} else {
 			// we must create a patch
 			string oldFile = path(oldDir).file_string() + "/" + *index;
@@ -92,7 +92,7 @@ int CreatePatch(string oldDir, string newDir, string patchFile) {
 
 	// now, what is left in our old listing that we haven't removed, we will need to erase
 	string digestFile = current_path().file_string() + "/temp_patch/DIGEST";
-	FILE *digest = fopen(digestFile.c_str(), "w");
+	FILE *digest = fopen(digestFile.c_str(), "wb");
 
 	// write files to patch to digest
 	for(vector<string>::iterator it = patchFiles.begin(); it != patchFiles.end(); it++)
