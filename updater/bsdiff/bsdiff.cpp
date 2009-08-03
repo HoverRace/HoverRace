@@ -17,9 +17,6 @@
  * - ryan */
 
 #include "bsdiff.h"
-#include <errno.h>
-
-extern int errno;
 
 void err(char a, char* format, char* param)
 {
