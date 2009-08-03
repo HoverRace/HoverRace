@@ -33,7 +33,7 @@ using namespace HoverRace::Client;
 using HoverRace::Util::OS;
 
 RoomList::RoomList() :
-	selectedRoom(NULL)
+	selectedRoom(NULL), curBanner(NULL), curBannerIdx(0)
 {
 }
 
@@ -130,6 +130,11 @@ void RoomList::LoadFromStream(std::istream &in)
 	if (rooms.empty()) {
 		throw Net::NetExn("No rooms available");
 	}
+
+	if (!banners.empty()) {
+		curBanner = banners.front();
+		curBannerIdx = 0;
+	}
 }
 
 /**
@@ -143,12 +148,23 @@ void RoomList::SetSelectedRoom(size_t index)
 	selectedRoom = (index >= 0 && index < rooms.size()) ? rooms.at(index) : NULL;
 }
 
+/**
+ * Rotate to the next banner in the banner list.
+ * Will have no effect if there are no banners.
+ * @return The next banner in the list (@c NULL if banner list is empty).
+ */
+RoomList::Banner *RoomList::NextBanner()
+{
+	return (curBanner =
+		banners.empty() ? NULL : banners.at((++curBannerIdx) % banners.size()));
+}
+
 std::istream &HoverRace::Client::operator>>(std::istream &in, RoomList::IpAddr &ip)
 {
 	std::string ris;
 	in >> ris;
 	
-	unsigned int i = 0;
+	unsigned long i = 0;
 	unsigned int nibble = 0;
 	unsigned int components = 1;
 	for (std::string::iterator iter = ris.begin();

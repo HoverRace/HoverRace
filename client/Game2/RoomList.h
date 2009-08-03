@@ -41,9 +41,9 @@ class RoomList
 	public:
 		class IpAddr
 		{
-			unsigned int ud;
+			unsigned long ud;
 			public:
-				operator unsigned int() { return ud; }
+				operator unsigned long() const { return ud; }
 				friend std::istream &operator>>(std::istream &in, IpAddr &ip);
 		};
 		struct Server
@@ -71,15 +71,21 @@ class RoomList
 		void SetSelectedRoom(size_t index);
 
 		const Server &GetScoreServer() const { return scoreServer; }
+		
 		const rooms_t &GetRooms() const { return rooms; }
 		const Server *GetSelectedRoom() const { return selectedRoom; }
+		
 		const banners_t &GetBanners() const { return banners; }
+		const bool HasBanners() const { return !banners.empty(); }
+		Banner *NextBanner();
 
 	private:
 		Server scoreServer;
 		rooms_t rooms;
 		Server *selectedRoom;
 		banners_t banners;
+		Banner *curBanner;
+		int curBannerIdx;
 };
 typedef boost::shared_ptr<RoomList> RoomListPtr;
 
