@@ -68,13 +68,17 @@ class RoomList
 		typedef std::vector<Server*> rooms_t;
 		typedef std::vector<Banner*> banners_t;
 
+		void SetSelectedRoom(size_t index);
+
 		const Server &GetScoreServer() const { return scoreServer; }
 		const rooms_t &GetRooms() const { return rooms; }
+		const Server *GetSelectedRoom() const { return selectedRoom; }
 		const banners_t &GetBanners() const { return banners; }
 
 	private:
 		Server scoreServer;
 		rooms_t rooms;
+		Server *selectedRoom;
 		banners_t banners;
 };
 typedef boost::shared_ptr<RoomList> RoomListPtr;

@@ -32,7 +32,8 @@ using namespace HoverRace;
 using namespace HoverRace::Client;
 using HoverRace::Util::OS;
 
-RoomList::RoomList()
+RoomList::RoomList() :
+	selectedRoom(NULL)
 {
 }
 
@@ -129,6 +130,17 @@ void RoomList::LoadFromStream(std::istream &in)
 	if (rooms.empty()) {
 		throw Net::NetExn("No rooms available");
 	}
+}
+
+/**
+ * Set the currently-selected room index.
+ * If an invalid @p index is provided, then the currently-selected room is
+ * set to @c NULL.
+ * @param index The index.
+ */
+void RoomList::SetSelectedRoom(size_t index)
+{
+	selectedRoom = (index >= 0 && index < rooms.size()) ? rooms.at(index) : NULL;
 }
 
 std::istream &HoverRace::Client::operator>>(std::istream &in, RoomList::IpAddr &ip)
