@@ -108,10 +108,11 @@ int bsdiff_patch_file(char *patchFile, char *oldFile, char *newFile)
 
 	//if(argc!=4) errx(1,"usage: %s oldfile newfile patchfile\n",argv[0]);
 
-	if(((fd=fopen(patchFile,"rb"))<=0) ||
-		(fseek(fd,0,SEEK_END)!=0) ||
-		((patchsize=ftell(fd)) == 0) ||
-		(fseek(fd,0,SEEK_SET)!=0)) errx(1,"Problem patchsize %s",patchFile);
+	fd = fopen(patchFile, "rb");
+	if((fd == NULL) ||
+	   (fseek(fd,0,SEEK_END)!=0) ||
+	   ((patchsize=ftell(fd)) == 0) ||
+	   (fseek(fd,0,SEEK_SET)!=0)) errx(1,"Problem patchsize %s",patchFile);
 	if(patchsize<32) errx(1,"Corrupt patch\n");
 
 	/*
