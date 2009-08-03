@@ -161,14 +161,17 @@ RoomList::Banner *RoomList::NextBanner()
 
 std::istream &HoverRace::Client::operator>>(std::istream &in, RoomList::IpAddr &ip)
 {
-	std::string ris;
-	in >> ris;
+	// InternetRoom uses IPv4 addresses packed into an unsigned long.
+	// We store both the string and unsigned long versions for now
+	// to ease in the transition.
+
+	in >> ip.s;
 	
 	unsigned long i = 0;
 	unsigned int nibble = 0;
 	unsigned int components = 1;
-	for (std::string::iterator iter = ris.begin();
-		iter != ris.end(); ++iter)
+	for (std::string::iterator iter = ip.s.begin();
+		iter != ip.s.end(); ++iter)
 	{
 		char c = *iter;
 		if (c >= '0' && c <= '9') {

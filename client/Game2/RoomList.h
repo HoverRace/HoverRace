@@ -41,8 +41,10 @@ class RoomList
 	public:
 		class IpAddr
 		{
-			unsigned long ud;
+			std::string s;     ///< As original string
+			unsigned long ud;  ///< As packed 32-bit number
 			public:
+				operator std::string() const { return s; }
 				operator unsigned long() const { return ud; }
 				friend std::istream &operator>>(std::istream &in, IpAddr &ip);
 		};
