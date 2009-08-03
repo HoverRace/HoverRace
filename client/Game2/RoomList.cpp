@@ -78,6 +78,7 @@ void RoomList::LoadFromStream(std::istream &in)
 
 	in.exceptions(std::istream::badbit | std::istream::failbit);
 
+	bool foundScoreServer = false;
 	for (;;) {
 		int type;
 		try {
@@ -92,6 +93,7 @@ void RoomList::LoadFromStream(std::istream &in)
 			switch (type) {
 				case 0:  // Score server
 					in >> scoreServer;
+					foundScoreServer = true;
 					break;
 
 				case 1:  // Room entry
@@ -119,6 +121,14 @@ void RoomList::LoadFromStream(std::istream &in)
 			throw Net::NetExn("Parse error");
 		}
 	}
+
+	// Verify data.
+	if (!foundScoreServer) {
+		throw Net::NetExn("No score server");
+	}
+	if (rooms.empty()) {
+		throw Net::NetExn("No rooms available");
+	}
 }
 
 std::istream &HoverRace::Client::operator>>(std::istream &in, RoomList::IpAddr &ip)
@@ -139,12 +149,18 @@ std::istream &HoverRace::Client::operator>>(std::istream &in, RoomList::IpAddr &
 		else if (c == '.') {
 			i = (i << 8) + nibble;
 			nibble = 0;
+			++components;
 		}
 		else {
-			in.setstate(std::istream::failbit);
+			throw Net::NetExn(boost::str(boost::format(
+				"Invalid character in IP address: 0x%02x") % (int)c));
 		}
 	}
 	i = (i << 8) + nibble;
+
+	if (components != 4) {
+		throw Net::NetExn("Invalid IP address in roomlist");
+	}
 
 	ip.ud = i;
 
