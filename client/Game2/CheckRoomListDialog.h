@@ -42,8 +42,6 @@ class CheckRoomListDialog : public RoomListDialog
 
 	public:
 		void ShowModal(HINSTANCE hinst, HWND parent);
-	private:
-		void DisplayError(HWND parent) const;
 
 	protected:
 		virtual void HandleLoadFinished(HWND hwnd, result_t result);

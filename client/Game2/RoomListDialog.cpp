@@ -24,6 +24,7 @@
 
 #include "../../engine/Net/Agent.h"
 #include "../../engine/Net/NetExn.h"
+#include "../../engine/Util/Str.h"
 
 #include "RoomList.h"
 
@@ -31,6 +32,7 @@
 
 using namespace HoverRace;
 using namespace HoverRace::Client;
+using namespace HoverRace::Util;
 
 namespace {
 	// CancelFlag that checks if the thread has been interrupted.
@@ -71,6 +73,22 @@ RoomListDialog::~RoomListDialog()
 void RoomListDialog::CancelLoad()
 {
 	loadThread.interrupt();
+}
+
+/**
+ * Display an error message in a message box.
+ * @parent The parent window.
+ */
+void RoomListDialog::DisplayError(HWND parent) const
+{
+	std::string msg = _("Error while retrieving roomlist:");
+	msg += '\n';
+	msg += url;
+	msg += "\n\n";
+	msg += errMsg;
+
+	MessageBoxW(parent, Str::UW(msg.c_str()), PACKAGE_NAME_L,
+		MB_ICONWARNING | MB_OK);
 }
 
 // Roomlist load thread.

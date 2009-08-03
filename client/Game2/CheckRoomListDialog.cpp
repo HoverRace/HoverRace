@@ -69,18 +69,6 @@ void CheckRoomListDialog::ShowModal(HINSTANCE hinst, HWND parent)
 	}
 }
 
-void CheckRoomListDialog::DisplayError(HWND parent) const
-{
-	std::string msg = _("Error while retrieving roomlist:");
-	msg += '\n';
-	msg += GetUrl();
-	msg += "\n\n";
-	msg += GetErrorMessage();
-
-	MessageBoxW(parent, Str::UW(msg.c_str()), PACKAGE_NAME_L,
-		MB_ICONWARNING | MB_OK);
-}
-
 void CheckRoomListDialog::HandleLoadFinished(HWND hwnd, result_t result)
 {
 	EnableWindow(GetDlgItem(hwnd, IDCANCEL), FALSE);

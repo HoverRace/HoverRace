@@ -57,6 +57,7 @@ class RoomListDialog {
 			RESULT_FAILED,
 		};
 		void CancelLoad();
+		void DisplayError(HWND parent) const;
 		virtual void HandleLoadFinished(HWND hwnd, result_t result) = 0;
 
 	private:
