@@ -65,11 +65,16 @@ class RoomList
 			friend std::istream &operator>>(std::istream &in, Banner &server);
 		};
 
+		typedef std::vector<Server*> rooms_t;
+		typedef std::vector<Banner*> banners_t;
+
+		const Server &GetScoreServer() const { return scoreServer; }
+		const rooms_t &GetRooms() const { return rooms; }
+		const banners_t &GetBanners() const { return banners; }
+
 	private:
 		Server scoreServer;
-		typedef std::vector<Server*> rooms_t;
 		rooms_t rooms;
-		typedef std::vector<Banner*> banners_t;
 		banners_t banners;
 };
 typedef boost::shared_ptr<RoomList> RoomListPtr;
