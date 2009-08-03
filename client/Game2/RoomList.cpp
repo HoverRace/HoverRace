@@ -204,5 +204,8 @@ std::istream &HoverRace::Client::operator>>(std::istream &in, RoomList::Server &
 std::istream &HoverRace::Client::operator>>(std::istream &in, RoomList::Banner &banner)
 {
 	in >> (RoomList::Server&)banner >> banner.delay >> banner.clickUrl;
+
+	banner.indirectClick = (banner.clickUrl.find("//") == std::string::npos);
+
 	return in;
 }
