@@ -142,8 +142,15 @@ int PatchHoverRace(string targetDir, string patchFile) {
 		if(action != 'D') {
 			// remove extracted file
 			remove(path(current_path().file_string() + "\\" + filename));
+
+			if(strcmp(path(filename).branch_path().file_string().c_str(), "") != 0) // must remove parent directory if it exists
+				remove_all(path(filename).branch_path());
 		}
 	}
+
+	// close and remove digest
+	fclose(digest);
+	remove(path(current_path().file_string() + "\\DIGEST"));
 
 	UnzipClose(huz);
 
