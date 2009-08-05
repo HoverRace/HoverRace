@@ -47,6 +47,11 @@ int PatchHoverRace(string targetDir, string patchFile) {
 
 	FILE *digest = fopen("DIGEST", "rb");
 
+	if(digest == NULL) {
+		fprintf(stderr, "Cannot open DIGEST!\n");
+		return -1;
+	}
+
 	// unpack each file
 	// we do not have to worry about changing directory as the compressed files
 	// are in a directory with the same name as the patch file
@@ -86,7 +91,7 @@ int PatchHoverRace(string targetDir, string patchFile) {
 					size_t bsdiffLoc = bsdiffPatch.rfind(".bsdiff");
 					if(bsdiffLoc == string::npos) {
 						fprintf(stderr, "Invalid patchfile name %s\n", bsdiffPatch.c_str());
-						return -1;
+						fail = true;
 					} else {
 						// strip patch directory (it may not exist)
 						size_t slashLoc = bsdiffPatch.find("/");
@@ -102,11 +107,11 @@ int PatchHoverRace(string targetDir, string patchFile) {
 						// now move .tmp to original
 						if(remove(fileToPatch.c_str()) != 0) {
 							fprintf(stderr, "Error removing %s\n", fileToPatch.c_str());
-							return -1;
+							fail = true;
 						} else {
 							if(rename(newFile.c_str(), fileToPatch.c_str()) != 0) {
 								fprintf(stderr, "Error moving %s to %s\n", newFile.c_str(), fileToPatch.c_str());
-								return -1;
+								fail = true;
 							}
 							
 							// file has been patched successfully...
@@ -154,5 +159,6 @@ int PatchHoverRace(string targetDir, string patchFile) {
 
 	UnzipClose(huz);
 
-	fprintf(stdout, "Patching complete!\n");
+	if(!fail)
+		fprintf(stdout, "Patching complete!\n");
 }
