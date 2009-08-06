@@ -25,6 +25,7 @@
 #define NETWORK_SESSION_H
 
 #include "ClientSession.h"
+#include "RoomList.h"
 #include "NetInterface.h"
 
 /**
@@ -61,6 +62,8 @@ class MR_NetworkSession : public MR_ClientSession
 		BOOL mSended8SecClockUpdate;
 		int mMajorID;
 		int mMinorID;
+
+		HoverRace::Client::RoomListPtr roomList;
 
 		int mSendedPlayerStats;
 		MR_FreeElementHandle mClient[MR_NetworkInterface::eMaxClient];
@@ -121,6 +124,7 @@ class MR_NetworkSession : public MR_ClientSession
 
 		void SetPlayerName(const char *pPlayerName);
 		const char *GetPlayerName() const;
+		void SetRoomList(HoverRace::Client::RoomListPtr roomList);
 		BOOL WaitConnections(HWND pWindow, const char *pTrackName, BOOL pPromptForPort = TRUE,
 			unsigned pDefaultPort = HoverRace::Util::Config::GetInstance()->net.tcpServPort,
 			HWND * pModalessDlg = NULL, int pReturnMessage = 0);

@@ -39,6 +39,8 @@
 #define MRNM_SEND_KEYID               9
 #define MRNM_HIT_MESSAGE             10
 
+using namespace HoverRace::Client;
+
 // Local structures
 class MR_PlayerStats
 {
@@ -54,8 +56,9 @@ class MR_PlayerStats
  * Initializes the MR_NetworkSession.  Sets default values; main character
  * creation will be sent at least 5 seconds before the game starts.
  */
-MR_NetworkSession::MR_NetworkSession(BOOL pInternetGame, int pMajorID, int pMinorID, HWND pWindow)
-:MR_ClientSession()
+MR_NetworkSession::MR_NetworkSession(BOOL pInternetGame, int pMajorID,
+                                     int pMinorID, HWND pWindow) :
+	MR_ClientSession()
 {
 	mMasterMode = FALSE;
 	mInternetGame = pInternetGame;
@@ -128,8 +131,17 @@ MR_NetworkSession::~MR_NetworkSession()
 
 				int lTotalLap = mMainCharacter1->GetTotalLap();
 
-				MR_SendRaceResult(mWindow, mSession.GetTitle(), lPlayer->mBestLap, mMajorID, mMinorID, mNetInterface.GetPlayerName(-1), mSession.GetCurrentMazeFile()->GetCheckSum(), mMainCharacter1->GetHoverModel(), (lPlayer->mNbCompletedLap == -1) ? lPlayer->mFinishTime : 0, (lPlayer->mNbCompletedLap == -1) ? lTotalLap : 0, lNbPlayer);
 
+				MR_SendRaceResult(mWindow, mSession.GetTitle(),
+					lPlayer->mBestLap, mMajorID, mMinorID,
+					mNetInterface.GetPlayerName(-1),
+					mSession.GetCurrentMazeFile()->GetCheckSum(),
+					mMainCharacter1->GetHoverModel(),
+					(lPlayer->mNbCompletedLap == -1) ? lPlayer->mFinishTime : 0,
+					(lPlayer->mNbCompletedLap == -1) ? lTotalLap : 0,
+					lNbPlayer, roomList);
+
+				/*
 				// Report ladder matchs
 				if(lNbPlayer == 2) {
 					int lWinnerIndex = mResultList->mPlayerIndex;
@@ -140,6 +152,7 @@ MR_NetworkSession::~MR_NetworkSession()
 
 					}
 				}
+				*/
 			}
 		//}
 	}
@@ -702,6 +715,11 @@ void MR_NetworkSession::SetPlayerName(const char *pPlayerName)
 const char *MR_NetworkSession::GetPlayerName() const
 {
 	return mNetInterface.GetPlayerName();
+}
+
+void MR_NetworkSession::SetRoomList(HoverRace::Client::RoomListPtr roomList)
+{
+	this->roomList = roomList;
 }
 
 /**

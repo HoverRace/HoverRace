@@ -30,6 +30,7 @@
 #include "TrackSelect.h"
 #include "NetworkSession.h"
 #include "Banner.h"
+#include "RoomList.h"
 
 class MR_InternetRequest
 {
@@ -113,6 +114,8 @@ class MR_InternetRoom
 
 		static MR_InternetRoom *mThis;
 
+		HoverRace::Client::RoomListPtr roomList;
+
 		std::string mMainServer;
 
 		int mCurrentUserIndex;
@@ -152,7 +155,9 @@ class MR_InternetRoom
 
 		std::ofstream *chatLog;
 
+		/*
 		static BOOL CALLBACK AskParamsCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
+		*/
 		static BOOL CALLBACK RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 		static BOOL CALLBACK BannerCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 		static BOOL CALLBACK NetOpCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
@@ -160,7 +165,9 @@ class MR_InternetRoom
 		static BOOL CALLBACK GetAddrCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 
 		BOOL AskRoomParams(HWND pParentWindow, BOOL pShouldRecheckServer);
+		/*
 		BOOL LocateServers(HWND pWindow, BOOL pShouldRecheckServer);
+		*/
 		BOOL AddUserOp(HWND pParentWindow);
 		BOOL DelUserOp(HWND pParentWindow, BOOL pFastMode = FALSE);
 		BOOL AddGameOp(HWND pParentWindow, const char *pGameName, const char *pTrackName, int pNbLap, char pGameOpts, unsigned pPort);
@@ -189,6 +196,8 @@ class MR_InternetRoom
 		MR_InternetRoom(const std::string &pMainServer);
 		~MR_InternetRoom();
 
+		HoverRace::Client::RoomListPtr GetRoomList() const { return roomList; }
+
 		BOOL DisplayChatRoom(HWND pParentWindow, MR_NetworkSession *pSession, MR_VideoBuffer *pVideoBuffer, BOOL pShouldRecheckServer);
 
 		// Modelless.. do not use for the moment
@@ -199,6 +208,14 @@ class MR_InternetRoom
 
 };
 
-BOOL MR_SendRaceResult(HWND pParentWindow, const char *pTrack, int pBestLapTime, int pMajorID, int pMinorID, const char *pAlias, unsigned int pTrackSum, int pHoverModel, int pTotalTime, int pNbLap, int pNbPlayer);
-BOOL MR_SendLadderResult(HWND pParentWindow, const char *pWinAlias, int pWinMajorID, int pWinMinorID, const char *pLoseAlias, int pLoseMajorID, int pLoseMinorID, const char *pTrack, int pNbLap);
+BOOL MR_SendRaceResult(HWND pParentWindow, const char *pTrack,
+	int pBestLapTime, int pMajorID, int pMinorID, const char *pAlias,
+	unsigned int pTrackSum, int pHoverModel, int pTotalTime,
+	int pNbLap, int pNbPlayer, HoverRace::Client::RoomListPtr roomList);
+
+/*
+BOOL MR_SendLadderResult(HWND pParentWindow, const char *pWinAlias,
+	int pWinMajorID, int pWinMinorID, const char *pLoseAlias,
+	int pLoseMajorID, int pLoseMinorID, const char *pTrack, int pNbLap);
+*/
 #endif

@@ -281,6 +281,12 @@
 				RelativePath=".\Game2\RoomListDialog.h">
 			</File>
 			<File
+				RelativePath=".\Game2\SelectRoomDialog.cpp">
+			</File>
+			<File
+				RelativePath=".\Game2\SelectRoomDialog.h">
+			</File>
+			<File
 				RelativePath=".\Game2\StdAfx.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
