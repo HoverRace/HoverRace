@@ -159,6 +159,11 @@ RoomList::Banner *RoomList::NextBanner()
 		banners.empty() ? NULL : banners.at((++curBannerIdx) % banners.size()));
 }
 
+RoomList::Banner *RoomList::PeekNextBanner() const
+{
+	return banners.empty() ? NULL : banners.at((curBannerIdx + 1) % banners.size());
+}
+
 std::istream &HoverRace::Client::operator>>(std::istream &in, RoomList::IpAddr &ip)
 {
 	// InternetRoom uses IPv4 addresses packed into an unsigned long.

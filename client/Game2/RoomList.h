@@ -61,7 +61,7 @@ class RoomList
 		{
 			int delay;             ///< Delay in seconds (formerly @c mDelay)
 			std::string clickUrl;  ///< Banner click URL
-			bool indirectClick;    ///< Load location first (formerly @c mIndirectClick)
+			bool indirectClick;    ///< Get the click URL from the server instead of navigating directly.
 			std::string cookie;    ///< Storage for cookie info after banner is loaded (formerly @c mLastCookie).
 
 			friend std::istream &operator>>(std::istream &in, Banner &server);
@@ -70,16 +70,17 @@ class RoomList
 		typedef std::vector<Server*> rooms_t;
 		typedef std::vector<Banner*> banners_t;
 
-		void SetSelectedRoom(size_t index);
-
 		const Server &GetScoreServer() const { return scoreServer; }
 		
 		const rooms_t &GetRooms() const { return rooms; }
 		const Server *GetSelectedRoom() const { return selectedRoom; }
+		void SetSelectedRoom(size_t index);
 		
 		const banners_t &GetBanners() const { return banners; }
 		const bool HasBanners() const { return !banners.empty(); }
+		Banner *GetCurrentBanner() const { return curBanner; }
 		Banner *NextBanner();
+		Banner *PeekNextBanner() const;
 
 	private:
 		Server scoreServer;
