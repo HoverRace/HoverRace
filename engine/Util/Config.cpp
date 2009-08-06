@@ -66,7 +66,8 @@ namespace fs = boost::filesystem;
 #define PREREL_CONFIG_FILENAME	"config-testing.yml"
 
 #define DEFAULT_NICKNAME		"Player"
-#define DEFAULT_MAIN_SERVER		"66.197.183.245/~sirbrock/imr/rl.php"
+#define DEFAULT_MAIN_SERVER		"http://www.hoverrace.com/imr/rl.php"
+#define OLD_MAIN_SERVER			"66.197.183.245/~sirbrock/imr/rl.php"
 
 #define READ_BOOL(root,name) \
 	{\
@@ -719,6 +720,13 @@ void Config::cfg_net_t::Load(yaml::MapNode *root)
 	READ_INT(root, udpRecvPort, 0, 65535);
 	READ_INT(root, tcpRecvPort, 0, 65535);
 	READ_INT(root, tcpServPort, 0, 65535);
+
+	// As of 1.24 we support DNS lookups, so use the real server URL.
+	if (mainServer == OLD_MAIN_SERVER ||
+		mainServer == "http://" OLD_MAIN_SERVER)
+	{
+		mainServer = DEFAULT_MAIN_SERVER;
+	}
 }
 
 void Config::cfg_net_t::Save(yaml::Emitter *emitter)
