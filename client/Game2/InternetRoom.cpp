@@ -108,17 +108,12 @@ int gCurrentBannerEntry = 0;
 
 MR_InternetRoom *MR_InternetRoom::mThis = NULL;
 
-static BOOL gAskPassword = TRUE;
-
 static CString MR_Pad(const char *pSrc);
 static CString GetLine(const char *pSrc);
 static int GetLineLen(const char *pSrc);
 static const char *GetNextLine(const char *pSrc);
 
 static int FindFocusItem(HWND pWindow);
-
-// DNS Cache
-static CString gUserNameCache;
 
 // MR_InternetRequest
 
