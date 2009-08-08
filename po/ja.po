@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
 "Report-Msgid-Bugs-To: bugs@hoverrace.com\n"
-"POT-Creation-Date: 2009-07-12 05:08-0400\n"
+"POT-Creation-Date: 2009-08-08 00:31-0400\n"
 "PO-Revision-Date: 2009-06-26 23:06-0500\n"
 "Last-Translator: Michael Imamura <zoogie@lugatgt.org>\n"
 "Language-Team: Japanese\n"
@@ -281,18 +281,18 @@ msgid ""
 "help."
 msgstr ""
 
-#: client/Game2/FullscreenTest.cpp:78
+#: client/Game2/FullscreenTest.cpp:76
 msgid ""
 "Fullscreen settings have changed.  Would you like to test these changes?"
 msgstr ""
 
-#: client/Game2/FullscreenTest.cpp:108
+#: client/Game2/FullscreenTest.cpp:106
 #, c-format, boost-format
 msgid "Returning in %d second."
 msgid_plural "Returning in %d seconds."
 msgstr[0] ""
 
-#: client/Game2/FullscreenTest.cpp:126
+#: client/Game2/FullscreenTest.cpp:124
 #, fuzzy
 msgid "HoverRace fullscreen test"
 msgstr "HoverRace バージョン "
@@ -473,11 +473,7 @@ msgid ""
 msgstr ""
 
 #: client/Game2/GameApp.cpp:1153 client/Game2/GameApp.cpp:1163
-#: client/Game2/InternetRoom.cpp:1391 client/Game2/InternetRoom.cpp:2440
-#: client/Game2/TrackDownloadDialog.cpp:228
-#: client/Game2/TrackDownloadDialog.cpp:239
-#: client/Game2/TrackDownloadDialog.cpp:247
-#: client/Game2/TrackDownloadDialog.cpp:333
+#: client/Game2/InternetRoom.cpp:2464
 msgid "HoverRace"
 msgstr "HoverRace"
 
@@ -498,7 +494,7 @@ msgctxt "HUD|Frames Per Second"
 msgid "FPS"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:525
+#: client/Game2/InternetRoom.cpp:521
 msgid "Connecting to the Internet Meeting Room..."
 msgstr ""
 
@@ -514,259 +510,222 @@ msgstr ""
 msgid "Disconnecting from the Internet Meeting Room..."
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:581
+#: client/Game2/InternetRoom.cpp:584
 msgid "Registering game with the Internet Meeting Room..."
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:615
+#: client/Game2/InternetRoom.cpp:622
 msgid "Unregistering game from the Internet Meeting Room..."
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:632
+#: client/Game2/InternetRoom.cpp:642
 msgid "Registering with the Internet Meeting Room..."
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:656
+#: client/Game2/InternetRoom.cpp:667
 msgid "Unregistering from the Internet Meeting Room..."
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:673
+#: client/Game2/InternetRoom.cpp:687
 msgid "Sending message to the Internet Meeting Room..."
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:768 client/Game2/InternetRoom.cpp:789
+#: client/Game2/InternetRoom.cpp:793 client/Game2/InternetRoom.cpp:814
 msgid "Unable to create chat log file:"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:769
+#: client/Game2/InternetRoom.cpp:794
 msgid "Unable to create directory:"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:790
+#: client/Game2/InternetRoom.cpp:815
 msgid "Unable to open file for writing:"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:801
+#: client/Game2/InternetRoom.cpp:826
 msgid "Chat log started at:"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:804
+#: client/Game2/InternetRoom.cpp:829
 msgid "Saving chat session to:"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:863
+#: client/Game2/InternetRoom.cpp:888
 msgid "[no selection]"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:877
+#: client/Game2/InternetRoom.cpp:902
 msgid "Available"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:881
+#: client/Game2/InternetRoom.cpp:906
 msgid "Join game to download from hoverrace.com"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1033
+#: client/Game2/InternetRoom.cpp:1058
 msgid "Communication error"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1039 client/Game2/InternetRoom.cpp:1091
+#: client/Game2/InternetRoom.cpp:1064 client/Game2/InternetRoom.cpp:1116
 msgid "Unable to add user"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1043
+#: client/Game2/InternetRoom.cpp:1068
 msgid "No more Shareware users allowed"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1047
+#: client/Game2/InternetRoom.cpp:1072
 msgid "No more user allowed"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1051
+#: client/Game2/InternetRoom.cpp:1076
 msgid "Incompatible version"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1055
+#: client/Game2/InternetRoom.cpp:1080
 msgid "Expired key"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1059
+#: client/Game2/InternetRoom.cpp:1084
 msgid "Already used key (report for investigation)"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1063
+#: client/Game2/InternetRoom.cpp:1088
 msgid "Unable to send refresh info"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1067 client/Game2/InternetRoom.cpp:1075
-#: client/Game2/InternetRoom.cpp:1083 client/Game2/InternetRoom.cpp:1095
-#: client/Game2/InternetRoom.cpp:1111 client/Game2/InternetRoom.cpp:1128
-#: client/Game2/InternetRoom.cpp:1146 client/Game2/InternetRoom.cpp:1155
-#: client/Game2/InternetRoom.cpp:1171
+#: client/Game2/InternetRoom.cpp:1092 client/Game2/InternetRoom.cpp:1100
+#: client/Game2/InternetRoom.cpp:1108 client/Game2/InternetRoom.cpp:1120
+#: client/Game2/InternetRoom.cpp:1136 client/Game2/InternetRoom.cpp:1153
+#: client/Game2/InternetRoom.cpp:1171 client/Game2/InternetRoom.cpp:1180
+#: client/Game2/InternetRoom.cpp:1196
 msgid "Not online"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1071
+#: client/Game2/InternetRoom.cpp:1096
 msgid "Unable to add chat message"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1079
+#: client/Game2/InternetRoom.cpp:1104
 msgid "Unable to add game"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1087
+#: client/Game2/InternetRoom.cpp:1112
 msgid "Entry is no longer available"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1099 client/Game2/InternetRoom.cpp:1116
-#: client/Game2/InternetRoom.cpp:1133 client/Game2/InternetRoom.cpp:1159
+#: client/Game2/InternetRoom.cpp:1124 client/Game2/InternetRoom.cpp:1141
+#: client/Game2/InternetRoom.cpp:1158 client/Game2/InternetRoom.cpp:1184
 msgid "Game is no longer available"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1103
+#: client/Game2/InternetRoom.cpp:1128
 msgid "Game is full"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1107
+#: client/Game2/InternetRoom.cpp:1132
 msgid "Unable to delete game"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1120 client/Game2/InternetRoom.cpp:1163
+#: client/Game2/InternetRoom.cpp:1145 client/Game2/InternetRoom.cpp:1188
 msgid "Not owner"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1124
+#: client/Game2/InternetRoom.cpp:1149
 msgid "Unable to leave game"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1138
+#: client/Game2/InternetRoom.cpp:1163
 msgid "Must join first"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1142
+#: client/Game2/InternetRoom.cpp:1167
 msgid "Unable to delete user"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1151
+#: client/Game2/InternetRoom.cpp:1176
 msgid "Unable to start game"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1167
+#: client/Game2/InternetRoom.cpp:1192
 msgid "Unable to add message"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1175
+#: client/Game2/InternetRoom.cpp:1200
 msgid "Not authorized"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1183
+#: client/Game2/InternetRoom.cpp:1208
 msgid "Unknown error code"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1194 client/Game2/InternetRoom.cpp:1318
-#: client/Game2/InternetRoom.cpp:1356 client/Game2/InternetRoom.cpp:1361
-#: client/Game2/InternetRoom.cpp:1392 client/Game2/InternetRoom.cpp:2076
-#: client/Game2/InternetRoom.cpp:2087 client/Game2/InternetRoom.cpp:2160
-#: client/Game2/InternetRoom.cpp:2316 client/Game2/NetworkPrefsPage.cpp:70
+#: client/Game2/InternetRoom.cpp:1219 client/Game2/InternetRoom.cpp:1363
+#: client/Game2/InternetRoom.cpp:2324 client/Game2/NetworkPrefsPage.cpp:71
 msgid "Internet Meeting Room"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1319
-msgid "Your alias:"
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp:1320
-msgid "Room:"
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp:1355
-msgid "You must enter an alias"
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp:1360
-msgid "You must select a room"
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp:1395
+#: client/Game2/InternetRoom.cpp:1366
 msgid "Game list"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1396
+#: client/Game2/InternetRoom.cpp:1367
 msgid "User list"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1397
+#: client/Game2/InternetRoom.cpp:1368
 msgid "Game details"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1398
+#: client/Game2/InternetRoom.cpp:1369
 msgid "Track name:"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1399
+#: client/Game2/InternetRoom.cpp:1370
 msgid "Laps:"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1400
+#: client/Game2/InternetRoom.cpp:1371
 msgid "Weapons:"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1401
+#: client/Game2/InternetRoom.cpp:1372
 msgid "Availability:"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1402
+#: client/Game2/InternetRoom.cpp:1373
 msgid "Player list:"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1403
+#: client/Game2/InternetRoom.cpp:1374
 msgid "Chat section"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1404
+#: client/Game2/InternetRoom.cpp:1375
 msgid "Join Game..."
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1405
+#: client/Game2/InternetRoom.cpp:1376
 msgid "New Game..."
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1406
+#: client/Game2/InternetRoom.cpp:1377
 msgid "Quit"
 msgstr "終了"
 
-#: client/Game2/InternetRoom.cpp:1563 client/Game2/InternetRoom.cpp:1590
+#: client/Game2/InternetRoom.cpp:1534 client/Game2/InternetRoom.cpp:1571
 msgid "Warning: communication timeout"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:2033 client/Game2/InternetRoom.cpp:2299
-#: client/Game2/InternetRoom.cpp:2363 client/Game2/InternetRoom.cpp:2422
-#: client/Game2/NetInterface.cpp:821
+#: client/Game2/InternetRoom.cpp:2302 client/Game2/InternetRoom.cpp:2371
+#: client/Game2/InternetRoom.cpp:2438 client/Game2/NetInterface.cpp:821
 msgid "Network Transaction Progress"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:2038
-msgid "Locating the main server..."
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp:2072
-msgid ""
-"Unable to find the server.\n"
-"You must be connected to the Internet to use this function.\n"
-"If the problem persists, you can report it to the\n"
-"HoverRace forums, in the 'Help Desk' section."
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp:2086 client/Game2/InternetRoom.cpp:2315
-#: client/Game2/InternetRoom.cpp:2440
+#: client/Game2/InternetRoom.cpp:2323 client/Game2/InternetRoom.cpp:2464
 msgid "Connection timeout"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:2159
-msgid "Server error; please contact the server administrator"
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp:2423
+#: client/Game2/InternetRoom.cpp:2439
 msgid "Registering your best lap time to the server"
 msgstr ""
 
@@ -942,51 +901,51 @@ msgstr ""
 msgid "no network connection"
 msgstr ""
 
-#: client/Game2/NetworkPrefsPage.cpp:44
+#: client/Game2/NetworkPrefsPage.cpp:45
 msgid "Network"
 msgstr ""
 
-#: client/Game2/NetworkPrefsPage.cpp:73
+#: client/Game2/NetworkPrefsPage.cpp:74
 msgid "Address of Server Roomlist:"
 msgstr ""
 
-#: client/Game2/NetworkPrefsPage.cpp:76
+#: client/Game2/NetworkPrefsPage.cpp:77
 msgid "&Log all chat sessions to:"
 msgstr ""
 
-#: client/Game2/NetworkPrefsPage.cpp:79
+#: client/Game2/NetworkPrefsPage.cpp:80
 msgid "Open Folder"
 msgstr ""
 
-#: client/Game2/NetworkPrefsPage.cpp:81
+#: client/Game2/NetworkPrefsPage.cpp:82
 msgid "Connection"
 msgstr ""
 
-#: client/Game2/NetworkPrefsPage.cpp:83
+#: client/Game2/NetworkPrefsPage.cpp:84
 msgid "TCP Server Port:"
 msgstr ""
 
-#: client/Game2/NetworkPrefsPage.cpp:84
+#: client/Game2/NetworkPrefsPage.cpp:85
 msgid "TCP Receive Port:"
 msgstr ""
 
-#: client/Game2/NetworkPrefsPage.cpp:85
+#: client/Game2/NetworkPrefsPage.cpp:86
 msgid "UDP Receive Port:"
 msgstr ""
 
-#: client/Game2/NetworkPrefsPage.cpp:99
+#: client/Game2/NetworkPrefsPage.cpp:100
 msgid "Select a destination folder for saved chat sessions."
 msgstr ""
 
-#: client/Game2/NetworkSession.cpp:637 client/Game2/NetworkSession.cpp:677
+#: client/Game2/NetworkSession.cpp:650 client/Game2/NetworkSession.cpp:690
 msgid "Press F2 when ready to return to the Meeting Room"
 msgstr ""
 
-#: client/Game2/NetworkSession.cpp:670
+#: client/Game2/NetworkSession.cpp:683
 msgid "has left"
 msgstr ""
 
-#: client/Game2/NetworkSession.cpp:680
+#: client/Game2/NetworkSession.cpp:693
 msgid "You are now alone"
 msgstr ""
 
