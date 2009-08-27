@@ -56,7 +56,7 @@ CheckRoomListDialog::~CheckRoomListDialog()
 void CheckRoomListDialog::ShowModal(HINSTANCE hinst, HWND parent)
 {
 	result_t result = (result_t)DialogBoxParamW(hinst,
-		MAKEINTRESOURCEW(IDD_CHECK_ROOMLIST),
+		MAKEINTRESOURCEW(IDD_PERFORMING_TASK),
 		parent, DlgFunc, reinterpret_cast<LPARAM>(this));
 	switch (result) {
 		case RESULT_SUCCESS:

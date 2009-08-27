@@ -39,6 +39,7 @@
 #define IDD_PRESS_ANY_KEY               167
 #define IDD_NETWORK                     168
 #define IDD_CHECK_ROOMLIST              170
+#define IDD_PERFORMING_TASK             170
 #define IDC_GAMMA_SLIDER                1001
 #define IDC_CONTRAST_SLIDER             1002
 #define IDC_SERVER_PORT                 1002
