@@ -102,7 +102,7 @@ bool TrackDownloadDialog::ShowModal(HINSTANCE hinst, HWND parent)
 
 	boost::thread thread(boost::bind(&TrackDownloadDialog::ThreadProc, this));
 
-	DWORD dlgRetv = DialogBoxParamW(hinst, MAKEINTRESOURCEW(IDD_TRACK_DOWNLOAD),
+	DWORD dlgRetv = DialogBoxParamW(hinst, MAKEINTRESOURCEW(IDD_DOWNLOAD_PROGRESS),
 		parent, DlgFunc, reinterpret_cast<LPARAM>(this));
 	if (dlgRetv == IDCANCEL) cancel = true;
 

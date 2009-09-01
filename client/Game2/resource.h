@@ -35,6 +35,7 @@
 #define IDD_LADDER_SUBMIT_PROCESS       160
 #define IDD_MISC                        161
 #define IDD_TRACK_DOWNLOAD              163
+#define IDD_DOWNLOAD_PROGRESS           163
 #define IDD_WARN_ALONE                  166
 #define IDD_PRESS_ANY_KEY               167
 #define IDD_NETWORK                     168
