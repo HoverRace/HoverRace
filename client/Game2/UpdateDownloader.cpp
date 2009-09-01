@@ -148,7 +148,7 @@ bool UpdateDownloader::DownloadUpdate(string dir)
  */
 void UpdateDownloader::ApplyUpdate()
 {
-	MessageBox(NULL, "We would run updater.exe", "Shit cock", MB_OK);
+	MessageBox(NULL, "We would run updater.exe", "info", MB_OK);
 }
 
 /***

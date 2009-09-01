@@ -75,7 +75,7 @@ void CheckUpdateServerDialog::ShowModal(HINSTANCE hinst, HWND parent)
 {
 	result_t result = (result_t) DialogBoxParamW(hinst,
 		MAKEINTRESOURCEW(IDD_PERFORMING_TASK),
-		parent, DlgProc, reinterpret_cast<LPARAM>(this));
+		parent, DlgFunc, reinterpret_cast<LPARAM>(this));
 
 	string msg;
 	switch (result) {
@@ -151,6 +151,24 @@ BOOL CALLBACK CheckUpdateServerDialog::DlgProc(HWND hwnd, UINT message, WPARAM w
 	}
 
 	return retv;
+}
+
+/// Global dialog callback dispatcher.
+BOOL CALLBACK CheckUpdateServerDialog::DlgFunc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
+{
+	// Determine which instance to route the message to.
+	CheckUpdateServerDialog *dlg;
+	if (message == WM_INITDIALOG) {
+		dlg = reinterpret_cast<CheckUpdateServerDialog *>(lparam);
+		SetWindowLong(hwnd, GWL_USERDATA, lparam);
+	} else {
+		dlg = reinterpret_cast<CheckUpdateServerDialog *>(GetWindowLong(hwnd, GWL_USERDATA));
+		if (message == WM_DESTROY) {
+			SetWindowLong(hwnd, GWL_USERDATA, 0);
+		}
+	}
+
+	return (dlg == NULL) ? FALSE : dlg->DlgProc(hwnd, message, wparam, lparam);
 }
 
 void CheckUpdateServerDialog::ThreadProc(HWND hwnd) {
