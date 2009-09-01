@@ -31,6 +31,7 @@
 #include "InternetRoom.h"
 #include "MatchReport.h"
 #include "SelectRoomDialog.h"
+#include "CheckUpdateServerDialog.h"
 #include "TrackDownloadDialog.h"
 #include "resource.h"
 
@@ -715,6 +716,7 @@ BOOL MR_InternetRoom::AskRoomParams(HWND pParentWindow, BOOL pShouldRecheckServe
 	return lReturnValue;
 	*/
 	if (roomList == NULL || pShouldRecheckServer) {
+		CheckUpdateServerDialog("http://www.hoverrace.com/updates/updates.php").ShowModal(NULL, pParentWindow);
 		roomList = SelectRoomDialog().ShowModal(NULL, pParentWindow);
 	}
 	return roomList != NULL;

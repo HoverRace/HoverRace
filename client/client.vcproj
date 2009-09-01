@@ -146,6 +146,12 @@
 				RelativePath=".\Game2\CheckRoomListDialog.h">
 			</File>
 			<File
+				RelativePath=".\Game2\CheckUpdateServerDialog.cpp">
+			</File>
+			<File
+				RelativePath=".\Game2\CheckUpdateServerDialog.h">
+			</File>
+			<File
 				RelativePath=".\Game2\ClientSession.cpp">
 			</File>
 			<File
@@ -315,6 +321,12 @@
 			</File>
 			<File
 				RelativePath=".\Game2\TrackSelect.h">
+			</File>
+			<File
+				RelativePath=".\Game2\UpdateDownloader.cpp">
+			</File>
+			<File
+				RelativePath=".\Game2\UpdateDownloader.h">
 			</File>
 			<File
 				RelativePath=".\Game2\VideoAudioPrefsPage.cpp">
