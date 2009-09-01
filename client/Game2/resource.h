@@ -34,12 +34,10 @@
 #define IDD_LADDER_RES_1                159
 #define IDD_LADDER_SUBMIT_PROCESS       160
 #define IDD_MISC                        161
-#define IDD_TRACK_DOWNLOAD              163
 #define IDD_DOWNLOAD_PROGRESS           163
 #define IDD_WARN_ALONE                  166
 #define IDD_PRESS_ANY_KEY               167
 #define IDD_NETWORK                     168
-#define IDD_CHECK_ROOMLIST              170
 #define IDD_PERFORMING_TASK             170
 #define IDC_GAMMA_SLIDER                1001
 #define IDC_CONTRAST_SLIDER             1002
