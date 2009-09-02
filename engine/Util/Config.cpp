@@ -66,7 +66,8 @@ namespace fs = boost::filesystem;
 #define PREREL_CONFIG_FILENAME	"config-testing.yml"
 
 #define DEFAULT_NICKNAME		"Player"
-#define DEFAULT_MAIN_SERVER		"http://www.hoverrace.com/imr/rl.php"
+#define DEFAULT_MAIN_SERVER		"www.hoverrace.com/imr/rl.php"
+#define DEFAULT_UPDATE_SERVER	"www.hoverrace.com/updates/updates.php"
 #define OLD_MAIN_SERVER			"66.197.183.245/~sirbrock/imr/rl.php"
 
 #define READ_BOOL(root,name) \
@@ -333,6 +334,15 @@ std::string Config::GetDefaultRoomListUrl()
 }
 
 /**
+ * Retrieve the default URL for the update server list.
+ * @return The URL (without the initial "http://").
+ */
+std::string Config::GetDefaultUpdateServerUrl()
+{
+	return DEFAULT_UPDATE_SERVER;
+}
+
+/**
  * Retrieve the default path for the chat log.
  * @return The fully-qualified path (may be empty if base path could not
  *         be retrieved from the system).
@@ -427,6 +437,7 @@ void Config::ResetToDefaults()
 #endif
 
 	net.mainServer = DEFAULT_MAIN_SERVER;
+	net.updateServer = DEFAULT_UPDATE_SERVER;
 	net.logChats = false;
 	net.logChatsPath = GetDefaultChatLogPath();
 	net.udpRecvPort = cfg_net_t::DEFAULT_UDP_RECV_PORT;
@@ -715,6 +726,7 @@ void Config::cfg_net_t::Load(yaml::MapNode *root)
 	if (root == NULL) return;
 
 	READ_STRING(root, mainServer);
+	READ_STRING(root, updateServer);
 	READ_BOOL(root, logChats);
 	READ_STRING(root, logChatsPath);
 	READ_INT(root, udpRecvPort, 0, 65535);
@@ -735,6 +747,7 @@ void Config::cfg_net_t::Save(yaml::Emitter *emitter)
 	emitter->StartMap();
 
 	EMIT_VAR(emitter, mainServer);
+	EMIT_VAR(emitter, updateServer);
 	EMIT_VAR(emitter, logChats);
 	EMIT_VAR(emitter, logChatsPath);
 	EMIT_VAR(emitter, udpRecvPort);

@@ -102,6 +102,7 @@ class MR_DllDeclare Config
 		std::string GetTrackPath(const std::string &file) const;
 
 		static std::string GetDefaultRoomListUrl();
+		static std::string GetDefaultUpdateServerUrl();
 		static std::string GetDefaultChatLogPath();
 
 		const std::string &GetDefaultFontName() const;
@@ -162,6 +163,7 @@ class MR_DllDeclare Config
 
 		struct cfg_net_t {
 			std::string mainServer;
+			std::string updateServer;
 			bool logChats;
 			std::string logChatsPath;
 			int udpRecvPort;
