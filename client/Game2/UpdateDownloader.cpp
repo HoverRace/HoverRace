@@ -126,32 +126,6 @@ bool UpdateDownloader::CheckUrl(const std::string &url, Net::CancelFlagPtr cance
 }
 
 /***
- * Download the necessary update to the given directory.
- *
- * @param dir Directory to download patchfile to
- *
- * @return
- *	 true if download is successful
- *   false if download fails
- */
-bool UpdateDownloader::DownloadUpdate(string dir)
-{
-	// nothing yet
-	return true;
-}
-
-/***
- * Apply the downloaded update, using the updater.exe utility.
- *
- * HoverRace will exit while that program is running!  Once patched
- * it will then be restarted.
- */
-void UpdateDownloader::ApplyUpdate()
-{
-	MessageBox(NULL, "We would run updater.exe", "info", MB_OK);
-}
-
-/***
  * Default Version constructor.  0.0.0.0 default value.
  */
 UpdateDownloader::Version::Version()

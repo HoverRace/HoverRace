@@ -41,9 +41,6 @@ class UpdateDownloader
 		bool CheckUrl(const std::string &url,
 			Net::CancelFlagPtr cancelFlag=Net::CancelFlagPtr());
 
-		bool DownloadUpdate(string dir);
-		void ApplyUpdate();
-
 		string updateUrl;
 
 	private:

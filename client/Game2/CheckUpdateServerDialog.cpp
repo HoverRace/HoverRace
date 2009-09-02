@@ -23,6 +23,7 @@
 #include "StdAfx.h"
 
 #include "CheckUpdateServerDialog.h"
+#include "DownloadUpdateDialog.h"
 
 #include "../../engine/Net/Agent.h"
 #include "../../engine/Net/NetExn.h"
@@ -93,11 +94,13 @@ void CheckUpdateServerDialog::ShowModal(HINSTANCE hinst, HWND parent)
 
 				if(MessageBoxW(parent, Str::UW(msg.c_str()), PACKAGE_NAME_L,
 					MB_YESNO) == IDYES) {
-						// only update if the user hit ok
-						dlPtr->DownloadUpdate(".");
-						dlPtr->ApplyUpdate(); // at this point HoverRace will
-							// exit and restart (unless the user chooses not to
-							// apply the patch for some reason)
+					// only update if the user hit ok
+					if(DownloadUpdateDialog(dlPtr->updateUrl, ".").ShowModal(hinst, parent)) {
+						// download was successful
+						MessageBox(NULL, "We would now run the updater", "...", MB_OK);
+					}
+					// If that was not executed, there was a failure during download of the update,
+					// but DownloadUpdateDialog notifies the user so we do not need to.
 				}
 				// do not do anything if the user chooses not to update
 			}
