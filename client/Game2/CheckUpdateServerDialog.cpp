@@ -117,11 +117,11 @@ void CheckUpdateServerDialog::ShowModal(HINSTANCE hinst, HWND parent)
 	}
 }
 
-BOOL CALLBACK CheckUpdateServerDialog::DlgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
+BOOL CheckUpdateServerDialog::DlgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
 {
 	BOOL retv = FALSE;
 
-	CheckUpdateServerDialog *dlg = reinterpret_cast<CheckUpdateServerDialog *>(lparam);
+//	CheckUpdateServerDialog *dlg = reinterpret_cast<CheckUpdateServerDialog *>(lparam);
 
 	switch(message) {
 		case WM_INITDIALOG:
@@ -129,14 +129,12 @@ BOOL CALLBACK CheckUpdateServerDialog::DlgProc(HWND hwnd, UINT message, WPARAM w
 			SetDlgItemTextW(hwnd, IDC_MSG_LBL, Str::UW(_("Checking server for updates.  Please wait.")));
 			SetDlgItemTextW(hwnd, IDCANCEL, Str::UW(_("Cancel")));
 			retv = TRUE;
-
-			dlg->loadThread = boost::thread(boost::bind(&CheckUpdateServerDialog::ThreadProc, dlg, hwnd));
 			break;
 
 		case WM_COMMAND:
 			switch (LOWORD(wparam)) {
 				case IDCANCEL:
-					dlg->loadThread.interrupt();
+					loadThread.interrupt();
 					SetDlgItemTextW(hwnd, IDC_MSG_LBL, Str::UW(_("Canceling...")));
 					EnableWindow(GetDlgItem(hwnd, IDCANCEL), FALSE);
 					retv = TRUE;
@@ -160,6 +158,7 @@ BOOL CALLBACK CheckUpdateServerDialog::DlgFunc(HWND hwnd, UINT message, WPARAM w
 	CheckUpdateServerDialog *dlg;
 	if (message == WM_INITDIALOG) {
 		dlg = reinterpret_cast<CheckUpdateServerDialog *>(lparam);
+		dlg->loadThread = boost::thread(boost::bind(&CheckUpdateServerDialog::ThreadProc, dlg, hwnd));
 		SetWindowLong(hwnd, GWL_USERDATA, lparam);
 	} else {
 		dlg = reinterpret_cast<CheckUpdateServerDialog *>(GetWindowLong(hwnd, GWL_USERDATA));
