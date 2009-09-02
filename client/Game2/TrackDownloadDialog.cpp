@@ -266,8 +266,8 @@ BOOL TrackDownloadDialog::DlgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM
 		case WM_INITDIALOG:
 			dlgHwnd = hwnd;
 			SetWindowTextW(hwnd, Str::UW(_("Track Download")));
-			SetDlgItemTextW(hwnd, IDC_DLTRACK, Str::UW(_("Downloading Track:")));
-			SetDlgItemTextW(hwnd, IDC_TRACK_NAME, Str::UW(name.c_str()));
+			SetDlgItemTextW(hwnd, IDC_DLITEM, Str::UW(_("Downloading Track:")));
+			SetDlgItemTextW(hwnd, IDC_ITEM_NAME, Str::UW(name.c_str()));
 			UpdateDialogProgress(hwnd);
 			retv = TRUE;
 			break;

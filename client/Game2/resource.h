@@ -175,6 +175,7 @@
 #define IDC_RES                         1238
 #define IDC_MONITOR_LBL                 1239
 #define IDC_DLTRACK                     1333
+#define IDC_DLITEM                      1333
 #define IDC_CRAFTS_BOX                  1336
 #define IDC_OPTIONS_BOX                 1337
 #define IDC_ASK_AGAIN                   1338
@@ -198,6 +199,7 @@
 #define IDC_MSG_LBL                     1359
 #define IDC_CHECK_URL_BTN               1360
 #define IDC_CHECK_URL                   1360
+#define IDC_ITEM_NAME                   1361
 #define ID_VIEW_3DACTION                32775
 #define ID_SETTING_WINDOW               32784
 #define ID_GAME_PAUSE                   32788
@@ -384,7 +386,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        171
 #define _APS_NEXT_COMMAND_VALUE         40049
-#define _APS_NEXT_CONTROL_VALUE         1361
+#define _APS_NEXT_CONTROL_VALUE         1362
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
