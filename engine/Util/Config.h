@@ -164,6 +164,7 @@ class MR_DllDeclare Config
 		struct cfg_net_t {
 			std::string mainServer;
 			std::string updateServer;
+			bool autoUpdates;
 			bool logChats;
 			std::string logChatsPath;
 			int udpRecvPort;

@@ -438,6 +438,7 @@ void Config::ResetToDefaults()
 
 	net.mainServer = DEFAULT_MAIN_SERVER;
 	net.updateServer = DEFAULT_UPDATE_SERVER;
+	net.autoUpdates = true;
 	net.logChats = false;
 	net.logChatsPath = GetDefaultChatLogPath();
 	net.udpRecvPort = cfg_net_t::DEFAULT_UDP_RECV_PORT;
@@ -727,6 +728,7 @@ void Config::cfg_net_t::Load(yaml::MapNode *root)
 
 	READ_STRING(root, mainServer);
 	READ_STRING(root, updateServer);
+	READ_BOOL(root, autoUpdates);
 	READ_BOOL(root, logChats);
 	READ_STRING(root, logChatsPath);
 	READ_INT(root, udpRecvPort, 0, 65535);
@@ -748,6 +750,7 @@ void Config::cfg_net_t::Save(yaml::Emitter *emitter)
 
 	EMIT_VAR(emitter, mainServer);
 	EMIT_VAR(emitter, updateServer);
+	EMIT_VAR(emitter, autoUpdates);
 	EMIT_VAR(emitter, logChats);
 	EMIT_VAR(emitter, logChatsPath);
 	EMIT_VAR(emitter, udpRecvPort);
