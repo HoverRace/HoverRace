@@ -28,6 +28,7 @@
 #include "../../engine/Util/Str.h"
 
 #include "CheckRoomListDialog.h"
+#include "CheckUpdateServerDialog.h"
 #include "GameApp.h"
 #include "PathSelector.h"
 
@@ -68,11 +69,17 @@ BOOL NetworkPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 
 	switch (pMsgId) {
 		case WM_INITDIALOG:
-			SetDlgItemTextW(pWindow, IDC_IMR_GROUP, Str::UW(_("Internet Meeting Room")));
+			SetDlgItemTextW(pWindow, IDC_IMR_GROUP, Str::UW(_("Server Options")));
 
 			SetDlgItemTextW(pWindow, IDC_SERVER_ADDR,
 				Str::UW(_("Address of Server Roomlist:")));
 			SetDlgItemText(pWindow, IDC_MAINSERVER, cfg->net.mainServer.c_str());
+			SetDlgItemTextW(pWindow, IDC_CHECK_URL, Str::UW(_("Check URL")));
+
+			SetDlgItemTextW(pWindow, IDC_UPDATE_SERVER_ADDR,
+				Str::UW(_("Address of Update Server List:")));
+			SetDlgItemText(pWindow, IDC_UPDATESERVER, cfg->net.updateServer.c_str());
+			SetDlgItemTextW(pWindow, IDC_CHECK_UPDATES, Str::UW(_("Check for updates")));
 
 			SetDlgItemTextW(pWindow, IDC_LOG_CHATS, Str::UW(_("&Log all chat sessions to:")));
 			SendDlgItemMessage(pWindow, IDC_LOG_CHATS, BM_SETCHECK, cfg->net.logChats, 0);
@@ -86,8 +93,9 @@ BOOL NetworkPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 			SetDlgItemTextW(pWindow, IDC_UDP_RECV_PORT_C, Str::UW(_("UDP Receive Port:")));
 			SetPortFields(pWindow, cfg->net.tcpServPort, cfg->net.tcpRecvPort, cfg->net.udpRecvPort);
 
-			SetDlgItemTextW(pWindow, IDC_SERVER_RESET_DEFAULT, Str::UW("Reset to Default"));
-			SetDlgItemTextW(pWindow, IDC_CONNECTION_RESET_DEFAULT, Str::UW("Reset to Defaults"));
+			SetDlgItemTextW(pWindow, IDC_SERVER_RESET_DEFAULT, Str::UW(_("Reset to Default")));
+			SetDlgItemTextW(pWindow, IDC_UPDATE_SERVER_RESET_DEFAULT, Str::UW(_("Reset to Default")));
+			SetDlgItemTextW(pWindow, IDC_CONNECTION_RESET_DEFAULT, Str::UW(_("Reset to Defaults")));
 			break;
 
 		case WM_COMMAND:
@@ -113,8 +121,20 @@ BOOL NetworkPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 					}
 					break;
 
+				case IDC_CHECK_UPDATES:
+					{
+						char buf[MAX_PATH];
+						GetDlgItemText(pWindow, IDC_UPDATESERVER, buf, sizeof(buf));
+						CheckUpdateServerDialog(buf).ShowModal(NULL, pWindow);
+					}
+					break;
+
 				case IDC_SERVER_RESET_DEFAULT:
 					SetDlgItemText(pWindow, IDC_MAINSERVER, Config::GetDefaultRoomListUrl().c_str());
+					break;
+
+				case IDC_UPDATE_SERVER_RESET_DEFAULT:
+					SetDlgItemText(pWindow, IDC_UPDATESERVER, Config::GetDefaultUpdateServerUrl().c_str());
 					break;
 
 				case IDC_OPEN_FOLDER:
@@ -145,6 +165,11 @@ BOOL NetworkPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 
 						cfg->net.mainServer = lBuffer;
 						app->SignalServerHasChanged();
+
+						if(GetDlgItemText(pWindow, IDC_UPDATESERVER, lBuffer, sizeof(lBuffer)) == 0)
+							ASSERT(FALSE);
+						
+						cfg->net.updateServer = lBuffer;
 
 						cfg->net.logChats = (SendDlgItemMessage(pWindow, IDC_LOG_CHATS, BM_GETCHECK, 0, 0) != FALSE);
 						if(GetDlgItemText(pWindow, IDC_LOG_CHATS_TXT, lBuffer, sizeof(lBuffer)) == 0)

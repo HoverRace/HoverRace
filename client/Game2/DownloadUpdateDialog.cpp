@@ -51,8 +51,8 @@ using namespace HoverRace::Util;
  * @param url URL of update to download
  * @param destDir The destination directory we will put the update into
  */
-DownloadUpdateDialog::DownloadUpdateDialog(const string &filename, const string &destDir) :
-	filename(filename), destDir(destDir), dlgHwnd(NULL), state(ST_INITIALIZING),
+DownloadUpdateDialog::DownloadUpdateDialog(const string &baseUrl, const string &filename, const string &destDir) :
+	baseUrl(baseUrl), filename(filename), destDir(destDir), dlgHwnd(NULL), state(ST_INITIALIZING),
 	bufSize(0), bufCapacity(INIT_CAPACITY)
 {
 	updateDl = curl_easy_init();
@@ -219,9 +219,7 @@ void DownloadUpdateDialog::ThreadProc()
 		*/
 		
 		curl_easy_setopt(updateDl, CURLOPT_USERAGENT, cfg->GetUserAgentId().c_str());
-		string url = "http://www.hoverrace.com/updates/";
-		url += filename;
-		curl_easy_setopt(updateDl, CURLOPT_URL, url.c_str());
+		curl_easy_setopt(updateDl, CURLOPT_URL, (baseUrl + "/" + filename).c_str());
 
 		if(!cancel) {
 			SetState(ST_DOWNLOADING);
@@ -236,7 +234,7 @@ void DownloadUpdateDialog::ThreadProc()
 			if(bufSize <= 128) {
 				std::string message = boost::str(boost::format(
 					_("Cannot update!  File %s not found.  Contact a site administrator."))
-					% url);
+					% (baseUrl + "/" + filename));
 
 				MessageBoxW(dlgHwnd, Str::UW(message.c_str()), PACKAGE_NAME_L, MB_ICONWARNING | MB_OK);
 				cancel = true;

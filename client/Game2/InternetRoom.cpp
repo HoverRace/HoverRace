@@ -716,7 +716,7 @@ BOOL MR_InternetRoom::AskRoomParams(HWND pParentWindow, BOOL pShouldRecheckServe
 	return lReturnValue;
 	*/
 	if (roomList == NULL || pShouldRecheckServer) {
-		CheckUpdateServerDialog("http://www.hoverrace.com/updates/updates.php").ShowModal(NULL, pParentWindow);
+		CheckUpdateServerDialog(Config::GetInstance()->net.updateServer).ShowModal(NULL, pParentWindow);
 		roomList = SelectRoomDialog().ShowModal(NULL, pParentWindow);
 	}
 	return roomList != NULL;

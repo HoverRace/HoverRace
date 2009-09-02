@@ -37,7 +37,7 @@ using namespace std;
 class DownloadUpdateDialog
 {
 	public:
-		DownloadUpdateDialog(const string &url, const string &destDir);
+		DownloadUpdateDialog(const string &baseUrl, const string &filename, const string &destDir);
 		~DownloadUpdateDialog();
 
 		bool ShowModal(HINSTANCE hinst, HWND parent);
@@ -64,6 +64,7 @@ class DownloadUpdateDialog
 		static size_t ProgressFunc(void *clientp, double dlTotal, double dlNow, double, double);
 
 	private:
+		string baseUrl;
 		string filename;
 		string destDir;
 

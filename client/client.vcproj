@@ -176,6 +176,12 @@
 				RelativePath=".\Game2\ControlPrefsPage.h">
 			</File>
 			<File
+				RelativePath=".\Game2\DownloadUpdateDialog.cpp">
+			</File>
+			<File
+				RelativePath=".\Game2\DownloadUpdateDialog.h">
+			</File>
+			<File
 				RelativePath=".\Game2\FirstChoiceDialog.cpp">
 			</File>
 			<File

@@ -95,7 +95,9 @@ void CheckUpdateServerDialog::ShowModal(HINSTANCE hinst, HWND parent)
 				if(MessageBoxW(parent, Str::UW(msg.c_str()), PACKAGE_NAME_L,
 					MB_YESNO) == IDYES) {
 					// only update if the user hit ok
-					if(DownloadUpdateDialog(dlPtr->updateUrl, ".").ShowModal(hinst, parent)) {
+					// strip updates.php from url
+					string baseUrl = url.substr(0, url.rfind('/'));
+					if(DownloadUpdateDialog(baseUrl, dlPtr->updateUrl, ".").ShowModal(hinst, parent)) {
 						// download was successful
 						MessageBox(NULL, "We would now run the updater", "...", MB_OK);
 					}
@@ -179,7 +181,7 @@ void CheckUpdateServerDialog::ThreadProc(HWND hwnd) {
 
 	try {
 		dlPtr = UpdateDownloaderPtr(new UpdateDownloader());
-		if(dlPtr->CheckUrl("http://www.hoverrace.com/updates/updates.php", cancelFlag))
+		if(dlPtr->CheckUrl(url + "/updates.php", cancelFlag))
 			result = RESULT_UPDATE;
 		else
 			result = RESULT_UPTODATE;

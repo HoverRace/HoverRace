@@ -547,23 +547,23 @@ BEGIN
                     11
 END
 
-IDD_NETWORK DIALOGEX 0, 0, 374, 142
+IDD_NETWORK DIALOGEX 0, 0, 374, 161
 STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_SYSMENU
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    GROUPBOX        "Internet Meeting Room",IDC_IMR_GROUP,7,7,223,128
+    GROUPBOX        "Server Options",IDC_IMR_GROUP,7,7,223,147
     LTEXT           "Address of server roomlist:",IDC_SERVER_ADDR,19,22,197,
                     8
     EDITTEXT        IDC_MAINSERVER,19,33,197,12,ES_AUTOHSCROLL
     PUSHBUTTON      "Check URL",IDC_CHECK_URL,19,47,71,14
     PUSHBUTTON      "Reset to Default",IDC_SERVER_RESET_DEFAULT,135,47,81,14
     CONTROL         "&Log all chat sessions to:",IDC_LOG_CHATS,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,19,70,197,10
-    EDITTEXT        IDC_LOG_CHATS_TXT,19,82,180,14,ES_AUTOHSCROLL | 
+                    BS_AUTOCHECKBOX | WS_TABSTOP,19,110,197,10
+    EDITTEXT        IDC_LOG_CHATS_TXT,19,122,180,14,ES_AUTOHSCROLL | 
                     ES_READONLY
-    PUSHBUTTON      "…",IDC_LOG_CHATS_BROWSE,200,81,16,14
-    PUSHBUTTON      "Open Folder",IDC_OPEN_FOLDER,19,98,71,14
-    GROUPBOX        "Connection",IDC_CONNECTION_GROUP,239,7,128,128
+    PUSHBUTTON      "…",IDC_LOG_CHATS_BROWSE,200,122,16,14
+    PUSHBUTTON      "Open Folder",IDC_OPEN_FOLDER,19,138,71,14
+    GROUPBOX        "Connection",IDC_CONNECTION_GROUP,239,7,128,147
     LTEXT           "TCP Server Port:",IDC_TCP_SERV_PORT_C,249,22,69,10
     EDITTEXT        IDC_TCP_SERV_PORT,322,22,30,12,ES_AUTOHSCROLL | 
                     ES_NUMBER
@@ -575,6 +575,12 @@ BEGIN
                     ES_NUMBER
     PUSHBUTTON      "Reset to Defaults",IDC_CONNECTION_RESET_DEFAULT,266,64,
                     86,14
+    LTEXT           "Address of update server list:",IDC_UPDATE_SERVER_ADDR,
+                    19,65,197,8
+    EDITTEXT        IDC_UPDATESERVER,19,76,197,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "Check for updates",IDC_CHECK_UPDATES,19,90,71,14
+    PUSHBUTTON      "Reset to Default",IDC_UPDATE_SERVER_RESET_DEFAULT,135,
+                    90,81,14
 END
 
 IDD_PERFORMING_TASK DIALOGEX 0, 0, 208, 58
@@ -883,7 +889,7 @@ BEGIN
         VERTGUIDE, 249
         VERTGUIDE, 352
         TOPMARGIN, 7
-        BOTTOMMARGIN, 135
+        BOTTOMMARGIN, 154
         HORZGUIDE, 22
     END
 

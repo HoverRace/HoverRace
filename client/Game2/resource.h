@@ -47,6 +47,7 @@
 #define IDC_PLAYER_NAME                 1004
 #define IDC_SFX_VOLUME_SLIDER           1004
 #define IDC_GAME_NAME                   1005
+#define IDC_UPDATE_SERVER_ADDR          1005
 #define IDC_LIST                        1007
 #define IDC_DESCRIPTION                 1008
 #define IDC_MOTOR_ON1                   1011
@@ -117,6 +118,7 @@
 #define IDC_BRIGHTNESS_TXT              1081
 #define IDC_ABOUT_TXT                   1081
 #define IDC_CONTRAST_TXT                1082
+#define IDC_UPDATESERVER                1082
 #define IDC_SFX_VOLUME_TXT              1083
 #define IDC_STATE                       1083
 #define IDC_GAMMA_TXT                   1084
@@ -196,10 +198,13 @@
 #define IDC_CONNECTION_RESET_DEFAULT    1354
 #define IDC_OPEN_FOLDER                 1355
 #define IDC_AUDIO_STATUS                1356
+#define IDC_SERVER_RESET_DEFAULT2       1356
+#define IDC_UPDATE_SERVER_RESET_DEFAULT 1356
 #define IDC_MSG_LBL                     1359
 #define IDC_CHECK_URL_BTN               1360
 #define IDC_CHECK_URL                   1360
 #define IDC_ITEM_NAME                   1361
+#define IDC_CHECK_UPDATES               1361
 #define ID_VIEW_3DACTION                32775
 #define ID_SETTING_WINDOW               32784
 #define ID_GAME_PAUSE                   32788
