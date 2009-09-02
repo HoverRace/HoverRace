@@ -595,6 +595,8 @@ MR_GameApp::MR_GameApp(HINSTANCE pInstance, bool safeMode)
 	}
 
 	mServerHasChanged = FALSE;
+
+	mustCheckUpdates = Config::GetInstance()->net.autoUpdates;
 }
 
 MR_GameApp::~MR_GameApp()
@@ -1842,7 +1844,10 @@ void MR_GameApp::NewInternetSession()
 	BOOL lSuccess = TRUE;
 	MR_NetworkSession *lCurrentSession = NULL;
 	Config *cfg = Config::GetInstance();
-	MR_InternetRoom lInternetRoom(cfg->net.mainServer);
+	MR_InternetRoom lInternetRoom(cfg->net.mainServer, mustCheckUpdates);
+
+	if(mustCheckUpdates)
+		mustCheckUpdates = false; // must make sure we only check once
 
 	// Verify is user acknowledge
 	if(AskUserToAbortGame() != IDOK)

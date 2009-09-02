@@ -303,8 +303,8 @@ BOOL MR_InternetRequest::IsReady() const
 
 // MR_InternetRoom
 
-MR_InternetRoom::MR_InternetRoom(const std::string &pMainServer) :
-	mMainServer(pMainServer), chatLog(NULL)
+MR_InternetRoom::MR_InternetRoom(const std::string &pMainServer, bool mustCheckUpdates) :
+	mMainServer(pMainServer), chatLog(NULL), checkUpdates(mustCheckUpdates)
 {
 	int lCounter;
 
@@ -715,8 +715,14 @@ BOOL MR_InternetRoom::AskRoomParams(HWND pParentWindow, BOOL pShouldRecheckServe
 
 	return lReturnValue;
 	*/
-	if (roomList == NULL || pShouldRecheckServer) {
+
+	// check for updates, if we need to
+	if(checkUpdates) {
 		CheckUpdateServerDialog(Config::GetInstance()->net.updateServer).ShowModal(NULL, pParentWindow);
+		checkUpdates = false;
+	}
+
+	if (roomList == NULL || pShouldRecheckServer) {
 		roomList = SelectRoomDialog().ShowModal(NULL, pParentWindow);
 	}
 	return roomList != NULL;

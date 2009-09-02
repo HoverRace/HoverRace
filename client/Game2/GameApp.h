@@ -93,6 +93,9 @@ class MR_GameApp
 		time_t mNbFramesStartingTime;
 		int mNbFrames;
 
+		// we only want to check for updates once an instance so we have to keep track
+		bool mustCheckUpdates;
+
 		static LRESULT CALLBACK DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 		static BOOL CALLBACK BadModeDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 
@@ -155,6 +158,7 @@ class MR_GameApp
 
 		/// Signal that the selected IMR server has (possibly) changed.
 		void SignalServerHasChanged() { mServerHasChanged = TRUE; }
+		void ChangeAutoUpdates(bool newSetting) { mustCheckUpdates = newSetting; }
 
 		MR_VideoBuffer *GetVideoBuffer() const { return mVideoBuffer; }
 

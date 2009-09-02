@@ -153,6 +153,8 @@ class MR_InternetRoom
 		MR_GifDecoder mBanner;
 		int mCurrentBannerIndex;
 
+		bool checkUpdates;
+
 		std::ofstream *chatLog;
 
 		/*
@@ -193,7 +195,7 @@ class MR_InternetRoom
 		int RefreshBanner(HWND pWindow);		  // Return next refresh time
 
 	public:
-		MR_InternetRoom(const std::string &pMainServer);
+		MR_InternetRoom(const std::string &pMainServer, bool mustCheckUpdates);
 		~MR_InternetRoom();
 
 		HoverRace::Client::RoomListPtr GetRoomList() const { return roomList; }

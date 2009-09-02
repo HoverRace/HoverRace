@@ -80,6 +80,8 @@ BOOL NetworkPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 				Str::UW(_("Address of Update Server List:")));
 			SetDlgItemText(pWindow, IDC_UPDATESERVER, cfg->net.updateServer.c_str());
 			SetDlgItemTextW(pWindow, IDC_CHECK_UPDATES, Str::UW(_("Check for updates")));
+			SetDlgItemTextW(pWindow, IDC_AUTO_CHECK, Str::UW(_("Automatically check for HoverRace updates")));
+			SendDlgItemMessage(pWindow, IDC_AUTO_CHECK, BM_SETCHECK, cfg->net.autoUpdates, 0);
 
 			SetDlgItemTextW(pWindow, IDC_LOG_CHATS, Str::UW(_("&Log all chat sessions to:")));
 			SendDlgItemMessage(pWindow, IDC_LOG_CHATS, BM_SETCHECK, cfg->net.logChats, 0);
@@ -170,6 +172,11 @@ BOOL NetworkPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 							ASSERT(FALSE);
 						
 						cfg->net.updateServer = lBuffer;
+						bool newUpdateSetting = (SendDlgItemMessage(pWindow, IDC_AUTO_CHECK, BM_GETCHECK, 0, 0) != FALSE); 
+						if(newUpdateSetting != cfg->net.autoUpdates) {
+							cfg->net.autoUpdates = newUpdateSetting;
+							app->ChangeAutoUpdates(newUpdateSetting);
+						}
 
 						cfg->net.logChats = (SendDlgItemMessage(pWindow, IDC_LOG_CHATS, BM_GETCHECK, 0, 0) != FALSE);
 						if(GetDlgItemText(pWindow, IDC_LOG_CHATS_TXT, lBuffer, sizeof(lBuffer)) == 0)

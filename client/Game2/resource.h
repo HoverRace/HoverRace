@@ -194,11 +194,12 @@
 #define IDC_LOG_CHATS_TXT               1349
 #define IDC_LOG_CHATS_BROWSE            1350
 #define IDC_LOG_CHATS                   1351
+#define IDC_LOG_CHATS2                  1352
+#define IDC_AUTO_CHECK                  1352
 #define IDC_SERVER_RESET_DEFAULT        1353
 #define IDC_CONNECTION_RESET_DEFAULT    1354
 #define IDC_OPEN_FOLDER                 1355
 #define IDC_AUDIO_STATUS                1356
-#define IDC_SERVER_RESET_DEFAULT2       1356
 #define IDC_UPDATE_SERVER_RESET_DEFAULT 1356
 #define IDC_MSG_LBL                     1359
 #define IDC_CHECK_URL_BTN               1360
