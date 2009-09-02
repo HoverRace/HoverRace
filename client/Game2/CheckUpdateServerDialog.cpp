@@ -181,7 +181,7 @@ void CheckUpdateServerDialog::ThreadProc(HWND hwnd) {
 
 	try {
 		dlPtr = UpdateDownloaderPtr(new UpdateDownloader());
-		if(dlPtr->CheckUrl(url + "/updates.php", cancelFlag))
+		if(dlPtr->CheckUrl(url, cancelFlag))
 			result = RESULT_UPDATE;
 		else
 			result = RESULT_UPTODATE;
