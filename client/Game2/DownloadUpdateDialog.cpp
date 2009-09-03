@@ -185,7 +185,7 @@ void DownloadUpdateDialog::ThreadProc()
 
 	string destFile = destDir + "/" + filename;
 
-	outFile = fopen(destFile.c_str(), "w");
+	outFile = fopen(destFile.c_str(), "wb");
 
 	if(outFile == NULL) {
 		// opening file failed
