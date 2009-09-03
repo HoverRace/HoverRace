@@ -64,7 +64,7 @@ int main(int argc, const char **argv) {
 					sourceDir = argv[++i];
 				}
 			} else if(argv[i][1] == 'h') {
-				fprintf(stderr, "Usage: %s [-c /path/to/updated/version/] /path/to/hoverrace/ patchfile.bsdiff\n", argv[0]);
+				fprintf(stderr, "Usage: %s [-c /path/to/updated/version/] /path/to/hoverrace/ patchfile.zip\n", argv[0]);
 				fprintf(stderr, "  The -c option specifies that an update should be created\n");
 				return -1;
 			} else {
@@ -77,7 +77,7 @@ int main(int argc, const char **argv) {
 			targetDir = argv[i];
 
 			if(i == argc - 1) { // missing an argument
-				fprintf(stderr, "No bsdiff file supplied!\n");
+				fprintf(stderr, "No bsdiff zip file supplied!\n");
 				return -1;
 			} else {
 				patchFile = argv[i + 1];
