@@ -191,6 +191,46 @@
 				RelativePath=".\bzlib\randtable.c">
 			</File>
 		</Filter>
+		<Filter
+			Name="Libraries"
+			Filter="">
+			<File
+				RelativePath="..\lib\LiteUnzip.dll">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
+						Outputs="$(OutDir)\$(InputFileName)"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
+						Outputs="$(OutDir)\$(InputFileName)"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\lib\LiteZip.dll">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
+						Outputs="$(OutDir)\$(InputFileName)"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"/>
+				</FileConfiguration>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
