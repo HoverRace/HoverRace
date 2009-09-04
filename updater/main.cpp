@@ -132,4 +132,7 @@ int main(int argc, const char **argv) {
 		// now, HoverRace is closed; do the patching
 		PatchHoverRace(targetDir, patchFile);
 	}
+
+	// wait for 2 seconds so the user can see what has happened
+	Sleep(2000);
 }
