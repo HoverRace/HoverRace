@@ -28,8 +28,13 @@
 #include "../../engine/Net/Agent.h"
 #include "../../engine/Net/NetExn.h"
 #include "../../engine/Util/Str.h"
+#include "../../engine/Util/Config.h"
 
 #include "resource.h"
+
+#include <direct.h>
+
+#include <boost/filesystem.hpp>
 
 using namespace HoverRace;
 using namespace HoverRace::Client;
@@ -97,9 +102,30 @@ void CheckUpdateServerDialog::ShowModal(HINSTANCE hinst, HWND parent)
 					// only update if the user hit ok
 					// strip updates.php from url
 					string baseUrl = url.substr(0, url.rfind('/'));
-					if(DownloadUpdateDialog(baseUrl, dlPtr->updateUrl, ".").ShowModal(hinst, parent)) {
+					if(DownloadUpdateDialog(baseUrl, dlPtr->updateUrl, 
+						Config::GetInstance()->GetDefaultPath()).ShowModal(hinst, parent)) {
 						// download was successful
-						MessageBox(NULL, "We would now run the updater", "...", MB_OK);
+						// assemble arguments for updater
+						// theoretically, the root directory of this instance of HoverRace should just
+						// be ../ but, it would be a good idea to write code that checks this in the future
+						string hrPath = "..\\";
+						string patchFile = Config::GetInstance()->GetDefaultPath() + "\\" + dlPtr->updateUrl;
+
+						// temporarily move updater and dependencies into "safe" area
+						// these files should be checked for and removed at HR startup
+						string updaterDir = Config::GetInstance()->GetDefaultPath() + "\\updater_tmp\\";
+						if(boost::filesystem::exists(updaterDir)) // in case cleanup failed
+							boost::filesystem::remove_all(updaterDir);
+						boost::filesystem::create_directory(updaterDir);
+						boost::filesystem::copy_file("updater.exe", updaterDir + "updater.exe");
+						boost::filesystem::copy_file("LiteZip.dll", updaterDir + "LiteZip.dll");
+						boost::filesystem::copy_file("LiteUnzip.dll", updaterDir + "LiteUnzip.dll");
+
+						// now, run the updater
+						string cmdLine = "\"" + updaterDir + "updater.exe\" \"" + hrPath + "\" \"" + patchFile + "\"";
+						chdir(updaterDir.c_str());
+						if(system(cmdLine.c_str()) != 0)
+							MessageBoxW(NULL, Str::UW(_("Problem running updater.exe!")), PACKAGE_NAME_L, MB_ICONWARNING | MB_OK);
 					}
 					// If that was not executed, there was a failure during download of the update,
 					// but DownloadUpdateDialog notifies the user so we do not need to.
@@ -125,8 +151,6 @@ void CheckUpdateServerDialog::ShowModal(HINSTANCE hinst, HWND parent)
 BOOL CheckUpdateServerDialog::DlgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
 {
 	BOOL retv = FALSE;
-
-//	CheckUpdateServerDialog *dlg = reinterpret_cast<CheckUpdateServerDialog *>(lparam);
 
 	switch(message) {
 		case WM_INITDIALOG:
