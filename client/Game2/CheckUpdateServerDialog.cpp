@@ -108,7 +108,7 @@ void CheckUpdateServerDialog::ShowModal(HINSTANCE hinst, HWND parent)
 						// assemble arguments for updater
 						// theoretically, the root directory of this instance of HoverRace should just
 						// be ../ but, it would be a good idea to write code that checks this in the future
-						string hrPath = "..\\";
+						string hrPath = "..\\\\";
 						string patchFile = Config::GetInstance()->GetDefaultPath() + "\\" + dlPtr->updateUrl;
 
 						// temporarily move updater and dependencies into "safe" area
