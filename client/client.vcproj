@@ -50,9 +50,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCPreBuildEventTool"
-				Description="Get versioning info"
-				CommandLine="$(SolutionDir)\build\SubWCRev.exe $(SolutionDir) $(SolutionDir)\client\Game2\winversion_base.h $(SolutionDir)\client\Game2\winversion.h"/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool
@@ -106,9 +104,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCPreBuildEventTool"
-				Description="Get versioning info"
-				CommandLine="../../build/SubWCRev.exe ../../ winversion_base.h winversion.h"/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool
@@ -343,9 +339,6 @@
 			</File>
 			<File
 				RelativePath=".\Game2\VideoAudioPrefsPage.h">
-			</File>
-			<File
-				RelativePath=".\Game2\winversion_base.h">
 			</File>
 		</Filter>
 		<Filter
