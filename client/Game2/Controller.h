@@ -91,7 +91,8 @@ class Controller : public KeyListener, public MouseListener, public JoyStickList
 		~Controller();
 
 		void poll();
-		ControlState getState(int player) const;
+		
+		ControlState getControlState(int player);
 		void captureNextInput(int control, int player, Util::OS::wnd_t hwnd);
 		void stopCapture();
 		void disableInput(int control, int player);
@@ -127,7 +128,7 @@ class Controller : public KeyListener, public MouseListener, public JoyStickList
 
 		// for polling
 		void clearControlState(); // clear the control state before each poll
-		ControlState getControlState(int player) const;
+		bool getSingleControlState(InputControl input);
 		void updateAxisControl(bool &ctlState, InputControl &ctl, int *axes, int numAxes);
 
 		void setControls(HoverRace::Util::Config::cfg_controls_t *controls);
@@ -154,6 +155,11 @@ class Controller : public KeyListener, public MouseListener, public JoyStickList
 		int capturePlayerId;
 		Util::OS::wnd_t captureHwnd;
 		bool updated;
+
+		// mouse inputs
+		int mouseXLast;
+		int mouseYLast;
+		int mouseZLast;
 };
 
 } // namespace Control

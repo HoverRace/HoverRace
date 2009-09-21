@@ -1308,8 +1308,8 @@ int MR_GameApp::ReadAsyncInputControllerPlayer(int playerIdx)
 {
 	int retv = 0;
 
-	// hack in for now
-	Control::ControlState cur = controller->getState(playerIdx);
+	// hack in for now; this checks the current state
+	Control::ControlState cur = controller->getControlState(playerIdx);
 
 	if (cur.motorOn)  retv |= MR_MainCharacter::eMotorOn;
 	if (cur.jump)     retv |= MR_MainCharacter::eJump;

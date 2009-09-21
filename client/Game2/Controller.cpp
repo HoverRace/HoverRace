@@ -20,7 +20,8 @@ using namespace OIS;
  *
  * @param mainWindow Handle to the main HR window
  */
-Controller::Controller(Util::OS::wnd_t mainWindow) {
+Controller::Controller(Util::OS::wnd_t mainWindow)
+{
 	kbd = NULL;
 	mouse = NULL;
 	joys = NULL;
@@ -29,6 +30,10 @@ Controller::Controller(Util::OS::wnd_t mainWindow) {
 	captureNext = false;
 	captureControl = 0;
 	capturePlayerId = 0;
+
+	mouseXLast = 0;
+	mouseYLast = 0;
+	mouseZLast = 0;
 
 	updated = false;
 
@@ -41,7 +46,8 @@ Controller::Controller(Util::OS::wnd_t mainWindow) {
 /***
  * Clean up the Controller and everything in it.
  */
-Controller::~Controller() {
+Controller::~Controller() 
+{
 	// simple cleanup... I like OIS
 	InputManager::destroyInputSystem(mgr);
 	delete[] joys;
@@ -51,7 +57,8 @@ Controller::~Controller() {
 /***
  * Save any control bindings that may have changed.
  */
-void Controller::saveControls() {
+void Controller::saveControls() 
+{
 	Config *cfg = Config::GetInstance();
 
 	for(int i = 0; i < 4; i++) {
@@ -69,7 +76,8 @@ void Controller::saveControls() {
 /***
  * Poll the inputs for new input.  If there is input, it will call the correct handler.
  */
-void Controller::poll() {
+void Controller::poll() 
+{
 	try {
 		if(kbd)
 			kbd->capture();
@@ -107,8 +115,79 @@ void Controller::poll() {
 /***
  * Return the current control state.
  */
-ControlState Controller::getState(int player) const {
+ControlState Controller::getControlState(int player)
+{
+	// update control state
+	curState[player].brake		= getSingleControlState(brake[player]);
+	curState[player].fire		= getSingleControlState(fire[player]);
+	curState[player].jump		= getSingleControlState(jump[player]);
+	curState[player].left		= getSingleControlState(left[player]);
+	curState[player].lookBack	= getSingleControlState(lookBack[player]);
+	curState[player].motorOn	= getSingleControlState(motorOn[player]);
+	curState[player].right		= getSingleControlState(right[player]);
+	curState[player].weapon		= getSingleControlState(weapon[player]);
+
+	if(mouse) { // update mouse positions
+		mouseXLast = mouse->getMouseState().X.abs;
+		mouseYLast = mouse->getMouseState().Y.abs;
+		mouseZLast = mouse->getMouseState().Z.abs;
+	}
+
 	return (const ControlState) curState[player];
+}
+
+/***
+ * Get the control state of one particular input control.
+ *
+ * @return bool indicating whether or not the given control is activated
+ */
+bool Controller::getSingleControlState(InputControl input)
+{
+	bool ret = false;
+	switch(input.inputType) {
+		case OISKeyboard:
+			ret = (kbd->isKeyDown((KeyCode) input.kbdBinding));
+			break;
+		case OISMouse:
+			{
+				MouseState ms = mouse->getMouseState();
+				if(input.axis == 0) {
+					// button
+					ret = (ms.buttonDown((MouseButtonID) input.button));
+				} else {
+					// looking for movement
+					switch(input.axis) {
+						case AXIS_X:
+							ret = ((input.direction == 1) ? (ms.X.abs > mouseXLast) : (ms.X.abs < mouseXLast));
+							break;
+						case AXIS_Y:
+							ret = ((input.direction == 1) ? (ms.Y.abs > mouseYLast) : (ms.Y.abs < mouseYLast));
+							break;
+						case AXIS_Z:
+							ret = ((input.direction == 1) ? (ms.Z.abs > mouseZLast) : (ms.Z.abs < mouseZLast));
+							break;
+					}
+				}
+			}
+			break;
+		case OISJoyStick:
+			{
+				JoyStickState js = joys[input.joystickId]->getJoyStickState();
+				if(input.axis != 0) {
+					ret = ((input.direction == 1) ? (js.mAxes.at(input.axis - 1).abs > 5000) : (js.mAxes.at(input.axis - 1).abs < -5000));
+				} else if(input.pov != 0) {
+					ret = (input.direction == js.mPOV[input.pov].direction);
+				} else if(input.slider != 0) {
+					// not yet implemented
+				} else { // button
+					ret = js.mButtons.at(input.button);
+				}
+			}
+			break;
+	}
+
+	// control must be disabled or something; return false
+	return ret;
 }
 
 /***
@@ -118,7 +197,8 @@ ControlState Controller::getState(int player) const {
  * @param player ID of the player; 0-3
  * @param hwnd Handle to the window we should contact when we are done
  */
-void Controller::captureNextInput(int control, int player, Util::OS::wnd_t hwnd) {
+void Controller::captureNextInput(int control, int player, Util::OS::wnd_t hwnd)
+{
 	captureNext = true;
 	captureControl = control;
 	capturePlayerId = player;
@@ -128,7 +208,8 @@ void Controller::captureNextInput(int control, int player, Util::OS::wnd_t hwnd)
 /***
  * Stop waiting to capture the next input.
  */
-void Controller::stopCapture() {
+void Controller::stopCapture()
+{
 	captureNext = false;
 	captureControl = 0;
 	capturePlayerId = 0;
@@ -141,7 +222,8 @@ void Controller::stopCapture() {
  * @param control ID of the control (CTL_MOTOR_ON, ...)
  * @param player ID of the player; 0-3
  */
-void Controller::disableInput(int control, int player) {
+void Controller::disableInput(int control, int player)
+{
 	Config *cfg = Config::GetInstance();
 
 	switch(control) {
@@ -183,7 +265,8 @@ void Controller::disableInput(int control, int player) {
 /***
  * Return a string representation of the input control.
  */
-std::string Controller::toString(HoverRace::Util::Config::cfg_controls_t::cfg_control_t control) {
+std::string Controller::toString(HoverRace::Util::Config::cfg_controls_t::cfg_control_t control)
+{
 	if(control.inputType == OISKeyboard) {
 		return kbd->getAsString((OIS::KeyCode) control.kbdBinding);
 	} else if(control.inputType == OISMouse) {
@@ -324,7 +407,8 @@ std::string Controller::toString(HoverRace::Util::Config::cfg_controls_t::cfg_co
  *
  * @param mainWindow Handle to the main HR window
  */
-void Controller::InitInputManager(Util::OS::wnd_t mainWindow) {
+void Controller::InitInputManager(Util::OS::wnd_t mainWindow)
+{
 	// collect parameters to give to init InputManager
 	// just following the example here... I'm not 100% on this
 	std::ostringstream wnd;
@@ -370,9 +454,12 @@ void Controller::InitInputManager(Util::OS::wnd_t mainWindow) {
 	else
 		ASSERT(false); // this should be logged... wait until #105 is done
 
-	if(mouse)
+	if(mouse) {
 		mouse->setEventCallback(this);
-	else
+		mouseXLast = mouse->getMouseState().X.abs;
+		mouseYLast = mouse->getMouseState().Y.abs;
+		mouseZLast = mouse->getMouseState().Z.abs;
+	} else
 		ASSERT(false); // this should be logged... wait until #105 is done
 	
 	for(int i = 0; i < numJoys; i++) {
@@ -391,7 +478,8 @@ void Controller::InitInputManager(Util::OS::wnd_t mainWindow) {
  *
  * @param player Which player to load values for (0 through 3)
  */
-void Controller::LoadControllerConfig() {
+void Controller::LoadControllerConfig()
+{
 	Config *cfg = Config::GetInstance();
 
 	/* now we need to load the values */
@@ -412,12 +500,14 @@ void Controller::LoadControllerConfig() {
  *
  * @return whether the controls have been updated
  */
-bool Controller::controlsUpdated() {
+bool Controller::controlsUpdated()
+{
 	return updated;
 	updated = false;	
 }
 
-bool Controller::keyPressed(const KeyEvent &arg) {
+bool Controller::keyPressed(const KeyEvent &arg)
+{
 	// modify modifier keys to reflect the same keycode; LShift == RShift, etc.
 	OIS::KeyCode kc = arg.key;
 
@@ -524,7 +614,8 @@ bool Controller::keyReleased(const KeyEvent &arg) {
 	return true;	
 }
 
-bool Controller::mouseMoved(const MouseEvent &arg) {
+bool Controller::mouseMoved(const MouseEvent &arg)
+{
 	// examine the axes to find the maximum
 	int x, y, z, ax, ay, az;
 
@@ -621,7 +712,8 @@ bool Controller::mouseMoved(const MouseEvent &arg) {
 	return true;
 }
 
-bool Controller::mousePressed(const MouseEvent &arg, MouseButtonID id) {
+bool Controller::mousePressed(const MouseEvent &arg, MouseButtonID id)
+{
 	if(captureNext) {
 		InputControl *input = NULL;
 		Util::Config::cfg_controls_t::cfg_control_t *cfg_input = NULL;
@@ -670,7 +762,8 @@ bool Controller::mousePressed(const MouseEvent &arg, MouseButtonID id) {
 	return true;
 }
 
-bool Controller::mouseReleased(const MouseEvent &arg, MouseButtonID id) {
+bool Controller::mouseReleased(const MouseEvent &arg, MouseButtonID id)
+{
 	if(!captureNext) {
 		for(int i = 0; i < 4; i++) {
 			if((brake[i].inputType == OISMouse) && (brake[i].button == id))
@@ -695,7 +788,8 @@ bool Controller::mouseReleased(const MouseEvent &arg, MouseButtonID id) {
 	return true;
 }
 
-bool Controller::buttonPressed(const JoyStickEvent &arg, int button) {
+bool Controller::buttonPressed(const JoyStickEvent &arg, int button)
+{
 	if(captureNext) {
 		// capture this input as a key binding
 		InputControl *input = NULL;
@@ -748,7 +842,8 @@ bool Controller::buttonPressed(const JoyStickEvent &arg, int button) {
 	return true;
 }
 
-bool Controller::buttonReleased(const JoyStickEvent &arg, int button) {
+bool Controller::buttonReleased(const JoyStickEvent &arg, int button)
+{
 	if(!captureNext) {
 		for(int i = 0; i < 4; i++) {
 			if((brake[i].inputType == OISJoyStick) && (brake[i].joystickId == arg.device->getID()) && (brake[i].button == button))
@@ -772,7 +867,8 @@ bool Controller::buttonReleased(const JoyStickEvent &arg, int button) {
 	return true;
 }
 
-bool Controller::axisMoved(const JoyStickEvent &arg, int axis) {
+bool Controller::axisMoved(const JoyStickEvent &arg, int axis)
+{
 	// examine the axes to find the maximum
 	int numAxes = arg.state.mAxes.size();
 	int *axes = new int[numAxes];
@@ -866,7 +962,8 @@ bool Controller::axisMoved(const JoyStickEvent &arg, int axis) {
 	return true;
 }
 
-bool Controller::povMoved(const JoyStickEvent &arg, int pov) {
+bool Controller::povMoved(const JoyStickEvent &arg, int pov)
+{
 	pov++; // increment pov by one
 	if(captureNext) {
 		// capture this input as a key binding
@@ -958,7 +1055,8 @@ bool Controller::povMoved(const JoyStickEvent &arg, int pov) {
  * Clear the control state of each player.  This is done each time Controller::poll() is
  * called.
  */
-void Controller::clearControlState() {
+void Controller::clearControlState()
+{
 	memset(curState, 0, sizeof(ControlState));
 }
 
@@ -969,7 +1067,8 @@ void Controller::clearControlState() {
  * @param input Pointer to InputControl that will be set to the control specified in captureControl
  * @param cfg_input Pointer to cfg_control_t that will be set to the control specified in captureControl
  */
-void Controller::getCaptureControl(int captureControl, InputControl **input, HoverRace::Util::Config::cfg_controls_t::cfg_control_t **cfg_input) {
+void Controller::getCaptureControl(int captureControl, InputControl **input, HoverRace::Util::Config::cfg_controls_t::cfg_control_t **cfg_input)
+{
 	Config *cfg = Config::GetInstance();
 
 	switch(captureControl) {
@@ -1016,14 +1115,16 @@ void Controller::getCaptureControl(int captureControl, InputControl **input, Hov
  * @param axes An array of axes measurements
  * @param numAxes The number of axes
  */
-void Controller::updateAxisControl(bool &ctlState, InputControl &ctl, int *axes, int numAxes) {
+void Controller::updateAxisControl(bool &ctlState, InputControl &ctl, int *axes, int numAxes)
+{
 	for(int i = 0; i < numAxes; i++) {
 		if((ctl.axis - 1) == i)
 			ctlState = ((ctl.direction == 1) ? (axes[i] > 0) : (axes[i] < 0));
 	}
 }
 
-InputControl Controller::toInputControl(HoverRace::Util::Config::cfg_controls_t::cfg_control_t control) {
+InputControl Controller::toInputControl(HoverRace::Util::Config::cfg_controls_t::cfg_control_t control)
+{
 	InputControl ret;
 
 	ret.axis = control.axis;
@@ -1039,7 +1140,8 @@ InputControl Controller::toInputControl(HoverRace::Util::Config::cfg_controls_t:
 	return ret;
 }
 
-HoverRace::Util::Config::cfg_controls_t::cfg_control_t Controller::toCfgControl(InputControl control) {
+HoverRace::Util::Config::cfg_controls_t::cfg_control_t Controller::toCfgControl(InputControl control)
+{
 	HoverRace::Util::Config::cfg_controls_t::cfg_control_t ret;
 
 	ret.axis = control.axis;
