@@ -59,25 +59,8 @@ struct ControlState {
 	bool left;
 };
 
-/***
- * The InputControl struct contains key/mouse/joystick bindings for one particular
- * control.
- */
-struct InputControl {
-	int inputType; /// OISKeyboard, OISMouse, OISJoyStick
-
-	// keyboard
-	int kbdBinding; // see OIS KeyCode class
-
-	// mouse or joystick
-	int button;
-	int axis;
-	int direction; // for the axis and joystick povs; axis is -1 or 1 while pov can be a larger set
-	int pov; // joystick only
-	int slider; // joystick only
-	int sensitivity; // defines how quickly we get to the maximum value
-	int joystickId;
-};
+/// Convenient typedef prevents us from having to write long namespace specifiers
+typedef HoverRace::Util::Config::cfg_controls_t::cfg_control_t InputControl;
 
 /***
  * The HoverRace::Client::Control::Controller class handles all the input of HoverRace.
@@ -146,9 +129,6 @@ class Controller : public KeyListener, public MouseListener, public JoyStickList
 		InputControl weapon[HoverRace::Util::Config::MAX_PLAYERS];
 
 		void getCaptureControl(int captureControl, InputControl **input, HoverRace::Util::Config::cfg_controls_t::cfg_control_t **cfg_input);
-
-		InputControl toInputControl(HoverRace::Util::Config::cfg_controls_t::cfg_control_t control);
-		HoverRace::Util::Config::cfg_controls_t::cfg_control_t toCfgControl(InputControl control);
 
 		bool captureNext;
 		int captureControl;

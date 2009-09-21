@@ -62,14 +62,14 @@ void Controller::saveControls()
 	Config *cfg = Config::GetInstance();
 
 	for(int i = 0; i < 4; i++) {
-		cfg->controls[i].brake = toCfgControl(this->brake[i]);
-		cfg->controls[i].fire = toCfgControl(this->fire[i]);
-		cfg->controls[i].jump = toCfgControl(this->jump[i]);
-		cfg->controls[i].left = toCfgControl(this->left[i]);
-		cfg->controls[i].lookBack = toCfgControl(this->lookBack[i]);
-		cfg->controls[i].motorOn = toCfgControl(this->motorOn[i]);
-		cfg->controls[i].right = toCfgControl(this->right[i]);
-		cfg->controls[i].weapon = toCfgControl(this->weapon[i]);
+		cfg->controls[i].brake = this->brake[i];
+		cfg->controls[i].fire = this->fire[i];
+		cfg->controls[i].jump = this->jump[i];
+		cfg->controls[i].left = this->left[i];
+		cfg->controls[i].lookBack = this->lookBack[i];
+		cfg->controls[i].motorOn = this->motorOn[i];
+		cfg->controls[i].right = this->right[i];
+		cfg->controls[i].weapon = this->weapon[i];
 	}
 }
 
@@ -484,14 +484,14 @@ void Controller::LoadControllerConfig()
 
 	/* now we need to load the values */
 	for(int i = 0; i < 4; i++) {
-		this->brake[i] = toInputControl(cfg->controls[i].brake);
-		this->fire[i] = toInputControl(cfg->controls[i].fire);
-		this->jump[i] = toInputControl(cfg->controls[i].jump);
-		this->left[i] = toInputControl(cfg->controls[i].left);
-		this->lookBack[i] = toInputControl(cfg->controls[i].lookBack);
-		this->motorOn[i] = toInputControl(cfg->controls[i].motorOn);
-		this->right[i] = toInputControl(cfg->controls[i].right);
-		this->weapon[i] = toInputControl(cfg->controls[i].weapon);
+		this->brake[i] = cfg->controls[i].brake;
+		this->fire[i] = cfg->controls[i].fire;
+		this->jump[i] = cfg->controls[i].jump;
+		this->left[i] = cfg->controls[i].left;
+		this->lookBack[i] = cfg->controls[i].lookBack;
+		this->motorOn[i] = cfg->controls[i].motorOn;
+		this->right[i] = cfg->controls[i].right;
+		this->weapon[i] = cfg->controls[i].weapon;
 	}
 }
 
@@ -1121,38 +1121,4 @@ void Controller::updateAxisControl(bool &ctlState, InputControl &ctl, int *axes,
 		if((ctl.axis - 1) == i)
 			ctlState = ((ctl.direction == 1) ? (axes[i] > 0) : (axes[i] < 0));
 	}
-}
-
-InputControl Controller::toInputControl(HoverRace::Util::Config::cfg_controls_t::cfg_control_t control)
-{
-	InputControl ret;
-
-	ret.axis = control.axis;
-	ret.button = control.button;
-	ret.direction = control.direction;
-	ret.inputType = control.inputType;
-	ret.kbdBinding = control.kbdBinding;
-	ret.pov = control.pov;
-	ret.sensitivity = control.sensitivity;
-	ret.slider = control.slider;
-	ret.joystickId = control.joystickId;
-
-	return ret;
-}
-
-HoverRace::Util::Config::cfg_controls_t::cfg_control_t Controller::toCfgControl(InputControl control)
-{
-	HoverRace::Util::Config::cfg_controls_t::cfg_control_t ret;
-
-	ret.axis = control.axis;
-	ret.button = control.button;
-	ret.direction = control.direction;
-	ret.inputType = control.inputType;
-	ret.kbdBinding = control.kbdBinding;
-	ret.pov = control.pov;
-	ret.sensitivity = control.sensitivity;
-	ret.slider = control.slider;
-	ret.joystickId = control.joystickId;
-
-	return ret;
 }
