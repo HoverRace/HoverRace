@@ -60,14 +60,24 @@ BOOL CALLBACK AboutDialog::DlgFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LP
 		case WM_INITDIALOG:
 			{
 				SetWindowTextW(pWindow, Str::UW(_("About HoverRace")));
+
+				// set version string
 				std::string verStr(_("HoverRace version "));
 				verStr += Config::GetInstance()->GetVersion();
 				SetDlgItemTextW(pWindow, IDC_VER_TXT, Str::UW(verStr.c_str()));
+
+				CHARFORMAT fmt;
+				fmt.cbSize = sizeof(CHARFORMAT);
+				fmt.yHeight = 240; // 12pt (units are 1/20 pt)
+				fmt.dwEffects = CFE_BOLD | CFE_UNDERLINE;
+				fmt.dwMask = CFM_BOLD | CFM_UNDERLINE | CFM_SIZE;
+				SendMessage(GetDlgItem(pWindow, IDC_VER_TXT), EM_SETCHARFORMAT, SCF_ALL, (LPARAM) (CHARFORMAT FAR *) &fmt);
+
 				std::ostringstream oss;
 				oss <<
 					_("HoverRace is brought to you by:") << "\r\n"
 					"\r\n"
-					"Ricard Langlois (" << _("original author") << ")\r\n"
+					"Richard Langlois (" << _("original author") << ")\r\n"
 					"  Grokksoft Inc.\r\n"
 					"\r\n" <<
 					_("with contributions from (in alphabetical order)") << ":\r\n"
@@ -103,13 +113,13 @@ BOOL CALLBACK AboutDialog::DlgFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LP
 					;
 				SetDlgItemTextW(pWindow, IDC_ABOUT_TXT, Str::UW(oss.str().c_str()));
 				SetDlgItemTextW(pWindow, IDOK, Str::UW(_("Close")));
+
 				lReturnValue = TRUE;
 			}
 			break;
 
 		case WM_COMMAND:
 			switch (LOWORD(pWParam)) {
-
 				case IDCANCEL:
 					EndDialog(pWindow, IDCANCEL);
 					lReturnValue = TRUE;
@@ -121,7 +131,7 @@ BOOL CALLBACK AboutDialog::DlgFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LP
 					break;
 			}
 			break;
+
 	}
 	return lReturnValue;
 }
-

@@ -39,6 +39,7 @@
 #define IDD_PRESS_ANY_KEY               167
 #define IDD_NETWORK                     168
 #define IDD_PERFORMING_TASK             170
+#define IDB_ABOUT                       172
 #define IDC_GAMMA_SLIDER                1001
 #define IDC_CONTRAST_SLIDER             1002
 #define IDC_SERVER_PORT                 1002
@@ -62,6 +63,7 @@
 #define IDC_LEFT2                       1020
 #define IDC_CHAT_OUT                    1020
 #define IDC_FIRE2                       1021
+#define IDC_CHAT_OUT2                   1021
 #define IDC_CHAT_IN                     1022
 #define IDC_SELWEAPON2                  1022
 #define IDC_JUMP1                       1024
@@ -206,6 +208,7 @@
 #define IDC_CHECK_URL                   1360
 #define IDC_ITEM_NAME                   1361
 #define IDC_CHECK_UPDATES               1361
+#define IDC_ABOUT_BMP                   1362
 #define ID_VIEW_3DACTION                32775
 #define ID_SETTING_WINDOW               32784
 #define ID_GAME_PAUSE                   32788
@@ -390,9 +393,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        171
+#define _APS_NEXT_RESOURCE_VALUE        173
 #define _APS_NEXT_COMMAND_VALUE         40049
-#define _APS_NEXT_CONTROL_VALUE         1362
+#define _APS_NEXT_CONTROL_VALUE         1363
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -189,17 +189,20 @@ BEGIN
                     109,14
 END
 
-IDD_ABOUT DIALOGEX 0, 0, 222, 172
+IDD_ABOUT DIALOGEX 0, 0, 365, 322
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | 
     WS_CAPTION | WS_SYSMENU
 CAPTION "About HoverRace"
 FONT 8, "MS Shell Dlg", 0, 0, 0x0
 BEGIN
-    DEFPUSHBUTTON   "Close",IDOK,144,150,68,14
-    EDITTEXT        IDC_VER_TXT,7,7,208,14,ES_AUTOHSCROLL | ES_READONLY | 
-                    NOT WS_BORDER
-    EDITTEXT        IDC_ABOUT_TXT,7,26,208,114,ES_MULTILINE | ES_AUTOVSCROLL | 
-                    ES_READONLY | WS_VSCROLL
+    CONTROL         172,IDC_STATIC,"Static",SS_BITMAP,0,0,365,322
+    DEFPUSHBUTTON   "Close",IDOK,287,303,68,14
+    CONTROL         "",IDC_ABOUT_TXT,"RichEdit20A",ES_MULTILINE | 
+                    ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_READONLY | 
+                    WS_VSCROLL | WS_TABSTOP,7,30,358,266,WS_EX_TRANSPARENT
+    CONTROL         "",IDC_VER_TXT,"RichEdit20A",ES_MULTILINE | 
+                    ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_READONLY | 
+                    WS_VSCROLL | WS_TABSTOP,7,7,351,14,WS_EX_TRANSPARENT
 END
 
 IDD_TCP_SERVER DIALOGEX 0, 0, 224, 135
@@ -681,10 +684,10 @@ BEGIN
     IDD_ABOUT, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 215
+        RIGHTMARGIN, 291
         TOPMARGIN, 7
-        BOTTOMMARGIN, 164
-        HORZGUIDE, 163
+        BOTTOMMARGIN, 269
+        HORZGUIDE, 234
     END
 
     IDD_TCP_SERVER, DIALOG
@@ -1254,6 +1257,13 @@ END
 
 #endif    // APSTUDIO_INVOKED
 
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_ABOUT               BITMAP                  "About.bmp"
 #endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////
 
