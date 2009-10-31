@@ -171,7 +171,7 @@ bool Controller::getSingleControlState(InputControl input)
 			}
 			break;
 		case OISJoyStick:
-			{
+			if(input.joystickId < numJoys) { // otherwise we will ignore the input (controller is not plugged in?)
 				JoyStickState js = joys[input.joystickId]->getJoyStickState();
 				if(input.axis != 0) {
 					ret = ((input.direction == 1) ? (js.mAxes.at(input.axis - 1).abs > 5000) : (js.mAxes.at(input.axis - 1).abs < -5000));
