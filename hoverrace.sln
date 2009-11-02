@@ -47,6 +47,7 @@ Global
 		{2453907E-2872-409E-A1E9-49279F8D0B7A}.Debug.ActiveCfg = Debug|Win32
 		{2453907E-2872-409E-A1E9-49279F8D0B7A}.Debug.Build.0 = Debug|Win32
 		{2453907E-2872-409E-A1E9-49279F8D0B7A}.Release.ActiveCfg = Release|Win32
+		{2453907E-2872-409E-A1E9-49279F8D0B7A}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
