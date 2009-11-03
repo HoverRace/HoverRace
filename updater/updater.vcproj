@@ -78,7 +78,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="LiteUnzip.lib"
+				AdditionalDependencies="LiteUnzip.lib LiteZip.lib"
 				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../lib"
@@ -201,7 +201,8 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; &quot;$(OutDir)&quot;"
+						CommandLine="copy &quot;$(InputPath)&quot; &quot;$(OutDir)&quot;
+"
 						Outputs="$(OutDir)\$(InputFileName)"/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -209,7 +210,8 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; &quot;$(OutDir)&quot;"
+						CommandLine="copy &quot;$(InputPath)&quot; &quot;$(OutDir)&quot;
+"
 						Outputs="$(OutDir)\$(InputFileName)"/>
 				</FileConfiguration>
 			</File>
@@ -220,14 +222,16 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; &quot;$(OutDir)&quot;"
+						CommandLine="copy &quot;$(InputPath)&quot; &quot;$(OutDir)&quot;
+"
 						Outputs="$(OutDir)\$(InputFileName)"/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="copy &quot;$(InputPath)&quot; &quot;$(OutDir)&quot;"/>
+						CommandLine="copy &quot;$(InputPath)&quot; &quot;$(OutDir)&quot;
+"/>
 				</FileConfiguration>
 			</File>
 		</Filter>
