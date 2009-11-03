@@ -716,8 +716,8 @@ BOOL MR_InternetRoom::AskRoomParams(HWND pParentWindow, BOOL pShouldRecheckServe
 	return lReturnValue;
 	*/
 
-	// check for updates, if we need to
-	if(checkUpdates) {
+	// check for updates, if we need to; don't check if this was not built by the buildserver (and version is not marked)
+	if(checkUpdates && (Config::GetInstance()->GetBuild() != 0)) {
 		CheckUpdateServerDialog(Config::GetInstance()->net.updateServer).ShowModal(NULL, pParentWindow);
 		checkUpdates = false;
 	}
