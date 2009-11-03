@@ -216,6 +216,15 @@ const std::string &Config::GetFullVersion() const
 }
 
 /**
+ * Retrieve the build number of the version.
+ * @return The build number (that was passed to the constructor).
+ */
+const int &Config::GetBuild() const
+{
+	return verBuild;
+}
+
+/**
  * Retrieve the user agent identifier used for HTTP requests.
  * @return The user agent string.
  */

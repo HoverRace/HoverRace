@@ -90,6 +90,7 @@ class MR_DllDeclare Config
 		bool IsPrerelease() const;
 		const std::string &GetVersion() const;
 		const std::string &GetFullVersion() const;
+		const int &GetBuild() const;
 		const std::string &GetUserAgentId() const;
 
 		static std::string GetDefaultPath();
