@@ -230,8 +230,10 @@
 					Name="Release|Win32">
 					<Tool
 						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
 						CommandLine="copy &quot;$(InputPath)&quot; &quot;$(OutDir)&quot;
-"/>
+"
+						Outputs="$(OutDir)\$(InputFileName)"/>
 				</FileConfiguration>
 			</File>
 		</Filter>
