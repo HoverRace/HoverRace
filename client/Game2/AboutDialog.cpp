@@ -63,7 +63,10 @@ BOOL CALLBACK AboutDialog::DlgFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LP
 
 				// set version string
 				std::string verStr(_("HoverRace version "));
-				verStr += Config::GetInstance()->GetVersion();
+				if(Config::GetInstance()->IsPrerelease())
+					verStr += Config::GetInstance()->GetFullVersion();
+				else
+					verStr += Config::GetInstance()->GetVersion();
 				SetDlgItemTextW(pWindow, IDC_VER_TXT, Str::UW(verStr.c_str()));
 
 				CHARFORMAT fmt;
@@ -110,7 +113,7 @@ BOOL CALLBACK AboutDialog::DlgFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LP
 					"\r\n"
 					"Luabind -- Copyright (c) 2003 Daniel Wallin and Arvid Norberg\r\n"
 					"  http://www.rasterbar.com/products/luabind.html\r\n"
-					;
+				;
 				SetDlgItemTextW(pWindow, IDC_ABOUT_TXT, Str::UW(oss.str().c_str()));
 				SetDlgItemTextW(pWindow, IDOK, Str::UW(_("Close")));
 
