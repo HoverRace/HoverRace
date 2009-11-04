@@ -46,6 +46,7 @@
 #include "../../engine/Util/OS.h"
 #include "../../engine/Util/Str.h"
 #include "InternetRoom.h"
+#include "CheckUpdateServerDialog.h"
 
 #include <vfw.h>
 
@@ -90,6 +91,7 @@ void CaptureScreen( MR_VideoBuffer* pVideoBuffer );
 #define ID_SETTING_PROPERTIES           40048
 #define ID_HELP_CONTENTS                32772
 #define ID_HELP_SITE                    40007
+#define ID_HELP_UPDATES					32773
 
 #define MR_APP_CLASS_NAME L"HoverRaceClass"
 
@@ -1049,6 +1051,9 @@ bool MR_GameApp::CreateMainMenu()
 	if (!AppendMenuW(helpMenu, MF_SEPARATOR, NULL, NULL)) return false;
 	if (!AppendMenuW(helpMenu, MF_STRING, ID_HELP_SITE,
 		Str::UW("&HoverRace.com"))) return false;
+	if (!AppendMenuW(helpMenu, MF_SEPARATOR, NULL, NULL)) return false;
+	if (!AppendMenuW(helpMenu, MF_STRING, ID_HELP_UPDATES,
+		Str::UW(MENUFMT("Menu|Help", "Check for &Updates", false, NULL).c_str()))) return false;
 	if (!AppendMenuW(helpMenu, MF_SEPARATOR, NULL, NULL)) return false;
 	if (!AppendMenuW(helpMenu, MF_STRING, ID_APP_ABOUT,
 		Str::UW(MENUFMT("Menu|Help", "&About HoverRace", false, NULL).c_str()))) return false;
@@ -2292,6 +2297,18 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 
 				case ID_HELP_SITE:
 					This->DisplaySite();
+					break;
+
+				case ID_HELP_UPDATES:
+					// don't check if we are a homebuilt version
+					if(Config::GetInstance()->GetBuild() != 0) {
+						CheckUpdateServerDialog(Config::GetInstance()->net.updateServer).ShowModal(NULL, This->mMainWindow);
+					} else {
+						MessageBoxW(This->mMainWindow,
+							Str::UW(_("This build of HoverRace is not official; updates are not available.")),
+							PACKAGE_NAME_L,
+							MB_ICONEXCLAMATION);
+					}
 					break;
 
 				case ID_APP_ABOUT:
