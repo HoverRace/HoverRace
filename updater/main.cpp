@@ -134,5 +134,5 @@ int main(int argc, const char **argv) {
 	}
 
 	// wait for 2 seconds so the user can see what has happened
-	Sleep(3000);
+	Sleep(2000);
 }
