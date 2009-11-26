@@ -52,8 +52,6 @@
 
 using namespace HoverRace::Client;
 
-I like cheese a lot
-
 // If MR_AVI_CAPTURE is defined
 // #define MR_AVI_CAPTUREh
 
