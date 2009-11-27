@@ -45,6 +45,8 @@ int PatchHoverRace(string targetDir, string patchFile) {
 	UnzipFindItem(huz, &ze, 0);
 	UnzipItemToFile(huz, ze.Name, &ze);
 
+	printf("Opening DIGEST...\n");
+
 	FILE *digest = fopen("DIGEST", "rb");
 
 	if(digest == NULL) {

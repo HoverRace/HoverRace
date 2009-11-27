@@ -44,6 +44,7 @@ bool dirExists(string dir); /// check if a directory exists; auxiliary function
 bool fileExists(string dir); /// check if a file exists; auxiliary function
 
 int main(int argc, const char **argv) {
+	printf("HoverRace automatic updater and patch generator\n");
 
 	bool createUpdate = false; // if createUpdate is false we are updating
 	string targetDir = "";

@@ -28,6 +28,8 @@ using namespace boost::filesystem;
 
 int CreatePatch(string oldDir, string newDir, string patchFile) {
 	// list all the files we will need to look at
+	printf("Enumerating files...\n");
+
 	vector<string> dirListing = EnumerateDirectory(newDir);
 	vector<string> oldListing = EnumerateDirectory(oldDir);
 
