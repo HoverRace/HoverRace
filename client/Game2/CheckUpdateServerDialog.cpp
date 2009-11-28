@@ -108,7 +108,10 @@ void CheckUpdateServerDialog::ShowModal(HINSTANCE hinst, HWND parent)
 						// assemble arguments for updater
 						// theoretically, the root directory of this instance of HoverRace should just
 						// be ../ but, it would be a good idea to write code that checks this in the future
-						string hrPath = "..\\\\";
+						string curPath = boost::filesystem::current_path().file_string();
+						chdir("../");
+						string hrPath = boost::filesystem::current_path().file_string();
+						chdir(curPath.c_str());
 						string patchFile = Config::GetInstance()->GetDefaultPath() + "\\" + dlPtr->updateUrl;
 
 						// temporarily move updater and dependencies into "safe" area
@@ -122,10 +125,11 @@ void CheckUpdateServerDialog::ShowModal(HINSTANCE hinst, HWND parent)
 						boost::filesystem::copy_file("LiteUnzip.dll", updaterDir + "LiteUnzip.dll");
 
 						// now, run the updater
-						string cmdLine = "\"" + updaterDir + "updater.exe\" \"" + hrPath + "\" \"" + patchFile + "\"";
+						string cmdLine = "updater.exe \"" + hrPath + "\" \"" + patchFile + "\"";
 						chdir(updaterDir.c_str());
 						if(system(cmdLine.c_str()) != 0)
 							MessageBoxW(NULL, Str::UW(_("Problem running updater.exe!")), PACKAGE_NAME_L, MB_ICONWARNING | MB_OK);
+						chdir(curPath.c_str()); // change back to original working directory
 					}
 					// If that was not executed, there was a failure during download of the update,
 					// but DownloadUpdateDialog notifies the user so we do not need to.

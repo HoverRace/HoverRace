@@ -42,6 +42,7 @@ using namespace boost::filesystem;
 
 bool dirExists(string dir); /// check if a directory exists; auxiliary function
 bool fileExists(string dir); /// check if a file exists; auxiliary function
+void waitExit(int code);
 
 int main(int argc, const char **argv) {
 	printf("HoverRace automatic updater and patch generator\n");
@@ -60,18 +61,18 @@ int main(int argc, const char **argv) {
 
 				if(i == argc - 1) {
 					fprintf(stderr, "No updated version path given!\n");
-					return -1;
+					waitExit(1);
 				} else {
 					sourceDir = argv[++i];
 				}
 			} else if(argv[i][1] == 'h') {
 				fprintf(stderr, "Usage: %s [-c /path/to/updated/version/] /path/to/hoverrace/ patchfile.zip\n", argv[0]);
 				fprintf(stderr, "  The -c option specifies that an update should be created\n");
-				return -1;
+				waitExit(1);
 			} else {
 				// no gettext here... this should not ever be used by users
 				fprintf(stderr, "Unknown option %s\n", argv[i]);
-				return -1;
+				waitExit(1);
 			}
 		} else {
 			// must be our working directory
@@ -79,7 +80,7 @@ int main(int argc, const char **argv) {
 
 			if(i == argc - 1) { // missing an argument
 				fprintf(stderr, "No bsdiff zip file supplied!\n");
-				return -1;
+				waitExit(1);
 			} else {
 				patchFile = argv[i + 1];
 			}
@@ -90,24 +91,24 @@ int main(int argc, const char **argv) {
 
 	if(createUpdate && sourceDir == "") {
 		fprintf(stderr, "No source directory supplied!\n");
-		return -1;
+		waitExit(1);
 	} 
 
 	if(targetDir == "") {
 		fprintf(stderr, "No target directory supplied!\n");
-		return -1;
+		waitExit(1);
 	}
 
 	// check that updated directory is valid
 	if(createUpdate && !is_directory(sourceDir)) {
 		fprintf(stderr, "Source directory %s does not exist!\n", sourceDir.c_str());
-		return -1;
+		waitExit(1);
 	}
 
 	// check that directory is valid
 	if(!is_directory(targetDir)) {
 		fprintf(stderr, "Target directory %s does not exist!\n", targetDir.c_str());
-		return -1;
+		waitExit(1);
 	}
 
 	// now that all the setup is done, begin the actual work
@@ -118,7 +119,7 @@ int main(int argc, const char **argv) {
 		// check that patch exists
 		if(!exists(patchFile)) {
 			fprintf(stderr, "Patch file %s does not exist!\n", patchFile.c_str());
-			return -1;
+			waitExit(1);
 		}
 
 		// check that HoverRace is not running
@@ -134,6 +135,10 @@ int main(int argc, const char **argv) {
 		PatchHoverRace(targetDir, patchFile);
 	}
 
-	// wait for 2 seconds so the user can see what has happened
-	Sleep(2000);
+	waitExit(0);
+}
+
+void waitExit(int code) {
+	Sleep(4000); // wait for four seconds
+	exit(code);
 }

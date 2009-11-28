@@ -114,9 +114,15 @@ bool UpdateDownloader::CheckUrl(const std::string &url, Net::CancelFlagPtr cance
 		// update is necessary
 		// generate url
 		char buffer[500];
+#ifdef _DEBUG
+		sprintf(buffer, "hoverrace-update-%ld.%ld.%ld.%ld-to-%ld.%ld.%ld.%ld.debug.zip",
+			currentVersion.major, currentVersion.minor, currentVersion.patch, currentVersion.rev,
+			updatedVersion.major, updatedVersion.minor, updatedVersion.patch, updatedVersion.rev);
+#else
 		sprintf(buffer, "hoverrace-update-%ld.%ld.%ld.%ld-to-%ld.%ld.%ld.%ld.zip",
 			currentVersion.major, currentVersion.minor, currentVersion.patch, currentVersion.rev,
 			updatedVersion.major, updatedVersion.minor, updatedVersion.patch, updatedVersion.rev);
+#endif
 
 		updateUrl = buffer;
 		return true;
