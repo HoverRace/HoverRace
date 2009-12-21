@@ -114,6 +114,7 @@ int main(int argc, const char **argv) {
 	// now that all the setup is done, begin the actual work
 	if(createUpdate) {
 		// diff source and target
+		printf("Creating patch from %s to %s\n", sourceDir, targetDir);
 		return (CreatePatch(targetDir, sourceDir, patchFile));
 	} else {
 		// check that patch exists
@@ -132,6 +133,7 @@ int main(int argc, const char **argv) {
 		}
 
 		// now, HoverRace is closed; do the patching
+		printf("Will patch with file %s\n", patchFile);
 		PatchHoverRace(targetDir, patchFile);
 	}
 

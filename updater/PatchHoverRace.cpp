@@ -28,6 +28,7 @@ using namespace boost::filesystem;
 
 int PatchHoverRace(string targetDir, string patchFile) {
 	// we assume that the files are valid
+	printf("Beginning patch process...\n");
 
 	// first, we must unpack the patch file, which is a zip
 	HUNZIP huz;
