@@ -146,7 +146,7 @@ bool Controller::getSingleControlState(InputControl input)
 	bool ret = false;
 	switch(input.inputType) {
 		case OISKeyboard:
-			ret = (kbd->isKeyDown((KeyCode) input.kbdBinding));
+			ret = (kbd->isKeyDown((OIS::KeyCode) input.kbdBinding));
 			break;
 		case OISMouse:
 			{
