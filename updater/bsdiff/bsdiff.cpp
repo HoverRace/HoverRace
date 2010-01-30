@@ -20,12 +20,18 @@
 
 void err(char a, char* format, char* param)
 {
-    printf(format,param);
+	printf("bsdiff error: ");
+	printf(format,param);
+	printf("\n");
+	Sleep(4000);
     exit(1);
 }
 void err(char a, char* format)
 {
-    printf(format);
+	printf("bsdiff error: ");
+	printf(format);
+	printf("\n");
+	Sleep(4000);
     exit(1);
 }
 

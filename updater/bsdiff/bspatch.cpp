@@ -20,15 +20,20 @@
 //#endif
 
 #include "bspatch.h"
+#include <string>
 
 void errx(char a, char* format, char* param)
 {
-    printf(format,param);
+	printf("bspatch error: ");
+	printf(format,param);
+	Sleep(4000);
     exit(1);
 }
 void errx(char a, char* format)
 {
-    printf(format);
+	printf("bspatch error: ");
+	printf(format);
+	Sleep(4000);
     exit(1);
 }
 
