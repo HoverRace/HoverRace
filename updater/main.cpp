@@ -63,10 +63,7 @@ int main(int argc, const char **argv) {
 
 	// Windows has no getopt() therefore we must do it by hand and as a result my implementation is not the best or the
 	// cleanest but it does work
-	printf("argc %d\n", argc);
 	for(int i = 1; i < argc; i++) {
-		printf("next arg is %s\n", argv[i]);
-		printf("after that is %s\n", argv[i + 1]);
 		if(argv[i][0] == '-') {
 			if(argv[i][1] == 'c') {
 				createUpdate = true;
@@ -94,9 +91,7 @@ int main(int argc, const char **argv) {
 				fprintf(stderr, "No bsdiff zip file supplied!\n");
 				waitExit(1);
 			} else {
-				printf("going to set our patch file to %s\n", argv[i + 1]);
 				patchFile = argv[i + 1];
-				printf("patchFile is %s\n", patchFile.c_str());
 			}
 
 			break;
