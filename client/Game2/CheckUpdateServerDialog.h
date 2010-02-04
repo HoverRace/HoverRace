@@ -59,7 +59,7 @@ class CheckUpdateServerDialog {
 		BOOL DlgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
 		static BOOL CALLBACK DlgFunc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
 
-		static const WM_APP_UPDATE_CHECK_DONE = WM_APP + 20;
+		static const int WM_APP_UPDATE_CHECK_DONE = WM_APP + 20;
 
 	private:
 		void ThreadProc(HWND hwnd);
