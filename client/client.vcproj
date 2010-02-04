@@ -47,7 +47,7 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_MBNET_;WITH_OPENAL"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="0"
-				RuntimeLibrary="1"
+				RuntimeLibrary="3"
 				BufferSecurityCheck="false"
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
