@@ -50,8 +50,8 @@
 #include <boost/thread/thread.hpp>
 
 #define PACKAGE_NAME_WIDEN(x) L ## x
-#define PACKAGE_NAME_APPLY(x,y) x ## ( ## y ## )
-#define PACKAGE_NAME_L PACKAGE_NAME_APPLY(PACKAGE_NAME_WIDEN,PACKAGE_NAME)
+#define PACKAGE_NAME_APPLY(x) PACKAGE_NAME_WIDEN(x)
+#define PACKAGE_NAME_L PACKAGE_NAME_APPLY(PACKAGE_NAME)
 
 #ifdef _
 #	undef _
