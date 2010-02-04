@@ -279,7 +279,7 @@ MR_MainCharacter *MR_MainCharacter::New(int pNbLap, char pGameOpts)
 		lReturnValue->mGameOpts = pGameOpts;
 	}
 	// if mGameOpts now outlaw basic craft, we must update
-	while(!(lReturnValue->mGameOpts & ((int) pow(2, 3 - ((lReturnValue->mHoverModel + 4) % 4)))))
+	while(!(lReturnValue->mGameOpts & ((int) pow(2.0f, 3.0f - ((lReturnValue->mHoverModel + 4) % 4)))))
 		lReturnValue->mHoverModel++;
 
 	return lReturnValue;
@@ -405,7 +405,7 @@ void MR_MainCharacter::SetControlState(int pState, MR_SimulationTime pTime)
 				mHoverModel++;
 				
 				// ensure we are using an allowed craft
-				while(!(mGameOpts & ((int) pow(2, 3 - ((mHoverModel + 4) % 4)))))
+				while(!(mGameOpts & ((int) pow(2.0f, 3.0f - ((mHoverModel + 4) % 4)))))
 					mHoverModel++;
 			}
 
@@ -413,7 +413,7 @@ void MR_MainCharacter::SetControlState(int pState, MR_SimulationTime pTime)
 				mHoverModel--;
 
 				// ensure we are using an allowed craft
-				while(!(mGameOpts & ((int) pow(2, 3 - ((mHoverModel + 4) % 4)))))
+				while(!(mGameOpts & ((int) pow(2.0f, 3.0f - ((mHoverModel + 4) % 4)))))
 					mHoverModel--;
 			}
 

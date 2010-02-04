@@ -136,7 +136,7 @@ void MR_3DViewPort::ComputeBackgroundConst()
 		mBackgroundConst[lCounter].mLineIncrement_1024 =
 			static_cast<MR_Int32>(
 				1024 * MR_BACK_Y_RES * mPlanVW /
-				(sqrt(pow(mPlanDist, 2) + pow((lCounter - mXRes / 2) * mPlanHW / (mXRes / 2), 2)) * (mYRes / 2))
+				(sqrt(pow(mPlanDist, 2.0f) + pow((lCounter - mXRes / 2) * mPlanHW / (mXRes / 2), 2.0f)) * (mYRes / 2))
 				);
 	}
 }
