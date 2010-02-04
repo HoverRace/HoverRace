@@ -865,6 +865,7 @@ void MR_NetworkSession::BroadcastMainElementCreation(const MR_ObjectFromFactoryI
 void MR_NetworkSession::BroadcastAutoElementCreation(const MR_ObjectFromFactoryId &pId, const MR_ElementNetState &pState, int pRoom)
 {
 	MR_NetMessageBuffer lMessage;
+	int lCounter;
 
 	// lMessage.mSendingTime            = mSession.GetSimulationTime()>>2;
 	lMessage.mMessageType = MRNM_CREATE_AUTO_ELEM;
@@ -947,6 +948,7 @@ void MR_NetworkSession::BroadcastAutoElementCreation(const MR_ObjectFromFactoryI
 void MR_NetworkSession::BroadcastPermElementState(int pPermId, const MR_ElementNetState &pState, int pRoom)
 {
 	MR_NetMessageBuffer lMessage;
+	int lCounter;
 
 	// lMessage.mSendingTime            = mSession.GetSimulationTime()>>2;
 	lMessage.mMessageType = MRNM_SET_PERM_ELEMENT_STATE;
