@@ -751,7 +751,7 @@ double MR_LevelBuilder::ComputeShapeConst(Section * pSection)
 	}
 
 	// Compute bonding box diag size
-	lReturnValue = sqrt(pow(pSection->mMax.mX - pSection->mMin.mX, 2) + pow(pSection->mMax.mY - pSection->mMin.mY, 2)) / 1000.0;
+	lReturnValue = sqrt(pow(pSection->mMax.mX - pSection->mMin.mX, 2.0f) + pow(pSection->mMax.mY - pSection->mMin.mY, 2.0f)) / 1000.0;
 
 	return lReturnValue;
 }
