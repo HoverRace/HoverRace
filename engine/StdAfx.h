@@ -6,8 +6,11 @@
 
 #	define VC_EXTRALEAN							  // Exclude rarely-used stuff from Windows headers
 
-	// Minimum Windows version: XP
+// Minimum Windows version: XP
 #	define WINVER 0x0501
+
+#	define _CRT_SECURE_NO_DEPRECATE
+#	define _SCL_SECURE_NO_DEPRECATE
 
 #	include <afxwin.h>								// MFC core and standard components
 #	include <afxext.h>								// MFC extensions
