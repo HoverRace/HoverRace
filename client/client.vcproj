@@ -1,124 +1,188 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="8.00"
 	Name="client"
 	ProjectGUID="{49D400AC-8D6D-4866-84A7-B38389E035E3}"
 	RootNamespace="client"
-	Keyword="ManagedCProj">
+	Keyword="ManagedCProj"
+	>
 	<Platforms>
 		<Platform
-			Name="Win32"/>
+			Name="Win32"
+		/>
 	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory=".\..\Debug"
 			IntermediateDirectory=".\Debug"
 			ConfigurationType="1"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="2"
 			CharacterSet="2"
-			ManagedExtensions="FALSE">
+			ManagedExtensions="0"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../include;../include/lua"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_MBNET_;WITH_OPENAL"
-				MinimalRebuild="FALSE"
+				MinimalRebuild="false"
 				BasicRuntimeChecks="0"
-				RuntimeLibrary="3"
-				BufferSecurityCheck="FALSE"
-				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="3"
+				RuntimeLibrary="1"
+				BufferSecurityCheck="false"
+				RuntimeTypeInfo="true"
+				UsePrecompiledHeader="2"
 				WarningLevel="3"
-				DebugInformationFormat="4"/>
+				DebugInformationFormat="4"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
-			<Tool
-				Name="VCLinkerTool"
-				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="Vfw32.lib vfw32.lib wsock32.lib winmm.lib version.lib comctl32.lib libcurld.lib LiteUnzip.lib intl.lib lua5.1D.lib OIS_d.lib"
-				OutputFile="..\Debug\HoverRace.exe"
-				LinkIncremental="1"
-				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="..\lib"
-				GenerateDebugInformation="TRUE"
-				AssemblyDebug="0"
-				SubSystem="2"/>
-			<Tool
-				Name="VCMIDLTool"/>
-			<Tool
-				Name="VCPostBuildEventTool"/>
-			<Tool
-				Name="VCPreBuildEventTool"/>
-			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
 			<Tool
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="_AFXDLL;_DEBUG;_MBNET_"
-				Culture="1033"/>
+				Culture="1033"
+			/>
 			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
+				Name="VCLinkerTool"
+				AdditionalOptions="/MACHINE:I386"
+				AdditionalDependencies="Vfw32.lib wsock32.lib winmm.lib version.lib comctl32.lib libcurld.lib LiteUnzip.lib intl.lib lua5.1D.lib OIS_d.lib"
+				OutputFile="..\Debug\HoverRace.exe"
+				LinkIncremental="1"
+				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="..\lib"
+				GenerateDebugInformation="true"
+				AssemblyDebug="0"
+				SubSystem="2"
+			/>
 			<Tool
-				Name="VCWebDeploymentTool"/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
+				Name="VCManifestTool"
+			/>
 			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory=".\..\Release"
 			IntermediateDirectory=".\Release"
 			ConfigurationType="1"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="2"
 			CharacterSet="2"
-			ManagedExtensions="FALSE">
+			ManagedExtensions="0"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="../include;../include/lua"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_MBNET_;WITH_OPENAL"
-				StringPooling="TRUE"
-				MinimalRebuild="FALSE"
+				StringPooling="true"
+				MinimalRebuild="false"
 				RuntimeLibrary="2"
-				EnableFunctionLevelLinking="TRUE"
-				UsePrecompiledHeader="3"
+				EnableFunctionLevelLinking="true"
+				UsePrecompiledHeader="2"
 				WarningLevel="3"
-				DebugInformationFormat="0"/>
+				DebugInformationFormat="0"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="vfw32.lib wsock32.lib winmm.lib version.lib comctl32.lib libcurl.lib LiteUnzip.lib intl.lib lua5.1.lib OIS.lib"
 				OutputFile=".\..\Release\HoverRace.exe"
 				LinkIncremental="1"
-				SuppressStartupBanner="TRUE"
+				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="..\lib"
-				GenerateDebugInformation="FALSE"
-				SubSystem="2"/>
+				GenerateDebugInformation="false"
+				SubSystem="2"
+			/>
 			<Tool
-				Name="VCMIDLTool"/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCManifestTool"
+			/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCXDCMakeTool"
+			/>
 			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCBscMakeTool"
+			/>
 			<Tool
-				Name="VCResourceCompilerTool"/>
+				Name="VCFxCopTool"
+			/>
 			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="VCAppVerifierTool"
+			/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
+				Name="VCWebDeploymentTool"
+			/>
 			<Tool
-				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 	</Configurations>
 	<References>
@@ -126,455 +190,577 @@
 	<Files>
 		<Filter
 			Name="Game2"
-			Filter="">
+			>
 			<File
-				RelativePath=".\Game2\AboutDialog.cpp">
+				RelativePath=".\Game2\AboutDialog.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\AboutDialog.h">
+				RelativePath=".\Game2\AboutDialog.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\Banner.cpp">
+				RelativePath=".\Game2\Banner.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\Banner.h">
+				RelativePath=".\Game2\Banner.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\CheckRoomListDialog.cpp">
+				RelativePath=".\Game2\CheckRoomListDialog.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\CheckRoomListDialog.h">
+				RelativePath=".\Game2\CheckRoomListDialog.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\CheckUpdateServerDialog.cpp">
+				RelativePath=".\Game2\CheckUpdateServerDialog.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\CheckUpdateServerDialog.h">
+				RelativePath=".\Game2\CheckUpdateServerDialog.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\ClientSession.cpp">
+				RelativePath=".\Game2\ClientSession.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\ClientSession.h">
+				RelativePath=".\Game2\ClientSession.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\Console.cpp">
+				RelativePath=".\Game2\Console.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\Console.h">
+				RelativePath=".\Game2\Console.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\Controller.cpp">
+				RelativePath=".\Game2\Controller.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\Controller.h">
+				RelativePath=".\Game2\Controller.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\ControlPrefsPage.cpp">
+				RelativePath=".\Game2\ControlPrefsPage.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\ControlPrefsPage.h">
+				RelativePath=".\Game2\ControlPrefsPage.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\DownloadUpdateDialog.cpp">
+				RelativePath=".\Game2\DownloadUpdateDialog.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\DownloadUpdateDialog.h">
+				RelativePath=".\Game2\DownloadUpdateDialog.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\FirstChoiceDialog.cpp">
+				RelativePath=".\Game2\FirstChoiceDialog.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\FirstChoiceDialog.h">
+				RelativePath=".\Game2\FirstChoiceDialog.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\FullscreenTest.cpp">
+				RelativePath=".\Game2\FullscreenTest.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\FullscreenTest.h">
+				RelativePath=".\Game2\FullscreenTest.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\Game2.rc">
+				RelativePath=".\Game2\Game2.rc"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\GameApp.cpp">
+				RelativePath=".\Game2\GameApp.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\GameApp.h">
+				RelativePath=".\Game2\GameApp.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\HighConsole.cpp">
+				RelativePath=".\Game2\HighConsole.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\HighConsole.h">
+				RelativePath=".\Game2\HighConsole.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\HighObserver.cpp">
+				RelativePath=".\Game2\HighObserver.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\HighObserver.h">
+				RelativePath=".\Game2\HighObserver.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\InternetRoom.cpp">
+				RelativePath=".\Game2\InternetRoom.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\InternetRoom.h">
+				RelativePath=".\Game2\InternetRoom.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\main.cpp">
+				RelativePath=".\Game2\main.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\MatchReport.cpp">
+				RelativePath=".\Game2\MatchReport.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\MatchReport.h">
+				RelativePath=".\Game2\MatchReport.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\MiscPrefsPage.cpp">
+				RelativePath=".\Game2\MiscPrefsPage.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\MiscPrefsPage.h">
+				RelativePath=".\Game2\MiscPrefsPage.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\NetInterface.cpp">
+				RelativePath=".\Game2\NetInterface.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\NetInterface.h">
+				RelativePath=".\Game2\NetInterface.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\NetworkPrefsPage.cpp">
+				RelativePath=".\Game2\NetworkPrefsPage.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\NetworkPrefsPage.h">
+				RelativePath=".\Game2\NetworkPrefsPage.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\NetworkSession.cpp">
+				RelativePath=".\Game2\NetworkSession.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\NetworkSession.h">
+				RelativePath=".\Game2\NetworkSession.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\Observer.cpp">
+				RelativePath=".\Game2\Observer.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\Observer.h">
+				RelativePath=".\Game2\Observer.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\PathSelector.cpp">
+				RelativePath=".\Game2\PathSelector.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\PathSelector.h">
+				RelativePath=".\Game2\PathSelector.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\PrefsDialog.cpp">
+				RelativePath=".\Game2\PrefsDialog.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\PrefsDialog.h">
+				RelativePath=".\Game2\PrefsDialog.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\PrefsPage.cpp">
+				RelativePath=".\Game2\PrefsPage.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\PrefsPage.h">
+				RelativePath=".\Game2\PrefsPage.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\resource.h">
+				RelativePath=".\Game2\resource.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\RoomList.cpp">
+				RelativePath=".\Game2\RoomList.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\RoomList.h">
+				RelativePath=".\Game2\RoomList.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\RoomListDialog.cpp">
+				RelativePath=".\Game2\RoomListDialog.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\RoomListDialog.h">
+				RelativePath=".\Game2\RoomListDialog.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\SelectRoomDialog.cpp">
+				RelativePath=".\Game2\SelectRoomDialog.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\SelectRoomDialog.h">
+				RelativePath=".\Game2\SelectRoomDialog.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\StdAfx.cpp">
+				RelativePath=".\Game2\StdAfx.cpp"
+				>
 				<FileConfiguration
-					Name="Debug|Win32">
+					Name="Debug|Win32"
+					>
 					<Tool
 						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"/>
+						UsePrecompiledHeader="1"
+					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32">
+					Name="Release|Win32"
+					>
 					<Tool
 						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"/>
+						UsePrecompiledHeader="1"
+					/>
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Game2\StdAfx.h">
+				RelativePath=".\Game2\StdAfx.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\TrackDownloadDialog.cpp">
+				RelativePath=".\Game2\TrackDownloadDialog.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\TrackDownloadDialog.h">
+				RelativePath=".\Game2\TrackDownloadDialog.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\TrackSelect.cpp">
+				RelativePath=".\Game2\TrackSelect.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\TrackSelect.h">
+				RelativePath=".\Game2\TrackSelect.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\UpdateDownloader.cpp">
+				RelativePath=".\Game2\UpdateDownloader.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\UpdateDownloader.h">
+				RelativePath=".\Game2\UpdateDownloader.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\VideoAudioPrefsPage.cpp">
+				RelativePath=".\Game2\VideoAudioPrefsPage.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Game2\VideoAudioPrefsPage.h">
+				RelativePath=".\Game2\VideoAudioPrefsPage.h"
+				>
 			</File>
 		</Filter>
 		<Filter
 			Name="Libraries"
-			Filter="">
+			>
 			<File
-				RelativePath="..\lib\alut.dll">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
-"
-						Outputs="$(OutDir)\$(InputFileName)"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
-"
-						Outputs="$(OutDir)\$(InputFileName)"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\lib\intl.dll">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
-"
-						Outputs="$(OutDir)\$(InputFileName)"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
-"
-						Outputs="$(OutDir)\$(InputFileName)"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\lib\libcurl.dll">
+				RelativePath="..\lib\alut.dll"
+				>
 				<FileConfiguration
 					Name="Debug|Win32"
-					ExcludedFromBuild="TRUE">
+					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
-"
-						Outputs="$(OutDir)\$(InputFileName)"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
-"
-						Outputs="$(OutDir)\$(InputFileName)"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\lib\libcurld.dll">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
-"
-						Outputs="$(OutDir)\$(InputFileName)"/>
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)&#x0D;&#x0A;"
+						Outputs="$(OutDir)\$(InputFileName)"
+					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Win32"
-					ExcludedFromBuild="TRUE">
+					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
-"
-						Outputs="$(OutDir)\$(InputFileName)"/>
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)&#x0D;&#x0A;"
+						Outputs="$(OutDir)\$(InputFileName)"
+					/>
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\lib\LiteUnzip.dll">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
-"
-						Outputs="$(OutDir)\$(InputFileName)"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
-"
-						Outputs="$(OutDir)\$(InputFileName)"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\lib\lua5.1.dll">
+				RelativePath="..\lib\intl.dll"
+				>
 				<FileConfiguration
 					Name="Debug|Win32"
-					ExcludedFromBuild="TRUE">
+					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
-"
-						Outputs="$(OutDir)\$(InputFileName)"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
-"
-						Outputs="$(OutDir)\$(InputFileName)"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\lib\lua5.1D.dll">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
-"
-						Outputs="$(OutDir)\$(InputFileName)"/>
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)&#x0D;&#x0A;"
+						Outputs="$(OutDir)\$(InputFileName)"
+					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Win32"
-					ExcludedFromBuild="TRUE">
+					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
-"
-						Outputs="$(OutDir)\$(InputFileName)"/>
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)&#x0D;&#x0A;"
+						Outputs="$(OutDir)\$(InputFileName)"
+					/>
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\lib\OIS.dll">
+				RelativePath="..\lib\libcurl.dll"
+				>
 				<FileConfiguration
 					Name="Debug|Win32"
-					ExcludedFromBuild="TRUE">
+					ExcludedFromBuild="true"
+					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
-"
-						Outputs="$(OutDir)\$(InputFileName)"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
-"
-						Outputs="$(OutDir)\$(InputFileName)"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\lib\OIS_d.dll">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
-"
-						Outputs="$(OutDir)\$(InputFileName)"/>
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)&#x0D;&#x0A;"
+						Outputs="$(OutDir)\$(InputFileName)"
+					/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Win32"
-					ExcludedFromBuild="TRUE">
+					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
-"
-						Outputs="$(OutDir)\$(InputFileName)"/>
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)&#x0D;&#x0A;"
+						Outputs="$(OutDir)\$(InputFileName)"
+					/>
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\lib\zlib1.dll">
+				RelativePath="..\lib\libcurld.dll"
+				>
 				<FileConfiguration
-					Name="Debug|Win32">
+					Name="Debug|Win32"
+					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
-"
-						Outputs="$(OutDir)\$(InputFileName)"/>
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)&#x0D;&#x0A;"
+						Outputs="$(OutDir)\$(InputFileName)"
+					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32">
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)
-"
-						Outputs="$(OutDir)\$(InputFileName)"/>
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)&#x0D;&#x0A;"
+						Outputs="$(OutDir)\$(InputFileName)"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\lib\LiteUnzip.dll"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)&#x0D;&#x0A;"
+						Outputs="$(OutDir)\$(InputFileName)"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)&#x0D;&#x0A;"
+						Outputs="$(OutDir)\$(InputFileName)"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\lib\lua5.1.dll"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)&#x0D;&#x0A;"
+						Outputs="$(OutDir)\$(InputFileName)"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)&#x0D;&#x0A;"
+						Outputs="$(OutDir)\$(InputFileName)"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\lib\lua5.1D.dll"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)&#x0D;&#x0A;"
+						Outputs="$(OutDir)\$(InputFileName)"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)&#x0D;&#x0A;"
+						Outputs="$(OutDir)\$(InputFileName)"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\lib\OIS.dll"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)&#x0D;&#x0A;"
+						Outputs="$(OutDir)\$(InputFileName)"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)&#x0D;&#x0A;"
+						Outputs="$(OutDir)\$(InputFileName)"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\lib\OIS_d.dll"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)&#x0D;&#x0A;"
+						Outputs="$(OutDir)\$(InputFileName)"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)&#x0D;&#x0A;"
+						Outputs="$(OutDir)\$(InputFileName)"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\lib\zlib1.dll"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)&#x0D;&#x0A;"
+						Outputs="$(OutDir)\$(InputFileName)"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)&#x0D;&#x0A;"
+						Outputs="$(OutDir)\$(InputFileName)"
+					/>
 				</FileConfiguration>
 			</File>
 		</Filter>
 		<File
-			RelativePath=".\Game2\About.bmp">
+			RelativePath=".\Game2\About.bmp"
+			>
 		</File>
 		<File
-			RelativePath="..\include\config-win32.h">
+			RelativePath="..\include\config-win32.h"
+			>
 		</File>
 		<File
-			RelativePath=".\Game2\Game2.exe.manifest">
+			RelativePath=".\Game2\Game2.exe.manifest"
+			>
+			<FileConfiguration
+				Name="Debug|Win32"
+				ExcludedFromBuild="true"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release|Win32"
+				ExcludedFromBuild="true"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+				/>
+			</FileConfiguration>
 		</File>
 		<File
-			RelativePath=".\Game2\icon3.ico">
+			RelativePath=".\Game2\icon3.ico"
+			>
 		</File>
 		<File
-			RelativePath=".\Game2\warning.ico">
+			RelativePath=".\Game2\warning.ico"
+			>
 		</File>
 	</Files>
 	<Globals>

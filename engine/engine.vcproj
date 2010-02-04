@@ -1,127 +1,191 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="8.00"
 	Name="engine"
 	ProjectGUID="{1CCF897B-2194-4646-9F09-C307664F6193}"
 	RootNamespace="engine"
-	Keyword="ManagedCProj">
+	Keyword="ManagedCProj"
+	>
 	<Platforms>
 		<Platform
-			Name="Win32"/>
+			Name="Win32"
+		/>
 	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="2"
 			CharacterSet="2"
-			ManagedExtensions="FALSE">
+			ManagedExtensions="0"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../include;../include/lua"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;MR_ENGINE;YAML_DECLARE_STATIC;WITH_OPENAL"
-				MinimalRebuild="FALSE"
+				MinimalRebuild="false"
 				BasicRuntimeChecks="0"
 				RuntimeLibrary="3"
-				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="3"
+				RuntimeTypeInfo="true"
+				UsePrecompiledHeader="2"
 				WarningLevel="3"
-				DebugInformationFormat="3"/>
+				DebugInformationFormat="3"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="winmm.lib yamlD.lib ddraw.lib dxguid.lib dsound.lib lua5.1D.lib libcurld.lib"
 				OutputFile="$(OutDir)\$(ProjectName).dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../lib"
-				GenerateDebugInformation="TRUE"
+				GenerateDebugInformation="true"
 				AssemblyDebug="1"
 				SubSystem="2"
-				BaseAddress="0x61000000"/>
+				BaseAddress="0x61000000"
+			/>
 			<Tool
-				Name="VCMIDLTool"/>
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy ..\res\ObjFac1.dat ..\share"/>
-			<Tool
-				Name="VCPreBuildEventTool"/>
-			<Tool
-				Name="VCPreLinkEventTool"/>
-			<Tool
-				Name="VCResourceCompilerTool"/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
-				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				CommandLine="copy ..\res\ObjFac1.dat ..\share"
+			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory=".\..\Release"
 			IntermediateDirectory=".\Release"
 			ConfigurationType="2"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="2"
 			CharacterSet="2"
-			ManagedExtensions="FALSE">
+			ManagedExtensions="0"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="../include;../include/lua"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;MR_ENGINE;YAML_DECLARE_STATIC;WITH_OPENAL"
-				StringPooling="TRUE"
-				MinimalRebuild="FALSE"
+				StringPooling="true"
+				MinimalRebuild="false"
 				RuntimeLibrary="2"
-				EnableFunctionLevelLinking="TRUE"
-				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="3"
+				EnableFunctionLevelLinking="true"
+				RuntimeTypeInfo="true"
+				UsePrecompiledHeader="2"
 				WarningLevel="3"
-				DebugInformationFormat="0"/>
+				DebugInformationFormat="0"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
 				Name="VCLinkerTool"
-				IgnoreImportLibrary="FALSE"
+				IgnoreImportLibrary="false"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="winmm.lib yaml.lib ddraw.lib dxguid.lib dsound.lib  lua5.1.lib libcurl.lib"
+				AdditionalDependencies="winmm.lib yaml.lib ddraw.lib dxguid.lib dsound.lib lua5.1.lib libcurl.lib"
 				OutputFile=".\..\Release\engine.dll"
 				LinkIncremental="1"
-				SuppressStartupBanner="TRUE"
+				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="..\lib"
-				GenerateDebugInformation="FALSE"
+				GenerateDebugInformation="false"
 				SubSystem="2"
 				BaseAddress="0x61000000"
-				FixedBaseAddress="0"/>
+				FixedBaseAddress="0"
+			/>
 			<Tool
-				Name="VCMIDLTool"/>
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy ..\res\ObjFac1.dat ..\share"/>
-			<Tool
-				Name="VCPreBuildEventTool"/>
-			<Tool
-				Name="VCPreLinkEventTool"/>
-			<Tool
-				Name="VCResourceCompilerTool"/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
-				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				CommandLine="copy ..\res\ObjFac1.dat ..\share"
+			/>
 		</Configuration>
 	</Configurations>
 	<References>
@@ -129,535 +193,697 @@
 	<Files>
 		<Filter
 			Name="ColorTools"
-			Filter="">
+			>
 			<File
-				RelativePath=".\ColorTools\ColorTools.cpp">
+				RelativePath=".\ColorTools\ColorTools.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ColorTools\ColorTools.h">
+				RelativePath=".\ColorTools\ColorTools.h"
+				>
 			</File>
 		</Filter>
 		<Filter
 			Name="MainCharacter"
-			Filter="">
+			>
 			<File
-				RelativePath=".\MainCharacter\MainCharacter.cpp">
+				RelativePath=".\MainCharacter\MainCharacter.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\MainCharacter\MainCharacter.h">
+				RelativePath=".\MainCharacter\MainCharacter.h"
+				>
 			</File>
 			<File
-				RelativePath=".\MainCharacter\MainCharacterRenderer.cpp">
+				RelativePath=".\MainCharacter\MainCharacterRenderer.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\MainCharacter\MainCharacterRenderer.h">
+				RelativePath=".\MainCharacter\MainCharacterRenderer.h"
+				>
 			</File>
 		</Filter>
 		<Filter
 			Name="Model"
-			Filter="">
+			>
 			<File
-				RelativePath=".\Model\ActorPool.h">
+				RelativePath=".\Model\ActorPool.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Model\ConcreteShape.cpp">
+				RelativePath=".\Model\ConcreteShape.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Model\ConcreteShape.h">
+				RelativePath=".\Model\ConcreteShape.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Model\ContactEffect.cpp">
+				RelativePath=".\Model\ContactEffect.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Model\ContactEffect.h">
+				RelativePath=".\Model\ContactEffect.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Model\FreeElementMovingHelper.cpp">
+				RelativePath=".\Model\FreeElementMovingHelper.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Model\FreeElementMovingHelper.h">
+				RelativePath=".\Model\FreeElementMovingHelper.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Model\GameSession.cpp">
+				RelativePath=".\Model\GameSession.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Model\GameSession.h">
+				RelativePath=".\Model\GameSession.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Model\Level.cpp">
+				RelativePath=".\Model\Level.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Model\Level.h">
+				RelativePath=".\Model\Level.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Model\MazeElement.cpp">
+				RelativePath=".\Model\MazeElement.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Model\MazeElement.h">
+				RelativePath=".\Model\MazeElement.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Model\PhysicalCollision.cpp">
+				RelativePath=".\Model\PhysicalCollision.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Model\PhysicalCollision.h">
+				RelativePath=".\Model\PhysicalCollision.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Model\RaceEffects.h">
+				RelativePath=".\Model\RaceEffects.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Model\ShapeCollisions.cpp">
+				RelativePath=".\Model\ShapeCollisions.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Model\ShapeCollisions.h">
+				RelativePath=".\Model\ShapeCollisions.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Model\Shapes.cpp">
+				RelativePath=".\Model\Shapes.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Model\Shapes.h">
+				RelativePath=".\Model\Shapes.h"
+				>
 			</File>
 		</Filter>
 		<Filter
 			Name="ObjFac1"
-			Filter="">
+			>
 			<File
-				RelativePath=".\ObjFac1\BallElement.cpp">
+				RelativePath=".\ObjFac1\BallElement.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFac1\BallElement.h">
+				RelativePath=".\ObjFac1\BallElement.h"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFac1\BumperGate.cpp">
+				RelativePath=".\ObjFac1\BumperGate.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFac1\BumperGate.h">
+				RelativePath=".\ObjFac1\BumperGate.h"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFac1\DefaultSurface.cpp">
+				RelativePath=".\ObjFac1\DefaultSurface.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFac1\DefaultSurface.h">
+				RelativePath=".\ObjFac1\DefaultSurface.h"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFac1\DoubleSpeedSource.cpp">
+				RelativePath=".\ObjFac1\DoubleSpeedSource.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFac1\DoubleSpeedSource.h">
+				RelativePath=".\ObjFac1\DoubleSpeedSource.h"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFac1\FinishLine.cpp">
+				RelativePath=".\ObjFac1\FinishLine.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFac1\FinishLine.h">
+				RelativePath=".\ObjFac1\FinishLine.h"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFac1\FuelSource.cpp">
+				RelativePath=".\ObjFac1\FuelSource.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFac1\FuelSource.h">
+				RelativePath=".\ObjFac1\FuelSource.h"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFac1\gate.h">
+				RelativePath=".\ObjFac1\gate.h"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFac1\GenericRenderer.cpp">
+				RelativePath=".\ObjFac1\GenericRenderer.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFac1\GenericRenderer.h">
+				RelativePath=".\ObjFac1\GenericRenderer.h"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFac1\HoverRender.cpp">
+				RelativePath=".\ObjFac1\HoverRender.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFac1\HoverRender.h">
+				RelativePath=".\ObjFac1\HoverRender.h"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFac1\Mine.cpp">
+				RelativePath=".\ObjFac1\Mine.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFac1\Mine.h">
+				RelativePath=".\ObjFac1\Mine.h"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFac1\Missile.cpp">
+				RelativePath=".\ObjFac1\Missile.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFac1\Missile.h">
+				RelativePath=".\ObjFac1\Missile.h"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFac1\ObjFac1.cpp">
+				RelativePath=".\ObjFac1\ObjFac1.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFac1\ObjFac1.h">
+				RelativePath=".\ObjFac1\ObjFac1.h"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFac1\ObjFac1Res.h">
+				RelativePath=".\ObjFac1\ObjFac1Res.h"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFac1\PowerUp.cpp">
+				RelativePath=".\ObjFac1\PowerUp.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFac1\PowerUp.h">
+				RelativePath=".\ObjFac1\PowerUp.h"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFac1\TestElement.cpp">
+				RelativePath=".\ObjFac1\TestElement.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFac1\TestElement.h">
+				RelativePath=".\ObjFac1\TestElement.h"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFac1\WoodSurface.cpp">
+				RelativePath=".\ObjFac1\WoodSurface.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFac1\WoodSurface.h">
+				RelativePath=".\ObjFac1\WoodSurface.h"
+				>
 			</File>
 		</Filter>
 		<Filter
 			Name="ObjFacTools"
-			Filter="">
+			>
 			<File
-				RelativePath=".\ObjFacTools\BitmapSurface.cpp">
+				RelativePath=".\ObjFacTools\BitmapSurface.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFacTools\BitmapSurface.h">
+				RelativePath=".\ObjFacTools\BitmapSurface.h"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFacTools\FreeElementBase.cpp">
+				RelativePath=".\ObjFacTools\FreeElementBase.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFacTools\FreeElementBase.h">
+				RelativePath=".\ObjFacTools\FreeElementBase.h"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFacTools\FreeElementBaseRenderer.cpp">
+				RelativePath=".\ObjFacTools\FreeElementBaseRenderer.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFacTools\FreeElementBaseRenderer.h">
+				RelativePath=".\ObjFacTools\FreeElementBaseRenderer.h"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFacTools\MovementSpec.h">
+				RelativePath=".\ObjFacTools\MovementSpec.h"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFacTools\ResActor.cpp">
+				RelativePath=".\ObjFacTools\ResActor.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFacTools\ResActor.h">
+				RelativePath=".\ObjFacTools\ResActor.h"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFacTools\ResBitmap.cpp">
+				RelativePath=".\ObjFacTools\ResBitmap.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFacTools\ResBitmap.h">
+				RelativePath=".\ObjFacTools\ResBitmap.h"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFacTools\ResourceLib.cpp">
+				RelativePath=".\ObjFacTools\ResourceLib.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFacTools\ResourceLib.h">
+				RelativePath=".\ObjFacTools\ResourceLib.h"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFacTools\ResSound.cpp">
+				RelativePath=".\ObjFacTools\ResSound.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFacTools\ResSound.h">
+				RelativePath=".\ObjFacTools\ResSound.h"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFacTools\ResSprite.cpp">
+				RelativePath=".\ObjFacTools\ResSprite.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFacTools\ResSprite.h">
+				RelativePath=".\ObjFacTools\ResSprite.h"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFacTools\SpriteHandle.cpp">
+				RelativePath=".\ObjFacTools\SpriteHandle.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\ObjFacTools\SpriteHandle.h">
+				RelativePath=".\ObjFacTools\SpriteHandle.h"
+				>
 			</File>
 		</Filter>
 		<Filter
 			Name="PaletteCreator"
-			Filter="">
+			>
 			<File
-				RelativePath=".\PaletteCreator\PaletteCreator.cpp">
+				RelativePath=".\PaletteCreator\PaletteCreator.cpp"
+				>
 			</File>
 		</Filter>
 		<Filter
 			Name="Util"
-			Filter="">
+			>
 			<File
-				RelativePath=".\Util\BitPacking.h">
+				RelativePath=".\Util\BitPacking.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\Config.cpp">
+				RelativePath=".\Util\Config.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\Config.h">
+				RelativePath=".\Util\Config.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\Cursor.h">
+				RelativePath=".\Util\Cursor.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\DllObjectFactory.cpp">
+				RelativePath=".\Util\DllObjectFactory.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\DllObjectFactory.h">
+				RelativePath=".\Util\DllObjectFactory.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\FastArray.h">
+				RelativePath=".\Util\FastArray.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\FastFifo.h">
+				RelativePath=".\Util\FastFifo.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\FastMemManip.h">
+				RelativePath=".\Util\FastMemManip.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\FuzzyLogic.cpp">
+				RelativePath=".\Util\FuzzyLogic.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\FuzzyLogic.h">
+				RelativePath=".\Util\FuzzyLogic.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\KeyHandling.h">
+				RelativePath=".\Util\KeyHandling.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\MR_Types.h">
+				RelativePath=".\Util\MR_Types.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\NET.rc">
+				RelativePath=".\Util\NET.rc"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\OS.cpp">
+				RelativePath=".\Util\OS.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\OS.h">
+				RelativePath=".\Util\OS.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\Profiler.cpp">
+				RelativePath=".\Util\Profiler.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\Profiler.h">
+				RelativePath=".\Util\Profiler.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\RecordFile.cpp">
+				RelativePath=".\Util\RecordFile.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\RecordFile.h">
+				RelativePath=".\Util\RecordFile.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\resource.h">
+				RelativePath=".\Util\resource.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\Str.cpp">
+				RelativePath=".\Util\Str.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\Str.h">
+				RelativePath=".\Util\Str.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\StrRes.cpp">
+				RelativePath=".\Util\StrRes.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\StrRes.h">
+				RelativePath=".\Util\StrRes.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\WorldCoordinates.cpp">
+				RelativePath=".\Util\WorldCoordinates.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\WorldCoordinates.h">
+				RelativePath=".\Util\WorldCoordinates.h"
+				>
 			</File>
 		</Filter>
 		<Filter
 			Name="VideoServices"
-			Filter="">
+			>
 			<File
-				RelativePath=".\VideoServices\2DViewPort.cpp">
+				RelativePath=".\VideoServices\2DViewPort.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\VideoServices\2DViewPort.h">
+				RelativePath=".\VideoServices\2DViewPort.h"
+				>
 			</File>
 			<File
-				RelativePath=".\VideoServices\3DViewport.cpp">
+				RelativePath=".\VideoServices\3DViewport.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\VideoServices\3DViewport.h">
+				RelativePath=".\VideoServices\3DViewport.h"
+				>
 			</File>
 			<File
-				RelativePath=".\VideoServices\3DViewportRendering.cpp">
+				RelativePath=".\VideoServices\3DViewportRendering.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\VideoServices\Bitmap.cpp">
+				RelativePath=".\VideoServices\Bitmap.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\VideoServices\Bitmap.h">
+				RelativePath=".\VideoServices\Bitmap.h"
+				>
 			</File>
 			<File
-				RelativePath=".\VideoServices\ColorPalette.cpp">
+				RelativePath=".\VideoServices\ColorPalette.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\VideoServices\ColorPalette.h">
+				RelativePath=".\VideoServices\ColorPalette.h"
+				>
 			</File>
 			<File
-				RelativePath=".\VideoServices\ColorTab.cpp">
+				RelativePath=".\VideoServices\ColorTab.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\VideoServices\Font.cpp">
+				RelativePath=".\VideoServices\Font.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\VideoServices\Font.h">
+				RelativePath=".\VideoServices\Font.h"
+				>
 			</File>
 			<File
-				RelativePath=".\VideoServices\MultipartText.cpp">
+				RelativePath=".\VideoServices\MultipartText.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\VideoServices\MultipartText.h">
+				RelativePath=".\VideoServices\MultipartText.h"
+				>
 			</File>
 			<File
-				RelativePath=".\VideoServices\NumericGlyphs.cpp">
+				RelativePath=".\VideoServices\NumericGlyphs.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\VideoServices\NumericGlyphs.h">
+				RelativePath=".\VideoServices\NumericGlyphs.h"
+				>
 			</File>
 			<File
-				RelativePath=".\VideoServices\Patch.cpp">
+				RelativePath=".\VideoServices\Patch.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\VideoServices\Patch.h">
+				RelativePath=".\VideoServices\Patch.h"
+				>
 			</File>
 			<File
-				RelativePath=".\VideoServices\SoundServer.cpp">
+				RelativePath=".\VideoServices\SoundServer.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\VideoServices\SoundServer.h">
+				RelativePath=".\VideoServices\SoundServer.h"
+				>
 			</File>
 			<File
-				RelativePath=".\VideoServices\Sprite.cpp">
+				RelativePath=".\VideoServices\Sprite.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\VideoServices\Sprite.h">
+				RelativePath=".\VideoServices\Sprite.h"
+				>
 			</File>
 			<File
-				RelativePath=".\VideoServices\StaticText.cpp">
+				RelativePath=".\VideoServices\StaticText.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\VideoServices\StaticText.h">
+				RelativePath=".\VideoServices\StaticText.h"
+				>
 			</File>
 			<File
-				RelativePath=".\VideoServices\VideoBuffer.cpp">
+				RelativePath=".\VideoServices\VideoBuffer.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\VideoServices\VideoBuffer.h">
+				RelativePath=".\VideoServices\VideoBuffer.h"
+				>
 			</File>
 			<File
-				RelativePath=".\VideoServices\VideoBuffer2DDraw.cpp">
+				RelativePath=".\VideoServices\VideoBuffer2DDraw.cpp"
+				>
 			</File>
 		</Filter>
 		<Filter
 			Name="yaml"
-			Filter="">
+			>
 			<File
-				RelativePath=".\Util\yaml\Emitter.cpp">
+				RelativePath=".\Util\yaml\Emitter.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\yaml\Emitter.h">
+				RelativePath=".\Util\yaml\Emitter.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\yaml\MapNode.cpp">
+				RelativePath=".\Util\yaml\MapNode.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\yaml\MapNode.h">
+				RelativePath=".\Util\yaml\MapNode.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\yaml\Node.h">
+				RelativePath=".\Util\yaml\Node.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\yaml\NodeFactory.cpp">
+				RelativePath=".\Util\yaml\NodeFactory.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\yaml\NodeFactory.h">
+				RelativePath=".\Util\yaml\NodeFactory.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\yaml\Parser.cpp">
+				RelativePath=".\Util\yaml\Parser.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\yaml\Parser.h">
+				RelativePath=".\Util\yaml\Parser.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\yaml\ScalarNode.cpp">
+				RelativePath=".\Util\yaml\ScalarNode.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\yaml\ScalarNode.h">
+				RelativePath=".\Util\yaml\ScalarNode.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\yaml\SeqNode.cpp">
+				RelativePath=".\Util\yaml\SeqNode.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\yaml\SeqNode.h">
+				RelativePath=".\Util\yaml\SeqNode.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Util\yaml\YamlExn.h">
+				RelativePath=".\Util\yaml\YamlExn.h"
+				>
 			</File>
 		</Filter>
 		<Filter
 			Name="Script"
-			Filter="">
+			>
 			<File
-				RelativePath=".\Script\Env.cpp">
+				RelativePath=".\Script\Env.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Script\Env.h">
+				RelativePath=".\Script\Env.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Script\ScriptExn.h">
+				RelativePath=".\Script\ScriptExn.h"
+				>
 			</File>
 		</Filter>
 		<Filter
 			Name="Net"
-			Filter="">
+			>
 			<File
-				RelativePath=".\Net\Agent.cpp">
+				RelativePath=".\Net\Agent.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Net\Agent.h">
+				RelativePath=".\Net\Agent.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Net\BaseTransfer.cpp">
+				RelativePath=".\Net\BaseTransfer.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Net\BaseTransfer.h">
+				RelativePath=".\Net\BaseTransfer.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Net\BlockingTransfer.cpp">
+				RelativePath=".\Net\BlockingTransfer.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\Net\BlockingTransfer.h">
+				RelativePath=".\Net\BlockingTransfer.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Net\CancelFlag.h">
+				RelativePath=".\Net\CancelFlag.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Net\NetExn.h">
+				RelativePath=".\Net\NetExn.h"
+				>
 			</File>
 			<File
-				RelativePath=".\Net\Transfer.h">
+				RelativePath=".\Net\Transfer.h"
+				>
 			</File>
 		</Filter>
 		<File
-			RelativePath=".\StdAfx.cpp">
+			RelativePath=".\StdAfx.cpp"
+			>
 			<FileConfiguration
-				Name="Debug|Win32">
+				Name="Debug|Win32"
+				>
 				<Tool
 					Name="VCCLCompilerTool"
 					UsePrecompiledHeader="1"
-					ObjectFile="$(IntDir)/$(InputName)5.obj"/>
+					ObjectFile="$(IntDir)/$(InputName)5.obj"
+				/>
 			</FileConfiguration>
 			<FileConfiguration
-				Name="Release|Win32">
+				Name="Release|Win32"
+				>
 				<Tool
 					Name="VCCLCompilerTool"
 					UsePrecompiledHeader="1"
-					ObjectFile="$(IntDir)/$(InputName)5.obj"/>
+					ObjectFile="$(IntDir)/$(InputName)5.obj"
+				/>
 			</FileConfiguration>
 		</File>
 		<File
-			RelativePath=".\StdAfx.h">
+			RelativePath=".\StdAfx.h"
+			>
 		</File>
 	</Files>
 	<Globals>

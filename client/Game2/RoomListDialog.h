@@ -74,7 +74,7 @@ class RoomListDialog {
 		RoomListPtr roomList;
 
 	protected:
-		static const WM_APP_LOAD_COMPLETE = WM_APP + 20;
+		static const int WM_APP_LOAD_COMPLETE = WM_APP + 20;
 };
 
 }  // namespace Client
