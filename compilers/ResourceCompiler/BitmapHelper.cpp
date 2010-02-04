@@ -37,7 +37,7 @@ MR_UInt8 *LoadBitmap(const char *lFileName, int &pXRes, int &pYRes, BOOL pRevers
 		printf("ERROR: Unable to open input file\n");
 	}
 	else {
-		char *lExtension = strrchr(lFileName, '.');
+		const char *lExtension = strrchr(lFileName, '.');
 
 		if(!strcmpi(lExtension, ".PCX")) {
 			lReturnValue = PCXRead(lFile, pXRes, pYRes);

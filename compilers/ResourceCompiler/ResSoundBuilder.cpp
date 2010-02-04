@@ -39,7 +39,7 @@ MR_ResShortSoundBuilder::MR_ResShortSoundBuilder(int pResourceId)
 BOOL MR_ResShortSoundBuilder::BuildFromFile(const char *pFile, int pNbCopy)
 {
 	mNbCopy = pNbCopy;
-	return ParseFile(pFile, mData, mDataLen);
+	return ParseFile(pFile, (const char *&) mData, mDataLen);
 }
 
 MR_ResContinuousSoundBuilder::MR_ResContinuousSoundBuilder(int pResourceId)
@@ -51,7 +51,7 @@ MR_ResContinuousSoundBuilder::MR_ResContinuousSoundBuilder(int pResourceId)
 BOOL MR_ResContinuousSoundBuilder::BuildFromFile(const char *pFile, int pNbCopy)
 {
 	mNbCopy = pNbCopy;
-	return ParseFile(pFile, mData, mDataLen);
+	return ParseFile(pFile, (const char *&) mData, mDataLen);
 }
 
 BOOL ParseFile(const char *pFile, const char *&pData, int &pDataLen)
