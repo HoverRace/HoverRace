@@ -178,10 +178,10 @@ int main(int argc, char** argv)
 	GetModuleFileName(NULL, exePath, MAX_PATH - 1);
 
 	// Change the working directory to the app's directory.
-	char *appPath = strdup(exePath);
+	char *appPath = _strdup(exePath);
 	char *appDiv = strrchr(appPath, '\\');
 	*appDiv = '\0';
-	chdir(appPath);
+	_chdir(appPath);
 	free(appPath);
 #endif
 
