@@ -8,6 +8,10 @@
 	// Minimum Windows version: XP
 #	define WINVER 0x0501
 
+	// Defined in project since some resources don't use StdAfx.h.
+//#	define _CRT_SECURE_NO_DEPRECATE
+//#	define _SCL_SECURE_NO_DEPRECATE
+
 //#	include <afxwin.h>							// MFC core and standard components
 //#	include <afxext.h>							// MFC extensions
 //#	include <afxtempl.h>
