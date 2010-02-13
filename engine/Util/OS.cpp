@@ -237,7 +237,7 @@ void OS::SetLocale()
 				}
 			}
 		}
-		lang = strdup(lang);
+		lang = _strdup(lang);
 
 		if (strcmp(lang, "C") == 0) {
 			// The "C" locale on Win32 roughly means to use system default.
