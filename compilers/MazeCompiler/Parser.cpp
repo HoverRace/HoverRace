@@ -148,7 +148,7 @@ const char *MR_Parser::GetNextClass(const char *pClassType)
 	do {
 		lReturnValue = InternalGetNextClass();
 	}
-	while(pClassType != NULL && lReturnValue != NULL && stricmp(pClassType, lReturnValue));
+	while(pClassType != NULL && lReturnValue != NULL && _stricmp(pClassType, lReturnValue));
 
 	return lReturnValue;
 }
@@ -180,7 +180,7 @@ const char *MR_Parser::GetNextAttrib(const char *pAttrib)
 	const char *lReturnValue = mReturnBuffer;
 
 	if(pAttrib != NULL) {
-		if(stricmp(pAttrib, mReturnBuffer)) {
+		if(_stricmp(pAttrib, mReturnBuffer)) {
 			lReturnValue = GetNextAttrib(pAttrib);
 			// Warning, this code can easily lead to a stack overflow
 		}

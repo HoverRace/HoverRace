@@ -30,7 +30,7 @@ using namespace yaml;
 
 #ifndef _WIN32
 #	include <strings.h>
-#	define stricmp strcasecmp
+#	define _stricmp strcasecmp
 #endif
 
 namespace {
@@ -71,17 +71,17 @@ std::string ScalarNode::AsString() const
 bool ScalarNode::AsBool(bool def) const
 {
 	// See spec: http://yaml.org/type/bool.html
-	if (stricmp(value, "y") == 0 ||
-		stricmp(value, "yes") == 0 ||
-		stricmp(value, "true") == 0 ||
-		stricmp(value, "on") == 0)
+	if (_stricmp(value, "y") == 0 ||
+		_stricmp(value, "yes") == 0 ||
+		_stricmp(value, "true") == 0 ||
+		_stricmp(value, "on") == 0)
 	{
 		return true;
 	}
-	if (stricmp(value, "n") == 0 ||
-		stricmp(value, "no") == 0 ||
-		stricmp(value, "false") == 0 ||
-		stricmp(value, "off") == 0)
+	if (_stricmp(value, "n") == 0 ||
+		_stricmp(value, "no") == 0 ||
+		_stricmp(value, "false") == 0 ||
+		_stricmp(value, "off") == 0)
 	{
 		return false;
 	}

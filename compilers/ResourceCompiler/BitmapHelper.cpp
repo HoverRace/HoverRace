@@ -39,13 +39,13 @@ MR_UInt8 *LoadBitmap(const char *lFileName, int &pXRes, int &pYRes, BOOL pRevers
 	else {
 		const char *lExtension = strrchr(lFileName, '.');
 
-		if(!strcmpi(lExtension, ".PCX")) {
+		if(!_stricmp(lExtension, ".PCX")) {
 			lReturnValue = PCXRead(lFile, pXRes, pYRes);
 		}
-		else if(!stricmp(lExtension, ".BMP")) {
+		else if(!_stricmp(lExtension, ".BMP")) {
 			lReturnValue = BMPRead(lFile, pXRes, pYRes);
 		}
-		else if(!stricmp(lExtension, ".IMG")) {
+		else if(!_stricmp(lExtension, ".IMG")) {
 			lReturnValue = IMGRead(lFile, pXRes, pYRes);
 		}
 		else {

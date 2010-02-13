@@ -164,10 +164,10 @@ BOOL MR_LevelBuilder::Parse(FILE * pFile)
 				ASSERT(mRoomList[lRoomIndex].mNbVertex == 0);
 
 				while((lAttrib = lParser.GetNextAttrib()) != NULL) {
-					if(!strcmpi(lAttrib, "Wall")) {
+					if(!_stricmp(lAttrib, "Wall")) {
 						mRoomList[lRoomIndex].mNbVertex++;
 					}
-					else if(!strcmpi(lAttrib, "Floor")) {
+					else if(!_stricmp(lAttrib, "Floor")) {
 						// Load floor attributes
 						mRoomList[lRoomIndex].mFloorLevel = (MR_Int32) (lParser.GetNextNumParam() * 1000.0);
 
@@ -178,7 +178,7 @@ BOOL MR_LevelBuilder::Parse(FILE * pFile)
 							lReturnValue = FALSE;
 						}
 					}
-					else if(!strcmpi(lAttrib, "Ceiling")) {
+					else if(!_stricmp(lAttrib, "Ceiling")) {
 						// Load floor attributes
 						mRoomList[lRoomIndex].mCeilingLevel = (MR_Int32) (lParser.GetNextNumParam() * 1000.0);
 
@@ -215,10 +215,10 @@ BOOL MR_LevelBuilder::Parse(FILE * pFile)
 				ASSERT(mFeatureList[lFeatureIndex].mNbVertex == 0);
 
 				while((lAttrib = lParser.GetNextAttrib()) != NULL) {
-					if(!strcmpi(lAttrib, "Wall")) {
+					if(!_stricmp(lAttrib, "Wall")) {
 						mFeatureList[lFeatureIndex].mNbVertex++;
 					}
-					else if(!strcmpi(lAttrib, "Floor")) {
+					else if(!_stricmp(lAttrib, "Floor")) {
 						// Load floor attributes
 						mFeatureList[lFeatureIndex].mFloorLevel = (MR_Int32) (lParser.GetNextNumParam() * 1000.0);
 
@@ -229,7 +229,7 @@ BOOL MR_LevelBuilder::Parse(FILE * pFile)
 							lReturnValue = FALSE;
 						}
 					}
-					else if(!strcmpi(lAttrib, "Ceiling")) {
+					else if(!_stricmp(lAttrib, "Ceiling")) {
 						// Load floor attributes
 						mFeatureList[lFeatureIndex].mCeilingLevel = (MR_Int32) (lParser.GetNextNumParam() * 1000.0);
 
@@ -240,7 +240,7 @@ BOOL MR_LevelBuilder::Parse(FILE * pFile)
 							lReturnValue = FALSE;
 						}
 					}
-					else if(!strcmpi(lAttrib, "Parent")) {
+					else if(!_stricmp(lAttrib, "Parent")) {
 						int lParentId = (int) lParser.GetNextNumParam();
 
 						if(!lRoomList.Lookup(lParentId, mFeatureList[lFeatureIndex].mParentSectionIndex)) {
@@ -481,7 +481,7 @@ BOOL MR_LevelBuilder::Parse(FILE * pFile)
 			const char *lAttrib;
 
 			while((lAttrib = lParser.GetNextAttrib()) != NULL) {
-				if(!stricmp(lAttrib, "Section")) {
+				if(!_stricmp(lAttrib, "Section")) {
 					int lRoomId = (int) lParser.GetNextNumParam();
 
 					if(!lRoomList.Lookup(lRoomId, mStartingRoom[lNbStartingPosition])) {
@@ -490,15 +490,15 @@ BOOL MR_LevelBuilder::Parse(FILE * pFile)
 						printf("\n");
 					}
 				}
-				else if(!stricmp(lAttrib, "Position")) {
+				else if(!_stricmp(lAttrib, "Position")) {
 					mStartingPosition[lNbStartingPosition].mX = (MR_Int32) (lParser.GetNextNumParam() * 1000.0);
 					mStartingPosition[lNbStartingPosition].mY = (MR_Int32) (lParser.GetNextNumParam() * 1000.0);
 					mStartingPosition[lNbStartingPosition].mZ = (MR_Int32) (lParser.GetNextNumParam() * 1000.0);
 				}
-				else if(!stricmp(lAttrib, "Orientation")) {
+				else if(!_stricmp(lAttrib, "Orientation")) {
 					mStartingOrientation[lNbStartingPosition] = (MR_Angle) (lParser.GetNextNumParam() * MR_2PI / 360.0);
 				}
-				else if(!stricmp(lAttrib, "Team")) {
+				else if(!_stricmp(lAttrib, "Team")) {
 					mPlayerTeam[lNbStartingPosition] = (int) lParser.GetNextNumParam();
 				}
 				// Do some validation
@@ -533,7 +533,7 @@ BOOL MR_LevelBuilder::Parse(FILE * pFile)
 		const char *lAttrib;
 
 		while((lAttrib = lParser.GetNextAttrib()) != NULL) {
-			if(!stricmp(lAttrib, "Section")) {
+			if(!_stricmp(lAttrib, "Section")) {
 				int lRoomId = (int) lParser.GetNextNumParam();
 
 				if(!lRoomList.Lookup(lRoomId, lRoomIndex)) {
@@ -542,15 +542,15 @@ BOOL MR_LevelBuilder::Parse(FILE * pFile)
 					printf("\n");
 				}
 			}
-			else if(!stricmp(lAttrib, "Position")) {
+			else if(!_stricmp(lAttrib, "Position")) {
 				lPosition.mX = (MR_Int32) (lParser.GetNextNumParam() * 1000.0);
 				lPosition.mY = (MR_Int32) (lParser.GetNextNumParam() * 1000.0);
 				lPosition.mZ = (MR_Int32) (lParser.GetNextNumParam() * 1000.0);
 			}
-			else if(!stricmp(lAttrib, "Orientation")) {
+			else if(!_stricmp(lAttrib, "Orientation")) {
 				lOrientation = (MR_Angle) (lParser.GetNextNumParam() * MR_2PI / 360.0);
 			}
-			else if(!stricmp(lAttrib, "Element_Type")) {
+			else if(!_stricmp(lAttrib, "Element_Type")) {
 				lElementType.mDllId = (MR_UInt16) lParser.GetNextNumParam();
 				lElementType.mClassId = (MR_UInt16) lParser.GetNextNumParam();
 			}
