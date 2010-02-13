@@ -71,9 +71,8 @@ CString MR_PreProcLine(const char *pLine)
 
 	if(pLine != NULL) {
 		const char *lPtr = pLine;
-		BOOL lInToken = FALSE;
 		BOOL lEnd = FALSE;
-		const char *lTokenStart;
+		const char *lTokenStart = NULL;
 
 		while(!lEnd) {
 			switch (*lPtr) {
@@ -85,12 +84,12 @@ CString MR_PreProcLine(const char *pLine)
 				case '\r':
 				case '\t':
 
-					if(lInToken) {
+					if(lTokenStart) {
 						CString lValue;
 
 						CString lKey(lTokenStart, lPtr - lTokenStart);
 
-						lInToken = FALSE;
+						lTokenStart = NULL;
 
 						if(gDefineMap.Lookup(lKey, lValue)) {
 							lReturnValue += lValue;
@@ -108,8 +107,7 @@ CString MR_PreProcLine(const char *pLine)
 					break;
 
 				default:
-					if(!lInToken) {
-						lInToken = TRUE;
+					if(!lTokenStart) {
 						lTokenStart = lPtr;
 					}
 					break;
