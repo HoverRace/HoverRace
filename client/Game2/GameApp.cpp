@@ -33,6 +33,7 @@
 #include "PrefsDialog.h"
 #include "HighConsole.h"
 #include "HighObserver.h"
+#include "IntroMovie.h"
 #include "TrackSelect.h"
 #include "TrackDownloadDialog.h"
 #include "../../engine/Util/DllObjectFactory.h"
@@ -48,7 +49,7 @@
 #include "InternetRoom.h"
 #include "CheckUpdateServerDialog.h"
 
-#include <vfw.h>
+#include <mmsystem.h>
 
 using namespace HoverRace::Client;
 
@@ -562,13 +563,13 @@ void MR_GameThread::Restart()
 	}
 }
 
-MR_GameApp::MR_GameApp(HINSTANCE pInstance, bool safeMode)
+MR_GameApp::MR_GameApp(HINSTANCE pInstance, bool safeMode) :
+	introMovie(NULL)
 {
 	This = this;
 	mInstance = pInstance;
 	mMainWindow = NULL;
 	mBadVideoModeDlg = NULL;
-	mMovieWnd = NULL;
 	mAccelerators = NULL;
 	mVideoBuffer = NULL;
 	mObserver1 = NULL;
@@ -1180,21 +1181,8 @@ BOOL MR_GameApp::InitGame()
 
 	// play the opening movie
 	if(lReturnValue && cfg->misc.introMovie) {
-		mMovieWnd = MCIWndCreate(
-			mMainWindow, mInstance, 
-			WS_CHILD | MCIWNDF_NOMENU | MCIWNDF_NOPLAYBAR, 
-			cfg->GetMediaPath("Intro.avi").c_str());
-
-		// Fill the client area.
-		RECT clientRect;
-		GetClientRect(mMainWindow, &clientRect);
-		MoveWindow(mMovieWnd, 0, 0,
-			clientRect.right - clientRect.left,
-			clientRect.bottom - clientRect.top,
-			TRUE);
-		
-		MCIWndPlay(mMovieWnd);
-
+		introMovie = new IntroMovie(mMainWindow, mInstance);
+		introMovie->Play();
 	}
 
 	if(lReturnValue)
@@ -1433,7 +1421,6 @@ void MR_GameApp::OnDisplayChange()
 
 			POINT lUpperLeft = { lClientRect.left, lClientRect.top };
 			POINT lLowerRight = { lClientRect.right, lClientRect.bottom };
-			RECT lMovieRect;
 			RECT lBadModeRect;
 
 			ClientToScreen(mMainWindow, &lUpperLeft);
@@ -1451,13 +1438,8 @@ void MR_GameApp::OnDisplayChange()
 				}
 			}
 
-			if(GetWindowRect(mMovieWnd, &lMovieRect)) {
-				SetWindowPos(mMovieWnd, HWND_TOP,
-					0, 0,
-					lClientRect.right - lClientRect.left,
-					lClientRect.bottom - lClientRect.top,
-					SWP_SHOWWINDOW);
-			}
+			if (introMovie != NULL)
+				introMovie->ResetSize();
 		}
 	}
 	// Adjust video buffer
@@ -1499,8 +1481,8 @@ void MR_GameApp::AssignPalette()
 {
 	if(mPaletteChangeAllowed) {
 		if(This->mGameThread == NULL) {
-			if(mMovieWnd != NULL)
-				MCIWndRealize(mMovieWnd, FALSE);
+			if (introMovie != NULL)
+				introMovie->ResetPalette();
 		}
 		else {
 			if(This->mVideoBuffer != NULL)
@@ -1511,12 +1493,9 @@ void MR_GameApp::AssignPalette()
 
 void MR_GameApp::DeleteMovieWnd()
 {
-	if(mMovieWnd != NULL) {
-
-		MCIWndClose(mMovieWnd);
-		Sleep(1000);
-		MCIWndDestroy(mMovieWnd);
-		mMovieWnd = NULL;
+	if (introMovie != NULL) {
+		delete introMovie;
+		introMovie = NULL;
 	}
 }
 
@@ -2001,9 +1980,8 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 			return TRUE;
 
 		case WM_PALETTECHANGED:
-			if(This->mMovieWnd != NULL) {
-				MCIWndRealize(This->mMovieWnd, TRUE);
-			}
+			if (This->introMovie != NULL)
+				This->introMovie->ResetPalette(true);
 			break;
 
 		case WM_ENTERMENULOOP:
