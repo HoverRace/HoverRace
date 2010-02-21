@@ -623,6 +623,7 @@ void MR_GameApp::Clean()
 
 	delete highConsole;
 	delete highObserver;
+	DeleteMovieWnd();
 	mObserver1->Delete();
 	mObserver2->Delete();
 	mObserver3->Delete();
