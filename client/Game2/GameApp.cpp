@@ -2405,10 +2405,14 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 			break;
 
 		case WM_PAINT:
-			// Nothing to paint (all done by video or DirectX)
-			PAINTSTRUCT lPs;
-			BeginPaint(pWindow, &lPs);
-			EndPaint(pWindow, &lPs);
+			{
+				// Nothing to paint (all done by video or DirectX)
+				PAINTSTRUCT lPs;
+				HDC hdc = BeginPaint(pWindow, &lPs);
+				if (This->introMovie != NULL)
+					This->introMovie->Repaint(hdc);
+				EndPaint(pWindow, &lPs);
+			}
 			return 0;
 
 		case WM_CLOSE:

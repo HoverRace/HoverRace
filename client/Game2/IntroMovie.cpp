@@ -31,22 +31,33 @@
 #endif
 
 #include "../../engine/Util/Config.h"
+#include "../../engine/Util/Str.h"
 
 #include "IntroMovie.h"
 
 using namespace HoverRace;
 using namespace HoverRace::Client;
-using HoverRace::Util::Config;
+using namespace HoverRace::Util;
 
 IntroMovie::IntroMovie(HWND hwnd, HINSTANCE hinst) :
-	hwnd(hwnd)
+	hwnd(hwnd),
+#ifdef WITH_DIRECTSHOW
+	graph(NULL), winCtl(NULL), mediaCtl(NULL)
+#else
+	movieWnd(NULL)
+#endif
 {
 	Config *cfg = Config::GetInstance();
 	std::string movieFilename = cfg->GetMediaPath("Intro.avi");
 
 #ifdef WITH_DIRECTSHOW
-	//TODO
+	HRESULT hr;
+	if (FAILED(hr = InitDirectShow(movieFilename))) {
+		Clean();
+	}
+
 #else
+
 	movieWnd = MCIWndCreate(
 		hwnd, hinst, 
 		WS_CHILD | MCIWNDF_NOMENU | MCIWNDF_NOPLAYBAR, 
@@ -64,8 +75,18 @@ IntroMovie::IntroMovie(HWND hwnd, HINSTANCE hinst) :
 
 IntroMovie::~IntroMovie()
 {
+	Clean();
+}
+
+void IntroMovie::Clean()
+{
 #ifdef WITH_DIRECTSHOW
-	//TODO
+	if (mediaCtl != NULL)
+		mediaCtl->Release();
+	if (winCtl != NULL)
+		winCtl->Release();
+	if (graph != NULL)
+		graph->Release();
 #else
 	if (movieWnd != NULL) {
 		MCIWndClose(movieWnd);
@@ -75,10 +96,41 @@ IntroMovie::~IntroMovie()
 #endif
 }
 
+#ifdef WITH_DIRECTSHOW
+HRESULT IntroMovie::InitDirectShow(const std::string &movieFilename)
+{
+	HRESULT hr;
+
+	if (FAILED(hr = CoCreateInstance(CLSID_FilterGraph, NULL,
+		CLSCTX_INPROC_SERVER, IID_IGraphBuilder,
+		(void**)&graph))) return hr;
+
+	CComPtr<IBaseFilter> vmr;
+	if (FAILED(hr = CoCreateInstance(CLSID_VideoMixingRenderer, NULL, 
+		CLSCTX_INPROC_SERVER, IID_IBaseFilter, (void**)&vmr))) return hr;
+	if (FAILED(hr = graph->AddFilter(vmr, L"Video Mixing Renderer"))) return hr;
+
+	CComPtr<IVMRFilterConfig> filterCfg;
+	if (FAILED(hr = vmr->QueryInterface(IID_IVMRFilterConfig, (void**)&filterCfg))) return hr;
+	if (FAILED(hr = filterCfg->SetRenderingMode(VMRMode_Windowless))) return hr;
+
+	if (FAILED(hr = vmr->QueryInterface(IID_IVMRWindowlessControl, (void**)&winCtl))) return hr;
+
+	if (FAILED(hr = winCtl->SetVideoClippingWindow(hwnd))) return hr;
+
+	if (FAILED(hr = graph->RenderFile(Str::UW(movieFilename.c_str()), NULL))) return hr;
+
+	if (FAILED(hr = graph->QueryInterface(IID_IMediaControl, (void**)&mediaCtl))) return hr;
+
+	return ERROR_SUCCESS;
+}
+#endif
+
 void IntroMovie::Play()
 {
 #ifdef WITH_DIRECTSHOW
-	//TODO
+	if (mediaCtl != NULL)
+		mediaCtl->Run();
 #else
 	if (movieWnd != NULL)
 		MCIWndPlay(movieWnd);
@@ -87,24 +139,46 @@ void IntroMovie::Play()
 
 void IntroMovie::ResetSize()
 {
-#ifndef WITH_DIRECTSHOW
 	RECT clientRect, movieRect;
 
 	if (GetClientRect(hwnd, &clientRect)) {
-		if (GetWindowRect(movieWnd, &movieRect)) {
-			SetWindowPos(movieWnd, HWND_TOP,
-				0, 0,
-				clientRect.right - clientRect.left,
-				clientRect.bottom - clientRect.top,
-				SWP_SHOWWINDOW);
-		}
+#		ifdef WITH_DIRECTSHOW
+			HRESULT hr;
+			long w, h;
+
+			if (mediaCtl != NULL) {
+				if (FAILED(hr = winCtl->GetNativeVideoSize(&w, &h, NULL, NULL))) {
+					return;
+				}
+				SetRect(&movieRect, 0, 0, w, h);
+				winCtl->SetVideoPosition(&movieRect, &clientRect);
+			}
+#		else
+			if (GetWindowRect(movieWnd, &movieRect)) {
+				SetWindowPos(movieWnd, HWND_TOP,
+					0, 0,
+					clientRect.right - clientRect.left,
+					clientRect.bottom - clientRect.top,
+					SWP_SHOWWINDOW);
+			}
+#		endif
 	}
+}
+
+void IntroMovie::Repaint(HDC hdc)
+{
+#ifdef WITH_DIRECTSHOW
+	if (winCtl != NULL)
+		winCtl->RepaintVideo(hwnd, hdc);
 #endif
 }
 
 void IntroMovie::ResetPalette(bool background)
 {
-#ifndef WITH_DIRECTSHOW
+#ifdef WITH_DIRECTSHOW
+	if (winCtl != NULL)
+		winCtl->DisplayModeChanged();
+#else
 	MCIWndRealize(movieWnd, background);
 #endif
 }

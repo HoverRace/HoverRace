@@ -183,6 +183,8 @@ int main(int argc, char** argv)
 	*appDiv = '\0';
 	_chdir(appPath);
 	free(appPath);
+
+	CoInitialize(NULL);
 #endif
 
 	// Process command-line options.
@@ -256,6 +258,10 @@ int main(int argc, char** argv)
 	curl_global_cleanup();
 
 	Config::Shutdown();
+
+#ifdef _WIN32
+	CoUninitialize();
+#endif
 
 	return lErrorCode;
 }

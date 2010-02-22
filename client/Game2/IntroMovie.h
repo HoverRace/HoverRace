@@ -22,6 +22,10 @@
 
 #pragma once
 
+#ifdef WITH_DIRECTSHOW
+#	include <dshow.h>
+#endif
+
 namespace HoverRace {
 namespace Client {
 
@@ -35,16 +39,25 @@ class IntroMovie
 		IntroMovie(HWND hwnd=NULL, HINSTANCE hinst=NULL);
 		~IntroMovie();
 
+	private:
+		void Clean();
+#		ifdef WITH_DIRECTSHOW
+			HRESULT InitDirectShow(const std::string &movieFilename);
+#		endif
+
 	public:
 		void Play();
 
 		void ResetSize();
+		void Repaint(HDC hdc);
 		void ResetPalette(bool background=false);
 
 	private:
 		HWND hwnd;
 #		ifdef WITH_DIRECTSHOW
-			//TODO
+			IGraphBuilder *graph;
+			IVMRWindowlessControl *winCtl;
+			IMediaControl *mediaCtl;
 #		else
 			HWND movieWnd;
 #		endif

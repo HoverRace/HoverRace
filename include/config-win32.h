@@ -2,6 +2,8 @@
 /* config-win32.h
 	Win32 counterpart to the config.h generated from Linux build. */
 
+#include "ntverp.h"
+
 #define PACKAGE "hoverrace"
 #define PACKAGE_NAME "HoverRace"
 #define PLATFORM_NAME "Win32"
@@ -12,3 +14,8 @@
 #define HAVE_LONG_LONG_INT 1
 
 #define HAVE_LUA 1
+
+// Only enable DirectShow support if a recent Windows SDK is installed.
+#if defined(VER_PRODUCTBUILD) && VER_PRODUCTBUILD >= 6001
+#	define WITH_DIRECTSHOW 1
+#endif
