@@ -863,7 +863,7 @@ BEGIN
             VALUE "FileDescription", "Online Racing Game"
             VALUE "FileVersion", "1, 24, 0, 0"
             VALUE "InternalName", "HoverRace"
-            VALUE "LegalCopyright", "Copyright © 2008"
+            VALUE "LegalCopyright", "Copyright © 2010"
             VALUE "OriginalFilename", "HoverRace.exe"
             VALUE "ProductName", "HoverRace"
             VALUE "ProductVersion", "1, 24, 0, 0"
