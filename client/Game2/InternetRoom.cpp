@@ -1858,7 +1858,10 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 								}
 
 								if (lSuccess) {
-									lSuccess = mThis->mSession->LoadNew(mThis->mGameList[lFocus].mTrack, lTrackFile, mThis->mGameList[lFocus].mNbLap, mThis->mGameList[lFocus].mAllowWeapons, mThis->mVideoBuffer);
+									lSuccess = mThis->mSession->LoadNew(mThis->mGameList[lFocus].mTrack,
+										lTrackFile, mThis->mGameList[lFocus].mNbLap,
+										mThis->mGameList[lFocus].mAllowWeapons,
+										mThis->mVideoBuffer);
 								}
 
 								if(lSuccess) {
