@@ -422,6 +422,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Game2\Rulebook.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Game2\SelectRoomDialog.cpp"
 				>
 			</File>

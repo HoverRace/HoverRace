@@ -33,6 +33,7 @@ namespace HoverRace {
 	namespace Client {
 		class FullscreenTest;
 		class IntroMovie;
+		class Rulebook;
 	}
 }
 
@@ -113,7 +114,7 @@ class MR_GameApp
 		void ReadAsyncInputController();		  // Get the state of the input controler (KDB, joystick, mouse)
 
 		// Message handlers
-		void NewLocalSession();
+		void NewLocalSession(HoverRace::Client::Rulebook *rules=NULL);
 		void NewSplitSession(int pSplitPlayers);
 		void NewNetworkSession(BOOL pIsServer);
 		void NewInternetSession();

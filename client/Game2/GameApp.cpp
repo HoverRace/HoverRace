@@ -34,6 +34,7 @@
 #include "HighConsole.h"
 #include "HighObserver.h"
 #include "IntroMovie.h"
+#include "Rulebook.h"
 #include "TrackSelect.h"
 #include "TrackDownloadDialog.h"
 #include "../../engine/Util/DllObjectFactory.h"
@@ -1500,23 +1501,35 @@ void MR_GameApp::DeleteMovieWnd()
 	}
 }
 
-void MR_GameApp::NewLocalSession()
+/**
+ * Start a new single-player (practice) session.
+ * @param rules The rulebook for this session.  If @c NULL then the track
+ *              selection dialog will be displayed to the player.  The
+ *              caller may delete the object after this function returns.
+ */
+void MR_GameApp::NewLocalSession(Rulebook *rules)
 {
 	bool lSuccess = true;
 
-	// Verify is user acknowledge
-	if(AskUserToAbortGame() != IDOK)
+	// If a rulebook was supplied, then we assume the user has already been
+	// prompted to abort the game or the command came from a script.
+	if (rules == NULL && AskUserToAbortGame() != IDOK)
 		return;
 
 	// Delete the current session
 	Clean();
 
 	// Prompt the user for a track name
-	std::string lCurrentTrack;
-	int lNbLap;
-	char lGameOpts;
+	Rulebook *userRules = NULL;
+	if (rules == NULL) {
+		std::string lCurrentTrack;
+		int lNbLap;
+		char lGameOpts;
 
-	lSuccess = MR_SelectTrack(mMainWindow, lCurrentTrack, lNbLap, lGameOpts);
+		lSuccess = MR_SelectTrack(mMainWindow, lCurrentTrack, lNbLap, lGameOpts);
+
+		rules = userRules = new Rulebook(lCurrentTrack, lNbLap, lGameOpts);
+	}
 
 	if(lSuccess) {
 		DeleteMovieWnd();
@@ -1532,10 +1545,12 @@ void MR_GameApp::NewLocalSession()
 
 		// Load the selected track
 		if(lSuccess) {
-			MR_RecordFile *lTrackFile = MR_TrackOpen(mMainWindow, lCurrentTrack.c_str());
-			lSuccess = (lCurrentSession->LoadNew(lCurrentTrack.c_str(), lTrackFile, lNbLap, lGameOpts, mVideoBuffer) != FALSE);
+			MR_RecordFile *lTrackFile = MR_TrackOpen(mMainWindow, rules->GetTrackName().c_str());
+			lSuccess = (lCurrentSession->LoadNew(
+				rules->GetTrackName().c_str(), lTrackFile,
+				rules->GetLaps(), rules->GetGameOpts(), mVideoBuffer) != FALSE);
 		}
-		// Create the main character
+		
 		if(lSuccess)
 			lCurrentSession->SetSimulationTime(-6000);
 
@@ -1558,6 +1573,9 @@ void MR_GameApp::NewLocalSession()
 			delete lCurrentSession;
 		}
 	}
+
+	if (userRules != NULL)
+		delete userRules;
 
 	AssignPalette();
 }
