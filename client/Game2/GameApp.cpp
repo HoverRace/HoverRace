@@ -1504,10 +1504,9 @@ void MR_GameApp::DeleteMovieWnd()
 /**
  * Start a new single-player (practice) session.
  * @param rules The rulebook for this session.  If @c NULL then the track
- *              selection dialog will be displayed to the player.  The
- *              caller may delete the object after this function returns.
+ *              selection dialog will be displayed to the player.
  */
-void MR_GameApp::NewLocalSession(Rulebook *rules)
+void MR_GameApp::NewLocalSession(RulebookPtr rules)
 {
 	bool lSuccess = true;
 
@@ -1520,7 +1519,6 @@ void MR_GameApp::NewLocalSession(Rulebook *rules)
 	Clean();
 
 	// Prompt the user for a track name
-	Rulebook *userRules = NULL;
 	if (rules == NULL) {
 		std::string lCurrentTrack;
 		int lNbLap;
@@ -1528,7 +1526,7 @@ void MR_GameApp::NewLocalSession(Rulebook *rules)
 
 		lSuccess = MR_SelectTrack(mMainWindow, lCurrentTrack, lNbLap, lGameOpts);
 
-		rules = userRules = new Rulebook(lCurrentTrack, lNbLap, lGameOpts);
+		rules = boost::make_shared<Rulebook>(lCurrentTrack, lNbLap, lGameOpts);
 	}
 
 	if(lSuccess) {
@@ -1573,9 +1571,6 @@ void MR_GameApp::NewLocalSession(Rulebook *rules)
 			delete lCurrentSession;
 		}
 	}
-
-	if (userRules != NULL)
-		delete userRules;
 
 	AssignPalette();
 }

@@ -34,6 +34,7 @@ namespace HoverRace {
 		class FullscreenTest;
 		class IntroMovie;
 		class Rulebook;
+		typedef boost::shared_ptr<Rulebook> RulebookPtr;
 	}
 }
 
@@ -114,7 +115,7 @@ class MR_GameApp
 		void ReadAsyncInputController();		  // Get the state of the input controler (KDB, joystick, mouse)
 
 		// Message handlers
-		void NewLocalSession(HoverRace::Client::Rulebook *rules=NULL);
+		void NewLocalSession(HoverRace::Client::RulebookPtr rules=HoverRace::Client::RulebookPtr());
 		void NewSplitSession(int pSplitPlayers);
 		void NewNetworkSession(BOOL pIsServer);
 		void NewInternetSession();
