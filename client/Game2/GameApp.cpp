@@ -1969,6 +1969,9 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 		 */
 
 		case WM_DISPLAYCHANGE:
+			if (This->introMovie != NULL) {
+				This->introMovie->ResetPalette(true);
+			}
 			break;
 
 		case WM_SIZE:
