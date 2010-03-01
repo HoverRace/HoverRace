@@ -35,6 +35,7 @@ namespace HoverRace {
 		class IntroMovie;
 		class Rulebook;
 		typedef boost::shared_ptr<Rulebook> RulebookPtr;
+		class SysConsole;
 	}
 }
 
@@ -81,6 +82,7 @@ class MR_GameApp
 		HoverRace::HighConsole *highConsole;
 		HoverRace::Client::IntroMovie *introMovie;
 		HoverRace::Client::FullscreenTest *fullscreenTest;
+		HoverRace::Client::SysConsole *sysConsole;
 		MR_ClientSession *mCurrentSession;
 		MR_GameThread *mGameThread;
 

@@ -219,6 +219,7 @@ class MR_DllDeclare Config
 			bool aieeee;
 			bool showFramerate;
 			bool enableConsole;
+			std::string initScript;
 		} runtime;
 };
 

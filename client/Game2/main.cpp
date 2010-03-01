@@ -45,6 +45,7 @@ using boost::str;
 using HoverRace::Util::Config;
 using HoverRace::Util::OS;
 
+static std::string initScript;
 static bool debugMode = false;
 static bool safeMode = false;
 static bool allowMultipleInstances = false;
@@ -79,6 +80,15 @@ static bool ProcessCmdLine(int argc, char **argv)
 
 		if (strcmp("-D", arg) == 0) {
 			debugMode = true;
+		}
+		else if (strcmp("--exec", arg) == 0) {
+			if (i < argc) {
+				initScript = argv[i++];
+			}
+			else {
+				ShowMessage("Expected: --exec (script filename)");
+				return false;
+			}
 		}
 		else if (strcmp("-L", arg) == 0) {
 			if (i < argc) {
@@ -203,6 +213,7 @@ int main(int argc, char** argv)
 	cfg->runtime.silent = silentMode;
 	cfg->runtime.aieeee = experimentalMode;
 	cfg->runtime.showFramerate = showFramerate;
+	cfg->runtime.initScript = initScript;
 
 #ifdef ENABLE_NLS
 	// Gettext initialization.

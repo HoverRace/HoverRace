@@ -35,6 +35,7 @@
 #include "HighObserver.h"
 #include "IntroMovie.h"
 #include "Rulebook.h"
+#include "SysConsole.h"
 #include "TrackSelect.h"
 #include "TrackDownloadDialog.h"
 #include "../../engine/Util/DllObjectFactory.h"
@@ -99,6 +100,8 @@ void CaptureScreen( MR_VideoBuffer* pVideoBuffer );
 
 #define MRM_RETURN2WINDOWMODE  1
 #define MRM_EXIT_MENU_LOOP     2
+
+#define MR_WM_ON_INIT (WM_APP + 0x0042)
 
 #ifdef WITH_OPENAL
 #	define SOUNDSERVER_INIT(s) MR_SoundServer::Init()
@@ -565,7 +568,7 @@ void MR_GameThread::Restart()
 }
 
 MR_GameApp::MR_GameApp(HINSTANCE pInstance, bool safeMode) :
-	introMovie(NULL)
+	introMovie(NULL), sysConsole(NULL)
 {
 	This = this;
 	mInstance = pInstance;
@@ -605,6 +608,11 @@ MR_GameApp::MR_GameApp(HINSTANCE pInstance, bool safeMode) :
 
 MR_GameApp::~MR_GameApp()
 {
+	if (sysConsole != NULL) {
+		delete sysConsole;
+		sysConsole = NULL;
+	}
+
 	delete controller;
 
 	Clean();
@@ -1096,6 +1104,7 @@ BOOL MR_GameApp::InitGame()
 {
 	BOOL lReturnValue = TRUE;
 	Config *cfg = Config::GetInstance();
+	std::string &initScript = cfg->runtime.initScript;
 
 	InitCommonControls();						  // Allow some special and complex controls
 
@@ -1182,7 +1191,7 @@ BOOL MR_GameApp::InitGame()
 	}
 
 	// play the opening movie
-	if(lReturnValue && cfg->misc.introMovie) {
+	if(lReturnValue && cfg->misc.introMovie && initScript.empty()) {
 		introMovie = new IntroMovie(mMainWindow, mInstance);
 		introMovie->Play();
 	}
@@ -1200,9 +1209,16 @@ BOOL MR_GameApp::InitGame()
 	//}
 
 	// show "click OK to play on the internet" dialog
-	if(lReturnValue && cfg->misc.displayFirstScreen) {
+	if(lReturnValue && cfg->misc.displayFirstScreen && initScript.empty()) {
 		if (FirstChoiceDialog().ShowModal(mInstance, mMainWindow))
 			SendMessage(mMainWindow, WM_COMMAND, ID_GAME_NETWORK_INTERNET, 0);
+	}
+
+	// Create the system console and execute the init script.
+	sysConsole = new SysConsole();
+	sysConsole->Init();
+	if (!initScript.empty()) {
+		sysConsole->RunScript(initScript);
 	}
 
 	return lReturnValue;
@@ -1981,6 +1997,14 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 			   }
 			   break;
 		 */
+		case WM_CREATE:
+			// Trigger the scripting "on_init" call later.
+			PostMessage(pWindow, MR_WM_ON_INIT, 0, 0);
+			break;
+
+		case MR_WM_ON_INIT:
+			This->sysConsole->OnInit();
+			break;
 
 		case WM_DISPLAYCHANGE:
 			if (This->introMovie != NULL) {
