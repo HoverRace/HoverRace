@@ -42,7 +42,7 @@ class Console
 		Console();
 		virtual ~Console();
 
-	private:
+	public:
 		void Init();
 	protected:
 		Script::Env *GetScripting() const { return scripting; }

@@ -63,7 +63,6 @@ Console::Console() :
 {
 	chunk.reserve(1024);
 	logStream = boost::shared_ptr<std::ostream>(new LogStream(this));
-	Init();
 }
 
 Console::~Console()
