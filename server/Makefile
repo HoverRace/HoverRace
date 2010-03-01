@@ -1,2 +1,2 @@
 all:
-  g++ -o main main.cpp -lboost_system
+	g++ -o main main.cpp -lboost_system
