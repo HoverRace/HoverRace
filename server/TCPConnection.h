@@ -30,9 +30,14 @@
  *
  * @author Ryan Curtin
  */
+#include <boost/asio.hpp>
 
 class TCPConnection {
 	public:
-		TCPConnection();
+		TCPConnection(boost::asio::io_service &io_service);
 
+		inline boost::asio::ip::tcp::socket &getSocket() { return socket; }
+
+	private:
+		boost::asio::ip::tcp::socket socket;
 };

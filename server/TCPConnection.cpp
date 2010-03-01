@@ -24,27 +24,14 @@
 // 
 
 /***
- * main.cpp
- * Entrance point for dedicated server
- * Use getopt() if not on Windows, or do it by hand if we are
+ * TCPConnection.cpp
+ * Implementation of TCPConnection class, which abstracts away communication via
+ * TCP.
  *
  * @author Ryan Curtin
  */
+#include "TCPConnection.h"
 
-#ifdef _WIN32
-	// perhaps find some getopt() equivalent
-#else
-	#include <getopt.h>
-#endif
-
-#include "Server.h"
-#include <boost/asio.hpp>
-
-using namespace boost::asio;
-
-int main(int argv, char **argc) {
-	// parse program options which have not yet been invented
-	// TODO
-
-	Server s(io_service());
+TCPConnection::TCPConnection(boost::asio::io_service &io_service) {
+	socket(io_service);
 }

@@ -32,15 +32,27 @@
 
 #include <vector>
 
+#include <boost/asio.hpp>
+
 #include "Connection.h"
 #include "TCPConnection.h"
 #include "UDPConnection.h"
 
 class Server {
 	public:
-		Server();
+		Server(boost::asio::io_service &io_service);
+
+		void run();
 
 	private:
+		void HandleTCPAccept(TCPConnection *newConn, const boost::system::error_code &error);
+
 		std::vector<Connection> connections;
-		std::vector<Game> games;		
+		//std::vector<Game> games; // games we are managing
+
+		TCPConnection *nextConnection;
+
+		boost::asio::io_service io_service;
+		boost::asio::ip::tcp::acceptor tcpAccept;
+//		udp::acceptor udpAccept;
 };

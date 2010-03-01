@@ -29,9 +29,48 @@
  *
  * @author Ryan Curtin
  */
+#include <string>
+#include <vector>
 
-class Connection {
+/***
+ * Player class holds player-specific information that the Game needs to keep
+ * track of.
+ *
+ * It has no methods and should be dealt with more like a C struct.
+ */
+class Player {
 	public:
-		Connection();
+		std::string name;
+		int id; // theoretically should not be necessary?
+		int lap;
+		int position;
+		float *laptimes; // we can save laptimes as we get them (which HoverRace
+							  // does not do at this time)
+		int hitsFor;
+		int hitsAgainst;
 
+		float x;
+		float y;
+		float z;
+	
+		Connection *conn; // may be NULL if the player doesn't exist
+}	
+
+/***
+ * The Game class is the abstraction of a HoverRace game, which holds
+ * information relevant to the game.
+ */
+class Game {
+	public:
+		Game();
+
+		void addPlayer(Player p);
+		void removePlayer(int id);
+		Player getPlayer(int id);
+
+	private:
+		int laps;
+		std::string trackName;
+
+		vector<Player> players;
 };

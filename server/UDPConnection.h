@@ -30,9 +30,15 @@
  *
  * @author Ryan Curtin
  */
+#include <boost/asio.hpp>
 
 class UDPConnection {
 	public:
 		UDPConnection();
 
+		inline boost::asio::ip::udp::endpoint &getEndpoint() { return endpoint; }
+
+		void setEndpoint(boost::asio::ip::udp::endpoint &endpoint);
+	private:
+		boost::asio::ip::udp::endpoint endpoint;
 };

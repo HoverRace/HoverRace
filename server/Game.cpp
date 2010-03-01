@@ -24,27 +24,28 @@
 // 
 
 /***
- * main.cpp
- * Entrance point for dedicated server
- * Use getopt() if not on Windows, or do it by hand if we are
- *
- * @author Ryan Curtin
+ * Game.cpp
+ * 
+ * Implementation of Game class.
  */
+#include "Game.h"
 
-#ifdef _WIN32
-	// perhaps find some getopt() equivalent
-#else
-	#include <getopt.h>
-#endif
+using namespace std;
 
-#include "Server.h"
-#include <boost/asio.hpp>
+Game::Game() {
+	// defaults
+	trackName = "";
+	laps = 0;
+}
 
-using namespace boost::asio;
+void Game::addPlayer(Player p) {
+	players.push_back(p);
+}
 
-int main(int argv, char **argc) {
-	// parse program options which have not yet been invented
-	// TODO
+void Game::removePlayer(int id) {
+	players.erase(players.begin() + id);
+}
 
-	Server s(io_service());
+Player Game::getPlayer(int id) {
+	return players.at(id);
 }

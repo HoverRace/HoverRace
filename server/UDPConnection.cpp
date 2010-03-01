@@ -24,27 +24,20 @@
 // 
 
 /***
- * main.cpp
- * Entrance point for dedicated server
- * Use getopt() if not on Windows, or do it by hand if we are
+ * UDPConnection.h
+ * Implementation of UDPConnection class, which abstracts away communication via
+ * UDP.
  *
  * @author Ryan Curtin
  */
-
-#ifdef _WIN32
-	// perhaps find some getopt() equivalent
-#else
-	#include <getopt.h>
-#endif
-
-#include "Server.h"
-#include <boost/asio.hpp>
+#include "UDPConnection.h"
 
 using namespace boost::asio;
+using namespace boost::asio::ip;
 
-int main(int argv, char **argc) {
-	// parse program options which have not yet been invented
-	// TODO
+UDPConnection::UDPConnection() { /* nothing to do */
 
-	Server s(io_service());
+void UDPConnection::setEndpoint(udp::endpoint &endpoint)
+{
+	this->endpoint = endpoint;
 }
