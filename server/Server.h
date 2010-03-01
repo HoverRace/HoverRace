@@ -46,11 +46,14 @@ class Server {
 
 	private:
 		void HandleTCPAccept(TCPConnection *newConn, const boost::system::error_code &error);
+		void HandleUDPConnect(UDPConnection *udpConn, const boost::system::error_code &error);
 
 		std::vector<Connection> connections;
 		//std::vector<Game> games; // games we are managing
 
-		TCPConnection *nextConnection;
+		TCPConnection *tcpConnection;
+		boost::asio::ip::udp::socket udpSocket;
+		boost::asio::ip::udp::endpoint udpSender;
 
 		boost::asio::io_service io_service;
 		boost::asio::ip::tcp::acceptor tcpAccept;
