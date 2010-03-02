@@ -1215,6 +1215,7 @@ BOOL MR_GameApp::InitGame()
 	}
 
 	// Create the system console and execute the init script.
+	OutputDebugString("Creating system console.\n");
 	sysConsole = new SysConsole();
 	sysConsole->Init();
 	if (!initScript.empty()) {
@@ -2003,7 +2004,9 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 			break;
 
 		case MR_WM_ON_INIT:
-			This->sysConsole->OnInit();
+			//FIXME: First choice dialog causing this to be called prematurely.
+			if (This->sysConsole)
+				This->sysConsole->OnInit();
 			break;
 
 		case WM_DISPLAYCHANGE:
