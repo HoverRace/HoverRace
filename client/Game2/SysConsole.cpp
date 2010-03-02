@@ -118,13 +118,13 @@ void SysConsole::OnInit()
 	lua_pushlightuserdata(state, (void*)&ON_INIT_REG_KEY);
 	lua_gettable(state, LUA_REGISTRYINDEX);  // table
 
-	size_t sz = lua_objlen(state, -1);
-
-	for (size_t i = 0; i < sz; ++i) {
-		lua_pushinteger(state, i + 1); // table key
-		lua_gettable(state, -2); // table fn
-		lua_call(state, 0, 0); // table
+	lua_pushnil(state);  // table nil
+	while (lua_next(state, -2) != 0) {
+		// table key fn
+		lua_call(state, 0, 0);  // table key
 	}
+	// table
+	lua_pop(state, 1);
 }
 
 int SysConsole::LOnInit(lua_State *state)
