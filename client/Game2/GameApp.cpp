@@ -852,6 +852,9 @@ int MR_GameApp::MainLoop()
 	MSG lMessage;
 	BOOL lEofGame = FALSE;
 
+	// Execute the on_init handlers once we've handled any pending messages.
+	PostMessage(mMainWindow, MR_WM_ON_INIT, 0, 0);
+
 	while(!lEofGame) {
 		WaitMessage();
 
@@ -1998,15 +2001,8 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 			   }
 			   break;
 		 */
-		case WM_CREATE:
-			// Trigger the scripting "on_init" call later.
-			PostMessage(pWindow, MR_WM_ON_INIT, 0, 0);
-			break;
-
 		case MR_WM_ON_INIT:
-			//FIXME: First choice dialog causing this to be called prematurely.
-			if (This->sysConsole)
-				This->sysConsole->OnInit();
+			This->sysConsole->OnInit();
 			break;
 
 		case WM_DISPLAYCHANGE:
