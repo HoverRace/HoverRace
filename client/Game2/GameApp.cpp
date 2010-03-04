@@ -1133,6 +1133,14 @@ BOOL MR_GameApp::InitGame()
 	// Load accelerators
 	mAccelerators = LoadAccelerators(mInstance, MAKEINTRESOURCE(IDR_ACCELERATOR));
 
+	// Create the system console and execute the init script.
+	// This allows the script to modify the configuration (e.g. for unit tests).
+	sysConsole = new SysConsole();
+	sysConsole->Init();
+	if (!initScript.empty()) {
+		sysConsole->RunScript(initScript);
+	}
+
 	lReturnValue = CreateMainWindow();
 
 	if(lReturnValue) {
@@ -1215,14 +1223,6 @@ BOOL MR_GameApp::InitGame()
 	if(lReturnValue && cfg->misc.displayFirstScreen && initScript.empty()) {
 		if (FirstChoiceDialog().ShowModal(mInstance, mMainWindow))
 			SendMessage(mMainWindow, WM_COMMAND, ID_GAME_NETWORK_INTERNET, 0);
-	}
-
-	// Create the system console and execute the init script.
-	OutputDebugString("Creating system console.\n");
-	sysConsole = new SysConsole();
-	sysConsole->Init();
-	if (!initScript.empty()) {
-		sysConsole->RunScript(initScript);
 	}
 
 	return lReturnValue;
