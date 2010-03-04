@@ -66,6 +66,7 @@ class MR_DllDeclare Config
 {
 	private:
 		static Config *instance;
+		bool unlinked;  ///< if @c true, will prevent saving config.
 		std::string path;
 		int verMajor;
 		int verMinor;
@@ -86,6 +87,9 @@ class MR_DllDeclare Config
 		static Config *Init(int verMajor, int verMinor, int verPatch, int verBuild,
 			bool prerelease, const std::string &path="");
 		static void Shutdown();
+
+		bool IsUnlinked() const;
+		void SetUnlinked(bool unlinked);
 
 		bool IsPrerelease() const;
 		const std::string &GetVersion() const;

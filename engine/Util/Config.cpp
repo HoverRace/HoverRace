@@ -189,6 +189,27 @@ void Config::Shutdown()
 }
 
 /**
+ * Check if saving the config to disk is disabled.
+ * @return @c true if saving is disabled.
+ * @see #SetUnlinked(bool)
+ */
+bool Config::IsUnlinked() const
+{
+	return unlinked;
+}
+
+/**
+ * Enable or disable saving the configuration to disk.
+ * This is useful for testing, since it allows temporary changes
+ * without overwriting the config previously saved to disk.
+ * @param unlinked @c true to prevent saving config to disk.
+ */
+void Config::SetUnlinked(bool unlinked)
+{
+	this->unlinked = unlinked;
+}
+
+/**
  * Check if this build is a prerelease (development) version.
  * @return @c true if prerelease.
  */
@@ -570,6 +591,8 @@ void Config::Load()
  */
 void Config::Save()
 {
+	if (unlinked) return;
+
 	const std::string &cfgfile = GetConfigFilename();
 
 	// Create the config directory.
