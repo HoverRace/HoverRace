@@ -38,17 +38,23 @@ using namespace HoverRace;
 using namespace HoverRace::Client;
 using namespace HoverRace::Script;
 
-namespace {
-	const char ON_INIT_REG_KEY = 'A';
-}
-
 SysConsole::SysConsole() :
-	SUPER()
+	SUPER(), onInitRef(-1)
 {
 }
 
 SysConsole::~SysConsole()
 {
+	if (onInitRef >= 0) {
+		lua_State *state = GetScripting()->GetState();
+		luaL_unref(state, LUA_REGISTRYINDEX, onInitRef);
+	}
+}
+
+void SysConsole::InitEnv(Script::Env *scripting)
+{
+	SUPER::InitEnv(scripting);
+	onInitRef = luaL_ref(scripting->GetState(), LUA_REGISTRYINDEX);
 }
 
 void SysConsole::InitGlobals(Script::Env *scripting)
@@ -57,16 +63,17 @@ void SysConsole::InitGlobals(Script::Env *scripting)
 
 	lua_State *state = scripting->GetState();
 
-	lua_pushcclosure(state, SysConsole::LOnInit, 0);
+	lua_pushlightuserdata(state, this);
+	lua_pushcclosure(state, SysConsole::LOnInit, 1);
 	lua_setglobal(state, "on_init");
 
-	lua_pushcclosure(state, SysConsole::LGetOnInit, 0);
+	lua_pushlightuserdata(state, this);
+	lua_pushcclosure(state, SysConsole::LGetOnInit, 1);
 	lua_setglobal(state, "get_on_init");
 
 	// Initial arrays for callbacks.
-	lua_pushlightuserdata(state, (void*)&ON_INIT_REG_KEY);
 	lua_newtable(state);
-	lua_settable(state, LUA_REGISTRYINDEX);
+	lua_rawseti(state, LUA_REGISTRYINDEX, onInitRef);
 }
 
 void SysConsole::LogInfo(const std::string &s)
@@ -115,8 +122,7 @@ void SysConsole::OnInit()
 {
 	lua_State *state = GetScripting()->GetState();
 
-	lua_pushlightuserdata(state, (void*)&ON_INIT_REG_KEY);
-	lua_gettable(state, LUA_REGISTRYINDEX);  // table
+	lua_rawgeti(state, LUA_REGISTRYINDEX, onInitRef);  // table
 
 	lua_pushnil(state);  // table nil
 	while (lua_next(state, -2) != 0) {
@@ -131,14 +137,14 @@ int SysConsole::LOnInit(lua_State *state)
 {
 	// function on_init(f)
 	// Register a callback function for when the game starts up.
+	SysConsole *self = static_cast<SysConsole*>(lua_touserdata(state, lua_upvalueindex(1)));
 
 	if (!lua_isfunction(state, 1)) {
 		lua_pushstring(state, "on_init requires a function.");
 		return lua_error(state);
 	}
 
-	lua_pushlightuserdata(state, (void*)&ON_INIT_REG_KEY);
-	lua_gettable(state, LUA_REGISTRYINDEX);  // table
+	lua_rawgeti(state, LUA_REGISTRYINDEX, self->onInitRef);  // table
 
 	lua_pushinteger(state, lua_objlen(state, -1) + 1); // table key
 	lua_pushvalue(state, 1); // table key fn
@@ -153,9 +159,9 @@ int SysConsole::LGetOnInit(lua_State *state)
 {
 	// function get_on_init()
 	// Returns the table of on_init callbacks (for debugging purposes).
+	SysConsole *self = static_cast<SysConsole*>(lua_touserdata(state, lua_upvalueindex(1)));
 
-	lua_pushlightuserdata(state, (void*)&ON_INIT_REG_KEY);
-	lua_gettable(state, LUA_REGISTRYINDEX);  // table
+	lua_rawgeti(state, LUA_REGISTRYINDEX, self->onInitRef);  // table
 
 	return 1;
 }

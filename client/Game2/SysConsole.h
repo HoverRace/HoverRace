@@ -36,6 +36,7 @@ class SysConsole : public Console
 		virtual ~SysConsole();
 
 	protected:
+		virtual void InitEnv(Script::Env *scripting);
 		virtual void InitGlobals(Script::Env *scripting);
 
 	public:
@@ -55,6 +56,9 @@ class SysConsole : public Console
 	private:
 		static int LOnInit(lua_State *state);
 		static int LGetOnInit(lua_State *state);
+
+	private:
+		int onInitRef;
 };
 
 }  // namespace Client
