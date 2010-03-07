@@ -84,7 +84,7 @@ void Console::Init()
  */
 void Console::InitEnv(Script::Env *scripting)
 {
-	scripting->SetOutput(logStream);
+	scripting->AddOutput(logStream);
 }
 
 /**

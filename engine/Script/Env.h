@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include <queue>
+#include <list>
 
 #include <lua.hpp>
 
@@ -63,7 +63,13 @@ class MR_DllDeclare Env
 		lua_State *GetState() const { return state; }
 		void Reset();
 		void ActivateSandbox();
-		void SetOutput(boost::shared_ptr<std::ostream> out);
+
+	private:
+		typedef std::list<boost::shared_ptr<std::ostream> > outs_t;
+	public:
+		typedef outs_t::iterator OutHandle;
+		OutHandle AddOutput(boost::shared_ptr<std::ostream> out);
+		void RemoveOutput(const OutHandle &handle);
 
 		std::string GetVersionString() const;
 
@@ -77,7 +83,7 @@ class MR_DllDeclare Env
 		static int LSandboxedFunction(lua_State *state);
 
 	private:
-		boost::shared_ptr<std::ostream> out;
+		outs_t outs;
 		lua_State *state;
 };
 

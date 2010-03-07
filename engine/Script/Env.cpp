@@ -24,6 +24,8 @@
 
 #include <iostream>
 
+#include <boost/foreach.hpp>
+
 #include "../Util/OS.h"
 
 #include "Env.h"
@@ -142,10 +144,17 @@ void Env::ActivateSandbox()
  * Redirect output to a stream.
  * @param out The output stream (wrapped in a shared pointer).
  *            May be @c NULL to use the system default.
+ * @return A handle for removing the stream later.
  */
-void Env::SetOutput(boost::shared_ptr<std::ostream> out)
+Env::OutHandle Env::AddOutput(boost::shared_ptr<std::ostream> out)
 {
-	this->out = out;
+	outs.push_back(out);
+	return --(outs.end());
+}
+
+void Env::RemoveOutput(const OutHandle &handle)
+{
+	outs.erase(handle);
 }
 
 /**
@@ -220,7 +229,8 @@ std::string Env::PopError()
 int Env::LPrint(lua_State *state)
 {
 	Env *self = static_cast<Env*>(lua_touserdata(state, lua_upvalueindex(1)));
-	std::ostream &oss = (self->out == NULL) ? std::cout : *(self->out);
+	//std::ostream &oss = (self->out == NULL) ? std::cout : *(self->out);
+	//bool hasOut = !outs.empty();
 
 	int numParams = lua_gettop(state);
 
@@ -245,11 +255,15 @@ int Env::LPrint(lua_State *state)
 			lua_pop(state, 1);
 			continue;
 		}
-		if (i > 1) oss << '\t';
-		oss << s;
+		BOOST_FOREACH(boost::shared_ptr<std::ostream> &oss, self->outs) {
+			if (i > 1) *oss << '\t';
+			*oss << s;
+		}
 		lua_pop(state, 1);
 	}
-	oss << std::endl;
+	BOOST_FOREACH(boost::shared_ptr<std::ostream> &oss, self->outs) {
+		*oss << std::endl;
+	}
 
 	return 0;
 }
