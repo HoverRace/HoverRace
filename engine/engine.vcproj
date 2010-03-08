@@ -807,11 +807,11 @@
 			Name="Script"
 			>
 			<File
-				RelativePath=".\Script\Env.cpp"
+				RelativePath=".\Script\Core.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Script\Env.h"
+				RelativePath=".\Script\Core.h"
 				>
 			</File>
 			<File

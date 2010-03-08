@@ -28,7 +28,7 @@
 #include <boost/filesystem/fstream.hpp>
 #include <boost/format.hpp>
 
-#include "../../engine/Script/Env.h"
+#include "../../engine/Script/Core.h"
 
 #include "SysConsole.h"
 
@@ -51,13 +51,13 @@ SysConsole::~SysConsole()
 	}
 }
 
-void SysConsole::InitEnv(Script::Env *scripting)
+void SysConsole::InitEnv(Script::Core *scripting)
 {
 	SUPER::InitEnv(scripting);
 	onInitRef = luaL_ref(scripting->GetState(), LUA_REGISTRYINDEX);
 }
 
-void SysConsole::InitGlobals(Script::Env *scripting)
+void SysConsole::InitGlobals(Script::Core *scripting)
 {
 	SUPER::InitGlobals(scripting);
 

@@ -26,7 +26,7 @@
 
 #include <boost/thread/locks.hpp>
 
-#include "../../engine/Script/Env.h"
+#include "../../engine/Script/Core.h"
 #include "../../engine/Util/Config.h"
 #include "../../engine/VideoServices/2DViewPort.h"
 #include "../../engine/VideoServices/StaticText.h"
@@ -100,7 +100,7 @@ HighConsole::HighConsole() :
 	logLines->Add(PACKAGE_NAME " version " + cfg->GetVersion(),
 		Font("Arial", 20, true), 0x0a);
 
-	Script::Env *env = GetScripting();
+	Script::Core *env = GetScripting();
 	std::string intro = env->GetVersionString();
 	intro += " :: Console active.";
 	logLines->Add(intro, *logFont, 0x0e);

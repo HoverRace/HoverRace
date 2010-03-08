@@ -29,7 +29,7 @@
 namespace HoverRace {
 
 namespace Script {
-	class Env;
+	class Core;
 }
 
 /**
@@ -45,9 +45,9 @@ class Console
 	public:
 		void Init();
 	protected:
-		Script::Env *GetScripting() const { return scripting; }
-		virtual void InitEnv(Script::Env *scripting);
-		virtual void InitGlobals(Script::Env *scripting);
+		Script::Core *GetScripting() const { return scripting; }
+		virtual void InitEnv(Script::Core *scripting);
+		virtual void InitGlobals(Script::Core *scripting);
 
 		virtual void Cleanup();
 
@@ -77,8 +77,8 @@ class Console
 		static int LSandbox(lua_State *state);
 
 	private:
-		Script::Env *scripting;
-		typedef std::list<Script::Env*> oldScriptings_t;
+		Script::Core *scripting;
+		typedef std::list<Script::Core*> oldScriptings_t;
 		oldScriptings_t oldScriptings;
 		boost::shared_ptr<std::ostream> logStream;
 		std::string chunk;

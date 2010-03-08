@@ -1,5 +1,5 @@
 
-// Env.cpp
+// Core.cpp
 // Scripting support.
 //
 // Copyright (c) 2009 Michael Imamura.
@@ -28,7 +28,7 @@
 
 #include "../Util/OS.h"
 
-#include "Env.h"
+#include "Core.h"
 
 using namespace HoverRace::Script;
 using HoverRace::Util::OS;
@@ -44,10 +44,10 @@ using HoverRace::Util::OS;
 
 #define DISALLOW_LUA_GLOBAL(state, name) \
 	lua_pushstring((state), (name)); \
-	lua_pushcclosure((state), Env::LSandboxedFunction, 1); \
+	lua_pushcclosure((state), Core::LSandboxedFunction, 1); \
 	lua_setglobal((state), (name))
 
-Env::Env()
+Core::Core()
 {
 	state = luaL_newstate();
 
@@ -56,7 +56,7 @@ Env::Env()
 	Reset();
 }
 
-Env::~Env()
+Core::~Core()
 {
 	lua_close(state);
 }
@@ -68,7 +68,7 @@ Env::~Env()
  * Call ActivateSandbox() to reactivate if necessary.
  * The state returned by GetState() is otherwise unchanged.
  */
-void Env::Reset()
+void Core::Reset()
 {
 	// Register a "safe" set of standard libraries.
 	REG_LUA_LIB(state, "", luaopen_base);
@@ -78,7 +78,7 @@ void Env::Reset()
 
 	// Override the print function so we can reroute the output.
 	lua_pushlightuserdata(state, this);
-	lua_pushcclosure(state, Env::LPrint, 1);
+	lua_pushcclosure(state, Core::LPrint, 1);
 	lua_setglobal(state, "print");
 
 	// Remove the metatable protection from the global table.
@@ -95,7 +95,7 @@ void Env::Reset()
  * This guards against methods a script may use to access the filesystem
  * or break out of the sandbox.
  */
-void Env::ActivateSandbox()
+void Core::ActivateSandbox()
 {
 	if (!lua_checkstack(state, 2))
 		throw ScriptExn("Out of stack space.");
@@ -146,13 +146,13 @@ void Env::ActivateSandbox()
  *            May be @c NULL to use the system default.
  * @return A handle for removing the stream later.
  */
-Env::OutHandle Env::AddOutput(boost::shared_ptr<std::ostream> out)
+Core::OutHandle Core::AddOutput(boost::shared_ptr<std::ostream> out)
 {
 	outs.push_back(out);
 	return --(outs.end());
 }
 
-void Env::RemoveOutput(const OutHandle &handle)
+void Core::RemoveOutput(const OutHandle &handle)
 {
 	outs.erase(handle);
 }
@@ -161,7 +161,7 @@ void Env::RemoveOutput(const OutHandle &handle)
  * Retrieve the full scripting version string (name and version).
  * @return The string (never empty).
  */
-std::string Env::GetVersionString() const
+std::string Core::GetVersionString() const
 {
 	return LUA_VERSION;
 }
@@ -175,7 +175,7 @@ std::string Env::GetVersionString() const
  * @throw ScriptExn The code either failed to compile or signaled an error
  *                  while executing.
  */
-void Env::Execute(const std::string &chunk)
+void Core::Execute(const std::string &chunk)
 {
 	// Compile the chunk.
 	int status = luaL_loadbuffer(state, chunk.c_str(), chunk.length(), "=lua");
@@ -217,7 +217,7 @@ void Env::Execute(const std::string &chunk)
  * Only call this if you KNOW that there is an error on the top of the stack.
  * @return The error as a string.
  */
-std::string Env::PopError()
+std::string Core::PopError()
 {
 	size_t len;
 	const char *s = lua_tolstring(state, -1, &len);
@@ -226,9 +226,9 @@ std::string Env::PopError()
 	return msg;
 }
 
-int Env::LPrint(lua_State *state)
+int Core::LPrint(lua_State *state)
 {
-	Env *self = static_cast<Env*>(lua_touserdata(state, lua_upvalueindex(1)));
+	Core *self = static_cast<Core*>(lua_touserdata(state, lua_upvalueindex(1)));
 
 	int numParams = lua_gettop(state);
 
@@ -266,7 +266,7 @@ int Env::LPrint(lua_State *state)
 	return 0;
 }
 
-int Env::LSandboxedFunction(lua_State *state)
+int Core::LSandboxedFunction(lua_State *state)
 {
 	const char *name = lua_tostring(state, lua_upvalueindex(1));
 	return luaL_error(state, "Disallowed access to protected function: %s", name);

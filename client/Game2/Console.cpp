@@ -22,7 +22,7 @@
 
 #include "StdAfx.h"
 
-#include "../../engine/Script/Env.h"
+#include "../../engine/Script/Core.h"
 
 #include "Console.h"
 
@@ -73,7 +73,7 @@ Console::~Console()
 
 void Console::Init()
 {
-	scripting = new Env();
+	scripting = new Core();
 	InitEnv(scripting);
 	InitGlobals(scripting);
 }
@@ -82,7 +82,7 @@ void Console::Init()
  * Set intial settings on the scripting environment.
  * @param scripting The environment to initialize (may not be @c NULL).
  */
-void Console::InitEnv(Script::Env *scripting)
+void Console::InitEnv(Script::Core *scripting)
 {
 	scripting->AddOutput(logStream);
 }
@@ -91,7 +91,7 @@ void Console::InitEnv(Script::Env *scripting)
  * Populate the globals in the environment.
  * @param scripting The environment to initialize (may not be @c NULL).
  */
-void Console::InitGlobals(Script::Env *scripting)
+void Console::InitGlobals(Script::Core *scripting)
 {
 	lua_State *state = scripting->GetState();
 

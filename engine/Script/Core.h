@@ -1,5 +1,5 @@
 
-// Env.h
+// Core.h
 // Header for the scripting engine environment.
 //
 // Copyright (c) 2009 Michael Imamura.
@@ -53,11 +53,11 @@ class IncompleteExn : public ScriptExn
  * A script environment.
  * @author Michael Imamura
  */
-class MR_DllDeclare Env
+class MR_DllDeclare Core
 {
 	public:
-		Env();
-		~Env();
+		Core();
+		~Core();
 
 	public:
 		lua_State *GetState() const { return state; }

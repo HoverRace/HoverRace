@@ -36,8 +36,8 @@ class SysConsole : public Console
 		virtual ~SysConsole();
 
 	protected:
-		virtual void InitEnv(Script::Env *scripting);
-		virtual void InitGlobals(Script::Env *scripting);
+		virtual void InitEnv(Script::Core *scripting);
+		virtual void InitGlobals(Script::Core *scripting);
 
 	public:
 		virtual void Advance(Util::OS::timestamp_t tick) { };
