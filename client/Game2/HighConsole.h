@@ -27,13 +27,15 @@
 #include "Console.h"
 
 class MR_VideoBuffer;
+namespace HoverRace {
+	namespace VideoServices {
+		struct Font;
+		class StaticText;
+	}
+}
 
 namespace HoverRace {
-
-namespace VideoServices {
-	struct Font;
-	class StaticText;
-}
+namespace Client {
 
 /**
  * An on-screen debug console.
@@ -92,4 +94,5 @@ class HighConsole : public Console
 		static const int PADDING_LEFT = 5;
 };
 
+}  // namespace Client
 }  // namespace HoverRace

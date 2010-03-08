@@ -30,6 +30,7 @@ using namespace HoverRace;
 using namespace HoverRace::Script;
 
 namespace HoverRace {
+namespace Client {
 
 // Stream bits to redirect output to the console log.
 
@@ -55,8 +56,6 @@ class Console::LogStream : public std::ostream
 			SUPER(new LogStreamBuf(console)) { }
 		virtual ~LogStream() { delete rdbuf(); }
 };
-
-}
 
 Console::Console() :
 	inputState(ISTATE_COMMAND)
@@ -260,3 +259,6 @@ int Console::LogStreamBuf::sync()
 
 	return 0;
 }
+
+}  // namespace Client
+}  // namespace HoverRace

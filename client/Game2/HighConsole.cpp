@@ -50,6 +50,8 @@ namespace {
 }
 
 namespace HoverRace {
+namespace Client {
+
 class HighConsole::LogLines
 {
 	public:
@@ -72,7 +74,6 @@ class HighConsole::LogLines
 
 		static const int MAX_LINES = 10;
 };
-}
 
 HighConsole::HighConsole() :
 	SUPER(), visible(false), cursorOn(true), cursorTick(0)
@@ -356,3 +357,6 @@ void HighConsole::LogLines::Render(MR_2DViewPort *vp, int x, int y)
 		y += line->GetHeight();
 	}
 }
+
+}  // namespace Client
+}  // namespace HoverRace

@@ -27,10 +27,13 @@
 #include "../../engine/Util/OS.h"
 
 namespace HoverRace {
-
-namespace Script {
-	class Core;
+	namespace Script {
+		class Core;
+	}
 }
+
+namespace HoverRace {
+namespace Client {
 
 /**
  * Base class for debug consoles.
@@ -88,4 +91,5 @@ class Console
 		class LogStream;
 };
 
+}  // namespace Client
 }  // namespace HoverRace
