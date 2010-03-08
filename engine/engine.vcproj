@@ -815,6 +815,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Script\Env.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Script\Env.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Script\ScriptExn.h"
 				>
 			</File>
