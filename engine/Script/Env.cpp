@@ -229,8 +229,6 @@ std::string Env::PopError()
 int Env::LPrint(lua_State *state)
 {
 	Env *self = static_cast<Env*>(lua_touserdata(state, lua_upvalueindex(1)));
-	//std::ostream &oss = (self->out == NULL) ? std::cout : *(self->out);
-	//bool hasOut = !outs.empty();
 
 	int numParams = lua_gettop(state);
 
