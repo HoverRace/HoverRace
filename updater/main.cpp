@@ -159,7 +159,7 @@ int main(int argc, const char **argv) {
 				if(index == oldListing.end()) {
 					// file does not exist in old directory
 					// so we have to copy the file over directly
-					string oldFile = path(targetDir).file_string() + "\\" + *it;
+					string oldFile = path(sourceDir).file_string() + "\\" + *it;
 					string patchName = "\\temp_patch\\" + *it; // same filename
 					string newFile = current_path().file_string() + patchName;
 
