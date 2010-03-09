@@ -198,6 +198,7 @@ int main(int argc, const char **argv) {
 			// now, what is left in our old listing that we haven't removed, we will need to erase
 			string digestFile = current_path().file_string() + "/temp_patch/DIGEST";
 			FILE *digest = fopen(digestFile.c_str(), "wb");
+			printf("Creating DIGEST file...");
 
 			// write files to patch to digest
 			for(vector<string>::iterator it = patchFiles.begin(); it != patchFiles.end(); it++) {
@@ -205,6 +206,7 @@ int main(int argc, const char **argv) {
 				if((*it).at(0) == '\\' || (*it).at(0) == '/')
 					(*it).erase(0, 1);
 				fprintf(digest, "P %s\n", (*it).c_str());
+				printf("P %s\n", (*it).c_str());
 			}
 
 			// write files to add to digest
@@ -212,6 +214,7 @@ int main(int argc, const char **argv) {
 				if((*it).at(0) == '\\' || (*it).at(0) == '/')
 					(*it).erase(0, 1);
 				fprintf(digest, "A %s\n", (*it).c_str());
+				printf("A %s\n", (*it).c_str());
 			}
 
 			// write files to remove to digest
@@ -219,11 +222,13 @@ int main(int argc, const char **argv) {
 				if((*it).at(0) == '\\' || (*it).at(0) == '/')
 					(*it).erase(0, 1);
 				fprintf(digest, "D %s\n", (*it).c_str());
+				printf("D %s\n", (*it).c_str());
 			}
 
 			fclose(digest);
 
 			// now, we zip everything up
+			printf("Creating %s...\n", patchFile.c_str());
 			HZIP hz;
 
 			ZipCreateFile(&hz, patchFile.c_str(), 0);
@@ -242,8 +247,10 @@ int main(int argc, const char **argv) {
 			ZipClose(hz);
 
 			// remove all our temporary files
+			printf("Removing temporary directory...\n");
 			remove_all("temp_patch");
 
+			printf("Complete!\n");
 			return 0;
 		}
 	} else {
