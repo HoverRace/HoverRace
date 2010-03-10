@@ -22,8 +22,6 @@
 
 #pragma once
 
-#include "Core.h"
-
 #ifdef _WIN32
 #	ifdef MR_ENGINE
 #		define MR_DllDeclare   __declspec( dllexport )
@@ -45,8 +43,18 @@ class MR_DllDeclare Env
 		Env(Core *scripting);
 		virtual ~Env();
 
+	protected:
+		Core *GetScripting() const { return scripting; }
+
+		virtual void InitEnv() = 0;
+		void CopyGlobals();
+
+		void Execute(const std::string &chunk);
+
 	private:
 		Core *scripting;
+		bool initialized;
+		int envRef;
 };
 
 }  // namespace Script

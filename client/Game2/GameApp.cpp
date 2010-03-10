@@ -42,6 +42,7 @@
 #include "../../engine/VideoServices/ColorPalette.h"
 #include "../../engine/VideoServices/VideoBuffer.h"
 #include "../../engine/MainCharacter/MainCharacter.h"
+#include "../../engine/Script/Core.h"
 #include "../../engine/Util/FuzzyLogic.h"
 #include "../../engine/Util/Profiler.h"
 #include "../../engine/Util/StrRes.h"
@@ -568,7 +569,7 @@ void MR_GameThread::Restart()
 }
 
 MR_GameApp::MR_GameApp(HINSTANCE pInstance, bool safeMode) :
-	introMovie(NULL), sysConsole(NULL)
+	introMovie(NULL), scripting(NULL), sysConsole(NULL)
 {
 	This = this;
 	mInstance = pInstance;
@@ -611,6 +612,10 @@ MR_GameApp::~MR_GameApp()
 	if (sysConsole != NULL) {
 		delete sysConsole;
 		sysConsole = NULL;
+	}
+	if (scripting != NULL) {
+		delete scripting;
+		scripting = NULL;
 	}
 
 	delete controller;
@@ -1135,8 +1140,8 @@ BOOL MR_GameApp::InitGame()
 
 	// Create the system console and execute the init script.
 	// This allows the script to modify the configuration (e.g. for unit tests).
-	sysConsole = new SysConsole();
-	sysConsole->Init();
+	scripting = new Script::Core();
+	sysConsole = new SysConsole(scripting);
 	if (!initScript.empty()) {
 		sysConsole->RunScript(initScript);
 	}

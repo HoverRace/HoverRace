@@ -22,27 +22,29 @@
 
 #pragma once
 
-#include "Console.h"
+#include "../../engine/Script/Core.h"
+#include "../../engine/Script/Env.h"
+
+namespace HoverRace {
+	namespace Script {
+		class Core;
+	}
+}
 
 namespace HoverRace {
 namespace Client {
 
-class SysConsole : public Console
+class SysConsole : private Script::Env
 {
-	typedef Console SUPER;
+	typedef Script::Env SUPER;
 
 	public:
-		SysConsole();
+		SysConsole(Script::Core *scripting);
 		virtual ~SysConsole();
 
 	protected:
-		virtual void InitEnv(Script::Core *scripting);
-		virtual void InitGlobals(Script::Core *scripting);
+		virtual void InitEnv();
 
-	public:
-		virtual void Advance(Util::OS::timestamp_t tick) { };
-		virtual void Clear() { };
-	
 	protected:
 		virtual void LogInfo(const std::string &s);
 		virtual void LogError(const std::string &s);
@@ -58,6 +60,7 @@ class SysConsole : public Console
 		static int LGetOnInit(lua_State *state);
 
 	private:
+		Script::Core::OutHandle outHandle;
 		int onInitRef;
 };
 

@@ -37,6 +37,9 @@ namespace HoverRace {
 		typedef boost::shared_ptr<Rulebook> RulebookPtr;
 		class SysConsole;
 	}
+	namespace Script {
+		class Core;
+	}
 }
 
 class MR_GameThread
@@ -82,6 +85,7 @@ class MR_GameApp
 		HoverRace::Client::HighConsole *highConsole;
 		HoverRace::Client::IntroMovie *introMovie;
 		HoverRace::Client::FullscreenTest *fullscreenTest;
+		HoverRace::Script::Core *scripting;
 		HoverRace::Client::SysConsole *sysConsole;
 		MR_ClientSession *mCurrentSession;
 		MR_GameThread *mGameThread;

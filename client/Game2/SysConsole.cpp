@@ -28,52 +28,83 @@
 #include <boost/filesystem/fstream.hpp>
 #include <boost/format.hpp>
 
-#include "../../engine/Script/Core.h"
-
 #include "SysConsole.h"
 
 namespace fs = boost::filesystem;
 
-using namespace HoverRace;
-using namespace HoverRace::Client;
-using namespace HoverRace::Script;
+namespace {
+	class LogStreamBuf : public std::stringbuf
+	{
+		typedef std::stringbuf SUPER;
+		public:
+			LogStreamBuf() { }
+			virtual ~LogStreamBuf() { sync(); }
 
-SysConsole::SysConsole() :
-	SUPER(), onInitRef(-1)
+		protected:
+			virtual int sync()
+			{
+				std::string s = str();
+
+#				ifdef _WIN32
+					OutputDebugString(s.c_str());
+#				endif
+				std::cout << s << std::flush;
+
+				str(std::string());
+				return 0;
+			}
+	};
+
+	class LogStream : public std::ostream
+	{
+		typedef std::ostream SUPER;
+		public:
+			LogStream() : SUPER(new LogStreamBuf()) { }
+			virtual ~LogStream() { delete rdbuf(); }
+	};
+}
+
+namespace HoverRace {
+namespace Client {
+
+SysConsole::SysConsole(Script::Core *scripting) :
+	SUPER(scripting), outHandle(scripting->AddOutput(boost::make_shared<LogStream>()))
 {
+	lua_State *state = scripting->GetState();
+
+	scripting->PrintStack();
+
+	// Initial table for callbacks.
+	lua_newtable(state);
+	onInitRef = luaL_ref(scripting->GetState(), LUA_REGISTRYINDEX);
 }
 
 SysConsole::~SysConsole()
 {
-	if (onInitRef >= 0) {
-		lua_State *state = GetScripting()->GetState();
-		luaL_unref(state, LUA_REGISTRYINDEX, onInitRef);
-	}
+	Script::Core *scripting = GetScripting();
+	luaL_unref(scripting->GetState(), LUA_REGISTRYINDEX, onInitRef);
+	scripting->RemoveOutput(outHandle);
 }
 
-void SysConsole::InitEnv(Script::Core *scripting)
+void SysConsole::InitEnv()
 {
-	SUPER::InitEnv(scripting);
-	onInitRef = luaL_ref(scripting->GetState(), LUA_REGISTRYINDEX);
-}
-
-void SysConsole::InitGlobals(Script::Core *scripting)
-{
-	SUPER::InitGlobals(scripting);
-
+	Script::Core *scripting = GetScripting();
 	lua_State *state = scripting->GetState();
 
-	lua_pushlightuserdata(state, this);
-	lua_pushcclosure(state, SysConsole::LOnInit, 1);
-	lua_setglobal(state, "on_init");
+	// Start with the standard global environment.
+	CopyGlobals();
 
-	lua_pushlightuserdata(state, this);
-	lua_pushcclosure(state, SysConsole::LGetOnInit, 1);
-	lua_setglobal(state, "get_on_init");
+	lua_pushlightuserdata(state, this);  // table this
+	lua_pushcclosure(state, SysConsole::LOnInit, 1);  // table fn
+	lua_pushstring(state, "on_init");  // table fn str
+	lua_insert(state, -2);  // table str fn
+	lua_rawset(state, -3);  // table
 
-	// Initial arrays for callbacks.
-	lua_newtable(state);
-	lua_rawseti(state, LUA_REGISTRYINDEX, onInitRef);
+	lua_pushlightuserdata(state, this);  // table this
+	lua_pushcclosure(state, SysConsole::LGetOnInit, 1);  // table fn
+	lua_pushstring(state, "get_on_init");  // table fn str
+	lua_insert(state, -2);  // table str fn
+	lua_rawset(state, -3);  // table
 }
 
 void SysConsole::LogInfo(const std::string &s)
@@ -112,7 +143,12 @@ void SysConsole::RunScript(const std::string &filename)
 	// Read and submit the whole script at once.
 	fs::ifstream ifs(scriptPath, std::ios_base::in);
 	std::string ris((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
-	SubmitChunk(ris);
+	try {
+		Execute(ris);
+	}
+	catch (Script::ScriptExn &ex) {
+		LogError(ex.what());
+	}
 }
 
 /**
@@ -165,3 +201,6 @@ int SysConsole::LGetOnInit(lua_State *state)
 
 	return 1;
 }
+
+}  // namespace Client
+}  // namespace HoverRace
