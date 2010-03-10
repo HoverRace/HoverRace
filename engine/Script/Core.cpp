@@ -24,6 +24,11 @@
 
 #include <iostream>
 
+// The X headers define "Bool" with breaks Boost Foreach.
+// This workaround is only required for Boost < 1.40.
+#if !defined(_WIN32) && defined(Bool)
+#	undef Bool
+#endif
 #include <boost/foreach.hpp>
 
 #include "../Util/OS.h"
