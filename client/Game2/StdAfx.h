@@ -31,6 +31,7 @@
 #	include "../../include/compat/unix.h"
 #	include "../../config.h"
 
+#	include <string.h>
 #	include <strings.h>
 
 #endif
