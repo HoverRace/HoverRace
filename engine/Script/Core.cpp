@@ -238,6 +238,32 @@ void Core::Execute(const std::string &chunk)
 	CallAndPrint();
 }
 
+void Core::PrintStack()
+{
+	int num = lua_gettop(state);
+	std::ostringstream oss;
+	for (int i = 1; i <= num; ++i) {
+		oss << i << ": ";
+		int type = lua_type(state, i);
+		switch (type) {
+			case LUA_TBOOLEAN: oss << "bool<" << (lua_toboolean(state, i) ? "true" : "false") << '>'; break;
+			case LUA_TFUNCTION: oss << "function"; break;
+			case LUA_TLIGHTUSERDATA: oss << "lightuserdata"; break;
+			case LUA_TNIL: oss << "nil"; break;
+			case LUA_TNUMBER: oss << "number<" << lua_tonumber(state, i) << '>'; break;
+			case LUA_TSTRING: oss << "string<" << lua_tostring(state, i) << '>'; break;
+			case LUA_TTABLE: oss << "table"; break;
+			case LUA_TTHREAD: oss << "thread"; break;
+			default: oss << "unknown type: " << type; break;
+		}
+		oss << std::endl;
+	}
+	std::string s = oss.str();
+	BOOST_FOREACH(boost::shared_ptr<std::ostream> &out, outs) {
+		*out << s;
+	}
+}
+
 /**
  * Pop the error message off the stack.
  * Only call this if you KNOW that there is an error on the top of the stack.

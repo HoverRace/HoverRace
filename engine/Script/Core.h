@@ -79,6 +79,8 @@ class MR_DllDeclare Core
 
 		void Execute(const std::string &chunk);
 
+		void PrintStack();
+
 	private:
 		std::string PopError();
 
