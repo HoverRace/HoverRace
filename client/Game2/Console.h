@@ -83,7 +83,6 @@ class Console
 		Script::Core *scripting;
 		typedef std::list<Script::Core*> oldScriptings_t;
 		oldScriptings_t oldScriptings;
-		boost::shared_ptr<std::ostream> logStream;
 		std::string chunk;
 		inputState_t inputState;
 

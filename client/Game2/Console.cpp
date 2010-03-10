@@ -61,7 +61,6 @@ Console::Console() :
 	inputState(ISTATE_COMMAND)
 {
 	chunk.reserve(1024);
-	logStream = boost::shared_ptr<std::ostream>(new LogStream(this));
 }
 
 Console::~Console()
@@ -83,7 +82,7 @@ void Console::Init()
  */
 void Console::InitEnv(Script::Core *scripting)
 {
-	scripting->AddOutput(logStream);
+	scripting->AddOutput(boost::make_shared<LogStream>(this));
 }
 
 /**
