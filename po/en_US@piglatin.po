@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: HoverRace 1.24\n"
 "Report-Msgid-Bugs-To: bugs@hoverrace.com\n"
-"POT-Creation-Date: 2010-01-17 19:17-0500\n"
+"POT-Creation-Date: 2010-03-10 16:25-0500\n"
 "PO-Revision-Date: 2009-03-22 02:37-0500\n"
 "Last-Translator: Michael Imamura <zoogie@lugatgt.org>\n"
 "Language-Team: English\n"
@@ -301,11 +301,11 @@ msgstr[1] ""
 msgid "HoverRace fullscreen test"
 msgstr "HoverRace ersionvay "
 
-#: client/Game2/GameApp.cpp:757
+#: client/Game2/GameApp.cpp:773
 msgid "Abort current game?"
 msgstr "Ixnay on the urrentcay amegay?"
 
-#: client/Game2/GameApp.cpp:783
+#: client/Game2/GameApp.cpp:799
 msgid ""
 "To be able to display HoverRace Help\n"
 "you must have a Word document viewer installed\n"
@@ -315,167 +315,167 @@ msgstr ""
 "ouyay ustmay avehay a Word ocumentday iewervay installedway\n"
 "onway ouryay ystemsay."
 
-#: client/Game2/GameApp.cpp:992
+#: client/Game2/GameApp.cpp:1011
 msgctxt "Menu|File|Split Screen"
 msgid "&2 Player"
 msgstr "&2 Ayerplay"
 
-#: client/Game2/GameApp.cpp:994
+#: client/Game2/GameApp.cpp:1013
 msgctxt "Menu|File|Split Screen"
 msgid "&3 Player"
 msgstr "&3 Ayerplay"
 
-#: client/Game2/GameApp.cpp:996
+#: client/Game2/GameApp.cpp:1015
 msgctxt "Menu|File|Split Screen"
 msgid "&4 Player"
 msgstr "&4 Ayerplay"
 
-#: client/Game2/GameApp.cpp:1001
+#: client/Game2/GameApp.cpp:1020
 msgctxt "Menu|File|Network"
 msgid "&Connect to server"
 msgstr "Onnect&cay otay erversay"
 
-#: client/Game2/GameApp.cpp:1003
+#: client/Game2/GameApp.cpp:1022
 msgctxt "Menu|File|Network"
 msgid "Create a &server"
 msgstr "Eatecray a erver&say"
 
-#: client/Game2/GameApp.cpp:1006
+#: client/Game2/GameApp.cpp:1025
 msgctxt "Menu|File|Network"
 msgid "&Internet Meeting Room"
 msgstr "&Internetway Eetingmay Oomray"
 
-#: client/Game2/GameApp.cpp:1011
+#: client/Game2/GameApp.cpp:1030
 msgctxt "Menu|File"
 msgid "&Internet"
 msgstr "&Internetway"
 
-#: client/Game2/GameApp.cpp:1013
+#: client/Game2/GameApp.cpp:1032
 msgctxt "Menu|File"
 msgid "&Practice"
 msgstr "Actice&pray"
 
-#: client/Game2/GameApp.cpp:1015
+#: client/Game2/GameApp.cpp:1034
 msgctxt "Menu|File"
 msgid "&Split Screen"
 msgstr "Lit&spay Eenscray"
 
-#: client/Game2/GameApp.cpp:1017
+#: client/Game2/GameApp.cpp:1036
 msgctxt "Menu|File"
 msgid "&Network"
 msgstr "Etwork&nay"
 
-#: client/Game2/GameApp.cpp:1020
+#: client/Game2/GameApp.cpp:1039
 msgctxt "Menu|File"
 msgid "E&xit"
 msgstr "Amscra&y"
 
-#: client/Game2/GameApp.cpp:1025
+#: client/Game2/GameApp.cpp:1044
 msgctxt "Menu|View"
 msgid "&Following Camera"
 msgstr "Ollowing&fay Ameracay"
 
-#: client/Game2/GameApp.cpp:1027
+#: client/Game2/GameApp.cpp:1046
 msgctxt "Menu|View"
 msgid "&Cockpit"
 msgstr "Ockpit&cay"
 
-#: client/Game2/GameApp.cpp:1030
+#: client/Game2/GameApp.cpp:1049
 msgctxt "Menu|View"
 msgid "&Players list"
 msgstr "Ayers&play istlay"
 
-#: client/Game2/GameApp.cpp:1032
+#: client/Game2/GameApp.cpp:1051
 msgctxt "Menu|View"
 msgid "More &messages"
 msgstr "Ore&may essagesmay"
 
-#: client/Game2/GameApp.cpp:1035
+#: client/Game2/GameApp.cpp:1054
 msgctxt "Menu|View"
 msgid "&Refresh colors"
 msgstr "Efresh&ray olorscay"
 
-#: client/Game2/GameApp.cpp:1040 client/Game2/GameApp.cpp:1954
+#: client/Game2/GameApp.cpp:1059 client/Game2/GameApp.cpp:1973
 msgctxt "Menu|Setting"
 msgid "&Fullscreen"
 msgstr "Ullscreen&fay"
 
-#: client/Game2/GameApp.cpp:1042
+#: client/Game2/GameApp.cpp:1061
 msgctxt "Menu|Setting"
 msgid "&Window"
 msgstr "Indo&way"
 
-#: client/Game2/GameApp.cpp:1045
+#: client/Game2/GameApp.cpp:1064
 msgctxt "Menu|Setting"
 msgid "&Preferences"
 msgstr "Eferences&pray"
 
-#: client/Game2/GameApp.cpp:1050
+#: client/Game2/GameApp.cpp:1069
 msgctxt "Menu|Help"
 msgid "&Contents"
 msgstr "Ontents&cay"
 
-#: client/Game2/GameApp.cpp:1056
+#: client/Game2/GameApp.cpp:1075
 msgctxt "Menu|Help"
 msgid "Check for &Updates"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:1059
+#: client/Game2/GameApp.cpp:1078
 msgctxt "Menu|Help"
 msgid "&About HoverRace"
 msgstr "&Aboutlay HoverRace"
 
-#: client/Game2/GameApp.cpp:1064
+#: client/Game2/GameApp.cpp:1083
 msgctxt "Menu"
 msgid "&File"
 msgstr "Ile&fay"
 
-#: client/Game2/GameApp.cpp:1066
+#: client/Game2/GameApp.cpp:1085
 msgctxt "Menu"
 msgid "&View"
 msgstr "Iew&vay"
 
-#: client/Game2/GameApp.cpp:1068
+#: client/Game2/GameApp.cpp:1087
 msgctxt "Menu"
 msgid "&Setting"
 msgstr "Etting&say"
 
-#: client/Game2/GameApp.cpp:1070
+#: client/Game2/GameApp.cpp:1089
 msgctxt "Menu"
 msgid "&Help"
 msgstr "Elp&hay"
 
-#: client/Game2/GameApp.cpp:1083
+#: client/Game2/GameApp.cpp:1102
 msgctxt "Version"
 msgid "testing"
 msgstr "estingtay"
 
-#: client/Game2/GameApp.cpp:1086
+#: client/Game2/GameApp.cpp:1105
 msgid "silent mode"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:1104
+#: client/Game2/GameApp.cpp:1124
 msgid "Unable to initialize: Unable to find suitable rich text DLL."
 msgstr ""
 
-#: client/Game2/GameApp.cpp:1132
+#: client/Game2/GameApp.cpp:1160
 msgid "There was a problem setting up the sound device."
 msgstr ""
 
-#: client/Game2/GameApp.cpp:1134
+#: client/Game2/GameApp.cpp:1162
 msgid "Sound will be disabled for this session."
 msgstr ""
 
-#: client/Game2/GameApp.cpp:1136
+#: client/Game2/GameApp.cpp:1164
 msgid ""
 "If this is your first time running HoverRace, try restarting your computer."
 msgstr ""
 
-#: client/Game2/GameApp.cpp:1138
+#: client/Game2/GameApp.cpp:1166
 msgid "The specific error was:"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:1156
+#: client/Game2/GameApp.cpp:1184
 msgid ""
 "You can play HoverRace in a Window or Fullscreen;\n"
 "to play in a Window, HoverRace will have to switch to 256 color mode.\n"
@@ -484,23 +484,23 @@ msgid ""
 "Do you want to play in Window mode and switch to 256 color?"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:1160 client/Game2/GameApp.cpp:1170
-#: client/Game2/InternetRoom.cpp:2472
+#: client/Game2/GameApp.cpp:1188 client/Game2/GameApp.cpp:1198
+#: client/Game2/InternetRoom.cpp:2475
 #, fuzzy
 msgid "HoverRace"
 msgstr "HoverRace Errorway"
 
-#: client/Game2/GameApp.cpp:1169
+#: client/Game2/GameApp.cpp:1197
 msgid ""
 "HoverRace was unable to switch the video mode. You will need to play in full "
 "screen."
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2308
+#: client/Game2/GameApp.cpp:2332
 msgid "This build of HoverRace is not official; updates are not available."
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2476
+#: client/Game2/GameApp.cpp:2504
 msgid ""
 "Incompatible video mode. Select a compatible video mode by pressing F8 or F9 "
 "once a game is started"
@@ -696,7 +696,7 @@ msgid "Unknown error code"
 msgstr ""
 
 #: client/Game2/InternetRoom.cpp:1227 client/Game2/InternetRoom.cpp:1371
-#: client/Game2/InternetRoom.cpp:2332
+#: client/Game2/InternetRoom.cpp:2335
 #, fuzzy
 msgid "Internet Meeting Room"
 msgstr "&Internetway Eetingmay Oomray"
@@ -759,17 +759,17 @@ msgstr ""
 msgid "Warning: communication timeout"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:2310 client/Game2/InternetRoom.cpp:2379
-#: client/Game2/InternetRoom.cpp:2446 client/Game2/NetInterface.cpp:821
+#: client/Game2/InternetRoom.cpp:2313 client/Game2/InternetRoom.cpp:2382
+#: client/Game2/InternetRoom.cpp:2449 client/Game2/NetInterface.cpp:821
 msgid "Network Transaction Progress"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:2331 client/Game2/InternetRoom.cpp:2472
+#: client/Game2/InternetRoom.cpp:2334 client/Game2/InternetRoom.cpp:2475
 #, fuzzy
 msgid "Connection timeout"
 msgstr "Onnectioncay erroray ithway"
 
-#: client/Game2/InternetRoom.cpp:2447
+#: client/Game2/InternetRoom.cpp:2450
 msgid "Registering your best lap time to the server"
 msgstr ""
 
@@ -1308,7 +1308,7 @@ msgstr ""
 msgid "HoverRace is currently in silent mode."
 msgstr ""
 
-#: client/Game2/main.cpp:247
+#: client/Game2/main.cpp:260
 #, c-format, boost-format
 msgid ""
 "HoverRace for Linux is under development!\n"
