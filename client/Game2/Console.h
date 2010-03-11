@@ -24,13 +24,9 @@
 
 #include <lua.hpp>
 
+#include "../../engine/Script/Core.h"
+#include "../../engine/Script/Env.h"
 #include "../../engine/Util/OS.h"
-
-namespace HoverRace {
-	namespace Script {
-		class Core;
-	}
-}
 
 namespace HoverRace {
 namespace Client {
@@ -39,20 +35,16 @@ namespace Client {
  * Base class for debug consoles.
  * @author Michael Imamura
  */
-class Console
+class Console : public Script::Env
 {
+	typedef Script::Env SUPER;
+
 	public:
-		Console();
+		Console(Script::Core *scripting);
 		virtual ~Console();
 
-	public:
-		void Init();
 	protected:
-		Script::Core *GetScripting() const { return scripting; }
-		virtual void InitEnv(Script::Core *scripting);
-		virtual void InitGlobals(Script::Core *scripting);
-
-		virtual void Cleanup();
+		virtual void InitEnv();
 
 	public:
 		virtual void Advance(Util::OS::timestamp_t tick) = 0;
@@ -75,16 +67,15 @@ class Console
 
 	private:
 		static int LClear(lua_State *state);
+		/*
 		static int LReset(lua_State *state);
-		static int LReinit(lua_State *state);
 		static int LSandbox(lua_State *state);
+		*/
 
 	private:
-		Script::Core *scripting;
-		typedef std::list<Script::Core*> oldScriptings_t;
-		oldScriptings_t oldScriptings;
-		std::string chunk;
 		inputState_t inputState;
+		Script::Core::OutHandle outHandle;
+		std::string chunk;
 
 		class LogStreamBuf;
 		class LogStream;

@@ -57,49 +57,35 @@ class Console::LogStream : public std::ostream
 		virtual ~LogStream() { delete rdbuf(); }
 };
 
-Console::Console() :
-	inputState(ISTATE_COMMAND)
+Console::Console(Script::Core *scripting) :
+	SUPER(scripting), inputState(ISTATE_COMMAND)
 {
 	chunk.reserve(1024);
+	outHandle = scripting->AddOutput(boost::make_shared<LogStream>(this));
 }
 
 Console::~Console()
 {
-	Cleanup();
-	delete scripting;
+	GetScripting()->RemoveOutput(outHandle);
 }
 
-void Console::Init()
+void Console::InitEnv()
 {
-	scripting = new Core();
-	InitEnv(scripting);
-	InitGlobals(scripting);
-}
+	lua_State *state = GetScripting()->GetState();
 
-/**
- * Set intial settings on the scripting environment.
- * @param scripting The environment to initialize (may not be @c NULL).
- */
-void Console::InitEnv(Script::Core *scripting)
-{
-	scripting->AddOutput(boost::make_shared<LogStream>(this));
-}
+	// Start with the standard global environment.
+	CopyGlobals();
 
-/**
- * Populate the globals in the environment.
- * @param scripting The environment to initialize (may not be @c NULL).
- */
-void Console::InitGlobals(Script::Core *scripting)
-{
-	lua_State *state = scripting->GetState();
+	lua_pushlightuserdata(state, this);  // table this
+	lua_pushcclosure(state, Console::LClear, 1);  // table fn
+	lua_pushstring(state, "clear");  // table fn str
+	lua_insert(state, -2);  // table str fn
+	lua_rawset(state, -3);  // table
 
+	/*
 	lua_pushlightuserdata(state, this);
 	lua_pushcclosure(state, Console::LClear, 1);
 	lua_setglobal(state, "clear");
-
-	lua_pushlightuserdata(state, this);
-	lua_pushcclosure(state, Console::LReinit, 1);
-	lua_setglobal(state, "reinit");
 
 	lua_pushlightuserdata(state, this);
 	lua_pushcclosure(state, Console::LReset, 1);
@@ -108,24 +94,7 @@ void Console::InitGlobals(Script::Core *scripting)
 	lua_pushlightuserdata(state, this);
 	lua_pushcclosure(state, Console::LSandbox, 1);
 	lua_setglobal(state, "sandbox");
-}
-
-/**
- * Clean up any resources invalidated during script execution.
- * Note that this is not the same as invoking the garbage collector for the
- * scripting environment; this is for console-specific resources which
- * have been invalidated but could not be freed while the script was executing.
- */
-void Console::Cleanup()
-{
-	if (!oldScriptings.empty()) {
-		for (oldScriptings_t::iterator iter = oldScriptings.begin();
-			iter != oldScriptings.end(); ++iter)
-		{
-			delete *iter;
-		}
-		oldScriptings.clear();
-	}
+	*/
 }
 
 /**
@@ -137,7 +106,7 @@ void Console::SubmitChunk(const std::string &s)
 	chunk += s;
 
 	try {
-		scripting->Execute(chunk);
+		Execute(chunk);
 	}
 	catch (const IncompleteExn&) {
 		SetInputState(ISTATE_CONTINUE);
@@ -146,8 +115,6 @@ void Console::SubmitChunk(const std::string &s)
 	catch (const ScriptExn &exn) {
 		LogError(exn.GetMessage());
 	}
-
-	Cleanup();
 
 	chunk.clear();
 	SetInputState(ISTATE_COMMAND);
@@ -174,6 +141,7 @@ int Console::LClear(lua_State *state)
 	return 0;
 }
 
+/*
 int Console::LReset(lua_State *state)
 {
 	// function reset()
@@ -184,27 +152,6 @@ int Console::LReset(lua_State *state)
 	self->InitGlobals(self->scripting);
 	self->LogInfo("Console script environment reset complete.");
 	return 0;
-}
-
-int Console::LReinit(lua_State *state)
-{
-	// function reinit()
-	// Completely reinitialize the environment.
-	// This is a last-resort call for fixing an environment that is very
-	// messed up.  reset() does not need to be called afterwards; this function
-	// is a superset of what reset() does.
-	Console *self = static_cast<Console*>(lua_touserdata(state, lua_upvalueindex(1)));
-
-	// Save the current environment to be cleaned up later (in Clean()).
-	// We can't destroy it just yet -- we were called from it!
-	self->oldScriptings.push_back(self->scripting);
-
-	self->Init();
-
-	// Cause an error in order to terminate execution in the current environment
-	// immediately.
-	lua_pushstring(state, "Console script environment reinitialization complete.");
-	return lua_error(state);
 }
 
 int Console::LSandbox(lua_State *state)
@@ -220,6 +167,7 @@ int Console::LSandbox(lua_State *state)
 	self->LogInfo("Call reset() to deactivate the sandbox.");
 	return 0;
 }
+*/
 
 // Console::LogStreamBuf
 

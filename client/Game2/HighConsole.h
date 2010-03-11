@@ -45,7 +45,7 @@ class HighConsole : public Console
 {
 	typedef Console SUPER;
 	public:
-		HighConsole();
+		HighConsole(Script::Core *scripting);
 		virtual ~HighConsole();
 
 		virtual void Advance(Util::OS::timestamp_t tick);

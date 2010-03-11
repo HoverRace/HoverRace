@@ -75,8 +75,8 @@ class HighConsole::LogLines
 		static const int MAX_LINES = 10;
 };
 
-HighConsole::HighConsole() :
-	SUPER(), visible(false), cursorOn(true), cursorTick(0)
+HighConsole::HighConsole(Script::Core *scripting) :
+	SUPER(scripting), visible(false), cursorOn(true), cursorTick(0)
 {
 	vp = new MR_2DViewPort();
 

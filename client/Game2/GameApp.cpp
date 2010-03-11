@@ -1560,8 +1560,7 @@ void MR_GameApp::NewLocalSession(RulebookPtr rules)
 		mObserver1 = MR_Observer::New();
 		highObserver = new HighObserver();
 		if (Config::GetInstance()->runtime.enableConsole) {
-			highConsole = new HighConsole();
-			highConsole->Init();
+			highConsole = new HighConsole(scripting);
 		}
 
 		// Create the new session
