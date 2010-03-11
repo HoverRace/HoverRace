@@ -30,11 +30,13 @@
 #include <exception>
 
 #ifdef _WIN32
-	#include <windows.h>
-	#include <shlobj.h>
-	#include <lmcons.h>
+#	include <windows.h>
+#	include <shlobj.h>
+#	include <lmcons.h>
 #else
-	#include <unistd.h>
+#	include <sys/types.h>
+#	include <pwd.h>
+#	include <unistd.h>
 #endif
 
 #include <boost/filesystem/convenience.hpp>
@@ -275,6 +277,10 @@ std::string Config::GetDefaultPath()
 	}
 #else
 	char *home = getenv("HOME");
+	if (home == NULL) {
+		passwd *pw = getpwuid(geteuid());
+		home = pw->pw_dir;
+	}
 	if (home != NULL) {
 		std::string retv(home);
 		retv += "/.hoverrace";
