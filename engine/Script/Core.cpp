@@ -259,13 +259,14 @@ void Core::PrintStack()
 			case LUA_TSTRING: oss << "string<" << lua_tostring(state, i) << '>'; break;
 			case LUA_TTABLE: oss << "table"; break;
 			case LUA_TTHREAD: oss << "thread"; break;
+			case LUA_TUSERDATA: oss << "userdata"; break;
 			default: oss << "unknown type: " << type; break;
 		}
 		oss << std::endl;
 	}
 	std::string s = oss.str();
 	BOOST_FOREACH(boost::shared_ptr<std::ostream> &out, outs) {
-		*out << s;
+		*out << s << std::flush;
 	}
 }
 
