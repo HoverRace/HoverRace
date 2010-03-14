@@ -74,6 +74,8 @@ class MR_DllDeclare Core
 		std::string GetVersionString() const;
 
 	public:
+		void Print(const std::string &s);
+
 		void Compile(const std::string &chunk);
 		void CallAndPrint();
 

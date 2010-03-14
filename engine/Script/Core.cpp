@@ -172,6 +172,17 @@ std::string Core::GetVersionString() const
 }
 
 /**
+ * Print a message to all registered output streams.
+ * @param s The message to broadcast (a newline will be appended automatically).
+ */
+void Core::Print(const std::string &s)
+{
+	BOOST_FOREACH(boost::shared_ptr<std::ostream> &out, outs) {
+		*out << s << std::endl;
+	}
+}
+
+/**
  * Compile a chunk of code.
  * Upon successful execution, the compiled chunk will be pushed to the stack.
  * @param chunk The code to compile.
