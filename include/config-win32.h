@@ -15,6 +15,9 @@
 
 #define HAVE_LUA 1
 
+#define HAVE_LUABIND 1
+#define LUABIND_DYNAMIC_LINK 1
+
 // Only enable DirectShow support if a recent Windows SDK is installed.
 #if defined(VER_PRODUCTBUILD) && VER_PRODUCTBUILD >= 6001
 #	define WITH_DIRECTSHOW 1

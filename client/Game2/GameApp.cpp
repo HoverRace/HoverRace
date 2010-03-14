@@ -27,6 +27,7 @@
 #include "AboutDialog.h"
 #include "FirstChoiceDialog.h"
 #include "FullscreenTest.h"
+#include "GamePeer.h"
 #include "Controller.h"
 #include "resource.h"
 #include "NetworkSession.h"
@@ -569,7 +570,7 @@ void MR_GameThread::Restart()
 }
 
 MR_GameApp::MR_GameApp(HINSTANCE pInstance, bool safeMode) :
-	introMovie(NULL), scripting(NULL), sysConsole(NULL)
+	introMovie(NULL), scripting(NULL), gamePeer(NULL), sysConsole(NULL)
 {
 	This = this;
 	mInstance = pInstance;
@@ -612,6 +613,10 @@ MR_GameApp::~MR_GameApp()
 	if (sysConsole != NULL) {
 		delete sysConsole;
 		sysConsole = NULL;
+	}
+	if (gamePeer != NULL) {
+		delete gamePeer;
+		gamePeer = NULL;
 	}
 	if (scripting != NULL) {
 		delete scripting;
@@ -1141,7 +1146,9 @@ BOOL MR_GameApp::InitGame()
 	// Create the system console and execute the init script.
 	// This allows the script to modify the configuration (e.g. for unit tests).
 	scripting = new Script::Core();
-	sysConsole = new SysConsole(scripting);
+	GamePeer::Register(scripting);
+	gamePeer = new GamePeer(scripting);
+	sysConsole = new SysConsole(scripting, gamePeer);
 	if (!initScript.empty()) {
 		sysConsole->RunScript(initScript);
 	}
@@ -2006,7 +2013,7 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 			   break;
 		 */
 		case MR_WM_ON_INIT:
-			This->sysConsole->OnInit();
+			This->gamePeer->OnInit();
 			break;
 
 		case WM_DISPLAYCHANGE:

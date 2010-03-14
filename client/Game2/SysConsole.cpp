@@ -28,6 +28,10 @@
 #include <boost/filesystem/fstream.hpp>
 #include <boost/format.hpp>
 
+#include <luabind/luabind.hpp>
+
+#include "GamePeer.h"
+
 #include "SysConsole.h"
 
 namespace fs = boost::filesystem;
@@ -67,33 +71,31 @@ namespace {
 namespace HoverRace {
 namespace Client {
 
-SysConsole::SysConsole(Script::Core *scripting) :
-	SUPER(scripting), outHandle(scripting->AddOutput(boost::make_shared<LogStream>()))
+SysConsole::SysConsole(Script::Core *scripting, GamePeer *gamePeer) :
+	SUPER(scripting), gamePeer(gamePeer),
+	outHandle(scripting->AddOutput(boost::make_shared<LogStream>()))
 {
-	lua_State *state = scripting->GetState();
-
-	scripting->PrintStack();
-
-	// Initial table for callbacks.
-	lua_newtable(state);
-	onInitRef = luaL_ref(scripting->GetState(), LUA_REGISTRYINDEX);
 }
 
 SysConsole::~SysConsole()
 {
-	Script::Core *scripting = GetScripting();
-	luaL_unref(scripting->GetState(), LUA_REGISTRYINDEX, onInitRef);
-	scripting->RemoveOutput(outHandle);
+	GetScripting()->RemoveOutput(outHandle);
 }
 
 void SysConsole::InitEnv()
 {
+	using namespace luabind;
+
 	Script::Core *scripting = GetScripting();
-	lua_State *state = scripting->GetState();
+	lua_State *L = scripting->GetState();
 
 	// Start with the standard global environment.
 	CopyGlobals();
 
+	object env(from_stack(L, -1));
+	env["game"] = gamePeer;
+
+	/*
 	lua_pushlightuserdata(state, this);  // table this
 	lua_pushcclosure(state, SysConsole::LOnInit, 1);  // table fn
 	lua_pushstring(state, "on_init");  // table fn str
@@ -105,6 +107,7 @@ void SysConsole::InitEnv()
 	lua_pushstring(state, "get_on_init");  // table fn str
 	lua_insert(state, -2);  // table str fn
 	lua_rawset(state, -3);  // table
+	*/
 }
 
 void SysConsole::LogInfo(const std::string &s)
@@ -149,57 +152,6 @@ void SysConsole::RunScript(const std::string &filename)
 	catch (Script::ScriptExn &ex) {
 		LogError(ex.what());
 	}
-}
-
-/**
- * Executes all "on_init" callbacks.
- */
-void SysConsole::OnInit()
-{
-	lua_State *state = GetScripting()->GetState();
-
-	lua_rawgeti(state, LUA_REGISTRYINDEX, onInitRef);  // table
-
-	lua_pushnil(state);  // table nil
-	while (lua_next(state, -2) != 0) {
-		// table key fn
-		lua_call(state, 0, 0);  // table key
-	}
-	// table
-	lua_pop(state, 1);
-}
-
-int SysConsole::LOnInit(lua_State *state)
-{
-	// function on_init(f)
-	// Register a callback function for when the game starts up.
-	SysConsole *self = static_cast<SysConsole*>(lua_touserdata(state, lua_upvalueindex(1)));
-
-	if (!lua_isfunction(state, 1)) {
-		lua_pushstring(state, "on_init requires a function.");
-		return lua_error(state);
-	}
-
-	lua_rawgeti(state, LUA_REGISTRYINDEX, self->onInitRef);  // table
-
-	lua_pushinteger(state, lua_objlen(state, -1) + 1); // table key
-	lua_pushvalue(state, 1); // table key fn
-	lua_settable(state, -3); // table
-
-	lua_pop(state, 1);
-
-	return 0;
-}
-
-int SysConsole::LGetOnInit(lua_State *state)
-{
-	// function get_on_init()
-	// Returns the table of on_init callbacks (for debugging purposes).
-	SysConsole *self = static_cast<SysConsole*>(lua_touserdata(state, lua_upvalueindex(1)));
-
-	lua_rawgeti(state, LUA_REGISTRYINDEX, self->onInitRef);  // table
-
-	return 1;
 }
 
 }  // namespace Client

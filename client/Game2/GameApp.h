@@ -31,6 +31,7 @@ class HighObserver;
 namespace HoverRace {
 	namespace Client {
 		class FullscreenTest;
+		class GamePeer;
 		class HighConsole;
 		class IntroMovie;
 		class Rulebook;
@@ -86,6 +87,7 @@ class MR_GameApp
 		HoverRace::Client::IntroMovie *introMovie;
 		HoverRace::Client::FullscreenTest *fullscreenTest;
 		HoverRace::Script::Core *scripting;
+		HoverRace::Client::GamePeer *gamePeer;
 		HoverRace::Client::SysConsole *sysConsole;
 		MR_ClientSession *mCurrentSession;
 		MR_GameThread *mGameThread;

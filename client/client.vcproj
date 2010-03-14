@@ -68,7 +68,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="wsock32.lib winmm.lib version.lib comctl32.lib libcurld.lib LiteUnzip.lib intl.lib lua5.1D.lib OIS_d.lib"
+				AdditionalDependencies="wsock32.lib winmm.lib version.lib comctl32.lib libcurld.lib LiteUnzip.lib intl.lib lua5.1D.lib luabindD.lib OIS_d.lib"
 				OutputFile="..\Debug\HoverRace.exe"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="..\lib"
@@ -151,7 +151,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wsock32.lib winmm.lib version.lib comctl32.lib libcurl.lib LiteUnzip.lib intl.lib lua5.1.lib OIS.lib"
+				AdditionalDependencies="wsock32.lib winmm.lib version.lib comctl32.lib libcurl.lib LiteUnzip.lib intl.lib lua5.1.lib luabind.lib OIS.lib"
 				OutputFile=".\..\Release\HoverRace.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -290,6 +290,14 @@
 			</File>
 			<File
 				RelativePath=".\Game2\GameApp.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Game2\GamePeer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Game2\GamePeer.h"
 				>
 			</File>
 			<File
@@ -668,6 +676,56 @@
 						Name="VCCustomBuildTool"
 						Description="$(InputFileName)"
 						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)&#x0D;&#x0A;"
+						Outputs="$(OutDir)\$(InputFileName)"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\lib\luabind.dll"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
+						Outputs="$(OutDir)\$(InputFileName)"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
+						Outputs="$(OutDir)\$(InputFileName)"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\lib\luabindD.dll"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
+						Outputs="$(OutDir)\$(InputFileName)"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="$(InputFileName)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
 						Outputs="$(OutDir)\$(InputFileName)"
 					/>
 				</FileConfiguration>

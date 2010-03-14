@@ -1,6 +1,6 @@
 
-// SysConsole.h
-// The global system console.
+// GamePeer.h
+// Scripting peer for system-level control of the game.
 //
 // Copyright (c) 2010 Michael Imamura.
 //
@@ -22,13 +22,10 @@
 
 #pragma once
 
-#include "../../engine/Script/Core.h"
-#include "../../engine/Script/Env.h"
+#include <luabind/luabind.hpp>
+#include <luabind/object.hpp>
 
 namespace HoverRace {
-	namespace Client {
-		class GamePeer;
-	}
 	namespace Script {
 		class Core;
 	}
@@ -37,27 +34,32 @@ namespace HoverRace {
 namespace HoverRace {
 namespace Client {
 
-class SysConsole : private Script::Env
-{
-	typedef Script::Env SUPER;
+/**
+ * Scripting peer for system-level control of the game.
+ * @author Michael Imamura
+ */
+class GamePeer {
+	private:
+		GamePeer() { }
+	public:
+		GamePeer(Script::Core *scripting);
+		virtual ~GamePeer();
 
 	public:
-		SysConsole(Script::Core *scripting, GamePeer *gamePeer);
-		virtual ~SysConsole();
-
-	protected:
-		virtual void InitEnv();
-
-	protected:
-		virtual void LogInfo(const std::string &s);
-		virtual void LogError(const std::string &s);
+		static void Register(Script::Core *scripting);
 
 	public:
-		void RunScript(const std::string &filename);
+		void OnInit();
+
+	public:
+		void LOnInit(const luabind::object &fn);
+		/*TODO
+		void LGetOnInit();
+		*/
 
 	private:
-		GamePeer *gamePeer;
-		Script::Core::OutHandle outHandle;
+		Script::Core *scripting;
+		int onInitRef;
 };
 
 }  // namespace Client
