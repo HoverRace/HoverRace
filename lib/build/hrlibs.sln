@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "luabind", "luabind\luabind.vcproj", "{8BCFB27F-654C-471E-8590-31D89ED4A529}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mfcleakfix", "mfcleakfix\mfcleakfix.vcproj", "{DC4ADD42-4E45-4E72-AD47-7D67FFFE4F95}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -13,6 +15,9 @@ Global
 		{8BCFB27F-654C-471E-8590-31D89ED4A529}.Debug|Win32.Build.0 = Debug|Win32
 		{8BCFB27F-654C-471E-8590-31D89ED4A529}.Release|Win32.ActiveCfg = Release|Win32
 		{8BCFB27F-654C-471E-8590-31D89ED4A529}.Release|Win32.Build.0 = Release|Win32
+		{DC4ADD42-4E45-4E72-AD47-7D67FFFE4F95}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DC4ADD42-4E45-4E72-AD47-7D67FFFE4F95}.Debug|Win32.Build.0 = Debug|Win32
+		{DC4ADD42-4E45-4E72-AD47-7D67FFFE4F95}.Release|Win32.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -45,6 +45,11 @@ using boost::str;
 using HoverRace::Util::Config;
 using HoverRace::Util::OS;
 
+#ifdef _WIN32
+#	include <mfcleakfix.h>
+	static int foo = use_ignore_mfc_leaks();
+#endif
+
 static std::string initScript;
 static bool debugMode = false;
 static bool safeMode = false;
