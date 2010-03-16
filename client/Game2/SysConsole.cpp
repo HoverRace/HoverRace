@@ -51,8 +51,9 @@ namespace {
 
 #				ifdef _WIN32
 					OutputDebugString(s.c_str());
+#				else
+					std::cout << s << std::flush;
 #				endif
-				std::cout << s << std::flush;
 
 				str(std::string());
 				return 0;
@@ -115,8 +116,9 @@ void SysConsole::LogInfo(const std::string &s)
 #	ifdef _WIN32
 		OutputDebugString(s.c_str());
 		OutputDebugString("\n");
+#	else
+		std::cout << s << std::endl;
 #	endif
-	std::cout << s << std::endl;
 }
 
 void SysConsole::LogError(const std::string &s)
@@ -124,8 +126,9 @@ void SysConsole::LogError(const std::string &s)
 #	ifdef _WIN32
 		OutputDebugString(s.c_str());
 		OutputDebugString("\n");
+#	else
+		std::cerr << s << std::endl;
 #	endif
-	std::cerr << s << std::endl;
 }
 
 /**
