@@ -57,6 +57,7 @@ void GamePeer::Register(Script::Core *scripting)
 
 	module(L) [
 		class_<GamePeer>("Game")
+			.def("get_on_init", &LGetOnInit)
 			.def("on_init", &LOnInit)
 	];
 }
@@ -109,18 +110,13 @@ void GamePeer::LOnInit(const luabind::object &fn)
 	lua_pop(L, 2);
 }
 
-/*TODO
-int GamePeer::LGetOnInit(lua_State *state)
+void GamePeer::LGetOnInit()
 {
 	// function get_on_init()
 	// Returns the table of on_init callbacks (for debugging purposes).
-	SysConsole *self = static_cast<SysConsole*>(lua_touserdata(state, lua_upvalueindex(1)));
 
-	lua_rawgeti(state, LUA_REGISTRYINDEX, self->onInitRef);  // table
-
-	return 1;
+	lua_rawgeti(scripting->GetState(), LUA_REGISTRYINDEX, onInitRef);  // table
 }
-*/
 
 }  // namespace Client
 }  // namespace HoverRace

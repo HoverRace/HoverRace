@@ -53,9 +53,7 @@ class GamePeer {
 
 	public:
 		void LOnInit(const luabind::object &fn);
-		/*TODO
 		void LGetOnInit();
-		*/
 
 	private:
 		Script::Core *scripting;
