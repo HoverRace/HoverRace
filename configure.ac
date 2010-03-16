@@ -28,6 +28,7 @@ BOOST_THREADS
 LUA51_REQUIRE
 PKG_CHECK_MODULES(DEPS, [
 	freealut >= 1.1
+	luabind >= 0.8
 	libcurl >= 7.18
 	openal >= 0.0.8
 	OIS >= 1.2.0
@@ -37,9 +38,6 @@ AC_SUBST(DEPS_LIBS)
 
 dnl TODO: Make LibYAML location configurable.
 YAML_REQUIRE(0.1.1)
-
-AC_CHECK_LIB([luabind], [main], , , [$LUA_LIBS])
-AC_CHECK_HEADER([luabind/luabind.hpp])
 
 # Checks for header files.
 
