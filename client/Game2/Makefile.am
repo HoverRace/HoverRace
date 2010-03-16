@@ -11,10 +11,14 @@ hoverrace_LDADD = \
 	$(DEPS_LIBS)
 hoverrace_SOURCES = \
 	StdAfx.h \
+	ConfigPeer.cpp \
+	ConfigPeer.h \
 	Console.cpp \
 	Console.h \
 	Controller.cpp \
 	Controller.h \
+	GamePeer.cpp \
+	GamePeer.h \
 	RoomList.cpp \
 	RoomList.h \
 	Rulebook.h \

@@ -22,6 +22,8 @@
 
 #include "StdAfx.h"
 
+#include <lua.hpp>
+
 #include <luabind/adopt_policy.hpp>
 
 #include "../../engine/Script/Core.h"
@@ -60,9 +62,9 @@ void GamePeer::Register(Script::Core *scripting)
 
 	module(L) [
 		class_<GamePeer>("Game")
-			.def("get_config", &LGetConfig, adopt(result))
-			.def("get_on_init", &LGetOnInit)
-			.def("on_init", &LOnInit)
+			.def("get_config", &GamePeer::LGetConfig, adopt(result))
+			.def("get_on_init", &GamePeer::LGetOnInit)
+			.def("on_init", &GamePeer::LOnInit)
 	];
 }
 

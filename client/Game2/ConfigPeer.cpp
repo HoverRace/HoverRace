@@ -53,9 +53,9 @@ void ConfigPeer::Register(Script::Core *scripting)
 
 	module(L) [
 		class_<ConfigPeer>("Config")
-			.def("unlink", &LUnlink)
-			.def("get_video_res", &LGetVideoRes)
-			.def("set_video_res", &LSetVideoRes)
+			.def("unlink", &ConfigPeer::LUnlink)
+			.def("get_video_res", &ConfigPeer::LGetVideoRes)
+			.def("set_video_res", &ConfigPeer::LSetVideoRes)
 	];
 }
 
