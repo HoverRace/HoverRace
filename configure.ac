@@ -28,7 +28,7 @@ BOOST_THREADS
 LUA51_REQUIRE
 PKG_CHECK_MODULES(DEPS, [
 	freealut >= 1.1
-	luabind >= 0.8
+	luabind >= 0.7
 	libcurl >= 7.18
 	openal >= 0.0.8
 	OIS >= 1.2.0
