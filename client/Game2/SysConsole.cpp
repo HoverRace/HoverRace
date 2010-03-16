@@ -143,11 +143,14 @@ void SysConsole::RunScript(const std::string &filename)
 		return;
 	}
 	
+	std::string chunkName("=");
+	chunkName += scriptPath.filename();
+
 	// Read and submit the whole script at once.
 	fs::ifstream ifs(scriptPath, std::ios_base::in);
 	std::string ris((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
 	try {
-		Execute(ris);
+		Execute(ris, chunkName);
 	}
 	catch (Script::ScriptExn &ex) {
 		LogError(ex.what());

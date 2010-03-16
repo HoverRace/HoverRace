@@ -52,6 +52,8 @@ using HoverRace::Util::OS;
 	lua_pushcclosure((state), Core::LSandboxedFunction, 1); \
 	lua_setglobal((state), (name))
 
+const std::string Core::DEFAULT_CHUNK_NAME("=lua");
+
 Core::Core()
 {
 	state = luaL_newstate();
@@ -186,14 +188,17 @@ void Core::Print(const std::string &s)
  * Compile a chunk of code.
  * Upon successful execution, the compiled chunk will be pushed to the stack.
  * @param chunk The code to compile.
+ * @param name Optional name for the chunk.  This name is used in error messages.
+ *             Prefix the name with @c "=" to use the name verbatim, without
+ *             decoration, in error messages.
  * @throw IncompleteExn If the code does not complete a statement; i.e.,
  *                      expecting more tokens.  Callers can catch this
  *                      to keep reading more data to finish the statement.
  * @throw ScriptExn The code failed to compile.
  */
-void Core::Compile(const std::string &chunk)
+void Core::Compile(const std::string &chunk, const std::string &name)
 {
-	int status = luaL_loadbuffer(state, chunk.c_str(), chunk.length(), "=lua");
+	int status = luaL_loadbuffer(state, chunk.c_str(), chunk.length(), name.c_str());
 	if (status != 0) {
 		std::string msg = PopError();
 		if (msg.find("<eof>") != std::string::npos) {

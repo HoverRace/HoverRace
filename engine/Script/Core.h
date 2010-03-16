@@ -76,7 +76,8 @@ class MR_DllDeclare Core
 	public:
 		void Print(const std::string &s);
 
-		void Compile(const std::string &chunk);
+		static const std::string DEFAULT_CHUNK_NAME;
+		void Compile(const std::string &chunk, const std::string &name=DEFAULT_CHUNK_NAME);
 		void CallAndPrint();
 
 		void Execute(const std::string &chunk);

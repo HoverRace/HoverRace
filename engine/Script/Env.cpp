@@ -81,18 +81,21 @@ void Env::CopyGlobals()
 /**
  * Execute a chunk of code in the current environment.
  * @param chunk The code to execute.
+ * @param name Optional name for the chunk.  This name is used in error messages.
+ *             Prefix the name with @c "=" to use the name verbatim, without
+ *             decoration, in error messages.
  * @throw IncompleteExn If the code does not complete a statement; i.e.,
  *                      expecting more tokens.  Callers can catch this
  *                      to keep reading more data to finish the statement.
  * @throw ScriptExn The code either failed to compile or signaled an error
  *                  while executing.
  */
-void Env::Execute(const std::string &chunk)
+void Env::Execute(const std::string &chunk, const std::string &name)
 {
 	lua_State *state = scripting->GetState();
 
 	// May throw ScriptExn or IncompleteExn, in which case stack will be unchanged.
-	scripting->Compile(chunk);
+	scripting->Compile(chunk, name);
 
 	if (initialized) {
 		lua_rawgeti(state, LUA_REGISTRYINDEX, envRef);
