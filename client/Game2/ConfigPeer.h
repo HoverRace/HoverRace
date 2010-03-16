@@ -1,6 +1,6 @@
 
-// GamePeer.h
-// Scripting peer for system-level control of the game.
+// ConfigPeer.h
+// Scripting peer for access to the game configuration.
 //
 // Copyright (c) 2010 Michael Imamura.
 //
@@ -26,9 +26,6 @@
 #include <luabind/object.hpp>
 
 namespace HoverRace {
-	namespace Client {
-		class ConfigPeer;
-	}
 	namespace Script {
 		class Core;
 	}
@@ -38,31 +35,27 @@ namespace HoverRace {
 namespace Client {
 
 /**
- * Scripting peer for system-level control of the game.
+ * Scripting peer for access to the game configuration.
  * @author Michael Imamura
  */
-class GamePeer {
+class ConfigPeer {
 	private:
-		GamePeer() { }
+		ConfigPeer() { }
 	public:
-		GamePeer(Script::Core *scripting);
-		virtual ~GamePeer();
+		ConfigPeer(Script::Core *scripting);
+		virtual ~ConfigPeer();
 
 	public:
 		static void Register(Script::Core *scripting);
 
 	public:
-		void OnInit();
+		void LUnlink();
 
-	public:
-		ConfigPeer *LGetConfig();
-
-		void LOnInit(const luabind::object &fn);
-		void LGetOnInit();
+		void LGetVideoRes();
+		void LSetVideoRes(int w, int h);
 
 	private:
 		Script::Core *scripting;
-		int onInitRef;
 };
 
 }  // namespace Client

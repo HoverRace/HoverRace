@@ -22,7 +22,10 @@
 
 #include "StdAfx.h"
 
+#include <luabind/adopt_policy.hpp>
+
 #include "../../engine/Script/Core.h"
+#include "ConfigPeer.h"
 
 #include "GamePeer.h"
 
@@ -57,6 +60,7 @@ void GamePeer::Register(Script::Core *scripting)
 
 	module(L) [
 		class_<GamePeer>("Game")
+			.def("get_config", &LGetConfig, adopt(result))
 			.def("get_on_init", &LGetOnInit)
 			.def("on_init", &LOnInit)
 	];
@@ -83,6 +87,13 @@ void GamePeer::OnInit()
 	}
 	// table
 	lua_pop(L, 1);
+}
+
+ConfigPeer *GamePeer::LGetConfig()
+{
+	// function get_config()
+	// Returns the game configuration, so it can be modified.
+	return new ConfigPeer(scripting);
 }
 
 void GamePeer::LOnInit(const luabind::object &fn)

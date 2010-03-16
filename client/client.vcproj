@@ -233,6 +233,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Game2\ConfigPeer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Game2\ConfigPeer.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Game2\Console.cpp"
 				>
 			</File>
@@ -739,7 +747,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)&#x0D;&#x0A;"
 						Outputs="$(OutDir)\$(InputFileName)"
 					/>
 				</FileConfiguration>
@@ -750,7 +758,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)"
+						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)&#x0D;&#x0A;"
 						Outputs="$(OutDir)\$(InputFileName)"
 					/>
 				</FileConfiguration>
