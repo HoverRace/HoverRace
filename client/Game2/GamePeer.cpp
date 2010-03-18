@@ -35,7 +35,7 @@ namespace HoverRace {
 namespace Client {
 
 GamePeer::GamePeer(Script::Core *scripting) :
-	scripting(scripting)
+	scripting(scripting), initialized(false)
 {
 	lua_State *L = scripting->GetState();
 
@@ -62,6 +62,7 @@ void GamePeer::Register(Script::Core *scripting)
 
 	module(L) [
 		class_<GamePeer>("Game")
+			.def("is_initialized", &GamePeer::LIsInitialized)
 			.def("get_config", &GamePeer::LGetConfig, adopt(result))
 			.def("get_on_init", &GamePeer::LGetOnInit)
 			.def("on_init", &GamePeer::LOnInit)
@@ -73,6 +74,7 @@ void GamePeer::Register(Script::Core *scripting)
  */
 void GamePeer::OnInit()
 {
+	initialized = true;
 	lua_State *L = scripting->GetState();
 
 	lua_rawgeti(L, LUA_REGISTRYINDEX, onInitRef);  // table
@@ -89,6 +91,11 @@ void GamePeer::OnInit()
 	}
 	// table
 	lua_pop(L, 1);
+}
+
+bool GamePeer::LIsInitialized()
+{
+	return initialized;
 }
 
 ConfigPeer *GamePeer::LGetConfig()

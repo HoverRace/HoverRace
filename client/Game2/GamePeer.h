@@ -57,11 +57,13 @@ class GamePeer {
 	public:
 		ConfigPeer *LGetConfig();
 
+		bool LIsInitialized();
 		void LOnInit(const luabind::object &fn);
 		void LGetOnInit();
 
 	private:
 		Script::Core *scripting;
+		bool initialized;
 		int onInitRef;
 };
 
