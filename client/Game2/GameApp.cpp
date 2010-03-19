@@ -1149,7 +1149,7 @@ BOOL MR_GameApp::InitGame()
 	scripting = new Script::Core();
 	ConfigPeer::Register(scripting);
 	GamePeer::Register(scripting);
-	gamePeer = new GamePeer(scripting);
+	gamePeer = new GamePeer(scripting, this);
 	sysConsole = new SysConsole(scripting, gamePeer);
 	if (!initScript.empty()) {
 		sysConsole->RunScript(initScript);

@@ -25,9 +25,12 @@
 #include <luabind/luabind.hpp>
 #include <luabind/object.hpp>
 
+class MR_GameApp;
 namespace HoverRace {
 	namespace Client {
 		class ConfigPeer;
+		class Rulebook;
+		typedef boost::shared_ptr<Rulebook> RulebookPtr;
 	}
 	namespace Script {
 		class Core;
@@ -45,7 +48,7 @@ class GamePeer {
 	private:
 		GamePeer() { }
 	public:
-		GamePeer(Script::Core *scripting);
+		GamePeer(Script::Core *scripting, MR_GameApp *gameApp);
 		virtual ~GamePeer();
 
 	public:
@@ -61,10 +64,15 @@ class GamePeer {
 		void LOnInit(const luabind::object &fn);
 		void LGetOnInit();
 
+		void LStartPractice(const std::string &track);
+		void LStartPractice(const std::string &track, const luabind::object &rules);
+
 	private:
 		Script::Core *scripting;
+		MR_GameApp *gameApp;
 		bool initialized;
 		int onInitRef;
+		RulebookPtr deferredStart;
 };
 
 }  // namespace Client

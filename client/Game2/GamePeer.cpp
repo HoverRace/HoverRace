@@ -22,20 +22,26 @@
 
 #include "StdAfx.h"
 
+#include <boost/lexical_cast.hpp>
+
 #include <lua.hpp>
 
 #include <luabind/adopt_policy.hpp>
 
 #include "../../engine/Script/Core.h"
 #include "ConfigPeer.h"
+#ifdef _WIN32
+#	include "GameApp.h"
+#endif
+#include "Rulebook.h"
 
 #include "GamePeer.h"
 
 namespace HoverRace {
 namespace Client {
 
-GamePeer::GamePeer(Script::Core *scripting) :
-	scripting(scripting), initialized(false)
+GamePeer::GamePeer(Script::Core *scripting, MR_GameApp *gameApp) :
+	scripting(scripting), gameApp(gameApp), initialized(false)
 {
 	lua_State *L = scripting->GetState();
 
@@ -66,6 +72,8 @@ void GamePeer::Register(Script::Core *scripting)
 			.def("get_config", &GamePeer::LGetConfig, adopt(result))
 			.def("get_on_init", &GamePeer::LGetOnInit)
 			.def("on_init", &GamePeer::LOnInit)
+			.def("start_practice", (void(GamePeer::*)(const std::string&))&GamePeer::LStartPractice)
+			.def("start_practice", (void(GamePeer::*)(const std::string&, const luabind::object&))&GamePeer::LStartPractice)
 	];
 }
 
@@ -91,6 +99,14 @@ void GamePeer::OnInit()
 	}
 	// table
 	lua_pop(L, 1);
+
+	// Process any deferred operations.
+	if (deferredStart != NULL) {
+#		ifdef _WIN32
+			gameApp->NewLocalSession(deferredStart);
+#		endif
+		deferredStart.reset();
+	}
 }
 
 bool GamePeer::LIsInitialized()
@@ -136,6 +152,61 @@ void GamePeer::LGetOnInit()
 	// Returns the table of on_init callbacks (for debugging purposes).
 
 	lua_rawgeti(scripting->GetState(), LUA_REGISTRYINDEX, onInitRef);  // table
+}
+
+void GamePeer::LStartPractice(const std::string &track)
+{
+	// function start_practice(track)
+	// Start a new single-player practice session with default rules.
+	//   track - The track name to load, including the ".trk" suffix (e.g. "ClassicH.trk").
+	using namespace luabind;
+	lua_State *L = scripting->GetState();
+	lua_pushnil(L);
+	object nilobj(from_stack(L, -1));
+	LStartPractice(track, nilobj);
+	lua_pop(L, 1);
+}
+
+void GamePeer::LStartPractice(const std::string &track, const luabind::object &rules)
+{
+	// function start_practice(track, rules)
+	// Start a new single-player practice session.
+	//   track - The track name to load, including the ".trk" suffix (e.g. "ClassicH.trk").
+	//   rules - Table listing the rules for the session:
+	//             laps - Number of laps (between 1 and 99, inclusive).
+	using namespace luabind;
+
+	if (!initialized) {
+		//FIXME: Report error.
+		ASSERT(false);
+		return;
+	}
+
+	int laps = 5;
+
+	int rulesParamType = type(rules);
+	if (rulesParamType != LUA_TNIL) {
+		if (rulesParamType == LUA_TTABLE) {
+			try {
+				laps = boost::lexical_cast<int>(rules["laps"]);
+				if (laps < 1) laps = 1;
+				else if (laps > 99) laps = 99;
+			}
+			catch (boost::bad_lexical_cast&) { }
+		}
+		else {
+			//FIXME: Report error.
+			ASSERT(false);
+			return;
+		}
+	}
+
+	// We can't safely start a new session while handlers are still executing
+	// since a new thread will be spawned which will likely also try to execute
+	// a script concurrently, leading to undefined behavior.
+	// So, instead we defer the actual spawning of the new session until after
+	// the handlers are finished.
+	deferredStart = boost::make_shared<Rulebook>(track, laps, 0x7f);
 }
 
 }  // namespace Client

@@ -123,11 +123,13 @@ class MR_GameApp
 		void ReadAsyncInputController();		  // Get the state of the input controler (KDB, joystick, mouse)
 
 		// Message handlers
+	public:
 		void NewLocalSession(HoverRace::Client::RulebookPtr rules=HoverRace::Client::RulebookPtr());
 		void NewSplitSession(int pSplitPlayers);
 		void NewNetworkSession(BOOL pIsServer);
 		void NewInternetSession();
 
+	private:
 		void LoadRegistry();
 
 		void Clean();
