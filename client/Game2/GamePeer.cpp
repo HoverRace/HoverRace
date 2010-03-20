@@ -129,13 +129,13 @@ void GamePeer::LOnInit(const luabind::object &fn)
 	// Register a callback function for when the game starts up.
 	using namespace luabind;
 
+	lua_State *L = scripting->GetState();
+
 	//TODO: Support named callbacks.
 	if (type(fn) != LUA_TFUNCTION) {
-		//FIXME: Uh...
-		ASSERT(FALSE);
+		luaL_error(L, "Expected function as first parameter.");
+		return;
 	}
-
-	lua_State *L = scripting->GetState();
 
 	fn.push(L);  // fn
 
@@ -178,9 +178,10 @@ void GamePeer::LStartPractice(const std::string &track, const luabind::object &r
 	//             laps - Number of laps (between 1 and 99, inclusive).
 	using namespace luabind;
 
+	lua_State *L = scripting->GetState();
+
 	if (!initialized) {
-		//FIXME: Report error.
-		ASSERT(false);
+		luaL_error(L, "Game is not yet initialized.");
 		return;
 	}
 
@@ -199,8 +200,7 @@ void GamePeer::LStartPractice(const std::string &track, const luabind::object &r
 			catch (boost::bad_lexical_cast&) { }
 		}
 		else {
-			//FIXME: Report error.
-			ASSERT(false);
+			luaL_error(L, "Expected table or nil as second parameter.");
 			return;
 		}
 	}
