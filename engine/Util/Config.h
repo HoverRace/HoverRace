@@ -124,6 +124,8 @@ class MR_DllDeclare Config
 		void SaveVersion(yaml::Emitter*);
 
 	public:
+		static const std::string TRACK_EXT;
+
 		struct cfg_video_t {
 			double gamma;
 			double contrast;

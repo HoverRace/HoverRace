@@ -69,8 +69,6 @@ static const char *TRACK_PATHS[] = {
 };
 #define NUM_TRACK_PATHS 3
 
-#define TRACK_EXT   ".trk"
-
 // Local functions
 static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 static BOOL CALLBACK ListCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
@@ -447,7 +445,11 @@ void ReadTrackListDir(const std::string &dir)
 	long lHandle;
 	struct _finddata_t lFileInfo;
 
-	lHandle = _findfirst((dir + "*" TRACK_EXT).c_str(), &lFileInfo);
+	std::string glob = dir;
+	glob += '*';
+	glob += Config::TRACK_EXT;
+
+	lHandle = _findfirst(glob.c_str(), &lFileInfo);
 
 	if(lHandle != -1) {
 		if(lFileInfo.time_access == -1 || lFileInfo.time_create == -1 || lFileInfo.time_write == -1) {
@@ -477,7 +479,7 @@ void ReadTrackListDir(const std::string &dir)
 		do {
 			gsTrackList.push_back(TrackEntry());
 			TrackEntry &ent = gsTrackList.back();
-			ent.mFileName = std::string(lFileInfo.name, 0, strlen(lFileInfo.name) - strlen(TRACK_EXT));
+			ent.mFileName = std::string(lFileInfo.name, 0, strlen(lFileInfo.name) - Config::TRACK_EXT.length());
 
 			// Open the file and read additional info
 			MR_RecordFile lRecordFile;
@@ -519,7 +521,7 @@ std::string FindTrack(const std::string &name)
 	for (int i = 0; i < NUM_TRACK_PATHS; ++i) {
 		path = TRACK_PATHS[i];
 		path += name;
-		path += TRACK_EXT;
+		path += Config::TRACK_EXT;
 		if (_access(path.c_str(), 4) == 0) return path;
 	}
 

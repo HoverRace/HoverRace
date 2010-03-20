@@ -39,6 +39,7 @@
 #	include <unistd.h>
 #endif
 
+#include <boost/algorithm/string.hpp>
 #include <boost/filesystem/convenience.hpp>
 #include <boost/filesystem/path.hpp>
 
@@ -107,6 +108,8 @@ namespace fs = boost::filesystem;
 	(emitter)->Value(name);
 
 using namespace HoverRace::Util;
+
+const std::string Config::TRACK_EXT(".trk");
 
 Config *Config::instance = NULL;
 
@@ -354,8 +357,8 @@ std::string Config::GetTrackPath(const std::string &file) const
 	std::string retv(path);
 	retv += (DIRSEP "Tracks" DIRSEP);
 	retv += file;
-	if (file.length() < 4 || file.rfind(".trk") != (file.length() - 4)) {
-		retv += ".trk";
+	if (!boost::ends_with(file, TRACK_EXT)) {
+		retv += TRACK_EXT;
 	}
 	return retv;
 }
