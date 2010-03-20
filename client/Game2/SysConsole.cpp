@@ -146,7 +146,7 @@ void SysConsole::RunScript(const std::string &filename)
 		return;
 	}
 	
-	std::string chunkName("=");
+	std::string chunkName("@");
 	chunkName += scriptPath.filename();
 
 	// Read and submit the whole script at once.
