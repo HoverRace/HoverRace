@@ -22,13 +22,13 @@
 
 #include "StdAfx.h"
 
+#include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
-
 #include <lua.hpp>
-
 #include <luabind/adopt_policy.hpp>
 
 #include "../../engine/Script/Core.h"
+#include "../../engine/Util/Config.h"
 #include "ConfigPeer.h"
 #ifdef _WIN32
 #	include "GameApp.h"
@@ -36,6 +36,8 @@
 #include "Rulebook.h"
 
 #include "GamePeer.h"
+
+using HoverRace::Util::Config;
 
 namespace HoverRace {
 namespace Client {
@@ -171,7 +173,7 @@ void GamePeer::LStartPractice(const std::string &track, const luabind::object &r
 {
 	// function start_practice(track, rules)
 	// Start a new single-player practice session.
-	//   track - The track name to load, including the ".trk" suffix (e.g. "ClassicH.trk").
+	//   track - The track name to load (e.g. "ClassicH").
 	//   rules - Table listing the rules for the session:
 	//             laps - Number of laps (between 1 and 99, inclusive).
 	using namespace luabind;
@@ -181,6 +183,8 @@ void GamePeer::LStartPractice(const std::string &track, const luabind::object &r
 		ASSERT(false);
 		return;
 	}
+
+	bool hasExtension = boost::ends_with(track, Config::TRACK_EXT);
 
 	int laps = 5;
 
@@ -206,7 +210,10 @@ void GamePeer::LStartPractice(const std::string &track, const luabind::object &r
 	// a script concurrently, leading to undefined behavior.
 	// So, instead we defer the actual spawning of the new session until after
 	// the handlers are finished.
-	deferredStart = boost::make_shared<Rulebook>(track, laps, 0x7f);
+	deferredStart = boost::make_shared<Rulebook>(
+		hasExtension ? track : (track + Config::TRACK_EXT),
+		laps,
+		0x7f);
 }
 
 }  // namespace Client
