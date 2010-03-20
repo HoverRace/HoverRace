@@ -11,6 +11,8 @@ hoverrace_LDADD = \
 	$(DEPS_LIBS)
 hoverrace_SOURCES = \
 	StdAfx.h \
+	ClientScriptCore.cpp \
+	ClientScriptCore.h \
 	ConfigPeer.cpp \
 	ConfigPeer.h \
 	Console.cpp \
