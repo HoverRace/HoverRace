@@ -225,6 +225,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Game2\ClientScriptCore.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Game2\ClientScriptCore.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Game2\ClientSession.cpp"
 				>
 			</File>

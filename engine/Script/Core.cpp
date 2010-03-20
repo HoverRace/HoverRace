@@ -59,8 +59,6 @@ Core::Core()
 	state = luaL_newstate();
 
 	//TODO: Set panic handler.
-
-	Reset();
 }
 
 Core::~Core()
@@ -70,12 +68,15 @@ Core::~Core()
 
 /**
  * Reset changes to the global environment.
+ * When creating a new instance, this member function must be called at least
+ * once before executing any scripts.
  * This is used for fixing accidental changes to globals.
  * Note that this will effectively deactivate the security sandbox.
  * Call ActivateSandbox() to reactivate if necessary.
  * The state returned by GetState() is otherwise unchanged.
+ * @return The same instance.
  */
-void Core::Reset()
+Core *Core::Reset()
 {
 	// Register a "safe" set of standard libraries.
 	REG_LUA_LIB(state, "", luaopen_base);
@@ -95,6 +96,8 @@ void Core::Reset()
 	lua_pushnil(state);
 	lua_setmetatable(state, 1);
 	lua_pop(state, 1);
+
+	return this;
 }
 
 /**

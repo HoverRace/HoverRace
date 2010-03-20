@@ -25,10 +25,10 @@
 
 #include "GameApp.h"
 #include "AboutDialog.h"
-#include "ConfigPeer.h"
 #include "FirstChoiceDialog.h"
 #include "FullscreenTest.h"
 #include "GamePeer.h"
+#include "ClientScriptCore.h"
 #include "Controller.h"
 #include "resource.h"
 #include "NetworkSession.h"
@@ -1146,9 +1146,7 @@ BOOL MR_GameApp::InitGame()
 
 	// Create the system console and execute the init script.
 	// This allows the script to modify the configuration (e.g. for unit tests).
-	scripting = new Script::Core();
-	ConfigPeer::Register(scripting);
-	GamePeer::Register(scripting);
+	scripting = (new ClientScriptCore())->Reset();
 	gamePeer = new GamePeer(scripting, this);
 	sysConsole = new SysConsole(scripting, gamePeer);
 	if (!initScript.empty()) {

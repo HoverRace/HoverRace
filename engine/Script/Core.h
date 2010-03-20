@@ -57,11 +57,11 @@ class MR_DllDeclare Core
 {
 	public:
 		Core();
-		~Core();
+		virtual ~Core();
 
 	public:
 		lua_State *GetState() const { return state; }
-		void Reset();
+		virtual Core *Reset();
 		void ActivateSandbox();
 
 	private:
