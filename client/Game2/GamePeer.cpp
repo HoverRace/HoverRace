@@ -160,7 +160,7 @@ void GamePeer::LStartPractice(const std::string &track)
 {
 	// function start_practice(track)
 	// Start a new single-player practice session with default rules.
-	//   track - The track name to load, including the ".trk" suffix (e.g. "ClassicH.trk").
+	//   track - The track name to load (e.g. "ClassicH").
 	using namespace luabind;
 	lua_State *L = scripting->GetState();
 	lua_pushnil(L);
