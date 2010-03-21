@@ -27,8 +27,6 @@
 #include "../../engine/VideoServices/Sprite.h"
 #include "../../engine/Util/OS.h"
 
-#define MR_CHAT_MESSAGE_STACK   8
-
 class MR_MainCharacter;
 
 namespace HoverRace {
@@ -45,7 +43,8 @@ class ClientSession
 		};
 
 		CRITICAL_SECTION mChatMutex;
-		ChatMessage mMessageStack[MR_CHAT_MESSAGE_STACK];
+		static const int CHAT_MESSAGE_STACK = 8;
+		ChatMessage mMessageStack[CHAT_MESSAGE_STACK];
 
 		MR_GameSession mSession;
 		MR_MainCharacter *mMainCharacter1;

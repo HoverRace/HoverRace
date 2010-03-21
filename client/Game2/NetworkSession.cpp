@@ -1499,7 +1499,7 @@ void MR_NetworkSession::GetCurrentMessage(char *pDest) const
  */
 void MR_NetworkSession::AddChatMessage(int pPlayerIndex, const char *pMessage, int pMessageLen)
 {
-	for(int lCounter = MR_CHAT_MESSAGE_STACK - 1; lCounter > 0; lCounter--) {
+	for(int lCounter = CHAT_MESSAGE_STACK - 1; lCounter > 0; lCounter--) {
 		mMessageStack[lCounter] = mMessageStack[lCounter - 1];
 	}
 

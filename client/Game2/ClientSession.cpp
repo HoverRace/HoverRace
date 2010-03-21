@@ -491,7 +491,7 @@ BOOL ClientSession::GetMessageStack(int pLevel, char *pDest, int pExpiration) co
 {
 	BOOL lReturnValue = FALSE;
 
-	if(pLevel < MR_CHAT_MESSAGE_STACK) {
+	if(pLevel < CHAT_MESSAGE_STACK) {
 		EnterCriticalSection(&((ClientSession *) this)->mChatMutex);
 
 		if(((mMessageStack[pLevel].mCreationTime + pExpiration) > time(NULL)) && (mMessageStack[pLevel].mBuffer.GetLength() > 0)) {
@@ -508,7 +508,7 @@ void ClientSession::AddMessage(const char *pMessage)
 {
 	EnterCriticalSection(&mChatMutex);
 
-	for(int lCounter = MR_CHAT_MESSAGE_STACK - 1; lCounter > 0; lCounter--) {
+	for(int lCounter = CHAT_MESSAGE_STACK - 1; lCounter > 0; lCounter--) {
 		mMessageStack[lCounter] = mMessageStack[lCounter - 1];
 	}
 
