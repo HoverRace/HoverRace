@@ -54,6 +54,10 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/thread/thread.hpp>
 
+#include <lua.hpp>
+#include <luabind/luabind.hpp>
+#include <luabind/object.hpp>
+
 #define PACKAGE_NAME_WIDEN(x) L ## x
 #define PACKAGE_NAME_APPLY(x) PACKAGE_NAME_WIDEN(x)
 #define PACKAGE_NAME_L PACKAGE_NAME_APPLY(PACKAGE_NAME)
