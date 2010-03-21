@@ -41,7 +41,6 @@ game:on_init(function()
 	print("In third on_init handler")
 end)
 
---[[ Some ideas for expanding the API...
 function second_session(session)
 	-- Remove the "session_start" on_session_start handler.
 	game:on_session_start("session_start", nil)
@@ -53,8 +52,10 @@ function first_session(session)
 	-- so the next session will fire second_session instead
 	-- of this one.
 	game:on_session_start("session_start", second_session)
-	print("Starting up the first session")
+	print("Starting up the first session.  Num players:",
+		session:get_num_players())
 	
+	--[[ Some ideas for expanding the API...
 	local player = session:get_local_player()
 	-- local player = session:get_player(1)
 	local track = session:get_track()
@@ -65,7 +66,7 @@ function first_session(session)
 		-- Start the next session
 		game:start_practice("ClasicH.trk")
 	end)
+	--]]
 end
 
 game:on_session_start("session_start", first_session)
---]]
