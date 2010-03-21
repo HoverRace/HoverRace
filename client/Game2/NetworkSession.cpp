@@ -22,10 +22,14 @@
 #include "stdafx.h"
 
 #include <Mmsystem.h>
-#include "NetworkSession.h"
+
+#include "../../engine/MainCharacter/MainCharacter.h"
+#include "../../engine/Util/StrRes.h"
+
 #include "InternetRoom.h"
 #include "resource.h"
-#include "../../engine/Util/StrRes.h"
+
+#include "NetworkSession.h"
 
 // Messages
 #define MRNM_SET_TIME                 1
@@ -58,7 +62,7 @@ class MR_PlayerStats
  */
 MR_NetworkSession::MR_NetworkSession(BOOL pInternetGame, int pMajorID,
                                      int pMinorID, HWND pWindow) :
-	MR_ClientSession()
+	SUPER()
 {
 	mMasterMode = FALSE;
 	mInternetGame = pInternetGame;
@@ -359,7 +363,7 @@ int MR_NetworkSession::GetRank(const MR_MainCharacter * /*pPlayer */ ) const {
 void MR_NetworkSession::Process(int pSpeedFactor)
 {
 	ReadNet();
-	MR_ClientSession::Process(pSpeedFactor);
+	SUPER::Process(pSpeedFactor);
 	WriteNet();
 	ReadNet();
 }
@@ -370,7 +374,7 @@ void MR_NetworkSession::Process(int pSpeedFactor)
  */
 BOOL MR_NetworkSession::LoadNew(const char *pTitle, MR_RecordFile *pMazeFile, int pNbLap, char pGameOpts, MR_VideoBuffer *pVideo)
 {
-	BOOL lReturnValue = MR_ClientSession::LoadNew(pTitle, pMazeFile, pNbLap, pGameOpts, pVideo);
+	BOOL lReturnValue = SUPER::LoadNew(pTitle, pMazeFile, pNbLap, pGameOpts, pVideo);
 
 	if(lReturnValue) {
 		mSession.GetCurrentLevel()->SetBroadcastHook(ElementCreationHook, PermElementStateHook, this);
@@ -788,7 +792,7 @@ void MR_NetworkSession::SetSimulationTime(MR_SimulationTime pTime)
 	if(mTimeToSendCharacterCreation != 0) {
 		mTimeToSendCharacterCreation = min(pTime + 2000, mTimeToSendCharacterCreation);
 	}
-	MR_ClientSession::SetSimulationTime(pTime);
+	SUPER::SetSimulationTime(pTime);
 }
 
 /**

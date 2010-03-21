@@ -22,7 +22,9 @@
 #include "StdAfx.h"
 
 #include "../../engine/VideoServices/VideoBuffer.h"
+#include "ClientSession.h"
 #include "Observer.h"
+#include "../../engine/Model/Level.h"
 #include "../../engine/Model/MazeElement.h"
 #include "../../engine/Util/Profiler.h"
 #include "../../engine/Util/Config.h"
@@ -32,6 +34,7 @@
 
 #include <math.h>
 
+using namespace HoverRace::Client;
 using HoverRace::Util::Config;
 using HoverRace::VideoServices::StaticText;
 
@@ -407,7 +410,7 @@ void MR_Observer::DrawWFSection(const MR_Level * pLevel, const MR_SectionId & pS
 
 }
 
-void MR_Observer::Render3DView(const MR_ClientSession * pSession, const MR_MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage)
+void MR_Observer::Render3DView(const ClientSession *pSession, const MR_MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage)
 {
 
 	const MR_Level *lLevel = pSession->GetCurrentLevel();
@@ -979,7 +982,7 @@ void MR_Observer::RenderFloorOrCeiling(const MR_Level * pLevel, const MR_Section
 	delete lShape;
 }
 
-void MR_Observer::RenderDebugDisplay(MR_VideoBuffer * pDest, const MR_ClientSession * pSession, const MR_MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage)
+void MR_Observer::RenderDebugDisplay(MR_VideoBuffer * pDest, const ClientSession *pSession, const MR_MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage)
 {
 	int lXRes = pDest->GetXRes();
 	int lYRes = pDest->GetYRes();
@@ -1011,7 +1014,7 @@ void MR_Observer::RenderDebugDisplay(MR_VideoBuffer * pDest, const MR_ClientSess
 
 }
 
-void MR_Observer::RenderNormalDisplay(MR_VideoBuffer * pDest, const MR_ClientSession * pSession, const MR_MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage)
+void MR_Observer::RenderNormalDisplay(MR_VideoBuffer * pDest, const ClientSession *pSession, const MR_MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage)
 {
 	MR_SAMPLE_CONTEXT("RenderNormalDisplay");
 

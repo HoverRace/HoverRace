@@ -91,7 +91,7 @@ class MR_GameApp
 		HoverRace::Script::Core *scripting;
 		HoverRace::Client::GamePeer *gamePeer;
 		HoverRace::Client::SysEnv *sysEnv;
-		MR_ClientSession *mCurrentSession;
+		HoverRace::Client::ClientSession *mCurrentSession;
 		HoverRace::Client::SessionPeerPtr sessionPeer;
 		MR_GameThread *mGameThread;
 

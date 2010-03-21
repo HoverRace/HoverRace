@@ -1577,7 +1577,7 @@ void MR_GameApp::NewLocalSession(RulebookPtr rules)
 		highObserver = new HighObserver();
 
 		// Create the new session
-		MR_ClientSession *lCurrentSession = new MR_ClientSession();
+		ClientSession *lCurrentSession = new ClientSession();
 		sessionPeer = boost::make_shared<SessionPeer>(scripting, lCurrentSession);
 
 		if (Config::GetInstance()->runtime.enableConsole) {
@@ -1666,7 +1666,7 @@ void MR_GameApp::NewSplitSession(int pSplitPlayers)
 
 		highObserver = new HighObserver();
 
-		MR_ClientSession *lCurrentSession = new MR_ClientSession;
+		ClientSession *lCurrentSession = new ClientSession;
 
 		// Load the selected maze
 		if(lSuccess) {

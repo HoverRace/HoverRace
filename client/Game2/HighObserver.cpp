@@ -37,6 +37,7 @@
 #include "HighObserver.h"
 
 using namespace HoverRace;
+using HoverRace::Client::ClientSession;
 using HoverRace::Util::Config;
 using HoverRace::Util::OS;
 using namespace HoverRace::VideoServices;
@@ -71,7 +72,7 @@ HighObserver::~HighObserver()
  * Render the stats layer.
  * @param session The current client session.
  */
-void HighObserver::RenderStats(const MR_ClientSession *session) const
+void HighObserver::RenderStats(const ClientSession *session) const
 {
 	Config *cfg = Config::GetInstance();
 
@@ -84,7 +85,7 @@ void HighObserver::RenderStats(const MR_ClientSession *session) const
  * @param dest The target video buffer.
  * @param session The current client session.
  */
-void HighObserver::Render(MR_VideoBuffer *dest, const MR_ClientSession *session)
+void HighObserver::Render(MR_VideoBuffer *dest, const ClientSession *session)
 {
 	viewport->Setup(dest, 0, 0, dest->GetXRes(), dest->GetYRes());
 

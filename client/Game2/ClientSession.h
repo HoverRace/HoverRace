@@ -21,17 +21,20 @@
 // and limitations under the License.
 //
 
-#ifndef CLIENT_SESSION_H
-#define CLIENT_SESSION_H
+#pragma once
 
 #include "../../engine/Model/GameSession.h"
-#include "../../engine/MainCharacter/MainCharacter.h"
 #include "../../engine/VideoServices/Sprite.h"
 #include "../../engine/Util/OS.h"
 
 #define MR_CHAT_MESSAGE_STACK   8
 
-class MR_ClientSession
+class MR_MainCharacter;
+
+namespace HoverRace {
+namespace Client {
+
+class ClientSession
 {
 	protected:
 		class ChatMessage
@@ -71,8 +74,8 @@ class MR_ClientSession
 		void ReadLevelAttrib(MR_RecordFile *pFile, MR_VideoBuffer *pVideo);
 	public:
 		// Creation and destruction
-		MR_ClientSession();
-		virtual ~ MR_ClientSession();
+		ClientSession();
+		virtual ~ClientSession();
 
 		// Simulation control
 												  // Simulation, speed factor can be used to reduce processing speed to create AVI files
@@ -122,4 +125,6 @@ class MR_ClientSession
 		void IncFrameCount();
 		double GetCurrentFramerate() const;
 };
-#endif
+
+}  // namespace Client
+}  // namespace HoverRace

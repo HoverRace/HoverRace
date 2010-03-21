@@ -19,15 +19,20 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
-#include "ClientSession.h"
+#include "../../engine/MainCharacter/MainCharacter.h"
 #include "../../engine/VideoServices/VideoBuffer.h"
 #include "../../compilers/MazeCompiler/TrackCommonStuff.h"
 
+#include "ClientSession.h"
+
 using HoverRace::Util::OS;
 
-MR_ClientSession::MR_ClientSession() :
+namespace HoverRace {
+namespace Client {
+
+ClientSession::ClientSession() :
 	mSession(TRUE),
 	frameCount(0), lastTimestamp(0), fps(0.0)
 {
@@ -43,7 +48,7 @@ MR_ClientSession::MR_ClientSession() :
 	InitializeCriticalSection(&mChatMutex);
 }
 
-MR_ClientSession::~MR_ClientSession()
+ClientSession::~ClientSession()
 {
 	delete[]mBackImage;
 	delete mMap;
@@ -51,12 +56,12 @@ MR_ClientSession::~MR_ClientSession()
 	DeleteCriticalSection(&mChatMutex);
 }
 
-void MR_ClientSession::Process(int pSpeedFactor)
+void ClientSession::Process(int pSpeedFactor)
 {
 	mSession.Simulate();
 }
 
-void MR_ClientSession::ReadLevelAttrib(MR_RecordFile * pRecordFile, MR_VideoBuffer * pVideo)
+void ClientSession::ReadLevelAttrib(MR_RecordFile * pRecordFile, MR_VideoBuffer * pVideo)
 {
 	// Read level background palette
 	if((pVideo != NULL) && (pRecordFile->GetNbRecords() >= 3)) {
@@ -115,7 +120,7 @@ void MR_ClientSession::ReadLevelAttrib(MR_RecordFile * pRecordFile, MR_VideoBuff
 	}
 }
 
-BOOL MR_ClientSession::LoadNew(const char *pTitle, MR_RecordFile *pMazeFile, int pNbLap, char pGameOpts, MR_VideoBuffer * pVideo)
+BOOL ClientSession::LoadNew(const char *pTitle, MR_RecordFile *pMazeFile, int pNbLap, char pGameOpts, MR_VideoBuffer * pVideo)
 {
 	BOOL lReturnValue;
 	mNbLap = pNbLap;
@@ -129,14 +134,14 @@ BOOL MR_ClientSession::LoadNew(const char *pTitle, MR_RecordFile *pMazeFile, int
 	return lReturnValue;
 }
 
-const MR_UInt8 *MR_ClientSession::GetBackImage() const
+const MR_UInt8 *ClientSession::GetBackImage() const
 {
 	return mBackImage;
 }
 
 // Main character controll and interogation
 
-BOOL MR_ClientSession::CreateMainCharacter()
+BOOL ClientSession::CreateMainCharacter()
 {
 
 	// Add a main character in
@@ -178,7 +183,7 @@ BOOL MR_ClientSession::CreateMainCharacter()
 	return TRUE;
 }
 
-BOOL MR_ClientSession::CreateMainCharacter2()
+BOOL ClientSession::CreateMainCharacter2()
 {
 
 	// Add a main character in
@@ -201,7 +206,7 @@ BOOL MR_ClientSession::CreateMainCharacter2()
 	return TRUE;
 }
 
-BOOL MR_ClientSession::CreateMainCharacter3()
+BOOL ClientSession::CreateMainCharacter3()
 {
 
 	// Add a main character in
@@ -224,7 +229,7 @@ BOOL MR_ClientSession::CreateMainCharacter3()
 	return TRUE;
 }
 
-BOOL MR_ClientSession::CreateMainCharacter4()
+BOOL ClientSession::CreateMainCharacter4()
 {
 
 	// Add a main character in
@@ -247,37 +252,37 @@ BOOL MR_ClientSession::CreateMainCharacter4()
 	return TRUE;
 }
 
-MR_MainCharacter *MR_ClientSession::GetMainCharacter() const
+MR_MainCharacter *ClientSession::GetMainCharacter() const
 {
 	return mMainCharacter1;
 }
 
-MR_MainCharacter *MR_ClientSession::GetMainCharacter2() const
+MR_MainCharacter *ClientSession::GetMainCharacter2() const
 {
 	return mMainCharacter2;
 }
 
-MR_MainCharacter *MR_ClientSession::GetMainCharacter3() const
+MR_MainCharacter *ClientSession::GetMainCharacter3() const
 {
 	return mMainCharacter3;
 }
 
-MR_MainCharacter *MR_ClientSession::GetMainCharacter4() const
+MR_MainCharacter *ClientSession::GetMainCharacter4() const
 {
 	return mMainCharacter4;
 }
 
-void MR_ClientSession::SetSimulationTime(MR_SimulationTime pTime)
+void ClientSession::SetSimulationTime(MR_SimulationTime pTime)
 {
 	mSession.SetSimulationTime(pTime);
 }
 
-MR_SimulationTime MR_ClientSession::GetSimulationTime() const
+MR_SimulationTime ClientSession::GetSimulationTime() const
 {
 	return mSession.GetSimulationTime();
 }
 
-void MR_ClientSession::SetControlState(int pState1, int pState2, int pState3, int pState4)
+void ClientSession::SetControlState(int pState1, int pState2, int pState3, int pState4)
 {
 	if(mMainCharacter1 != NULL) {
 		mMainCharacter1->SetControlState(pState1, mSession.GetSimulationTime());
@@ -296,31 +301,31 @@ void MR_ClientSession::SetControlState(int pState1, int pState2, int pState3, in
 	}
 }
 
-const MR_Level *MR_ClientSession::GetCurrentLevel() const
+const MR_Level *ClientSession::GetCurrentLevel() const
 {
 	MR_GameSession *lSession = (MR_GameSession *) & mSession;
 
 	return lSession->GetCurrentLevel();
 }
 
-int MR_ClientSession::ResultAvaillable() const
+int ClientSession::ResultAvaillable() const
 {
 	return 0;
 }
 
-void MR_ClientSession::GetResult(int, const char *&pPlayerName, int &, BOOL &, int &, MR_SimulationTime &, MR_SimulationTime &) const
+void ClientSession::GetResult(int, const char *&pPlayerName, int &, BOOL &, int &, MR_SimulationTime &, MR_SimulationTime &) const
 {
 	pPlayerName = "?";
 	ASSERT(FALSE);
 }
 
-void MR_ClientSession::GetHitResult(int pPosition, const char *&pPlayerName, int &pId, BOOL & pConnected, int &pNbHitOther, int &pNbHitHimself) const
+void ClientSession::GetHitResult(int pPosition, const char *&pPlayerName, int &pId, BOOL & pConnected, int &pNbHitOther, int &pNbHitHimself) const
 {
 	pPlayerName = "?";
 	ASSERT(FALSE);
 }
 
-int MR_ClientSession::GetNbPlayers() const
+int ClientSession::GetNbPlayers() const
 {
 	BOOL lReturnValue = 0;
 
@@ -339,7 +344,7 @@ int MR_ClientSession::GetNbPlayers() const
 	return lReturnValue;
 }
 
-int MR_ClientSession::GetRank(const MR_MainCharacter * pPlayer) const
+int ClientSession::GetRank(const MR_MainCharacter * pPlayer) const
 {
 	int lReturnValue = 1;
 
@@ -422,7 +427,7 @@ int MR_ClientSession::GetRank(const MR_MainCharacter * pPlayer) const
 	return lReturnValue;
 }
 
-void MR_ClientSession::SetMap(MR_Sprite * pMap, int pX0, int pY0, int pX1, int pY1)
+void ClientSession::SetMap(MR_Sprite * pMap, int pX0, int pY0, int pX1, int pY1)
 {
 	delete mMap;
 
@@ -438,18 +443,18 @@ void MR_ClientSession::SetMap(MR_Sprite * pMap, int pX0, int pY0, int pX1, int p
 
 }
 
-const MR_Sprite *MR_ClientSession::GetMap() const
+const MR_Sprite *ClientSession::GetMap() const
 {
 	return mMap;
 }
 
-void MR_ClientSession::ConvertMapCoordinate(int &pX, int &pY, int pRatio) const
+void ClientSession::ConvertMapCoordinate(int &pX, int &pY, int pRatio) const
 {
 	pX = (pX - mX0Map) * mWidthSprite / (mWidthMap * pRatio);
 	pY = (mHeightSprite - 1 - (pY - mY0Map) * mHeightSprite / mHeightMap) / pRatio;
 }
 
-const MR_MainCharacter *MR_ClientSession::GetPlayer(int pPlayerIndex) const
+const MR_MainCharacter *ClientSession::GetPlayer(int pPlayerIndex) const
 {
 	const MR_MainCharacter *lReturnValue = NULL;
 
@@ -472,34 +477,34 @@ const MR_MainCharacter *MR_ClientSession::GetPlayer(int pPlayerIndex) const
 	return lReturnValue;
 }
 
-void MR_ClientSession::AddMessageKey(char /*pKey */ )
+void ClientSession::AddMessageKey(char /*pKey */ )
 {
 
 }
 
-void MR_ClientSession::GetCurrentMessage(char *pDest) const
+void ClientSession::GetCurrentMessage(char *pDest) const
 {
 	pDest[0] = 0;
 }
 
-BOOL MR_ClientSession::GetMessageStack(int pLevel, char *pDest, int pExpiration) const
+BOOL ClientSession::GetMessageStack(int pLevel, char *pDest, int pExpiration) const
 {
 	BOOL lReturnValue = FALSE;
 
 	if(pLevel < MR_CHAT_MESSAGE_STACK) {
-		EnterCriticalSection(&((MR_ClientSession *) this)->mChatMutex);
+		EnterCriticalSection(&((ClientSession *) this)->mChatMutex);
 
 		if(((mMessageStack[pLevel].mCreationTime + pExpiration) > time(NULL)) && (mMessageStack[pLevel].mBuffer.GetLength() > 0)) {
 			lReturnValue = TRUE;
 			strcpy(pDest, mMessageStack[pLevel].mBuffer);
 		}
-		LeaveCriticalSection(&((MR_ClientSession *) this)->mChatMutex);
+		LeaveCriticalSection(&((ClientSession *) this)->mChatMutex);
 	}
 
 	return lReturnValue;
 }
 
-void MR_ClientSession::AddMessage(const char *pMessage)
+void ClientSession::AddMessage(const char *pMessage)
 {
 	EnterCriticalSection(&mChatMutex);
 
@@ -519,7 +524,7 @@ void MR_ClientSession::AddMessage(const char *pMessage)
  * Increment the frame counter for stats purposes.
  * This should be called once after rendering each frame.
  */
-void MR_ClientSession::IncFrameCount()
+void ClientSession::IncFrameCount()
 {
 	// Don't start counting until the first frame.
 	if (lastTimestamp == 0) lastTimestamp = OS::Time();
@@ -545,7 +550,10 @@ void MR_ClientSession::IncFrameCount()
  * @return The framerate in frames per second (may be zero if a second
  *         hasn't passed yet).
  */
-double MR_ClientSession::GetCurrentFramerate() const
+double ClientSession::GetCurrentFramerate() const
 {
 	return fps;
 }
+
+}  // namespace Client
+}  // namespace HoverRace

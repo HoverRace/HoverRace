@@ -32,7 +32,7 @@
 namespace HoverRace {
 namespace Client {
 
-SessionPeer::SessionPeer(Script::Core *scripting, MR_ClientSession *session) :
+SessionPeer::SessionPeer(Script::Core *scripting, ClientSession *session) :
 	scripting(scripting), session(session)
 {
 }

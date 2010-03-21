@@ -33,8 +33,9 @@
  * game session.  The MR_NetworkSession class itself manages the network
  * interface, connected clients, scores, and general game data.
  */
-class MR_NetworkSession : public MR_ClientSession
+class MR_NetworkSession : public HoverRace::Client::ClientSession
 {
+	typedef HoverRace::Client::ClientSession SUPER;
 	protected:
 		class PlayerResult
 		{

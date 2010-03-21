@@ -26,11 +26,13 @@
 #include <luabind/object.hpp>
 
 namespace HoverRace {
+	namespace Client {
+		class ClientSession;
+	}
 	namespace Script {
 		class Core;
 	}
 }
-class MR_ClientSession;
 
 namespace HoverRace {
 namespace Client {
@@ -41,7 +43,7 @@ namespace Client {
  */
 class SessionPeer {
 	public:
-		SessionPeer(Script::Core *scripting, MR_ClientSession *session);
+		SessionPeer(Script::Core *scripting, ClientSession *session);
 		virtual ~SessionPeer();
 
 	public:
@@ -57,7 +59,7 @@ class SessionPeer {
 		int LGetNumPlayers() const;
 
 	private:
-		MR_ClientSession *session;
+		ClientSession *session;
 		Script::Core *scripting;
 };
 typedef boost::shared_ptr<SessionPeer> SessionPeerPtr;

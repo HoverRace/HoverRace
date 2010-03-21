@@ -24,11 +24,18 @@
 #define OBSERVER_H
 
 #include "../../engine/VideoServices/3DViewPort.h"
-#include "ClientSession.h"
 #include "../../engine/MainCharacter/MainCharacter.h"
 #include "../../engine/ObjFacTools/SpriteHandle.h"
 
-namespace HoverRace { namespace VideoServices { class StaticText; } }
+namespace HoverRace {
+	namespace Client {
+		class ClientSession;
+	}
+	namespace VideoServices {
+		class StaticText;
+	}
+}
+class MR_SectionId;
 
 class MR_Observer
 {
@@ -78,7 +85,7 @@ class MR_Observer
 
 		void Render2DDebugView(MR_VideoBuffer * pDest, const MR_Level * pLevel, const MR_MainCharacter * pViewingCharacter);
 		void RenderWireFrameView(const MR_Level * pLevel, const MR_MainCharacter * pViewingCharacter);
-		void Render3DView(const MR_ClientSession * pSession, const MR_MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage);
+		void Render3DView(const HoverRace::Client::ClientSession * pSession, const MR_MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage);
 
 		void DrawWFSection(const MR_Level * pLevel, const MR_SectionId & pSectionId, MR_UInt8 pColor);
 		void RenderRoomWalls(const MR_Level * pLevel, int pRoomId, MR_SimulationTime pTime);
@@ -108,12 +115,11 @@ class MR_Observer
 		void SetSplitMode(eSplitMode pMode);
 
 		// Rendering function
-		void RenderDebugDisplay(MR_VideoBuffer * pDest, const MR_ClientSession * pSession, const MR_MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage);
-		void RenderNormalDisplay(MR_VideoBuffer * pDest, const MR_ClientSession * pSession, const MR_MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage);
+		void RenderDebugDisplay(MR_VideoBuffer * pDest, const HoverRace::Client::ClientSession *pSession, const MR_MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage);
+		void RenderNormalDisplay(MR_VideoBuffer * pDest, const HoverRace::Client::ClientSession *pSession, const MR_MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage);
 
 		void PlaySounds(const MR_Level * pLevel, MR_MainCharacter * pViewingCharacter);
 
 };
 
-#undef MR_DllDeclare
 #endif

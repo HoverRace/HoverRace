@@ -25,6 +25,9 @@
 #include "../../engine/Util/OS.h"
 
 namespace HoverRace {
+	namespace Client {
+		class ClientSession;
+	}
 	namespace VideoServices {
 		struct Font;
 		class MultipartText;
@@ -34,7 +37,6 @@ namespace HoverRace {
 }
 
 class MR_2DViewPort;
-class MR_ClientSession;
 class MR_VideoBuffer;
 
 /**
@@ -54,9 +56,9 @@ class HighObserver
 		~HighObserver();
 
 	private:
-		void RenderStats(const MR_ClientSession *session) const;
+		void RenderStats(const HoverRace::Client::ClientSession *session) const;
 	public:
-		void Render(MR_VideoBuffer *dest, const MR_ClientSession *session);
+		void Render(MR_VideoBuffer *dest, const HoverRace::Client::ClientSession *session);
 
 	private:
 		MR_2DViewPort *viewport;
