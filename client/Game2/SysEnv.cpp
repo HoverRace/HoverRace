@@ -95,20 +95,6 @@ void SysEnv::InitEnv()
 
 	object env(from_stack(L, -1));
 	env["game"] = gamePeer;
-
-	/*
-	lua_pushlightuserdata(state, this);  // table this
-	lua_pushcclosure(state, SysEnv::LOnInit, 1);  // table fn
-	lua_pushstring(state, "on_init");  // table fn str
-	lua_insert(state, -2);  // table str fn
-	lua_rawset(state, -3);  // table
-
-	lua_pushlightuserdata(state, this);  // table this
-	lua_pushcclosure(state, SysEnv::LGetOnInit, 1);  // table fn
-	lua_pushstring(state, "get_on_init");  // table fn str
-	lua_insert(state, -2);  // table str fn
-	lua_rawset(state, -3);  // table
-	*/
 }
 
 void SysEnv::LogInfo(const std::string &s)
