@@ -218,18 +218,19 @@ void Core::Compile(const std::string &chunk, const std::string &name)
 
 /**
  * Pop a function off the stack and execute it, printing any return values.
+ * @param numParams The number of params being passed to the function.
  * @throw ScriptExn The code signaled an error while executing.
  */
-void Core::CallAndPrint()
+void Core::CallAndPrint(int numParams)
 {
 	int initStack = lua_gettop(state);
 	if (initStack == 0) {
 		throw ScriptExn("No function on stack.");
 	}
-	--initStack;
+	initStack -= (1 + numParams);
 
 	// Execute the chunk.
-	int status = lua_pcall(state, 0, LUA_MULTRET, 0);
+	int status = lua_pcall(state, numParams, LUA_MULTRET, 0);
 	if (status != 0) {
 		throw ScriptExn(PopError());
 	}

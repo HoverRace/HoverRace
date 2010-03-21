@@ -78,7 +78,7 @@ class MR_DllDeclare Core
 
 		static const std::string DEFAULT_CHUNK_NAME;
 		void Compile(const std::string &chunk, const std::string &name=DEFAULT_CHUNK_NAME);
-		void CallAndPrint();
+		void CallAndPrint(int numParams=0);
 
 		void Execute(const std::string &chunk);
 
