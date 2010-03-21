@@ -23,7 +23,9 @@
 #include "StdAfx.h"
 
 #include "../../engine/Script/Core.h"
-#include "ClientSession.h"
+#ifdef _WIN32
+#	include "ClientSession.h"
+#endif
 
 #include "SessionPeer.h"
 
@@ -51,7 +53,9 @@ void SessionPeer::Register(Script::Core *scripting)
 
 	module(L) [
 		class_<SessionPeer>("Session")
+#			ifdef _WIN32
 			.def("get_num_players", &SessionPeer::LGetNumPlayers)
+#			endif
 	];
 }
 
@@ -79,7 +83,11 @@ void SessionPeer::VerifySession() const
 int SessionPeer::LGetNumPlayers() const
 {
 	VerifySession();
-	return session->GetNbPlayers();
+#	ifdef _WIN32
+		return session->GetNbPlayers();
+#	else
+		return 1;
+#	endif
 }
 
 }  // namespace Client

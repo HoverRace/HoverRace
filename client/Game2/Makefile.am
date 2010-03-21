@@ -24,6 +24,8 @@ hoverrace_SOURCES = \
 	RoomList.cpp \
 	RoomList.h \
 	Rulebook.h \
+	SessionPeer.cpp \
+	SessionPeer.h \
 	SysConsole.cpp \
 	SysConsole.h \
 	main.cpp \
