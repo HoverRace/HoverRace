@@ -60,18 +60,28 @@ void Handlers::CallHandlers() const
 
 	lua_rawgeti(L, LUA_REGISTRYINDEX, ref);  // table
 
+	int functionsToCall = 0;
+
+	// First, gather the list of handler functions to call.
+	// We do this so that the handlers can add/remove handlers.
 	lua_pushnil(L);  // table nil
 	while (lua_next(L, -2) != 0) {
-		// table key fn
+		// (fns...) table key fn
+		lua_insert(L, -3);  // (fns...fn) table key
+		++functionsToCall;
+	}
+	// (fns...) table
+	lua_pop(L, 1);  // (fns...)
+
+	// Call the handlers, one by one.
+	for (int i = 0; i < functionsToCall; ++i) {
 		try {
-			scripting->CallAndPrint();  // table key
+			scripting->CallAndPrint();
 		}
 		catch (Script::ScriptExn &ex) {
 			scripting->Print(ex.what());
 		}
 	}
-	// table
-	lua_pop(L, 1);
 }
 
 /**
