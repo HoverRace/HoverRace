@@ -7,5 +7,7 @@ libscript_la_SOURCES = \
 	Core.h \
 	Env.cpp \
 	Env.h \
+	Handlers.cpp \
+	Handlers.h \
 	ScriptExn.h
 
