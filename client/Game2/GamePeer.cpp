@@ -43,19 +43,12 @@ namespace HoverRace {
 namespace Client {
 
 GamePeer::GamePeer(Script::Core *scripting, MR_GameApp *gameApp) :
-	scripting(scripting), gameApp(gameApp), initialized(false)
+	scripting(scripting), gameApp(gameApp), initialized(false), onInit(scripting)
 {
-	lua_State *L = scripting->GetState();
-
-	// Initial table for on_init callbacks.
-	lua_newtable(L);
-	onInitRef = luaL_ref(L, LUA_REGISTRYINDEX);
 }
 
 GamePeer::~GamePeer()
 {
-	lua_State *L = scripting->GetState();
-	luaL_unref(L, LUA_REGISTRYINDEX, onInitRef);
 }
 
 /**
@@ -72,7 +65,6 @@ void GamePeer::Register(Script::Core *scripting)
 		class_<GamePeer>("Game")
 			.def("is_initialized", &GamePeer::LIsInitialized)
 			.def("get_config", &GamePeer::LGetConfig, adopt(result))
-			.def("get_on_init", &GamePeer::LGetOnInit)
 			.def("on_init", &GamePeer::LOnInit)
 			.def("start_practice", (void(GamePeer::*)(const std::string&))&GamePeer::LStartPractice)
 			.def("start_practice", (void(GamePeer::*)(const std::string&, const luabind::object&))&GamePeer::LStartPractice)
@@ -85,22 +77,8 @@ void GamePeer::Register(Script::Core *scripting)
 void GamePeer::OnInit()
 {
 	initialized = true;
-	lua_State *L = scripting->GetState();
 
-	lua_rawgeti(L, LUA_REGISTRYINDEX, onInitRef);  // table
-
-	lua_pushnil(L);  // table nil
-	while (lua_next(L, -2) != 0) {
-		// table key fn
-		try {
-			scripting->CallAndPrint();  // table key
-		}
-		catch (Script::ScriptExn &ex) {
-			scripting->Print(ex.what());
-		}
-	}
-	// table
-	lua_pop(L, 1);
+	onInit.CallHandlers();
 
 	// Process any deferred operations.
 	if (deferredStart != NULL) {
@@ -125,35 +103,7 @@ ConfigPeer *GamePeer::LGetConfig()
 
 void GamePeer::LOnInit(const luabind::object &fn)
 {
-	// function on_init(f)
-	// Register a callback function for when the game starts up.
-	using namespace luabind;
-
-	lua_State *L = scripting->GetState();
-
-	//TODO: Support named callbacks.
-	if (type(fn) != LUA_TFUNCTION) {
-		luaL_error(L, "Expected function as first parameter.");
-		return;
-	}
-
-	fn.push(L);  // fn
-
-	lua_rawgeti(L, LUA_REGISTRYINDEX, onInitRef);  // fn table
-
-	lua_pushinteger(L, lua_objlen(L, -1) + 1); // fn table key
-	lua_pushvalue(L, -3); // fn table key fn
-	lua_settable(L, -3); // fn table
-
-	lua_pop(L, 2);
-}
-
-void GamePeer::LGetOnInit()
-{
-	// function get_on_init()
-	// Returns the table of on_init callbacks (for debugging purposes).
-
-	lua_rawgeti(scripting->GetState(), LUA_REGISTRYINDEX, onInitRef);  // table
+	onInit.AddHandler(fn);
 }
 
 void GamePeer::LStartPractice(const std::string &track)

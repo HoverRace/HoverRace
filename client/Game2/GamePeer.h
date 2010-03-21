@@ -25,6 +25,8 @@
 #include <luabind/luabind.hpp>
 #include <luabind/object.hpp>
 
+#include "../../engine/Script/Handlers.h"
+
 class MR_GameApp;
 namespace HoverRace {
 	namespace Client {
@@ -45,8 +47,6 @@ namespace Client {
  * @author Michael Imamura
  */
 class GamePeer {
-	private:
-		GamePeer() { }
 	public:
 		GamePeer(Script::Core *scripting, MR_GameApp *gameApp);
 		virtual ~GamePeer();
@@ -71,7 +71,7 @@ class GamePeer {
 		Script::Core *scripting;
 		MR_GameApp *gameApp;
 		bool initialized;
-		int onInitRef;
+		Script::Handlers onInit;
 		RulebookPtr deferredStart;
 };
 

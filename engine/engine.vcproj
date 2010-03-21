@@ -64,7 +64,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="winmm.lib yamlD.lib ddraw.lib dxguid.lib dsound.lib lua5.1D.lib libcurld.lib"
+				AdditionalDependencies="winmm.lib yamlD.lib ddraw.lib dxguid.lib dsound.lib lua5.1D.lib luabindD.lib libcurld.lib"
 				OutputFile="$(OutDir)\$(ProjectName).dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../lib"
@@ -151,7 +151,7 @@
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="false"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="winmm.lib yaml.lib ddraw.lib dxguid.lib dsound.lib lua5.1.lib libcurl.lib"
+				AdditionalDependencies="winmm.lib yaml.lib ddraw.lib dxguid.lib dsound.lib lua5.1.lib luabind.lib libcurl.lib"
 				OutputFile=".\..\Release\engine.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -820,6 +820,14 @@
 			</File>
 			<File
 				RelativePath=".\Script\Env.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Script\Handlers.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Script\Handlers.h"
 				>
 			</File>
 			<File
