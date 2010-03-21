@@ -84,10 +84,6 @@ void Console::InitEnv()
 
 	/*
 	lua_pushlightuserdata(state, this);
-	lua_pushcclosure(state, Console::LClear, 1);
-	lua_setglobal(state, "clear");
-
-	lua_pushlightuserdata(state, this);
 	lua_pushcclosure(state, Console::LReset, 1);
 	lua_setglobal(state, "reset");
 

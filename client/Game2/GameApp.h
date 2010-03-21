@@ -36,6 +36,8 @@ namespace HoverRace {
 		class IntroMovie;
 		class Rulebook;
 		typedef boost::shared_ptr<Rulebook> RulebookPtr;
+		class SessionPeer;
+		typedef boost::shared_ptr<SessionPeer> SessionPeerPtr;
 		class SysEnv;
 	}
 	namespace Script {
@@ -90,6 +92,7 @@ class MR_GameApp
 		HoverRace::Client::GamePeer *gamePeer;
 		HoverRace::Client::SysEnv *sysEnv;
 		MR_ClientSession *mCurrentSession;
+		HoverRace::Client::SessionPeerPtr sessionPeer;
 		MR_GameThread *mGameThread;
 
 		eViewMode mCurrentMode;

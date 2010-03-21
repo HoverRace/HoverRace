@@ -28,6 +28,11 @@
 
 class MR_VideoBuffer;
 namespace HoverRace {
+	namespace Client {
+		class GamePeer;
+		class SessionPeer;
+		typedef boost::shared_ptr<SessionPeer> SessionPeerPtr;
+	}
 	namespace VideoServices {
 		struct Font;
 		class StaticText;
@@ -45,9 +50,13 @@ class HighConsole : public Console
 {
 	typedef Console SUPER;
 	public:
-		HighConsole(Script::Core *scripting);
+		HighConsole(Script::Core *scripting, GamePeer *gamePeer, SessionPeerPtr sessionPeer);
 		virtual ~HighConsole();
 
+	protected:
+		virtual void InitEnv();
+
+	public:
 		virtual void Advance(Util::OS::timestamp_t tick);
 
 		virtual void Clear();
@@ -67,6 +76,9 @@ class HighConsole : public Console
 		void Render(MR_VideoBuffer *dest);
 
 	private:
+		GamePeer *gamePeer;
+		SessionPeerPtr sessionPeer;
+
 		bool visible;
 		MR_2DViewPort *vp;
 

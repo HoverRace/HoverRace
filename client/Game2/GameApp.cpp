@@ -477,9 +477,7 @@ unsigned long MR_GameThread::Loop(LPVOID pThread)
 
 	//TODO: Execute track script.
 
-	SessionPeerPtr sessionPeer = boost::make_shared<SessionPeer>(
-		gameApp->scripting, gameApp->mCurrentSession);
-	gameApp->gamePeer->OnSessionStart(sessionPeer);
+	gameApp->gamePeer->OnSessionStart(gameApp->sessionPeer);
 
 	while(true) {
 		EnterCriticalSection(&lThis->mMutex);
@@ -520,7 +518,7 @@ unsigned long MR_GameThread::Loop(LPVOID pThread)
 	}
 
 	// Detach the session peer.
-	sessionPeer->OnSessionEnd();
+	gameApp->sessionPeer->OnSessionEnd();
 
 	return 0;
 }
@@ -648,6 +646,7 @@ void MR_GameApp::Clean()
 		mGameThread->Kill();
 		mGameThread = NULL;
 	}
+	sessionPeer.reset();
 	delete mCurrentSession;
 	mCurrentSession = NULL;
 
@@ -1576,12 +1575,14 @@ void MR_GameApp::NewLocalSession(RulebookPtr rules)
 		SOUNDSERVER_INIT(mMainWindow);
 		mObserver1 = MR_Observer::New();
 		highObserver = new HighObserver();
-		if (Config::GetInstance()->runtime.enableConsole) {
-			highConsole = new HighConsole(scripting);
-		}
 
 		// Create the new session
 		MR_ClientSession *lCurrentSession = new MR_ClientSession();
+		sessionPeer = boost::make_shared<SessionPeer>(scripting, lCurrentSession);
+
+		if (Config::GetInstance()->runtime.enableConsole) {
+			highConsole = new HighConsole(scripting, gamePeer, sessionPeer);
+		}
 
 		// Load the selected track
 		if(lSuccess) {

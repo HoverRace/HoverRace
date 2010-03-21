@@ -26,11 +26,16 @@
 
 #include <boost/thread/locks.hpp>
 
+#include <lua.hpp>
+#include <luabind/luabind.hpp>
+
 #include "../../engine/Script/Core.h"
 #include "../../engine/Util/Config.h"
 #include "../../engine/VideoServices/2DViewPort.h"
 #include "../../engine/VideoServices/StaticText.h"
 #include "../../engine/VideoServices/VideoBuffer.h"
+#include "GamePeer.h"
+#include "SessionPeer.h"
 
 #include "HighConsole.h"
 
@@ -75,8 +80,9 @@ class HighConsole::LogLines
 		static const int MAX_LINES = 10;
 };
 
-HighConsole::HighConsole(Script::Core *scripting) :
-	SUPER(scripting), visible(false), cursorOn(true), cursorTick(0)
+HighConsole::HighConsole(Script::Core *scripting, GamePeer *gamePeer, SessionPeerPtr sessionPeer) :
+	SUPER(scripting), gamePeer(gamePeer), sessionPeer(sessionPeer),
+	visible(false), cursorOn(true), cursorTick(0)
 {
 	vp = new MR_2DViewPort();
 
@@ -119,6 +125,22 @@ HighConsole::~HighConsole()
 	delete logFont;
 
 	delete vp;
+}
+
+void HighConsole::InitEnv()
+{
+	using namespace luabind;
+
+	SUPER::InitEnv();
+
+	lua_State *L = GetScripting()->GetState();
+
+	// Start with the standard global environment.
+	CopyGlobals();
+
+	object env(from_stack(L, -1));
+	env["game"] = gamePeer;
+	env["session"] = sessionPeer;
 }
 
 void HighConsole::Advance(Util::OS::timestamp_t tick)
