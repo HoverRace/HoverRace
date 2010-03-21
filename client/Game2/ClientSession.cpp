@@ -494,9 +494,11 @@ BOOL ClientSession::GetMessageStack(int pLevel, char *pDest, int pExpiration) co
 	if(pLevel < CHAT_MESSAGE_STACK) {
 		EnterCriticalSection(&((ClientSession *) this)->mChatMutex);
 
-		if(((mMessageStack[pLevel].mCreationTime + pExpiration) > time(NULL)) && (mMessageStack[pLevel].mBuffer.GetLength() > 0)) {
+		if(((mMessageStack[pLevel].mCreationTime + pExpiration) > time(NULL)) &&
+			(mMessageStack[pLevel].mBuffer.length() > 0))
+		{
 			lReturnValue = TRUE;
-			strcpy(pDest, mMessageStack[pLevel].mBuffer);
+			strcpy(pDest, mMessageStack[pLevel].mBuffer.c_str());
 		}
 		LeaveCriticalSection(&((ClientSession *) this)->mChatMutex);
 	}

@@ -39,7 +39,7 @@ class ClientSession
 		{
 			public:
 				time_t mCreationTime;
-				CString mBuffer;
+				std::string mBuffer;
 		};
 
 		CRITICAL_SECTION mChatMutex;
