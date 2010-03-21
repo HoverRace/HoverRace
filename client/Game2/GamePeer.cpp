@@ -34,6 +34,7 @@
 #	include "GameApp.h"
 #endif
 #include "Rulebook.h"
+#include "SessionPeer.h"
 
 #include "GamePeer.h"
 
@@ -43,7 +44,8 @@ namespace HoverRace {
 namespace Client {
 
 GamePeer::GamePeer(Script::Core *scripting, MR_GameApp *gameApp) :
-	scripting(scripting), gameApp(gameApp), initialized(false), onInit(scripting)
+	scripting(scripting), gameApp(gameApp), initialized(false),
+	onInit(scripting), onSessionStart(scripting)
 {
 }
 
@@ -67,13 +69,16 @@ void GamePeer::Register(Script::Core *scripting)
 			.def("get_config", &GamePeer::LGetConfig, adopt(result))
 			.def("on_init", (void(GamePeer::*)(const luabind::object&))&GamePeer::LOnInit)
 			.def("on_init", (void(GamePeer::*)(const std::string&, const luabind::object&))&GamePeer::LOnInit)
+			.def("on_session_start", (void(GamePeer::*)(const luabind::object&))&GamePeer::LOnSessionStart)
+			.def("on_session_start", (void(GamePeer::*)(const std::string&, const luabind::object&))&GamePeer::LOnSessionStart)
 			.def("start_practice", (void(GamePeer::*)(const std::string&))&GamePeer::LStartPractice)
 			.def("start_practice", (void(GamePeer::*)(const std::string&, const luabind::object&))&GamePeer::LStartPractice)
 	];
 }
 
 /**
- * Executes all "on_init" callbacks.
+ * Executes all "on_init" handlers.
+ * This should be called just after the main game window is visible.
  */
 void GamePeer::OnInit()
 {
@@ -88,6 +93,18 @@ void GamePeer::OnInit()
 #		endif
 		deferredStart.reset();
 	}
+}
+
+/**
+ * Executes all "on_session_start" handlers.
+ * This should be called at the start of every session, after the track script
+ * has been executed.
+ * @param sessionPeer The session peer.
+ */
+void GamePeer::OnSessionStart(SessionPeerPtr sessionPeer)
+{
+	luabind::object sessionObj(scripting->GetState(), sessionPeer);
+	onSessionStart.CallHandlers(sessionObj);
 }
 
 bool GamePeer::LIsInitialized()
@@ -110,6 +127,16 @@ void GamePeer::LOnInit(const luabind::object &fn)
 void GamePeer::LOnInit(const std::string &name, const luabind::object &fn)
 {
 	onInit.AddHandler(name, fn);
+}
+
+void GamePeer::LOnSessionStart(const luabind::object &fn)
+{
+	onSessionStart.AddHandler(fn);
+}
+
+void GamePeer::LOnSessionStart(const std::string &name, const luabind::object &fn)
+{
+	onSessionStart.AddHandler(name, fn);
 }
 
 void GamePeer::LStartPractice(const std::string &track)

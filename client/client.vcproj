@@ -457,6 +457,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Game2\SessionPeer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Game2\SessionPeer.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Game2\StdAfx.cpp"
 				>
 				<FileConfiguration

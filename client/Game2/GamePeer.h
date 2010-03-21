@@ -33,6 +33,8 @@ namespace HoverRace {
 		class ConfigPeer;
 		class Rulebook;
 		typedef boost::shared_ptr<Rulebook> RulebookPtr;
+		class SessionPeer;
+		typedef boost::shared_ptr<SessionPeer> SessionPeerPtr;
 	}
 	namespace Script {
 		class Core;
@@ -56,6 +58,7 @@ class GamePeer {
 
 	public:
 		void OnInit();
+		void OnSessionStart(SessionPeerPtr sessionPeer);
 
 	public:
 		ConfigPeer *LGetConfig();
@@ -65,6 +68,9 @@ class GamePeer {
 		void LOnInit(const luabind::object &fn);
 		void LOnInit(const std::string &name, const luabind::object &fn);
 
+		void LOnSessionStart(const luabind::object &fn);
+		void LOnSessionStart(const std::string &name, const luabind::object &fn);
+
 		void LStartPractice(const std::string &track);
 		void LStartPractice(const std::string &track, const luabind::object &rules);
 
@@ -73,6 +79,7 @@ class GamePeer {
 		MR_GameApp *gameApp;
 		bool initialized;
 		Script::Handlers onInit;
+		Script::Handlers onSessionStart;
 		RulebookPtr deferredStart;
 };
 

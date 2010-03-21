@@ -37,6 +37,7 @@
 #include "HighObserver.h"
 #include "IntroMovie.h"
 #include "Rulebook.h"
+#include "SessionPeer.h"
 #include "SysConsole.h"
 #include "TrackSelect.h"
 #include "TrackDownloadDialog.h"
@@ -472,10 +473,16 @@ static HPALETTE CreateDIBPalette(LPBITMAPINFO lpbmi, LPINT lpiNumColors);
 unsigned long MR_GameThread::Loop(LPVOID pThread)
 {
 	MR_GameThread *lThis = (MR_GameThread *) pThread;
+	MR_GameApp *gameApp = lThis->mGameApp;
+
+	//TODO: Execute track script.
+
+	SessionPeerPtr sessionPeer = boost::make_shared<SessionPeer>(
+		gameApp->scripting, gameApp->mCurrentSession);
+	gameApp->gamePeer->OnSessionStart(sessionPeer);
 
 	while(true) {
 		EnterCriticalSection(&lThis->mMutex);
-		MR_GameApp *gameApp = lThis->mGameApp;
 
 		if(lThis->mTerminate)
 			break;
@@ -511,6 +518,9 @@ unsigned long MR_GameThread::Loop(LPVOID pThread)
 
 		LeaveCriticalSection(&lThis->mMutex);
 	}
+
+	// Detach the session peer.
+	sessionPeer->OnSessionEnd();
 
 	return 0;
 }

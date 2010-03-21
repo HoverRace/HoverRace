@@ -1,6 +1,6 @@
 
-// ClientScriptCore.cpp
-// Scripting core configured for the client.
+// SessionPeer.h
+// Scripting peer for a game session.
 //
 // Copyright (c) 2010 Michael Imamura.
 //
@@ -20,32 +20,47 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
-#include "StdAfx.h"
+#pragma once
 
-#include "ConfigPeer.h"
-#include "GamePeer.h"
-#include "SessionPeer.h"
+#include <luabind/luabind.hpp>
+#include <luabind/object.hpp>
 
-#include "ClientScriptCore.h"
+namespace HoverRace {
+	namespace Script {
+		class Core;
+	}
+}
+class MR_ClientSession;
 
 namespace HoverRace {
 namespace Client {
 
-Script::Core *ClientScriptCore::Reset()
-{
-	SUPER::Reset();
+/**
+ * Scripting peer for a game session.
+ * @author Michael Imamura
+ */
+class SessionPeer {
+	public:
+		SessionPeer(Script::Core *scripting, MR_ClientSession *session);
+		virtual ~SessionPeer();
 
-	if (!classesRegistered) {
+	public:
+		static void Register(Script::Core *scripting);
 
-		ConfigPeer::Register(this);
-		GamePeer::Register(this);
-		SessionPeer::Register(this);
+	public:
+		void OnSessionEnd();
 
-		classesRegistered = true;
-	}
+	protected:
+		void VerifySession() const;
 
-	return this;
-}
+	public:
+		int LGetNumPlayers() const;
+
+	private:
+		MR_ClientSession *session;
+		Script::Core *scripting;
+};
+typedef boost::shared_ptr<SessionPeer> SessionPeerPtr;
 
 }  // namespace Client
 }  // namespace HoverRace
