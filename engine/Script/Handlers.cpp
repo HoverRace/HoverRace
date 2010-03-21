@@ -53,35 +53,65 @@ Handlers::~Handlers()
 
 /**
  * Call all registered event handlers.
+ * @param numParams The number of parameters on the stack.
  */
-void Handlers::CallHandlers() const
+void Handlers::Call(int numParams) const
 {
 	lua_State *L = scripting->GetState();
 
-	lua_rawgeti(L, LUA_REGISTRYINDEX, ref);  // table
+	int paramsStart = lua_gettop(L) + 1 - numParams;
+
+	lua_rawgeti(L, LUA_REGISTRYINDEX, ref);  // (params...) table
 
 	int functionsToCall = 0;
 
 	// First, gather the list of handler functions to call.
 	// We do this so that the handlers can add/remove handlers.
-	lua_pushnil(L);  // table nil
+	lua_pushnil(L);  // (params...) table nil
 	while (lua_next(L, -2) != 0) {
-		// (fns...) table key fn
-		lua_insert(L, -3);  // (fns...fn) table key
+		// (params...) (fns...) table key fn
+		lua_insert(L, -3);  // (params...) (fns...fn) table key
 		++functionsToCall;
 	}
-	// (fns...) table
-	lua_pop(L, 1);  // (fns...)
+	// (params...) (fns...) table
+	lua_pop(L, 1);  // (params...) (fns...)
 
 	// Call the handlers, one by one.
 	for (int i = 0; i < functionsToCall; ++i) {
 		try {
-			scripting->CallAndPrint();
+			for (int j = 0; j < numParams; ++j) {
+				lua_pushvalue(L, paramsStart + j);
+			}
+			// (params...) (fns...) (params...)
+			scripting->CallAndPrint(numParams);
 		}
 		catch (Script::ScriptExn &ex) {
 			scripting->Print(ex.what());
 		}
 	}
+	// (params...)
+
+	if (numParams > 0) {
+		lua_pop(L, numParams);
+	}
+}
+
+/**
+ * Call all registered event handlers without any parameters.
+ */
+void Handlers::CallHandlers() const
+{
+	Call(0);
+}
+
+/**
+ * Call all registered event handlers with a single parameter.
+ */
+void Handlers::CallHandlers(const luabind::object &p1) const
+{
+	lua_State *L = scripting->GetState();
+	p1.push(L);
+	Call(1);
 }
 
 /**
