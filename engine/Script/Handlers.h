@@ -57,6 +57,7 @@ class MR_DllDeclare Handlers
 		void CallHandlers() const;
 
 		void AddHandler(const luabind::object &fn);
+		void AddHandler(const std::string &name, const luabind::object &fn);
 
 	private:
 		Core *scripting;

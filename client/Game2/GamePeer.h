@@ -61,8 +61,9 @@ class GamePeer {
 		ConfigPeer *LGetConfig();
 
 		bool LIsInitialized();
+
 		void LOnInit(const luabind::object &fn);
-		void LGetOnInit();
+		void LOnInit(const std::string &name, const luabind::object &fn);
 
 		void LStartPractice(const std::string &track);
 		void LStartPractice(const std::string &track, const luabind::object &rules);

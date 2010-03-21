@@ -65,7 +65,8 @@ void GamePeer::Register(Script::Core *scripting)
 		class_<GamePeer>("Game")
 			.def("is_initialized", &GamePeer::LIsInitialized)
 			.def("get_config", &GamePeer::LGetConfig, adopt(result))
-			.def("on_init", &GamePeer::LOnInit)
+			.def("on_init", (void(GamePeer::*)(const luabind::object&))&GamePeer::LOnInit)
+			.def("on_init", (void(GamePeer::*)(const std::string&, const luabind::object&))&GamePeer::LOnInit)
 			.def("start_practice", (void(GamePeer::*)(const std::string&))&GamePeer::LStartPractice)
 			.def("start_practice", (void(GamePeer::*)(const std::string&, const luabind::object&))&GamePeer::LStartPractice)
 	];
@@ -104,6 +105,11 @@ ConfigPeer *GamePeer::LGetConfig()
 void GamePeer::LOnInit(const luabind::object &fn)
 {
 	onInit.AddHandler(fn);
+}
+
+void GamePeer::LOnInit(const std::string &name, const luabind::object &fn)
+{
+	onInit.AddHandler(name, fn);
 }
 
 void GamePeer::LStartPractice(const std::string &track)

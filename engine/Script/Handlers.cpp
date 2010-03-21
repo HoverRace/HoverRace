@@ -80,15 +80,12 @@ void Handlers::CallHandlers() const
  */
 void Handlers::AddHandler(const luabind::object &fn)
 {
-	// function on_init(f)
-	// Register a callback function for when the game starts up.
 	using namespace luabind;
 
 	lua_State *L = scripting->GetState();
 
-	//TODO: Support named callbacks.
 	if (type(fn) != LUA_TFUNCTION) {
-		luaL_error(L, "Expected function as first parameter.");
+		luaL_error(L, "Expected: (function) or (string, function) or (string, nil)");
 		return;
 	}
 
@@ -101,6 +98,36 @@ void Handlers::AddHandler(const luabind::object &fn)
 	lua_settable(L, -3); // fn table
 
 	lua_pop(L, 2);
+}
+
+/**
+ * Add a named event handler.
+ * This will replace any previously-registered handler with the same name.
+ * @param name The name to use.
+ * @param fn The function to register.  May be @c nil to remove the handler.
+ */
+void Handlers::AddHandler(const std::string &name, const luabind::object &fn)
+{
+	using namespace luabind;
+
+	lua_State *L = scripting->GetState();
+
+	int paramType = type(fn);
+	if (paramType != LUA_TNIL && paramType != LUA_TFUNCTION) {
+		luaL_error(L, "Expected: (function) or (string, function) or (string, nil)");
+		return;
+	}
+
+	fn.push(L);  // fn
+
+	lua_rawgeti(L, LUA_REGISTRYINDEX, ref);  // fn table
+
+	lua_pushstring(L, name.c_str()); // fn table key
+	lua_pushvalue(L, -3); // fn table key fn
+	lua_settable(L, -3); // fn table
+
+	lua_pop(L, 2);
+
 }
 
 }  // namespace Script
