@@ -1,6 +1,6 @@
 
-// SysConsole.cpp
-// The global system console.
+// SysEnv.cpp
+// The global system environment.
 //
 // Copyright (c) 2010 Michael Imamura.
 //
@@ -32,7 +32,7 @@
 
 #include "GamePeer.h"
 
-#include "SysConsole.h"
+#include "SysEnv.h"
 
 namespace fs = boost::filesystem;
 
@@ -72,18 +72,18 @@ namespace {
 namespace HoverRace {
 namespace Client {
 
-SysConsole::SysConsole(Script::Core *scripting, GamePeer *gamePeer) :
+SysEnv::SysEnv(Script::Core *scripting, GamePeer *gamePeer) :
 	SUPER(scripting), gamePeer(gamePeer),
 	outHandle(scripting->AddOutput(boost::make_shared<LogStream>()))
 {
 }
 
-SysConsole::~SysConsole()
+SysEnv::~SysEnv()
 {
 	GetScripting()->RemoveOutput(outHandle);
 }
 
-void SysConsole::InitEnv()
+void SysEnv::InitEnv()
 {
 	using namespace luabind;
 
@@ -98,20 +98,20 @@ void SysConsole::InitEnv()
 
 	/*
 	lua_pushlightuserdata(state, this);  // table this
-	lua_pushcclosure(state, SysConsole::LOnInit, 1);  // table fn
+	lua_pushcclosure(state, SysEnv::LOnInit, 1);  // table fn
 	lua_pushstring(state, "on_init");  // table fn str
 	lua_insert(state, -2);  // table str fn
 	lua_rawset(state, -3);  // table
 
 	lua_pushlightuserdata(state, this);  // table this
-	lua_pushcclosure(state, SysConsole::LGetOnInit, 1);  // table fn
+	lua_pushcclosure(state, SysEnv::LGetOnInit, 1);  // table fn
 	lua_pushstring(state, "get_on_init");  // table fn str
 	lua_insert(state, -2);  // table str fn
 	lua_rawset(state, -3);  // table
 	*/
 }
 
-void SysConsole::LogInfo(const std::string &s)
+void SysEnv::LogInfo(const std::string &s)
 {
 #	ifdef _WIN32
 		OutputDebugString(s.c_str());
@@ -121,7 +121,7 @@ void SysConsole::LogInfo(const std::string &s)
 #	endif
 }
 
-void SysConsole::LogError(const std::string &s)
+void SysEnv::LogError(const std::string &s)
 {
 #	ifdef _WIN32
 		OutputDebugString(s.c_str());
@@ -135,7 +135,7 @@ void SysConsole::LogError(const std::string &s)
  * Execute a script from a file.
  * @param filename The script filename (must be an absolute path).
  */
-void SysConsole::RunScript(const std::string &filename)
+void SysEnv::RunScript(const std::string &filename)
 {
 	fs::path scriptPath = fs::system_complete(fs::path(filename));
 

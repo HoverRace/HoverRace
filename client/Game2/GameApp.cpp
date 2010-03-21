@@ -38,7 +38,7 @@
 #include "IntroMovie.h"
 #include "Rulebook.h"
 #include "SessionPeer.h"
-#include "SysConsole.h"
+#include "SysEnv.h"
 #include "TrackSelect.h"
 #include "TrackDownloadDialog.h"
 #include "../../engine/Util/DllObjectFactory.h"
@@ -581,7 +581,7 @@ void MR_GameThread::Restart()
 }
 
 MR_GameApp::MR_GameApp(HINSTANCE pInstance, bool safeMode) :
-	introMovie(NULL), scripting(NULL), gamePeer(NULL), sysConsole(NULL)
+	introMovie(NULL), scripting(NULL), gamePeer(NULL), sysEnv(NULL)
 {
 	This = this;
 	mInstance = pInstance;
@@ -621,9 +621,9 @@ MR_GameApp::MR_GameApp(HINSTANCE pInstance, bool safeMode) :
 
 MR_GameApp::~MR_GameApp()
 {
-	if (sysConsole != NULL) {
-		delete sysConsole;
-		sysConsole = NULL;
+	if (sysEnv != NULL) {
+		delete sysEnv;
+		sysEnv = NULL;
 	}
 	if (gamePeer != NULL) {
 		delete gamePeer;
@@ -1158,9 +1158,9 @@ BOOL MR_GameApp::InitGame()
 	// This allows the script to modify the configuration (e.g. for unit tests).
 	scripting = (new ClientScriptCore())->Reset();
 	gamePeer = new GamePeer(scripting, this);
-	sysConsole = new SysConsole(scripting, gamePeer);
+	sysEnv = new SysEnv(scripting, gamePeer);
 	if (!initScript.empty()) {
-		sysConsole->RunScript(initScript);
+		sysEnv->RunScript(initScript);
 	}
 
 	lReturnValue = CreateMainWindow();

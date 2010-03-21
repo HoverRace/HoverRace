@@ -1,6 +1,6 @@
 
-// SysConsole.h
-// The global system console.
+// SysEnv.h
+// The global system environment.
 //
 // Copyright (c) 2010 Michael Imamura.
 //
@@ -37,13 +37,13 @@ namespace HoverRace {
 namespace HoverRace {
 namespace Client {
 
-class SysConsole : private Script::Env
+class SysEnv : private Script::Env
 {
 	typedef Script::Env SUPER;
 
 	public:
-		SysConsole(Script::Core *scripting, GamePeer *gamePeer);
-		virtual ~SysConsole();
+		SysEnv(Script::Core *scripting, GamePeer *gamePeer);
+		virtual ~SysEnv();
 
 	protected:
 		virtual void InitEnv();

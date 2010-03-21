@@ -489,11 +489,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Game2\SysConsole.cpp"
+				RelativePath=".\Game2\SysEnv.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Game2\SysConsole.h"
+				RelativePath=".\Game2\SysEnv.h"
 				>
 			</File>
 			<File

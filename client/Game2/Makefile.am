@@ -26,8 +26,8 @@ hoverrace_SOURCES = \
 	Rulebook.h \
 	SessionPeer.cpp \
 	SessionPeer.h \
-	SysConsole.cpp \
-	SysConsole.h \
+	SysEnv.cpp \
+	SysEnv.h \
 	main.cpp \
 	version.h
 
