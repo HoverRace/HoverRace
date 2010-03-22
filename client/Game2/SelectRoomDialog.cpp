@@ -2,7 +2,7 @@
 // SelectRoomDialog.h
 // The room list selector.
 //
-// Copyright (c) 2009 Michael Imamura.
+// Copyright (c) 2009, 2010 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -32,14 +32,19 @@
 using namespace HoverRace::Client;
 using namespace HoverRace::Util;
 
-SelectRoomDialog::SelectRoomDialog() :
+SelectRoomDialog::SelectRoomDialog(const std::string &playerName) :
 	SUPER(Config::GetInstance()->net.mainServer),
-	finished(false)
+	playerName(playerName), finished(false)
 {
 }
 
 SelectRoomDialog::~SelectRoomDialog()
 {
+}
+
+const std::string &SelectRoomDialog::GetPlayerName() const
+{
+	return playerName;
 }
 
 /**
@@ -110,7 +115,7 @@ BOOL SelectRoomDialog::DlgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lp
 			SetDlgItemTextW(hwnd, IDC_MSG_LBL, Str::UW(_("Connecting...")));
 			SetDlgItemTextW(hwnd, IDC_YOUR_ALIAS, Str::UW(_("Your alias:")));
 			SetDlgItemTextW(hwnd, IDC_ROOM_C, Str::UW(_("Room:")));
-			SetDlgItemTextW(hwnd, IDC_ALIAS, Str::UW(Config::GetInstance()->player.nickName.c_str()));
+			SetDlgItemTextW(hwnd, IDC_ALIAS, Str::UW(playerName.c_str()));
 			SetDlgItemTextW(hwnd, IDOK, Str::UW(_("OK")));
 			SetDlgItemTextW(hwnd, IDCANCEL, Str::UW(_("Cancel")));
 			retv = TRUE;
@@ -133,6 +138,13 @@ BOOL SelectRoomDialog::DlgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lp
 				case IDOK:
 					GetRoomList()->SetSelectedRoom(
 						SendDlgItemMessage(hwnd, IDC_ROOMLIST, LB_GETCURSEL, 0, 0));
+
+					// Update the player name.
+					wchar_t alias[64];
+					GetDlgItemTextW(hwnd, IDC_ALIAS, alias, 64);
+					alias[63] = 0;
+					playerName = (const char*)Str::WU(alias);
+
 					EndDialog(hwnd, IDOK);
 					break;
 			}

@@ -2,7 +2,7 @@
 // SelectRoomDialog.h
 // Header for the room list selector.
 //
-// Copyright (c) 2009 Michael Imamura.
+// Copyright (c) 2009, 2010 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -35,8 +35,11 @@ class SelectRoomDialog : public RoomListDialog
 {
 	typedef RoomListDialog SUPER;
 	public:
-		SelectRoomDialog();
+		SelectRoomDialog(const std::string &playerName);
 		virtual ~SelectRoomDialog();
+
+	public:
+		const std::string &GetPlayerName() const;
 
 	public:
 		RoomListPtr ShowModal(HINSTANCE hinst, HWND parent);
@@ -50,6 +53,7 @@ class SelectRoomDialog : public RoomListDialog
 		virtual BOOL DlgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
 
 	private:
+		std::string playerName;
 		volatile bool finished;
 };
 

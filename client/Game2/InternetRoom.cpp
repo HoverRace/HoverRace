@@ -723,7 +723,11 @@ BOOL MR_InternetRoom::AskRoomParams(HWND pParentWindow, BOOL pShouldRecheckServe
 	}
 
 	if (roomList == NULL || pShouldRecheckServer) {
-		roomList = SelectRoomDialog().ShowModal(NULL, pParentWindow);
+		SelectRoomDialog dlg((const char *)mUser);
+		roomList = dlg.ShowModal(NULL, pParentWindow);
+		if (roomList != NULL) {
+			mUser = dlg.GetPlayerName().c_str();
+		}
 	}
 	return roomList != NULL;
 }
