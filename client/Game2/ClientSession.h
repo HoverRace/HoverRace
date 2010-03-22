@@ -47,10 +47,8 @@ class ClientSession
 		ChatMessage mMessageStack[CHAT_MESSAGE_STACK];
 
 		MR_GameSession mSession;
-		MR_MainCharacter *mMainCharacter1;
-		MR_MainCharacter *mMainCharacter2;
-		MR_MainCharacter *mMainCharacter3;
-		MR_MainCharacter *mMainCharacter4;
+		static const int MAX_PLAYERS = 4;
+		MR_MainCharacter *mainCharacter[MAX_PLAYERS];
 
 		MR_UInt8 *mBackImage;
 
@@ -83,6 +81,7 @@ class ClientSession
 		virtual BOOL LoadNew(const char *pTitle, MR_RecordFile *pMazeFile, int pNbLap, char pGameOpts, MR_VideoBuffer *pVideo);
 
 		// Main character control and interrogation
+		bool CreateMainCharacter(int i);
 		BOOL CreateMainCharacter();
 		BOOL CreateMainCharacter2();
 		BOOL CreateMainCharacter3();

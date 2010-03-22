@@ -36,10 +36,9 @@ ClientSession::ClientSession() :
 	mSession(TRUE),
 	frameCount(0), lastTimestamp(0), fps(0.0)
 {
-	mMainCharacter1 = NULL;
-	mMainCharacter2 = NULL;
-	mMainCharacter3 = NULL;
-	mMainCharacter4 = NULL;
+	for (int i = 0; i < MAX_PLAYERS; ++i) {
+		mainCharacter[i] = NULL;
+	}
 	mBackImage = NULL;
 	mMap = NULL;
 	mNbLap = 1;
@@ -120,7 +119,8 @@ void ClientSession::ReadLevelAttrib(MR_RecordFile * pRecordFile, MR_VideoBuffer 
 	}
 }
 
-BOOL ClientSession::LoadNew(const char *pTitle, MR_RecordFile *pMazeFile, int pNbLap, char pGameOpts, MR_VideoBuffer * pVideo)
+BOOL ClientSession::LoadNew(const char *pTitle, MR_RecordFile *pMazeFile,
+                            int pNbLap, char pGameOpts, MR_VideoBuffer *pVideo)
 {
 	BOOL lReturnValue;
 	mNbLap = pNbLap;
@@ -139,137 +139,74 @@ const MR_UInt8 *ClientSession::GetBackImage() const
 	return mBackImage;
 }
 
-// Main character controll and interogation
+// Main character control and interrogation
 
+bool ClientSession::CreateMainCharacter(int i)
+{
+	ASSERT(mainCharacter[i] == NULL);
+
+	MR_Level *curLevel = mSession.GetCurrentLevel();
+	ASSERT(curLevel != NULL);
+
+	MR_MainCharacter *ch = mainCharacter[i] = MR_MainCharacter::New(mNbLap, mGameOpts);
+
+	int startingRoom = curLevel->GetStartingRoom(i);
+	ch->mRoom = startingRoom;
+	ch->mPosition = curLevel->GetStartingPos(i);
+	ch->SetOrientation(curLevel->GetStartingOrientation(i));
+	ch->SetHoverId(i);
+
+	curLevel->InsertElement(ch, startingRoom);
+
+	return true;
+}
+
+/** @deprecated Use CreateMainCharacter(int) instead. */
 BOOL ClientSession::CreateMainCharacter()
 {
-
-	// Add a main character in
-
-	ASSERT(mMainCharacter1 == NULL);			  // why creating it twice?
-	ASSERT(mSession.GetCurrentLevel() != NULL);
-
-	mMainCharacter1 = MR_MainCharacter::New(mNbLap, mGameOpts);
-
-	// Insert the character in the current level
-	MR_Level *lCurrentLevel = mSession.GetCurrentLevel();
-
-	mMainCharacter1->mRoom = lCurrentLevel->GetStartingRoom(0);
-	mMainCharacter1->mPosition = lCurrentLevel->GetStartingPos(0);
-	mMainCharacter1->SetOrientation(lCurrentLevel->GetStartingOrientation(0));
-	mMainCharacter1->SetHoverId(0);
-
-	lCurrentLevel->InsertElement(mMainCharacter1, lCurrentLevel->GetStartingRoom(0));
-
-	// Insert two dummy (TEST)
-	/*
-	   MR_MainCharacter* lMainCharacter;
-
-	   lMainCharacter = MR_MainCharacter::New();
-	   lMainCharacter->SetAsSlave();
-
-	   lMainCharacter->mPosition    = lCurrentLevel->GetStartingPos( 1 );
-	   lMainCharacter->mOrientation = lCurrentLevel->GetStartingOrientation( 1 );
-	   lCurrentLevel->InsertElement( lMainCharacter, lCurrentLevel->GetStartingRoom( 1 ) );
-
-	   lMainCharacter = MR_MainCharacter::New();
-	   lMainCharacter->SetAsSlave();
-
-	   lMainCharacter->mPosition    = lCurrentLevel->GetStartingPos( 2 );
-	   lMainCharacter->mOrientation = lCurrentLevel->GetStartingOrientation( 2 );
-	   lCurrentLevel->InsertElement( lMainCharacter, lCurrentLevel->GetStartingRoom( 2 ) );
-	 */
-
-	return TRUE;
+	return CreateMainCharacter(0);
 }
 
+/** @deprecated Use CreateMainCharacter(int) instead. */
 BOOL ClientSession::CreateMainCharacter2()
 {
-
-	// Add a main character in
-
-	ASSERT(mMainCharacter2 == NULL);			  // why creating it twice?
-	ASSERT(mSession.GetCurrentLevel() != NULL);
-
-	mMainCharacter2 = MR_MainCharacter::New(mNbLap, mGameOpts);
-
-	// Insert the character in the current level
-	MR_Level *lCurrentLevel = mSession.GetCurrentLevel();
-
-	mMainCharacter2->mRoom = lCurrentLevel->GetStartingRoom(1);
-	mMainCharacter2->mPosition = lCurrentLevel->GetStartingPos(1);
-	mMainCharacter2->SetOrientation(lCurrentLevel->GetStartingOrientation(1));
-	mMainCharacter2->SetHoverId(1);
-
-	lCurrentLevel->InsertElement(mMainCharacter2, lCurrentLevel->GetStartingRoom(1));
-
-	return TRUE;
+	return CreateMainCharacter(1);
 }
 
+/** @deprecated Use CreateMainCharacter(int) instead. */
 BOOL ClientSession::CreateMainCharacter3()
 {
-
-	// Add a main character in
-
-	ASSERT(mMainCharacter3 == NULL);			  // why creating it twice?
-	ASSERT(mSession.GetCurrentLevel() != NULL);
-
-	mMainCharacter3 = MR_MainCharacter::New(mNbLap, mGameOpts);
-
-	// Insert the character in the current level
-	MR_Level *lCurrentLevel = mSession.GetCurrentLevel();
-
-	mMainCharacter3->mRoom = lCurrentLevel->GetStartingRoom(2);
-	mMainCharacter3->mPosition = lCurrentLevel->GetStartingPos(2);
-	mMainCharacter3->SetOrientation(lCurrentLevel->GetStartingOrientation(2));
-	mMainCharacter3->SetHoverId(2);
-
-	lCurrentLevel->InsertElement(mMainCharacter3, lCurrentLevel->GetStartingRoom(2));
-
-	return TRUE;
+	return CreateMainCharacter(2);
 }
 
+/** @deprecated Use CreateMainCharacter(int) instead. */
 BOOL ClientSession::CreateMainCharacter4()
 {
-
-	// Add a main character in
-
-	ASSERT(mMainCharacter4 == NULL);			  // why creating it twice?
-	ASSERT(mSession.GetCurrentLevel() != NULL);
-
-	mMainCharacter4 = MR_MainCharacter::New(mNbLap, mGameOpts);
-
-	// Insert the character in the current level
-	MR_Level *lCurrentLevel = mSession.GetCurrentLevel();
-
-	mMainCharacter4->mRoom = lCurrentLevel->GetStartingRoom(3);
-	mMainCharacter4->mPosition = lCurrentLevel->GetStartingPos(3);
-	mMainCharacter4->SetOrientation(lCurrentLevel->GetStartingOrientation(3));
-	mMainCharacter4->SetHoverId(3);
-
-	lCurrentLevel->InsertElement(mMainCharacter4, lCurrentLevel->GetStartingRoom(3));
-
-	return TRUE;
+	return CreateMainCharacter(3);
 }
 
+/** @deprecated Use GetPlayer(int) instead. */
 MR_MainCharacter *ClientSession::GetMainCharacter() const
 {
-	return mMainCharacter1;
+	return const_cast<MR_MainCharacter*>(GetPlayer(0));
 }
 
+/** @deprecated Use GetPlayer(int) instead. */
 MR_MainCharacter *ClientSession::GetMainCharacter2() const
 {
-	return mMainCharacter2;
+	return const_cast<MR_MainCharacter*>(GetPlayer(1));
 }
 
+/** @deprecated Use GetPlayer(int) instead. */
 MR_MainCharacter *ClientSession::GetMainCharacter3() const
 {
-	return mMainCharacter3;
+	return const_cast<MR_MainCharacter*>(GetPlayer(2));
 }
 
+/** @deprecated Use GetPlayer(int) instead. */
 MR_MainCharacter *ClientSession::GetMainCharacter4() const
 {
-	return mMainCharacter4;
+	return const_cast<MR_MainCharacter*>(GetPlayer(3));
 }
 
 void ClientSession::SetSimulationTime(MR_SimulationTime pTime)
@@ -284,20 +221,20 @@ MR_SimulationTime ClientSession::GetSimulationTime() const
 
 void ClientSession::SetControlState(int pState1, int pState2, int pState3, int pState4)
 {
-	if(mMainCharacter1 != NULL) {
-		mMainCharacter1->SetControlState(pState1, mSession.GetSimulationTime());
+	if(mainCharacter[0] != NULL) {
+		mainCharacter[0]->SetControlState(pState1, mSession.GetSimulationTime());
 	}
 
-	if(mMainCharacter2 != NULL) {
-		mMainCharacter2->SetControlState(pState2, mSession.GetSimulationTime());
+	if(mainCharacter[1] != NULL) {
+		mainCharacter[1]->SetControlState(pState2, mSession.GetSimulationTime());
 	}
 
-	if(mMainCharacter3 != NULL) {
-		mMainCharacter3->SetControlState(pState3, mSession.GetSimulationTime());
+	if(mainCharacter[2] != NULL) {
+		mainCharacter[2]->SetControlState(pState3, mSession.GetSimulationTime());
 	}
 
-	if(mMainCharacter4 != NULL) {
-		mMainCharacter4->SetControlState(pState4, mSession.GetSimulationTime());
+	if(mainCharacter[3] != NULL) {
+		mainCharacter[3]->SetControlState(pState4, mSession.GetSimulationTime());
 	}
 }
 
@@ -313,13 +250,17 @@ int ClientSession::ResultAvaillable() const
 	return 0;
 }
 
-void ClientSession::GetResult(int, const char *&pPlayerName, int &, BOOL &, int &, MR_SimulationTime &, MR_SimulationTime &) const
+/** @deprecated */
+void ClientSession::GetResult(int, const char *&pPlayerName, int &, BOOL &,
+                              int &, MR_SimulationTime &, MR_SimulationTime &) const
 {
 	pPlayerName = "?";
 	ASSERT(FALSE);
 }
 
-void ClientSession::GetHitResult(int pPosition, const char *&pPlayerName, int &pId, BOOL & pConnected, int &pNbHitOther, int &pNbHitHimself) const
+/** @deprecated */
+void ClientSession::GetHitResult(int pPosition, const char *&pPlayerName,
+                                 int &pId, BOOL & pConnected, int &pNbHitOther, int &pNbHitHimself) const
 {
 	pPlayerName = "?";
 	ASSERT(FALSE);
@@ -327,26 +268,23 @@ void ClientSession::GetHitResult(int pPosition, const char *&pPlayerName, int &p
 
 int ClientSession::GetNbPlayers() const
 {
-	BOOL lReturnValue = 0;
+	int retv = 0;
 
-	if(mMainCharacter1 != NULL) {
-		lReturnValue++;
-	}
-	if(mMainCharacter2 != NULL) {
-		lReturnValue++;
-	}
-	if(mMainCharacter3 != NULL) {
-		lReturnValue++;
-	}
-	if(mMainCharacter4 != NULL) {
-		lReturnValue++;
-	}
-	return lReturnValue;
+	for (int i = 0; i < MAX_PLAYERS; ++i)
+		if (mainCharacter[i] != NULL)
+			++retv;
+
+	return retv;
 }
 
-int ClientSession::GetRank(const MR_MainCharacter * pPlayer) const
+int ClientSession::GetRank(const MR_MainCharacter *pPlayer) const
 {
 	int lReturnValue = 1;
+
+	MR_MainCharacter *mMainCharacter1 = mainCharacter[0];
+	MR_MainCharacter *mMainCharacter2 = mainCharacter[1];
+	MR_MainCharacter *mMainCharacter3 = mainCharacter[2];
+	MR_MainCharacter *mMainCharacter4 = mainCharacter[3];
 
 	if(mMainCharacter1 != NULL) {
 		if(pPlayer == mMainCharacter1) {
@@ -454,27 +392,10 @@ void ClientSession::ConvertMapCoordinate(int &pX, int &pY, int pRatio) const
 	pY = (mHeightSprite - 1 - (pY - mY0Map) * mHeightSprite / mHeightMap) / pRatio;
 }
 
-const MR_MainCharacter *ClientSession::GetPlayer(int pPlayerIndex) const
+const MR_MainCharacter *ClientSession::GetPlayer(int i) const
 {
-	const MR_MainCharacter *lReturnValue = NULL;
-
-	switch (pPlayerIndex) {
-		case 0:
-			lReturnValue = mMainCharacter1;
-			break;
-
-		case 1:lReturnValue = mMainCharacter2;
-		break;
-
-		case 2:lReturnValue = mMainCharacter3;
-		break;
-
-		case 3:lReturnValue = mMainCharacter4;
-		break;
-	}
-	ASSERT(lReturnValue != NULL);
-
-	return lReturnValue;
+	ASSERT(i >= 0 && i < MAX_PLAYERS);
+	return mainCharacter[i];
 }
 
 void ClientSession::AddMessageKey(char /*pKey */ )

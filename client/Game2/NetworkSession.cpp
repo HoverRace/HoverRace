@@ -94,8 +94,8 @@ MR_NetworkSession::MR_NetworkSession(BOOL pInternetGame, int pMajorID,
  */
 MR_NetworkSession::~MR_NetworkSession()
 {
-	if(mInternetGame && (mMainCharacter1 != NULL)) {
-		int lCurrentModel = mMainCharacter1->GetHoverModel();
+	if(mInternetGame && (mainCharacter[0] != NULL)) {
+		int lCurrentModel = mainCharacter[0]->GetHoverModel();
 
 		// Send results to the record server
 		// regardless of registration info
@@ -133,14 +133,14 @@ MR_NetworkSession::~MR_NetworkSession()
 
 			if(lPlayer != NULL) {
 
-				int lTotalLap = mMainCharacter1->GetTotalLap();
+				int lTotalLap = mainCharacter[0]->GetTotalLap();
 
 
 				MR_SendRaceResult(mWindow, mSession.GetTitle(),
 					lPlayer->mBestLap, mMajorID, mMinorID,
 					mNetInterface.GetPlayerName(-1),
 					mSession.GetCurrentMazeFile()->GetCheckSum(),
-					mMainCharacter1->GetHoverModel(),
+					mainCharacter[0]->GetHoverModel(),
 					(lPlayer->mNbCompletedLap == -1) ? lPlayer->mFinishTime : 0,
 					(lPlayer->mNbCompletedLap == -1) ? lTotalLap : 0,
 					lNbPlayer, roomList);
@@ -328,7 +328,7 @@ const MR_MainCharacter *MR_NetworkSession::GetPlayer(int pPlayerIndex) const
 	const MR_MainCharacter *lReturnValue = NULL;
 
 	if(pPlayerIndex == 0) 
-		lReturnValue = mMainCharacter1;
+		lReturnValue = mainCharacter[0];
 	else if(pPlayerIndex <= MR_NetworkInterface::eMaxClient)
 		lReturnValue = mClientCharacter[pPlayerIndex - 1];
 	
@@ -528,18 +528,18 @@ void MR_NetworkSession::ReadNet()
 						// Verify if it is not a good idea to simulate the network delay
 						int lNetworkDelay = mNetInterface.GetMinLag(lClientId);
 	
-						if((mMainCharacter1 != NULL) && (lNetworkDelay > 50)) {
+						if((mainCharacter[0] != NULL) && (lNetworkDelay > 50)) {
 							// if the element is in the visible range do the simulation
-							BOOL lVisible = (lRoom == mMainCharacter1->mRoom);
+							BOOL lVisible = (lRoom == mainCharacter[0]->mRoom);
 							int lVisibleRoomCount;
-							const int *lVisibleRoom = lCurrentLevel->GetVisibleZones(mMainCharacter1->mRoom, lVisibleRoomCount);
+							const int *lVisibleRoom = lCurrentLevel->GetVisibleZones(mainCharacter[0]->mRoom, lVisibleRoomCount);
 	
 							for(int lCounter = 0; !lVisible && (lCounter < lVisibleRoomCount); lCounter++) {
 								if(lVisibleRoom[lCounter] == lRoom) {
 									lVisible = TRUE;
 								}
 							}
-							// ASSERT( !(!lVisible&&(mMainCharacter1->mRoom==lRoom)) );
+							// ASSERT( !(!lVisible&&(mainCharacter[0]->mRoom==lRoom)) );
 	
 							if(lVisible) {
 													  // the 50ms extra is only a small bonus
@@ -637,17 +637,17 @@ void MR_NetworkSession::WriteNet()
 
 	if(mTimeToSendCharacterCreation != 0) {
 		if(mSession.GetSimulationTime() >= mTimeToSendCharacterCreation) { // it is time to broadcast the created hovercraft
-			BroadcastMainElementCreation(mMainCharacter1->GetTypeId(), mMainCharacter1->GetNetState(), mMainCharacter1->mRoom, mMainCharacter1->GetHoverId());
+			BroadcastMainElementCreation(mainCharacter[0]->GetTypeId(), mainCharacter[0]->GetNetState(), mainCharacter[0]->mRoom, mainCharacter[0]->GetHoverId());
 			mTimeToSendCharacterCreation = 0; // set to 0 so we don't broadcast it again
 		}
 	}
-	else if(mMainCharacter1 != NULL) { // it has already been broadcast
-		BroadcastMainElementState(mMainCharacter1->GetNetState()); // send state
+	else if(mainCharacter[0] != NULL) { // it has already been broadcast
+		BroadcastMainElementState(mainCharacter[0]->GetNetState()); // send state
 
 		if(mSendedPlayerStats != -1) { // send statistics if necessary
-			if(mMainCharacter1->GetLap() >= mSendedPlayerStats) {
-				if(mMainCharacter1->HasFinish()) { // race is finished
-					BroadcastMainElementStats(mMainCharacter1->GetTotalTime(), mMainCharacter1->GetBestLapDuration(), -1);
+			if(mainCharacter[0]->GetLap() >= mSendedPlayerStats) {
+				if(mainCharacter[0]->HasFinish()) { // race is finished
+					BroadcastMainElementStats(mainCharacter[0]->GetTotalTime(), mainCharacter[0]->GetBestLapDuration(), -1);
 					mSendedPlayerStats = -1;
 
 					if(mInternetGame) {
@@ -655,21 +655,21 @@ void MR_NetworkSession::WriteNet()
 					}
 
 				}
-				else if(mMainCharacter1->GetLap() == 0) { // race has not yet started
-					BroadcastMainElementStats(mMainCharacter1->GetHoverId(), -1, 0);
+				else if(mainCharacter[0]->GetLap() == 0) { // race has not yet started
+					BroadcastMainElementStats(mainCharacter[0]->GetHoverId(), -1, 0);
 					mSendedPlayerStats = 1;
 				}
 				else { // send statistics (lap number, total time, best lap)
-					mSendedPlayerStats = mMainCharacter1->GetLap();
-					BroadcastMainElementStats(mMainCharacter1->GetTotalTime(), mMainCharacter1->GetBestLapDuration(), mSendedPlayerStats);
+					mSendedPlayerStats = mainCharacter[0]->GetLap();
+					BroadcastMainElementStats(mainCharacter[0]->GetTotalTime(), mainCharacter[0]->GetBestLapDuration(), mSendedPlayerStats);
 					mSendedPlayerStats++;
 				}
 			}
 		}
 
 		// Broadcast hits
-		while(mMainCharacter1->HitQueueCount() > 0) {
-			BroadcastHit(mMainCharacter1->GetHitQueue());
+		while(mainCharacter[0]->HitQueueCount() > 0) {
+			BroadcastHit(mainCharacter[0]->GetHitQueue());
 		}
 	}
 
@@ -802,22 +802,22 @@ void MR_NetworkSession::SetSimulationTime(MR_SimulationTime pTime)
 BOOL MR_NetworkSession::CreateMainCharacter()
 {
 	// Add a main character on the track
-	ASSERT(mMainCharacter1 == NULL);			  // make sure we are not creating it twice
+	ASSERT(mainCharacter[0] == NULL);			  // make sure we are not creating it twice
 	ASSERT(mSession.GetCurrentLevel() != NULL);
 
-	mMainCharacter1 = MR_MainCharacter::New(mNbLap, mGameOpts);
+	mainCharacter[0] = MR_MainCharacter::New(mNbLap, mGameOpts);
 
 	// Insert the character in the current level
 	MR_Level *lCurrentLevel = mSession.GetCurrentLevel();
 
-	mMainCharacter1->mPosition = lCurrentLevel->GetStartingPos(mNetInterface.GetId());
-	mMainCharacter1->SetOrientation(lCurrentLevel->GetStartingOrientation(mNetInterface.GetId()));
-	mMainCharacter1->mRoom = lCurrentLevel->GetStartingRoom(mNetInterface.GetId());
-	mMainCharacter1->SetHoverId(mNetInterface.GetId());
+	mainCharacter[0]->mPosition = lCurrentLevel->GetStartingPos(mNetInterface.GetId());
+	mainCharacter[0]->SetOrientation(lCurrentLevel->GetStartingOrientation(mNetInterface.GetId()));
+	mainCharacter[0]->mRoom = lCurrentLevel->GetStartingRoom(mNetInterface.GetId());
+	mainCharacter[0]->SetHoverId(mNetInterface.GetId());
 
-	lCurrentLevel->InsertElement(mMainCharacter1, mMainCharacter1->mRoom);
+	lCurrentLevel->InsertElement(mainCharacter[0], mainCharacter[0]->mRoom);
 
-	// BroadcastMainElementCreation( mMainCharacter1->GetTypeId(), mMainCharacter1->GetNetState(), mMainCharacter1->mRoom, mMainCharacter1->GetHoverId() );
+	// BroadcastMainElementCreation( mainCharacter[0]->GetTypeId(), mainCharacter[0]->GetNetState(), mainCharacter[0]->mRoom, mainCharacter[0]->GetHoverId() );
 
 	return TRUE;
 }
@@ -884,15 +884,15 @@ void MR_NetworkSession::BroadcastAutoElementCreation(const MR_ObjectFromFactoryI
 
 	const MR_Level *lLevel = GetCurrentLevel();
 	// int             lVisibleRoomCount;
-	// const int* lVisibleRoom = lLevel->GetVisibleZones( mMainCharacter1->mRoom, lVisibleRoomCount );
+	// const int* lVisibleRoom = lLevel->GetVisibleZones( mainCharacter[0]->mRoom, lVisibleRoomCount );
 
 	// Init priority level
 	for(int lCounter = 0; lCounter < MR_NetworkInterface::eMaxClient; lCounter++) {
 		if(mClientCharacter[lCounter] != NULL) {
 			lPriorityLevel[lCounter] = 0;
 
-			int lDistanceX = (mClientCharacter[lCounter]->mPosition.mX - mMainCharacter1->mPosition.mX) / 8192;
-			int lDistanceY = (mClientCharacter[lCounter]->mPosition.mY - mMainCharacter1->mPosition.mY) / 8192;
+			int lDistanceX = (mClientCharacter[lCounter]->mPosition.mX - mainCharacter[0]->mPosition.mX) / 8192;
+			int lDistanceY = (mClientCharacter[lCounter]->mPosition.mY - mainCharacter[0]->mPosition.mY) / 8192;
 
 			MR_Int64 lSqrDistance = Int32x32To64(lDistanceX, lDistanceX) + Int32x32To64(lDistanceY, lDistanceY);
 
@@ -966,15 +966,15 @@ void MR_NetworkSession::BroadcastPermElementState(int pPermId, const MR_ElementN
 
 	const MR_Level *lLevel = GetCurrentLevel();
 	// int             lVisibleRoomCount;
-	// const int* lVisibleRoom = lLevel->GetVisibleZones( mMainCharacter1->mRoom, lVisibleRoomCount );
+	// const int* lVisibleRoom = lLevel->GetVisibleZones( mainCharacter[0]->mRoom, lVisibleRoomCount );
 
 	// Init priority level
 	for(int lCounter = 0; lCounter < MR_NetworkInterface::eMaxClient; lCounter++) {
 		if(mClientCharacter[lCounter] != NULL) {
 			lPriorityLevel[lCounter] = 0;
 
-			int lDistanceX = (mClientCharacter[lCounter]->mPosition.mX - mMainCharacter1->mPosition.mX) / 8192;
-			int lDistanceY = (mClientCharacter[lCounter]->mPosition.mY - mMainCharacter1->mPosition.mY) / 8192;
+			int lDistanceX = (mClientCharacter[lCounter]->mPosition.mX - mainCharacter[0]->mPosition.mX) / 8192;
+			int lDistanceY = (mClientCharacter[lCounter]->mPosition.mY - mainCharacter[0]->mPosition.mY) / 8192;
 
 			MR_Int64 lSqrDistance = Int32x32To64(lDistanceX, lDistanceX) + Int32x32To64(lDistanceY, lDistanceY);
 
@@ -1101,7 +1101,7 @@ void MR_NetworkSession::BroadcastMainElementState(const MR_ElementNetState &pSta
 		lMaxSend /= 4;							  // relax on refresh before game start
 	}
 	else {
-		if(mMainCharacter1->mNetPriority) {
+		if(mainCharacter[0]->mNetPriority) {
 			lMaxSend += 2;						  // increse that base number.. there is a priority
 		}
 	}
@@ -1113,7 +1113,7 @@ void MR_NetworkSession::BroadcastMainElementState(const MR_ElementNetState &pSta
 
 		const MR_Level *lLevel = GetCurrentLevel();
 		int lVisibleRoomCount;
-		const int *lVisibleRoom = lLevel->GetVisibleZones(mMainCharacter1->mRoom, lVisibleRoomCount);
+		const int *lVisibleRoom = lLevel->GetVisibleZones(mainCharacter[0]->mRoom, lVisibleRoomCount);
 
 		int lNbEligible = 0;
 
@@ -1123,8 +1123,8 @@ void MR_NetworkSession::BroadcastMainElementState(const MR_ElementNetState &pSta
 				lPriorityLevel[lCounter] = lCurrentTime - mLastSendElemStateTime[lCounter];
 
 				// Do the visibilitytest
-				if(mClientCharacter[lCounter]->mRoom == mMainCharacter1->mRoom) {
-					if(mMainCharacter1->mNetPriority) {
+				if(mClientCharacter[lCounter]->mRoom == mainCharacter[0]->mRoom) {
+					if(mainCharacter[0]->mNetPriority) {
 												  // to keep priority state even when this broadcast will be finish
 						mLastSendElemStateTime[lCounter] -= 100;
 												  // major priority boost
@@ -1137,7 +1137,7 @@ void MR_NetworkSession::BroadcastMainElementState(const MR_ElementNetState &pSta
 				else {
 					for(int lRoom = 0; lRoom < lVisibleRoomCount; lRoom++) {
 						if(lVisibleRoom[lRoom] == mClientCharacter[lCounter]->mRoom) {
-							if(mMainCharacter1->mNetPriority) {
+							if(mainCharacter[0]->mNetPriority) {
 												  // to keep priority state even when this broadcast will be finish
 								mLastSendElemStateTime[lCounter] -= 100;
 												  // major priority boost
@@ -1151,8 +1151,8 @@ void MR_NetworkSession::BroadcastMainElementState(const MR_ElementNetState &pSta
 					}
 				}
 
-				int lDistanceX = (mClientCharacter[lCounter]->mPosition.mX - mMainCharacter1->mPosition.mX) / 1024;
-				int lDistanceY = (mClientCharacter[lCounter]->mPosition.mY - mMainCharacter1->mPosition.mY) / 1024;
+				int lDistanceX = (mClientCharacter[lCounter]->mPosition.mX - mainCharacter[0]->mPosition.mX) / 1024;
+				int lDistanceY = (mClientCharacter[lCounter]->mPosition.mY - mainCharacter[0]->mPosition.mY) / 1024;
 
 				MR_Int64 lSqrDistance = Int32x32To64(lDistanceX, lDistanceX) + Int32x32To64(lDistanceY, lDistanceY);
 
@@ -1203,7 +1203,7 @@ void MR_NetworkSession::BroadcastMainElementState(const MR_ElementNetState &pSta
 		}
 
 		// Disable burst alarm
-		mMainCharacter1->mNetPriority = FALSE;
+		mainCharacter[0]->mNetPriority = FALSE;
 	}
 }
 
@@ -1381,8 +1381,8 @@ void MR_NetworkSession::AddResultEntry(int pPlayerIndex, MR_SimulationTime pFini
 			}
 		}
 		else {
-			if(mMainCharacter1 != NULL) {
-				lEntry->mCraftModel = mMainCharacter1->GetHoverModel();
+			if(mainCharacter[0] != NULL) {
+				lEntry->mCraftModel = mainCharacter[0]->GetHoverModel();
 			}
 		}
 
@@ -1407,9 +1407,9 @@ void MR_NetworkSession::AddResultEntry(int pPlayerIndex, MR_SimulationTime pFini
 			}
 		}
 		else {
-			if(mMainCharacter1 != NULL) {
-				lEntry->mPlayerId = mMainCharacter1->GetHoverId();
-				lEntry->mCraftModel = mMainCharacter1->GetHoverModel();
+			if(mainCharacter[0] != NULL) {
+				lEntry->mPlayerId = mainCharacter[0]->GetHoverId();
+				lEntry->mCraftModel = mainCharacter[0]->GetHoverModel();
 			}
 		}
 	}
