@@ -477,7 +477,8 @@ unsigned long MR_GameThread::Loop(LPVOID pThread)
 
 	//TODO: Execute track script.
 
-	gameApp->gamePeer->OnSessionStart(gameApp->sessionPeer);
+	if (gameApp->sessionPeer != NULL)
+		gameApp->gamePeer->OnSessionStart(gameApp->sessionPeer);
 
 	while(true) {
 		EnterCriticalSection(&lThis->mMutex);
@@ -518,7 +519,8 @@ unsigned long MR_GameThread::Loop(LPVOID pThread)
 	}
 
 	// Detach the session peer.
-	gameApp->sessionPeer->OnSessionEnd();
+	if (gameApp->sessionPeer != NULL)
+		gameApp->sessionPeer->OnSessionEnd();
 
 	return 0;
 }
