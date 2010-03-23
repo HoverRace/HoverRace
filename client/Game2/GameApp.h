@@ -94,6 +94,7 @@ class MR_GameApp
 		HoverRace::Client::ClientSession *mCurrentSession;
 		HoverRace::Client::SessionPeerPtr sessionPeer;
 		MR_GameThread *mGameThread;
+		HoverRace::Client::RulebookPtr requestedNewSession;
 
 		eViewMode mCurrentMode;
 

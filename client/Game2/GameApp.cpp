@@ -106,6 +106,7 @@ void CaptureScreen( MR_VideoBuffer* pVideoBuffer );
 #define MRM_EXIT_MENU_LOOP     2
 
 #define MR_WM_ON_INIT (WM_APP + 0x0042)
+#define MR_WM_REQ_NEW_SESSION (WM_APP + 0x0043)
 
 #ifdef WITH_OPENAL
 #	define SOUNDSERVER_INIT(s) MR_SoundServer::Init()
@@ -475,12 +476,17 @@ unsigned long MR_GameThread::Loop(LPVOID pThread)
 	MR_GameThread *lThis = (MR_GameThread *) pThread;
 	MR_GameApp *gameApp = lThis->mGameApp;
 
+	RulebookPtr newSessionRules;
+
 	//TODO: Execute track script.
 
-	if (gameApp->sessionPeer != NULL)
+	if (gameApp->sessionPeer != NULL) {
 		gameApp->gamePeer->OnSessionStart(gameApp->sessionPeer);
+		// Check if a new session was requested.
+		newSessionRules = gameApp->gamePeer->RequestedNewSession();
+	}
 
-	while(true) {
+	while (newSessionRules == NULL) {
 		EnterCriticalSection(&lThis->mMutex);
 
 		if(lThis->mTerminate)
@@ -494,6 +500,8 @@ unsigned long MR_GameThread::Loop(LPVOID pThread)
 		HighConsole *highConsole = gameApp->highConsole;
 		if (highConsole != NULL && highConsole->isVisible()) {
 			highConsole->Advance(tick);
+			// Check if a new session was requested.
+			newSessionRules = gameApp->gamePeer->RequestedNewSession();
 		}
 		else {
 			gameApp->ReadAsyncInputController();
@@ -521,6 +529,10 @@ unsigned long MR_GameThread::Loop(LPVOID pThread)
 	// Detach the session peer.
 	if (gameApp->sessionPeer != NULL)
 		gameApp->sessionPeer->OnSessionEnd();
+
+	// If a new session was requested, notify the gameApp.
+	gameApp->requestedNewSession = newSessionRules;
+	PostMessageW(gameApp->mMainWindow, MR_WM_REQ_NEW_SESSION, 0, 0);
 
 	return 0;
 }
@@ -2027,6 +2039,20 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 		 */
 		case MR_WM_ON_INIT:
 			This->gamePeer->OnInit();
+			{
+				// Check if a new session was requested.
+				RulebookPtr rules = This->gamePeer->RequestedNewSession();
+				if (rules != NULL) {
+					This->NewLocalSession(rules);
+				}
+			}
+			break;
+
+		case MR_WM_REQ_NEW_SESSION:
+			if (This->requestedNewSession != NULL) {
+				This->NewLocalSession(This->requestedNewSession);
+				This->requestedNewSession.reset();
+			}
 			break;
 
 		case WM_DISPLAYCHANGE:

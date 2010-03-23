@@ -60,6 +60,8 @@ class GamePeer {
 		void OnInit();
 		void OnSessionStart(SessionPeerPtr sessionPeer);
 
+		RulebookPtr RequestedNewSession();
+
 	public:
 		ConfigPeer *LGetConfig();
 

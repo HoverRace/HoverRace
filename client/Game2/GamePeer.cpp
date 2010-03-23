@@ -85,14 +85,6 @@ void GamePeer::OnInit()
 	initialized = true;
 
 	onInit.CallHandlers();
-
-	// Process any deferred operations.
-	if (deferredStart != NULL) {
-#		ifdef _WIN32
-			gameApp->NewLocalSession(deferredStart);
-#		endif
-		deferredStart.reset();
-	}
 }
 
 /**
@@ -105,6 +97,20 @@ void GamePeer::OnSessionStart(SessionPeerPtr sessionPeer)
 {
 	luabind::object sessionObj(scripting->GetState(), sessionPeer);
 	onSessionStart.CallHandlers(sessionObj);
+}
+
+/**
+ * Check if the last script execution requested a new session.
+ * After this is called, subsequent calls will return @c NULL until a script
+ * requests a new session.
+ * @return @c NULL if no new session was requested, a pointer to the selected
+ *         rules otherwise.
+ */
+RulebookPtr GamePeer::RequestedNewSession()
+{
+	RulebookPtr retv;
+	retv.swap(deferredStart);
+	return retv;
 }
 
 bool GamePeer::LIsInitialized()
