@@ -194,6 +194,8 @@ void GamePeer::LStartPractice(const std::string &track, const luabind::object &r
 		}
 	}
 
+	//TODO: Check that the track actually exists and throw an error otherwise.
+
 	// We can't safely start a new session while handlers are still executing
 	// since a new thread will be spawned which will likely also try to execute
 	// a script concurrently, leading to undefined behavior.
