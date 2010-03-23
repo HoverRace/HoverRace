@@ -22,6 +22,8 @@
 
 #include "StdAfx.h"
 
+#include "luabind/class_info.hpp"
+
 #include "ConfigPeer.h"
 #include "GamePeer.h"
 #include "SessionPeer.h"
@@ -36,6 +38,14 @@ Script::Core *ClientScriptCore::Reset()
 	SUPER::Reset();
 
 	if (!classesRegistered) {
+
+		lua_State *L = GetState();
+
+		luabind::open(L);
+#		ifdef _DEBUG
+			// Enable class inspection.
+			luabind::bind_class_info(L);
+#		endif
 
 		ConfigPeer::Register(this);
 		GamePeer::Register(this);
