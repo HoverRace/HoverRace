@@ -111,10 +111,21 @@ HighConsole::HighConsole(Script::Core *scripting, GamePeer *gamePeer, SessionPee
 	std::string intro = env->GetVersionString();
 	intro += " :: Console active.";
 	logLines->Add(intro, *logFont, 0x0e);
+
+	// The heading for the console.
+	Font titleFont("Arial", 12);
+	consoleTitle = new StaticText(_("Console"), titleFont, 0x0e);
+	std::string consoleControlsText;
+	consoleControlsText += _("Hide");
+	consoleControlsText += " [~]";
+	consoleControls = new StaticText(consoleControlsText, titleFont, 0x0e);;
 }
 
 HighConsole::~HighConsole()
 {
+	delete consoleControls;
+	delete consoleTitle;
+
 	delete logLines;
 
 	delete cursor;
@@ -320,6 +331,11 @@ void HighConsole::Render(MR_VideoBuffer *dest)
 	int x = 0;
 	int y = viewHeight - totalHeight + PADDING_TOP;
 
+	// Render the title.
+	RenderHeading(consoleTitle, consoleControls,
+		y - PADDING_TOP - TITLE_PADDING_BOTTOM - consoleTitle->GetHeight() - TITLE_PADDING_TOP,
+		0x18);
+
 	// Render the log lines.
 	logLines->Render(vp, PADDING_LEFT, y);
 	y += logLines->GetHeight() + (PADDING_BOTTOM / 2);
@@ -333,6 +349,29 @@ void HighConsole::Render(MR_VideoBuffer *dest)
 		x += commandLineDisplay->GetWidth();
 		cursor->Blt(x, y, vp);
 	}
+}
+
+void HighConsole::RenderHeading(const VideoServices::StaticText *title,
+                                const VideoServices::StaticText *controls,
+                                int y, MR_UInt8 bgColor)
+{
+	const int viewWidth = vp->GetXRes();
+
+	// We assume that both bits of text are the same height.
+	const int totalHeight = TITLE_PADDING_TOP + title->GetHeight() + TITLE_PADDING_BOTTOM;
+	const int titleTotalWidth = PADDING_LEFT + title->GetWidth() + PADDING_RIGHT;
+	const int controlsTotalWidth = PADDING_LEFT + controls->GetWidth() + PADDING_RIGHT;
+
+	for (int i = 0; i < totalHeight; ++i) {
+		vp->DrawHorizontalLine(y + i, 0, titleTotalWidth + i, bgColor);
+	}
+	for (int i = 0; i < totalHeight; ++i) {
+		vp->DrawHorizontalLine(y + i, viewWidth - controlsTotalWidth - i, viewWidth - 1, bgColor);
+	}
+
+	title->Blt(PADDING_LEFT, y + TITLE_PADDING_TOP, vp);
+	controls->Blt(viewWidth - PADDING_RIGHT - controls->GetWidth(),
+		y + TITLE_PADDING_TOP, vp);
 }
 
 HighConsole::LogLines::LogLines() :

@@ -75,6 +75,9 @@ class HighConsole : public Console
 		void OnChar(char c);
 		void Render(MR_VideoBuffer *dest);
 
+		void RenderHeading(const VideoServices::StaticText *title,
+			const VideoServices::StaticText *controls, int y, MR_UInt8 bgColor);
+
 	private:
 		GamePeer *gamePeer;
 		SessionPeerPtr sessionPeer;
@@ -91,6 +94,9 @@ class HighConsole : public Console
 		VideoServices::StaticText *commandPrompt, *continuePrompt;
 		VideoServices::StaticText *commandLineDisplay;
 
+		VideoServices::StaticText *consoleTitle;
+		VideoServices::StaticText *consoleControls;
+
 		unsigned int charWidth;  ///< Guessed fixed character width, in pixels.
 		unsigned int consoleWidth;  ///< Console text width, in pixels.
 
@@ -104,6 +110,10 @@ class HighConsole : public Console
 		static const int PADDING_TOP = 2;
 		static const int PADDING_BOTTOM = 5;
 		static const int PADDING_LEFT = 5;
+		static const int PADDING_RIGHT = PADDING_LEFT;
+
+		static const int TITLE_PADDING_TOP = 2;
+		static const int TITLE_PADDING_BOTTOM = 2;
 };
 
 }  // namespace Client
