@@ -37,12 +37,14 @@
 #include "HighObserver.h"
 
 using namespace HoverRace;
-using HoverRace::Client::ClientSession;
 using HoverRace::Util::Config;
 using HoverRace::Util::OS;
 using namespace HoverRace::VideoServices;
 
 #define STATS_COLOR 0x47
+
+namespace HoverRace {
+namespace Client {
 
 HighObserver::HighObserver()
 {
@@ -91,3 +93,6 @@ void HighObserver::Render(MR_VideoBuffer *dest, const ClientSession *session)
 
 	RenderStats(session);
 }
+
+}  // namespace Client
+}  // namespace HoverRace

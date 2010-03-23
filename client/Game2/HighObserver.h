@@ -39,6 +39,9 @@ namespace HoverRace {
 class MR_2DViewPort;
 class MR_VideoBuffer;
 
+namespace HoverRace {
+namespace Client {
+
 /**
  * A global HUD that sits on top of everything else.
  *
@@ -56,13 +59,16 @@ class HighObserver
 		~HighObserver();
 
 	private:
-		void RenderStats(const HoverRace::Client::ClientSession *session) const;
+		void RenderStats(const ClientSession *session) const;
 	public:
-		void Render(MR_VideoBuffer *dest, const HoverRace::Client::ClientSession *session);
+		void Render(MR_VideoBuffer *dest, const ClientSession *session);
 
 	private:
 		MR_2DViewPort *viewport;
-		HoverRace::VideoServices::Font *statsFont; ///< Font used for stats HUD text.
-		HoverRace::VideoServices::NumericGlyphs *statsNumGlyphs;
-		HoverRace::VideoServices::MultipartText *fpsTxt;
+		VideoServices::Font *statsFont; ///< Font used for stats HUD text.
+		VideoServices::NumericGlyphs *statsNumGlyphs;
+		VideoServices::MultipartText *fpsTxt;
 };
+
+}  // namespace Client
+}  // namespace HoverRace

@@ -27,12 +27,12 @@
 #include "ClientSession.h"
 
 class MR_GameApp;
-class HighObserver;
 namespace HoverRace {
 	namespace Client {
 		class FullscreenTest;
 		class GamePeer;
 		class HighConsole;
+		class HighObserver;
 		class IntroMovie;
 		class Rulebook;
 		typedef boost::shared_ptr<Rulebook> RulebookPtr;
@@ -84,7 +84,7 @@ class MR_GameApp
 		MR_Observer *mObserver2;
 		MR_Observer *mObserver3;
 		MR_Observer *mObserver4;
-		HighObserver *highObserver;
+		HoverRace::Client::HighObserver *highObserver;
 		HoverRace::Client::HighConsole *highConsole;
 		HoverRace::Client::IntroMovie *introMovie;
 		HoverRace::Client::FullscreenTest *fullscreenTest;
