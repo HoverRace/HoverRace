@@ -28,7 +28,7 @@ game:on_init(function()
 	print("Initialized: ", game:is_initialized())
 	-- The session won't actually start until all on_init handlers
 	-- have finished executing.
-	game:start_practice("ClassicH.trk", {
+	game:start_practice("ClassicH", {
 		laps = 2
 		})
 end)
@@ -64,7 +64,7 @@ function first_session(session)
 	-- Can also say clock:from_now("3s")
 	clock:at(clock:from_now(3000), function()
 		-- Start the next session
-		game:start_practice("ClasicH.trk")
+		game:start_practice("The Alley2")
 	end)
 	--]]
 end
