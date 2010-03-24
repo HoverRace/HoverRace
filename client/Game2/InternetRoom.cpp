@@ -2476,7 +2476,7 @@ BOOL CALLBACK UpdateScoresCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LP
 				KillTimer(pWindow, pWParam);
 	
 				// Ask the user if he want to retry
-				if(MessageBoxW(pWindow, Str::UW(_("Connection timeout")), Str::UW(_("HoverRace")), 
+				if(MessageBoxW(pWindow, Str::UW(_("Connection timeout")), PACKAGE_NAME_L, 
 					MB_ICONSTOP | MB_RETRYCANCEL | MB_APPLMODAL) == IDRETRY)
 				{
 					// Initiate the request

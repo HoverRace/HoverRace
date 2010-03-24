@@ -871,7 +871,7 @@ BOOL MR_GameApp::InitGame()
 				"to play in a Window, HoverRace will have to switch to 256 color mode.\n"
 				"It is recommended you use Fullscreen mode instead.\n\n"
 				"Do you want to play in Window mode and switch to 256 color?")), 
-				Str::UW(_("HoverRace")), 
+				PACKAGE_NAME_L, 
 				MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2) == IDYES) {
 
 				if(mVideoBuffer->TryToSetColorMode(8)) {
@@ -881,7 +881,7 @@ BOOL MR_GameApp::InitGame()
 				if(!lSwitchTo256) {				  // mode switch failed, tell the user
 					MessageBoxW(mMainWindow,
 						Str::UW(_("HoverRace was unable to switch the video mode. You will need to play in full screen.")), 
-						Str::UW(_("HoverRace")),
+						PACKAGE_NAME_L,
 						MB_OK);
 				}
 			}
