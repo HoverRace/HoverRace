@@ -252,6 +252,7 @@ void MR_GameThread::Restart()
 }
 
 MR_GameApp::MR_GameApp(HINSTANCE pInstance, bool safeMode) :
+	nonInteractiveShutdown(false),
 	introMovie(NULL), scripting(NULL), gamePeer(NULL), sysEnv(NULL)
 {
 	This = this;
@@ -1652,6 +1653,21 @@ void MR_GameApp::NewInternetSession()
 
 }
 
+/**
+ * Begin the orderly shutdown procedure, avoiding all prompts.
+ */
+void MR_GameApp::RequestShutdown()
+{
+	if (mMainWindow != NULL) {
+		nonInteractiveShutdown = true;
+		PostMessage(mMainWindow, WM_CLOSE, 0, 0);
+	}
+	else {
+		// No main window?  Just terminate immediately.
+		exit(0);
+	}
+}
+
 void MR_GameApp::DrawBackground()
 {
 
@@ -2007,7 +2023,7 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 		case WM_CLOSE:
 			if(This->IsGameRunning()) {
 				This->SetVideoMode(0, 0);
-				if(This->AskUserToAbortGame() != IDOK) {
+				if(!This->nonInteractiveShutdown && This->AskUserToAbortGame() != IDOK) {
 					return 0;
 				}
 			}

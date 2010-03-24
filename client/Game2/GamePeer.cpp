@@ -73,6 +73,7 @@ void GamePeer::Register(Script::Core *scripting)
 			.def("on_session_start", (void(GamePeer::*)(const std::string&, const luabind::object&))&GamePeer::LOnSessionStart)
 			.def("start_practice", (void(GamePeer::*)(const std::string&))&GamePeer::LStartPractice)
 			.def("start_practice", (void(GamePeer::*)(const std::string&, const luabind::object&))&GamePeer::LStartPractice)
+			.def("shutdown", &GamePeer::LShutdown)
 	];
 }
 
@@ -111,6 +112,14 @@ RulebookPtr GamePeer::RequestedNewSession()
 	RulebookPtr retv;
 	retv.swap(deferredStart);
 	return retv;
+}
+
+void GamePeer::VerifyInitialized() const
+{
+	if (!initialized) {
+		luaL_error(scripting->GetState(), "Game is not yet initialized.");
+		return;
+	}
 }
 
 bool GamePeer::LIsInitialized()
@@ -167,12 +176,9 @@ void GamePeer::LStartPractice(const std::string &track, const luabind::object &r
 	//             laps - Number of laps (between 1 and 99, inclusive).
 	using namespace luabind;
 
-	lua_State *L = scripting->GetState();
+	VerifyInitialized();
 
-	if (!initialized) {
-		luaL_error(L, "Game is not yet initialized.");
-		return;
-	}
+	lua_State *L = scripting->GetState();
 
 	bool hasExtension = boost::ends_with(track, Config::TRACK_EXT);
 
@@ -205,6 +211,22 @@ void GamePeer::LStartPractice(const std::string &track, const luabind::object &r
 		hasExtension ? track : (track + Config::TRACK_EXT),
 		laps,
 		0x7f);
+}
+
+void GamePeer::LShutdown()
+{
+	// function shutdown()
+	// Request an orderly shutdown of the game.
+	// The shutdown may not be immediate; the game will try to shut down all
+	// systems in an orderly fashion.
+
+	VerifyInitialized();
+
+#	ifdef _WIN32
+		gameApp->RequestShutdown();
+#	else
+		exit(0);
+#	endif
 }
 
 }  // namespace Client

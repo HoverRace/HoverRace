@@ -62,6 +62,9 @@ class GamePeer {
 
 		RulebookPtr RequestedNewSession();
 
+	protected:
+		void VerifyInitialized() const;
+
 	public:
 		ConfigPeer *LGetConfig();
 
@@ -75,6 +78,8 @@ class GamePeer {
 
 		void LStartPractice(const std::string &track);
 		void LStartPractice(const std::string &track, const luabind::object &rules);
+
+		void LShutdown();
 
 	private:
 		Script::Core *scripting;

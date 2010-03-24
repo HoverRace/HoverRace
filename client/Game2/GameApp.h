@@ -84,6 +84,7 @@ class MR_GameApp
 		MR_VideoBuffer *mVideoBuffer;
 		static const int MAX_OBSERVERS = HoverRace::Util::Config::MAX_PLAYERS;
 		MR_Observer *observers[MAX_OBSERVERS];
+		bool nonInteractiveShutdown;
 		HoverRace::Client::HighObserver *highObserver;
 		HoverRace::Client::HighConsole *highConsole;
 		HoverRace::Client::IntroMovie *introMovie;
@@ -133,6 +134,8 @@ class MR_GameApp
 		void NewSplitSession(int pSplitPlayers);
 		void NewNetworkSession(BOOL pIsServer);
 		void NewInternetSession();
+
+		void RequestShutdown();
 
 	private:
 		void LoadRegistry();
