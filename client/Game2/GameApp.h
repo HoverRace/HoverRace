@@ -123,6 +123,7 @@ class MR_GameApp
 		void RefreshTitleBar();
 
 		void OnChar(char c);
+		bool OnKeyDown(int keycode);
 		int ReadAsyncInputControllerPlayer(int playerIdx);
 		void ReadAsyncInputController();		  // Get the state of the input controler (KDB, joystick, mouse)
 

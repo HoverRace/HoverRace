@@ -1002,6 +1002,46 @@ void MR_GameApp::OnChar(char c)
 	}
 }
 
+bool MR_GameApp::OnKeyDown(int keycode)
+{
+	if (highConsole == NULL || !highConsole->isVisible()) {
+		switch (keycode) {
+			// Camera control
+			case VK_HOME:
+				BOOST_FOREACH(MR_Observer *obs, observers) {
+					if (obs != NULL) obs->Home();
+				}
+				return true;
+
+			case VK_PRIOR:
+				BOOST_FOREACH(MR_Observer *obs, observers) {
+					if (obs != NULL) obs->Scroll(1);
+				}
+				return true;
+
+			case VK_NEXT:
+				BOOST_FOREACH(MR_Observer *obs, observers) {
+					if (obs != NULL) obs->Scroll(-1);
+				}
+				return true;
+
+			case VK_INSERT:
+				BOOST_FOREACH(MR_Observer *obs, observers) {
+					if (obs != NULL) obs->ZoomIn();
+				}
+				return true;
+
+			case VK_DELETE:
+				BOOST_FOREACH(MR_Observer *obs, observers) {
+					if (obs != NULL) obs->ZoomOut();
+				}
+				return true;
+		}
+	}
+
+	return false;
+}
+
 /**
  * Read the control state for a specific player.
  * @param playerIdx The player index (0 = first player, 1 = second, etc.).
@@ -1950,61 +1990,7 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 			return 0;
 
 		case WM_KEYDOWN:
-			switch (pWParam) {
-				// Camera control
-				case VK_HOME:
-					BOOST_FOREACH(MR_Observer *obs, This->observers) {
-						if (obs != NULL) obs->Home();
-					}
-					return 0;
-
-				case VK_PRIOR:
-					BOOST_FOREACH(MR_Observer *obs, This->observers) {
-						if (obs != NULL) obs->Scroll(1);
-					}
-					return 0;
-
-				case VK_NEXT:
-					BOOST_FOREACH(MR_Observer *obs, This->observers) {
-						if (obs != NULL) obs->Scroll(-1);
-					}
-					return 0;
-
-				case VK_INSERT:
-					BOOST_FOREACH(MR_Observer *obs, This->observers) {
-						if (obs != NULL) obs->ZoomIn();
-					}
-					return 0;
-
-				case VK_DELETE:
-					BOOST_FOREACH(MR_Observer *obs, This->observers) {
-						if (obs != NULL) obs->ZoomOut();
-					}
-					return 0;
-
-					// Debug keys
-					/*
-					   case VK_F8:
-					   #ifdef MR_AVI_CAPTURE
-					   InitCapture( "demo.avi", This->mVideoBuffer );
-					   #endif
-					   This->mNbFrames = 0;
-					   This->mNbFramesStartingTime = time( NULL );
-					   return 0;
-
-					   case VK_F9:
-					   #ifdef MR_AVI_CAPTURE
-					   CloseCapture();
-					   #endif
-
-					   TRACE( "Refresh rate = %d f/s( %d/%d)\n",
-					   (int)((double)This->mNbFrames/(double(time(NULL)-This->mNbFramesStartingTime))),
-					   This->mNbFrames,
-					   (time(NULL)-This->mNbFramesStartingTime) );
-					   return 0;
-					 */
-
-			}
+			if (This->OnKeyDown(pWParam)) return 0;
 			break;
 
 		case WM_PAINT:
