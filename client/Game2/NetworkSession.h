@@ -145,6 +145,6 @@ class MR_NetworkSession : public HoverRace::Client::ClientSession
 		void AddMessageKey(char pKey);
 		void GetCurrentMessage(char *pDest) const;
 
-		const MR_MainCharacter *GetPlayer(int pPlayerIndex) const;
+		MR_MainCharacter *GetPlayer(int pPlayerIndex) const;
 };
 #endif

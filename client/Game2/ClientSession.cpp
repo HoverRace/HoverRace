@@ -188,25 +188,25 @@ BOOL ClientSession::CreateMainCharacter4()
 /** @deprecated Use GetPlayer(int) instead. */
 MR_MainCharacter *ClientSession::GetMainCharacter() const
 {
-	return const_cast<MR_MainCharacter*>(GetPlayer(0));
+	return GetPlayer(0);
 }
 
 /** @deprecated Use GetPlayer(int) instead. */
 MR_MainCharacter *ClientSession::GetMainCharacter2() const
 {
-	return const_cast<MR_MainCharacter*>(GetPlayer(1));
+	return GetPlayer(1);
 }
 
 /** @deprecated Use GetPlayer(int) instead. */
 MR_MainCharacter *ClientSession::GetMainCharacter3() const
 {
-	return const_cast<MR_MainCharacter*>(GetPlayer(2));
+	return GetPlayer(2);
 }
 
 /** @deprecated Use GetPlayer(int) instead. */
 MR_MainCharacter *ClientSession::GetMainCharacter4() const
 {
-	return const_cast<MR_MainCharacter*>(GetPlayer(3));
+	return GetPlayer(3);
 }
 
 void ClientSession::SetSimulationTime(MR_SimulationTime pTime)
@@ -392,7 +392,7 @@ void ClientSession::ConvertMapCoordinate(int &pX, int &pY, int pRatio) const
 	pY = (mHeightSprite - 1 - (pY - mY0Map) * mHeightSprite / mHeightMap) / pRatio;
 }
 
-const MR_MainCharacter *ClientSession::GetPlayer(int i) const
+MR_MainCharacter *ClientSession::GetPlayer(int i) const
 {
 	ASSERT(i >= 0 && i < MAX_PLAYERS);
 	return mainCharacter[i];

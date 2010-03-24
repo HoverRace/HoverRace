@@ -108,7 +108,7 @@ class ClientSession
 
 		virtual int GetNbPlayers() const;
 		virtual int GetRank(const MR_MainCharacter * pPlayer) const;
-		virtual const MR_MainCharacter *GetPlayer(int pPlayerIndex) const;
+		virtual MR_MainCharacter *GetPlayer(int pPlayerIndex) const;
 
 		// Chat related functions (all messages are already converted in internal ASCII
 		virtual void AddMessageKey(char pKey);

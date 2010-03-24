@@ -323,9 +323,9 @@ int MR_NetworkSession::GetNbPlayers() const
  *
  * @param pPlayerIndex Index of the player being located
  */
-const MR_MainCharacter *MR_NetworkSession::GetPlayer(int pPlayerIndex) const
+MR_MainCharacter *MR_NetworkSession::GetPlayer(int pPlayerIndex) const
 {
-	const MR_MainCharacter *lReturnValue = NULL;
+	MR_MainCharacter *lReturnValue = NULL;
 
 	if(pPlayerIndex == 0) 
 		lReturnValue = mainCharacter[0];
