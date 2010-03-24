@@ -122,6 +122,7 @@ using boost::str;
 using namespace HoverRace;
 using namespace HoverRace::Util;
 
+/*
 enum MR_InControler { MR_KDB, MR_JOY1, MR_JOY2, MR_JOY3, MR_JOY4 };
 
 enum
@@ -268,14 +269,6 @@ static BOOL CheckKeyState(int pKeyIndex)
 				lJoystick1.dwFlags = JOY_RETURNBUTTONS | JOY_RETURNX | JOY_RETURNY;
 				joyGetPosEx(0, &lJoystick1);
 
-				/*
-				   TRACE( "Joy %d %d %d %d %d %d \n",
-				   lJoystick1.dwXpos, lJoystick1.dwYpos,
-				   lJoystick1.dwButtons&1,
-				   lJoystick1.dwButtons&2,
-				   lJoystick1.dwButtons&4,
-				   lJoystick1.dwButtons&8              );
-				 */
 			}
 
 			switch (KeyChoice[pKeyIndex].mKeyValue) {
@@ -464,6 +457,7 @@ static BOOL CheckKeyState(int pKeyIndex)
 	}
 	return lReturnValue;
 }
+*/
 
 MR_GameApp *MR_GameApp::This;
 
@@ -679,7 +673,9 @@ void MR_GameApp::Clean()
 	MR_DllObjectFactory::Clean(TRUE);
 
 	mClrScrTodo = 2;
+	/*
 	gFirstKDBCall = TRUE;						  // Set to TRUE on each new game
+	*/
 
 }
 
@@ -1371,8 +1367,10 @@ int MR_GameApp::ReadAsyncInputControllerPlayer(int playerIdx)
 
 void MR_GameApp::ReadAsyncInputController()
 {
+	/*
 	gFirstKDBResetJoy1 = TRUE;
 	gFirstKDBResetJoy2 = TRUE;
+	*/
 
 	if(mCurrentSession != NULL) {
 		if(GetForegroundWindow() == mMainWindow)
