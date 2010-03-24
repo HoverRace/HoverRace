@@ -26,8 +26,6 @@
 
 #else
 
-#	include <X11/Xlib.h>
-
 #	include "../../include/compat/unix.h"
 #	include "../../config.h"
 
@@ -59,6 +57,12 @@
 #include <lua.hpp>
 #include <luabind/luabind.hpp>
 #include <luabind/object.hpp>
+
+#ifndef _WIN32
+	// Xlib.h must be included *after* boost/foreach.hpp as a workaround for
+	// https://svn.boost.org/trac/boost/ticket/3000
+#	include <X11/Xlib.h>
+#endif
 
 #define PACKAGE_NAME_WIDEN(x) L ## x
 #define PACKAGE_NAME_APPLY(x) PACKAGE_NAME_WIDEN(x)

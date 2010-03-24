@@ -26,8 +26,6 @@
 
 #else
 
-#	include <X11/Xlib.h>
-
 #	include "../include/compat/unix.h"
 #	include "../config.h"
 
@@ -52,8 +50,15 @@
 
 #include <boost/filesystem/convenience.hpp>
 #include <boost/filesystem/path.hpp>
+#include <boost/foreach.hpp>
 #include <boost/format.hpp>
 #include <boost/shared_ptr.hpp>
+
+#ifndef _WIN32
+	// Xlib.h must be included *after* boost/foreach.hpp as a workaround for
+	// https://svn.boost.org/trac/boost/ticket/3000
+#	include <X11/Xlib.h>
+#endif
 
 // Don't use the min/max macros; use std::min and std::max from the STL.
 #ifdef min
