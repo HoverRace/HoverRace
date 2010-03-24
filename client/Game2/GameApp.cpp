@@ -2013,22 +2013,7 @@ void MR_GameApp::UpdateMenuItems()
 
 LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
 {
-	// Catch environment modification events
-	// TRACE( "MESSAGE %d W %d L %d\n", pMsgId, pWParam, pLParam );
-
 	switch (pMsgId) {
-		// Catch environment modification events
-		/*
-		   case WM_SHOWWINDOW:
-		   if( pWParam && pLParam == SW_PARENTOPENING )
-			   {
-			   if( This->mVideoBuffer != NULL )
-			   {
-			   This->mVideoBuffer->ExitIconMode();
-			   }
-			   }
-			   break;
-		 */
 		case MR_WM_ON_INIT:
 			This->gamePeer->OnInit();
 			{
@@ -2152,13 +2137,9 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 			 */
 
 		case WM_ACTIVATEAPP:
-			//TRACE("WM_ACTIVATE %d\n", pWParam);
-
 			if(pWParam && (This->mVideoBuffer != NULL) && (This->mMainWindow == GetForegroundWindow())) {
 				if(!This->mVideoBuffer->IsModeSettingInProgress()) {
 					if(This->mVideoBuffer->IsWindowMode()) {
-						//TRACE("SetMode\n");
-
 						This->SetVideoMode(0, 0);
 						This->AssignPalette();
 						return 0;
@@ -2262,48 +2243,6 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 					This->mCurrentMode = eDebugView;
 					return 0;
 
-					/* DISABLED BY AUSTIN: No need for the +/- to be used.
-
-					   case ID_VIEW_LARGER:
-					   if( This->mObserver1 != NULL )
-						   {
-						   This->mObserver1->ReduceMargin();
-						   }
-						   if( This->mObserver2 != NULL )
-						   {
-						   This->mObserver2->ReduceMargin();
-						   }
-						   if( This->mObserver3 != NULL )
-						   {
-						   This->mObserver3->ReduceMargin();
-						   }
-						   if( This->mObserver4 != NULL )
-						   {
-						   This->mObserver4->ReduceMargin();
-						   }
-						   return 0;
-	
-						   case ID_VIEW_SMALLER:
-						   if( This->mObserver1 != NULL )
-						   {
-						   This->mObserver1->EnlargeMargin();
-						   }
-						   if( This->mObserver2 != NULL )
-						   {
-						   This->mObserver2->EnlargeMargin();
-						   }
-						   if( This->mObserver3 != NULL )
-						   {
-						   This->mObserver3->EnlargeMargin();
-						   }
-						   if( This->mObserver4 != NULL )
-						   {
-						   This->mObserver4->EnlargeMargin();
-						   }
-						   This->mClrScrTodo = 2;
-						   return 0;
-						 */
-	
 					case ID_VIEW_PLAYERSLIST:
 						BOOST_FOREACH(MR_Observer *obs, This->observers) {
 							if (obs != NULL) obs->PlayersListPageDn();
