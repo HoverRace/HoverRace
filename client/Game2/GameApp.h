@@ -22,6 +22,8 @@
 #ifndef GAME_APP_H
 #define GAME_APP_H
 
+#include "../../engine/Util/Config.h"
+
 #include "Controller.h"
 #include "Observer.h"
 #include "ClientSession.h"
@@ -80,10 +82,8 @@ class MR_GameApp
 		HWND mBadVideoModeDlg;
 		HACCEL mAccelerators;
 		MR_VideoBuffer *mVideoBuffer;
-		MR_Observer *mObserver1;
-		MR_Observer *mObserver2;
-		MR_Observer *mObserver3;
-		MR_Observer *mObserver4;
+		static const int MAX_OBSERVERS = HoverRace::Util::Config::MAX_PLAYERS;
+		MR_Observer *observers[MAX_OBSERVERS];
 		HoverRace::Client::HighObserver *highObserver;
 		HoverRace::Client::HighConsole *highConsole;
 		HoverRace::Client::IntroMovie *introMovie;

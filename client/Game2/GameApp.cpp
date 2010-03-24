@@ -23,6 +23,8 @@
 
 #include <sstream>
 
+#include <boost/foreach.hpp>
+
 #include "GameApp.h"
 #include "AboutDialog.h"
 #include "FirstChoiceDialog.h"
@@ -601,10 +603,9 @@ MR_GameApp::MR_GameApp(HINSTANCE pInstance, bool safeMode) :
 	mBadVideoModeDlg = NULL;
 	mAccelerators = NULL;
 	mVideoBuffer = NULL;
-	mObserver1 = NULL;
-	mObserver2 = NULL;
-	mObserver3 = NULL;
-	mObserver4 = NULL;
+	for (int i = 0; i < MAX_OBSERVERS; ++i) {
+		observers[i] = NULL;
+	}
 	highObserver = NULL;
 	highConsole = NULL;
 	fullscreenTest = NULL;
@@ -667,17 +668,13 @@ void MR_GameApp::Clean()
 	delete highConsole;
 	delete highObserver;
 	DeleteMovieWnd();
-	mObserver1->Delete();
-	mObserver2->Delete();
-	mObserver3->Delete();
-	mObserver4->Delete();
+	for (int i = 0; i < MAX_OBSERVERS; ++i) {
+		observers[i]->Delete();
+		observers[i] = NULL;
+	}
 
 	highConsole = NULL;
 	highObserver = NULL;
-	mObserver1 = NULL;
-	mObserver2 = NULL;
-	mObserver3 = NULL;
-	mObserver4 = NULL;
 
 	MR_DllObjectFactory::Clean(TRUE);
 
@@ -1280,25 +1277,25 @@ void MR_GameApp::RefreshView()
 							DrawBackground();
 						}
 
-						if(mObserver1 != NULL)
-							mObserver1->RenderNormalDisplay(mVideoBuffer, mCurrentSession, mCurrentSession->GetMainCharacter(), lTime, mCurrentSession->GetBackImage());
-						if(mObserver2 != NULL)
-							mObserver2->RenderNormalDisplay(mVideoBuffer, mCurrentSession, mCurrentSession->GetMainCharacter2(), lTime, mCurrentSession->GetBackImage());
-						if(mObserver3 != NULL)
-							mObserver3->RenderNormalDisplay(mVideoBuffer, mCurrentSession, mCurrentSession->GetMainCharacter3(), lTime, mCurrentSession->GetBackImage());
-						if(mObserver4 != NULL)
-							mObserver4->RenderNormalDisplay(mVideoBuffer, mCurrentSession, mCurrentSession->GetMainCharacter4(), lTime, mCurrentSession->GetBackImage());
+						for (int i = 0; i < MAX_OBSERVERS; ++i) {
+							MR_Observer *obs = observers[i];
+							if (obs != NULL) {
+								obs->RenderNormalDisplay(mVideoBuffer, mCurrentSession,
+									mCurrentSession->GetPlayer(i),
+									lTime, mCurrentSession->GetBackImage());
+							}
+						}
 						break;
 
 					case eDebugView:
-						if(mObserver1 != NULL)
-							mObserver1->RenderDebugDisplay(mVideoBuffer, mCurrentSession, mCurrentSession->GetMainCharacter(), lTime, mCurrentSession->GetBackImage());
-						if(mObserver2 != NULL)
-							mObserver2->RenderDebugDisplay(mVideoBuffer, mCurrentSession, mCurrentSession->GetMainCharacter2(), lTime, mCurrentSession->GetBackImage());
-						if(mObserver3 != NULL)
-							mObserver3->RenderDebugDisplay(mVideoBuffer, mCurrentSession, mCurrentSession->GetMainCharacter3(), lTime, mCurrentSession->GetBackImage());
-						if(mObserver4 != NULL)
-							mObserver4->RenderDebugDisplay(mVideoBuffer, mCurrentSession, mCurrentSession->GetMainCharacter4(), lTime, mCurrentSession->GetBackImage());
+						for (int i = 0; i < MAX_OBSERVERS; ++i) {
+							MR_Observer *obs = observers[i];
+							if (obs != NULL) {
+								obs->RenderDebugDisplay(mVideoBuffer, mCurrentSession,
+									mCurrentSession->GetPlayer(i),
+									lTime, mCurrentSession->GetBackImage());
+							}
+						}
 						break;
 				}
 				if (highObserver != NULL) {
@@ -1321,15 +1318,12 @@ void MR_GameApp::RefreshView()
 	}
 	// Sound refresh
 	if(mCurrentSession != NULL) {
-		if(mObserver1 != NULL)
-			mObserver1->PlaySounds(mCurrentSession->GetCurrentLevel(), mCurrentSession->GetMainCharacter());
-		if(mObserver2 != NULL)
-			mObserver2->PlaySounds(mCurrentSession->GetCurrentLevel(), mCurrentSession->GetMainCharacter2());
-		if(mObserver3 != NULL)
-			mObserver3->PlaySounds(mCurrentSession->GetCurrentLevel(), mCurrentSession->GetMainCharacter3());
-		if(mObserver4 != NULL)
-			mObserver4->PlaySounds(mCurrentSession->GetCurrentLevel(), mCurrentSession->GetMainCharacter4());
-
+		for (int i = 0; i < MAX_OBSERVERS; ++i) {
+			MR_Observer *obs = observers[i];
+			if (obs != NULL) {
+				obs->PlaySounds(mCurrentSession->GetCurrentLevel(), mCurrentSession->GetPlayer(i));
+			}
+		}
 		MR_SoundServer::ApplyContinuousPlay();
 	}
 }
@@ -1587,7 +1581,7 @@ void MR_GameApp::NewLocalSession(RulebookPtr rules)
 	if(lSuccess) {
 		DeleteMovieWnd();
 		SOUNDSERVER_INIT(mMainWindow);
-		mObserver1 = MR_Observer::New();
+		observers[0] = MR_Observer::New();
 		highObserver = new HighObserver();
 
 		// Create the new session
@@ -1655,27 +1649,27 @@ void MR_GameApp::NewSplitSession(int pSplitPlayers)
 		DeleteMovieWnd();
 		SOUNDSERVER_INIT(mMainWindow);
 
-		mObserver1 = MR_Observer::New();
-		mObserver2 = MR_Observer::New();
+		observers[0] = MR_Observer::New();
+		observers[1] = MR_Observer::New();
 		if(pSplitPlayers > 2)
-			mObserver3 = MR_Observer::New();
+			observers[2] = MR_Observer::New();
 		if(pSplitPlayers > 3)
-			mObserver4 = MR_Observer::New();
+			observers[3] = MR_Observer::New();
 
 		if(pSplitPlayers == 2) {
-			mObserver1->SetSplitMode(MR_Observer::eUpperSplit);
-			mObserver2->SetSplitMode(MR_Observer::eLowerSplit);
+			observers[0]->SetSplitMode(MR_Observer::eUpperSplit);
+			observers[1]->SetSplitMode(MR_Observer::eLowerSplit);
 		}
 		if(pSplitPlayers == 3) {
-			mObserver1->SetSplitMode(MR_Observer::eUpperLeftSplit);
-			mObserver2->SetSplitMode(MR_Observer::eUpperRightSplit);
-			mObserver3->SetSplitMode(MR_Observer::eLowerLeftSplit);
+			observers[0]->SetSplitMode(MR_Observer::eUpperLeftSplit);
+			observers[1]->SetSplitMode(MR_Observer::eUpperRightSplit);
+			observers[2]->SetSplitMode(MR_Observer::eLowerLeftSplit);
 		}
 		if(pSplitPlayers == 4) {
-			mObserver1->SetSplitMode(MR_Observer::eUpperLeftSplit);
-			mObserver2->SetSplitMode(MR_Observer::eUpperRightSplit);
-			mObserver3->SetSplitMode(MR_Observer::eLowerLeftSplit);
-			mObserver4->SetSplitMode(MR_Observer::eLowerRightSplit);
+			observers[0]->SetSplitMode(MR_Observer::eUpperLeftSplit);
+			observers[1]->SetSplitMode(MR_Observer::eUpperRightSplit);
+			observers[2]->SetSplitMode(MR_Observer::eLowerLeftSplit);
+			observers[3]->SetSplitMode(MR_Observer::eLowerRightSplit);
 		}
 
 		highObserver = new HighObserver();
@@ -1804,7 +1798,7 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 
 	MR_RecordFile *lTrackFile;
 	if(lSuccess) {
-		mObserver1 = MR_Observer::New();
+		observers[0] = MR_Observer::New();
 		highObserver = new HighObserver();
 
 		// Load the track
@@ -1934,7 +1928,7 @@ void MR_GameApp::NewInternetSession()
 	}
 
 	if(lSuccess) {
-		mObserver1 = MR_Observer::New();
+		observers[0] = MR_Observer::New();
 		highObserver = new HighObserver();
 		lSuccess = lCurrentSession->CreateMainCharacter();
 	}
@@ -2254,33 +2248,15 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 
 				case ID_VIEW_3DACTION:
 					This->mCurrentMode = e3DView;
-					if(This->mObserver1 != NULL) {
-						This->mObserver1->SetCockpitView(FALSE);
-					}
-					if(This->mObserver2 != NULL) {
-						This->mObserver2->SetCockpitView(FALSE);
-					}
-					if(This->mObserver3 != NULL) {
-						This->mObserver3->SetCockpitView(FALSE);
-					}
-					if(This->mObserver4 != NULL) {
-						This->mObserver4->SetCockpitView(FALSE);
+					BOOST_FOREACH(MR_Observer *obs, This->observers) {
+						if (obs != NULL) obs->SetCockpitView(FALSE);
 					}
 					return 0;
 
 				case ID_VIEW_COCKPIT:
 					This->mCurrentMode = e3DView;
-					if(This->mObserver1 != NULL) {
-						This->mObserver1->SetCockpitView(TRUE);
-					}
-					if(This->mObserver2 != NULL) {
-						This->mObserver2->SetCockpitView(TRUE);
-					}
-					if(This->mObserver3 != NULL) {
-						This->mObserver3->SetCockpitView(TRUE);
-					}
-					if(This->mObserver4 != NULL) {
-						This->mObserver4->SetCockpitView(TRUE);
+					BOOST_FOREACH(MR_Observer *obs, This->observers) {
+						if (obs != NULL) obs->SetCockpitView(TRUE);
 					}
 					return 0;
 
@@ -2331,32 +2307,14 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 						 */
 	
 					case ID_VIEW_PLAYERSLIST:
-						if(This->mObserver1 != NULL) {
-							This->mObserver1->PlayersListPageDn();
-						}
-						if(This->mObserver2 != NULL) {
-							This->mObserver2->PlayersListPageDn();
-						}
-						if(This->mObserver3 != NULL) {
-							This->mObserver3->PlayersListPageDn();
-						}
-						if(This->mObserver4 != NULL) {
-							This->mObserver4->PlayersListPageDn();
+						BOOST_FOREACH(MR_Observer *obs, This->observers) {
+							if (obs != NULL) obs->PlayersListPageDn();
 						}
 						return 0;
 	
 					case ID_VIEW_MOREMESSAGES:
-						if(This->mObserver1 != NULL) {
-							This->mObserver1->MoreMessages();
-						}
-						if(This->mObserver2 != NULL) {
-							This->mObserver2->MoreMessages();
-						}
-						if(This->mObserver3 != NULL) {
-							This->mObserver3->MoreMessages();
-						}
-						if(This->mObserver4 != NULL) {
-							This->mObserver4->MoreMessages();
+						BOOST_FOREACH(MR_Observer *obs, This->observers) {
+							if (obs != NULL) obs->MoreMessages();
 						}
 						return 0;
 	
@@ -2395,77 +2353,32 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 			switch (pWParam) {
 				// Camera control
 				case VK_HOME:
-					if(This->mObserver1 != NULL) {
-						This->mObserver1->Home();
-					}
-					if(This->mObserver2 != NULL) {
-						This->mObserver2->Home();
-					}
-					if(This->mObserver3 != NULL) {
-						This->mObserver3->Home();
-					}
-					if(This->mObserver4 != NULL) {
-						This->mObserver4->Home();
+					BOOST_FOREACH(MR_Observer *obs, This->observers) {
+						if (obs != NULL) obs->Home();
 					}
 					return 0;
 
 				case VK_PRIOR:
-					if(This->mObserver1 != NULL) {
-						This->mObserver1->Scroll(1);
-					}
-					if(This->mObserver2 != NULL) {
-						This->mObserver2->Scroll(1);
-					}
-					if(This->mObserver3 != NULL) {
-						This->mObserver3->Scroll(1);
-					}
-					if(This->mObserver4 != NULL) {
-						This->mObserver4->Scroll(1);
+					BOOST_FOREACH(MR_Observer *obs, This->observers) {
+						if (obs != NULL) obs->Scroll(1);
 					}
 					return 0;
 
 				case VK_NEXT:
-					if(This->mObserver1 != NULL) {
-						This->mObserver1->Scroll(-1);
-					}
-					if(This->mObserver2 != NULL) {
-						This->mObserver2->Scroll(-1);
-					}
-					if(This->mObserver3 != NULL) {
-						This->mObserver3->Scroll(-1);
-					}
-					if(This->mObserver4 != NULL) {
-						This->mObserver4->Scroll(-1);
+					BOOST_FOREACH(MR_Observer *obs, This->observers) {
+						if (obs != NULL) obs->Scroll(-1);
 					}
 					return 0;
 
 				case VK_INSERT:
-					if(This->mObserver1 != NULL) {
-						This->mObserver1->ZoomIn();
-					}
-					if(This->mObserver2 != NULL) {
-						This->mObserver2->ZoomIn();
-					}
-					if(This->mObserver3 != NULL) {
-						This->mObserver3->ZoomIn();
-					}
-					if(This->mObserver4 != NULL) {
-						This->mObserver4->ZoomIn();
+					BOOST_FOREACH(MR_Observer *obs, This->observers) {
+						if (obs != NULL) obs->ZoomIn();
 					}
 					return 0;
 
 				case VK_DELETE:
-					if(This->mObserver1 != NULL) {
-						This->mObserver1->ZoomOut();
-					}
-					if(This->mObserver2 != NULL) {
-						This->mObserver2->ZoomOut();
-					}
-					if(This->mObserver3 != NULL) {
-						This->mObserver3->ZoomOut();
-					}
-					if(This->mObserver4 != NULL) {
-						This->mObserver4->ZoomOut();
+					BOOST_FOREACH(MR_Observer *obs, This->observers) {
+						if (obs != NULL) obs->ZoomOut();
 					}
 					return 0;
 
