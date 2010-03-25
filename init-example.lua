@@ -70,3 +70,11 @@ function first_session(session)
 end
 
 game:on_session_start("session_start", first_session)
+
+game:on_session_end(function(session)
+	print("Ending a session")
+end)
+
+game:on_shutdown(function()
+	print("In on_shutdown handler.")
+end)
