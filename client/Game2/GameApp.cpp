@@ -1077,11 +1077,6 @@ int MR_GameApp::ReadAsyncInputControllerPlayer(int playerIdx)
 
 void MR_GameApp::ReadAsyncInputController()
 {
-	/*
-	gFirstKDBResetJoy1 = TRUE;
-	gFirstKDBResetJoy2 = TRUE;
-	*/
-
 	if(mCurrentSession != NULL) {
 		if(GetForegroundWindow() == mMainWindow)
 		{
