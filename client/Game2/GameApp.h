@@ -24,13 +24,15 @@
 
 #include "../../engine/Util/Config.h"
 
-#include "Controller.h"
 #include "Observer.h"
 #include "ClientSession.h"
 
 class MR_GameApp;
 namespace HoverRace {
 	namespace Client {
+		namespace Control {
+			class Controller;
+		}
 		class FullscreenTest;
 		class GamePeer;
 		class HighConsole;

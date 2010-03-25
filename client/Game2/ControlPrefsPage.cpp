@@ -27,7 +27,7 @@
 #include "../../engine/Util/OS.h"
 #include "../../engine/Util/Str.h"
 
-#include "Controller.h"
+#include "Control/Controller.h"
 #include "GameApp.h"
 
 #include "resource.h"

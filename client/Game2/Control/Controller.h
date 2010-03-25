@@ -16,8 +16,8 @@
 #include "OIS/OISMouse.h"
 #include "OIS/OISJoyStick.h"
 #include "OIS/OISEvents.h"
-#include "../../engine/Util/Config.h"
-#include "../../engine/Util/OS.h"
+#include "../../../engine/Util/Config.h"
+#include "../../../engine/Util/OS.h"
 
 #define	CTL_MOTOR_ON	1
 #define CTL_LEFT		2

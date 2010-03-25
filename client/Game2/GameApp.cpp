@@ -31,7 +31,7 @@
 #include "FullscreenTest.h"
 #include "GamePeer.h"
 #include "ClientScriptCore.h"
-#include "Controller.h"
+#include "Control/Controller.h"
 #include "resource.h"
 #include "NetworkSession.h"
 #include "PrefsDialog.h"

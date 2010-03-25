@@ -7,8 +7,6 @@
 #include "StdAfx.h"
 
 #include "Controller.h"
-#include "../../engine/Util/Config.h"
-#include "../../engine/Util/OS.h"
 
 using namespace HoverRace;
 using namespace HoverRace::Client::Control;
