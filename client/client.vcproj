@@ -257,14 +257,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Game2\Controller.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Game2\Controller.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Game2\ControlPrefsPage.cpp"
 				>
 			</File>
@@ -852,6 +844,18 @@
 						Outputs="$(OutDir)\$(InputFileName)"
 					/>
 				</FileConfiguration>
+			</File>
+		</Filter>
+		<Filter
+			Name="Control"
+			>
+			<File
+				RelativePath=".\Game2\Control\Controller.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Game2\Control\Controller.h"
+				>
 			</File>
 		</Filter>
 		<File
