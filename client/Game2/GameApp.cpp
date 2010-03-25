@@ -186,8 +186,14 @@ unsigned long MR_GameThread::Loop(LPVOID pThread)
 	}
 
 	// Detach the session peer.
-	if (gameApp->sessionPeer != NULL)
+	if (gameApp->sessionPeer != NULL) {
+		gameApp->gamePeer->OnSessionEnd(gameApp->sessionPeer);
 		gameApp->sessionPeer->OnSessionEnd();
+		// Check if a new session was requested.
+		if (newSessionRules == NULL) {
+			newSessionRules = gameApp->gamePeer->RequestedNewSession();
+		}
+	}
 
 	// If a new session was requested, notify the gameApp.
 	gameApp->requestedNewSession = newSessionRules;
@@ -2028,6 +2034,10 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 				}
 			}
 			This->Clean();
+
+			// Now that the game thread is stopped, we can call the shutdown handlers.
+			This->gamePeer->OnShutdown();
+
 			delete This->mVideoBuffer;
 			This->mVideoBuffer = NULL;
 			// save resolution information

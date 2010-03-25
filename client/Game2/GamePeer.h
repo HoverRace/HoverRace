@@ -58,7 +58,9 @@ class GamePeer {
 
 	public:
 		void OnInit();
+		void OnShutdown();
 		void OnSessionStart(SessionPeerPtr sessionPeer);
+		void OnSessionEnd(SessionPeerPtr sessionPeer);
 
 		RulebookPtr RequestedNewSession();
 
@@ -73,8 +75,14 @@ class GamePeer {
 		void LOnInit(const luabind::object &fn);
 		void LOnInit(const std::string &name, const luabind::object &fn);
 
+		void LOnShutdown(const luabind::object &fn);
+		void LOnShutdown(const std::string &name, const luabind::object &fn);
+
 		void LOnSessionStart(const luabind::object &fn);
 		void LOnSessionStart(const std::string &name, const luabind::object &fn);
+
+		void LOnSessionEnd(const luabind::object &fn);
+		void LOnSessionEnd(const std::string &name, const luabind::object &fn);
 
 		void LStartPractice(const std::string &track);
 		void LStartPractice(const std::string &track, const luabind::object &rules);
@@ -86,7 +94,9 @@ class GamePeer {
 		MR_GameApp *gameApp;
 		bool initialized;
 		Script::Handlers onInit;
+		Script::Handlers onShutdown;
 		Script::Handlers onSessionStart;
+		Script::Handlers onSessionEnd;
 		RulebookPtr deferredStart;
 };
 

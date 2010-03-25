@@ -45,7 +45,8 @@ namespace Client {
 
 GamePeer::GamePeer(Script::Core *scripting, MR_GameApp *gameApp) :
 	scripting(scripting), gameApp(gameApp), initialized(false),
-	onInit(scripting), onSessionStart(scripting)
+	onInit(scripting), onShutdown(scripting),
+	onSessionStart(scripting), onSessionEnd(scripting)
 {
 }
 
@@ -69,8 +70,12 @@ void GamePeer::Register(Script::Core *scripting)
 			.def("get_config", &GamePeer::LGetConfig, adopt(result))
 			.def("on_init", (void(GamePeer::*)(const luabind::object&))&GamePeer::LOnInit)
 			.def("on_init", (void(GamePeer::*)(const std::string&, const luabind::object&))&GamePeer::LOnInit)
+			.def("on_shutdown", (void(GamePeer::*)(const luabind::object&))&GamePeer::LOnShutdown)
+			.def("on_shutdown", (void(GamePeer::*)(const std::string&, const luabind::object&))&GamePeer::LOnShutdown)
 			.def("on_session_start", (void(GamePeer::*)(const luabind::object&))&GamePeer::LOnSessionStart)
 			.def("on_session_start", (void(GamePeer::*)(const std::string&, const luabind::object&))&GamePeer::LOnSessionStart)
+			.def("on_session_end", (void(GamePeer::*)(const luabind::object&))&GamePeer::LOnSessionEnd)
+			.def("on_session_end", (void(GamePeer::*)(const std::string&, const luabind::object&))&GamePeer::LOnSessionEnd)
 			.def("start_practice", (void(GamePeer::*)(const std::string&))&GamePeer::LStartPractice)
 			.def("start_practice", (void(GamePeer::*)(const std::string&, const luabind::object&))&GamePeer::LStartPractice)
 			.def("shutdown", &GamePeer::LShutdown)
@@ -89,6 +94,17 @@ void GamePeer::OnInit()
 }
 
 /**
+ * Executes all "on_shutdown" handlers.
+ * This is called just before the game window closes.
+ */
+void GamePeer::OnShutdown()
+{
+	initialized = false;
+
+	onShutdown.CallHandlers();
+}
+
+/**
  * Executes all "on_session_start" handlers.
  * This should be called at the start of every session, after the track script
  * has been executed.
@@ -98,6 +114,18 @@ void GamePeer::OnSessionStart(SessionPeerPtr sessionPeer)
 {
 	luabind::object sessionObj(scripting->GetState(), sessionPeer);
 	onSessionStart.CallHandlers(sessionObj);
+}
+
+/**
+ * Executes all "on_session_end" handlers.
+ * This is called at the end of every session, before the game thread is
+ * shut down.
+ * @param sessionPeer The session peer.
+ */
+void GamePeer::OnSessionEnd(SessionPeerPtr sessionPeer)
+{
+	luabind::object sessionObj(scripting->GetState(), sessionPeer);
+	onSessionEnd.CallHandlers(sessionObj);
 }
 
 /**
@@ -144,6 +172,16 @@ void GamePeer::LOnInit(const std::string &name, const luabind::object &fn)
 	onInit.AddHandler(name, fn);
 }
 
+void GamePeer::LOnShutdown(const luabind::object &fn)
+{
+	onShutdown.AddHandler(fn);
+}
+
+void GamePeer::LOnShutdown(const std::string &name, const luabind::object &fn)
+{
+	onShutdown.AddHandler(name, fn);
+}
+
 void GamePeer::LOnSessionStart(const luabind::object &fn)
 {
 	onSessionStart.AddHandler(fn);
@@ -152,6 +190,16 @@ void GamePeer::LOnSessionStart(const luabind::object &fn)
 void GamePeer::LOnSessionStart(const std::string &name, const luabind::object &fn)
 {
 	onSessionStart.AddHandler(name, fn);
+}
+
+void GamePeer::LOnSessionEnd(const luabind::object &fn)
+{
+	onSessionEnd.AddHandler(fn);
+}
+
+void GamePeer::LOnSessionEnd(const std::string &name, const luabind::object &fn)
+{
+	onSessionEnd.AddHandler(name, fn);
 }
 
 void GamePeer::LStartPractice(const std::string &track)
