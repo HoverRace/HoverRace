@@ -112,6 +112,8 @@ HighConsole::HighConsole(Script::Core *scripting, GamePeer *gamePeer, SessionPee
 	intro += " :: Console active.";
 	logLines->Add(intro, *logFont, 0x0e);
 
+	logLines->Add("Available global objects: game, session", *logFont, 0x0e);
+
 	// The heading for the console.
 	Font titleFont("Arial", 12);
 	consoleTitle = new StaticText(_("Console"), titleFont, 0x0e);
