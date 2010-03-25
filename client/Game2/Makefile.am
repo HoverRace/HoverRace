@@ -1,4 +1,6 @@
 
+AUTOMAKE_OPTIONS = subdir-objects
+
 bin_PROGRAMS = hoverrace
 hoverrace_CPPFLAGS = $(HR_CPPFLAGS) -DLOCALEDIR=\"$(localedir)\"
 hoverrace_CXXFLAGS = $(HR_CXXFLAGS)
