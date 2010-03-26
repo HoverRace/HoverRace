@@ -25,22 +25,23 @@
 
 #include <boost/foreach.hpp>
 
+#include "Control/Controller.h"
+#include "HoverScript/ClientScriptCore.h"
+#include "HoverScript/GamePeer.h"
+#include "HoverScript/HighConsole.h"
+#include "HoverScript/SessionPeer.h"
+#include "HoverScript/SysEnv.h"
+
 #include "GameApp.h"
 #include "AboutDialog.h"
 #include "FirstChoiceDialog.h"
 #include "FullscreenTest.h"
-#include "GamePeer.h"
-#include "ClientScriptCore.h"
-#include "Control/Controller.h"
 #include "resource.h"
 #include "NetworkSession.h"
 #include "PrefsDialog.h"
-#include "HighConsole.h"
 #include "HighObserver.h"
 #include "IntroMovie.h"
 #include "Rulebook.h"
-#include "SessionPeer.h"
-#include "SysEnv.h"
 #include "TrackSelect.h"
 #include "TrackDownloadDialog.h"
 #include "../../engine/Util/DllObjectFactory.h"
@@ -60,6 +61,7 @@
 #include <mmsystem.h>
 
 using namespace HoverRace::Client;
+using namespace HoverRace::Client::HoverScript;
 
 // If MR_AVI_CAPTURE is defined
 // #define MR_AVI_CAPTUREh

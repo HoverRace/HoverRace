@@ -22,10 +22,11 @@
 
 #pragma once
 
-#include "../../engine/Script/Core.h"
+#include "../../../engine/Script/Core.h"
 
 namespace HoverRace {
 namespace Client {
+namespace HoverScript {
 
 class ClientScriptCore : public Script::Core
 {
@@ -41,5 +42,6 @@ class ClientScriptCore : public Script::Core
 		bool classesRegistered;
 };
 
+}  // namespace HoverScript
 }  // namespace Client
 }  // namespace HoverRace

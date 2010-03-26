@@ -24,13 +24,14 @@
 
 #include "../../engine/Script/Core.h"
 #ifdef _WIN32
-#	include "ClientSession.h"
+#	include "../ClientSession.h"
 #endif
 
 #include "SessionPeer.h"
 
 namespace HoverRace {
 namespace Client {
+namespace HoverScript {
 
 SessionPeer::SessionPeer(Script::Core *scripting, ClientSession *session) :
 	scripting(scripting), session(session)
@@ -90,5 +91,6 @@ int SessionPeer::LGetNumPlayers() const
 #	endif
 }
 
+}  // namespace HoverScript
 }  // namespace Client
 }  // namespace HoverRace

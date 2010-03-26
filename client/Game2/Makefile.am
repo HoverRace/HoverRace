@@ -15,21 +15,21 @@ hoverrace_SOURCES = \
 	StdAfx.h \
 	Control/Controller.cpp \
 	Control/Controller.h \
-	ClientScriptCore.cpp \
-	ClientScriptCore.h \
-	ConfigPeer.cpp \
-	ConfigPeer.h \
-	Console.cpp \
-	Console.h \
-	GamePeer.cpp \
-	GamePeer.h \
+	HoverScript/ClientScriptCore.cpp \
+	HoverScript/ClientScriptCore.h \
+	HoverScript/ConfigPeer.cpp \
+	HoverScript/ConfigPeer.h \
+	HoverScript/Console.cpp \
+	HoverScript/Console.h \
+	HoverScript/GamePeer.cpp \
+	HoverScript/GamePeer.h \
+	HoverScript/SessionPeer.cpp \
+	HoverScript/SessionPeer.h \
+	HoverScript/SysEnv.cpp \
+	HoverScript/SysEnv.h \
 	RoomList.cpp \
 	RoomList.h \
 	Rulebook.h \
-	SessionPeer.cpp \
-	SessionPeer.h \
-	SysEnv.cpp \
-	SysEnv.h \
 	main.cpp \
 	version.h
 

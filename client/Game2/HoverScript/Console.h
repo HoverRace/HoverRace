@@ -24,12 +24,18 @@
 
 #include <lua.hpp>
 
-#include "../../engine/Script/Core.h"
-#include "../../engine/Script/Env.h"
-#include "../../engine/Util/OS.h"
+#include "../../../engine/Script/Env.h"
+#include "../../../engine/Util/OS.h"
+
+namespace HoverRace {
+	namespace Script {
+		class Core;
+	}
+}
 
 namespace HoverRace {
 namespace Client {
+namespace HoverScript {
 
 /**
  * Base class for debug consoles.
@@ -81,5 +87,6 @@ class Console : public Script::Env
 		class LogStream;
 };
 
+}  // namespace HoverScript
 }  // namespace Client
 }  // namespace HoverRace

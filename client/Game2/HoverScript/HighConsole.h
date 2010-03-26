@@ -24,23 +24,29 @@
 
 #include <boost/thread/mutex.hpp>
 
+#include "../../engine/Util/MR_Types.h"
+
 #include "Console.h"
 
 class MR_VideoBuffer;
 namespace HoverRace {
 	namespace Client {
-		class GamePeer;
-		class SessionPeer;
-		typedef boost::shared_ptr<SessionPeer> SessionPeerPtr;
+		namespace HoverScript {
+			class GamePeer;
+			class SessionPeer;
+			typedef boost::shared_ptr<SessionPeer> SessionPeerPtr;
+		}
 	}
 	namespace VideoServices {
 		struct Font;
 		class StaticText;
 	}
 }
+class MR_2DViewPort;
 
 namespace HoverRace {
 namespace Client {
+namespace HoverScript {
 
 /**
  * An on-screen debug console.
@@ -116,5 +122,6 @@ class HighConsole : public Console
 		static const int TITLE_PADDING_BOTTOM = 2;
 };
 
+}  // namespace HoverScript
 }  // namespace Client
 }  // namespace HoverRace

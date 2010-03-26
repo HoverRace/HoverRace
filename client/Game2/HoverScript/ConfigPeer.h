@@ -33,6 +33,7 @@ namespace HoverRace {
 
 namespace HoverRace {
 namespace Client {
+namespace HoverScript {
 
 /**
  * Scripting peer for access to the game configuration.
@@ -58,5 +59,6 @@ class ConfigPeer {
 		Script::Core *scripting;
 };
 
+}  // namespace HoverScript
 }  // namespace Client
 }  // namespace HoverRace

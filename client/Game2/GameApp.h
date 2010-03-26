@@ -33,16 +33,18 @@ namespace HoverRace {
 		namespace Control {
 			class Controller;
 		}
+		namespace HoverScript {
+			class GamePeer;
+			class HighConsole;
+			class SessionPeer;
+			typedef boost::shared_ptr<SessionPeer> SessionPeerPtr;
+			class SysEnv;
+		}
 		class FullscreenTest;
-		class GamePeer;
-		class HighConsole;
 		class HighObserver;
 		class IntroMovie;
 		class Rulebook;
 		typedef boost::shared_ptr<Rulebook> RulebookPtr;
-		class SessionPeer;
-		typedef boost::shared_ptr<SessionPeer> SessionPeerPtr;
-		class SysEnv;
 	}
 	namespace Script {
 		class Core;
@@ -88,14 +90,14 @@ class MR_GameApp
 		MR_Observer *observers[MAX_OBSERVERS];
 		bool nonInteractiveShutdown;
 		HoverRace::Client::HighObserver *highObserver;
-		HoverRace::Client::HighConsole *highConsole;
+		HoverRace::Client::HoverScript::HighConsole *highConsole;
 		HoverRace::Client::IntroMovie *introMovie;
 		HoverRace::Client::FullscreenTest *fullscreenTest;
 		HoverRace::Script::Core *scripting;
-		HoverRace::Client::GamePeer *gamePeer;
-		HoverRace::Client::SysEnv *sysEnv;
+		HoverRace::Client::HoverScript::GamePeer *gamePeer;
+		HoverRace::Client::HoverScript::SysEnv *sysEnv;
 		HoverRace::Client::ClientSession *mCurrentSession;
-		HoverRace::Client::SessionPeerPtr sessionPeer;
+		HoverRace::Client::HoverScript::SessionPeerPtr sessionPeer;
 		MR_GameThread *mGameThread;
 		HoverRace::Client::RulebookPtr requestedNewSession;
 

@@ -30,6 +30,8 @@
 
 #include <luabind/luabind.hpp>
 
+#include "../../../engine/Script/Core.h"
+
 #include "GamePeer.h"
 
 #include "SysEnv.h"
@@ -71,6 +73,7 @@ namespace {
 
 namespace HoverRace {
 namespace Client {
+namespace HoverScript {
 
 SysEnv::SysEnv(Script::Core *scripting, GamePeer *gamePeer) :
 	SUPER(scripting), gamePeer(gamePeer),
@@ -146,5 +149,6 @@ void SysEnv::RunScript(const std::string &filename)
 	}
 }
 
+}  // namespace HoverScript
 }  // namespace Client
 }  // namespace HoverRace

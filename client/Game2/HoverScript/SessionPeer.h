@@ -36,6 +36,7 @@ namespace HoverRace {
 
 namespace HoverRace {
 namespace Client {
+namespace HoverScript {
 
 /**
  * Scripting peer for a game session.
@@ -64,5 +65,6 @@ class SessionPeer {
 };
 typedef boost::shared_ptr<SessionPeer> SessionPeerPtr;
 
+}  // namespace HoverScript
 }  // namespace Client
 }  // namespace HoverRace

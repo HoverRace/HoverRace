@@ -27,13 +27,13 @@
 #include <lua.hpp>
 #include <luabind/adopt_policy.hpp>
 
-#include "../../engine/Script/Core.h"
-#include "../../engine/Util/Config.h"
-#include "ConfigPeer.h"
+#include "../../../engine/Script/Core.h"
+#include "../../../engine/Util/Config.h"
 #ifdef _WIN32
-#	include "GameApp.h"
+#	include "../GameApp.h"
 #endif
-#include "Rulebook.h"
+#include "../Rulebook.h"
+#include "ConfigPeer.h"
 #include "SessionPeer.h"
 
 #include "GamePeer.h"
@@ -42,6 +42,7 @@ using HoverRace::Util::Config;
 
 namespace HoverRace {
 namespace Client {
+namespace HoverScript {
 
 GamePeer::GamePeer(Script::Core *scripting, MR_GameApp *gameApp) :
 	scripting(scripting), gameApp(gameApp), initialized(false),
@@ -277,5 +278,6 @@ void GamePeer::LShutdown()
 #	endif
 }
 
+}  // namespace HoverScript
 }  // namespace Client
 }  // namespace HoverRace

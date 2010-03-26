@@ -22,8 +22,8 @@
 
 #include "StdAfx.h"
 
-#include "../../engine/Script/Core.h"
-#include "../../engine/Util/Config.h"
+#include "../../../engine/Script/Core.h"
+#include "../../../engine/Util/Config.h"
 
 #include "ConfigPeer.h"
 
@@ -31,6 +31,7 @@ using HoverRace::Util::Config;
 
 namespace HoverRace {
 namespace Client {
+namespace HoverScript {
 
 ConfigPeer::ConfigPeer(Script::Core *scripting) :
 	scripting(scripting)
@@ -90,5 +91,6 @@ void ConfigPeer::LSetVideoRes(int w, int h)
 	cfg->video.yRes = h;
 }
 
+}  // namespace HoverScript
 }  // namespace Client
 }  // namespace HoverRace

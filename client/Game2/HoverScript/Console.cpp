@@ -22,15 +22,15 @@
 
 #include "StdAfx.h"
 
-#include "../../engine/Script/Core.h"
+#include "../../../engine/Script/Core.h"
 
 #include "Console.h"
 
-using namespace HoverRace;
 using namespace HoverRace::Script;
 
 namespace HoverRace {
 namespace Client {
+namespace HoverScript {
 
 // Stream bits to redirect output to the console log.
 
@@ -203,5 +203,6 @@ int Console::LogStreamBuf::sync()
 	return 0;
 }
 
+}  // namespace HoverScript
 }  // namespace Client
 }  // namespace HoverRace

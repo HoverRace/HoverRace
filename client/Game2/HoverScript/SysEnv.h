@@ -22,12 +22,13 @@
 
 #pragma once
 
-#include "../../engine/Script/Core.h"
-#include "../../engine/Script/Env.h"
+#include "../../../engine/Script/Env.h"
 
 namespace HoverRace {
 	namespace Client {
-		class GamePeer;
+		namespace HoverScript {
+			class GamePeer;
+		}
 	}
 	namespace Script {
 		class Core;
@@ -36,6 +37,7 @@ namespace HoverRace {
 
 namespace HoverRace {
 namespace Client {
+namespace HoverScript {
 
 class SysEnv : private Script::Env
 {
@@ -60,5 +62,6 @@ class SysEnv : private Script::Env
 		Script::Core::OutHandle outHandle;
 };
 
+}  // namespace HoverScript
 }  // namespace Client
 }  // namespace HoverRace

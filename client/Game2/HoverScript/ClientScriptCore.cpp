@@ -32,6 +32,7 @@
 
 namespace HoverRace {
 namespace Client {
+namespace HoverScript {
 
 Script::Core *ClientScriptCore::Reset()
 {
@@ -57,5 +58,6 @@ Script::Core *ClientScriptCore::Reset()
 	return this;
 }
 
+}  // namespace HoverScript
 }  // namespace Client
 }  // namespace HoverRace

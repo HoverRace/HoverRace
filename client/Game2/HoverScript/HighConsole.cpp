@@ -29,11 +29,11 @@
 #include <lua.hpp>
 #include <luabind/luabind.hpp>
 
-#include "../../engine/Script/Core.h"
-#include "../../engine/Util/Config.h"
-#include "../../engine/VideoServices/2DViewPort.h"
-#include "../../engine/VideoServices/StaticText.h"
-#include "../../engine/VideoServices/VideoBuffer.h"
+#include "../../../engine/Script/Core.h"
+#include "../../../engine/Util/Config.h"
+#include "../../../engine/VideoServices/2DViewPort.h"
+#include "../../../engine/VideoServices/StaticText.h"
+#include "../../../engine/VideoServices/VideoBuffer.h"
 #include "GamePeer.h"
 #include "SessionPeer.h"
 
@@ -56,6 +56,7 @@ namespace {
 
 namespace HoverRace {
 namespace Client {
+namespace HoverScript {
 
 class HighConsole::LogLines
 {
@@ -421,5 +422,6 @@ void HighConsole::LogLines::Render(MR_2DViewPort *vp, int x, int y)
 	}
 }
 
+}  // namespace HoverScript
 }  // namespace Client
 }  // namespace HoverRace

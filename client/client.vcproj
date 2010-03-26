@@ -225,35 +225,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Game2\ClientScriptCore.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Game2\ClientScriptCore.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Game2\ClientSession.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\Game2\ClientSession.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Game2\ConfigPeer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Game2\ConfigPeer.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Game2\Console.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Game2\Console.h"
 				>
 			</File>
 			<File
@@ -298,22 +274,6 @@
 			</File>
 			<File
 				RelativePath=".\Game2\GameApp.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Game2\GamePeer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Game2\GamePeer.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Game2\HighConsole.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Game2\HighConsole.h"
 				>
 			</File>
 			<File
@@ -449,14 +409,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Game2\SessionPeer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Game2\SessionPeer.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Game2\StdAfx.cpp"
 				>
 				<FileConfiguration
@@ -478,14 +430,6 @@
 			</File>
 			<File
 				RelativePath=".\Game2\StdAfx.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Game2\SysEnv.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Game2\SysEnv.h"
 				>
 			</File>
 			<File
@@ -855,6 +799,66 @@
 			</File>
 			<File
 				RelativePath=".\Game2\Control\Controller.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="HoverScript"
+			>
+			<File
+				RelativePath=".\Game2\HoverScript\ClientScriptCore.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Game2\HoverScript\ClientScriptCore.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Game2\HoverScript\ConfigPeer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Game2\HoverScript\ConfigPeer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Game2\HoverScript\Console.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Game2\HoverScript\Console.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Game2\HoverScript\GamePeer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Game2\HoverScript\GamePeer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Game2\HoverScript\HighConsole.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Game2\HoverScript\HighConsole.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Game2\HoverScript\SessionPeer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Game2\HoverScript\SessionPeer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Game2\HoverScript\SysEnv.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Game2\HoverScript\SysEnv.h"
 				>
 			</File>
 		</Filter>

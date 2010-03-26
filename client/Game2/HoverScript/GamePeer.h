@@ -25,16 +25,18 @@
 #include <luabind/luabind.hpp>
 #include <luabind/object.hpp>
 
-#include "../../engine/Script/Handlers.h"
+#include "../../../engine/Script/Handlers.h"
 
 class MR_GameApp;
 namespace HoverRace {
 	namespace Client {
-		class ConfigPeer;
+		namespace HoverScript {
+			class ConfigPeer;
+			class SessionPeer;
+			typedef boost::shared_ptr<SessionPeer> SessionPeerPtr;
+		}
 		class Rulebook;
 		typedef boost::shared_ptr<Rulebook> RulebookPtr;
-		class SessionPeer;
-		typedef boost::shared_ptr<SessionPeer> SessionPeerPtr;
 	}
 	namespace Script {
 		class Core;
@@ -43,6 +45,7 @@ namespace HoverRace {
 
 namespace HoverRace {
 namespace Client {
+namespace HoverScript {
 
 /**
  * Scripting peer for system-level control of the game.
@@ -100,5 +103,6 @@ class GamePeer {
 		RulebookPtr deferredStart;
 };
 
+}  // namespace HoverScript
 }  // namespace Client
 }  // namespace HoverRace
