@@ -6,12 +6,19 @@
 
 #include "StdAfx.h"
 
+#include "InputHandler.h"
+
 #include "Controller.h"
 
 using namespace HoverRace;
 using namespace HoverRace::Client::Control;
 using namespace HoverRace::Util;
 using namespace OIS;
+
+#define DIVERT_TO_CONTROL_STACK \
+	if (!controlLayers.empty()) \
+		return controlLayers.back()
+
 
 /***
  * Initialize the controller for player 1, loading configuration values.
@@ -115,6 +122,9 @@ void Controller::poll()
  */
 ControlState Controller::getControlState(int player)
 {
+	if (!controlLayers.empty())
+		return curState[player];
+
 	// update control state
 	curState[player].brake		= getSingleControlState(brake[player]);
 	curState[player].fire		= getSingleControlState(fire[player]);
@@ -400,6 +410,36 @@ std::string Controller::toString(HoverRace::Util::Config::cfg_controls_t::cfg_co
 	}
 }
 
+/**
+ * Push an input handler onto the control layer stack.
+ * While this handler is at the top of the stack, it will receive all input events.
+ * @param handler The handler (may not be @c NULL).
+ * @see LeaveControlLayer()
+ */
+void Controller::EnterControlLayer(InputHandlerPtr handler)
+{
+	ASSERT(handler != NULL);
+	controlLayers.push_back(handler);
+}
+
+/**
+ * Pop an input handler from the control layer stack.
+ */
+void Controller::LeaveControlLayer()
+{
+	ASSERT(!controlLayers.empty());
+	controlLayers.pop_back();
+}
+
+/**
+ * Reset the control layer stack.
+ * All input events will revert to controlling the player.
+ */
+void Controller::ResetControlLayers()
+{
+	controlLayers.clear();
+}
+
 /***
  * Initialize the InputManager object and set up all input devices.
  *
@@ -516,6 +556,8 @@ bool Controller::keyPressed(const KeyEvent &arg)
 	else if(arg.key == KC_RMENU)
 		kc = KC_LMENU;
 
+	DIVERT_TO_CONTROL_STACK->KeyPressed(kc, arg.text);
+
 	if(captureNext) {
 		// capture this input as a keycode
 		InputControl *input = NULL;
@@ -588,6 +630,8 @@ bool Controller::keyReleased(const KeyEvent &arg) {
 	else if(arg.key == KC_RMENU)
 		kc = KC_LMENU;
 
+	DIVERT_TO_CONTROL_STACK->KeyReleased(kc, arg.text);
+
 	if(!captureNext) {
 		for(int i = 0; i < 4; i++) {
 			if((brake[i].inputType == OISKeyboard) && (kc == brake[i].kbdBinding))
@@ -614,6 +658,8 @@ bool Controller::keyReleased(const KeyEvent &arg) {
 
 bool Controller::mouseMoved(const MouseEvent &arg)
 {
+	DIVERT_TO_CONTROL_STACK->MouseMoved(arg.state);
+
 	// examine the axes to find the maximum
 	int x, y, z, ax, ay, az;
 
@@ -712,6 +758,8 @@ bool Controller::mouseMoved(const MouseEvent &arg)
 
 bool Controller::mousePressed(const MouseEvent &arg, MouseButtonID id)
 {
+	DIVERT_TO_CONTROL_STACK->MousePressed(arg.state, id);
+
 	if(captureNext) {
 		InputControl *input = NULL;
 		Util::Config::cfg_controls_t::cfg_control_t *cfg_input = NULL;
@@ -762,6 +810,8 @@ bool Controller::mousePressed(const MouseEvent &arg, MouseButtonID id)
 
 bool Controller::mouseReleased(const MouseEvent &arg, MouseButtonID id)
 {
+	DIVERT_TO_CONTROL_STACK->MouseReleased(arg.state, id);
+
 	if(!captureNext) {
 		for(int i = 0; i < 4; i++) {
 			if((brake[i].inputType == OISMouse) && (brake[i].button == id))
@@ -788,6 +838,8 @@ bool Controller::mouseReleased(const MouseEvent &arg, MouseButtonID id)
 
 bool Controller::buttonPressed(const JoyStickEvent &arg, int button)
 {
+	DIVERT_TO_CONTROL_STACK->ButtonPressed(arg.state, button);
+
 	if(captureNext) {
 		// capture this input as a key binding
 		InputControl *input = NULL;
@@ -842,6 +894,8 @@ bool Controller::buttonPressed(const JoyStickEvent &arg, int button)
 
 bool Controller::buttonReleased(const JoyStickEvent &arg, int button)
 {
+	DIVERT_TO_CONTROL_STACK->ButtonReleased(arg.state, button);
+
 	if(!captureNext) {
 		for(int i = 0; i < 4; i++) {
 			if((brake[i].inputType == OISJoyStick) && (brake[i].joystickId == arg.device->getID()) && (brake[i].button == button))
@@ -867,6 +921,8 @@ bool Controller::buttonReleased(const JoyStickEvent &arg, int button)
 
 bool Controller::axisMoved(const JoyStickEvent &arg, int axis)
 {
+	DIVERT_TO_CONTROL_STACK->AxisMoved(arg.state, axis);
+
 	// examine the axes to find the maximum
 	int numAxes = arg.state.mAxes.size();
 	int *axes = new int[numAxes];
@@ -962,6 +1018,8 @@ bool Controller::axisMoved(const JoyStickEvent &arg, int axis)
 
 bool Controller::povMoved(const JoyStickEvent &arg, int pov)
 {
+	DIVERT_TO_CONTROL_STACK->PovMoved(arg.state, pov);
+
 	pov++; // increment pov by one
 	if(captureNext) {
 		// capture this input as a key binding

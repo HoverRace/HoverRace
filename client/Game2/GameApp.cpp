@@ -159,14 +159,12 @@ unsigned long MR_GameThread::Loop(LPVOID pThread)
 
 		// Game processing
 		HighConsole *highConsole = gameApp->highConsole;
-		if (highConsole != NULL && highConsole->isVisible()) {
+		if (highConsole != NULL && highConsole->IsVisible()) {
 			highConsole->Advance(tick);
 			// Check if a new session was requested.
 			newSessionRules = gameApp->gamePeer->RequestedNewSession();
 		}
-		else {
-			gameApp->ReadAsyncInputController();
-		}
+		gameApp->ReadAsyncInputController();
 
 		MR_SAMPLE_START(Process, "Process");
 
@@ -327,6 +325,10 @@ void MR_GameApp::Clean()
 		mGameThread->Kill();
 		mGameThread = NULL;
 	}
+
+	// All modal dialogs and control-grabbing layers are about to be destroyed.
+	controller->ResetControlLayers();
+
 	sessionPeer.reset();
 	delete mCurrentSession;
 	mCurrentSession = NULL;
@@ -345,10 +347,6 @@ void MR_GameApp::Clean()
 	MR_DllObjectFactory::Clean(TRUE);
 
 	mClrScrTodo = 2;
-	/*
-	gFirstKDBCall = TRUE;						  // Set to TRUE on each new game
-	*/
-
 }
 
 void MR_GameApp::LoadRegistry()
@@ -1000,9 +998,9 @@ void MR_GameApp::OnChar(char c)
 {
 	if (highConsole != NULL) {
 		if (c == '`') {
-			highConsole->toggleVisible();
+			highConsole->ToggleVisible();
 		}
-		else if (highConsole->isVisible()) {
+		else if (highConsole->IsVisible()) {
 			highConsole->OnChar(c);
 		}
 	}
@@ -1013,7 +1011,7 @@ void MR_GameApp::OnChar(char c)
 
 bool MR_GameApp::OnKeyDown(int keycode)
 {
-	if (highConsole == NULL || !highConsole->isVisible()) {
+	if (highConsole == NULL || !highConsole->IsVisible()) {
 		switch (keycode) {
 			// Camera control
 			case VK_HOME:
@@ -1294,7 +1292,7 @@ void MR_GameApp::NewLocalSession(RulebookPtr rules)
 		sessionPeer = boost::make_shared<SessionPeer>(scripting, lCurrentSession);
 
 		if (Config::GetInstance()->runtime.enableConsole) {
-			highConsole = new HighConsole(scripting, gamePeer, sessionPeer);
+			highConsole = new HighConsole(scripting, this, gamePeer, sessionPeer);
 		}
 
 		// Load the selected track

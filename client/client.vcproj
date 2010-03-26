@@ -801,6 +801,10 @@
 				RelativePath=".\Game2\Control\Controller.h"
 				>
 			</File>
+			<File
+				RelativePath=".\Game2\Control\InputHandler.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="HoverScript"

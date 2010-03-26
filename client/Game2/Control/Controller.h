@@ -37,11 +37,14 @@
 // maybe later... TODO
 //#include "OIS/OISForceFeedback.h"
 
-using namespace OIS;
-
 namespace HoverRace {
 namespace Client {
 namespace Control {
+
+class InputHandler;
+typedef boost::shared_ptr<InputHandler> InputHandlerPtr;
+
+using namespace OIS;
 
 /***
  * Contains information on the current control state.  Eventually, its members should
@@ -82,6 +85,10 @@ class Controller : public KeyListener, public MouseListener, public JoyStickList
 		bool controlsUpdated();
 		void saveControls();
 		std::string toString(HoverRace::Util::Config::cfg_controls_t::cfg_control_t control);
+
+		void EnterControlLayer(InputHandlerPtr handler);
+		void LeaveControlLayer();
+		void ResetControlLayers();
 
 	private:
 		void InitInputManager(Util::OS::wnd_t mainWindow);
@@ -140,6 +147,10 @@ class Controller : public KeyListener, public MouseListener, public JoyStickList
 		int mouseXLast;
 		int mouseYLast;
 		int mouseZLast;
+
+		// Control layers.
+		typedef std::vector<InputHandlerPtr> controlLayers_t;
+		controlLayers_t controlLayers;
 };
 
 } // namespace Control

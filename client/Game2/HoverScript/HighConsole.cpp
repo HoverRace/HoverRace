@@ -34,12 +34,14 @@
 #include "../../../engine/VideoServices/2DViewPort.h"
 #include "../../../engine/VideoServices/StaticText.h"
 #include "../../../engine/VideoServices/VideoBuffer.h"
+#include "../Control/Controller.h"
+#include "../Control/InputHandler.h"
+#include "../GameApp.h"
 #include "GamePeer.h"
 #include "SessionPeer.h"
 
 #include "HighConsole.h"
 
-using namespace HoverRace;
 using HoverRace::Util::Config;
 using HoverRace::Util::OS;
 using HoverRace::VideoServices::Font;
@@ -81,9 +83,23 @@ class HighConsole::LogLines
 		static const int MAX_LINES = 10;
 };
 
-HighConsole::HighConsole(Script::Core *scripting, GamePeer *gamePeer, SessionPeerPtr sessionPeer) :
-	SUPER(scripting), gamePeer(gamePeer), sessionPeer(sessionPeer),
-	visible(false), cursorOn(true), cursorTick(0)
+class HighConsole::Input : public Control::InputHandler
+{
+	typedef Control::InputHandler SUPER;
+	public:
+		Input() : SUPER() { }
+		virtual ~Input() { }
+
+	public:
+		virtual bool KeyPressed(OIS::KeyCode kc, unsigned int text);
+		virtual bool KeyReleased(OIS::KeyCode kc, unsigned int text);
+};
+
+HighConsole::HighConsole(Script::Core *scripting, MR_GameApp *gameApp,
+                         GamePeer *gamePeer, SessionPeerPtr sessionPeer) :
+	SUPER(scripting), gameApp(gameApp), gamePeer(gamePeer), sessionPeer(sessionPeer),
+	visible(false), cursorOn(true), cursorTick(0),
+	input(boost::make_shared<Input>())
 {
 	vp = new MR_2DViewPort();
 
@@ -246,6 +262,18 @@ void HighConsole::LogError(const std::string &s)
 	AddLogEntry(s, 0x23);
 }
 
+void HighConsole::ToggleVisible()
+{
+	if (visible) {
+		gameApp->GetController()->LeaveControlLayer();
+		visible = false;
+	}
+	else {
+		gameApp->GetController()->EnterControlLayer(input);
+		visible = true;
+	}
+}
+
 /**
  * Handle a character keypress.
  * Assume that the keypress is always consumed.
@@ -377,6 +405,8 @@ void HighConsole::RenderHeading(const VideoServices::StaticText *title,
 		y + TITLE_PADDING_TOP, vp);
 }
 
+// LogLines ////////////////////////////////////////////////////////////////////
+
 HighConsole::LogLines::LogLines() :
 	lines(), height(0)
 {
@@ -420,6 +450,20 @@ void HighConsole::LogLines::Render(MR_2DViewPort *vp, int x, int y)
 		line->Blt(x, y, vp);
 		y += line->GetHeight();
 	}
+}
+
+// Input ///////////////////////////////////////////////////////////////////////
+
+bool HighConsole::Input::KeyPressed(OIS::KeyCode kc, unsigned int text)
+{
+	OutputDebugString("HighConsole KeyPressed\n");
+	return true;
+}
+
+bool HighConsole::Input::KeyReleased(OIS::KeyCode kc, unsigned int text)
+{
+	OutputDebugString("HighConsole KeyReleased\n");
+	return true;
 }
 
 }  // namespace HoverScript

@@ -31,6 +31,10 @@
 class MR_VideoBuffer;
 namespace HoverRace {
 	namespace Client {
+		namespace Control {
+			class InputHandler;
+			typedef boost::shared_ptr<InputHandler> InputHandlerPtr;
+		}
 		namespace HoverScript {
 			class GamePeer;
 			class SessionPeer;
@@ -43,6 +47,7 @@ namespace HoverRace {
 	}
 }
 class MR_2DViewPort;
+class MR_GameApp;
 
 namespace HoverRace {
 namespace Client {
@@ -56,7 +61,8 @@ class HighConsole : public Console
 {
 	typedef Console SUPER;
 	public:
-		HighConsole(Script::Core *scripting, GamePeer *gamePeer, SessionPeerPtr sessionPeer);
+		HighConsole(Script::Core *scripting, MR_GameApp *gameApp,
+			GamePeer *gamePeer, SessionPeerPtr sessionPeer);
 		virtual ~HighConsole();
 
 	protected:
@@ -74,8 +80,8 @@ class HighConsole : public Console
 		virtual void LogError(const std::string &s);
 
 	public:
-		void toggleVisible() { visible = !visible; }
-		bool isVisible() const { return visible; }
+		void ToggleVisible();
+		bool IsVisible() const { return visible; }
 
 	public:
 		void OnChar(char c);
@@ -85,6 +91,7 @@ class HighConsole : public Console
 			const VideoServices::StaticText *controls, int y, MR_UInt8 bgColor);
 
 	private:
+		MR_GameApp *gameApp;
 		GamePeer *gamePeer;
 		SessionPeerPtr sessionPeer;
 
@@ -112,6 +119,9 @@ class HighConsole : public Console
 
 		class LogLines;
 		LogLines *logLines;
+
+		class Input;
+		Control::InputHandlerPtr input;
 
 		static const int PADDING_TOP = 2;
 		static const int PADDING_BOTTOM = 5;
