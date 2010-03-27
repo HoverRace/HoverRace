@@ -54,6 +54,13 @@ using HoverRace::VideoServices::StaticText;
 namespace {
 	static const std::string COMMAND_PROMPT(">> ");
 	static const std::string CONTINUE_PROMPT(":> ");
+
+	static const Config::cfg_control_t SCROLL_TOP_KEY = Config::cfg_control_t::Key(OIS::KC_HOME);
+	static const Config::cfg_control_t SCROLL_UP_KEY = Config::cfg_control_t::Key(OIS::KC_PGUP);
+	static const Config::cfg_control_t SCROLL_DOWN_KEY = Config::cfg_control_t::Key(OIS::KC_PGDOWN);
+	static const Config::cfg_control_t SCROLL_BOTTOM_KEY = Config::cfg_control_t::Key(OIS::KC_END);
+
+	static const int SCROLL_SPEED = 3;
 }
 
 namespace HoverRace {
@@ -66,8 +73,14 @@ class HighConsole::LogLines
 		LogLines();
 		~LogLines();
 
+	private:
+		void RecalcHeight();
 	public:
 		int GetHeight() const { return height; }
+
+		void ScrollTop();
+		void Scroll(int i);
+		void ScrollBottom();
 
 	public:
 		void Add(const std::string &s, const Font &font, MR_UInt8 color);
@@ -78,9 +91,11 @@ class HighConsole::LogLines
 	private:
 		typedef std::deque<StaticText*> lines_t;
 		lines_t lines;
+		unsigned int pos;
+		unsigned int num;
 		int height;
 
-		static const int MAX_LINES = 10;
+		static const int MAX_LINES = 100;
 };
 
 class HighConsole::Input : public Control::InputHandler
@@ -141,7 +156,8 @@ HighConsole::HighConsole(Script::Core *scripting, MR_GameApp *gameApp,
 	Font titleFont("Arial", 12);
 	consoleTitle = new StaticText(_("Console"), titleFont, 0x0e);
 	std::string consoleControlsText = boost::str(
-		boost::format("%s [%s]") %
+		boost::format("%s [%s/%s]  %s [%s]") %
+		_("Scroll") % controller->toString(SCROLL_UP_KEY) % controller->toString(SCROLL_DOWN_KEY) %
 		_("Hide") % controller->toString(cfg->ui.console)
 		);
 	consoleControls = new StaticText(consoleControlsText, titleFont, 0x0e);;
@@ -419,7 +435,7 @@ void HighConsole::RenderHeading(const VideoServices::StaticText *title,
 // LogLines ////////////////////////////////////////////////////////////////////
 
 HighConsole::LogLines::LogLines() :
-	lines(), height(0)
+	lines(), pos(0), num(10), height(0)
 {
 }
 
@@ -428,20 +444,68 @@ HighConsole::LogLines::~LogLines()
 	Clear();
 }
 
+void HighConsole::LogLines::RecalcHeight()
+{
+	height = 0;
+	unsigned int i = 0;
+	for (lines_t::iterator iter = lines.begin() + pos;
+		iter != lines.end() && i < num;
+		++iter, ++i)
+	{
+		height += (*iter)->GetHeight();
+	}
+}
+
+void HighConsole::LogLines::ScrollTop()
+{
+	if (pos != 0) {
+		pos = 0;
+		RecalcHeight();
+	}
+}
+
+void HighConsole::LogLines::Scroll(int i)
+{
+	if (i < 0) {
+		if ((unsigned int)-i >= pos) {
+			ScrollTop();
+		}
+		else {
+			pos += i;
+			RecalcHeight();
+		}
+	}
+	else if (lines.size() > num) {
+		if (pos + i > lines.size() - num) {
+			ScrollBottom();
+		}
+		else {
+			pos += i;
+			RecalcHeight();
+		}
+	}
+}
+
+void HighConsole::LogLines::ScrollBottom()
+{
+	pos = (lines.size() <= num) ? 0 : (lines.size() - num);
+	RecalcHeight();
+}
+
 void HighConsole::LogLines::Add(const std::string &s, const Font &font, MR_UInt8 color)
 {
 	// Remove the top line if we're full.
 	if (lines.size() == MAX_LINES) {
 		StaticText *line = lines.front();
-		height -= line->GetHeight();
 		delete line;
 		lines.pop_front();
 	}
 
 	// Add the new line.
 	StaticText *line = new StaticText(s, font, color);
-	height += line->GetHeight();
 	lines.push_back(line);
+
+	ScrollBottom();
 }
 
 void HighConsole::LogLines::Clear()
@@ -451,12 +515,17 @@ void HighConsole::LogLines::Clear()
 		delete *iter;
 	}
 	lines.clear();
+	pos = 0;
 	height = 0;
 }
 
 void HighConsole::LogLines::Render(MR_2DViewPort *vp, int x, int y)
 {
-	for (lines_t::iterator iter = lines.begin(); iter != lines.end(); ++iter) {
+	unsigned int i = 0;
+	for (lines_t::iterator iter = lines.begin() + pos;
+		iter != lines.end() && i < num;
+		++iter, ++i)
+	{
 		const StaticText *line = *iter;
 		line->Blt(x, y, vp);
 		y += line->GetHeight();
@@ -467,23 +536,35 @@ void HighConsole::LogLines::Render(MR_2DViewPort *vp, int x, int y)
 
 bool HighConsole::Input::KeyPressed(OIS::KeyCode kc, unsigned int text)
 {
-	if (cons == NULL) return true;
+	if (cons == NULL || !cons->IsVisible()) return true;
 
-	if (Config::GetInstance()->ui.console.IsKey(kc) && cons->IsVisible()) {
+	if (Config::GetInstance()->ui.console.IsKey(kc)) {
 		cons->ToggleVisible();
-		return true;
 	}
-
-	/*
-	if (text) {
-		if (text >= 32 && text < 127) {
-			OutputDebugString(boost::str(boost::format("Text key: %c (%d)\n") % (char)text % text).c_str());
-		}
-		else {
-			OutputDebugString(boost::str(boost::format("Text key: (%d)\n") % text).c_str());
-		}
+	else if (SCROLL_TOP_KEY.IsKey(kc)) {
+		cons->logLines->ScrollTop();
 	}
-	*/
+	else if (SCROLL_UP_KEY.IsKey(kc)) {
+		cons->logLines->Scroll(-SCROLL_SPEED);
+	}
+	else if (SCROLL_DOWN_KEY.IsKey(kc)) {
+		cons->logLines->Scroll(SCROLL_SPEED);
+	}
+	else if (SCROLL_BOTTOM_KEY.IsKey(kc)) {
+		cons->logLines->ScrollBottom();
+	}
+	else {
+		/*
+		if (text) {
+			if (text >= 32 && text < 127) {
+				OutputDebugString(boost::str(boost::format("Text key: %c (%d)\n") % (char)text % text).c_str());
+			}
+			else {
+				OutputDebugString(boost::str(boost::format("Text key: (%d)\n") % text).c_str());
+			}
+		}
+		*/
+	}
 
 	return true;
 }
