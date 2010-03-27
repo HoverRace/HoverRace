@@ -201,8 +201,9 @@ class MR_DllDeclare Config
 			int sensitivity; // defines how quickly we get to the maximum value
 			int joystickId;
 
-			void SetKey(int kc);
-			MR_DllDeclare bool IsKey(int kc);
+			MR_DllDeclare static cfg_control_t Key(int kc);
+			MR_DllDeclare void SetKey(int kc);
+			MR_DllDeclare bool IsKey(int kc) const;
 
 			void Load(yaml::MapNode *);
 			void Save(yaml::Emitter *);

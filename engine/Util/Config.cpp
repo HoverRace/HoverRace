@@ -843,13 +843,21 @@ void Config::cfg_controls_t::Save(yaml::Emitter *emitter)
 	emitter->EndMap();
 }
 
+Config::cfg_control_t Config::cfg_control_t::Key(int kc)
+{
+	Config::cfg_control_t ctl;
+	ctl.inputType = OIS::OISKeyboard;
+	ctl.kbdBinding = kc;
+	return ctl;
+}
+
 void Config::cfg_control_t::SetKey(int kc)
 {
 	inputType = OIS::OISKeyboard;
 	kbdBinding = kc;
 }
 
-bool Config::cfg_control_t::IsKey(int kc)
+bool Config::cfg_control_t::IsKey(int kc) const
 {
 	return inputType == OIS::OISKeyboard && kbdBinding == kc;
 }
