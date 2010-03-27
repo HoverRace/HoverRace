@@ -79,10 +79,14 @@ Core::~Core()
 Core *Core::Reset()
 {
 	// Register a "safe" set of standard libraries.
-	REG_LUA_LIB(state, "", luaopen_base);
-	REG_LUA_LIB(state, LUA_MATHLIBNAME, luaopen_math);
-	REG_LUA_LIB(state, LUA_STRLIBNAME, luaopen_string);
-	REG_LUA_LIB(state, LUA_TABLIBNAME, luaopen_table);
+	// Load standard libraries, then remove references to libraries which we
+	// don't want any scripts to have access to.
+	// This is to be compatible with LuaJIT.
+	luaL_openlibs(state);
+	UNDEF_LUA_GLOBAL(state, "debug");
+	UNDEF_LUA_GLOBAL(state, "io");
+	UNDEF_LUA_GLOBAL(state, "os");
+	UNDEF_LUA_GLOBAL(state, "package");
 
 	// Override the print function so we can reroute the output.
 	lua_pushlightuserdata(state, this);
