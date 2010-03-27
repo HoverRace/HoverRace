@@ -32,6 +32,8 @@ namespace HoverRace {
 	namespace Client {
 		namespace Control {
 			class Controller;
+			class UiHandler;
+			typedef boost::shared_ptr<UiHandler> UiHandlerPtr;
 		}
 		namespace HoverScript {
 			class GamePeer;
@@ -100,6 +102,8 @@ class MR_GameApp
 		HoverRace::Client::HoverScript::SessionPeerPtr sessionPeer;
 		MR_GameThread *mGameThread;
 		HoverRace::Client::RulebookPtr requestedNewSession;
+		class UiInput;
+		boost::shared_ptr<UiInput> uiInput;
 
 		eViewMode mCurrentMode;
 

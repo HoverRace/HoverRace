@@ -87,19 +87,23 @@ class HighConsole::Input : public Control::InputHandler
 {
 	typedef Control::InputHandler SUPER;
 	public:
-		Input() : SUPER() { }
+		Input(HighConsole *cons) : SUPER(), cons(cons) { }
 		virtual ~Input() { }
+
+		void Detach() { cons = NULL; }
 
 	public:
 		virtual bool KeyPressed(OIS::KeyCode kc, unsigned int text);
 		virtual bool KeyReleased(OIS::KeyCode kc, unsigned int text);
+
+	private:
+		HighConsole *cons;
 };
 
 HighConsole::HighConsole(Script::Core *scripting, MR_GameApp *gameApp,
                          GamePeer *gamePeer, SessionPeerPtr sessionPeer) :
 	SUPER(scripting), gameApp(gameApp), gamePeer(gamePeer), sessionPeer(sessionPeer),
-	visible(false), cursorOn(true), cursorTick(0),
-	input(boost::make_shared<Input>())
+	visible(false), cursorOn(true), cursorTick(0)
 {
 	vp = new MR_2DViewPort();
 
@@ -131,17 +135,24 @@ HighConsole::HighConsole(Script::Core *scripting, MR_GameApp *gameApp,
 
 	logLines->Add("Available global objects: game, session", *logFont, 0x0e);
 
+	Control::Controller *controller = gameApp->GetController();
+
 	// The heading for the console.
 	Font titleFont("Arial", 12);
 	consoleTitle = new StaticText(_("Console"), titleFont, 0x0e);
-	std::string consoleControlsText;
-	consoleControlsText += _("Hide");
-	consoleControlsText += " [~]";
+	std::string consoleControlsText = boost::str(
+		boost::format("%s [%s]") %
+		_("Hide") % controller->toString(cfg->ui.console)
+		);
 	consoleControls = new StaticText(consoleControlsText, titleFont, 0x0e);;
+
+	input = boost::make_shared<Input>(this);
 }
 
 HighConsole::~HighConsole()
 {
+	input->Detach();
+
 	delete consoleControls;
 	delete consoleTitle;
 
@@ -456,13 +467,27 @@ void HighConsole::LogLines::Render(MR_2DViewPort *vp, int x, int y)
 
 bool HighConsole::Input::KeyPressed(OIS::KeyCode kc, unsigned int text)
 {
-	OutputDebugString("HighConsole KeyPressed\n");
+	if (Config::GetInstance()->ui.console.IsKey(kc) && cons->IsVisible()) {
+		cons->ToggleVisible();
+		return true;
+	}
+
+	/*
+	if (text) {
+		if (text >= 32 && text < 127) {
+			OutputDebugString(boost::str(boost::format("Text key: %c (%d)\n") % (char)text % text).c_str());
+		}
+		else {
+			OutputDebugString(boost::str(boost::format("Text key: (%d)\n") % text).c_str());
+		}
+	}
+	*/
+
 	return true;
 }
 
 bool HighConsole::Input::KeyReleased(OIS::KeyCode kc, unsigned int text)
 {
-	OutputDebugString("HighConsole KeyReleased\n");
 	return true;
 }
 

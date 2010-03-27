@@ -43,6 +43,8 @@ namespace Control {
 
 class InputHandler;
 typedef boost::shared_ptr<InputHandler> InputHandlerPtr;
+class UiHandler;
+typedef boost::shared_ptr<UiHandler> UiHandlerPtr;
 
 using namespace OIS;
 
@@ -63,7 +65,7 @@ struct ControlState {
 };
 
 /// Convenient typedef prevents us from having to write long namespace specifiers
-typedef HoverRace::Util::Config::cfg_controls_t::cfg_control_t InputControl;
+typedef HoverRace::Util::Config::cfg_control_t InputControl;
 
 /***
  * The HoverRace::Client::Control::Controller class handles all the input of HoverRace.
@@ -73,7 +75,7 @@ typedef HoverRace::Util::Config::cfg_controls_t::cfg_control_t InputControl;
  */
 class Controller : public KeyListener, public MouseListener, public JoyStickListener {
 	public:
-		Controller(Util::OS::wnd_t mainWindow);
+		Controller(Util::OS::wnd_t mainWindow, UiHandlerPtr uiHandler);
 		~Controller();
 
 		void poll();
@@ -84,7 +86,7 @@ class Controller : public KeyListener, public MouseListener, public JoyStickList
 		void disableInput(int control, int player);
 		bool controlsUpdated();
 		void saveControls();
-		std::string toString(HoverRace::Util::Config::cfg_controls_t::cfg_control_t control);
+		std::string toString(HoverRace::Util::Config::cfg_control_t control);
 
 		void EnterControlLayer(InputHandlerPtr handler);
 		void LeaveControlLayer();
@@ -135,7 +137,7 @@ class Controller : public KeyListener, public MouseListener, public JoyStickList
 		InputControl right[HoverRace::Util::Config::MAX_PLAYERS];
 		InputControl weapon[HoverRace::Util::Config::MAX_PLAYERS];
 
-		void getCaptureControl(int captureControl, InputControl **input, HoverRace::Util::Config::cfg_controls_t::cfg_control_t **cfg_input);
+		void getCaptureControl(int captureControl, InputControl **input, Util::Config::cfg_control_t **cfg_input);
 
 		bool captureNext;
 		int captureControl;
@@ -147,6 +149,8 @@ class Controller : public KeyListener, public MouseListener, public JoyStickList
 		int mouseXLast;
 		int mouseYLast;
 		int mouseZLast;
+
+		UiHandlerPtr uiHandler;
 
 		// Control layers.
 		typedef std::vector<InputHandlerPtr> controlLayers_t;

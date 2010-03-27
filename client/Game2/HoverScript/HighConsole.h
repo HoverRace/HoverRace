@@ -121,7 +121,7 @@ class HighConsole : public Console
 		LogLines *logLines;
 
 		class Input;
-		Control::InputHandlerPtr input;
+		boost::shared_ptr<Input> input;
 
 		static const int PADDING_TOP = 2;
 		static const int PADDING_BOTTOM = 5;

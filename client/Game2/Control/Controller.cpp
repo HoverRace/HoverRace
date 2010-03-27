@@ -7,6 +7,7 @@
 #include "StdAfx.h"
 
 #include "InputHandler.h"
+#include "UiHandler.h"
 
 #include "Controller.h"
 
@@ -25,7 +26,8 @@ using namespace OIS;
  *
  * @param mainWindow Handle to the main HR window
  */
-Controller::Controller(Util::OS::wnd_t mainWindow)
+Controller::Controller(Util::OS::wnd_t mainWindow, UiHandlerPtr uiHandler) :
+	uiHandler(uiHandler)
 {
 	kbd = NULL;
 	mouse = NULL;
@@ -273,7 +275,7 @@ void Controller::disableInput(int control, int player)
 /***
  * Return a string representation of the input control.
  */
-std::string Controller::toString(HoverRace::Util::Config::cfg_controls_t::cfg_control_t control)
+std::string Controller::toString(Util::Config::cfg_control_t control)
 {
 	if(control.inputType == OISKeyboard) {
 		return kbd->getAsString((OIS::KeyCode) control.kbdBinding);
@@ -561,7 +563,7 @@ bool Controller::keyPressed(const KeyEvent &arg)
 	if(captureNext) {
 		// capture this input as a keycode
 		InputControl *input = NULL;
-		Util::Config::cfg_controls_t::cfg_control_t *cfg_input = NULL;
+		Util::Config::cfg_control_t *cfg_input = NULL;
 
 		getCaptureControl(captureControl, &input, &cfg_input);
 		
@@ -580,6 +582,14 @@ bool Controller::keyPressed(const KeyEvent &arg)
 		capturePlayerId = 0;
 		captureHwnd = NULL;
 	} else {
+		if (uiHandler != NULL) {
+			InputControl &ctl = Config::GetInstance()->ui.console;
+			if (ctl.inputType == OISKeyboard && ctl.kbdBinding == kc) {
+				uiHandler->OnConsole();
+				return true;
+			}
+		}
+
 		for(int i = 0; i < 4; i++) {
 			if((brake[i].inputType == OISKeyboard) && (kc == brake[i].kbdBinding))
 				curState[i].brake = true;
@@ -685,7 +695,7 @@ bool Controller::mouseMoved(const MouseEvent &arg)
 
 	if(captureNext) {
 		InputControl *input = NULL;
-		Util::Config::cfg_controls_t::cfg_control_t *cfg_input = NULL;
+		Util::Config::cfg_control_t *cfg_input = NULL;
 
 		getCaptureControl(captureControl, &input, &cfg_input);
 
@@ -762,7 +772,7 @@ bool Controller::mousePressed(const MouseEvent &arg, MouseButtonID id)
 
 	if(captureNext) {
 		InputControl *input = NULL;
-		Util::Config::cfg_controls_t::cfg_control_t *cfg_input = NULL;
+		Util::Config::cfg_control_t *cfg_input = NULL;
 
 		getCaptureControl(captureControl, &input, &cfg_input);
 		
@@ -843,7 +853,7 @@ bool Controller::buttonPressed(const JoyStickEvent &arg, int button)
 	if(captureNext) {
 		// capture this input as a key binding
 		InputControl *input = NULL;
-		Util::Config::cfg_controls_t::cfg_control_t *cfg_input = NULL;
+		Util::Config::cfg_control_t *cfg_input = NULL;
 
 		getCaptureControl(captureControl, &input, &cfg_input);
 		
@@ -953,7 +963,7 @@ bool Controller::axisMoved(const JoyStickEvent &arg, int axis)
 
 		if(axes[axisIndex] != 0) { // make sure we actually got usable input
 			InputControl *input = NULL;
-			Util::Config::cfg_controls_t::cfg_control_t *cfg_input = NULL;
+			Util::Config::cfg_control_t *cfg_input = NULL;
 
 			getCaptureControl(captureControl, &input, &cfg_input);
 
@@ -1024,7 +1034,7 @@ bool Controller::povMoved(const JoyStickEvent &arg, int pov)
 	if(captureNext) {
 		// capture this input as a key binding
 		InputControl *input = NULL;
-		Util::Config::cfg_controls_t::cfg_control_t *cfg_input = NULL;
+		Util::Config::cfg_control_t *cfg_input = NULL;
 
 		getCaptureControl(captureControl, &input, &cfg_input);
 		
@@ -1123,7 +1133,7 @@ void Controller::clearControlState()
  * @param input Pointer to InputControl that will be set to the control specified in captureControl
  * @param cfg_input Pointer to cfg_control_t that will be set to the control specified in captureControl
  */
-void Controller::getCaptureControl(int captureControl, InputControl **input, HoverRace::Util::Config::cfg_controls_t::cfg_control_t **cfg_input)
+void Controller::getCaptureControl(int captureControl, InputControl **input, Util::Config::cfg_control_t **cfg_input)
 {
 	Config *cfg = Config::GetInstance();
 

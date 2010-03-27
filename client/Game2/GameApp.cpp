@@ -26,6 +26,7 @@
 #include <boost/foreach.hpp>
 
 #include "Control/Controller.h"
+#include "Control/UiHandler.h"
 #include "HoverScript/ClientScriptCore.h"
 #include "HoverScript/GamePeer.h"
 #include "HoverScript/HighConsole.h"
@@ -129,6 +130,16 @@ MR_GameApp *MR_GameApp::This;
 // Local prototypes
 static HBITMAP LoadResourceBitmap(HINSTANCE hInstance, LPSTR lpString, HPALETTE FAR * lphPalette);
 static HPALETTE CreateDIBPalette(LPBITMAPINFO lpbmi, LPINT lpiNumColors);
+
+class MR_GameApp::UiInput : public Control::UiHandler
+{
+	virtual void OnConsole()
+	{
+		if (This != NULL && This->highConsole != NULL && !This->highConsole->IsVisible()) {
+			This->highConsole->ToggleVisible();
+		}
+	}
+};
 
 // class MR_GameThread
 
@@ -259,7 +270,8 @@ void MR_GameThread::Restart()
 
 MR_GameApp::MR_GameApp(HINSTANCE pInstance, bool safeMode) :
 	nonInteractiveShutdown(false),
-	introMovie(NULL), scripting(NULL), gamePeer(NULL), sysEnv(NULL)
+	introMovie(NULL), scripting(NULL), gamePeer(NULL), sysEnv(NULL),
+	uiInput(boost::make_shared<UiInput>())
 {
 	This = this;
 	mInstance = pInstance;
@@ -671,7 +683,7 @@ BOOL MR_GameApp::CreateMainWindow()
 	UpdateMenuItems();
 
 	// set up controller
-	controller = new HoverRace::Client::Control::Controller(mMainWindow);
+	controller = new Control::Controller(mMainWindow, uiInput);
 
 	return lReturnValue;
 }
@@ -743,7 +755,7 @@ bool MR_GameApp::CreateMainMenu()
 		Str::UW(MENUFMT("Menu|View", "More &messages", false, "F6").c_str()))) return false;
 	if (!AppendMenuW(viewMenu, MF_SEPARATOR, NULL, NULL)) return false;
 	if (!AppendMenuW(viewMenu, MF_STRING, ID_SETTING_REFRESHCOLORS,
-		Str::UW(MENUFMT("Menu|View", "&Refresh colors", false, "F12").c_str()))) return false;
+		Str::UW(MENUFMT("Menu|View", "&Refresh colors", false, "F11").c_str()))) return false;
 
 	HMENU settingMenu = CreatePopupMenu();
 	if (settingMenu == NULL) return false;
@@ -996,13 +1008,8 @@ void MR_GameApp::RefreshView()
 
 void MR_GameApp::OnChar(char c)
 {
-	if (highConsole != NULL) {
-		if (c == '`') {
-			highConsole->ToggleVisible();
-		}
-		else if (highConsole->IsVisible()) {
-			highConsole->OnChar(c);
-		}
+	if (highConsole != NULL && highConsole->IsVisible()) {
+		highConsole->OnChar(c);
 	}
 	else if (mCurrentSession != NULL) {
 		mCurrentSession->AddMessageKey(c);
@@ -1588,7 +1595,7 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 HoverRace::Client::Control::Controller *MR_GameApp::ReloadController()
 {
 	delete controller;
-	return (controller = new HoverRace::Client::Control::Controller(This->mMainWindow));
+	return (controller = new Control::Controller(This->mMainWindow, This->uiInput));
 }
 
 void MR_GameApp::NewInternetSession()

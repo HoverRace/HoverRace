@@ -526,6 +526,8 @@ void Config::ResetToDefaults()
 	controls[1].weapon.kbdBinding = OIS::KC_Q;
 	controls[1].lookBack.kbdBinding = OIS::KC_I;
 
+	ui.console.SetKey(OIS::KC_F12);
+
 	runtime.silent = false;
 	runtime.aieeee = false;
 	runtime.showFramerate = false;
@@ -841,7 +843,18 @@ void Config::cfg_controls_t::Save(yaml::Emitter *emitter)
 	emitter->EndMap();
 }
 
-void Config::cfg_controls_t::cfg_control_t::Load(yaml::MapNode *root)
+void Config::cfg_control_t::SetKey(int kc)
+{
+	inputType = OIS::OISKeyboard;
+	kbdBinding = kc;
+}
+
+bool Config::cfg_control_t::IsKey(int kc)
+{
+	return inputType == OIS::OISKeyboard && kbdBinding == kc;
+}
+
+void Config::cfg_control_t::Load(yaml::MapNode *root)
 {
 	if (root == NULL) return;
 
@@ -856,7 +869,7 @@ void Config::cfg_controls_t::cfg_control_t::Load(yaml::MapNode *root)
 	READ_INT(root, joystickId, -32768, 32767);
 }
 
-void Config::cfg_controls_t::cfg_control_t::Save(yaml::Emitter *emitter)
+void Config::cfg_control_t::Save(yaml::Emitter *emitter)
 {
 	emitter->StartMap();
 

@@ -186,27 +186,30 @@ class MR_DllDeclare Config
 			void Save(yaml::Emitter*);
 		} net;
 
+		struct cfg_control_t {
+			int inputType; /// OISKeyboard, OISMouse, OISJoyStick
+
+			// keyboard
+			int kbdBinding; // see OIS KeyCode class
+
+			// mouse or joystick
+			int button;
+			int axis;
+			int direction; // for axis as well as POV
+			int pov; // joystick only
+			int slider; // joystick only
+			int sensitivity; // defines how quickly we get to the maximum value
+			int joystickId;
+
+			void SetKey(int kc);
+			MR_DllDeclare bool IsKey(int kc);
+
+			void Load(yaml::MapNode *);
+			void Save(yaml::Emitter *);
+		};
+
 		static const int MAX_PLAYERS = 4;
 		struct cfg_controls_t {
-			struct cfg_control_t {
-				int inputType; /// OISKeyboard, OISMouse, OISJoyStick
-
-				// keyboard
-				int kbdBinding; // see OIS KeyCode class
-
-				// mouse or joystick
-				int button;
-				int axis;
-				int direction; // for axis as well as POV
-				int pov; // joystick only
-				int slider; // joystick only
-				int sensitivity; // defines how quickly we get to the maximum value
-				int joystickId;
-
-				void Load(yaml::MapNode *);
-				void Save(yaml::Emitter *);
-			};
-
 			cfg_control_t motorOn;
 			cfg_control_t right;
 			cfg_control_t left;
@@ -219,6 +222,11 @@ class MR_DllDeclare Config
 			void Load(yaml::MapNode*);
 			void Save(yaml::Emitter*);
 		} controls[MAX_PLAYERS];
+
+		struct cfg_ui_t {
+			// Not configurable yet.
+			cfg_control_t console;
+		} ui;
 
 		struct cfg_runtime_t {
 			bool silent;

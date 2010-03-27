@@ -28,6 +28,7 @@
 #include "../../engine/Util/Str.h"
 
 #include "Control/Controller.h"
+#include "Control/UiHandler.h"
 #include "GameApp.h"
 
 #include "resource.h"
@@ -358,7 +359,7 @@ LRESULT ControlPrefsPage::PressKeyDialogProc(HWND pWindow, UINT pMsgId, WPARAM p
 			EnableWindow(app->GetWindowHandle(), false);
 			EnableWindow(pWindow, true);
 
-			tmpControl = new Control::Controller(pWindow);
+			tmpControl = new Control::Controller(pWindow, Control::UiHandlerPtr());
 			tmpControl->captureNextInput(setControlControl, setControlPlayer, pWindow);
 
 			// set timer for 3 seconds
