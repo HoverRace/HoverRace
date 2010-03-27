@@ -467,7 +467,7 @@ void HighConsole::LogLines::Render(MR_2DViewPort *vp, int x, int y)
 
 bool HighConsole::Input::KeyPressed(OIS::KeyCode kc, unsigned int text)
 {
-	if (cons == NULL) return;
+	if (cons == NULL) return true;
 
 	if (Config::GetInstance()->ui.console.IsKey(kc) && cons->IsVisible()) {
 		cons->ToggleVisible();
