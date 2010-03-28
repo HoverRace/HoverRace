@@ -87,8 +87,12 @@ class HighConsole : public Console
 		void OnChar(char c);
 		void Render(MR_VideoBuffer *dest);
 
+	private:
+		void RenderConsole();
+		void RenderHelp();
 		void RenderHeading(const VideoServices::StaticText *title,
-			const VideoServices::StaticText *controls, int y, MR_UInt8 bgColor);
+			const VideoServices::StaticText *controls, int y, MR_UInt8 bgColor,
+			bool reversed=false);
 
 	private:
 		MR_GameApp *gameApp;
@@ -96,6 +100,7 @@ class HighConsole : public Console
 		SessionPeerPtr sessionPeer;
 
 		bool visible;
+		bool helpVisible;
 		MR_2DViewPort *vp;
 
 		std::string submitBuffer;
@@ -109,6 +114,8 @@ class HighConsole : public Console
 
 		VideoServices::StaticText *consoleTitle;
 		VideoServices::StaticText *consoleControls;
+		VideoServices::StaticText *helpTitle;
+		VideoServices::StaticText *helpControls;
 
 		unsigned int charWidth;  ///< Guessed fixed character width, in pixels.
 		unsigned int consoleWidth;  ///< Console text width, in pixels.
@@ -119,6 +126,7 @@ class HighConsole : public Console
 
 		class LogLines;
 		LogLines *logLines;
+		LogLines *helpLines;
 
 		class Input;
 		boost::shared_ptr<Input> input;

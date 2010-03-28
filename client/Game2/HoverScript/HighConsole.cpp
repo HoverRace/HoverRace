@@ -50,10 +50,15 @@ using HoverRace::VideoServices::StaticText;
 #ifdef max
 #	undef max
 #endif
+#ifdef HELP_KEY
+#	undef HELP_KEY
+#endif
 
 namespace {
 	static const std::string COMMAND_PROMPT(">> ");
 	static const std::string CONTINUE_PROMPT(":> ");
+
+	static const Config::cfg_control_t HELP_KEY = Config::cfg_control_t::Key(OIS::KC_F1);
 
 	static const Config::cfg_control_t SCROLL_TOP_KEY = Config::cfg_control_t::Key(OIS::KC_HOME);
 	static const Config::cfg_control_t SCROLL_UP_KEY = Config::cfg_control_t::Key(OIS::KC_PGUP);
@@ -118,7 +123,7 @@ class HighConsole::Input : public Control::InputHandler
 HighConsole::HighConsole(Script::Core *scripting, MR_GameApp *gameApp,
                          GamePeer *gamePeer, SessionPeerPtr sessionPeer) :
 	SUPER(scripting), gameApp(gameApp), gamePeer(gamePeer), sessionPeer(sessionPeer),
-	visible(false), cursorOn(true), cursorTick(0)
+	visible(false), helpVisible(false), cursorOn(true), cursorTick(0)
 {
 	vp = new MR_2DViewPort();
 
@@ -137,6 +142,11 @@ HighConsole::HighConsole(Script::Core *scripting, MR_GameApp *gameApp,
 	commandLineDisplay = new StaticText("", *logFont, 0x0a, StaticText::EFFECT_SHADOW);
 
 	logLines = new LogLines();
+	helpLines = new LogLines();
+
+	// Testing text for the help window.
+	helpLines->Add("This is the help window.", *logFont, 0x0a);
+	helpLines->Add("Help windows are fun!", *logFont, 0x0a);
 
 	// Introductory text for the console log.
 	Config *cfg = cfg->GetInstance();
@@ -160,7 +170,15 @@ HighConsole::HighConsole(Script::Core *scripting, MR_GameApp *gameApp,
 		_("Scroll") % controller->toString(SCROLL_UP_KEY) % controller->toString(SCROLL_DOWN_KEY) %
 		_("Hide") % controller->toString(cfg->ui.console)
 		);
-	consoleControls = new StaticText(consoleControlsText, titleFont, 0x0e);;
+	consoleControls = new StaticText(consoleControlsText, titleFont, 0x0e);
+
+	// The heading for the help window.
+	helpTitle = new StaticText(_("Help"), titleFont, 0x0e);
+	std::string helpControlsText = boost::str(
+		boost::format("%s [%s]") %
+		_("Hide") % controller->toString(HELP_KEY)
+		);
+	helpControls = new StaticText(helpControlsText, titleFont, 0x0e);
 
 	input = boost::make_shared<Input>(this);
 }
@@ -169,9 +187,12 @@ HighConsole::~HighConsole()
 {
 	input->Detach();
 
+	delete helpControls;
+	delete helpTitle;
 	delete consoleControls;
 	delete consoleTitle;
 
+	delete helpLines;
 	delete logLines;
 
 	delete cursor;
@@ -351,6 +372,12 @@ void HighConsole::Render(MR_VideoBuffer *dest)
 
 	vp->Setup(dest, 0, 0, dest->GetXRes(), dest->GetYRes());
 
+	RenderConsole();
+	if (helpVisible) RenderHelp();
+}
+
+void HighConsole::RenderConsole()
+{
 	const int viewHeight = vp->GetYRes();
 	const int viewWidth = vp->GetXRes();
 
@@ -409,9 +436,27 @@ void HighConsole::Render(MR_VideoBuffer *dest)
 	}
 }
 
+void HighConsole::RenderHelp()
+{
+	const int viewHeight = vp->GetYRes();
+	const int viewWidth = vp->GetXRes();
+
+	int totalHeight = PADDING_TOP + helpLines->GetHeight() + PADDING_BOTTOM;
+
+	// Draw the background.
+	for (int ly = 0; ly < totalHeight; ++ly) {
+		vp->DrawHorizontalLine(ly, 0, viewWidth - 1, 0x18);
+	}
+
+	// Render the title.
+	RenderHeading(helpTitle, helpControls, totalHeight, 0x18, true);
+
+	helpLines->Render(vp, PADDING_LEFT, PADDING_TOP);
+}
+
 void HighConsole::RenderHeading(const VideoServices::StaticText *title,
                                 const VideoServices::StaticText *controls,
-                                int y, MR_UInt8 bgColor)
+                                int y, MR_UInt8 bgColor, bool reversed)
 {
 	const int viewWidth = vp->GetXRes();
 
@@ -421,10 +466,13 @@ void HighConsole::RenderHeading(const VideoServices::StaticText *title,
 	const int controlsTotalWidth = PADDING_LEFT + controls->GetWidth() + PADDING_RIGHT;
 
 	for (int i = 0; i < totalHeight; ++i) {
-		vp->DrawHorizontalLine(y + i, 0, titleTotalWidth + i, bgColor);
+		int x2 = titleTotalWidth + (reversed ? (totalHeight - i - 1) : i);
+		vp->DrawHorizontalLine(y + i, 0, x2, bgColor);
 	}
 	for (int i = 0; i < totalHeight; ++i) {
-		vp->DrawHorizontalLine(y + i, viewWidth - controlsTotalWidth - i, viewWidth - 1, bgColor);
+		int x1 = viewWidth - controlsTotalWidth -
+			(reversed ? (totalHeight - i - 1) : i);
+		vp->DrawHorizontalLine(y + i, x1, viewWidth - 1, bgColor);
 	}
 
 	title->Blt(PADDING_LEFT, y + TITLE_PADDING_TOP, vp);
@@ -540,6 +588,9 @@ bool HighConsole::Input::KeyPressed(OIS::KeyCode kc, unsigned int text)
 
 	if (Config::GetInstance()->ui.console.IsKey(kc)) {
 		cons->ToggleVisible();
+	}
+	else if (HELP_KEY.IsKey(kc)) {
+		cons->helpVisible = !cons->helpVisible;
 	}
 	else if (SCROLL_TOP_KEY.IsKey(kc)) {
 		cons->logLines->ScrollTop();
