@@ -74,7 +74,8 @@ class HighConsole : public Console
 		virtual void Clear();
 
 	private:
-		void AddLogEntry(const std::string &s, MR_UInt8 color);
+		class LogLines;
+		void AddLogEntry(LogLines *lines, const std::string &s, MR_UInt8 color);
 	protected:
 		virtual void LogInfo(const std::string &s);
 		virtual void LogError(const std::string &s);
@@ -124,7 +125,6 @@ class HighConsole : public Console
 		Util::OS::timestamp_t cursorTick;
 		VideoServices::StaticText *cursor;
 
-		class LogLines;
 		LogLines *logLines;
 		LogLines *helpLines;
 
