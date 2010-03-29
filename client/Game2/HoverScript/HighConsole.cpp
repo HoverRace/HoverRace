@@ -30,6 +30,8 @@
 #include <luabind/luabind.hpp>
 
 #include "../../../engine/Script/Core.h"
+#include "../../../engine/Script/Help/HelpHandler.h"
+#include "../../../engine/Script/Help/Class.h"
 #include "../../../engine/Util/Config.h"
 #include "../../../engine/VideoServices/2DViewPort.h"
 #include "../../../engine/VideoServices/StaticText.h"
@@ -144,10 +146,6 @@ HighConsole::HighConsole(Script::Core *scripting, MR_GameApp *gameApp,
 	logLines = new LogLines();
 	helpLines = new LogLines();
 
-	// Testing text for the help window.
-	helpLines->Add("This is the help window.", *logFont, 0x0a);
-	helpLines->Add("Help windows are fun!", *logFont, 0x0a);
-
 	// Introductory text for the console log.
 	Config *cfg = cfg->GetInstance();
 	logLines->Add(PACKAGE_NAME " version " + cfg->GetVersion(),
@@ -159,6 +157,13 @@ HighConsole::HighConsole(Script::Core *scripting, MR_GameApp *gameApp,
 	logLines->Add(intro, *logFont, 0x0e);
 
 	logLines->Add("Available global objects: game, session", *logFont, 0x0e);
+
+	std::string helpInstructions = boost::str(boost::format(
+		_("For help on a class or method, call the %s method: %s")) %
+		"help()" % "game:help(); game:help(\"on_init\")");
+
+	helpLines->Add(helpInstructions, *logFont, 0x0e);
+	logLines->Add(helpInstructions, *logFont, 0x0e);
 
 	Control::Controller *controller = gameApp->GetController();
 
@@ -479,6 +484,36 @@ void HighConsole::RenderHeading(const VideoServices::StaticText *title,
 	title->Blt(PADDING_LEFT, y + TITLE_PADDING_TOP, vp);
 	controls->Blt(viewWidth - PADDING_RIGHT - controls->GetWidth(),
 		y + TITLE_PADDING_TOP, vp);
+}
+
+void HighConsole::HelpClass(const Script::Help::Class &cls)
+{
+	using Script::Help::Class;
+	using Script::Help::MethodPtr;
+
+	AddLogEntry(helpLines,
+		boost::str(boost::format(_("Methods for class %s:")) % cls.GetName()),
+		0x0a);
+
+	std::string s;
+	s.reserve(1024);
+	BOOST_FOREACH(const Class::methods_t::value_type &ent, cls.GetMethods()) {
+		MethodPtr method = ent.second;
+		s.clear();
+		s += "  ";
+		s += method->GetName();
+		//TODO: Method brief description.
+		AddLogEntry(helpLines, s, 0x0a);
+	}
+
+	helpVisible = true;
+}
+
+void HighConsole::HelpMethod(const Script::Help::Class &cls, const Script::Help::Method &method)
+{
+	//TODO
+
+	helpVisible = true;
 }
 
 // LogLines ////////////////////////////////////////////////////////////////////

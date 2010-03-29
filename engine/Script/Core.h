@@ -39,6 +39,16 @@
 #endif
 
 namespace HoverRace {
+	namespace Script {
+		namespace Help {
+			class Class;
+			typedef boost::shared_ptr<Class> ClassPtr;
+			class HelpHandler;
+		}
+	}
+}
+
+namespace HoverRace {
 namespace Script {
 
 /// Exception to signal that the current chunk is incomplete.
@@ -78,11 +88,14 @@ class MR_DllDeclare Core
 
 		static const std::string DEFAULT_CHUNK_NAME;
 		void Compile(const std::string &chunk, const std::string &name=DEFAULT_CHUNK_NAME);
-		void CallAndPrint(int numParams=0);
+		void CallAndPrint(int numParams=0, Help::HelpHandler *helpHandler=NULL);
 
-		void Execute(const std::string &chunk);
+		void Execute(const std::string &chunk, Help::HelpHandler *helpHandler=NULL);
 
 		void PrintStack();
+
+		void ReqHelp(const std::string &className);
+		void ReqHelp(const std::string &className, const std::string &methodName);
 
 	private:
 		std::string PopError();
@@ -93,6 +106,9 @@ class MR_DllDeclare Core
 	private:
 		outs_t outs;
 		lua_State *state;
+		Help::HelpHandler *curHelpHandler;
+		typedef std::map<const std::string,Help::ClassPtr> helpClasses_t;
+		helpClasses_t helpClasses;
 };
 
 }  // namespace Script

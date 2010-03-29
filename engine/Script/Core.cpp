@@ -30,8 +30,13 @@
 #	undef Bool
 #endif
 #include <boost/foreach.hpp>
+#include <boost/make_shared.hpp>
 
 #include "../Util/OS.h"
+#include "Help/HelpHandler.h"
+#include "Help/Class.h"
+#include "Help/Event.h"
+#include "Help/Method.h"
 
 #include "Core.h"
 
@@ -52,13 +57,31 @@ using HoverRace::Util::OS;
 	lua_pushcclosure((state), Core::LSandboxedFunction, 1); \
 	lua_setglobal((state), (name))
 
+namespace HoverRace {
+namespace Script {
+
 const std::string Core::DEFAULT_CHUNK_NAME("=lua");
 
-Core::Core()
+Core::Core() :
+	curHelpHandler(NULL)
 {
 	state = luaL_newstate();
 
 	//TODO: Set panic handler.
+
+	//TODO: Load class help on demand.
+	Help::ClassPtr cls;
+
+	cls = boost::make_shared<Help::Class>("Game");
+	cls->AddMethod(boost::make_shared<Help::Method>("get_config"));
+	cls->AddMethod(boost::make_shared<Help::Event>("on_init"));
+	cls->AddMethod(boost::make_shared<Help::Event>("on_shutdown"));
+	cls->AddMethod(boost::make_shared<Help::Method>("is_initialized"));
+	helpClasses.insert(helpClasses_t::value_type(cls->GetName(), cls));
+
+	cls = boost::make_shared<Help::Class>("Session");
+	cls->AddMethod(boost::make_shared<Help::Method>("get_num_players"));
+	helpClasses.insert(helpClasses_t::value_type(cls->GetName(), cls));
 }
 
 Core::~Core()
@@ -223,9 +246,10 @@ void Core::Compile(const std::string &chunk, const std::string &name)
 /**
  * Pop a function off the stack and execute it, printing any return values.
  * @param numParams The number of params being passed to the function.
+ * @param helpHandler Optional callback for when a script requests API help.
  * @throw ScriptExn The code signaled an error while executing.
  */
-void Core::CallAndPrint(int numParams)
+void Core::CallAndPrint(int numParams, Help::HelpHandler *helpHandler)
 {
 	int initStack = lua_gettop(state);
 	if (initStack == 0) {
@@ -234,7 +258,9 @@ void Core::CallAndPrint(int numParams)
 	initStack -= (1 + numParams);
 
 	// Execute the chunk.
+	curHelpHandler = helpHandler;
 	int status = lua_pcall(state, numParams, LUA_MULTRET, 0);
+	curHelpHandler = NULL;
 	if (status != 0) {
 		throw ScriptExn(PopError());
 	}
@@ -255,16 +281,17 @@ void Core::CallAndPrint(int numParams)
 /**
  * Compile and execute a chunk of code.
  * @param chunk The code to execute.
+ * @param helpHandler Optional callback for when a script requests API help.
  * @throw IncompleteExn If the code does not complete a statement; i.e.,
  *                      expecting more tokens.  Callers can catch this
  *                      to keep reading more data to finish the statement.
  * @throw ScriptExn The code either failed to compile or signaled an error
  *                  while executing.
  */
-void Core::Execute(const std::string &chunk)
+void Core::Execute(const std::string &chunk, Help::HelpHandler *helpHandler)
 {
 	Compile(chunk);
-	CallAndPrint();
+	CallAndPrint(0, helpHandler);
 }
 
 void Core::PrintStack()
@@ -291,6 +318,53 @@ void Core::PrintStack()
 	std::string s = oss.str();
 	BOOST_FOREACH(boost::shared_ptr<std::ostream> &out, outs) {
 		*out << s << std::flush;
+	}
+}
+
+/**
+ * Request the documentation for a scripting API class.
+ * This must only be called from a script peer as the result of a Lua invocation!
+ * @param className The name of the class (may not be blank).
+ */
+void Core::ReqHelp(const std::string &className)
+{
+	ReqHelp(className, "");
+}
+
+/**
+ * Request the documentation for a scripting API class or method.
+ * This must only be called from a script peer as the result of a Lua invocation!
+ * @param className The name of the class (may not be blank).
+ * @param methodName The name of the method within the class (may be blank to
+ *                   retrieve the class documentation instead of the method
+ *                   documentation).
+ */
+void Core::ReqHelp(const std::string &className, const std::string &methodName)
+{
+	if (curHelpHandler == NULL) return;
+
+	// Find the class documentation in the cache.
+	helpClasses_t::const_iterator iter = helpClasses.find(className);
+	if (iter == helpClasses.end()) {
+		//TODO: First try to load the documentation from disk.
+		luaL_error(state, "Class \"%s\" has no documentation", className.c_str());
+		return;
+	}
+	Help::ClassPtr cls = iter->second;
+
+	if (methodName.empty()) {
+		curHelpHandler->HelpClass(*cls);
+	}
+	else {
+		Help::MethodPtr method = cls->GetMethod(methodName);
+		if (method == NULL) {
+			luaL_error(state, "Class \"%s\" has no method named \"%s\"",
+				className.c_str(), methodName.c_str());
+			return;
+		}
+		else {
+			curHelpHandler->HelpMethod(*cls, *method);
+		}
 	}
 }
 
@@ -353,3 +427,6 @@ int Core::LSandboxedFunction(lua_State *state)
 	const char *name = lua_tostring(state, lua_upvalueindex(1));
 	return luaL_error(state, "Disallowed access to protected function: %s", name);
 }
+
+}  // namespace Script
+}  // namespace HoverRace

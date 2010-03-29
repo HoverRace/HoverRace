@@ -1,6 +1,6 @@
 
-// SessionPeer.h
-// Scripting peer for a game session.
+// Method.h
+// Help text for a method in the scripting API.
 //
 // Copyright (c) 2010 Michael Imamura.
 //
@@ -22,52 +22,42 @@
 
 #pragma once
 
-#include <luabind/luabind.hpp>
-#include <luabind/object.hpp>
+#ifdef _WIN32
+#	ifdef MR_ENGINE
+#		define MR_DllDeclare   __declspec( dllexport )
+#	else
+#		define MR_DllDeclare   __declspec( dllimport )
+#	endif
+#else
+#	define MR_DllDeclare
+#endif
 
 namespace HoverRace {
-	namespace Client {
-		class ClientSession;
-	}
-	namespace Script {
-		class Core;
-	}
-}
-
-namespace HoverRace {
-namespace Client {
-namespace HoverScript {
+namespace Script {
+namespace Help {
 
 /**
- * Scripting peer for a game session.
+ * API documentation for a Lua method.
  * @author Michael Imamura
  */
-class SessionPeer {
+class MR_DllDeclare Method
+{
+	private:
+		Method() { }
 	public:
-		SessionPeer(Script::Core *scripting, ClientSession *session);
-		virtual ~SessionPeer();
-
-	public:
-		static void Register(Script::Core *scripting);
-
-	public:
-		void OnSessionEnd();
-
-	protected:
-		void VerifySession() const;
+		Method(const std::string &name);
+		virtual ~Method();
 
 	public:
-		void LHelp();
-		void LHelp(const std::string &methodName);
-
-		int LGetNumPlayers() const;
+		const std::string &GetName() const;
 
 	private:
-		ClientSession *session;
-		Script::Core *scripting;
+		std::string name;
 };
-typedef boost::shared_ptr<SessionPeer> SessionPeerPtr;
+typedef boost::shared_ptr<Method> MethodPtr;
 
-}  // namespace HoverScript
-}  // namespace Client
+}  // namespace Help
+}  // namespace Script
 }  // namespace HoverRace
+
+#undef MR_DllDeclare

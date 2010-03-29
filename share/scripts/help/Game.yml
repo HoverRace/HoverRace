@@ -1,0 +1,41 @@
+%YAML 1.1
+---
+get_config:
+  type: method
+  sig:
+    - config = game:get_config()
+  brief: <
+    Retrieve a reference to the configuration.
+  desc: <
+    The return value is a Config object.
+
+is_initialized:
+  type: method
+  sig:
+    - init = game:is_initialized()
+  brief: <
+    Check if the game is initialized.
+  desc: <
+    Returns true or false.
+    
+    The game is initialized just before the on_init handlers are called.
+
+on_init:
+  type: event
+  brief: <
+    Called immediately after the game is initialized.
+
+start_practice:
+  type: method
+  sig:
+    - game:start_practice(track_name)
+    - game:start_practice(track_name, {opts...})
+  brief: <
+    Start a single-player practice race.
+  desc: <
+    This may only be called after the game is initialized (e.g. in an on_init
+    handler or later).
+    
+    "opts" is a table of options for the session.
+  examples: <
+    - game:start_practice("The Alley2", { laps = 2 })

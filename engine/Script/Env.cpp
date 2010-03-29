@@ -78,6 +78,11 @@ void Env::CopyGlobals()
 	// table
 }
 
+void Env::SetHelpHandler(Help::HelpHandler *handler)
+{
+	helpHandler = handler;
+}
+
 /**
  * Execute a chunk of code in the current environment.
  * @param chunk The code to execute.
@@ -110,7 +115,7 @@ void Env::Execute(const std::string &chunk, const std::string &name)
 	lua_setfenv(state, -2);
 
 	// May throw ScriptExn, but the function on the stack will be consumed anyway.
-	scripting->CallAndPrint();
+	scripting->CallAndPrint(0, helpHandler);
 }
 
 }  // namespace Script

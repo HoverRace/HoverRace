@@ -834,6 +834,38 @@
 				RelativePath=".\Script\ScriptExn.h"
 				>
 			</File>
+			<Filter
+				Name="Help"
+				>
+				<File
+					RelativePath=".\Script\Help\Class.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Script\Help\Class.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Script\Help\Event.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Script\Help\Event.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Script\Help\HelpHandler.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Script\Help\Method.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Script\Help\Method.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Net"

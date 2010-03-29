@@ -54,6 +54,8 @@ void SessionPeer::Register(Script::Core *scripting)
 
 	module(L) [
 		class_<SessionPeer>("Session")
+			.def("help", (void(SessionPeer::*)())&SessionPeer::LHelp)
+			.def("help", (void(SessionPeer::*)(const std::string&))&SessionPeer::LHelp)
 #			ifdef _WIN32
 			.def("get_num_players", &SessionPeer::LGetNumPlayers)
 #			endif
@@ -79,6 +81,16 @@ void SessionPeer::VerifySession() const
 	if (session == NULL) {
 		luaL_error(scripting->GetState(), "Session has ended.");
 	}
+}
+
+void SessionPeer::LHelp()
+{
+	scripting->ReqHelp("Session");
+}
+
+void SessionPeer::LHelp(const std::string &methodName)
+{
+	scripting->ReqHelp("Session", methodName);
 }
 
 int SessionPeer::LGetNumPlayers() const

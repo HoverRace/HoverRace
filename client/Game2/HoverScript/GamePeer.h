@@ -71,6 +71,9 @@ class GamePeer {
 		void VerifyInitialized() const;
 
 	public:
+		void LHelp();
+		void LHelp(const std::string &methodName);
+
 		ConfigPeer *LGetConfig();
 
 		bool LIsInitialized();

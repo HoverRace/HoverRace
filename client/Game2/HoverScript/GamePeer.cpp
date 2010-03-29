@@ -67,6 +67,8 @@ void GamePeer::Register(Script::Core *scripting)
 
 	module(L) [
 		class_<GamePeer>("Game")
+			.def("help", (void(GamePeer::*)())&GamePeer::LHelp)
+			.def("help", (void(GamePeer::*)(const std::string&))&GamePeer::LHelp)
 			.def("is_initialized", &GamePeer::LIsInitialized)
 			.def("get_config", &GamePeer::LGetConfig, adopt(result))
 			.def("on_init", (void(GamePeer::*)(const luabind::object&))&GamePeer::LOnInit)
@@ -149,6 +151,16 @@ void GamePeer::VerifyInitialized() const
 		luaL_error(scripting->GetState(), "Game is not yet initialized.");
 		return;
 	}
+}
+
+void GamePeer::LHelp()
+{
+	scripting->ReqHelp("Game");
+}
+
+void GamePeer::LHelp(const std::string &methodName)
+{
+	scripting->ReqHelp("Game", methodName);
 }
 
 bool GamePeer::LIsInitialized()

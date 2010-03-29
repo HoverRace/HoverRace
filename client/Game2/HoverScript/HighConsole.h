@@ -95,6 +95,11 @@ class HighConsole : public Console
 			const VideoServices::StaticText *controls, int y, MR_UInt8 bgColor,
 			bool reversed=false);
 
+	public:
+		// HelpHandler.
+		virtual void HelpClass(const Script::Help::Class &cls);
+		virtual void HelpMethod(const Script::Help::Class &cls, const Script::Help::Method &method);
+
 	private:
 		MR_GameApp *gameApp;
 		GamePeer *gamePeer;

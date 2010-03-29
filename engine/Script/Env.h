@@ -35,6 +35,14 @@
 #endif
 
 namespace HoverRace {
+	namespace Script {
+		namespace Help {
+			class HelpHandler;
+		}
+	}
+}
+
+namespace HoverRace {
 namespace Script {
 
 class MR_DllDeclare Env
@@ -51,12 +59,15 @@ class MR_DllDeclare Env
 		virtual void InitEnv() = 0;
 		void CopyGlobals();
 
+		void SetHelpHandler(Help::HelpHandler *helpHandler);
+
 		void Execute(const std::string &chunk, const std::string &name=Core::DEFAULT_CHUNK_NAME);
 
 	private:
 		Core *scripting;
 		bool initialized;
 		int envRef;
+		Help::HelpHandler *helpHandler;
 };
 
 }  // namespace Script

@@ -26,9 +26,13 @@
 
 #include "../../../engine/Script/Env.h"
 #include "../../../engine/Util/OS.h"
+#include "../../../engine/Script/Help/HelpHandler.h"
 
 namespace HoverRace {
 	namespace Script {
+		namespace Help {
+			class Class;
+		}
 		class Core;
 	}
 }
@@ -41,7 +45,7 @@ namespace HoverScript {
  * Base class for debug consoles.
  * @author Michael Imamura
  */
-class Console : public Script::Env
+class Console : public Script::Env, public Script::Help::HelpHandler
 {
 	typedef Script::Env SUPER;
 

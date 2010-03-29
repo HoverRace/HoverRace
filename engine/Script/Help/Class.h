@@ -1,6 +1,6 @@
 
-// SessionPeer.h
-// Scripting peer for a game session.
+// Class.h
+// Help text for a class in the scripting API.
 //
 // Copyright (c) 2010 Michael Imamura.
 //
@@ -22,52 +22,52 @@
 
 #pragma once
 
-#include <luabind/luabind.hpp>
-#include <luabind/object.hpp>
+#include "Method.h"
+
+#ifdef _WIN32
+#	ifdef MR_ENGINE
+#		define MR_DllDeclare   __declspec( dllexport )
+#	else
+#		define MR_DllDeclare   __declspec( dllimport )
+#	endif
+#else
+#	define MR_DllDeclare
+#endif
 
 namespace HoverRace {
-	namespace Client {
-		class ClientSession;
-	}
-	namespace Script {
-		class Core;
-	}
-}
-
-namespace HoverRace {
-namespace Client {
-namespace HoverScript {
+namespace Script {
+namespace Help {
 
 /**
- * Scripting peer for a game session.
+ * API documentation for a Lua class.
  * @author Michael Imamura
  */
-class SessionPeer {
+class MR_DllDeclare Class
+{
+	private:
+		Class() { }
 	public:
-		SessionPeer(Script::Core *scripting, ClientSession *session);
-		virtual ~SessionPeer();
-
-	public:
-		static void Register(Script::Core *scripting);
-
-	public:
-		void OnSessionEnd();
-
-	protected:
-		void VerifySession() const;
+		Class(const std::string &name);
+		~Class();
 
 	public:
-		void LHelp();
-		void LHelp(const std::string &methodName);
+		const std::string &GetName() const;
 
-		int LGetNumPlayers() const;
+	public:
+		typedef std::map<const std::string,MethodPtr> methods_t;
+		const methods_t &GetMethods() const;
+
+		void AddMethod(MethodPtr method);
+		MethodPtr GetMethod(const std::string &methodName) const;
 
 	private:
-		ClientSession *session;
-		Script::Core *scripting;
+		std::string name;
+		methods_t methods;
 };
-typedef boost::shared_ptr<SessionPeer> SessionPeerPtr;
+typedef boost::shared_ptr<Class> ClassPtr;
 
-}  // namespace HoverScript
-}  // namespace Client
+}  // namespace Help
+}  // namespace Script
 }  // namespace HoverRace
+
+#undef MR_DllDeclare
