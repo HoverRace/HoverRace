@@ -323,9 +323,10 @@ MR_GameApp::~MR_GameApp()
 		scripting = NULL;
 	}
 
+	Clean();
+
 	delete controller;
 
-	Clean();
 	MR_DllObjectFactory::Clean(FALSE);
 	MR_SoundServer::Close();
 	delete mVideoBuffer;
@@ -346,15 +347,17 @@ void MR_GameApp::Clean()
 	mCurrentSession = NULL;
 
 	delete highConsole;
+	highConsole = NULL;
 	delete highObserver;
+	highObserver = NULL;
+
 	DeleteMovieWnd();
 	for (int i = 0; i < MAX_OBSERVERS; ++i) {
-		observers[i]->Delete();
-		observers[i] = NULL;
+		if (observers[i] != NULL) {
+			observers[i]->Delete();
+			observers[i] = NULL;
+		}
 	}
-
-	highConsole = NULL;
-	highObserver = NULL;
 
 	MR_DllObjectFactory::Clean(TRUE);
 
