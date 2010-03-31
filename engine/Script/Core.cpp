@@ -32,6 +32,8 @@
 #include <boost/foreach.hpp>
 #include <boost/make_shared.hpp>
 
+#include <luabind/luabind.hpp>
+
 #include "../Util/OS.h"
 #include "Help/HelpHandler.h"
 #include "Help/Class.h"
@@ -123,6 +125,9 @@ Core *Core::Reset()
 	lua_pushnil(state);
 	lua_setmetatable(state, 1);
 	lua_pop(state, 1);
+
+	// Startup Luabind.
+	luabind::open(state);
 
 	return this;
 }

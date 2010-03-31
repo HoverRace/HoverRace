@@ -50,8 +50,6 @@ void SessionPeer::Register(Script::Core *scripting)
 	using namespace luabind;
 	lua_State *L = scripting->GetState();
 
-	open(L);
-
 	module(L) [
 		class_<SessionPeer>("Session")
 			.def("help", (void(SessionPeer::*)())&SessionPeer::LHelp)

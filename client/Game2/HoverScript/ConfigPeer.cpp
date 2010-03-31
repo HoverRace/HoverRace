@@ -50,8 +50,6 @@ void ConfigPeer::Register(Script::Core *scripting)
 	using namespace luabind;
 	lua_State *L = scripting->GetState();
 
-	open(L);
-
 	module(L) [
 		class_<ConfigPeer>("Config")
 			.def("unlink", &ConfigPeer::LUnlink)

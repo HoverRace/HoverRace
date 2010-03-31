@@ -63,8 +63,6 @@ void GamePeer::Register(Script::Core *scripting)
 	using namespace luabind;
 	lua_State *L = scripting->GetState();
 
-	open(L);
-
 	module(L) [
 		class_<GamePeer>("Game")
 			.def("help", (void(GamePeer::*)())&GamePeer::LHelp)
