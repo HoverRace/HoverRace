@@ -45,7 +45,7 @@ namespace Client {
 namespace HoverScript {
 
 GamePeer::GamePeer(Script::Core *scripting, MR_GameApp *gameApp) :
-	scripting(scripting), gameApp(gameApp), initialized(false),
+	SUPER(scripting, "Game"), gameApp(gameApp), initialized(false),
 	onInit(scripting), onShutdown(scripting),
 	onSessionStart(scripting), onSessionEnd(scripting)
 {
@@ -64,9 +64,7 @@ void GamePeer::Register(Script::Core *scripting)
 	lua_State *L = scripting->GetState();
 
 	module(L) [
-		class_<GamePeer>("Game")
-			.def("help", (void(GamePeer::*)())&GamePeer::LHelp)
-			.def("help", (void(GamePeer::*)(const std::string&))&GamePeer::LHelp)
+		class_<GamePeer,Script::Peer>("Game")
 			.def("is_initialized", &GamePeer::LIsInitialized)
 			.def("get_config", &GamePeer::LGetConfig, adopt(result))
 			.def("on_init", (void(GamePeer::*)(const luabind::object&))&GamePeer::LOnInit)
@@ -113,7 +111,7 @@ void GamePeer::OnShutdown()
  */
 void GamePeer::OnSessionStart(SessionPeerPtr sessionPeer)
 {
-	luabind::object sessionObj(scripting->GetState(), sessionPeer);
+	luabind::object sessionObj(GetScripting()->GetState(), sessionPeer);
 	onSessionStart.CallHandlers(sessionObj);
 }
 
@@ -125,7 +123,7 @@ void GamePeer::OnSessionStart(SessionPeerPtr sessionPeer)
  */
 void GamePeer::OnSessionEnd(SessionPeerPtr sessionPeer)
 {
-	luabind::object sessionObj(scripting->GetState(), sessionPeer);
+	luabind::object sessionObj(GetScripting()->GetState(), sessionPeer);
 	onSessionEnd.CallHandlers(sessionObj);
 }
 
@@ -146,19 +144,9 @@ RulebookPtr GamePeer::RequestedNewSession()
 void GamePeer::VerifyInitialized() const
 {
 	if (!initialized) {
-		luaL_error(scripting->GetState(), "Game is not yet initialized.");
+		luaL_error(GetScripting()->GetState(), "Game is not yet initialized.");
 		return;
 	}
-}
-
-void GamePeer::LHelp()
-{
-	scripting->ReqHelp("Game");
-}
-
-void GamePeer::LHelp(const std::string &methodName)
-{
-	scripting->ReqHelp("Game", methodName);
 }
 
 bool GamePeer::LIsInitialized()
@@ -170,7 +158,7 @@ ConfigPeer *GamePeer::LGetConfig()
 {
 	// function get_config()
 	// Returns the game configuration, so it can be modified.
-	return new ConfigPeer(scripting);
+	return new ConfigPeer(GetScripting());
 }
 
 void GamePeer::LOnInit(const luabind::object &fn)
@@ -219,7 +207,7 @@ void GamePeer::LStartPractice(const std::string &track)
 	// Start a new single-player practice session with default rules.
 	//   track - The track name to load (e.g. "ClassicH").
 	using namespace luabind;
-	lua_State *L = scripting->GetState();
+	lua_State *L = GetScripting()->GetState();
 	lua_pushnil(L);
 	object nilobj(from_stack(L, -1));
 	LStartPractice(track, nilobj);
@@ -237,7 +225,7 @@ void GamePeer::LStartPractice(const std::string &track, const luabind::object &r
 
 	VerifyInitialized();
 
-	lua_State *L = scripting->GetState();
+	lua_State *L = GetScripting()->GetState();
 
 	bool hasExtension = boost::ends_with(track, Config::TRACK_EXT);
 

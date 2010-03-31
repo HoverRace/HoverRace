@@ -26,6 +26,7 @@
 #include <luabind/object.hpp>
 
 #include "../../../engine/Script/Handlers.h"
+#include "../../../engine/Script/Peer.h"
 
 class MR_GameApp;
 namespace HoverRace {
@@ -51,7 +52,8 @@ namespace HoverScript {
  * Scripting peer for system-level control of the game.
  * @author Michael Imamura
  */
-class GamePeer {
+class GamePeer : public Script::Peer {
+	typedef Script::Peer SUPER;
 	public:
 		GamePeer(Script::Core *scripting, MR_GameApp *gameApp);
 		virtual ~GamePeer();
@@ -71,9 +73,6 @@ class GamePeer {
 		void VerifyInitialized() const;
 
 	public:
-		void LHelp();
-		void LHelp(const std::string &methodName);
-
 		ConfigPeer *LGetConfig();
 
 		bool LIsInitialized();

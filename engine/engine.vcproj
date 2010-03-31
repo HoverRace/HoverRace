@@ -831,6 +831,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Script\Peer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Script\Peer.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Script\ScriptExn.h"
 				>
 			</File>

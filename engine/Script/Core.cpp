@@ -39,6 +39,7 @@
 #include "Help/Class.h"
 #include "Help/Event.h"
 #include "Help/Method.h"
+#include "Peer.h"
 
 #include "Core.h"
 
@@ -128,6 +129,7 @@ Core *Core::Reset()
 
 	// Startup Luabind.
 	luabind::open(state);
+	Peer::Register(this);
 
 	return this;
 }
