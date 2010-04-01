@@ -34,7 +34,7 @@ namespace Client {
 namespace HoverScript {
 
 ConfigPeer::ConfigPeer(Script::Core *scripting) :
-	scripting(scripting)
+	SUPER(scripting, "Config")
 {
 }
 
@@ -51,7 +51,7 @@ void ConfigPeer::Register(Script::Core *scripting)
 	lua_State *L = scripting->GetState();
 
 	module(L) [
-		class_<ConfigPeer>("Config")
+		class_<ConfigPeer,SUPER>("Config")
 			.def("unlink", &ConfigPeer::LUnlink)
 			.def("get_video_res", &ConfigPeer::LGetVideoRes)
 			.def("set_video_res", &ConfigPeer::LSetVideoRes)
@@ -73,7 +73,7 @@ void ConfigPeer::LGetVideoRes()
 	// function width, height = get_video_res()
 	// Returns the width and height of the game window when in windowed mode.
 	Config *cfg = Config::GetInstance();
-	lua_State *L = scripting->GetState();
+	lua_State *L = GetScripting()->GetState();
 	lua_pushnumber(L, cfg->video.xRes);
 	lua_pushnumber(L, cfg->video.yRes);
 }

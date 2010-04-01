@@ -25,6 +25,8 @@
 #include <luabind/luabind.hpp>
 #include <luabind/object.hpp>
 
+#include "../../../engine/Script/Peer.h"
+
 namespace HoverRace {
 	namespace Script {
 		class Core;
@@ -39,9 +41,8 @@ namespace HoverScript {
  * Scripting peer for access to the game configuration.
  * @author Michael Imamura
  */
-class ConfigPeer {
-	private:
-		ConfigPeer() { }
+class ConfigPeer : public Script::Peer {
+	typedef Script::Peer SUPER;
 	public:
 		ConfigPeer(Script::Core *scripting);
 		virtual ~ConfigPeer();

@@ -25,6 +25,8 @@
 #include <luabind/luabind.hpp>
 #include <luabind/object.hpp>
 
+#include "../../../engine/Script/Peer.h"
+
 namespace HoverRace {
 	namespace Client {
 		class ClientSession;
@@ -42,7 +44,8 @@ namespace HoverScript {
  * Scripting peer for a game session.
  * @author Michael Imamura
  */
-class SessionPeer {
+class SessionPeer : public Script::Peer {
+	typedef Script::Peer SUPER;
 	public:
 		SessionPeer(Script::Core *scripting, ClientSession *session);
 		virtual ~SessionPeer();
@@ -57,9 +60,6 @@ class SessionPeer {
 		void VerifySession() const;
 
 	public:
-		void LHelp();
-		void LHelp(const std::string &methodName);
-
 		int LGetNumPlayers() const;
 
 	private:

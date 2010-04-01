@@ -64,7 +64,7 @@ void GamePeer::Register(Script::Core *scripting)
 	lua_State *L = scripting->GetState();
 
 	module(L) [
-		class_<GamePeer,Script::Peer>("Game")
+		class_<GamePeer,SUPER>("Game")
 			.def("is_initialized", &GamePeer::LIsInitialized)
 			.def("get_config", &GamePeer::LGetConfig, adopt(result))
 			.def("on_init", (void(GamePeer::*)(const luabind::object&))&GamePeer::LOnInit)
