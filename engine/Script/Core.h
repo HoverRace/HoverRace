@@ -75,6 +75,9 @@ class MR_DllDeclare Core
 		void ActivateSandbox();
 
 	private:
+		static int ErrorFunc(lua_State *L);
+
+	private:
 		typedef std::list<boost::shared_ptr<std::ostream> > outs_t;
 	public:
 		typedef outs_t::iterator OutHandle;

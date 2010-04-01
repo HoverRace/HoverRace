@@ -129,6 +129,7 @@ Core *Core::Reset()
 
 	// Startup Luabind.
 	luabind::open(state);
+	luabind::set_pcall_callback(&Core::ErrorFunc);
 	Peer::Register(this);
 
 	return this;
@@ -182,6 +183,31 @@ void Core::ActivateSandbox()
 	DISALLOW_LUA_GLOBAL(state, "rawset");
 	DISALLOW_LUA_GLOBAL(state, "require");
 	DISALLOW_LUA_GLOBAL(state, "setfenv");
+}
+
+/**
+ * The error function for Luabind.
+ * We use the default Lua function for non-Luabind calls.
+ * @param L Lua state.
+ * @return
+ */
+int Core::ErrorFunc(lua_State *L)
+{
+	// Basically straight from the Luabind documentation.
+	lua_Debug d;
+	lua_getstack(L, 1, &d);
+	lua_getinfo(L, "Sln", &d);
+	std::string err = lua_tostring(L, -1);
+	lua_pop(L, 1);
+	std::stringstream msg;
+	msg << d.short_src << ':' << d.currentline;
+
+	if (d.name != 0) {
+		msg << '(' << d.namewhat << ' ' << d.name << ')';
+	}
+	msg << ' ' << err;
+	lua_pushstring(L, msg.str().c_str());
+	return 1;
 }
 
 /**
