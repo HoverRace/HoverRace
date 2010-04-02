@@ -37,13 +37,23 @@ namespace yaml
 			virtual ~MapNode();
 
 		private:
-			void Init();
+			void Init() const;
+
+			typedef std::map<std::string,Node*> children_t;
 
 		public:
 			Node *Get(const std::string &key);
 
+			// STL-like iteration, so we can use BOOST_FOREACH on the node itself.
+			typedef children_t::iterator iterator;
+			typedef children_t::const_iterator const_iterator;
+			typedef children_t::value_type value_type;
+			const_iterator begin() const;
+			iterator begin();
+			const_iterator end() const;
+			iterator end();
+
 		private:
-			typedef std::map<std::string,Node*> children_t;
-			children_t *children;
+			mutable children_t *children;
 	};
 }

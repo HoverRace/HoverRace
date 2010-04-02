@@ -52,7 +52,7 @@ MapNode::~MapNode()
 }
 
 /// Lazy initialization of the child nodes.
-void MapNode::Init()
+void MapNode::Init() const
 {
 	yaml_document_t *doc = GetDocument();
 	yaml_node_t *node = GetNode();
@@ -93,4 +93,28 @@ Node *MapNode::Get(const std::string &key)
 
 	children_t::iterator iter = children->find(key);
 	return (iter == children->end()) ? NULL : iter->second;
+}
+
+MapNode::const_iterator MapNode::begin() const
+{
+	if (children == NULL) Init();
+	return children->begin();
+}
+
+MapNode::iterator MapNode::begin()
+{
+	if (children == NULL) Init();
+	return children->begin();
+}
+
+MapNode::const_iterator MapNode::end() const
+{
+	if (children == NULL) Init();
+	return children->end();
+}
+
+MapNode::iterator MapNode::end()
+{
+	if (children == NULL) Init();
+	return children->end();
 }
