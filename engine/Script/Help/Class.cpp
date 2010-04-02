@@ -22,6 +22,11 @@
 
 #include "StdAfx.h"
 
+#include <boost/foreach.hpp>
+#include <boost/make_shared.hpp>
+
+#include "../../Util/yaml/MapNode.h"
+
 #include "Class.h"
 
 namespace HoverRace {
@@ -39,6 +44,16 @@ Class::Class(const std::string &name) :
 
 Class::~Class()
 {
+}
+
+void Class::Load(yaml::MapNode *node)
+{
+	BOOST_FOREACH(const yaml::MapNode::value_type &ent, *node) {
+		const std::string &methodName = ent.first;
+		//TODO: Determine type of method.
+		MethodPtr method = boost::make_shared<Method>(methodName);
+		AddMethod(method);
+	}
 }
 
 const std::string &Class::GetName() const

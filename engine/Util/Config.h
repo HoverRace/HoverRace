@@ -2,7 +2,7 @@
 // Config.h
 // Header for the configuration system.
 //
-// Copyright (c) 2008, 2009 Michael Imamura.
+// Copyright (c) 2008, 2009, 2010 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -105,6 +105,8 @@ class MR_DllDeclare Config
 
 		std::string GetTrackPath() const;
 		std::string GetTrackPath(const std::string &file) const;
+
+		std::string GetScriptHelpPath(const std::string &className) const;
 
 		static std::string GetDefaultRoomListUrl();
 		static std::string GetDefaultUpdateServerUrl();

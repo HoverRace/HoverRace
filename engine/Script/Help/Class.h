@@ -34,6 +34,10 @@
 #	define MR_DllDeclare
 #endif
 
+namespace yaml {
+	class MapNode;
+}
+
 namespace HoverRace {
 namespace Script {
 namespace Help {
@@ -49,6 +53,8 @@ class MR_DllDeclare Class
 	public:
 		Class(const std::string &name);
 		~Class();
+
+		void Load(yaml::MapNode *node);
 
 	public:
 		const std::string &GetName() const;

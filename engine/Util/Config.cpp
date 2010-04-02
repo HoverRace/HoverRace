@@ -2,7 +2,7 @@
 // Config.cpp
 // Configuration system.
 //
-// Copyright (c) 2008, 2009 Michael Imamura.
+// Copyright (c) 2008, 2009, 2010 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -360,6 +360,20 @@ std::string Config::GetTrackPath(const std::string &file) const
 	if (!boost::ends_with(file, TRACK_EXT)) {
 		retv += TRACK_EXT;
 	}
+	return retv;
+}
+
+/**
+ * Retrieve the path to the help file for a class in the scripting API.
+ * @param className The name of the class.
+ * @return The directory path (may be relative).
+ */
+std::string Config::GetScriptHelpPath(const std::string &className) const
+{
+	std::string retv(GetMediaPath());
+	retv += (DIRSEP "scripts" DIRSEP "help" DIRSEP);
+	retv += className;
+	retv += ".yml";
 	return retv;
 }
 

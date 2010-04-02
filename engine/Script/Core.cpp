@@ -34,7 +34,12 @@
 
 #include <luabind/luabind.hpp>
 
+#include "../Util/Config.h"
 #include "../Util/OS.h"
+#include "../Util/yaml/MapNode.h"
+#include "../Util/yaml/ScalarNode.h"
+#include "../Util/yaml/SeqNode.h"
+#include "../Util/yaml/Parser.h"
 #include "Help/HelpHandler.h"
 #include "Help/Class.h"
 #include "Help/Event.h"
@@ -75,12 +80,14 @@ Core::Core() :
 	//TODO: Load class help on demand.
 	Help::ClassPtr cls;
 
+	/*
 	cls = boost::make_shared<Help::Class>("Game");
 	cls->AddMethod(boost::make_shared<Help::Method>("get_config"));
 	cls->AddMethod(boost::make_shared<Help::Event>("on_init"));
 	cls->AddMethod(boost::make_shared<Help::Event>("on_shutdown"));
 	cls->AddMethod(boost::make_shared<Help::Method>("is_initialized"));
 	helpClasses.insert(helpClasses_t::value_type(cls->GetName(), cls));
+	*/
 
 	cls = boost::make_shared<Help::Class>("Session");
 	cls->AddMethod(boost::make_shared<Help::Method>("get_num_players"));
@@ -379,9 +386,13 @@ void Core::ReqHelp(const std::string &className, const std::string &methodName)
 	// Find the class documentation in the cache.
 	helpClasses_t::const_iterator iter = helpClasses.find(className);
 	if (iter == helpClasses.end()) {
-		//TODO: First try to load the documentation from disk.
-		luaL_error(state, "Class \"%s\" has no documentation", className.c_str());
-		return;
+		// Not found, try to load from disk, then look again.
+		LoadClassHelp(className);
+		iter = helpClasses.find(className);
+		if (iter == helpClasses.end()) {
+			luaL_error(state, "Class \"%s\" has no documentation", className.c_str());
+			return;
+		}
 	}
 	Help::ClassPtr cls = iter->second;
 
@@ -399,6 +410,50 @@ void Core::ReqHelp(const std::string &className, const std::string &methodName)
 			curHelpHandler->HelpMethod(*cls, *method);
 		}
 	}
+}
+
+void Core::LoadClassHelp(const std::string &className)
+{
+	Util::Config *cfg = Util::Config::GetInstance();
+	std::string filename = cfg->GetScriptHelpPath(className);
+
+	FILE *in = fopen(filename.c_str(), "rb");
+	if (in == NULL) {
+#		ifdef _WIN32
+			OutputDebugString("Class help file not found: ");
+			OutputDebugString(filename.c_str());
+			OutputDebugString("\n");
+#		endif
+		return;
+	}
+
+	yaml::Parser *parser = NULL;
+	try {
+		parser = new yaml::Parser(in);
+		yaml::Node *node = parser->GetRootNode();
+
+		yaml::MapNode *root = dynamic_cast<yaml::MapNode*>(node);
+		if (root == NULL) {
+			throw yaml::ParserExn((filename + ": Expected root node to be a map.").c_str());
+		}
+		Help::ClassPtr cls = boost::make_shared<Help::Class>(className);
+		cls->Load(root);
+		helpClasses.insert(helpClasses_t::value_type(className, cls));
+
+		delete parser;
+	}
+	catch (yaml::EmptyDocParserExn&) {
+		// Ignore.
+	}
+	catch (yaml::ParserExn &ex) {
+		if (parser != NULL) delete parser;
+		fclose(in);
+#		ifdef _WIN32
+			OutputDebugString(ex.what());
+#		endif
+	}
+
+	fclose(in);
 }
 
 /**

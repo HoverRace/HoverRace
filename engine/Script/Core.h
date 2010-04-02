@@ -101,6 +101,7 @@ class MR_DllDeclare Core
 		void ReqHelp(const std::string &className, const std::string &methodName);
 
 	private:
+		void LoadClassHelp(const std::string &className);
 		std::string PopError();
 
 		static int LPrint(lua_State *state);
