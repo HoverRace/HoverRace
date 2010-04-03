@@ -517,7 +517,19 @@ void HighConsole::HelpClass(const Script::Help::Class &cls)
 
 void HighConsole::HelpMethod(const Script::Help::Class &cls, const Script::Help::Method &method)
 {
-	//TODO
+	using Script::Help::Method;
+	
+	AddLogEntry(helpLines, "---", 0x0a);
+
+	BOOST_FOREACH(const std::string &s, method.GetSigs()) {
+		AddLogEntry(helpLines, s, 0x0a);
+	}
+
+	AddLogEntry(helpLines, method.GetBrief(), 0x0e);
+	const std::string &desc = method.GetDesc();
+	if (!desc.empty()) {
+		AddLogEntry(helpLines, method.GetDesc(), 0x0e);
+	}
 
 	helpVisible = true;
 }

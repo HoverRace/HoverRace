@@ -51,6 +51,23 @@ void Method::Load(yaml::MapNode *node)
 {
 	node->ReadString("brief", brief);
 	node->ReadString("desc", desc);
+
+	yaml::Node *sigNode = node->Get("sig");
+	yaml::ScalarNode *scalar = dynamic_cast<yaml::ScalarNode*>(sigNode);
+	if (scalar != NULL) {
+		sigs.push_back(scalar->AsString());
+	}
+	else {
+		yaml::SeqNode *seq = dynamic_cast<yaml::SeqNode*>(sigNode);
+		if (seq != NULL) {
+			BOOST_FOREACH(yaml::Node *seqNode, *seq) {
+				yaml::ScalarNode *scalar = dynamic_cast<yaml::ScalarNode*>(seqNode);
+				if (scalar != NULL) {
+					sigs.push_back(scalar->AsString());
+				}
+			}
+		}
+	}
 }
 
 const std::string &Method::GetName() const
@@ -76,6 +93,16 @@ void Method::SetDesc(const std::string &s)
 const std::string &Method::GetDesc() const
 {
 	return desc;
+}
+
+Method::sigs_t &Method::GetSigs()
+{
+	return sigs;
+}
+
+const Method::sigs_t &Method::GetSigs() const
+{
+	return sigs;
 }
 
 }  // namespace Help

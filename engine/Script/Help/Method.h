@@ -54,19 +54,26 @@ class MR_DllDeclare Method
 
 		virtual void Load(yaml::MapNode *node);
 
+	public:
+		typedef std::vector<std::string> sigs_t;
+		typedef std::vector<std::string> examples_t;
 	protected:
 		void SetBrief(const std::string &s);
 		void SetDesc(const std::string &s);
+		sigs_t &GetSigs();
 
 	public:
 		const std::string &GetName() const;
 		const std::string &GetBrief() const;
 		const std::string &GetDesc() const;
+		const sigs_t &GetSigs() const;
 
 	private:
 		std::string name;
 		std::string brief;
 		std::string desc;
+		sigs_t sigs;
+		examples_t examples;
 };
 typedef boost::shared_ptr<Method> MethodPtr;
 

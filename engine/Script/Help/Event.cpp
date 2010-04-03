@@ -28,6 +28,9 @@
 
 #include "Event.h"
 
+using boost::str;
+using boost::format;
+
 namespace HoverRace {
 namespace Script {
 namespace Help {
@@ -47,11 +50,13 @@ Event::~Event()
 
 void Event::Load(yaml::MapNode *node)
 {
-	yaml::ScalarNode *scalar = dynamic_cast<yaml::ScalarNode*>(node->Get("brief"));
-	if (scalar != NULL) SetBrief(scalar->AsString());
+	SUPER::Load(node);
 
-	//TODO: Standard desc.
-	//TODO: Standard sigs.
+	sigs_t &sigs = GetSigs();
+	std::string base(GetName());
+	sigs.push_back(base + "(function)        -- Add event handler");
+	sigs.push_back(base + "(name, function)  -- Add/modify named handler");
+	sigs.push_back(base + "(name, nil)       -- Remove named handler");
 }
 
 }  // namespace Help
