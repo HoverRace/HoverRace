@@ -22,6 +22,10 @@
 
 #include "StdAfx.h"
 
+#include "../../Util/yaml/MapNode.h"
+#include "../../Util/yaml/ScalarNode.h"
+#include "../../Util/yaml/SeqNode.h"
+
 #include "Event.h"
 
 namespace HoverRace {
@@ -39,6 +43,15 @@ Event::Event(const std::string &name) :
 
 Event::~Event()
 {
+}
+
+void Event::Load(yaml::MapNode *node)
+{
+	yaml::ScalarNode *scalar = dynamic_cast<yaml::ScalarNode*>(node->Get("brief"));
+	if (scalar != NULL) SetBrief(scalar->AsString());
+
+	//TODO: Standard desc.
+	//TODO: Standard sigs.
 }
 
 }  // namespace Help

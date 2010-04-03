@@ -32,6 +32,10 @@
 #	define MR_DllDeclare
 #endif
 
+namespace yaml {
+	class MapNode;
+}
+
 namespace HoverRace {
 namespace Script {
 namespace Help {
@@ -48,11 +52,21 @@ class MR_DllDeclare Method
 		Method(const std::string &name);
 		virtual ~Method();
 
+		virtual void Load(yaml::MapNode *node);
+
+	protected:
+		void SetBrief(const std::string &s);
+		void SetDesc(const std::string &s);
+
 	public:
 		const std::string &GetName() const;
+		const std::string &GetBrief() const;
+		const std::string &GetDesc() const;
 
 	private:
 		std::string name;
+		std::string brief;
+		std::string desc;
 };
 typedef boost::shared_ptr<Method> MethodPtr;
 

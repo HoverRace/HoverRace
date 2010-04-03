@@ -48,6 +48,8 @@ class MR_DllDeclare Event : public Method
 	public:
 		Event(const std::string &name);
 		virtual ~Event();
+
+		virtual void Load(yaml::MapNode *node);
 };
 typedef boost::shared_ptr<Event> EventPtr;
 

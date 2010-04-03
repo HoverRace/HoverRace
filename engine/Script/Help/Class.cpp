@@ -26,6 +26,9 @@
 #include <boost/make_shared.hpp>
 
 #include "../../Util/yaml/MapNode.h"
+#include "../../Util/yaml/ScalarNode.h"
+
+#include "Event.h"
 
 #include "Class.h"
 
@@ -49,10 +52,25 @@ Class::~Class()
 void Class::Load(yaml::MapNode *node)
 {
 	BOOST_FOREACH(const yaml::MapNode::value_type &ent, *node) {
-		const std::string &methodName = ent.first;
-		//TODO: Determine type of method.
-		MethodPtr method = boost::make_shared<Method>(methodName);
-		AddMethod(method);
+		yaml::MapNode *root = dynamic_cast<yaml::MapNode*>(ent.second);
+
+		if (root != NULL) {
+			const std::string &methodName = ent.first;
+
+			// Determine the type of method.
+			std::string type;
+			root->ReadString("type", type);
+			MethodPtr method;
+			if (type == "event") {
+				method = boost::make_shared<Event>(methodName);
+			}
+			else {
+				method = boost::make_shared<Method>(methodName);
+			}
+
+			method->Load(root);
+			AddMethod(method);
+		}
 	}
 }
 

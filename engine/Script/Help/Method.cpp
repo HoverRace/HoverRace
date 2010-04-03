@@ -22,6 +22,12 @@
 
 #include "StdAfx.h"
 
+#include <boost/foreach.hpp>
+
+#include "../../Util/yaml/MapNode.h"
+#include "../../Util/yaml/ScalarNode.h"
+#include "../../Util/yaml/SeqNode.h"
+
 #include "Method.h"
 
 namespace HoverRace {
@@ -41,9 +47,35 @@ Method::~Method()
 {
 }
 
+void Method::Load(yaml::MapNode *node)
+{
+	node->ReadString("brief", brief);
+	node->ReadString("desc", desc);
+}
+
 const std::string &Method::GetName() const
 {
 	return name;
+}
+
+void Method::SetBrief(const std::string &s)
+{
+	brief = s;
+}
+
+const std::string &Method::GetBrief() const
+{
+	return brief;
+}
+
+void Method::SetDesc(const std::string &s)
+{
+	desc = s;
+}
+
+const std::string &Method::GetDesc() const
+{
+	return desc;
 }
 
 }  // namespace Help

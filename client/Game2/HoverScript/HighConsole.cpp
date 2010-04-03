@@ -502,7 +502,13 @@ void HighConsole::HelpClass(const Script::Help::Class &cls)
 		s.clear();
 		s += "  ";
 		s += method->GetName();
-		//TODO: Method brief description.
+		
+		const std::string &brief = method->GetBrief();
+		if (!brief.empty()) {
+			s += " - ";
+			s += brief;
+		}
+
 		AddLogEntry(helpLines, s, 0x0a);
 	}
 
