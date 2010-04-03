@@ -37,5 +37,5 @@ start_practice:
     handler or later).
     
     "opts" is a table of options for the session.
-  examples: >
+  examples:
     - game:start_practice("The Alley2", { laps = 2 })
