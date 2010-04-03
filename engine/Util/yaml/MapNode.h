@@ -42,7 +42,9 @@ namespace yaml
 			typedef std::map<std::string,Node*> children_t;
 
 		public:
-			Node *Get(const std::string &key);
+			Node *Get(const std::string &key) const;
+
+			void ReadString(const std::string &key, std::string &dest) const;
 
 			// STL-like iteration, so we can use BOOST_FOREACH on the node itself.
 			typedef children_t::iterator iterator;

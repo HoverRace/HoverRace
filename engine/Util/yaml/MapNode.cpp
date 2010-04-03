@@ -23,6 +23,7 @@
 #include "StdAfx.h"
 
 #include "NodeFactory.h"
+#include "ScalarNode.h"
 
 #include "MapNode.h"
 
@@ -87,12 +88,27 @@ void MapNode::Init() const
  * @param key The key to look up.
  * @return A Node instance or NULL if the key was not found.
  */
-Node *MapNode::Get(const std::string &key)
+Node *MapNode::Get(const std::string &key) const
 {
 	if (children == NULL) Init();
 
 	children_t::iterator iter = children->find(key);
 	return (iter == children->end()) ? NULL : iter->second;
+}
+
+/**
+ * Retrieve an optional child node as a string.
+ * If the child node does not exist or is not a scalar, then @p dest will not
+ * be changed.
+ * @param key The key to look up.
+ * @param dest The destination string.
+ */
+void MapNode::ReadString(const std::string &key, std::string &dest) const
+{
+	if (children == NULL) Init();
+
+	ScalarNode *scalar = dynamic_cast<ScalarNode*>(Get(key));
+	if (scalar != NULL) dest = scalar->AsString();
 }
 
 MapNode::const_iterator MapNode::begin() const
