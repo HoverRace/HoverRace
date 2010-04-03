@@ -42,6 +42,7 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem/convenience.hpp>
 #include <boost/filesystem/path.hpp>
+#include <boost/foreach.hpp>
 
 #include <OIS/OISPrereqs.h>
 #include <OIS/OISKeyboard.h>
@@ -587,11 +588,8 @@ void Config::Load()
 			yaml::SeqNode *ctlseq = dynamic_cast<yaml::SeqNode*>(root->Get("controls"));
 			if (ctlseq != NULL) {
 				int i = 0;
-				yaml::SeqNode::children_t *children = ctlseq->GetChildren();
-				for (yaml::SeqNode::children_t::iterator iter = children->begin();
-					iter != children->end() && i < MAX_PLAYERS; ++iter, ++i)
-				{
-					controls[i].Load(dynamic_cast<yaml::MapNode*>(*iter));
+				BOOST_FOREACH(yaml::Node *node, *ctlseq) {
+					controls[i++].Load(dynamic_cast<yaml::MapNode*>(node));
 				}
 			}
 		}

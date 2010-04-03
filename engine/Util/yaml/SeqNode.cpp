@@ -52,7 +52,7 @@ SeqNode::~SeqNode()
 }
 
 /// Lazy initialization of the child nodes.
-void SeqNode::Init()
+void SeqNode::Init() const
 {
 	yaml_document_t *doc = GetDocument();
 	yaml_node_t *node = GetNode();
@@ -73,14 +73,26 @@ void SeqNode::Init()
 	}
 }
 
-/**
- * Retrieve the child nodes.
- * @return A pointer to a vector of nodes (never NULL, may be empty).
- */
-SeqNode::children_t *SeqNode::GetChildren()
+SeqNode::const_iterator SeqNode::begin() const
 {
 	if (children == NULL) Init();
-
-	return children;
+	return children->begin();
 }
 
+SeqNode::iterator SeqNode::begin()
+{
+	if (children == NULL) Init();
+	return children->begin();
+}
+
+SeqNode::const_iterator SeqNode::end() const
+{
+	if (children == NULL) Init();
+	return children->end();
+}
+
+SeqNode::iterator SeqNode::end()
+{
+	if (children == NULL) Init();
+	return children->end();
+}
