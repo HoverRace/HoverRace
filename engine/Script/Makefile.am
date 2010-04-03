@@ -18,5 +18,7 @@ libscript_la_SOURCES = \
 	Env.h \
 	Handlers.cpp \
 	Handlers.h \
+	Peer.cpp \
+	Peer.h \
 	ScriptExn.h
 
