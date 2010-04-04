@@ -1,0 +1,34 @@
+%YAML 1.1
+---
+unlink:
+  type: method
+  sig:
+    - config:unlink()
+  brief: >
+    Prevent config changes from being written to disk.
+  desc: >
+    This is useful for testing.  Call unlink() at the start of the init
+    script and then make any changes to the config you want; the config
+    file will remain unchanged.
+
+get_video_res:
+  type: method
+  sig:
+    - width, height = config:get_video_res()
+  brief: >
+    The dimensions of the game window.
+  desc: >
+    This applies to windowed (not fullscreen) mode.
+
+set_video_res:
+  type: method
+  sig:
+    - config:set_video_res(width, height)
+  brief: >
+    Set the dimensions of the game window.
+  desc: >
+    This applies to windowed (not fullscreen) mode.
+    
+    This only works before the game is initialized (i.e. before the on_init
+    event is fired).
+

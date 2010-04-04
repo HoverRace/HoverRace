@@ -1,0 +1,9 @@
+%YAML 1.1
+---
+get_num_players:
+  type: method
+  sig:
+    - num = session:get_num_players()
+  brief: >
+    Total count of local and network players.
+
