@@ -604,7 +604,9 @@ void HighConsole::LogLines::Add(const std::string &s, const Font &font, MR_UInt8
 	}
 
 	// Add the new line.
-	StaticText *line = new StaticText(s, font, color);
+	// If the line is blank, then use a single space, since a blank string will
+	// result in the StaticText not being full height.
+	StaticText *line = new StaticText(s.empty() ? " " : s, font, color);
 	lines.push_back(line);
 
 	ScrollBottom();
