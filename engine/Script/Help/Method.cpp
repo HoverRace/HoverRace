@@ -22,6 +22,7 @@
 
 #include "StdAfx.h"
 
+#include <boost/algorithm/string/trim.hpp>
 #include <boost/foreach.hpp>
 
 #include "../../Util/yaml/MapNode.h"
@@ -29,6 +30,8 @@
 #include "../../Util/yaml/SeqNode.h"
 
 #include "Method.h"
+
+using boost::algorithm::trim;
 
 namespace HoverRace {
 namespace Script {
@@ -50,7 +53,9 @@ Method::~Method()
 void Method::Load(yaml::MapNode *node)
 {
 	node->ReadString("brief", brief);
+	trim(brief);
 	node->ReadString("desc", desc);
+	trim(desc);
 
 	yaml::Node *sigNode = node->Get("sig");
 	yaml::ScalarNode *scalar = dynamic_cast<yaml::ScalarNode*>(sigNode);
