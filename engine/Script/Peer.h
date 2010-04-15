@@ -56,7 +56,7 @@ class MR_DllDeclare Peer {
 
 	public:
 		void LHelp();
-		void LHelp(const std::string &methodName);
+		void LHelp_M(const std::string &methodName);
 
 	private:
 		Core *scripting;

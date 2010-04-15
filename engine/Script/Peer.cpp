@@ -48,8 +48,8 @@ void Peer::Register(Core *scripting)
 
 	module(L) [
 		class_<Peer>("Object")
-			.def("help", (void(Peer::*)())&Peer::LHelp)
-			.def("help", (void(Peer::*)(const std::string&))&Peer::LHelp)
+			.def("help", &Peer::LHelp)
+			.def("help", &Peer::LHelp_M)
 	];
 }
 
@@ -58,7 +58,7 @@ void Peer::LHelp()
 	scripting->ReqHelp(name);
 }
 
-void Peer::LHelp(const std::string &methodName)
+void Peer::LHelp_M(const std::string &methodName)
 {
 	scripting->ReqHelp(name, methodName);
 }

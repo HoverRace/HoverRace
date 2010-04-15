@@ -78,19 +78,19 @@ class GamePeer : public Script::Peer {
 		bool LIsInitialized();
 
 		void LOnInit(const luabind::object &fn);
-		void LOnInit(const std::string &name, const luabind::object &fn);
+		void LOnInit_N(const std::string &name, const luabind::object &fn);
 
 		void LOnShutdown(const luabind::object &fn);
-		void LOnShutdown(const std::string &name, const luabind::object &fn);
+		void LOnShutdown_N(const std::string &name, const luabind::object &fn);
 
 		void LOnSessionStart(const luabind::object &fn);
-		void LOnSessionStart(const std::string &name, const luabind::object &fn);
+		void LOnSessionStart_N(const std::string &name, const luabind::object &fn);
 
 		void LOnSessionEnd(const luabind::object &fn);
-		void LOnSessionEnd(const std::string &name, const luabind::object &fn);
+		void LOnSessionEnd_N(const std::string &name, const luabind::object &fn);
 
 		void LStartPractice(const std::string &track);
-		void LStartPractice(const std::string &track, const luabind::object &rules);
+		void LStartPractice_R(const std::string &track, const luabind::object &rules);
 
 		void LShutdown();
 

@@ -67,16 +67,16 @@ void GamePeer::Register(Script::Core *scripting)
 		class_<GamePeer,SUPER>("Game")
 			.def("is_initialized", &GamePeer::LIsInitialized)
 			.def("get_config", &GamePeer::LGetConfig, adopt(result))
-			.def("on_init", (void(GamePeer::*)(const luabind::object&))&GamePeer::LOnInit)
-			.def("on_init", (void(GamePeer::*)(const std::string&, const luabind::object&))&GamePeer::LOnInit)
-			.def("on_shutdown", (void(GamePeer::*)(const luabind::object&))&GamePeer::LOnShutdown)
-			.def("on_shutdown", (void(GamePeer::*)(const std::string&, const luabind::object&))&GamePeer::LOnShutdown)
-			.def("on_session_start", (void(GamePeer::*)(const luabind::object&))&GamePeer::LOnSessionStart)
-			.def("on_session_start", (void(GamePeer::*)(const std::string&, const luabind::object&))&GamePeer::LOnSessionStart)
-			.def("on_session_end", (void(GamePeer::*)(const luabind::object&))&GamePeer::LOnSessionEnd)
-			.def("on_session_end", (void(GamePeer::*)(const std::string&, const luabind::object&))&GamePeer::LOnSessionEnd)
-			.def("start_practice", (void(GamePeer::*)(const std::string&))&GamePeer::LStartPractice)
-			.def("start_practice", (void(GamePeer::*)(const std::string&, const luabind::object&))&GamePeer::LStartPractice)
+			.def("on_init", &GamePeer::LOnInit)
+			.def("on_init", &GamePeer::LOnInit_N)
+			.def("on_shutdown", &GamePeer::LOnShutdown)
+			.def("on_shutdown", &GamePeer::LOnShutdown_N)
+			.def("on_session_start", &GamePeer::LOnSessionStart)
+			.def("on_session_start", &GamePeer::LOnSessionStart_N)
+			.def("on_session_end", &GamePeer::LOnSessionEnd)
+			.def("on_session_end", &GamePeer::LOnSessionEnd_N)
+			.def("start_practice", &GamePeer::LStartPractice)
+			.def("start_practice", &GamePeer::LStartPractice_R)
 			.def("shutdown", &GamePeer::LShutdown)
 	];
 }
@@ -166,7 +166,7 @@ void GamePeer::LOnInit(const luabind::object &fn)
 	onInit.AddHandler(fn);
 }
 
-void GamePeer::LOnInit(const std::string &name, const luabind::object &fn)
+void GamePeer::LOnInit_N(const std::string &name, const luabind::object &fn)
 {
 	onInit.AddHandler(name, fn);
 }
@@ -176,7 +176,7 @@ void GamePeer::LOnShutdown(const luabind::object &fn)
 	onShutdown.AddHandler(fn);
 }
 
-void GamePeer::LOnShutdown(const std::string &name, const luabind::object &fn)
+void GamePeer::LOnShutdown_N(const std::string &name, const luabind::object &fn)
 {
 	onShutdown.AddHandler(name, fn);
 }
@@ -186,7 +186,7 @@ void GamePeer::LOnSessionStart(const luabind::object &fn)
 	onSessionStart.AddHandler(fn);
 }
 
-void GamePeer::LOnSessionStart(const std::string &name, const luabind::object &fn)
+void GamePeer::LOnSessionStart_N(const std::string &name, const luabind::object &fn)
 {
 	onSessionStart.AddHandler(name, fn);
 }
@@ -196,7 +196,7 @@ void GamePeer::LOnSessionEnd(const luabind::object &fn)
 	onSessionEnd.AddHandler(fn);
 }
 
-void GamePeer::LOnSessionEnd(const std::string &name, const luabind::object &fn)
+void GamePeer::LOnSessionEnd_N(const std::string &name, const luabind::object &fn)
 {
 	onSessionEnd.AddHandler(name, fn);
 }
@@ -210,11 +210,11 @@ void GamePeer::LStartPractice(const std::string &track)
 	lua_State *L = GetScripting()->GetState();
 	lua_pushnil(L);
 	object nilobj(from_stack(L, -1));
-	LStartPractice(track, nilobj);
+	LStartPractice_R(track, nilobj);
 	lua_pop(L, 1);
 }
 
-void GamePeer::LStartPractice(const std::string &track, const luabind::object &rules)
+void GamePeer::LStartPractice_R(const std::string &track, const luabind::object &rules)
 {
 	// function start_practice(track, rules)
 	// Start a new single-player practice session.
