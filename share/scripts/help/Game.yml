@@ -23,6 +23,35 @@ on_init:
   brief: >
     Called immediately after the game is initialized.
 
+on_session_end:
+  type: event
+  brief: >
+    Called when a game session ends.
+  desc: >
+    The Session object is passed to the callback function.
+
+on_session_start:
+  type: event
+  brief: >
+    Called when a game session starts.
+  desc: >
+    The Session object is passed to the callback function.
+
+on_shutdown:
+  type: event
+  brief: >
+  	Called immediately before the game shuts down.
+
+shutdown:
+  type: method
+  sig:
+  	- game:shutdown()
+  brief: >
+  	Gracefully exit the game.
+  desc: >
+  	All on_session_end and on_shutdown events will be fired as usual, but
+  	all normal confirmation prompts are disabled.
+
 start_practice:
   type: method
   sig:
@@ -37,3 +66,4 @@ start_practice:
     "opts" is a table of options for the session.
   examples:
     - game:start_practice("The Alley2", { laps = 2 })
+
