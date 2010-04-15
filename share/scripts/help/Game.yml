@@ -40,17 +40,17 @@ on_session_start:
 on_shutdown:
   type: event
   brief: >
-  	Called immediately before the game shuts down.
+    Called immediately before the game shuts down.
 
 shutdown:
   type: method
   sig:
-  	- game:shutdown()
+    - game:shutdown()
   brief: >
-  	Gracefully exit the game.
+    Gracefully exit the game.
   desc: >
-  	All on_session_end and on_shutdown events will be fired as usual, but
-  	all normal confirmation prompts are disabled.
+    All on_session_end and on_shutdown events will be fired as usual, but
+    all normal confirmation prompts are disabled.
 
 start_practice:
   type: method
