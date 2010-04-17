@@ -71,8 +71,8 @@ void GamePeer::Register(Script::Core *scripting)
 			.def("on_init", &GamePeer::LOnInit_N)
 			.def("on_shutdown", &GamePeer::LOnShutdown)
 			.def("on_shutdown", &GamePeer::LOnShutdown_N)
-			.def("on_session_start", &GamePeer::LOnSessionStart)
-			.def("on_session_start", &GamePeer::LOnSessionStart_N)
+			.def("on_session_begin", &GamePeer::LOnSessionBegin)
+			.def("on_session_begin", &GamePeer::LOnSessionBegin_N)
 			.def("on_session_end", &GamePeer::LOnSessionEnd)
 			.def("on_session_end", &GamePeer::LOnSessionEnd_N)
 			.def("start_practice", &GamePeer::LStartPractice)
@@ -181,12 +181,12 @@ void GamePeer::LOnShutdown_N(const std::string &name, const luabind::object &fn)
 	onShutdown.AddHandler(name, fn);
 }
 
-void GamePeer::LOnSessionStart(const luabind::object &fn)
+void GamePeer::LOnSessionBegin(const luabind::object &fn)
 {
 	onSessionStart.AddHandler(fn);
 }
 
-void GamePeer::LOnSessionStart_N(const std::string &name, const luabind::object &fn)
+void GamePeer::LOnSessionBegin_N(const std::string &name, const luabind::object &fn)
 {
 	onSessionStart.AddHandler(name, fn);
 }

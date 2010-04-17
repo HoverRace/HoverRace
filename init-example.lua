@@ -43,7 +43,7 @@ end)
 
 function second_session(session)
 	-- Remove the "session_start" on_session_start handler.
-	game:on_session_start("session_start", nil)
+	game:on_session_begin("session_start", nil)
 	print("Starting up the second session")
 end
 
@@ -51,7 +51,7 @@ function first_session(session)
 	-- Replace the "session_start" on_session_start handler
 	-- so the next session will fire second_session instead
 	-- of this one.
-	game:on_session_start("session_start", second_session)
+	game:on_session_begin("session_start", second_session)
 	print("Starting up the first session.  Num players:",
 		session:get_num_players())
 	
@@ -69,7 +69,7 @@ function first_session(session)
 	--]]
 end
 
-game:on_session_start("session_start", first_session)
+game:on_session_begin("session_begin", first_session)
 
 game:on_session_end(function(session)
 	print("Ending a session")

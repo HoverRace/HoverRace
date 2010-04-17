@@ -23,17 +23,17 @@ on_init:
   brief: >
     Called immediately after the game is initialized.
 
+on_session_begin:
+  type: event
+  brief: >
+    Called when a game session starts.
+  desc: >
+    The Session object is passed to the callback function.
+
 on_session_end:
   type: event
   brief: >
     Called when a game session ends.
-  desc: >
-    The Session object is passed to the callback function.
-
-on_session_start:
-  type: event
-  brief: >
-    Called when a game session starts.
   desc: >
     The Session object is passed to the callback function.
 
