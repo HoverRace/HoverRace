@@ -1,0 +1,126 @@
+
+RecordFile (multiple CArchive streams)
+
+Track name is based on the filename.
+
+At the start is the RecordFileTable
+	string fileTitle
+	int padding1 = 0
+	int padding2 = 0
+	BOOL:int sumValid
+	uint chkSum
+	int recordUsed
+	int recordMax
+	int padding1 = 0
+	int padding2 = 0
+	if recordMax > 0
+		uint[recordMax] offset
+
+Records:
+
+0: Track Metadata
+	int magicNumber = MR_MAGIC_TRACK_NUMBER = 82617
+	int version = 1
+	string description
+	int minorId
+	int majorId
+	int sortingIndex
+	int registrationMode
+	if registrationMode == (MR_FREE_TRACK = 1)
+		int magicNumber = MR_MAGIC_TRACK_NUMBER = 82617
+
+1: Track
+	Level
+		int numStartingPositions
+		foreach startingPosition
+			int teamIdx
+			int roomIdx
+			3DCoordinate position
+				int x, y, z
+			int angle
+		int numRooms
+		int numFeatures
+		foreach room
+			Level::Room
+				Level::Section
+					int numVertex
+					int floorLevel
+					int ceilingLevel
+					2DCoordinate min
+					2DCoordinate max
+					foreach vertex
+						2DCoordinate pos
+						int wallLen
+					ObjectFromFactoryPtr floorTexture
+						ObjectFromFactoryId
+							int dllId
+							int classId
+						ObjectFromFactory
+							# Type-dependent...
+							CObject
+					ObjectFromFactoryPtr ceilingTexture
+					foreach vertex
+						ObjectFromFactoryPtr wallTexture
+				int numChildren
+				int numVisibleRoom
+				int numVisibleSurface
+				int numAudibleRoom
+				foreach vertex
+					int neighborId
+				foreach child
+					int childId
+				foreach visibleRoom
+					int roomId
+				foreach visibleSurface
+					SectionId visibleFloor
+						eSectionType:int type
+						int id
+					SectionId visibleCeiling
+				foreach audibleRoom
+					int roomId
+		foreach feature
+			Level::Feature
+				Level::Section
+				int parentSectionIdx
+		List freeElementNonClassified
+			foreach freeElement
+				ObjectFromFactoryPtr freeElement
+				3DCoordinate position
+				int angle
+			ObjectFromFactoryPtr = NULL
+				ObjectFromFactoryId
+					int dllId = 0
+					int classId = 0
+		foreach room
+			List freeElementClassifiedByRoom
+		foreach room
+			SurfaceLogicState
+				if floorTexture
+					LogicState floorTexture
+						# Type-dependent...
+				if ceilingTexture
+					LogicState ceilingTexture
+				foreach vertex
+					if wallTexture
+						LogicState wallTexture
+		foreach feature
+			SurfaceLogicState
+
+2: Background (optional?)
+	int imageType = MR_RAW_BITMAP = 1
+	byte[128 * 3] palette
+	byte[2048 * 256] backImage
+
+3: Map (optional?)
+	int x0
+	int x1
+	int y0
+	int y1
+	Sprite trackMap
+		int numItem
+		int itemHeight
+		int totalHeight
+		int width
+		byte[width * totalHeight] image
+
+4: MIDI stream (never implemented?)
