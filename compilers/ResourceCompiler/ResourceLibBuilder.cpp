@@ -23,6 +23,8 @@
 #include "StdAfx.h"
 #include "ResourceLibBuilder.h"
 
+using HoverRace::Util::RecordFile;
+
 MR_ResourceLibBuilder::MR_ResourceLibBuilder()
 {
 	// Notting to do
@@ -73,7 +75,7 @@ BOOL MR_ResourceLibBuilder::Export(const char *pFileName)
 {
 	BOOL lReturnValue = TRUE;
 
-	MR_RecordFile lFile;
+	RecordFile lFile;
 
 	lReturnValue = lFile.CreateForWrite(pFileName, 1, "\x8\rFireball object factory resource file, (c)GrokkSoft 1996\n\x1a");
 

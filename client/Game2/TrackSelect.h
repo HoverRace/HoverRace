@@ -25,7 +25,11 @@
 
 #include <string>
 
-class MR_RecordFile;
+namespace HoverRace {
+	namespace Util {
+		class RecordFile;
+	}
+}
 
 // for gsGameOpts
 #define OPT_ALLOW_WEAPONS	0x40
@@ -45,7 +49,7 @@ enum MR_TrackAvail
 bool MR_SelectTrack(HWND pParentWindow, std::string &pTrackFile, int &pNbLap, char &pGameOpts);
 
 // pFile name must contains no path and no extension
-MR_RecordFile *MR_TrackOpen(HWND pWindow, const char *pFileName);
+HoverRace::Util::RecordFile *MR_TrackOpen(HWND pWindow, const char *pFileName);
 
 MR_TrackAvail MR_GetTrackAvail(const char *pFileName);
 

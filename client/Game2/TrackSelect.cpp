@@ -72,7 +72,7 @@ static const char *TRACK_PATHS[] = {
 // Local functions
 static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 static BOOL CALLBACK ListCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
-static BOOL ReadTrackEntry(MR_RecordFile * pRecordFile, TrackEntry * pDest, const char *pFileName);
+static BOOL ReadTrackEntry(RecordFile * pRecordFile, TrackEntry * pDest, const char *pFileName);
 static bool CompareFunc(const TrackEntry *ent1, const TrackEntry *ent2);
 static bool EqualityFunc(const TrackEntry *ent1, const TrackEntry *ent2);
 static void SortList();
@@ -104,9 +104,9 @@ static WNDPROC oldListProc;
  * @param pFileName The track name (without the ".trk" extension).
  * @return The opened track file, or @c NULL if the track could not be opened.
  */
-MR_RecordFile *MR_TrackOpen(HWND pWindow, const char *pFileName)
+RecordFile *MR_TrackOpen(HWND pWindow, const char *pFileName)
 {
-	MR_RecordFile *lReturnValue = NULL;
+	RecordFile *lReturnValue = NULL;
 
 	std::string filename = FindTrack(pFileName);
 
@@ -114,7 +114,7 @@ MR_RecordFile *MR_TrackOpen(HWND pWindow, const char *pFileName)
 		//MessageBox(pWindow, _("Track not found"), PACKAGE_NAME, MB_ICONERROR | MB_OK | MB_APPLMODAL);
 	}
 	else {
-		lReturnValue = new MR_RecordFile;
+		lReturnValue = new RecordFile;
 		if(!lReturnValue->OpenForRead(filename.c_str(), TRUE)) {
 			delete lReturnValue;
 			lReturnValue = NULL;
@@ -321,7 +321,7 @@ MR_TrackAvail MR_GetTrackAvail(const char *pFileName)
 	std::string path = FindTrack(pFileName);
 
 	if (!path.empty()) {
-		MR_RecordFile lFile;
+		RecordFile lFile;
 
 		if(!lFile.OpenForRead(path.c_str()))
 			ASSERT(FALSE);
@@ -335,7 +335,7 @@ MR_TrackAvail MR_GetTrackAvail(const char *pFileName)
 	return lReturnValue;
 }
 
-BOOL ReadTrackEntry(MR_RecordFile * pRecordFile, TrackEntry * pDest, const char *pFileName)
+BOOL ReadTrackEntry(RecordFile * pRecordFile, TrackEntry * pDest, const char *pFileName)
 {
 	BOOL lReturnValue = FALSE;
 	int lMagicNumber;
@@ -482,7 +482,7 @@ void ReadTrackListDir(const std::string &dir)
 			ent.mFileName = std::string(lFileInfo.name, 0, strlen(lFileInfo.name) - Config::TRACK_EXT.length());
 
 			// Open the file and read additional info
-			MR_RecordFile lRecordFile;
+			RecordFile lRecordFile;
 
 			if(!lRecordFile.OpenForRead((dir + lFileInfo.name).c_str()))
 				gsTrackList.pop_back();

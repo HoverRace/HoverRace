@@ -44,6 +44,7 @@
 #define MRNM_HIT_MESSAGE             10
 
 using namespace HoverRace::Client;
+using HoverRace::Util::RecordFile;
 
 // Local structures
 class MR_PlayerStats
@@ -372,7 +373,7 @@ void MR_NetworkSession::Process(int pSpeedFactor)
  * Load a new level.  This function calls MR_ClientSession::LoadNew() and then tells the level to notify call ElementCreationHook() and PermElementStateHook() when
  * elements are created.
  */
-BOOL MR_NetworkSession::LoadNew(const char *pTitle, MR_RecordFile *pMazeFile, int pNbLap, char pGameOpts, MR_VideoBuffer *pVideo)
+BOOL MR_NetworkSession::LoadNew(const char *pTitle, HoverRace::Util::RecordFile *pMazeFile, int pNbLap, char pGameOpts, MR_VideoBuffer *pVideo)
 {
 	BOOL lReturnValue = SUPER::LoadNew(pTitle, pMazeFile, pNbLap, pGameOpts, pVideo);
 

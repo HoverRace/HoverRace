@@ -25,6 +25,8 @@
 
 #define new DEBUG_NEW
 
+using HoverRace::Util::RecordFile;
+
 /**
  * Create a new MR_ResourceLib object, reading from the specified filename.
  *

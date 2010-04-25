@@ -1850,7 +1850,7 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 								// Try to load the track
 								// Load the track
 								std::string lCurrentTrack((const char*)mThis->mGameList[lFocus].mTrack);
-								MR_RecordFile *lTrackFile = MR_TrackOpen(pWindow, lCurrentTrack.c_str());
+								RecordFile *lTrackFile = MR_TrackOpen(pWindow, lCurrentTrack.c_str());
 								if (lTrackFile == NULL) {
 									lSuccess = TrackDownloadDialog(lCurrentTrack).ShowModal(GetModuleHandle(NULL), pWindow);
 									if (lSuccess) {
@@ -1903,7 +1903,7 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 
 						if(lSuccess) {
 							// Load the track
-							MR_RecordFile *lTrackFile = MR_TrackOpen(pWindow,
+							RecordFile *lTrackFile = MR_TrackOpen(pWindow,
 								lCurrentTrack.c_str());
 							lSuccess = (mThis->mSession->LoadNew(
 								lCurrentTrack.c_str(), lTrackFile, lNbLap,

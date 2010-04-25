@@ -1307,7 +1307,7 @@ void MR_GameApp::NewLocalSession(RulebookPtr rules)
 
 		// Load the selected track
 		if(lSuccess) {
-			MR_RecordFile *lTrackFile = MR_TrackOpen(mMainWindow, rules->GetTrackName().c_str());
+			RecordFile *lTrackFile = MR_TrackOpen(mMainWindow, rules->GetTrackName().c_str());
 			lSuccess = (lCurrentSession->LoadNew(
 				rules->GetTrackName().c_str(), lTrackFile,
 				rules->GetLaps(), rules->GetGameOpts(), mVideoBuffer) != FALSE);
@@ -1391,7 +1391,7 @@ void MR_GameApp::NewSplitSession(int pSplitPlayers)
 
 		// Load the selected maze
 		if(lSuccess) {
-			MR_RecordFile *lTrackFile = MR_TrackOpen(mMainWindow, lCurrentTrack.c_str());
+			RecordFile *lTrackFile = MR_TrackOpen(mMainWindow, lCurrentTrack.c_str());
 			lSuccess = (lCurrentSession->LoadNew(lCurrentTrack.c_str(), lTrackFile, lNbLap, lGameOpts, mVideoBuffer) != FALSE);
 		}
 
@@ -1509,7 +1509,7 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 		}
 	}
 
-	MR_RecordFile *lTrackFile;
+	RecordFile *lTrackFile;
 	if(lSuccess) {
 		observers[0] = MR_Observer::New();
 		highObserver = new HighObserver();

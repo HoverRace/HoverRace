@@ -29,6 +29,8 @@
 #define MR_SIMULATION_SLICE             15
 #define MR_MINIMUM_SIMULATION_SLICE     10
 
+using HoverRace::Util::RecordFile;
+
 MR_GameSession::MR_GameSession(BOOL pAllowRendering)
 {
 	mAllowRendering = pAllowRendering;
@@ -82,7 +84,7 @@ void MR_GameSession::Clean()
 	mCurrentLevelNumber = -1;
 }
 
-BOOL MR_GameSession::LoadNew(const char *pTitle, MR_RecordFile *pMazeFile, char pGameOpts)
+BOOL MR_GameSession::LoadNew(const char *pTitle, RecordFile *pMazeFile, char pGameOpts)
 {
 	BOOL lReturnValue = FALSE;
 
@@ -407,7 +409,7 @@ const char *MR_GameSession::GetTitle() const
 	return mTitle;
 }
 
-MR_RecordFile *MR_GameSession::GetCurrentMazeFile()
+HoverRace::Util::RecordFile *MR_GameSession::GetCurrentMazeFile()
 {
 	return mCurrentMazeFile;
 }

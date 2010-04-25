@@ -32,6 +32,8 @@
 
 #define new DEBUG_NEW
 
+using HoverRace::Util::RecordFile;
+
 static void PrintUsage()
 {
 	// this should be redone, it's horrible
@@ -96,7 +98,7 @@ int main(int pArgCount, const char **pArgStrings)
 	}
 
 	if(!lError && !lPrintUsage) {
-		MR_RecordFile lOutputFile;
+		RecordFile lOutputFile;
 
 		// Verify that there is at least one ofhtr parameter
 		CString lCopyrightNotice = "\x8\r" + CString(_("HoverRace track file")) + ", " + "(c)GrokkSoft 1997\n\x1a";
@@ -216,7 +218,7 @@ int main(int pArgCount, const char **pArgStrings)
 	}
 
 	if(!lError) {
-		MR_RecordFile lOutputFile;
+		RecordFile lOutputFile;
 		lOutputFile.ApplyChecksum(pArgStrings[1]);
 	}
 

@@ -20,8 +20,7 @@
 // and limitations under the License.
 //
 
-#ifndef RECORD_FILE_H
-#define RECORD_FILE_H
+#pragma once
 
 #ifdef _WIN32
 #	ifdef MR_ENGINE
@@ -33,20 +32,23 @@
 #	define MR_DllDeclare
 #endif
 
-class MR_RecordFileTable;
+namespace HoverRace {
+namespace Util {
 
-class MR_DllDeclare MR_RecordFile : public CFile
+class RecordFileTable;
+
+class MR_DllDeclare RecordFile : public CFile
 {
 	private:
 
-		MR_RecordFileTable * mTable;
+		RecordFileTable * mTable;
 		int mCurrentRecord;						  // for read and write, -1 = not specified
 		BOOL mConstructionMode;
 
 	public:
 		// Constructors
-		MR_RecordFile();
-		virtual ~MR_RecordFile();
+		RecordFile();
+		virtual ~RecordFile();
 
 		// Creation operations
 		BOOL CreateForWrite(const char *pFileName, int pNbRecords, const char *lTitle = NULL);
@@ -97,5 +99,7 @@ class MR_DllDeclare MR_RecordFile : public CFile
 
 };
 
+}  // namespace Util
+}  // namespace HoverRace
+
 #undef MR_DllDeclare
-#endif

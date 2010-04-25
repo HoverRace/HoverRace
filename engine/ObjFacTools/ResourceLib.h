@@ -39,7 +39,7 @@ class MR_ResourceLib
 	// Each module can have its own MR_ResourceLib
 
 	protected:
-		MR_RecordFile mRecordFile;
+		HoverRace::Util::RecordFile mRecordFile;
 
 		CMap <int, int, MR_ResBitmap *, MR_ResBitmap *> mBitmapList;
 		CMap <int, int, MR_ResActor *, MR_ResActor *> mActorList;
