@@ -23,15 +23,19 @@
 #ifndef RECORD_FILE_H
 #define RECORD_FILE_H
 
-#ifdef MR_ENGINE
-#define MR_DllDeclare   __declspec( dllexport )
+#ifdef _WIN32
+#	ifdef MR_ENGINE
+#		define MR_DllDeclare   __declspec( dllexport )
+#	else
+#		define MR_DllDeclare   __declspec( dllimport )
+#	endif
 #else
-#define MR_DllDeclare   __declspec( dllimport )
+#	define MR_DllDeclare
 #endif
 
 class MR_RecordFileTable;
 
-class MR_RecordFile:public CFile
+class MR_DllDeclare MR_RecordFile : public CFile
 {
 	private:
 
@@ -41,54 +45,54 @@ class MR_RecordFile:public CFile
 
 	public:
 		// Constructors
-		MR_DllDeclare MR_RecordFile();
-		MR_DllDeclare ~ MR_RecordFile();
+		MR_RecordFile();
+		virtual ~MR_RecordFile();
 
 		// Creation operations
-		MR_DllDeclare BOOL CreateForWrite(const char *pFileName, int pNbRecords, const char *lTitle = NULL);
-		MR_DllDeclare BOOL OpenForWrite(const char *pFileName);
+		BOOL CreateForWrite(const char *pFileName, int pNbRecords, const char *lTitle = NULL);
+		BOOL OpenForWrite(const char *pFileName);
 
-		MR_DllDeclare BOOL BeginANewRecord();
+		BOOL BeginANewRecord();
 
 		// Read operation
-		MR_DllDeclare BOOL OpenForRead(const char *pFileName, BOOL pValidateChkSum = FALSE);
-		MR_DllDeclare void SelectRecord(int pRecordNumber);
+		BOOL OpenForRead(const char *pFileName, BOOL pValidateChkSum = FALSE);
+		void SelectRecord(int pRecordNumber);
 
 		// Checksum stuff (Renamed to Reopen for security purpose
 #define ApplyChecksum ReOpen
-		MR_DllDeclare BOOL ReOpen(const char *pFileName);
+		BOOL ReOpen(const char *pFileName);
 
 #define GetCheckSum GetAlignMode
-		MR_DllDeclare DWORD GetAlignMode();
+		DWORD GetAlignMode();
 
 		// File information functions
-		MR_DllDeclare int GetNbRecords() const;
-		MR_DllDeclare int GetNbRecordsMax() const;
-		MR_DllDeclare int GetCurrentRecordNumber() const;
+		int GetNbRecords() const;
+		int GetNbRecordsMax() const;
+		int GetCurrentRecordNumber() const;
 
 		// Overrided CFile operations
-		MR_DllDeclare ULONGLONG GetPosition() const;
-		MR_DllDeclare CString GetFileTitle() const;
+		ULONGLONG GetPosition() const;
+		CString GetFileTitle() const;
 
-		MR_DllDeclare BOOL Open(LPCTSTR lpszFileName, UINT nOpenFlags, CFileException * pError = NULL);
-		MR_DllDeclare CFile *Duplicate() const;
+		BOOL Open(LPCTSTR lpszFileName, UINT nOpenFlags, CFileException * pError = NULL);
+		CFile *Duplicate() const;
 
-		MR_DllDeclare LONG Seek(LONG lOff, UINT nFrom);
-		MR_DllDeclare void SetLength(DWORD dwNewLen);
-		MR_DllDeclare ULONGLONG GetLength() const;
+		LONG Seek(LONG lOff, UINT nFrom);
+		void SetLength(DWORD dwNewLen);
+		ULONGLONG GetLength() const;
 
-		MR_DllDeclare UINT Read(void *lpBuf, UINT nCount);
-		MR_DllDeclare void Write(const void *lpBuf, UINT nCount);
+		UINT Read(void *lpBuf, UINT nCount);
+		void Write(const void *lpBuf, UINT nCount);
 
-		MR_DllDeclare void LockRange(DWORD dwPos, DWORD dwCount);
-		MR_DllDeclare void UnlockRange(DWORD dwPos, DWORD dwCount);
+		void LockRange(DWORD dwPos, DWORD dwCount);
+		void UnlockRange(DWORD dwPos, DWORD dwCount);
 
-		MR_DllDeclare void Abort();
-		MR_DllDeclare void Close();
+		void Abort();
+		void Close();
 
 #ifdef _DEBUG
-		MR_DllDeclare void AssertValid() const;
-		MR_DllDeclare void Dump(CDumpContext & dc) const;
+		void AssertValid() const;
+		void Dump(CDumpContext & dc) const;
 #endif
 
 };
