@@ -21,6 +21,8 @@
 
 #include "StdAfx.h"
 
+#include <boost/make_shared.hpp>
+
 #include "RecordFile.h"
 
 #define new DEBUG_NEW
@@ -532,6 +534,29 @@ void RecordFile::Dump(CDumpContext & dc) const
 	// TODO
 }
 #endif
+
+/**
+ * Open an object stream for reading at the current record.
+ * It is the caller's responsibility to ensure that only one stream
+ * (input or output) exists at a time.
+ * @return A shared pointer to the new input stream (never @c NULL).
+ */
+ObjStreamPtr RecordFile::StreamIn()
+{
+	return ObjStreamPtr(new ObjStream(this, CArchive::load));
+}
+
+/**
+ * Open an object stream for writing at the current record.
+ * It is the caller's responsibility to ensure that only one stream
+ * (input or output) exists at a time.
+ * @return A shared pointer to the new output stream (never @c NULL).
+ */
+ObjStreamPtr RecordFile::StreamOut()
+{
+	return ObjStreamPtr(new ObjStream(this, CArchive::store));
+}
+
 
 }  // namespace Util
 }  // namespace HoverRace

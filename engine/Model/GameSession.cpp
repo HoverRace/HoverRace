@@ -29,7 +29,7 @@
 #define MR_SIMULATION_SLICE             15
 #define MR_MINIMUM_SIMULATION_SLICE     10
 
-using HoverRace::Util::RecordFile;
+using namespace HoverRace::Util;
 
 MR_GameSession::MR_GameSession(BOOL pAllowRendering)
 {
@@ -61,7 +61,8 @@ BOOL MR_GameSession::LoadLevel(int pLevel, char pGameOpts)
 		mCurrentLevel = new MR_Level(mAllowRendering, pGameOpts);
 		mCurrentMazeFile->SelectRecord(pLevel);
 
-		CArchive lArchive(mCurrentMazeFile, CArchive::load);
+		ObjStreamPtr archivePtr(mCurrentMazeFile->StreamIn());
+		ObjStream &lArchive = *archivePtr;
 
 		mCurrentLevel->Serialize(lArchive);
 

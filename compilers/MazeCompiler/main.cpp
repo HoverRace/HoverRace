@@ -32,7 +32,7 @@
 
 #define new DEBUG_NEW
 
-using HoverRace::Util::RecordFile;
+using namespace HoverRace::Util;
 
 static void PrintUsage()
 {
@@ -132,7 +132,8 @@ int main(int pArgCount, const char **pArgStrings)
 				puts(_("Unable to add a header to the output file"));
 			}
 			else {
-				CArchive lArchive(&lOutputFile, CArchive::store);
+				ObjStreamPtr archivePtr(lOutputFile.StreamOut());
+				ObjStream &lArchive = *archivePtr;
 
 				lError = !CreateHeader(lFile, lArchive);
 			}
@@ -155,7 +156,8 @@ int main(int pArgCount, const char **pArgStrings)
 				puts(_("Unable to add the track to the output file"));
 			}
 			else {
-				CArchive lArchive(&lOutputFile, CArchive::store);
+				ObjStreamPtr archivePtr(lOutputFile.StreamOut());
+				ObjStream &lArchive = *archivePtr;
 
 				lNewLevel->Serialize(lArchive);
 			}
@@ -168,7 +170,8 @@ int main(int pArgCount, const char **pArgStrings)
 				puts(_("Unable to add a background image record"));
 			}
 			else {
-				CArchive lArchive(&lOutputFile, CArchive::store);
+				ObjStreamPtr archivePtr(lOutputFile.StreamOut());
+				ObjStream &lArchive = *archivePtr;
 
 				lError = !AddBackgroundImage(lFile, lArchive);
 			}
@@ -182,7 +185,8 @@ int main(int pArgCount, const char **pArgStrings)
 				puts(_("Unable to add a map record"));
 			}
 			else {
-				CArchive lArchive(&lOutputFile, CArchive::store);
+				ObjStreamPtr archivePtr(lOutputFile.StreamOut());
+				ObjStream &lArchive = *archivePtr;
 
 				int lX0;
 				int lX1;

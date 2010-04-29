@@ -37,7 +37,10 @@ namespace Util {
 
 class RecordFileTable;
 
-class MR_DllDeclare RecordFile : public CFile
+typedef ::CArchive ObjStream;
+typedef boost::shared_ptr<ObjStream> ObjStreamPtr;
+
+class MR_DllDeclare RecordFile : private CFile
 {
 	private:
 
@@ -49,6 +52,9 @@ class MR_DllDeclare RecordFile : public CFile
 		// Constructors
 		RecordFile();
 		virtual ~RecordFile();
+
+		// Temporary until dep on CFile is removed.
+		static RecordFile *New() { return new RecordFile(); }
 
 		// Creation operations
 		BOOL CreateForWrite(const char *pFileName, int pNbRecords, const char *lTitle = NULL);
@@ -91,6 +97,9 @@ class MR_DllDeclare RecordFile : public CFile
 
 		void Abort();
 		void Close();
+
+		ObjStreamPtr StreamIn();
+		ObjStreamPtr StreamOut();
 
 #ifdef _DEBUG
 		void AssertValid() const;

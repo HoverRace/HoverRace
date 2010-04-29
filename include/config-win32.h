@@ -22,3 +22,5 @@
 #if defined(VER_PRODUCTBUILD) && VER_PRODUCTBUILD >= 6001
 #	define WITH_DIRECTSHOW 1
 #endif
+
+#define WITH_OBJSTREAM 1

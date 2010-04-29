@@ -23,7 +23,7 @@
 #include "StdAfx.h"
 #include "ResourceLibBuilder.h"
 
-using HoverRace::Util::RecordFile;
+using namespace HoverRace::Util;
 
 MR_ResourceLibBuilder::MR_ResourceLibBuilder()
 {
@@ -89,7 +89,8 @@ BOOL MR_ResourceLibBuilder::Export(const char *pFileName)
 			// Write the magic number
 			int lMagicNumber = MR_RESOURCE_FILE_MAGIC;
 
-			CArchive lArchive(&lFile, CArchive::store);
+			ObjStreamPtr archivePtr(lFile.StreamOut());
+			ObjStream &lArchive = *archivePtr;
 
 			lArchive << lMagicNumber;
 

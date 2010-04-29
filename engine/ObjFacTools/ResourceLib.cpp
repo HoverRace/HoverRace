@@ -25,7 +25,7 @@
 
 #define new DEBUG_NEW
 
-using HoverRace::Util::RecordFile;
+using namespace HoverRace::Util;
 
 /**
  * Create a new MR_ResourceLib object, reading from the specified filename.
@@ -41,7 +41,8 @@ MR_ResourceLib::MR_ResourceLib(const char *pResFile)
 		{
 			int lMagicNumber;
 
-			CArchive lArchive(&mRecordFile, CArchive::load);
+			ObjStreamPtr archivePtr(mRecordFile.StreamIn());
+			ObjStream &lArchive = *archivePtr;
 
 			lArchive >> lMagicNumber;
 

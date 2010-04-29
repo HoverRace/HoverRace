@@ -114,7 +114,7 @@ RecordFile *MR_TrackOpen(HWND pWindow, const char *pFileName)
 		//MessageBox(pWindow, _("Track not found"), PACKAGE_NAME, MB_ICONERROR | MB_OK | MB_APPLMODAL);
 	}
 	else {
-		lReturnValue = new RecordFile;
+		lReturnValue = RecordFile::New();
 		if(!lReturnValue->OpenForRead(filename.c_str(), TRUE)) {
 			delete lReturnValue;
 			lReturnValue = NULL;
@@ -342,7 +342,9 @@ BOOL ReadTrackEntry(RecordFile * pRecordFile, TrackEntry * pDest, const char *pF
 
 	pRecordFile->SelectRecord(0);
 
-	CArchive lArchive(pRecordFile, CArchive::load | CArchive::bNoFlushOnDelete);
+	ObjStreamPtr archivePtr(pRecordFile->StreamIn());
+	ObjStream &lArchive = *archivePtr;
+	
 	lArchive >> lMagicNumber;
 	if(lMagicNumber == MR_MAGIC_TRACK_NUMBER) {
 		int lVersion;

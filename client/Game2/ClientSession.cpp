@@ -27,8 +27,7 @@
 
 #include "ClientSession.h"
 
-using HoverRace::Util::OS;
-using HoverRace::Util::RecordFile;
+using namespace HoverRace::Util;
 
 namespace HoverRace {
 namespace Client {
@@ -68,7 +67,8 @@ void ClientSession::ReadLevelAttrib(Util::RecordFile * pRecordFile, MR_VideoBuff
 		pRecordFile->SelectRecord(2);
 
 		{
-			CArchive lArchive(pRecordFile, CArchive::load | CArchive::bNoFlushOnDelete);
+			ObjStreamPtr archivePtr(pRecordFile->StreamIn());
+			ObjStream &lArchive = *archivePtr;
 
 			int lImageType;
 
@@ -92,7 +92,8 @@ void ClientSession::ReadLevelAttrib(Util::RecordFile * pRecordFile, MR_VideoBuff
 	if(pRecordFile->GetNbRecords() >= 4) {
 		pRecordFile->SelectRecord(3);
 		{
-			CArchive lArchive(pRecordFile, CArchive::load | CArchive::bNoFlushOnDelete);
+			ObjStreamPtr archivePtr(pRecordFile->StreamIn());
+			ObjStream &lArchive = *archivePtr;
 
 			int lX0;
 			int lX1;
