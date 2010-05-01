@@ -25,7 +25,7 @@
 // Includes
 #include "Level.h"
 #include "ContactEffect.h"
-#include "../Util/RecordFile.h"
+#include "../Parcel/RecordFile.h"
 
 #ifdef MR_ENGINE
 #define MR_DllDeclare   __declspec(dllexport)
@@ -42,7 +42,7 @@ class MR_GameSession
 		int mCurrentLevelNumber;
 
 		CString mTitle;
-		HoverRace::Util::RecordFile *mCurrentMazeFile;
+		HoverRace::Parcel::RecordFile *mCurrentMazeFile;
 		MR_Level *mCurrentLevel;
 
 		MR_SimulationTime mSimulationTime;		  // Time simulated since the session start
@@ -62,7 +62,7 @@ class MR_GameSession
 		MR_DllDeclare MR_GameSession(BOOL pAllowRendering = FALSE);
 		MR_DllDeclare ~MR_GameSession();
 
-		MR_DllDeclare BOOL LoadNew(const char *pTitle, HoverRace::Util::RecordFile *pMazeFile, char pGameOpts);
+		MR_DllDeclare BOOL LoadNew(const char *pTitle, HoverRace::Parcel::RecordFile *pMazeFile, char pGameOpts);
 
 		MR_DllDeclare void SetSimulationTime(MR_SimulationTime);
 		MR_DllDeclare MR_SimulationTime GetSimulationTime() const;
@@ -71,7 +71,7 @@ class MR_GameSession
 
 		MR_DllDeclare MR_Level *GetCurrentLevel();
 		MR_DllDeclare const char *GetTitle() const;
-		MR_DllDeclare HoverRace::Util::RecordFile *GetCurrentMazeFile();
+		MR_DllDeclare HoverRace::Parcel::RecordFile *GetCurrentMazeFile();
 };
 
 #undef MR_DllDeclare

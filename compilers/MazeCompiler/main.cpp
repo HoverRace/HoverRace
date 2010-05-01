@@ -20,7 +20,7 @@
 //
 
 #include "stdafx.h"
-#include "../../engine/Util/RecordFile.h"
+#include "../../engine/Parcel/RecordFile.h"
 #include "LevelBuilder.h"
 #include "TrackMap.h"
 #include "Parser.h"
@@ -32,7 +32,7 @@
 
 #define new DEBUG_NEW
 
-using namespace HoverRace::Util;
+using namespace HoverRace::Parcel;
 
 static void PrintUsage()
 {

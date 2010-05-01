@@ -23,7 +23,7 @@
 #ifndef MR_RESOURCE_LIB_H
 #define MR_RESOURCE_LIB_H
 
-#include "../Util/RecordFile.h"
+#include "../Parcel/RecordFile.h"
 #include "ResActor.h"
 #include "ResSprite.h"
 #include "ResSound.h"
@@ -39,7 +39,7 @@ class MR_ResourceLib
 	// Each module can have its own MR_ResourceLib
 
 	protected:
-		HoverRace::Util::RecordFile mRecordFile;
+		HoverRace::Parcel::RecordFile mRecordFile;
 
 		CMap <int, int, MR_ResBitmap *, MR_ResBitmap *> mBitmapList;
 		CMap <int, int, MR_ResActor *, MR_ResActor *> mActorList;

@@ -25,7 +25,7 @@
 
 #define new DEBUG_NEW
 
-using namespace HoverRace::Util;
+using namespace HoverRace::Parcel;
 
 /**
  * Create a new MR_ResourceLib object, reading from the specified filename.

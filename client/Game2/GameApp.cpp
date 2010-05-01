@@ -63,6 +63,7 @@
 
 using namespace HoverRace::Client;
 using namespace HoverRace::Client::HoverScript;
+using namespace HoverRace::Parcel;
 
 // If MR_AVI_CAPTURE is defined
 // #define MR_AVI_CAPTUREh

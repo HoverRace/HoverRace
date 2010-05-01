@@ -23,7 +23,7 @@
 #include "StdAfx.h"
 #include "ResourceLibBuilder.h"
 
-using namespace HoverRace::Util;
+using namespace HoverRace::Parcel;
 
 MR_ResourceLibBuilder::MR_ResourceLibBuilder()
 {

@@ -26,7 +26,7 @@
 #include <string>
 
 namespace HoverRace {
-	namespace Util {
+	namespace Parcel {
 		class RecordFile;
 	}
 }
@@ -49,7 +49,7 @@ enum MR_TrackAvail
 bool MR_SelectTrack(HWND pParentWindow, std::string &pTrackFile, int &pNbLap, char &pGameOpts);
 
 // pFile name must contains no path and no extension
-HoverRace::Util::RecordFile *MR_TrackOpen(HWND pWindow, const char *pFileName);
+HoverRace::Parcel::RecordFile *MR_TrackOpen(HWND pWindow, const char *pFileName);
 
 MR_TrackAvail MR_GetTrackAvail(const char *pFileName);
 

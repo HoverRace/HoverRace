@@ -27,7 +27,8 @@
 
 #include "ClientSession.h"
 
-using namespace HoverRace::Util;
+using namespace HoverRace::Parcel;
+using HoverRace::Util::OS;
 
 namespace HoverRace {
 namespace Client {
@@ -60,7 +61,7 @@ void ClientSession::Process(int pSpeedFactor)
 	mSession.Simulate();
 }
 
-void ClientSession::ReadLevelAttrib(Util::RecordFile * pRecordFile, MR_VideoBuffer * pVideo)
+void ClientSession::ReadLevelAttrib(Parcel::RecordFile * pRecordFile, MR_VideoBuffer * pVideo)
 {
 	// Read level background palette
 	if((pVideo != NULL) && (pRecordFile->GetNbRecords() >= 3)) {
@@ -121,7 +122,7 @@ void ClientSession::ReadLevelAttrib(Util::RecordFile * pRecordFile, MR_VideoBuff
 	}
 }
 
-BOOL ClientSession::LoadNew(const char *pTitle, Util::RecordFile *pMazeFile,
+BOOL ClientSession::LoadNew(const char *pTitle, Parcel::RecordFile *pMazeFile,
                             int pNbLap, char pGameOpts, MR_VideoBuffer *pVideo)
 {
 	BOOL lReturnValue;

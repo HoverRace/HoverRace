@@ -33,7 +33,7 @@
 #endif
 
 namespace HoverRace {
-namespace Util {
+namespace Parcel {
 
 class RecordFileTable;
 
@@ -108,7 +108,7 @@ class MR_DllDeclare RecordFile : private CFile
 
 };
 
-}  // namespace Util
+}  // namespace Parcel
 }  // namespace HoverRace
 
 #undef MR_DllDeclare

@@ -21,14 +21,12 @@
 
 #include "StdAfx.h"
 
-#include <boost/make_shared.hpp>
-
 #include "RecordFile.h"
 
 #define new DEBUG_NEW
 
 namespace HoverRace {
-namespace Util {
+namespace Parcel {
 
 // RecordFileTable
 
@@ -558,5 +556,5 @@ ObjStreamPtr RecordFile::StreamOut()
 }
 
 
-}  // namespace Util
+}  // namespace Parcel
 }  // namespace HoverRace

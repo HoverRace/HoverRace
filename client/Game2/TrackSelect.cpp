@@ -22,7 +22,7 @@
 #include "stdafx.h"
 #include "TrackSelect.h"
 #include "../../engine/Util/Cursor.h"
-#include "../../engine/Util/RecordFile.h"
+#include "../../engine/Parcel/RecordFile.h"
 #include "resource.h"
 #include "io.h"
 #include "../../compilers/MazeCompiler/TrackCommonStuff.h"
@@ -33,6 +33,7 @@
 
 #include <algorithm>
 
+using namespace HoverRace::Parcel;
 using namespace HoverRace::Util;
 
 class TrackEntry

@@ -595,14 +595,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Util\RecordFile.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Util\RecordFile.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Util\resource.h"
 				>
 			</File>
@@ -912,6 +904,18 @@
 			</File>
 			<File
 				RelativePath=".\Net\Transfer.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Parcel"
+			>
+			<File
+				RelativePath=".\Parcel\RecordFile.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Parcel\RecordFile.h"
 				>
 			</File>
 		</Filter>

@@ -72,6 +72,7 @@
 #define MR_REG_BANNER_SERVER     9
 
 using namespace HoverRace::Client;
+using namespace HoverRace::Parcel;
 using namespace HoverRace::Util;
 
 /*

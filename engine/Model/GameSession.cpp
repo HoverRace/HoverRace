@@ -29,7 +29,7 @@
 #define MR_SIMULATION_SLICE             15
 #define MR_MINIMUM_SIMULATION_SLICE     10
 
-using namespace HoverRace::Util;
+using namespace HoverRace::Parcel;
 
 MR_GameSession::MR_GameSession(BOOL pAllowRendering)
 {
@@ -410,7 +410,7 @@ const char *MR_GameSession::GetTitle() const
 	return mTitle;
 }
 
-HoverRace::Util::RecordFile *MR_GameSession::GetCurrentMazeFile()
+HoverRace::Parcel::RecordFile *MR_GameSession::GetCurrentMazeFile()
 {
 	return mCurrentMazeFile;
 }
