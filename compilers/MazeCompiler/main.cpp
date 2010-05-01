@@ -20,7 +20,7 @@
 //
 
 #include "stdafx.h"
-#include "../../engine/Parcel/RecordFile.h"
+#include "../../engine/Parcel/MfcRecordFile.h"
 #include "LevelBuilder.h"
 #include "TrackMap.h"
 #include "Parser.h"
@@ -98,7 +98,7 @@ int main(int pArgCount, const char **pArgStrings)
 	}
 
 	if(!lError && !lPrintUsage) {
-		RecordFile lOutputFile;
+		MfcRecordFile lOutputFile;
 
 		// Verify that there is at least one ofhtr parameter
 		CString lCopyrightNotice = "\x8\r" + CString(_("HoverRace track file")) + ", " + "(c)GrokkSoft 1997\n\x1a";
@@ -222,7 +222,7 @@ int main(int pArgCount, const char **pArgStrings)
 	}
 
 	if(!lError) {
-		RecordFile lOutputFile;
+		MfcRecordFile lOutputFile;
 		lOutputFile.ApplyChecksum(pArgStrings[1]);
 	}
 

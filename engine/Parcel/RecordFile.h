@@ -1,7 +1,8 @@
+
 // RecordFile.h
+// Base class for parcel implementations.
 //
-//
-// Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
+// Copyright (c) 2010 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -18,7 +19,6 @@
 //
 // See the License for the specific language governing permissions
 // and limitations under the License.
-//
 
 #pragma once
 
@@ -35,77 +35,31 @@
 namespace HoverRace {
 namespace Parcel {
 
-class RecordFileTable;
-
+//TODO: Temporary until ObjStream hierarchy is realized.
 typedef ::CArchive ObjStream;
 typedef boost::shared_ptr<ObjStream> ObjStreamPtr;
 
-class MR_DllDeclare RecordFile : private CFile
-{
-	private:
-
-		RecordFileTable * mTable;
-		int mCurrentRecord;						  // for read and write, -1 = not specified
-		BOOL mConstructionMode;
-
+/**
+ * Base class for parcel implementations.
+ * @author Michael Imamura
+ */
+class MR_DllDeclare RecordFile {
 	public:
-		// Constructors
-		RecordFile();
-		virtual ~RecordFile();
+		RecordFile() { }
+		virtual ~RecordFile() { }
 
-		// Temporary until dep on CFile is removed.
-		static RecordFile *New() { return new RecordFile(); }
+		virtual bool CreateForWrite(const char *filename, int numRecords, const char *title=NULL) = 0;
+		virtual bool OpenForWrite(const char *filename) = 0;
+		virtual bool OpenForRead(const char *filename, bool validateChecksum=false) = 0;
 
-		// Creation operations
-		BOOL CreateForWrite(const char *pFileName, int pNbRecords, const char *lTitle = NULL);
-		BOOL OpenForWrite(const char *pFileName);
+		virtual DWORD GetAlignMode() = 0;
 
-		BOOL BeginANewRecord();
+		virtual int GetNbRecords() const = 0;
+		virtual void SelectRecord(int i) = 0;
+		virtual bool BeginANewRecord() = 0;
 
-		// Read operation
-		BOOL OpenForRead(const char *pFileName, BOOL pValidateChkSum = FALSE);
-		void SelectRecord(int pRecordNumber);
-
-		// Checksum stuff (Renamed to Reopen for security purpose
-#define ApplyChecksum ReOpen
-		BOOL ReOpen(const char *pFileName);
-
-#define GetCheckSum GetAlignMode
-		DWORD GetAlignMode();
-
-		// File information functions
-		int GetNbRecords() const;
-		int GetNbRecordsMax() const;
-		int GetCurrentRecordNumber() const;
-
-		// Overrided CFile operations
-		ULONGLONG GetPosition() const;
-		CString GetFileTitle() const;
-
-		BOOL Open(LPCTSTR lpszFileName, UINT nOpenFlags, CFileException * pError = NULL);
-		CFile *Duplicate() const;
-
-		LONG Seek(LONG lOff, UINT nFrom);
-		void SetLength(DWORD dwNewLen);
-		ULONGLONG GetLength() const;
-
-		UINT Read(void *lpBuf, UINT nCount);
-		void Write(const void *lpBuf, UINT nCount);
-
-		void LockRange(DWORD dwPos, DWORD dwCount);
-		void UnlockRange(DWORD dwPos, DWORD dwCount);
-
-		void Abort();
-		void Close();
-
-		ObjStreamPtr StreamIn();
-		ObjStreamPtr StreamOut();
-
-#ifdef _DEBUG
-		void AssertValid() const;
-		void Dump(CDumpContext & dc) const;
-#endif
-
+		virtual ObjStreamPtr StreamIn() = 0;
+		virtual ObjStreamPtr StreamOut() = 0;
 };
 
 }  // namespace Parcel

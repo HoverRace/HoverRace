@@ -1,4 +1,4 @@
-// RecordFile.cpp
+// MfcRecordFile.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
@@ -21,16 +21,16 @@
 
 #include "StdAfx.h"
 
-#include "RecordFile.h"
+#include "MfcRecordFile.h"
 
 #define new DEBUG_NEW
 
 namespace HoverRace {
 namespace Parcel {
 
-// RecordFileTable
+// MfcRecordFileTable
 
-class RecordFileTable
+class MfcRecordFileTable
 {
 	public:
 		CString mFileTitle;
@@ -40,9 +40,9 @@ class RecordFileTable
 		int mRecordMax;							  // Ne of record allowed
 		DWORD *mRecordList;
 
-		RecordFileTable();
-		RecordFileTable(int pNbRecords);
-		~RecordFileTable();
+		MfcRecordFileTable();
+		MfcRecordFileTable(int pNbRecords);
+		~MfcRecordFileTable();
 
 		void Serialize(CArchive & pArchive);
 
@@ -50,7 +50,7 @@ class RecordFileTable
 
 static DWORD ComputeSum(const char *pFileName);
 
-RecordFileTable::RecordFileTable()
+MfcRecordFileTable::MfcRecordFileTable()
 {
 	mRecordUsed = 0;
 	mRecordMax = 0;
@@ -60,7 +60,7 @@ RecordFileTable::RecordFileTable()
 	mRecordList = NULL;
 }
 
-RecordFileTable::RecordFileTable(int pNbRecords)
+MfcRecordFileTable::MfcRecordFileTable(int pNbRecords)
 {
 	ASSERT(pNbRecords > 0);
 
@@ -74,12 +74,12 @@ RecordFileTable::RecordFileTable(int pNbRecords)
 	}
 }
 
-RecordFileTable::~RecordFileTable()
+MfcRecordFileTable::~MfcRecordFileTable()
 {
 	delete[]mRecordList;
 }
 
-void RecordFileTable::Serialize(CArchive & pArchive)
+void MfcRecordFileTable::Serialize(CArchive & pArchive)
 {
 
 	if(pArchive.IsStoring()) {
@@ -120,16 +120,17 @@ void RecordFileTable::Serialize(CArchive & pArchive)
 	}
 }
 
-// RecordFile
+// MfcRecordFile
 
-RecordFile::RecordFile()
+MfcRecordFile::MfcRecordFile() :
+	RecordFile(), CFile()
 {
 	mConstructionMode = FALSE;
 	mTable = NULL;
 	mCurrentRecord = -1;
 }
 
-RecordFile::~RecordFile()
+MfcRecordFile::~MfcRecordFile()
 {
 	if(mTable != NULL) {
 		Close();
@@ -137,7 +138,7 @@ RecordFile::~RecordFile()
 	}
 }
 
-int RecordFile::GetNbRecords() const
+int MfcRecordFile::GetNbRecords() const
 {
 	int lReturnValue = 0;
 
@@ -147,7 +148,7 @@ int RecordFile::GetNbRecords() const
 	return lReturnValue;
 }
 
-int RecordFile::GetNbRecordsMax() const
+int MfcRecordFile::GetNbRecordsMax() const
 {
 	int lReturnValue = 0;
 
@@ -157,12 +158,12 @@ int RecordFile::GetNbRecordsMax() const
 	return lReturnValue;
 }
 
-int RecordFile::GetCurrentRecordNumber() const
+int MfcRecordFile::GetCurrentRecordNumber() const
 {
 	return mCurrentRecord;
 }
 
-BOOL RecordFile::CreateForWrite(const char *pFileName, int pNbRecords, const char *pTitle)
+bool MfcRecordFile::CreateForWrite(const char *pFileName, int pNbRecords, const char *pTitle)
 {
 	BOOL lReturnValue = FALSE;
 	ASSERT(mTable == NULL);						  // Open function must be called only once
@@ -176,7 +177,7 @@ BOOL RecordFile::CreateForWrite(const char *pFileName, int pNbRecords, const cha
 
 		if(lReturnValue) {
 			// Create the mTable
-			mTable = new RecordFileTable(pNbRecords);
+			mTable = new MfcRecordFileTable(pNbRecords);
 			mTable->mFileTitle = pTitle;
 
 			// Write the mTable to reserve some space and position the file on the first record
@@ -187,11 +188,11 @@ BOOL RecordFile::CreateForWrite(const char *pFileName, int pNbRecords, const cha
 			}
 		}
 	}
-	return lReturnValue;
+	return lReturnValue != FALSE;
 
 }
 
-BOOL RecordFile::OpenForWrite(const char *pFileName)
+bool MfcRecordFile::OpenForWrite(const char *pFileName)
 {
 	BOOL lReturnValue = FALSE;
 	ASSERT(mTable == NULL);
@@ -205,7 +206,7 @@ BOOL RecordFile::OpenForWrite(const char *pFileName)
 
 		if(lReturnValue) {
 			CArchive lArchive(this, CArchive::load);
-			mTable = new RecordFileTable;
+			mTable = new MfcRecordFileTable;
 
 			mTable->Serialize(lArchive);
 
@@ -216,10 +217,10 @@ BOOL RecordFile::OpenForWrite(const char *pFileName)
 				CFile::Close();
 		}
 	}
-	return lReturnValue;
+	return lReturnValue != FALSE;
 }
 
-BOOL RecordFile::BeginANewRecord()
+bool MfcRecordFile::BeginANewRecord()
 {
 	BOOL lReturnValue = FALSE;
 
@@ -235,10 +236,10 @@ BOOL RecordFile::BeginANewRecord()
 			lReturnValue = TRUE;
 		}
 	}
-	return lReturnValue;
+	return lReturnValue != FALSE;
 }
 
-BOOL RecordFile::OpenForRead(const char *pFileName, BOOL pValidateChkSum)
+bool MfcRecordFile::OpenForRead(const char *pFileName, bool pValidateChkSum)
 {
 	BOOL lReturnValue = FALSE;
 	ASSERT(mTable == NULL);
@@ -259,7 +260,7 @@ BOOL RecordFile::OpenForRead(const char *pFileName, BOOL pValidateChkSum)
 		if(lReturnValue) {
 			CArchive lArchive(this, CArchive::load | CArchive::bNoFlushOnDelete);
 
-			mTable = new RecordFileTable;
+			mTable = new MfcRecordFileTable;
 			mTable->Serialize(lArchive);
 
 			if(mTable->mRecordList == NULL) // file did not read correctly
@@ -286,12 +287,12 @@ BOOL RecordFile::OpenForRead(const char *pFileName, BOOL pValidateChkSum)
 		}
 	}
 
-	return lReturnValue;
+	return lReturnValue != FALSE;
 }
 
 // Checksum stuff (Renamed to Reopen for security purpose
 //      #define ApplyChecksum ReOpen
-BOOL RecordFile::ReOpen(const char *pFileName)
+BOOL MfcRecordFile::ReOpen(const char *pFileName)
 {
 	BOOL lReturnValue = FALSE;
 
@@ -310,7 +311,7 @@ BOOL RecordFile::ReOpen(const char *pFileName)
 }
 
 // #define GetCheckSum GetAlignMode
-DWORD RecordFile::GetAlignMode()
+DWORD MfcRecordFile::GetAlignMode()
 {
 	if((mTable != NULL) && (mTable->mSumValid)) {
 		return mTable->mChkSum;
@@ -320,7 +321,7 @@ DWORD RecordFile::GetAlignMode()
 	}
 }
 
-void RecordFile::SelectRecord(int pRecordNumber)
+void MfcRecordFile::SelectRecord(int pRecordNumber)
 {
 	ASSERT(!mConstructionMode);
 
@@ -335,7 +336,7 @@ void RecordFile::SelectRecord(int pRecordNumber)
 	}
 }
 
-ULONGLONG RecordFile::GetPosition() const
+ULONGLONG MfcRecordFile::GetPosition() const
 {
 	ULONGLONG lReturnValue = CFile::GetPosition();
 
@@ -345,7 +346,7 @@ ULONGLONG RecordFile::GetPosition() const
 	return lReturnValue;
 }
 
-CString RecordFile::GetFileTitle() const
+CString MfcRecordFile::GetFileTitle() const
 {
 	if(mTable != NULL) {
 		return mTable->mFileTitle;
@@ -356,7 +357,7 @@ CString RecordFile::GetFileTitle() const
 	}
 }
 
-BOOL RecordFile::Open(LPCTSTR, UINT, CFileException *)
+BOOL MfcRecordFile::Open(LPCTSTR, UINT, CFileException *)
 {
 	ASSERT(FALSE);
 	AfxThrowNotSupportedException();
@@ -364,14 +365,14 @@ BOOL RecordFile::Open(LPCTSTR, UINT, CFileException *)
 	return FALSE;
 }
 
-CFile *RecordFile::Duplicate() const
+CFile *MfcRecordFile::Duplicate() const
 {
 	ASSERT(FALSE);
 	AfxThrowNotSupportedException();
 	return NULL;
 }
 
-LONG RecordFile::Seek(LONG pOff, UINT pFrom)
+LONG MfcRecordFile::Seek(LONG pOff, UINT pFrom)
 {
 	// BUG This function do not check for record overflow
 	LONG lLocalOffset = 0;
@@ -385,13 +386,13 @@ LONG RecordFile::Seek(LONG pOff, UINT pFrom)
 	return static_cast<LONG>(CFile::Seek(pOff + lLocalOffset, pFrom)) - lLocalOffset;
 }
 
-void RecordFile::SetLength(DWORD)
+void MfcRecordFile::SetLength(DWORD)
 {
 	ASSERT(FALSE);
 	AfxThrowNotSupportedException();
 }
 
-ULONGLONG RecordFile::GetLength() const
+ULONGLONG MfcRecordFile::GetLength() const
 {
 	ASSERT_VALID(this);
 	ASSERT(!mConstructionMode);
@@ -410,7 +411,7 @@ ULONGLONG RecordFile::GetLength() const
 	return lReturnValue;
 }
 
-UINT RecordFile::Read(void *pBuf, UINT pCount)
+UINT MfcRecordFile::Read(void *pBuf, UINT pCount)
 {
 
 	// Simply cut nCount if it overflow
@@ -431,32 +432,32 @@ UINT RecordFile::Read(void *pBuf, UINT pCount)
 	return CFile::Read(pBuf, pCount);
 }
 
-void RecordFile::Write(const void *pBuf, UINT pCount)
+void MfcRecordFile::Write(const void *pBuf, UINT pCount)
 {
 	ASSERT(mConstructionMode);
 
 	CFile::Write(pBuf, pCount);
 }
 
-void RecordFile::LockRange(DWORD, DWORD)
+void MfcRecordFile::LockRange(DWORD, DWORD)
 {
 	ASSERT(FALSE);
 	AfxThrowNotSupportedException();
 }
 
-void RecordFile::UnlockRange(DWORD, DWORD)
+void MfcRecordFile::UnlockRange(DWORD, DWORD)
 {
 	ASSERT(FALSE);
 	AfxThrowNotSupportedException();
 }
 
-void RecordFile::Abort()
+void MfcRecordFile::Abort()
 {
 	ASSERT(FALSE);
 	CFile(Abort);
 }
 
-void RecordFile::Close()
+void MfcRecordFile::Close()
 {
 	mCurrentRecord = -1;
 	if(mConstructionMode && (mTable != NULL)) {
@@ -508,7 +509,7 @@ DWORD ComputeSum(const char *pFileName)
 
 #ifdef _DEBUG
 
-void RecordFile::AssertValid() const
+void MfcRecordFile::AssertValid() const
 {
 	CFile::AssertValid();
 
@@ -525,7 +526,7 @@ void RecordFile::AssertValid() const
 	}
 }
 
-void RecordFile::Dump(CDumpContext & dc) const
+void MfcRecordFile::Dump(CDumpContext & dc) const
 {
 	CFile::Dump(dc);
 
@@ -539,7 +540,7 @@ void RecordFile::Dump(CDumpContext & dc) const
  * (input or output) exists at a time.
  * @return A shared pointer to the new input stream (never @c NULL).
  */
-ObjStreamPtr RecordFile::StreamIn()
+ObjStreamPtr MfcRecordFile::StreamIn()
 {
 	return ObjStreamPtr(new ObjStream(this, CArchive::load));
 }
@@ -550,7 +551,7 @@ ObjStreamPtr RecordFile::StreamIn()
  * (input or output) exists at a time.
  * @return A shared pointer to the new output stream (never @c NULL).
  */
-ObjStreamPtr RecordFile::StreamOut()
+ObjStreamPtr MfcRecordFile::StreamOut()
 {
 	return ObjStreamPtr(new ObjStream(this, CArchive::store));
 }

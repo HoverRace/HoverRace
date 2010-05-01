@@ -911,7 +911,11 @@
 			Name="Parcel"
 			>
 			<File
-				RelativePath=".\Parcel\RecordFile.cpp"
+				RelativePath=".\Parcel\MfcRecordFile.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Parcel\MfcRecordFile.h"
 				>
 			</File>
 			<File

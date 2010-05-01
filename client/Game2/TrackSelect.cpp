@@ -22,7 +22,7 @@
 #include "stdafx.h"
 #include "TrackSelect.h"
 #include "../../engine/Util/Cursor.h"
-#include "../../engine/Parcel/RecordFile.h"
+#include "../../engine/Parcel/MfcRecordFile.h"
 #include "resource.h"
 #include "io.h"
 #include "../../compilers/MazeCompiler/TrackCommonStuff.h"
@@ -115,7 +115,7 @@ RecordFile *MR_TrackOpen(HWND pWindow, const char *pFileName)
 		//MessageBox(pWindow, _("Track not found"), PACKAGE_NAME, MB_ICONERROR | MB_OK | MB_APPLMODAL);
 	}
 	else {
-		lReturnValue = RecordFile::New();
+		lReturnValue = MfcRecordFile::New();
 		if(!lReturnValue->OpenForRead(filename.c_str(), TRUE)) {
 			delete lReturnValue;
 			lReturnValue = NULL;
@@ -322,7 +322,7 @@ MR_TrackAvail MR_GetTrackAvail(const char *pFileName)
 	std::string path = FindTrack(pFileName);
 
 	if (!path.empty()) {
-		RecordFile lFile;
+		MfcRecordFile lFile;
 
 		if(!lFile.OpenForRead(path.c_str()))
 			ASSERT(FALSE);
@@ -485,7 +485,7 @@ void ReadTrackListDir(const std::string &dir)
 			ent.mFileName = std::string(lFileInfo.name, 0, strlen(lFileInfo.name) - Config::TRACK_EXT.length());
 
 			// Open the file and read additional info
-			RecordFile lRecordFile;
+			MfcRecordFile lRecordFile;
 
 			if(!lRecordFile.OpenForRead((dir + lFileInfo.name).c_str()))
 				gsTrackList.pop_back();

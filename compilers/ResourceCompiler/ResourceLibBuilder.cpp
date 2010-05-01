@@ -75,7 +75,7 @@ BOOL MR_ResourceLibBuilder::Export(const char *pFileName)
 {
 	BOOL lReturnValue = TRUE;
 
-	RecordFile lFile;
+	MfcRecordFile lFile;
 
 	lReturnValue = lFile.CreateForWrite(pFileName, 1, "\x8\rFireball object factory resource file, (c)GrokkSoft 1996\n\x1a");
 

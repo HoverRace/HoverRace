@@ -140,7 +140,7 @@ MR_NetworkSession::~MR_NetworkSession()
 				MR_SendRaceResult(mWindow, mSession.GetTitle(),
 					lPlayer->mBestLap, mMajorID, mMinorID,
 					mNetInterface.GetPlayerName(-1),
-					mSession.GetCurrentMazeFile()->GetCheckSum(),
+					mSession.GetCurrentMazeFile()->GetAlignMode(),
 					mainCharacter[0]->GetHoverModel(),
 					(lPlayer->mNbCompletedLap == -1) ? lPlayer->mFinishTime : 0,
 					(lPlayer->mNbCompletedLap == -1) ? lTotalLap : 0,
