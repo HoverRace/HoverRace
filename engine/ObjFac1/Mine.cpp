@@ -56,7 +56,7 @@ MR_Int32 MR_Mine::RayLen() const
 } MR_Mine::MR_Mine(const MR_ObjectFromFactoryId & pId, MR_ResourceLib* resourceLib)
 :MR_FreeElementBase(pId)
 {
-	mEffectList.AddTail(&mEffect);
+	mEffectList.push_back(&mEffect);
 	mActor = resourceLib->GetActor(MR_MINE);
 
 	mOnGround = FALSE;

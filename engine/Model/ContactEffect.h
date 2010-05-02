@@ -23,6 +23,8 @@
 #ifndef CONTACT_EFFECT_H
 #define CONTACT_EFFECT_H
 
+#include <list>
+
 #include "../Model/Shapes.h"
 
 #ifdef MR_ENGINE
@@ -42,10 +44,7 @@ class MR_DllDeclare MR_ContactEffect
 		virtual const MR_ContactEffect *GetAlternate() const;
 		// Usually return NULL
 };
-
-class MR_DllDeclare MR_ContactEffectList:public CList < MR_ContactEffect *, MR_ContactEffect * >
-{
-};
+typedef std::list<MR_ContactEffect*> MR_ContactEffectList;
 
 #undef MR_DllDeclare
 #endif

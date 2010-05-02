@@ -72,7 +72,7 @@ MR_BumperGate::MR_BumperGate(const MR_ObjectFromFactoryId & pId, MR_ResourceLib*
 	mCurrentFrame = mLastState;
 	mCurrentSequence = 0;
 
-	mEffectList.AddTail(&mCollisionEffect);
+	mEffectList.push_back(&mCollisionEffect);
 
 }
 

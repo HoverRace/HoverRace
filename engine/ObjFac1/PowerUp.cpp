@@ -57,7 +57,7 @@ MR_Int32 MR_PowerUp::RayLen() const
 MR_PowerUp::MR_PowerUp(const MR_ObjectFromFactoryId & pId, MR_ResourceLib* resourceLib)
 	:MR_FreeElementBase(pId)
 {
-	mEffectList.AddTail(&mPowerUpEffect);
+	mEffectList.push_back(&mPowerUpEffect);
 	mActor = resourceLib->GetActor(MR_PWRUP);
 
 	mOrientation = 0;

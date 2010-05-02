@@ -54,7 +54,7 @@ MR_Int32 MR_FuelSource::RayLen() const
 :MR_FreeElement(pId)
 {
 	mFuelEffect.mFuelQty = cFuelGain;
-	mContactEffectList.AddTail(&mFuelEffect);
+	mContactEffectList.push_back(&mFuelEffect);
 }
 
 MR_FuelSource::~MR_FuelSource()

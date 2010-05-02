@@ -42,6 +42,7 @@
 // Commonly-used STL headers.
 #include <algorithm>
 #include <exception>
+#include <list>
 #include <map>
 #include <set>
 #include <sstream>

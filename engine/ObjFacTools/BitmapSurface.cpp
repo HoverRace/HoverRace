@@ -42,7 +42,7 @@ MR_BitmapSurface::MR_BitmapSurface(const MR_ObjectFromFactoryId & pId)
 
 	if(!gLocalInitialized) {
 		gLocalInitialized = TRUE;
-		gEffectList.AddTail(&gEffect);
+		gEffectList.push_back(&gEffect);
 
 		gEffect.mWeight = MR_InertialMoment::eInfiniteWeight;
 		gEffect.mXSpeed = 0;
@@ -62,7 +62,7 @@ MR_BitmapSurface::MR_BitmapSurface(const MR_ObjectFromFactoryId & pId, /*const *
 
 	if(!gLocalInitialized) {
 		gLocalInitialized = TRUE;
-		gEffectList.AddTail(&gEffect);
+		gEffectList.push_back(&gEffect);
 
 		gEffect.mWeight = MR_InertialMoment::eInfiniteWeight;
 		gEffect.mXSpeed = 0;
@@ -83,7 +83,7 @@ MR_BitmapSurface::MR_BitmapSurface(const MR_ObjectFromFactoryId & pId, MR_ResBit
 
 	if(!gLocalInitialized) {
 		gLocalInitialized = TRUE;
-		gEffectList.AddTail(&gEffect);
+		gEffectList.push_back(&gEffect);
 
 		gEffect.mWeight = MR_InertialMoment::eInfiniteWeight;
 		gEffect.mXSpeed = 0;

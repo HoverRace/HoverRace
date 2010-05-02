@@ -186,7 +186,7 @@ MR_MainCharacter::MR_MainCharacter(const MR_ObjectFromFactoryId & pId)
 	mCollisionShape.mRay = eCharacterRay;
 	mContactShape.mRay = eCharacterContactRay;
 
-	mContactEffectList.AddTail(&mContactEffect);
+	mContactEffectList.push_back(&mContactEffect);
 
 	mNbLapForRace = 5;							  // Hard coded default
 	mLapCount = 0;

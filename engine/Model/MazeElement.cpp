@@ -78,10 +78,10 @@ const MR_ContactEffectList *MR_Element::GetEffectList()
 void MR_Element::ApplyEffects(const MR_ContactEffectList * pList, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 pZMin, MR_Int32 pZMax, MR_Level * pLevel)
 {
 	if(pList != NULL) {
-		POSITION lPos = pList->GetHeadPosition();
-
-		while(lPos != NULL) {
-			const MR_ContactEffect *lEffect = pList->GetNext(lPos);
+		for (MR_ContactEffectList::const_iterator iter = pList->begin();
+			iter != pList->end(); ++iter)
+		{
+			const MR_ContactEffect *lEffect = *iter;
 			ApplyEffect(lEffect, pTime, pDuration, pValidDirection, pHorizontalDirection, pZMin, pZMax, pLevel);
 		}
 	}

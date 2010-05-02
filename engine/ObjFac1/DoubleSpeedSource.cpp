@@ -52,7 +52,7 @@ MR_Int32 MR_DoubleSpeedSource::RayLen() const
 } MR_DoubleSpeedSource::MR_DoubleSpeedSource(const MR_ObjectFromFactoryId & pId)
 :MR_FreeElement(pId)
 {
-	mContactEffectList.AddTail(&mSpeedEffect);
+	mContactEffectList.push_back(&mSpeedEffect);
 }
 
 MR_DoubleSpeedSource::~MR_DoubleSpeedSource()

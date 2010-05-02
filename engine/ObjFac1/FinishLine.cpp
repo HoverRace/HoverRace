@@ -53,7 +53,7 @@ MR_Int32 MR_FinishLine::RayLen() const
 :MR_FreeElement(pId)
 {
 	mEffect.mType = pType;
-	mContactEffectList.AddTail(&mEffect);
+	mContactEffectList.push_back(&mEffect);
 }
 
 MR_FinishLine::~MR_FinishLine()

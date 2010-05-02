@@ -38,7 +38,7 @@ MR_TestElement::MR_TestElement(const MR_ObjectFromFactoryId & pId, MR_ResourceLi
 	mContactShape.mRay = 300;
 
 	mContactEffect.mWeight = 90;
-	mContactEffectList.AddTail(&mContactEffect);
+	mContactEffectList.push_back(&mContactEffect);
 }
 
 MR_TestElement::~MR_TestElement()

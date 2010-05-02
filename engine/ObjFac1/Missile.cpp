@@ -77,8 +77,8 @@ MR_Missile::MR_Missile(const MR_ObjectFromFactoryId & pId, MR_ResourceLib* resou
 	mXSpeed = 0;
 	mYSpeed = 0;
 	mBounceSoundEvent = FALSE;
-	mEffectList.AddTail(&mCollisionEffect);
-	mEffectList.AddTail(&mLostOfControlEffect);
+	mEffectList.push_back(&mCollisionEffect);
+	mEffectList.push_back(&mLostOfControlEffect);
 	mActor = resourceLib->GetActor(MR_MISSILE);
 
 	mBounceSound = resourceLib->GetShortSound(MR_SND_MISSILE_BOUNCE)->GetSound();
