@@ -20,9 +20,13 @@
 //
 
 #include "stdafx.h"
+
+#include "../Parcel/ObjStream.h"
+#include "ResourceLib.h"
+
 #include "ResActor.h"
 
-#include "ResourceLib.h"
+using HoverRace::Parcel::ObjStream;
 
 // ResActor
 //
@@ -53,10 +57,10 @@ int MR_ResActor::GetFrameCount(int pSequence) const
 	return mSequenceList[pSequence].mNbFrame;
 } 
 
-void MR_ResActor::Serialize(CArchive & pArchive, MR_ResourceLib * pLib)
+void MR_ResActor::Serialize(ObjStream &pArchive, MR_ResourceLib *pLib)
 {
 
-	if(pArchive.IsStoring()) {
+	if(pArchive.IsWriting()) {
 		pArchive << mNbSequence;
 	}
 	else {
@@ -95,9 +99,9 @@ MR_ResActor::Sequence::~Sequence()
 	delete[]mFrameList;
 }
 
-void MR_ResActor::Sequence::Serialize(CArchive & pArchive, MR_ResourceLib * pLib)
+void MR_ResActor::Sequence::Serialize(ObjStream &pArchive, MR_ResourceLib *pLib)
 {
-	if(pArchive.IsStoring()) {
+	if(pArchive.IsWriting()) {
 		pArchive << mNbFrame;
 	}
 	else {
@@ -148,11 +152,11 @@ void MR_ResActor::Frame::Clean()
 	}
 }
 
-void MR_ResActor::Frame::Serialize(CArchive & pArchive, MR_ResourceLib * pLib)
+void MR_ResActor::Frame::Serialize(ObjStream &pArchive, MR_ResourceLib *pLib)
 {
 	int lCounter;
 
-	if(pArchive.IsStoring()) {
+	if(pArchive.IsWriting()) {
 		pArchive << mNbComponent;
 
 		for(lCounter = 0; lCounter < mNbComponent; lCounter++) {
@@ -221,11 +225,11 @@ MR_ResActor::eComponentType MR_ResActor::Patch::GetType() const
 	return ePatch;
 }
 
-void MR_ResActor::Patch::Serialize(CArchive & pArchive, MR_ResourceLib * pLib)
+void MR_ResActor::Patch::Serialize(ObjStream &pArchive, MR_ResourceLib *pLib)
 {
 	int lCounter;
 
-	if(pArchive.IsStoring()) {
+	if(pArchive.IsWriting()) {
 		pArchive << mURes;
 		pArchive << mVRes;
 		pArchive << mBitmap->GetResourceId();	  //bitmaptype is serialize using the Id of the bitmap

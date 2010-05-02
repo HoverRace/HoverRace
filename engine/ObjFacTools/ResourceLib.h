@@ -34,6 +34,12 @@
 #define MR_DllDeclare   __declspec( dllimport )
 #endif
 
+namespace HoverRace {
+	namespace Parcel {
+		class ObjStream;
+	}
+}
+
 class MR_ResourceLib
 {
 	// Each module can have its own MR_ResourceLib
@@ -47,10 +53,10 @@ class MR_ResourceLib
 		CMap <int, int, MR_ResShortSound *, MR_ResShortSound *> mShortSoundList;
 		CMap <int, int, MR_ResContinuousSound *, MR_ResContinuousSound *> mContinuousSoundList;
 
-		void LoadBitmaps(CArchive &pArchive);
-		void LoadActors(CArchive &pArchive);
-		void LoadSprites(CArchive &pArchive);
-		void LoadSounds(CArchive &pArchive);
+		void LoadBitmaps(HoverRace::Parcel::ObjStream &pArchive);
+		void LoadActors(HoverRace::Parcel::ObjStream &pArchive);
+		void LoadSprites(HoverRace::Parcel::ObjStream &pArchive);
+		void LoadSounds(HoverRace::Parcel::ObjStream &pArchive);
 
 		MR_DllDeclare MR_ResourceLib();
 

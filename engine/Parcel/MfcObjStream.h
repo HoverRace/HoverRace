@@ -1,6 +1,6 @@
 
-// RecordFile.h
-// Base class for parcel implementations.
+// MfcObjStream.h
+// CArchive implementation of ObjStream.
 //
 // Copyright (c) 2010 Michael Imamura.
 //
@@ -34,30 +34,33 @@
 #	define MR_DllDeclare
 #endif
 
+class CFile;
+
 namespace HoverRace {
 namespace Parcel {
 
-/**
- * Base class for parcel implementations.
- * @author Michael Imamura
- */
-class MR_DllDeclare RecordFile {
+class MR_DllDeclare MfcObjStream : public ObjStream {
+	typedef ObjStream SUPER;
 	public:
-		RecordFile() { }
-		virtual ~RecordFile() { }
+		MfcObjStream(CFile *file, bool writing);
+		virtual ~MfcObjStream() { }
 
-		virtual bool CreateForWrite(const char *filename, int numRecords, const char *title=NULL) = 0;
-		virtual bool OpenForWrite(const char *filename) = 0;
-		virtual bool OpenForRead(const char *filename, bool validateChecksum=false) = 0;
+		virtual void Write(const void *buf, size_t ct) { archive.Write(buf, ct); }
 
-		virtual DWORD GetAlignMode() = 0;
+		virtual void WriteUInt8(MR_UInt8 i) { archive << i; }
+		virtual void WriteInt32(MR_Int32 i) { archive << i; }
+		virtual void WriteUInt32(MR_UInt32 i) { archive << i; }
+		virtual void WriteCString(const CString &s) { archive << s; }
 
-		virtual int GetNbRecords() const = 0;
-		virtual void SelectRecord(int i) = 0;
-		virtual bool BeginANewRecord() = 0;
+		virtual void Read(void *buf, size_t ct) { archive.Read(buf, ct); }
 
-		virtual ObjStreamPtr StreamIn() = 0;
-		virtual ObjStreamPtr StreamOut() = 0;
+		virtual void ReadUInt8(MR_UInt8 &i) { archive >> i; }
+		virtual void ReadInt32(MR_Int32 &i) { archive >> i; }
+		virtual void ReadUInt32(MR_UInt32 &i) { archive >> i; }
+		virtual void ReadCString(CString &s) { archive >> s; }
+
+	private:
+		CArchive archive;
 };
 
 }  // namespace Parcel

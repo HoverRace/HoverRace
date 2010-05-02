@@ -35,11 +35,13 @@
 #	define MR_DllDeclare
 #endif
 
-// All geometrical coordinates are in milimeters,
+namespace HoverRace {
+	namespace Parcel {
+		class ObjStream;
+	}
+}
 
-#ifndef NO_SERIALIZE
-class CArchive;
-#endif
+// All geometrical coordinates are in milimeters,
 
 class MR_DllDeclare MR_2DCoordinate
 {
@@ -47,9 +49,7 @@ class MR_DllDeclare MR_2DCoordinate
 		MR_Int32 mX;
 		MR_Int32 mY;
 
-#ifndef NO_SERIALIZE
-		void Serialize(CArchive & pArchive);
-#endif
+		void Serialize(HoverRace::Parcel::ObjStream &pArchive);
 
 		// Comparaison operator
 		BOOL operator ==(const MR_2DCoordinate & pCoordinate) const;
@@ -69,9 +69,7 @@ class MR_DllDeclare MR_3DCoordinate:public MR_2DCoordinate
 	public:
 		MR_Int32 mZ;
 
-#ifndef NO_SERIALIZE
-		void Serialize(CArchive & pArchive);
-#endif
+		void Serialize(HoverRace::Parcel::ObjStream &pArchive);
 
 		// Comparaison operator
 

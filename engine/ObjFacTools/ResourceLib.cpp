@@ -21,6 +21,8 @@
 
 #include "StdAfx.h"
 
+#include "../Parcel/ObjStream.h"
+
 #include "ResourceLib.h"
 
 #define new DEBUG_NEW
@@ -192,7 +194,7 @@ const MR_ResContinuousSound *MR_ResourceLib::GetContinuousSound(int pSoundId)
  *
  * @param pArchive The archive to read from
  */
-void MR_ResourceLib::LoadBitmaps(CArchive & pArchive)
+void MR_ResourceLib::LoadBitmaps(ObjStream &pArchive)
 {
 	int lNbBitmap;
 
@@ -217,7 +219,7 @@ void MR_ResourceLib::LoadBitmaps(CArchive & pArchive)
  *
  * @param pArchive The archive to read from
  */
-void MR_ResourceLib::LoadActors(CArchive & pArchive)
+void MR_ResourceLib::LoadActors(ObjStream &pArchive)
 {
 	int lNbActor;
 
@@ -241,7 +243,7 @@ void MR_ResourceLib::LoadActors(CArchive & pArchive)
  *
  * @param pArchive The archive to read from
  */
-void MR_ResourceLib::LoadSprites(CArchive & pArchive)
+void MR_ResourceLib::LoadSprites(ObjStream &pArchive)
 {
 	int lNbSprite;
 
@@ -266,7 +268,7 @@ void MR_ResourceLib::LoadSprites(CArchive & pArchive)
  *
  * @param pArchive The archive to read from
  */
-void MR_ResourceLib::LoadSounds(CArchive & pArchive)
+void MR_ResourceLib::LoadSounds(ObjStream &pArchive)
 {
 	int lNbSound;
 	int lCounter;

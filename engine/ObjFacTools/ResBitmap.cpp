@@ -20,6 +20,9 @@
 //
 
 #include "StdAfx.h"
+
+#include "../Parcel/ObjStream.h"
+
 #include "ResBitmap.h"
 
 #define new DEBUG_NEW
@@ -53,11 +56,11 @@ int MR_ResBitmap::GetResourceId() const
  *
  * @param pArchive The archive to write to / read from
  */
-void MR_ResBitmap::Serialize(CArchive &pArchive)
+void MR_ResBitmap::Serialize(HoverRace::Parcel::ObjStream &pArchive)
 {
 	int lCounter;
 
-	if(pArchive.IsStoring()) {
+	if(pArchive.IsWriting()) {
 		pArchive << mWidth;
 		pArchive << mHeight;
 		pArchive << mXRes;
@@ -173,9 +176,9 @@ MR_ResBitmap::SubBitmap::~SubBitmap()
 	delete[] mColumnPtr;
 }
 
-void MR_ResBitmap::SubBitmap::Serialize(CArchive & pArchive)
+void MR_ResBitmap::SubBitmap::Serialize(HoverRace::Parcel::ObjStream &pArchive)
 {
-	if(pArchive.IsStoring()) {
+	if(pArchive.IsWriting()) {
 
 		pArchive << mXRes;
 		pArchive << mYRes;

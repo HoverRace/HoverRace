@@ -21,6 +21,8 @@
 
 #include "StdAfx.h"
 
+#include "MfcObjStream.h"
+
 #include "MfcRecordFile.h"
 
 #define new DEBUG_NEW
@@ -35,7 +37,7 @@ class MfcRecordFileTable
 	public:
 		CString mFileTitle;
 		BOOL mSumValid;
-		DWORD mChkSum;							  // Check sum of the control record
+		MR_UInt32 mChkSum;						  // Check sum of the control record
 		int mRecordUsed;						  // Nb of record used
 		int mRecordMax;							  // Ne of record allowed
 		DWORD *mRecordList;
@@ -44,7 +46,7 @@ class MfcRecordFileTable
 		MfcRecordFileTable(int pNbRecords);
 		~MfcRecordFileTable();
 
-		void Serialize(CArchive & pArchive);
+		void Serialize(ObjStream &pArchive);
 
 };
 
@@ -79,12 +81,12 @@ MfcRecordFileTable::~MfcRecordFileTable()
 	delete[]mRecordList;
 }
 
-void MfcRecordFileTable::Serialize(CArchive & pArchive)
+void MfcRecordFileTable::Serialize(ObjStream &pArchive)
 {
 
-	if(pArchive.IsStoring()) {
-		pArchive << mFileTitle << (int) 0		  // Padding for checksum purpose
-			<< (int) 0 << mSumValid << mChkSum << mRecordUsed << mRecordMax << (int) 0 << (int) 0;
+	if(pArchive.IsWriting()) {
+		pArchive << mFileTitle << (MR_Int32) 0		  // Padding for checksum purpose
+			<< (MR_Int32) 0 << mSumValid << mChkSum << mRecordUsed << mRecordMax << (MR_Int32) 0 << (MR_Int32) 0;
 
 		if(mRecordMax > 0) {
 			ASSERT(mRecordList != NULL);
@@ -108,7 +110,7 @@ void MfcRecordFileTable::Serialize(CArchive & pArchive)
 		if((mFileTitle.Find("HoverRace track file") == -1) &&
 		   (mFileTitle.Find("Fireball object factory resource file") == -1)) {
 			char error[200];
-			sprintf(error, "Corrupt file: %s\n", pArchive.GetFile()->GetFileName());
+			sprintf(error, "Corrupt file: %s\n", pArchive.GetName().c_str());
 			OutputDebugString(error);
 		} else {
 			if(mRecordMax > 0) {
@@ -182,7 +184,7 @@ bool MfcRecordFile::CreateForWrite(const char *pFileName, int pNbRecords, const 
 
 			// Write the mTable to reserve some space and position the file on the first record
 			{
-				CArchive lArchive(this, CArchive::store);
+				MfcObjStream lArchive(this, true);
 
 				mTable->Serialize(lArchive);
 			}
@@ -205,7 +207,7 @@ bool MfcRecordFile::OpenForWrite(const char *pFileName)
 		lReturnValue = CFile::Open(pFileName, modeReadWrite | typeBinary | shareExclusive);
 
 		if(lReturnValue) {
-			CArchive lArchive(this, CArchive::load);
+			MfcObjStream lArchive(this, false);
 			mTable = new MfcRecordFileTable;
 
 			mTable->Serialize(lArchive);
@@ -258,7 +260,7 @@ bool MfcRecordFile::OpenForRead(const char *pFileName, bool pValidateChkSum)
 		lReturnValue = CFile::Open(pFileName, modeRead | typeBinary | shareDenyWrite, &e);
 
 		if(lReturnValue) {
-			CArchive lArchive(this, CArchive::load | CArchive::bNoFlushOnDelete);
+			MfcObjStream lArchive(this, false);
 
 			mTable = new MfcRecordFileTable;
 			mTable->Serialize(lArchive);
@@ -465,7 +467,7 @@ void MfcRecordFile::Close()
 
 		Seek(0, begin);
 
-		CArchive lArchive(this, CArchive::store);
+		MfcObjStream lArchive(this, true);
 
 		mTable->Serialize(lArchive);
 	}
@@ -542,7 +544,7 @@ void MfcRecordFile::Dump(CDumpContext & dc) const
  */
 ObjStreamPtr MfcRecordFile::StreamIn()
 {
-	return ObjStreamPtr(new ObjStream(this, CArchive::load));
+	return ObjStreamPtr(new MfcObjStream(this, false));
 }
 
 /**
@@ -553,7 +555,7 @@ ObjStreamPtr MfcRecordFile::StreamIn()
  */
 ObjStreamPtr MfcRecordFile::StreamOut()
 {
-	return ObjStreamPtr(new ObjStream(this, CArchive::store));
+	return ObjStreamPtr(new MfcObjStream(this, true));
 }
 
 
