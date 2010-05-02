@@ -26,15 +26,21 @@
 
 #include "../../engine/ObjFacTools/ResourceLib.h"
 
+namespace HoverRace {
+	namespace Parcel {
+		class ObjStream;
+	}
+}
+
 class MR_ResourceLibBuilder:public MR_ResourceLib
 {
 	// Each module can have its own MR_BitmapLib
 	protected:
 
-		void WriteBitmaps(CArchive & pArchive);
-		void WriteActors(CArchive & pArchive);
-		void WriteSprites(CArchive & pArchive);
-		void WriteSounds(CArchive & pArchive);
+		void WriteBitmaps(HoverRace::Parcel::ObjStream &pArchive);
+		void WriteActors(HoverRace::Parcel::ObjStream &pArchive);
+		void WriteSprites(HoverRace::Parcel::ObjStream &pArchive);
+		void WriteSounds(HoverRace::Parcel::ObjStream &pArchive);
 
 	public:
 		MR_ResourceLibBuilder();

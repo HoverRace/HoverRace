@@ -20,9 +20,14 @@
 //
 
 #include "StdAfx.h"
+
+#include "../Parcel/ObjStream.h"
+
 #include "ResSound.h"
 
 #define new DEBUG_NEW
+
+using HoverRace::Parcel::ObjStream;
 
 MR_ResShortSound::MR_ResShortSound(int pResourceId)
 {
@@ -48,9 +53,9 @@ int MR_ResShortSound::GetResourceId() const
 	return mResourceId;
 }
 
-void MR_ResShortSound::Serialize(CArchive &pArchive)
+void MR_ResShortSound::Serialize(ObjStream &pArchive)
 {
-	if(pArchive.IsStoring()) {
+	if(pArchive.IsWriting()) {
 		pArchive << mNbCopy;
 		pArchive << mDataLen;
 		pArchive.Write(mData, mDataLen);
@@ -103,9 +108,9 @@ int MR_ResContinuousSound::GetResourceId() const
 	return mResourceId;
 }
 
-void MR_ResContinuousSound::Serialize(CArchive & pArchive)
+void MR_ResContinuousSound::Serialize(ObjStream &pArchive)
 {
-	if(pArchive.IsStoring()) {
+	if(pArchive.IsWriting()) {
 		pArchive << mNbCopy;
 		pArchive << mDataLen;
 		pArchive.Write(mData, mDataLen);

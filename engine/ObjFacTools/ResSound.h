@@ -31,6 +31,12 @@
 #define MR_DllDeclare   __declspec( dllimport )
 #endif
 
+namespace HoverRace {
+	namespace Parcel {
+		class ObjStream;
+	}
+}
+
 class MR_ResShortSound
 {
 	protected:
@@ -47,7 +53,7 @@ class MR_ResShortSound
 		MR_DllDeclare ~MR_ResShortSound();
 
 		MR_DllDeclare int GetResourceId() const;
-		MR_DllDeclare void Serialize(CArchive & pArchive);
+		MR_DllDeclare void Serialize(HoverRace::Parcel::ObjStream &pArchive);
 
 		MR_DllDeclare MR_ShortSound *GetSound() const;
 
@@ -69,7 +75,7 @@ class MR_ResContinuousSound
 		MR_DllDeclare ~ MR_ResContinuousSound();
 
 		MR_DllDeclare int GetResourceId() const;
-		MR_DllDeclare void Serialize(CArchive & pArchive);
+		MR_DllDeclare void Serialize(HoverRace::Parcel::ObjStream &pArchive);
 
 		MR_DllDeclare MR_ContinuousSound *GetSound() const;
 

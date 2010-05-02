@@ -22,6 +22,8 @@
 
 #pragma once
 
+#include <string>
+
 #include "../Util/MR_Types.h"
 
 #ifdef _WIN32
@@ -55,10 +57,16 @@ class MR_DllDeclare ObjStream {
 		bool IsWriting() const { return writing; }
 
 	public:
-		virtual void Write(const void *buf, size_t ct);
+		virtual void Write(const void *buf, size_t ct) = 0;
 
 		virtual void WriteUInt8(MR_UInt8 i) = 0;
 		friend ObjStream &operator<<(ObjStream &os, MR_UInt8 i) { os.WriteUInt8(i); return os; }
+
+		virtual void WriteInt16(MR_Int16 i) = 0;
+		friend ObjStream &operator<<(ObjStream &os, MR_Int16 i) { os.WriteInt16(i); return os; }
+
+		virtual void WriteUInt16(MR_UInt16 i) = 0;
+		friend ObjStream &operator<<(ObjStream &os, MR_UInt16 i) { os.WriteUInt16(i); return os; }
 
 		virtual void WriteInt32(MR_Int32 i) = 0;
 		friend ObjStream &operator<<(ObjStream &os, MR_Int32 i) { os.WriteInt32(i); return os; }
@@ -71,10 +79,16 @@ class MR_DllDeclare ObjStream {
 			friend ObjStream &operator<<(ObjStream &os, const CString &s) { os.WriteCString(s); return os; }
 #		endif
 
-		virtual void Read(void *buf, size_t ct);
+		virtual void Read(void *buf, size_t ct) = 0;
 
 		virtual void ReadUInt8(MR_UInt8 &i) = 0;
 		friend ObjStream &operator>>(ObjStream &os, MR_UInt8 &i) { os.ReadUInt8(i); return os; }
+
+		virtual void ReadInt16(MR_Int16 &i) = 0;
+		friend ObjStream &operator>>(ObjStream &os, MR_Int16 &i) { os.ReadInt16(i); return os; }
+
+		virtual void ReadUInt16(MR_UInt16 &i) = 0;
+		friend ObjStream &operator>>(ObjStream &os, MR_UInt16 &i) { os.ReadUInt16(i); return os; }
 
 		virtual void ReadInt32(MR_Int32 &i) = 0;
 		friend ObjStream &operator>>(ObjStream &os, MR_Int32 &i) { os.ReadInt32(i); return os; }

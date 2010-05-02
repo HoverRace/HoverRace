@@ -19,10 +19,13 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
+
+#include "../Parcel/ObjStream.h"
 
 #include "MazeElement.h"
-// #include "Shapes.h"
+
+using HoverRace::Parcel::ObjStream;
 
 // MR_Element default behavior
 
@@ -47,11 +50,11 @@ BOOL MR_Element::InitString(const char *pInitStr)
 	return lReturnValue;
 }
 
-void MR_Element::SerializeLogicState(CArchive & /*pArchive */ )
+void MR_Element::SerializeLogicState(ObjStream & /*pArchive */ )
 {												  /* The default function do notting */
 }
 
-void MR_Element::Serialize(CArchive & pArchive)
+void MR_Element::Serialize(ObjStream & pArchive)
 {
 	MR_ObjectFromFactory::Serialize(pArchive);
 }

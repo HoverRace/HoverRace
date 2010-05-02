@@ -21,9 +21,13 @@
 
 #include "stdafx.h"
 
+#include "../Parcel/ObjStream.h"
+
 #include "Level.h"
 
 #define new DEBUG_NEW
+
+using HoverRace::Parcel::ObjStream;
 
 // MR_Level implementation
 MR_Level::MR_Level(BOOL pAllowRendering, char pGameOpts)
@@ -80,13 +84,13 @@ void MR_Level::SetBroadcastHook(void (*pCreationHook) (MR_FreeElement *, int, vo
 }
 
 // Serialization
-void MR_Level::Serialize(CArchive & pArchive)
+void MR_Level::Serialize(ObjStream &pArchive)
 {
 	int lCounter;
 	int lPlayerNo;
 
 	// Serialize the starting position
-	if(pArchive.IsStoring()) {
+	if(pArchive.IsWriting()) {
 		pArchive << mNbPlayer;
 
 		for(lPlayerNo = 0; lPlayerNo < mNbPlayer; lPlayerNo++) {
@@ -110,7 +114,7 @@ void MR_Level::Serialize(CArchive & pArchive)
 	}
 
 	// Serialize the structure
-	if(pArchive.IsStoring()) {
+	if(pArchive.IsWriting()) {
 		pArchive << mNbRoom;
 		pArchive << mNbFeature;
 	}
@@ -145,7 +149,7 @@ void MR_Level::Serialize(CArchive & pArchive)
 	for(lCounter = 0; lCounter < mNbRoom; lCounter++) {
 		FreeElement::SerializeList(pArchive, &mFreeElementClassifiedByRoomList[lCounter]);
 
-		if(!pArchive.IsStoring()) {
+		if(!pArchive.IsWriting()) {
 			FreeElement *lCurrentElem = mFreeElementClassifiedByRoomList[lCounter];
 
 			while(lCurrentElem != NULL) {
@@ -166,7 +170,7 @@ void MR_Level::Serialize(CArchive & pArchive)
 
 	// remove unwanted elements
 	for(lCounter = 0; lCounter < mNbRoom; lCounter++) {
-		if(!pArchive.IsStoring()) {
+		if(!pArchive.IsWriting()) {
 			FreeElement *lCurrentElem = mFreeElementClassifiedByRoomList[lCounter];
 			
 
@@ -566,11 +570,11 @@ MR_Level::Room::AudibleRoom::~AudibleRoom()
 	delete[]mSoundCoefficient;
 }
 
-void MR_Level::Room::AudibleRoom::Serialize(CArchive & pArchive)
+void MR_Level::Room::AudibleRoom::Serialize(ObjStream & pArchive)
 {
 	int lCounter;
 
-	if(pArchive.IsStoring()) {
+	if(pArchive.IsWriting()) {
 		pArchive << mNbVertexSources;
 
 		for(lCounter = 0; lCounter < mNbVertexSources; lCounter++) {
@@ -671,11 +675,11 @@ MR_Level::Section::~Section()
 
 }
 
-void MR_Level::Section::SerializeStructure(CArchive & pArchive)
+void MR_Level::Section::SerializeStructure(ObjStream & pArchive)
 {
 	int lCounter;
 
-	if(pArchive.IsStoring()) {
+	if(pArchive.IsWriting()) {
 		pArchive << mNbVertex;
 
 		pArchive << mFloorLevel << mCeilingLevel;
@@ -714,7 +718,7 @@ void MR_Level::Section::SerializeStructure(CArchive & pArchive)
 	MR_ObjectFromFactory::SerializePtr(pArchive, (MR_ObjectFromFactory * &)mFloorTexture);
 	MR_ObjectFromFactory::SerializePtr(pArchive, (MR_ObjectFromFactory * &)mCeilingTexture);
 
-	if(!pArchive.IsStoring()) {
+	if(!pArchive.IsWriting()) {
 		mWallTexture = new MR_SurfaceElement *[mNbVertex];
 	}
 
@@ -723,7 +727,7 @@ void MR_Level::Section::SerializeStructure(CArchive & pArchive)
 	}
 }
 
-void MR_Level::Section::SerializeSurfacesLogicState(CArchive & pArchive)
+void MR_Level::Section::SerializeSurfacesLogicState(ObjStream & pArchive)
 {
 	// Serialize the textures state
 	if(mFloorTexture != NULL) {
@@ -769,12 +773,12 @@ MR_Level::Room::~Room()
 	delete[]mVisibleCeilingList;
 }
 
-void MR_Level::Room::SerializeStructure(CArchive & pArchive)
+void MR_Level::Room::SerializeStructure(ObjStream & pArchive)
 {
 	int lCounter;
 	Section::SerializeStructure(pArchive);
 
-	if(pArchive.IsStoring()) {
+	if(pArchive.IsWriting()) {
 		pArchive << mNbChild;
 		pArchive << mNbVisibleRoom;
 		pArchive << mNbVisibleSurface;
@@ -855,11 +859,11 @@ void MR_Level::Room::SerializeStructure(CArchive & pArchive)
 
 // class MR_Level::Feature
 
-void MR_Level::Feature::SerializeStructure(CArchive & pArchive)
+void MR_Level::Feature::SerializeStructure(ObjStream & pArchive)
 {
 	Section::SerializeStructure(pArchive);
 
-	if(pArchive.IsStoring()) {
+	if(pArchive.IsWriting()) {
 		pArchive << mParentSectionIndex;
 	}
 	else {
@@ -907,9 +911,9 @@ void MR_Level::FreeElement::LinkTo(FreeElement ** pPrevLink)
 	}
 }
 
-void MR_Level::FreeElement::SerializeList(CArchive & pArchive, FreeElement ** pListHead)
+void MR_Level::FreeElement::SerializeList(ObjStream & pArchive, FreeElement ** pListHead)
 {
-	if(pArchive.IsStoring()) {
+	if(pArchive.IsWriting()) {
 		FreeElement *lFreeElement = *pListHead;
 
 		while(lFreeElement) {
@@ -949,9 +953,9 @@ void MR_Level::FreeElement::SerializeList(CArchive & pArchive, FreeElement ** pL
 }
 
 // class MR_SectionId
-void MR_SectionId::Serialize(CArchive & pArchive)
+void MR_SectionId::Serialize(ObjStream & pArchive)
 {
-	if(pArchive.IsStoring()) {
+	if(pArchive.IsWriting()) {
 		pArchive << (int) mType;
 		pArchive << mId;
 	}

@@ -48,6 +48,8 @@ class MR_DllDeclare MfcObjStream : public ObjStream {
 		virtual void Write(const void *buf, size_t ct) { archive.Write(buf, ct); }
 
 		virtual void WriteUInt8(MR_UInt8 i) { archive << i; }
+		virtual void WriteInt16(MR_Int16 i) { archive << i; }
+		virtual void WriteUInt16(MR_UInt16 i) { archive << i; }
 		virtual void WriteInt32(MR_Int32 i) { archive << i; }
 		virtual void WriteUInt32(MR_UInt32 i) { archive << i; }
 		virtual void WriteCString(const CString &s) { archive << s; }
@@ -55,6 +57,8 @@ class MR_DllDeclare MfcObjStream : public ObjStream {
 		virtual void Read(void *buf, size_t ct) { archive.Read(buf, ct); }
 
 		virtual void ReadUInt8(MR_UInt8 &i) { archive >> i; }
+		virtual void ReadInt16(MR_Int16 &i) { archive >> i; }
+		virtual void ReadUInt16(MR_UInt16 &i) { archive >> i; }
 		virtual void ReadInt32(MR_Int32 &i) { archive >> i; }
 		virtual void ReadUInt32(MR_UInt32 &i) { archive >> i; }
 		virtual void ReadCString(CString &s) { archive >> s; }
