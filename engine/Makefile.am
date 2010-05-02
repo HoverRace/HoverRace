@@ -8,6 +8,7 @@ SUBDIRS = \
 	Net \
 	ObjFac1 \
 	ObjFacTools \
+	Parcel \
 	Script \
 	Util \
 	VideoServices
@@ -22,6 +23,7 @@ libhoverrace_engine_la_LIBADD = \
 	Net/libnet.la \
 	ObjFac1/libobjfac1.la \
 	ObjFacTools/libobjfactools.la \
+	Parcel/libparcel.la \
 	Script/libscript.la \
 	Util/libutil.la \
 	VideoServices/libvideosvc.la

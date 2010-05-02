@@ -70,6 +70,7 @@ AC_CONFIG_FILES([
 	engine/Net/Makefile
 	engine/ObjFac1/Makefile
 	engine/ObjFacTools/Makefile
+	engine/Parcel/Makefile
 	engine/Script/Makefile
 	engine/Util/Makefile
 	engine/Util/yaml/Makefile
