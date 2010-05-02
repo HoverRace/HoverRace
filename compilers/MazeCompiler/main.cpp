@@ -25,6 +25,7 @@
 #include "TrackMap.h"
 #include "Parser.h"
 #include "TrackCommonStuff.h"
+#include "../../engine/Parcel/ObjStream.h"
 #include "../../engine/Util/StrRes.h"
 #include "resource.h"
 
@@ -40,8 +41,8 @@ static void PrintUsage()
 	puts(_("Usage: MazeCompiler <outputfile> <inputfile>"));
 }
 
-static BOOL CreateHeader(FILE * pInputFile, CArchive & pDestination);
-static BOOL AddBackgroundImage(FILE * pInputFile, CArchive & pDestination);
+static BOOL CreateHeader(FILE * pInputFile, ObjStream &pDestination);
+static BOOL AddBackgroundImage(FILE * pInputFile, ObjStream &pDestination);
 
 static CString FormatStr(const char *pSrc);
 static MR_UInt8 *PCXRead(FILE * pFile, int &pXRes, int &pYRes);
@@ -245,7 +246,7 @@ int main(int pArgCount, const char **pArgStrings)
 	return lError ? 255 : 0;
 }
 
-BOOL CreateHeader(FILE * pInputFile, CArchive & pArchive)
+BOOL CreateHeader(FILE * pInputFile, ObjStream &pArchive)
 {
 	BOOL lReturnValue = TRUE;
 
@@ -331,7 +332,7 @@ CString FormatStr(const char *pSrc)
 	return lReturnValue;
 }
 
-BOOL AddBackgroundImage(FILE * pInputFile, CArchive & pDestination)
+BOOL AddBackgroundImage(FILE * pInputFile, ObjStream &pDestination)
 {
 	BOOL lReturnValue = TRUE;
 

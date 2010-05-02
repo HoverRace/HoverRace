@@ -20,8 +20,13 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
+
+#include "../Parcel/ObjStream.h"
+
 #include "Sprite.h"
+
+using HoverRace::Parcel::ObjStream;
 
 MR_Sprite::MR_Sprite()
 {
@@ -51,9 +56,9 @@ int MR_Sprite::GetItemWidth() const
 	return mWidth;
 }
 
-void MR_Sprite::Serialize(CArchive & pArchive)
+void MR_Sprite::Serialize(ObjStream &pArchive)
 {
-	if(pArchive.IsStoring()) {
+	if(pArchive.IsWriting()) {
 		pArchive << mNbItem;
 		pArchive << mItemHeight;
 		pArchive << mTotalHeight;

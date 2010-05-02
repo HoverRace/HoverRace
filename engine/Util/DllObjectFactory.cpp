@@ -24,12 +24,14 @@
 #include <map>
 
 #include "../ObjFac1/ObjFac1.h"
+#include "../Parcel/ObjStream.h"
 
 #include "DllObjectFactory.h"
 
 #define new DEBUG_NEW
 
 using HoverRace::ObjFac1::ObjFac1;
+using HoverRace::Parcel::ObjStream;
 
 // Base class for object factory "DLLs".
 // (Originally, these were real DLLs which were loaded at runtime).
@@ -212,11 +214,11 @@ const MR_ObjectFromFactoryId &MR_ObjectFromFactory::GetTypeId() const
 	return mId;
 }
 
-void MR_ObjectFromFactory::SerializePtr(CArchive & pArchive, MR_ObjectFromFactory * &pPtr)
+void MR_ObjectFromFactory::SerializePtr(ObjStream & pArchive, MR_ObjectFromFactory * &pPtr)
 {
 	MR_ObjectFromFactoryId lId = { 0, 0 };
 
-	if(pArchive.IsStoring()) {
+	if(pArchive.IsWriting()) {
 		if(pPtr != NULL) {
 			lId = pPtr->mId;
 		}
@@ -240,9 +242,9 @@ void MR_ObjectFromFactory::SerializePtr(CArchive & pArchive, MR_ObjectFromFactor
 	}
 }
 
-void MR_ObjectFromFactory::Serialize(CArchive & pArchive)
+void MR_ObjectFromFactory::Serialize(ObjStream &pArchive)
 {
-	CObject::Serialize(pArchive);
+	//CObject::Serialize(pArchive);
 
 	// Notting to serialize at that point
 	// Object type should be already initialize if Loading
@@ -250,9 +252,9 @@ void MR_ObjectFromFactory::Serialize(CArchive & pArchive)
 }
 
 // MR_ObjectFromFactoryId
-void MR_ObjectFromFactoryId::Serialize(CArchive & pArchive)
+void MR_ObjectFromFactoryId::Serialize(ObjStream &pArchive)
 {
-	if(pArchive.IsStoring()) {
+	if(pArchive.IsWriting()) {
 		pArchive << mDllId << mClassId;
 
 	}

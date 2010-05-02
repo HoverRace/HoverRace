@@ -56,6 +56,12 @@
 #define MR_DllDeclare   __declspec(dllimport)
 #endif
 
+namespace HoverRace {
+	namespace Parcel {
+		class ObjStream;
+	}
+}
+
 // Class Declaration
 class MR_Level;
 
@@ -82,7 +88,7 @@ class MR_DllDeclare MR_Element:public MR_ObjectFromFactory
 		virtual BOOL InitString(const char *pInitStr = NULL);
 
 												  // Serialize the logic component and the body of the component
-		virtual void SerializeLogicState(CArchive & pArchive);
+		virtual void SerializeLogicState(HoverRace::Parcel::ObjStream &pArchive);
 
 		// Contact effect interface
 		virtual void ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 pZMin, MR_Int32 pZMax, MR_Level * pLevel);
@@ -94,7 +100,7 @@ class MR_DllDeclare MR_Element:public MR_ObjectFromFactory
 
 	private:
 												  // Prevent overriding of the Serialize function
-		virtual void Serialize(CArchive & pArchive);
+		virtual void Serialize(HoverRace::Parcel::ObjStream &pArchive);
 };
 
 class MR_DllDeclare MR_SurfaceElement:public MR_Element

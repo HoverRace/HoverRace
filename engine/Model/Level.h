@@ -46,6 +46,11 @@
 #define OPT_ALLOW_EON		0x01
 
 // Class declaration
+namespace HoverRace {
+	namespace Parcel {
+		class ObjStream;
+	}
+}
 class MR_FreeElementHandleClass;
 typedef MR_FreeElementHandleClass *MR_FreeElementHandle;
 
@@ -57,7 +62,7 @@ class MR_SectionId
 		eSectionType mType;
 		int mId;
 
-		void Serialize(CArchive & pArchive);
+		void Serialize(HoverRace::Parcel::ObjStream &pArchive);
 };
 
 class MR_DllDeclare MR_Level
@@ -131,8 +136,8 @@ class MR_DllDeclare MR_Level
 				Section();
 				~Section();
 
-				void SerializeStructure(CArchive &pArchive);
-				void SerializeSurfacesLogicState(CArchive &pArchive);
+				void SerializeStructure(HoverRace::Parcel::ObjStream &pArchive);
+				void SerializeSurfacesLogicState(HoverRace::Parcel::ObjStream &pArchive);
 
 		};
 
@@ -142,7 +147,7 @@ class MR_DllDeclare MR_Level
 				// Connectivity
 				int mParentSectionIndex;
 
-				void SerializeStructure(CArchive & pArchive);
+				void SerializeStructure(HoverRace::Parcel::ObjStream &pArchive);
 		};
 
 		class MR_DllDeclare Room : public Section
@@ -164,7 +169,7 @@ class MR_DllDeclare MR_Level
 						AudibleRoom();
 						~AudibleRoom();
 
-						void Serialize(CArchive & pArchive);
+						void Serialize(HoverRace::Parcel::ObjStream &pArchive);
 
 				};
 
@@ -192,7 +197,7 @@ class MR_DllDeclare MR_Level
 				Room();
 				~Room();
 
-				void SerializeStructure(CArchive & pArchive);
+				void SerializeStructure(HoverRace::Parcel::ObjStream &pArchive);
 
 		};
 
@@ -209,7 +214,7 @@ class MR_DllDeclare MR_Level
 				void Unlink();
 				void LinkTo(FreeElement ** pPrevLink);
 
-				static void SerializeList(CArchive & pArchive, FreeElement ** pListHead);
+				static void SerializeList(HoverRace::Parcel::ObjStream &pArchive, FreeElement **pListHead);
 		};
 
 		// Private Data
@@ -259,7 +264,7 @@ class MR_DllDeclare MR_Level
 		void SetBroadcastHook(void (*pCreationHook) (MR_FreeElement *, int, void *), void (*pStateHook) (MR_FreeElement *, int, int, void *), void *pHookData);
 
 		// Serialisation functions
-		void Serialize(CArchive & pArchive);
+		void Serialize(HoverRace::Parcel::ObjStream &pArchive);
 
 		// Strucre Interrocation functions
 		int GetRoomCount() const;

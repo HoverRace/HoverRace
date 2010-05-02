@@ -39,6 +39,12 @@
 #define MR_DllDeclare   __declspec( dllimport )
 #endif
 
+namespace HoverRace {
+	namespace Parcel {
+		class ObjStream;
+	}
+}
+
 // Class decalration
 class MR_ObjectFromFactoryId
 {
@@ -48,7 +54,7 @@ class MR_ObjectFromFactoryId
 		MR_UInt16 mDllId;
 		MR_UInt16 mClassId;
 
-		void Serialize(CArchive & pArchive);
+		void Serialize(HoverRace::Parcel::ObjStream &pArchive);
 
 		MR_DllDeclare int operator ==(const MR_ObjectFromFactoryId & pId) const;
 };
@@ -79,8 +85,8 @@ class MR_DllDeclare MR_ObjectFromFactory:public CObject
 		// you will have to serialize the object.(To use this technique, the first time
 		// you serialize the object, you must know that the object hav not been serialize yet)
 		//
-		static void SerializePtr(CArchive & pArchive, MR_ObjectFromFactory * &pPtr);
-		virtual void Serialize(CArchive & pArchive);
+		static void SerializePtr(HoverRace::Parcel::ObjStream &pArchive, MR_ObjectFromFactory * &pPtr);
+		virtual void Serialize(HoverRace::Parcel::ObjStream &pArchive);
 
 };
 

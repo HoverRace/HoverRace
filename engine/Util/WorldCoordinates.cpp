@@ -22,11 +22,13 @@
 
 #include "StdAfx.h"
 
-// System includes
 #include <math.h>
 
-// Project Includes
+#include "../Parcel/ObjStream.h"
+
 #include "WorldCoordinates.h"
+
+using HoverRace::Parcel::ObjStream;
 
 // Data intanciation
 MR_Int16 MR_Sin[MR_2PI];
@@ -45,10 +47,10 @@ void MR_InitTrigoTables()
 }
 
 #ifndef NO_SERIALIZE
-void MR_2DCoordinate::Serialize(CArchive & pArchive)
+void MR_2DCoordinate::Serialize(ObjStream &pArchive)
 {
 
-	if(pArchive.IsStoring()) {
+	if(pArchive.IsWriting()) {
 		pArchive << mX << mY;
 	}
 	else {
@@ -68,11 +70,11 @@ BOOL MR_2DCoordinate::operator !=(const MR_2DCoordinate & pCoordinate) const
 }
 
 #ifndef NO_SERIALIZE
-void MR_3DCoordinate::Serialize(CArchive & pArchive)
+void MR_3DCoordinate::Serialize(ObjStream &pArchive)
 {
 	MR_2DCoordinate::Serialize(pArchive);
 
-	if(pArchive.IsStoring()) {
+	if(pArchive.IsWriting()) {
 		pArchive << mZ;
 	}
 	else {

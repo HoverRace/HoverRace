@@ -21,6 +21,9 @@
 //
 
 #include "StdAfx.h"
+
+#include "../../engine/Parcel/ObjStream.h"
+
 #include "ResourceLibBuilder.h"
 
 using namespace HoverRace::Parcel;
@@ -113,7 +116,7 @@ BOOL MR_ResourceLibBuilder::Export(const char *pFileName)
  *
  * @param pArchive The output archive
  */
-void MR_ResourceLibBuilder::WriteBitmaps(CArchive &pArchive)
+void MR_ResourceLibBuilder::WriteBitmaps(ObjStream &pArchive)
 {
 	int lNbBitmap = mBitmapList.GetCount();
 	POSITION lPos = mBitmapList.GetStartPosition();
@@ -138,7 +141,7 @@ void MR_ResourceLibBuilder::WriteBitmaps(CArchive &pArchive)
  *
  * @param pArchive The output archive
  */
-void MR_ResourceLibBuilder::WriteActors(CArchive & pArchive)
+void MR_ResourceLibBuilder::WriteActors(ObjStream &pArchive)
 {
 	int lNbActor = mActorList.GetCount();
 	POSITION lPos = mActorList.GetStartPosition();
@@ -162,7 +165,7 @@ void MR_ResourceLibBuilder::WriteActors(CArchive & pArchive)
  *
  * @param pArchive The output archive
  */
-void MR_ResourceLibBuilder::WriteSprites(CArchive & pArchive)
+void MR_ResourceLibBuilder::WriteSprites(ObjStream &pArchive)
 {
 	int lNbSprite = mSpriteList.GetCount();
 	POSITION lPos = mSpriteList.GetStartPosition();
@@ -186,7 +189,7 @@ void MR_ResourceLibBuilder::WriteSprites(CArchive & pArchive)
  *
  * @param pArchive The output archive
  */
-void MR_ResourceLibBuilder::WriteSounds(CArchive & pArchive)
+void MR_ResourceLibBuilder::WriteSounds(ObjStream &pArchive)
 {
 	int lNbSound;
 	POSITION lPos;

@@ -32,6 +32,12 @@
 #define MR_DllDeclare   __declspec( dllimport )
 #endif
 
+namespace HoverRace {
+	namespace Parcel {
+		class ObjStream;
+	}
+}
+
 class MR_DllDeclare MR_Sprite
 {
 	public:
@@ -63,7 +69,7 @@ class MR_DllDeclare MR_Sprite
 		int GetItemHeight() const;
 		int GetItemWidth() const;
 
-		void Serialize(CArchive & pArchive);
+		void Serialize(HoverRace::Parcel::ObjStream &pArchive);
 
 };
 

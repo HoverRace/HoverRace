@@ -32,6 +32,12 @@
 #define MR_DllDeclare   __declspec(dllimport)
 #endif
 
+namespace HoverRace {
+	namespace Parcel {
+		class ObjStream;
+	}
+}
+
 class MR_ResBitmap:public MR_Bitmap
 {
 	protected:
@@ -50,7 +56,7 @@ class MR_ResBitmap:public MR_Bitmap
 				MR_DllDeclare SubBitmap();
 				MR_DllDeclare ~ SubBitmap();
 
-				void Serialize(CArchive & pArchive);
+				void Serialize(HoverRace::Parcel::ObjStream &pArchive);
 
 		};
 
@@ -70,7 +76,7 @@ class MR_ResBitmap:public MR_Bitmap
 		MR_DllDeclare ~MR_ResBitmap();
 
 		MR_DllDeclare int GetResourceId() const;
-		MR_DllDeclare void Serialize(CArchive & pArchive);
+		MR_DllDeclare void Serialize(HoverRace::Parcel::ObjStream &pArchive);
 
 		MR_DllDeclare int GetWidth() const;
 		MR_DllDeclare int GetHeight() const;

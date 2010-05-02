@@ -22,6 +22,8 @@
 
 #pragma once
 
+#include "ObjStream.h"
+
 #ifdef _WIN32
 #	ifdef MR_ENGINE
 #		define MR_DllDeclare   __declspec( dllexport )
@@ -34,10 +36,6 @@
 
 namespace HoverRace {
 namespace Parcel {
-
-//TODO: Temporary until ObjStream hierarchy is realized.
-typedef ::CArchive ObjStream;
-typedef boost::shared_ptr<ObjStream> ObjStreamPtr;
 
 /**
  * Base class for parcel implementations.
