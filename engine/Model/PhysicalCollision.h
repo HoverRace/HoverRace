@@ -20,15 +20,18 @@
 // and limitations under the License.
 //
 
-#ifndef PHYSICAL_COLLISION_H
-#define PHYSICAL_COLLISION_H
+#pragma once
 
 #include "ContactEffect.h"
 
-#ifdef MR_ENGINE
-#define MR_DllDeclare   __declspec( dllexport )
+#ifdef _WIN32
+#	ifdef MR_ENGINE
+#		define MR_DllDeclare   __declspec( dllexport )
+#	else
+#		define MR_DllDeclare   __declspec( dllimport )
+#	endif
 #else
-#define MR_DllDeclare   __declspec( dllimport )
+#	define MR_DllDeclare
 #endif
 
 class MR_DllDeclare MR_InertialMoment
@@ -53,4 +56,3 @@ class MR_PhysicalCollision:public MR_ContactEffect, public MR_InertialMoment
 };
 
 #undef MR_DllDeclare
-#endif

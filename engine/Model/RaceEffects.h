@@ -20,15 +20,18 @@
 // and limitations under the License.
 //
 
-#ifndef RACE_EFFECTS_H
-#define RACE_EFFECTS_H
+#pragma once
 
 #include "ContactEffect.h"
 
-#ifdef MR_ENGINE
-#define MR_DllDeclare   __declspec(dllexport)
+#ifdef _WIN32
+#	ifdef MR_ENGINE
+#		define MR_DllDeclare   __declspec( dllexport )
+#	else
+#		define MR_DllDeclare   __declspec( dllimport )
+#	endif
 #else
-#define MR_DllDeclare   __declspec(dllimport)
+#	define MR_DllDeclare
 #endif
 
 class MR_SpeedDoubler:public MR_ContactEffect
@@ -66,4 +69,3 @@ class MR_PowerUpEffect:public MR_ContactEffect
 };
 
 #undef MR_DllDeclare
-#endif
