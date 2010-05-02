@@ -227,10 +227,6 @@
 			Name="Model"
 			>
 			<File
-				RelativePath=".\Model\ActorPool.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Model\ConcreteShape.cpp"
 				>
 			</File>
