@@ -46,7 +46,6 @@ void MR_InitTrigoTables()
 
 }
 
-#ifndef NO_SERIALIZE
 void MR_2DCoordinate::Serialize(ObjStream &pArchive)
 {
 
@@ -57,7 +56,6 @@ void MR_2DCoordinate::Serialize(ObjStream &pArchive)
 		pArchive >> mX >> mY;
 	}
 }
-#endif
 
 BOOL MR_2DCoordinate::operator ==(const MR_2DCoordinate & pCoordinate) const
 {
@@ -69,7 +67,6 @@ BOOL MR_2DCoordinate::operator !=(const MR_2DCoordinate & pCoordinate) const
 	return (mX != pCoordinate.mX) || (mY != pCoordinate.mY);
 }
 
-#ifndef NO_SERIALIZE
 void MR_3DCoordinate::Serialize(ObjStream &pArchive)
 {
 	MR_2DCoordinate::Serialize(pArchive);
@@ -81,4 +78,3 @@ void MR_3DCoordinate::Serialize(ObjStream &pArchive)
 		pArchive >> mZ;
 	}
 }
-#endif
