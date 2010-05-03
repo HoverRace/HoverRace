@@ -208,6 +208,22 @@
 			<File
 				RelativePath=".\bsdiff\bsdiff.cpp"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						WarningLevel="2"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						WarningLevel="2"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\bsdiff\bsdiff.h"
@@ -245,7 +261,16 @@
 					>
 					<Tool
 						Name="VCCLCompilerTool"
+						WarningLevel="2"
 						CompileAsManaged="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						WarningLevel="2"
 					/>
 				</FileConfiguration>
 			</File>
