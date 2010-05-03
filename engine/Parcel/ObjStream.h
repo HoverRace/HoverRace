@@ -39,7 +39,7 @@
 namespace HoverRace {
 namespace Parcel {
 
-class ObjStreamExn : public std::exception
+class MR_DllDeclare ObjStreamExn : public std::exception
 {
 	typedef std::exception SUPER;
 
