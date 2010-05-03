@@ -521,9 +521,9 @@ BOOL MR_LevelBuilder::Parse(FILE * pFile)
 	int lFreeElementCount = 0;
 
 	while(lReturnValue && (lParser.GetNextClass("Free_Element") != NULL)) {
-		int lRoomIndex;
+		int lRoomIndex = 0;
 		MR_3DCoordinate lPosition;
-		MR_Angle lOrientation;
+		MR_Angle lOrientation = 0;
 		MR_ObjectFromFactoryId lElementType;
 
 		lFreeElementCount++;
