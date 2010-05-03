@@ -99,7 +99,7 @@ void MR_MapSprite::DrawMap(MR_Level * pLevel)
 	MR_ObjectFromFactoryId lFinishLineId = { 1, 202 };
 
 	for(int lRoom = 0; lRoom < lRoomCount; lRoom++) {
-		int lColor = 61;
+		MR_UInt8 lColor = 61;
 
 		// Verify if it is not the FinishLineSection
 		MR_FreeElementHandle lCurrentElem = pLevel->GetFirstFreeElement(lRoom);
