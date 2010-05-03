@@ -131,7 +131,9 @@ BOOL ParseInputFile(const char *pFileName)
 						lReturnValue = FALSE;
 					}
 					else {
-						MR_ResBitmapBuilder *lBitmap = new MR_ResBitmapBuilder(lResourceId, lWidth * 1000, lHeight * 1000);
+						MR_ResBitmapBuilder *lBitmap =
+							new MR_ResBitmapBuilder(lResourceId,
+								(int)(lWidth * 1000), (int)(lHeight * 1000));
 
 						lReturnValue = lBitmap->BuildFromFile(lLineBuffer, lAntiAliasScheme);
 
