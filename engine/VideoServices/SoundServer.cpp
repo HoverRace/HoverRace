@@ -241,7 +241,7 @@ BOOL MR_SoundBuffer::Init(const char *pData, int pNbCopy)
 
 	BOOL lReturnValue = TRUE;
 
-	ASSERT(mSoundBuffer[0] == NULL);			  // Already initialized
+	ASSERT(!mSoundBuffer[0]);			  // Already initialized
 
 	if(pNbCopy > MR_MAX_SOUND_COPY) {
 		ASSERT(FALSE);
@@ -355,7 +355,7 @@ void MR_SoundBuffer::SetParams(int pCopy, int pDB, double pSpeed, int pPan)
 	if (pSpeed < 0.01f) pSpeed = 0.01f;
 
 	ALuint src = mSoundBuffer[pCopy];
-	if (src != NULL) {
+	if (src) {
 		alSourcef(mSoundBuffer[pCopy], AL_GAIN, attenuatedVolume);
 		alSourcef(mSoundBuffer[pCopy], AL_PITCH, static_cast<float>(pSpeed));
 		//TODO: Simulate panning by changing position.
