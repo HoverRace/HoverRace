@@ -27,6 +27,7 @@
 #include "ResActor.h"
 
 using HoverRace::Parcel::ObjStream;
+using HoverRace::Parcel::ObjStreamExn;
 
 // ResActor
 //
@@ -184,7 +185,8 @@ void MR_ResActor::Frame::Serialize(ObjStream &pArchive, MR_ResourceLib *pLib)
 
 					default:
 						ASSERT(FALSE);
-						AfxThrowArchiveException(CArchiveException::badSchema);
+						throw ObjStreamExn(pArchive.GetName(),
+							boost::str(boost::format("Unhandled component type: %d") % lType));
 				}
 
 				mComponentList[lCounter]->Serialize(pArchive, pLib);

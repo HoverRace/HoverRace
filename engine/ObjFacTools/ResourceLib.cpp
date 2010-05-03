@@ -64,13 +64,15 @@ MR_ResourceLib::MR_ResourceLib(const char *pResFile)
 			}
 			else {
 				ASSERT(FALSE);
-				AfxThrowArchiveException(CArchiveException::badSchema);
+				throw ObjStreamExn(pResFile,
+					boost::str(boost::format("Invalid magic number: Expected %08x, got %08x instead") %
+						MR_RESOURCE_FILE_MAGIC % lMagicNumber));
 			}
 		}
 	}
 	else {
 		ASSERT(FALSE);
-		AfxThrowFileException(CFileException::fileNotFound);
+		throw ObjStreamExn(pResFile, "File not found or not readable");
 	}
 }
 

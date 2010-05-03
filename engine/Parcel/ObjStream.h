@@ -39,11 +39,32 @@
 namespace HoverRace {
 namespace Parcel {
 
+class ObjStreamExn : public std::exception
+{
+	typedef std::exception SUPER;
+
+	public:
+		ObjStreamExn() : SUPER() { }
+		ObjStreamExn(const std::string &name, const std::string &details) :
+			SUPER(), msg(name)
+		{
+			msg += ": ";
+			msg += details;
+		}
+		virtual ~ObjStreamExn() throw() { }
+
+		virtual const char* what() const throw() { return msg.c_str(); }
+
+	private:
+		std::string msg;
+};
+
 /**
  * Base class for parcel serializers.
  * @author Michael Imamura
  */
-class MR_DllDeclare ObjStream {
+class MR_DllDeclare ObjStream
+{
 	private:
 		ObjStream() { }
 	public:
