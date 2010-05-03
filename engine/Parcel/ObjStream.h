@@ -47,13 +47,14 @@ class MR_DllDeclare ObjStream {
 	private:
 		ObjStream() { }
 	public:
-		ObjStream(const std::string &name, bool writing) :
-			name(name), writing(writing)
+		ObjStream(const std::string &name, int version, bool writing) :
+			name(name), version(version), writing(writing)
 			{ }
 		virtual ~ObjStream() { }
 
 	public:
 		const std::string &GetName() const { return name; }
+		int GetVersion() const { return version; }
 		bool IsWriting() const { return writing; }
 
 	public:
@@ -103,6 +104,7 @@ class MR_DllDeclare ObjStream {
 
 	private:
 		std::string name;
+		int version;
 		bool writing;
 };
 typedef boost::shared_ptr<ObjStream> ObjStreamPtr;

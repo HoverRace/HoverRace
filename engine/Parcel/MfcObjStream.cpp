@@ -28,9 +28,10 @@ namespace HoverRace {
 namespace Parcel {
 
 MfcObjStream::MfcObjStream(CFile *file, bool writing) :
-	SUPER((const char*)file->GetFileName(), writing),
+	SUPER((const char*)file->GetFileName(), 1, writing),
 	archive(file, writing ? CArchive::store : CArchive::load)
 {
+	// Version for MFC record file is always 1.
 }
 
 }  // namespace Parcel
