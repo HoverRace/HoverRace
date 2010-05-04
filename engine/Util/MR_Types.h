@@ -37,7 +37,7 @@
 	typedef DWORDLONG MR_UInt64;
 
 #else
-#  include <inttypes.h>
+#	include <inttypes.h>
 	
 	typedef int8_t MR_Int8;
 	typedef uint8_t MR_UInt8;
