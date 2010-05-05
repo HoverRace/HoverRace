@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include <list>
+#include <vector>
 
 #include "../Model/Shapes.h"
 
@@ -47,6 +47,6 @@ class MR_DllDeclare MR_ContactEffect
 		virtual const MR_ContactEffect *GetAlternate() const;
 		// Usually return NULL
 };
-typedef std::list<MR_ContactEffect*> MR_ContactEffectList;
+typedef std::vector<MR_ContactEffect*> MR_ContactEffectList;
 
 #undef MR_DllDeclare
