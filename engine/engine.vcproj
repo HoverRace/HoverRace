@@ -563,6 +563,18 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Util\Inspectable.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Util\InspectNode.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Util\InspectNode.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Util\KeyHandling.h"
 				>
 			</File>
