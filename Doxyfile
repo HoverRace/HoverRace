@@ -94,13 +94,17 @@ WARN_LOGFILE           = srcdoc/warnings.txt
 # configuration options related to the input files
 #---------------------------------------------------------------------------
 INPUT                  = client/Game2 \
+                         client/Game2/Control \
+                         client/Game2/HoverScript \
                          engine/ColorTools \
                          engine/MainCharacter \
                          engine/Model \
+                         engine/Parcel \
                          engine/ObjFac1 \
                          engine/ObjFacTools \
                          engine/PaletteCreator \
                          engine/Script \
+                         engine/Script/Help \
                          engine/Util \
                          engine/Util/yaml \
                          engine/VideoServices \
