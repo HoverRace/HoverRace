@@ -27,5 +27,10 @@
 #include <math.h>
 #include <stdio.h>
 
+#include <map>
+#include <string>
+#include <vector>
+
+#include <boost/lexical_cast.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
