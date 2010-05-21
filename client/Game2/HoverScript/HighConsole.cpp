@@ -269,7 +269,7 @@ void HighConsole::Clear()
 
 /**
  * Add a log entry, pre-processing the string for display purposes.
- * @param logLines The log lines.
+ * @param lines The log lines.
  * @param s The log string.  We assume that the trailing "\n" has been stripped.
  * @param color The color.
  */

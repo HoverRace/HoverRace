@@ -77,7 +77,7 @@ void RoomListDialog::CancelLoad()
 
 /**
  * Display an error message in a message box.
- * @parent The parent window.
+ * @param parent The parent window.
  */
 void RoomListDialog::DisplayError(HWND parent) const
 {

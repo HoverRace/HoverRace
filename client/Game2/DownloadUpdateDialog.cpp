@@ -48,7 +48,8 @@ using namespace HoverRace::Util;
 /**
  * Constructor.
  * 
- * @param url URL of update to download
+ * @param baseUrl Base URL of update to download
+ * @param filename Name of file to download
  * @param destDir The destination directory we will put the update into
  */
 DownloadUpdateDialog::DownloadUpdateDialog(const string &baseUrl, const string &filename, const string &destDir) :
