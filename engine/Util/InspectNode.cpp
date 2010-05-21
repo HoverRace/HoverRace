@@ -37,17 +37,18 @@ InspectNode::~InspectNode()
 {
 }
 
-void InspectNode::AddField(const std::string &name, const std::string &value)
+void InspectNode::AddStringField(const std::string &name, const std::string &value)
 {
 	fields.insert(fields_t::value_type(name, value));
 }
 
-void InspectNode::AddSubobject(const std::string &name, const Inspectable *obj)
+InspectNode &InspectNode::AddSubobject(const std::string &name, const Inspectable *obj)
 {
 	InspectNodePtr node = boost::make_shared<InspectNode>();
 	if (obj != NULL)
 		obj->Inspect(*node);
 	subobjects.insert(subobjects_t::value_type(name, node));
+	return *this;
 }
 
 }  // namespace Util

@@ -22,6 +22,8 @@
 
 #pragma once
 
+#include <boost/lexical_cast.hpp>
+
 #include "Inspectable.h"
 
 #ifdef _WIN32
@@ -46,9 +48,30 @@ class MR_DllDeclare InspectNode
 		InspectNode();
 		virtual ~InspectNode();
 
-		void AddField(const std::string &name, const std::string &value);
+	protected:
+		void AddStringField(const std::string &name, const std::string &value);
 
-		void AddSubobject(const std::string &name, const Inspectable *obj);
+	public:
+		template<typename T>
+		InspectNode &AddField(const std::string &name, const T &value)
+		{
+			AddStringField(name, boost::lexical_cast<std::string>(value));
+			return *this;
+		}
+
+		InspectNode &AddField(const std::string &name, const char *value)
+		{
+			AddStringField(name, value);
+			return *this;
+		}
+
+		InspectNode &AddField(const std::string &name, const std::string &value)
+		{
+			AddStringField(name, value);
+			return *this;
+		}
+
+		InspectNode &AddSubobject(const std::string &name, const Inspectable *obj);
 
 	private:
 		typedef std::map<std::string,std::string> fields_t;
