@@ -32,7 +32,7 @@ namespace Parcel {
 
 // MfcRecordFileTable
 
-class MfcRecordFileTable
+class MfcRecordFileTable : public Util::Inspectable
 {
 	public:
 		CString mFileTitle;
@@ -44,15 +44,17 @@ class MfcRecordFileTable
 
 		MfcRecordFileTable();
 		MfcRecordFileTable(int pNbRecords);
-		~MfcRecordFileTable();
+		virtual ~MfcRecordFileTable();
 
 		void Serialize(ObjStream &pArchive);
 
+		virtual void Inspect(Util::InspectNode &node) const;
 };
 
 static DWORD ComputeSum(const char *pFileName);
 
-MfcRecordFileTable::MfcRecordFileTable()
+MfcRecordFileTable::MfcRecordFileTable() :
+	Util::Inspectable()
 {
 	mRecordUsed = 0;
 	mRecordMax = 0;
@@ -120,6 +122,19 @@ void MfcRecordFileTable::Serialize(ObjStream &pArchive)
 			}
 		}
 	}
+}
+
+void MfcRecordFileTable::Inspect(Util::InspectNode &node) const
+{
+	node.
+		AddField("title", mFileTitle).
+		AddField("sumValid", mSumValid != FALSE).
+		AddField("checksum", mChkSum).
+		AddField("recordsUsed", mRecordUsed).
+		AddField("recordsMax", mRecordMax);
+	/*TODO
+	node.AddFieldArray("recordList", mRecordList, 0, mRecordMax);
+	*/
 }
 
 // MfcRecordFile
@@ -535,6 +550,13 @@ void MfcRecordFile::Dump(CDumpContext & dc) const
 	// TODO
 }
 #endif
+
+void MfcRecordFile::Inspect(Util::InspectNode &node) const
+{
+	node.
+		AddField("curRecord", mCurrentRecord).
+		AddSubobject("header", mTable);
+}
 
 /**
  * Open an object stream for reading at the current record.

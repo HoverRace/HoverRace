@@ -97,6 +97,8 @@ class MR_DllDeclare MfcRecordFile : public RecordFile, private CFile
 		void Abort();
 		void Close();
 
+		virtual void Inspect(Util::InspectNode &node) const;
+
 		ObjStreamPtr StreamIn();
 		ObjStreamPtr StreamOut();
 

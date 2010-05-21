@@ -22,6 +22,9 @@
 
 #pragma once
 
+#include "../Util/Inspectable.h"
+#include "../Util/InspectNode.h"
+
 #include "ObjStream.h"
 
 #ifdef _WIN32
@@ -41,9 +44,10 @@ namespace Parcel {
  * Base class for parcel implementations.
  * @author Michael Imamura
  */
-class MR_DllDeclare RecordFile {
+class MR_DllDeclare RecordFile : public Util::Inspectable {
+	typedef Util::Inspectable SUPER;
 	public:
-		RecordFile() { }
+		RecordFile() : SUPER() { }
 		virtual ~RecordFile() { }
 
 		virtual bool CreateForWrite(const char *filename, int numRecords, const char *title=NULL) = 0;
