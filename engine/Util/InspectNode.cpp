@@ -59,6 +59,22 @@ void InspectNode::RenderToStream(std::ostream &os)
 }
 
 /**
+ * Render this node to a string.
+ * @param s The output string.
+ * @throw std::exception An error occurred.
+ */
+void InspectNode::RenderToString(std::string &s)
+{
+	try {
+		yaml::Emitter emitter(s, false);
+		RenderToYaml(emitter);
+	}
+	catch (yaml::EmitterExn &ex) {
+		throw std::exception(ex);
+	}
+}
+
+/**
  * Render this node to a YAML emitter.
  * @param emitter The emitter.
  */

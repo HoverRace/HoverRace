@@ -50,6 +50,7 @@ namespace yaml
 		public:
 			Emitter(FILE *file, bool versionDirective=true);
 			Emitter(std::ostream &os, bool versionDirective=true);
+			Emitter(std::string &s, bool versionDirective=true);
 			virtual ~Emitter();
 
 		protected:
@@ -58,6 +59,7 @@ namespace yaml
 
 		private:
 			static int OutputStreamHandler(void *data, unsigned char *buffer, size_t size);
+			static int OutputStringHandler(void *data, unsigned char *buffer, size_t size);
 
 		public:
 			void StartMap();

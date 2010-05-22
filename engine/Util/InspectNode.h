@@ -57,6 +57,7 @@ class MR_DllDeclare InspectNode
 
 	public:
 		void RenderToStream(std::ostream &os);
+		void RenderToString(std::string &s);
 	protected:
 		virtual void RenderToYaml(yaml::Emitter &emitter);
 

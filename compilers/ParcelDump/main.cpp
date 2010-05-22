@@ -26,6 +26,7 @@
 #	include "../../engine/Parcel/MfcRecordFile.h"
 #endif
 #include "../../engine/Util/InspectNode.h"
+#include "../../engine/Util/Str.h"
 
 using namespace HoverRace::Parcel;
 using namespace HoverRace::Util;
@@ -62,17 +63,17 @@ int main(int argc, char **argv)
 
 	InspectNode root;
 	file->Inspect(root);
+
+	std::string outStr;
+	outStr.reserve(4096);
+	root.RenderToString(outStr);
+
+	std::wstring ws(Str::UW(outStr.c_str()));
+	std::wcout << ws << std::endl;
 #	ifdef _DEBUG
-		std::stringstream oss;
-		root.RenderToStream(oss);
-		std::string outStr(oss.str());
-		std::cout << outStr;
-		OutputDebugStringA(outStr.c_str());
-		OutputDebugStringA("\n");
-#	else
-		root.RenderToStream(std::cout);
+		OutputDebugStringW(ws.c_str());
+		OutputDebugStringW(L"\n");
 #	endif
-	std::cout << std::endl;
 
 	return EXIT_SUCCESS;
 }

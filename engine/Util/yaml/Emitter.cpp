@@ -66,6 +66,18 @@ Emitter::Emitter(std::ostream &os, bool versionDirective)
 	InitStream(versionDirective);
 }
 
+/**
+ * Create a new emitter for a string.
+ * @param s The output string.
+ * @param versionDirective Include the @c YAML version directive at the start.
+ */
+Emitter::Emitter(std::string &s, bool versionDirective)
+{
+	InitEmitter();
+	yaml_emitter_set_output(&emitter, &Emitter::OutputStringHandler, &s);
+	InitStream(versionDirective);
+}
+
 /// Destructor.
 Emitter::~Emitter()
 {
@@ -132,6 +144,13 @@ int Emitter::OutputStreamHandler(void *data, unsigned char *buffer, size_t size)
 {
 	std::ostream *os = (std::ostream*)data;
 	os->write((const char*)buffer, size);
+	return 1;
+}
+
+int Emitter::OutputStringHandler(void *data, unsigned char *buffer, size_t size)
+{
+	std::string *s = (std::string*)data;
+	s->append((const char*)buffer, size);
 	return 1;
 }
 
