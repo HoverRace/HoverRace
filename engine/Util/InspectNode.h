@@ -81,6 +81,12 @@ class MR_DllDeclare InspectNode
 			return *this;
 		}
 
+		InspectNode &AddField(const std::string &name, bool value)
+		{
+			AddStringField(name, value ? "true" : "false");
+			return *this;
+		}
+
 		InspectNode &AddSubobject(const std::string &name, const Inspectable *obj);
 
 	private:
