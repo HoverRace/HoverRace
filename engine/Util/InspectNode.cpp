@@ -50,7 +50,7 @@ InspectNode::~InspectNode()
 void InspectNode::RenderToStream(std::ostream &os)
 {
 	try {
-		yaml::Emitter emitter(os);
+		yaml::Emitter emitter(os, false);
 		RenderToYaml(emitter);
 	}
 	catch (yaml::EmitterExn &ex) {
