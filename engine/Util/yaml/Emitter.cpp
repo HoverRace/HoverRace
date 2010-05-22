@@ -41,37 +41,27 @@ namespace {
 }
 
 /**
- * Create a new emitter.
+ * Create a new emitter for a file handle.
  * @param file An open file for writing (may not be null).
  *             It is the caller's job to close the file when the emitter
  *             is destroyed.
  */
 Emitter::Emitter(FILE *file)
 {
-	yaml_event_t event;
-
-	// Initialize the LibYAML emitter.
-	memset(&emitter, 0, sizeof(emitter));
-	yaml_emitter_initialize(&emitter);
+	InitEmitter();
 	yaml_emitter_set_output_file(&emitter, file);
+	InitStream();
+}
 
-	// Start the stream.
-	yaml_stream_start_event_initialize(&event, YAML_UTF8_ENCODING);
-	if(!yaml_emitter_emit(&emitter, &event))
-		throw EmitterExn("Unable to start stream");
-
-	yaml_version_directive_t version;
-	version.major = 1;
-	version.minor = 1;
-
-	yaml_tag_directive_t nullTag;
-	nullTag.handle = NULL;
-	nullTag.prefix = NULL;
-
-	// Start the document.
-	yaml_document_start_event_initialize(&event, &version, &nullTag, &nullTag, 1);
-	if(!yaml_emitter_emit(&emitter, &event))
-		throw EmitterExn("Unable to start document");
+/**
+ * Create a new emitter for an output stream.
+ * @param os The output stream.
+ */
+Emitter::Emitter(std::ostream &os)
+{
+	InitEmitter();
+	yaml_emitter_set_output(&emitter, &Emitter::OutputStreamHandler, &os);
+	InitStream();
 }
 
 /// Destructor.
@@ -94,6 +84,49 @@ Emitter::~Emitter()
 	}
 
 	yaml_emitter_delete(&emitter);
+}
+
+/**
+ * Initialize the LibYAML emitter.
+ * This should only be called from the constructor.
+ */
+void Emitter::InitEmitter()
+{
+	memset(&emitter, 0, sizeof(emitter));
+	yaml_emitter_initialize(&emitter);
+}
+
+/**
+ * Initialize the stream and document.
+ */
+void Emitter::InitStream()
+{
+	yaml_event_t event;
+
+	// Start the stream.
+	yaml_stream_start_event_initialize(&event, YAML_UTF8_ENCODING);
+	if(!yaml_emitter_emit(&emitter, &event))
+		throw EmitterExn("Unable to start stream");
+
+	yaml_version_directive_t version;
+	version.major = 1;
+	version.minor = 1;
+
+	yaml_tag_directive_t nullTag;
+	nullTag.handle = NULL;
+	nullTag.prefix = NULL;
+
+	// Start the document.
+	yaml_document_start_event_initialize(&event, &version, &nullTag, &nullTag, 1);
+	if(!yaml_emitter_emit(&emitter, &event))
+		throw EmitterExn("Unable to start document");
+}
+
+int Emitter::OutputStreamHandler(void *data, unsigned char *buffer, size_t size)
+{
+	std::ostream *os = (std::ostream*)data;
+	os->write((const char*)buffer, size);
+	return 1;
 }
 
 /**

@@ -49,8 +49,17 @@ namespace yaml
 			Emitter() { }
 		public:
 			Emitter(FILE *file);
+			Emitter(std::ostream &os);
 			virtual ~Emitter();
 
+		protected:
+			void InitEmitter();
+			void InitStream();
+
+		private:
+			static int OutputStreamHandler(void *data, unsigned char *buffer, size_t size);
+
+		public:
 			void StartMap();
 			void MapKey(const std::string &s);
 			void EndMap();
