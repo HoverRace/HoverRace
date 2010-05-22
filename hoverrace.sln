@@ -19,6 +19,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "resourcecompiler", "compile
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "updater", "updater\updater.vcproj", "{2453907E-2872-409E-A1E9-49279F8D0B7A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ParcelDump", "compilers\ParcelDump\ParcelDump.vcproj", "{3E248AA6-69AE-49F6-9A04-F4A91F826231}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1CCF897B-2194-4646-9F09-C307664F6193} = {1CCF897B-2194-4646-9F09-C307664F6193}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -45,6 +50,10 @@ Global
 		{2453907E-2872-409E-A1E9-49279F8D0B7A}.Debug|Win32.Build.0 = Debug|Win32
 		{2453907E-2872-409E-A1E9-49279F8D0B7A}.Release|Win32.ActiveCfg = Release|Win32
 		{2453907E-2872-409E-A1E9-49279F8D0B7A}.Release|Win32.Build.0 = Release|Win32
+		{3E248AA6-69AE-49F6-9A04-F4A91F826231}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3E248AA6-69AE-49F6-9A04-F4A91F826231}.Debug|Win32.Build.0 = Debug|Win32
+		{3E248AA6-69AE-49F6-9A04-F4A91F826231}.Release|Win32.ActiveCfg = Release|Win32
+		{3E248AA6-69AE-49F6-9A04-F4A91F826231}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
