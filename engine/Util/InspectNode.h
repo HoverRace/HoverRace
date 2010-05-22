@@ -36,6 +36,10 @@
 #	define MR_DllDeclare
 #endif
 
+namespace yaml {
+	class Emitter;
+}
+
 namespace HoverRace {
 namespace Util {
 
@@ -50,6 +54,11 @@ class MR_DllDeclare InspectNode
 
 	protected:
 		void AddStringField(const std::string &name, const std::string &value);
+
+	public:
+		void RenderToStream(std::ostream &os);
+	protected:
+		virtual void RenderToYaml(yaml::Emitter &emitter);
 
 	public:
 		template<typename T>
