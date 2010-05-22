@@ -45,23 +45,25 @@ namespace {
  * @param file An open file for writing (may not be null).
  *             It is the caller's job to close the file when the emitter
  *             is destroyed.
+ * @param versionDirective Include the @c YAML version directive at the start.
  */
-Emitter::Emitter(FILE *file)
+Emitter::Emitter(FILE *file, bool versionDirective)
 {
 	InitEmitter();
 	yaml_emitter_set_output_file(&emitter, file);
-	InitStream();
+	InitStream(versionDirective);
 }
 
 /**
  * Create a new emitter for an output stream.
  * @param os The output stream.
+ * @param versionDirective Include the @c YAML version directive at the start.
  */
-Emitter::Emitter(std::ostream &os)
+Emitter::Emitter(std::ostream &os, bool versionDirective)
 {
 	InitEmitter();
 	yaml_emitter_set_output(&emitter, &Emitter::OutputStreamHandler, &os);
-	InitStream();
+	InitStream(versionDirective);
 }
 
 /// Destructor.
@@ -98,8 +100,10 @@ void Emitter::InitEmitter()
 
 /**
  * Initialize the stream and document.
+ * This should only be called from the constructor.
+ * @param versionDirective Include the @c YAML version directive at the start.
  */
-void Emitter::InitStream()
+void Emitter::InitStream(bool versionDirective)
 {
 	yaml_event_t event;
 
@@ -117,7 +121,9 @@ void Emitter::InitStream()
 	nullTag.prefix = NULL;
 
 	// Start the document.
-	yaml_document_start_event_initialize(&event, &version, &nullTag, &nullTag, 1);
+	yaml_document_start_event_initialize(&event,
+		versionDirective ? &version : NULL,
+		&nullTag, &nullTag, 1);
 	if(!yaml_emitter_emit(&emitter, &event))
 		throw EmitterExn("Unable to start document");
 }

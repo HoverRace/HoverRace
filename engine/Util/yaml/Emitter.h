@@ -48,13 +48,13 @@ namespace yaml
 		private:
 			Emitter() { }
 		public:
-			Emitter(FILE *file);
-			Emitter(std::ostream &os);
+			Emitter(FILE *file, bool versionDirective=true);
+			Emitter(std::ostream &os, bool versionDirective=true);
 			virtual ~Emitter();
 
 		protected:
 			void InitEmitter();
-			void InitStream();
+			void InitStream(bool versionDirective);
 
 		private:
 			static int OutputStreamHandler(void *data, unsigned char *buffer, size_t size);
