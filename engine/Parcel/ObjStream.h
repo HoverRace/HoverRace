@@ -96,6 +96,9 @@ class MR_DllDeclare ObjStream
 		virtual void WriteUInt32(MR_UInt32 i) = 0;
 		friend ObjStream &operator<<(ObjStream &os, MR_UInt32 i) { os.WriteUInt32(i); return os; }
 
+		virtual void WriteString(const std::string &s) = 0;
+		friend ObjStream &operator<<(ObjStream &os, const std::string &s) { os.WriteString(s); return os; }
+
 #		ifdef _WIN32
 			virtual void WriteCString(const CString &s) = 0;
 			friend ObjStream &operator<<(ObjStream &os, const CString &s) { os.WriteCString(s); return os; }
@@ -117,6 +120,9 @@ class MR_DllDeclare ObjStream
 
 		virtual void ReadUInt32(MR_UInt32 &i) = 0;
 		friend ObjStream &operator>>(ObjStream &os, MR_UInt32 &i) { os.ReadUInt32(i); return os; }
+
+		virtual void ReadString(std::string &s) = 0;
+		friend ObjStream &operator>>(ObjStream &os, std::string &s) { os.ReadString(s); return os; }
 
 #		ifdef _WIN32
 			virtual void ReadCString(CString &s) = 0;

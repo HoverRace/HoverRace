@@ -52,6 +52,7 @@ class MR_DllDeclare MfcObjStream : public ObjStream {
 		virtual void WriteUInt16(MR_UInt16 i) { archive << i; }
 		virtual void WriteInt32(MR_Int32 i) { archive << i; }
 		virtual void WriteUInt32(MR_UInt32 i) { archive << i; }
+		virtual void WriteString(const std::string &s) { CString cs(s.c_str()); archive << cs; }
 		virtual void WriteCString(const CString &s) { archive << s; }
 
 		virtual void Read(void *buf, size_t ct) { archive.Read(buf, ct); }
@@ -61,6 +62,7 @@ class MR_DllDeclare MfcObjStream : public ObjStream {
 		virtual void ReadUInt16(MR_UInt16 &i) { archive >> i; }
 		virtual void ReadInt32(MR_Int32 &i) { archive >> i; }
 		virtual void ReadUInt32(MR_UInt32 &i) { archive >> i; }
+		virtual void ReadString(std::string &s) { CString cs; archive >> cs; s = (const char*)cs; }
 		virtual void ReadCString(CString &s) { archive >> s; }
 
 	private:
