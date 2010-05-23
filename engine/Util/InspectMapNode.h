@@ -1,6 +1,6 @@
 
-// InspectNode.h
-// Inspection state..
+// InspectMapNode.h
+// Inspection state for an object.
 //
 // Copyright (c) 2010 Michael Imamura.
 //
@@ -43,14 +43,11 @@ namespace yaml {
 namespace HoverRace {
 namespace Util {
 
-class InspectNode;
-typedef boost::shared_ptr<InspectNode> InspectNodePtr;
-
-class MR_DllDeclare InspectNode
+class MR_DllDeclare InspectMapNode
 {
 	public:
-		InspectNode();
-		virtual ~InspectNode();
+		InspectMapNode();
+		virtual ~InspectMapNode();
 
 	protected:
 		void AddStringField(const std::string &name, const std::string &value);

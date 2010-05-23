@@ -37,7 +37,7 @@
 namespace HoverRace {
 namespace Util {
 
-class InspectNode;
+class InspectMapNode;
 
 class MR_DllDeclare Inspectable
 {
@@ -45,7 +45,7 @@ class MR_DllDeclare Inspectable
 		Inspectable() { }
 		virtual ~Inspectable() { }
 
-		virtual void Inspect(InspectNode &node) const = 0;
+		virtual void Inspect(InspectMapNode &node) const = 0;
 };
 
 }  // namespace Util

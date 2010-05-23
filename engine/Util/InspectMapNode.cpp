@@ -1,6 +1,6 @@
 
-// InspectNode.h
-// Inspection state..
+// InspectMapNode.cpp
+// Inspection state for an object.
 //
 // Copyright (c) 2010 Michael Imamura.
 //
@@ -29,16 +29,16 @@
 #include "yaml/MapNode.h"
 #include "yaml/ScalarNode.h"
 
-#include "InspectNode.h"
+#include "InspectMapNode.h"
 
 namespace HoverRace {
 namespace Util {
 
-InspectNode::InspectNode()
+InspectMapNode::InspectMapNode()
 {
 }
 
-InspectNode::~InspectNode()
+InspectMapNode::~InspectMapNode()
 {
 }
 
@@ -47,7 +47,7 @@ InspectNode::~InspectNode()
  * @param os The output stream.
  * @throw std::exception An error occurred.
  */
-void InspectNode::RenderToStream(std::ostream &os)
+void InspectMapNode::RenderToStream(std::ostream &os)
 {
 	try {
 		yaml::Emitter emitter(os, false);
@@ -63,7 +63,7 @@ void InspectNode::RenderToStream(std::ostream &os)
  * @param s The output string.
  * @throw std::exception An error occurred.
  */
-void InspectNode::RenderToString(std::string &s)
+void InspectMapNode::RenderToString(std::string &s)
 {
 	try {
 		yaml::Emitter emitter(s, false);
@@ -78,7 +78,7 @@ void InspectNode::RenderToString(std::string &s)
  * Render this node to a YAML emitter.
  * @param emitter The emitter.
  */
-void InspectNode::RenderToYaml(yaml::Emitter &emitter)
+void InspectMapNode::RenderToYaml(yaml::Emitter &emitter)
 {
 	emitter.StartMap();
 	BOOST_FOREACH(fields_t::value_type &ent, fields) {
@@ -97,12 +97,12 @@ void InspectNode::RenderToYaml(yaml::Emitter &emitter)
 	emitter.EndMap();
 }
 
-void InspectNode::AddStringField(const std::string &name, const std::string &value)
+void InspectMapNode::AddStringField(const std::string &name, const std::string &value)
 {
 	fields.insert(fields_t::value_type(name, value));
 }
 
-InspectNode &InspectNode::AddSubobject(const std::string &name, const Inspectable *obj)
+InspectMapNode &InspectMapNode::AddSubobject(const std::string &name, const Inspectable *obj)
 {
 	InspectNodePtr node = boost::make_shared<InspectNode>();
 	if (obj != NULL)
