@@ -25,7 +25,7 @@
 #ifdef _WIN32
 #	include "../../engine/Parcel/MfcRecordFile.h"
 #endif
-#include "../../engine/Util/InspectNode.h"
+#include "../../engine/Util/InspectMapNode.h"
 #include "../../engine/Util/Str.h"
 
 using namespace HoverRace::Parcel;
@@ -61,7 +61,7 @@ int main(int argc, char **argv)
 	RecordFilePtr file = OpenRecordFile(filename);
 	if (file == NULL) return EXIT_FAILURE;
 
-	InspectNode root;
+	InspectMapNode root;
 	file->Inspect(root);
 
 	std::string outStr;

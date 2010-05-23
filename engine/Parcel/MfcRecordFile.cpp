@@ -48,7 +48,7 @@ class MfcRecordFileTable : public Util::Inspectable
 
 		void Serialize(ObjStream &pArchive);
 
-		virtual void Inspect(Util::InspectNode &node) const;
+		virtual void Inspect(Util::InspectMapNode &node) const;
 };
 
 static DWORD ComputeSum(const char *pFileName);
@@ -124,7 +124,7 @@ void MfcRecordFileTable::Serialize(ObjStream &pArchive)
 	}
 }
 
-void MfcRecordFileTable::Inspect(Util::InspectNode &node) const
+void MfcRecordFileTable::Inspect(Util::InspectMapNode &node) const
 {
 	node.
 		AddField("title", mFileTitle).
@@ -551,7 +551,7 @@ void MfcRecordFile::Dump(CDumpContext & dc) const
 }
 #endif
 
-void MfcRecordFile::Inspect(Util::InspectNode &node) const
+void MfcRecordFile::Inspect(Util::InspectMapNode &node) const
 {
 	node.
 		AddField("curRecord", mCurrentRecord).

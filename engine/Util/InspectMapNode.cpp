@@ -30,11 +30,13 @@
 #include "yaml/ScalarNode.h"
 
 #include "InspectMapNode.h"
+#include "Inspectable.h"
 
 namespace HoverRace {
 namespace Util {
 
-InspectMapNode::InspectMapNode()
+InspectMapNode::InspectMapNode() :
+	SUPER()
 {
 }
 
@@ -104,7 +106,7 @@ void InspectMapNode::AddStringField(const std::string &name, const std::string &
 
 InspectMapNode &InspectMapNode::AddSubobject(const std::string &name, const Inspectable *obj)
 {
-	InspectNodePtr node = boost::make_shared<InspectNode>();
+	InspectMapNodePtr node = boost::make_shared<InspectMapNode>();
 	if (obj != NULL)
 		obj->Inspect(*node);
 	subobjects.insert(subobjects_t::value_type(name, node));

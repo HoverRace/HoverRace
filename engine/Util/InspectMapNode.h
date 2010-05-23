@@ -24,7 +24,7 @@
 
 #include <boost/lexical_cast.hpp>
 
-#include "Inspectable.h"
+#include "InspectNode.h"
 
 #ifdef _WIN32
 #	ifdef MR_ENGINE
@@ -43,8 +43,11 @@ namespace yaml {
 namespace HoverRace {
 namespace Util {
 
-class MR_DllDeclare InspectMapNode
+class Inspectable;
+
+class MR_DllDeclare InspectMapNode : public InspectNode
 {
+	typedef InspectNode SUPER;
 	public:
 		InspectMapNode();
 		virtual ~InspectMapNode();
@@ -55,36 +58,37 @@ class MR_DllDeclare InspectMapNode
 	public:
 		void RenderToStream(std::ostream &os);
 		void RenderToString(std::string &s);
-	protected:
+
+	public:
 		virtual void RenderToYaml(yaml::Emitter &emitter);
 
 	public:
 		template<typename T>
-		InspectNode &AddField(const std::string &name, const T &value)
+		InspectMapNode &AddField(const std::string &name, const T &value)
 		{
 			AddStringField(name, boost::lexical_cast<std::string>(value));
 			return *this;
 		}
 
-		InspectNode &AddField(const std::string &name, const char *value)
+		InspectMapNode &AddField(const std::string &name, const char *value)
 		{
 			AddStringField(name, value);
 			return *this;
 		}
 
-		InspectNode &AddField(const std::string &name, const std::string &value)
+		InspectMapNode &AddField(const std::string &name, const std::string &value)
 		{
 			AddStringField(name, value);
 			return *this;
 		}
 
-		InspectNode &AddField(const std::string &name, bool value)
+		InspectMapNode &AddField(const std::string &name, bool value)
 		{
 			AddStringField(name, value ? "true" : "false");
 			return *this;
 		}
 
-		InspectNode &AddSubobject(const std::string &name, const Inspectable *obj);
+		InspectMapNode &AddSubobject(const std::string &name, const Inspectable *obj);
 
 	private:
 		typedef std::map<std::string,std::string> fields_t;
@@ -93,6 +97,7 @@ class MR_DllDeclare InspectMapNode
 		typedef std::map<std::string,InspectNodePtr> subobjects_t;
 		subobjects_t subobjects;
 };
+typedef boost::shared_ptr<InspectMapNode> InspectMapNodePtr;
 
 }  // namespace Util
 }  // namespace HoverRace

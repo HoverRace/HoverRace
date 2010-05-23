@@ -1,6 +1,6 @@
 
-// Inspectable.h
-// Base class for inspectable classes.
+// InspectMapNode.h
+// Inspection state for an object.
 //
 // Copyright (c) 2010 Michael Imamura.
 //
@@ -22,9 +22,9 @@
 
 #pragma once
 
-#include <string>
+#include <boost/lexical_cast.hpp>
 
-#include "InspectMapNode.h"
+#include "Inspectable.h"
 
 #ifdef _WIN32
 #	ifdef MR_ENGINE
@@ -36,19 +36,23 @@
 #	define MR_DllDeclare
 #endif
 
+namespace yaml {
+	class Emitter;
+}
+
 namespace HoverRace {
 namespace Util {
 
-class InspectMapNode;
-
-class MR_DllDeclare Inspectable
+class MR_DllDeclare InspectNode
 {
 	public:
-		Inspectable() { }
-		virtual ~Inspectable() { }
+		InspectNode() { }
+		virtual ~InspectNode() { }
 
-		virtual void Inspect(InspectMapNode &node) const = 0;
+	public:
+		virtual void RenderToYaml(yaml::Emitter &emitter) = 0;
 };
+typedef boost::shared_ptr<InspectNode> InspectNodePtr;
 
 }  // namespace Util
 }  // namespace HoverRace

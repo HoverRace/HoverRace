@@ -567,7 +567,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Util\InspectNode.cpp"
+				RelativePath=".\Util\InspectMapNode.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Util\InspectMapNode.h"
 				>
 			</File>
 			<File
