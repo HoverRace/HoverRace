@@ -86,6 +86,11 @@ class InspectSeqNode : public InspectNode
 };
 typedef boost::shared_ptr<InspectSeqNode> InspectSeqNodePtr;
 
+/**
+ * An inspection node which maps field names to values
+ * (either strings or inspectable subobjects).
+ * @author Michael Imamura
+ */
 class MR_DllDeclare InspectMapNode : public InspectNode
 {
 	typedef InspectNode SUPER;
