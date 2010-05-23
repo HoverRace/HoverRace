@@ -133,9 +133,6 @@ void MfcRecordFileTable::Inspect(Util::InspectMapNode &node) const
 		AddField("recordsUsed", mRecordUsed).
 		AddField("recordsMax", mRecordMax).
 		AddArray("recordList", mRecordList, 0, mRecordMax);
-	/*TODO
-	node.AddFieldArray("recordList", mRecordList, 0, mRecordMax);
-	*/
 }
 
 // MfcRecordFile
