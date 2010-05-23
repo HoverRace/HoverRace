@@ -35,6 +35,23 @@
 namespace HoverRace {
 namespace Util {
 
+class InspectScalarNode : public InspectNode {
+	typedef InspectNode SUPER;
+	public:
+		InspectScalarNode(const std::string &value) :
+			SUPER(), value(value) { }
+		virtual ~InspectScalarNode() { }
+
+	public:
+		virtual void RenderToYaml(yaml::Emitter &emitter)
+		{
+			emitter.Value(value);
+		}
+
+	private:
+		std::string value;
+};
+
 InspectMapNode::InspectMapNode() :
 	SUPER()
 {
@@ -85,10 +102,6 @@ void InspectMapNode::RenderToYaml(yaml::Emitter &emitter)
 	emitter.StartMap();
 	BOOST_FOREACH(fields_t::value_type &ent, fields) {
 		emitter.MapKey(ent.first);
-		emitter.Value(ent.second);
-	}
-	BOOST_FOREACH(subobjects_t::value_type &ent, subobjects) {
-		emitter.MapKey(ent.first);
 		if (ent.second.get() == NULL) {
 			emitter.Value("NULL");
 		}
@@ -101,7 +114,8 @@ void InspectMapNode::RenderToYaml(yaml::Emitter &emitter)
 
 void InspectMapNode::AddStringField(const std::string &name, const std::string &value)
 {
-	fields.insert(fields_t::value_type(name, value));
+	fields.insert(fields_t::value_type(name,
+		boost::make_shared<InspectScalarNode>(value)));
 }
 
 InspectMapNode &InspectMapNode::AddSubobject(const std::string &name, const Inspectable *obj)
@@ -109,7 +123,7 @@ InspectMapNode &InspectMapNode::AddSubobject(const std::string &name, const Insp
 	InspectMapNodePtr node = boost::make_shared<InspectMapNode>();
 	if (obj != NULL)
 		obj->Inspect(*node);
-	subobjects.insert(subobjects_t::value_type(name, node));
+	fields.insert(fields_t::value_type(name, node));
 	return *this;
 }
 
