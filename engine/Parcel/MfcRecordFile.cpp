@@ -131,7 +131,8 @@ void MfcRecordFileTable::Inspect(Util::InspectMapNode &node) const
 		AddField("sumValid", mSumValid != FALSE).
 		AddField("checksum", mChkSum).
 		AddField("recordsUsed", mRecordUsed).
-		AddField("recordsMax", mRecordMax);
+		AddField("recordsMax", mRecordMax).
+		AddArray("recordList", mRecordList, 0, mRecordMax);
 	/*TODO
 	node.AddFieldArray("recordList", mRecordList, 0, mRecordMax);
 	*/
