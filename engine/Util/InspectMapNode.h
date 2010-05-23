@@ -91,7 +91,7 @@ class MR_DllDeclare InspectMapNode : public InspectNode
 		InspectMapNode &AddSubobject(const std::string &name, const Inspectable *obj);
 
 	private:
-		typedef std::map<std::string,InspectNodePtr> fields_t;
+		typedef std::vector<std::pair<std::string,InspectNodePtr> > fields_t;
 		fields_t fields;
 };
 typedef boost::shared_ptr<InspectMapNode> InspectMapNodePtr;

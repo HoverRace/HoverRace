@@ -114,7 +114,7 @@ void InspectMapNode::RenderToYaml(yaml::Emitter &emitter)
 
 void InspectMapNode::AddStringField(const std::string &name, const std::string &value)
 {
-	fields.insert(fields_t::value_type(name,
+	fields.push_back(fields_t::value_type(name,
 		boost::make_shared<InspectScalarNode>(value)));
 }
 
@@ -123,7 +123,7 @@ InspectMapNode &InspectMapNode::AddSubobject(const std::string &name, const Insp
 	InspectMapNodePtr node = boost::make_shared<InspectMapNode>();
 	if (obj != NULL)
 		obj->Inspect(*node);
-	fields.insert(fields_t::value_type(name, node));
+	fields.push_back(fields_t::value_type(name, node));
 	return *this;
 }
 
