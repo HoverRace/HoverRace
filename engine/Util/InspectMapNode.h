@@ -22,6 +22,7 @@
 
 #pragma once
 
+#include <boost/make_shared.hpp>
 #include <boost/lexical_cast.hpp>
 
 #include "InspectNode.h"
@@ -44,6 +45,46 @@ namespace HoverRace {
 namespace Util {
 
 class Inspectable;
+
+class InspectScalarNode : public InspectNode {
+	typedef InspectNode SUPER;
+	public:
+		InspectScalarNode(const std::string &value) :
+			SUPER(), value(value) { }
+		virtual ~InspectScalarNode() { }
+
+	public:
+		virtual void RenderToYaml(yaml::Emitter &emitter);
+
+	private:
+		std::string value;
+};
+typedef boost::shared_ptr<InspectScalarNode> InspectScalarNodePtr;
+
+class InspectSeqNode : public InspectNode
+{
+	typedef InspectNode SUPER;
+	public:
+		InspectSeqNode(size_t sz) : SUPER()
+		{
+			fields.reserve(sz);
+		}
+		virtual ~InspectSeqNode() { }
+
+	public:
+		void Add(InspectNodePtr s)
+		{
+			fields.push_back(s);
+		}
+
+	public:
+		virtual void RenderToYaml(yaml::Emitter &emitter);
+
+	private:
+		typedef std::vector<InspectNodePtr> fields_t;
+		fields_t fields;
+};
+typedef boost::shared_ptr<InspectSeqNode> InspectSeqNodePtr;
 
 class MR_DllDeclare InspectMapNode : public InspectNode
 {
@@ -85,6 +126,18 @@ class MR_DllDeclare InspectMapNode : public InspectNode
 		InspectMapNode &AddField(const std::string &name, bool value)
 		{
 			AddStringField(name, value ? "true" : "false");
+			return *this;
+		}
+
+		template<typename T>
+		InspectMapNode &AddArray(const std::string &name, T *elems,
+			size_t startIndex, size_t size)
+		{
+			InspectSeqNodePtr node = boost::make_shared<InspectSeqNode>(size);
+			for (size_t i = startIndex; i < size; ++i)
+				node->Add(boost::make_shared<InspectScalarNode>(
+					boost::lexical_cast<std::string>(elems[i])));
+			fields.push_back(fields_t::value_type(name, node));
 			return *this;
 		}
 

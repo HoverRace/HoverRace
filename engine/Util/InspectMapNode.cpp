@@ -35,23 +35,6 @@
 namespace HoverRace {
 namespace Util {
 
-class InspectScalarNode : public InspectNode {
-	typedef InspectNode SUPER;
-	public:
-		InspectScalarNode(const std::string &value) :
-			SUPER(), value(value) { }
-		virtual ~InspectScalarNode() { }
-
-	public:
-		virtual void RenderToYaml(yaml::Emitter &emitter)
-		{
-			emitter.Value(value);
-		}
-
-	private:
-		std::string value;
-};
-
 InspectMapNode::InspectMapNode() :
 	SUPER()
 {
@@ -125,6 +108,25 @@ InspectMapNode &InspectMapNode::AddSubobject(const std::string &name, const Insp
 		obj->Inspect(*node);
 	fields.push_back(fields_t::value_type(name, node));
 	return *this;
+}
+
+void InspectScalarNode::RenderToYaml(yaml::Emitter &emitter)
+{
+	emitter.Value(value);
+}
+
+void InspectSeqNode::RenderToYaml(yaml::Emitter &emitter)
+{
+	emitter.StartSeq();
+	BOOST_FOREACH(InspectNodePtr field, fields) {
+		if (field.get() == NULL) {
+			emitter.Value("NULL");
+		}
+		else {
+			field->RenderToYaml(emitter);
+		}
+	}
+	emitter.EndSeq();
 }
 
 }  // namespace Util
