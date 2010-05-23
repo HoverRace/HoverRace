@@ -60,7 +60,20 @@ class MR_DllDeclare RecordFile : public Util::Inspectable {
 		virtual void SelectRecord(int i) = 0;
 		virtual bool BeginANewRecord() = 0;
 
+		/**
+		 * Open an object stream for reading at the current record.
+		 * It is the caller's responsibility to ensure that only one stream
+		 * (input or output) exists at a time.
+		 * @return A shared pointer to the new input stream (never @c NULL).
+		 */
 		virtual ObjStreamPtr StreamIn() = 0;
+
+		/**
+		 * Open an object stream for writing at the current record.
+		 * It is the caller's responsibility to ensure that only one stream
+		 * (input or output) exists at a time.
+		 * @return A shared pointer to the new output stream (never @c NULL).
+		 */
 		virtual ObjStreamPtr StreamOut() = 0;
 };
 

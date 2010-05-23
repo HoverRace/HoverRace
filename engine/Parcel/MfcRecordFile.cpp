@@ -556,23 +556,11 @@ void MfcRecordFile::Inspect(Util::InspectMapNode &node) const
 		AddSubobject("header", mTable);
 }
 
-/**
- * Open an object stream for reading at the current record.
- * It is the caller's responsibility to ensure that only one stream
- * (input or output) exists at a time.
- * @return A shared pointer to the new input stream (never @c NULL).
- */
 ObjStreamPtr MfcRecordFile::StreamIn()
 {
 	return ObjStreamPtr(new MfcObjStream(this, false));
 }
 
-/**
- * Open an object stream for writing at the current record.
- * It is the caller's responsibility to ensure that only one stream
- * (input or output) exists at a time.
- * @return A shared pointer to the new output stream (never @c NULL).
- */
 ObjStreamPtr MfcRecordFile::StreamOut()
 {
 	return ObjStreamPtr(new MfcObjStream(this, true));
