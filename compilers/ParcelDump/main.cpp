@@ -22,6 +22,7 @@
 
 #include "StdAfx.h"
 
+#include "../../engine/Parcel/ClassicRecordFile.h"
 #ifdef _WIN32
 #	include "../../engine/Parcel/MfcRecordFile.h"
 #endif
@@ -41,7 +42,11 @@ typedef boost::shared_ptr<RecordFile> RecordFilePtr;
 static RecordFilePtr OpenRecordFile(const char *filename)
 {
 	//TODO: Allow loader selection.
-	RecordFilePtr file(MfcRecordFile::New());
+#	ifdef _WIN32
+		RecordFilePtr file(MfcRecordFile::New());
+#	else
+		RecordFilePtr file(new ClassicRecordFile());
+#	endif
 
 	if (!file->OpenForRead(filename)) {
 		std::cerr << "Invalid or corrupt parcel file: " << filename << std::endl;

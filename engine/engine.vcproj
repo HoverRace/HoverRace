@@ -923,6 +923,22 @@
 			Name="Parcel"
 			>
 			<File
+				RelativePath=".\Parcel\ClassicObjStream.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Parcel\ClassicObjStream.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Parcel\ClassicRecordFile.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Parcel\ClassicRecordFile.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Parcel\MfcObjStream.cpp"
 				>
 			</File>
