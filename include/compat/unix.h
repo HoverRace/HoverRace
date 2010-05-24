@@ -7,6 +7,7 @@
 #define ASSERT(e) assert(e)
 
 #define BOOL int
+#define DWORD unsigned int
 #define TRUE 1
 #define FALSE 0
 
