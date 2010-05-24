@@ -13,7 +13,8 @@ libutil_la_SOURCES = \
 	FastFifo.h \
 	FuzzyLogic.cpp \
 	FuzzyLogic.h \
-	InspectNode.cpp \
+	InspectMapNode.cpp \
+	InspectMapNode.h \
 	InspectNode.h \
 	Inspectable.h \
 	MR_Types.h \
