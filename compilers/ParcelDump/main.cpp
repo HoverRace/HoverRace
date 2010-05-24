@@ -73,9 +73,9 @@ int main(int argc, char **argv)
 	outStr.reserve(4096);
 	root.RenderToString(outStr);
 
-	std::wstring ws(Str::UW(outStr.c_str()));
+	std::wstring ws((const wchar_t*)Str::UW(outStr.c_str()));
 	std::wcout << ws << std::endl;
-#	ifdef _DEBUG
+#	if defined(_WIN32) && defined(_DEBUG)
 		OutputDebugStringW(ws.c_str());
 		OutputDebugStringW(L"\n");
 #	endif
