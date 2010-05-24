@@ -123,7 +123,7 @@ MR_UInt32 ClassicObjStream::ReadStringLength()
 	if (w == 0xfffe) {
 		// Unicode (length follows).
 		ASSERT(FALSE);
-		throw std::exception("Unicode strings not supported.");
+		throw std::exception();
 	}
 	else if (w == 0xffff) {
 		MR_UInt32 dw;

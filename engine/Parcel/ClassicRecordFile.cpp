@@ -81,7 +81,7 @@ void ClassicRecordFileHeader::Serialize(ObjStream &os)
 	if (os.IsWriting()) {
 		//TODO
 		ASSERT(FALSE);
-		throw new std::exception("ClassicRecordFileHeader cannot serialize out.");
+		throw new std::exception();
 	}
 	else {
 		delete[] recordList;
