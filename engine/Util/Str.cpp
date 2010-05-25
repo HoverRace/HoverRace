@@ -22,6 +22,10 @@
 
 #include "StdAfx.h"
 
+#ifndef _WIN32
+#	include <iconv.h>
+#endif
+
 #include "Str.h"
 
 using namespace HoverRace::Util;
@@ -35,15 +39,15 @@ using namespace HoverRace::Util;
 wchar_t *Str::Utf8ToWide(const char *s)
 {
 	ASSERT(s != NULL);
+	
+	size_t sz = strlen(s) + 1;
+	wchar_t *retv = (wchar_t*)malloc(sz * sizeof(wchar_t));
+	if (sz == 1) {
+		*retv = L'\0';
+		return retv;
+	}
 
 #	ifdef _WIN32
-		size_t sz = strlen(s) + 1;
-		wchar_t *retv = (wchar_t*)malloc(sz * sizeof(wchar_t));
-		if (sz == 1) {
-			*retv = L'\0';
-			return retv;
-		}
-		
 		int ct = MultiByteToWideChar(CP_UTF8, 0, s, -1, retv, sz);
 		while (ct == 0 && GetLastError() == ERROR_INSUFFICIENT_BUFFER) {
 			if (GetLastError() == ERROR_INSUFFICIENT_BUFFER) {
@@ -60,8 +64,37 @@ wchar_t *Str::Utf8ToWide(const char *s)
 
 		return retv;
 #	else
-		//TODO: Use iconv.
-		throw std::exception();
+		//TODO: Initialize icv only once per thread.
+		iconv_t icv = iconv_open("WCHAR_T", "UTF-8");
+		size_t origsz = sz - 1;
+		for (;;) {
+			char *inbuf = const_cast<char*>(s);
+			size_t insz = origsz;
+			char *outbuf = reinterpret_cast<char*>(retv);
+			size_t outsz = sz - 1;
+			size_t ct = iconv(icv, &inbuf, &insz, &outbuf, &outsz);
+			if (ct == (size_t)-1) {
+				switch (errno) {
+					case EILSEQ:
+						free(retv);
+						iconv_close(icv);
+						return wcsdup(L"#<Invalid UTF-8 sequence>");
+					case EINVAL:
+						free(retv);
+						iconv_close(icv);
+						return wcsdup(L"#<Incomplete UTF-8 sequence>");
+					case E2BIG:
+						sz *= 2;
+						retv = (wchar_t*)realloc(retv, sz * sizeof(wchar_t));
+				}
+			}
+			else {
+				*((wchar_t*)outbuf) = L'\0';
+				break;
+			}
+		}
+		iconv_close(icv);
+		return retv;
 #	endif
 }
 
