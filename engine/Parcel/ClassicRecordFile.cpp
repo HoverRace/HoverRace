@@ -96,12 +96,19 @@ void ClassicRecordFileHeader::Serialize(ObjStream &os)
 			dummy >> dummy;
 		sumValid = sumValidLoad != FALSE;
 
-		//TODO: Check title for validity.
-
-		if (recordsMax > 0) {
-			recordList = new MR_UInt32[recordsMax];
-			for (unsigned int i = 0; i < recordsMax; ++i) {
-				os >> recordList[i];
+		// Check title for validity.
+		if (title.find("HoverRace track file") == std::string::npos &&
+			title.find("Fireball object factory resource file") == std::string::npos)
+		{
+			//TODO: Log error.
+			ASSERT(FALSE);
+		}
+		else {
+			if (recordsMax > 0) {
+				recordList = new MR_UInt32[recordsMax];
+				for (unsigned int i = 0; i < recordsMax; ++i) {
+					os >> recordList[i];
+				}
 			}
 		}
 	}
@@ -195,7 +202,15 @@ int ClassicRecordFile::GetNbRecords() const
 
 void ClassicRecordFile::SelectRecord(int i)
 {
-	//TODO
+	if (header != NULL) {
+		if ((unsigned)i < header->recordsUsed) {
+			curRecord = i;
+			fileStream.seekg(header->recordList[i], ios::beg);
+		}
+		else {
+			ASSERT(FALSE);
+		}
+	}
 }
 
 bool ClassicRecordFile::BeginANewRecord()
