@@ -22,6 +22,9 @@
 
 #include "StdAfx.h"
 
+#include <boost/algorithm/string/predicate.hpp>
+
+#include "../../engine/Model/TrackEntry.h"
 #include "../../engine/Parcel/ClassicRecordFile.h"
 #ifdef _WIN32
 #	include "../../engine/Parcel/MfcRecordFile.h"
@@ -29,6 +32,7 @@
 #include "../../engine/Util/InspectMapNode.h"
 #include "../../engine/Util/Str.h"
 
+using namespace HoverRace::Model;
 using namespace HoverRace::Parcel;
 using namespace HoverRace::Util;
 
@@ -39,7 +43,7 @@ using namespace HoverRace::Util;
 
 typedef boost::shared_ptr<RecordFile> RecordFilePtr;
 
-static RecordFilePtr OpenRecordFile(const char *filename)
+static RecordFilePtr OpenRecordFile(const std::string &filename)
 {
 	//TODO: Allow loader selection.
 #	ifdef _WIN32
@@ -48,7 +52,7 @@ static RecordFilePtr OpenRecordFile(const char *filename)
 		RecordFilePtr file(new ClassicRecordFile());
 #	endif
 
-	if (!file->OpenForRead(filename)) {
+	if (!file->OpenForRead(filename.c_str())) {
 		std::cerr << "Invalid or corrupt parcel file: " << filename << std::endl;
 		file.reset();
 	}
@@ -56,29 +60,51 @@ static RecordFilePtr OpenRecordFile(const char *filename)
 	return file;
 }
 
-int main(int argc, char **argv)
+static void InspectAndPrint(const Inspectable *insp)
 {
-	if (argc < 2) return EXIT_FAILURE;
-
-	//TODO: Command line options.
-	const char *filename = argv[1];
-
-	RecordFilePtr file = OpenRecordFile(filename);
-	if (file == NULL) return EXIT_FAILURE;
-
 	InspectMapNode root;
-	file->Inspect(root);
+	insp->Inspect(root);
 
 	std::string outStr;
 	outStr.reserve(4096);
 	root.RenderToString(outStr);
 
 	std::wstring ws((const wchar_t*)Str::UW(outStr.c_str()));
-	std::wcout << ws << std::endl;
+	std::wcout << L"---\n" << ws << std::endl;
 #	if defined(_WIN32) && defined(_DEBUG)
+		OutputDebugStringW(L"---\n");
 		OutputDebugStringW(ws.c_str());
 		OutputDebugStringW(L"\n");
 #	endif
+}
+
+static void DumpTrack(RecordFilePtr file)
+{
+	file->SelectRecord(0);
+	ObjStreamPtr os(file->StreamIn());
+	TrackEntry ent;
+	ent.Serialize(*os);
+	InspectAndPrint(&ent);
+}
+
+int main(int argc, char **argv)
+{
+	if (argc < 2) return EXIT_FAILURE;
+
+	//TODO: Command line options.
+	std::string filename(argv[1]);
+
+	RecordFilePtr file = OpenRecordFile(filename);
+	if (file == NULL) return EXIT_FAILURE;
+
+	InspectAndPrint(file.get());
+
+	if (boost::algorithm::ends_with(filename, ".trk")) {
+		DumpTrack(file);
+	}
+	else {
+		std::wcerr << L"-- Unsupported record file type." << std::endl;
+	}
 
 	return EXIT_SUCCESS;
 }
