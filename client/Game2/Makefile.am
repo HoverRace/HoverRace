@@ -37,7 +37,6 @@ BUILT_SOURCES = StdAfx.h.gch
 CLEANFILES = $(BUILT_SOURCES)
 
 EXTRA_DIST = \
-	Game2.exe.manifest \
 	Game2.rc \
 	StdAfx.cpp \
 	icon1.ico \
