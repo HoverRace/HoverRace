@@ -36,7 +36,6 @@ ClassicObjStream::ClassicObjStream(std::iostream &stream, const std::string &nam
 
 void ClassicObjStream::WriteUInt8(MR_UInt8 i)
 {
-	//TODO: Big-endian conversion.
 	stream->write(reinterpret_cast<char*>(&i), 1);
 }
 
@@ -72,7 +71,6 @@ void ClassicObjStream::WriteString(const std::string &s)
 void ClassicObjStream::ReadUInt8(MR_UInt8 &i)
 {
 	stream->read(reinterpret_cast<char*>(&i), 1);
-	//TODO: Big-endian conversion.
 }
 
 void ClassicObjStream::ReadInt16(MR_Int16 &i)
