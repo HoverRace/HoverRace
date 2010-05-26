@@ -302,6 +302,14 @@
 				RelativePath=".\Model\Shapes.h"
 				>
 			</File>
+			<File
+				RelativePath=".\Model\TrackEntry.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Model\TrackEntry.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="ObjFac1"
