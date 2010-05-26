@@ -15,7 +15,7 @@ EXTRA_DIST = config/config.rpath  \
 	hoverrace.sln \
 	license.txt
 
-SUBDIRS = engine client po
+SUBDIRS = engine client compilers po
 
 pkgdata_DATA = \
 	res/Intro.avi \

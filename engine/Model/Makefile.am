@@ -13,5 +13,7 @@ libmodel_la_SOURCES = \
 	ShapeCollisions.cpp \
 	ShapeCollisions.h \
 	Shapes.cpp \
-	Shapes.h
+	Shapes.h \
+	TrackEntry.cpp \
+	TrackEntry.h
 

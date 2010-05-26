@@ -73,6 +73,7 @@ AC_CONFIG_FILES([
 	Makefile
 	client/Makefile
 	client/Game2/Makefile
+	compilers/Makefile
 	compilers/ParcelDump/Makefile
 	engine/Makefile
 	engine/ColorTools/Makefile
