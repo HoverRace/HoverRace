@@ -16,6 +16,9 @@ hr_parceldump_SOURCES = \
 BUILT_SOURCES = StdAfx.h.gch
 CLEANFILES = $(BUILT_SOURCES)
 
+EXTRA_DIST = \
+	ParcelDump.vcproj
+
 # Build the precompiled header.
 StdAfx.h.gch: StdAfx.h
 	$(CXXCOMPILE) $(HR_CPPFLAGS) $(HR_CXXFLAGS) -x c++-header -c -o $@ $<
