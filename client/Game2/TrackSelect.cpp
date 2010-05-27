@@ -26,6 +26,7 @@
 #include "resource.h"
 #include "io.h"
 #include "../../compilers/MazeCompiler/TrackCommonStuff.h"
+#include "../../engine/Model/TrackEntry.h"
 #include "../../engine/Util/StrRes.h"
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/OS.h"
@@ -33,34 +34,9 @@
 
 #include <algorithm>
 
+using HoverRace::Model::TrackEntry;
 using namespace HoverRace::Parcel;
 using namespace HoverRace::Util;
-
-class TrackEntry
-{
-	public:
-		std::string mFileName;
-		std::string mDescription;
-		int mRegistrationMode;
-		int mSortingIndex;
-
-		bool operator<(const TrackEntry &elem2) const
-		{
-			int diff = mSortingIndex - elem2.mSortingIndex;
-			if (diff == 0) {
-				return mFileName < elem2.mFileName;
-			}
-			else {
-				return (diff < 0);
-			}
-		}
-
-		bool operator==(const TrackEntry &elem2) const
-		{
-			return ((mFileName == elem2.mFileName) && 
-					(mDescription == elem2.mDescription));
-		}
-};
 
 /// Search path for tracks (not including download path from config).
 static const char *TRACK_PATHS[] = {
@@ -160,7 +136,7 @@ bool MR_SelectTrack(HWND pParentWindow, std::string &pTrackFile, int &pNbLap, ch
 	gsGameOpts = 0;
 
 	if(DialogBoxW(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDD_TRACK_SELECT), pParentWindow, TrackSelectCallBack) == IDOK) {
-		pTrackFile = gsSortedTrackList[gsSelectedEntry]->mFileName;
+		pTrackFile = gsSortedTrackList[gsSelectedEntry]->filename;
 		pNbLap = gsNbLaps;
 		pGameOpts = gsGameOpts;
 		lReturnValue = true;
@@ -205,7 +181,7 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 				iter != gsSortedTrackList.end(); ++iter)
 			{
 				SendDlgItemMessage(pWindow, IDC_LIST, LB_ADDSTRING, 0,
-					(LPARAM) ((*iter)->mFileName.c_str()));
+					(LPARAM) ((*iter)->filename.c_str()));
 			}
 
 			SetDlgItemInt(pWindow, IDC_NB_LAP, gsNbLaps, FALSE);
@@ -222,7 +198,7 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 			if (!gsSortedTrackList.empty()) {
 				gsSelectedEntry = 0;
 				SendDlgItemMessage(pWindow, IDOK, WM_ENABLE, TRUE, 0);
-				SetDlgItemText(pWindow, IDC_DESCRIPTION, gsSortedTrackList[gsSelectedEntry]->mDescription.c_str());
+				SetDlgItemText(pWindow, IDC_DESCRIPTION, gsSortedTrackList[gsSelectedEntry]->description.c_str());
 				SendDlgItemMessage(pWindow, IDC_LIST, LB_SETCURSEL, 0, 0);
 			}
 			else {
@@ -251,7 +227,7 @@ static BOOL CALLBACK TrackSelectCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 							}
 							else {
 								SendDlgItemMessage(pWindow, IDOK, WM_ENABLE, TRUE, 0);
-								SetDlgItemText(pWindow, IDC_DESCRIPTION, gsSortedTrackList[gsSelectedEntry]->mDescription.c_str());
+								SetDlgItemText(pWindow, IDC_DESCRIPTION, gsSortedTrackList[gsSelectedEntry]->description.c_str());
 							}
 							break;
 					}
@@ -338,14 +314,16 @@ MR_TrackAvail MR_GetTrackAvail(const char *pFileName)
 
 BOOL ReadTrackEntry(RecordFile * pRecordFile, TrackEntry * pDest, const char *pFileName)
 {
-	BOOL lReturnValue = FALSE;
-	int lMagicNumber;
+	BOOL lReturnValue = TRUE;
+	//int lMagicNumber;
 
 	pRecordFile->SelectRecord(0);
 
 	ObjStreamPtr archivePtr(pRecordFile->StreamIn());
-	ObjStream &lArchive = *archivePtr;
+	//ObjStream &lArchive = *archivePtr;
+	pDest->Serialize(*archivePtr);
 	
+	/*
 	lArchive >> lMagicNumber;
 	if(lMagicNumber == MR_MAGIC_TRACK_NUMBER) {
 		int lVersion;
@@ -397,6 +375,7 @@ BOOL ReadTrackEntry(RecordFile * pRecordFile, TrackEntry * pDest, const char *pF
 			}
 		}
 	}
+	*/
 	return lReturnValue;
 }
 
@@ -482,7 +461,7 @@ void ReadTrackListDir(const std::string &dir)
 		do {
 			gsTrackList.push_back(TrackEntry());
 			TrackEntry &ent = gsTrackList.back();
-			ent.mFileName = std::string(lFileInfo.name, 0, strlen(lFileInfo.name) - Config::TRACK_EXT.length());
+			ent.filename = std::string(lFileInfo.name, 0, strlen(lFileInfo.name) - Config::TRACK_EXT.length());
 
 			// Open the file and read additional info
 			MfcRecordFile lRecordFile;
