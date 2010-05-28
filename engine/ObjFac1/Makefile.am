@@ -2,5 +2,7 @@
 noinst_LTLIBRARIES = libobjfac1.la
 libobjfac1_la_CPPFLAGS = -I.. $(HR_CPPFLAGS)
 libobjfac1_la_CXXFLAGS = $(HR_CXXFLAGS)
-libobjfac1_la_SOURCES = 
+libobjfac1_la_SOURCES = \
+	ObjFac1.h \
+	ObjFac1Res.h
 
