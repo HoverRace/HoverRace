@@ -15,6 +15,8 @@ hoverrace_SOURCES = \
 	StdAfx.h \
 	Control/Controller.cpp \
 	Control/Controller.h \
+	Control/InputHandler.h \
+	Control/UiHandler.h \
 	HoverScript/ClientScriptCore.cpp \
 	HoverScript/ClientScriptCore.h \
 	HoverScript/ConfigPeer.cpp \
