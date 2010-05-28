@@ -80,11 +80,12 @@ static void InspectAndPrint(const std::wstring &label, const Inspectable *insp)
 #	endif
 }
 
-static void DumpTrack(RecordFilePtr file)
+static void DumpTrack(const std::string &filename, RecordFilePtr file)
 {
 	file->SelectRecord(0);
 	ObjStreamPtr os(file->StreamIn());
 	TrackEntry ent;
+	ent.filename = filename;
 	ent.Serialize(*os);
 	InspectAndPrint(L"Track metadata", &ent);
 }
@@ -102,7 +103,7 @@ int main(int argc, char **argv)
 	InspectAndPrint(L"Header", file.get());
 
 	if (boost::algorithm::ends_with(filename, ".trk")) {
-		DumpTrack(file);
+		DumpTrack(filename, file);
 	}
 	else {
 		std::wcerr << L"-- Unsupported record file type." << std::endl;
