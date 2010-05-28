@@ -16,7 +16,8 @@ AC_PROG_CPP
 AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
-AC_PROG_LIBTOOL
+LT_INIT([disable-static])
+AC_SUBST([LIBTOOL_DEPS])
 AM_GNU_GETTEXT([external])
 
 # pthread support.
