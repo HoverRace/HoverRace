@@ -26,6 +26,8 @@
 #include "../Model/ConcreteShape.h"
 #include "../Model/FreeElementMovingHelper.h"
 
+using HoverRace::ObjFacTools::ResourceLib;
+
 const MR_Int32 cMissileRay = 300;				  // the missile have a diameter of 60cm
 const MR_Int32 cMissileWeight = 100;
 const MR_Int32 cLifeTime = 7500;				  // 7.6 sec..was 10 sec before
@@ -69,7 +71,7 @@ MR_Int32 MR_Missile::RayLen() const
 	return cMissileRay;
 }
 
-MR_Missile::MR_Missile(const MR_ObjectFromFactoryId & pId, MR_ResourceLib* resourceLib)
+MR_Missile::MR_Missile(const MR_ObjectFromFactoryId & pId, ResourceLib* resourceLib)
 	: MR_FreeElementBase(pId)
 {
 	mHoverId = -1;

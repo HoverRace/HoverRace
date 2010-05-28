@@ -3,8 +3,13 @@
 
 #include <string>
 
+namespace HoverRace {
+	namespace ObjFacTools {
+		class ResourceLib;
+	}
+}
+
 class MR_ObjectFromFactory;
-class MR_ResourceLib;
 
 namespace HoverRace
 {
@@ -20,7 +25,7 @@ namespace HoverRace
 				MR_ObjectFromFactory *GetObject(int pClassId);
 
 			private:
-				MR_ResourceLib* resourceLib;
+				HoverRace::ObjFacTools::ResourceLib* resourceLib;
 		};
 
 	} // namespace ObjFac1

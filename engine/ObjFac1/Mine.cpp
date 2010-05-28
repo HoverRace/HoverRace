@@ -27,6 +27,8 @@
 #include "../Model/ConcreteShape.h"
 #include "../Model/FreeElementMovingHelper.h"
 
+using HoverRace::ObjFacTools::ResourceLib;
+
 const MR_Int32 cMineRay = 400;
 const MR_Int32 cMineHeight = 140;
 
@@ -53,7 +55,7 @@ MR_Int32 MR_Mine::AxisY() const
 MR_Int32 MR_Mine::RayLen() const
 {
 	return cMineRay;
-} MR_Mine::MR_Mine(const MR_ObjectFromFactoryId & pId, MR_ResourceLib* resourceLib)
+} MR_Mine::MR_Mine(const MR_ObjectFromFactoryId & pId, ResourceLib* resourceLib)
 :MR_FreeElementBase(pId)
 {
 	mEffectList.push_back(&mEffect);

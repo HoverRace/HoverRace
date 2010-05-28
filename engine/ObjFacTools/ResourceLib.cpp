@@ -29,12 +29,15 @@
 
 using namespace HoverRace::Parcel;
 
+namespace HoverRace {
+namespace ObjFacTools {
+
 /**
- * Create a new MR_ResourceLib object, reading from the specified filename.
+ * Create a new ResourceLib object, reading from the specified filename.
  *
  * @param pResFile Filename of object
  */
-MR_ResourceLib::MR_ResourceLib(const char *pResFile)
+ResourceLib::ResourceLib(const char *pResFile)
 {
 	if(mRecordFile.OpenForRead(pResFile)) {
 
@@ -79,12 +82,12 @@ MR_ResourceLib::MR_ResourceLib(const char *pResFile)
 /**
  * Empty constructor
  */
-MR_ResourceLib::MR_ResourceLib() { }
+ResourceLib::ResourceLib() { }
 
 /**
- * Close the MR_ResourceLib, deleting all of the objects that were created.
+ * Close the ResourceLib, deleting all of the objects that were created.
  */
-MR_ResourceLib::~MR_ResourceLib()
+ResourceLib::~ResourceLib()
 {
 	POSITION lPos;
 
@@ -145,7 +148,7 @@ MR_ResourceLib::~MR_ResourceLib()
 
 }
 
-/*const*/ MR_ResBitmap *MR_ResourceLib::GetBitmap(int pBitmapId)
+/*const*/ MR_ResBitmap *ResourceLib::GetBitmap(int pBitmapId)
 {
 
 	MR_ResBitmap *lValue = NULL;
@@ -155,7 +158,7 @@ MR_ResourceLib::~MR_ResourceLib()
 	return lValue;
 }
 
-const MR_ResActor *MR_ResourceLib::GetActor(int pActorId)
+const MR_ResActor *ResourceLib::GetActor(int pActorId)
 {
 	MR_ResActor *lValue = NULL;
 
@@ -164,7 +167,7 @@ const MR_ResActor *MR_ResourceLib::GetActor(int pActorId)
 	return lValue;
 }
 
-const MR_ResSprite *MR_ResourceLib::GetSprite(int pSpriteId)
+const MR_ResSprite *ResourceLib::GetSprite(int pSpriteId)
 {
 	MR_ResSprite *lValue = NULL;
 
@@ -173,7 +176,7 @@ const MR_ResSprite *MR_ResourceLib::GetSprite(int pSpriteId)
 	return lValue;
 }
 
-const MR_ResShortSound *MR_ResourceLib::GetShortSound(int pSoundId)
+const MR_ResShortSound *ResourceLib::GetShortSound(int pSoundId)
 {
 	MR_ResShortSound *lValue = NULL;
 
@@ -182,7 +185,7 @@ const MR_ResShortSound *MR_ResourceLib::GetShortSound(int pSoundId)
 	return lValue;
 }
 
-const MR_ResContinuousSound *MR_ResourceLib::GetContinuousSound(int pSoundId)
+const MR_ResContinuousSound *ResourceLib::GetContinuousSound(int pSoundId)
 {
 	MR_ResContinuousSound *lValue = NULL;
 
@@ -196,7 +199,7 @@ const MR_ResContinuousSound *MR_ResourceLib::GetContinuousSound(int pSoundId)
  *
  * @param pArchive The archive to read from
  */
-void MR_ResourceLib::LoadBitmaps(ObjStream &pArchive)
+void ResourceLib::LoadBitmaps(ObjStream &pArchive)
 {
 	int lNbBitmap;
 
@@ -221,7 +224,7 @@ void MR_ResourceLib::LoadBitmaps(ObjStream &pArchive)
  *
  * @param pArchive The archive to read from
  */
-void MR_ResourceLib::LoadActors(ObjStream &pArchive)
+void ResourceLib::LoadActors(ObjStream &pArchive)
 {
 	int lNbActor;
 
@@ -245,7 +248,7 @@ void MR_ResourceLib::LoadActors(ObjStream &pArchive)
  *
  * @param pArchive The archive to read from
  */
-void MR_ResourceLib::LoadSprites(ObjStream &pArchive)
+void ResourceLib::LoadSprites(ObjStream &pArchive)
 {
 	int lNbSprite;
 
@@ -270,7 +273,7 @@ void MR_ResourceLib::LoadSprites(ObjStream &pArchive)
  *
  * @param pArchive The archive to read from
  */
-void MR_ResourceLib::LoadSounds(ObjStream &pArchive)
+void ResourceLib::LoadSounds(ObjStream &pArchive)
 {
 	int lNbSound;
 	int lCounter;
@@ -304,3 +307,6 @@ void MR_ResourceLib::LoadSounds(ObjStream &pArchive)
 	}
 
 }
+
+}  // namespace ObjFacTools
+}  // namespace HoverRace

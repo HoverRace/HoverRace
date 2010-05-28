@@ -24,7 +24,9 @@
 #include "TestElement.h"
 #include "../Model/FreeElementMovingHelper.h"
 
-MR_TestElement::MR_TestElement(const MR_ObjectFromFactoryId & pId, MR_ResourceLib* resourceLib, int pActorRes)
+using HoverRace::ObjFacTools::ResourceLib;
+
+MR_TestElement::MR_TestElement(const MR_ObjectFromFactoryId & pId, ResourceLib* resourceLib, int pActorRes)
 	: MR_FreeElementBase(pId)
 {
 	mElapsedFrameTime = 0;

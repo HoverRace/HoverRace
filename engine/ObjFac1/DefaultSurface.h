@@ -29,7 +29,7 @@
 class MR_DefaultSurface:public MR_BitmapSurface
 {
 	public:
-		MR_DefaultSurface(const MR_ObjectFromFactoryId & pId, MR_ResourceLib* resourceLib);
+		MR_DefaultSurface(const MR_ObjectFromFactoryId & pId, HoverRace::ObjFacTools::ResourceLib* resourceLib);
 		~MR_DefaultSurface();
 };
 #endif

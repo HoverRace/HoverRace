@@ -24,7 +24,9 @@
 #include "BallElement.h"
 #include "ObjFac1Res.h"
 
-MR_BallElement::MR_BallElement(const MR_ObjectFromFactoryId & pId, MR_ResourceLib* resourceLib)
+using HoverRace::ObjFacTools::ResourceLib;
+
+MR_BallElement::MR_BallElement(const MR_ObjectFromFactoryId & pId, ResourceLib* resourceLib)
 	: MR_FreeElementBase(pId)
 {
 	mActor = resourceLib->GetActor(MR_BALL);

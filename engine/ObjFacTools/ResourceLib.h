@@ -40,9 +40,12 @@ namespace HoverRace {
 	}
 }
 
-class MR_ResourceLib
+namespace HoverRace {
+namespace ObjFacTools {
+
+class ResourceLib
 {
-	// Each module can have its own MR_ResourceLib
+	// Each module can have its own ResourceLib
 
 	protected:
 		HoverRace::Parcel::MfcRecordFile mRecordFile;
@@ -58,11 +61,11 @@ class MR_ResourceLib
 		void LoadSprites(HoverRace::Parcel::ObjStream &pArchive);
 		void LoadSounds(HoverRace::Parcel::ObjStream &pArchive);
 
-		MR_DllDeclare MR_ResourceLib();
+		MR_DllDeclare ResourceLib();
 
 	public:
-		MR_DllDeclare MR_ResourceLib(const char *pFileName);
-		MR_DllDeclare ~MR_ResourceLib();
+		MR_DllDeclare ResourceLib(const char *pFileName);
+		MR_DllDeclare ~ResourceLib();
 
 		MR_DllDeclare /*const */ MR_ResBitmap * GetBitmap(int pBitmapId);
 		MR_DllDeclare const MR_ResActor *GetActor(int pActorId);
@@ -73,6 +76,9 @@ class MR_ResourceLib
 };
 
 #define MR_RESOURCE_FILE_MAGIC    12345
+
+}  // namespace ObjFacTools
+}  // namespace HoverRace
 
 #undef MR_DllDeclare
 #endif

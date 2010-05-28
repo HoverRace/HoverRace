@@ -44,7 +44,7 @@ class MR_Mine:public MR_FreeElementBase, protected MR_CylinderShape
 		MR_ContactEffectList mEffectList;
 
 	public:
-		MR_Mine(const MR_ObjectFromFactoryId & pId, MR_ResourceLib* resourceLib);
+		MR_Mine(const MR_ObjectFromFactoryId & pId, HoverRace::ObjFacTools::ResourceLib* resourceLib);
 		~MR_Mine();
 
 	protected:

@@ -24,6 +24,8 @@
 #include "ResActorBuilder.h"
 #include "TextParsing.h"
 
+using HoverRace::ObjFacTools::ResourceLib;
+
 #define MR_MAX_SEQUENCE   1024
 #define MR_MAX_FRAME      2048
 
@@ -33,7 +35,7 @@ MR_ResActorBuilder::MR_ResActorBuilder(int pResourceId)
 
 }
 
-BOOL MR_ResActorBuilder::BuildFromFile(const char *pFile, MR_ResourceLib * pBitmapLib)
+BOOL MR_ResActorBuilder::BuildFromFile(const char *pFile, ResourceLib *pBitmapLib)
 {
 	int lCounter;
 	BOOL lReturnValue = TRUE;
@@ -162,7 +164,7 @@ BOOL MR_ResActorBuilder::BuildFromFile(const char *pFile, MR_ResourceLib * pBitm
 	return lReturnValue;
 }
 
-MR_ResActorBuilder::Patch * MR_ResActorBuilder::ReadPatch(FILE * pFile, MR_ResourceLib * pBitmapLib)
+MR_ResActorBuilder::Patch * MR_ResActorBuilder::ReadPatch(FILE * pFile, ResourceLib * pBitmapLib)
 {
 	Patch *lReturnValue = new Patch;
 	char lBuffer[250];

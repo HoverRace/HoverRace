@@ -24,7 +24,9 @@
 #include "DefaultSurface.h"
 #include "ObjFac1Res.h"
 
-MR_DefaultSurface::MR_DefaultSurface(const MR_ObjectFromFactoryId & pId, MR_ResourceLib* resourceLib)
+using HoverRace::ObjFacTools::ResourceLib;
+
+MR_DefaultSurface::MR_DefaultSurface(const MR_ObjectFromFactoryId & pId, ResourceLib* resourceLib)
 	: MR_BitmapSurface(pId)
 {
 	mBitmap = resourceLib->GetBitmap(MR_ETALON);

@@ -14,12 +14,13 @@
 #endif
 
 namespace HoverRace {
+	namespace ObjFacTools {
+		class ResourceLib;
+	}
 	namespace Parcel {
 		class ObjStream;
 	}
 }
-
-class MR_ResourceLib;
 
 class MR_ResActor
 {
@@ -36,7 +37,7 @@ class MR_ResActor
 
 				virtual ~ ActorComponent();
 				virtual eComponentType GetType() const = 0;
-				virtual void Serialize(HoverRace::Parcel::ObjStream &pArchive, MR_ResourceLib *pLib) = 0;
+				virtual void Serialize(HoverRace::Parcel::ObjStream &pArchive, HoverRace::ObjFacTools::ResourceLib *pLib) = 0;
 				virtual void Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix) const = 0;
 
 		};
@@ -53,7 +54,7 @@ class MR_ResActor
 				~Patch();
 
 				eComponentType GetType() const;
-				void Serialize(HoverRace::Parcel::ObjStream &pArchive, MR_ResourceLib *pLib);
+				void Serialize(HoverRace::Parcel::ObjStream &pArchive, HoverRace::ObjFacTools::ResourceLib *pLib);
 				void Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix) const;
 
 				int GetURes() const;
@@ -71,7 +72,7 @@ class MR_ResActor
 				Frame();
 				~Frame();
 				void Clean();
-				void Serialize(HoverRace::Parcel::ObjStream &pArchive, MR_ResourceLib *pLib);
+				void Serialize(HoverRace::Parcel::ObjStream &pArchive, HoverRace::ObjFacTools::ResourceLib *pLib);
 				void Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix) const;
 
 		};
@@ -84,7 +85,7 @@ class MR_ResActor
 
 				Sequence();
 				~Sequence();
-				void Serialize(HoverRace::Parcel::ObjStream &pArchive, MR_ResourceLib *pLib);
+				void Serialize(HoverRace::Parcel::ObjStream &pArchive, HoverRace::ObjFacTools::ResourceLib *pLib);
 				void Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix, int pFrame) const;
 
 		};
@@ -103,7 +104,7 @@ class MR_ResActor
 		MR_DllDeclare int GetSequenceCount() const;
 		MR_DllDeclare int GetFrameCount(int pSequence) const;
 
-		MR_DllDeclare void Serialize(HoverRace::Parcel::ObjStream &pArchive, MR_ResourceLib *pLib = NULL);
+		MR_DllDeclare void Serialize(HoverRace::Parcel::ObjStream &pArchive, HoverRace::ObjFacTools::ResourceLib *pLib = NULL);
 		MR_DllDeclare void Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix, int pSequence, int pFrame) const;
 
 };

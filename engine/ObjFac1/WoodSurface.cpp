@@ -24,7 +24,9 @@
 #include "WoodSurface.h"
 #include "ObjFac1Res.h"
 
-MR_WoodSurface::MR_WoodSurface(const MR_ObjectFromFactoryId & pId, MR_ResourceLib* resourceLib)
+using HoverRace::ObjFacTools::ResourceLib;
+
+MR_WoodSurface::MR_WoodSurface(const MR_ObjectFromFactoryId & pId, ResourceLib* resourceLib)
 :MR_BitmapSurface(pId)
 {
 	mBitmap = resourceLib->GetBitmap(MR_WOOD1);

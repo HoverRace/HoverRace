@@ -32,7 +32,7 @@ namespace HoverRace {
 	}
 }
 
-class MR_ResourceLibBuilder:public MR_ResourceLib
+class MR_ResourceLibBuilder : public HoverRace::ObjFacTools::ResourceLib
 {
 	// Each module can have its own MR_BitmapLib
 	protected:

@@ -26,6 +26,8 @@
 #include "../Model/ConcreteShape.h"
 #include "../Model/FreeElementMovingHelper.h"
 
+using HoverRace::ObjFacTools::ResourceLib;
+
 #define NB_STATE 10
 
 const MR_Int32 cGateRayMin = 200;
@@ -61,7 +63,7 @@ MR_Int32 MR_BumperGate::RayLen() const
 	return cGateRayMin + mCurrentFrame * (cGateRayMax - cGateRayMin) / (mLastState);
 }
 
-MR_BumperGate::MR_BumperGate(const MR_ObjectFromFactoryId & pId, MR_ResourceLib* resourceLib)
+MR_BumperGate::MR_BumperGate(const MR_ObjectFromFactoryId & pId, ResourceLib* resourceLib)
 	: MR_FreeElementBase(pId)
 {
 	mActor = resourceLib->GetActor(MR_BUMPERGATE);

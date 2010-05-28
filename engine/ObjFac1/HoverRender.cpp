@@ -25,6 +25,8 @@
 #include "ObjFac1Res.h"
 #include "../Util/FuzzyLogic.h"
 
+using HoverRace::ObjFacTools::ResourceLib;
+
 // Local stuff
 
 class MR_ResActorFriend
@@ -33,7 +35,7 @@ class MR_ResActorFriend
 		static void Draw(const MR_ResActor *pActor, MR_3DViewPort *pDest, const MR_PositionMatrix &pMatrix, int pSequence, int pFrame, const MR_Bitmap *pCockpitBitmap);
 };
 
-MR_HoverRender::MR_HoverRender(const MR_ObjectFromFactoryId &pId, MR_ResourceLib *resourceLib)
+MR_HoverRender::MR_HoverRender(const MR_ObjectFromFactoryId &pId, ResourceLib *resourceLib)
 :MR_MainCharacterRenderer(pId)
 {
 	mFrame = 0;

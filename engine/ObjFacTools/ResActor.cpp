@@ -26,6 +26,7 @@
 
 #include "ResActor.h"
 
+using HoverRace::ObjFacTools::ResourceLib;
 using HoverRace::Parcel::ObjStream;
 using HoverRace::Parcel::ObjStreamExn;
 
@@ -58,7 +59,7 @@ int MR_ResActor::GetFrameCount(int pSequence) const
 	return mSequenceList[pSequence].mNbFrame;
 } 
 
-void MR_ResActor::Serialize(ObjStream &pArchive, MR_ResourceLib *pLib)
+void MR_ResActor::Serialize(ObjStream &pArchive, ResourceLib *pLib)
 {
 
 	if(pArchive.IsWriting()) {
@@ -100,7 +101,7 @@ MR_ResActor::Sequence::~Sequence()
 	delete[]mFrameList;
 }
 
-void MR_ResActor::Sequence::Serialize(ObjStream &pArchive, MR_ResourceLib *pLib)
+void MR_ResActor::Sequence::Serialize(ObjStream &pArchive, ResourceLib *pLib)
 {
 	if(pArchive.IsWriting()) {
 		pArchive << mNbFrame;
@@ -153,7 +154,7 @@ void MR_ResActor::Frame::Clean()
 	}
 }
 
-void MR_ResActor::Frame::Serialize(ObjStream &pArchive, MR_ResourceLib *pLib)
+void MR_ResActor::Frame::Serialize(ObjStream &pArchive, ResourceLib *pLib)
 {
 	int lCounter;
 
@@ -227,7 +228,7 @@ MR_ResActor::eComponentType MR_ResActor::Patch::GetType() const
 	return ePatch;
 }
 
-void MR_ResActor::Patch::Serialize(ObjStream &pArchive, MR_ResourceLib *pLib)
+void MR_ResActor::Patch::Serialize(ObjStream &pArchive, ResourceLib *pLib)
 {
 	int lCounter;
 

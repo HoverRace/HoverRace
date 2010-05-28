@@ -26,6 +26,8 @@
 #include "../Model/ConcreteShape.h"
 #include "../Model/FreeElementMovingHelper.h"
 
+using HoverRace::ObjFacTools::ResourceLib;
+
 const MR_Int32 cPowerUpRay = 550;
 const MR_Int32 cPowerUpHalfHeight = 550;
 
@@ -54,7 +56,7 @@ MR_Int32 MR_PowerUp::RayLen() const
 	return cPowerUpRay;
 }
 
-MR_PowerUp::MR_PowerUp(const MR_ObjectFromFactoryId & pId, MR_ResourceLib* resourceLib)
+MR_PowerUp::MR_PowerUp(const MR_ObjectFromFactoryId & pId, ResourceLib* resourceLib)
 	:MR_FreeElementBase(pId)
 {
 	mEffectList.push_back(&mPowerUpEffect);
