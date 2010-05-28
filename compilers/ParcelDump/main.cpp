@@ -60,7 +60,7 @@ static RecordFilePtr OpenRecordFile(const std::string &filename)
 	return file;
 }
 
-static void InspectAndPrint(const Inspectable *insp)
+static void InspectAndPrint(const std::wstring &label, const Inspectable *insp)
 {
 	InspectMapNode root;
 	insp->Inspect(root);
@@ -70,9 +70,11 @@ static void InspectAndPrint(const Inspectable *insp)
 	root.RenderToString(outStr);
 
 	std::wstring ws((const wchar_t*)Str::UW(outStr.c_str()));
-	std::wcout << L"---\n" << ws << std::endl;
+	std::wcout << L"--- # " << label << '\n' << ws << std::endl;
 #	if defined(_WIN32) && defined(_DEBUG)
-		OutputDebugStringW(L"---\n");
+		OutputDebugStringW(L"--- # ");
+		OutputDebugStringW(label.c_str());
+		OutputDebugStringW(L"\n");
 		OutputDebugStringW(ws.c_str());
 		OutputDebugStringW(L"\n");
 #	endif
@@ -84,7 +86,7 @@ static void DumpTrack(RecordFilePtr file)
 	ObjStreamPtr os(file->StreamIn());
 	TrackEntry ent;
 	ent.Serialize(*os);
-	InspectAndPrint(&ent);
+	InspectAndPrint(L"Track metadata", &ent);
 }
 
 int main(int argc, char **argv)
@@ -97,7 +99,7 @@ int main(int argc, char **argv)
 	RecordFilePtr file = OpenRecordFile(filename);
 	if (file == NULL) return EXIT_FAILURE;
 
-	InspectAndPrint(file.get());
+	InspectAndPrint(L"Header", file.get());
 
 	if (boost::algorithm::ends_with(filename, ".trk")) {
 		DumpTrack(file);
