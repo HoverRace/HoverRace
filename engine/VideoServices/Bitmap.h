@@ -20,15 +20,18 @@
 // and limitations under the License.
 //
 
-#ifndef MR_BITMAP_H
-#define MR_BITMAP_H
+#pragma once
 
 #include "../Util/MR_Types.h"
 
-#ifdef MR_ENGINE
-#define MR_DllDeclare   __declspec( dllexport )
+#ifdef _WIN32
+#	ifdef MR_ENGINE
+#		define MR_DllDeclare   __declspec( dllexport )
+#	else
+#		define MR_DllDeclare   __declspec( dllimport )
+#	endif
 #else
-#define MR_DllDeclare   __declspec( dllimport )
+#	define MR_DllDeclare
 #endif
 
 class MR_DllDeclare MR_Bitmap
@@ -60,4 +63,3 @@ class MR_DllDeclare MR_Bitmap
 };
 
 #undef MR_DllDeclare
-#endif

@@ -21,15 +21,18 @@
 // and limitations under the License.
 //
 
-#ifndef MR_RES_BITMAP_H
-#define MR_RES_BITMAP_H
+#pragma once
 
 #include "../VideoServices/Bitmap.h"
 
-#ifdef MR_ENGINE
-#define MR_DllDeclare   __declspec(dllexport)
+#ifdef _WIN32
+#	ifdef MR_ENGINE
+#		define MR_DllDeclare   __declspec( dllexport )
+#	else
+#		define MR_DllDeclare   __declspec( dllimport )
+#	endif
 #else
-#define MR_DllDeclare   __declspec(dllimport)
+#	define MR_DllDeclare
 #endif
 
 namespace HoverRace {
@@ -98,4 +101,3 @@ class MR_ResBitmap:public MR_Bitmap
 };
 
 #undef MR_DllDeclare
-#endif

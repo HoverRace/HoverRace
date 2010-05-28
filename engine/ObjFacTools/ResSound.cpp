@@ -25,7 +25,9 @@
 
 #include "ResSound.h"
 
-#define new DEBUG_NEW
+#if defined(_WIN32) && defined(_DEBUG)
+#	define new DEBUG_NEW
+#endif
 
 using HoverRace::Parcel::ObjStream;
 
