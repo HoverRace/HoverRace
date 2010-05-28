@@ -19,7 +19,7 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
 #include <map>
 
@@ -28,7 +28,9 @@
 
 #include "DllObjectFactory.h"
 
-#define new DEBUG_NEW
+#if defined(_WIN32) && defined(_DEBUG)
+#	define new DEBUG_NEW
+#endif
 
 using HoverRace::ObjFac1::ObjFac1;
 using HoverRace::Parcel::ObjStream;

@@ -28,15 +28,18 @@
 //
 //
 
-#ifndef DLL_OBJECT_FACTORY_H
-#define DLL_OBJECT_FACTORY_H
+#pragma once
 
 #include "MR_Types.h"
 
-#ifdef MR_ENGINE
-#define MR_DllDeclare   __declspec( dllexport )
+#ifdef _WIN32
+#	ifdef MR_ENGINE
+#		define MR_DllDeclare   __declspec( dllexport )
+#	else
+#		define MR_DllDeclare   __declspec( dllimport )
+#	endif
 #else
-#define MR_DllDeclare   __declspec( dllimport )
+#	define MR_DllDeclare
 #endif
 
 namespace HoverRace {
@@ -59,7 +62,7 @@ class MR_ObjectFromFactoryId
 		MR_DllDeclare int operator ==(const MR_ObjectFromFactoryId & pId) const;
 };
 
-class MR_DllDeclare MR_ObjectFromFactory:public CObject
+class MR_DllDeclare MR_ObjectFromFactory/*:public CObject*/
 {
 	// Base class for object created with a Dll Factory
 
@@ -114,4 +117,3 @@ namespace MR_DllObjectFactory
 };
 
 #undef MR_DllDeclare
-#endif
