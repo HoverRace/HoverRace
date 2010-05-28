@@ -22,11 +22,28 @@
 
 #include "StdAfx.h"
 
+#include <boost/foreach.hpp>
+
+#include "../../engine/Parcel/MfcRecordFile.h"
 #include "../../engine/Parcel/ObjStream.h"
 
 #include "ResourceLibBuilder.h"
 
 using namespace HoverRace::Parcel;
+
+namespace {
+	template<class T>
+	void WriteRes(ObjStream &os, T &res)
+	{
+		MR_UInt32 num = res.size();
+		os << num;
+		BOOST_FOREACH(typename const T::value_type &ent, res) {
+			MR_Int32 key = ent.first;
+			os << key;
+			ent.second->Serialize(os);
+		}
+	}
+}
 
 MR_ResourceLibBuilder::MR_ResourceLibBuilder()
 {
@@ -40,27 +57,27 @@ MR_ResourceLibBuilder::~MR_ResourceLibBuilder()
 
 void MR_ResourceLibBuilder::AddBitmap(MR_ResBitmap * pBitmap)
 {
-	mBitmapList.SetAt(pBitmap->GetResourceId(), pBitmap);
+	bitmaps.insert(bitmaps_t::value_type(pBitmap->GetResourceId(), pBitmap));
 }
 
 void MR_ResourceLibBuilder::AddActor(MR_ResActor * pActor)
 {
-	mActorList.SetAt(pActor->GetResourceId(), pActor);
+	actors.insert(actors_t::value_type(pActor->GetResourceId(), pActor));
 }
 
 void MR_ResourceLibBuilder::AddSprite(MR_ResSprite * pSprite)
 {
-	mSpriteList.SetAt(pSprite->GetResourceId(), pSprite);
+	sprites.insert(sprites_t::value_type(pSprite->GetResourceId(), pSprite));
 }
 
 void MR_ResourceLibBuilder::AddSound(MR_ResShortSound * pSound)
 {
-	mShortSoundList.SetAt(pSound->GetResourceId(), pSound);
+	shortSounds.insert(shortSounds_t::value_type(pSound->GetResourceId(), pSound));
 }
 
 void MR_ResourceLibBuilder::AddSound(MR_ResContinuousSound * pSound)
 {
-	mContinuousSoundList.SetAt(pSound->GetResourceId(), pSound);
+	continuousSounds.insert(continuousSounds_t::value_type(pSound->GetResourceId(), pSound));
 }
 
 /**
@@ -97,131 +114,13 @@ BOOL MR_ResourceLibBuilder::Export(const char *pFileName)
 
 			lArchive << lMagicNumber;
 
-			WriteBitmaps(lArchive);
-
-			WriteActors(lArchive);
-
-			WriteSprites(lArchive);
-
-			WriteSounds(lArchive);
-
+			WriteRes(lArchive, bitmaps);
+			WriteRes(lArchive, actors);
+			WriteRes(lArchive, sprites);
+			WriteRes(lArchive, shortSounds);
+			WriteRes(lArchive, continuousSounds);
 		}
 	}
 
 	return lReturnValue;
-}
-
-/**
- * Traverse the bitmap list, writing each into the output archive with Serialize().
- *
- * @param pArchive The output archive
- */
-void MR_ResourceLibBuilder::WriteBitmaps(ObjStream &pArchive)
-{
-	int lNbBitmap = mBitmapList.GetCount();
-	POSITION lPos = mBitmapList.GetStartPosition();
-
-	pArchive << lNbBitmap;
-
-	while(lPos != NULL) {
-		int lKey;
-		MR_ResBitmap *lValue;
-
-		mBitmapList.GetNextAssoc(lPos, lKey, lValue);
-
-		pArchive << lKey;
-		lValue->Serialize(pArchive);
-	}
-
-}
-
-/**
- * Traverse the actor list, writing each into the output archive with
- * Serialize().
- *
- * @param pArchive The output archive
- */
-void MR_ResourceLibBuilder::WriteActors(ObjStream &pArchive)
-{
-	int lNbActor = mActorList.GetCount();
-	POSITION lPos = mActorList.GetStartPosition();
-
-	pArchive << lNbActor;
-
-	while(lPos != NULL) {
-		int lKey;
-		MR_ResActor *lValue;
-
-		mActorList.GetNextAssoc(lPos, lKey, lValue);
-
-		pArchive << lKey;
-		lValue->Serialize(pArchive);
-	}
-}
-
-/**
- * Traverse the sprite list, writing each into the output archive with
- * Serialize().
- *
- * @param pArchive The output archive
- */
-void MR_ResourceLibBuilder::WriteSprites(ObjStream &pArchive)
-{
-	int lNbSprite = mSpriteList.GetCount();
-	POSITION lPos = mSpriteList.GetStartPosition();
-
-	pArchive << lNbSprite;
-
-	while(lPos != NULL) {
-		int lKey;
-		MR_ResSprite *lValue;
-
-		mSpriteList.GetNextAssoc(lPos, lKey, lValue);
-
-		pArchive << lKey;
-		lValue->Serialize(pArchive);
-	}
-}
-
-/**
- * Traverse the short sound list, then the continuous sound list, writing them
- * each into the output archive with Serialize().
- *
- * @param pArchive The output archive
- */
-void MR_ResourceLibBuilder::WriteSounds(ObjStream &pArchive)
-{
-	int lNbSound;
-	POSITION lPos;
-
-	lNbSound = mShortSoundList.GetCount();
-	lPos = mShortSoundList.GetStartPosition();
-
-	pArchive << lNbSound;
-
-	while(lPos != NULL) {
-		int lKey;
-		MR_ResShortSound *lValue;
-
-		mShortSoundList.GetNextAssoc(lPos, lKey, lValue);
-
-		pArchive << lKey;
-		lValue->Serialize(pArchive);
-	}
-
-	lNbSound = mContinuousSoundList.GetCount();
-	lPos = mContinuousSoundList.GetStartPosition();
-
-	pArchive << lNbSound;
-
-	while(lPos != NULL) {
-		int lKey;
-		MR_ResContinuousSound *lValue;
-
-		mContinuousSoundList.GetNextAssoc(lPos, lKey, lValue);
-
-		pArchive << lKey;
-		lValue->Serialize(pArchive);
-	}
-
 }

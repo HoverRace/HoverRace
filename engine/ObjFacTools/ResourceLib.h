@@ -1,7 +1,8 @@
+
 // ResourceLib.h
+// Loadable resource manager.
 //
-//
-// Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
+// Copyright (c) 2010 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -18,67 +19,68 @@
 //
 // See the License for the specific language governing permissions
 // and limitations under the License.
-//
 
-#ifndef MR_RESOURCE_LIB_H
-#define MR_RESOURCE_LIB_H
+#pragma once
 
-#include "../Parcel/MfcRecordFile.h"
+#include <map>
+
 #include "ResActor.h"
 #include "ResSprite.h"
 #include "ResSound.h"
 
-#ifdef MR_ENGINE
-#define MR_DllDeclare   __declspec( dllexport )
+#ifdef _WIN32
+#	ifdef MR_ENGINE
+#		define MR_DllDeclare   __declspec( dllexport )
+#	else
+#		define MR_DllDeclare   __declspec( dllimport )
+#	endif
 #else
-#define MR_DllDeclare   __declspec( dllimport )
+#	define MR_DllDeclare
 #endif
 
 namespace HoverRace {
 	namespace Parcel {
 		class ObjStream;
+		class RecordFile;
 	}
 }
 
 namespace HoverRace {
 namespace ObjFacTools {
 
-class ResourceLib
+class MR_DllDeclare ResourceLib
 {
-	// Each module can have its own ResourceLib
-
 	protected:
-		HoverRace::Parcel::MfcRecordFile mRecordFile;
-
-		CMap <int, int, MR_ResBitmap *, MR_ResBitmap *> mBitmapList;
-		CMap <int, int, MR_ResActor *, MR_ResActor *> mActorList;
-		CMap <int, int, MR_ResSprite *, MR_ResSprite *> mSpriteList;
-		CMap <int, int, MR_ResShortSound *, MR_ResShortSound *> mShortSoundList;
-		CMap <int, int, MR_ResContinuousSound *, MR_ResContinuousSound *> mContinuousSoundList;
-
-		void LoadBitmaps(HoverRace::Parcel::ObjStream &pArchive);
-		void LoadActors(HoverRace::Parcel::ObjStream &pArchive);
-		void LoadSprites(HoverRace::Parcel::ObjStream &pArchive);
-		void LoadSounds(HoverRace::Parcel::ObjStream &pArchive);
-
-		MR_DllDeclare ResourceLib();
+		ResourceLib() { }
+	public:
+		ResourceLib(const char *filename);
+		~ResourceLib();
 
 	public:
-		MR_DllDeclare ResourceLib(const char *pFileName);
-		MR_DllDeclare ~ResourceLib();
+		MR_ResBitmap * GetBitmap(int id);
+		const MR_ResActor *GetActor(int id);
+		const MR_ResSprite *GetSprite(int id);
+		const MR_ResShortSound *GetShortSound(int id);
+		const MR_ResContinuousSound *GetContinuousSound(int id);
 
-		MR_DllDeclare /*const */ MR_ResBitmap * GetBitmap(int pBitmapId);
-		MR_DllDeclare const MR_ResActor *GetActor(int pActorId);
-		MR_DllDeclare const MR_ResSprite *GetSprite(int pSpriteId);
-		MR_DllDeclare const MR_ResShortSound *GetShortSound(int pSoundId);
-		MR_DllDeclare const MR_ResContinuousSound *GetContinuousSound(int pSoundId);
+	protected:
+		Parcel::RecordFile *recordFile;
 
+		typedef std::map<int, MR_ResBitmap*> bitmaps_t;
+		bitmaps_t bitmaps;
+		typedef std::map<int, MR_ResActor*> actors_t;
+		actors_t actors;
+		typedef std::map<int, MR_ResSprite*> sprites_t;
+		sprites_t sprites;
+		typedef std::map<int, MR_ResShortSound*> shortSounds_t;
+		shortSounds_t shortSounds;
+		typedef std::map<int, MR_ResContinuousSound*> continuousSounds_t;
+		continuousSounds_t continuousSounds;
 };
 
 #define MR_RESOURCE_FILE_MAGIC    12345
 
-}  // namespace ObjFacTools
 }  // namespace HoverRace
+}  // namespace ObjFacTools
 
 #undef MR_DllDeclare
-#endif

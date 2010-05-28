@@ -35,13 +35,6 @@ namespace HoverRace {
 class MR_ResourceLibBuilder : public HoverRace::ObjFacTools::ResourceLib
 {
 	// Each module can have its own MR_BitmapLib
-	protected:
-
-		void WriteBitmaps(HoverRace::Parcel::ObjStream &pArchive);
-		void WriteActors(HoverRace::Parcel::ObjStream &pArchive);
-		void WriteSprites(HoverRace::Parcel::ObjStream &pArchive);
-		void WriteSounds(HoverRace::Parcel::ObjStream &pArchive);
-
 	public:
 		MR_ResourceLibBuilder();
 		~MR_ResourceLibBuilder();
