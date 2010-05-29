@@ -48,7 +48,7 @@ class MR_DllDeclare Exception : public std::exception
 		Exception() : SUPER() { }
 		Exception(const std::string &msg) : SUPER(), msg(msg) { }
 		Exception(const char *msg) : SUPER(), msg(msg) { }
-		virtual ~Exception() { }
+		virtual ~Exception() throw() { }
 
 		virtual const char* what() const throw() { return msg.c_str(); }
 
