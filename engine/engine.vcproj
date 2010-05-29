@@ -587,10 +587,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Util\KeyHandling.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Util\MR_Types.h"
 				>
 			</File>
