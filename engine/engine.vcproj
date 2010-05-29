@@ -591,10 +591,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Util\NET.rc"
-				>
-			</File>
-			<File
 				RelativePath=".\Util\OS.cpp"
 				>
 			</File>
@@ -608,10 +604,6 @@
 			</File>
 			<File
 				RelativePath=".\Util\Profiler.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Util\resource.h"
 				>
 			</File>
 			<File
