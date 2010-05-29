@@ -952,6 +952,10 @@
 			</File>
 		</Filter>
 		<File
+			RelativePath=".\Exception.h"
+			>
+		</File>
+		<File
 			RelativePath=".\StdAfx.cpp"
 			>
 			<FileConfiguration

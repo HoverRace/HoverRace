@@ -24,6 +24,7 @@
 
 #include <string>
 
+#include "../Exception.h"
 #include "../Util/MR_Types.h"
 
 #ifdef _WIN32
@@ -39,24 +40,19 @@
 namespace HoverRace {
 namespace Parcel {
 
-class MR_DllDeclare ObjStreamExn : public std::exception
+class MR_DllDeclare ObjStreamExn : public Exception
 {
-	typedef std::exception SUPER;
-
+	typedef Exception SUPER;
 	public:
 		ObjStreamExn() : SUPER() { }
 		ObjStreamExn(const std::string &name, const std::string &details) :
-			SUPER(), msg(name)
+			SUPER(name)
 		{
+			std::string &msg = GetMessage();
 			msg += ": ";
 			msg += details;
 		}
 		virtual ~ObjStreamExn() throw() { }
-
-		virtual const char* what() const throw() { return msg.c_str(); }
-
-	private:
-		std::string msg;
 };
 
 /**
