@@ -103,9 +103,6 @@ ResourceLib::ResourceLib(const char *filename)
 	LoadRes(os, continuousSounds, this);
 }
 
-/**
- * Close the MR_ResourceLib, deleting all of the objects that were created.
- */
 ResourceLib::~ResourceLib()
 {
 	BOOST_FOREACH(const bitmaps_t::value_type &ent, bitmaps) delete ent.second;
