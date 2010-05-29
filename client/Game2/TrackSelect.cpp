@@ -27,7 +27,6 @@
 #include "io.h"
 #include "../../compilers/MazeCompiler/TrackCommonStuff.h"
 #include "../../engine/Model/TrackEntry.h"
-#include "../../engine/Util/StrRes.h"
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/OS.h"
 #include "../../engine/Util/Str.h"

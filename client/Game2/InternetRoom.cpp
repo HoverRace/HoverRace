@@ -26,7 +26,6 @@
 
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/Str.h"
-#include "../../engine/Util/StrRes.h"
 
 #include "InternetRoom.h"
 #include "MatchReport.h"

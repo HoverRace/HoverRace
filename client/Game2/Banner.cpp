@@ -24,7 +24,6 @@
 
 #include "Banner.h"
 #include "GameApp.h"
-#include "../../engine/Util/StrRes.h"
 #include "../../engine/Util/OS.h"
 #include "../../engine/Util/Str.h"
 #include "resource.h"

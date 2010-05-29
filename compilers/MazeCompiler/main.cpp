@@ -26,7 +26,6 @@
 #include "Parser.h"
 #include "TrackCommonStuff.h"
 #include "../../engine/Parcel/ObjStream.h"
-#include "../../engine/Util/StrRes.h"
 #include "resource.h"
 
 #include <stdio.h>

@@ -24,7 +24,6 @@
 #include <Mmsystem.h>
 
 #include "../../engine/MainCharacter/MainCharacter.h"
-#include "../../engine/Util/StrRes.h"
 
 #include "InternetRoom.h"
 #include "resource.h"

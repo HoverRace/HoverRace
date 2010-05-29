@@ -22,7 +22,6 @@
 #include "stdafx.h"
 #include "LevelBuilder.h"
 #include "Parser.h"
-#include "../../engine/Util/StrRes.h"
 #include "resource.h"
 
 #include <math.h>

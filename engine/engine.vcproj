@@ -615,14 +615,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Util\StrRes.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Util\StrRes.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Util\WorldCoordinates.cpp"
 				>
 			</File>

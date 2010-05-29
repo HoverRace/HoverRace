@@ -23,7 +23,6 @@
 
 #include <math.h>
 #include "LevelBuilder.h"
-#include "../../engine/Util/StrRes.h"
 #include "resource.h"
 
 #define new DEBUG_NEW

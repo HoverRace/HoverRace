@@ -52,7 +52,6 @@
 #include "../../engine/Script/Core.h"
 #include "../../engine/Util/FuzzyLogic.h"
 #include "../../engine/Util/Profiler.h"
-#include "../../engine/Util/StrRes.h"
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/OS.h"
 #include "../../engine/Util/Str.h"
