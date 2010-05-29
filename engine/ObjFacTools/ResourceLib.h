@@ -76,9 +76,10 @@ class MR_DllDeclare ResourceLib
 		shortSounds_t shortSounds;
 		typedef std::map<int, MR_ResContinuousSound*> continuousSounds_t;
 		continuousSounds_t continuousSounds;
-};
 
-#define MR_RESOURCE_FILE_MAGIC    12345
+	protected:
+		static const MR_UInt32 FILE_MAGIC = 12345;
+};
 
 }  // namespace HoverRace
 }  // namespace ObjFacTools

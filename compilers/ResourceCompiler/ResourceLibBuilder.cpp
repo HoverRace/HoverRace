@@ -107,7 +107,7 @@ BOOL MR_ResourceLibBuilder::Export(const char *pFileName)
 
 		{
 			// Write the magic number
-			int lMagicNumber = MR_RESOURCE_FILE_MAGIC;
+			int lMagicNumber = FILE_MAGIC;
 
 			ObjStreamPtr archivePtr(lFile.StreamOut());
 			ObjStream &lArchive = *archivePtr;

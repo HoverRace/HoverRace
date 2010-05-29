@@ -90,10 +90,10 @@ ResourceLib::ResourceLib(const char *filename)
 
 	MR_UInt32 magic;
 	os >> magic;
-	if (magic != MR_RESOURCE_FILE_MAGIC) {
+	if (magic != FILE_MAGIC) {
 		throw ObjStreamExn(filename,
 			boost::str(boost::format("Invalid magic number: Expected %08x, got %08x instead") %
-				MR_RESOURCE_FILE_MAGIC % magic));
+				FILE_MAGIC % magic));
 	}
 
 	LoadRes(os, bitmaps, this);
