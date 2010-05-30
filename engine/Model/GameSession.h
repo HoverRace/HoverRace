@@ -38,10 +38,9 @@ class MR_GameSession
 {
 	private:
 		BOOL mAllowRendering;
-		CString mCurrentMazeName;
 		int mCurrentLevelNumber;
 
-		CString mTitle;
+		std::string mTitle;
 		HoverRace::Parcel::RecordFile *mCurrentMazeFile;
 		MR_Level *mCurrentLevel;
 

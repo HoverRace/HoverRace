@@ -81,7 +81,6 @@ void MR_GameSession::Clean()
 	delete mCurrentLevel;
 	mCurrentLevel = NULL;
 
-	mCurrentMazeName = "";
 	mCurrentLevelNumber = -1;
 }
 
@@ -407,7 +406,7 @@ MR_Level *MR_GameSession::GetCurrentLevel()
 
 const char *MR_GameSession::GetTitle() const
 {
-	return mTitle;
+	return mTitle.c_str();
 }
 
 HoverRace::Parcel::RecordFile *MR_GameSession::GetCurrentMazeFile()
