@@ -31,14 +31,13 @@
 
 using namespace HoverRace::Parcel;
 
-MR_GameSession::MR_GameSession(BOOL pAllowRendering)
+MR_GameSession::MR_GameSession(BOOL pAllowRendering) :
+	mAllowRendering(pAllowRendering),
+	mCurrentLevelNumber(-1),
+	mCurrentMazeFile(NULL),
+	mCurrentLevel(NULL),
+	mSimulationTime(-3000)  // 3 sec countdown
 {
-	mAllowRendering = pAllowRendering;
-	mCurrentMazeFile = NULL;
-	mCurrentLevel = NULL;
-	mCurrentLevelNumber = -1;
-
-	mSimulationTime = -3000;					  // 3 sec countdown
 }
 
 MR_GameSession::~MR_GameSession()
