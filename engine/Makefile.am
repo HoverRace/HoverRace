@@ -31,8 +31,10 @@ libhoverrace_engine_la_LDFLAGS = \
 	$(BOOST_FILESYSTEM_LDFLAGS) $(BOOST_FILESYSTEM_LIBS) \
 	$(DEPS_LIBS)
 libhoverrace_engine_la_SOURCES = \
-	StdAfx.cpp \
-	StdAfx.h
+	StdAfx.h \
+	Exception.h
+EXTRA_libhoverrace_engine_la_SOURCES = \
+	StdAfx.cpp
 
 CLEANFILES = $(BUILT_SOURCES)
 
