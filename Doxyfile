@@ -96,6 +96,7 @@ WARN_LOGFILE           = srcdoc/warnings.txt
 INPUT                  = client/Game2 \
                          client/Game2/Control \
                          client/Game2/HoverScript \
+                         engine \
                          engine/ColorTools \
                          engine/MainCharacter \
                          engine/Model \
