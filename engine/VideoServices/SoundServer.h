@@ -21,8 +21,7 @@
 // and limitations under the License.
 //
 
-#ifndef SOUND_SERVER_H
-#define SOUND_SERVER_H
+#pragma once
 
 #include <string>
 
@@ -36,10 +35,13 @@
 #	define MR_DllDeclare
 #endif
 
-class MR_ShortSound;
-class MR_ContinuousSound;
+namespace HoverRace {
+namespace VideoServices {
 
-namespace MR_SoundServer
+class ShortSound;
+class ContinuousSound;
+
+namespace SoundServer
 {
 
 	MR_DllDeclare bool Init(
@@ -51,30 +53,32 @@ namespace MR_SoundServer
 
 	MR_DllDeclare std::string GetInitError();
 
-	MR_DllDeclare MR_ShortSound *CreateShortSound(const char *pData, int pNbCopy);
-	MR_DllDeclare void DeleteShortSound(MR_ShortSound * pSound);
+	MR_DllDeclare ShortSound *CreateShortSound(const char *pData, int pNbCopy);
+	MR_DllDeclare void DeleteShortSound(ShortSound * pSound);
 
-	MR_DllDeclare void Play(MR_ShortSound * pSound, int pDB = 0, double pSpeed = 1.0, int pPan = 0);
+	MR_DllDeclare void Play(ShortSound * pSound, int pDB = 0, double pSpeed = 1.0, int pPan = 0);
 
-	MR_DllDeclare int GetNbCopy(MR_ShortSound * pSound);
+	MR_DllDeclare int GetNbCopy(ShortSound * pSound);
 
 	// Continous play
-	MR_DllDeclare MR_ContinuousSound *CreateContinuousSound(const char *pData, int pNbCopy);
-	MR_DllDeclare void DeleteContinuousSound(MR_ContinuousSound * pSound);
+	MR_DllDeclare ContinuousSound *CreateContinuousSound(const char *pData, int pNbCopy);
+	MR_DllDeclare void DeleteContinuousSound(ContinuousSound * pSound);
 
-	MR_DllDeclare void Play(MR_ContinuousSound * pSound, int pCopy, int pDB = 0, double pSpeed = 1.0, int pPan = 0);
+	MR_DllDeclare void Play(ContinuousSound * pSound, int pCopy, int pDB = 0, double pSpeed = 1.0, int pPan = 0);
 
 	/* Obsoletes
-	   MR_DllDeclare void                Pause(   MR_ContinuousSound* pSound, int pCopy );
-	   MR_DllDeclare void                Restart( MR_ContinuousSound* pSound, int pCopy );
+	   MR_DllDeclare void                Pause(   ContinuousSound* pSound, int pCopy );
+	   MR_DllDeclare void                Restart( ContinuousSound* pSound, int pCopy );
 
-	   MR_DllDeclare void                SetParams( MR_ContinuousSound* pSound, int pCopy, int pDB, double pSpeed = 1.0, int pPan = 0 );
+	   MR_DllDeclare void                SetParams( ContinuousSound* pSound, int pCopy, int pDB, double pSpeed = 1.0, int pPan = 0 );
 	 */
-	MR_DllDeclare int GetNbCopy(MR_ContinuousSound * pSound);
+	MR_DllDeclare int GetNbCopy(ContinuousSound * pSound);
 
 	MR_DllDeclare void ApplyContinuousPlay();
 
 };
 
+}  // namespace VideoServices
+}  // namespace HoverRace
+
 #undef MR_DllDeclare
-#endif

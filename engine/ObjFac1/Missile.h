@@ -49,8 +49,8 @@ class MR_Missile:public MR_FreeElementBase, protected MR_CylinderShape
 		double mYSpeed;
 
 		BOOL mBounceSoundEvent;
-		MR_ShortSound *mBounceSound;
-		MR_ContinuousSound *mMotorSound;
+		HoverRace::VideoServices::ShortSound *mBounceSound;
+		HoverRace::VideoServices::ContinuousSound *mMotorSound;
 
 	public:
 		MR_Missile(const MR_ObjectFromFactoryId & pId, HoverRace::ObjFacTools::ResourceLib* resourceLib);

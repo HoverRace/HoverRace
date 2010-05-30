@@ -26,6 +26,7 @@
 #include "../Util/FuzzyLogic.h"
 
 using HoverRace::ObjFacTools::ResourceLib;
+using namespace HoverRace::VideoServices;
 
 // Local stuff
 
@@ -95,57 +96,57 @@ void MR_HoverRender::Render(MR_3DViewPort *pDest, const MR_3DCoordinate &pPositi
 	}
 }
 
-MR_ShortSound *MR_HoverRender::GetLineCrossingSound()
+ShortSound *MR_HoverRender::GetLineCrossingSound()
 {
 	return mLineCrossingSound;
 }
 
-MR_ShortSound *MR_HoverRender::GetStartSound()
+ShortSound *MR_HoverRender::GetStartSound()
 {
 	return mStartSound;
 }
 
-MR_ShortSound *MR_HoverRender::GetFinishSound()
+ShortSound *MR_HoverRender::GetFinishSound()
 {
 	return mFinishSound;
 }
 
-MR_ShortSound *MR_HoverRender::GetBumpSound()
+ShortSound *MR_HoverRender::GetBumpSound()
 {
 	return mBumpSound;
 }
 
-MR_ShortSound *MR_HoverRender::GetJumpSound()
+ShortSound *MR_HoverRender::GetJumpSound()
 {
 	return mJumpSound;
 }
 
-MR_ShortSound *MR_HoverRender::GetFireSound()
+ShortSound *MR_HoverRender::GetFireSound()
 {
 	return mFireSound;
 }
 
-MR_ShortSound *MR_HoverRender::GetMisJumpSound()
+ShortSound *MR_HoverRender::GetMisJumpSound()
 {
 	return mMisJumpSound;
 }
 
-MR_ShortSound *MR_HoverRender::GetMisFireSound()
+ShortSound *MR_HoverRender::GetMisFireSound()
 {
 	return mMisFireSound;
 }
 
-MR_ShortSound *MR_HoverRender::GetOutOfCtrlSound()
+ShortSound *MR_HoverRender::GetOutOfCtrlSound()
 {
 	return mOutOfCtrlSound;
 }
 
-MR_ContinuousSound *MR_HoverRender::GetMotorSound()
+ContinuousSound *MR_HoverRender::GetMotorSound()
 {
 	return mMotorSound;
 }
 
-MR_ContinuousSound *MR_HoverRender::GetFrictionSound()
+ContinuousSound *MR_HoverRender::GetFrictionSound()
 {
 	return mFrictionSound;
 }

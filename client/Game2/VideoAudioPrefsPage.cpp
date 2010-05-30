@@ -40,6 +40,7 @@ using boost::str;
 
 using namespace HoverRace::Client;
 using namespace HoverRace::Util;
+using namespace HoverRace::VideoServices;
 
 VideoAudioPrefsPage::VideoAudioPrefsPage(MR_GameApp *app) :
 	SUPER(_("Video and Audio"), IDD_DISPLAY_INTENSITY),
@@ -323,7 +324,7 @@ void VideoAudioPrefsPage::UpdateIntensityDialogLabels(HWND pWindow)
  */
 void VideoAudioPrefsPage::UpdateAudioStatus(HWND hwnd)
 {
-	std::string status = MR_SoundServer::GetInitError();
+	std::string status = SoundServer::GetInitError();
 	if (status.length() == 0 && Config::GetInstance()->runtime.silent) {
 		status = _("HoverRace is currently in silent mode.");
 	}

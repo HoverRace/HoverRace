@@ -44,7 +44,7 @@ class MR_ResShortSound
 {
 	protected:
 		int mResourceId;
-		MR_ShortSound *mSound;
+		HoverRace::VideoServices::ShortSound *mSound;
 
 		int mNbCopy;
 		int mDataLen;
@@ -58,7 +58,7 @@ class MR_ResShortSound
 		MR_DllDeclare int GetResourceId() const;
 		MR_DllDeclare void Serialize(HoverRace::Parcel::ObjStream &pArchive);
 
-		MR_DllDeclare MR_ShortSound *GetSound() const;
+		MR_DllDeclare HoverRace::VideoServices::ShortSound *GetSound() const;
 
 };
 
@@ -66,7 +66,7 @@ class MR_ResContinuousSound
 {
 	protected:
 		int mResourceId;
-		MR_ContinuousSound *mSound;
+		HoverRace::VideoServices::ContinuousSound *mSound;
 
 		int mNbCopy;
 		int mDataLen;
@@ -80,7 +80,7 @@ class MR_ResContinuousSound
 		MR_DllDeclare int GetResourceId() const;
 		MR_DllDeclare void Serialize(HoverRace::Parcel::ObjStream &pArchive);
 
-		MR_DllDeclare MR_ContinuousSound *GetSound() const;
+		MR_DllDeclare HoverRace::VideoServices::ContinuousSound *GetSound() const;
 
 };
 

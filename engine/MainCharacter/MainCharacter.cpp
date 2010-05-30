@@ -28,6 +28,8 @@
 #include "../Model/FreeElementMovingHelper.h"
 #include "../Util/FuzzyLogic.h"
 
+using namespace HoverRace::VideoServices;
+
 #define MR_NB_HOVER_MODEL 8
 
 // Local types
@@ -1075,19 +1077,19 @@ void MR_MainCharacter::PlayInternalSounds()
 	if(mRenderer != NULL) {
 		// Sound events
 		while(!mInternalSoundList.IsEmpty()) {
-			MR_SoundServer::Play(mInternalSoundList.GetHead());
+			SoundServer::Play(mInternalSoundList.GetHead());
 			mInternalSoundList.Remove();
 		}
 
 		// Continuous sounds
-		MR_ContinuousSound *lWindSound = mRenderer->GetFrictionSound();
-		MR_ContinuousSound *lMotorSound = mRenderer->GetMotorSound();
+		ContinuousSound *lWindSound = mRenderer->GetFrictionSound();
+		ContinuousSound *lMotorSound = mRenderer->GetMotorSound();
 		double lAbsSpeed = sqrt(mXSpeed * mXSpeed + mYSpeed * mYSpeed) / (eSteadySpeed[0]);
 
 		if(lAbsSpeed > 0.02)
-			MR_SoundServer::Play(lWindSound, 0, 0, 1.5 * lAbsSpeed);
+			SoundServer::Play(lWindSound, 0, 0, 1.5 * lAbsSpeed);
 		if(mControlState & eMotorOn)
-			MR_SoundServer::Play(lMotorSound, 0);
+			SoundServer::Play(lMotorSound, 0);
 	}
 }
 
@@ -1096,18 +1098,18 @@ void MR_MainCharacter::PlayExternalSounds(int pDB, int pPan)
 	if(mRenderer != NULL) {
 		// Sound events
 		while(!mExternalSoundList.IsEmpty()) {
-			MR_SoundServer::Play(mExternalSoundList.GetHead(), pDB, 1.0, pPan);
+			SoundServer::Play(mExternalSoundList.GetHead(), pDB, 1.0, pPan);
 			mExternalSoundList.Remove();
 		}
 
 		// Continuous sounds
-		MR_ContinuousSound *lWindSound = mRenderer->GetFrictionSound();
-		MR_ContinuousSound *lMotorSound = mRenderer->GetMotorSound();
+		ContinuousSound *lWindSound = mRenderer->GetFrictionSound();
+		ContinuousSound *lMotorSound = mRenderer->GetMotorSound();
 		double lAbsSpeed = sqrt(mXSpeed * mXSpeed + mYSpeed * mYSpeed) / (eSteadySpeed[0]);
 
 		if(lAbsSpeed > 0.02)
-			MR_SoundServer::Play(lWindSound, 1, pDB, 1.5 * lAbsSpeed, pPan);
+			SoundServer::Play(lWindSound, 1, pDB, 1.5 * lAbsSpeed, pPan);
 		if(mControlState & eMotorOn)
-			MR_SoundServer::Play(lMotorSound, 1, pDB, 1.0, pPan);
+			SoundServer::Play(lMotorSound, 1, pDB, 1.0, pPan);
 	}
 }

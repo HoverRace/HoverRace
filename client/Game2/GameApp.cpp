@@ -63,6 +63,7 @@
 using namespace HoverRace::Client;
 using namespace HoverRace::Client::HoverScript;
 using namespace HoverRace::Parcel;
+using namespace HoverRace::VideoServices;
 
 // If MR_AVI_CAPTURE is defined
 // #define MR_AVI_CAPTUREh
@@ -114,9 +115,9 @@ void CaptureScreen( MR_VideoBuffer* pVideoBuffer );
 #define MR_WM_REQ_NEW_SESSION (WM_APP + 0x0043)
 
 #ifdef WITH_OPENAL
-#	define SOUNDSERVER_INIT(s) MR_SoundServer::Init()
+#	define SOUNDSERVER_INIT(s) SoundServer::Init()
 #else
-#	define SOUNDSERVER_INIT(s) MR_SoundServer::Init(s)
+#	define SOUNDSERVER_INIT(s) SoundServer::Init(s)
 #endif
 
 using boost::format;
@@ -328,7 +329,7 @@ MR_GameApp::~MR_GameApp()
 	delete controller;
 
 	MR_DllObjectFactory::Clean(FALSE);
-	MR_SoundServer::Close();
+	SoundServer::Close();
 	delete mVideoBuffer;
 }
 
@@ -873,14 +874,14 @@ BOOL MR_GameApp::InitGame()
 			errMsg += "\r\n\r\n";
 			errMsg += _("The specific error was:");
 			errMsg += "\r\n";
-			errMsg += MR_SoundServer::GetInitError();
+			errMsg += SoundServer::GetInitError();
 			MessageBoxW(mMainWindow, Str::UW(errMsg.c_str()), PACKAGE_NAME_L, MB_ICONWARNING);
 			RefreshTitleBar();  // To add the "silent mode" marker.
 		}
 		else {
 			// Stop the sound service so it doesn't interfere with the
 			// intro movie.
-			MR_SoundServer::Close();
+			SoundServer::Close();
 		}
 	}
 
@@ -1005,7 +1006,7 @@ void MR_GameApp::RefreshView()
 				obs->PlaySounds(mCurrentSession->GetCurrentLevel(), mCurrentSession->GetPlayer(i));
 			}
 		}
-		MR_SoundServer::ApplyContinuousPlay();
+		SoundServer::ApplyContinuousPlay();
 	}
 }
 

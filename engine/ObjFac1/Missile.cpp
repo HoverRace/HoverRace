@@ -27,6 +27,7 @@
 #include "../Model/FreeElementMovingHelper.h"
 
 using HoverRace::ObjFacTools::ResourceLib;
+using namespace HoverRace::VideoServices;
 
 const MR_Int32 cMissileRay = 300;				  // the missile have a diameter of 60cm
 const MR_Int32 cMissileWeight = 100;
@@ -350,8 +351,8 @@ void MR_Missile::PlayExternalSounds(int pDB, int pPan)
 	if(mBounceSoundEvent) {
 		mBounceSoundEvent = FALSE;
 
-		MR_SoundServer::Play(mBounceSound, pDB, 1.0, pPan);
+		SoundServer::Play(mBounceSound, pDB, 1.0, pPan);
 	}
 
-	MR_SoundServer::Play(mMotorSound, 1, pDB, 1.0, pPan);
+	SoundServer::Play(mMotorSound, 1, pDB, 1.0, pPan);
 }

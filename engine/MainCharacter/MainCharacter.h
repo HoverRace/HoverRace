@@ -147,8 +147,8 @@ class MR_MainCharacter:public MR_FreeElement
 		MR_FixedFastFifo < int, 6 > mLastHits;
 
 		// Sound events list
-		MR_FixedFastFifo < MR_ShortSound *, 6 > mInternalSoundList;
-		MR_FixedFastFifo < MR_ShortSound *, 6 > mExternalSoundList;
+		MR_FixedFastFifo < HoverRace::VideoServices::ShortSound *, 6 > mInternalSoundList;
+		MR_FixedFastFifo < HoverRace::VideoServices::ShortSound *, 6 > mExternalSoundList;
 
 		MR_MainCharacter(const MR_ObjectFromFactoryId & pId);
 

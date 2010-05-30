@@ -43,6 +43,9 @@
 
 using HoverRace::Util::Config;
 
+namespace HoverRace {
+namespace VideoServices {
+
 #define MR_MAX_SOUND_COPY 6
 
 static bool soundDisabled = false;
@@ -70,11 +73,11 @@ static float DirectXToLinear(int value)
 		powf(10.0f, (float)value / 2000.0f);
 } 
 
-class MR_SoundBuffer
+class SoundBuffer
 {
 	private:
-		static MR_SoundBuffer *mList;
-		MR_SoundBuffer *mNext;
+		static SoundBuffer *mList;
+		SoundBuffer *mNext;
 
 	protected:
 
@@ -89,8 +92,8 @@ class MR_SoundBuffer
 		int mNormalFreq;
 
 	public:
-		MR_SoundBuffer();
-		virtual ~ MR_SoundBuffer();
+		SoundBuffer();
+		virtual ~ SoundBuffer();
 
 		BOOL Init(const char *pData, int pNbCopy);
 
@@ -106,20 +109,20 @@ class MR_SoundBuffer
 
 };
 
-class MR_ShortSound:public MR_SoundBuffer
+class ShortSound : public SoundBuffer
 {
 
 	protected:
 		int mCurrentCopy;
 
 	public:
-		MR_ShortSound();
-		~MR_ShortSound();
+		ShortSound();
+		~ShortSound();
 
 		void Play(int pDB, double pSpeed, int pPan);
 };
 
-class MR_ContinuousSound:public MR_SoundBuffer
+class ContinuousSound : public SoundBuffer
 {
 	protected:
 		BOOL mOn[MR_MAX_SOUND_COPY];
@@ -129,8 +132,8 @@ class MR_ContinuousSound:public MR_SoundBuffer
 		void ResetCumStat();
 
 	public:
-		MR_ContinuousSound();
-		~MR_ContinuousSound();
+		ContinuousSound();
+		~ContinuousSound();
 
 		void Pause(int pCopy);
 		void Restart(int pCopy);
@@ -141,7 +144,7 @@ class MR_ContinuousSound:public MR_SoundBuffer
 };
 
 // Variables
-MR_SoundBuffer *MR_SoundBuffer::mList = NULL;
+SoundBuffer *SoundBuffer::mList = NULL;
 
 #ifndef WITH_OPENAL
 IDirectSound *gDirectSound = NULL;
@@ -155,7 +158,7 @@ static const char* const waveHeader =
 #endif
 
 // Implementation
-MR_SoundBuffer::MR_SoundBuffer()
+SoundBuffer::SoundBuffer()
 {
 	mNbCopy = 0;
 #ifdef WITH_OPENAL
@@ -172,7 +175,7 @@ MR_SoundBuffer::MR_SoundBuffer()
 
 }
 
-MR_SoundBuffer::~MR_SoundBuffer()
+SoundBuffer::~SoundBuffer()
 {
 	// Remove form list
 	if(mList == this) {
@@ -180,7 +183,7 @@ MR_SoundBuffer::~MR_SoundBuffer()
 		mNext = NULL;
 	}
 	else {
-		MR_SoundBuffer *mPrev = mList;
+		SoundBuffer *mPrev = mList;
 
 		while(mPrev->mNext != this) {
 			ASSERT(mPrev != NULL);
@@ -206,14 +209,14 @@ MR_SoundBuffer::~MR_SoundBuffer()
 #endif
 }
 
-void MR_SoundBuffer::ApplyCumCommand()
+void SoundBuffer::ApplyCumCommand()
 {
 	// Do notting by default
 }
 
-void MR_SoundBuffer::ApplyCumCommandForAll()
+void SoundBuffer::ApplyCumCommandForAll()
 {
-	MR_SoundBuffer *mCurrent = mList;
+	SoundBuffer *mCurrent = mList;
 
 	while(mCurrent != NULL) {
 		mCurrent->ApplyCumCommand();
@@ -221,7 +224,7 @@ void MR_SoundBuffer::ApplyCumCommandForAll()
 	}
 }
 
-void MR_SoundBuffer::DeleteAll()
+void SoundBuffer::DeleteAll()
 {
 	while(mList != NULL) {
 		delete mList;
@@ -235,7 +238,7 @@ void MR_SoundBuffer::DeleteAll()
  * @param pNbCopy The number of copies to make.
  * @return @c TRUE if successful.
  */
-BOOL MR_SoundBuffer::Init(const char *pData, int pNbCopy)
+BOOL SoundBuffer::Init(const char *pData, int pNbCopy)
 {
 	if (soundDisabled) return TRUE;
 
@@ -334,7 +337,7 @@ BOOL MR_SoundBuffer::Init(const char *pData, int pNbCopy)
 	return lReturnValue;
 }
 
-void MR_SoundBuffer::SetParams(int pCopy, int pDB, double pSpeed, int pPan)
+void SoundBuffer::SetParams(int pCopy, int pDB, double pSpeed, int pPan)
 {
 	if (soundDisabled) return;
 
@@ -386,22 +389,22 @@ void MR_SoundBuffer::SetParams(int pCopy, int pDB, double pSpeed, int pPan)
 #endif
 }
 
-int MR_SoundBuffer::GetNbCopy() const
+int SoundBuffer::GetNbCopy() const
 {
 	return mNbCopy;
 }
 
-// MR_ShortSound
-MR_ShortSound::MR_ShortSound()
+// ShortSound
+ShortSound::ShortSound()
 {
 	mCurrentCopy = 0;
 }
 
-MR_ShortSound::~MR_ShortSound()
+ShortSound::~ShortSound()
 {
 }
 
-void MR_ShortSound::Play(int pDB, double pSpeed, int pPan)
+void ShortSound::Play(int pDB, double pSpeed, int pPan)
 {
 	if (soundDisabled) return;
 
@@ -420,17 +423,17 @@ void MR_ShortSound::Play(int pDB, double pSpeed, int pPan)
 	}
 }
 
-// class MR_ContinuousSound
-MR_ContinuousSound::MR_ContinuousSound()
+// class ContinuousSound
+ContinuousSound::ContinuousSound()
 {
 	ResetCumStat();
 }
 
-MR_ContinuousSound::~MR_ContinuousSound()
+ContinuousSound::~ContinuousSound()
 {
 }
 
-void MR_ContinuousSound::ResetCumStat()
+void ContinuousSound::ResetCumStat()
 {
 	for(int lCounter = 0; lCounter < mNbCopy; lCounter++) {
 		mOn[lCounter] = FALSE;
@@ -439,7 +442,7 @@ void MR_ContinuousSound::ResetCumStat()
 	}
 }
 
-void MR_ContinuousSound::Pause(int pCopy)
+void ContinuousSound::Pause(int pCopy)
 {
 	if (soundDisabled) return;
 
@@ -455,7 +458,7 @@ void MR_ContinuousSound::Pause(int pCopy)
 
 }
 
-void MR_ContinuousSound::Restart(int pCopy)
+void ContinuousSound::Restart(int pCopy)
 {
 	if (soundDisabled) return;
 
@@ -474,7 +477,7 @@ void MR_ContinuousSound::Restart(int pCopy)
 #endif
 }
 
-void MR_ContinuousSound::ApplyCumCommand()
+void ContinuousSound::ApplyCumCommand()
 {
 
 	for(int lCounter = 0; lCounter < mNbCopy; lCounter++) {
@@ -490,7 +493,7 @@ void MR_ContinuousSound::ApplyCumCommand()
 
 }
 
-void MR_ContinuousSound::CumPlay(int pCopy, int pDB, double pSpeed)
+void ContinuousSound::CumPlay(int pCopy, int pDB, double pSpeed)
 {
 	if(pCopy >= mNbCopy) {
 		pCopy = mNbCopy - 1;
@@ -502,9 +505,9 @@ void MR_ContinuousSound::CumPlay(int pCopy, int pDB, double pSpeed)
 
 }
 
-// namespace MR_SoundServer
+// namespace SoundServer
 
-bool MR_SoundServer::Init(
+bool SoundServer::Init(
 #	ifndef WITH_OPENAL
 		HWND pWindow
 #	endif
@@ -546,9 +549,9 @@ bool MR_SoundServer::Init(
 	return lReturnValue;
 }
 
-void MR_SoundServer::Close()
+void SoundServer::Close()
 {
-	MR_SoundBuffer::DeleteAll();
+	SoundBuffer::DeleteAll();
 
 	if (soundDisabled) return;
 
@@ -564,10 +567,10 @@ void MR_SoundServer::Close()
 
 /**
  * Retrieve the error message from the initialization.
- * Use this function to get details if MR_SoundServer::Init() failed.
+ * Use this function to get details if SoundServer::Init() failed.
  * @return The error message (will be empty if there was no error).
  */
-std::string MR_SoundServer::GetInitError()
+std::string SoundServer::GetInitError()
 {
 #ifdef WITH_OPENAL
 	return (initErrorCode == ALUT_ERROR_NO_ERROR) ? "" :
@@ -577,12 +580,12 @@ std::string MR_SoundServer::GetInitError()
 #endif
 }
 
-MR_ShortSound *MR_SoundServer::CreateShortSound(const char *pData, int pNbCopy)
+ShortSound *SoundServer::CreateShortSound(const char *pData, int pNbCopy)
 {
 #ifndef WITH_OPENAL
 	if(gDirectSound != NULL) {
 #endif
-		MR_ShortSound *lReturnValue = new MR_ShortSound;
+		ShortSound *lReturnValue = new ShortSound;
 
 		if(!lReturnValue->Init(pData, pNbCopy)) {
 			lReturnValue = NULL;
@@ -596,19 +599,19 @@ MR_ShortSound *MR_SoundServer::CreateShortSound(const char *pData, int pNbCopy)
 #endif
 }
 
-void MR_SoundServer::DeleteShortSound(MR_ShortSound * pSound)
+void SoundServer::DeleteShortSound(ShortSound * pSound)
 {
 	delete pSound;
 }
 
-void MR_SoundServer::Play(MR_ShortSound * pSound, int pDB, double pSpeed, int pPan)
+void SoundServer::Play(ShortSound * pSound, int pDB, double pSpeed, int pPan)
 {
 	if(pSound != NULL) {
 		pSound->Play(pDB, pSpeed, pPan);
 	}
 }
 
-int MR_SoundServer::GetNbCopy(MR_ShortSound * pSound)
+int SoundServer::GetNbCopy(ShortSound * pSound)
 {
 	if(pSound != NULL) {
 		return pSound->GetNbCopy();
@@ -618,12 +621,12 @@ int MR_SoundServer::GetNbCopy(MR_ShortSound * pSound)
 	}
 }
 
-MR_ContinuousSound *MR_SoundServer::CreateContinuousSound(const char *pData, int pNbCopy)
+ContinuousSound *SoundServer::CreateContinuousSound(const char *pData, int pNbCopy)
 {
 #ifndef WITH_OPENAL
 	if(gDirectSound != NULL) {
 #endif
-		MR_ContinuousSound *lReturnValue = new MR_ContinuousSound;
+		ContinuousSound *lReturnValue = new ContinuousSound;
 
 		if(!lReturnValue->Init(pData, pNbCopy)) {
 			lReturnValue = NULL;
@@ -637,31 +640,31 @@ MR_ContinuousSound *MR_SoundServer::CreateContinuousSound(const char *pData, int
 #endif
 }
 
-void MR_SoundServer::DeleteContinuousSound(MR_ContinuousSound * pSound)
+void SoundServer::DeleteContinuousSound(ContinuousSound * pSound)
 {
 	delete pSound;
 }
 
-void MR_SoundServer::Play(MR_ContinuousSound * pSound, int pCopy, int pDB, double pSpeed, int /*pPan */ )
+void SoundServer::Play(ContinuousSound * pSound, int pCopy, int pDB, double pSpeed, int /*pPan */ )
 {
 	if(pSound != NULL) {
 		pSound->CumPlay(pCopy, pDB, pSpeed);
 	}
 }
 
-void MR_SoundServer::ApplyContinuousPlay()
+void SoundServer::ApplyContinuousPlay()
 {
 #ifndef WITH_OPENAL
 	if(gDirectSound != NULL) {
 #endif
-		MR_SoundBuffer::ApplyCumCommandForAll();
+		SoundBuffer::ApplyCumCommandForAll();
 #ifndef WITH_OPENAL
 	}
 #endif
 }
 
 /*
-void MR_SoundServer::Pause(   MR_ContinuousSound* pSound, int pCopy )
+void SoundServer::Pause(   ContinuousSound* pSound, int pCopy )
 {
    if( pSound != NULL )
    {
@@ -669,7 +672,7 @@ void MR_SoundServer::Pause(   MR_ContinuousSound* pSound, int pCopy )
    }
 }
 
-void MR_SoundServer::Restart( MR_ContinuousSound* pSound, int pCopy )
+void SoundServer::Restart( ContinuousSound* pSound, int pCopy )
 {
    if( pSound != NULL )
    {
@@ -677,7 +680,7 @@ void MR_SoundServer::Restart( MR_ContinuousSound* pSound, int pCopy )
    }
 }
 
-void MR_SoundServer::SetParams( MR_ContinuousSound* pSound, int pCopy, int pDB, double pSpeed, int pPan )
+void SoundServer::SetParams( ContinuousSound* pSound, int pCopy, int pDB, double pSpeed, int pPan )
 {
    if( pSound != NULL )
    {
@@ -686,7 +689,7 @@ void MR_SoundServer::SetParams( MR_ContinuousSound* pSound, int pCopy, int pDB, 
 }
 */
 
-int MR_SoundServer::GetNbCopy(MR_ContinuousSound * pSound)
+int SoundServer::GetNbCopy(ContinuousSound * pSound)
 {
 	if(pSound != NULL) {
 		return pSound->GetNbCopy();
@@ -695,3 +698,6 @@ int MR_SoundServer::GetNbCopy(MR_ContinuousSound * pSound)
 		return 1;
 	}
 }
+
+}  // namespace VideoServices
+}  // namespace HoverRace

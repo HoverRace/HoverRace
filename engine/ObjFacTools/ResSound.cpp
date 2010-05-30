@@ -30,6 +30,7 @@
 #endif
 
 using HoverRace::Parcel::ObjStream;
+using namespace HoverRace::VideoServices;
 
 MR_ResShortSound::MR_ResShortSound(int pResourceId)
 {
@@ -43,7 +44,7 @@ MR_ResShortSound::MR_ResShortSound(int pResourceId)
 
 MR_ResShortSound::~MR_ResShortSound()
 {
-	MR_SoundServer::DeleteShortSound(mSound);
+	SoundServer::DeleteShortSound(mSound);
 	mSound = NULL;
 
 	delete[]mData;
@@ -64,7 +65,7 @@ void MR_ResShortSound::Serialize(ObjStream &pArchive)
 
 	}
 	else {
-		MR_SoundServer::DeleteShortSound(mSound);
+		SoundServer::DeleteShortSound(mSound);
 		mSound = NULL;
 
 		delete[]mData;
@@ -77,12 +78,12 @@ void MR_ResShortSound::Serialize(ObjStream &pArchive)
 
 		pArchive.Read(mData, mDataLen);
 
-		mSound = MR_SoundServer::CreateShortSound(mData, mNbCopy);
+		mSound = SoundServer::CreateShortSound(mData, mNbCopy);
 
 	}
 }
 
-MR_ShortSound *MR_ResShortSound::GetSound() const
+ShortSound *MR_ResShortSound::GetSound() const
 {
 	return mSound;
 }
@@ -98,7 +99,7 @@ MR_ResContinuousSound::MR_ResContinuousSound(int pResourceId)
 
 MR_ResContinuousSound::~MR_ResContinuousSound()
 {
-	MR_SoundServer::DeleteContinuousSound(mSound);
+	SoundServer::DeleteContinuousSound(mSound);
 	mSound = NULL;
 
 	delete[]mData;
@@ -119,7 +120,7 @@ void MR_ResContinuousSound::Serialize(ObjStream &pArchive)
 
 	}
 	else {
-		MR_SoundServer::DeleteContinuousSound(mSound);
+		SoundServer::DeleteContinuousSound(mSound);
 		mSound = NULL;
 
 		delete[]mData;
@@ -132,12 +133,12 @@ void MR_ResContinuousSound::Serialize(ObjStream &pArchive)
 
 		pArchive.Read(mData, mDataLen);
 
-		mSound = MR_SoundServer::CreateContinuousSound(mData, mNbCopy);
+		mSound = SoundServer::CreateContinuousSound(mData, mNbCopy);
 
 	}
 }
 
-MR_ContinuousSound *MR_ResContinuousSound::GetSound() const
+HoverRace::VideoServices::ContinuousSound *MR_ResContinuousSound::GetSound() const
 {
 	return mSound;
 }
