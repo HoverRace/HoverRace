@@ -252,34 +252,6 @@ void PrintLog(const char *pFormat, ...);
 
 static GUID zeroGuid = { 0, 0, 0, { 0, 0, 0, 0, 0, 0, 0, 0 } };
 
-// Computes the run length and shift of the block of ones in a bitmask.
-// Example: If the mask is "00011100" then mSize=3 and mShift=2.
-void MR_VideoBuffer::Channel::SetMask(DWORD mask)
-{
-	mShift = 0;
-	mSize = 0;
-
-	// Count the zeros on right hand side.
-	while(!(mask & 1L)) {
-		mask >>= 1;
-		mShift++;
-	}
-
-	// Count the ones.
-	while(mask & 1L) {
-		mask >>= 1;
-		mSize++;
-	}
-}
-
-// Packs a value into the bitmask for this channel.
-DWORD MR_VideoBuffer::Channel::Pack(DWORD intensity) const
-{
-	intensity >>= (8 - mSize);
-	intensity <<= mShift;
-	return intensity;
-}
-
 MR_VideoBuffer::MR_VideoBuffer(HWND pWindow, double pGamma, double pContrast, double pBrightness)
 {
 	OPEN_LOG();

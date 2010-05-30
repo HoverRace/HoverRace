@@ -65,15 +65,44 @@ class MR_VideoBuffer
 
 		DWORD mBpp;								  // current bits per pixel
 		DWORD mNativeBpp;						  // native (desktop) bits per pixel
+
 		struct Channel
 		{
 			DWORD mShift;
 			DWORD mSize;
+
 			Channel() : mShift(0), mSize(0) { }
-			void SetMask(DWORD mask);
-			DWORD Pack(DWORD intensity) const;
+
+			void SetMask(DWORD mask)
+			{
+				// Computes the run length and shift of the block of ones in a bitmask.
+				// Example: If the mask is "00011100" then mSize=3 and mShift=2.
+				mShift = 0;
+				mSize = 0;
+
+				// Count the zeros on right hand side.
+				while(!(mask & 1L)) {
+					mask >>= 1;
+					mShift++;
+				}
+
+				// Count the ones.
+				while(mask & 1L) {
+					mask >>= 1;
+					mSize++;
+				}
+			}
+
+			DWORD Pack(DWORD intensity) const
+			{
+				// Packs a value into the bitmask for this channel.
+				intensity >>= (8 - mSize);
+				intensity <<= mShift;
+				return intensity;
+			}
 		};
 		Channel mRChan, mGChan, mBChan;
+
 		DWORD *mPackedPalette;
 
 		MR_UInt16 *mZBuffer;
