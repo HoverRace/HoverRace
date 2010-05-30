@@ -69,8 +69,8 @@ class MR_VideoBuffer
 		{
 			DWORD mShift;
 			DWORD mSize;
-			Channel():mShift(0), mSize(0) {
-			} void SetMask(DWORD mask);
+			Channel() : mShift(0), mSize(0) { }
+			void SetMask(DWORD mask);
 			DWORD Pack(DWORD intensity) const;
 		};
 		Channel mRChan, mGChan, mBChan;
