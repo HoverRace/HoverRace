@@ -76,6 +76,7 @@ class MR_DllDeclare RecordFile : public Util::Inspectable {
 		 */
 		virtual ObjStreamPtr StreamOut() = 0;
 };
+typedef boost::shared_ptr<RecordFile> RecordFilePtr;
 
 }  // namespace Parcel
 }  // namespace HoverRace
