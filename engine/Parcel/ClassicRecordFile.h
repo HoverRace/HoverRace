@@ -70,7 +70,7 @@ class MR_DllDeclare ClassicRecordFile : public RecordFile
 	private:
 		int curRecord;
 		ClassicRecordFileHeader *header;
-		std::fstream fileStream;
+		FILE *fileStream;
 		std::string filename;
 };
 

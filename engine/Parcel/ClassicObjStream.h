@@ -46,10 +46,11 @@ class MR_DllDeclare ClassicObjStream : public ObjStream
 {
 	typedef ObjStream SUPER;
 	public:
-		ClassicObjStream(std::iostream &stream, const std::string &name, bool writing);
+	public:
+		ClassicObjStream(FILE *stream, const std::string &name, bool writing);
 		virtual ~ClassicObjStream() { }
 
-		virtual void Write(const void *buf, size_t ct) { stream->write((const char*)buf, ct); }
+		virtual void Write(const void *buf, size_t ct) { fwrite(buf, ct, 1, stream); }
 
 		virtual void WriteUInt8(MR_UInt8 i);
 		virtual void WriteInt16(MR_Int16 i);
@@ -61,7 +62,7 @@ class MR_DllDeclare ClassicObjStream : public ObjStream
 			virtual void WriteCString(const CString &s) { WriteString((const char *)s); }
 #		endif
 
-		virtual void Read(void *buf, size_t ct) { stream->read((char*)buf, ct); }
+		virtual void Read(void *buf, size_t ct) { fread(buf, ct, 1, stream); }
 
 		virtual void ReadUInt8(MR_UInt8 &i);
 		virtual void ReadInt16(MR_Int16 &i);
@@ -77,7 +78,7 @@ class MR_DllDeclare ClassicObjStream : public ObjStream
 		MR_UInt32 ReadStringLength();
 
 	private:
-		std::iostream *stream;
+		FILE *stream;
 };
 
 }  // namespace Parcel

@@ -24,3 +24,6 @@
 #endif
 
 #define WITH_OBJSTREAM 1
+
+// Use wide (Unicode) paths.
+#define WITH_WIDE_PATHS 1

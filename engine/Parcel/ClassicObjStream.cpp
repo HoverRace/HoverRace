@@ -27,40 +27,40 @@
 namespace HoverRace {
 namespace Parcel {
 
-ClassicObjStream::ClassicObjStream(std::iostream &stream, const std::string &name, bool writing) :
+ClassicObjStream::ClassicObjStream(FILE *stream, const std::string &name, bool writing) :
 	SUPER(name, 1, writing),
-	stream(&stream)
+	stream(stream)
 {
 	// Version for classic record file is currently always 1.
 }
 
 void ClassicObjStream::WriteUInt8(MR_UInt8 i)
 {
-	stream->write(reinterpret_cast<char*>(&i), 1);
+	fwrite(&i, 1, 1, stream);
 }
 
 void ClassicObjStream::WriteInt16(MR_Int16 i)
 {
 	//TODO: Big-endian conversion.
-	stream->write(reinterpret_cast<char*>(&i), 2);
+	fwrite(&i, 2, 1, stream);
 }
 
 void ClassicObjStream::WriteUInt16(MR_UInt16 i)
 {
 	//TODO: Big-endian conversion.
-	stream->write(reinterpret_cast<char*>(&i), 2);
+	fwrite(&i, 2, 1, stream);
 }
 
 void ClassicObjStream::WriteInt32(MR_Int32 i)
 {
 	//TODO: Big-endian conversion.
-	stream->write(reinterpret_cast<char*>(&i), 4);
+	fwrite(&i, 4, 1, stream);
 }
 
 void ClassicObjStream::WriteUInt32(MR_UInt32 i)
 {
 	//TODO: Big-endian conversion.
-	stream->write(reinterpret_cast<char*>(&i), 4);
+	fwrite(&i, 4, 1, stream);
 }
 
 void ClassicObjStream::WriteString(const std::string &s)
@@ -70,30 +70,30 @@ void ClassicObjStream::WriteString(const std::string &s)
 
 void ClassicObjStream::ReadUInt8(MR_UInt8 &i)
 {
-	stream->read(reinterpret_cast<char*>(&i), 1);
+	fread(&i, 1, 1, stream);
 }
 
 void ClassicObjStream::ReadInt16(MR_Int16 &i)
 {
-	stream->read(reinterpret_cast<char*>(&i), 2);
+	fread(&i, 2, 1, stream);
 	//TODO: Big-endian conversion.
 }
 
 void ClassicObjStream::ReadUInt16(MR_UInt16 &i)
 {
-	stream->read(reinterpret_cast<char*>(&i), 2);
+	fread(&i, 2, 1, stream);
 	//TODO: Big-endian conversion.
 }
 
 void ClassicObjStream::ReadInt32(MR_Int32 &i)
 {
-	stream->read(reinterpret_cast<char*>(&i), 4);
+	fread(&i, 4, 1, stream);
 	//TODO: Big-endian conversion.
 }
 
 void ClassicObjStream::ReadUInt32(MR_UInt32 &i)
 {
-	stream->read(reinterpret_cast<char*>(&i), 4);
+	fread(&i, 4, 1, stream);
 	//TODO: Big-endian conversion.
 }
 
@@ -105,7 +105,7 @@ void ClassicObjStream::ReadString(std::string &s)
 	MR_UInt32 len = ReadStringLength();
 
 	char *buf = new char[len];
-	stream->read(buf, len);
+	fread(buf, 1, len, stream);
 	s.assign(buf, len);
 	delete[] buf;
 }

@@ -22,11 +22,14 @@
 
 #include "StdAfx.h"
 
+#include "../Util/Str.h"
 #include "ClassicObjStream.h"
 
 #include "ClassicRecordFile.h"
 
 using std::ios;
+
+using namespace HoverRace::Util;
 
 namespace HoverRace {
 namespace Parcel {
@@ -135,7 +138,7 @@ ClassicRecordFile::ClassicRecordFile() :
 ClassicRecordFile::~ClassicRecordFile()
 {
 	if (header != NULL) {
-		fileStream.close();
+		fclose(fileStream);
 		delete header;
 	}
 }
@@ -146,8 +149,12 @@ bool ClassicRecordFile::CreateForWrite(const char *filename, int numRecords, con
 
 	this->filename = filename;
 
-	fileStream.open(filename, ios::in | ios::out | ios::binary | ios::trunc);
-	if (fileStream.fail()) return false;
+#	ifdef WITH_WIDE_PATHS
+		fileStream = _wfopen(Str::UW(filename), L"w+b");
+#	else
+		fileStream = fopen(filename, "w+b");
+#	endif
+	if (fileStream == NULL) return false;
 
 	//TODO: Write header.
 
@@ -160,8 +167,12 @@ bool ClassicRecordFile::OpenForWrite(const char *filename)
 
 	this->filename = filename;
 
-	fileStream.open(filename, ios::in | ios::out | ios::binary);
-	if (fileStream.fail()) return false;
+#	ifdef WITH_WIDE_PATHS
+		fileStream = _wfopen(Str::UW(filename), L"r+b");
+#	else
+		fileStream = fopen(filename, "r+b");
+#	endif
+	if (fileStream == NULL) return false;
 
 	//TODO: Read header.
 
@@ -174,14 +185,18 @@ bool ClassicRecordFile::OpenForRead(const char *filename, bool validateChecksum)
 
 	this->filename = filename;
 
-	fileStream.open(filename, ios::in | ios::out | ios::binary);
-	if (fileStream.fail()) return false;
+#	ifdef WITH_WIDE_PATHS
+		fileStream = _wfopen(Str::UW(filename), L"r+b");
+#	else
+		fileStream = fopen(filename, "r+b");
+#	endif
+	if (fileStream == NULL) return false;
 
 	ClassicObjStream objStream(fileStream, filename, false);
 	header = new ClassicRecordFileHeader();
 	header->Serialize(objStream);
 
-	if (header->recordList == NULL) { fileStream.close(); return false; }
+	if (header->recordList == NULL) { fclose(fileStream); return false; }
 
 	//TODO: Validate checksum.
 
@@ -205,7 +220,7 @@ void ClassicRecordFile::SelectRecord(int i)
 	if (header != NULL) {
 		if ((unsigned)i < header->recordsUsed) {
 			curRecord = i;
-			fileStream.seekg(header->recordList[i], ios::beg);
+			fseek(fileStream, header->recordList[i], SEEK_SET);
 		}
 		else {
 			ASSERT(FALSE);
