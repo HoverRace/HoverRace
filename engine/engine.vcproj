@@ -911,6 +911,14 @@
 			Name="Parcel"
 			>
 			<File
+				RelativePath=".\Parcel\Bundle.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Parcel\Bundle.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Parcel\ClassicObjStream.cpp"
 				>
 			</File>
