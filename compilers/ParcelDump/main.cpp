@@ -41,8 +41,6 @@ using namespace HoverRace::Util;
 	static int foo = use_ignore_mfc_leaks();
 #endif
 
-typedef boost::shared_ptr<RecordFile> RecordFilePtr;
-
 static RecordFilePtr OpenRecordFile(const std::string &filename)
 {
 	//TODO: Allow loader selection.
