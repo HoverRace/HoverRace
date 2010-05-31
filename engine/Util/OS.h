@@ -27,6 +27,7 @@
 #include <string>
 #include <vector>
 
+#include <boost/filesystem.hpp>
 #include <boost/shared_ptr.hpp>
 
 #ifdef _WIN32
@@ -59,6 +60,12 @@ class MR_DllDeclare OS {
 #		else
 			typedef unsigned long long timestamp_t;
 			typedef Window wnd_t;
+#		endif
+
+#		ifdef WITH_WIDE_PATHS
+			typedef boost::filesystem::wpath path_t;
+#		else
+			typedef boost::filesystem::path path_t;
 #		endif
 		
 		static void SetEnv(const char *key, const char *val);

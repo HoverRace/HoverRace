@@ -64,6 +64,14 @@ namespace Str {
 			operator const std::string() const { return cs; }
 	};
 
+#	ifdef WITH_WIDE_PATHS
+		typedef UW UP;
+		typedef WU PU;
+#	else
+		MR_DllDeclare const char *UP(const char *s) { return s; }
+		MR_DllDeclare const wchar_t *PU(const wchar_t *s) { return s; }
+#	endif
+
 }  // namespace Str
 
 }  // namespace Util
