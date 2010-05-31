@@ -36,31 +36,31 @@ ClassicObjStream::ClassicObjStream(FILE *stream, const std::string &name, bool w
 
 void ClassicObjStream::WriteUInt8(MR_UInt8 i)
 {
-	fwrite(&i, 1, 1, stream);
+	WriteBuf(&i, 1);
 }
 
 void ClassicObjStream::WriteInt16(MR_Int16 i)
 {
 	//TODO: Big-endian conversion.
-	fwrite(&i, 2, 1, stream);
+	WriteBuf(&i, 2);
 }
 
 void ClassicObjStream::WriteUInt16(MR_UInt16 i)
 {
 	//TODO: Big-endian conversion.
-	fwrite(&i, 2, 1, stream);
+	WriteBuf(&i, 2);
 }
 
 void ClassicObjStream::WriteInt32(MR_Int32 i)
 {
 	//TODO: Big-endian conversion.
-	fwrite(&i, 4, 1, stream);
+	WriteBuf(&i, 4);
 }
 
 void ClassicObjStream::WriteUInt32(MR_UInt32 i)
 {
 	//TODO: Big-endian conversion.
-	fwrite(&i, 4, 1, stream);
+	WriteBuf(&i, 4);
 }
 
 void ClassicObjStream::WriteString(const std::string &s)
@@ -70,30 +70,30 @@ void ClassicObjStream::WriteString(const std::string &s)
 
 void ClassicObjStream::ReadUInt8(MR_UInt8 &i)
 {
-	fread(&i, 1, 1, stream);
+	ReadBuf(&i, 1);
 }
 
 void ClassicObjStream::ReadInt16(MR_Int16 &i)
 {
-	fread(&i, 2, 1, stream);
+	ReadBuf(&i, 2);
 	//TODO: Big-endian conversion.
 }
 
 void ClassicObjStream::ReadUInt16(MR_UInt16 &i)
 {
-	fread(&i, 2, 1, stream);
+	ReadBuf(&i, 2);
 	//TODO: Big-endian conversion.
 }
 
 void ClassicObjStream::ReadInt32(MR_Int32 &i)
 {
-	fread(&i, 4, 1, stream);
+	ReadBuf(&i, 4);
 	//TODO: Big-endian conversion.
 }
 
 void ClassicObjStream::ReadUInt32(MR_UInt32 &i)
 {
-	fread(&i, 4, 1, stream);
+	ReadBuf(&i, 4);
 	//TODO: Big-endian conversion.
 }
 
@@ -105,7 +105,7 @@ void ClassicObjStream::ReadString(std::string &s)
 	MR_UInt32 len = ReadStringLength();
 
 	char *buf = new char[len];
-	fread(buf, 1, len, stream);
+	ReadBuf(buf, len);
 	s.assign(buf, len);
 	delete[] buf;
 }

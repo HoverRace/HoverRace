@@ -50,7 +50,15 @@ class MR_DllDeclare ClassicObjStream : public ObjStream
 		ClassicObjStream(FILE *stream, const std::string &name, bool writing);
 		virtual ~ClassicObjStream() { }
 
-		virtual void Write(const void *buf, size_t ct) { fwrite(buf, ct, 1, stream); }
+	private:
+		void WriteBuf(const void *buf, size_t ct)
+		{
+			size_t ret = fwrite(buf, ct, 1, stream);
+			if (ret == 0) throw ObjStreamExn(GetName(), "Write failed");
+		}
+
+	public:
+		virtual void Write(const void *buf, size_t ct) { WriteBuf(buf, ct); }
 
 		virtual void WriteUInt8(MR_UInt8 i);
 		virtual void WriteInt16(MR_Int16 i);
@@ -62,7 +70,15 @@ class MR_DllDeclare ClassicObjStream : public ObjStream
 			virtual void WriteCString(const CString &s) { WriteString((const char *)s); }
 #		endif
 
-		virtual void Read(void *buf, size_t ct) { fread(buf, ct, 1, stream); }
+	private:
+		void ReadBuf(void *buf, size_t ct)
+		{
+			size_t ret = fread(buf, ct, 1, stream);
+			if (ret == 0) throw ObjStreamExn(GetName(), "Read failed");
+		}
+
+	public:
+		virtual void Read(void *buf, size_t ct) { ReadBuf(buf, ct); }
 
 		virtual void ReadUInt8(MR_UInt8 &i);
 		virtual void ReadInt16(MR_Int16 &i);
