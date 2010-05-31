@@ -68,8 +68,8 @@ namespace Str {
 		typedef UW UP;
 		typedef WU PU;
 #	else
-		MR_DllDeclare const char *UP(const char *s) { return s; }
-		MR_DllDeclare const wchar_t *PU(const wchar_t *s) { return s; }
+		MR_DllDeclare inline const char *UP(const char *s) { return s; }
+		MR_DllDeclare inline const wchar_t *PU(const wchar_t *s) { return s; }
 #	endif
 
 }  // namespace Str
