@@ -53,6 +53,8 @@
 #include "yaml/SeqNode.h"
 #include "yaml/Parser.h"
 
+#include "Str.h"
+
 #include "Config.h"
 
 #ifndef _WIN32
@@ -125,11 +127,11 @@ Config *Config::instance = NULL;
  *             The default is to use {@link #GetDefaultPath()}.
  */
 Config::Config(int verMajor, int verMinor, int verPatch, int verBuild,
-					 bool prerelease, const std::string &path) :
+					 bool prerelease, const OS::path_t &path) :
 	verMajor(verMajor), verMinor(verMinor), verPatch(verPatch), verBuild(verBuild),
 	prerelease(prerelease)
 {
-	this->path = (path.length() == 0) ? GetDefaultPath() : path;
+	this->path = path.empty() ? GetDefaultPath() : path;
 
 	std::ostringstream oss;
 	oss << verMajor << '.' << verMinor;
@@ -175,7 +177,7 @@ Config::~Config()
  * @return The config instance.
  */
 Config *Config::Init(int verMajor, int verMinor, int verPatch, int verBuild,
-						   bool prerelease, const std::string &path)
+						   bool prerelease, const OS::path_t &path)
 {
 	if (instance == NULL) {
 		instance = new Config(verMajor, verMinor, verPatch, verBuild, prerelease, path);
@@ -265,15 +267,16 @@ const std::string &Config::GetUserAgentId() const
  * @return The fully-qualified path.
  * @throws ConfigExn if unable to retrieve the default directory.
  */
-std::string Config::GetDefaultPath()
+OS::path_t Config::GetDefaultPath()
 {
 #ifdef _WIN32
-	char dpath[MAX_PATH] = {0};
+	wchar_t dpath[MAX_PATH] = {0};
 	HRESULT hr = 
-		SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, SHGFP_TYPE_CURRENT, dpath);
+		SHGetFolderPathW(NULL, CSIDL_APPDATA, NULL, SHGFP_TYPE_CURRENT, dpath);
 	if (SUCCEEDED(hr)) {
-		std::string retv(dpath);
-		retv += "\\HoverRace.com\\HoverRace";
+		OS::path_t retv(dpath);
+		retv /= L"HoverRace.com";
+		retv /= L"HoverRace";
 		return retv;
 	}
 	else {
@@ -298,14 +301,14 @@ std::string Config::GetDefaultPath()
 #endif
 }
 
-std::string Config::GetConfigFilename() const
+OS::path_t Config::GetConfigFilename() const
 {
-	std::string retv(path);
+	OS::path_t retv(path);
 	if (prerelease) {
-		retv += DIRSEP PREREL_CONFIG_FILENAME;
+		retv /= (const OS::path_t::value_type*)Str::UP(PREREL_CONFIG_FILENAME);
 	}
 	else {
-		retv += DIRSEP CONFIG_FILENAME;
+		retv /= (const OS::path_t::value_type*)Str::UP(CONFIG_FILENAME);
 	}
 	return retv;
 }
@@ -343,7 +346,7 @@ std::string Config::GetMediaPath(const std::string &file) const
  */
 std::string Config::GetTrackPath() const
 {
-	return path + (DIRSEP "Tracks");
+	return (const char*)Str::PU((path / (const OS::path_t::value_type*)Str::UP("Tracks")).file_string().c_str());
 }
 
 /**
@@ -355,7 +358,7 @@ std::string Config::GetTrackPath() const
  */
 std::string Config::GetTrackPath(const std::string &file) const
 {
-	std::string retv(path);
+	std::string retv((const char*)Str::PU(path.file_string().c_str()));
 	retv += (DIRSEP "Tracks" DIRSEP);
 	retv += file;
 	if (!boost::ends_with(file, TRACK_EXT)) {
@@ -556,9 +559,13 @@ void Config::ResetToDefaults()
  */
 void Config::Load()
 {
-	const std::string &cfgfile = GetConfigFilename();
+	const OS::path_t cfgfile(GetConfigFilename());
 	
-	FILE *in = fopen(cfgfile.c_str(), "rb");
+#	ifdef WITH_WIDE_PATHS
+		FILE *in = _wfopen(cfgfile.file_string().c_str(), L"rb");
+#	else
+		FILE *in = fopen(cfgfile.file_string().c_str(), "rb");
+#	endif
 	if (in == NULL) {
 		// File doesn't exist.
 		// That's perfectly fine; we'll use the defaults.
@@ -616,21 +623,26 @@ void Config::Save()
 {
 	if (unlinked) return;
 
-	const std::string &cfgfile = GetConfigFilename();
+	const OS::path_t cfgfile(GetConfigFilename());
 
 	// Create the config directory.
-	fs::path dirpath(path);
-	if (!fs::exists(dirpath)) {
-		if (!fs::create_directories(dirpath)) {
-			throw ConfigExn(
-				(std::string("Unable to create directory: ") + path).c_str());
+	if (!fs::exists(path)) {
+		if (!fs::create_directories(path)) {
+			std::string msg("Unable to create directory: ");
+			msg += (const char*)Str::PU(path.file_string().c_str());
+			throw ConfigExn(msg.c_str());
 		}
 	}
 
-	FILE *out = fopen(cfgfile.c_str(), "wb");
+#	ifdef WITH_WIDE_PATHS
+		FILE *out = _wfopen(cfgfile.file_string().c_str(), L"wb");
+#	else
+		FILE *out = fopen(cfgfile.file_string().c_str(), "wb");
+#	endif
 	if(out == NULL) {
-		throw ConfigExn(
-			(std::string("Unable to create configuration file: ") + cfgfile).c_str());
+		std::string msg("Unable to create configuration file: ");
+		msg += (const char*)Str::PU(cfgfile.file_string().c_str());
+		throw ConfigExn(msg.c_str());
 	}
 
 	yaml::Emitter *emitter = NULL;

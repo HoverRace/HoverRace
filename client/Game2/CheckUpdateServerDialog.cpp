@@ -102,8 +102,10 @@ void CheckUpdateServerDialog::ShowModal(HINSTANCE hinst, HWND parent)
 					// only update if the user hit ok
 					// strip updates.php from url
 					string baseUrl = url.substr(0, url.rfind('/'));
+					//FIXME: Use OS::path_t throughout.
+					std::string defaultPath((const char*)Str::PU(Config::GetInstance()->GetDefaultPath().file_string().c_str()));
 					if(DownloadUpdateDialog(baseUrl, dlPtr->updateUrl, 
-						Config::GetInstance()->GetDefaultPath()).ShowModal(hinst, parent)) {
+						defaultPath).ShowModal(hinst, parent)) {
 						// download was successful
 						// assemble arguments for updater
 						// theoretically, the root directory of this instance of HoverRace should just
@@ -112,11 +114,11 @@ void CheckUpdateServerDialog::ShowModal(HINSTANCE hinst, HWND parent)
 						_chdir("../");
 						string hrPath = boost::filesystem::current_path().file_string();
 						_chdir(curPath.c_str());
-						string patchFile = Config::GetInstance()->GetDefaultPath() + "\\" + dlPtr->updateUrl;
+						string patchFile = defaultPath + "\\" + dlPtr->updateUrl;
 
 						// temporarily move updater and dependencies into "safe" area
 						// these files should be checked for and removed at HR startup
-						string updaterDir = Config::GetInstance()->GetDefaultPath() + "\\updater_tmp\\";
+						string updaterDir = defaultPath + "\\updater_tmp\\";
 						if(boost::filesystem::exists(updaterDir)) // in case cleanup failed
 							boost::filesystem::remove_all(updaterDir);
 						boost::filesystem::create_directory(updaterDir);

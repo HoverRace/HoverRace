@@ -24,6 +24,8 @@
 
 #include <string>
 
+#include "OS.h"
+
 #ifdef _WIN32
 #	ifdef MR_ENGINE
 #		define MR_DllDeclare   __declspec( dllexport )
@@ -38,6 +40,12 @@
 namespace yaml {
 	class Emitter;
 	class MapNode;
+}
+namespace HoverRace {
+	namespace Parcel {
+		class Bundle;
+		typedef boost::shared_ptr<Bundle> BundlePtr;
+	}
 }
 
 namespace HoverRace {
@@ -67,7 +75,7 @@ class MR_DllDeclare Config
 	private:
 		static Config *instance;
 		bool unlinked;  ///< if @c true, will prevent saving config.
-		std::string path;
+		OS::path_t path;
 		int verMajor;
 		int verMinor;
 		int verPatch;
@@ -80,12 +88,12 @@ class MR_DllDeclare Config
 
 	private:
 		Config(int verMajor, int verMinor, int verPatch, int verBuild,
-			bool prerelease, const std::string &file="");
+			bool prerelease, const OS::path_t &file=OS::path_t());
 	public:
 		~Config();
 	
 		static Config *Init(int verMajor, int verMinor, int verPatch, int verBuild,
-			bool prerelease, const std::string &path="");
+			bool prerelease, const OS::path_t &path=OS::path_t());
 		static void Shutdown();
 
 		bool IsUnlinked() const;
@@ -97,8 +105,8 @@ class MR_DllDeclare Config
 		const int &GetBuild() const;
 		const std::string &GetUserAgentId() const;
 
-		static std::string GetDefaultPath();
-		std::string GetConfigFilename() const;
+		static OS::path_t GetDefaultPath();
+		OS::path_t GetConfigFilename() const;
 
 		std::string GetMediaPath() const;
 		std::string GetMediaPath(const std::string &file) const;
