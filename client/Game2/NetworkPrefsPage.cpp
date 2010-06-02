@@ -141,9 +141,11 @@ BOOL NetworkPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 
 				case IDC_OPEN_FOLDER:
 					{
-						char buf[MAX_PATH];
-						GetDlgItemText(pWindow, IDC_LOG_CHATS_TXT, buf, sizeof(buf));
-						OS::OpenLink(buf);
+						wchar_t buf[MAX_PATH];
+						GetDlgItemTextW(pWindow, IDC_LOG_CHATS_TXT, buf, sizeof(buf) / sizeof(wchar_t));
+						if (!OS::OpenPath(buf)) {
+							MessageBoxW(pWindow, Str::UW(_("Directory does not exist")), PACKAGE_NAME_L, MB_ICONWARNING);
+						}
 					}
 					break;
 

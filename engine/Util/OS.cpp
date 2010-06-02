@@ -44,10 +44,12 @@
 
 #include "OS.h"
 
+namespace fs = boost::filesystem;
 using boost::format;
 using boost::str;
 
-using namespace HoverRace::Util;
+namespace HoverRace {
+namespace Util {
 
 /// Lookup table for converting from hex.
 int OS::nibbles[256] = {
@@ -565,3 +567,23 @@ bool OS::OpenLink(const std::string &url)
 		return (int)ShellExecuteW(NULL, L"open", urlw, NULL, NULL, SW_SHOWNORMAL) > 32;
 #	endif
 }
+
+/**
+ * Open a filesystem path.
+ * @param path The path to open.
+ * @return @c true if successful, @c false otherwise.
+ */
+bool OS::OpenPath(const path_t &path)
+{
+	if (!(fs::exists(path) && fs::is_directory(path))) return false;
+#	ifdef _WIN32
+		std::wstring s(path.file_string());
+		OutputDebugStringW(L"Opening Path: ");
+		OutputDebugStringW(s.c_str());
+		OutputDebugStringW(L"\n");
+		return (int)ShellExecuteW(NULL, L"open", s.c_str(), NULL, NULL, SW_SHOWNORMAL) > 32;
+#	endif
+}
+
+}  // namespace Util
+}  // namespace HoverRace

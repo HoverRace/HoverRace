@@ -103,6 +103,7 @@ class MR_DllDeclare OS {
 		static void TimeShutdown();
 
 		static bool OpenLink(const std::string &url);
+		static bool OpenPath(const path_t &path);
 
 		static void Free(void *buf);
 };
