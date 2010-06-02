@@ -289,8 +289,8 @@ OS::path_t Config::GetDefaultPath()
 		home = pw->pw_dir;
 	}
 	if (home != NULL) {
-		std::string retv(home);
-		retv += "/.hoverrace";
+		OS::path_t retv(home);
+		retv /= ".hoverrace";
 		return retv;
 	}
 	else {
