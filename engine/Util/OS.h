@@ -67,6 +67,8 @@ class MR_DllDeclare OS {
 #		else
 			typedef boost::filesystem::path path_t;
 #		endif
+		typedef path_t::value_type *pstr_t;
+		typedef const path_t::value_type *cpstr_t;
 		
 		static void SetEnv(const char *key, const char *val);
 		static void SetLocale();
