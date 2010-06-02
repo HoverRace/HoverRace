@@ -24,8 +24,12 @@
 
 #include <sstream>
 
+#include "../Str.h"
+
 #include "ScalarNode.h"
 
+namespace Str = HoverRace::Util::Str;
+using HoverRace::Util::OS;
 using namespace yaml;
 
 #ifndef _WIN32
@@ -140,4 +144,13 @@ int ScalarNode::AsInt(int def, int min, int max) const
 	if (retv < min) return min;
 	if (retv > max) return max;
 	return retv;
+}
+
+/**
+ * Convert this scalar to a path.
+ * @return The path.
+ */
+OS::path_t ScalarNode::AsPath() const
+{
+	return OS::path_t((const OS::path_t::value_type*)Str::UP(value));
 }

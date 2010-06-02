@@ -24,6 +24,8 @@
 
 #include <limits.h>
 
+#include "../OS.h"
+
 #include "Node.h"
 
 namespace yaml
@@ -43,6 +45,7 @@ namespace yaml
 			double AsDouble(double def, double min, double max) const;
 			float AsFloat(float def, float min, float max) const;
 			int AsInt(int def, int min=INT_MIN, int max=INT_MAX) const;
+			HoverRace::Util::OS::path_t AsPath() const;
 
 		private:
 			char *value;

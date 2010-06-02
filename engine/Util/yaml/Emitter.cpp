@@ -24,8 +24,11 @@
 
 #include <boost/format.hpp>
 
+#include "../Str.h"
+
 #include "Emitter.h"
 
+namespace Str = HoverRace::Util::Str;
 using namespace yaml;
 
 #define YAML_STR(s) ((yaml_char_t*)(s))
@@ -295,4 +298,13 @@ void Emitter::Value(double val)
 void Emitter::Value(float val)
 {
 	Value(static_cast<double>(val));
+}
+
+/**
+ * Write a single path value.
+ * @param val The value.
+ */
+void Emitter::Value(const HoverRace::Util::OS::path_t &path)
+{
+	Value(static_cast<const char*>(Str::PU(path.file_string().c_str())));
 }

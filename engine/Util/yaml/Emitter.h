@@ -27,6 +27,7 @@
 
 #include <yaml.h>
 
+#include "../OS.h"
 #include "YamlExn.h"
 
 namespace yaml
@@ -75,6 +76,7 @@ namespace yaml
 			void Value(int val);
 			void Value(double val);
 			void Value(float val);
+			void Value(const HoverRace::Util::OS::path_t &path);
 
 		private:
 			yaml_emitter_t emitter;
