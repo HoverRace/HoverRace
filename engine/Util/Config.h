@@ -118,7 +118,7 @@ class MR_DllDeclare Config
 
 		static std::string GetDefaultRoomListUrl();
 		static std::string GetDefaultUpdateServerUrl();
-		static std::string GetDefaultChatLogPath();
+		static OS::path_t GetDefaultChatLogPath();
 
 		const std::string &GetDefaultFontName() const;
 
@@ -183,7 +183,7 @@ class MR_DllDeclare Config
 			std::string updateServer;
 			bool autoUpdates;
 			bool logChats;
-			std::string logChatsPath;
+			OS::path_t logChatsPath;
 			int udpRecvPort;
 			int tcpRecvPort;
 			int tcpServPort;

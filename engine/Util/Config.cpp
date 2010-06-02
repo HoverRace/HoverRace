@@ -106,6 +106,12 @@ namespace fs = boost::filesystem;
 		if (_scalar != NULL) (name) = _scalar->AsString(); \
 	}
 
+#define READ_PATH(root,name) \
+	{\
+		yaml::ScalarNode *_scalar = dynamic_cast<yaml::ScalarNode*>((root)->Get(#name)); \
+		if (_scalar != NULL) (name) = _scalar->AsPath(); \
+	}
+
 #define EMIT_VAR(emitter,name) \
 	(emitter)->MapKey(#name); \
 	(emitter)->Value(name);
@@ -404,30 +410,30 @@ std::string Config::GetDefaultUpdateServerUrl()
  * @return The fully-qualified path (may be empty if base path could not
  *         be retrieved from the system).
  */
-std::string Config::GetDefaultChatLogPath()
+OS::path_t Config::GetDefaultChatLogPath()
 {
 #ifdef _WIN32
-	char dpath[MAX_PATH] = {0};
+	wchar_t dpath[MAX_PATH] = {0};
 	HRESULT hr = 
-		SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, dpath);
+		SHGetFolderPathW(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, dpath);
 	if (SUCCEEDED(hr)) {
-		std::string retv(dpath);
-		retv += "\\HoverRace Chat";
+		OS::path_t retv(dpath);
+		retv /= L"HoverRace Chat";
 		return retv;
 	}
 	else {
 		ASSERT(FALSE);
-		return "";
+		return OS::path_t();
 	}
 #else
 	char *home = getenv("HOME");
 	if (home != NULL) {
-		std::string retv(home);
-		retv += "/HoverRace Chat";
+		OS::path_t retv(home);
+		retv /= "HoverRace Chat";
 		return retv;
 	}
 	else {
-		return "";
+		return OS::path_t();
 	}
 #endif
 }
@@ -797,7 +803,7 @@ void Config::cfg_net_t::Load(yaml::MapNode *root)
 	READ_STRING(root, updateServer);
 	READ_BOOL(root, autoUpdates);
 	READ_BOOL(root, logChats);
-	READ_STRING(root, logChatsPath);
+	READ_PATH(root, logChatsPath);
 	READ_INT(root, udpRecvPort, 0, 65535);
 	READ_INT(root, tcpRecvPort, 0, 65535);
 	READ_INT(root, tcpServPort, 0, 65535);

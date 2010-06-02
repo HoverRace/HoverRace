@@ -85,7 +85,7 @@ BOOL NetworkPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 
 			SetDlgItemTextW(pWindow, IDC_LOG_CHATS, Str::UW(_("&Log all chat sessions to:")));
 			SendDlgItemMessage(pWindow, IDC_LOG_CHATS, BM_SETCHECK, cfg->net.logChats, 0);
-			SetDlgItemText(pWindow, IDC_LOG_CHATS_TXT, cfg->net.logChatsPath.c_str());
+			SetDlgItemTextW(pWindow, IDC_LOG_CHATS_TXT, cfg->net.logChatsPath.file_string().c_str());
 			SetDlgItemTextW(pWindow, IDC_OPEN_FOLDER, Str::UW(_("Open Folder")));
 
 			SetDlgItemTextW(pWindow, IDC_CONNECTION_GROUP, Str::UW(_("Connection")));
@@ -104,13 +104,13 @@ BOOL NetworkPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 			switch (LOWORD(pWParam)) {
 				case IDC_LOG_CHATS_BROWSE:
 					{
-						char buf[MAX_PATH];
-						GetDlgItemText(pWindow, IDC_LOG_CHATS_TXT, buf, sizeof(buf));
-						std::string curPath = buf;
+						wchar_t buf[MAX_PATH];
+						GetDlgItemTextW(pWindow, IDC_LOG_CHATS_TXT, buf, sizeof(buf) / sizeof(wchar_t));
+						std::string curPath((Str::WU(buf)));
 						if (PathSelector(_("Select a destination folder for saved chat sessions.")).
 							ShowModal(pWindow, curPath))
 						{
-							SetDlgItemText(pWindow, IDC_LOG_CHATS_TXT, curPath.c_str());
+							SetDlgItemTextW(pWindow, IDC_LOG_CHATS_TXT, Str::UW(curPath.c_str()));
 						}
 					}
 					break;
@@ -162,6 +162,7 @@ BOOL NetworkPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 				case PSN_APPLY:
 					{
 						char lBuffer[MAX_PATH];
+						wchar_t wbuf[MAX_PATH];
 						if(GetDlgItemText(pWindow, IDC_MAINSERVER, lBuffer, sizeof(lBuffer)) == 0)
 							ASSERT(FALSE);
 
@@ -179,9 +180,9 @@ BOOL NetworkPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 						}
 
 						cfg->net.logChats = (SendDlgItemMessage(pWindow, IDC_LOG_CHATS, BM_GETCHECK, 0, 0) != FALSE);
-						if(GetDlgItemText(pWindow, IDC_LOG_CHATS_TXT, lBuffer, sizeof(lBuffer)) == 0)
+						if(GetDlgItemTextW(pWindow, IDC_LOG_CHATS_TXT, wbuf, sizeof(wbuf) / sizeof(wchar_t)) == 0)
 							ASSERT(FALSE);
-						cfg->net.logChatsPath = lBuffer;
+						cfg->net.logChatsPath = wbuf;
 
 						if(GetDlgItemText(pWindow, IDC_TCP_SERV_PORT, lBuffer, sizeof(lBuffer)) == 0)
 							ASSERT(FALSE);

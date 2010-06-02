@@ -792,10 +792,9 @@ void MR_InternetRoom::OpenChatLog()
 	const Config *cfg = Config::GetInstance();
 	if (!cfg->net.logChats) return;
 
-	const std::string &logChatsPath = cfg->net.logChatsPath;
-	if (logChatsPath.length() == 0) return;
+	OS::path_t logPath(cfg->net.logChatsPath);
+	if (logPath.empty()) return;
 
-	fs::path logPath(logChatsPath);
 	try {
 		if (!fs::exists(logPath)) {
 			fs::create_directories(logPath);
@@ -804,7 +803,7 @@ void MR_InternetRoom::OpenChatLog()
 	catch (fs::basic_filesystem_error<fs::path> &ex) {
 		AddChatLine(_("Unable to create chat log file:"));
 		AddChatLine(_("Unable to create directory:"));
-		AddChatLine(logPath.string().c_str());
+		AddChatLine(Str::PU(logPath.file_string().c_str()));
 		AddChatLine(ex.what());
 		return;
 	}
@@ -817,7 +816,7 @@ void MR_InternetRoom::OpenChatLog()
 	char timestamp[128] = { 0 };
 	strftime(timestamp, 128, "%Y-%m-%d %H:%M:%S %z", &now);
 
-	logPath /= filename;
+	logPath /= (OS::cpstr_t)Str::UP(filename);
 
 	chatLog = new fs::ofstream(logPath, std::ios_base::app | std::ios_base::out);
 	if (chatLog->fail()) {
@@ -825,7 +824,7 @@ void MR_InternetRoom::OpenChatLog()
 		chatLog = NULL;
 		AddChatLine(_("Unable to create chat log file:"));
 		AddChatLine(_("Unable to open file for writing:"));
-		AddChatLine(logPath.string().c_str());
+		AddChatLine(Str::PU(logPath.file_string().c_str()));
 		return;
 	}
 
@@ -839,7 +838,7 @@ void MR_InternetRoom::OpenChatLog()
 		timestamp << std::endl << std::endl;
 
 	AddChatLine(_("Saving chat session to:"), true);
-	AddChatLine(logPath.string().c_str(), true);
+	AddChatLine(Str::PU(logPath.string().c_str()), true);
 }
 
 /***
