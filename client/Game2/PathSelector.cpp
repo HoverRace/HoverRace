@@ -29,10 +29,12 @@
 
 #include "PathSelector.h"
 
-using namespace HoverRace::Client;
 using namespace HoverRace::Util;
 
 static bool SHGetTargetFolderPath(LPCITEMIDLIST pidlFolder, LPWSTR pszPath);
+
+namespace HoverRace {
+namespace Client {
 
 /**
  * Constructor.
@@ -55,10 +57,10 @@ PathSelector::~PathSelector()
  * @return @c true if the user selected a valid path,
  *         @c false if the user canceled the dialog or the path was invalid.
  */
-bool PathSelector::ShowModal(HWND parent, std::string &path)
+bool PathSelector::ShowModal(HWND parent, OS::path_t &path)
 {
 	wchar_t browsePath[MAX_PATH] = { 0 };
-	initialPath = (const wchar_t *)Str::UW(path.c_str());
+	initialPath = path.file_string();
 	BROWSEINFOW browseInfo;
 	memset(&browseInfo, 0, sizeof(browseInfo));
 	browseInfo.hwndOwner = parent;
@@ -76,7 +78,7 @@ bool PathSelector::ShowModal(HWND parent, std::string &path)
 	else {
 		bool retv = SHGetTargetFolderPath(pidl, browsePath);
 		if (retv) {
-			path = (const char*)Str::WU(browsePath);
+			path = browsePath;
 		}
 		CoTaskMemFree(pidl);
 		return retv;
@@ -104,6 +106,9 @@ int CALLBACK PathSelector::DlgFunc(HWND hwnd, UINT message, LPARAM lparam, LPARA
 	PathSelector *dlg = reinterpret_cast<PathSelector*>(data);
 	return (dlg == NULL) ? 0 : dlg->DlgProc(hwnd, message, lparam);
 }
+
+}  // namespace Client
+}  // namespace HoverRace
 
 // PIDL-to-path conversion utilities (from MSDN).
 // See http://msdn.microsoft.com/en-us/library/bb762115(VS.85).aspx for details

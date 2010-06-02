@@ -106,11 +106,11 @@ BOOL NetworkPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 					{
 						wchar_t buf[MAX_PATH];
 						GetDlgItemTextW(pWindow, IDC_LOG_CHATS_TXT, buf, sizeof(buf) / sizeof(wchar_t));
-						std::string curPath((Str::WU(buf)));
+						OS::path_t curPath(buf);
 						if (PathSelector(_("Select a destination folder for saved chat sessions.")).
 							ShowModal(pWindow, curPath))
 						{
-							SetDlgItemTextW(pWindow, IDC_LOG_CHATS_TXT, Str::UW(curPath.c_str()));
+							SetDlgItemTextW(pWindow, IDC_LOG_CHATS_TXT, curPath.file_string().c_str());
 						}
 					}
 					break;

@@ -2,7 +2,7 @@
 // PathSelector.h
 // Header for the directory selection dialog.
 //
-// Copyright (c) 2009 Michael Imamura.
+// Copyright (c) 2009-2010 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -23,16 +23,22 @@
 
 #pragma once
 
+#include "../../engine/Util/OS.h"
+
 namespace HoverRace {
 namespace Client {
 
+/**
+ * File path selection dialog.
+ * @author Michael Imamura
+ */
 class PathSelector
 {
 	public:
 		PathSelector(const std::string &title);
 		~PathSelector();
 
-		bool ShowModal(HWND parent, std::string &path);
+		bool ShowModal(HWND parent, Util::OS::path_t &path);
 
 	protected:
 		int DlgProc(HWND hwnd, UINT message, LPARAM lparam);
