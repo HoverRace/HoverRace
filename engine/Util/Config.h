@@ -148,8 +148,8 @@ class MR_DllDeclare Config
 			int xRes;
 			int yRes;
 			std::string fullscreenMonitor;
-			int xResFullscreen; /// for fullscreen
-			int yResFullscreen; /// for fullscreen
+			int xResFullscreen; ///< for fullscreen
+			int yResFullscreen; ///< for fullscreen
 
 			void Load(yaml::MapNode*);
 			void Save(yaml::Emitter*);
