@@ -311,10 +311,10 @@ OS::path_t Config::GetConfigFilename() const
 {
 	OS::path_t retv(path);
 	if (prerelease) {
-		retv /= (const OS::path_t::value_type*)Str::UP(PREREL_CONFIG_FILENAME);
+		retv /= (OS::cpstr_t)Str::UP(PREREL_CONFIG_FILENAME);
 	}
 	else {
-		retv /= (const OS::path_t::value_type*)Str::UP(CONFIG_FILENAME);
+		retv /= (OS::cpstr_t)Str::UP(CONFIG_FILENAME);
 	}
 	return retv;
 }
