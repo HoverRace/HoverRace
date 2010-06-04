@@ -56,7 +56,7 @@ Bundle::Bundle(const OS::path_t &dir, BundlePtr subBundle) :
  */
 RecordFilePtr Bundle::OpenParcel(const std::string &name, bool writing) const
 {
-	OS::path_t pt = dir / Str::UP(name.c_str());
+	OS::path_t pt = dir / (OS::cpstr_t)Str::UP(name.c_str());
 
 	if (fs::exists(pt)) {
 #		ifdef _WIN32
@@ -65,10 +65,10 @@ RecordFilePtr Bundle::OpenParcel(const std::string &name, bool writing) const
 			RecordFile *rec = new ClassicRecordFile();
 #		endif
 		if (writing) {
-			rec->OpenForWrite((const char*)Str::PU(pt.file_string().c_str()));
+			rec->OpenForWrite(Str::PU(pt.file_string().c_str()));
 		}
 		else {
-			rec->OpenForRead((const char*)Str::PU(pt.file_string().c_str()));
+			rec->OpenForRead(Str::PU(pt.file_string().c_str()));
 		}
 		return RecordFilePtr(rec);
 	}
