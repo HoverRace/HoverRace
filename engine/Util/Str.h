@@ -64,12 +64,23 @@ namespace Str {
 			operator const std::string() const { return cs; }
 	};
 
+	/** Wrapper for a UTF-8 string, so non-wide UP/PU can be used like UW/WU. */
+	class MR_DllDeclare UU
+	{
+		const char *cs;
+		public:
+			UU(const char *s=NULL) throw() : cs(s) { }
+			~UU() { }
+			operator const char*() const throw() { return cs; }
+			operator const std::string() const { return cs; }
+	};
+
 #	ifdef WITH_WIDE_PATHS
 		typedef UW UP;
 		typedef WU PU;
 #	else
-		MR_DllDeclare inline const char *UP(const char *s) { return s; }
-		MR_DllDeclare inline const char *PU(const char *s) { return s; }
+		typedef UU UP;
+		typedef UU PU;
 #	endif
 
 }  // namespace Str
