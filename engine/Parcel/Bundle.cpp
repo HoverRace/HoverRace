@@ -65,10 +65,10 @@ RecordFilePtr Bundle::OpenParcel(const std::string &name, bool writing) const
 			RecordFile *rec = new ClassicRecordFile();
 #		endif
 		if (writing) {
-			rec->OpenForWrite(Str::PU(pt.file_string().c_str()));
+			rec->OpenForWrite(pt);
 		}
 		else {
-			rec->OpenForRead(Str::PU(pt.file_string().c_str()));
+			rec->OpenForRead(pt);
 		}
 		return RecordFilePtr(rec);
 	}

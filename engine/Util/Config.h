@@ -76,6 +76,7 @@ class MR_DllDeclare Config
 		static Config *instance;
 		bool unlinked;  ///< if @c true, will prevent saving config.
 		OS::path_t path;
+		OS::path_t mediaPath;
 		int verMajor;
 		int verMinor;
 		int verPatch;
@@ -108,13 +109,13 @@ class MR_DllDeclare Config
 		static OS::path_t GetDefaultPath();
 		OS::path_t GetConfigFilename() const;
 
-		std::string GetMediaPath() const;
-		std::string GetMediaPath(const std::string &file) const;
+		const OS::path_t &GetMediaPath() const;
+		OS::path_t GetMediaPath(const std::string &file) const;
 
 		std::string GetTrackPath() const;
 		std::string GetTrackPath(const std::string &file) const;
 
-		std::string GetScriptHelpPath(const std::string &className) const;
+		OS::path_t GetScriptHelpPath(const std::string &className) const;
 
 		static std::string GetDefaultRoomListUrl();
 		static std::string GetDefaultUpdateServerUrl();

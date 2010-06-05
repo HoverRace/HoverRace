@@ -24,6 +24,7 @@
 
 #include "../Util/Inspectable.h"
 #include "../Util/InspectNode.h"
+#include "../Util/OS.h"
 
 #include "ObjStream.h"
 
@@ -50,9 +51,9 @@ class MR_DllDeclare RecordFile : public Util::Inspectable {
 		RecordFile() : SUPER() { }
 		virtual ~RecordFile() { }
 
-		virtual bool CreateForWrite(const char *filename, int numRecords, const char *title=NULL) = 0;
-		virtual bool OpenForWrite(const char *filename) = 0;
-		virtual bool OpenForRead(const char *filename, bool validateChecksum=false) = 0;
+		virtual bool CreateForWrite(const Util::OS::path_t &filename, int numRecords, const char *title=NULL) = 0;
+		virtual bool OpenForWrite(const Util::OS::path_t &filename) = 0;
+		virtual bool OpenForRead(const Util::OS::path_t &filename, bool validateChecksum=false) = 0;
 
 		virtual DWORD GetAlignMode() = 0;
 

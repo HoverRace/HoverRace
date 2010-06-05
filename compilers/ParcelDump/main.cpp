@@ -50,7 +50,7 @@ static RecordFilePtr OpenRecordFile(const std::string &filename)
 		RecordFilePtr file(new ClassicRecordFile());
 #	endif
 
-	if (!file->OpenForRead(filename.c_str())) {
+	if (!file->OpenForRead((OS::cpstr_t)Str::UP(filename.c_str()))) {
 		std::cerr << "Invalid or corrupt parcel file: " << filename << std::endl;
 		file.reset();
 	}

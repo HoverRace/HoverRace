@@ -52,9 +52,9 @@ class MR_DllDeclare ClassicRecordFile : public RecordFile
 		ClassicRecordFile();
 		virtual ~ClassicRecordFile();
 
-		virtual bool CreateForWrite(const char *filename, int numRecords, const char *title=NULL);
-		virtual bool OpenForWrite(const char *filename);
-		virtual bool OpenForRead(const char *filename, bool validateChecksum=false);
+		virtual bool CreateForWrite(const Util::OS::path_t &filename, int numRecords, const char *title=NULL);
+		virtual bool OpenForWrite(const Util::OS::path_t &filename);
+		virtual bool OpenForRead(const Util::OS::path_t &filename, bool validateChecksum=false);
 
 		virtual DWORD GetAlignMode();
 
@@ -71,7 +71,7 @@ class MR_DllDeclare ClassicRecordFile : public RecordFile
 		int curRecord;
 		ClassicRecordFileHeader *header;
 		FILE *fileStream;
-		std::string filename;
+		Util::OS::path_t filename;
 };
 
 }  // namespace Parcel

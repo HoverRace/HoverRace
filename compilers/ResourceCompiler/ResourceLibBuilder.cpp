@@ -88,16 +88,16 @@ void MR_ResourceLibBuilder::AddSound(MR_ResContinuousSound * pSound)
  * - sprites
  * - sounds
  *
- * @param pFileName Filename of output file
+ * @param filename Filename of output file
  * @return BOOL indicating the success of the operation
  */
-BOOL MR_ResourceLibBuilder::Export(const char *pFileName)
+bool MR_ResourceLibBuilder::Export(const HoverRace::Util::OS::path_t &filename)
 {
-	BOOL lReturnValue = TRUE;
+	bool lReturnValue = true;
 
 	MfcRecordFile lFile;
 
-	lReturnValue = lFile.CreateForWrite(pFileName, 1, "\x8\rFireball object factory resource file, (c)GrokkSoft 1996\n\x1a");
+	lReturnValue = lFile.CreateForWrite(filename, 1, "\x8\rFireball object factory resource file, (c)GrokkSoft 1996\n\x1a");
 
 	if(!lReturnValue) {
 		fprintf(stderr, "ERROR: Unable to create output file\n");

@@ -71,7 +71,7 @@ namespace ObjFacTools {
  * Constructor.
  * @param filename The resource data file.
  */
-ResourceLib::ResourceLib(const char *filename)
+ResourceLib::ResourceLib(const Util::OS::path_t &filename)
 {
 #	ifdef _WIN32
 		recordFile = MfcRecordFile::New();

@@ -26,6 +26,7 @@
 
 #include "../Exception.h"
 #include "../Util/MR_Types.h"
+#include "../Util/OS.h"
 
 #ifdef _WIN32
 #	ifdef MR_ENGINE
@@ -45,13 +46,7 @@ class MR_DllDeclare ObjStreamExn : public Exception
 	typedef Exception SUPER;
 	public:
 		ObjStreamExn() : SUPER() { }
-		ObjStreamExn(const std::string &name, const std::string &details) :
-			SUPER(name)
-		{
-			std::string &msg = GetMessage();
-			msg += ": ";
-			msg += details;
-		}
+		ObjStreamExn(const Util::OS::path_t &path, const std::string &details);
 		virtual ~ObjStreamExn() throw() { }
 };
 
@@ -64,13 +59,13 @@ class MR_DllDeclare ObjStream
 	private:
 		ObjStream() { }
 	public:
-		ObjStream(const std::string &name, int version, bool writing) :
+		ObjStream(const Util::OS::path_t &name, int version, bool writing) :
 			name(name), version(version), writing(writing)
 			{ }
 		virtual ~ObjStream() { }
 
 	public:
-		const std::string &GetName() const { return name; }
+		const Util::OS::path_t &GetName() const { return name; }
 		int GetVersion() const { return version; }
 		bool IsWriting() const { return writing; }
 
@@ -126,7 +121,7 @@ class MR_DllDeclare ObjStream
 #		endif
 
 	private:
-		std::string name;
+		Util::OS::path_t name;
 		int version;
 		bool writing;
 };

@@ -42,7 +42,7 @@ class IntroMovie
 	private:
 		void Clean();
 #		ifdef WITH_DIRECTSHOW
-			HRESULT InitDirectShow(const std::string &movieFilename);
+			HRESULT InitDirectShow(const Util::OS::path_t &movieFilename);
 #		endif
 
 	public:

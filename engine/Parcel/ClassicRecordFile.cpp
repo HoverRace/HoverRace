@@ -143,53 +143,43 @@ ClassicRecordFile::~ClassicRecordFile()
 	}
 }
 
-bool ClassicRecordFile::CreateForWrite(const char *filename, int numRecords, const char *title)
+bool ClassicRecordFile::CreateForWrite(const Util::OS::path_t &filename, int numRecords, const char *title)
 {
 	if (header != NULL) return false;
 
 	this->filename = filename;
 
-#	ifdef WITH_WIDE_PATHS
-		fileStream = _wfopen(Str::UW(filename), L"w+b");
-#	else
-		fileStream = fopen(filename, "w+b");
-#	endif
+	fileStream = OS::FOpen(filename, "w+b");
 	if (fileStream == NULL) return false;
 
 	//TODO: Write header.
+	throw std::exception();
 
-	return true;
+	//return true;
 }
 
-bool ClassicRecordFile::OpenForWrite(const char *filename)
+bool ClassicRecordFile::OpenForWrite(const Util::OS::path_t &filename)
 {
 	if (header != NULL) return false;
 
 	this->filename = filename;
 
-#	ifdef WITH_WIDE_PATHS
-		fileStream = _wfopen(Str::UW(filename), L"r+b");
-#	else
-		fileStream = fopen(filename, "r+b");
-#	endif
+	fileStream = OS::FOpen(filename, "r+b");
 	if (fileStream == NULL) return false;
 
 	//TODO: Read header.
+	throw std::exception();
 
-	return true;
+	//return true;
 }
 
-bool ClassicRecordFile::OpenForRead(const char *filename, bool validateChecksum)
+bool ClassicRecordFile::OpenForRead(const Util::OS::path_t &filename, bool validateChecksum)
 {
 	if (header != NULL) return false;
 
 	this->filename = filename;
 
-#	ifdef WITH_WIDE_PATHS
-		fileStream = _wfopen(Str::UW(filename), L"r+b");
-#	else
-		fileStream = fopen(filename, "r+b");
-#	endif
+	fileStream = OS::FOpen(filename, "r+b");
 	if (fileStream == NULL) return false;
 
 	ClassicObjStream objStream(fileStream, filename, false);

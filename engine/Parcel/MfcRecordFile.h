@@ -56,18 +56,18 @@ class MR_DllDeclare MfcRecordFile : public RecordFile, private CFile
 		static MfcRecordFile *New() { return new MfcRecordFile(); }
 
 		// Creation operations
-		bool CreateForWrite(const char *pFileName, int pNbRecords, const char *lTitle = NULL);
-		bool OpenForWrite(const char *pFileName);
+		bool CreateForWrite(const Util::OS::path_t &filename, int pNbRecords, const char *lTitle = NULL);
+		bool OpenForWrite(const Util::OS::path_t &filename);
 
 		bool BeginANewRecord();
 
 		// Read operation
-		bool OpenForRead(const char *pFileName, bool pValidateChkSum = false);
+		bool OpenForRead(const Util::OS::path_t &filename, bool pValidateChkSum = false);
 		void SelectRecord(int pRecordNumber);
 
 		// Checksum stuff (Renamed to Reopen for security purpose
 #define ApplyChecksum ReOpen
-		BOOL ReOpen(const char *pFileName);
+		BOOL ReOpen(const Util::OS::path_t &filename);
 
 #define GetCheckSum GetAlignMode
 		DWORD GetAlignMode();

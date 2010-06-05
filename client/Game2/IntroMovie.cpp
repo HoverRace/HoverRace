@@ -48,7 +48,7 @@ IntroMovie::IntroMovie(HWND hwnd, HINSTANCE hinst) :
 #endif
 {
 	Config *cfg = Config::GetInstance();
-	std::string movieFilename = cfg->GetMediaPath("Intro.avi");
+	OS::path_t movieFilename = cfg->GetMediaPath("Intro.avi");
 
 #ifdef WITH_DIRECTSHOW
 	HRESULT hr;
@@ -58,10 +58,10 @@ IntroMovie::IntroMovie(HWND hwnd, HINSTANCE hinst) :
 
 #else
 
-	movieWnd = MCIWndCreate(
+	movieWnd = MCIWndCreateW(
 		hwnd, hinst, 
 		WS_CHILD | MCIWNDF_NOMENU | MCIWNDF_NOPLAYBAR, 
-		movieFilename.c_str());
+		movieFilename.file_string().c_str());
 
 	// Fill the client area.
 	RECT clientRect;
@@ -97,7 +97,7 @@ void IntroMovie::Clean()
 }
 
 #ifdef WITH_DIRECTSHOW
-HRESULT IntroMovie::InitDirectShow(const std::string &movieFilename)
+HRESULT IntroMovie::InitDirectShow(const Util::OS::path_t &movieFilename)
 {
 	HRESULT hr;
 
@@ -118,7 +118,7 @@ HRESULT IntroMovie::InitDirectShow(const std::string &movieFilename)
 
 	if (FAILED(hr = winCtl->SetVideoClippingWindow(hwnd))) return hr;
 
-	if (FAILED(hr = graph->RenderFile(Str::UW(movieFilename.c_str()), NULL))) return hr;
+	if (FAILED(hr = graph->RenderFile(movieFilename.file_string().c_str(), NULL))) return hr;
 
 	if (FAILED(hr = graph->QueryInterface(IID_IMediaControl, (void**)&mediaCtl))) return hr;
 

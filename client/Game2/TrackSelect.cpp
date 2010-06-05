@@ -91,7 +91,7 @@ RecordFile *MR_TrackOpen(HWND pWindow, const char *pFileName)
 	}
 	else {
 		lReturnValue = MfcRecordFile::New();
-		if(!lReturnValue->OpenForRead(filename.c_str(), TRUE)) {
+		if(!lReturnValue->OpenForRead((OS::cpstr_t)Str::UP(filename.c_str()), TRUE)) {
 			delete lReturnValue;
 			lReturnValue = NULL;
 			MessageBoxW(pWindow, Str::UW(_("Bad track file format")), Str::UW(PACKAGE_NAME), MB_ICONERROR | MB_OK | MB_APPLMODAL);
@@ -299,7 +299,7 @@ MR_TrackAvail MR_GetTrackAvail(const char *pFileName)
 	if (!path.empty()) {
 		MfcRecordFile lFile;
 
-		if(!lFile.OpenForRead(path.c_str()))
+		if(!lFile.OpenForRead((OS::cpstr_t)Str::UW(path.c_str())))
 			ASSERT(FALSE);
 		else {
 			TrackEntry lCurrentEntry;
@@ -465,7 +465,7 @@ void ReadTrackListDir(const std::string &dir)
 			// Open the file and read additional info
 			MfcRecordFile lRecordFile;
 
-			if(!lRecordFile.OpenForRead((dir + lFileInfo.name).c_str()))
+			if(!lRecordFile.OpenForRead((OS::cpstr_t)Str::UW((dir + lFileInfo.name).c_str())))
 				gsTrackList.pop_back();
 			else {
 				if(!ReadTrackEntry(&lRecordFile, &ent, NULL))

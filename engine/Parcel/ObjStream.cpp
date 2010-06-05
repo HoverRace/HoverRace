@@ -1,6 +1,6 @@
 
-// MfcObjStream.cpp
-// CArchive implementation of ObjStream.
+// ObjStream.cpp
+// Base class for parcel serializers.
 //
 // Copyright (c) 2010 Michael Imamura.
 //
@@ -22,16 +22,21 @@
 
 #include "StdAfx.h"
 
-#include "MfcObjStream.h"
+#include "../Util/Str.h"
+
+#include "ObjStream.h"
+
+namespace Str = HoverRace::Util::Str;
 
 namespace HoverRace {
 namespace Parcel {
 
-MfcObjStream::MfcObjStream(CFile *file, const Util::OS::path_t &name, bool writing) :
-	SUPER(name, 1, writing),
-	archive(file, writing ? CArchive::store : CArchive::load)
+ObjStreamExn::ObjStreamExn(const Util::OS::path_t &path, const std::string &details) :
+	SUPER((const char*)Str::PU(path.file_string().c_str()))
 {
-	// Version for MFC record file is always 1.
+	std::string &msg = GetMessage();
+	msg += ": ";
+	msg += details;
 }
 
 }  // namespace Parcel

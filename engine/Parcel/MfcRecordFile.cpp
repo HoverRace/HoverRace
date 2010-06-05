@@ -21,11 +21,15 @@
 
 #include "StdAfx.h"
 
+#include "../Util/Str.h"
 #include "MfcObjStream.h"
 
 #include "MfcRecordFile.h"
 
 #define new DEBUG_NEW
+
+using HoverRace::Util::OS;
+namespace Str = HoverRace::Util::Str;
 
 namespace HoverRace {
 namespace Parcel {
@@ -51,7 +55,7 @@ class MfcRecordFileTable : public Util::Inspectable
 		virtual void Inspect(Util::InspectMapNode &node) const;
 };
 
-static DWORD ComputeSum(const char *pFileName);
+static DWORD ComputeSum(const OS::path_t &filename);
 
 MfcRecordFileTable::MfcRecordFileTable() :
 	Util::Inspectable()
@@ -112,7 +116,7 @@ void MfcRecordFileTable::Serialize(ObjStream &pArchive)
 		if((mFileTitle.Find("HoverRace track file") == -1) &&
 		   (mFileTitle.Find("Fireball object factory resource file") == -1)) {
 			char error[200];
-			sprintf(error, "Corrupt file: %s\n", pArchive.GetName().c_str());
+			sprintf(error, "Corrupt file: %s\n", pArchive.GetName().file_string().c_str());
 			OutputDebugString(error);
 		} else {
 			if(mRecordMax > 0) {
@@ -178,7 +182,7 @@ int MfcRecordFile::GetCurrentRecordNumber() const
 	return mCurrentRecord;
 }
 
-bool MfcRecordFile::CreateForWrite(const char *pFileName, int pNbRecords, const char *pTitle)
+bool MfcRecordFile::CreateForWrite(const OS::path_t &filename, int pNbRecords, const char *pTitle)
 {
 	BOOL lReturnValue = FALSE;
 	ASSERT(mTable == NULL);						  // Open function must be called only once
@@ -188,7 +192,9 @@ bool MfcRecordFile::CreateForWrite(const char *pFileName, int pNbRecords, const 
 		mCurrentRecord = -1;
 
 		// Try yo open the file
-		lReturnValue = CFile::Open(pFileName, modeCreate | modeWrite | typeBinary | shareExclusive);
+		//HACK: Using Str::PU here is not correct, but since this class is
+		//      deprecated anyway, it'll do.
+		lReturnValue = CFile::Open(Str::PU(filename.file_string().c_str()), modeCreate | modeWrite | typeBinary | shareExclusive);
 
 		if(lReturnValue) {
 			// Create the mTable
@@ -197,7 +203,7 @@ bool MfcRecordFile::CreateForWrite(const char *pFileName, int pNbRecords, const 
 
 			// Write the mTable to reserve some space and position the file on the first record
 			{
-				MfcObjStream lArchive(this, true);
+				MfcObjStream lArchive(this, filename, true);
 
 				mTable->Serialize(lArchive);
 			}
@@ -207,7 +213,7 @@ bool MfcRecordFile::CreateForWrite(const char *pFileName, int pNbRecords, const 
 
 }
 
-bool MfcRecordFile::OpenForWrite(const char *pFileName)
+bool MfcRecordFile::OpenForWrite(const OS::path_t &filename)
 {
 	BOOL lReturnValue = FALSE;
 	ASSERT(mTable == NULL);
@@ -217,10 +223,12 @@ bool MfcRecordFile::OpenForWrite(const char *pFileName)
 		mCurrentRecord = -1;
 
 		// Try to open the file
-		lReturnValue = CFile::Open(pFileName, modeReadWrite | typeBinary | shareExclusive);
+		//HACK: Using Str::PU here is not correct, but since this class is
+		//      deprecated anyway, it'll do.
+		lReturnValue = CFile::Open(Str::PU(filename.file_string().c_str()), modeReadWrite | typeBinary | shareExclusive);
 
 		if(lReturnValue) {
-			MfcObjStream lArchive(this, false);
+			MfcObjStream lArchive(this, filename, false);
 			mTable = new MfcRecordFileTable;
 
 			mTable->Serialize(lArchive);
@@ -254,7 +262,7 @@ bool MfcRecordFile::BeginANewRecord()
 	return lReturnValue != FALSE;
 }
 
-bool MfcRecordFile::OpenForRead(const char *pFileName, bool pValidateChkSum)
+bool MfcRecordFile::OpenForRead(const OS::path_t &filename, bool pValidateChkSum)
 {
 	BOOL lReturnValue = FALSE;
 	ASSERT(mTable == NULL);
@@ -263,17 +271,19 @@ bool MfcRecordFile::OpenForRead(const char *pFileName, bool pValidateChkSum)
 	DWORD lSum = 0;
 
 	if(pValidateChkSum)
-		lSum = ComputeSum(pFileName);
+		lSum = ComputeSum(filename);
 
 	if(mTable == NULL) {
 		mConstructionMode = FALSE;
 		mCurrentRecord = -1;
 
 		// Try to open the file
-		lReturnValue = CFile::Open(pFileName, modeRead | typeBinary | shareDenyWrite, &e);
+		//HACK: Using Str::PU here is not correct, but since this class is
+		//      deprecated anyway, it'll do.
+		lReturnValue = CFile::Open(Str::PU(filename.file_string().c_str()), modeRead | typeBinary | shareDenyWrite, &e);
 
 		if(lReturnValue) {
-			MfcObjStream lArchive(this, false);
+			MfcObjStream lArchive(this, filename, false);
 
 			mTable = new MfcRecordFileTable;
 			mTable->Serialize(lArchive);
@@ -307,15 +317,15 @@ bool MfcRecordFile::OpenForRead(const char *pFileName, bool pValidateChkSum)
 
 // Checksum stuff (Renamed to Reopen for security purpose
 //      #define ApplyChecksum ReOpen
-BOOL MfcRecordFile::ReOpen(const char *pFileName)
+BOOL MfcRecordFile::ReOpen(const OS::path_t &filename)
 {
 	BOOL lReturnValue = FALSE;
 
 	DWORD lSum = 0;
 
-	lSum = ComputeSum(pFileName);
+	lSum = ComputeSum(filename);
 
-	lReturnValue = OpenForWrite(pFileName);
+	lReturnValue = OpenForWrite(filename);
 
 	if(lReturnValue) {
 		mTable->mSumValid = TRUE;
@@ -480,7 +490,8 @@ void MfcRecordFile::Close()
 
 		Seek(0, begin);
 
-		MfcObjStream lArchive(this, true);
+		//HACK: The filename conversion isn't correct here, but this class is deprecated anyway.
+		MfcObjStream lArchive(this, OS::path_t((OS::cpstr_t)Str::UP(GetFileName())), true);
 
 		mTable->Serialize(lArchive);
 	}
@@ -491,12 +502,12 @@ void MfcRecordFile::Close()
 	CFile::Close();
 }
 
-DWORD ComputeSum(const char *pFileName)
+DWORD ComputeSum(const OS::path_t &filename)
 {
 	DWORD lReturnValue = 0;
 	DWORD lBuffer[2048];						  // 8 K of data
 
-	FILE *lFile = fopen(pFileName, "rb");
+	FILE *lFile = _wfopen(filename.file_string().c_str(), L"rb");
 
 	if(lFile != NULL) {
 		int lDataLen = fread(lBuffer, 1, sizeof(lBuffer), lFile);
@@ -558,12 +569,14 @@ void MfcRecordFile::Inspect(Util::InspectMapNode &node) const
 
 ObjStreamPtr MfcRecordFile::StreamIn()
 {
-	return ObjStreamPtr(new MfcObjStream(this, false));
+	//HACK: The filename conversion isn't correct here, but this class is deprecated anyway.
+	return ObjStreamPtr(new MfcObjStream(this, OS::path_t((OS::cpstr_t)Str::UP(GetFileName())), false));
 }
 
 ObjStreamPtr MfcRecordFile::StreamOut()
 {
-	return ObjStreamPtr(new MfcObjStream(this, true));
+	//HACK: The filename conversion isn't correct here, but this class is deprecated anyway.
+	return ObjStreamPtr(new MfcObjStream(this, OS::path_t((OS::cpstr_t)Str::UP(GetFileName())), true));
 }
 
 

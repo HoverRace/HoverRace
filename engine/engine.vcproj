@@ -951,6 +951,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Parcel\ObjStream.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Parcel\ObjStream.h"
 				>
 			</File>

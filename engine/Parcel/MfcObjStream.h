@@ -42,7 +42,7 @@ namespace Parcel {
 class MR_DllDeclare MfcObjStream : public ObjStream {
 	typedef ObjStream SUPER;
 	public:
-		MfcObjStream(CFile *file, bool writing);
+		MfcObjStream(CFile *file, const Util::OS::path_t &name, bool writing);
 		virtual ~MfcObjStream() { }
 
 		virtual void Write(const void *buf, size_t ct) { archive.Write(buf, ct); }

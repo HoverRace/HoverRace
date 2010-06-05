@@ -24,6 +24,7 @@
 
 #include <map>
 
+#include "../Util/OS.h"
 #include "ResActor.h"
 #include "ResSprite.h"
 #include "ResSound.h"
@@ -53,7 +54,7 @@ class MR_DllDeclare ResourceLib
 	protected:
 		ResourceLib() { }
 	public:
-		ResourceLib(const char *filename);
+		ResourceLib(const Util::OS::path_t &filename);
 		~ResourceLib();
 
 	public:

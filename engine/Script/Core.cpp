@@ -36,6 +36,7 @@
 
 #include "../Util/Config.h"
 #include "../Util/OS.h"
+#include "../Util/Str.h"
 #include "../Util/yaml/MapNode.h"
 #include "../Util/yaml/ScalarNode.h"
 #include "../Util/yaml/SeqNode.h"
@@ -50,6 +51,7 @@
 
 using namespace HoverRace::Script;
 using HoverRace::Util::OS;
+namespace Str = HoverRace::Util::Str;
 
 #define REG_LUA_LIB(st, name, fn) \
 	lua_pushcfunction((st), (fn)); \
@@ -415,14 +417,18 @@ void Core::ReqHelp(const std::string &className, const std::string &methodName)
 void Core::LoadClassHelp(const std::string &className)
 {
 	Util::Config *cfg = Util::Config::GetInstance();
-	std::string filename = cfg->GetScriptHelpPath(className);
+	OS::path_t filename = cfg->GetScriptHelpPath(className);
 
-	FILE *in = fopen(filename.c_str(), "rb");
+#	ifdef _WIN32
+		FILE *in = _wfopen(filename.file_string().c_str(), L"rb");
+#	else
+		FILE *in = fopen(filename.file_string().c_str(), "rb");
+#	endif
 	if (in == NULL) {
 #		ifdef _WIN32
-			OutputDebugString("Class help file not found: ");
-			OutputDebugString(filename.c_str());
-			OutputDebugString("\n");
+			OutputDebugStringW(L"Class help file not found: ");
+			OutputDebugStringW(filename.file_string().c_str());
+			OutputDebugStringW(L"\n");
 #		endif
 		return;
 	}
@@ -434,7 +440,8 @@ void Core::LoadClassHelp(const std::string &className)
 
 		yaml::MapNode *root = dynamic_cast<yaml::MapNode*>(node);
 		if (root == NULL) {
-			throw yaml::ParserExn((filename + ": Expected root node to be a map.").c_str());
+			std::string filenamestr = Str::PU(filename.file_string().c_str());
+			throw yaml::ParserExn((filenamestr + ": Expected root node to be a map.").c_str());
 		}
 		Help::ClassPtr cls = boost::make_shared<Help::Class>(className);
 		cls->Load(root);

@@ -47,7 +47,7 @@ class MR_DllDeclare ClassicObjStream : public ObjStream
 	typedef ObjStream SUPER;
 	public:
 	public:
-		ClassicObjStream(FILE *stream, const std::string &name, bool writing);
+		ClassicObjStream(FILE *stream, const Util::OS::path_t &name, bool writing);
 		virtual ~ClassicObjStream() { }
 
 	private:

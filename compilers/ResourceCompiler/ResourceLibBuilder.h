@@ -45,7 +45,7 @@ class MR_ResourceLibBuilder : public HoverRace::ObjFacTools::ResourceLib
 		void AddSound(MR_ResShortSound * pSound);
 		void AddSound(MR_ResContinuousSound * pSound);
 
-		BOOL Export(const char *pFileName);
+		bool Export(const HoverRace::Util::OS::path_t &filename);
 
 };
 

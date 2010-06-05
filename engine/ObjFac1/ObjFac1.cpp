@@ -51,7 +51,7 @@ using HoverRace::Util::Config;
 ObjFac1::ObjFac1()
 {
 	Config *cfg = Config::GetInstance();
-	resourceLib = new ResourceLib(cfg->GetMediaPath("ObjFac1.dat").c_str());
+	resourceLib = new ResourceLib(cfg->GetMediaPath("ObjFac1.dat"));
 }
 
 ObjFac1::~ObjFac1()

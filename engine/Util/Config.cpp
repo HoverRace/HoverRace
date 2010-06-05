@@ -164,6 +164,17 @@ Config::Config(int verMajor, int verMinor, int verPatch, int verBuild,
 
 	// Set initial defaults.
 	ResetToDefaults();
+
+#	ifdef _WIN32
+		mediaPath = L"..";
+		mediaPath /= L"share";
+#	else
+		//TODO: Get directory from configure.
+		mediaPath = "..";
+		mediaPath /= "share";
+		mediaPath /= PACKAGE;
+#	endif
+
 }
 
 Config::~Config()
@@ -323,13 +334,9 @@ OS::path_t Config::GetConfigFilename() const
  * Retrieve the directory for media files.
  * @return The directory path (may be relative).
  */
-std::string Config::GetMediaPath() const
+const OS::path_t &Config::GetMediaPath() const
 {
-#	ifdef _WIN32
-		return ".." DIRSEP "share";
-#	else
-		return ".." DIRSEP "share" DIRSEP PACKAGE DIRSEP;
-#	endif
+	return mediaPath;
 }
 
 /**
@@ -337,13 +344,9 @@ std::string Config::GetMediaPath() const
  * @param file The media filename (may not be blank).
  * @return The file path (may be relative).
  */
-std::string Config::GetMediaPath(const std::string &file) const
+OS::path_t Config::GetMediaPath(const std::string &file) const
 {
-#	ifdef _WIN32
-		return (".." DIRSEP "share" DIRSEP) + file;
-#	else
-		return (".." DIRSEP "share" DIRSEP PACKAGE DIRSEP) + file;
-#	endif
+	return mediaPath / (OS::cpstr_t)Str::UP(file.c_str());
 }
 
 /**
@@ -378,12 +381,13 @@ std::string Config::GetTrackPath(const std::string &file) const
  * @param className The name of the class.
  * @return The directory path (may be relative).
  */
-std::string Config::GetScriptHelpPath(const std::string &className) const
+OS::path_t Config::GetScriptHelpPath(const std::string &className) const
 {
-	std::string retv(GetMediaPath());
-	retv += (DIRSEP "scripts" DIRSEP "help" DIRSEP);
-	retv += className;
-	retv += ".yml";
+	OS::path_t retv(GetMediaPath());
+	retv /= (OS::cpstr_t)Str::UP("scripts");
+	retv /= (OS::cpstr_t)Str::UP("help");
+	retv /= (OS::cpstr_t)Str::UP(className.c_str());
+	retv /= (OS::cpstr_t)Str::UP(".yml");
 	return retv;
 }
 

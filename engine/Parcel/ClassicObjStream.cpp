@@ -27,7 +27,7 @@
 namespace HoverRace {
 namespace Parcel {
 
-ClassicObjStream::ClassicObjStream(FILE *stream, const std::string &name, bool writing) :
+ClassicObjStream::ClassicObjStream(FILE *stream, const Util::OS::path_t &name, bool writing) :
 	SUPER(name, 1, writing),
 	stream(stream)
 {
