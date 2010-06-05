@@ -585,5 +585,25 @@ bool OS::OpenPath(const path_t &path)
 #	endif
 }
 
+/**
+ * Open a file using the OS-specific path format.
+ * @param path The file to open.
+ * @param mode The mode (same as POSIX {@c fopen(3)}).
+ * @return The file handle or @c NULL if an error occurred.
+ */
+FILE *OS::FOpen(const path_t &path, const char *mode)
+{
+#	ifdef WITH_WIDE_PATHS
+#		ifdef _WIN32
+			return _wfopen(path.file_string().c_str(), Str::UW(mode));
+#		else
+			// Unimplemented.
+			throw std::exception();
+#		endif
+#	else
+		return fopen(path.file_string().c_str(), mode);
+#	endif
+}
+
 }  // namespace Util
 }  // namespace HoverRace

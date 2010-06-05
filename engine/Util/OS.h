@@ -105,6 +105,8 @@ class MR_DllDeclare OS {
 		static bool OpenLink(const std::string &url);
 		static bool OpenPath(const path_t &path);
 
+		static FILE *FOpen(const path_t &path, const char *mode);
+
 		static void Free(void *buf);
 };
 
