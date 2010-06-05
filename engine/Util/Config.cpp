@@ -571,11 +571,7 @@ void Config::Load()
 {
 	const OS::path_t cfgfile(GetConfigFilename());
 	
-#	ifdef WITH_WIDE_PATHS
-		FILE *in = _wfopen(cfgfile.file_string().c_str(), L"rb");
-#	else
-		FILE *in = fopen(cfgfile.file_string().c_str(), "rb");
-#	endif
+	FILE *in = OS::FOpen(cfgfile, "rb");
 	if (in == NULL) {
 		// File doesn't exist.
 		// That's perfectly fine; we'll use the defaults.
@@ -644,12 +640,8 @@ void Config::Save()
 		}
 	}
 
-#	ifdef WITH_WIDE_PATHS
-		FILE *out = _wfopen(cfgfile.file_string().c_str(), L"wb");
-#	else
-		FILE *out = fopen(cfgfile.file_string().c_str(), "wb");
-#	endif
-	if(out == NULL) {
+	FILE *out = OS::FOpen(cfgfile, "wb");
+	if (out == NULL) {
 		std::string msg("Unable to create configuration file: ");
 		msg += (const char*)Str::PU(cfgfile.file_string().c_str());
 		throw ConfigExn(msg.c_str());

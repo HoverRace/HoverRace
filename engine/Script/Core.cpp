@@ -419,11 +419,7 @@ void Core::LoadClassHelp(const std::string &className)
 	Util::Config *cfg = Util::Config::GetInstance();
 	OS::path_t filename = cfg->GetScriptHelpPath(className);
 
-#	ifdef _WIN32
-		FILE *in = _wfopen(filename.file_string().c_str(), L"rb");
-#	else
-		FILE *in = fopen(filename.file_string().c_str(), "rb");
-#	endif
+	FILE *in = OS::FOpen(filename, "rb");
 	if (in == NULL) {
 #		ifdef _WIN32
 			OutputDebugStringW(L"Class help file not found: ");
