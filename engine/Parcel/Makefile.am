@@ -13,3 +13,10 @@ libparcel_la_SOURCES = \
 	ObjStream.h \
 	RecordFile.h
 
+EXTRA_DIST = \
+	MfcObjStream.cpp \
+	MfcObjStream.h \
+	MfcRecordFile.cpp \
+	MfcRecordFile.h
+
+
