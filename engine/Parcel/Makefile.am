@@ -9,6 +9,7 @@ libparcel_la_SOURCES = \
 	ClassicObjStream.h \
 	ClassicRecordFile.cpp \
 	ClassicRecordFile.h \
+	ObjStream.cpp \
 	ObjStream.h \
 	RecordFile.h
 
