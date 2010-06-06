@@ -31,12 +31,15 @@
 #include <luabind/luabind.hpp>
 
 #include "../../../engine/Script/Core.h"
+#include "../../../engine/Util/Str.h"
 
 #include "GamePeer.h"
 
 #include "SysEnv.h"
 
 namespace fs = boost::filesystem;
+namespace Str = HoverRace::Util::Str;
+using HoverRace::Util::OS;
 
 namespace {
 	class LogStreamBuf : public std::stringbuf
@@ -124,19 +127,20 @@ void SysEnv::LogError(const std::string &s)
  * Execute a script from a file.
  * @param filename The script filename (must be an absolute path).
  */
-void SysEnv::RunScript(const std::string &filename)
+void SysEnv::RunScript(const OS::path_t &filename)
 {
-	fs::path scriptPath = fs::system_complete(fs::path(filename));
+	OS::path_t scriptPath = fs::system_complete(filename);
 
 	if (!fs::exists(scriptPath)) {
 		LogError(boost::str(
 			boost::format("Init script file not found: %s (interpreted as %s)") %
-			filename % scriptPath));
+				Str::PU(filename.file_string().c_str()) %
+				Str::PU(scriptPath.file_string().c_str())));
 		return;
 	}
 	
 	std::string chunkName("@");
-	chunkName += scriptPath.filename();
+	chunkName += (const char*)Str::PU(scriptPath.filename().c_str());
 
 	// Read and submit the whole script at once.
 	fs::ifstream ifs(scriptPath, std::ios_base::in);

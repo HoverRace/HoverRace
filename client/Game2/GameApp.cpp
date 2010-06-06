@@ -820,7 +820,7 @@ BOOL MR_GameApp::InitGame()
 {
 	BOOL lReturnValue = TRUE;
 	Config *cfg = Config::GetInstance();
-	std::string &initScript = cfg->runtime.initScript;
+	OS::path_t &initScript = cfg->runtime.initScript;
 
 	InitCommonControls();						  // Allow some special and complex controls
 

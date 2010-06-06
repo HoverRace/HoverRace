@@ -50,7 +50,7 @@ using HoverRace::Util::OS;
 	static int foo = use_ignore_mfc_leaks();
 #endif
 
-static std::string initScript;
+static OS::path_t initScript;
 static bool debugMode = false;
 static bool safeMode = false;
 static bool allowMultipleInstances = false;
@@ -80,6 +80,12 @@ static void ShowMessage(const std::string &s)
  */
 static bool ProcessCmdLine(int argc, char **argv)
 {
+#	ifdef _WIN32
+		int wargc;
+		wchar_t **wargv = CommandLineToArgvW(GetCommandLineW(), &wargc);
+		ASSERT(argc == wargc);
+#	endif
+
 	for (int i = 1; i < argc; ) {
 		const char *arg = argv[i++];
 
@@ -88,7 +94,11 @@ static bool ProcessCmdLine(int argc, char **argv)
 		}
 		else if (strcmp("--exec", arg) == 0) {
 			if (i < argc) {
-				initScript = argv[i++];
+#				ifdef _WIN32
+					initScript = wargv[i++];
+#				else
+					initScript = argv[i++];
+#				endif
 			}
 			else {
 				ShowMessage("Expected: --exec (script filename)");
@@ -126,6 +136,11 @@ static bool ProcessCmdLine(int argc, char **argv)
 			experimentalMode = true;
 		}
 	}
+
+#	ifdef _WIN32
+		LocalFree(wargv);
+#	endif
+
 	return true;
 }
 

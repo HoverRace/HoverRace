@@ -23,6 +23,7 @@
 #pragma once
 
 #include "../../../engine/Script/Env.h"
+#include "../../../engine/Util/OS.h"
 
 namespace HoverRace {
 	namespace Client {
@@ -55,7 +56,7 @@ class SysEnv : private Script::Env
 		virtual void LogError(const std::string &s);
 
 	public:
-		void RunScript(const std::string &filename);
+		void RunScript(const Util::OS::path_t &filename);
 
 	private:
 		GamePeer *gamePeer;
