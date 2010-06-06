@@ -132,7 +132,7 @@ static bool ProcessCmdLine(int argc, char **argv)
 // Initialize (but not load) the config system.
 static Config *InitConfig(
 #ifdef _WIN32
-	const char *exePath
+	const OS::path_t &exePath
 #endif
 	)
 {
@@ -144,12 +144,12 @@ static Config *InitConfig(
 	long verBuild = 0;
 	bool prerelease = true;
 	DWORD dummyHandle;
-	DWORD verInfoSize = GetFileVersionInfoSize(exePath, &dummyHandle);
+	DWORD verInfoSize = GetFileVersionInfoSizeW(exePath.file_string().c_str(), &dummyHandle);
 	void *verInfo = malloc(verInfoSize);
-	if (GetFileVersionInfo(exePath, 0, verInfoSize, verInfo)) {
+	if (GetFileVersionInfoW(exePath.file_string().c_str(), 0, verInfoSize, verInfo)) {
 		UINT outSize;
 		void *outPtr;
-		if (VerQueryValue(verInfo, "\\", (LPVOID*)&outPtr, &outSize)) {
+		if (VerQueryValueW(verInfo, L"\\", (LPVOID*)&outPtr, &outSize)) {
 			VS_FIXEDFILEINFO *fixedInfo = (VS_FIXEDFILEINFO*)outPtr;
 			verMajor = (fixedInfo->dwProductVersionMS >> 16) & 0xffff;
 			verMinor = fixedInfo->dwProductVersionMS & 0xffff;
@@ -177,6 +177,36 @@ static Config *InitConfig(
 #endif
 }
 
+#ifdef _WIN32
+/**
+ * Find the path of the executable itself.
+ * @return The path, including the executable name.
+ */
+static OS::path_t FindExePath()
+{
+	DWORD curSize = MAX_PATH;
+	wchar_t *exePath = new wchar_t[curSize];
+	for (;;) {
+		DWORD ret = GetModuleFileNameW(NULL, exePath, curSize);
+		if (ret == 0) {
+			ShowMessage("Internal Error: GetModuleFileName() failed.");
+			exit(EXIT_FAILURE);
+		}
+		else if (ret >= curSize) {
+			curSize *= 2;
+			delete[] exePath;
+			exePath = new wchar_t[curSize];
+		}
+		else {
+			break;
+		}
+	} 
+	OS::path_t retv(exePath);
+	delete[] exePath;
+	return retv;
+}
+#endif
+
 // Entry point
 #ifdef _WIN32
 int WINAPI WinMain(HINSTANCE pInstance, HINSTANCE pPrevInstance, LPSTR /* pCmdLine */ , int pCmdShow)
@@ -189,15 +219,10 @@ int main(int argc, char** argv)
 	int lErrorCode = EXIT_SUCCESS;
 
 #ifdef _WIN32
-	char exePath[MAX_PATH];
-	GetModuleFileName(NULL, exePath, MAX_PATH - 1);
+	OS::path_t exePath = FindExePath();
 
 	// Change the working directory to the app's directory.
-	char *appPath = _strdup(exePath);
-	char *appDiv = strrchr(appPath, '\\');
-	*appDiv = '\0';
-	_chdir(appPath);
-	free(appPath);
+	_wchdir(exePath.parent_path().file_string().c_str());
 
 	CoInitialize(NULL);
 #endif
