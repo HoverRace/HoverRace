@@ -45,7 +45,7 @@ using boost::str;
 using HoverRace::Util::Config;
 using HoverRace::Util::OS;
 
-#ifdef _WIN32
+#if defined(_WIN32) && defined(_DEBUG)
 #	include <mfcleakfix.h>
 	static int foo = use_ignore_mfc_leaks();
 #endif
