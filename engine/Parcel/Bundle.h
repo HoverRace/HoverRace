@@ -50,9 +50,9 @@ class MR_DllDeclare Bundle
 {
 	public:
 		Bundle(const Util::OS::path_t &dir, BundlePtr subBundle=BundlePtr());
-		~Bundle() { }
+		virtual ~Bundle() { }
 
-		RecordFilePtr OpenParcel(const std::string &name, bool writing=false) const;
+		virtual RecordFilePtr OpenParcel(const std::string &name, bool writing=false) const;
 
 	private:
 		Util::OS::path_t dir;
