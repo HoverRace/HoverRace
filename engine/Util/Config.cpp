@@ -383,11 +383,13 @@ std::string Config::GetTrackPath(const std::string &file) const
  */
 OS::path_t Config::GetScriptHelpPath(const std::string &className) const
 {
+	std::string filename(className);
+	filename += ".yml";
+
 	OS::path_t retv(GetMediaPath());
 	retv /= (OS::cpstr_t)Str::UP("scripts");
 	retv /= (OS::cpstr_t)Str::UP("help");
-	retv /= (OS::cpstr_t)Str::UP(className.c_str());
-	retv /= (OS::cpstr_t)Str::UP(".yml");
+	retv /= (OS::cpstr_t)Str::UP(filename.c_str());
 	return retv;
 }
 
