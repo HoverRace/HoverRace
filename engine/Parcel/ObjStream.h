@@ -46,6 +46,7 @@ class MR_DllDeclare ObjStreamExn : public Exception
 	typedef Exception SUPER;
 	public:
 		ObjStreamExn() : SUPER() { }
+		ObjStreamExn(const std::string &msg) : SUPER(msg) { }
 		ObjStreamExn(const Util::OS::path_t &path, const std::string &details);
 		virtual ~ObjStreamExn() throw() { }
 };
