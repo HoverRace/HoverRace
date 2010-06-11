@@ -11,7 +11,9 @@ libparcel_la_SOURCES = \
 	ClassicRecordFile.h \
 	ObjStream.cpp \
 	ObjStream.h \
-	RecordFile.h
+	RecordFile.h \
+	TrackBundle.cpp \
+	TrackBundle.h
 
 EXTRA_DIST = \
 	MfcObjStream.cpp \
