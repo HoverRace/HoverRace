@@ -303,6 +303,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Model\Track.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Model\Track.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Model\TrackEntry.cpp"
 				>
 			</File>
@@ -960,6 +968,14 @@
 			</File>
 			<File
 				RelativePath=".\Parcel\RecordFile.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Parcel\TrackBundle.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Parcel\TrackBundle.h"
 				>
 			</File>
 		</Filter>

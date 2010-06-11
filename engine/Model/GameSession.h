@@ -41,7 +41,7 @@ class MR_GameSession
 		int mCurrentLevelNumber;
 
 		std::string mTitle;
-		HoverRace::Parcel::RecordFile *mCurrentMazeFile;
+		HoverRace::Parcel::RecordFilePtr mCurrentMazeFile;
 		MR_Level *mCurrentLevel;
 
 		MR_SimulationTime mSimulationTime;		  // Time simulated since the session start
@@ -61,7 +61,7 @@ class MR_GameSession
 		MR_DllDeclare MR_GameSession(BOOL pAllowRendering = FALSE);
 		MR_DllDeclare ~MR_GameSession();
 
-		MR_DllDeclare BOOL LoadNew(const char *pTitle, HoverRace::Parcel::RecordFile *pMazeFile, char pGameOpts);
+		MR_DllDeclare BOOL LoadNew(const char *pTitle, HoverRace::Parcel::RecordFilePtr pMazeFile, char pGameOpts);
 
 		MR_DllDeclare void SetSimulationTime(MR_SimulationTime);
 		MR_DllDeclare MR_SimulationTime GetSimulationTime() const;
@@ -70,7 +70,7 @@ class MR_GameSession
 
 		MR_DllDeclare MR_Level *GetCurrentLevel();
 		MR_DllDeclare const char *GetTitle() const;
-		MR_DllDeclare HoverRace::Parcel::RecordFile *GetCurrentMazeFile();
+		MR_DllDeclare HoverRace::Parcel::RecordFilePtr GetCurrentMazeFile();
 };
 
 #undef MR_DllDeclare

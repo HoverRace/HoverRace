@@ -172,6 +172,8 @@ class MR_GameApp
 		BOOL IsGameRunning();					  // return TRUE if a not terminated game is running
 		int AskUserToAbortGame();				  // Return IDOK if OK
 
+		static void TrackOpenFailMessageBox(HWND parent, const std::string &name, const std::string &details);
+
 		HoverRace::Client::Control::Controller *controller;
 
 	public:

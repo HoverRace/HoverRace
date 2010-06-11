@@ -45,6 +45,8 @@ namespace HoverRace {
 	namespace Parcel {
 		class Bundle;
 		typedef boost::shared_ptr<Bundle> BundlePtr;
+		class TrackBundle;
+		typedef boost::shared_ptr<TrackBundle> TrackBundlePtr;
 	}
 }
 
@@ -77,6 +79,8 @@ class MR_DllDeclare Config
 		bool unlinked;  ///< if @c true, will prevent saving config.
 		OS::path_t path;
 		OS::path_t mediaPath;
+		OS::path_t userTrackPath;
+		Parcel::TrackBundlePtr trackBundle;
 		int verMajor;
 		int verMinor;
 		int verPatch;
@@ -112,8 +116,13 @@ class MR_DllDeclare Config
 		const OS::path_t &GetMediaPath() const;
 		OS::path_t GetMediaPath(const std::string &file) const;
 
+		/*
 		std::string GetTrackPath() const;
 		std::string GetTrackPath(const std::string &file) const;
+		*/
+		const OS::path_t &GetUserTrackPath() const;
+		OS::path_t GetUserTrackPath(const std::string &name) const;
+		Parcel::TrackBundlePtr GetTrackBundle() const;
 
 		OS::path_t GetScriptHelpPath(const std::string &className) const;
 

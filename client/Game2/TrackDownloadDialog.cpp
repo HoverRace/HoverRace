@@ -374,7 +374,7 @@ size_t TrackDownloadDialog::ProgressFunc(void *clientp, double dlTotal, double d
  */
 bool TrackDownloadDialog::ExtractTrackFile()
 {
-	std::string destFilename = Config::GetInstance()->GetTrackPath(name);
+	OS::path_t destFilename = Config::GetInstance()->GetUserTrackPath(name);
 	bool retv = false;
 
 	if (dlBuf[0] == 0x50 && dlBuf[1] == 0x4b) {
@@ -386,11 +386,11 @@ bool TrackDownloadDialog::ExtractTrackFile()
 
 		memset(&zent, 0, sizeof(zent));
 		lstrcpy(zent.Name, trackFilename.c_str());
-		DWORD unzRetv = UnzipFindItem(huz, &zent, 1);
+		DWORD unzRetv = UnzipFindItemW(huz, &zent, 1);
 		retv = (unzRetv == ZR_OK);
 
 		if (retv) {
-			unzRetv = UnzipItemToFile(huz, destFilename.c_str(), &zent);
+			unzRetv = UnzipItemToFileW(huz, destFilename.file_string().c_str(), &zent);
 			retv = (unzRetv == ZR_OK);
 		}
 
@@ -398,7 +398,7 @@ bool TrackDownloadDialog::ExtractTrackFile()
 	}
 	else {
 		// Raw file.
-		FILE *outFile = fopen(destFilename.c_str(), "wb");
+		FILE *outFile = _wfopen(destFilename.file_string().c_str(), L"wb");
 		if (outFile != NULL) {
 			fwrite(dlBuf, bufSize, 1, outFile);
 			fclose(outFile);
@@ -409,7 +409,7 @@ bool TrackDownloadDialog::ExtractTrackFile()
 	/* fix modification time and creation time */
 
 	/* what the fuck? "CreateFile()" opens existing files?  Misnomer much? */
-	HANDLE file = CreateFile(destFilename.c_str(),
+	HANDLE file = CreateFileW(destFilename.file_string().c_str(),
 								FILE_WRITE_ATTRIBUTES,
 								FILE_SHARE_READ | FILE_SHARE_WRITE,
 								NULL,

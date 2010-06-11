@@ -441,11 +441,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Game2\TrackSelect.cpp"
+				RelativePath=".\Game2\TrackSelectDialog.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Game2\TrackSelect.h"
+				RelativePath=".\Game2\TrackSelectDialog.h"
 				>
 			</File>
 			<File

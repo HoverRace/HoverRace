@@ -24,6 +24,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 
+#include "../../engine/Model/Track.h"
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/Str.h"
 
@@ -31,6 +32,7 @@
 #include "MatchReport.h"
 #include "SelectRoomDialog.h"
 #include "CheckUpdateServerDialog.h"
+#include "Rulebook.h"
 #include "TrackDownloadDialog.h"
 #include "resource.h"
 
@@ -70,6 +72,7 @@
 #define MR_NREG_BANNER_SERVER    8
 #define MR_REG_BANNER_SERVER     9
 
+using namespace HoverRace;
 using namespace HoverRace::Client;
 using namespace HoverRace::Parcel;
 using namespace HoverRace::Util;
@@ -417,7 +420,8 @@ int MR_InternetRoom::ParseState(const char *pAnswer)
 
 							lLinePtr = GetNextLine(lLinePtr);
 							mGameList[lEntry].mTrack = GetLine(lLinePtr);
-							mGameList[lEntry].mAvailCode = MR_GetTrackAvail(mGameList[lEntry].mTrack);
+							mGameList[lEntry].mAvailCode =
+								Config::GetInstance()->GetTrackBundle()->CheckAvail((const char*)mGameList[lEntry].mTrack);
 
 							lLinePtr = GetNextLine(lLinePtr);
 							mGameList[lEntry].mIPAddr = GetLine(lLinePtr);
@@ -1286,6 +1290,15 @@ int MR_InternetRoom::RefreshBanner(HWND pWindow)
 
 }
 
+void MR_InternetRoom::TrackOpenFailMessageBox(HWND parent, const std::string &name,
+                                              const std::string &details)
+{
+	std::string msg = boost::str(boost::format(_("Unable to load track \"%s\".  Error details:")) % name);
+	msg += "\r\n\r\n";
+	msg += details;
+	MessageBoxW(parent, Str::UW(msg.c_str()), PACKAGE_NAME_L, MB_ICONWARNING);
+}
+
 /*
 BOOL CALLBACK MR_InternetRoom::AskParamsCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
 {
@@ -1849,6 +1862,7 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 								// Try to load the track
 								// Load the track
 								std::string lCurrentTrack((const char*)mThis->mGameList[lFocus].mTrack);
+								/*CRUFT
 								RecordFile *lTrackFile = MR_TrackOpen(pWindow, lCurrentTrack.c_str());
 								if (lTrackFile == NULL) {
 									lSuccess = TrackDownloadDialog(lCurrentTrack).ShowModal(GetModuleHandle(NULL), pWindow);
@@ -1859,10 +1873,44 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 										}
 									}
 								}
-
 								if (lSuccess) {
 									lSuccess = mThis->mSession->LoadNew(mThis->mGameList[lFocus].mTrack,
 										lTrackFile, mThis->mGameList[lFocus].mNbLap,
+										mThis->mGameList[lFocus].mAllowWeapons,
+										mThis->mVideoBuffer);
+								}
+								*/
+								Model::TrackPtr track;
+								try {
+									track = Config::GetInstance()->
+										GetTrackBundle()->OpenTrack(lCurrentTrack.c_str());
+								}
+								catch (Parcel::ObjStreamExn&) {
+									// Ignore -- force a re-download.
+								}
+								if (track.get() == NULL) {
+									try {
+										OutputDebugString("Track not found; downloading: ");
+										OutputDebugString(lCurrentTrack.c_str());
+										OutputDebugString("\n");
+
+										lSuccess = TrackDownloadDialog(lCurrentTrack).ShowModal(GetModuleHandle(NULL), pWindow);
+										if (lSuccess) {
+											Model::TrackPtr track = Config::GetInstance()->
+												GetTrackBundle()->OpenTrack(lCurrentTrack.c_str());
+											if (track.get() == NULL) {
+												throw Parcel::ObjStreamExn("Track failed to download.");
+											}
+										}
+									}
+									catch (Parcel::ObjStreamExn &ex) {
+										TrackOpenFailMessageBox(pWindow, lCurrentTrack, ex.what());
+										lSuccess = false;
+									}
+								}
+								if (lSuccess) {
+									lSuccess = mThis->mSession->LoadNew(mThis->mGameList[lFocus].mTrack,
+										track->GetRecordFile(), mThis->mGameList[lFocus].mNbLap,
 										mThis->mGameList[lFocus].mAllowWeapons,
 										mThis->mVideoBuffer);
 								}
@@ -1897,16 +1945,36 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 						int lNbLap;
 						char lGameOpts;
 
+						/*CRUFT
 						lSuccess = MR_SelectTrack(pWindow, lCurrentTrack,
 							lNbLap, lGameOpts);
+						*/
+						RulebookPtr rules = TrackSelectDialog().ShowModal(GetModuleHandle(NULL), pWindow);
+						if ((lSuccess = (rules.get() != NULL))) {
+							lCurrentTrack = rules->GetTrackName();
+							lNbLap = rules->GetLaps();
+							lGameOpts = rules->GetGameOpts();
+						}
 
 						if(lSuccess) {
 							// Load the track
-							RecordFile *lTrackFile = MR_TrackOpen(pWindow,
-								lCurrentTrack.c_str());
-							lSuccess = (mThis->mSession->LoadNew(
-								lCurrentTrack.c_str(), lTrackFile, lNbLap,
-								lGameOpts, mThis->mVideoBuffer) != FALSE);
+							try {
+								Model::TrackPtr track = Config::GetInstance()->
+									GetTrackBundle()->OpenTrack(lCurrentTrack.c_str());
+								if (track.get() == NULL)
+									throw Parcel::ObjStreamExn("Track does not exist.");
+								/*CRUFT
+								RecordFile *lTrackFile = MR_TrackOpen(pWindow,
+									lCurrentTrack.c_str());
+								*/
+								lSuccess = (mThis->mSession->LoadNew(
+									lCurrentTrack.c_str(), track->GetRecordFile(), lNbLap,
+									lGameOpts, mThis->mVideoBuffer) != FALSE);
+							}
+							catch (Parcel::ObjStreamExn &ex) {
+								TrackOpenFailMessageBox(pWindow, lCurrentTrack, ex.what());
+								lSuccess = false;
+							}
 						}
 
 						if(lSuccess) {

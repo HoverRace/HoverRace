@@ -43,6 +43,7 @@
 #include <boost/filesystem/convenience.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/foreach.hpp>
+#include <boost/make_shared.hpp>
 
 #include <OIS/OISPrereqs.h>
 #include <OIS/OISKeyboard.h>
@@ -53,6 +54,8 @@
 #include "yaml/SeqNode.h"
 #include "yaml/Parser.h"
 
+#include "../Parcel/Bundle.h"
+#include "../Parcel/TrackBundle.h"
 #include "Str.h"
 
 #include "Config.h"
@@ -116,7 +119,8 @@ namespace fs = boost::filesystem;
 	(emitter)->MapKey(#name); \
 	(emitter)->Value(name);
 
-using namespace HoverRace::Util;
+namespace HoverRace {
+namespace Util {
 
 const std::string Config::TRACK_EXT(".trk");
 
@@ -137,7 +141,8 @@ Config::Config(int verMajor, int verMinor, int verPatch, int verBuild,
 	verMajor(verMajor), verMinor(verMinor), verPatch(verPatch), verBuild(verBuild),
 	prerelease(prerelease)
 {
-	this->path = path.empty() ? GetDefaultPath() : path;
+	OS::path_t homePath = GetDefaultPath();
+	this->path = path.empty() ? homePath : path;
 
 	std::ostringstream oss;
 	oss << verMajor << '.' << verMinor;
@@ -173,6 +178,20 @@ Config::Config(int verMajor, int verMinor, int verPatch, int verBuild,
 		mediaPath = "..";
 		mediaPath /= "share";
 		mediaPath /= PACKAGE;
+#	endif
+
+	userTrackPath = mediaPath;
+	userTrackPath /= (OS::cpstr_t)Str::UP("Tracks");
+
+	Parcel::BundlePtr mediaTrackBundle(new Parcel::Bundle(userTrackPath));
+#	ifdef _WIN32
+		trackBundle = boost::make_shared<Parcel::TrackBundle>(homePath / (OS::cpstr_t)Str::UP("Tracks"),
+			boost::make_shared<Parcel::Bundle>((OS::cpstr_t)Str::UP("track_source"),  // Historical.
+			boost::make_shared<Parcel::Bundle>((OS::cpstr_t)Str::UP("Tracks"),  // Historical.
+			mediaTrackBundle)));
+#	else
+		trackBundle = boost::make_shared<Parcel::TrackBundle>(homePath / (OS::cpstr_t)Str::UP("Tracks"),
+			mediaTrackBundle);
 #	endif
 
 }
@@ -353,10 +372,12 @@ OS::path_t Config::GetMediaPath(const std::string &file) const
  * Retrieve the directory for downloaded tracks.
  * @return The directory path (may be relative).
  */
+/*
 std::string Config::GetTrackPath() const
 {
 	return (const char*)Str::PU((path / (const OS::path_t::value_type*)Str::UP("Tracks")).file_string().c_str());
 }
+*/
 
 /**
  * Retrieve the path to a downloaded track.
@@ -365,6 +386,7 @@ std::string Config::GetTrackPath() const
  *             automatically.
  * @return The directory path (may be relative).
  */
+/*
 std::string Config::GetTrackPath(const std::string &file) const
 {
 	std::string retv((const char*)Str::PU(path.file_string().c_str()));
@@ -374,6 +396,41 @@ std::string Config::GetTrackPath(const std::string &file) const
 		retv += TRACK_EXT;
 	}
 	return retv;
+}
+*/
+
+/**
+ * Retrieve the path to where downloaded and user-installed tracks are stored.
+ * @return The path (never empty, may be relative).
+ */
+const OS::path_t &Config::GetUserTrackPath() const
+{
+	return userTrackPath;
+}
+
+/**
+ * Retrieve the path to a downloaded track.
+ * @param name The track filename (may not be blank).
+ *             If the filename does not end in ".trk", it will be appended
+ *             automatically.
+ * @return The directory path (may be relative).
+ */
+OS::path_t Config::GetUserTrackPath(const std::string &name) const
+{
+	std::string filename(name);
+	if (!boost::ends_with(filename, TRACK_EXT)) {
+		filename += TRACK_EXT;
+	}
+	return userTrackPath / (OS::cpstr_t)Str::UP(filename.c_str());
+}
+
+/**
+ * Retrieve the track bundle.
+ * @return The track bundle (never @c NULL).
+ */
+Parcel::TrackBundlePtr Config::GetTrackBundle() const
+{
+	return trackBundle;
 }
 
 /**
@@ -921,3 +978,6 @@ void Config::cfg_control_t::Save(yaml::Emitter *emitter)
 
 	emitter->EndMap();
 }
+
+}  // namespace Util
+}  // namespace HoverRace
