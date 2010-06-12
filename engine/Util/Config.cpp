@@ -180,17 +180,18 @@ Config::Config(int verMajor, int verMinor, int verPatch, int verBuild,
 		mediaPath /= PACKAGE;
 #	endif
 
-	userTrackPath = mediaPath;
-	userTrackPath /= (OS::cpstr_t)Str::UP("Tracks");
+	Str::UP tracksDirName("Tracks");
 
-	Parcel::BundlePtr mediaTrackBundle(new Parcel::Bundle(userTrackPath));
+	userTrackPath = homePath / tracksDirName;
+
+	Parcel::BundlePtr mediaTrackBundle(new Parcel::Bundle(mediaPath / tracksDirName));
 #	ifdef _WIN32
-		trackBundle = boost::make_shared<Parcel::TrackBundle>(homePath / (OS::cpstr_t)Str::UP("Tracks"),
+		trackBundle = boost::make_shared<Parcel::TrackBundle>(userTrackPath,
 			boost::make_shared<Parcel::Bundle>((OS::cpstr_t)Str::UP("track_source"),  // Historical.
-			boost::make_shared<Parcel::Bundle>((OS::cpstr_t)Str::UP("Tracks"),  // Historical.
+			boost::make_shared<Parcel::Bundle>((OS::cpstr_t)tracksDirName,  // Historical.
 			mediaTrackBundle)));
 #	else
-		trackBundle = boost::make_shared<Parcel::TrackBundle>(homePath / (OS::cpstr_t)Str::UP("Tracks"),
+		trackBundle = boost::make_shared<Parcel::TrackBundle>(userTrackPath,
 			mediaTrackBundle);
 #	endif
 
