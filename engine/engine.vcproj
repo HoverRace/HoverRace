@@ -318,6 +318,14 @@
 				RelativePath=".\Model\TrackEntry.h"
 				>
 			</File>
+			<File
+				RelativePath=".\Model\TrackList.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Model\TrackList.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="ObjFac1"
