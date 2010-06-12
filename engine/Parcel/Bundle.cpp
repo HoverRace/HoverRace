@@ -106,7 +106,7 @@ Bundle::const_iterator Bundle::end() const
 
 // class Iterator
 
-const Bundle::dirIter_t Bundle::Iterator::END;
+const OS::dirIter_t Bundle::Iterator::END;
 
 Bundle::Iterator::Iterator() :
 	bundle(), iter(END)
@@ -118,7 +118,7 @@ Bundle::Iterator::Iterator(const Bundle *bundle) :
 {
 	FindNextValidBundle();
 	if (bundle != NULL)
-		iter = dirIter_t(bundle->dir);
+		iter = OS::dirIter_t(bundle->dir);
 }
 
 Bundle::Iterator &Bundle::Iterator::operator++()
@@ -128,7 +128,7 @@ Bundle::Iterator &Bundle::Iterator::operator++()
 		if (iter == END) {
 			bundle = bundle->subBundle.get();
 			FindNextValidBundle();
-			iter = (bundle == NULL) ? END : dirIter_t(bundle->dir);
+			iter = (bundle == NULL) ? END : OS::dirIter_t(bundle->dir);
 		}
 	}
 	return *this;

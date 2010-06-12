@@ -54,18 +54,9 @@ class MR_DllDeclare Bundle
 
 		virtual RecordFilePtr OpenParcel(const std::string &name, bool writing=false) const;
 
-	protected:
-#		ifdef WITH_WIDE_PATHS
-			typedef boost::filesystem::wdirectory_iterator dirIter_t;
-			typedef boost::filesystem::wdirectory_entry dirEnt_t;
-#		else
-			typedef boost::filesystem::directory_iterator dirIter_t;
-			typedef boost::filesystem::directory_entry dirEnt_t;
-#		endif
-
 	private:
 		class MR_DllDeclare Iterator :
-			public std::iterator<std::input_iterator_tag, dirEnt_t>
+			public std::iterator<std::input_iterator_tag, Util::OS::dirEnt_t>
 		{
 			public:
 				Iterator();
@@ -81,8 +72,8 @@ class MR_DllDeclare Bundle
 					return (bundle != other.bundle) || (iter != other.iter);
 				}
 
-				dirEnt_t &operator*() const { return *iter; }
-				dirEnt_t *operator->() const { return &*iter; }
+				Util::OS::dirEnt_t &operator*() const { return *iter; }
+				Util::OS::dirEnt_t *operator->() const { return &*iter; }
 
 				Iterator &operator++();
 				Iterator operator++(int);
@@ -92,13 +83,13 @@ class MR_DllDeclare Bundle
 
 			private:
 				const Bundle *bundle;
-				dirIter_t iter;
-				static const dirIter_t END;
+				Util::OS::dirIter_t iter;
+				static const Util::OS::dirIter_t END;
 		};
 	public:
 		typedef Iterator iterator;
 		typedef Iterator const_iterator;
-		typedef dirEnt_t value_type;
+		typedef Util::OS::dirEnt_t value_type;
 
 		iterator begin();
 		iterator end();
