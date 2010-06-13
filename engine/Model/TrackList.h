@@ -53,10 +53,25 @@ class MR_DllDeclare TrackList
 		void Clear();
 		void Reload(Parcel::TrackBundlePtr trackBundle);
 
+		bool IsEmpty() const { return sorted.empty(); }
+
+		TrackEntry *operator[](int i) { return sorted[i]; }
+
+	private:
+		typedef std::vector<TrackEntry*> sorted_t;
+	public:
+		typedef sorted_t::iterator iterator;
+		typedef sorted_t::const_iterator const_iterator;
+		typedef TrackEntry *value_type;
+
+		iterator begin() { return sorted.begin(); }
+		iterator end() { return sorted.end(); }
+		const_iterator begin() const { return sorted.begin(); }
+		const_iterator end() const { return sorted.end(); }
+
 	private:
 		typedef std::vector<TrackEntry> tracks_t;
 		tracks_t tracks;
-		typedef std::vector<TrackEntry*> sorted_t;
 		sorted_t sorted;
 };
 
