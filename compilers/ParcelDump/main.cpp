@@ -83,7 +83,7 @@ static void DumpTrack(const std::string &filename, RecordFilePtr file)
 	file->SelectRecord(0);
 	ObjStreamPtr os(file->StreamIn());
 	TrackEntry ent;
-	ent.filename = filename;
+	ent.name = filename;
 	ent.Serialize(*os);
 	InspectAndPrint(L"Track metadata", &ent);
 }

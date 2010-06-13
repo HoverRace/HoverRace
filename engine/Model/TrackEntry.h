@@ -24,6 +24,7 @@
 
 #include "../Util/Inspectable.h"
 #include "../Util/MR_Types.h"
+#include "../Util/OS.h"
 
 #ifdef _WIN32
 #	ifdef MR_ENGINE
@@ -66,7 +67,7 @@ class MR_DllDeclare TrackEntry : public Util::Inspectable
 		{
 			int diff = sortingIndex - elem2.sortingIndex;
 			if (diff == 0) {
-				return filename < elem2.filename;
+				return name < elem2.name;
 			}
 			else {
 				return (diff < 0);
@@ -75,18 +76,22 @@ class MR_DllDeclare TrackEntry : public Util::Inspectable
 
 		bool operator==(const TrackEntry &elem2) const
 		{
-			return ((filename == elem2.filename) && 
+			return ((name == elem2.name) && 
 					(description == elem2.description));
 		}
 
 	public:
-		std::string filename;
+		std::string name;
+#		ifdef _DEBUG
+			Util::OS::path_t path;  // For parcel debugging.
+#		endif
 		std::string description;
 		MR_Int32 regMinor;
 		MR_Int32 regMajor;
 		MR_Int32 registrationMode;
 		MR_Int32 sortingIndex;
 };
+typedef boost::shared_ptr<TrackEntry> TrackEntryPtr;
 
 }  // namespace Model
 }  // namespace HoverRace
