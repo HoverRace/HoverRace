@@ -17,5 +17,7 @@ libmodel_la_SOURCES = \
 	Track.cpp \
 	Track.h \
 	TrackEntry.cpp \
-	TrackEntry.h
+	TrackEntry.h \
+	TrackList.cpp \
+	TrackList.h
 
