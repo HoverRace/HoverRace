@@ -83,7 +83,13 @@ Model::TrackEntryPtr TrackBundle::OpenTrackEntry(const std::string &name) const
 	else {
 		recFile->SelectRecord(0);
 		Model::TrackEntryPtr retv = boost::make_shared<Model::TrackEntry>();
-		retv->name = name;
+		if (boost::ends_with(name, Config::TRACK_EXT)) {
+			// Trim off ".trk".
+			retv->name.assign(name, 0, name.length() - Config::TRACK_EXT.length());
+		}
+		else {
+			retv->name = name;
+		}
 		retv->Serialize(*recFile->StreamIn());
 		return retv;
 	}
