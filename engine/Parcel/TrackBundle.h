@@ -38,6 +38,8 @@ namespace HoverRace {
 	namespace Model {
 		class Track;
 		typedef boost::shared_ptr<Track> TrackPtr;
+		class TrackEntry;
+		typedef boost::shared_ptr<TrackEntry> TrackEntryPtr;
 	}
 }
 
@@ -64,6 +66,7 @@ class MR_DllDeclare TrackBundle : public Bundle
 		virtual RecordFilePtr OpenParcel(const std::string &name, bool writing=false) const;
 
 		Model::TrackPtr OpenTrack(const std::string &name) const;
+		Model::TrackEntryPtr OpenTrackEntry(const std::string &name) const;
 
 		MR_TrackAvail CheckAvail(const std::string &name) const;
 };

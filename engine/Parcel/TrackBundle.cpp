@@ -25,6 +25,8 @@
 #include <boost/algorithm/string.hpp>
 
 #include "../Model/Track.h"
+#include "../Model/TrackEntry.h"
+#include "../Parcel/RecordFile.h"
 #include "../Util/Config.h"
 #include "ObjStream.h"
 
@@ -64,6 +66,27 @@ Model::TrackPtr TrackBundle::OpenTrack(const std::string &name) const
 	return (recFile.get() == NULL) ?
 		Model::TrackPtr() :
 		boost::make_shared<Model::Track>(recFile);
+}
+
+/**
+ * Load a track header.
+ * @param name The name of the track.  The ".trk" suffix may be omitted.
+ * @return The track or @c NULL if the track does not exist.
+ * @throws ObjStreamExn The track failed to load.
+ */
+Model::TrackEntryPtr TrackBundle::OpenTrackEntry(const std::string &name) const
+{
+	RecordFilePtr recFile(OpenParcel(name));
+	if (recFile.get() == NULL) {
+		return Model::TrackEntryPtr();
+	}
+	else {
+		recFile->SelectRecord(0);
+		Model::TrackEntryPtr retv = boost::make_shared<Model::TrackEntry>();
+		retv->name = name;
+		retv->Serialize(*recFile->StreamIn());
+		return retv;
+	}
 }
 
 /**
