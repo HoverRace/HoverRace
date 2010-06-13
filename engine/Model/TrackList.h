@@ -56,6 +56,8 @@ class MR_DllDeclare TrackList
 	private:
 		typedef std::vector<TrackEntry> tracks_t;
 		tracks_t tracks;
+		typedef std::vector<TrackEntry*> sorted_t;
+		sorted_t sorted;
 };
 
 }  // namespace Model
