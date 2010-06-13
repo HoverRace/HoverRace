@@ -22,6 +22,8 @@
 
 #pragma once
 
+#include "../../engine/Model/TrackList.h"
+
 #define OPT_ALLOW_WEAPONS	0x40
 #define OPT_ALLOW_MINES		0x20
 #define OPT_ALLOW_CANS		0x10
@@ -31,16 +33,30 @@
 #define OPT_ALLOW_EON		0x01
 
 namespace HoverRace {
+	namespace Model {
+		class TrackEntry;
+	}
+}
+
+namespace HoverRace {
 namespace Client {
 
 class Rulebook;
 typedef boost::shared_ptr<Rulebook> RulebookPtr;
 
+/**
+ * Track selection dialog.
+ * @author Michael Imamura
+ */
 class TrackSelectDialog {
 	public:
 		TrackSelectDialog();
 		~TrackSelectDialog();
 
+	private:
+		void Clean();
+
+	public:
 		RulebookPtr ShowModal(HINSTANCE hinst, HWND parent);
 
 		const std::string &GetTrackName() const { return trackName; }
@@ -56,6 +72,8 @@ class TrackSelectDialog {
 		std::string trackName;
 		int laps;
 		char opts;  ///< bits: (unused)(weapons)(mines)(cans)(basic)(bi)(cx)(eon)
+		int idx;
+		Model::TrackList trackList;
 };
 
 }  // namespace Client
