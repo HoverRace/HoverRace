@@ -43,12 +43,14 @@
 #include "HighObserver.h"
 #include "IntroMovie.h"
 #include "Rulebook.h"
-#include "TrackSelect.h"
+#include "TrackSelectDialog.h"
 #include "TrackDownloadDialog.h"
 #include "../../engine/Util/DllObjectFactory.h"
 #include "../../engine/VideoServices/ColorPalette.h"
 #include "../../engine/VideoServices/VideoBuffer.h"
 #include "../../engine/MainCharacter/MainCharacter.h"
+#include "../../engine/Model/Track.h"
+#include "../../engine/Parcel/TrackBundle.h"
 #include "../../engine/Script/Core.h"
 #include "../../engine/Util/FuzzyLogic.h"
 #include "../../engine/Util/Profiler.h"
@@ -487,6 +489,15 @@ int MR_GameApp::AskUserToAbortGame()
 		}
 	}
 	return lReturnValue;
+}
+
+void MR_GameApp::TrackOpenFailMessageBox(HWND parent, const std::string &name,
+                                         const std::string &details)
+{
+	std::string msg = boost::str(boost::format(_("Unable to load track \"%s\".  Error details:")) % name);
+	msg += "\r\n\r\n";
+	msg += details;
+	MessageBoxW(parent, Str::UW(msg.c_str()), PACKAGE_NAME_L, MB_ICONWARNING);
 }
 
 void MR_GameApp::DisplayHelp()
@@ -1283,13 +1294,8 @@ void MR_GameApp::NewLocalSession(RulebookPtr rules)
 
 	// Prompt the user for a track name
 	if (rules == NULL) {
-		std::string lCurrentTrack;
-		int lNbLap;
-		char lGameOpts;
-
-		lSuccess = MR_SelectTrack(mMainWindow, lCurrentTrack, lNbLap, lGameOpts);
-
-		rules = boost::make_shared<Rulebook>(lCurrentTrack, lNbLap, lGameOpts);
+		rules = TrackSelectDialog().ShowModal(mInstance, mMainWindow);
+		lSuccess = (rules.get() != NULL);
 	}
 
 	if(lSuccess) {
@@ -1308,10 +1314,21 @@ void MR_GameApp::NewLocalSession(RulebookPtr rules)
 
 		// Load the selected track
 		if(lSuccess) {
+			/*CRUFT
 			RecordFile *lTrackFile = MR_TrackOpen(mMainWindow, rules->GetTrackName().c_str());
-			lSuccess = (lCurrentSession->LoadNew(
-				rules->GetTrackName().c_str(), lTrackFile,
-				rules->GetLaps(), rules->GetGameOpts(), mVideoBuffer) != FALSE);
+			*/
+			try {
+				Model::TrackPtr track = Config::GetInstance()->
+					GetTrackBundle()->OpenTrack(rules->GetTrackName());
+				if (track.get() == NULL) throw Parcel::ObjStreamExn("Track does not exist.");
+				lSuccess = (lCurrentSession->LoadNew(
+					rules->GetTrackName().c_str(), track->GetRecordFile(),
+					rules->GetLaps(), rules->GetGameOpts(), mVideoBuffer) != FALSE);
+			}
+			catch (Parcel::ObjStreamExn &ex) {
+				TrackOpenFailMessageBox(mMainWindow, rules->GetTrackName(), ex.what());
+				lSuccess = false;
+			}
 		}
 		
 		if(lSuccess)
@@ -1356,7 +1373,15 @@ void MR_GameApp::NewSplitSession(int pSplitPlayers)
 	int lNbLap;
 	char lGameOpts;
 
+	/*CRUFT
 	lSuccess = MR_SelectTrack(mMainWindow, lCurrentTrack, lNbLap, lGameOpts);
+	*/
+	RulebookPtr rules = TrackSelectDialog().ShowModal(mInstance, mMainWindow);
+	if ((lSuccess = (rules.get() != NULL))) {
+		lCurrentTrack = rules->GetTrackName();
+		lNbLap = rules->GetLaps();
+		lGameOpts = rules->GetGameOpts();
+	}
 
 	if(lSuccess) {
 		// Create the new session
@@ -1392,8 +1417,22 @@ void MR_GameApp::NewSplitSession(int pSplitPlayers)
 
 		// Load the selected maze
 		if(lSuccess) {
+			/*CRUFT
 			RecordFile *lTrackFile = MR_TrackOpen(mMainWindow, lCurrentTrack.c_str());
 			lSuccess = (lCurrentSession->LoadNew(lCurrentTrack.c_str(), lTrackFile, lNbLap, lGameOpts, mVideoBuffer) != FALSE);
+			*/
+			try {
+				Model::TrackPtr track = Config::GetInstance()->
+					GetTrackBundle()->OpenTrack(rules->GetTrackName());
+				if (track.get() == NULL) throw Parcel::ObjStreamExn("Track does not exist.");
+				lSuccess = (lCurrentSession->LoadNew(
+					lCurrentTrack.c_str(), track->GetRecordFile(),
+					lNbLap, lGameOpts, mVideoBuffer) != FALSE);
+			}
+			catch (Parcel::ObjStreamExn &ex) {
+				TrackOpenFailMessageBox(mMainWindow, rules->GetTrackName(), ex.what());
+				lSuccess = false;
+			}
 		}
 
 		if(lSuccess) {
@@ -1449,7 +1488,15 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 	// Prompt the user for a maze name fbm extensions
 
 	if(pServer) {
+		/*CRUFT
 		lSuccess = MR_SelectTrack(mMainWindow, lCurrentTrack, lNbLap, lGameOpts);
+		*/
+		RulebookPtr rules = TrackSelectDialog().ShowModal(mInstance, mMainWindow);
+		if ((lSuccess = (rules.get() != NULL))) {
+			lCurrentTrack = rules->GetTrackName();
+			lNbLap = rules->GetLaps();
+			lGameOpts = rules->GetGameOpts();
+		}
 
 		DeleteMovieWnd();
 		SOUNDSERVER_INIT(mMainWindow);
@@ -1510,11 +1557,12 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 		}
 	}
 
-	RecordFile *lTrackFile;
+	Model::TrackPtr track;
 	if(lSuccess) {
 		observers[0] = MR_Observer::New();
 		highObserver = new HighObserver();
 
+		/*CRUFT
 		// Load the track
 		lTrackFile = MR_TrackOpen(mMainWindow, lCurrentTrack.c_str());
 		if (lTrackFile == NULL) {
@@ -1526,10 +1574,40 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 				}
 			}
 		}
+		*/
+		try {
+			track = Config::GetInstance()->
+				GetTrackBundle()->OpenTrack(lCurrentTrack.c_str());
+		}
+		catch (Parcel::ObjStreamExn&) {
+			// Ignore -- force a re-download.
+		}
+		if (track.get() == NULL) {
+			try {
+				OutputDebugString("Track not found; downloading: ");
+				OutputDebugString(lCurrentTrack.c_str());
+				OutputDebugString("\n");
+
+				lSuccess = TrackDownloadDialog(lCurrentTrack).ShowModal(mInstance, mMainWindow);
+				if (lSuccess) {
+					Model::TrackPtr track = Config::GetInstance()->
+						GetTrackBundle()->OpenTrack(lCurrentTrack.c_str());
+					if (track.get() == NULL) {
+						throw Parcel::ObjStreamExn("Track failed to download.");
+					}
+				}
+			}
+			catch (Parcel::ObjStreamExn &ex) {
+				TrackOpenFailMessageBox(mMainWindow, lCurrentTrack, ex.what());
+				lSuccess = false;
+			}
+		}
 	}
 
 	if(lSuccess) {
-		lSuccess = (lCurrentSession->LoadNew(lCurrentTrack.c_str(), lTrackFile, lNbLap, lGameOpts, mVideoBuffer) != FALSE);
+		lSuccess = (lCurrentSession->LoadNew(
+			lCurrentTrack.c_str(), track->GetRecordFile(),
+			lNbLap, lGameOpts, mVideoBuffer) != FALSE);
 	}
 
 	if(lSuccess) {

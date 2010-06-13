@@ -64,8 +64,12 @@ class MR_DllDeclare OS {
 
 #		ifdef WITH_WIDE_PATHS
 			typedef boost::filesystem::wpath path_t;
+			typedef boost::filesystem::wdirectory_iterator dirIter_t;
+			typedef boost::filesystem::wdirectory_entry dirEnt_t;
 #		else
 			typedef boost::filesystem::path path_t;
+			typedef boost::filesystem::directory_iterator dirIter_t;
+			typedef boost::filesystem::directory_entry dirEnt_t;
 #		endif
 		typedef path_t::value_type *pstr_t;
 		typedef const path_t::value_type *cpstr_t;

@@ -1,6 +1,6 @@
 
-// TrackEntry.h
-// Track metadata.
+// Track.h
+// A track.
 //
 // Copyright (c) 2010 Michael Imamura.
 //
@@ -22,9 +22,7 @@
 
 #pragma once
 
-#include "../Util/Inspectable.h"
-#include "../Util/MR_Types.h"
-#include "../Util/OS.h"
+#include "TrackEntry.h"
 
 #ifdef _WIN32
 #	ifdef MR_ENGINE
@@ -38,10 +36,8 @@
 
 namespace HoverRace {
 	namespace Parcel {
-		class ObjStream;
-	}
-	namespace Util {
-		class InspectMapNode;
+		class RecordFile;
+		typedef boost::shared_ptr<RecordFile> RecordFilePtr;
 	}
 }
 
@@ -49,49 +45,25 @@ namespace HoverRace {
 namespace Model {
 
 /**
- * The metadata for a track.
+ * A track level.
  * @author Michael Imamura
  */
-class MR_DllDeclare TrackEntry : public Util::Inspectable
+class MR_DllDeclare Track
 {
-	typedef Util::Inspectable SUPER;
+	private:
+		Track() { }
 	public:
-		TrackEntry() : SUPER() { }
-		virtual ~TrackEntry() { }
+		Track(Parcel::RecordFilePtr recFile);
+		~Track();
 
-		void Serialize(Parcel::ObjStream &os);
+		//HACK: Temporary until track data loading moved into this class.
+		Parcel::RecordFilePtr GetRecordFile() const { return recFile; }
 
-		virtual void Inspect(Util::InspectMapNode &node) const;
-
-		bool operator<(const TrackEntry &elem2) const
-		{
-			int diff = sortingIndex - elem2.sortingIndex;
-			if (diff == 0) {
-				return name < elem2.name;
-			}
-			else {
-				return (diff < 0);
-			}
-		}
-
-		bool operator==(const TrackEntry &elem2) const
-		{
-			return ((name == elem2.name) && 
-					(description == elem2.description));
-		}
-
-	public:
-		std::string name;
-#		ifdef _DEBUG
-			Util::OS::path_t path;  // For parcel debugging.
-#		endif
-		std::string description;
-		MR_Int32 regMinor;
-		MR_Int32 regMajor;
-		MR_Int32 registrationMode;
-		MR_Int32 sortingIndex;
+	private:
+		Parcel::RecordFilePtr recFile;
+		TrackEntry header;
 };
-typedef boost::shared_ptr<TrackEntry> TrackEntryPtr;
+typedef boost::shared_ptr<Track> TrackPtr;
 
 }  // namespace Model
 }  // namespace HoverRace

@@ -55,8 +55,51 @@ class MR_DllDeclare Bundle
 		virtual RecordFilePtr OpenParcel(const std::string &name, bool writing=false) const;
 
 	private:
+		class MR_DllDeclare Iterator :
+			public std::iterator<std::input_iterator_tag, Util::OS::dirEnt_t>
+		{
+			public:
+				Iterator();
+				Iterator(const Bundle *bundle);
+
+			public:
+				bool operator==(const Iterator &other) const
+				{
+					return (bundle == other.bundle) && (iter == other.iter);
+				}
+				bool operator!=(const Iterator &other) const
+				{
+					return (bundle != other.bundle) || (iter != other.iter);
+				}
+
+				Util::OS::dirEnt_t &operator*() const { return *iter; }
+				Util::OS::dirEnt_t *operator->() const { return &*iter; }
+
+				Iterator &operator++();
+				Iterator operator++(int);
+
+			private:
+				void FindNextValidBundle();
+
+			private:
+				const Bundle *bundle;
+				Util::OS::dirIter_t iter;
+				static const Util::OS::dirIter_t END;
+		};
+	public:
+		typedef Iterator iterator;
+		typedef Iterator const_iterator;
+		typedef Util::OS::dirEnt_t value_type;
+
+		iterator begin();
+		iterator end();
+		const_iterator begin() const;
+		const_iterator end() const;
+
+	private:
 		Util::OS::path_t dir;
 		BundlePtr subBundle;
+		static const iterator END;
 };
 
 }  // namespace Parcel

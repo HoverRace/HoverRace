@@ -66,7 +66,7 @@ void TrackEntry::Serialize(Parcel::ObjStream &os)
 void TrackEntry::Inspect(Util::InspectMapNode &node) const
 {
 	node.
-		AddField("filename", filename).
+		AddField("name", name).
 		AddField("description", description).
 		AddField("regMinor", regMinor).
 		AddField("regMajor", regMajor).

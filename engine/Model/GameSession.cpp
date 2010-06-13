@@ -34,7 +34,6 @@ using namespace HoverRace::Parcel;
 MR_GameSession::MR_GameSession(BOOL pAllowRendering) :
 	mAllowRendering(pAllowRendering),
 	mCurrentLevelNumber(-1),
-	mCurrentMazeFile(NULL),
 	mCurrentLevel(NULL),
 	mSimulationTime(-3000)  // 3 sec countdown
 {
@@ -47,7 +46,7 @@ MR_GameSession::~MR_GameSession()
 
 BOOL MR_GameSession::LoadLevel(int pLevel, char pGameOpts)
 {
-	ASSERT(mCurrentMazeFile != NULL);
+	ASSERT(mCurrentMazeFile.get() != NULL);
 
 	BOOL lReturnValue = TRUE;
 
@@ -74,8 +73,7 @@ BOOL MR_GameSession::LoadLevel(int pLevel, char pGameOpts)
 
 void MR_GameSession::Clean()
 {
-	delete mCurrentMazeFile;
-	mCurrentMazeFile = NULL;
+	mCurrentMazeFile.reset();
 
 	delete mCurrentLevel;
 	mCurrentLevel = NULL;
@@ -83,7 +81,7 @@ void MR_GameSession::Clean()
 	mCurrentLevelNumber = -1;
 }
 
-BOOL MR_GameSession::LoadNew(const char *pTitle, RecordFile *pMazeFile, char pGameOpts)
+BOOL MR_GameSession::LoadNew(const char *pTitle, RecordFilePtr pMazeFile, char pGameOpts)
 {
 	BOOL lReturnValue = FALSE;
 
@@ -408,7 +406,7 @@ const char *MR_GameSession::GetTitle() const
 	return mTitle.c_str();
 }
 
-HoverRace::Parcel::RecordFile *MR_GameSession::GetCurrentMazeFile()
+HoverRace::Parcel::RecordFilePtr MR_GameSession::GetCurrentMazeFile()
 {
 	return mCurrentMazeFile;
 }

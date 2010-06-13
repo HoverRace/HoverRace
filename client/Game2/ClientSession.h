@@ -68,7 +68,7 @@ class ClientSession
 		HoverRace::Util::OS::timestamp_t lastTimestamp;
 		double fps;
 
-		void ReadLevelAttrib(Parcel::RecordFile *pFile, MR_VideoBuffer *pVideo);
+		void ReadLevelAttrib(Parcel::RecordFilePtr pFile, MR_VideoBuffer *pVideo);
 	public:
 		// Creation and destruction
 		ClientSession();
@@ -78,7 +78,7 @@ class ClientSession
 												  // Simulation, speed factor can be used to reduce processing speed to create AVI files
 		virtual void Process(int pSpeedFactor = 1);
 
-		virtual BOOL LoadNew(const char *pTitle, Parcel::RecordFile *pMazeFile, int pNbLap, char pGameOpts, MR_VideoBuffer *pVideo);
+		virtual BOOL LoadNew(const char *pTitle, Parcel::RecordFilePtr pMazeFile, int pNbLap, char pGameOpts, MR_VideoBuffer *pVideo);
 
 		// Main character control and interrogation
 		bool CreateMainCharacter(int i);

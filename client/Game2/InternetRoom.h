@@ -27,7 +27,9 @@
 
 #include <string>
 
-#include "TrackSelect.h"
+#include "../../engine/Parcel/TrackBundle.h"
+
+#include "TrackSelectDialog.h"
 #include "NetworkSession.h"
 #include "Banner.h"
 #include "RoomList.h"
@@ -193,6 +195,8 @@ class MR_InternetRoom
 
 		int LoadBanner(HWND pWindow, const char *pBuffer, int pBufferLen);
 		int RefreshBanner(HWND pWindow);		  // Return next refresh time
+
+		static void TrackOpenFailMessageBox(HWND parent, const std::string &name, const std::string &details);
 
 	public:
 		MR_InternetRoom(const std::string &pMainServer, bool mustCheckUpdates);
