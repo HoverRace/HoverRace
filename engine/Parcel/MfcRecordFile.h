@@ -102,6 +102,8 @@ class MR_DllDeclare MfcRecordFile : public RecordFile, private CFile
 		ObjStreamPtr StreamIn();
 		ObjStreamPtr StreamOut();
 
+		static void FixFileAttrs(const Util::OS::path_t &path);
+
 #ifdef _DEBUG
 		void AssertValid() const;
 		void Dump(CDumpContext & dc) const;

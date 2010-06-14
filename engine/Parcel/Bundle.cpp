@@ -62,6 +62,7 @@ RecordFilePtr Bundle::OpenParcel(const std::string &name, bool writing) const
 
 	if (fs::exists(pt)) {
 #		ifdef _WIN32
+			MfcRecordFile::FixFileAttrs(pt);
 			RecordFile *rec = MfcRecordFile::New();
 #		else
 			RecordFile *rec = new ClassicRecordFile();

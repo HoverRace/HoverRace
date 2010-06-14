@@ -21,6 +21,8 @@
 
 #include "StdAfx.h"
 
+#include <io.h>
+
 #include "../Util/Str.h"
 #include "MfcObjStream.h"
 
@@ -579,6 +581,44 @@ ObjStreamPtr MfcRecordFile::StreamOut()
 	return ObjStreamPtr(new MfcObjStream(this, OS::path_t((OS::cpstr_t)Str::UP(GetFileName())), true));
 }
 
+/**
+ * Make sure that the file attributes are within range so that CFile won't
+ * fail an assertion when it tries to open it.
+ * This was originally part of TrackSelect.  Many downloaded tracks have
+ * bad time attributes on the files, making this necessary.
+ * @param path The path to the file to fix.
+ */
+void MfcRecordFile::FixFileAttrs(const OS::path_t &path)
+{
+	_wfinddata_t info;
+	std::wstring filename = path.file_string();
+	intptr_t handle = _wfindfirst(filename.c_str(), &info);
+	if (handle != -1) {
+		if (info.time_access == -1 || info.time_create == -1 || info.time_write == -1) {
+			HANDLE file = CreateFileW(filename.c_str(),
+				FILE_WRITE_ATTRIBUTES,
+				FILE_SHARE_READ | FILE_SHARE_WRITE,
+				NULL,
+				OPEN_EXISTING,
+				FILE_ATTRIBUTE_NORMAL,
+				NULL);
+			FILETIME ft;
+			SYSTEMTIME st;
+
+			GetSystemTime(&st);
+			SystemTimeToFileTime(&st, &ft);
+
+			if(SetFileTime(file, &ft, &ft, &ft) == 0) {
+				/* error */
+				ASSERT(FALSE);
+			}
+
+			CloseHandle(file);
+		}
+
+		_findclose(handle);
+	}
+}
 
 }  // namespace Parcel
 }  // namespace HoverRace
