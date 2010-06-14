@@ -1314,9 +1314,6 @@ void MR_GameApp::NewLocalSession(RulebookPtr rules)
 
 		// Load the selected track
 		if(lSuccess) {
-			/*CRUFT
-			RecordFile *lTrackFile = MR_TrackOpen(mMainWindow, rules->GetTrackName().c_str());
-			*/
 			try {
 				Model::TrackPtr track = Config::GetInstance()->
 					GetTrackBundle()->OpenTrack(rules->GetTrackName());
@@ -1373,9 +1370,6 @@ void MR_GameApp::NewSplitSession(int pSplitPlayers)
 	int lNbLap;
 	char lGameOpts;
 
-	/*CRUFT
-	lSuccess = MR_SelectTrack(mMainWindow, lCurrentTrack, lNbLap, lGameOpts);
-	*/
 	RulebookPtr rules = TrackSelectDialog().ShowModal(mInstance, mMainWindow);
 	if ((lSuccess = (rules.get() != NULL))) {
 		lCurrentTrack = rules->GetTrackName();
@@ -1417,10 +1411,6 @@ void MR_GameApp::NewSplitSession(int pSplitPlayers)
 
 		// Load the selected maze
 		if(lSuccess) {
-			/*CRUFT
-			RecordFile *lTrackFile = MR_TrackOpen(mMainWindow, lCurrentTrack.c_str());
-			lSuccess = (lCurrentSession->LoadNew(lCurrentTrack.c_str(), lTrackFile, lNbLap, lGameOpts, mVideoBuffer) != FALSE);
-			*/
 			try {
 				Model::TrackPtr track = Config::GetInstance()->
 					GetTrackBundle()->OpenTrack(rules->GetTrackName());
@@ -1488,9 +1478,6 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 	// Prompt the user for a maze name fbm extensions
 
 	if(pServer) {
-		/*CRUFT
-		lSuccess = MR_SelectTrack(mMainWindow, lCurrentTrack, lNbLap, lGameOpts);
-		*/
 		RulebookPtr rules = TrackSelectDialog().ShowModal(mInstance, mMainWindow);
 		if ((lSuccess = (rules.get() != NULL))) {
 			lCurrentTrack = rules->GetTrackName();
@@ -1562,19 +1549,6 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 		observers[0] = MR_Observer::New();
 		highObserver = new HighObserver();
 
-		/*CRUFT
-		// Load the track
-		lTrackFile = MR_TrackOpen(mMainWindow, lCurrentTrack.c_str());
-		if (lTrackFile == NULL) {
-			lSuccess = TrackDownloadDialog(lCurrentTrack).ShowModal(mInstance, mMainWindow);
-			if (lSuccess) {
-				lTrackFile = MR_TrackOpen(mMainWindow, lCurrentTrack.c_str());
-				if (lTrackFile == NULL) {
-					lSuccess = FALSE;
-				}
-			}
-		}
-		*/
 		try {
 			track = Config::GetInstance()->
 				GetTrackBundle()->OpenTrack(lCurrentTrack.c_str());

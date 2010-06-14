@@ -1862,24 +1862,6 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 								// Try to load the track
 								// Load the track
 								std::string lCurrentTrack((const char*)mThis->mGameList[lFocus].mTrack);
-								/*CRUFT
-								RecordFile *lTrackFile = MR_TrackOpen(pWindow, lCurrentTrack.c_str());
-								if (lTrackFile == NULL) {
-									lSuccess = TrackDownloadDialog(lCurrentTrack).ShowModal(GetModuleHandle(NULL), pWindow);
-									if (lSuccess) {
-										lTrackFile = MR_TrackOpen(pWindow, lCurrentTrack.c_str());
-										if (lTrackFile == NULL) {
-											lSuccess = FALSE;
-										}
-									}
-								}
-								if (lSuccess) {
-									lSuccess = mThis->mSession->LoadNew(mThis->mGameList[lFocus].mTrack,
-										lTrackFile, mThis->mGameList[lFocus].mNbLap,
-										mThis->mGameList[lFocus].mAllowWeapons,
-										mThis->mVideoBuffer);
-								}
-								*/
 								Model::TrackPtr track;
 								try {
 									track = Config::GetInstance()->
@@ -1945,10 +1927,6 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 						int lNbLap;
 						char lGameOpts;
 
-						/*CRUFT
-						lSuccess = MR_SelectTrack(pWindow, lCurrentTrack,
-							lNbLap, lGameOpts);
-						*/
 						RulebookPtr rules = TrackSelectDialog().ShowModal(GetModuleHandle(NULL), pWindow);
 						if ((lSuccess = (rules.get() != NULL))) {
 							lCurrentTrack = rules->GetTrackName();
@@ -1963,10 +1941,6 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 									GetTrackBundle()->OpenTrack(lCurrentTrack.c_str());
 								if (track.get() == NULL)
 									throw Parcel::ObjStreamExn("Track does not exist.");
-								/*CRUFT
-								RecordFile *lTrackFile = MR_TrackOpen(pWindow,
-									lCurrentTrack.c_str());
-								*/
 								lSuccess = (mThis->mSession->LoadNew(
 									lCurrentTrack.c_str(), track->GetRecordFile(), lNbLap,
 									lGameOpts, mThis->mVideoBuffer) != FALSE);
