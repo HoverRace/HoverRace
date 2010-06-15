@@ -48,13 +48,16 @@ namespace Model {
  * A track level.
  * @author Michael Imamura
  */
-class MR_DllDeclare Track
+class MR_DllDeclare Track : public Util::Inspectable
 {
+	typedef Util::Inspectable SUPER;
 	private:
 		Track() { }
 	public:
 		Track(Parcel::RecordFilePtr recFile);
-		~Track();
+		virtual ~Track();
+
+		virtual void Inspect(Util::InspectMapNode &node) const;
 
 		//HACK: Temporary until track data loading moved into this class.
 		Parcel::RecordFilePtr GetRecordFile() const { return recFile; }

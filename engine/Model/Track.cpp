@@ -35,7 +35,7 @@ namespace Model {
  * @throw Parcel::ObjStreamExn
  */
 Track::Track(Parcel::RecordFilePtr recFile) :
-	recFile(recFile)
+	SUPER(), recFile(recFile)
 {
 	recFile->SelectRecord(0);
 	header.Serialize(*recFile->StreamIn());
@@ -43,6 +43,12 @@ Track::Track(Parcel::RecordFilePtr recFile) :
 
 Track::~Track()
 {
+}
+
+void Track::Inspect(Util::InspectMapNode &node) const
+{
+	node.
+		AddSubobject("metadata", &header);
 }
 
 }  // namespace Model
