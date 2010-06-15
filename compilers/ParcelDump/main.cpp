@@ -22,43 +22,34 @@
 
 #include "StdAfx.h"
 
+#ifdef _WIN32
+#	include <fcntl.h>
+#	include <io.h>
+#else
+#	include <locale.h>
+#	include <langinfo.h>
+#endif
+
 #include <boost/algorithm/string/predicate.hpp>
 
+#include "../../engine/Model/Track.h"
 #include "../../engine/Model/TrackEntry.h"
-#include "../../engine/Parcel/ClassicRecordFile.h"
-#ifdef _WIN32
-#	include "../../engine/Parcel/MfcRecordFile.h"
-#endif
+#include "../../engine/Parcel/RecordFile.h"
+#include "../../engine/Parcel/TrackBundle.h"
 #include "../../engine/Util/InspectMapNode.h"
 #include "../../engine/Util/Str.h"
 
 using namespace HoverRace::Model;
 using namespace HoverRace::Parcel;
 using namespace HoverRace::Util;
+namespace fs = boost::filesystem;
 
 #if defined(_WIN32) && defined(_DEBUG)
 #	include <mfcleakfix.h>
 	static int foo = use_ignore_mfc_leaks();
 #endif
 
-static RecordFilePtr OpenRecordFile(const std::string &filename)
-{
-	//TODO: Allow loader selection.
-#	ifdef _WIN32
-		RecordFilePtr file(MfcRecordFile::New());
-#	else
-		RecordFilePtr file(new ClassicRecordFile());
-#	endif
-
-	if (!file->OpenForRead((OS::cpstr_t)Str::UP(filename.c_str()))) {
-		std::cerr << "Invalid or corrupt parcel file: " << filename << std::endl;
-		file.reset();
-	}
-
-	return file;
-}
-
-static void InspectAndPrint(const std::wstring &label, const Inspectable *insp)
+static void InspectAndPrint(const std::string &label, const Inspectable *insp)
 {
 	InspectMapNode root;
 	insp->Inspect(root);
@@ -67,44 +58,68 @@ static void InspectAndPrint(const std::wstring &label, const Inspectable *insp)
 	outStr.reserve(4096);
 	root.RenderToString(outStr);
 
-	std::wstring ws((const wchar_t*)Str::UW(outStr.c_str()));
-	std::wcout << L"--- # " << label << '\n' << ws << std::endl;
+	std::cout << "--- # " << label << std::endl;
+	std::cout << outStr << std::endl;
 #	if defined(_WIN32) && defined(_DEBUG)
+		std::wstring ws((const wchar_t*)Str::UW(outStr.c_str()));
 		OutputDebugStringW(L"--- # ");
-		OutputDebugStringW(label.c_str());
+		OutputDebugStringW(Str::UW(label.c_str()));
 		OutputDebugStringW(L"\n");
 		OutputDebugStringW(ws.c_str());
 		OutputDebugStringW(L"\n");
 #	endif
 }
 
-static void DumpTrack(const std::string &filename, RecordFilePtr file)
+static void DumpTrack(const OS::path_t &path, const std::string &name)
 {
-	file->SelectRecord(0);
-	ObjStreamPtr os(file->StreamIn());
-	TrackEntry ent;
-	ent.name = filename;
-	ent.Serialize(*os);
-	InspectAndPrint(L"Track metadata", &ent);
+	TrackBundle trackBundle(path);
+	TrackPtr track = trackBundle.OpenTrack(name);
+	if (track.get() == NULL) {
+		std::cerr << "Corrupted track file." << std::endl;
+		return;
+	}
+
+	InspectAndPrint("Header", track->GetRecordFile().get());
+	InspectAndPrint("Track", track.get());
 }
 
 int main(int argc, char **argv)
 {
+#	ifdef _WIN32
+		/*
+		_setmode(_fileno(stdout), _O_U8TEXT);
+		*/
+#	endif
+	OS::SetLocale();
+#	ifndef _WIN32
+		if (strcmp(nl_langinfo(CODESET), "UTF-8") != 0) {
+			std::cerr << "Warning: Locale is not UTF-8." << std::endl;
+		}
+#	endif
+
 	if (argc < 2) return EXIT_FAILURE;
 
-	//TODO: Command line options.
-	std::string filename(argv[1]);
+#	ifdef _WIN32
+		int wargc;
+		wchar_t **wargv = CommandLineToArgvW(GetCommandLineW(), &wargc);
+		OS::path_t filename(wargv[1]);
+#	else
+		OS::path_t filename(argv[1]);
+#	endif
 
-	RecordFilePtr file = OpenRecordFile(filename);
-	if (file == NULL) return EXIT_FAILURE;
+	if (!fs::exists(filename)) {
+		std::cerr << "File does not exist." << std::endl;
+		return EXIT_FAILURE;
+	}
 
-	InspectAndPrint(L"Header", file.get());
+	OS::path_t dir = filename.parent_path();
+	std::string name = Str::PU(filename.filename().c_str());
 
-	if (boost::algorithm::ends_with(filename, ".trk")) {
-		DumpTrack(filename, file);
+	if (boost::algorithm::ends_with(name, ".trk")) {
+		DumpTrack(dir, name);
 	}
 	else {
-		std::wcerr << L"-- Unsupported record file type." << std::endl;
+		std::cerr << "-- Unsupported record file type." << std::endl;
 	}
 
 	return EXIT_SUCCESS;
