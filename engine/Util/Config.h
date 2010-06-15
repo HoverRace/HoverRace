@@ -116,10 +116,6 @@ class MR_DllDeclare Config
 		const OS::path_t &GetMediaPath() const;
 		OS::path_t GetMediaPath(const std::string &file) const;
 
-		/*
-		std::string GetTrackPath() const;
-		std::string GetTrackPath(const std::string &file) const;
-		*/
 		const OS::path_t &GetUserTrackPath() const;
 		OS::path_t GetUserTrackPath(const std::string &name) const;
 		Parcel::TrackBundlePtr GetTrackBundle() const;

@@ -370,37 +370,6 @@ OS::path_t Config::GetMediaPath(const std::string &file) const
 }
 
 /**
- * Retrieve the directory for downloaded tracks.
- * @return The directory path (may be relative).
- */
-/*
-std::string Config::GetTrackPath() const
-{
-	return (const char*)Str::PU((path / (const OS::path_t::value_type*)Str::UP("Tracks")).file_string().c_str());
-}
-*/
-
-/**
- * Retrieve the path to a downloaded track.
- * @param file The track filename (may not be blank).
- *             If the filename does not end in ".trk", it will be appended
- *             automatically.
- * @return The directory path (may be relative).
- */
-/*
-std::string Config::GetTrackPath(const std::string &file) const
-{
-	std::string retv((const char*)Str::PU(path.file_string().c_str()));
-	retv += (DIRSEP "Tracks" DIRSEP);
-	retv += file;
-	if (!boost::ends_with(file, TRACK_EXT)) {
-		retv += TRACK_EXT;
-	}
-	return retv;
-}
-*/
-
-/**
  * Retrieve the path to where downloaded and user-installed tracks are stored.
  * @return The path (never empty, may be relative).
  */
