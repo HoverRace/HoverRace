@@ -82,7 +82,7 @@ void TrackList::Reload(Parcel::TrackBundlePtr trackBundle)
 	Clear();
 
 	BOOST_FOREACH(const OS::dirEnt_t &ent, *trackBundle) {
-		std::string name((OS::cpstr_t)Str::PU(ent.path().filename().c_str()));
+		std::string name((const char*)Str::PU(ent.path().filename().c_str()));
 		try {
 			Model::TrackEntryPtr trackEnt = trackBundle->OpenTrackEntry(name);
 			if (trackEnt.get() != NULL) {
