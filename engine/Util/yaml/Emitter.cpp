@@ -302,7 +302,7 @@ void Emitter::Value(float val)
 
 /**
  * Write a single path value.
- * @param val The value.
+ * @param path The value.
  */
 void Emitter::Value(const HoverRace::Util::OS::path_t &path)
 {
