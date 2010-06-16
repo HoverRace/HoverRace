@@ -24,6 +24,7 @@
 #pragma once
 
 namespace HoverRace {
+namespace Client {
 
 class AboutDialog
 {
@@ -37,4 +38,5 @@ class AboutDialog
 		static BOOL CALLBACK DlgFunc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam);
 };
 
+}  // namespace Client
 }  // namespace HoverRace

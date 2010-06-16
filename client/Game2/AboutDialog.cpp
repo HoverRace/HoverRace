@@ -34,8 +34,10 @@
 using boost::format;
 using boost::str;
 
-using namespace HoverRace;
 using namespace HoverRace::Util;
+
+namespace HoverRace {
+namespace Client {
 
 /**
  * Display the modal dialog.
@@ -138,3 +140,6 @@ BOOL CALLBACK AboutDialog::DlgFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LP
 	}
 	return lReturnValue;
 }
+
+}  // namespace Client
+}  // namespace HoverRace
