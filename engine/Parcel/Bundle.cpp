@@ -119,7 +119,7 @@ Bundle::Iterator::Iterator(const Bundle *bundle) :
 {
 	FindNextValidBundle();
 	if (this->bundle != NULL)
-		iter = OS::dirIter_t(bundle->dir);
+		iter = OS::dirIter_t(this->bundle->dir);
 }
 
 Bundle::Iterator &Bundle::Iterator::operator++()
