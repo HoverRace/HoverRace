@@ -682,13 +682,10 @@ void NetworkSession::WriteNet()
 	}
 
 	if((mClientCharacter[sClientToCheck] != NULL) && !mNetInterface.IsConnected(sClientToCheck)) {
-		CString lMessage;
 		// Add a message indicating the the guy disconnected
-		lMessage = mNetInterface.GetPlayerName(sClientToCheck);
-		lMessage += " ";
-		lMessage += _("has left");
-
-		AddMessage(lMessage);
+		AddMessage(boost::str(
+			boost::format(_("%s has left")) %
+			mNetInterface.GetPlayerName(sClientToCheck)).c_str());
 
 		// If only one player left, add an other message to indicate it
 		if(mNetInterface.GetClientCount() == 0) {
@@ -1509,7 +1506,7 @@ void NetworkSession::AddChatMessage(int pPlayerIndex, const char *pMessage, int 
 
 	mMessageStack[0].mBuffer = Ascii2Simple(mNetInterface.GetPlayerName(pPlayerIndex));
 	mMessageStack[0].mBuffer += Ascii2Simple('>');
-	mMessageStack[0].mBuffer += CString(pMessage, pMessageLen);
+	mMessageStack[0].mBuffer += std::string(pMessage, pMessageLen);
 }
 
 }  // namespace Client
