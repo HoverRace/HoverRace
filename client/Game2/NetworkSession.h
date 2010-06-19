@@ -131,7 +131,7 @@ class NetworkSession : public ClientSession
 		BOOL WaitConnections(HWND pWindow, const char *pTrackName, BOOL pPromptForPort = TRUE,
 			unsigned pDefaultPort = HoverRace::Util::Config::GetInstance()->net.tcpServPort,
 			HWND * pModalessDlg = NULL, int pReturnMessage = 0);
-		BOOL PreConnectToServer(HWND pWindow, CString & pTrackName);
+		BOOL PreConnectToServer(HWND pWindow, std::string &pTrackName);
 		BOOL ConnectToServer(HWND pWindow, const char *pServerIP = NULL,
 			unsigned pPort = HoverRace::Util::Config::GetInstance()->net.tcpServPort,
 			const char *pGameName = NULL, HWND * pModalessDlg = NULL,

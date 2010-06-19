@@ -138,15 +138,15 @@ class NetworkInterface
 			eMaxClient = 9
 		};
 	private:
-		CString mPlayer;			/// player name
+		std::string mPlayer;			/// player name
 		int mId;					/// player id
 		BOOL mServerMode;
 		SOCKET mRegistrySocket;
 		int mServerPort;
 		int mUDPRecvPort;
 		int mTCPRecvPort;
-		CString mServerAddr;
-		CString mGameName;			/// just the track name
+		std::string mServerAddr;
+		std::string mGameName;			/// just the track name
 
 		// UDP port
 		SOCKET mUDPOutShortPort;
@@ -155,7 +155,7 @@ class NetworkInterface
 
 		// Data
 		NetworkPort mClient[eMaxClient];
-		CString mClientName[eMaxClient];
+		std::string mClientName[eMaxClient];
 		BOOL mAllPreLoguedRecv;					  /// Used by client to know if all prelogued have been received
 		BOOL mCanBePreLogued[eMaxClient];
 		BOOL mPreLoguedClient[eMaxClient];
@@ -190,7 +190,7 @@ class NetworkInterface
 			BOOL pPromptForPort = TRUE,
 			unsigned pDefaultPort = HoverRace::Util::Config::GetInstance()->net.tcpServPort,
 			HWND * pModalessDlg = NULL, int pReturnMessage = 0);
-		BOOL SlavePreConnect(HWND pWindow, CString & pGameName);
+		BOOL SlavePreConnect(HWND pWindow, std::string &pGameName);
 		BOOL SlaveConnect(HWND pWindow, const char *pServerIP = NULL,
 			unsigned pPort = HoverRace::Util::Config::GetInstance()->net.tcpServPort,
 			const char *pGameName = NULL, HWND * pModalessDlg = NULL,

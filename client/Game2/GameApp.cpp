@@ -1496,9 +1496,9 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 		lCurrentSession = new NetworkSession(FALSE, -1, -1, mMainWindow);
 		lCurrentSession->SetPlayerName(cfg->player.nickName.c_str());
 
-		CString lTrack;
+		std::string lTrack;
 		lSuccess = (lCurrentSession->PreConnectToServer(mMainWindow, lTrack) != FALSE);
-		lCurrentTrack = static_cast<const char*>(lTrack);
+		lCurrentTrack = lTrack.c_str();
 
 		if(cfg->player.nickName != lCurrentSession->GetPlayerName()) {
 			cfg->player.nickName = lCurrentSession->GetPlayerName();

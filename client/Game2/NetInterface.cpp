@@ -164,10 +164,10 @@ const char *NetworkInterface::GetPlayerName(int pIndex) const
 	const char *lReturnValue = NULL;
 
 	if(pIndex < 0)
-		lReturnValue = mPlayer;
+		lReturnValue = mPlayer.c_str();
 	else {
 		if(pIndex < eMaxClient)
-			lReturnValue = mClientName[pIndex];
+			lReturnValue = mClientName[pIndex].c_str();
 	}
 	return lReturnValue;
 }
@@ -435,7 +435,7 @@ void NetworkInterface::SetPlayerName(const char *pPlayerName)
  */
 const char *NetworkInterface::GetPlayerName() const
 {
-	return mPlayer;
+	return mPlayer.c_str();
 } 
 
 /**
@@ -541,7 +541,7 @@ BOOL NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName, BOOL p
  * @param pWindow Parent window
  * @param pGameName CString to store the name of the game into
  */
-BOOL NetworkInterface::SlavePreConnect(HWND pWindow, CString &pGameName)
+BOOL NetworkInterface::SlavePreConnect(HWND pWindow, std::string &pGameName)
 {
 	BOOL lReturnValue = FALSE;
 	mActiveInterface = this;
@@ -689,7 +689,7 @@ BOOL CALLBACK NetworkInterface::ServerPortCallBack(HWND pWindow, UINT pMsgId, WP
 	switch (pMsgId) {
 		// Catch environment modification events
 		case WM_INITDIALOG: // set up the dialog
-			SetDlgItemText(pWindow, IDC_PLAYER_NAME, mActiveInterface->mPlayer);
+			SetDlgItemText(pWindow, IDC_PLAYER_NAME, mActiveInterface->mPlayer.c_str());
 
 			lReturnValue = TRUE;
 			break;
@@ -751,7 +751,7 @@ BOOL CALLBACK NetworkInterface::ServerAddrCallBack(HWND pWindow, UINT pMsgId, WP
 	switch (pMsgId) {
 		// Catch environment modification events
 		case WM_INITDIALOG: // set up the dialog
-			SetDlgItemText(pWindow, IDC_PLAYER_NAME, mActiveInterface->mPlayer);
+			SetDlgItemText(pWindow, IDC_PLAYER_NAME, mActiveInterface->mPlayer.c_str());
 			SetDlgItemInt(pWindow, IDC_SERVER_PORT, 9530, FALSE); // 9530 is the default port
 			lReturnValue = TRUE;
 			break;
@@ -835,11 +835,11 @@ BOOL CALLBACK NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgId, 
 					SOCKADDR_IN lAddr;
 	
 					lAddr.sin_family = AF_INET;
-					lAddr.sin_addr.s_addr = GetAddrFromStr(mActiveInterface->mServerAddr);
+					lAddr.sin_addr.s_addr = GetAddrFromStr(mActiveInterface->mServerAddr.c_str());
 					lAddr.sin_port = htons(mActiveInterface->mServerPort);
 
-					mActiveInterface->mClientAddr[0] = GetAddrFromStr(mActiveInterface->mServerAddr);
-					mActiveInterface->mClientBkAddr[0] = GetAddrFromStr(mActiveInterface->mServerAddr);
+					mActiveInterface->mClientAddr[0] = GetAddrFromStr(mActiveInterface->mServerAddr.c_str());
+					mActiveInterface->mClientBkAddr[0] = GetAddrFromStr(mActiveInterface->mServerAddr.c_str());
 					mActiveInterface->mClientPort[0] = htons(mActiveInterface->mServerPort);
 
 					// call this callback again when the socket successfully connects
@@ -1063,8 +1063,8 @@ BOOL CALLBACK NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARAM p
 	
 				// set game information in dialog
 				SetDlgItemInt(pWindow, IDC_SERVER_PORT, mActiveInterface->mServerPort, FALSE);
-				SetDlgItemText(pWindow, IDC_SERVER_ADDR, mActiveInterface->mServerAddr);
-				SetDlgItemText(pWindow, IDC_GAME_NAME, mActiveInterface->mGameName);
+				SetDlgItemText(pWindow, IDC_SERVER_ADDR, mActiveInterface->mServerAddr.c_str());
+				SetDlgItemText(pWindow, IDC_GAME_NAME, mActiveInterface->mGameName.c_str());
 	
 				// Add the current player to the list
 				LV_ITEM lItem;
@@ -1075,7 +1075,7 @@ BOOL CALLBACK NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARAM p
 				lItem.pszText = "";
 	
 				ListView_InsertItem(lListHandle, &lItem);
-				ListView_SetItemText(lListHandle, 0, 0, (char *) ((const char *) mActiveInterface->mPlayer));
+				ListView_SetItemText(lListHandle, 0, 0, (char *) ((const char *) mActiveInterface->mPlayer.c_str()));
 				ListView_SetItemText(lListHandle, 0, 1, _("Local"));
 				ListView_SetItemText(lListHandle, 0, 2, _("Connected"));
 	
@@ -1098,9 +1098,9 @@ BOOL CALLBACK NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARAM p
 					// Request server name to start sequence
 					// also include UDP port number in the request
 					lAnswer.mMessageType = MRNM_CONN_NAME_GET_SET;
-					lAnswer.mDataLen = mActiveInterface->mPlayer.GetLength() + 4;
+					lAnswer.mDataLen = mActiveInterface->mPlayer.length() + 4;
 					*(unsigned int *) (lAnswer.mData) = htons(mActiveInterface->mUDPRecvPort);
-					memcpy(lAnswer.mData + 4, mActiveInterface->mPlayer, lAnswer.mDataLen - 4);
+					memcpy(lAnswer.mData + 4, mActiveInterface->mPlayer.c_str(), lAnswer.mDataLen - 4);
 	
 					mActiveInterface->mClient[0].Send(&lAnswer, MR_NET_REQUIRED);
 				}
@@ -1383,8 +1383,8 @@ BOOL CALLBACK NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARAM p
 							mActiveInterface->mClientPort[lClient] = *(int *) &(lBuffer->mData[4]);
 
 							lAnswer.mMessageType = MRNM_GAME_NAME;
-							lAnswer.mDataLen = mActiveInterface->mGameName.GetLength();
-							memcpy(lAnswer.mData, (const char *) mActiveInterface->mGameName, lAnswer.mDataLen);
+							lAnswer.mDataLen = mActiveInterface->mGameName.length();
+							memcpy(lAnswer.mData, mActiveInterface->mGameName.c_str(), lAnswer.mDataLen);
 
 							mActiveInterface->mClient[lClient].Send(&lAnswer, MR_NET_REQUIRED);
 
@@ -1416,9 +1416,9 @@ BOOL CALLBACK NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARAM p
 								// return local name as an answer
 								// also include UDP port number in the request
 								lAnswer.mMessageType = MRNM_CONN_NAME_SET;
-								lAnswer.mDataLen = mActiveInterface->mPlayer.GetLength() + 4;
+								lAnswer.mDataLen = mActiveInterface->mPlayer.length() + 4;
 								*(unsigned int *) (lAnswer.mData) = htons(mActiveInterface->mUDPRecvPort);
-								memcpy(lAnswer.mData + 4, mActiveInterface->mPlayer, lAnswer.mDataLen - 4);
+								memcpy(lAnswer.mData + 4, mActiveInterface->mPlayer.c_str(), lAnswer.mDataLen - 4);
 	
 								mActiveInterface->mClient[lClient].Send(&lAnswer, MR_NET_REQUIRED);
 	
@@ -1805,10 +1805,10 @@ BOOL CALLBACK NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARAM p
 					// request client name to start the connection sequence
 					// also include UDP port number in the request
 					lAnswer.mMessageType = MRNM_CONN_NAME_GET_SET;
-					lAnswer.mDataLen = mActiveInterface->mPlayer.GetLength() + 4;
+					lAnswer.mDataLen = mActiveInterface->mPlayer.length() + 4;
 					*(unsigned int *) (lAnswer.mData) = htons(mActiveInterface->mUDPRecvPort);
 
-					memcpy(lAnswer.mData + 4, mActiveInterface->mPlayer, lAnswer.mDataLen - 4);
+					memcpy(lAnswer.mData + 4, mActiveInterface->mPlayer.c_str(), lAnswer.mDataLen - 4);
 
 					mActiveInterface->mClient[lClient].Send(&lAnswer, MR_NET_REQUIRED);
 				}

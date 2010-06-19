@@ -755,7 +755,7 @@ BOOL NetworkSession::WaitConnections(HWND pWindow, const char *pTrackName, BOOL 
  * @param pWindow Handle to the current window
  * @param pTrackName A variable that the track name is written into
  */
-BOOL NetworkSession::PreConnectToServer(HWND pWindow, CString &pTrackName)
+BOOL NetworkSession::PreConnectToServer(HWND pWindow, std::string &pTrackName)
 {
 	mMasterMode = FALSE;
 	return mNetInterface.SlavePreConnect(pWindow, pTrackName);
