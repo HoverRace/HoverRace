@@ -1538,7 +1538,6 @@ void GameApp::NewNetworkSession(BOOL pServer)
 					if(lNbLap < 1)
 						lNbLap = 5;
 
-					//lCurrentTrack = CString(lCurrentTrack, lCounter);
 					lCurrentTrack.resize(lCounter);
 					break;
 				}
@@ -1588,8 +1587,7 @@ void GameApp::NewNetworkSession(BOOL pServer)
 
 	if(lSuccess) {
 		if(pServer) {
-			CString lNameBuffer;
-
+			/*CRUFT
 			lNameBuffer.Format("%s %d %s; options %c%c%c, %c%c%c%c", lCurrentTrack.c_str(), lNbLap, lNbLap > 1 ? "laps" : "lap", 
 				(lGameOpts & OPT_ALLOW_WEAPONS) ? 'W' : '_',
 				(lGameOpts & OPT_ALLOW_MINES)   ? 'M' : '_',
@@ -1598,11 +1596,24 @@ void GameApp::NewNetworkSession(BOOL pServer)
 				(lGameOpts & OPT_ALLOW_BI)		? '2' : '_',
 				(lGameOpts & OPT_ALLOW_CX)		? 'C' : '_',
 				(lGameOpts & OPT_ALLOW_EON)		? 'E' : '_');
+			*/
+			std::string nameBuf = boost::str(
+				boost::format("%s %d %s; options %c%c%c, %c%c%c%c") %
+				lCurrentTrack % lNbLap % (lNbLap > 1 ? "laps" : "lap") %
+				// Options
+				((lGameOpts & OPT_ALLOW_WEAPONS) ? 'W' : '_') %
+				((lGameOpts & OPT_ALLOW_MINES)   ? 'M' : '_') %
+				((lGameOpts & OPT_ALLOW_CANS)    ? 'C' : '_') %
+				// Crafts
+				((lGameOpts & OPT_ALLOW_BASIC)   ? 'B' : '_') %
+				((lGameOpts & OPT_ALLOW_BI)      ? '2' : '_') %
+				((lGameOpts & OPT_ALLOW_CX)      ? 'C' : '_') %
+				((lGameOpts & OPT_ALLOW_EON)     ? 'E' : '_'));
 
 			// Create a net server
 			lCurrentSession->SetPlayerName(cfg->player.nickName.c_str());
 
-			lSuccess = (lCurrentSession->WaitConnections(mMainWindow, lNameBuffer) != FALSE);
+			lSuccess = (lCurrentSession->WaitConnections(mMainWindow, nameBuf.c_str()) != FALSE);
 			if(cfg->player.nickName != lCurrentSession->GetPlayerName()) {
 				cfg->player.nickName = lCurrentSession->GetPlayerName();
 				cfg->Save();
