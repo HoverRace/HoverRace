@@ -38,11 +38,13 @@
 using boost::format;
 using boost::str;
 
-using namespace HoverRace::Client;
 using namespace HoverRace::Util;
 using namespace HoverRace::VideoServices;
 
-VideoAudioPrefsPage::VideoAudioPrefsPage(MR_GameApp *app) :
+namespace HoverRace {
+namespace Client {
+
+VideoAudioPrefsPage::VideoAudioPrefsPage(GameApp *app) :
 	SUPER(_("Video and Audio"), IDD_DISPLAY_INTENSITY),
 	app(app)
 {
@@ -330,3 +332,6 @@ void VideoAudioPrefsPage::UpdateAudioStatus(HWND hwnd)
 	}
 	SetDlgItemTextW(hwnd, IDC_AUDIO_STATUS, Str::UW(status.c_str()));
 }
+
+}  // namespace Client
+}  // namespace HoverRace

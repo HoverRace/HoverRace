@@ -44,7 +44,7 @@ namespace HoverRace {
 namespace Client {
 namespace HoverScript {
 
-GamePeer::GamePeer(Script::Core *scripting, MR_GameApp *gameApp) :
+GamePeer::GamePeer(Script::Core *scripting, GameApp *gameApp) :
 	SUPER(scripting, "Game"), gameApp(gameApp), initialized(false),
 	onInit(scripting), onShutdown(scripting),
 	onSessionStart(scripting), onSessionEnd(scripting)

@@ -27,16 +27,16 @@
 
 #include "PrefsPage.h"
 
-class MR_GameApp;
-
 namespace HoverRace {
 namespace Client {
+
+class GameApp;
 
 class VideoAudioPrefsPage : public PrefsPage
 {
 	typedef PrefsPage SUPER;
 	public:
-		VideoAudioPrefsPage(MR_GameApp *app);
+		VideoAudioPrefsPage(GameApp *app);
 		virtual ~VideoAudioPrefsPage();
 
 	private:
@@ -54,7 +54,7 @@ class VideoAudioPrefsPage : public PrefsPage
 		static void UpdateAudioStatus(HWND hwnd);
 
 	private:
-		MR_GameApp *app;
+		GameApp *app;
 };
 
 }  // namespace Client

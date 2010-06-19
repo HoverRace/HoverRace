@@ -32,10 +32,12 @@
 
 #include "PrefsDialog.h"
 
-using namespace HoverRace::Client;
 using namespace HoverRace::Util;
 
-PrefsDialog::PrefsDialog(MR_GameApp *app) :
+namespace HoverRace {
+namespace Client {
+
+PrefsDialog::PrefsDialog(GameApp *app) :
 	app(app)
 {
 	AddPage(videoAudioPage = new VideoAudioPrefsPage(app));
@@ -94,3 +96,6 @@ void PrefsDialog::ShowModal(HINSTANCE hinst, HWND parent)
 
 	delete[] psp;
 }
+
+}  // namespace Client
+}  // namespace HoverRace

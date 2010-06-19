@@ -25,16 +25,16 @@
 
 #include "PrefsPage.h"
 
-class MR_GameApp;
-
 namespace HoverRace {
 namespace Client {
+
+class GameApp;
 
 class ControlPrefsPage : public PrefsPage
 {
 	typedef PrefsPage SUPER;
 	public:
-		ControlPrefsPage(MR_GameApp *app);
+		ControlPrefsPage(GameApp *app);
 		virtual ~ControlPrefsPage();
 
 	private:
@@ -46,7 +46,7 @@ class ControlPrefsPage : public PrefsPage
 		static LRESULT CALLBACK PressKeyDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 
 	private:
-		MR_GameApp *app;
+		GameApp *app;
 		int setControlPlayer;
 		int setControlControl;
 		HWND pressAnyKeyDialog;

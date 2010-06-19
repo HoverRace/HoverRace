@@ -33,10 +33,12 @@
 
 #include "MiscPrefsPage.h"
 
-using namespace HoverRace::Client;
 using namespace HoverRace::Util;
 
-MiscPrefsPage::MiscPrefsPage(MR_GameApp *app) :
+namespace HoverRace {
+namespace Client {
+
+MiscPrefsPage::MiscPrefsPage(GameApp *app) :
 	SUPER(_("Miscellaneous"), IDD_MISC),
 	app(app)
 {
@@ -85,3 +87,6 @@ BOOL MiscPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pL
 
 	return lReturnValue;
 }
+
+}  // namespace Client
+}  // namespace HoverRace

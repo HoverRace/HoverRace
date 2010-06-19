@@ -23,17 +23,16 @@
 
 #pragma once
 
-class MR_GameApp;
-
 namespace HoverRace {
 namespace Client {
 
+class GameApp;
 class PrefsPage;
 
 class PrefsDialog
 {
 	public:
-		PrefsDialog(MR_GameApp *app);
+		PrefsDialog(GameApp *app);
 		~PrefsDialog();
 
 		void AddPage(PrefsPage *page);
@@ -41,7 +40,7 @@ class PrefsDialog
 		void ShowModal(HINSTANCE hinst, HWND parent);
 
 	private:
-		MR_GameApp *app;
+		GameApp *app;
 		typedef std::vector<PrefsPage*> pages_t;
 		pages_t pages;
 

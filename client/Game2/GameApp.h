@@ -1,4 +1,4 @@
-// MR_GameApp.h
+// GameApp.h
 //
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
@@ -19,15 +19,14 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 //
-#ifndef GAME_APP_H
-#define GAME_APP_H
+
+#pragma once
 
 #include "../../engine/Util/Config.h"
 
 #include "Observer.h"
 #include "ClientSession.h"
 
-class MR_GameApp;
 namespace HoverRace {
 	namespace Client {
 		namespace Control {
@@ -43,6 +42,7 @@ namespace HoverRace {
 			class SysEnv;
 		}
 		class FullscreenTest;
+		class GameApp;
 		class HighObserver;
 		class IntroMovie;
 		class Rulebook;
@@ -53,10 +53,13 @@ namespace HoverRace {
 	}
 }
 
-class MR_GameThread
+namespace HoverRace {
+namespace Client {
+
+class GameThread
 {
 	private:
-		MR_GameApp *mGameApp;
+		GameApp *mGameApp;
 		CRITICAL_SECTION mMutex;
 		HANDLE mThread;
 		BOOL mTerminate;
@@ -64,24 +67,24 @@ class MR_GameThread
 
 		static unsigned long __stdcall Loop(LPVOID pThread);
 
-		MR_GameThread(MR_GameApp * pApp);
-		~MR_GameThread();
+		GameThread(GameApp * pApp);
+		~GameThread();
 
 	public:
-		static MR_GameThread *New(MR_GameApp * pApp);
+		static GameThread *New(GameApp * pApp);
 		void Kill();
 		void Pause();
 		void Restart();
 };
 
-class MR_GameApp
+class GameApp
 {
-	friend MR_GameThread;
+	friend GameThread;
 
 	private:
 		enum eViewMode { e3DView, eDebugView };
 
-		static MR_GameApp *This;				  // unique instance pointer
+		static GameApp *This;				  // unique instance pointer
 
 		HINSTANCE mInstance;
 		HWND mMainWindow;
@@ -91,17 +94,17 @@ class MR_GameApp
 		static const int MAX_OBSERVERS = HoverRace::Util::Config::MAX_PLAYERS;
 		MR_Observer *observers[MAX_OBSERVERS];
 		bool nonInteractiveShutdown;
-		HoverRace::Client::HighObserver *highObserver;
-		HoverRace::Client::HoverScript::HighConsole *highConsole;
-		HoverRace::Client::IntroMovie *introMovie;
-		HoverRace::Client::FullscreenTest *fullscreenTest;
-		HoverRace::Script::Core *scripting;
-		HoverRace::Client::HoverScript::GamePeer *gamePeer;
-		HoverRace::Client::HoverScript::SysEnv *sysEnv;
-		HoverRace::Client::ClientSession *mCurrentSession;
-		HoverRace::Client::HoverScript::SessionPeerPtr sessionPeer;
-		MR_GameThread *mGameThread;
-		HoverRace::Client::RulebookPtr requestedNewSession;
+		HighObserver *highObserver;
+		HoverScript::HighConsole *highConsole;
+		IntroMovie *introMovie;
+		FullscreenTest *fullscreenTest;
+		Script::Core *scripting;
+		HoverScript::GamePeer *gamePeer;
+		HoverScript::SysEnv *sysEnv;
+		ClientSession *mCurrentSession;
+		HoverScript::SessionPeerPtr sessionPeer;
+		GameThread *mGameThread;
+		RulebookPtr requestedNewSession;
 		class UiInput;
 		boost::shared_ptr<UiInput> uiInput;
 
@@ -138,7 +141,7 @@ class MR_GameApp
 
 		// Message handlers
 	public:
-		void NewLocalSession(HoverRace::Client::RulebookPtr rules=HoverRace::Client::RulebookPtr());
+		void NewLocalSession(RulebookPtr rules=RulebookPtr());
 		void NewSplitSession(int pSplitPlayers);
 		void NewNetworkSession(BOOL pIsServer);
 		void NewInternetSession();
@@ -174,11 +177,11 @@ class MR_GameApp
 
 		static void TrackOpenFailMessageBox(HWND parent, const std::string &name, const std::string &details);
 
-		HoverRace::Client::Control::Controller *controller;
+		Control::Controller *controller;
 
 	public:
-		MR_GameApp(HINSTANCE pInstance, bool safeMode);
-		~MR_GameApp();
+		GameApp(HINSTANCE pInstance, bool safeMode);
+		~GameApp();
 
 		BOOL IsFirstInstance() const;
 
@@ -193,8 +196,8 @@ class MR_GameApp
 
 		MR_VideoBuffer *GetVideoBuffer() const { return mVideoBuffer; }
 
-		HoverRace::Client::Control::Controller *GetController() const { return controller; }
-		HoverRace::Client::Control::Controller *ReloadController();
+		Control::Controller *GetController() const { return controller; }
+		Control::Controller *ReloadController();
 
 		HWND GetWindowHandle() const { return mMainWindow; }
 
@@ -202,5 +205,5 @@ class MR_GameApp
 		static void NewInternetSessionCall();
 };
 
-#undef MR_DllDeclare
-#endif
+}  // namespace Client
+}  // namespace HoverRace

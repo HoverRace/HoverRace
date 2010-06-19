@@ -25,16 +25,16 @@
 
 #include "PrefsPage.h"
 
-class MR_GameApp;
-
 namespace HoverRace {
 namespace Client {
+
+class GameApp;
 
 class NetworkPrefsPage : public PrefsPage
 {
 	typedef PrefsPage SUPER;
 	public:
-		NetworkPrefsPage(MR_GameApp *app);
+		NetworkPrefsPage(GameApp *app);
 		virtual ~NetworkPrefsPage();
 
 	protected:
@@ -42,7 +42,7 @@ class NetworkPrefsPage : public PrefsPage
 		virtual BOOL DlgProc(HWND pWindow, UINT message, WPARAM wparam, LPARAM lparam);
 
 	private:
-		MR_GameApp *app;
+		GameApp *app;
 };
 
 }  // namespace Client

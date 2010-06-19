@@ -1,4 +1,4 @@
-// MR_GameApp.cpp
+// GameApp.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
@@ -62,7 +62,6 @@
 
 #include <mmsystem.h>
 
-using namespace HoverRace::Client;
 using namespace HoverRace::Client::HoverScript;
 using namespace HoverRace::Parcel;
 using namespace HoverRace::VideoServices;
@@ -128,13 +127,16 @@ using boost::str;
 using namespace HoverRace;
 using namespace HoverRace::Util;
 
-MR_GameApp *MR_GameApp::This;
+namespace HoverRace {
+namespace Client {
+
+GameApp *GameApp::This;
 
 // Local prototypes
 static HBITMAP LoadResourceBitmap(HINSTANCE hInstance, LPSTR lpString, HPALETTE FAR * lphPalette);
 static HPALETTE CreateDIBPalette(LPBITMAPINFO lpbmi, LPINT lpiNumColors);
 
-class MR_GameApp::UiInput : public Control::UiHandler
+class GameApp::UiInput : public Control::UiHandler
 {
 	virtual void OnConsole()
 	{
@@ -144,12 +146,12 @@ class MR_GameApp::UiInput : public Control::UiHandler
 	}
 };
 
-// class MR_GameThread
+// class GameThread
 
-unsigned long MR_GameThread::Loop(LPVOID pThread)
+unsigned long GameThread::Loop(LPVOID pThread)
 {
-	MR_GameThread *lThis = (MR_GameThread *) pThread;
-	MR_GameApp *gameApp = lThis->mGameApp;
+	GameThread *lThis = (GameThread *) pThread;
+	GameApp *gameApp = lThis->mGameApp;
 
 	RulebookPtr newSessionRules;
 
@@ -216,7 +218,7 @@ unsigned long MR_GameThread::Loop(LPVOID pThread)
 	return 0;
 }
 
-MR_GameThread::MR_GameThread(MR_GameApp * pApp)
+GameThread::GameThread(GameApp * pApp)
 {
 	mGameApp = pApp;
 	InitializeCriticalSection(&mMutex);
@@ -225,15 +227,15 @@ MR_GameThread::MR_GameThread(MR_GameApp * pApp)
 	mPauseLevel = 0;
 }
 
-MR_GameThread::~MR_GameThread()
+GameThread::~GameThread()
 {
 	DeleteCriticalSection(&mMutex);
 }
 
-MR_GameThread *MR_GameThread::New(MR_GameApp * pApp)
+GameThread *GameThread::New(GameApp * pApp)
 {
 	unsigned long lDummyInt;
-	MR_GameThread *lReturnValue = new MR_GameThread(pApp);
+	GameThread *lReturnValue = new GameThread(pApp);
 
 	lReturnValue->mThread = CreateThread(NULL, 0, Loop, lReturnValue, 0, &lDummyInt);
 
@@ -244,7 +246,7 @@ MR_GameThread *MR_GameThread::New(MR_GameApp * pApp)
 	return lReturnValue;
 }
 
-void MR_GameThread::Kill()
+void GameThread::Kill()
 {
 	mTerminate = TRUE;
 
@@ -255,14 +257,14 @@ void MR_GameThread::Kill()
 	delete this;
 }
 
-void MR_GameThread::Pause()
+void GameThread::Pause()
 {
 	if(mPauseLevel == 0)
 		EnterCriticalSection(&mMutex);
 	mPauseLevel++;
 }
 
-void MR_GameThread::Restart()
+void GameThread::Restart()
 {
 	if(mPauseLevel > 0) {
 		mPauseLevel--;
@@ -271,7 +273,7 @@ void MR_GameThread::Restart()
 	}
 }
 
-MR_GameApp::MR_GameApp(HINSTANCE pInstance, bool safeMode) :
+GameApp::GameApp(HINSTANCE pInstance, bool safeMode) :
 	nonInteractiveShutdown(false),
 	introMovie(NULL), scripting(NULL), gamePeer(NULL), sysEnv(NULL),
 	uiInput(boost::make_shared<UiInput>())
@@ -311,7 +313,7 @@ MR_GameApp::MR_GameApp(HINSTANCE pInstance, bool safeMode) :
 	mustCheckUpdates = Config::GetInstance()->net.autoUpdates;
 }
 
-MR_GameApp::~MR_GameApp()
+GameApp::~GameApp()
 {
 	if (sysEnv != NULL) {
 		delete sysEnv;
@@ -335,7 +337,7 @@ MR_GameApp::~MR_GameApp()
 	delete mVideoBuffer;
 }
 
-void MR_GameApp::Clean()
+void GameApp::Clean()
 {
 	if(mGameThread != NULL) {
 		mGameThread->Kill();
@@ -367,7 +369,7 @@ void MR_GameApp::Clean()
 	mClrScrTodo = 2;
 }
 
-void MR_GameApp::LoadRegistry()
+void GameApp::LoadRegistry()
 {
 	Config *cfg = Config::GetInstance();
 
@@ -437,7 +439,7 @@ void MR_GameApp::LoadRegistry()
 	}
 }
 
-BOOL MR_GameApp::IsGameRunning()
+BOOL GameApp::IsGameRunning()
 {
 	BOOL lReturnValue = FALSE;
 
@@ -474,7 +476,7 @@ BOOL MR_GameApp::IsGameRunning()
 	return lReturnValue;
 }
 
-int MR_GameApp::AskUserToAbortGame()
+int GameApp::AskUserToAbortGame()
 {
 	int lReturnValue = IDOK;
 
@@ -491,7 +493,7 @@ int MR_GameApp::AskUserToAbortGame()
 	return lReturnValue;
 }
 
-void MR_GameApp::TrackOpenFailMessageBox(HWND parent, const std::string &name,
+void GameApp::TrackOpenFailMessageBox(HWND parent, const std::string &name,
                                          const std::string &details)
 {
 	std::string msg = boost::str(boost::format(_("Unable to load track \"%s\".  Error details:")) % name);
@@ -500,7 +502,7 @@ void MR_GameApp::TrackOpenFailMessageBox(HWND parent, const std::string &name,
 	MessageBoxW(parent, Str::UW(msg.c_str()), PACKAGE_NAME_L, MB_ICONWARNING);
 }
 
-void MR_GameApp::DisplayHelp()
+void GameApp::DisplayHelp()
 {
 
 	// first return to window mode
@@ -523,21 +525,21 @@ void MR_GameApp::DisplayHelp()
 
 }
 
-void MR_GameApp::DisplaySite()
+void GameApp::DisplaySite()
 {
 	// first return to window mode
 	SetVideoMode(0, 0);
 	OS::OpenLink(HR_WEBSITE);
 }
 
-void MR_GameApp::DisplayAbout()
+void GameApp::DisplayAbout()
 {
 	SetVideoMode(0, 0);
 	AboutDialog().ShowModal(mInstance, mMainWindow);
 	AssignPalette();
 }
 
-void MR_GameApp::DisplayPrefs()
+void GameApp::DisplayPrefs()
 {
 	const Config *cfg = Config::GetInstance();
 	FullscreenTest *ftest =
@@ -571,7 +573,7 @@ void MR_GameApp::DisplayPrefs()
 	}
 }
 
-int MR_GameApp::MainLoop()
+int GameApp::MainLoop()
 {
 	MSG lMessage;
 	BOOL lEofGame = FALSE;
@@ -599,7 +601,7 @@ int MR_GameApp::MainLoop()
 	return lMessage.wParam;
 }
 
-BOOL MR_GameApp::IsFirstInstance() const
+BOOL GameApp::IsFirstInstance() const
 {
 	HWND lPrevAppWnd = FindWindowW(MR_APP_CLASS_NAME, NULL);
 	HWND lChildAppWnd = NULL;
@@ -621,7 +623,7 @@ BOOL MR_GameApp::IsFirstInstance() const
 	return (lPrevAppWnd == NULL);
 }
 
-BOOL MR_GameApp::InitApplication()
+BOOL GameApp::InitApplication()
 {
 	BOOL lReturnValue = TRUE;
 
@@ -646,7 +648,7 @@ BOOL MR_GameApp::InitApplication()
 	return lReturnValue;
 }
 
-BOOL MR_GameApp::CreateMainWindow()
+BOOL GameApp::CreateMainWindow()
 {
 	BOOL lReturnValue = TRUE;
 
@@ -722,7 +724,7 @@ static std::string MenuFmt(const char *ctx, const char *txt, bool more,
 	return s;
 }
 
-bool MR_GameApp::CreateMainMenu()
+bool GameApp::CreateMainMenu()
 {
 	HMENU splitScreenMenu = CreatePopupMenu();
 	if (splitScreenMenu == NULL) return false;
@@ -810,7 +812,7 @@ bool MR_GameApp::CreateMainMenu()
 	return SetMenu(mMainWindow, menu) == TRUE;
 }
 
-void MR_GameApp::RefreshTitleBar()
+void GameApp::RefreshTitleBar()
 {
 	Config *cfg = Config::GetInstance();
 
@@ -827,7 +829,7 @@ void MR_GameApp::RefreshTitleBar()
 	}
 }
 
-BOOL MR_GameApp::InitGame()
+BOOL GameApp::InitGame()
 {
 	BOOL lReturnValue = TRUE;
 	Config *cfg = Config::GetInstance();
@@ -953,7 +955,7 @@ BOOL MR_GameApp::InitGame()
 	return lReturnValue;
 }
 
-void MR_GameApp::RefreshView()
+void GameApp::RefreshView()
 {
 	static int lColor = 0;
 
@@ -1021,7 +1023,7 @@ void MR_GameApp::RefreshView()
 	}
 }
 
-void MR_GameApp::OnChar(char c)
+void GameApp::OnChar(char c)
 {
 	if (highConsole != NULL && highConsole->IsVisible()) {
 		highConsole->OnChar(c);
@@ -1031,7 +1033,7 @@ void MR_GameApp::OnChar(char c)
 	}
 }
 
-bool MR_GameApp::OnKeyDown(int keycode)
+bool GameApp::OnKeyDown(int keycode)
 {
 	if (highConsole == NULL || !highConsole->IsVisible()) {
 		switch (keycode) {
@@ -1076,7 +1078,7 @@ bool MR_GameApp::OnKeyDown(int keycode)
  * @param playerIdx The player index (0 = first player, 1 = second, etc.).
  * @return The control state.
  */
-int MR_GameApp::ReadAsyncInputControllerPlayer(int playerIdx)
+int GameApp::ReadAsyncInputControllerPlayer(int playerIdx)
 {
 	int retv = 0;
 
@@ -1097,7 +1099,7 @@ int MR_GameApp::ReadAsyncInputControllerPlayer(int playerIdx)
 	return retv;
 }
 
-void MR_GameApp::ReadAsyncInputController()
+void GameApp::ReadAsyncInputController()
 {
 	if(mCurrentSession != NULL) {
 		if(GetForegroundWindow() == mMainWindow)
@@ -1129,7 +1131,7 @@ void MR_GameApp::ReadAsyncInputController()
 	}
 }
 
-bool MR_GameApp::SetVideoMode(int pX, int pY, const std::string *monitor, bool testing)
+bool GameApp::SetVideoMode(int pX, int pY, const std::string *monitor, bool testing)
 {
 	if(mVideoBuffer != NULL) {
 		bool lSuccess;
@@ -1173,21 +1175,21 @@ bool MR_GameApp::SetVideoMode(int pX, int pY, const std::string *monitor, bool t
 		return false;
 }
 
-void MR_GameApp::PauseGameThread()
+void GameApp::PauseGameThread()
 {
 	if(mGameThread != NULL) {
 		mGameThread->Pause();
 	}
 }
 
-void MR_GameApp::RestartGameThread()
+void GameApp::RestartGameThread()
 {
 	if(mGameThread != NULL) {
 		mGameThread->Restart();
 	}
 }
 
-void MR_GameApp::OnDisplayChange()
+void GameApp::OnDisplayChange()
 {
 	// Show or hide movie and display mode warning
 	RECT lClientRect;
@@ -1253,7 +1255,7 @@ void MR_GameApp::OnDisplayChange()
 	}
 }
 
-void MR_GameApp::AssignPalette()
+void GameApp::AssignPalette()
 {
 	if(mPaletteChangeAllowed) {
 		if(This->mGameThread == NULL) {
@@ -1267,7 +1269,7 @@ void MR_GameApp::AssignPalette()
 	}
 }
 
-void MR_GameApp::DeleteMovieWnd()
+void GameApp::DeleteMovieWnd()
 {
 	if (introMovie != NULL) {
 		delete introMovie;
@@ -1280,7 +1282,7 @@ void MR_GameApp::DeleteMovieWnd()
  * @param rules The rulebook for this session.  If @c NULL then the track
  *              selection dialog will be displayed to the player.
  */
-void MR_GameApp::NewLocalSession(RulebookPtr rules)
+void GameApp::NewLocalSession(RulebookPtr rules)
 {
 	bool lSuccess = true;
 
@@ -1337,7 +1339,7 @@ void MR_GameApp::NewLocalSession(RulebookPtr rules)
 
 		if(lSuccess) {
 			mCurrentSession = lCurrentSession;
-			mGameThread = MR_GameThread::New(this);
+			mGameThread = GameThread::New(this);
 
 			if(mGameThread == NULL) {
 				mCurrentSession = NULL;
@@ -1354,7 +1356,7 @@ void MR_GameApp::NewLocalSession(RulebookPtr rules)
 	AssignPalette();
 }
 
-void MR_GameApp::NewSplitSession(int pSplitPlayers)
+void GameApp::NewSplitSession(int pSplitPlayers)
 {
 	bool lSuccess = true;
 
@@ -1447,7 +1449,7 @@ void MR_GameApp::NewSplitSession(int pSplitPlayers)
 		}
 		else {
 			mCurrentSession = lCurrentSession;
-			mGameThread = MR_GameThread::New(this);
+			mGameThread = GameThread::New(this);
 
 			if(mGameThread == NULL) {
 				mCurrentSession = NULL;
@@ -1459,7 +1461,7 @@ void MR_GameApp::NewSplitSession(int pSplitPlayers)
 	AssignPalette();
 }
 
-void MR_GameApp::NewNetworkSession(BOOL pServer)
+void GameApp::NewNetworkSession(BOOL pServer)
 {
 	bool lSuccess = true;
 	NetworkSession *lCurrentSession = NULL;
@@ -1633,7 +1635,7 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 		}
 
 		mCurrentSession = lCurrentSession;
-		mGameThread = MR_GameThread::New(this);
+		mGameThread = GameThread::New(this);
 
 		if(mGameThread == NULL) {
 			mCurrentSession = NULL;
@@ -1648,13 +1650,13 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
  * Reload the control settings.
  * @return The new control settings.
  */
-HoverRace::Client::Control::Controller *MR_GameApp::ReloadController()
+HoverRace::Client::Control::Controller *GameApp::ReloadController()
 {
 	delete controller;
 	return (controller = new Control::Controller(This->mMainWindow, This->uiInput));
 }
 
-void MR_GameApp::NewInternetSession()
+void GameApp::NewInternetSession()
 {
 	BOOL lSuccess = TRUE;
 	NetworkSession *lCurrentSession = NULL;
@@ -1706,7 +1708,7 @@ void MR_GameApp::NewInternetSession()
 	}
 	else {
 		mCurrentSession = lCurrentSession;
-		mGameThread = MR_GameThread::New(this);
+		mGameThread = GameThread::New(this);
 
 		if(mGameThread == NULL) {
 			mCurrentSession = NULL;
@@ -1720,7 +1722,7 @@ void MR_GameApp::NewInternetSession()
 /**
  * Begin the orderly shutdown procedure, avoiding all prompts.
  */
-void MR_GameApp::RequestShutdown()
+void GameApp::RequestShutdown()
 {
 	if (mMainWindow != NULL) {
 		nonInteractiveShutdown = true;
@@ -1732,7 +1734,7 @@ void MR_GameApp::RequestShutdown()
 	}
 }
 
-void MR_GameApp::DrawBackground()
+void GameApp::DrawBackground()
 {
 
 	MR_UInt8 *lDest = mVideoBuffer->GetBuffer();
@@ -1754,7 +1756,7 @@ void MR_GameApp::DrawBackground()
 	}
 }
 
-void MR_GameApp::UpdateMenuItems()
+void GameApp::UpdateMenuItems()
 {
 	// Only update the menu if the fullscreen resolution actually changed.
 	static int curX = 0;
@@ -1794,7 +1796,7 @@ void MR_GameApp::UpdateMenuItems()
 	OS::Free(ws);
 }
 
-LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
+LRESULT CALLBACK GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
 {
 	switch (pMsgId) {
 		case MR_WM_ON_INIT:
@@ -2122,7 +2124,7 @@ LRESULT CALLBACK MR_GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWPa
 	return DefWindowProcW(pWindow, pMsgId, pWParam, pLParam);
 }
 
-BOOL CALLBACK MR_GameApp::BadModeDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
+BOOL CALLBACK GameApp::BadModeDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
 {
 	// theoretically this dialog should never be shown
 	switch (pMsgId) {
@@ -2343,3 +2345,6 @@ void CaptureScreen(MR_VideoBuffer * pVideoBuffer)
 	}
 }
 #endif
+
+}  // namespace Client
+}  // namespace HoverRace

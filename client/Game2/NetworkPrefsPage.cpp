@@ -39,10 +39,12 @@
 using boost::format;
 using boost::str;
 
-using namespace HoverRace::Client;
 using namespace HoverRace::Util;
 
-NetworkPrefsPage::NetworkPrefsPage(MR_GameApp *app) :
+namespace HoverRace {
+namespace Client {
+
+NetworkPrefsPage::NetworkPrefsPage(GameApp *app) :
 	SUPER(_("Network"), IDD_NETWORK),
 	app(app)
 {
@@ -212,3 +214,6 @@ BOOL NetworkPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 
 	return lReturnValue;
 }
+
+}  // namespace Client
+}  // namespace HoverRace

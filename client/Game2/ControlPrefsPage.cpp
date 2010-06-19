@@ -38,14 +38,16 @@
 using boost::format;
 using boost::str;
 
-using namespace HoverRace::Client;
 using namespace HoverRace::Util;
 using HoverRace::Client::Control::Controller;
 
 #define MRM_CONTROL_TIMER   3
 #define MRM_CONTROL_POLL    4
 
-ControlPrefsPage::ControlPrefsPage(MR_GameApp *app) :
+namespace HoverRace {
+namespace Client {
+
+ControlPrefsPage::ControlPrefsPage(GameApp *app) :
 	SUPER(_("Controls"), IDD_CONTROL),
 	app(app)
 {
@@ -454,3 +456,6 @@ LRESULT CALLBACK ControlPrefsPage::PressKeyDialogFunc(HWND hwnd, UINT message, W
 		DefWindowProc(hwnd, message, wparam, lparam) :
 		dlg->PressKeyDialogProc(hwnd, message, wparam, lparam);
 }
+
+}  // namespace Client
+}  // namespace HoverRace

@@ -42,6 +42,9 @@
 using boost::format;
 using boost::str;
 
+#ifdef _WIN32
+using HoverRace::Client::GameApp;
+#endif
 using HoverRace::Util::Config;
 using HoverRace::Util::OS;
 
@@ -282,7 +285,7 @@ int main(int argc, char** argv)
 	OS::TimeInit();
 
 #ifdef _WIN32
-	MR_GameApp lGame(pInstance, safeMode);
+	GameApp lGame(pInstance, safeMode);
 
 	// Allow only one instance of HoverRace; press CAPS_LOCK to bypass or
 	// use the "-m" command-line option.
