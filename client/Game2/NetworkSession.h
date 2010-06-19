@@ -31,8 +31,8 @@ namespace HoverRace {
 namespace Client {
 
 /**
- * The MR_NetworkSession is a child of the MR_ClientSession; it is a networked
- * game session.  The MR_NetworkSession class itself manages the network
+ * The NetworkSession is a child of the ClientSession; it is a networked
+ * game session.  The NetworkSession class itself manages the network
  * interface, connected clients, scores, and general game data.
  */
 class NetworkSession : public ClientSession
