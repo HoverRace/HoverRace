@@ -67,7 +67,7 @@ class NetMessageBuffer
 class NetworkPort
 {
 	private:
-		// CString mNetAddr;
+		// std::string mNetAddr;
 		// int     mPort;
 		SOCKET mSocket;
 

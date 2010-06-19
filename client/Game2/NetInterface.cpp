@@ -61,8 +61,42 @@ namespace HoverRace {
 namespace Client {
 
 // Local prototypes
-static CString GetLocalAddrStr();
+static std::string GetLocalAddrStr();
 static MR_UInt32 GetAddrFromStr(const char *pName);
+
+namespace {
+	void InsertListViewColumn(HWND listHandle, int colIdx, const char *label,
+	                          int fmt, int cx)
+	{
+		Str::UW labelBuf(label);
+
+		LVCOLUMNW spec;
+		memset(&spec, 0, sizeof(spec));
+		spec.mask = LVCF_SUBITEM | LVCF_TEXT | LVCF_WIDTH | LVCF_FMT;
+		spec.fmt = fmt;
+		spec.cx = cx;
+		spec.pszText = const_cast<wchar_t*>(static_cast<const wchar_t*>(labelBuf));
+		spec.iSubItem = 0;
+
+		SendMessageW(listHandle, LVM_INSERTCOLUMNW,
+			static_cast<WPARAM>(colIdx),
+			reinterpret_cast<LPARAM>(&spec));
+	}
+
+	void SetListViewText(HWND listHandle, int rowIdx, int colIdx, const char *text)
+	{
+		Str::UW textBuf(text);
+
+		LV_ITEMW item;
+		memset(&item, 0, sizeof(item));
+		item.iSubItem = colIdx;
+		item.pszText = const_cast<wchar_t*>(static_cast<const wchar_t*>(textBuf));
+
+		SendMessageW(listHandle, LVM_SETITEMTEXTW,
+			static_cast<WPARAM>(rowIdx),
+			reinterpret_cast<LPARAM>(&item));
+	}
+}
 
 NetworkInterface *NetworkInterface::mActiveInterface = NULL;
 
@@ -539,7 +573,7 @@ BOOL NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName, BOOL p
  * selected.  When the dialog box is filled out, NetworkInterface::ServerAddrCallBack is called.
  *
  * @param pWindow Parent window
- * @param pGameName CString to store the name of the game into
+ * @param pGameName String to store the name of the game into
  */
 BOOL NetworkInterface::SlavePreConnect(HWND pWindow, std::string &pGameName)
 {
@@ -932,7 +966,7 @@ BOOL CALLBACK NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgId, 
 						lBuffer = mActiveInterface->mClient[0].Poll(0, TRUE);
 	
 						if((lBuffer != NULL) && (lBuffer->mMessageType == MRNM_GAME_NAME)) {
-							mActiveInterface->mGameName = CString((const char *) lBuffer->mData, lBuffer->mDataLen);
+							mActiveInterface->mGameName.assign((const char *) lBuffer->mData, lBuffer->mDataLen);
 							EndDialog(pWindow, IDOK);
 						}
 						else {
@@ -1029,36 +1063,14 @@ BOOL CALLBACK NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARAM p
 				else {
 					// Create list columns
 					int lWidth = lRect.right;
-					LV_COLUMN lSpec;
-	
-					lSpec.mask = LVCF_SUBITEM | LVCF_TEXT | LVCF_WIDTH | LVCF_FMT;
-	
-					CString lPlayerLabel;
-					lPlayerLabel = _("Player");
-					lSpec.fmt = LVCFMT_LEFT;
-					lSpec.cx = lWidth - (lWidth / 6) - (lWidth / 4) - GetSystemMetrics(SM_CXVSCROLL);
-					lSpec.pszText = (char *) (const char *) lPlayerLabel;
-					lSpec.iSubItem = 0;
-	
-					ListView_InsertColumn(lListHandle, 0, &lSpec);
-	
-					CString lLagLabel;
-					lLagLabel = _("Lag (ms)");
-					lSpec.fmt = LVCFMT_RIGHT;
-					lSpec.cx = lWidth / 6;
-					lSpec.pszText = (char *) (const char *) lLagLabel;
-					lSpec.iSubItem = 1;
-	
-					ListView_InsertColumn(lListHandle, 1, &lSpec);
-	
-					CString lStatusLabel;
-					lStatusLabel = _("Status");
-					lSpec.fmt = LVCFMT_LEFT;
-					lSpec.cx = lWidth / 4;
-					lSpec.pszText = (char *) (const char *) lStatusLabel;
-					lSpec.iSubItem = 2;
-	
-					ListView_InsertColumn(lListHandle, 2, &lSpec);
+					int curCol = 0;
+
+					InsertListViewColumn(lListHandle, curCol++, _("Player"), LVCFMT_LEFT,
+						lWidth - (lWidth / 6) - (lWidth / 4) - GetSystemMetrics(SM_CXVSCROLL));
+					InsertListViewColumn(lListHandle, curCol++, _("Lag (ms)"), LVCFMT_RIGHT,
+						lWidth / 6);
+					InsertListViewColumn(lListHandle, curCol++, _("Status"), LVCFMT_LEFT,
+						lWidth / 4);
 				}
 	
 				// set game information in dialog
@@ -1075,9 +1087,9 @@ BOOL CALLBACK NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARAM p
 				lItem.pszText = "";
 	
 				ListView_InsertItem(lListHandle, &lItem);
-				ListView_SetItemText(lListHandle, 0, 0, (char *) ((const char *) mActiveInterface->mPlayer.c_str()));
-				ListView_SetItemText(lListHandle, 0, 1, _("Local"));
-				ListView_SetItemText(lListHandle, 0, 2, _("Connected"));
+				SetListViewText(lListHandle, 0, 0, mActiveInterface->mPlayer.c_str());
+				SetListViewText(lListHandle, 0, 1, _("Local"));
+				SetListViewText(lListHandle, 0, 2, _("Connected"));
 	
 				for(int lCounter = 1; lCounter < eMaxClient; lCounter++) {
 					// Add empty entries
@@ -1337,8 +1349,8 @@ BOOL CALLBACK NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARAM p
 				mActiveInterface->mPreLoguedClient[lClient] = FALSE;
 				mActiveInterface->mConnected[lClient] = FALSE;
 
-				ListView_SetItemText(lListHandle, lClient + 1, 1, "");
-				ListView_SetItemText(lListHandle, lClient + 1, 2, _("Disconnected"));
+				SetListViewText(lListHandle, lClient + 1, 1, "");
+				SetListViewText(lListHandle, lClient + 1, 2, _("Disconnected"));
 
 				break;
 
@@ -1394,7 +1406,7 @@ BOOL CALLBACK NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARAM p
 							{
 								// Add the item int the list
 								LV_ITEM lItem;
-								CString lConnectionName((const char *) (lBuffer->mData + 4), lBuffer->mDataLen - 4);
+								std::string lConnectionName((const char *) (lBuffer->mData + 4), lBuffer->mDataLen - 4);
 	
 								mActiveInterface->mClient[lClient].SetRemoteUDPPort(*(unsigned int *) (lBuffer->mData));
 								mActiveInterface->mClientName[lClient] = lConnectionName;
@@ -1402,7 +1414,7 @@ BOOL CALLBACK NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARAM p
 								lItem.mask = LVIF_TEXT;
 								lItem.iItem = lClient + 1;
 								lItem.iSubItem = 0;
-								lItem.pszText = (char *) ((const char *) lConnectionName);
+								lItem.pszText = const_cast<char*>(lConnectionName.c_str());
 	
 								if(ListView_GetItemCount(lListHandle) > lItem.iItem) {
 									ListView_SetItem(lListHandle, &lItem);
@@ -1410,8 +1422,8 @@ BOOL CALLBACK NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARAM p
 								else {
 									ListView_InsertItem(lListHandle, &lItem);
 								}
-								ListView_SetItemText(lListHandle, lClient + 1, 1, _("Computing lag"));
-								ListView_SetItemText(lListHandle, lClient + 1, 2, _("Connecting"));
+								SetListViewText(lListHandle, lClient + 1, 1, _("Computing lag"));
+								SetListViewText(lListHandle, lClient + 1, 2, _("Connecting"));
 	
 								// return local name as an answer
 								// also include UDP port number in the request
@@ -1461,7 +1473,7 @@ BOOL CALLBACK NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARAM p
 						case MRNM_CONN_NAME_SET: // client returned information on their name and UDP recv port
 							{
 								LV_ITEM lItem;
-								CString lConnectionName((const char *) (lBuffer->mData + 4), lBuffer->mDataLen - 4);
+								std::string lConnectionName((const char *) (lBuffer->mData + 4), lBuffer->mDataLen - 4);
 	
 								mActiveInterface->mClient[lClient].SetRemoteUDPPort(*(unsigned int *) (lBuffer->mData));
 								mActiveInterface->mClientName[lClient] = lConnectionName;
@@ -1469,7 +1481,7 @@ BOOL CALLBACK NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARAM p
 								lItem.mask = LVIF_TEXT;
 								lItem.iItem = lClient + 1;
 								lItem.iSubItem = 0;
-								lItem.pszText = (char *) ((const char *) lConnectionName);
+								lItem.pszText = const_cast<char*>(lConnectionName.c_str());
 	
 								// Add the client into the list
 								if(ListView_GetItemCount(lListHandle) > lItem.iItem) {
@@ -1480,8 +1492,8 @@ BOOL CALLBACK NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARAM p
 								}
 	
 								// Begin lag test
-								ListView_SetItemText(lListHandle, lClient + 1, 1, _("Computing lag"));
-								ListView_SetItemText(lListHandle, lClient + 1, 2, _("Connecting"));
+								SetListViewText(lListHandle, lClient + 1, 1, _("Computing lag"));
+								SetListViewText(lListHandle, lClient + 1, 2, _("Connecting"));
 	
 								// Start lag test with that connection
 								lAnswer.mMessageType = MRNM_LAG_TEST;
@@ -1613,8 +1625,8 @@ BOOL CALLBACK NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARAM p
 									// Update display
 									char lStrBuffer[20];
 
-									ListView_SetItemText(lListHandle, lClient + 1, 1, _itoa(mActiveInterface->mClient[lClient].GetAvgLag(), lStrBuffer, 10));
-									ListView_SetItemText(lListHandle, lClient + 1, 2, _("Connected"));
+									SetListViewText(lListHandle, lClient + 1, 1, _itoa(mActiveInterface->mClient[lClient].GetAvgLag(), lStrBuffer, 10));
+									SetListViewText(lListHandle, lClient + 1, 2, _("Connected"));
 
 									// Verify if weconnected with all the client that we were suppose to
 									mActiveInterface->SendConnectionDoneIfNeeded();
@@ -1629,12 +1641,12 @@ BOOL CALLBACK NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARAM p
 								// Update display
 								char lStrBuffer[20];
 	
-								ListView_SetItemText(lListHandle, lClient + 1, 1, _itoa(mActiveInterface->mClient[lClient].GetAvgLag(), lStrBuffer, 10));
+								SetListViewText(lListHandle, lClient + 1, 1, _itoa(mActiveInterface->mClient[lClient].GetAvgLag(), lStrBuffer, 10));
 								if(mActiveInterface->mServerMode) {
-									ListView_SetItemText(lListHandle, lClient + 1, 2, _("Waiting acknowledgement"));
+									SetListViewText(lListHandle, lClient + 1, 2, _("Waiting acknowledgement"));
 								}
 								else {
-									ListView_SetItemText(lListHandle, lClient + 1, 2, _("Connected"));
+									SetListViewText(lListHandle, lClient + 1, 2, _("Connected"));
 								}
 							}
 							break;
@@ -1644,7 +1656,7 @@ BOOL CALLBACK NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARAM p
 								ASSERT(mActiveInterface->mServerMode);
 	
 								// Mark the connection as completed
-								ListView_SetItemText(lListHandle, lClient + 1, 2, _("Connected"));
+								SetListViewText(lListHandle, lClient + 1, 2, _("Connected"));
 								mActiveInterface->mConnected[lClient] = TRUE;
 							}
 							break;
@@ -2372,11 +2384,11 @@ void NetworkPort::SetLag(int pAvgLag, int pMinLag)
 // Helper functions
 
 /**
- * Returns the local IP in a CString.
+ * Returns the local IP in a string.
  */
-CString GetLocalAddrStr()
+std::string GetLocalAddrStr()
 {
-	CString lReturnValue;
+	std::string lReturnValue;
 
 	char lHostname[100];
 	HOSTENT *lHostEnt;
