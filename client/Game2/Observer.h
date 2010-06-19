@@ -20,8 +20,7 @@
 // and limitations under the License.
 //
 
-#ifndef OBSERVER_H
-#define OBSERVER_H
+#pragma once
 
 #include "../../engine/VideoServices/3DViewPort.h"
 #include "../../engine/MainCharacter/MainCharacter.h"
@@ -37,7 +36,10 @@ namespace HoverRace {
 }
 class MR_SectionId;
 
-class MR_Observer
+namespace HoverRace {
+namespace Client {
+
+class Observer
 {
 	public:
 		enum eSplitMode
@@ -80,8 +82,8 @@ class MR_Observer
 		HoverRace::VideoServices::StaticText *selectCraftTxt;
 		HoverRace::VideoServices::StaticText *craftTxt;
 
-		MR_Observer();
-		~MR_Observer();
+		Observer();
+		~Observer();
 
 		void Render2DDebugView(MR_VideoBuffer * pDest, const MR_Level * pLevel, const MR_MainCharacter * pViewingCharacter);
 		void RenderWireFrameView(const MR_Level * pLevel, const MR_MainCharacter * pViewingCharacter);
@@ -95,7 +97,7 @@ class MR_Observer
 		static void DrawBackground(MR_VideoBuffer * pDest);
 
 	public:
-		static MR_Observer *New();				  // Local construction and destruction
+		static Observer *New();				  // Local construction and destruction
 		void Delete();							  // to be able to change the dll without problem
 
 		// Camera control
@@ -122,4 +124,5 @@ class MR_Observer
 
 };
 
-#endif
+}  // namespace Client
+}  // namespace HoverRace

@@ -33,7 +33,6 @@
 
 #include <math.h>
 
-using namespace HoverRace::Client;
 using HoverRace::Util::Config;
 using HoverRace::VideoServices::StaticText;
 
@@ -69,7 +68,10 @@ static const std::string &GetCraftName(int id)
 	return (id >= 0 && id < 4) ? names[id] : unknown;
 }
 
-MR_Observer::MR_Observer()
+namespace HoverRace {
+namespace Client {
+
+Observer::Observer()
 {
 	const Config *cfg = Config::GetInstance();
 
@@ -112,7 +114,7 @@ MR_Observer::MR_Observer()
 		0x47, StaticText::EFFECT_SHADOW);
 }
 
-MR_Observer::~MR_Observer()
+Observer::~Observer()
 {
 	delete craftTxt;
 	delete selectCraftTxt;
@@ -124,22 +126,22 @@ MR_Observer::~MR_Observer()
 	delete mHoverIcons;
 }
 
-MR_Observer *MR_Observer::New()
+Observer *Observer::New()
 {
-	return new MR_Observer;
+	return new Observer;
 }
 
-void MR_Observer::Delete()
+void Observer::Delete()
 {
 	delete this;
 }
 
-void MR_Observer::SetCockpitView(BOOL pOn)
+void Observer::SetCockpitView(BOOL pOn)
 {
 	mCockpitView = pOn;
 }
 
-void MR_Observer::Scroll(int pOffset)
+void Observer::Scroll(int pOffset)
 {
 	mScroll += pOffset;
 
@@ -156,27 +158,27 @@ void MR_Observer::Scroll(int pOffset)
 	//}
 }
 
-void MR_Observer::ZoomIn()
+void Observer::ZoomIn()
 {
 	if(mApperture > MR_PI / 10) {
 		mApperture = MR_Angle((mApperture * 4) / 5);
 	}
 }
 
-void MR_Observer::ZoomOut()
+void Observer::ZoomOut()
 {
 	if(mApperture < 3 * MR_PI / 4) {
 		mApperture = MR_Angle(mApperture + mApperture / 4);
 	}
 }
 
-void MR_Observer::Home()
+void Observer::Home()
 {
 	mScroll = 0;
 	mApperture = MR_PI / 2;
 }
 
-void MR_Observer::EnlargeMargin()
+void Observer::EnlargeMargin()
 {
 	if(mXMargin_1024 < 400) {
 		mXMargin_1024 += 64;
@@ -187,7 +189,7 @@ void MR_Observer::EnlargeMargin()
 	}
 }
 
-void MR_Observer::ReduceMargin()
+void Observer::ReduceMargin()
 {
 	mXMargin_1024 -= 64;
 	mYMargin_1024 -= 64;
@@ -201,12 +203,12 @@ void MR_Observer::ReduceMargin()
 	}
 }
 
-void MR_Observer::SetSplitMode(eSplitMode pMode)
+void Observer::SetSplitMode(eSplitMode pMode)
 {
 	mSplitMode = pMode;
 }
 
-void MR_Observer::MoreMessages()
+void Observer::MoreMessages()
 {
 	if(mDispPlayers != 0) {
 		mDispPlayers = 0;
@@ -217,7 +219,7 @@ void MR_Observer::MoreMessages()
 	}
 }
 
-void MR_Observer::PlayersListPageDn()
+void Observer::PlayersListPageDn()
 {
 	if(mDispPlayers == 0) {
 		// mMoreMessages = FALSE;
@@ -226,7 +228,7 @@ void MR_Observer::PlayersListPageDn()
 }
 
 // Rendering functions
-void MR_Observer::Render2DDebugView(MR_VideoBuffer * pDest, const MR_Level * pLevel, const MR_MainCharacter * pViewingCharacter)
+void Observer::Render2DDebugView(MR_VideoBuffer * pDest, const MR_Level * pLevel, const MR_MainCharacter * pViewingCharacter)
 {
 	// WARNING Calculations are done using floats..it is only a debug view
 
@@ -316,7 +318,7 @@ void MR_Observer::Render2DDebugView(MR_VideoBuffer * pDest, const MR_Level * pLe
 
 }
 
-void MR_Observer::RenderWireFrameView(const MR_Level * pLevel, const MR_MainCharacter * pViewingCharacter)
+void Observer::RenderWireFrameView(const MR_Level * pLevel, const MR_MainCharacter * pViewingCharacter)
 {
 
 	mWireFrameView.Clear(0);
@@ -364,7 +366,7 @@ void MR_Observer::RenderWireFrameView(const MR_Level * pLevel, const MR_MainChar
 
 }
 
-void MR_Observer::DrawWFSection(const MR_Level * pLevel, const MR_SectionId & pSectionId, MR_UInt8 pColor)
+void Observer::DrawWFSection(const MR_Level * pLevel, const MR_SectionId & pSectionId, MR_UInt8 pColor)
 {
 	MR_PolygonShape *lSectionShape;
 
@@ -409,7 +411,7 @@ void MR_Observer::DrawWFSection(const MR_Level * pLevel, const MR_SectionId & pS
 
 }
 
-void MR_Observer::Render3DView(const ClientSession *pSession, const MR_MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage)
+void Observer::Render3DView(const ClientSession *pSession, const MR_MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage)
 {
 
 	const MR_Level *lLevel = pSession->GetCurrentLevel();
@@ -827,7 +829,7 @@ void MR_Observer::Render3DView(const ClientSession *pSession, const MR_MainChara
 
 }
 
-void MR_Observer::RenderRoomWalls(const MR_Level * pLevel, int lRoomId, MR_SimulationTime pTime)
+void Observer::RenderRoomWalls(const MR_Level * pLevel, int lRoomId, MR_SimulationTime pTime)
 {
 	MR_PolygonShape *lSectionShape = pLevel->GetRoomShape(lRoomId);
 
@@ -892,7 +894,7 @@ void MR_Observer::RenderRoomWalls(const MR_Level * pLevel, int lRoomId, MR_Simul
 	delete lSectionShape;
 }
 
-void MR_Observer::RenderFeatureWalls(const MR_Level * pLevel, int lFeatureId, MR_SimulationTime pTime)
+void Observer::RenderFeatureWalls(const MR_Level * pLevel, int lFeatureId, MR_SimulationTime pTime)
 {
 	MR_PolygonShape *lSectionShape = pLevel->GetFeatureShape(lFeatureId);
 
@@ -931,7 +933,7 @@ void MR_Observer::RenderFeatureWalls(const MR_Level * pLevel, int lFeatureId, MR
 	delete lSectionShape;
 }
 
-void MR_Observer::RenderFloorOrCeiling(const MR_Level * pLevel, const MR_SectionId & pSectionId, BOOL pFloor, MR_SimulationTime pTime)
+void Observer::RenderFloorOrCeiling(const MR_Level * pLevel, const MR_SectionId & pSectionId, BOOL pFloor, MR_SimulationTime pTime)
 {
 	int lCounter;
 
@@ -981,7 +983,7 @@ void MR_Observer::RenderFloorOrCeiling(const MR_Level * pLevel, const MR_Section
 	delete lShape;
 }
 
-void MR_Observer::RenderDebugDisplay(MR_VideoBuffer * pDest, const ClientSession *pSession, const MR_MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage)
+void Observer::RenderDebugDisplay(MR_VideoBuffer * pDest, const ClientSession *pSession, const MR_MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage)
 {
 	int lXRes = pDest->GetXRes();
 	int lYRes = pDest->GetYRes();
@@ -1013,7 +1015,7 @@ void MR_Observer::RenderDebugDisplay(MR_VideoBuffer * pDest, const ClientSession
 
 }
 
-void MR_Observer::RenderNormalDisplay(MR_VideoBuffer * pDest, const ClientSession *pSession, const MR_MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage)
+void Observer::RenderNormalDisplay(MR_VideoBuffer * pDest, const ClientSession *pSession, const MR_MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage)
 {
 	MR_SAMPLE_CONTEXT("RenderNormalDisplay");
 
@@ -1122,7 +1124,7 @@ void MR_Observer::RenderNormalDisplay(MR_VideoBuffer * pDest, const ClientSessio
 	}
 }
 
-void MR_Observer::PlaySounds(const MR_Level * pLevel, MR_MainCharacter * pViewingCharacter)
+void Observer::PlaySounds(const MR_Level * pLevel, MR_MainCharacter * pViewingCharacter)
 {
 	// Play the sound of all moving elemnts arround
 
@@ -1161,3 +1163,6 @@ void MR_Observer::PlaySounds(const MR_Level * pLevel, MR_MainCharacter * pViewin
 
 	pViewingCharacter->PlayInternalSounds();
 }
+
+}  // namespace Client
+}  // namespace HoverRace

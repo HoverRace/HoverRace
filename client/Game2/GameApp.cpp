@@ -973,7 +973,7 @@ void GameApp::RefreshView()
 						}
 
 						for (int i = 0; i < MAX_OBSERVERS; ++i) {
-							MR_Observer *obs = observers[i];
+							Observer *obs = observers[i];
 							if (obs != NULL) {
 								obs->RenderNormalDisplay(mVideoBuffer, mCurrentSession,
 									mCurrentSession->GetPlayer(i),
@@ -984,7 +984,7 @@ void GameApp::RefreshView()
 
 					case eDebugView:
 						for (int i = 0; i < MAX_OBSERVERS; ++i) {
-							MR_Observer *obs = observers[i];
+							Observer *obs = observers[i];
 							if (obs != NULL) {
 								obs->RenderDebugDisplay(mVideoBuffer, mCurrentSession,
 									mCurrentSession->GetPlayer(i),
@@ -1014,7 +1014,7 @@ void GameApp::RefreshView()
 	// Sound refresh
 	if(mCurrentSession != NULL) {
 		for (int i = 0; i < MAX_OBSERVERS; ++i) {
-			MR_Observer *obs = observers[i];
+			Observer *obs = observers[i];
 			if (obs != NULL) {
 				obs->PlaySounds(mCurrentSession->GetCurrentLevel(), mCurrentSession->GetPlayer(i));
 			}
@@ -1039,31 +1039,31 @@ bool GameApp::OnKeyDown(int keycode)
 		switch (keycode) {
 			// Camera control
 			case VK_HOME:
-				BOOST_FOREACH(MR_Observer *obs, observers) {
+				BOOST_FOREACH(Observer *obs, observers) {
 					if (obs != NULL) obs->Home();
 				}
 				return true;
 
 			case VK_PRIOR:
-				BOOST_FOREACH(MR_Observer *obs, observers) {
+				BOOST_FOREACH(Observer *obs, observers) {
 					if (obs != NULL) obs->Scroll(1);
 				}
 				return true;
 
 			case VK_NEXT:
-				BOOST_FOREACH(MR_Observer *obs, observers) {
+				BOOST_FOREACH(Observer *obs, observers) {
 					if (obs != NULL) obs->Scroll(-1);
 				}
 				return true;
 
 			case VK_INSERT:
-				BOOST_FOREACH(MR_Observer *obs, observers) {
+				BOOST_FOREACH(Observer *obs, observers) {
 					if (obs != NULL) obs->ZoomIn();
 				}
 				return true;
 
 			case VK_DELETE:
-				BOOST_FOREACH(MR_Observer *obs, observers) {
+				BOOST_FOREACH(Observer *obs, observers) {
 					if (obs != NULL) obs->ZoomOut();
 				}
 				return true;
@@ -1303,7 +1303,7 @@ void GameApp::NewLocalSession(RulebookPtr rules)
 	if(lSuccess) {
 		DeleteMovieWnd();
 		SOUNDSERVER_INIT(mMainWindow);
-		observers[0] = MR_Observer::New();
+		observers[0] = Observer::New();
 		highObserver = new HighObserver();
 
 		// Create the new session
@@ -1384,27 +1384,27 @@ void GameApp::NewSplitSession(int pSplitPlayers)
 		DeleteMovieWnd();
 		SOUNDSERVER_INIT(mMainWindow);
 
-		observers[0] = MR_Observer::New();
-		observers[1] = MR_Observer::New();
+		observers[0] = Observer::New();
+		observers[1] = Observer::New();
 		if(pSplitPlayers > 2)
-			observers[2] = MR_Observer::New();
+			observers[2] = Observer::New();
 		if(pSplitPlayers > 3)
-			observers[3] = MR_Observer::New();
+			observers[3] = Observer::New();
 
 		if(pSplitPlayers == 2) {
-			observers[0]->SetSplitMode(MR_Observer::eUpperSplit);
-			observers[1]->SetSplitMode(MR_Observer::eLowerSplit);
+			observers[0]->SetSplitMode(Observer::eUpperSplit);
+			observers[1]->SetSplitMode(Observer::eLowerSplit);
 		}
 		if(pSplitPlayers == 3) {
-			observers[0]->SetSplitMode(MR_Observer::eUpperLeftSplit);
-			observers[1]->SetSplitMode(MR_Observer::eUpperRightSplit);
-			observers[2]->SetSplitMode(MR_Observer::eLowerLeftSplit);
+			observers[0]->SetSplitMode(Observer::eUpperLeftSplit);
+			observers[1]->SetSplitMode(Observer::eUpperRightSplit);
+			observers[2]->SetSplitMode(Observer::eLowerLeftSplit);
 		}
 		if(pSplitPlayers == 4) {
-			observers[0]->SetSplitMode(MR_Observer::eUpperLeftSplit);
-			observers[1]->SetSplitMode(MR_Observer::eUpperRightSplit);
-			observers[2]->SetSplitMode(MR_Observer::eLowerLeftSplit);
-			observers[3]->SetSplitMode(MR_Observer::eLowerRightSplit);
+			observers[0]->SetSplitMode(Observer::eUpperLeftSplit);
+			observers[1]->SetSplitMode(Observer::eUpperRightSplit);
+			observers[2]->SetSplitMode(Observer::eLowerLeftSplit);
+			observers[3]->SetSplitMode(Observer::eLowerRightSplit);
 		}
 
 		highObserver = new HighObserver();
@@ -1548,7 +1548,7 @@ void GameApp::NewNetworkSession(BOOL pServer)
 
 	Model::TrackPtr track;
 	if(lSuccess) {
-		observers[0] = MR_Observer::New();
+		observers[0] = Observer::New();
 		highObserver = new HighObserver();
 
 		try {
@@ -1696,7 +1696,7 @@ void GameApp::NewInternetSession()
 	}
 
 	if(lSuccess) {
-		observers[0] = MR_Observer::New();
+		observers[0] = Observer::New();
 		highObserver = new HighObserver();
 		lSuccess = lCurrentSession->CreateMainCharacter();
 	}
@@ -2012,14 +2012,14 @@ LRESULT CALLBACK GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam
 
 				case ID_VIEW_3DACTION:
 					This->mCurrentMode = e3DView;
-					BOOST_FOREACH(MR_Observer *obs, This->observers) {
+					BOOST_FOREACH(Observer *obs, This->observers) {
 						if (obs != NULL) obs->SetCockpitView(FALSE);
 					}
 					return 0;
 
 				case ID_VIEW_COCKPIT:
 					This->mCurrentMode = e3DView;
-					BOOST_FOREACH(MR_Observer *obs, This->observers) {
+					BOOST_FOREACH(Observer *obs, This->observers) {
 						if (obs != NULL) obs->SetCockpitView(TRUE);
 					}
 					return 0;
@@ -2029,13 +2029,13 @@ LRESULT CALLBACK GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam
 					return 0;
 
 					case ID_VIEW_PLAYERSLIST:
-						BOOST_FOREACH(MR_Observer *obs, This->observers) {
+						BOOST_FOREACH(Observer *obs, This->observers) {
 							if (obs != NULL) obs->PlayersListPageDn();
 						}
 						return 0;
 	
 					case ID_VIEW_MOREMESSAGES:
-						BOOST_FOREACH(MR_Observer *obs, This->observers) {
+						BOOST_FOREACH(Observer *obs, This->observers) {
 							if (obs != NULL) obs->MoreMessages();
 						}
 						return 0;

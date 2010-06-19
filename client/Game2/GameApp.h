@@ -92,7 +92,7 @@ class GameApp
 		HACCEL mAccelerators;
 		MR_VideoBuffer *mVideoBuffer;
 		static const int MAX_OBSERVERS = HoverRace::Util::Config::MAX_PLAYERS;
-		MR_Observer *observers[MAX_OBSERVERS];
+		Observer *observers[MAX_OBSERVERS];
 		bool nonInteractiveShutdown;
 		HighObserver *highObserver;
 		HoverScript::HighConsole *highConsole;
