@@ -19,7 +19,7 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
@@ -73,9 +73,11 @@
 #define MR_REG_BANNER_SERVER     9
 
 using namespace HoverRace;
-using namespace HoverRace::Client;
 using namespace HoverRace::Parcel;
 using namespace HoverRace::Util;
+
+namespace HoverRace {
+namespace Client {
 
 /*
 class MR_InternetServerEntry
@@ -110,7 +112,7 @@ int gNbBannerEntries = 0;
 int gCurrentBannerEntry = 0;
 */
 
-MR_InternetRoom *MR_InternetRoom::mThis = NULL;
+InternetRoom *InternetRoom::mThis = NULL;
 
 static CString MR_Pad(const char *pSrc);
 static CString GetLine(const char *pSrc);
@@ -119,9 +121,9 @@ static const char *GetNextLine(const char *pSrc);
 
 static int FindFocusItem(HWND pWindow);
 
-// MR_InternetRequest
+// InternetRequest
 
-MR_InternetRequest::MR_InternetRequest()
+InternetRequest::InternetRequest()
 {
 	mSocket = INVALID_SOCKET;
 	mBinMode = FALSE;
@@ -129,7 +131,7 @@ MR_InternetRequest::MR_InternetRequest()
 	mBinIndex = 0;
 }
 
-MR_InternetRequest::~MR_InternetRequest()
+InternetRequest::~InternetRequest()
 {
 	Close();
 
@@ -138,7 +140,7 @@ MR_InternetRequest::~MR_InternetRequest()
 	}
 }
 
-void MR_InternetRequest::SetBin()
+void InternetRequest::SetBin()
 {
 	mBinMode = TRUE;
 
@@ -147,7 +149,7 @@ void MR_InternetRequest::SetBin()
 	}
 }
 
-void MR_InternetRequest::Close()
+void InternetRequest::Close()
 {
 	if(mSocket != INVALID_SOCKET) {
 		closesocket(mSocket);
@@ -155,12 +157,12 @@ void MR_InternetRequest::Close()
 	}
 }
 
-BOOL MR_InternetRequest::Working() const
+BOOL InternetRequest::Working() const
 {
 	return (mSocket != INVALID_SOCKET);
 }
 
-void MR_InternetRequest::Clear()
+void InternetRequest::Clear()
 {
 	Close();
 	mBuffer = "";
@@ -169,7 +171,7 @@ void MR_InternetRequest::Clear()
 
 }
 
-BOOL MR_InternetRequest::Send(HWND pWindow, unsigned long pIP, unsigned int pPort, const char *pURL, const char *pCookie)
+BOOL InternetRequest::Send(HWND pWindow, unsigned long pIP, unsigned int pPort, const char *pURL, const char *pCookie)
 {
 	BOOL lReturnValue = FALSE;
 
@@ -223,7 +225,7 @@ BOOL MR_InternetRequest::Send(HWND pWindow, unsigned long pIP, unsigned int pPor
 	return lReturnValue;
 }
 
-BOOL MR_InternetRequest::ProcessEvent(WPARAM pWParam, LPARAM pLParam)
+BOOL InternetRequest::ProcessEvent(WPARAM pWParam, LPARAM pLParam)
 {
 	// static variables required to patch E-On/ICE protocol
 
@@ -288,25 +290,25 @@ BOOL MR_InternetRequest::ProcessEvent(WPARAM pWParam, LPARAM pLParam)
 
 }
 
-const char *MR_InternetRequest::GetBuffer() const
+const char *InternetRequest::GetBuffer() const
 {
 	return mBuffer;
 }
 
-const char *MR_InternetRequest::GetBinBuffer(int &pSize) const
+const char *InternetRequest::GetBinBuffer(int &pSize) const
 {
 	pSize = mBinIndex;
 	return mBinBuffer;
 }
 
-BOOL MR_InternetRequest::IsReady() const
+BOOL InternetRequest::IsReady() const
 {
 	return (((mBinIndex != 0) || !mBuffer.IsEmpty()) && !Working());
 }
 
-// MR_InternetRoom
+// InternetRoom
 
-MR_InternetRoom::MR_InternetRoom(const std::string &pMainServer, bool mustCheckUpdates) :
+InternetRoom::InternetRoom(const std::string &pMainServer, bool mustCheckUpdates) :
 	mMainServer(pMainServer), chatLog(NULL), checkUpdates(mustCheckUpdates)
 {
 	int lCounter;
@@ -337,7 +339,7 @@ MR_InternetRoom::MR_InternetRoom(const std::string &pMainServer, bool mustCheckU
 
 }
 
-MR_InternetRoom::~MR_InternetRoom()
+InternetRoom::~InternetRoom()
 {
 	// Close WinSock
 	WSACleanup();
@@ -350,7 +352,7 @@ MR_InternetRoom::~MR_InternetRoom()
 	ASSERT(mModelessDlg == NULL);
 }
 
-int MR_InternetRoom::ParseState(const char *pAnswer)
+int InternetRoom::ParseState(const char *pAnswer)
 {
 	int lReturnValue = 0;
 	const char *lLinePtr;
@@ -487,7 +489,7 @@ int MR_InternetRoom::ParseState(const char *pAnswer)
 }
 
 /*
-BOOL MR_InternetRoom::LocateServers(HWND pParentWindow, BOOL pShouldRecheckServer)
+BOOL InternetRoom::LocateServers(HWND pParentWindow, BOOL pShouldRecheckServer)
 {
 	BOOL lReturnValue = FALSE;
 	mThis = this;
@@ -517,7 +519,7 @@ BOOL MR_InternetRoom::LocateServers(HWND pParentWindow, BOOL pShouldRecheckServe
 }
 */
 
-BOOL MR_InternetRoom::AddUserOp(HWND pParentWindow)
+BOOL InternetRoom::AddUserOp(HWND pParentWindow)
 {
 	BOOL lReturnValue = FALSE;
 
@@ -560,7 +562,7 @@ BOOL MR_InternetRoom::AddUserOp(HWND pParentWindow)
 	return lReturnValue;
 }
 
-BOOL MR_InternetRoom::DelUserOp(HWND pParentWindow, BOOL pFastMode)
+BOOL InternetRoom::DelUserOp(HWND pParentWindow, BOOL pFastMode)
 {
 	BOOL lReturnValue = FALSE;
 
@@ -580,7 +582,7 @@ BOOL MR_InternetRoom::DelUserOp(HWND pParentWindow, BOOL pFastMode)
 	return lReturnValue;
 }
 
-BOOL MR_InternetRoom::AddGameOp(HWND pParentWindow, const char *pGameName, const char *pTrackName, int pNbLap, char pGameOpts, unsigned pPort)
+BOOL InternetRoom::AddGameOp(HWND pParentWindow, const char *pGameName, const char *pTrackName, int pNbLap, char pGameOpts, unsigned pPort)
 {
 	BOOL lReturnValue = FALSE;
 
@@ -618,7 +620,7 @@ BOOL MR_InternetRoom::AddGameOp(HWND pParentWindow, const char *pGameName, const
 	return lReturnValue;
 }
 
-BOOL MR_InternetRoom::DelGameOp(HWND pParentWindow)
+BOOL InternetRoom::DelGameOp(HWND pParentWindow)
 {
 	BOOL lReturnValue = FALSE;
 
@@ -638,7 +640,7 @@ BOOL MR_InternetRoom::DelGameOp(HWND pParentWindow)
 	return lReturnValue;
 }
 
-BOOL MR_InternetRoom::JoinGameOp(HWND pParentWindow, int pGameIndex)
+BOOL InternetRoom::JoinGameOp(HWND pParentWindow, int pGameIndex)
 {
 	BOOL lReturnValue = FALSE;
 
@@ -663,7 +665,7 @@ BOOL MR_InternetRoom::JoinGameOp(HWND pParentWindow, int pGameIndex)
 	return lReturnValue;
 }
 
-BOOL MR_InternetRoom::LeaveGameOp(HWND pParentWindow)
+BOOL InternetRoom::LeaveGameOp(HWND pParentWindow)
 {
 	BOOL lReturnValue = FALSE;
 
@@ -683,7 +685,7 @@ BOOL MR_InternetRoom::LeaveGameOp(HWND pParentWindow)
 	return lReturnValue;
 }
 
-BOOL MR_InternetRoom::AddMessageOp(HWND pParentWindow, const char *pMessage, int pHours, int pMinutes)
+BOOL InternetRoom::AddMessageOp(HWND pParentWindow, const char *pMessage, int pHours, int pMinutes)
 {
 	BOOL lReturnValue = FALSE;
 
@@ -705,7 +707,7 @@ BOOL MR_InternetRoom::AddMessageOp(HWND pParentWindow, const char *pMessage, int
 	return lReturnValue;
 }
 
-BOOL MR_InternetRoom::AskRoomParams(HWND pParentWindow, BOOL pShouldRecheckServer)
+BOOL InternetRoom::AskRoomParams(HWND pParentWindow, BOOL pShouldRecheckServer)
 {
 	/*
 	BOOL lReturnValue = FALSE;
@@ -740,7 +742,7 @@ BOOL MR_InternetRoom::AskRoomParams(HWND pParentWindow, BOOL pShouldRecheckServe
 /**
  * This function is called to initiate the connection to the IMR
  */
-BOOL MR_InternetRoom::DisplayChatRoom(HWND pParentWindow, MR_NetworkSession *pSession, MR_VideoBuffer *pVideoBuffer, BOOL pShouldRecheckServer)
+BOOL InternetRoom::DisplayChatRoom(HWND pParentWindow, NetworkSession *pSession, MR_VideoBuffer *pVideoBuffer, BOOL pShouldRecheckServer)
 {
 	mUser = pSession->GetPlayerName();
 
@@ -760,7 +762,7 @@ BOOL MR_InternetRoom::DisplayChatRoom(HWND pParentWindow, MR_NetworkSession *pSe
 }
 
 /*
-BOOL MR_InternetRoom::DisplayModeless( HWND pParentWindow, MR_NetworkSession* pSession, MR_VideoBuffer* pVideoBuffer )
+BOOL InternetRoom::DisplayModeless( HWND pParentWindow, MR_NetworkSession* pSession, MR_VideoBuffer* pVideoBuffer )
 {
    BOOL lReturnValue = AskRoomParams( pParentWindow );
 
@@ -778,7 +780,7 @@ BOOL MR_InternetRoom::DisplayModeless( HWND pParentWindow, MR_NetworkSession* pS
    return lReturnValue;
 }
 
-BOOL MR_InternetRoom::IsDisplayed( )const
+BOOL InternetRoom::IsDisplayed( )const
 {
    return mWindow != NULL;
 }
@@ -789,7 +791,7 @@ BOOL MR_InternetRoom::IsDisplayed( )const
  * If the chat log could not be opened, then an error message is written to
  * the the message window.
  */
-void MR_InternetRoom::OpenChatLog()
+void InternetRoom::OpenChatLog()
 {
 	namespace fs = boost::filesystem;
 
@@ -850,7 +852,7 @@ void MR_InternetRoom::OpenChatLog()
  * @param pText The text (UTF-8).
  * @param neverLog @c true to prevent writing to the chat log file.
  */
-void MR_InternetRoom::AddChatLine(const char *pText, bool neverLog)
+void InternetRoom::AddChatLine(const char *pText, bool neverLog)
 {
 	if(!mChatBuffer.IsEmpty()) {
 		mChatBuffer += "\r\n";
@@ -874,7 +876,7 @@ void MR_InternetRoom::AddChatLine(const char *pText, bool neverLog)
 	}
 }
 
-void MR_InternetRoom::SelectGameForUser(HWND pWindow)
+void InternetRoom::SelectGameForUser(HWND pWindow)
 {
 	int lFocus = FindFocusItem(GetDlgItem(pWindow, IDC_USER_LIST));
 
@@ -895,7 +897,7 @@ void MR_InternetRoom::SelectGameForUser(HWND pWindow)
 	}
 }
 
-void MR_InternetRoom::RefreshGameSelection(HWND pWindow)
+void InternetRoom::RefreshGameSelection(HWND pWindow)
 {
 	int lGameIndex = FindFocusItem(GetDlgItem(pWindow, IDC_GAME_LIST));
 
@@ -945,7 +947,7 @@ void MR_InternetRoom::RefreshGameSelection(HWND pWindow)
 
 }
 
-void MR_InternetRoom::RefreshGameList(HWND pWindow)
+void InternetRoom::RefreshGameList(HWND pWindow)
 {
 	HWND lList = GetDlgItem(pWindow, IDC_GAME_LIST);
 
@@ -981,7 +983,7 @@ void MR_InternetRoom::RefreshGameList(HWND pWindow)
 	RefreshGameSelection(pWindow);
 }
 
-void MR_InternetRoom::RefreshUserList(HWND pWindow)
+void InternetRoom::RefreshUserList(HWND pWindow)
 {
 	HWND lList = GetDlgItem(pWindow, IDC_USER_LIST);
 
@@ -1032,7 +1034,7 @@ void MR_InternetRoom::RefreshUserList(HWND pWindow)
  * Refresh the chat buffer.
  * Keep in mind that mChatBuffer is internally UTF-8 (not wide), so Str::UW must be used before displaying.
  */
-void MR_InternetRoom::RefreshChatOut(HWND pWindow)
+void InternetRoom::RefreshChatOut(HWND pWindow)
 {
 	HWND pDest = GetDlgItem(pWindow, IDC_CHAT_OUT);
 
@@ -1044,7 +1046,7 @@ void MR_InternetRoom::RefreshChatOut(HWND pWindow)
 	SendMessage(pDest, WM_VSCROLL, SB_BOTTOM, 0);
 }
 
-BOOL MR_InternetRoom::VerifyError(HWND pParentWindow, const char *pAnswer)
+BOOL InternetRoom::VerifyError(HWND pParentWindow, const char *pAnswer)
 {
 	BOOL lReturnValue = FALSE;
 	int lCode = -1;
@@ -1237,7 +1239,7 @@ BOOL MR_InternetRoom::VerifyError(HWND pParentWindow, const char *pAnswer)
 	return lReturnValue;
 }
 
-int MR_InternetRoom::LoadBanner(HWND pWindow, const char *pBuffer, int pBufferLen)
+int InternetRoom::LoadBanner(HWND pWindow, const char *pBuffer, int pBufferLen)
 {
 	ASSERT(pWindow != NULL);
 
@@ -1270,7 +1272,7 @@ int MR_InternetRoom::LoadBanner(HWND pWindow, const char *pBuffer, int pBufferLe
 	}
 }
 
-int MR_InternetRoom::RefreshBanner(HWND pWindow)
+int InternetRoom::RefreshBanner(HWND pWindow)
 {
 	ASSERT(pWindow != NULL);
 
@@ -1290,7 +1292,7 @@ int MR_InternetRoom::RefreshBanner(HWND pWindow)
 
 }
 
-void MR_InternetRoom::TrackOpenFailMessageBox(HWND parent, const std::string &name,
+void InternetRoom::TrackOpenFailMessageBox(HWND parent, const std::string &name,
                                               const std::string &details)
 {
 	std::string msg = boost::str(boost::format(_("Unable to load track \"%s\".  Error details:")) % name);
@@ -1300,7 +1302,7 @@ void MR_InternetRoom::TrackOpenFailMessageBox(HWND parent, const std::string &na
 }
 
 /*
-BOOL CALLBACK MR_InternetRoom::AskParamsCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
+BOOL CALLBACK InternetRoom::AskParamsCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
 {
 	BOOL lReturnValue = FALSE;
 
@@ -1372,7 +1374,7 @@ BOOL CALLBACK MR_InternetRoom::AskParamsCallBack(HWND pWindow, UINT pMsgId, WPAR
 }
 */
 
-BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
+BOOL CALLBACK InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
 {
 	BOOL lReturnValue = FALSE;
 
@@ -2062,7 +2064,7 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 	return lReturnValue;
 }
 
-BOOL CALLBACK MR_InternetRoom::BannerCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
+BOOL CALLBACK InternetRoom::BannerCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
 {
 	switch (pMsgId) {
 		case WM_SETCURSOR:
@@ -2077,7 +2079,7 @@ BOOL CALLBACK MR_InternetRoom::BannerCallBack(HWND pWindow, UINT pMsgId, WPARAM 
 }
 
 /*
-BOOL CALLBACK MR_InternetRoom::GetAddrCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
+BOOL CALLBACK InternetRoom::GetAddrCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
 {
 	BOOL lReturnValue = FALSE;
 
@@ -2346,7 +2348,7 @@ BOOL CALLBACK MR_InternetRoom::GetAddrCallBack(HWND pWindow, UINT pMsgId, WPARAM
 }
 */
 
-BOOL CALLBACK MR_InternetRoom::NetOpCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
+BOOL CALLBACK InternetRoom::NetOpCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
 {
 	BOOL lReturnValue = FALSE;
 
@@ -2415,7 +2417,7 @@ BOOL CALLBACK MR_InternetRoom::NetOpCallBack(HWND pWindow, UINT pMsgId, WPARAM p
 
 }
 
-BOOL CALLBACK MR_InternetRoom::FastNetOpCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
+BOOL CALLBACK InternetRoom::FastNetOpCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
 {
 	BOOL lReturnValue = FALSE;
 
@@ -2477,7 +2479,7 @@ BOOL CALLBACK MR_InternetRoom::FastNetOpCallBack(HWND pWindow, UINT pMsgId, WPAR
 }
 
 CString gScoreRequestStr;
-MR_InternetRequest gScoreRequest;
+InternetRequest gScoreRequest;
 
 BOOL CALLBACK UpdateScoresCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
 {
@@ -2774,3 +2776,6 @@ int FindFocusItem(HWND pWindow)
 
 	return lReturnValue;
 }
+
+}  // namespace Client
+}  // namespace HoverRace

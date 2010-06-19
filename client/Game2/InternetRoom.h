@@ -20,8 +20,7 @@
 // and limitations under the License.
 //
 
-#ifndef INTERNET_ROOM_H
-#define INTERNET_ROOM_H
+#pragma once
 
 #include <WINSOCK.h>
 
@@ -34,7 +33,10 @@
 #include "Banner.h"
 #include "RoomList.h"
 
-class MR_InternetRequest
+namespace HoverRace {
+namespace Client {
+
+class InternetRequest
 {
 	protected:
 		time_t mStartTime;
@@ -51,8 +53,8 @@ class MR_InternetRequest
 		BOOL Working() const;
 
 	public:
-		MR_InternetRequest();
-		~MR_InternetRequest();
+		InternetRequest();
+		~InternetRequest();
 
 		void SetBin();
 
@@ -67,7 +69,7 @@ class MR_InternetRequest
 		BOOL IsReady() const;
 };
 
-class MR_InternetRoom
+class InternetRoom
 {
 	public:
 		enum {
@@ -114,9 +116,9 @@ class MR_InternetRoom
 
 		};
 
-		static MR_InternetRoom *mThis;
+		static InternetRoom *mThis;
 
-		HoverRace::Client::RoomListPtr roomList;
+		RoomListPtr roomList;
 
 		std::string mMainServer;
 
@@ -141,15 +143,15 @@ class MR_InternetRoom
 		char mHostEnt[MAXGETHOSTSTRUCT];
 		CString mNetOpString;
 		CString mNetOpRequest;
-		MR_NetworkSession *mSession;
+		NetworkSession *mSession;
 		MR_VideoBuffer *mVideoBuffer;
 		int mNbSuccessiveRefreshTimeOut;
 
-		MR_InternetRequest mOpRequest;
-		MR_InternetRequest mChatRequest;
-		MR_InternetRequest mRefreshRequest;
-		MR_InternetRequest mBannerRequest;
-		MR_InternetRequest mClickRequest;
+		InternetRequest mOpRequest;
+		InternetRequest mChatRequest;
+		InternetRequest mRefreshRequest;
+		InternetRequest mBannerRequest;
+		InternetRequest mClickRequest;
 
 		WNDPROC oldBannerProc;
 		MR_GifDecoder mBanner;
@@ -199,12 +201,12 @@ class MR_InternetRoom
 		static void TrackOpenFailMessageBox(HWND parent, const std::string &name, const std::string &details);
 
 	public:
-		MR_InternetRoom(const std::string &pMainServer, bool mustCheckUpdates);
-		~MR_InternetRoom();
+		InternetRoom(const std::string &pMainServer, bool mustCheckUpdates);
+		~InternetRoom();
 
-		HoverRace::Client::RoomListPtr GetRoomList() const { return roomList; }
+		RoomListPtr GetRoomList() const { return roomList; }
 
-		BOOL DisplayChatRoom(HWND pParentWindow, MR_NetworkSession *pSession, MR_VideoBuffer *pVideoBuffer, BOOL pShouldRecheckServer);
+		BOOL DisplayChatRoom(HWND pParentWindow, NetworkSession *pSession, MR_VideoBuffer *pVideoBuffer, BOOL pShouldRecheckServer);
 
 		// Modelless.. do not use for the moment
 		/*
@@ -224,4 +226,6 @@ BOOL MR_SendLadderResult(HWND pParentWindow, const char *pWinAlias,
 	int pWinMajorID, int pWinMinorID, const char *pLoseAlias,
 	int pLoseMajorID, int pLoseMinorID, const char *pTrack, int pNbLap);
 */
-#endif
+
+}  // namespace Client
+}  // namespace HoverRace

@@ -19,7 +19,7 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
 #include <Mmsystem.h>
 
@@ -55,19 +55,22 @@ using HoverRace::Util::Config;
 #define MR_PING_RETRY_TIME		750
 #define MR_CLIENT_RETRY_TIME	5000
 
+using namespace HoverRace::Util;
+
+namespace HoverRace {
+namespace Client {
+
 // Local prototypes
 static CString GetLocalAddrStr();
 static MR_UInt32 GetAddrFromStr(const char *pName);
 
-using namespace HoverRace::Util;
-
-MR_NetworkInterface *MR_NetworkInterface::mActiveInterface = NULL;
+NetworkInterface *NetworkInterface::mActiveInterface = NULL;
 
 /**
- * Set up the MR_NetworkInterface.  Set up the client list and information, create and initialize both UDPOut ports, set them as non-blocking, and
+ * Set up the NetworkInterface.  Set up the client list and information, create and initialize both UDPOut ports, set them as non-blocking, and
  * set the player name (mPlayer) correctly.
  */
-MR_NetworkInterface::MR_NetworkInterface()
+NetworkInterface::NetworkInterface()
 {
 	ASSERT(MR_NET_HEADER_LEN == 5);
 
@@ -137,9 +140,9 @@ MR_NetworkInterface::MR_NetworkInterface()
 }
 
 /**
- * Destroy the MR_NetworkInterface.  Close the UDP out sockets, disconnect, and call WSACleanup() to clean up WSA-related cruft.
+ * Destroy the NetworkInterface.  Close the UDP out sockets, disconnect, and call WSACleanup() to clean up WSA-related cruft.
  */
-MR_NetworkInterface::~MR_NetworkInterface()
+NetworkInterface::~NetworkInterface()
 {
 	if(mUDPOutShortPort != INVALID_SOCKET)
 		closesocket(mUDPOutShortPort);
@@ -156,7 +159,7 @@ MR_NetworkInterface::~MR_NetworkInterface()
  *
  * @param pIndex The index of the player whose name we are seeking
  */
-const char *MR_NetworkInterface::GetPlayerName(int pIndex) const
+const char *NetworkInterface::GetPlayerName(int pIndex) const
 {
 	const char *lReturnValue = NULL;
 
@@ -174,7 +177,7 @@ const char *MR_NetworkInterface::GetPlayerName(int pIndex) const
  *
  * @param pIndex The index of the player whose connection status we are seeking
  */
-BOOL MR_NetworkInterface::IsConnected(int pIndex) const
+BOOL NetworkInterface::IsConnected(int pIndex) const
 {
 	ASSERT(pIndex < eMaxClient);
 
@@ -187,7 +190,7 @@ BOOL MR_NetworkInterface::IsConnected(int pIndex) const
 /**
  * Close the registry socket and reset all variables to their "disconnected" state.
  */
-void MR_NetworkInterface::Disconnect()
+void NetworkInterface::Disconnect()
 {
 	if(mRegistrySocket != INVALID_SOCKET) {
 		closesocket(mRegistrySocket);
@@ -218,7 +221,7 @@ void MR_NetworkInterface::Disconnect()
 /**
  * Returns the number of connected clients (checks with IsConnected()).
  */
-int MR_NetworkInterface::GetClientCount() const
+int NetworkInterface::GetClientCount() const
 {
 	int lReturnValue = 0;
 
@@ -232,7 +235,7 @@ int MR_NetworkInterface::GetClientCount() const
 /**
  * Returns the player id of this interface ("what player are we?").
  */
-int MR_NetworkInterface::GetId() const
+int NetworkInterface::GetId() const
 {
 	ASSERT((mId != 0) || mServerMode);
 	return mId;
@@ -241,7 +244,7 @@ int MR_NetworkInterface::GetId() const
 /**
  * Returns the calculated lag to the server.
  */
-int MR_NetworkInterface::GetLagFromServer() const
+int NetworkInterface::GetLagFromServer() const
 {
 	if(mServerMode)
 		return 0;
@@ -254,7 +257,7 @@ int MR_NetworkInterface::GetLagFromServer() const
  *
  * @param pPort The port to use
  */
-BOOL MR_NetworkInterface::CreateUDPRecvSocket(int pPort)
+BOOL NetworkInterface::CreateUDPRecvSocket(int pPort)
 {
 	// this assert can be removed; early debugging artifact
 	ASSERT(mUDPRecvSocket == INVALID_SOCKET);
@@ -285,7 +288,7 @@ BOOL MR_NetworkInterface::CreateUDPRecvSocket(int pPort)
  *
  * @param pClient Index of the client
  */
-int MR_NetworkInterface::GetMinLag(int pClient) const
+int NetworkInterface::GetMinLag(int pClient) const
 {
 	ASSERT((pClient >= 0) && (pClient < eMaxClient));
 	return mClient[pClient].GetMinLag();
@@ -297,7 +300,7 @@ int MR_NetworkInterface::GetMinLag(int pClient) const
  *
  * @param pClient Index of the client
  */
-int MR_NetworkInterface::GetAvgLag(int pClient) const
+int NetworkInterface::GetAvgLag(int pClient) const
 {
 	ASSERT((pClient >= 0) && (pClient < eMaxClient));
 	return mClient[pClient].GetMinLag();
@@ -307,11 +310,11 @@ int MR_NetworkInterface::GetAvgLag(int pClient) const
  * Send a message to the given client.
  *
  * @param pClient Index of the client
- * @param pMessage MR_NetMessageBuffer structure containing the message to be sent
+ * @param pMessage NetMessageBuffer structure containing the message to be sent
  * @param pLongPort TRUE uses the UDP out long port, FALSE uses the UDP out short port
  * @param pResendLast Should be set to TRUE if we are resending pMessage
  */
-BOOL MR_NetworkInterface::UDPSend(int pClient, MR_NetMessageBuffer *pMessage, BOOL pLongPort, BOOL pResendLast)
+BOOL NetworkInterface::UDPSend(int pClient, NetMessageBuffer *pMessage, BOOL pLongPort, BOOL pResendLast)
 {
 	ASSERT((pClient >= 0) && (pClient < eMaxClient));
 	pMessage->mClient = mId;
@@ -321,10 +324,10 @@ BOOL MR_NetworkInterface::UDPSend(int pClient, MR_NetMessageBuffer *pMessage, BO
 /**
  * Send a message to all clients.  Assumes long port for UDP out and that the message is not being resent.
  *
- * @param pMessage MR_NetMessageBuffer structure containing the message to be sent
+ * @param pMessage NetMessageBuffer structure containing the message to be sent
  * @param pReqLevel If set to MR_NET_DATAGRAM UDP will be used; otherwise, TCP will be used
  */
-BOOL MR_NetworkInterface::BroadcastMessage(MR_NetMessageBuffer *pMessage, int pReqLevel)
+BOOL NetworkInterface::BroadcastMessage(NetMessageBuffer *pMessage, int pReqLevel)
 {
 	pMessage->mClient = mId; // must ensure this
 	for(int lCounter = 0; lCounter < eMaxClient; lCounter++) {
@@ -337,9 +340,9 @@ BOOL MR_NetworkInterface::BroadcastMessage(MR_NetMessageBuffer *pMessage, int pR
 }
 
 /*
-BOOL MR_NetworkInterface::BroadcastMessage( DWORD  pTimeStamp, int  pMessageType, int pMessageLen, const MR_UInt8* pMessage )
+BOOL NetworkInterface::BroadcastMessage( DWORD  pTimeStamp, int  pMessageType, int pMessageLen, const MR_UInt8* pMessage )
 {
-	MR_NetMessageBuffer lMessage;
+	NetMessageBuffer lMessage;
 
 	lMessage.mSendingTime = pTimeStamp;
 	lMessage.mMessageType = pMessageType;
@@ -364,7 +367,7 @@ BOOL MR_NetworkInterface::BroadcastMessage( DWORD  pTimeStamp, int  pMessageType
  * @param pMessage MR_UInt8 buffer containing the message
  * @param pClientId ID of the client
  */
-BOOL MR_NetworkInterface::FetchMessage(DWORD &pTimeStamp, int &pMessageType, int &pMessageLen, const MR_UInt8 *&pMessage, int &pClientId)
+BOOL NetworkInterface::FetchMessage(DWORD &pTimeStamp, int &pMessageType, int &pMessageLen, const MR_UInt8 *&pMessage, int &pClientId)
 {
 	BOOL lReturnValue = FALSE;
 	static int sLastClient = 0;
@@ -373,7 +376,7 @@ BOOL MR_NetworkInterface::FetchMessage(DWORD &pTimeStamp, int &pMessageType, int
 		int lClient = (lCounter + sLastClient + 1) % eMaxClient;
 
 		//TRACE("Polling client %d\n", lClient);
-		const MR_NetMessageBuffer *lMessage = mClient[lClient].Poll((lClient >= mId) ? lClient + 1 : lClient, TRUE);
+		const NetMessageBuffer *lMessage = mClient[lClient].Poll((lClient >= mId) ? lClient + 1 : lClient, TRUE);
 
 		if(lMessage != NULL) {
 			lReturnValue = TRUE;
@@ -422,7 +425,7 @@ BOOL MR_NetworkInterface::FetchMessage(DWORD &pTimeStamp, int &pMessageType, int
  *
  * @param pPlayerName The player name
  */
-void MR_NetworkInterface::SetPlayerName(const char *pPlayerName)
+void NetworkInterface::SetPlayerName(const char *pPlayerName)
 {
 	mPlayer = pPlayerName;
 }
@@ -430,7 +433,7 @@ void MR_NetworkInterface::SetPlayerName(const char *pPlayerName)
 /**
  * Get the player name.
  */
-const char *MR_NetworkInterface::GetPlayerName() const
+const char *NetworkInterface::GetPlayerName() const
 {
 	return mPlayer;
 } 
@@ -446,7 +449,7 @@ const char *MR_NetworkInterface::GetPlayerName() const
  * @param pModalessDlg If this is NULL, the "TCP Connections" dialog is modal
  * @param pReturnMessage Callback message (see ListCallBack())
  */
-BOOL MR_NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName, BOOL pPromptForPort, unsigned pDefaultPort, HWND *pModalessDlg, int pReturnMessage)
+BOOL NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName, BOOL pPromptForPort, unsigned pDefaultPort, HWND *pModalessDlg, int pReturnMessage)
 {
 	BOOL lReturnValue = FALSE;
 	mActiveInterface = this;
@@ -533,12 +536,12 @@ BOOL MR_NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName, BOO
 
 /**
  * This function is called to get parameters about a server.  It is called as a result of the "Connect to TCP Server..." menu option being
- * selected.  When the dialog box is filled out, MR_NetworkInterface::ServerAddrCallBack is called.
+ * selected.  When the dialog box is filled out, NetworkInterface::ServerAddrCallBack is called.
  *
  * @param pWindow Parent window
  * @param pGameName CString to store the name of the game into
  */
-BOOL MR_NetworkInterface::SlavePreConnect(HWND pWindow, CString &pGameName)
+BOOL NetworkInterface::SlavePreConnect(HWND pWindow, CString &pGameName)
 {
 	BOOL lReturnValue = FALSE;
 	mActiveInterface = this;
@@ -586,8 +589,8 @@ BOOL MR_NetworkInterface::SlavePreConnect(HWND pWindow, CString &pGameName)
 /**
  * This function is called when a user connects to an existing game from the IMR, or, after the SlavePreConnect phase completes (which is called
  * when a user connects to a came from the "Connect to TCP Server..." option.  This phase sets up a dialog to get server information (if the PreConnect
- * phase never happened) which calls MR_NetworkInterface::ServerAddrCallBack() and later a dialog (the "TCP Connections" waiting screen) that calls
- * MR_NetworkInterface::ListCallBack().
+ * phase never happened) which calls NetworkInterface::ServerAddrCallBack() and later a dialog (the "TCP Connections" waiting screen) that calls
+ * NetworkInterface::ListCallBack().
  *
  * @param pWindow Parent window
  * @param pServerIP IP of the server
@@ -596,7 +599,7 @@ BOOL MR_NetworkInterface::SlavePreConnect(HWND pWindow, CString &pGameName)
  * @param pModalessDlg If this is NULL, the "TCP Connections" dialog is modal
  * @param pReturnMessage Callback message (see ListCallBack())
  */
-BOOL MR_NetworkInterface::SlaveConnect(HWND pWindow, const char *pServerIP, unsigned pDefaultPort, const char *pGameName, HWND *pModalessDlg, int pReturnMessage)
+BOOL NetworkInterface::SlaveConnect(HWND pWindow, const char *pServerIP, unsigned pDefaultPort, const char *pGameName, HWND *pModalessDlg, int pReturnMessage)
 {
 	ASSERT(!mServerMode);
 
@@ -679,7 +682,7 @@ BOOL MR_NetworkInterface::SlaveConnect(HWND pWindow, const char *pServerIP, unsi
  * @param pWParam ID denoting a selected option (for pMsgId WM_COMMAND) 
  * @param pLParam not used but required for MFC callback
  */
-BOOL CALLBACK MR_NetworkInterface::ServerPortCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
+BOOL CALLBACK NetworkInterface::ServerPortCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
 {
 	BOOL lReturnValue = FALSE;
 
@@ -741,7 +744,7 @@ BOOL CALLBACK MR_NetworkInterface::ServerPortCallBack(HWND pWindow, UINT pMsgId,
  * @param pWParam ID denoting a selected option (for pMsgId WM_COMMAND) 
  * @param pLParam not used but required for MFC callback
  */
-BOOL CALLBACK MR_NetworkInterface::ServerAddrCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
+BOOL CALLBACK NetworkInterface::ServerAddrCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
 {
 	BOOL lReturnValue = FALSE;
 
@@ -806,7 +809,7 @@ BOOL CALLBACK MR_NetworkInterface::ServerAddrCallBack(HWND pWindow, UINT pMsgId,
  * @param pWParam ID denoting a selected option (for pMsgId WM_COMMAND) 
  * @param pLParam not used but required for MFC callback
  */
-BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
+BOOL CALLBACK NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
 {
 	BOOL lReturnValue = FALSE;
 
@@ -867,7 +870,7 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 		// sNewSocket has connected to the server successfully, now let's get the game information
 		case MRM_SERVER_CONNECT:
 			{
-				MR_NetMessageBuffer lOutputBuffer;
+				NetMessageBuffer lOutputBuffer;
 	
 				if(WSAGETSELECTERROR(pLParam) == 0) {
 					SetDlgItemText(pWindow, IDC_TEXT, _("Retrieving game info..."));
@@ -920,7 +923,7 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
 
 		case MRM_CLIENT:
 			{
-				const MR_NetMessageBuffer *lBuffer = NULL;
+				const NetMessageBuffer *lBuffer = NULL;
 	
 				switch (WSAGETSELECTEVENT(pLParam)) {
 					case FD_READ:
@@ -1005,11 +1008,11 @@ BOOL CALLBACK MR_NetworkInterface::WaitGameNameCallBack(HWND pWindow, UINT pMsgI
  * @param pWParam ID denoting a selected option (for pMsgId WM_COMMAND) 
  * @param pLParam not used but required for MFC callback
  */
-BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
+BOOL CALLBACK NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
 {
 	BOOL lReturnValue = FALSE;
 	HWND lListHandle = NULL;
-	MR_NetMessageBuffer lAnswer;
+	NetMessageBuffer lAnswer;
 	lAnswer.mClient = mActiveInterface->GetId();
 
 	switch (pMsgId) {
@@ -1170,7 +1173,7 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 							}
 
 							if(lOk) {
-								MR_NetMessageBuffer lMessage;
+								NetMessageBuffer lMessage;
 	
 								lMessage.mMessageType = MRNM_READY;
 								lMessage.mClient = mActiveInterface->mId;
@@ -1321,7 +1324,7 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
 	 */
 	if((pMsgId >= MRM_CLIENT) && (pMsgId < (MRM_CLIENT + eMaxClient))) {
 		int lClient = pMsgId - MRM_CLIENT;
-		const MR_NetMessageBuffer *lBuffer = NULL;
+		const NetMessageBuffer *lBuffer = NULL;
 
 		lListHandle = GetDlgItem(pWindow, IDC_LIST);
 
@@ -1823,7 +1826,7 @@ BOOL CALLBACK MR_NetworkInterface::ListCallBack(HWND pWindow, UINT pMsgId, WPARA
  *
  * Its function is to warn the user if they are launching a game alone.
  */
-BOOL CALLBACK MR_NetworkInterface::WarnAloneCallback(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam) {
+BOOL CALLBACK NetworkInterface::WarnAloneCallback(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam) {
 	switch (pMsgId) {
 		case WM_INITDIALOG: // set up the window
 			// do i18n
@@ -1861,7 +1864,7 @@ BOOL CALLBACK MR_NetworkInterface::WarnAloneCallback(HWND pWindow, UINT pMsgId, 
  * This callback is used for the dialog displayed if not all players have connected successfully.
  * It is rather simple.
  */
-BOOL CALLBACK MR_NetworkInterface::WaitConnCallback(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam) {
+BOOL CALLBACK NetworkInterface::WaitConnCallback(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam) {
 	switch (pMsgId) {
 		case WM_INITDIALOG: // set up the window
 			// do i18n
@@ -1891,9 +1894,9 @@ BOOL CALLBACK MR_NetworkInterface::WaitConnCallback(HWND pWindow, UINT pMsgId, W
  * This function sends the MRNM_CONNECTION_DONE message to the server, if we have successfully connected to all other clients.  The message is not
  * sent if any clients are not yet finished with connecting.
  */
-void MR_NetworkInterface::SendConnectionDoneIfNeeded()
+void NetworkInterface::SendConnectionDoneIfNeeded()
 {
-	MR_NetMessageBuffer lAnswer;
+	NetMessageBuffer lAnswer;
 
 	if(mAllPreLoguedRecv) {
 		BOOL lAllDone = TRUE;
@@ -1918,7 +1921,7 @@ void MR_NetworkInterface::SendConnectionDoneIfNeeded()
 /**
  * Initialize the sockets to INVALID_SOCKETs.  Also run Disconnect().
  */
-MR_NetworkPort::MR_NetworkPort()
+NetworkPort::NetworkPort()
 {
 	mSocket = INVALID_SOCKET;
 	mUDPRecvSocket = INVALID_SOCKET;
@@ -1930,7 +1933,7 @@ MR_NetworkPort::MR_NetworkPort()
 /**
  * Disconnect before destruction.
  */
-MR_NetworkPort::~MR_NetworkPort()
+NetworkPort::~NetworkPort()
 {
 	Disconnect();
 }
@@ -1942,7 +1945,7 @@ MR_NetworkPort::~MR_NetworkPort()
  * @param pSocket An already-connected socket.
  * @param pUDPRecvSocket UDP receive socket.
  */
-void MR_NetworkPort::Connect(SOCKET pSocket, SOCKET pUDPRecvSocket)
+void NetworkPort::Connect(SOCKET pSocket, SOCKET pUDPRecvSocket)
 {
 	Disconnect();
 	mSocket = pSocket;
@@ -1977,7 +1980,7 @@ void MR_NetworkPort::Connect(SOCKET pSocket, SOCKET pUDPRecvSocket)
  *
  * @param pPort Remote port to use for UDP
  */
-void MR_NetworkPort::SetRemoteUDPPort(unsigned int pPort)
+void NetworkPort::SetRemoteUDPPort(unsigned int pPort)
 {
 	// Determine remote address and port based on the TCP port
 	int lSize = sizeof(mUDPRemoteAddr);
@@ -1990,7 +1993,7 @@ void MR_NetworkPort::SetRemoteUDPPort(unsigned int pPort)
 /**
  * Close the main socket and UDP receive socket, and reset variables.  Default lag is 300.  Not sure why.
  */
-void MR_NetworkPort::Disconnect()
+void NetworkPort::Disconnect()
 {
 	if(mSocket != INVALID_SOCKET) {
 		closesocket(mSocket);
@@ -2035,7 +2038,7 @@ void MR_NetworkPort::Disconnect()
 /**
  * Tests if the port is connected (with mSocket).
  */
-BOOL MR_NetworkPort::IsConnected() const
+BOOL NetworkPort::IsConnected() const
 {
 	return (mSocket != INVALID_SOCKET);
 }
@@ -2043,7 +2046,7 @@ BOOL MR_NetworkPort::IsConnected() const
 /**
  * Returns the TCP socket used for communication with the client.
  */
-SOCKET MR_NetworkPort::GetSocket() const
+SOCKET NetworkPort::GetSocket() const
 {
 	return mSocket;
 }
@@ -2051,7 +2054,7 @@ SOCKET MR_NetworkPort::GetSocket() const
 /**
  * Returns the UDP socket that is being used for listening.
  */
-SOCKET MR_NetworkPort::GetUDPSocket() const
+SOCKET NetworkPort::GetUDPSocket() const
 {
 	return mUDPRecvSocket;
 }
@@ -2070,7 +2073,7 @@ SOCKET MR_NetworkPort::GetUDPSocket() const
  * @param pClientId Id of the client a packet should be from
  * @param pCheckClientId Enable client ID checking.
  */
-const MR_NetMessageBuffer *MR_NetworkPort::Poll(int pClientId, BOOL pCheckClientId)
+const NetMessageBuffer *NetworkPort::Poll(int pClientId, BOOL pCheckClientId)
 {
 	// Socket is assumed to be non-blocking, but it damn well better be because we set it that way
 	if((mInputMessageBufferIndex == 0) && (mUDPRecvSocket != INVALID_SOCKET)) {
@@ -2171,12 +2174,12 @@ const MR_NetMessageBuffer *MR_NetworkPort::Poll(int pClientId, BOOL pCheckClient
 /**
  * Send a packet via UDP, using the supplied socket.
  *
- * @param pSocket The socket the packet will be sent from (generally MR_NetworkInterface::mUDPOutLongPort or MR_NetworkInterface::mUDPOutShortPort)
+ * @param pSocket The socket the packet will be sent from (generally NetworkInterface::mUDPOutLongPort or NetworkInterface::mUDPOutShortPort)
  * @param pMessage The message to be sent
  * @param pQueueId The queue ID of the message
  * @param pResendLast TRUE if this is a re-send of the last packet
  */
-BOOL MR_NetworkPort::UDPSend(SOCKET pSocket, MR_NetMessageBuffer *pMessage, unsigned pQueueId, BOOL pResendLast)
+BOOL NetworkPort::UDPSend(SOCKET pSocket, NetMessageBuffer *pMessage, unsigned pQueueId, BOOL pResendLast)
 {
 	BOOL lReturnValue = TRUE;
 
@@ -2211,7 +2214,7 @@ BOOL MR_NetworkPort::UDPSend(SOCKET pSocket, MR_NetMessageBuffer *pMessage, unsi
  * @param pMessage The message to be sent
  * @param pReqLevel Should be set to MR_NET_REQUIRED
  */
-void MR_NetworkPort::Send(const MR_NetMessageBuffer *pMessage, int pReqLevel)
+void NetworkPort::Send(const NetMessageBuffer *pMessage, int pReqLevel)
 {
 	// First try to send buffered data
 	if(mSocket != INVALID_SOCKET) {
@@ -2314,7 +2317,7 @@ void MR_NetworkPort::Send(const MR_NetMessageBuffer *pMessage, int pReqLevel)
  *
  * @param pLag Observed lag
  */
-BOOL MR_NetworkPort::AddLagSample(int pLag)
+BOOL NetworkPort::AddLagSample(int pLag)
 {
 	mNbLagTest++;
 
@@ -2330,7 +2333,7 @@ BOOL MR_NetworkPort::AddLagSample(int pLag)
 /**
  * Returns whether or not five lag tests have been performed.
  */
-BOOL MR_NetworkPort::LagDone() const
+BOOL NetworkPort::LagDone() const
 {
 	return (mNbLagTest >= 5);
 }
@@ -2338,7 +2341,7 @@ BOOL MR_NetworkPort::LagDone() const
 /**
  * Returns the calculated average lag.
  */
-int MR_NetworkPort::GetAvgLag() const
+int NetworkPort::GetAvgLag() const
 {
 	return mAvgLag;
 }
@@ -2346,7 +2349,7 @@ int MR_NetworkPort::GetAvgLag() const
 /**
  * Returns the minimum observed lag.
  */
-int MR_NetworkPort::GetMinLag() const
+int NetworkPort::GetMinLag() const
 {
 	return mMinLag;
 } 
@@ -2357,7 +2360,7 @@ int MR_NetworkPort::GetMinLag() const
  * @param pAvgLag The average lag
  * @param pMinLag The minimum lag
  */
-void MR_NetworkPort::SetLag(int pAvgLag, int pMinLag)
+void NetworkPort::SetLag(int pAvgLag, int pMinLag)
 {
 	mAvgLag = pAvgLag;
 	mMinLag = pMinLag;
@@ -2435,3 +2438,6 @@ MR_UInt32 GetAddrFromStr(const char *pName)
 	}
 	return lReturnValue;
 }
+
+}  // namespace Client
+}  // namespace HoverRace

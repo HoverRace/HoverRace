@@ -1462,7 +1462,7 @@ void MR_GameApp::NewSplitSession(int pSplitPlayers)
 void MR_GameApp::NewNetworkSession(BOOL pServer)
 {
 	bool lSuccess = true;
-	MR_NetworkSession *lCurrentSession = NULL;
+	NetworkSession *lCurrentSession = NULL;
 	Config *cfg = Config::GetInstance();
 
 	// Verify is user acknowledge
@@ -1487,13 +1487,13 @@ void MR_GameApp::NewNetworkSession(BOOL pServer)
 
 		DeleteMovieWnd();
 		SOUNDSERVER_INIT(mMainWindow);
-		lCurrentSession = new MR_NetworkSession(FALSE, -1, -1, mMainWindow);
+		lCurrentSession = new NetworkSession(FALSE, -1, -1, mMainWindow);
 	}
 	else {
 		DeleteMovieWnd();
 		SOUNDSERVER_INIT(mMainWindow);
 
-		lCurrentSession = new MR_NetworkSession(FALSE, -1, -1, mMainWindow);
+		lCurrentSession = new NetworkSession(FALSE, -1, -1, mMainWindow);
 		lCurrentSession->SetPlayerName(cfg->player.nickName.c_str());
 
 		CString lTrack;
@@ -1657,9 +1657,9 @@ HoverRace::Client::Control::Controller *MR_GameApp::ReloadController()
 void MR_GameApp::NewInternetSession()
 {
 	BOOL lSuccess = TRUE;
-	MR_NetworkSession *lCurrentSession = NULL;
+	NetworkSession *lCurrentSession = NULL;
 	Config *cfg = Config::GetInstance();
-	MR_InternetRoom lInternetRoom(cfg->net.mainServer, mustCheckUpdates);
+	InternetRoom lInternetRoom(cfg->net.mainServer, mustCheckUpdates);
 
 	if(mustCheckUpdates)
 		mustCheckUpdates = false; // must make sure we only check once
@@ -1673,7 +1673,7 @@ void MR_GameApp::NewInternetSession()
 	DeleteMovieWnd();
 	SOUNDSERVER_INIT(mMainWindow);
 
-	lCurrentSession = new MR_NetworkSession(TRUE, -1, -1, mMainWindow);
+	lCurrentSession = new NetworkSession(TRUE, -1, -1, mMainWindow);
 
 	if(lSuccess) {
 		lCurrentSession->SetPlayerName(cfg->player.nickName.c_str());

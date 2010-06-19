@@ -21,8 +21,7 @@
 //
 //
 
-#ifndef NET_INTERFACE_H
-#define NET_INTERFACE_H
+#pragma once
 
 #include <WINSOCK.h>
 
@@ -39,10 +38,13 @@
 #define MR_NOT_REQUIRED				0
 #define MR_NET_DATAGRAM				-1
 
+namespace HoverRace {
+namespace Client {
+
 /**
  * The MR_NetMessageBuffer class is a wrapper for data being transmitted over the network.
  */
-class MR_NetMessageBuffer
+class NetMessageBuffer
 {
 	public:
 		// MR_UInt16  mSendingTime:10; // 4ms of precision on a +-2sec range (if a datagram take more than 2 sec to travel..it will be droped (UDP only)
@@ -57,12 +59,12 @@ class MR_NetMessageBuffer
 		// int MessageLen()const { return mDataLen+5; }
 };
 
-#define MR_NET_HEADER_LEN  (sizeof(MR_NetMessageBuffer) - MR_MAX_NET_MESSAGE_LEN)
+#define MR_NET_HEADER_LEN  (sizeof(NetMessageBuffer) - MR_MAX_NET_MESSAGE_LEN)
 
 /**
  * The MR_NetworkPort class is the backbone for a single connection to a peer.
  */
-class MR_NetworkPort
+class NetworkPort
 {
 	private:
 		// CString mNetAddr;
@@ -85,7 +87,7 @@ class MR_NetworkPort
 		int mTotalLag;		/// for lag computation
 
 		int mInputMessageBufferIndex;
-		MR_NetMessageBuffer mInputMessageBuffer;
+		NetMessageBuffer mInputMessageBuffer;
 
 		// Output queue
 		// This queue is only used for messages that must absolutely be sent
@@ -94,8 +96,8 @@ class MR_NetworkPort
 		int mOutQueueLen;
 		int mOutQueueHead;
 	public:
-		MR_NetworkPort();
-		~MR_NetworkPort();
+		NetworkPort();
+		~NetworkPort();
 
 		void Connect(SOCKET pSocket, SOCKET pUDPRecvSocket);
 		void SetRemoteUDPPort(unsigned int pPort);
@@ -105,9 +107,9 @@ class MR_NetworkPort
 		SOCKET GetSocket() const;
 		SOCKET GetUDPSocket() const;
 
-		const MR_NetMessageBuffer *Poll(int pClientId, BOOL pCheckClientId); // parameters are hacks
-		void Send(const MR_NetMessageBuffer *pMessage, int pReqLevel);
-		BOOL UDPSend(SOCKET pSocket, MR_NetMessageBuffer *pMessage, unsigned pQueueId, BOOL pResendLast);
+		const NetMessageBuffer *Poll(int pClientId, BOOL pCheckClientId); // parameters are hacks
+		void Send(const NetMessageBuffer *pMessage, int pReqLevel);
+		BOOL UDPSend(SOCKET pSocket, NetMessageBuffer *pMessage, unsigned pQueueId, BOOL pResendLast);
 
 		// Time related stuff
 		BOOL AddLagSample(int pLag);
@@ -129,7 +131,7 @@ class MR_NetworkPort
  * 
  * The "guts" of the connection establishing process can be found in the ListCallBack() dialog callback function.
  */
-class MR_NetworkInterface
+class NetworkInterface
 {
 	public:
 		enum {
@@ -152,7 +154,7 @@ class MR_NetworkInterface
 		SOCKET mUDPRecvSocket;		/// for one-port UDP hack
 
 		// Data
-		MR_NetworkPort mClient[eMaxClient];
+		NetworkPort mClient[eMaxClient];
 		CString mClientName[eMaxClient];
 		BOOL mAllPreLoguedRecv;					  /// Used by client to know if all prelogued have been received
 		BOOL mCanBePreLogued[eMaxClient];
@@ -165,7 +167,7 @@ class MR_NetworkInterface
 		int mReturnMessage;						  /// Message to return to the parent window in modeless mode
 
 		// Dialog functions
-		static MR_NetworkInterface *mActiveInterface;
+		static NetworkInterface *mActiveInterface;
 		static BOOL CALLBACK ServerPortCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 		static BOOL CALLBACK ServerAddrCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 		static BOOL CALLBACK WaitGameNameCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
@@ -178,8 +180,8 @@ class MR_NetworkInterface
 
 	public:
 		// Creation and destruction
-		MR_NetworkInterface();
-		~MR_NetworkInterface();
+		NetworkInterface();
+		~NetworkInterface();
 
 		void SetPlayerName(const char *pPlayerName);
 		const char *GetPlayerName() const;
@@ -207,8 +209,8 @@ class MR_NetworkInterface
 		BOOL CreateUDPRecvSocket(int pPort);
 
 		// return TRUE if queue not full
-		BOOL UDPSend(int pClient, MR_NetMessageBuffer * pMessage, BOOL pLongPort, BOOL pResendLast = FALSE);
-		BOOL BroadcastMessage(MR_NetMessageBuffer * pMessage, int pReqLevel);
+		BOOL UDPSend(int pClient, NetMessageBuffer * pMessage, BOOL pLongPort, BOOL pResendLast = FALSE);
+		BOOL BroadcastMessage(NetMessageBuffer * pMessage, int pReqLevel);
 		// BOOL BroadcastMessage( DWORD  pTimeStamp, int  pMessageType, int pMessageLen, const MR_UInt8* pMessage );
 		BOOL FetchMessage(DWORD & pTimeStamp, int &pMessageType, int &pMessageLen, const MR_UInt8 * &pMessage, int &pClientId);
 		// pTimeStamp must be set to current time stamp before fetch
@@ -216,4 +218,6 @@ class MR_NetworkInterface
 		const char *GetPlayerName(int pIndex) const;
 		BOOL IsConnected(int pIndex) const;
 };
-#endif
+
+}  // namespace Client
+}  // namespace HoverRace

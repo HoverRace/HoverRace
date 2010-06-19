@@ -21,21 +21,23 @@
 //
 //
 
-#ifndef NETWORK_SESSION_H
-#define NETWORK_SESSION_H
+#pragma once
 
 #include "ClientSession.h"
 #include "RoomList.h"
 #include "NetInterface.h"
+
+namespace HoverRace {
+namespace Client {
 
 /**
  * The MR_NetworkSession is a child of the MR_ClientSession; it is a networked
  * game session.  The MR_NetworkSession class itself manages the network
  * interface, connected clients, scores, and general game data.
  */
-class MR_NetworkSession : public HoverRace::Client::ClientSession
+class NetworkSession : public ClientSession
 {
-	typedef HoverRace::Client::ClientSession SUPER;
+	typedef ClientSession SUPER;
 	protected:
 		class PlayerResult
 		{
@@ -57,7 +59,7 @@ class MR_NetworkSession : public HoverRace::Client::ClientSession
 		};
 
 		BOOL mMasterMode;
-		MR_NetworkInterface mNetInterface;
+		NetworkInterface mNetInterface;
 		BOOL mTimeToSendCharacterCreation;		  // 0 mean sended
 		BOOL mSended12SecClockUpdate;			  // User by server to adjust client clock
 		BOOL mSended8SecClockUpdate;
@@ -67,11 +69,11 @@ class MR_NetworkSession : public HoverRace::Client::ClientSession
 		HoverRace::Client::RoomListPtr roomList;
 
 		int mSendedPlayerStats;
-		MR_FreeElementHandle mClient[MR_NetworkInterface::eMaxClient];
-		MR_MainCharacter *mClientCharacter[MR_NetworkInterface::eMaxClient];
+		MR_FreeElementHandle mClient[NetworkInterface::eMaxClient];
+		MR_MainCharacter *mClientCharacter[NetworkInterface::eMaxClient];
 
 		int mLastSendElemStateFuncTime;
-		int mLastSendElemStateTime[MR_NetworkInterface::eMaxClient];
+		int mLastSendElemStateTime[NetworkInterface::eMaxClient];
 
 		PlayerResult *mResultList;
 		PlayerResult *mHitList;
@@ -111,8 +113,8 @@ class MR_NetworkSession : public HoverRace::Client::ClientSession
 
 	public:
 		// Creation and destruction
-		MR_NetworkSession(BOOL pInternetGame, int pMajorID, int pMinorID, HWND pWindow);
-		~MR_NetworkSession();
+		NetworkSession(BOOL pInternetGame, int pMajorID, int pMinorID, HWND pWindow);
+		~NetworkSession();
 
 		// Simulation control
 		void Process(int pSpeedFactor = 1);		  // Simulation, speed factor can be used to reduce processing speed to create AVI files
@@ -147,4 +149,6 @@ class MR_NetworkSession : public HoverRace::Client::ClientSession
 
 		MR_MainCharacter *GetPlayer(int pPlayerIndex) const;
 };
-#endif
+
+}  // namespace Client
+}  // namespace HoverRace

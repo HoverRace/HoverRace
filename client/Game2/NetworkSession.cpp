@@ -19,7 +19,7 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
 #include <Mmsystem.h>
 
@@ -57,11 +57,11 @@ class MR_PlayerStats
 };
 
 /**
- * Initializes the MR_NetworkSession.  Sets default values; main character
+ * Initializes the NetworkSession.  Sets default values; main character
  * creation will be sent at least 5 seconds before the game starts.
  */
-MR_NetworkSession::MR_NetworkSession(BOOL pInternetGame, int pMajorID,
-                                     int pMinorID, HWND pWindow) :
+NetworkSession::NetworkSession(BOOL pInternetGame, int pMajorID,
+                               int pMinorID, HWND pWindow) :
 	SUPER()
 {
 	mMasterMode = FALSE;
@@ -70,7 +70,7 @@ MR_NetworkSession::MR_NetworkSession(BOOL pInternetGame, int pMajorID,
 	mMinorID = pMinorID;
 	mWindow = pWindow;
 
-	for(int lCounter = 0; lCounter < MR_NetworkInterface::eMaxClient; lCounter++) {
+	for(int lCounter = 0; lCounter < NetworkInterface::eMaxClient; lCounter++) {
 		mClientCharacter[lCounter] = NULL;
 		mLastSendElemStateTime[lCounter] = timeGetTime();
 	}
@@ -90,9 +90,9 @@ MR_NetworkSession::MR_NetworkSession(BOOL pInternetGame, int pMajorID,
 }
 
 /**
- * Destroy the MR_NetworkSession.  Clean things up, report the match.
+ * Destroy the NetworkSession.  Clean things up, report the match.
  */
-MR_NetworkSession::~MR_NetworkSession()
+NetworkSession::~NetworkSession()
 {
 	if(mInternetGame && (mainCharacter[0] != NULL)) {
 		int lCurrentModel = mainCharacter[0]->GetHoverModel();
@@ -177,7 +177,7 @@ MR_NetworkSession::~MR_NetworkSession()
 /**
  * Return the number of results that are available.  Richard can't spell.
  */
-int MR_NetworkSession::ResultAvaillable() const
+int NetworkSession::ResultAvaillable() const
 {
 	int lReturnValue = 0;
 
@@ -202,7 +202,7 @@ int MR_NetworkSession::ResultAvaillable() const
  * @param pFinishTime Variable we will write the player's finish time into
  * @param pBestLap Variable we will write the player's best lap time into
  */
-void MR_NetworkSession::GetResult(int pPosition, const char *&pPlayerName, int &pId, BOOL &pConnected, int &pNbLap, MR_SimulationTime &pFinishTime, MR_SimulationTime &pBestLap) const
+void NetworkSession::GetResult(int pPosition, const char *&pPlayerName, int &pId, BOOL &pConnected, int &pNbLap, MR_SimulationTime &pFinishTime, MR_SimulationTime &pBestLap) const
 {
 	// The PlayerResult is a linked list, we have to step through it starting at
 	// the head to find the position we are looking for.  Why the hell is it a
@@ -243,7 +243,7 @@ void MR_NetworkSession::GetResult(int pPosition, const char *&pPlayerName, int &
  * @param pNbHitOther Variable we will write the number of times the player hit others into
  * @param pNbHitHimself Variable we will write the number of times the player was hit into
  */
-void MR_NetworkSession::GetHitResult(int pPosition, const char *&pPlayerName, int &pId, BOOL & pConnected, int &pNbHitOther, int &pNbHitHimself) const
+void NetworkSession::GetHitResult(int pPosition, const char *&pPlayerName, int &pId, BOOL & pConnected, int &pNbHitOther, int &pNbHitHimself) const
 {
 	PlayerResult *lCurrent = mHitList;
 
@@ -271,7 +271,7 @@ void MR_NetworkSession::GetHitResult(int pPosition, const char *&pPlayerName, in
 }
 
 /*
-BOOL MR_NetworkSession::GetResult( int pPosition, const char*& pPlayer, MR_SimulationTime& pFinishTime, MR_SimulationTime& pBestLap )const
+BOOL NetworkSession::GetResult( int pPosition, const char*& pPlayer, MR_SimulationTime& pFinishTime, MR_SimulationTime& pBestLap )const
 {
    BOOL lReturnValue = TRUE;
 
@@ -302,7 +302,7 @@ BOOL MR_NetworkSession::GetResult( int pPosition, const char*& pPlayer, MR_Simul
    return lReturnValue;
 }
 
-BOOL MR_NetworkSession::ResultAvaillable()const
+BOOL NetworkSession::ResultAvaillable()const
 {
    return( mResultList!=NULL );
 }
@@ -311,7 +311,7 @@ BOOL MR_NetworkSession::ResultAvaillable()const
 /**
  * Returns the number of players still connected and playing.
  */
-int MR_NetworkSession::GetNbPlayers() const
+int NetworkSession::GetNbPlayers() const
 {
 	// Return the number of players still playing???
 	// return mNetInterface.GetClientCount()+1;
@@ -323,13 +323,13 @@ int MR_NetworkSession::GetNbPlayers() const
  *
  * @param pPlayerIndex Index of the player being located
  */
-MR_MainCharacter *MR_NetworkSession::GetPlayer(int pPlayerIndex) const
+MR_MainCharacter *NetworkSession::GetPlayer(int pPlayerIndex) const
 {
 	MR_MainCharacter *lReturnValue = NULL;
 
 	if(pPlayerIndex == 0) 
 		lReturnValue = mainCharacter[0];
-	else if(pPlayerIndex <= MR_NetworkInterface::eMaxClient)
+	else if(pPlayerIndex <= NetworkInterface::eMaxClient)
 		lReturnValue = mClientCharacter[pPlayerIndex - 1];
 	
 	return lReturnValue;
@@ -340,7 +340,7 @@ MR_MainCharacter *MR_NetworkSession::GetPlayer(int pPlayerIndex) const
  *
  * @param pPlayer Ignored.
  */
-int MR_NetworkSession::GetRank(const MR_MainCharacter * /*pPlayer */ ) const {
+int NetworkSession::GetRank(const MR_MainCharacter * /*pPlayer */ ) const {
 // We assume that we are looking for the main character
 	int lReturnValue = 0;
 
@@ -360,7 +360,7 @@ int MR_NetworkSession::GetRank(const MR_MainCharacter * /*pPlayer */ ) const {
 /**
  * The main game loop.  Read, process, write, read.  I wonder why we read twice.
  */
-void MR_NetworkSession::Process(int pSpeedFactor)
+void NetworkSession::Process(int pSpeedFactor)
 {
 	ReadNet();
 	SUPER::Process(pSpeedFactor);
@@ -372,7 +372,7 @@ void MR_NetworkSession::Process(int pSpeedFactor)
  * Load a new level.  This function calls MR_ClientSession::LoadNew() and then tells the level to notify call ElementCreationHook() and PermElementStateHook() when
  * elements are created.
  */
-BOOL MR_NetworkSession::LoadNew(const char *pTitle, HoverRace::Parcel::RecordFilePtr pMazeFile, int pNbLap, char pGameOpts, MR_VideoBuffer *pVideo)
+BOOL NetworkSession::LoadNew(const char *pTitle, HoverRace::Parcel::RecordFilePtr pMazeFile, int pNbLap, char pGameOpts, MR_VideoBuffer *pVideo)
 {
 	BOOL lReturnValue = SUPER::LoadNew(pTitle, pMazeFile, pNbLap, pGameOpts, pVideo);
 
@@ -386,17 +386,17 @@ BOOL MR_NetworkSession::LoadNew(const char *pTitle, HoverRace::Parcel::RecordFil
 /**
  * A hook called when a free element is created.  We need to broadcast it once it is created.
  */
-void MR_NetworkSession::ElementCreationHook(MR_FreeElement *pElement, int pRoom, void *pThis)
+void NetworkSession::ElementCreationHook(MR_FreeElement *pElement, int pRoom, void *pThis)
 {
-	((MR_NetworkSession *) pThis)->BroadcastAutoElementCreation(pElement->GetTypeId(), pElement->GetNetState(), pRoom);
+	((NetworkSession *) pThis)->BroadcastAutoElementCreation(pElement->GetTypeId(), pElement->GetNetState(), pRoom);
 }
 
 /**
  * A hook called when a permanent element is created.  We need to broadcast it once it is created.
  */
-void MR_NetworkSession::PermElementStateHook(MR_FreeElement *pElement, int pRoom, int pPermId, void *pThis)
+void NetworkSession::PermElementStateHook(MR_FreeElement *pElement, int pRoom, int pPermId, void *pThis)
 {
-	((MR_NetworkSession *) pThis)->BroadcastPermElementState(pPermId, pElement->GetNetState(), pRoom);
+	((NetworkSession *) pThis)->BroadcastPermElementState(pPermId, pElement->GetNetState(), pRoom);
 }
 
 /**
@@ -409,7 +409,7 @@ void MR_NetworkSession::PermElementStateHook(MR_FreeElement *pElement, int pRoom
  * MRNM_SEND_KEYID -- for the unused ladder patch; does not do anything
  * MRNM_SET_MAIN_ELEM_STATE -- move a hovercraft to a different room or position
  */
-void MR_NetworkSession::ReadNet()
+void NetworkSession::ReadNet()
 {
 	DWORD lTimeStamp;
 	int lMessageType;
@@ -602,7 +602,7 @@ void MR_NetworkSession::ReadNet()
 }
 
 /**
- * Send all necessary data to clients.  This is called by MR_NetworkSession::Process() as part of the game loop.
+ * Send all necessary data to clients.  This is called by NetworkSession::Process() as part of the game loop.
  *
  * If we are the server, we must send clock updates 12 and 8 seconds before the game starts.
  *
@@ -610,7 +610,7 @@ void MR_NetworkSession::ReadNet()
  *
  * Then, we check if any clients are disconnected and remove them if necessary.
  */
-void MR_NetworkSession::WriteNet()
+void NetworkSession::WriteNet()
 {
 	static unsigned int sClientToCheck = 0;	// verified ok even if it may seen weird
 
@@ -675,7 +675,7 @@ void MR_NetworkSession::WriteNet()
 
 	// Remove disconnected opponents
 	sClientToCheck++;
-	if(sClientToCheck >= MR_NetworkInterface::eMaxClient) {
+	if(sClientToCheck >= NetworkInterface::eMaxClient) {
 		sClientToCheck = 0;
 	}
 
@@ -708,7 +708,7 @@ void MR_NetworkSession::WriteNet()
  *
  * @param pPlayerName The local player's name
  */
-void MR_NetworkSession::SetPlayerName(const char *pPlayerName)
+void NetworkSession::SetPlayerName(const char *pPlayerName)
 {
 	mNetInterface.SetPlayerName(pPlayerName);
 }
@@ -716,12 +716,12 @@ void MR_NetworkSession::SetPlayerName(const char *pPlayerName)
 /**
  * Get the local player's name.
  */
-const char *MR_NetworkSession::GetPlayerName() const
+const char *NetworkSession::GetPlayerName() const
 {
 	return mNetInterface.GetPlayerName();
 }
 
-void MR_NetworkSession::SetRoomList(HoverRace::Client::RoomListPtr roomList)
+void NetworkSession::SetRoomList(HoverRace::Client::RoomListPtr roomList)
 {
 	this->roomList = roomList;
 }
@@ -736,9 +736,9 @@ void MR_NetworkSession::SetRoomList(HoverRace::Client::RoomListPtr roomList)
  * @param pPromptForPort Should we use the default port or choose our own?
  * @param pDefaultPort The default port (@c MR_DEFAULT_NET_PORT)
  * @param pModalessDlg If this is @c NULL, the "TCP Connections" dialog is modal
- * @param pReturnMessage Callback message (see MR_NetworkInterface::ListCallBack);
+ * @param pReturnMessage Callback message (see NetworkInterface::ListCallBack);
  */
-BOOL MR_NetworkSession::WaitConnections(HWND pWindow, const char *pTrackName, BOOL pPromptForPort, unsigned pDefaultPort, HWND *pModalessDlg, int pReturnMessage)
+BOOL NetworkSession::WaitConnections(HWND pWindow, const char *pTrackName, BOOL pPromptForPort, unsigned pDefaultPort, HWND *pModalessDlg, int pReturnMessage)
 {
 	mMasterMode = TRUE;
 	mSended12SecClockUpdate = FALSE;
@@ -755,7 +755,7 @@ BOOL MR_NetworkSession::WaitConnections(HWND pWindow, const char *pTrackName, BO
  * @param pWindow Handle to the current window
  * @param pTrackName A variable that the track name is written into
  */
-BOOL MR_NetworkSession::PreConnectToServer(HWND pWindow, CString &pTrackName)
+BOOL NetworkSession::PreConnectToServer(HWND pWindow, CString &pTrackName)
 {
 	mMasterMode = FALSE;
 	return mNetInterface.SlavePreConnect(pWindow, pTrackName);
@@ -771,9 +771,9 @@ BOOL MR_NetworkSession::PreConnectToServer(HWND pWindow, CString &pTrackName)
  * @param pPort Server port number
  * @param pGameName String representing the name of the game (track name)
  * @param pModalessDlg If this is NULL, the "TCP Connections" dialog is modal
- * @param pReturnMessage Callback message (see MR_NetworkInterface::ListCallBack);
+ * @param pReturnMessage Callback message (see NetworkInterface::ListCallBack);
  */
-BOOL MR_NetworkSession::ConnectToServer(HWND pWindow, const char *pServerIP, unsigned pPort, const char *pGameName, HWND *pModalessDlg, int pReturnMessage)
+BOOL NetworkSession::ConnectToServer(HWND pWindow, const char *pServerIP, unsigned pPort, const char *pGameName, HWND *pModalessDlg, int pReturnMessage)
 {
 	mMasterMode = FALSE;
 
@@ -785,7 +785,7 @@ BOOL MR_NetworkSession::ConnectToServer(HWND pWindow, const char *pServerIP, uns
  *
  * @param pTime New simulation time
  */
-void MR_NetworkSession::SetSimulationTime(MR_SimulationTime pTime)
+void NetworkSession::SetSimulationTime(MR_SimulationTime pTime)
 {
 	pTime += mNetInterface.GetLagFromServer();
 
@@ -799,7 +799,7 @@ void MR_NetworkSession::SetSimulationTime(MR_SimulationTime pTime)
  * Create the main character.  Get the default starting position for our client
  * ID and then place the hovercraft in that position.
  */
-BOOL MR_NetworkSession::CreateMainCharacter()
+BOOL NetworkSession::CreateMainCharacter()
 {
 	// Add a main character on the track
 	ASSERT(mainCharacter[0] == NULL);			  // make sure we are not creating it twice
@@ -833,9 +833,9 @@ BOOL MR_NetworkSession::CreateMainCharacter()
  * @param pRoom ID of the room the hovercraft is in
  * @param pHoverId ID of the hovercraft
  */
-void MR_NetworkSession::BroadcastMainElementCreation(const MR_ObjectFromFactoryId &pId, const MR_ElementNetState &pState, int pRoom, int pHoverId)
+void NetworkSession::BroadcastMainElementCreation(const MR_ObjectFromFactoryId &pId, const MR_ElementNetState &pState, int pRoom, int pHoverId)
 {
-	MR_NetMessageBuffer lMessage;
+	NetMessageBuffer lMessage;
 
 	// lMessage.mSendingTime            = mSession.GetSimulationTime()>>2;
 	lMessage.mMessageType = MRNM_CREATE_MAIN_ELEM;
@@ -866,9 +866,9 @@ void MR_NetworkSession::BroadcastMainElementCreation(const MR_ObjectFromFactoryI
  * @param pState State of the object; position, speed, direction, etc.
  * @param pRoom Room the object is inside of
  */
-void MR_NetworkSession::BroadcastAutoElementCreation(const MR_ObjectFromFactoryId &pId, const MR_ElementNetState &pState, int pRoom)
+void NetworkSession::BroadcastAutoElementCreation(const MR_ObjectFromFactoryId &pId, const MR_ElementNetState &pState, int pRoom)
 {
-	MR_NetMessageBuffer lMessage;
+	NetMessageBuffer lMessage;
 	int lCounter;
 
 	// lMessage.mSendingTime            = mSession.GetSimulationTime()>>2;
@@ -880,14 +880,14 @@ void MR_NetworkSession::BroadcastAutoElementCreation(const MR_ObjectFromFactoryI
 	memcpy(lMessage.mData + 6, pState.mData, pState.mDataLen);
 
 	// Determine clients proximity
-	int lPriorityLevel[MR_NetworkInterface::eMaxClient];
+	int lPriorityLevel[NetworkInterface::eMaxClient];
 
 	const MR_Level *lLevel = GetCurrentLevel();
 	// int             lVisibleRoomCount;
 	// const int* lVisibleRoom = lLevel->GetVisibleZones( mainCharacter[0]->mRoom, lVisibleRoomCount );
 
 	// Init priority level
-	for(int lCounter = 0; lCounter < MR_NetworkInterface::eMaxClient; lCounter++) {
+	for(int lCounter = 0; lCounter < NetworkInterface::eMaxClient; lCounter++) {
 		if(mClientCharacter[lCounter] != NULL) {
 			lPriorityLevel[lCounter] = 0;
 
@@ -906,7 +906,7 @@ void MR_NetworkSession::BroadcastAutoElementCreation(const MR_ObjectFromFactoryI
 	}
 
 	// First broadcast to near clients
-	for(lCounter = 0; lCounter < MR_NetworkInterface::eMaxClient; lCounter++) {
+	for(lCounter = 0; lCounter < NetworkInterface::eMaxClient; lCounter++) {
 		if(lPriorityLevel[lCounter] >= 5) {
 			if(mNetInterface.UDPSend(lCounter, &lMessage, TRUE, FALSE)) {
 				TRACE("SendUDPA:%d\n", lCounter);
@@ -918,7 +918,7 @@ void MR_NetworkSession::BroadcastAutoElementCreation(const MR_ObjectFromFactoryI
 	}
 
 	// Now to far clients
-	for(lCounter = 0; lCounter < MR_NetworkInterface::eMaxClient; lCounter++) {
+	for(lCounter = 0; lCounter < NetworkInterface::eMaxClient; lCounter++) {
 		if(lPriorityLevel[lCounter] < 5) {
 			if(mNetInterface.UDPSend(lCounter, &lMessage, TRUE, FALSE)) {
 				TRACE("SendUDPB:%d\n", lCounter);
@@ -930,7 +930,7 @@ void MR_NetworkSession::BroadcastAutoElementCreation(const MR_ObjectFromFactoryI
 	}
 
 	// Now to near clients (the second broadcast bring security)
-	for(lCounter = 0; lCounter < MR_NetworkInterface::eMaxClient; lCounter++) {
+	for(lCounter = 0; lCounter < NetworkInterface::eMaxClient; lCounter++) {
 		if(lPriorityLevel[lCounter] >= 5) {
 			if(mNetInterface.UDPSend(lCounter, &lMessage, TRUE, TRUE)) {
 				TRACE("SendUDPC:%d\n", lCounter);
@@ -949,9 +949,9 @@ void MR_NetworkSession::BroadcastAutoElementCreation(const MR_ObjectFromFactoryI
  * @param pState State of the permanent elemnt
  * @param pRoom Room the element is in
  */
-void MR_NetworkSession::BroadcastPermElementState(int pPermId, const MR_ElementNetState &pState, int pRoom)
+void NetworkSession::BroadcastPermElementState(int pPermId, const MR_ElementNetState &pState, int pRoom)
 {
-	MR_NetMessageBuffer lMessage;
+	NetMessageBuffer lMessage;
 	int lCounter;
 
 	// lMessage.mSendingTime            = mSession.GetSimulationTime()>>2;
@@ -962,14 +962,14 @@ void MR_NetworkSession::BroadcastPermElementState(int pPermId, const MR_ElementN
 	memcpy(lMessage.mData + 3, pState.mData, pState.mDataLen);
 
 	// Determine clients proximity
-	int lPriorityLevel[MR_NetworkInterface::eMaxClient];
+	int lPriorityLevel[NetworkInterface::eMaxClient];
 
 	const MR_Level *lLevel = GetCurrentLevel();
 	// int             lVisibleRoomCount;
 	// const int* lVisibleRoom = lLevel->GetVisibleZones( mainCharacter[0]->mRoom, lVisibleRoomCount );
 
 	// Init priority level
-	for(int lCounter = 0; lCounter < MR_NetworkInterface::eMaxClient; lCounter++) {
+	for(int lCounter = 0; lCounter < NetworkInterface::eMaxClient; lCounter++) {
 		if(mClientCharacter[lCounter] != NULL) {
 			lPriorityLevel[lCounter] = 0;
 
@@ -988,7 +988,7 @@ void MR_NetworkSession::BroadcastPermElementState(int pPermId, const MR_ElementN
 	}
 
 	// First broadcast to near clients
-	for(lCounter = 0; lCounter < MR_NetworkInterface::eMaxClient; lCounter++) {
+	for(lCounter = 0; lCounter < NetworkInterface::eMaxClient; lCounter++) {
 		if(lPriorityLevel[lCounter] >= 5) {
 			if(mNetInterface.UDPSend(lCounter, &lMessage, TRUE, FALSE)) {
 				TRACE("SendUDPA:%d\n", lCounter);
@@ -1000,7 +1000,7 @@ void MR_NetworkSession::BroadcastPermElementState(int pPermId, const MR_ElementN
 	}
 
 	// Now to far clients
-	for(lCounter = 0; lCounter < MR_NetworkInterface::eMaxClient; lCounter++) {
+	for(lCounter = 0; lCounter < NetworkInterface::eMaxClient; lCounter++) {
 		if(lPriorityLevel[lCounter] < 5) {
 			if(mNetInterface.UDPSend(lCounter, &lMessage, TRUE, FALSE)) {
 				TRACE("SendUDPB:%d\n", lCounter);
@@ -1012,7 +1012,7 @@ void MR_NetworkSession::BroadcastPermElementState(int pPermId, const MR_ElementN
 	}
 
 	// Now to near clients (the second broadcast bring security)
-	for(lCounter = 0; lCounter < MR_NetworkInterface::eMaxClient; lCounter++) {
+	for(lCounter = 0; lCounter < NetworkInterface::eMaxClient; lCounter++) {
 		if(lPriorityLevel[lCounter] >= 5) {
 			if(mNetInterface.UDPSend(lCounter, &lMessage, TRUE, TRUE)) {
 				TRACE("SendUDPC:%d\n", lCounter);
@@ -1028,9 +1028,9 @@ void MR_NetworkSession::BroadcastPermElementState(int pPermId, const MR_ElementN
  * Broadcast the current game time to other clients.  Sends an MRNM_SET_TIME
  * message to all other clients.
  */
-void MR_NetworkSession::BroadcastTime()
+void NetworkSession::BroadcastTime()
 {
-	MR_NetMessageBuffer lMessage;
+	NetMessageBuffer lMessage;
 
 	// lMessage.mSendingTime            = mSession.GetSimulationTime()>>2;
 	lMessage.mMessageType = MRNM_SET_TIME;
@@ -1038,7 +1038,7 @@ void MR_NetworkSession::BroadcastTime()
 	*(MR_Int32 *) & (lMessage.mData[0]) = mSession.GetSimulationTime();
 
 	// Broadcat to everyone
-	for(int lCounter = 0; lCounter < MR_NetworkInterface::eMaxClient; lCounter++) {
+	for(int lCounter = 0; lCounter < NetworkInterface::eMaxClient; lCounter++) {
 		if(mNetInterface.UDPSend(lCounter, &lMessage, TRUE, FALSE)) {
 			TRACE("SendUDPTime:%d\n", lCounter);
 		}
@@ -1055,9 +1055,9 @@ void MR_NetworkSession::BroadcastTime()
  *
  * @param pState Current state of the hovercraft
  */
-void MR_NetworkSession::BroadcastMainElementState(const MR_ElementNetState &pState)
+void NetworkSession::BroadcastMainElementState(const MR_ElementNetState &pState)
 {
-	MR_NetMessageBuffer lMessage;
+	NetMessageBuffer lMessage;
 
 	// lMessage.mSendingTime            = mSession.GetSimulationTime()>>2;
 	lMessage.mMessageType = MRNM_SET_MAIN_ELEM_STATE;
@@ -1109,7 +1109,7 @@ void MR_NetworkSession::BroadcastMainElementState(const MR_ElementNetState &pSta
 	if(lMaxSend > 0) {
 		mLastSendElemStateFuncTime = lCurrentTime;
 
-		int lPriorityLevel[MR_NetworkInterface::eMaxClient];
+		int lPriorityLevel[NetworkInterface::eMaxClient];
 
 		const MR_Level *lLevel = GetCurrentLevel();
 		int lVisibleRoomCount;
@@ -1118,7 +1118,7 @@ void MR_NetworkSession::BroadcastMainElementState(const MR_ElementNetState &pSta
 		int lNbEligible = 0;
 
 		// Init priority level
-		for(int lCounter = 0; lCounter < MR_NetworkInterface::eMaxClient; lCounter++) {
+		for(int lCounter = 0; lCounter < NetworkInterface::eMaxClient; lCounter++) {
 			if(mClientCharacter[lCounter] != NULL) {
 				lPriorityLevel[lCounter] = lCurrentTime - mLastSendElemStateTime[lCounter];
 
@@ -1181,7 +1181,7 @@ void MR_NetworkSession::BroadcastMainElementState(const MR_ElementNetState &pSta
 			int lBestPriority = lPriorityLevel[0];
 			int lSelectedClient = 0;
 
-			for(int lClient = 1; lClient < MR_NetworkInterface::eMaxClient; lClient++) {
+			for(int lClient = 1; lClient < NetworkInterface::eMaxClient; lClient++) {
 				if(lPriorityLevel[lClient] > lBestPriority) {
 					lBestPriority = lPriorityLevel[lClient];
 					lSelectedClient = lClient;
@@ -1215,9 +1215,9 @@ void MR_NetworkSession::BroadcastMainElementState(const MR_ElementNetState &pSta
  * @param pBestLap Time of best lap
  * @param pNbLaps Lap we are currently on; -1 denotes that we have finished
  */
-void MR_NetworkSession::BroadcastMainElementStats(MR_SimulationTime pFinishTime, MR_SimulationTime pBestLap, int pNbLaps)
+void NetworkSession::BroadcastMainElementStats(MR_SimulationTime pFinishTime, MR_SimulationTime pBestLap, int pNbLaps)
 {
-	MR_NetMessageBuffer lMessage;
+	NetMessageBuffer lMessage;
 
 	// lMessage.mSendingTime            = mSession.GetSimulationTime()>>2;
 	lMessage.mMessageType = MRNM_PLAYER_STATS;
@@ -1240,9 +1240,9 @@ void MR_NetworkSession::BroadcastMainElementStats(MR_SimulationTime pFinishTime,
  *
  * @param pMessage Chat message
  */
-void MR_NetworkSession::BroadcastChatMessage(const char *pMessage)
+void NetworkSession::BroadcastChatMessage(const char *pMessage)
 {
-	MR_NetMessageBuffer lMessage;
+	NetMessageBuffer lMessage;
 
 	// lMessage.mSendingTime    = mSession.GetSimulationTime()>>2;
 	lMessage.mMessageType = MRNM_CHAT_MESSAGE;
@@ -1263,9 +1263,9 @@ void MR_NetworkSession::BroadcastChatMessage(const char *pMessage)
  *
  * @param pHoverIdSrc Who we have been hit by
  */
-void MR_NetworkSession::BroadcastHit(int pHoverIdSrc)
+void NetworkSession::BroadcastHit(int pHoverIdSrc)
 {
-	MR_NetMessageBuffer lMessage;
+	NetMessageBuffer lMessage;
 
 	// lMessage.mSendingTime    = mSession.GetSimulationTime()>>2;
 	lMessage.mMessageType = MRNM_HIT_MESSAGE;
@@ -1284,7 +1284,7 @@ void MR_NetworkSession::BroadcastHit(int pHoverIdSrc)
  * @param pPlayerIndex Player that was hit
  * @param pPlayerFromId Player who shot him
  */
-void MR_NetworkSession::AddHitEntry(int pPlayerIndex, int pPlayerFromId)
+void NetworkSession::AddHitEntry(int pPlayerIndex, int pPlayerFromId)
 {
 	// We assume that a result entry exist for both players
 	PlayerResult *lEntry;
@@ -1330,7 +1330,7 @@ void MR_NetworkSession::AddHitEntry(int pPlayerIndex, int pPlayerFromId)
  *
  * @param pEntry PlayerResult object pointer to be inserted into the list
  */
-void MR_NetworkSession::InsertHitEntry(PlayerResult *pEntry)
+void NetworkSession::InsertHitEntry(PlayerResult *pEntry)
 {
 	PlayerResult **lPtr;
 
@@ -1355,7 +1355,7 @@ void MR_NetworkSession::InsertHitEntry(PlayerResult *pEntry)
  * @param pBestLap Best lap time of the player
  * @param pNbLap Lap number that the player is on (-1 means they have finished the race)
  */
-void MR_NetworkSession::AddResultEntry(int pPlayerIndex, MR_SimulationTime pFinishTime, MR_SimulationTime pBestLap, int pNbLap)
+void NetworkSession::AddResultEntry(int pPlayerIndex, MR_SimulationTime pFinishTime, MR_SimulationTime pBestLap, int pNbLap)
 {
 	// If nbLap == -1 that mean that the race is completed
 	PlayerResult *lEntry;
@@ -1447,7 +1447,7 @@ void MR_NetworkSession::AddResultEntry(int pPlayerIndex, MR_SimulationTime pFini
  *
  * @param pKey The key the user pressed
  */
-void MR_NetworkSession::AddMessageKey(char pKey)
+void NetworkSession::AddMessageKey(char pKey)
 {
 	EnterCriticalSection(&mChatMutex);
 
@@ -1481,13 +1481,13 @@ void MR_NetworkSession::AddMessageKey(char pKey)
  *
  * @param pDest Destination string for the text entered into the chat buffer
  */
-void MR_NetworkSession::GetCurrentMessage(char *pDest) const
+void NetworkSession::GetCurrentMessage(char *pDest) const
 {
-	EnterCriticalSection(&((MR_NetworkSession *) this)->mChatMutex);
+	EnterCriticalSection(&((NetworkSession *) this)->mChatMutex);
 
 	strcpy(pDest, mChatEditBuffer);
 
-	LeaveCriticalSection(&((MR_NetworkSession *) this)->mChatMutex);
+	LeaveCriticalSection(&((NetworkSession *) this)->mChatMutex);
 } 
 
 /**
@@ -1497,7 +1497,7 @@ void MR_NetworkSession::GetCurrentMessage(char *pDest) const
  * @param pMessage The message to be added
  * @param pMessageLen Length of the message
  */
-void MR_NetworkSession::AddChatMessage(int pPlayerIndex, const char *pMessage, int pMessageLen)
+void NetworkSession::AddChatMessage(int pPlayerIndex, const char *pMessage, int pMessageLen)
 {
 	for(int lCounter = CHAT_MESSAGE_STACK - 1; lCounter > 0; lCounter--) {
 		mMessageStack[lCounter] = mMessageStack[lCounter - 1];
