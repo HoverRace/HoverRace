@@ -66,7 +66,7 @@ class NetworkSession : public ClientSession
 		int mMajorID;
 		int mMinorID;
 
-		HoverRace::Client::RoomListPtr roomList;
+		RoomListPtr roomList;
 
 		int mSendedPlayerStats;
 		MR_FreeElementHandle mClient[NetworkInterface::eMaxClient];
@@ -127,7 +127,7 @@ class NetworkSession : public ClientSession
 
 		void SetPlayerName(const char *pPlayerName);
 		const char *GetPlayerName() const;
-		void SetRoomList(HoverRace::Client::RoomListPtr roomList);
+		void SetRoomList(RoomListPtr roomList);
 		BOOL WaitConnections(HWND pWindow, const char *pTrackName, BOOL pPromptForPort = TRUE,
 			unsigned pDefaultPort = HoverRace::Util::Config::GetInstance()->net.tcpServPort,
 			HWND * pModalessDlg = NULL, int pReturnMessage = 0);

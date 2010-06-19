@@ -42,11 +42,13 @@
 #define MRNM_SEND_KEYID               9
 #define MRNM_HIT_MESSAGE             10
 
-using namespace HoverRace::Client;
 using HoverRace::Parcel::RecordFile;
 
+namespace HoverRace {
+namespace Client {
+
 // Local structures
-class MR_PlayerStats
+class PlayerStats
 {
 	public:
 
@@ -581,7 +583,7 @@ void NetworkSession::ReadNet()
 
 			case MRNM_PLAYER_STATS:
 				{
-					MR_PlayerStats *lStats = (MR_PlayerStats *) lMessage;
+					PlayerStats *lStats = (PlayerStats *) lMessage;
 					AddResultEntry(lClientId, lStats->mFinishTime, lStats->mBestLap, lStats->mCompletedLaps);
 				}
 				break;
@@ -721,7 +723,7 @@ const char *NetworkSession::GetPlayerName() const
 	return mNetInterface.GetPlayerName();
 }
 
-void NetworkSession::SetRoomList(HoverRace::Client::RoomListPtr roomList)
+void NetworkSession::SetRoomList(RoomListPtr roomList)
 {
 	this->roomList = roomList;
 }
@@ -1221,9 +1223,9 @@ void NetworkSession::BroadcastMainElementStats(MR_SimulationTime pFinishTime, MR
 
 	// lMessage.mSendingTime            = mSession.GetSimulationTime()>>2;
 	lMessage.mMessageType = MRNM_PLAYER_STATS;
-	lMessage.mDataLen = sizeof(MR_PlayerStats);
+	lMessage.mDataLen = sizeof(PlayerStats);
 
-	MR_PlayerStats *lStats = (MR_PlayerStats *) lMessage.mData;
+	PlayerStats *lStats = (PlayerStats *) lMessage.mData;
 
 	lStats->mFinishTime = pFinishTime;
 	lStats->mBestLap = pBestLap;
@@ -1509,3 +1511,6 @@ void NetworkSession::AddChatMessage(int pPlayerIndex, const char *pMessage, int 
 	mMessageStack[0].mBuffer += Ascii2Simple('>');
 	mMessageStack[0].mBuffer += CString(pMessage, pMessageLen);
 }
+
+}  // namespace Client
+}  // namespace HoverRace
