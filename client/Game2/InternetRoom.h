@@ -43,8 +43,8 @@ class InternetRequest
 		BOOL mBinMode;							  // use Bin buffer and Bin sending mode"referer request"
 
 		SOCKET mSocket;
-		CString mRequest;
-		CString mBuffer;
+		std::string mRequest;
+		std::string mBuffer;
 
 		char *mBinBuffer;
 		int mBinIndex;
@@ -91,7 +91,7 @@ class InternetRoom
 		{
 			public:
 				BOOL mValid;
-				CString mName;
+				std::string mName;
 				int mGame;
 				int mMajorID;
 				int mMinorID;
@@ -105,13 +105,13 @@ class InternetRoom
 				BOOL mValid;
 				int mId;
 				MR_TrackAvail mAvailCode;
-				CString mName;
-				CString mTrack;
+				std::string mName;
+				std::string mTrack;
 				int mNbLap;
 				BOOL mAllowWeapons;
 				int mNbClient;
 				int mClientList[eMaxPlayerGame];
-				CString mIPAddr;
+				std::string mIPAddr;
 				unsigned mPort;
 
 		};
@@ -127,12 +127,12 @@ class InternetRoom
 		int mCurrentGameIndex;
 		int mCurrentGameId;
 
-		CString mUser;
+		std::string mUser;
 
 		Client mClientList[eMaxClient];
 		Game mGameList[eMaxGame];
 
-		CString mChatBuffer;
+		std::string mChatBuffer;
 
 		int mLastRefreshTimeStamp;
 

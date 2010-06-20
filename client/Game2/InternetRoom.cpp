@@ -165,8 +165,8 @@ BOOL InternetRequest::Working() const
 void InternetRequest::Clear()
 {
 	Close();
-	mBuffer = "";
-	mRequest = "";
+	mBuffer.clear();
+	mRequest.clear();
 	mBinIndex = 0;
 
 }
@@ -238,7 +238,7 @@ BOOL InternetRequest::ProcessEvent(WPARAM pWParam, LPARAM pLParam)
 			case FD_CONNECT:
 				// We are now connected, send the request
 					{
-						send(mSocket, mRequest, mRequest.GetLength(), 0);
+						send(mSocket, mRequest.c_str(), mRequest.length(), 0);
 					}
 					mRequest = "";
 					break;
@@ -292,7 +292,7 @@ BOOL InternetRequest::ProcessEvent(WPARAM pWParam, LPARAM pLParam)
 
 const char *InternetRequest::GetBuffer() const
 {
-	return mBuffer;
+	return mBuffer.c_str();
 }
 
 const char *InternetRequest::GetBinBuffer(int &pSize) const
@@ -303,7 +303,7 @@ const char *InternetRequest::GetBinBuffer(int &pSize) const
 
 BOOL InternetRequest::IsReady() const
 {
-	return (((mBinIndex != 0) || !mBuffer.IsEmpty()) && !Working());
+	return (((mBinIndex != 0) || !mBuffer.empty()) && !Working());
 }
 
 // InternetRoom
@@ -423,7 +423,7 @@ int InternetRoom::ParseState(const char *pAnswer)
 							lLinePtr = GetNextLine(lLinePtr);
 							mGameList[lEntry].mTrack = GetLine(lLinePtr);
 							mGameList[lEntry].mAvailCode =
-								Config::GetInstance()->GetTrackBundle()->CheckAvail((const char*)mGameList[lEntry].mTrack);
+								Config::GetInstance()->GetTrackBundle()->CheckAvail(mGameList[lEntry].mTrack.c_str());
 
 							lLinePtr = GetNextLine(lLinePtr);
 							mGameList[lEntry].mIPAddr = GetLine(lLinePtr);
@@ -531,7 +531,7 @@ BOOL InternetRoom::AddUserOp(HWND pParentWindow)
 		roomList->GetSelectedRoom()->path.c_str(),
 		//(const char *) gServerList[gCurrentServerEntry].mURL,
 		-1, -2, 0, 0,
-		(const char *) MR_Pad(mUser));
+		(const char *) MR_Pad(mUser.c_str()));
 
 	lReturnValue = DialogBoxW(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDD_NET_PROGRESS), pParentWindow, NetOpCallBack) == IDOK;
 
@@ -729,7 +729,7 @@ BOOL InternetRoom::AskRoomParams(HWND pParentWindow, BOOL pShouldRecheckServer)
 	}
 
 	if (roomList == NULL || pShouldRecheckServer) {
-		SelectRoomDialog dlg((const char *)mUser);
+		SelectRoomDialog dlg(mUser);
 		roomList = dlg.ShowModal(NULL, pParentWindow);
 		if (roomList != NULL) {
 			mUser = dlg.GetPlayerName().c_str();
@@ -754,7 +754,7 @@ BOOL InternetRoom::DisplayChatRoom(HWND pParentWindow, NetworkSession *pSession,
 		mSession = pSession;
 		mVideoBuffer = pVideoBuffer;
 
-		mSession->SetPlayerName(mUser);
+		mSession->SetPlayerName(mUser.c_str());
 
 		lReturnValue = DialogBoxW(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDD_INTERNET_MEETING_PUB), pParentWindow, RoomCallBack) == IDOK;
 	}
@@ -854,7 +854,7 @@ void InternetRoom::OpenChatLog()
  */
 void InternetRoom::AddChatLine(const char *pText, bool neverLog)
 {
-	if(!mChatBuffer.IsEmpty()) {
+	if (!mChatBuffer.empty()) {
 		mChatBuffer += "\r\n";
 	}
 	mChatBuffer += pText;
@@ -864,14 +864,14 @@ void InternetRoom::AddChatLine(const char *pText, bool neverLog)
 	}
 
 	// Determine if we must cut some lines from the buffer
-	while(mChatBuffer.GetLength() > (40 * 40)) {
-		int lIndex = mChatBuffer.Find('\n');
+	while (mChatBuffer.length() > (40 * 40)) {
+		size_t idx = mChatBuffer.find_first_of('\n');
 
-		if(lIndex < 0) {
+		if (idx == std::string::npos) {
 			break;
 		}
 		else {
-			mChatBuffer = mChatBuffer.Mid(lIndex + 1);
+			mChatBuffer.erase(0, idx + 1);
 		}
 	}
 }
@@ -911,8 +911,8 @@ void InternetRoom::RefreshGameSelection(HWND pWindow)
 		SendMessage(GetDlgItem(pWindow, IDC_JOIN), WM_ENABLE, FALSE, 0);
 	}
 	else {
-		CString lAvailString = "";
-		CString lPlayerList;
+		std::string lAvailString;
+		std::string lPlayerList;
 
 		switch (mGameList[lGameIndex].mAvailCode) {
 			case eTrackAvail:
@@ -928,7 +928,7 @@ void InternetRoom::RefreshGameSelection(HWND pWindow)
 			int lClientIndex = mGameList[lGameIndex].mClientList[lCounter];
 
 			if(mClientList[lClientIndex].mValid) {
-				if(!lPlayerList.IsEmpty()) {
+				if (!lPlayerList.empty()) {
 					lPlayerList += "\r\n";
 				}
 				lPlayerList += mClientList[lClientIndex].mName;
@@ -936,11 +936,11 @@ void InternetRoom::RefreshGameSelection(HWND pWindow)
 
 		}
 
-		SetDlgItemText(pWindow, IDC_TRACK_NAME, mGameList[lGameIndex].mTrack);
+		SetDlgItemTextW(pWindow, IDC_TRACK_NAME, Str::UW(mGameList[lGameIndex].mTrack.c_str()));
 		SetDlgItemInt(pWindow, IDC_NB_LAP, mGameList[lGameIndex].mNbLap, FALSE);
 		SetDlgItemText(pWindow, IDC_WEAPONS, mGameList[lGameIndex].mAllowWeapons ? "on" : "off");
-		SetDlgItemText(pWindow, IDC_AVAIL_MESSAGE, lAvailString);
-		SetDlgItemText(pWindow, IDC_PLAYER_LIST, lPlayerList);
+		SetDlgItemTextW(pWindow, IDC_AVAIL_MESSAGE, Str::UW(lAvailString.c_str()));
+		SetDlgItemTextW(pWindow, IDC_PLAYER_LIST, Str::UW(lPlayerList.c_str()));
 
 		SendMessage(GetDlgItem(pWindow, IDC_JOIN), WM_ENABLE, mGameList[lGameIndex].mAvailCode == eTrackAvail, 0);
 	}
@@ -967,7 +967,7 @@ void InternetRoom::RefreshGameList(HWND pWindow)
 				lItem.mask = LVIF_TEXT | LVIF_PARAM;
 				lItem.iItem = lIndex++;
 				lItem.iSubItem = 0;
-				lItem.pszText = (char *) (const char *) mGameList[lCounter].mName;
+				lItem.pszText = const_cast<char*>(mGameList[lCounter].mName.c_str());
 				lItem.lParam = lCounter;
 
 				if(lCounter == lSelected) {
@@ -998,19 +998,19 @@ void InternetRoom::RefreshUserList(HWND pWindow)
 		int lIndex = 0;
 		for(int lCounter = 0; lCounter < eMaxClient; lCounter++) {
 			if(mClientList[lCounter].mValid) {
-				CString lName = mClientList[lCounter].mName;
+				std::string &lName = mClientList[lCounter].mName;
 
 				if(mClientList[lCounter].mMajorID != -1) {
-					CString lExtension;
-					lExtension.Format("[%d-%d]", mClientList[lCounter].mMajorID, mClientList[lCounter].mMinorID);
-					lName += lExtension;
+					lName += boost::str(boost::format("[%d-%d]") %
+						mClientList[lCounter].mMajorID %
+						mClientList[lCounter].mMinorID);
 				}
 				LV_ITEM lItem;
 
 				lItem.mask = LVIF_TEXT | LVIF_PARAM;
 				lItem.iItem = lIndex++;
 				lItem.iSubItem = 0;
-				lItem.pszText = (char *) (const char *) lName;
+				lItem.pszText = const_cast<char*>(lName.c_str());
 				lItem.lParam = lCounter;
 
 				if(lCounter == lSelected) {
@@ -1040,7 +1040,7 @@ void InternetRoom::RefreshChatOut(HWND pWindow)
 
 	static SETTEXTEX textInfo = { ST_DEFAULT, 1200 };  // Replace all using Unicode.
 	SendMessage(pDest, EM_SETTEXTEX, (WPARAM)&textInfo,
-		(LPARAM)(const wchar_t*)Str::UW((const char*)mChatBuffer));
+		(LPARAM)(const wchar_t*)Str::UW(mChatBuffer.c_str()));
 
 	//SendMessage(pDest, EM_LINESCROLL, 0, 1000);
 	SendMessage(pDest, WM_VSCROLL, SB_BOTTOM, 0);
@@ -1863,7 +1863,7 @@ BOOL CALLBACK InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 							if(lSuccess) {
 								// Try to load the track
 								// Load the track
-								std::string lCurrentTrack((const char*)mThis->mGameList[lFocus].mTrack);
+								std::string lCurrentTrack(mThis->mGameList[lFocus].mTrack);
 								Model::TrackPtr track;
 								try {
 									track = Config::GetInstance()->
@@ -1893,19 +1893,22 @@ BOOL CALLBACK InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 									}
 								}
 								if (lSuccess) {
-									lSuccess = mThis->mSession->LoadNew(mThis->mGameList[lFocus].mTrack,
+									lSuccess = mThis->mSession->LoadNew(mThis->mGameList[lFocus].mTrack.c_str(),
 										track->GetRecordFile(), mThis->mGameList[lFocus].mNbLap,
 										mThis->mGameList[lFocus].mAllowWeapons,
 										mThis->mVideoBuffer);
 								}
 
 								if(lSuccess) {
-									// connect to the game server
-									CString lCurrentTrack;
+									std::string curTrack = boost::str(boost::format("%s  %d laps") %
+										mThis->mGameList[lFocus].mTrack %
+										mThis->mGameList[lFocus].mNbLap);
 
-									lCurrentTrack.Format("%s  %d laps %s", (const char *) mThis->mGameList[lFocus].mTrack, mThis->mGameList[lFocus].mNbLap);
-
-									lSuccess = mThis->mSession->ConnectToServer(pWindow, mThis->mGameList[lFocus].mIPAddr, mThis->mGameList[lFocus].mPort, lCurrentTrack, &mThis->mModelessDlg, MRM_DLG_END_JOIN);
+									lSuccess = mThis->mSession->ConnectToServer(pWindow,
+										mThis->mGameList[lFocus].mIPAddr.c_str(),
+										mThis->mGameList[lFocus].mPort,
+										lCurrentTrack.c_str(),
+										&mThis->mModelessDlg, MRM_DLG_END_JOIN);
 								}
 
 								if(!lSuccess) {
