@@ -20,13 +20,15 @@
 // and limitations under the License.
 //
 
-#ifndef BANNER_H
-#define BANNER_H
+#pragma once
 
 #define MR_MAX_IMAGES  32
 
+namespace HoverRace {
+namespace Client {
+
 /// GIF image loader.
-class MR_GifDecoder
+class GifDecoder
 {
 	private:
 		int mNbImages;
@@ -38,8 +40,8 @@ class MR_GifDecoder
 		void Clean();
 
 	public:
-		MR_GifDecoder();
-		~MR_GifDecoder();
+		GifDecoder();
+		~GifDecoder();
 
 		bool Decode(const unsigned char *pGifStream, int pStreamLen);
 
@@ -49,4 +51,6 @@ class MR_GifDecoder
 		int GetDelay(int pImage) const;
 
 };
-#endif
+
+}  // namespace Client
+}  // namespace HoverRace

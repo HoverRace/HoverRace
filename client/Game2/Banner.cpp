@@ -20,7 +20,7 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
 #include "Banner.h"
 #include "GameApp.h"
@@ -32,10 +32,10 @@
 
 using namespace HoverRace::Util;
 
-// Local functions
+namespace HoverRace {
+namespace Client {
 
-BOOL decoder(short linewidth);
-
+/*CRUFT
 class ByteStream
 {
 	private:
@@ -209,8 +209,9 @@ void ByteStream::Inc(int pCount)
 		mIndex += pCount;
 	}
 }
+*/
 
-MR_GifDecoder::MR_GifDecoder()
+GifDecoder::GifDecoder()
 {
 	mNbImages = 0;
 	mGlobalPalette = NULL;
@@ -220,12 +221,12 @@ MR_GifDecoder::MR_GifDecoder()
 	}
 }
 
-MR_GifDecoder::~MR_GifDecoder()
+GifDecoder::~GifDecoder()
 {
 	Clean();
 }
 
-void MR_GifDecoder::Clean()
+void GifDecoder::Clean()
 {
 	mNbImages = 0;
 
@@ -254,7 +255,7 @@ void MR_GifDecoder::Clean()
  * @return @c true if the load succeeded, @c false otherwise (current
  *         image will still be cleared).
  */
-bool MR_GifDecoder::Decode(const unsigned char *pGifStream, int pStreamLen)
+bool GifDecoder::Decode(const unsigned char *pGifStream, int pStreamLen)
 {
 	// Delete current image.
 	Clean();
@@ -287,7 +288,7 @@ bool MR_GifDecoder::Decode(const unsigned char *pGifStream, int pStreamLen)
 	return retv;
 }
 
-HPALETTE MR_GifDecoder::GetGlobalPalette() const
+HPALETTE GifDecoder::GetGlobalPalette() const
 {
 	return mGlobalPalette;
 }
@@ -296,7 +297,7 @@ HPALETTE MR_GifDecoder::GetGlobalPalette() const
  * Retrieve the number of frames in the current image.
  * @return Either zero (no image loaded) or one.
  */
-int MR_GifDecoder::GetImageCount() const
+int GifDecoder::GetImageCount() const
 {
 	return mNbImages;
 }
@@ -306,7 +307,7 @@ int MR_GifDecoder::GetImageCount() const
  * @param pImage The frame index (zero is the first frame).
  * @return The bitmap data, or NULL if no frame at that index.
  */
-HBITMAP MR_GifDecoder::GetImage(int pImage) const
+HBITMAP GifDecoder::GetImage(int pImage) const
 {
 	return mBitmap[pImage];
 }
@@ -317,7 +318,10 @@ HBITMAP MR_GifDecoder::GetImage(int pImage) const
  * @param pImage The frame index (zero is the first frame).
  * @return The delay (in ms) (never negative).
  */
-int MR_GifDecoder::GetDelay(int pImage) const
+int GifDecoder::GetDelay(int pImage) const
 {
 	return mDelay[pImage];
 }
+
+}  // namespace Client
+}  // namespace HoverRace

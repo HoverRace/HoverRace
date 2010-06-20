@@ -154,7 +154,7 @@ class InternetRoom
 		InternetRequest mClickRequest;
 
 		WNDPROC oldBannerProc;
-		MR_GifDecoder mBanner;
+		GifDecoder mBanner;
 		int mCurrentBannerIndex;
 
 		bool checkUpdates;
