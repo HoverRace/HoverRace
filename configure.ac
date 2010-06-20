@@ -8,6 +8,7 @@ AC_CONFIG_MACRO_DIR(config/m4)
 AC_CONFIG_SRCDIR([engine/Util/FuzzyLogic.h])
 AM_CONFIG_HEADER([config.h])
 AM_INIT_AUTOMAKE
+AM_SILENT_RULES
 
 # Checks for programs.
 AC_PROG_CXX
