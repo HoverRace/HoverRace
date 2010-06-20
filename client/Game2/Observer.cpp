@@ -39,12 +39,7 @@ using HoverRace::VideoServices::StaticText;
 #define NB_PLAYER_PAGE 10
 #define MR_CHAT_EXPIRATION     20
 
-CString gRankTitle = Ascii2Simple(_("Rank            Result   Best Lap "));
-CString gHitTitle = Ascii2Simple(_("Rank                 For   Against"));
-
-// most of this string is control codes
 CString gFirstLapStr = _("%d %-0.10s #%d%*s   --First lap--  %c");
-
 CString gChartFinish = _("%d %-0.10s #%d%*s %2d.%02d.%03d %2d.%02d.%03d%c");
 CString gChart = _("%d %-0.10s #%d%*s lap:%-2d   %2d.%02d.%03d%c");
 CString gHitChart = _("%d %-0.10s #%d%*s  %2d      %2d");
@@ -71,9 +66,40 @@ static const std::string &GetCraftName(int id)
 namespace HoverRace {
 namespace Client {
 
+namespace {
+	// Global table of formatted HUD strings.
+	struct
+	{
+		std::string rankTitle;
+		std::string hitTitle;
+
+		// This is initialized once via Observer's constructor.
+		// We have to defer the initialization until first use because the
+		// locale isn't set until the app is initialized.
+		void Init()
+		{
+			static bool initialized = false;
+			if (initialized) return;
+
+			std::string s;
+
+			//TODO: This is the original hard-coded spacing.
+			//      The revamped HUD will render these bits separately.
+			s = _("Rank"); s += "            "; s += _("Result"); s += "   "; s += _("Best Lap");
+			rankTitle = Ascii2Simple(s.c_str());
+			s = _("Rank"); s += "                 "; s += _("For"); s += "   "; s += _("Against");
+			hitTitle = Ascii2Simple(s.c_str());
+
+			initialized = true;
+		}
+	} globalFmts;
+}
+
 Observer::Observer()
 {
 	const Config *cfg = Config::GetInstance();
+
+	globalFmts.Init();
 
 	mLastCameraPosValid = FALSE;
 	mScroll = 0;
@@ -707,10 +733,12 @@ void Observer::Render3DView(const ClientSession *pSession, const MR_MainCharacte
 			// Display banner
 
 			if(lShowHits) {
-				mBaseFont->GetSprite()->StrBlt(lXRes / 2, lCurrentLine, gHitTitle, &m3DView, MR_Sprite::eCenter, MR_Sprite::eTop, lFontScaling);
+				mBaseFont->GetSprite()->StrBlt(lXRes / 2, lCurrentLine, globalFmts.hitTitle.c_str(),
+					&m3DView, MR_Sprite::eCenter, MR_Sprite::eTop, lFontScaling);
 			}
 			else {
-				mBaseFont->GetSprite()->StrBlt(lXRes / 2, lCurrentLine, gRankTitle, &m3DView, MR_Sprite::eCenter, MR_Sprite::eTop, lFontScaling);
+				mBaseFont->GetSprite()->StrBlt(lXRes / 2, lCurrentLine, globalFmts.rankTitle.c_str(),
+					&m3DView, MR_Sprite::eCenter, MR_Sprite::eTop, lFontScaling);
 			}
 			lCurrentLine += lLineSpacing;
 
