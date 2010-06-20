@@ -39,18 +39,6 @@ using HoverRace::VideoServices::StaticText;
 #define NB_PLAYER_PAGE 10
 #define MR_CHAT_EXPIRATION     20
 
-CString gFirstLapStr = _("%d %-0.10s #%d%*s   --First lap--  %c");
-CString gChartFinish = _("%d %-0.10s #%d%*s %2d.%02d.%03d %2d.%02d.%03d%c");
-CString gChart = _("%d %-0.10s #%d%*s lap:%-2d   %2d.%02d.%03d%c");
-CString gHitChart = _("%d %-0.10s #%d%*s  %2d      %2d");
-CString gCountdownStr = _("Starting in %02d.%02d sec. for %d laps");
-CString gFinishStr = _("Finished in %d.%02d.%03d, placed %d of %d");
-CString gFinishStrSingle = _("Finished in %d.%02d.%03d");
-CString gBestLapStr = _("Best lap %d.%02d.%03d");
-CString gHeaderStr = _("%d.%02d.%02d  Lap:%d/%d");
-CString gLastLapStr = _("Last lap %d.%02d.%03d  Best %d.%02d.%03d");
-CString gCurLapStr = _("Current lap %d.%02d.%03d  Best %d.%02d.%03d");
-
 static const std::string &GetCraftName(int id)
 {
 	static const std::string names[4] = {
@@ -73,6 +61,18 @@ namespace {
 		std::string rankTitle;
 		std::string hitTitle;
 
+		std::string firstLap;
+		std::string chartFinish;
+		std::string chart;
+		std::string hitChart;
+		std::string countdown;
+		std::string finish;
+		std::string finishSingle;
+		std::string bestLap;
+		std::string header;
+		std::string lastLap;
+		std::string curLap;
+
 		// This is initialized once via Observer's constructor.
 		// We have to defer the initialization until first use because the
 		// locale isn't set until the app is initialized.
@@ -89,6 +89,18 @@ namespace {
 			rankTitle = Ascii2Simple(s.c_str());
 			s = _("Rank"); s += "                 "; s += _("For"); s += "   "; s += _("Against");
 			hitTitle = Ascii2Simple(s.c_str());
+
+			firstLap = _("%d %-0.10s #%d%*s   --First lap--  %c");
+			chartFinish = _("%d %-0.10s #%d%*s %2d.%02d.%03d %2d.%02d.%03d%c");
+			chart = _("%d %-0.10s #%d%*s lap:%-2d   %2d.%02d.%03d%c");
+			hitChart = _("%d %-0.10s #%d%*s  %2d      %2d");
+			countdown = _("Starting in %02d.%02d sec. for %d laps");
+			finish = _("Finished in %d.%02d.%03d, placed %d of %d");
+			finishSingle = _("Finished in %d.%02d.%03d");
+			bestLap = _("Best lap %d.%02d.%03d");
+			header = _("%d.%02d.%02d  Lap:%d/%d");
+			lastLap = _("Last lap %d.%02d.%03d  Best %d.%02d.%03d");
+			curLap = _("Current lap %d.%02d.%03d  Best %d.%02d.%03d");
 
 			initialized = true;
 		}
@@ -765,19 +777,19 @@ void Observer::Render3DView(const ClientSession *pSession, const MR_MainCharacte
 				int lPlayerNameLen = min(strlen(lPlayerName), 10);
 
 				if(lShowHits) {
-					sprintf(lBuffer, gHitChart, lCounter + 1, lPlayerName, lHoverId + 1, 10 - lPlayerNameLen, "", lNbFor, lNbAgain);
+					sprintf(lBuffer, globalFmts.hitChart.c_str(), lCounter + 1, lPlayerName, lHoverId + 1, 10 - lPlayerNameLen, "", lNbFor, lNbAgain);
 
 				}
 				else if(lNbLap == 0) {
-					sprintf(lBuffer, gFirstLapStr, lCounter + 1, lPlayerName, lHoverId + 1, 10 - lPlayerNameLen, "", lConnected ? '*' : '-');
+					sprintf(lBuffer, globalFmts.firstLap.c_str(), lCounter + 1, lPlayerName, lHoverId + 1, 10 - lPlayerNameLen, "", lConnected ? '*' : '-');
 
 				}
 				else if(lNbLap == -1) {
-					sprintf(lBuffer, gChartFinish, lCounter + 1, lPlayerName, lHoverId + 1, 10 - lPlayerNameLen, "", lFinishTime / 60000, (lFinishTime % 60000) / 1000, (lFinishTime % 1000), lBestLap / 60000, (lBestLap % 60000) / 1000, (lBestLap % 1000), lConnected ? '*' : '-');
+					sprintf(lBuffer, globalFmts.chartFinish.c_str(), lCounter + 1, lPlayerName, lHoverId + 1, 10 - lPlayerNameLen, "", lFinishTime / 60000, (lFinishTime % 60000) / 1000, (lFinishTime % 1000), lBestLap / 60000, (lBestLap % 60000) / 1000, (lBestLap % 1000), lConnected ? '*' : '-');
 
 				}
 				else {
-					sprintf(lBuffer, gChart, lCounter + 1, lPlayerName, lHoverId + 1, 10 - lPlayerNameLen, "", lNbLap + 1, lBestLap / 60000, (lBestLap % 60000) / 1000, (lBestLap % 1000), lConnected ? '*' : '-');
+					sprintf(lBuffer, globalFmts.chart.c_str(), lCounter + 1, lPlayerName, lHoverId + 1, 10 - lPlayerNameLen, "", lNbLap + 1, lBestLap / 60000, (lBestLap % 60000) / 1000, (lBestLap % 1000), lConnected ? '*' : '-');
 
 				}
 
@@ -797,7 +809,7 @@ void Observer::Render3DView(const ClientSession *pSession, const MR_MainCharacte
 
 		if(pTime < 0) {
 			pTime = -pTime;
-			sprintf(lMainLineBuffer, gCountdownStr, (pTime % 60000) / 1000, (pTime % 1000) / 10, pViewingCharacter->GetTotalLap());
+			sprintf(lMainLineBuffer, globalFmts.countdown.c_str(), (pTime % 60000) / 1000, (pTime % 1000) / 10, pViewingCharacter->GetTotalLap());
 			
 			int lFontScaling = 1 + (mBaseFont->GetSprite()->GetItemHeight() * 30) / (lYRes);
 			int lLineHeight = (mBaseFont->GetSprite()->GetItemHeight() / lFontScaling);
@@ -813,17 +825,17 @@ void Observer::Render3DView(const ClientSession *pSession, const MR_MainCharacte
 
 			// Race is finish
 			if(pSession->GetNbPlayers() > 1) {
-				sprintf(lMainLineBuffer, gFinishStr, lTotalTime / 60000, (lTotalTime % 60000) / 1000, (lTotalTime % 1000), pSession->GetRank(pViewingCharacter), pSession->GetNbPlayers());
+				sprintf(lMainLineBuffer, globalFmts.finish.c_str(), lTotalTime / 60000, (lTotalTime % 60000) / 1000, (lTotalTime % 1000), pSession->GetRank(pViewingCharacter), pSession->GetNbPlayers());
 			}
 			else {
-				sprintf(lMainLineBuffer, gFinishStrSingle, lTotalTime / 60000, (lTotalTime % 60000) / 1000, (lTotalTime % 1000));
+				sprintf(lMainLineBuffer, globalFmts.finishSingle.c_str(), lTotalTime / 60000, (lTotalTime % 60000) / 1000, (lTotalTime % 1000));
 			}
-			sprintf(lLapLineBuffer, gBestLapStr, lBestLap / 60000, (lBestLap % 60000) / 1000, (lBestLap % 1000));
+			sprintf(lLapLineBuffer, globalFmts.bestLap.c_str(), lBestLap / 60000, (lBestLap % 60000) / 1000, (lBestLap % 1000));
 
 		}
 		else if(pViewingCharacter->GetLap() == 0) {
 			// First lap
-			sprintf(lMainLineBuffer, gHeaderStr, pTime / 60000, (pTime % 60000) / 1000, (pTime % 1000) / 10, 1, pViewingCharacter->GetTotalLap());
+			sprintf(lMainLineBuffer, globalFmts.header.c_str(), pTime / 60000, (pTime % 60000) / 1000, (pTime % 1000) / 10, 1, pViewingCharacter->GetTotalLap());
 			// sprintf( lLapLineBuffer, "Current lap %d.%02d.%02d", pTime/60000, (pTime%60000)/1000, (pTime%1000) );
 
 		}
@@ -833,16 +845,16 @@ void Observer::Render3DView(const ClientSession *pSession, const MR_MainCharacte
 			MR_SimulationTime lLastLap = pViewingCharacter->GetLastLapDuration();
 
 			// More than one lap completed
-			sprintf(lMainLineBuffer, gHeaderStr, pTime / 60000, (pTime % 60000) / 1000, (pTime % 1000) / 10, pViewingCharacter->GetLap() + 1, pViewingCharacter->GetTotalLap());
-			sprintf(lLapLineBuffer, gLastLapStr, lLastLap / 60000, (lLastLap % 60000) / 1000, (lLastLap % 1000), lBestLap / 60000, (lBestLap % 60000) / 1000, (lBestLap % 1000));
+			sprintf(lMainLineBuffer, globalFmts.header.c_str(), pTime / 60000, (pTime % 60000) / 1000, (pTime % 1000) / 10, pViewingCharacter->GetLap() + 1, pViewingCharacter->GetTotalLap());
+			sprintf(lLapLineBuffer, globalFmts.lastLap.c_str(), lLastLap / 60000, (lLastLap % 60000) / 1000, (lLastLap % 1000), lBestLap / 60000, (lBestLap % 60000) / 1000, (lBestLap % 1000));
 		}
 		else {
 			MR_SimulationTime lBestLap = pViewingCharacter->GetBestLapDuration();
 			MR_SimulationTime lCurrentLap = pTime - pViewingCharacter->GetLastLapCompletion();
 
 			// More than one lap completed
-			sprintf(lMainLineBuffer, gHeaderStr, pTime / 60000, (pTime % 60000) / 1000, (pTime % 1000) / 10, pViewingCharacter->GetLap() + 1, pViewingCharacter->GetTotalLap());
-			sprintf(lLapLineBuffer, gCurLapStr, lCurrentLap / 60000, (lCurrentLap % 60000) / 1000, (lCurrentLap % 1000), lBestLap / 60000, (lBestLap % 60000) / 1000, (lBestLap % 1000));
+			sprintf(lMainLineBuffer, globalFmts.header.c_str(), pTime / 60000, (pTime % 60000) / 1000, (pTime % 1000) / 10, pViewingCharacter->GetLap() + 1, pViewingCharacter->GetTotalLap());
+			sprintf(lLapLineBuffer, globalFmts.curLap.c_str(), lCurrentLap / 60000, (lCurrentLap % 60000) / 1000, (lCurrentLap % 1000), lBestLap / 60000, (lBestLap % 60000) / 1000, (lBestLap % 1000));
 
 		}
 
