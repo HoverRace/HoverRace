@@ -527,10 +527,9 @@ BOOL InternetRoom::AddUserOp(HWND pParentWindow)
 
 	mNetOpString = _("Connecting to the Internet Meeting Room...");
 
-	mNetOpRequest.Format("%s?=ADD_USER%%%%%d-%d%%%%1%%%%%u%%%%%u%%%%%s",
-		roomList->GetSelectedRoom()->path.c_str(),
-		//(const char *) gServerList[gCurrentServerEntry].mURL,
-		-1, -2, 0, 0,
+	mNetOpRequest = boost::str(boost::format("%s?=ADD_USER%%%%%d-%d%%%%1%%%%%u%%%%%u%%%%%s") %
+		roomList->GetSelectedRoom()->path %
+		-1 % -2 % 0 % 0 %
 		(const char *) MR_Pad(mUser.c_str()));
 
 	lReturnValue = DialogBoxW(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDD_NET_PROGRESS), pParentWindow, NetOpCallBack) == IDOK;
@@ -570,10 +569,10 @@ BOOL InternetRoom::DelUserOp(HWND pParentWindow, BOOL pFastMode)
 
 	mNetOpString = _("Disconnecting from the Internet Meeting Room...");
 
-	mNetOpRequest.Format("%s?=DEL_USER%%%%%d-%u",
-		roomList->GetSelectedRoom()->path.c_str(),
+	mNetOpRequest = boost::str(boost::format("%s?=DEL_USER%%%%%d-%u") %
+		roomList->GetSelectedRoom()->path %
 		//(const char *) gServerList[gCurrentServerEntry].mURL,
-		mCurrentUserIndex, mCurrentUserId);
+		mCurrentUserIndex % mCurrentUserId);
 
 	lReturnValue = DialogBoxW(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDD_NET_PROGRESS), pParentWindow, pFastMode ? FastNetOpCallBack : NetOpCallBack) == IDOK;
 
@@ -590,11 +589,11 @@ BOOL InternetRoom::AddGameOp(HWND pParentWindow, const char *pGameName, const ch
 
 	mNetOpString = _("Registering game with the Internet Meeting Room...");
 
-	mNetOpRequest.Format("%s?=ADD_GAME%%%%%d-%u%%%%%s%%%%%s%%%%%d%%%%%d%%%%%d",
-		roomList->GetSelectedRoom()->path.c_str(),
+	mNetOpRequest = boost::str(boost::format("%s?=ADD_GAME%%%%%d-%u%%%%%s%%%%%s%%%%%d%%%%%d%%%%%d") %
+		roomList->GetSelectedRoom()->path %
 		//(const char *) gServerList[gCurrentServerEntry].mURL,
-		mCurrentUserIndex, mCurrentUserId, (const char *) MR_Pad(pGameName),
-		(const char *) MR_Pad(pTrackName), pNbLap, pGameOpts, pPort);
+		mCurrentUserIndex % mCurrentUserId % (const char *) MR_Pad(pGameName) %
+		(const char *) MR_Pad(pTrackName) % pNbLap % pGameOpts % pPort);
 
 	lReturnValue = DialogBoxW(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDD_NET_PROGRESS), pParentWindow, NetOpCallBack) == IDOK;
 
@@ -628,10 +627,10 @@ BOOL InternetRoom::DelGameOp(HWND pParentWindow)
 
 	mNetOpString = _("Unregistering game from the Internet Meeting Room...");
 
-	mNetOpRequest.Format("%s?=DEL_GAME%%%%%d-%u%%%%%d-%u",
-		roomList->GetSelectedRoom()->path.c_str(),
+	mNetOpRequest = boost::str(boost::format("%s?=DEL_GAME%%%%%d-%u%%%%%d-%u") %
+		roomList->GetSelectedRoom()->path %
 		//(const char *) gServerList[gCurrentServerEntry].mURL,
-		mCurrentGameIndex, mCurrentGameId, mCurrentUserIndex, mCurrentUserId);
+		mCurrentGameIndex % mCurrentGameId % mCurrentUserIndex % mCurrentUserId);
 
 	lReturnValue = DialogBoxW(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDD_NET_PROGRESS), pParentWindow, NetOpCallBack) == IDOK;
 
@@ -651,11 +650,11 @@ BOOL InternetRoom::JoinGameOp(HWND pParentWindow, int pGameIndex)
 	mCurrentGameIndex = pGameIndex;
 	mCurrentGameId = mGameList[pGameIndex].mId;
 
-	mNetOpRequest.Format("%s?=JOIN_GAME%%%%%d-%u%%%%%d-%u%%%%%u%%%%%u",
-		roomList->GetSelectedRoom()->path.c_str(),
+	mNetOpRequest = boost::str(boost::format("%s?=JOIN_GAME%%%%%d-%u%%%%%d-%u%%%%%u%%%%%u") %
+		roomList->GetSelectedRoom()->path.c_str() %
 		//(const char *) gServerList[gCurrentServerEntry].mURL,
-		mCurrentGameIndex, mCurrentGameId, mCurrentUserIndex, mCurrentUserId,
-		Config::GetInstance()->net.tcpRecvPort,
+		mCurrentGameIndex % mCurrentGameId % mCurrentUserIndex % mCurrentUserId %
+		Config::GetInstance()->net.tcpRecvPort %
 		Config::GetInstance()->net.udpRecvPort);
 
 	lReturnValue = DialogBoxW(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDD_NET_PROGRESS), pParentWindow, NetOpCallBack) == IDOK;
@@ -673,10 +672,10 @@ BOOL InternetRoom::LeaveGameOp(HWND pParentWindow)
 
 	mNetOpString = _("Unregistering from the Internet Meeting Room...");
 
-	mNetOpRequest.Format("%s?=LEAVE_GAME%%%%%d-%u%%%%%d-%u",
-		roomList->GetSelectedRoom()->path.c_str(),
+	mNetOpRequest = boost::str(boost::format("%s?=LEAVE_GAME%%%%%d-%u%%%%%d-%u") %
+		roomList->GetSelectedRoom()->path %
 		//(const char *) gServerList[gCurrentServerEntry].mURL,
-		mCurrentGameIndex, mCurrentGameId, mCurrentUserIndex, mCurrentUserId);
+		mCurrentGameIndex % mCurrentGameId % mCurrentUserIndex % mCurrentUserId);
 
 	lReturnValue = DialogBoxW(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDD_NET_PROGRESS), pParentWindow, NetOpCallBack) == IDOK;
 
@@ -693,11 +692,11 @@ BOOL InternetRoom::AddMessageOp(HWND pParentWindow, const char *pMessage, int pH
 
 	mNetOpString = _("Sending message to the Internet Meeting Room...");
 
-	mNetOpRequest.Format("%s?=MESSAGE%%%%%d-%u%%%%%d:%d%%%%%s",
-		roomList->GetSelectedRoom()->path.c_str(),
+	mNetOpRequest = boost::str(boost::format("%s?=MESSAGE%%%%%d-%u%%%%%d:%d%%%%%s") %
+		roomList->GetSelectedRoom()->path %
 		//(const char *) gServerList[gCurrentServerEntry].mURL,
-		mCurrentUserIndex, mCurrentUserId,
-		pHours, pMinutes,
+		mCurrentUserIndex % mCurrentUserId %
+		pHours % pMinutes %
 		(const char *) MR_Pad(pMessage));
 
 	lReturnValue = DialogBoxW(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDD_NET_PROGRESS), pParentWindow, NetOpCallBack) == IDOK;
@@ -2361,7 +2360,7 @@ BOOL CALLBACK InternetRoom::NetOpCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPa
 			{
 				// Setup message
 				SetWindowTextW(pWindow, Str::UW(_("Network Transaction Progress")));
-				SetDlgItemTextW(pWindow, IDC_TEXT, Str::UW(mThis->mNetOpString));
+				SetDlgItemTextW(pWindow, IDC_TEXT, Str::UW(mThis->mNetOpString.c_str()));
 	
 				// Initiate the request
 				mThis->mOpRequest.Send(pWindow,
@@ -2369,7 +2368,7 @@ BOOL CALLBACK InternetRoom::NetOpCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPa
 					//gServerList[gCurrentServerEntry].mAddress,
 					mThis->roomList->GetSelectedRoom()->port,
 					//gServerList[gCurrentServerEntry].mPort,
-					mThis->mNetOpRequest);
+					mThis->mNetOpRequest.c_str());
 	
 				// start a timeout timer
 				SetTimer(pWindow, OP_TIMEOUT_EVENT, OP_TIMEOUT, NULL);
@@ -2430,7 +2429,7 @@ BOOL CALLBACK InternetRoom::FastNetOpCallBack(HWND pWindow, UINT pMsgId, WPARAM 
 			{
 				// Setup message
 				SetWindowTextW(pWindow, Str::UW(_("Network Transaction Progress")));
-				SetDlgItemTextW(pWindow, IDC_TEXT, Str::UW(mThis->mNetOpString));
+				SetDlgItemTextW(pWindow, IDC_TEXT, Str::UW(mThis->mNetOpString.c_str()));
 	
 				// Initiate the request
 				mThis->mOpRequest.Send(pWindow,
@@ -2438,7 +2437,7 @@ BOOL CALLBACK InternetRoom::FastNetOpCallBack(HWND pWindow, UINT pMsgId, WPARAM 
 					//gServerList[gCurrentServerEntry].mAddress,
 					mThis->roomList->GetSelectedRoom()->port,
 					//gServerList[gCurrentServerEntry].mPort,
-					mThis->mNetOpRequest);
+					mThis->mNetOpRequest.c_str());
 	
 				// start a timeout timer
 				SetTimer(pWindow, OP_TIMEOUT_EVENT, FAST_OP_TIMEOUT, NULL);

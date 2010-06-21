@@ -141,8 +141,8 @@ class InternetRoom
 		// Temporary data
 		HANDLE mCurrentLocateRequest;
 		char mHostEnt[MAXGETHOSTSTRUCT];
-		CString mNetOpString;
-		CString mNetOpRequest;
+		std::string mNetOpString;
+		std::string mNetOpRequest;
 		NetworkSession *mSession;
 		MR_VideoBuffer *mVideoBuffer;
 		int mNbSuccessiveRefreshTimeOut;
