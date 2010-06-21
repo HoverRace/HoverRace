@@ -114,8 +114,8 @@ int gCurrentBannerEntry = 0;
 
 InternetRoom *InternetRoom::mThis = NULL;
 
-static CString MR_Pad(const char *pSrc);
-static CString GetLine(const char *pSrc);
+static std::string MR_Pad(const char *pSrc);
+static std::string GetLine(const char *pSrc);
 static int GetLineLen(const char *pSrc);
 static const char *GetNextLine(const char *pSrc);
 
@@ -382,7 +382,7 @@ int InternetRoom::ParseState(const char *pAnswer)
 							mClientList[lEntry].mMajorID = -1;
 							mClientList[lEntry].mMinorID = -1;
 
-							sscanf(GetLine(lLinePtr), "%d-%d", &mClientList[lEntry].mMajorID, &mClientList[lEntry].mMinorID);
+							sscanf(GetLine(lLinePtr).c_str(), "%d-%d", &mClientList[lEntry].mMajorID, &mClientList[lEntry].mMinorID);
 
 							mClientList[lEntry].mValid = TRUE;
 							mClientList[lEntry].mGame = -1;
@@ -477,7 +477,7 @@ int InternetRoom::ParseState(const char *pAnswer)
 
 			if(lLinePtr != NULL) {
 				lReturnValue |= eChatModified;
-				AddChatLine(GetLine(lLinePtr));
+				AddChatLine(GetLine(lLinePtr).c_str());
 			}
 		}
 
@@ -530,7 +530,7 @@ BOOL InternetRoom::AddUserOp(HWND pParentWindow)
 	mNetOpRequest = boost::str(boost::format("%s?=ADD_USER%%%%%d-%d%%%%1%%%%%u%%%%%u%%%%%s") %
 		roomList->GetSelectedRoom()->path %
 		-1 % -2 % 0 % 0 %
-		(const char *) MR_Pad(mUser.c_str()));
+		MR_Pad(mUser.c_str()).c_str());
 
 	lReturnValue = DialogBoxW(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDD_NET_PROGRESS), pParentWindow, NetOpCallBack) == IDOK;
 
@@ -592,8 +592,8 @@ BOOL InternetRoom::AddGameOp(HWND pParentWindow, const char *pGameName, const ch
 	mNetOpRequest = boost::str(boost::format("%s?=ADD_GAME%%%%%d-%u%%%%%s%%%%%s%%%%%d%%%%%d%%%%%d") %
 		roomList->GetSelectedRoom()->path %
 		//(const char *) gServerList[gCurrentServerEntry].mURL,
-		mCurrentUserIndex % mCurrentUserId % (const char *) MR_Pad(pGameName) %
-		(const char *) MR_Pad(pTrackName) % pNbLap % pGameOpts % pPort);
+		mCurrentUserIndex % mCurrentUserId % MR_Pad(pGameName) %
+		MR_Pad(pTrackName) % pNbLap % pGameOpts % pPort);
 
 	lReturnValue = DialogBoxW(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDD_NET_PROGRESS), pParentWindow, NetOpCallBack) == IDOK;
 
@@ -697,7 +697,7 @@ BOOL InternetRoom::AddMessageOp(HWND pParentWindow, const char *pMessage, int pH
 		//(const char *) gServerList[gCurrentServerEntry].mURL,
 		mCurrentUserIndex % mCurrentUserId %
 		pHours % pMinutes %
-		(const char *) MR_Pad(pMessage));
+		MR_Pad(pMessage));
 
 	lReturnValue = DialogBoxW(GetModuleHandle(NULL), MAKEINTRESOURCEW(IDD_NET_PROGRESS), pParentWindow, NetOpCallBack) == IDOK;
 
@@ -1067,14 +1067,14 @@ BOOL InternetRoom::VerifyError(HWND pParentWindow, const char *pAnswer)
 
 	if(!lReturnValue && (pParentWindow != NULL)) {
 		BOOL lPopDlg = TRUE;
-		CString lMessage;
+		std::string lMessage;
 
 		if(lCode == -1) {
 			ASSERT(FALSE);
 			lMessage = _("Communication error");
 		}
 
-		while(lMessage.IsEmpty()) {
+		while (lMessage.empty()) {
 			switch (lCode) {
 				case 100:
 					lMessage = _("Unable to add user");
@@ -1218,7 +1218,7 @@ BOOL InternetRoom::VerifyError(HWND pParentWindow, const char *pAnswer)
 
 			}
 
-			if(lMessage.IsEmpty()) {
+			if (lMessage.empty()) {
 				if((lCode % 100) == 0) {
 					lMessage = boost::str(boost::format("%s %d") %
 						_("Unknown error code") %
@@ -1232,7 +1232,9 @@ BOOL InternetRoom::VerifyError(HWND pParentWindow, const char *pAnswer)
 		}
 
 		if(lPopDlg) {
-			MessageBoxW(pParentWindow, Str::UW(lMessage), Str::UW(_("Internet Meeting Room")), MB_ICONSTOP | MB_OK | MB_APPLMODAL);
+			MessageBoxW(pParentWindow, Str::UW(lMessage.c_str()),
+				Str::UW(_("Internet Meeting Room")),
+				MB_ICONSTOP | MB_OK | MB_APPLMODAL);
 		}
 	}
 	return lReturnValue;
@@ -1567,20 +1569,20 @@ BOOL CALLBACK InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 
 				case REFRESH_EVENT:
 					{
-						CString lRequest;
+						std::string lRequest;
 	
-						lRequest.Format("%s?=REFRESH%%%%%d-%u%%%%%d",
-							mThis->roomList->GetSelectedRoom()->path.c_str(),
+						lRequest = boost::str(boost::format("%s?=REFRESH%%%%%d-%u%%%%%d") %
+							mThis->roomList->GetSelectedRoom()->path %
 							//(const char *) gServerList[gCurrentServerEntry].mURL,
-							mThis->mCurrentUserIndex,
-							mThis->mCurrentUserId,
+							mThis->mCurrentUserIndex %
+							mThis->mCurrentUserId %
 							mThis->mLastRefreshTimeStamp);
 						mThis->mRefreshRequest.Send(pWindow,
 							mThis->roomList->GetSelectedRoom()->addr,
 							//gServerList[gCurrentServerEntry].mAddress,
 							mThis->roomList->GetSelectedRoom()->port,
 							//gServerList[gCurrentServerEntry].mPort,
-							lRequest);
+							lRequest.c_str());
 	
 						// Activate timeout
 						SetTimer(pWindow, REFRESH_TIMEOUT_EVENT, REFRESH_TIMEOUT, NULL);
@@ -1820,17 +1822,17 @@ BOOL CALLBACK InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 
 						GetDlgItemTextW(pWindow, IDC_CHAT_IN, lBuffer, sizeof(lBuffer));
 
-						CString lRequest;
+						std::string lRequest;
 
 						const RoomList::Server *room = mThis->roomList->GetSelectedRoom();
 
-						lRequest.Format("%s?=ADD_CHAT%%%%%d-%u%%%%%s",
-							room->path.c_str(),
+						lRequest = boost::str(boost::format("%s?=ADD_CHAT%%%%%d-%u%%%%%s") %
+							room->path %
 							//(const char *) gServerList[gCurrentServerEntry].mURL,
-							mThis->mCurrentUserIndex, mThis->mCurrentUserId,
-							(const char *) MR_Pad(Str::WU(lBuffer)));
+							mThis->mCurrentUserIndex % mThis->mCurrentUserId %
+							MR_Pad(Str::WU(lBuffer)));
 
-						if(mThis->mChatRequest.Send(pWindow, room->addr, room->port, lRequest)) {
+						if (mThis->mChatRequest.Send(pWindow, room->addr, room->port, lRequest.c_str())) {
 							SetDlgItemText(pWindow, IDC_CHAT_IN, "");
 
 							// Activate timeout
@@ -1964,21 +1966,21 @@ BOOL CALLBACK InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 
 							if(lSuccess) {
 								// Wait client registration
-								CString lTrackName;
+								std::string lTrackName;
 
-								lTrackName.Format("%s  %d %s; options %c%c%c, %c%c%c%c",
-									lCurrentTrack.c_str(), lNbLap,
-									(lNbLap == 1) ? "lap" : "laps",
-									(lGameOpts & OPT_ALLOW_WEAPONS) ? 'W' : '_',
-									(lGameOpts & OPT_ALLOW_MINES)   ? 'M' : '_',
-									(lGameOpts & OPT_ALLOW_CANS)    ? 'C' : '_',
-									(lGameOpts & OPT_ALLOW_BASIC)   ? 'B' : '_',
-									(lGameOpts & OPT_ALLOW_BI)		? '2' : '_',
-									(lGameOpts & OPT_ALLOW_CX)		? 'C' : '_',
-									(lGameOpts & OPT_ALLOW_EON)		? 'E' : '_');
+								lTrackName = boost::str(boost::format("%s  %d %s; options %c%c%c, %c%c%c%c") %
+									lCurrentTrack % lNbLap %
+									((lNbLap == 1) ? "lap" : "laps") %
+									((lGameOpts & OPT_ALLOW_WEAPONS) ? 'W' : '_') %
+									((lGameOpts & OPT_ALLOW_MINES)   ? 'M' : '_') %
+									((lGameOpts & OPT_ALLOW_CANS)    ? 'C' : '_') %
+									((lGameOpts & OPT_ALLOW_BASIC)   ? 'B' : '_') %
+									((lGameOpts & OPT_ALLOW_BI)      ? '2' : '_') %
+									((lGameOpts & OPT_ALLOW_CX)      ? 'C' : '_') %
+									((lGameOpts & OPT_ALLOW_EON)     ? 'E' : '_'));
 
 								lSuccess = (mThis->mSession->WaitConnections(pWindow,
-									lTrackName, FALSE,
+									lTrackName.c_str(), FALSE,
 									Config::GetInstance()->net.tcpServPort,
 									&mThis->mModelessDlg, MRM_DLG_END_ADD) != FALSE);
 
@@ -2480,7 +2482,7 @@ BOOL CALLBACK InternetRoom::FastNetOpCallBack(HWND pWindow, UINT pMsgId, WPARAM 
 	return lReturnValue;
 }
 
-CString gScoreRequestStr;
+std::string gScoreRequestStr;
 InternetRequest gScoreRequest;
 
 BOOL CALLBACK UpdateScoresCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam)
@@ -2504,7 +2506,7 @@ BOOL CALLBACK UpdateScoresCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LP
 					//gScoreServer.mAddress,
 					roomList->GetScoreServer().port,
 					//gScoreServer.mPort,
-					gScoreRequestStr);
+					gScoreRequestStr.c_str());
 	
 				// start a timeout timer
 				SetTimer(pWindow, OP_TIMEOUT_EVENT, SCORE_OP_TIMEOUT, NULL);
@@ -2530,7 +2532,7 @@ BOOL CALLBACK UpdateScoresCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LP
 						//gScoreServer.mAddress,
 						roomList->GetScoreServer().port,
 						//gScoreServer.mPort,
-						gScoreRequestStr);
+						gScoreRequestStr.c_str());
 
 					// start a timeout timer
 					SetTimer(pWindow, OP_TIMEOUT_EVENT, SCORE_OP_TIMEOUT + 3000, NULL);
@@ -2634,11 +2636,11 @@ BOOL MR_SendRaceResult(HWND pParentWindow, const char *pTrack,
 		   else
 		   {
 		 */
-		gScoreRequestStr.Format(
-			"%s?=RESULT%%%%%u%%%%%s%%%%%s%%%%%u%%%%%d%%%%%d%%%%%d%%%%%d",
-			roomList->GetScoreServer().path.c_str(), pBestLapTime,
-			(const char *) MR_Pad(pTrack), (const char *) MR_Pad(pAlias),
-			pTrackSum, pHoverModel, pTotalTime, pNbLap, pNbPlayer);
+		gScoreRequestStr = boost::str(
+			boost::format("%s?=RESULT%%%%%u%%%%%s%%%%%s%%%%%u%%%%%d%%%%%d%%%%%d%%%%%d") %
+			roomList->GetScoreServer().path % pBestLapTime %
+			MR_Pad(pTrack) % MR_Pad(pAlias) %
+			pTrackSum % pHoverModel % pTotalTime % pNbLap % pNbPlayer);
 		//}
 
 		lReturnValue = DialogBoxParamW(GetModuleHandle(NULL),
@@ -2650,9 +2652,10 @@ BOOL MR_SendRaceResult(HWND pParentWindow, const char *pTrack,
 	return lReturnValue;
 }
 
-CString MR_Pad(const char *pStr)
+std::string MR_Pad(const char *pStr)
 {
-	CString lReturnValue;
+	static boost::format nfmt("%%%02x");
+	std::string lReturnValue;
 
 	while(*pStr != 0) {
 		/*
@@ -2693,12 +2696,8 @@ CString MR_Pad(const char *pStr)
 				default:
 				{
 					*/
-					CString lNumber;
-
 					unsigned char c = *pStr;
-					lNumber.Format("%%%02x", c);
-
-					lReturnValue += lNumber;
+					lReturnValue += (nfmt % c).str();
 					/*
 				}
 			}
@@ -2713,9 +2712,9 @@ CString MR_Pad(const char *pStr)
 
 }
 
-CString GetLine(const char *pSrc)
+std::string GetLine(const char *pSrc)
 {
-	return CString(pSrc, GetLineLen(pSrc));
+	return std::string(pSrc, GetLineLen(pSrc));
 }
 
 /**
