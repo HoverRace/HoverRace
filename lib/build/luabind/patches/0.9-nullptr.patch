@@ -1,0 +1,66 @@
+diff -urN orig/luabind/detail/instance_holder.hpp src/luabind/detail/instance_holder.hpp
+--- orig/luabind/detail/instance_holder.hpp	2010-06-22 13:51:06.844651400 -0400
++++ src/luabind/detail/instance_holder.hpp	2010-06-22 13:49:02.027512300 -0400
+@@ -98,7 +98,7 @@
+             weak ? weak : get_pointer(p)));
+ 
+         if (!naked_ptr)
+-            return std::pair<void*, int>(0, 0);
++            return std::pair<void*, int>(nullptr, 0);
+ 
+         return get_class()->casts().cast(
+             naked_ptr
+diff -urN orig/luabind/detail/object_rep.hpp src/luabind/detail/object_rep.hpp
+--- orig/luabind/detail/object_rep.hpp	2010-06-22 13:51:06.621638700 -0400
++++ src/luabind/detail/object_rep.hpp	2010-06-22 13:22:44.915766100 -0400
+@@ -55,7 +55,7 @@
+ 		std::pair<void*, int> get_instance(class_id target) const
+ 		{
+ 			if (m_instance == 0)
+-				return std::pair<void*, int>(0, -1);
++				return std::pair<void*, int>(nullptr, -1);
+ 			return m_instance->get(target);
+ 		}
+ 
+diff -urN orig/src/class_rep.cpp src/src/class_rep.cpp
+--- orig/src/class_rep.cpp	2010-06-22 13:51:07.046663000 -0400
++++ src/src/class_rep.cpp	2010-06-22 13:49:20.695580000 -0400
+@@ -123,7 +123,7 @@
+ {
+ 	const int size = sizeof(object_rep);
+ 	char* mem = static_cast<char*>(lua_newuserdata(L, size));
+-	return std::pair<void*,void*>(mem, 0);
++	return std::pair<void*,void*>(mem, nullptr);
+ }
+ 
+ namespace
+diff -urN orig/src/inheritance.cpp src/src/inheritance.cpp
+--- orig/src/inheritance.cpp	2010-06-22 13:51:06.897654400 -0400
++++ src/src/inheritance.cpp	2010-06-22 13:42:25.661841500 -0400
+@@ -144,7 +144,7 @@
+         return std::make_pair(p, 0);
+ 
+     if (src >= m_vertices.size() || target >= m_vertices.size())
+-        return std::pair<void*, int>(0, -1);
++        return std::pair<void*, int>(nullptr, -1);
+ 
+     std::ptrdiff_t const object_offset =
+         (char const*)dynamic_ptr - (char const*)p;
+@@ -154,7 +154,7 @@
+     if (cached.first != cache::unknown)
+     {
+         if (cached.first == cache::invalid)
+-            return std::pair<void*, int>(0, -1);
++            return std::pair<void*, int>(nullptr, -1);
+         return std::make_pair((char*)p + cached.first, cached.second);
+     }
+ 
+@@ -192,7 +192,7 @@
+ 
+     m_cache.put(src, target, dynamic_id, object_offset, cache::invalid, -1);
+ 
+-    return std::pair<void*, int>(0, -1);
++    return std::pair<void*, int>(nullptr, -1);
+ }
+ 
+ void cast_graph::impl::insert(

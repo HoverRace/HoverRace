@@ -8,3 +8,5 @@ http://sourceforge.net/projects/luabind/files/luabind/
 2. Unpack the .zip file into this folder.
 
 3. Rename the "luabind-0.9" folder to "src".
+
+4. Apply patches/0.9-nullptr.patch
