@@ -691,32 +691,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\lib\mfcleakfix.dll"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)&#x0D;&#x0A;"
-						Outputs="$(OutDir)\$(InputFileName)"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-						Description="$(InputFileName)"
-						CommandLine="copy &quot;$(InputPath)&quot; $(OutDir)&#x0D;&#x0A;"
-						Outputs="$(OutDir)\$(InputFileName)"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath="..\lib\OIS.dll"
 				>
 				<FileConfiguration
