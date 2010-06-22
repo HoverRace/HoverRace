@@ -29,6 +29,7 @@ libhoverrace_engine_la_LIBADD = \
 	VideoServices/libvideosvc.la
 libhoverrace_engine_la_LDFLAGS = \
 	$(BOOST_FILESYSTEM_LDFLAGS) $(BOOST_FILESYSTEM_LIBS) \
+	$(LUABIND_LDFLAGS) \
 	$(DEPS_LIBS)
 libhoverrace_engine_la_SOURCES = \
 	StdAfx.h \
