@@ -44,9 +44,11 @@ using namespace HoverRace::Parcel;
 using namespace HoverRace::Util;
 namespace fs = boost::filesystem;
 
+#if 0
 #if defined(_WIN32) && defined(_DEBUG)
 #	include <mfcleakfix.h>
 	static int foo = use_ignore_mfc_leaks();
+#endif
 #endif
 
 static void InspectAndPrint(const std::string &label, const Inspectable *insp)

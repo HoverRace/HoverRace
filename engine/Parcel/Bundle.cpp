@@ -24,7 +24,7 @@
 
 #include "../Util/Str.h"
 #include "ClassicRecordFile.h"
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(WITH_OBJSTREAM)
 #	include "MfcRecordFile.h"
 #endif
 
@@ -61,7 +61,7 @@ RecordFilePtr Bundle::OpenParcel(const std::string &name, bool writing) const
 	OS::path_t pt = dir / (OS::cpstr_t)Str::UP(name.c_str());
 
 	if (fs::exists(pt)) {
-#		ifdef _WIN32
+#		if defined(_WIN32) && !defined(WITH_OBJSTREAM)
 			MfcRecordFile::FixFileAttrs(pt);
 			RecordFile *rec = MfcRecordFile::New();
 #		else

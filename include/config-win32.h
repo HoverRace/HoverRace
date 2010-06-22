@@ -25,3 +25,5 @@
 
 // Use wide (Unicode) paths.
 #define WITH_WIDE_PATHS 1
+
+#define WITH_OBJSTREAM 1

@@ -155,7 +155,7 @@ IDD_BAD_MODE4 DIALOGEX 10, 10, 153, 41
 STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | DS_FIXEDSYS | DS_CONTROL | DS_CENTER | WS_POPUP | WS_VISIBLE
 FONT 8, "MS Shell Dlg", 0, 0, 0x0
 BEGIN
-    CTEXT           "You must select a full screen mode because this version of the application only support 8bit/pixel display modes.",IDC_STATIC,2,1,149,26
+    CTEXT           "You must select a full screen mode because this version of the application only support 8bit/pixel display modes.",IDC_BADMODE_FULLSCREEN_LBL,2,1,149,26
     DEFPUSHBUTTON   "Switch to full screen mode",IDC_FULL_MENU_MODE,22,27,109,14
 END
 
@@ -835,6 +835,8 @@ BEGIN
     VK_F6,          ID_VIEW_MOREMESSAGES,   VIRTKEY, NOINVERT
     VK_F5,          ID_VIEW_PLAYERSLIST,    VIRTKEY, NOINVERT
     VK_F5,          ID_VIEW_PLAYERSLIST,    VIRTKEY, SHIFT, NOINVERT
+    VK_F4,          ID_GAME_EXIT,           VIRTKEY, ALT, NOINVERT
+    VK_F1,          ID_HELP_ABOUT,          VIRTKEY, NOINVERT
 END
 
 

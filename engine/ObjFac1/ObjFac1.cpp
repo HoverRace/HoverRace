@@ -42,8 +42,6 @@
 
 #include "ObjFac1.h"
 
-#define new DEBUG_NEW
-
 using namespace HoverRace::ObjFac1;
 using HoverRace::ObjFacTools::ResourceLib;
 using HoverRace::Util::Config;

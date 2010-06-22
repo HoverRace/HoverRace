@@ -23,6 +23,7 @@
 #include "StdAfx.h"
 
 #ifdef WITH_DIRECTSHOW
+#	include <atlbase.h>
 #	include <dshow.h>
 #	pragma comment(lib, "Strmiids.lib")
 #else

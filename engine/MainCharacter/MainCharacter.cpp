@@ -813,7 +813,6 @@ void MR_MainCharacter::ApplyEffect(const MR_ContactEffect * pEffect, MR_Simulati
 			}
 
 			if((lPhysCollision->mXSpeed != 0 || lPhysCollision->mYSpeed != 0)) {
-				TRACE("Net priority increase %d\n", mMasterMode);
 				mNetPriority = TRUE;
 				mLastCollisionTime = pTime;
 			}

@@ -20,7 +20,7 @@
 			OutputDirectory=".\..\..\Debug"
 			IntermediateDirectory=".\Debug"
 			ConfigurationType="1"
-			UseOfMFC="2"
+			UseOfMFC="0"
 			CharacterSet="2"
 			>
 			<Tool
@@ -62,7 +62,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="mfcleakfix.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="../../lib"
 				GenerateDebugInformation="true"

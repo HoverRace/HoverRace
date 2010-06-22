@@ -48,9 +48,11 @@ using HoverRace::Client::GameApp;
 using HoverRace::Util::Config;
 using HoverRace::Util::OS;
 
+#if 0
 #if defined(_WIN32) && defined(_DEBUG)
 #	include <mfcleakfix.h>
 	static int foo = use_ignore_mfc_leaks();
+#endif
 #endif
 
 static OS::path_t initScript;

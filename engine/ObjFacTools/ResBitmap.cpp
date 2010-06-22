@@ -25,10 +25,6 @@
 
 #include "ResBitmap.h"
 
-#if defined(_WIN32) && defined(_DEBUG)
-#	define new DEBUG_NEW
-#endif
-
 MR_ResBitmap::MR_ResBitmap(int pResourceId)
 {
 	mResourceId = pResourceId;

@@ -91,7 +91,7 @@ class MR_DllDeclare ObjStream
 		virtual void WriteString(const std::string &s) = 0;
 		friend ObjStream &operator<<(ObjStream &os, const std::string &s) { os.WriteString(s); return os; }
 
-#		ifdef _WIN32
+#		if defined(_WIN32) && !defined(WITH_OBJSTREAM)
 			virtual void WriteCString(const CString &s) = 0;
 			friend ObjStream &operator<<(ObjStream &os, const CString &s) { os.WriteCString(s); return os; }
 #		endif
@@ -116,7 +116,7 @@ class MR_DllDeclare ObjStream
 		virtual void ReadString(std::string &s) = 0;
 		friend ObjStream &operator>>(ObjStream &os, std::string &s) { os.ReadString(s); return os; }
 
-#		ifdef _WIN32
+#		if defined(_WIN32) && !defined(WITH_OBJSTREAM)
 			virtual void ReadCString(CString &s) = 0;
 			friend ObjStream &operator>>(ObjStream &os, CString &s) { os.ReadCString(s); return os; }
 #		endif

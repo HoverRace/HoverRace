@@ -21,6 +21,8 @@
 
 #include "StdAfx.h"
 
+#include <richedit.h>
+
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 

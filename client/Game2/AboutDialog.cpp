@@ -23,6 +23,8 @@
 
 #include "StdAfx.h"
 
+#include <richedit.h>
+
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/OS.h"
 #include "../../engine/Util/Str.h"

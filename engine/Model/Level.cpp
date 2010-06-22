@@ -25,8 +25,6 @@
 
 #include "Level.h"
 
-#define new DEBUG_NEW
-
 using HoverRace::Parcel::ObjStream;
 
 // MR_Level implementation

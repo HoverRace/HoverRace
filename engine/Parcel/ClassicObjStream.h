@@ -66,7 +66,7 @@ class MR_DllDeclare ClassicObjStream : public ObjStream
 		virtual void WriteInt32(MR_Int32 i);
 		virtual void WriteUInt32(MR_UInt32 i);
 		virtual void WriteString(const std::string &s);
-#		ifdef _WIN32
+#		if defined(_WIN32) && !defined(WITH_OBJSTREAM)
 			virtual void WriteCString(const CString &s) { WriteString((const char *)s); }
 #		endif
 
@@ -86,7 +86,7 @@ class MR_DllDeclare ClassicObjStream : public ObjStream
 		virtual void ReadInt32(MR_Int32 &i);
 		virtual void ReadUInt32(MR_UInt32 &i);
 		virtual void ReadString(std::string &s);
-#		ifdef _WIN32
+#		if defined(_WIN32) && !defined(WITH_OBJSTREAM)
 			virtual void ReadCString(CString &s) { std::string ss; ReadString(ss); s = ss.c_str(); }
 #		endif
 

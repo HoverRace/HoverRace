@@ -756,7 +756,7 @@ bool GameApp::CreateMainMenu()
 	if (!AppendMenuW(fileMenu, MF_POPUP | MF_STRING, (UINT_PTR)netMenu,
 		Str::UW(pgettext("Menu|File","&Network")))) return false;
 	if (!AppendMenuW(fileMenu, MF_SEPARATOR, NULL, NULL)) return false;
-	if (!AppendMenuW(fileMenu, MF_STRING, ID_APP_EXIT,
+	if (!AppendMenuW(fileMenu, MF_STRING, ID_GAME_EXIT,
 		Str::UW(MENUFMT("Menu|File", "E&xit", false, "Alt+F4").c_str()))) return false;
 	
 	HMENU viewMenu = CreatePopupMenu();
@@ -795,7 +795,7 @@ bool GameApp::CreateMainMenu()
 	if (!AppendMenuW(helpMenu, MF_STRING, ID_HELP_UPDATES,
 		Str::UW(MENUFMT("Menu|Help", "Check for &Updates", false, NULL).c_str()))) return false;
 	if (!AppendMenuW(helpMenu, MF_SEPARATOR, NULL, NULL)) return false;
-	if (!AppendMenuW(helpMenu, MF_STRING, ID_APP_ABOUT,
+	if (!AppendMenuW(helpMenu, MF_STRING, ID_HELP_ABOUT,
 		Str::UW(MENUFMT("Menu|Help", "&About HoverRace", false, NULL).c_str()))) return false;
 
 	HMENU menu = CreateMenu();
@@ -1956,7 +1956,7 @@ LRESULT CALLBACK GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam
 		case WM_COMMAND:
 			switch (LOWORD(pWParam)) {
 				// Game control
-				case ID_APP_EXIT:
+				case ID_GAME_EXIT:
 					PostMessage(This->mMainWindow, WM_CLOSE, 0, 0);
 					break;
 
@@ -2071,7 +2071,7 @@ LRESULT CALLBACK GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam
 					}
 					break;
 
-				case ID_APP_ABOUT:
+				case ID_HELP_ABOUT:
 					This->DisplayAbout();
 					break;
 
@@ -2142,7 +2142,8 @@ BOOL CALLBACK GameApp::BadModeDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWPar
 		// Catch environment modification events
 		case WM_INITDIALOG:
 			// i18n
-			SetDlgItemTextW(pWindow, IDC_STATIC, Str::UW(_("Incompatible video mode. Select a compatible video mode by pressing F8 or F9 once a game is started")));
+			SetDlgItemTextW(pWindow, IDC_BADMODE_FULLSCREEN_LBL,
+				Str::UW(_("Incompatible video mode. Select a compatible video mode by pressing F8 or F9 once a game is started")));
 
 			return TRUE;
 

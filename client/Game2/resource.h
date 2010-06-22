@@ -204,6 +204,7 @@
 #define IDC_CHECK_URL                   1360
 #define IDC_ITEM_NAME                   1361
 #define IDC_CHECK_UPDATES               1361
+#define IDC_BADMODE_FULLSCREEN_LBL      1363
 #define ID_VIEW_3DACTION                32775
 #define ID_SETTING_WINDOW               32784
 #define ID_GAME_PAUSE                   32788
@@ -214,6 +215,8 @@
 #define ID_VIEW_MOREMESSAGES            40010
 #define ID_SETTING_REFRESHCOLORS        40013
 #define ID_SETTING_FULLSCREEN           40046
+#define ID_GAME_EXIT                    40049
+#define ID_HELP_ABOUT                   40050
 #define IDS_MODE_SWITCH_TRY             40080
 #define IDS_CANT_SWITCH_MODE            40081
 #define IDS_BAD_MODE                    40082
@@ -334,8 +337,8 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        173
-#define _APS_NEXT_COMMAND_VALUE         40049
-#define _APS_NEXT_CONTROL_VALUE         1363
+#define _APS_NEXT_COMMAND_VALUE         40052
+#define _APS_NEXT_CONTROL_VALUE         1364
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

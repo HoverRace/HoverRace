@@ -28,10 +28,6 @@
 
 #include "DllObjectFactory.h"
 
-#if defined(_WIN32) && defined(_DEBUG)
-#	define new DEBUG_NEW
-#endif
-
 using HoverRace::ObjFac1::ObjFac1;
 using HoverRace::Parcel::ObjStream;
 

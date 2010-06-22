@@ -23,7 +23,7 @@
 #include "StdAfx.h"
 
 #include "../Parcel/ClassicRecordFile.h"
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(WITH_OBJSTREAM)
 #	include "../Parcel/MfcRecordFile.h"
 #endif
 #include "../Parcel/ObjStream.h"
@@ -73,7 +73,7 @@ namespace ObjFacTools {
  */
 ResourceLib::ResourceLib(const Util::OS::path_t &filename)
 {
-#	ifdef _WIN32
+#	if defined(_WIN32) && !defined(WITH_OBJSTREAM)
 		recordFile = MfcRecordFile::New();
 #	else
 		recordFile = new ClassicRecordFile();
