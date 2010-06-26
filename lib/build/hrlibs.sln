@@ -8,6 +8,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "luabind", "luabind\luabind.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lua5.1", "lua\lua.vcxproj", "{7243E30E-52D9-384A-91A2-C8783F1F808B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "yaml", "yaml\yaml.vcxproj", "{B2A239E5-46DD-41C6-9D92-CC18E1B9FA24}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -22,6 +24,10 @@ Global
 		{7243E30E-52D9-384A-91A2-C8783F1F808B}.Debug|Win32.Build.0 = Debug|Win32
 		{7243E30E-52D9-384A-91A2-C8783F1F808B}.Release|Win32.ActiveCfg = Release|Win32
 		{7243E30E-52D9-384A-91A2-C8783F1F808B}.Release|Win32.Build.0 = Release|Win32
+		{B2A239E5-46DD-41C6-9D92-CC18E1B9FA24}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B2A239E5-46DD-41C6-9D92-CC18E1B9FA24}.Debug|Win32.Build.0 = Debug|Win32
+		{B2A239E5-46DD-41C6-9D92-CC18E1B9FA24}.Release|Win32.ActiveCfg = Release|Win32
+		{B2A239E5-46DD-41C6-9D92-CC18E1B9FA24}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
