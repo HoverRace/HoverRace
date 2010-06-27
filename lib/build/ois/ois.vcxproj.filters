@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="src\win32">
+      <UniqueIdentifier>{cdb5cc78-4f1f-4681-9b59-e8f1a3e790d7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\src\OISEffect.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\src\OISException.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\src\OISForceFeedback.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\src\OISInputManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\src\OISJoyStick.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\src\OISKeyboard.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\src\OISObject.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\src\win32\Win32ForceFeedback.cpp">
+      <Filter>src\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="src\src\win32\Win32InputManager.cpp">
+      <Filter>src\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="src\src\win32\Win32JoyStick.cpp">
+      <Filter>src\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="src\src\win32\Win32KeyBoard.cpp">
+      <Filter>src\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="src\src\win32\Win32Mouse.cpp">
+      <Filter>src\win32</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
