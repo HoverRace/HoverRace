@@ -41,7 +41,7 @@ namespace Client {
  * @param title The description of what kind of folder to select (UTF-8).
  */
 PathSelector::PathSelector(const std::string &title) :
-	title(Str::UW(title.c_str()))
+	title((const wchar_t*)Str::UW(title.c_str()))
 {
 }
 

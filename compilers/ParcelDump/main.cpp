@@ -115,7 +115,7 @@ int main(int argc, char **argv)
 	}
 
 	OS::path_t dir = filename.parent_path();
-	std::string name = Str::PU(filename.filename().c_str());
+	std::string name = (const char*)Str::PU(filename.filename().c_str());
 
 	if (boost::algorithm::ends_with(name, ".trk")) {
 		DumpTrack(dir, name);

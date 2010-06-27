@@ -36,7 +36,7 @@ using namespace HoverRace::Util;
  * @param dlgTmplId The dialog template ID.
  */
 PrefsPage::PrefsPage(const std::string &title, DWORD dlgTmplId) :
-	title(Str::UW(title.c_str())), dlgTmplId(dlgTmplId)
+	title((const wchar_t*)Str::UW(title.c_str())), dlgTmplId(dlgTmplId)
 {
 }
 
