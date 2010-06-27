@@ -25,6 +25,7 @@
 #include "VideoBuffer.h"
 #include "ColorPalette.h"
 
+#include "../Exception.h"
 #include "../Util/Profiler.h"
 #include "../Util/Config.h"
 #include "../Util/OS.h"
@@ -285,12 +286,14 @@ MR_VideoBuffer::MR_VideoBuffer(HWND pWindow, double pGamma, double pContrast, do
 
 	mSpecialWindowMode = FALSE;
 
-	/*
-	   if( !SetVideoMode() )
-	   {
+	// Load DirectDraw.
+	// As of the June 2010 update of the DirectX SDK, ddraw.lib is no longer
+	// included; however, it is possible to still load DirectDraw manually.
+	directDrawInst = LoadLibrary("ddraw.dll");
+	if (directDrawInst == NULL) {
+		throw HoverRace::Exception("Could not load DirectDraw: ddraw.dll");
+	}
 
-	   }
-	 */
 }
 
 MR_VideoBuffer::~MR_VideoBuffer()
@@ -314,6 +317,7 @@ MR_VideoBuffer::~MR_VideoBuffer()
 	PRINT_LOG("VIDEO_BUFFER_DESTRUCTION\n\n");
 	CLOSE_LOG();
 
+	FreeLibrary(directDrawInst);
 }
 
 DWORD MR_VideoBuffer::PackRGB(DWORD r, DWORD g, DWORD b)
@@ -366,7 +370,13 @@ bool MR_VideoBuffer::InitDirectDraw(GUID *monitor, bool newFullscreen)
 	}
 
 	if(mDirectDraw == NULL) {
-		if(DD_CALL(DirectDrawCreate(monitor, &mDirectDraw, NULL)) != DD_OK) {
+		typedef HRESULT (WINAPI* LPDIRECTDRAWCREATE)(GUID FAR *lpGUID, LPDIRECTDRAW FAR *lplpDD, IUnknown FAR *pUnkOuter);
+		LPDIRECTDRAWCREATE directDrawCreate = (LPDIRECTDRAWCREATE)GetProcAddress(directDrawInst, "DirectDrawCreate");
+		if (directDrawCreate == NULL) {
+			return false;
+		}
+
+		if(DD_CALL(directDrawCreate(monitor, &mDirectDraw, NULL)) != DD_OK) {
 			ASSERT(FALSE);
 			lReturnValue = false;
 		}

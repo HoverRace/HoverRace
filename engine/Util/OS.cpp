@@ -40,6 +40,7 @@
 
 #include <boost/format.hpp>
 
+#include "../Exception.h"
 #include "Str.h"
 
 #include "OS.h"
@@ -329,9 +330,22 @@ boost::shared_ptr<OS::monitors_t> OS::GetMonitors()
 {
 	boost::shared_ptr<monitors_t> retv(new monitors_t());
 #	ifdef _WIN32
+		HINSTANCE directDrawInst = LoadLibrary("ddraw.dll");
+		if (directDrawInst == NULL) {
+			throw Exception("Could not load DirectDraw: ddraw.dll");
+		}
+
+		typedef HRESULT (WINAPI* LPDIRECTDRAWEENUMERATEEXA)(LPDDENUMCALLBACKEX lpCallback, LPVOID lpContext, DWORD dwFlags);
+		LPDIRECTDRAWEENUMERATEEXA directDrawEnumerateEx =
+			(LPDIRECTDRAWEENUMERATEEXA)GetProcAddress(directDrawInst, "DirectDrawEnumerateExA");
+		if (directDrawEnumerateEx == NULL) {
+			FreeLibrary(directDrawInst);
+			throw Exception("Could not load DirectDraw: DirectDrawEnumerateExA");
+		}
+
 		// Use DirectDraw enumeration to map device names to GUIDs.
 		monGuids_t monGuids;
-		DirectDrawEnumerateEx(GetMonitorsProc, (void*)&monGuids,
+		directDrawEnumerateEx(GetMonitorsProc, (void*)&monGuids,
 			DDENUM_ATTACHEDSECONDARYDEVICES | DDENUM_DETACHEDSECONDARYDEVICES);
 
 		bool foundPrimary = false;
@@ -422,6 +436,8 @@ boost::shared_ptr<OS::monitors_t> OS::GetMonitors()
 					retv->end());
 			}
 		}
+
+		FreeLibrary(directDrawInst);
 
 		return retv;
 #	else

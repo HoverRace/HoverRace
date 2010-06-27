@@ -38,6 +38,7 @@ class MR_VideoBuffer
 
 	private:
 		HWND mWindow;
+		HINSTANCE directDrawInst;
 		GUID curMonitor;
 		bool mFullScreen;
 		LPDIRECTDRAW mDirectDraw;
