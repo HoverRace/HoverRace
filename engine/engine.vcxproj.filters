@@ -1,0 +1,611 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ColorTools">
+      <UniqueIdentifier>{ed59148f-f6e3-44cd-b6cf-abe4c8ce36df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainCharacter">
+      <UniqueIdentifier>{4b9eb683-92c8-497b-b334-63c0a3eb1fcd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model">
+      <UniqueIdentifier>{7a5d8043-9585-4b06-b043-163926d72e64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ObjFac1">
+      <UniqueIdentifier>{84c5e643-4b7f-487a-8459-af2cd7efa165}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ObjFacTools">
+      <UniqueIdentifier>{4cbf513d-e37c-4599-897c-3868ce31dc52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PaletteCreator">
+      <UniqueIdentifier>{62cbde14-6ffe-422c-9e24-c20c0dfe7588}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{54d8a779-58a0-4089-aed0-ec233cb3fd40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VideoServices">
+      <UniqueIdentifier>{0a1ec86d-542e-46ff-9ab9-7892c08399bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="yaml">
+      <UniqueIdentifier>{31ae6291-3a94-441f-926a-7c86d5e69a91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script">
+      <UniqueIdentifier>{df9c5f63-5d64-463c-81cd-d13bdc43ce0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Help">
+      <UniqueIdentifier>{1c7c5854-cc0a-4cd1-bf68-23ce58202282}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Net">
+      <UniqueIdentifier>{c0e74f60-a5b8-4b7f-b2cd-55f8c90140d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parcel">
+      <UniqueIdentifier>{2b5b8758-c5d1-4a50-9fcd-96708f742c25}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ColorTools\ColorTools.cpp">
+      <Filter>ColorTools</Filter>
+    </ClCompile>
+    <ClCompile Include="MainCharacter\MainCharacter.cpp">
+      <Filter>MainCharacter</Filter>
+    </ClCompile>
+    <ClCompile Include="MainCharacter\MainCharacterRenderer.cpp">
+      <Filter>MainCharacter</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ConcreteShape.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ContactEffect.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\FreeElementMovingHelper.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\GameSession.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Level.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\MazeElement.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\PhysicalCollision.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ShapeCollisions.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Shapes.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Track.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\TrackEntry.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\TrackList.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjFac1\BallElement.cpp">
+      <Filter>ObjFac1</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjFac1\BumperGate.cpp">
+      <Filter>ObjFac1</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjFac1\DefaultSurface.cpp">
+      <Filter>ObjFac1</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjFac1\DoubleSpeedSource.cpp">
+      <Filter>ObjFac1</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjFac1\FinishLine.cpp">
+      <Filter>ObjFac1</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjFac1\FuelSource.cpp">
+      <Filter>ObjFac1</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjFac1\GenericRenderer.cpp">
+      <Filter>ObjFac1</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjFac1\HoverRender.cpp">
+      <Filter>ObjFac1</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjFac1\Mine.cpp">
+      <Filter>ObjFac1</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjFac1\Missile.cpp">
+      <Filter>ObjFac1</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjFac1\ObjFac1.cpp">
+      <Filter>ObjFac1</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjFac1\PowerUp.cpp">
+      <Filter>ObjFac1</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjFac1\TestElement.cpp">
+      <Filter>ObjFac1</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjFac1\WoodSurface.cpp">
+      <Filter>ObjFac1</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjFacTools\BitmapSurface.cpp">
+      <Filter>ObjFacTools</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjFacTools\FreeElementBase.cpp">
+      <Filter>ObjFacTools</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjFacTools\FreeElementBaseRenderer.cpp">
+      <Filter>ObjFacTools</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjFacTools\ResActor.cpp">
+      <Filter>ObjFacTools</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjFacTools\ResBitmap.cpp">
+      <Filter>ObjFacTools</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjFacTools\ResourceLib.cpp">
+      <Filter>ObjFacTools</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjFacTools\ResSound.cpp">
+      <Filter>ObjFacTools</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjFacTools\ResSprite.cpp">
+      <Filter>ObjFacTools</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjFacTools\SpriteHandle.cpp">
+      <Filter>ObjFacTools</Filter>
+    </ClCompile>
+    <ClCompile Include="PaletteCreator\PaletteCreator.cpp">
+      <Filter>PaletteCreator</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\Config.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\DllObjectFactory.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\FuzzyLogic.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\InspectMapNode.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\OS.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\Profiler.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\Str.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\WorldCoordinates.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="VideoServices\2DViewPort.cpp">
+      <Filter>VideoServices</Filter>
+    </ClCompile>
+    <ClCompile Include="VideoServices\3DViewport.cpp">
+      <Filter>VideoServices</Filter>
+    </ClCompile>
+    <ClCompile Include="VideoServices\3DViewportRendering.cpp">
+      <Filter>VideoServices</Filter>
+    </ClCompile>
+    <ClCompile Include="VideoServices\Bitmap.cpp">
+      <Filter>VideoServices</Filter>
+    </ClCompile>
+    <ClCompile Include="VideoServices\ColorPalette.cpp">
+      <Filter>VideoServices</Filter>
+    </ClCompile>
+    <ClCompile Include="VideoServices\ColorTab.cpp">
+      <Filter>VideoServices</Filter>
+    </ClCompile>
+    <ClCompile Include="VideoServices\Font.cpp">
+      <Filter>VideoServices</Filter>
+    </ClCompile>
+    <ClCompile Include="VideoServices\MultipartText.cpp">
+      <Filter>VideoServices</Filter>
+    </ClCompile>
+    <ClCompile Include="VideoServices\NumericGlyphs.cpp">
+      <Filter>VideoServices</Filter>
+    </ClCompile>
+    <ClCompile Include="VideoServices\Patch.cpp">
+      <Filter>VideoServices</Filter>
+    </ClCompile>
+    <ClCompile Include="VideoServices\SoundServer.cpp">
+      <Filter>VideoServices</Filter>
+    </ClCompile>
+    <ClCompile Include="VideoServices\Sprite.cpp">
+      <Filter>VideoServices</Filter>
+    </ClCompile>
+    <ClCompile Include="VideoServices\StaticText.cpp">
+      <Filter>VideoServices</Filter>
+    </ClCompile>
+    <ClCompile Include="VideoServices\VideoBuffer.cpp">
+      <Filter>VideoServices</Filter>
+    </ClCompile>
+    <ClCompile Include="VideoServices\VideoBuffer2DDraw.cpp">
+      <Filter>VideoServices</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\yaml\Emitter.cpp">
+      <Filter>yaml</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\yaml\MapNode.cpp">
+      <Filter>yaml</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\yaml\NodeFactory.cpp">
+      <Filter>yaml</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\yaml\Parser.cpp">
+      <Filter>yaml</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\yaml\ScalarNode.cpp">
+      <Filter>yaml</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\yaml\SeqNode.cpp">
+      <Filter>yaml</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Core.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Env.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Handlers.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Peer.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Help\Class.cpp">
+      <Filter>Script\Help</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Help\Event.cpp">
+      <Filter>Script\Help</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Help\Method.cpp">
+      <Filter>Script\Help</Filter>
+    </ClCompile>
+    <ClCompile Include="Net\Agent.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="Net\BaseTransfer.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="Net\BlockingTransfer.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="Parcel\Bundle.cpp">
+      <Filter>Parcel</Filter>
+    </ClCompile>
+    <ClCompile Include="Parcel\ClassicObjStream.cpp">
+      <Filter>Parcel</Filter>
+    </ClCompile>
+    <ClCompile Include="Parcel\ClassicRecordFile.cpp">
+      <Filter>Parcel</Filter>
+    </ClCompile>
+    <ClCompile Include="Parcel\MfcObjStream.cpp">
+      <Filter>Parcel</Filter>
+    </ClCompile>
+    <ClCompile Include="Parcel\MfcRecordFile.cpp">
+      <Filter>Parcel</Filter>
+    </ClCompile>
+    <ClCompile Include="Parcel\ObjStream.cpp">
+      <Filter>Parcel</Filter>
+    </ClCompile>
+    <ClCompile Include="Parcel\TrackBundle.cpp">
+      <Filter>Parcel</Filter>
+    </ClCompile>
+    <ClCompile Include="StdAfx.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ColorTools\ColorTools.h">
+      <Filter>ColorTools</Filter>
+    </ClInclude>
+    <ClInclude Include="MainCharacter\MainCharacter.h">
+      <Filter>MainCharacter</Filter>
+    </ClInclude>
+    <ClInclude Include="MainCharacter\MainCharacterRenderer.h">
+      <Filter>MainCharacter</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ConcreteShape.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ContactEffect.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\FreeElementMovingHelper.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\GameSession.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Level.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\MazeElement.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\PhysicalCollision.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\RaceEffects.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ShapeCollisions.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Shapes.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Track.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\TrackEntry.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\TrackList.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjFac1\BallElement.h">
+      <Filter>ObjFac1</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjFac1\BumperGate.h">
+      <Filter>ObjFac1</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjFac1\DefaultSurface.h">
+      <Filter>ObjFac1</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjFac1\DoubleSpeedSource.h">
+      <Filter>ObjFac1</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjFac1\FinishLine.h">
+      <Filter>ObjFac1</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjFac1\FuelSource.h">
+      <Filter>ObjFac1</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjFac1\gate.h">
+      <Filter>ObjFac1</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjFac1\GenericRenderer.h">
+      <Filter>ObjFac1</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjFac1\HoverRender.h">
+      <Filter>ObjFac1</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjFac1\Mine.h">
+      <Filter>ObjFac1</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjFac1\Missile.h">
+      <Filter>ObjFac1</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjFac1\ObjFac1.h">
+      <Filter>ObjFac1</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjFac1\ObjFac1Res.h">
+      <Filter>ObjFac1</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjFac1\PowerUp.h">
+      <Filter>ObjFac1</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjFac1\TestElement.h">
+      <Filter>ObjFac1</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjFac1\WoodSurface.h">
+      <Filter>ObjFac1</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjFacTools\BitmapSurface.h">
+      <Filter>ObjFacTools</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjFacTools\FreeElementBase.h">
+      <Filter>ObjFacTools</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjFacTools\FreeElementBaseRenderer.h">
+      <Filter>ObjFacTools</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjFacTools\MovementSpec.h">
+      <Filter>ObjFacTools</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjFacTools\ResActor.h">
+      <Filter>ObjFacTools</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjFacTools\ResBitmap.h">
+      <Filter>ObjFacTools</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjFacTools\ResourceLib.h">
+      <Filter>ObjFacTools</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjFacTools\ResSound.h">
+      <Filter>ObjFacTools</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjFacTools\ResSprite.h">
+      <Filter>ObjFacTools</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjFacTools\SpriteHandle.h">
+      <Filter>ObjFacTools</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\BitPacking.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Config.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Cursor.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\DllObjectFactory.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\FastArray.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\FastFifo.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\FastMemManip.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\FuzzyLogic.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Inspectable.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\InspectMapNode.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\InspectNode.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\MR_Types.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\OS.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Profiler.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Str.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\WorldCoordinates.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="VideoServices\2DViewPort.h">
+      <Filter>VideoServices</Filter>
+    </ClInclude>
+    <ClInclude Include="VideoServices\3DViewport.h">
+      <Filter>VideoServices</Filter>
+    </ClInclude>
+    <ClInclude Include="VideoServices\Bitmap.h">
+      <Filter>VideoServices</Filter>
+    </ClInclude>
+    <ClInclude Include="VideoServices\ColorPalette.h">
+      <Filter>VideoServices</Filter>
+    </ClInclude>
+    <ClInclude Include="VideoServices\Font.h">
+      <Filter>VideoServices</Filter>
+    </ClInclude>
+    <ClInclude Include="VideoServices\MultipartText.h">
+      <Filter>VideoServices</Filter>
+    </ClInclude>
+    <ClInclude Include="VideoServices\NumericGlyphs.h">
+      <Filter>VideoServices</Filter>
+    </ClInclude>
+    <ClInclude Include="VideoServices\Patch.h">
+      <Filter>VideoServices</Filter>
+    </ClInclude>
+    <ClInclude Include="VideoServices\SoundServer.h">
+      <Filter>VideoServices</Filter>
+    </ClInclude>
+    <ClInclude Include="VideoServices\Sprite.h">
+      <Filter>VideoServices</Filter>
+    </ClInclude>
+    <ClInclude Include="VideoServices\StaticText.h">
+      <Filter>VideoServices</Filter>
+    </ClInclude>
+    <ClInclude Include="VideoServices\VideoBuffer.h">
+      <Filter>VideoServices</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\yaml\Emitter.h">
+      <Filter>yaml</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\yaml\MapNode.h">
+      <Filter>yaml</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\yaml\Node.h">
+      <Filter>yaml</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\yaml\NodeFactory.h">
+      <Filter>yaml</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\yaml\Parser.h">
+      <Filter>yaml</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\yaml\ScalarNode.h">
+      <Filter>yaml</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\yaml\SeqNode.h">
+      <Filter>yaml</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\yaml\YamlExn.h">
+      <Filter>yaml</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\Core.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\Env.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\Handlers.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\Peer.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\ScriptExn.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\Help\Class.h">
+      <Filter>Script\Help</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\Help\Event.h">
+      <Filter>Script\Help</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\Help\HelpHandler.h">
+      <Filter>Script\Help</Filter>
+    </ClInclude>
+    <ClInclude Include="Script\Help\Method.h">
+      <Filter>Script\Help</Filter>
+    </ClInclude>
+    <ClInclude Include="Net\Agent.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="Net\BaseTransfer.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="Net\BlockingTransfer.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="Net\CancelFlag.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="Net\NetExn.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="Net\Transfer.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="Parcel\Bundle.h">
+      <Filter>Parcel</Filter>
+    </ClInclude>
+    <ClInclude Include="Parcel\ClassicObjStream.h">
+      <Filter>Parcel</Filter>
+    </ClInclude>
+    <ClInclude Include="Parcel\ClassicRecordFile.h">
+      <Filter>Parcel</Filter>
+    </ClInclude>
+    <ClInclude Include="Parcel\ObjStream.h">
+      <Filter>Parcel</Filter>
+    </ClInclude>
+    <ClInclude Include="Parcel\RecordFile.h">
+      <Filter>Parcel</Filter>
+    </ClInclude>
+    <ClInclude Include="Parcel\TrackBundle.h">
+      <Filter>Parcel</Filter>
+    </ClInclude>
+    <ClInclude Include="Exception.h" />
+    <ClInclude Include="StdAfx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuildStep Include="Parcel\MfcObjStream.h">
+      <Filter>Parcel</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="Parcel\MfcRecordFile.h">
+      <Filter>Parcel</Filter>
+    </CustomBuildStep>
+  </ItemGroup>
+</Project>

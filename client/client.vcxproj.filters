@@ -1,0 +1,313 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Game2">
+      <UniqueIdentifier>{e9a1b5c7-98c0-473f-8d11-ad9aec0b2073}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries">
+      <UniqueIdentifier>{f118c67f-6cc2-4fea-90c3-90245007c4c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Control">
+      <UniqueIdentifier>{d121e2e4-7d5b-4460-9c30-3a6c66b380dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HoverScript">
+      <UniqueIdentifier>{9bbec523-a9fb-421c-87f7-2f267225d8c5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Game2\AboutDialog.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\Banner.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\CheckRoomListDialog.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\CheckUpdateServerDialog.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\ClientSession.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\ControlPrefsPage.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\DownloadUpdateDialog.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\FirstChoiceDialog.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\FullscreenTest.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\GameApp.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\HighObserver.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\InternetRoom.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\IntroMovie.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\main.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\MatchReport.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\MiscPrefsPage.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\NetInterface.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\NetworkPrefsPage.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\NetworkSession.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\Observer.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\PathSelector.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\PrefsDialog.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\PrefsPage.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\RoomList.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\RoomListDialog.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\SelectRoomDialog.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\StdAfx.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\TrackDownloadDialog.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\TrackSelectDialog.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\UpdateDownloader.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\VideoAudioPrefsPage.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\Control\Controller.cpp">
+      <Filter>Control</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\HoverScript\ClientScriptCore.cpp">
+      <Filter>HoverScript</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\HoverScript\ConfigPeer.cpp">
+      <Filter>HoverScript</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\HoverScript\Console.cpp">
+      <Filter>HoverScript</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\HoverScript\GamePeer.cpp">
+      <Filter>HoverScript</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\HoverScript\HighConsole.cpp">
+      <Filter>HoverScript</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\HoverScript\SessionPeer.cpp">
+      <Filter>HoverScript</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\HoverScript\SysEnv.cpp">
+      <Filter>HoverScript</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Game2\AboutDialog.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\Banner.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\CheckRoomListDialog.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\CheckUpdateServerDialog.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\ClientSession.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\ControlPrefsPage.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\DownloadUpdateDialog.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\FirstChoiceDialog.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\FullscreenTest.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\GameApp.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\HighObserver.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\InternetRoom.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\IntroMovie.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\MatchReport.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\MiscPrefsPage.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\NetInterface.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\NetworkPrefsPage.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\NetworkSession.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\Observer.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\PathSelector.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\PrefsDialog.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\PrefsPage.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\resource.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\RoomList.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\RoomListDialog.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\Rulebook.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\SelectRoomDialog.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\StdAfx.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\TrackDownloadDialog.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\TrackSelectDialog.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\UpdateDownloader.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\VideoAudioPrefsPage.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\Control\Controller.h">
+      <Filter>Control</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\Control\InputHandler.h">
+      <Filter>Control</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\Control\UiHandler.h">
+      <Filter>Control</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\HoverScript\ClientScriptCore.h">
+      <Filter>HoverScript</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\HoverScript\ConfigPeer.h">
+      <Filter>HoverScript</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\HoverScript\Console.h">
+      <Filter>HoverScript</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\HoverScript\GamePeer.h">
+      <Filter>HoverScript</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\HoverScript\HighConsole.h">
+      <Filter>HoverScript</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\HoverScript\SessionPeer.h">
+      <Filter>HoverScript</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\HoverScript\SysEnv.h">
+      <Filter>HoverScript</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\config-win32.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Game2\Game2.rc">
+      <Filter>Game2</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Game2\About.bmp" />
+    <None Include="Game2\icon3.ico" />
+    <None Include="Game2\warning.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\lib\alut.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\lib\intl.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\lib\libcurl.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\lib\libcurld.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\lib\LiteUnzip.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\lib\lua5.1.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\lib\lua5.1D.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\lib\luabind.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\lib\luabindD.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\lib\zlib1.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\lib\oisD.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\lib\ois.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>

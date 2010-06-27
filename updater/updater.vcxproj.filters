@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx</Extensions>
+    </Filter>
+    <Filter Include="bsdiff">
+      <UniqueIdentifier>{be11e100-3365-40c7-8537-84ca1df77f59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="bzlib">
+      <UniqueIdentifier>{601fe6a0-367a-457a-8cc3-18727080f68f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries">
+      <UniqueIdentifier>{f50451e1-94f1-43df-85f2-992e4e3ecb46}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StdAfx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bsdiff\bsdiff.cpp">
+      <Filter>bsdiff</Filter>
+    </ClCompile>
+    <ClCompile Include="bsdiff\bspatch.cpp">
+      <Filter>bsdiff</Filter>
+    </ClCompile>
+    <ClCompile Include="bzlib\blocksort.c">
+      <Filter>bzlib</Filter>
+    </ClCompile>
+    <ClCompile Include="bzlib\bzlib.c">
+      <Filter>bzlib</Filter>
+    </ClCompile>
+    <ClCompile Include="bzlib\compress.c">
+      <Filter>bzlib</Filter>
+    </ClCompile>
+    <ClCompile Include="bzlib\crctable.c">
+      <Filter>bzlib</Filter>
+    </ClCompile>
+    <ClCompile Include="bzlib\decompress.c">
+      <Filter>bzlib</Filter>
+    </ClCompile>
+    <ClCompile Include="bzlib\huffman.c">
+      <Filter>bzlib</Filter>
+    </ClCompile>
+    <ClCompile Include="bzlib\randtable.c">
+      <Filter>bzlib</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="StdAfx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bsdiff\bsdiff.h">
+      <Filter>bsdiff</Filter>
+    </ClInclude>
+    <ClInclude Include="bsdiff\bspatch.h">
+      <Filter>bsdiff</Filter>
+    </ClInclude>
+    <ClInclude Include="bzlib\bzlib.h">
+      <Filter>bzlib</Filter>
+    </ClInclude>
+    <ClInclude Include="bzlib\bzlib_private.h">
+      <Filter>bzlib</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\lib\LiteZip.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\lib\LiteUnzip.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>

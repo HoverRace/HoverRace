@@ -1,0 +1,326 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{1CCF897B-2194-4646-9F09-C307664F6193}</ProjectGuid>
+    <RootNamespace>engine</RootNamespace>
+    <Keyword>ManagedCProj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <CLRSupport>false</CLRSupport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <CLRSupport>false</CLRSupport>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release\</IntDir>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</IgnoreImportLibrary>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../include;../include/lua;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;MR_ENGINE;YAML_DECLARE_STATIC;WITH_OPENAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>winmm.lib;yamlD.lib;dxguid.lib;dsound.lib;lua5.1D.lib;luabindD.lib;libcurlD.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
+      <AdditionalLibraryDirectories>../lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AssemblyDebug>true</AssemblyDebug>
+      <SubSystem>Windows</SubSystem>
+      <BaseAddress>0x61000000</BaseAddress>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy ..\res\ObjFac1.dat ..\share</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>../include;../include/lua;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;MR_ENGINE;YAML_DECLARE_STATIC;WITH_OPENAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>winmm.lib;yaml.lib;dxguid.lib;dsound.lib;lua5.1.lib;luabind.lib;libcurl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>.\..\Release\engine.dll</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <BaseAddress>0x61000000</BaseAddress>
+      <FixedBaseAddress>
+      </FixedBaseAddress>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy ..\res\ObjFac1.dat ..\share</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="ColorTools\ColorTools.cpp" />
+    <ClCompile Include="MainCharacter\MainCharacter.cpp" />
+    <ClCompile Include="MainCharacter\MainCharacterRenderer.cpp" />
+    <ClCompile Include="Model\ConcreteShape.cpp" />
+    <ClCompile Include="Model\ContactEffect.cpp" />
+    <ClCompile Include="Model\FreeElementMovingHelper.cpp" />
+    <ClCompile Include="Model\GameSession.cpp" />
+    <ClCompile Include="Model\Level.cpp" />
+    <ClCompile Include="Model\MazeElement.cpp" />
+    <ClCompile Include="Model\PhysicalCollision.cpp" />
+    <ClCompile Include="Model\ShapeCollisions.cpp" />
+    <ClCompile Include="Model\Shapes.cpp" />
+    <ClCompile Include="Model\Track.cpp" />
+    <ClCompile Include="Model\TrackEntry.cpp" />
+    <ClCompile Include="Model\TrackList.cpp" />
+    <ClCompile Include="ObjFac1\BallElement.cpp" />
+    <ClCompile Include="ObjFac1\BumperGate.cpp" />
+    <ClCompile Include="ObjFac1\DefaultSurface.cpp" />
+    <ClCompile Include="ObjFac1\DoubleSpeedSource.cpp" />
+    <ClCompile Include="ObjFac1\FinishLine.cpp" />
+    <ClCompile Include="ObjFac1\FuelSource.cpp" />
+    <ClCompile Include="ObjFac1\GenericRenderer.cpp" />
+    <ClCompile Include="ObjFac1\HoverRender.cpp" />
+    <ClCompile Include="ObjFac1\Mine.cpp" />
+    <ClCompile Include="ObjFac1\Missile.cpp" />
+    <ClCompile Include="ObjFac1\ObjFac1.cpp" />
+    <ClCompile Include="ObjFac1\PowerUp.cpp" />
+    <ClCompile Include="ObjFac1\TestElement.cpp" />
+    <ClCompile Include="ObjFac1\WoodSurface.cpp" />
+    <ClCompile Include="ObjFacTools\BitmapSurface.cpp" />
+    <ClCompile Include="ObjFacTools\FreeElementBase.cpp" />
+    <ClCompile Include="ObjFacTools\FreeElementBaseRenderer.cpp" />
+    <ClCompile Include="ObjFacTools\ResActor.cpp" />
+    <ClCompile Include="ObjFacTools\ResBitmap.cpp" />
+    <ClCompile Include="ObjFacTools\ResourceLib.cpp" />
+    <ClCompile Include="ObjFacTools\ResSound.cpp" />
+    <ClCompile Include="ObjFacTools\ResSprite.cpp" />
+    <ClCompile Include="ObjFacTools\SpriteHandle.cpp" />
+    <ClCompile Include="PaletteCreator\PaletteCreator.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Util\Config.cpp" />
+    <ClCompile Include="Util\DllObjectFactory.cpp" />
+    <ClCompile Include="Util\FuzzyLogic.cpp" />
+    <ClCompile Include="Util\InspectMapNode.cpp" />
+    <ClCompile Include="Util\OS.cpp" />
+    <ClCompile Include="Util\Profiler.cpp" />
+    <ClCompile Include="Util\Str.cpp" />
+    <ClCompile Include="Util\WorldCoordinates.cpp" />
+    <ClCompile Include="VideoServices\2DViewPort.cpp" />
+    <ClCompile Include="VideoServices\3DViewport.cpp" />
+    <ClCompile Include="VideoServices\3DViewportRendering.cpp" />
+    <ClCompile Include="VideoServices\Bitmap.cpp" />
+    <ClCompile Include="VideoServices\ColorPalette.cpp" />
+    <ClCompile Include="VideoServices\ColorTab.cpp" />
+    <ClCompile Include="VideoServices\Font.cpp" />
+    <ClCompile Include="VideoServices\MultipartText.cpp" />
+    <ClCompile Include="VideoServices\NumericGlyphs.cpp" />
+    <ClCompile Include="VideoServices\Patch.cpp" />
+    <ClCompile Include="VideoServices\SoundServer.cpp" />
+    <ClCompile Include="VideoServices\Sprite.cpp" />
+    <ClCompile Include="VideoServices\StaticText.cpp" />
+    <ClCompile Include="VideoServices\VideoBuffer.cpp" />
+    <ClCompile Include="VideoServices\VideoBuffer2DDraw.cpp" />
+    <ClCompile Include="Util\yaml\Emitter.cpp" />
+    <ClCompile Include="Util\yaml\MapNode.cpp" />
+    <ClCompile Include="Util\yaml\NodeFactory.cpp" />
+    <ClCompile Include="Util\yaml\Parser.cpp" />
+    <ClCompile Include="Util\yaml\ScalarNode.cpp" />
+    <ClCompile Include="Util\yaml\SeqNode.cpp" />
+    <ClCompile Include="Script\Core.cpp" />
+    <ClCompile Include="Script\Env.cpp" />
+    <ClCompile Include="Script\Handlers.cpp" />
+    <ClCompile Include="Script\Peer.cpp" />
+    <ClCompile Include="Script\Help\Class.cpp" />
+    <ClCompile Include="Script\Help\Event.cpp" />
+    <ClCompile Include="Script\Help\Method.cpp" />
+    <ClCompile Include="Net\Agent.cpp" />
+    <ClCompile Include="Net\BaseTransfer.cpp" />
+    <ClCompile Include="Net\BlockingTransfer.cpp" />
+    <ClCompile Include="Parcel\Bundle.cpp" />
+    <ClCompile Include="Parcel\ClassicObjStream.cpp" />
+    <ClCompile Include="Parcel\ClassicRecordFile.cpp" />
+    <ClCompile Include="Parcel\MfcObjStream.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Parcel\MfcRecordFile.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Parcel\ObjStream.cpp" />
+    <ClCompile Include="Parcel\TrackBundle.cpp" />
+    <ClCompile Include="StdAfx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)5.obj</ObjectFileName>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)5.obj</ObjectFileName>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ColorTools\ColorTools.h" />
+    <ClInclude Include="MainCharacter\MainCharacter.h" />
+    <ClInclude Include="MainCharacter\MainCharacterRenderer.h" />
+    <ClInclude Include="Model\ConcreteShape.h" />
+    <ClInclude Include="Model\ContactEffect.h" />
+    <ClInclude Include="Model\FreeElementMovingHelper.h" />
+    <ClInclude Include="Model\GameSession.h" />
+    <ClInclude Include="Model\Level.h" />
+    <ClInclude Include="Model\MazeElement.h" />
+    <ClInclude Include="Model\PhysicalCollision.h" />
+    <ClInclude Include="Model\RaceEffects.h" />
+    <ClInclude Include="Model\ShapeCollisions.h" />
+    <ClInclude Include="Model\Shapes.h" />
+    <ClInclude Include="Model\Track.h" />
+    <ClInclude Include="Model\TrackEntry.h" />
+    <ClInclude Include="Model\TrackList.h" />
+    <ClInclude Include="ObjFac1\BallElement.h" />
+    <ClInclude Include="ObjFac1\BumperGate.h" />
+    <ClInclude Include="ObjFac1\DefaultSurface.h" />
+    <ClInclude Include="ObjFac1\DoubleSpeedSource.h" />
+    <ClInclude Include="ObjFac1\FinishLine.h" />
+    <ClInclude Include="ObjFac1\FuelSource.h" />
+    <ClInclude Include="ObjFac1\gate.h" />
+    <ClInclude Include="ObjFac1\GenericRenderer.h" />
+    <ClInclude Include="ObjFac1\HoverRender.h" />
+    <ClInclude Include="ObjFac1\Mine.h" />
+    <ClInclude Include="ObjFac1\Missile.h" />
+    <ClInclude Include="ObjFac1\ObjFac1.h" />
+    <ClInclude Include="ObjFac1\ObjFac1Res.h" />
+    <ClInclude Include="ObjFac1\PowerUp.h" />
+    <ClInclude Include="ObjFac1\TestElement.h" />
+    <ClInclude Include="ObjFac1\WoodSurface.h" />
+    <ClInclude Include="ObjFacTools\BitmapSurface.h" />
+    <ClInclude Include="ObjFacTools\FreeElementBase.h" />
+    <ClInclude Include="ObjFacTools\FreeElementBaseRenderer.h" />
+    <ClInclude Include="ObjFacTools\MovementSpec.h" />
+    <ClInclude Include="ObjFacTools\ResActor.h" />
+    <ClInclude Include="ObjFacTools\ResBitmap.h" />
+    <ClInclude Include="ObjFacTools\ResourceLib.h" />
+    <ClInclude Include="ObjFacTools\ResSound.h" />
+    <ClInclude Include="ObjFacTools\ResSprite.h" />
+    <ClInclude Include="ObjFacTools\SpriteHandle.h" />
+    <ClInclude Include="Util\BitPacking.h" />
+    <ClInclude Include="Util\Config.h" />
+    <ClInclude Include="Util\Cursor.h" />
+    <ClInclude Include="Util\DllObjectFactory.h" />
+    <ClInclude Include="Util\FastArray.h" />
+    <ClInclude Include="Util\FastFifo.h" />
+    <ClInclude Include="Util\FastMemManip.h" />
+    <ClInclude Include="Util\FuzzyLogic.h" />
+    <ClInclude Include="Util\Inspectable.h" />
+    <ClInclude Include="Util\InspectMapNode.h" />
+    <ClInclude Include="Util\InspectNode.h" />
+    <ClInclude Include="Util\MR_Types.h" />
+    <ClInclude Include="Util\OS.h" />
+    <ClInclude Include="Util\Profiler.h" />
+    <ClInclude Include="Util\Str.h" />
+    <ClInclude Include="Util\WorldCoordinates.h" />
+    <ClInclude Include="VideoServices\2DViewPort.h" />
+    <ClInclude Include="VideoServices\3DViewport.h" />
+    <ClInclude Include="VideoServices\Bitmap.h" />
+    <ClInclude Include="VideoServices\ColorPalette.h" />
+    <ClInclude Include="VideoServices\Font.h" />
+    <ClInclude Include="VideoServices\MultipartText.h" />
+    <ClInclude Include="VideoServices\NumericGlyphs.h" />
+    <ClInclude Include="VideoServices\Patch.h" />
+    <ClInclude Include="VideoServices\SoundServer.h" />
+    <ClInclude Include="VideoServices\Sprite.h" />
+    <ClInclude Include="VideoServices\StaticText.h" />
+    <ClInclude Include="VideoServices\VideoBuffer.h" />
+    <ClInclude Include="Util\yaml\Emitter.h" />
+    <ClInclude Include="Util\yaml\MapNode.h" />
+    <ClInclude Include="Util\yaml\Node.h" />
+    <ClInclude Include="Util\yaml\NodeFactory.h" />
+    <ClInclude Include="Util\yaml\Parser.h" />
+    <ClInclude Include="Util\yaml\ScalarNode.h" />
+    <ClInclude Include="Util\yaml\SeqNode.h" />
+    <ClInclude Include="Util\yaml\YamlExn.h" />
+    <ClInclude Include="Script\Core.h" />
+    <ClInclude Include="Script\Env.h" />
+    <ClInclude Include="Script\Handlers.h" />
+    <ClInclude Include="Script\Peer.h" />
+    <ClInclude Include="Script\ScriptExn.h" />
+    <ClInclude Include="Script\Help\Class.h" />
+    <ClInclude Include="Script\Help\Event.h" />
+    <ClInclude Include="Script\Help\HelpHandler.h" />
+    <ClInclude Include="Script\Help\Method.h" />
+    <ClInclude Include="Net\Agent.h" />
+    <ClInclude Include="Net\BaseTransfer.h" />
+    <ClInclude Include="Net\BlockingTransfer.h" />
+    <ClInclude Include="Net\CancelFlag.h" />
+    <ClInclude Include="Net\NetExn.h" />
+    <ClInclude Include="Net\Transfer.h" />
+    <ClInclude Include="Parcel\Bundle.h" />
+    <ClInclude Include="Parcel\ClassicObjStream.h" />
+    <ClInclude Include="Parcel\ClassicRecordFile.h" />
+    <CustomBuildStep Include="Parcel\MfcObjStream.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </CustomBuildStep>
+    <CustomBuildStep Include="Parcel\MfcRecordFile.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </CustomBuildStep>
+    <ClInclude Include="Parcel\ObjStream.h" />
+    <ClInclude Include="Parcel\RecordFile.h" />
+    <ClInclude Include="Parcel\TrackBundle.h" />
+    <ClInclude Include="Exception.h" />
+    <ClInclude Include="StdAfx.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
