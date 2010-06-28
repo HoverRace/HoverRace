@@ -23,7 +23,7 @@
 #include "StdAfx.h"
 
 #ifdef WITH_DIRECTSHOW
-#	include <atlbase.h>
+#	include <comdef.h>
 #	include <dshow.h>
 #	pragma comment(lib, "Strmiids.lib")
 #else
@@ -106,12 +106,14 @@ HRESULT IntroMovie::InitDirectShow(const Util::OS::path_t &movieFilename)
 		CLSCTX_INPROC_SERVER, IID_IGraphBuilder,
 		(void**)&graph))) return hr;
 
-	CComPtr<IBaseFilter> vmr;
+	_COM_SMARTPTR_TYPEDEF(IBaseFilter, __uuidof(IBaseFilter));
+	IBaseFilterPtr vmr;
 	if (FAILED(hr = CoCreateInstance(CLSID_VideoMixingRenderer, NULL, 
 		CLSCTX_INPROC_SERVER, IID_IBaseFilter, (void**)&vmr))) return hr;
 	if (FAILED(hr = graph->AddFilter(vmr, L"Video Mixing Renderer"))) return hr;
 
-	CComPtr<IVMRFilterConfig> filterCfg;
+	_COM_SMARTPTR_TYPEDEF(IVMRFilterConfig, __uuidof(IVMRFilterConfig));
+	IVMRFilterConfigPtr filterCfg;
 	if (FAILED(hr = vmr->QueryInterface(IID_IVMRFilterConfig, (void**)&filterCfg))) return hr;
 	if (FAILED(hr = filterCfg->SetRenderingMode(VMRMode_Windowless))) return hr;
 
