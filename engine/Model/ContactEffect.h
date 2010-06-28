@@ -43,9 +43,11 @@ class MR_DllDeclare MR_ContactEffect
 	public:
 		virtual ~ MR_ContactEffect();
 
-												  // If the effect is unknow, use that one instead
+		/**
+		 * If the effect is unknown, use that one instead.
+		 * @return Usually @c NULL.
+		 */
 		virtual const MR_ContactEffect *GetAlternate() const;
-		// Usually return NULL
 };
 typedef std::vector<MR_ContactEffect*> MR_ContactEffectList;
 
