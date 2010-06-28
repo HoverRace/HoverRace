@@ -386,10 +386,10 @@ void GameApp::LoadRegistry()
 		&lProgramKey);
 
 	if(lError == ERROR_SUCCESS) { // opened key successfully
+		/*
 		MR_UInt8 lControlBuffer[32];
 		DWORD lControlBufferSize = sizeof(lControlBuffer);
 
-		/*
 		if(RegQueryValueEx(lProgramKey, "Control", 0, NULL, lControlBuffer, &lControlBufferSize) == ERROR_SUCCESS) {
 			for (int p = 0, i = 0; p < Config::MAX_PLAYERS; ++p) {
 				Config::cfg_controls_t &ctl = cfg->controls[p];
