@@ -19,20 +19,26 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
 #include "DefaultSurface.h"
 #include "ObjFac1Res.h"
 
 using HoverRace::ObjFacTools::ResourceLib;
 
-MR_DefaultSurface::MR_DefaultSurface(const MR_ObjectFromFactoryId & pId, ResourceLib* resourceLib)
-	: MR_BitmapSurface(pId)
+namespace HoverRace {
+namespace ObjFac1 {
+
+DefaultSurface::DefaultSurface(const MR_ObjectFromFactoryId & pId, ResourceLib* resourceLib) :
+	MR_BitmapSurface(pId)
 {
 	mBitmap = resourceLib->GetBitmap(MR_ETALON);
 }
 
-MR_DefaultSurface::~MR_DefaultSurface()
+DefaultSurface::~DefaultSurface()
 {
 
 }
+
+}  // namespace ObjFac1
+}  // namespace HoverRace

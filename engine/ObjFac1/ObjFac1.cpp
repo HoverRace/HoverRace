@@ -64,11 +64,11 @@ MR_ObjectFromFactory *ObjFac1::GetObject(int pClassId)
 
 	switch (pClassId) {
 		case 1:
-			lReturnValue = new MR_DefaultSurface(lId, resourceLib);
+			lReturnValue = new DefaultSurface(lId, resourceLib);
 			break;
 
 		case 2:
-			lReturnValue = new MR_WoodSurface(lId, resourceLib);
+			lReturnValue = new WoodSurface(lId, resourceLib);
 			break;
 
 		case 3:
@@ -84,7 +84,7 @@ MR_ObjectFromFactory *ObjFac1::GetObject(int pClassId)
 			break;
 
 		case 10:
-			lReturnValue = new MR_TestElement(lId, resourceLib, MR_DEMO_FIGHTER);
+			lReturnValue = new TestElement(lId, resourceLib, MR_DEMO_FIGHTER);
 			break;
 
 		case 11:
@@ -96,7 +96,7 @@ MR_ObjectFromFactory *ObjFac1::GetObject(int pClassId)
 			break;
 
 		case 13:
-			lReturnValue = new MR_TestElement(lId, resourceLib, MR_ELECTRO_CAR);
+			lReturnValue = new TestElement(lId, resourceLib, MR_ELECTRO_CAR);
 			break;
 
 		case 50:

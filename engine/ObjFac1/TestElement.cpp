@@ -19,15 +19,18 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
 #include "TestElement.h"
 #include "../Model/FreeElementMovingHelper.h"
 
 using HoverRace::ObjFacTools::ResourceLib;
 
-MR_TestElement::MR_TestElement(const MR_ObjectFromFactoryId & pId, ResourceLib* resourceLib, int pActorRes)
-	: MR_FreeElementBase(pId)
+namespace HoverRace {
+namespace ObjFac1 {
+
+TestElement::TestElement(const MR_ObjectFromFactoryId & pId, ResourceLib* resourceLib, int pActorRes) :
+	MR_FreeElementBase(pId)
 {
 	mElapsedFrameTime = 0;
 	mActor = resourceLib->GetActor(pActorRes);
@@ -43,12 +46,12 @@ MR_TestElement::MR_TestElement(const MR_ObjectFromFactoryId & pId, ResourceLib* 
 	mContactEffectList.push_back(&mContactEffect);
 }
 
-MR_TestElement::~MR_TestElement()
+TestElement::~TestElement()
 {
 
 }
 
-int MR_TestElement::Simulate(MR_SimulationTime pDuration, MR_Level * pLevel, int pRoom)
+int TestElement::Simulate(MR_SimulationTime pDuration, MR_Level * pLevel, int pRoom)
 {
 	mElapsedFrameTime += pDuration;
 
@@ -119,14 +122,14 @@ int MR_TestElement::Simulate(MR_SimulationTime pDuration, MR_Level * pLevel, int
 	return pRoom;
 }
 
-const MR_ShapeInterface *MR_TestElement::GetObstacleShape()
+const MR_ShapeInterface *TestElement::GetObstacleShape()
 {
 	mCollisionShape.mPosition = mPosition;
 
 	return &mCollisionShape;
 }
 
-void MR_TestElement::ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 /*pZMin */ , MR_Int32 /*pZMax */ , MR_Level * /*pLevel */ )
+void TestElement::ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 /*pZMin */ , MR_Int32 /*pZMax */ , MR_Level * /*pLevel */ )
 {
 	MR_ContactEffect *lEffect = (MR_ContactEffect *) pEffect;
 	const MR_PhysicalCollision *lPhysCollision = dynamic_cast < MR_PhysicalCollision * >(lEffect);
@@ -148,7 +151,7 @@ void MR_TestElement::ApplyEffect(const MR_ContactEffect * pEffect, MR_Simulation
 
 }
 
-const MR_ContactEffectList *MR_TestElement::GetEffectList()
+const MR_ContactEffectList *TestElement::GetEffectList()
 {
 	*(int *) &mContactEffect.mXSpeed = mXSpeed;
 	*(int *) &mContactEffect.mYSpeed = mYSpeed;
@@ -158,39 +161,42 @@ const MR_ContactEffectList *MR_TestElement::GetEffectList()
 
 }
 
-const MR_ShapeInterface *MR_TestElement::GetReceivingContactEffectShape()
+const MR_ShapeInterface *TestElement::GetReceivingContactEffectShape()
 {
 	mCollisionShape.mPosition = mPosition;
 	return &mCollisionShape;
 }
 
-const MR_ShapeInterface *MR_TestElement::GetGivingContactEffectShape()
+const MR_ShapeInterface *TestElement::GetGivingContactEffectShape()
 {
 	mContactShape.mPosition = mPosition;
 	return &mContactShape;
 }
 
-MR_Int32 MR_TestElement::Cylinder::ZMin() const
+MR_Int32 TestElement::Cylinder::ZMin() const
 {
 	return mPosition.mZ;
 }
 
-MR_Int32 MR_TestElement::Cylinder::ZMax() const
+MR_Int32 TestElement::Cylinder::ZMax() const
 {
 	return mPosition.mZ + 1800;
 }
 
-MR_Int32 MR_TestElement::Cylinder::AxisX() const
+MR_Int32 TestElement::Cylinder::AxisX() const
 {
 	return mPosition.mX;
 }
 
-MR_Int32 MR_TestElement::Cylinder::AxisY() const
+MR_Int32 TestElement::Cylinder::AxisY() const
 {
 	return mPosition.mY;
 }
 
-MR_Int32 MR_TestElement::Cylinder::RayLen() const
+MR_Int32 TestElement::Cylinder::RayLen() const
 {
 	return mRay;
 }
+
+}  // namespace ObjFac1
+}  // namespace HoverRace

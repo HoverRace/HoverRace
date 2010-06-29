@@ -24,13 +24,15 @@
 // This element is used to test and build new FreeElements
 //
 
-#ifndef TEST_ELEMENT_H
-#define TEST_ELEMENT_H
+#pragma once
 
 #include "../ObjFacTools/FreeElementBase.h"
 #include "../Model/PhysicalCollision.h"
 
-class MR_TestElement:public MR_FreeElementBase
+namespace HoverRace {
+namespace ObjFac1 {
+
+class TestElement : public MR_FreeElementBase
 {
 	class Cylinder:public MR_CylinderShape
 	{
@@ -60,8 +62,8 @@ class MR_TestElement:public MR_FreeElementBase
 		MR_ContactEffectList mContactEffectList;
 
 	public:
-		MR_TestElement(const MR_ObjectFromFactoryId & pId, HoverRace::ObjFacTools::ResourceLib* resourceLib, int pActorRes);
-		~MR_TestElement();
+		TestElement(const MR_ObjectFromFactoryId & pId, HoverRace::ObjFacTools::ResourceLib* resourceLib, int pActorRes);
+		~TestElement();
 
 		int Simulate(MR_SimulationTime pDuration, MR_Level * pLevel, int pRoom);
 
@@ -77,4 +79,6 @@ class MR_TestElement:public MR_FreeElementBase
 		const MR_ShapeInterface *GetGivingContactEffectShape();
 
 };
-#endif
+
+}  // namespace ObjFac1
+}  // namespace HoverRace

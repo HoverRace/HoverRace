@@ -19,20 +19,26 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
 #include "WoodSurface.h"
 #include "ObjFac1Res.h"
 
 using HoverRace::ObjFacTools::ResourceLib;
 
-MR_WoodSurface::MR_WoodSurface(const MR_ObjectFromFactoryId & pId, ResourceLib* resourceLib)
-:MR_BitmapSurface(pId)
+namespace HoverRace {
+namespace ObjFac1 {
+
+WoodSurface::WoodSurface(const MR_ObjectFromFactoryId & pId, ResourceLib* resourceLib) :
+	MR_BitmapSurface(pId)
 {
 	mBitmap = resourceLib->GetBitmap(MR_WOOD1);
 }
 
-MR_WoodSurface::~MR_WoodSurface()
+WoodSurface::~WoodSurface()
 {
 
 }
+
+}  // namespace ObjFac1
+}  // namespace HoverRace

@@ -20,18 +20,22 @@
 // and limitations under the License.
 //
 
-#ifndef WOOD_SURFACE_H
-#define WOOD_SURFACE_H
+#pragma once
 
 #include "../Model/MazeElement.h"
 #include "../ObjFacTools/BitmapSurface.h"
 
-class MR_WoodSurface:public MR_BitmapSurface
+namespace HoverRace {
+namespace ObjFac1 {
+
+class WoodSurface : public MR_BitmapSurface
 {
 
 	public:
-		MR_WoodSurface(const MR_ObjectFromFactoryId & pId, HoverRace::ObjFacTools::ResourceLib* resourceLib);
-		~MR_WoodSurface();
+		WoodSurface(const MR_ObjectFromFactoryId & pId, ObjFacTools::ResourceLib* resourceLib);
+		~WoodSurface();
 
 };
-#endif
+
+}  // namespace ObjFac1
+}  // namespace HoverRace

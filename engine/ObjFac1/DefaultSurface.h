@@ -20,16 +20,20 @@
 // and limitations under the License.
 //
 
-#ifndef DEFAULT_SURFACE_H
-#define DEFAULT_SURFACE_H
+#pragma once
 
 #include "../Model/MazeElement.h"
 #include "../ObjFacTools/BitmapSurface.h"
 
-class MR_DefaultSurface:public MR_BitmapSurface
+namespace HoverRace {
+namespace ObjFac1 {
+
+class DefaultSurface : public MR_BitmapSurface
 {
 	public:
-		MR_DefaultSurface(const MR_ObjectFromFactoryId & pId, HoverRace::ObjFacTools::ResourceLib* resourceLib);
-		~MR_DefaultSurface();
+		DefaultSurface(const MR_ObjectFromFactoryId & pId, ObjFacTools::ResourceLib* resourceLib);
+		~DefaultSurface();
 };
-#endif
+
+}  // namespace ObjFac1
+}  // namespace HoverRace
