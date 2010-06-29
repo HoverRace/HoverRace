@@ -138,6 +138,7 @@ Config *Config::instance = NULL;
  */
 Config::Config(int verMajor, int verMinor, int verPatch, int verBuild,
 					 bool prerelease, const OS::path_t &path) :
+	unlinked(false),
 	verMajor(verMajor), verMinor(verMinor), verPatch(verPatch), verBuild(verBuild),
 	prerelease(prerelease)
 {
