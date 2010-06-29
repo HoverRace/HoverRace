@@ -254,7 +254,6 @@
     <ClInclude Include="ObjFacTools\SpriteHandle.h" />
     <ClInclude Include="Util\BitPacking.h" />
     <ClInclude Include="Util\Config.h" />
-    <ClInclude Include="Util\Cursor.h" />
     <ClInclude Include="Util\DllObjectFactory.h" />
     <ClInclude Include="Util\FastArray.h" />
     <ClInclude Include="Util\FastFifo.h" />

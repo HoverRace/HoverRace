@@ -432,9 +432,6 @@
     <ClInclude Include="Util\Config.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="Util\Cursor.h">
-      <Filter>Util</Filter>
-    </ClInclude>
     <ClInclude Include="Util\DllObjectFactory.h">
       <Filter>Util</Filter>
     </ClInclude>
