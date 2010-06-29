@@ -31,7 +31,10 @@
 
 using namespace HoverRace::Parcel;
 
-MR_GameSession::MR_GameSession(BOOL pAllowRendering) :
+namespace HoverRace {
+namespace Model {
+
+GameSession::GameSession(BOOL pAllowRendering) :
 	mAllowRendering(pAllowRendering),
 	mCurrentLevelNumber(-1),
 	mCurrentLevel(NULL),
@@ -39,12 +42,12 @@ MR_GameSession::MR_GameSession(BOOL pAllowRendering) :
 {
 }
 
-MR_GameSession::~MR_GameSession()
+GameSession::~GameSession()
 {
 	Clean();
 }
 
-BOOL MR_GameSession::LoadLevel(int pLevel, char pGameOpts)
+BOOL GameSession::LoadLevel(int pLevel, char pGameOpts)
 {
 	ASSERT(mCurrentMazeFile.get() != NULL);
 
@@ -71,7 +74,7 @@ BOOL MR_GameSession::LoadLevel(int pLevel, char pGameOpts)
 	return lReturnValue;
 }
 
-void MR_GameSession::Clean()
+void GameSession::Clean()
 {
 	mCurrentMazeFile.reset();
 
@@ -81,7 +84,7 @@ void MR_GameSession::Clean()
 	mCurrentLevelNumber = -1;
 }
 
-BOOL MR_GameSession::LoadNew(const char *pTitle, RecordFilePtr pMazeFile, char pGameOpts)
+BOOL GameSession::LoadNew(const char *pTitle, RecordFilePtr pMazeFile, char pGameOpts)
 {
 	BOOL lReturnValue = FALSE;
 
@@ -98,18 +101,18 @@ BOOL MR_GameSession::LoadNew(const char *pTitle, RecordFilePtr pMazeFile, char p
 	return lReturnValue;
 }
 
-void MR_GameSession::SetSimulationTime(MR_SimulationTime pTime)
+void GameSession::SetSimulationTime(MR_SimulationTime pTime)
 {
 	mSimulationTime = pTime;
 	mLastSimulateCallTime = timeGetTime();
 }
 
-MR_SimulationTime MR_GameSession::GetSimulationTime() const
+MR_SimulationTime GameSession::GetSimulationTime() const
 {
 	return mSimulationTime;
 }
 
-void MR_GameSession::Simulate()
+void GameSession::Simulate()
 {
 	ASSERT(mCurrentLevel != NULL);
 
@@ -151,7 +154,7 @@ void MR_GameSession::Simulate()
 	mLastSimulateCallTime = lSimulateCallTime - lTimeToSimulate;
 }
 
-void MR_GameSession::SimulateLateElement(MR_FreeElementHandle pElement, MR_SimulationTime pDuration, int pRoom)
+void GameSession::SimulateLateElement(MR_FreeElementHandle pElement, MR_SimulationTime pDuration, int pRoom)
 {
 	ASSERT(mCurrentLevel != NULL);
 
@@ -183,7 +186,7 @@ void MR_GameSession::SimulateLateElement(MR_FreeElementHandle pElement, MR_Simul
 	mSimulationTime = lOriginalTime;
 }
 
-void MR_GameSession::SimulateSurfaceElems(MR_SimulationTime /*pTimeToSimulate */ )
+void GameSession::SimulateSurfaceElems(MR_SimulationTime /*pTimeToSimulate */ )
 {
 	// Give the control to each surface so they can update there state
 
@@ -191,7 +194,7 @@ void MR_GameSession::SimulateSurfaceElems(MR_SimulationTime /*pTimeToSimulate */
 
 }
 
-int MR_GameSession::SimulateOneFreeElem(MR_SimulationTime pTimeToSimulate, MR_FreeElementHandle pElementHandle, int pRoom)
+int GameSession::SimulateOneFreeElem(MR_SimulationTime pTimeToSimulate, MR_FreeElementHandle pElementHandle, int pRoom)
 {
 	BOOL lDeleteElem = FALSE;
 	MR_FreeElement *lElement = mCurrentLevel->GetFreeElement(pElementHandle);
@@ -227,7 +230,7 @@ int MR_GameSession::SimulateOneFreeElem(MR_SimulationTime pTimeToSimulate, MR_Fr
 	return lReturnValue;
 }
 
-void MR_GameSession::SimulateFreeElems(MR_SimulationTime pTimeToSimulate)
+void GameSession::SimulateFreeElems(MR_SimulationTime pTimeToSimulate)
 {
 	// Do the simulation
 	int lRoomIndex;
@@ -248,7 +251,7 @@ void MR_GameSession::SimulateFreeElems(MR_SimulationTime pTimeToSimulate)
 	mCurrentLevel->FlushPermElementPosCache();
 }
 
-void MR_GameSession::ComputeShapeContactEffects(int pCurrentRoom, MR_FreeElement * pActor, const MR_RoomContactSpec & pLastSpec, MR_FastArrayBase < int >*pVisitedRooms, int pMaxDepth, MR_SimulationTime pDuration)
+void GameSession::ComputeShapeContactEffects(int pCurrentRoom, MR_FreeElement * pActor, const MR_RoomContactSpec & pLastSpec, MR_FastArrayBase < int >*pVisitedRooms, int pMaxDepth, MR_SimulationTime pDuration)
 {
 	int lCounter;
 	MR_ContactSpec lSpec;
@@ -396,17 +399,20 @@ void MR_GameSession::ComputeShapeContactEffects(int pCurrentRoom, MR_FreeElement
 
 }
 
-MR_Level *MR_GameSession::GetCurrentLevel()
+MR_Level *GameSession::GetCurrentLevel() const
 {
 	return mCurrentLevel;
 }
 
-const char *MR_GameSession::GetTitle() const
+const char *GameSession::GetTitle() const
 {
 	return mTitle.c_str();
 }
 
-HoverRace::Parcel::RecordFilePtr MR_GameSession::GetCurrentMazeFile()
+HoverRace::Parcel::RecordFilePtr GameSession::GetCurrentMazeFile()
 {
 	return mCurrentMazeFile;
 }
+
+}  // namespace Model
+}  // namespace HoverRace

@@ -243,9 +243,7 @@ void ClientSession::SetControlState(int pState1, int pState2, int pState3, int p
 
 const MR_Level *ClientSession::GetCurrentLevel() const
 {
-	MR_GameSession *lSession = (MR_GameSession *) & mSession;
-
-	return lSession->GetCurrentLevel();
+	return mSession.GetCurrentLevel();
 }
 
 int ClientSession::ResultAvaillable() const

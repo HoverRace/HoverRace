@@ -46,7 +46,7 @@ class ClientSession
 		static const int CHAT_MESSAGE_STACK = 8;
 		ChatMessage mMessageStack[CHAT_MESSAGE_STACK];
 
-		MR_GameSession mSession;
+		Model::GameSession mSession;
 		static const int MAX_PLAYERS = 4;
 		MR_MainCharacter *mainCharacter[MAX_PLAYERS];
 

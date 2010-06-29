@@ -19,10 +19,8 @@
 // and limitations under the License.
 //
 
-#ifndef GAME_SESSION_H
-#define GAME_SESSION_H
+#pragma once
 
-// Includes
 #include "Level.h"
 #include "ContactEffect.h"
 #include "../Parcel/RecordFile.h"
@@ -33,8 +31,10 @@
 #define MR_DllDeclare   __declspec(dllimport)
 #endif
 
-// Class Declaration
-class MR_GameSession
+namespace HoverRace {
+namespace Model {
+
+class GameSession
 {
 	private:
 		BOOL mAllowRendering;
@@ -58,8 +58,8 @@ class MR_GameSession
 		void ComputeShapeContactEffects(int pCurrentRoom, MR_FreeElement *pActor, const MR_RoomContactSpec &pLastSpec, MR_FastArrayBase<int> *pVisitedRooms, int pMaxDepth, MR_SimulationTime pDuration);
 
 	public:
-		MR_DllDeclare MR_GameSession(BOOL pAllowRendering = FALSE);
-		MR_DllDeclare ~MR_GameSession();
+		MR_DllDeclare GameSession(BOOL pAllowRendering = FALSE);
+		MR_DllDeclare ~GameSession();
 
 		MR_DllDeclare BOOL LoadNew(const char *pTitle, HoverRace::Parcel::RecordFilePtr pMazeFile, char pGameOpts);
 
@@ -68,10 +68,12 @@ class MR_GameSession
 		MR_DllDeclare void Simulate();
 		MR_DllDeclare void SimulateLateElement(MR_FreeElementHandle pElement, MR_SimulationTime pDuration, int pRoom);
 
-		MR_DllDeclare MR_Level *GetCurrentLevel();
+		MR_DllDeclare MR_Level *GetCurrentLevel() const;
 		MR_DllDeclare const char *GetTitle() const;
 		MR_DllDeclare HoverRace::Parcel::RecordFilePtr GetCurrentMazeFile();
 };
 
+}  // namespace Model
+}  // namespace HoverRace
+
 #undef MR_DllDeclare
-#endif
