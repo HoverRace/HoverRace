@@ -444,7 +444,7 @@ BOOL GameApp::IsGameRunning()
 	BOOL lReturnValue = FALSE;
 
 	if(mCurrentSession != NULL) {
-		MR_MainCharacter *lPlayer = mCurrentSession->GetMainCharacter();
+		MainCharacter::MainCharacter *lPlayer = mCurrentSession->GetMainCharacter();
 
 		if(lPlayer != NULL) {
 			if(!(lPlayer->GetTotalLap() <= lPlayer->GetLap())) {
@@ -854,7 +854,7 @@ BOOL GameApp::InitGame()
 	MR_InitTrigoTables();
 	MR_InitFuzzyModule();
 	MR_DllObjectFactory::Init();
-	MR_MainCharacter::RegisterFactory();
+	MainCharacter::MainCharacter::RegisterFactory();
 
 	// Load accelerators
 	mAccelerators = LoadAccelerators(mInstance, MAKEINTRESOURCE(IDR_ACCELERATOR));
@@ -1085,14 +1085,14 @@ int GameApp::ReadAsyncInputControllerPlayer(int playerIdx)
 	// hack in for now; this checks the current state
 	Control::ControlState cur = controller->getControlState(playerIdx);
 
-	if (cur.motorOn)  retv |= MR_MainCharacter::eMotorOn;
-	if (cur.jump)     retv |= MR_MainCharacter::eJump;
-	if (cur.brake)    retv |= MR_MainCharacter::eBreakDirection;
-	if (cur.fire)     retv |= MR_MainCharacter::eFire;
-	if (cur.weapon)   retv |= MR_MainCharacter::eSelectWeapon;
-	if (cur.lookBack) retv |= MR_MainCharacter::eLookBack;
-	if (cur.right)    retv |= MR_MainCharacter::eRight;
-	if (cur.left)     retv |= MR_MainCharacter::eLeft;
+	if (cur.motorOn)  retv |= MainCharacter::MainCharacter::eMotorOn;
+	if (cur.jump)     retv |= MainCharacter::MainCharacter::eJump;
+	if (cur.brake)    retv |= MainCharacter::MainCharacter::eBreakDirection;
+	if (cur.fire)     retv |= MainCharacter::MainCharacter::eFire;
+	if (cur.weapon)   retv |= MainCharacter::MainCharacter::eSelectWeapon;
+	if (cur.lookBack) retv |= MainCharacter::MainCharacter::eLookBack;
+	if (cur.right)    retv |= MainCharacter::MainCharacter::eRight;
+	if (cur.left)     retv |= MainCharacter::MainCharacter::eLeft;
 
 	controller->poll();
 

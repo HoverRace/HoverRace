@@ -20,8 +20,7 @@
 // and limitations under the License.
 //
 
-#ifndef MAIN_CHARACTER_RENDERER_H
-#define MAIN_CHARACTER_RENDERER_H
+#pragma once
 
 #include "../VideoServices/3DViewPort.h"
 #include "../VideoServices/SoundServer.h"
@@ -33,29 +32,34 @@
 #define MR_DllDeclare   __declspec(dllimport)
 #endif
 
-class MR_DllDeclare MR_MainCharacterRenderer : public MR_ObjectFromFactory
+namespace HoverRace {
+namespace MainCharacter {
+
+class MR_DllDeclare MainCharacterRenderer : public MR_ObjectFromFactory
 {
 	public:
 		// Construction
-		MR_MainCharacterRenderer(const MR_ObjectFromFactoryId & pId);
-		~MR_MainCharacterRenderer();
+		MainCharacterRenderer(const MR_ObjectFromFactoryId & pId);
+		~MainCharacterRenderer();
 
 		virtual void Render(MR_3DViewPort *pDest, const MR_3DCoordinate &pPosition, MR_Angle pOrientation, BOOL pMotorOn, int pHoverId, int pModel) = 0;
 
 		// Sound list
-		virtual HoverRace::VideoServices::ShortSound *GetLineCrossingSound() = 0;
-		virtual HoverRace::VideoServices::ShortSound *GetStartSound() = 0;
-		virtual HoverRace::VideoServices::ShortSound *GetFinishSound() = 0;
-		virtual HoverRace::VideoServices::ShortSound *GetBumpSound() = 0;
-		virtual HoverRace::VideoServices::ShortSound *GetJumpSound() = 0;
-		virtual HoverRace::VideoServices::ShortSound *GetFireSound() = 0;
-		virtual HoverRace::VideoServices::ShortSound *GetMisJumpSound() = 0;
-		virtual HoverRace::VideoServices::ShortSound *GetMisFireSound() = 0;
-		virtual HoverRace::VideoServices::ShortSound *GetOutOfCtrlSound() = 0;
-		virtual HoverRace::VideoServices::ContinuousSound *GetMotorSound() = 0;
-		virtual HoverRace::VideoServices::ContinuousSound *GetFrictionSound() = 0;
+		virtual VideoServices::ShortSound *GetLineCrossingSound() = 0;
+		virtual VideoServices::ShortSound *GetStartSound() = 0;
+		virtual VideoServices::ShortSound *GetFinishSound() = 0;
+		virtual VideoServices::ShortSound *GetBumpSound() = 0;
+		virtual VideoServices::ShortSound *GetJumpSound() = 0;
+		virtual VideoServices::ShortSound *GetFireSound() = 0;
+		virtual VideoServices::ShortSound *GetMisJumpSound() = 0;
+		virtual VideoServices::ShortSound *GetMisFireSound() = 0;
+		virtual VideoServices::ShortSound *GetOutOfCtrlSound() = 0;
+		virtual VideoServices::ContinuousSound *GetMotorSound() = 0;
+		virtual VideoServices::ContinuousSound *GetFrictionSound() = 0;
 
 };
 
+}  // namespace MainCharacter
+}  // namespace HoverRace
+
 #undef MR_DllDeclare
-#endif

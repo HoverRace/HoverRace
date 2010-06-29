@@ -151,7 +151,7 @@ bool ClientSession::CreateMainCharacter(int i)
 	MR_Level *curLevel = mSession.GetCurrentLevel();
 	ASSERT(curLevel != NULL);
 
-	MR_MainCharacter *ch = mainCharacter[i] = MR_MainCharacter::New(mNbLap, mGameOpts);
+	MainCharacter::MainCharacter *ch = mainCharacter[i] = MainCharacter::MainCharacter::New(mNbLap, mGameOpts);
 
 	int startingRoom = curLevel->GetStartingRoom(i);
 	ch->mRoom = startingRoom;
@@ -189,25 +189,25 @@ BOOL ClientSession::CreateMainCharacter4()
 }
 
 /** @deprecated Use GetPlayer(int) instead. */
-MR_MainCharacter *ClientSession::GetMainCharacter() const
+MainCharacter::MainCharacter *ClientSession::GetMainCharacter() const
 {
 	return GetPlayer(0);
 }
 
 /** @deprecated Use GetPlayer(int) instead. */
-MR_MainCharacter *ClientSession::GetMainCharacter2() const
+MainCharacter::MainCharacter *ClientSession::GetMainCharacter2() const
 {
 	return GetPlayer(1);
 }
 
 /** @deprecated Use GetPlayer(int) instead. */
-MR_MainCharacter *ClientSession::GetMainCharacter3() const
+MainCharacter::MainCharacter *ClientSession::GetMainCharacter3() const
 {
 	return GetPlayer(2);
 }
 
 /** @deprecated Use GetPlayer(int) instead. */
-MR_MainCharacter *ClientSession::GetMainCharacter4() const
+MainCharacter::MainCharacter *ClientSession::GetMainCharacter4() const
 {
 	return GetPlayer(3);
 }
@@ -278,14 +278,14 @@ int ClientSession::GetNbPlayers() const
 	return retv;
 }
 
-int ClientSession::GetRank(const MR_MainCharacter *pPlayer) const
+int ClientSession::GetRank(const MainCharacter::MainCharacter *pPlayer) const
 {
 	int lReturnValue = 1;
 
-	MR_MainCharacter *mMainCharacter1 = mainCharacter[0];
-	MR_MainCharacter *mMainCharacter2 = mainCharacter[1];
-	MR_MainCharacter *mMainCharacter3 = mainCharacter[2];
-	MR_MainCharacter *mMainCharacter4 = mainCharacter[3];
+	MainCharacter::MainCharacter *mMainCharacter1 = mainCharacter[0];
+	MainCharacter::MainCharacter *mMainCharacter2 = mainCharacter[1];
+	MainCharacter::MainCharacter *mMainCharacter3 = mainCharacter[2];
+	MainCharacter::MainCharacter *mMainCharacter4 = mainCharacter[3];
 
 	if(mMainCharacter1 != NULL) {
 		if(pPlayer == mMainCharacter1) {
@@ -393,7 +393,7 @@ void ClientSession::ConvertMapCoordinate(int &pX, int &pY, int pRatio) const
 	pY = (mHeightSprite - 1 - (pY - mY0Map) * mHeightSprite / mHeightMap) / pRatio;
 }
 
-MR_MainCharacter *ClientSession::GetPlayer(int i) const
+MainCharacter::MainCharacter *ClientSession::GetPlayer(int i) const
 {
 	ASSERT(i >= 0 && i < MAX_PLAYERS);
 	return mainCharacter[i];

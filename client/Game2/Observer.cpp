@@ -266,7 +266,7 @@ void Observer::PlayersListPageDn()
 }
 
 // Rendering functions
-void Observer::Render2DDebugView(MR_VideoBuffer * pDest, const MR_Level * pLevel, const MR_MainCharacter * pViewingCharacter)
+void Observer::Render2DDebugView(MR_VideoBuffer * pDest, const MR_Level * pLevel, const MainCharacter::MainCharacter * pViewingCharacter)
 {
 	// WARNING Calculations are done using floats..it is only a debug view
 
@@ -356,7 +356,7 @@ void Observer::Render2DDebugView(MR_VideoBuffer * pDest, const MR_Level * pLevel
 
 }
 
-void Observer::RenderWireFrameView(const MR_Level * pLevel, const MR_MainCharacter * pViewingCharacter)
+void Observer::RenderWireFrameView(const MR_Level * pLevel, const MainCharacter::MainCharacter * pViewingCharacter)
 {
 
 	mWireFrameView.Clear(0);
@@ -449,7 +449,7 @@ void Observer::DrawWFSection(const MR_Level * pLevel, const MR_SectionId & pSect
 
 }
 
-void Observer::Render3DView(const ClientSession *pSession, const MR_MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage)
+void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage)
 {
 
 	const MR_Level *lLevel = pSession->GetCurrentLevel();
@@ -610,11 +610,11 @@ void Observer::Render3DView(const ClientSession *pSession, const MR_MainCharacte
 	MR_SpriteHandle *lWeaponSprite = NULL;
 	int lWeaponSpriteIndex = 0;
 
-	if(pViewingCharacter->GetCurrentWeapon() == MR_MainCharacter::eMissile) {
+	if(pViewingCharacter->GetCurrentWeapon() == MainCharacter::MainCharacter::eMissile) {
 		lWeaponSprite = mMissileLevel;
 		lWeaponSpriteIndex = pViewingCharacter->GetMissileRefillLevel(mMissileLevel->GetSprite()->GetNbItem());
 	}
-	else if(pViewingCharacter->GetCurrentWeapon() == MR_MainCharacter::eMine) {
+	else if(pViewingCharacter->GetCurrentWeapon() == MainCharacter::MainCharacter::eMine) {
 		lWeaponSprite = mMineDisp;
 		lWeaponSpriteIndex = pViewingCharacter->GetMineCount();
 
@@ -625,7 +625,7 @@ void Observer::Render3DView(const ClientSession *pSession, const MR_MainCharacte
 			}
 		}
 	}
-	else if(pViewingCharacter->GetCurrentWeapon() == MR_MainCharacter::ePowerUp) {
+	else if(pViewingCharacter->GetCurrentWeapon() == MainCharacter::MainCharacter::ePowerUp) {
 		lWeaponSprite = mPowerUpDisp;
 		lWeaponSpriteIndex = pViewingCharacter->GetPowerUpFraction(4);
 		if(lWeaponSpriteIndex == 0) {
@@ -661,7 +661,7 @@ void Observer::Render3DView(const ClientSession *pSession, const MR_MainCharacte
 			int lX;
 			int lY;
 
-			const MR_MainCharacter *lPlayer = pSession->GetPlayer(lCounter);
+			const MainCharacter::MainCharacter *lPlayer = pSession->GetPlayer(lCounter);
 
 			if(lPlayer != NULL) {
 				lNbPlayers--;
@@ -1023,7 +1023,7 @@ void Observer::RenderFloorOrCeiling(const MR_Level * pLevel, const MR_SectionId 
 	delete lShape;
 }
 
-void Observer::RenderDebugDisplay(MR_VideoBuffer * pDest, const ClientSession *pSession, const MR_MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage)
+void Observer::RenderDebugDisplay(MR_VideoBuffer * pDest, const ClientSession *pSession, const MainCharacter::MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage)
 {
 	int lXRes = pDest->GetXRes();
 	int lYRes = pDest->GetYRes();
@@ -1055,7 +1055,7 @@ void Observer::RenderDebugDisplay(MR_VideoBuffer * pDest, const ClientSession *p
 
 }
 
-void Observer::RenderNormalDisplay(MR_VideoBuffer * pDest, const ClientSession *pSession, const MR_MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage)
+void Observer::RenderNormalDisplay(MR_VideoBuffer * pDest, const ClientSession *pSession, const MainCharacter::MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage)
 {
 	MR_SAMPLE_CONTEXT("RenderNormalDisplay");
 
@@ -1164,7 +1164,7 @@ void Observer::RenderNormalDisplay(MR_VideoBuffer * pDest, const ClientSession *
 	}
 }
 
-void Observer::PlaySounds(const MR_Level * pLevel, MR_MainCharacter * pViewingCharacter)
+void Observer::PlaySounds(const MR_Level * pLevel, MainCharacter::MainCharacter * pViewingCharacter)
 {
 	// Play the sound of all moving elemnts arround
 

@@ -14,6 +14,9 @@
 #endif
 
 namespace HoverRace {
+	namespace ObjFac1 {
+		class ResActorFriend;
+	}
 	namespace ObjFacTools {
 		class ResourceLib;
 	}
@@ -25,7 +28,7 @@ namespace HoverRace {
 class MR_ResActor
 {
 	public:
-		friend class MR_ResActorFriend;
+		friend class HoverRace::ObjFac1::ResActorFriend;
 
 		enum eComponentType { ePatch };
 

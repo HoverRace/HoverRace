@@ -85,9 +85,9 @@ class Observer
 		Observer();
 		~Observer();
 
-		void Render2DDebugView(MR_VideoBuffer * pDest, const MR_Level * pLevel, const MR_MainCharacter * pViewingCharacter);
-		void RenderWireFrameView(const MR_Level * pLevel, const MR_MainCharacter * pViewingCharacter);
-		void Render3DView(const HoverRace::Client::ClientSession * pSession, const MR_MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage);
+		void Render2DDebugView(MR_VideoBuffer * pDest, const MR_Level * pLevel, const MainCharacter::MainCharacter * pViewingCharacter);
+		void RenderWireFrameView(const MR_Level * pLevel, const MainCharacter::MainCharacter * pViewingCharacter);
+		void Render3DView(const HoverRace::Client::ClientSession * pSession, const MainCharacter::MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage);
 
 		void DrawWFSection(const MR_Level * pLevel, const MR_SectionId & pSectionId, MR_UInt8 pColor);
 		void RenderRoomWalls(const MR_Level * pLevel, int pRoomId, MR_SimulationTime pTime);
@@ -117,10 +117,10 @@ class Observer
 		void SetSplitMode(eSplitMode pMode);
 
 		// Rendering function
-		void RenderDebugDisplay(MR_VideoBuffer * pDest, const HoverRace::Client::ClientSession *pSession, const MR_MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage);
-		void RenderNormalDisplay(MR_VideoBuffer * pDest, const HoverRace::Client::ClientSession *pSession, const MR_MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage);
+		void RenderDebugDisplay(MR_VideoBuffer * pDest, const HoverRace::Client::ClientSession *pSession, const MainCharacter::MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage);
+		void RenderNormalDisplay(MR_VideoBuffer * pDest, const HoverRace::Client::ClientSession *pSession, const MainCharacter::MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage);
 
-		void PlaySounds(const MR_Level * pLevel, MR_MainCharacter * pViewingCharacter);
+		void PlaySounds(const MR_Level * pLevel, MainCharacter::MainCharacter * pViewingCharacter);
 
 };
 

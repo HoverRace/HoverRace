@@ -20,8 +20,7 @@
 // and limitations under the License.
 //
 
-#ifndef MAIN_CHARACTER_H
-#define MAIN_CHARACTER_H
+#pragma once
 
 #include "MainCharacterRenderer.h"
 #include "../Model/MazeElement.h"
@@ -35,6 +34,9 @@
 #define MR_DllDeclare   __declspec( dllimport )
 #endif
 
+namespace HoverRace {
+namespace MainCharacter {
+
 #define MR_MAIN_CHARACTER_DLL_ID     5000
 #define MR_MAIN_CHARACTER_CLASS_ID      1
 
@@ -47,7 +49,7 @@
 #define OPT_ALLOW_CX		0x04
 #define OPT_ALLOW_EON		0x01
 
-class MR_MainCharacter:public MR_FreeElement
+class MainCharacter : public MR_FreeElement
 {
 	public:
 		enum {
@@ -101,7 +103,7 @@ class MR_MainCharacter:public MR_FreeElement
 	private:
 		BOOL mMasterMode;
 		unsigned mHoverModel;					  // HoverRace model
-		MR_MainCharacterRenderer *mRenderer;
+		MainCharacterRenderer *mRenderer;
 		unsigned int mControlState;
 		BOOL mMotorOnState;
 		int mMotorDisplay;
@@ -150,7 +152,7 @@ class MR_MainCharacter:public MR_FreeElement
 		MR_FixedFastFifo < HoverRace::VideoServices::ShortSound *, 6 > mInternalSoundList;
 		MR_FixedFastFifo < HoverRace::VideoServices::ShortSound *, 6 > mExternalSoundList;
 
-		MR_MainCharacter(const MR_ObjectFromFactoryId & pId);
+		MainCharacter(const MR_ObjectFromFactoryId & pId);
 
 		static MR_ObjectFromFactory *FactoryFunc(MR_UInt16 pElemenType);
 
@@ -159,9 +161,9 @@ class MR_MainCharacter:public MR_FreeElement
 	public:
 		// Construction
 		MR_DllDeclare static void RegisterFactory();
-		MR_DllDeclare static MR_MainCharacter *New(int pNbLap, char pGameOpts);
+		MR_DllDeclare static MainCharacter *New(int pNbLap, char pGameOpts);
 
-		~MR_MainCharacter();
+		~MainCharacter();
 
 		MR_DllDeclare void SetAsMaster();
 		MR_DllDeclare void SetAsSlave();
@@ -228,5 +230,7 @@ class MR_MainCharacter:public MR_FreeElement
 		void PlayExternalSounds(int pDB, int pPan);
 };
 
+}  // namespace MainCharacter
+}  // namespace HoverRace
+
 #undef MR_DllDeclare
-#endif

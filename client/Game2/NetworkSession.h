@@ -70,7 +70,7 @@ class NetworkSession : public ClientSession
 
 		int mSendedPlayerStats;
 		MR_FreeElementHandle mClient[NetworkInterface::eMaxClient];
-		MR_MainCharacter *mClientCharacter[NetworkInterface::eMaxClient];
+		MainCharacter::MainCharacter *mClientCharacter[NetworkInterface::eMaxClient];
 
 		int mLastSendElemStateFuncTime;
 		int mLastSendElemStateTime[NetworkInterface::eMaxClient];
@@ -142,12 +142,12 @@ class NetworkSession : public ClientSession
 		void GetHitResult(int pPosition, const char *&pPlayerName, int &pId, BOOL &pConnected, int &pNbHitOther, int &pNbHitHimself) const;
 
 		int GetNbPlayers() const;
-		int GetRank(const MR_MainCharacter * pPlayer) const;
+		int GetRank(const MainCharacter::MainCharacter * pPlayer) const;
 
 		void AddMessageKey(char pKey);
 		void GetCurrentMessage(char *pDest) const;
 
-		MR_MainCharacter *GetPlayer(int pPlayerIndex) const;
+		MainCharacter::MainCharacter *GetPlayer(int pPlayerIndex) const;
 };
 
 }  // namespace Client

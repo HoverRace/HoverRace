@@ -28,16 +28,19 @@
 using HoverRace::ObjFacTools::ResourceLib;
 using namespace HoverRace::VideoServices;
 
+namespace HoverRace {
+namespace ObjFac1 {
+
 // Local stuff
 
-class MR_ResActorFriend
+class ResActorFriend
 {
 	public:
 		static void Draw(const MR_ResActor *pActor, MR_3DViewPort *pDest, const MR_PositionMatrix &pMatrix, int pSequence, int pFrame, const MR_Bitmap *pCockpitBitmap);
 };
 
-MR_HoverRender::MR_HoverRender(const MR_ObjectFromFactoryId &pId, ResourceLib *resourceLib)
-:MR_MainCharacterRenderer(pId)
+HoverRender::HoverRender(const MR_ObjectFromFactoryId &pId, ResourceLib *resourceLib) :
+	SUPER(pId)
 {
 	mFrame = 0;
 	mActor0 = resourceLib->GetActor(MR_ELECTRO_CAR);
@@ -64,12 +67,12 @@ MR_HoverRender::MR_HoverRender(const MR_ObjectFromFactoryId &pId, ResourceLib *r
 	}
 }
 
-MR_HoverRender::~MR_HoverRender()
+HoverRender::~HoverRender()
 {
 
 }
 
-void MR_HoverRender::Render(MR_3DViewPort *pDest, const MR_3DCoordinate &pPosition, MR_Angle pOrientation, BOOL pMotorOn, int pHoverId, int pModel)
+void HoverRender::Render(MR_3DViewPort *pDest, const MR_3DCoordinate &pPosition, MR_Angle pOrientation, BOOL pMotorOn, int pHoverId, int pModel)
 {
 	// Compute the required rotation matrix
 	MR_PositionMatrix lMatrix;
@@ -85,73 +88,73 @@ void MR_HoverRender::Render(MR_3DViewPort *pDest, const MR_3DCoordinate &pPositi
 		}
 
 		if(pModel == 1) {
-			MR_ResActorFriend::Draw(mActor1, pDest, lMatrix, lSeq, mFrame, mCockpitBitmap2[pHoverId % 10]);
+			ResActorFriend::Draw(mActor1, pDest, lMatrix, lSeq, mFrame, mCockpitBitmap2[pHoverId % 10]);
 		} else if(pModel == 2) {
-			MR_ResActorFriend::Draw(mActor2, pDest, lMatrix, lSeq, mFrame, mCockpitBitmap[pHoverId % 10]);
+			ResActorFriend::Draw(mActor2, pDest, lMatrix, lSeq, mFrame, mCockpitBitmap[pHoverId % 10]);
 		} else if(pModel == 3) {
-			MR_ResActorFriend::Draw(mActor3, pDest, lMatrix, lSeq, mFrame, mEonCockpitBitmap[pHoverId % 10]);
+			ResActorFriend::Draw(mActor3, pDest, lMatrix, lSeq, mFrame, mEonCockpitBitmap[pHoverId % 10]);
 		} else {
-			MR_ResActorFriend::Draw(mActor0, pDest, lMatrix, lSeq, mFrame, mCockpitBitmap[pHoverId % 10]);
+			ResActorFriend::Draw(mActor0, pDest, lMatrix, lSeq, mFrame, mCockpitBitmap[pHoverId % 10]);
 		}
 	}
 }
 
-ShortSound *MR_HoverRender::GetLineCrossingSound()
+ShortSound *HoverRender::GetLineCrossingSound()
 {
 	return mLineCrossingSound;
 }
 
-ShortSound *MR_HoverRender::GetStartSound()
+ShortSound *HoverRender::GetStartSound()
 {
 	return mStartSound;
 }
 
-ShortSound *MR_HoverRender::GetFinishSound()
+ShortSound *HoverRender::GetFinishSound()
 {
 	return mFinishSound;
 }
 
-ShortSound *MR_HoverRender::GetBumpSound()
+ShortSound *HoverRender::GetBumpSound()
 {
 	return mBumpSound;
 }
 
-ShortSound *MR_HoverRender::GetJumpSound()
+ShortSound *HoverRender::GetJumpSound()
 {
 	return mJumpSound;
 }
 
-ShortSound *MR_HoverRender::GetFireSound()
+ShortSound *HoverRender::GetFireSound()
 {
 	return mFireSound;
 }
 
-ShortSound *MR_HoverRender::GetMisJumpSound()
+ShortSound *HoverRender::GetMisJumpSound()
 {
 	return mMisJumpSound;
 }
 
-ShortSound *MR_HoverRender::GetMisFireSound()
+ShortSound *HoverRender::GetMisFireSound()
 {
 	return mMisFireSound;
 }
 
-ShortSound *MR_HoverRender::GetOutOfCtrlSound()
+ShortSound *HoverRender::GetOutOfCtrlSound()
 {
 	return mOutOfCtrlSound;
 }
 
-ContinuousSound *MR_HoverRender::GetMotorSound()
+ContinuousSound *HoverRender::GetMotorSound()
 {
 	return mMotorSound;
 }
 
-ContinuousSound *MR_HoverRender::GetFrictionSound()
+ContinuousSound *HoverRender::GetFrictionSound()
 {
 	return mFrictionSound;
 }
 
-void MR_ResActorFriend::Draw(const MR_ResActor *pActor, MR_3DViewPort *pDest, const MR_PositionMatrix &pMatrix, int pSequence, int pFrame, const MR_Bitmap *pCockpitBitmap)
+void ResActorFriend::Draw(const MR_ResActor *pActor, MR_3DViewPort *pDest, const MR_PositionMatrix &pMatrix, int pSequence, int pFrame, const MR_Bitmap *pCockpitBitmap)
 {
 	MR_ResActor::Frame * lFrame = &(pActor->mSequenceList[pSequence].mFrameList[pFrame]);
 
@@ -170,3 +173,6 @@ void MR_ResActorFriend::Draw(const MR_ResActor *pActor, MR_3DViewPort *pDest, co
 		}
 	}
 }
+
+}  // namespace ObjFac1
+}  // namespace HoverRace

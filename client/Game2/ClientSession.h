@@ -27,7 +27,11 @@
 #include "../../engine/VideoServices/Sprite.h"
 #include "../../engine/Util/OS.h"
 
-class MR_MainCharacter;
+namespace HoverRace {
+	namespace MainCharacter {
+		class MainCharacter;
+	}
+}
 
 namespace HoverRace {
 namespace Client {
@@ -48,7 +52,7 @@ class ClientSession
 
 		Model::GameSession mSession;
 		static const int MAX_PLAYERS = 4;
-		MR_MainCharacter *mainCharacter[MAX_PLAYERS];
+		MainCharacter::MainCharacter *mainCharacter[MAX_PLAYERS];
 
 		MR_UInt8 *mBackImage;
 
@@ -65,7 +69,7 @@ class ClientSession
 
 		// Stats counters.
 		unsigned int frameCount;
-		HoverRace::Util::OS::timestamp_t lastTimestamp;
+		Util::OS::timestamp_t lastTimestamp;
 		double fps;
 
 		void ReadLevelAttrib(Parcel::RecordFilePtr pFile, MR_VideoBuffer *pVideo);
@@ -87,10 +91,10 @@ class ClientSession
 		BOOL CreateMainCharacter3();
 		BOOL CreateMainCharacter4();
 
-		MR_MainCharacter *GetMainCharacter() const;
-		MR_MainCharacter *GetMainCharacter2() const;
-		MR_MainCharacter *GetMainCharacter3() const;
-		MR_MainCharacter *GetMainCharacter4() const;
+		MainCharacter::MainCharacter *GetMainCharacter() const;
+		MainCharacter::MainCharacter *GetMainCharacter2() const;
+		MainCharacter::MainCharacter *GetMainCharacter3() const;
+		MainCharacter::MainCharacter *GetMainCharacter4() const;
 
 		virtual void SetSimulationTime(MR_SimulationTime pTime);
 		MR_SimulationTime GetSimulationTime() const;
@@ -107,8 +111,8 @@ class ClientSession
 		virtual void GetHitResult(int pPosition, const char *&pPlayerName, int &pId, BOOL & pConnected, int &pNbHitOther, int &pNbHitHimself) const;
 
 		virtual int GetNbPlayers() const;
-		virtual int GetRank(const MR_MainCharacter * pPlayer) const;
-		virtual MR_MainCharacter *GetPlayer(int pPlayerIndex) const;
+		virtual int GetRank(const MainCharacter::MainCharacter * pPlayer) const;
+		virtual MainCharacter::MainCharacter *GetPlayer(int pPlayerIndex) const;
 
 		// Chat related functions (all messages are already converted in internal ASCII
 		virtual void AddMessageKey(char pKey);

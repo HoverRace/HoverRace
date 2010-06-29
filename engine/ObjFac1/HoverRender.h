@@ -21,14 +21,17 @@
 // and limitations under the License.
 //
 
-#ifndef HOVER_RENDER_H
-#define HOVER_RENDER_H
+#pragma once
 
 #include "../ObjFacTools/FreeElementBase.h"
 #include "../MainCharacter/MainCharacterRenderer.h"
 
-class MR_HoverRender : public MR_MainCharacterRenderer
+namespace HoverRace {
+namespace ObjFac1 {
+
+class HoverRender : public MainCharacter::MainCharacterRenderer
 {
+	typedef MainCharacter::MainCharacterRenderer SUPER;
 	protected:
 		const MR_ResActor *mActor0;
 		const MR_ResActor *mActor1;
@@ -37,39 +40,41 @@ class MR_HoverRender : public MR_MainCharacterRenderer
 
 		int mFrame;
 
-		HoverRace::VideoServices::ShortSound *mLineCrossingSound;
-		HoverRace::VideoServices::ShortSound *mStartSound;
-		HoverRace::VideoServices::ShortSound *mFinishSound;
-		HoverRace::VideoServices::ShortSound *mBumpSound;
-		HoverRace::VideoServices::ShortSound *mJumpSound;
-		HoverRace::VideoServices::ShortSound *mFireSound;
-		HoverRace::VideoServices::ShortSound *mMisJumpSound;
-		HoverRace::VideoServices::ShortSound *mMisFireSound;
-		HoverRace::VideoServices::ShortSound *mOutOfCtrlSound;
-		HoverRace::VideoServices::ContinuousSound *mMotorSound;
-		HoverRace::VideoServices::ContinuousSound *mFrictionSound;
+		VideoServices::ShortSound *mLineCrossingSound;
+		VideoServices::ShortSound *mStartSound;
+		VideoServices::ShortSound *mFinishSound;
+		VideoServices::ShortSound *mBumpSound;
+		VideoServices::ShortSound *mJumpSound;
+		VideoServices::ShortSound *mFireSound;
+		VideoServices::ShortSound *mMisJumpSound;
+		VideoServices::ShortSound *mMisFireSound;
+		VideoServices::ShortSound *mOutOfCtrlSound;
+		VideoServices::ContinuousSound *mMotorSound;
+		VideoServices::ContinuousSound *mFrictionSound;
 
 		const MR_ResBitmap *mCockpitBitmap[10];
 		const MR_ResBitmap *mCockpitBitmap2[10];
 		const MR_ResBitmap *mEonCockpitBitmap[10];
 
 	public:
-		MR_HoverRender(const MR_ObjectFromFactoryId &pId, HoverRace::ObjFacTools::ResourceLib *resourceLib);
-		~MR_HoverRender();
+		HoverRender(const MR_ObjectFromFactoryId &pId, ObjFacTools::ResourceLib *resourceLib);
+		~HoverRender();
 
 		void Render(MR_3DViewPort *pDest, const MR_3DCoordinate &pPosition, MR_Angle pOrientation, BOOL pMotorOn, int pHoverId, int pModel);
 
-		virtual HoverRace::VideoServices::ShortSound *GetLineCrossingSound();
-		virtual HoverRace::VideoServices::ShortSound *GetStartSound();
-		virtual HoverRace::VideoServices::ShortSound *GetFinishSound();
-		virtual HoverRace::VideoServices::ShortSound *GetBumpSound();
-		virtual HoverRace::VideoServices::ShortSound *GetJumpSound();
-		virtual HoverRace::VideoServices::ShortSound *GetFireSound();
-		virtual HoverRace::VideoServices::ShortSound *GetMisJumpSound();
-		virtual HoverRace::VideoServices::ShortSound *GetMisFireSound();
-		virtual HoverRace::VideoServices::ShortSound *GetOutOfCtrlSound();
-		virtual HoverRace::VideoServices::ContinuousSound *GetMotorSound();
-		virtual HoverRace::VideoServices::ContinuousSound *GetFrictionSound();
+		virtual VideoServices::ShortSound *GetLineCrossingSound();
+		virtual VideoServices::ShortSound *GetStartSound();
+		virtual VideoServices::ShortSound *GetFinishSound();
+		virtual VideoServices::ShortSound *GetBumpSound();
+		virtual VideoServices::ShortSound *GetJumpSound();
+		virtual VideoServices::ShortSound *GetFireSound();
+		virtual VideoServices::ShortSound *GetMisJumpSound();
+		virtual VideoServices::ShortSound *GetMisFireSound();
+		virtual VideoServices::ShortSound *GetOutOfCtrlSound();
+		virtual VideoServices::ContinuousSound *GetMotorSound();
+		virtual VideoServices::ContinuousSound *GetFrictionSound();
 
 };
-#endif
+
+}  // namespace ObjFac1
+}  // namespace HoverRace

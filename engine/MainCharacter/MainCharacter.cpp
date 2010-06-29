@@ -30,12 +30,15 @@
 
 using namespace HoverRace::VideoServices;
 
+namespace HoverRace {
+namespace MainCharacter {
+
 #define MR_NB_HOVER_MODEL 8
 
 // Local types
-class MR_MainCharacterState:private MR_BitPack
+class MainCharacterState:private MR_BitPack
 {
-	friend class MR_MainCharacter;
+	friend class MainCharacter;
 
 	// Packing description
 	//                     Offset  len   Prec
@@ -153,7 +156,7 @@ const double eFuelConsuming[MR_NB_HOVER_MODEL] =
 
 // Functions implementations
 
-MR_MainCharacter::MR_MainCharacter(const MR_ObjectFromFactoryId & pId)
+MainCharacter::MainCharacter(const MR_ObjectFromFactoryId & pId)
 :MR_FreeElement(pId)
 {
 	mMasterMode = TRUE;
@@ -203,78 +206,78 @@ MR_MainCharacter::MR_MainCharacter(const MR_ObjectFromFactoryId & pId)
 
 }
 
-MR_MainCharacter::~MR_MainCharacter()
+MainCharacter::~MainCharacter()
 {
 	delete mRenderer;
 }
 
-void MR_MainCharacter::SetAsMaster()
+void MainCharacter::SetAsMaster()
 {
 	mMasterMode = TRUE;
 }
 
-void MR_MainCharacter::SetAsSlave()
+void MainCharacter::SetAsSlave()
 {
 	mMasterMode = FALSE;
 }
 
-void MR_MainCharacter::SetHoverId(int pId)
+void MainCharacter::SetHoverId(int pId)
 {
 	mHoverId = pId;
 }
 
-void MR_MainCharacter::SetHoverModel(int pModel)
+void MainCharacter::SetHoverModel(int pModel)
 {
 	mHoverModel = pModel;
 }
 
-int MR_MainCharacter::GetHoverModel() const
+int MainCharacter::GetHoverModel() const
 {
 	return mHoverModel;
 } 
 
-void MR_MainCharacter::SetOrientation(MR_Angle pOrientation)
+void MainCharacter::SetOrientation(MR_Angle pOrientation)
 {
 	mOrientation = pOrientation;
 	mCabinOrientation = pOrientation;
 }
 
-int MR_MainCharacter::GetHoverId() const
+int MainCharacter::GetHoverId() const
 {
 	return mHoverId;
 } 
 
-void MR_MainCharacter::AddRenderer()
+void MainCharacter::AddRenderer()
 {
 	if(mRenderer == NULL) {
 		MR_ObjectFromFactoryId lId = { 1, 100 };
-		mRenderer = (MR_MainCharacterRenderer *) MR_DllObjectFactory::CreateObject(lId);
+		mRenderer = (MainCharacterRenderer *) MR_DllObjectFactory::CreateObject(lId);
 	}
 }
 
-void MR_MainCharacter::Render(MR_3DViewPort * pDest, MR_SimulationTime /*pTime */ )
+void MainCharacter::Render(MR_3DViewPort * pDest, MR_SimulationTime /*pTime */ )
 {
 	if(mRenderer != NULL)
 		mRenderer->Render(pDest, mPosition, mCabinOrientation, mMotorDisplay > 0, mHoverId, mHoverModel);
 }
 
-MR_ObjectFromFactory *MR_MainCharacter::FactoryFunc(MR_UInt16)
+MR_ObjectFromFactory *MainCharacter::FactoryFunc(MR_UInt16)
 {
 	MR_ObjectFromFactoryId lId = { MR_MAIN_CHARACTER_DLL_ID, MR_MAIN_CHARACTER_CLASS_ID };
 
-	return new MR_MainCharacter(lId);
+	return new MainCharacter(lId);
 }
 
-void MR_MainCharacter::RegisterFactory()
+void MainCharacter::RegisterFactory()
 {
 	MR_DllObjectFactory::RegisterLocalDll(MR_MAIN_CHARACTER_DLL_ID, FactoryFunc);
 }
 
-MR_MainCharacter *MR_MainCharacter::New(int pNbLap, char pGameOpts)
+MainCharacter *MainCharacter::New(int pNbLap, char pGameOpts)
 {
 	MR_ObjectFromFactoryId lId = { MR_MAIN_CHARACTER_DLL_ID, MR_MAIN_CHARACTER_CLASS_ID };
 
-	MR_MainCharacter *lReturnValue = (MR_MainCharacter *) MR_DllObjectFactory::CreateObject(lId);
+	MainCharacter *lReturnValue = (MainCharacter *) MR_DllObjectFactory::CreateObject(lId);
 
 	if(lReturnValue != NULL) {
 		lReturnValue->mNbLapForRace = pNbLap;
@@ -287,9 +290,9 @@ MR_MainCharacter *MR_MainCharacter::New(int pNbLap, char pGameOpts)
 	return lReturnValue;
 }
 
-MR_ElementNetState MR_MainCharacter::GetNetState() const
+MR_ElementNetState MainCharacter::GetNetState() const
 {
-	static MR_MainCharacterState lsState;		  // Static is ok because the variable will be used immediatly
+	static MainCharacterState lsState;		  // Static is ok because the variable will be used immediatly
 
 	MR_ElementNetState lReturnValue;
 
@@ -335,9 +338,9 @@ MR_ElementNetState MR_MainCharacter::GetNetState() const
 	return lReturnValue;
 }
 
-void MR_MainCharacter::SetNetState(int /*pDataLen */ , const MR_UInt8 *pData)
+void MainCharacter::SetNetState(int /*pDataLen */ , const MR_UInt8 *pData)
 {
-	const MR_MainCharacterState *lState = (const MR_MainCharacterState *) pData;
+	const MainCharacterState *lState = (const MainCharacterState *) pData;
 
 	mPosition.mX = lState->Get(MC_POSX);
 	mPosition.mY = lState->Get(MC_POSY);
@@ -391,12 +394,12 @@ void MR_MainCharacter::SetNetState(int /*pDataLen */ , const MR_UInt8 *pData)
 	//}
 }
 
-void MR_MainCharacter::SetNbLapForRace(int pNbLap)
+void MainCharacter::SetNbLapForRace(int pNbLap)
 {
 	mNbLapForRace = pNbLap;
 }
 
-void MR_MainCharacter::SetControlState(int pState, MR_SimulationTime pTime)
+void MainCharacter::SetControlState(int pState, MR_SimulationTime pTime)
 {
 	int lState = pState;
 
@@ -461,7 +464,7 @@ void MR_MainCharacter::SetControlState(int pState, MR_SimulationTime pTime)
 	mControlState = lState;
 }
 
-int MR_MainCharacter::Simulate(MR_SimulationTime pDuration, MR_Level *pLevel, int pRoom)
+int MainCharacter::Simulate(MR_SimulationTime pDuration, MR_Level *pLevel, int pRoom)
 {
 	mRoom = pRoom;
 
@@ -575,7 +578,7 @@ int MR_MainCharacter::Simulate(MR_SimulationTime pDuration, MR_Level *pLevel, in
 	return pRoom;
 }
 
-int MR_MainCharacter::InternalSimulate(MR_SimulationTime pDuration, MR_Level *pLevel, int pRoom)
+int MainCharacter::InternalSimulate(MR_SimulationTime pDuration, MR_Level *pLevel, int pRoom)
 {
 	// Determine new speed (PosVar and OrientationVar
 	double lAbsoluteSpeed = sqrt(mXSpeed * mXSpeed + mYSpeed * mYSpeed);
@@ -760,14 +763,14 @@ int MR_MainCharacter::InternalSimulate(MR_SimulationTime pDuration, MR_Level *pL
 	return pRoom;
 }
 
-const MR_ShapeInterface *MR_MainCharacter::GetObstacleShape()
+const MR_ShapeInterface *MainCharacter::GetObstacleShape()
 {
 	return NULL;
 	mCollisionShape.mPosition = mPosition;
 	return &mCollisionShape;
 }
 
-void MR_MainCharacter::ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 /*pZMin */ ,
+void MainCharacter::ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 /*pZMin */ ,
 	MR_Int32 pZMax, MR_Level * pLevel)
 {
 	MR_ContactEffect *lEffect = (MR_ContactEffect *) pEffect;
@@ -911,7 +914,7 @@ void MR_MainCharacter::ApplyEffect(const MR_ContactEffect * pEffect, MR_Simulati
 	}
 }
 
-const MR_ContactEffectList *MR_MainCharacter::GetEffectList()
+const MR_ContactEffectList *MainCharacter::GetEffectList()
 {
 	mContactEffect.mWeight = eCharacterWeight[mHoverModel];
 	mContactEffect.mXSpeed = mXSpeed * 256;
@@ -921,61 +924,61 @@ const MR_ContactEffectList *MR_MainCharacter::GetEffectList()
 	return &mContactEffectList;
 }
 
-const MR_ShapeInterface *MR_MainCharacter::GetReceivingContactEffectShape()
+const MR_ShapeInterface *MainCharacter::GetReceivingContactEffectShape()
 {
 	mCollisionShape.mPosition = mPosition;
 	return &mCollisionShape;
 }
 
-const MR_ShapeInterface *MR_MainCharacter::GetGivingContactEffectShape()
+const MR_ShapeInterface *MainCharacter::GetGivingContactEffectShape()
 {
 	mContactShape.mPosition = mPosition;
 	return &mContactShape;
 }
 
-// MR_MainCharacter::Cylinder
-MR_Int32 MR_MainCharacter::Cylinder::ZMin() const
+// MainCharacter::Cylinder
+MR_Int32 MainCharacter::Cylinder::ZMin() const
 {
 	return mPosition.mZ;
 }
 
-MR_Int32 MR_MainCharacter::Cylinder::ZMax() const
+MR_Int32 MainCharacter::Cylinder::ZMax() const
 {
 	return mPosition.mZ + eCharacterHeight;
 }
 
-MR_Int32 MR_MainCharacter::Cylinder::AxisX() const
+MR_Int32 MainCharacter::Cylinder::AxisX() const
 {
 	return mPosition.mX;
 }
 
-MR_Int32 MR_MainCharacter::Cylinder::AxisY() const
+MR_Int32 MainCharacter::Cylinder::AxisY() const
 {
 	return mPosition.mY;
 }
 
-MR_Int32 MR_MainCharacter::Cylinder::RayLen() const
+MR_Int32 MainCharacter::Cylinder::RayLen() const
 {
 	return mRay;
 }
 
 // Done with the cylinder stuff
-MR_Angle MR_MainCharacter::GetCabinOrientation() const
+MR_Angle MainCharacter::GetCabinOrientation() const
 {
 	return mCabinOrientation;
 }
 
-double MR_MainCharacter::GetFuelLevel() const
+double MainCharacter::GetFuelLevel() const
 {
 	return mFuelLevel / eFuelCapacity;
 }
 
-MR_MainCharacter::eWeapon MR_MainCharacter::GetCurrentWeapon() const
+MainCharacter::eWeapon MainCharacter::GetCurrentWeapon() const
 {
 	return mCurrentWeapon;
 }
 
-int MR_MainCharacter::GetMissileRefillLevel(int pNbLevel) const
+int MainCharacter::GetMissileRefillLevel(int pNbLevel) const
 {
 	if(mGameOpts & OPT_ALLOW_WEAPONS)
 		return (pNbLevel - 1) * (eMissileRefillTime - mMissileRefillDuration) / eMissileRefillTime;
@@ -983,17 +986,17 @@ int MR_MainCharacter::GetMissileRefillLevel(int pNbLevel) const
 		return 0;
 }
 
-int MR_MainCharacter::GetMineCount() const
+int MainCharacter::GetMineCount() const
 {
 	return mMineList.Used();
 }
 
-int MR_MainCharacter::GetPowerUpCount() const
+int MainCharacter::GetPowerUpCount() const
 {
 	return mPowerUpList.Used();
 }
 
-int MR_MainCharacter::GetPowerUpFraction(int pNbLevel) const
+int MainCharacter::GetPowerUpFraction(int pNbLevel) const
 {
 	int lReturnValue = 0;
 	if(mPowerUpLeft > 0) {
@@ -1004,7 +1007,7 @@ int MR_MainCharacter::GetPowerUpFraction(int pNbLevel) const
 	return lReturnValue;
 }
 
-double MR_MainCharacter::GetAbsoluteSpeed() const
+double MainCharacter::GetAbsoluteSpeed() const
 {
 	double lReturnValue = sqrt(mXSpeed * mXSpeed + mYSpeed * mYSpeed) / (eSteadySpeed[0] * 1.9);
 	if(lReturnValue > 1.0)
@@ -1012,7 +1015,7 @@ double MR_MainCharacter::GetAbsoluteSpeed() const
 	return lReturnValue;
 }
 
-double MR_MainCharacter::GetDirectionalSpeed() const
+double MainCharacter::GetDirectionalSpeed() const
 {
 	double lReturnValue = (mXSpeed * MR_Cos[mCabinOrientation] + mYSpeed * MR_Sin[mCabinOrientation]) / (MR_TRIGO_FRACT * eSteadySpeed[0] * 1.9);
 
@@ -1024,54 +1027,54 @@ double MR_MainCharacter::GetDirectionalSpeed() const
 	return lReturnValue;
 }
 
-int MR_MainCharacter::GetLap() const
+int MainCharacter::GetLap() const
 {
 	return mLapCount;
 }
 
-int MR_MainCharacter::GetTotalLap() const
+int MainCharacter::GetTotalLap() const
 {
 	return mNbLapForRace;
 }
 
-MR_SimulationTime MR_MainCharacter::GetTotalTime() const
+MR_SimulationTime MainCharacter::GetTotalTime() const
 {
 	return mLastLapCompletion;
 }
 
-MR_SimulationTime MR_MainCharacter::GetBestLapDuration() const
+MR_SimulationTime MainCharacter::GetBestLapDuration() const
 {
 	return mBestLapDuration;
 }
 
-MR_SimulationTime MR_MainCharacter::GetLastLapDuration() const
+MR_SimulationTime MainCharacter::GetLastLapDuration() const
 {
 	return mLastLapDuration;
 }
 
-MR_SimulationTime MR_MainCharacter::GetLastLapCompletion() const
+MR_SimulationTime MainCharacter::GetLastLapCompletion() const
 {
 	return mLastLapCompletion;
 }
 
-BOOL MR_MainCharacter::HasFinish() const
+BOOL MainCharacter::HasFinish() const
 {
 	return (mLapCount >= mNbLapForRace);
 }
 
-int MR_MainCharacter::HitQueueCount() const
+int MainCharacter::HitQueueCount() const
 {
 	return mLastHits.Used();
 }
 
-int MR_MainCharacter::GetHitQueue()
+int MainCharacter::GetHitQueue()
 {
 	int lReturnValue = mLastHits.GetHead();
 	mLastHits.Remove();
 	return lReturnValue;
 }
 
-void MR_MainCharacter::PlayInternalSounds()
+void MainCharacter::PlayInternalSounds()
 {
 	if(mRenderer != NULL) {
 		// Sound events
@@ -1092,7 +1095,7 @@ void MR_MainCharacter::PlayInternalSounds()
 	}
 }
 
-void MR_MainCharacter::PlayExternalSounds(int pDB, int pPan)
+void MainCharacter::PlayExternalSounds(int pDB, int pPan)
 {
 	if(mRenderer != NULL) {
 		// Sound events
@@ -1112,3 +1115,6 @@ void MR_MainCharacter::PlayExternalSounds(int pDB, int pPan)
 			SoundServer::Play(lMotorSound, 1, pDB, 1.0, pPan);
 	}
 }
+
+}  // namespace MainCharacter
+}  // namespace HoverRace

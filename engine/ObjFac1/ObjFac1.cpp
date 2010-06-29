@@ -196,7 +196,7 @@ MR_ObjectFromFactory *ObjFac1::GetObject(int pClassId)
 			break;
 
 		case 100:
-			lReturnValue = new MR_HoverRender(lId, resourceLib);
+			lReturnValue = new HoverRender(lId, resourceLib);
 			break;
 
 		case 150:

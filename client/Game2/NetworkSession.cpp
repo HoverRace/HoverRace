@@ -321,13 +321,13 @@ int NetworkSession::GetNbPlayers() const
 }
 
 /**
- * Returns an MR_MainCharacter object pointer pointing to the player specified in pPlayerIndex.
+ * Returns an MainCharacter::MainCharacter object pointer pointing to the player specified in pPlayerIndex.
  *
  * @param pPlayerIndex Index of the player being located
  */
-MR_MainCharacter *NetworkSession::GetPlayer(int pPlayerIndex) const
+MainCharacter::MainCharacter *NetworkSession::GetPlayer(int pPlayerIndex) const
 {
-	MR_MainCharacter *lReturnValue = NULL;
+	MainCharacter::MainCharacter *lReturnValue = NULL;
 
 	if(pPlayerIndex == 0) 
 		lReturnValue = mainCharacter[0];
@@ -342,7 +342,7 @@ MR_MainCharacter *NetworkSession::GetPlayer(int pPlayerIndex) const
  *
  * @param pPlayer Ignored.
  */
-int NetworkSession::GetRank(const MR_MainCharacter * /*pPlayer */ ) const {
+int NetworkSession::GetRank(const MainCharacter::MainCharacter * /*pPlayer */ ) const {
 // We assume that we are looking for the main character
 	int lReturnValue = 0;
 
@@ -451,7 +451,7 @@ void NetworkSession::ReadNet()
 					lRoom = *(MR_Int16 *) & (lMessage[4]);
 					lHoverId = *(MR_Int16 *) & (lMessage[6]);
 	
-					mClientCharacter[lClientId] = (MR_MainCharacter *) MR_DllObjectFactory::CreateObject(lTypeId);
+					mClientCharacter[lClientId] = (MainCharacter::MainCharacter *) MR_DllObjectFactory::CreateObject(lTypeId);
 					mClientCharacter[lClientId]->mRoom = lRoom;
 					mClientCharacter[lClientId]->SetAsSlave();
 					mClientCharacter[lClientId]->SetHoverId(lHoverId);
@@ -804,7 +804,7 @@ BOOL NetworkSession::CreateMainCharacter()
 	ASSERT(mainCharacter[0] == NULL);			  // make sure we are not creating it twice
 	ASSERT(mSession.GetCurrentLevel() != NULL);
 
-	mainCharacter[0] = MR_MainCharacter::New(mNbLap, mGameOpts);
+	mainCharacter[0] = MainCharacter::MainCharacter::New(mNbLap, mGameOpts);
 
 	// Insert the character in the current level
 	MR_Level *lCurrentLevel = mSession.GetCurrentLevel();
