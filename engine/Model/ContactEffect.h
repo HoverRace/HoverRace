@@ -36,10 +36,12 @@
 #	define MR_DllDeclare
 #endif
 
+/**
+ * Base class for all contact effects.
+ * You must use typeinfo to determine the real type of the effect.
+ */
 class MR_DllDeclare MR_ContactEffect
 {
-	// Base class for all the contact effects
-	// you must use typeinfo to determine the real type of the effect
 	public:
 		virtual ~ MR_ContactEffect();
 
