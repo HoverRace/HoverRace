@@ -25,7 +25,7 @@
 
 #include "MainCharacter.h"
 #include "../Model/RaceEffects.h"
-#include "../Model/FreeElementMovingHelper.h"
+#include "../Model/ObstacleCollisionReport.h"
 #include "../Util/FuzzyLogic.h"
 
 using namespace HoverRace::VideoServices;

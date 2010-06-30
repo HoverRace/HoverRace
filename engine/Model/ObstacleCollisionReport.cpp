@@ -21,7 +21,7 @@
 
 #include "StdAfx.h"
 
-#include "FreeElementMovingHelper.h"
+#include "ObstacleCollisionReport.h"
 #include "../Util/FastArray.h"
 
 // MR_ObstacleCollisionReport

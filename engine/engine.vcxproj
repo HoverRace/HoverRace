@@ -113,10 +113,10 @@
     <ClCompile Include="MainCharacter\MainCharacterRenderer.cpp" />
     <ClCompile Include="Model\ConcreteShape.cpp" />
     <ClCompile Include="Model\ContactEffect.cpp" />
-    <ClCompile Include="Model\FreeElementMovingHelper.cpp" />
     <ClCompile Include="Model\GameSession.cpp" />
     <ClCompile Include="Model\Level.cpp" />
     <ClCompile Include="Model\MazeElement.cpp" />
+    <ClCompile Include="Model\ObstacleCollisionReport.cpp" />
     <ClCompile Include="Model\PhysicalCollision.cpp" />
     <ClCompile Include="Model\ShapeCollisions.cpp" />
     <ClCompile Include="Model\Shapes.cpp" />
@@ -215,10 +215,10 @@
     <ClInclude Include="MainCharacter\MainCharacterRenderer.h" />
     <ClInclude Include="Model\ConcreteShape.h" />
     <ClInclude Include="Model\ContactEffect.h" />
-    <ClInclude Include="Model\FreeElementMovingHelper.h" />
     <ClInclude Include="Model\GameSession.h" />
     <ClInclude Include="Model\Level.h" />
     <ClInclude Include="Model\MazeElement.h" />
+    <ClInclude Include="Model\ObstacleCollisionReport.h" />
     <ClInclude Include="Model\PhysicalCollision.h" />
     <ClInclude Include="Model\RaceEffects.h" />
     <ClInclude Include="Model\ShapeCollisions.h" />
@@ -232,7 +232,6 @@
     <ClInclude Include="ObjFac1\DoubleSpeedSource.h" />
     <ClInclude Include="ObjFac1\FinishLine.h" />
     <ClInclude Include="ObjFac1\FuelSource.h" />
-    <ClInclude Include="ObjFac1\gate.h" />
     <ClInclude Include="ObjFac1\GenericRenderer.h" />
     <ClInclude Include="ObjFac1\HoverRender.h" />
     <ClInclude Include="ObjFac1\Mine.h" />

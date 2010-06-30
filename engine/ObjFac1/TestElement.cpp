@@ -22,7 +22,7 @@
 #include "StdAfx.h"
 
 #include "TestElement.h"
-#include "../Model/FreeElementMovingHelper.h"
+#include "../Model/ObstacleCollisionReport.h"
 
 using HoverRace::ObjFacTools::ResourceLib;
 

@@ -57,9 +57,6 @@
     <ClCompile Include="Model\ContactEffect.cpp">
       <Filter>Model</Filter>
     </ClCompile>
-    <ClCompile Include="Model\FreeElementMovingHelper.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
     <ClCompile Include="Model\GameSession.cpp">
       <Filter>Model</Filter>
     </ClCompile>
@@ -298,6 +295,9 @@
       <Filter>Parcel</Filter>
     </ClCompile>
     <ClCompile Include="StdAfx.cpp" />
+    <ClCompile Include="Model\ObstacleCollisionReport.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColorTools\ColorTools.h">
@@ -313,9 +313,6 @@
       <Filter>Model</Filter>
     </ClInclude>
     <ClInclude Include="Model\ContactEffect.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\FreeElementMovingHelper.h">
       <Filter>Model</Filter>
     </ClInclude>
     <ClInclude Include="Model\GameSession.h">
@@ -364,9 +361,6 @@
       <Filter>ObjFac1</Filter>
     </ClInclude>
     <ClInclude Include="ObjFac1\FuelSource.h">
-      <Filter>ObjFac1</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjFac1\gate.h">
       <Filter>ObjFac1</Filter>
     </ClInclude>
     <ClInclude Include="ObjFac1\GenericRenderer.h">
@@ -596,6 +590,9 @@
     </ClInclude>
     <ClInclude Include="Exception.h" />
     <ClInclude Include="StdAfx.h" />
+    <ClInclude Include="Model\ObstacleCollisionReport.h">
+      <Filter>Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuildStep Include="Parcel\MfcObjStream.h">

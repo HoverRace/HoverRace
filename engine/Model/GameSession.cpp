@@ -24,7 +24,7 @@
 #include <Mmsystem.h>
 
 #include "GameSession.h"
-#include "FreeElementMovingHelper.h"
+#include "ObstacleCollisionReport.h"
 
 #define MR_SIMULATION_SLICE             15
 #define MR_MINIMUM_SIMULATION_SLICE     10

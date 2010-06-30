@@ -24,7 +24,7 @@
 #include "Missile.h"
 #include "ObjFac1Res.h"
 #include "../Model/ConcreteShape.h"
-#include "../Model/FreeElementMovingHelper.h"
+#include "../Model/ObstacleCollisionReport.h"
 
 using HoverRace::ObjFacTools::ResourceLib;
 using namespace HoverRace::VideoServices;
