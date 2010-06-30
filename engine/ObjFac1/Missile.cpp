@@ -223,7 +223,7 @@ int Missile::InternalSimulate(MR_SimulationTime pDuration, MR_Level * pLevel, in
 	lTranslation.mY = static_cast<int>(pDuration * mYSpeed);
 
 	// Verify if the move is valid
-	MR_ObstacleCollisionReport lReport;
+	Model::ObstacleCollisionReport lReport;
 
 	BOOL lSuccessfullTry;
 	MR_SimulationTime lDuration = pDuration;

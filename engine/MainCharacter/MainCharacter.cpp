@@ -674,7 +674,7 @@ int MainCharacter::InternalSimulate(MR_SimulationTime pDuration, MR_Level *pLeve
 		lTranslation.mZ = -1;
 
 	// Verify if the move is valid
-	MR_ObstacleCollisionReport lReport;
+	Model::ObstacleCollisionReport lReport;
 
 	BOOL lSuccessfullTry;
 	MR_SimulationTime lDuration = pDuration;

@@ -24,21 +24,24 @@
 #include "ObstacleCollisionReport.h"
 #include "../Util/FastArray.h"
 
-// MR_ObstacleCollisionReport
+namespace HoverRace {
+namespace Model {
 
-BOOL MR_ObstacleCollisionReport::IsInMaze() const
+// ObstacleCollisionReport
+
+BOOL ObstacleCollisionReport::IsInMaze() const
 {
 	return mInMaze;
 }
 
-BOOL MR_ObstacleCollisionReport::HaveContact() const
+BOOL ObstacleCollisionReport::HaveContact() const
 {
 	ASSERT(mInMaze);
 
 	return mHaveObstacleContact || (mClosestFloor < 0) || (mClosestCeiling < 0);
 }
 
-MR_Int32 MR_ObstacleCollisionReport::StepHeight() const
+MR_Int32 ObstacleCollisionReport::StepHeight() const
 {
 	MR_Int32 lReturnValue = -mClosestFloor;
 
@@ -51,7 +54,7 @@ MR_Int32 MR_ObstacleCollisionReport::StepHeight() const
 	return lReturnValue;
 }
 
-MR_Int32 MR_ObstacleCollisionReport::CeilingStepHeight() const
+MR_Int32 ObstacleCollisionReport::CeilingStepHeight() const
 {
 	MR_Int32 lReturnValue = -mClosestCeiling;
 
@@ -63,36 +66,36 @@ MR_Int32 MR_ObstacleCollisionReport::CeilingStepHeight() const
 	return lReturnValue;
 }
 
-MR_Int32 MR_ObstacleCollisionReport::SpaceToFloor() const
+MR_Int32 ObstacleCollisionReport::SpaceToFloor() const
 {
 	ASSERT(mInMaze);
 
 	return mClosestFloor;
 }
 
-MR_Int32 MR_ObstacleCollisionReport::SpaceToCeiling() const
+MR_Int32 ObstacleCollisionReport::SpaceToCeiling() const
 {
 	ASSERT(mInMaze);
 
 	return mClosestCeiling;
 }
 
-MR_Int32 MR_ObstacleCollisionReport::LargestHoleHeight() const
+MR_Int32 ObstacleCollisionReport::LargestHoleHeight() const
 {
 	return (mShapeTop - mShapeBottom) - (CeilingStepHeight() + StepHeight());
 }
 
-MR_Int32 MR_ObstacleCollisionReport::LargestHoleStep() const
+MR_Int32 ObstacleCollisionReport::LargestHoleStep() const
 {
 	return StepHeight();
 }
 
-BOOL MR_ObstacleCollisionReport::AlmostCompleted() const
+BOOL ObstacleCollisionReport::AlmostCompleted() const
 {
 	return (mHaveObstacleContact && (mObstacleTop >= mShapeTop) && (mObstacleBottom <= mShapeBottom));
 }
 
-void MR_ObstacleCollisionReport::GetContactWithObstacles(
+void ObstacleCollisionReport::GetContactWithObstacles(
 	MR_Level * pLevel, const MR_ShapeInterface * pShape, int pRoom,
 	MR_FreeElement * pElement, BOOL pIgnoreActors)
 {
@@ -166,12 +169,12 @@ void MR_ObstacleCollisionReport::GetContactWithObstacles(
 /**
  * Return the current room that this MR_ObstaceCollisionReport refers to.
  */
-int MR_ObstacleCollisionReport::Room() const
+int ObstacleCollisionReport::Room() const
 {
 	return mCurrentRoom;
 }
 
-void MR_ObstacleCollisionReport::GetContactWithFeaturesAndActors(
+void ObstacleCollisionReport::GetContactWithFeaturesAndActors(
 	MR_Level * pLevel, const MR_ShapeInterface * pShape, int pRoom,
 	MR_FreeElement * pElement, BOOL pIgnoreActors)
 {
@@ -296,3 +299,6 @@ void MR_FreeElementMovingInterface::ComputePosition( const MR_3DCoordinate& pOff
 
 }
 */
+
+}  // namespace Model
+}  // namespace HoverRace

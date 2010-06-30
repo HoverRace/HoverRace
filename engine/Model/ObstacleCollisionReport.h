@@ -21,8 +21,7 @@
 // and limitations under the License.
 //
 
-#ifndef FREE_ELEMENT_MOVING_HELPER_H
-#define FREE_ELEMENT_MOVING_HELPER_H
+#pragma once
 
 #include "Level.h"
 
@@ -32,8 +31,11 @@
 #define MR_DllDeclare   __declspec( dllimport )
 #endif
 
+namespace HoverRace {
+namespace Model {
+
 // Helper class
-class MR_ObstacleCollisionReport
+class ObstacleCollisionReport
 {
 	private:
 		BOOL mInMaze;							  // If false, forget the rest
@@ -77,5 +79,7 @@ class MR_ObstacleCollisionReport
 // Helper class that determine if a move can be made
 // If not the function
 
+}  // namespace Model
+}  // namespace HoverRace
+
 #undef MR_DllDeclare
-#endif

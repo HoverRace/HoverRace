@@ -80,7 +80,7 @@ int TestElement::Simulate(MR_SimulationTime pDuration, MR_Level * pLevel, int pR
 	Cylinder lShape;
 	MR_3DCoordinate lNewPos;
 	MR_Angle lNewOrientation;
-	MR_ObstacleCollisionReport lReport;
+	Model::ObstacleCollisionReport lReport;
 
 	lNewPos = mPosition;
 	lNewOrientation = mOrientation;

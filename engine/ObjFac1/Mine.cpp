@@ -114,7 +114,7 @@ int Mine::Simulate(MR_SimulationTime pDuration, MR_Level * pLevel, int pRoom)
 	else if(!mOnGround && (pDuration > 0)) {
 		// FreeFall computation
 
-		MR_ObstacleCollisionReport lReport;
+		Model::ObstacleCollisionReport lReport;
 
 		mPosition.mZ -= static_cast<int>(pDuration * 0.6);
 
