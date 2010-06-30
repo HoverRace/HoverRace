@@ -19,7 +19,7 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
 #include "../Parcel/ObjStream.h"
 
@@ -27,8 +27,11 @@
 
 using HoverRace::Parcel::ObjStream;
 
-// MR_Level implementation
-MR_Level::MR_Level(BOOL pAllowRendering, char pGameOpts)
+namespace HoverRace {
+namespace Model {
+
+// Level implementation
+Level::Level(BOOL pAllowRendering, char pGameOpts)
 {
 	// Initialisation of an empty level
 	mAllowRendering = pAllowRendering;
@@ -52,7 +55,7 @@ MR_Level::MR_Level(BOOL pAllowRendering, char pGameOpts)
 
 }
 
-MR_Level::~MR_Level()
+Level::~Level()
 {
 
 	// Delete free elements
@@ -74,7 +77,7 @@ MR_Level::~MR_Level()
 
 }
 
-void MR_Level::SetBroadcastHook(void (*pCreationHook) (MR_FreeElement *, int, void *), void (*pStateHook) (MR_FreeElement *, int, int, void *), void *pHookData)
+void Level::SetBroadcastHook(void (*pCreationHook) (FreeElement *, int, void *), void (*pStateHook) (FreeElement *, int, int, void *), void *pHookData)
 {
 	mElementCreationBroadcastHook = pCreationHook;
 	mPermElementStateBroadcastHook = pStateHook;
@@ -82,7 +85,7 @@ void MR_Level::SetBroadcastHook(void (*pCreationHook) (MR_FreeElement *, int, vo
 }
 
 // Serialization
-void MR_Level::Serialize(ObjStream &pArchive)
+void Level::Serialize(ObjStream &pArchive)
 {
 	int lCounter;
 	int lPlayerNo;
@@ -125,7 +128,7 @@ void MR_Level::Serialize(ObjStream &pArchive)
 
 		mRoomList = new Room[mNbRoom];
 		mFeatureList = new Feature[mNbFeature];
-		mFreeElementClassifiedByRoomList = new FreeElement *[mNbRoom];
+		mFreeElementClassifiedByRoomList = new FreeElementList *[mNbRoom];
 
 		for(lCounter = 0; lCounter < mNbRoom; lCounter++) {
 			mFreeElementClassifiedByRoomList[lCounter] = NULL;
@@ -142,13 +145,13 @@ void MR_Level::Serialize(ObjStream &pArchive)
 
 	// Serialise the actors
 
-	FreeElement::SerializeList(pArchive, &mFreeElementNonClassifiedList);
+	FreeElementList::SerializeList(pArchive, &mFreeElementNonClassifiedList);
 
 	for(lCounter = 0; lCounter < mNbRoom; lCounter++) {
-		FreeElement::SerializeList(pArchive, &mFreeElementClassifiedByRoomList[lCounter]);
+		FreeElementList::SerializeList(pArchive, &mFreeElementClassifiedByRoomList[lCounter]);
 
 		if(!pArchive.IsWriting()) {
-			FreeElement *lCurrentElem = mFreeElementClassifiedByRoomList[lCounter];
+			FreeElementList *lCurrentElem = mFreeElementClassifiedByRoomList[lCounter];
 
 			while(lCurrentElem != NULL) {
 				if(mNbPermNetActor < MR_NB_PERNET_ACTORS) {
@@ -169,11 +172,11 @@ void MR_Level::Serialize(ObjStream &pArchive)
 	// remove unwanted elements
 	for(lCounter = 0; lCounter < mNbRoom; lCounter++) {
 		if(!pArchive.IsWriting()) {
-			FreeElement *lCurrentElem = mFreeElementClassifiedByRoomList[lCounter];
+			FreeElementList *lCurrentElem = mFreeElementClassifiedByRoomList[lCounter];
 			
 
 			while(lCurrentElem != NULL) {
-				FreeElement *lNext = lCurrentElem->mNext;
+				FreeElementList *lNext = lCurrentElem->mNext;
 
 				// check if the element is allowed
 				if((lCurrentElem->mElement->GetTypeId().mClassId == 151 /* mine */) && !(mGameOpts & OPT_ALLOW_MINES)) {
@@ -203,97 +206,97 @@ void MR_Level::Serialize(ObjStream &pArchive)
 
 // Internal helper functions
 
-int MR_Level::GetRoomCount() const
+int Level::GetRoomCount() const
 {
 	return mNbRoom;
 }
 
-int MR_Level::GetPlayerCount() const
+int Level::GetPlayerCount() const
 {
 	return mNbPlayer;
 }
 
-int MR_Level::GetPlayerTeam(int pPlayerId) const
+int Level::GetPlayerTeam(int pPlayerId) const
 {
 	return mPlayerTeam[pPlayerId];
 }
 
-int MR_Level::GetStartingRoom(int pPlayerId) const
+int Level::GetStartingRoom(int pPlayerId) const
 {
 	return mStartingRoom[pPlayerId];
 }
 
-const MR_3DCoordinate & MR_Level::GetStartingPos(int pPlayerId) const
+const MR_3DCoordinate & Level::GetStartingPos(int pPlayerId) const
 {
 	return mStartingPosition[pPlayerId];
 }
 
-MR_Angle MR_Level::GetStartingOrientation(int pPlayerId) const
+MR_Angle Level::GetStartingOrientation(int pPlayerId) const
 {
 	return mStartingOrientation[pPlayerId];
 }
 
-MR_PolygonShape *MR_Level::GetRoomShape(int pRoomId) const
+MR_PolygonShape *Level::GetRoomShape(int pRoomId) const
 {
 	return new SectionShape(&mRoomList[pRoomId]);
 }
 
-MR_PolygonShape *MR_Level::GetFeatureShape(int pFeatureId) const
+MR_PolygonShape *Level::GetFeatureShape(int pFeatureId) const
 {
 	return new SectionShape(&mFeatureList[pFeatureId]);
 }
 
-MR_Int32 MR_Level::GetRoomWallLen(int pRoomId, int pVertex) const
+MR_Int32 Level::GetRoomWallLen(int pRoomId, int pVertex) const
 {
 	return mRoomList[pRoomId].mWallLen[pVertex];
 }
 
-MR_Int32 MR_Level::GetFeatureWallLen(int pFeatureId, int pVertex) const
+MR_Int32 Level::GetFeatureWallLen(int pFeatureId, int pVertex) const
 {
 	return mFeatureList[pFeatureId].mWallLen[pVertex];
 }
 
-const MR_2DCoordinate & MR_Level::GetRoomVertex(int pRoomId, int pVertex) const
+const MR_2DCoordinate & Level::GetRoomVertex(int pRoomId, int pVertex) const
 {
 	return mRoomList[pRoomId].mVertexList[pVertex];
 }
 
-const MR_2DCoordinate & MR_Level::GetFeatureVertex(int pFeatureId, int pVertex) const
+const MR_2DCoordinate & Level::GetFeatureVertex(int pFeatureId, int pVertex) const
 {
 	return mFeatureList[pFeatureId].mVertexList[pVertex];
 }
 
-int MR_Level::GetRoomVertexCount(int pRoomId) const
+int Level::GetRoomVertexCount(int pRoomId) const
 {
 	return mRoomList[pRoomId].mNbVertex;
 }
 
-int MR_Level::GetFeatureVertexCount(int pFeatureId) const
+int Level::GetFeatureVertexCount(int pFeatureId) const
 {
 	return mFeatureList[pFeatureId].mNbVertex;
 }
 
-MR_Int32 MR_Level::GetRoomBottomLevel(int pRoomId) const
+MR_Int32 Level::GetRoomBottomLevel(int pRoomId) const
 {
 	return mRoomList[pRoomId].mFloorLevel;
 }
 
-MR_Int32 MR_Level::GetFeatureBottomLevel(int pFeatureId) const
+MR_Int32 Level::GetFeatureBottomLevel(int pFeatureId) const
 {
 	return mFeatureList[pFeatureId].mFloorLevel;
 }
 
-MR_Int32 MR_Level::GetRoomTopLevel(int pRoomId) const
+MR_Int32 Level::GetRoomTopLevel(int pRoomId) const
 {
 	return mRoomList[pRoomId].mCeilingLevel;
 }
 
-MR_Int32 MR_Level::GetFeatureTopLevel(int pFeatureId) const
+MR_Int32 Level::GetFeatureTopLevel(int pFeatureId) const
 {
 	return mFeatureList[pFeatureId].mCeilingLevel;
 }
 
-const int *MR_Level::GetVisibleZones(int pRoomId, int &pNbVisibleZones) const
+const int *Level::GetVisibleZones(int pRoomId, int &pNbVisibleZones) const
 {
 
 	pNbVisibleZones = mRoomList[pRoomId].mNbVisibleRoom;
@@ -301,75 +304,75 @@ const int *MR_Level::GetVisibleZones(int pRoomId, int &pNbVisibleZones) const
 	return mRoomList[pRoomId].mVisibleRoomList;
 }
 
-int MR_Level::GetNbVisibleSurface(int pRoomId) const
+int Level::GetNbVisibleSurface(int pRoomId) const
 {
 	return mRoomList[pRoomId].mNbVisibleSurface;
 }
 
-const MR_SectionId *MR_Level::GetVisibleFloorList(int pRoomId) const
+const SectionId *Level::GetVisibleFloorList(int pRoomId) const
 {
 	return mRoomList[pRoomId].mVisibleFloorList;
 }
 
-const MR_SectionId *MR_Level::GetVisibleCeilingList(int pRoomId) const
+const SectionId *Level::GetVisibleCeilingList(int pRoomId) const
 {
 	return mRoomList[pRoomId].mVisibleCeilingList;
 }
 
-int MR_Level::GetNeighbor(int pRoomId, int pVertex) const
+int Level::GetNeighbor(int pRoomId, int pVertex) const
 {
 	return mRoomList[pRoomId].mNeighborList[pVertex];
 }
 
-int MR_Level::GetParent(int pFeatureId) const
+int Level::GetParent(int pFeatureId) const
 {
 	return mFeatureList[pFeatureId].mParentSectionIndex;
 }
 
-int MR_Level::GetFeatureCount(int pRoomId) const
+int Level::GetFeatureCount(int pRoomId) const
 {
 	return mRoomList[pRoomId].mNbChild;
 }
 
-int MR_Level::GetFeature(int pRoomId, int pChildIndex) const
+int Level::GetFeature(int pRoomId, int pChildIndex) const
 {
 	return mRoomList[pRoomId].mChildList[pChildIndex];
 }
 
-MR_SurfaceElement *MR_Level::GetRoomWallElement(int pRoomId, int pVertex) const
+SurfaceElement *Level::GetRoomWallElement(int pRoomId, int pVertex) const
 {
 	return mRoomList[pRoomId].mWallTexture[pVertex];
 }
 
-MR_SurfaceElement *MR_Level::GetFeatureWallElement(int pFeatureId, int pVertex) const
+SurfaceElement *Level::GetFeatureWallElement(int pFeatureId, int pVertex) const
 {
 	return mFeatureList[pFeatureId].mWallTexture[pVertex];
 }
 
-MR_SurfaceElement *MR_Level::GetRoomBottomElement(int pRoomId) const
+SurfaceElement *Level::GetRoomBottomElement(int pRoomId) const
 {
 	return mRoomList[pRoomId].mFloorTexture;
 }
 
-MR_SurfaceElement *MR_Level::GetFeatureBottomElement(int pFeatureId) const
+SurfaceElement *Level::GetFeatureBottomElement(int pFeatureId) const
 {
 	return mFeatureList[pFeatureId].mFloorTexture;
 }
 
-MR_SurfaceElement *MR_Level::GetRoomTopElement(int pRoomId) const
+SurfaceElement *Level::GetRoomTopElement(int pRoomId) const
 {
 	return mRoomList[pRoomId].mCeilingTexture;
 }
 
-MR_SurfaceElement *MR_Level::GetFeatureTopElement(int pFeatureId) const
+SurfaceElement *Level::GetFeatureTopElement(int pFeatureId) const
 {
 	return mFeatureList[pFeatureId].mCeilingTexture;
 }
 
 // FreeElements manipulation 
-MR_FreeElementHandle MR_Level::GetFirstFreeElement(int pRoom) const 
+MR_FreeElementHandle Level::GetFirstFreeElement(int pRoom) const 
 {
-	FreeElement *lReturnValue;
+	FreeElementList *lReturnValue;
 
 	if(pRoom == eNonClassified)
 		lReturnValue = mFreeElementNonClassifiedList;
@@ -379,29 +382,29 @@ MR_FreeElementHandle MR_Level::GetFirstFreeElement(int pRoom) const
 	return (MR_FreeElementHandle) lReturnValue;
 }
 
-MR_FreeElementHandle MR_Level::GetNextFreeElement(MR_FreeElementHandle pHandle)
+MR_FreeElementHandle Level::GetNextFreeElement(MR_FreeElementHandle pHandle)
 {
-	return (MR_FreeElementHandle) ((FreeElement *) pHandle)->mNext;
+	return (MR_FreeElementHandle) ((FreeElementList *) pHandle)->mNext;
 }
 
-MR_FreeElement *MR_Level::GetFreeElement(MR_FreeElementHandle pHandle)
+FreeElement *Level::GetFreeElement(MR_FreeElementHandle pHandle)
 {
-	return ((FreeElement *) pHandle)->mElement;
+	return ((FreeElementList *) pHandle)->mElement;
 }
 
-void MR_Level::MoveElement(MR_FreeElementHandle pHandle, int pNewRoom)
+void Level::MoveElement(MR_FreeElementHandle pHandle, int pNewRoom)
 {
 	if(pNewRoom == eNonClassified) {
-		((FreeElement *) pHandle)->LinkTo(&mFreeElementNonClassifiedList);
+		((FreeElementList *) pHandle)->LinkTo(&mFreeElementNonClassifiedList);
 	}
 	else {
-		((FreeElement *) pHandle)->LinkTo(&(mFreeElementClassifiedByRoomList[pNewRoom]));
+		((FreeElementList *) pHandle)->LinkTo(&(mFreeElementClassifiedByRoomList[pNewRoom]));
 	}
 }
 
-MR_FreeElementHandle MR_Level::InsertElement(MR_FreeElement * pElement, int pRoom, BOOL pBroadcast)
+MR_FreeElementHandle Level::InsertElement(FreeElement * pElement, int pRoom, BOOL pBroadcast)
 {
-	FreeElement *lReturnValue = new FreeElement;
+	FreeElementList *lReturnValue = new FreeElementList;
 
 	if(mAllowRendering) {
 		pElement->AddRenderer();
@@ -418,12 +421,12 @@ MR_FreeElementHandle MR_Level::InsertElement(MR_FreeElement * pElement, int pRoo
 	return (MR_FreeElementHandle) lReturnValue;
 }
 
-void MR_Level::DeleteElement(MR_FreeElementHandle pHandle)
+void Level::DeleteElement(MR_FreeElementHandle pHandle)
 {
-	delete((FreeElement *) pHandle);
+	delete((FreeElementList *) pHandle);
 }
 
-MR_FreeElementHandle MR_Level::GetPermanentElementHandle(int pElem) const
+MR_FreeElementHandle Level::GetPermanentElementHandle(int pElem) const
 {
 
 	ASSERT(pElem >= 0);
@@ -432,7 +435,7 @@ MR_FreeElementHandle MR_Level::GetPermanentElementHandle(int pElem) const
 	return (MR_FreeElementHandle) mPermNetActor[pElem];
 }
 
-void MR_Level::SetPermElementPos(int pPermElement, int pRoom, const MR_3DCoordinate & pNewPos)
+void Level::SetPermElementPos(int pPermElement, int pRoom, const MR_3DCoordinate & pNewPos)
 {
 	if(pPermElement >= 0) {
 		ASSERT(pPermElement < mNbPermNetActor);
@@ -450,7 +453,7 @@ void MR_Level::SetPermElementPos(int pPermElement, int pRoom, const MR_3DCoordin
 	}
 }
 
-void MR_Level::FlushPermElementPosCache()
+void Level::FlushPermElementPosCache()
 {
 	for(int lCounter = 0; lCounter < mPermActorCacheCount; lCounter++) {
 		MoveElement((MR_FreeElementHandle) mPermNetActor[mPermActorIndexCache[lCounter]], mPermActorNewRoomCache[lCounter]);
@@ -459,102 +462,102 @@ void MR_Level::FlushPermElementPosCache()
 
 }
 
-void MR_Level::GetRoomContact(int pRoom, const MR_ShapeInterface * pShape, MR_RoomContactSpec & pAnswer)
+void Level::GetRoomContact(int pRoom, const MR_ShapeInterface * pShape, MR_RoomContactSpec & pAnswer)
 {
 
 	// Verify if the current room contains the requires shape
 	MR_DetectRoomContact(pShape, &SectionShape(&(mRoomList[pRoom])), pAnswer);
 }
 
-BOOL MR_Level::GetRoomWallContactOrientation(int pRoom, int pWall, const MR_ShapeInterface * pShape, MR_Angle & pAnswer)
+BOOL Level::GetRoomWallContactOrientation(int pRoom, int pWall, const MR_ShapeInterface * pShape, MR_Angle & pAnswer)
 {
 	return MR_GetWallForceLongitude(pShape, &SectionShape(&(mRoomList[pRoom])), pWall, pAnswer);
 }
 
-BOOL MR_Level::GetFeatureContact(int pFeature, const MR_ShapeInterface * pShape, MR_ContactSpec & pAnswer)
+BOOL Level::GetFeatureContact(int pFeature, const MR_ShapeInterface * pShape, MR_ContactSpec & pAnswer)
 {
 
 	// Verify if the current room contains the requires shape
 	return MR_DetectFeatureContact(pShape, &SectionShape(&(mFeatureList[pFeature])), pAnswer);
 }
 
-BOOL MR_Level::GetFeatureContactOrientation(int pFeature, const MR_ShapeInterface * pShape, MR_Angle & pAnswer)
+BOOL Level::GetFeatureContactOrientation(int pFeature, const MR_ShapeInterface * pShape, MR_Angle & pAnswer)
 {
 	return MR_GetFeatureForceLongitude(pShape, &SectionShape(&(mFeatureList[pFeature])), pAnswer);
 }
 
 // Sub classes implementation
 
-// class MR_Level::SectionShape
-MR_Level::SectionShape::SectionShape(MR_Level::Section * pSection)
+// class Level::SectionShape
+Level::SectionShape::SectionShape(Level::Section * pSection)
 {
 	mSection = pSection;
 }
 
-MR_Int32 MR_Level::SectionShape::XMin() const
+MR_Int32 Level::SectionShape::XMin() const
 {
 	return mSection->mMin.mX;
 }
 
-MR_Int32 MR_Level::SectionShape::XMax() const
+MR_Int32 Level::SectionShape::XMax() const
 {
 	return mSection->mMax.mX;
 }
 
-MR_Int32 MR_Level::SectionShape::YMin() const
+MR_Int32 Level::SectionShape::YMin() const
 {
 	return mSection->mMin.mY;
 }
 
-MR_Int32 MR_Level::SectionShape::YMax() const
+MR_Int32 Level::SectionShape::YMax() const
 {
 	return mSection->mMax.mY;
 }
 
-MR_Int32 MR_Level::SectionShape::ZMin() const
+MR_Int32 Level::SectionShape::ZMin() const
 {
 	return mSection->mFloorLevel;
 }
 
-MR_Int32 MR_Level::SectionShape::ZMax() const
+MR_Int32 Level::SectionShape::ZMax() const
 {
 	return mSection->mCeilingLevel;
 }
 
-int MR_Level::SectionShape::VertexCount() const
+int Level::SectionShape::VertexCount() const
 {
 	return mSection->mNbVertex;
 }
 
-MR_Int32 MR_Level::SectionShape::XCenter() const
+MR_Int32 Level::SectionShape::XCenter() const
 {
 	ASSERT(FALSE);								  // Why do you need that???
 	return 0;
 }
 
-MR_Int32 MR_Level::SectionShape::YCenter() const
+MR_Int32 Level::SectionShape::YCenter() const
 {
 	ASSERT(FALSE);								  // Why do you need that???
 	return 0;
 }
 
-MR_Int32 MR_Level::SectionShape::X(int pIndex) const
+MR_Int32 Level::SectionShape::X(int pIndex) const
 {
 	return mSection->mVertexList[pIndex].mX;
 }
 
-MR_Int32 MR_Level::SectionShape::Y(int pIndex) const
+MR_Int32 Level::SectionShape::Y(int pIndex) const
 {
 	return mSection->mVertexList[pIndex].mY;
 }
 
-MR_Int32 MR_Level::SectionShape::SideLen(int pIndex) const
+MR_Int32 Level::SectionShape::SideLen(int pIndex) const
 {
 	return mSection->mWallLen[pIndex];
 }
 
-// class MR_Level::Section::AudibleRoom 
-MR_Level::Room::AudibleRoom::AudibleRoom()
+// class Level::Section::AudibleRoom 
+Level::Room::AudibleRoom::AudibleRoom()
 {
 	mSectionSource = -1;
 	mNbVertexSources = 0;
@@ -562,13 +565,13 @@ MR_Level::Room::AudibleRoom::AudibleRoom()
 	mSoundCoefficient = NULL;
 }
 
-MR_Level::Room::AudibleRoom::~AudibleRoom()
+Level::Room::AudibleRoom::~AudibleRoom()
 {
 	delete[]mVertexList;
 	delete[]mSoundCoefficient;
 }
 
-void MR_Level::Room::AudibleRoom::Serialize(ObjStream & pArchive)
+void Level::Room::AudibleRoom::Serialize(ObjStream & pArchive)
 {
 	int lCounter;
 
@@ -597,7 +600,7 @@ void MR_Level::Room::AudibleRoom::Serialize(ObjStream & pArchive)
 
 }
 
-int MR_Level::FindRoomForPoint(const MR_2DCoordinate & pPosition, int pStartingRoom) const
+int Level::FindRoomForPoint(const MR_2DCoordinate & pPosition, int pStartingRoom) const
 {
 	int lReturnValue = -1;
 
@@ -643,9 +646,9 @@ int MR_Level::FindRoomForPoint(const MR_2DCoordinate & pPosition, int pStartingR
 
 }
 
-// class MR_Level::Section
+// class Level::Section
 
-MR_Level::Section::Section()
+Level::Section::Section()
 {
 
 	mNbVertex = 0;
@@ -658,7 +661,7 @@ MR_Level::Section::Section()
 
 }
 
-MR_Level::Section::~Section()
+Level::Section::~Section()
 {
 	delete[]mVertexList;
 	delete[]mWallLen;
@@ -673,7 +676,7 @@ MR_Level::Section::~Section()
 
 }
 
-void MR_Level::Section::SerializeStructure(ObjStream & pArchive)
+void Level::Section::SerializeStructure(ObjStream & pArchive)
 {
 	int lCounter;
 
@@ -717,7 +720,7 @@ void MR_Level::Section::SerializeStructure(ObjStream & pArchive)
 	MR_ObjectFromFactory::SerializePtr(pArchive, (MR_ObjectFromFactory * &)mCeilingTexture);
 
 	if(!pArchive.IsWriting()) {
-		mWallTexture = new MR_SurfaceElement *[mNbVertex];
+		mWallTexture = new SurfaceElement *[mNbVertex];
 	}
 
 	for(lCounter = 0; lCounter < mNbVertex; lCounter++) {
@@ -725,7 +728,7 @@ void MR_Level::Section::SerializeStructure(ObjStream & pArchive)
 	}
 }
 
-void MR_Level::Section::SerializeSurfacesLogicState(ObjStream & pArchive)
+void Level::Section::SerializeSurfacesLogicState(ObjStream & pArchive)
 {
 	// Serialize the textures state
 	if(mFloorTexture != NULL) {
@@ -743,9 +746,9 @@ void MR_Level::Section::SerializeSurfacesLogicState(ObjStream & pArchive)
 	}
 }
 
-// class MR_Level::Room
+// class Level::Room
 
-MR_Level::Room::Room()
+Level::Room::Room()
 {
 	mNbChild = 0;
 	mChildList = NULL;
@@ -761,7 +764,7 @@ MR_Level::Room::Room()
 
 }
 
-MR_Level::Room::~Room()
+Level::Room::~Room()
 {
 	delete[]mChildList;
 	delete[]mNeighborList;
@@ -771,7 +774,7 @@ MR_Level::Room::~Room()
 	delete[]mVisibleCeilingList;
 }
 
-void MR_Level::Room::SerializeStructure(ObjStream & pArchive)
+void Level::Room::SerializeStructure(ObjStream & pArchive)
 {
 	int lCounter;
 	Section::SerializeStructure(pArchive);
@@ -823,8 +826,8 @@ void MR_Level::Room::SerializeStructure(ObjStream & pArchive)
 		}
 
 		if(mNbVisibleSurface != 0) {
-			mVisibleFloorList = new MR_SectionId[mNbVisibleSurface];
-			mVisibleCeilingList = new MR_SectionId[mNbVisibleSurface];
+			mVisibleFloorList = new SectionId[mNbVisibleSurface];
+			mVisibleCeilingList = new SectionId[mNbVisibleSurface];
 		}
 
 		if(mNbAudibleRoom != 0) {
@@ -855,9 +858,9 @@ void MR_Level::Room::SerializeStructure(ObjStream & pArchive)
 	}
 }
 
-// class MR_Level::Feature
+// class Level::Feature
 
-void MR_Level::Feature::SerializeStructure(ObjStream & pArchive)
+void Level::Feature::SerializeStructure(ObjStream & pArchive)
 {
 	Section::SerializeStructure(pArchive);
 
@@ -869,21 +872,21 @@ void MR_Level::Feature::SerializeStructure(ObjStream & pArchive)
 	}
 }
 
-// class MR_Level::FreeElement
-MR_Level::FreeElement::FreeElement()
+// class Level::FreeElementList
+Level::FreeElementList::FreeElementList()
 {
 	mPrevLink = NULL;
 	mNext = NULL;
 	mElement = NULL;
 }
 
-MR_Level::FreeElement::~FreeElement()
+Level::FreeElementList::~FreeElementList()
 {
 	Unlink();
 	delete mElement;
 }
 
-void MR_Level::FreeElement::Unlink()
+void Level::FreeElementList::Unlink()
 {
 	if(mNext != NULL) {
 		mNext->mPrevLink = mPrevLink;
@@ -896,7 +899,7 @@ void MR_Level::FreeElement::Unlink()
 	mPrevLink = NULL;
 }
 
-void MR_Level::FreeElement::LinkTo(FreeElement ** pPrevLink)
+void Level::FreeElementList::LinkTo(FreeElementList ** pPrevLink)
 {
 	Unlink();
 
@@ -909,10 +912,10 @@ void MR_Level::FreeElement::LinkTo(FreeElement ** pPrevLink)
 	}
 }
 
-void MR_Level::FreeElement::SerializeList(ObjStream & pArchive, FreeElement ** pListHead)
+void Level::FreeElementList::SerializeList(ObjStream & pArchive, FreeElementList ** pListHead)
 {
 	if(pArchive.IsWriting()) {
-		FreeElement *lFreeElement = *pListHead;
+		FreeElementList *lFreeElement = *pListHead;
 
 		while(lFreeElement) {
 			MR_ObjectFromFactory::SerializePtr(pArchive, (MR_ObjectFromFactory * &)lFreeElement->mElement);
@@ -931,13 +934,13 @@ void MR_Level::FreeElement::SerializeList(ObjStream & pArchive, FreeElement ** p
 	else {
 		ASSERT(*pListHead == NULL);
 
-		MR_FreeElement *lCurrentElement;
+		FreeElement *lCurrentElement;
 
 		do {
 			MR_ObjectFromFactory::SerializePtr(pArchive, (MR_ObjectFromFactory * &)lCurrentElement);
 
 			if(lCurrentElement != NULL) {
-				FreeElement *lFreeElement = new FreeElement;
+				FreeElementList *lFreeElement = new FreeElementList;
 
 				lCurrentElement->mPosition.Serialize(pArchive);
 				pArchive >> lCurrentElement->mOrientation;
@@ -950,8 +953,8 @@ void MR_Level::FreeElement::SerializeList(ObjStream & pArchive, FreeElement ** p
 	}
 }
 
-// class MR_SectionId
-void MR_SectionId::Serialize(ObjStream & pArchive)
+// class SectionId
+void SectionId::Serialize(ObjStream & pArchive)
 {
 	if(pArchive.IsWriting()) {
 		pArchive << (int) mType;
@@ -966,3 +969,6 @@ void MR_SectionId::Serialize(ObjStream & pArchive)
 		mType = (eSectionType) lType;
 	}
 }
+
+}  // namespace Model
+}  // namespace HoverRace

@@ -30,7 +30,7 @@ namespace ObjFac1 {
 
 // Note.. finish lines are not finish lines..they are check points
 
-class FinishLine : public MR_FreeElement, protected MR_CylinderShape
+class FinishLine : public Model::FreeElement, protected MR_CylinderShape
 {
 	protected:
 

@@ -133,7 +133,7 @@ const MR_ShapeInterface *Missile::GetGivingContactEffectShape()
 }
 
 // Simulation
-int Missile::Simulate(MR_SimulationTime pDuration, MR_Level * pLevel, int pRoom)
+int Missile::Simulate(MR_SimulationTime pDuration, Model::Level * pLevel, int pRoom)
 {
 
 	// Do the simulation
@@ -175,13 +175,13 @@ int Missile::Simulate(MR_SimulationTime pDuration, MR_Level * pLevel, int pRoom)
 
 	// Determined if the object should be deleted
 	if(mLived >= (cLifeTime + cStopTime)) {
-		pRoom = MR_Level::eMustBeDeleted;
+		pRoom = Model::Level::eMustBeDeleted;
 	}
 
 	return pRoom;
 }
 
-int Missile::InternalSimulate(MR_SimulationTime pDuration, MR_Level * pLevel, int pRoom)
+int Missile::InternalSimulate(MR_SimulationTime pDuration, Model::Level * pLevel, int pRoom)
 {
 
 	mLived += pDuration;
@@ -273,7 +273,7 @@ int Missile::InternalSimulate(MR_SimulationTime pDuration, MR_Level * pLevel, in
 	return pRoom;
 }
 
-void Missile::ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 /*pZMin */ , MR_Int32 /*pZMax */ , MR_Level * /*pLevel */ )
+void Missile::ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 /*pZMin */ , MR_Int32 /*pZMax */ , Model::Level * /*pLevel */ )
 {
 	MR_ContactEffect *lEffect = (MR_ContactEffect *) pEffect;
 	const MR_PhysicalCollision *lPhysCollision = dynamic_cast < MR_PhysicalCollision * >(lEffect);
@@ -312,11 +312,11 @@ class MissileState
 		MR_Int8 mHoverId;						  // 1   16
 };
 
-MR_ElementNetState Missile::GetNetState() const
+Model::ElementNetState Missile::GetNetState() const
 {
 	static MissileState lsState;				  // Static is ok because the variable will be used immediatly
 
-	MR_ElementNetState lReturnValue;
+	Model::ElementNetState lReturnValue;
 
 	lReturnValue.mDataLen = sizeof(lsState);
 	lReturnValue.mData = (MR_UInt8 *) & lsState;

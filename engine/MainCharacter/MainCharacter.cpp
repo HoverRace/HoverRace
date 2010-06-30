@@ -156,8 +156,8 @@ const double eFuelConsuming[MR_NB_HOVER_MODEL] =
 
 // Functions implementations
 
-MainCharacter::MainCharacter(const MR_ObjectFromFactoryId & pId)
-:MR_FreeElement(pId)
+MainCharacter::MainCharacter(const MR_ObjectFromFactoryId & pId) :
+	Model::FreeElement(pId)
 {
 	mMasterMode = TRUE;
 	mRoom = -1;
@@ -290,11 +290,11 @@ MainCharacter *MainCharacter::New(int pNbLap, char pGameOpts)
 	return lReturnValue;
 }
 
-MR_ElementNetState MainCharacter::GetNetState() const
+Model::ElementNetState MainCharacter::GetNetState() const
 {
 	static MainCharacterState lsState;		  // Static is ok because the variable will be used immediatly
 
-	MR_ElementNetState lReturnValue;
+	Model::ElementNetState lReturnValue;
 
 	lReturnValue.mDataLen = sizeof(lsState);
 	lReturnValue.mData = (MR_UInt8 *) &lsState;
@@ -464,7 +464,7 @@ void MainCharacter::SetControlState(int pState, MR_SimulationTime pTime)
 	mControlState = lState;
 }
 
-int MainCharacter::Simulate(MR_SimulationTime pDuration, MR_Level *pLevel, int pRoom)
+int MainCharacter::Simulate(MR_SimulationTime pDuration, Model::Level *pLevel, int pRoom)
 {
 	mRoom = pRoom;
 
@@ -535,7 +535,7 @@ int MainCharacter::Simulate(MR_SimulationTime pDuration, MR_Level *pLevel, int p
 
 					MR_ObjectFromFactoryId lObjectId = { 1, 150 };
 					// Create a new missile
-					MR_FreeElement *lMissile = (MR_FreeElement *) MR_DllObjectFactory::CreateObject(lObjectId);
+					FreeElement *lMissile = (FreeElement *) MR_DllObjectFactory::CreateObject(lObjectId);
 
 					if(lMissile != NULL) {
 						lMissile->SetOwnerId(mHoverId);
@@ -578,7 +578,7 @@ int MainCharacter::Simulate(MR_SimulationTime pDuration, MR_Level *pLevel, int p
 	return pRoom;
 }
 
-int MainCharacter::InternalSimulate(MR_SimulationTime pDuration, MR_Level *pLevel, int pRoom)
+int MainCharacter::InternalSimulate(MR_SimulationTime pDuration, Model::Level *pLevel, int pRoom)
 {
 	// Determine new speed (PosVar and OrientationVar
 	double lAbsoluteSpeed = sqrt(mXSpeed * mXSpeed + mYSpeed * mYSpeed);
@@ -771,7 +771,7 @@ const MR_ShapeInterface *MainCharacter::GetObstacleShape()
 }
 
 void MainCharacter::ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 /*pZMin */ ,
-	MR_Int32 pZMax, MR_Level * pLevel)
+	MR_Int32 pZMax, Model::Level * pLevel)
 {
 	MR_ContactEffect *lEffect = (MR_ContactEffect *) pEffect;
 	const MR_PhysicalCollision *lPhysCollision = dynamic_cast < MR_PhysicalCollision * >(lEffect);

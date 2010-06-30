@@ -41,7 +41,7 @@
 namespace HoverRace {
 namespace ObjFac1 {
 
-class MR_DllDeclare BitmapSurface : public MR_SurfaceElement
+class MR_DllDeclare BitmapSurface : public Model::SurfaceElement
 {
 	protected:
 		MR_ResBitmap * mBitmap;

@@ -19,8 +19,7 @@
 // and limitations under the License.
 //
 
-#ifndef LEVEL_H
-#define LEVEL_H
+#pragma once
 
 #include "MazeElement.h"
 #include "ShapeCollisions.h"
@@ -54,7 +53,10 @@ namespace HoverRace {
 class MR_FreeElementHandleClass;
 typedef MR_FreeElementHandleClass *MR_FreeElementHandle;
 
-class MR_SectionId
+namespace HoverRace {
+namespace Model {
+
+class SectionId
 {
 	public:
 		enum eSectionType { eRoom, eFeature };
@@ -62,10 +64,10 @@ class MR_SectionId
 		eSectionType mType;
 		int mId;
 
-		void Serialize(HoverRace::Parcel::ObjStream &pArchive);
+		void Serialize(Parcel::ObjStream &pArchive);
 };
 
-class MR_DllDeclare MR_Level
+class MR_DllDeclare Level
 {
 
 	// This class will be derived for construction purpose by the MazeCompiler
@@ -128,16 +130,16 @@ class MR_DllDeclare MR_Level
 				MR_2DCoordinate mMax;
 
 				// Wall textures
-				MR_SurfaceElement **mWallTexture;
-				MR_SurfaceElement *mFloorTexture;
-				MR_SurfaceElement *mCeilingTexture;
+				SurfaceElement **mWallTexture;
+				SurfaceElement *mFloorTexture;
+				SurfaceElement *mCeilingTexture;
 
 				// Methods
 				Section();
 				~Section();
 
-				void SerializeStructure(HoverRace::Parcel::ObjStream &pArchive);
-				void SerializeSurfacesLogicState(HoverRace::Parcel::ObjStream &pArchive);
+				void SerializeStructure(Parcel::ObjStream &pArchive);
+				void SerializeSurfacesLogicState(Parcel::ObjStream &pArchive);
 
 		};
 
@@ -147,7 +149,7 @@ class MR_DllDeclare MR_Level
 				// Connectivity
 				int mParentSectionIndex;
 
-				void SerializeStructure(HoverRace::Parcel::ObjStream &pArchive);
+				void SerializeStructure(Parcel::ObjStream &pArchive);
 		};
 
 		class MR_DllDeclare Room : public Section
@@ -169,7 +171,7 @@ class MR_DllDeclare MR_Level
 						AudibleRoom();
 						~AudibleRoom();
 
-						void Serialize(HoverRace::Parcel::ObjStream &pArchive);
+						void Serialize(Parcel::ObjStream &pArchive);
 
 				};
 
@@ -187,8 +189,8 @@ class MR_DllDeclare MR_Level
 				// This attribute apply only to Sections without parent
 
 				int mNbVisibleSurface;
-				MR_SectionId *mVisibleFloorList;  // Ordered floor list
-				MR_SectionId *mVisibleCeilingList;// Ordered ceiling list
+				SectionId *mVisibleFloorList;  // Ordered floor list
+				SectionId *mVisibleCeilingList;// Ordered ceiling list
 
 				int mNbAudibleRoom;				  // Theses members are only used by the server
 				AudibleRoom *mAudibleRoomList;	  // List of the room from where a sound can be heard from the current room
@@ -197,24 +199,24 @@ class MR_DllDeclare MR_Level
 				Room();
 				~Room();
 
-				void SerializeStructure(HoverRace::Parcel::ObjStream &pArchive);
+				void SerializeStructure(Parcel::ObjStream &pArchive);
 
 		};
 
-		class FreeElement
+		class FreeElementList
 		{
 			public:
-				FreeElement ** mPrevLink;
-				FreeElement *mNext;
-				MR_FreeElement *mElement;
+				FreeElementList ** mPrevLink;
+				FreeElementList *mNext;
+				FreeElement *mElement;
 
-				FreeElement();
-				~FreeElement();
+				FreeElementList();
+				~FreeElementList();
 
 				void Unlink();
-				void LinkTo(FreeElement ** pPrevLink);
+				void LinkTo(FreeElementList ** pPrevLink);
 
-				static void SerializeList(HoverRace::Parcel::ObjStream &pArchive, FreeElement **pListHead);
+				static void SerializeList(Parcel::ObjStream &pArchive, FreeElementList **pListHead);
 		};
 
 		// Private Data
@@ -237,11 +239,11 @@ class MR_DllDeclare MR_Level
 		MR_Angle mStartingOrientation[MR_NB_MAX_PLAYER];
 
 		// FreeElements
-		FreeElement *mFreeElementNonClassifiedList;
-		FreeElement **mFreeElementClassifiedByRoomList;
+		FreeElementList *mFreeElementNonClassifiedList;
+		FreeElementList **mFreeElementClassifiedByRoomList;
 
 		int mNbPermNetActor;
-		FreeElement *mPermNetActor[MR_NB_PERNET_ACTORS];
+		FreeElementList *mPermNetActor[MR_NB_PERNET_ACTORS];
 
 		// PermActor moving cache (Big patch since there is a smll bug in the design)
 		int mPermActorCacheCount;
@@ -249,22 +251,22 @@ class MR_DllDeclare MR_Level
 		int mPermActorNewRoomCache[MR_NB_PERNET_ACTORS];
 
 		// Broadcast hook
-		void (*mElementCreationBroadcastHook) (MR_FreeElement * pElement, int pRoom, void *pHookData);
-		void (*mPermElementStateBroadcastHook) (MR_FreeElement * pElement, int pRoom, int pPermId, void *pHookData);
+		void (*mElementCreationBroadcastHook) (FreeElement * pElement, int pRoom, void *pHookData);
+		void (*mPermElementStateBroadcastHook) (FreeElement * pElement, int pRoom, int pPermId, void *pHookData);
 		void *mBroadcastHookData;
 
 		// Helper functions
 		int GetRealRoomRecursive(const MR_2DCoordinate & pPosition, int pOriginalSection, int = -1) const;
 
 	public:
-		MR_Level(BOOL pAllowRendering = FALSE, char pGameOpts = 1);
-		~MR_Level();
+		Level(BOOL pAllowRendering = FALSE, char pGameOpts = 1);
+		~Level();
 
 		// Network stuff
-		void SetBroadcastHook(void (*pCreationHook) (MR_FreeElement *, int, void *), void (*pStateHook) (MR_FreeElement *, int, int, void *), void *pHookData);
+		void SetBroadcastHook(void (*pCreationHook) (FreeElement *, int, void *), void (*pStateHook) (FreeElement *, int, int, void *), void *pHookData);
 
 		// Serialisation functions
-		void Serialize(HoverRace::Parcel::ObjStream &pArchive);
+		void Serialize(Parcel::ObjStream &pArchive);
 
 		// Strucre Interrocation functions
 		int GetRoomCount() const;
@@ -293,31 +295,31 @@ class MR_DllDeclare MR_Level
 
 		const int *GetVisibleZones(int pRoomId, int &pNbVisibleZones) const;
 		int GetNbVisibleSurface(int pRoomId) const;
-		const MR_SectionId *GetVisibleFloorList(int pRoomId) const;
-		const MR_SectionId *GetVisibleCeilingList(int pRoomId) const;
+		const SectionId *GetVisibleFloorList(int pRoomId) const;
+		const SectionId *GetVisibleCeilingList(int pRoomId) const;
 		int GetNeighbor(int pRoomId, int pVertex) const;
 		int GetParent(int pFeatureId) const;
 		int GetFeatureCount(int pRoomId) const;
 		int GetFeature(int pRoomId, int pChildIndex) const;
 
-		MR_SurfaceElement *GetRoomWallElement(int pRoomId, int pVertex) const;
-		MR_SurfaceElement *GetRoomBottomElement(int pRoomId) const;
-		MR_SurfaceElement *GetRoomTopElement(int pRoomId) const;
+		SurfaceElement *GetRoomWallElement(int pRoomId, int pVertex) const;
+		SurfaceElement *GetRoomBottomElement(int pRoomId) const;
+		SurfaceElement *GetRoomTopElement(int pRoomId) const;
 
-		MR_SurfaceElement *GetFeatureWallElement(int pFeatureId, int pVertex) const;
-		MR_SurfaceElement *GetFeatureBottomElement(int pFeatureId) const;
-		MR_SurfaceElement *GetFeatureTopElement(int pFeatureId) const;
+		SurfaceElement *GetFeatureWallElement(int pFeatureId, int pVertex) const;
+		SurfaceElement *GetFeatureBottomElement(int pFeatureId) const;
+		SurfaceElement *GetFeatureTopElement(int pFeatureId) const;
 
 		// Free element content interrogation and manipulation
 		MR_FreeElementHandle GetFirstFreeElement(int pRoom) const;
 		static MR_FreeElementHandle GetNextFreeElement(MR_FreeElementHandle pHandle);
-		static MR_FreeElement *GetFreeElement(MR_FreeElementHandle pHandle);
+		static FreeElement *GetFreeElement(MR_FreeElementHandle pHandle);
 		MR_FreeElementHandle GetPermanentElementHandle(int pElem) const;
 
 												  // -1 mean non classified
 		void MoveElement(MR_FreeElementHandle pHandle, int pNewRoom);
 												  // -1 mean non classified
-		MR_FreeElementHandle InsertElement(MR_FreeElement * pElement, int pNewRoom, BOOL Broadcast = FALSE);
+		MR_FreeElementHandle InsertElement(FreeElement * pElement, int pNewRoom, BOOL Broadcast = FALSE);
 		static void DeleteElement(MR_FreeElementHandle pHandle);
 
 												  // Set and broadcast the newporition
@@ -337,5 +339,7 @@ class MR_DllDeclare MR_Level
 
 };
 
+}  // namespace Model
+}  // namespace HoverRace
+
 #undef MR_DllDeclare
-#endif

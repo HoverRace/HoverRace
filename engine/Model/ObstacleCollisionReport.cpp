@@ -96,8 +96,8 @@ BOOL ObstacleCollisionReport::AlmostCompleted() const
 }
 
 void ObstacleCollisionReport::GetContactWithObstacles(
-	MR_Level * pLevel, const MR_ShapeInterface * pShape, int pRoom,
-	MR_FreeElement * pElement, BOOL pIgnoreActors)
+	Level * pLevel, const MR_ShapeInterface * pShape, int pRoom,
+	FreeElement * pElement, BOOL pIgnoreActors)
 {
 	// Compute the touched rooms and the floor limits
 	// Fort each room check collisions with the features
@@ -175,8 +175,8 @@ int ObstacleCollisionReport::Room() const
 }
 
 void ObstacleCollisionReport::GetContactWithFeaturesAndActors(
-	MR_Level * pLevel, const MR_ShapeInterface * pShape, int pRoom,
-	MR_FreeElement * pElement, BOOL pIgnoreActors)
+	Level * pLevel, const MR_ShapeInterface * pShape, int pRoom,
+	FreeElement * pElement, BOOL pIgnoreActors)
 {
 
 	int lCounter;
@@ -207,7 +207,7 @@ void ObstacleCollisionReport::GetContactWithFeaturesAndActors(
 			MR_FreeElementHandle lObstacleHandle = pLevel->GetFirstFreeElement(pRoom);
 
 			while(lObstacleHandle != NULL) {
-				MR_FreeElement *lObstacle = MR_Level::GetFreeElement(lObstacleHandle);
+				FreeElement *lObstacle = Level::GetFreeElement(lObstacleHandle);
 
 				if(lObstacle != pElement) {
 
@@ -231,7 +231,7 @@ void ObstacleCollisionReport::GetContactWithFeaturesAndActors(
 						}
 					}
 				}
-				lObstacleHandle = MR_Level::GetNextFreeElement(lObstacleHandle);
+				lObstacleHandle = Level::GetNextFreeElement(lObstacleHandle);
 			}
 		}
 	}
@@ -279,7 +279,7 @@ void MR_FreeElementMovingInterface::ComputePosition( const MR_3DCoordinate& pOff
    MR_3DCoordinate lNewPosition;
    MR_Angle        lNewAngle;
    MR_Angle        lNewAngleP90;
-   MR_FreeElement* lElement = mLevel->GetFreeElement( mLevel->GetFreeElementHandle( mSection, mElement ) );
+   FreeElement* lElement = mLevel->GetFreeElement( mLevel->GetFreeElementHandle( mSection, mElement ) );
    MR_3DCoordinate lOldPosition = lElement->mPosition;
    MR_Angle        lOldAngle    = lElement->mOrientation;
 

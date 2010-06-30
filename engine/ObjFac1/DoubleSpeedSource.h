@@ -28,7 +28,7 @@
 namespace HoverRace {
 namespace ObjFac1 {
 
-class DoubleSpeedSource : public MR_FreeElement, protected MR_CylinderShape
+class DoubleSpeedSource : public Model::FreeElement, protected MR_CylinderShape
 {
 	protected:
 

@@ -51,7 +51,7 @@ TestElement::~TestElement()
 
 }
 
-int TestElement::Simulate(MR_SimulationTime pDuration, MR_Level * pLevel, int pRoom)
+int TestElement::Simulate(MR_SimulationTime pDuration, Model::Level * pLevel, int pRoom)
 {
 	mElapsedFrameTime += pDuration;
 
@@ -129,7 +129,7 @@ const MR_ShapeInterface *TestElement::GetObstacleShape()
 	return &mCollisionShape;
 }
 
-void TestElement::ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 /*pZMin */ , MR_Int32 /*pZMax */ , MR_Level * /*pLevel */ )
+void TestElement::ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 /*pZMin */ , MR_Int32 /*pZMax */ , Model::Level * /*pLevel */ )
 {
 	MR_ContactEffect *lEffect = (MR_ContactEffect *) pEffect;
 	const MR_PhysicalCollision *lPhysCollision = dynamic_cast < MR_PhysicalCollision * >(lEffect);

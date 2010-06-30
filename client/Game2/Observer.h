@@ -30,11 +30,13 @@ namespace HoverRace {
 	namespace Client {
 		class ClientSession;
 	}
+	namespace Model {
+		class SectionId;
+	}
 	namespace VideoServices {
 		class StaticText;
 	}
 }
-class MR_SectionId;
 
 namespace HoverRace {
 namespace Client {
@@ -79,20 +81,20 @@ class Observer
 		ObjFac1::SpriteHandle *mPowerUpDisp;
 		ObjFac1::SpriteHandle *mHoverIcons;
 
-		HoverRace::VideoServices::StaticText *selectCraftTxt;
-		HoverRace::VideoServices::StaticText *craftTxt;
+		VideoServices::StaticText *selectCraftTxt;
+		VideoServices::StaticText *craftTxt;
 
 		Observer();
 		~Observer();
 
-		void Render2DDebugView(MR_VideoBuffer * pDest, const MR_Level * pLevel, const MainCharacter::MainCharacter * pViewingCharacter);
-		void RenderWireFrameView(const MR_Level * pLevel, const MainCharacter::MainCharacter * pViewingCharacter);
+		void Render2DDebugView(MR_VideoBuffer * pDest, const Model::Level * pLevel, const MainCharacter::MainCharacter * pViewingCharacter);
+		void RenderWireFrameView(const Model::Level * pLevel, const MainCharacter::MainCharacter * pViewingCharacter);
 		void Render3DView(const HoverRace::Client::ClientSession * pSession, const MainCharacter::MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage);
 
-		void DrawWFSection(const MR_Level * pLevel, const MR_SectionId & pSectionId, MR_UInt8 pColor);
-		void RenderRoomWalls(const MR_Level * pLevel, int pRoomId, MR_SimulationTime pTime);
-		void RenderFeatureWalls(const MR_Level * pLevel, int pFeatureId, MR_SimulationTime pTime);
-		void RenderFloorOrCeiling(const MR_Level * pLevel, const MR_SectionId & pSectionId, BOOL pFloor, MR_SimulationTime pTime);
+		void DrawWFSection(const Model::Level * pLevel, const Model::SectionId & pSectionId, MR_UInt8 pColor);
+		void RenderRoomWalls(const Model::Level * pLevel, int pRoomId, MR_SimulationTime pTime);
+		void RenderFeatureWalls(const Model::Level * pLevel, int pFeatureId, MR_SimulationTime pTime);
+		void RenderFloorOrCeiling(const Model::Level * pLevel, const Model::SectionId & pSectionId, BOOL pFloor, MR_SimulationTime pTime);
 
 		static void DrawBackground(MR_VideoBuffer * pDest);
 
@@ -120,7 +122,7 @@ class Observer
 		void RenderDebugDisplay(MR_VideoBuffer * pDest, const HoverRace::Client::ClientSession *pSession, const MainCharacter::MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage);
 		void RenderNormalDisplay(MR_VideoBuffer * pDest, const HoverRace::Client::ClientSession *pSession, const MainCharacter::MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage);
 
-		void PlaySounds(const MR_Level * pLevel, MainCharacter::MainCharacter * pViewingCharacter);
+		void PlaySounds(const Model::Level * pLevel, MainCharacter::MainCharacter * pViewingCharacter);
 
 };
 

@@ -49,7 +49,7 @@ namespace MainCharacter {
 #define OPT_ALLOW_CX		0x04
 #define OPT_ALLOW_EON		0x01
 
-class MainCharacter : public MR_FreeElement
+class MainCharacter : public Model::FreeElement
 {
 	public:
 		enum {
@@ -156,7 +156,7 @@ class MainCharacter : public MR_FreeElement
 
 		static MR_ObjectFromFactory *FactoryFunc(MR_UInt16 pElemenType);
 
-		int InternalSimulate(MR_SimulationTime pDuration, MR_Level * pLevel, int pRoom);
+		int InternalSimulate(MR_SimulationTime pDuration, Model::Level * pLevel, int pRoom);
 
 	public:
 		// Construction
@@ -179,7 +179,7 @@ class MainCharacter : public MR_FreeElement
 		void AddRenderer();
 		void Render(MR_3DViewPort * pDest, MR_SimulationTime pTime);
 
-		MR_DllDeclare MR_ElementNetState GetNetState() const;
+		MR_DllDeclare Model::ElementNetState GetNetState() const;
 		MR_DllDeclare void SetNetState(int pDataLen, const MR_UInt8 * pData);
 		MR_DllDeclare void SetNbLapForRace(int pNbLap);
 
@@ -212,12 +212,12 @@ class MainCharacter : public MR_FreeElement
 
 	protected:
 		// Logic interface
-		int Simulate(MR_SimulationTime pDuration, MR_Level * pLevel, int pRoom);
+		int Simulate(MR_SimulationTime pDuration, Model::Level * pLevel, int pRoom);
 
 		const MR_ShapeInterface *GetObstacleShape();
 
 		// ContactEffectShapeInterface
-		void ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 pZMin, MR_Int32 pZMax, MR_Level * pLevel);
+		void ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 pZMin, MR_Int32 pZMax, Model::Level * pLevel);
 
 		const MR_ContactEffectList *GetEffectList();
 

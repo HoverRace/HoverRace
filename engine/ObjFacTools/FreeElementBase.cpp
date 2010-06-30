@@ -23,8 +23,8 @@
 
 #include "FreeElementBase.h"
 
-MR_FreeElementBase::MR_FreeElementBase(const MR_ObjectFromFactoryId & pId)
-:MR_FreeElement(pId)
+MR_FreeElementBase::MR_FreeElementBase(const MR_ObjectFromFactoryId & pId) :
+	HoverRace::Model::FreeElement(pId)
 {
 	// The task of initialising the data members is done by the superclass
 	mActor = NULL;

@@ -55,7 +55,7 @@ MR_Int32 DoubleSpeedSource::RayLen() const
 }
 
 DoubleSpeedSource::DoubleSpeedSource(const MR_ObjectFromFactoryId &pId) :
-	MR_FreeElement(pId)
+	Model::FreeElement(pId)
 {
 	mContactEffectList.push_back(&mSpeedEffect);
 }

@@ -42,8 +42,7 @@
 // Data that is shared by the two possible component is store directly in the element body
 //
 
-#ifndef MAZE_ELEMENT_H
-#define MAZE_ELEMENT_H
+#pragma once
 
 #include "Shapes.h"
 #include "ContactEffect.h"
@@ -57,31 +56,34 @@
 #endif
 
 namespace HoverRace {
+	namespace Model {
+		class Level;
+	}
 	namespace Parcel {
 		class ObjStream;
 	}
 }
 
-// Class Declaration
-class MR_Level;
-
 // Renderer bases
-class MR_SurfaceElementRenderer;				  // used and defines by the Observer module
-class MR_FreeElementRenderer;					  // used and defines by the Observer module
+class SurfaceElementRenderer;				  // used and defines by the Observer module
+class FreeElementRenderer;					  // used and defines by the Observer module
 
-class MR_FreeElementMovingInterface;
+class FreeElementMovingInterface;
 
-class MR_ElementNetState
+namespace HoverRace {
+namespace Model {
+
+class ElementNetState
 {
 	public:
 		int mDataLen;
 		const MR_UInt8 *mData;
 };
 
-class MR_DllDeclare MR_Element:public MR_ObjectFromFactory
+class MR_DllDeclare Element : public MR_ObjectFromFactory
 {
 	public:
-		MR_Element(const MR_ObjectFromFactoryId & pId);
+		Element(const MR_ObjectFromFactoryId & pId);
 
 		virtual void AddRenderer();
 												  // Initialisation string used during maze creation
@@ -91,48 +93,48 @@ class MR_DllDeclare MR_Element:public MR_ObjectFromFactory
 		virtual void SerializeLogicState(HoverRace::Parcel::ObjStream &pArchive);
 
 		// Contact effect interface
-		virtual void ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 pZMin, MR_Int32 pZMax, MR_Level * pLevel);
+		virtual void ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 pZMin, MR_Int32 pZMax, Level * pLevel);
 
 		virtual const MR_ContactEffectList *GetEffectList();
 
 		// Helper functions
-		void ApplyEffects(const MR_ContactEffectList * pList, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 pZMin, MR_Int32 pZMax, MR_Level * pLevel);
+		void ApplyEffects(const MR_ContactEffectList * pList, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 pZMin, MR_Int32 pZMax, Level * pLevel);
 
 	private:
 												  // Prevent overriding of the Serialize function
 		virtual void Serialize(HoverRace::Parcel::ObjStream &pArchive);
 };
 
-class MR_DllDeclare MR_SurfaceElement:public MR_Element
+class MR_DllDeclare SurfaceElement : public Element
 {
 	public:
-		MR_SurfaceElement(const MR_ObjectFromFactoryId & pId);
+		SurfaceElement(const MR_ObjectFromFactoryId & pId);
 
 		virtual void RenderWallSurface(MR_3DViewPort * pDest, const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, MR_SimulationTime pTime);
 
 		virtual void RenderHorizontalSurface(MR_3DViewPort * pDest, int pNbVertex, const MR_2DCoordinate * pVertexList, MR_Int32 pLevel, BOOL pTop, MR_SimulationTime pTime);
 };
 
-class MR_DllDeclare MR_FreeElement:public MR_Element
+class MR_DllDeclare FreeElement : public Element
 {
 	public:
 		MR_3DCoordinate mPosition;
 		MR_Angle mOrientation;
 
 	public:
-		MR_FreeElement(const MR_ObjectFromFactoryId & pId);
+		FreeElement(const MR_ObjectFromFactoryId & pId);
 
 		virtual void Render(MR_3DViewPort * pDest, MR_SimulationTime pTime);
 
 		virtual void PlayInternalSounds();
 		virtual void PlayExternalSounds(int pDB, int pPan);
 
-		virtual MR_ElementNetState GetNetState() const;
+		virtual ElementNetState GetNetState() const;
 		virtual void SetNetState(int pDataLen, const MR_UInt8 * pData);
 
 		// Logic interface (For simulation)
 												  // shoud return new room number
-		virtual int Simulate(MR_SimulationTime pTimeSlice, MR_Level * pLevel, int pRoom);
+		virtual int Simulate(MR_SimulationTime pTimeSlice, Level * pLevel, int pRoom);
 
 												  // Shape that stop other elements movement
 		virtual const MR_ShapeInterface *GetObstacleShape();
@@ -147,5 +149,7 @@ class MR_DllDeclare MR_FreeElement:public MR_Element
 		virtual void SetOwnerId(int pOwnerId);
 };
 
+}  // namespace Model
+}  // namespace HoverRace
+
 #undef MR_DllDeclare
-#endif

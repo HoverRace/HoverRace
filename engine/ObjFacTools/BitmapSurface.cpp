@@ -32,7 +32,7 @@ static MR_PhysicalCollision gEffect;
 static MR_ContactEffectList gEffectList;
 
 BitmapSurface::BitmapSurface(const MR_ObjectFromFactoryId & pId) :
-	MR_SurfaceElement(pId)
+	Model::SurfaceElement(pId)
 {
 	// The task of initialising the data members is done by the superclass
 	mBitmap = NULL;
@@ -52,7 +52,7 @@ BitmapSurface::BitmapSurface(const MR_ObjectFromFactoryId & pId) :
 }
 
 BitmapSurface::BitmapSurface(const MR_ObjectFromFactoryId & pId, /*const */ MR_ResBitmap * pBitmap)
-:MR_SurfaceElement(pId)
+:Model::SurfaceElement(pId)
 {
 	// The task of initialising the data members i
 	mBitmap = pBitmap;
@@ -73,7 +73,7 @@ BitmapSurface::BitmapSurface(const MR_ObjectFromFactoryId & pId, /*const */ MR_R
 }
 
 BitmapSurface::BitmapSurface(const MR_ObjectFromFactoryId & pId, MR_ResBitmap * pBitmap1, MR_ResBitmap * pBitmap2, int pRotationSpeed, int pRotationLen)
-:MR_SurfaceElement(pId)
+:Model::SurfaceElement(pId)
 {
 	// The task of initialising the data members i
 	mBitmap = pBitmap1;

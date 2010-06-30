@@ -89,11 +89,11 @@ class NetworkSession : public ClientSession
 
 		// Network functions
 												  // Must be called only once
-		void BroadcastMainElementCreation(const MR_ObjectFromFactoryId &pId, const MR_ElementNetState &pState, int pRoom, int pHoverId);
+		void BroadcastMainElementCreation(const MR_ObjectFromFactoryId &pId, const Model::ElementNetState &pState, int pRoom, int pHoverId);
 												  // Creation of autonomous elements
-		void BroadcastAutoElementCreation(const MR_ObjectFromFactoryId &pId, const MR_ElementNetState &pState, int pRoom);
-		void BroadcastPermElementState(int pPermId, const MR_ElementNetState &pState, int pRoom);
-		void BroadcastMainElementState(const MR_ElementNetState &pState);
+		void BroadcastAutoElementCreation(const MR_ObjectFromFactoryId &pId, const Model::ElementNetState &pState, int pRoom);
+		void BroadcastPermElementState(int pPermId, const Model::ElementNetState &pState, int pRoom);
+		void BroadcastMainElementState(const Model::ElementNetState &pState);
 		void BroadcastMainElementStats(MR_SimulationTime pFinishTime, MR_SimulationTime pBestLap, int pNbLap);
 		void BroadcastChatMessage(const char *pMessage);
 		void BroadcastTime();
@@ -108,8 +108,8 @@ class NetworkSession : public ClientSession
 		void ReadNet();
 		void WriteNet();
 
-		static void ElementCreationHook(MR_FreeElement * pElement, int pRoom, void *pThis);
-		static void PermElementStateHook(MR_FreeElement * pElement, int pRoom, int pPermId, void *pThis);
+		static void ElementCreationHook(Model::FreeElement * pElement, int pRoom, void *pThis);
+		static void PermElementStateHook(Model::FreeElement * pElement, int pRoom, int pPermId, void *pThis);
 
 	public:
 		// Creation and destruction

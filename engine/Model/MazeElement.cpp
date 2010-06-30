@@ -27,18 +27,21 @@
 
 using HoverRace::Parcel::ObjStream;
 
-// MR_Element default behavior
+namespace HoverRace {
+namespace Model {
 
-MR_Element::MR_Element(const MR_ObjectFromFactoryId & pId)
-:MR_ObjectFromFactory(pId)
+// Element default behavior
+
+Element::Element(const MR_ObjectFromFactoryId & pId) :
+	MR_ObjectFromFactory(pId)
 {
 }
 
-void MR_Element::AddRenderer()
+void Element::AddRenderer()
 {												  /* The default function do notting */
 }
 
-BOOL MR_Element::InitString(const char *pInitStr)
+BOOL Element::InitString(const char *pInitStr)
 {
 	BOOL lReturnValue = TRUE;
 
@@ -50,32 +53,32 @@ BOOL MR_Element::InitString(const char *pInitStr)
 	return lReturnValue;
 }
 
-void MR_Element::SerializeLogicState(ObjStream & /*pArchive */ )
+void Element::SerializeLogicState(ObjStream & /*pArchive */ )
 {												  /* The default function do notting */
 }
 
-void MR_Element::Serialize(ObjStream & pArchive)
+void Element::Serialize(ObjStream & pArchive)
 {
 	MR_ObjectFromFactory::Serialize(pArchive);
 }
 
-void MR_Element::ApplyEffect(const MR_ContactEffect * /*pEffect */ ,
+void Element::ApplyEffect(const MR_ContactEffect * /*pEffect */ ,
 MR_SimulationTime /*pTime */ ,
 MR_SimulationTime /*pDuration */ ,
 BOOL /*pValidRirection */ ,
 MR_Angle /*pHorizontalDirection */ ,
 MR_Int32 /*pZMin */ ,
 MR_Int32 /*pZMax */ ,
-MR_Level * /*pLevel */ )
+Level * /*pLevel */ )
 {												  /* Do notting by default */
 }
 
-const MR_ContactEffectList *MR_Element::GetEffectList()
+const MR_ContactEffectList *Element::GetEffectList()
 {
 	return NULL;
 }
 
-void MR_Element::ApplyEffects(const MR_ContactEffectList * pList, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 pZMin, MR_Int32 pZMax, MR_Level * pLevel)
+void Element::ApplyEffects(const MR_ContactEffectList * pList, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 pZMin, MR_Int32 pZMax, Level * pLevel)
 {
 	if(pList != NULL) {
 		for (MR_ContactEffectList::const_iterator iter = pList->begin();
@@ -87,13 +90,13 @@ void MR_Element::ApplyEffects(const MR_ContactEffectList * pList, MR_SimulationT
 	}
 }
 
-// MR_SurfaceElement default behavior
-MR_SurfaceElement::MR_SurfaceElement(const MR_ObjectFromFactoryId & pId)
-:MR_Element(pId)
+// SurfaceElement default behavior
+SurfaceElement::SurfaceElement(const MR_ObjectFromFactoryId & pId) :
+	Element(pId)
 {
 }
 
-void MR_SurfaceElement::RenderWallSurface(MR_3DViewPort * /*pDest */ ,
+void SurfaceElement::RenderWallSurface(MR_3DViewPort * /*pDest */ ,
 const MR_3DCoordinate & /*pUpperLeft */ ,
 const MR_3DCoordinate & /*pLowerRight */ ,
 MR_Int32 /*pLen */ ,
@@ -101,7 +104,7 @@ MR_SimulationTime /*pTime */ )
 {												  /* Notting is rendered by default */
 }
 
-void MR_SurfaceElement::RenderHorizontalSurface(MR_3DViewPort * /*pDest */ ,
+void SurfaceElement::RenderHorizontalSurface(MR_3DViewPort * /*pDest */ ,
 int /*pNbVertex */ ,
 const MR_2DCoordinate * /*pVertexList */ ,
 MR_Int32 /*pLevel */ ,
@@ -110,61 +113,64 @@ MR_SimulationTime /*pTime */ )
 {												  /* Notting is rendered by default */
 }
 
-// MR_FreeElement default behavior
+// FreeElement default behavior
 
-MR_FreeElement::MR_FreeElement(const MR_ObjectFromFactoryId & pId)
-:MR_Element(pId)
+FreeElement::FreeElement(const MR_ObjectFromFactoryId & pId) :
+	Element(pId)
 {
 }
 
-MR_ElementNetState MR_FreeElement::GetNetState() const
+ElementNetState FreeElement::GetNetState() const
 {
-	MR_ElementNetState lReturnValue = { 0, NULL };
+	ElementNetState lReturnValue = { 0, NULL };
 	return lReturnValue;
 }
 
-void MR_FreeElement::SetNetState(int pDataLen, const MR_UInt8 * /*pData */ )
+void FreeElement::SetNetState(int pDataLen, const MR_UInt8 * /*pData */ )
 {
 	ASSERT(pDataLen == 0);						  // Why a Get without a Set??
 }
 
-void MR_FreeElement::Render(MR_3DViewPort * /*pDest */ , MR_SimulationTime /*pTime */ )
+void FreeElement::Render(MR_3DViewPort * /*pDest */ , MR_SimulationTime /*pTime */ )
 {												  /* Notting is rendered by default */
 }
 
-int MR_FreeElement::Simulate(MR_SimulationTime, MR_Level *, int pRoom)
+int FreeElement::Simulate(MR_SimulationTime, Level *, int pRoom)
 {												  /* Notting to do by default */
 	return pRoom;
 }
 
-const MR_ShapeInterface *MR_FreeElement::GetObstacleShape()
+const MR_ShapeInterface *FreeElement::GetObstacleShape()
 {
 	return NULL;
 }
 
-const MR_ShapeInterface *MR_FreeElement::GetReceivingContactEffectShape()
+const MR_ShapeInterface *FreeElement::GetReceivingContactEffectShape()
 {
 	return NULL;
 }
 
-const MR_ShapeInterface *MR_FreeElement::GetGivingContactEffectShape()
+const MR_ShapeInterface *FreeElement::GetGivingContactEffectShape()
 {
 	return NULL;
 }
 
-void MR_FreeElement::PlayInternalSounds()
+void FreeElement::PlayInternalSounds()
 {
 }
 
-void MR_FreeElement::PlayExternalSounds(int /*pDB */ , int /*pPan */ )
+void FreeElement::PlayExternalSounds(int /*pDB */ , int /*pPan */ )
 {
 }
 
-BOOL MR_FreeElement::AssignPermNumber(int /*pNumber */ )
+BOOL FreeElement::AssignPermNumber(int /*pNumber */ )
 {
 	return FALSE;
 }
 
-void MR_FreeElement::SetOwnerId(int /*pOwnerId */ )
+void FreeElement::SetOwnerId(int /*pOwnerId */ )
 {
 }
+
+}  // namespace Model
+}  // namespace HoverRace

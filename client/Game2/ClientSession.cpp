@@ -148,7 +148,7 @@ bool ClientSession::CreateMainCharacter(int i)
 {
 	ASSERT(mainCharacter[i] == NULL);
 
-	MR_Level *curLevel = mSession.GetCurrentLevel();
+	Model::Level *curLevel = mSession.GetCurrentLevel();
 	ASSERT(curLevel != NULL);
 
 	MainCharacter::MainCharacter *ch = mainCharacter[i] = MainCharacter::MainCharacter::New(mNbLap, mGameOpts);
@@ -241,7 +241,7 @@ void ClientSession::SetControlState(int pState1, int pState2, int pState3, int p
 	}
 }
 
-const MR_Level *ClientSession::GetCurrentLevel() const
+const Model::Level *ClientSession::GetCurrentLevel() const
 {
 	return mSession.GetCurrentLevel();
 }

@@ -106,7 +106,7 @@ const MR_ShapeInterface *Mine::GetGivingContactEffectShape()
 }
 
 // Simulation
-int Mine::Simulate(MR_SimulationTime pDuration, MR_Level * pLevel, int pRoom)
+int Mine::Simulate(MR_SimulationTime pDuration, Model::Level * pLevel, int pRoom)
 {
 	if(pRoom == -1) {
 		mOnGround = FALSE;
@@ -155,11 +155,11 @@ class MineState
 
 };
 
-MR_ElementNetState Mine::GetNetState() const
+Model::ElementNetState Mine::GetNetState() const
 {
 	static MineState lsState;				  // Static is ok because the variable will be used immediatly
 
-	MR_ElementNetState lReturnValue;
+	Model::ElementNetState lReturnValue;
 
 	lReturnValue.mDataLen = sizeof(lsState);
 	lReturnValue.mData = (MR_UInt8 *) & lsState;

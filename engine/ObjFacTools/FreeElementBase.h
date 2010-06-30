@@ -38,7 +38,7 @@
 #define MR_DllDeclare   __declspec( dllimport )
 #endif
 
-class MR_FreeElementBase:public MR_FreeElement
+class MR_FreeElementBase : public HoverRace::Model::FreeElement
 {
 	protected:
 		const MR_ResActor *mActor;

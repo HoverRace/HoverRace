@@ -59,7 +59,7 @@ BOOL GameSession::LoadLevel(int pLevel, char pGameOpts)
 
 	// Load the new level
 	if(pLevel < mCurrentMazeFile->GetNbRecords()) {
-		mCurrentLevel = new MR_Level(mAllowRendering, pGameOpts);
+		mCurrentLevel = new Level(mAllowRendering, pGameOpts);
 		mCurrentMazeFile->SelectRecord(pLevel);
 
 		ObjStreamPtr archivePtr(mCurrentMazeFile->StreamIn());
@@ -197,13 +197,13 @@ void GameSession::SimulateSurfaceElems(MR_SimulationTime /*pTimeToSimulate */ )
 int GameSession::SimulateOneFreeElem(MR_SimulationTime pTimeToSimulate, MR_FreeElementHandle pElementHandle, int pRoom)
 {
 	BOOL lDeleteElem = FALSE;
-	MR_FreeElement *lElement = mCurrentLevel->GetFreeElement(pElementHandle);
+	FreeElement *lElement = mCurrentLevel->GetFreeElement(pElementHandle);
 
 	// Ask the element to simulate its movement
 	int lNewRoom = lElement->Simulate(pTimeToSimulate, mCurrentLevel, pRoom);
 	int lReturnValue = lNewRoom;
 
-	if(lNewRoom == MR_Level::eMustBeDeleted) {
+	if(lNewRoom == Level::eMustBeDeleted) {
 		lDeleteElem = TRUE;
 		lNewRoom = pRoom;
 	}
@@ -243,7 +243,7 @@ void GameSession::SimulateFreeElems(MR_SimulationTime pTimeToSimulate)
 		MR_FreeElementHandle lElementHandle = mCurrentLevel->GetFirstFreeElement(lRoomIndex);
 
 		while(lElementHandle != NULL) {
-			MR_FreeElementHandle lNext = MR_Level::GetNextFreeElement(lElementHandle);
+			MR_FreeElementHandle lNext = Level::GetNextFreeElement(lElementHandle);
 			SimulateOneFreeElem(pTimeToSimulate, lElementHandle, lRoomIndex);
 			lElementHandle = lNext;
 		}
@@ -251,7 +251,7 @@ void GameSession::SimulateFreeElems(MR_SimulationTime pTimeToSimulate)
 	mCurrentLevel->FlushPermElementPosCache();
 }
 
-void GameSession::ComputeShapeContactEffects(int pCurrentRoom, MR_FreeElement * pActor, const MR_RoomContactSpec & pLastSpec, MR_FastArrayBase < int >*pVisitedRooms, int pMaxDepth, MR_SimulationTime pDuration)
+void GameSession::ComputeShapeContactEffects(int pCurrentRoom, FreeElement * pActor, const MR_RoomContactSpec & pLastSpec, MR_FastArrayBase < int >*pVisitedRooms, int pMaxDepth, MR_SimulationTime pDuration)
 {
 	int lCounter;
 	MR_ContactSpec lSpec;
@@ -273,7 +273,7 @@ void GameSession::ComputeShapeContactEffects(int pCurrentRoom, MR_FreeElement * 
 		int lFeatureId = mCurrentLevel->GetFeature(pCurrentRoom, lCounter);
 
 		if(mCurrentLevel->GetFeatureContact(lFeatureId, lActorShape, lSpec)) {
-			MR_SurfaceElement *lFloor = mCurrentLevel->GetFeatureTopElement(lFeatureId);
+			SurfaceElement *lFloor = mCurrentLevel->GetFeatureTopElement(lFeatureId);
 
 			// Ok Compute the directiion of the collision
 			if(lSpec.mZMax <= lActorShape->ZMin()) {
@@ -305,7 +305,7 @@ void GameSession::ComputeShapeContactEffects(int pCurrentRoom, MR_FreeElement * 
 	MR_FreeElementHandle lObstacleHandle = mCurrentLevel->GetFirstFreeElement(pCurrentRoom);
 
 	while(lObstacleHandle != NULL) {
-		MR_FreeElement *lObstacleElem = MR_Level::GetFreeElement(lObstacleHandle);
+		FreeElement *lObstacleElem = Level::GetFreeElement(lObstacleHandle);
 
 		if(lObstacleElem != pActor) {
 
@@ -333,7 +333,7 @@ void GameSession::ComputeShapeContactEffects(int pCurrentRoom, MR_FreeElement * 
 
 			}
 		}
-		lObstacleHandle = MR_Level::GetNextFreeElement(lObstacleHandle);
+		lObstacleHandle = Level::GetNextFreeElement(lObstacleHandle);
 	}
 
 	// Compute interaction with touched walls
@@ -383,7 +383,7 @@ void GameSession::ComputeShapeContactEffects(int pCurrentRoom, MR_FreeElement * 
 		if(lNeighbor == -1) {
 			// Apply the effect of the wall
 			if(mCurrentLevel->GetRoomWallContactOrientation(pCurrentRoom, pLastSpec.mWallContact[lCounter], lActorShape, lDirectionAngle)) {
-				MR_SurfaceElement *lWall = mCurrentLevel->GetRoomWallElement(pCurrentRoom, pLastSpec.mWallContact[lCounter]);
+				SurfaceElement *lWall = mCurrentLevel->GetRoomWallElement(pCurrentRoom, pLastSpec.mWallContact[lCounter]);
 				// const MR_ContactEffectList* lActorEffectList    = pActor->GetEffectList();
 				const MR_ContactEffectList *lWallEffectList = lWall->GetEffectList();
 
@@ -399,7 +399,7 @@ void GameSession::ComputeShapeContactEffects(int pCurrentRoom, MR_FreeElement * 
 
 }
 
-MR_Level *GameSession::GetCurrentLevel() const
+Level *GameSession::GetCurrentLevel() const
 {
 	return mCurrentLevel;
 }

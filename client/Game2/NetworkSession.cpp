@@ -388,7 +388,7 @@ BOOL NetworkSession::LoadNew(const char *pTitle, HoverRace::Parcel::RecordFilePt
 /**
  * A hook called when a free element is created.  We need to broadcast it once it is created.
  */
-void NetworkSession::ElementCreationHook(MR_FreeElement *pElement, int pRoom, void *pThis)
+void NetworkSession::ElementCreationHook(Model::FreeElement *pElement, int pRoom, void *pThis)
 {
 	((NetworkSession *) pThis)->BroadcastAutoElementCreation(pElement->GetTypeId(), pElement->GetNetState(), pRoom);
 }
@@ -396,7 +396,7 @@ void NetworkSession::ElementCreationHook(MR_FreeElement *pElement, int pRoom, vo
 /**
  * A hook called when a permanent element is created.  We need to broadcast it once it is created.
  */
-void NetworkSession::PermElementStateHook(MR_FreeElement *pElement, int pRoom, int pPermId, void *pThis)
+void NetworkSession::PermElementStateHook(Model::FreeElement *pElement, int pRoom, int pPermId, void *pThis)
 {
 	((NetworkSession *) pThis)->BroadcastPermElementState(pPermId, pElement->GetNetState(), pRoom);
 }
@@ -458,7 +458,7 @@ void NetworkSession::ReadNet()
 					mClientCharacter[lClientId]->SetNetState(lMessageLen - 8, lMessage + 8);
 					mClientCharacter[lClientId]->SetNbLapForRace(mNbLap);
 	
-					MR_Level *lCurrentLevel = mSession.GetCurrentLevel();
+					Model::Level *lCurrentLevel = mSession.GetCurrentLevel();
 	
 					mClient[lClientId] = lCurrentLevel->InsertElement(mClientCharacter[lClientId], lRoom);
 				}
@@ -500,7 +500,7 @@ void NetworkSession::ReadNet()
 
 						// Move element if needed
 						if(mClientCharacter[lClientId]->mRoom != lOldRoom) {
-							MR_Level *lCurrentLevel = mSession.GetCurrentLevel();
+							Model::Level *lCurrentLevel = mSession.GetCurrentLevel();
 
 							lCurrentLevel->MoveElement(mClient[lClientId], mClientCharacter[lClientId]->mRoom);
 						}
@@ -512,18 +512,18 @@ void NetworkSession::ReadNet()
 				{
 					MR_ObjectFromFactoryId lTypeId;
 					int lRoom;
-					MR_FreeElement *lNewElement;
+					Model::FreeElement *lNewElement;
 	
 					lTypeId.mDllId = *(MR_Int16 *) & (lMessage[0]);
 					lTypeId.mClassId = *(MR_Int16 *) & (lMessage[2]);
 					lRoom = *(MR_Int16 *) & (lMessage[4]);
 	
-					lNewElement = (MR_FreeElement *) MR_DllObjectFactory::CreateObject(lTypeId);
+					lNewElement = (Model::FreeElement *) MR_DllObjectFactory::CreateObject(lTypeId);
 	
 					if(lNewElement != NULL) {
 						lNewElement->SetNetState(lMessageLen - 6, lMessage + 6);
 	
-						MR_Level *lCurrentLevel = mSession.GetCurrentLevel();
+						Model::Level *lCurrentLevel = mSession.GetCurrentLevel();
 	
 						MR_FreeElementHandle lElementHandle = lCurrentLevel->InsertElement(lNewElement, lRoom);
 	
@@ -560,7 +560,7 @@ void NetworkSession::ReadNet()
 
 			case MRNM_SET_PERM_ELEMENT_STATE:
 				{
-					MR_Level *lCurrentLevel = mSession.GetCurrentLevel();
+					Model::Level *lCurrentLevel = mSession.GetCurrentLevel();
 	
 					if(lCurrentLevel != NULL) {
 						int lPermId = *(MR_Int8 *) & (lMessage[0]);
@@ -569,7 +569,7 @@ void NetworkSession::ReadNet()
 						MR_FreeElementHandle lPermElemHandle = lCurrentLevel->GetPermanentElementHandle(lPermId);
 	
 						if(lPermElemHandle != NULL) {
-							MR_FreeElement *lElem = MR_Level::GetFreeElement(lPermElemHandle);
+							Model::FreeElement *lElem = Model::Level::GetFreeElement(lPermElemHandle);
 	
 							ASSERT(lElem != NULL);
 	
@@ -807,7 +807,7 @@ BOOL NetworkSession::CreateMainCharacter()
 	mainCharacter[0] = MainCharacter::MainCharacter::New(mNbLap, mGameOpts);
 
 	// Insert the character in the current level
-	MR_Level *lCurrentLevel = mSession.GetCurrentLevel();
+	Model::Level *lCurrentLevel = mSession.GetCurrentLevel();
 
 	mainCharacter[0]->mPosition = lCurrentLevel->GetStartingPos(mNetInterface.GetId());
 	mainCharacter[0]->SetOrientation(lCurrentLevel->GetStartingOrientation(mNetInterface.GetId()));
@@ -832,7 +832,7 @@ BOOL NetworkSession::CreateMainCharacter()
  * @param pRoom ID of the room the hovercraft is in
  * @param pHoverId ID of the hovercraft
  */
-void NetworkSession::BroadcastMainElementCreation(const MR_ObjectFromFactoryId &pId, const MR_ElementNetState &pState, int pRoom, int pHoverId)
+void NetworkSession::BroadcastMainElementCreation(const MR_ObjectFromFactoryId &pId, const Model::ElementNetState &pState, int pRoom, int pHoverId)
 {
 	NetMessageBuffer lMessage;
 
@@ -865,7 +865,7 @@ void NetworkSession::BroadcastMainElementCreation(const MR_ObjectFromFactoryId &
  * @param pState State of the object; position, speed, direction, etc.
  * @param pRoom Room the object is inside of
  */
-void NetworkSession::BroadcastAutoElementCreation(const MR_ObjectFromFactoryId &pId, const MR_ElementNetState &pState, int pRoom)
+void NetworkSession::BroadcastAutoElementCreation(const MR_ObjectFromFactoryId &pId, const Model::ElementNetState &pState, int pRoom)
 {
 	NetMessageBuffer lMessage;
 	int lCounter;
@@ -881,7 +881,7 @@ void NetworkSession::BroadcastAutoElementCreation(const MR_ObjectFromFactoryId &
 	// Determine clients proximity
 	int lPriorityLevel[NetworkInterface::eMaxClient];
 
-	const MR_Level *lLevel = GetCurrentLevel();
+	const Model::Level *lLevel = GetCurrentLevel();
 	// int             lVisibleRoomCount;
 	// const int* lVisibleRoom = lLevel->GetVisibleZones( mainCharacter[0]->mRoom, lVisibleRoomCount );
 
@@ -948,7 +948,7 @@ void NetworkSession::BroadcastAutoElementCreation(const MR_ObjectFromFactoryId &
  * @param pState State of the permanent elemnt
  * @param pRoom Room the element is in
  */
-void NetworkSession::BroadcastPermElementState(int pPermId, const MR_ElementNetState &pState, int pRoom)
+void NetworkSession::BroadcastPermElementState(int pPermId, const Model::ElementNetState &pState, int pRoom)
 {
 	NetMessageBuffer lMessage;
 	int lCounter;
@@ -963,7 +963,7 @@ void NetworkSession::BroadcastPermElementState(int pPermId, const MR_ElementNetS
 	// Determine clients proximity
 	int lPriorityLevel[NetworkInterface::eMaxClient];
 
-	const MR_Level *lLevel = GetCurrentLevel();
+	const Model::Level *lLevel = GetCurrentLevel();
 	// int             lVisibleRoomCount;
 	// const int* lVisibleRoom = lLevel->GetVisibleZones( mainCharacter[0]->mRoom, lVisibleRoomCount );
 
@@ -1054,7 +1054,7 @@ void NetworkSession::BroadcastTime()
  *
  * @param pState Current state of the hovercraft
  */
-void NetworkSession::BroadcastMainElementState(const MR_ElementNetState &pState)
+void NetworkSession::BroadcastMainElementState(const Model::ElementNetState &pState)
 {
 	NetMessageBuffer lMessage;
 
@@ -1110,7 +1110,7 @@ void NetworkSession::BroadcastMainElementState(const MR_ElementNetState &pState)
 
 		int lPriorityLevel[NetworkInterface::eMaxClient];
 
-		const MR_Level *lLevel = GetCurrentLevel();
+		const Model::Level *lLevel = GetCurrentLevel();
 		int lVisibleRoomCount;
 		const int *lVisibleRoom = lLevel->GetVisibleZones(mainCharacter[0]->mRoom, lVisibleRoomCount);
 

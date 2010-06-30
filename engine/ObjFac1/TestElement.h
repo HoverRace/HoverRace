@@ -65,12 +65,12 @@ class TestElement : public MR_FreeElementBase
 		TestElement(const MR_ObjectFromFactoryId & pId, HoverRace::ObjFacTools::ResourceLib* resourceLib, int pActorRes);
 		~TestElement();
 
-		int Simulate(MR_SimulationTime pDuration, MR_Level * pLevel, int pRoom);
+		int Simulate(MR_SimulationTime pDuration, Model::Level * pLevel, int pRoom);
 
 	protected:
 
 		// ContactEffectShapeInterface
-		void ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 pZMin, MR_Int32 pZMax, MR_Level * pLevel);
+		void ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 pZMin, MR_Int32 pZMax, Model::Level * pLevel);
 
 		const MR_ContactEffectList *GetEffectList();
 

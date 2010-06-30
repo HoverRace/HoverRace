@@ -266,7 +266,7 @@ void Observer::PlayersListPageDn()
 }
 
 // Rendering functions
-void Observer::Render2DDebugView(MR_VideoBuffer * pDest, const MR_Level * pLevel, const MainCharacter::MainCharacter * pViewingCharacter)
+void Observer::Render2DDebugView(MR_VideoBuffer * pDest, const Model::Level * pLevel, const MainCharacter::MainCharacter * pViewingCharacter)
 {
 	// WARNING Calculations are done using floats..it is only a debug view
 
@@ -356,7 +356,7 @@ void Observer::Render2DDebugView(MR_VideoBuffer * pDest, const MR_Level * pLevel
 
 }
 
-void Observer::RenderWireFrameView(const MR_Level * pLevel, const MainCharacter::MainCharacter * pViewingCharacter)
+void Observer::RenderWireFrameView(const Model::Level * pLevel, const MainCharacter::MainCharacter * pViewingCharacter)
 {
 
 	mWireFrameView.Clear(0);
@@ -388,14 +388,14 @@ void Observer::RenderWireFrameView(const MR_Level * pLevel, const MainCharacter:
 		// Draw the room and all the features
 		for(int lCounter2 = -1; lCounter2 < pLevel->GetFeatureCount(lRoom); lCounter2++) {
 
-			MR_SectionId lSectionId;
+			Model::SectionId lSectionId;
 
 			if(lCounter2 == -1) {
-				lSectionId.mType = MR_SectionId::eRoom;
+				lSectionId.mType = Model::SectionId::eRoom;
 				lSectionId.mId = lRoom;
 			}
 			else {
-				lSectionId.mType = MR_SectionId::eFeature;
+				lSectionId.mType = Model::SectionId::eFeature;
 				lSectionId.mId = pLevel->GetFeature(lRoom, lCounter2);
 			}
 			DrawWFSection(pLevel, lSectionId, lColor);
@@ -404,11 +404,11 @@ void Observer::RenderWireFrameView(const MR_Level * pLevel, const MainCharacter:
 
 }
 
-void Observer::DrawWFSection(const MR_Level * pLevel, const MR_SectionId & pSectionId, MR_UInt8 pColor)
+void Observer::DrawWFSection(const Model::Level * pLevel, const Model::SectionId & pSectionId, MR_UInt8 pColor)
 {
 	MR_PolygonShape *lSectionShape;
 
-	if(pSectionId.mType == MR_SectionId::eRoom) {
+	if(pSectionId.mType == Model::SectionId::eRoom) {
 		lSectionShape = pLevel->GetRoomShape(pSectionId.mId);
 	}
 	else {
@@ -452,7 +452,7 @@ void Observer::DrawWFSection(const MR_Level * pLevel, const MR_SectionId & pSect
 void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage)
 {
 
-	const MR_Level *lLevel = pSession->GetCurrentLevel();
+	const Model::Level *lLevel = pSession->GetCurrentLevel();
 
 	MR_3DCoordinate lCameraPos;
 	MR_Angle lOrientation = pViewingCharacter->mOrientation;
@@ -515,8 +515,8 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 	MR_SAMPLE_START(FloorRendering, "Floor Rendering");
 
 	int lTotalSections = lLevel->GetNbVisibleSurface(lRoom);
-	const MR_SectionId *lFloorList = lLevel->GetVisibleFloorList(lRoom);
-	const MR_SectionId *lCeilingList = lLevel->GetVisibleCeilingList(lRoom);
+	const Model::SectionId *lFloorList = lLevel->GetVisibleFloorList(lRoom);
+	const Model::SectionId *lCeilingList = lLevel->GetVisibleCeilingList(lRoom);
 
 	for(lCounter = 0; lCounter < lTotalSections; lCounter++) {
 		// Draw the floor
@@ -574,11 +574,11 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 		MR_FreeElementHandle lHandle = lLevel->GetFirstFreeElement(lRoomId);
 
 		while(lHandle != NULL) {
-			MR_FreeElement *lElement = MR_Level::GetFreeElement(lHandle);
+			Model::FreeElement *lElement = Model::Level::GetFreeElement(lHandle);
 
 			lElement->Render(&m3DView, pTime);
 
-			lHandle = MR_Level::GetNextFreeElement(lHandle);
+			lHandle = Model::Level::GetNextFreeElement(lHandle);
 		}
 	}
 
@@ -869,7 +869,7 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 
 }
 
-void Observer::RenderRoomWalls(const MR_Level * pLevel, int lRoomId, MR_SimulationTime pTime)
+void Observer::RenderRoomWalls(const Model::Level * pLevel, int lRoomId, MR_SimulationTime pTime)
 {
 	MR_PolygonShape *lSectionShape = pLevel->GetRoomShape(lRoomId);
 
@@ -895,7 +895,7 @@ void Observer::RenderRoomWalls(const MR_Level * pLevel, int lRoomId, MR_Simulati
 		lP1.mX = lSectionShape->X(lNext);
 		lP1.mY = lSectionShape->Y(lNext);
 
-		MR_SurfaceElement *lElement = pLevel->GetRoomWallElement(lRoomId, lVertex);
+		Model::SurfaceElement *lElement = pLevel->GetRoomWallElement(lRoomId, lVertex);
 
 		if(lElement != NULL) {
 			int lNeighbor = pLevel->GetNeighbor(lRoomId, lVertex);
@@ -934,7 +934,7 @@ void Observer::RenderRoomWalls(const MR_Level * pLevel, int lRoomId, MR_Simulati
 	delete lSectionShape;
 }
 
-void Observer::RenderFeatureWalls(const MR_Level * pLevel, int lFeatureId, MR_SimulationTime pTime)
+void Observer::RenderFeatureWalls(const Model::Level * pLevel, int lFeatureId, MR_SimulationTime pTime)
 {
 	MR_PolygonShape *lSectionShape = pLevel->GetFeatureShape(lFeatureId);
 
@@ -960,7 +960,7 @@ void Observer::RenderFeatureWalls(const MR_Level * pLevel, int lFeatureId, MR_Si
 		lP0.mX = lSectionShape->X(lNext);
 		lP0.mY = lSectionShape->Y(lNext);
 
-		MR_SurfaceElement *lElement = pLevel->GetFeatureWallElement(lFeatureId, lVertex);
+		Model::SurfaceElement *lElement = pLevel->GetFeatureWallElement(lFeatureId, lVertex);
 
 		if(lElement != NULL) {
 			lElement->RenderWallSurface(&m3DView, lP0, lP1, pLevel->GetFeatureWallLen(lFeatureId, lVertex), pTime);
@@ -973,7 +973,7 @@ void Observer::RenderFeatureWalls(const MR_Level * pLevel, int lFeatureId, MR_Si
 	delete lSectionShape;
 }
 
-void Observer::RenderFloorOrCeiling(const MR_Level * pLevel, const MR_SectionId & pSectionId, BOOL pFloor, MR_SimulationTime pTime)
+void Observer::RenderFloorOrCeiling(const Model::Level * pLevel, const Model::SectionId & pSectionId, BOOL pFloor, MR_SimulationTime pTime)
 {
 	int lCounter;
 
@@ -982,10 +982,10 @@ void Observer::RenderFloorOrCeiling(const MR_Level * pLevel, const MR_SectionId 
 	MR_2DCoordinate lVertexList[MR_MAX_POLYGON_VERTEX];
 
 	MR_PolygonShape *lShape;
-	MR_SurfaceElement *lElement;
+	Model::SurfaceElement *lElement;
 
 	// Extract the surface geometry
-	if(pSectionId.mType == MR_SectionId::eRoom) {
+	if(pSectionId.mType == Model::SectionId::eRoom) {
 		lShape = pLevel->GetRoomShape(pSectionId.mId);
 		if(pFloor) {
 			lLevel = lShape->ZMin();
@@ -1046,7 +1046,7 @@ void Observer::RenderDebugDisplay(MR_VideoBuffer * pDest, const ClientSession *p
 	m2DDebugView.Setup(pDest, lXRes / 2, lYOffset, lXRes / 2, lYRes);
 
 	if(pViewingCharacter->mRoom != -1) {
-		const MR_Level *lLevel = pSession->GetCurrentLevel();
+		const Model::Level *lLevel = pSession->GetCurrentLevel();
 
 		Render2DDebugView(pDest, lLevel, pViewingCharacter);
 		RenderWireFrameView(lLevel, pViewingCharacter);
@@ -1164,7 +1164,7 @@ void Observer::RenderNormalDisplay(MR_VideoBuffer * pDest, const ClientSession *
 	}
 }
 
-void Observer::PlaySounds(const MR_Level * pLevel, MainCharacter::MainCharacter * pViewingCharacter)
+void Observer::PlaySounds(const Model::Level * pLevel, MainCharacter::MainCharacter * pViewingCharacter)
 {
 	// Play the sound of all moving elemnts arround
 
@@ -1185,7 +1185,7 @@ void Observer::PlaySounds(const MR_Level * pLevel, MainCharacter::MainCharacter 
 			MR_FreeElementHandle lHandle = pLevel->GetFirstFreeElement(lRoomId);
 
 			while(lHandle != NULL) {
-				MR_FreeElement *lElement = MR_Level::GetFreeElement(lHandle);
+				Model::FreeElement *lElement = Model::Level::GetFreeElement(lHandle);
 
 				if(lElement != pViewingCharacter) {
 					double lXDist = pViewingCharacter->mPosition.mX - lElement->mPosition.mX;
@@ -1196,7 +1196,7 @@ void Observer::PlaySounds(const MR_Level * pLevel, MainCharacter::MainCharacter 
 					lElement->PlayExternalSounds(lDB, 0);
 				}
 
-				lHandle = MR_Level::GetNextFreeElement(lHandle);
+				lHandle = Model::Level::GetNextFreeElement(lHandle);
 			}
 		}
 	}

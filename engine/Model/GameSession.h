@@ -42,7 +42,7 @@ class GameSession
 
 		std::string mTitle;
 		HoverRace::Parcel::RecordFilePtr mCurrentMazeFile;
-		MR_Level *mCurrentLevel;
+		Level *mCurrentLevel;
 
 		MR_SimulationTime mSimulationTime;		  // Time simulated since the session start
 		DWORD mLastSimulateCallTime;			  // Time in ms obtainend by timeGetTime
@@ -55,7 +55,7 @@ class GameSession
 		void SimulateSurfaceElems(MR_SimulationTime pDuration);
 
 		// SimulateFreeElem sub-functions
-		void ComputeShapeContactEffects(int pCurrentRoom, MR_FreeElement *pActor, const MR_RoomContactSpec &pLastSpec, MR_FastArrayBase<int> *pVisitedRooms, int pMaxDepth, MR_SimulationTime pDuration);
+		void ComputeShapeContactEffects(int pCurrentRoom, FreeElement *pActor, const MR_RoomContactSpec &pLastSpec, MR_FastArrayBase<int> *pVisitedRooms, int pMaxDepth, MR_SimulationTime pDuration);
 
 	public:
 		MR_DllDeclare GameSession(BOOL pAllowRendering = FALSE);
@@ -68,7 +68,7 @@ class GameSession
 		MR_DllDeclare void Simulate();
 		MR_DllDeclare void SimulateLateElement(MR_FreeElementHandle pElement, MR_SimulationTime pDuration, int pRoom);
 
-		MR_DllDeclare MR_Level *GetCurrentLevel() const;
+		MR_DllDeclare Level *GetCurrentLevel() const;
 		MR_DllDeclare const char *GetTitle() const;
 		MR_DllDeclare HoverRace::Parcel::RecordFilePtr GetCurrentMazeFile();
 };

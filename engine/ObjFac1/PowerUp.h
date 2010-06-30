@@ -55,12 +55,12 @@ class PowerUp : public MR_FreeElementBase, protected MR_CylinderShape
 		const MR_ShapeInterface *GetGivingContactEffectShape();
 		const MR_ShapeInterface *GetReceivingContactEffectShape();
 
-		int Simulate(MR_SimulationTime pTimeSlice, MR_Level * pLevel, int pRoom);
+		int Simulate(MR_SimulationTime pTimeSlice, Model::Level * pLevel, int pRoom);
 
 		// void  ApplyEffect( const MR_ContactEffect* pEffect,  MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection );
 
 		// Network state
-		MR_ElementNetState GetNetState() const;
+		Model::ElementNetState GetNetState() const;
 		void SetNetState(int pDataLen, const MR_UInt8 * pData);
 
 		BOOL AssignPermNumber(int pNumber);

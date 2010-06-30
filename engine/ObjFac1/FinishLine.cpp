@@ -53,7 +53,7 @@ MR_Int32 FinishLine::RayLen() const
 {
 	return cSourceRay;
 } FinishLine::FinishLine(const MR_ObjectFromFactoryId & pId, MR_CheckPoint::CheckPointType pType)
-:MR_FreeElement(pId)
+:Model::FreeElement(pId)
 {
 	mEffect.mType = pType;
 	mContactEffectList.push_back(&mEffect);

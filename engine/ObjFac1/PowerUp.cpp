@@ -96,7 +96,7 @@ const MR_ShapeInterface *PowerUp::GetGivingContactEffectShape()
 }
 
 // Simulation
-int PowerUp::Simulate(MR_SimulationTime pDuration, MR_Level * /*pLevel */ , int pRoom)
+int PowerUp::Simulate(MR_SimulationTime pDuration, Model::Level * /*pLevel */ , int pRoom)
 {
 	// Just rotate on ourself
 	if(pDuration != 0) {
@@ -107,7 +107,7 @@ int PowerUp::Simulate(MR_SimulationTime pDuration, MR_Level * /*pLevel */ , int 
 }
 
 /*
-void PowerUp::ApplyEffect( const MR_ContactEffect* pEffect,  MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Level* pLevel )
+void PowerUp::ApplyEffect( const MR_ContactEffect* pEffect,  MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, Model::Level* pLevel )
 {
    MR_ContactEffect* lEffect = (MR_ContactEffect*)pEffect;
    const MR_PhysicalCollision* lPhysCollision = dynamic_cast<MR_PhysicalCollision*>(lEffect);
@@ -150,11 +150,11 @@ class MR_PowerUpState
 
 };
 
-MR_ElementNetState PowerUp::GetNetState() const
+Model::ElementNetState PowerUp::GetNetState() const
 {
 	static MR_PowerUpState lsState;				  // Static is ok because the variable will be used immediatly
 
-	MR_ElementNetState lReturnValue;
+	Model::ElementNetState lReturnValue;
 
 	lReturnValue.mDataLen = sizeof(lsState);
 	lReturnValue.mData = (MR_UInt8 *) & lsState;

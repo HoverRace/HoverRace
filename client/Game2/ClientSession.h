@@ -121,7 +121,7 @@ class ClientSession
 		void AddMessage(const char *pMessage);
 
 		// Rendering access to level
-		const MR_Level *GetCurrentLevel() const;
+		const Model::Level *GetCurrentLevel() const;
 
 		// Client stats.
 		void IncFrameCount();
