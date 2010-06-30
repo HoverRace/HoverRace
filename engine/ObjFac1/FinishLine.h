@@ -20,15 +20,17 @@
 // and limitations under the License.
 //
 
-#ifndef FINISH_LINE_H
-#define FINISH_LINE_H
+#pragma once
 
 #include "../Model/MazeElement.h"
 #include "../Model/RaceEffects.h"
 
+namespace HoverRace {
+namespace ObjFac1 {
+
 // Note.. finish lines are not finish lines..they are check points
 
-class MR_FinishLine:public MR_FreeElement, protected MR_CylinderShape
+class FinishLine : public MR_FreeElement, protected MR_CylinderShape
 {
 	protected:
 
@@ -45,8 +47,8 @@ class MR_FinishLine:public MR_FreeElement, protected MR_CylinderShape
 		MR_ContactEffectList mContactEffectList;
 
 	public:
-		MR_FinishLine(const MR_ObjectFromFactoryId & pId, MR_CheckPoint::CheckPointType pType);
-		~MR_FinishLine();
+		FinishLine(const MR_ObjectFromFactoryId & pId, MR_CheckPoint::CheckPointType pType);
+		~FinishLine();
 
 	protected:
 
@@ -55,4 +57,6 @@ class MR_FinishLine:public MR_FreeElement, protected MR_CylinderShape
 		const MR_ShapeInterface *GetReceivingContactEffectShape();
 
 };
-#endif
+
+}  // namespace ObjFac1
+}  // namespace HoverRace

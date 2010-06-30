@@ -20,13 +20,15 @@
 // and limitations under the License.
 //
 
-#ifndef DOUBLE_SPEED_SOURCE_H
-#define DOUBLE_SPEED_SOURCE_H
+#pragma once
 
 #include "../Model/MazeElement.h"
 #include "../Model/RaceEffects.h"
 
-class MR_DoubleSpeedSource:public MR_FreeElement, protected MR_CylinderShape
+namespace HoverRace {
+namespace ObjFac1 {
+
+class DoubleSpeedSource : public MR_FreeElement, protected MR_CylinderShape
 {
 	protected:
 
@@ -43,8 +45,8 @@ class MR_DoubleSpeedSource:public MR_FreeElement, protected MR_CylinderShape
 		MR_ContactEffectList mContactEffectList;
 
 	public:
-		MR_DoubleSpeedSource(const MR_ObjectFromFactoryId & pId);
-		~MR_DoubleSpeedSource();
+		DoubleSpeedSource(const MR_ObjectFromFactoryId & pId);
+		~DoubleSpeedSource();
 
 	protected:
 
@@ -53,4 +55,6 @@ class MR_DoubleSpeedSource:public MR_FreeElement, protected MR_CylinderShape
 		const MR_ShapeInterface *GetReceivingContactEffectShape();
 
 };
-#endif
+
+}  // namespace ObjFac1
+}  // namespace HoverRace

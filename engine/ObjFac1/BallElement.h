@@ -21,17 +21,21 @@
 // and limitations under the License.
 //
 
-#ifndef BALL_ELEMENT_H
-#define BALL_ELEMENT_H
+#pragma once
 
 #include "../ObjFacTools/FreeElementBase.h"
 
-class MR_BallElement:public MR_FreeElementBase
+namespace HoverRace {
+namespace ObjFac1 {
+
+class BallElement : public MR_FreeElementBase
 {
 
 	public:
-		MR_BallElement(const MR_ObjectFromFactoryId & pId, HoverRace::ObjFacTools::ResourceLib* resourceLib);
-		~MR_BallElement();
+		BallElement(const MR_ObjectFromFactoryId & pId, ObjFacTools::ResourceLib* resourceLib);
+		~BallElement();
 
 };
-#endif
+
+}  // namespace Model
+}  // namespace HoverRace

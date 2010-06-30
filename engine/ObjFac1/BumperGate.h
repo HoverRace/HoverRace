@@ -20,14 +20,16 @@
 // and limitations under the License.
 //
 
-#ifndef BUMPERGATE_H
-#define BUMPERGATE_H
+#pragma once
 
 #include "../ObjFacTools/FreeElementBase.h"
 #include "../Model/RaceEffects.h"
 #include "../Model/PhysicalCollision.h"
 
-class MR_BumperGate:public MR_FreeElementBase, protected MR_CylinderShape
+namespace HoverRace {
+namespace ObjFac1 {
+
+class BumperGate : public MR_FreeElementBase, protected MR_CylinderShape
 {
 	protected:
 
@@ -46,8 +48,8 @@ class MR_BumperGate:public MR_FreeElementBase, protected MR_CylinderShape
 		MR_ContactEffectList mEffectList;
 
 	public:
-		MR_BumperGate(const MR_ObjectFromFactoryId & pId, HoverRace::ObjFacTools::ResourceLib* resourceLib);
-		~MR_BumperGate();
+		BumperGate(const MR_ObjectFromFactoryId &pId, ObjFacTools::ResourceLib* resourceLib);
+		~BumperGate();
 
 	protected:
 
@@ -61,4 +63,6 @@ class MR_BumperGate:public MR_FreeElementBase, protected MR_CylinderShape
 		void ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 pZMin, MR_Int32 pZMax, MR_Level * pLevel);
 
 };
-#endif
+
+}  // namespace ObjFac1
+}  // namespace HoverRace

@@ -128,19 +128,19 @@ Observer::Observer()
 	mCockpitView = FALSE;
 
 	MR_ObjectFromFactoryId lBaseFontId = { 1, 1000 };
-	mBaseFont = (MR_SpriteHandle *) MR_DllObjectFactory::CreateObject(lBaseFontId);
+	mBaseFont = (ObjFac1::SpriteHandle *) MR_DllObjectFactory::CreateObject(lBaseFontId);
 
 	MR_ObjectFromFactoryId lMissileLevelId = { 1, 1100 };
-	mMissileLevel = (MR_SpriteHandle *) MR_DllObjectFactory::CreateObject(lMissileLevelId);
+	mMissileLevel = (ObjFac1::SpriteHandle *) MR_DllObjectFactory::CreateObject(lMissileLevelId);
 
 	MR_ObjectFromFactoryId lMineDispId = { 1, 1102 };
-	mMineDisp = (MR_SpriteHandle *) MR_DllObjectFactory::CreateObject(lMineDispId);
+	mMineDisp = (ObjFac1::SpriteHandle *) MR_DllObjectFactory::CreateObject(lMineDispId);
 
 	MR_ObjectFromFactoryId lPowerUpDispId = { 1, 1103 };
-	mPowerUpDisp = (MR_SpriteHandle *) MR_DllObjectFactory::CreateObject(lPowerUpDispId);
+	mPowerUpDisp = (ObjFac1::SpriteHandle *) MR_DllObjectFactory::CreateObject(lPowerUpDispId);
 
 	MR_ObjectFromFactoryId lHoverIconsId = { 1, 1101 };
-	mHoverIcons = (MR_SpriteHandle *) MR_DllObjectFactory::CreateObject(lHoverIconsId);
+	mHoverIcons = (ObjFac1::SpriteHandle *) MR_DllObjectFactory::CreateObject(lHoverIconsId);
 
 	std::string selectStr("<==   ");
 	selectStr += _("Select your craft with the arrow keys");
@@ -607,7 +607,7 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 	m3DView.DrawHorizontalMeter(lXRes - lXMargin - lFuelMeterLen, lFuelMeterLen, lYMargin, lMeterHight * 2, lFuelLen, 54, (lFuelLevel < 0.20) ? 35 : 56);
 
 	// MissileLevel
-	MR_SpriteHandle *lWeaponSprite = NULL;
+	ObjFac1::SpriteHandle *lWeaponSprite = NULL;
 	int lWeaponSpriteIndex = 0;
 
 	if(pViewingCharacter->GetCurrentWeapon() == MainCharacter::MainCharacter::eMissile) {

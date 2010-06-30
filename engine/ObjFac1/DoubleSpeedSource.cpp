@@ -19,52 +19,60 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
 #include "DoubleSpeedSource.h"
+
+namespace HoverRace {
+namespace ObjFac1 {
 
 const MR_Int32 cSourceRay = 20000;				  // the source have a diameter of 40 meters
 const MR_Int32 cSourceHeight = 2000;			  // 2 meters
 
-MR_Int32 MR_DoubleSpeedSource::ZMin() const
+MR_Int32 DoubleSpeedSource::ZMin() const
 {
 	return mPosition.mZ;
 }
 
-MR_Int32 MR_DoubleSpeedSource::ZMax() const
+MR_Int32 DoubleSpeedSource::ZMax() const
 {
 	return mPosition.mZ + cSourceHeight;
 }
 
-MR_Int32 MR_DoubleSpeedSource::AxisX() const
+MR_Int32 DoubleSpeedSource::AxisX() const
 {
 	return mPosition.mX;
 }
 
-MR_Int32 MR_DoubleSpeedSource::AxisY() const
+MR_Int32 DoubleSpeedSource::AxisY() const
 {
 	return mPosition.mY;
 }
 
-MR_Int32 MR_DoubleSpeedSource::RayLen() const
+MR_Int32 DoubleSpeedSource::RayLen() const
 {
 	return cSourceRay;
-} MR_DoubleSpeedSource::MR_DoubleSpeedSource(const MR_ObjectFromFactoryId & pId)
-:MR_FreeElement(pId)
+}
+
+DoubleSpeedSource::DoubleSpeedSource(const MR_ObjectFromFactoryId &pId) :
+	MR_FreeElement(pId)
 {
 	mContactEffectList.push_back(&mSpeedEffect);
 }
 
-MR_DoubleSpeedSource::~MR_DoubleSpeedSource()
+DoubleSpeedSource::~DoubleSpeedSource()
 {
 }
 
-const MR_ContactEffectList *MR_DoubleSpeedSource::GetEffectList()
+const MR_ContactEffectList *DoubleSpeedSource::GetEffectList()
 {
 	return &mContactEffectList;
 }
 
-const MR_ShapeInterface *MR_DoubleSpeedSource::GetReceivingContactEffectShape()
+const MR_ShapeInterface *DoubleSpeedSource::GetReceivingContactEffectShape()
 {
 	return this;
 }
+
+}  // namespace ObjFac1
+}  // namespace HoverRace

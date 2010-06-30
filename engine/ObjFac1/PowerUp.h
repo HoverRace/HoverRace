@@ -20,13 +20,15 @@
 // and limitations under the License.
 //
 
-#ifndef POWERUP_H
-#define POWERUP_H
+#pragma once
 
 #include "../ObjFacTools/FreeElementBase.h"
 #include "../Model/RaceEffects.h"
 
-class MR_PowerUp:public MR_FreeElementBase, protected MR_CylinderShape
+namespace HoverRace {
+namespace ObjFac1 {
+
+class PowerUp : public MR_FreeElementBase, protected MR_CylinderShape
 {
 	protected:
 
@@ -43,8 +45,8 @@ class MR_PowerUp:public MR_FreeElementBase, protected MR_CylinderShape
 		MR_ContactEffectList mEffectList;
 
 	public:
-		MR_PowerUp(const MR_ObjectFromFactoryId & pId, HoverRace::ObjFacTools::ResourceLib* resourceLib);
-		~MR_PowerUp();
+		PowerUp(const MR_ObjectFromFactoryId & pId, ObjFacTools::ResourceLib* resourceLib);
+		~PowerUp();
 
 	protected:
 
@@ -63,4 +65,6 @@ class MR_PowerUp:public MR_FreeElementBase, protected MR_CylinderShape
 
 		BOOL AssignPermNumber(int pNumber);
 };
-#endif
+
+}  // namespace ObjFac1
+}  // namespace HoverRace

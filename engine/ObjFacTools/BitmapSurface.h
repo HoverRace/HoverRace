@@ -27,8 +27,7 @@
 // The bitmap must come from a resource
 //
 
-#ifndef BITMAP_SURFACE_H
-#define BITMAP_SURFACE_H
+#pragma once
 
 #include "ResourceLib.h"
 #include "../Model/MazeElement.h"
@@ -39,7 +38,10 @@
 #define MR_DllDeclare   __declspec( dllimport )
 #endif
 
-class MR_DllDeclare MR_BitmapSurface:public MR_SurfaceElement
+namespace HoverRace {
+namespace ObjFac1 {
+
+class MR_DllDeclare BitmapSurface : public MR_SurfaceElement
 {
 	protected:
 		MR_ResBitmap * mBitmap;
@@ -49,10 +51,10 @@ class MR_DllDeclare MR_BitmapSurface:public MR_SurfaceElement
 
 	public:
 												  // old constructor..obsolete
-		MR_BitmapSurface(const MR_ObjectFromFactoryId & pId);
-		MR_BitmapSurface(const MR_ObjectFromFactoryId & pId, /*const */ MR_ResBitmap * pBitmap);
-		MR_BitmapSurface(const MR_ObjectFromFactoryId & pId, MR_ResBitmap * pBitmap1, MR_ResBitmap * pBitmap2, int pRotationSpeed, int pRotationLen);
-		~MR_BitmapSurface();
+		BitmapSurface(const MR_ObjectFromFactoryId & pId);
+		BitmapSurface(const MR_ObjectFromFactoryId & pId, /*const */ MR_ResBitmap * pBitmap);
+		BitmapSurface(const MR_ObjectFromFactoryId & pId, MR_ResBitmap * pBitmap1, MR_ResBitmap * pBitmap2, int pRotationSpeed, int pRotationLen);
+		~BitmapSurface();
 
 		// Rendering stuff
 		void RenderWallSurface(MR_3DViewPort * pDest, const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, MR_SimulationTime pTime);
@@ -63,17 +65,19 @@ class MR_DllDeclare MR_BitmapSurface:public MR_SurfaceElement
 
 };
 
-class MR_DllDeclare MR_VStretchBitmapSurface:public MR_BitmapSurface
+class MR_DllDeclare VStretchBitmapSurface : public BitmapSurface
 {
 	private:
 		int mMaxHeight;
 
 	public:
 
-		MR_VStretchBitmapSurface(const MR_ObjectFromFactoryId & pId, /*const */ MR_ResBitmap * pBitmap, int pMaxHeight);
-		MR_VStretchBitmapSurface(const MR_ObjectFromFactoryId & pId, MR_ResBitmap * pBitmap1, MR_ResBitmap * pBitmap2, int pRotationSpeed, int pRotationLen, int pMaxHeight);
+		VStretchBitmapSurface(const MR_ObjectFromFactoryId & pId, /*const */ MR_ResBitmap * pBitmap, int pMaxHeight);
+		VStretchBitmapSurface(const MR_ObjectFromFactoryId & pId, MR_ResBitmap * pBitmap1, MR_ResBitmap * pBitmap2, int pRotationSpeed, int pRotationLen, int pMaxHeight);
 		void RenderWallSurface(MR_3DViewPort * pDest, const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, MR_SimulationTime pTime);
 };
 
+}  // namespace Model
+}  // namespace HoverRace
+
 #undef MR_DllDeclare
-#endif

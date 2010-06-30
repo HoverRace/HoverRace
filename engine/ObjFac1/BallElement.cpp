@@ -26,12 +26,18 @@
 
 using HoverRace::ObjFacTools::ResourceLib;
 
-MR_BallElement::MR_BallElement(const MR_ObjectFromFactoryId & pId, ResourceLib* resourceLib)
-	: MR_FreeElementBase(pId)
+namespace HoverRace {
+namespace ObjFac1 {
+
+BallElement::BallElement(const MR_ObjectFromFactoryId & pId, ResourceLib* resourceLib) :
+	MR_FreeElementBase(pId)
 {
 	mActor = resourceLib->GetActor(MR_BALL);
 }
 
-MR_BallElement::~MR_BallElement()
+BallElement::~BallElement()
 {
 }
+
+}  // namespace Model
+}  // namespace HoverRace

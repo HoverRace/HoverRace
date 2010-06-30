@@ -28,7 +28,7 @@
 namespace HoverRace {
 namespace ObjFac1 {
 
-class DefaultSurface : public MR_BitmapSurface
+class DefaultSurface : public BitmapSurface
 {
 	public:
 		DefaultSurface(const MR_ObjectFromFactoryId & pId, ObjFacTools::ResourceLib* resourceLib);

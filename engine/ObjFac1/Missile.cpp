@@ -19,7 +19,7 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
 #include "Missile.h"
 #include "ObjFac1Res.h"
@@ -28,6 +28,9 @@
 
 using HoverRace::ObjFacTools::ResourceLib;
 using namespace HoverRace::VideoServices;
+
+namespace HoverRace {
+namespace ObjFac1 {
 
 const MR_Int32 cMissileRay = 300;				  // the missile have a diameter of 60cm
 const MR_Int32 cMissileWeight = 100;
@@ -47,33 +50,33 @@ const MR_Int32 cIgnitionTime  = 110;       // 0.175 sec
 #define MINIMUM_SPLITTABLE_TIME_SLICE  6
 const double eSteadySpeed = 21.0 * 2222.0 / 1000.0;
 
-MR_Int32 MR_Missile::ZMin() const
+MR_Int32 Missile::ZMin() const
 {
 	return mPosition.mZ - cMissileRay;
 }
 
-MR_Int32 MR_Missile::ZMax() const
+MR_Int32 Missile::ZMax() const
 {
 	return mPosition.mZ + cMissileRay;
 }
 
-MR_Int32 MR_Missile::AxisX() const
+MR_Int32 Missile::AxisX() const
 {
 	return mPosition.mX;
 }
 
-MR_Int32 MR_Missile::AxisY() const
+MR_Int32 Missile::AxisY() const
 {
 	return mPosition.mY;
 }
 
-MR_Int32 MR_Missile::RayLen() const
+MR_Int32 Missile::RayLen() const
 {
 	return cMissileRay;
 }
 
-MR_Missile::MR_Missile(const MR_ObjectFromFactoryId & pId, ResourceLib* resourceLib)
-	: MR_FreeElementBase(pId)
+Missile::Missile(const MR_ObjectFromFactoryId & pId, ResourceLib* resourceLib) :
+	MR_FreeElementBase(pId)
 {
 	mHoverId = -1;
 	mLived = 0;
@@ -93,17 +96,17 @@ MR_Missile::MR_Missile(const MR_ObjectFromFactoryId & pId, ResourceLib* resource
 
 }
 
-MR_Missile::~MR_Missile()
+Missile::~Missile()
 {
 }
 
-void MR_Missile::SetOwnerId(int pHoverId)
+void Missile::SetOwnerId(int pHoverId)
 {
 	mHoverId = pHoverId;
 	mLostOfControlEffect.mHoverId = mHoverId;
 }
 
-const MR_ContactEffectList *MR_Missile::GetEffectList()
+const MR_ContactEffectList *Missile::GetEffectList()
 {
 
 	if(mLived > cIgnitionTime) {
@@ -119,18 +122,18 @@ const MR_ContactEffectList *MR_Missile::GetEffectList()
 	}
 }
 
-const MR_ShapeInterface *MR_Missile::GetReceivingContactEffectShape()
+const MR_ShapeInterface *Missile::GetReceivingContactEffectShape()
 {
 	return this;
 }
 
-const MR_ShapeInterface *MR_Missile::GetGivingContactEffectShape()
+const MR_ShapeInterface *Missile::GetGivingContactEffectShape()
 {
 	return this;
 }
 
 // Simulation
-int MR_Missile::Simulate(MR_SimulationTime pDuration, MR_Level * pLevel, int pRoom)
+int Missile::Simulate(MR_SimulationTime pDuration, MR_Level * pLevel, int pRoom)
 {
 
 	// Do the simulation
@@ -178,7 +181,7 @@ int MR_Missile::Simulate(MR_SimulationTime pDuration, MR_Level * pLevel, int pRo
 	return pRoom;
 }
 
-int MR_Missile::InternalSimulate(MR_SimulationTime pDuration, MR_Level * pLevel, int pRoom)
+int Missile::InternalSimulate(MR_SimulationTime pDuration, MR_Level * pLevel, int pRoom)
 {
 
 	mLived += pDuration;
@@ -270,7 +273,7 @@ int MR_Missile::InternalSimulate(MR_SimulationTime pDuration, MR_Level * pLevel,
 	return pRoom;
 }
 
-void MR_Missile::ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 /*pZMin */ , MR_Int32 /*pZMax */ , MR_Level * /*pLevel */ )
+void Missile::ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 /*pZMin */ , MR_Int32 /*pZMax */ , MR_Level * /*pLevel */ )
 {
 	MR_ContactEffect *lEffect = (MR_ContactEffect *) pEffect;
 	const MR_PhysicalCollision *lPhysCollision = dynamic_cast < MR_PhysicalCollision * >(lEffect);
@@ -298,7 +301,7 @@ void MR_Missile::ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationTime
 
 // State broadcast
 
-class MR_MissileState
+class MissileState
 {
 	public:
 		MR_Int32 mPosX;							  // 4    4
@@ -309,9 +312,9 @@ class MR_MissileState
 		MR_Int8 mHoverId;						  // 1   16
 };
 
-MR_ElementNetState MR_Missile::GetNetState() const
+MR_ElementNetState Missile::GetNetState() const
 {
-	static MR_MissileState lsState;				  // Static is ok because the variable will be used immediatly
+	static MissileState lsState;				  // Static is ok because the variable will be used immediatly
 
 	MR_ElementNetState lReturnValue;
 
@@ -328,10 +331,10 @@ MR_ElementNetState MR_Missile::GetNetState() const
 
 	return lReturnValue;
 
-} void MR_Missile::SetNetState(int pDataLen, const MR_UInt8 * pData)
+} void Missile::SetNetState(int pDataLen, const MR_UInt8 * pData)
 {
 
-	const MR_MissileState *lState = (const MR_MissileState *) pData;
+	const MissileState *lState = (const MissileState *) pData;
 
 	mPosition.mX = lState->mPosX;
 	mPosition.mY = lState->mPosY;
@@ -339,14 +342,14 @@ MR_ElementNetState MR_Missile::GetNetState() const
 
 	mOrientation = lState->mOrientation;
 
-	if(pDataLen >= sizeof(MR_MissileState)) {
+	if(pDataLen >= sizeof(MissileState)) {
 		mHoverId = lState->mHoverId;
 		mLostOfControlEffect.mHoverId = mHoverId;
 	}
 
 }
 
-void MR_Missile::PlayExternalSounds(int pDB, int pPan)
+void Missile::PlayExternalSounds(int pDB, int pPan)
 {
 	if(mBounceSoundEvent) {
 		mBounceSoundEvent = FALSE;
@@ -356,3 +359,6 @@ void MR_Missile::PlayExternalSounds(int pDB, int pPan)
 
 	SoundServer::Play(mMotorSound, 1, pDB, 1.0, pPan);
 }
+
+}  // namespace ObjFac1
+}  // namespace HoverRace

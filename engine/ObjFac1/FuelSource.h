@@ -20,13 +20,15 @@
 // and limitations under the License.
 //
 
-#ifndef FUEL_SOURCE_H
-#define FUEL_SOURCE_H
+#pragma once
 
 #include "../Model/MazeElement.h"
 #include "../Model/RaceEffects.h"
 
-class MR_FuelSource:public MR_FreeElement, protected MR_CylinderShape
+namespace HoverRace {
+namespace ObjFac1 {
+
+class FuelSource : public MR_FreeElement, protected MR_CylinderShape
 {
 	protected:
 
@@ -43,8 +45,8 @@ class MR_FuelSource:public MR_FreeElement, protected MR_CylinderShape
 		MR_ContactEffectList mContactEffectList;
 
 	public:
-		MR_FuelSource(const MR_ObjectFromFactoryId & pId);
-		~MR_FuelSource();
+		FuelSource(const MR_ObjectFromFactoryId & pId);
+		~FuelSource();
 
 	protected:
 
@@ -53,4 +55,6 @@ class MR_FuelSource:public MR_FreeElement, protected MR_CylinderShape
 		const MR_ShapeInterface *GetReceivingContactEffectShape();
 
 };
-#endif
+
+}  // namespace ObjFac1
+}  // namespace HoverRace

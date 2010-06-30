@@ -19,54 +19,62 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
 #include "FuelSource.h"
+
+namespace HoverRace {
+namespace ObjFac1 {
 
 const double cFuelGain = 60 / 3;				  // A 60 second refill takes 3 seconds
 const MR_Int32 cSourceRay = 20000;				  // the source have a diameter of 40 meters
 const MR_Int32 cSourceHeight = 3000;			  // 3 meters
 
-MR_Int32 MR_FuelSource::ZMin() const
+MR_Int32 FuelSource::ZMin() const
 {
 	return mPosition.mZ;
 }
 
-MR_Int32 MR_FuelSource::ZMax() const
+MR_Int32 FuelSource::ZMax() const
 {
 	return mPosition.mZ + cSourceHeight;
 }
 
-MR_Int32 MR_FuelSource::AxisX() const
+MR_Int32 FuelSource::AxisX() const
 {
 	return mPosition.mX;
 }
 
-MR_Int32 MR_FuelSource::AxisY() const
+MR_Int32 FuelSource::AxisY() const
 {
 	return mPosition.mY;
 }
 
-MR_Int32 MR_FuelSource::RayLen() const
+MR_Int32 FuelSource::RayLen() const
 {
 	return cSourceRay;
-} MR_FuelSource::MR_FuelSource(const MR_ObjectFromFactoryId & pId)
-:MR_FreeElement(pId)
+}
+
+FuelSource::FuelSource(const MR_ObjectFromFactoryId &pId) :
+	MR_FreeElement(pId)
 {
 	mFuelEffect.mFuelQty = cFuelGain;
 	mContactEffectList.push_back(&mFuelEffect);
 }
 
-MR_FuelSource::~MR_FuelSource()
+FuelSource::~FuelSource()
 {
 }
 
-const MR_ContactEffectList *MR_FuelSource::GetEffectList()
+const MR_ContactEffectList *FuelSource::GetEffectList()
 {
 	return &mContactEffectList;
 }
 
-const MR_ShapeInterface *MR_FuelSource::GetReceivingContactEffectShape()
+const MR_ShapeInterface *FuelSource::GetReceivingContactEffectShape()
 {
 	return this;
 }
+
+}  // namespace ObjFac1
+}  // namespace HoverRace

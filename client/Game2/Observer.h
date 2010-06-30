@@ -73,11 +73,11 @@ class Observer
 		int mDispPlayers;						  // Index of the players list to display
 		// 0 mean do not display
 
-		MR_SpriteHandle *mBaseFont;
-		MR_SpriteHandle *mMissileLevel;
-		MR_SpriteHandle *mMineDisp;
-		MR_SpriteHandle *mPowerUpDisp;
-		MR_SpriteHandle *mHoverIcons;
+		ObjFac1::SpriteHandle *mBaseFont;
+		ObjFac1::SpriteHandle *mMissileLevel;
+		ObjFac1::SpriteHandle *mMineDisp;
+		ObjFac1::SpriteHandle *mPowerUpDisp;
+		ObjFac1::SpriteHandle *mHoverIcons;
 
 		HoverRace::VideoServices::StaticText *selectCraftTxt;
 		HoverRace::VideoServices::StaticText *craftTxt;

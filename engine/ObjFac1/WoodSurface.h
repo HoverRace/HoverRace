@@ -28,13 +28,11 @@
 namespace HoverRace {
 namespace ObjFac1 {
 
-class WoodSurface : public MR_BitmapSurface
+class WoodSurface : public BitmapSurface
 {
-
 	public:
 		WoodSurface(const MR_ObjectFromFactoryId & pId, ObjFacTools::ResourceLib* resourceLib);
 		~WoodSurface();
-
 };
 
 }  // namespace ObjFac1

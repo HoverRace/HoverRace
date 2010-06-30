@@ -20,7 +20,7 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
 #include "Mine.h"
 #include "ObjFac1Res.h"
@@ -29,34 +29,39 @@
 
 using HoverRace::ObjFacTools::ResourceLib;
 
+namespace HoverRace {
+namespace ObjFac1 {
+
 const MR_Int32 cMineRay = 400;
 const MR_Int32 cMineHeight = 140;
 
-MR_Int32 MR_Mine::ZMin() const
+MR_Int32 Mine::ZMin() const
 {
 	return mPosition.mZ;
 }
 
-MR_Int32 MR_Mine::ZMax() const
+MR_Int32 Mine::ZMax() const
 {
 	return mPosition.mZ + cMineHeight;
 }
 
-MR_Int32 MR_Mine::AxisX() const
+MR_Int32 Mine::AxisX() const
 {
 	return mPosition.mX;
 }
 
-MR_Int32 MR_Mine::AxisY() const
+MR_Int32 Mine::AxisY() const
 {
 	return mPosition.mY;
 }
 
-MR_Int32 MR_Mine::RayLen() const
+MR_Int32 Mine::RayLen() const
 {
 	return cMineRay;
-} MR_Mine::MR_Mine(const MR_ObjectFromFactoryId & pId, ResourceLib* resourceLib)
-:MR_FreeElementBase(pId)
+}
+
+Mine::Mine(const MR_ObjectFromFactoryId & pId, ResourceLib* resourceLib) :
+	MR_FreeElementBase(pId)
 {
 	mEffectList.push_back(&mEffect);
 	mActor = resourceLib->GetActor(MR_MINE);
@@ -69,17 +74,17 @@ MR_Int32 MR_Mine::RayLen() const
 	mEffect.mHoverId = -1;
 }
 
-MR_Mine::~MR_Mine()
+Mine::~Mine()
 {
 }
 
-BOOL MR_Mine::AssignPermNumber(int pNumber)
+BOOL Mine::AssignPermNumber(int pNumber)
 {
 	mEffect.mElementId = pNumber;
 	return TRUE;
 }
 
-const MR_ContactEffectList *MR_Mine::GetEffectList()
+const MR_ContactEffectList *Mine::GetEffectList()
 {
 	if(mOnGround) {
 		return &mEffectList;
@@ -89,19 +94,19 @@ const MR_ContactEffectList *MR_Mine::GetEffectList()
 	}
 }
 
-const MR_ShapeInterface *MR_Mine::GetReceivingContactEffectShape()
+const MR_ShapeInterface *Mine::GetReceivingContactEffectShape()
 {
 	return this;
 }
 
-const MR_ShapeInterface *MR_Mine::GetGivingContactEffectShape()
+const MR_ShapeInterface *Mine::GetGivingContactEffectShape()
 {
 	// return this;
 	return NULL;
 }
 
 // Simulation
-int MR_Mine::Simulate(MR_SimulationTime pDuration, MR_Level * pLevel, int pRoom)
+int Mine::Simulate(MR_SimulationTime pDuration, MR_Level * pLevel, int pRoom)
 {
 	if(pRoom == -1) {
 		mOnGround = FALSE;
@@ -133,7 +138,7 @@ int MR_Mine::Simulate(MR_SimulationTime pDuration, MR_Level * pLevel, int pRoom)
 	return pRoom;
 }
 
-void MR_Mine::Render(MR_3DViewPort * pDest, MR_SimulationTime pTime)
+void Mine::Render(MR_3DViewPort * pDest, MR_SimulationTime pTime)
 {
 	mCurrentFrame = (pTime >> 9) & 1;
 	MR_FreeElementBase::Render(pDest, pTime);
@@ -141,7 +146,7 @@ void MR_Mine::Render(MR_3DViewPort * pDest, MR_SimulationTime pTime)
 
 // State broadcast
 
-class MR_MineState
+class MineState
 {
 	public:
 		MR_Int32 mPosX;							  // 4    4
@@ -150,9 +155,9 @@ class MR_MineState
 
 };
 
-MR_ElementNetState MR_Mine::GetNetState() const
+MR_ElementNetState Mine::GetNetState() const
 {
-	static MR_MineState lsState;				  // Static is ok because the variable will be used immediatly
+	static MineState lsState;				  // Static is ok because the variable will be used immediatly
 
 	MR_ElementNetState lReturnValue;
 
@@ -164,15 +169,20 @@ MR_ElementNetState MR_Mine::GetNetState() const
 	lsState.mPosZ = mPosition.mZ;
 
 	return lReturnValue;
-	} void MR_Mine::SetNetState(int /*pDataLen */ , const MR_UInt8 * pData)
-	{
+}
 
-		const MR_MineState *lState = (const MR_MineState *) pData;
+void Mine::SetNetState(int /*pDataLen */ , const MR_UInt8 * pData)
+{
 
-		mPosition.mX = lState->mPosX;
-		mPosition.mY = lState->mPosY;
-		mPosition.mZ = lState->mPosZ;
+	const MineState *lState = (const MineState *) pData;
 
-		mOrientation = 0;
+	mPosition.mX = lState->mPosX;
+	mPosition.mY = lState->mPosY;
+	mPosition.mZ = lState->mPosZ;
 
-	}
+	mOrientation = 0;
+
+}
+
+}  // namespace ObjFac1
+}  // namespace HoverRace

@@ -25,8 +25,7 @@
 //
 //
 
-#ifndef SPRITE_HANDLE_H
-#define SPRITE_HANDLE_H
+#pragma once
 
 #include "ResourceLib.h"
 
@@ -36,18 +35,23 @@
 #define MR_DllDeclare   __declspec( dllimport )
 #endif
 
-class MR_SpriteHandle:public MR_ObjectFromFactory
+namespace HoverRace {
+namespace ObjFac1 {
+
+class SpriteHandle : public MR_ObjectFromFactory
 {
 	protected:
 		const MR_ResSprite *mSprite;
 
 	public:
-		MR_DllDeclare MR_SpriteHandle(const MR_ObjectFromFactoryId & pId, const MR_ResSprite * pSprite);
-		MR_DllDeclare ~ MR_SpriteHandle();
+		MR_DllDeclare SpriteHandle(const MR_ObjectFromFactoryId & pId, const MR_ResSprite * pSprite);
+		MR_DllDeclare ~SpriteHandle();
 
 		MR_DllDeclare const MR_Sprite *GetSprite() const;
 
 };
 
+}  // namespace ObjFac1
+}  // namespace HoverRace
+
 #undef MR_DllDeclare
-#endif

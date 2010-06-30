@@ -19,21 +19,29 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
+
 #include "SpriteHandle.h"
+
+namespace HoverRace {
+namespace ObjFac1 {
+
 const MR_ResSprite *mSprite;
 
-MR_SpriteHandle::MR_SpriteHandle(const MR_ObjectFromFactoryId & pId, const MR_ResSprite * pSprite)
-:MR_ObjectFromFactory(pId)
+SpriteHandle::SpriteHandle(const MR_ObjectFromFactoryId & pId, const MR_ResSprite * pSprite) :
+	MR_ObjectFromFactory(pId)
 {
 	mSprite = pSprite;
 }
 
-MR_SpriteHandle::~MR_SpriteHandle()
+SpriteHandle::~SpriteHandle()
 {
 }
 
-const MR_Sprite *MR_SpriteHandle::GetSprite() const
+const MR_Sprite *SpriteHandle::GetSprite() const
 {
 	return mSprite;
 }
+
+}  // namespace ObjFac1
+}  // namespace HoverRace

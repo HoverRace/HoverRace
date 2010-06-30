@@ -20,14 +20,16 @@
 // and limitations under the License.
 //
 
-#ifndef MISSILE_H
-#define MISSILE_H
+#pragma once
 
 #include "../ObjFacTools/FreeElementBase.h"
 #include "../Model/RaceEffects.h"
 #include "../Model/PhysicalCollision.h"
 
-class MR_Missile:public MR_FreeElementBase, protected MR_CylinderShape
+namespace HoverRace {
+namespace ObjFac1 {
+
+class Missile : public MR_FreeElementBase, protected MR_CylinderShape
 {
 	protected:
 		// Shape interface
@@ -49,12 +51,12 @@ class MR_Missile:public MR_FreeElementBase, protected MR_CylinderShape
 		double mYSpeed;
 
 		BOOL mBounceSoundEvent;
-		HoverRace::VideoServices::ShortSound *mBounceSound;
-		HoverRace::VideoServices::ContinuousSound *mMotorSound;
+		VideoServices::ShortSound *mBounceSound;
+		VideoServices::ContinuousSound *mMotorSound;
 
 	public:
-		MR_Missile(const MR_ObjectFromFactoryId & pId, HoverRace::ObjFacTools::ResourceLib* resourceLib);
-		~MR_Missile();
+		Missile(const MR_ObjectFromFactoryId & pId, ObjFacTools::ResourceLib* resourceLib);
+		~Missile();
 
 	protected:
 		// Init interface
@@ -75,6 +77,8 @@ class MR_Missile:public MR_FreeElementBase, protected MR_CylinderShape
 		void SetNetState(int pDataLen, const MR_UInt8 * pData);
 
 		// Sounds
-		void MR_Missile::PlayExternalSounds(int pDB, int pPan);
+		void Missile::PlayExternalSounds(int pDB, int pPan);
 };
-#endif
+
+}  // namespace ObjFac1
+}  // namespace HoverRace

@@ -20,13 +20,15 @@
 // and limitations under the License.
 //
 
-#ifndef MINE_H
-#define MINE_H
+#pragma once
 
 #include "../ObjFacTools/FreeElementBase.h"
 #include "../Model/RaceEffects.h"
 
-class MR_Mine:public MR_FreeElementBase, protected MR_CylinderShape
+namespace HoverRace {
+namespace ObjFac1 {
+
+class Mine : public MR_FreeElementBase, protected MR_CylinderShape
 {
 	protected:
 
@@ -44,8 +46,8 @@ class MR_Mine:public MR_FreeElementBase, protected MR_CylinderShape
 		MR_ContactEffectList mEffectList;
 
 	public:
-		MR_Mine(const MR_ObjectFromFactoryId & pId, HoverRace::ObjFacTools::ResourceLib* resourceLib);
-		~MR_Mine();
+		Mine(const MR_ObjectFromFactoryId & pId, ObjFacTools::ResourceLib* resourceLib);
+		~Mine();
 
 	protected:
 
@@ -66,4 +68,6 @@ class MR_Mine:public MR_FreeElementBase, protected MR_CylinderShape
 
 		BOOL AssignPermNumber(int pNumber);
 };
-#endif
+
+}  // namespace ObjFac1
+}  // namespace HoverRace

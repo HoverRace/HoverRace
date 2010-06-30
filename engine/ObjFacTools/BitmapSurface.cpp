@@ -24,15 +24,15 @@
 #include "BitmapSurface.h"
 #include "../Model/PhysicalCollision.h"
 
-//Local data
+namespace HoverRace {
+namespace ObjFac1 {
+
 static BOOL gLocalInitialized = FALSE;
 static MR_PhysicalCollision gEffect;
 static MR_ContactEffectList gEffectList;
 
-//
-
-MR_BitmapSurface::MR_BitmapSurface(const MR_ObjectFromFactoryId & pId)
-:MR_SurfaceElement(pId)
+BitmapSurface::BitmapSurface(const MR_ObjectFromFactoryId & pId) :
+	MR_SurfaceElement(pId)
 {
 	// The task of initialising the data members is done by the superclass
 	mBitmap = NULL;
@@ -51,7 +51,7 @@ MR_BitmapSurface::MR_BitmapSurface(const MR_ObjectFromFactoryId & pId)
 	}
 }
 
-MR_BitmapSurface::MR_BitmapSurface(const MR_ObjectFromFactoryId & pId, /*const */ MR_ResBitmap * pBitmap)
+BitmapSurface::BitmapSurface(const MR_ObjectFromFactoryId & pId, /*const */ MR_ResBitmap * pBitmap)
 :MR_SurfaceElement(pId)
 {
 	// The task of initialising the data members i
@@ -72,7 +72,7 @@ MR_BitmapSurface::MR_BitmapSurface(const MR_ObjectFromFactoryId & pId, /*const *
 
 }
 
-MR_BitmapSurface::MR_BitmapSurface(const MR_ObjectFromFactoryId & pId, MR_ResBitmap * pBitmap1, MR_ResBitmap * pBitmap2, int pRotationSpeed, int pRotationLen)
+BitmapSurface::BitmapSurface(const MR_ObjectFromFactoryId & pId, MR_ResBitmap * pBitmap1, MR_ResBitmap * pBitmap2, int pRotationSpeed, int pRotationLen)
 :MR_SurfaceElement(pId)
 {
 	// The task of initialising the data members i
@@ -93,11 +93,11 @@ MR_BitmapSurface::MR_BitmapSurface(const MR_ObjectFromFactoryId & pId, MR_ResBit
 
 }
 
-MR_BitmapSurface::~MR_BitmapSurface()
+BitmapSurface::~BitmapSurface()
 {
 }
 
-void MR_BitmapSurface::RenderWallSurface(MR_3DViewPort * pDest, const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, MR_SimulationTime pTime)
+void BitmapSurface::RenderWallSurface(MR_3DViewPort * pDest, const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, MR_SimulationTime pTime)
 {
 	if(mBitmap != NULL) {
 		if(mRotationSpeed != 0) {
@@ -118,33 +118,33 @@ void MR_BitmapSurface::RenderWallSurface(MR_3DViewPort * pDest, const MR_3DCoord
 	}
 }
 
-void MR_BitmapSurface::RenderHorizontalSurface(MR_3DViewPort * pDest, int pNbVertex, const MR_2DCoordinate * pVertexList, MR_Int32 pLevel, BOOL pTop, MR_SimulationTime /*pTime */ )
+void BitmapSurface::RenderHorizontalSurface(MR_3DViewPort * pDest, int pNbVertex, const MR_2DCoordinate * pVertexList, MR_Int32 pLevel, BOOL pTop, MR_SimulationTime /*pTime */ )
 {
 	if(mBitmap != NULL) {
 		pDest->RenderHorizontalSurface(pNbVertex, pVertexList, pLevel, pTop, mBitmap);
 	}
 }
 
-const MR_ContactEffectList *MR_BitmapSurface::GetEffectList()
+const MR_ContactEffectList *BitmapSurface::GetEffectList()
 {
 	return &gEffectList;
 }
 
-// MR_VStretchBitmapSurface:public
+// VStretchBitmapSurface:public
 
-MR_VStretchBitmapSurface::MR_VStretchBitmapSurface(const MR_ObjectFromFactoryId & pId, /*const */ MR_ResBitmap * pBitmap, int pMaxHeight)
-:MR_BitmapSurface(pId, pBitmap)
+VStretchBitmapSurface::VStretchBitmapSurface(const MR_ObjectFromFactoryId & pId, /*const */ MR_ResBitmap * pBitmap, int pMaxHeight)
+:BitmapSurface(pId, pBitmap)
 {
 	mMaxHeight = pMaxHeight;
 }
 
-MR_VStretchBitmapSurface::MR_VStretchBitmapSurface(const MR_ObjectFromFactoryId & pId, MR_ResBitmap * pBitmap1, MR_ResBitmap * pBitmap2, int pRotationSpeed, int pRotationLen, int pMaxHeight)
-:MR_BitmapSurface(pId, pBitmap1, pBitmap2, pRotationSpeed, pRotationLen)
+VStretchBitmapSurface::VStretchBitmapSurface(const MR_ObjectFromFactoryId & pId, MR_ResBitmap * pBitmap1, MR_ResBitmap * pBitmap2, int pRotationSpeed, int pRotationLen, int pMaxHeight)
+:BitmapSurface(pId, pBitmap1, pBitmap2, pRotationSpeed, pRotationLen)
 {
 	mMaxHeight = pMaxHeight;
 }
 
-void MR_VStretchBitmapSurface::RenderWallSurface(MR_3DViewPort * pDest, const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, MR_SimulationTime pTime)
+void VStretchBitmapSurface::RenderWallSurface(MR_3DViewPort * pDest, const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, MR_SimulationTime pTime)
 {
 	if(mBitmap != NULL) {
 		int lHeight = pUpperLeft.mZ - pLowerRight.mZ;
@@ -158,7 +158,10 @@ void MR_VStretchBitmapSurface::RenderWallSurface(MR_3DViewPort * pDest, const MR
 
 			mBitmap->SetWidthHeight(lHeight, lHeight);
 
-			MR_BitmapSurface::RenderWallSurface(pDest, pUpperLeft, pLowerRight, pLen, pTime);
+			BitmapSurface::RenderWallSurface(pDest, pUpperLeft, pLowerRight, pLen, pTime);
 		}
 	}
 }
+
+}  // namespace Model
+}  // namespace HoverRace

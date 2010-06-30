@@ -30,7 +30,7 @@ namespace HoverRace {
 namespace ObjFac1 {
 
 DefaultSurface::DefaultSurface(const MR_ObjectFromFactoryId & pId, ResourceLib* resourceLib) :
-	MR_BitmapSurface(pId)
+	BitmapSurface(pId)
 {
 	mBitmap = resourceLib->GetBitmap(MR_ETALON);
 }

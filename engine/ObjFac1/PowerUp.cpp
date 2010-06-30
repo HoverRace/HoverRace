@@ -19,7 +19,7 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
 #include "PowerUp.h"
 #include "ObjFac1Res.h"
@@ -28,36 +28,39 @@
 
 using HoverRace::ObjFacTools::ResourceLib;
 
+namespace HoverRace {
+namespace ObjFac1 {
+
 const MR_Int32 cPowerUpRay = 550;
 const MR_Int32 cPowerUpHalfHeight = 550;
 
-MR_Int32 MR_PowerUp::ZMin() const
+MR_Int32 PowerUp::ZMin() const
 {
 	return mPosition.mZ - cPowerUpHalfHeight;
 }
 
-MR_Int32 MR_PowerUp::ZMax() const
+MR_Int32 PowerUp::ZMax() const
 {
 	return mPosition.mZ + cPowerUpHalfHeight;
 }
 
-MR_Int32 MR_PowerUp::AxisX() const
+MR_Int32 PowerUp::AxisX() const
 {
 	return mPosition.mX;
 }
 
-MR_Int32 MR_PowerUp::AxisY() const
+MR_Int32 PowerUp::AxisY() const
 {
 	return mPosition.mY;
 }
 
-MR_Int32 MR_PowerUp::RayLen() const
+MR_Int32 PowerUp::RayLen() const
 {
 	return cPowerUpRay;
 }
 
-MR_PowerUp::MR_PowerUp(const MR_ObjectFromFactoryId & pId, ResourceLib* resourceLib)
-	:MR_FreeElementBase(pId)
+PowerUp::PowerUp(const MR_ObjectFromFactoryId &pId, ResourceLib* resourceLib) :
+	MR_FreeElementBase(pId)
 {
 	mEffectList.push_back(&mPowerUpEffect);
 	mActor = resourceLib->GetActor(MR_PWRUP);
@@ -66,34 +69,34 @@ MR_PowerUp::MR_PowerUp(const MR_ObjectFromFactoryId & pId, ResourceLib* resource
 	mPowerUpEffect.mElementPermId = -1;
 }
 
-MR_PowerUp::~MR_PowerUp()
+PowerUp::~PowerUp()
 {
 }
 
-BOOL MR_PowerUp::AssignPermNumber(int pNumber)
+BOOL PowerUp::AssignPermNumber(int pNumber)
 {
 	mPowerUpEffect.mElementPermId = pNumber;
 	return TRUE;
 }
 
-const MR_ContactEffectList *MR_PowerUp::GetEffectList()
+const MR_ContactEffectList *PowerUp::GetEffectList()
 {
 	return &mEffectList;
 }
 
-const MR_ShapeInterface *MR_PowerUp::GetReceivingContactEffectShape()
+const MR_ShapeInterface *PowerUp::GetReceivingContactEffectShape()
 {
 	return this;
 }
 
-const MR_ShapeInterface *MR_PowerUp::GetGivingContactEffectShape()
+const MR_ShapeInterface *PowerUp::GetGivingContactEffectShape()
 {
 	// return this;
 	return NULL;
 }
 
 // Simulation
-int MR_PowerUp::Simulate(MR_SimulationTime pDuration, MR_Level * /*pLevel */ , int pRoom)
+int PowerUp::Simulate(MR_SimulationTime pDuration, MR_Level * /*pLevel */ , int pRoom)
 {
 	// Just rotate on ourself
 	if(pDuration != 0) {
@@ -104,7 +107,7 @@ int MR_PowerUp::Simulate(MR_SimulationTime pDuration, MR_Level * /*pLevel */ , i
 }
 
 /*
-void MR_PowerUp::ApplyEffect( const MR_ContactEffect* pEffect,  MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Level* pLevel )
+void PowerUp::ApplyEffect( const MR_ContactEffect* pEffect,  MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Level* pLevel )
 {
    MR_ContactEffect* lEffect = (MR_ContactEffect*)pEffect;
    const MR_PhysicalCollision* lPhysCollision = dynamic_cast<MR_PhysicalCollision*>(lEffect);
@@ -147,7 +150,7 @@ class MR_PowerUpState
 
 };
 
-MR_ElementNetState MR_PowerUp::GetNetState() const
+MR_ElementNetState PowerUp::GetNetState() const
 {
 	static MR_PowerUpState lsState;				  // Static is ok because the variable will be used immediatly
 
@@ -161,15 +164,20 @@ MR_ElementNetState MR_PowerUp::GetNetState() const
 	lsState.mPosZ = mPosition.mZ;
 
 	return lReturnValue;
-	} void MR_PowerUp::SetNetState(int /*pDataLen */ , const MR_UInt8 * pData)
-	{
+}
 
-		const MR_PowerUpState *lState = (const MR_PowerUpState *) pData;
+void PowerUp::SetNetState(int /*pDataLen */ , const MR_UInt8 * pData)
+{
 
-		mPosition.mX = lState->mPosX;
-		mPosition.mY = lState->mPosY;
-		mPosition.mZ = lState->mPosZ;
+	const MR_PowerUpState *lState = (const MR_PowerUpState *) pData;
 
-		mOrientation = 0;
+	mPosition.mX = lState->mPosX;
+	mPosition.mY = lState->mPosY;
+	mPosition.mZ = lState->mPosZ;
 
-	}
+	mOrientation = 0;
+
+}
+
+}  // namespace ObjFac1
+}  // namespace HoverRace
