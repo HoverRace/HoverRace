@@ -64,12 +64,6 @@ namespace HoverRace {
 	}
 }
 
-// Renderer bases
-class SurfaceElementRenderer;				  // used and defines by the Observer module
-class FreeElementRenderer;					  // used and defines by the Observer module
-
-class FreeElementMovingInterface;
-
 namespace HoverRace {
 namespace Model {
 
