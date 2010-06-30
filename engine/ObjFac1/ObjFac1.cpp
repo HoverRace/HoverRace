@@ -57,10 +57,10 @@ ObjFac1::~ObjFac1()
 	delete resourceLib;
 }
 
-MR_ObjectFromFactory *ObjFac1::GetObject(int pClassId)
+HoverRace::Util::ObjectFromFactory *ObjFac1::GetObject(int pClassId)
 {
-	MR_ObjectFromFactory *lReturnValue = NULL;
-	MR_ObjectFromFactoryId lId = { 1, pClassId };
+	Util::ObjectFromFactory *lReturnValue = NULL;
+	Util::ObjectFromFactoryId lId = { 1, pClassId };
 
 	switch (pClassId) {
 		case 1:

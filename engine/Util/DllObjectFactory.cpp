@@ -31,73 +31,76 @@
 using HoverRace::ObjFac1::ObjFac1;
 using HoverRace::Parcel::ObjStream;
 
+namespace HoverRace {
+namespace Util {
+
 // Base class for object factory "DLLs".
 // (Originally, these were real DLLs which were loaded at runtime).
-class MR_FactoryDll
+class FactoryDll
 {
 	public:
 		BOOL mDynamic;
 		int mRefCount;
 
-		virtual MR_ObjectFromFactory* GetObject(int classId) const = 0;
+		virtual ObjectFromFactory* GetObject(int classId) const = 0;
 
 		// Initialisation
-		MR_FactoryDll();
-		virtual ~MR_FactoryDll();
+		FactoryDll();
+		virtual ~FactoryDll();
 
 };
 
 // Using ObjFac1 (read from package file).
-class PackageFactoryDll : public MR_FactoryDll
+class PackageFactoryDll : public FactoryDll
 {
-	typedef MR_FactoryDll SUPER;
+	typedef FactoryDll SUPER;
 
 	public:
 		PackageFactoryDll();
 		virtual ~PackageFactoryDll();
 
-		virtual MR_ObjectFromFactory* GetObject(int classId) const;
+		virtual ObjectFromFactory* GetObject(int classId) const;
 
 	private:
-		ObjFac1 *package;
+		ObjFac1::ObjFac1 *package;
 };
 
 // Using function pointer callback.
-class LocalFactoryDll : public MR_FactoryDll
+class LocalFactoryDll : public FactoryDll
 {
-	typedef MR_FactoryDll SUPER;
+	typedef FactoryDll SUPER;
 
 	private:
 		LocalFactoryDll() {}
 	public:
-		LocalFactoryDll(MR_DllObjectFactory::getObject_t getObject);
+		LocalFactoryDll(DllObjectFactory::getObject_t getObject);
 		virtual ~LocalFactoryDll();
 
-		virtual MR_ObjectFromFactory* GetObject(int classId) const;
+		virtual ObjectFromFactory* GetObject(int classId) const;
 
 	private:
-		MR_DllObjectFactory::getObject_t getObject;
+		DllObjectFactory::getObject_t getObject;
 };
 
 // Local functions declarations
-static MR_FactoryDll *GetDll(MR_UInt16 pDllId, BOOL pTrowOnError);
+static FactoryDll *GetDll(MR_UInt16 pDllId, BOOL pTrowOnError);
 
 // Module variables
 //TODO: Use a std::map instead.
-typedef std::map<int,MR_FactoryDll*> gsDllList_t;
+typedef std::map<int,FactoryDll*> gsDllList_t;
 static gsDllList_t gsDllList;
 
 // Module functions
-void MR_DllObjectFactory::Init()
+void DllObjectFactory::Init()
 {
 	// Nothing to do
 }
 
-void MR_DllObjectFactory::Clean(BOOL pOnlyDynamic)
+void DllObjectFactory::Clean(BOOL pOnlyDynamic)
 {
 	for (gsDllList_t::iterator iter = gsDllList.begin(); iter != gsDllList.end(); ) {
 		int dllId = iter->first;
-		MR_FactoryDll* dllPtr = iter->second;
+		FactoryDll* dllPtr = iter->second;
 
 		if ((dllPtr->mRefCount <= 0) && (dllPtr->mDynamic || !pOnlyDynamic)) {
 			gsDllList.erase(iter++);
@@ -110,16 +113,16 @@ void MR_DllObjectFactory::Clean(BOOL pOnlyDynamic)
 }
 
 /*
-BOOL MR_DllObjectFactory::OpenDll(MR_UInt16 pDllId)
+BOOL DllObjectFactory::OpenDll(MR_UInt16 pDllId)
 {
 	return (GetDll(pDllId, FALSE) != NULL);
 }
 */
 
-void MR_DllObjectFactory::RegisterLocalDll(int pDllId, getObject_t pFunc)
+void DllObjectFactory::RegisterLocalDll(int pDllId, getObject_t pFunc)
 {
 
-	MR_FactoryDll *lDllPtr;
+	FactoryDll *lDllPtr;
 
 	ASSERT(pDllId != 0);						  // Number 0 is reserved for NULL entry
 	ASSERT(pDllId != 1);						  // Number 1 is reserved for ObjFac1
@@ -131,7 +134,7 @@ void MR_DllObjectFactory::RegisterLocalDll(int pDllId, getObject_t pFunc)
 	ASSERT(inserted);
 }
 
-void MR_DllObjectFactory::IncrementReferenceCount(int pDllId)
+void DllObjectFactory::IncrementReferenceCount(int pDllId)
 {
 	gsDllList_t::iterator iter = gsDllList.find(pDllId);
 	if (iter != gsDllList.end()) {
@@ -142,7 +145,7 @@ void MR_DllObjectFactory::IncrementReferenceCount(int pDllId)
 	}
 }
 
-void MR_DllObjectFactory::DecrementReferenceCount(int pDllId)
+void DllObjectFactory::DecrementReferenceCount(int pDllId)
 {
 	gsDllList_t::iterator iter = gsDllList.find(pDllId);
 	if (iter != gsDllList.end()) {
@@ -153,11 +156,11 @@ void MR_DllObjectFactory::DecrementReferenceCount(int pDllId)
 	}
 }
 
-MR_ObjectFromFactory *MR_DllObjectFactory::CreateObject(const MR_ObjectFromFactoryId &pId)
+ObjectFromFactory *DllObjectFactory::CreateObject(const ObjectFromFactoryId &pId)
 {
-	MR_ObjectFromFactory *lReturnValue;
+	ObjectFromFactory *lReturnValue;
 
-	MR_FactoryDll *lDllPtr = GetDll(pId.mDllId, TRUE);
+	FactoryDll *lDllPtr = GetDll(pId.mDllId, TRUE);
 
 	lReturnValue = lDllPtr->GetObject(pId.mClassId);
 
@@ -167,9 +170,9 @@ MR_ObjectFromFactory *MR_DllObjectFactory::CreateObject(const MR_ObjectFromFacto
 /**
  * Get a handle to the factory DLL.  The option of choosing which DLL has been deprecated.
  */
-MR_FactoryDll *GetDll(MR_UInt16 pDllId, BOOL pThrowOnError)
+FactoryDll *GetDll(MR_UInt16 pDllId, BOOL pThrowOnError)
 {
-	MR_FactoryDll *lDllPtr;
+	FactoryDll *lDllPtr;
 
 	ASSERT(pDllId != 0);						  // Number 0 is reserved for NULL entry
 
@@ -187,34 +190,34 @@ MR_FactoryDll *GetDll(MR_UInt16 pDllId, BOOL pThrowOnError)
 	return lDllPtr;
 }
 
-// MR_ObjectFromFactory methods
-MR_ObjectFromFactory::MR_ObjectFromFactory(const MR_ObjectFromFactoryId & pId)
+// ObjectFromFactory methods
+ObjectFromFactory::ObjectFromFactory(const ObjectFromFactoryId & pId)
 {
 	mId = pId;
 
 	// Increment this object dll reference count
 	// This will prevent the Dll from being discarted
-	MR_DllObjectFactory::IncrementReferenceCount(mId.mDllId);
+	DllObjectFactory::IncrementReferenceCount(mId.mDllId);
 
 }
 
-MR_ObjectFromFactory::~MR_ObjectFromFactory()
+ObjectFromFactory::~ObjectFromFactory()
 {
 
 	// Decrement this object dll reference count
 	// This will allow the dll to be freed if not needed anymore
-	MR_DllObjectFactory::DecrementReferenceCount(mId.mDllId);
+	DllObjectFactory::DecrementReferenceCount(mId.mDllId);
 
 }
 
-const MR_ObjectFromFactoryId &MR_ObjectFromFactory::GetTypeId() const
+const ObjectFromFactoryId &ObjectFromFactory::GetTypeId() const
 {
 	return mId;
 }
 
-void MR_ObjectFromFactory::SerializePtr(ObjStream & pArchive, MR_ObjectFromFactory * &pPtr)
+void ObjectFromFactory::SerializePtr(ObjStream & pArchive, ObjectFromFactory * &pPtr)
 {
-	MR_ObjectFromFactoryId lId = { 0, 0 };
+	ObjectFromFactoryId lId = { 0, 0 };
 
 	if(pArchive.IsWriting()) {
 		if(pPtr != NULL) {
@@ -234,13 +237,13 @@ void MR_ObjectFromFactory::SerializePtr(ObjStream & pArchive, MR_ObjectFromFacto
 			pPtr = NULL;
 		}
 		else {
-			pPtr = MR_DllObjectFactory::CreateObject(lId);
+			pPtr = DllObjectFactory::CreateObject(lId);
 			pPtr->Serialize(pArchive);
 		}
 	}
 }
 
-void MR_ObjectFromFactory::Serialize(ObjStream &pArchive)
+void ObjectFromFactory::Serialize(ObjStream &pArchive)
 {
 	//CObject::Serialize(pArchive);
 
@@ -249,8 +252,8 @@ void MR_ObjectFromFactory::Serialize(ObjStream &pArchive)
 
 }
 
-// MR_ObjectFromFactoryId
-void MR_ObjectFromFactoryId::Serialize(ObjStream &pArchive)
+// ObjectFromFactoryId
+void ObjectFromFactoryId::Serialize(ObjStream &pArchive)
 {
 	if(pArchive.IsWriting()) {
 		pArchive << mDllId << mClassId;
@@ -261,19 +264,19 @@ void MR_ObjectFromFactoryId::Serialize(ObjStream &pArchive)
 	}
 }
 
-int MR_ObjectFromFactoryId::operator ==(const MR_ObjectFromFactoryId & pId) const
+int ObjectFromFactoryId::operator ==(const ObjectFromFactoryId & pId) const
 {
 	return ((mDllId == pId.mDllId) && (mClassId == pId.mClassId));
 }
 
 
-// class MR_FactoryDll methods 
-MR_FactoryDll::MR_FactoryDll() :
+// class FactoryDll methods 
+FactoryDll::FactoryDll() :
 	mDynamic(FALSE), mRefCount(0)
 {
 }
 
-MR_FactoryDll::~MR_FactoryDll()
+FactoryDll::~FactoryDll()
 {
 	ASSERT(mRefCount == 0);
 }
@@ -282,7 +285,7 @@ PackageFactoryDll::PackageFactoryDll() :
 	SUPER()
 {
 	mDynamic = TRUE;
-	package = new ObjFac1();
+	package = new ObjFac1::ObjFac1();
 }
 
 PackageFactoryDll::~PackageFactoryDll()
@@ -290,12 +293,12 @@ PackageFactoryDll::~PackageFactoryDll()
 	delete package;
 }
 
-MR_ObjectFromFactory* PackageFactoryDll::GetObject(int classId) const
+ObjectFromFactory* PackageFactoryDll::GetObject(int classId) const
 {
 	return package->GetObject(classId);
 }
 
-LocalFactoryDll::LocalFactoryDll(MR_DllObjectFactory::getObject_t getObject) :
+LocalFactoryDll::LocalFactoryDll(DllObjectFactory::getObject_t getObject) :
 	SUPER(), getObject(getObject)
 {
 }
@@ -304,8 +307,10 @@ LocalFactoryDll::~LocalFactoryDll()
 {
 }
 
-MR_ObjectFromFactory* LocalFactoryDll::GetObject(int classId) const
+ObjectFromFactory* LocalFactoryDll::GetObject(int classId) const
 {
 	return getObject(classId);
 }
 
+}  // namespace Util
+}  // namespace HoverRace

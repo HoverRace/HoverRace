@@ -156,7 +156,7 @@ const double eFuelConsuming[MR_NB_HOVER_MODEL] =
 
 // Functions implementations
 
-MainCharacter::MainCharacter(const MR_ObjectFromFactoryId & pId) :
+MainCharacter::MainCharacter(const Util::ObjectFromFactoryId & pId) :
 	Model::FreeElement(pId)
 {
 	mMasterMode = TRUE;
@@ -250,8 +250,8 @@ int MainCharacter::GetHoverId() const
 void MainCharacter::AddRenderer()
 {
 	if(mRenderer == NULL) {
-		MR_ObjectFromFactoryId lId = { 1, 100 };
-		mRenderer = (MainCharacterRenderer *) MR_DllObjectFactory::CreateObject(lId);
+		Util::ObjectFromFactoryId lId = { 1, 100 };
+		mRenderer = (MainCharacterRenderer *) Util::DllObjectFactory::CreateObject(lId);
 	}
 }
 
@@ -261,23 +261,23 @@ void MainCharacter::Render(MR_3DViewPort * pDest, MR_SimulationTime /*pTime */ )
 		mRenderer->Render(pDest, mPosition, mCabinOrientation, mMotorDisplay > 0, mHoverId, mHoverModel);
 }
 
-MR_ObjectFromFactory *MainCharacter::FactoryFunc(MR_UInt16)
+Util::ObjectFromFactory *MainCharacter::FactoryFunc(MR_UInt16)
 {
-	MR_ObjectFromFactoryId lId = { MR_MAIN_CHARACTER_DLL_ID, MR_MAIN_CHARACTER_CLASS_ID };
+	Util::ObjectFromFactoryId lId = { MR_MAIN_CHARACTER_DLL_ID, MR_MAIN_CHARACTER_CLASS_ID };
 
 	return new MainCharacter(lId);
 }
 
 void MainCharacter::RegisterFactory()
 {
-	MR_DllObjectFactory::RegisterLocalDll(MR_MAIN_CHARACTER_DLL_ID, FactoryFunc);
+	Util::DllObjectFactory::RegisterLocalDll(MR_MAIN_CHARACTER_DLL_ID, FactoryFunc);
 }
 
 MainCharacter *MainCharacter::New(int pNbLap, char pGameOpts)
 {
-	MR_ObjectFromFactoryId lId = { MR_MAIN_CHARACTER_DLL_ID, MR_MAIN_CHARACTER_CLASS_ID };
+	Util::ObjectFromFactoryId lId = { MR_MAIN_CHARACTER_DLL_ID, MR_MAIN_CHARACTER_CLASS_ID };
 
-	MainCharacter *lReturnValue = (MainCharacter *) MR_DllObjectFactory::CreateObject(lId);
+	MainCharacter *lReturnValue = (MainCharacter *) Util::DllObjectFactory::CreateObject(lId);
 
 	if(lReturnValue != NULL) {
 		lReturnValue->mNbLapForRace = pNbLap;
@@ -533,9 +533,9 @@ int MainCharacter::Simulate(MR_SimulationTime pDuration, Model::Level *pLevel, i
 				if((mMissileRefillDuration == 0) && (mGameOpts & OPT_ALLOW_WEAPONS)) {
 					mMissileRefillDuration = eMissileRefillTime;
 
-					MR_ObjectFromFactoryId lObjectId = { 1, 150 };
+					Util::ObjectFromFactoryId lObjectId = { 1, 150 };
 					// Create a new missile
-					FreeElement *lMissile = (FreeElement *) MR_DllObjectFactory::CreateObject(lObjectId);
+					FreeElement *lMissile = (FreeElement *) Util::DllObjectFactory::CreateObject(lObjectId);
 
 					if(lMissile != NULL) {
 						lMissile->SetOwnerId(mHoverId);

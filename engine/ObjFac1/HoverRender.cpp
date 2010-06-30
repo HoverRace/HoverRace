@@ -19,7 +19,7 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
 #include "HoverRender.h"
 #include "ObjFac1Res.h"
@@ -39,7 +39,7 @@ class ResActorFriend
 		static void Draw(const MR_ResActor *pActor, MR_3DViewPort *pDest, const MR_PositionMatrix &pMatrix, int pSequence, int pFrame, const MR_Bitmap *pCockpitBitmap);
 };
 
-HoverRender::HoverRender(const MR_ObjectFromFactoryId &pId, ResourceLib *resourceLib) :
+HoverRender::HoverRender(const Util::ObjectFromFactoryId &pId, ResourceLib *resourceLib) :
 	SUPER(pId)
 {
 	mFrame = 0;

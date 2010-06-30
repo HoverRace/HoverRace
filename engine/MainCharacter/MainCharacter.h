@@ -152,9 +152,9 @@ class MainCharacter : public Model::FreeElement
 		MR_FixedFastFifo < HoverRace::VideoServices::ShortSound *, 6 > mInternalSoundList;
 		MR_FixedFastFifo < HoverRace::VideoServices::ShortSound *, 6 > mExternalSoundList;
 
-		MainCharacter(const MR_ObjectFromFactoryId & pId);
+		MainCharacter(const Util::ObjectFromFactoryId & pId);
 
-		static MR_ObjectFromFactory *FactoryFunc(MR_UInt16 pElemenType);
+		static Util::ObjectFromFactory *FactoryFunc(MR_UInt16 pElemenType);
 
 		int InternalSimulate(MR_SimulationTime pDuration, Model::Level * pLevel, int pRoom);
 

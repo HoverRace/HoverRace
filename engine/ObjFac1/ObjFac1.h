@@ -7,9 +7,10 @@ namespace HoverRace {
 	namespace ObjFacTools {
 		class ResourceLib;
 	}
+	namespace Util {
+		class ObjectFromFactory;
+	}
 }
-
-class MR_ObjectFromFactory;
 
 namespace HoverRace
 {
@@ -22,7 +23,7 @@ namespace HoverRace
 				ObjFac1();
 				~ObjFac1();
 
-				MR_ObjectFromFactory *GetObject(int pClassId);
+				HoverRace::Util::ObjectFromFactory *GetObject(int pClassId);
 
 			private:
 				HoverRace::ObjFacTools::ResourceLib* resourceLib;

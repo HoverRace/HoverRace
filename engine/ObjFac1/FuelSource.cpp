@@ -55,7 +55,7 @@ MR_Int32 FuelSource::RayLen() const
 	return cSourceRay;
 }
 
-FuelSource::FuelSource(const MR_ObjectFromFactoryId &pId) :
+FuelSource::FuelSource(const Util::ObjectFromFactoryId &pId) :
 	Model::FreeElement(pId)
 {
 	mFuelEffect.mFuelQty = cFuelGain;

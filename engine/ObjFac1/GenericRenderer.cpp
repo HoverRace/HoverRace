@@ -25,7 +25,7 @@
 
 using HoverRace::ObjFacTools::ResourceLib;
 
-MR_GenericRenderer::MR_GenericRenderer(const MR_ObjectFromFactoryId & pId, ResourceLib* resourceLib, int pActorRes)
+MR_GenericRenderer::MR_GenericRenderer(const HoverRace::Util::ObjectFromFactoryId & pId, ResourceLib* resourceLib, int pActorRes)
 	: MR_FreeElementBaseRenderer(pId)
 {
 	mActor = resourceLib->GetActor(pActorRes);

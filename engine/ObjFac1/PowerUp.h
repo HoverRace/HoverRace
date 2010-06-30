@@ -45,7 +45,7 @@ class PowerUp : public MR_FreeElementBase, protected MR_CylinderShape
 		MR_ContactEffectList mEffectList;
 
 	public:
-		PowerUp(const MR_ObjectFromFactoryId & pId, ObjFacTools::ResourceLib* resourceLib);
+		PowerUp(const Util::ObjectFromFactoryId & pId, ObjFacTools::ResourceLib* resourceLib);
 		~PowerUp();
 
 	protected:

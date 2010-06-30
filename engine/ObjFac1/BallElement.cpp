@@ -19,7 +19,7 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
 #include "BallElement.h"
 #include "ObjFac1Res.h"
@@ -29,7 +29,7 @@ using HoverRace::ObjFacTools::ResourceLib;
 namespace HoverRace {
 namespace ObjFac1 {
 
-BallElement::BallElement(const MR_ObjectFromFactoryId & pId, ResourceLib* resourceLib) :
+BallElement::BallElement(const Util::ObjectFromFactoryId & pId, ResourceLib* resourceLib) :
 	MR_FreeElementBase(pId)
 {
 	mActor = resourceLib->GetActor(MR_BALL);

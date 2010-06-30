@@ -31,7 +31,7 @@ namespace ObjFac1 {
 class DefaultSurface : public BitmapSurface
 {
 	public:
-		DefaultSurface(const MR_ObjectFromFactoryId & pId, ObjFacTools::ResourceLib* resourceLib);
+		DefaultSurface(const Util::ObjectFromFactoryId & pId, ObjFacTools::ResourceLib* resourceLib);
 		~DefaultSurface();
 };
 

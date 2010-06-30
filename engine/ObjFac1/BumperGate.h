@@ -48,7 +48,7 @@ class BumperGate : public MR_FreeElementBase, protected MR_CylinderShape
 		MR_ContactEffectList mEffectList;
 
 	public:
-		BumperGate(const MR_ObjectFromFactoryId &pId, ObjFacTools::ResourceLib* resourceLib);
+		BumperGate(const Util::ObjectFromFactoryId &pId, ObjFacTools::ResourceLib* resourceLib);
 		~BumperGate();
 
 	protected:

@@ -127,20 +127,20 @@ Observer::Observer()
 
 	mCockpitView = FALSE;
 
-	MR_ObjectFromFactoryId lBaseFontId = { 1, 1000 };
-	mBaseFont = (ObjFac1::SpriteHandle *) MR_DllObjectFactory::CreateObject(lBaseFontId);
+	Util::ObjectFromFactoryId lBaseFontId = { 1, 1000 };
+	mBaseFont = (ObjFac1::SpriteHandle *) Util::DllObjectFactory::CreateObject(lBaseFontId);
 
-	MR_ObjectFromFactoryId lMissileLevelId = { 1, 1100 };
-	mMissileLevel = (ObjFac1::SpriteHandle *) MR_DllObjectFactory::CreateObject(lMissileLevelId);
+	Util::ObjectFromFactoryId lMissileLevelId = { 1, 1100 };
+	mMissileLevel = (ObjFac1::SpriteHandle *) Util::DllObjectFactory::CreateObject(lMissileLevelId);
 
-	MR_ObjectFromFactoryId lMineDispId = { 1, 1102 };
-	mMineDisp = (ObjFac1::SpriteHandle *) MR_DllObjectFactory::CreateObject(lMineDispId);
+	Util::ObjectFromFactoryId lMineDispId = { 1, 1102 };
+	mMineDisp = (ObjFac1::SpriteHandle *) Util::DllObjectFactory::CreateObject(lMineDispId);
 
-	MR_ObjectFromFactoryId lPowerUpDispId = { 1, 1103 };
-	mPowerUpDisp = (ObjFac1::SpriteHandle *) MR_DllObjectFactory::CreateObject(lPowerUpDispId);
+	Util::ObjectFromFactoryId lPowerUpDispId = { 1, 1103 };
+	mPowerUpDisp = (ObjFac1::SpriteHandle *) Util::DllObjectFactory::CreateObject(lPowerUpDispId);
 
-	MR_ObjectFromFactoryId lHoverIconsId = { 1, 1101 };
-	mHoverIcons = (ObjFac1::SpriteHandle *) MR_DllObjectFactory::CreateObject(lHoverIconsId);
+	Util::ObjectFromFactoryId lHoverIconsId = { 1, 1101 };
+	mHoverIcons = (ObjFac1::SpriteHandle *) Util::DllObjectFactory::CreateObject(lHoverIconsId);
 
 	std::string selectStr("<==   ");
 	selectStr += _("Select your craft with the arrow keys");

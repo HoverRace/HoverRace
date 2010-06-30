@@ -45,7 +45,7 @@ class FuelSource : public Model::FreeElement, protected MR_CylinderShape
 		MR_ContactEffectList mContactEffectList;
 
 	public:
-		FuelSource(const MR_ObjectFromFactoryId & pId);
+		FuelSource(const Util::ObjectFromFactoryId & pId);
 		~FuelSource();
 
 	protected:

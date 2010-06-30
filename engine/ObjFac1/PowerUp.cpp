@@ -59,7 +59,7 @@ MR_Int32 PowerUp::RayLen() const
 	return cPowerUpRay;
 }
 
-PowerUp::PowerUp(const MR_ObjectFromFactoryId &pId, ResourceLib* resourceLib) :
+PowerUp::PowerUp(const Util::ObjectFromFactoryId &pId, ResourceLib* resourceLib) :
 	MR_FreeElementBase(pId)
 {
 	mEffectList.push_back(&mPowerUpEffect);

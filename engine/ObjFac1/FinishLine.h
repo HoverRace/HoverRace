@@ -47,7 +47,7 @@ class FinishLine : public Model::FreeElement, protected MR_CylinderShape
 		MR_ContactEffectList mContactEffectList;
 
 	public:
-		FinishLine(const MR_ObjectFromFactoryId & pId, MR_CheckPoint::CheckPointType pType);
+		FinishLine(const Util::ObjectFromFactoryId & pId, MR_CheckPoint::CheckPointType pType);
 		~FinishLine();
 
 	protected:

@@ -89,9 +89,9 @@ class NetworkSession : public ClientSession
 
 		// Network functions
 												  // Must be called only once
-		void BroadcastMainElementCreation(const MR_ObjectFromFactoryId &pId, const Model::ElementNetState &pState, int pRoom, int pHoverId);
+		void BroadcastMainElementCreation(const Util::ObjectFromFactoryId &pId, const Model::ElementNetState &pState, int pRoom, int pHoverId);
 												  // Creation of autonomous elements
-		void BroadcastAutoElementCreation(const MR_ObjectFromFactoryId &pId, const Model::ElementNetState &pState, int pRoom);
+		void BroadcastAutoElementCreation(const Util::ObjectFromFactoryId &pId, const Model::ElementNetState &pState, int pRoom);
 		void BroadcastPermElementState(int pPermId, const Model::ElementNetState &pState, int pRoom);
 		void BroadcastMainElementState(const Model::ElementNetState &pState);
 		void BroadcastMainElementStats(MR_SimulationTime pFinishTime, MR_SimulationTime pBestLap, int pNbLap);

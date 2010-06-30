@@ -46,7 +46,7 @@ class MR_FreeElementBase : public HoverRace::Model::FreeElement
 		int mCurrentFrame;
 
 	public:
-		MR_DllDeclare MR_FreeElementBase(const MR_ObjectFromFactoryId & pId);
+		MR_DllDeclare MR_FreeElementBase(const HoverRace::Util::ObjectFromFactoryId & pId);
 		MR_DllDeclare ~ MR_FreeElementBase();
 
 		// Rendering stuff

@@ -29,7 +29,7 @@ using HoverRace::ObjFacTools::ResourceLib;
 namespace HoverRace {
 namespace ObjFac1 {
 
-TestElement::TestElement(const MR_ObjectFromFactoryId & pId, ResourceLib* resourceLib, int pActorRes) :
+TestElement::TestElement(const Util::ObjectFromFactoryId & pId, ResourceLib* resourceLib, int pActorRes) :
 	MR_FreeElementBase(pId)
 {
 	mElapsedFrameTime = 0;

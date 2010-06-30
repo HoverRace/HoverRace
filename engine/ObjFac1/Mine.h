@@ -46,7 +46,7 @@ class Mine : public MR_FreeElementBase, protected MR_CylinderShape
 		MR_ContactEffectList mEffectList;
 
 	public:
-		Mine(const MR_ObjectFromFactoryId & pId, ObjFacTools::ResourceLib* resourceLib);
+		Mine(const Util::ObjectFromFactoryId & pId, ObjFacTools::ResourceLib* resourceLib);
 		~Mine();
 
 	protected:

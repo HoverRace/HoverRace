@@ -440,7 +440,7 @@ void NetworkSession::ReadNet()
 
 			case MRNM_CREATE_MAIN_ELEM: // create a hovercraft
 				{
-					MR_ObjectFromFactoryId lTypeId;
+					Util::ObjectFromFactoryId lTypeId;
 					int lRoom;
 					int lHoverId;
 	
@@ -451,7 +451,7 @@ void NetworkSession::ReadNet()
 					lRoom = *(MR_Int16 *) & (lMessage[4]);
 					lHoverId = *(MR_Int16 *) & (lMessage[6]);
 	
-					mClientCharacter[lClientId] = (MainCharacter::MainCharacter *) MR_DllObjectFactory::CreateObject(lTypeId);
+					mClientCharacter[lClientId] = (MainCharacter::MainCharacter *) Util::DllObjectFactory::CreateObject(lTypeId);
 					mClientCharacter[lClientId]->mRoom = lRoom;
 					mClientCharacter[lClientId]->SetAsSlave();
 					mClientCharacter[lClientId]->SetHoverId(lHoverId);
@@ -510,7 +510,7 @@ void NetworkSession::ReadNet()
 
 			case MRNM_CREATE_AUTO_ELEM:
 				{
-					MR_ObjectFromFactoryId lTypeId;
+					Util::ObjectFromFactoryId lTypeId;
 					int lRoom;
 					Model::FreeElement *lNewElement;
 	
@@ -518,7 +518,7 @@ void NetworkSession::ReadNet()
 					lTypeId.mClassId = *(MR_Int16 *) & (lMessage[2]);
 					lRoom = *(MR_Int16 *) & (lMessage[4]);
 	
-					lNewElement = (Model::FreeElement *) MR_DllObjectFactory::CreateObject(lTypeId);
+					lNewElement = (Model::FreeElement *) Util::DllObjectFactory::CreateObject(lTypeId);
 	
 					if(lNewElement != NULL) {
 						lNewElement->SetNetState(lMessageLen - 6, lMessage + 6);
@@ -832,7 +832,7 @@ BOOL NetworkSession::CreateMainCharacter()
  * @param pRoom ID of the room the hovercraft is in
  * @param pHoverId ID of the hovercraft
  */
-void NetworkSession::BroadcastMainElementCreation(const MR_ObjectFromFactoryId &pId, const Model::ElementNetState &pState, int pRoom, int pHoverId)
+void NetworkSession::BroadcastMainElementCreation(const Util::ObjectFromFactoryId &pId, const Model::ElementNetState &pState, int pRoom, int pHoverId)
 {
 	NetMessageBuffer lMessage;
 
@@ -865,7 +865,7 @@ void NetworkSession::BroadcastMainElementCreation(const MR_ObjectFromFactoryId &
  * @param pState State of the object; position, speed, direction, etc.
  * @param pRoom Room the object is inside of
  */
-void NetworkSession::BroadcastAutoElementCreation(const MR_ObjectFromFactoryId &pId, const Model::ElementNetState &pState, int pRoom)
+void NetworkSession::BroadcastAutoElementCreation(const Util::ObjectFromFactoryId &pId, const Model::ElementNetState &pState, int pRoom)
 {
 	NetMessageBuffer lMessage;
 	int lCounter;

@@ -31,7 +31,7 @@ namespace ObjFac1 {
 class WoodSurface : public BitmapSurface
 {
 	public:
-		WoodSurface(const MR_ObjectFromFactoryId & pId, ObjFacTools::ResourceLib* resourceLib);
+		WoodSurface(const Util::ObjectFromFactoryId & pId, ObjFacTools::ResourceLib* resourceLib);
 		~WoodSurface();
 };
 

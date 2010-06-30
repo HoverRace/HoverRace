@@ -35,11 +35,11 @@
 namespace HoverRace {
 namespace MainCharacter {
 
-class MR_DllDeclare MainCharacterRenderer : public MR_ObjectFromFactory
+class MR_DllDeclare MainCharacterRenderer : public Util::ObjectFromFactory
 {
 	public:
 		// Construction
-		MainCharacterRenderer(const MR_ObjectFromFactoryId & pId);
+		MainCharacterRenderer(const Util::ObjectFromFactoryId & pId);
 		~MainCharacterRenderer();
 
 		virtual void Render(MR_3DViewPort *pDest, const MR_3DCoordinate &pPosition, MR_Angle pOrientation, BOOL pMotorOn, int pHoverId, int pModel) = 0;

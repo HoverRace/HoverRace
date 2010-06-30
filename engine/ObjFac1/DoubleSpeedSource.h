@@ -45,7 +45,7 @@ class DoubleSpeedSource : public Model::FreeElement, protected MR_CylinderShape
 		MR_ContactEffectList mContactEffectList;
 
 	public:
-		DoubleSpeedSource(const MR_ObjectFromFactoryId & pId);
+		DoubleSpeedSource(const Util::ObjectFromFactoryId & pId);
 		~DoubleSpeedSource();
 
 	protected:

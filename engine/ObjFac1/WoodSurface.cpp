@@ -29,7 +29,7 @@ using HoverRace::ObjFacTools::ResourceLib;
 namespace HoverRace {
 namespace ObjFac1 {
 
-WoodSurface::WoodSurface(const MR_ObjectFromFactoryId & pId, ResourceLib* resourceLib) :
+WoodSurface::WoodSurface(const Util::ObjectFromFactoryId & pId, ResourceLib* resourceLib) :
 	BitmapSurface(pId)
 {
 	mBitmap = resourceLib->GetBitmap(MR_WOOD1);

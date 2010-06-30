@@ -52,7 +52,7 @@ MR_Int32 FinishLine::AxisY() const
 MR_Int32 FinishLine::RayLen() const
 {
 	return cSourceRay;
-} FinishLine::FinishLine(const MR_ObjectFromFactoryId & pId, MR_CheckPoint::CheckPointType pType)
+} FinishLine::FinishLine(const Util::ObjectFromFactoryId & pId, MR_CheckPoint::CheckPointType pType)
 :Model::FreeElement(pId)
 {
 	mEffect.mType = pType;

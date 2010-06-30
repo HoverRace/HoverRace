@@ -62,7 +62,7 @@ class TestElement : public MR_FreeElementBase
 		MR_ContactEffectList mContactEffectList;
 
 	public:
-		TestElement(const MR_ObjectFromFactoryId & pId, HoverRace::ObjFacTools::ResourceLib* resourceLib, int pActorRes);
+		TestElement(const Util::ObjectFromFactoryId & pId, ObjFacTools::ResourceLib* resourceLib, int pActorRes);
 		~TestElement();
 
 		int Simulate(MR_SimulationTime pDuration, Model::Level * pLevel, int pRoom);

@@ -32,7 +32,7 @@ class BallElement : public MR_FreeElementBase
 {
 
 	public:
-		BallElement(const MR_ObjectFromFactoryId & pId, ObjFacTools::ResourceLib* resourceLib);
+		BallElement(const Util::ObjectFromFactoryId & pId, ObjFacTools::ResourceLib* resourceLib);
 		~BallElement();
 
 };

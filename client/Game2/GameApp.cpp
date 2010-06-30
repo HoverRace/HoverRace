@@ -332,7 +332,7 @@ GameApp::~GameApp()
 
 	delete controller;
 
-	MR_DllObjectFactory::Clean(FALSE);
+	Util::DllObjectFactory::Clean(FALSE);
 	SoundServer::Close();
 	delete mVideoBuffer;
 }
@@ -364,7 +364,7 @@ void GameApp::Clean()
 		}
 	}
 
-	MR_DllObjectFactory::Clean(TRUE);
+	Util::DllObjectFactory::Clean(TRUE);
 
 	mClrScrTodo = 2;
 }
@@ -853,7 +853,7 @@ BOOL GameApp::InitGame()
 	// Init needed modules
 	MR_InitTrigoTables();
 	MR_InitFuzzyModule();
-	MR_DllObjectFactory::Init();
+	Util::DllObjectFactory::Init();
 	MainCharacter::MainCharacter::RegisterFactory();
 
 	// Load accelerators

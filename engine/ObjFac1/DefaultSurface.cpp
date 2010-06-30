@@ -29,7 +29,7 @@ using HoverRace::ObjFacTools::ResourceLib;
 namespace HoverRace {
 namespace ObjFac1 {
 
-DefaultSurface::DefaultSurface(const MR_ObjectFromFactoryId & pId, ResourceLib* resourceLib) :
+DefaultSurface::DefaultSurface(const Util::ObjectFromFactoryId & pId, ResourceLib* resourceLib) :
 	BitmapSurface(pId)
 {
 	mBitmap = resourceLib->GetBitmap(MR_ETALON);

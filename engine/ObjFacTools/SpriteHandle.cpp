@@ -28,8 +28,8 @@ namespace ObjFac1 {
 
 const MR_ResSprite *mSprite;
 
-SpriteHandle::SpriteHandle(const MR_ObjectFromFactoryId & pId, const MR_ResSprite * pSprite) :
-	MR_ObjectFromFactory(pId)
+SpriteHandle::SpriteHandle(const Util::ObjectFromFactoryId & pId, const MR_ResSprite * pSprite) :
+	Util::ObjectFromFactory(pId)
 {
 	mSprite = pSprite;
 }

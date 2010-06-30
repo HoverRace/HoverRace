@@ -57,7 +57,7 @@ class HoverRender : public MainCharacter::MainCharacterRenderer
 		const MR_ResBitmap *mEonCockpitBitmap[10];
 
 	public:
-		HoverRender(const MR_ObjectFromFactoryId &pId, ObjFacTools::ResourceLib *resourceLib);
+		HoverRender(const Util::ObjectFromFactoryId &pId, ObjFacTools::ResourceLib *resourceLib);
 		~HoverRender();
 
 		void Render(MR_3DViewPort *pDest, const MR_3DCoordinate &pPosition, MR_Angle pOrientation, BOOL pMotorOn, int pHoverId, int pModel);

@@ -48,8 +48,10 @@ namespace HoverRace {
 	}
 }
 
-// Class decalration
-class MR_ObjectFromFactoryId
+namespace HoverRace {
+namespace Util {
+
+class ObjectFromFactoryId
 {
 	// Simple structure that hold the necessary information
 	// tu uniquely identify a Factory Object
@@ -59,24 +61,24 @@ class MR_ObjectFromFactoryId
 
 		void Serialize(HoverRace::Parcel::ObjStream &pArchive);
 
-		MR_DllDeclare int operator ==(const MR_ObjectFromFactoryId & pId) const;
+		MR_DllDeclare int operator ==(const ObjectFromFactoryId & pId) const;
 };
 
-class MR_DllDeclare MR_ObjectFromFactory/*:public CObject*/
+class MR_DllDeclare ObjectFromFactory/*:public CObject*/
 {
 	// Base class for object created with a Dll Factory
 
 	private:
 
-		MR_ObjectFromFactoryId mId;
+		ObjectFromFactoryId mId;
 
 	public:
 
 		// Construction and destruction
-		MR_ObjectFromFactory(const MR_ObjectFromFactoryId & pId);
-		virtual ~ MR_ObjectFromFactory();
+		ObjectFromFactory(const ObjectFromFactoryId & pId);
+		virtual ~ ObjectFromFactory();
 
-		const MR_ObjectFromFactoryId & GetTypeId() const;
+		const ObjectFromFactoryId & GetTypeId() const;
 
 		// Serialisation functions
 		//
@@ -88,14 +90,14 @@ class MR_DllDeclare MR_ObjectFromFactory/*:public CObject*/
 		// you will have to serialize the object.(To use this technique, the first time
 		// you serialize the object, you must know that the object hav not been serialize yet)
 		//
-		static void SerializePtr(HoverRace::Parcel::ObjStream &pArchive, MR_ObjectFromFactory * &pPtr);
+		static void SerializePtr(HoverRace::Parcel::ObjStream &pArchive, ObjectFromFactory * &pPtr);
 		virtual void Serialize(HoverRace::Parcel::ObjStream &pArchive);
 
 };
 
-namespace MR_DllObjectFactory
+namespace DllObjectFactory
 {
-	typedef MR_ObjectFromFactory* (*getObject_t) (MR_UInt16);
+	typedef ObjectFromFactory* (*getObject_t) (MR_UInt16);
 
 	MR_DllDeclare void Init();					  // Must be called at the begining of the program
 	MR_DllDeclare void Clean(BOOL pOnlyDynamic);  // Must be called at the end of the program
@@ -109,11 +111,14 @@ namespace MR_DllObjectFactory
 	MR_DllDeclare void DecrementReferenceCount(int pDllId);
 
 	// Fast Object Creation function
-	MR_DllDeclare MR_ObjectFromFactory *CreateObject(const MR_ObjectFromFactoryId & pId);
+	MR_DllDeclare ObjectFromFactory *CreateObject(const ObjectFromFactoryId & pId);
 
 	// Local Dll
 	MR_DllDeclare void RegisterLocalDll(int pDLLId, getObject_t pFunc);
 
-};
+}
+
+}  // namespace Util
+}  // namespace HoverRace
 
 #undef MR_DllDeclare

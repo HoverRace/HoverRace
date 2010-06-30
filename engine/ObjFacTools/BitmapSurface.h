@@ -51,9 +51,9 @@ class MR_DllDeclare BitmapSurface : public Model::SurfaceElement
 
 	public:
 												  // old constructor..obsolete
-		BitmapSurface(const MR_ObjectFromFactoryId & pId);
-		BitmapSurface(const MR_ObjectFromFactoryId & pId, /*const */ MR_ResBitmap * pBitmap);
-		BitmapSurface(const MR_ObjectFromFactoryId & pId, MR_ResBitmap * pBitmap1, MR_ResBitmap * pBitmap2, int pRotationSpeed, int pRotationLen);
+		BitmapSurface(const Util::ObjectFromFactoryId & pId);
+		BitmapSurface(const Util::ObjectFromFactoryId & pId, /*const */ MR_ResBitmap * pBitmap);
+		BitmapSurface(const Util::ObjectFromFactoryId & pId, MR_ResBitmap * pBitmap1, MR_ResBitmap * pBitmap2, int pRotationSpeed, int pRotationLen);
 		~BitmapSurface();
 
 		// Rendering stuff
@@ -72,8 +72,8 @@ class MR_DllDeclare VStretchBitmapSurface : public BitmapSurface
 
 	public:
 
-		VStretchBitmapSurface(const MR_ObjectFromFactoryId & pId, /*const */ MR_ResBitmap * pBitmap, int pMaxHeight);
-		VStretchBitmapSurface(const MR_ObjectFromFactoryId & pId, MR_ResBitmap * pBitmap1, MR_ResBitmap * pBitmap2, int pRotationSpeed, int pRotationLen, int pMaxHeight);
+		VStretchBitmapSurface(const Util::ObjectFromFactoryId & pId, /*const */ MR_ResBitmap * pBitmap, int pMaxHeight);
+		VStretchBitmapSurface(const Util::ObjectFromFactoryId & pId, MR_ResBitmap * pBitmap1, MR_ResBitmap * pBitmap2, int pRotationSpeed, int pRotationLen, int pMaxHeight);
 		void RenderWallSurface(MR_3DViewPort * pDest, const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, MR_SimulationTime pTime);
 };
 

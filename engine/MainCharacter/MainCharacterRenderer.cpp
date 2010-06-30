@@ -26,8 +26,8 @@
 namespace HoverRace {
 namespace MainCharacter {
 
-MainCharacterRenderer::MainCharacterRenderer(const MR_ObjectFromFactoryId & pId) :
-	MR_ObjectFromFactory(pId)
+MainCharacterRenderer::MainCharacterRenderer(const Util::ObjectFromFactoryId & pId) :
+	Util::ObjectFromFactory(pId)
 {
 }
 

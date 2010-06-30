@@ -716,15 +716,15 @@ void Level::Section::SerializeStructure(ObjStream & pArchive)
 	}
 
 	// Serialize the textures
-	MR_ObjectFromFactory::SerializePtr(pArchive, (MR_ObjectFromFactory * &)mFloorTexture);
-	MR_ObjectFromFactory::SerializePtr(pArchive, (MR_ObjectFromFactory * &)mCeilingTexture);
+	Util::ObjectFromFactory::SerializePtr(pArchive, (Util::ObjectFromFactory * &)mFloorTexture);
+	Util::ObjectFromFactory::SerializePtr(pArchive, (Util::ObjectFromFactory * &)mCeilingTexture);
 
 	if(!pArchive.IsWriting()) {
 		mWallTexture = new SurfaceElement *[mNbVertex];
 	}
 
 	for(lCounter = 0; lCounter < mNbVertex; lCounter++) {
-		MR_ObjectFromFactory::SerializePtr(pArchive, (MR_ObjectFromFactory * &)mWallTexture[lCounter]);
+		Util::ObjectFromFactory::SerializePtr(pArchive, (Util::ObjectFromFactory * &)mWallTexture[lCounter]);
 	}
 }
 
@@ -918,7 +918,7 @@ void Level::FreeElementList::SerializeList(ObjStream & pArchive, FreeElementList
 		FreeElementList *lFreeElement = *pListHead;
 
 		while(lFreeElement) {
-			MR_ObjectFromFactory::SerializePtr(pArchive, (MR_ObjectFromFactory * &)lFreeElement->mElement);
+			Util::ObjectFromFactory::SerializePtr(pArchive, (Util::ObjectFromFactory * &)lFreeElement->mElement);
 
 			lFreeElement->mElement->mPosition.Serialize(pArchive);
 			pArchive << lFreeElement->mElement->mOrientation;
@@ -926,9 +926,9 @@ void Level::FreeElementList::SerializeList(ObjStream & pArchive, FreeElementList
 			lFreeElement = lFreeElement->mNext;
 		}
 
-		MR_ObjectFromFactory *lNullPtr = NULL;
+		Util::ObjectFromFactory *lNullPtr = NULL;
 
-		MR_ObjectFromFactory::SerializePtr(pArchive, lNullPtr);
+		Util::ObjectFromFactory::SerializePtr(pArchive, lNullPtr);
 
 	}
 	else {
@@ -937,7 +937,7 @@ void Level::FreeElementList::SerializeList(ObjStream & pArchive, FreeElementList
 		FreeElement *lCurrentElement;
 
 		do {
-			MR_ObjectFromFactory::SerializePtr(pArchive, (MR_ObjectFromFactory * &)lCurrentElement);
+			Util::ObjectFromFactory::SerializePtr(pArchive, (Util::ObjectFromFactory * &)lCurrentElement);
 
 			if(lCurrentElement != NULL) {
 				FreeElementList *lFreeElement = new FreeElementList;

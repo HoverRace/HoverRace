@@ -60,7 +60,7 @@ MR_Int32 Mine::RayLen() const
 	return cMineRay;
 }
 
-Mine::Mine(const MR_ObjectFromFactoryId & pId, ResourceLib* resourceLib) :
+Mine::Mine(const Util::ObjectFromFactoryId & pId, ResourceLib* resourceLib) :
 	MR_FreeElementBase(pId)
 {
 	mEffectList.push_back(&mEffect);

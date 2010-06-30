@@ -74,10 +74,10 @@ class ElementNetState
 		const MR_UInt8 *mData;
 };
 
-class MR_DllDeclare Element : public MR_ObjectFromFactory
+class MR_DllDeclare Element : public Util::ObjectFromFactory
 {
 	public:
-		Element(const MR_ObjectFromFactoryId & pId);
+		Element(const Util::ObjectFromFactoryId & pId);
 
 		virtual void AddRenderer();
 												  // Initialisation string used during maze creation
@@ -102,7 +102,7 @@ class MR_DllDeclare Element : public MR_ObjectFromFactory
 class MR_DllDeclare SurfaceElement : public Element
 {
 	public:
-		SurfaceElement(const MR_ObjectFromFactoryId & pId);
+		SurfaceElement(const Util::ObjectFromFactoryId & pId);
 
 		virtual void RenderWallSurface(MR_3DViewPort * pDest, const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, MR_SimulationTime pTime);
 
@@ -116,7 +116,7 @@ class MR_DllDeclare FreeElement : public Element
 		MR_Angle mOrientation;
 
 	public:
-		FreeElement(const MR_ObjectFromFactoryId & pId);
+		FreeElement(const Util::ObjectFromFactoryId & pId);
 
 		virtual void Render(MR_3DViewPort * pDest, MR_SimulationTime pTime);
 

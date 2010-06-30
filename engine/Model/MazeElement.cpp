@@ -32,8 +32,8 @@ namespace Model {
 
 // Element default behavior
 
-Element::Element(const MR_ObjectFromFactoryId & pId) :
-	MR_ObjectFromFactory(pId)
+Element::Element(const Util::ObjectFromFactoryId & pId) :
+	Util::ObjectFromFactory(pId)
 {
 }
 
@@ -59,7 +59,7 @@ void Element::SerializeLogicState(ObjStream & /*pArchive */ )
 
 void Element::Serialize(ObjStream & pArchive)
 {
-	MR_ObjectFromFactory::Serialize(pArchive);
+	Util::ObjectFromFactory::Serialize(pArchive);
 }
 
 void Element::ApplyEffect(const MR_ContactEffect * /*pEffect */ ,
@@ -91,7 +91,7 @@ void Element::ApplyEffects(const MR_ContactEffectList * pList, MR_SimulationTime
 }
 
 // SurfaceElement default behavior
-SurfaceElement::SurfaceElement(const MR_ObjectFromFactoryId & pId) :
+SurfaceElement::SurfaceElement(const Util::ObjectFromFactoryId & pId) :
 	Element(pId)
 {
 }
@@ -115,7 +115,7 @@ MR_SimulationTime /*pTime */ )
 
 // FreeElement default behavior
 
-FreeElement::FreeElement(const MR_ObjectFromFactoryId & pId) :
+FreeElement::FreeElement(const Util::ObjectFromFactoryId & pId) :
 	Element(pId)
 {
 }

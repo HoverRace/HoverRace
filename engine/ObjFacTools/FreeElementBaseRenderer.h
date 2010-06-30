@@ -39,7 +39,7 @@
 #define MR_DllDeclare   __declspec( dllimport )
 #endif
 
-class MR_FreeElementBaseRenderer:public MR_ObjectFromFactory
+class MR_FreeElementBaseRenderer : public HoverRace::Util::ObjectFromFactory
 {
 	protected:
 		const MR_ResActor *mActor;
@@ -47,7 +47,7 @@ class MR_FreeElementBaseRenderer:public MR_ObjectFromFactory
 		int mCurrentFrame;
 
 	public:
-		MR_DllDeclare MR_FreeElementBaseRenderer(const MR_ObjectFromFactoryId & pId);
+		MR_DllDeclare MR_FreeElementBaseRenderer(const HoverRace::Util::ObjectFromFactoryId & pId);
 		MR_DllDeclare ~ MR_FreeElementBaseRenderer();
 
 		// Rendering stuff
