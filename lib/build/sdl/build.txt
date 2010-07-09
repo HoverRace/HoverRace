@@ -1,0 +1,31 @@
+
+Current supported SDL version: 1.2.14
+
+
+== PowerShell Instructions ==
+
+Right-click on "fetch.ps1" and select "Run with PowerShell".
+
+-- Allowing PowerShell to execute scripts --
+
+Note: PowerShell by default does not allow scripts, even local ones, to be
+executed.  To run this script, you must first enable scripts to run.
+
+1. Start PowerShell as administrator.
+
+2. Run this command:
+    Set-ExecutionPolicy RemoteSigned
+
+For more information, see:
+http://technet.microsoft.com/en-us/library/ee176949.aspx
+
+
+== Manual Instructions ==
+
+1. Download the SDL sources (SDL-1.2.14.zip) from here:
+
+http://www.libsdl.org/release/
+
+2. Unpack the .zip file into this folder.
+
+3. Rename the "SDL-1.2.14" folder to "src".
