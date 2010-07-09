@@ -309,5 +309,11 @@
     <CustomBuild Include="..\lib\ois.dll">
       <Filter>Libraries</Filter>
     </CustomBuild>
+    <CustomBuild Include="..\lib\sdlD.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\lib\sdl.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>
