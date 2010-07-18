@@ -52,7 +52,7 @@ ClientApp::ClientApp() :
 	// Move the window to the saved position (platform-dependent).
 	SDL_SysWMinfo wm;
 	SDL_VERSION(&wm.version);
-	if (SDL_GetWMInfo(&wm) != NULL) {
+	if (SDL_GetWMInfo(&wm) != 0) {
 #		ifdef _WIN32
 			HWND hwnd = wm.window;
 			SetWindowPos(hwnd, HWND_TOP,
