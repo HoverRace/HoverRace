@@ -43,6 +43,7 @@ PKG_CHECK_MODULES(DEPS, [
 	libcurl >= 7.18
 	openal >= 0.0.8
 	OIS >= 1.2.0
+	sdl >= 1.2.10
 ])
 AC_SUBST(DEPS_CFLAGS)
 AC_SUBST(DEPS_LIBS)
