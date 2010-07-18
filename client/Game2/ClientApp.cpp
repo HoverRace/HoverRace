@@ -25,7 +25,9 @@
 #include <SDL/SDL_syswm.h>
 
 #include "../../engine/Exception.h"
+#ifdef _WIN32
 #include "../../engine/MainCharacter/MainCharacter.h"
+#endif
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/FuzzyLogic.h"
 #include "../../engine/Util/DllObjectFactory.h"
@@ -66,7 +68,9 @@ ClientApp::ClientApp() :
 	MR_InitFuzzyModule();
 	SOUNDSERVER_INIT(NULL);
 	DllObjectFactory::Init();
+#ifdef _WIN32
 	MainCharacter::MainCharacter::RegisterFactory();
+#endif
 
 	if (SDL_Init(SDL_INIT_VIDEO) == -1)
 		throw Exception("SDL initialization failed");
