@@ -30,7 +30,9 @@
 #endif
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/FuzzyLogic.h"
+#ifdef _WIN32
 #include "../../engine/Util/DllObjectFactory.h"
+#endif
 #include "../../engine/Util/Str.h"
 #include "../../engine/Util/WorldCoordinates.h"
 #include "../../engine/VideoServices/SoundServer.h"
@@ -67,8 +69,8 @@ ClientApp::ClientApp() :
 	MR_InitTrigoTables();
 	MR_InitFuzzyModule();
 	SOUNDSERVER_INIT(NULL);
-	DllObjectFactory::Init();
 #ifdef _WIN32
+	DllObjectFactory::Init();
 	MainCharacter::MainCharacter::RegisterFactory();
 #endif
 
@@ -114,7 +116,9 @@ ClientApp::~ClientApp()
 	delete scripting;
 
 	// Engine shutdown.
+#ifdef _WIN32
 	DllObjectFactory::Clean(FALSE);
+#endif
 	SoundServer::Close();
 
 	SDL_Quit();
