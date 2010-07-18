@@ -100,6 +100,7 @@
     <ClCompile Include="Game2\Banner.cpp" />
     <ClCompile Include="Game2\CheckRoomListDialog.cpp" />
     <ClCompile Include="Game2\CheckUpdateServerDialog.cpp" />
+    <ClCompile Include="Game2\ClientApp.cpp" />
     <ClCompile Include="Game2\ClientSession.cpp" />
     <ClCompile Include="Game2\ControlPrefsPage.cpp" />
     <ClCompile Include="Game2\DownloadUpdateDialog.cpp" />
@@ -144,6 +145,7 @@
     <ClInclude Include="Game2\Banner.h" />
     <ClInclude Include="Game2\CheckRoomListDialog.h" />
     <ClInclude Include="Game2\CheckUpdateServerDialog.h" />
+    <ClInclude Include="Game2\ClientApp.h" />
     <ClInclude Include="Game2\ClientSession.h" />
     <ClInclude Include="Game2\ControlPrefsPage.h" />
     <ClInclude Include="Game2\DownloadUpdateDialog.h" />

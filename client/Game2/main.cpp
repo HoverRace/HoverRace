@@ -20,6 +20,7 @@
 //
 #include "StdAfx.h"
 
+#include "ClientApp.h"
 #ifdef _WIN32
 #include "GameApp.h"
 #endif
@@ -42,6 +43,7 @@
 using boost::format;
 using boost::str;
 
+using HoverRace::Client::ClientApp;
 #ifdef _WIN32
 using HoverRace::Client::GameApp;
 #endif
@@ -61,7 +63,12 @@ static bool safeMode = false;
 static bool allowMultipleInstances = false;
 static bool showVersion = false;
 static bool silentMode = false;
-static bool experimentalMode = false;
+static bool experimentalMode =
+#	ifdef _WIN32
+		false;
+#	else
+		true;  // Always use experimental mode in non-Win32.
+#	endif
 static bool showFramerate = false;
 
 /**
@@ -137,9 +144,11 @@ static bool ProcessCmdLine(int argc, char **argv)
 		else if (strcmp("-V", arg) == 0 || strcmp("--version", arg) == 0) {
 			showVersion = true;
 		}
+#ifdef _WIN32
 		else if (strcmp("--yes-i-totally-want-to-break-my-system", arg) == 0) {
 			experimentalMode = true;
 		}
+#endif
 	}
 
 #	ifdef _WIN32
@@ -286,31 +295,32 @@ int main(int argc, char** argv)
 
 	OS::TimeInit();
 
-#ifdef _WIN32
-	GameApp lGame(pInstance, safeMode);
-
-	// Allow only one instance of HoverRace; press CAPS_LOCK to bypass or
-	// use the "-m" command-line option.
-	if (!allowMultipleInstances) {
-		GetAsyncKeyState(VK_CAPITAL);				  // Reset the function
-		if(!GetAsyncKeyState(VK_CAPITAL))
-			lReturnValue = lGame.IsFirstInstance();
+	if (cfg->runtime.aieeee) {
+		ClientApp game;
+		game.MainLoop();
 	}
+#ifdef _WIN32
+	else {
+		GameApp lGame(pInstance, safeMode);
 
-	if(lReturnValue && (pPrevInstance == NULL))
-		lReturnValue = lGame.InitApplication();
+		// Allow only one instance of HoverRace; press CAPS_LOCK to bypass or
+		// use the "-m" command-line option.
+		if (!allowMultipleInstances) {
+			GetAsyncKeyState(VK_CAPITAL);				  // Reset the function
+			if(!GetAsyncKeyState(VK_CAPITAL))
+				lReturnValue = lGame.IsFirstInstance();
+		}
 
-	if(lReturnValue)
-		lReturnValue = lGame.InitGame();
+		if(lReturnValue && (pPrevInstance == NULL))
+			lReturnValue = lGame.InitApplication();
 
-	// this is where the game actually takes control
-	if(lReturnValue)
-		lErrorCode = lGame.MainLoop();
-#else
-	std::cout << boost::format(_("HoverRace for Linux is under development!\n"
-		"Please visit %s to learn how to\n"
-		"contribute to this project.")) % "http://svn.igglybob.com/hoverrace/" <<
-		std::endl;
+		if(lReturnValue)
+			lReturnValue = lGame.InitGame();
+
+		// this is where the game actually takes control
+		if(lReturnValue)
+			lErrorCode = lGame.MainLoop();
+	}
 #endif
 
 	OS::TimeShutdown();

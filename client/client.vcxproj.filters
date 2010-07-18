@@ -132,6 +132,9 @@
     <ClCompile Include="Game2\HoverScript\SysEnv.cpp">
       <Filter>HoverScript</Filter>
     </ClCompile>
+    <ClCompile Include="Game2\ClientApp.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game2\AboutDialog.h">
@@ -262,6 +265,9 @@
     </ClInclude>
     <ClInclude Include="..\include\config-win32.h" />
     <ClInclude Include="Game2\GameDirector.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\ClientApp.h">
       <Filter>Game2</Filter>
     </ClInclude>
   </ItemGroup>
