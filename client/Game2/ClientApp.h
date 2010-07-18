@@ -27,6 +27,21 @@
 #include "GameDirector.h"
 
 namespace HoverRace {
+	namespace Client {
+		namespace Control {
+			class Controller;
+		}
+		namespace HoverScript {
+			class GamePeer;
+			class SysEnv;
+		}
+	}
+	namespace Script {
+		class Core;
+	}
+}
+
+namespace HoverRace {
 namespace Client {
 
 class ClientApp : public GameDirector
@@ -44,7 +59,13 @@ class ClientApp : public GameDirector
 		void MainLoop();
 
 	public:
+		// GameDirector
 		virtual void RequestShutdown();
+
+	private:
+		Script::Core *scripting;
+		HoverScript::GamePeer *gamePeer;
+		HoverScript::SysEnv *sysEnv;
 };
 
 }  // namespace HoverScript

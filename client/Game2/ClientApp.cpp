@@ -25,12 +25,33 @@
 #include <SDL/SDL_syswm.h>
 
 #include "../../engine/Exception.h"
+#include "../../engine/MainCharacter/MainCharacter.h"
 #include "../../engine/Util/Config.h"
+#include "../../engine/Util/FuzzyLogic.h"
+#include "../../engine/Util/DllObjectFactory.h"
 #include "../../engine/Util/Str.h"
+#include "../../engine/Util/WorldCoordinates.h"
+#include "../../engine/VideoServices/SoundServer.h"
+
+#include "Control/Controller.h"
+#include "Control/UiHandler.h"
+#include "HoverScript/ClientScriptCore.h"
+#include "HoverScript/GamePeer.h"
+#include "HoverScript/HighConsole.h"
+#include "HoverScript/SessionPeer.h"
+#include "HoverScript/SysEnv.h"
 
 #include "ClientApp.h"
 
+#ifdef WITH_OPENAL
+#	define SOUNDSERVER_INIT(s) SoundServer::Init()
+#else
+#	define SOUNDSERVER_INIT(s) SoundServer::Init(s)
+#endif
+
+using namespace HoverRace::Client::HoverScript;
 using namespace HoverRace::Util;
+namespace SoundServer = HoverRace::VideoServices::SoundServer;
 
 namespace HoverRace {
 namespace Client {
@@ -40,9 +61,27 @@ ClientApp::ClientApp() :
 {
 	Config *cfg = Config::GetInstance();
 
+	// Engine initialization.
+	MR_InitTrigoTables();
+	MR_InitFuzzyModule();
+	SOUNDSERVER_INIT(NULL);
+	DllObjectFactory::Init();
+	MainCharacter::MainCharacter::RegisterFactory();
+
 	if (SDL_Init(SDL_INIT_VIDEO) == -1)
 		throw Exception("SDL initialization failed");
 
+	// Create the system console and execute the init script.
+	// This allows the script to modify the configuration (e.g. for unit tests).
+	scripting = (new ClientScriptCore())->Reset();
+	gamePeer = new GamePeer(scripting, this);
+	sysEnv = new SysEnv(scripting, gamePeer);
+	OS::path_t &initScript = cfg->runtime.initScript;
+	if (!initScript.empty()) {
+		sysEnv->RunScript(initScript);
+	}
+
+	// Create the main window and SDL surface.
 	if (SDL_SetVideoMode(cfg->video.xRes, cfg->video.yRes, 8,
 		SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE) == NULL)
 	{
@@ -66,6 +105,14 @@ ClientApp::ClientApp() :
 
 ClientApp::~ClientApp()
 {
+	delete sysEnv;
+	delete gamePeer;
+	delete scripting;
+
+	// Engine shutdown.
+	DllObjectFactory::Clean(FALSE);
+	SoundServer::Close();
+
 	SDL_Quit();
 }
 
