@@ -274,6 +274,7 @@ void GameThread::Restart()
 }
 
 GameApp::GameApp(HINSTANCE pInstance, bool safeMode) :
+	SUPER(),
 	nonInteractiveShutdown(false),
 	introMovie(NULL), scripting(NULL), gamePeer(NULL), sysEnv(NULL),
 	uiInput(boost::make_shared<UiInput>())

@@ -29,9 +29,7 @@
 
 #include "../../../engine/Script/Core.h"
 #include "../../../engine/Util/Config.h"
-#ifdef _WIN32
-#	include "../GameApp.h"
-#endif
+#include "../GameDirector.h"
 #include "../Rulebook.h"
 #include "ConfigPeer.h"
 #include "SessionPeer.h"
@@ -44,8 +42,8 @@ namespace HoverRace {
 namespace Client {
 namespace HoverScript {
 
-GamePeer::GamePeer(Script::Core *scripting, GameApp *gameApp) :
-	SUPER(scripting, "Game"), gameApp(gameApp), initialized(false),
+GamePeer::GamePeer(Script::Core *scripting, GameDirector *gameDirector) :
+	SUPER(scripting, "Game"), gameDirector(gameDirector), initialized(false),
 	onInit(scripting), onShutdown(scripting),
 	onSessionStart(scripting), onSessionEnd(scripting)
 {
@@ -269,11 +267,7 @@ void GamePeer::LShutdown()
 
 	VerifyInitialized();
 
-#	ifdef _WIN32
-		gameApp->RequestShutdown();
-#	else
-		exit(0);
-#	endif
+	gameDirector->RequestShutdown();
 }
 
 }  // namespace HoverScript

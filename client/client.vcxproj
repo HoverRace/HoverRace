@@ -150,6 +150,7 @@
     <ClInclude Include="Game2\FirstChoiceDialog.h" />
     <ClInclude Include="Game2\FullscreenTest.h" />
     <ClInclude Include="Game2\GameApp.h" />
+    <ClInclude Include="Game2\GameDirector.h" />
     <ClInclude Include="Game2\HighObserver.h" />
     <ClInclude Include="Game2\InternetRoom.h" />
     <ClInclude Include="Game2\IntroMovie.h" />

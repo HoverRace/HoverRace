@@ -261,6 +261,9 @@
       <Filter>HoverScript</Filter>
     </ClInclude>
     <ClInclude Include="..\include\config-win32.h" />
+    <ClInclude Include="Game2\GameDirector.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game2\Game2.rc">

@@ -24,6 +24,7 @@
 
 #include "../../engine/Util/Config.h"
 
+#include "GameDirector.h"
 #include "Observer.h"
 #include "ClientSession.h"
 
@@ -77,8 +78,9 @@ class GameThread
 		void Restart();
 };
 
-class GameApp
+class GameApp : public GameDirector
 {
+	typedef GameDirector SUPER;
 	friend GameThread;
 
 	private:
@@ -146,7 +148,7 @@ class GameApp
 		void NewNetworkSession(BOOL pIsServer);
 		void NewInternetSession();
 
-		void RequestShutdown();
+		virtual void RequestShutdown();
 
 	private:
 		void LoadRegistry();
@@ -181,7 +183,7 @@ class GameApp
 
 	public:
 		GameApp(HINSTANCE pInstance, bool safeMode);
-		~GameApp();
+		virtual ~GameApp();
 
 		BOOL IsFirstInstance() const;
 

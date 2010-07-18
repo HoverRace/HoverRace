@@ -35,7 +35,7 @@ namespace HoverRace {
 			class SessionPeer;
 			typedef boost::shared_ptr<SessionPeer> SessionPeerPtr;
 		}
-		class GameApp;
+		class GameDirector;
 		class Rulebook;
 		typedef boost::shared_ptr<Rulebook> RulebookPtr;
 	}
@@ -55,7 +55,7 @@ namespace HoverScript {
 class GamePeer : public Script::Peer {
 	typedef Script::Peer SUPER;
 	public:
-		GamePeer(Script::Core *scripting, GameApp *gameApp);
+		GamePeer(Script::Core *scripting, GameDirector *gameDirector);
 		virtual ~GamePeer();
 
 	public:
@@ -96,7 +96,7 @@ class GamePeer : public Script::Peer {
 
 	private:
 		Script::Core *scripting;
-		GameApp *gameApp;
+		GameDirector *gameDirector;
 		bool initialized;
 		Script::Handlers onInit;
 		Script::Handlers onShutdown;
