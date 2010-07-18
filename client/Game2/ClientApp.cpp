@@ -22,6 +22,8 @@
 
 #include "StdAfx.h"
 
+#include <SDL/SDL_syswm.h>
+
 #include "../../engine/Exception.h"
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/Str.h"
@@ -45,6 +47,18 @@ ClientApp::ClientApp() :
 		SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE) == NULL)
 	{
 		throw Exception("Unable to create video surface");
+	}
+
+	// Move the window to the saved position (platform-dependent).
+	SDL_SysWMinfo wm;
+	SDL_VERSION(&wm.version);
+	if (SDL_GetWMInfo(&wm) != NULL) {
+#		ifdef _WIN32
+			HWND hwnd = wm.window;
+			SetWindowPos(hwnd, HWND_TOP,
+				cfg->video.xPos, cfg->video.yPos, 0, 0,
+				SWP_NOSIZE);
+#		endif
 	}
 
 	RefreshTitleBar();
