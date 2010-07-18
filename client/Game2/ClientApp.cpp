@@ -45,6 +45,10 @@
 #include "HoverScript/SessionPeer.h"
 #include "HoverScript/SysEnv.h"
 
+#ifdef _WIN32
+#	include "resource.h"
+#endif
+
 #include "ClientApp.h"
 
 #ifdef WITH_OPENAL
@@ -94,7 +98,7 @@ ClientApp::ClientApp() :
 		throw Exception("Unable to create video surface");
 	}
 
-	// Move the window to the saved position (platform-dependent).
+	// Set window position and icon (platform-dependent).
 	SDL_SysWMinfo wm;
 	SDL_VERSION(&wm.version);
 	if (SDL_GetWMInfo(&wm) != 0) {
@@ -103,6 +107,26 @@ ClientApp::ClientApp() :
 			SetWindowPos(hwnd, HWND_TOP,
 				cfg->video.xPos, cfg->video.yPos, 0, 0,
 				SWP_NOSIZE);
+
+			// Set icon.
+			// On Windows, the icon is embedded as a resource.
+			HMODULE hmod = GetModuleHandleW(NULL);
+			LPWSTR iconRes = MAKEINTRESOURCEW(IDI_HOVER_ICON);
+			HANDLE ico;
+			ico = LoadImageW(hmod, iconRes, IMAGE_ICON,
+				GetSystemMetrics(SM_CXICON), GetSystemMetrics(SM_CYICON), 0);
+			if (ico != NULL)
+				SendMessageW(hwnd, WM_SETICON, ICON_BIG, reinterpret_cast<LPARAM>(ico));
+			ico = LoadImageW(hmod, iconRes, IMAGE_ICON,
+				GetSystemMetrics(SM_CXSMICON), GetSystemMetrics(SM_CYSMICON), 0);
+			if (ico != NULL)
+				SendMessageW(hwnd, WM_SETICON, ICON_SMALL, reinterpret_cast<LPARAM>(ico));
+#		else
+			// On non-Win32 we prefer to let the window manager decide the
+			// position of the window.
+			/*TODO
+			SDL_WM_SetIcon(SDL_LoadBMP(cfg->GetMediaPath("icon.bmp").file_string().c_str()), 0);
+			*/
 #		endif
 	}
 
