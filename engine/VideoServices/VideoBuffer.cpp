@@ -40,6 +40,8 @@ static const BOOL gDebugMode = FALSE;
 using HoverRace::Util::Config;
 using HoverRace::Util::OS;
 
+namespace ColorPalette = HoverRace::VideoServices::ColorPalette;
+
 // Video card debuging traces
 
 // #define _CARD_DEBUG
@@ -555,7 +557,7 @@ void MR_VideoBuffer::CreatePalette(double pGamma, double pContrast, double pBrig
 		ReleaseDC(NULL, hdc);
 
 		// Add out own entries
-		PALETTEENTRY *lOurEntries = MR_GetColors(1.0 / mGamma, mContrast * mBrightness, mBrightness - (mContrast * mBrightness));
+		PALETTEENTRY *lOurEntries = ColorPalette::GetColors(1.0 / mGamma, mContrast * mBrightness, mBrightness - (mContrast * mBrightness));
 
 		for(lCounter = 0; lCounter < MR_BASIC_COLORS; lCounter++) {
 			lPalette[MR_RESERVED_COLORS_BEGINNING + lCounter] = lOurEntries[lCounter];
@@ -566,7 +568,7 @@ void MR_VideoBuffer::CreatePalette(double pGamma, double pContrast, double pBrig
 
 		if(mBackPalette != NULL) {
 			for(lCounter = 0; lCounter < MR_BACK_COLORS; lCounter++) {
-				lPalette[MR_RESERVED_COLORS_BEGINNING + MR_BASIC_COLORS + lCounter] = MR_ConvertColor(mBackPalette[lCounter * 3], mBackPalette[lCounter * 3 + 1], mBackPalette[lCounter * 3 + 2], 1.0 / mGamma, mContrast * mBrightness, mBrightness - (mContrast * mBrightness));
+				lPalette[MR_RESERVED_COLORS_BEGINNING + MR_BASIC_COLORS + lCounter] = ColorPalette::ConvertColor(mBackPalette[lCounter * 3], mBackPalette[lCounter * 3 + 1], mBackPalette[lCounter * 3 + 2], 1.0 / mGamma, mContrast * mBrightness, mBrightness - (mContrast * mBrightness));
 												  //|*/PC_EXPLICIT; //lPalette[ 0 ].peFlags;
 				lPalette[MR_RESERVED_COLORS_BEGINNING + MR_BASIC_COLORS + lCounter].peFlags = PC_NOCOLLAPSE;
 

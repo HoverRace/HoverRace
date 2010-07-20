@@ -20,30 +20,32 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
 #include <math.h>
+
 #include "ColorPalette.h"
 
-// Local functions
+namespace HoverRace {
+namespace VideoServices {
 
-// Functions implementation
+namespace ColorPalette {
 
-PALETTEENTRY *MR_GetColors(double pGamma, double pIntensity, double pIntensityBase)
+PALETTEENTRY *GetColors(double pGamma, double pIntensity, double pIntensityBase)
 {
 	PALETTEENTRY *lReturnValue = new PALETTEENTRY[MR_BASIC_COLORS];
 
 	int lColorIndex = 0;
 
-	for(; lColorIndex < MR_BasicPaletteSize; lColorIndex++) {
+	for(; lColorIndex < basicPaletteSize; lColorIndex++) {
 		double lRed;
 		double lGreen;
 		double lBlue;
 
 		// Compute the gamma correction
-		lRed = pIntensityBase + pIntensity * pow(MR_BasicPalette[lColorIndex][0], pGamma);
-		lGreen = pIntensityBase + pIntensity * pow(MR_BasicPalette[lColorIndex][1], pGamma);
-		lBlue = pIntensityBase + pIntensity * pow(MR_BasicPalette[lColorIndex][2], pGamma);
+		lRed = pIntensityBase + pIntensity * pow(basicPalette[lColorIndex][0], pGamma);
+		lGreen = pIntensityBase + pIntensity * pow(basicPalette[lColorIndex][1], pGamma);
+		lBlue = pIntensityBase + pIntensity * pow(basicPalette[lColorIndex][2], pGamma);
 
 		// Return in the int domain
 		lRed *= 256;
@@ -84,7 +86,7 @@ PALETTEENTRY *MR_GetColors(double pGamma, double pIntensity, double pIntensityBa
 	return lReturnValue;
 }
 
-const PALETTEENTRY & MR_ConvertColor(MR_UInt8 pRed, MR_UInt8 pGreen, MR_UInt8 pBlue, double pGamma, double pIntensity, double pIntensityBase)
+const PALETTEENTRY &ConvertColor(MR_UInt8 pRed, MR_UInt8 pGreen, MR_UInt8 pBlue, double pGamma, double pIntensity, double pIntensityBase)
 {
 	static PALETTEENTRY lReturnValue;
 
@@ -121,3 +123,8 @@ const PALETTEENTRY & MR_ConvertColor(MR_UInt8 pRed, MR_UInt8 pGreen, MR_UInt8 pB
 
 	return lReturnValue;
 }
+
+}  // namespace ColorPalette
+
+}  // namespace VideoServices
+}  // namespace HoverRace
