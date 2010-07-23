@@ -33,8 +33,10 @@
 
 #include <curl/curl.h>
 
+#include "../../engine/Exception.h"
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/OS.h"
+#include "../../engine/Util/Str.h"
 
 #ifndef _WIN32
 #	include "version.h"
@@ -49,12 +51,17 @@ using HoverRace::Client::GameApp;
 #endif
 using HoverRace::Util::Config;
 using HoverRace::Util::OS;
+namespace Str = HoverRace::Util::Str;
 
 #if 0
 #if defined(_WIN32) && defined(_DEBUG)
 #	include <mfcleakfix.h>
 	static int foo = use_ignore_mfc_leaks();
 #endif
+#endif
+
+#ifdef _WIN32
+	static HINSTANCE hinstance;
 #endif
 
 static OS::path_t initScript;
@@ -236,18 +243,56 @@ static OS::path_t FindExePath()
 }
 #endif
 
+static int RunClient()
+{
+#	ifdef WITH_SDL
+		ClientApp game;
+		game.MainLoop();
+		return EXIT_SUCCESS;
+
+#	elif _WIN32
+		BOOL lReturnValue = TRUE;
+
+		GameApp lGame(hinstance, safeMode);
+
+		// Allow only one instance of HoverRace; press CAPS_LOCK to bypass or
+		// use the "-m" command-line option.
+		if (!allowMultipleInstances) {
+			GetAsyncKeyState(VK_CAPITAL);				  // Reset the function
+			if(!GetAsyncKeyState(VK_CAPITAL))
+				lReturnValue = lGame.IsFirstInstance();
+		}
+
+		if(lReturnValue)
+			lReturnValue = lGame.InitApplication();
+
+		if(lReturnValue)
+			lReturnValue = lGame.InitGame();
+
+		// this is where the game actually takes control
+		if(lReturnValue) {
+			return lGame.MainLoop();
+		}
+		else {
+			return EXIT_FAILURE;
+		}
+
+#	endif
+}
+
 // Entry point
 #ifdef _WIN32
-int WINAPI WinMain(HINSTANCE pInstance, HINSTANCE pPrevInstance, LPSTR /* pCmdLine */ , int pCmdShow)
+int WINAPI WinMain(HINSTANCE pInstance, HINSTANCE, LPSTR, int pCmdShow)
 #else
 int main(int argc, char** argv)
 #endif
 {
 	// initialize return variables
-	BOOL lReturnValue = TRUE;
 	int lErrorCode = EXIT_SUCCESS;
 
 #ifdef _WIN32
+	hinstance = pInstance;
+
 	OS::path_t exePath = FindExePath();
 
 	// Change the working directory to the app's directory.
@@ -295,33 +340,26 @@ int main(int argc, char** argv)
 
 	OS::TimeInit();
 
-	if (cfg->runtime.aieeee) {
-		ClientApp game;
-		game.MainLoop();
+	try {
+		lErrorCode = RunClient();
 	}
-#ifdef _WIN32
-	else {
-		GameApp lGame(pInstance, safeMode);
-
-		// Allow only one instance of HoverRace; press CAPS_LOCK to bypass or
-		// use the "-m" command-line option.
-		if (!allowMultipleInstances) {
-			GetAsyncKeyState(VK_CAPITAL);				  // Reset the function
-			if(!GetAsyncKeyState(VK_CAPITAL))
-				lReturnValue = lGame.IsFirstInstance();
-		}
-
-		if(lReturnValue && (pPrevInstance == NULL))
-			lReturnValue = lGame.InitApplication();
-
-		if(lReturnValue)
-			lReturnValue = lGame.InitGame();
-
-		// this is where the game actually takes control
-		if(lReturnValue)
-			lErrorCode = lGame.MainLoop();
+	catch (HoverRace::Exception &ex) {
+		//TODO: Managed error handler.
+#		ifdef _WIN32
+			std::ostringstream oss;
+			oss <<
+				_("You found a bug!") << "\r\n\r\n" <<
+				ex.what();
+			MessageBoxW(NULL, Str::UW(oss.str()), PACKAGE_NAME_L, MB_OK | MB_ICONERROR);
+#		else
+			std::cerr <<
+				"***\n\n" <<
+				_("You found a bug!") << "\n\n" <<
+				ex.what() << "\n\n" 
+				"***\n" <<
+				std::endl;
+#		endif
 	}
-#endif
 
 	OS::TimeShutdown();
 

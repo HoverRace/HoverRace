@@ -27,3 +27,6 @@
 #define WITH_WIDE_PATHS 1
 
 #define WITH_OBJSTREAM 1
+
+// Uncomment this to use the SDL renderer and client.
+//#define WITH_SDL 1
