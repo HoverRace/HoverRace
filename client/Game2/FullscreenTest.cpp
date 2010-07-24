@@ -34,9 +34,11 @@
 using boost::format;
 using boost::str;
 
-using namespace HoverRace::Client;
 using namespace HoverRace::Util;
 using namespace HoverRace::VideoServices;
+
+namespace HoverRace {
+namespace Client {
 
 /**
  * Constructor.
@@ -46,7 +48,7 @@ using namespace HoverRace::VideoServices;
  */
 FullscreenTest::FullscreenTest(int oldX, int oldY, const std::string &oldMonitor) :
 	oldX(oldX), oldY(oldY), oldMonitor(oldMonitor),
-	viewport(new MR_2DViewPort()), widgetsInitialized(false),
+	viewport(new VideoServices::Viewport2D()), widgetsInitialized(false),
 	heading(NULL), subheading(NULL),
 	timeRemaining(5)
 {
@@ -133,7 +135,7 @@ void FullscreenTest::InitWidgets(int resX, int resY)
  * test is active.
  * @param dest The destination video buffer.
  */
-void FullscreenTest::Render(MR_VideoBuffer *dest)
+void FullscreenTest::Render(VideoServices::VideoBuffer *dest)
 {
 	int resX = dest->GetXRes();
 	int resY = dest->GetYRes();
@@ -156,3 +158,6 @@ void FullscreenTest::Render(MR_VideoBuffer *dest)
 
 	dest->Unlock();
 }
+
+}  // namespace Client
+}  // namespace HoverRace

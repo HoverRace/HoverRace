@@ -20,7 +20,7 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
 #include "VideoBuffer.h"
 #include "ColorPalette.h"
@@ -30,17 +30,18 @@
 #include "../Util/Config.h"
 #include "../Util/OS.h"
 
+using HoverRace::Util::Config;
+using HoverRace::Util::OS;
+
+namespace HoverRace {
+namespace VideoServices {
+
 // Debug flag
 #ifdef _DEBUG
 static const BOOL gDebugMode = TRUE;
 #else
 static const BOOL gDebugMode = FALSE;
 #endif
-
-using HoverRace::Util::Config;
-using HoverRace::Util::OS;
-
-namespace ColorPalette = HoverRace::VideoServices::ColorPalette;
 
 // Video card debuging traces
 
@@ -255,7 +256,7 @@ void PrintLog(const char *pFormat, ...);
 
 static GUID zeroGuid = { 0, 0, 0, { 0, 0, 0, 0, 0, 0, 0, 0 } };
 
-MR_VideoBuffer::MR_VideoBuffer(HWND pWindow, double pGamma, double pContrast, double pBrightness)
+VideoBuffer::VideoBuffer(HWND pWindow, double pGamma, double pContrast, double pBrightness)
 {
 	OPEN_LOG();
 	PRINT_LOG("VIDEO_BUFFER_CREATION");
@@ -298,7 +299,7 @@ MR_VideoBuffer::MR_VideoBuffer(HWND pWindow, double pGamma, double pContrast, do
 
 }
 
-MR_VideoBuffer::~MR_VideoBuffer()
+VideoBuffer::~VideoBuffer()
 {
 	//   mFullScreen        = TRUE;
 	//   mSpecialWindowMode = FALSE;   // force real windows resolution
@@ -322,7 +323,7 @@ MR_VideoBuffer::~MR_VideoBuffer()
 	FreeLibrary(directDrawInst);
 }
 
-DWORD MR_VideoBuffer::PackRGB(DWORD r, DWORD g, DWORD b)
+DWORD VideoBuffer::PackRGB(DWORD r, DWORD g, DWORD b)
 {
 	return mRChan.Pack(r) | mGChan.Pack(g) | mBChan.Pack(b);
 }
@@ -347,7 +348,7 @@ static inline bool guidEqual(const GUID &a, const GUID &b)
  *                      @c false if switching to windowed mode.
  * @return @c true if successful.
  */
-bool MR_VideoBuffer::InitDirectDraw(GUID *monitor, bool newFullscreen)
+bool VideoBuffer::InitDirectDraw(GUID *monitor, bool newFullscreen)
 {
 	//OutputDebugString("InitDirectDraw\n");
 
@@ -418,7 +419,7 @@ bool MR_VideoBuffer::InitDirectDraw(GUID *monitor, bool newFullscreen)
 	return lReturnValue;
 }
 
-BOOL MR_VideoBuffer::ProcessCurrentBpp(const DDPIXELFORMAT & lFormat)
+BOOL VideoBuffer::ProcessCurrentBpp(const DDPIXELFORMAT & lFormat)
 {
 	if(lFormat.dwFlags & DDPF_PALETTEINDEXED8) {
 		mBpp = 8;
@@ -443,7 +444,7 @@ BOOL MR_VideoBuffer::ProcessCurrentBpp(const DDPIXELFORMAT & lFormat)
 	return TRUE;
 }
 
-BOOL MR_VideoBuffer::TryToSetColorMode(int colorBits)
+BOOL VideoBuffer::TryToSetColorMode(int colorBits)
 {
 
 	// do it only if it is safe
@@ -476,7 +477,7 @@ BOOL MR_VideoBuffer::TryToSetColorMode(int colorBits)
 	return mSpecialWindowMode;
 }
 
-void MR_VideoBuffer::DeleteInternalSurfaces()
+void VideoBuffer::DeleteInternalSurfaces()
 {
 	PRINT_LOG("DeleteInternalSurfaces");
 
@@ -503,7 +504,7 @@ void MR_VideoBuffer::DeleteInternalSurfaces()
 	mBuffer = NULL;
 }
 
-void MR_VideoBuffer::CreatePalette(double pGamma, double pContrast, double pBrightness)
+void VideoBuffer::CreatePalette(double pGamma, double pContrast, double pBrightness)
 {
 	PRINT_LOG("CreatePalette");
 
@@ -600,14 +601,14 @@ void MR_VideoBuffer::CreatePalette(double pGamma, double pContrast, double pBrig
 
 }
 
-void MR_VideoBuffer::GetPaletteAttrib(double &pGamma, double &pContrast, double &pBrightness)
+void VideoBuffer::GetPaletteAttrib(double &pGamma, double &pContrast, double &pBrightness)
 {
 	pGamma = mGamma;
 	pContrast = mContrast;
 	pBrightness = mBrightness;
 }
 
-void MR_VideoBuffer::SetBackPalette(MR_UInt8 * pPalette)
+void VideoBuffer::SetBackPalette(MR_UInt8 * pPalette)
 {
 	delete[]mBackPalette;
 	mBackPalette = pPalette;
@@ -615,7 +616,7 @@ void MR_VideoBuffer::SetBackPalette(MR_UInt8 * pPalette)
 	CreatePalette(mGamma, mContrast, mBrightness);
 }
 
-void MR_VideoBuffer::AssignPalette()
+void VideoBuffer::AssignPalette()
 {
 	PRINT_LOG("AssignPalette");
 
@@ -626,7 +627,7 @@ void MR_VideoBuffer::AssignPalette()
 	}
 }
 
-void MR_VideoBuffer::ReturnToWindowsResolution()
+void VideoBuffer::ReturnToWindowsResolution()
 {
 	PRINT_LOG("ReturnToWindowsResolution");
 
@@ -690,7 +691,7 @@ void MR_VideoBuffer::ReturnToWindowsResolution()
  * Switch to windowed mode.
  * @return @c true if successful.
  */
-bool MR_VideoBuffer::SetVideoMode()
+bool VideoBuffer::SetVideoMode()
 {
 	PRINT_LOG("SetVideoMode(Window)");
 
@@ -823,7 +824,7 @@ bool MR_VideoBuffer::SetVideoMode()
  *                May be @c NULL to use the primary monitor.
  * @return @c true if successful.
  */
-bool MR_VideoBuffer::SetVideoMode(int pXRes, int pYRes, GUID *monitor)
+bool VideoBuffer::SetVideoMode(int pXRes, int pYRes, GUID *monitor)
 {
 	PRINT_LOG("SetVideoMode %dx%d", pXRes, pYRes);
 
@@ -939,52 +940,52 @@ bool MR_VideoBuffer::SetVideoMode(int pXRes, int pYRes, GUID *monitor)
 	return lReturnValue;
 }
 
-BOOL MR_VideoBuffer::IsWindowMode() const
+BOOL VideoBuffer::IsWindowMode() const
 {
 	return !mFullScreen;
 }
 
-BOOL MR_VideoBuffer::IsIconMode() const
+BOOL VideoBuffer::IsIconMode() const
 {
 	return mIconMode;
 }
 
-BOOL MR_VideoBuffer::IsModeSettingInProgress() const
+BOOL VideoBuffer::IsModeSettingInProgress() const
 {
 	return mModeSettingInProgress;
 }
 
-int MR_VideoBuffer::GetXRes() const
+int VideoBuffer::GetXRes() const
 {
 	return mXRes;
 }
 
-int MR_VideoBuffer::GetYRes() const
+int VideoBuffer::GetYRes() const
 {
 	return mYRes;
 }
 
-int MR_VideoBuffer::GetLineLen() const
+int VideoBuffer::GetLineLen() const
 {
 	return mLineLen;
 }
 
-int MR_VideoBuffer::GetZLineLen() const
+int VideoBuffer::GetZLineLen() const
 {
 	return mXRes;
 }
 
-MR_UInt8 *MR_VideoBuffer::GetBuffer()
+MR_UInt8 *VideoBuffer::GetBuffer()
 {
 	return mBuffer;
 }
 
-MR_UInt16 *MR_VideoBuffer::GetZBuffer()
+MR_UInt16 *VideoBuffer::GetZBuffer()
 {
 	return mZBuffer;
 }
 
-int MR_VideoBuffer::GetXPixelMeter() const
+int VideoBuffer::GetXPixelMeter() const
 {
 	if(mFullScreen) {
 		return mXRes * 3;
@@ -994,7 +995,7 @@ int MR_VideoBuffer::GetXPixelMeter() const
 	}
 }
 
-int MR_VideoBuffer::GetYPixelMeter() const
+int VideoBuffer::GetYPixelMeter() const
 {
 	if(mFullScreen) {
 		return mYRes * 4;
@@ -1004,7 +1005,7 @@ int MR_VideoBuffer::GetYPixelMeter() const
 	}
 }
 
-BOOL MR_VideoBuffer::Lock()
+BOOL VideoBuffer::Lock()
 {
 	PRINT_LOG("Lock");
 
@@ -1066,7 +1067,7 @@ BOOL MR_VideoBuffer::Lock()
 	return lReturnValue;
 }
 
-void MR_VideoBuffer::Unlock()
+void VideoBuffer::Unlock()
 {
 	PRINT_LOG("Unlock");
 
@@ -1167,7 +1168,7 @@ void MR_VideoBuffer::Unlock()
 	Flip();
 }
 
-void MR_VideoBuffer::Flip()
+void VideoBuffer::Flip()
 {
 	PRINT_LOG("Flip");
 
@@ -1199,7 +1200,7 @@ void MR_VideoBuffer::Flip()
 	}
 }
 
-void MR_VideoBuffer::Clear(MR_UInt8 pColor)
+void VideoBuffer::Clear(MR_UInt8 pColor)
 {
 	ASSERT(mBuffer != NULL);
 	ASSERT(mDirectDraw != NULL);
@@ -1208,7 +1209,7 @@ void MR_VideoBuffer::Clear(MR_UInt8 pColor)
 	memset(mBuffer, pColor, mLineLen * mYRes);
 }
 
-void MR_VideoBuffer::EnterIconMode()
+void VideoBuffer::EnterIconMode()
 {
 	PRINT_LOG("EnterIconMode");
 
@@ -1217,7 +1218,7 @@ void MR_VideoBuffer::EnterIconMode()
 	}
 }
 
-void MR_VideoBuffer::ExitIconMode()
+void VideoBuffer::ExitIconMode()
 {
 	PRINT_LOG("ExitIconMode");
 
@@ -1225,3 +1226,6 @@ void MR_VideoBuffer::ExitIconMode()
 		mIconMode = FALSE;
 	}
 }
+
+}  // namespace VideoServices
+}  // namespace HoverRace

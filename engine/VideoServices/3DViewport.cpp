@@ -20,16 +20,19 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
+
+#include <math.h>
 
 #include "VideoBuffer.h"
 #include "3DViewport.h"
 #include "../Util/FastMemManip.h"
 
-#include <math.h>
+namespace HoverRace {
+namespace VideoServices {
 
 // Methods implementation
-MR_3DViewPort::MR_3DViewPort()
+Viewport3D::Viewport3D()
 {
 	mOrientation = 0;
 	mPosition = MR_3DCoordinate(0, 0, 0);
@@ -42,14 +45,14 @@ MR_3DViewPort::MR_3DViewPort()
 
 }
 
-MR_3DViewPort::~MR_3DViewPort()
+Viewport3D::~Viewport3D()
 {
 	delete[]mBufferLine;
 	delete[]mZBufferLine;
 	delete[]mBackgroundConst;
 }
 
-void MR_3DViewPort::OnMetricsChange(int pMetrics)
+void Viewport3D::OnMetricsChange(int pMetrics)
 {
 	if((pMetrics & ~eBuffer) != eNone) {
 		// Recompute camera parameters
@@ -94,7 +97,7 @@ void MR_3DViewPort::OnMetricsChange(int pMetrics)
 	ComputeBackgroundConst();
 }
 
-void MR_3DViewPort::Setup(MR_VideoBuffer * pBuffer, int pX0, int pY0, int pSizeX, int pSizeY, MR_Angle pApperture, int pMetrics)
+void Viewport3D::Setup(VideoBuffer * pBuffer, int pX0, int pY0, int pSizeX, int pSizeY, MR_Angle pApperture, int pMetrics)
 {
 	mZLineLen = pBuffer->GetZLineLen();
 	MR_UInt16 *lNewZBuffer = pBuffer->GetZBuffer() + pX0 + mZLineLen * pY0;
@@ -109,10 +112,10 @@ void MR_3DViewPort::Setup(MR_VideoBuffer * pBuffer, int pX0, int pY0, int pSizeX
 		pMetrics |= eXSize | eYSize;			  // Generate a recomputation of mA and mB
 	}
 
-	MR_2DViewPort::Setup(pBuffer, pX0, pY0, pSizeX, pSizeY, pMetrics);
+	Viewport2D::Setup(pBuffer, pX0, pY0, pSizeX, pSizeY, pMetrics);
 }
 
-void MR_3DViewPort::SetupCameraPosition(const MR_3DCoordinate & pPosition, MR_Angle pOrientation, int pScroll)
+void Viewport3D::SetupCameraPosition(const MR_3DCoordinate & pPosition, MR_Angle pOrientation, int pScroll)
 {
 	mPosition = pPosition;
 	mOrientation = pOrientation;
@@ -121,7 +124,7 @@ void MR_3DViewPort::SetupCameraPosition(const MR_3DCoordinate & pPosition, MR_An
 	ComputeRotationMatrix();
 }
 
-void MR_3DViewPort::ComputeBackgroundConst()
+void Viewport3D::ComputeBackgroundConst()
 {
 	delete[]mBackgroundConst;
 
@@ -142,7 +145,7 @@ void MR_3DViewPort::ComputeBackgroundConst()
 }
 
 /*
-void MR_3DViewPort::ComputeA()
+void Viewport3D::ComputeA()
 {
    delete []mA;
 
@@ -155,7 +158,7 @@ void MR_3DViewPort::ComputeA()
 
 }
 
-void MR_3DViewPort::ComputeB()
+void Viewport3D::ComputeB()
 {
    delete []mB;
 
@@ -169,7 +172,7 @@ void MR_3DViewPort::ComputeB()
 }
 */
 
-void MR_3DViewPort::ComputeRotationMatrix()
+void Viewport3D::ComputeRotationMatrix()
 {
 	mRotationMatrix[0][0] = MR_Cos[mOrientation];
 	mRotationMatrix[0][1] = MR_Sin[mOrientation];
@@ -201,7 +204,7 @@ void MR_3DViewPort::ComputeRotationMatrix()
 
 }
 
-void MR_3DViewPort::ApplyRotationMatrix(const MR_3DCoordinate & pSrc, MR_3DCoordinate & pDest) const
+void Viewport3D::ApplyRotationMatrix(const MR_3DCoordinate & pSrc, MR_3DCoordinate & pDest) const
 {
 	MR_3DCoordinate lPos;
 
@@ -220,7 +223,7 @@ void MR_3DViewPort::ApplyRotationMatrix(const MR_3DCoordinate & pSrc, MR_3DCoord
 	 */
 }
 
-void MR_3DViewPort::ApplyRotationMatrix(const MR_2DCoordinate & pSrc, MR_2DCoordinate & pDest) const
+void Viewport3D::ApplyRotationMatrix(const MR_2DCoordinate & pSrc, MR_2DCoordinate & pDest) const
 {
 	MR_3DCoordinate lPos;
 
@@ -231,7 +234,7 @@ void MR_3DViewPort::ApplyRotationMatrix(const MR_2DCoordinate & pSrc, MR_2DCoord
 	pDest.mY = (MR_Int32) Int64ShraMod32(Int32x32To64(lPos.mX, mRotationMatrix[1][0]) + Int32x32To64(lPos.mY, mRotationMatrix[1][1]), MR_TRIGO_SHIFT);
 }
 
-BOOL MR_3DViewPort::ComputePositionMatrix(MR_PositionMatrix & pMatrix, const MR_3DCoordinate & pPosition, MR_Angle pOrientation, MR_Int32 pMaxObjRay)
+BOOL Viewport3D::ComputePositionMatrix(PositionMatrix & pMatrix, const MR_3DCoordinate & pPosition, MR_Angle pOrientation, MR_Int32 pMaxObjRay)
 {
 	BOOL lReturnValue = TRUE;
 
@@ -274,7 +277,7 @@ BOOL MR_3DViewPort::ComputePositionMatrix(MR_PositionMatrix & pMatrix, const MR_
 	return lReturnValue;
 }
 
-void MR_3DViewPort::ApplyPositionMatrix(const MR_PositionMatrix & pMatrix, const MR_3DCoordinate & pSrc, MR_3DCoordinate & pDest) const
+void Viewport3D::ApplyPositionMatrix(const PositionMatrix & pMatrix, const MR_3DCoordinate & pSrc, MR_3DCoordinate & pDest) const
 {
 	MR_2DCoordinate lPos;
 
@@ -287,7 +290,7 @@ void MR_3DViewPort::ApplyPositionMatrix(const MR_PositionMatrix & pMatrix, const
 
 }
 
-void MR_3DViewPort::ClearZ()
+void Viewport3D::ClearZ()
 {
 
 	MR_UInt16 *lZBuffer = mZBuffer;
@@ -298,7 +301,7 @@ void MR_3DViewPort::ClearZ()
 	}
 }
 
-void MR_3DViewPort::DrawWFLine(const MR_3DCoordinate & pP0, const MR_3DCoordinate & pP1, MR_UInt8 pColor)
+void Viewport3D::DrawWFLine(const MR_3DCoordinate & pP0, const MR_3DCoordinate & pP1, MR_UInt8 pColor)
 {
 	MR_3DCoordinate lP0;
 	MR_3DCoordinate lP1;
@@ -351,3 +354,6 @@ void MR_3DViewPort::DrawWFLine(const MR_3DCoordinate & pP0, const MR_3DCoordinat
 	DrawLine(lX0 + mXRes / 2, -lY0 + mYRes / 2 + mScroll, lX1 + mXRes / 2, -lY1 + mYRes / 2 + mScroll, pColor);
 
 }
+
+}  // namespace VideoServices
+}  // namespace HoverRace

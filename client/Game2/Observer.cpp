@@ -266,7 +266,7 @@ void Observer::PlayersListPageDn()
 }
 
 // Rendering functions
-void Observer::Render2DDebugView(MR_VideoBuffer * pDest, const Model::Level * pLevel, const MainCharacter::MainCharacter * pViewingCharacter)
+void Observer::Render2DDebugView(VideoServices::VideoBuffer * pDest, const Model::Level * pLevel, const MainCharacter::MainCharacter * pViewingCharacter)
 {
 	// WARNING Calculations are done using floats..it is only a debug view
 
@@ -1023,7 +1023,7 @@ void Observer::RenderFloorOrCeiling(const Model::Level * pLevel, const Model::Se
 	delete lShape;
 }
 
-void Observer::RenderDebugDisplay(MR_VideoBuffer * pDest, const ClientSession *pSession, const MainCharacter::MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage)
+void Observer::RenderDebugDisplay(VideoServices::VideoBuffer * pDest, const ClientSession *pSession, const MainCharacter::MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage)
 {
 	int lXRes = pDest->GetXRes();
 	int lYRes = pDest->GetYRes();
@@ -1055,7 +1055,7 @@ void Observer::RenderDebugDisplay(MR_VideoBuffer * pDest, const ClientSession *p
 
 }
 
-void Observer::RenderNormalDisplay(MR_VideoBuffer * pDest, const ClientSession *pSession, const MainCharacter::MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage)
+void Observer::RenderNormalDisplay(VideoServices::VideoBuffer * pDest, const ClientSession *pSession, const MainCharacter::MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage)
 {
 	MR_SAMPLE_CONTEXT("RenderNormalDisplay");
 

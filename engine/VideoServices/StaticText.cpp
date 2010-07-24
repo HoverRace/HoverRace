@@ -248,7 +248,7 @@ void StaticText::ApplyShadow()
  * @param centerX Center the text on the X coordinate.
  * @param vp The viewport (may not be @c NULL).
  */
-void StaticText::Blt(int x, int y, MR_2DViewPort *vp, bool centerX) const
+void StaticText::Blt(int x, int y, Viewport2D *vp, bool centerX) const
 {
 #ifdef _WIN32
 	if (centerX) x -= width / 2;

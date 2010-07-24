@@ -47,10 +47,10 @@ class MR_FreeElementBase : public HoverRace::Model::FreeElement
 
 	public:
 		MR_DllDeclare MR_FreeElementBase(const HoverRace::Util::ObjectFromFactoryId & pId);
-		MR_DllDeclare ~ MR_FreeElementBase();
+		MR_DllDeclare ~MR_FreeElementBase();
 
 		// Rendering stuff
-		MR_DllDeclare void Render(MR_3DViewPort * pDest, MR_SimulationTime pTime);
+		MR_DllDeclare void Render(HoverRace::VideoServices::Viewport3D *pDest, MR_SimulationTime pTime);
 
 };
 

@@ -36,7 +36,7 @@ namespace ObjFac1 {
 class ResActorFriend
 {
 	public:
-		static void Draw(const MR_ResActor *pActor, MR_3DViewPort *pDest, const MR_PositionMatrix &pMatrix, int pSequence, int pFrame, const MR_Bitmap *pCockpitBitmap);
+		static void Draw(const MR_ResActor *pActor, Viewport3D *pDest, const PositionMatrix &pMatrix, int pSequence, int pFrame, const MR_Bitmap *pCockpitBitmap);
 };
 
 HoverRender::HoverRender(const Util::ObjectFromFactoryId &pId, ResourceLib *resourceLib) :
@@ -72,10 +72,10 @@ HoverRender::~HoverRender()
 
 }
 
-void HoverRender::Render(MR_3DViewPort *pDest, const MR_3DCoordinate &pPosition, MR_Angle pOrientation, BOOL pMotorOn, int pHoverId, int pModel)
+void HoverRender::Render(VideoServices::Viewport3D *pDest, const MR_3DCoordinate &pPosition, MR_Angle pOrientation, BOOL pMotorOn, int pHoverId, int pModel)
 {
 	// Compute the required rotation matrix
-	MR_PositionMatrix lMatrix;
+	PositionMatrix lMatrix;
 
 	if(pDest->ComputePositionMatrix(lMatrix, pPosition, pOrientation, 1000 /* TODO Object ray must be precomputed at compilation */ )) {
 		int lSeq = pMotorOn ? 1 : 0;
@@ -154,7 +154,7 @@ ContinuousSound *HoverRender::GetFrictionSound()
 	return mFrictionSound;
 }
 
-void ResActorFriend::Draw(const MR_ResActor *pActor, MR_3DViewPort *pDest, const MR_PositionMatrix &pMatrix, int pSequence, int pFrame, const MR_Bitmap *pCockpitBitmap)
+void ResActorFriend::Draw(const MR_ResActor *pActor, Viewport3D *pDest, const PositionMatrix &pMatrix, int pSequence, int pFrame, const MR_Bitmap *pCockpitBitmap)
 {
 	MR_ResActor::Frame * lFrame = &(pActor->mSequenceList[pSequence].mFrameList[pFrame]);
 

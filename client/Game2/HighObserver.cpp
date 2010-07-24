@@ -50,7 +50,7 @@ HighObserver::HighObserver()
 {
 	const Config *cfg = cfg->GetInstance();
 
-	viewport = new MR_2DViewPort();
+	viewport = new VideoServices::Viewport2D();
 
 	statsFont = new Font("Arial", 12);
 	statsNumGlyphs = new NumericGlyphs(*statsFont, STATS_COLOR);
@@ -87,7 +87,7 @@ void HighObserver::RenderStats(const ClientSession *session) const
  * @param dest The target video buffer.
  * @param session The current client session.
  */
-void HighObserver::Render(MR_VideoBuffer *dest, const ClientSession *session)
+void HighObserver::Render(VideoServices::VideoBuffer *dest, const ClientSession *session)
 {
 	viewport->Setup(dest, 0, 0, dest->GetXRes(), dest->GetYRes());
 

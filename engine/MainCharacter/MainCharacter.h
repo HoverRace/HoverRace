@@ -177,7 +177,7 @@ class MainCharacter : public Model::FreeElement
 		MR_DllDeclare void SetOrientation(MR_Angle pOrientation);
 
 		void AddRenderer();
-		void Render(MR_3DViewPort * pDest, MR_SimulationTime pTime);
+		void Render(VideoServices::Viewport3D * pDest, MR_SimulationTime pTime);
 
 		MR_DllDeclare Model::ElementNetState GetNetState() const;
 		MR_DllDeclare void SetNetState(int pDataLen, const MR_UInt8 * pData);

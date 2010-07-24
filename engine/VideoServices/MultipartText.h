@@ -59,7 +59,7 @@ class MR_DllDeclare MultipartText
 		const NumericGlyphs *GetGlyphs() const;
 		const MR_UInt8 GetColor() const;
 
-		void Blt(int x, int y, MR_2DViewPort *vp, ...) const;
+		void Blt(int x, int y, Viewport2D *vp, ...) const;
 
 	private:
 		class Part;

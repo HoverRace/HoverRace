@@ -61,7 +61,7 @@ void ClientSession::Process(int pSpeedFactor)
 	mSession.Simulate();
 }
 
-void ClientSession::ReadLevelAttrib(Parcel::RecordFilePtr pRecordFile, MR_VideoBuffer * pVideo)
+void ClientSession::ReadLevelAttrib(Parcel::RecordFilePtr pRecordFile, VideoServices::VideoBuffer * pVideo)
 {
 	// Read level background palette
 	if((pVideo != NULL) && (pRecordFile->GetNbRecords() >= 3)) {
@@ -123,7 +123,7 @@ void ClientSession::ReadLevelAttrib(Parcel::RecordFilePtr pRecordFile, MR_VideoB
 }
 
 BOOL ClientSession::LoadNew(const char *pTitle, Parcel::RecordFilePtr pMazeFile,
-                            int pNbLap, char pGameOpts, MR_VideoBuffer *pVideo)
+                            int pNbLap, char pGameOpts, VideoServices::VideoBuffer *pVideo)
 {
 	BOOL lReturnValue;
 	mNbLap = pNbLap;

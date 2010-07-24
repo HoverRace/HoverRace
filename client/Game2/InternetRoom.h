@@ -144,7 +144,7 @@ class InternetRoom
 		std::string mNetOpString;
 		std::string mNetOpRequest;
 		NetworkSession *mSession;
-		MR_VideoBuffer *mVideoBuffer;
+		VideoServices::VideoBuffer *mVideoBuffer;
 		int mNbSuccessiveRefreshTimeOut;
 
 		InternetRequest mOpRequest;
@@ -206,11 +206,11 @@ class InternetRoom
 
 		RoomListPtr GetRoomList() const { return roomList; }
 
-		BOOL DisplayChatRoom(HWND pParentWindow, NetworkSession *pSession, MR_VideoBuffer *pVideoBuffer, BOOL pShouldRecheckServer);
+		BOOL DisplayChatRoom(HWND pParentWindow, NetworkSession *pSession, VideoServices::VideoBuffer *pVideoBuffer, BOOL pShouldRecheckServer);
 
 		// Modelless.. do not use for the moment
 		/*
-		   BOOL DisplayModeless( HWND pParentWindow, MR_NetworkSession* pSession, MR_VideoBuffer* pVideoBuffer );
+		   BOOL DisplayModeless( HWND pParentWindow, MR_NetworkSession* pSession, VideoServices::VideoBuffer* pVideoBuffer );
 		   BOOL IsDisplayed()const;
 		 */
 

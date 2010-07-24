@@ -37,10 +37,10 @@
 #	define MR_DllDeclare
 #endif
 
-class MR_2DViewPort;
-
 namespace HoverRace {
 namespace VideoServices {
+
+class Viewport2D;
 
 /**
  * An i18n-capable text renderable.
@@ -77,7 +77,7 @@ class MR_DllDeclare StaticText {
 		void ApplyShadow();
 
 	public:
-		void Blt(int x, int y, MR_2DViewPort *pDest, bool centerX=false) const;
+		void Blt(int x, int y, Viewport2D *pDest, bool centerX=false) const;
 
 	private:
 		std::string s;

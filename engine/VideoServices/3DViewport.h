@@ -19,33 +19,39 @@
 // and limitations under the License.
 //
 
-#ifndef _3D_VIEWPORT_H
-#define _3D_VIEWPORT_H
+#pragma once
 
 #include "2DViewport.h"
 #include "ColorPalette.h"
 #include "Bitmap.h"
 #include "Patch.h"
 
-#ifdef MR_ENGINE
-#define MR_DllDeclare   __declspec( dllexport )
+#ifdef _WIN32
+#	ifdef MR_ENGINE
+#		define MR_DllDeclare   __declspec( dllexport )
+#	else
+#		define MR_DllDeclare   __declspec( dllimport )
+#	endif
 #else
-#define MR_DllDeclare   __declspec( dllimport )
+#	define MR_DllDeclare
 #endif
+
+namespace HoverRace {
+namespace VideoServices {
 
 // define
 #define MR_BACK_X_RES 2048
 #define MR_BACK_Y_RES  256
 
 // Helper class
-class MR_PositionMatrix
+class PositionMatrix
 {
 	public:
 		MR_Int32 mRotation[2][2];
 		MR_3DCoordinate mDisplacement;
 };
 
-class MR_3DViewPort:public MR_2DViewPort
+class Viewport3D : public Viewport2D
 {
 	protected:
 
@@ -89,22 +95,22 @@ class MR_3DViewPort:public MR_2DViewPort
 
 		void ApplyRotationMatrix(const MR_3DCoordinate & pSrc, MR_3DCoordinate & pDest) const;
 		void ApplyRotationMatrix(const MR_2DCoordinate & pSrc, MR_2DCoordinate & pDest) const;
-		void ApplyPositionMatrix(const MR_PositionMatrix & pMatrix, const MR_3DCoordinate & pSrc, MR_3DCoordinate & pDest) const;
+		void ApplyPositionMatrix(const PositionMatrix & pMatrix, const MR_3DCoordinate & pSrc, MR_3DCoordinate & pDest) const;
 
 		MR_DllDeclare void OnMetricsChange(int pMetrics);
 
 	public:
 
-		MR_DllDeclare MR_3DViewPort();
-		MR_DllDeclare ~ MR_3DViewPort();
+		MR_DllDeclare Viewport3D();
+		MR_DllDeclare ~Viewport3D();
 
-		MR_DllDeclare void Setup(MR_VideoBuffer * pBuffer, int pX0, int pY0, int pSizeX, int pSizeY, MR_Angle pApperture, int pMetrics = eNone);
+		MR_DllDeclare void Setup(VideoBuffer *pBuffer, int pX0, int pY0, int pSizeX, int pSizeY, MR_Angle pApperture, int pMetrics = eNone);
 
 		MR_DllDeclare void SetupCameraPosition(const MR_3DCoordinate & pPosition, MR_Angle pOrientation, int pScroll);
 
 		MR_DllDeclare void ClearZ();
 
-		MR_DllDeclare BOOL ComputePositionMatrix(MR_PositionMatrix & pMatrix, const MR_3DCoordinate & pPosition, MR_Angle pOrientation, MR_Int32 pMaxObjRay);
+		MR_DllDeclare BOOL ComputePositionMatrix(PositionMatrix & pMatrix, const MR_3DCoordinate & pPosition, MR_Angle pOrientation, MR_Int32 pMaxObjRay);
 
 		// WireFrame services
 		MR_DllDeclare void DrawWFLine(const MR_3DCoordinate & pP0, const MR_3DCoordinate & pP1, MR_UInt8 pColor);
@@ -115,8 +121,8 @@ class MR_3DViewPort:public MR_2DViewPort
 
 		MR_DllDeclare void RenderHorizontalSurface(int lNbVertex, const MR_2DCoordinate * pVertexList, MR_Int32 pLevel, BOOL lTop, const MR_Bitmap * pBitmap);
 
-		MR_DllDeclare void RenderPatch(const MR_Patch & pPatch, const MR_PositionMatrix & pMatrix, const MR_Bitmap * pBitmap);
-		MR_DllDeclare void RenderPatch(const MR_Patch & pPatch, const MR_PositionMatrix & pMatrix, MR_UInt8 pColor);
+		MR_DllDeclare void RenderPatch(const MR_Patch & pPatch, const PositionMatrix & pMatrix, const MR_Bitmap * pBitmap);
+		MR_DllDeclare void RenderPatch(const MR_Patch & pPatch, const PositionMatrix & pMatrix, MR_UInt8 pColor);
 
 		MR_DllDeclare void RenderBackground(const MR_UInt8 * pBitmap);
 };
@@ -127,5 +133,7 @@ class MR_3DViewPort:public MR_2DViewPort
 // max deep of field is 260m
 #define MR_MAX_POLYGON_VERTEX 16
 
+}  // namespace VideoServices
+}  // namespace HoverRace
+
 #undef MR_DllDeclare
-#endif

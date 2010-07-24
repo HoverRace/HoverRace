@@ -97,7 +97,7 @@ BitmapSurface::~BitmapSurface()
 {
 }
 
-void BitmapSurface::RenderWallSurface(MR_3DViewPort * pDest, const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, MR_SimulationTime pTime)
+void BitmapSurface::RenderWallSurface(VideoServices::Viewport3D * pDest, const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, MR_SimulationTime pTime)
 {
 	if(mBitmap != NULL) {
 		if(mRotationSpeed != 0) {
@@ -118,7 +118,7 @@ void BitmapSurface::RenderWallSurface(MR_3DViewPort * pDest, const MR_3DCoordina
 	}
 }
 
-void BitmapSurface::RenderHorizontalSurface(MR_3DViewPort * pDest, int pNbVertex, const MR_2DCoordinate * pVertexList, MR_Int32 pLevel, BOOL pTop, MR_SimulationTime /*pTime */ )
+void BitmapSurface::RenderHorizontalSurface(VideoServices::Viewport3D * pDest, int pNbVertex, const MR_2DCoordinate * pVertexList, MR_Int32 pLevel, BOOL pTop, MR_SimulationTime /*pTime */ )
 {
 	if(mBitmap != NULL) {
 		pDest->RenderHorizontalSurface(pNbVertex, pVertexList, pLevel, pTop, mBitmap);
@@ -144,7 +144,7 @@ VStretchBitmapSurface::VStretchBitmapSurface(const Util::ObjectFromFactoryId & p
 	mMaxHeight = pMaxHeight;
 }
 
-void VStretchBitmapSurface::RenderWallSurface(MR_3DViewPort * pDest, const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, MR_SimulationTime pTime)
+void VStretchBitmapSurface::RenderWallSurface(VideoServices::Viewport3D * pDest, const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, MR_SimulationTime pTime)
 {
 	if(mBitmap != NULL) {
 		int lHeight = pUpperLeft.mZ - pLowerRight.mZ;

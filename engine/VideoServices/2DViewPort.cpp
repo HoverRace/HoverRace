@@ -20,13 +20,16 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
 #include "VideoBuffer.h"
 
 #include "2DViewport.h"
 
-MR_2DViewPort::MR_2DViewPort()
+namespace HoverRace {
+namespace VideoServices {
+
+Viewport2D::Viewport2D()
 {
 
 	mVideoBuffer = NULL;
@@ -40,35 +43,35 @@ MR_2DViewPort::MR_2DViewPort()
 
 }
 
-MR_2DViewPort::~MR_2DViewPort()
+Viewport2D::~Viewport2D()
 {
 }
 
-void MR_2DViewPort::OnMetricsChange(int /*pMetrics */ )
+void Viewport2D::OnMetricsChange(int /*pMetrics */ )
 {
 }
 
-int MR_2DViewPort::GetXRes() const
+int Viewport2D::GetXRes() const
 {
 	return mXRes;
 }
 
-int MR_2DViewPort::GetYRes() const
+int Viewport2D::GetYRes() const
 {
 	return mYRes;
 }
 
-MR_UInt8 *MR_2DViewPort::GetBuffer()
+MR_UInt8 *Viewport2D::GetBuffer()
 {
 	return mBuffer;
 }
 
-int MR_2DViewPort::GetLineLen() const
+int Viewport2D::GetLineLen() const
 {
 	return mLineLen;
 }
 
-void MR_2DViewPort::Setup(MR_VideoBuffer * pBuffer, int pX0, int pY0, int pSizeX, int pSizeY, int pMetrics)
+void Viewport2D::Setup(VideoBuffer * pBuffer, int pX0, int pY0, int pSizeX, int pSizeY, int pMetrics)
 {
 	ASSERT(pBuffer != NULL);
 
@@ -109,7 +112,7 @@ void MR_2DViewPort::Setup(MR_VideoBuffer * pBuffer, int pX0, int pY0, int pSizeX
 	OnMetricsChange(pMetrics);
 }
 
-void MR_2DViewPort::Clear(MR_UInt8 pColor)
+void Viewport2D::Clear(MR_UInt8 pColor)
 {
 	MR_UInt8 *lBuffer = mBuffer;
 
@@ -119,7 +122,7 @@ void MR_2DViewPort::Clear(MR_UInt8 pColor)
 	}
 }
 
-void MR_2DViewPort::DrawPoint(int pX, int pY, MR_UInt8 pColor)
+void Viewport2D::DrawPoint(int pX, int pY, MR_UInt8 pColor)
 {
 	if(pX >= 0 && pY >= 0 && pX < mXRes && pY < mYRes) {
 		mBuffer[pY * mLineLen + pX] = pColor;
@@ -127,7 +130,7 @@ void MR_2DViewPort::DrawPoint(int pX, int pY, MR_UInt8 pColor)
 
 }
 
-void MR_2DViewPort::DrawHorizontalLine(int pY, int pX0, int pX1, MR_UInt8 pColor)
+void Viewport2D::DrawHorizontalLine(int pY, int pX0, int pX1, MR_UInt8 pColor)
 {
 	int lTemp;
 
@@ -153,7 +156,7 @@ void MR_2DViewPort::DrawHorizontalLine(int pY, int pX0, int pX1, MR_UInt8 pColor
 	}
 }
 
-void MR_2DViewPort::DrawLine(int pX0, int pY0, int pX1, int pY1, MR_UInt8 pColor)
+void Viewport2D::DrawLine(int pX0, int pY0, int pX1, int pY1, MR_UInt8 pColor)
 {
 	int lTemp;
 
@@ -210,7 +213,7 @@ void MR_2DViewPort::DrawLine(int pX0, int pY0, int pX1, int pY1, MR_UInt8 pColor
 }
 
 // HighLevel 2D functionalities
-void MR_2DViewPort::DrawHorizontalMeter(int pX0, int pXLen, int pY0, int pYHeight, int pXM, MR_UInt8 pColor, MR_UInt8 pBackColor)
+void Viewport2D::DrawHorizontalMeter(int pX0, int pXLen, int pY0, int pYHeight, int pXM, MR_UInt8 pColor, MR_UInt8 pBackColor)
 {
 
 	// Warning, no coordinate check
@@ -229,3 +232,6 @@ void MR_2DViewPort::DrawHorizontalMeter(int pX0, int pXLen, int pY0, int pYHeigh
 		lDest += mLineLen;
 	}
 }
+
+}  // namespace VideoServices
+}  // namespace HoverRace

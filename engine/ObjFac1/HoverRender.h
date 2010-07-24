@@ -60,7 +60,7 @@ class HoverRender : public MainCharacter::MainCharacterRenderer
 		HoverRender(const Util::ObjectFromFactoryId &pId, ObjFacTools::ResourceLib *resourceLib);
 		~HoverRender();
 
-		void Render(MR_3DViewPort *pDest, const MR_3DCoordinate &pPosition, MR_Angle pOrientation, BOOL pMotorOn, int pHoverId, int pModel);
+		void Render(VideoServices::Viewport3D *pDest, const MR_3DCoordinate &pPosition, MR_Angle pOrientation, BOOL pMotorOn, int pHoverId, int pModel);
 
 		virtual VideoServices::ShortSound *GetLineCrossingSound();
 		virtual VideoServices::ShortSound *GetStartSound();

@@ -33,11 +33,10 @@ namespace HoverRace {
 		class MultipartText;
 		class NumericGlyphs;
 		class StaticText;
+		class Viewport2D;
+		class VideoBuffer;
 	}
 }
-
-class MR_2DViewPort;
-class MR_VideoBuffer;
 
 namespace HoverRace {
 namespace Client {
@@ -61,10 +60,10 @@ class HighObserver
 	private:
 		void RenderStats(const ClientSession *session) const;
 	public:
-		void Render(MR_VideoBuffer *dest, const ClientSession *session);
+		void Render(VideoServices::VideoBuffer *dest, const ClientSession *session);
 
 	private:
-		MR_2DViewPort *viewport;
+		VideoServices::Viewport2D *viewport;
 		VideoServices::Font *statsFont; ///< Font used for stats HUD text.
 		VideoServices::NumericGlyphs *statsNumGlyphs;
 		VideoServices::MultipartText *fpsTxt;

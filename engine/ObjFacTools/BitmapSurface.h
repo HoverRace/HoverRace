@@ -57,8 +57,8 @@ class MR_DllDeclare BitmapSurface : public Model::SurfaceElement
 		~BitmapSurface();
 
 		// Rendering stuff
-		void RenderWallSurface(MR_3DViewPort * pDest, const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, MR_SimulationTime pTime);
-		void RenderHorizontalSurface(MR_3DViewPort * pDest, int pNbVertex, const MR_2DCoordinate * pVertexList, MR_Int32 pLevel, BOOL pTop, MR_SimulationTime pTime);
+		void RenderWallSurface(VideoServices::Viewport3D * pDest, const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, MR_SimulationTime pTime);
+		void RenderHorizontalSurface(VideoServices::Viewport3D * pDest, int pNbVertex, const MR_2DCoordinate * pVertexList, MR_Int32 pLevel, BOOL pTop, MR_SimulationTime pTime);
 
 		// Logic stuff
 		const MR_ContactEffectList *GetEffectList();
@@ -74,7 +74,7 @@ class MR_DllDeclare VStretchBitmapSurface : public BitmapSurface
 
 		VStretchBitmapSurface(const Util::ObjectFromFactoryId & pId, /*const */ MR_ResBitmap * pBitmap, int pMaxHeight);
 		VStretchBitmapSurface(const Util::ObjectFromFactoryId & pId, MR_ResBitmap * pBitmap1, MR_ResBitmap * pBitmap2, int pRotationSpeed, int pRotationLen, int pMaxHeight);
-		void RenderWallSurface(MR_3DViewPort * pDest, const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, MR_SimulationTime pTime);
+		void RenderWallSurface(VideoServices::Viewport3D * pDest, const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, MR_SimulationTime pTime);
 };
 
 }  // namespace Model

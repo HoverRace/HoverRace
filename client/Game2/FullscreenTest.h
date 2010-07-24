@@ -26,11 +26,10 @@ namespace HoverRace {
 	namespace VideoServices {
 		struct Font;
 		class StaticText;
+		class Viewport2D;
+		class VideoBuffer;
 	}
 }
-
-class MR_2DViewPort;
-class MR_VideoBuffer;
 
 namespace HoverRace {
 namespace Client {
@@ -50,13 +49,13 @@ class FullscreenTest {
 		void UpdateSubheading(int resY);
 		void InitWidgets(int resX, int resY);
 	public:
-		void Render(MR_VideoBuffer *dest);
+		void Render(VideoServices::VideoBuffer *dest);
 
 	private:
 		int oldX, oldY;
 		std::string oldMonitor;
 
-		MR_2DViewPort *viewport;
+		VideoServices::Viewport2D *viewport;
 		bool widgetsInitialized;
 		VideoServices::StaticText *heading;
 		VideoServices::StaticText *subheading;

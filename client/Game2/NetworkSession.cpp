@@ -374,7 +374,7 @@ void NetworkSession::Process(int pSpeedFactor)
  * Load a new level.  This function calls MR_ClientSession::LoadNew() and then tells the level to notify call ElementCreationHook() and PermElementStateHook() when
  * elements are created.
  */
-BOOL NetworkSession::LoadNew(const char *pTitle, HoverRace::Parcel::RecordFilePtr pMazeFile, int pNbLap, char pGameOpts, MR_VideoBuffer *pVideo)
+BOOL NetworkSession::LoadNew(const char *pTitle, HoverRace::Parcel::RecordFilePtr pMazeFile, int pNbLap, char pGameOpts, VideoServices::VideoBuffer *pVideo)
 {
 	BOOL lReturnValue = SUPER::LoadNew(pTitle, pMazeFile, pNbLap, pGameOpts, pVideo);
 

@@ -28,7 +28,6 @@
 
 #include "Console.h"
 
-class MR_VideoBuffer;
 namespace HoverRace {
 	namespace Client {
 		namespace Control {
@@ -45,9 +44,10 @@ namespace HoverRace {
 	namespace VideoServices {
 		struct Font;
 		class StaticText;
+		class Viewport2D;
+		class VideoBuffer;
 	}
 }
-class MR_2DViewPort;
 
 namespace HoverRace {
 namespace Client {
@@ -86,7 +86,7 @@ class HighConsole : public Console
 
 	public:
 		void OnChar(char c);
-		void Render(MR_VideoBuffer *dest);
+		void Render(VideoServices::VideoBuffer *dest);
 
 	private:
 		void RenderConsole();
@@ -107,7 +107,7 @@ class HighConsole : public Console
 
 		bool visible;
 		bool helpVisible;
-		MR_2DViewPort *vp;
+		VideoServices::Viewport2D *vp;
 
 		std::string submitBuffer;
 		std::string historyBuffer;

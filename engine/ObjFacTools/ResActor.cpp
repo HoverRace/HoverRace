@@ -82,7 +82,7 @@ void MR_ResActor::Serialize(ObjStream &pArchive, ResourceLib *pLib)
 
 }
 
-void MR_ResActor::Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix, int pSequence, int pFrame) const
+void MR_ResActor::Draw(HoverRace::VideoServices::Viewport3D * pDest, const HoverRace::VideoServices::PositionMatrix & pMatrix, int pSequence, int pFrame) const
 {
 	ASSERT(pSequence < mNbSequence);
 
@@ -122,7 +122,7 @@ void MR_ResActor::Sequence::Serialize(ObjStream &pArchive, ResourceLib *pLib)
 	}
 }
 
-void MR_ResActor::Sequence::Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix, int pFrame) const
+void MR_ResActor::Sequence::Draw(HoverRace::VideoServices::Viewport3D * pDest, const HoverRace::VideoServices::PositionMatrix & pMatrix, int pFrame) const
 {
 	ASSERT(pFrame < mNbFrame);
 
@@ -196,7 +196,7 @@ void MR_ResActor::Frame::Serialize(ObjStream &pArchive, ResourceLib *pLib)
 	}
 }
 
-void MR_ResActor::Frame::Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix) const
+void MR_ResActor::Frame::Draw(HoverRace::VideoServices::Viewport3D * pDest, const HoverRace::VideoServices::PositionMatrix & pMatrix) const
 {
 	// Draw each component of the frame
 	for(int lCounter = 0; lCounter < mNbComponent; lCounter++) {
@@ -260,7 +260,7 @@ void MR_ResActor::Patch::Serialize(ObjStream &pArchive, ResourceLib *pLib)
 	}
 }
 
-void MR_ResActor::Patch::Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix) const
+void MR_ResActor::Patch::Draw(HoverRace::VideoServices::Viewport3D *pDest, const HoverRace::VideoServices::PositionMatrix & pMatrix) const
 {
 	pDest->RenderPatch(*this, pMatrix, mBitmap);
 }

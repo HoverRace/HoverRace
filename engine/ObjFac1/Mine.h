@@ -58,7 +58,7 @@ class Mine : public MR_FreeElementBase, protected MR_CylinderShape
 
 		int Simulate(MR_SimulationTime pTimeSlice, Model::Level * pLevel, int pRoom);
 
-		void Render(MR_3DViewPort * pDest, MR_SimulationTime pTime);
+		void Render(VideoServices::Viewport3D * pDest, MR_SimulationTime pTime);
 
 		// void  ApplyEffect( const MR_ContactEffect* pEffect,  MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Int32 pZMin, MR_Int32 pZMax, MR_Angle pHorizontalDirection );
 

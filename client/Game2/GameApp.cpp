@@ -79,9 +79,9 @@ PAVIFILE         gCaptureFile           = NULL;
 PAVISTREAM       gCaptureStream         = NULL;
 int              gCaptureFrameNo        = 0;
 
-void InitCapture( const char* pFileName, MR_VideoBuffer* pVideoBuffer );
+void InitCapture( const char* pFileName, VideoServices::VideoBuffer* pVideoBuffer );
 void CloseCapture();
-void CaptureScreen( MR_VideoBuffer* pVideoBuffer );
+void CaptureScreen( VideoServices::VideoBuffer* pVideoBuffer );
 
 #endif
 */
@@ -872,7 +872,7 @@ BOOL GameApp::InitGame()
 	lReturnValue = CreateMainWindow();
 
 	if(lReturnValue) {
-		mVideoBuffer = new MR_VideoBuffer(mMainWindow,
+		mVideoBuffer = new VideoServices::VideoBuffer(mMainWindow,
 			cfg->video.gamma, cfg->video.contrast, cfg->video.brightness);
 
 		// Attempt to create the sound service.
@@ -2235,7 +2235,7 @@ HPALETTE CreateDIBPalette(LPBITMAPINFO lpbmi, LPINT lpiNumColors)
 
 #ifdef MR_AVI_CAPTURE
 
-void InitCapture(const char *pFileName, MR_VideoBuffer * pVideoBuffer)
+void InitCapture(const char *pFileName, VideoServices::VideoBuffer * pVideoBuffer)
 {
 
 	AVISTREAMINFO lStreamInfo;
@@ -2328,7 +2328,7 @@ void CloseCapture()
 	}
 }
 
-void CaptureScreen(MR_VideoBuffer * pVideoBuffer)
+void CaptureScreen(VideoServices::VideoBuffer * pVideoBuffer)
 {
 
 	if(gCaptureStream != NULL) {

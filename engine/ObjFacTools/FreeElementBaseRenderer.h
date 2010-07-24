@@ -51,7 +51,7 @@ class MR_FreeElementBaseRenderer : public HoverRace::Util::ObjectFromFactory
 		MR_DllDeclare ~ MR_FreeElementBaseRenderer();
 
 		// Rendering stuff
-		MR_DllDeclare void Render(MR_3DViewPort * pDest, const MR_3DCoordinate & pPosition, MR_Angle pOrientation);
+		MR_DllDeclare void Render(HoverRace::VideoServices::Viewport3D * pDest, const MR_3DCoordinate & pPosition, MR_Angle pOrientation);
 
 };
 

@@ -61,9 +61,9 @@ class MR_DllDeclare MR_Sprite
 		MR_Sprite();
 		~MR_Sprite();
 
-		void Blt(int pX, int pY, MR_2DViewPort * pDest, eAlignment pHAlign = eLeft, eAlignment pVAlign = eTop, int pItem = 0, int pScaling = 1) const;
+		void Blt(int pX, int pY, HoverRace::VideoServices::Viewport2D *pDest, eAlignment pHAlign = eLeft, eAlignment pVAlign = eTop, int pItem = 0, int pScaling = 1) const;
 
-		void StrBlt(int pX, int pY, const char *pStr, MR_2DViewPort * pDest, eAlignment pHAlign = eLeft, eAlignment pVAlign = eTop, int pScaling = 1) const;
+		void StrBlt(int pX, int pY, const char *pStr, HoverRace::VideoServices::Viewport2D *pDest, eAlignment pHAlign = eLeft, eAlignment pVAlign = eTop, int pScaling = 1) const;
 
 		int GetNbItem() const;
 		int GetItemHeight() const;

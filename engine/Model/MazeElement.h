@@ -104,9 +104,9 @@ class MR_DllDeclare SurfaceElement : public Element
 	public:
 		SurfaceElement(const Util::ObjectFromFactoryId & pId);
 
-		virtual void RenderWallSurface(MR_3DViewPort * pDest, const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, MR_SimulationTime pTime);
+		virtual void RenderWallSurface(VideoServices::Viewport3D * pDest, const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, MR_SimulationTime pTime);
 
-		virtual void RenderHorizontalSurface(MR_3DViewPort * pDest, int pNbVertex, const MR_2DCoordinate * pVertexList, MR_Int32 pLevel, BOOL pTop, MR_SimulationTime pTime);
+		virtual void RenderHorizontalSurface(VideoServices::Viewport3D * pDest, int pNbVertex, const MR_2DCoordinate * pVertexList, MR_Int32 pLevel, BOOL pTop, MR_SimulationTime pTime);
 };
 
 class MR_DllDeclare FreeElement : public Element
@@ -118,7 +118,7 @@ class MR_DllDeclare FreeElement : public Element
 	public:
 		FreeElement(const Util::ObjectFromFactoryId & pId);
 
-		virtual void Render(MR_3DViewPort * pDest, MR_SimulationTime pTime);
+		virtual void Render(VideoServices::Viewport3D * pDest, MR_SimulationTime pTime);
 
 		virtual void PlayInternalSounds();
 		virtual void PlayExternalSounds(int pDB, int pPan);

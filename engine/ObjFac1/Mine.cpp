@@ -138,7 +138,7 @@ int Mine::Simulate(MR_SimulationTime pDuration, Model::Level * pLevel, int pRoom
 	return pRoom;
 }
 
-void Mine::Render(MR_3DViewPort * pDest, MR_SimulationTime pTime)
+void Mine::Render(VideoServices::Viewport3D * pDest, MR_SimulationTime pTime)
 {
 	mCurrentFrame = (pTime >> 9) & 1;
 	MR_FreeElementBase::Render(pDest, pTime);

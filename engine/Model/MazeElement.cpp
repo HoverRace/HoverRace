@@ -96,7 +96,7 @@ SurfaceElement::SurfaceElement(const Util::ObjectFromFactoryId & pId) :
 {
 }
 
-void SurfaceElement::RenderWallSurface(MR_3DViewPort * /*pDest */ ,
+void SurfaceElement::RenderWallSurface(VideoServices::Viewport3D * /*pDest */ ,
 const MR_3DCoordinate & /*pUpperLeft */ ,
 const MR_3DCoordinate & /*pLowerRight */ ,
 MR_Int32 /*pLen */ ,
@@ -104,7 +104,7 @@ MR_SimulationTime /*pTime */ )
 {												  /* Notting is rendered by default */
 }
 
-void SurfaceElement::RenderHorizontalSurface(MR_3DViewPort * /*pDest */ ,
+void SurfaceElement::RenderHorizontalSurface(VideoServices::Viewport3D * /*pDest */ ,
 int /*pNbVertex */ ,
 const MR_2DCoordinate * /*pVertexList */ ,
 MR_Int32 /*pLevel */ ,
@@ -131,7 +131,7 @@ void FreeElement::SetNetState(int pDataLen, const MR_UInt8 * /*pData */ )
 	ASSERT(pDataLen == 0);						  // Why a Get without a Set??
 }
 
-void FreeElement::Render(MR_3DViewPort * /*pDest */ , MR_SimulationTime /*pTime */ )
+void FreeElement::Render(VideoServices::Viewport3D * /*pDest */ , MR_SimulationTime /*pTime */ )
 {												  /* Notting is rendered by default */
 }
 

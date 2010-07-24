@@ -666,7 +666,7 @@ BOOL InternetRoom::AskRoomParams(HWND pParentWindow, BOOL pShouldRecheckServer)
 /**
  * This function is called to initiate the connection to the IMR
  */
-BOOL InternetRoom::DisplayChatRoom(HWND pParentWindow, NetworkSession *pSession, MR_VideoBuffer *pVideoBuffer, BOOL pShouldRecheckServer)
+BOOL InternetRoom::DisplayChatRoom(HWND pParentWindow, NetworkSession *pSession, VideoServices::VideoBuffer *pVideoBuffer, BOOL pShouldRecheckServer)
 {
 	mUser = pSession->GetPlayerName();
 

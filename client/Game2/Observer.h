@@ -60,9 +60,9 @@ class Observer
 		BOOL mLastCameraPosValid;
 		BOOL mCockpitView;
 
-		MR_2DViewPort m2DDebugView;
-		MR_3DViewPort mWireFrameView;
-		MR_3DViewPort m3DView;
+		VideoServices::Viewport2D m2DDebugView;
+		VideoServices::Viewport3D mWireFrameView;
+		VideoServices::Viewport3D m3DView;
 
 		eSplitMode mSplitMode;
 
@@ -87,7 +87,7 @@ class Observer
 		Observer();
 		~Observer();
 
-		void Render2DDebugView(MR_VideoBuffer * pDest, const Model::Level * pLevel, const MainCharacter::MainCharacter * pViewingCharacter);
+		void Render2DDebugView(VideoServices::VideoBuffer * pDest, const Model::Level * pLevel, const MainCharacter::MainCharacter * pViewingCharacter);
 		void RenderWireFrameView(const Model::Level * pLevel, const MainCharacter::MainCharacter * pViewingCharacter);
 		void Render3DView(const HoverRace::Client::ClientSession * pSession, const MainCharacter::MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage);
 
@@ -96,7 +96,7 @@ class Observer
 		void RenderFeatureWalls(const Model::Level * pLevel, int pFeatureId, MR_SimulationTime pTime);
 		void RenderFloorOrCeiling(const Model::Level * pLevel, const Model::SectionId & pSectionId, BOOL pFloor, MR_SimulationTime pTime);
 
-		static void DrawBackground(MR_VideoBuffer * pDest);
+		static void DrawBackground(VideoServices::VideoBuffer * pDest);
 
 	public:
 		static Observer *New();				  // Local construction and destruction
@@ -119,8 +119,8 @@ class Observer
 		void SetSplitMode(eSplitMode pMode);
 
 		// Rendering function
-		void RenderDebugDisplay(MR_VideoBuffer * pDest, const HoverRace::Client::ClientSession *pSession, const MainCharacter::MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage);
-		void RenderNormalDisplay(MR_VideoBuffer * pDest, const HoverRace::Client::ClientSession *pSession, const MainCharacter::MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage);
+		void RenderDebugDisplay(VideoServices::VideoBuffer * pDest, const HoverRace::Client::ClientSession *pSession, const MainCharacter::MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage);
+		void RenderNormalDisplay(VideoServices::VideoBuffer * pDest, const HoverRace::Client::ClientSession *pSession, const MainCharacter::MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage);
 
 		void PlaySounds(const Model::Level * pLevel, MainCharacter::MainCharacter * pViewingCharacter);
 

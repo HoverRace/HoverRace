@@ -37,10 +37,10 @@ MR_FreeElementBaseRenderer::~MR_FreeElementBaseRenderer()
 {
 }
 
-void MR_FreeElementBaseRenderer::Render(MR_3DViewPort * pDest, const MR_3DCoordinate & pPosition, MR_Angle pOrientation)
+void MR_FreeElementBaseRenderer::Render(HoverRace::VideoServices::Viewport3D * pDest, const MR_3DCoordinate & pPosition, MR_Angle pOrientation)
 {
 	// Compute the required rotation matrix
-	MR_PositionMatrix lMatrix;
+	HoverRace::VideoServices::PositionMatrix lMatrix;
 
 	if(pDest->ComputePositionMatrix(lMatrix, pPosition, pOrientation, 1000 /* TODO Object ray must be precomputed at compilation */ )) {
 	mActor->Draw(pDest, lMatrix, mCurrentSequence, mCurrentFrame);

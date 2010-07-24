@@ -255,7 +255,7 @@ void MainCharacter::AddRenderer()
 	}
 }
 
-void MainCharacter::Render(MR_3DViewPort * pDest, MR_SimulationTime /*pTime */ )
+void MainCharacter::Render(VideoServices::Viewport3D * pDest, MR_SimulationTime /*pTime */ )
 {
 	if(mRenderer != NULL)
 		mRenderer->Render(pDest, mPosition, mCabinOrientation, mMotorDisplay > 0, mHoverId, mHoverModel);

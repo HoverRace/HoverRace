@@ -60,7 +60,7 @@ class MultipartText::Part
 		 * @param[in,out] y The starting Y coordinate.
 		 * @param vp The viewport (may not be @c NULL).
 		 */
-		virtual void Blt(int &x, int &y, MR_2DViewPort *vp) = 0;
+		virtual void Blt(int &x, int &y, Viewport2D *vp) = 0;
 
 		/**
 		 * Provide arguments for the part to optionally consume.
@@ -87,7 +87,7 @@ class MultipartText::StringPart : public MultipartText::Part
 			delete widget;
 		}
 
-		virtual void Blt(int &x, int &y, MR_2DViewPort *vp)
+		virtual void Blt(int &x, int &y, Viewport2D *vp)
 		{
 			if (widget == NULL) {
 				MultipartText &container = GetContainer();
@@ -121,7 +121,7 @@ class MultipartText::FormatPart : public MultipartText::Part
 			delete widget;
 		}
 
-		virtual void Blt(int &x, int &y, MR_2DViewPort *vp)
+		virtual void Blt(int &x, int &y, Viewport2D *vp)
 		{
 			if (widget != NULL) {
 				widget->Blt(x, y, vp);
@@ -173,8 +173,8 @@ class MultipartText::FormatPart : public MultipartText::Part
  *               (may be @c NULL if a StaticText should be created for dynamic parts).
  * @param color The text color.
  */
-MultipartText::MultipartText(const HoverRace::VideoServices::Font &font,
-                             const HoverRace::VideoServices::NumericGlyphs *glyphs,
+MultipartText::MultipartText(const Font &font,
+                             const NumericGlyphs *glyphs,
                              MR_UInt8 color) :
 	font(font), glyphs(glyphs), color(color),
 	parts(), lastStringPart(NULL)
@@ -210,7 +210,7 @@ const MR_UInt8 MultipartText::GetColor() const
  * @param vp The viewport (may not be @c NULL).
  * @param ... Variable list of arguments, one per dynamic part.
  */
-void MultipartText::Blt(int x, int y, MR_2DViewPort *vp, ...) const
+void MultipartText::Blt(int x, int y, Viewport2D *vp, ...) const
 {
 	va_list vl;
 

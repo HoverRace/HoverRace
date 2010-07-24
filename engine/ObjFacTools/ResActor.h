@@ -5,7 +5,7 @@
 #define MR_RES_ACTOR_H
 
 #include "ResBitmap.h"
-#include "../VideoServices/3DViewPort.h"
+#include "../VideoServices/3DViewport.h"
 
 #ifdef MR_ENGINE
 #define MR_DllDeclare   __declspec( dllexport )
@@ -41,7 +41,7 @@ class MR_ResActor
 				virtual ~ ActorComponent();
 				virtual eComponentType GetType() const = 0;
 				virtual void Serialize(HoverRace::Parcel::ObjStream &pArchive, HoverRace::ObjFacTools::ResourceLib *pLib) = 0;
-				virtual void Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix) const = 0;
+				virtual void Draw(HoverRace::VideoServices::Viewport3D *pDest, const HoverRace::VideoServices::PositionMatrix & pMatrix) const = 0;
 
 		};
 
@@ -58,7 +58,7 @@ class MR_ResActor
 
 				eComponentType GetType() const;
 				void Serialize(HoverRace::Parcel::ObjStream &pArchive, HoverRace::ObjFacTools::ResourceLib *pLib);
-				void Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix) const;
+				void Draw(HoverRace::VideoServices::Viewport3D *pDest, const HoverRace::VideoServices::PositionMatrix & pMatrix) const;
 
 				int GetURes() const;
 				int GetVRes() const;
@@ -76,7 +76,7 @@ class MR_ResActor
 				~Frame();
 				void Clean();
 				void Serialize(HoverRace::Parcel::ObjStream &pArchive, HoverRace::ObjFacTools::ResourceLib *pLib);
-				void Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix) const;
+				void Draw(HoverRace::VideoServices::Viewport3D *pDest, const HoverRace::VideoServices::PositionMatrix & pMatrix) const;
 
 		};
 
@@ -89,7 +89,7 @@ class MR_ResActor
 				Sequence();
 				~Sequence();
 				void Serialize(HoverRace::Parcel::ObjStream &pArchive, HoverRace::ObjFacTools::ResourceLib *pLib);
-				void Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix, int pFrame) const;
+				void Draw(HoverRace::VideoServices::Viewport3D * pDest, const HoverRace::VideoServices::PositionMatrix & pMatrix, int pFrame) const;
 
 		};
 
@@ -108,7 +108,7 @@ class MR_ResActor
 		MR_DllDeclare int GetFrameCount(int pSequence) const;
 
 		MR_DllDeclare void Serialize(HoverRace::Parcel::ObjStream &pArchive, HoverRace::ObjFacTools::ResourceLib *pLib = NULL);
-		MR_DllDeclare void Draw(MR_3DViewPort * pDest, const MR_PositionMatrix & pMatrix, int pSequence, int pFrame) const;
+		MR_DllDeclare void Draw(HoverRace::VideoServices::Viewport3D * pDest, const HoverRace::VideoServices::PositionMatrix & pMatrix, int pSequence, int pFrame) const;
 
 };
 

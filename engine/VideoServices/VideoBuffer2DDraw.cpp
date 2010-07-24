@@ -24,7 +24,10 @@
 
 #include "VideoBuffer.h"
 
-void MR_VideoBuffer::DrawPoint(int pX, int pY, MR_UInt8 pColor)
+namespace HoverRace {
+namespace VideoServices {
+
+void VideoBuffer::DrawPoint(int pX, int pY, MR_UInt8 pColor)
 {
 	if(pX >= 0 && pY >= 0 && pX < mXRes && pY < mYRes) {
 		mBuffer[pY * mLineLen + pX] = pColor;
@@ -32,7 +35,7 @@ void MR_VideoBuffer::DrawPoint(int pX, int pY, MR_UInt8 pColor)
 
 }
 
-void MR_VideoBuffer::DrawHorizontalLine(int pY, int pX0, int pX1, MR_UInt8 pColor)
+void VideoBuffer::DrawHorizontalLine(int pY, int pX0, int pX1, MR_UInt8 pColor)
 {
 	int lTemp;
 
@@ -59,7 +62,7 @@ void MR_VideoBuffer::DrawHorizontalLine(int pY, int pX0, int pX1, MR_UInt8 pColo
 
 }
 
-void MR_VideoBuffer::DrawLine(int pX0, int pY0, int pX1, int pY1, MR_UInt8 pColor)
+void VideoBuffer::DrawLine(int pX0, int pY0, int pX1, int pY1, MR_UInt8 pColor)
 {
 	int lTemp;
 
@@ -115,3 +118,6 @@ void MR_VideoBuffer::DrawLine(int pX0, int pY0, int pX1, int pY1, MR_UInt8 pColo
 	}
 
 }
+
+}  // namespace VideoServices
+}  // namespace HoverRace

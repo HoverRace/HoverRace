@@ -1,4 +1,5 @@
-// VideoBuffer.h // DirectDraw encapsulation module
+// VideoBuffer.h
+// DirectDraw encapsulation module
 //
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
@@ -20,20 +21,26 @@
 // and limitations under the License.
 //
 
-#ifndef VIDEO_BUFFER_H
-#define VIDEO_BUFFER_H
+#pragma once
 
 #include <ddraw.h>
 
 #include "../Util/MR_Types.h"
 
-#ifdef MR_ENGINE
-#define MR_DllDeclare   __declspec( dllexport )
+#ifdef _WIN32
+#	ifdef MR_ENGINE
+#		define MR_DllDeclare   __declspec( dllexport )
+#	else
+#		define MR_DllDeclare   __declspec( dllimport )
+#	endif
 #else
-#define MR_DllDeclare   __declspec( dllimport )
+#	define MR_DllDeclare
 #endif
 
-class MR_VideoBuffer
+namespace HoverRace {
+namespace VideoServices {
+
+class VideoBuffer
 {
 
 	private:
@@ -132,8 +139,8 @@ class MR_VideoBuffer
 
 	public:
 
-		MR_DllDeclare MR_VideoBuffer(HWND pWindow, double lGamma, double lContrast, double mBrightness);
-		MR_DllDeclare ~MR_VideoBuffer();
+		MR_DllDeclare VideoBuffer(HWND pWindow, double lGamma, double lContrast, double mBrightness);
+		MR_DllDeclare ~VideoBuffer();
 
 		// Video mode selection
 		MR_DllDeclare bool SetVideoMode();		  // In a window mode
@@ -183,5 +190,7 @@ class MR_VideoBuffer
 
 };
 
+}  // namespace VideoServices
+}  // namespace HoverRace
+
 #undef MR_DllDeclare
-#endif

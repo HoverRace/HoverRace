@@ -20,8 +20,9 @@
 // and limitations under the License.
 //
 
-#ifndef _2D_VIEWPORT_H
-#define _2D_VIEWPORT_H
+#pragma once
+
+#include "../Util/MR_Types.h"
 
 #ifdef _WIN32
 #	ifdef MR_ENGINE
@@ -33,11 +34,12 @@
 #	define MR_DllDeclare
 #endif
 
-#include "../Util/MR_Types.h"
+namespace HoverRace {
+namespace VideoServices {
 
-class MR_VideoBuffer;
+class VideoBuffer;
 
-class MR_2DViewPort
+class Viewport2D
 {
 	protected:
 
@@ -51,7 +53,7 @@ class MR_2DViewPort
 		};
 
 		// VideobufferRelativeStock
-		MR_VideoBuffer *mVideoBuffer;
+		VideoBuffer *mVideoBuffer;
 		MR_UInt8 *mBuffer;						  // With computed offset
 		int mLineLen;
 
@@ -66,10 +68,10 @@ class MR_2DViewPort
 
 	public:
 
-		MR_DllDeclare MR_2DViewPort();
-		MR_DllDeclare ~ MR_2DViewPort();
+		MR_DllDeclare Viewport2D();
+		MR_DllDeclare ~ Viewport2D();
 
-		MR_DllDeclare void Setup(MR_VideoBuffer * pBuffer, int pX0, int pY0, int pSizeX, int pSizeY, int pMetrics = eNone);
+		MR_DllDeclare void Setup(VideoBuffer * pBuffer, int pX0, int pY0, int pSizeX, int pSizeY, int pMetrics = eNone);
 		MR_DllDeclare void Clear(MR_UInt8 pColor = 0);
 
 		MR_DllDeclare int GetXRes() const;
@@ -89,5 +91,7 @@ class MR_2DViewPort
 
 };
 
+}  // namespace VideoServices
+}  // namespace HoverRace
+
 #undef MR_DllDeclare
-#endif

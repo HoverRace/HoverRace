@@ -83,7 +83,7 @@ void MR_Sprite::Serialize(ObjStream &pArchive)
 	}
 }
 
-void MR_Sprite::Blt(int pX, int pY, MR_2DViewPort * pDest, eAlignment pHAlign, eAlignment pVAlign, int pItem, int pScaling) const
+void MR_Sprite::Blt(int pX, int pY, HoverRace::VideoServices::Viewport2D *pDest, eAlignment pHAlign, eAlignment pVAlign, int pItem, int pScaling) const
 {
 	ASSERT((pItem < mNbItem) && (pItem >= 0));
 
@@ -147,7 +147,7 @@ void MR_Sprite::Blt(int pX, int pY, MR_2DViewPort * pDest, eAlignment pHAlign, e
 	}
 }
 
-void MR_Sprite::StrBlt(int pX, int pY, const char *pStr, MR_2DViewPort * pDest, eAlignment pHAlign, eAlignment pVAlign, int pScaling) const
+void MR_Sprite::StrBlt(int pX, int pY, const char *pStr, HoverRace::VideoServices::Viewport2D *pDest, eAlignment pHAlign, eAlignment pVAlign, int pScaling) const
 {
 	if((pStr != NULL) && (pStr[0] != 0)) {
 		int lStrLen = strlen(pStr);

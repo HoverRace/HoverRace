@@ -92,7 +92,7 @@ class GameApp : public GameDirector
 		HWND mMainWindow;
 		HWND mBadVideoModeDlg;
 		HACCEL mAccelerators;
-		MR_VideoBuffer *mVideoBuffer;
+		VideoServices::VideoBuffer *mVideoBuffer;
 		static const int MAX_OBSERVERS = HoverRace::Util::Config::MAX_PLAYERS;
 		Observer *observers[MAX_OBSERVERS];
 		bool nonInteractiveShutdown;
@@ -196,7 +196,7 @@ class GameApp : public GameDirector
 		void SignalServerHasChanged() { mServerHasChanged = TRUE; }
 		void ChangeAutoUpdates(bool newSetting) { mustCheckUpdates = newSetting; }
 
-		MR_VideoBuffer *GetVideoBuffer() const { return mVideoBuffer; }
+		VideoServices::VideoBuffer *GetVideoBuffer() const { return mVideoBuffer; }
 
 		Control::Controller *GetController() const { return controller; }
 		Control::Controller *ReloadController();

@@ -93,7 +93,7 @@ class HighConsole::LogLines
 		void Add(const std::string &s, const Font &font, MR_UInt8 color);
 		void Clear();
 
-		void Render(MR_2DViewPort *vp, int x, int y);
+		void Render(VideoServices::Viewport2D *vp, int x, int y);
 
 	private:
 		typedef std::deque<StaticText*> lines_t;
@@ -127,7 +127,7 @@ HighConsole::HighConsole(Script::Core *scripting, GameApp *gameApp,
 	SUPER(scripting), gameApp(gameApp), gamePeer(gamePeer), sessionPeer(sessionPeer),
 	visible(false), helpVisible(false), cursorOn(true), cursorTick(0)
 {
-	vp = new MR_2DViewPort();
+	vp = new VideoServices::Viewport2D();
 
 	logFont = new Font("Courier New", 16);
 
@@ -372,7 +372,7 @@ void HighConsole::OnChar(char c)
  * Renders the console.
  * @param dest The destination viewport (may not be @c NULL).
  */
-void HighConsole::Render(MR_VideoBuffer *dest)
+void HighConsole::Render(VideoServices::VideoBuffer *dest)
 {
 	if (!visible) return;
 
@@ -623,7 +623,7 @@ void HighConsole::LogLines::Clear()
 	height = 0;
 }
 
-void HighConsole::LogLines::Render(MR_2DViewPort *vp, int x, int y)
+void HighConsole::LogLines::Render(VideoServices::Viewport2D *vp, int x, int y)
 {
 	unsigned int i = 0;
 	for (lines_t::iterator iter = lines.begin() + pos;

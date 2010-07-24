@@ -42,7 +42,7 @@ class MR_DllDeclare MainCharacterRenderer : public Util::ObjectFromFactory
 		MainCharacterRenderer(const Util::ObjectFromFactoryId & pId);
 		~MainCharacterRenderer();
 
-		virtual void Render(MR_3DViewPort *pDest, const MR_3DCoordinate &pPosition, MR_Angle pOrientation, BOOL pMotorOn, int pHoverId, int pModel) = 0;
+		virtual void Render(VideoServices::Viewport3D *pDest, const MR_3DCoordinate &pPosition, MR_Angle pOrientation, BOOL pMotorOn, int pHoverId, int pModel) = 0;
 
 		// Sound list
 		virtual VideoServices::ShortSound *GetLineCrossingSound() = 0;
