@@ -21,27 +21,6 @@
 // and limitations under the License.
 //
 
-//
-// Elemetens is a class that is used to represent all the objects (Wall, floor, ceiling, Monster...)
-// that can be found in a maze.
-//
-//
-
-// They are two kings of elements, the surface elements and the free elements. The Surface
-// elements have a geometry based of the maze geometry. That mean that a wall elements
-// contains no geometry, it's geometry is defines by the surtace of the maze that it is attached to.
-//
-// free elements are monsters, furnitures... They contains there own geometry but they do not contains
-// there position and orientation.
-//
-// Elements are formed from component. They are two kinds of components in an element, the Logic
-// component and the rendering component. The logic component own the part of the object that
-// is responsible of the logic simulation of the element. The rendering component contains the
-// data needed for the rendering of the object(usually this component is empty)
-//
-// Data that is shared by the two possible component is store directly in the element body
-//
-
 #pragma once
 
 #include "Shapes.h"
@@ -74,6 +53,24 @@ class ElementNetState
 		const MR_UInt8 *mData;
 };
 
+/**
+ * Represents all objects (wall, floor, ceiling, etc.) that can be found
+ * in a maze.
+ *
+ * There are two kinds of elements, the surface elements and the free elements.  Surface
+ * elements have a geometry based on the maze geometry. That means that a wall element
+ * contains no geometry, its geometry is defined by the surface of the maze that it is attached to.
+ *
+ * Free elements are monsters, furniture, etc.  They contain their own geometry
+ * but they do not contain their position or orientation.
+ *
+ * Elements are formed from components. There are two kinds of components in an element, the logic
+ * component and the rendering component. The logic component owns the part of the object that
+ * is responsible of the logic simulation of the element. The rendering component contains the
+ * data needed for the rendering of the object (usually this component is empty).
+ *
+ * Data that is shared by the two possible components is stored directly in the element body.
+ */
 class MR_DllDeclare Element : public Util::ObjectFromFactory
 {
 	public:
