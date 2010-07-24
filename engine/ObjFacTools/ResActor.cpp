@@ -19,47 +19,47 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
 #include "../Parcel/ObjStream.h"
 #include "ResourceLib.h"
 
 #include "ResActor.h"
 
-using HoverRace::ObjFacTools::ResourceLib;
 using HoverRace::Parcel::ObjStream;
 using HoverRace::Parcel::ObjStreamExn;
 
-// ResActor
-//
-MR_ResActor::MR_ResActor(int pResourceId)
+namespace HoverRace {
+namespace ObjFacTools {
+
+ResActor::ResActor(int pResourceId)
 {
 	mResourceId = pResourceId;
 	mNbSequence = 0;
 	mSequenceList = NULL;
 }
 
-MR_ResActor::~MR_ResActor()
+ResActor::~ResActor()
 {
 	delete[]mSequenceList;
 }
 
-int MR_ResActor::GetResourceId() const
+int ResActor::GetResourceId() const
 {
 	return mResourceId;
 }
 
-int MR_ResActor::GetSequenceCount() const
+int ResActor::GetSequenceCount() const
 {
 	return mNbSequence;
 }
 
-int MR_ResActor::GetFrameCount(int pSequence) const
+int ResActor::GetFrameCount(int pSequence) const
 {
 	return mSequenceList[pSequence].mNbFrame;
 } 
 
-void MR_ResActor::Serialize(ObjStream &pArchive, ResourceLib *pLib)
+void ResActor::Serialize(ObjStream &pArchive, ResourceLib *pLib)
 {
 
 	if(pArchive.IsWriting()) {
@@ -82,7 +82,7 @@ void MR_ResActor::Serialize(ObjStream &pArchive, ResourceLib *pLib)
 
 }
 
-void MR_ResActor::Draw(HoverRace::VideoServices::Viewport3D * pDest, const HoverRace::VideoServices::PositionMatrix & pMatrix, int pSequence, int pFrame) const
+void ResActor::Draw(VideoServices::Viewport3D * pDest, const VideoServices::PositionMatrix & pMatrix, int pSequence, int pFrame) const
 {
 	ASSERT(pSequence < mNbSequence);
 
@@ -90,18 +90,18 @@ void MR_ResActor::Draw(HoverRace::VideoServices::Viewport3D * pDest, const Hover
 }
 
 // Sequence 
-MR_ResActor::Sequence::Sequence()
+ResActor::Sequence::Sequence()
 {
 	mNbFrame = 0;
 	mFrameList = NULL;
 }
 
-MR_ResActor::Sequence::~Sequence()
+ResActor::Sequence::~Sequence()
 {
 	delete[]mFrameList;
 }
 
-void MR_ResActor::Sequence::Serialize(ObjStream &pArchive, ResourceLib *pLib)
+void ResActor::Sequence::Serialize(ObjStream &pArchive, ResourceLib *pLib)
 {
 	if(pArchive.IsWriting()) {
 		pArchive << mNbFrame;
@@ -122,7 +122,7 @@ void MR_ResActor::Sequence::Serialize(ObjStream &pArchive, ResourceLib *pLib)
 	}
 }
 
-void MR_ResActor::Sequence::Draw(HoverRace::VideoServices::Viewport3D * pDest, const HoverRace::VideoServices::PositionMatrix & pMatrix, int pFrame) const
+void ResActor::Sequence::Draw(VideoServices::Viewport3D * pDest, const VideoServices::PositionMatrix & pMatrix, int pFrame) const
 {
 	ASSERT(pFrame < mNbFrame);
 
@@ -130,19 +130,19 @@ void MR_ResActor::Sequence::Draw(HoverRace::VideoServices::Viewport3D * pDest, c
 }
 
 // Frame 
-MR_ResActor::Frame::Frame()
+ResActor::Frame::Frame()
 {
 	mNbComponent = 0;
 	mComponentList = NULL;
 
 }
 
-MR_ResActor::Frame::~Frame()
+ResActor::Frame::~Frame()
 {
 	Clean();
 }
 
-void MR_ResActor::Frame::Clean()
+void ResActor::Frame::Clean()
 {
 	if(mComponentList != NULL) {
 		for(int lCounter = 0; lCounter < mNbComponent; lCounter++) {
@@ -154,7 +154,7 @@ void MR_ResActor::Frame::Clean()
 	}
 }
 
-void MR_ResActor::Frame::Serialize(ObjStream &pArchive, ResourceLib *pLib)
+void ResActor::Frame::Serialize(ObjStream &pArchive, ResourceLib *pLib)
 {
 	int lCounter;
 
@@ -196,7 +196,7 @@ void MR_ResActor::Frame::Serialize(ObjStream &pArchive, ResourceLib *pLib)
 	}
 }
 
-void MR_ResActor::Frame::Draw(HoverRace::VideoServices::Viewport3D * pDest, const HoverRace::VideoServices::PositionMatrix & pMatrix) const
+void ResActor::Frame::Draw(VideoServices::Viewport3D * pDest, const VideoServices::PositionMatrix & pMatrix) const
 {
 	// Draw each component of the frame
 	for(int lCounter = 0; lCounter < mNbComponent; lCounter++) {
@@ -205,30 +205,30 @@ void MR_ResActor::Frame::Draw(HoverRace::VideoServices::Viewport3D * pDest, cons
 }
 
 // class ActorComponent 
-MR_ResActor::ActorComponent::~ActorComponent()
+ResActor::ActorComponent::~ActorComponent()
 {
 	// Notting to do
 }
 
 // Patch
 //
-MR_ResActor::Patch::Patch()
+ResActor::Patch::Patch()
 {
 	mBitmap = NULL;
 	mVertexList = NULL;
 }
 
-MR_ResActor::Patch::~Patch()
+ResActor::Patch::~Patch()
 {
 	delete[]mVertexList;
 }
 
-MR_ResActor::eComponentType MR_ResActor::Patch::GetType() const
+ResActor::eComponentType ResActor::Patch::GetType() const
 {
 	return ePatch;
 }
 
-void MR_ResActor::Patch::Serialize(ObjStream &pArchive, ResourceLib *pLib)
+void ResActor::Patch::Serialize(ObjStream &pArchive, ResourceLib *pLib)
 {
 	int lCounter;
 
@@ -260,22 +260,25 @@ void MR_ResActor::Patch::Serialize(ObjStream &pArchive, ResourceLib *pLib)
 	}
 }
 
-void MR_ResActor::Patch::Draw(HoverRace::VideoServices::Viewport3D *pDest, const HoverRace::VideoServices::PositionMatrix & pMatrix) const
+void ResActor::Patch::Draw(VideoServices::Viewport3D *pDest, const VideoServices::PositionMatrix & pMatrix) const
 {
 	pDest->RenderPatch(*this, pMatrix, mBitmap);
 }
 
-int MR_ResActor::Patch::GetURes() const
+int ResActor::Patch::GetURes() const
 {
 	return mURes;
 }
 
-int MR_ResActor::Patch::GetVRes() const
+int ResActor::Patch::GetVRes() const
 {
 	return mVRes;
 }
 
-const MR_3DCoordinate *MR_ResActor::Patch::GetNodeList() const
+const MR_3DCoordinate *ResActor::Patch::GetNodeList() const
 {
 	return mVertexList;
 }
+
+}  // namespace ObjFacTools
+}  // namespace HoverRace

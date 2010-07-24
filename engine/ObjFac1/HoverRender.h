@@ -33,10 +33,10 @@ class HoverRender : public MainCharacter::MainCharacterRenderer
 {
 	typedef MainCharacter::MainCharacterRenderer SUPER;
 	protected:
-		const MR_ResActor *mActor0;
-		const MR_ResActor *mActor1;
-		const MR_ResActor *mActor2;
-		const MR_ResActor *mActor3;
+		const ObjFacTools::ResActor *mActor0;
+		const ObjFacTools::ResActor *mActor1;
+		const ObjFacTools::ResActor *mActor2;
+		const ObjFacTools::ResActor *mActor3;
 
 		int mFrame;
 

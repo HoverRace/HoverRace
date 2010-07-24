@@ -25,7 +25,10 @@ namespace HoverRace {
 	}
 }
 
-class MR_ResActor
+namespace HoverRace {
+namespace ObjFacTools {
+
+class ResActor
 {
 	public:
 		friend class HoverRace::ObjFac1::ResActorFriend;
@@ -40,8 +43,8 @@ class MR_ResActor
 
 				virtual ~ ActorComponent();
 				virtual eComponentType GetType() const = 0;
-				virtual void Serialize(HoverRace::Parcel::ObjStream &pArchive, HoverRace::ObjFacTools::ResourceLib *pLib) = 0;
-				virtual void Draw(HoverRace::VideoServices::Viewport3D *pDest, const HoverRace::VideoServices::PositionMatrix & pMatrix) const = 0;
+				virtual void Serialize(Parcel::ObjStream &pArchive, ResourceLib *pLib) = 0;
+				virtual void Draw(VideoServices::Viewport3D *pDest, const VideoServices::PositionMatrix & pMatrix) const = 0;
 
 		};
 
@@ -57,8 +60,8 @@ class MR_ResActor
 				~Patch();
 
 				eComponentType GetType() const;
-				void Serialize(HoverRace::Parcel::ObjStream &pArchive, HoverRace::ObjFacTools::ResourceLib *pLib);
-				void Draw(HoverRace::VideoServices::Viewport3D *pDest, const HoverRace::VideoServices::PositionMatrix & pMatrix) const;
+				void Serialize(Parcel::ObjStream &pArchive, ResourceLib *pLib);
+				void Draw(VideoServices::Viewport3D *pDest, const VideoServices::PositionMatrix & pMatrix) const;
 
 				int GetURes() const;
 				int GetVRes() const;
@@ -75,8 +78,8 @@ class MR_ResActor
 				Frame();
 				~Frame();
 				void Clean();
-				void Serialize(HoverRace::Parcel::ObjStream &pArchive, HoverRace::ObjFacTools::ResourceLib *pLib);
-				void Draw(HoverRace::VideoServices::Viewport3D *pDest, const HoverRace::VideoServices::PositionMatrix & pMatrix) const;
+				void Serialize(Parcel::ObjStream &pArchive, ResourceLib *pLib);
+				void Draw(VideoServices::Viewport3D *pDest, const VideoServices::PositionMatrix & pMatrix) const;
 
 		};
 
@@ -88,8 +91,8 @@ class MR_ResActor
 
 				Sequence();
 				~Sequence();
-				void Serialize(HoverRace::Parcel::ObjStream &pArchive, HoverRace::ObjFacTools::ResourceLib *pLib);
-				void Draw(HoverRace::VideoServices::Viewport3D * pDest, const HoverRace::VideoServices::PositionMatrix & pMatrix, int pFrame) const;
+				void Serialize(Parcel::ObjStream &pArchive, ResourceLib *pLib);
+				void Draw(VideoServices::Viewport3D * pDest, const VideoServices::PositionMatrix & pMatrix, int pFrame) const;
 
 		};
 
@@ -99,18 +102,21 @@ class MR_ResActor
 
 	public:
 												  // Only availlable for resourceLib and construction
-		MR_DllDeclare MR_ResActor(int mResourceId);
-		MR_DllDeclare ~ MR_ResActor();
+		MR_DllDeclare ResActor(int mResourceId);
+		MR_DllDeclare ~ ResActor();
 
 		MR_DllDeclare int GetResourceId() const;
 
 		MR_DllDeclare int GetSequenceCount() const;
 		MR_DllDeclare int GetFrameCount(int pSequence) const;
 
-		MR_DllDeclare void Serialize(HoverRace::Parcel::ObjStream &pArchive, HoverRace::ObjFacTools::ResourceLib *pLib = NULL);
-		MR_DllDeclare void Draw(HoverRace::VideoServices::Viewport3D * pDest, const HoverRace::VideoServices::PositionMatrix & pMatrix, int pSequence, int pFrame) const;
+		MR_DllDeclare void Serialize(Parcel::ObjStream &pArchive, ResourceLib *pLib = NULL);
+		MR_DllDeclare void Draw(VideoServices::Viewport3D * pDest, const VideoServices::PositionMatrix & pMatrix, int pSequence, int pFrame) const;
 
 };
+
+}  // namespace ObjFacTools
+}  // namespace HoverRace
 
 #undef MR_DllDeclare
 #endif

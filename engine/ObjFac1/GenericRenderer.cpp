@@ -19,14 +19,15 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
 #include "GenericRenderer.h"
 
-using HoverRace::ObjFacTools::ResourceLib;
+namespace HoverRace {
+namespace ObjFac1 {
 
-MR_GenericRenderer::MR_GenericRenderer(const HoverRace::Util::ObjectFromFactoryId & pId, ResourceLib* resourceLib, int pActorRes)
-	: MR_FreeElementBaseRenderer(pId)
+MR_GenericRenderer::MR_GenericRenderer(const Util::ObjectFromFactoryId &pId, ObjFacTools::ResourceLib *resourceLib, int pActorRes) :
+	SUPER(pId)
 {
 	mActor = resourceLib->GetActor(pActorRes);
 }
@@ -35,3 +36,6 @@ MR_GenericRenderer::~MR_GenericRenderer()
 {
 
 }
+
+}  // namespace ObjFac1
+}  // namespace HoverRace

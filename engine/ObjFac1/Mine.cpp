@@ -61,7 +61,7 @@ MR_Int32 Mine::RayLen() const
 }
 
 Mine::Mine(const Util::ObjectFromFactoryId & pId, ResourceLib* resourceLib) :
-	MR_FreeElementBase(pId)
+	SUPER(pId)
 {
 	mEffectList.push_back(&mEffect);
 	mActor = resourceLib->GetActor(MR_MINE);
@@ -141,7 +141,7 @@ int Mine::Simulate(MR_SimulationTime pDuration, Model::Level * pLevel, int pRoom
 void Mine::Render(VideoServices::Viewport3D * pDest, MR_SimulationTime pTime)
 {
 	mCurrentFrame = (pTime >> 9) & 1;
-	MR_FreeElementBase::Render(pDest, pTime);
+	SUPER::Render(pDest, pTime);
 }
 
 // State broadcast

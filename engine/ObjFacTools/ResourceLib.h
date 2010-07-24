@@ -59,7 +59,7 @@ class MR_DllDeclare ResourceLib
 
 	public:
 		MR_ResBitmap * GetBitmap(int id);
-		const MR_ResActor *GetActor(int id);
+		const ResActor *GetActor(int id);
 		const MR_ResSprite *GetSprite(int id);
 		const MR_ResShortSound *GetShortSound(int id);
 		const MR_ResContinuousSound *GetContinuousSound(int id);
@@ -69,7 +69,7 @@ class MR_DllDeclare ResourceLib
 
 		typedef std::map<int, MR_ResBitmap*> bitmaps_t;
 		bitmaps_t bitmaps;
-		typedef std::map<int, MR_ResActor*> actors_t;
+		typedef std::map<int, ResActor*> actors_t;
 		actors_t actors;
 		typedef std::map<int, MR_ResSprite*> sprites_t;
 		sprites_t sprites;

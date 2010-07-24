@@ -28,9 +28,9 @@
 namespace HoverRace {
 namespace ObjFac1 {
 
-class BallElement : public MR_FreeElementBase
+class BallElement : public ObjFacTools::FreeElementBase
 {
-
+	typedef ObjFacTools::FreeElementBase SUPER;
 	public:
 		BallElement(const Util::ObjectFromFactoryId & pId, ObjFacTools::ResourceLib* resourceLib);
 		~BallElement();

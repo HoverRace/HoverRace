@@ -39,21 +39,28 @@
 #define MR_DllDeclare   __declspec( dllimport )
 #endif
 
-class MR_FreeElementBaseRenderer : public HoverRace::Util::ObjectFromFactory
+namespace HoverRace {
+namespace ObjFacTools {
+
+class FreeElementBaseRenderer : public Util::ObjectFromFactory
 {
+	typedef Util::ObjectFromFactory SUPER;
 	protected:
-		const MR_ResActor *mActor;
+		const ResActor *mActor;
 		int mCurrentSequence;
 		int mCurrentFrame;
 
 	public:
-		MR_DllDeclare MR_FreeElementBaseRenderer(const HoverRace::Util::ObjectFromFactoryId & pId);
-		MR_DllDeclare ~ MR_FreeElementBaseRenderer();
+		MR_DllDeclare FreeElementBaseRenderer(const Util::ObjectFromFactoryId & pId);
+		MR_DllDeclare ~FreeElementBaseRenderer();
 
 		// Rendering stuff
-		MR_DllDeclare void Render(HoverRace::VideoServices::Viewport3D * pDest, const MR_3DCoordinate & pPosition, MR_Angle pOrientation);
+		MR_DllDeclare void Render(VideoServices::Viewport3D * pDest, const MR_3DCoordinate & pPosition, MR_Angle pOrientation);
 
 };
+
+}  // namespace ObjFacTools
+}  // namespace HoverRace
 
 #undef MR_DllDeclare
 #endif

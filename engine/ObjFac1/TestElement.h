@@ -32,9 +32,11 @@
 namespace HoverRace {
 namespace ObjFac1 {
 
-class TestElement : public MR_FreeElementBase
+class TestElement : public ObjFacTools::FreeElementBase
 {
-	class Cylinder:public MR_CylinderShape
+	typedef ObjFacTools::FreeElementBase SUPER;
+
+	class Cylinder : public MR_CylinderShape
 	{
 		public:
 

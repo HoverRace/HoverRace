@@ -76,7 +76,7 @@ MR_Int32 Missile::RayLen() const
 }
 
 Missile::Missile(const Util::ObjectFromFactoryId & pId, ResourceLib* resourceLib) :
-	MR_FreeElementBase(pId)
+	SUPER(pId)
 {
 	mHoverId = -1;
 	mLived = 0;

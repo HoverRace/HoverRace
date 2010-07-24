@@ -29,8 +29,9 @@
 namespace HoverRace {
 namespace ObjFac1 {
 
-class BumperGate : public MR_FreeElementBase, protected MR_CylinderShape
+class BumperGate : public ObjFacTools::FreeElementBase, protected MR_CylinderShape
 {
+	typedef ObjFacTools::FreeElementBase SUPER;
 	protected:
 
 		// Shape interface

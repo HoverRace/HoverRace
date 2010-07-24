@@ -32,9 +32,10 @@
 
 using namespace HoverRace::Parcel;
 
-namespace {
-	using HoverRace::ObjFacTools::ResourceLib;
+namespace HoverRace {
+namespace ObjFacTools {
 
+namespace {
 	template<class T>
 	void NewRes(T *val, ObjStream &os, ResourceLib *self)
 	{
@@ -42,7 +43,7 @@ namespace {
 	}
 
 	template<>
-	void NewRes<MR_ResActor>(MR_ResActor *val, ObjStream &os, ResourceLib *self)
+	void NewRes<ResActor>(ResActor *val, ObjStream &os, ResourceLib *self)
 	{
 		val->Serialize(os, self);
 	}
@@ -63,9 +64,6 @@ namespace {
 		}
 	}
 }
-
-namespace HoverRace {
-namespace ObjFacTools {
 
 /**
  * Constructor.
@@ -120,7 +118,7 @@ MR_ResBitmap *ResourceLib::GetBitmap(int id)
 	return (iter == bitmaps.end()) ? NULL : iter->second;
 }
 
-const MR_ResActor *ResourceLib::GetActor(int id)
+const ResActor *ResourceLib::GetActor(int id)
 {
 	actors_t::const_iterator iter = actors.find(id);
 	return (iter == actors.end()) ? NULL : iter->second;

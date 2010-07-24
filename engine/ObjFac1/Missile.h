@@ -29,8 +29,9 @@
 namespace HoverRace {
 namespace ObjFac1 {
 
-class Missile : public MR_FreeElementBase, protected MR_CylinderShape
+class Missile : public ObjFacTools::FreeElementBase, protected MR_CylinderShape
 {
+	typedef ObjFacTools::FreeElementBase SUPER;
 	protected:
 		// Shape interface
 		MR_Int32 ZMin() const;

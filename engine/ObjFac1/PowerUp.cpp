@@ -60,7 +60,7 @@ MR_Int32 PowerUp::RayLen() const
 }
 
 PowerUp::PowerUp(const Util::ObjectFromFactoryId &pId, ResourceLib* resourceLib) :
-	MR_FreeElementBase(pId)
+	SUPER(pId)
 {
 	mEffectList.push_back(&mPowerUpEffect);
 	mActor = resourceLib->GetActor(MR_PWRUP);

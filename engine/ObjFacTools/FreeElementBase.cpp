@@ -23,7 +23,10 @@
 
 #include "FreeElementBase.h"
 
-MR_FreeElementBase::MR_FreeElementBase(const HoverRace::Util::ObjectFromFactoryId & pId) :
+namespace HoverRace {
+namespace ObjFacTools {
+
+FreeElementBase::FreeElementBase(const HoverRace::Util::ObjectFromFactoryId & pId) :
 	HoverRace::Model::FreeElement(pId)
 {
 	// The task of initialising the data members is done by the superclass
@@ -33,17 +36,19 @@ MR_FreeElementBase::MR_FreeElementBase(const HoverRace::Util::ObjectFromFactoryI
 
 }
 
-MR_FreeElementBase::~MR_FreeElementBase()
+FreeElementBase::~FreeElementBase()
 {
 }
 
-void MR_FreeElementBase::Render(HoverRace::VideoServices::Viewport3D *pDest, MR_SimulationTime /*pTime */ )
+void FreeElementBase::Render(HoverRace::VideoServices::Viewport3D *pDest, MR_SimulationTime /*pTime */ )
 {
 	// Compute the required rotation matrix
 	HoverRace::VideoServices::PositionMatrix lMatrix;
 
 	if(pDest->ComputePositionMatrix(lMatrix, mPosition, mOrientation, 1000 /* TODO Object ray must be precomputed at compilation */ )) {
-	mActor->Draw(pDest, lMatrix, mCurrentSequence, mCurrentFrame);
+		mActor->Draw(pDest, lMatrix, mCurrentSequence, mCurrentFrame);
+	}
 }
 
-}
+}  // namespace ObjFacTools
+}  // namespace HoverRace

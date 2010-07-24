@@ -29,12 +29,19 @@
 
 #include "../ObjFacTools/FreeElementBaseRenderer.h"
 
-class MR_GenericRenderer:public MR_FreeElementBaseRenderer
-{
+namespace HoverRace {
+namespace ObjFac1 {
 
+class MR_GenericRenderer : public ObjFacTools::FreeElementBaseRenderer
+{
+	typedef ObjFacTools::FreeElementBaseRenderer SUPER;
 	public:
-		MR_GenericRenderer(const HoverRace::Util::ObjectFromFactoryId & pId, HoverRace::ObjFacTools::ResourceLib* resourceLib, int pActorRes);
+		MR_GenericRenderer(const Util::ObjectFromFactoryId & pId, ObjFacTools::ResourceLib* resourceLib, int pActorRes);
 		~MR_GenericRenderer();
 
 };
+
+}  // namespace ObjFac1
+}  // namespace HoverRace
+
 #endif

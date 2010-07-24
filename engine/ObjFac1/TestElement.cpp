@@ -30,7 +30,7 @@ namespace HoverRace {
 namespace ObjFac1 {
 
 TestElement::TestElement(const Util::ObjectFromFactoryId & pId, ResourceLib* resourceLib, int pActorRes) :
-	MR_FreeElementBase(pId)
+	SUPER(pId)
 {
 	mElapsedFrameTime = 0;
 	mActor = resourceLib->GetActor(pActorRes);

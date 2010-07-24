@@ -30,7 +30,7 @@ namespace HoverRace {
 namespace ObjFac1 {
 
 BallElement::BallElement(const Util::ObjectFromFactoryId & pId, ResourceLib* resourceLib) :
-	MR_FreeElementBase(pId)
+	SUPER(pId)
 {
 	mActor = resourceLib->GetActor(MR_BALL);
 }

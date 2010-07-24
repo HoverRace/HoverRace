@@ -23,8 +23,11 @@
 
 #include "FreeElementBaseRenderer.h"
 
-MR_FreeElementBaseRenderer::MR_FreeElementBaseRenderer(const HoverRace::Util::ObjectFromFactoryId & pId) :
-	HoverRace::Util::ObjectFromFactory(pId)
+namespace HoverRace {
+namespace ObjFacTools {
+
+FreeElementBaseRenderer::FreeElementBaseRenderer(const HoverRace::Util::ObjectFromFactoryId & pId) :
+	SUPER(pId)
 {
 	// The task of initialising the data members is done by the superclass
 	mActor = NULL;
@@ -33,17 +36,19 @@ MR_FreeElementBaseRenderer::MR_FreeElementBaseRenderer(const HoverRace::Util::Ob
 
 }
 
-MR_FreeElementBaseRenderer::~MR_FreeElementBaseRenderer()
+FreeElementBaseRenderer::~FreeElementBaseRenderer()
 {
 }
 
-void MR_FreeElementBaseRenderer::Render(HoverRace::VideoServices::Viewport3D * pDest, const MR_3DCoordinate & pPosition, MR_Angle pOrientation)
+void FreeElementBaseRenderer::Render(HoverRace::VideoServices::Viewport3D * pDest, const MR_3DCoordinate & pPosition, MR_Angle pOrientation)
 {
 	// Compute the required rotation matrix
 	HoverRace::VideoServices::PositionMatrix lMatrix;
 
 	if(pDest->ComputePositionMatrix(lMatrix, pPosition, pOrientation, 1000 /* TODO Object ray must be precomputed at compilation */ )) {
-	mActor->Draw(pDest, lMatrix, mCurrentSequence, mCurrentFrame);
+		mActor->Draw(pDest, lMatrix, mCurrentSequence, mCurrentFrame);
+	}
 }
 
-}
+}  // namespace ObjFacTools
+}  // namespace HoverRace

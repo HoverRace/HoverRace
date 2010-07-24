@@ -36,7 +36,7 @@ namespace ObjFac1 {
 class ResActorFriend
 {
 	public:
-		static void Draw(const MR_ResActor *pActor, Viewport3D *pDest, const PositionMatrix &pMatrix, int pSequence, int pFrame, const MR_Bitmap *pCockpitBitmap);
+		static void Draw(const ObjFacTools::ResActor *pActor, Viewport3D *pDest, const PositionMatrix &pMatrix, int pSequence, int pFrame, const MR_Bitmap *pCockpitBitmap);
 };
 
 HoverRender::HoverRender(const Util::ObjectFromFactoryId &pId, ResourceLib *resourceLib) :
@@ -154,14 +154,14 @@ ContinuousSound *HoverRender::GetFrictionSound()
 	return mFrictionSound;
 }
 
-void ResActorFriend::Draw(const MR_ResActor *pActor, Viewport3D *pDest, const PositionMatrix &pMatrix, int pSequence, int pFrame, const MR_Bitmap *pCockpitBitmap)
+void ResActorFriend::Draw(const ObjFacTools::ResActor *pActor, Viewport3D *pDest, const PositionMatrix &pMatrix, int pSequence, int pFrame, const MR_Bitmap *pCockpitBitmap)
 {
-	MR_ResActor::Frame * lFrame = &(pActor->mSequenceList[pSequence].mFrameList[pFrame]);
+	ObjFacTools::ResActor::Frame * lFrame = &(pActor->mSequenceList[pSequence].mFrameList[pFrame]);
 
 	ASSERT(lFrame != NULL);
 
 	for(int lCounter = 0; lCounter < lFrame->mNbComponent; lCounter++) {
-		MR_ResActor::Patch *lPatch = (MR_ResActor::Patch *) lFrame->mComponentList[lCounter];
+		ObjFacTools::ResActor::Patch *lPatch = (ObjFacTools::ResActor::Patch *) lFrame->mComponentList[lCounter];
 
 		int lBitmapResId = lPatch->mBitmap->GetResourceId();
 

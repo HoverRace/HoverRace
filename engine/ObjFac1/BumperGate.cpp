@@ -66,8 +66,8 @@ MR_Int32 BumperGate::RayLen() const
 	return cGateRayMin + mCurrentFrame * (cGateRayMax - cGateRayMin) / (mLastState);
 }
 
-BumperGate::BumperGate(const Util::ObjectFromFactoryId & pId, ResourceLib* resourceLib)
-	: MR_FreeElementBase(pId)
+BumperGate::BumperGate(const Util::ObjectFromFactoryId & pId, ResourceLib* resourceLib) :
+	SUPER(pId)
 {
 	mActor = resourceLib->GetActor(MR_BUMPERGATE);
 

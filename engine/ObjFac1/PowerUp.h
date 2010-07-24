@@ -28,8 +28,9 @@
 namespace HoverRace {
 namespace ObjFac1 {
 
-class PowerUp : public MR_FreeElementBase, protected MR_CylinderShape
+class PowerUp : public ObjFacTools::FreeElementBase, protected MR_CylinderShape
 {
+	typedef ObjFacTools::FreeElementBase SUPER;
 	protected:
 
 		// Shape interface
