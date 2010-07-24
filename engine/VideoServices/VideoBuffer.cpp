@@ -56,21 +56,21 @@ static FILE *gOutputFile = NULL;
 if( gOutputFile == NULL ) \
 { \
 	gOutputFile = fopen( "Video.log", "a" ); \
-} \
+}
 
 #define CLOSE_LOG() \
 if( gOutputFile != NULL ) \
 { \
 	fclose( gOutputFile ); \
 	gOutputFile = NULL; \
-} \
+}
 
-		static void PrintTimeAndLine(int pLine)
-		{
-			if(gOutputFile != NULL) {
-				fprintf(gOutputFile, "%6d %4d : ", (int) timeGetTime(), pLine);
-			}
-		}
+static void PrintTimeAndLine(int pLine)
+{
+	if(gOutputFile != NULL) {
+		fprintf(gOutputFile, "%6d %4d : ", (int) timeGetTime(), pLine);
+	}
+}
 
 static int Assert(int pCondition, int pLine)
 {
@@ -624,14 +624,6 @@ void MR_VideoBuffer::AssignPalette()
 		DD_CALL(mFrontBuffer->SetPalette(mPalette));
 
 	}
-
-	/*
-	   if( (mBackBuffer != NULL)&&( mPalette!=NULL)&&!mFullScreen )
-	   {
-	   HRESULT lErrorCode = mBackBuffer->SetPalette( mPalette );
-	   }
-	 */
-
 }
 
 void MR_VideoBuffer::ReturnToWindowsResolution()
@@ -639,13 +631,6 @@ void MR_VideoBuffer::ReturnToWindowsResolution()
 	PRINT_LOG("ReturnToWindowsResolution");
 
 	DeleteInternalSurfaces();
-
-	/*
-	   if( mSpecialMode && (GetActiveWindow()==mWindow ))
-	   {
-	   mFullScreen = TRUE;
-	   }
-	 */
 
 	if(mDirectDraw && mFullScreen) {
 		mFullScreen = false;
@@ -754,12 +739,6 @@ bool MR_VideoBuffer::SetVideoMode()
 
 		lSurfaceDesc.ddsCaps.dwCaps = DDSCAPS_PRIMARYSURFACE;
 
-		/*
-		   lSurfaceDesc.ddpfPixelFormat.dwSize  = sizeof( lSurfaceDesc.ddpfPixelFormat );
-		   lSurfaceDesc.ddpfPixelFormat.dwFlags = DDPF_PALETTEINDEXED8|DDPF_RGB;
-		   lSurfaceDesc.ddpfPixelFormat.dwRGBBitCount = 8;
-		 */
-
 		if(DD_CALL(mDirectDraw->CreateSurface(&lSurfaceDesc, &mFrontBuffer, NULL)) != DD_OK) {
 			// ASSERT( FALSE );
 			lReturnValue = false;
@@ -780,12 +759,6 @@ bool MR_VideoBuffer::SetVideoMode()
 		lSurfaceDesc.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN | DDSCAPS_SYSTEMMEMORY;
 		lSurfaceDesc.dwHeight = mYRes;
 		lSurfaceDesc.dwWidth = mXRes;
-
-		/*
-		   lSurfaceDesc.ddpfPixelFormat.dwSize  = sizeof( lSurfaceDesc.ddpfPixelFormat );
-		   lSurfaceDesc.ddpfPixelFormat.dwFlags = DDPF_PALETTEINDEXED8|DDPF_RGB;
-		   lSurfaceDesc.ddpfPixelFormat.dwRGBBitCount = 8;
-		 */
 
 		if(DD_CALL(mDirectDraw->CreateSurface(&lSurfaceDesc, &mBackBuffer, NULL)) != DD_OK) {
 			// ASSERT( FALSE ); // Probably a bad video mode (not 8bit/pixel)
@@ -1241,22 +1214,6 @@ void MR_VideoBuffer::EnterIconMode()
 
 	if(!mIconMode) {
 		mIconMode = TRUE;
-
-		/*
-		   if( !mFullScreen )
-		   {
-		   mBeforeIconXRes = 0;
-		   mBeforeIconYRes = 0;
-		   }
-		   else
-		   {
-		   // mBeforeIconXRes = 0;
-		   // mBeforeIconYRes = 0;
-
-		   mBeforeIconXRes = mXRes;
-		   mBeforeIconYRes = mYRes;
-		   }
-		 */
 	}
 }
 
@@ -1266,17 +1223,5 @@ void MR_VideoBuffer::ExitIconMode()
 
 	if(mIconMode) {
 		mIconMode = FALSE;
-
-		/*
-		   if( mBeforeIconXRes != 0 )
-		   {
-		   mFullScreen = TRUE;
-		   SetVideoMode();
-
-		   // SetFocus( mWindow );
-		   // SetVideoMode( mBeforeIconXRes, mBeforeIconYRes );
-		   }
-		 */
-
 	}
 }
