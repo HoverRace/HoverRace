@@ -24,7 +24,10 @@
 
 #include "Bitmap.h"
 
-int MR_Bitmap::GetBestBitmapFor(int pXRes, int pYRes) const
+namespace HoverRace {
+namespace VideoServices {
+
+int Bitmap::GetBestBitmapFor(int pXRes, int pYRes) const
 {
 	int lReturnValue = -1;
 
@@ -43,7 +46,7 @@ int MR_Bitmap::GetBestBitmapFor(int pXRes, int pYRes) const
 	return lReturnValue;
 }
 
-int MR_Bitmap::GetBestBitmapForYRes(int pYRes) const
+int Bitmap::GetBestBitmapForYRes(int pYRes) const
 {
 	int lReturnValue = -1;
 
@@ -61,7 +64,7 @@ int MR_Bitmap::GetBestBitmapForYRes(int pYRes) const
 
 }
 
-int MR_Bitmap::GetBestBitmapForXRes(int pXRes) const
+int Bitmap::GetBestBitmapForXRes(int pXRes) const
 {
 	int lReturnValue = -1;
 
@@ -79,7 +82,7 @@ int MR_Bitmap::GetBestBitmapForXRes(int pXRes) const
 
 }
 
-int MR_Bitmap::GetBestBitmapForPitch_4096(int pPitch_4096) const
+int Bitmap::GetBestBitmapForPitch_4096(int pPitch_4096) const
 {
 	int lReturnValue = -1;
 
@@ -95,3 +98,6 @@ int MR_Bitmap::GetBestBitmapForPitch_4096(int pPitch_4096) const
 	return lReturnValue;
 
 }
+
+}  // namespace VideoServices
+}  // namespace HoverRace

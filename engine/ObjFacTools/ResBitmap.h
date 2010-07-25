@@ -41,7 +41,7 @@ namespace HoverRace {
 	}
 }
 
-class MR_ResBitmap:public MR_Bitmap
+class MR_ResBitmap : public HoverRace::VideoServices::Bitmap
 {
 	protected:
 		class SubBitmap

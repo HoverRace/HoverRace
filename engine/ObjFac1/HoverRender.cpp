@@ -36,7 +36,7 @@ namespace ObjFac1 {
 class ResActorFriend
 {
 	public:
-		static void Draw(const ObjFacTools::ResActor *pActor, Viewport3D *pDest, const PositionMatrix &pMatrix, int pSequence, int pFrame, const MR_Bitmap *pCockpitBitmap);
+		static void Draw(const ObjFacTools::ResActor *pActor, Viewport3D *pDest, const PositionMatrix &pMatrix, int pSequence, int pFrame, const VideoServices::Bitmap *pCockpitBitmap);
 };
 
 HoverRender::HoverRender(const Util::ObjectFromFactoryId &pId, ResourceLib *resourceLib) :
@@ -154,7 +154,7 @@ ContinuousSound *HoverRender::GetFrictionSound()
 	return mFrictionSound;
 }
 
-void ResActorFriend::Draw(const ObjFacTools::ResActor *pActor, Viewport3D *pDest, const PositionMatrix &pMatrix, int pSequence, int pFrame, const MR_Bitmap *pCockpitBitmap)
+void ResActorFriend::Draw(const ObjFacTools::ResActor *pActor, Viewport3D *pDest, const PositionMatrix &pMatrix, int pSequence, int pFrame, const VideoServices::Bitmap *pCockpitBitmap)
 {
 	ObjFacTools::ResActor::Frame * lFrame = &(pActor->mSequenceList[pSequence].mFrameList[pFrame]);
 

@@ -34,7 +34,10 @@
 #	define MR_DllDeclare
 #endif
 
-class MR_DllDeclare MR_Bitmap
+namespace HoverRace {
+namespace VideoServices {
+
+class MR_DllDeclare Bitmap
 {
 	// Very flexible but may have to be change for performance issue
 
@@ -61,5 +64,8 @@ class MR_DllDeclare MR_Bitmap
 		virtual MR_UInt8 *GetColumnBuffer(int pSubBitmap, int pColumn) const = 0;
 		virtual MR_UInt8 **GetColumnBufferTable(int pSubBitmap) const = 0;
 };
+
+}  // namespace VideoServices
+}  // namespace HoverRace
 
 #undef MR_DllDeclare

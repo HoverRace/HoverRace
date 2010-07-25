@@ -118,12 +118,12 @@ static void BltTriangle();
 //
 // Floor and Ceiling rendering
 //
-void Viewport3D::RenderWallSurface(const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, const MR_Bitmap * pBitmap)
+void Viewport3D::RenderWallSurface(const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, const Bitmap * pBitmap)
 {
 	RenderAlternateWallSurface(pUpperLeft, pLowerRight, pLen, pBitmap, pBitmap, 1, 0);
 }
 
-void Viewport3D::RenderAlternateWallSurface(const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, const MR_Bitmap * pBitmap, const MR_Bitmap * pBitmap2, int pSerialLen, int pSerialStart)
+void Viewport3D::RenderAlternateWallSurface(const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, const Bitmap * pBitmap, const Bitmap * pBitmap2, int pSerialLen, int pSerialStart)
 {
 
 	// DEBUG -- prin bitmap
@@ -527,7 +527,7 @@ void BltColumn()
 // Floor and Ceiling rendering
 //
 
-void Viewport3D::RenderHorizontalSurface(int pNbVertex, const MR_2DCoordinate * pVertexList, MR_Int32 pLevel, BOOL pTop, const MR_Bitmap * pBitmap)
+void Viewport3D::RenderHorizontalSurface(int pNbVertex, const MR_2DCoordinate * pVertexList, MR_Int32 pLevel, BOOL pTop, const Bitmap * pBitmap)
 {
 
 	// Algorithme
@@ -1236,7 +1236,7 @@ static int gsScreenXPatch[MAX_PATCH_RES * MAX_PATCH_RES];
 static int gsScreenYPatch[MAX_PATCH_RES * MAX_PATCH_RES];
 static int gsScreenVisibility[MAX_PATCH_RES * MAX_PATCH_RES];
 
-void Viewport3D::RenderPatch(const MR_Patch & pPatch, const PositionMatrix & pMatrix, const MR_Bitmap * pBitmap)
+void Viewport3D::RenderPatch(const MR_Patch & pPatch, const PositionMatrix & pMatrix, const Bitmap * pBitmap)
 {
 
 	int lCounter;

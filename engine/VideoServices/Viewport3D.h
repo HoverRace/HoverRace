@@ -116,12 +116,12 @@ class Viewport3D : public Viewport2D
 		MR_DllDeclare void DrawWFLine(const MR_3DCoordinate & pP0, const MR_3DCoordinate & pP1, MR_UInt8 pColor);
 
 		// Rendering services ( availlable in the file 3DViewportRendering.cpp )
-		MR_DllDeclare void RenderWallSurface(const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, const MR_Bitmap * pBitmap);
-		MR_DllDeclare void RenderAlternateWallSurface(const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, const MR_Bitmap * pBitmap, const MR_Bitmap * pBitmap2, int pSerialLen, int pSerialStart);
+		MR_DllDeclare void RenderWallSurface(const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, const Bitmap * pBitmap);
+		MR_DllDeclare void RenderAlternateWallSurface(const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, const Bitmap * pBitmap, const Bitmap * pBitmap2, int pSerialLen, int pSerialStart);
 
-		MR_DllDeclare void RenderHorizontalSurface(int lNbVertex, const MR_2DCoordinate * pVertexList, MR_Int32 pLevel, BOOL lTop, const MR_Bitmap * pBitmap);
+		MR_DllDeclare void RenderHorizontalSurface(int lNbVertex, const MR_2DCoordinate * pVertexList, MR_Int32 pLevel, BOOL lTop, const Bitmap * pBitmap);
 
-		MR_DllDeclare void RenderPatch(const MR_Patch & pPatch, const PositionMatrix & pMatrix, const MR_Bitmap * pBitmap);
+		MR_DllDeclare void RenderPatch(const MR_Patch & pPatch, const PositionMatrix & pMatrix, const Bitmap * pBitmap);
 		MR_DllDeclare void RenderPatch(const MR_Patch & pPatch, const PositionMatrix & pMatrix, MR_UInt8 pColor);
 
 		MR_DllDeclare void RenderBackground(const MR_UInt8 * pBitmap);
