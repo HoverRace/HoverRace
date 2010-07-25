@@ -112,7 +112,7 @@ ResourceLib::~ResourceLib()
 	delete recordFile;
 }
 
-MR_ResBitmap *ResourceLib::GetBitmap(int id)
+ResBitmap *ResourceLib::GetBitmap(int id)
 {
 	bitmaps_t::const_iterator iter = bitmaps.find(id);
 	return (iter == bitmaps.end()) ? NULL : iter->second;
@@ -124,19 +124,19 @@ const ResActor *ResourceLib::GetActor(int id)
 	return (iter == actors.end()) ? NULL : iter->second;
 }
 
-const MR_ResSprite *ResourceLib::GetSprite(int id)
+const ResSprite *ResourceLib::GetSprite(int id)
 {
 	sprites_t::const_iterator iter = sprites.find(id);
 	return (iter == sprites.end()) ? NULL : iter->second;
 }
 
-const MR_ResShortSound *ResourceLib::GetShortSound(int id)
+const ResShortSound *ResourceLib::GetShortSound(int id)
 {
 	shortSounds_t::const_iterator iter = shortSounds.find(id);
 	return (iter == shortSounds.end()) ? NULL : iter->second;
 }
 
-const MR_ResContinuousSound *ResourceLib::GetContinuousSound(int id)
+const ResContinuousSound *ResourceLib::GetContinuousSound(int id)
 {
 	continuousSounds_t::const_iterator iter = continuousSounds.find(id);
 	return (iter == continuousSounds.end()) ? NULL : iter->second;

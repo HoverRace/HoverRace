@@ -1463,7 +1463,7 @@ void NetworkSession::AddMessageKey(char pKey)
 		}
 	}
 	else if((lStrLen + 1) < sizeof(mChatEditBuffer)) {
-		pKey = Ascii2Simple(pKey);
+		pKey = VideoServices::Ascii2Simple(pKey);
 
 		if(pKey != 0) {
 			mChatEditBuffer[lStrLen] = pKey;
@@ -1504,8 +1504,8 @@ void NetworkSession::AddChatMessage(int pPlayerIndex, const char *pMessage, int 
 
 	mMessageStack[0].mCreationTime = time(NULL);
 
-	mMessageStack[0].mBuffer = Ascii2Simple(mNetInterface.GetPlayerName(pPlayerIndex));
-	mMessageStack[0].mBuffer += Ascii2Simple('>');
+	mMessageStack[0].mBuffer = VideoServices::Ascii2Simple(mNetInterface.GetPlayerName(pPlayerIndex));
+	mMessageStack[0].mBuffer += VideoServices::Ascii2Simple('>');
 	mMessageStack[0].mBuffer += std::string(pMessage, pMessageLen);
 }
 

@@ -58,24 +58,24 @@ class MR_DllDeclare ResourceLib
 		~ResourceLib();
 
 	public:
-		MR_ResBitmap * GetBitmap(int id);
+		ResBitmap * GetBitmap(int id);
 		const ResActor *GetActor(int id);
-		const MR_ResSprite *GetSprite(int id);
-		const MR_ResShortSound *GetShortSound(int id);
-		const MR_ResContinuousSound *GetContinuousSound(int id);
+		const ResSprite *GetSprite(int id);
+		const ResShortSound *GetShortSound(int id);
+		const ResContinuousSound *GetContinuousSound(int id);
 
 	protected:
 		Parcel::RecordFile *recordFile;
 
-		typedef std::map<int, MR_ResBitmap*> bitmaps_t;
+		typedef std::map<int, ResBitmap*> bitmaps_t;
 		bitmaps_t bitmaps;
 		typedef std::map<int, ResActor*> actors_t;
 		actors_t actors;
-		typedef std::map<int, MR_ResSprite*> sprites_t;
+		typedef std::map<int, ResSprite*> sprites_t;
 		sprites_t sprites;
-		typedef std::map<int, MR_ResShortSound*> shortSounds_t;
+		typedef std::map<int, ResShortSound*> shortSounds_t;
 		shortSounds_t shortSounds;
-		typedef std::map<int, MR_ResContinuousSound*> continuousSounds_t;
+		typedef std::map<int, ResContinuousSound*> continuousSounds_t;
 		continuousSounds_t continuousSounds;
 
 	protected:

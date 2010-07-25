@@ -40,11 +40,14 @@ namespace HoverRace {
 	}
 }
 
-class MR_ResShortSound
+namespace HoverRace {
+namespace ObjFacTools {
+
+class ResShortSound
 {
 	protected:
 		int mResourceId;
-		HoverRace::VideoServices::ShortSound *mSound;
+		VideoServices::ShortSound *mSound;
 
 		int mNbCopy;
 		int mDataLen;
@@ -52,17 +55,17 @@ class MR_ResShortSound
 
 	public:
 												  // Only availlable for resourceLib and construction
-		MR_DllDeclare MR_ResShortSound(int pResourceId);
-		MR_DllDeclare ~MR_ResShortSound();
+		MR_DllDeclare ResShortSound(int pResourceId);
+		MR_DllDeclare ~ResShortSound();
 
 		MR_DllDeclare int GetResourceId() const;
-		MR_DllDeclare void Serialize(HoverRace::Parcel::ObjStream &pArchive);
+		MR_DllDeclare void Serialize(Parcel::ObjStream &pArchive);
 
-		MR_DllDeclare HoverRace::VideoServices::ShortSound *GetSound() const;
+		MR_DllDeclare VideoServices::ShortSound *GetSound() const;
 
 };
 
-class MR_ResContinuousSound
+class ResContinuousSound
 {
 	protected:
 		int mResourceId;
@@ -74,14 +77,17 @@ class MR_ResContinuousSound
 
 	public:
 												  // Only availlable for resourceLib and construction
-		MR_DllDeclare MR_ResContinuousSound(int pResourceId);
-		MR_DllDeclare ~ MR_ResContinuousSound();
+		MR_DllDeclare ResContinuousSound(int pResourceId);
+		MR_DllDeclare ~ResContinuousSound();
 
 		MR_DllDeclare int GetResourceId() const;
-		MR_DllDeclare void Serialize(HoverRace::Parcel::ObjStream &pArchive);
+		MR_DllDeclare void Serialize(Parcel::ObjStream &pArchive);
 
-		MR_DllDeclare HoverRace::VideoServices::ContinuousSound *GetSound() const;
+		MR_DllDeclare VideoServices::ContinuousSound *GetSound() const;
 
 };
+
+}  // namespace ObjFacTools
+}  // namespace HoverRace
 
 #undef MR_DllDeclare

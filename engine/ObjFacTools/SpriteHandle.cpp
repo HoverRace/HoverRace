@@ -26,9 +26,9 @@
 namespace HoverRace {
 namespace ObjFac1 {
 
-const MR_ResSprite *mSprite;
+const ObjFacTools::ResSprite *mSprite;
 
-SpriteHandle::SpriteHandle(const Util::ObjectFromFactoryId & pId, const MR_ResSprite * pSprite) :
+SpriteHandle::SpriteHandle(const Util::ObjectFromFactoryId & pId, const ObjFacTools::ResSprite * pSprite) :
 	Util::ObjectFromFactory(pId)
 {
 	mSprite = pSprite;
@@ -38,7 +38,7 @@ SpriteHandle::~SpriteHandle()
 {
 }
 
-const MR_Sprite *SpriteHandle::GetSprite() const
+const VideoServices::Sprite *SpriteHandle::GetSprite() const
 {
 	return mSprite;
 }

@@ -25,7 +25,10 @@
 
 #include "ResBitmap.h"
 
-MR_ResBitmap::MR_ResBitmap(int pResourceId)
+namespace HoverRace {
+namespace ObjFacTools {
+
+ResBitmap::ResBitmap(int pResourceId)
 {
 	mResourceId = pResourceId;
 	mWidth = 1;
@@ -37,12 +40,12 @@ MR_ResBitmap::MR_ResBitmap(int pResourceId)
 	mSubBitmapList = NULL;
 }
 
-MR_ResBitmap::~MR_ResBitmap()
+ResBitmap::~ResBitmap()
 {
 	delete[] mSubBitmapList;
 }
 
-int MR_ResBitmap::GetResourceId() const
+int ResBitmap::GetResourceId() const
 {
 	return mResourceId;
 } 
@@ -54,7 +57,7 @@ int MR_ResBitmap::GetResourceId() const
  *
  * @param pArchive The archive to write to / read from
  */
-void MR_ResBitmap::Serialize(HoverRace::Parcel::ObjStream &pArchive)
+void ResBitmap::Serialize(Parcel::ObjStream &pArchive)
 {
 	int lCounter;
 
@@ -90,91 +93,91 @@ void MR_ResBitmap::Serialize(HoverRace::Parcel::ObjStream &pArchive)
 
 }
 
-void MR_ResBitmap::SetWidthHeight(int pWidth, int pHeight)
+void ResBitmap::SetWidthHeight(int pWidth, int pHeight)
 {
 	mWidth = pWidth;
 	mHeight = pHeight;
 }
 
 // MR_Bitmap overloaded functions
-int MR_ResBitmap::GetWidth() const
+int ResBitmap::GetWidth() const
 {
 	return mWidth;
 }
 
-int MR_ResBitmap::GetHeight() const
+int ResBitmap::GetHeight() const
 {
 	return mHeight;
 }
 
-int MR_ResBitmap::GetMaxXRes() const
+int ResBitmap::GetMaxXRes() const
 {
 	return mXRes;
 }
 
-int MR_ResBitmap::GetMaxYRes() const
+int ResBitmap::GetMaxYRes() const
 {
 	return mYRes;
 }
 
-MR_UInt8 MR_ResBitmap::GetPlainColor() const
+MR_UInt8 ResBitmap::GetPlainColor() const
 {
 	return mPlainColor;
 }
 
-int MR_ResBitmap::GetNbSubBitmap() const
+int ResBitmap::GetNbSubBitmap() const
 {
 	return mSubBitmapCount;
 }
 
-int MR_ResBitmap::GetXRes(int pSubBitmap) const
+int ResBitmap::GetXRes(int pSubBitmap) const
 {
 	return mSubBitmapList[pSubBitmap].mXRes;
 }
 
-int MR_ResBitmap::GetYRes(int pSubBitmap) const
+int ResBitmap::GetYRes(int pSubBitmap) const
 {
 	return mSubBitmapList[pSubBitmap].mYRes;
 }
 
-int MR_ResBitmap::GetXResShiftFactor(int pSubBitmap) const
+int ResBitmap::GetXResShiftFactor(int pSubBitmap) const
 {
 	return mSubBitmapList[pSubBitmap].mXResShiftFactor;
 }
 
-int MR_ResBitmap::GetYResShiftFactor(int pSubBitmap) const
+int ResBitmap::GetYResShiftFactor(int pSubBitmap) const
 {
 	return mSubBitmapList[pSubBitmap].mYResShiftFactor;
 }
 
-MR_UInt8 *MR_ResBitmap::GetBuffer(int pSubBitmap) const
+MR_UInt8 *ResBitmap::GetBuffer(int pSubBitmap) const
 {
 	return mSubBitmapList[pSubBitmap].mBuffer;
 }
 
-MR_UInt8 *MR_ResBitmap::GetColumnBuffer(int pSubBitmap, int pColumn) const
+MR_UInt8 *ResBitmap::GetColumnBuffer(int pSubBitmap, int pColumn) const
 {
 	return mSubBitmapList[pSubBitmap].mColumnPtr[pColumn];
 }
 
-MR_UInt8 **MR_ResBitmap::GetColumnBufferTable(int pSubBitmap) const
+MR_UInt8 **ResBitmap::GetColumnBufferTable(int pSubBitmap) const
 {
 	return mSubBitmapList[pSubBitmap].mColumnPtr;
 } 
 
-MR_ResBitmap::SubBitmap::SubBitmap()
+ResBitmap::SubBitmap::SubBitmap()
 {
 	mBuffer = NULL;
 	mColumnPtr = NULL;
 }
 
-MR_ResBitmap::SubBitmap::~SubBitmap()
+ResBitmap::SubBitmap::~SubBitmap()
 {
 	delete[] mBuffer;
 	delete[] mColumnPtr;
 }
 
-void MR_ResBitmap::SubBitmap::Serialize(HoverRace::Parcel::ObjStream &pArchive)
+void ResBitmap::SubBitmap::Serialize(Parcel::ObjStream &pArchive)
 {
 	if(pArchive.IsWriting()) {
 
@@ -208,3 +211,6 @@ void MR_ResBitmap::SubBitmap::Serialize(HoverRace::Parcel::ObjStream &pArchive)
 		pArchive.Read(mBuffer, mXRes * mYRes);
 	}
 }
+
+}  // namespace ObjFacTools
+}  // namespace HoverRace

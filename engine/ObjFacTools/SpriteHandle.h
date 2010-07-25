@@ -41,13 +41,13 @@ namespace ObjFac1 {
 class SpriteHandle : public Util::ObjectFromFactory
 {
 	protected:
-		const MR_ResSprite *mSprite;
+		const ObjFacTools::ResSprite *mSprite;
 
 	public:
-		MR_DllDeclare SpriteHandle(const Util::ObjectFromFactoryId & pId, const MR_ResSprite * pSprite);
+		MR_DllDeclare SpriteHandle(const Util::ObjectFromFactoryId & pId, const ObjFacTools::ResSprite * pSprite);
 		MR_DllDeclare ~SpriteHandle();
 
-		MR_DllDeclare const MR_Sprite *GetSprite() const;
+		MR_DllDeclare const VideoServices::Sprite *GetSprite() const;
 
 };
 

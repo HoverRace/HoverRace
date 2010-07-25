@@ -25,10 +25,12 @@
 
 #include "ResSound.h"
 
-using HoverRace::Parcel::ObjStream;
 using namespace HoverRace::VideoServices;
 
-MR_ResShortSound::MR_ResShortSound(int pResourceId)
+namespace HoverRace {
+namespace ObjFacTools {
+
+ResShortSound::ResShortSound(int pResourceId)
 {
 	mResourceId = pResourceId;
 	mNbCopy = 0;
@@ -38,7 +40,7 @@ MR_ResShortSound::MR_ResShortSound(int pResourceId)
 
 }
 
-MR_ResShortSound::~MR_ResShortSound()
+ResShortSound::~ResShortSound()
 {
 	SoundServer::DeleteShortSound(mSound);
 	mSound = NULL;
@@ -47,12 +49,12 @@ MR_ResShortSound::~MR_ResShortSound()
 	mData = NULL;
 }
 
-int MR_ResShortSound::GetResourceId() const
+int ResShortSound::GetResourceId() const
 {
 	return mResourceId;
 }
 
-void MR_ResShortSound::Serialize(ObjStream &pArchive)
+void ResShortSound::Serialize(Parcel::ObjStream &pArchive)
 {
 	if(pArchive.IsWriting()) {
 		pArchive << mNbCopy;
@@ -79,12 +81,12 @@ void MR_ResShortSound::Serialize(ObjStream &pArchive)
 	}
 }
 
-ShortSound *MR_ResShortSound::GetSound() const
+ShortSound *ResShortSound::GetSound() const
 {
 	return mSound;
 }
 
-MR_ResContinuousSound::MR_ResContinuousSound(int pResourceId)
+ResContinuousSound::ResContinuousSound(int pResourceId)
 {
 	mResourceId = pResourceId;
 	mNbCopy = 0;
@@ -93,7 +95,7 @@ MR_ResContinuousSound::MR_ResContinuousSound(int pResourceId)
 	mSound = NULL;
 }
 
-MR_ResContinuousSound::~MR_ResContinuousSound()
+ResContinuousSound::~ResContinuousSound()
 {
 	SoundServer::DeleteContinuousSound(mSound);
 	mSound = NULL;
@@ -102,12 +104,12 @@ MR_ResContinuousSound::~MR_ResContinuousSound()
 	mData = NULL;
 }
 
-int MR_ResContinuousSound::GetResourceId() const
+int ResContinuousSound::GetResourceId() const
 {
 	return mResourceId;
 }
 
-void MR_ResContinuousSound::Serialize(ObjStream &pArchive)
+void ResContinuousSound::Serialize(Parcel::ObjStream &pArchive)
 {
 	if(pArchive.IsWriting()) {
 		pArchive << mNbCopy;
@@ -134,7 +136,10 @@ void MR_ResContinuousSound::Serialize(ObjStream &pArchive)
 	}
 }
 
-HoverRace::VideoServices::ContinuousSound *MR_ResContinuousSound::GetSound() const
+VideoServices::ContinuousSound *ResContinuousSound::GetSound() const
 {
 	return mSound;
 }
+
+}  // namespace ObjFacTools
+}  // namespace HoverRace

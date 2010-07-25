@@ -53,7 +53,7 @@ class ResActor
 			public:
 				int mURes;
 				int mVRes;
-				const MR_ResBitmap *mBitmap;
+				const ResBitmap *mBitmap;
 				MR_3DCoordinate *mVertexList;
 
 				Patch();

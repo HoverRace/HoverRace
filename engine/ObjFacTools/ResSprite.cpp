@@ -20,22 +20,27 @@
 //
 
 #include "StdAfx.h"
+
 #include "ResSprite.h"
 
-#define new DEBUG_NEW
+namespace HoverRace {
+namespace ObjFacTools {
 
-MR_ResSprite::MR_ResSprite(int pResourceId)
+ResSprite::ResSprite(int pResourceId)
 {
 	mResourceId = pResourceId;
 }
 
-MR_ResSprite::~MR_ResSprite()
+ResSprite::~ResSprite()
 {
-	delete[]mData;
+	delete[] mData;
 	mData = NULL;
 }
 
-int MR_ResSprite::GetResourceId() const
+int ResSprite::GetResourceId() const
 {
 	return mResourceId;
 }
+
+}  // namespace ObjFacTools
+}  // namespace HoverRace

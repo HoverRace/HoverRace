@@ -35,6 +35,7 @@
 
 using HoverRace::Util::Config;
 using HoverRace::VideoServices::StaticText;
+using HoverRace::VideoServices::Ascii2Simple;
 
 #define NB_PLAYER_PAGE 10
 #define MR_CHAT_EXPIRATION     20
@@ -451,6 +452,7 @@ void Observer::DrawWFSection(const Model::Level * pLevel, const Model::SectionId
 
 void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage)
 {
+	using HoverRace::VideoServices::Sprite;
 
 	const Model::Level *lLevel = pSession->GetCurrentLevel();
 
@@ -640,18 +642,18 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 	if(lWeaponSprite != NULL) {
 		int lMissileScaling = 1 + (310 / lXRes);
 
-		lWeaponSprite->GetSprite()->Blt(lXRes, lYRes / 16, &m3DView, MR_Sprite::eRight, MR_Sprite::eTop, lWeaponSpriteIndex, lMissileScaling);
+		lWeaponSprite->GetSprite()->Blt(lXRes, lYRes / 16, &m3DView, Sprite::eRight, Sprite::eTop, lWeaponSpriteIndex, lMissileScaling);
 	}
 	// Map
 
 	if(pSession->GetMap() != NULL) {
-		const MR_Sprite *lHoverIcons = mHoverIcons->GetSprite();
+		const Sprite *lHoverIcons = mHoverIcons->GetSprite();
 
 		int lMapScaling = 1 + (3 * pSession->GetMap()->GetItemHeight() / lYRes);
 		int lIconsScaling = 1 + (14 * lHoverIcons->GetItemHeight() / lYRes);
 		int lMargin = lHoverIcons->GetItemHeight() / lIconsScaling;
 
-		pSession->GetMap()->Blt(lMargin, lMargin, &m3DView, MR_Sprite::eLeft, MR_Sprite::eTop, 0, lMapScaling);
+		pSession->GetMap()->Blt(lMargin, lMargin, &m3DView, Sprite::eLeft, Sprite::eTop, 0, lMapScaling);
 
 		// display all the car icons
 		int lNbPlayers = pSession->GetNbPlayers();
@@ -671,7 +673,7 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 
 				pSession->ConvertMapCoordinate(lX, lY, lMapScaling);
 
-				lHoverIcons->Blt(lX + lMargin, lY + lMargin, &m3DView, MR_Sprite::eCenter, MR_Sprite::eCenter, (lPlayer->GetHoverId()) % lNbIcons, lIconsScaling);
+				lHoverIcons->Blt(lX + lMargin, lY + lMargin, &m3DView, Sprite::eCenter, Sprite::eCenter, (lPlayer->GetHoverId()) % lNbIcons, lIconsScaling);
 			}
 		}
 	}
@@ -680,7 +682,7 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 	if(mBaseFont != NULL) {
 		char lStrBuffer[170];
 
-		const MR_Sprite *lFont = mBaseFont->GetSprite();
+		const Sprite *lFont = mBaseFont->GetSprite();
 
 		// Display chat messages
 		int lFontScaling = 1 + (lFont->GetItemHeight() * 30) / (lYRes);
@@ -694,7 +696,7 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 		pSession->GetCurrentMessage(lStrBuffer);
 
 		if(lStrBuffer[0] != 0) {
-			lFont->StrBlt(lXMargin, lYMargin, lStrBuffer, &m3DView, MR_Sprite::eLeft, MR_Sprite::eTop, lFontScaling);
+			lFont->StrBlt(lXMargin, lYMargin, lStrBuffer, &m3DView, Sprite::eLeft, Sprite::eTop, lFontScaling);
 		}
 		lYMargin -= lLineSpacing;
 
@@ -707,12 +709,12 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 			int lStrLen = strlen(lStrBuffer);
 
 			if(lStrLen > lPrintLen) {
-				lFont->StrBlt(lXMargin, lYMargin, lStrBuffer + lPrintLen, &m3DView, MR_Sprite::eLeft, MR_Sprite::eTop, lFontScaling);
+				lFont->StrBlt(lXMargin, lYMargin, lStrBuffer + lPrintLen, &m3DView, Sprite::eLeft, Sprite::eTop, lFontScaling);
 				lYMargin -= lLineSpacing;
 				lStrBuffer[lPrintLen] = 0;
 				lLineLevel++;
 			}
-			lFont->StrBlt(lXMargin, lYMargin, lStrBuffer, &m3DView, MR_Sprite::eLeft, MR_Sprite::eTop, lFontScaling);
+			lFont->StrBlt(lXMargin, lYMargin, lStrBuffer, &m3DView, Sprite::eLeft, Sprite::eTop, lFontScaling);
 			lYMargin -= lLineSpacing;
 			lLineLevel++;
 		}
@@ -746,11 +748,11 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 
 			if(lShowHits) {
 				mBaseFont->GetSprite()->StrBlt(lXRes / 2, lCurrentLine, globalFmts.hitTitle.c_str(),
-					&m3DView, MR_Sprite::eCenter, MR_Sprite::eTop, lFontScaling);
+					&m3DView, Sprite::eCenter, Sprite::eTop, lFontScaling);
 			}
 			else {
 				mBaseFont->GetSprite()->StrBlt(lXRes / 2, lCurrentLine, globalFmts.rankTitle.c_str(),
-					&m3DView, MR_Sprite::eCenter, MR_Sprite::eTop, lFontScaling);
+					&m3DView, Sprite::eCenter, Sprite::eTop, lFontScaling);
 			}
 			lCurrentLine += lLineSpacing;
 
@@ -793,7 +795,7 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 
 				}
 
-				mBaseFont->GetSprite()->StrBlt(lXRes / 2, lCurrentLine, Ascii2Simple(lBuffer), &m3DView, MR_Sprite::eCenter, MR_Sprite::eTop, lFontScaling);
+				mBaseFont->GetSprite()->StrBlt(lXRes / 2, lCurrentLine, Ascii2Simple(lBuffer), &m3DView, Sprite::eCenter, Sprite::eTop, lFontScaling);
 				lCurrentLine += lLineSpacing;
 			}
 		}
@@ -860,8 +862,8 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 
 		int lFontScaling = 1 + (mBaseFont->GetSprite()->GetItemHeight() * 30) / (lYRes);
 
-		mBaseFont->GetSprite()->StrBlt(lXRes / 2, lYRes / 16, Ascii2Simple(lMainLineBuffer), &m3DView, MR_Sprite::eCenter, MR_Sprite::eTop, lFontScaling);
-		mBaseFont->GetSprite()->StrBlt(lXRes / 2, lYRes - 1, Ascii2Simple(lLapLineBuffer), &m3DView, MR_Sprite::eCenter, MR_Sprite::eBottom, lFontScaling);
+		mBaseFont->GetSprite()->StrBlt(lXRes / 2, lYRes / 16, Ascii2Simple(lMainLineBuffer), &m3DView, Sprite::eCenter, Sprite::eTop, lFontScaling);
+		mBaseFont->GetSprite()->StrBlt(lXRes / 2, lYRes - 1, Ascii2Simple(lLapLineBuffer), &m3DView, Sprite::eCenter, Sprite::eBottom, lFontScaling);
 
 	}
 

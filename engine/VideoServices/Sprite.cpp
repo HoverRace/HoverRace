@@ -26,37 +26,38 @@
 
 #include "Sprite.h"
 
-using HoverRace::Parcel::ObjStream;
+namespace HoverRace {
+namespace VideoServices {
 
-MR_Sprite::MR_Sprite()
+Sprite::Sprite()
 {
 	mNbItem = 0;
 	mData = NULL;
 }
 
-MR_Sprite::~MR_Sprite()
+Sprite::~Sprite()
 {
 	if(mData != NULL) {
 		delete[]mData;
 	}
 }
 
-int MR_Sprite::GetNbItem() const
+int Sprite::GetNbItem() const
 {
 	return mNbItem;
 }
 
-int MR_Sprite::GetItemHeight() const
+int Sprite::GetItemHeight() const
 {
 	return mItemHeight;
 }
 
-int MR_Sprite::GetItemWidth() const
+int Sprite::GetItemWidth() const
 {
 	return mWidth;
 }
 
-void MR_Sprite::Serialize(ObjStream &pArchive)
+void Sprite::Serialize(Parcel::ObjStream &pArchive)
 {
 	if(pArchive.IsWriting()) {
 		pArchive << mNbItem;
@@ -83,7 +84,7 @@ void MR_Sprite::Serialize(ObjStream &pArchive)
 	}
 }
 
-void MR_Sprite::Blt(int pX, int pY, HoverRace::VideoServices::Viewport2D *pDest, eAlignment pHAlign, eAlignment pVAlign, int pItem, int pScaling) const
+void Sprite::Blt(int pX, int pY, Viewport2D *pDest, eAlignment pHAlign, eAlignment pVAlign, int pItem, int pScaling) const
 {
 	ASSERT((pItem < mNbItem) && (pItem >= 0));
 
@@ -147,7 +148,7 @@ void MR_Sprite::Blt(int pX, int pY, HoverRace::VideoServices::Viewport2D *pDest,
 	}
 }
 
-void MR_Sprite::StrBlt(int pX, int pY, const char *pStr, HoverRace::VideoServices::Viewport2D *pDest, eAlignment pHAlign, eAlignment pVAlign, int pScaling) const
+void Sprite::StrBlt(int pX, int pY, const char *pStr, Viewport2D *pDest, eAlignment pHAlign, eAlignment pVAlign, int pScaling) const
 {
 	if((pStr != NULL) && (pStr[0] != 0)) {
 		int lStrLen = strlen(pStr);
@@ -239,3 +240,6 @@ char Ascii2Simple(char pSrc)
 	}
 	return lReturnValue;
 }
+
+}  // namespace VideoServices
+}  // namespace HoverRace

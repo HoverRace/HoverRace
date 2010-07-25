@@ -52,9 +52,9 @@ class HoverRender : public MainCharacter::MainCharacterRenderer
 		VideoServices::ContinuousSound *mMotorSound;
 		VideoServices::ContinuousSound *mFrictionSound;
 
-		const MR_ResBitmap *mCockpitBitmap[10];
-		const MR_ResBitmap *mCockpitBitmap2[10];
-		const MR_ResBitmap *mEonCockpitBitmap[10];
+		const ObjFacTools::ResBitmap *mCockpitBitmap[10];
+		const ObjFacTools::ResBitmap *mCockpitBitmap2[10];
+		const ObjFacTools::ResBitmap *mEonCockpitBitmap[10];
 
 	public:
 		HoverRender(const Util::ObjectFromFactoryId &pId, ObjFacTools::ResourceLib *resourceLib);

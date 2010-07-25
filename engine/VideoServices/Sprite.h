@@ -38,7 +38,10 @@ namespace HoverRace {
 	}
 }
 
-class MR_DllDeclare MR_Sprite
+namespace HoverRace {
+namespace VideoServices {
+
+class MR_DllDeclare Sprite
 {
 	public:
 		enum eAlignment
@@ -58,24 +61,27 @@ class MR_DllDeclare MR_Sprite
 		MR_UInt8 *mData;
 
 	public:
-		MR_Sprite();
-		~MR_Sprite();
+		Sprite();
+		~Sprite();
 
-		void Blt(int pX, int pY, HoverRace::VideoServices::Viewport2D *pDest, eAlignment pHAlign = eLeft, eAlignment pVAlign = eTop, int pItem = 0, int pScaling = 1) const;
+		void Blt(int pX, int pY, Viewport2D *pDest, eAlignment pHAlign = eLeft, eAlignment pVAlign = eTop, int pItem = 0, int pScaling = 1) const;
 
-		void StrBlt(int pX, int pY, const char *pStr, HoverRace::VideoServices::Viewport2D *pDest, eAlignment pHAlign = eLeft, eAlignment pVAlign = eTop, int pScaling = 1) const;
+		void StrBlt(int pX, int pY, const char *pStr, Viewport2D *pDest, eAlignment pHAlign = eLeft, eAlignment pVAlign = eTop, int pScaling = 1) const;
 
 		int GetNbItem() const;
 		int GetItemHeight() const;
 		int GetItemWidth() const;
 
-		void Serialize(HoverRace::Parcel::ObjStream &pArchive);
+		void Serialize(Parcel::ObjStream &pArchive);
 
 };
 
 // Helper class and functions
 MR_DllDeclare const char *Ascii2Simple(const char *pSrc);
 MR_DllDeclare char Ascii2Simple(char pSrc);
+
+}  // namespace VideoServices
+}  // namespace HoverRace
 
 #undef MR_DllDeclare
 #endif

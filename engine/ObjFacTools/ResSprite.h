@@ -31,19 +31,25 @@
 #define MR_DllDeclare   __declspec( dllimport )
 #endif
 
-class MR_ResSprite:public MR_Sprite
+namespace HoverRace {
+namespace ObjFacTools {
+
+class ResSprite : public VideoServices::Sprite
 {
 	protected:
 		int mResourceId;
 
 	public:
 												  // Only availlable for resourceLib and construction
-		MR_DllDeclare MR_ResSprite(int pResourceId);
-		MR_DllDeclare ~ MR_ResSprite();
+		MR_DllDeclare ResSprite(int pResourceId);
+		MR_DllDeclare ~ResSprite();
 
 		MR_DllDeclare int GetResourceId() const;
 
 };
+
+}  // namespace ObjFacTools
+}  // namespace HoverRace
 
 #undef MR_DllDeclare
 #endif

@@ -41,7 +41,10 @@ namespace HoverRace {
 	}
 }
 
-class MR_ResBitmap : public HoverRace::VideoServices::Bitmap
+namespace HoverRace {
+namespace ObjFacTools {
+
+class ResBitmap : public VideoServices::Bitmap
 {
 	protected:
 		class SubBitmap
@@ -59,7 +62,7 @@ class MR_ResBitmap : public HoverRace::VideoServices::Bitmap
 				MR_DllDeclare SubBitmap();
 				MR_DllDeclare ~ SubBitmap();
 
-				void Serialize(HoverRace::Parcel::ObjStream &pArchive);
+				void Serialize(Parcel::ObjStream &pArchive);
 
 		};
 
@@ -75,11 +78,11 @@ class MR_ResBitmap : public HoverRace::VideoServices::Bitmap
 
 	public:
 												  // Only availlable for resourceLib and construction
-		MR_DllDeclare MR_ResBitmap(int pResourceId);
-		MR_DllDeclare ~MR_ResBitmap();
+		MR_DllDeclare ResBitmap(int pResourceId);
+		MR_DllDeclare ~ResBitmap();
 
 		MR_DllDeclare int GetResourceId() const;
-		MR_DllDeclare void Serialize(HoverRace::Parcel::ObjStream &pArchive);
+		MR_DllDeclare void Serialize(Parcel::ObjStream &pArchive);
 
 		MR_DllDeclare int GetWidth() const;
 		MR_DllDeclare int GetHeight() const;
@@ -99,5 +102,8 @@ class MR_ResBitmap : public HoverRace::VideoServices::Bitmap
 		MR_DllDeclare MR_UInt8 *GetColumnBuffer(int pSubBitmap, int pColumn) const;
 		MR_DllDeclare MR_UInt8 **GetColumnBufferTable(int pSubBitmap) const;
 };
+
+}  // namespace ObjFacTools
+}  // namespace HoverRace
 
 #undef MR_DllDeclare

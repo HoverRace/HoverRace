@@ -51,7 +51,7 @@ BitmapSurface::BitmapSurface(const Util::ObjectFromFactoryId & pId) :
 	}
 }
 
-BitmapSurface::BitmapSurface(const Util::ObjectFromFactoryId & pId, /*const */ MR_ResBitmap * pBitmap)
+BitmapSurface::BitmapSurface(const Util::ObjectFromFactoryId & pId, /*const */ ObjFacTools::ResBitmap * pBitmap)
 :Model::SurfaceElement(pId)
 {
 	// The task of initialising the data members i
@@ -72,7 +72,7 @@ BitmapSurface::BitmapSurface(const Util::ObjectFromFactoryId & pId, /*const */ M
 
 }
 
-BitmapSurface::BitmapSurface(const Util::ObjectFromFactoryId & pId, MR_ResBitmap * pBitmap1, MR_ResBitmap * pBitmap2, int pRotationSpeed, int pRotationLen)
+BitmapSurface::BitmapSurface(const Util::ObjectFromFactoryId & pId, ObjFacTools::ResBitmap * pBitmap1, ObjFacTools::ResBitmap * pBitmap2, int pRotationSpeed, int pRotationLen)
 :Model::SurfaceElement(pId)
 {
 	// The task of initialising the data members i
@@ -132,13 +132,13 @@ const MR_ContactEffectList *BitmapSurface::GetEffectList()
 
 // VStretchBitmapSurface:public
 
-VStretchBitmapSurface::VStretchBitmapSurface(const Util::ObjectFromFactoryId & pId, /*const */ MR_ResBitmap * pBitmap, int pMaxHeight)
+VStretchBitmapSurface::VStretchBitmapSurface(const Util::ObjectFromFactoryId & pId, /*const */ ObjFacTools::ResBitmap * pBitmap, int pMaxHeight)
 :BitmapSurface(pId, pBitmap)
 {
 	mMaxHeight = pMaxHeight;
 }
 
-VStretchBitmapSurface::VStretchBitmapSurface(const Util::ObjectFromFactoryId & pId, MR_ResBitmap * pBitmap1, MR_ResBitmap * pBitmap2, int pRotationSpeed, int pRotationLen, int pMaxHeight)
+VStretchBitmapSurface::VStretchBitmapSurface(const Util::ObjectFromFactoryId & pId, ObjFacTools::ResBitmap * pBitmap1, ObjFacTools::ResBitmap * pBitmap2, int pRotationSpeed, int pRotationLen, int pMaxHeight)
 :BitmapSurface(pId, pBitmap1, pBitmap2, pRotationSpeed, pRotationLen)
 {
 	mMaxHeight = pMaxHeight;

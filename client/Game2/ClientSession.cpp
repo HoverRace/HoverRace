@@ -101,7 +101,7 @@ void ClientSession::ReadLevelAttrib(Parcel::RecordFilePtr pRecordFile, VideoServ
 			int lY0;
 			int lY1;
 
-			MR_Sprite *lMapSprite = new MR_Sprite;
+			VideoServices::Sprite *lMapSprite = new VideoServices::Sprite;
 
 			lArchive >> lX0;
 			lArchive >> lX1;
@@ -366,7 +366,7 @@ int ClientSession::GetRank(const MainCharacter::MainCharacter *pPlayer) const
 	return lReturnValue;
 }
 
-void ClientSession::SetMap(MR_Sprite * pMap, int pX0, int pY0, int pX1, int pY1)
+void ClientSession::SetMap(VideoServices::Sprite * pMap, int pX0, int pY0, int pX1, int pY1)
 {
 	delete mMap;
 
@@ -382,7 +382,7 @@ void ClientSession::SetMap(MR_Sprite * pMap, int pX0, int pY0, int pX1, int pY1)
 
 }
 
-const MR_Sprite *ClientSession::GetMap() const
+const VideoServices::Sprite *ClientSession::GetMap() const
 {
 	return mMap;
 }
@@ -438,7 +438,7 @@ void ClientSession::AddMessage(const char *pMessage)
 
 	mMessageStack[0].mCreationTime = time(NULL);
 
-	mMessageStack[0].mBuffer = Ascii2Simple(pMessage);
+	mMessageStack[0].mBuffer = VideoServices::Ascii2Simple(pMessage);
 
 	LeaveCriticalSection(&mChatMutex);
 
