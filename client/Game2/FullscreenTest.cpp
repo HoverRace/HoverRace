@@ -24,7 +24,7 @@
 
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/Str.h"
-#include "../../engine/VideoServices/2DViewPort.h"
+#include "../../engine/VideoServices/Viewport2D.h"
 #include "../../engine/VideoServices/Font.h"
 #include "../../engine/VideoServices/StaticText.h"
 #include "../../engine/VideoServices/VideoBuffer.h"

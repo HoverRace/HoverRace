@@ -25,7 +25,7 @@
 #include <boost/format.hpp>
 
 #include "../../engine/Util/Config.h"
-#include "../../engine/VideoServices/2DViewPort.h"
+#include "../../engine/VideoServices/Viewport2D.h"
 #include "../../engine/VideoServices/Font.h"
 #include "../../engine/VideoServices/MultipartText.h"
 #include "../../engine/VideoServices/NumericGlyphs.h"

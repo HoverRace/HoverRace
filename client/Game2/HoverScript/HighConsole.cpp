@@ -33,7 +33,7 @@
 #include "../../../engine/Script/Help/HelpHandler.h"
 #include "../../../engine/Script/Help/Class.h"
 #include "../../../engine/Util/Config.h"
-#include "../../../engine/VideoServices/2DViewPort.h"
+#include "../../../engine/VideoServices/Viewport2D.h"
 #include "../../../engine/VideoServices/StaticText.h"
 #include "../../../engine/VideoServices/VideoBuffer.h"
 #include "../Control/Controller.h"

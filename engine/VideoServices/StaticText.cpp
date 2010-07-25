@@ -23,7 +23,7 @@
 #include "StdAfx.h"
 
 #include "../Util/Str.h"
-#include "2DViewPort.h"
+#include "Viewport2D.h"
 
 #include "StaticText.h"
 
