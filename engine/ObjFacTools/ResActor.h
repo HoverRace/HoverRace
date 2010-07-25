@@ -5,7 +5,7 @@
 #define MR_RES_ACTOR_H
 
 #include "ResBitmap.h"
-#include "../VideoServices/3DViewport.h"
+#include "../VideoServices/Viewport3D.h"
 
 #ifdef MR_ENGINE
 #define MR_DllDeclare   __declspec( dllexport )

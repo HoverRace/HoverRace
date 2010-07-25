@@ -26,7 +26,7 @@
 #include "Shapes.h"
 #include "ContactEffect.h"
 #include "../Util/DllObjectFactory.h"
-#include "../VideoServices/3DViewPort.h"
+#include "../VideoServices/Viewport3D.h"
 
 #ifdef MR_ENGINE
 #define MR_DllDeclare   __declspec(dllexport)

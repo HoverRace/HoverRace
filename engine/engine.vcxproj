@@ -158,9 +158,9 @@
     <ClCompile Include="Util\Profiler.cpp" />
     <ClCompile Include="Util\Str.cpp" />
     <ClCompile Include="Util\WorldCoordinates.cpp" />
-    <ClCompile Include="VideoServices\2DViewPort.cpp" />
-    <ClCompile Include="VideoServices\3DViewport.cpp" />
-    <ClCompile Include="VideoServices\3DViewportRendering.cpp" />
+    <ClCompile Include="VideoServices\Viewport2D.cpp" />
+    <ClCompile Include="VideoServices\Viewport3D.cpp" />
+    <ClCompile Include="VideoServices\Viewport3DRendering.cpp" />
     <ClCompile Include="VideoServices\Bitmap.cpp" />
     <ClCompile Include="VideoServices\ColorPalette.cpp" />
     <ClCompile Include="VideoServices\ColorTab.cpp" />
@@ -266,8 +266,8 @@
     <ClInclude Include="Util\Profiler.h" />
     <ClInclude Include="Util\Str.h" />
     <ClInclude Include="Util\WorldCoordinates.h" />
-    <ClInclude Include="VideoServices\2DViewPort.h" />
-    <ClInclude Include="VideoServices\3DViewport.h" />
+    <ClInclude Include="VideoServices\Viewport2D.h" />
+    <ClInclude Include="VideoServices\Viewport3D.h" />
     <ClInclude Include="VideoServices\Bitmap.h" />
     <ClInclude Include="VideoServices\ColorPalette.h" />
     <ClInclude Include="VideoServices\Font.h" />

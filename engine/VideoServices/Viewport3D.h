@@ -1,4 +1,4 @@
-// 3DViewport.h
+// Viewport3D.h
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include "2DViewport.h"
+#include "Viewport2D.h"
 #include "ColorPalette.h"
 #include "Bitmap.h"
 #include "Patch.h"

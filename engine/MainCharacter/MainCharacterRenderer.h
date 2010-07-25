@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "../VideoServices/3DViewPort.h"
+#include "../VideoServices/Viewport3D.h"
 #include "../VideoServices/SoundServer.h"
 #include "../Util/DllObjectFactory.h"
 

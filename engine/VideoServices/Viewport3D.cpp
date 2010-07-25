@@ -1,4 +1,4 @@
-// 3DViewport.cpp
+// Viewport3D.cpp
 //
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
@@ -25,7 +25,7 @@
 #include <math.h>
 
 #include "VideoBuffer.h"
-#include "3DViewport.h"
+#include "Viewport3D.h"
 #include "../Util/FastMemManip.h"
 
 namespace HoverRace {

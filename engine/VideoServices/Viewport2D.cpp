@@ -1,4 +1,4 @@
-// 2DViewport.cpp
+// Viewport2D.cpp
 //
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
@@ -24,7 +24,7 @@
 
 #include "VideoBuffer.h"
 
-#include "2DViewport.h"
+#include "Viewport2D.h"
 
 namespace HoverRace {
 namespace VideoServices {

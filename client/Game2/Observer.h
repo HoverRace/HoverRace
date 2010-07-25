@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "../../engine/VideoServices/3DViewPort.h"
+#include "../../engine/VideoServices/Viewport3D.h"
 #include "../../engine/MainCharacter/MainCharacter.h"
 #include "../../engine/ObjFacTools/SpriteHandle.h"
 

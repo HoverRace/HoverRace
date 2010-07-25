@@ -1,4 +1,4 @@
-// 3DViewportRendering.cpp
+// Viewport3DRendering.cpp
 //
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
@@ -21,7 +21,7 @@
 //
 #include "StdAfx.h"
 
-#include "3DViewport.h"
+#include "Viewport3D.h"
 #include "../Util/Profiler.h"
 
 // #pragma optimize( "atw", on )

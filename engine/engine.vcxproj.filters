@@ -180,15 +180,6 @@
     <ClCompile Include="Util\WorldCoordinates.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="VideoServices\2DViewPort.cpp">
-      <Filter>VideoServices</Filter>
-    </ClCompile>
-    <ClCompile Include="VideoServices\3DViewport.cpp">
-      <Filter>VideoServices</Filter>
-    </ClCompile>
-    <ClCompile Include="VideoServices\3DViewportRendering.cpp">
-      <Filter>VideoServices</Filter>
-    </ClCompile>
     <ClCompile Include="VideoServices\Bitmap.cpp">
       <Filter>VideoServices</Filter>
     </ClCompile>
@@ -297,6 +288,15 @@
     <ClCompile Include="StdAfx.cpp" />
     <ClCompile Include="Model\ObstacleCollisionReport.cpp">
       <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="VideoServices\Viewport2D.cpp">
+      <Filter>VideoServices</Filter>
+    </ClCompile>
+    <ClCompile Include="VideoServices\Viewport3D.cpp">
+      <Filter>VideoServices</Filter>
+    </ClCompile>
+    <ClCompile Include="VideoServices\Viewport3DRendering.cpp">
+      <Filter>VideoServices</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -465,12 +465,6 @@
     <ClInclude Include="Util\WorldCoordinates.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="VideoServices\2DViewPort.h">
-      <Filter>VideoServices</Filter>
-    </ClInclude>
-    <ClInclude Include="VideoServices\3DViewport.h">
-      <Filter>VideoServices</Filter>
-    </ClInclude>
     <ClInclude Include="VideoServices\Bitmap.h">
       <Filter>VideoServices</Filter>
     </ClInclude>
@@ -592,6 +586,12 @@
     <ClInclude Include="StdAfx.h" />
     <ClInclude Include="Model\ObstacleCollisionReport.h">
       <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="VideoServices\Viewport2D.h">
+      <Filter>VideoServices</Filter>
+    </ClInclude>
+    <ClInclude Include="VideoServices\Viewport3D.h">
+      <Filter>VideoServices</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

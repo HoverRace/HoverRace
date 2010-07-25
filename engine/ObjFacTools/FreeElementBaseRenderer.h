@@ -29,7 +29,7 @@
 #ifndef FREE_ELEMENT_RENDERER_BASE_H
 #define FREE_ELEMENT_RENDERER_BASE_H
 
-#include "../VideoServices/3DViewPort.h"
+#include "../VideoServices/Viewport3D.h"
 #include "../Util/DllObjectFactory.h"
 #include "ResourceLib.h"
 
