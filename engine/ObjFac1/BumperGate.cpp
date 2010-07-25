@@ -96,12 +96,12 @@ const MR_ContactEffectList *BumperGate::GetEffectList()
 	return &mEffectList;
 }
 
-const MR_ShapeInterface *BumperGate::GetReceivingContactEffectShape()
+const Model::ShapeInterface *BumperGate::GetReceivingContactEffectShape()
 {
 	return this;
 }
 
-const MR_ShapeInterface *BumperGate::GetGivingContactEffectShape()
+const Model::ShapeInterface *BumperGate::GetGivingContactEffectShape()
 {
 	// return this;
 	// ASSERT( FALSE );

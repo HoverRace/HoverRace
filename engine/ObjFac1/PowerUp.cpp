@@ -84,12 +84,12 @@ const MR_ContactEffectList *PowerUp::GetEffectList()
 	return &mEffectList;
 }
 
-const MR_ShapeInterface *PowerUp::GetReceivingContactEffectShape()
+const Model::ShapeInterface *PowerUp::GetReceivingContactEffectShape()
 {
 	return this;
 }
 
-const MR_ShapeInterface *PowerUp::GetGivingContactEffectShape()
+const Model::ShapeInterface *PowerUp::GetGivingContactEffectShape()
 {
 	// return this;
 	return NULL;

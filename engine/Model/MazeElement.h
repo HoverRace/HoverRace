@@ -128,11 +128,11 @@ class MR_DllDeclare FreeElement : public Element
 		virtual int Simulate(MR_SimulationTime pTimeSlice, Level * pLevel, int pRoom);
 
 												  // Shape that stop other elements movement
-		virtual const MR_ShapeInterface *GetObstacleShape();
+		virtual const ShapeInterface *GetObstacleShape();
 												  // Shape that give an effect when touched by a moving element
-		virtual const MR_ShapeInterface *GetReceivingContactEffectShape();
+		virtual const ShapeInterface *GetReceivingContactEffectShape();
 												  // Shape that give an effect when touching while moving
-		virtual const MR_ShapeInterface *GetGivingContactEffectShape();
+		virtual const ShapeInterface *GetGivingContactEffectShape();
 
 		// Perm state hook
 												  // object must return TRUE only if it accept the permanent hook number

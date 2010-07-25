@@ -236,12 +236,12 @@ MR_Angle Level::GetStartingOrientation(int pPlayerId) const
 	return mStartingOrientation[pPlayerId];
 }
 
-MR_PolygonShape *Level::GetRoomShape(int pRoomId) const
+PolygonShape *Level::GetRoomShape(int pRoomId) const
 {
 	return new SectionShape(&mRoomList[pRoomId]);
 }
 
-MR_PolygonShape *Level::GetFeatureShape(int pFeatureId) const
+PolygonShape *Level::GetFeatureShape(int pFeatureId) const
 {
 	return new SectionShape(&mFeatureList[pFeatureId]);
 }
@@ -462,28 +462,28 @@ void Level::FlushPermElementPosCache()
 
 }
 
-void Level::GetRoomContact(int pRoom, const MR_ShapeInterface * pShape, MR_RoomContactSpec & pAnswer)
+void Level::GetRoomContact(int pRoom, const ShapeInterface * pShape, RoomContactSpec & pAnswer)
 {
 
 	// Verify if the current room contains the requires shape
-	MR_DetectRoomContact(pShape, &SectionShape(&(mRoomList[pRoom])), pAnswer);
+	DetectRoomContact(pShape, &SectionShape(&(mRoomList[pRoom])), pAnswer);
 }
 
-BOOL Level::GetRoomWallContactOrientation(int pRoom, int pWall, const MR_ShapeInterface * pShape, MR_Angle & pAnswer)
+BOOL Level::GetRoomWallContactOrientation(int pRoom, int pWall, const ShapeInterface * pShape, MR_Angle & pAnswer)
 {
-	return MR_GetWallForceLongitude(pShape, &SectionShape(&(mRoomList[pRoom])), pWall, pAnswer);
+	return GetWallForceLongitude(pShape, &SectionShape(&(mRoomList[pRoom])), pWall, pAnswer);
 }
 
-BOOL Level::GetFeatureContact(int pFeature, const MR_ShapeInterface * pShape, MR_ContactSpec & pAnswer)
+BOOL Level::GetFeatureContact(int pFeature, const ShapeInterface * pShape, ContactSpec & pAnswer)
 {
 
 	// Verify if the current room contains the requires shape
-	return MR_DetectFeatureContact(pShape, &SectionShape(&(mFeatureList[pFeature])), pAnswer);
+	return DetectFeatureContact(pShape, &SectionShape(&(mFeatureList[pFeature])), pAnswer);
 }
 
-BOOL Level::GetFeatureContactOrientation(int pFeature, const MR_ShapeInterface * pShape, MR_Angle & pAnswer)
+BOOL Level::GetFeatureContactOrientation(int pFeature, const ShapeInterface * pShape, MR_Angle & pAnswer)
 {
-	return MR_GetFeatureForceLongitude(pShape, &SectionShape(&(mFeatureList[pFeature])), pAnswer);
+	return GetFeatureForceLongitude(pShape, &SectionShape(&(mFeatureList[pFeature])), pAnswer);
 }
 
 // Sub classes implementation
@@ -605,7 +605,7 @@ int Level::FindRoomForPoint(const MR_2DCoordinate & pPosition, int pStartingRoom
 	int lReturnValue = -1;
 
 	// Verify if the position is included in the current section
-	if(MR_GetPolygonInclusion(SectionShape(&mRoomList[pStartingRoom]), pPosition)) {
+	if(GetPolygonInclusion(SectionShape(&mRoomList[pStartingRoom]), pPosition)) {
 		lReturnValue = pStartingRoom;
 	}
 	else {
@@ -614,7 +614,7 @@ int Level::FindRoomForPoint(const MR_2DCoordinate & pPosition, int pStartingRoom
 			int lNeighbor = mRoomList[pStartingRoom].mNeighborList[lCounter];
 
 			if(lNeighbor != -1) {
-				if(MR_GetPolygonInclusion(SectionShape(&mRoomList[lNeighbor]), pPosition)) {
+				if(GetPolygonInclusion(SectionShape(&mRoomList[lNeighbor]), pPosition)) {
 					lReturnValue = lNeighbor;
 					break;
 				} else {
@@ -624,7 +624,7 @@ int Level::FindRoomForPoint(const MR_2DCoordinate & pPosition, int pStartingRoom
 						if(lNeighborsNeighbor == pStartingRoom) continue;
 
 						if(lNeighborsNeighbor != -1) {
-							if(MR_GetPolygonInclusion(SectionShape(&mRoomList[lNeighborsNeighbor]), pPosition)) {
+							if(GetPolygonInclusion(SectionShape(&mRoomList[lNeighborsNeighbor]), pPosition)) {
 								lReturnValue = lNeighborsNeighbor;
 								break;
 							}

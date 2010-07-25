@@ -29,7 +29,7 @@
 namespace HoverRace {
 namespace ObjFac1 {
 
-class Missile : public ObjFacTools::FreeElementBase, protected MR_CylinderShape
+class Missile : public ObjFacTools::FreeElementBase, protected Model::CylinderShape
 {
 	typedef ObjFacTools::FreeElementBase SUPER;
 	protected:
@@ -65,8 +65,8 @@ class Missile : public ObjFacTools::FreeElementBase, protected MR_CylinderShape
 
 		// ContactEffectShapeInterface
 		const MR_ContactEffectList *GetEffectList();
-		const MR_ShapeInterface *GetGivingContactEffectShape();
-		const MR_ShapeInterface *GetReceivingContactEffectShape();
+		const Model::ShapeInterface *GetGivingContactEffectShape();
+		const Model::ShapeInterface *GetReceivingContactEffectShape();
 
 		int Simulate(MR_SimulationTime pTimeSlice, Model::Level * pLevel, int pRoom);
 		int InternalSimulate(MR_SimulationTime pDuration, Model::Level * pLevel, int pRoom);

@@ -22,31 +22,35 @@
 #include "StdAfx.h"
 
 #include <math.h>
+
 #include "ShapeCollisions.h"
 
+namespace HoverRace {
+namespace Model {
+
 // Local prototypes
-typedef BOOL(*MR_ActorActorContactFunc) (const MR_ShapeInterface * pActor0, const MR_ShapeInterface * pActor1, MR_ContactSpec & pAnswer);
-typedef BOOL(*MR_ActorActorLongitudeFunc) (const MR_ShapeInterface * pActor0, const MR_ShapeInterface * pActor1, MR_Angle & pLongitude);
+typedef BOOL(*MR_ActorActorContactFunc) (const ShapeInterface * pActor0, const ShapeInterface * pActor1, ContactSpec & pAnswer);
+typedef BOOL(*MR_ActorActorLongitudeFunc) (const ShapeInterface * pActor0, const ShapeInterface * pActor1, MR_Angle & pLongitude);
 
-static BOOL MR_CylinderCylinderContact(const MR_CylinderShape * pActor0, const MR_CylinderShape * pActor1, MR_ContactSpec & pAnswer);
-static BOOL MR_LineLineContact(const MR_LineSegmentShape * pActor0, const MR_LineSegmentShape * pActor1, MR_ContactSpec & pAnswer);
-static BOOL MR_PolygonPolygonContact(const MR_PolygonShape * pActor0, const MR_PolygonShape * pActor1, MR_ContactSpec & pAnswer);
-static BOOL MR_CylinderLineContact(const MR_CylinderShape * pActor0, const MR_LineSegmentShape * pActor1, MR_ContactSpec & pAnswer);
-static BOOL MR_CylinderPolygonContact(const MR_CylinderShape * pActor0, const MR_PolygonShape * pActor1, MR_ContactSpec & pAnswer);
-static BOOL MR_LinePolygonContact(const MR_LineSegmentShape * pActor0, const MR_PolygonShape * pActor1, MR_ContactSpec & pAnswer);
-static BOOL MR_LineCylinderContact(const MR_LineSegmentShape * pActor0, const MR_CylinderShape * pActor1, MR_ContactSpec & pAnswer);
-static BOOL MR_PolygonCylinderContact(const MR_PolygonShape * pActor0, const MR_CylinderShape * pActor1, MR_ContactSpec & pAnswer);
-static BOOL MR_PolygonLineContact(const MR_PolygonShape * pActor0, const MR_LineSegmentShape * pActor1, MR_ContactSpec & pAnswer);
+static BOOL MR_CylinderCylinderContact(const CylinderShape * pActor0, const CylinderShape * pActor1, ContactSpec & pAnswer);
+static BOOL MR_LineLineContact(const LineSegmentShape * pActor0, const LineSegmentShape * pActor1, ContactSpec & pAnswer);
+static BOOL MR_PolygonPolygonContact(const PolygonShape * pActor0, const PolygonShape * pActor1, ContactSpec & pAnswer);
+static BOOL MR_CylinderLineContact(const CylinderShape * pActor0, const LineSegmentShape * pActor1, ContactSpec & pAnswer);
+static BOOL MR_CylinderPolygonContact(const CylinderShape * pActor0, const PolygonShape * pActor1, ContactSpec & pAnswer);
+static BOOL MR_LinePolygonContact(const LineSegmentShape * pActor0, const PolygonShape * pActor1, ContactSpec & pAnswer);
+static BOOL MR_LineCylinderContact(const LineSegmentShape * pActor0, const CylinderShape * pActor1, ContactSpec & pAnswer);
+static BOOL MR_PolygonCylinderContact(const PolygonShape * pActor0, const CylinderShape * pActor1, ContactSpec & pAnswer);
+static BOOL MR_PolygonLineContact(const PolygonShape * pActor0, const LineSegmentShape * pActor1, ContactSpec & pAnswer);
 
-static void MR_CylinderRoomContact(const MR_CylinderShape * pActor, const MR_PolygonShape * pRoom, MR_RoomContactSpec & pAnswer);
-static void MR_LineRoomContact(const MR_LineSegmentShape * pActor, const MR_PolygonShape * pRoom, MR_RoomContactSpec & pAnswer);
-static void MR_PolygonRoomContact(const MR_PolygonShape * pActor, const MR_PolygonShape * pRoom, MR_RoomContactSpec & pAnswer);
+static void MR_CylinderRoomContact(const CylinderShape * pActor, const PolygonShape * pRoom, RoomContactSpec & pAnswer);
+static void MR_LineRoomContact(const LineSegmentShape * pActor, const PolygonShape * pRoom, RoomContactSpec & pAnswer);
+static void MR_PolygonRoomContact(const PolygonShape * pActor, const PolygonShape * pRoom, RoomContactSpec & pAnswer);
 
-static BOOL MR_TestLevelShape(const MR_ShapeInterface * pActor0, const MR_ShapeInterface * pActor1, MR_ContactSpec & pAnswer);
-static BOOL MR_TestBoundingBox(const MR_ShapeInterface * pActor0, const MR_ShapeInterface * pActor1);
+static BOOL MR_TestLevelShape(const ShapeInterface * pActor0, const ShapeInterface * pActor1, ContactSpec & pAnswer);
+static BOOL MR_TestBoundingBox(const ShapeInterface * pActor0, const ShapeInterface * pActor1);
 static BOOL MR_IsOnLeft(const MR_2DCoordinate & pPointToCheck, const MR_2DCoordinate & pVectorOrigin, const MR_2DCoordinate & pVectorDest);
-static BOOL MR_Is1Outside0(const MR_PolygonShape * pActor0, const MR_PolygonShape * pActor1);
-static void MR_AddContactWall(int pWallIndex, MR_RoomContactSpec & pAnswer);
+static BOOL MR_Is1Outside0(const PolygonShape * pActor0, const PolygonShape * pActor1);
+static void MR_AddContactWall(int pWallIndex, RoomContactSpec & pAnswer);
 static BOOL MR_AreLineCrossing(MR_Int32 pAX0, MR_Int32 pAY0, MR_Int32 pAX1, MR_Int32 pAY1, MR_Int32 pBX0, MR_Int32 pBY0, MR_Int32 pBX1, MR_Int32 pBY1);
 
 static const MR_ActorActorContactFunc MR_ActorActorContactMatrix[3][3] =
@@ -68,7 +72,7 @@ static const MR_ActorActorContactFunc MR_ActorActorContactMatrix[3][3] =
 	}
 };
 
-BOOL MR_GetPolygonInclusion(const MR_PolygonShape & pPolygon, const MR_2DCoordinate & pPosition)
+BOOL GetPolygonInclusion(const PolygonShape &pPolygon, const MR_2DCoordinate &pPosition)
 {
 	BOOL lAnswer = TRUE;
 
@@ -104,17 +108,17 @@ BOOL MR_GetPolygonInclusion(const MR_PolygonShape & pPolygon, const MR_2DCoordin
 	return lAnswer;
 }
 
-BOOL MR_DetectActorContact(const MR_ShapeInterface * pActor, const MR_ShapeInterface * pObstacle, MR_ContactSpec & pAnswer)
+BOOL DetectActorContact(const ShapeInterface * pActor, const ShapeInterface * pObstacle, ContactSpec & pAnswer)
 {
 	return MR_ActorActorContactMatrix[pActor->ShapeType()][pObstacle->ShapeType()](pActor, pObstacle, pAnswer);
 }
 
-BOOL MR_DetectFeatureContact(const MR_ShapeInterface * pActor, const MR_PolygonShape * pFeature, MR_ContactSpec & pAnswer)
+BOOL DetectFeatureContact(const ShapeInterface * pActor, const PolygonShape * pFeature, ContactSpec & pAnswer)
 {
-	return MR_DetectActorContact(pActor, pFeature, pAnswer);
+	return DetectActorContact(pActor, pFeature, pAnswer);
 }
 
-void MR_DetectRoomContact(const MR_ShapeInterface * pActor, const MR_PolygonShape * pRoom, MR_RoomContactSpec & pAnswer)
+void DetectRoomContact(const ShapeInterface * pActor, const PolygonShape * pRoom, RoomContactSpec & pAnswer)
 {
 
 	// Initialize basic stuff
@@ -129,16 +133,16 @@ void MR_DetectRoomContact(const MR_ShapeInterface * pActor, const MR_PolygonShap
 
 	if(MR_TestBoundingBox(pActor, pRoom)) {
 		switch (pActor->ShapeType()) {
-			case MR_ShapeInterface::eCylinder:
-				MR_CylinderRoomContact((const MR_CylinderShape *) pActor, pRoom, pAnswer);
+			case ShapeInterface::eCylinder:
+				MR_CylinderRoomContact((const CylinderShape *) pActor, pRoom, pAnswer);
 				break;
 
-			case MR_ShapeInterface::eLineSegment:
-				MR_LineRoomContact((const MR_LineSegmentShape *) pActor, pRoom, pAnswer);
+			case ShapeInterface::eLineSegment:
+				MR_LineRoomContact((const LineSegmentShape *) pActor, pRoom, pAnswer);
 				break;
 
-			case MR_ShapeInterface::ePolygon:
-				MR_PolygonRoomContact((const MR_PolygonShape *) pActor, pRoom, pAnswer);
+			case ShapeInterface::ePolygon:
+				MR_PolygonRoomContact((const PolygonShape *) pActor, pRoom, pAnswer);
 				break;
 
 			default:
@@ -147,7 +151,7 @@ void MR_DetectRoomContact(const MR_ShapeInterface * pActor, const MR_PolygonShap
 	}
 }
 
-BOOL MR_GetActorForceLongitude(const MR_ShapeInterface * pActor, const MR_ShapeInterface * pObstacle, MR_Angle & pLongitude)
+BOOL GetActorForceLongitude(const ShapeInterface * pActor, const ShapeInterface * pObstacle, MR_Angle & pLongitude)
 {
 	// Big approximation:Assume that the shape is not a long shape
 	int lX0 = pActor->XPos();
@@ -159,7 +163,7 @@ BOOL MR_GetActorForceLongitude(const MR_ShapeInterface * pActor, const MR_ShapeI
 	return TRUE;
 }
 
-BOOL MR_GetFeatureForceLongitude(const MR_ShapeInterface * pActor, const MR_PolygonShape * pFeature, MR_Angle & pLongitude)
+BOOL GetFeatureForceLongitude(const ShapeInterface * pActor, const PolygonShape * pFeature, MR_Angle & pLongitude)
 {
 
 	MR_Int32 lXMassCenter = pActor->XPos();
@@ -219,7 +223,7 @@ BOOL MR_GetFeatureForceLongitude(const MR_ShapeInterface * pActor, const MR_Poly
 	return lReturnValue;
 }
 
-BOOL MR_GetWallForceLongitude(const MR_ShapeInterface * /*pActor */ , const MR_PolygonShape * pRoom, int pWallIndex, MR_Angle & pLongitude)
+BOOL GetWallForceLongitude(const ShapeInterface * /*pActor */ , const PolygonShape * pRoom, int pWallIndex, MR_Angle & pLongitude)
 {
 	// return a vector perpendicular to the selected wall
 	int lP1 = (pWallIndex + 1) % pRoom->VertexCount();
@@ -231,7 +235,7 @@ BOOL MR_GetWallForceLongitude(const MR_ShapeInterface * /*pActor */ , const MR_P
 
 // Local functions implementation
 
-BOOL MR_CylinderCylinderContact(const MR_CylinderShape * pActor0, const MR_CylinderShape * pActor1, MR_ContactSpec & pAnswer)
+BOOL MR_CylinderCylinderContact(const CylinderShape * pActor0, const CylinderShape * pActor1, ContactSpec & pAnswer)
 {
 
 	// First verify the level of the objects
@@ -274,13 +278,13 @@ BOOL MR_CylinderCylinderContact(const MR_CylinderShape * pActor0, const MR_Cylin
 	return lReturnValue;
 }
 
-BOOL MR_LineLineContact(const MR_LineSegmentShape * /*pActor0 */ , const MR_LineSegmentShape * /*pActor1 */ , MR_ContactSpec & /*pAnswer */ )
+BOOL MR_LineLineContact(const LineSegmentShape * /*pActor0 */ , const LineSegmentShape * /*pActor1 */ , ContactSpec & /*pAnswer */ )
 {
 	// Line segments can not enter in collision
 	return FALSE;
 }
 
-BOOL MR_PolygonPolygonContact(const MR_PolygonShape * pActor0, const MR_PolygonShape * pActor1, MR_ContactSpec & pAnswer)
+BOOL MR_PolygonPolygonContact(const PolygonShape * pActor0, const PolygonShape * pActor1, ContactSpec & pAnswer)
 {
 
 	// First verify the level of the objects
@@ -303,7 +307,7 @@ BOOL MR_PolygonPolygonContact(const MR_PolygonShape * pActor0, const MR_PolygonS
 	return lReturnValue;
 }
 
-BOOL MR_CylinderLineContact(const MR_CylinderShape * pActor0, const MR_LineSegmentShape * pActor1, MR_ContactSpec & pAnswer)
+BOOL MR_CylinderLineContact(const CylinderShape * pActor0, const LineSegmentShape * pActor1, ContactSpec & pAnswer)
 {
 	// First check the 3D bounding box
 	BOOL lReturnValue = MR_TestLevelShape(pActor0, pActor1, pAnswer);
@@ -332,7 +336,7 @@ BOOL MR_CylinderLineContact(const MR_CylinderShape * pActor0, const MR_LineSegme
 	return lReturnValue;
 }
 
-BOOL MR_CylinderPolygonContact(const MR_CylinderShape * pActor0, const MR_PolygonShape * pActor1, MR_ContactSpec & pAnswer)
+BOOL MR_CylinderPolygonContact(const CylinderShape * pActor0, const PolygonShape * pActor1, ContactSpec & pAnswer)
 {
 	// First check the 3D bounding box
 	BOOL lReturnValue = MR_TestLevelShape(pActor0, pActor1, pAnswer);
@@ -367,7 +371,7 @@ BOOL MR_CylinderPolygonContact(const MR_CylinderShape * pActor0, const MR_Polygo
 	return lReturnValue;
 }
 
-BOOL MR_LinePolygonContact(const MR_LineSegmentShape * pActor0, const MR_PolygonShape * pActor1, MR_ContactSpec & pAnswer)
+BOOL MR_LinePolygonContact(const LineSegmentShape * pActor0, const PolygonShape * pActor1, ContactSpec & pAnswer)
 {
 	// First check the 3D bounding box
 	BOOL lReturnValue = MR_TestLevelShape(pActor0, pActor1, pAnswer);
@@ -426,28 +430,28 @@ BOOL MR_LinePolygonContact(const MR_LineSegmentShape * pActor0, const MR_Polygon
 	return lReturnValue;
 }
 
-BOOL MR_LineCylinderContact(const MR_LineSegmentShape * pActor0, const MR_CylinderShape * pActor1, MR_ContactSpec & pAnswer)
+BOOL MR_LineCylinderContact(const LineSegmentShape * pActor0, const CylinderShape * pActor1, ContactSpec & pAnswer)
 {
 	BOOL lReturnValue = MR_CylinderLineContact(pActor1, pActor0, pAnswer);
 
 	return lReturnValue;
 }
 
-BOOL MR_PolygonCylinderContact(const MR_PolygonShape * pActor0, const MR_CylinderShape * pActor1, MR_ContactSpec & pAnswer)
+BOOL MR_PolygonCylinderContact(const PolygonShape * pActor0, const CylinderShape * pActor1, ContactSpec & pAnswer)
 {
 	BOOL lReturnValue = MR_CylinderPolygonContact(pActor1, pActor0, pAnswer);
 
 	return lReturnValue;
 }
 
-BOOL MR_PolygonLineContact(const MR_PolygonShape * pActor0, const MR_LineSegmentShape * pActor1, MR_ContactSpec & pAnswer)
+BOOL MR_PolygonLineContact(const PolygonShape * pActor0, const LineSegmentShape * pActor1, ContactSpec & pAnswer)
 {
 	BOOL lReturnValue = MR_LinePolygonContact(pActor1, pActor0, pAnswer);
 
 	return lReturnValue;
 }
 
-void MR_CylinderRoomContact(const MR_CylinderShape * pActor, const MR_PolygonShape * pRoom, MR_RoomContactSpec & pAnswer)
+void MR_CylinderRoomContact(const CylinderShape * pActor, const PolygonShape * pRoom, RoomContactSpec & pAnswer)
 {
 	// For each side of the polygon, verify that
 	// the left perpendicular distance of the center of
@@ -517,7 +521,7 @@ void MR_CylinderRoomContact(const MR_CylinderShape * pActor, const MR_PolygonSha
 	}
 }
 
-void MR_LineRoomContact(const MR_LineSegmentShape * pActor, const MR_PolygonShape * pRoom, MR_RoomContactSpec & pAnswer)
+void MR_LineRoomContact(const LineSegmentShape * pActor, const PolygonShape * pRoom, RoomContactSpec & pAnswer)
 {
 	// Count the crossed sides
 	int lVertexCount = pRoom->VertexCount();
@@ -537,13 +541,13 @@ void MR_LineRoomContact(const MR_LineSegmentShape * pActor, const MR_PolygonShap
 		pAnswer.mTouchingRoom = TRUE;
 	}
 	else {
-		if(MR_GetPolygonInclusion(*pRoom, MR_2DCoordinate(pActor->X0(), pActor->X1()))) {
+		if(GetPolygonInclusion(*pRoom, MR_2DCoordinate(pActor->X0(), pActor->X1()))) {
 			pAnswer.mTouchingRoom = TRUE;
 		}
 	}
 }
 
-void MR_PolygonRoomContact(const MR_PolygonShape * pActor, const MR_PolygonShape * pRoom, MR_RoomContactSpec & pAnswer)
+void MR_PolygonRoomContact(const PolygonShape * pActor, const PolygonShape * pRoom, RoomContactSpec & pAnswer)
 {
 	// For each wall of the Room, verify if it is crossed by a wall of the
 	// polygon to check
@@ -579,13 +583,13 @@ void MR_PolygonRoomContact(const MR_PolygonShape * pActor, const MR_PolygonShape
 		pAnswer.mTouchingRoom = TRUE;
 	}
 	else {
-		if(MR_GetPolygonInclusion(*pRoom, MR_2DCoordinate(pActor->X(0), pActor->Y(0)))) {
+		if(GetPolygonInclusion(*pRoom, MR_2DCoordinate(pActor->X(0), pActor->Y(0)))) {
 			pAnswer.mTouchingRoom = TRUE;
 		}
 	}
 }
 
-BOOL MR_TestLevelShape(const MR_ShapeInterface * pActor0, const MR_ShapeInterface * pActor1, MR_ContactSpec & pAnswer)
+BOOL MR_TestLevelShape(const ShapeInterface * pActor0, const ShapeInterface * pActor1, ContactSpec & pAnswer)
 {
 	int lZMin0 = pActor0->ZMin();
 	int lZMin1 = pActor1->ZMin();
@@ -598,7 +602,7 @@ BOOL MR_TestLevelShape(const MR_ShapeInterface * pActor0, const MR_ShapeInterfac
 	return pAnswer.mZMin < pAnswer.mZMax;
 }
 
-BOOL MR_TestBoundingBox(const MR_ShapeInterface * pActor0, const MR_ShapeInterface * pActor1)
+BOOL MR_TestBoundingBox(const ShapeInterface * pActor0, const ShapeInterface * pActor1)
 {
 	BOOL lReturnValue = TRUE;
 
@@ -627,7 +631,7 @@ BOOL MR_IsOnLeft(const MR_2DCoordinate & pPointToCheck, const MR_2DCoordinate & 
 	return lLeftScalarResult > 0;
 }
 
-BOOL MR_Is1Outside0(const MR_PolygonShape * pActor0, const MR_PolygonShape * pActor1)
+BOOL MR_Is1Outside0(const PolygonShape * pActor0, const PolygonShape * pActor1)
 {
 	BOOL lReturnValue = FALSE;
 
@@ -645,9 +649,9 @@ BOOL MR_Is1Outside0(const MR_PolygonShape * pActor0, const MR_PolygonShape * pAc
 	return lReturnValue;
 }
 
-void MR_AddContactWall(int pWallIndex, MR_RoomContactSpec & pAnswer)
+void MR_AddContactWall(int pWallIndex, RoomContactSpec & pAnswer)
 {
-	if(pAnswer.mNbWallContact < MR_RoomContactSpec::eMaxWallContact) {
+	if(pAnswer.mNbWallContact < RoomContactSpec::eMaxWallContact) {
 		pAnswer.mWallContact[pAnswer.mNbWallContact++] = pWallIndex;
 	}
 	else {
@@ -686,3 +690,6 @@ BOOL MR_AreLineCrossing(MR_Int32 pAX0, MR_Int32 pAY0, MR_Int32 pAX1, MR_Int32 pA
 	}
 	return lReturnValue;
 }
+
+}  // namespace Model
+}  // namespace HoverRace

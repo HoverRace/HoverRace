@@ -68,7 +68,7 @@ const MR_ContactEffectList *FinishLine::GetEffectList()
 	return &mContactEffectList;
 }
 
-const MR_ShapeInterface *FinishLine::GetReceivingContactEffectShape()
+const Model::ShapeInterface *FinishLine::GetReceivingContactEffectShape()
 {
 	return this;
 }

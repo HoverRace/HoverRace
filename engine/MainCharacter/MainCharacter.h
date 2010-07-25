@@ -74,7 +74,7 @@ class MainCharacter : public Model::FreeElement
 			eNotAWeapon
 		};
 	private:
-		class Cylinder:public MR_CylinderShape
+		class Cylinder : public Model::CylinderShape
 		{
 			public:
 				MR_Int32 mRay;
@@ -214,15 +214,15 @@ class MainCharacter : public Model::FreeElement
 		// Logic interface
 		int Simulate(MR_SimulationTime pDuration, Model::Level * pLevel, int pRoom);
 
-		const MR_ShapeInterface *GetObstacleShape();
+		const Model::ShapeInterface *GetObstacleShape();
 
 		// ContactEffectShapeInterface
 		void ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 pZMin, MR_Int32 pZMax, Model::Level * pLevel);
 
 		const MR_ContactEffectList *GetEffectList();
 
-		const MR_ShapeInterface *GetReceivingContactEffectShape();
-		const MR_ShapeInterface *GetGivingContactEffectShape();
+		const Model::ShapeInterface *GetReceivingContactEffectShape();
+		const Model::ShapeInterface *GetGivingContactEffectShape();
 
 	public:
 		// Sounds

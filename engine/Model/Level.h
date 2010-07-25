@@ -86,7 +86,7 @@ class MR_DllDeclare Level
 		class Section;
 
 		// Helper structure
-		class MR_DllDeclare SectionShape:public MR_PolygonShape
+		class MR_DllDeclare SectionShape : public Model::PolygonShape
 		{
 			private:
 				Section * mSection;
@@ -279,14 +279,14 @@ class MR_DllDeclare Level
 		MR_Angle GetStartingOrientation(int pPlayerId) const;
 
 		// Structural information
-		MR_PolygonShape *GetRoomShape(int pRoomId) const;
+		PolygonShape *GetRoomShape(int pRoomId) const;
 		MR_Int32 GetRoomWallLen(int pRoomId, int pVertex) const;
 		MR_Int32 GetRoomBottomLevel(int pRoomId) const;
 		MR_Int32 GetRoomTopLevel(int pRoomId) const;
 		const MR_2DCoordinate & GetRoomVertex(int pRoomId, int pVertex) const;
 		int GetRoomVertexCount(int pRoomId) const;
 
-		MR_PolygonShape *GetFeatureShape(int pFeatureId) const;
+		PolygonShape *GetFeatureShape(int pFeatureId) const;
 		MR_Int32 GetFeatureWallLen(int pFeatureId, int pVertex) const;
 		MR_Int32 GetFeatureBottomLevel(int pFeatureId) const;
 		MR_Int32 GetFeatureTopLevel(int pFeatureId) const;
@@ -329,13 +329,13 @@ class MR_DllDeclare Level
 		// Element movement functions
 		int FindRoomForPoint(const MR_2DCoordinate & pPosition, int pStartingRoom) const;
 
-		void GetRoomContact(int pRoom, const MR_ShapeInterface * pShape, MR_RoomContactSpec & pAnswer);
+		void GetRoomContact(int pRoom, const ShapeInterface * pShape, RoomContactSpec & pAnswer);
 
-		BOOL GetRoomWallContactOrientation(int pRoom, int pWall, const MR_ShapeInterface * pShape, MR_Angle & pAnswer);
+		BOOL GetRoomWallContactOrientation(int pRoom, int pWall, const ShapeInterface * pShape, MR_Angle & pAnswer);
 
-		BOOL GetFeatureContact(int pFeature, const MR_ShapeInterface * pShape, MR_ContactSpec & pAnswer);
+		BOOL GetFeatureContact(int pFeature, const ShapeInterface * pShape, ContactSpec & pAnswer);
 
-		BOOL GetFeatureContactOrientation(int pFeature, const MR_ShapeInterface * pShape, MR_Angle & pAnswer);
+		BOOL GetFeatureContactOrientation(int pFeature, const ShapeInterface * pShape, MR_Angle & pAnswer);
 
 };
 

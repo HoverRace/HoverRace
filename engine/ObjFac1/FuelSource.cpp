@@ -71,7 +71,7 @@ const MR_ContactEffectList *FuelSource::GetEffectList()
 	return &mContactEffectList;
 }
 
-const MR_ShapeInterface *FuelSource::GetReceivingContactEffectShape()
+const Model::ShapeInterface *FuelSource::GetReceivingContactEffectShape()
 {
 	return this;
 }

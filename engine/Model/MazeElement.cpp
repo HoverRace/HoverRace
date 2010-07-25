@@ -140,17 +140,17 @@ int FreeElement::Simulate(MR_SimulationTime, Level *, int pRoom)
 	return pRoom;
 }
 
-const MR_ShapeInterface *FreeElement::GetObstacleShape()
+const ShapeInterface *FreeElement::GetObstacleShape()
 {
 	return NULL;
 }
 
-const MR_ShapeInterface *FreeElement::GetReceivingContactEffectShape()
+const ShapeInterface *FreeElement::GetReceivingContactEffectShape()
 {
 	return NULL;
 }
 
-const MR_ShapeInterface *FreeElement::GetGivingContactEffectShape()
+const ShapeInterface *FreeElement::GetGivingContactEffectShape()
 {
 	return NULL;
 }

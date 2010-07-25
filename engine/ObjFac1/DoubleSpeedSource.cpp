@@ -69,7 +69,7 @@ const MR_ContactEffectList *DoubleSpeedSource::GetEffectList()
 	return &mContactEffectList;
 }
 
-const MR_ShapeInterface *DoubleSpeedSource::GetReceivingContactEffectShape()
+const Model::ShapeInterface *DoubleSpeedSource::GetReceivingContactEffectShape()
 {
 	return this;
 }

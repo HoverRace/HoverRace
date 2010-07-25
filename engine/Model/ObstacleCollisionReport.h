@@ -54,7 +54,7 @@ class ObstacleCollisionReport
 
 		BOOL AlmostCompleted() const;
 
-		void GetContactWithFeaturesAndActors(Level * pLevel, const MR_ShapeInterface * pShape, int pRoom, FreeElement * pElement, BOOL pIgnoreActors);
+		void GetContactWithFeaturesAndActors(Level * pLevel, const ShapeInterface * pShape, int pRoom, FreeElement * pElement, BOOL pIgnoreActors);
 
 	public:
 
@@ -72,7 +72,7 @@ class ObstacleCollisionReport
 		MR_Int32 MR_DllDeclare LargestHoleHeight() const;
 		MR_Int32 MR_DllDeclare LargestHoleStep() const;
 
-		void MR_DllDeclare GetContactWithObstacles(Level * pLevel, const MR_ShapeInterface * pShape, int pRoom, FreeElement * pElement, BOOL pIgnoreActors = FALSE);
+		void MR_DllDeclare GetContactWithObstacles(Level * pLevel, const ShapeInterface * pShape, int pRoom, FreeElement * pElement, BOOL pIgnoreActors = FALSE);
 
 };
 

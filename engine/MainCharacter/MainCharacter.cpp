@@ -763,7 +763,7 @@ int MainCharacter::InternalSimulate(MR_SimulationTime pDuration, Model::Level *p
 	return pRoom;
 }
 
-const MR_ShapeInterface *MainCharacter::GetObstacleShape()
+const Model::ShapeInterface *MainCharacter::GetObstacleShape()
 {
 	return NULL;
 	mCollisionShape.mPosition = mPosition;
@@ -924,13 +924,13 @@ const MR_ContactEffectList *MainCharacter::GetEffectList()
 	return &mContactEffectList;
 }
 
-const MR_ShapeInterface *MainCharacter::GetReceivingContactEffectShape()
+const Model::ShapeInterface *MainCharacter::GetReceivingContactEffectShape()
 {
 	mCollisionShape.mPosition = mPosition;
 	return &mCollisionShape;
 }
 
-const MR_ShapeInterface *MainCharacter::GetGivingContactEffectShape()
+const Model::ShapeInterface *MainCharacter::GetGivingContactEffectShape()
 {
 	mContactShape.mPosition = mPosition;
 	return &mContactShape;

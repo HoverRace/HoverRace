@@ -96,7 +96,7 @@ BOOL ObstacleCollisionReport::AlmostCompleted() const
 }
 
 void ObstacleCollisionReport::GetContactWithObstacles(
-	Level * pLevel, const MR_ShapeInterface * pShape, int pRoom,
+	Level * pLevel, const ShapeInterface * pShape, int pRoom,
 	FreeElement * pElement, BOOL pIgnoreActors)
 {
 	// Compute the touched rooms and the floor limits
@@ -117,7 +117,7 @@ void ObstacleCollisionReport::GetContactWithObstacles(
 		mInMaze = FALSE;
 	}
 	else {
-		MR_RoomContactSpec lSpec;
+		RoomContactSpec lSpec;
 		pLevel->GetRoomContact(mCurrentRoom, pShape, lSpec);
 
 		ASSERT(lSpec.mTouchingRoom);
@@ -148,7 +148,7 @@ void ObstacleCollisionReport::GetContactWithObstacles(
 				mObstacleBottom = mShapeBottom;
 			}
 			else {
-				MR_RoomContactSpec lNextSpec;
+				RoomContactSpec lNextSpec;
 
 				pLevel->GetRoomContact(lNextRoom, pShape, lNextSpec);
 
@@ -175,12 +175,12 @@ int ObstacleCollisionReport::Room() const
 }
 
 void ObstacleCollisionReport::GetContactWithFeaturesAndActors(
-	Level * pLevel, const MR_ShapeInterface * pShape, int pRoom,
+	Level * pLevel, const ShapeInterface * pShape, int pRoom,
 	FreeElement * pElement, BOOL pIgnoreActors)
 {
 
 	int lCounter;
-	MR_ContactSpec lSpec;
+	ContactSpec lSpec;
 
 	if(!AlmostCompleted()) {
 		// First verify the features
@@ -211,10 +211,10 @@ void ObstacleCollisionReport::GetContactWithFeaturesAndActors(
 
 				if(lObstacle != pElement) {
 
-					const MR_ShapeInterface *lObstacleShape = lObstacle->GetObstacleShape();
+					const ShapeInterface *lObstacleShape = lObstacle->GetObstacleShape();
 
 					if(lObstacleShape != NULL) {
-						if(MR_DetectActorContact(pShape, lObstacleShape, lSpec)) {
+						if(DetectActorContact(pShape, lObstacleShape, lSpec)) {
 							if(mHaveObstacleContact) {
 								mObstacleBottom = min(mObstacleBottom, lSpec.mZMin);
 								mObstacleTop = max(mObstacleTop, lSpec.mZMax);

@@ -30,7 +30,7 @@ namespace ObjFac1 {
 
 // Note.. finish lines are not finish lines..they are check points
 
-class FinishLine : public Model::FreeElement, protected MR_CylinderShape
+class FinishLine : public Model::FreeElement, protected Model::CylinderShape
 {
 	protected:
 
@@ -54,7 +54,7 @@ class FinishLine : public Model::FreeElement, protected MR_CylinderShape
 
 		// ContactEffectShapeInterface
 		const MR_ContactEffectList *GetEffectList();
-		const MR_ShapeInterface *GetReceivingContactEffectShape();
+		const Model::ShapeInterface *GetReceivingContactEffectShape();
 
 };
 

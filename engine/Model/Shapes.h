@@ -30,8 +30,7 @@
 // Theses objects should be build at run time for collision detection only
 //
 
-#ifndef SHAPES_H
-#define SHAPES_H
+#pragma once
 
 #include "../Util/WorldCoordinates.h"
 
@@ -45,7 +44,10 @@
 #	define MR_DllDeclare
 #endif
 
-class MR_DllDeclare MR_ShapeInterface
+namespace HoverRace {
+namespace Model {
+
+class MR_DllDeclare ShapeInterface
 {
 	public:
 		enum eShape { eCylinder = 0, eLineSegment = 1, ePolygon = 2 };
@@ -68,7 +70,7 @@ class MR_DllDeclare MR_ShapeInterface
 
 // List of availlable shapes
 
-class MR_DllDeclare MR_CylinderShape:public MR_ShapeInterface
+class MR_DllDeclare CylinderShape : public ShapeInterface
 {
 	public:
 		virtual MR_Int32 AxisX() const = 0;
@@ -88,7 +90,7 @@ class MR_DllDeclare MR_CylinderShape:public MR_ShapeInterface
 
 };
 
-class MR_DllDeclare MR_LineSegmentShape:public MR_ShapeInterface
+class MR_DllDeclare LineSegmentShape : public ShapeInterface
 {
 	public:
 
@@ -115,7 +117,7 @@ class MR_DllDeclare MR_LineSegmentShape:public MR_ShapeInterface
 
 };
 
-class MR_DllDeclare MR_PolygonShape:public MR_ShapeInterface
+class MR_DllDeclare PolygonShape : public ShapeInterface
 {
 	public:
 		virtual int VertexCount() const = 0;
@@ -131,5 +133,7 @@ class MR_DllDeclare MR_PolygonShape:public MR_ShapeInterface
 
 };
 
+}  // namespace Model
+}  // namespace HoverRace
+
 #undef MR_DllDeclare
-#endif

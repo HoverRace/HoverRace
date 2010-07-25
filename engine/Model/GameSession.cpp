@@ -212,12 +212,12 @@ int GameSession::SimulateOneFreeElem(MR_SimulationTime pTimeToSimulate, MR_FreeE
 		mCurrentLevel->MoveElement(pElementHandle, lNewRoom);
 
 	// Compute interaction of the element with the environment
-	const MR_ShapeInterface *lContactShape = lElement->GetGivingContactEffectShape();
+	const ShapeInterface *lContactShape = lElement->GetGivingContactEffectShape();
 
 	if(lContactShape != NULL) {
 		// Compute contact with structural elements
 		MR_FixedFastArray < int, 20 > lVisitedRooms;
-		MR_RoomContactSpec lSpec;
+		RoomContactSpec lSpec;
 
 		// Do the contact treatement for that room
 		mCurrentLevel->GetRoomContact(lNewRoom, lContactShape, lSpec);
@@ -251,12 +251,12 @@ void GameSession::SimulateFreeElems(MR_SimulationTime pTimeToSimulate)
 	mCurrentLevel->FlushPermElementPosCache();
 }
 
-void GameSession::ComputeShapeContactEffects(int pCurrentRoom, FreeElement * pActor, const MR_RoomContactSpec & pLastSpec, MR_FastArrayBase < int >*pVisitedRooms, int pMaxDepth, MR_SimulationTime pDuration)
+void GameSession::ComputeShapeContactEffects(int pCurrentRoom, FreeElement * pActor, const RoomContactSpec & pLastSpec, MR_FastArrayBase < int >*pVisitedRooms, int pMaxDepth, MR_SimulationTime pDuration)
 {
 	int lCounter;
-	MR_ContactSpec lSpec;
+	ContactSpec lSpec;
 
-	const MR_ShapeInterface *lActorShape = pActor->GetGivingContactEffectShape();
+	const ShapeInterface *lActorShape = pActor->GetGivingContactEffectShape();
 
 	BOOL lValidDirection;
 	MR_Angle lDirectionAngle;
@@ -309,7 +309,7 @@ void GameSession::ComputeShapeContactEffects(int pCurrentRoom, FreeElement * pAc
 
 		if(lObstacleElem != pActor) {
 
-			if(MR_DetectActorContact(lActorShape, lObstacleElem->GetReceivingContactEffectShape(), lSpec)) {
+			if(DetectActorContact(lActorShape, lObstacleElem->GetReceivingContactEffectShape(), lSpec)) {
 				// Ok Compute the directiion of the collision
 				if(lSpec.mZMax <= lActorShape->ZMin()) {
 					lValidDirection = FALSE;
@@ -318,7 +318,7 @@ void GameSession::ComputeShapeContactEffects(int pCurrentRoom, FreeElement * pAc
 					lValidDirection = FALSE;
 				}
 				else {
-					lValidDirection = MR_GetActorForceLongitude(lActorShape, lObstacleElem->GetReceivingContactEffectShape(), lDirectionAngle);
+					lValidDirection = GetActorForceLongitude(lActorShape, lObstacleElem->GetReceivingContactEffectShape(), lDirectionAngle);
 				}
 
 				const MR_ContactEffectList *lActorEffectList = pActor->GetEffectList();
@@ -350,7 +350,7 @@ void GameSession::ComputeShapeContactEffects(int pCurrentRoom, FreeElement * pAc
 
 		if(lNeighbor != -1) {
 			if(!pVisitedRooms->Contains(lNeighbor)) {
-				MR_RoomContactSpec lSpec;
+				RoomContactSpec lSpec;
 
 				// Recursively call this function
 

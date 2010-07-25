@@ -295,7 +295,7 @@ void Observer::Render2DDebugView(VideoServices::VideoBuffer * pDest, const Model
 
 	// Draw each room of the maze
 	for(int lRoomId = 0; lRoomId < pLevel->GetRoomCount(); lRoomId++) {
-		MR_PolygonShape *lSectionShape = pLevel->GetRoomShape(lRoomId);
+		Model::PolygonShape *lSectionShape = pLevel->GetRoomShape(lRoomId);
 
 		// Determine the Drawing color
 		MR_UInt8 lColor = 6;
@@ -407,7 +407,7 @@ void Observer::RenderWireFrameView(const Model::Level * pLevel, const MainCharac
 
 void Observer::DrawWFSection(const Model::Level * pLevel, const Model::SectionId & pSectionId, MR_UInt8 pColor)
 {
-	MR_PolygonShape *lSectionShape;
+	Model::PolygonShape *lSectionShape;
 
 	if(pSectionId.mType == Model::SectionId::eRoom) {
 		lSectionShape = pLevel->GetRoomShape(pSectionId.mId);
@@ -873,7 +873,7 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 
 void Observer::RenderRoomWalls(const Model::Level * pLevel, int lRoomId, MR_SimulationTime pTime)
 {
-	MR_PolygonShape *lSectionShape = pLevel->GetRoomShape(lRoomId);
+	Model::PolygonShape *lSectionShape = pLevel->GetRoomShape(lRoomId);
 
 	int lVertexCount = lSectionShape->VertexCount();
 
@@ -938,7 +938,7 @@ void Observer::RenderRoomWalls(const Model::Level * pLevel, int lRoomId, MR_Simu
 
 void Observer::RenderFeatureWalls(const Model::Level * pLevel, int lFeatureId, MR_SimulationTime pTime)
 {
-	MR_PolygonShape *lSectionShape = pLevel->GetFeatureShape(lFeatureId);
+	Model::PolygonShape *lSectionShape = pLevel->GetFeatureShape(lFeatureId);
 
 	int lVertexCount = lSectionShape->VertexCount();
 
@@ -983,7 +983,7 @@ void Observer::RenderFloorOrCeiling(const Model::Level * pLevel, const Model::Se
 	int lNbVertex;
 	MR_2DCoordinate lVertexList[MR_MAX_POLYGON_VERTEX];
 
-	MR_PolygonShape *lShape;
+	Model::PolygonShape *lShape;
 	Model::SurfaceElement *lElement;
 
 	// Extract the surface geometry

@@ -122,7 +122,7 @@ int TestElement::Simulate(MR_SimulationTime pDuration, Model::Level * pLevel, in
 	return pRoom;
 }
 
-const MR_ShapeInterface *TestElement::GetObstacleShape()
+const Model::ShapeInterface *TestElement::GetObstacleShape()
 {
 	mCollisionShape.mPosition = mPosition;
 
@@ -161,13 +161,13 @@ const MR_ContactEffectList *TestElement::GetEffectList()
 
 }
 
-const MR_ShapeInterface *TestElement::GetReceivingContactEffectShape()
+const Model::ShapeInterface *TestElement::GetReceivingContactEffectShape()
 {
 	mCollisionShape.mPosition = mPosition;
 	return &mCollisionShape;
 }
 
-const MR_ShapeInterface *TestElement::GetGivingContactEffectShape()
+const Model::ShapeInterface *TestElement::GetGivingContactEffectShape()
 {
 	mContactShape.mPosition = mPosition;
 	return &mContactShape;

@@ -20,8 +20,7 @@
 // and limitations under the License.
 //
 
-#ifndef SHAPE_COLLISIONS_H
-#define SHAPE_COLLISIONS_H
+#pragma once
 
 #include "Shapes.h"
 
@@ -34,6 +33,9 @@
 #else
 #	define MR_DllDeclare
 #endif
+
+namespace HoverRace {
+namespace Model {
 
 // Collisions vs Movement
 //
@@ -56,14 +58,14 @@
 
 // Collisions description
 
-class MR_ContactSpec
+class ContactSpec
 {
 	public:
 		MR_Int32 mZMin;
 		MR_Int32 mZMax;
 };
 
-class MR_RoomContactSpec
+class RoomContactSpec
 {
 	public:
 		enum { eMaxWallContact = 6 };
@@ -77,16 +79,18 @@ class MR_RoomContactSpec
 		int mWallContact[eMaxWallContact];
 };
 
-BOOL MR_DllDeclare MR_GetPolygonInclusion(const MR_PolygonShape & pPolygon, const MR_2DCoordinate & pPosition);
+BOOL MR_DllDeclare GetPolygonInclusion(const PolygonShape &pPolygon, const MR_2DCoordinate &pPosition);
 
 // High level oontact function
-BOOL MR_DllDeclare MR_DetectActorContact(const MR_ShapeInterface * pActor, const MR_ShapeInterface * pObstacle, MR_ContactSpec & pAnswer);
-BOOL MR_DllDeclare MR_DetectFeatureContact(const MR_ShapeInterface * pActor, const MR_PolygonShape * pFeature, MR_ContactSpec & pAnswer);
-void MR_DllDeclare MR_DetectRoomContact(const MR_ShapeInterface * pActor, const MR_PolygonShape * pRoom, MR_RoomContactSpec & pAnswer);
+BOOL MR_DllDeclare DetectActorContact(const ShapeInterface *pActor, const ShapeInterface *pObstacle, ContactSpec &pAnswer);
+BOOL MR_DllDeclare DetectFeatureContact(const ShapeInterface *pActor, const PolygonShape *pFeature, ContactSpec &pAnswer);
+void MR_DllDeclare DetectRoomContact(const ShapeInterface *pActor, const PolygonShape *pRoom, RoomContactSpec &pAnswer);
 
-BOOL MR_DllDeclare MR_GetActorForceLongitude(const MR_ShapeInterface * pActor, const MR_ShapeInterface * pObstacle, MR_Angle & pLongitude);
-BOOL MR_DllDeclare MR_GetFeatureForceLongitude(const MR_ShapeInterface * pActor, const MR_PolygonShape * pFeature, MR_Angle & pLongitude);
-BOOL MR_DllDeclare MR_GetWallForceLongitude(const MR_ShapeInterface * pActor, const MR_PolygonShape * pRoom, int pWallIndex, MR_Angle & pLongitude);
+BOOL MR_DllDeclare GetActorForceLongitude(const ShapeInterface *pActor, const ShapeInterface *pObstacle, MR_Angle &pLongitude);
+BOOL MR_DllDeclare GetFeatureForceLongitude(const ShapeInterface *pActor, const PolygonShape *pFeature, MR_Angle &pLongitude);
+BOOL MR_DllDeclare GetWallForceLongitude(const ShapeInterface *pActor, const PolygonShape *pRoom, int pWallIndex, MR_Angle &pLongitude);
+
+}  // namespace Model
+}  // namespace HoverRace
 
 #undef MR_DllDeclare
-#endif

@@ -23,8 +23,7 @@
 // This file contains non-abstact class that can be used
 // to create stand alone MR_ShapeInterface derived objects
 
-#ifndef CONCRETE_SHAPE_H
-#define CONCRETE_SHAPE_H
+#pragma once
 
 #include "Shapes.h"
 
@@ -38,7 +37,10 @@
 #	define MR_DllDeclare
 #endif
 
-class MR_DllDeclare MR_Cylinder:public MR_CylinderShape
+namespace HoverRace {
+namespace Model {
+
+class MR_DllDeclare Cylinder : public CylinderShape
 {
 	public:
 		MR_2DCoordinate mAxis;
@@ -54,5 +56,7 @@ class MR_DllDeclare MR_Cylinder:public MR_CylinderShape
 
 };
 
+}  // namespace Model
+}  // namespace HoverRace
+
 #undef MR_DllDeclare
-#endif

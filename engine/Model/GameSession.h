@@ -55,7 +55,7 @@ class GameSession
 		void SimulateSurfaceElems(MR_SimulationTime pDuration);
 
 		// SimulateFreeElem sub-functions
-		void ComputeShapeContactEffects(int pCurrentRoom, FreeElement *pActor, const MR_RoomContactSpec &pLastSpec, MR_FastArrayBase<int> *pVisitedRooms, int pMaxDepth, MR_SimulationTime pDuration);
+		void ComputeShapeContactEffects(int pCurrentRoom, FreeElement *pActor, const RoomContactSpec &pLastSpec, MR_FastArrayBase<int> *pVisitedRooms, int pMaxDepth, MR_SimulationTime pDuration);
 
 	public:
 		MR_DllDeclare GameSession(BOOL pAllowRendering = FALSE);

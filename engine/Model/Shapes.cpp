@@ -23,52 +23,55 @@
 
 #include "Shapes.h"
 
-MR_Int32 MR_CylinderShape::XPos() const
+namespace HoverRace {
+namespace Model {
+
+MR_Int32 CylinderShape::XPos() const
 {
 	return AxisX();
 }
 
-MR_Int32 MR_CylinderShape::YPos() const
+MR_Int32 CylinderShape::YPos() const
 {
 	return AxisY();
 }
 
-MR_Int32 MR_CylinderShape::XMin() const
+MR_Int32 CylinderShape::XMin() const
 {
 	return AxisX() - RayLen();
 }
 
-MR_Int32 MR_CylinderShape::XMax() const
+MR_Int32 CylinderShape::XMax() const
 {
 	return AxisX() + RayLen();
 }
 
-MR_Int32 MR_CylinderShape::YMin() const
+MR_Int32 CylinderShape::YMin() const
 {
 	return AxisY() - RayLen();
 }
 
-MR_Int32 MR_CylinderShape::YMax() const
+MR_Int32 CylinderShape::YMax() const
 {
 	return AxisY() + RayLen();
 }
 
-MR_ShapeInterface::eShape MR_CylinderShape::ShapeType() const
+ShapeInterface::eShape CylinderShape::ShapeType() const
 {
 	return eCylinder;
 }
 
-MR_Int32 MR_LineSegmentShape::XPos() const
+MR_Int32 LineSegmentShape::XPos() const
 {
 	return X0();
 }
 
-MR_Int32 MR_LineSegmentShape::YPos() const
+MR_Int32 LineSegmentShape::YPos() const
 {
 	return Y0();
 }
 
-MR_Int32 MR_LineSegmentShape::XMin() const
+MR_Int32 LineSegmentShape::XMin() const
 {
 	int lX0 = X0();
 	int lX1 = X1();
@@ -76,7 +79,7 @@ MR_Int32 MR_LineSegmentShape::XMin() const
 	return ((lX0 < lX1) ? lX0 : lX1);
 }
 
-MR_Int32 MR_LineSegmentShape::XMax() const
+MR_Int32 LineSegmentShape::XMax() const
 {
 	int lX0 = X0();
 	int lX1 = X1();
@@ -84,7 +87,7 @@ MR_Int32 MR_LineSegmentShape::XMax() const
 	return ((lX0 > lX1) ? lX0 : lX1);
 }
 
-MR_Int32 MR_LineSegmentShape::YMin() const
+MR_Int32 LineSegmentShape::YMin() const
 {
 	int lY0 = Y0();
 	int lY1 = Y1();
@@ -92,7 +95,7 @@ MR_Int32 MR_LineSegmentShape::YMin() const
 	return ((lY0 < lY1) ? lY0 : lY1);
 }
 
-MR_Int32 MR_LineSegmentShape::YMax() const
+MR_Int32 LineSegmentShape::YMax() const
 {
 	int lY0 = Y0();
 	int lY1 = Y1();
@@ -100,28 +103,28 @@ MR_Int32 MR_LineSegmentShape::YMax() const
 	return ((lY0 > lY1) ? lY0 : lY1);
 }
 
-MR_ShapeInterface::eShape MR_LineSegmentShape::ShapeType() const
+ShapeInterface::eShape LineSegmentShape::ShapeType() const
 {
 	return eLineSegment;
 }
 
-MR_Int32 MR_PolygonShape::XPos() const
+MR_Int32 PolygonShape::XPos() const
 {
 	return (XMin() + XMax()) / 2;
 }
 
-MR_Int32 MR_PolygonShape::YPos() const
+MR_Int32 PolygonShape::YPos() const
 {
 	return (YMin() + YMax()) / 2;
 }
 
-MR_ShapeInterface::eShape MR_PolygonShape::ShapeType() const
+ShapeInterface::eShape PolygonShape::ShapeType() const
 {
 	return ePolygon;
 }
 
-// BOOL MR_GetContact( const MR_ShapeInterface&  /*pShape0*/,
-//                    const MR_ShapeInterface&  /*pShape1*/,
+// BOOL MR_GetContact( const ShapeInterface&  /*pShape0*/,
+//                    const ShapeInterface&  /*pShape1*/,
 //                    MR_ShapeContact&          /*pContact*/ )
 //{
 //   // TODO
@@ -130,8 +133,8 @@ MR_ShapeInterface::eShape MR_PolygonShape::ShapeType() const
 //}
 
 /*
-void MR_GetPolygonInclusion( const MR_PolygonShape&     pPolygon,
-							 const MR_ShapeInterface&   pShape,
+void MR_GetPolygonInclusion( const PolygonShape&     pPolygon,
+							 const ShapeInterface&   pShape,
 							 MR_PolygonInclusion&       pAnswer )
 {
 
@@ -153,7 +156,7 @@ void MR_GetPolygonInclusion( const MR_PolygonShape&     pPolygon,
 	  // Warning, to be revied because this technique do not take in account
 	  // that that pShap is derived form one of the basic abstract shapes
 
-	  if( typeid( pShape ) == typeid( MR_CylinderShape ) )
+	  if( typeid( pShape ) == typeid( CylinderShape ) )
 	  {
 
 	  }
@@ -165,11 +168,11 @@ void MR_GetPolygonInclusion( const MR_PolygonShape&     pPolygon,
 	  {
 
 	  }
-	  else if( typeid( pShape ) == typeid( MR_LineSegmentShape ) )
+	  else if( typeid( pShape ) == typeid( LineSegmentShape ) )
 	  {
 
 	  }
-	  else if( typeid( pShape ) == typeid( MR_PolygonShape ) )
+	  else if( typeid( pShape ) == typeid( PolygonShape ) )
 	  {
 
 	  }
@@ -190,7 +193,7 @@ void MR_GetPolygonInclusion( const MR_PolygonShape&     pPolygon,
 */
 
 /*
-void MR_GetPolygonInclusion( const MR_PolygonShape&     pPolygon,
+void MR_GetPolygonInclusion( const PolygonShape&     pPolygon,
 							 const MR_PointShape&       pShape,
 							 MR_PolygonInclusion&       pAnswer )
 {
@@ -206,3 +209,6 @@ void MR_GetPolygonInclusion( const MR_PolygonShape&     pPolygon,
    pAnswer.mNbIntersection = 0;
 }
 */
+
+}  // namespace Model
+}  // namespace HoverRace

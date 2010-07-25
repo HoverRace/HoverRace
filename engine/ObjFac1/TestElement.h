@@ -36,7 +36,7 @@ class TestElement : public ObjFacTools::FreeElementBase
 {
 	typedef ObjFacTools::FreeElementBase SUPER;
 
-	class Cylinder : public MR_CylinderShape
+	class Cylinder : public Model::CylinderShape
 	{
 		public:
 
@@ -76,9 +76,9 @@ class TestElement : public ObjFacTools::FreeElementBase
 
 		const MR_ContactEffectList *GetEffectList();
 
-		const MR_ShapeInterface *GetObstacleShape();
-		const MR_ShapeInterface *GetReceivingContactEffectShape();
-		const MR_ShapeInterface *GetGivingContactEffectShape();
+		const Model::ShapeInterface *GetObstacleShape();
+		const Model::ShapeInterface *GetReceivingContactEffectShape();
+		const Model::ShapeInterface *GetGivingContactEffectShape();
 
 };
 

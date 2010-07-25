@@ -122,12 +122,12 @@ const MR_ContactEffectList *Missile::GetEffectList()
 	}
 }
 
-const MR_ShapeInterface *Missile::GetReceivingContactEffectShape()
+const Model::ShapeInterface *Missile::GetReceivingContactEffectShape()
 {
 	return this;
 }
 
-const MR_ShapeInterface *Missile::GetGivingContactEffectShape()
+const Model::ShapeInterface *Missile::GetGivingContactEffectShape()
 {
 	return this;
 }
@@ -207,7 +207,7 @@ int Missile::InternalSimulate(MR_SimulationTime pDuration, Model::Level * pLevel
 
 	// Determine new dispacement
 
-	MR_Cylinder lShape;
+	Model::Cylinder lShape;
 
 	lShape.mRayLen = 1;							  //cMissileRay;
 	lShape.mZMin = mPosition.mZ - cMissileRay;

@@ -94,12 +94,12 @@ const MR_ContactEffectList *Mine::GetEffectList()
 	}
 }
 
-const MR_ShapeInterface *Mine::GetReceivingContactEffectShape()
+const Model::ShapeInterface *Mine::GetReceivingContactEffectShape()
 {
 	return this;
 }
 
-const MR_ShapeInterface *Mine::GetGivingContactEffectShape()
+const Model::ShapeInterface *Mine::GetGivingContactEffectShape()
 {
 	// return this;
 	return NULL;

@@ -28,7 +28,7 @@
 namespace HoverRace {
 namespace ObjFac1 {
 
-class DoubleSpeedSource : public Model::FreeElement, protected MR_CylinderShape
+class DoubleSpeedSource : public Model::FreeElement, protected Model::CylinderShape
 {
 	protected:
 
@@ -52,7 +52,7 @@ class DoubleSpeedSource : public Model::FreeElement, protected MR_CylinderShape
 
 		// ContactEffectShapeInterface
 		const MR_ContactEffectList *GetEffectList();
-		const MR_ShapeInterface *GetReceivingContactEffectShape();
+		const Model::ShapeInterface *GetReceivingContactEffectShape();
 
 };
 
