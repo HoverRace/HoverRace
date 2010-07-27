@@ -8,6 +8,7 @@ with contributions from (in alphabetical order):
 Austin L. Brock
 Ryan Curtin
 Michael Imamura
+Geoffrey White
 
 and with the help of the many testers willing to put up with bugs and other strange happenings.
 
