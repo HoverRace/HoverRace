@@ -59,6 +59,21 @@ class MR_DllDeclare Exception : public std::exception
 		std::string msg;
 };
 
+/**
+ * Exception indicating an unimplemented bit of code has been hit.
+ * @author Michael Imamura
+ */
+class MR_DllDeclare UnimplementedExn : public Exception
+{
+	typedef Exception SUPER;
+
+	public:
+		UnimplementedExn() : SUPER() { }
+		UnimplementedExn(const std::string &msg) : SUPER(msg) { }
+		UnimplementedExn(const char *msg) : SUPER(msg) { }
+		virtual ~UnimplementedExn() throw() { }
+};
+
 }  // namespace HoverRace
 
 #undef MR_DllDeclare
