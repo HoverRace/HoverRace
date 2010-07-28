@@ -20,9 +20,10 @@
 //
 #include "StdAfx.h"
 
-#include "ClientApp.h"
-#ifdef _WIN32
-#include "GameApp.h"
+#ifdef WITH_SDL
+#	include "ClientApp.h"
+#else
+#	include "GameApp.h"
 #endif
 
 #ifdef _WIN32
@@ -45,8 +46,9 @@
 using boost::format;
 using boost::str;
 
+#ifdef WITH_SDL
 using HoverRace::Client::ClientApp;
-#ifdef _WIN32
+#else
 using HoverRace::Client::GameApp;
 #endif
 using HoverRace::Util::Config;
