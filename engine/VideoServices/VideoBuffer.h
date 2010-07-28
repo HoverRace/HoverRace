@@ -23,7 +23,9 @@
 
 #pragma once
 
-#include <ddraw.h>
+#ifndef WITH_SDL
+#	include <ddraw.h>
+#endif
 
 #include "../Util/MR_Types.h"
 
