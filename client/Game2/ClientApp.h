@@ -24,7 +24,7 @@
 
 #include <SDL/SDL.h>
 
-#include "../../../engine/Util/OS.h"
+#include "../../engine/Util/OS.h"
 
 #include "GameDirector.h"
 
