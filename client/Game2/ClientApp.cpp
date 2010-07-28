@@ -51,6 +51,8 @@
 
 #include "ClientApp.h"
 
+#ifdef WITH_SDL
+
 #ifdef WITH_OPENAL
 #	define SOUNDSERVER_INIT(s) SoundServer::Init()
 #else
@@ -60,12 +62,22 @@
 using namespace HoverRace::Client::HoverScript;
 using namespace HoverRace::Util;
 namespace SoundServer = HoverRace::VideoServices::SoundServer;
+using HoverRace::Client::Control::Controller;
 
 namespace HoverRace {
 namespace Client {
 
+class ClientApp::UiInput : public Control::UiHandler
+{
+	virtual void OnConsole()
+	{
+		throw UnimplementedExn("ClientApp::UiInput::OnConsole()");
+	}
+};
+
 ClientApp::ClientApp() :
-	SUPER()
+	SUPER(),
+	uiInput(boost::make_shared<UiInput>())
 {
 	Config *cfg = Config::GetInstance();
 
@@ -103,7 +115,7 @@ ClientApp::ClientApp() :
 	SDL_VERSION(&wm.version);
 	if (SDL_GetWMInfo(&wm) != 0) {
 #		ifdef _WIN32
-			HWND hwnd = wm.window;
+			HWND hwnd = mainWnd = wm.window;
 			SetWindowPos(hwnd, HWND_TOP,
 				cfg->video.xPos, cfg->video.yPos, 0, 0,
 				SWP_NOSIZE);
@@ -130,6 +142,8 @@ ClientApp::ClientApp() :
 #		endif
 	}
 
+	controller = new Controller(mainWnd, uiInput);
+
 	RefreshTitleBar();
 }
 
@@ -138,6 +152,7 @@ ClientApp::~ClientApp()
 	delete sysEnv;
 	delete gamePeer;
 	delete scripting;
+	delete controller;
 
 	// Engine shutdown.
 #ifdef _WIN32
@@ -180,8 +195,31 @@ void ClientApp::MainLoop()
 
 void ClientApp::RequestShutdown()
 {
-	//TODO
+	throw UnimplementedExn("ClientApp::RequestShutdown()");
+}
+
+void ClientApp::SignalServerHasChanged()
+{
+	throw UnimplementedExn("ClientApp::SignalServerHasChanged()");
+}
+
+void ClientApp::ChangeAutoUpdates(bool newSetting)
+{
+	throw UnimplementedExn("ClientApp::ChangeAutoUpdates(bool)");
+}
+
+void ClientApp::AssignPalette()
+{
+	throw UnimplementedExn("ClientApp::AssignPalette()");
+}
+
+Control::Controller *ClientApp::ReloadController()
+{
+	delete controller;
+	return (controller = new Controller(mainWnd, uiInput));
 }
 
 }  // namespace HoverScript
 }  // namespace Client
+
+#endif  // ifdef WITH_SDL

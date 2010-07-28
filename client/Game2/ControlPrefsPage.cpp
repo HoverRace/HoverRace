@@ -29,7 +29,7 @@
 
 #include "Control/Controller.h"
 #include "Control/UiHandler.h"
-#include "GameApp.h"
+#include "GameDirector.h"
 
 #include "resource.h"
 
@@ -47,7 +47,7 @@ using HoverRace::Client::Control::Controller;
 namespace HoverRace {
 namespace Client {
 
-ControlPrefsPage::ControlPrefsPage(GameApp *app) :
+ControlPrefsPage::ControlPrefsPage(GameDirector *app) :
 	SUPER(_("Controls"), IDD_CONTROL),
 	app(app)
 {

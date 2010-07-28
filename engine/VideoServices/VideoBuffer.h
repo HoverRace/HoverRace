@@ -44,24 +44,31 @@ class VideoBuffer
 {
 
 	private:
+		bool mFullScreen;
+#	ifdef WITH_SDL
+#	else
 		HWND mWindow;
 		HINSTANCE directDrawInst;
 		GUID curMonitor;
-		bool mFullScreen;
 		LPDIRECTDRAW mDirectDraw;
 		LPDIRECTDRAWSURFACE mFrontBuffer;
 		LPDIRECTDRAWSURFACE mBackBuffer;
 		LPDIRECTDRAWPALETTE mPalette;
 		LPDIRECTDRAWCLIPPER mClipper;			  // To use in windows only
 		// remove if too slow
+#	endif
 
 		BOOL mSpecialWindowMode;				  // Use a 256 color mode when switching to window mode
 		int mSpecialModeXRes;
 		int mSpecialModeYRes;
 
+#	ifdef WITH_SDL
+
+#	else
 		LONG mOriginalExStyle;					  // Only valid if mFullScreen
 		LONG mOriginalStyle;					  // Only valid if mFullScreen
 		RECT mOriginalPos;						  // Only valid if mFullScreen
+#	endif
 
 		BOOL mModeSettingInProgress;
 
@@ -130,10 +137,12 @@ class VideoBuffer
 
 		DWORD PackRGB(DWORD r, DWORD g, DWORD b);
 
+#	ifndef WITH_SDL
 		bool InitDirectDraw(GUID *monitor, bool newFullscreen);
 		BOOL ProcessCurrentBpp(const DDPIXELFORMAT & lFormat);
 		void DeleteInternalSurfaces();
 		void ReturnToWindowsResolution();		  //Automaticly call DeleteInternalSurfaces
+#	endif
 
 		void Flip();
 
@@ -151,7 +160,9 @@ class VideoBuffer
 		MR_DllDeclare void ExitIconMode();
 		MR_DllDeclare void AssignPalette();
 
+#	ifndef WITH_SDL
 		MR_DllDeclare BOOL TryToSetColorMode(int colorBits);
+#	endif
 
 		MR_DllDeclare BOOL IsWindowMode() const;
 		MR_DllDeclare BOOL IsIconMode() const;

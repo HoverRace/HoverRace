@@ -263,17 +263,20 @@ VideoBuffer::VideoBuffer(HWND pWindow, double pGamma, double pContrast, double p
 
 	ASSERT(pWindow != NULL);
 
+#ifndef WITH_SDL
 	mWindow = pWindow;
 	memset(&curMonitor, 0, sizeof(curMonitor));
 	mDirectDraw = NULL;
 	mFrontBuffer = NULL;
 	mBackBuffer = NULL;
 	mPalette = NULL;
-	mZBuffer = NULL;
-	mBuffer = NULL;
 	mClipper = NULL;
 	mBackPalette = NULL;
 	mPackedPalette = NULL;
+#endif
+
+	mZBuffer = NULL;
+	mBuffer = NULL;
 
 	mModeSettingInProgress = FALSE;
 	mFullScreen = false;
@@ -281,7 +284,11 @@ VideoBuffer::VideoBuffer(HWND pWindow, double pGamma, double pContrast, double p
 	mBpp = 0;
 	mNativeBpp = 0;
 
+#ifdef WITH_SDL
+	mIconMode = false;
+#else
 	mIconMode = IsIconic(pWindow);
+#endif
 
 	mGamma = pGamma;
 	mContrast = pContrast;
@@ -289,6 +296,9 @@ VideoBuffer::VideoBuffer(HWND pWindow, double pGamma, double pContrast, double p
 
 	mSpecialWindowMode = FALSE;
 
+#ifdef WITH_SDL
+	//TODO
+#else
 	// Load DirectDraw.
 	// As of the June 2010 update of the DirectX SDK, ddraw.lib is no longer
 	// included; however, it is possible to still load DirectDraw manually.
@@ -296,11 +306,15 @@ VideoBuffer::VideoBuffer(HWND pWindow, double pGamma, double pContrast, double p
 	if (directDrawInst == NULL) {
 		throw HoverRace::Exception("Could not load DirectDraw: ddraw.dll");
 	}
+#endif
 
 }
 
 VideoBuffer::~VideoBuffer()
 {
+#ifdef WITH_SDL
+	//TODO
+#else
 	//   mFullScreen        = TRUE;
 	//   mSpecialWindowMode = FALSE;   // force real windows resolution
 	ReturnToWindowsResolution();
@@ -321,6 +335,7 @@ VideoBuffer::~VideoBuffer()
 	CLOSE_LOG();
 
 	FreeLibrary(directDrawInst);
+#endif
 }
 
 DWORD VideoBuffer::PackRGB(DWORD r, DWORD g, DWORD b)
@@ -338,6 +353,7 @@ static inline bool guidEqual(const GUID &a, const GUID &b)
 	return true;
 }
 
+#ifndef WITH_SDL
 /**
  * Initialize DirectDraw.
  * This should be called whenever the monitor or fullscreen state changes.
@@ -418,7 +434,9 @@ bool VideoBuffer::InitDirectDraw(GUID *monitor, bool newFullscreen)
 
 	return lReturnValue;
 }
+#endif
 
+#ifndef WITH_SDL
 BOOL VideoBuffer::ProcessCurrentBpp(const DDPIXELFORMAT & lFormat)
 {
 	if(lFormat.dwFlags & DDPF_PALETTEINDEXED8) {
@@ -443,7 +461,9 @@ BOOL VideoBuffer::ProcessCurrentBpp(const DDPIXELFORMAT & lFormat)
 	}
 	return TRUE;
 }
+#endif
 
+#ifndef WITH_SDL
 BOOL VideoBuffer::TryToSetColorMode(int colorBits)
 {
 
@@ -476,7 +496,9 @@ BOOL VideoBuffer::TryToSetColorMode(int colorBits)
 
 	return mSpecialWindowMode;
 }
+#endif
 
+#ifndef WITH_SDL
 void VideoBuffer::DeleteInternalSurfaces()
 {
 	PRINT_LOG("DeleteInternalSurfaces");
@@ -503,9 +525,13 @@ void VideoBuffer::DeleteInternalSurfaces()
 	mZBuffer = NULL;
 	mBuffer = NULL;
 }
+#endif
 
 void VideoBuffer::CreatePalette(double pGamma, double pContrast, double pBrightness)
 {
+#ifdef WITH_SDL
+	throw UnimplementedExn("VideoBuffer::CreatePalette(double,double,double)");
+#else
 	PRINT_LOG("CreatePalette");
 
 	PALETTEENTRY lPalette[256];
@@ -592,13 +618,14 @@ void VideoBuffer::CreatePalette(double pGamma, double pContrast, double pBrightn
 		}
 		// Create the palette
 		if(DD_CALL(mDirectDraw->CreatePalette(DDPCAPS_8BIT /*|DDPCAPS_ALLOW256 */ , lPalette, &mPalette, NULL)) != DD_OK) {
-		ASSERT(FALSE);
-		mPalette = NULL;
+			ASSERT(FALSE);
+			mPalette = NULL;
+		}
+		// Assign the palette to the existing buffers
+		// AssignPalette();
 	}
-	// Assign the palette to the existing buffers
-	// AssignPalette();
-}
 
+#endif
 }
 
 void VideoBuffer::GetPaletteAttrib(double &pGamma, double &pContrast, double &pBrightness)
@@ -610,14 +637,21 @@ void VideoBuffer::GetPaletteAttrib(double &pGamma, double &pContrast, double &pB
 
 void VideoBuffer::SetBackPalette(MR_UInt8 * pPalette)
 {
+#ifdef WITH_SDL
+	throw UnimplementedExn("VideoBuffer::SetBackPalette(MR_UInt8*)");
+#else
 	delete[]mBackPalette;
 	mBackPalette = pPalette;
+#endif
 
 	CreatePalette(mGamma, mContrast, mBrightness);
 }
 
 void VideoBuffer::AssignPalette()
 {
+#ifdef WITH_SDL
+	throw UnimplementedExn("Unimplemented: VideoBuffer::AssignPalette()");
+#else
 	PRINT_LOG("AssignPalette");
 
 	// Currently only work in 8bit mode
@@ -625,8 +659,10 @@ void VideoBuffer::AssignPalette()
 		DD_CALL(mFrontBuffer->SetPalette(mPalette));
 
 	}
+#endif
 }
 
+#ifndef WITH_SDL
 void VideoBuffer::ReturnToWindowsResolution()
 {
 	PRINT_LOG("ReturnToWindowsResolution");
@@ -686,6 +722,7 @@ void VideoBuffer::ReturnToWindowsResolution()
 		}
 	}
 }
+#endif
 
 /**
  * Switch to windowed mode.
@@ -693,6 +730,9 @@ void VideoBuffer::ReturnToWindowsResolution()
  */
 bool VideoBuffer::SetVideoMode()
 {
+#ifdef WITH_SDL
+	throw UnimplementedExn("VideoBuffer::SetVideoMode()");
+#else
 	PRINT_LOG("SetVideoMode(Window)");
 
 	bool lReturnValue;
@@ -814,6 +854,7 @@ bool VideoBuffer::SetVideoMode()
 	mModeSettingInProgress = FALSE;
 
 	return lReturnValue;
+#endif
 }
 
 /**
@@ -826,6 +867,9 @@ bool VideoBuffer::SetVideoMode()
  */
 bool VideoBuffer::SetVideoMode(int pXRes, int pYRes, GUID *monitor)
 {
+#ifdef WITH_SDL
+	throw UnimplementedExn("VideoBuffer::SetVideoMode(int,int,GUID*)");
+#else
 	PRINT_LOG("SetVideoMode %dx%d", pXRes, pYRes);
 
 	// Set afull screen video mode
@@ -938,6 +982,7 @@ bool VideoBuffer::SetVideoMode(int pXRes, int pYRes, GUID *monitor)
 	mModeSettingInProgress = FALSE;
 
 	return lReturnValue;
+#endif
 }
 
 BOOL VideoBuffer::IsWindowMode() const
@@ -1007,6 +1052,9 @@ int VideoBuffer::GetYPixelMeter() const
 
 BOOL VideoBuffer::Lock()
 {
+#ifdef WITH_SDL
+	throw UnimplementedExn("VideoBuffer::Lock()");
+#else
 	PRINT_LOG("Lock");
 
 	MR_SAMPLE_CONTEXT("LockVideoBuffer");
@@ -1065,10 +1113,14 @@ BOOL VideoBuffer::Lock()
 	}
 
 	return lReturnValue;
+#endif
 }
 
 void VideoBuffer::Unlock()
 {
+#ifdef WITH_SDL
+	throw UnimplementedExn("VideoBuffer::Unlock()");
+#else
 	PRINT_LOG("Unlock");
 
 	MR_SAMPLE_CONTEXT("UnlockVideoBuffer");
@@ -1166,10 +1218,14 @@ void VideoBuffer::Unlock()
 	}
 
 	Flip();
+#endif
 }
 
 void VideoBuffer::Flip()
 {
+#ifdef WITH_SDL
+	throw UnimplementedExn("VideoBuffer::Flip()");
+#else
 	PRINT_LOG("Flip");
 
 	HRESULT lErrorCode;
@@ -1198,13 +1254,16 @@ void VideoBuffer::Flip()
 			// ASSERT( FALSE );
 		}
 	}
+#endif
 }
 
 void VideoBuffer::Clear(MR_UInt8 pColor)
 {
 	ASSERT(mBuffer != NULL);
+#ifndef WITH_SDL
 	ASSERT(mDirectDraw != NULL);
 	ASSERT(mBackBuffer != NULL);
+#endif
 
 	memset(mBuffer, pColor, mLineLen * mYRes);
 }

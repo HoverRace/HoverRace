@@ -28,20 +28,20 @@
 namespace HoverRace {
 namespace Client {
 
-class GameApp;
+class GameDirector;
 
 class MiscPrefsPage : public PrefsPage
 {
 	typedef PrefsPage SUPER;
 	public:
-		MiscPrefsPage(GameApp *app);
+		MiscPrefsPage(GameDirector *app);
 		virtual ~MiscPrefsPage();
 
 	protected:
 		virtual BOOL DlgProc(HWND pWindow, UINT message, WPARAM wparam, LPARAM lparam);
 
 	private:
-		GameApp *app;
+		GameDirector *app;
 };
 
 }  // namespace Client

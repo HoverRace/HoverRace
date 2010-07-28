@@ -24,7 +24,11 @@
 
 #include <SDL/SDL.h>
 
+#include "../../../engine/Util/OS.h"
+
 #include "GameDirector.h"
+
+#ifdef WITH_SDL
 
 namespace HoverRace {
 	namespace Client {
@@ -61,8 +65,22 @@ class ClientApp : public GameDirector
 	public:
 		// GameDirector
 		virtual void RequestShutdown();
+		virtual void SignalServerHasChanged();
+		virtual void ChangeAutoUpdates(bool newSetting);
+		virtual void AssignPalette();
+		virtual VideoServices::VideoBuffer *GetVideoBuffer() const { return videoBuf; }
+		virtual Control::Controller *GetController() const { return controller; }
+		virtual Control::Controller *ReloadController();
+#	ifdef _WIN32
+		virtual HWND GetWindowHandle() const { return mainWnd; }
+#	endif
 
 	private:
+		Util::OS::wnd_t mainWnd;
+		VideoServices::VideoBuffer *videoBuf;
+		class UiInput;
+		boost::shared_ptr<UiInput> uiInput;
+		Control::Controller *controller;
 		Script::Core *scripting;
 		HoverScript::GamePeer *gamePeer;
 		HoverScript::SysEnv *sysEnv;
@@ -70,3 +88,5 @@ class ClientApp : public GameDirector
 
 }  // namespace HoverScript
 }  // namespace Client
+
+#endif  // ifdef WITH_SDL

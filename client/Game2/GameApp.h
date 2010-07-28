@@ -28,6 +28,8 @@
 #include "Observer.h"
 #include "ClientSession.h"
 
+#ifndef WITH_SDL
+
 namespace HoverRace {
 	namespace Client {
 		namespace Control {
@@ -156,8 +158,6 @@ class GameApp : public GameDirector
 		void Clean();
 
 		void OnDisplayChange();
-	public:
-		void AssignPalette();
 
 	private:
 		void PauseGameThread();
@@ -192,16 +192,16 @@ class GameApp : public GameDirector
 
 		int MainLoop();
 
-		/// Signal that the selected IMR server has (possibly) changed.
-		void SignalServerHasChanged() { mServerHasChanged = TRUE; }
-		void ChangeAutoUpdates(bool newSetting) { mustCheckUpdates = newSetting; }
+		virtual void SignalServerHasChanged() { mServerHasChanged = TRUE; }
+		virtual void ChangeAutoUpdates(bool newSetting) { mustCheckUpdates = newSetting; }
+		virtual void AssignPalette();
 
-		VideoServices::VideoBuffer *GetVideoBuffer() const { return mVideoBuffer; }
+		virtual VideoServices::VideoBuffer *GetVideoBuffer() const { return mVideoBuffer; }
 
-		Control::Controller *GetController() const { return controller; }
-		Control::Controller *ReloadController();
+		virtual Control::Controller *GetController() const { return controller; }
+		virtual Control::Controller *ReloadController();
 
-		HWND GetWindowHandle() const { return mMainWindow; }
+		virtual HWND GetWindowHandle() const { return mMainWindow; }
 
 		// Helper stuff
 		static void NewInternetSessionCall();
@@ -209,3 +209,5 @@ class GameApp : public GameDirector
 
 }  // namespace Client
 }  // namespace HoverRace
+
+#endif  // ifndef WITH_SDL

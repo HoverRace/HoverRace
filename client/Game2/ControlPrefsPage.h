@@ -28,13 +28,13 @@
 namespace HoverRace {
 namespace Client {
 
-class GameApp;
+class GameDirector;
 
 class ControlPrefsPage : public PrefsPage
 {
 	typedef PrefsPage SUPER;
 	public:
-		ControlPrefsPage(GameApp *app);
+		ControlPrefsPage(GameDirector *app);
 		virtual ~ControlPrefsPage();
 
 	private:
@@ -46,7 +46,7 @@ class ControlPrefsPage : public PrefsPage
 		static LRESULT CALLBACK PressKeyDialogFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam);
 
 	private:
-		GameApp *app;
+		GameDirector *app;
 		int setControlPlayer;
 		int setControlControl;
 		HWND pressAnyKeyDialog;

@@ -27,7 +27,7 @@
 #include "../../engine/Util/OS.h"
 #include "../../engine/Util/Str.h"
 
-#include "GameApp.h"
+#include "GameDirector.h"
 
 #include "resource.h"
 
@@ -38,7 +38,7 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace Client {
 
-MiscPrefsPage::MiscPrefsPage(GameApp *app) :
+MiscPrefsPage::MiscPrefsPage(GameDirector *app) :
 	SUPER(_("Miscellaneous"), IDD_MISC),
 	app(app)
 {

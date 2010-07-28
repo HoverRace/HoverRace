@@ -29,7 +29,7 @@
 
 #include "CheckRoomListDialog.h"
 #include "CheckUpdateServerDialog.h"
-#include "GameApp.h"
+#include "GameDirector.h"
 #include "PathSelector.h"
 
 #include "resource.h"
@@ -44,7 +44,7 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace Client {
 
-NetworkPrefsPage::NetworkPrefsPage(GameApp *app) :
+NetworkPrefsPage::NetworkPrefsPage(GameDirector *app) :
 	SUPER(_("Network"), IDD_NETWORK),
 	app(app)
 {

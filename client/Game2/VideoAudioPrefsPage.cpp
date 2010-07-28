@@ -29,7 +29,7 @@
 #include "../../engine/VideoServices/VideoBuffer.h"
 #include "../../engine/VideoServices/SoundServer.h"
 
-#include "GameApp.h"
+#include "GameDirector.h"
 
 #include "resource.h"
 
@@ -44,7 +44,7 @@ using namespace HoverRace::VideoServices;
 namespace HoverRace {
 namespace Client {
 
-VideoAudioPrefsPage::VideoAudioPrefsPage(GameApp *app) :
+VideoAudioPrefsPage::VideoAudioPrefsPage(GameDirector *app) :
 	SUPER(_("Video and Audio"), IDD_DISPLAY_INTENSITY),
 	app(app)
 {

@@ -39,7 +39,7 @@ namespace HoverRace {
 			class SessionPeer;
 			typedef boost::shared_ptr<SessionPeer> SessionPeerPtr;
 		}
-		class GameApp;
+		class GameDirector;
 	}
 	namespace VideoServices {
 		struct Font;
@@ -61,7 +61,7 @@ class HighConsole : public Console
 {
 	typedef Console SUPER;
 	public:
-		HighConsole(Script::Core *scripting, GameApp *gameApp,
+		HighConsole(Script::Core *scripting, GameDirector *gameDirector,
 			GamePeer *gamePeer, SessionPeerPtr sessionPeer);
 		virtual ~HighConsole();
 
@@ -101,7 +101,7 @@ class HighConsole : public Console
 		virtual void HelpMethod(const Script::Help::Class &cls, const Script::Help::Method &method);
 
 	private:
-		GameApp *gameApp;
+		GameDirector *gameApp;
 		GamePeer *gamePeer;
 		SessionPeerPtr sessionPeer;
 

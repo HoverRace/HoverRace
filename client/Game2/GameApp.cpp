@@ -66,6 +66,8 @@ using namespace HoverRace::Client::HoverScript;
 using namespace HoverRace::Parcel;
 using namespace HoverRace::VideoServices;
 
+#ifndef WITH_SDL
+
 // If MR_AVI_CAPTURE is defined
 // #define MR_AVI_CAPTUREh
 
@@ -1658,10 +1660,6 @@ void GameApp::NewNetworkSession(BOOL pServer)
 	AssignPalette();
 }
 
-/**
- * Reload the control settings.
- * @return The new control settings.
- */
 HoverRace::Client::Control::Controller *GameApp::ReloadController()
 {
 	delete controller;
@@ -2361,3 +2359,5 @@ void CaptureScreen(VideoServices::VideoBuffer * pVideoBuffer)
 
 }  // namespace Client
 }  // namespace HoverRace
+
+#endif  // ifndef WITH_SDL

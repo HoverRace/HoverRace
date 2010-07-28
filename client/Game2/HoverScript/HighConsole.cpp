@@ -38,7 +38,7 @@
 #include "../../../engine/VideoServices/VideoBuffer.h"
 #include "../Control/Controller.h"
 #include "../Control/InputHandler.h"
-#include "../GameApp.h"
+#include "../GameDirector.h"
 #include "GamePeer.h"
 #include "SessionPeer.h"
 
@@ -122,7 +122,7 @@ class HighConsole::Input : public Control::InputHandler
 		HighConsole *cons;
 };
 
-HighConsole::HighConsole(Script::Core *scripting, GameApp *gameApp,
+HighConsole::HighConsole(Script::Core *scripting, GameDirector *gameApp,
                          GamePeer *gamePeer, SessionPeerPtr sessionPeer) :
 	SUPER(scripting), gameApp(gameApp), gamePeer(gamePeer), sessionPeer(sessionPeer),
 	visible(false), helpVisible(false), cursorOn(true), cursorTick(0)

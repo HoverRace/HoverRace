@@ -30,13 +30,13 @@
 namespace HoverRace {
 namespace Client {
 
-class GameApp;
+class GameDirector;
 
 class VideoAudioPrefsPage : public PrefsPage
 {
 	typedef PrefsPage SUPER;
 	public:
-		VideoAudioPrefsPage(GameApp *app);
+		VideoAudioPrefsPage(GameDirector *app);
 		virtual ~VideoAudioPrefsPage();
 
 	private:
@@ -54,7 +54,7 @@ class VideoAudioPrefsPage : public PrefsPage
 		static void UpdateAudioStatus(HWND hwnd);
 
 	private:
-		GameApp *app;
+		GameDirector *app;
 };
 
 }  // namespace Client

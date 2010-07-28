@@ -22,6 +22,14 @@
 
 #pragma once
 
+#include "Control/Controller.h"
+
+namespace HoverRace {
+	namespace VideoServices {
+		class VideoBuffer;
+	}
+}
+
 namespace HoverRace {
 namespace Client {
 
@@ -41,6 +49,36 @@ class GameDirector
 		 * All normal "Are you sure?" confirmation prompts will be skipped.
 		 */
 		virtual void RequestShutdown() = 0;
+
+		/**
+		 * Notify this director that the IMR server configuration has changed.
+		 */
+		virtual void SignalServerHasChanged() = 0;
+
+		/**
+		 * Notify this director that the auto-update configuration has changed.
+		 * @param newSetting The new value of the auto-update setting.
+		 */
+		virtual void ChangeAutoUpdates(bool newSetting) = 0;
+
+		/**
+		 * Notify this director that the video palette configuration has changed.
+		 */
+		virtual void AssignPalette() = 0;
+
+		virtual VideoServices::VideoBuffer *GetVideoBuffer() const = 0;
+
+		virtual Control::Controller *GetController() const = 0;
+
+		/**
+		 * Reload the control settings.
+		 * @return The new control settings.
+		 */
+		virtual Control::Controller *ReloadController() = 0;
+
+#	ifdef _WIN32
+		virtual HWND GetWindowHandle() const = 0;
+#	endif
 };
 
 }  // namespace HoverScript

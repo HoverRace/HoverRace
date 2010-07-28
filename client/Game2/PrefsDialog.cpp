@@ -37,7 +37,7 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace Client {
 
-PrefsDialog::PrefsDialog(GameApp *app) :
+PrefsDialog::PrefsDialog(GameDirector *app) :
 	app(app)
 {
 	AddPage(videoAudioPage = new VideoAudioPrefsPage(app));
