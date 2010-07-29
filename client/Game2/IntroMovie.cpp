@@ -51,6 +51,11 @@ IntroMovie::IntroMovie(HWND hwnd, HINSTANCE hinst) :
 	Config *cfg = Config::GetInstance();
 	OS::path_t movieFilename = cfg->GetMediaPath("Intro.avi");
 
+	// ensure that movie path exists
+	if(!exists(movieFilename))
+		return; // poor user gets no movie
+		// maybe we should throw an exception instead of failing silently?
+
 #ifdef WITH_DIRECTSHOW
 	HRESULT hr;
 	if (FAILED(hr = InitDirectShow(movieFilename))) {
