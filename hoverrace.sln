@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+# Visual C++ Express 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "engine", "engine\engine.vcxproj", "{1CCF897B-2194-4646-9F09-C307664F6193}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "client", "client\client.vcxproj", "{49D400AC-8D6D-4866-84A7-B38389E035E3}"
@@ -11,6 +11,11 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "updater", "updater\updater.vcxproj", "{2453907E-2872-409E-A1E9-49279F8D0B7A}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ParcelDump", "compilers\ParcelDump\ParcelDump.vcxproj", "{3E248AA6-69AE-49F6-9A04-F4A91F826231}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HoverCad", "hovercad\HoverCad.vcxproj", "{D6EC9065-9C4F-476B-BB10-1F96F16FE574}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BE113900-CEB8-4289-91A9-930B145BF0E8} = {BE113900-CEB8-4289-91A9-930B145BF0E8}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,6 +43,9 @@ Global
 		{3E248AA6-69AE-49F6-9A04-F4A91F826231}.Debug|Win32.Build.0 = Debug|Win32
 		{3E248AA6-69AE-49F6-9A04-F4A91F826231}.Release|Win32.ActiveCfg = Release|Win32
 		{3E248AA6-69AE-49F6-9A04-F4A91F826231}.Release|Win32.Build.0 = Release|Win32
+		{D6EC9065-9C4F-476B-BB10-1F96F16FE574}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D6EC9065-9C4F-476B-BB10-1F96F16FE574}.Release|Win32.ActiveCfg = Release|Win32
+		{D6EC9065-9C4F-476B-BB10-1F96F16FE574}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
