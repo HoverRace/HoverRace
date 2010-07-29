@@ -67,4 +67,39 @@
     <None Include="res\tools_ba.bmp" />
     <None Include="res\zoom.bmp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ChildFrm.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GDIResources.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HoverCad.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HoverCadDoc.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HoverCadView.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HoverTypes.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MainFrm.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ScaleSelect.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectAttrib.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StdAfx.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ZoomBar.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>

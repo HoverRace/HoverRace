@@ -221,6 +221,19 @@
     <None Include="res\tools_ba.bmp" />
     <None Include="res\zoom.bmp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ChildFrm.h" />
+    <ClInclude Include="GDIResources.h" />
+    <ClInclude Include="HoverCad.h" />
+    <ClInclude Include="HoverCadDoc.h" />
+    <ClInclude Include="HoverCadView.h" />
+    <ClInclude Include="HoverTypes.h" />
+    <ClInclude Include="MainFrm.h" />
+    <ClInclude Include="ScaleSelect.h" />
+    <ClInclude Include="SelectAttrib.h" />
+    <ClInclude Include="StdAfx.h" />
+    <ClInclude Include="ZoomBar.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
