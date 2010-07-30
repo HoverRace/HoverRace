@@ -28,6 +28,7 @@
 #endif
 
 #include "../Util/MR_Types.h"
+#include "../Util/OS.h"
 
 #ifdef _WIN32
 #	ifdef MR_ENGINE
@@ -150,7 +151,7 @@ class VideoBuffer
 
 	public:
 
-		MR_DllDeclare VideoBuffer(HWND pWindow, double lGamma, double lContrast, double mBrightness);
+		MR_DllDeclare VideoBuffer(Util::OS::wnd_t pWindow, double lGamma, double lContrast, double mBrightness);
 		MR_DllDeclare ~VideoBuffer();
 
 		// Video mode selection

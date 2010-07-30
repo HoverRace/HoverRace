@@ -256,7 +256,7 @@ void PrintLog(const char *pFormat, ...);
 
 static GUID zeroGuid = { 0, 0, 0, { 0, 0, 0, 0, 0, 0, 0, 0 } };
 
-VideoBuffer::VideoBuffer(HWND pWindow, double pGamma, double pContrast, double pBrightness)
+VideoBuffer::VideoBuffer(Util::OS::wnd_t pWindow, double pGamma, double pContrast, double pBrightness)
 {
 	OPEN_LOG();
 	PRINT_LOG("VIDEO_BUFFER_CREATION");
