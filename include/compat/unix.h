@@ -11,6 +11,14 @@
 #define TRUE 1
 #define FALSE 0
 
+struct GUID
+{
+	uint32_t Data1;
+	uint16_t Data2;
+	uint16_t Data3;
+	uint8_t Data4[8];
+};
+
 #define _snprintf snprintf
 
 #define Int32x32To64(x,y) \
