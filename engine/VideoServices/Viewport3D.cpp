@@ -57,11 +57,13 @@ void Viewport3D::OnMetricsChange(int pMetrics)
 	if((pMetrics & ~eBuffer) != eNone) {
 		// Recompute camera parameters
 
+		VideoBuffer::pixelMeter_t pixelMeter = mVideoBuffer->GetPixelMeter();
+
 		mPlanDist = 200;						  // 20cm Fixed distance projection plan, good in most cases
 
 		ASSERT(MR_Sin[mVAngle] != 0);
 		mPlanHW = (mPlanDist * MR_Sin[mVAngle / 2]) / MR_Int32(MR_Cos[mVAngle / 2]);
-		mPlanVW = (mPlanHW * mYRes * mVideoBuffer->GetXPixelMeter()) / (mXRes * mVideoBuffer->GetYPixelMeter());
+		mPlanVW = (mPlanHW * mYRes * pixelMeter.first) / (mXRes * pixelMeter.second);
 		mHVarPerDInc_16384 = -(mPlanHW * 2 * 16384 + 1) / (mPlanDist * mXRes);
 		mVVarPerDInc_16384 = -(mPlanVW * 2 * 16384 + 1) / (mPlanDist * mYRes);
 

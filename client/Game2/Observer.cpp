@@ -277,11 +277,13 @@ void Observer::Render2DDebugView(VideoServices::VideoBuffer * pDest, const Model
 	int lXRes = m2DDebugView.GetXRes();
 	int lYRes = m2DDebugView.GetYRes();
 
+	VideoServices::VideoBuffer::pixelMeter_t pixelMeter = pDest->GetPixelMeter();
+
 	// Compute the scaling factor and the origin
 												  // lXRes/100000.0; // 1m == 2mm on screen
-	double lXScaling = pDest->GetXPixelMeter() / (500.0 * 1000.0);
+	double lXScaling = pixelMeter.first / (500.0 * 1000.0);
 												  //-lYRes/60000.0;
-	double lYScaling = -pDest->GetYPixelMeter() / (500.0 * 1000.0);
+	double lYScaling = -pixelMeter.second / (500.0 * 1000.0);
 
 	MR_3DCoordinate lCharacterPos = pViewingCharacter->mPosition;
 	MR_Angle lOrientation = pViewingCharacter->mOrientation;

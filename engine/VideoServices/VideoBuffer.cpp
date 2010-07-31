@@ -261,8 +261,6 @@ VideoBuffer::VideoBuffer(Util::OS::wnd_t pWindow, double pGamma, double pContras
 	OPEN_LOG();
 	PRINT_LOG("VIDEO_BUFFER_CREATION");
 
-	ASSERT(pWindow != NULL);
-
 #ifndef WITH_SDL
 	mWindow = pWindow;
 	memset(&curMonitor, 0, sizeof(curMonitor));
@@ -1030,23 +1028,15 @@ MR_UInt16 *VideoBuffer::GetZBuffer()
 	return mZBuffer;
 }
 
-int VideoBuffer::GetXPixelMeter() const
+VideoBuffer::pixelMeter_t VideoBuffer::GetPixelMeter() const
 {
-	if(mFullScreen) {
-		return mXRes * 3;
+	if (mFullScreen) {
+		return pixelMeter_t(mXRes * 3, mYRes * 4);
 	}
 	else {
-		return 3 * GetSystemMetrics(SM_CXSCREEN);
-	}
-}
-
-int VideoBuffer::GetYPixelMeter() const
-{
-	if(mFullScreen) {
-		return mYRes * 4;
-	}
-	else {
-		return 4 * GetSystemMetrics(SM_CYSCREEN);
+		return pixelMeter_t(
+			3 * GetSystemMetrics(SM_CXSCREEN),
+			4 * GetSystemMetrics(SM_CYSCREEN));
 	}
 }
 

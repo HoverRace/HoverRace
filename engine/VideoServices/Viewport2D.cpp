@@ -87,13 +87,15 @@ void Viewport2D::Setup(VideoBuffer * pBuffer, int pX0, int pY0, int pSizeX, int 
 		pMetrics |= eYSize;
 	}
 
-	if(pBuffer->GetXPixelMeter() != mXPitch) {
-		mXPitch = pBuffer->GetXPixelMeter();
+	VideoBuffer::pixelMeter_t pixelMeter = pBuffer->GetPixelMeter();
+
+	if (pixelMeter.first != mXPitch) {
+		mXPitch = pixelMeter.first;
 		pMetrics |= eXPitch | eBuffer;
 	}
 
-	if(pBuffer->GetYPixelMeter() != mYPitch) {
-		mYPitch = pBuffer->GetYPixelMeter();
+	if (pixelMeter.second != mYPitch) {
+		mYPitch = pixelMeter.second;
 		pMetrics |= eYPitch | eBuffer;
 	}
 

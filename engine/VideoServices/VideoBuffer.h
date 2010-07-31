@@ -192,8 +192,8 @@ class VideoBuffer
 		MR_DllDeclare void ClearZ(MR_UInt8 pDepth = -1);
 
 		// geometry access functions
-		MR_DllDeclare int GetXPixelMeter() const;
-		MR_DllDeclare int GetYPixelMeter() const;
+		typedef std::pair<int,int> pixelMeter_t;
+		MR_DllDeclare pixelMeter_t GetPixelMeter() const;
 
 		// 2DDrawing primitives, defined in VideoBuffer2DDraw.cpp
 		MR_DllDeclare void DrawPoint(int pX, int pY, MR_UInt8 pColor);
