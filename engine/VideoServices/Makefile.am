@@ -6,6 +6,9 @@ libvideosvc_la_SOURCES = \
 	2DViewPort.h \
 	Bitmap.cpp \
 	Bitmap.h \
+	ColorPalette.cpp \
+	ColorPalette.h \
+	ColorTab.cpp \
 	Font.cpp \
 	Font.h \
 	MultipartText.cpp \
@@ -17,5 +20,7 @@ libvideosvc_la_SOURCES = \
 	SoundServer.cpp \
 	SoundServer.h \
 	StaticText.cpp \
-	StaticText.h
+	StaticText.h \
+	VideoBuffer.cpp \
+	VideoBuffer.h
 
