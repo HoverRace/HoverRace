@@ -256,7 +256,8 @@ void PrintLog(const char *pFormat, ...);
 
 static GUID zeroGuid = { 0, 0, 0, { 0, 0, 0, 0, 0, 0, 0, 0 } };
 
-VideoBuffer::VideoBuffer(Util::OS::wnd_t pWindow, double pGamma, double pContrast, double pBrightness)
+VideoBuffer::VideoBuffer(Util::OS::wnd_t pWindow, double pGamma, double pContrast, double pBrightness) :
+	desktopWidth(0), desktopHeight(0)
 {
 	OPEN_LOG();
 	PRINT_LOG("VIDEO_BUFFER_CREATION");
@@ -334,6 +335,19 @@ VideoBuffer::~VideoBuffer()
 
 	FreeLibrary(directDrawInst);
 #endif
+}
+
+/**
+ * Notify the video buffer that the desktop resolution has changed.
+ * This should be called immediately after the video buffer instance is created
+ * and every time the desktop resolution changes.
+ * @param width The desktop resolution width.
+ * @param height The desktop resolution height.
+ */
+void VideoBuffer::NotifyDesktopModeChange(int width, int height)
+{
+	desktopWidth = width;
+	desktopHeight = height;
 }
 
 DWORD VideoBuffer::PackRGB(DWORD r, DWORD g, DWORD b)
@@ -1035,8 +1049,8 @@ VideoBuffer::pixelMeter_t VideoBuffer::GetPixelMeter() const
 	}
 	else {
 		return pixelMeter_t(
-			3 * GetSystemMetrics(SM_CXSCREEN),
-			4 * GetSystemMetrics(SM_CYSCREEN));
+			3 * desktopWidth,
+			4 * desktopHeight);
 	}
 }
 

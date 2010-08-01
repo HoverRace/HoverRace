@@ -23,7 +23,9 @@
 
 #pragma once
 
-#ifndef WITH_SDL
+#ifdef WITH_SDL
+#	include <SDL/SDL.h>
+#else
 #	include <ddraw.h>
 #endif
 
@@ -48,6 +50,8 @@ class VideoBuffer
 
 	private:
 		bool mFullScreen;
+		int desktopWidth;
+		int desktopHeight;
 #	ifdef WITH_SDL
 #	else
 		HWND mWindow;
@@ -155,6 +159,7 @@ class VideoBuffer
 		MR_DllDeclare ~VideoBuffer();
 
 		// Video mode selection
+		MR_DllDeclare void NotifyDesktopModeChange(int width, int height);
 		MR_DllDeclare bool SetVideoMode();		  // In a window mode
 												  // Full screen mode
 		MR_DllDeclare bool SetVideoMode(int pXRes, int pYRes, GUID *monitor);

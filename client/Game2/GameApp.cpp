@@ -876,6 +876,8 @@ BOOL GameApp::InitGame()
 	if(lReturnValue) {
 		mVideoBuffer = new VideoServices::VideoBuffer(mMainWindow,
 			cfg->video.gamma, cfg->video.contrast, cfg->video.brightness);
+		mVideoBuffer->NotifyDesktopModeChange(
+			GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
 
 		// Attempt to create the sound service.
 		// We do this early so we can notify the user of any errors
@@ -1830,6 +1832,11 @@ LRESULT CALLBACK GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam
 		case WM_DISPLAYCHANGE:
 			if (This->introMovie != NULL) {
 				This->introMovie->ResetPalette(true);
+			}
+			if (This->mVideoBuffer != NULL) {
+				This->mVideoBuffer->NotifyDesktopModeChange(
+					GetSystemMetrics(SM_CXSCREEN),
+					GetSystemMetrics(SM_CYSCREEN));
 			}
 			break;
 
