@@ -595,7 +595,7 @@ void VideoBuffer::CreatePalette(double pGamma, double pContrast, double pBrightn
 		}
 		ReleaseDC(NULL, hdc);
 
-		// Add out own entries
+		// Add our own entries
 		PALETTEENTRY *lOurEntries = ColorPalette::GetColors(1.0 / mGamma, mContrast * mBrightness, mBrightness - (mContrast * mBrightness));
 
 		for(lCounter = 0; lCounter < MR_BASIC_COLORS; lCounter++) {
