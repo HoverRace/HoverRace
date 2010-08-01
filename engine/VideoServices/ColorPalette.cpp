@@ -31,6 +31,16 @@ namespace VideoServices {
 
 namespace ColorPalette {
 
+/**
+ * Generate the "basic" range of the color palette.
+ * The "basic" range starts at index @c MR_RESERVED_COLORS_BEGINNING and
+ * contains @c MR_BASIC_COLORS entries.  The "background" range follows
+ * the "basic" range.
+ * @param pGamma The gamma correction (the inverse of the configuration gamma).
+ * @param pIntensity The color intensity (contrast * brightness).
+ * @param pIntensityBase The base intensity (brightness - intensity).
+ * @return An array of size @c MR_BASIC_COLORS defining the "basic" range.
+ */
 PALETTEENTRY *GetColors(double pGamma, double pIntensity, double pIntensityBase)
 {
 	PALETTEENTRY *lReturnValue = new PALETTEENTRY[MR_BASIC_COLORS];
@@ -86,6 +96,17 @@ PALETTEENTRY *GetColors(double pGamma, double pIntensity, double pIntensityBase)
 	return lReturnValue;
 }
 
+/**
+ * Generate a palette entry from RGB components.
+ * This is usually to apply color correction to the background palette.
+ * @param pRed The red component.
+ * @param pGreen The green component.
+ * @param pBlue The blue component.
+ * @param pGamma The gamma correction (the inverse of the configuration gamma).
+ * @param pIntensity The color intensity (contrast * brightness).
+ * @param pIntensityBase The base intensity (brightness - intensity).
+ * @return The generated palette entry.
+ */
 const PALETTEENTRY &ConvertColor(MR_UInt8 pRed, MR_UInt8 pGreen, MR_UInt8 pBlue, double pGamma, double pIntensity, double pIntensityBase)
 {
 	static PALETTEENTRY lReturnValue;

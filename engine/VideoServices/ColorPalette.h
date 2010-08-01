@@ -61,7 +61,6 @@ MR_DllDeclare extern MR_UInt8 colorAdditionTable[MR_NB_COLORS][MR_NB_COLORS];
 extern double basicPalette[][3];
 extern int basicPaletteSize;
 
-												  // return a vectors of MR_NB_COLORS-MR_RESERVED_COLORS
 MR_DllDeclare PALETTEENTRY *GetColors(double pGamma, double pIntensity = 0.8, double pIntensityBase = 0.0);
 MR_DllDeclare const PALETTEENTRY &ConvertColor(MR_UInt8 pRed, MR_UInt8 pGreen, MR_UInt8 pBlue, double pGamma, double pIntensity = 0.8, double pIntensityBase = 0.0);
 
