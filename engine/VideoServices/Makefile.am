@@ -22,5 +22,7 @@ libvideosvc_la_SOURCES = \
 	StaticText.cpp \
 	StaticText.h \
 	VideoBuffer.cpp \
-	VideoBuffer.h
+	VideoBuffer.h \
+	Viewport2D.cpp \
+	Viewport2D.h
 
