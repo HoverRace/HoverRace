@@ -31,6 +31,22 @@ namespace VideoServices {
 
 namespace ColorPalette {
 
+namespace {
+	void AssignPaletteEntry(paletteEntry_t &ent, double r, double g, double b)
+	{
+#		ifdef WITH_SDL
+			ent.r = static_cast<MR_UInt8>(r);
+			ent.g = static_cast<MR_UInt8>(g);
+			ent.b = static_cast<MR_UInt8>(b);
+#		else
+			ent.peRed = static_cast<MR_UInt8>(r);
+			ent.peGreen = static_cast<MR_UInt8>(g);
+			ent.peBlue = static_cast<MR_UInt8>(b);
+			ent.peFlags = 0;  // PC_EXPLICIT
+#		endif
+	}
+}
+
 /**
  * Generate the "basic" range of the color palette.
  * The "basic" range starts at index @c MR_RESERVED_COLORS_BEGINNING and
@@ -41,9 +57,9 @@ namespace ColorPalette {
  * @param pIntensityBase The base intensity (brightness - intensity).
  * @return An array of size @c MR_BASIC_COLORS defining the "basic" range.
  */
-PALETTEENTRY *GetColors(double pGamma, double pIntensity, double pIntensityBase)
+paletteEntry_t *GetColors(double pGamma, double pIntensity, double pIntensityBase)
 {
-	PALETTEENTRY *lReturnValue = new PALETTEENTRY[MR_BASIC_COLORS];
+	paletteEntry_t *lReturnValue = new paletteEntry_t[MR_BASIC_COLORS];
 
 	int lColorIndex = 0;
 
@@ -74,21 +90,12 @@ PALETTEENTRY *GetColors(double pGamma, double pIntensity, double pIntensityBase)
 			lBlue = 255;
 		}
 
-		lReturnValue[lColorIndex].peRed = (MR_UInt8) lRed;
-		lReturnValue[lColorIndex].peGreen = (MR_UInt8) lGreen;
-		lReturnValue[lColorIndex].peBlue = (MR_UInt8) lBlue;
-
-		lReturnValue[lColorIndex].peFlags = 0;	  //PC_EXPLICIT;
-
+		AssignPaletteEntry(lReturnValue[lColorIndex], lRed, lGreen, lBlue);
 	}
 
 	for(; lColorIndex < MR_BASIC_COLORS; lColorIndex++) {
 
-		lReturnValue[lColorIndex].peRed = 255;
-		lReturnValue[lColorIndex].peGreen = 255;
-		lReturnValue[lColorIndex].peBlue = static_cast<byte>(lColorIndex - 15);
-
-		lReturnValue[lColorIndex].peFlags = 0;	  //PC_EXPLICIT;
+		AssignPaletteEntry(lReturnValue[lColorIndex], 255, 255, lColorIndex - 15);
 
 		lColorIndex++;
 	}
@@ -107,9 +114,9 @@ PALETTEENTRY *GetColors(double pGamma, double pIntensity, double pIntensityBase)
  * @param pIntensityBase The base intensity (brightness - intensity).
  * @return The generated palette entry.
  */
-const PALETTEENTRY &ConvertColor(MR_UInt8 pRed, MR_UInt8 pGreen, MR_UInt8 pBlue, double pGamma, double pIntensity, double pIntensityBase)
+const paletteEntry_t &ConvertColor(MR_UInt8 pRed, MR_UInt8 pGreen, MR_UInt8 pBlue, double pGamma, double pIntensity, double pIntensityBase)
 {
-	static PALETTEENTRY lReturnValue;
+	static paletteEntry_t lReturnValue;
 
 	double lRed;
 	double lGreen;
@@ -136,11 +143,7 @@ const PALETTEENTRY &ConvertColor(MR_UInt8 pRed, MR_UInt8 pGreen, MR_UInt8 pBlue,
 		lBlue = 255;
 	}
 
-	lReturnValue.peRed = (MR_UInt8) lRed;
-	lReturnValue.peGreen = (MR_UInt8) lGreen;
-	lReturnValue.peBlue = (MR_UInt8) lBlue;
-
-	lReturnValue.peFlags = 0;					  //PC_EXPLICIT;
+	AssignPaletteEntry(lReturnValue, lRed, lGreen, lBlue);
 
 	return lReturnValue;
 }
