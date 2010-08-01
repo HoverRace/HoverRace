@@ -134,6 +134,7 @@ ClientApp::ClientApp() :
 			if (ico != NULL)
 				SendMessageW(hwnd, WM_SETICON, ICON_SMALL, reinterpret_cast<LPARAM>(ico));
 #		else
+			mainWnd = wm.info.x11.window;
 			// On non-Win32 we prefer to let the window manager decide the
 			// position of the window.
 			/*TODO
@@ -142,7 +143,11 @@ ClientApp::ClientApp() :
 #		endif
 	}
 
+	//FIXME: OIS conflicts with SDL on Linux since they both try to
+	//       listen for input events.
+#ifdef _WIN32
 	controller = new Controller(mainWnd, uiInput);
+#endif
 
 	RefreshTitleBar();
 }
