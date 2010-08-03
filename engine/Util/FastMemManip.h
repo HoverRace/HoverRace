@@ -38,6 +38,7 @@ inline void MR_SmallMem16Set(MR_UInt16 * pDest, MR_UInt16 pValue, int pCount)
 
 inline void MR_LargeMem16Set(MR_UInt16 * pDest, MR_UInt16 pValue, int pCount)
 {
+#if defined(_WIN32) && !defined(_WIN64)
 	if(pCount > 0) {
 		MR_UInt32 lValue = pValue | (pValue << 16);
 		MR_UInt32 *lDest = (MR_UInt32 *) (((int) pDest) & ~1);
@@ -53,4 +54,7 @@ inline void MR_LargeMem16Set(MR_UInt16 * pDest, MR_UInt16 pValue, int pCount)
 			lDest[lCounter] = lValue;
 		}
 	}
+#else
+	MR_SmallMem16Set(pDest, pValue, pCount);
+#endif
 }
