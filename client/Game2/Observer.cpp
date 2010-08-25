@@ -183,18 +183,6 @@ void Observer::SetCockpitView(BOOL pOn)
 void Observer::Scroll(int pOffset)
 {
 	mScroll += pOffset;
-
-	if(mScroll != 0)
-		mScroll = 0;
-
-	//if( mScroll < -0 )
-	//{
-	// mScroll = -0;
-	//}
-	//else if( mScroll > 1 )
-	//{
-	//   mScroll = 0;
-	//}
 }
 
 void Observer::ZoomIn()
