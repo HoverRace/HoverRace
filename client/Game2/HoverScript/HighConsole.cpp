@@ -165,15 +165,16 @@ HighConsole::HighConsole(Script::Core *scripting, GameDirector *gameApp,
 	helpLines->Add(helpInstructions, *logFont, 0x0e);
 	logLines->Add(helpInstructions, *logFont, 0x0e);
 
-	Control::Controller *controller = gameApp->GetController();
+	Control::InputEventController *controller = gameApp->GetController();
 
 	// The heading for the console.
 	Font titleFont("Arial", 12);
 	consoleTitle = new StaticText(_("Console"), titleFont, 0x0e);
 	std::string consoleControlsText = boost::str(
 		boost::format("%s [%s/%s]  %s [%s]") %
-		_("Scroll") % controller->toString(SCROLL_UP_KEY) % controller->toString(SCROLL_DOWN_KEY) %
-		_("Hide") % controller->toString(cfg->ui.console)
+		//_("Scroll") % controller->toString(SCROLL_UP_KEY) % controller->toString(SCROLL_DOWN_KEY) %
+		_("Scroll") % controller->HashToString(0) % controller->HashToString(0) %
+		_("Hide") % controller->HashToString(0)
 		);
 	consoleControls = new StaticText(consoleControlsText, titleFont, 0x0e);
 
@@ -181,7 +182,7 @@ HighConsole::HighConsole(Script::Core *scripting, GameDirector *gameApp,
 	helpTitle = new StaticText(_("Help"), titleFont, 0x0e);
 	std::string helpControlsText = boost::str(
 		boost::format("%s [%s]") %
-		_("Hide") % controller->toString(HELP_KEY)
+		_("Hide") % controller->HashToString(0)
 		);
 	helpControls = new StaticText(helpControlsText, titleFont, 0x0e);
 
@@ -319,11 +320,11 @@ void HighConsole::LogError(const std::string &s)
 void HighConsole::ToggleVisible()
 {
 	if (visible) {
-		gameApp->GetController()->LeaveControlLayer();
+		//gameApp->GetController()->LeaveControlLayer();
 		visible = false;
 	}
 	else {
-		gameApp->GetController()->EnterControlLayer(input);
+		//gameApp->GetController()->EnterControlLayer(input);
 		visible = true;
 	}
 }

@@ -58,6 +58,7 @@ ClientSession::~ClientSession()
 
 void ClientSession::Process(int pSpeedFactor)
 {
+	UpdateCharacterSimulationTimes();
 	mSession.Simulate();
 }
 
@@ -222,23 +223,17 @@ MR_SimulationTime ClientSession::GetSimulationTime() const
 	return mSession.GetSimulationTime();
 }
 
-void ClientSession::SetControlState(int pState1, int pState2, int pState3, int pState4)
+void ClientSession::UpdateCharacterSimulationTimes()
 {
-	if(mainCharacter[0] != NULL) {
-		mainCharacter[0]->SetControlState(pState1, mSession.GetSimulationTime());
-	}
-
-	if(mainCharacter[1] != NULL) {
-		mainCharacter[1]->SetControlState(pState2, mSession.GetSimulationTime());
-	}
-
-	if(mainCharacter[2] != NULL) {
-		mainCharacter[2]->SetControlState(pState3, mSession.GetSimulationTime());
-	}
-
-	if(mainCharacter[3] != NULL) {
-		mainCharacter[3]->SetControlState(pState4, mSession.GetSimulationTime());
-	}
+	// pass to main characters
+	if(mainCharacter[0] != NULL)
+		mainCharacter[0]->SetSimulationTime(mSession.GetSimulationTime());
+	if(mainCharacter[1] != NULL)
+		mainCharacter[1]->SetSimulationTime(mSession.GetSimulationTime());
+	if(mainCharacter[2] != NULL)
+		mainCharacter[2]->SetSimulationTime(mSession.GetSimulationTime());
+	if(mainCharacter[3] != NULL)
+		mainCharacter[3]->SetSimulationTime(mSession.GetSimulationTime());
 }
 
 const Model::Level *ClientSession::GetCurrentLevel() const

@@ -103,6 +103,7 @@
     <ClCompile Include="Game2\ClientApp.cpp" />
     <ClCompile Include="Game2\ClientSession.cpp" />
     <ClCompile Include="Game2\ControlPrefsPage.cpp" />
+    <ClCompile Include="Game2\Control\ActionPerformers.cpp" />
     <ClCompile Include="Game2\DownloadUpdateDialog.cpp" />
     <ClCompile Include="Game2\FirstChoiceDialog.cpp" />
     <ClCompile Include="Game2\FullscreenTest.cpp" />
@@ -148,6 +149,8 @@
     <ClInclude Include="Game2\ClientApp.h" />
     <ClInclude Include="Game2\ClientSession.h" />
     <ClInclude Include="Game2\ControlPrefsPage.h" />
+    <ClInclude Include="Game2\Control\ActionPerformers.h" />
+    <ClInclude Include="Game2\Control\ControlAction.h" />
     <ClInclude Include="Game2\DownloadUpdateDialog.h" />
     <ClInclude Include="Game2\FirstChoiceDialog.h" />
     <ClInclude Include="Game2\FullscreenTest.h" />

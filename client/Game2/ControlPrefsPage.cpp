@@ -39,7 +39,7 @@ using boost::format;
 using boost::str;
 
 using namespace HoverRace::Util;
-using HoverRace::Client::Control::Controller;
+using HoverRace::Client::Control::InputEventController;
 
 #define MRM_CONTROL_TIMER   3
 #define MRM_CONTROL_POLL    4
@@ -60,43 +60,43 @@ ControlPrefsPage::~ControlPrefsPage()
 void ControlPrefsPage::UpdateDialogLabels(HWND pWindow)
 {
 	Config *cfg = Config::GetInstance();
-	Controller * const controller = app->GetController();
+	InputEventController* const controller = app->GetController();
 
-	SetDlgItemTextW(pWindow, IDC_MOTOR_ON1, Str::UW(controller->toString(cfg->controls[0].motorOn).c_str()));
-	SetDlgItemTextW(pWindow, IDC_RIGHT1, Str::UW(controller->toString(cfg->controls[0].right).c_str()));
-	SetDlgItemTextW(pWindow, IDC_LEFT1, Str::UW(controller->toString(cfg->controls[0].left).c_str()));
-	SetDlgItemTextW(pWindow, IDC_JUMP1, Str::UW(controller->toString(cfg->controls[0].jump).c_str()));
-	SetDlgItemTextW(pWindow, IDC_FIRE1, Str::UW(controller->toString(cfg->controls[0].fire).c_str()));
-	SetDlgItemTextW(pWindow, IDC_BRAKE1, Str::UW(controller->toString(cfg->controls[0].brake).c_str()));
-	SetDlgItemTextW(pWindow, IDC_SELWEAPON1, Str::UW(controller->toString(cfg->controls[0].weapon).c_str()));
-	SetDlgItemTextW(pWindow, IDC_LOOKBACK1, Str::UW(controller->toString(cfg->controls[0].lookBack).c_str()));
+	SetDlgItemTextW(pWindow, IDC_MOTOR_ON1, Str::UW(controller->HashToString(cfg->controls_hash[0].motorOn).c_str()));
+	SetDlgItemTextW(pWindow, IDC_RIGHT1, Str::UW(controller->HashToString(cfg->controls_hash[0].right).c_str()));
+	SetDlgItemTextW(pWindow, IDC_LEFT1, Str::UW(controller->HashToString(cfg->controls_hash[0].left).c_str()));
+	SetDlgItemTextW(pWindow, IDC_JUMP1, Str::UW(controller->HashToString(cfg->controls_hash[0].jump).c_str()));
+	SetDlgItemTextW(pWindow, IDC_FIRE1, Str::UW(controller->HashToString(cfg->controls_hash[0].fire).c_str()));
+	SetDlgItemTextW(pWindow, IDC_BRAKE1, Str::UW(controller->HashToString(cfg->controls_hash[0].brake).c_str()));
+	SetDlgItemTextW(pWindow, IDC_SELWEAPON1, Str::UW(controller->HashToString(cfg->controls_hash[0].weapon).c_str()));
+	SetDlgItemTextW(pWindow, IDC_LOOKBACK1, Str::UW(controller->HashToString(cfg->controls_hash[0].lookBack).c_str()));
 
-	SetDlgItemTextW(pWindow, IDC_MOTOR_ON2, Str::UW(controller->toString(cfg->controls[1].motorOn).c_str()));
-	SetDlgItemTextW(pWindow, IDC_RIGHT2, Str::UW(controller->toString(cfg->controls[1].right).c_str()));
-	SetDlgItemTextW(pWindow, IDC_LEFT2, Str::UW(controller->toString(cfg->controls[1].left).c_str()));
-	SetDlgItemTextW(pWindow, IDC_JUMP2, Str::UW(controller->toString(cfg->controls[1].jump).c_str()));
-	SetDlgItemTextW(pWindow, IDC_FIRE2, Str::UW(controller->toString(cfg->controls[1].fire).c_str()));
-	SetDlgItemTextW(pWindow, IDC_BRAKE2, Str::UW(controller->toString(cfg->controls[1].brake).c_str()));
-	SetDlgItemTextW(pWindow, IDC_SELWEAPON2, Str::UW(controller->toString(cfg->controls[1].weapon).c_str()));
-	SetDlgItemTextW(pWindow, IDC_LOOKBACK2, Str::UW(controller->toString(cfg->controls[1].lookBack).c_str()));
+	SetDlgItemTextW(pWindow, IDC_MOTOR_ON2, Str::UW(controller->HashToString(cfg->controls_hash[1].motorOn).c_str()));
+	SetDlgItemTextW(pWindow, IDC_RIGHT2, Str::UW(controller->HashToString(cfg->controls_hash[1].right).c_str()));
+	SetDlgItemTextW(pWindow, IDC_LEFT2, Str::UW(controller->HashToString(cfg->controls_hash[1].left).c_str()));
+	SetDlgItemTextW(pWindow, IDC_JUMP2, Str::UW(controller->HashToString(cfg->controls_hash[1].jump).c_str()));
+	SetDlgItemTextW(pWindow, IDC_FIRE2, Str::UW(controller->HashToString(cfg->controls_hash[1].fire).c_str()));
+	SetDlgItemTextW(pWindow, IDC_BRAKE2, Str::UW(controller->HashToString(cfg->controls_hash[1].brake).c_str()));
+	SetDlgItemTextW(pWindow, IDC_SELWEAPON2, Str::UW(controller->HashToString(cfg->controls_hash[1].weapon).c_str()));
+	SetDlgItemTextW(pWindow, IDC_LOOKBACK2, Str::UW(controller->HashToString(cfg->controls_hash[1].lookBack).c_str()));
 
-	SetDlgItemTextW(pWindow, IDC_MOTOR_ON3, Str::UW(controller->toString(cfg->controls[2].motorOn).c_str()));
-	SetDlgItemTextW(pWindow, IDC_RIGHT3, Str::UW(controller->toString(cfg->controls[2].right).c_str()));
-	SetDlgItemTextW(pWindow, IDC_LEFT3, Str::UW(controller->toString(cfg->controls[2].left).c_str()));
-	SetDlgItemTextW(pWindow, IDC_JUMP3, Str::UW(controller->toString(cfg->controls[2].jump).c_str()));
-	SetDlgItemTextW(pWindow, IDC_FIRE3, Str::UW(controller->toString(cfg->controls[2].fire).c_str()));
-	SetDlgItemTextW(pWindow, IDC_BRAKE3, Str::UW(controller->toString(cfg->controls[2].brake).c_str()));
-	SetDlgItemTextW(pWindow, IDC_SELWEAPON3, Str::UW(controller->toString(cfg->controls[2].weapon).c_str()));
-	SetDlgItemTextW(pWindow, IDC_LOOKBACK3, Str::UW(controller->toString(cfg->controls[2].lookBack).c_str()));
+	SetDlgItemTextW(pWindow, IDC_MOTOR_ON3, Str::UW(controller->HashToString(cfg->controls_hash[2].motorOn).c_str()));
+	SetDlgItemTextW(pWindow, IDC_RIGHT3, Str::UW(controller->HashToString(cfg->controls_hash[2].right).c_str()));
+	SetDlgItemTextW(pWindow, IDC_LEFT3, Str::UW(controller->HashToString(cfg->controls_hash[2].left).c_str()));
+	SetDlgItemTextW(pWindow, IDC_JUMP3, Str::UW(controller->HashToString(cfg->controls_hash[2].jump).c_str()));
+	SetDlgItemTextW(pWindow, IDC_FIRE3, Str::UW(controller->HashToString(cfg->controls_hash[2].fire).c_str()));
+	SetDlgItemTextW(pWindow, IDC_BRAKE3, Str::UW(controller->HashToString(cfg->controls_hash[2].brake).c_str()));
+	SetDlgItemTextW(pWindow, IDC_SELWEAPON3, Str::UW(controller->HashToString(cfg->controls_hash[2].weapon).c_str()));
+	SetDlgItemTextW(pWindow, IDC_LOOKBACK3, Str::UW(controller->HashToString(cfg->controls_hash[2].lookBack).c_str()));
 
-	SetDlgItemTextW(pWindow, IDC_MOTOR_ON4, Str::UW(controller->toString(cfg->controls[3].motorOn).c_str()));
-	SetDlgItemTextW(pWindow, IDC_RIGHT4, Str::UW(controller->toString(cfg->controls[3].right).c_str()));
-	SetDlgItemTextW(pWindow, IDC_LEFT4, Str::UW(controller->toString(cfg->controls[3].left).c_str()));
-	SetDlgItemTextW(pWindow, IDC_JUMP4, Str::UW(controller->toString(cfg->controls[3].jump).c_str()));
-	SetDlgItemTextW(pWindow, IDC_FIRE4, Str::UW(controller->toString(cfg->controls[3].fire).c_str()));
-	SetDlgItemTextW(pWindow, IDC_BRAKE4, Str::UW(controller->toString(cfg->controls[3].brake).c_str()));
-	SetDlgItemTextW(pWindow, IDC_SELWEAPON4, Str::UW(controller->toString(cfg->controls[3].weapon).c_str()));
-	SetDlgItemTextW(pWindow, IDC_LOOKBACK4, Str::UW(controller->toString(cfg->controls[3].lookBack).c_str()));
+	SetDlgItemTextW(pWindow, IDC_MOTOR_ON4, Str::UW(controller->HashToString(cfg->controls_hash[3].motorOn).c_str()));
+	SetDlgItemTextW(pWindow, IDC_RIGHT4, Str::UW(controller->HashToString(cfg->controls_hash[3].right).c_str()));
+	SetDlgItemTextW(pWindow, IDC_LEFT4, Str::UW(controller->HashToString(cfg->controls_hash[3].left).c_str()));
+	SetDlgItemTextW(pWindow, IDC_JUMP4, Str::UW(controller->HashToString(cfg->controls_hash[3].jump).c_str()));
+	SetDlgItemTextW(pWindow, IDC_FIRE4, Str::UW(controller->HashToString(cfg->controls_hash[3].fire).c_str()));
+	SetDlgItemTextW(pWindow, IDC_BRAKE4, Str::UW(controller->HashToString(cfg->controls_hash[3].brake).c_str()));
+	SetDlgItemTextW(pWindow, IDC_SELWEAPON4, Str::UW(controller->HashToString(cfg->controls_hash[3].weapon).c_str()));
+	SetDlgItemTextW(pWindow, IDC_LOOKBACK4, Str::UW(controller->HashToString(cfg->controls_hash[3].lookBack).c_str()));
 }
 
 /***
@@ -111,7 +111,7 @@ BOOL ControlPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 
 	static Config::cfg_controls_t *oldcontrols = NULL;
 
-	Controller * const controller = app->GetController();
+	InputEventController* const controller = app->GetController();
 
 	BOOL lReturnValue = FALSE;
 	switch (pMsgId) {
@@ -264,7 +264,6 @@ BOOL ControlPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 					lWinClass.hIcon = NULL;
 					lWinClass.hCursor = LoadCursor(NULL, IDC_ARROW);
 					lWinClass.hbrBackground = (HBRUSH) COLOR_APPWORKSPACE + 1;
-					//lWinClass.lpszMenuName = MAKEINTRESOURCEW(FIREBALL_MAIN_MENU);
 					lWinClass.lpszMenuName = NULL;
 					lWinClass.lpszClassName = L"IDD_PRESS_ANY_KEY";
 

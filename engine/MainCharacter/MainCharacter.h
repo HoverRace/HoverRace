@@ -142,6 +142,7 @@ class MainCharacter : public Model::FreeElement
 		MR_SimulationTime mLastLapCompletion;
 		MR_SimulationTime mLastLapDuration;
 		MR_SimulationTime mBestLapDuration;
+		MR_SimulationTime mCurrentTime;
 
 		BOOL mCheckPoint1;
 		BOOL mCheckPoint2;
@@ -184,7 +185,15 @@ class MainCharacter : public Model::FreeElement
 		MR_DllDeclare void SetNbLapForRace(int pNbLap);
 
 		// Movement inputs
-		MR_DllDeclare void SetControlState(int pState, MR_SimulationTime pTime);
+		MR_DllDeclare void SetSimulationTime(MR_SimulationTime pTime);
+		MR_DllDeclare void SetEngineState(bool engineState); // TODO: analog
+		MR_DllDeclare void SetTurnLeftState(bool leftState); // TODO: analog
+		MR_DllDeclare void SetTurnRightState(bool rightState); // TODO: analog
+		MR_DllDeclare void SetJump();
+		MR_DllDeclare void SetPowerup();
+		MR_DllDeclare void SetChangeItem();
+		MR_DllDeclare void SetBrakeState(bool brakeState); // TODO: analog? maybe not
+		MR_DllDeclare void SetLookBackState(bool lookBackState);
 
 		// State interogation functions
 		MR_DllDeclare MR_Angle GetCabinOrientation() const;

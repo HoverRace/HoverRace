@@ -240,9 +240,25 @@ class MR_DllDeclare Config
 			void Save(yaml::Emitter*);
 		} controls[MAX_PLAYERS];
 
+		/// See Client/Control/Controller.h for the hash function
+		struct cfg_controls_hash_t {
+			int motorOn;
+			int right;
+			int left;
+			int jump;
+			int fire;
+			int brake;
+			int weapon;
+			int lookBack;
+
+			void Load(yaml::MapNode*);
+			void Save(yaml::Emitter*);
+		} controls_hash[MAX_PLAYERS];
+
 		struct cfg_ui_t {
 			// Not configurable yet.
 			cfg_control_t console;
+			int console_hash;
 		} ui;
 
 		struct cfg_runtime_t {

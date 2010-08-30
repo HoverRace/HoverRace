@@ -182,7 +182,7 @@ unsigned long GameThread::Loop(LPVOID pThread)
 			// Check if a new session was requested.
 			newSessionRules = gameApp->gamePeer->RequestedNewSession();
 		}
-		gameApp->ReadAsyncInputController();
+		gameApp->PollController();
 
 		MR_SAMPLE_START(Process, "Process");
 
@@ -348,7 +348,7 @@ void GameApp::Clean()
 	}
 
 	// All modal dialogs and control-grabbing layers are about to be destroyed.
-	controller->ResetControlLayers();
+	//controller->ResetControlLayers();
 
 	sessionPeer.reset();
 	delete mCurrentSession;
@@ -703,7 +703,7 @@ BOOL GameApp::CreateMainWindow()
 	UpdateMenuItems();
 
 	// set up controller
-	controller = new Control::Controller(mMainWindow, uiInput);
+	controller = new Control::InputEventController(mMainWindow, uiInput);
 
 	return lReturnValue;
 }
@@ -1028,14 +1028,9 @@ void GameApp::RefreshView()
 	}
 }
 
-void GameApp::OnChar(char c)
+void GameApp::PollController()
 {
-	if (highConsole != NULL && highConsole->IsVisible()) {
-		highConsole->OnChar(c);
-	}
-	else if (mCurrentSession != NULL) {
-		mCurrentSession->AddMessageKey(c);
-	}
+	controller->Poll();
 }
 
 bool GameApp::OnKeyDown(int keycode)
@@ -1076,64 +1071,6 @@ bool GameApp::OnKeyDown(int keycode)
 	}
 
 	return false;
-}
-
-/**
- * Read the control state for a specific player.
- * @param playerIdx The player index (0 = first player, 1 = second, etc.).
- * @return The control state.
- */
-int GameApp::ReadAsyncInputControllerPlayer(int playerIdx)
-{
-	int retv = 0;
-
-	// hack in for now; this checks the current state
-	Control::ControlState cur = controller->getControlState(playerIdx);
-
-	if (cur.motorOn)  retv |= MainCharacter::MainCharacter::eMotorOn;
-	if (cur.jump)     retv |= MainCharacter::MainCharacter::eJump;
-	if (cur.brake)    retv |= MainCharacter::MainCharacter::eBreakDirection;
-	if (cur.fire)     retv |= MainCharacter::MainCharacter::eFire;
-	if (cur.weapon)   retv |= MainCharacter::MainCharacter::eSelectWeapon;
-	if (cur.lookBack) retv |= MainCharacter::MainCharacter::eLookBack;
-	if (cur.right)    retv |= MainCharacter::MainCharacter::eRight;
-	if (cur.left)     retv |= MainCharacter::MainCharacter::eLeft;
-
-	controller->poll();
-
-	return retv;
-}
-
-void GameApp::ReadAsyncInputController()
-{
-	if(mCurrentSession != NULL) {
-		if(GetForegroundWindow() == mMainWindow)
-		{
-			static BOOL lFirstCall = TRUE;
-			int lControlState1 = 0;
-			int lControlState2 = 0;
-			int lControlState3 = 0;
-			int lControlState4 = 0;
-
-			lControlState1 = ReadAsyncInputControllerPlayer(0);
-
-			// If we're in multiplayer mode we need to check those keys too
-			if(mCurrentSession->GetMainCharacter2() != NULL) {
-				lControlState2 = ReadAsyncInputControllerPlayer(1);
-			}
-			if(mCurrentSession->GetMainCharacter3() != NULL) {
-				lControlState3 = ReadAsyncInputControllerPlayer(2);
-			}
-			if(mCurrentSession->GetMainCharacter4() != NULL) {
-				lControlState4 = ReadAsyncInputControllerPlayer(3);
-			}
-
-			if(lFirstCall)
-				lFirstCall = FALSE;
-			else
-				mCurrentSession->SetControlState(lControlState1, lControlState2, lControlState3, lControlState4);
-		}
-	}
 }
 
 bool GameApp::SetVideoMode(int pX, int pY, const std::string *monitor, bool testing)
@@ -1317,6 +1254,7 @@ void GameApp::NewLocalSession(RulebookPtr rules)
 
 		if (Config::GetInstance()->runtime.enableConsole) {
 			highConsole = new HighConsole(scripting, this, gamePeer, sessionPeer);
+			controller->SetConsole(highConsole);
 		}
 
 		// Load the selected track
@@ -1343,6 +1281,10 @@ void GameApp::NewLocalSession(RulebookPtr rules)
 			lSuccess = (lCurrentSession->CreateMainCharacter() != FALSE);
 
 		if(lSuccess) {
+			// Set up the controls
+			MainCharacter::MainCharacter* mc = lCurrentSession->GetPlayer(0);
+			controller->AddPlayerMaps(1, &mc);
+
 			mCurrentSession = lCurrentSession;
 			mGameThread = GameThread::New(this);
 
@@ -1400,15 +1342,12 @@ void GameApp::NewSplitSession(int pSplitPlayers)
 			observers[0]->SetSplitMode(Observer::eUpperSplit);
 			observers[1]->SetSplitMode(Observer::eLowerSplit);
 		}
-		if(pSplitPlayers == 3) {
+		if(pSplitPlayers >= 3) {
 			observers[0]->SetSplitMode(Observer::eUpperLeftSplit);
 			observers[1]->SetSplitMode(Observer::eUpperRightSplit);
 			observers[2]->SetSplitMode(Observer::eLowerLeftSplit);
 		}
 		if(pSplitPlayers == 4) {
-			observers[0]->SetSplitMode(Observer::eUpperLeftSplit);
-			observers[1]->SetSplitMode(Observer::eUpperRightSplit);
-			observers[2]->SetSplitMode(Observer::eLowerLeftSplit);
 			observers[3]->SetSplitMode(Observer::eLowerRightSplit);
 		}
 
@@ -1440,11 +1379,19 @@ void GameApp::NewSplitSession(int pSplitPlayers)
 		}
 
 		if(lSuccess) {
-			lSuccess = (lCurrentSession->CreateMainCharacter2() != FALSE);
+			lSuccess = (lCurrentSession->CreateMainCharacter2() != false);
 			if(pSplitPlayers > 2)
-				lSuccess = (lCurrentSession->CreateMainCharacter3() != FALSE);
+				lSuccess = (lCurrentSession->CreateMainCharacter3() != false);
 			if(pSplitPlayers > 3)
-				lSuccess = (lCurrentSession->CreateMainCharacter4() != FALSE);
+				lSuccess = (lCurrentSession->CreateMainCharacter4() != false);
+
+			MainCharacter::MainCharacter* mcs[4];
+			mcs[0] = lCurrentSession->GetMainCharacter();
+			mcs[1] = lCurrentSession->GetMainCharacter2();
+			mcs[2] = lCurrentSession->GetMainCharacter3();
+			mcs[3] = lCurrentSession->GetMainCharacter4();
+
+			controller->AddPlayerMaps(4, mcs);
 		}
 
 		if(!lSuccess) {
@@ -1662,10 +1609,10 @@ void GameApp::NewNetworkSession(BOOL pServer)
 	AssignPalette();
 }
 
-HoverRace::Client::Control::Controller *GameApp::ReloadController()
+HoverRace::Client::Control::InputEventController *GameApp::ReloadController()
 {
 	delete controller;
-	return (controller = new Control::Controller(This->mMainWindow, This->uiInput));
+	return (controller = new Control::InputEventController(This->mMainWindow, This->uiInput));
 }
 
 void GameApp::NewInternetSession()
@@ -2084,9 +2031,9 @@ LRESULT CALLBACK GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam
 			}
 			break;
 
-		case WM_CHAR:
-			This->OnChar((char)pWParam);
-			return 0;
+//		case WM_CHAR:
+//			This->OnChar((char)pWParam);
+//			return 0;
 
 		case WM_KEYDOWN:
 			if (This->OnKeyDown(pWParam)) return 0;

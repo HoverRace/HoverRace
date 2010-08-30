@@ -181,7 +181,7 @@ MainCharacter::MainCharacter(const Util::ObjectFromFactoryId & pId) :
 	mOutOfControlDuration = 0;
 	mMissileRefillDuration = 0;
 
-	mFireDone = FALSE;
+	mFireDone = TRUE;
 
 	mCurrentWeapon = eMissile;
 	mPowerUpLeft = 0;
@@ -399,42 +399,59 @@ void MainCharacter::SetNbLapForRace(int pNbLap)
 	mNbLapForRace = pNbLap;
 }
 
-void MainCharacter::SetControlState(int pState, MR_SimulationTime pTime)
+void MainCharacter::SetSimulationTime(MR_SimulationTime pTime)
 {
-	int lState = pState;
+	mCurrentTime = pTime;
+}
 
-	// Set HoverType if race not started
-	if(pTime < 0) {
-		if(!(mControlState & (eRight | eLeft))) {
-			if(pState & eRight) {
-				mHoverModel++;
-				
-				// ensure we are using an allowed craft
-				while(!(mGameOpts & ((int) pow(2.0f, 3.0f - ((mHoverModel + 4) % 4)))))
-					mHoverModel++;
-			}
+void MainCharacter::SetEngineState(bool engineState) {
+	if(mFuelLevel <= 0.0) { // if the user is out of fuel... they're going nowhere
+		if(!mMotorOnState && engineState)
+			mFuelLevel = 120; // gives player a tiny bit of fuel so they can limp to a pit
+		else
+			engineState = false;
+	}
+	mMotorOnState = engineState;
+}
 
-			if(pState & eLeft) {
+void MainCharacter::SetTurnLeftState(bool leftState)
+{
+	if(leftState) {
+		if(mCurrentTime < 0) {
+			mHoverModel--;
+
+			// ensure we are using an allowed craft
+			while(!(mGameOpts & ((int) pow(2.0f, 3.0f - ((mHoverModel + 4) % 4)))))
 				mHoverModel--;
+		
+			mHoverModel = (mHoverModel + 4) % 4;
+		}
+		mControlState |= eLeft;
+	} else
+		mControlState &= ~eLeft;
+}
 
-				// ensure we are using an allowed craft
-				while(!(mGameOpts & ((int) pow(2.0f, 3.0f - ((mHoverModel + 4) % 4)))))
-					mHoverModel--;
-			}
+void MainCharacter::SetTurnRightState(bool rightState)
+{
+	if(rightState) {
+		if(mCurrentTime < 0) {
+			mHoverModel++;
+				
+			// ensure we are using an allowed craft
+			while(!(mGameOpts & ((int) pow(2.0f, 3.0f - ((mHoverModel + 4) % 4)))))
+				mHoverModel++;
 
 			mHoverModel = (mHoverModel + 4) % 4;
 		}
-	}
-	// First verify transition states
-	if(!(mControlState & eSelectWeapon) && (lState & eSelectWeapon)) {
-		(*(int *) &mCurrentWeapon)++;
-		if(mCurrentWeapon == eNotAWeapon)
-			(*(int *) &mCurrentWeapon) = 0;
-	}
-	if(!(mControlState & eFire) && (lState & eFire))
-		mFireDone = FALSE;
+		
+		mControlState |= eRight;
+	} else
+		mControlState &= ~eRight;
+}
 
-	if(!(mControlState & eJump) && (lState & eJump)) {
+void MainCharacter::SetJump()
+{
+	if(!(mControlState & eJump)) {
 		if(mOnFloor) {
 			mZSpeed = 1.1 * eMaxZSpeed[mHoverModel];
 			if(mRenderer != NULL)
@@ -445,23 +462,39 @@ void MainCharacter::SetControlState(int pState, MR_SimulationTime pTime)
 				mInternalSoundList.Add(mRenderer->GetMisJumpSound());
 		}
 	}
+}
 
-	// We're no longer looking behind us
-	if((mControlState & eLookBack) && !(lState & eLookBack))
-		mOrientation = mCabinOrientation;
+void MainCharacter::SetPowerup()
+{
+	if(mFireDone)
+		mFireDone = FALSE;
+}
 
-	if(!(mControlState & (eRight | eLeft)))
-		lState |= eSlowRotation;
-
-	// Now verify continous states
-	if(mFuelLevel <= 0.0) {
-		if((!mMotorOnState) && (lState & eMotorOn))
-			mFuelLevel = 120;
-		else
-			lState &= ~eMotorOn;
+void MainCharacter::SetChangeItem()
+{
+	if(!(mControlState & eSelectWeapon)) {
+		(*(int *) &mCurrentWeapon)++;
+		if(mCurrentWeapon == eNotAWeapon)
+			(*(int *) &mCurrentWeapon) = 0;
 	}
-	mMotorOnState = pState & eMotorOn;
-	mControlState = lState;
+}
+
+void MainCharacter::SetBrakeState(bool brakeState)
+{
+	if(brakeState)
+		mControlState |= eBreakDirection;
+	else
+		mControlState &= ~eBreakDirection;
+}
+
+void MainCharacter::SetLookBackState(bool lookBackState)
+{
+	if(lookBackState)
+		mControlState |= eLookBack;
+	else {
+		mControlState &= ~eLookBack;
+		mOrientation = mCabinOrientation; // reset orientation
+	}
 }
 
 int MainCharacter::Simulate(MR_SimulationTime pDuration, Model::Level *pLevel, int pRoom)
@@ -470,11 +503,11 @@ int MainCharacter::Simulate(MR_SimulationTime pDuration, Model::Level *pLevel, i
 
 	if(pDuration > 0) {
 		if(mMasterMode) {
-			if((mControlState & eMotorOn) && (mFuelLevel > 0.0))
+			if((mMotorOnState) && (mFuelLevel > 0.0))
 				mMotorDisplay = 250;
 		}
 		else {
-			if(mControlState & eMotorOn)
+			if(mMotorOnState)
 				mMotorDisplay = 250;
 		}
 	}
@@ -526,7 +559,7 @@ int MainCharacter::Simulate(MR_SimulationTime pDuration, Model::Level *pLevel, i
 		if(mPowerUpLeft < 0)
 			mPowerUpLeft = 0;
 
-		if((mControlState & eFire) && !mFireDone) {
+		if(!mFireDone) {
 			mFireDone = TRUE;
 
 			if(mCurrentWeapon == eMissile) {
@@ -634,7 +667,7 @@ int MainCharacter::InternalSimulate(MR_SimulationTime pDuration, Model::Level *p
 	}
 
 	// MotorEffect
-	if(mControlState & eMotorOn) {
+	if(mMotorOnState) {
 		double lDirectionalSpeed = (mXSpeed * MR_Cos[mCabinOrientation] + mYSpeed * MR_Sin[mCabinOrientation]) / MR_TRIGO_FRACT;
 
 		double lMaxSpeedFactor = 1.3;
@@ -757,7 +790,7 @@ int MainCharacter::InternalSimulate(MR_SimulationTime pDuration, Model::Level *p
 	}
 
 	if((mFuelLevel < 0.0) && mMasterMode)
-		mControlState &= ~eMotorOn;
+		mMotorOnState = FALSE;
 
 	mRoom = pRoom;
 	return pRoom;
@@ -1090,7 +1123,7 @@ void MainCharacter::PlayInternalSounds()
 
 		if(lAbsSpeed > 0.02)
 			SoundServer::Play(lWindSound, 0, 0, 1.5 * lAbsSpeed);
-		if(mControlState & eMotorOn)
+		if(mMotorOnState)
 			SoundServer::Play(lMotorSound, 0);
 	}
 }
@@ -1111,7 +1144,7 @@ void MainCharacter::PlayExternalSounds(int pDB, int pPan)
 
 		if(lAbsSpeed > 0.02)
 			SoundServer::Play(lWindSound, 1, pDB, 1.5 * lAbsSpeed, pPan);
-		if(mControlState & eMotorOn)
+		if(mMotorOnState)
 			SoundServer::Play(lMotorSound, 1, pDB, 1.0, pPan);
 	}
 }

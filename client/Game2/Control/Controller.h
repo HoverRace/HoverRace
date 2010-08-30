@@ -8,6 +8,7 @@
 #define CONTROLLER_H
 
 #include <vector>
+#include <string>
 
 #include "OIS/OIS.h"
 #include "OIS/OISInputManager.h"
@@ -18,6 +19,10 @@
 #include "OIS/OISEvents.h"
 #include "../../../engine/Util/Config.h"
 #include "../../../engine/Util/OS.h"
+#include "../../../engine/MainCharacter/MainCharacter.h"
+#include "../HoverScript/HighConsole.h"
+
+#include "ControlAction.h"
 
 #define	CTL_MOTOR_ON	1
 #define CTL_LEFT		2
@@ -31,6 +36,8 @@
 #define AXIS_X			1
 #define AXIS_Y			2
 #define AXIS_Z			3
+
+#define UNASSIGNED		-1
 
 #define SET_CONTROL		(WM_USER + 1)
 
@@ -155,6 +162,148 @@ class Controller : public KeyListener, public MouseListener, public JoyStickList
 		// Control layers.
 		typedef std::vector<InputHandlerPtr> controlLayers_t;
 		controlLayers_t controlLayers;
+};
+
+class InputEventController : public KeyListener, public MouseListener, public JoyStickListener {
+	public:
+		InputEventController(Util::OS::wnd_t mainWindow, UiHandlerPtr uiHandler);
+		~InputEventController();
+
+		// event handlers
+		bool keyPressed(const KeyEvent &arg);
+		bool keyReleased(const KeyEvent &arg);
+		bool mouseMoved(const MouseEvent &arg);
+		bool mousePressed(const MouseEvent &arg, MouseButtonID id);
+		bool mouseReleased(const MouseEvent &arg, MouseButtonID id);
+		bool buttonPressed(const JoyStickEvent &arg, int button);
+		bool buttonReleased(const JoyStickEvent &arg, int button);
+		bool axisMoved(const JoyStickEvent &arg, int axis);
+		bool povMoved(const JoyStickEvent &arg, int pov);
+
+		void Poll();
+		void HandleEvent(int hash, int value);
+
+		/***
+		 * This function tells the InputEventController to capture the next user input
+		 * event and assign the action currently residing at 'oldhash' to the hash of
+		 * the new input.  Behavior is undefined if there is no action assigned to the
+		 * old hash, so don't screw it up!  This is meant to be called by the control
+		 * assignment dialog box.
+		 */
+		void CaptureNextInput(int oldhash);
+
+		/***
+		 * Clears all of the active control bindings.  Does not delete the bindings
+		 * but simply removes them from the active action map.
+		 */
+		void ClearActionMap();
+
+		/***
+		 * Add an action map into the current action map.  The available maps are
+		 * referenced by string.  Maps include:
+		 *
+		 * "player1" ... "player4"
+		 *
+		 * @return false if the map is not found
+		 */
+		bool AddActionMap(std::string mapname);
+
+		/***
+		 * Return a vector containing the current maps.
+		 */
+		const std::vector<std::string>& GetActiveMaps();
+
+		/***
+		 * Update player mappings to point to correct MainCharacter objects, then
+		 * add them to the active action map.  If NULL is passed as any of the pointers
+		 * that map will not be added.
+		 * The "console-toggle" map will also be added.
+		 */
+		void AddPlayerMaps(int numPlayers, MainCharacter::MainCharacter** mcs);
+
+		/***
+		 * Convert a hash into an internationalized string.
+		 */
+		std::string HashToString(int hash);
+
+		/***
+		 * Set up controls for the console.
+		 */
+		void LoadConsoleMap();
+
+		/***
+		 * Update the pointer to the Console.
+		 */
+		void SetConsole(HoverScript::HighConsole* hc);
+
+	private:
+		void InitInputManager(Util::OS::wnd_t mainWindow);
+		void LoadControllerConfig();
+
+		// Auxiliary functions
+
+		// Hashing scheme (we have 32 bits but won't always use them):
+		// disabled control
+		// [000000000000000000][aaaaaaaaaaaa]
+		//   a: next available disabled id
+		// keyboard event
+		// [00000000][00][000000][aaaaaaaa][00000000]
+		//	 a: int keycode
+		// mouse event
+		// [00000000][01][00][aaaaaaaa][000000000000]: button press
+		//   a: button id
+		// [00000000][01][01][aaaa][bbbb][000000000000]: axis move
+		//	 a: axis id
+		//   b: direction
+		// joystick event
+		// [00000000][10][00][aaaaaaaa][bbbbbbbb][0000]: button press
+		//   a: joystick id
+		//   b: button id
+		// [00000000][10][01][aaaaaaaa][bbbbbbbb][0000]: slider move
+		//   a: joystick id
+		//   b: slider id
+		// [00000000][10][10][aaaaaaaa][bbbb][cccc][0000]: pov move
+		//   a: joystick id
+		//   b: direction
+		//   c: pov id
+		// [00000000][10][11][aaaaaaaa][bbbb][cccc][0000]: axis move
+		//   a: joystick id
+		//   b: axis id
+		//   c: direction
+		int GetNextAvailableDisabledHash();
+		int HashKeyboardEvent(const KeyEvent& arg);
+		int HashMouseButtonEvent(const MouseEvent& arg, MouseButtonID id);
+		int HashMouseAxisEvent(const MouseEvent& arg, int axis, int direction);
+		int HashJoystickAxisEvent(const JoyStickEvent& arg, int axis, int direction);
+		int HashJoystickSliderEvent(const JoyStickEvent& arg, int slider);
+		int HashJoystickButtonEvent(const JoyStickEvent& arg, int button);
+		int HashJoystickPovEvent(const JoyStickEvent& arg, int pov, int direction);
+
+		/***
+		 * We store several different action maps which we can choose from.
+		 * They are referenced by string.  See ClearActionMap(), AddActionMap().
+		 */
+		typedef std::map<int, ControlAction*> ActionMap;
+		ActionMap actionMap;
+		std::vector<std::string> activeMaps;
+		std::map<std::string, ActionMap> allActionMaps;
+
+		/// OIS input manager does most of the work for us
+		InputManager *mgr;
+
+		UiHandlerPtr uiHandler;
+
+		// now the input devices
+		Keyboard *kbd;
+		Mouse *mouse;
+		int numJoys;
+		JoyStick **joys;
+		int *joyIds;
+
+		int nextAvailableDisabledHash;
+
+		bool captureNextInput;
+		int  captureOldHash; /// stores the value of the hash we will be replacing when capturing input
 };
 
 } // namespace Control

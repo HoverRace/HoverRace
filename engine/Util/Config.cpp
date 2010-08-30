@@ -584,7 +584,45 @@ void Config::ResetToDefaults()
 	controls[1].weapon.kbdBinding = OIS::KC_Q;
 	controls[1].lookBack.kbdBinding = OIS::KC_I;
 
+	controls_hash[0].motorOn  = OIS::KC_LSHIFT   << 8;
+	controls_hash[0].right    = OIS::KC_RIGHT    << 8;
+	controls_hash[0].left     = OIS::KC_LEFT     << 8;
+	controls_hash[0].jump     = OIS::KC_UP       << 8;
+	controls_hash[0].fire     = OIS::KC_LCONTROL << 8;
+	controls_hash[0].brake    = OIS::KC_DOWN     << 8;
+	controls_hash[0].weapon   = OIS::KC_TAB      << 8;
+	controls_hash[0].lookBack = OIS::KC_END      << 8;
+
+	controls_hash[1].motorOn  = OIS::KC_F        << 8;
+	controls_hash[1].right    = OIS::KC_D        << 8;
+	controls_hash[1].left     = OIS::KC_A        << 8;
+	controls_hash[1].jump     = OIS::KC_S        << 8;
+	controls_hash[1].fire     = OIS::KC_R        << 8;
+	controls_hash[1].brake    = OIS::KC_W        << 8;
+	controls_hash[1].weapon   = OIS::KC_Q        << 8;
+	controls_hash[1].lookBack = OIS::KC_I        << 8;
+
+	// set these to disabled (0x0000<code>)
+	controls_hash[2].motorOn  = 0;
+	controls_hash[2].right    = 1;
+	controls_hash[2].left     = 2;
+	controls_hash[2].jump     = 3;
+	controls_hash[2].fire     = 4;
+	controls_hash[2].brake    = 5;
+	controls_hash[2].weapon   = 6;
+	controls_hash[2].lookBack = 7;
+
+	controls_hash[3].motorOn  = 8;
+	controls_hash[3].right    = 9;
+	controls_hash[3].left     = 10;
+	controls_hash[3].jump     = 11;
+	controls_hash[3].fire     = 12;
+	controls_hash[3].brake    = 13;
+	controls_hash[3].weapon   = 14;
+	controls_hash[3].lookBack = 15;
+
 	ui.console.SetKey(OIS::KC_F12);
+	ui.console_hash = OIS::KC_F12 << 8;
 
 	runtime.silent = false;
 	runtime.aieeee = false;
@@ -633,6 +671,13 @@ void Config::Load()
 				int i = 0;
 				BOOST_FOREACH(yaml::Node *node, *ctlseq) {
 					controls[i++].Load(dynamic_cast<yaml::MapNode*>(node));
+				}
+			}
+			yaml::SeqNode *ctlseqh = dynamic_cast<yaml::SeqNode*>(root->Get("controls_hash"));
+			if (ctlseqh != NULL) {
+				int i = 0;
+				BOOST_FOREACH(yaml::Node *node, *ctlseqh) {
+					controls_hash[i++].Load(dynamic_cast<yaml::MapNode*>(node));
 				}
 			}
 		}
@@ -694,6 +739,12 @@ void Config::Save()
 		emitter->StartSeq();
 		for (int i = 0; i < MAX_PLAYERS; ++i) {
 			controls[i].Save(emitter);
+		}
+		emitter->EndSeq();
+		emitter->MapKey("controls_hash");
+		emitter->StartSeq();
+		for (int i = 0; i < MAX_PLAYERS; ++i) {
+			controls_hash[i].Save(emitter);
 		}
 		emitter->EndSeq();
 
@@ -895,6 +946,36 @@ void Config::cfg_controls_t::Save(yaml::Emitter *emitter)
 	weapon.Save(emitter);
 	emitter->MapKey("lookBack");
 	lookBack.Save(emitter);
+
+	emitter->EndMap();
+}
+
+void Config::cfg_controls_hash_t::Load(yaml::MapNode* root)
+{
+	if (root == NULL) return;
+
+	READ_INT(root, motorOn, 0, INT_MAX);
+	READ_INT(root, right, 0, INT_MAX);
+	READ_INT(root, left, 0, INT_MAX);
+	READ_INT(root, jump, 0, INT_MAX);
+	READ_INT(root, fire, 0, INT_MAX);
+	READ_INT(root, brake, 0, INT_MAX);
+	READ_INT(root, weapon, 0, INT_MAX);
+	READ_INT(root, lookBack, 0, INT_MAX);
+}
+
+void Config::cfg_controls_hash_t::Save(yaml::Emitter* emitter)
+{
+	emitter->StartMap();
+
+	EMIT_VAR(emitter, motorOn);
+	EMIT_VAR(emitter, right);
+	EMIT_VAR(emitter, left);
+	EMIT_VAR(emitter, jump);
+	EMIT_VAR(emitter, fire);
+	EMIT_VAR(emitter, brake);
+	EMIT_VAR(emitter, weapon);
+	EMIT_VAR(emitter, lookBack);
 
 	emitter->EndMap();
 }
