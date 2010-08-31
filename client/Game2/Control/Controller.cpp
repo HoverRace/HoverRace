@@ -1410,7 +1410,7 @@ void InputEventController::AddPlayerMaps(int numPlayers, MainCharacter::MainChar
 			continue;
 
 		std::stringstream str;
-		str << "player" << i;
+		str << _("Player") << " " << i;
 		std::string mapname = str.str();
 		if(allActionMaps.count(mapname) != 1)
 			continue; // was not loaded for some reason...
@@ -1424,7 +1424,7 @@ void InputEventController::AddPlayerMaps(int numPlayers, MainCharacter::MainChar
 		activeMaps.push_back(mapname);
 	}
 
-	AddActionMap("console-toggle");
+	AddActionMap(_("Console"));
 }
 
 void InputEventController::InitInputManager(Util::OS::wnd_t mainWindow)
@@ -1453,7 +1453,7 @@ void InputEventController::InitInputManager(Util::OS::wnd_t mainWindow)
 
 	// we can have more than one joystick
 	numJoys = mgr->getNumberOfDevices(OISJoyStick);
-	joys = new JoyStick *[numJoys];
+	joys = new JoyStick*[numJoys];
 	joyIds = new int[numJoys];
 
 	for(int i = 0; i < numJoys; i++) {
@@ -1500,47 +1500,50 @@ void InputEventController::LoadControllerConfig()
 	for(int i = 0; i < cfg->MAX_PLAYERS; i++) {
 		// use map playerX
 		std::stringstream str;
-		str << "player" << i;
+		str << _("Player") << " " << i;
 		ActionMap& playerMap = allActionMaps[str.str()];
 
-		playerMap[cfg->controls_hash[i].brake] = new BrakeAction(NULL);
-		playerMap[cfg->controls_hash[i].fire] = new PowerupAction(NULL);
-		playerMap[cfg->controls_hash[i].jump] = new JumpAction(NULL);
-		playerMap[cfg->controls_hash[i].left] = new TurnLeftAction(NULL);
-		playerMap[cfg->controls_hash[i].lookBack] = new LookBackAction(NULL);
-		playerMap[cfg->controls_hash[i].motorOn] = new EngineAction(NULL);
-		playerMap[cfg->controls_hash[i].right] = new TurnRightAction(NULL);
-		playerMap[cfg->controls_hash[i].weapon] = new ChangeItemAction(NULL);
+		playerMap[cfg->controls_hash[i].brake] = new BrakeAction(_("Brake"), NULL);
+		playerMap[cfg->controls_hash[i].fire] = new PowerupAction(_("Fire"), NULL);
+		playerMap[cfg->controls_hash[i].jump] = new JumpAction(_("Jump"), NULL);
+		playerMap[cfg->controls_hash[i].left] = new TurnLeftAction(_("Turn Left"), NULL);
+		playerMap[cfg->controls_hash[i].lookBack] = new LookBackAction(_("Look Back"), NULL);
+		playerMap[cfg->controls_hash[i].motorOn] = new EngineAction(_("Throttle"), NULL);
+		playerMap[cfg->controls_hash[i].right] = new TurnRightAction(_("Turn Right"), NULL);
+		playerMap[cfg->controls_hash[i].weapon] = new ChangeItemAction(_("Item"), NULL);
 	}
 }
 
 void InputEventController::LoadConsoleMap()
 {
-	// add console map, which is all keys
+	// add console-keys map, which is all keys
+	// console-keys map is special because it won't appear in the configuration panel,
+	// so we don't need to internationalize the name of it.
 	for(int i = (int) OIS::KC_ESCAPE; i < (int) OIS::KC_MEDIASELECT; i++) {
 		int hash = HashKeyboardEvent(KeyEvent(NULL, (OIS::KeyCode) i, 0));
-		if(allActionMaps["console"].count(hash) > 0)
-			delete allActionMaps["console"][hash];
+		if(allActionMaps["console-keys"].count(hash) > 0)
+			delete allActionMaps["console-keys"][hash];
 
-		allActionMaps["console"][HashKeyboardEvent(KeyEvent(NULL, (OIS::KeyCode) i, 0))] =
-			new ConsoleKeyAction(NULL, (OIS::KeyCode) i);
+		allActionMaps["console-keys"][HashKeyboardEvent(KeyEvent(NULL, (OIS::KeyCode) i, 0))] =
+			new ConsoleKeyAction("" /* no name necessary */, NULL, (OIS::KeyCode) i);
 	}
 
+	std::string console = _("Console");
 	int toggleHash = Config::GetInstance()->ui.console_hash;
-	if(allActionMaps["console-toggle"].count(toggleHash) > 0)
-		delete allActionMaps["console-toggle"][toggleHash];
-	allActionMaps["console-toggle"][toggleHash] = new ConsoleToggleAction(NULL, this);
+	if(allActionMaps[console].count(toggleHash) > 0)
+		delete allActionMaps[console][toggleHash];
+	allActionMaps[console][toggleHash] = new ConsoleToggleAction(_("Toggle Console"), NULL, this);
 }
 
 void InputEventController::SetConsole(HighConsole* hc)
 {
-	for(ActionMap::iterator it = allActionMaps["console"].begin(); it != allActionMaps["console"].end(); it++) {
+	for(ActionMap::iterator it = allActionMaps["console-keys"].begin(); it != allActionMaps["console-keys"].end(); it++) {
 		ConsoleAction* x = dynamic_cast<ConsoleAction*>(it->second);
 		if(x != NULL)
 			x->SetHighConsole(hc);
 	}
 
-	for(ActionMap::iterator it = allActionMaps["console-toggle"].begin(); it != allActionMaps["console-toggle"].end(); it++) {
+	for(ActionMap::iterator it = allActionMaps[_("Console")].begin(); it != allActionMaps[_("Console")].end(); it++) {
 		ConsoleAction* x = dynamic_cast<ConsoleAction*>(it->second);
 		if(x != NULL)
 			x->SetHighConsole(hc);
