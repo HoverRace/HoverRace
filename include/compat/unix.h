@@ -23,5 +23,12 @@ struct GUID
 
 #define Int32x32To64(x,y) \
 	static_cast<int64_t>( \
-		static_cast<int64_t>(x) * static_cast<int64_t>(y));
+		static_cast<int64_t>(x) * static_cast<int64_t>(y))
+
+#define Int64ShraMod32(x,y) \
+	(static_cast<int64_t>(x) >> (y))
+
+#define MulDiv(x,y,z) \
+	static_cast<int32_t>( \
+		(static_cast<int64_t>(x) * static_cast<int64_t>(y)) / (z))
 
