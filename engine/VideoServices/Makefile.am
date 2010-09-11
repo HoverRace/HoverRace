@@ -24,5 +24,7 @@ libvideosvc_la_SOURCES = \
 	VideoBuffer.cpp \
 	VideoBuffer.h \
 	Viewport2D.cpp \
-	Viewport2D.h
+	Viewport2D.h \
+	Viewport3D.cpp \
+	Viewport3D.h
 
