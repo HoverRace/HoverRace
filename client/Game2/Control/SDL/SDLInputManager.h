@@ -32,6 +32,7 @@ The original distribution may be found at:
 #pragma once
 
 #include "OISInputManager.h"
+#include "OISFactoryCreator.h"
 #include "SDLPrereqs.h"
 
 namespace HoverRace {
@@ -42,7 +43,7 @@ namespace SDL {
 	/**
 		SDL Input Manager wrapper
 	*/
-	class SDLInputManager : public OIS::InputManager
+	class SDLInputManager : public OIS::InputManager, OIS::FactoryCreator
 	{
 	public:
 		SDLInputManager();
@@ -59,9 +60,18 @@ namespace SDL {
 		virtual int numKeyboards();
 		
 		/** @copydoc InputManager::createInputObject */
-		OIS::Object* createInputObject( OIS::Type iType, bool bufferMode );
+		OIS::Object* createObject( OIS::InputManager*, OIS::Type iType, bool bufferMode, const std::string &vendor="" );
 		/** @copydoc InputManager::destroyInputObject */
-		void destroyInputObject( OIS::Object* obj );
+		void destroyObject( OIS::Object* obj );
+
+		bool vendorExist(OIS::Type iType, const std::string &vendor);
+
+		OIS::DeviceList freeDeviceList();
+		int totalDevices(OIS::Type iType);
+		int freeDevices(OIS::Type iType);
+
+		void setKeyboardUsed(bool used) { keyboardUsed = used; }
+		void setMouseUsed(bool used) { mouseUsed = used; }
 
 		/** @copydoc InputManager::_initialize */
 		void _initialize( OIS::ParamList &paramList );
@@ -79,6 +89,9 @@ namespace SDL {
 		static const std::string iName;
 
 		bool mGrabbed;
+
+		bool keyboardUsed;
+		bool mouseUsed;
 	};
 
 }  // namespace SDL

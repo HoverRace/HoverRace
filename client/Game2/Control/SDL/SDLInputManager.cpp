@@ -45,8 +45,9 @@ using namespace OIS;
 const std::string SDLInputManager::iName = "SDL Input Wrapper";
 
 //--------------------------------------------------------------------------------//
-SDLInputManager::SDLInputManager() : InputManager("SDLInputManager"), mGrabbed(false)
+SDLInputManager::SDLInputManager() : InputManager("SDLInputManager"), mGrabbed(false), keyboardUsed(false), mouseUsed(false)
 {
+	mFactories.push_back(this);
 }
 
 //--------------------------------------------------------------------------------//
@@ -95,7 +96,7 @@ int SDLInputManager::numKeyboards()
 }
 
 //----------------------------------------------------------------------------//
-Object* SDLInputManager::createInputObject( Type iType, bool bufferMode )
+Object* SDLInputManager::createObject( OIS::InputManager *creator, Type iType, bool bufferMode, const std::string &vendor )
 {
 	Object* obj = 0;
 	
@@ -119,11 +120,43 @@ Object* SDLInputManager::createInputObject( Type iType, bool bufferMode )
 }
 
 //----------------------------------------------------------------------------//
-void SDLInputManager::destroyInputObject( Object* obj )
+void SDLInputManager::destroyObject( Object* obj )
 {
 	if( obj == 0 ) return;
 
 	delete obj;
+}
+
+bool SDLInputManager::vendorExist(Type iType, const std::string &vendor)
+{
+	return (iType == OISKeyboard || iType == OISMouse) && vendor == mInputSystemName;
+}
+
+DeviceList SDLInputManager::freeDeviceList()
+{
+	DeviceList retv;
+
+	if (!keyboardUsed)
+		retv.insert(DeviceList::value_type(OISKeyboard, mInputSystemName));
+
+	if (!mouseUsed)
+		retv.insert(DeviceList::value_type(OISMouse, mInputSystemName));
+
+	return retv;
+}
+
+int SDLInputManager::totalDevices(Type iType)
+{
+	return (iType == OISKeyboard || iType == OISMouse) ? 1 : 0;
+}
+
+int SDLInputManager::freeDevices(Type iType)
+{
+	switch (iType) {
+		case OISKeyboard: return keyboardUsed ? 0 : 1;
+		case OISMouse: return mouseUsed ? 0 : 1;
+		default: return 0;
+	}
 }
 
 }  // namespace SDL

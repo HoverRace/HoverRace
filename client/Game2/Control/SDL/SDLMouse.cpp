@@ -49,6 +49,8 @@ SDLMouse::SDLMouse( OIS::InputManager *creator, bool buffered ) :
 	mBuffered = buffered;
 	mType = OISMouse;
 	mListener = 0;
+
+	static_cast<SDLInputManager*>(creator)->setMouseUsed(true);
 }
 
 //-------------------------------------------------------------------//
@@ -70,6 +72,7 @@ SDLMouse::~SDLMouse()
 	_setVisible(true);
 
 	static_cast<SDLInputManager*>(mCreator)->_setGrabMode(false);
+	static_cast<SDLInputManager*>(mCreator)->setMouseUsed(false);
 }
 
 //-------------------------------------------------------------------//

@@ -52,6 +52,8 @@ SDLKeyboard::SDLKeyboard( OIS::InputManager *creator, bool buffered ) :
 
 	//Clear our keyboard state buffer
 	memset( &KeyBuffer, 0, 256 );
+
+	static_cast<SDLInputManager*>(creator)->setKeyboardUsed(true);
 }
 
 //-------------------------------------------------------------------//
@@ -170,6 +172,7 @@ void SDLKeyboard::_initialize()
 //-------------------------------------------------------------------//
 SDLKeyboard::~SDLKeyboard()
 {
+	static_cast<SDLInputManager*>(mCreator)->setKeyboardUsed(false);
 }
 
 //-------------------------------------------------------------------//
