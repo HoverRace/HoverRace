@@ -36,6 +36,7 @@
 #include "../../engine/Util/Str.h"
 #include "../../engine/Util/WorldCoordinates.h"
 #include "../../engine/VideoServices/SoundServer.h"
+#include "../../engine/VideoServices/VideoBuffer.h"
 
 #include "Control/Controller.h"
 #include "Control/UiHandler.h"
@@ -103,6 +104,12 @@ ClientApp::ClientApp() :
 		sysEnv->RunScript(initScript);
 	}
 
+	// With SDL we can only get the desktop resolution before the first call to
+	// SDL_SetVideoMode().
+	const SDL_VideoInfo *videoInfo = SDL_GetVideoInfo();
+	int desktopWidth = videoInfo->current_w;
+	int desktopHeight = videoInfo->current_h;
+
 	// Create the main window and SDL surface.
 	if (SDL_SetVideoMode(cfg->video.xRes, cfg->video.yRes, 8,
 		SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE) == NULL)
@@ -143,6 +150,10 @@ ClientApp::ClientApp() :
 #		endif
 	}
 
+	videoBuf = new VideoServices::VideoBuffer(mainWnd,
+		cfg->video.gamma, cfg->video.contrast, cfg->video.brightness);
+	videoBuf->NotifyDesktopModeChange(desktopWidth, desktopHeight);
+
 	//FIXME: OIS conflicts with SDL on Linux since they both try to
 	//       listen for input events.
 #ifdef _WIN32
@@ -157,6 +168,7 @@ ClientApp::~ClientApp()
 	delete sysEnv;
 	delete gamePeer;
 	delete scripting;
+	delete videoBuf;
 	delete controller;
 
 	// Engine shutdown.
