@@ -169,7 +169,11 @@ ClientApp::~ClientApp()
 	delete gamePeer;
 	delete scripting;
 	delete videoBuf;
+	//FIXME: OIS conflicts with SDL on Linux since they both try to
+	//       listen for input events.
+#ifdef _WIN32
 	delete controller;
+#endif
 
 	// Engine shutdown.
 #ifdef _WIN32
@@ -232,8 +236,14 @@ void ClientApp::AssignPalette()
 
 Control::Controller *ClientApp::ReloadController()
 {
+	//FIXME: OIS conflicts with SDL on Linux since they both try to
+	//       listen for input events.
+#ifdef _WIN32
 	delete controller;
 	return (controller = new Controller(mainWnd, uiInput));
+#else
+	return NULL;
+#endif
 }
 
 }  // namespace HoverScript
