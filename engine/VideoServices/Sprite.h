@@ -20,16 +20,19 @@
 // and limitations under the License.
 //
 
-#ifndef MR_SPRITE_H
-#define MR_SPRITE_H
+#pragma once
 
 #include "Viewport2D.h"
 #include "../Util/DllObjectFactory.h"
 
-#ifdef MR_ENGINE
-#define MR_DllDeclare   __declspec( dllexport )
+#ifdef _WIN32
+#	ifdef MR_ENGINE
+#		define MR_DllDeclare   __declspec( dllexport )
+#	else
+#		define MR_DllDeclare   __declspec( dllimport )
+#	endif
 #else
-#define MR_DllDeclare   __declspec( dllimport )
+#	define MR_DllDeclare
 #endif
 
 namespace HoverRace {
@@ -84,4 +87,3 @@ MR_DllDeclare char Ascii2Simple(char pSrc);
 }  // namespace HoverRace
 
 #undef MR_DllDeclare
-#endif

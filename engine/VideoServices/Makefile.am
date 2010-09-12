@@ -19,6 +19,8 @@ libvideosvc_la_SOURCES = \
 	Patch.h \
 	SoundServer.cpp \
 	SoundServer.h \
+	Sprite.cpp \
+	Sprite.h \
 	StaticText.cpp \
 	StaticText.h \
 	VideoBuffer.cpp \
