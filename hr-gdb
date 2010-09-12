@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# hr-gdb
+#   Start up HoverRace in GDB.
+
+cd `dirname "$0"`
+
+echo '==> Updating resources...'
+( cd share ; make ) || exit 1
+
+echo '==> Updating locales...'
+( cd po ; make update-gmo ) || exit 1
+build/mklocale.sh po/*.gmo || exit 1
+
+echo '==> Launching HoverRace in GDB!'
+libtool --mode=execute gdb client/Game2/hoverrace "$@"
