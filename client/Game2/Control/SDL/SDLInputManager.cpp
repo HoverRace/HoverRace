@@ -62,7 +62,6 @@ void SDLInputManager::_initialize( ParamList &paramList )
 	if( flags == 0 )
 		OIS_EXCEPT( E_General, "SDLInputManager::SDLInputManager >> SDL Not Initialized already!");
 
-	//Ok, now we have DirectInput, parse whatever extra settings were sent to us
 	_parseConfigSettings( paramList );
 	_enumerateDevices();
 }
@@ -103,7 +102,7 @@ Object* SDLInputManager::createObject( OIS::InputManager *creator, Type iType, b
 	switch( iType )
 	{
 		case OISKeyboard: obj = new SDLKeyboard( this, bufferMode ); break;
-		case OISMouse: obj = new SDLMouse( this, bufferMode ); break;
+		case OISMouse: obj = new SDLMouse( this, bufferMode, false ); break;
 		case OISJoyStick: 
 		default: OIS_EXCEPT( E_InputDeviceNotSupported, "Type not implemented");
 	}

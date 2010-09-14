@@ -42,7 +42,7 @@ namespace SDL {
 	class SDLMouse : public OIS::Mouse
 	{
 	public:
-		SDLMouse( OIS::InputManager*, bool buffered );
+		SDLMouse( OIS::InputManager*, bool buffered, bool grab );
 		virtual ~SDLMouse();
 		
 		/** @copydoc Object::setBuffered */
@@ -61,6 +61,7 @@ namespace SDL {
 		void _setVisible(bool visible);
 
 	protected:
+		bool grab;
 		bool mGrabbed;
 		bool mRegainFocus;
 	};

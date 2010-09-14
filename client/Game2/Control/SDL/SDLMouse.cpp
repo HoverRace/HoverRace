@@ -42,9 +42,9 @@ namespace SDL {
 using namespace OIS;
 
 //-------------------------------------------------------------------//
-SDLMouse::SDLMouse( OIS::InputManager *creator, bool buffered ) :
+SDLMouse::SDLMouse( OIS::InputManager *creator, bool buffered, bool grab ) :
 	Mouse(creator->inputSystemName(), buffered, 0, creator),
-	mGrabbed(false), mRegainFocus(false)
+	grab(grab), mGrabbed(false), mRegainFocus(false)
 {
 	mBuffered = buffered;
 	mType = OISMouse;
@@ -60,18 +60,24 @@ void SDLMouse::_initialize()
 	mState.clear();
 	mRegainFocus = false;
 
-	_setGrab(true);
 	_setVisible(false);
-	static_cast<SDLInputManager*>(mCreator)->_setGrabMode(true);
+
+	if (grab) {
+		_setGrab(true);
+		static_cast<SDLInputManager*>(mCreator)->_setGrabMode(true);
+	}
 }
 
 //-------------------------------------------------------------------//
 SDLMouse::~SDLMouse()
 {
-	_setGrab(true);
+	if (grab) {
+		_setGrab(false);
+		static_cast<SDLInputManager*>(mCreator)->_setGrabMode(false);
+	}
+
 	_setVisible(true);
 
-	static_cast<SDLInputManager*>(mCreator)->_setGrabMode(false);
 	static_cast<SDLInputManager*>(mCreator)->setMouseUsed(false);
 }
 
