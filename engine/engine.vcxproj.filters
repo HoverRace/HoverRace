@@ -399,9 +399,6 @@
     <ClInclude Include="ObjFacTools\FreeElementBaseRenderer.h">
       <Filter>ObjFacTools</Filter>
     </ClInclude>
-    <ClInclude Include="ObjFacTools\MovementSpec.h">
-      <Filter>ObjFacTools</Filter>
-    </ClInclude>
     <ClInclude Include="ObjFacTools\ResActor.h">
       <Filter>ObjFacTools</Filter>
     </ClInclude>
