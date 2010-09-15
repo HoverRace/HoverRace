@@ -1,16 +1,19 @@
 // ResActor.h
 //
 
-#ifndef MR_RES_ACTOR_H
-#define MR_RES_ACTOR_H
+#pragma once
 
 #include "ResBitmap.h"
 #include "../VideoServices/Viewport3D.h"
 
-#ifdef MR_ENGINE
-#define MR_DllDeclare   __declspec( dllexport )
+#ifdef _WIN32
+#	ifdef MR_ENGINE
+#		define MR_DllDeclare   __declspec( dllexport )
+#	else
+#		define MR_DllDeclare   __declspec( dllimport )
+#	endif
 #else
-#define MR_DllDeclare   __declspec( dllimport )
+#	define MR_DllDeclare
 #endif
 
 namespace HoverRace {
@@ -119,4 +122,3 @@ class ResActor
 }  // namespace HoverRace
 
 #undef MR_DllDeclare
-#endif
