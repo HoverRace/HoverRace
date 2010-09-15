@@ -60,7 +60,7 @@ namespace {
 			T *val = new T(key);
 			NewRes(val, os, self);
 
-			res.insert(std::map<int, T*>::value_type(key, val));
+			res.insert(typename std::map<int, T*>::value_type(key, val));
 		}
 	}
 }
