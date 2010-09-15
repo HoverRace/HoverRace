@@ -78,7 +78,7 @@ class Missile : public ObjFacTools::FreeElementBase, protected Model::CylinderSh
 		void SetNetState(int pDataLen, const MR_UInt8 * pData);
 
 		// Sounds
-		void Missile::PlayExternalSounds(int pDB, int pPan);
+		void PlayExternalSounds(int pDB, int pPan);
 };
 
 }  // namespace ObjFac1
