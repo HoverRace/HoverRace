@@ -26,16 +26,19 @@
 //
 //
 
-#ifndef FREE_ELEMENT_BASE_H
-#define FREE_ELEMENT_BASE_H
+#pragma once
 
 #include "../Model/MazeElement.h"
 #include "ResourceLib.h"
 
-#ifdef MR_ENGINE
-#define MR_DllDeclare   __declspec( dllexport )
+#ifdef _WIN32
+#	ifdef MR_ENGINE
+#		define MR_DllDeclare   __declspec( dllexport )
+#	else
+#		define MR_DllDeclare   __declspec( dllimport )
+#	endif
 #else
-#define MR_DllDeclare   __declspec( dllimport )
+#	define MR_DllDeclare
 #endif
 
 namespace HoverRace {
@@ -61,4 +64,3 @@ class FreeElementBase : public HoverRace::Model::FreeElement
 }  // namespace HoverRace
 
 #undef MR_DllDeclare
-#endif

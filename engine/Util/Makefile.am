@@ -9,6 +9,8 @@ libutil_la_SOURCES = \
 	BitPacking.h \
 	Config.cpp \
 	Config.h \
+	DllObjectFactory.cpp \
+	DllObjectFactory.h \
 	FastArray.h \
 	FastFifo.h \
 	FuzzyLogic.cpp \

@@ -28,10 +28,14 @@
 #include "../Util/FastFifo.h"
 #include "../Util/BitPacking.h"
 
-#ifdef MR_ENGINE
-#define MR_DllDeclare   __declspec( dllexport )
+#ifdef _WIN32
+#	ifdef MR_ENGINE
+#		define MR_DllDeclare   __declspec( dllexport )
+#	else
+#		define MR_DllDeclare   __declspec( dllimport )
+#	endif
 #else
-#define MR_DllDeclare   __declspec( dllimport )
+#	define MR_DllDeclare
 #endif
 
 namespace HoverRace {

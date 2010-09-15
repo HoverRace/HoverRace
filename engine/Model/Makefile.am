@@ -7,6 +7,12 @@ libmodel_la_SOURCES = \
 	ConcreteShape.h \
 	ContactEffect.cpp \
 	ContactEffect.h \
+	Level.cpp \
+	Level.h \
+	MazeElement.cpp \
+	MazeElement.h \
+	ObstacleCollisionReport.cpp \
+	ObstacleCollisionReport.h \
 	PhysicalCollision.cpp \
 	PhysicalCollision.h \
 	RaceEffects.h \

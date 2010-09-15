@@ -26,17 +26,20 @@
 //
 //
 
-#ifndef FREE_ELEMENT_RENDERER_BASE_H
-#define FREE_ELEMENT_RENDERER_BASE_H
+#pragma once
 
 #include "../VideoServices/Viewport3D.h"
 #include "../Util/DllObjectFactory.h"
 #include "ResourceLib.h"
 
-#ifdef MR_ENGINE
-#define MR_DllDeclare   __declspec( dllexport )
+#ifdef _WIN32
+#	ifdef MR_ENGINE
+#		define MR_DllDeclare   __declspec( dllexport )
+#	else
+#		define MR_DllDeclare   __declspec( dllimport )
+#	endif
 #else
-#define MR_DllDeclare   __declspec( dllimport )
+#	define MR_DllDeclare
 #endif
 
 namespace HoverRace {
@@ -63,4 +66,3 @@ class FreeElementBaseRenderer : public Util::ObjectFromFactory
 }  // namespace HoverRace
 
 #undef MR_DllDeclare
-#endif
