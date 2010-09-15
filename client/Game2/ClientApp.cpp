@@ -25,14 +25,10 @@
 #include <SDL/SDL_syswm.h>
 
 #include "../../engine/Exception.h"
-#ifdef _WIN32
 #include "../../engine/MainCharacter/MainCharacter.h"
-#endif
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/FuzzyLogic.h"
-#ifdef _WIN32
 #include "../../engine/Util/DllObjectFactory.h"
-#endif
 #include "../../engine/Util/Str.h"
 #include "../../engine/Util/WorldCoordinates.h"
 #include "../../engine/VideoServices/SoundServer.h"
@@ -86,10 +82,8 @@ ClientApp::ClientApp() :
 	MR_InitTrigoTables();
 	MR_InitFuzzyModule();
 	SOUNDSERVER_INIT(NULL);
-#ifdef _WIN32
 	DllObjectFactory::Init();
 	MainCharacter::MainCharacter::RegisterFactory();
-#endif
 
 	if (SDL_Init(SDL_INIT_VIDEO) == -1)
 		throw Exception("SDL initialization failed");
@@ -168,9 +162,7 @@ ClientApp::~ClientApp()
 	delete controller;
 
 	// Engine shutdown.
-#ifdef _WIN32
 	DllObjectFactory::Clean(FALSE);
-#endif
 	SoundServer::Close();
 
 	SDL_Quit();
