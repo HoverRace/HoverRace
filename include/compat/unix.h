@@ -6,6 +6,7 @@
 
 #define ASSERT(e) assert(e)
 
+#define BYTE unsigned char
 #define BOOL int
 #define DWORD unsigned int
 #define TRUE 1
