@@ -466,24 +466,28 @@ void Level::GetRoomContact(int pRoom, const ShapeInterface * pShape, RoomContact
 {
 
 	// Verify if the current room contains the requires shape
-	DetectRoomContact(pShape, &SectionShape(&(mRoomList[pRoom])), pAnswer);
+	SectionShape room(&(mRoomList[pRoom]));
+	DetectRoomContact(pShape, &room, pAnswer);
 }
 
 BOOL Level::GetRoomWallContactOrientation(int pRoom, int pWall, const ShapeInterface * pShape, MR_Angle & pAnswer)
 {
-	return GetWallForceLongitude(pShape, &SectionShape(&(mRoomList[pRoom])), pWall, pAnswer);
+	SectionShape room(&(mRoomList[pRoom]));
+	return GetWallForceLongitude(pShape, &room, pWall, pAnswer);
 }
 
 BOOL Level::GetFeatureContact(int pFeature, const ShapeInterface * pShape, ContactSpec & pAnswer)
 {
 
 	// Verify if the current room contains the requires shape
-	return DetectFeatureContact(pShape, &SectionShape(&(mFeatureList[pFeature])), pAnswer);
+	SectionShape feature(&(mFeatureList[pFeature]));
+	return DetectFeatureContact(pShape, &feature, pAnswer);
 }
 
 BOOL Level::GetFeatureContactOrientation(int pFeature, const ShapeInterface * pShape, MR_Angle & pAnswer)
 {
-	return GetFeatureForceLongitude(pShape, &SectionShape(&(mFeatureList[pFeature])), pAnswer);
+	SectionShape feature(&(mFeatureList[pFeature]));
+	return GetFeatureForceLongitude(pShape, &feature, pAnswer);
 }
 
 // Sub classes implementation
