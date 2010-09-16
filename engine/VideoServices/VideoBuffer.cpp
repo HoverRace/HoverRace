@@ -270,9 +270,9 @@ VideoBuffer::VideoBuffer(Util::OS::wnd_t pWindow, double pGamma, double pContras
 	mBackBuffer = NULL;
 	mPalette = NULL;
 	mClipper = NULL;
+#endif
 	mBackPalette = NULL;
 	mPackedPalette = NULL;
-#endif
 
 	mZBuffer = NULL;
 	mBuffer = NULL;
@@ -541,12 +541,7 @@ void VideoBuffer::DeleteInternalSurfaces()
 
 void VideoBuffer::CreatePalette(double pGamma, double pContrast, double pBrightness)
 {
-#ifdef WITH_SDL
-	throw UnimplementedExn("VideoBuffer::CreatePalette(double,double,double)");
-#else
 	PRINT_LOG("CreatePalette");
-
-	PALETTEENTRY lPalette[256];
 
 	int lCounter;
 
@@ -577,6 +572,12 @@ void VideoBuffer::CreatePalette(double pGamma, double pContrast, double pBrightn
 	if(mBrightness < 0.3) {
 		mBrightness = 0.3;
 	}
+
+#ifdef WITH_SDL
+	throw UnimplementedExn("VideoBuffer::CreatePalette(double,double,double)");
+#else
+	PALETTEENTRY lPalette[256];
+
 	// Clean existing pallette
 	if(mPalette != NULL) {
 		mPalette->Release();
@@ -649,12 +650,8 @@ void VideoBuffer::GetPaletteAttrib(double &pGamma, double &pContrast, double &pB
 
 void VideoBuffer::SetBackPalette(MR_UInt8 * pPalette)
 {
-#ifdef WITH_SDL
-	throw UnimplementedExn("VideoBuffer::SetBackPalette(MR_UInt8*)");
-#else
 	delete[]mBackPalette;
 	mBackPalette = pPalette;
-#endif
 
 	CreatePalette(mGamma, mContrast, mBrightness);
 }
