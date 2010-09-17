@@ -184,10 +184,42 @@ void ClientApp::RefreshTitleBar()
 	SDL_WM_SetCaption(oss.str().c_str(), NULL);
 }
 
+/**
+ * Draws a color grid to debug the color palette.
+ */
+void ClientApp::DrawPalette()
+{
+	SDL_Surface *surface = SDL_GetVideoSurface();
+
+	if (SDL_MUSTLOCK(surface)) {
+		if (SDL_LockSurface(surface) < 0) {
+			throw Exception("Unable to lock surface");
+		}
+	}
+
+	MR_UInt8 *buf = static_cast<MR_UInt8*>(surface->pixels);
+	for (int y = 0; y < 256; y++, buf += surface->pitch) {
+		if ((y % 16) == 0) continue;
+		MR_UInt8 *cur = buf;
+		for (int x = 0; x < 256; x++, cur++) {
+			if ((x % 16) == 0) continue;
+			*cur = ((y >> 4) << 4) + (x >> 4);
+		}
+	}
+
+	if (SDL_MUSTLOCK(surface)) {
+		SDL_UnlockSurface(surface);
+	}
+
+	SDL_Flip(surface);
+}
+
 void ClientApp::MainLoop()
 {
 	bool quit = false;
 	SDL_Event evt;
+
+	DrawPalette();
 
 	while (!quit) {
 		while (SDL_PollEvent(&evt)) {

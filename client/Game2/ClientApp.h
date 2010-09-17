@@ -58,6 +58,7 @@ class ClientApp : public GameDirector
 
 	private:
 		void RefreshTitleBar();
+		void DrawPalette();
 
 	public:
 		void MainLoop();
