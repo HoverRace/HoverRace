@@ -23,7 +23,6 @@
 #include "StdAfx.h"
 
 #include "VideoBuffer.h"
-#include "ColorPalette.h"
 
 #include "../Exception.h"
 #include "../Util/Profiler.h"
@@ -257,7 +256,8 @@ void PrintLog(const char *pFormat, ...);
 static GUID zeroGuid = { 0, 0, 0, { 0, 0, 0, 0, 0, 0, 0, 0 } };
 
 VideoBuffer::VideoBuffer(Util::OS::wnd_t pWindow, double pGamma, double pContrast, double pBrightness) :
-	desktopWidth(0), desktopHeight(0)
+	desktopWidth(0), desktopHeight(0),
+	mBackPalette(NULL)
 {
 	OPEN_LOG();
 	PRINT_LOG("VIDEO_BUFFER_CREATION");
@@ -270,9 +270,8 @@ VideoBuffer::VideoBuffer(Util::OS::wnd_t pWindow, double pGamma, double pContras
 	mBackBuffer = NULL;
 	mPalette = NULL;
 	mClipper = NULL;
-#endif
-	mBackPalette = NULL;
 	mPackedPalette = NULL;
+#endif
 
 	mZBuffer = NULL;
 	mBuffer = NULL;
@@ -350,9 +349,12 @@ void VideoBuffer::NotifyDesktopModeChange(int width, int height)
 	desktopHeight = height;
 }
 
-DWORD VideoBuffer::PackRGB(DWORD r, DWORD g, DWORD b)
+DWORD VideoBuffer::PackRGB(ColorPalette::paletteEntry_t &pal)
 {
-	return mRChan.Pack(r) | mGChan.Pack(g) | mBChan.Pack(b);
+	return
+		mRChan.Pack(ColorPalette::PalR(pal)) |
+		mGChan.Pack(ColorPalette::PalG(pal)) |
+		mBChan.Pack(ColorPalette::PalB(pal));
 }
 
 static inline bool guidEqual(const GUID &a, const GUID &b)
@@ -543,6 +545,8 @@ void VideoBuffer::CreatePalette(double pGamma, double pContrast, double pBrightn
 {
 	PRINT_LOG("CreatePalette");
 
+	ColorPalette::paletteEntry_t lPalette[256];
+
 	int lCounter;
 
 	mGamma = pGamma;
@@ -574,71 +578,80 @@ void VideoBuffer::CreatePalette(double pGamma, double pContrast, double pBrightn
 	}
 
 #ifdef WITH_SDL
-	throw UnimplementedExn("VideoBuffer::CreatePalette(double,double,double)");
+	memset(mPalette, 0, sizeof(ColorPalette::paletteEntry_t) * 256);
 #else
-	PALETTEENTRY lPalette[256];
-
-	// Clean existing pallette
+	// Clean existing palette
 	if(mPalette != NULL) {
 		mPalette->Release();
 		mPalette = NULL;
 	}
 
-	if(mDirectDraw != NULL) {
-		// Initialize with system colors (Ignore errors)
-		HDC hdc = GetDC(NULL);
-		if(GetDeviceCaps(hdc, RASTERCAPS) & RC_PALETTE) {
-			// get the current windows colors.
-			GetSystemPaletteEntries(hdc, 0, 256, lPalette);
-		}
-		else {
-			// ASSERT( FALSE );
-		}
-		ReleaseDC(NULL, hdc);
+	if (mDirectDraw == NULL) return;
 
-		// Add our own entries
-		PALETTEENTRY *lOurEntries = ColorPalette::GetColors(1.0 / mGamma, mContrast * mBrightness, mBrightness - (mContrast * mBrightness));
+	// Initialize with system colors (Ignore errors)
+	HDC hdc = GetDC(NULL);
+	if(GetDeviceCaps(hdc, RASTERCAPS) & RC_PALETTE) {
+		// get the current windows colors.
+		GetSystemPaletteEntries(hdc, 0, 256, lPalette);
+	}
+	else {
+		// ASSERT( FALSE );
+	}
+	ReleaseDC(NULL, hdc);
+#endif
 
-		for(lCounter = 0; lCounter < MR_BASIC_COLORS; lCounter++) {
-			lPalette[MR_RESERVED_COLORS_BEGINNING + lCounter] = lOurEntries[lCounter];
-												  //|*/PC_EXPLICIT; //lPalette[ 0 ].peFlags;
-			lPalette[MR_RESERVED_COLORS_BEGINNING + lCounter].peFlags = PC_NOCOLLAPSE;
-		}
-		delete[]lOurEntries;
+	// Add our own entries
+	ColorPalette::paletteEntry_t *lOurEntries = ColorPalette::GetColors(1.0 / mGamma, mContrast * mBrightness, mBrightness - (mContrast * mBrightness));
 
-		if(mBackPalette != NULL) {
-			for(lCounter = 0; lCounter < MR_BACK_COLORS; lCounter++) {
-				lPalette[MR_RESERVED_COLORS_BEGINNING + MR_BASIC_COLORS + lCounter] = ColorPalette::ConvertColor(mBackPalette[lCounter * 3], mBackPalette[lCounter * 3 + 1], mBackPalette[lCounter * 3 + 2], 1.0 / mGamma, mContrast * mBrightness, mBrightness - (mContrast * mBrightness));
-												  //|*/PC_EXPLICIT; //lPalette[ 0 ].peFlags;
-				lPalette[MR_RESERVED_COLORS_BEGINNING + MR_BASIC_COLORS + lCounter].peFlags = PC_NOCOLLAPSE;
+	for(lCounter = 0; lCounter < MR_BASIC_COLORS; lCounter++) {
+		lPalette[MR_RESERVED_COLORS_BEGINNING + lCounter] = lOurEntries[lCounter];
+#ifndef WITH_SDL
+												//|*/PC_EXPLICIT; //lPalette[ 0 ].peFlags;
+		lPalette[MR_RESERVED_COLORS_BEGINNING + lCounter].peFlags = PC_NOCOLLAPSE;
+#endif
+	}
+	delete[] lOurEntries;
 
-			}
+	if(mBackPalette != NULL) {
+		for(lCounter = 0; lCounter < MR_BACK_COLORS; lCounter++) {
+			lPalette[MR_RESERVED_COLORS_BEGINNING + MR_BASIC_COLORS + lCounter] =
+				ColorPalette::ConvertColor(mBackPalette[lCounter * 3], mBackPalette[lCounter * 3 + 1], mBackPalette[lCounter * 3 + 2], 1.0 / mGamma, mContrast * mBrightness, mBrightness - (mContrast * mBrightness));
+#ifndef WITH_SDL
+												//|*/PC_EXPLICIT; //lPalette[ 0 ].peFlags;
+			lPalette[MR_RESERVED_COLORS_BEGINNING + MR_BASIC_COLORS + lCounter].peFlags = PC_NOCOLLAPSE;
+#endif
 		}
-
-		for(lCounter = 0; lCounter < MR_RESERVED_COLORS_BEGINNING; lCounter++) {
-			lPalette[lCounter].peFlags = 0;		  //PC_NOCOLLAPSE; //lPalette[ 0 ].peFlags;
-		}
-
-		// Generate the packed palette.
-		if(mBpp > 8) {
-			if(mPackedPalette == NULL) {
-				mPackedPalette = new DWORD[256];
-			}
-			for(int i = 0; i < 256; i++) {
-				mPackedPalette[i] = PackRGB(lPalette[i].peRed, lPalette[i].peGreen, lPalette[i].peBlue);
-				PRINT_LOG("Palette entry %d is %08xd", i, mPackedPalette[i]);
-			}
-		}
-		// Create the palette
-		if(DD_CALL(mDirectDraw->CreatePalette(DDPCAPS_8BIT /*|DDPCAPS_ALLOW256 */ , lPalette, &mPalette, NULL)) != DD_OK) {
-			ASSERT(FALSE);
-			mPalette = NULL;
-		}
-		// Assign the palette to the existing buffers
-		// AssignPalette();
 	}
 
+#ifndef WITH_SDL
+	for(lCounter = 0; lCounter < MR_RESERVED_COLORS_BEGINNING; lCounter++) {
+		lPalette[lCounter].peFlags = 0;		  //PC_NOCOLLAPSE; //lPalette[ 0 ].peFlags;
+	}
 #endif
+
+	// Generate the packed palette.
+	if(mBpp > 8) {
+		if(mPackedPalette == NULL) {
+			mPackedPalette = new DWORD[256];
+		}
+		for(int i = 0; i < 256; i++) {
+			mPackedPalette[i] = PackRGB(lPalette[i]);
+			PRINT_LOG("Palette entry %d is %08xd", i, mPackedPalette[i]);
+		}
+	}
+
+	// Create the palette
+#ifdef WITH_SDL
+	memcpy(mPalette, lPalette, 256 * sizeof(ColorPalette::paletteEntry_t));
+#else
+	if(DD_CALL(mDirectDraw->CreatePalette(DDPCAPS_8BIT /*|DDPCAPS_ALLOW256 */ , lPalette, &mPalette, NULL)) != DD_OK) {
+		ASSERT(FALSE);
+		mPalette = NULL;
+	}
+#endif
+
+	// Assign the palette to the existing buffers
+	// AssignPalette();
 }
 
 void VideoBuffer::GetPaletteAttrib(double &pGamma, double &pContrast, double &pBrightness)
@@ -658,11 +671,14 @@ void VideoBuffer::SetBackPalette(MR_UInt8 * pPalette)
 
 void VideoBuffer::AssignPalette()
 {
-#ifdef WITH_SDL
-	throw UnimplementedExn("Unimplemented: VideoBuffer::AssignPalette()");
-#else
 	PRINT_LOG("AssignPalette");
 
+#ifdef WITH_SDL
+	SDL_Surface *surface = SDL_GetVideoSurface();
+	if (surface != NULL) {
+		SDL_SetPalette(surface, SDL_PHYSPAL, mPalette, 0, 256);
+	}
+#else
 	// Currently only work in 8bit mode
 	if((mFrontBuffer != NULL) && (mPalette != NULL)) {
 		DD_CALL(mFrontBuffer->SetPalette(mPalette));

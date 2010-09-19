@@ -31,6 +31,7 @@
 
 #include "../Util/MR_Types.h"
 #include "../Util/OS.h"
+#include "ColorPalette.h"
 
 #ifdef _WIN32
 #	ifdef MR_ENGINE
@@ -53,6 +54,7 @@ class VideoBuffer
 		int desktopWidth;
 		int desktopHeight;
 #	ifdef WITH_SDL
+		ColorPalette::paletteEntry_t mPalette[256];
 #	else
 		HWND mWindow;
 		HINSTANCE directDrawInst;
@@ -142,7 +144,7 @@ class VideoBuffer
 		double mContrast;
 		double mBrightness;
 
-		DWORD PackRGB(DWORD r, DWORD g, DWORD b);
+		DWORD PackRGB(ColorPalette::paletteEntry_t &pal);
 
 #	ifndef WITH_SDL
 		bool InitDirectDraw(GUID *monitor, bool newFullscreen);

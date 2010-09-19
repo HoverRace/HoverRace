@@ -148,6 +148,10 @@ ClientApp::ClientApp() :
 		cfg->video.gamma, cfg->video.contrast, cfg->video.brightness);
 	videoBuf->NotifyDesktopModeChange(desktopWidth, desktopHeight);
 
+	videoBuf->CreatePalette(
+		cfg->video.gamma, cfg->video.contrast, cfg->video.brightness);
+	videoBuf->AssignPalette();
+
 	controller = new Controller(mainWnd, uiInput);
 
 	RefreshTitleBar();
