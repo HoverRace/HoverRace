@@ -545,7 +545,7 @@ void VideoBuffer::CreatePalette(double pGamma, double pContrast, double pBrightn
 {
 	PRINT_LOG("CreatePalette");
 
-	ColorPalette::paletteEntry_t lPalette[256];
+	ColorPalette::paletteEntry_t lPalette[256] = { 0 };
 
 	int lCounter;
 
@@ -577,9 +577,7 @@ void VideoBuffer::CreatePalette(double pGamma, double pContrast, double pBrightn
 		mBrightness = 0.3;
 	}
 
-#ifdef WITH_SDL
-	memset(mPalette, 0, sizeof(ColorPalette::paletteEntry_t) * 256);
-#else
+#ifndef WITH_SDL
 	// Clean existing palette
 	if(mPalette != NULL) {
 		mPalette->Release();
