@@ -67,8 +67,14 @@ extern int basicPaletteSize;
 
 #ifdef WITH_SDL
 	typedef SDL_Color paletteEntry_t;
+	inline MR_UInt8 &PalR(paletteEntry_t &ent) { return ent.r; }
+	inline MR_UInt8 &PalG(paletteEntry_t &ent) { return ent.g; }
+	inline MR_UInt8 &PalB(paletteEntry_t &ent) { return ent.b; }
 #else
 	typedef PALETTEENTRY paletteEntry_t;
+	inline MR_UInt8 &PalR(paletteEntry_t &ent) { return ent.peRed; }
+	inline MR_UInt8 &PalG(paletteEntry_t &ent) { return ent.peGreen; }
+	inline MR_UInt8 &PalB(paletteEntry_t &ent) { return ent.peBlue; }
 #endif
 
 MR_DllDeclare paletteEntry_t *GetColors(double pGamma, double pIntensity = 0.8, double pIntensityBase = 0.0);
