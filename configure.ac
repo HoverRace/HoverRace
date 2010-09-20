@@ -88,7 +88,6 @@ AC_CONFIG_FILES([
 	engine/Parcel/Makefile
 	engine/Script/Makefile
 	engine/Util/Makefile
-	engine/Util/yaml/Makefile
 	engine/VideoServices/Makefile
 	share/Makefile
 	po/Makefile.in
