@@ -8,7 +8,7 @@ hoverrace_LDADD = \
 	../../engine/libhoverrace-engine.la \
 	$(BOOST_FILESYSTEM_LDFLAGS) $(BOOST_FILESYSTEM_LIBS) \
 	$(BOOST_SYSTEM_LDFLAGS) $(BOOST_SYSTEM_LIBS) \
-	$(BOOST_THREADS_LDFLAGS) $(BOOST_THREADS_LIBS) \
+	$(BOOST_THREAD_LDFLAGS) $(BOOST_THREAD_LIBS) \
 	$(LUA_LIBS) \
 	$(DEPS_LIBS)
 hoverrace_SOURCES = \
@@ -32,6 +32,8 @@ hoverrace_SOURCES = \
 	HoverScript/Console.h \
 	HoverScript/GamePeer.cpp \
 	HoverScript/GamePeer.h \
+	HoverScript/HighConsole.cpp \
+	HoverScript/HighConsole.h \
 	HoverScript/SessionPeer.cpp \
 	HoverScript/SessionPeer.h \
 	HoverScript/SysEnv.cpp \
