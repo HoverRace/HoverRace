@@ -114,7 +114,7 @@ void GameSession::Simulate()
 {
 	ASSERT(mCurrentLevel != NULL);
 
-	DWORD lSimulateCallTime = timeGetTime();
+	Util::OS::timestamp_t lSimulateCallTime = Util::OS::Time();
 	MR_SimulationTime lTimeToSimulate;
 
 	// Determine the duration of the simulation step
