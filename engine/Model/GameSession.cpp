@@ -21,8 +21,6 @@
 
 #include "StdAfx.h"
 
-#include <Mmsystem.h>
-
 #include "GameSession.h"
 #include "ObstacleCollisionReport.h"
 
@@ -104,7 +102,7 @@ BOOL GameSession::LoadNew(const char *pTitle, RecordFilePtr pMazeFile, char pGam
 void GameSession::SetSimulationTime(MR_SimulationTime pTime)
 {
 	mSimulationTime = pTime;
-	mLastSimulateCallTime = timeGetTime();
+	mLastSimulateCallTime = Util::OS::Time();
 }
 
 MR_SimulationTime GameSession::GetSimulationTime() const

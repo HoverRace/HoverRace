@@ -25,10 +25,14 @@
 #include "ContactEffect.h"
 #include "../Parcel/RecordFile.h"
 
-#ifdef MR_ENGINE
-#define MR_DllDeclare   __declspec(dllexport)
+#ifdef _WIN32
+#	ifdef MR_ENGINE
+#		define MR_DllDeclare   __declspec( dllexport )
+#	else
+#		define MR_DllDeclare   __declspec( dllimport )
+#	endif
 #else
-#define MR_DllDeclare   __declspec(dllimport)
+#	define MR_DllDeclare
 #endif
 
 namespace HoverRace {
@@ -41,11 +45,11 @@ class GameSession
 		int mCurrentLevelNumber;
 
 		std::string mTitle;
-		HoverRace::Parcel::RecordFilePtr mCurrentMazeFile;
+		Parcel::RecordFilePtr mCurrentMazeFile;
 		Level *mCurrentLevel;
 
 		MR_SimulationTime mSimulationTime;		  // Time simulated since the session start
-		DWORD mLastSimulateCallTime;			  // Time in ms obtainend by timeGetTime
+		Util::OS::timestamp_t mLastSimulateCallTime;			  // Time in ms obtainend by timeGetTime
 
 		BOOL LoadLevel(int pLevelIndex, char pGameOpts);
 		void Clean();							  // Clean up before destruction or clean-up
@@ -61,7 +65,7 @@ class GameSession
 		MR_DllDeclare GameSession(BOOL pAllowRendering = FALSE);
 		MR_DllDeclare ~GameSession();
 
-		MR_DllDeclare BOOL LoadNew(const char *pTitle, HoverRace::Parcel::RecordFilePtr pMazeFile, char pGameOpts);
+		MR_DllDeclare BOOL LoadNew(const char *pTitle, Parcel::RecordFilePtr pMazeFile, char pGameOpts);
 
 		MR_DllDeclare void SetSimulationTime(MR_SimulationTime);
 		MR_DllDeclare MR_SimulationTime GetSimulationTime() const;
@@ -70,7 +74,7 @@ class GameSession
 
 		MR_DllDeclare Level *GetCurrentLevel() const;
 		MR_DllDeclare const char *GetTitle() const;
-		MR_DllDeclare HoverRace::Parcel::RecordFilePtr GetCurrentMazeFile();
+		MR_DllDeclare Parcel::RecordFilePtr GetCurrentMazeFile();
 };
 
 }  // namespace Model
