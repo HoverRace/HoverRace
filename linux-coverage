@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+
+# linux-coverage
+#   Reports on how much of the project is covered by the Linux build.
+#   This is used for checking if a source file was added to the Windows build
+#   but not the Linux build.
+#
+# Usage:
+#   ./linux-coverage
+
+cd "$(dirname "$0")"
+
+covered=0
+total=0
+summary=''
+
+function print_cov {
+	cov="$1"
+	tot="$2"
+	if [[ $tot = 0 ]]; then
+		echo "No files in this directory."
+	else
+		echo "$cov files covered out of $tot: $(( cov * 100 / tot ))%"
+	fi
+}
+
+function check_cov {
+	basedir="$1"
+	dircov=0
+	dirtot=0
+
+	echo "--> $basedir"
+
+	pushd "$basedir" > /dev/null
+	for fn in $(find . -name '*.h' -o -name '*.cpp' | sed 's/^[.][/]//' | sort)
+	do
+		(( dirtot += 1 ))
+		if [[ -f Makefile.am ]] && egrep -q "^[[:space:]]+$fn" Makefile.am; then
+			echo "  [OK] $fn"
+			(( dircov += 1 ))
+		else
+			echo "  [  ] $fn"
+		fi
+	done
+	popd > /dev/null
+
+	(( covered += dircov ))
+	(( total += dirtot ))
+	summary_line=$(print_cov "$dircov" "$dirtot")
+	echo "$summary_line"
+	summary="$summary  $basedir: $summary_line
+"
+	echo ''
+}
+
+echo "==> Scanning..."
+check_cov client/Game2
+for d in $(find engine -mindepth 1 -maxdepth 1 -type d -not -name '.*'); do
+	check_cov "$d"
+done
+
+if [[ total = 0 ]]; then
+	echo "No files found." >&2
+else
+	echo "==> Summary"
+	print_cov "$covered" "$total"
+	echo "$summary"
+fi
+
