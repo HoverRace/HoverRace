@@ -40,7 +40,8 @@ EXTRA_libhoverrace_engine_la_SOURCES = \
 CLEANFILES = $(BUILT_SOURCES)
 
 EXTRA_DIST = \
-	engine.vcproj
+	engine.vcxproj \
+	engine.vcxproj.filters
 
 # Build the precompiled header.
 # It may not be correct to explicitly set -fPIC, but it's required

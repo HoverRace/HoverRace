@@ -1,6 +1,7 @@
 
 EXTRA_DIST = \
-	client.vcproj
+	client.vcxproj \
+	client.vcxproj.filters
 
 SUBDIRS = Game2
 
