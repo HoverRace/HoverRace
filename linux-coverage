@@ -55,7 +55,8 @@ function check_cov {
 
 echo "==> Scanning..."
 check_cov client/Game2
-for d in $(find engine -mindepth 1 -maxdepth 1 -type d -not -name '.*'); do
+for d in $(find engine -mindepth 1 -maxdepth 1 -type d -not -name '.*' | sort)
+do
 	check_cov "$d"
 done
 
