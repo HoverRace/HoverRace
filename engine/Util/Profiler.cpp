@@ -19,44 +19,47 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
-#include <Mmsystem.h>
+#include "OS.h"
 
 #include "Profiler.h"
 
 #ifdef _DEBUG
 
-class MR_ProfilerMaster
+namespace HoverRace {
+namespace Util {
+
+class ProfilerMaster
 {
 	public:
-		int mPauseStart;
-		int mTimeOffset;
+		OS::timestamp_t mPauseStart;
+		OS::timestamp_t mTimeOffset;
 
 		// TimerFunctions
-		int GetTime();
-		int PauseTime();						  // Same as GetTime but it also stop the timer
+		OS::timestamp_t GetTime();
+		OS::timestamp_t PauseTime();						  // Same as GetTime but it also stop the timer
 		void UnPauseTime();
 
 		void Reset();
 		void PrintStats();
 };
 
-static MR_ProfilerSampler *gProfilerSamplerList = NULL;
-static MR_ProfilerMaster gProfilerMaster;
+static ProfilerSampler *gProfilerSamplerList = NULL;
+static ProfilerMaster gProfilerMaster;
 
-void MR_ResetProfilerStats()
+void ResetProfilerStats()
 {
 	gProfilerMaster.Reset();
 }
 
-void MR_OutputProfilerStats()
+void OutputProfilerStats()
 {
 	gProfilerMaster.PrintStats();
 }
 
-// MR_ProfilerSampler
-MR_ProfilerSampler::MR_ProfilerSampler(const char *pName)
+// ProfilerSampler
+ProfilerSampler::ProfilerSampler(const char *pName)
 {
 	mName = pName;
 	mNext = gProfilerSamplerList;
@@ -65,7 +68,7 @@ MR_ProfilerSampler::MR_ProfilerSampler(const char *pName)
 	Reset();
 }
 
-void MR_ProfilerSampler::Reset()
+void ProfilerSampler::Reset()
 {
 	mNbCall = 0;
 	mTotalTime = 0;
@@ -75,12 +78,12 @@ void MR_ProfilerSampler::Reset()
 	mLastPeriodStart = 0;
 }
 
-void MR_ProfilerSampler::StartSample()
+void ProfilerSampler::StartSample()
 {
 	mLastPeriodStart = gProfilerMaster.GetTime();
 }
 
-void MR_ProfilerSampler::EndSample()
+void ProfilerSampler::EndSample()
 {
 	int lDuration = gProfilerMaster.PauseTime() - mLastPeriodStart;
 
@@ -98,28 +101,28 @@ void MR_ProfilerSampler::EndSample()
 	gProfilerMaster.UnPauseTime();
 }
 
-// MR_ProfilerMaster
-int MR_ProfilerMaster::GetTime()
+// ProfilerMaster
+OS::timestamp_t ProfilerMaster::GetTime()
 {
 	return timeGetTime() - mTimeOffset;
 }
 
-int MR_ProfilerMaster::PauseTime()
+OS::timestamp_t ProfilerMaster::PauseTime()
 {
 	mPauseStart = GetTime();
 
 	return mPauseStart;
 }
 
-void MR_ProfilerMaster::UnPauseTime()
+void ProfilerMaster::UnPauseTime()
 {
 	mTimeOffset += GetTime() - mPauseStart;
 }
 
-void MR_ProfilerMaster::Reset()
+void ProfilerMaster::Reset()
 {
 	// Reset all the Samplers
-	MR_ProfilerSampler *lCurrent = gProfilerSamplerList;
+	ProfilerSampler *lCurrent = gProfilerSamplerList;
 
 	while(lCurrent != NULL) {
 		lCurrent->Reset();
@@ -127,13 +130,13 @@ void MR_ProfilerMaster::Reset()
 	}
 }
 
-void MR_ProfilerMaster::PrintStats()
+void ProfilerMaster::PrintStats()
 {
 	PauseTime();
 	/*
 	   TRACE( " Hit    Total  Avg    Min    Max   Name\n" );
 
-	   MR_ProfilerSampler* lCurrent = gProfilerSamplerList;
+	   ProfilerSampler* lCurrent = gProfilerSamplerList;
 
 	   while( lCurrent != NULL )
 	   {
@@ -164,7 +167,7 @@ void MR_ProfilerMaster::PrintStats()
 	if(lFile != NULL) {
 		fprintf(lFile, " Hit    Total  Avg    Min    Max   Name\n");
 
-		MR_ProfilerSampler *lCurrent = gProfilerSamplerList;
+		ProfilerSampler *lCurrent = gProfilerSamplerList;
 
 		while(lCurrent != NULL) {
 			int lAvg = 0;
@@ -183,4 +186,8 @@ void MR_ProfilerMaster::PrintStats()
 
 	UnPauseTime();
 }
+
+}  // namespace Util
+}  // namespace HoverRace
+
 #endif

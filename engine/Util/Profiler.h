@@ -20,27 +20,31 @@
 // and limitations under the License.
 //
 
-#ifndef PROFILER_H
-#define PROFILER_H
+#pragma once
 
-// Includes
-
-#ifdef MR_ENGINE
-#define MR_DllDeclare   __declspec( dllexport )
+#ifdef _WIN32
+#	ifdef MR_ENGINE
+#		define MR_DllDeclare   __declspec( dllexport )
+#	else
+#		define MR_DllDeclare   __declspec( dllimport )
+#	endif
 #else
-#define MR_DllDeclare   __declspec( dllimport )
+#	define MR_DllDeclare
 #endif
 
 #ifdef _DEBUG
 
+namespace HoverRace {
+namespace Util {
+
 // Required declaration
-class MR_DllDeclare MR_ProfilerSampler
+class MR_DllDeclare ProfilerSampler
 {
 	// Theses objects must always be declared staticly
-	friend class MR_ProfilerMaster;
+	friend class ProfilerMaster;
 
 	private:
-		MR_ProfilerSampler * mNext;
+		ProfilerSampler *mNext;
 		const char *mName;						  // Name or comment, used during outputs
 		int mNbCall;
 		int mTotalTime;
@@ -52,24 +56,24 @@ class MR_DllDeclare MR_ProfilerSampler
 		void Reset();
 
 	public:
-		MR_ProfilerSampler(const char *pName);
+		ProfilerSampler(const char *pName);
 
 		void StartSample();
 		void EndSample();
 
 };
 
-class MR_ContextSampler
+class ContextSampler
 {
 	private:
-		MR_ProfilerSampler * mSampler;
+		ProfilerSampler *mSampler;
 
 	public:
-		MR_ContextSampler(MR_ProfilerSampler * pSampler) {
+		ContextSampler(ProfilerSampler * pSampler) {
 			mSampler = pSampler;
 			mSampler->StartSample();
 		}
-		~MR_ContextSampler() {
+		~ContextSampler() {
 			mSampler->EndSample();
 		}
 
@@ -78,30 +82,33 @@ class MR_ContextSampler
 // Macros declaration
 
 #define MR_SAMPLE_START( pId, pName ) \
-static MR_ProfilerSampler pId( pName ); \
+static HoverRace::Util::ProfilerSampler pId( pName ); \
 pId.StartSample();
 
 #define MR_SAMPLE_END( pId ) \
 pId.EndSample();
 
 #define MR_SAMPLE_CONTEXT( pName ) \
-static MR_ProfilerSampler TheSampler( pName ); \
-MR_ContextSampler TheContextSampler( &TheSampler );
+static HoverRace::Util::ProfilerSampler TheSampler( pName ); \
+HoverRace::Util::ContextSampler TheContextSampler( &TheSampler );
 
 #define MR_PRINT_STATS( pPeriod ) \
 { \
 	static time_t lLastRefresh = time( NULL ); \
-if( time( NULL ) >= lLastRefresh+pPeriod ) \
-{ \
-	MR_OutputProfilerStats(); \
-	MR_ResetProfilerStats(); \
-	lLastRefresh = time( NULL ); \
-} \
-} \
+	if( time( NULL ) >= lLastRefresh+pPeriod ) \
+	{ \
+		HoverRace::Util::OutputProfilerStats(); \
+		HoverRace::Util::ResetProfilerStats(); \
+		lLastRefresh = time( NULL ); \
+	} \
+}
 
-// Other usefull function
-void MR_DllDeclare MR_ResetProfilerStats();
-void MR_DllDeclare MR_OutputProfilerStats();
+// Other useful functions
+void MR_DllDeclare ResetProfilerStats();
+void MR_DllDeclare OutputProfilerStats();
+
+}  // namespace Util
+}  // namespace HoverRace
 
 #else
 
@@ -116,4 +123,3 @@ void MR_DllDeclare MR_OutputProfilerStats();
 #endif
 
 #undef MR_DllDeclare
-#endif
