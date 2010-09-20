@@ -165,7 +165,6 @@ class VideoBuffer
 		MR_DllDeclare bool SetVideoMode();		  // In a window mode
 												  // Full screen mode
 		MR_DllDeclare bool SetVideoMode(int pXRes, int pYRes, GUID *monitor);
-		MR_DllDeclare BOOL SetMenuVideoMode();	  // slow full screen mode for menus
 		MR_DllDeclare void EnterIconMode();
 		MR_DllDeclare void ExitIconMode();
 		MR_DllDeclare void AssignPalette();
