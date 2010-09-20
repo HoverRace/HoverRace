@@ -37,6 +37,8 @@ libutil_la_SOURCES = \
 	MR_Types.h \
 	OS.cpp \
 	OS.h \
+	Profiler.cpp \
+	Profiler.h \
 	Str.cpp \
 	Str.h \
 	WorldCoordinates.cpp \
