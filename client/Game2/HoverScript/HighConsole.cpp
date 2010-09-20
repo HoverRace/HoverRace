@@ -90,7 +90,7 @@ class HighConsole::LogLines
 		void ScrollBottom();
 
 	public:
-		void Add(const std::string &s, const Font &font, MR_UInt8 color);
+		void Add(const std::string &s, const VideoServices::Font &font, MR_UInt8 color);
 		void Clear();
 
 		void Render(VideoServices::Viewport2D *vp, int x, int y);
@@ -129,7 +129,7 @@ HighConsole::HighConsole(Script::Core *scripting, GameDirector *gameApp,
 {
 	vp = new VideoServices::Viewport2D();
 
-	logFont = new Font("Courier New", 16);
+	logFont = new VideoServices::Font("Courier New", 16);
 
 	commandPrompt = new StaticText(COMMAND_PROMPT, *logFont, 0x0a, StaticText::EFFECT_SHADOW);
 	continuePrompt = new StaticText(CONTINUE_PROMPT, *logFont, 0x0a, StaticText::EFFECT_SHADOW);
@@ -149,7 +149,7 @@ HighConsole::HighConsole(Script::Core *scripting, GameDirector *gameApp,
 	// Introductory text for the console log.
 	Config *cfg = cfg->GetInstance();
 	logLines->Add(PACKAGE_NAME " version " + cfg->GetVersion(),
-		Font("Arial", 20, true), 0x0a);
+		VideoServices::Font("Arial", 20, true), 0x0a);
 
 	Script::Core *env = GetScripting();
 	std::string intro = env->GetVersionString();
@@ -168,7 +168,7 @@ HighConsole::HighConsole(Script::Core *scripting, GameDirector *gameApp,
 	Control::Controller *controller = gameApp->GetController();
 
 	// The heading for the console.
-	Font titleFont("Arial", 12);
+	VideoServices::Font titleFont("Arial", 12);
 	consoleTitle = new StaticText(_("Console"), titleFont, 0x0e);
 	std::string consoleControlsText = boost::str(
 		boost::format("%s [%s/%s]  %s [%s]") %
@@ -594,7 +594,7 @@ void HighConsole::LogLines::ScrollBottom()
 	RecalcHeight();
 }
 
-void HighConsole::LogLines::Add(const std::string &s, const Font &font, MR_UInt8 color)
+void HighConsole::LogLines::Add(const std::string &s, const VideoServices::Font &font, MR_UInt8 color)
 {
 	// Remove the top line if we're full.
 	if (lines.size() == MAX_LINES) {
