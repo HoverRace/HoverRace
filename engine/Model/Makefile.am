@@ -7,6 +7,8 @@ libmodel_la_SOURCES = \
 	ConcreteShape.h \
 	ContactEffect.cpp \
 	ContactEffect.h \
+	GameSession.cpp \
+	GameSession.h \
 	Level.cpp \
 	Level.h \
 	MazeElement.cpp \
