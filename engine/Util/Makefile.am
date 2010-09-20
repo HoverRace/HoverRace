@@ -28,6 +28,7 @@ libutil_la_SOURCES = \
 	DllObjectFactory.h \
 	FastArray.h \
 	FastFifo.h \
+	FastMemManip.h \
 	FuzzyLogic.cpp \
 	FuzzyLogic.h \
 	InspectMapNode.cpp \
