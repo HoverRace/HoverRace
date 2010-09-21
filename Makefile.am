@@ -2,7 +2,7 @@
 ACLOCAL_FLAGS = -I config/m4
 AUTOMAKE_OPTIONS = foreign no-dist-gzip dist-bzip2
 
-EXTRA_DIST = m4/ChangeLog  config/config.rpath  \
+EXTRA_DIST = config/config.rpath  \
 	build \
 	hovercad \
 	imr \
@@ -24,5 +24,3 @@ pkgdata_DATA = \
 libtool: $(LIBTOOL_DEPS)
 	$(SHELL) ./config.status --recheck
 
-
-ACLOCAL_AMFLAGS = -I m4
