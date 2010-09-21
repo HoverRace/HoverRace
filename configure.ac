@@ -20,6 +20,7 @@ AC_PROG_MAKE_SET
 LT_INIT([disable-static])
 AC_SUBST([LIBTOOL_DEPS])
 AM_GNU_GETTEXT([external])
+AM_GNU_GETTEXT_VERSION(0.17)
 
 # pthread support.
 AX_PTHREAD(, [
