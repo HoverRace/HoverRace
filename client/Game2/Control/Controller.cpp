@@ -1400,6 +1400,20 @@ const std::vector<std::string>& InputEventController::GetActiveMaps()
 	return activeMaps;
 }
 
+InputEventController::ActionMap& InputEventController::GetActionMap(std::string key)
+{
+	return allActionMaps[key];
+}
+
+std::vector<std::string> InputEventController::GetAvailableMaps()
+{
+	std::vector<std::string> maps;
+	for(std::map<std::string, ActionMap>::iterator it = allActionMaps.begin(); it != allActionMaps.end(); it++)
+		maps.push_back(it->first);
+
+	return maps;
+}
+
 void InputEventController::AddPlayerMaps(int numPlayers, MainCharacter::MainCharacter** mcs)
 {
 	// iterate over each actionMap
@@ -1410,7 +1424,7 @@ void InputEventController::AddPlayerMaps(int numPlayers, MainCharacter::MainChar
 			continue;
 
 		std::stringstream str;
-		str << _("Player") << " " << i;
+		str << _("Player") << " " << (i + 1);
 		std::string mapname = str.str();
 		if(allActionMaps.count(mapname) != 1)
 			continue; // was not loaded for some reason...
@@ -1500,7 +1514,7 @@ void InputEventController::LoadControllerConfig()
 	for(int i = 0; i < cfg->MAX_PLAYERS; i++) {
 		// use map playerX
 		std::stringstream str;
-		str << _("Player") << " " << i;
+		str << _("Player") << " " << (i + 1);
 		ActionMap& playerMap = allActionMaps[str.str()];
 
 		playerMap[cfg->controls_hash[i].brake] = new BrakeAction(_("Brake"), NULL);

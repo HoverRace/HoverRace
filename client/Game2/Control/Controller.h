@@ -169,6 +169,9 @@ class InputEventController : public KeyListener, public MouseListener, public Jo
 		InputEventController(Util::OS::wnd_t mainWindow, UiHandlerPtr uiHandler);
 		~InputEventController();
 
+		// Typedef for the maps of hashes to controls
+		typedef std::map<int, ControlAction*> ActionMap;
+
 		// event handlers
 		bool keyPressed(const KeyEvent &arg);
 		bool keyReleased(const KeyEvent &arg);
@@ -212,6 +215,16 @@ class InputEventController : public KeyListener, public MouseListener, public Jo
 		 * Return a vector containing the current maps.
 		 */
 		const std::vector<std::string>& GetActiveMaps();
+
+		/***
+		 * Return the map with the given key.
+		 */
+		ActionMap& GetActionMap(std::string key);
+
+		/***
+		 * Return a vector containing the names of all the available maps.
+		 */
+		std::vector<std::string> GetAvailableMaps();
 
 		/***
 		 * Update player mappings to point to correct MainCharacter objects, then
@@ -283,7 +296,6 @@ class InputEventController : public KeyListener, public MouseListener, public Jo
 		 * We store several different action maps which we can choose from.
 		 * They are referenced by string.  See ClearActionMap(), AddActionMap().
 		 */
-		typedef std::map<int, ControlAction*> ActionMap;
 		ActionMap actionMap;
 		std::vector<std::string> activeMaps;
 		std::map<std::string, ActionMap> allActionMaps;
