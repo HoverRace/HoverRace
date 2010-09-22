@@ -1612,10 +1612,10 @@ std::string InputEventController::HashToString(int hash)
 {
 	switch((hash & 0x00C00000) >> 22) {
 		case 0: // keyboard event
-			if((hash & 0x00FF0000) == 0)
+			if((hash & 0x0000FF00) == 0)
 				return "Disabled";
 			else
-				return kbd->getAsString((OIS::KeyCode) ((hash & 0x00FF0000) >> 16));
+				return kbd->getAsString((OIS::KeyCode) ((hash & 0x0000FF00) >> 8));
 		case 1: // mouse event
 			if((hash & 0x00300000) == 0) {
 				// OIS has no nice "getAsString" for mice so we have to do it by hand
