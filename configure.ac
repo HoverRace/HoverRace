@@ -4,7 +4,7 @@ AC_INIT(
 	[m4_normalize(esyscmd(build/mkversion.sh))],
 	[http://svn.igglybob.com/hoverrace/])
 AC_CONFIG_AUX_DIR(config)
-AC_CONFIG_MACRO_DIR(config/m4)
+AC_CONFIG_MACRO_DIR(m4)
 AC_CONFIG_SRCDIR([engine/Util/FuzzyLogic.h])
 AM_CONFIG_HEADER([config.h])
 AM_INIT_AUTOMAKE
