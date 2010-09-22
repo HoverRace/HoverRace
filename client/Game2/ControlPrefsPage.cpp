@@ -143,18 +143,18 @@ BOOL ControlPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 				LVCOLUMNW keycol;
 				memset(&keycol, 0, sizeof(keycol));
 				keycol.mask = LVCF_WIDTH | LVCF_TEXT;
-				keycol.cx = 200; // 200px
+				keycol.cx = 400; // 400px
 				keycol.pszText = (LPWSTR) _("Action");
 
 				LVCOLUMNW bindcol;
 				memset(&bindcol, 0, sizeof(bindcol));
 				bindcol.mask = LVCF_WIDTH | LVCF_TEXT;
-				bindcol.cx = 100; // 100px
+				bindcol.cx = 135; // 135px
 				bindcol.pszText = (LPWSTR) _("Binding");
 
 				HWND listview = GetDlgItem(pWindow, IDC_CONTROL_BINDING);
 				SendMessageW(listview, LVM_INSERTCOLUMN, 0, (LPARAM) &keycol);
-				SendMessageW(listview, LVM_INSERTCOLUMN, 0, (LPARAM) &bindcol);
+				SendMessageW(listview, LVM_INSERTCOLUMN, 1, (LPARAM) &bindcol);
 			}
 
 		case WM_COMMAND:
