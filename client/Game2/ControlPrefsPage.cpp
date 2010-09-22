@@ -117,38 +117,81 @@ BOOL ControlPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 	switch (pMsgId) {
 		// Catch environment modification events
 		case WM_INITDIALOG:
-			// i18nize the choices
-			SetDlgItemTextW(pWindow, IDC_PLAYER1, Str::UW(_("Player 1")));
-			SetDlgItemTextW(pWindow, IDC_PLAYER2, Str::UW(_("Player 2")));
-			SetDlgItemTextW(pWindow, IDC_PLAYER3, Str::UW(_("Player 3")));
-			SetDlgItemTextW(pWindow, IDC_PLAYER4, Str::UW(_("Player 4")));
-			SetDlgItemTextW(pWindow, IDC_MOTOR_ON, Str::UW(_("Motor On:")));
-			SetDlgItemTextW(pWindow, IDC_TURN_RIGHT, Str::UW(_("Turn Right:")));
-			SetDlgItemTextW(pWindow, IDC_TURN_LEFT, Str::UW(_("Turn Left:")));
-			SetDlgItemTextW(pWindow, IDC_BRAKE, Str::UW(_("Brake:")));
-			SetDlgItemTextW(pWindow, IDC_JUMP, Str::UW(_("Jump:")));
-			SetDlgItemTextW(pWindow, IDC_FIRE_WEAPON, Str::UW(_("Fire Weapon:")));
-			SetDlgItemTextW(pWindow, IDC_SELECT_WEAPON, Str::UW(_("Select Weapon:")));
-			SetDlgItemTextW(pWindow, IDC_LOOK_BACK, Str::UW(_("Look Back:")));
+			// add available maps to the drop-down box
+			{
+				std::vector<std::string> mapnames = controller->GetAvailableMaps();
+				HWND hList = GetDlgItem(pWindow, IDC_MAP_SELECT);
+				
+				// add all the maps except console-keys
+				for(int i = 0; i < mapnames.size(); i++) {
+					if(mapnames.at(i) == "console-keys")
+						continue; // don't add this one
+					int item = SendMessage(hList, CB_ADDSTRING, 0, (LPARAM) mapnames.at(i).c_str());
+				}
 
-			UpdateDialogLabels(pWindow);
+				// select first player map (or first map)
+				std::string mapname = _("Player");
+				mapname += " 1";
+				int select = SendMessage(hList, CB_FINDSTRINGEXACT, -1, (LPARAM) mapname.c_str());
+				SendMessage(hList, CB_SETCURSEL, (select == CB_ERR) ? 0 : select, 0); // set current item
 
-			pressAnyKeyDialog = NULL;
+				// now fake the message that we just changed the selection
+				// (this is why there is no break at the end of this case)
+				pWParam = IDC_MAP_SELECT;
 
-			// set up new controls
-			if (oldcontrols == NULL) {
-				oldcontrols = new Config::cfg_controls_t[cfg->MAX_PLAYERS];
-				memcpy((void *) oldcontrols, (void *) cfg->controls, sizeof(cfg->controls));
+				// initialize columns in ListView box
+				LVCOLUMNW keycol;
+				memset(&keycol, 0, sizeof(keycol));
+				keycol.mask = LVCF_WIDTH | LVCF_TEXT;
+				keycol.cx = 200; // 200px
+				keycol.pszText = (LPWSTR) _("Action");
+
+				LVCOLUMNW bindcol;
+				memset(&bindcol, 0, sizeof(bindcol));
+				bindcol.mask = LVCF_WIDTH | LVCF_TEXT;
+				bindcol.cx = 100; // 100px
+				bindcol.pszText = (LPWSTR) _("Binding");
+
+				HWND listview = GetDlgItem(pWindow, IDC_CONTROL_BINDING);
+				SendMessageW(listview, LVM_INSERTCOLUMN, 0, (LPARAM) &keycol);
+				SendMessageW(listview, LVM_INSERTCOLUMN, 0, (LPARAM) &bindcol);
 			}
-			break;
 
 		case WM_COMMAND:
 			{
-				// reset
-				setControlControl = 0;
-				setControlPlayer = 0;
-
 				switch(LOWORD(pWParam)) {
+					// The user changed the map selection
+					case IDC_MAP_SELECT:
+						{
+							char buffer[200];
+							HWND combobox = GetDlgItem(pWindow, IDC_MAP_SELECT);
+							SendMessage(combobox, WM_GETTEXT, 200, (LPARAM) &buffer);
+							std::string mapname = buffer;
+
+							// we need to populate the ListView with actions
+							HWND hList = GetDlgItem(pWindow, IDC_CONTROL_BINDINGS);
+							SendMessage(hList, LVM_DELETEALLITEMS, 0, 0);
+							InputEventController::ActionMap map = controller->GetActionMap(mapname);
+							for(InputEventController::ActionMap::iterator it = map.begin(); it != map.end(); it++) {
+								LVITEM item;
+								memset(&item, 0, sizeof(item));
+								
+								std::string temp;
+								item.mask = LVIF_TEXT;
+								temp = it->second->getName();
+								item.pszText = (LPSTR) temp.c_str();
+								int pos = SendMessage(hList, LVM_INSERTITEM, 0, (LPARAM) &item);
+
+								item.mask = LVIF_TEXT;
+								item.iItem = pos;
+								item.iSubItem = 1;
+								temp = controller->HashToString(it->first).c_str();
+								item.pszText = (LPSTR) temp.c_str();
+								SendMessage(hList, LVM_SETITEM, pos, (LPARAM) &item);
+							}
+						}
+						break;
+
 					case IDC_MOTOR_ON1:
 					case IDC_MOTOR_ON2:
 					case IDC_MOTOR_ON3:
@@ -253,7 +296,7 @@ BOOL ControlPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 				}
 
 				// create dialog window by hand, the hard way
-				if(pressAnyKeyDialog == NULL) {
+				/*if(pressAnyKeyDialog == NULL) {
 					WNDCLASSW lWinClass;
 
 					lWinClass.style = CS_DBLCLKS;
@@ -308,7 +351,7 @@ BOOL ControlPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 					// put focus back to already existing window
 					EnableWindow(pWindow, false);
 					EnableWindow(pressAnyKeyDialog, true);
-				}
+				}*/
 			}
 			break;
 
