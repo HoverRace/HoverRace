@@ -4,7 +4,7 @@ AC_INIT(
 	[m4_normalize(esyscmd(build/mkversion.sh))],
 	[http://svn.igglybob.com/hoverrace/])
 AC_CONFIG_AUX_DIR(config)
-AC_CONFIG_MACRO_DIR(config/m4)
+AC_CONFIG_MACRO_DIR(m4)
 AC_CONFIG_SRCDIR([engine/Util/FuzzyLogic.h])
 AM_CONFIG_HEADER([config.h])
 AM_INIT_AUTOMAKE
@@ -20,6 +20,7 @@ AC_PROG_MAKE_SET
 LT_INIT([disable-static])
 AC_SUBST([LIBTOOL_DEPS])
 AM_GNU_GETTEXT([external])
+AM_GNU_GETTEXT_VERSION(0.17)
 
 # pthread support.
 AX_PTHREAD(, [

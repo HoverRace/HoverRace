@@ -1,5 +1,5 @@
 
-ACLOCAL_FLAGS = -I config/m4
+ACLOCAL_FLAGS = -I m4
 AUTOMAKE_OPTIONS = foreign no-dist-gzip dist-bzip2
 
 EXTRA_DIST = config/config.rpath  \
