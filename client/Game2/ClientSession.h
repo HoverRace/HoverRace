@@ -86,15 +86,6 @@ class ClientSession
 
 		// Main character control and interrogation
 		bool CreateMainCharacter(int i);
-		BOOL CreateMainCharacter();
-		BOOL CreateMainCharacter2();
-		BOOL CreateMainCharacter3();
-		BOOL CreateMainCharacter4();
-
-		MainCharacter::MainCharacter *GetMainCharacter() const;
-		MainCharacter::MainCharacter *GetMainCharacter2() const;
-		MainCharacter::MainCharacter *GetMainCharacter3() const;
-		MainCharacter::MainCharacter *GetMainCharacter4() const;
 
 		virtual void SetSimulationTime(MR_SimulationTime pTime);
 		MR_SimulationTime GetSimulationTime() const;

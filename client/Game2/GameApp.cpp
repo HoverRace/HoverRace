@@ -447,23 +447,23 @@ BOOL GameApp::IsGameRunning()
 	BOOL lReturnValue = FALSE;
 
 	if(mCurrentSession != NULL) {
-		MainCharacter::MainCharacter *lPlayer = mCurrentSession->GetMainCharacter();
+		MainCharacter::MainCharacter *lPlayer = mCurrentSession->GetPlayer(0);
 
 		if(lPlayer != NULL) {
 			if(!(lPlayer->GetTotalLap() <= lPlayer->GetLap())) {
-				lPlayer = mCurrentSession->GetMainCharacter2();
+				lPlayer = mCurrentSession->GetPlayer(1);
 
 				if(lPlayer == NULL) {
 					lReturnValue = TRUE;
 				}
 
-				lPlayer = mCurrentSession->GetMainCharacter3();
+				lPlayer = mCurrentSession->GetPlayer(2);
 
 				if(lPlayer == NULL) {
 					lReturnValue = TRUE;
 				}
 
-				lPlayer = mCurrentSession->GetMainCharacter4();
+				lPlayer = mCurrentSession->GetPlayer(3);
 
 				if(lPlayer == NULL) {
 					lReturnValue = TRUE;
@@ -1118,13 +1118,13 @@ void GameApp::ReadAsyncInputController()
 			lControlState1 = ReadAsyncInputControllerPlayer(0);
 
 			// If we're in multiplayer mode we need to check those keys too
-			if(mCurrentSession->GetMainCharacter2() != NULL) {
+			if(mCurrentSession->GetPlayer(1) != NULL) {
 				lControlState2 = ReadAsyncInputControllerPlayer(1);
 			}
-			if(mCurrentSession->GetMainCharacter3() != NULL) {
+			if(mCurrentSession->GetPlayer(2) != NULL) {
 				lControlState3 = ReadAsyncInputControllerPlayer(2);
 			}
-			if(mCurrentSession->GetMainCharacter4() != NULL) {
+			if(mCurrentSession->GetPlayer(3) != NULL) {
 				lControlState4 = ReadAsyncInputControllerPlayer(3);
 			}
 
@@ -1340,7 +1340,7 @@ void GameApp::NewLocalSession(RulebookPtr rules)
 
 		// Create the main character
 		if(lSuccess)
-			lSuccess = (lCurrentSession->CreateMainCharacter() != FALSE);
+			lSuccess = lCurrentSession->CreateMainCharacter(0);
 
 		if(lSuccess) {
 			mCurrentSession = lCurrentSession;
@@ -1436,15 +1436,15 @@ void GameApp::NewSplitSession(int pSplitPlayers)
 			lCurrentSession->SetSimulationTime(-8000);
 
 			// Create the main character2
-			lSuccess = (lCurrentSession->CreateMainCharacter() != FALSE);
+			lSuccess = lCurrentSession->CreateMainCharacter(0);
 		}
 
 		if(lSuccess) {
-			lSuccess = (lCurrentSession->CreateMainCharacter2() != FALSE);
+			lSuccess = lCurrentSession->CreateMainCharacter(1);
 			if(pSplitPlayers > 2)
-				lSuccess = (lCurrentSession->CreateMainCharacter3() != FALSE);
+				lSuccess = lCurrentSession->CreateMainCharacter(2);
 			if(pSplitPlayers > 3)
-				lSuccess = (lCurrentSession->CreateMainCharacter4() != FALSE);
+				lSuccess = lCurrentSession->CreateMainCharacter(3);
 		}
 
 		if(!lSuccess) {

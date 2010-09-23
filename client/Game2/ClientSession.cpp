@@ -164,54 +164,6 @@ bool ClientSession::CreateMainCharacter(int i)
 	return true;
 }
 
-/** @deprecated Use CreateMainCharacter(int) instead. */
-BOOL ClientSession::CreateMainCharacter()
-{
-	return CreateMainCharacter(0);
-}
-
-/** @deprecated Use CreateMainCharacter(int) instead. */
-BOOL ClientSession::CreateMainCharacter2()
-{
-	return CreateMainCharacter(1);
-}
-
-/** @deprecated Use CreateMainCharacter(int) instead. */
-BOOL ClientSession::CreateMainCharacter3()
-{
-	return CreateMainCharacter(2);
-}
-
-/** @deprecated Use CreateMainCharacter(int) instead. */
-BOOL ClientSession::CreateMainCharacter4()
-{
-	return CreateMainCharacter(3);
-}
-
-/** @deprecated Use GetPlayer(int) instead. */
-MainCharacter::MainCharacter *ClientSession::GetMainCharacter() const
-{
-	return GetPlayer(0);
-}
-
-/** @deprecated Use GetPlayer(int) instead. */
-MainCharacter::MainCharacter *ClientSession::GetMainCharacter2() const
-{
-	return GetPlayer(1);
-}
-
-/** @deprecated Use GetPlayer(int) instead. */
-MainCharacter::MainCharacter *ClientSession::GetMainCharacter3() const
-{
-	return GetPlayer(2);
-}
-
-/** @deprecated Use GetPlayer(int) instead. */
-MainCharacter::MainCharacter *ClientSession::GetMainCharacter4() const
-{
-	return GetPlayer(3);
-}
-
 void ClientSession::SetSimulationTime(MR_SimulationTime pTime)
 {
 	mSession.SetSimulationTime(pTime);
