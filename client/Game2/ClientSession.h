@@ -46,7 +46,7 @@ class ClientSession
 				std::string mBuffer;
 		};
 
-		CRITICAL_SECTION mChatMutex;
+		mutable boost::mutex chatMutex;
 		static const int CHAT_MESSAGE_STACK = 8;
 		ChatMessage mMessageStack[CHAT_MESSAGE_STACK];
 

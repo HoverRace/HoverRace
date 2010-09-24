@@ -589,9 +589,10 @@ void NetworkSession::ReadNet()
 				break;
 
 			case MRNM_CHAT_MESSAGE:
-				EnterCriticalSection(&mChatMutex);
-				AddChatMessage(lClientId, (const char *) lMessage, lMessageLen);
-				LeaveCriticalSection(&mChatMutex);
+				{
+					boost::lock_guard<boost::mutex> lock(chatMutex);
+					AddChatMessage(lClientId, (const char *) lMessage, lMessageLen);
+				}
 				break;
 
 			case MRNM_HIT_MESSAGE:
@@ -1448,7 +1449,7 @@ void NetworkSession::AddResultEntry(int pPlayerIndex, MR_SimulationTime pFinishT
  */
 void NetworkSession::AddMessageKey(char pKey)
 {
-	EnterCriticalSection(&mChatMutex);
+	boost::lock_guard<boost::mutex> lock(chatMutex);
 
 	int lStrLen = strlen(mChatEditBuffer);
 
@@ -1471,8 +1472,6 @@ void NetworkSession::AddMessageKey(char pKey)
 
 		}
 	}
-
-	LeaveCriticalSection(&mChatMutex);
 }
 
 /**
@@ -1482,11 +1481,8 @@ void NetworkSession::AddMessageKey(char pKey)
  */
 void NetworkSession::GetCurrentMessage(char *pDest) const
 {
-	EnterCriticalSection(&((NetworkSession *) this)->mChatMutex);
-
+	boost::lock_guard<boost::mutex> lock(chatMutex);
 	strcpy(pDest, mChatEditBuffer);
-
-	LeaveCriticalSection(&((NetworkSession *) this)->mChatMutex);
 } 
 
 /**

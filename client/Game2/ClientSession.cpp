@@ -21,6 +21,8 @@
 
 #include "StdAfx.h"
 
+#include <boost/thread/locks.hpp>
+
 #include "../../engine/MainCharacter/MainCharacter.h"
 #include "../../engine/VideoServices/VideoBuffer.h"
 #include "../../compilers/MazeCompiler/TrackCommonStuff.h"
@@ -44,16 +46,12 @@ ClientSession::ClientSession() :
 	mMap = NULL;
 	mNbLap = 1;
 	mGameOpts = 0;
-
-	InitializeCriticalSection(&mChatMutex);
 }
 
 ClientSession::~ClientSession()
 {
 	delete[]mBackImage;
 	delete mMap;
-
-	DeleteCriticalSection(&mChatMutex);
 }
 
 void ClientSession::Process(int pSpeedFactor)
@@ -366,7 +364,7 @@ BOOL ClientSession::GetMessageStack(int pLevel, char *pDest, int pExpiration) co
 	BOOL lReturnValue = FALSE;
 
 	if(pLevel < CHAT_MESSAGE_STACK) {
-		EnterCriticalSection(&((ClientSession *) this)->mChatMutex);
+		boost::lock_guard<boost::mutex> lock(chatMutex);
 
 		if(((mMessageStack[pLevel].mCreationTime + pExpiration) > time(NULL)) &&
 			(mMessageStack[pLevel].mBuffer.length() > 0))
@@ -374,7 +372,6 @@ BOOL ClientSession::GetMessageStack(int pLevel, char *pDest, int pExpiration) co
 			lReturnValue = TRUE;
 			strcpy(pDest, mMessageStack[pLevel].mBuffer.c_str());
 		}
-		LeaveCriticalSection(&((ClientSession *) this)->mChatMutex);
 	}
 
 	return lReturnValue;
@@ -382,7 +379,7 @@ BOOL ClientSession::GetMessageStack(int pLevel, char *pDest, int pExpiration) co
 
 void ClientSession::AddMessage(const char *pMessage)
 {
-	EnterCriticalSection(&mChatMutex);
+	boost::lock_guard<boost::mutex> lock(chatMutex);
 
 	for(int lCounter = CHAT_MESSAGE_STACK - 1; lCounter > 0; lCounter--) {
 		mMessageStack[lCounter] = mMessageStack[lCounter - 1];
@@ -391,9 +388,6 @@ void ClientSession::AddMessage(const char *pMessage)
 	mMessageStack[0].mCreationTime = time(NULL);
 
 	mMessageStack[0].mBuffer = VideoServices::Ascii2Simple(pMessage);
-
-	LeaveCriticalSection(&mChatMutex);
-
 }
 
 /**
