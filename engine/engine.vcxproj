@@ -167,7 +167,6 @@
     <ClCompile Include="VideoServices\Font.cpp" />
     <ClCompile Include="VideoServices\MultipartText.cpp" />
     <ClCompile Include="VideoServices\NumericGlyphs.cpp" />
-    <ClCompile Include="VideoServices\Patch.cpp" />
     <ClCompile Include="VideoServices\SoundServer.cpp" />
     <ClCompile Include="VideoServices\Sprite.cpp" />
     <ClCompile Include="VideoServices\StaticText.cpp" />

@@ -14,7 +14,6 @@ libvideosvc_la_SOURCES = \
 	MultipartText.h \
 	NumericGlyphs.cpp \
 	NumericGlyphs.h \
-	Patch.cpp \
 	Patch.h \
 	SoundServer.cpp \
 	SoundServer.h \

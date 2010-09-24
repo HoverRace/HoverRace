@@ -35,15 +35,20 @@
 
 class MR_DllDeclare MR_Patch
 {
-	protected:
 	public:
 		virtual int GetURes() const = 0;
 		virtual int GetVRes() const = 0;
 
 		/*
-		const MR_3DCoordinate & GetNodePos(int pU, int pV) const;
+		const MR_3DCoordinate & GetNodePos(int pU, int pV) const
+		{
+			return GetNodePos(pU + pV * GetURes());
+		}
 												  // More effective function
-		const MR_3DCoordinate & GetNodePos(int pIndex) const;
+		const MR_3DCoordinate & GetNodePos(int pIndex) const
+		{
+			return GetNodeList()[pIndex];
+		}
 												  // Most effective function
 		*/
 		virtual const MR_3DCoordinate *GetNodeList() const = 0;

@@ -198,9 +198,6 @@
     <ClCompile Include="VideoServices\NumericGlyphs.cpp">
       <Filter>VideoServices</Filter>
     </ClCompile>
-    <ClCompile Include="VideoServices\Patch.cpp">
-      <Filter>VideoServices</Filter>
-    </ClCompile>
     <ClCompile Include="VideoServices\SoundServer.cpp">
       <Filter>VideoServices</Filter>
     </ClCompile>
