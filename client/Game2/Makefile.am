@@ -40,6 +40,8 @@ hoverrace_SOURCES = \
 	HoverScript/SysEnv.h \
 	ClientApp.cpp \
 	ClientApp.h \
+	ClientSession.cpp \
+	ClientSession.h \
 	GameDirector.h \
 	RoomList.cpp \
 	RoomList.h \
