@@ -121,8 +121,8 @@ class Viewport3D : public Viewport2D
 
 		MR_DllDeclare void RenderHorizontalSurface(int lNbVertex, const MR_2DCoordinate * pVertexList, MR_Int32 pLevel, BOOL lTop, const Bitmap * pBitmap);
 
-		MR_DllDeclare void RenderPatch(const MR_Patch & pPatch, const PositionMatrix & pMatrix, const Bitmap * pBitmap);
-		MR_DllDeclare void RenderPatch(const MR_Patch & pPatch, const PositionMatrix & pMatrix, MR_UInt8 pColor);
+		MR_DllDeclare void RenderPatch(const Patch & pPatch, const PositionMatrix & pMatrix, const Bitmap * pBitmap);
+		MR_DllDeclare void RenderPatch(const Patch & pPatch, const PositionMatrix & pMatrix, MR_UInt8 pColor);
 
 		MR_DllDeclare void RenderBackground(const MR_UInt8 * pBitmap);
 };

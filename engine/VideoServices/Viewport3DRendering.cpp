@@ -1236,7 +1236,7 @@ static int gsScreenXPatch[MAX_PATCH_RES * MAX_PATCH_RES];
 static int gsScreenYPatch[MAX_PATCH_RES * MAX_PATCH_RES];
 static int gsScreenVisibility[MAX_PATCH_RES * MAX_PATCH_RES];
 
-void Viewport3D::RenderPatch(const MR_Patch & pPatch, const PositionMatrix & pMatrix, const Bitmap * pBitmap)
+void Viewport3D::RenderPatch(const Patch & pPatch, const PositionMatrix & pMatrix, const Bitmap * pBitmap)
 {
 
 	int lCounter;

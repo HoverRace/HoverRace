@@ -33,7 +33,10 @@
 #	define MR_DllDeclare
 #endif
 
-class MR_DllDeclare MR_Patch
+namespace HoverRace {
+namespace VideoServices {
+
+class MR_DllDeclare Patch
 {
 	public:
 		virtual int GetURes() const = 0;
@@ -54,5 +57,8 @@ class MR_DllDeclare MR_Patch
 		virtual const MR_3DCoordinate *GetNodeList() const = 0;
 
 };
+
+}  // namespace VideoServices
+}  // namespace HoverRace
 
 #undef MR_DllDeclare

@@ -69,7 +69,7 @@ class ResActor
 
 		};
 
-		class MR_DllDeclare Patch:public ActorComponent, public MR_Patch
+		class MR_DllDeclare Patch : public ActorComponent, public VideoServices::Patch
 		{
 			public:
 				int mURes;
