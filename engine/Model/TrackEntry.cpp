@@ -24,7 +24,7 @@
 
 #include <boost/algorithm/string/replace.hpp>
 
-#include "../../compilers/MazeCompiler/TrackCommonStuff.h"
+#include "../../engine/Model/TrackFileCommon.h"
 
 #include "../Parcel/ObjStream.h"
 

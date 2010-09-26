@@ -224,6 +224,7 @@
     <ClInclude Include="Model\Shapes.h" />
     <ClInclude Include="Model\Track.h" />
     <ClInclude Include="Model\TrackEntry.h" />
+    <ClInclude Include="Model\TrackFileCommon.h" />
     <ClInclude Include="Model\TrackList.h" />
     <ClInclude Include="ObjFac1\BallElement.h" />
     <ClInclude Include="ObjFac1\BumperGate.h" />

@@ -587,6 +587,9 @@
     <ClInclude Include="VideoServices\Viewport3D.h">
       <Filter>VideoServices</Filter>
     </ClInclude>
+    <ClInclude Include="Model\TrackFileCommon.h">
+      <Filter>Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuildStep Include="Parcel\MfcObjStream.h">

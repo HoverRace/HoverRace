@@ -24,7 +24,7 @@
 #include "LevelBuilder.h"
 #include "TrackMap.h"
 #include "Parser.h"
-#include "TrackCommonStuff.h"
+#include "../../engine/Model/TrackFileCommon.h"
 #include "../../engine/Parcel/ObjStream.h"
 #include "resource.h"
 

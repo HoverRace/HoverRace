@@ -42,9 +42,6 @@
     <ClInclude Include="StdAfx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TrackCommonStuff.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="TrackMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>

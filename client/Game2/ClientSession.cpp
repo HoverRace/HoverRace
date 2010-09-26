@@ -24,8 +24,8 @@
 #include <boost/thread/locks.hpp>
 
 #include "../../engine/MainCharacter/MainCharacter.h"
+#include "../../engine/Model/TrackFileCommon.h"
 #include "../../engine/VideoServices/VideoBuffer.h"
-#include "../../compilers/MazeCompiler/TrackCommonStuff.h"
 
 #include "ClientSession.h"
 

@@ -128,7 +128,6 @@
     <ClInclude Include="Parser.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="StdAfx.h" />
-    <ClInclude Include="TrackCommonStuff.h" />
     <ClInclude Include="TrackMap.h" />
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,4 @@
-// TrackCommonStuff.h
+// TrackFileCommon.h
 //
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
@@ -20,8 +20,7 @@
 // and limitations under the License.
 //
 
-#ifndef _TRACK_COMMON_STUFF_H
-#define _TRACK_COMMON_STUFF_H
+#pragma once
 
 #define MR_MAGIC_TRACK_NUMBER  82617
 #define MR_REGISTRED_TRACK         0
@@ -29,4 +28,3 @@
 
 #define MR_NOBITMAP  0
 #define MR_RAWBITMAP 1
-#endif
