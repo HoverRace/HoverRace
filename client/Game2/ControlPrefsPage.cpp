@@ -172,20 +172,28 @@ BOOL ControlPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 							HWND hList = GetDlgItem(pWindow, IDC_CONTROL_BINDINGS);
 							SendMessage(hList, LVM_DELETEALLITEMS, 0, 0);
 							InputEventController::ActionMap map = controller->GetActionMap(mapname);
-							for(InputEventController::ActionMap::iterator it = map.begin(); it != map.end(); it++) {
+
+							// order bindings by defined ordering in ControlAction::listOrder
+							std::map<int, int> orderMap;
+							for(InputEventController::ActionMap::iterator it = map.begin(); it != map.end(); it++)
+								orderMap[it->second->getListOrder()] = it->first;
+
+							// ListView adds new items at the top... so start from the back
+							for(std::map<int, int>::reverse_iterator it(orderMap.end()); 
+									it != std::map<int, int>::reverse_iterator(orderMap.begin()); it++) {
 								LVITEM item;
 								memset(&item, 0, sizeof(item));
 								
 								std::string temp;
 								item.mask = LVIF_TEXT;
-								temp = it->second->getName();
+								temp = map[it->second]->getName();
 								item.pszText = (LPSTR) temp.c_str();
 								int pos = SendMessage(hList, LVM_INSERTITEM, 0, (LPARAM) &item);
 
 								item.mask = LVIF_TEXT;
 								item.iItem = pos;
 								item.iSubItem = 1;
-								temp = controller->HashToString(it->first).c_str();
+								temp = controller->HashToString(it->second).c_str();
 								item.pszText = (LPSTR) temp.c_str();
 								SendMessage(hList, LVM_SETITEM, pos, (LPARAM) &item);
 							}
