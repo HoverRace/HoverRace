@@ -1517,14 +1517,14 @@ void InputEventController::LoadControllerConfig()
 		str << _("Player") << " " << (i + 1);
 		ActionMap& playerMap = allActionMaps[str.str()];
 
-		playerMap[cfg->controls_hash[i].brake] = new BrakeAction(_("Brake"), NULL);
-		playerMap[cfg->controls_hash[i].fire] = new PowerupAction(_("Fire"), NULL);
-		playerMap[cfg->controls_hash[i].jump] = new JumpAction(_("Jump"), NULL);
-		playerMap[cfg->controls_hash[i].left] = new TurnLeftAction(_("Turn Left"), NULL);
-		playerMap[cfg->controls_hash[i].lookBack] = new LookBackAction(_("Look Back"), NULL);
-		playerMap[cfg->controls_hash[i].motorOn] = new EngineAction(_("Throttle"), NULL);
-		playerMap[cfg->controls_hash[i].right] = new TurnRightAction(_("Turn Right"), NULL);
-		playerMap[cfg->controls_hash[i].weapon] = new ChangeItemAction(_("Item"), NULL);
+		playerMap[cfg->controls_hash[i].motorOn] = new EngineAction(_("Throttle"), 0, NULL);
+		playerMap[cfg->controls_hash[i].brake] = new BrakeAction(_("Brake"), 1, NULL);
+		playerMap[cfg->controls_hash[i].left] = new TurnLeftAction(_("Turn Left"), 2, NULL);
+		playerMap[cfg->controls_hash[i].right] = new TurnRightAction(_("Turn Right"), 3, NULL);
+		playerMap[cfg->controls_hash[i].jump] = new JumpAction(_("Jump"), 4, NULL);
+		playerMap[cfg->controls_hash[i].fire] = new PowerupAction(_("Fire"), 5, NULL);
+		playerMap[cfg->controls_hash[i].weapon] = new ChangeItemAction(_("Item"), 6, NULL);
+		playerMap[cfg->controls_hash[i].lookBack] = new LookBackAction(_("Look Back"), 7, NULL);
 	}
 }
 
@@ -1539,14 +1539,15 @@ void InputEventController::LoadConsoleMap()
 			delete allActionMaps["console-keys"][hash];
 
 		allActionMaps["console-keys"][HashKeyboardEvent(KeyEvent(NULL, (OIS::KeyCode) i, 0))] =
-			new ConsoleKeyAction("" /* no name necessary */, NULL, (OIS::KeyCode) i);
+			new ConsoleKeyAction("" /* no name necessary */, 0 /* no ordering necessary */,
+					NULL, (OIS::KeyCode) i);
 	}
 
 	std::string console = _("Console");
 	int toggleHash = Config::GetInstance()->ui.console_hash;
 	if(allActionMaps[console].count(toggleHash) > 0)
 		delete allActionMaps[console][toggleHash];
-	allActionMaps[console][toggleHash] = new ConsoleToggleAction(_("Toggle Console"), NULL, this);
+	allActionMaps[console][toggleHash] = new ConsoleToggleAction(_("Toggle Console"), 0, NULL, this);
 }
 
 void InputEventController::SetConsole(HighConsole* hc)

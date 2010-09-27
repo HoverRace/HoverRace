@@ -46,7 +46,7 @@ namespace Control {
 class PlayerEffectAction : public ControlAction {
 	public:
 		// C++0x should give us constructor inheritance... whenever that happens
-		PlayerEffectAction(std::string name, MainCharacter::MainCharacter* mc);
+		PlayerEffectAction(std::string name, int listOrder, MainCharacter::MainCharacter* mc);
 
 		void SetMainCharacter(MainCharacter::MainCharacter* mc);
 		virtual void operator()(int value) = 0;
@@ -63,7 +63,7 @@ class PlayerEffectAction : public ControlAction {
  */
 class EngineAction : public PlayerEffectAction {
 	public:
-		EngineAction(std::string name, MainCharacter::MainCharacter* mc) : PlayerEffectAction(name, mc) { }
+		EngineAction(std::string name, int listOrder, MainCharacter::MainCharacter* mc) : PlayerEffectAction(name, listOrder, mc) { }
 
 		/***
 		 * eventValue > 0: turn engine on.
@@ -79,7 +79,7 @@ class EngineAction : public PlayerEffectAction {
  */
 class TurnLeftAction : public PlayerEffectAction {
 	public:
-		TurnLeftAction(std::string name, MainCharacter::MainCharacter* mc) : PlayerEffectAction(name, mc) { }
+		TurnLeftAction(std::string name, int listOrder, MainCharacter::MainCharacter* mc) : PlayerEffectAction(name, listOrder, mc) { }
 
 		/***
 		 * eventValue > 0: set craft to turn left
@@ -95,7 +95,7 @@ class TurnLeftAction : public PlayerEffectAction {
  */
 class TurnRightAction : public PlayerEffectAction {
 	public:
-		TurnRightAction(std::string name, MainCharacter::MainCharacter* mc) : PlayerEffectAction(name, mc) { }
+		TurnRightAction(std::string name, int listOrder, MainCharacter::MainCharacter* mc) : PlayerEffectAction(name, listOrder, mc) { }
 		
 		/***
 		 * eventValue > 0: set craft to turn right
@@ -111,7 +111,7 @@ class TurnRightAction : public PlayerEffectAction {
  */
 class JumpAction : public PlayerEffectAction {
 	public:
-		JumpAction(std::string name, MainCharacter::MainCharacter* mc) : PlayerEffectAction(name, mc) { }
+		JumpAction(std::string name, int listOrder, MainCharacter::MainCharacter* mc) : PlayerEffectAction(name, listOrder, mc) { }
 		
 		/***
 		 * The craft will be told to jump, regardless of eventValue.
@@ -127,7 +127,7 @@ class JumpAction : public PlayerEffectAction {
  */
 class PowerupAction : public PlayerEffectAction {
 	public:
-		PowerupAction(std::string name, MainCharacter::MainCharacter* mc) : PlayerEffectAction(name, mc) { }
+		PowerupAction(std::string name, int listOrder, MainCharacter::MainCharacter* mc) : PlayerEffectAction(name, listOrder, mc) { }
 		
 		/***
 		 * Uses the item, regardless of eventValue.
@@ -142,7 +142,7 @@ class PowerupAction : public PlayerEffectAction {
  */
 class ChangeItemAction : public PlayerEffectAction {
 	public:	
-		ChangeItemAction(std::string name, MainCharacter::MainCharacter* mc) : PlayerEffectAction(name, mc) { }
+		ChangeItemAction(std::string name, int listOrder, MainCharacter::MainCharacter* mc) : PlayerEffectAction(name, listOrder, mc) { }
 		
 		/***
 		 * Changes the current item, regardless of eventValue.
@@ -158,7 +158,7 @@ class ChangeItemAction : public PlayerEffectAction {
  */
 class BrakeAction : public PlayerEffectAction {
 	public:
-		BrakeAction(std::string name, MainCharacter::MainCharacter* mc) : PlayerEffectAction(name, mc) { }
+		BrakeAction(std::string name, int listOrder, MainCharacter::MainCharacter* mc) : PlayerEffectAction(name, listOrder, mc) { }
 		
 		/***
 		 * eventValue > 0: set brake state on
@@ -175,7 +175,7 @@ class BrakeAction : public PlayerEffectAction {
  */
 class LookBackAction : public PlayerEffectAction {
 	public:
-		LookBackAction(std::string name, MainCharacter::MainCharacter* mc) : PlayerEffectAction(name, mc) { }
+		LookBackAction(std::string name, int listOrder, MainCharacter::MainCharacter* mc) : PlayerEffectAction(name, listOrder, mc) { }
 		
 		/***
 		 * eventValue > 0: set lookback state on
@@ -191,7 +191,7 @@ class LookBackAction : public PlayerEffectAction {
  */
 class ConsoleAction : public ControlAction {
 	public:
-		ConsoleAction(std::string name, HoverScript::HighConsole* hc);
+		ConsoleAction(std::string name, int listOrder, HoverScript::HighConsole* hc);
 		virtual ~ConsoleAction() { }
 
 		void SetHighConsole(HoverScript::HighConsole* hc);
@@ -204,7 +204,7 @@ class ConsoleAction : public ControlAction {
 
 class ConsoleKeyAction : public ConsoleAction {
 	public:
-		ConsoleKeyAction(std::string name, HoverScript::HighConsole* hc, OIS::KeyCode kc);
+		ConsoleKeyAction(std::string name, int listOrder, HoverScript::HighConsole* hc, OIS::KeyCode kc);
 		virtual ~ConsoleKeyAction() { }
 
 		void SetHighConsole(HoverScript::HighConsole* hc);
@@ -221,8 +221,8 @@ class ConsoleKeyAction : public ConsoleAction {
 
 class ConsoleToggleAction : public ConsoleAction {
 	public:
-		ConsoleToggleAction(std::string name, HoverScript::HighConsole* hc, InputEventController* controller) : 
-			ConsoleAction(name, hc), controller(controller) { }
+		ConsoleToggleAction(std::string name, int listOrder, HoverScript::HighConsole* hc, InputEventController* controller) : 
+			ConsoleAction(name, listOrder, hc), controller(controller) { }
 		virtual ~ConsoleToggleAction() { }
 
 		/***
@@ -243,7 +243,7 @@ class ConsoleToggleAction : public ConsoleAction {
  */
 class ObserverAction : public ControlAction {
 	public:
-		ObserverAction(std::string name, Observer** observers, int nObservers) : ControlAction(name), observers(observers), nObservers(nObservers) { }
+		ObserverAction(std::string name, int listOrder, Observer** observers, int nObservers) : ControlAction(name, listOrder), observers(observers), nObservers(nObservers) { }
 		virtual ~ObserverAction() { }
 
 		void SetObservers(Observer** observers, int nObservers);
@@ -261,7 +261,7 @@ class ObserverAction : public ControlAction {
  */
 class ObserverTiltAction : public ObserverAction {
 	public:
-		ObserverTiltAction(std::string name, Observer** observers, int nObservers, int tiltIncrement) : ObserverAction(name, observers, nObservers), tiltIncrement(tiltIncrement) { }
+		ObserverTiltAction(std::string name, int listOrder, Observer** observers, int nObservers, int tiltIncrement) : ObserverAction(name, listOrder, observers, nObservers), tiltIncrement(tiltIncrement) { }
 
 		/// Fires on >0 value.
 		virtual void operator()(int value);
@@ -277,7 +277,7 @@ class ObserverTiltAction : public ObserverAction {
  */
 class ObserverZoomAction : public ObserverAction {
 	public:
-		ObserverZoomAction(std::string name, Observer** observers, int nObservers, int zoomIncrement) : ObserverAction(name, observers, nObservers), zoomIncrement(zoomIncrement) { }
+		ObserverZoomAction(std::string name, int listOrder, Observer** observers, int nObservers, int zoomIncrement) : ObserverAction(name, listOrder, observers, nObservers), zoomIncrement(zoomIncrement) { }
 
 		/// Fires on >0 value.
 		virtual void operator()(int value);
@@ -293,7 +293,7 @@ class ObserverZoomAction : public ObserverAction {
  */
 class ObserverResetAction : public ObserverAction {
 	public:
-		ObserverResetAction(std::string name, Observer** observers, int nObservers) : ObserverAction(name, observers, nObservers) { }
+		ObserverResetAction(std::string name, int listOrder, Observer** observers, int nObservers) : ObserverAction(name, listOrder, observers, nObservers) { }
 
 		/// Fires on >0 value.
 		virtual void operator()(int value);

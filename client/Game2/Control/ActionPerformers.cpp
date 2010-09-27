@@ -37,7 +37,7 @@ using namespace HoverRace::Client::HoverScript;
 using HoverRace::Client::Observer;
 
 // constructor does not need to do anything but save our pointer
-PlayerEffectAction::PlayerEffectAction(std::string name, MainCharacter* pmc) : ControlAction(name), mc(pmc) { }
+PlayerEffectAction::PlayerEffectAction(std::string name, int listOrder, MainCharacter* pmc) : ControlAction(name, listOrder), mc(pmc) { }
 
 void PlayerEffectAction::SetMainCharacter(MainCharacter* mc) { this->mc = mc; }
 
@@ -101,14 +101,14 @@ void LookBackAction::operator()(int eventValue)
 
 //// Console actions
 
-ConsoleAction::ConsoleAction(std::string name, HighConsole* hc) : ControlAction(name), hc(hc) { }
+ConsoleAction::ConsoleAction(std::string name, int listOrder, HighConsole* hc) : ControlAction(name, listOrder), hc(hc) { }
 
 void ConsoleAction::SetHighConsole(HighConsole* hc)
 {
 	this->hc = hc;
 }
 
-ConsoleKeyAction::ConsoleKeyAction(std::string name, HighConsole* hc, OIS::KeyCode kc) : ConsoleAction(name, hc), kc(kc) { }
+ConsoleKeyAction::ConsoleKeyAction(std::string name, int listOrder, HighConsole* hc, OIS::KeyCode kc) : ConsoleAction(name, listOrder, hc), kc(kc) { }
 
 void ConsoleKeyAction::operator()(int eventValue)
 {
