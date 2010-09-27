@@ -16,9 +16,6 @@
     <Filter Include="ObjFacTools">
       <UniqueIdentifier>{4cbf513d-e37c-4599-897c-3868ce31dc52}</UniqueIdentifier>
     </Filter>
-    <Filter Include="PaletteCreator">
-      <UniqueIdentifier>{62cbde14-6ffe-422c-9e24-c20c0dfe7588}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Util">
       <UniqueIdentifier>{54d8a779-58a0-4089-aed0-ec233cb3fd40}</UniqueIdentifier>
     </Filter>
@@ -152,9 +149,6 @@
     </ClCompile>
     <ClCompile Include="ObjFacTools\SpriteHandle.cpp">
       <Filter>ObjFacTools</Filter>
-    </ClCompile>
-    <ClCompile Include="PaletteCreator\PaletteCreator.cpp">
-      <Filter>PaletteCreator</Filter>
     </ClCompile>
     <ClCompile Include="Util\Config.cpp">
       <Filter>Util</Filter>

@@ -146,10 +146,6 @@
     <ClCompile Include="ObjFacTools\ResSound.cpp" />
     <ClCompile Include="ObjFacTools\ResSprite.cpp" />
     <ClCompile Include="ObjFacTools\SpriteHandle.cpp" />
-    <ClCompile Include="PaletteCreator\PaletteCreator.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="Util\Config.cpp" />
     <ClCompile Include="Util\DllObjectFactory.cpp" />
     <ClCompile Include="Util\FuzzyLogic.cpp" />
