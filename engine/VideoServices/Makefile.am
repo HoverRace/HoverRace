@@ -8,8 +8,8 @@ libvideosvc_la_SOURCES = \
 	ColorPalette.cpp \
 	ColorPalette.h \
 	ColorTab.cpp \
-	Font.cpp \
-	Font.h \
+	FontSpec.cpp \
+	FontSpec.h \
 	MultipartText.cpp \
 	MultipartText.h \
 	NumericGlyphs.cpp \
