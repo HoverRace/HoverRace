@@ -728,7 +728,7 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 			}
 			// Display rank list
 			int lFirstPlayer = lCurrentPage * NB_PLAYER_PAGE;
-			int lLastPlayer = min(lFirstPlayer + NB_PLAYER_PAGE, lNbResultAvail);
+			int lLastPlayer = std::min(lFirstPlayer + NB_PLAYER_PAGE, lNbResultAvail);
 			int lFontScaling = 1 + (mBaseFont->GetSprite()->GetItemHeight() * 30) / (lYRes);
 			int lLineSpacing = mBaseFont->GetSprite()->GetItemHeight() / lFontScaling;
 
@@ -766,7 +766,7 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 					pSession->GetResult(lCounter, lPlayerName, lHoverId, lConnected, lNbLap, lFinishTime, lBestLap);
 				}
 
-				int lPlayerNameLen = min(strlen(lPlayerName), 10);
+				int lPlayerNameLen = std::min(strlen(lPlayerName), static_cast<size_t>(10));
 
 				if(lShowHits) {
 					sprintf(lBuffer, globalFmts.hitChart.c_str(), lCounter + 1, lPlayerName, lHoverId + 1, 10 - lPlayerNameLen, "", lNbFor, lNbAgain);
