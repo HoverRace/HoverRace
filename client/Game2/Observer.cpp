@@ -33,6 +33,10 @@
 
 #include <math.h>
 
+#ifdef min
+#	undef min
+#endif
+
 using HoverRace::Util::Config;
 using HoverRace::VideoServices::StaticText;
 using HoverRace::VideoServices::Ascii2Simple;
