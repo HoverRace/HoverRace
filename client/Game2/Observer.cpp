@@ -57,7 +57,7 @@ namespace Client {
 
 namespace {
 	// Global table of formatted HUD strings.
-	struct
+	struct GlobalFmts
 	{
 		std::string rankTitle;
 		std::string hitTitle;
