@@ -43,6 +43,8 @@ hoverrace_SOURCES = \
 	ClientSession.cpp \
 	ClientSession.h \
 	GameDirector.h \
+	HighObserver.cpp \
+	HighObserver.h \
 	RoomList.cpp \
 	RoomList.h \
 	Rulebook.h \
