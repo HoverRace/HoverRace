@@ -25,7 +25,7 @@
 #include <string>
 
 #include "../Util/MR_Types.h"
-#include "../VideoServices/Font.h"
+#include "../VideoServices/FontSpec.h"
 
 #ifdef _WIN32
 #	ifdef MR_ENGINE
@@ -58,7 +58,7 @@ class MR_DllDeclare StaticText {
 			int size=20, bool bold=false, bool italic=false,
 			MR_UInt8 color=43, effect_t effect=EFFECT_NONE);
 		StaticText(const std::string &s,
-			const HoverRace::VideoServices::Font &font,
+			const FontSpec &font,
 			MR_UInt8 color=43, effect_t effect=EFFECT_NONE);
 		virtual ~StaticText();
 
@@ -68,7 +68,7 @@ class MR_DllDeclare StaticText {
 		int GetRealHeight() const;
 
 		void SetText(const std::string &s);
-		void SetFont(const HoverRace::VideoServices::Font &font);
+		void SetFont(const FontSpec &font);
 		void SetColor(MR_UInt8 color);
 
 	private:
@@ -84,7 +84,7 @@ class MR_DllDeclare StaticText {
 		wchar_t *ws;
 		size_t wsLen;
 
-		HoverRace::VideoServices::Font font;
+		FontSpec font;
 		MR_UInt8 color;
 		effect_t effect;
 

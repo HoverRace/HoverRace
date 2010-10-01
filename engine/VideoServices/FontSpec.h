@@ -1,5 +1,5 @@
 
-// Font.h
+// FontSpec.h
 // Header for specifying a specific typeface.
 //
 // Copyright (c) 2009 Michael Imamura.
@@ -41,9 +41,9 @@ namespace VideoServices {
  * Describes a typeface.
  * @author Michael Imamura
  */
-struct MR_DllDeclare Font {
+struct MR_DllDeclare FontSpec {
 
-	Font(const std::string &name="Arial", int size=20,
+	FontSpec(const std::string &name="Arial", int size=20,
 		bool bold=false, bool italic=false) :
 		name(name), size(size), bold(bold), italic(italic) { }
 
@@ -53,7 +53,7 @@ struct MR_DllDeclare Font {
 	bool italic;
 };
 
-MR_DllDeclare inline bool operator==(const Font &a, const Font &b)
+MR_DllDeclare inline bool operator==(const FontSpec &a, const FontSpec &b)
 {
 	return
 		a.size == b.size &&

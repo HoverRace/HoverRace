@@ -28,13 +28,14 @@
 
 #include <boost/format.hpp>
 
-#include "Font.h"
+#include "FontSpec.h"
 #include "NumericGlyphs.h"
 #include "StaticText.h"
 
 #include "MultipartText.h"
 
-using namespace HoverRace::VideoServices;
+namespace HoverRace {
+namespace VideoServices {
 
 /// Base class for individual text parts.
 class MultipartText::Part
@@ -173,7 +174,7 @@ class MultipartText::FormatPart : public MultipartText::Part
  *               (may be @c NULL if a StaticText should be created for dynamic parts).
  * @param color The text color.
  */
-MultipartText::MultipartText(const Font &font,
+MultipartText::MultipartText(const FontSpec &font,
                              const NumericGlyphs *glyphs,
                              MR_UInt8 color) :
 	font(font), glyphs(glyphs), color(color),
@@ -188,7 +189,7 @@ MultipartText::~MultipartText()
 	}
 }
 
-const HoverRace::VideoServices::Font &MultipartText::GetFont() const
+const FontSpec &MultipartText::GetFont() const
 {
 	return font;
 }
@@ -266,3 +267,6 @@ MultipartText &HoverRace::VideoServices::operator<<(MultipartText &self, const b
 	self.AddPart(new MultipartText::FormatPart(self, fmt));
 	return self;
 }
+
+}  // namespace VideoServices
+}  // namespace HoverRace

@@ -42,7 +42,7 @@ namespace HoverRace {
 		class GameDirector;
 	}
 	namespace VideoServices {
-		struct Font;
+		struct FontSpec;
 		class StaticText;
 		class Viewport2D;
 		class VideoBuffer;
@@ -114,7 +114,7 @@ class HighConsole : public Console
 		boost::mutex submitBufferMutex;
 		std::string commandLine;
 
-		VideoServices::Font *logFont;
+		VideoServices::FontSpec *logFont;
 		VideoServices::StaticText *commandPrompt, *continuePrompt;
 		VideoServices::StaticText *commandLineDisplay;
 

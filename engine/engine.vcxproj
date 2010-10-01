@@ -154,13 +154,13 @@
     <ClCompile Include="Util\Profiler.cpp" />
     <ClCompile Include="Util\Str.cpp" />
     <ClCompile Include="Util\WorldCoordinates.cpp" />
+    <ClCompile Include="VideoServices\FontSpec.cpp" />
     <ClCompile Include="VideoServices\Viewport2D.cpp" />
     <ClCompile Include="VideoServices\Viewport3D.cpp" />
     <ClCompile Include="VideoServices\Viewport3DRendering.cpp" />
     <ClCompile Include="VideoServices\Bitmap.cpp" />
     <ClCompile Include="VideoServices\ColorPalette.cpp" />
     <ClCompile Include="VideoServices\ColorTab.cpp" />
-    <ClCompile Include="VideoServices\Font.cpp" />
     <ClCompile Include="VideoServices\MultipartText.cpp" />
     <ClCompile Include="VideoServices\NumericGlyphs.cpp" />
     <ClCompile Include="VideoServices\SoundServer.cpp" />
@@ -261,11 +261,11 @@
     <ClInclude Include="Util\Profiler.h" />
     <ClInclude Include="Util\Str.h" />
     <ClInclude Include="Util\WorldCoordinates.h" />
+    <ClInclude Include="VideoServices\FontSpec.h" />
     <ClInclude Include="VideoServices\Viewport2D.h" />
     <ClInclude Include="VideoServices\Viewport3D.h" />
     <ClInclude Include="VideoServices\Bitmap.h" />
     <ClInclude Include="VideoServices\ColorPalette.h" />
-    <ClInclude Include="VideoServices\Font.h" />
     <ClInclude Include="VideoServices\MultipartText.h" />
     <ClInclude Include="VideoServices\NumericGlyphs.h" />
     <ClInclude Include="VideoServices\Patch.h" />

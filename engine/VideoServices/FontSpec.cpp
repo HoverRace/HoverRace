@@ -1,5 +1,5 @@
 
-// Font.cpp
+// FontSpec.cpp
 // Specifies a specific typeface.
 //
 // Copyright (c) 2009 Michael Imamura.

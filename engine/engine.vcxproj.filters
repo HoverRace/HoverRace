@@ -183,9 +183,6 @@
     <ClCompile Include="VideoServices\ColorTab.cpp">
       <Filter>VideoServices</Filter>
     </ClCompile>
-    <ClCompile Include="VideoServices\Font.cpp">
-      <Filter>VideoServices</Filter>
-    </ClCompile>
     <ClCompile Include="VideoServices\MultipartText.cpp">
       <Filter>VideoServices</Filter>
     </ClCompile>
@@ -287,6 +284,9 @@
       <Filter>VideoServices</Filter>
     </ClCompile>
     <ClCompile Include="VideoServices\Viewport3DRendering.cpp">
+      <Filter>VideoServices</Filter>
+    </ClCompile>
+    <ClCompile Include="VideoServices\FontSpec.cpp">
       <Filter>VideoServices</Filter>
     </ClCompile>
   </ItemGroup>
@@ -459,9 +459,6 @@
     <ClInclude Include="VideoServices\ColorPalette.h">
       <Filter>VideoServices</Filter>
     </ClInclude>
-    <ClInclude Include="VideoServices\Font.h">
-      <Filter>VideoServices</Filter>
-    </ClInclude>
     <ClInclude Include="VideoServices\MultipartText.h">
       <Filter>VideoServices</Filter>
     </ClInclude>
@@ -583,6 +580,9 @@
     </ClInclude>
     <ClInclude Include="Model\TrackFileCommon.h">
       <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="VideoServices\FontSpec.h">
+      <Filter>VideoServices</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

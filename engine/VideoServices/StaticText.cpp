@@ -29,7 +29,8 @@
 
 using namespace HoverRace::Util;
 
-using namespace HoverRace::VideoServices;
+namespace HoverRace {
+namespace VideoServices {
 
 #ifdef _WIN32
 static RGBQUAD RGB_BLACK = { 0, 0, 0, 0 };
@@ -65,7 +66,7 @@ StaticText::StaticText(const std::string &s,
  * @param effect Effect to apply.
  */
 StaticText::StaticText(const std::string &s,
-                       const HoverRace::VideoServices::Font &font,
+                       const FontSpec &font,
                        MR_UInt8 color, effect_t effect) :
 	s(s), ws(Str::Utf8ToWide(s.c_str())), wsLen(wcslen(ws)),
 	font(font), color(color), effect(effect),
@@ -112,7 +113,7 @@ void StaticText::SetText(const std::string &s)
 	}
 }
 
-void StaticText::SetFont(const HoverRace::VideoServices::Font &font)
+void StaticText::SetFont(const FontSpec &font)
 {
 	if (!(this->font == font)) {
 		this->font = font;
@@ -284,3 +285,5 @@ void StaticText::Blt(int x, int y, Viewport2D *vp, bool centerX) const
 #endif
 }
 
+}  // namespace VideoServices
+}  // namespace HoverRace

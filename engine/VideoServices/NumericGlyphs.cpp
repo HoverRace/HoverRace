@@ -22,19 +22,20 @@
 
 #include "StdAfx.h"
 
-#include "Font.h"
+#include "FontSpec.h"
 #include "StaticText.h"
 
 #include "NumericGlyphs.h"
 
-using namespace HoverRace::VideoServices;
+namespace HoverRace {
+namespace VideoServices {
 
 /**
  * Constructor.
  * @param font The font.
  * @param color The color index.
  */
-NumericGlyphs::NumericGlyphs(const Font &font, MR_UInt8 color)
+NumericGlyphs::NumericGlyphs(const FontSpec &font, MR_UInt8 color)
 {
 	for (int i = 0; i < 32; ++i) {
 		glyphs[i] = NULL;
@@ -56,7 +57,7 @@ NumericGlyphs::~NumericGlyphs()
 	}
 }
 
-void NumericGlyphs::SetFont(const HoverRace::VideoServices::Font &font)
+void NumericGlyphs::SetFont(const HoverRace::VideoServices::FontSpec &font)
 {
 	for (int i = 0; i < 32; ++i) {
 		glyphs[i]->SetFont(font);
@@ -79,3 +80,6 @@ const StaticText *NumericGlyphs::GetGlyph(char c) const
 {
 	return (c < 32 || c >= 64) ? NULL : glyphs[c - 32];
 }
+
+}  // namespace VideoServices
+}  // namespace HoverRace

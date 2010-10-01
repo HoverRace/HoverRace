@@ -26,7 +26,7 @@
 
 #include "../../engine/Util/Config.h"
 #include "../../engine/VideoServices/Viewport2D.h"
-#include "../../engine/VideoServices/Font.h"
+#include "../../engine/VideoServices/FontSpec.h"
 #include "../../engine/VideoServices/MultipartText.h"
 #include "../../engine/VideoServices/NumericGlyphs.h"
 #include "../../engine/VideoServices/StaticText.h"
@@ -52,7 +52,7 @@ HighObserver::HighObserver()
 
 	viewport = new VideoServices::Viewport2D();
 
-	statsFont = new Font("Arial", 12);
+	statsFont = new FontSpec("Arial", 12);
 	statsNumGlyphs = new NumericGlyphs(*statsFont, STATS_COLOR);
 
 	fpsTxt = new MultipartText(*statsFont, statsNumGlyphs, STATS_COLOR);

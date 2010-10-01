@@ -35,7 +35,7 @@
 #include <boost/format.hpp>
 
 #include "../Util/MR_Types.h"
-#include "Font.h"
+#include "FontSpec.h"
 
 namespace HoverRace {
 namespace VideoServices {
@@ -50,12 +50,12 @@ class NumericGlyphs;
 class MR_DllDeclare MultipartText
 {
 	public:
-		MultipartText(const Font &font,
+		MultipartText(const FontSpec &font,
 			const NumericGlyphs *glyphs,
 			MR_UInt8 color=43);
 		~MultipartText();
 
-		const Font &GetFont() const;
+		const FontSpec &GetFont() const;
 		const NumericGlyphs *GetGlyphs() const;
 		const MR_UInt8 GetColor() const;
 
@@ -69,7 +69,7 @@ class MR_DllDeclare MultipartText
 		void AddStringPart(const char *s);
 
 	private:
-		Font font;
+		FontSpec font;
 		const NumericGlyphs *glyphs;
 		MR_UInt8 color;
 		typedef std::vector<Part*> parts_t;

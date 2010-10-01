@@ -24,7 +24,6 @@
 
 namespace HoverRace {
 	namespace VideoServices {
-		struct Font;
 		class StaticText;
 		class Viewport2D;
 		class VideoBuffer;

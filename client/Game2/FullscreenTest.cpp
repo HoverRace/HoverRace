@@ -25,7 +25,7 @@
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/Str.h"
 #include "../../engine/VideoServices/Viewport2D.h"
-#include "../../engine/VideoServices/Font.h"
+#include "../../engine/VideoServices/FontSpec.h"
 #include "../../engine/VideoServices/StaticText.h"
 #include "../../engine/VideoServices/VideoBuffer.h"
 
@@ -110,7 +110,7 @@ void FullscreenTest::UpdateSubheading(int resY)
 		timeRemaining);
 	std::string subheadingStr = str(format(text) % timeRemaining);
 	if (subheading == NULL) {
-		Font subheadingFont("Arial", ScaleFont(16, resY), true);
+		FontSpec subheadingFont("Arial", ScaleFont(16, resY), true);
 		subheading = new StaticText(subheadingStr, subheadingFont, 0x10);
 	}
 	else {
@@ -120,7 +120,7 @@ void FullscreenTest::UpdateSubheading(int resY)
 
 void FullscreenTest::InitWidgets(int resX, int resY)
 {
-	Font headingFont("Arial", ScaleFont(20, resY), true);
+	FontSpec headingFont("Arial", ScaleFont(20, resY), true);
 	
 	// Keep these translations short -- the user doesn't have much time to read them!
 	std::string headingStr = _("HoverRace fullscreen test");

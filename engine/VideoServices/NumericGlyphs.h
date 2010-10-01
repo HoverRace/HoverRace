@@ -23,7 +23,7 @@
 #pragma once
 
 #include "../Util/MR_Types.h"
-#include "Font.h"
+#include "FontSpec.h"
 
 #ifdef _WIN32
 #	ifdef MR_ENGINE
@@ -47,10 +47,10 @@ class StaticText;
 class MR_DllDeclare NumericGlyphs
 {
 	public:
-		NumericGlyphs(const Font &font, MR_UInt8 color=43);
+		NumericGlyphs(const FontSpec &font, MR_UInt8 color=43);
 		virtual ~NumericGlyphs();
 
-		void SetFont(const Font &font);
+		void SetFont(const FontSpec &font);
 		void SetColor(MR_UInt8 color);
 
 		const StaticText *GetGlyph(char c) const;

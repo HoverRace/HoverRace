@@ -29,7 +29,7 @@ namespace HoverRace {
 		class ClientSession;
 	}
 	namespace VideoServices {
-		struct Font;
+		struct FontSpec;
 		class MultipartText;
 		class NumericGlyphs;
 		class StaticText;
@@ -64,7 +64,7 @@ class HighObserver
 
 	private:
 		VideoServices::Viewport2D *viewport;
-		VideoServices::Font *statsFont; ///< Font used for stats HUD text.
+		VideoServices::FontSpec *statsFont; ///< Font used for stats HUD text.
 		VideoServices::NumericGlyphs *statsNumGlyphs;
 		VideoServices::MultipartText *fpsTxt;
 };
