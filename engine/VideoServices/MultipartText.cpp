@@ -250,19 +250,19 @@ void MultipartText::AddPart(Part *part)
 	parts.push_back(part);
 }
 
-MultipartText &HoverRace::VideoServices::operator<<(MultipartText &self, const char *s)
+MultipartText &operator<<(MultipartText &self, const char *s)
 {
 	if (s != NULL && s[0] != '\0') self.AddStringPart(s);
 	return self;
 }
 
-MultipartText &HoverRace::VideoServices::operator<<(MultipartText &self, const std::string &s)
+MultipartText &operator<<(MultipartText &self, const std::string &s)
 {
 	if (!s.empty()) self.AddStringPart(s.c_str());
 	return self;
 }
 
-MultipartText &HoverRace::VideoServices::operator<<(MultipartText &self, const boost::format &fmt)
+MultipartText &operator<<(MultipartText &self, const boost::format &fmt)
 {
 	self.AddPart(new MultipartText::FormatPart(self, fmt));
 	return self;
