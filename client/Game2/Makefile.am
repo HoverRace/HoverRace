@@ -45,6 +45,8 @@ hoverrace_SOURCES = \
 	GameDirector.h \
 	HighObserver.cpp \
 	HighObserver.h \
+	Observer.cpp \
+	Observer.h \
 	RoomList.cpp \
 	RoomList.h \
 	Rulebook.h \
