@@ -148,9 +148,7 @@ ClientApp::ClientApp() :
 		cfg->video.gamma, cfg->video.contrast, cfg->video.brightness);
 	videoBuf->NotifyDesktopModeChange(desktopWidth, desktopHeight);
 
-	videoBuf->CreatePalette(
-		cfg->video.gamma, cfg->video.contrast, cfg->video.brightness);
-	videoBuf->AssignPalette();
+	AssignPalette();
 
 	controller = new Controller(mainWnd, uiInput);
 
@@ -251,7 +249,11 @@ void ClientApp::ChangeAutoUpdates(bool newSetting)
 
 void ClientApp::AssignPalette()
 {
-	throw UnimplementedExn("ClientApp::AssignPalette()");
+	Config *cfg = Config::GetInstance();
+
+	videoBuf->CreatePalette(
+		cfg->video.gamma, cfg->video.contrast, cfg->video.brightness);
+	videoBuf->AssignPalette();
 }
 
 Control::Controller *ClientApp::ReloadController()
