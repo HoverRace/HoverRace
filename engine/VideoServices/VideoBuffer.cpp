@@ -1068,7 +1068,17 @@ VideoBuffer::pixelMeter_t VideoBuffer::GetPixelMeter() const
 BOOL VideoBuffer::Lock()
 {
 #ifdef WITH_SDL
-	throw UnimplementedExn("VideoBuffer::Lock()");
+	SDL_Surface *surface = SDL_GetVideoSurface();
+
+	if (SDL_MUSTLOCK(surface)) {
+		if (SDL_LockSurface(surface) < 0) {
+			throw Exception("Unable to lock surface");
+		}
+	}
+
+	mBuffer = static_cast<MR_UInt8*>(surface->pixels);
+
+	return TRUE;
 #else
 	PRINT_LOG("Lock");
 
@@ -1134,7 +1144,11 @@ BOOL VideoBuffer::Lock()
 void VideoBuffer::Unlock()
 {
 #ifdef WITH_SDL
-	throw UnimplementedExn("VideoBuffer::Unlock()");
+	SDL_Surface *surface = SDL_GetVideoSurface();
+
+	if (SDL_MUSTLOCK(surface)) {
+		SDL_UnlockSurface(surface);
+	}
 #else
 	PRINT_LOG("Unlock");
 
@@ -1231,15 +1245,15 @@ void VideoBuffer::Unlock()
 		delete[]mBuffer;
 		mBuffer = NULL;
 	}
+#endif
 
 	Flip();
-#endif
 }
 
 void VideoBuffer::Flip()
 {
 #ifdef WITH_SDL
-	throw UnimplementedExn("VideoBuffer::Flip()");
+	SDL_Flip(SDL_GetVideoSurface());
 #else
 	PRINT_LOG("Flip");
 
