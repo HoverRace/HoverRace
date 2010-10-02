@@ -54,7 +54,7 @@ hoverrace_SOURCES = \
 	version.h
 
 BUILT_SOURCES = StdAfx.h.gch
-CLEANFILES = $(BUILT_SOURCES)
+CLEANFILES = $(BUILT_SOURCES) StdAfx.h.Td StdAfx.h.d
 
 EXTRA_DIST = \
 	Game2.rc \
@@ -65,5 +65,10 @@ EXTRA_DIST = \
 
 # Build the precompiled header.
 StdAfx.h.gch: StdAfx.h
-	$(CXXCOMPILE) $(HR_CPPFLAGS) $(HR_CXXFLAGS) -x c++-header -c -o $@ $<
+	$(CXXCOMPILE) $(HR_CPPFLAGS) $(HR_CXXFLAGS) -x c++-header \
+		-MD -MP -MF StdAfx.h.Td \
+		-c -o $@ $<
+	mv StdAfx.h.Td StdAfx.h.d
+
+-include StdAfx.h.d
 

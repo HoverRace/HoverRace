@@ -37,7 +37,7 @@ libhoverrace_engine_la_SOURCES = \
 EXTRA_libhoverrace_engine_la_SOURCES = \
 	StdAfx.cpp
 
-CLEANFILES = $(BUILT_SOURCES)
+CLEANFILES = $(BUILT_SOURCES) StdAfx.h.Td StdAfx.h.d
 
 EXTRA_DIST = \
 	engine.vcxproj \
@@ -48,5 +48,10 @@ EXTRA_DIST = \
 # otherwise GCC will complain that the PCH was built with different
 # options.
 StdAfx.h.gch: StdAfx.h
-	$(CXXCOMPILE) $(HR_CPPFLAGS) $(HR_CXXFLAGS) -x c++-header -fPIC -DPIC -c -o $@ $<
+	$(CXXCOMPILE) $(HR_CPPFLAGS) $(HR_CXXFLAGS) -x c++-header -fPIC -DPIC \
+		-MD -MP -MF StdAfx.h.Td \
+		-c -o $@ $<
+	mv StdAfx.h.Td StdAfx.h.d
+
+-include StdAfx.h.d
 
