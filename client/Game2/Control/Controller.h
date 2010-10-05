@@ -196,6 +196,12 @@ class InputEventController : public KeyListener, public MouseListener, public Jo
 		void CaptureNextInput(int oldhash);
 
 		/***
+		 * This function indicates whether or not the controller is capturing an input.
+		 * It can be used to check whether or not an input has been captured.
+		 */
+		bool IsCapturing();
+
+		/***
 		 * Clears all of the active control bindings.  Does not delete the bindings
 		 * but simply removes them from the active action map.
 		 */

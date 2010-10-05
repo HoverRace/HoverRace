@@ -1377,6 +1377,11 @@ void InputEventController::CaptureNextInput(int oldhash)
 	captureOldHash = oldhash;
 }
 
+bool InputEventController::IsCapturing()
+{
+	return captureNextInput;
+}
+
 void InputEventController::ClearActionMap()
 {
 	// remove all active bindings
