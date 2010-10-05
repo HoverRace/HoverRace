@@ -1446,6 +1446,72 @@ void InputEventController::AddPlayerMaps(int numPlayers, MainCharacter::MainChar
 	AddActionMap(_("Console"));
 }
 
+void InputEventController::SaveControllerConfig()
+{
+	Config *cfg = Config::GetInstance();
+
+	/* We must save each functor's hash */
+	for(int i = 0; i < cfg->MAX_PLAYERS; i++) {
+		// use map playerX
+		std::stringstream str;
+		str << _("Player") << " " << (i + 1);
+		ActionMap& playerMap = allActionMaps[str.str()];
+
+		for(ActionMap::iterator it = playerMap.begin(); it != playerMap.end(); it++) {
+			// tedious, unfortunately
+			switch(it->second->getListOrder()) {
+				case 0: // throttle
+					cfg->controls_hash[i].motorOn = it->first;
+					break;
+				case 1: // brake
+					cfg->controls_hash[i].brake = it->first;
+					break;
+				case 2: // turn left
+					cfg->controls_hash[i].left = it->first;
+					break;
+				case 3: // turn right
+					cfg->controls_hash[i].right = it->first;
+					break;
+				case 4: // jump
+					cfg->controls_hash[i].jump = it->first;
+					break;
+				case 5: // powerup
+					cfg->controls_hash[i].fire = it->first;
+					break;
+				case 6: // change item
+					cfg->controls_hash[i].weapon = it->first;
+					break;
+				case 7: // look back
+					cfg->controls_hash[i].lookBack = it->first;
+					break;
+			}
+		}
+	}
+}
+
+void InputEventController::LoadControllerConfig()
+{
+	// use the cfg_controls_t structure to load functors
+	Config *cfg = Config::GetInstance();
+
+	/* now we need to load the values */
+	for(int i = 0; i < cfg->MAX_PLAYERS; i++) {
+		// use map playerX
+		std::stringstream str;
+		str << _("Player") << " " << (i + 1);
+		ActionMap& playerMap = allActionMaps[str.str()];
+
+		playerMap[cfg->controls_hash[i].motorOn] = new EngineAction(_("Throttle"), 0, NULL);
+		playerMap[cfg->controls_hash[i].brake] = new BrakeAction(_("Brake"), 1, NULL);
+		playerMap[cfg->controls_hash[i].left] = new TurnLeftAction(_("Turn Left"), 2, NULL);
+		playerMap[cfg->controls_hash[i].right] = new TurnRightAction(_("Turn Right"), 3, NULL);
+		playerMap[cfg->controls_hash[i].jump] = new JumpAction(_("Jump"), 4, NULL);
+		playerMap[cfg->controls_hash[i].fire] = new PowerupAction(_("Fire"), 5, NULL);
+		playerMap[cfg->controls_hash[i].weapon] = new ChangeItemAction(_("Item"), 6, NULL);
+		playerMap[cfg->controls_hash[i].lookBack] = new LookBackAction(_("Look Back"), 7, NULL);
+	}
+}
+
 void InputEventController::InitInputManager(Util::OS::wnd_t mainWindow)
 {
 	// collect parameters to give to init InputManager
@@ -1508,29 +1574,6 @@ void InputEventController::InitInputManager(Util::OS::wnd_t mainWindow)
 	}
 
 	// now everything is set up and hopefully it will working forever!
-}
-
-void InputEventController::LoadControllerConfig()
-{
-	// use the cfg_controls_t structure to load functors
-	Config *cfg = Config::GetInstance();
-
-	/* now we need to load the values */
-	for(int i = 0; i < cfg->MAX_PLAYERS; i++) {
-		// use map playerX
-		std::stringstream str;
-		str << _("Player") << " " << (i + 1);
-		ActionMap& playerMap = allActionMaps[str.str()];
-
-		playerMap[cfg->controls_hash[i].motorOn] = new EngineAction(_("Throttle"), 0, NULL);
-		playerMap[cfg->controls_hash[i].brake] = new BrakeAction(_("Brake"), 1, NULL);
-		playerMap[cfg->controls_hash[i].left] = new TurnLeftAction(_("Turn Left"), 2, NULL);
-		playerMap[cfg->controls_hash[i].right] = new TurnRightAction(_("Turn Right"), 3, NULL);
-		playerMap[cfg->controls_hash[i].jump] = new JumpAction(_("Jump"), 4, NULL);
-		playerMap[cfg->controls_hash[i].fire] = new PowerupAction(_("Fire"), 5, NULL);
-		playerMap[cfg->controls_hash[i].weapon] = new ChangeItemAction(_("Item"), 6, NULL);
-		playerMap[cfg->controls_hash[i].lookBack] = new LookBackAction(_("Look Back"), 7, NULL);
-	}
 }
 
 void InputEventController::LoadConsoleMap()

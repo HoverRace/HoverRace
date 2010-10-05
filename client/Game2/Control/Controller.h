@@ -255,9 +255,18 @@ class InputEventController : public KeyListener, public MouseListener, public Jo
 		 */
 		void SetConsole(HoverScript::HighConsole* hc);
 
+		/***
+		 * Save the controller configuration to the Config object.
+		 */
+		void SaveControllerConfig();
+
+		/***
+		 * Load the configuration from the Config object.
+		 */
+		void LoadControllerConfig();
+
 	private:
 		void InitInputManager(Util::OS::wnd_t mainWindow);
-		void LoadControllerConfig();
 
 		// Auxiliary functions
 
