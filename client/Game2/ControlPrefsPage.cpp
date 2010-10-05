@@ -57,6 +57,7 @@ ControlPrefsPage::~ControlPrefsPage()
 {
 }
 
+
 void ControlPrefsPage::UpdateDialogLabels(HWND pWindow)
 {
 	Config *cfg = Config::GetInstance();
@@ -98,6 +99,7 @@ void ControlPrefsPage::UpdateDialogLabels(HWND pWindow)
 	SetDlgItemTextW(pWindow, IDC_SELWEAPON4, Str::UW(controller->HashToString(cfg->controls_hash[3].weapon).c_str()));
 	SetDlgItemTextW(pWindow, IDC_LOOKBACK4, Str::UW(controller->HashToString(cfg->controls_hash[3].lookBack).c_str()));
 }
+
 
 /***
  * Dialog callback for the controls property page.
@@ -155,28 +157,32 @@ BOOL ControlPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 				HWND listview = GetDlgItem(pWindow, IDC_CONTROL_BINDING);
 				SendMessageW(listview, LVM_INSERTCOLUMN, 0, (LPARAM) &keycol);
 				SendMessageW(listview, LVM_INSERTCOLUMN, 1, (LPARAM) &bindcol);
+
+				pressAnyKeyDialog = NULL;
 			}
 
 		case WM_COMMAND:
 			{
+				char buffer[200];
+				HWND combobox = GetDlgItem(pWindow, IDC_MAP_SELECT);
+				SendMessage(combobox, WM_GETTEXT, 200, (LPARAM) &buffer);
+				std::string mapname = buffer;
+
+				// we need to populate the ListView with actions
+				HWND hList = GetDlgItem(pWindow, IDC_CONTROL_BINDINGS);
+				InputEventController::ActionMap map = controller->GetActionMap(mapname);
+
+				// order bindings by defined ordering in ControlAction::listOrder
+				std::map<int, int> orderMap;
+				for(InputEventController::ActionMap::iterator it = map.begin(); it != map.end(); it++)
+					orderMap[it->second->getListOrder()] = it->first;
+
 				switch(LOWORD(pWParam)) {
 					// The user changed the map selection
 					case IDC_MAP_SELECT:
 						{
-							char buffer[200];
-							HWND combobox = GetDlgItem(pWindow, IDC_MAP_SELECT);
-							SendMessage(combobox, WM_GETTEXT, 200, (LPARAM) &buffer);
-							std::string mapname = buffer;
-
-							// we need to populate the ListView with actions
-							HWND hList = GetDlgItem(pWindow, IDC_CONTROL_BINDINGS);
+							// Delete all items
 							SendMessage(hList, LVM_DELETEALLITEMS, 0, 0);
-							InputEventController::ActionMap map = controller->GetActionMap(mapname);
-
-							// order bindings by defined ordering in ControlAction::listOrder
-							std::map<int, int> orderMap;
-							for(InputEventController::ActionMap::iterator it = map.begin(); it != map.end(); it++)
-								orderMap[it->second->getListOrder()] = it->first;
 
 							// ListView adds new items at the top... so start from the back
 							for(std::map<int, int>::reverse_iterator it(orderMap.end()); 
@@ -200,166 +206,75 @@ BOOL ControlPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 						}
 						break;
 
-					case IDC_MOTOR_ON1:
-					case IDC_MOTOR_ON2:
-					case IDC_MOTOR_ON3:
-					case IDC_MOTOR_ON4:
-						setControlControl = CTL_MOTOR_ON;
-						break;
+					case IDC_CHANGE_BINDING:
+						{
+							// user wants to change assigned binding
+							int selectedIndex = SendMessage(hList, LVM_GETSELECTIONMARK, 0, 0);
+							if(selectedIndex == -1)
+								break; // apparently nothing is selected
 
-					case IDC_LEFT1:
-					case IDC_LEFT2:
-					case IDC_LEFT3:
-					case IDC_LEFT4:
-						setControlControl = CTL_LEFT;
-						break;
+							// this is in our binding map
+							controller->CaptureNextInput(orderMap[selectedIndex]);
 
-					case IDC_RIGHT1:
-					case IDC_RIGHT2:
-					case IDC_RIGHT3:
-					case IDC_RIGHT4:
-						setControlControl = CTL_RIGHT;
-						break;
+							if(pressAnyKeyDialog == NULL) {
+								WNDCLASSW lWinClass;
 
-					case IDC_JUMP1:
-					case IDC_JUMP2:
-					case IDC_JUMP3:
-					case IDC_JUMP4:
-						setControlControl = CTL_JUMP;
-						break;
+								lWinClass.style = CS_DBLCLKS;
+								lWinClass.lpfnWndProc = PressKeyDialogFunc;
+								lWinClass.cbClsExtra = 0;
+								lWinClass.cbWndExtra = 0;
+								lWinClass.hInstance = GetInstanceHandle();
+								lWinClass.hIcon = NULL;
+								lWinClass.hCursor = LoadCursor(NULL, IDC_ARROW);
+								lWinClass.hbrBackground = (HBRUSH) COLOR_APPWORKSPACE + 1;
+								lWinClass.lpszMenuName = NULL;
+								lWinClass.lpszClassName = L"IDD_PRESS_ANY_KEY";
+
+								lReturnValue = RegisterClassW(&lWinClass);
+
+								// set HWND for when we get called back
+								preferencesDialog = pWindow;
+
+								RECT size = {0};
+								GetWindowRect(app->GetWindowHandle(), &size);
+								SetCursorPos(size.left + 110, size.top + 80); // move to center of new window
+
+								pressAnyKeyDialog = CreateWindowW(
+									L"IDD_PRESS_ANY_KEY",
+									PACKAGE_NAME_L,
+									(WS_POPUPWINDOW | WS_VISIBLE),
+									size.left + 30,
+									size.top + 30,
+									160,
+									100,
+									app->GetWindowHandle(),
+									NULL,
+									GetInstanceHandle(),
+									this);
+
+								if(pressAnyKeyDialog == NULL) { // report error if necessary
+									DWORD err = GetLastError();
+									LPVOID errMsg;
 					
-					case IDC_FIRE1:
-					case IDC_FIRE2:
-					case IDC_FIRE3:
-					case IDC_FIRE4:
-						setControlControl = CTL_FIRE;
-						break;
-					
-					case IDC_BRAKE1:
-					case IDC_BRAKE2:
-					case IDC_BRAKE3:
-					case IDC_BRAKE4:
-						setControlControl = CTL_BRAKE;
-						break;
-					
-					case IDC_SELWEAPON1:
-					case IDC_SELWEAPON2:
-					case IDC_SELWEAPON3:
-					case IDC_SELWEAPON4:
-						setControlControl = CTL_WEAPON;
-						break;
-
-					case IDC_LOOKBACK1:
-					case IDC_LOOKBACK2:
-					case IDC_LOOKBACK3:
-					case IDC_LOOKBACK4:
-						setControlControl = CTL_LOOKBACK;
+									FormatMessage(
+										FORMAT_MESSAGE_ALLOCATE_BUFFER |
+										FORMAT_MESSAGE_FROM_SYSTEM,
+										NULL,
+										err,
+										MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+										(LPTSTR) &errMsg,
+										0, NULL);
+									MessageBox(NULL, (const char*)errMsg, "AIEEE", MB_ICONERROR | MB_APPLMODAL | MB_OK);
+									LocalFree(errMsg);
+								}
+							} else {
+								// put focus back to already existing window
+								EnableWindow(pWindow, false);
+								EnableWindow(pressAnyKeyDialog, true);
+							}
+						}
 						break;
 				}
-
-				switch(LOWORD(pWParam)) {
-					case IDC_MOTOR_ON1:
-					case IDC_LEFT1:
-					case IDC_RIGHT1:
-					case IDC_JUMP1:
-					case IDC_FIRE1:
-					case IDC_BRAKE1:
-					case IDC_SELWEAPON1:
-					case IDC_LOOKBACK1:
-						setControlPlayer = 0;
-						break;
-
-					case IDC_MOTOR_ON2:
-					case IDC_LEFT2:
-					case IDC_RIGHT2:
-					case IDC_JUMP2:
-					case IDC_FIRE2:
-					case IDC_BRAKE2:
-					case IDC_SELWEAPON2:
-					case IDC_LOOKBACK2:
-						setControlPlayer = 1;
-						break;
-
-					case IDC_MOTOR_ON3:
-					case IDC_LEFT3:
-					case IDC_RIGHT3:
-					case IDC_JUMP3:
-					case IDC_FIRE3:
-					case IDC_BRAKE3:
-					case IDC_SELWEAPON3:
-					case IDC_LOOKBACK3:
-						setControlPlayer = 2;
-						break;
-
-					case IDC_MOTOR_ON4:
-					case IDC_LEFT4:
-					case IDC_RIGHT4:
-					case IDC_JUMP4:
-					case IDC_FIRE4:
-					case IDC_BRAKE4:
-					case IDC_SELWEAPON4:
-					case IDC_LOOKBACK4:
-						setControlPlayer = 3;
-						break;
-				}
-
-				// create dialog window by hand, the hard way
-				/*if(pressAnyKeyDialog == NULL) {
-					WNDCLASSW lWinClass;
-
-					lWinClass.style = CS_DBLCLKS;
-					lWinClass.lpfnWndProc = PressKeyDialogFunc;
-					lWinClass.cbClsExtra = 0;
-					lWinClass.cbWndExtra = 0;
-					lWinClass.hInstance = GetInstanceHandle();
-					lWinClass.hIcon = NULL;
-					lWinClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-					lWinClass.hbrBackground = (HBRUSH) COLOR_APPWORKSPACE + 1;
-					lWinClass.lpszMenuName = NULL;
-					lWinClass.lpszClassName = L"IDD_PRESS_ANY_KEY";
-
-					lReturnValue = RegisterClassW(&lWinClass);
-
-					// set HWND for when we get called back
-					preferencesDialog = pWindow;
-
-					RECT size = {0};
-					GetWindowRect(app->GetWindowHandle(), &size);
-					SetCursorPos(size.left + 110, size.top + 80); // move to center of new window
-
-					pressAnyKeyDialog = CreateWindowW(
-						L"IDD_PRESS_ANY_KEY",
-						PACKAGE_NAME_L,
-						(WS_POPUPWINDOW | WS_VISIBLE),
-						size.left + 30,
-						size.top + 30,
-						160,
-						100,
-						app->GetWindowHandle(),
-						NULL,
-						GetInstanceHandle(),
-						this);
-
-					if(pressAnyKeyDialog == NULL) { // report error if necessary
-						DWORD err = GetLastError();
-						LPVOID errMsg;
-					
-						FormatMessage(
-							FORMAT_MESSAGE_ALLOCATE_BUFFER |
-							FORMAT_MESSAGE_FROM_SYSTEM,
-							NULL,
-							err,
-							MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-							(LPTSTR)&errMsg,
-							0, NULL);
-						MessageBox(NULL, (const char*)errMsg, "AIEEE", MB_ICONERROR | MB_APPLMODAL | MB_OK);
-						LocalFree(errMsg);
-					}
-				} else {
-					// put focus back to already existing window
-					EnableWindow(pWindow, false);
-					EnableWindow(pressAnyKeyDialog, true);
-				}*/
 			}
 			break;
 
@@ -393,7 +308,8 @@ BOOL ControlPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 }
 
 LRESULT ControlPrefsPage::PressKeyDialogProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam) {	
-	static Control::Controller *tmpControl = NULL;
+//	static Control::Controller *tmpControl = NULL;
+	InputEventController* const controller = app->GetController();
 
 	switch (pMsgId) {
 		// Catch environment modification events
@@ -411,8 +327,8 @@ LRESULT ControlPrefsPage::PressKeyDialogProc(HWND pWindow, UINT pMsgId, WPARAM p
 			EnableWindow(app->GetWindowHandle(), false);
 			EnableWindow(pWindow, true);
 
-			tmpControl = new Control::Controller(pWindow, Control::UiHandlerPtr());
-			tmpControl->captureNextInput(setControlControl, setControlPlayer, pWindow);
+			//tmpControl = new Control::Controller(pWindow, Control::UiHandlerPtr());
+			//tmpControl->captureNextInput(setControlControl, setControlPlayer, pWindow);
 
 			// set timer for 3 seconds
 			SetTimer(pWindow, MRM_CONTROL_TIMER, 3000, NULL);
@@ -439,19 +355,19 @@ LRESULT ControlPrefsPage::PressKeyDialogProc(HWND pWindow, UINT pMsgId, WPARAM p
 			switch (pWParam) {
 				case MRM_CONTROL_TIMER:
 					// 3 seconds are up, disable input
-					tmpControl->disableInput(setControlControl, setControlPlayer);
-					tmpControl->stopCapture();
+//					tmpControl->disableInput(setControlControl, setControlPlayer);
+//					tmpControl->stopCapture();
 			
 					// save new controls
-					delete tmpControl;
-					tmpControl = NULL;
+//					delete tmpControl;
+//					tmpControl = NULL;
 
 
 					// unset the handle
 					pressAnyKeyDialog = NULL;
 
 					// now we have to tell the preferences dialog to refresh itself
-					UpdateDialogLabels(preferencesDialog);
+//					UpdateDialogLabels(preferencesDialog);
 					KillTimer(pWindow, MRM_CONTROL_TIMER);
 					KillTimer(pWindow, MRM_CONTROL_POLL);
 					EnableWindow(preferencesDialog, TRUE);
@@ -459,23 +375,21 @@ LRESULT ControlPrefsPage::PressKeyDialogProc(HWND pWindow, UINT pMsgId, WPARAM p
 					break;
 				case MRM_CONTROL_POLL:
 					KillTimer(pWindow, MRM_CONTROL_POLL);
-					tmpControl->poll();
+					controller->Poll();
 					SetTimer(pWindow, MRM_CONTROL_POLL, 100, NULL);
 			}
 			break;
 	}
 
-	if(tmpControl != NULL) {
-		tmpControl->poll();
+	if(controller != NULL) {
+		controller->Poll();
 
 		// check if things are updated
-		if(tmpControl->controlsUpdated()) {
+		if(!controller->IsCapturing()) {
 			// the new key binding is set, now it's time to close the window
-			tmpControl->saveControls();
-			delete tmpControl;
-			tmpControl = NULL;
+			//tmpControl->saveControls();
 
-			UpdateDialogLabels(preferencesDialog);
+			//UpdateDialogLabels(preferencesDialog);
 			pressAnyKeyDialog = NULL;
 			KillTimer(pWindow, MRM_CONTROL_TIMER);
 			EnableWindow(preferencesDialog, TRUE);
