@@ -38,7 +38,7 @@ class ControlPrefsPage : public PrefsPage
 		virtual ~ControlPrefsPage();
 
 	private:
-		void UpdateDialogLabels(HWND pWindow);
+		void UpdateBindingLabels(HWND pWindow);
 
 	protected:
 		virtual BOOL DlgProc(HWND pWindow, UINT message, WPARAM wparam, LPARAM lparam);
@@ -47,8 +47,8 @@ class ControlPrefsPage : public PrefsPage
 
 	private:
 		GameDirector *app;
-		int setControlPlayer;
-		int setControlControl;
+		int setControlHash;
+		std::string setControlMap;
 		HWND pressAnyKeyDialog;
 		HWND preferencesDialog;
 };

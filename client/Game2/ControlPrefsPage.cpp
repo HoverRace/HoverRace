@@ -58,46 +58,47 @@ ControlPrefsPage::~ControlPrefsPage()
 }
 
 
-void ControlPrefsPage::UpdateDialogLabels(HWND pWindow)
+void ControlPrefsPage::UpdateBindingLabels(HWND pWindow)
 {
 	Config *cfg = Config::GetInstance();
 	InputEventController* const controller = app->GetController();
 
-	SetDlgItemTextW(pWindow, IDC_MOTOR_ON1, Str::UW(controller->HashToString(cfg->controls_hash[0].motorOn).c_str()));
-	SetDlgItemTextW(pWindow, IDC_RIGHT1, Str::UW(controller->HashToString(cfg->controls_hash[0].right).c_str()));
-	SetDlgItemTextW(pWindow, IDC_LEFT1, Str::UW(controller->HashToString(cfg->controls_hash[0].left).c_str()));
-	SetDlgItemTextW(pWindow, IDC_JUMP1, Str::UW(controller->HashToString(cfg->controls_hash[0].jump).c_str()));
-	SetDlgItemTextW(pWindow, IDC_FIRE1, Str::UW(controller->HashToString(cfg->controls_hash[0].fire).c_str()));
-	SetDlgItemTextW(pWindow, IDC_BRAKE1, Str::UW(controller->HashToString(cfg->controls_hash[0].brake).c_str()));
-	SetDlgItemTextW(pWindow, IDC_SELWEAPON1, Str::UW(controller->HashToString(cfg->controls_hash[0].weapon).c_str()));
-	SetDlgItemTextW(pWindow, IDC_LOOKBACK1, Str::UW(controller->HashToString(cfg->controls_hash[0].lookBack).c_str()));
+	char buffer[200];
+	HWND combobox = GetDlgItem(pWindow, IDC_MAP_SELECT);
+	SendMessage(combobox, WM_GETTEXT, 200, (LPARAM) &buffer);
+	std::string mapname = buffer;
 
-	SetDlgItemTextW(pWindow, IDC_MOTOR_ON2, Str::UW(controller->HashToString(cfg->controls_hash[1].motorOn).c_str()));
-	SetDlgItemTextW(pWindow, IDC_RIGHT2, Str::UW(controller->HashToString(cfg->controls_hash[1].right).c_str()));
-	SetDlgItemTextW(pWindow, IDC_LEFT2, Str::UW(controller->HashToString(cfg->controls_hash[1].left).c_str()));
-	SetDlgItemTextW(pWindow, IDC_JUMP2, Str::UW(controller->HashToString(cfg->controls_hash[1].jump).c_str()));
-	SetDlgItemTextW(pWindow, IDC_FIRE2, Str::UW(controller->HashToString(cfg->controls_hash[1].fire).c_str()));
-	SetDlgItemTextW(pWindow, IDC_BRAKE2, Str::UW(controller->HashToString(cfg->controls_hash[1].brake).c_str()));
-	SetDlgItemTextW(pWindow, IDC_SELWEAPON2, Str::UW(controller->HashToString(cfg->controls_hash[1].weapon).c_str()));
-	SetDlgItemTextW(pWindow, IDC_LOOKBACK2, Str::UW(controller->HashToString(cfg->controls_hash[1].lookBack).c_str()));
+	// we need to populate the ListView with actions
+	HWND hList = GetDlgItem(pWindow, IDC_CONTROL_BINDINGS);
+	InputEventController::ActionMap map = controller->GetActionMap(mapname);
 
-	SetDlgItemTextW(pWindow, IDC_MOTOR_ON3, Str::UW(controller->HashToString(cfg->controls_hash[2].motorOn).c_str()));
-	SetDlgItemTextW(pWindow, IDC_RIGHT3, Str::UW(controller->HashToString(cfg->controls_hash[2].right).c_str()));
-	SetDlgItemTextW(pWindow, IDC_LEFT3, Str::UW(controller->HashToString(cfg->controls_hash[2].left).c_str()));
-	SetDlgItemTextW(pWindow, IDC_JUMP3, Str::UW(controller->HashToString(cfg->controls_hash[2].jump).c_str()));
-	SetDlgItemTextW(pWindow, IDC_FIRE3, Str::UW(controller->HashToString(cfg->controls_hash[2].fire).c_str()));
-	SetDlgItemTextW(pWindow, IDC_BRAKE3, Str::UW(controller->HashToString(cfg->controls_hash[2].brake).c_str()));
-	SetDlgItemTextW(pWindow, IDC_SELWEAPON3, Str::UW(controller->HashToString(cfg->controls_hash[2].weapon).c_str()));
-	SetDlgItemTextW(pWindow, IDC_LOOKBACK3, Str::UW(controller->HashToString(cfg->controls_hash[2].lookBack).c_str()));
+	// order bindings by defined ordering in ControlAction::listOrder
+	std::map<int, int> orderMap;
+	for(InputEventController::ActionMap::iterator it = map.begin(); it != map.end(); it++)
+		orderMap[it->second->getListOrder()] = it->first;
 
-	SetDlgItemTextW(pWindow, IDC_MOTOR_ON4, Str::UW(controller->HashToString(cfg->controls_hash[3].motorOn).c_str()));
-	SetDlgItemTextW(pWindow, IDC_RIGHT4, Str::UW(controller->HashToString(cfg->controls_hash[3].right).c_str()));
-	SetDlgItemTextW(pWindow, IDC_LEFT4, Str::UW(controller->HashToString(cfg->controls_hash[3].left).c_str()));
-	SetDlgItemTextW(pWindow, IDC_JUMP4, Str::UW(controller->HashToString(cfg->controls_hash[3].jump).c_str()));
-	SetDlgItemTextW(pWindow, IDC_FIRE4, Str::UW(controller->HashToString(cfg->controls_hash[3].fire).c_str()));
-	SetDlgItemTextW(pWindow, IDC_BRAKE4, Str::UW(controller->HashToString(cfg->controls_hash[3].brake).c_str()));
-	SetDlgItemTextW(pWindow, IDC_SELWEAPON4, Str::UW(controller->HashToString(cfg->controls_hash[3].weapon).c_str()));
-	SetDlgItemTextW(pWindow, IDC_LOOKBACK4, Str::UW(controller->HashToString(cfg->controls_hash[3].lookBack).c_str()));
+	// Delete all items
+	SendMessage(hList, LVM_DELETEALLITEMS, 0, 0);
+
+	// ListView adds new items at the top... so start from the back
+	for(std::map<int, int>::reverse_iterator it(orderMap.end()); 
+			it != std::map<int, int>::reverse_iterator(orderMap.begin()); it++) {
+		LVITEM item;
+		memset(&item, 0, sizeof(item));
+								
+		std::string temp;
+		item.mask = LVIF_TEXT;
+		temp = map[it->second]->getName();
+		item.pszText = (LPSTR) temp.c_str();
+		int pos = SendMessage(hList, LVM_INSERTITEM, 0, (LPARAM) &item);
+
+		item.mask = LVIF_TEXT;
+		item.iItem = pos;
+		item.iSubItem = 1;
+		temp = controller->HashToString(it->second).c_str();
+		item.pszText = (LPSTR) temp.c_str();
+		SendMessage(hList, LVM_SETITEM, pos, (LPARAM) &item);
+	}
 }
 
 
@@ -163,58 +164,35 @@ BOOL ControlPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 
 		case WM_COMMAND:
 			{
-				char buffer[200];
-				HWND combobox = GetDlgItem(pWindow, IDC_MAP_SELECT);
-				SendMessage(combobox, WM_GETTEXT, 200, (LPARAM) &buffer);
-				std::string mapname = buffer;
-
-				// we need to populate the ListView with actions
-				HWND hList = GetDlgItem(pWindow, IDC_CONTROL_BINDINGS);
-				InputEventController::ActionMap map = controller->GetActionMap(mapname);
-
-				// order bindings by defined ordering in ControlAction::listOrder
-				std::map<int, int> orderMap;
-				for(InputEventController::ActionMap::iterator it = map.begin(); it != map.end(); it++)
-					orderMap[it->second->getListOrder()] = it->first;
-
 				switch(LOWORD(pWParam)) {
 					// The user changed the map selection
 					case IDC_MAP_SELECT:
-						{
-							// Delete all items
-							SendMessage(hList, LVM_DELETEALLITEMS, 0, 0);
-
-							// ListView adds new items at the top... so start from the back
-							for(std::map<int, int>::reverse_iterator it(orderMap.end()); 
-									it != std::map<int, int>::reverse_iterator(orderMap.begin()); it++) {
-								LVITEM item;
-								memset(&item, 0, sizeof(item));
-								
-								std::string temp;
-								item.mask = LVIF_TEXT;
-								temp = map[it->second]->getName();
-								item.pszText = (LPSTR) temp.c_str();
-								int pos = SendMessage(hList, LVM_INSERTITEM, 0, (LPARAM) &item);
-
-								item.mask = LVIF_TEXT;
-								item.iItem = pos;
-								item.iSubItem = 1;
-								temp = controller->HashToString(it->second).c_str();
-								item.pszText = (LPSTR) temp.c_str();
-								SendMessage(hList, LVM_SETITEM, pos, (LPARAM) &item);
-							}
-						}
+						UpdateBindingLabels(pWindow);
 						break;
 
 					case IDC_CHANGE_BINDING:
 						{
+							char buffer[200];
+							HWND combobox = GetDlgItem(pWindow, IDC_MAP_SELECT);
+							SendMessage(combobox, WM_GETTEXT, 200, (LPARAM) &buffer);
+							std::string mapname = buffer;
+
+							// we need to populate the ListView with actions
+							HWND hList = GetDlgItem(pWindow, IDC_CONTROL_BINDINGS);
+							InputEventController::ActionMap map = controller->GetActionMap(mapname);
+
+							// order bindings by defined ordering in ControlAction::listOrder
+							std::map<int, int> orderMap;
+							for(InputEventController::ActionMap::iterator it = map.begin(); it != map.end(); it++)
+								orderMap[it->second->getListOrder()] = it->first;
+							
 							// user wants to change assigned binding
 							int selectedIndex = SendMessage(hList, LVM_GETSELECTIONMARK, 0, 0);
 							if(selectedIndex == -1)
 								break; // apparently nothing is selected
 
-							// this is in our binding map
-							controller->CaptureNextInput(orderMap[selectedIndex]);
+							setControlHash = orderMap[selectedIndex];
+							setControlMap = mapname;
 
 							if(pressAnyKeyDialog == NULL) {
 								WNDCLASSW lWinClass;
@@ -264,7 +242,7 @@ BOOL ControlPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 										MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 										(LPTSTR) &errMsg,
 										0, NULL);
-									MessageBox(NULL, (const char*)errMsg, "AIEEE", MB_ICONERROR | MB_APPLMODAL | MB_OK);
+									MessageBox(NULL, (const char*) errMsg, "AIEEE", MB_ICONERROR | MB_APPLMODAL | MB_OK);
 									LocalFree(errMsg);
 								}
 							} else {
@@ -308,8 +286,7 @@ BOOL ControlPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 }
 
 LRESULT ControlPrefsPage::PressKeyDialogProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam) {	
-//	static Control::Controller *tmpControl = NULL;
-	InputEventController* const controller = app->GetController();
+	static InputEventController *tmpControl = NULL;
 
 	switch (pMsgId) {
 		// Catch environment modification events
@@ -327,8 +304,8 @@ LRESULT ControlPrefsPage::PressKeyDialogProc(HWND pWindow, UINT pMsgId, WPARAM p
 			EnableWindow(app->GetWindowHandle(), false);
 			EnableWindow(pWindow, true);
 
-			//tmpControl = new Control::Controller(pWindow, Control::UiHandlerPtr());
-			//tmpControl->captureNextInput(setControlControl, setControlPlayer, pWindow);
+			tmpControl = new InputEventController(pWindow, Control::UiHandlerPtr());
+			tmpControl->CaptureNextInput(setControlHash, setControlMap);
 
 			// set timer for 3 seconds
 			SetTimer(pWindow, MRM_CONTROL_TIMER, 3000, NULL);
@@ -355,19 +332,19 @@ LRESULT ControlPrefsPage::PressKeyDialogProc(HWND pWindow, UINT pMsgId, WPARAM p
 			switch (pWParam) {
 				case MRM_CONTROL_TIMER:
 					// 3 seconds are up, disable input
-//					tmpControl->disableInput(setControlControl, setControlPlayer);
-//					tmpControl->stopCapture();
+					tmpControl->DisableCaptureInput();
+					tmpControl->SaveControllerConfig();
 			
 					// save new controls
-//					delete tmpControl;
-//					tmpControl = NULL;
-
+					delete tmpControl;
+					tmpControl = NULL;
 
 					// unset the handle
 					pressAnyKeyDialog = NULL;
 
 					// now we have to tell the preferences dialog to refresh itself
-//					UpdateDialogLabels(preferencesDialog);
+					app->GetController()->ReloadConfig();
+					UpdateBindingLabels(preferencesDialog);
 					KillTimer(pWindow, MRM_CONTROL_TIMER);
 					KillTimer(pWindow, MRM_CONTROL_POLL);
 					EnableWindow(preferencesDialog, TRUE);
@@ -375,21 +352,25 @@ LRESULT ControlPrefsPage::PressKeyDialogProc(HWND pWindow, UINT pMsgId, WPARAM p
 					break;
 				case MRM_CONTROL_POLL:
 					KillTimer(pWindow, MRM_CONTROL_POLL);
-					controller->Poll();
+					tmpControl->Poll();
 					SetTimer(pWindow, MRM_CONTROL_POLL, 100, NULL);
 			}
 			break;
 	}
 
-	if(controller != NULL) {
-		controller->Poll();
+	if(tmpControl != NULL) {
+		tmpControl->Poll();
 
 		// check if things are updated
-		if(!controller->IsCapturing()) {
+		if(!tmpControl->IsCapturing()) {
 			// the new key binding is set, now it's time to close the window
-			//tmpControl->saveControls();
+			tmpControl->SaveControllerConfig();
 
-			//UpdateDialogLabels(preferencesDialog);
+			delete tmpControl;
+			tmpControl = NULL;
+
+			app->GetController()->ReloadConfig();
+			UpdateBindingLabels(preferencesDialog);
 			pressAnyKeyDialog = NULL;
 			KillTimer(pWindow, MRM_CONTROL_TIMER);
 			EnableWindow(preferencesDialog, TRUE);
