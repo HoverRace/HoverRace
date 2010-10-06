@@ -71,99 +71,6 @@ struct ControlState {
 	bool left;
 };
 
-/// Convenient typedef prevents us from having to write long namespace specifiers
-typedef HoverRace::Util::Config::cfg_control_t InputControl;
-
-/***
- * The HoverRace::Client::Control::Controller class handles all the input of HoverRace.
- * It tracks all of the input devices, loads key mapping configuration, and returns the
- * current control state when it is asked for.  It is meant to replace Richard's old
- * system that was pretty ugly.
- */
-class Controller : public KeyListener, public MouseListener, public JoyStickListener {
-	public:
-		Controller(Util::OS::wnd_t mainWindow, UiHandlerPtr uiHandler);
-		~Controller();
-
-		void poll();
-		
-		ControlState getControlState(int player);
-		void captureNextInput(int control, int player, Util::OS::wnd_t hwnd);
-		void stopCapture();
-		void disableInput(int control, int player);
-		bool controlsUpdated();
-		void saveControls();
-		std::string toString(HoverRace::Util::Config::cfg_control_t control);
-
-		void EnterControlLayer(InputHandlerPtr handler);
-		void LeaveControlLayer();
-		void ResetControlLayers();
-
-	private:
-		void InitInputManager(Util::OS::wnd_t mainWindow);
-		void LoadControllerConfig();
-
-		/// OIS input manager does most of the work for us
-		InputManager *mgr;
-
-		// now the input devices
-		Keyboard *kbd;
-		Mouse    *mouse;
-
-		int numJoys;
-		JoyStick **joys; /// we can have over 9000 joysticks, depending on how much RAM we have
-		int *joyIds;
-
-		// event handler
-		bool keyPressed(const KeyEvent &arg);
-		bool keyReleased(const KeyEvent &arg);
-		bool mouseMoved(const MouseEvent &arg);
-		bool mousePressed(const MouseEvent &arg, MouseButtonID id);
-		bool mouseReleased(const MouseEvent &arg, MouseButtonID id);
-		bool buttonPressed(const JoyStickEvent &arg, int button);
-		bool buttonReleased(const JoyStickEvent &arg, int button);
-		bool axisMoved(const JoyStickEvent &arg, int axis);
-		bool povMoved(const JoyStickEvent &arg, int pov);
-
-		// for polling
-		void clearControlState(); // clear the control state before each poll
-		bool getSingleControlState(InputControl input);
-		void updateAxisControl(bool &ctlState, InputControl &ctl, int *axes, int numAxes);
-
-		void setControls(HoverRace::Util::Config::cfg_controls_t *controls);
-
-		ControlState curState[HoverRace::Util::Config::MAX_PLAYERS];
-
-		// kept locally to make things a bit quicker
-		InputControl brake[HoverRace::Util::Config::MAX_PLAYERS];
-		InputControl fire[HoverRace::Util::Config::MAX_PLAYERS];
-		InputControl jump[HoverRace::Util::Config::MAX_PLAYERS];
-		InputControl left[HoverRace::Util::Config::MAX_PLAYERS];
-		InputControl lookBack[HoverRace::Util::Config::MAX_PLAYERS];
-		InputControl motorOn[HoverRace::Util::Config::MAX_PLAYERS];
-		InputControl right[HoverRace::Util::Config::MAX_PLAYERS];
-		InputControl weapon[HoverRace::Util::Config::MAX_PLAYERS];
-
-		void getCaptureControl(int captureControl, InputControl **input, Util::Config::cfg_control_t **cfg_input);
-
-		bool captureNext;
-		int captureControl;
-		int capturePlayerId;
-		Util::OS::wnd_t captureHwnd;
-		bool updated;
-
-		// mouse inputs
-		int mouseXLast;
-		int mouseYLast;
-		int mouseZLast;
-
-		UiHandlerPtr uiHandler;
-
-		// Control layers.
-		typedef std::vector<InputHandlerPtr> controlLayers_t;
-		controlLayers_t controlLayers;
-};
-
 class InputEventController : public KeyListener, public MouseListener, public JoyStickListener {
 	public:
 		InputEventController(Util::OS::wnd_t mainWindow, UiHandlerPtr uiHandler);
@@ -320,7 +227,7 @@ class InputEventController : public KeyListener, public MouseListener, public Jo
 		//   b: axis id
 		//   c: direction
 		int GetNextAvailableDisabledHash();
-		int HashKeyboardEvent(const KeyEvent& arg);
+		int HashKeyboardEvent(const KeyCode& arg);
 		int HashMouseButtonEvent(const MouseEvent& arg, MouseButtonID id);
 		int HashMouseAxisEvent(const MouseEvent& arg, int axis, int direction);
 		int HashJoystickAxisEvent(const JoyStickEvent& arg, int axis, int direction);
