@@ -544,46 +544,6 @@ void Config::ResetToDefaults()
 
 	// Default controls.
 	// values pulled from OIS
-	memset(&controls[0], 0, sizeof(cfg_controls_t));
-	memset(&controls[1], 0, sizeof(cfg_controls_t));
-	memset(&controls[2], 0, sizeof(cfg_controls_t));
-	memset(&controls[3], 0, sizeof(cfg_controls_t));
-
-	controls[0].motorOn.inputType = 
-		controls[0].left.inputType =
-		controls[0].right.inputType = 
-		controls[0].jump.inputType = 
-		controls[0].fire.inputType = 
-		controls[0].brake.inputType = 
-		controls[0].weapon.inputType =
-		controls[0].lookBack.inputType = 
-		controls[1].motorOn.inputType =
-		controls[1].left.inputType =
-		controls[1].right.inputType =
-		controls[1].jump.inputType =
-		controls[1].fire.inputType =
-		controls[1].brake.inputType =
-		controls[1].weapon.inputType =
-		controls[1].lookBack.inputType = OIS::OISKeyboard;
-
-	controls[0].motorOn.kbdBinding = OIS::KC_LSHIFT;
-	controls[0].right.kbdBinding = OIS::KC_RIGHT;
-	controls[0].left.kbdBinding = OIS::KC_LEFT;
-	controls[0].jump.kbdBinding = OIS::KC_UP;
-	controls[0].fire.kbdBinding = OIS::KC_LCONTROL;
-	controls[0].brake.kbdBinding = OIS::KC_DOWN;
-	controls[0].weapon.kbdBinding = OIS::KC_TAB;
-	controls[0].lookBack.kbdBinding = OIS::KC_END;
-
-	controls[1].motorOn.kbdBinding = OIS::KC_F;
-	controls[1].right.kbdBinding = OIS::KC_D;
-	controls[1].left.kbdBinding = OIS::KC_A;
-	controls[1].jump.kbdBinding = OIS::KC_S;
-	controls[1].fire.kbdBinding = OIS::KC_R;
-	controls[1].brake.kbdBinding = OIS::KC_W;
-	controls[1].weapon.kbdBinding = OIS::KC_Q;
-	controls[1].lookBack.kbdBinding = OIS::KC_I;
-
 	controls_hash[0].motorOn  = OIS::KC_LSHIFT   << 8;
 	controls_hash[0].right    = OIS::KC_RIGHT    << 8;
 	controls_hash[0].left     = OIS::KC_LEFT     << 8;
@@ -666,13 +626,6 @@ void Config::Load()
 			net.Load(dynamic_cast<yaml::MapNode*>(root->Get("net")));
 
 			// Get the controls.
-			yaml::SeqNode *ctlseq = dynamic_cast<yaml::SeqNode*>(root->Get("controls"));
-			if (ctlseq != NULL) {
-				int i = 0;
-				BOOST_FOREACH(yaml::Node *node, *ctlseq) {
-					controls[i++].Load(dynamic_cast<yaml::MapNode*>(node));
-				}
-			}
 			yaml::SeqNode *ctlseqh = dynamic_cast<yaml::SeqNode*>(root->Get("controls_hash"));
 			if (ctlseqh != NULL) {
 				int i = 0;
@@ -735,12 +688,6 @@ void Config::Save()
 		net.Save(emitter);
 		
 		// Save list of controls.
-		emitter->MapKey("controls");
-		emitter->StartSeq();
-		for (int i = 0; i < MAX_PLAYERS; ++i) {
-			controls[i].Save(emitter);
-		}
-		emitter->EndSeq();
 		emitter->MapKey("controls_hash");
 		emitter->StartSeq();
 		for (int i = 0; i < MAX_PLAYERS; ++i) {
@@ -911,44 +858,6 @@ void Config::cfg_net_t::Save(yaml::Emitter *emitter)
 }
 
 // controls ////////////////////////////////////////////////////////////////////
-
-void Config::cfg_controls_t::Load(yaml::MapNode *root)
-{
-	if (root == NULL) return;
-
-	motorOn.Load(dynamic_cast<yaml::MapNode*>(root->Get("motorOn")));
-	right.Load(dynamic_cast<yaml::MapNode*>(root->Get("right")));
-	left.Load(dynamic_cast<yaml::MapNode*>(root->Get("left")));
-	jump.Load(dynamic_cast<yaml::MapNode*>(root->Get("jump")));
-	fire.Load(dynamic_cast<yaml::MapNode*>(root->Get("fire")));
-	brake.Load(dynamic_cast<yaml::MapNode*>(root->Get("brake")));
-	weapon.Load(dynamic_cast<yaml::MapNode*>(root->Get("weapon")));
-	lookBack.Load(dynamic_cast<yaml::MapNode*>(root->Get("lookBack")));
-}
-
-void Config::cfg_controls_t::Save(yaml::Emitter *emitter)
-{
-	emitter->StartMap();
-
-	emitter->MapKey("motorOn");
-	motorOn.Save(emitter);
-	emitter->MapKey("right");
-	right.Save(emitter);
-	emitter->MapKey("left");
-	left.Save(emitter);
-	emitter->MapKey("jump");
-	jump.Save(emitter);
-	emitter->MapKey("fire");
-	fire.Save(emitter);
-	emitter->MapKey("brake");
-	brake.Save(emitter);
-	emitter->MapKey("weapon");
-	weapon.Save(emitter);
-	emitter->MapKey("lookBack");
-	lookBack.Save(emitter);
-
-	emitter->EndMap();
-}
 
 void Config::cfg_controls_hash_t::Load(yaml::MapNode* root)
 {

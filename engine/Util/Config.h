@@ -226,19 +226,6 @@ class MR_DllDeclare Config
 		};
 
 		static const int MAX_PLAYERS = 4;
-		struct cfg_controls_t {
-			cfg_control_t motorOn;
-			cfg_control_t right;
-			cfg_control_t left;
-			cfg_control_t jump;
-			cfg_control_t fire;
-			cfg_control_t brake;
-			cfg_control_t weapon;
-			cfg_control_t lookBack;
-
-			void Load(yaml::MapNode*);
-			void Save(yaml::Emitter*);
-		} controls[MAX_PLAYERS];
 
 		/// See Client/Control/Controller.h for the hash function
 		struct cfg_controls_hash_t {
