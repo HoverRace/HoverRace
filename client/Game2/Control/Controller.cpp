@@ -21,6 +21,7 @@ using namespace HoverRace::Client::Control;
 using namespace HoverRace::Util;
 using namespace OIS;
 using HoverRace::Client::HoverScript::HighConsole;
+using namespace std;
 
 #define DIVERT_TO_CONTROL_STACK \
 	if (!controlLayers.empty()) \
@@ -281,7 +282,7 @@ void Controller::disableInput(int control, int player)
 /***
  * Return a string representation of the input control.
  */
-std::string Controller::toString(Util::Config::cfg_control_t control)
+string Controller::toString(Util::Config::cfg_control_t control)
 {
 	if(control.inputType == OISKeyboard) {
 		return kbd->getAsString((OIS::KeyCode) control.kbdBinding);
@@ -457,16 +458,16 @@ void Controller::InitInputManager(Util::OS::wnd_t mainWindow)
 {
 	// collect parameters to give to init InputManager
 	// just following the example here... I'm not 100% on this
-	std::ostringstream wnd;
+	ostringstream wnd;
 	wnd.imbue(OS::stdLocale);
 	wnd << (size_t) mainWindow;
 
 	ParamList pl;
-	pl.insert(std::make_pair(std::string("WINDOW"), wnd.str()));
+	pl.insert(make_pair(string("WINDOW"), wnd.str()));
 
 	// mice
-	pl.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_FOREGROUND")));
-	pl.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_NONEXCLUSIVE")));
+	pl.insert(make_pair(string("w32_mouse"), string("DISCL_FOREGROUND")));
+	pl.insert(make_pair(string("w32_mouse"), string("DISCL_NONEXCLUSIVE")));
 
 	// this throws an exception on errors
 	mgr = InputManager::createInputSystem(pl);
@@ -1199,6 +1200,7 @@ InputEventController::InputEventController(Util::OS::wnd_t mainWindow, UiHandler
 {
 	captureNextInput = false;
 	captureOldHash = 0;
+	captureMap = "";
 	nextAvailableDisabledHash = 0;
 
 	kbd = NULL;
@@ -1220,7 +1222,7 @@ InputEventController::InputEventController(Util::OS::wnd_t mainWindow, UiHandler
 InputEventController::~InputEventController()
 {
 	// clean up all our ControlActions
-	for(std::map<std::string, ActionMap>::iterator it = allActionMaps.begin(); it != allActionMaps.end(); it++) {
+	for(map<string, ActionMap>::iterator it = allActionMaps.begin(); it != allActionMaps.end(); it++) {
 		for(ActionMap::iterator itm = it->second.begin(); itm != it->second.end(); itm++) {
 			delete itm->second;
 		}
@@ -1289,11 +1291,11 @@ bool InputEventController::mouseMoved(const MouseEvent& arg)
 
 	// send up to three events if necessary
 	if(ax > 0)
-		HandleEvent(HashMouseAxisEvent(arg, 0, (x > 0) ? 1 : 0), ax);
+		HandleEvent(HashMouseAxisEvent(arg, AXIS_X, (x > 0) ? 1 : 0), ax);
 	if(ay > 0)
-		HandleEvent(HashMouseAxisEvent(arg, 1, (y > 0) ? 1 : 0), ay);
+		HandleEvent(HashMouseAxisEvent(arg, AXIS_Y, (y > 0) ? 1 : 0), ay);
 	if(az > 0)
-		HandleEvent(HashMouseAxisEvent(arg, 2, (z > 0) ? 1 : 0), az);
+		HandleEvent(HashMouseAxisEvent(arg, AXIS_Z, (z > 0) ? 1 : 0), az);
 
 	return true;
 }
@@ -1355,11 +1357,11 @@ void InputEventController::HandleEvent(int hash, int value)
 {
 	// if we are setting controls, we need to update our action map
 	if(captureNextInput) {
-		ControlAction* tmp = actionMap[captureOldHash];
-		actionMap.erase(captureOldHash);
-		actionMap[hash] = tmp; // bind old action to new control
+		RebindKey(captureMap, captureOldHash, hash);
 
 		captureNextInput = false; // don't do this again
+		captureMap = "";
+		captureOldHash = 0;
 
 		return;
 	}
@@ -1369,17 +1371,36 @@ void InputEventController::HandleEvent(int hash, int value)
 		(*actionMap[hash])(value);
 }
 
-void InputEventController::CaptureNextInput(int oldhash)
+void InputEventController::CaptureNextInput(int oldhash, string mapname)
 {
 	// the next time the user gives any input, it will be bound to the control
 	// that is currently bound to oldhash
 	captureNextInput = true;
 	captureOldHash = oldhash;
+	captureMap = mapname;
 }
 
 bool InputEventController::IsCapturing()
 {
 	return captureNextInput;
+}
+
+void InputEventController::StopCapture()
+{
+	captureNextInput = false;
+	captureOldHash = 0;
+}
+
+void InputEventController::DisableCaptureInput()
+{
+	if(!captureNextInput)
+		return;
+
+	RebindKey(captureMap, captureOldHash, GetNextAvailableDisabledHash());
+	
+	captureOldHash = 0;
+	captureMap = "";
+	captureNextInput = false;
 }
 
 void InputEventController::ClearActionMap()
@@ -1389,7 +1410,7 @@ void InputEventController::ClearActionMap()
 	activeMaps.clear();
 }
 
-bool InputEventController::AddActionMap(std::string mapname)
+bool InputEventController::AddActionMap(string mapname)
 {
 	if(allActionMaps.count(mapname) != 1)
 		return false;
@@ -1400,20 +1421,20 @@ bool InputEventController::AddActionMap(std::string mapname)
 	return true;
 }
 
-const std::vector<std::string>& InputEventController::GetActiveMaps()
+const vector<string>& InputEventController::GetActiveMaps()
 {
 	return activeMaps;
 }
 
-InputEventController::ActionMap& InputEventController::GetActionMap(std::string key)
+InputEventController::ActionMap& InputEventController::GetActionMap(string key)
 {
 	return allActionMaps[key];
 }
 
-std::vector<std::string> InputEventController::GetAvailableMaps()
+vector<string> InputEventController::GetAvailableMaps()
 {
-	std::vector<std::string> maps;
-	for(std::map<std::string, ActionMap>::iterator it = allActionMaps.begin(); it != allActionMaps.end(); it++)
+	vector<string> maps;
+	for(map<string, ActionMap>::iterator it = allActionMaps.begin(); it != allActionMaps.end(); it++)
 		maps.push_back(it->first);
 
 	return maps;
@@ -1428,9 +1449,9 @@ void InputEventController::AddPlayerMaps(int numPlayers, MainCharacter::MainChar
 		if(mcs[i] == NULL) // player controls do not exist for this player; do not add it
 			continue;
 
-		std::stringstream str;
+		stringstream str;
 		str << _("Player") << " " << (i + 1);
-		std::string mapname = str.str();
+		string mapname = str.str();
 		if(allActionMaps.count(mapname) != 1)
 			continue; // was not loaded for some reason...
 
@@ -1453,7 +1474,7 @@ void InputEventController::SaveControllerConfig()
 	/* We must save each functor's hash */
 	for(int i = 0; i < cfg->MAX_PLAYERS; i++) {
 		// use map playerX
-		std::stringstream str;
+		stringstream str;
 		str << _("Player") << " " << (i + 1);
 		ActionMap& playerMap = allActionMaps[str.str()];
 
@@ -1489,6 +1510,15 @@ void InputEventController::SaveControllerConfig()
 	}
 }
 
+void InputEventController::ReloadConfig()
+{
+	allActionMaps.clear();
+	activeMaps.clear();
+	actionMap.clear();
+	LoadControllerConfig();
+	LoadConsoleMap();
+}
+
 void InputEventController::LoadControllerConfig()
 {
 	// use the cfg_controls_t structure to load functors
@@ -1497,7 +1527,7 @@ void InputEventController::LoadControllerConfig()
 	/* now we need to load the values */
 	for(int i = 0; i < cfg->MAX_PLAYERS; i++) {
 		// use map playerX
-		std::stringstream str;
+		stringstream str;
 		str << _("Player") << " " << (i + 1);
 		ActionMap& playerMap = allActionMaps[str.str()];
 
@@ -1515,16 +1545,16 @@ void InputEventController::LoadControllerConfig()
 void InputEventController::InitInputManager(Util::OS::wnd_t mainWindow)
 {
 	// collect parameters to give to init InputManager
-	std::ostringstream wnd;
+	ostringstream wnd;
 	wnd.imbue(OS::stdLocale);
 	wnd << (size_t) mainWindow;
 
 	ParamList pl;
-	pl.insert(std::make_pair(std::string("WINDOW"), wnd.str()));
+	pl.insert(make_pair(string("WINDOW"), wnd.str()));
 
 	// mice
-	pl.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_FOREGROUND")));
-	pl.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_NONEXCLUSIVE")));
+	pl.insert(make_pair(string("w32_mouse"), string("DISCL_FOREGROUND")));
+	pl.insert(make_pair(string("w32_mouse"), string("DISCL_NONEXCLUSIVE")));
 
 	// this throws an exception on errors
 	mgr = InputManager::createInputSystem(pl);
@@ -1576,6 +1606,26 @@ void InputEventController::InitInputManager(Util::OS::wnd_t mainWindow)
 	// now everything is set up and hopefully it will working forever!
 }
 
+void InputEventController::RebindKey(string mapname, int oldhash, int newhash)
+{
+	// check map exists
+	if(allActionMaps.count(mapname) > 0) {
+		ActionMap& map = allActionMaps[mapname];
+		// check anything exists at old hash
+		if(map.count(oldhash) > 0) {
+			ControlAction* tmp = map[oldhash];
+			map.erase(oldhash);
+			// check if we need to disable 
+			if(map.count(newhash) > 0) {
+					ControlAction* tmp2 = map[newhash];
+					map.erase(newhash);
+					map[GetNextAvailableDisabledHash()] = tmp2;
+			}
+			map[newhash] = tmp; // bind old action to new control
+		}
+	}
+}
+
 void InputEventController::LoadConsoleMap()
 {
 	// add console-keys map, which is all keys
@@ -1591,7 +1641,7 @@ void InputEventController::LoadConsoleMap()
 					NULL, (OIS::KeyCode) i);
 	}
 
-	std::string console = _("Console");
+	string console = _("Console");
 	int toggleHash = Config::GetInstance()->ui.console_hash;
 	if(allActionMaps[console].count(toggleHash) > 0)
 		delete allActionMaps[console][toggleHash];
@@ -1657,7 +1707,7 @@ int InputEventController::HashJoystickAxisEvent(const JoyStickEvent& arg, int ax
 						 ((axis % 16) << 8) | ((direction % 16) << 4));
 }
 
-std::string InputEventController::HashToString(int hash)
+string InputEventController::HashToString(int hash)
 {
 	switch((hash & 0x00C00000) >> 22) {
 		case 0: // keyboard event

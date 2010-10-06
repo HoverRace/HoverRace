@@ -192,14 +192,29 @@ class InputEventController : public KeyListener, public MouseListener, public Jo
 		 * the new input.  Behavior is undefined if there is no action assigned to the
 		 * old hash, so don't screw it up!  This is meant to be called by the control
 		 * assignment dialog box.
+		 *
+		 * @param oldhash Old hash.
+		 * @param mapname String representing the name of the map.
 		 */
-		void CaptureNextInput(int oldhash);
+		void CaptureNextInput(int oldhash, std::string mapname);
 
 		/***
 		 * This function indicates whether or not the controller is capturing an input.
 		 * It can be used to check whether or not an input has been captured.
 		 */
 		bool IsCapturing();
+
+		/***
+		 * This function stops a capture.
+		 */
+		void StopCapture();
+
+		/***
+		 * This function assigns the next disabled hash to the current capture control.
+		 * Nothing will be done if the InputEventController is not in capture mode.  This
+		 * function will also disable capture mode.
+		 */
+		void DisableCaptureInput();
 
 		/***
 		 * Clears all of the active control bindings.  Does not delete the bindings
@@ -261,6 +276,11 @@ class InputEventController : public KeyListener, public MouseListener, public Jo
 		void SaveControllerConfig();
 
 		/***
+		 * Clear and reload entire configuration.
+		 */
+		void ReloadConfig();
+
+		/***
 		 * Load the configuration from the Config object.
 		 */
 		void LoadControllerConfig();
@@ -269,6 +289,7 @@ class InputEventController : public KeyListener, public MouseListener, public Jo
 		void InitInputManager(Util::OS::wnd_t mainWindow);
 
 		// Auxiliary functions
+		void RebindKey(std::string mapname, int oldhash, int newhash);
 
 		// Hashing scheme (we have 32 bits but won't always use them):
 		// disabled control
@@ -331,6 +352,7 @@ class InputEventController : public KeyListener, public MouseListener, public Jo
 
 		bool captureNextInput;
 		int  captureOldHash; /// stores the value of the hash we will be replacing when capturing input
+		std::string captureMap; /// name of the map we are capturing for
 };
 
 } // namespace Control
