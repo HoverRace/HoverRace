@@ -26,6 +26,7 @@
 
 #include "../../engine/Util/OS.h"
 
+#include "Observer.h"
 #include "GameDirector.h"
 
 #ifdef WITH_SDL
@@ -37,8 +38,14 @@ namespace HoverRace {
 		}
 		namespace HoverScript {
 			class GamePeer;
+			class HighConsole;
+			class SessionPeer;
+			typedef boost::shared_ptr<SessionPeer> SessionPeerPtr;
 			class SysEnv;
 		}
+		class HighObserver;
+		class Rulebook;
+		typedef boost::shared_ptr<Rulebook> RulebookPtr;
 	}
 	namespace Script {
 		class Core;
@@ -63,6 +70,8 @@ class ClientApp : public GameDirector
 	public:
 		void MainLoop();
 
+		void NewLocalSession(RulebookPtr rules=RulebookPtr());
+
 	public:
 		// GameDirector
 		virtual void RequestShutdown();
@@ -82,9 +91,20 @@ class ClientApp : public GameDirector
 		class UiInput;
 		boost::shared_ptr<UiInput> uiInput;
 		Control::Controller *controller;
+
+		static const int MAX_OBSERVERS = HoverRace::Util::Config::MAX_PLAYERS;
+		Observer *observers[MAX_OBSERVERS];
+		ClientSession *currentSession;
+
+		HighObserver *highObserver;
+		HoverScript::HighConsole *highConsole;
+
 		Script::Core *scripting;
 		HoverScript::GamePeer *gamePeer;
+		HoverScript::SessionPeerPtr sessionPeer;
 		HoverScript::SysEnv *sysEnv;
+
+		RulebookPtr requestedNewSession;
 };
 
 }  // namespace HoverScript

@@ -26,6 +26,8 @@
 
 #include "../../engine/Exception.h"
 #include "../../engine/MainCharacter/MainCharacter.h"
+#include "../../engine/Model/Track.h"
+#include "../../engine/Parcel/TrackBundle.h"
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/FuzzyLogic.h"
 #include "../../engine/Util/DllObjectFactory.h"
@@ -41,6 +43,9 @@
 #include "HoverScript/HighConsole.h"
 #include "HoverScript/SessionPeer.h"
 #include "HoverScript/SysEnv.h"
+#include "ClientSession.h"
+#include "HighObserver.h"
+#include "Rulebook.h"
 
 #ifdef _WIN32
 #	include "resource.h"
@@ -74,7 +79,8 @@ class ClientApp::UiInput : public Control::UiHandler
 
 ClientApp::ClientApp() :
 	SUPER(),
-	uiInput(boost::make_shared<UiInput>())
+	uiInput(boost::make_shared<UiInput>()),
+	currentSession(NULL)
 {
 	Config *cfg = Config::GetInstance();
 
@@ -157,6 +163,8 @@ ClientApp::ClientApp() :
 
 ClientApp::~ClientApp()
 {
+	delete currentSession;
+
 	delete sysEnv;
 	delete gamePeer;
 	delete scripting;
@@ -221,6 +229,13 @@ void ClientApp::MainLoop()
 	bool quit = false;
 	SDL_Event evt;
 
+	// Fire all on_init handlers and check if a new session was requested.
+	gamePeer->OnInit();
+	RulebookPtr rules = gamePeer->RequestedNewSession();
+	if (rules != NULL) {
+		NewLocalSession(rules);
+	}
+
 	DrawPalette();
 
 	while (!quit) {
@@ -230,6 +245,60 @@ void ClientApp::MainLoop()
 			}
 		}
 	}
+}
+
+void ClientApp::NewLocalSession(RulebookPtr rules)
+{
+	//TODO: Confirm ending the current session.
+
+	// Shut down the current session (if any).
+	if (currentSession != NULL) {
+		delete currentSession;
+		currentSession = NULL;
+	}
+
+	//TODO: Prompt the user for a track name.
+
+	observers[0] = Observer::New();
+	highObserver = new HighObserver();
+
+	// Create the new session
+	ClientSession *newSession = new ClientSession();
+	sessionPeer = boost::make_shared<SessionPeer>(scripting, newSession);
+
+	if (Config::GetInstance()->runtime.enableConsole) {
+		highConsole = new HighConsole(scripting, this, gamePeer, sessionPeer);
+	}
+
+	// Load the selected track
+	try {
+		Model::TrackPtr track = Config::GetInstance()->
+			GetTrackBundle()->OpenTrack(rules->GetTrackName());
+		if (track.get() == NULL) throw Parcel::ObjStreamExn("Track does not exist.");
+		if (!newSession->LoadNew(
+			rules->GetTrackName().c_str(), track->GetRecordFile(),
+			rules->GetLaps(), rules->GetGameOpts(), videoBuf))
+		{
+			throw Parcel::ObjStreamExn("Track load failed.");
+		}
+	}
+	catch (Parcel::ObjStreamExn&) {
+		/*TODO
+		TrackOpenFailMessageBox(mMainWindow, rules->GetTrackName(), ex.what());
+		*/
+		throw;
+	}
+
+	newSession->SetSimulationTime(-6000);
+
+	if (!newSession->CreateMainCharacter(0)) {
+		//TODO: Display error.
+		return;
+	}
+
+	currentSession = newSession;
+
+	AssignPalette();
 }
 
 void ClientApp::RequestShutdown()
