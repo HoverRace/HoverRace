@@ -112,8 +112,6 @@ BOOL ControlPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 {
 	Config *cfg = Config::GetInstance();
 
-	static Config::cfg_controls_t *oldcontrols = NULL;
-
 	InputEventController* const controller = app->GetController();
 
 	BOOL lReturnValue = FALSE;
@@ -259,8 +257,6 @@ BOOL ControlPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 		case WM_NOTIFY:
 			switch (((NMHDR FAR *) pLParam)->code) {
 				case PSN_APPLY:
-					delete[] oldcontrols;
-					oldcontrols = NULL;
 					pressAnyKeyDialog = NULL;
 
 					// reload controller
@@ -270,8 +266,6 @@ BOOL ControlPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 					break;
 
 				case PSN_RESET:
-					delete[] oldcontrols;
-					oldcontrols = NULL;
 					pressAnyKeyDialog = NULL;
 					break;
 
