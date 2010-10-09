@@ -13,5 +13,5 @@ echo '==> Updating locales...'
 build/mklocale.sh po/*.gmo || exit 1
 
 echo '==> Launching HoverRace!'
-client/Game2/hoverrace -D "$@"
+client/Game2/hoverrace -D --media-path share "$@"
 
