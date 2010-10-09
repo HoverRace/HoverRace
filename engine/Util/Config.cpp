@@ -137,10 +137,12 @@ Config *Config::instance = NULL;
  *             The default is to use {@link #GetDefaultPath()}.
  */
 Config::Config(int verMajor, int verMinor, int verPatch, int verBuild,
-					 bool prerelease, const OS::path_t &path) :
+               bool prerelease, const OS::path_t &mediaPath,
+               const OS::path_t &path) :
 	unlinked(false),
 	verMajor(verMajor), verMinor(verMinor), verPatch(verPatch), verBuild(verBuild),
-	prerelease(prerelease)
+	prerelease(prerelease),
+	mediaPath(mediaPath.empty() ? GetDefaultMediaPath() : mediaPath)
 {
 	OS::path_t homePath = GetDefaultPath();
 	this->path = path.empty() ? homePath : path;
@@ -170,16 +172,6 @@ Config::Config(int verMajor, int verMinor, int verPatch, int verBuild,
 
 	// Set initial defaults.
 	ResetToDefaults();
-
-#	ifdef _WIN32
-		mediaPath = L"..";
-		mediaPath /= L"share";
-#	else
-		//TODO: Get directory from configure.
-		mediaPath = "..";
-		mediaPath /= "share";
-		mediaPath /= PACKAGE;
-#	endif
 
 	Str::UP tracksDirName("Tracks");
 
@@ -215,10 +207,11 @@ Config::~Config()
  * @return The config instance.
  */
 Config *Config::Init(int verMajor, int verMinor, int verPatch, int verBuild,
-						   bool prerelease, const OS::path_t &path)
+                     bool prerelease, const OS::path_t &mediaPath,
+                     const OS::path_t &path)
 {
 	if (instance == NULL) {
-		instance = new Config(verMajor, verMinor, verPatch, verBuild, prerelease, path);
+		instance = new Config(verMajor, verMinor, verPatch, verBuild, prerelease, mediaPath, path);
 	}
 	return instance;
 }
@@ -348,6 +341,24 @@ OS::path_t Config::GetConfigFilename() const
 	else {
 		retv /= (OS::cpstr_t)Str::UP(CONFIG_FILENAME);
 	}
+	return retv;
+}
+
+/**
+ * Retrieve the OS-specific default media path.
+ * @return The directory path (may be relative).
+ */
+OS::path_t Config::GetDefaultMediaPath()
+{
+#	ifdef _WIN32
+		OS::path_t retv = L"..";
+		retv /= L"share";
+#	else
+		//TODO: Get directory from configure.
+		OS::path_t retv = "..";
+		retv /= "share";
+		retv /= PACKAGE;
+#	endif
 	return retv;
 }
 

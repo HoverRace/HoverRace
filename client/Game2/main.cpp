@@ -67,6 +67,7 @@ namespace Str = HoverRace::Util::Str;
 #endif
 
 static OS::path_t initScript;
+static OS::path_t mediaPath;
 static bool debugMode = false;
 static bool safeMode = false;
 static bool allowMultipleInstances = false;
@@ -144,6 +145,19 @@ static bool ProcessCmdLine(int argc, char **argv)
 		else if (strcmp("-m", arg) == 0) {
 			allowMultipleInstances = true;
 		}
+		else if (strcmp("--media-path", arg) == 0) {
+			if (i < argc) {
+#				ifdef _WIN32
+					mediaPath = wargv[i++];
+#				else
+					mediaPath = argv[i++];
+#				endif
+			}
+			else {
+				ShowMessage("Expected: --media-path (path to media files)");
+				return false;
+			}
+		}
 		else if (strcmp("-s", arg) == 0) {
 			safeMode = true;
 		}
@@ -205,12 +219,12 @@ static Config *InitConfig(
 	}
 
 	// Load the configuration, using the default OS-specific path.
-	return Config::Init(verMajor, verMinor, verPatch, verBuild, prerelease);
+	return Config::Init(verMajor, verMinor, verPatch, verBuild, prerelease, mediaPath);
 
 #else
 	
 	//FIXME: Extract prerelease flag from ver resource at build time.
-	return Config::Init(HR_APP_VERSION, HR_APP_VERSION_PRERELEASE);
+	return Config::Init(HR_APP_VERSION, HR_APP_VERSION_PRERELEASE, mediaPath);
 
 #endif
 }

@@ -93,12 +93,14 @@ class MR_DllDeclare Config
 
 	private:
 		Config(int verMajor, int verMinor, int verPatch, int verBuild,
-			bool prerelease, const OS::path_t &file=OS::path_t());
+			bool prerelease, const OS::path_t &mediaPath,
+			const OS::path_t &file=OS::path_t());
 	public:
 		~Config();
 	
 		static Config *Init(int verMajor, int verMinor, int verPatch, int verBuild,
-			bool prerelease, const OS::path_t &path=OS::path_t());
+			bool prerelease, const OS::path_t &mediaPath,
+			const OS::path_t &path=OS::path_t());
 		static void Shutdown();
 
 		bool IsUnlinked() const;
@@ -113,6 +115,7 @@ class MR_DllDeclare Config
 		static OS::path_t GetDefaultPath();
 		OS::path_t GetConfigFilename() const;
 
+		static OS::path_t GetDefaultMediaPath();
 		const OS::path_t &GetMediaPath() const;
 		OS::path_t GetMediaPath(const std::string &file) const;
 
