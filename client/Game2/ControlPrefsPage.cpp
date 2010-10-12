@@ -69,7 +69,7 @@ void ControlPrefsPage::UpdateBindingLabels(HWND pWindow)
 	std::string mapname = buffer;
 
 	// we need to populate the ListView with actions
-	HWND hList = GetDlgItem(pWindow, IDC_CONTROL_BINDINGS);
+	HWND hList = GetDlgItem(pWindow, IDC_CONTROL_BINDING);
 	InputEventController::ActionMap map = controller->GetActionMap(mapname);
 
 	// order bindings by defined ordering in ControlAction::listOrder
@@ -176,7 +176,7 @@ BOOL ControlPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 							std::string mapname = buffer;
 
 							// we need to populate the ListView with actions
-							HWND hList = GetDlgItem(pWindow, IDC_CONTROL_BINDINGS);
+							HWND hList = GetDlgItem(pWindow, IDC_CONTROL_BINDING);
 							InputEventController::ActionMap map = controller->GetActionMap(mapname);
 
 							// order bindings by defined ordering in ControlAction::listOrder

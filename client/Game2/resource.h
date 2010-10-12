@@ -207,7 +207,6 @@
 #define IDC_BADMODE_FULLSCREEN_LBL      1363
 #define IDC_MAP_SELECT                  1364
 #define IDC_CHANGE_BINDING              1367
-#define IDC_CONTROL_BINDINGS            1369
 #define IDC_CONTROL_BINDING             1369
 #define ID_VIEW_3DACTION                32775
 #define ID_SETTING_WINDOW               32784
