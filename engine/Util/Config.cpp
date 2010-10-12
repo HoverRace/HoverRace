@@ -581,8 +581,17 @@ void Config::ResetToDefaults()
 	controls_hash[3].weapon   = 14;
 	controls_hash[3].lookBack = 15;
 
-	ui.console.SetKey(OIS::KC_F12);
-	ui.console_hash = OIS::KC_F12 << 8;
+	camera_hash.zoomIn  = OIS::KC_INSERT << 8;
+	camera_hash.zoomOut = OIS::KC_DELETE << 8;
+	camera_hash.panUp   = OIS::KC_PGUP   << 8;
+	camera_hash.panDown = OIS::KC_PGDOWN << 8;
+
+	ui.console_toggle = OIS::KC_F12      << 8;
+	ui.console_up     = OIS::KC_PGUP     << 8;
+	ui.console_down   = OIS::KC_PGDOWN   << 8;
+	ui.console_top    = OIS::KC_HOME     << 8;
+	ui.console_bottom = OIS::KC_END      << 8;
+	ui.console_help   = OIS::KC_F1       << 8;
 
 	runtime.silent = false;
 	runtime.aieeee = false;
@@ -633,6 +642,8 @@ void Config::Load()
 					controls_hash[i++].Load(dynamic_cast<yaml::MapNode*>(node));
 				}
 			}
+
+			camera_hash.Load(dynamic_cast<yaml::MapNode*>(root->Get("camera_hash")));
 		}
 
 		delete parser;
@@ -694,6 +705,9 @@ void Config::Save()
 			controls_hash[i].Save(emitter);
 		}
 		emitter->EndSeq();
+
+		camera_hash.Save(emitter);
+		ui.Save(emitter);
 
 		emitter->EndMap();
 		delete emitter;
@@ -889,53 +903,52 @@ void Config::cfg_controls_hash_t::Save(yaml::Emitter* emitter)
 	emitter->EndMap();
 }
 
-Config::cfg_control_t Config::cfg_control_t::Key(int kc)
-{
-	Config::cfg_control_t ctl;
-	ctl.inputType = OIS::OISKeyboard;
-	ctl.kbdBinding = kc;
-	return ctl;
-}
-
-void Config::cfg_control_t::SetKey(int kc)
-{
-	inputType = OIS::OISKeyboard;
-	kbdBinding = kc;
-}
-
-bool Config::cfg_control_t::IsKey(int kc) const
-{
-	return inputType == OIS::OISKeyboard && kbdBinding == kc;
-}
-
-void Config::cfg_control_t::Load(yaml::MapNode *root)
+void Config::cfg_camera_hash_t::Load(yaml::MapNode* root)
 {
 	if (root == NULL) return;
 
-	READ_INT(root, inputType, 0, 4);
-	READ_INT(root, kbdBinding, 0, 65535);
-	READ_INT(root, button, -32768, 32767);
-	READ_INT(root, axis, 0, 65535);
-	READ_INT(root, direction, -32768, 32767);
-	READ_INT(root, pov, 0, 65535);
-	READ_INT(root, slider, 0, 65535);
-	READ_INT(root, sensitivity, -32768, 32767);
-	READ_INT(root, joystickId, -32768, 32767);
+	READ_INT(root, zoomIn, 0, INT_MAX);
+	READ_INT(root, zoomOut, 0, INT_MAX);
+	READ_INT(root, panUp, 0, INT_MAX);
+	READ_INT(root, panDown, 0, INT_MAX);
 }
 
-void Config::cfg_control_t::Save(yaml::Emitter *emitter)
+void Config::cfg_camera_hash_t::Save(yaml::Emitter* emitter)
 {
+	emitter->MapKey("camera_hash");
 	emitter->StartMap();
 
-	EMIT_VAR(emitter, inputType);
-	EMIT_VAR(emitter, kbdBinding);
-	EMIT_VAR(emitter, button);
-	EMIT_VAR(emitter, axis);
-	EMIT_VAR(emitter, direction);
-	EMIT_VAR(emitter, pov);
-	EMIT_VAR(emitter, slider);
-	EMIT_VAR(emitter, sensitivity);
-	EMIT_VAR(emitter, joystickId);
+	EMIT_VAR(emitter, zoomIn);
+	EMIT_VAR(emitter, zoomOut);
+	EMIT_VAR(emitter, panUp);
+	EMIT_VAR(emitter, panDown);
+
+	emitter->EndMap();
+}
+
+void Config::cfg_ui_t::Load(yaml::MapNode* root)
+{
+	if (root == NULL) return;
+
+	READ_INT(root, console_toggle, 0, INT_MAX);
+	READ_INT(root, console_up, 0, INT_MAX);
+	READ_INT(root, console_down, 0, INT_MAX);
+	READ_INT(root, console_top, 0, INT_MAX);
+	READ_INT(root, console_bottom, 0, INT_MAX);
+	READ_INT(root, console_help, 0, INT_MAX);
+}
+
+void Config::cfg_ui_t::Save(yaml::Emitter* emitter)
+{
+	emitter->MapKey("ui");
+	emitter->StartMap();
+
+	EMIT_VAR(emitter, console_toggle);
+	EMIT_VAR(emitter, console_up);
+	EMIT_VAR(emitter, console_down);
+	EMIT_VAR(emitter, console_top);
+	EMIT_VAR(emitter, console_bottom);
+	EMIT_VAR(emitter, console_help);
 
 	emitter->EndMap();
 }
