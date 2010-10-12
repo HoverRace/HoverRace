@@ -69,6 +69,43 @@ using HoverRace::Client::Control::Controller;
 namespace HoverRace {
 namespace Client {
 
+class Scene
+{
+	public:
+		virtual ~Scene() { }
+
+	public:
+		virtual void Advance(Util::OS::timestamp_t tick) = 0;
+};
+
+class GameScene : public Scene
+{
+	typedef Scene SUPER;
+	public:
+		GameScene(GameDirector *director, VideoServices::VideoBuffer *videoBuf,
+			Script::Core *scripting, HoverScript::GamePeer *gamePeer,
+			RulebookPtr rules);
+		virtual ~GameScene();
+
+	private:
+		void Cleanup();
+
+	public:
+		void Advance(Util::OS::timestamp_t tick);
+
+	private:
+		int frame;
+		int numPlayers;
+		static const int MAX_OBSERVERS = Util::Config::MAX_PLAYERS;
+		Observer *observers[MAX_OBSERVERS];
+		ClientSession *session;
+
+		HighObserver *highObserver;
+		HoverScript::HighConsole *highConsole;
+
+		HoverScript::SessionPeerPtr sessionPeer;
+};
+
 class ClientApp::UiInput : public Control::UiHandler
 {
 	virtual void OnConsole()
@@ -80,7 +117,7 @@ class ClientApp::UiInput : public Control::UiHandler
 ClientApp::ClientApp() :
 	SUPER(),
 	uiInput(boost::make_shared<UiInput>()),
-	currentSession(NULL)
+	scene(NULL)
 {
 	Config *cfg = Config::GetInstance();
 
@@ -163,7 +200,7 @@ ClientApp::ClientApp() :
 
 ClientApp::~ClientApp()
 {
-	delete currentSession;
+	delete scene;
 
 	delete sysEnv;
 	delete gamePeer;
@@ -252,51 +289,18 @@ void ClientApp::NewLocalSession(RulebookPtr rules)
 	//TODO: Confirm ending the current session.
 
 	// Shut down the current session (if any).
-	if (currentSession != NULL) {
-		delete currentSession;
-		currentSession = NULL;
+	if (scene != NULL) {
+		delete scene;
+		scene = NULL;
 	}
 
 	//TODO: Prompt the user for a track name.
-
-	observers[0] = Observer::New();
-	highObserver = new HighObserver();
-
-	// Create the new session
-	ClientSession *newSession = new ClientSession();
-	sessionPeer = boost::make_shared<SessionPeer>(scripting, newSession);
-
-	if (Config::GetInstance()->runtime.enableConsole) {
-		highConsole = new HighConsole(scripting, this, gamePeer, sessionPeer);
-	}
-
-	// Load the selected track
 	try {
-		Model::TrackPtr track = Config::GetInstance()->
-			GetTrackBundle()->OpenTrack(rules->GetTrackName());
-		if (track.get() == NULL) throw Parcel::ObjStreamExn("Track does not exist.");
-		if (!newSession->LoadNew(
-			rules->GetTrackName().c_str(), track->GetRecordFile(),
-			rules->GetLaps(), rules->GetGameOpts(), videoBuf))
-		{
-			throw Parcel::ObjStreamExn("Track load failed.");
-		}
+		scene = new GameScene(this, videoBuf, scripting, gamePeer, rules);
 	}
 	catch (Parcel::ObjStreamExn&) {
-		/*TODO
-		TrackOpenFailMessageBox(mMainWindow, rules->GetTrackName(), ex.what());
-		*/
 		throw;
 	}
-
-	newSession->SetSimulationTime(-6000);
-
-	if (!newSession->CreateMainCharacter(0)) {
-		//TODO: Display error.
-		return;
-	}
-
-	currentSession = newSession;
 
 	AssignPalette();
 }
@@ -329,6 +333,75 @@ Control::Controller *ClientApp::ReloadController()
 {
 	delete controller;
 	return (controller = new Controller(mainWnd, uiInput));
+}
+
+// GameScene
+
+GameScene::GameScene(GameDirector *director, VideoServices::VideoBuffer *videoBuf,
+                     Script::Core *scripting, HoverScript::GamePeer *gamePeer,
+                     RulebookPtr rules) :
+	SUPER(),
+	frame(0), numPlayers(1), session(NULL), highObserver(NULL), highConsole(NULL)
+{
+	// Create the new session
+	session = new ClientSession();
+	sessionPeer = boost::make_shared<SessionPeer>(scripting, session);
+
+	// Load the selected track
+	try {
+		Model::TrackPtr track = Config::GetInstance()->
+			GetTrackBundle()->OpenTrack(rules->GetTrackName());
+		if (track.get() == NULL) throw Parcel::ObjStreamExn("Track does not exist.");
+		if (!session->LoadNew(
+			rules->GetTrackName().c_str(), track->GetRecordFile(),
+			rules->GetLaps(), rules->GetGameOpts(), videoBuf))
+		{
+			throw Parcel::ObjStreamExn("Track load failed.");
+		}
+	}
+	catch (Parcel::ObjStreamExn&) {
+		Cleanup();
+		throw;
+	}
+
+	session->SetSimulationTime(-6000);
+
+	if (!session->CreateMainCharacter(0)) {
+		Cleanup();
+		throw Exception("Main character creation failed");
+	}
+
+	observers[0] = Observer::New();
+	highObserver = new HighObserver();
+
+	if (Config::GetInstance()->runtime.enableConsole) {
+		highConsole = new HighConsole(scripting, director, gamePeer, sessionPeer);
+	}
+
+}
+
+GameScene::~GameScene()
+{
+	Cleanup();
+}
+
+void GameScene::Cleanup()
+{
+	delete highConsole;
+	delete highObserver;
+	delete session;
+	for (int i = 0; i < numPlayers; i++) {
+		observers[i]->Delete();
+	}
+}
+
+void GameScene::Advance(Util::OS::timestamp_t tick)
+{
+	if (frame == 0) {
+		gamePeer->OnSessionStart(gameApp->sessionPeer);
+		// Check if a new session was requested.
+		RulebookPtr newSessionRules = gamePeer->RequestedNewSession();
+	}
 }
 
 }  // namespace HoverScript

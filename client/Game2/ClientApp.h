@@ -55,6 +55,8 @@ namespace HoverRace {
 namespace HoverRace {
 namespace Client {
 
+class Scene;
+
 class ClientApp : public GameDirector
 {
 	typedef GameDirector SUPER;
@@ -92,16 +94,10 @@ class ClientApp : public GameDirector
 		boost::shared_ptr<UiInput> uiInput;
 		Control::Controller *controller;
 
-		static const int MAX_OBSERVERS = HoverRace::Util::Config::MAX_PLAYERS;
-		Observer *observers[MAX_OBSERVERS];
-		ClientSession *currentSession;
-
-		HighObserver *highObserver;
-		HoverScript::HighConsole *highConsole;
+		Scene *scene;
 
 		Script::Core *scripting;
 		HoverScript::GamePeer *gamePeer;
-		HoverScript::SessionPeerPtr sessionPeer;
 		HoverScript::SysEnv *sysEnv;
 
 		RulebookPtr requestedNewSession;
