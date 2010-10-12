@@ -13,6 +13,8 @@
 
 #include "ControlAction.h"
 #include "ActionPerformers.h"
+#include "ObserverActions.h"
+#include "ConsoleActions.h"
 
 #include <sstream>
 
@@ -21,6 +23,7 @@ using namespace HoverRace::Client::Control;
 using namespace HoverRace::Util;
 using namespace OIS;
 using HoverRace::Client::HoverScript::HighConsole;
+using HoverRace::Client::Observer;
 using namespace std;
 
 InputEventController::InputEventController(Util::OS::wnd_t mainWindow, UiHandlerPtr uiHandler) : uiHandler(uiHandler)
@@ -42,7 +45,7 @@ InputEventController::InputEventController(Util::OS::wnd_t mainWindow, UiHandler
 //	updated = false;
 
 	InitInputManager(mainWindow);
-	LoadControllerConfig();
+	LoadConfig();
 	LoadConsoleMap();
 }
 
@@ -328,7 +331,33 @@ void InputEventController::AddPlayerMaps(int numPlayers, MainCharacter::MainChar
 	AddActionMap(_("Console"));
 }
 
-void InputEventController::SaveControllerConfig()
+void InputEventController::AddObserverMaps(Observer** obs, int numObs)
+{
+	for(ActionMap::iterator it = allActionMaps[_("Camera")].begin(); it != allActionMaps[_("Camera")].end(); it++) {
+		ObserverAction* x = dynamic_cast<ObserverAction*>(it->second);
+		if(x != NULL)
+			x->SetObservers(obs, numObs);
+	}
+
+	AddActionMap(_("Camera"));
+}
+
+void InputEventController::SetConsole(HighConsole* hc)
+{
+	for(ActionMap::iterator it = allActionMaps["console-keys"].begin(); it != allActionMaps["console-keys"].end(); it++) {
+		ConsoleAction* x = dynamic_cast<ConsoleAction*>(it->second);
+		if(x != NULL)
+			x->SetHighConsole(hc);
+	}
+
+	for(ActionMap::iterator it = allActionMaps[_("Console")].begin(); it != allActionMaps[_("Console")].end(); it++) {
+		ConsoleAction* x = dynamic_cast<ConsoleAction*>(it->second);
+		if(x != NULL)
+			x->SetHighConsole(hc);
+	}
+}
+
+void InputEventController::SaveConfig()
 {
 	Config *cfg = Config::GetInstance();
 
@@ -369,6 +398,48 @@ void InputEventController::SaveControllerConfig()
 			}
 		}
 	}
+
+	// now save console map
+	for(ActionMap::iterator it = allActionMaps[_("Console")].begin(); it != allActionMaps[_("Console")].end(); it++) {
+		switch(it->second->getListOrder()) {
+			case 0: // toggle console
+				cfg->ui.console_toggle = it->first;
+				break;
+			case 1: // page up
+				cfg->ui.console_up = it->first;
+				break;
+			case 2: // page down
+				cfg->ui.console_down = it->first;
+				break;
+			case 3: // top
+				cfg->ui.console_top = it->first;
+				break;
+			case 4: // bottom
+				cfg->ui.console_bottom = it->first;
+				break;
+			case 5: // help
+				cfg->ui.console_help = it->first;
+				break;
+		}
+	}
+
+	// now save camera map
+	for(ActionMap::iterator it = allActionMaps[_("Camera")].begin(); it != allActionMaps[_("Camera")].end(); it++) {
+		switch(it->second->getListOrder()) {
+			case 0: // zoom in
+				cfg->camera_hash.zoomIn = it->first;
+				break;
+			case 1: // zoom out
+				cfg->camera_hash.zoomOut = it->first;
+				break;
+			case 2: // pan up
+				cfg->camera_hash.panUp = it->first;
+				break;
+			case 3: // pan down
+				cfg->camera_hash.panDown = it->first;
+				break;
+		}
+	}
 }
 
 void InputEventController::ReloadConfig()
@@ -376,11 +447,11 @@ void InputEventController::ReloadConfig()
 	allActionMaps.clear();
 	activeMaps.clear();
 	actionMap.clear();
-	LoadControllerConfig();
+	LoadConfig();
 	LoadConsoleMap();
 }
 
-void InputEventController::LoadControllerConfig()
+void InputEventController::LoadConfig()
 {
 	// use the cfg_controls_t structure to load functors
 	Config *cfg = Config::GetInstance();
@@ -401,6 +472,14 @@ void InputEventController::LoadControllerConfig()
 		playerMap[cfg->controls_hash[i].weapon] = new ChangeItemAction(_("Item"), 6, NULL);
 		playerMap[cfg->controls_hash[i].lookBack] = new LookBackAction(_("Look Back"), 7, NULL);
 	}
+
+	/* load camera map */
+	ActionMap& cameraMap = allActionMaps[_("Camera")];
+
+	cameraMap[cfg->camera_hash.zoomIn]  = new ObserverZoomAction(_("Zoom In"), 0, NULL, 0, 1);
+	cameraMap[cfg->camera_hash.zoomOut] = new ObserverZoomAction(_("Zoom Out"), 1, NULL, 0, -1);
+	cameraMap[cfg->camera_hash.panUp]   = new ObserverTiltAction(_("Pan Up"), 2, NULL, 0, 1);
+	cameraMap[cfg->camera_hash.panDown] = new ObserverTiltAction(_("Pan Down"), 3, NULL, 0, -1);
 }
 
 void InputEventController::InitInputManager(Util::OS::wnd_t mainWindow)
@@ -502,26 +581,17 @@ void InputEventController::LoadConsoleMap()
 					NULL, (OIS::KeyCode) i);
 	}
 
-	string console = _("Console");
-	int toggleHash = Config::GetInstance()->ui.console_hash;
-	if(allActionMaps[console].count(toggleHash) > 0)
-		delete allActionMaps[console][toggleHash];
-	allActionMaps[console][toggleHash] = new ConsoleToggleAction(_("Toggle Console"), 0, NULL, this);
-}
+	ActionMap& cmap = allActionMaps[_("Console")];
+	cmap.clear();
+	
+	Config* config = Config::GetInstance();
 
-void InputEventController::SetConsole(HighConsole* hc)
-{
-	for(ActionMap::iterator it = allActionMaps["console-keys"].begin(); it != allActionMaps["console-keys"].end(); it++) {
-		ConsoleAction* x = dynamic_cast<ConsoleAction*>(it->second);
-		if(x != NULL)
-			x->SetHighConsole(hc);
-	}
-
-	for(ActionMap::iterator it = allActionMaps[_("Console")].begin(); it != allActionMaps[_("Console")].end(); it++) {
-		ConsoleAction* x = dynamic_cast<ConsoleAction*>(it->second);
-		if(x != NULL)
-			x->SetHighConsole(hc);
-	}
+	cmap[config->ui.console_toggle] = new ConsoleToggleAction(_("Toggle Console"), 0, NULL, this);
+	cmap[config->ui.console_up]     = new ConsoleScrollAction(_("Page Up"), 1, NULL, -HighConsole::SCROLL_SPEED);
+	cmap[config->ui.console_down]   = new ConsoleScrollAction(_("Page Down"), 2, NULL, HighConsole::SCROLL_SPEED);
+	cmap[config->ui.console_top]    = new ConsoleScrollTopAction(_("Top"), 3, NULL);
+	cmap[config->ui.console_bottom] = new ConsoleScrollBottomAction(_("Bottom"), 4, NULL);
+	cmap[config->ui.console_help]   = new ConsoleHelpAction(_("Help"), 5, NULL);
 }
 
 // 0x0000xx00; xx = keycode

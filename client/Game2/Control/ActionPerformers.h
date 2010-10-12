@@ -1,6 +1,6 @@
 // ActionPerformers.h
 // A collection of classes implementing the ActionPerformer template class
-// (just has to implement Perform() and a constructor).  These are all
+// (just has to implement operator() and a constructor).  These are all
 // actions to be performed when the user presses a control key.
 //
 // Copyright (c) 2010, Ryan Curtin
@@ -28,8 +28,6 @@
 #include "Controller.h"
 #include "ControlAction.h"
 #include "../../../engine/MainCharacter/MainCharacter.h"
-#include "../HoverScript/HighConsole.h"
-#include "../Observer.h"
 
 namespace HoverRace {
 namespace Client {
@@ -182,121 +180,6 @@ class LookBackAction : public PlayerEffectAction {
 		 * eventValue == 0: set lookback state off
 		 */
 		virtual void operator()(int eventValue);
-};
-
-/***
- * \class ConsoleAction
- *
- * Base class for events pertaining to the console.
- */
-class ConsoleAction : public ControlAction {
-	public:
-		ConsoleAction(std::string name, int listOrder, HoverScript::HighConsole* hc);
-		virtual ~ConsoleAction() { }
-
-		void SetHighConsole(HoverScript::HighConsole* hc);
-		virtual void operator()(int value) = 0;
-
-	protected:
-		// TODO: shared_ptr
-		HoverScript::HighConsole* hc;
-};
-
-class ConsoleKeyAction : public ConsoleAction {
-	public:
-		ConsoleKeyAction(std::string name, int listOrder, HoverScript::HighConsole* hc, OIS::KeyCode kc);
-		virtual ~ConsoleKeyAction() { }
-
-		void SetHighConsole(HoverScript::HighConsole* hc);
-
-		/***
-		 * eventValue signifies if the key was pressed or released.
-		 * This will only fire when eventValue > 0.
-		 */
-		virtual void operator()(int eventValue);
-
-	protected:
-		OIS::KeyCode kc;
-};
-
-class ConsoleToggleAction : public ConsoleAction {
-	public:
-		ConsoleToggleAction(std::string name, int listOrder, HoverScript::HighConsole* hc, InputEventController* controller) : 
-			ConsoleAction(name, listOrder, hc), controller(controller) { }
-		virtual ~ConsoleToggleAction() { }
-
-		/***
-		 * eventValue signifies if the key was pressed or released.
-		 * This will only toggle the console when eventValue > 0.
-		 */
-		virtual void operator()(int eventValue);
-
-	protected:
-		std::vector<std::string> oldMaps; /// To keep track of the maps we were using
-		InputEventController* controller;
-};
-
-/***
- * \class ObserverAction
- *
- * Base class for all camera changing or otherwise observer-related actions.
- */
-class ObserverAction : public ControlAction {
-	public:
-		ObserverAction(std::string name, int listOrder, Observer** observers, int nObservers) : ControlAction(name, listOrder), observers(observers), nObservers(nObservers) { }
-		virtual ~ObserverAction() { }
-
-		void SetObservers(Observer** observers, int nObservers);
-		virtual void operator()(int value) = 0;
-
-	protected:
-		Observer** observers;
-		int nObservers;
-};
-
-/***
- * \class ObserverTiltAction
- *
- * Tilt the camera up or down (using Observer::Scroll()).
- */
-class ObserverTiltAction : public ObserverAction {
-	public:
-		ObserverTiltAction(std::string name, int listOrder, Observer** observers, int nObservers, int tiltIncrement) : ObserverAction(name, listOrder, observers, nObservers), tiltIncrement(tiltIncrement) { }
-
-		/// Fires on >0 value.
-		virtual void operator()(int value);
-	
-	protected:
-		int tiltIncrement;
-};
-
-/***
- * \class ObserverZoomAction
- *
- * Zoom the camera in or out.
- */
-class ObserverZoomAction : public ObserverAction {
-	public:
-		ObserverZoomAction(std::string name, int listOrder, Observer** observers, int nObservers, int zoomIncrement) : ObserverAction(name, listOrder, observers, nObservers), zoomIncrement(zoomIncrement) { }
-
-		/// Fires on >0 value.
-		virtual void operator()(int value);
-
-	protected:
-		int zoomIncrement;
-};
-
-/***
- * \class ObserverZoomResetAction
- *
- * Reset camera zoom and tilt to default.
- */
-class ObserverResetAction : public ObserverAction {
-	public:
-		ObserverResetAction(std::string name, int listOrder, Observer** observers, int nObservers) : ObserverAction(name, listOrder, observers, nObservers) { }
-
-		/// Fires on >0 value.
-		virtual void operator()(int value);
 };
 
 } // namespace Control

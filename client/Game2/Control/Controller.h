@@ -21,6 +21,7 @@
 #include "../../../engine/Util/OS.h"
 #include "../../../engine/MainCharacter/MainCharacter.h"
 #include "../HoverScript/HighConsole.h"
+#include "../Observer.h"
 
 #include "ControlAction.h"
 
@@ -163,6 +164,12 @@ class InputEventController : public KeyListener, public MouseListener, public Jo
 		void AddPlayerMaps(int numPlayers, MainCharacter::MainCharacter** mcs);
 
 		/***
+		 * Update pointers to Observer objects and add "Camera" map to the active
+		 * action maps.
+		 */
+		void AddObserverMaps(Observer** obs, int numObs);
+
+		/***
 		 * Convert a hash into an internationalized string.
 		 */
 		std::string HashToString(int hash);
@@ -180,7 +187,7 @@ class InputEventController : public KeyListener, public MouseListener, public Jo
 		/***
 		 * Save the controller configuration to the Config object.
 		 */
-		void SaveControllerConfig();
+		void SaveConfig();
 
 		/***
 		 * Clear and reload entire configuration.
@@ -190,7 +197,7 @@ class InputEventController : public KeyListener, public MouseListener, public Jo
 		/***
 		 * Load the configuration from the Config object.
 		 */
-		void LoadControllerConfig();
+		void LoadConfig();
 
 	private:
 		void InitInputManager(Util::OS::wnd_t mainWindow);
