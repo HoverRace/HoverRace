@@ -189,24 +189,10 @@ void Observer::Zoom(int factor)
 {
 	int oldAperture = mApperture;
 	// weird algebra is so that positive factor zooms in, negative zooms out
-	mApperture = MR_Angle(mApperture * (1 - factor / 5));
+	mApperture = MR_Angle(mApperture * (1.0 - factor / 5.0));
 
-	if(mApperture > MR_PI / 10 || mApperture < (3 * MR_PI / 4))
+	if(mApperture < MR_PI / 10.0 || mApperture > (3.0 * MR_PI / 4.0))
 		mApperture = oldAperture;
-}
-
-void Observer::ZoomIn()
-{
-	if(mApperture > MR_PI / 10) {
-		mApperture = MR_Angle((mApperture * 4) / 5);
-	}
-}
-
-void Observer::ZoomOut()
-{
-	if(mApperture < 3 * MR_PI / 4) {
-		mApperture = MR_Angle(mApperture + mApperture / 4);
-	}
 }
 
 void Observer::Home()
