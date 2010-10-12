@@ -1033,46 +1033,6 @@ void GameApp::PollController()
 	controller->Poll();
 }
 
-bool GameApp::OnKeyDown(int keycode)
-{
-	if (highConsole == NULL || !highConsole->IsVisible()) {
-		switch (keycode) {
-			// Camera control
-			case VK_HOME:
-				BOOST_FOREACH(Observer *obs, observers) {
-					if (obs != NULL) obs->Home();
-				}
-				return true;
-
-			case VK_PRIOR:
-				BOOST_FOREACH(Observer *obs, observers) {
-					if (obs != NULL) obs->Scroll(1);
-				}
-				return true;
-
-			case VK_NEXT:
-				BOOST_FOREACH(Observer *obs, observers) {
-					if (obs != NULL) obs->Scroll(-1);
-				}
-				return true;
-
-			case VK_INSERT:
-				BOOST_FOREACH(Observer *obs, observers) {
-					if (obs != NULL) obs->ZoomIn();
-				}
-				return true;
-
-			case VK_DELETE:
-				BOOST_FOREACH(Observer *obs, observers) {
-					if (obs != NULL) obs->ZoomOut();
-				}
-				return true;
-		}
-	}
-
-	return false;
-}
-
 bool GameApp::SetVideoMode(int pX, int pY, const std::string *monitor, bool testing)
 {
 	if(mVideoBuffer != NULL) {
@@ -1252,6 +1212,7 @@ void GameApp::NewLocalSession(RulebookPtr rules)
 		ClientSession *lCurrentSession = new ClientSession();
 		sessionPeer = boost::make_shared<SessionPeer>(scripting, lCurrentSession);
 
+		controller->ClearActionMap();
 		if (Config::GetInstance()->runtime.enableConsole) {
 			highConsole = new HighConsole(scripting, this, gamePeer, sessionPeer);
 			controller->SetConsole(highConsole);
@@ -1284,6 +1245,7 @@ void GameApp::NewLocalSession(RulebookPtr rules)
 			// Set up the controls
 			MainCharacter::MainCharacter* mc = lCurrentSession->GetPlayer(0);
 			controller->AddPlayerMaps(1, &mc);
+			controller->AddObserverMaps(observers, 1);
 
 			mCurrentSession = lCurrentSession;
 			mGameThread = GameThread::New(this);
@@ -1391,7 +1353,9 @@ void GameApp::NewSplitSession(int pSplitPlayers)
 			mcs[2] = lCurrentSession->GetMainCharacter3();
 			mcs[3] = lCurrentSession->GetMainCharacter4();
 
-			controller->AddPlayerMaps(4, mcs);
+			controller->ClearActionMap();
+			controller->AddPlayerMaps(pSplitPlayers, mcs);
+			controller->AddObserverMaps(observers, pSplitPlayers);
 		}
 
 		if(!lSuccess) {
@@ -1578,6 +1542,11 @@ void GameApp::NewNetworkSession(BOOL pServer)
 												  // start in 13 seconds
 		lCurrentSession->SetSimulationTime(-13000);
 		lSuccess = (lCurrentSession->CreateMainCharacter() != FALSE);
+
+		MainCharacter::MainCharacter* mc = lCurrentSession->GetMainCharacter();
+		controller->ClearActionMap();
+		controller->AddPlayerMaps(1, &mc);
+		controller->AddObserverMaps(observers, 1);
 	}
 
 	if(!lSuccess) {
@@ -1658,6 +1627,11 @@ void GameApp::NewInternetSession()
 		observers[0] = Observer::New();
 		highObserver = new HighObserver();
 		lSuccess = lCurrentSession->CreateMainCharacter();
+
+		MainCharacter::MainCharacter* mc = lCurrentSession->GetMainCharacter();
+		controller->ClearActionMap();
+		controller->AddPlayerMaps(1, &mc);
+		controller->AddObserverMaps(observers, 1);
 	}
 
 	if(!lSuccess) {
@@ -2029,14 +2003,6 @@ LRESULT CALLBACK GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam
 					break;
 
 			}
-			break;
-
-//		case WM_CHAR:
-//			This->OnChar((char)pWParam);
-//			return 0;
-
-		case WM_KEYDOWN:
-			if (This->OnKeyDown(pWParam)) return 0;
 			break;
 
 		case WM_PAINT:
