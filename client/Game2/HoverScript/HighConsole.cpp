@@ -59,15 +59,6 @@ using HoverRace::VideoServices::StaticText;
 namespace {
 	static const std::string COMMAND_PROMPT(">> ");
 	static const std::string CONTINUE_PROMPT(":> ");
-
-	static const Config::cfg_control_t HELP_KEY = Config::cfg_control_t::Key(OIS::KC_F1);
-
-	static const Config::cfg_control_t SCROLL_TOP_KEY = Config::cfg_control_t::Key(OIS::KC_HOME);
-	static const Config::cfg_control_t SCROLL_UP_KEY = Config::cfg_control_t::Key(OIS::KC_PGUP);
-	static const Config::cfg_control_t SCROLL_DOWN_KEY = Config::cfg_control_t::Key(OIS::KC_PGDOWN);
-	static const Config::cfg_control_t SCROLL_BOTTOM_KEY = Config::cfg_control_t::Key(OIS::KC_END);
-
-	static const int SCROLL_SPEED = 3;
 }
 
 namespace HoverRace {
@@ -165,15 +156,16 @@ HighConsole::HighConsole(Script::Core *scripting, GameDirector *gameApp,
 	helpLines->Add(helpInstructions, *logFont, 0x0e);
 	logLines->Add(helpInstructions, *logFont, 0x0e);
 
-	Control::Controller *controller = gameApp->GetController();
+	Control::InputEventController *controller = gameApp->GetController();
 
 	// The heading for the console.
 	VideoServices::FontSpec titleFont("Arial", 12);
 	consoleTitle = new StaticText(_("Console"), titleFont, 0x0e);
 	std::string consoleControlsText = boost::str(
 		boost::format("%s [%s/%s]  %s [%s]") %
-		_("Scroll") % controller->toString(SCROLL_UP_KEY) % controller->toString(SCROLL_DOWN_KEY) %
-		_("Hide") % controller->toString(cfg->ui.console)
+		//_("Scroll") % controller->toString(SCROLL_UP_KEY) % controller->toString(SCROLL_DOWN_KEY) %
+		_("Scroll") % controller->HashToString(0) % controller->HashToString(0) %
+		_("Hide") % controller->HashToString(0)
 		);
 	consoleControls = new StaticText(consoleControlsText, titleFont, 0x0e);
 
@@ -181,7 +173,7 @@ HighConsole::HighConsole(Script::Core *scripting, GameDirector *gameApp,
 	helpTitle = new StaticText(_("Help"), titleFont, 0x0e);
 	std::string helpControlsText = boost::str(
 		boost::format("%s [%s]") %
-		_("Hide") % controller->toString(HELP_KEY)
+		_("Hide") % controller->HashToString(0)
 		);
 	helpControls = new StaticText(helpControlsText, titleFont, 0x0e);
 
@@ -318,14 +310,27 @@ void HighConsole::LogError(const std::string &s)
 
 void HighConsole::ToggleVisible()
 {
-	if (visible) {
-		gameApp->GetController()->LeaveControlLayer();
-		visible = false;
-	}
-	else {
-		gameApp->GetController()->EnterControlLayer(input);
-		visible = true;
-	}
+	visible = !visible;
+}
+
+void HighConsole::ToggleHelp()
+{
+	helpVisible = !helpVisible;
+}
+
+void HighConsole::Scroll(int lines)
+{
+	logLines->Scroll(lines);
+}
+
+void HighConsole::ScrollTop()
+{
+	logLines->ScrollTop();
+}
+
+void HighConsole::ScrollBottom()
+{
+	logLines->ScrollBottom();
 }
 
 /**
@@ -642,35 +647,13 @@ bool HighConsole::Input::KeyPressed(OIS::KeyCode kc, unsigned int text)
 {
 	if (cons == NULL || !cons->IsVisible()) return true;
 
-	if (Config::GetInstance()->ui.console.IsKey(kc)) {
-		cons->ToggleVisible();
-	}
-	else if (HELP_KEY.IsKey(kc)) {
-		cons->helpVisible = !cons->helpVisible;
-	}
-	else if (SCROLL_TOP_KEY.IsKey(kc)) {
-		cons->logLines->ScrollTop();
-	}
-	else if (SCROLL_UP_KEY.IsKey(kc)) {
-		cons->logLines->Scroll(-SCROLL_SPEED);
-	}
-	else if (SCROLL_DOWN_KEY.IsKey(kc)) {
-		cons->logLines->Scroll(SCROLL_SPEED);
-	}
-	else if (SCROLL_BOTTOM_KEY.IsKey(kc)) {
-		cons->logLines->ScrollBottom();
-	}
-	else {
-		/*
-		if (text) {
-			if (text >= 32 && text < 127) {
-				OutputDebugString(boost::str(boost::format("Text key: %c (%d)\n") % (char)text % text).c_str());
-			}
-			else {
-				OutputDebugString(boost::str(boost::format("Text key: (%d)\n") % text).c_str());
-			}
+	if (text) {
+		if (text >= 32 && text < 127) {
+			OutputDebugString(boost::str(boost::format("Text key: %c (%d)\n") % (char)text % text).c_str());
 		}
-		*/
+		else {
+			OutputDebugString(boost::str(boost::format("Text key: (%d)\n") % text).c_str());
+		}
 	}
 
 	return true;

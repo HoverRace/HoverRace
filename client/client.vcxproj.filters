@@ -135,6 +135,15 @@
     <ClCompile Include="Game2\ClientApp.cpp">
       <Filter>Game2</Filter>
     </ClCompile>
+    <ClCompile Include="Game2\Control\ActionPerformers.cpp">
+      <Filter>Control</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\Control\ConsoleActions.cpp">
+      <Filter>Control</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\Control\ObserverActions.cpp">
+      <Filter>Control</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game2\AboutDialog.h">
@@ -269,6 +278,18 @@
     </ClInclude>
     <ClInclude Include="Game2\ClientApp.h">
       <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\Control\ControlAction.h">
+      <Filter>Control</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\Control\ActionPerformers.h">
+      <Filter>Control</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\Control\ConsoleActions.h">
+      <Filter>Control</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\Control\ObserverActions.h">
+      <Filter>Control</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

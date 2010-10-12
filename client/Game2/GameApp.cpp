@@ -182,7 +182,7 @@ unsigned long GameThread::Loop(LPVOID pThread)
 			// Check if a new session was requested.
 			newSessionRules = gameApp->gamePeer->RequestedNewSession();
 		}
-		gameApp->ReadAsyncInputController();
+		gameApp->PollController();
 
 		MR_SAMPLE_START(Process, "Process");
 
@@ -348,7 +348,7 @@ void GameApp::Clean()
 	}
 
 	// All modal dialogs and control-grabbing layers are about to be destroyed.
-	controller->ResetControlLayers();
+	//controller->ResetControlLayers();
 
 	sessionPeer.reset();
 	delete mCurrentSession;
@@ -703,7 +703,7 @@ BOOL GameApp::CreateMainWindow()
 	UpdateMenuItems();
 
 	// set up controller
-	controller = new Control::Controller(mMainWindow, uiInput);
+	controller = new Control::InputEventController(mMainWindow, uiInput);
 
 	return lReturnValue;
 }
@@ -1028,112 +1028,9 @@ void GameApp::RefreshView()
 	}
 }
 
-void GameApp::OnChar(char c)
+void GameApp::PollController()
 {
-	if (highConsole != NULL && highConsole->IsVisible()) {
-		highConsole->OnChar(c);
-	}
-	else if (mCurrentSession != NULL) {
-		mCurrentSession->AddMessageKey(c);
-	}
-}
-
-bool GameApp::OnKeyDown(int keycode)
-{
-	if (highConsole == NULL || !highConsole->IsVisible()) {
-		switch (keycode) {
-			// Camera control
-			case VK_HOME:
-				BOOST_FOREACH(Observer *obs, observers) {
-					if (obs != NULL) obs->Home();
-				}
-				return true;
-
-			case VK_PRIOR:
-				BOOST_FOREACH(Observer *obs, observers) {
-					if (obs != NULL) obs->Scroll(1);
-				}
-				return true;
-
-			case VK_NEXT:
-				BOOST_FOREACH(Observer *obs, observers) {
-					if (obs != NULL) obs->Scroll(-1);
-				}
-				return true;
-
-			case VK_INSERT:
-				BOOST_FOREACH(Observer *obs, observers) {
-					if (obs != NULL) obs->ZoomIn();
-				}
-				return true;
-
-			case VK_DELETE:
-				BOOST_FOREACH(Observer *obs, observers) {
-					if (obs != NULL) obs->ZoomOut();
-				}
-				return true;
-		}
-	}
-
-	return false;
-}
-
-/**
- * Read the control state for a specific player.
- * @param playerIdx The player index (0 = first player, 1 = second, etc.).
- * @return The control state.
- */
-int GameApp::ReadAsyncInputControllerPlayer(int playerIdx)
-{
-	int retv = 0;
-
-	// hack in for now; this checks the current state
-	Control::ControlState cur = controller->getControlState(playerIdx);
-
-	if (cur.motorOn)  retv |= MainCharacter::MainCharacter::eMotorOn;
-	if (cur.jump)     retv |= MainCharacter::MainCharacter::eJump;
-	if (cur.brake)    retv |= MainCharacter::MainCharacter::eBreakDirection;
-	if (cur.fire)     retv |= MainCharacter::MainCharacter::eFire;
-	if (cur.weapon)   retv |= MainCharacter::MainCharacter::eSelectWeapon;
-	if (cur.lookBack) retv |= MainCharacter::MainCharacter::eLookBack;
-	if (cur.right)    retv |= MainCharacter::MainCharacter::eRight;
-	if (cur.left)     retv |= MainCharacter::MainCharacter::eLeft;
-
-	controller->poll();
-
-	return retv;
-}
-
-void GameApp::ReadAsyncInputController()
-{
-	if(mCurrentSession != NULL) {
-		if(GetForegroundWindow() == mMainWindow)
-		{
-			static BOOL lFirstCall = TRUE;
-			int lControlState1 = 0;
-			int lControlState2 = 0;
-			int lControlState3 = 0;
-			int lControlState4 = 0;
-
-			lControlState1 = ReadAsyncInputControllerPlayer(0);
-
-			// If we're in multiplayer mode we need to check those keys too
-			if(mCurrentSession->GetPlayer(1) != NULL) {
-				lControlState2 = ReadAsyncInputControllerPlayer(1);
-			}
-			if(mCurrentSession->GetPlayer(2) != NULL) {
-				lControlState3 = ReadAsyncInputControllerPlayer(2);
-			}
-			if(mCurrentSession->GetPlayer(3) != NULL) {
-				lControlState4 = ReadAsyncInputControllerPlayer(3);
-			}
-
-			if(lFirstCall)
-				lFirstCall = FALSE;
-			else
-				mCurrentSession->SetControlState(lControlState1, lControlState2, lControlState3, lControlState4);
-		}
-	}
+	controller->Poll();
 }
 
 bool GameApp::SetVideoMode(int pX, int pY, const std::string *monitor, bool testing)
@@ -1315,8 +1212,10 @@ void GameApp::NewLocalSession(RulebookPtr rules)
 		ClientSession *lCurrentSession = new ClientSession();
 		sessionPeer = boost::make_shared<SessionPeer>(scripting, lCurrentSession);
 
+		controller->ClearActionMap();
 		if (Config::GetInstance()->runtime.enableConsole) {
 			highConsole = new HighConsole(scripting, this, gamePeer, sessionPeer);
+			controller->SetConsole(highConsole);
 		}
 
 		// Load the selected track
@@ -1343,6 +1242,11 @@ void GameApp::NewLocalSession(RulebookPtr rules)
 			lSuccess = lCurrentSession->CreateMainCharacter(0);
 
 		if(lSuccess) {
+			// Set up the controls
+			MainCharacter::MainCharacter* mc = lCurrentSession->GetPlayer(0);
+			controller->AddPlayerMaps(1, &mc);
+			controller->AddObserverMaps(observers, 1);
+
 			mCurrentSession = lCurrentSession;
 			mGameThread = GameThread::New(this);
 
@@ -1400,15 +1304,12 @@ void GameApp::NewSplitSession(int pSplitPlayers)
 			observers[0]->SetSplitMode(Observer::eUpperSplit);
 			observers[1]->SetSplitMode(Observer::eLowerSplit);
 		}
-		if(pSplitPlayers == 3) {
+		if(pSplitPlayers >= 3) {
 			observers[0]->SetSplitMode(Observer::eUpperLeftSplit);
 			observers[1]->SetSplitMode(Observer::eUpperRightSplit);
 			observers[2]->SetSplitMode(Observer::eLowerLeftSplit);
 		}
 		if(pSplitPlayers == 4) {
-			observers[0]->SetSplitMode(Observer::eUpperLeftSplit);
-			observers[1]->SetSplitMode(Observer::eUpperRightSplit);
-			observers[2]->SetSplitMode(Observer::eLowerLeftSplit);
 			observers[3]->SetSplitMode(Observer::eLowerRightSplit);
 		}
 
@@ -1445,6 +1346,16 @@ void GameApp::NewSplitSession(int pSplitPlayers)
 				lSuccess = lCurrentSession->CreateMainCharacter(2);
 			if(pSplitPlayers > 3)
 				lSuccess = lCurrentSession->CreateMainCharacter(3);
+
+			MainCharacter::MainCharacter* mcs[4];
+			mcs[0] = lCurrentSession->GetPlayer(0);
+			mcs[1] = lCurrentSession->GetPlayer(1);
+			mcs[2] = lCurrentSession->GetPlayer(2);
+			mcs[3] = lCurrentSession->GetPlayer(3);
+
+			controller->ClearActionMap();
+			controller->AddPlayerMaps(pSplitPlayers, mcs);
+			controller->AddObserverMaps(observers, pSplitPlayers);
 		}
 
 		if(!lSuccess) {
@@ -1630,7 +1541,12 @@ void GameApp::NewNetworkSession(BOOL pServer)
 	if(lSuccess) {
 												  // start in 13 seconds
 		lCurrentSession->SetSimulationTime(-13000);
-		lSuccess = (lCurrentSession->CreateMainCharacter() != FALSE);
+		lSuccess = (lCurrentSession->CreateMainCharacter(0));
+
+		MainCharacter::MainCharacter* mc = lCurrentSession->GetMainCharacter();
+		controller->ClearActionMap();
+		controller->AddPlayerMaps(1, &mc);
+		controller->AddObserverMaps(observers, 1);
 	}
 
 	if(!lSuccess) {
@@ -1662,10 +1578,10 @@ void GameApp::NewNetworkSession(BOOL pServer)
 	AssignPalette();
 }
 
-HoverRace::Client::Control::Controller *GameApp::ReloadController()
+HoverRace::Client::Control::InputEventController *GameApp::ReloadController()
 {
 	delete controller;
-	return (controller = new Control::Controller(This->mMainWindow, This->uiInput));
+	return (controller = new Control::InputEventController(This->mMainWindow, This->uiInput));
 }
 
 void GameApp::NewInternetSession()
@@ -1711,6 +1627,11 @@ void GameApp::NewInternetSession()
 		observers[0] = Observer::New();
 		highObserver = new HighObserver();
 		lSuccess = lCurrentSession->CreateMainCharacter();
+
+		MainCharacter::MainCharacter* mc = lCurrentSession->GetMainCharacter();
+		controller->ClearActionMap();
+		controller->AddPlayerMaps(1, &mc);
+		controller->AddObserverMaps(observers, 1);
 	}
 
 	if(!lSuccess) {
@@ -2082,14 +2003,6 @@ LRESULT CALLBACK GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam
 					break;
 
 			}
-			break;
-
-		case WM_CHAR:
-			This->OnChar((char)pWParam);
-			return 0;
-
-		case WM_KEYDOWN:
-			if (This->OnKeyDown(pWParam)) return 0;
 			break;
 
 		case WM_PAINT:

@@ -7,8 +7,7 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
-#include <windows.h>
-#define IDC_STATIC (-1)
+#include "afxres.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -17,10 +16,8 @@
 // Neutral (Default) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEUD)
-#ifdef _WIN32
 LANGUAGE LANG_NEUTRAL, SUBLANG_DEFAULT
 #pragma code_page(1252)
-#endif //_WIN32
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -102,54 +99,13 @@ BEGIN
     PUSHBUTTON      "Open Download Folder",IDC_OPEN_FOLDER,7,163,111,14
 END
 
-IDD_CONTROL DIALOGEX 0, 0, 373, 140
+IDD_CONTROL DIALOGEX 0, 0, 373, 177
 STYLE DS_SETFONT | DS_3DLOOK | DS_FIXEDSYS | WS_CHILD
 FONT 8, "MS Shell Dlg", 0, 0, 0x0
 BEGIN
-    LTEXT           "Motor On:",IDC_MOTOR_ON,4,21,58,8
-    LTEXT           "Turn Right:",IDC_TURN_RIGHT,4,35,58,8
-    LTEXT           "Turn Left:",IDC_TURN_LEFT,4,49,58,8
-    LTEXT           "Brake:",IDC_BRAKE,4,63,58,9
-    LTEXT           "Jump:",IDC_JUMP,4,77,58,9
-    LTEXT           "Fire Weapon:",IDC_FIRE_WEAPON,4,91,58,8
-    LTEXT           "Select Weapon:",IDC_SELECT_WEAPON,4,105,58,8
-    LTEXT           "Look Back:",IDC_LOOK_BACK,4,119,58,8
-    LTEXT           "Player 1",IDC_PLAYER1,62,7,73,8
-    PUSHBUTTON      "Motor On",IDC_MOTOR_ON1,62,18,73,14
-    PUSHBUTTON      "Right",IDC_RIGHT1,62,32,73,14
-    PUSHBUTTON      "Left",IDC_LEFT1,62,46,73,14
-    PUSHBUTTON      "Brake",IDC_BRAKE1,62,60,73,14
-    PUSHBUTTON      "Jump",IDC_JUMP1,62,74,73,14
-    PUSHBUTTON      "Fire",IDC_FIRE1,62,88,73,14
-    PUSHBUTTON      "Weapon",IDC_SELWEAPON1,62,102,73,14
-    PUSHBUTTON      "Look Back",IDC_LOOKBACK1,62,116,73,14
-    LTEXT           "Player 2",IDC_PLAYER2,139,7,73,8
-    PUSHBUTTON      "Motor On",IDC_MOTOR_ON2,139,18,73,14
-    PUSHBUTTON      "Right",IDC_RIGHT2,139,32,73,14
-    PUSHBUTTON      "Left",IDC_LEFT2,139,46,73,14
-    PUSHBUTTON      "Brake",IDC_BRAKE2,139,60,73,14
-    PUSHBUTTON      "Jump",IDC_JUMP2,139,74,73,14
-    PUSHBUTTON      "Fire",IDC_FIRE2,139,88,73,14
-    PUSHBUTTON      "Weapon",IDC_SELWEAPON2,139,102,73,14
-    PUSHBUTTON      "Look Back",IDC_LOOKBACK2,139,116,73,14
-    LTEXT           "Player 3",IDC_PLAYER3,216,7,72,8
-    PUSHBUTTON      "Motor On",IDC_MOTOR_ON3,216,18,73,14
-    PUSHBUTTON      "Right",IDC_RIGHT3,216,32,73,14
-    PUSHBUTTON      "Left",IDC_LEFT3,216,46,73,14
-    PUSHBUTTON      "Brake",IDC_BRAKE3,216,60,73,14
-    PUSHBUTTON      "Jump",IDC_JUMP3,216,74,73,14
-    PUSHBUTTON      "Fire",IDC_FIRE3,216,88,73,14
-    PUSHBUTTON      "Weapon",IDC_SELWEAPON3,216,102,73,14
-    PUSHBUTTON      "Look Back",IDC_LOOKBACK3,216,116,73,14
-    LTEXT           "Player 4",IDC_PLAYER4,292,7,73,8
-    PUSHBUTTON      "Motor On",IDC_MOTOR_ON4,292,18,73,14
-    PUSHBUTTON      "Right",IDC_RIGHT4,292,32,73,14
-    PUSHBUTTON      "Left",IDC_LEFT4,292,46,73,14
-    PUSHBUTTON      "Brake",IDC_BRAKE4,292,60,73,14
-    PUSHBUTTON      "Jump",IDC_JUMP4,292,74,73,14
-    PUSHBUTTON      "Fire",IDC_FIRE4,292,88,73,14
-    PUSHBUTTON      "Weapon",IDC_SELWEAPON4,292,102,73,14
-    PUSHBUTTON      "Look Back",IDC_LOOKBACK4,292,116,73,14
+    COMBOBOX        IDC_MAP_SELECT,4,7,201,15,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Change Binding",IDC_CHANGE_BINDING,279,7,72,15
+    CONTROL         "",IDC_CONTROL_BINDING,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,4,26,361,143,WS_EX_STATICEDGE
 END
 
 IDD_BAD_MODE4 DIALOGEX 10, 10, 153, 41
@@ -254,7 +210,7 @@ BEGIN
     LTEXT           "Connecting...",IDC_MSG_LBL,45,27,45,8
 END
 
-IDD_SET_MESSAGE DIALOG  0, 0, 187, 91
+IDD_SET_MESSAGE DIALOG 0, 0, 187, 91
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Internet Meeting Room Message"
 FONT 8, "MS Sans Serif"
@@ -298,7 +254,7 @@ BEGIN
     LTEXT           "It is highly preferable to wait until all players have successfully connected to the game before pressing the START buttton.",IDC_WARN_TEXT,34,7,141,30
 END
 
-IDD_CHAT_MESSAGES DIALOG  0, 0, 186, 122
+IDD_CHAT_MESSAGES DIALOG 0, 0, 186, 122
 STYLE DS_SETFONT | DS_3DLOOK | WS_CHILD
 FONT 8, "MS Sans Serif"
 BEGIN
@@ -350,7 +306,7 @@ BEGIN
     CONTROL         "",IDC_CHAT_OUT,"RichEdit20W",WS_BORDER | WS_VSCROLL | WS_TABSTOP | 0x8c4,120,108,265,108
 END
 
-IDD_LADDER_SUBMIT DIALOG  0, 0, 216, 133
+IDD_LADDER_SUBMIT DIALOG 0, 0, 216, 133
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Match Result Submission Form"
 FONT 8, "MS Sans Serif"
@@ -364,7 +320,7 @@ BEGIN
     LTEXT           "Match Result:",IDC_STATIC,7,28,46,8
 END
 
-IDD_LADDER_RES_3 DIALOG  0, 0, 207, 78
+IDD_LADDER_RES_3 DIALOG 0, 0, 207, 78
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Ladder Answer"
 FONT 8, "MS Sans Serif"
@@ -388,7 +344,7 @@ BEGIN
     ICON            IDI_HOVER_ICON,IDC_STATIC,7,16,21,20
 END
 
-IDD_LADDER_SUBMIT_QUIT DIALOG  0, 0, 162, 73
+IDD_LADDER_SUBMIT_QUIT DIALOG 0, 0, 162, 73
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Match Result Submission"
 FONT 8, "MS Sans Serif"
@@ -398,7 +354,7 @@ BEGIN
     CTEXT           "Are you sure that you do not want to report that match result?",IDC_STATIC,27,16,109,21
 END
 
-IDD_LADDER_RETRY DIALOG  0, 0, 162, 68
+IDD_LADDER_RETRY DIALOG 0, 0, 162, 68
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Match Result Submission"
 FONT 8, "MS Sans Serif"
@@ -408,7 +364,7 @@ BEGIN
     CTEXT           "Unable to connect to the server.",IDC_STATIC,27,19,109,14
 END
 
-IDD_LADDER_RES_2 DIALOG  0, 0, 207, 78
+IDD_LADDER_RES_2 DIALOG 0, 0, 207, 78
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Ladder Answer"
 FONT 8, "MS Sans Serif"
@@ -418,7 +374,7 @@ BEGIN
     EDITTEXT        IDC_TEXT,33,7,141,47,ES_MULTILINE | ES_READONLY | NOT WS_BORDER
 END
 
-IDD_LADDER_RES_1 DIALOG  0, 0, 207, 78
+IDD_LADDER_RES_1 DIALOG 0, 0, 207, 78
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Ladder Answer"
 FONT 8, "MS Sans Serif"
@@ -427,7 +383,7 @@ BEGIN
     EDITTEXT        IDC_TEXT,33,7,141,47,ES_MULTILINE | ES_READONLY | NOT WS_BORDER
 END
 
-IDD_LADDER_SUBMIT_PROCESS DIALOG  0, 0, 162, 63
+IDD_LADDER_SUBMIT_PROCESS DIALOG 0, 0, 162, 63
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Match Result Submission"
 FONT 8, "MS Sans Serif"
@@ -504,7 +460,7 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO 
+GUIDELINES DESIGNINFO
 BEGIN
     IDD_WARN_ALONE, DIALOG
     BEGIN
@@ -568,7 +524,7 @@ BEGIN
         VERTGUIDE, 288
         VERTGUIDE, 292
         TOPMARGIN, 7
-        BOTTOMMARGIN, 132
+        BOTTOMMARGIN, 169
     END
 
     IDD_BAD_MODE4, DIALOG
@@ -822,7 +778,7 @@ IDI_WARNING2            ICON                    "warning.ico"
 // Accelerator
 //
 
-IDR_ACCELERATOR ACCELERATORS 
+IDR_ACCELERATOR ACCELERATORS
 BEGIN
     VK_F2,          ID_GAME_NETWORK_INTERNET, VIRTKEY, NOINVERT
     "N",            ID_GAME_NEW,            VIRTKEY, CONTROL, NOINVERT
@@ -884,14 +840,14 @@ END
 // String Table
 //
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_MODE_SWITCH_TRY     "You can play HoverRace in a Window or Fullscreen; to play in a Window, HoverRace will have to switch to 256 color mode.\nIt is recommended you use Fullscreen mode instead.\n\nDo you want to play in Window mode and switch to 256 color?"
     IDS_CANT_SWITCH_MODE    "HoverRace was unable to switch the video mode. You will need to play in full screen."
     IDS_BAD_MODE            "Incompatible video mode. You will need to play in full screen."
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_COMM_ERROR          "Communication error"
     IDS_CANT_ADDUSER        "Unable to add user"
@@ -906,7 +862,7 @@ BEGIN
     IDS_GAME_FULL           "Game is full"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_CANT_DEL_GAME       "Unable to delete game"
     IDS_NOT_OWNER           "Not owner"
@@ -924,7 +880,7 @@ BEGIN
     IDS_CANT_FIND_SERVER    "Unable to find the server.\nYou must be connected to the Internet to use this function.\nIf the problem persists, you can report it to the\nHoverRace forums, in the 'Help Desk' section."
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_TO                  "Communication timeout"
     IDS_SERVER_ERROR        "Server error; please contact the server administrator"
@@ -943,7 +899,7 @@ BEGIN
     IDS_CONNECTED           "Connected"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_REG_BEST_LAP        "Registering your best lap time to the server"
     IDS_DISCONNECTED        "Disconnected"
@@ -958,7 +914,7 @@ BEGIN
     IDS_ALONE               "You are now alone"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_RANK_TITLE          "Rank            Result   Best Lap "
     IDS_FLAP_STR            "%d %-0.10s #%d%*s   --First lap--  %c"
@@ -975,7 +931,7 @@ BEGIN
     IDS_HIT_CHART           "%d %-0.10s #%d%*s  %2d      %2d"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_JOY1BTN5            "Joystick Btn5"
     IDS_JOY1BTN6            "Joystick Btn6"
@@ -995,7 +951,7 @@ BEGIN
     IDS_JOY3BTN8            "Joystick3 Btn8"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_JOY3TOP             "Joystick3 Top"
     IDS_JOY3DOWN            "Joystick3 Down"
@@ -1015,7 +971,7 @@ BEGIN
     IDS_JOY4RIGHT           "Joystick4 Right"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_CANT_USE_UDP_PORT   "Unable to use UDP recv port; choose a different port or close some Winsock applications."
     IDS_GAME_CANCELLED      "Game cancelled by server"
@@ -1028,7 +984,7 @@ BEGIN
     IDS_CONN_ERROR          "Connection error with "
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_INVALID_RESOLUTION  "Invalid resolution; reverting to default %dx%d"
     IDS_TEST_RESOLUTION     "Hit OK to test new resolution"
@@ -1041,13 +997,11 @@ END
 
 
 /////////////////////////////////////////////////////////////////////////////
-// English (U.S.) resources
+// English (United States) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-#ifdef _WIN32
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
-#endif //_WIN32
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -1081,7 +1035,7 @@ END
 //
 
 IDB_ABOUT               BITMAP                  "About.bmp"
-#endif    // English (U.S.) resources
+#endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

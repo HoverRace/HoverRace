@@ -89,7 +89,7 @@ class ClientSession
 
 		virtual void SetSimulationTime(MR_SimulationTime pTime);
 		MR_SimulationTime GetSimulationTime() const;
-		void SetControlState(int pState1, int pState2, int pState3, int pState4);
+		void UpdateCharacterSimulationTimes();
 
 		const MR_UInt8 *GetBackImage() const;
 

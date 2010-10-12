@@ -88,6 +88,13 @@ class HighConsole : public Console
 		void OnChar(char c);
 		void Render(VideoServices::VideoBuffer *dest);
 
+	public:
+		void ToggleHelp();
+		bool IsHelpVisible() const { return helpVisible; }
+		void Scroll(int lines);
+		void ScrollTop();
+		void ScrollBottom();
+
 	private:
 		void RenderConsole();
 		void RenderHelp();
@@ -99,6 +106,8 @@ class HighConsole : public Console
 		// HelpHandler.
 		virtual void HelpClass(const Script::Help::Class &cls);
 		virtual void HelpMethod(const Script::Help::Class &cls, const Script::Help::Method &method);
+
+		static const int SCROLL_SPEED = 3;
 
 	private:
 		GameDirector *gameApp;

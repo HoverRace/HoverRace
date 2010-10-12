@@ -189,18 +189,14 @@ void Observer::Scroll(int pOffset)
 	mScroll += pOffset;
 }
 
-void Observer::ZoomIn()
+void Observer::Zoom(int factor)
 {
-	if(mApperture > MR_PI / 10) {
-		mApperture = MR_Angle((mApperture * 4) / 5);
-	}
-}
+	int oldAperture = mApperture;
+	// positive factor zooms in, negative zooms out
+	mApperture = MR_Angle(mApperture * pow(0.8, factor));
 
-void Observer::ZoomOut()
-{
-	if(mApperture < 3 * MR_PI / 4) {
-		mApperture = MR_Angle(mApperture + mApperture / 4);
-	}
+	if(mApperture < MR_PI / 10.0 || mApperture > (3.0 * MR_PI / 4.0))
+		mApperture = oldAperture;
 }
 
 void Observer::Home()

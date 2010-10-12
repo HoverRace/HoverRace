@@ -555,47 +555,55 @@ void Config::ResetToDefaults()
 
 	// Default controls.
 	// values pulled from OIS
-	memset(&controls[0], 0, sizeof(cfg_controls_t));
-	memset(&controls[1], 0, sizeof(cfg_controls_t));
-	memset(&controls[2], 0, sizeof(cfg_controls_t));
-	memset(&controls[3], 0, sizeof(cfg_controls_t));
+	controls_hash[0].motorOn  = OIS::KC_LSHIFT   << 8;
+	controls_hash[0].right    = OIS::KC_RIGHT    << 8;
+	controls_hash[0].left     = OIS::KC_LEFT     << 8;
+	controls_hash[0].jump     = OIS::KC_UP       << 8;
+	controls_hash[0].fire     = OIS::KC_LCONTROL << 8;
+	controls_hash[0].brake    = OIS::KC_DOWN     << 8;
+	controls_hash[0].weapon   = OIS::KC_TAB      << 8;
+	controls_hash[0].lookBack = OIS::KC_END      << 8;
 
-	controls[0].motorOn.inputType = 
-		controls[0].left.inputType =
-		controls[0].right.inputType = 
-		controls[0].jump.inputType = 
-		controls[0].fire.inputType = 
-		controls[0].brake.inputType = 
-		controls[0].weapon.inputType =
-		controls[0].lookBack.inputType = 
-		controls[1].motorOn.inputType =
-		controls[1].left.inputType =
-		controls[1].right.inputType =
-		controls[1].jump.inputType =
-		controls[1].fire.inputType =
-		controls[1].brake.inputType =
-		controls[1].weapon.inputType =
-		controls[1].lookBack.inputType = OIS::OISKeyboard;
+	controls_hash[1].motorOn  = OIS::KC_F        << 8;
+	controls_hash[1].right    = OIS::KC_D        << 8;
+	controls_hash[1].left     = OIS::KC_A        << 8;
+	controls_hash[1].jump     = OIS::KC_S        << 8;
+	controls_hash[1].fire     = OIS::KC_R        << 8;
+	controls_hash[1].brake    = OIS::KC_W        << 8;
+	controls_hash[1].weapon   = OIS::KC_Q        << 8;
+	controls_hash[1].lookBack = OIS::KC_I        << 8;
 
-	controls[0].motorOn.kbdBinding = OIS::KC_LSHIFT;
-	controls[0].right.kbdBinding = OIS::KC_RIGHT;
-	controls[0].left.kbdBinding = OIS::KC_LEFT;
-	controls[0].jump.kbdBinding = OIS::KC_UP;
-	controls[0].fire.kbdBinding = OIS::KC_LCONTROL;
-	controls[0].brake.kbdBinding = OIS::KC_DOWN;
-	controls[0].weapon.kbdBinding = OIS::KC_TAB;
-	controls[0].lookBack.kbdBinding = OIS::KC_END;
+	// set these to disabled (0x0000<code>)
+	controls_hash[2].motorOn  = 0;
+	controls_hash[2].right    = 1;
+	controls_hash[2].left     = 2;
+	controls_hash[2].jump     = 3;
+	controls_hash[2].fire     = 4;
+	controls_hash[2].brake    = 5;
+	controls_hash[2].weapon   = 6;
+	controls_hash[2].lookBack = 7;
 
-	controls[1].motorOn.kbdBinding = OIS::KC_F;
-	controls[1].right.kbdBinding = OIS::KC_D;
-	controls[1].left.kbdBinding = OIS::KC_A;
-	controls[1].jump.kbdBinding = OIS::KC_S;
-	controls[1].fire.kbdBinding = OIS::KC_R;
-	controls[1].brake.kbdBinding = OIS::KC_W;
-	controls[1].weapon.kbdBinding = OIS::KC_Q;
-	controls[1].lookBack.kbdBinding = OIS::KC_I;
+	controls_hash[3].motorOn  = 8;
+	controls_hash[3].right    = 9;
+	controls_hash[3].left     = 10;
+	controls_hash[3].jump     = 11;
+	controls_hash[3].fire     = 12;
+	controls_hash[3].brake    = 13;
+	controls_hash[3].weapon   = 14;
+	controls_hash[3].lookBack = 15;
 
-	ui.console.SetKey(OIS::KC_F12);
+	camera_hash.zoomIn  = OIS::KC_INSERT << 8;
+	camera_hash.zoomOut = OIS::KC_DELETE << 8;
+	camera_hash.panUp   = OIS::KC_PGUP   << 8;
+	camera_hash.panDown = OIS::KC_PGDOWN << 8;
+	camera_hash.reset   = OIS::KC_HOME   << 8;
+
+	ui.console_toggle = OIS::KC_F12      << 8;
+	ui.console_up     = OIS::KC_PGUP     << 8;
+	ui.console_down   = OIS::KC_PGDOWN   << 8;
+	ui.console_top    = OIS::KC_HOME     << 8;
+	ui.console_bottom = OIS::KC_END      << 8;
+	ui.console_help   = OIS::KC_F1       << 8;
 
 	runtime.silent = false;
 	runtime.aieeee = false;
@@ -639,13 +647,15 @@ void Config::Load()
 			net.Load(dynamic_cast<yaml::MapNode*>(root->Get("net")));
 
 			// Get the controls.
-			yaml::SeqNode *ctlseq = dynamic_cast<yaml::SeqNode*>(root->Get("controls"));
-			if (ctlseq != NULL) {
+			yaml::SeqNode *ctlseqh = dynamic_cast<yaml::SeqNode*>(root->Get("controls_hash"));
+			if (ctlseqh != NULL) {
 				int i = 0;
-				BOOST_FOREACH(yaml::Node *node, *ctlseq) {
-					controls[i++].Load(dynamic_cast<yaml::MapNode*>(node));
+				BOOST_FOREACH(yaml::Node *node, *ctlseqh) {
+					controls_hash[i++].Load(dynamic_cast<yaml::MapNode*>(node));
 				}
 			}
+
+			camera_hash.Load(dynamic_cast<yaml::MapNode*>(root->Get("camera_hash")));
 		}
 
 		delete parser;
@@ -701,12 +711,15 @@ void Config::Save()
 		net.Save(emitter);
 		
 		// Save list of controls.
-		emitter->MapKey("controls");
+		emitter->MapKey("controls_hash");
 		emitter->StartSeq();
 		for (int i = 0; i < MAX_PLAYERS; ++i) {
-			controls[i].Save(emitter);
+			controls_hash[i].Save(emitter);
 		}
 		emitter->EndSeq();
+
+		camera_hash.Save(emitter);
+		ui.Save(emitter);
 
 		emitter->EndMap();
 		delete emitter;
@@ -872,91 +885,84 @@ void Config::cfg_net_t::Save(yaml::Emitter *emitter)
 
 // controls ////////////////////////////////////////////////////////////////////
 
-void Config::cfg_controls_t::Load(yaml::MapNode *root)
+void Config::cfg_controls_hash_t::Load(yaml::MapNode* root)
 {
 	if (root == NULL) return;
 
-	motorOn.Load(dynamic_cast<yaml::MapNode*>(root->Get("motorOn")));
-	right.Load(dynamic_cast<yaml::MapNode*>(root->Get("right")));
-	left.Load(dynamic_cast<yaml::MapNode*>(root->Get("left")));
-	jump.Load(dynamic_cast<yaml::MapNode*>(root->Get("jump")));
-	fire.Load(dynamic_cast<yaml::MapNode*>(root->Get("fire")));
-	brake.Load(dynamic_cast<yaml::MapNode*>(root->Get("brake")));
-	weapon.Load(dynamic_cast<yaml::MapNode*>(root->Get("weapon")));
-	lookBack.Load(dynamic_cast<yaml::MapNode*>(root->Get("lookBack")));
+	READ_INT(root, motorOn, 0, INT_MAX);
+	READ_INT(root, right, 0, INT_MAX);
+	READ_INT(root, left, 0, INT_MAX);
+	READ_INT(root, jump, 0, INT_MAX);
+	READ_INT(root, fire, 0, INT_MAX);
+	READ_INT(root, brake, 0, INT_MAX);
+	READ_INT(root, weapon, 0, INT_MAX);
+	READ_INT(root, lookBack, 0, INT_MAX);
 }
 
-void Config::cfg_controls_t::Save(yaml::Emitter *emitter)
+void Config::cfg_controls_hash_t::Save(yaml::Emitter* emitter)
 {
 	emitter->StartMap();
 
-	emitter->MapKey("motorOn");
-	motorOn.Save(emitter);
-	emitter->MapKey("right");
-	right.Save(emitter);
-	emitter->MapKey("left");
-	left.Save(emitter);
-	emitter->MapKey("jump");
-	jump.Save(emitter);
-	emitter->MapKey("fire");
-	fire.Save(emitter);
-	emitter->MapKey("brake");
-	brake.Save(emitter);
-	emitter->MapKey("weapon");
-	weapon.Save(emitter);
-	emitter->MapKey("lookBack");
-	lookBack.Save(emitter);
+	EMIT_VAR(emitter, motorOn);
+	EMIT_VAR(emitter, right);
+	EMIT_VAR(emitter, left);
+	EMIT_VAR(emitter, jump);
+	EMIT_VAR(emitter, fire);
+	EMIT_VAR(emitter, brake);
+	EMIT_VAR(emitter, weapon);
+	EMIT_VAR(emitter, lookBack);
 
 	emitter->EndMap();
 }
 
-Config::cfg_control_t Config::cfg_control_t::Key(int kc)
-{
-	Config::cfg_control_t ctl;
-	ctl.inputType = OIS::OISKeyboard;
-	ctl.kbdBinding = kc;
-	return ctl;
-}
-
-void Config::cfg_control_t::SetKey(int kc)
-{
-	inputType = OIS::OISKeyboard;
-	kbdBinding = kc;
-}
-
-bool Config::cfg_control_t::IsKey(int kc) const
-{
-	return inputType == OIS::OISKeyboard && kbdBinding == kc;
-}
-
-void Config::cfg_control_t::Load(yaml::MapNode *root)
+void Config::cfg_camera_hash_t::Load(yaml::MapNode* root)
 {
 	if (root == NULL) return;
 
-	READ_INT(root, inputType, 0, 4);
-	READ_INT(root, kbdBinding, 0, 65535);
-	READ_INT(root, button, -32768, 32767);
-	READ_INT(root, axis, 0, 65535);
-	READ_INT(root, direction, -32768, 32767);
-	READ_INT(root, pov, 0, 65535);
-	READ_INT(root, slider, 0, 65535);
-	READ_INT(root, sensitivity, -32768, 32767);
-	READ_INT(root, joystickId, -32768, 32767);
+	READ_INT(root, zoomIn, 0, INT_MAX);
+	READ_INT(root, zoomOut, 0, INT_MAX);
+	READ_INT(root, panUp, 0, INT_MAX);
+	READ_INT(root, panDown, 0, INT_MAX);
+	READ_INT(root, reset, 0, INT_MAX);
 }
 
-void Config::cfg_control_t::Save(yaml::Emitter *emitter)
+void Config::cfg_camera_hash_t::Save(yaml::Emitter* emitter)
 {
+	emitter->MapKey("camera_hash");
 	emitter->StartMap();
 
-	EMIT_VAR(emitter, inputType);
-	EMIT_VAR(emitter, kbdBinding);
-	EMIT_VAR(emitter, button);
-	EMIT_VAR(emitter, axis);
-	EMIT_VAR(emitter, direction);
-	EMIT_VAR(emitter, pov);
-	EMIT_VAR(emitter, slider);
-	EMIT_VAR(emitter, sensitivity);
-	EMIT_VAR(emitter, joystickId);
+	EMIT_VAR(emitter, zoomIn);
+	EMIT_VAR(emitter, zoomOut);
+	EMIT_VAR(emitter, panUp);
+	EMIT_VAR(emitter, panDown);
+	EMIT_VAR(emitter, reset);
+
+	emitter->EndMap();
+}
+
+void Config::cfg_ui_t::Load(yaml::MapNode* root)
+{
+	if (root == NULL) return;
+
+	READ_INT(root, console_toggle, 0, INT_MAX);
+	READ_INT(root, console_up, 0, INT_MAX);
+	READ_INT(root, console_down, 0, INT_MAX);
+	READ_INT(root, console_top, 0, INT_MAX);
+	READ_INT(root, console_bottom, 0, INT_MAX);
+	READ_INT(root, console_help, 0, INT_MAX);
+}
+
+void Config::cfg_ui_t::Save(yaml::Emitter* emitter)
+{
+	emitter->MapKey("ui");
+	emitter->StartMap();
+
+	EMIT_VAR(emitter, console_toggle);
+	EMIT_VAR(emitter, console_up);
+	EMIT_VAR(emitter, console_down);
+	EMIT_VAR(emitter, console_top);
+	EMIT_VAR(emitter, console_bottom);
+	EMIT_VAR(emitter, console_help);
 
 	emitter->EndMap();
 }

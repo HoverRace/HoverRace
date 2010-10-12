@@ -68,13 +68,13 @@ class GameDirector
 
 		virtual VideoServices::VideoBuffer *GetVideoBuffer() const = 0;
 
-		virtual Control::Controller *GetController() const = 0;
+		virtual Control::InputEventController *GetController() const = 0;
 
 		/**
 		 * Reload the control settings.
 		 * @return The new control settings.
 		 */
-		virtual Control::Controller *ReloadController() = 0;
+		virtual Control::InputEventController *ReloadController() = 0;
 
 #	ifdef _WIN32
 		virtual HWND GetWindowHandle() const = 0;

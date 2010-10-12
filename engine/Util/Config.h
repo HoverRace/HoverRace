@@ -205,47 +205,44 @@ class MR_DllDeclare Config
 			void Save(yaml::Emitter*);
 		} net;
 
-		struct cfg_control_t {
-			int inputType; /// OISKeyboard, OISMouse, OISJoyStick
-
-			// keyboard
-			int kbdBinding; // see OIS KeyCode class
-
-			// mouse or joystick
-			int button;
-			int axis;
-			int direction; // for axis as well as POV
-			int pov; // joystick only
-			int slider; // joystick only
-			int sensitivity; // defines how quickly we get to the maximum value
-			int joystickId;
-
-			MR_DllDeclare static cfg_control_t Key(int kc);
-			MR_DllDeclare void SetKey(int kc);
-			MR_DllDeclare bool IsKey(int kc) const;
-
-			void Load(yaml::MapNode *);
-			void Save(yaml::Emitter *);
-		};
-
 		static const int MAX_PLAYERS = 4;
-		struct cfg_controls_t {
-			cfg_control_t motorOn;
-			cfg_control_t right;
-			cfg_control_t left;
-			cfg_control_t jump;
-			cfg_control_t fire;
-			cfg_control_t brake;
-			cfg_control_t weapon;
-			cfg_control_t lookBack;
+
+		/// See Client/Control/Controller.h for the hash function
+		struct cfg_controls_hash_t {
+			int motorOn;
+			int right;
+			int left;
+			int jump;
+			int fire;
+			int brake;
+			int weapon;
+			int lookBack;
 
 			void Load(yaml::MapNode*);
 			void Save(yaml::Emitter*);
-		} controls[MAX_PLAYERS];
+		} controls_hash[MAX_PLAYERS];
+
+		struct cfg_camera_hash_t {
+			int zoomIn;
+			int zoomOut;
+			int panUp;
+			int panDown;
+			int reset;
+
+			void Load(yaml::MapNode*);
+			void Save(yaml::Emitter*);
+		} camera_hash;
 
 		struct cfg_ui_t {
-			// Not configurable yet.
-			cfg_control_t console;
+			int console_toggle;
+			int console_up;
+			int console_down;
+			int console_top;
+			int console_bottom;
+			int console_help;
+
+			void Load(yaml::MapNode*);
+			void Save(yaml::Emitter*);
 		} ui;
 
 		struct cfg_runtime_t {

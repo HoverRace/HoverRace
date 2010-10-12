@@ -138,8 +138,7 @@ class GameApp : public GameDirector
 			bool testing=false);
 		void RefreshTitleBar();
 
-		void OnChar(char c);
-		bool OnKeyDown(int keycode);
+		void PollController();
 		int ReadAsyncInputControllerPlayer(int playerIdx);
 		void ReadAsyncInputController();		  // Get the state of the input controler (KDB, joystick, mouse)
 
@@ -179,7 +178,7 @@ class GameApp : public GameDirector
 
 		static void TrackOpenFailMessageBox(HWND parent, const std::string &name, const std::string &details);
 
-		Control::Controller *controller;
+		Control::InputEventController* controller;
 
 	public:
 		GameApp(HINSTANCE pInstance, bool safeMode);
@@ -198,8 +197,8 @@ class GameApp : public GameDirector
 
 		virtual VideoServices::VideoBuffer *GetVideoBuffer() const { return mVideoBuffer; }
 
-		virtual Control::Controller *GetController() const { return controller; }
-		virtual Control::Controller *ReloadController();
+		virtual Control::InputEventController *GetController() const { return controller; }
+		virtual Control::InputEventController *ReloadController();
 
 		virtual HWND GetWindowHandle() const { return mMainWindow; }
 

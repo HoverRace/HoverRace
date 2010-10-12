@@ -39,7 +39,7 @@ using boost::format;
 using boost::str;
 
 using namespace HoverRace::Util;
-using HoverRace::Client::Control::Controller;
+using HoverRace::Client::Control::InputEventController;
 
 #define MRM_CONTROL_TIMER   3
 #define MRM_CONTROL_POLL    4
@@ -57,47 +57,50 @@ ControlPrefsPage::~ControlPrefsPage()
 {
 }
 
-void ControlPrefsPage::UpdateDialogLabels(HWND pWindow)
+
+void ControlPrefsPage::UpdateBindingLabels(HWND pWindow)
 {
 	Config *cfg = Config::GetInstance();
-	Controller * const controller = app->GetController();
+	InputEventController* const controller = app->GetController();
 
-	SetDlgItemTextW(pWindow, IDC_MOTOR_ON1, Str::UW(controller->toString(cfg->controls[0].motorOn).c_str()));
-	SetDlgItemTextW(pWindow, IDC_RIGHT1, Str::UW(controller->toString(cfg->controls[0].right).c_str()));
-	SetDlgItemTextW(pWindow, IDC_LEFT1, Str::UW(controller->toString(cfg->controls[0].left).c_str()));
-	SetDlgItemTextW(pWindow, IDC_JUMP1, Str::UW(controller->toString(cfg->controls[0].jump).c_str()));
-	SetDlgItemTextW(pWindow, IDC_FIRE1, Str::UW(controller->toString(cfg->controls[0].fire).c_str()));
-	SetDlgItemTextW(pWindow, IDC_BRAKE1, Str::UW(controller->toString(cfg->controls[0].brake).c_str()));
-	SetDlgItemTextW(pWindow, IDC_SELWEAPON1, Str::UW(controller->toString(cfg->controls[0].weapon).c_str()));
-	SetDlgItemTextW(pWindow, IDC_LOOKBACK1, Str::UW(controller->toString(cfg->controls[0].lookBack).c_str()));
+	char buffer[200];
+	HWND combobox = GetDlgItem(pWindow, IDC_MAP_SELECT);
+	SendMessage(combobox, WM_GETTEXT, 200, (LPARAM) &buffer);
+	std::string mapname = buffer;
 
-	SetDlgItemTextW(pWindow, IDC_MOTOR_ON2, Str::UW(controller->toString(cfg->controls[1].motorOn).c_str()));
-	SetDlgItemTextW(pWindow, IDC_RIGHT2, Str::UW(controller->toString(cfg->controls[1].right).c_str()));
-	SetDlgItemTextW(pWindow, IDC_LEFT2, Str::UW(controller->toString(cfg->controls[1].left).c_str()));
-	SetDlgItemTextW(pWindow, IDC_JUMP2, Str::UW(controller->toString(cfg->controls[1].jump).c_str()));
-	SetDlgItemTextW(pWindow, IDC_FIRE2, Str::UW(controller->toString(cfg->controls[1].fire).c_str()));
-	SetDlgItemTextW(pWindow, IDC_BRAKE2, Str::UW(controller->toString(cfg->controls[1].brake).c_str()));
-	SetDlgItemTextW(pWindow, IDC_SELWEAPON2, Str::UW(controller->toString(cfg->controls[1].weapon).c_str()));
-	SetDlgItemTextW(pWindow, IDC_LOOKBACK2, Str::UW(controller->toString(cfg->controls[1].lookBack).c_str()));
+	// we need to populate the ListView with actions
+	HWND hList = GetDlgItem(pWindow, IDC_CONTROL_BINDINGS);
+	InputEventController::ActionMap map = controller->GetActionMap(mapname);
 
-	SetDlgItemTextW(pWindow, IDC_MOTOR_ON3, Str::UW(controller->toString(cfg->controls[2].motorOn).c_str()));
-	SetDlgItemTextW(pWindow, IDC_RIGHT3, Str::UW(controller->toString(cfg->controls[2].right).c_str()));
-	SetDlgItemTextW(pWindow, IDC_LEFT3, Str::UW(controller->toString(cfg->controls[2].left).c_str()));
-	SetDlgItemTextW(pWindow, IDC_JUMP3, Str::UW(controller->toString(cfg->controls[2].jump).c_str()));
-	SetDlgItemTextW(pWindow, IDC_FIRE3, Str::UW(controller->toString(cfg->controls[2].fire).c_str()));
-	SetDlgItemTextW(pWindow, IDC_BRAKE3, Str::UW(controller->toString(cfg->controls[2].brake).c_str()));
-	SetDlgItemTextW(pWindow, IDC_SELWEAPON3, Str::UW(controller->toString(cfg->controls[2].weapon).c_str()));
-	SetDlgItemTextW(pWindow, IDC_LOOKBACK3, Str::UW(controller->toString(cfg->controls[2].lookBack).c_str()));
+	// order bindings by defined ordering in ControlAction::listOrder
+	std::map<int, int> orderMap;
+	for(InputEventController::ActionMap::iterator it = map.begin(); it != map.end(); it++)
+		orderMap[it->second->getListOrder()] = it->first;
 
-	SetDlgItemTextW(pWindow, IDC_MOTOR_ON4, Str::UW(controller->toString(cfg->controls[3].motorOn).c_str()));
-	SetDlgItemTextW(pWindow, IDC_RIGHT4, Str::UW(controller->toString(cfg->controls[3].right).c_str()));
-	SetDlgItemTextW(pWindow, IDC_LEFT4, Str::UW(controller->toString(cfg->controls[3].left).c_str()));
-	SetDlgItemTextW(pWindow, IDC_JUMP4, Str::UW(controller->toString(cfg->controls[3].jump).c_str()));
-	SetDlgItemTextW(pWindow, IDC_FIRE4, Str::UW(controller->toString(cfg->controls[3].fire).c_str()));
-	SetDlgItemTextW(pWindow, IDC_BRAKE4, Str::UW(controller->toString(cfg->controls[3].brake).c_str()));
-	SetDlgItemTextW(pWindow, IDC_SELWEAPON4, Str::UW(controller->toString(cfg->controls[3].weapon).c_str()));
-	SetDlgItemTextW(pWindow, IDC_LOOKBACK4, Str::UW(controller->toString(cfg->controls[3].lookBack).c_str()));
+	// Delete all items
+	SendMessage(hList, LVM_DELETEALLITEMS, 0, 0);
+
+	// ListView adds new items at the top... so start from the back
+	for(std::map<int, int>::reverse_iterator it(orderMap.end()); 
+			it != std::map<int, int>::reverse_iterator(orderMap.begin()); it++) {
+		LVITEM item;
+		memset(&item, 0, sizeof(item));
+								
+		std::string temp;
+		item.mask = LVIF_TEXT;
+		temp = map[it->second]->getName();
+		item.pszText = (LPSTR) temp.c_str();
+		int pos = SendMessage(hList, LVM_INSERTITEM, 0, (LPARAM) &item);
+
+		item.mask = LVIF_TEXT;
+		item.iItem = pos;
+		item.iSubItem = 1;
+		temp = controller->HashToString(it->second).c_str();
+		item.pszText = (LPSTR) temp.c_str();
+		SendMessage(hList, LVM_SETITEM, pos, (LPARAM) &item);
+	}
 }
+
 
 /***
  * Dialog callback for the controls property page.
@@ -109,206 +112,144 @@ BOOL ControlPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 {
 	Config *cfg = Config::GetInstance();
 
-	static Config::cfg_controls_t *oldcontrols = NULL;
-
-	Controller * const controller = app->GetController();
+	InputEventController* const controller = app->GetController();
 
 	BOOL lReturnValue = FALSE;
 	switch (pMsgId) {
 		// Catch environment modification events
 		case WM_INITDIALOG:
-			// i18nize the choices
-			SetDlgItemTextW(pWindow, IDC_PLAYER1, Str::UW(_("Player 1")));
-			SetDlgItemTextW(pWindow, IDC_PLAYER2, Str::UW(_("Player 2")));
-			SetDlgItemTextW(pWindow, IDC_PLAYER3, Str::UW(_("Player 3")));
-			SetDlgItemTextW(pWindow, IDC_PLAYER4, Str::UW(_("Player 4")));
-			SetDlgItemTextW(pWindow, IDC_MOTOR_ON, Str::UW(_("Motor On:")));
-			SetDlgItemTextW(pWindow, IDC_TURN_RIGHT, Str::UW(_("Turn Right:")));
-			SetDlgItemTextW(pWindow, IDC_TURN_LEFT, Str::UW(_("Turn Left:")));
-			SetDlgItemTextW(pWindow, IDC_BRAKE, Str::UW(_("Brake:")));
-			SetDlgItemTextW(pWindow, IDC_JUMP, Str::UW(_("Jump:")));
-			SetDlgItemTextW(pWindow, IDC_FIRE_WEAPON, Str::UW(_("Fire Weapon:")));
-			SetDlgItemTextW(pWindow, IDC_SELECT_WEAPON, Str::UW(_("Select Weapon:")));
-			SetDlgItemTextW(pWindow, IDC_LOOK_BACK, Str::UW(_("Look Back:")));
+			// add available maps to the drop-down box
+			{
+				std::vector<std::string> mapnames = controller->GetAvailableMaps();
+				HWND hList = GetDlgItem(pWindow, IDC_MAP_SELECT);
+				
+				// add all the maps except console-keys
+				for(int i = 0; i < mapnames.size(); i++) {
+					if(mapnames.at(i) == "console-keys")
+						continue; // don't add this one
+					int item = SendMessage(hList, CB_ADDSTRING, 0, (LPARAM) mapnames.at(i).c_str());
+				}
 
-			UpdateDialogLabels(pWindow);
+				// select first player map (or first map)
+				std::string mapname = _("Player");
+				mapname += " 1";
+				int select = SendMessage(hList, CB_FINDSTRINGEXACT, -1, (LPARAM) mapname.c_str());
+				SendMessage(hList, CB_SETCURSEL, (select == CB_ERR) ? 0 : select, 0); // set current item
 
-			pressAnyKeyDialog = NULL;
+				// now fake the message that we just changed the selection
+				// (this is why there is no break at the end of this case)
+				pWParam = IDC_MAP_SELECT;
 
-			// set up new controls
-			if (oldcontrols == NULL) {
-				oldcontrols = new Config::cfg_controls_t[cfg->MAX_PLAYERS];
-				memcpy((void *) oldcontrols, (void *) cfg->controls, sizeof(cfg->controls));
+				// initialize columns in ListView box
+				LVCOLUMNW keycol;
+				memset(&keycol, 0, sizeof(keycol));
+				keycol.mask = LVCF_WIDTH | LVCF_TEXT;
+				keycol.cx = 400; // 400px
+				keycol.pszText = (LPWSTR) _("Action");
+
+				LVCOLUMNW bindcol;
+				memset(&bindcol, 0, sizeof(bindcol));
+				bindcol.mask = LVCF_WIDTH | LVCF_TEXT;
+				bindcol.cx = 135; // 135px
+				bindcol.pszText = (LPWSTR) _("Binding");
+
+				HWND listview = GetDlgItem(pWindow, IDC_CONTROL_BINDING);
+				SendMessageW(listview, LVM_INSERTCOLUMN, 0, (LPARAM) &keycol);
+				SendMessageW(listview, LVM_INSERTCOLUMN, 1, (LPARAM) &bindcol);
+
+				pressAnyKeyDialog = NULL;
 			}
-			break;
 
 		case WM_COMMAND:
 			{
-				// reset
-				setControlControl = 0;
-				setControlPlayer = 0;
-
 				switch(LOWORD(pWParam)) {
-					case IDC_MOTOR_ON1:
-					case IDC_MOTOR_ON2:
-					case IDC_MOTOR_ON3:
-					case IDC_MOTOR_ON4:
-						setControlControl = CTL_MOTOR_ON;
+					// The user changed the map selection
+					case IDC_MAP_SELECT:
+						UpdateBindingLabels(pWindow);
 						break;
 
-					case IDC_LEFT1:
-					case IDC_LEFT2:
-					case IDC_LEFT3:
-					case IDC_LEFT4:
-						setControlControl = CTL_LEFT;
-						break;
+					case IDC_CHANGE_BINDING:
+						{
+							char buffer[200];
+							HWND combobox = GetDlgItem(pWindow, IDC_MAP_SELECT);
+							SendMessage(combobox, WM_GETTEXT, 200, (LPARAM) &buffer);
+							std::string mapname = buffer;
 
-					case IDC_RIGHT1:
-					case IDC_RIGHT2:
-					case IDC_RIGHT3:
-					case IDC_RIGHT4:
-						setControlControl = CTL_RIGHT;
-						break;
+							// we need to populate the ListView with actions
+							HWND hList = GetDlgItem(pWindow, IDC_CONTROL_BINDINGS);
+							InputEventController::ActionMap map = controller->GetActionMap(mapname);
 
-					case IDC_JUMP1:
-					case IDC_JUMP2:
-					case IDC_JUMP3:
-					case IDC_JUMP4:
-						setControlControl = CTL_JUMP;
-						break;
+							// order bindings by defined ordering in ControlAction::listOrder
+							std::map<int, int> orderMap;
+							for(InputEventController::ActionMap::iterator it = map.begin(); it != map.end(); it++)
+								orderMap[it->second->getListOrder()] = it->first;
+							
+							// user wants to change assigned binding
+							int selectedIndex = SendMessage(hList, LVM_GETSELECTIONMARK, 0, 0);
+							if(selectedIndex == -1)
+								break; // apparently nothing is selected
+
+							setControlHash = orderMap[selectedIndex];
+							setControlMap = mapname;
+
+							if(pressAnyKeyDialog == NULL) {
+								WNDCLASSW lWinClass;
+
+								lWinClass.style = CS_DBLCLKS;
+								lWinClass.lpfnWndProc = PressKeyDialogFunc;
+								lWinClass.cbClsExtra = 0;
+								lWinClass.cbWndExtra = 0;
+								lWinClass.hInstance = GetInstanceHandle();
+								lWinClass.hIcon = NULL;
+								lWinClass.hCursor = LoadCursor(NULL, IDC_ARROW);
+								lWinClass.hbrBackground = (HBRUSH) COLOR_APPWORKSPACE + 1;
+								lWinClass.lpszMenuName = NULL;
+								lWinClass.lpszClassName = L"IDD_PRESS_ANY_KEY";
+
+								lReturnValue = RegisterClassW(&lWinClass);
+
+								// set HWND for when we get called back
+								preferencesDialog = pWindow;
+
+								RECT size = {0};
+								GetWindowRect(app->GetWindowHandle(), &size);
+								SetCursorPos(size.left + 110, size.top + 80); // move to center of new window
+
+								pressAnyKeyDialog = CreateWindowW(
+									L"IDD_PRESS_ANY_KEY",
+									PACKAGE_NAME_L,
+									(WS_POPUPWINDOW | WS_VISIBLE),
+									size.left + 30,
+									size.top + 30,
+									160,
+									100,
+									app->GetWindowHandle(),
+									NULL,
+									GetInstanceHandle(),
+									this);
+
+								if(pressAnyKeyDialog == NULL) { // report error if necessary
+									DWORD err = GetLastError();
+									LPVOID errMsg;
 					
-					case IDC_FIRE1:
-					case IDC_FIRE2:
-					case IDC_FIRE3:
-					case IDC_FIRE4:
-						setControlControl = CTL_FIRE;
+									FormatMessage(
+										FORMAT_MESSAGE_ALLOCATE_BUFFER |
+										FORMAT_MESSAGE_FROM_SYSTEM,
+										NULL,
+										err,
+										MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+										(LPTSTR) &errMsg,
+										0, NULL);
+									MessageBox(NULL, (const char*) errMsg, "AIEEE", MB_ICONERROR | MB_APPLMODAL | MB_OK);
+									LocalFree(errMsg);
+								}
+							} else {
+								// put focus back to already existing window
+								EnableWindow(pWindow, false);
+								EnableWindow(pressAnyKeyDialog, true);
+							}
+						}
 						break;
-					
-					case IDC_BRAKE1:
-					case IDC_BRAKE2:
-					case IDC_BRAKE3:
-					case IDC_BRAKE4:
-						setControlControl = CTL_BRAKE;
-						break;
-					
-					case IDC_SELWEAPON1:
-					case IDC_SELWEAPON2:
-					case IDC_SELWEAPON3:
-					case IDC_SELWEAPON4:
-						setControlControl = CTL_WEAPON;
-						break;
-
-					case IDC_LOOKBACK1:
-					case IDC_LOOKBACK2:
-					case IDC_LOOKBACK3:
-					case IDC_LOOKBACK4:
-						setControlControl = CTL_LOOKBACK;
-						break;
-				}
-
-				switch(LOWORD(pWParam)) {
-					case IDC_MOTOR_ON1:
-					case IDC_LEFT1:
-					case IDC_RIGHT1:
-					case IDC_JUMP1:
-					case IDC_FIRE1:
-					case IDC_BRAKE1:
-					case IDC_SELWEAPON1:
-					case IDC_LOOKBACK1:
-						setControlPlayer = 0;
-						break;
-
-					case IDC_MOTOR_ON2:
-					case IDC_LEFT2:
-					case IDC_RIGHT2:
-					case IDC_JUMP2:
-					case IDC_FIRE2:
-					case IDC_BRAKE2:
-					case IDC_SELWEAPON2:
-					case IDC_LOOKBACK2:
-						setControlPlayer = 1;
-						break;
-
-					case IDC_MOTOR_ON3:
-					case IDC_LEFT3:
-					case IDC_RIGHT3:
-					case IDC_JUMP3:
-					case IDC_FIRE3:
-					case IDC_BRAKE3:
-					case IDC_SELWEAPON3:
-					case IDC_LOOKBACK3:
-						setControlPlayer = 2;
-						break;
-
-					case IDC_MOTOR_ON4:
-					case IDC_LEFT4:
-					case IDC_RIGHT4:
-					case IDC_JUMP4:
-					case IDC_FIRE4:
-					case IDC_BRAKE4:
-					case IDC_SELWEAPON4:
-					case IDC_LOOKBACK4:
-						setControlPlayer = 3;
-						break;
-				}
-
-				// create dialog window by hand, the hard way
-				if(pressAnyKeyDialog == NULL) {
-					WNDCLASSW lWinClass;
-
-					lWinClass.style = CS_DBLCLKS;
-					lWinClass.lpfnWndProc = PressKeyDialogFunc;
-					lWinClass.cbClsExtra = 0;
-					lWinClass.cbWndExtra = 0;
-					lWinClass.hInstance = GetInstanceHandle();
-					lWinClass.hIcon = NULL;
-					lWinClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-					lWinClass.hbrBackground = (HBRUSH) COLOR_APPWORKSPACE + 1;
-					//lWinClass.lpszMenuName = MAKEINTRESOURCEW(FIREBALL_MAIN_MENU);
-					lWinClass.lpszMenuName = NULL;
-					lWinClass.lpszClassName = L"IDD_PRESS_ANY_KEY";
-
-					lReturnValue = RegisterClassW(&lWinClass);
-
-					// set HWND for when we get called back
-					preferencesDialog = pWindow;
-
-					RECT size = {0};
-					GetWindowRect(app->GetWindowHandle(), &size);
-					SetCursorPos(size.left + 110, size.top + 80); // move to center of new window
-
-					pressAnyKeyDialog = CreateWindowW(
-						L"IDD_PRESS_ANY_KEY",
-						PACKAGE_NAME_L,
-						(WS_POPUPWINDOW | WS_VISIBLE),
-						size.left + 30,
-						size.top + 30,
-						160,
-						100,
-						app->GetWindowHandle(),
-						NULL,
-						GetInstanceHandle(),
-						this);
-
-					if(pressAnyKeyDialog == NULL) { // report error if necessary
-						DWORD err = GetLastError();
-						LPVOID errMsg;
-					
-						FormatMessage(
-							FORMAT_MESSAGE_ALLOCATE_BUFFER |
-							FORMAT_MESSAGE_FROM_SYSTEM,
-							NULL,
-							err,
-							MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-							(LPTSTR)&errMsg,
-							0, NULL);
-						MessageBox(NULL, (const char*)errMsg, "AIEEE", MB_ICONERROR | MB_APPLMODAL | MB_OK);
-						LocalFree(errMsg);
-					}
-				} else {
-					// put focus back to already existing window
-					EnableWindow(pWindow, false);
-					EnableWindow(pressAnyKeyDialog, true);
 				}
 			}
 			break;
@@ -316,8 +257,6 @@ BOOL ControlPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 		case WM_NOTIFY:
 			switch (((NMHDR FAR *) pLParam)->code) {
 				case PSN_APPLY:
-					delete[] oldcontrols;
-					oldcontrols = NULL;
 					pressAnyKeyDialog = NULL;
 
 					// reload controller
@@ -327,8 +266,6 @@ BOOL ControlPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 					break;
 
 				case PSN_RESET:
-					delete[] oldcontrols;
-					oldcontrols = NULL;
 					pressAnyKeyDialog = NULL;
 					break;
 
@@ -343,7 +280,7 @@ BOOL ControlPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 }
 
 LRESULT ControlPrefsPage::PressKeyDialogProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pLParam) {	
-	static Control::Controller *tmpControl = NULL;
+	static InputEventController *tmpControl = NULL;
 
 	switch (pMsgId) {
 		// Catch environment modification events
@@ -361,8 +298,8 @@ LRESULT ControlPrefsPage::PressKeyDialogProc(HWND pWindow, UINT pMsgId, WPARAM p
 			EnableWindow(app->GetWindowHandle(), false);
 			EnableWindow(pWindow, true);
 
-			tmpControl = new Control::Controller(pWindow, Control::UiHandlerPtr());
-			tmpControl->captureNextInput(setControlControl, setControlPlayer, pWindow);
+			tmpControl = new InputEventController(pWindow, Control::UiHandlerPtr());
+			tmpControl->CaptureNextInput(setControlHash, setControlMap);
 
 			// set timer for 3 seconds
 			SetTimer(pWindow, MRM_CONTROL_TIMER, 3000, NULL);
@@ -389,19 +326,19 @@ LRESULT ControlPrefsPage::PressKeyDialogProc(HWND pWindow, UINT pMsgId, WPARAM p
 			switch (pWParam) {
 				case MRM_CONTROL_TIMER:
 					// 3 seconds are up, disable input
-					tmpControl->disableInput(setControlControl, setControlPlayer);
-					tmpControl->stopCapture();
+					tmpControl->DisableCaptureInput();
+					tmpControl->SaveConfig();
 			
 					// save new controls
 					delete tmpControl;
 					tmpControl = NULL;
 
-
 					// unset the handle
 					pressAnyKeyDialog = NULL;
 
 					// now we have to tell the preferences dialog to refresh itself
-					UpdateDialogLabels(preferencesDialog);
+					app->GetController()->ReloadConfig();
+					UpdateBindingLabels(preferencesDialog);
 					KillTimer(pWindow, MRM_CONTROL_TIMER);
 					KillTimer(pWindow, MRM_CONTROL_POLL);
 					EnableWindow(preferencesDialog, TRUE);
@@ -409,23 +346,25 @@ LRESULT ControlPrefsPage::PressKeyDialogProc(HWND pWindow, UINT pMsgId, WPARAM p
 					break;
 				case MRM_CONTROL_POLL:
 					KillTimer(pWindow, MRM_CONTROL_POLL);
-					tmpControl->poll();
+					tmpControl->Poll();
 					SetTimer(pWindow, MRM_CONTROL_POLL, 100, NULL);
 			}
 			break;
 	}
 
 	if(tmpControl != NULL) {
-		tmpControl->poll();
+		tmpControl->Poll();
 
 		// check if things are updated
-		if(tmpControl->controlsUpdated()) {
+		if(!tmpControl->IsCapturing()) {
 			// the new key binding is set, now it's time to close the window
-			tmpControl->saveControls();
+			tmpControl->SaveConfig();
+
 			delete tmpControl;
 			tmpControl = NULL;
 
-			UpdateDialogLabels(preferencesDialog);
+			app->GetController()->ReloadConfig();
+			UpdateBindingLabels(preferencesDialog);
 			pressAnyKeyDialog = NULL;
 			KillTimer(pWindow, MRM_CONTROL_TIMER);
 			EnableWindow(preferencesDialog, TRUE);

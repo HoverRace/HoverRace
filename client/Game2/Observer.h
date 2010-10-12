@@ -104,8 +104,7 @@ class Observer
 
 		// Camera control
 		void Scroll(int pOffset);
-		void ZoomIn();
-		void ZoomOut();
+		void Zoom(int factor); /// A positive factor zooms in; a negative factor zooms out.
 		void Home();
 
 		void EnlargeMargin();
