@@ -327,7 +327,7 @@ LRESULT ControlPrefsPage::PressKeyDialogProc(HWND pWindow, UINT pMsgId, WPARAM p
 				case MRM_CONTROL_TIMER:
 					// 3 seconds are up, disable input
 					tmpControl->DisableCaptureInput();
-					tmpControl->SaveControllerConfig();
+					tmpControl->SaveConfig();
 			
 					// save new controls
 					delete tmpControl;
@@ -358,7 +358,7 @@ LRESULT ControlPrefsPage::PressKeyDialogProc(HWND pWindow, UINT pMsgId, WPARAM p
 		// check if things are updated
 		if(!tmpControl->IsCapturing()) {
 			// the new key binding is set, now it's time to close the window
-			tmpControl->SaveControllerConfig();
+			tmpControl->SaveConfig();
 
 			delete tmpControl;
 			tmpControl = NULL;
