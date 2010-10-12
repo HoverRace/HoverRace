@@ -585,6 +585,7 @@ void Config::ResetToDefaults()
 	camera_hash.zoomOut = OIS::KC_DELETE << 8;
 	camera_hash.panUp   = OIS::KC_PGUP   << 8;
 	camera_hash.panDown = OIS::KC_PGDOWN << 8;
+	camera_hash.reset   = OIS::KC_HOME   << 8;
 
 	ui.console_toggle = OIS::KC_F12      << 8;
 	ui.console_up     = OIS::KC_PGUP     << 8;
@@ -911,6 +912,7 @@ void Config::cfg_camera_hash_t::Load(yaml::MapNode* root)
 	READ_INT(root, zoomOut, 0, INT_MAX);
 	READ_INT(root, panUp, 0, INT_MAX);
 	READ_INT(root, panDown, 0, INT_MAX);
+	READ_INT(root, reset, 0, INT_MAX);
 }
 
 void Config::cfg_camera_hash_t::Save(yaml::Emitter* emitter)
@@ -922,6 +924,7 @@ void Config::cfg_camera_hash_t::Save(yaml::Emitter* emitter)
 	EMIT_VAR(emitter, zoomOut);
 	EMIT_VAR(emitter, panUp);
 	EMIT_VAR(emitter, panDown);
+	EMIT_VAR(emitter, reset);
 
 	emitter->EndMap();
 }

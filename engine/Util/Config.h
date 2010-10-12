@@ -224,6 +224,7 @@ class MR_DllDeclare Config
 			int zoomOut;
 			int panUp;
 			int panDown;
+			int reset;
 
 			void Load(yaml::MapNode*);
 			void Save(yaml::Emitter*);
