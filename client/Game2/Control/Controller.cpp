@@ -438,6 +438,9 @@ void InputEventController::SaveConfig()
 			case 3: // pan down
 				cfg->camera_hash.panDown = it->first;
 				break;
+			case 4: // reset
+				cfg->camera_hash.reset = it->first;
+				break;
 		}
 	}
 }
@@ -480,6 +483,7 @@ void InputEventController::LoadConfig()
 	cameraMap[cfg->camera_hash.zoomOut] = new ObserverZoomAction(_("Zoom Out"), 1, NULL, 0, -1);
 	cameraMap[cfg->camera_hash.panUp]   = new ObserverTiltAction(_("Pan Up"), 2, NULL, 0, 1);
 	cameraMap[cfg->camera_hash.panDown] = new ObserverTiltAction(_("Pan Down"), 3, NULL, 0, -1);
+	cameraMap[cfg->camera_hash.reset]   = new ObserverResetAction(_("Reset Camera"), 4, NULL, 0);
 }
 
 void InputEventController::InitInputManager(Util::OS::wnd_t mainWindow)
