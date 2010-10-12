@@ -188,8 +188,8 @@ void Observer::Scroll(int pOffset)
 void Observer::Zoom(int factor)
 {
 	int oldAperture = mApperture;
-	// weird algebra is so that positive factor zooms in, negative zooms out
-	mApperture = MR_Angle(mApperture * (1.0 - factor / 5.0));
+	// positive factor zooms in, negative zooms out
+	mApperture = MR_Angle(mApperture * pow(0.8, factor));
 
 	if(mApperture < MR_PI / 10.0 || mApperture > (3.0 * MR_PI / 4.0))
 		mApperture = oldAperture;
