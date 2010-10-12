@@ -1541,9 +1541,9 @@ void GameApp::NewNetworkSession(BOOL pServer)
 	if(lSuccess) {
 												  // start in 13 seconds
 		lCurrentSession->SetSimulationTime(-13000);
-		lSuccess = (lCurrentSession->CreateMainCharacter(0));
+		lSuccess = (lCurrentSession->CreateMainCharacter() != FALSE);
 
-		MainCharacter::MainCharacter* mc = lCurrentSession->GetMainCharacter();
+		MainCharacter::MainCharacter* mc = lCurrentSession->GetPlayer(0);
 		controller->ClearActionMap();
 		controller->AddPlayerMaps(1, &mc);
 		controller->AddObserverMaps(observers, 1);
@@ -1628,7 +1628,7 @@ void GameApp::NewInternetSession()
 		highObserver = new HighObserver();
 		lSuccess = lCurrentSession->CreateMainCharacter();
 
-		MainCharacter::MainCharacter* mc = lCurrentSession->GetMainCharacter();
+		MainCharacter::MainCharacter* mc = lCurrentSession->GetPlayer(0);
 		controller->ClearActionMap();
 		controller->AddPlayerMaps(1, &mc);
 		controller->AddObserverMaps(observers, 1);
