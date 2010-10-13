@@ -20,6 +20,8 @@ hoverrace_SOURCES = \
 	Control/SDL/SDLMouse.cpp \
 	Control/SDL/SDLMouse.h \
 	Control/SDL/SDLPrereqs.h \
+	Control/ActionPerformers.cpp \
+	Control/ActionPerformers.h \
 	Control/Controller.cpp \
 	Control/Controller.h \
 	Control/InputHandler.h \
