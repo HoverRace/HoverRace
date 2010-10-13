@@ -234,7 +234,7 @@ class InputEventController : public KeyListener, public MouseListener, public Jo
 		//   b: axis id
 		//   c: direction
 		int GetNextAvailableDisabledHash();
-		int HashKeyboardEvent(const KeyCode& arg);
+		int HashKeyboardEvent(const OIS::KeyCode& arg);
 		int HashMouseButtonEvent(const MouseEvent& arg, MouseButtonID id);
 		int HashMouseAxisEvent(const MouseEvent& arg, int axis, int direction);
 		int HashJoystickAxisEvent(const JoyStickEvent& arg, int axis, int direction);

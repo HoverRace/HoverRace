@@ -588,11 +588,11 @@ void InputEventController::LoadConsoleMap()
 	// console-keys map is special because it won't appear in the configuration panel,
 	// so we don't need to internationalize the name of it.
 	for(int i = (int) OIS::KC_ESCAPE; i < (int) OIS::KC_MEDIASELECT; i++) {
-		int hash = HashKeyboardEvent((KeyCode) i);
+		int hash = HashKeyboardEvent((OIS::KeyCode) i);
 		if(allActionMaps["console-keys"].count(hash) > 0)
 			delete allActionMaps["console-keys"][hash];
 
-		allActionMaps["console-keys"][HashKeyboardEvent((KeyCode) i)] =
+		allActionMaps["console-keys"][HashKeyboardEvent((OIS::KeyCode) i)] =
 			new ConsoleKeyAction("" /* no name necessary */, 0 /* no ordering necessary */,
 					NULL, (OIS::KeyCode) i);
 	}
@@ -611,7 +611,7 @@ void InputEventController::LoadConsoleMap()
 }
 
 // 0x0000xx00; xx = keycode
-int InputEventController::HashKeyboardEvent(const KeyCode& key)
+int InputEventController::HashKeyboardEvent(const OIS::KeyCode& key)
 {
 	return (key % 256) << 8;
 }
