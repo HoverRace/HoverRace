@@ -34,7 +34,7 @@
 namespace HoverRace {
 	namespace Client {
 		namespace Control {
-			class Controller;
+			class InputEventController;
 		}
 		namespace HoverScript {
 			class GamePeer;
@@ -81,8 +81,8 @@ class ClientApp : public GameDirector
 		virtual void ChangeAutoUpdates(bool newSetting);
 		virtual void AssignPalette();
 		virtual VideoServices::VideoBuffer *GetVideoBuffer() const { return videoBuf; }
-		virtual Control::Controller *GetController() const { return controller; }
-		virtual Control::Controller *ReloadController();
+		virtual Control::InputEventController *GetController() const { return controller; }
+		virtual Control::InputEventController *ReloadController();
 #	ifdef _WIN32
 		virtual HWND GetWindowHandle() const { return mainWnd; }
 #	endif
@@ -92,7 +92,7 @@ class ClientApp : public GameDirector
 		VideoServices::VideoBuffer *videoBuf;
 		class UiInput;
 		boost::shared_ptr<UiInput> uiInput;
-		Control::Controller *controller;
+		Control::InputEventController *controller;
 
 		Scene *scene;
 

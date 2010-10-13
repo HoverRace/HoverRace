@@ -64,7 +64,7 @@
 using namespace HoverRace::Client::HoverScript;
 using namespace HoverRace::Util;
 namespace SoundServer = HoverRace::VideoServices::SoundServer;
-using HoverRace::Client::Control::Controller;
+using HoverRace::Client::Control::InputEventController;
 
 namespace HoverRace {
 namespace Client {
@@ -193,7 +193,7 @@ ClientApp::ClientApp() :
 
 	AssignPalette();
 
-	controller = new Controller(mainWnd, uiInput);
+	controller = new InputEventController(mainWnd, uiInput);
 
 	RefreshTitleBar();
 }
@@ -329,10 +329,10 @@ void ClientApp::AssignPalette()
 	videoBuf->AssignPalette();
 }
 
-Control::Controller *ClientApp::ReloadController()
+Control::InputEventController *ClientApp::ReloadController()
 {
 	delete controller;
-	return (controller = new Controller(mainWnd, uiInput));
+	return (controller = new InputEventController(mainWnd, uiInput));
 }
 
 // GameScene
@@ -397,11 +397,6 @@ void GameScene::Cleanup()
 
 void GameScene::Advance(Util::OS::timestamp_t tick)
 {
-	if (frame == 0) {
-		gamePeer->OnSessionStart(gameApp->sessionPeer);
-		// Check if a new session was requested.
-		RulebookPtr newSessionRules = gamePeer->RequestedNewSession();
-	}
 }
 
 }  // namespace HoverScript
