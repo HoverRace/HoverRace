@@ -647,6 +647,7 @@ bool HighConsole::Input::KeyPressed(OIS::KeyCode kc, unsigned int text)
 {
 	if (cons == NULL || !cons->IsVisible()) return true;
 
+#ifdef _WIN32
 	if (text) {
 		if (text >= 32 && text < 127) {
 			OutputDebugString(boost::str(boost::format("Text key: %c (%d)\n") % (char)text % text).c_str());
@@ -655,6 +656,7 @@ bool HighConsole::Input::KeyPressed(OIS::KeyCode kc, unsigned int text)
 			OutputDebugString(boost::str(boost::format("Text key: (%d)\n") % text).c_str());
 		}
 	}
+#endif
 
 	return true;
 }
