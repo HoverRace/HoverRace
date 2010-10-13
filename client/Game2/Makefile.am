@@ -25,6 +25,8 @@ hoverrace_SOURCES = \
 	Control/Controller.cpp \
 	Control/Controller.h \
 	Control/InputHandler.h \
+	Control/ObserverActions.cpp \
+	Control/ObserverActions.h \
 	Control/UiHandler.h \
 	HoverScript/ClientScriptCore.cpp \
 	HoverScript/ClientScriptCore.h \
