@@ -124,7 +124,7 @@ BOOL ControlPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 				HWND hList = GetDlgItem(pWindow, IDC_MAP_SELECT);
 				
 				// add all the maps except console-keys
-				for(int i = 0; i < mapnames.size(); i++) {
+				for(size_t i = 0; i < mapnames.size(); i++) {
 					if(mapnames.at(i) == "console-keys")
 						continue; // don't add this one
 					int item = SendMessage(hList, CB_ADDSTRING, 0, (LPARAM) mapnames.at(i).c_str());

@@ -52,7 +52,7 @@ void ConsoleKeyAction::operator()(int eventValue)
 		// Plus users don't type too incredibly quickly.
 		// TODO(ryan): #ifdef blocks for platform independence; depend on OIS unless on Windows
 		for(int i = 0; i < 256; i++)
-			state[i] = GetKeyState(i);
+			state[i] = static_cast<unsigned char>(GetKeyState(i));
 		int vk = MapVirtualKeyEx(kc, 1, layout);
 		int out;
 		int ret = ToAsciiEx(vk, kc, state, (LPWORD) &out, 0, layout);
@@ -67,7 +67,7 @@ void ConsoleToggleAction::operator()(int eventValue)
 		if(hc->IsVisible()) {
 			// Delete old console action maps, re-add player action maps.
 			controller->ClearActionMap();
-			for(int i = 0; i < oldMaps.size(); i++)
+			for(size_t i = 0; i < oldMaps.size(); i++)
 				controller->AddActionMap(oldMaps.at(i));
 		} else {
 			// Save our old maps
