@@ -26,18 +26,13 @@
 
 #include "ActionPerformers.h"
 
-#ifdef _WIN32
-#	include <windows.h>
-#	include <dinput.h>
-#endif
-
 using namespace HoverRace::Client::Control;
 using namespace HoverRace::MainCharacter;
 
 // constructor does not need to do anything but save our pointer
-PlayerEffectAction::PlayerEffectAction(std::string name, int listOrder, MainCharacter::MainCharacter* pmc) : ControlAction(name, listOrder), mc(pmc) { }
+PlayerEffectAction::PlayerEffectAction(std::string name, int listOrder, HoverRace::MainCharacter::MainCharacter* pmc) : ControlAction(name, listOrder), mc(pmc) { }
 
-void PlayerEffectAction::SetMainCharacter(MainCharacter::MainCharacter* mc) { this->mc = mc; }
+void PlayerEffectAction::SetMainCharacter(HoverRace::MainCharacter::MainCharacter* mc) { this->mc = mc; }
 
 void EngineAction::operator()(int eventValue)
 {	
