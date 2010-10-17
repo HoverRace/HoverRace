@@ -177,7 +177,7 @@ Config::Config(int verMajor, int verMinor, int verPatch, int verBuild,
 
 	userTrackPath = homePath / tracksDirName;
 
-	Parcel::BundlePtr mediaTrackBundle(new Parcel::Bundle(mediaPath / tracksDirName));
+	Parcel::BundlePtr mediaTrackBundle(new Parcel::Bundle(this->mediaPath / tracksDirName));
 #	ifdef _WIN32
 		trackBundle = boost::make_shared<Parcel::TrackBundle>(userTrackPath,
 			boost::make_shared<Parcel::Bundle>((OS::cpstr_t)Str::UP("track_source"),  // Historical.
