@@ -343,6 +343,8 @@ GameScene::GameScene(GameDirector *director, VideoServices::VideoBuffer *videoBu
 	SUPER(),
 	frame(0), numPlayers(1), session(NULL), highObserver(NULL), highConsole(NULL)
 {
+	memset(observers, 0, sizeof(observers[0]) * MAX_OBSERVERS);
+
 	// Create the new session
 	session = new ClientSession();
 	sessionPeer = boost::make_shared<SessionPeer>(scripting, session);
@@ -391,7 +393,9 @@ void GameScene::Cleanup()
 	delete highObserver;
 	delete session;
 	for (int i = 0; i < numPlayers; i++) {
-		observers[i]->Delete();
+		if (observers[i] != NULL) {
+			observers[i]->Delete();
+		}
 	}
 }
 
