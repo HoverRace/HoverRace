@@ -1,6 +1,6 @@
 
-// ClientApp.h
-// Experimental game shell.
+// GameScene.h
+// Main game scene.
 //
 // Copyright (c) 2010 Michael Imamura.
 //
@@ -22,14 +22,12 @@
 
 #pragma once
 
-#include <SDL/SDL.h>
-
-#include "../../engine/Util/OS.h"
+#include "../../engine/Util/Config.h"
 
 #include "Observer.h"
 #include "GameDirector.h"
 
-#ifdef WITH_SDL
+#include "Scene.h"
 
 namespace HoverRace {
 	namespace Client {
@@ -38,16 +36,15 @@ namespace HoverRace {
 		}
 		namespace HoverScript {
 			class GamePeer;
-			class HighConsole;
 			class SessionPeer;
 			typedef boost::shared_ptr<SessionPeer> SessionPeerPtr;
 			class SysEnv;
 		}
-		class HighObserver;
+		class ClientSession;
 		class Rulebook;
 		typedef boost::shared_ptr<Rulebook> RulebookPtr;
-		class Scene;
 	}
+	class HighObserver;
 	namespace Script {
 		class Core;
 	}
@@ -56,53 +53,33 @@ namespace HoverRace {
 namespace HoverRace {
 namespace Client {
 
-class ClientApp : public GameDirector
+class GameScene : public Scene
 {
-	typedef GameDirector SUPER;
-
+	typedef Scene SUPER;
 	public:
-		ClientApp();
-		virtual ~ClientApp();
+		GameScene(GameDirector *director, VideoServices::VideoBuffer *videoBuf,
+			Script::Core *scripting, HoverScript::GamePeer *gamePeer,
+			RulebookPtr rules);
+		virtual ~GameScene();
 
 	private:
-		void RefreshTitleBar();
-		void DrawPalette();
+		void Cleanup();
 
 	public:
-		void MainLoop();
-
-		void NewLocalSession(RulebookPtr rules=RulebookPtr());
-
-	public:
-		// GameDirector
-		virtual void RequestShutdown();
-		virtual void SignalServerHasChanged();
-		virtual void ChangeAutoUpdates(bool newSetting);
-		virtual void AssignPalette();
-		virtual VideoServices::VideoBuffer *GetVideoBuffer() const { return videoBuf; }
-		virtual Control::InputEventController *GetController() const { return controller; }
-		virtual Control::InputEventController *ReloadController();
-#	ifdef _WIN32
-		virtual HWND GetWindowHandle() const { return mainWnd; }
-#	endif
+		void Advance(Util::OS::timestamp_t tick);
 
 	private:
-		Util::OS::wnd_t mainWnd;
-		VideoServices::VideoBuffer *videoBuf;
-		class UiInput;
-		boost::shared_ptr<UiInput> uiInput;
-		Control::InputEventController *controller;
+		int frame;
+		int numPlayers;
+		static const int MAX_OBSERVERS = Util::Config::MAX_PLAYERS;
+		Observer *observers[MAX_OBSERVERS];
+		ClientSession *session;
 
-		Scene *scene;
+		HighObserver *highObserver;
+		HoverScript::HighConsole *highConsole;
 
-		Script::Core *scripting;
-		HoverScript::GamePeer *gamePeer;
-		HoverScript::SysEnv *sysEnv;
-
-		RulebookPtr requestedNewSession;
+		HoverScript::SessionPeerPtr sessionPeer;
 };
 
 }  // namespace HoverScript
 }  // namespace Client
-
-#endif  // ifdef WITH_SDL

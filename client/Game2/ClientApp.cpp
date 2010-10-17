@@ -44,8 +44,10 @@
 #include "HoverScript/SessionPeer.h"
 #include "HoverScript/SysEnv.h"
 #include "ClientSession.h"
+#include "GameScene.h"
 #include "HighObserver.h"
 #include "Rulebook.h"
+#include "Scene.h"
 
 #ifdef _WIN32
 #	include "resource.h"
@@ -68,43 +70,6 @@ using HoverRace::Client::Control::InputEventController;
 
 namespace HoverRace {
 namespace Client {
-
-class Scene
-{
-	public:
-		virtual ~Scene() { }
-
-	public:
-		virtual void Advance(Util::OS::timestamp_t tick) = 0;
-};
-
-class GameScene : public Scene
-{
-	typedef Scene SUPER;
-	public:
-		GameScene(GameDirector *director, VideoServices::VideoBuffer *videoBuf,
-			Script::Core *scripting, HoverScript::GamePeer *gamePeer,
-			RulebookPtr rules);
-		virtual ~GameScene();
-
-	private:
-		void Cleanup();
-
-	public:
-		void Advance(Util::OS::timestamp_t tick);
-
-	private:
-		int frame;
-		int numPlayers;
-		static const int MAX_OBSERVERS = Util::Config::MAX_PLAYERS;
-		Observer *observers[MAX_OBSERVERS];
-		ClientSession *session;
-
-		HighObserver *highObserver;
-		HoverScript::HighConsole *highConsole;
-
-		HoverScript::SessionPeerPtr sessionPeer;
-};
 
 class ClientApp::UiInput : public Control::UiHandler
 {
@@ -333,74 +298,6 @@ Control::InputEventController *ClientApp::ReloadController()
 {
 	delete controller;
 	return (controller = new InputEventController(mainWnd, uiInput));
-}
-
-// GameScene
-
-GameScene::GameScene(GameDirector *director, VideoServices::VideoBuffer *videoBuf,
-                     Script::Core *scripting, HoverScript::GamePeer *gamePeer,
-                     RulebookPtr rules) :
-	SUPER(),
-	frame(0), numPlayers(1), session(NULL), highObserver(NULL), highConsole(NULL)
-{
-	memset(observers, 0, sizeof(observers[0]) * MAX_OBSERVERS);
-
-	// Create the new session
-	session = new ClientSession();
-	sessionPeer = boost::make_shared<SessionPeer>(scripting, session);
-
-	// Load the selected track
-	try {
-		Model::TrackPtr track = Config::GetInstance()->
-			GetTrackBundle()->OpenTrack(rules->GetTrackName());
-		if (track.get() == NULL) throw Parcel::ObjStreamExn("Track does not exist.");
-		if (!session->LoadNew(
-			rules->GetTrackName().c_str(), track->GetRecordFile(),
-			rules->GetLaps(), rules->GetGameOpts(), videoBuf))
-		{
-			throw Parcel::ObjStreamExn("Track load failed.");
-		}
-	}
-	catch (Parcel::ObjStreamExn&) {
-		Cleanup();
-		throw;
-	}
-
-	session->SetSimulationTime(-6000);
-
-	if (!session->CreateMainCharacter(0)) {
-		Cleanup();
-		throw Exception("Main character creation failed");
-	}
-
-	observers[0] = Observer::New();
-	highObserver = new HighObserver();
-
-	if (Config::GetInstance()->runtime.enableConsole) {
-		highConsole = new HighConsole(scripting, director, gamePeer, sessionPeer);
-	}
-
-}
-
-GameScene::~GameScene()
-{
-	Cleanup();
-}
-
-void GameScene::Cleanup()
-{
-	delete highConsole;
-	delete highObserver;
-	delete session;
-	for (int i = 0; i < numPlayers; i++) {
-		if (observers[i] != NULL) {
-			observers[i]->Delete();
-		}
-	}
-}
-
-void GameScene::Advance(Util::OS::timestamp_t tick)
-{
 }
 
 }  // namespace HoverScript
