@@ -1,0 +1,399 @@
+
+# /
+/*.ncb
+/*.old
+/*.opensdf
+/*.sdf
+/*.suo
+/*.swo
+/*.swp
+/*.tmp
+/_UpgradeReport_Files
+/ABOUT-NLS
+/Debug
+/Makefile
+/Makefile.in
+/Release
+/UpgradeLog*.XML
+/aclocal.m4
+/autom4te.cache
+/confdefs.h
+/config.h
+/config.h.in
+/config.log
+/config.status*
+/configure
+/conftest*
+/hoverrace-*
+/ipch
+/libltdl
+/libtool
+/stamp-h1
+/init.lua
+
+# /build/
+/build/*.swo
+/build/*.swp
+/build/*.tmp
+
+# /client/
+/client/*.swo
+/client/*.swp
+/client/*.user
+/client/Makefile
+/client/Makefile.in
+/client/Debug
+/client/Release
+
+# /client/Game2/
+/client/Game2/.deps
+/client/Game2/.libs
+/client/Game2/*.aps
+/client/Game2/*.swo
+/client/Game2/*.swp
+/client/Game2/Debug
+/client/Game2/Makefile
+/client/Game2/Makefile.in
+/client/Game2/Release
+/client/Game2/StdAfx.h.Td
+/client/Game2/StdAfx.h.d
+/client/Game2/StdAfx.h.gch
+/client/Game2/hoverrace
+/client/Game2/version.h
+
+# /client/Game2/Control/
+/client/Game2/Control/*.swo
+/client/Game2/Control/*.swp
+/client/Game2/Control/.deps
+/client/Game2/Control/.dirstamp
+
+# /client/Game2/Control/SDL/
+/client/Game2/Control/SDL/*.swo
+/client/Game2/Control/SDL/*.swp
+/client/Game2/Control/SDL/.deps
+/client/Game2/Control/SDL/.dirstamp
+
+# /client/Game2/HoverScript/
+/client/Game2/HoverScript/*.swo
+/client/Game2/HoverScript/*.swp
+/client/Game2/HoverScript/.deps
+/client/Game2/HoverScript/.dirstamp
+
+# /compilers/
+/compilers/*.swo
+/compilers/*.swp
+/compilers/Makefile
+/compilers/Makefile.in
+
+# /compilers/MazeCompiler/
+/compilers/MazeCompiler/*.aps
+/compilers/MazeCompiler/*.user
+/compilers/MazeCompiler/Debug
+/compilers/MazeCompiler/Release
+
+# /compilers/PaletteCreator/
+/compilers/PaletteCreator/Debug
+/compilers/PaletteCreator/Release
+
+# /compilers/ParcelDump/
+/compilers/ParcelDump/.deps
+/compilers/ParcelDump/.libs
+/compilers/ParcelDump/*.aps
+/compilers/ParcelDump/*.swo
+/compilers/ParcelDump/*.swp
+/compilers/ParcelDump/*.user
+/compilers/ParcelDump/Debug
+/compilers/ParcelDump/Makefile
+/compilers/ParcelDump/Makefile.in
+/compilers/ParcelDump/Release
+/compilers/ParcelDump/StdAfx.h.gch
+/compilers/ParcelDump/hr-parceldump
+
+# /compilers/ResourceCompiler/
+/compilers/ResourceCompiler/*.user
+/compilers/ResourceCompiler/Debug
+/compilers/ResourceCompiler/Release
+
+# /config/
+/config/argz.m4
+/config/config.guess
+/config/config.sub
+/config/depcomp
+/config/install-sh
+/config/libtool.m4
+/config/lt*.m4
+/config/ltmain.sh
+/config/missing
+
+# /engine/
+/engine/.deps
+/engine/.libs
+/engine/*.ncb
+/engine/*.suo
+/engine/*.swo
+/engine/*.swp
+/engine/*.user
+/engine/Debug
+/engine/Release
+/engine/Makefile
+/engine/Makefile.in
+/engine/StdAfx.h.Td
+/engine/StdAfx.h.d
+/engine/StdAfx.h.gch
+
+# /engine/ColorTools/
+/engine/ColorTools/*.swo
+/engine/ColorTools/*.swp
+/engine/ColorTools/.deps
+/engine/ColorTools/.libs
+/engine/ColorTools/Debug
+/engine/ColorTools/Makefile
+/engine/ColorTools/Makefile.in
+/engine/ColorTools/Release
+
+# /engine/MainCharacter/
+/engine/MainCharacter/*.swo
+/engine/MainCharacter/*.swp
+/engine/MainCharacter/.deps
+/engine/MainCharacter/.libs
+/engine/MainCharacter/Debug
+/engine/MainCharacter/Makefile
+/engine/MainCharacter/Makefile.in
+/engine/MainCharacter/Release
+
+# /engine/Model/
+/engine/Model/*.swo
+/engine/Model/*.swp
+/engine/Model/.deps
+/engine/Model/.libs
+/engine/Model/Debug
+/engine/Model/Makefile
+/engine/Model/Makefile.in
+/engine/Model/Release
+
+# /engine/Net/
+/engine/Net/*.swo
+/engine/Net/*.swp
+/engine/Net/.deps
+/engine/Net/.libs
+/engine/Net/Debug
+/engine/Net/Makefile
+/engine/Net/Makefile.in
+/engine/Net/Release
+
+# /engine/ObjFac1/
+/engine/ObjFac1/*.aps
+/engine/ObjFac1/*.swo
+/engine/ObjFac1/*.swp
+/engine/ObjFac1/.deps
+/engine/ObjFac1/.libs
+/engine/ObjFac1/Debug
+/engine/ObjFac1/Makefile
+/engine/ObjFac1/Makefile.in
+/engine/ObjFac1/Release
+
+# /engine/ObjFacTools/
+/engine/ObjFacTools/*.swo
+/engine/ObjFacTools/*.swp
+/engine/ObjFacTools/.deps
+/engine/ObjFacTools/.libs
+/engine/ObjFacTools/Debug
+/engine/ObjFacTools/Makefile
+/engine/ObjFacTools/Makefile.in
+/engine/ObjFacTools/Release
+
+# /engine/Parcel/
+/engine/Parcel/*.swo
+/engine/Parcel/*.swp
+/engine/Parcel/.deps
+/engine/Parcel/.libs
+/engine/Parcel/Debug
+/engine/Parcel/Makefile
+/engine/Parcel/Makefile.in
+/engine/Parcel/Release
+
+# /engine/Script/
+/engine/Script/*.APS
+/engine/Script/*.loT
+/engine/Script/*.swo
+/engine/Script/*.swp
+/engine/Script/.deps
+/engine/Script/.libs
+/engine/Script/Debug
+/engine/Script/Makefile
+/engine/Script/Makefile.in
+/engine/Script/Release
+/engine/Script/libscript.la
+
+# /engine/Script/Help/
+/engine/Script/Help/*.swo
+/engine/Script/Help/*.swp
+/engine/Script/Help/.deps
+/engine/Script/Help/.dirstamp
+
+# /engine/Util/
+/engine/Util/*.APS
+/engine/Util/*.loT
+/engine/Util/*.swo
+/engine/Util/*.swp
+/engine/Util/.deps
+/engine/Util/.libs
+/engine/Util/Debug
+/engine/Util/Makefile
+/engine/Util/Makefile.in
+/engine/Util/Release
+/engine/Util/libutil.la
+
+# /engine/Util/yaml/
+/engine/Util/yaml/*.swo
+/engine/Util/yaml/*.swp
+/engine/Util/yaml/.deps
+/engine/Util/yaml/.dirstamp
+/engine/Util/yaml/.libs
+/engine/Util/yaml/Makefile
+/engine/Util/yaml/Makefile.in
+
+# /engine/VideoServices/
+/engine/VideoServices/*.swo
+/engine/VideoServices/*.swp
+/engine/VideoServices/.deps
+/engine/VideoServices/.libs
+/engine/VideoServices/Debug
+/engine/VideoServices/Makefile
+/engine/VideoServices/Makefile.in
+/engine/VideoServices/Release
+
+# /hovercad/
+/hovercad/*.aps
+/hovercad/*.ncb
+/hovercad/*.sdf
+/hovercad/*.suo
+/hovercad/*.user
+/hovercad/Debug
+/hovercad/Release
+
+# /imr/
+/imr/*.swo
+/imr/*.swp
+/imr/logfile
+
+# /include/compat/
+/include/compat/*.swo
+/include/compat/*.swp
+
+# /lib/
+/lib/*.exp
+/lib/*.ilk
+/lib/*.pdb
+
+# /lib/build/
+/lib/build/*.ncb
+/lib/build/*.old
+/lib/build/*.opensdf
+/lib/build/*.sdf
+/lib/build/*.suo
+/lib/build/*.swp
+/lib/build/_UpgradeReport_Files
+/lib/build/UpgradeLog*.XML
+/lib/build/ipch
+
+# /lib/build/curl/
+/lib/build/curl/*.old
+/lib/build/curl/*.user
+/lib/build/curl/Debug
+/lib/build/curl/Release
+/lib/build/curl/src
+
+# /lib/build/curl/download/
+/lib/build/curl/download/*.gz
+/lib/build/curl/download/*.tar
+/lib/build/curl/download/*.zip
+
+# /lib/build/lua/
+/lib/build/lua/*.user
+/lib/build/lua/Debug
+/lib/build/lua/Release
+/lib/build/lua/src
+
+# /lib/build/lua/download/
+/lib/build/lua/download/*.zip
+
+# /lib/build/luabind/
+/lib/build/luabind/*.user
+/lib/build/luabind/Debug
+/lib/build/luabind/Release
+/lib/build/luabind/dist
+/lib/build/luabind/orig
+/lib/build/luabind/src
+
+# /lib/build/luabind/download/
+/lib/build/luabind/download/*.zip
+
+# /lib/build/ois/
+/lib/build/ois/*.user
+/lib/build/ois/Debug
+/lib/build/ois/Release
+/lib/build/ois/src
+
+# /lib/build/ois/download/
+/lib/build/ois/download/*.gz
+/lib/build/ois/download/*.tar
+/lib/build/ois/download/*.zip
+
+# /lib/build/sdl/
+/lib/build/sdl/*.user
+/lib/build/sdl/Debug
+/lib/build/sdl/Release
+/lib/build/sdl/src
+/lib/build/sdl/old
+
+# /lib/build/sdl/download/
+/lib/build/sdl/download/*.zip
+
+# /lib/build/yaml/
+/lib/build/yaml/*.user
+/lib/build/yaml/Debug
+/lib/build/yaml/Release
+/lib/build/yaml/src
+
+# /lib/build/yaml/download/
+/lib/build/yaml/download/*.gz
+/lib/build/yaml/download/*.old
+/lib/build/yaml/download/*.tar
+
+# /m4/
+/m4/*.swo
+/m4/*.swp
+/m4/argz.m4
+/m4/libtool.m4
+/m4/lt*.m4
+
+# /po/
+/po/*.gmo
+/po/*.mo
+/po/*.pot
+/po/*.sed
+/po/*.swo
+/po/*.swp
+/po/Makefile
+/po/Makefile.in
+/po/Makevars.template
+/po/POTFILES
+/po/Rules-quot
+/po/en@boldquot.header
+/po/en@quot.header
+/po/stamp-po
+
+# /share/
+/share/*.avi
+/share/*.dat
+/share/*.db
+/share/Makefile
+/share/Makefile.in
+/share/locale
+/share/tracks
+
+# /updater/
+/updater/*.user
+/updater/Debug
+/updater/Release
