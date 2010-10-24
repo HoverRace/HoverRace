@@ -50,6 +50,8 @@ hoverrace_SOURCES = \
 	ClientSession.cpp \
 	ClientSession.h \
 	GameDirector.h \
+	GameScene.cpp \
+	GameScene.h \
 	HighObserver.cpp \
 	HighObserver.h \
 	Observer.cpp \
