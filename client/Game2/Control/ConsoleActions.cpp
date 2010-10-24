@@ -24,6 +24,8 @@
 
 #include "StdAfx.h"
 
+#include "../../engine/Exception.h"
+
 #include "ConsoleActions.h"
 
 using namespace HoverRace::Client::Control;
@@ -42,6 +44,7 @@ ConsoleKeyAction::ConsoleKeyAction(std::string name, int listOrder, HighConsole*
 
 void ConsoleKeyAction::operator()(int eventValue)
 {
+#ifdef _WIN32
 	if(eventValue > 0) {
 		HKL layout = GetKeyboardLayout(0);
 		unsigned char state[256];
@@ -59,6 +62,9 @@ void ConsoleKeyAction::operator()(int eventValue)
 		if(ret == 1)
 			hc->OnChar((char) out);
 	}
+#else
+	throw UnimplementedExn("ConsoleKeyAction::operator()(int)");
+#endif
 }
 
 void ConsoleToggleAction::operator()(int eventValue)

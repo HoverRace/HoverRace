@@ -22,6 +22,9 @@ hoverrace_SOURCES = \
 	Control/SDL/SDLPrereqs.h \
 	Control/ActionPerformers.cpp \
 	Control/ActionPerformers.h \
+	Control/ConsoleActions.cpp \
+	Control/ConsoleActions.h \
+	Control/ControlAction.h \
 	Control/Controller.cpp \
 	Control/Controller.h \
 	Control/InputHandler.h \
