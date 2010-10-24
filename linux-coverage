@@ -10,6 +10,8 @@
 
 cd "$(dirname "$0")"
 
+SHOW_ALL=0
+
 covered=0
 total=0
 summary=''
@@ -36,7 +38,7 @@ function check_cov {
 	do
 		(( dirtot += 1 ))
 		if [[ -f Makefile.am ]] && egrep -q "^[[:space:]]+$fn" Makefile.am; then
-			echo "  [OK] $fn"
+			[[ $SHOW_ALL = 1 ]] && echo "  [OK] $fn"
 			(( dircov += 1 ))
 		else
 			echo "  [  ] $fn"
@@ -52,6 +54,14 @@ function check_cov {
 "
 	echo ''
 }
+
+while getopts 'a' opt; do
+	case $opt in
+		a)
+			SHOW_ALL=1
+			;;
+	esac
+done
 
 echo "==> Scanning..."
 check_cov client/Game2
