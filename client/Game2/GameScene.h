@@ -68,9 +68,14 @@ class GameScene : public Scene
 	public:
 		void Advance(Util::OS::timestamp_t tick);
 
+		void Render();
+
 	private:
 		int frame;
 		int numPlayers;
+
+		VideoServices::VideoBuffer *videoBuf;
+
 		static const int MAX_OBSERVERS = Util::Config::MAX_PLAYERS;
 		Observer *observers[MAX_OBSERVERS];
 		ClientSession *session;

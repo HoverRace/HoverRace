@@ -34,6 +34,7 @@ class Scene
 
 	public:
 		virtual void Advance(Util::OS::timestamp_t tick) = 0;
+		virtual void Render() = 0;
 };
 
 }  // namespace HoverScript

@@ -45,7 +45,8 @@ GameScene::GameScene(GameDirector *director, VideoServices::VideoBuffer *videoBu
                      Script::Core *scripting, HoverScript::GamePeer *gamePeer,
                      RulebookPtr rules) :
 	SUPER(),
-	frame(0), numPlayers(1), session(NULL), highObserver(NULL), highConsole(NULL)
+	frame(0), numPlayers(1), videoBuf(videoBuf),
+	session(NULL), highObserver(NULL), highConsole(NULL)
 {
 	memset(observers, 0, sizeof(observers[0]) * MAX_OBSERVERS);
 
@@ -105,6 +106,25 @@ void GameScene::Cleanup()
 
 void GameScene::Advance(Util::OS::timestamp_t tick)
 {
+	if (highConsole != NULL && highConsole->IsVisible()) {
+		highConsole->Advance(tick);
+	}
+
+	session->Process();
+}
+
+void GameScene::Render()
+{
+	MR_SimulationTime simTime = session->GetSimulationTime();
+
+	for (int i = 0; i < MAX_OBSERVERS; ++i) {
+		Observer *obs = observers[i];
+		if (obs != NULL) {
+			obs->RenderNormalDisplay(videoBuf, session,
+				session->GetPlayer(i),
+				simTime, session->GetBackImage());
+		}
+	}
 }
 
 }  // namespace HoverScript

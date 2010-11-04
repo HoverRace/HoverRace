@@ -226,6 +226,19 @@ void ClientApp::DrawPalette()
 	SDL_Flip(surface);
 }
 
+void ClientApp::RenderScene()
+{
+	if (videoBuf->Lock()) {
+		if (scene == NULL) {
+			videoBuf->Clear();
+		}
+		else {
+			scene->Render();
+		}
+	}
+	videoBuf->Unlock();
+}
+
 void ClientApp::MainLoop()
 {
 	bool quit = false;
@@ -238,14 +251,27 @@ void ClientApp::MainLoop()
 		NewLocalSession(rules);
 	}
 
+	SDL_Surface *surface = SDL_GetVideoSurface();
+	videoBuf->NotifyWindowResChange(surface->w, surface->h);
+
 	DrawPalette();
 
 	while (!quit) {
+		OS::timestamp_t tick = OS::Time();
+
 		while (SDL_PollEvent(&evt)) {
 			if (evt.type == SDL_QUIT) {
 				quit = true;
 			}
+			//TODO: Check for resize event and call NotifyWindowResChange().
 		}
+
+		if (scene != NULL) {
+			scene->Advance(tick);
+			//TODO: Check for scene change notification.
+		}
+
+		RenderScene();
 	}
 }
 
