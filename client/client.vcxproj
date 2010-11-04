@@ -110,6 +110,7 @@
     <ClCompile Include="Game2\FirstChoiceDialog.cpp" />
     <ClCompile Include="Game2\FullscreenTest.cpp" />
     <ClCompile Include="Game2\GameApp.cpp" />
+    <ClCompile Include="Game2\GameScene.cpp" />
     <ClCompile Include="Game2\HighObserver.cpp" />
     <ClCompile Include="Game2\InternetRoom.cpp" />
     <ClCompile Include="Game2\IntroMovie.cpp" />
@@ -160,6 +161,7 @@
     <ClInclude Include="Game2\FullscreenTest.h" />
     <ClInclude Include="Game2\GameApp.h" />
     <ClInclude Include="Game2\GameDirector.h" />
+    <ClInclude Include="Game2\GameScene.h" />
     <ClInclude Include="Game2\HighObserver.h" />
     <ClInclude Include="Game2\InternetRoom.h" />
     <ClInclude Include="Game2\IntroMovie.h" />
@@ -176,6 +178,7 @@
     <ClInclude Include="Game2\RoomList.h" />
     <ClInclude Include="Game2\RoomListDialog.h" />
     <ClInclude Include="Game2\Rulebook.h" />
+    <ClInclude Include="Game2\Scene.h" />
     <ClInclude Include="Game2\SelectRoomDialog.h" />
     <ClInclude Include="Game2\StdAfx.h" />
     <ClInclude Include="Game2\TrackDownloadDialog.h" />
