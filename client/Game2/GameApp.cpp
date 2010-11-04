@@ -967,7 +967,10 @@ void GameApp::RefreshView()
 	// Game processing
 	if(mVideoBuffer != NULL) {
 		if(mVideoBuffer->Lock()) {
-			if(mCurrentSession != NULL) {
+			if(mCurrentSession == NULL) {
+				mVideoBuffer->Clear((MR_UInt8) (lColor++));
+			}
+			else {
 				MR_SimulationTime lTime = mCurrentSession->GetSimulationTime();
 
 				switch (mCurrentMode) {
@@ -1011,8 +1014,7 @@ void GameApp::RefreshView()
 				CaptureScreen(mVideoBuffer);
 #endif
 
-			} else
-			mVideoBuffer->Clear((MR_UInt8) (lColor++));
+			}
 			mVideoBuffer->Unlock();
 		}
 	}
