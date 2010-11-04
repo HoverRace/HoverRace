@@ -311,7 +311,7 @@ VideoBuffer::VideoBuffer(Util::OS::wnd_t pWindow, double pGamma, double pContras
 VideoBuffer::~VideoBuffer()
 {
 #ifdef WITH_SDL
-	//TODO
+	delete[] mZBuffer;
 #else
 	//   mFullScreen        = TRUE;
 	//   mSpecialWindowMode = FALSE;   // force real windows resolution
@@ -348,6 +348,25 @@ void VideoBuffer::NotifyDesktopModeChange(int width, int height)
 	desktopWidth = width;
 	desktopHeight = height;
 }
+
+#ifdef WITH_SDL
+/**
+ * Notify the video buffer that the window size has changed.
+ * @param width The window client area width.
+ * @param height The window client area height.
+ */
+void VideoBuffer::NotifyWindowResChange(int width, int height)
+{
+	mXRes = width;
+	mYRes = height;
+	mLineLen = mXRes;
+
+	if (mZBuffer != NULL) {
+		delete[] mZBuffer;
+	}
+	mZBuffer = new MR_UInt16[mXRes * mYRes];
+}
+#endif
 
 DWORD VideoBuffer::PackRGB(ColorPalette::paletteEntry_t &pal)
 {
