@@ -96,23 +96,6 @@ class HighConsole::LogLines
 		static const int MAX_LINES = 100;
 };
 
-class HighConsole::Input : public Control::InputHandler
-{
-	typedef Control::InputHandler SUPER;
-	public:
-		Input(HighConsole *cons) : SUPER(), cons(cons) { }
-		virtual ~Input() { }
-
-		void Detach() { cons = NULL; }
-
-	public:
-		virtual bool KeyPressed(OIS::KeyCode kc, unsigned int text);
-		virtual bool KeyReleased(OIS::KeyCode kc, unsigned int text);
-
-	private:
-		HighConsole *cons;
-};
-
 HighConsole::HighConsole(Script::Core *scripting, GameDirector *gameApp,
                          GamePeer *gamePeer, SessionPeerPtr sessionPeer) :
 	SUPER(scripting), gameApp(gameApp), gamePeer(gamePeer), sessionPeer(sessionPeer),
@@ -176,14 +159,10 @@ HighConsole::HighConsole(Script::Core *scripting, GameDirector *gameApp,
 		_("Hide") % controller->HashToString(0)
 		);
 	helpControls = new StaticText(helpControlsText, titleFont, 0x0e);
-
-	input = boost::make_shared<Input>(this);
 }
 
 HighConsole::~HighConsole()
 {
-	input->Detach();
-
 	delete helpControls;
 	delete helpTitle;
 	delete consoleControls;
@@ -639,31 +618,6 @@ void HighConsole::LogLines::Render(VideoServices::Viewport2D *vp, int x, int y)
 		line->Blt(x, y, vp);
 		y += line->GetHeight();
 	}
-}
-
-// Input ///////////////////////////////////////////////////////////////////////
-
-bool HighConsole::Input::KeyPressed(OIS::KeyCode kc, unsigned int text)
-{
-	if (cons == NULL || !cons->IsVisible()) return true;
-
-#ifdef _WIN32
-	if (text) {
-		if (text >= 32 && text < 127) {
-			OutputDebugString(boost::str(boost::format("Text key: %c (%d)\n") % (char)text % text).c_str());
-		}
-		else {
-			OutputDebugString(boost::str(boost::format("Text key: (%d)\n") % text).c_str());
-		}
-	}
-#endif
-
-	return true;
-}
-
-bool HighConsole::Input::KeyReleased(OIS::KeyCode kc, unsigned int text)
-{
-	return true;
 }
 
 }  // namespace HoverScript
