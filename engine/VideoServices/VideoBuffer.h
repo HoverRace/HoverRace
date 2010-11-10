@@ -163,7 +163,7 @@ class VideoBuffer
 		// Video mode selection
 		MR_DllDeclare void NotifyDesktopModeChange(int width, int height);
 #	ifdef WITH_SDL
-		MR_DllDeclare void NotifyWindowResChange(int width, int height);
+		MR_DllDeclare void NotifyWindowResChange(int width, int height, int lineLen);
 #	endif
 		MR_DllDeclare bool SetVideoMode();		  // In a window mode
 												  // Full screen mode

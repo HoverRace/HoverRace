@@ -252,7 +252,7 @@ void ClientApp::MainLoop()
 	}
 
 	SDL_Surface *surface = SDL_GetVideoSurface();
-	videoBuf->NotifyWindowResChange(surface->w, surface->h);
+	videoBuf->NotifyWindowResChange(surface->w, surface->h, surface->pitch);
 
 	DrawPalette();
 
@@ -260,8 +260,22 @@ void ClientApp::MainLoop()
 		OS::timestamp_t tick = OS::Time();
 
 		while (SDL_PollEvent(&evt)) {
-			if (evt.type == SDL_QUIT) {
-				quit = true;
+			switch (evt.type) {
+				case SDL_QUIT:
+					quit = true;
+					break;
+
+				case SDL_VIDEORESIZE:
+					if ((surface = SDL_SetVideoMode(evt.resize.w, evt.resize.h,
+						8, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE))
+						== NULL)
+					{
+						throw Exception("Unable to resize video surface");
+					}
+					videoBuf->NotifyWindowResChange(surface->w, surface->h,
+						surface->pitch);
+					AssignPalette();
+					break;
 			}
 			//TODO: Check for resize event and call NotifyWindowResChange().
 		}

@@ -354,12 +354,13 @@ void VideoBuffer::NotifyDesktopModeChange(int width, int height)
  * Notify the video buffer that the window size has changed.
  * @param width The window client area width.
  * @param height The window client area height.
+ * @param lineLen The length of each line in bytes.
  */
-void VideoBuffer::NotifyWindowResChange(int width, int height)
+void VideoBuffer::NotifyWindowResChange(int width, int height, int lineLen)
 {
 	mXRes = width;
 	mYRes = height;
-	mLineLen = mXRes;
+	mLineLen = lineLen;
 
 	if (mZBuffer != NULL) {
 		delete[] mZBuffer;
