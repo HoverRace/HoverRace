@@ -33,7 +33,7 @@
 #define CONFIG_FILENAME			"config.yml"
 
 #define DEFAULT_NICKNAME		"Player"
-#define DEFAULT_MAIN_SERVER		"66.197.183.245/~sirbrock/imr/rl.php"
+#define DEFAULT_MAIN_SERVER		"174.122.149.6/~sirbrock/imr/rl.php"
 #define DEFAULT_UDP_RECV_PORT	9531
 #define DEFAULT_TCP_RECV_PORT	9531
 #define DEFAULT_TCP_SERV_PORT	9530
