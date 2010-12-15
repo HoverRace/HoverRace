@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{d9a8c907-3c4e-4c80-94f7-abd827816e10}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;hpj;bat;for;f90</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{8e5a942f-333a-4122-93d4-6757321bed09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="yaml">
+      <UniqueIdentifier>{42bd363c-2c90-4a0b-8c2d-05d1c8fede8e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Config.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DllObjectFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FuzzyLogic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Profiler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RecordFile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StdAfx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StrRes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldCoordinates.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="yaml\Emitter.cpp">
+      <Filter>yaml</Filter>
+    </ClCompile>
+    <ClCompile Include="yaml\MapNode.cpp">
+      <Filter>yaml</Filter>
+    </ClCompile>
+    <ClCompile Include="yaml\NodeFactory.cpp">
+      <Filter>yaml</Filter>
+    </ClCompile>
+    <ClCompile Include="yaml\Parser.cpp">
+      <Filter>yaml</Filter>
+    </ClCompile>
+    <ClCompile Include="yaml\ScalarNode.cpp">
+      <Filter>yaml</Filter>
+    </ClCompile>
+    <ClCompile Include="yaml\SeqNode.cpp">
+      <Filter>yaml</Filter>
+    </ClCompile>
+    <ClCompile Include="Net\Agent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Net\BaseTransfer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Net\BlockingTransfer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BitPacking.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Cursor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DllObjectFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FastArray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FastFifo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FastMemManip.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FuzzyLogic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyHandling.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MR_Types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Profiler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RecordFile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StdAfx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StrRes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldCoordinates.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="yaml\Emitter.h">
+      <Filter>yaml</Filter>
+    </ClInclude>
+    <ClInclude Include="yaml\MapNode.h">
+      <Filter>yaml</Filter>
+    </ClInclude>
+    <ClInclude Include="yaml\Node.h">
+      <Filter>yaml</Filter>
+    </ClInclude>
+    <ClInclude Include="yaml\NodeFactory.h">
+      <Filter>yaml</Filter>
+    </ClInclude>
+    <ClInclude Include="yaml\Parser.h">
+      <Filter>yaml</Filter>
+    </ClInclude>
+    <ClInclude Include="yaml\ScalarNode.h">
+      <Filter>yaml</Filter>
+    </ClInclude>
+    <ClInclude Include="yaml\SeqNode.h">
+      <Filter>yaml</Filter>
+    </ClInclude>
+    <ClInclude Include="Net\Agent.h" />
+    <ClInclude Include="Net\BaseTransfer.h" />
+    <ClInclude Include="Net\BlockingTransfer.h" />
+    <ClInclude Include="Net\Transfer.h" />
+    <ClInclude Include="Net\NetExn.h" />
+    <ClInclude Include="Net\CancelFlag.h" />
+  </ItemGroup>
+</Project>
