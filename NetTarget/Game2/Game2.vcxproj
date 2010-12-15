@@ -140,6 +140,8 @@
     <ClCompile Include="NetInterface.cpp" />
     <ClCompile Include="NetworkSession.cpp" />
     <ClCompile Include="Observer.cpp" />
+    <ClCompile Include="RoomList.cpp" />
+    <ClCompile Include="RoomListDialog.cpp" />
     <ClCompile Include="StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -160,6 +162,8 @@
     <ClInclude Include="NetInterface.h" />
     <ClInclude Include="NetworkSession.h" />
     <ClInclude Include="Observer.h" />
+    <ClInclude Include="RoomList.h" />
+    <ClInclude Include="RoomListDialog.h" />
     <ClInclude Include="Security.h" />
     <ClInclude Include="StdAfx.h" />
     <ClInclude Include="TrackDownloadDialog.h" />
