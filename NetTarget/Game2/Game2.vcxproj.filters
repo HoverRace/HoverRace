@@ -58,6 +58,9 @@
     <ClCompile Include="RoomListDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SelectRoomDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game2.rc">
@@ -107,6 +110,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="RoomListDialog.h" />
     <ClInclude Include="RoomList.h" />
+    <ClInclude Include="SelectRoomDialog.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="About.bmp" />

@@ -142,6 +142,7 @@
     <ClCompile Include="Observer.cpp" />
     <ClCompile Include="RoomList.cpp" />
     <ClCompile Include="RoomListDialog.cpp" />
+    <ClCompile Include="SelectRoomDialog.cpp" />
     <ClCompile Include="StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -165,6 +166,7 @@
     <ClInclude Include="RoomList.h" />
     <ClInclude Include="RoomListDialog.h" />
     <ClInclude Include="Security.h" />
+    <ClInclude Include="SelectRoomDialog.h" />
     <ClInclude Include="StdAfx.h" />
     <ClInclude Include="TrackDownloadDialog.h" />
     <ClInclude Include="TrackSelect.h" />

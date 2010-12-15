@@ -156,6 +156,7 @@
 #define IDC_TCP_RECV_PORT               1088
 #define IDC_ABOUT_RTF                   1088
 #define IDC_TCP_SERV_PORT               1089
+#define IDC_MSG_LBL                     1089
 #define ID_HELP_CONTENTS                32772
 #define ID_HELP_HOWTOORDER              32773
 #define ID_HELP_TIPOFTHEDAY             32774
@@ -430,7 +431,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        164
 #define _APS_NEXT_COMMAND_VALUE         40046
-#define _APS_NEXT_CONTROL_VALUE         1089
+#define _APS_NEXT_CONTROL_VALUE         1090
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
