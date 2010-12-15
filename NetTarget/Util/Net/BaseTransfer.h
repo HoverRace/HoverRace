@@ -28,14 +28,10 @@
 #include "NetExn.h"
 #include "Transfer.h"
 
-#ifdef _WIN32
-#	ifdef MR_ENGINE
-#		define MR_DllDeclare   __declspec( dllexport )
-#	else
-#		define MR_DllDeclare   __declspec( dllimport )
-#	endif
+#ifdef MR_UTIL
+#	define MR_DllDeclare   __declspec( dllexport )
 #else
-#	define MR_DllDeclare
+#	define MR_DllDeclare   __declspec( dllimport )
 #endif
 
 namespace HoverRace {

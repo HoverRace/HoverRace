@@ -22,16 +22,10 @@
 
 #pragma once
 
-#ifdef _WIN32
-#	ifdef MR_ENGINE
-#		define MR_DllDeclare   __declspec( dllexport )
-#	else
-#		define MR_DllDeclare   __declspec( dllimport )
-#	endif
-#	define MR_PureVirtual __declspec(novtable)
+#ifdef MR_UTIL
+#	define MR_DllDeclare   __declspec( dllexport )
 #else
-#	define MR_DllDeclare
-#	define MR_PureVirtual
+#	define MR_DllDeclare   __declspec( dllimport )
 #endif
 
 namespace HoverRace {
@@ -41,7 +35,7 @@ namespace Net {
  * Interface for cancel checking.
  * @author Michael Imamura
  */
-class MR_DllDeclare MR_PureVirtual CancelFlag
+class MR_DllDeclare CancelFlag
 {
 	public:
 		virtual bool IsCanceled() = 0;

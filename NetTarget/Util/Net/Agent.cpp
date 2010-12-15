@@ -32,8 +32,6 @@
 
 using namespace HoverRace::Net;
 
-using HoverRace::Util::Config;
-
 /**
  * Constructor.
  * @param The URL to retrieve.
