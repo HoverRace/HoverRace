@@ -39,6 +39,7 @@ class MR_VideoBuffer
 	private:
 		HWND mWindow;
 		BOOL mFullScreen;
+		HINSTANCE directDrawInst;
 		LPDIRECTDRAW mDirectDraw;
 		LPDIRECTDRAWSURFACE mFrontBuffer;
 		LPDIRECTDRAWSURFACE mBackBuffer;

@@ -88,7 +88,7 @@ template < class pType > class MR_FastArrayBase
 
 };
 
-template < class pType > class MR_FastArray:public MR_FastArrayBase < class pType >
+template < class pType > class MR_FastArray:public MR_FastArrayBase < pType >
 {
 	public:
 		MR_FastArray(int pSize) {

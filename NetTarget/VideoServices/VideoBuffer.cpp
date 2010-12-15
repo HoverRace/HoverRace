@@ -306,6 +306,12 @@ MR_VideoBuffer::MR_VideoBuffer(HWND pWindow, double pGamma, double pContrast, do
 
 	mSpecialWindowMode = FALSE;
 
+	// backported from newer VideoBuffer.cpp
+	// Load DirectDraw.
+	// As of the June 2010 update of the DirectX SDK, ddraw.lib is no longer
+	// included; however, it is possible to still load DirectDraw manually.
+	directDrawInst = LoadLibrary("ddraw.dll");
+
 	/*
 	   if( !SetVideoMode() )
 	   {
@@ -349,44 +355,50 @@ BOOL MR_VideoBuffer::InitDirectDraw()
 	BOOL lReturnValue = TRUE;
 
 	if(mDirectDraw == NULL) {
-		if(DD_CALL(DirectDrawCreate( /*(LPGUID) DDCREATE_EMULATIONONLY */ NULL, &mDirectDraw, NULL)) != DD_OK) {
-		ASSERT(FALSE);
-		lReturnValue = FALSE;
-	}
-	else {
-		if(DD_CALL(mDirectDraw->SetCooperativeLevel(mWindow, DDSCL_NORMAL)) != DD_OK) {
+		typedef HRESULT (WINAPI* LPDIRECTDRAWCREATE)(GUID FAR *lpGUID, LPDIRECTDRAW FAR *lplpDD, IUnknown FAR *pUnkOuter);
+		LPDIRECTDRAWCREATE directDrawCreate = (LPDIRECTDRAWCREATE)GetProcAddress(directDrawInst, "DirectDrawCreate");
+		if (directDrawCreate == NULL) {
+			return false;
+		}
+
+		if(DD_CALL(directDrawCreate(NULL, &mDirectDraw, NULL)) != DD_OK) {
 			ASSERT(FALSE);
+			lReturnValue = false;
+		}
+		else {
+			if(DD_CALL(mDirectDraw->SetCooperativeLevel(mWindow, DDSCL_NORMAL)) != DD_OK) {
+				ASSERT(FALSE);
+				lReturnValue = false;
+			}
+		}
+	}
+
+	if(lReturnValue) {
+		// Keep track of the native pixel format so we can blit later.
+		DDSURFACEDESC lSurfaceDesc;
+		memset(&lSurfaceDesc, 0, sizeof(lSurfaceDesc));
+		lSurfaceDesc.dwSize = sizeof(lSurfaceDesc);
+
+		if(DD_CALL(mDirectDraw->GetDisplayMode(&lSurfaceDesc)) != DD_OK) {
 			lReturnValue = FALSE;
 		}
-	}
-}
-
-if(lReturnValue) {
-	// Keep track of the native pixel format so we can blit later.
-	DDSURFACEDESC lSurfaceDesc;
-	memset(&lSurfaceDesc, 0, sizeof(lSurfaceDesc));
-	lSurfaceDesc.dwSize = sizeof(lSurfaceDesc);
-
-	if(DD_CALL(mDirectDraw->GetDisplayMode(&lSurfaceDesc)) != DD_OK) {
-		lReturnValue = FALSE;
-	}
-	else {
-		lReturnValue = ProcessCurrentBpp(lSurfaceDesc.ddpfPixelFormat);
-		if(lReturnValue) {
-			// We make the assumption that the desktop color depth
-			// won't change while we're running.
-			if(mNativeBpp == 0)
-				mNativeBpp = mBpp;
+		else {
+			lReturnValue = ProcessCurrentBpp(lSurfaceDesc.ddpfPixelFormat);
+			if(lReturnValue) {
+				// We make the assumption that the desktop color depth
+				// won't change while we're running.
+				if(mNativeBpp == 0)
+					mNativeBpp = mBpp;
+			}
 		}
 	}
-}
 
-if(mPalette == NULL) {
-	// Create a palette
-	CreatePalette(mGamma, mContrast, mBrightness);
-}
+	if(mPalette == NULL) {
+		// Create a palette
+		CreatePalette(mGamma, mContrast, mBrightness);
+	}
 
-return lReturnValue;
+	return lReturnValue;
 }
 
 BOOL MR_VideoBuffer::ProcessCurrentBpp(const DDPIXELFORMAT & lFormat)

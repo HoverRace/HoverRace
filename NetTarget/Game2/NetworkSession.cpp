@@ -858,9 +858,10 @@ void MR_NetworkSession::BroadcastAutoElementCreation(const MR_ObjectFromFactoryI
 	const MR_Level *lLevel = GetCurrentLevel();
 	// int             lVisibleRoomCount;
 	// const int* lVisibleRoom = lLevel->GetVisibleZones( mMainCharacter1->mRoom, lVisibleRoomCount );
+	int lCounter;
 
 	// Init priority level
-	for(int lCounter = 0; lCounter < MR_NetworkInterface::eMaxClient; lCounter++) {
+	for(lCounter = 0; lCounter < MR_NetworkInterface::eMaxClient; lCounter++) {
 		if(mClientCharacter[lCounter] != NULL) {
 			lPriorityLevel[lCounter] = 0;
 
@@ -939,9 +940,10 @@ void MR_NetworkSession::BroadcastPermElementState(int pPermId, const MR_ElementN
 	const MR_Level *lLevel = GetCurrentLevel();
 	// int             lVisibleRoomCount;
 	// const int* lVisibleRoom = lLevel->GetVisibleZones( mMainCharacter1->mRoom, lVisibleRoomCount );
+	int lCounter;
 
 	// Init priority level
-	for(int lCounter = 0; lCounter < MR_NetworkInterface::eMaxClient; lCounter++) {
+	for(lCounter = 0; lCounter < MR_NetworkInterface::eMaxClient; lCounter++) {
 		if(mClientCharacter[lCounter] != NULL) {
 			lPriorityLevel[lCounter] = 0;
 
