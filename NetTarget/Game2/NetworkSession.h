@@ -26,6 +26,7 @@
 
 #include "ClientSession.h"
 #include "NetInterface.h"
+#include "RoomList.h"
 
 /**
  * The MR_NetworkSession is a child of the MR_ClientSession; it is a networked
@@ -61,6 +62,8 @@ class MR_NetworkSession : public MR_ClientSession
 		BOOL mSended8SecClockUpdate;
 		int mMajorID;
 		int mMinorID;
+
+		HoverRace::Client::RoomListPtr roomList;
 
 		int mSendedPlayerStats;
 		MR_FreeElementHandle mClient[MR_NetworkInterface::eMaxClient];
@@ -121,6 +124,7 @@ class MR_NetworkSession : public MR_ClientSession
 
 		void SetPlayerName(const char *pPlayerName);
 		const char *GetPlayerName() const;
+		void SetRoomList(HoverRace::Client::RoomListPtr roomList);
 		BOOL WaitConnections(HWND pWindow, const char *pTrackName, BOOL pPromptForPort = TRUE, unsigned pDefaultPort = MR_Config::GetInstance()->net.tcpServPort, HWND * pModalessDlg = NULL, int pReturnMessage = 0);
 		BOOL PreConnectToServer(HWND pWindow, CString & pTrackName);
 		BOOL ConnectToServer(HWND pWindow, const char *pServerIP = NULL, unsigned pPort = MR_Config::GetInstance()->net.tcpServPort, const char *pGameName = NULL, HWND * pModalessDlg = NULL, int pReturnMessage = 0);

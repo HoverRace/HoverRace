@@ -30,6 +30,8 @@
 #include "TrackSelect.h"
 #include "NetworkSession.h"
 #include "Banner.h"
+#include "RoomList.h"
+#include "SelectRoomDialog.h"
 
 class MR_InternetRequest
 {
@@ -112,6 +114,8 @@ class MR_InternetRoom
 		};
 
 		static MR_InternetRoom *mThis;
+
+		HoverRace::Client::RoomListPtr roomList;
 
 		std::string mMainServer;
 
@@ -196,6 +200,8 @@ class MR_InternetRoom
 
 		BOOL DisplayChatRoom(HWND pParentWindow, MR_NetworkSession *pSession, MR_VideoBuffer *pVideoBuffer, BOOL pShouldRecheckServer);
 
+		HoverRace::Client::RoomListPtr GetRoomList() const { return roomList; }
+
 		// Modelless.. do not use for the moment
 		/*
 		   BOOL DisplayModeless( HWND pParentWindow, MR_NetworkSession* pSession, MR_VideoBuffer* pVideoBuffer );
@@ -204,6 +210,6 @@ class MR_InternetRoom
 
 };
 
-BOOL MR_SendRaceResult(HWND pParentWindow, const char *pTrack, int pBestLapTime, int pMajorID, int pMinorID, const char *pAlias, unsigned int pTrackSum, int pHoverModel, int pTotalTime, int pNbLap, int pNbPlayer);
+BOOL MR_SendRaceResult(HWND pParentWindow, const char *pTrack, int pBestLapTime, int pMajorID, int pMinorID, const char *pAlias, unsigned int pTrackSum, int pHoverModel, int pTotalTime, int pNbLap, int pNbPlayer, HoverRace::Client::RoomListPtr roomList);
 BOOL MR_SendLadderResult(HWND pParentWindow, const char *pWinAlias, int pWinMajorID, int pWinMinorID, const char *pLoseAlias, int pLoseMajorID, int pLoseMinorID, const char *pTrack, int pNbLap);
 #endif

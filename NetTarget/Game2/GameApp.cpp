@@ -1658,6 +1658,7 @@ void MR_GameApp::NewInternetSession()
 		lCurrentSession->SetPlayerName(cfg->player.nickName.c_str());
 
 		lSuccess = lInternetRoom.DisplayChatRoom(mMainWindow, lCurrentSession, mVideoBuffer, mServerHasChanged);
+		lCurrentSession->SetRoomList(lInternetRoom.GetRoomList());
 		mServerHasChanged = FALSE;
 
 		if(cfg->player.nickName != lCurrentSession->GetPlayerName()) {

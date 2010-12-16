@@ -128,7 +128,7 @@ MR_NetworkSession::~MR_NetworkSession()
 
 				int lTotalLap = mMainCharacter1->GetTotalLap();
 
-				MR_SendRaceResult(mWindow, mSession.GetTitle(), lPlayer->mBestLap, mMajorID, mMinorID, mNetInterface.GetPlayerName(-1), mSession.GetCurrentMazeFile()->GetCheckSum(), mMainCharacter1->GetHoverModel(), (lPlayer->mNbCompletedLap == -1) ? lPlayer->mFinishTime : 0, (lPlayer->mNbCompletedLap == -1) ? lTotalLap : 0, lNbPlayer);
+				MR_SendRaceResult(mWindow, mSession.GetTitle(), lPlayer->mBestLap, mMajorID, mMinorID, mNetInterface.GetPlayerName(-1), mSession.GetCurrentMazeFile()->GetCheckSum(), mMainCharacter1->GetHoverModel(), (lPlayer->mNbCompletedLap == -1) ? lPlayer->mFinishTime : 0, (lPlayer->mNbCompletedLap == -1) ? lTotalLap : 0, lNbPlayer, roomList);
 
 				// Report ladder matchs
 				if(lNbPlayer == 2) {
@@ -700,6 +700,11 @@ void MR_NetworkSession::SetPlayerName(const char *pPlayerName)
 const char *MR_NetworkSession::GetPlayerName() const
 {
 	return mNetInterface.GetPlayerName();
+}
+
+void MR_NetworkSession::SetRoomList(HoverRace::Client::RoomListPtr roomList)
+{
+	this->roomList = roomList;
 }
 
 /**
