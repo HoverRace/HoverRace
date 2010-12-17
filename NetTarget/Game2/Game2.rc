@@ -386,7 +386,6 @@ BEGIN
     LTEXT           "Your alias:",IDC_STATIC,7,10,37,8
     LTEXT           "Room:",IDC_STATIC,7,26,36,8
     LISTBOX         IDC_ROOMLIST,45,26,117,55,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Connecting...",IDC_MSG_LBL,45,28,62,9
 END
 #endif
 

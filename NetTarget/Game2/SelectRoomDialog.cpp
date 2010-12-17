@@ -90,6 +90,7 @@ void SelectRoomDialog::HandleLoadFinished(HWND hwnd, result_t result)
  */
 void SelectRoomDialog::PopulateList(HWND hwnd)
 {
+	SendMessage(hwnd, LB_RESETCONTENT, 0, 0);
 	RoomListPtr roomList = GetRoomList();
 	const RoomList::rooms_t rooms = roomList->GetRooms();
 	for (RoomList::rooms_t::const_iterator iter = rooms.begin();
@@ -112,12 +113,13 @@ BOOL SelectRoomDialog::DlgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lp
 
 		case WM_INITDIALOG:
 			SetWindowText(hwnd, "Internet Meeting Room");
-			SetDlgItemText(hwnd, IDC_MSG_LBL, "Connecting...");
 			//SetDlgItemText(hwnd, IDC_YOUR_ALIAS, "Your alias:");
 			//SetDlgItemText(hwnd, IDC_ROOM_C, "Room:");
 			SetDlgItemText(hwnd, IDC_ALIAS, playerName.c_str());
 			SetDlgItemText(hwnd, IDOK, "OK");
 			SetDlgItemText(hwnd, IDCANCEL, "Cancel");
+			SendDlgItemMessage(hwnd, IDC_ROOMLIST, LB_RESETCONTENT, 0, 0);
+			SendDlgItemMessage(hwnd, IDC_ROOMLIST, LB_ADDSTRING, 0, (LPARAM)(const char *) "Connecting...");
 			retv = TRUE;
 			break;
 
@@ -129,7 +131,8 @@ BOOL SelectRoomDialog::DlgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lp
 					}
 					else {
 						CancelLoad();
-						SetDlgItemText(hwnd, IDC_MSG_LBL, "Canceling...");
+						SendDlgItemMessage(hwnd, IDC_ROOMLIST, LB_RESETCONTENT, 0, 0);
+						SendDlgItemMessage(hwnd, IDC_ROOMLIST, LB_ADDSTRING, 0, (LPARAM)(const char *) "Canceling...");
 						EnableWindow(GetDlgItem(hwnd, IDCANCEL), FALSE);
 						retv = TRUE;
 					}
