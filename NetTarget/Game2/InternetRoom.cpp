@@ -1707,9 +1707,13 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 				case IDC_JOIN:
 					lReturnValue = TRUE;
 
+					TRACE("IDC_JOIN called\n");
+
 					if(mThis->mModelessDlg == NULL) {
 						// First verify if the selected track can be played
 						int lFocus = FindFocusItem(GetDlgItem(pWindow, IDC_GAME_LIST));
+
+						TRACE("FindFocus\n");
 
 						if(lFocus != -1) {
 							BOOL lSuccess = FALSE;
@@ -1717,15 +1721,21 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 							// Register to the InternetServer
 							lSuccess = mThis->JoinGameOp(pWindow, lFocus);
 
+							TRACE("JoinGameOp\n");
+
 							if(lSuccess) {
 								// Try to load the track
 								// Load the track
 								std::string lCurrentTrack((const char*)mThis->mGameList[lFocus].mTrack);
+								TRACE("lCurrentTrack\n");
 								MR_RecordFile *lTrackFile = MR_TrackOpen(pWindow, lCurrentTrack.c_str());
+								TRACE("MR_TrackOpen\n");
 								if (lTrackFile == NULL) {
 									lSuccess = TrackDownloadDialog(lCurrentTrack).ShowModal(GetModuleHandle(NULL), pWindow);
+									TRACE("TrackDownloadDialog\n");
 									if (lSuccess) {
 										lTrackFile = MR_TrackOpen(pWindow, lCurrentTrack.c_str());
+										TRACE("MR_TrackOpen 2\n");
 										if (lTrackFile == NULL) {
 											lSuccess = FALSE;
 										}
@@ -1734,20 +1744,24 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 
 								if (lSuccess) {
 									lSuccess = mThis->mSession->LoadNew(mThis->mGameList[lFocus].mTrack, lTrackFile, mThis->mGameList[lFocus].mNbLap, mThis->mGameList[lFocus].mAllowWeapons, mThis->mVideoBuffer);
+									TRACE("LoadNew\n");
 								}
 
 								if(lSuccess) {
 									// connect to the game server
 									CString lCurrentTrack;
 
-									lCurrentTrack.Format("%s  %d laps %s", (const char *) mThis->mGameList[lFocus].mTrack, mThis->mGameList[lFocus].mNbLap);
-
+									lCurrentTrack.Format("%s  %d laps", (const char *) mThis->mGameList[lFocus].mTrack, mThis->mGameList[lFocus].mNbLap);
+									TRACE("ConnectToServer 1\n");
 									lSuccess = mThis->mSession->ConnectToServer(pWindow, mThis->mGameList[lFocus].mIPAddr, mThis->mGameList[lFocus].mPort, lCurrentTrack, &mThis->mModelessDlg, MRM_DLG_END_JOIN);
+
+									TRACE("ConnectToServer 2\n");
 								}
 
 								if(!lSuccess) {
 									// Unregister from Game
 									mThis->LeaveGameOp(pWindow);
+									TRACE("LeaveGameOp\n");
 								}
 							}
 						}

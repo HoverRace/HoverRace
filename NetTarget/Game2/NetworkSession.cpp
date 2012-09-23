@@ -1153,7 +1153,7 @@ void MR_NetworkSession::BroadcastMainElementState(const MR_ElementNetState &pSta
 			}
 		}
 
-		TRACE("lNbEligible:%d %d\n", lNbEligible, lMaxSend);
+		//TRACE("lNbEligible:%d %d\n", lNbEligible, lMaxSend);
 
 		for(int lNbToSend = min(lNbEligible, lMaxSend); lNbToSend > 0; lNbToSend--) {
 			// Find the highest priority element
