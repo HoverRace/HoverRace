@@ -424,8 +424,6 @@ unsigned long MR_GameThread::Loop(LPVOID pThread)
 	MR_GameThread *lThis = (MR_GameThread *) pThread;
 
 	while(true) {
-		Sleep(15);
-
 		EnterCriticalSection(&lThis->mMutex);
 
 		if(lThis->mTerminate)
