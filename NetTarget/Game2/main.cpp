@@ -26,6 +26,8 @@
 // Entry point
 int WINAPI WinMain(HINSTANCE pInstance, HINSTANCE pPrevInstance, LPSTR /* pCmdLine */ , int pCmdShow)
 {
+	SetProcessAffinityMask(GetCurrentProcess(), 1);
+
 	// initialize return variables
 	BOOL lReturnValue = TRUE;
 	int lErrorCode = -1;
