@@ -54,6 +54,7 @@
 #define IDC_PLAYER_NAME                 1004
 #define IDC_SFX_VOLUME_SLIDER           1004
 #define IDC_GAME_NAME                   1005
+#define IDC_SLEEP_LENGTH                1005
 #define IDC_LIST                        1007
 #define IDC_DESCRIPTION                 1008
 #define IDC_MOTOR_ON1                   1011
@@ -150,6 +151,8 @@
 #define IDC_STATE                       1083
 #define IDC_GAMMA_TXT                   1084
 #define IDC_DLPROGRESS                  1085
+#define IDC_SFX_VOLUME_TXT2             1085
+#define IDC_SLEEP_TXT                   1085
 #define IDC_BUTTON1                     1086
 #define IDC_UDP_RECV_PORT               1087
 #define IDC_UDP_RECV_PORT2              1088
