@@ -78,6 +78,7 @@ class MR_Config
 		struct cfg_misc_t {
 			bool displayFirstScreen;
 			bool introMovie;
+         int  mainLoopSleepLength;
 
 			MR_DllDeclare void Load(yaml::MapNode*);
 			MR_DllDeclare void Save(yaml::Emitter*);
