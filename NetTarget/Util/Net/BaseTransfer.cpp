@@ -45,7 +45,7 @@ BaseTransfer::BaseTransfer(const Agent &agent) :
 	curl_easy_setopt(curl, CURLOPT_MAXREDIRS, 5);
 
 	// hardcode user agent (option not yet present in MR_Config)
-	curl_easy_setopt(curl, CURLOPT_USERAGENT, "HoverRace 1.23.2");
+	curl_easy_setopt(curl, CURLOPT_USERAGENT, "HoverRace 1.23.3");
 
 	curl_easy_setopt(curl, CURLOPT_URL, agent.GetUrl().c_str());
 }
