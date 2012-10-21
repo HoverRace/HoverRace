@@ -422,9 +422,12 @@ static HPALETTE CreateDIBPalette(LPBITMAPINFO lpbmi, LPINT lpiNumColors);
 unsigned long MR_GameThread::Loop(LPVOID pThread)
 {
 	MR_GameThread *lThis = (MR_GameThread *) pThread;
+	MR_Config *cfg = MR_Config::GetInstance();
 
+	const int sleepLength = cfg->misc.mainLoopSleepLength;
+   
 	while(true) {
-		Sleep(15);
+		Sleep(sleepLength);
 
 		EnterCriticalSection(&lThis->mMutex);
 
