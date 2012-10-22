@@ -47,8 +47,8 @@ static MR_UInt8 *LoadBitmap(FILE * pFile);
 static MR_UInt8 *LoadPalette(FILE * pFile);
 
 static char gOwner[81];
-static int gMajorID = 100;
-static int gMinorID = -1;
+static int gMajorID = 0;
+static int gMinorID = 0;
 static unsigned char gKey[50];
 
 BOOL LoadRegistry()
@@ -117,10 +117,10 @@ int main(int pArgCount, const char **pArgStrings)
 		printf(MR_LoadString(IDS_BAD_PARAM_COUNT));
 		Sleep(4000);
 	}
-	else if(!LoadRegistry()) {
+	/*else if(!LoadRegistry()) {
 		lError = TRUE;
 		printf(MR_LoadString(IDS_NO_REGINFO));
-	}
+	}*/
 
 	if(!lError && !lPrintUsage) {
 		if((gMajorID != 0) && (gMajorID != 100)) {

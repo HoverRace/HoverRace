@@ -2282,17 +2282,18 @@ BOOL CALLBACK UpdateScoresCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LP
 		// Catch environment modification events
 		case WM_INITDIALOG:
 			{
-				RoomList *roomList = reinterpret_cast<RoomList*>(pLParam);
+				//RoomList *roomList = reinterpret_cast<RoomList*>(pLParam);
 
 				// Setup message
 				SetDlgItemText(pWindow, IDC_TEXT, MR_LoadString(IDS_REG_BEST_LAP));
 	
 				// Initiate the request
+
 				gScoreRequest.Send(pWindow,
-					roomList->GetScoreServer().addr,
-					//gScoreServer.mAddress,
-					roomList->GetScoreServer().port,
-					//gScoreServer.mPort,
+					//roomList->GetScoreServer().addr,
+					gScoreServer.mAddress,
+					//roomList->GetScoreServer().port,
+					gScoreServer.mPort,
 					gScoreRequestStr);
 	
 				// start a timeout timer
@@ -2303,8 +2304,8 @@ BOOL CALLBACK UpdateScoresCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LP
 		case WM_TIMER:
 			{
 				// Timeout
-				RoomList *roomList = reinterpret_cast<RoomList*>(
-					GetWindowLong(pWindow, GWL_USERDATA));
+				//RoomList *roomList = reinterpret_cast<RoomList*>(
+					//GetWindowLong(pWindow, GWL_USERDATA));
 
 				gScoreRequest.Clear();
 				KillTimer(pWindow, pWParam);
@@ -2313,10 +2314,10 @@ BOOL CALLBACK UpdateScoresCallBack(HWND pWindow, UINT pMsgId, WPARAM pWParam, LP
 				if(MessageBox(pWindow, MR_LoadString(IDS_TO), MR_LoadString(IDS_GAME_NAME), MB_ICONSTOP | MB_RETRYCANCEL | MB_APPLMODAL) == IDRETRY) {
 					// Initiate the request
 					gScoreRequest.Send(pWindow,
-						roomList->GetScoreServer().addr,
-						//gScoreServer.mAddress,
-						roomList->GetScoreServer().port,
-						//gScoreServer.mPort,
+						//roomList->GetScoreServer().addr,
+						gScoreServer.mAddress,
+						//roomList->GetScoreServer().port,
+						gScoreServer.mPort,
 						gScoreRequestStr);
 
 					// start a timeout timer
@@ -2387,7 +2388,7 @@ BOOL MR_SendRaceResult(HWND pParentWindow, const char *pTrack, int pBestLapTime,
 {
 	BOOL lReturnValue = FALSE;
 
-	if(gScoreServer.mURL.GetLength() > 0) {
+	if(roomList->GetScoreServer().path.size() > 0) {
 		// Create the RequestStrign
 		/*if( pMajorID != -1 )
 		   {
@@ -2414,6 +2415,8 @@ BOOL MR_SendRaceResult(HWND pParentWindow, const char *pTrack, int pBestLapTime,
 			roomList->GetScoreServer().path % pBestLapTime %
 			std::string((LPCTSTR) MR_Pad(pTrack)) % std::string((LPCTSTR) MR_Pad(pAlias)) %
 			pTrackSum % pHoverModel % pTotalTime % pNbLap % pNbPlayer)).c_str();
+		gScoreServer.mAddress = roomList->GetScoreServer().addr;
+		gScoreServer.mPort = roomList->GetScoreServer().port;
 		//}
 
 		lReturnValue = DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_NET_PROGRESS), pParentWindow, UpdateScoresCallBack) == IDOK;
