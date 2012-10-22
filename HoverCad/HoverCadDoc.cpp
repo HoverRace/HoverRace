@@ -1599,6 +1599,7 @@ void CHoverCadDoc::OnFileCompile()
 	// Verify if it is a registred version
 	BOOL lRegistred = TRUE;
 
+	/*
 	if(!LoadRegistry()) {
 		// Pop registration box
 		// ASSERT( FALSE );
@@ -1608,7 +1609,7 @@ void CHoverCadDoc::OnFileCompile()
 
 	}
 	else {
-
+	*/
 		CString szFilter;
 		szFilter.LoadString(IDS_DOC_FILTER);
 		// static char BASED_CODE szFilter[] = "HoverRace track(*.trk)|*.trk||";
@@ -1682,7 +1683,7 @@ void CHoverCadDoc::OnFileCompile()
 				}
 			}
 		}
-	}
+	//}
 }
 
 void CHoverCadDoc::OnUpdateEditScaleselection(CCmdUI * pCmdUI)

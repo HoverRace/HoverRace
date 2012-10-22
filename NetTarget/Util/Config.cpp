@@ -221,7 +221,7 @@ void MR_Config::ResetToDefaults()
 
 	misc.displayFirstScreen = true;
 	misc.introMovie = true;
-   misc.mainLoopSleepLength = 0;
+   misc.mainLoopSleepLength = 12;
 
 	// Get current user name as default nickname.
 #ifdef _WIN32

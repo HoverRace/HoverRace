@@ -1823,7 +1823,7 @@ BOOL CALLBACK MR_InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pW
 	
 							}
 							else {
-								LoadURL(pWindow, gBannerList[gCurrentBannerEntry].mClickURL);
+								LoadURLShortcut(pWindow, banner->clickUrl.c_str());
 							}
 						}
 					}
