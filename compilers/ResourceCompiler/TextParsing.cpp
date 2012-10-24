@@ -34,7 +34,7 @@ BOOL MR_ReadPredefinedConstants(const char *pFileName)
 	if(lFile == NULL) {
 		lReturnValue = FALSE;
 
-		fprintf(stderr, _("ERROR: Unable to open %s (defines file).\n"), pFileName);
+      fprintf(stderr, "%s: %s (%s).\n", _("ERROR"), _("unable to open defines file"), pFileName);
 	}
 	else {
 		char lBuffer[250];
@@ -50,7 +50,7 @@ BOOL MR_ReadPredefinedConstants(const char *pFileName)
 				if(sscanf(lLine, " #define %s %s ", lKey, &lValue) != 2) {
 					lReturnValue = FALSE;
 
-					fprintf(stderr, _("ERROR: syntax error in defines file, line %d.\n"), lLineNo);
+               fprintf(stderr, "%s: %s, %s %d.\n", _("ERROR"), _("syntax error in defines file"), _("line"), lLineNo);
 				}
 				else {
 					// add the define to the list
