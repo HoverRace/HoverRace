@@ -43,7 +43,7 @@ BOOL MR_ResActorBuilder::BuildFromFile(const char *pFile, ResourceLib *pBitmapLi
 	FILE *lFile = fopen(pFile, "r");
 
 	if(lFile == NULL) {
-		fprintf(stderr, "ERROR: unable to open actor file(%s)\n", pFile);
+		fprintf(stderr, _("ERROR: unable to open actor file (%s).\n"), pFile);
 		lReturnValue = FALSE;
 	}
 	else {
@@ -196,7 +196,7 @@ MR_ResActorBuilder::Patch * MR_ResActorBuilder::ReadPatch(FILE * pFile, Resource
 		delete lReturnValue;
 		lReturnValue = FALSE;
 
-		fprintf(stderr, "ERROR No bitmap associated to the patch\n");
+		fprintf(stderr, _("ERROR: No bitmap associated with the patch.\n"));
 	}
 	else {
 		lReturnValue->mBitmap = pBitmapLib->GetBitmap(lBitmapId);
@@ -205,7 +205,7 @@ MR_ResActorBuilder::Patch * MR_ResActorBuilder::ReadPatch(FILE * pFile, Resource
 			delete lReturnValue;
 			lReturnValue = FALSE;
 
-			fprintf(stderr, "ERROR Bad bitmap id\n");
+			fprintf(stderr, _("ERROR: Bad bitmap id.\n"));
 		}
 	}
 

@@ -100,7 +100,7 @@ bool MR_ResourceLibBuilder::Export(const HoverRace::Util::OS::path_t &filename)
 	lReturnValue = lFile.CreateForWrite(filename, 1, "\x8\rFireball object factory resource file, (c)GrokkSoft 1996\n\x1a");
 
 	if(!lReturnValue) {
-		fprintf(stderr, "ERROR: Unable to create output file\n");
+		fprintf(stderr, _("ERROR: Unable to create output file.\n"));
 	}
 	else {
 		lFile.BeginANewRecord();

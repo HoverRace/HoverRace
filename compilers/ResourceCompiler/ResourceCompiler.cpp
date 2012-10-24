@@ -109,7 +109,7 @@ BOOL ParseInputFile(const char *pFileName)
 
 	if(lFile == NULL) {
 		lReturnValue = FALSE;
-		fprintf(stderr, "ERROR: Unable to open input file(%s)\n", pFileName);
+		fprintf(stderr, _("ERROR: Unable to open input file (%s).\n"), pFileName);
 	}
 	else {
 		char lLineBuffer[250];
@@ -127,7 +127,7 @@ BOOL ParseInputFile(const char *pFileName)
 			switch (MR_ContainsKeyword(lLine, lKeywordList)) {
 				case 0:							  // BITMAP
 					if(sscanf(lLine, " %*s %s %d %f %f %d", lLineBuffer, &lResourceId, &lWidth, &lHeight, &lAntiAliasScheme) != 5) {
-						fprintf(stderr, "ERROR reading bitmap parameters\n");
+						fprintf(stderr, _("ERROR: problem reading bitmap parameters.\n"));
 						lReturnValue = FALSE;
 					}
 					else {
@@ -148,7 +148,7 @@ BOOL ParseInputFile(const char *pFileName)
 
 				case 1:							  // ACTOR
 					if(sscanf(lLine, " %*s %s %d ", lLineBuffer, &lResourceId) != 2) {
-						fprintf(stderr, "ERROR reading actor parameters\n");
+						fprintf(stderr, _("ERROR: problem reading actor parameters.\n"));
 					}
 					else {
 						MR_ResActorBuilder *lActor = new MR_ResActorBuilder(lResourceId);
@@ -166,7 +166,7 @@ BOOL ParseInputFile(const char *pFileName)
 
 				case 2:							  // SPRITE
 					if(sscanf(lLine, " %*s %s %d %d", lLineBuffer, &lResourceId, &lNbItem) != 3) {
-						fprintf(stderr, "ERROR reading sprite parameters\n");
+						fprintf(stderr, _("ERROR: problem reading sprite parameters.\n"));
 						lReturnValue = FALSE;
 					}
 					else {
@@ -185,7 +185,7 @@ BOOL ParseInputFile(const char *pFileName)
 
 				case 3:							  // SHORT_SOUND
 					if(sscanf(lLine, " %*s %s %d %d", lLineBuffer, &lResourceId, &lNbCopy) != 3) {
-						fprintf(stderr, "ERROR reading sound parameters\n");
+						fprintf(stderr, _("ERROR: problem reading sound parameters.\n"));
 						lReturnValue = FALSE;
 					}
 					else {
@@ -204,7 +204,7 @@ BOOL ParseInputFile(const char *pFileName)
 
 				case 4:							  // CONT_SOUND
 					if(sscanf(lLine, " %*s %s %d %d", lLineBuffer, &lResourceId, &lNbCopy) != 3) {
-						fprintf(stderr, "ERROR reading sound parameters\n");
+						fprintf(stderr, _("ERROR: problem reading sound parameters.\n"));
 						lReturnValue = FALSE;
 					}
 					else {
@@ -227,7 +227,8 @@ BOOL ParseInputFile(const char *pFileName)
 		fclose(lFile);
 	}
 
-	printf("--PROGRAM END-- Press enter to continue\n");
+	printf("--PROGRAM END--");
+   printf(_("Press enter to continue.\n"));
 	getchar();
 
 	return lReturnValue;

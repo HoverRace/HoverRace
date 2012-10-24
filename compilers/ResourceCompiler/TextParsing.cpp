@@ -34,12 +34,14 @@ BOOL MR_ReadPredefinedConstants(const char *pFileName)
 	if(lFile == NULL) {
 		lReturnValue = FALSE;
 
-		fprintf(stderr, "ERROR: Unable to open %s(defines file)\n", pFileName);
+		fprintf(stderr, _("ERROR: Unable to open %s (defines file).\n"), pFileName);
 	}
 	else {
 		char lBuffer[250];
+      int lLineNo = 1;
 		while(lReturnValue && fgets(lBuffer, sizeof(lBuffer), lFile)) {
 			CString lLine = MR_PreProcLine(lBuffer);
+         lLineNo++;
 
 			if(MR_BeginByKeyword(lLine, "#define")) {
 				char lKey[100];
@@ -48,8 +50,7 @@ BOOL MR_ReadPredefinedConstants(const char *pFileName)
 				if(sscanf(lLine, " #define %s %s ", lKey, &lValue) != 2) {
 					lReturnValue = FALSE;
 
-					fprintf(stderr, "ERROR: syntax error in defines file\n");
-
+					fprintf(stderr, _("ERROR: syntax error in defines file, line %d.\n"), lLineNo);
 				}
 				else {
 					// add the define to the list

@@ -290,28 +290,28 @@ void MR_ResBitmapBuilder::ComputeIntermediateImages(MR_UInt8 * pBuffer)
 
 		if(lNbTransparent != 0) {
 			if(lNbBadColors > 0) {
-				printf("WARNING: This image have invalid colors\n");
+				printf(_("WARNING: This image have invalid colors.\n"));
 			}
-			printf("INFO: This image have transparent pixels\n");
+			printf(_("INFO: This image have transparent pixels.\n"));
 		}
 		// First copy the original image
 		memcpy(mSubBitmapList[0].mBuffer, pBuffer, lBitmapSize);
 
 		// Resample the sub bitmaps
 		for(lCounter = 1; lCounter < mSubBitmapCount; lCounter++) {
-			printf("INFO: Resampling...\n");
+			printf(_("INFO: Resampling...\n"));
 			Resample(&mSubBitmapList[0], &mSubBitmapList[lCounter]);
 		}
 
 		// Init the plain color
 		BOOL lDummyBool;
 
-		printf("INFO: Computing plain color\n");
+		printf(_("INFO: Computing plain color...\n"));
 
 		mPlainColor = GetBestColor(mSubBitmapList[0].mBuffer, mSubBitmapList[0].mYRes, mSubBitmapList[0].mXRes, mSubBitmapList[0].mYRes, lDummyBool);
 	}
 	else {
-		printf("WARNING: Bitmap too small, using single color\n");
+		printf(_("WARNING: Bitmap too small, using single color.\n"));
 
 		mPlainColor = *pBuffer;
 	}

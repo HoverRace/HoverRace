@@ -34,7 +34,7 @@ MR_UInt8 *LoadBitmap(const char *lFileName, int &pXRes, int &pYRes, BOOL pRevers
 	FILE *lFile = fopen(lFileName, "rb");
 
 	if(lFile == NULL) {
-		printf("ERROR: Unable to open input file\n");
+		printf(_("ERROR: Unable to open input file.\n"));
 	}
 	else {
 		const char *lExtension = strrchr(lFileName, '.');
@@ -49,7 +49,7 @@ MR_UInt8 *LoadBitmap(const char *lFileName, int &pXRes, int &pYRes, BOOL pRevers
 			lReturnValue = IMGRead(lFile, pXRes, pYRes);
 		}
 		else {
-			printf("ERROR: Invalid file type\n");
+			printf(_("ERROR: Invalid file type.\n"));
 		}
 
 		fclose(lFile);
@@ -106,7 +106,7 @@ MR_UInt8 *BMPRead(FILE * pFile, int &pXRes, int &pYRes)
 
 MR_UInt8 *IMGRead(FILE * /*pFile */ , int & /*pXRes */ , int & /*pYRes */ )
 {
-	printf("ERROR: Unsupported format\n");
+	printf(_("ERROR: Unsupported format.\n"));
 
 	return NULL;
 
