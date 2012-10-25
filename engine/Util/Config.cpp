@@ -311,7 +311,7 @@ OS::path_t Config::GetDefaultPath()
 		return retv;
 	}
 	else {
-		throw ConfigExn("Unable to determine configuration directory");
+		throw ConfigExn(_("Unable to determine configuration directory"));
 	}
 #else
 	char *home = getenv("HOME");
@@ -326,8 +326,8 @@ OS::path_t Config::GetDefaultPath()
 	}
 	else {
 		throw ConfigExn(
-			"Unable to determine configuration directory "
-			"(HOME environment variable not set)");
+			_("Unable to determine configuration directory "
+			"(HOME environment variable not set)"));
 	}
 #endif
 }
@@ -685,7 +685,8 @@ void Config::Save()
 	// Create the config directory.
 	if (!fs::exists(path)) {
 		if (!fs::create_directories(path)) {
-			std::string msg("Unable to create directory: ");
+			std::string msg(_("Unable to create directory"));
+         msg += ": ";
 			msg += (const char*)Str::PU(path.file_string().c_str());
 			throw ConfigExn(msg.c_str());
 		}
@@ -693,7 +694,8 @@ void Config::Save()
 
 	FILE *out = OS::FOpen(cfgfile, "wb");
 	if (out == NULL) {
-		std::string msg("Unable to create configuration file: ");
+		std::string msg(_("Unable to create configuration file");
+      msg += ": ";
 		msg += (const char*)Str::PU(cfgfile.file_string().c_str());
 		throw ConfigExn(msg.c_str());
 	}

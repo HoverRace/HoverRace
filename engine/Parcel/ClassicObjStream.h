@@ -54,7 +54,7 @@ class MR_DllDeclare ClassicObjStream : public ObjStream
 		void WriteBuf(const void *buf, size_t ct)
 		{
 			size_t ret = fwrite(buf, ct, 1, stream);
-			if (ret == 0) throw ObjStreamExn(GetName(), "Write failed");
+			if (ret == 0) throw ObjStreamExn(GetName(), _("Write failed"));
 		}
 
 	public:
@@ -74,7 +74,7 @@ class MR_DllDeclare ClassicObjStream : public ObjStream
 		void ReadBuf(void *buf, size_t ct)
 		{
 			size_t ret = fread(buf, ct, 1, stream);
-			if (ret == 0) throw ObjStreamExn(GetName(), "Read failed");
+			if (ret == 0) throw ObjStreamExn(GetName(), _("Read failed"));
 		}
 
 	public:

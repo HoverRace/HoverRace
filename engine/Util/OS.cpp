@@ -332,7 +332,9 @@ boost::shared_ptr<OS::monitors_t> OS::GetMonitors()
 #	ifdef _WIN32
 		HINSTANCE directDrawInst = LoadLibrary("ddraw.dll");
 		if (directDrawInst == NULL) {
-			throw Exception("Could not load DirectDraw: ddraw.dll");
+         std::string msg(_("Could not load"));
+         msg += " DirectDraw: ddraw.dll";
+			throw Exception(msg);
 		}
 
 		typedef HRESULT (WINAPI* LPDIRECTDRAWEENUMERATEEXA)(LPDDENUMCALLBACKEX lpCallback, LPVOID lpContext, DWORD dwFlags);
@@ -340,7 +342,9 @@ boost::shared_ptr<OS::monitors_t> OS::GetMonitors()
 			(LPDIRECTDRAWEENUMERATEEXA)GetProcAddress(directDrawInst, "DirectDrawEnumerateExA");
 		if (directDrawEnumerateEx == NULL) {
 			FreeLibrary(directDrawInst);
-			throw Exception("Could not load DirectDraw: DirectDrawEnumerateExA");
+         std::string msg(_("Could not load"));
+         msg += " DirectDraw: DirectDrawEnumerateExA";
+			throw Exception(msg);
 		}
 
 		// Use DirectDraw enumeration to map device names to GUIDs.

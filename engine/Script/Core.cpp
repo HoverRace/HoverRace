@@ -152,7 +152,7 @@ Core *Core::Reset()
 void Core::ActivateSandbox()
 {
 	if (!lua_checkstack(state, 2))
-		throw ScriptExn("Out of stack space.");
+		throw ScriptExn(boost::format("%s.") % _("Out of stack space"));
 
 	// Create a reusable metatable protector.
 	// This prevents modification of the metatable.
@@ -295,7 +295,7 @@ void Core::CallAndPrint(int numParams, Help::HelpHandler *helpHandler)
 {
 	int initStack = lua_gettop(state);
 	if (initStack == 0) {
-		throw ScriptExn("No function on stack.");
+		throw ScriptExn(boost::format("%s.") % _("No function on stack"));
 	}
 	initStack -= (1 + numParams);
 
@@ -392,7 +392,7 @@ void Core::ReqHelp(const std::string &className, const std::string &methodName)
 		LoadClassHelp(className);
 		iter = helpClasses.find(className);
 		if (iter == helpClasses.end()) {
-			luaL_error(state, "Class \"%s\" has no documentation", className.c_str());
+			luaL_error(state, "Class \"%s\" %s", className.c_str(), _("has no documentation"));
 			return;
 		}
 	}
@@ -404,8 +404,8 @@ void Core::ReqHelp(const std::string &className, const std::string &methodName)
 	else {
 		Help::MethodPtr method = cls->GetMethod(methodName);
 		if (method == NULL) {
-			luaL_error(state, "Class \"%s\" has no method named \"%s\"",
-				className.c_str(), methodName.c_str());
+			luaL_error(state, "Class \"%s\" %s \"%s\"",
+				className.c_str(), _("has no method"), methodName.c_str());
 			return;
 		}
 		else {
@@ -516,7 +516,7 @@ int Core::LPrint(lua_State *state)
 int Core::LSandboxedFunction(lua_State *state)
 {
 	const char *name = lua_tostring(state, lua_upvalueindex(1));
-	return luaL_error(state, "Disallowed access to protected function: %s", name);
+	return luaL_error(state, "%s: %s", _("Disallowed access to protected function"), name);
 }
 
 }  // namespace Script

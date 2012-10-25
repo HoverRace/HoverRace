@@ -57,7 +57,9 @@ static void InitBasicPaletteTable(FILE * pOutput);
 void main()
 {
 
-	printf("FIREBALL project palette creator,         copyright 1996 GrokkSoft inc\n" "\n" "The palette will be put in the ColorTab.pal file\n" "The predfined tables will be placed in ColorTab.cpp\n");
+	printf("FIREBALL project palette creator,         (C)Copyright 1996 GrokkSoft inc\n\n");
+   printf(_("The palette will be put in the ColorTab.pal file.\n"));
+   printf(_("The predefined tables will be placed in ColorTab.cpp\n"));
 
 	MR_ColorTools::Init();
 

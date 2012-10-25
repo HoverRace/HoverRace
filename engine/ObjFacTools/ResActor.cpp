@@ -187,7 +187,7 @@ void ResActor::Frame::Serialize(ObjStream &pArchive, ResourceLib *pLib)
 					default:
 						ASSERT(FALSE);
 						throw ObjStreamExn(pArchive.GetName(),
-							boost::str(boost::format("Unhandled component type: %d") % lType));
+							boost::str(boost::format("%s: %d") % _("Unhandled component type") % lType));
 				}
 
 				mComponentList[lCounter]->Serialize(pArchive, pLib);
