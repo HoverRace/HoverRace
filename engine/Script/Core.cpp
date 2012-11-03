@@ -152,7 +152,7 @@ Core *Core::Reset()
 void Core::ActivateSandbox()
 {
 	if (!lua_checkstack(state, 2))
-		throw ScriptExn(boost::format("%s.") % _("Out of stack space"));
+		throw ScriptExn(boost::str(boost::format("%s.") % _("Out of stack space")));
 
 	// Create a reusable metatable protector.
 	// This prevents modification of the metatable.
@@ -295,7 +295,7 @@ void Core::CallAndPrint(int numParams, Help::HelpHandler *helpHandler)
 {
 	int initStack = lua_gettop(state);
 	if (initStack == 0) {
-		throw ScriptExn(boost::format("%s.") % _("No function on stack"));
+		throw ScriptExn(boost::str(boost::format("%s.") % _("No function on stack")));
 	}
 	initStack -= (1 + numParams);
 
