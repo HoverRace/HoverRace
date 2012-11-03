@@ -35,6 +35,8 @@
 
 #endif
 
+#define BOOST_FILESYSTEM_VERSION 2
+
 #include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
