@@ -694,7 +694,7 @@ void Config::Save()
 
 	FILE *out = OS::FOpen(cfgfile, "wb");
 	if (out == NULL) {
-		std::string msg(_("Unable to create configuration file");
+		std::string msg(_("Unable to create configuration file"));
       msg += ": ";
 		msg += (const char*)Str::PU(cfgfile.file_string().c_str());
 		throw ConfigExn(msg.c_str());
