@@ -22,7 +22,7 @@
 #include "StdAfx.h"
 
 #include "MatchReport.h"
-#include "Banner.h"
+#include "GifDecoder.h"
 
 #include <WINSOCK.h>
 #include "resource.h"

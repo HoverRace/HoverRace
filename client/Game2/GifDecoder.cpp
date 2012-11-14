@@ -1,4 +1,4 @@
-// Banner.cpp
+// GifDecoder.cpp
 //
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
@@ -22,7 +22,7 @@
 
 #include "StdAfx.h"
 
-#include "Banner.h"
+#include "GifDecoder.h"
 #include "GameApp.h"
 #include "../../engine/Util/OS.h"
 #include "../../engine/Util/Str.h"

@@ -30,7 +30,7 @@
 
 #include "TrackSelectDialog.h"
 #include "NetworkSession.h"
-#include "Banner.h"
+#include "GifDecoder.h"
 #include "RoomList.h"
 
 namespace HoverRace {

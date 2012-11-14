@@ -18,9 +18,6 @@
     <ClCompile Include="Game2\AboutDialog.cpp">
       <Filter>Game2</Filter>
     </ClCompile>
-    <ClCompile Include="Game2\Banner.cpp">
-      <Filter>Game2</Filter>
-    </ClCompile>
     <ClCompile Include="Game2\CheckRoomListDialog.cpp">
       <Filter>Game2</Filter>
     </ClCompile>
@@ -147,12 +144,12 @@
     <ClCompile Include="Game2\GameScene.cpp">
       <Filter>Game2</Filter>
     </ClCompile>
+    <ClCompile Include="Game2\GifDecoder.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game2\AboutDialog.h">
-      <Filter>Game2</Filter>
-    </ClInclude>
-    <ClInclude Include="Game2\Banner.h">
       <Filter>Game2</Filter>
     </ClInclude>
     <ClInclude Include="Game2\CheckRoomListDialog.h">
@@ -298,6 +295,9 @@
       <Filter>Game2</Filter>
     </ClInclude>
     <ClInclude Include="Game2\Scene.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\GifDecoder.h">
       <Filter>Game2</Filter>
     </ClInclude>
   </ItemGroup>
