@@ -1,5 +1,0 @@
-SERVER LIST
-0 Score_Server 195.153.39.5 80 /hover/cgi-bin/scoreserver.cgi
-1 Main_Room    195.153.39.5 80 /hover/cgi-bin/ir.cgi
-10 auth 195.153.39.5 4000 dummy
-
