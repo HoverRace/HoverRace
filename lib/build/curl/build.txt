@@ -1,5 +1,5 @@
 
-Current supported libcurl version: 7.21.0
+Current supported libcurl version: 7.28.0
 
 
 == PowerShell Instructions ==
@@ -22,10 +22,10 @@ http://technet.microsoft.com/en-us/library/ee176949.aspx
 
 == Manual Instructions ==
 
-1. Download the libcurl sources (libcurl-7.21.0.zip) from here:
+1. Download the libcurl sources (libcurl-7.28.0.zip) from here:
 
 http://curl.haxx.se/download.html
 
 2. Unpack the .zip file into this folder.
 
-3. Rename the "curl-7.21.0" folder to "src".
+3. Rename the "curl-7.28.0" folder to "src".

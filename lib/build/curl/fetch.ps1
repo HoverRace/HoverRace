@@ -2,7 +2,7 @@
 # fetch.ps1
 #   Downloads, extracts, and patches.
 
-$srcVer = "7.21.0"
+$srcVer = "7.28.0"
 $src = "curl-$srcVer"
 #TODO: Make the SourceForge mirror user-selectable.
 $url = "http://curl.haxx.se/download/$src.zip"
