@@ -65,6 +65,9 @@ namespace {
 	}
 }
 
+// boost::format takes a reference to a const, so we need to have a definition.
+const MR_UInt32 ResourceLib::FILE_MAGIC;
+
 /**
  * Constructor.
  * @param filename The resource data file.
