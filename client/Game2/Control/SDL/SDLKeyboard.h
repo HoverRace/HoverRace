@@ -52,13 +52,13 @@ namespace SDL {
 		virtual ~SDLKeyboard();
 
 		/** @copydoc Keyboard::isKeyDown */
-		virtual bool isKeyDown( OIS::KeyCode key );
+		virtual bool isKeyDown( OIS::KeyCode key ) const;
 
 		/** @copydoc Keyboard::getAsString */
 		virtual const std::string& getAsString( OIS::KeyCode kc );
 
 		/** @copydoc Keyboard::copyKeyStates */
-		virtual void copyKeyStates( char keys[256] );
+		virtual void copyKeyStates( char keys[256] ) const;
 
 		/** @copydoc Object::setBuffered */
 		virtual void setBuffered(bool buffered);

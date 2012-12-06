@@ -210,7 +210,7 @@ void SDLKeyboard::capture()
 }
 
 //-------------------------------------------------------------------//
-bool SDLKeyboard::isKeyDown( KeyCode key )
+bool SDLKeyboard::isKeyDown( KeyCode key ) const
 {
 	return KeyBuffer[key] == 1 ? true : false;
 }
@@ -371,7 +371,7 @@ const std::string& SDLKeyboard::getAsString( KeyCode kc )
 }
 
 //-------------------------------------------------------------------//
-void SDLKeyboard::copyKeyStates( char keys[256] )
+void SDLKeyboard::copyKeyStates( char keys[256] ) const
 {
 	for(int i = 0; i < 256; ++i)
 		keys[i] = KeyBuffer[i];
