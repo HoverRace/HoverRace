@@ -30,6 +30,8 @@
 
 #endif
 
+#define BOOST_FILESYSTEM_VERSION 2
+
 #include <math.h>
 #include <stdio.h>
 
