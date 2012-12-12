@@ -2,21 +2,21 @@
 # Copyright (C) 2009 HoverRace contributors
 # This file is distributed under the same license as the HoverRace package.
 #  <ryan@igglybob.com>, 2009.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
 "Report-Msgid-Bugs-To: bugs@hoverrace.com\n"
-"POT-Creation-Date: 2010-09-20 00:21-0400\n"
+"POT-Creation-Date: 2012-12-12 18:34-0500\n"
 "PO-Revision-Date: 2009-03-04 19:42-0700\n"
 "Last-Translator: Austin Brock <sir_brock@hotmail.com>\n"
 "Language-Team: Serbian <gnu@prevod.org>\n"
+"Language: sr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: sr\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
-"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Pootle 1.2.1\n"
 
 #: client/Game2/AboutDialog.cpp:66
@@ -102,216 +102,275 @@ msgstr ""
 msgid "Checking server for updates.  Please wait."
 msgstr ""
 
-#: client/Game2/ClientApp.cpp:182 client/Game2/GameApp.cpp:826
+#: client/Game2/ClientApp.cpp:190 client/Game2/GameApp.cpp:826
 msgctxt "Version"
 msgid "testing"
 msgstr ""
 
-#: client/Game2/ClientApp.cpp:185 client/Game2/GameApp.cpp:829
+#: client/Game2/ClientApp.cpp:193 client/Game2/GameApp.cpp:829
 msgid "silent mode"
 msgstr ""
 
-#: client/Game2/Control/Controller.cpp:291
+#: client/Game2/Control/Controller.cpp:321
+#: client/Game2/Control/Controller.cpp:372
+#: client/Game2/Control/Controller.cpp:470
+#: client/Game2/ControlPrefsPage.cpp:134 client/Game2/NetInterface.cpp:1068
+msgid "Player"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:335
+#: client/Game2/Control/Controller.cpp:357
+#: client/Game2/Control/Controller.cpp:407
+#: client/Game2/Control/Controller.cpp:600
+#: client/Game2/HoverScript/HighConsole.cpp:146
+msgid "Console"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:340
+#: client/Game2/Control/Controller.cpp:346
+#: client/Game2/Control/Controller.cpp:431
+#: client/Game2/Control/Controller.cpp:484
+msgid "Camera"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:473
+msgid "Throttle"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:474
+msgid "Brake"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:475
+msgid "Turn Left"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:476
+msgid "Turn Right"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:477
+msgid "Jump"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:478
+msgid "Fire"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:479
+msgid "Item"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:480
+msgid "Look Back"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:486
+msgid "Zoom In"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:487
+msgid "Zoom Out"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:488
+msgid "Pan Up"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:489
+msgid "Pan Down"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:490
+msgid "Reset Camera"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:605
+msgid "Toggle Console"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:606
+msgid "Page Up"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:607
+msgid "Page Down"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:608
+msgid "Top"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:609
+msgid "Bottom"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:610
+#: client/Game2/HoverScript/HighConsole.cpp:156
+msgid "Help"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:670
 msgid "Left Mouse Btn"
 msgstr ""
 
-#: client/Game2/Control/Controller.cpp:293
+#: client/Game2/Control/Controller.cpp:672
 msgid "Right Mouse Btn"
 msgstr ""
 
-#: client/Game2/Control/Controller.cpp:295
+#: client/Game2/Control/Controller.cpp:674
 msgid "Middle Mouse Btn"
 msgstr ""
 
-#: client/Game2/Control/Controller.cpp:297
+#: client/Game2/Control/Controller.cpp:676
 msgid "Mouse Button 3"
 msgstr ""
 
-#: client/Game2/Control/Controller.cpp:299
+#: client/Game2/Control/Controller.cpp:678
 msgid "Mouse Button 4"
 msgstr ""
 
-#: client/Game2/Control/Controller.cpp:301
+#: client/Game2/Control/Controller.cpp:680
 msgid "Mouse Button 5"
 msgstr ""
 
-#: client/Game2/Control/Controller.cpp:303
+#: client/Game2/Control/Controller.cpp:682
 msgid "Mouse Button 6"
 msgstr ""
 
-#: client/Game2/Control/Controller.cpp:305
+#: client/Game2/Control/Controller.cpp:684
 msgid "Mouse Button 7"
 msgstr ""
 
-#: client/Game2/Control/Controller.cpp:308
+#: client/Game2/Control/Controller.cpp:687
 msgid "Unknown Mouse Button"
 msgstr ""
 
-#: client/Game2/Control/Controller.cpp:314
+#: client/Game2/Control/Controller.cpp:693
 msgid "Mouse X+ Axis"
 msgstr ""
 
-#: client/Game2/Control/Controller.cpp:316
+#: client/Game2/Control/Controller.cpp:695
 msgid "Mouse X- Axis"
 msgstr ""
 
-#: client/Game2/Control/Controller.cpp:319
+#: client/Game2/Control/Controller.cpp:698
 msgid "Mouse Y+ Axis"
 msgstr ""
 
-#: client/Game2/Control/Controller.cpp:321
+#: client/Game2/Control/Controller.cpp:700
 msgid "Mouse Y- Axis"
 msgstr ""
 
-#: client/Game2/Control/Controller.cpp:324
+#: client/Game2/Control/Controller.cpp:703
 msgid "Mouse Z+ Axis"
 msgstr ""
 
-#: client/Game2/Control/Controller.cpp:326
+#: client/Game2/Control/Controller.cpp:705
 msgid "Mouse Z- Axis"
 msgstr ""
 
-#: client/Game2/Control/Controller.cpp:329
+#: client/Game2/Control/Controller.cpp:708
 msgid "Unknown Mouse Axis +"
 msgstr ""
 
-#: client/Game2/Control/Controller.cpp:331
+#: client/Game2/Control/Controller.cpp:710
 msgid "Unknown Mouse Axis -"
 msgstr ""
 
-#: client/Game2/Control/Controller.cpp:336
+#: client/Game2/Control/Controller.cpp:715
 msgid "Joystick"
 msgstr ""
 
-#: client/Game2/Control/Controller.cpp:343
-msgid "Axis"
-msgstr ""
-
-#: client/Game2/Control/Controller.cpp:352
-msgid "POV 1"
-msgstr ""
-
-#: client/Game2/Control/Controller.cpp:355
-msgid "POV 2"
-msgstr ""
-
-#: client/Game2/Control/Controller.cpp:358
-msgid "POV 3"
-msgstr ""
-
-#: client/Game2/Control/Controller.cpp:361
-msgid "POV 4"
-msgstr ""
-
-#: client/Game2/Control/Controller.cpp:368
-msgid "Center"
-msgstr ""
-
-#: client/Game2/Control/Controller.cpp:371
-msgid "North"
-msgstr ""
-
-#: client/Game2/Control/Controller.cpp:374
-msgid "East"
-msgstr ""
-
-#: client/Game2/Control/Controller.cpp:377
-msgid "West"
-msgstr ""
-
-#: client/Game2/Control/Controller.cpp:380
-msgid "South"
-msgstr ""
-
-#: client/Game2/Control/Controller.cpp:383
-msgid "Northeast"
-msgstr ""
-
-#: client/Game2/Control/Controller.cpp:386
-msgid "Northwest"
-msgstr ""
-
-#: client/Game2/Control/Controller.cpp:389
-msgid "Southeast"
-msgstr ""
-
-#: client/Game2/Control/Controller.cpp:392
-msgid "Southwest"
-msgstr ""
-
-#: client/Game2/Control/Controller.cpp:395
-msgid "Unknown direction"
-msgstr ""
-
-#: client/Game2/Control/Controller.cpp:404
-msgid "Slider"
-msgstr ""
-
-#: client/Game2/Control/Controller.cpp:409
+#: client/Game2/Control/Controller.cpp:720
 msgid "Button"
 msgstr ""
 
-#: client/Game2/Control/Controller.cpp:413
-msgid "Disabled"
+#: client/Game2/Control/Controller.cpp:725
+msgid "Slider"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:732
+msgid "POV 1"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:735
+msgid "POV 2"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:738
+msgid "POV 3"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:741
+msgid "POV 4"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:748
+msgid "Center"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:751
+msgid "North"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:754
+msgid "East"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:757
+msgid "West"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:760
+msgid "South"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:763
+msgid "Northeast"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:766
+msgid "Northwest"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:769
+msgid "Southeast"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:772
+msgid "Southwest"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:775
+msgid "Unknown direction"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:786
+msgid "Axis"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:793
+msgid "Unknown"
 msgstr ""
 
 #: client/Game2/ControlPrefsPage.cpp:51
 msgid "Controls"
 msgstr ""
 
-#: client/Game2/ControlPrefsPage.cpp:121
-msgid "Player 1"
+#: client/Game2/ControlPrefsPage.cpp:148
+msgid "Action"
 msgstr ""
 
-#: client/Game2/ControlPrefsPage.cpp:122
-msgid "Player 2"
+#: client/Game2/ControlPrefsPage.cpp:154
+msgid "Binding"
 msgstr ""
 
-#: client/Game2/ControlPrefsPage.cpp:123
-msgid "Player 3"
-msgstr ""
-
-#: client/Game2/ControlPrefsPage.cpp:124
-msgid "Player 4"
-msgstr ""
-
-#: client/Game2/ControlPrefsPage.cpp:125
-msgid "Motor On:"
-msgstr ""
-
-#: client/Game2/ControlPrefsPage.cpp:126
-msgid "Turn Right:"
-msgstr ""
-
-#: client/Game2/ControlPrefsPage.cpp:127
-msgid "Turn Left:"
-msgstr ""
-
-#: client/Game2/ControlPrefsPage.cpp:128
-msgid "Brake:"
-msgstr ""
-
-#: client/Game2/ControlPrefsPage.cpp:129
-msgid "Jump:"
-msgstr ""
-
-#: client/Game2/ControlPrefsPage.cpp:130
-msgid "Fire Weapon:"
-msgstr ""
-
-#: client/Game2/ControlPrefsPage.cpp:131
-msgid "Select Weapon:"
-msgstr ""
-
-#: client/Game2/ControlPrefsPage.cpp:132
-msgid "Look Back:"
-msgstr ""
-
-#: client/Game2/ControlPrefsPage.cpp:352
+#: client/Game2/ControlPrefsPage.cpp:289
 msgid "Control Assignment"
 msgstr ""
 
-#: client/Game2/ControlPrefsPage.cpp:355
+#: client/Game2/ControlPrefsPage.cpp:292
 msgid "Press a control or wait 3 seconds to disable..."
 msgstr ""
 
@@ -486,7 +545,7 @@ msgctxt "Menu|View"
 msgid "&Refresh colors"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:783 client/Game2/GameApp.cpp:1793
+#: client/Game2/GameApp.cpp:783 client/Game2/GameApp.cpp:1716
 msgctxt "Menu|Setting"
 msgid "&Fullscreen"
 msgstr ""
@@ -572,11 +631,11 @@ msgid ""
 "screen."
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2074
+#: client/Game2/GameApp.cpp:1997
 msgid "This build of HoverRace is not official; updates are not available."
 msgstr ""
 
-#: client/Game2/GameApp.cpp:2152
+#: client/Game2/GameApp.cpp:2067
 msgid ""
 "Incompatible video mode. Select a compatible video mode by pressing F8 or F9 "
 "once a game is started"
@@ -587,29 +646,21 @@ msgctxt "HUD|Frames Per Second"
 msgid "FPS"
 msgstr ""
 
-#: client/Game2/HoverScript/HighConsole.cpp:162
+#: client/Game2/HoverScript/HighConsole.cpp:136
 #, c-format, boost-format
 msgid "For help on a class or method, call the %s method: %s"
 msgstr ""
 
-#: client/Game2/HoverScript/HighConsole.cpp:172
-msgid "Console"
-msgstr ""
-
-#: client/Game2/HoverScript/HighConsole.cpp:175
+#: client/Game2/HoverScript/HighConsole.cpp:150
 msgid "Scroll"
 msgstr ""
 
-#: client/Game2/HoverScript/HighConsole.cpp:176
-#: client/Game2/HoverScript/HighConsole.cpp:184
+#: client/Game2/HoverScript/HighConsole.cpp:151
+#: client/Game2/HoverScript/HighConsole.cpp:159
 msgid "Hide"
 msgstr ""
 
-#: client/Game2/HoverScript/HighConsole.cpp:181
-msgid "Help"
-msgstr ""
-
-#: client/Game2/HoverScript/HighConsole.cpp:495
+#: client/Game2/HoverScript/HighConsole.cpp:479
 #, c-format, boost-format
 msgid "Methods for class %s:"
 msgstr ""
@@ -908,10 +959,6 @@ msgstr ""
 msgid "ERROR Unable to connect to server..."
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:1068
-msgid "Player"
-msgstr ""
-
 #: client/Game2/NetInterface.cpp:1070
 msgid "Lag (ms)"
 msgstr ""
@@ -1089,115 +1136,115 @@ msgstr ""
 msgid "Directory does not exist"
 msgstr ""
 
-#: client/Game2/NetworkSession.cpp:656 client/Game2/NetworkSession.cpp:693
+#: client/Game2/NetworkSession.cpp:657 client/Game2/NetworkSession.cpp:694
 msgid "Press F2 when ready to return to the Meeting Room"
 msgstr ""
 
-#: client/Game2/NetworkSession.cpp:687
+#: client/Game2/NetworkSession.cpp:688
 #, c-format, boost-format
 msgid "%s has left"
 msgstr ""
 
-#: client/Game2/NetworkSession.cpp:696
+#: client/Game2/NetworkSession.cpp:697
 msgid "You are now alone"
 msgstr ""
 
-#: client/Game2/Observer.cpp:46
+#: client/Game2/Observer.cpp:50
 msgid "Basic craft"
 msgstr ""
 
-#: client/Game2/Observer.cpp:47
+#: client/Game2/Observer.cpp:51
 msgid "CX craft"
 msgstr ""
 
-#: client/Game2/Observer.cpp:48
+#: client/Game2/Observer.cpp:52
 msgid "Bi-Turbo craft"
 msgstr ""
 
-#: client/Game2/Observer.cpp:49
+#: client/Game2/Observer.cpp:53
 msgid "Eon craft"
 msgstr ""
 
-#: client/Game2/Observer.cpp:51
+#: client/Game2/Observer.cpp:55
 msgid "Unknown craft"
 msgstr ""
 
-#: client/Game2/Observer.cpp:89
+#: client/Game2/Observer.cpp:93
 msgid "Best Lap"
 msgstr ""
 
-#: client/Game2/Observer.cpp:89 client/Game2/Observer.cpp:91
+#: client/Game2/Observer.cpp:93 client/Game2/Observer.cpp:95
 msgid "Rank"
 msgstr ""
 
-#: client/Game2/Observer.cpp:89
+#: client/Game2/Observer.cpp:93
 msgid "Result"
 msgstr ""
 
-#: client/Game2/Observer.cpp:91
+#: client/Game2/Observer.cpp:95
 msgid "Against"
 msgstr ""
 
-#: client/Game2/Observer.cpp:91
-msgid "For"
-msgstr ""
-
-#: client/Game2/Observer.cpp:94
-#, c-format, boost-format
-msgid "%d %-0.10s #%d%*s   --First lap--  %c"
-msgstr ""
-
 #: client/Game2/Observer.cpp:95
-#, c-format, boost-format
-msgid "%d %-0.10s #%d%*s %2d.%02d.%03d %2d.%02d.%03d%c"
-msgstr ""
-
-#: client/Game2/Observer.cpp:96
-#, c-format, boost-format
-msgid "%d %-0.10s #%d%*s lap:%-2d   %2d.%02d.%03d%c"
-msgstr ""
-
-#: client/Game2/Observer.cpp:97
-#, c-format, boost-format
-msgid "%d %-0.10s #%d%*s  %2d      %2d"
+msgid "For"
 msgstr ""
 
 #: client/Game2/Observer.cpp:98
 #, c-format, boost-format
-msgid "Starting in %02d.%02d sec. for %d laps"
+msgid "%d %-0.10s #%d%*s   --First lap--  %c"
 msgstr ""
 
 #: client/Game2/Observer.cpp:99
 #, c-format, boost-format
-msgid "Finished in %d.%02d.%03d, placed %d of %d"
+msgid "%d %-0.10s #%d%*s %2d.%02d.%03d %2d.%02d.%03d%c"
 msgstr ""
 
 #: client/Game2/Observer.cpp:100
 #, c-format, boost-format
-msgid "Finished in %d.%02d.%03d"
+msgid "%d %-0.10s #%d%*s lap:%-2d   %2d.%02d.%03d%c"
 msgstr ""
 
 #: client/Game2/Observer.cpp:101
 #, c-format, boost-format
-msgid "Best lap %d.%02d.%03d"
+msgid "%d %-0.10s #%d%*s  %2d      %2d"
 msgstr ""
 
 #: client/Game2/Observer.cpp:102
 #, c-format, boost-format
-msgid "%d.%02d.%02d  Lap:%d/%d"
+msgid "Starting in %02d.%02d sec. for %d laps"
 msgstr ""
 
 #: client/Game2/Observer.cpp:103
 #, c-format, boost-format
-msgid "Last lap %d.%02d.%03d  Best %d.%02d.%03d"
+msgid "Finished in %d.%02d.%03d, placed %d of %d"
 msgstr ""
 
 #: client/Game2/Observer.cpp:104
 #, c-format, boost-format
+msgid "Finished in %d.%02d.%03d"
+msgstr ""
+
+#: client/Game2/Observer.cpp:105
+#, c-format, boost-format
+msgid "Best lap %d.%02d.%03d"
+msgstr ""
+
+#: client/Game2/Observer.cpp:106
+#, c-format, boost-format
+msgid "%d.%02d.%02d  Lap:%d/%d"
+msgstr ""
+
+#: client/Game2/Observer.cpp:107
+#, c-format, boost-format
+msgid "Last lap %d.%02d.%03d  Best %d.%02d.%03d"
+msgstr ""
+
+#: client/Game2/Observer.cpp:108
+#, c-format, boost-format
 msgid "Current lap %d.%02d.%03d  Best %d.%02d.%03d"
 msgstr ""
 
-#: client/Game2/Observer.cpp:147
+#: client/Game2/Observer.cpp:151
 msgid "Select your craft with the arrow keys"
 msgstr ""
 
@@ -1379,6 +1426,6 @@ msgstr ""
 msgid "HoverRace is currently in silent mode."
 msgstr ""
 
-#: client/Game2/main.cpp:353 client/Game2/main.cpp:359
+#: client/Game2/main.cpp:367 client/Game2/main.cpp:373
 msgid "You found a bug!"
 msgstr ""
