@@ -1,6 +1,5 @@
 # List of source files which contain translatable strings.
 client/Game2/AboutDialog.cpp
-client/Game2/Banner.cpp
 client/Game2/CheckRoomListDialog.cpp
 client/Game2/CheckUpdateServerDialog.cpp
 client/Game2/ClientApp.cpp
@@ -14,6 +13,7 @@ client/Game2/DownloadUpdateDialog.cpp
 client/Game2/FirstChoiceDialog.cpp
 client/Game2/FullscreenTest.cpp
 client/Game2/GameApp.cpp
+client/Game2/GifDecoder.cpp
 client/Game2/HighObserver.cpp
 client/Game2/HoverScript/ClientScriptCore.cpp
 client/Game2/HoverScript/ConfigPeer.cpp
