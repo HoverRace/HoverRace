@@ -65,9 +65,6 @@ namespace {
 	}
 }
 
-// boost::format takes a reference to a const, so we need to have a definition.
-const MR_UInt32 ResourceLib::FILE_MAGIC;
-
 /**
  * Constructor.
  * @param filename The resource data file.
@@ -89,13 +86,14 @@ ResourceLib::ResourceLib(const Util::OS::path_t &filename)
 	ObjStreamPtr osPtr(recordFile->StreamIn());
 	ObjStream &os = *osPtr;
 
+	const MR_UInt32 expectedMagic = FILE_MAGIC;
 	MR_UInt32 magic;
 	os >> magic;
-	if (magic != FILE_MAGIC) {
+	if (magic != expectedMagic) {
 		throw ObjStreamExn(filename,
 			boost::str(boost::format("%s: %s %08x, %s %08x") %
             _("Invalid magic number") % _("Expected") %
-				FILE_MAGIC % _("got") % magic));
+				expectedMagic % _("got") % magic));
 	}
 
 	LoadRes(os, bitmaps, this);
