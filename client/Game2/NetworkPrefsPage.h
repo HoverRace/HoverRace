@@ -42,6 +42,9 @@ class NetworkPrefsPage : public PrefsPage
 		virtual BOOL DlgProc(HWND pWindow, UINT message, WPARAM wparam, LPARAM lparam);
 
 	private:
+		static bool VerifyDirectory(HWND wnd, const wchar_t *path);
+
+	private:
 		GameDirector *app;
 };
 
