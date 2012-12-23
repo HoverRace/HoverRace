@@ -28,6 +28,7 @@
 /config.status*
 /configure
 /conftest*
+/cscope.out
 /hoverrace-*
 /ipch
 /libltdl
