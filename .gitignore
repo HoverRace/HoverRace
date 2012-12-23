@@ -33,6 +33,7 @@
 /ipch
 /libltdl
 /libtool
+/srcdoc/
 /stamp-h1
 /init.lua
 
