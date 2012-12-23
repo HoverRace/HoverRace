@@ -3,7 +3,7 @@
 // Track selector.
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2012 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@
 #include "../../engine/Util/Str.h"
 
 #include "resource.h"
+#include "FolderViewer.h"
 #include "Rulebook.h"
 
 #include "TrackSelectDialog.h"
@@ -172,7 +173,7 @@ BOOL TrackSelectDialog::DlgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM l
 					break;
 
 				case IDC_OPEN_FOLDER:
-					OS::OpenPath(Config::GetInstance()->GetUserTrackPath());
+					FolderViewer(Config::GetInstance()->GetUserTrackPath()).Show(hwnd);
 
 					// Close the dialog since the user is probably opening the folder
 					// to add / delete tracks.  We won't need to do this when we add
