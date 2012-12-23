@@ -141,11 +141,25 @@ Config::Config(int verMajor, int verMinor, int verPatch, int verBuild,
                const OS::path_t &path) :
 	unlinked(false),
 	verMajor(verMajor), verMinor(verMinor), verPatch(verPatch), verBuild(verBuild),
-	prerelease(prerelease),
-	mediaPath(mediaPath.empty() ? GetDefaultMediaPath() : mediaPath)
+	prerelease(prerelease)
 {
-	OS::path_t homePath = GetDefaultPath();
-	this->path = path.empty() ? homePath : path;
+#	ifndef _WIN32
+		// Use the XDG Base Directory specification (if possible) to determine
+		// where to place user data.
+		xdg = (xdgHandle*)malloc(sizeof(xdgHandle));
+		if (!xdgInitHandle(xdg)) {
+			free(xdg);
+			xdg = NULL;
+
+			std::cerr << "Unable to use XDG directories for configuration, "
+				"falling back to default." << std::endl;
+		}
+#	endif
+
+	// If the override path was specified, use that for both data and config.
+	this->dataPath = path.empty() ? GetBaseDataPath() : path;
+	this->cfgPath = path.empty() ? GetBaseConfigPath() : path;
+	this->mediaPath = mediaPath.empty() ? GetDefaultMediaPath() : mediaPath;
 
 	std::ostringstream oss;
 	oss << verMajor << '.' << verMinor;
@@ -175,7 +189,7 @@ Config::Config(int verMajor, int verMinor, int verPatch, int verBuild,
 
 	Str::UP tracksDirName("Tracks");
 
-	userTrackPath = homePath / tracksDirName;
+	userTrackPath = this->dataPath / tracksDirName;
 
 	Parcel::BundlePtr mediaTrackBundle(new Parcel::Bundle(this->mediaPath / tracksDirName));
 #	ifdef _WIN32
@@ -187,11 +201,16 @@ Config::Config(int verMajor, int verMinor, int verPatch, int verBuild,
 		trackBundle = boost::make_shared<Parcel::TrackBundle>(userTrackPath,
 			mediaTrackBundle);
 #	endif
-
 }
 
 Config::~Config()
 {
+#	ifndef _WIN32
+		if (xdg != NULL) {
+			xdgWipeHandle(xdg);
+			free(xdg);
+		}
+#	endif
 }
 
 
@@ -294,21 +313,20 @@ const std::string &Config::GetUserAgentId() const
 }
 
 /**
- * Retrieve the OS-specific default configuration directory.
+ * Determine the OS-specific default configuration directory.
+ * Note: This is the top-level directory for per-user data, without our
+ * package namespace.
  * @return The fully-qualified path.
  * @throws ConfigExn if unable to retrieve the default directory.
  */
-OS::path_t Config::GetDefaultPath()
+OS::path_t Config::GetDefaultBasePath()
 {
 #ifdef _WIN32
 	wchar_t dpath[MAX_PATH] = {0};
 	HRESULT hr = 
 		SHGetFolderPathW(NULL, CSIDL_APPDATA, NULL, SHGFP_TYPE_CURRENT, dpath);
 	if (SUCCEEDED(hr)) {
-		OS::path_t retv(dpath);
-		retv /= L"HoverRace.com";
-		retv /= L"HoverRace";
-		return retv;
+		return OS::path_t(dpath);
 	}
 	else {
 		throw ConfigExn(_("Unable to determine configuration directory"));
@@ -320,9 +338,7 @@ OS::path_t Config::GetDefaultPath()
 		home = pw->pw_dir;
 	}
 	if (home != NULL) {
-		OS::path_t retv(home);
-		retv /= ".hoverrace";
-		return retv;
+		return OS::path_t(home);
 	}
 	else {
 		throw ConfigExn(
@@ -332,9 +348,58 @@ OS::path_t Config::GetDefaultPath()
 #endif
 }
 
+/**
+ * Append our package namespace to the base configuration directory.
+ * @param path The path to append the namespace onto.
+ */
+void Config::AppendPackageSubdir(OS::path_t &path) const
+{
+#	ifdef _WIN32
+		path /= L"HoverRace.com";
+		path /= L"HoverRace";
+#	else
+		if (xdg == NULL) {
+			path /= ".hoverrace";
+		}
+		else {
+			path /= "HoverRace";
+		}
+#	endif
+}
+
+/**
+ * Determine the OS-specific private data directory.
+ * @return The path to where we can store user data files.
+ */
+OS::path_t Config::GetBaseDataPath() const
+{
+#	ifdef _WIN32
+		OS::path_t retv = GetDefaultBasePath();
+#	else
+		OS::path_t retv = (xdg == NULL) ? GetDefaultBasePath() : xdgDataHome(xdg);
+#	endif
+	AppendPackageSubdir(retv);
+	return retv;
+}
+
+/**
+ * Determine the OS-specific private configuration directory.
+ * @return The path to where we can store user configuration files.
+ */
+OS::path_t Config::GetBaseConfigPath() const
+{
+#	ifdef _WIN32
+		OS::path_t retv = GetDefaultBasePath();
+#	else
+		OS::path_t retv = (xdg == NULL) ? GetDefaultBasePath() : xdgConfigHome(xdg);
+#	endif
+	AppendPackageSubdir(retv);
+	return retv;
+}
+
 OS::path_t Config::GetConfigFilename() const
 {
-	OS::path_t retv(path);
+	OS::path_t retv(cfgPath);
 	if (prerelease) {
 		retv /= (OS::cpstr_t)Str::UP(PREREL_CONFIG_FILENAME);
 	}
@@ -683,11 +748,11 @@ void Config::Save()
 	const OS::path_t cfgfile(GetConfigFilename());
 
 	// Create the config directory.
-	if (!fs::exists(path)) {
-		if (!fs::create_directories(path)) {
+	if (!fs::exists(cfgPath)) {
+		if (!fs::create_directories(cfgPath)) {
 			std::string msg(_("Unable to create directory"));
-         msg += ": ";
-			msg += (const char*)Str::PU(path.file_string().c_str());
+			msg += ": ";
+			msg += (const char*)Str::PU(cfgPath.file_string().c_str());
 			throw ConfigExn(msg.c_str());
 		}
 	}

@@ -24,6 +24,11 @@
 
 #include <string>
 
+#ifndef _WIN32
+	// Use XDG base directories on non-Win32.
+#	include <basedir.h>
+#endif
+
 #include "OS.h"
 
 #ifdef _WIN32
@@ -77,7 +82,8 @@ class MR_DllDeclare Config
 	private:
 		static Config *instance;
 		bool unlinked;  ///< if @c true, will prevent saving config.
-		OS::path_t path;
+		OS::path_t dataPath;  ///< Base path for data files.
+		OS::path_t cfgPath;  ///< Base path for config files.
 		OS::path_t mediaPath;
 		OS::path_t userTrackPath;
 		Parcel::TrackBundlePtr trackBundle;
@@ -90,6 +96,9 @@ class MR_DllDeclare Config
 		std::string fullVersion;
 		std::string userAgentId;
 		std::string defaultFontName;
+#		ifndef _WIN32
+			xdgHandle *xdg;
+#		endif
 
 	private:
 		Config(int verMajor, int verMinor, int verPatch, int verBuild,
@@ -112,7 +121,13 @@ class MR_DllDeclare Config
 		const int &GetBuild() const;
 		const std::string &GetUserAgentId() const;
 
-		static OS::path_t GetDefaultPath();
+	private:
+		static OS::path_t GetDefaultBasePath();
+		void AppendPackageSubdir(OS::path_t &path) const;
+		OS::path_t GetBaseDataPath() const;
+		OS::path_t GetBaseConfigPath() const;
+
+	public:
 		OS::path_t GetConfigFilename() const;
 
 		static OS::path_t GetDefaultMediaPath();

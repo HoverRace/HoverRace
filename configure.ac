@@ -42,6 +42,7 @@ LUABIND_REQUIRE
 PKG_CHECK_MODULES(DEPS, [
 	freealut >= 1.1
 	libcurl >= 7.18
+	libxdg-basedir >= 1.0
 	openal >= 0.0.8
 	OIS >= 1.2.0
 	sdl >= 1.2.10
