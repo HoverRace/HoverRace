@@ -29,6 +29,7 @@
 
 #include "CheckRoomListDialog.h"
 #include "CheckUpdateServerDialog.h"
+#include "FolderViewer.h"
 #include "GameDirector.h"
 #include "PathSelector.h"
 
@@ -38,11 +39,8 @@
 
 using boost::format;
 using boost::str;
-using boost::wformat;
 
 using namespace HoverRace::Util;
-
-namespace fs = boost::filesystem;
 
 namespace HoverRace {
 namespace Client {
@@ -148,10 +146,7 @@ BOOL NetworkPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 					{
 						wchar_t buf[MAX_PATH];
 						GetDlgItemTextW(pWindow, IDC_LOG_CHATS_TXT, buf, sizeof(buf) / sizeof(wchar_t));
-
-						if (VerifyDirectory(pWindow, buf)) {
-							OS::OpenPath(buf);
-						}
+						FolderViewer(buf).Show(pWindow);
 					}
 					break;
 
@@ -217,51 +212,6 @@ BOOL NetworkPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 	}
 
 	return lReturnValue;
-}
-
-/**
- * Verify the directory exists.
- * If the directory does not exist, the user will be prompted to create it.
- * @param wnd The parent window for dialogs.
- * @param path The path to check.
- * @return @c true if the directory exists, @c false otherwise.
- */
-bool NetworkPrefsPage::VerifyDirectory(HWND wnd, const wchar_t *path) {
-	if (fs::exists(path)) {
-		if (fs::is_directory(path)) {
-			return true;
-		} else {
-			MessageBoxW(wnd,
-				str(wformat(L"%s\n\n%s") %
-					(const wchar_t*)Str::UW(_("The path is not a directory.")) %
-					path).c_str(),
-				PACKAGE_NAME_L,
-				MB_ICONWARNING);
-			return false;
-		}
-	} else {
-		int resp = MessageBoxW(wnd,
-			str(wformat(L"%s\n\n%s\n\n%s") %
-				(const wchar_t*)Str::UW(_("Directory does not exist.")) %
-				path %
-				(const wchar_t*)Str::UW(_("Would you like to create it?"))).c_str(),
-			PACKAGE_NAME_L,
-			MB_ICONQUESTION | MB_YESNO);
-
-		if (resp == IDYES) {
-			fs::create_directories(path);
-			if (fs::exists(path) && fs::is_directory(path)) {
-				return true;
-			} else {
-				MessageBoxW(wnd,
-					Str::UW(_("Failed to create directory.")),
-					PACKAGE_NAME_L, MB_ICONWARNING);
-				return false;
-			}
-		}
-
-		return false;
-	}
 }
 
 }  // namespace Client

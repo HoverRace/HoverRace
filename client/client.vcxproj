@@ -97,6 +97,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Game2\AboutDialog.cpp" />
+    <ClCompile Include="Game2\FolderViewer.cpp" />
     <ClCompile Include="Game2\GifDecoder.cpp" />
     <ClCompile Include="Game2\CheckRoomListDialog.cpp" />
     <ClCompile Include="Game2\CheckUpdateServerDialog.cpp" />
@@ -146,6 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game2\AboutDialog.h" />
+    <ClInclude Include="Game2\FolderViewer.h" />
     <ClInclude Include="Game2\GifDecoder.h" />
     <ClInclude Include="Game2\CheckRoomListDialog.h" />
     <ClInclude Include="Game2\CheckUpdateServerDialog.h" />

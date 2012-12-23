@@ -1,8 +1,8 @@
 
-// NetworkPrefsPage.h
-// Header for the "Network" preferences page.
+// FolderViewer.h
+// Header for the folder viewer.
 //
-// Copyright (c) 2009, 2012 Michael Imamura.
+// Copyright (c) 2012 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -23,26 +23,32 @@
 
 #pragma once
 
-#include "PrefsPage.h"
+#include "../../engine/Util/OS.h"
 
 namespace HoverRace {
 namespace Client {
 
-class GameDirector;
-
-class NetworkPrefsPage : public PrefsPage
+/**
+ * Opens a filesytem folder for viewing, using the OS-specific folder viewer.
+ * This is a wrapper around OS::OpenPath with extra checks to make sure the
+ * path is actually a directory (and inform the user if it is not).  If the
+ * path does not exist, the user is prompted to create it.
+ * @author Michael Imamura
+ */
+class FolderViewer
 {
-	typedef PrefsPage SUPER;
 	public:
-		NetworkPrefsPage(GameDirector *app);
-		virtual ~NetworkPrefsPage();
+		FolderViewer(const Util::OS::path_t &path);
+		~FolderViewer() { }
 
-	protected:
-		void SetPortFields(HWND hwnd, int tcpServ, int tcpRecv, int udpRecv);
-		virtual BOOL DlgProc(HWND pWindow, UINT message, WPARAM wparam, LPARAM lparam);
+	public:
+		void Show(Util::OS::wnd_t parentWnd);
 
 	private:
-		GameDirector *app;
+		bool VerifyDirectory(Util::OS::wnd_t parentWnd);
+
+	private:
+		const Util::OS::path_t path;
 };
 
 }  // namespace Client
