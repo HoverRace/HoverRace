@@ -24,4 +24,6 @@ Download and play the latest release: <http://www.hoverrace.com/>
 
 Project hosted at GitHub: <https://github.com/HoverRace/HoverRace/>
 
+Source documentation: <http://hoverrace.github.com/HoverRace/>
+
 HoverRace wiki: <https://github.com/HoverRace/HoverRace/wiki>
