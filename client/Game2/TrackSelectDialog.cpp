@@ -173,6 +173,11 @@ BOOL TrackSelectDialog::DlgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM l
 
 				case IDC_OPEN_FOLDER:
 					OS::OpenPath(Config::GetInstance()->GetUserTrackPath());
+
+					// Close the dialog since the user is probably opening the folder
+					// to add / delete tracks.  We won't need to do this when we add
+					// the ability to monitor the folder and dynamically update the
+					// track list.
 					EndDialog(hwnd, IDCANCEL);
 					break;
 
