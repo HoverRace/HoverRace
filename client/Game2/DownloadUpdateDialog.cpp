@@ -40,10 +40,14 @@ using boost::format;
 
 using HoverRace::Util::Config;
 
+using namespace std;
 using namespace HoverRace::Util;
 
 #define INIT_CAPACITY (5 * 1024 * 1024)
 #define MAX_CAPACITY (20 * 1024 * 1024)
+
+namespace HoverRace {
+namespace Client {
 
 /**
  * Constructor.
@@ -333,3 +337,6 @@ size_t DownloadUpdateDialog::ProgressFunc(void *clientp, double dlTotal, double 
 {
 	return reinterpret_cast<DownloadUpdateDialog *>(clientp)->ProgressProc(dlTotal, dlNow);
 }
+
+}  // namespace Client
+}  // namespace HoverRace

@@ -19,14 +19,14 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
-#ifndef DOWNLOAD_UPDATE_DIALOG_H
-#define DOWNLOAD_UPDATE_DIALOG_H
+#pragma once
 
 #include <string>
 
 typedef void CURL;
 
-using namespace std;
+namespace HoverRace {
+namespace Client {
 
 /**
  * Update downloader with progress bar to notify user.
@@ -37,7 +37,7 @@ using namespace std;
 class DownloadUpdateDialog
 {
 	public:
-		DownloadUpdateDialog(const string &baseUrl, const string &filename, const string &destDir);
+		DownloadUpdateDialog(const std::string &baseUrl, const std::string &filename, const std::string &destDir);
 		~DownloadUpdateDialog();
 
 		bool ShowModal(HINSTANCE hinst, HWND parent);
@@ -64,9 +64,9 @@ class DownloadUpdateDialog
 		static size_t ProgressFunc(void *clientp, double dlTotal, double dlNow, double, double);
 
 	private:
-		string baseUrl;
-		string filename;
-		string destDir;
+		std::string baseUrl;
+		std::string filename;
+		std::string destDir;
 
 		HWND dlgHwnd;
 
@@ -83,4 +83,5 @@ class DownloadUpdateDialog
 		volatile size_t bufTotal;
 };
 
-#endif
+}  // namespace Client
+}  // namespace HoverRace
