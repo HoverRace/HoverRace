@@ -26,6 +26,9 @@
 
 typedef void CURL;
 
+namespace HoverRace {
+namespace Client {
+
 /**
  * Track downloader with built-in UI.
  * @author Michael Imamura
@@ -79,3 +82,6 @@ class TrackDownloadDialog
 		size_t bufCapacity;
 		volatile size_t bufTotal;
 };
+
+}  // namespace Client
+}  // namespace HoverRace

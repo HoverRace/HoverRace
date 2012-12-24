@@ -50,6 +50,9 @@ using namespace HoverRace::Util;
 
 #define TRACK_HOST "http://www.hoverrace.com/"
 
+namespace HoverRace {
+namespace Client {
+
 /**
  * Constructor.
  * @param name The name of the track (no ".trk" extension, may not be blank).
@@ -434,3 +437,6 @@ bool TrackDownloadDialog::ExtractTrackFile()
 
 	return retv;
 }
+
+}  // namespace Client
+}  // namespace HoverRace
