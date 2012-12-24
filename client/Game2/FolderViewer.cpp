@@ -64,8 +64,7 @@ void FolderViewer::Show(OS::wnd_t parentWnd)
 /**
  * Verify the directory exists.
  * If the directory does not exist, the user will be prompted to create it.
- * @param wnd The parent window for dialogs.
- * @param path The path to check.
+ * @param parentWnd The parent window for dialogs.
  * @return @c true if the directory exists, @c false otherwise.
  */
 bool FolderViewer::VerifyDirectory(OS::wnd_t parentWnd)

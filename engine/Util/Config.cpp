@@ -133,8 +133,11 @@ Config *Config::instance = NULL;
  * @param verPatch The patch (third) component of the version number.
  * @param verBuild The build (fourth) component of the version number.
  * @param prerelease Whether this build is a development version.
+ * @param mediaPath (Optional) The directory for finding media files.
+ *                  The default is to use {@link #GetDefaultMediaPath()}.
  * @param path (Optional) The directory for storing configuration data.
- *             The default is to use {@link #GetDefaultPath()}.
+ *             The default is to use {@link #GetBaseDataPath()} and
+ *             {@link #GetBaseConfigPath()}.
  */
 Config::Config(int verMajor, int verMinor, int verPatch, int verBuild,
                bool prerelease, const OS::path_t &mediaPath,
@@ -221,8 +224,11 @@ Config::~Config()
  * @param verPatch The patch (third) component of the version number.
  * @param verBuild The build (fourth) component of the version number.
  * @param prerelease Whether this build is a development version.
+ * @param mediaPath (Optional) The directory for finding media files.
+ *                  The default is to use {@link #GetDefaultMediaPath()}.
  * @param path (Optional) The directory for storing configuration data.
- *             The default is to use {@link #GetDefaultPath()}.
+ *             The default is to use {@link #GetBaseDataPath()} and
+ *             {@link #GetBaseConfigPath()}.
  * @return The config instance.
  */
 Config *Config::Init(int verMajor, int verMinor, int verPatch, int verBuild,
