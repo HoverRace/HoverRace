@@ -124,10 +124,10 @@ class MR_DllDeclare Config
 	private:
 		static OS::path_t GetDefaultBasePath();
 		void AppendPackageSubdir(OS::path_t &path) const;
-		OS::path_t GetBaseDataPath() const;
-		OS::path_t GetBaseConfigPath() const;
 
 	public:
+		OS::path_t GetBaseDataPath() const;
+		OS::path_t GetBaseConfigPath() const;
 		OS::path_t GetConfigFilename() const;
 
 		static OS::path_t GetDefaultMediaPath();
