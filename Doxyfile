@@ -107,7 +107,6 @@ INPUT                  = client/Game2 \
                          engine/Parcel \
                          engine/ObjFac1 \
                          engine/ObjFacTools \
-                         engine/PaletteCreator \
                          engine/Script \
                          engine/Script/Help \
                          engine/Util \
