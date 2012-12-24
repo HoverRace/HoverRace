@@ -103,7 +103,7 @@ void CheckUpdateServerDialog::ShowModal(HINSTANCE hinst, HWND parent)
 					// strip updates.php from url
 					string baseUrl = url.substr(0, url.rfind('/'));
 					//FIXME: Use OS::path_t throughout.
-					std::string defaultPath((const char*)Str::PU(Config::GetInstance()->GetDefaultPath().file_string().c_str()));
+					std::string defaultPath((const char*)Str::PU(Config::GetInstance()->GetBaseDataPath().file_string().c_str()));
 					if(DownloadUpdateDialog(baseUrl, dlPtr->updateUrl, 
 						defaultPath).ShowModal(hinst, parent)) {
 						// download was successful
