@@ -33,7 +33,6 @@
 /ipch
 /libltdl
 /libtool
-/srcdoc/
 /stamp-h1
 /init.lua
 
@@ -399,6 +398,10 @@
 /share/Tracks
 /share/locale
 /share/tracks
+
+# /srcdoc/
+/srcdoc/html/
+/srcdoc/warnings.txt
 
 # /updater/
 /updater/*.user
