@@ -146,7 +146,7 @@ void Bundle::Iterator::FindNextValidBundle()
 {
 	if (bundle == NULL) return;
 
-	while (!(fs::exists(bundle->dir) && fs::is_directory(bundle->dir))) {
+	while (!(fs::exists(bundle->dir) && fs::is_directory(bundle->dir) && !fs::is_empty(bundle->dir))) {
 		bundle = bundle->subBundle.get();
 		if (bundle == NULL) return;
 	}
