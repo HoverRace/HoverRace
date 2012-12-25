@@ -79,6 +79,19 @@ using std::max;
 #endif
 #ifdef ENABLE_NLS
 #	include <libintl.h>
+
+	// The gettext custom versions of printf (and the like) sometimes cause
+	// crashes on Win32.  We use Boost Format for translated strings anyway,
+	// so we don't need these.
+#	ifdef _WIN32
+#		undef printf
+#		undef vprintf
+#		undef fprintf
+#		undef vfprintf
+#		undef snprintf
+#		undef vsnprintf
+#	endif
+
 #	define _(x) gettext(x)
 
 	// Our own little version of pgettext() so we don't need all of gettext.h.
