@@ -19,25 +19,29 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
+
 #include "ResBitmapBuilder.h"
 #include "BitmapHelper.h"
 
 #include "../../engine/ColorTools/ColorTools.h"
 #include "../../engine/VideoServices/ColorPalette.h"
 
+namespace HoverRace {
+namespace ResourceCompiler {
+
 // Local prototypes
 static MR_UInt8 GetBestColor(MR_UInt8 * pSrc, int pStripeLenToScan, int pNbStripeToScan, int pStripeLen, BOOL & pTransparentFlag);
 static MR_UInt8 GetBestColorWithError(MR_UInt8 * pSrc, int pStripeLenToScan, int pNbStripeToScan, int pStripeLen, BOOL & pTransparentFlag, double &mRedError, double &mGreenError, double &mBlueError);
 
-MR_ResBitmapBuilder::MR_ResBitmapBuilder(int pResourceId, int pWidth, int pHeight)
-:MR_ResBitmap(pResourceId)
+ResBitmapBuilder::ResBitmapBuilder(int pResourceId, int pWidth, int pHeight) :
+	SUPER(pResourceId)
 {
 	mWidth = pWidth;
 	mHeight = pHeight;
 }
 
-BOOL MR_ResBitmapBuilder::BuildFromFile(const char *pFile, int pAntiAliasScheme)
+BOOL ResBitmapBuilder::BuildFromFile(const char *pFile, int pAntiAliasScheme)
 {
 	BOOL lReturnValue = TRUE;
 
@@ -107,7 +111,7 @@ BOOL MR_ResBitmapBuilder::BuildFromFile(const char *pFile, int pAntiAliasScheme)
 }
 
 /*
-void MR_ResBitmapBuilder::Resample( const SubBitmap* pSrc, SubBitmap* pDest )
+void ResBitmapBuilder::Resample( const SubBitmap* pSrc, SubBitmap* pDest )
 {
    int lX;
    int lY;
@@ -170,7 +174,7 @@ void MR_ResBitmapBuilder::Resample( const SubBitmap* pSrc, SubBitmap* pDest )
 }
 */
 
-void MR_ResBitmapBuilder::Resample(const SubBitmap * pSrc, SubBitmap * pDest)
+void ResBitmapBuilder::Resample(const SubBitmap * pSrc, SubBitmap * pDest)
 {
 
 	int lX;
@@ -263,7 +267,7 @@ void MR_ResBitmapBuilder::Resample(const SubBitmap * pSrc, SubBitmap * pDest)
 	delete[]lSrc;
 }
 
-void MR_ResBitmapBuilder::ComputeIntermediateImages(MR_UInt8 * pBuffer)
+void ResBitmapBuilder::ComputeIntermediateImages(MR_UInt8 * pBuffer)
 {
 
 	// First copy the original image
@@ -290,23 +294,23 @@ void MR_ResBitmapBuilder::ComputeIntermediateImages(MR_UInt8 * pBuffer)
 
 		if(lNbTransparent != 0) {
 			if(lNbBadColors > 0) {
-            printf("%s: %s.\n", _("WARNING"), _("This image has invalid colors"));
+				printf("%s: %s.\n", _("WARNING"), _("This image has invalid colors"));
 			}
-         printf("%s: %s.\n", _("INFO"), _("This image has transparent pixels"));
+			printf("%s: %s.\n", _("INFO"), _("This image has transparent pixels"));
 		}
 		// First copy the original image
 		memcpy(mSubBitmapList[0].mBuffer, pBuffer, lBitmapSize);
 
 		// Resample the sub bitmaps
 		for(lCounter = 1; lCounter < mSubBitmapCount; lCounter++) {
-         printf("%s: %s...\n", _("INFO"), _("resampling"));
+			printf("%s: %s...\n", _("INFO"), _("resampling"));
 			Resample(&mSubBitmapList[0], &mSubBitmapList[lCounter]);
 		}
 
 		// Init the plain color
 		BOOL lDummyBool;
 
-      printf("%s: %s...\n", _("INFO"), _("computing plain color"));
+		printf("%s: %s...\n", _("INFO"), _("computing plain color"));
 
 		mPlainColor = GetBestColor(mSubBitmapList[0].mBuffer, mSubBitmapList[0].mYRes, mSubBitmapList[0].mXRes, mSubBitmapList[0].mYRes, lDummyBool);
 	}
@@ -479,3 +483,6 @@ MR_UInt8 GetBestColorWithError(MR_UInt8 * pSrc, int pStripeLenToScan, int pNbStr
 	}
 	return lReturnValue;
 }
+
+}  // namespace ResourceCompiler
+}  // namespace HoverRace

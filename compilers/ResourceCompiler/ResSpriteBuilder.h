@@ -1,6 +1,5 @@
 // ResSpriteBuilder.h
 //
-//
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
@@ -20,19 +19,22 @@
 // and limitations under the License.
 //
 
-#ifndef MR_RES_SPRITE_BUILDER_H
-#define MR_RES_SPRITE_BUILDER_H
+#pragma once
 
 #include "../../engine/ObjFacTools/ResSprite.h"
 
-class MR_ResSpriteBuilder:public MR_ResSprite
-{
-	protected:
+namespace HoverRace {
+namespace ResourceCompiler {
 
+class ResSpriteBuilder : public ObjFacTools::ResSprite
+{
+	typedef ObjFacTools::ResSprite SUPER;
 	public:
-		MR_ResSpriteBuilder(int pResourceId);
+		ResSpriteBuilder(int pResourceId);
 
 		BOOL BuildFromFile(const char *pFile, int pNbItem);
 
 };
-#endif
+
+}  // namespace ResourceCompiler
+}  // namespace HoverRace

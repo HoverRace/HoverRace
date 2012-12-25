@@ -1,7 +1,5 @@
 // ResourceLibBuilder.h
 //
-//
-//
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
@@ -21,8 +19,7 @@
 // and limitations under the License.
 //
 
-#ifndef MR_RESOURCE_LIB_BUILDER_H
-#define MR_RESOURCE_LIB_BUILDER_H
+#pragma once
 
 #include "../../engine/ObjFacTools/ResourceLib.h"
 
@@ -32,22 +29,25 @@ namespace HoverRace {
 	}
 }
 
-class MR_ResourceLibBuilder : public HoverRace::ObjFacTools::ResourceLib
+namespace HoverRace {
+namespace ResourceCompiler {
+
+class ResourceLibBuilder : public ObjFacTools::ResourceLib
 {
 	// Each module can have its own MR_BitmapLib
 	public:
-		MR_ResourceLibBuilder();
-		~MR_ResourceLibBuilder();
+		ResourceLibBuilder();
+		~ResourceLibBuilder();
 
-		void AddBitmap(MR_ResBitmap * pBitmap);
-		void AddActor(MR_ResActor * pActor);
-		void AddSprite(MR_ResSprite * pSprite);
-		void AddSound(MR_ResShortSound * pSound);
-		void AddSound(MR_ResContinuousSound * pSound);
+		void AddBitmap(ObjFacTools::ResBitmap *pBitmap);
+		void AddActor(ObjFacTools::ResActor *pActor);
+		void AddSprite(ObjFacTools::ResSprite *pSprite);
+		void AddSound(ObjFacTools::ResShortSound *pSound);
+		void AddSound(ObjFacTools::ResContinuousSound *pSound);
 
 		bool Export(const HoverRace::Util::OS::path_t &filename);
 
 };
 
-#undef MR_DllDeclare
-#endif
+}  // namespace ResourceCompiler
+}  // namespace HoverRace

@@ -1,6 +1,5 @@
 // ResBitmapBuilder.h
 //
-//
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
@@ -20,21 +19,26 @@
 // and limitations under the License.
 //
 
-#ifndef MR_RES_BITMAP_BUILDER_H
-#define MR_RES_BITMAP_BUILDER_H
+#pragma once
 
 #include "../../engine/ObjFacTools/ResBitmap.h"
 
-class MR_ResBitmapBuilder:public MR_ResBitmap
+namespace HoverRace {
+namespace ResourceCompiler {
+
+class ResBitmapBuilder : public ObjFacTools::ResBitmap
 {
+	typedef ObjFacTools::ResBitmap SUPER;
 	protected:
 		void Resample(const SubBitmap * pSrc, SubBitmap * pDest);
 		void ComputeIntermediateImages(MR_UInt8 * pBuffer);
 
 	public:
-		MR_ResBitmapBuilder(int pResourceId, int pWidth, int pHeight);
+		ResBitmapBuilder(int pResourceId, int pWidth, int pHeight);
 
 		BOOL BuildFromFile(const char *pFile, int pAntiAliasScheme);
 
 };
-#endif
+
+}  // namespace ResourceCompiler
+}  // namespace HoverRace

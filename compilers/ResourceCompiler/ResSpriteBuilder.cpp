@@ -19,18 +19,20 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
+
 #include "ResSpriteBuilder.h"
 #include "BitmapHelper.h"
 
-// Local prototypes
+namespace HoverRace {
+namespace ResourceCompiler {
 
-MR_ResSpriteBuilder::MR_ResSpriteBuilder(int pResourceId)
-:MR_ResSprite(pResourceId)
+ResSpriteBuilder::ResSpriteBuilder(int pResourceId) :
+	SUPER(pResourceId)
 {
 }
 
-BOOL MR_ResSpriteBuilder::BuildFromFile(const char *pFile, int pNbItem)
+BOOL ResSpriteBuilder::BuildFromFile(const char *pFile, int pNbItem)
 {
 	BOOL lReturnValue = TRUE;
 
@@ -46,3 +48,6 @@ BOOL MR_ResSpriteBuilder::BuildFromFile(const char *pFile, int pNbItem)
 
 	return lReturnValue;
 }
+
+}  // namespace ResourceCompiler
+}  // namespace HoverRace

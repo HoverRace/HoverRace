@@ -29,13 +29,16 @@ using HoverRace::ObjFacTools::ResourceLib;
 #define MR_MAX_SEQUENCE   1024
 #define MR_MAX_FRAME      2048
 
-MR_ResActorBuilder::MR_ResActorBuilder(int pResourceId)
-:MR_ResActor(pResourceId)
+namespace HoverRace {
+namespace ResourceCompiler {
+
+ResActorBuilder::ResActorBuilder(int pResourceId) :
+	SUPER(pResourceId)
 {
 
 }
 
-BOOL MR_ResActorBuilder::BuildFromFile(const char *pFile, ResourceLib *pBitmapLib)
+BOOL ResActorBuilder::BuildFromFile(const char *pFile, ResourceLib *pBitmapLib)
 {
 	int lCounter;
 	BOOL lReturnValue = TRUE;
@@ -43,7 +46,7 @@ BOOL MR_ResActorBuilder::BuildFromFile(const char *pFile, ResourceLib *pBitmapLi
 	FILE *lFile = fopen(pFile, "r");
 
 	if(lFile == NULL) {
-      fprintf(stderr, "%s: %s (%s).\n", _("ERROR"), _("unable to open actor file"), pFile);
+		fprintf(stderr, "%s: %s (%s).\n", _("ERROR"), _("unable to open actor file"), pFile);
 		lReturnValue = FALSE;
 	}
 	else {
@@ -164,7 +167,7 @@ BOOL MR_ResActorBuilder::BuildFromFile(const char *pFile, ResourceLib *pBitmapLi
 	return lReturnValue;
 }
 
-MR_ResActorBuilder::Patch * MR_ResActorBuilder::ReadPatch(FILE * pFile, ResourceLib * pBitmapLib)
+ResActorBuilder::Patch * ResActorBuilder::ReadPatch(FILE * pFile, ResourceLib * pBitmapLib)
 {
 	Patch *lReturnValue = new Patch;
 	char lBuffer[250];
@@ -196,7 +199,7 @@ MR_ResActorBuilder::Patch * MR_ResActorBuilder::ReadPatch(FILE * pFile, Resource
 		delete lReturnValue;
 		lReturnValue = FALSE;
 
-      fprintf(stderr, "%s: %s.\n", _("ERROR"), _("No bitmap associated with the patch"));
+		fprintf(stderr, "%s: %s.\n", _("ERROR"), _("No bitmap associated with the patch"));
 	}
 	else {
 		lReturnValue->mBitmap = pBitmapLib->GetBitmap(lBitmapId);
@@ -205,9 +208,12 @@ MR_ResActorBuilder::Patch * MR_ResActorBuilder::ReadPatch(FILE * pFile, Resource
 			delete lReturnValue;
 			lReturnValue = FALSE;
 
-         fprintf(stderr, "%s: %s.\n", _("ERROR"), _("Bad bitmap ID"));
+			fprintf(stderr, "%s: %s.\n", _("ERROR"), _("Bad bitmap ID"));
 		}
 	}
 
 	return lReturnValue;
 }
+
+}  // namespace ResourceCompiler
+}  // namespace HoverRace

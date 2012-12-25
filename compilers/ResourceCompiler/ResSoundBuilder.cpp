@@ -19,36 +19,40 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
+
 #include "ResSoundBuilder.h"
 #include "BitmapHelper.h"
 
 #include <vfw.h>
 #include <mmreg.h>
 
+namespace HoverRace {
+namespace ResourceCompiler {
+
 // Local prototypes
 BOOL ParseFile(const char *pFile, const char *&pData, int &pDataLen);
 BOOL DSParseWaveResource(void *pvRes, WAVEFORMATEX ** ppWaveHeader, BYTE ** ppbWaveData, DWORD * pcbWaveSize);
 
-MR_ResShortSoundBuilder::MR_ResShortSoundBuilder(int pResourceId)
-:MR_ResShortSound(pResourceId)
+ResShortSoundBuilder::ResShortSoundBuilder(int pResourceId) :
+	SUPER(pResourceId)
 {
 
 }
 
-BOOL MR_ResShortSoundBuilder::BuildFromFile(const char *pFile, int pNbCopy)
+BOOL ResShortSoundBuilder::BuildFromFile(const char *pFile, int pNbCopy)
 {
 	mNbCopy = pNbCopy;
 	return ParseFile(pFile, (const char *&) mData, mDataLen);
 }
 
-MR_ResContinuousSoundBuilder::MR_ResContinuousSoundBuilder(int pResourceId)
-:MR_ResContinuousSound(pResourceId)
+ResContinuousSoundBuilder::ResContinuousSoundBuilder(int pResourceId) :
+	SUPER(pResourceId)
 {
 
 }
 
-BOOL MR_ResContinuousSoundBuilder::BuildFromFile(const char *pFile, int pNbCopy)
+BOOL ResContinuousSoundBuilder::BuildFromFile(const char *pFile, int pNbCopy)
 {
 	mNbCopy = pNbCopy;
 	return ParseFile(pFile, (const char *&) mData, mDataLen);
@@ -163,3 +167,6 @@ BOOL DSParseWaveResource(void *pvRes, WAVEFORMATEX ** ppWaveHeader, BYTE ** ppbW
 	exit:
 	return FALSE;
 }
+
+}  // namespace ResourceCompiler
+}  // namespace HoverRace

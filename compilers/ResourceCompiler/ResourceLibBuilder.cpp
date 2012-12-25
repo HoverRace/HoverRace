@@ -1,6 +1,5 @@
 // ResourceLibBuilder.cpp
 //
-//
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
@@ -45,37 +44,40 @@ namespace {
 	}
 }
 
-MR_ResourceLibBuilder::MR_ResourceLibBuilder()
+namespace HoverRace {
+namespace ResourceCompiler {
+
+ResourceLibBuilder::ResourceLibBuilder()
 {
 	// Notting to do
 }
 
-MR_ResourceLibBuilder::~MR_ResourceLibBuilder()
+ResourceLibBuilder::~ResourceLibBuilder()
 {
 	// Notting to do
 }
 
-void MR_ResourceLibBuilder::AddBitmap(MR_ResBitmap * pBitmap)
+void ResourceLibBuilder::AddBitmap(ObjFacTools::ResBitmap *pBitmap)
 {
 	bitmaps.insert(bitmaps_t::value_type(pBitmap->GetResourceId(), pBitmap));
 }
 
-void MR_ResourceLibBuilder::AddActor(MR_ResActor * pActor)
+void ResourceLibBuilder::AddActor(ObjFacTools::ResActor *pActor)
 {
 	actors.insert(actors_t::value_type(pActor->GetResourceId(), pActor));
 }
 
-void MR_ResourceLibBuilder::AddSprite(MR_ResSprite * pSprite)
+void ResourceLibBuilder::AddSprite(ObjFacTools::ResSprite *pSprite)
 {
 	sprites.insert(sprites_t::value_type(pSprite->GetResourceId(), pSprite));
 }
 
-void MR_ResourceLibBuilder::AddSound(MR_ResShortSound * pSound)
+void ResourceLibBuilder::AddSound(ObjFacTools::ResShortSound *pSound)
 {
 	shortSounds.insert(shortSounds_t::value_type(pSound->GetResourceId(), pSound));
 }
 
-void MR_ResourceLibBuilder::AddSound(MR_ResContinuousSound * pSound)
+void ResourceLibBuilder::AddSound(ObjFacTools::ResContinuousSound *pSound)
 {
 	continuousSounds.insert(continuousSounds_t::value_type(pSound->GetResourceId(), pSound));
 }
@@ -91,7 +93,7 @@ void MR_ResourceLibBuilder::AddSound(MR_ResContinuousSound * pSound)
  * @param filename Filename of output file
  * @return BOOL indicating the success of the operation
  */
-bool MR_ResourceLibBuilder::Export(const HoverRace::Util::OS::path_t &filename)
+bool ResourceLibBuilder::Export(const HoverRace::Util::OS::path_t &filename)
 {
 	bool lReturnValue = true;
 
@@ -124,3 +126,6 @@ bool MR_ResourceLibBuilder::Export(const HoverRace::Util::OS::path_t &filename)
 
 	return lReturnValue;
 }
+
+}  // namespace ResourceCompiler
+}  // namespace HoverRace

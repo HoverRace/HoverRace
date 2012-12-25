@@ -1,6 +1,5 @@
 // ResSoundBuilder.h
 //
-//
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
@@ -20,26 +19,32 @@
 // and limitations under the License.
 //
 
-#ifndef MR_RES_SOUND_BUILDER_H
-#define MR_RES_SOUND_BUILDER_H
+#pragma once
 
 #include "../../engine/ObjFacTools/ResSound.h"
 
-class MR_ResShortSoundBuilder:public MR_ResShortSound
+namespace HoverRace {
+namespace ResourceCompiler {
+
+class ResShortSoundBuilder : public ObjFacTools::ResShortSound
 {
+	typedef ObjFacTools::ResShortSound SUPER;
 	public:
-		MR_ResShortSoundBuilder(int pResourceId);
+		ResShortSoundBuilder(int pResourceId);
 
 		BOOL BuildFromFile(const char *pFile, int pNbCopy);
 
 };
 
-class MR_ResContinuousSoundBuilder:public MR_ResContinuousSound
+class ResContinuousSoundBuilder : public ObjFacTools::ResContinuousSound
 {
+	typedef ObjFacTools::ResContinuousSound SUPER;
 	public:
-		MR_ResContinuousSoundBuilder(int pResourceId);
+		ResContinuousSoundBuilder(int pResourceId);
 
 		BOOL BuildFromFile(const char *pFile, int pNbCopy);
 
 };
-#endif
+
+}  // namespace ResourceCompiler
+}  // namespace HoverRace

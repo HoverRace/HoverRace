@@ -50,7 +50,8 @@
 //     #define <Character string> <Integer constant>
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
+
 #include "TextParsing.h"
 #include "ResBitmapBuilder.h"
 #include "ResActorBuilder.h"
@@ -59,12 +60,14 @@
 #include "ResourceLibBuilder.h"
 #include "../../engine/ColorTools/ColorTools.h"
 
+using namespace HoverRace::ResourceCompiler;
+
 // Local functions prototypes
 static BOOL ParseInputFile(const char *pFileName);
 static void PrintUsage();
 
 // Local data
-static MR_ResourceLibBuilder gsLib;
+static ResourceLibBuilder gsLib;
 
 int main(int pArgc, const char **pArgs)
 {
@@ -109,7 +112,7 @@ BOOL ParseInputFile(const char *pFileName)
 
 	if(lFile == NULL) {
 		lReturnValue = FALSE;
-      fprintf(stderr, "%s: %s (%s).\n", _("ERROR"), _("unable to open input file"), pFileName);
+		fprintf(stderr, "%s: %s (%s).\n", _("ERROR"), _("unable to open input file"), pFileName);
 	}
 	else {
 		char lLineBuffer[250];
@@ -125,14 +128,14 @@ BOOL ParseInputFile(const char *pFileName)
 			CString lLine = MR_PreProcLine(lLineBuffer);
 
 			switch (MR_ContainsKeyword(lLine, lKeywordList)) {
-				case 0:							  // BITMAP
+				case 0:  // BITMAP
 					if(sscanf(lLine, " %*s %s %d %f %f %d", lLineBuffer, &lResourceId, &lWidth, &lHeight, &lAntiAliasScheme) != 5) {
-                  fprintf(stderr, "%s: %s.\n", _("ERROR"), _("problem reading bitmap parameters"));
+						fprintf(stderr, "%s: %s.\n", _("ERROR"), _("problem reading bitmap parameters"));
 						lReturnValue = FALSE;
 					}
 					else {
-						MR_ResBitmapBuilder *lBitmap =
-							new MR_ResBitmapBuilder(lResourceId,
+						ResBitmapBuilder *lBitmap =
+							new ResBitmapBuilder(lResourceId,
 								(int)(lWidth * 1000), (int)(lHeight * 1000));
 
 						lReturnValue = lBitmap->BuildFromFile(lLineBuffer, lAntiAliasScheme);
@@ -146,12 +149,12 @@ BOOL ParseInputFile(const char *pFileName)
 					}
 					break;
 
-				case 1:							  // ACTOR
+				case 1:  // ACTOR
 					if(sscanf(lLine, " %*s %s %d ", lLineBuffer, &lResourceId) != 2) {
-                  fprintf(stderr, "%s: %s.\n", _("ERROR"), _("problem reading actor parameters"));
+						fprintf(stderr, "%s: %s.\n", _("ERROR"), _("problem reading actor parameters"));
 					}
 					else {
-						MR_ResActorBuilder *lActor = new MR_ResActorBuilder(lResourceId);
+						ResActorBuilder *lActor = new ResActorBuilder(lResourceId);
 
 						lReturnValue = lActor->BuildFromFile(lLineBuffer, &gsLib);
 
@@ -164,13 +167,13 @@ BOOL ParseInputFile(const char *pFileName)
 					}
 					break;
 
-				case 2:							  // SPRITE
+				case 2:  // SPRITE
 					if(sscanf(lLine, " %*s %s %d %d", lLineBuffer, &lResourceId, &lNbItem) != 3) {
-                  fprintf(stderr, "%s: %s.\n", _("ERROR"), _("problem reading sprite parameters"));
+						fprintf(stderr, "%s: %s.\n", _("ERROR"), _("problem reading sprite parameters"));
 						lReturnValue = FALSE;
 					}
 					else {
-						MR_ResSpriteBuilder *lSprite = new MR_ResSpriteBuilder(lResourceId);
+						ResSpriteBuilder *lSprite = new ResSpriteBuilder(lResourceId);
 
 						lReturnValue = lSprite->BuildFromFile(lLineBuffer, lNbItem);
 
@@ -183,13 +186,13 @@ BOOL ParseInputFile(const char *pFileName)
 					}
 					break;
 
-				case 3:							  // SHORT_SOUND
+				case 3:  // SHORT_SOUND
 					if(sscanf(lLine, " %*s %s %d %d", lLineBuffer, &lResourceId, &lNbCopy) != 3) {
-                  fprintf(stderr, "%s: %s.\n", _("ERROR"), _("problem reading sound parameters"));
+						fprintf(stderr, "%s: %s.\n", _("ERROR"), _("problem reading sound parameters"));
 						lReturnValue = FALSE;
 					}
 					else {
-						MR_ResShortSoundBuilder *lSound = new MR_ResShortSoundBuilder(lResourceId);
+						ResShortSoundBuilder *lSound = new ResShortSoundBuilder(lResourceId);
 
 						lReturnValue = lSound->BuildFromFile(lLineBuffer, lNbCopy);
 
@@ -202,13 +205,13 @@ BOOL ParseInputFile(const char *pFileName)
 					}
 					break;
 
-				case 4:							  // CONT_SOUND
+				case 4:  // CONT_SOUND
 					if(sscanf(lLine, " %*s %s %d %d", lLineBuffer, &lResourceId, &lNbCopy) != 3) {
-                  fprintf(stderr, "%s: %s.\n", _("ERROR"), _("problem reading sound parameters"));
+						fprintf(stderr, "%s: %s.\n", _("ERROR"), _("problem reading sound parameters"));
 						lReturnValue = FALSE;
 					}
 					else {
-						MR_ResContinuousSoundBuilder *lSound = new MR_ResContinuousSoundBuilder(lResourceId);
+						ResContinuousSoundBuilder *lSound = new ResContinuousSoundBuilder(lResourceId);
 
 						lReturnValue = lSound->BuildFromFile(lLineBuffer, lNbCopy);
 
@@ -228,8 +231,8 @@ BOOL ParseInputFile(const char *pFileName)
 	}
 
 	printf("--PROGRAM END--");
-   printf(_("Press enter to continue."));
-   printf("\n");
+	printf(_("Press enter to continue."));
+	printf("\n");
 	getchar();
 
 	return lReturnValue;

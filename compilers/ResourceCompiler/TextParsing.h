@@ -1,7 +1,5 @@
 // TextParsing.h
 //
-//
-//
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
@@ -21,8 +19,10 @@
 // and limitations under the License.
 //
 
-#ifndef TEXT_PARSING_H
-#define TEXT_PARSING_H
+#pragma once
+
+namespace HoverRace {
+namespace ResourceCompiler {
 
 BOOL MR_ReadPredefinedConstants(const char *pFileName);
 
@@ -33,4 +33,6 @@ BOOL MR_BeginByKeyword(const char *pLine, const char *pKeyword);
 int MR_ContainsKeyword(const char *pLine, const char **pKeywordList);
 
 const char *MR_SkipLeadingSpaces(const char *);
-#endif
+
+}  // namespace ResourceCompiler
+}  // namespace HoverRace

@@ -19,9 +19,12 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
 #include "TextParsing.h"
+
+namespace HoverRace {
+namespace ResourceCompiler {
 
 // Local data
 static CMapStringToString gDefineMap;
@@ -34,14 +37,14 @@ BOOL MR_ReadPredefinedConstants(const char *pFileName)
 	if(lFile == NULL) {
 		lReturnValue = FALSE;
 
-      fprintf(stderr, "%s: %s (%s).\n", _("ERROR"), _("unable to open defines file"), pFileName);
+		fprintf(stderr, "%s: %s (%s).\n", _("ERROR"), _("unable to open defines file"), pFileName);
 	}
 	else {
 		char lBuffer[250];
-      int lLineNo = 1;
+		int lLineNo = 1;
 		while(lReturnValue && fgets(lBuffer, sizeof(lBuffer), lFile)) {
 			CString lLine = MR_PreProcLine(lBuffer);
-         lLineNo++;
+			lLineNo++;
 
 			if(MR_BeginByKeyword(lLine, "#define")) {
 				char lKey[100];
@@ -50,7 +53,7 @@ BOOL MR_ReadPredefinedConstants(const char *pFileName)
 				if(sscanf(lLine, " #define %s %s ", lKey, &lValue) != 2) {
 					lReturnValue = FALSE;
 
-               fprintf(stderr, "%s: %s, %s %d.\n", _("ERROR"), _("syntax error in defines file"), _("line"), lLineNo);
+					fprintf(stderr, "%s: %s, %s %d.\n", _("ERROR"), _("syntax error in defines file"), _("line"), lLineNo);
 				}
 				else {
 					// add the define to the list
@@ -156,3 +159,6 @@ const char *MR_SkipLeadingSpaces(const char *pString)
 
 	return lReturnValue;
 }
+
+}  // namespace ResourceCompiler
+}  // namespace HoverRace

@@ -1,6 +1,5 @@
 // ResActorBuilder.h
 //
-//
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
@@ -20,21 +19,26 @@
 // and limitations under the License.
 //
 
-#ifndef MR_RES_ACTOR_BUILDER_H
-#define MR_RES_ACTOR_BUILDER_H
+#pragma once
 
 #include "../../engine/ObjFacTools/ResourceLib.h"
 
-class MR_ResActorBuilder:public MR_ResActor
-{
-	protected:
+namespace HoverRace {
+namespace ResourceCompiler {
 
-		Patch * ReadPatch(FILE * pFile, HoverRace::ObjFacTools::ResourceLib* pBitmapLib);
+class ResActorBuilder : public ObjFacTools::ResActor
+{
+	typedef ObjFacTools::ResActor SUPER;
+
+	protected:
+		Patch * ReadPatch(FILE * pFile, ObjFacTools::ResourceLib* pBitmapLib);
 
 	public:
-		MR_ResActorBuilder(int pResourceId);
+		ResActorBuilder(int pResourceId);
 
-		BOOL BuildFromFile(const char *pFile, HoverRace::ObjFacTools::ResourceLib* pBitmapLib);
+		BOOL BuildFromFile(const char *pFile, ObjFacTools::ResourceLib* pBitmapLib);
 
 };
-#endif
+
+}  // namespace ResourceCompiler
+}  // namespace HoverRace
