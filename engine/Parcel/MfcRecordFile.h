@@ -65,11 +65,8 @@ class MR_DllDeclare MfcRecordFile : public RecordFile, private CFile
 		bool OpenForRead(const Util::OS::path_t &filename, bool pValidateChkSum = false);
 		void SelectRecord(int pRecordNumber);
 
-		// Checksum stuff (Renamed to Reopen for security purpose
-#define ApplyChecksum ReOpen
+		// Checksum stuff
 		BOOL ReOpen(const Util::OS::path_t &filename);
-
-#define GetCheckSum GetAlignMode
 		DWORD GetAlignMode();
 
 		// File information functions

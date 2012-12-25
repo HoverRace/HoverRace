@@ -318,7 +318,6 @@ bool MfcRecordFile::OpenForRead(const OS::path_t &filename, bool pValidateChkSum
 }
 
 // Checksum stuff (Renamed to Reopen for security purpose
-//      #define ApplyChecksum ReOpen
 BOOL MfcRecordFile::ReOpen(const OS::path_t &filename)
 {
 	BOOL lReturnValue = FALSE;
@@ -337,7 +336,6 @@ BOOL MfcRecordFile::ReOpen(const OS::path_t &filename)
 	return lReturnValue;
 }
 
-// #define GetCheckSum GetAlignMode
 DWORD MfcRecordFile::GetAlignMode()
 {
 	if((mTable != NULL) && (mTable->mSumValid)) {
