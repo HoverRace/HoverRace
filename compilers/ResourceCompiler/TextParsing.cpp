@@ -29,15 +29,19 @@ namespace ResourceCompiler {
 // Local data
 static CMapStringToString gDefineMap;
 
-BOOL MR_ReadPredefinedConstants(const char *pFileName)
+BOOL MR_ReadPredefinedConstants(const Util::OS::path_t &pFileName)
 {
 	BOOL lReturnValue = TRUE;
-	FILE *lFile = fopen(pFileName, "r");
+#	ifdef _WIN32
+		FILE *lFile = _wfopen(pFileName.file_string().c_str(), L"r");
+#	else
+		FILE *lFile = fopen(pFileName.file_string().c_str(), "r");
+#	endif
 
 	if(lFile == NULL) {
 		lReturnValue = FALSE;
 
-		fprintf(stderr, "%s: %s (%s).\n", _("ERROR"), _("unable to open defines file"), pFileName);
+		fprintf(stderr, "%s: %s.\n", _("ERROR"), _("unable to open defines file"));
 	}
 	else {
 		char lBuffer[250];

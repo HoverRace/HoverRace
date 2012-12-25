@@ -61,9 +61,10 @@
 #include "../../engine/ColorTools/ColorTools.h"
 
 using namespace HoverRace::ResourceCompiler;
+using namespace HoverRace::Util;
 
 // Local functions prototypes
-static BOOL ParseInputFile(const char *pFileName);
+static BOOL ParseInputFile(const OS::path_t &pFileName);
 static void PrintUsage();
 
 // Local data
@@ -77,20 +78,37 @@ int main(int pArgc, const char **pArgs)
 
 	MR_ColorTools::Init();
 
+#	ifdef _WIN32
+		int wargc;
+		wchar_t **wargv = CommandLineToArgvW(GetCommandLineW(), &wargc);
+#	endif
+
 	if(pArgc <= 2) {
 		PrintUsage();
 	}
 	else {
 		if(pArgc >= 4) {
-			lReturnValue = MR_ReadPredefinedConstants(pArgs[3]);
+#			ifdef _WIN32
+				lReturnValue = MR_ReadPredefinedConstants(wargv[3]);
+#			else
+				lReturnValue = MR_ReadPredefinedConstants(pArgs[3]);
+#			endif
 		}
 
 		if(lReturnValue) {
-			lReturnValue = ParseInputFile(pArgs[1]);
+#			ifdef _WIN32
+				lReturnValue = ParseInputFile(wargv[1]);
+#			else
+				lReturnValue = ParseInputFile(pArgs[1]);
+#			endif
 		}
 
 		if(lReturnValue) {
-			lReturnValue = gsLib.Export(pArgs[2]);
+#			ifdef _WIN32
+				lReturnValue = gsLib.Export(wargv[2]);
+#			else
+				lReturnValue = gsLib.Export(pArgs[2]);
+#			endif
 		}
 	}
 
@@ -102,13 +120,17 @@ void PrintUsage()
 	printf("\nResourceCompiler <InputFile> <OutputFile> [<DefineFile>]\n\n");
 }
 
-BOOL ParseInputFile(const char *pFileName)
+BOOL ParseInputFile(const OS::path_t &pFileName)
 {
 	static const char *lKeywordList[] = { "BITMAP", "ACTOR", "SPRITE", "SHORT_SOUND", "CONT_SOUND", NULL };
 
 	BOOL lReturnValue = TRUE;
 
-	FILE *lFile = fopen(pFileName, "r");
+#	ifdef _WIN32
+		FILE *lFile = _wfopen(pFileName.file_string().c_str(), L"r");
+#	else
+		FILE *lFile = fopen(pFileName.file_string().c_str(), "r");
+#	endif
 
 	if(lFile == NULL) {
 		lReturnValue = FALSE;

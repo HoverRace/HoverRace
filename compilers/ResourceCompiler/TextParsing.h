@@ -21,10 +21,12 @@
 
 #pragma once
 
+#include "../../engine/Util/OS.h"
+
 namespace HoverRace {
 namespace ResourceCompiler {
 
-BOOL MR_ReadPredefinedConstants(const char *pFileName);
+BOOL MR_ReadPredefinedConstants(const Util::OS::path_t &pFilename);
 
 CString MR_PreProcLine(const char *pLine);
 
