@@ -78,6 +78,14 @@ int main(int pArgc, const char **pArgs)
 
 	MR_ColorTools::Init();
 
+#	ifdef ENABLE_NLS
+		// Gettext initialization.
+		OS::SetLocale();
+		bind_textdomain_codeset(PACKAGE, "UTF-8");
+		bindtextdomain(PACKAGE, LOCALEDIR);
+		textdomain(PACKAGE);
+#	endif
+
 #	ifdef _WIN32
 		int wargc;
 		wchar_t **wargv = CommandLineToArgvW(GetCommandLineW(), &wargc);
