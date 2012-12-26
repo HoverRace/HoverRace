@@ -58,6 +58,7 @@ class MR_DllDeclare MainCharacterRenderer : public Util::ObjectFromFactory
 		virtual VideoServices::ShortSound *GetMisJumpSound() = 0;
 		virtual VideoServices::ShortSound *GetMisFireSound() = 0;
 		virtual VideoServices::ShortSound *GetOutOfCtrlSound() = 0;
+		virtual VideoServices::ShortSound *GetPickupSound() = 0;
 		virtual VideoServices::ContinuousSound *GetMotorSound() = 0;
 		virtual VideoServices::ContinuousSound *GetFrictionSound() = 0;
 

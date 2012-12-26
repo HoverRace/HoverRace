@@ -49,6 +49,7 @@ class HoverRender : public MainCharacter::MainCharacterRenderer
 		VideoServices::ShortSound *mMisJumpSound;
 		VideoServices::ShortSound *mMisFireSound;
 		VideoServices::ShortSound *mOutOfCtrlSound;
+		VideoServices::ShortSound *pickupSound;
 		VideoServices::ContinuousSound *mMotorSound;
 		VideoServices::ContinuousSound *mFrictionSound;
 
@@ -71,6 +72,7 @@ class HoverRender : public MainCharacter::MainCharacterRenderer
 		virtual VideoServices::ShortSound *GetMisJumpSound();
 		virtual VideoServices::ShortSound *GetMisFireSound();
 		virtual VideoServices::ShortSound *GetOutOfCtrlSound();
+		virtual VideoServices::ShortSound *GetPickupSound();
 		virtual VideoServices::ContinuousSound *GetMotorSound();
 		virtual VideoServices::ContinuousSound *GetFrictionSound();
 

@@ -57,6 +57,7 @@ HoverRender::HoverRender(const Util::ObjectFromFactoryId &pId, ResourceLib *reso
 	mMisJumpSound = resourceLib->GetShortSound(MR_SND_MIS_JUMP)->GetSound();
 	mMisFireSound = resourceLib->GetShortSound(MR_SND_MIS_FIRE)->GetSound();
 	mOutOfCtrlSound = resourceLib->GetShortSound(MR_SND_OUT_OF_CTRL)->GetSound();
+	pickupSound = resourceLib->GetShortSound(MR_SND_PICKUP)->GetSound();
 	mMotorSound = resourceLib->GetContinuousSound(MR_SND_MOTOR)->GetSound();
 	mFrictionSound = resourceLib->GetContinuousSound(MR_SND_FRICTION)->GetSound();
 
@@ -142,6 +143,11 @@ ShortSound *HoverRender::GetMisFireSound()
 ShortSound *HoverRender::GetOutOfCtrlSound()
 {
 	return mOutOfCtrlSound;
+}
+
+ShortSound *HoverRender::GetPickupSound()
+{
+	return pickupSound;
 }
 
 ContinuousSound *HoverRender::GetMotorSound()

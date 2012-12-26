@@ -103,6 +103,7 @@ SHORT_SOUND sounds/blank.wav 7 1
 SHORT_SOUND sounds/blank2.wav 8 1
 SHORT_SOUND sounds/spin.wav 9 1
 SHORT_SOUND sounds/missilebounce.wav 21 2
+SHORT_SOUND sounds/pickup.wav 22 1
 
 CONT_SOUND sounds/engine.wav 10 2
 CONT_SOUND sounds/engine2.wav 11 2

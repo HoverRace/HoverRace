@@ -903,10 +903,11 @@ void MainCharacter::ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationT
 	}
 
 	if(((lPowerUp != NULL) && mMasterMode) && (mGameOpts & OPT_ALLOW_CANS)) {
-		// TODO Add sound
 		if((mPowerUpLeft == 0) && (lPowerUp->mElementPermId != -1) && !mPowerUpList.Full()) {
 			mPowerUpList.Add(lPowerUp->mElementPermId);
 			pLevel->SetPermElementPos(lPowerUp->mElementPermId, -1, mPosition);
+			mInternalSoundList.Add(mRenderer->GetPickupSound());
+			mExternalSoundList.Add(mRenderer->GetPickupSound());
 		}
 	}
 
