@@ -700,7 +700,7 @@ int MainCharacter::InternalSimulate(MR_SimulationTime pDuration, Model::Level *p
 	lShape.mRay = eCharacterMovementRay;	  //eCharacterRay;
 
 	// Compute speed objectives
-	MR_3DCoordinate lTranslation((mXSpeed * (int) pDuration), (mYSpeed * (int) pDuration), (mZSpeed * (int) pDuration));
+	MR_3DCoordinate lTranslation((int)(mXSpeed * (int) pDuration), (int)(mYSpeed * (int) pDuration), (int)(mZSpeed * (int) pDuration));
 
 	// This avoid continious jumping
 	if(lTranslation.mZ == 0)
@@ -832,8 +832,8 @@ void MainCharacter::ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationT
 			MR_InertialMoment lMoment;
 
 			lMoment.mWeight = eCharacterWeight[mHoverModel];
-			lMoment.mXSpeed = mXSpeed * 256;
-			lMoment.mYSpeed = mYSpeed * 256;
+			lMoment.mXSpeed = (int)(mXSpeed * 256);
+			lMoment.mYSpeed = (int)(mYSpeed * 256);
 			lMoment.mZSpeed = 0;
 
 			lMoment.ComputeCollision(lPhysCollision, pHorizontalDirection);
@@ -951,8 +951,8 @@ void MainCharacter::ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationT
 const MR_ContactEffectList *MainCharacter::GetEffectList()
 {
 	mContactEffect.mWeight = eCharacterWeight[mHoverModel];
-	mContactEffect.mXSpeed = mXSpeed * 256;
-	mContactEffect.mYSpeed = mYSpeed * 256;
+	mContactEffect.mXSpeed = (int)(mXSpeed * 256);
+	mContactEffect.mYSpeed = (int)(mYSpeed * 256);
 	mContactEffect.mZSpeed = 0;
 
 	return &mContactEffectList;
