@@ -1,82 +1,81 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4fc6ba0f-a900-4cc4-9266-75d3f34379bf}</UniqueIdentifier>
-      <Extensions>cpp;c;cxx;rc;def;r;odl;hpj;bat;for;f90</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{40ceee0b-ab86-40c8-8ee3-825940762256}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Parcel">
       <UniqueIdentifier>{55e42095-7a89-4ee2-809d-eec2af93af2c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Main">
+      <UniqueIdentifier>{1728b2c0-f825-452c-a01f-61614dfbbac6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Builders">
+      <UniqueIdentifier>{94d32188-cfc8-4e8d-b4be-1a3802357e36}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BitmapHelper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ResActorBuilder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ResBitmapBuilder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ResourceCompiler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ResourceLibBuilder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ResSoundBuilder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ResSpriteBuilder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="StdAfx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TextParsing.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="MfcObjStream.cpp">
       <Filter>Parcel</Filter>
     </ClCompile>
     <ClCompile Include="MfcRecordFile.cpp">
       <Filter>Parcel</Filter>
     </ClCompile>
+    <ClCompile Include="StdAfx.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceCompiler.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="TextParsing.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="BitmapHelper.cpp">
+      <Filter>Builders</Filter>
+    </ClCompile>
+    <ClCompile Include="ResSpriteBuilder.cpp">
+      <Filter>Builders</Filter>
+    </ClCompile>
+    <ClCompile Include="ResActorBuilder.cpp">
+      <Filter>Builders</Filter>
+    </ClCompile>
+    <ClCompile Include="ResBitmapBuilder.cpp">
+      <Filter>Builders</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceLibBuilder.cpp">
+      <Filter>Builders</Filter>
+    </ClCompile>
+    <ClCompile Include="ResSoundBuilder.cpp">
+      <Filter>Builders</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BitmapHelper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ResActorBuilder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ResBitmapBuilder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ResourceLibBuilder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ResSoundBuilder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ResSpriteBuilder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="StdAfx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TextParsing.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MfcObjStream.h">
       <Filter>Parcel</Filter>
     </ClInclude>
     <ClInclude Include="MfcRecordFile.h">
       <Filter>Parcel</Filter>
+    </ClInclude>
+    <ClInclude Include="StdAfx.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="TextParsing.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="BitmapHelper.h">
+      <Filter>Builders</Filter>
+    </ClInclude>
+    <ClInclude Include="ResSpriteBuilder.h">
+      <Filter>Builders</Filter>
+    </ClInclude>
+    <ClInclude Include="ResActorBuilder.h">
+      <Filter>Builders</Filter>
+    </ClInclude>
+    <ClInclude Include="ResBitmapBuilder.h">
+      <Filter>Builders</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceLibBuilder.h">
+      <Filter>Builders</Filter>
+    </ClInclude>
+    <ClInclude Include="ResSoundBuilder.h">
+      <Filter>Builders</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
