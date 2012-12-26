@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
 "Report-Msgid-Bugs-To: bugs@hoverrace.com\n"
-"POT-Creation-Date: 2012-12-12 18:34-0500\n"
+"POT-Creation-Date: 2012-12-25 23:40-0500\n"
 "PO-Revision-Date: 2009-03-05 22:33-0500\n"
 "Last-Translator:  <ryan@igglybob.com>\n"
 "Language-Team: Korean <translation-team-ko@lists.sourceforge.net>\n"
@@ -66,7 +66,7 @@ msgstr ""
 #: client/Game2/CheckRoomListDialog.cpp:88
 #: client/Game2/CheckUpdateServerDialog.cpp:165
 #: client/Game2/FirstChoiceDialog.cpp:58 client/Game2/SelectRoomDialog.cpp:120
-#: client/Game2/TrackSelectDialog.cpp:102
+#: client/Game2/TrackSelectDialog.cpp:103
 msgid "Cancel"
 msgstr ""
 
@@ -372,43 +372,43 @@ msgstr ""
 msgid "Press a control or wait 3 seconds to disable..."
 msgstr ""
 
-#: client/Game2/DownloadUpdateDialog.cpp:106
-#: client/Game2/TrackDownloadDialog.cpp:117
+#: client/Game2/DownloadUpdateDialog.cpp:110
+#: client/Game2/TrackDownloadDialog.cpp:120
 msgid "Initializing"
 msgstr ""
 
-#: client/Game2/DownloadUpdateDialog.cpp:107
-#: client/Game2/DownloadUpdateDialog.cpp:164
-#: client/Game2/TrackDownloadDialog.cpp:118
-#: client/Game2/TrackDownloadDialog.cpp:176
+#: client/Game2/DownloadUpdateDialog.cpp:111
+#: client/Game2/DownloadUpdateDialog.cpp:168
+#: client/Game2/TrackDownloadDialog.cpp:121
+#: client/Game2/TrackDownloadDialog.cpp:179
 msgid "Downloading"
 msgstr ""
 
-#: client/Game2/DownloadUpdateDialog.cpp:108
-#: client/Game2/TrackDownloadDialog.cpp:120
+#: client/Game2/DownloadUpdateDialog.cpp:112
+#: client/Game2/TrackDownloadDialog.cpp:123
 msgid "Finished"
 msgstr ""
 
-#: client/Game2/DownloadUpdateDialog.cpp:160
-#: client/Game2/TrackDownloadDialog.cpp:172
+#: client/Game2/DownloadUpdateDialog.cpp:164
+#: client/Game2/TrackDownloadDialog.cpp:175
 msgid "Processing..."
 msgstr ""
 
-#: client/Game2/DownloadUpdateDialog.cpp:193
+#: client/Game2/DownloadUpdateDialog.cpp:197
 #, c-format, boost-format
 msgid "Cannot open file %s for writing!"
 msgstr ""
 
-#: client/Game2/DownloadUpdateDialog.cpp:237
+#: client/Game2/DownloadUpdateDialog.cpp:241
 #, c-format, boost-format
 msgid "Cannot update!  File %s not found.  Contact a site administrator."
 msgstr ""
 
-#: client/Game2/DownloadUpdateDialog.cpp:264
+#: client/Game2/DownloadUpdateDialog.cpp:268
 msgid "Update Download"
 msgstr ""
 
-#: client/Game2/DownloadUpdateDialog.cpp:265
+#: client/Game2/DownloadUpdateDialog.cpp:269
 msgid "Downloading Update:"
 msgstr ""
 
@@ -418,7 +418,7 @@ msgstr ""
 
 #: client/Game2/FirstChoiceDialog.cpp:57 client/Game2/NetInterface.cpp:1887
 #: client/Game2/PathSelector.cpp:93 client/Game2/SelectRoomDialog.cpp:119
-#: client/Game2/TrackSelectDialog.cpp:101
+#: client/Game2/TrackSelectDialog.cpp:102
 msgid "OK"
 msgstr ""
 
@@ -1063,72 +1063,68 @@ msgstr ""
 msgid "no network connection"
 msgstr ""
 
-#: client/Game2/NetworkPrefsPage.cpp:48
+#: client/Game2/NetworkPrefsPage.cpp:49
 msgid "Network"
 msgstr ""
 
-#: client/Game2/NetworkPrefsPage.cpp:74
+#: client/Game2/NetworkPrefsPage.cpp:75
 msgid "Server Options"
 msgstr ""
 
-#: client/Game2/NetworkPrefsPage.cpp:77
+#: client/Game2/NetworkPrefsPage.cpp:78
 msgid "Address of Server Roomlist:"
 msgstr ""
 
-#: client/Game2/NetworkPrefsPage.cpp:79
+#: client/Game2/NetworkPrefsPage.cpp:80
 msgid "Check URL"
 msgstr ""
 
-#: client/Game2/NetworkPrefsPage.cpp:82
+#: client/Game2/NetworkPrefsPage.cpp:83
 msgid "Address of Update Server List:"
 msgstr ""
 
-#: client/Game2/NetworkPrefsPage.cpp:84
+#: client/Game2/NetworkPrefsPage.cpp:85
 msgid "Check for updates"
 msgstr ""
 
-#: client/Game2/NetworkPrefsPage.cpp:85
+#: client/Game2/NetworkPrefsPage.cpp:86
 msgid "Automatically check for HoverRace updates"
 msgstr ""
 
-#: client/Game2/NetworkPrefsPage.cpp:88
+#: client/Game2/NetworkPrefsPage.cpp:89
 msgid "&Log all chat sessions to:"
 msgstr ""
 
-#: client/Game2/NetworkPrefsPage.cpp:91
+#: client/Game2/NetworkPrefsPage.cpp:92
 msgid "Open Folder"
 msgstr ""
 
-#: client/Game2/NetworkPrefsPage.cpp:93
+#: client/Game2/NetworkPrefsPage.cpp:94
 msgid "Connection"
 msgstr ""
 
-#: client/Game2/NetworkPrefsPage.cpp:95
+#: client/Game2/NetworkPrefsPage.cpp:96
 msgid "TCP Server Port:"
 msgstr ""
 
-#: client/Game2/NetworkPrefsPage.cpp:96
+#: client/Game2/NetworkPrefsPage.cpp:97
 msgid "TCP Receive Port:"
 msgstr ""
 
-#: client/Game2/NetworkPrefsPage.cpp:97
+#: client/Game2/NetworkPrefsPage.cpp:98
 msgid "UDP Receive Port:"
 msgstr ""
 
-#: client/Game2/NetworkPrefsPage.cpp:100 client/Game2/NetworkPrefsPage.cpp:101
+#: client/Game2/NetworkPrefsPage.cpp:101 client/Game2/NetworkPrefsPage.cpp:102
 msgid "Reset to Default"
 msgstr ""
 
-#: client/Game2/NetworkPrefsPage.cpp:102
+#: client/Game2/NetworkPrefsPage.cpp:103
 msgid "Reset to Defaults"
 msgstr ""
 
-#: client/Game2/NetworkPrefsPage.cpp:112
+#: client/Game2/NetworkPrefsPage.cpp:113
 msgid "Select a destination folder for saved chat sessions."
-msgstr ""
-
-#: client/Game2/NetworkPrefsPage.cpp:149
-msgid "Directory does not exist"
 msgstr ""
 
 #: client/Game2/NetworkSession.cpp:657 client/Game2/NetworkSession.cpp:694
@@ -1263,109 +1259,109 @@ msgstr ""
 msgid "Room:"
 msgstr ""
 
-#: client/Game2/TrackDownloadDialog.cpp:97
+#: client/Game2/TrackDownloadDialog.cpp:100
 #, c-format, boost-format
 msgid "Would you like to download the track \"%s\" now?"
 msgstr ""
 
-#: client/Game2/TrackDownloadDialog.cpp:99
-#: client/Game2/TrackDownloadDialog.cpp:268
+#: client/Game2/TrackDownloadDialog.cpp:102
+#: client/Game2/TrackDownloadDialog.cpp:271
 msgid "Track Download"
 msgstr ""
 
-#: client/Game2/TrackDownloadDialog.cpp:119
+#: client/Game2/TrackDownloadDialog.cpp:122
 msgid "Extracting"
 msgstr ""
 
-#: client/Game2/TrackDownloadDialog.cpp:238
+#: client/Game2/TrackDownloadDialog.cpp:241
 #, c-format, boost-format
 msgid "Sorry, track \"%s\" is not available from %s"
 msgstr ""
 
-#: client/Game2/TrackDownloadDialog.cpp:244
+#: client/Game2/TrackDownloadDialog.cpp:247
 #, c-format, boost-format
 msgid ""
 "Track download failed: The file \"%s\" was not found in the archive "
 "downloaded from %s"
 msgstr ""
 
-#: client/Game2/TrackDownloadDialog.cpp:269
+#: client/Game2/TrackDownloadDialog.cpp:272
 msgid "Downloading Track:"
 msgstr ""
 
-#: client/Game2/TrackDownloadDialog.cpp:329
+#: client/Game2/TrackDownloadDialog.cpp:332
 #, c-format, boost-format
 msgid ""
 "There was a problem downloading the track from %s\n"
 "Please visit %s and download the track manually."
 msgstr ""
 
-#: client/Game2/TrackSelectDialog.cpp:96
+#: client/Game2/TrackSelectDialog.cpp:97
 msgid "Track selection"
 msgstr ""
 
-#: client/Game2/TrackSelectDialog.cpp:97
+#: client/Game2/TrackSelectDialog.cpp:98
 msgid "Tracks"
 msgstr ""
 
-#: client/Game2/TrackSelectDialog.cpp:98
+#: client/Game2/TrackSelectDialog.cpp:99
 msgid "Description"
 msgstr ""
 
-#: client/Game2/TrackSelectDialog.cpp:99
+#: client/Game2/TrackSelectDialog.cpp:100
 msgid "Laps"
 msgstr ""
 
-#: client/Game2/TrackSelectDialog.cpp:100
+#: client/Game2/TrackSelectDialog.cpp:101
 msgid "Weapons"
 msgstr ""
 
-#: client/Game2/TrackSelectDialog.cpp:103
+#: client/Game2/TrackSelectDialog.cpp:104
 msgid "Open Download Folder"
 msgstr ""
 
-#: client/Game2/TrackSelectDialog.cpp:104
+#: client/Game2/TrackSelectDialog.cpp:105
 msgid "Crafts"
 msgstr ""
 
-#: client/Game2/TrackSelectDialog.cpp:105
+#: client/Game2/TrackSelectDialog.cpp:106
 msgid "Options"
 msgstr ""
 
-#: client/Game2/TrackSelectDialog.cpp:107
+#: client/Game2/TrackSelectDialog.cpp:108
 msgid "Basic"
 msgstr ""
 
-#: client/Game2/TrackSelectDialog.cpp:108
+#: client/Game2/TrackSelectDialog.cpp:109
 msgid "Bi-Turbo"
 msgstr ""
 
-#: client/Game2/TrackSelectDialog.cpp:109
+#: client/Game2/TrackSelectDialog.cpp:110
 msgid "Low CX"
 msgstr ""
 
-#: client/Game2/TrackSelectDialog.cpp:110
+#: client/Game2/TrackSelectDialog.cpp:111
 msgid "Eon"
 msgstr ""
 
-#: client/Game2/TrackSelectDialog.cpp:111
+#: client/Game2/TrackSelectDialog.cpp:112
 msgid "Mines"
 msgstr ""
 
-#: client/Game2/TrackSelectDialog.cpp:112
+#: client/Game2/TrackSelectDialog.cpp:113
 msgid "Boost Cans"
 msgstr ""
 
-#: client/Game2/TrackSelectDialog.cpp:144
-#: client/Game2/TrackSelectDialog.cpp:164
+#: client/Game2/TrackSelectDialog.cpp:145
+#: client/Game2/TrackSelectDialog.cpp:165
 msgid "no selection"
 msgstr ""
 
-#: client/Game2/TrackSelectDialog.cpp:201
+#: client/Game2/TrackSelectDialog.cpp:207
 msgid "Number of laps should be greater than 1"
 msgstr ""
 
-#: client/Game2/TrackSelectDialog.cpp:205
+#: client/Game2/TrackSelectDialog.cpp:211
 msgid "At least one craft must be selected"
 msgstr ""
 
@@ -1423,4 +1419,114 @@ msgstr ""
 
 #: client/Game2/main.cpp:367 client/Game2/main.cpp:373
 msgid "You found a bug!"
+msgstr ""
+
+#: compilers/ResourceCompiler/BitmapHelper.cpp:37
+#: compilers/ResourceCompiler/BitmapHelper.cpp:52
+#: compilers/ResourceCompiler/BitmapHelper.cpp:109
+#: compilers/ResourceCompiler/ResActorBuilder.cpp:49
+#: compilers/ResourceCompiler/ResActorBuilder.cpp:202
+#: compilers/ResourceCompiler/ResActorBuilder.cpp:211
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:145
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:163
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:184
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:202
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:221
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:240
+#: compilers/ResourceCompiler/ResourceLibBuilder.cpp:105
+#: compilers/ResourceCompiler/TextParsing.cpp:44
+#: compilers/ResourceCompiler/TextParsing.cpp:60
+msgid "ERROR"
+msgstr ""
+
+#: compilers/ResourceCompiler/BitmapHelper.cpp:37
+msgid "Unable to open input file"
+msgstr ""
+
+#: compilers/ResourceCompiler/BitmapHelper.cpp:52
+msgid "Invalid file type"
+msgstr ""
+
+#: compilers/ResourceCompiler/BitmapHelper.cpp:109
+msgid "Unsupported format"
+msgstr ""
+
+#: compilers/ResourceCompiler/ResActorBuilder.cpp:49
+msgid "unable to open actor file"
+msgstr ""
+
+#: compilers/ResourceCompiler/ResActorBuilder.cpp:202
+msgid "No bitmap associated with the patch"
+msgstr ""
+
+#: compilers/ResourceCompiler/ResActorBuilder.cpp:211
+msgid "Bad bitmap ID"
+msgstr ""
+
+#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:297
+msgid "This image has invalid colors"
+msgstr ""
+
+#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:297
+#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:318
+msgid "WARNING"
+msgstr ""
+
+#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:299
+#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:306
+#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:313
+msgid "INFO"
+msgstr ""
+
+#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:299
+msgid "This image has transparent pixels"
+msgstr ""
+
+#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:306
+msgid "resampling"
+msgstr ""
+
+#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:313
+msgid "computing plain color"
+msgstr ""
+
+#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:318
+msgid "bitmap too small; using single color"
+msgstr ""
+
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:145
+msgid "unable to open input file"
+msgstr ""
+
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:163
+msgid "problem reading bitmap parameters"
+msgstr ""
+
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:184
+msgid "problem reading actor parameters"
+msgstr ""
+
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:202
+msgid "problem reading sprite parameters"
+msgstr ""
+
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:221
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:240
+msgid "problem reading sound parameters"
+msgstr ""
+
+#: compilers/ResourceCompiler/ResourceLibBuilder.cpp:105
+msgid "unable to create output file"
+msgstr ""
+
+#: compilers/ResourceCompiler/TextParsing.cpp:44
+msgid "unable to open defines file"
+msgstr ""
+
+#: compilers/ResourceCompiler/TextParsing.cpp:60
+msgid "line"
+msgstr ""
+
+#: compilers/ResourceCompiler/TextParsing.cpp:60
+msgid "syntax error in defines file"
 msgstr ""
