@@ -2,7 +2,7 @@ AC_PREREQ(2.59)
 AC_INIT(
 	HoverRace,
 	[m4_normalize(esyscmd(build/mkversion.sh))],
-	[http://svn.igglybob.com/hoverrace/])
+	[https://github.com/HoverRace/HoverRace])
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_MACRO_DIR(m4)
 AC_CONFIG_SRCDIR([engine/Util/FuzzyLogic.h])
