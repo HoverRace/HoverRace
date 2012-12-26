@@ -260,10 +260,5 @@ BOOL ParseInputFile(const OS::path_t &pFileName)
 		fclose(lFile);
 	}
 
-	printf("--PROGRAM END--");
-	printf(_("Press enter to continue."));
-	printf("\n");
-	getchar();
-
 	return lReturnValue;
 }
