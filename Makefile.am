@@ -5,7 +5,6 @@ AUTOMAKE_OPTIONS = foreign no-dist-gzip dist-bzip2
 EXTRA_DIST = config/config.rpath  \
 	build \
 	hovercad \
-	imr \
 	include \
 	lib \
 	res \
