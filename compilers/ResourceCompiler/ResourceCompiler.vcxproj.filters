@@ -8,6 +8,9 @@
     <Filter Include="Header Files">
       <UniqueIdentifier>{40ceee0b-ab86-40c8-8ee3-825940762256}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Parcel">
+      <UniqueIdentifier>{55e42095-7a89-4ee2-809d-eec2af93af2c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BitmapHelper.cpp">
@@ -37,6 +40,12 @@
     <ClCompile Include="TextParsing.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MfcObjStream.cpp">
+      <Filter>Parcel</Filter>
+    </ClCompile>
+    <ClCompile Include="MfcRecordFile.cpp">
+      <Filter>Parcel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BitmapHelper.h">
@@ -62,6 +71,12 @@
     </ClInclude>
     <ClInclude Include="TextParsing.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MfcObjStream.h">
+      <Filter>Parcel</Filter>
+    </ClInclude>
+    <ClInclude Include="MfcRecordFile.h">
+      <Filter>Parcel</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

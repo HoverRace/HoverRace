@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "ObjStream.h"
+#include "../../engine/Parcel/ObjStream.h"
 
 #ifdef _WIN32
 #	ifdef MR_ENGINE
@@ -39,7 +39,7 @@ class CFile;
 namespace HoverRace {
 namespace Parcel {
 
-class MR_DllDeclare MfcObjStream : public ObjStream {
+class MfcObjStream : public ObjStream {
 	typedef ObjStream SUPER;
 	public:
 		MfcObjStream(CFile *file, const Util::OS::path_t &name, bool writing);
@@ -54,6 +54,7 @@ class MR_DllDeclare MfcObjStream : public ObjStream {
 		virtual void WriteUInt32(MR_UInt32 i) { archive << i; }
 		virtual void WriteString(const std::string &s) { CString cs(s.c_str()); archive << cs; }
 		virtual void WriteCString(const CString &s) { archive << s; }
+		friend MfcObjStream &operator<<(MfcObjStream &os, const CString &s) { os.WriteCString(s); return os; }
 
 		virtual void Read(void *buf, size_t ct) { archive.Read(buf, ct); }
 
@@ -64,6 +65,7 @@ class MR_DllDeclare MfcObjStream : public ObjStream {
 		virtual void ReadUInt32(MR_UInt32 &i) { archive >> i; }
 		virtual void ReadString(std::string &s) { CString cs; archive >> cs; s = (const char*)cs; }
 		virtual void ReadCString(CString &s) { archive >> s; }
+		friend MfcObjStream &operator>>(MfcObjStream &os, CString &s) { os.ReadCString(s); return os; }
 
 	private:
 		CArchive archive;

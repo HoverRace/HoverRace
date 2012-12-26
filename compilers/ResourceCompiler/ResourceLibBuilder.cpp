@@ -23,8 +23,8 @@
 
 #include <boost/foreach.hpp>
 
-#include "../../engine/Parcel/MfcRecordFile.h"
-#include "../../engine/Parcel/ObjStream.h"
+#include "MfcRecordFile.h"
+#include "MfcObjStream.h"
 
 #include "ResourceLibBuilder.h"
 

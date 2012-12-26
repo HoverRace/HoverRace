@@ -37,11 +37,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\..\..\Debug\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\..\..\Release\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Midl>
@@ -92,6 +92,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BitmapHelper.cpp" />
+    <ClCompile Include="MfcObjStream.cpp" />
+    <ClCompile Include="MfcRecordFile.cpp" />
     <ClCompile Include="ResActorBuilder.cpp" />
     <ClCompile Include="ResBitmapBuilder.cpp" />
     <ClCompile Include="ResourceCompiler.cpp" />
@@ -106,6 +108,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BitmapHelper.h" />
+    <ClInclude Include="MfcObjStream.h" />
+    <ClInclude Include="MfcRecordFile.h" />
     <ClInclude Include="ResActorBuilder.h" />
     <ClInclude Include="ResBitmapBuilder.h" />
     <ClInclude Include="ResourceLibBuilder.h" />

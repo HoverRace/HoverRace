@@ -187,14 +187,6 @@
     <ClCompile Include="Parcel\Bundle.cpp" />
     <ClCompile Include="Parcel\ClassicObjStream.cpp" />
     <ClCompile Include="Parcel\ClassicRecordFile.cpp" />
-    <ClCompile Include="Parcel\MfcObjStream.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="Parcel\MfcRecordFile.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="Parcel\ObjStream.cpp" />
     <ClCompile Include="Parcel\TrackBundle.cpp" />
     <ClCompile Include="StdAfx.cpp">

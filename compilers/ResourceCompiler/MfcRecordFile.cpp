@@ -23,7 +23,7 @@
 
 #include <io.h>
 
-#include "../Util/Str.h"
+#include "../../engine/Util/Str.h"
 #include "MfcObjStream.h"
 
 #include "MfcRecordFile.h"
@@ -89,8 +89,9 @@ MfcRecordFileTable::~MfcRecordFileTable()
 	delete[]mRecordList;
 }
 
-void MfcRecordFileTable::Serialize(ObjStream &pArchive)
+void MfcRecordFileTable::Serialize(ObjStream &archive)
 {
+	MfcObjStream &pArchive = (MfcObjStream&)archive;
 
 	if(pArchive.IsWriting()) {
 		pArchive << mFileTitle << (MR_Int32) 0		  // Padding for checksum purpose
@@ -132,6 +133,7 @@ void MfcRecordFileTable::Serialize(ObjStream &pArchive)
 
 void MfcRecordFileTable::Inspect(Util::InspectMapNode &node) const
 {
+	/* No longer available now that MfcRecordFile is outside of engine.
 	node.
 		AddField("title", mFileTitle).
 		AddField("sumValid", mSumValid != FALSE).
@@ -139,6 +141,7 @@ void MfcRecordFileTable::Inspect(Util::InspectMapNode &node) const
 		AddField("recordsUsed", mRecordUsed).
 		AddField("recordsMax", mRecordMax).
 		AddArray("recordList", mRecordList, 0, mRecordMax);
+	*/
 }
 
 // MfcRecordFile
@@ -562,9 +565,11 @@ void MfcRecordFile::Dump(CDumpContext & dc) const
 
 void MfcRecordFile::Inspect(Util::InspectMapNode &node) const
 {
+	/* No longer available now that MfcRecordFile is outside of engine.
 	node.
 		AddField("curRecord", mCurrentRecord).
 		AddSubobject("header", mTable);
+	*/
 }
 
 ObjStreamPtr MfcRecordFile::StreamIn()

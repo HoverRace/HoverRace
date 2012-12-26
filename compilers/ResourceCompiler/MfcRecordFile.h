@@ -22,24 +22,14 @@
 
 #pragma once
 
-#include "RecordFile.h"
-
-#ifdef _WIN32
-#	ifdef MR_ENGINE
-#		define MR_DllDeclare   __declspec( dllexport )
-#	else
-#		define MR_DllDeclare   __declspec( dllimport )
-#	endif
-#else
-#	define MR_DllDeclare
-#endif
+#include "../../engine/Parcel/RecordFile.h"
 
 namespace HoverRace {
 namespace Parcel {
 
 class MfcRecordFileTable;
 
-class MR_DllDeclare MfcRecordFile : public RecordFile, private CFile
+class MfcRecordFile : public RecordFile, private CFile
 {
 	private:
 
@@ -110,5 +100,3 @@ class MR_DllDeclare MfcRecordFile : public RecordFile, private CFile
 
 }  // namespace Parcel
 }  // namespace HoverRace
-
-#undef MR_DllDeclare

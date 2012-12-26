@@ -261,12 +261,6 @@
     <ClCompile Include="Parcel\ClassicRecordFile.cpp">
       <Filter>Parcel</Filter>
     </ClCompile>
-    <ClCompile Include="Parcel\MfcObjStream.cpp">
-      <Filter>Parcel</Filter>
-    </ClCompile>
-    <ClCompile Include="Parcel\MfcRecordFile.cpp">
-      <Filter>Parcel</Filter>
-    </ClCompile>
     <ClCompile Include="Parcel\ObjStream.cpp">
       <Filter>Parcel</Filter>
     </ClCompile>
@@ -584,13 +578,5 @@
     <ClInclude Include="VideoServices\FontSpec.h">
       <Filter>VideoServices</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuildStep Include="Parcel\MfcObjStream.h">
-      <Filter>Parcel</Filter>
-    </CustomBuildStep>
-    <CustomBuildStep Include="Parcel\MfcRecordFile.h">
-      <Filter>Parcel</Filter>
-    </CustomBuildStep>
   </ItemGroup>
 </Project>
