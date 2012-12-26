@@ -23,7 +23,6 @@
 #pragma once
 
 #include "../Util/Inspectable.h"
-#include "../Util/InspectNode.h"
 #include "../Util/OS.h"
 
 #include "ObjStream.h"

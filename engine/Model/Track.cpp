@@ -23,6 +23,7 @@
 #include "StdAfx.h"
 
 #include "../Parcel/RecordFile.h"
+#include "../Util/InspectMapNode.h"
 
 #include "Track.h"
 

@@ -22,6 +22,7 @@
 
 #include "StdAfx.h"
 
+#include "../Util/InspectMapNode.h"
 #include "../Util/Str.h"
 #include "ClassicObjStream.h"
 

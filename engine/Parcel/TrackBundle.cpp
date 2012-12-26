@@ -28,6 +28,7 @@
 #include "../Model/TrackEntry.h"
 #include "../Parcel/RecordFile.h"
 #include "../Util/Config.h"
+#include "../Util/InspectMapNode.h"
 #include "ObjStream.h"
 
 #include "TrackBundle.h"

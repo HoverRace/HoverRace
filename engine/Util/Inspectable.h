@@ -24,8 +24,6 @@
 
 #include <string>
 
-#include "InspectMapNode.h"
-
 #ifdef _WIN32
 #	ifdef MR_ENGINE
 #		define MR_DllDeclare   __declspec( dllexport )

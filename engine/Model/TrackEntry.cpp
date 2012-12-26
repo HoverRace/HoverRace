@@ -27,6 +27,7 @@
 #include "../../engine/Model/TrackFileCommon.h"
 
 #include "../Parcel/ObjStream.h"
+#include "../Util/InspectMapNode.h"
 
 #include "TrackEntry.h"
 
