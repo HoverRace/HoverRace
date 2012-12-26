@@ -15,10 +15,3 @@ libparcel_la_SOURCES = \
 	TrackBundle.cpp \
 	TrackBundle.h
 
-EXTRA_DIST = \
-	MfcObjStream.cpp \
-	MfcObjStream.h \
-	MfcRecordFile.cpp \
-	MfcRecordFile.h
-
-
