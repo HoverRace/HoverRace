@@ -278,7 +278,8 @@ BOOL InternetRequest::IsReady() const
 // InternetRoom
 
 InternetRoom::InternetRoom(const std::string &pMainServer, bool mustCheckUpdates) :
-	mMainServer(pMainServer), chatLog(NULL), checkUpdates(mustCheckUpdates)
+	mMainServer(pMainServer), chatLog(NULL),
+	lastMessageReceivedSoundTs(0), checkUpdates(mustCheckUpdates)
 {
 	int lCounter;
 
@@ -945,6 +946,27 @@ void InternetRoom::RefreshChatOut(HWND pWindow)
 	SendMessage(pDest, WM_VSCROLL, SB_BOTTOM, 0);
 }
 
+/**
+ * Play the "message received" notification sound.
+ * @param wnd The dialog window handle.
+ */
+void InternetRoom::PlayMessageReceivedSound(HWND wnd) {
+	Config *cfg = Config::GetInstance();
+
+	//TODO: Only play if enabled.
+
+	// Only play if not foreground window.
+	if (GetForegroundWindow() == GetParent(wnd)) return;
+
+	// Play the sound at most once per second.
+	OS::timestamp_t curTime = OS::Time();
+	if (OS::TimeDiff(curTime, lastMessageReceivedSoundTs) < 1000) return;
+	lastMessageReceivedSoundTs = curTime;
+
+	//TODO: Preload sounds into memory and use SND_MEMORY.
+	PlaySoundW(cfg->GetMediaPath("sounds/imr/message.wav").file_string().c_str(), NULL, SND_FILENAME);
+}
+
 BOOL InternetRoom::VerifyError(HWND pParentWindow, const char *pAnswer)
 {
 	BOOL lReturnValue = FALSE;
@@ -1500,9 +1522,10 @@ BOOL CALLBACK InternetRoom::RoomCallBack(HWND pWindow, UINT pMsgId, WPARAM pWPar
 
 						if(lToRefresh & eChatModified) {
 							mThis->RefreshChatOut(pWindow);
+							mThis->PlayMessageReceivedSound(pWindow);
 						}
-						// Schedule a new refresh
 
+						// Schedule a new refresh
 						SetTimer(pWindow, REFRESH_EVENT, REFRESH_DELAY, NULL);
 					}
 					mThis->mRefreshRequest.Clear();

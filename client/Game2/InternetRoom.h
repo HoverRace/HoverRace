@@ -153,6 +153,8 @@ class InternetRoom
 		InternetRequest mBannerRequest;
 		InternetRequest mClickRequest;
 
+		Util::OS::timestamp_t lastMessageReceivedSoundTs;
+
 		WNDPROC oldBannerProc;
 		GifDecoder mBanner;
 		int mCurrentBannerIndex;
@@ -187,6 +189,8 @@ class InternetRoom
 		void RefreshGameSelection(HWND pWindow);
 		void RefreshUserList(HWND pWindow);
 		void RefreshChatOut(HWND pWindow);
+
+		void PlayMessageReceivedSound(HWND wnd);
 
 		static BOOL VerifyError(HWND pParentWindow, const char *pAnswer);
 
