@@ -210,6 +210,8 @@
 #define IDC_CHANGE_BINDING              1367
 #define IDC_CONTROL_BINDING             1369
 #define IDC_IMR_CLIENT_GROUP            1371
+#define IDC_MESSAGE_RECEIVED_SOUND      1372
+#define IDC_MESSAGE_RECEIVED_SOUND_ONLY_BG 1373
 #define ID_VIEW_3DACTION                32775
 #define ID_SETTING_WINDOW               32784
 #define ID_GAME_PAUSE                   32788
@@ -343,7 +345,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        174
 #define _APS_NEXT_COMMAND_VALUE         40052
-#define _APS_NEXT_CONTROL_VALUE         1372
+#define _APS_NEXT_CONTROL_VALUE         1374
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

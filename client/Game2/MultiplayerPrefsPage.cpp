@@ -65,6 +65,11 @@ BOOL MultiplayerPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LP
 		case WM_INITDIALOG:
 			SetDlgItemTextW(pWindow, IDC_IMR_CLIENT_GROUP, Str::UW(_("Internet Meeting Room")));
 
+			SetDlgItemTextW(pWindow, IDC_MESSAGE_RECEIVED_SOUND, Str::UW(_("Play a sound when a &message is received")));
+			SendDlgItemMessage(pWindow, IDC_MESSAGE_RECEIVED_SOUND, BM_SETCHECK, cfg->net.messageReceivedSound, 0);
+			SetDlgItemTextW(pWindow, IDC_MESSAGE_RECEIVED_SOUND_ONLY_BG, Str::UW(_("Only play sound when not &foreground window")));
+			SendDlgItemMessage(pWindow, IDC_MESSAGE_RECEIVED_SOUND_ONLY_BG, BM_SETCHECK, cfg->net.messageReceivedSoundOnlyBg, 0);
+
 			SetDlgItemTextW(pWindow, IDC_LOG_CHATS, Str::UW(_("&Log all chat sessions to:")));
 			SendDlgItemMessage(pWindow, IDC_LOG_CHATS, BM_SETCHECK, cfg->net.logChats, 0);
 			SetDlgItemTextW(pWindow, IDC_LOG_CHATS_TXT, cfg->net.logChatsPath.file_string().c_str());
@@ -101,6 +106,9 @@ BOOL MultiplayerPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LP
 				case PSN_APPLY:
 					{
 						wchar_t wbuf[MAX_PATH];
+
+						cfg->net.messageReceivedSound = (SendDlgItemMessage(pWindow, IDC_MESSAGE_RECEIVED_SOUND, BM_GETCHECK, 0, 0) != FALSE);
+						cfg->net.messageReceivedSoundOnlyBg = (SendDlgItemMessage(pWindow, IDC_MESSAGE_RECEIVED_SOUND_ONLY_BG, BM_GETCHECK, 0, 0) != FALSE);
 
 						cfg->net.logChats = (SendDlgItemMessage(pWindow, IDC_LOG_CHATS, BM_GETCHECK, 0, 0) != FALSE);
 						if(GetDlgItemTextW(pWindow, IDC_LOG_CHATS_TXT, wbuf, sizeof(wbuf) / sizeof(wchar_t)) == 0)

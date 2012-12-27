@@ -953,10 +953,10 @@ void InternetRoom::RefreshChatOut(HWND pWindow)
 void InternetRoom::PlayMessageReceivedSound(HWND wnd) {
 	Config *cfg = Config::GetInstance();
 
-	//TODO: Only play if enabled.
+	if (!cfg->net.messageReceivedSound) return;
 
 	// Only play if not foreground window.
-	if (GetForegroundWindow() == GetParent(wnd)) return;
+	if (cfg->net.messageReceivedSoundOnlyBg && GetForegroundWindow() == wnd) return;
 
 	// Play the sound at most once per second.
 	OS::timestamp_t curTime = OS::Time();

@@ -206,6 +206,8 @@ class MR_DllDeclare Config
 			std::string mainServer;
 			std::string updateServer;
 			bool autoUpdates;
+			bool messageReceivedSound;
+			bool messageReceivedSoundOnlyBg;
 			bool logChats;
 			OS::path_t logChatsPath;
 			int udpRecvPort;
