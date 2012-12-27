@@ -39,6 +39,10 @@ class CFile;
 namespace HoverRace {
 namespace Parcel {
 
+/**
+ * MFC implementation of ObjStream.
+ * @deprecated Use ClassicObjStream instead for read-only operations.
+ */
 class MfcObjStream : public ObjStream {
 	typedef ObjStream SUPER;
 	public:

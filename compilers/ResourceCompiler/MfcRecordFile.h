@@ -29,6 +29,10 @@ namespace Parcel {
 
 class MfcRecordFileTable;
 
+/**
+ * MFC implementation of RecordFile.
+ * @deprecated Use ClassicRecordFile instead for read-only operations.
+ */
 class MfcRecordFile : public RecordFile, private CFile
 {
 	private:
