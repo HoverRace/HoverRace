@@ -1,8 +1,8 @@
 
-// PrefsDialog.h
-// Header for the "Preferences" dialog.
+// MultiplayerPrefsPage.h
+// Header for the "Multiplayer" preferences page.
 //
-// Copyright (c) 2009 Michael Imamura.
+// Copyright (c) 2012 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -23,32 +23,25 @@
 
 #pragma once
 
+#include "PrefsPage.h"
+
 namespace HoverRace {
 namespace Client {
 
 class GameDirector;
-class PrefsPage;
 
-class PrefsDialog
+class MultiplayerPrefsPage : public PrefsPage
 {
+	typedef PrefsPage SUPER;
 	public:
-		PrefsDialog(GameDirector *app);
-		~PrefsDialog();
+		MultiplayerPrefsPage(GameDirector *app);
+		virtual ~MultiplayerPrefsPage();
 
-		void AddPage(PrefsPage *page);
-
-		void ShowModal(HINSTANCE hinst, HWND parent);
+	protected:
+		virtual BOOL DlgProc(HWND pWindow, UINT message, WPARAM wparam, LPARAM lparam);
 
 	private:
 		GameDirector *app;
-		typedef std::vector<PrefsPage*> pages_t;
-		pages_t pages;
-
-		PrefsPage *videoAudioPage;
-		PrefsPage *controlsPage;
-		PrefsPage *multiplayerPage;
-		PrefsPage *networkPage;
-		PrefsPage *miscPage;
 };
 
 }  // namespace Client

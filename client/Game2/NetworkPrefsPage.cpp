@@ -29,9 +29,7 @@
 
 #include "CheckRoomListDialog.h"
 #include "CheckUpdateServerDialog.h"
-#include "FolderViewer.h"
 #include "GameDirector.h"
-#include "PathSelector.h"
 
 #include "resource.h"
 
@@ -86,11 +84,6 @@ BOOL NetworkPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 			SetDlgItemTextW(pWindow, IDC_AUTO_CHECK, Str::UW(_("Automatically check for HoverRace updates")));
 			SendDlgItemMessage(pWindow, IDC_AUTO_CHECK, BM_SETCHECK, cfg->net.autoUpdates, 0);
 
-			SetDlgItemTextW(pWindow, IDC_LOG_CHATS, Str::UW(_("&Log all chat sessions to:")));
-			SendDlgItemMessage(pWindow, IDC_LOG_CHATS, BM_SETCHECK, cfg->net.logChats, 0);
-			SetDlgItemTextW(pWindow, IDC_LOG_CHATS_TXT, cfg->net.logChatsPath.file_string().c_str());
-			SetDlgItemTextW(pWindow, IDC_OPEN_FOLDER, Str::UW(_("Open Folder")));
-
 			SetDlgItemTextW(pWindow, IDC_CONNECTION_GROUP, Str::UW(_("Connection")));
 
 			SetDlgItemTextW(pWindow, IDC_TCP_SERV_PORT_C, Str::UW(_("TCP Server Port:")));
@@ -105,19 +98,6 @@ BOOL NetworkPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 
 		case WM_COMMAND:
 			switch (LOWORD(pWParam)) {
-				case IDC_LOG_CHATS_BROWSE:
-					{
-						wchar_t buf[MAX_PATH];
-						GetDlgItemTextW(pWindow, IDC_LOG_CHATS_TXT, buf, sizeof(buf) / sizeof(wchar_t));
-						OS::path_t curPath(buf);
-						if (PathSelector(_("Select a destination folder for saved chat sessions.")).
-							ShowModal(pWindow, curPath))
-						{
-							SetDlgItemTextW(pWindow, IDC_LOG_CHATS_TXT, curPath.file_string().c_str());
-						}
-					}
-					break;
-
 				case IDC_CHECK_URL:
 					{
 						char buf[MAX_PATH];
@@ -142,14 +122,6 @@ BOOL NetworkPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 					SetDlgItemText(pWindow, IDC_UPDATESERVER, Config::GetDefaultUpdateServerUrl().c_str());
 					break;
 
-				case IDC_OPEN_FOLDER:
-					{
-						wchar_t buf[MAX_PATH];
-						GetDlgItemTextW(pWindow, IDC_LOG_CHATS_TXT, buf, sizeof(buf) / sizeof(wchar_t));
-						FolderViewer(buf).Show(pWindow);
-					}
-					break;
-
 				case IDC_CONNECTION_RESET_DEFAULT:
 					SetPortFields(pWindow,
 						Config::cfg_net_t::DEFAULT_TCP_SERV_PORT,
@@ -165,7 +137,6 @@ BOOL NetworkPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 				case PSN_APPLY:
 					{
 						char lBuffer[MAX_PATH];
-						wchar_t wbuf[MAX_PATH];
 						if(GetDlgItemText(pWindow, IDC_MAINSERVER, lBuffer, sizeof(lBuffer)) == 0)
 							ASSERT(FALSE);
 
@@ -181,11 +152,6 @@ BOOL NetworkPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 							cfg->net.autoUpdates = newUpdateSetting;
 							app->ChangeAutoUpdates(newUpdateSetting);
 						}
-
-						cfg->net.logChats = (SendDlgItemMessage(pWindow, IDC_LOG_CHATS, BM_GETCHECK, 0, 0) != FALSE);
-						if(GetDlgItemTextW(pWindow, IDC_LOG_CHATS_TXT, wbuf, sizeof(wbuf) / sizeof(wchar_t)) == 0)
-							ASSERT(FALSE);
-						cfg->net.logChatsPath = wbuf;
 
 						if(GetDlgItemText(pWindow, IDC_TCP_SERV_PORT, lBuffer, sizeof(lBuffer)) == 0)
 							ASSERT(FALSE);

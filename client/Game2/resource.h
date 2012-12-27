@@ -40,6 +40,7 @@
 #define IDD_NETWORK                     168
 #define IDD_PERFORMING_TASK             170
 #define IDB_ABOUT                       172
+#define IDD_MULTIPLAYER_PREFS           173
 #define IDC_GAMMA_SLIDER                1001
 #define IDC_CONTRAST_SLIDER             1002
 #define IDC_SERVER_PORT                 1002
@@ -208,6 +209,7 @@
 #define IDC_MAP_SELECT                  1364
 #define IDC_CHANGE_BINDING              1367
 #define IDC_CONTROL_BINDING             1369
+#define IDC_IMR_CLIENT_GROUP            1371
 #define ID_VIEW_3DACTION                32775
 #define ID_SETTING_WINDOW               32784
 #define ID_GAME_PAUSE                   32788
@@ -339,9 +341,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        173
+#define _APS_NEXT_RESOURCE_VALUE        174
 #define _APS_NEXT_COMMAND_VALUE         40052
-#define _APS_NEXT_CONTROL_VALUE         1371
+#define _APS_NEXT_CONTROL_VALUE         1372
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -118,6 +118,7 @@
     <ClCompile Include="Game2\main.cpp" />
     <ClCompile Include="Game2\MatchReport.cpp" />
     <ClCompile Include="Game2\MiscPrefsPage.cpp" />
+    <ClCompile Include="Game2\MultiplayerPrefsPage.cpp" />
     <ClCompile Include="Game2\NetInterface.cpp" />
     <ClCompile Include="Game2\NetworkPrefsPage.cpp" />
     <ClCompile Include="Game2\NetworkSession.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="Game2\IntroMovie.h" />
     <ClInclude Include="Game2\MatchReport.h" />
     <ClInclude Include="Game2\MiscPrefsPage.h" />
+    <ClInclude Include="Game2\MultiplayerPrefsPage.h" />
     <ClInclude Include="Game2\NetInterface.h" />
     <ClInclude Include="Game2\NetworkPrefsPage.h" />
     <ClInclude Include="Game2\NetworkSession.h" />
