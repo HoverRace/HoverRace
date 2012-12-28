@@ -32,11 +32,7 @@ static CMapStringToString gDefineMap;
 BOOL MR_ReadPredefinedConstants(const Util::OS::path_t &pFileName)
 {
 	BOOL lReturnValue = TRUE;
-#	ifdef _WIN32
-		FILE *lFile = _wfopen(pFileName.file_string().c_str(), L"r");
-#	else
-		FILE *lFile = fopen(pFileName.file_string().c_str(), "r");
-#	endif
+	FILE *lFile = Util::OS::FOpen(pFileName, "r");
 
 	if(lFile == NULL) {
 		lReturnValue = FALSE;
