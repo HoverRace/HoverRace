@@ -2,7 +2,7 @@
 // ClassicObjStream.cpp
 // Standard HoverRace 1.x parcel data stream.
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2012 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
