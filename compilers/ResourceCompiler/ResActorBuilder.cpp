@@ -59,7 +59,8 @@ BOOL ResActorBuilder::BuildFromFile(const char *pFile, ResourceLib *pBitmapLib)
 		int lCurrentFrame = -1;
 
 		ActorComponent *lCurrentComponent = NULL;
-		CList < ActorComponent *, ActorComponent * >lComponentList;
+		typedef std::vector<ActorComponent*> lComponentList_t;
+		lComponentList_t lComponentList;
 
 		for(lCounter = 0; lCounter < MR_MAX_SEQUENCE; lCounter++) {
 			lFrameCount[lCounter] = 0;
@@ -109,7 +110,7 @@ BOOL ResActorBuilder::BuildFromFile(const char *pFile, ResourceLib *pBitmapLib)
 
 							if(lCurrentComponent != NULL) {
 								lComponentCount[lCurrentFrame]++;
-								lComponentList.AddTail(lCurrentComponent);
+								lComponentList.push_back(lCurrentComponent);
 								lBufferPtr = fgets(lBuffer, sizeof(lBuffer), lFile);
 							}
 						}
@@ -133,7 +134,7 @@ BOOL ResActorBuilder::BuildFromFile(const char *pFile, ResourceLib *pBitmapLib)
 
 		if(lReturnValue) {
 			// Construct the real actor
-			POSITION lPos = lComponentList.GetHeadPosition();
+			lComponentList_t::iterator componentListIter = lComponentList.begin();
 
 			mSequenceList = new Sequence[mNbSequence];
 
@@ -148,7 +149,8 @@ BOOL ResActorBuilder::BuildFromFile(const char *pFile, ResourceLib *pBitmapLib)
 					mSequenceList[lSequence].mFrameList[lFrame].mComponentList = new ActorComponent *[lComponentCount[lCurrentFrame]];
 
 					for(int lComponent = 0; lComponent < lComponentCount[lCurrentFrame]; lComponent++) {
-						mSequenceList[lSequence].mFrameList[lFrame].mComponentList[lComponent] = lComponentList.GetNext(lPos);
+						mSequenceList[lSequence].mFrameList[lFrame].mComponentList[lComponent] = *componentListIter;
+						++componentListIter;
 					}
 					lCurrentFrame++;
 				}
@@ -156,10 +158,10 @@ BOOL ResActorBuilder::BuildFromFile(const char *pFile, ResourceLib *pBitmapLib)
 		}
 		else {
 			// Delete the lists
-			POSITION lPos = lComponentList.GetHeadPosition();
-
-			while(lPos != NULL) {
-				delete lComponentList.GetNext(lPos);
+			for (lComponentList_t::iterator iter = lComponentList.begin();
+				iter != lComponentList.end(); ++iter)
+			{
+				delete *iter;
 			}
 		}
 	}
@@ -195,7 +197,7 @@ ResActorBuilder::Patch * ResActorBuilder::ReadPatch(FILE * pFile, ResourceLib * 
 
 	fgets(lBuffer, sizeof(lBuffer), pFile);
 
-	if(sscanf(MR_PreProcLine(lBuffer), " %d ", &lBitmapId) != 1) {
+	if(sscanf(MR_PreProcLine(lBuffer).c_str(), " %d ", &lBitmapId) != 1) {
 		delete lReturnValue;
 		lReturnValue = FALSE;
 

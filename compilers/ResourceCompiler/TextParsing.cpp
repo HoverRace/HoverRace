@@ -27,7 +27,8 @@ namespace HoverRace {
 namespace ResourceCompiler {
 
 // Local data
-static CMapStringToString gDefineMap;
+typedef std::map<std::string, std::string> gDefineMap_t;
+static gDefineMap_t gDefineMap;
 
 BOOL MR_ReadPredefinedConstants(const Util::OS::path_t &pFileName)
 {
@@ -43,21 +44,20 @@ BOOL MR_ReadPredefinedConstants(const Util::OS::path_t &pFileName)
 		char lBuffer[250];
 		int lLineNo = 1;
 		while(lReturnValue && fgets(lBuffer, sizeof(lBuffer), lFile)) {
-			CString lLine = MR_PreProcLine(lBuffer);
+			std::string lLine = MR_PreProcLine(lBuffer);
 			lLineNo++;
 
-			if(MR_BeginByKeyword(lLine, "#define")) {
+			if (MR_BeginByKeyword(lLine.c_str(), "#define")) {
 				char lKey[100];
 				char lValue[100];
 
-				if(sscanf(lLine, " #define %s %s ", lKey, &lValue) != 2) {
+				if(sscanf(lLine.c_str(), " #define %s %s ", lKey, &lValue) != 2) {
 					lReturnValue = FALSE;
 
 					fprintf(stderr, "%s: %s, %s %d.\n", _("ERROR"), _("syntax error in defines file"), _("line"), lLineNo);
 				}
 				else {
-					// add the define to the list
-					gDefineMap.SetAt(lKey, lValue);
+					gDefineMap[lKey] = lValue;
 				}
 			}
 		}
@@ -68,10 +68,10 @@ BOOL MR_ReadPredefinedConstants(const Util::OS::path_t &pFileName)
 	return lReturnValue;
 }
 
-CString MR_PreProcLine(const char *pLine)
+const std::string MR_PreProcLine(const char *pLine)
 {
 	// scan the line and seardh for predefined keyword
-	CString lReturnValue;
+	std::string lReturnValue;
 
 	if(pLine != NULL) {
 		const char *lPtr = pLine;
@@ -89,19 +89,18 @@ CString MR_PreProcLine(const char *pLine)
 				case '\t':
 
 					if(lTokenStart) {
-						CString lValue;
-
-						CString lKey(lTokenStart, lPtr - lTokenStart);
+						std::string key(lTokenStart, lPtr - lTokenStart);
 
 						lTokenStart = NULL;
 
-						if(gDefineMap.Lookup(lKey, lValue)) {
-							lReturnValue += lValue;
+						gDefineMap_t::const_iterator iter = gDefineMap.find(key);
+						if (iter == gDefineMap.end()) {
+							lReturnValue += key;
 						}
 						else {
-							lReturnValue += lKey;
+							const std::string value = iter->second;
+							lReturnValue += value;
 						}
-
 					}
 
 					if(!lEnd) {

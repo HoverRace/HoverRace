@@ -28,7 +28,7 @@ namespace ResourceCompiler {
 
 BOOL MR_ReadPredefinedConstants(const Util::OS::path_t &pFilename);
 
-CString MR_PreProcLine(const char *pLine);
+const std::string MR_PreProcLine(const char *pLine);
 
 BOOL MR_BeginByKeyword(const char *pLine, const char *pKeyword);
 
