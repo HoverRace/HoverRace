@@ -65,7 +65,27 @@ void ClassicObjStream::WriteUInt32(MR_UInt32 i)
 
 void ClassicObjStream::WriteString(const std::string &s)
 {
-	//TODO
+	MR_UInt32 len = s.length();
+	WriteStringLength(len);
+	WriteBuf(s.c_str(), len);
+}
+
+void ClassicObjStream::WriteStringLength(MR_UInt32 len)
+{
+	if (len < 0xff) {
+		WriteUInt8(len);
+		return;
+	}
+
+	WriteUInt8(0xff);
+	// 0xfffe is the marker for Unicode strings.
+	if (len < 0xfffe) {
+		WriteUInt16(len);
+		return;
+	}
+
+	WriteUInt16(0xffff);
+	WriteUInt32(len);
 }
 
 void ClassicObjStream::ReadUInt8(MR_UInt8 &i)

@@ -71,6 +71,8 @@ class MR_DllDeclare ClassicObjStream : public ObjStream
 #		endif
 
 	private:
+		void WriteStringLength(MR_UInt32 len);
+
 		void ReadBuf(void *buf, size_t ct)
 		{
 			size_t ret = fread(buf, ct, 1, stream);
