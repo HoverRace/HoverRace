@@ -2220,7 +2220,7 @@ std::string MR_Pad(const char *pStr)
 				{
 					*/
 					unsigned char c = *pStr;
-					lReturnValue += (nfmt % c).str();
+					lReturnValue += (nfmt % (int)c).str();
 					/*
 				}
 			}
