@@ -657,7 +657,7 @@ BOOL InternetRoom::AskRoomParams(HWND pParentWindow, BOOL pShouldRecheckServer)
 		SelectRoomDialog dlg(mUser);
 		roomList = dlg.ShowModal(NULL, pParentWindow);
 		if (roomList != NULL) {
-			mUser = dlg.GetPlayerName().c_str();
+			mUser = dlg.GetPlayerName();
 		}
 	}
 	return roomList != NULL;
