@@ -23,8 +23,8 @@
 
 #include <boost/foreach.hpp>
 
-#include "MfcRecordFile.h"
-#include "MfcObjStream.h"
+#include "../../engine/Parcel/ClassicRecordFile.h"
+#include "../../engine/Parcel/ClassicObjStream.h"
 
 #include "ResourceLibBuilder.h"
 
@@ -97,7 +97,7 @@ bool ResourceLibBuilder::Export(const HoverRace::Util::OS::path_t &filename)
 {
 	bool lReturnValue = true;
 
-	MfcRecordFile lFile;
+	ClassicRecordFile lFile;
 
 	lReturnValue = lFile.CreateForWrite(filename, 1, "\x8\rFireball object factory resource file, (c)GrokkSoft 1996\n\x1a");
 
