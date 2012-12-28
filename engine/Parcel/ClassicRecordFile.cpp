@@ -2,7 +2,7 @@
 // ClassicRecordFile.cpp
 // Standard HoverRace 1.x parcel format.
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2012 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -70,8 +70,9 @@ ClassicRecordFileHeader::ClassicRecordFileHeader(MR_UInt32 numRecords) :
 {
 	ASSERT(numRecords > 0);
 
+	recordList = new MR_UInt32[numRecords];
 	for (MR_UInt32 i = 0; i < numRecords; ++i) {
-		recordList = NULL;
+		recordList[i] = NULL;
 	}
 }
 
@@ -83,9 +84,18 @@ ClassicRecordFileHeader::~ClassicRecordFileHeader()
 void ClassicRecordFileHeader::Serialize(ObjStream &os)
 {
 	if (os.IsWriting()) {
-		//TODO
-		ASSERT(FALSE);
-		throw new std::exception();
+		BOOL sumValidLoad = FALSE;  //TODO
+
+		os << title <<
+			(MR_Int32) 0 << (MR_Int32) 0 <<
+			sumValidLoad << checksum << recordsUsed << recordsMax <<
+			(MR_Int32) 0 << (MR_Int32) 0;
+
+		if (recordsMax > 0) {
+			for (unsigned int i = 0; i < recordsMax; ++i) {
+				os << recordList[i];
+			}
+		}
 	}
 	else {
 		delete[] recordList;
@@ -132,13 +142,20 @@ void ClassicRecordFileHeader::Inspect(Util::InspectMapNode &node) const
 // ClassicRecordFile
 
 ClassicRecordFile::ClassicRecordFile() :
-	SUPER(), curRecord(-1), header(NULL)
+	SUPER(), constructionMode(false), curRecord(-1), header(NULL)
 {
 }
 
 ClassicRecordFile::~ClassicRecordFile()
 {
 	if (header != NULL) {
+		// Re-write header for construction mode.
+		if (constructionMode) {
+			fseek(fileStream, 0, SEEK_SET);
+			ClassicObjStream objStream(fileStream, filename, true);
+			header->Serialize(objStream);
+		}
+
 		fclose(fileStream);
 		delete header;
 	}
@@ -153,28 +170,17 @@ bool ClassicRecordFile::CreateForWrite(const Util::OS::path_t &filename, int num
 	fileStream = OS::FOpen(filename, "w+b");
 	if (fileStream == NULL) return false;
 
-	//TODO: Write header.
-	throw std::exception();
+	ClassicObjStream objStream(fileStream, filename, true);
+	header = new ClassicRecordFileHeader(numRecords);
+	header->title = title;
+	header->Serialize(objStream);
 
-	//return true;
+	constructionMode = true;
+
+	return true;
 }
 
 bool ClassicRecordFile::OpenForWrite(const Util::OS::path_t &filename)
-{
-	if (header != NULL) return false;
-
-	this->filename = filename;
-
-	fileStream = OS::FOpen(filename, "r+b");
-	if (fileStream == NULL) return false;
-
-	//TODO: Read header.
-	throw std::exception();
-
-	//return true;
-}
-
-bool ClassicRecordFile::OpenForRead(const Util::OS::path_t &filename, bool validateChecksum)
 {
 	if (header != NULL) return false;
 
@@ -189,11 +195,23 @@ bool ClassicRecordFile::OpenForRead(const Util::OS::path_t &filename, bool valid
 
 	if (header->recordList == NULL) { fclose(fileStream); return false; }
 
-	//TODO: Validate checksum.
-
 	curRecord = 0;
 
+	constructionMode = true;
+
 	return true;
+}
+
+bool ClassicRecordFile::OpenForRead(const Util::OS::path_t &filename, bool validateChecksum)
+{
+	if (OpenForWrite(filename)) {
+		constructionMode = false;
+
+		//TODO: Validate checksum;
+		return true;
+	}
+
+	return false;
 }
 
 DWORD ClassicRecordFile::GetAlignMode()
@@ -221,8 +239,22 @@ void ClassicRecordFile::SelectRecord(int i)
 
 bool ClassicRecordFile::BeginANewRecord()
 {
-	//TODO
-	return false;
+	if (header == NULL) {
+		ASSERT(FALSE);
+		return false;
+	}
+
+	if (header->recordsUsed >= header->recordsMax) {
+		// Exceeded preallocated record count.
+		ASSERT(FALSE);
+		return false;
+	}
+
+	fseek(fileStream, 0, SEEK_END);
+	curRecord = header->recordsUsed++;
+	header->recordList[curRecord] = ftell(fileStream);
+
+	return true;
 }
 
 void ClassicRecordFile::Inspect(Util::InspectMapNode &node) const

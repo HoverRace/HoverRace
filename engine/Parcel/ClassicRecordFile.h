@@ -2,7 +2,7 @@
 // ClassicRecordFile.h
 // Standard HoverRace 1.x parcel format.
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2012 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -68,6 +68,7 @@ class MR_DllDeclare ClassicRecordFile : public RecordFile
 		virtual ObjStreamPtr StreamOut();
 
 	private:
+		bool constructionMode;
 		int curRecord;
 		ClassicRecordFileHeader *header;
 		FILE *fileStream;
