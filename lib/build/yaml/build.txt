@@ -6,7 +6,7 @@ Current supported LibYAML version: 0.1.4
 
 1. Download the LibYAML sources (libyaml.tar.gz) from here:
 
-http://pyyaml.org/download/libyaml/yaml-0.1.3.tar.gz
+http://pyyaml.org/download/libyaml/yaml-0.1.4.tar.gz
 
 2. Unpack the .tar.gz file into this folder.
 
