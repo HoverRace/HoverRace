@@ -47,7 +47,7 @@ BOOL ResBitmapBuilder::BuildFromFile(const char *pFile, int pAntiAliasScheme)
 
 	MR_UInt8 *lBuffer;
 
-	lBuffer = LoadBitmap(pFile, mXRes, mYRes, TRUE);
+	lBuffer = LoadBitmap(pFile, mXRes, mYRes, true);
 
 	if(lBuffer == NULL) {
 		lReturnValue = FALSE;

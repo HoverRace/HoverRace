@@ -20,10 +20,14 @@
 // and limitations under the License.
 //
 
-#ifndef MR_BITMAP_HELPER_H
-#define MR_BITMAP_HELPER_H
+#pragma once
 
 #include "../../engine/Util/MR_Types.h"
 
-MR_UInt8 *LoadBitmap(const char *lFileName, int &pXRes, int &pYRes, BOOL pReverse);
-#endif
+namespace HoverRace {
+namespace ResourceCompiler {
+
+MR_UInt8 *LoadBitmap(const char *lFileName, int &pXRes, int &pYRes, bool pReverse);
+
+}  // namespace ResourceCompiler
+}  // namespace HoverRace

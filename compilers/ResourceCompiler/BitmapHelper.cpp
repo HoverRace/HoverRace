@@ -28,12 +28,15 @@
 #	define _stricmp strcasecmp
 #endif
 
+namespace HoverRace {
+namespace ResourceCompiler {
+
 // Local prototypes
 static MR_UInt8 *BMPRead(FILE *pFile, int &pXRes, int &pYRes);
 static MR_UInt8 *IMGRead(FILE *pFile, int &pXRes, int &pYRes);
 static MR_UInt8 *PCXRead(FILE *pFile, int &pXRes, int &pYRes);
 
-MR_UInt8 *LoadBitmap(const char *lFileName, int &pXRes, int &pYRes, BOOL pReverse)
+MR_UInt8 *LoadBitmap(const char *lFileName, int &pXRes, int &pYRes, bool pReverse)
 {
 	MR_UInt8 *lReturnValue = NULL;
 
@@ -191,3 +194,6 @@ MR_UInt8 *PCXRead(FILE * pFile, int &pXRes, int &pYRes)
 
 	return lReturnValue;
 }
+
+}  // namespace ResourceCompiler
+}  // namespace HoverRace
