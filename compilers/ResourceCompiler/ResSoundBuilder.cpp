@@ -21,18 +21,15 @@
 
 #include "StdAfx.h"
 
+#include <SDL/SDL.h>
+
 #include "ResSoundBuilder.h"
 #include "BitmapHelper.h"
-
-#include <vfw.h>
-#include <mmreg.h>
 
 namespace HoverRace {
 namespace ResourceCompiler {
 
-// Local prototypes
-BOOL ParseFile(const char *pFile, const char *&pData, int &pDataLen);
-BOOL DSParseWaveResource(void *pvRes, WAVEFORMATEX ** ppWaveHeader, BYTE ** ppbWaveData, DWORD * pcbWaveSize);
+bool ParseSoundFile(const char *filename, const char *&destData, int &destLen);
 
 ResShortSoundBuilder::ResShortSoundBuilder(int pResourceId) :
 	SUPER(pResourceId)
@@ -40,7 +37,7 @@ ResShortSoundBuilder::ResShortSoundBuilder(int pResourceId) :
 
 }
 
-BOOL ResShortSoundBuilder::BuildFromFile(const char *pFile, int pNbCopy)
+bool ResShortSoundBuilder::BuildFromFile(const char *pFile, int pNbCopy)
 {
 	mNbCopy = pNbCopy;
 	return ParseFile(pFile, (const char *&) mData, mDataLen);
@@ -52,120 +49,42 @@ ResContinuousSoundBuilder::ResContinuousSoundBuilder(int pResourceId) :
 
 }
 
-BOOL ResContinuousSoundBuilder::BuildFromFile(const char *pFile, int pNbCopy)
+bool ResContinuousSoundBuilder::BuildFromFile(const char *pFile, int pNbCopy)
 {
 	mNbCopy = pNbCopy;
 	return ParseFile(pFile, (const char *&) mData, mDataLen);
 }
 
-BOOL ParseFile(const char *pFile, const char *&pData, int &pDataLen)
+bool ParseSoundFile(const char *filename, const char *&destData, int &destLen)
 {
-	static char lFileBuffer[1000000];
-
-	BOOL lReturnValue = TRUE;
-	FILE *lFile = fopen(pFile, "rb");
-
-	pData = NULL;
-	pDataLen = 0;
-
-	if(lFile == NULL) {
-		lReturnValue = FALSE;
-	}
-	else {
-		if(fread(lFileBuffer, 1, sizeof(lFileBuffer), lFile) > 20) {
-			WAVEFORMATEX *lWaveFormat;
-			BYTE *lWaveData;
-			DWORD lWaveSize;
-
-			lReturnValue = DSParseWaveResource((void *) lFileBuffer, &lWaveFormat, &lWaveData, &lWaveSize);
-
-			if(lReturnValue) {
-				pDataLen = sizeof(MR_UInt32) + sizeof(WAVEFORMATEX) + lWaveSize;
-				pData = new char[pDataLen];
-
-				*(MR_UInt32 *) (pData + 0) = lWaveSize;
-				*(WAVEFORMATEX *) (pData + sizeof(MR_UInt32)) = *lWaveFormat;
-				memcpy((void *) (pData + sizeof(MR_UInt32) + sizeof(WAVEFORMATEX)), lWaveData, lWaveSize);
-			}
-		}
-		else {
-			lReturnValue = FALSE;
-		}
-		fclose(lFile);
+	SDL_AudioSpec spec;
+	MR_UInt8 *audioBuf;
+	MR_UInt32 bufLen;
+	if (SDL_LoadWAV(filename, &spec, &audioBuf, &bufLen) == NULL) {
+		fprintf(stderr, "%s: %s: %s: %s\n", _("ERROR"), _("invalid WAV file"), filename, SDL_GetError());
+		return false;
 	}
 
-	return lReturnValue;
-}
+	destLen = sizeof(MR_UInt32) +
+		18 +  // sizeof(WAVEFORMATEX)
+		bufLen;
+	destData = new char[destLen]();
+	unsigned int bitsPerSample = spec.format & 0xff;
 
-// Ugly code Copied from a microsoft example
-// Hoping that it works (remember.. if it works.. don't touch it)
-BOOL DSParseWaveResource(void *pvRes, WAVEFORMATEX ** ppWaveHeader, BYTE ** ppbWaveData, DWORD * pcbWaveSize)
-{
-	DWORD *pdw;
-	DWORD *pdwEnd;
-	DWORD dwRiff;
-	DWORD dwType;
-	DWORD dwLength;
+	*(MR_UInt32*)(destData + 0) = bufLen;
 
-	if(ppWaveHeader)
-		*ppWaveHeader = NULL;
+	const char *hdr = destData + sizeof(MR_UInt32);
+	*(MR_UInt16*)(hdr + 0) = 1;  // wFormatTag = WAVE_FORMAT_PCM
+	*(MR_UInt16*)(hdr + 2) = spec.channels;  // nChannels
+	*(MR_UInt32*)(hdr + 4) = spec.freq;  // nSamplesPerSec
+	*(MR_UInt32*)(hdr + 8) = spec.freq * spec.channels * (bitsPerSample / 8);  // nAvgBytesPerSec
+	*(MR_UInt16*)(hdr + 12) = spec.channels * (bitsPerSample / 8);  // nBlockAlign
+	*(MR_UInt16*)(hdr + 14) = bitsPerSample;  // wBitsPerSample
 
-	if(ppbWaveData)
-		*ppbWaveData = NULL;
+	memcpy((void*)(destData + sizeof(MR_UInt32) + 18), audioBuf, bufLen);
 
-	if(pcbWaveSize)
-		*pcbWaveSize = 0;
-
-	pdw = (DWORD *) pvRes;
-	dwRiff = *pdw++;
-	dwLength = *pdw++;
-	dwType = *pdw++;
-
-	if(dwRiff != mmioFOURCC('R', 'I', 'F', 'F'))
-		goto exit;								  // not even RIFF
-
-	if(dwType != mmioFOURCC('W', 'A', 'V', 'E'))
-		goto exit;								  // not a WAV
-
-	pdwEnd = (DWORD *) ((BYTE *) pdw + dwLength - 4);
-
-	while(pdw < pdwEnd) {
-		dwType = *pdw++;
-		dwLength = *pdw++;
-
-		switch (dwType) {
-			case mmioFOURCC('f', 'm', 't', ' '):
-				if(ppWaveHeader && !*ppWaveHeader) {
-					if(dwLength < sizeof(WAVEFORMAT))
-						goto exit;				  // not a WAV
-
-					*ppWaveHeader = (WAVEFORMATEX *) pdw;
-
-					if((!ppbWaveData || *ppbWaveData) && (!pcbWaveSize || *pcbWaveSize)) {
-						return TRUE;
-					}
-				}
-				break;
-
-			case mmioFOURCC('d', 'a', 't', 'a'):
-				if((ppbWaveData && !*ppbWaveData) || (pcbWaveSize && !*pcbWaveSize)) {
-					if(ppbWaveData)
-						*ppbWaveData = (LPBYTE) pdw;
-
-					if(pcbWaveSize)
-						*pcbWaveSize = dwLength;
-
-					if(!ppWaveHeader || *ppWaveHeader)
-						return TRUE;
-				}
-				break;
-		}
-
-		pdw = (DWORD *) ((BYTE *) pdw + ((dwLength + 1) & ~1));
-	}
-
-	exit:
-	return FALSE;
+	SDL_FreeWAV(audioBuf);
+	return true;
 }
 
 }  // namespace ResourceCompiler

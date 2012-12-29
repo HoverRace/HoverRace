@@ -220,7 +220,7 @@ BOOL ParseInputFile(const OS::path_t &pFileName)
 					else {
 						ResShortSoundBuilder *lSound = new ResShortSoundBuilder(lResourceId);
 
-						lReturnValue = lSound->BuildFromFile(lLineBuffer, lNbCopy);
+						lReturnValue = lSound->BuildFromFile(lLineBuffer, lNbCopy) ? TRUE : FALSE;
 
 						if(lReturnValue) {
 							gsLib.AddSound(lSound);
@@ -239,7 +239,7 @@ BOOL ParseInputFile(const OS::path_t &pFileName)
 					else {
 						ResContinuousSoundBuilder *lSound = new ResContinuousSoundBuilder(lResourceId);
 
-						lReturnValue = lSound->BuildFromFile(lLineBuffer, lNbCopy);
+						lReturnValue = lSound->BuildFromFile(lLineBuffer, lNbCopy) ? TRUE : FALSE;
 
 						if(lReturnValue) {
 							gsLib.AddSound(lSound);

@@ -32,7 +32,7 @@ class ResShortSoundBuilder : public ObjFacTools::ResShortSound
 	public:
 		ResShortSoundBuilder(int pResourceId);
 
-		BOOL BuildFromFile(const char *pFile, int pNbCopy);
+		bool BuildFromFile(const char *pFile, int pNbCopy);
 
 };
 
@@ -42,8 +42,7 @@ class ResContinuousSoundBuilder : public ObjFacTools::ResContinuousSound
 	public:
 		ResContinuousSoundBuilder(int pResourceId);
 
-		BOOL BuildFromFile(const char *pFile, int pNbCopy);
-
+		bool BuildFromFile(const char *pFile, int pNbCopy);
 };
 
 }  // namespace ResourceCompiler
