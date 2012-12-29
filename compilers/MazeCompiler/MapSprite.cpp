@@ -21,7 +21,7 @@
 
 #include "StdAfx.h"
 
-#include "TrackMap.h"
+#include "MapSprite.h"
 
 namespace HoverRace {
 namespace MazeCompiler {

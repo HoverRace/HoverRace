@@ -30,7 +30,7 @@
 #include "MfcObjStream.h"
 
 #include "LevelBuilder.h"
-#include "TrackMap.h"
+#include "MapSprite.h"
 #include "Parser.h"
 
 #include "resource.h"

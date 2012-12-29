@@ -118,6 +118,7 @@
     <ClCompile Include="LevelBuilder.cpp" />
     <ClCompile Include="LevelBuilderVisiblesZones.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MapSprite.cpp" />
     <ClCompile Include="MfcObjStream.cpp" />
     <ClCompile Include="MfcRecordFile.cpp" />
     <ClCompile Include="Parser.cpp" />
@@ -125,16 +126,15 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="TrackMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LevelBuilder.h" />
+    <ClInclude Include="MapSprite.h" />
     <ClInclude Include="MfcObjStream.h" />
     <ClInclude Include="MfcRecordFile.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="StdAfx.h" />
-    <ClInclude Include="TrackMap.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\engine\engine.vcxproj">

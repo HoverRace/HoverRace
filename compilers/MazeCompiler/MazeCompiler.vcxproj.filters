@@ -27,14 +27,14 @@
     <ClCompile Include="Parser.cpp">
       <Filter>Compiler</Filter>
     </ClCompile>
-    <ClCompile Include="TrackMap.cpp">
-      <Filter>Compiler</Filter>
-    </ClCompile>
     <ClCompile Include="MfcObjStream.cpp">
       <Filter>Parcel</Filter>
     </ClCompile>
     <ClCompile Include="MfcRecordFile.cpp">
       <Filter>Parcel</Filter>
+    </ClCompile>
+    <ClCompile Include="MapSprite.cpp">
+      <Filter>Compiler</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -47,9 +47,6 @@
     <ClInclude Include="LevelBuilder.h">
       <Filter>Compiler</Filter>
     </ClInclude>
-    <ClInclude Include="TrackMap.h">
-      <Filter>Compiler</Filter>
-    </ClInclude>
     <ClInclude Include="Parser.h">
       <Filter>Compiler</Filter>
     </ClInclude>
@@ -58,6 +55,9 @@
     </ClInclude>
     <ClInclude Include="MfcRecordFile.h">
       <Filter>Parcel</Filter>
+    </ClInclude>
+    <ClInclude Include="MapSprite.h">
+      <Filter>Compiler</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
