@@ -19,8 +19,14 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
+
 #include "BitmapHelper.h"
+
+#ifndef _WIN32
+#	include <strings.h>
+#	define _stricmp strcasecmp
+#endif
 
 // Local prototypes
 static MR_UInt8 *BMPRead(FILE *pFile, int &pXRes, int &pYRes);

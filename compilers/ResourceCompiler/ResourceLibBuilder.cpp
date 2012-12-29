@@ -36,7 +36,7 @@ namespace {
 	{
 		MR_UInt32 num = res.size();
 		os << num;
-		BOOST_FOREACH(typename const T::value_type &ent, res) {
+		BOOST_FOREACH(const typename T::value_type &ent, res) {
 			MR_Int32 key = ent.first;
 			os << key;
 			ent.second->Serialize(os);
