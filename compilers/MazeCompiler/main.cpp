@@ -75,10 +75,7 @@ int main(int pArgCount, const char **pArgStrings)
 		textdomain(PACKAGE);
 #	endif
 
-	printf(_("HoverRace Track Compiler"));
-	printf("      ");
-	printf(_("(c)1996-1997 GrokkSoft Inc."));
-	printf("\n");
+	puts("HoverRace Track Compiler      (c)1996-1997 GrokkSoft Inc.");
 
 	Util::DllObjectFactory::Init();
 
