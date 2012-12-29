@@ -72,7 +72,6 @@ int main(int pArgCount, const char **pArgStrings)
 	printf(_("(c)1996-1997 GrokkSoft Inc."));
 	printf("\n");
 
-	Sleep(1000);
 	Util::DllObjectFactory::Init();
 
 #	ifdef _WIN32
@@ -84,7 +83,6 @@ int main(int pArgCount, const char **pArgStrings)
 	if(pArgCount != 3) {
 		lPrintUsage = TRUE;
 		puts(_("Wrong argument count"));
-		Sleep(4000);
 	}
 
 #	ifdef _WIN32
@@ -254,13 +252,6 @@ int main(int pArgCount, const char **pArgStrings)
 		}
 		PrintUsage();
 	}
-
-	if(lError) {
-		Sleep(7000);
-	}
-
-	Sleep(2000);
-	// printf( "END\n" );
 
 	Util::DllObjectFactory::Clean(FALSE);
 
