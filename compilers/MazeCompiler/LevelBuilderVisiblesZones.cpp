@@ -19,16 +19,20 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
 #include <math.h>
+
 #include "LevelBuilder.h"
-#include "resource.h"
 
-#define new DEBUG_NEW
+#ifdef _WIN32
+#	define new DEBUG_NEW
+#endif
 
-// Usefull constants
 #define MR_MAX_VISIBLE_ZONES   500
+
+namespace HoverRace {
+namespace MazeCompiler {
 
 static const double Pi = fabs(atan2((double) 0, (double) -1));
 
@@ -45,10 +49,10 @@ class MR_2DFloatPos
 
 };
 
-class MR_VisibleStep
+class VisibleStep
 {
 	public:
-		MR_VisibleStep * mPrev;
+		VisibleStep *mPrev;
 
 		int mZone;								  // Section Id
 
@@ -61,8 +65,8 @@ class MR_VisibleStep
 		MR_2DFloatPos mLeftLimitLightSource;
 		MR_2DFloatPos mRightLimitLightSource;
 
-		MR_VisibleStep();
-		~MR_VisibleStep();
+		VisibleStep();
+		~VisibleStep();
 
 };
 
@@ -71,7 +75,7 @@ static void AddZonetoArray(int pZone, int *pDestArray, int &pDestIndex);
 static double GetAngle(const MR_2DFloatPos & pPoint0, const MR_2DFloatPos & pPoint1, double pRef = 0.0);
 
 // Functions implementation
-BOOL MR_LevelBuilder::ComputeVisibleZones()
+BOOL LevelBuilder::ComputeVisibleZones()
 {
 	BOOL lReturnValue = TRUE;
 
@@ -80,7 +84,7 @@ BOOL MR_LevelBuilder::ComputeVisibleZones()
 
 	puts(_("Computing visible zones... be patient"));
 
-	MR_VisibleStep lStep;
+	VisibleStep lStep;
 
 	for(int lCounter = 0; lCounter < mNbRoom; lCounter++) {
 		lDestIndex = 0;							  // Index in destination array
@@ -122,10 +126,10 @@ BOOL MR_LevelBuilder::ComputeVisibleZones()
 	return lReturnValue;
 }
 
-void MR_LevelBuilder::TestForVisibility(MR_VisibleStep * pPreviousStep, int *pDestArray, int &pDestIndex, int pNewLeftNodeIndex)
+void LevelBuilder::TestForVisibility(VisibleStep *pPreviousStep, int *pDestArray, int &pDestIndex, int pNewLeftNodeIndex)
 {
 
-	MR_VisibleStep lCurrentStep;
+	VisibleStep lCurrentStep;
 
 	lCurrentStep.mPrev = pPreviousStep;
 
@@ -139,7 +143,7 @@ void MR_LevelBuilder::TestForVisibility(MR_VisibleStep * pPreviousStep, int *pDe
 
 		// december6-96
 		// Verify if the current room is not already in the list
-			MR_VisibleStep *lPtr = pPreviousStep;
+			VisibleStep *lPtr = pPreviousStep;
 
 			while(lPtr != NULL) {
 				if(lPtr->mZone == lCurrentStep.mZone) {
@@ -197,7 +201,7 @@ void MR_LevelBuilder::TestForVisibility(MR_VisibleStep * pPreviousStep, int *pDe
 					lCurrentStep.mLeftLimit = lCurrentStep.mLeftNode;
 					lCurrentStep.mLeftLimitLightSource = lCurrentStep.mRightNode;
 
-					MR_VisibleStep *lStep = pPreviousStep;
+					VisibleStep *lStep = pPreviousStep;
 
 					while(lStep != NULL) {
 						lAngle = GetAngle(lStep->mRightNode, lCurrentStep.mLeftLimit, GetAngle(lCurrentStep.mLeftLimitLightSource, lCurrentStep.mLeftLimit));
@@ -224,7 +228,7 @@ void MR_LevelBuilder::TestForVisibility(MR_VisibleStep * pPreviousStep, int *pDe
 					lCurrentStep.mRightLimit = lCurrentStep.mRightNode;
 					lCurrentStep.mRightLimitLightSource = lCurrentStep.mLeftNode;
 
-					MR_VisibleStep *lStep = pPreviousStep;
+					VisibleStep *lStep = pPreviousStep;
 
 					while(lStep != NULL) {
 						lAngle = GetAngle(lStep->mLeftNode, lCurrentStep.mRightLimit, GetAngle(lCurrentStep.mRightLimitLightSource, lCurrentStep.mRightLimit));
@@ -274,12 +278,14 @@ BOOL MR_2DFloatPos::operator==(const MR_2DFloatPos & pPos) const
 BOOL MR_2DFloatPos::operator!=(const MR_2DFloatPos & pPos) const
 {
 	return !(operator==(pPos));
-} MR_VisibleStep::MR_VisibleStep()
+}
+
+VisibleStep::VisibleStep()
 {
 	mPrev = NULL;
 }
 
-MR_VisibleStep::~MR_VisibleStep()
+VisibleStep::~VisibleStep()
 {
 }
 
@@ -321,3 +327,6 @@ double GetAngle(const MR_2DFloatPos & pPoint0, const MR_2DFloatPos & pPoint1, do
 	}
 	return lReturnValue;
 }
+
+}  // namespace MazeCompiler
+}  // namespace HoverRace

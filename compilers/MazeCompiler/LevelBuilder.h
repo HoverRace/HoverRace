@@ -1,7 +1,5 @@
 // LevelBuilder.h
 //
-//
-//
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
@@ -21,15 +19,18 @@
 // and limitations under the License.
 //
 
-#ifndef LEVELBUILDER_H
-#define LEVELBUILDER_H
+#pragma once
 
 #include "../../engine/Model/Level.h"
 
-class MR_VisibleStep;
+namespace HoverRace {
+namespace MazeCompiler {
 
-class MR_LevelBuilder:public MR_Level
+class VisibleStep;
+
+class LevelBuilder : public Model::Level
 {
+	typedef Model::Level SUPER;
 	protected:
 
 		// Implementation helpers
@@ -44,7 +45,7 @@ class MR_LevelBuilder:public MR_Level
 		void OrderVisibleSurfaces();
 
 	private:
-		void TestForVisibility(MR_VisibleStep *pPreviousStep, int *pDestArray, int &pDestIndex, int pNewLeftNodeIndex);
+		void TestForVisibility(VisibleStep *pPreviousStep, int *pDestArray, int &pDestIndex, int pNewLeftNodeIndex);
 
 		static int OrderFloor(const void *pSurface0, const void *pSurface1);
 		static int OrderCeiling(const void *pSurface0, const void *pSurface1);
@@ -54,4 +55,6 @@ class MR_LevelBuilder:public MR_Level
 		BOOL InitFromFile(FILE * pFile);
 
 };
-#endif
+
+}  // namespace MazeCompiler
+}  // namespace HoverRace

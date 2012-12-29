@@ -1,7 +1,5 @@
 // TrackMap.h
 //
-//
-//
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
@@ -21,26 +19,31 @@
 // and limitations under the License.
 //
 
-#ifndef TRACKMAP_H
-#define TRACKMAP_H
+#pragma once
 
 #include "../../engine/Model/Level.h"
 #include "../../engine/VideoServices/Sprite.h"
 
-class MR_MapSprite:public MR_Sprite
+namespace HoverRace {
+namespace MazeCompiler {
+
+class MapSprite : public VideoServices::Sprite
 {
+	typedef VideoServices::Sprite SUPER;
 	protected:
 		int mXMin;
 		int mXMax;
 		int mYMin;
 		int mYMax;
 
-		void ComputeMinMax(MR_Level * pLevel);
-		void DrawMap(MR_Level * pLevel);
+		void ComputeMinMax(Model::Level *pLevel);
+		void DrawMap(Model::Level *pLevel);
 
 	public:
 
-		BOOL CreateMap(MR_Level * pLevel, int &pX0, int &pY0, int &pX1, int &pY1);
+		BOOL CreateMap(Model::Level *pLevel, int &pX0, int &pY0, int &pX1, int &pY1);
 
 };
-#endif
+
+}  // namespace MazeCompiler
+}  // namespace HoverRace

@@ -19,17 +19,14 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
 #include "TrackMap.h"
 
-// Local prototypes
+namespace HoverRace {
+namespace MazeCompiler {
 
-// Implementation
-
-// class MR_MapSprite
-
-BOOL MR_MapSprite::CreateMap(MR_Level * pLevel, int &pX0, int &pY0, int &pX1, int &pY1)
+BOOL MapSprite::CreateMap(Model::Level *pLevel, int &pX0, int &pY0, int &pX1, int &pY1)
 {
 
 	mNbItem = 1;
@@ -51,7 +48,7 @@ BOOL MR_MapSprite::CreateMap(MR_Level * pLevel, int &pX0, int &pY0, int &pX1, in
 	return TRUE;
 }
 
-void MR_MapSprite::ComputeMinMax(MR_Level * pLevel)
+void MapSprite::ComputeMinMax(Model::Level *pLevel)
 {
 	int lRoomCount = pLevel->GetRoomCount();
 
@@ -61,7 +58,7 @@ void MR_MapSprite::ComputeMinMax(MR_Level * pLevel)
 	mYMax = -1000000;
 
 	for(int lRoom = 0; lRoom < lRoomCount; lRoom++) {
-		MR_PolygonShape *lShape = pLevel->GetRoomShape(lRoom);
+		Model::PolygonShape *lShape = pLevel->GetRoomShape(lRoom);
 
 		mXMin = min(mXMin, lShape->XMin());
 		mXMax = max(mXMax, lShape->XMax());
@@ -88,7 +85,7 @@ void MR_MapSprite::ComputeMinMax(MR_Level * pLevel)
 	}
 }
 
-void MR_MapSprite::DrawMap(MR_Level * pLevel)
+void MapSprite::DrawMap(Model::Level *pLevel)
 {
 	// Clr the map
 	memset(mData, 0, mTotalHeight * mWidth);
@@ -96,7 +93,7 @@ void MR_MapSprite::DrawMap(MR_Level * pLevel)
 	// Do a kind of ray tracing
 	int lRoomCount = pLevel->GetRoomCount();
 
-	MR_ObjectFromFactoryId lFinishLineId = { 1, 202 };
+	Util::ObjectFromFactoryId lFinishLineId = { 1, 202 };
 
 	for(int lRoom = 0; lRoom < lRoomCount; lRoom++) {
 		MR_UInt8 lColor = 61;
@@ -105,14 +102,14 @@ void MR_MapSprite::DrawMap(MR_Level * pLevel)
 		MR_FreeElementHandle lCurrentElem = pLevel->GetFirstFreeElement(lRoom);
 
 		while(lCurrentElem != NULL) {
-			if(MR_Level::GetFreeElement(lCurrentElem)->GetTypeId() == lFinishLineId) {
+			if(Model::Level::GetFreeElement(lCurrentElem)->GetTypeId() == lFinishLineId) {
 				lColor = 11;
 			}
 
-			lCurrentElem = MR_Level::GetNextFreeElement(lCurrentElem);
+			lCurrentElem = Model::Level::GetNextFreeElement(lCurrentElem);
 		}
 
-		MR_PolygonShape *lShape = pLevel->GetRoomShape(lRoom);
+		Model::PolygonShape *lShape = pLevel->GetRoomShape(lRoom);
 
 		int lXStart = (lShape->XMin() - mXMin) * mWidth / (mXMax - mXMin);
 		int lXEnd = (lShape->XMax() - mXMin) * mWidth / (mXMax - mXMin);
@@ -126,7 +123,7 @@ void MR_MapSprite::DrawMap(MR_Level * pLevel)
 				lPos.mX = (lX * (mXMax - mXMin) / mWidth) + mXMin;
 				lPos.mY = (lY * (mYMax - mYMin) / mItemHeight) + mYMin;
 
-				if(MR_GetPolygonInclusion(*lShape, lPos)) {
+				if(Model::GetPolygonInclusion(*lShape, lPos)) {
 					mData[(mItemHeight - 1 - lY) * mWidth + lX] = lColor;
 				}
 			}
@@ -134,3 +131,6 @@ void MR_MapSprite::DrawMap(MR_Level * pLevel)
 		delete lShape;
 	}
 }
+
+}  // namespace MazeCompiler
+}  // namespace HoverRace

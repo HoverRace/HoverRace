@@ -1,6 +1,5 @@
-// PARSE.H // Text file parser helper
-//
-//
+// Parser.h
+// Text file parser helper
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
@@ -21,14 +20,14 @@
 // and limitations under the License.
 //
 
-#ifndef PARSER_H
-#define PARSER_H
+#pragma once
 
-class MR_Parser
+namespace HoverRace {
+namespace MazeCompiler {
+
+class Parser
 {
-
 	protected:
-
 		FILE * mFile;
 
 		char mLineBuffer[150];
@@ -40,8 +39,8 @@ class MR_Parser
 		const char *InternalGetNextClass();
 
 	public:
-		MR_Parser(FILE * pFile);
-		~MR_Parser();
+		Parser(FILE * pFile);
+		~Parser();
 
 		void Reset();
 
@@ -56,4 +55,6 @@ class MR_Parser
 		int GetErrorLine() const;
 
 };
-#endif
+
+}  // namespace MazeCompiler
+}  // namespace HoverRace

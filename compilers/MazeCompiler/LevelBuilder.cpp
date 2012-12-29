@@ -19,14 +19,20 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
-#include "LevelBuilder.h"
-#include "Parser.h"
-#include "resource.h"
+#include "StdAfx.h"
 
 #include <math.h>
 
-#define new DEBUG_NEW
+#include "Parser.h"
+
+#include "LevelBuilder.h"
+
+#ifdef _WIN32
+#	define new DEBUG_NEW
+#endif
+
+namespace HoverRace {
+namespace MazeCompiler {
 
 // Helper structurtes
 class MR_Connection
@@ -39,13 +45,13 @@ class MR_Connection
 };
 
 // Helper variables
-static MR_LevelBuilder *gsCurrentLevelBuilder = NULL;
+static LevelBuilder *gsCurrentLevelBuilder = NULL;
 
 // Local helper functions
-static MR_SurfaceElement *sLoadTexture(MR_Parser * pParser);
+static Model::SurfaceElement *sLoadTexture(Parser * pParser);
 
-// class MR_LevelBuilder
-BOOL MR_LevelBuilder::InitFromFile(FILE * pFile)
+// class LevelBuilder
+BOOL LevelBuilder::InitFromFile(FILE * pFile)
 {
 	BOOL lReturnValue = TRUE;
 
@@ -68,11 +74,11 @@ BOOL MR_LevelBuilder::InitFromFile(FILE * pFile)
 	return lReturnValue;
 }
 
-BOOL MR_LevelBuilder::Parse(FILE * pFile)
+BOOL LevelBuilder::Parse(FILE * pFile)
 {
 	BOOL lReturnValue = TRUE;
 	int lCounter;
-	MR_Parser lParser(pFile);
+	Parser lParser(pFile);
 
 	CMap < int, int, int, int >lRoomList;
 	CMap < int, int, int, int >lFeatureList;
@@ -134,7 +140,7 @@ BOOL MR_LevelBuilder::Parse(FILE * pFile)
 		mNbFeature = lFeatureList.GetCount();
 		mFeatureList = new Feature[mNbFeature];
 
-		mFreeElementClassifiedByRoomList = new FreeElement *[mNbRoom];
+		mFreeElementClassifiedByRoomList = new Model::Level::FreeElementList*[mNbRoom];
 
 		for(lCounter = 0; lCounter < mNbRoom; lCounter++) {
 			mFreeElementClassifiedByRoomList[lCounter] = NULL;
@@ -268,7 +274,7 @@ BOOL MR_LevelBuilder::Parse(FILE * pFile)
 			for(int lNeighbor = 0; lNeighbor < mRoomList[lCounter].mNbVertex; lNeighbor++) {
 				mRoomList[lCounter].mNeighborList[lNeighbor] = -1;
 			}
-			mRoomList[lCounter].mWallTexture = new MR_SurfaceElement *[mRoomList[lCounter].mNbVertex];
+			mRoomList[lCounter].mWallTexture = new Model::SurfaceElement *[mRoomList[lCounter].mNbVertex];
 
 			mRoomList[lCounter].mChildList = new int[mRoomList[lCounter].mNbChild];
 
@@ -281,7 +287,7 @@ BOOL MR_LevelBuilder::Parse(FILE * pFile)
 			mFeatureList[lCounter].mVertexList = new MR_2DCoordinate[mFeatureList[lCounter].mNbVertex];
 			mFeatureList[lCounter].mWallLen = new MR_Int32[mFeatureList[lCounter].mNbVertex];
 
-			mFeatureList[lCounter].mWallTexture = new MR_SurfaceElement *[mFeatureList[lCounter].mNbVertex];
+			mFeatureList[lCounter].mWallTexture = new Model::SurfaceElement *[mFeatureList[lCounter].mNbVertex];
 
 			// Create the Parent->Child relations
 			int lParentIndex = mFeatureList[lCounter].mParentSectionIndex;
@@ -523,7 +529,7 @@ BOOL MR_LevelBuilder::Parse(FILE * pFile)
 		int lRoomIndex = 0;
 		MR_3DCoordinate lPosition;
 		MR_Angle lOrientation = 0;
-		MR_ObjectFromFactoryId lElementType;
+		Util::ObjectFromFactoryId lElementType;
 
 		lFreeElementCount++;
 
@@ -557,7 +563,7 @@ BOOL MR_LevelBuilder::Parse(FILE * pFile)
 
 		if(lReturnValue) {
 
-			MR_FreeElement *lElement = (MR_FreeElement *) MR_DllObjectFactory::CreateObject(lElementType);
+			Model::FreeElement *lElement = (Model::FreeElement*)Util::DllObjectFactory::CreateObject(lElementType);
 
 			if(lElement == NULL) {
 				lReturnValue = FALSE;
@@ -596,14 +602,14 @@ BOOL MR_LevelBuilder::Parse(FILE * pFile)
 	return lReturnValue;
 }
 
-BOOL MR_LevelBuilder::ComputeAudibleZones()
+BOOL LevelBuilder::ComputeAudibleZones()
 {
 	BOOL lReturnValue = TRUE;
 
 	return lReturnValue;
 }
 
-void MR_LevelBuilder::OrderVisibleSurfaces()
+void LevelBuilder::OrderVisibleSurfaces()
 {
 	int lCounter;
 
@@ -622,8 +628,8 @@ void MR_LevelBuilder::OrderVisibleSurfaces()
 		// Create the arrays containing the list of visible floor and ceiling
 		int lCurrentIndex = 0;
 
-		mRoomList[lRoomId].mVisibleFloorList = new MR_SectionId[mRoomList[lRoomId].mNbVisibleSurface];
-		mRoomList[lRoomId].mVisibleCeilingList = new MR_SectionId[mRoomList[lRoomId].mNbVisibleSurface];
+		mRoomList[lRoomId].mVisibleFloorList = new Model::SectionId[mRoomList[lRoomId].mNbVisibleSurface];
+		mRoomList[lRoomId].mVisibleCeilingList = new Model::SectionId[mRoomList[lRoomId].mNbVisibleSurface];
 
 		for(lCounter = -1; lCounter < mRoomList[lRoomId].mNbVisibleRoom; lCounter++) {
 			int lVisibleRoom;
@@ -635,15 +641,15 @@ void MR_LevelBuilder::OrderVisibleSurfaces()
 				lVisibleRoom = mRoomList[lRoomId].mVisibleRoomList[lCounter];
 			}
 
-			mRoomList[lRoomId].mVisibleFloorList[lCurrentIndex].mType = MR_SectionId::eRoom;
+			mRoomList[lRoomId].mVisibleFloorList[lCurrentIndex].mType = Model::SectionId::eRoom;
 			mRoomList[lRoomId].mVisibleFloorList[lCurrentIndex].mId = lVisibleRoom;
-			mRoomList[lRoomId].mVisibleCeilingList[lCurrentIndex].mType = MR_SectionId::eRoom;
+			mRoomList[lRoomId].mVisibleCeilingList[lCurrentIndex].mType = Model::SectionId::eRoom;
 			mRoomList[lRoomId].mVisibleCeilingList[lCurrentIndex++].mId = lVisibleRoom;
 
 			for(int lChildIndex = 0; lChildIndex < mRoomList[lVisibleRoom].mNbChild; lChildIndex++) {
-				mRoomList[lRoomId].mVisibleFloorList[lCurrentIndex].mType = MR_SectionId::eFeature;
+				mRoomList[lRoomId].mVisibleFloorList[lCurrentIndex].mType = Model::SectionId::eFeature;
 				mRoomList[lRoomId].mVisibleFloorList[lCurrentIndex].mId = mRoomList[lVisibleRoom].mChildList[lChildIndex];
-				mRoomList[lRoomId].mVisibleCeilingList[lCurrentIndex].mType = MR_SectionId::eFeature;
+				mRoomList[lRoomId].mVisibleCeilingList[lCurrentIndex].mType = Model::SectionId::eFeature;
 				mRoomList[lRoomId].mVisibleCeilingList[lCurrentIndex++].mId = mRoomList[lVisibleRoom].mChildList[lChildIndex];
 			}
 
@@ -655,29 +661,29 @@ void MR_LevelBuilder::OrderVisibleSurfaces()
 		// Order the surfaces list
 		gsCurrentLevelBuilder = this;
 
-		qsort(mRoomList[lRoomId].mVisibleFloorList, mRoomList[lRoomId].mNbVisibleSurface, sizeof(MR_SectionId), OrderFloor);
+		qsort(mRoomList[lRoomId].mVisibleFloorList, mRoomList[lRoomId].mNbVisibleSurface, sizeof(Model::SectionId), OrderFloor);
 
-		qsort(mRoomList[lRoomId].mVisibleCeilingList, mRoomList[lRoomId].mNbVisibleSurface, sizeof(MR_SectionId), OrderCeiling);
+		qsort(mRoomList[lRoomId].mVisibleCeilingList, mRoomList[lRoomId].mNbVisibleSurface, sizeof(Model::SectionId), OrderCeiling);
 
 	}
 }
 
-int MR_LevelBuilder::OrderFloor(const void *pSurface0, const void *pSurface1)
+int LevelBuilder::OrderFloor(const void *pSurface0, const void *pSurface1)
 {
 	int lLevel0;
 	int lLevel1;
 
-	MR_SectionId lSurface0 = *(MR_SectionId *) pSurface0;
-	MR_SectionId lSurface1 = *(MR_SectionId *) pSurface1;
+	Model::SectionId lSurface0 = *(Model::SectionId *) pSurface0;
+	Model::SectionId lSurface1 = *(Model::SectionId *) pSurface1;
 
-	if(lSurface0.mType == MR_SectionId::eRoom) {
+	if(lSurface0.mType == Model::SectionId::eRoom) {
 		lLevel0 = gsCurrentLevelBuilder->mRoomList[lSurface0.mId].mFloorLevel;
 	}
 	else {
 		lLevel0 = gsCurrentLevelBuilder->mFeatureList[lSurface0.mId].mCeilingLevel;
 	}
 
-	if(lSurface1.mType == MR_SectionId::eRoom) {
+	if(lSurface1.mType == Model::SectionId::eRoom) {
 		lLevel1 = gsCurrentLevelBuilder->mRoomList[lSurface1.mId].mFloorLevel;
 	}
 	else {
@@ -687,22 +693,22 @@ int MR_LevelBuilder::OrderFloor(const void *pSurface0, const void *pSurface1)
 	return (lLevel0 - lLevel1);
 }
 
-int MR_LevelBuilder::OrderCeiling(const void *pSurface0, const void *pSurface1)
+int LevelBuilder::OrderCeiling(const void *pSurface0, const void *pSurface1)
 {
 	int lLevel0;
 	int lLevel1;
 
-	MR_SectionId lSurface0 = *(MR_SectionId *) pSurface0;
-	MR_SectionId lSurface1 = *(MR_SectionId *) pSurface1;
+	Model::SectionId lSurface0 = *(Model::SectionId *) pSurface0;
+	Model::SectionId lSurface1 = *(Model::SectionId *) pSurface1;
 
-	if(lSurface0.mType == MR_SectionId::eFeature) {
+	if(lSurface0.mType == Model::SectionId::eFeature) {
 		lLevel0 = gsCurrentLevelBuilder->mFeatureList[lSurface0.mId].mFloorLevel;
 	}
 	else {
 		lLevel0 = gsCurrentLevelBuilder->mRoomList[lSurface0.mId].mCeilingLevel;
 	}
 
-	if(lSurface1.mType == MR_SectionId::eFeature) {
+	if(lSurface1.mType == Model::SectionId::eFeature) {
 		lLevel1 = gsCurrentLevelBuilder->mFeatureList[lSurface1.mId].mFloorLevel;
 	}
 	else {
@@ -712,7 +718,7 @@ int MR_LevelBuilder::OrderCeiling(const void *pSurface0, const void *pSurface1)
 	return (lLevel1 - lLevel0);
 }
 
-double MR_LevelBuilder::ComputeShapeConst(Section * pSection)
+double LevelBuilder::ComputeShapeConst(Section * pSection)
 {
 	int lCounter;
 	double lReturnValue;
@@ -750,26 +756,28 @@ double MR_LevelBuilder::ComputeShapeConst(Section * pSection)
 	}
 
 	// Compute bonding box diag size
-	lReturnValue = sqrt(pow(pSection->mMax.mX - pSection->mMin.mX, 2.0f) + pow(pSection->mMax.mY - pSection->mMin.mY, 2.0f)) / 1000.0;
+	lReturnValue = sqrt(
+		pow((float)(pSection->mMax.mX - pSection->mMin.mX), 2.0f) +
+		pow((float)(pSection->mMax.mY - pSection->mMin.mY), 2.0f)) / 1000.0;
 
 	return lReturnValue;
 }
 
 // Helpers implementation
-MR_SurfaceElement *sLoadTexture(MR_Parser * pParser)
+Model::SurfaceElement *sLoadTexture(Parser * pParser)
 {
-	MR_SurfaceElement *lReturnValue = NULL;
-	MR_ObjectFromFactory *lTempPtr = NULL;
+	Model::SurfaceElement *lReturnValue = NULL;
+	Util::ObjectFromFactory *lTempPtr = NULL;
 
-	MR_ObjectFromFactoryId lType;
+	Util::ObjectFromFactoryId lType;
 
 	lType.mDllId = (MR_UInt16) pParser->GetNextNumParam();
 	lType.mClassId = (MR_UInt16) pParser->GetNextNumParam();
 
-	lTempPtr = MR_DllObjectFactory::CreateObject(lType);
+	lTempPtr = Util::DllObjectFactory::CreateObject(lType);
 
 	if(lTempPtr != NULL) {
-		lReturnValue = dynamic_cast < MR_SurfaceElement * >(lTempPtr);
+		lReturnValue = dynamic_cast < Model::SurfaceElement * >(lTempPtr);
 
 		if(lReturnValue == NULL) {
 			lTempPtr = NULL;
@@ -782,3 +790,6 @@ MR_SurfaceElement *sLoadTexture(MR_Parser * pParser)
 
 	return lReturnValue;
 }
+
+}  // namespace MazeCompiler
+}  // namespace HoverRace

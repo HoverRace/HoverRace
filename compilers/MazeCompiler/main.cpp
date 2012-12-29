@@ -19,20 +19,29 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
-#include "../../engine/Parcel/MfcRecordFile.h"
-#include "LevelBuilder.h"
-#include "TrackMap.h"
-#include "Parser.h"
-#include "../../engine/Model/TrackFileCommon.h"
-#include "../../engine/Parcel/ObjStream.h"
-#include "resource.h"
+#include "StdAfx.h"
 
 #include <stdio.h>
 
-#define new DEBUG_NEW
+#include "../../engine/Model/TrackFileCommon.h"
+#include "../../engine/Util/OS.h"
 
-using namespace HoverRace::Parcel;
+#include "MfcRecordFile.h"
+#include "MfcObjStream.h"
+
+#include "LevelBuilder.h"
+#include "TrackMap.h"
+#include "Parser.h"
+
+#include "resource.h"
+
+#ifdef _WIN32
+#	define new DEBUG_NEW
+#endif
+
+using namespace HoverRace;
+using namespace HoverRace::MazeCompiler;
+using namespace HoverRace::Util;
 
 static void PrintUsage()
 {
@@ -40,8 +49,8 @@ static void PrintUsage()
 	puts(_("Usage: MazeCompiler <outputfile> <inputfile>"));
 }
 
-static BOOL CreateHeader(FILE * pInputFile, ObjStream &pDestination);
-static BOOL AddBackgroundImage(FILE * pInputFile, ObjStream &pDestination);
+static BOOL CreateHeader(FILE *pInputFile, Parcel::MfcObjStream &pDestination);
+static BOOL AddBackgroundImage(FILE *pInputFile, Parcel::ObjStream &pDestination);
 
 static CString FormatStr(const char *pSrc);
 static MR_UInt8 *PCXRead(FILE * pFile, int &pXRes, int &pYRes);
@@ -58,14 +67,18 @@ int main(int pArgCount, const char **pArgStrings)
 	BOOL lPrintUsage = FALSE;
 	BOOL lError = FALSE;
 
-	
 	printf(_("HoverRace Track Compiler"));
 	printf("      ");
 	printf(_("(c)1996-1997 GrokkSoft Inc."));
 	printf("\n");
 
 	Sleep(1000);
-	MR_DllObjectFactory::Init();
+	Util::DllObjectFactory::Init();
+
+#	ifdef _WIN32
+		int wargc;
+		wchar_t **wargv = CommandLineToArgvW(GetCommandLineW(), &wargc);
+#	endif
 
 	// Analyse the input parameters
 	if(pArgCount != 3) {
@@ -73,6 +86,14 @@ int main(int pArgCount, const char **pArgStrings)
 		puts(_("Wrong argument count"));
 		Sleep(4000);
 	}
+
+#	ifdef _WIN32
+		OS::path_t outputFilename = wargv[1];
+		OS::path_t inputFilename = wargv[2];
+#	else
+		OS::path_t outputFilename = pArgStrings[1];
+		OS::path_t inputFilename = pArgStrings[2];
+#	endif
 
 	if(!lError && !lPrintUsage) {
 		if((gMajorID != 0) && (gMajorID != 100)) {
@@ -98,7 +119,7 @@ int main(int pArgCount, const char **pArgStrings)
 	}
 
 	if(!lError && !lPrintUsage) {
-		MfcRecordFile lOutputFile;
+		Parcel::MfcRecordFile lOutputFile;
 
 		// Verify that there is at least one ofhtr parameter
 		CString lCopyrightNotice = "\x8\r" + CString(_("HoverRace track file")) + ", " + "(c)GrokkSoft 1997\n\x1a";
@@ -107,7 +128,7 @@ int main(int pArgCount, const char **pArgStrings)
 			lCopyrightNotice.Format("\x8\r" + CString(_("HoverRace track file designed by %s(%d-%d)")) + "\n\x1a", gOwner, gMajorID, gMinorID);
 		}
 		// Try to create the output file
-		if(!lOutputFile.CreateForWrite(pArgStrings[1], 4, lCopyrightNotice)) {
+		if(!lOutputFile.CreateForWrite(outputFilename, 4, lCopyrightNotice)) {
 			lError = TRUE;
 			puts(_("Unable to create the output file"));
 		}
@@ -116,7 +137,7 @@ int main(int pArgCount, const char **pArgStrings)
 		printf("\n");
 
 		// Open the input file
-		FILE *lFile = fopen(pArgStrings[2], "r");
+		FILE *lFile = OS::FOpen(inputFilename, "r");
 
 		if(lFile == NULL) {
 			lError = TRUE;
@@ -124,7 +145,7 @@ int main(int pArgCount, const char **pArgStrings)
 			puts(_("Unable to open the input file"));
 		}
 		// Compile the level
-		MR_LevelBuilder *lNewLevel = new MR_LevelBuilder;
+		LevelBuilder *lNewLevel = new LevelBuilder;
 
 		if(!lError) {
 			if(!lOutputFile.BeginANewRecord()) {
@@ -132,8 +153,8 @@ int main(int pArgCount, const char **pArgStrings)
 				puts(_("Unable to add a header to the output file"));
 			}
 			else {
-				ObjStreamPtr archivePtr(lOutputFile.StreamOut());
-				ObjStream &lArchive = *archivePtr;
+				Parcel::ObjStreamPtr archivePtr(lOutputFile.StreamOut());
+				Parcel::MfcObjStream &lArchive = static_cast<Parcel::MfcObjStream&>(*archivePtr);
 
 				lError = !CreateHeader(lFile, lArchive);
 			}
@@ -156,8 +177,8 @@ int main(int pArgCount, const char **pArgStrings)
 				puts(_("Unable to add the track to the output file"));
 			}
 			else {
-				ObjStreamPtr archivePtr(lOutputFile.StreamOut());
-				ObjStream &lArchive = *archivePtr;
+				Parcel::ObjStreamPtr archivePtr(lOutputFile.StreamOut());
+				Parcel::ObjStream &lArchive = *archivePtr;
 
 				lNewLevel->Serialize(lArchive);
 			}
@@ -170,8 +191,8 @@ int main(int pArgCount, const char **pArgStrings)
 				puts(_("Unable to add a background image record"));
 			}
 			else {
-				ObjStreamPtr archivePtr(lOutputFile.StreamOut());
-				ObjStream &lArchive = *archivePtr;
+				Parcel::ObjStreamPtr archivePtr(lOutputFile.StreamOut());
+				Parcel::ObjStream &lArchive = *archivePtr;
 
 				lError = !AddBackgroundImage(lFile, lArchive);
 			}
@@ -185,15 +206,15 @@ int main(int pArgCount, const char **pArgStrings)
 				puts(_("Unable to add a map record"));
 			}
 			else {
-				ObjStreamPtr archivePtr(lOutputFile.StreamOut());
-				ObjStream &lArchive = *archivePtr;
+				Parcel::ObjStreamPtr archivePtr(lOutputFile.StreamOut());
+				Parcel::ObjStream &lArchive = *archivePtr;
 
 				int lX0;
 				int lX1;
 				int lY0;
 				int lY1;
 
-				MR_MapSprite lMapSprite;
+				MapSprite lMapSprite;
 
 				lMapSprite.CreateMap(lNewLevel, lX0, lY0, lX1, lY1);
 
@@ -222,8 +243,9 @@ int main(int pArgCount, const char **pArgStrings)
 	}
 
 	if(!lError) {
-		MfcRecordFile lOutputFile;
-		lOutputFile.ApplyChecksum(pArgStrings[1]);
+		// Apply checksum.
+		Parcel::MfcRecordFile lOutputFile;
+		lOutputFile.ReOpen(outputFilename);
 	}
 
 	if(lPrintUsage) {
@@ -240,19 +262,19 @@ int main(int pArgCount, const char **pArgStrings)
 	Sleep(2000);
 	// printf( "END\n" );
 
-	MR_DllObjectFactory::Clean(FALSE);
+	Util::DllObjectFactory::Clean(FALSE);
 
 	return lError ? 255 : 0;
 }
 
-BOOL CreateHeader(FILE * pInputFile, ObjStream &pArchive)
+BOOL CreateHeader(FILE *pInputFile, Parcel::MfcObjStream &pArchive)
 {
 	BOOL lReturnValue = TRUE;
 
 	CString lDescription;
 	int lSortingOrder = 50;
 	int lRegistration = MR_REGISTRED_TRACK;
-	MR_Parser lParser(pInputFile);
+	Parser lParser(pInputFile);
 
 	// Look in the registry to find the User name and member number
 
@@ -331,13 +353,13 @@ CString FormatStr(const char *pSrc)
 	return lReturnValue;
 }
 
-BOOL AddBackgroundImage(FILE * pInputFile, ObjStream &pDestination)
+BOOL AddBackgroundImage(FILE * pInputFile, Parcel::ObjStream &pDestination)
 {
 	BOOL lReturnValue = TRUE;
 
 	CString lBackFileName;
 
-	MR_Parser lParser(pInputFile);
+	Parser lParser(pInputFile);
 
 	if(lParser.GetNextClass("HEADER") == NULL) {
 		lReturnValue = FALSE;

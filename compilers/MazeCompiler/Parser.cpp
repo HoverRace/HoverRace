@@ -1,7 +1,4 @@
-// PARSE.CPP
-//
-// Banner.cpp
-//
+// Parser.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
@@ -22,25 +19,28 @@
 // and limitations under the License.
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
 
 #include "Parser.h"
 
-#define new DEBUG_NEW
+#ifdef _WIN32
+#	define new DEBUG_NEW
+#endif
 
-//class CParsableFile
+namespace HoverRace {
+namespace MazeCompiler {
 
-MR_Parser::MR_Parser(FILE * pFile)
+Parser::Parser(FILE * pFile)
 {
 	mFile = pFile;
 	Reset();
 }
 
-MR_Parser::~MR_Parser()
+Parser::~Parser()
 {
 }
 
-void MR_Parser::Reset()
+void Parser::Reset()
 {
 	ASSERT(mFile != NULL);
 
@@ -52,7 +52,7 @@ void MR_Parser::Reset()
 	ReadNewLine();
 }
 
-BOOL MR_Parser::ReadNewLine()
+BOOL Parser::ReadNewLine()
 {
 	ASSERT(mFile != NULL);
 
@@ -110,7 +110,7 @@ BOOL MR_Parser::ReadNewLine()
 	}
 }
 
-const char *MR_Parser::InternalGetNextClass()
+const char *Parser::InternalGetNextClass()
 {
 
 	if(mParsePtr != mLineBuffer) {
@@ -141,7 +141,7 @@ const char *MR_Parser::InternalGetNextClass()
 
 }
 
-const char *MR_Parser::GetNextClass(const char *pClassType)
+const char *Parser::GetNextClass(const char *pClassType)
 {
 	const char *lReturnValue;
 
@@ -153,7 +153,7 @@ const char *MR_Parser::GetNextClass(const char *pClassType)
 	return lReturnValue;
 }
 
-const char *MR_Parser::GetNextAttrib(const char *pAttrib)
+const char *Parser::GetNextAttrib(const char *pAttrib)
 {
 
 	if((mParsePtr != mLineBuffer) || (mLineNumber == 0)) {
@@ -189,7 +189,7 @@ const char *MR_Parser::GetNextAttrib(const char *pAttrib)
 	return lReturnValue;
 }
 
-BOOL MR_Parser::GetNextLine()
+BOOL Parser::GetNextLine()
 {
 
 	if(!ReadNewLine()) {
@@ -204,12 +204,12 @@ BOOL MR_Parser::GetNextLine()
 	}
 }
 
-const char *MR_Parser::GetParams()
+const char *Parser::GetParams()
 {
 	return mParsePtr;
 }
 
-const char *MR_Parser::GetNextStrParam(const char *pDefault)
+const char *Parser::GetNextStrParam(const char *pDefault)
 {
 	sscanf(mParsePtr, " %29[^,]", mReturnBuffer);
 	mParsePtr = strchr(mParsePtr, ',');
@@ -239,7 +239,7 @@ const char *MR_Parser::GetNextStrParam(const char *pDefault)
 	}
 }
 
-double MR_Parser::GetNextNumParam(double pDefaultValue)
+double Parser::GetNextNumParam(double pDefaultValue)
 {
 	const char *lReturnValue = GetNextStrParam();
 
@@ -252,7 +252,10 @@ double MR_Parser::GetNextNumParam(double pDefaultValue)
 
 }
 
-int MR_Parser::GetErrorLine() const
+int Parser::GetErrorLine() const
 {
 	return mLineNumber;
 }
+
+}  // namespace MazeCompiler
+}  // namespace HoverRace

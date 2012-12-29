@@ -21,7 +21,23 @@
 #		include <afxcmn.h>						// MFC support for Windows 95 Common Controls
 #	endif										// _AFX_NO_AFXCMN_SUPPORT
 
+#	include "../../include/config-win32.h"
+
+#else
+
+#	include "../../include/compat/unix.h"
+#	include "../../config.h"
+
+#	include <string.h>
+#	include <strings.h>
+
 #endif
+
+#define BOOST_FILESYSTEM_VERSION 2
+
+#include <locale.h>
+#include <math.h>
+#include <stdio.h>
 
 #include <map>
 #include <string>
@@ -58,6 +74,3 @@
 
 
 #endif  // ENABLE_NLS
-
-#include <math.h>
-#include <stdio.h>
