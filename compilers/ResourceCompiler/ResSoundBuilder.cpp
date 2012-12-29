@@ -40,7 +40,7 @@ ResShortSoundBuilder::ResShortSoundBuilder(int pResourceId) :
 bool ResShortSoundBuilder::BuildFromFile(const char *pFile, int pNbCopy)
 {
 	mNbCopy = pNbCopy;
-	return ParseFile(pFile, (const char *&) mData, mDataLen);
+	return ParseSoundFile(pFile, (const char *&) mData, mDataLen);
 }
 
 ResContinuousSoundBuilder::ResContinuousSoundBuilder(int pResourceId) :
@@ -52,7 +52,7 @@ ResContinuousSoundBuilder::ResContinuousSoundBuilder(int pResourceId) :
 bool ResContinuousSoundBuilder::BuildFromFile(const char *pFile, int pNbCopy)
 {
 	mNbCopy = pNbCopy;
-	return ParseFile(pFile, (const char *&) mData, mDataLen);
+	return ParseSoundFile(pFile, (const char *&) mData, mDataLen);
 }
 
 bool ParseSoundFile(const char *filename, const char *&destData, int &destLen)
