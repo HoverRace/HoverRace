@@ -84,12 +84,6 @@ class MR_DllDeclare ObjectFromFactory/*:public CObject*/
 		//
 		// Warning this module do not support multiple references to objects
 		// or looped structures
-		//
-		// You can avoid this problem by calling CArchive::MapObject after aving call
-		// SerializePtr. Then use CArchive operator << or >> CObject* the next time
-		// you will have to serialize the object.(To use this technique, the first time
-		// you serialize the object, you must know that the object hav not been serialize yet)
-		//
 		static void SerializePtr(HoverRace::Parcel::ObjStream &pArchive, ObjectFromFactory * &pPtr);
 		virtual void Serialize(HoverRace::Parcel::ObjStream &pArchive);
 
