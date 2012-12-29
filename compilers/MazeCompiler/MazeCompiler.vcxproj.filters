@@ -1,49 +1,63 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{96647d40-2ea2-47b4-8e86-82ab29b63221}</UniqueIdentifier>
-      <Extensions>cpp;c;cxx;rc;def;r;odl;hpj;bat;for;f90</Extensions>
+    <Filter Include="Main">
+      <UniqueIdentifier>{015f6883-eb3b-4dbe-9fe4-14560617f766}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{53a1333e-5627-4db6-948c-436bb8a5f684}</UniqueIdentifier>
+    <Filter Include="Compiler">
+      <UniqueIdentifier>{d8d12bfa-a812-49ae-9bcc-23a3aa31bfbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parcel">
+      <UniqueIdentifier>{e536217f-3601-4312-885b-82b0843521ed}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="LevelBuilder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LevelBuilderVisiblesZones.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="StdAfx.cpp">
+      <Filter>Main</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelBuilder.cpp">
+      <Filter>Compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelBuilderVisiblesZones.cpp">
+      <Filter>Compiler</Filter>
     </ClCompile>
     <ClCompile Include="Parser.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="StdAfx.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Compiler</Filter>
     </ClCompile>
     <ClCompile Include="TrackMap.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="MfcObjStream.cpp">
+      <Filter>Parcel</Filter>
+    </ClCompile>
+    <ClCompile Include="MfcRecordFile.cpp">
+      <Filter>Parcel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="LevelBuilder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Parser.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="StdAfx.h">
+      <Filter>Main</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
+      <Filter>Main</Filter>
     </ClInclude>
-    <ClInclude Include="StdAfx.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="LevelBuilder.h">
+      <Filter>Compiler</Filter>
     </ClInclude>
     <ClInclude Include="TrackMap.h">
-      <Filter>Header Files</Filter>
+      <Filter>Compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="Parser.h">
+      <Filter>Compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="MfcObjStream.h">
+      <Filter>Parcel</Filter>
+    </ClInclude>
+    <ClInclude Include="MfcRecordFile.h">
+      <Filter>Parcel</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

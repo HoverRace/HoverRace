@@ -116,6 +116,8 @@
     <ClCompile Include="LevelBuilder.cpp" />
     <ClCompile Include="LevelBuilderVisiblesZones.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MfcObjStream.cpp" />
+    <ClCompile Include="MfcRecordFile.cpp" />
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -125,6 +127,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LevelBuilder.h" />
+    <ClInclude Include="MfcObjStream.h" />
+    <ClInclude Include="MfcRecordFile.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="StdAfx.h" />

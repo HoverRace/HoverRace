@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Parcel">
-      <UniqueIdentifier>{55e42095-7a89-4ee2-809d-eec2af93af2c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Main">
       <UniqueIdentifier>{1728b2c0-f825-452c-a01f-61614dfbbac6}</UniqueIdentifier>
     </Filter>
@@ -12,12 +9,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="MfcObjStream.cpp">
-      <Filter>Parcel</Filter>
-    </ClCompile>
-    <ClCompile Include="MfcRecordFile.cpp">
-      <Filter>Parcel</Filter>
-    </ClCompile>
     <ClCompile Include="StdAfx.cpp">
       <Filter>Main</Filter>
     </ClCompile>
@@ -47,12 +38,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MfcObjStream.h">
-      <Filter>Parcel</Filter>
-    </ClInclude>
-    <ClInclude Include="MfcRecordFile.h">
-      <Filter>Parcel</Filter>
-    </ClInclude>
     <ClInclude Include="StdAfx.h">
       <Filter>Main</Filter>
     </ClInclude>

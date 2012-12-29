@@ -91,14 +91,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BitmapHelper.cpp" />
-    <ClCompile Include="MfcObjStream.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="MfcRecordFile.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="ResActorBuilder.cpp" />
     <ClCompile Include="ResBitmapBuilder.cpp" />
     <ClCompile Include="ResourceCompiler.cpp" />
@@ -113,14 +105,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BitmapHelper.h" />
-    <ClInclude Include="MfcObjStream.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="MfcRecordFile.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClInclude>
     <ClInclude Include="ResActorBuilder.h" />
     <ClInclude Include="ResBitmapBuilder.h" />
     <ClInclude Include="ResourceLibBuilder.h" />

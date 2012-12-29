@@ -131,7 +131,7 @@ void MfcRecordFileTable::Serialize(ObjStream &archive)
 	}
 }
 
-void MfcRecordFileTable::Inspect(Util::InspectMapNode &node) const
+void MfcRecordFileTable::Inspect(Util::InspectMapNode &/*node*/) const
 {
 	/* No longer available now that MfcRecordFile is outside of engine.
 	node.
@@ -563,7 +563,7 @@ void MfcRecordFile::Dump(CDumpContext & dc) const
 }
 #endif
 
-void MfcRecordFile::Inspect(Util::InspectMapNode &node) const
+void MfcRecordFile::Inspect(Util::InspectMapNode &/*node*/) const
 {
 	/* No longer available now that MfcRecordFile is outside of engine.
 	node.
