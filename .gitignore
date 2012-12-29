@@ -118,9 +118,18 @@
 /compilers/ParcelDump/hr-parceldump
 
 # /compilers/ResourceCompiler/
+/compilers/ResourceCompiler/.deps
+/compilers/ResourceCompiler/.libs
+/compilers/ResourceCompiler/*.aps
+/compilers/ResourceCompiler/*.swo
+/compilers/ResourceCompiler/*.swp
 /compilers/ResourceCompiler/*.user
 /compilers/ResourceCompiler/Debug
+/compilers/ResourceCompiler/Makefile
+/compilers/ResourceCompiler/Makefile.in
 /compilers/ResourceCompiler/Release
+/compilers/ResourceCompiler/StdAfx.h.gch
+/compilers/ResourceCompiler/hr-resourcecompiler
 
 # /config/
 /config/argz.m4

@@ -80,6 +80,7 @@ AC_CONFIG_FILES([
 	client/Game2/Makefile
 	compilers/Makefile
 	compilers/ParcelDump/Makefile
+	compilers/ResourceCompiler/Makefile
 	engine/Makefile
 	engine/ColorTools/Makefile
 	engine/MainCharacter/Makefile

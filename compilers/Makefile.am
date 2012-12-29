@@ -1,4 +1,5 @@
 
 SUBDIRS = \
-	ParcelDump
+	ParcelDump \
+	ResourceCompiler
 
