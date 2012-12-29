@@ -67,6 +67,14 @@ int main(int pArgCount, const char **pArgStrings)
 	BOOL lPrintUsage = FALSE;
 	BOOL lError = FALSE;
 
+#	ifdef ENABLE_NLS
+		// Gettext initialization.
+		OS::SetLocale();
+		bind_textdomain_codeset(PACKAGE, "UTF-8");
+		bindtextdomain(PACKAGE, LOCALEDIR);
+		textdomain(PACKAGE);
+#	endif
+
 	printf(_("HoverRace Track Compiler"));
 	printf("      ");
 	printf(_("(c)1996-1997 GrokkSoft Inc."));
