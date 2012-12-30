@@ -23,6 +23,7 @@
 
 #include "StdAfx.h"
 
+#include "../../engine/Exception.h"
 #include "../../engine/Util/OS.h"
 #include "../../engine/Util/Str.h"
 
@@ -107,7 +108,7 @@ bool FolderViewer::VerifyDirectory(OS::wnd_t parentWnd)
 	}
 #else
 	// Unimplemented.
-	throw std::exception();
+	throw UnimplementedExn("FolderViewer::VerifyDirectory");
 #endif
 }
 

@@ -26,6 +26,8 @@
 #	include <iconv.h>
 #endif
 
+#include "../Exception.h"
+
 #include "Str.h"
 
 using namespace HoverRace::Util;
@@ -134,6 +136,6 @@ char *Str::WideToUtf8(const wchar_t *ws)
 		return retv;
 #	else
 		//TODO: Use iconv.
-		throw std::exception();
+		throw UnimplementedExn("Str::WideToUtf8");
 #	endif
 }

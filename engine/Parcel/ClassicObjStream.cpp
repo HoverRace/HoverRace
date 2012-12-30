@@ -22,6 +22,8 @@
 
 #include "StdAfx.h"
 
+#include "../Exception.h"
+
 #include "ClassicObjStream.h"
 
 namespace HoverRace {
@@ -141,7 +143,7 @@ MR_UInt32 ClassicObjStream::ReadStringLength()
 	if (w == 0xfffe) {
 		// Unicode (length follows).
 		ASSERT(FALSE);
-		throw std::exception();
+		throw UnimplementedExn("ClassicObjStream::ReadStringLength for unicode strings");
 	}
 	else if (w == 0xffff) {
 		MR_UInt32 dw;

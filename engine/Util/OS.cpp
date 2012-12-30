@@ -446,7 +446,7 @@ boost::shared_ptr<OS::monitors_t> OS::GetMonitors()
 		return retv;
 #	else
 		//TODO
-		throw std::exception();
+		throw UnimplementedExn("OS::GetMonitors");
 #	endif
 }
 
@@ -618,7 +618,7 @@ FILE *OS::FOpen(const path_t &path, const char *mode)
 			return _wfopen(path.file_string().c_str(), Str::UW(mode));
 #		else
 			// Unimplemented.
-			throw std::exception();
+			throw UnimplementedExn("OS::FOpen for non-Win32 wide paths");
 #		endif
 #	else
 		return fopen(path.file_string().c_str(), mode);
