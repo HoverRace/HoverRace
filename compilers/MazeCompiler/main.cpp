@@ -24,7 +24,9 @@
 #include <stdio.h>
 
 #include "../../engine/Model/TrackFileCommon.h"
+#include "../../engine/Util/Config.h"
 #include "../../engine/Util/OS.h"
+#include "../../engine/VideoServices/SoundServer.h"
 
 #include "MfcRecordFile.h"
 #include "MfcObjStream.h"
@@ -67,6 +69,11 @@ int main(int pArgCount, const char **pArgStrings)
 	BOOL lPrintUsage = FALSE;
 	BOOL lError = FALSE;
 
+	//TODO: Process command-line options.
+
+	Config *cfg = Config::Init(0, 0, 0, 0, true, OS::path_t());
+	cfg->runtime.silent = true;
+
 #	ifdef ENABLE_NLS
 		// Gettext initialization.
 		OS::SetLocale();
@@ -77,6 +84,7 @@ int main(int pArgCount, const char **pArgStrings)
 
 	puts("HoverRace Track Compiler      (c)1996-1997 GrokkSoft Inc.");
 
+	VideoServices::SoundServer::Init();
 	Util::DllObjectFactory::Init();
 
 #	ifdef _WIN32
@@ -259,6 +267,9 @@ int main(int pArgCount, const char **pArgStrings)
 	}
 
 	Util::DllObjectFactory::Clean(FALSE);
+	VideoServices::SoundServer::Close();
+
+	Config::Shutdown();
 
 	return lError ? 255 : 0;
 }
