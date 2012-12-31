@@ -35,13 +35,10 @@ namespace MainCharacter {
 
 #define MR_NB_HOVER_MODEL 8
 
-// Local types
-class MainCharacterState:private MR_BitPack
-{
-	friend class MainCharacter;
+typedef Util::BitPack<23> MainCharacterState;
 
-	// Packing description
-	//                     Offset  len   Prec
+// Packing description
+//                     Offset  len   Prec
 #define  MC_POSX           0,   32,     5
 #define  MC_POSY          32,   32,     5
 #define  MC_POSZ          64,   27,     0
@@ -54,14 +51,10 @@ class MainCharacterState:private MR_BitPack
 #define  MC_ON_FLOOR     169,    1,     0
 #define  MC_HOVER_MODEL  170,    3,     0
 #define  MC_PADDING      173,   11,     0
-	//   #define  MC_SOUNDFX      141,    5,     0
+//   #define  MC_SOUNDFX      141,    5,     0
+// Total                 184  = 23 bytes
 
-	// Total                 184  = 23 bytes
-	MR_UInt8 mFieldList[22];
-
-	public:
-
-};
+static_assert(std::is_pod<MainCharacterState>::value, "MainCharacterState must be a POD type");
 
 // Local constants
 #define TIME_SLICE                     5
@@ -296,10 +289,10 @@ Model::ElementNetState MainCharacter::GetNetState() const
 
 	Model::ElementNetState lReturnValue;
 
-	lReturnValue.mDataLen = sizeof(lsState);
+	lReturnValue.mDataLen = lsState.SIZE;
 	lReturnValue.mData = (MR_UInt8 *) &lsState;
 
-	lsState.Clear(sizeof(lsState));
+	lsState.Clear();
 
 	lsState.Set(MC_POSX, mPosition.mX);
 	lsState.Set(MC_POSY, mPosition.mY);
@@ -316,7 +309,7 @@ Model::ElementNetState MainCharacter::GetNetState() const
 	lsState.Set(MC_CONTROL_ST, mControlState);
 	lsState.Set(MC_ON_FLOOR, mOnFloor);
 	lsState.Set(MC_HOVER_MODEL, mHoverModel);
-	lsState.Set(MC_PADDING, 0);					  // no sounds now
+	lsState.Set(MC_PADDING, 0);
 
 	/*
 	   lsState.mPosX          = mPosition.mX;
@@ -340,30 +333,31 @@ Model::ElementNetState MainCharacter::GetNetState() const
 
 void MainCharacter::SetNetState(int /*pDataLen */ , const MR_UInt8 *pData)
 {
-	const MainCharacterState *lState = (const MainCharacterState *) pData;
+	MainCharacterState lState;
+	lState.InitFrom(pData);
 
-	mPosition.mX = lState->Get(MC_POSX);
-	mPosition.mY = lState->Get(MC_POSY);
-	mPosition.mZ = lState->Get(MC_POSZ);
+	mPosition.mX = lState.Get(MC_POSX);
+	mPosition.mY = lState.Get(MC_POSY);
+	mPosition.mZ = lState.Get(MC_POSZ);
 
-	mRoom = lState->Get(MC_ROOM);
+	mRoom = lState.Get(MC_ROOM);
 
 	if(mRoom < -1)
-		mRoom = lState->Getu(MC_ROOM);
+		mRoom = lState.Getu(MC_ROOM);
 
-	mOrientation = lState->Getu(MC_ORIENTATION);
+	mOrientation = lState.Getu(MC_ORIENTATION);
 
-	mXSpeed = lState->Get(MC_SPEED_X_256) / 256.0;
-	mYSpeed = lState->Get(MC_SPEED_Y_256) / 256.0;
-	mZSpeed = lState->Get(MC_SPEED_Z_256) / 256.0;
+	mXSpeed = lState.Get(MC_SPEED_X_256) / 256.0;
+	mYSpeed = lState.Get(MC_SPEED_Y_256) / 256.0;
+	mZSpeed = lState.Get(MC_SPEED_Z_256) / 256.0;
 
 	// calculate actual speed
 	double totalSpeed = sqrt(mXSpeed * mXSpeed + mYSpeed * mYSpeed);
 	//TRACE("set player %d speed to %lf\n", this->GetHoverId(), totalSpeed);
 
-	mControlState = lState->Getu(MC_CONTROL_ST);
-	mOnFloor = lState->Get(MC_ON_FLOOR);
-	mHoverModel = lState->Getu(MC_HOVER_MODEL);
+	mControlState = lState.Getu(MC_CONTROL_ST);
+	mOnFloor = lState.Get(MC_ON_FLOOR);
+	mHoverModel = lState.Getu(MC_HOVER_MODEL);
 
 	/*
 	   mPosition.mX = lState->mPosX;
