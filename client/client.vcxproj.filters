@@ -4,9 +4,6 @@
     <Filter Include="Game2">
       <UniqueIdentifier>{e9a1b5c7-98c0-473f-8d11-ad9aec0b2073}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Libraries">
-      <UniqueIdentifier>{f118c67f-6cc2-4fea-90c3-90245007c4c7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Control">
       <UniqueIdentifier>{d121e2e4-7d5b-4460-9c30-3a6c66b380dd}</UniqueIdentifier>
     </Filter>
@@ -322,49 +319,5 @@
     <None Include="Game2\About.bmp" />
     <None Include="Game2\icon3.ico" />
     <None Include="Game2\warning.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="..\lib\alut.dll">
-      <Filter>Libraries</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\lib\intl.dll">
-      <Filter>Libraries</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\lib\libcurl.dll">
-      <Filter>Libraries</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\lib\libcurld.dll">
-      <Filter>Libraries</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\lib\LiteUnzip.dll">
-      <Filter>Libraries</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\lib\lua5.1.dll">
-      <Filter>Libraries</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\lib\lua5.1D.dll">
-      <Filter>Libraries</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\lib\luabind.dll">
-      <Filter>Libraries</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\lib\luabindD.dll">
-      <Filter>Libraries</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\lib\zlib1.dll">
-      <Filter>Libraries</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\lib\oisD.dll">
-      <Filter>Libraries</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\lib\ois.dll">
-      <Filter>Libraries</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\lib\sdlD.dll">
-      <Filter>Libraries</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\lib\sdl.dll">
-      <Filter>Libraries</Filter>
-    </CustomBuild>
   </ItemGroup>
 </Project>

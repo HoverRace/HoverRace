@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="ColorTools">
@@ -36,6 +36,9 @@
     </Filter>
     <Filter Include="Parcel">
       <UniqueIdentifier>{2b5b8758-c5d1-4a50-9fcd-96708f742c25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries">
+      <UniqueIdentifier>{f118c67f-6cc2-4fea-90c3-90245007c4c7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -578,5 +581,49 @@
     <ClInclude Include="VideoServices\FontSpec.h">
       <Filter>VideoServices</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\lib\alut.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\lib\intl.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\lib\libcurl.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\lib\libcurld.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\lib\LiteUnzip.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\lib\lua5.1.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\lib\lua5.1D.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\lib\luabind.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\lib\luabindD.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\lib\zlib1.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\lib\oisD.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\lib\ois.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\lib\sdlD.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\lib\sdl.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>
