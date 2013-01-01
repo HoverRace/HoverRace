@@ -51,7 +51,7 @@ BOOL MR_ReadPredefinedConstants(const Util::OS::path_t &pFileName)
 				char lKey[100];
 				char lValue[100];
 
-				if(sscanf(lLine.c_str(), " #define %s %s ", lKey, lValue) != 2) {
+				if(sscanf(lLine.c_str(), " #define %99s %99s ", lKey, lValue) != 2) {
 					lReturnValue = FALSE;
 
 					fprintf(stderr, "%s: %s, %s %d.\n", _("ERROR"), _("syntax error in defines file"), _("line"), lLineNo);

@@ -155,7 +155,7 @@ BOOL ParseInputFile(const OS::path_t &pFileName)
 
 			switch (MR_ContainsKeyword(lLine.c_str(), lKeywordList)) {
 				case 0:  // BITMAP
-					if(sscanf(lLine.c_str(), " %*s %s %d %f %f %d", lLineBuffer, &lResourceId, &lWidth, &lHeight, &lAntiAliasScheme) != 5) {
+					if(sscanf(lLine.c_str(), " %*s %249s %d %f %f %d", lLineBuffer, &lResourceId, &lWidth, &lHeight, &lAntiAliasScheme) != 5) {
 						fprintf(stderr, "%s: %s.\n", _("ERROR"), _("problem reading bitmap parameters"));
 						lReturnValue = FALSE;
 					}
@@ -176,7 +176,7 @@ BOOL ParseInputFile(const OS::path_t &pFileName)
 					break;
 
 				case 1:  // ACTOR
-					if(sscanf(lLine.c_str(), " %*s %s %d ", lLineBuffer, &lResourceId) != 2) {
+					if(sscanf(lLine.c_str(), " %*s %249s %d ", lLineBuffer, &lResourceId) != 2) {
 						fprintf(stderr, "%s: %s.\n", _("ERROR"), _("problem reading actor parameters"));
 					}
 					else {
@@ -194,7 +194,7 @@ BOOL ParseInputFile(const OS::path_t &pFileName)
 					break;
 
 				case 2:  // SPRITE
-					if(sscanf(lLine.c_str(), " %*s %s %d %d", lLineBuffer, &lResourceId, &lNbItem) != 3) {
+					if(sscanf(lLine.c_str(), " %*s %249s %d %d", lLineBuffer, &lResourceId, &lNbItem) != 3) {
 						fprintf(stderr, "%s: %s.\n", _("ERROR"), _("problem reading sprite parameters"));
 						lReturnValue = FALSE;
 					}
@@ -213,7 +213,7 @@ BOOL ParseInputFile(const OS::path_t &pFileName)
 					break;
 
 				case 3:  // SHORT_SOUND
-					if(sscanf(lLine.c_str(), " %*s %s %d %d", lLineBuffer, &lResourceId, &lNbCopy) != 3) {
+					if(sscanf(lLine.c_str(), " %*s %249s %d %d", lLineBuffer, &lResourceId, &lNbCopy) != 3) {
 						fprintf(stderr, "%s: %s.\n", _("ERROR"), _("problem reading sound parameters"));
 						lReturnValue = FALSE;
 					}
@@ -232,7 +232,7 @@ BOOL ParseInputFile(const OS::path_t &pFileName)
 					break;
 
 				case 4:  // CONT_SOUND
-					if(sscanf(lLine.c_str(), " %*s %s %d %d", lLineBuffer, &lResourceId, &lNbCopy) != 3) {
+					if(sscanf(lLine.c_str(), " %*s %249s %d %d", lLineBuffer, &lResourceId, &lNbCopy) != 3) {
 						fprintf(stderr, "%s: %s.\n", _("ERROR"), _("problem reading sound parameters"));
 						lReturnValue = FALSE;
 					}
