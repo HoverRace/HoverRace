@@ -42,6 +42,14 @@ client/Game2/TrackSelectDialog.cpp
 client/Game2/UpdateDownloader.cpp
 client/Game2/VideoAudioPrefsPage.cpp
 client/Game2/main.cpp
+compilers/MazeCompiler/StdAfx.cpp
+compilers/MazeCompiler/MfcRecordFile.cpp
+compilers/MazeCompiler/LevelBuilder.cpp
+compilers/MazeCompiler/main.cpp
+compilers/MazeCompiler/Parser.cpp
+compilers/MazeCompiler/MapSprite.cpp
+compilers/MazeCompiler/MfcObjStream.cpp
+compilers/MazeCompiler/LevelBuilderVisiblesZones.cpp
 compilers/ResourceCompiler/ResActorBuilder.cpp
 compilers/ResourceCompiler/ResBitmapBuilder.cpp
 compilers/ResourceCompiler/ResourceLibBuilder.cpp
@@ -51,5 +59,3 @@ compilers/ResourceCompiler/StdAfx.cpp
 compilers/ResourceCompiler/ResSpriteBuilder.cpp
 compilers/ResourceCompiler/BitmapHelper.cpp
 compilers/ResourceCompiler/ResourceCompiler.cpp
-compilers/ResourceCompiler/MfcObjStream.cpp
-compilers/ResourceCompiler/MfcRecordFile.cpp

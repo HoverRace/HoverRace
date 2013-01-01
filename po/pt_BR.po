@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
 "Report-Msgid-Bugs-To: bugs@hoverrace.com\n"
-"POT-Creation-Date: 2012-12-27 17:42-0500\n"
+"POT-Creation-Date: 2013-01-01 04:42-0500\n"
 "PO-Revision-Date: 2009-03-04 22:20-0500\n"
 "Last-Translator:  <ryan@igglybob.com>\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -1410,33 +1410,232 @@ msgstr ""
 msgid "You found a bug!"
 msgstr ""
 
-#: compilers/ResourceCompiler/BitmapHelper.cpp:37
-#: compilers/ResourceCompiler/BitmapHelper.cpp:52
-#: compilers/ResourceCompiler/BitmapHelper.cpp:109
+#: compilers/MazeCompiler/LevelBuilder.cpp:94
+#: compilers/MazeCompiler/LevelBuilder.cpp:117
+#, c-format, boost-format
+msgid "Section ID missing on line %d"
+msgstr ""
+
+#: compilers/MazeCompiler/LevelBuilder.cpp:103
+#: compilers/MazeCompiler/LevelBuilder.cpp:126
+#, c-format, boost-format
+msgid "Duplicate section ID (%d) on line %d"
+msgstr ""
+
+#: compilers/MazeCompiler/LevelBuilder.cpp:253
+#, c-format, boost-format
+msgid "Invalid parent room reference on line %d\n"
+msgstr ""
+
+#: compilers/MazeCompiler/LevelBuilder.cpp:382
+msgid "Connection list not found"
+msgstr ""
+
+#: compilers/MazeCompiler/LevelBuilder.cpp:407
+#: compilers/MazeCompiler/LevelBuilder.cpp:412
+#, c-format, boost-format
+msgid "Connection to a nonexistent section %d"
+msgstr ""
+
+#: compilers/MazeCompiler/LevelBuilder.cpp:416
+#, c-format, boost-format
+msgid "Connection between sections %d and %d do not match"
+msgstr ""
+
+#: compilers/MazeCompiler/LevelBuilder.cpp:445
+#, c-format, boost-format
+msgid "Warning: room %d seems to be very small"
+msgstr ""
+
+#: compilers/MazeCompiler/LevelBuilder.cpp:450
+#, c-format, boost-format
+msgid "Warning: room %d seems to be very large"
+msgstr ""
+
+#: compilers/MazeCompiler/LevelBuilder.cpp:468
+#, c-format, boost-format
+msgid "Warning: feature %d seems to be very small"
+msgstr ""
+
+#: compilers/MazeCompiler/LevelBuilder.cpp:473
+#, c-format, boost-format
+msgid "Warning: feature %d seems to be very large"
+msgstr ""
+
+#: compilers/MazeCompiler/LevelBuilder.cpp:494
+#, c-format, boost-format
+msgid "Invalid starting position room %d"
+msgstr ""
+
+#: compilers/MazeCompiler/LevelBuilder.cpp:519
+msgid "No starting positions found"
+msgstr ""
+
+#: compilers/MazeCompiler/LevelBuilder.cpp:546
+#, c-format, boost-format
+msgid "Invalid room index on line %d"
+msgstr ""
+
+#: compilers/MazeCompiler/LevelBuilder.cpp:570
+#, c-format, boost-format
+msgid "Unable to create free element on line %d\n"
+msgstr ""
+
+#: compilers/MazeCompiler/LevelBuilder.cpp:588
+#, c-format
+msgid "   This level contains:"
+msgstr ""
+
+#: compilers/MazeCompiler/LevelBuilder.cpp:590
+#, c-format
+msgid "rooms"
+msgstr ""
+
+#: compilers/MazeCompiler/LevelBuilder.cpp:592
+#, c-format
+msgid "features"
+msgstr ""
+
+#: compilers/MazeCompiler/LevelBuilder.cpp:594
+#, c-format
+msgid "connections"
+msgstr ""
+
+#: compilers/MazeCompiler/LevelBuilder.cpp:596
+#, c-format
+msgid "elements"
+msgstr ""
+
+#: compilers/MazeCompiler/LevelBuilder.cpp:598
+#, c-format
+msgid "starting positions"
+msgstr ""
+
+#: compilers/MazeCompiler/LevelBuilder.cpp:788
+#, c-format, boost-format
+msgid "Unable to load texture %d %d on line %d\n"
+msgstr ""
+
+#: compilers/MazeCompiler/LevelBuilderVisiblesZones.cpp:85
+msgid "Computing visible zones... be patient"
+msgstr ""
+
+#: compilers/MazeCompiler/LevelBuilderVisiblesZones.cpp:324
+msgid "Two nodes with same position"
+msgstr ""
+
+#: compilers/MazeCompiler/main.cpp:51
+msgid "Usage: MazeCompiler <outputfile> <inputfile>"
+msgstr ""
+
+#: compilers/MazeCompiler/main.cpp:98
+msgid "Wrong argument count"
+msgstr ""
+
+#: compilers/MazeCompiler/main.cpp:127
+msgid "Track name must contain your registration number"
+msgstr ""
+
+#: compilers/MazeCompiler/main.cpp:136
+msgid "HoverRace track file"
+msgstr ""
+
+#: compilers/MazeCompiler/main.cpp:139
+#, c-format, boost-format
+msgid "HoverRace track file designed by %s(%d-%d)"
+msgstr ""
+
+#: compilers/MazeCompiler/main.cpp:144
+msgid "Unable to create the output file"
+msgstr ""
+
+#: compilers/MazeCompiler/main.cpp:147
+#, c-format, boost-format
+msgid "Compiling track (%s)"
+msgstr ""
+
+#: compilers/MazeCompiler/main.cpp:156
+msgid "Unable to open the input file"
+msgstr ""
+
+#: compilers/MazeCompiler/main.cpp:164
+msgid "Unable to add a header to the output file"
+msgstr ""
+
+#: compilers/MazeCompiler/main.cpp:180
+msgid "Track creation error"
+msgstr ""
+
+#: compilers/MazeCompiler/main.cpp:188
+msgid "Unable to add the track to the output file"
+msgstr ""
+
+#: compilers/MazeCompiler/main.cpp:202
+msgid "Unable to add a background image record"
+msgstr ""
+
+#: compilers/MazeCompiler/main.cpp:217
+msgid "Unable to add a map record"
+msgstr ""
+
+#: compilers/MazeCompiler/main.cpp:246
+#, c-format, boost-format
+msgid "The output file now contains %d records"
+msgstr ""
+
+#: compilers/MazeCompiler/main.cpp:264
+msgid "Command line error"
+msgstr ""
+
+#: compilers/MazeCompiler/main.cpp:299 compilers/MazeCompiler/main.cpp:373
+msgid "Unable to find [HEADER] section"
+msgstr ""
+
+#: compilers/MazeCompiler/main.cpp:305
+msgid "Warning: unable to find description"
+msgstr ""
+
+#: compilers/MazeCompiler/main.cpp:378 compilers/MazeCompiler/main.cpp:391
+#: compilers/MazeCompiler/main.cpp:404
+msgid "Unable to find background image"
+msgstr ""
+
+#: compilers/MazeCompiler/main.cpp:427
+msgid "Bad palette format for background file"
+msgstr ""
+
+#: compilers/MazeCompiler/main.cpp:449
+msgid "Incorrect background resolution"
+msgstr ""
+
+#: compilers/ResourceCompiler/BitmapHelper.cpp:46
+#: compilers/ResourceCompiler/BitmapHelper.cpp:61
+#: compilers/ResourceCompiler/BitmapHelper.cpp:118
 #: compilers/ResourceCompiler/ResActorBuilder.cpp:49
-#: compilers/ResourceCompiler/ResActorBuilder.cpp:202
-#: compilers/ResourceCompiler/ResActorBuilder.cpp:211
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:145
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:163
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:184
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:202
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:221
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:240
+#: compilers/ResourceCompiler/ResActorBuilder.cpp:204
+#: compilers/ResourceCompiler/ResActorBuilder.cpp:213
+#: compilers/ResourceCompiler/ResSoundBuilder.cpp:64
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:141
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:159
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:180
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:198
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:217
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:236
 #: compilers/ResourceCompiler/ResourceLibBuilder.cpp:105
-#: compilers/ResourceCompiler/TextParsing.cpp:44
-#: compilers/ResourceCompiler/TextParsing.cpp:60
+#: compilers/ResourceCompiler/TextParsing.cpp:41
+#: compilers/ResourceCompiler/TextParsing.cpp:57
 msgid "ERROR"
 msgstr ""
 
-#: compilers/ResourceCompiler/BitmapHelper.cpp:37
+#: compilers/ResourceCompiler/BitmapHelper.cpp:46
 msgid "Unable to open input file"
 msgstr ""
 
-#: compilers/ResourceCompiler/BitmapHelper.cpp:52
+#: compilers/ResourceCompiler/BitmapHelper.cpp:61
 msgid "Invalid file type"
 msgstr ""
 
-#: compilers/ResourceCompiler/BitmapHelper.cpp:109
+#: compilers/ResourceCompiler/BitmapHelper.cpp:118
 msgid "Unsupported format"
 msgstr ""
 
@@ -1444,11 +1643,11 @@ msgstr ""
 msgid "unable to open actor file"
 msgstr ""
 
-#: compilers/ResourceCompiler/ResActorBuilder.cpp:202
+#: compilers/ResourceCompiler/ResActorBuilder.cpp:204
 msgid "No bitmap associated with the patch"
 msgstr ""
 
-#: compilers/ResourceCompiler/ResActorBuilder.cpp:211
+#: compilers/ResourceCompiler/ResActorBuilder.cpp:213
 msgid "Bad bitmap ID"
 msgstr ""
 
@@ -1483,24 +1682,28 @@ msgstr ""
 msgid "bitmap too small; using single color"
 msgstr ""
 
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:145
+#: compilers/ResourceCompiler/ResSoundBuilder.cpp:64
+msgid "invalid WAV file"
+msgstr ""
+
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:141
 msgid "unable to open input file"
 msgstr ""
 
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:163
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:159
 msgid "problem reading bitmap parameters"
 msgstr ""
 
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:184
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:180
 msgid "problem reading actor parameters"
 msgstr ""
 
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:202
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:198
 msgid "problem reading sprite parameters"
 msgstr ""
 
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:221
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:240
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:217
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:236
 msgid "problem reading sound parameters"
 msgstr ""
 
@@ -1508,14 +1711,14 @@ msgstr ""
 msgid "unable to create output file"
 msgstr ""
 
-#: compilers/ResourceCompiler/TextParsing.cpp:44
+#: compilers/ResourceCompiler/TextParsing.cpp:41
 msgid "unable to open defines file"
 msgstr ""
 
-#: compilers/ResourceCompiler/TextParsing.cpp:60
+#: compilers/ResourceCompiler/TextParsing.cpp:57
 msgid "line"
 msgstr ""
 
-#: compilers/ResourceCompiler/TextParsing.cpp:60
+#: compilers/ResourceCompiler/TextParsing.cpp:57
 msgid "syntax error in defines file"
 msgstr ""
