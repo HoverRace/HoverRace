@@ -60,7 +60,7 @@ ObjFac1::~ObjFac1()
 HoverRace::Util::ObjectFromFactory *ObjFac1::GetObject(int pClassId)
 {
 	Util::ObjectFromFactory *lReturnValue = NULL;
-	Util::ObjectFromFactoryId lId = { 1, pClassId };
+	Util::ObjectFromFactoryId lId = { 1, static_cast<MR_UInt16>(pClassId) };
 
 	switch (pClassId) {
 		case 1:
