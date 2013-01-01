@@ -25,16 +25,12 @@ hr_resourcecompiler_SOURCES = \
 	ResourceLibBuilder.cpp \
 	ResourceLibBuilder.h \
 	TextParsing.cpp \
-	TestParsing.h
+	TextParsing.h
 
 BUILT_SOURCES = StdAfx.h.gch
 CLEANFILES = $(BUILT_SOURCES)
 
 EXTRA_DIST = \
-	MfcObjStream.cpp \
-	MfcObjStream.h \
-	MfcRecordFile.cpp \
-	MfcRecordFile.h \
 	ResourceCompiler.vcxproj \
 	ResourceCompiler.vcxproj.filters \
 	StdAfx.cpp
