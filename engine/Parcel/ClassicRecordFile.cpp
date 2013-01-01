@@ -72,7 +72,7 @@ ClassicRecordFileHeader::ClassicRecordFileHeader(MR_UInt32 numRecords) :
 
 	recordList = new MR_UInt32[numRecords];
 	for (MR_UInt32 i = 0; i < numRecords; ++i) {
-		recordList[i] = NULL;
+		recordList[i] = 0;
 	}
 }
 

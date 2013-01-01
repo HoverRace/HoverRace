@@ -166,7 +166,11 @@ SoundBuffer::SoundBuffer()
 #endif
 
 	for(int lCounter = 0; lCounter < MR_MAX_SOUND_COPY; lCounter++) {
+#ifdef WITH_OPENAL
+		mSoundBuffer[lCounter] = 0;
+#else
 		mSoundBuffer[lCounter] = NULL;
+#endif
 	}
 
 	// Add the new buffer to the list
