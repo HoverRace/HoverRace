@@ -22,6 +22,17 @@ AC_SUBST([LIBTOOL_DEPS])
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION(0.17)
 
+# C++11 support.
+AX_CXX_COMPILE_STDCXX_0X
+AC_SUBST([CXXFLAGS_STDCXX11])
+if test "$ax_cv_cxx_compile_cxx0x_cxx" = yes
+then
+	CXXFLAGS_STDCXX11=-std=c++0x
+elif test "ax_cv_cxx_compile_cxx0x_gxx" = yes
+then
+	CXXFLAGS_STDCXX11=-std=gnu++0x
+fi
+
 # pthread support.
 AX_PTHREAD(, [
 	AC_MSG_ERROR(["Could not determine thread support."])
@@ -71,7 +82,7 @@ AC_DEFINE_UNQUOTED([PLATFORM_NAME], ["$PLATFORM_NAME"], [Platform name.])
 # Additional global flags.
 HR_CPPFLAGS="-DWITH_OPENAL -DWITH_SDL $BOOST_CPPFLAGS $DEPS_CFLAGS $YAML_CPPFLAGS $LUA_CFLAGS $LUABIND_CFLAGS"
 AC_SUBST(HR_CPPFLAGS)
-HR_CXXFLAGS="-Winvalid-pch"
+HR_CXXFLAGS="-Winvalid-pch $CXXFLAGS_STDCXX11"
 AC_SUBST(HR_CXXFLAGS)
 
 AC_CONFIG_FILES([

@@ -11,6 +11,7 @@
 #define ENABLE_NLS 1
 #define LOCALEDIR "../share/locale"
 
+#define HAVE_STDCXX_0X 1
 #define HAVE_LONG_LONG_INT 1
 
 #define HAVE_LUA 1

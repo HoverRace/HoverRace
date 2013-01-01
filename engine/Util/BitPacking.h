@@ -44,7 +44,9 @@ struct BitPack {
 	MR_UInt32 Getu(int pOffset, int pLen, int pPrecision) const;
 };
 
+#ifdef HAVE_STDCXX_0X
 static_assert(std::is_pod<BitPack<32>>::value, "BitPack must be a POD type");
+#endif
 
 template<int BYTES>
 void BitPack<BYTES>::InitFrom(const MR_UInt8 *data) {
