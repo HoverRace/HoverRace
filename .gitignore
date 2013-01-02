@@ -383,6 +383,7 @@
 /m4/*.swp
 /m4/argz.m4
 /m4/libtool.m4
+/m4/pkg.m4
 /m4/lt*.m4
 
 # /po/
