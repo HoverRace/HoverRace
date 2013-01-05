@@ -346,6 +346,11 @@
 # /lib/build/luabind/download/
 /lib/build/luabind/download/*.zip
 
+# /lib/build/mfcleakfix/
+/lib/build/mfcleakfix/*.user
+/lib/build/mfcleakfix/Debug
+/lib/build/mfcleakfix/Release
+
 # /lib/build/ois/
 /lib/build/ois/*.user
 /lib/build/ois/Debug

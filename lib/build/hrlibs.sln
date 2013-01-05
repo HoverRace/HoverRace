@@ -1,4 +1,3 @@
-
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "luabind", "luabind\luabind.vcxproj", "{8BCFB27F-654C-471E-8590-31D89ED4A529}"
@@ -15,6 +14,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libcurl", "curl\libcurl.vcxproj", "{87EE9DA4-DE1E-4448-8324-183C98DCA588}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sdl", "sdl\sdl.vcxproj", "{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mfcleakfix", "mfcleakfix\mfcleakfix.vcxproj", "{DC4ADD42-4E45-4E72-AD47-7D67FFFE4F95}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,6 +47,10 @@ Global
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Debug|Win32.Build.0 = Debug|Win32
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Release|Win32.ActiveCfg = Release|Win32
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}.Release|Win32.Build.0 = Release|Win32
+		{DC4ADD42-4E45-4E72-AD47-7D67FFFE4F95}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DC4ADD42-4E45-4E72-AD47-7D67FFFE4F95}.Debug|Win32.Build.0 = Debug|Win32
+		{DC4ADD42-4E45-4E72-AD47-7D67FFFE4F95}.Release|Win32.ActiveCfg = Release|Win32
+		{DC4ADD42-4E45-4E72-AD47-7D67FFFE4F95}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
