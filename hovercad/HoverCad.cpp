@@ -39,6 +39,13 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
+#ifdef _WIN32
+#	ifdef _DEBUG
+#		include <mfcleakfix.h>
+		static int foo = use_ignore_mfc_leaks();
+#	endif
+#endif
+
 /////////////////////////////////////////////////////////////////////////////
 // The one and only CHoverCadApp object
 

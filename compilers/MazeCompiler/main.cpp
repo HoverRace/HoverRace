@@ -45,6 +45,13 @@ using namespace HoverRace;
 using namespace HoverRace::MazeCompiler;
 using namespace HoverRace::Util;
 
+#ifdef _WIN32
+#	ifdef _DEBUG
+#		include <mfcleakfix.h>
+		static int foo = use_ignore_mfc_leaks();
+#	endif
+#endif
+
 static void PrintUsage()
 {
 	// this should be redone, it's horrible
