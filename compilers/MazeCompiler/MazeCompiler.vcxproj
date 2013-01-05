@@ -133,7 +133,6 @@
     <ClInclude Include="MfcObjStream.h" />
     <ClInclude Include="MfcRecordFile.h" />
     <ClInclude Include="Parser.h" />
-    <ClInclude Include="resource.h" />
     <ClInclude Include="StdAfx.h" />
   </ItemGroup>
   <ItemGroup>

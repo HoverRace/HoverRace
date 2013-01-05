@@ -41,9 +41,6 @@
     <ClInclude Include="StdAfx.h">
       <Filter>Main</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>Main</Filter>
-    </ClInclude>
     <ClInclude Include="LevelBuilder.h">
       <Filter>Compiler</Filter>
     </ClInclude>

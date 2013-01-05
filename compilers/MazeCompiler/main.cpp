@@ -35,8 +35,6 @@
 #include "MapSprite.h"
 #include "Parser.h"
 
-#include "resource.h"
-
 #ifdef _WIN32
 #	define new DEBUG_NEW
 #endif
