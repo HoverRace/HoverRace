@@ -610,6 +610,9 @@
     <CustomBuild Include="..\lib\luabindD.dll">
       <Filter>Libraries</Filter>
     </CustomBuild>
+    <CustomBuild Include="..\lib\mfcleakfix.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
     <CustomBuild Include="..\lib\zlib1.dll">
       <Filter>Libraries</Filter>
     </CustomBuild>
