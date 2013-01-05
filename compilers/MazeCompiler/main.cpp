@@ -99,19 +99,23 @@ int main(int pArgCount, const char **pArgStrings)
 		wchar_t **wargv = CommandLineToArgvW(GetCommandLineW(), &wargc);
 #	endif
 
+	OS::path_t outputFilename;
+	OS::path_t inputFilename;
+
 	// Analyse the input parameters
 	if(pArgCount != 3) {
 		lPrintUsage = TRUE;
 		puts(_("Wrong argument count"));
 	}
-
-#	ifdef _WIN32
-		OS::path_t outputFilename = wargv[1];
-		OS::path_t inputFilename = wargv[2];
-#	else
-		OS::path_t outputFilename = pArgStrings[1];
-		OS::path_t inputFilename = pArgStrings[2];
-#	endif
+	else {
+#		ifdef _WIN32
+			outputFilename = wargv[1];
+			inputFilename = wargv[2];
+#		else
+			outputFilename = pArgStrings[1];
+			inputFilename = pArgStrings[2];
+#		endif
+	}
 
 	if(!lError && !lPrintUsage) {
 		if((gMajorID != 0) && (gMajorID != 100)) {
@@ -260,7 +264,7 @@ int main(int pArgCount, const char **pArgStrings)
 
 	}
 
-	if(!lError) {
+	if(!lError && !lPrintUsage) {
 		// Apply checksum.
 		Parcel::MfcRecordFile lOutputFile;
 		lOutputFile.ReOpen(outputFilename);
