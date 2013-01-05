@@ -285,6 +285,7 @@
 /hovercad/*.ncb
 /hovercad/*.sdf
 /hovercad/*.suo
+/hovercad/*.trk
 /hovercad/*.user
 /hovercad/Debug
 /hovercad/Release
