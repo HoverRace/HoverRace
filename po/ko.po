@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
 "Report-Msgid-Bugs-To: bugs@hoverrace.com\n"
-"POT-Creation-Date: 2013-01-01 04:42-0500\n"
+"POT-Creation-Date: 2013-01-06 02:51-0500\n"
 "PO-Revision-Date: 2009-03-05 22:33-0500\n"
 "Last-Translator:  <ryan@igglybob.com>\n"
 "Language-Team: Korean <translation-team-ko@lists.sourceforge.net>\n"
@@ -109,19 +109,20 @@ msgstr ""
 msgid "silent mode"
 msgstr ""
 
-#: client/Game2/Control/Controller.cpp:321
-#: client/Game2/Control/Controller.cpp:372
-#: client/Game2/Control/Controller.cpp:470
-#: client/Game2/ControlPrefsPage.cpp:134 client/Game2/NetInterface.cpp:1068
-msgid "Player"
-msgstr ""
-
+#: client/Game2/Control/ConsoleActions.cpp:83
 #: client/Game2/Control/Controller.cpp:335
 #: client/Game2/Control/Controller.cpp:357
 #: client/Game2/Control/Controller.cpp:407
 #: client/Game2/Control/Controller.cpp:600
 #: client/Game2/HoverScript/HighConsole.cpp:146
 msgid "Console"
+msgstr ""
+
+#: client/Game2/Control/Controller.cpp:321
+#: client/Game2/Control/Controller.cpp:372
+#: client/Game2/Control/Controller.cpp:470
+#: client/Game2/ControlPrefsPage.cpp:134 client/Game2/NetInterface.cpp:1068
+msgid "Player"
 msgstr ""
 
 #: client/Game2/Control/Controller.cpp:340
@@ -427,6 +428,22 @@ msgid ""
 "Make sure that you are connected to the Internet before clicking on OK.  If "
 "you have any problems, visit our forums at http://www.hoverrace.com/bb for "
 "help."
+msgstr ""
+
+#: client/Game2/FolderViewer.cpp:80
+msgid "The path is not a directory."
+msgstr ""
+
+#: client/Game2/FolderViewer.cpp:89
+msgid "Directory does not exist."
+msgstr ""
+
+#: client/Game2/FolderViewer.cpp:91
+msgid "Would you like to create it?"
+msgstr ""
+
+#: client/Game2/FolderViewer.cpp:101
+msgid "Failed to create directory."
 msgstr ""
 
 #: client/Game2/FullscreenTest.cpp:78
@@ -826,7 +843,8 @@ msgid "Unknown error code"
 msgstr ""
 
 #: client/Game2/InternetRoom.cpp:1158 client/Game2/InternetRoom.cpp:1239
-#: client/Game2/InternetRoom.cpp:1966 client/Game2/SelectRoomDialog.cpp:114
+#: client/Game2/InternetRoom.cpp:1966 client/Game2/MultiplayerPrefsPage.cpp:66
+#: client/Game2/SelectRoomDialog.cpp:114
 msgid "Internet Meeting Room"
 msgstr ""
 
@@ -910,6 +928,30 @@ msgstr ""
 
 #: client/Game2/MiscPrefsPage.cpp:64
 msgid "Use desktop &color depth when switching to fullscreen"
+msgstr ""
+
+#: client/Game2/MultiplayerPrefsPage.cpp:49
+msgid "Multiplayer"
+msgstr ""
+
+#: client/Game2/MultiplayerPrefsPage.cpp:68
+msgid "Play a sound when a &message is received"
+msgstr ""
+
+#: client/Game2/MultiplayerPrefsPage.cpp:70
+msgid "Only play sound when not &foreground window"
+msgstr ""
+
+#: client/Game2/MultiplayerPrefsPage.cpp:73
+msgid "&Log all chat sessions to:"
+msgstr ""
+
+#: client/Game2/MultiplayerPrefsPage.cpp:76
+msgid "Open Folder"
+msgstr ""
+
+#: client/Game2/MultiplayerPrefsPage.cpp:86
+msgid "Select a destination folder for saved chat sessions."
 msgstr ""
 
 #: client/Game2/NetInterface.cpp:501 client/Game2/NetInterface.cpp:522
@@ -1409,201 +1451,78 @@ msgstr ""
 msgid "You found a bug!"
 msgstr ""
 
-#: compilers/MazeCompiler/LevelBuilder.cpp:94
-#: compilers/MazeCompiler/LevelBuilder.cpp:117
-#, c-format, boost-format
-msgid "Section ID missing on line %d"
-msgstr ""
-
-#: compilers/MazeCompiler/LevelBuilder.cpp:103
-#: compilers/MazeCompiler/LevelBuilder.cpp:126
-#, c-format, boost-format
-msgid "Duplicate section ID (%d) on line %d"
-msgstr ""
-
-#: compilers/MazeCompiler/LevelBuilder.cpp:253
-#, c-format, boost-format
-msgid "Invalid parent room reference on line %d\n"
-msgstr ""
-
-#: compilers/MazeCompiler/LevelBuilder.cpp:382
-msgid "Connection list not found"
-msgstr ""
-
-#: compilers/MazeCompiler/LevelBuilder.cpp:407
-#: compilers/MazeCompiler/LevelBuilder.cpp:412
-#, c-format, boost-format
-msgid "Connection to a nonexistent section %d"
-msgstr ""
-
-#: compilers/MazeCompiler/LevelBuilder.cpp:416
-#, c-format, boost-format
-msgid "Connection between sections %d and %d do not match"
-msgstr ""
-
-#: compilers/MazeCompiler/LevelBuilder.cpp:445
-#, c-format, boost-format
-msgid "Warning: room %d seems to be very small"
-msgstr ""
-
-#: compilers/MazeCompiler/LevelBuilder.cpp:450
-#, c-format, boost-format
-msgid "Warning: room %d seems to be very large"
-msgstr ""
-
-#: compilers/MazeCompiler/LevelBuilder.cpp:468
-#, c-format, boost-format
-msgid "Warning: feature %d seems to be very small"
-msgstr ""
-
-#: compilers/MazeCompiler/LevelBuilder.cpp:473
-#, c-format, boost-format
-msgid "Warning: feature %d seems to be very large"
-msgstr ""
-
-#: compilers/MazeCompiler/LevelBuilder.cpp:494
-#, c-format, boost-format
-msgid "Invalid starting position room %d"
-msgstr ""
-
-#: compilers/MazeCompiler/LevelBuilder.cpp:519
-msgid "No starting positions found"
-msgstr ""
-
-#: compilers/MazeCompiler/LevelBuilder.cpp:546
-#, c-format, boost-format
-msgid "Invalid room index on line %d"
-msgstr ""
-
-#: compilers/MazeCompiler/LevelBuilder.cpp:570
-#, c-format, boost-format
-msgid "Unable to create free element on line %d\n"
-msgstr ""
-
-#: compilers/MazeCompiler/LevelBuilder.cpp:588
-#, c-format
-msgid "   This level contains:"
-msgstr ""
-
-#: compilers/MazeCompiler/LevelBuilder.cpp:590
-#, c-format
-msgid "rooms"
-msgstr ""
-
-#: compilers/MazeCompiler/LevelBuilder.cpp:592
-#, c-format
-msgid "features"
-msgstr ""
-
-#: compilers/MazeCompiler/LevelBuilder.cpp:594
-#, c-format
-msgid "connections"
-msgstr ""
-
-#: compilers/MazeCompiler/LevelBuilder.cpp:596
-#, c-format
-msgid "elements"
-msgstr ""
-
-#: compilers/MazeCompiler/LevelBuilder.cpp:598
-#, c-format
-msgid "starting positions"
-msgstr ""
-
-#: compilers/MazeCompiler/LevelBuilder.cpp:788
-#, c-format, boost-format
-msgid "Unable to load texture %d %d on line %d\n"
-msgstr ""
-
-#: compilers/MazeCompiler/LevelBuilderVisiblesZones.cpp:85
-msgid "Computing visible zones... be patient"
-msgstr ""
-
-#: compilers/MazeCompiler/LevelBuilderVisiblesZones.cpp:324
-msgid "Two nodes with same position"
-msgstr ""
-
-#: compilers/MazeCompiler/main.cpp:51
+#: compilers/MazeCompiler/main.cpp:42
 msgid "Usage: MazeCompiler <outputfile> <inputfile>"
 msgstr ""
 
-#: compilers/MazeCompiler/main.cpp:98
+#: compilers/MazeCompiler/main.cpp:92
 msgid "Wrong argument count"
 msgstr ""
 
-#: compilers/MazeCompiler/main.cpp:127
+#: compilers/MazeCompiler/main.cpp:122
 msgid "Track name must contain your registration number"
 msgstr ""
 
-#: compilers/MazeCompiler/main.cpp:136
-msgid "HoverRace track file"
-msgstr ""
-
-#: compilers/MazeCompiler/main.cpp:139
-#, c-format, boost-format
-msgid "HoverRace track file designed by %s(%d-%d)"
-msgstr ""
-
-#: compilers/MazeCompiler/main.cpp:144
+#: compilers/MazeCompiler/main.cpp:133
 msgid "Unable to create the output file"
 msgstr ""
 
-#: compilers/MazeCompiler/main.cpp:147
+#: compilers/MazeCompiler/main.cpp:136
 #, c-format, boost-format
 msgid "Compiling track (%s)"
 msgstr ""
 
-#: compilers/MazeCompiler/main.cpp:156
+#: compilers/MazeCompiler/main.cpp:145
 msgid "Unable to open the input file"
 msgstr ""
 
-#: compilers/MazeCompiler/main.cpp:164
+#: compilers/MazeCompiler/main.cpp:153
 msgid "Unable to add a header to the output file"
 msgstr ""
 
-#: compilers/MazeCompiler/main.cpp:180
+#: compilers/MazeCompiler/main.cpp:169
 msgid "Track creation error"
 msgstr ""
 
-#: compilers/MazeCompiler/main.cpp:188
+#: compilers/MazeCompiler/main.cpp:177
 msgid "Unable to add the track to the output file"
 msgstr ""
 
-#: compilers/MazeCompiler/main.cpp:202
+#: compilers/MazeCompiler/main.cpp:191
 msgid "Unable to add a background image record"
 msgstr ""
 
-#: compilers/MazeCompiler/main.cpp:217
+#: compilers/MazeCompiler/main.cpp:206
 msgid "Unable to add a map record"
 msgstr ""
 
-#: compilers/MazeCompiler/main.cpp:246
+#: compilers/MazeCompiler/main.cpp:235
 #, c-format, boost-format
 msgid "The output file now contains %d records"
 msgstr ""
 
-#: compilers/MazeCompiler/main.cpp:264
+#: compilers/MazeCompiler/main.cpp:255
 msgid "Command line error"
 msgstr ""
 
-#: compilers/MazeCompiler/main.cpp:299 compilers/MazeCompiler/main.cpp:373
+#: compilers/MazeCompiler/main.cpp:290 compilers/MazeCompiler/main.cpp:364
 msgid "Unable to find [HEADER] section"
 msgstr ""
 
-#: compilers/MazeCompiler/main.cpp:305
+#: compilers/MazeCompiler/main.cpp:296
 msgid "Warning: unable to find description"
 msgstr ""
 
-#: compilers/MazeCompiler/main.cpp:378 compilers/MazeCompiler/main.cpp:391
-#: compilers/MazeCompiler/main.cpp:404
+#: compilers/MazeCompiler/main.cpp:369 compilers/MazeCompiler/main.cpp:381
+#: compilers/MazeCompiler/main.cpp:394
 msgid "Unable to find background image"
 msgstr ""
 
-#: compilers/MazeCompiler/main.cpp:427
+#: compilers/MazeCompiler/main.cpp:417
 msgid "Bad palette format for background file"
 msgstr ""
 
-#: compilers/MazeCompiler/main.cpp:449
+#: compilers/MazeCompiler/main.cpp:439
 msgid "Incorrect background resolution"
 msgstr ""
 
@@ -1720,4 +1639,185 @@ msgstr ""
 
 #: compilers/ResourceCompiler/TextParsing.cpp:57
 msgid "syntax error in defines file"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:101
+#: engine/MazeCompiler/LevelBuilder.cpp:124
+#, c-format, boost-format
+msgid "Section ID missing on line %d"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:110
+#: engine/MazeCompiler/LevelBuilder.cpp:133
+#, c-format, boost-format
+msgid "Duplicate section ID (%d) on line %d"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:265
+#, c-format, boost-format
+msgid "Invalid parent room reference on line %d\n"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:400
+msgid "Connection list not found"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:420
+#: engine/MazeCompiler/LevelBuilder.cpp:428
+#, c-format, boost-format
+msgid "Connection to a nonexistent section %d"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:433
+#, c-format, boost-format
+msgid "Connection between sections %d and %d do not match"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:458
+#, c-format, boost-format
+msgid "Warning: room %d seems to be very small"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:463
+#, c-format, boost-format
+msgid "Warning: room %d seems to be very large"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:477
+#, c-format, boost-format
+msgid "Warning: feature %d seems to be very small"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:482
+#, c-format, boost-format
+msgid "Warning: feature %d seems to be very large"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:504
+#, c-format, boost-format
+msgid "Invalid starting position room %d"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:532
+msgid "No starting positions found"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:560
+#, c-format, boost-format
+msgid "Invalid room index on line %d"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:587
+#, c-format, boost-format
+msgid "Unable to create free element on line %d\n"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:605
+#, c-format
+msgid "   This level contains:"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:607
+#, c-format
+msgid "rooms"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:609
+#, c-format
+msgid "features"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:611
+#, c-format
+msgid "connections"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:613
+#, c-format
+msgid "elements"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:615
+#, c-format
+msgid "starting positions"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:805
+#, c-format, boost-format
+msgid "Unable to load texture %d %d on line %d\n"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilderVisiblesZones.cpp:81
+msgid "Computing visible zones... be patient"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilderVisiblesZones.cpp:320
+msgid "Two nodes with same position"
+msgstr ""
+
+#: engine/ObjFacTools/ResActor.cpp:190
+msgid "Unhandled component type"
+msgstr ""
+
+#: engine/ObjFacTools/ResourceLib.cpp:81
+msgid "File not found or not readable"
+msgstr ""
+
+#: engine/ObjFacTools/ResourceLib.cpp:95 engine/Script/Handlers.cpp:128
+#: engine/Script/Handlers.cpp:157
+msgid "Expected"
+msgstr ""
+
+#: engine/ObjFacTools/ResourceLib.cpp:95
+msgid "Invalid magic number"
+msgstr ""
+
+#: engine/ObjFacTools/ResourceLib.cpp:96
+msgid "got"
+msgstr ""
+
+#: engine/Script/Core.cpp:155
+msgid "Out of stack space"
+msgstr ""
+
+#: engine/Script/Core.cpp:298
+msgid "No function on stack"
+msgstr ""
+
+#: engine/Script/Core.cpp:395
+msgid "has no documentation"
+msgstr ""
+
+#: engine/Script/Core.cpp:408
+msgid "has no method"
+msgstr ""
+
+#: engine/Script/Core.cpp:519
+msgid "Disallowed access to protected function"
+msgstr ""
+
+#: engine/Script/Handlers.cpp:128 engine/Script/Handlers.cpp:157
+msgid "or"
+msgstr ""
+
+#: engine/Util/Config.cpp:338
+msgid "Unable to determine configuration directory"
+msgstr ""
+
+#: engine/Util/Config.cpp:351
+msgid ""
+"Unable to determine configuration directory (HOME environment variable not "
+"set)"
+msgstr ""
+
+#: engine/Util/Config.cpp:761
+msgid "Unable to create directory"
+msgstr ""
+
+#: engine/Util/Config.cpp:770
+msgid "Unable to create configuration file"
+msgstr ""
+
+#: engine/Util/OS.cpp:335 engine/Util/OS.cpp:345
+msgid "Could not load"
 msgstr ""
