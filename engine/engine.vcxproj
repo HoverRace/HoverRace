@@ -74,6 +74,7 @@
     </Link>
     <PostBuildEvent>
       <Command>copy ..\res\ObjFac1.dat ..\share</Command>
+      <Message>ObjFac1.dat</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -105,6 +106,7 @@
     </Link>
     <PostBuildEvent>
       <Command>copy ..\res\ObjFac1.dat ..\share</Command>
+      <Message>ObjFac1.dat</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
