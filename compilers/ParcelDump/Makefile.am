@@ -18,7 +18,8 @@ CLEANFILES = $(BUILT_SOURCES)
 
 EXTRA_DIST = \
 	ParcelDump.vcxproj \
-	ParcelDump.vcxproj.filters
+	ParcelDump.vcxproj.filters \
+	StdAfx.cpp
 
 # Build the precompiled header.
 StdAfx.h.gch: StdAfx.h
