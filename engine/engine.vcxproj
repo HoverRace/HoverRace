@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -111,6 +111,10 @@
     <ClCompile Include="ColorTools\ColorTools.cpp" />
     <ClCompile Include="MainCharacter\MainCharacter.cpp" />
     <ClCompile Include="MainCharacter\MainCharacterRenderer.cpp" />
+    <ClCompile Include="MazeCompiler\LevelBuilder.cpp" />
+    <ClCompile Include="MazeCompiler\LevelBuilderVisiblesZones.cpp" />
+    <ClCompile Include="MazeCompiler\MapSprite.cpp" />
+    <ClCompile Include="MazeCompiler\Parser.cpp" />
     <ClCompile Include="Model\ConcreteShape.cpp" />
     <ClCompile Include="Model\ContactEffect.cpp" />
     <ClCompile Include="Model\GameSession.cpp" />
@@ -200,6 +204,9 @@
     <ClInclude Include="ColorTools\ColorTools.h" />
     <ClInclude Include="MainCharacter\MainCharacter.h" />
     <ClInclude Include="MainCharacter\MainCharacterRenderer.h" />
+    <ClInclude Include="MazeCompiler\LevelBuilder.h" />
+    <ClInclude Include="MazeCompiler\MapSprite.h" />
+    <ClInclude Include="MazeCompiler\Parser.h" />
     <ClInclude Include="Model\ConcreteShape.h" />
     <ClInclude Include="Model\ContactEffect.h" />
     <ClInclude Include="Model\GameSession.h" />

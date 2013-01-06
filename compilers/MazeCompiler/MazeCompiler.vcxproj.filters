@@ -4,9 +4,6 @@
     <Filter Include="Main">
       <UniqueIdentifier>{015f6883-eb3b-4dbe-9fe4-14560617f766}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Compiler">
-      <UniqueIdentifier>{d8d12bfa-a812-49ae-9bcc-23a3aa31bfbd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Parcel">
       <UniqueIdentifier>{e536217f-3601-4312-885b-82b0843521ed}</UniqueIdentifier>
     </Filter>
@@ -18,43 +15,22 @@
     <ClCompile Include="main.cpp">
       <Filter>Main</Filter>
     </ClCompile>
-    <ClCompile Include="LevelBuilder.cpp">
-      <Filter>Compiler</Filter>
-    </ClCompile>
-    <ClCompile Include="LevelBuilderVisiblesZones.cpp">
-      <Filter>Compiler</Filter>
-    </ClCompile>
-    <ClCompile Include="Parser.cpp">
-      <Filter>Compiler</Filter>
-    </ClCompile>
     <ClCompile Include="MfcObjStream.cpp">
       <Filter>Parcel</Filter>
     </ClCompile>
     <ClCompile Include="MfcRecordFile.cpp">
       <Filter>Parcel</Filter>
     </ClCompile>
-    <ClCompile Include="MapSprite.cpp">
-      <Filter>Compiler</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StdAfx.h">
       <Filter>Main</Filter>
-    </ClInclude>
-    <ClInclude Include="LevelBuilder.h">
-      <Filter>Compiler</Filter>
-    </ClInclude>
-    <ClInclude Include="Parser.h">
-      <Filter>Compiler</Filter>
     </ClInclude>
     <ClInclude Include="MfcObjStream.h">
       <Filter>Parcel</Filter>
     </ClInclude>
     <ClInclude Include="MfcRecordFile.h">
       <Filter>Parcel</Filter>
-    </ClInclude>
-    <ClInclude Include="MapSprite.h">
-      <Filter>Compiler</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

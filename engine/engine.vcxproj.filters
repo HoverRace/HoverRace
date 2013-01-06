@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="ColorTools">
@@ -39,6 +39,9 @@
     </Filter>
     <Filter Include="Libraries">
       <UniqueIdentifier>{f118c67f-6cc2-4fea-90c3-90245007c4c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MazeCompiler">
+      <UniqueIdentifier>{f58b9dda-b47c-4c8e-988c-25eb60179a6e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -285,6 +288,18 @@
     </ClCompile>
     <ClCompile Include="VideoServices\FontSpec.cpp">
       <Filter>VideoServices</Filter>
+    </ClCompile>
+    <ClCompile Include="MazeCompiler\LevelBuilder.cpp">
+      <Filter>MazeCompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="MazeCompiler\LevelBuilderVisiblesZones.cpp">
+      <Filter>MazeCompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="MazeCompiler\MapSprite.cpp">
+      <Filter>MazeCompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="MazeCompiler\Parser.cpp">
+      <Filter>MazeCompiler</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -580,6 +595,15 @@
     </ClInclude>
     <ClInclude Include="VideoServices\FontSpec.h">
       <Filter>VideoServices</Filter>
+    </ClInclude>
+    <ClInclude Include="MazeCompiler\LevelBuilder.h">
+      <Filter>MazeCompiler</Filter>
+    </ClInclude>
+    <ClInclude Include="MazeCompiler\MapSprite.h">
+      <Filter>MazeCompiler</Filter>
+    </ClInclude>
+    <ClInclude Include="MazeCompiler\Parser.h">
+      <Filter>MazeCompiler</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

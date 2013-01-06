@@ -28,9 +28,9 @@
 #include "../../engine/Util/OS.h"
 #include "../../engine/VideoServices/SoundServer.h"
 
-#include "LevelBuilder.h"
-#include "MapSprite.h"
-#include "Parser.h"
+#include "../../engine/MazeCompiler/LevelBuilder.h"
+#include "../../engine/MazeCompiler/MapSprite.h"
+#include "../../engine/MazeCompiler/Parser.h"
 
 using namespace HoverRace;
 using namespace HoverRace::MazeCompiler;
