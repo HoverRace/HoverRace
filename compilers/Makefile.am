@@ -1,5 +1,6 @@
 
 SUBDIRS = \
+	MazeCompiler \
 	ParcelDump \
 	ResourceCompiler
 

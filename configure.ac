@@ -90,11 +90,13 @@ AC_CONFIG_FILES([
 	client/Makefile
 	client/Game2/Makefile
 	compilers/Makefile
+	compilers/MazeCompiler/Makefile
 	compilers/ParcelDump/Makefile
 	compilers/ResourceCompiler/Makefile
 	engine/Makefile
 	engine/ColorTools/Makefile
 	engine/MainCharacter/Makefile
+	engine/MazeCompiler/Makefile
 	engine/Model/Makefile
 	engine/Net/Makefile
 	engine/ObjFac1/Makefile

@@ -103,6 +103,7 @@ INPUT                  = client/Game2 \
                          engine \
                          engine/ColorTools \
                          engine/MainCharacter \
+                         engine/MazeCompiler \
                          engine/Model \
                          engine/Parcel \
                          engine/ObjFac1 \

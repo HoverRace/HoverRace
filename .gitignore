@@ -94,10 +94,18 @@
 /compilers/Makefile.in
 
 # /compilers/MazeCompiler/
+/compilers/MazeCompiler/.deps
+/compilers/MazeCompiler/.libs
 /compilers/MazeCompiler/*.aps
+/compilers/MazeCompiler/*.swo
+/compilers/MazeCompiler/*.swp
 /compilers/MazeCompiler/*.user
 /compilers/MazeCompiler/Debug
+/compilers/MazeCompiler/Makefile
+/compilers/MazeCompiler/Makefile.in
 /compilers/MazeCompiler/Release
+/compilers/MazeCompiler/StdAfx.h.gch
+/compilers/MazeCompiler/hr-mazecompiler
 
 # /compilers/PaletteCreator/
 /compilers/PaletteCreator/Debug
@@ -177,6 +185,16 @@
 /engine/MainCharacter/Makefile
 /engine/MainCharacter/Makefile.in
 /engine/MainCharacter/Release
+
+# /engine/MazeCompiler/
+/engine/MazeCompiler/*.swo
+/engine/MazeCompiler/*.swp
+/engine/MazeCompiler/.deps
+/engine/MazeCompiler/.libs
+/engine/MazeCompiler/Debug
+/engine/MazeCompiler/Makefile
+/engine/MazeCompiler/Makefile.in
+/engine/MazeCompiler/Release
 
 # /engine/Model/
 /engine/Model/*.swo

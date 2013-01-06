@@ -4,6 +4,7 @@ BUILT_SOURCES = StdAfx.h.gch
 SUBDIRS = \
 	ColorTools \
 	MainCharacter \
+	MazeCompiler \
 	Model \
 	Net \
 	ObjFac1 \
@@ -19,6 +20,7 @@ libhoverrace_engine_la_CXXFLAGS = $(HR_CXXFLAGS)
 libhoverrace_engine_la_LIBADD = \
 	ColorTools/libcolortools.la \
 	MainCharacter/libmainchar.la \
+	MazeCompiler/libmazecompiler.la \
 	Model/libmodel.la \
 	Net/libnet.la \
 	ObjFac1/libobjfac1.la \
