@@ -24,10 +24,10 @@
 
 #include <boost/algorithm/string/replace.hpp>
 
-#include "../../engine/Model/TrackFileCommon.h"
-
+#include "../Model/TrackFileCommon.h"
 #include "../Parcel/ObjStream.h"
 #include "../Util/InspectMapNode.h"
+#include "../Exception.h"
 
 #include "TrackEntry.h"
 
@@ -37,7 +37,7 @@ namespace Model {
 void TrackEntry::Serialize(Parcel::ObjStream &os)
 {
 	if (os.IsWriting()) {
-		//TODO
+		throw UnimplementedExn("TrackEntry::Serialize for writing");
 	}
 	else {
 		MR_Int32 magicNumber;
