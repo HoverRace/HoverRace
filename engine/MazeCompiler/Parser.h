@@ -22,10 +22,20 @@
 
 #pragma once
 
+#ifdef _WIN32
+#	ifdef MR_ENGINE
+#		define MR_DllDeclare   __declspec( dllexport )
+#	else
+#		define MR_DllDeclare   __declspec( dllimport )
+#	endif
+#else
+#	define MR_DllDeclare
+#endif
+
 namespace HoverRace {
 namespace MazeCompiler {
 
-class Parser
+class MR_DllDeclare Parser
 {
 	protected:
 		FILE * mFile;

@@ -21,14 +21,24 @@
 
 #pragma once
 
-#include "../../engine/Model/Level.h"
+#include "../Model/Level.h"
+
+#ifdef _WIN32
+#	ifdef MR_ENGINE
+#		define MR_DllDeclare   __declspec( dllexport )
+#	else
+#		define MR_DllDeclare   __declspec( dllimport )
+#	endif
+#else
+#	define MR_DllDeclare
+#endif
 
 namespace HoverRace {
 namespace MazeCompiler {
 
 class VisibleStep;
 
-class LevelBuilder : public Model::Level
+class MR_DllDeclare LevelBuilder : public Model::Level
 {
 	typedef Model::Level SUPER;
 	protected:
