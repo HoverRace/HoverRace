@@ -21,34 +21,20 @@
 
 #include "StdAfx.h"
 
-#include <stdio.h>
-
 #include "../../engine/Model/TrackFileCommon.h"
+#include "../../engine/Parcel/ClassicRecordFile.h"
+#include "../../engine/Parcel/ObjStream.h"
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/OS.h"
 #include "../../engine/VideoServices/SoundServer.h"
-
-#include "MfcRecordFile.h"
-#include "MfcObjStream.h"
 
 #include "LevelBuilder.h"
 #include "MapSprite.h"
 #include "Parser.h"
 
-#ifdef _WIN32
-#	define new DEBUG_NEW
-#endif
-
 using namespace HoverRace;
 using namespace HoverRace::MazeCompiler;
 using namespace HoverRace::Util;
-
-#ifdef _WIN32
-#	ifdef _DEBUG
-#		include <mfcleakfix.h>
-		static int foo = use_ignore_mfc_leaks();
-#	endif
-#endif
 
 static void PrintUsage()
 {
@@ -56,10 +42,10 @@ static void PrintUsage()
 	puts(_("Usage: MazeCompiler <outputfile> <inputfile>"));
 }
 
-static BOOL CreateHeader(FILE *pInputFile, Parcel::MfcObjStream &pDestination);
+static BOOL CreateHeader(FILE *pInputFile, Parcel::ObjStream &pDestination);
 static BOOL AddBackgroundImage(FILE *pInputFile, Parcel::ObjStream &pDestination);
 
-static CString FormatStr(const char *pSrc);
+static std::string FormatStr(const char *pSrc);
 static MR_UInt8 *PCXRead(FILE * pFile, int &pXRes, int &pYRes);
 static MR_UInt8 *LoadBitmap(FILE * pFile);
 static MR_UInt8 *LoadPalette(FILE * pFile);
@@ -139,16 +125,10 @@ int main(int pArgCount, const char **pArgStrings)
 	}
 
 	if(!lError && !lPrintUsage) {
-		Parcel::MfcRecordFile lOutputFile;
+		Parcel::ClassicRecordFile lOutputFile;
 
-		// Verify that there is at least one ofhtr parameter
-		CString lCopyrightNotice = "\x8\r" + CString(_("HoverRace track file")) + ", " + "(c)GrokkSoft 1997\n\x1a";
-
-		if((gMajorID != 0) && (gMajorID != 100)) {
-			lCopyrightNotice.Format("\x8\r" + CString(_("HoverRace track file designed by %s(%d-%d)")) + "\n\x1a", gOwner, gMajorID, gMinorID);
-		}
 		// Try to create the output file
-		if(!lOutputFile.CreateForWrite(outputFilename, 4, lCopyrightNotice)) {
+		if(!lOutputFile.CreateForWrite(outputFilename, 4, "\x8\rHoverRace track file\n\x1a")) {
 			lError = TRUE;
 			puts(_("Unable to create the output file"));
 		}
@@ -174,7 +154,7 @@ int main(int pArgCount, const char **pArgStrings)
 			}
 			else {
 				Parcel::ObjStreamPtr archivePtr(lOutputFile.StreamOut());
-				Parcel::MfcObjStream &lArchive = static_cast<Parcel::MfcObjStream&>(*archivePtr);
+				Parcel::ObjStream &lArchive = *archivePtr;
 
 				lError = !CreateHeader(lFile, lArchive);
 			}
@@ -262,11 +242,13 @@ int main(int pArgCount, const char **pArgStrings)
 
 	}
 
+	/*TODO
 	if(!lError && !lPrintUsage) {
 		// Apply checksum.
-		Parcel::MfcRecordFile lOutputFile;
+		Parcel::ClassicRecordFile lOutputFile;
 		lOutputFile.ReOpen(outputFilename);
 	}
+	*/
 
 	if(lPrintUsage) {
 		if(lError) {
@@ -283,11 +265,11 @@ int main(int pArgCount, const char **pArgStrings)
 	return lError ? 255 : 0;
 }
 
-BOOL CreateHeader(FILE *pInputFile, Parcel::MfcObjStream &pArchive)
+BOOL CreateHeader(FILE *pInputFile, Parcel::ObjStream &pArchive)
 {
 	BOOL lReturnValue = TRUE;
 
-	CString lDescription;
+	std::string lDescription;
 	int lSortingOrder = 50;
 	int lRegistration = MR_REGISTRED_TRACK;
 	Parser lParser(pInputFile);
@@ -337,14 +319,14 @@ BOOL CreateHeader(FILE *pInputFile, Parcel::MfcObjStream &pArchive)
 
 }
 
-CString FormatStr(const char *pSrc)
+std::string FormatStr(const char *pSrc)
 {
-	CString lReturnValue;
-	BOOL lEsc = FALSE;
+	std::string lReturnValue;
+	bool lEsc = false;
 
 	while(*pSrc != 0) {
 		if(lEsc) {
-			lEsc = FALSE;
+			lEsc = false;
 
 			switch (*pSrc) {
 				case 'n':
@@ -358,7 +340,7 @@ CString FormatStr(const char *pSrc)
 		}
 		else {
 			if(*pSrc == '\\') {
-				lEsc = TRUE;
+				lEsc = true;
 			}
 			else {
 				lReturnValue += *pSrc;
@@ -373,7 +355,7 @@ BOOL AddBackgroundImage(FILE * pInputFile, Parcel::ObjStream &pDestination)
 {
 	BOOL lReturnValue = TRUE;
 
-	CString lBackFileName;
+	std::string lBackFileName;
 
 	Parser lParser(pInputFile);
 
@@ -388,12 +370,11 @@ BOOL AddBackgroundImage(FILE * pInputFile, Parcel::ObjStream &pDestination)
 		}
 		else {
 			lBackFileName = lParser.GetParams();
-
 		}
 	}
 
 	if(lReturnValue) {
-		FILE *lBackFile = fopen(lBackFileName, "rb");
+		FILE *lBackFile = fopen(lBackFileName.c_str(), "rb");
 
 		if(lBackFile == NULL) {
 			lReturnValue = FALSE;

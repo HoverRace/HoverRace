@@ -27,21 +27,16 @@
 
 #include "LevelBuilder.h"
 
-#ifdef _WIN32
-#	define new DEBUG_NEW
-#endif
-
 namespace HoverRace {
 namespace MazeCompiler {
 
 // Helper structurtes
-class MR_Connection
+struct MR_Connection
 {
-	public:
-		int mRoom0;
-		int mWall0;
-		int mRoom1;
-		int mWall1;
+	int mRoom0;
+	int mWall0;
+	int mRoom1;
+	int mWall1;
 };
 
 // Helper variables
@@ -80,8 +75,15 @@ BOOL LevelBuilder::Parse(FILE * pFile)
 	int lCounter;
 	Parser lParser(pFile);
 
+	typedef std::map<int, int> lRoomList_t;
+	lRoomList_t lRoomList;
+	typedef std::map<int, int> lFeatureList_t;
+	lFeatureList_t lFeatureList;
+
+	/*
 	CMap < int, int, int, int >lRoomList;
 	CMap < int, int, int, int >lFeatureList;
+	*/
 
 	// First get the Room and feature count
 	mNbRoom = 0;
@@ -95,16 +97,16 @@ BOOL LevelBuilder::Parse(FILE * pFile)
 			printf("\n");
 		}
 		else {
-			int lDummy;
 			int lRoomId = (int) lParser.GetNextNumParam();
 
-			if(lRoomList.Lookup(lRoomId, lDummy)) {
+			lRoomList_t::const_iterator iter = lRoomList.find(lRoomId);
+			if (iter != lRoomList.end()) {
 				lReturnValue = FALSE;
 				printf(_("Duplicate section ID (%d) on line %d"), lRoomId, lParser.GetErrorLine());
 				printf("\n");
 			}
 			else {
-				lRoomList.SetAt(lRoomId, lRoomList.GetCount());
+				lRoomList[lRoomId] = lRoomList.size();
 			}
 		}
 	}
@@ -118,26 +120,26 @@ BOOL LevelBuilder::Parse(FILE * pFile)
 			printf("\n");
 		}
 		else {
-			int lDummy;
 			int lFeatureId = (int) lParser.GetNextNumParam();
 
-			if(lFeatureList.Lookup(lFeatureId, lDummy)) {
+			lFeatureList_t::const_iterator iter = lFeatureList.find(lFeatureId);
+			if (iter != lFeatureList.end()) {
 				lReturnValue = FALSE;
 				printf(_("Duplicate section ID (%d) on line %d"), lFeatureId, lParser.GetErrorLine());
 				printf("\n");
 			}
 			else {
-				lFeatureList.SetAt(lFeatureId, lFeatureList.GetCount());
+				lFeatureList[lFeatureId] = lFeatureList.size();
 			}
 		}
 	}
 
 	if(lReturnValue) {
 		// Create the room and feature lists
-		mNbRoom = lRoomList.GetCount();
+		mNbRoom = lRoomList.size();
 		mRoomList = new Room[mNbRoom];
 
-		mNbFeature = lFeatureList.GetCount();
+		mNbFeature = lFeatureList.size();
 		mFeatureList = new Feature[mNbFeature];
 
 		mFreeElementClassifiedByRoomList = new Model::Level::FreeElementList*[mNbRoom];
@@ -159,10 +161,12 @@ BOOL LevelBuilder::Parse(FILE * pFile)
 
 			// Load the attributes
 
-			if(!lRoomList.Lookup(lRoomId, lRoomIndex)) {
+			lRoomList_t::const_iterator iter = lRoomList.find(lRoomId);
+			if (iter == lRoomList.end()) {
 				ASSERT(FALSE);
 			}
 			else {
+				lRoomIndex = iter->second;
 				const char *lAttrib;
 
 				// Count the number of vertex and find the parent section
@@ -210,10 +214,12 @@ BOOL LevelBuilder::Parse(FILE * pFile)
 
 			// Load the attributes
 
-			if(!lFeatureList.Lookup(lFeatureId, lFeatureIndex)) {
+			lFeatureList_t::const_iterator iter = lFeatureList.find(lFeatureId);
+			if (iter == lFeatureList.end()) {
 				ASSERT(FALSE);
 			}
 			else {
+				lFeatureIndex = iter->second;
 				const char *lAttrib;
 
 				// Count the number of vertex and find the parent section
@@ -248,11 +254,13 @@ BOOL LevelBuilder::Parse(FILE * pFile)
 					else if(!_stricmp(lAttrib, "Parent")) {
 						int lParentId = (int) lParser.GetNextNumParam();
 
-						if(!lRoomList.Lookup(lParentId, mFeatureList[lFeatureIndex].mParentSectionIndex)) {
+						lRoomList_t::const_iterator iter = lRoomList.find(lParentId);
+						if (iter == lRoomList.end()) {
 							lReturnValue = FALSE;
 							printf(_("Invalid parent room reference on line %d\n"), lParser.GetErrorLine());
 						}
 						else {
+							mFeatureList[lFeatureIndex].mParentSectionIndex = iter->second;
 							mRoomList[mFeatureList[lFeatureIndex].mParentSectionIndex].mNbChild++;
 						}
 					}
@@ -307,10 +315,12 @@ BOOL LevelBuilder::Parse(FILE * pFile)
 
 			// Load the attributes
 
-			if(!lRoomList.Lookup(lRoomId, lRoomIndex)) {
+			lRoomList_t::const_iterator iter = lRoomList.find(lRoomId);
+			if (iter == lRoomList.end()) {
 				ASSERT(FALSE);
 			}
 			else {
+				lRoomIndex = iter->second;
 				int lVertex = 0;
 
 				while(lParser.GetNextAttrib("Wall") != NULL) {
@@ -344,10 +354,12 @@ BOOL LevelBuilder::Parse(FILE * pFile)
 
 			// Load the attributes
 
-			if(!lFeatureList.Lookup(lFeatureId, lFeatureIndex)) {
+			lFeatureList_t::const_iterator iter = lFeatureList.find(lFeatureId);
+			if (iter == lFeatureList.end()) {
 				ASSERT(FALSE);
 			}
 			else {
+				lFeatureIndex = iter->second;
 				int lVertex = 0;
 
 				while(lParser.GetNextAttrib("Wall") != NULL) {
@@ -373,7 +385,8 @@ BOOL LevelBuilder::Parse(FILE * pFile)
 	}
 
 	// Load the connections
-	CList < MR_Connection, MR_Connection & >lConnectionList;
+	typedef std::vector<MR_Connection> lConnectionList_t;
+	lConnectionList_t lConnectionList;
 
 	lParser.Reset();
 
@@ -390,29 +403,28 @@ BOOL LevelBuilder::Parse(FILE * pFile)
 			lNewConnection.mRoom1 = (int) lParser.GetNextNumParam();
 			lNewConnection.mWall1 = (int) lParser.GetNextNumParam();
 
-			lConnectionList.AddTail(lNewConnection);
+			lConnectionList.push_back(lNewConnection);
 		}
 
 		// Assign the connections to the MR_Level
-		POSITION lPos = lConnectionList.GetHeadPosition();
+		BOOST_FOREACH(MR_Connection &lConnection, lConnectionList) {
+			lRoomList_t::const_iterator iter;
 
-		while(lPos != NULL) {
-			MR_Connection & lConnection = lConnectionList.GetNext(lPos);
-
-			int lRoom0;
-			int lRoom1;
-
-			if(!lRoomList.Lookup(lConnection.mRoom0, lRoom0)) {
-				// lReturnValue = FALSE;
+			iter = lRoomList.find(lConnection.mRoom0);
+			if (iter == lRoomList.end()) {
 				printf(_("Connection to a nonexistent section %d"), lConnection.mRoom0);
 				printf("\n");
+				continue;
 			}
-			else if(!lRoomList.Lookup(lConnection.mRoom1, lRoom1)) {
-				// lReturnValue = FALSE;
+			int lRoom0 = iter->second;
+			
+			iter = lRoomList.find(lConnection.mRoom1);
+			if (iter == lRoomList.end()) {
 				printf(_("Connection to a nonexistent section %d"), lConnection.mRoom1);
 			}
-			else if((mRoomList[lRoom0].mVertexList[lConnection.mWall0] != mRoomList[lRoom1].mVertexList[(lConnection.mWall1 + 1) % mRoomList[lRoom1].mNbVertex]) || (mRoomList[lRoom1].mVertexList[lConnection.mWall1] != mRoomList[lRoom0].mVertexList[(lConnection.mWall0 + 1) % mRoomList[lRoom0].mNbVertex])) {
-				// lReturnValue = FALSE;
+			int lRoom1 = iter->second;
+
+			if ((mRoomList[lRoom0].mVertexList[lConnection.mWall0] != mRoomList[lRoom1].mVertexList[(lConnection.mWall1 + 1) % mRoomList[lRoom1].mNbVertex]) || (mRoomList[lRoom1].mVertexList[lConnection.mWall1] != mRoomList[lRoom0].mVertexList[(lConnection.mWall0 + 1) % mRoomList[lRoom0].mNbVertex])) {
 				printf(_("Connection between sections %d and %d do not match"), lConnection.mRoom0, lConnection.mRoom1);
 				printf("\n");
 				printf("%3dA: %5d, %5d\n", lConnection.mRoom0, mRoomList[lRoom0].mVertexList[lConnection.mWall0].mX, mRoomList[lRoom0].mVertexList[lConnection.mWall0].mY);
@@ -431,13 +443,9 @@ BOOL LevelBuilder::Parse(FILE * pFile)
 
 	// Compute the bounding box of each Room and do some validation
 	if(lReturnValue) {
-		POSITION lPos = lRoomList.GetStartPosition();
-
-		while(lPos != NULL) {
-			int lRoomId;
-			int lRoomIndex;
-
-			lRoomList.GetNextAssoc(lPos, lRoomId, lRoomIndex);
+		BOOST_FOREACH(lRoomList_t::value_type &item, lRoomList) {
+			int lRoomId = item.first;
+			int lRoomIndex = item.second;
 
 			double lDiagSize = ComputeShapeConst(&(mRoomList[lRoomIndex]));
 
@@ -454,13 +462,9 @@ BOOL LevelBuilder::Parse(FILE * pFile)
 	}
 
 	if(lReturnValue) {
-		POSITION lPos = lFeatureList.GetStartPosition();
-
-		while(lPos != NULL) {
-			int lFeatureId;
-			int lFeatureIndex;
-
-			lFeatureList.GetNextAssoc(lPos, lFeatureId, lFeatureIndex);
+		BOOST_FOREACH(lFeatureList_t::value_type &item, lFeatureList) {
+			int lFeatureId = item.first;
+			int lFeatureIndex = item.second;
 
 			double lDiagSize = ComputeShapeConst(&(mFeatureList[lFeatureIndex]));
 
@@ -489,10 +493,14 @@ BOOL LevelBuilder::Parse(FILE * pFile)
 				if(!_stricmp(lAttrib, "Section")) {
 					int lRoomId = (int) lParser.GetNextNumParam();
 
-					if(!lRoomList.Lookup(lRoomId, mStartingRoom[lNbStartingPosition])) {
+					lRoomList_t::const_iterator iter = lRoomList.find(lRoomId);
+					if (iter == lRoomList.end()) {
 						lReturnValue = FALSE;
 						printf(_("Invalid starting position room %d"), lRoomId);
 						printf("\n");
+					}
+					else {
+						mStartingRoom[lNbStartingPosition] = iter->second;
 					}
 				}
 				else if(!_stricmp(lAttrib, "Position")) {
@@ -541,10 +549,14 @@ BOOL LevelBuilder::Parse(FILE * pFile)
 			if(!_stricmp(lAttrib, "Section")) {
 				int lRoomId = (int) lParser.GetNextNumParam();
 
-				if(!lRoomList.Lookup(lRoomId, lRoomIndex)) {
+				lRoomList_t::const_iterator iter = lRoomList.find(lRoomId);
+				if (iter != lRoomList.end()) {
 					lReturnValue = FALSE;
 					printf(_("Invalid room index on line %d"), lParser.GetErrorLine());
 					printf("\n");
+				}
+				else {
+					lRoomIndex = iter->second;
 				}
 			}
 			else if(!_stricmp(lAttrib, "Position")) {
@@ -586,11 +598,11 @@ BOOL LevelBuilder::Parse(FILE * pFile)
 	if(lReturnValue) {
 		printf("   ");
 		printf(_("   This level contains:"));
-		printf("\n %6d ", lRoomList.GetCount());
+		printf("\n %6d ", lRoomList.size());
 		printf(_("rooms"));
-		printf("\n %6d ", lFeatureList.GetCount());
+		printf("\n %6d ", lFeatureList.size());
 		printf(_("features"));
-		printf("\n %6d ", lConnectionList.GetCount());
+		printf("\n %6d ", lConnectionList.size());
 		printf(_("connections"));
 		printf("\n %6d ", lFreeElementCount);
 		printf(_("elements"));

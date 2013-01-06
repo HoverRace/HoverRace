@@ -11,15 +11,15 @@
 #	define _CRT_SECURE_NO_DEPRECATE
 #	define _SCL_SECURE_NO_DEPRECATE
 
-#	include <afxwin.h>							// MFC core and standard components
-#	include <afxext.h>							// MFC extensions
-#	include <afxtempl.h>
-
+#	include <windows.h>
 #	include <typeinfo.h>
 
-#	ifndef _AFX_NO_AFXCMN_SUPPORT
-#		include <afxcmn.h>						// MFC support for Windows 95 Common Controls
-#	endif										// _AFX_NO_AFXCMN_SUPPORT
+#	pragma warning(disable: 4251)
+#	pragma warning(disable: 4275)
+
+#	include <assert.h>
+#	define ASSERT(e) assert(e)
+#	define TRACE __noop
 
 #	include "../../include/config-win32.h"
 
@@ -43,6 +43,7 @@
 #include <string>
 #include <vector>
 
+#include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
@@ -70,7 +71,5 @@
 #	define dcgettext(d,x,c) (x)
 #	define pgettext(p,x) (x)
 #	define pgettextImpl(f,x) (x)
-
-
 
 #endif  // ENABLE_NLS

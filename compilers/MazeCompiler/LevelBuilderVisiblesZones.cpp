@@ -25,10 +25,6 @@
 
 #include "LevelBuilder.h"
 
-#ifdef _WIN32
-#	define new DEBUG_NEW
-#endif
-
 #define MR_MAX_VISIBLE_ZONES   500
 
 namespace HoverRace {
