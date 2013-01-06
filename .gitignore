@@ -1,3 +1,6 @@
+.deps
+.dirstamp
+.libs
 *~
 *.bak
 *.la
@@ -5,6 +8,8 @@
 *.o
 *.swo
 *.swp
+*.tmp
+*.user
 
 # /
 /*.ncb
@@ -12,9 +17,6 @@
 /*.opensdf
 /*.sdf
 /*.suo
-/*.swo
-/*.swp
-/*.tmp
 /_UpgradeReport_Files
 /ABOUT-NLS
 /Debug
@@ -39,26 +41,14 @@
 /stamp-h1
 /init.lua
 
-# /build/
-/build/*.swo
-/build/*.swp
-/build/*.tmp
-
 # /client/
-/client/*.swo
-/client/*.swp
-/client/*.user
 /client/Makefile
 /client/Makefile.in
 /client/Debug
 /client/Release
 
 # /client/Game2/
-/client/Game2/.deps
-/client/Game2/.libs
 /client/Game2/*.aps
-/client/Game2/*.swo
-/client/Game2/*.swp
 /client/Game2/Debug
 /client/Game2/Makefile
 /client/Game2/Makefile.in
@@ -69,37 +59,12 @@
 /client/Game2/hoverrace
 /client/Game2/version.h
 
-# /client/Game2/Control/
-/client/Game2/Control/*.swo
-/client/Game2/Control/*.swp
-/client/Game2/Control/.deps
-/client/Game2/Control/.dirstamp
-
-# /client/Game2/Control/SDL/
-/client/Game2/Control/SDL/*.swo
-/client/Game2/Control/SDL/*.swp
-/client/Game2/Control/SDL/.deps
-/client/Game2/Control/SDL/.dirstamp
-
-# /client/Game2/HoverScript/
-/client/Game2/HoverScript/*.swo
-/client/Game2/HoverScript/*.swp
-/client/Game2/HoverScript/.deps
-/client/Game2/HoverScript/.dirstamp
-
 # /compilers/
-/compilers/*.swo
-/compilers/*.swp
 /compilers/Makefile
 /compilers/Makefile.in
 
 # /compilers/MazeCompiler/
-/compilers/MazeCompiler/.deps
-/compilers/MazeCompiler/.libs
 /compilers/MazeCompiler/*.aps
-/compilers/MazeCompiler/*.swo
-/compilers/MazeCompiler/*.swp
-/compilers/MazeCompiler/*.user
 /compilers/MazeCompiler/Debug
 /compilers/MazeCompiler/Makefile
 /compilers/MazeCompiler/Makefile.in
@@ -112,12 +77,7 @@
 /compilers/PaletteCreator/Release
 
 # /compilers/ParcelDump/
-/compilers/ParcelDump/.deps
-/compilers/ParcelDump/.libs
 /compilers/ParcelDump/*.aps
-/compilers/ParcelDump/*.swo
-/compilers/ParcelDump/*.swp
-/compilers/ParcelDump/*.user
 /compilers/ParcelDump/Debug
 /compilers/ParcelDump/Makefile
 /compilers/ParcelDump/Makefile.in
@@ -126,12 +86,7 @@
 /compilers/ParcelDump/hr-parceldump
 
 # /compilers/ResourceCompiler/
-/compilers/ResourceCompiler/.deps
-/compilers/ResourceCompiler/.libs
 /compilers/ResourceCompiler/*.aps
-/compilers/ResourceCompiler/*.swo
-/compilers/ResourceCompiler/*.swp
-/compilers/ResourceCompiler/*.user
 /compilers/ResourceCompiler/Debug
 /compilers/ResourceCompiler/Makefile
 /compilers/ResourceCompiler/Makefile.in
@@ -151,13 +106,8 @@
 /config/missing
 
 # /engine/
-/engine/.deps
-/engine/.libs
 /engine/*.ncb
 /engine/*.suo
-/engine/*.swo
-/engine/*.swp
-/engine/*.user
 /engine/Debug
 /engine/Release
 /engine/Makefile
@@ -167,50 +117,30 @@
 /engine/StdAfx.h.gch
 
 # /engine/ColorTools/
-/engine/ColorTools/*.swo
-/engine/ColorTools/*.swp
-/engine/ColorTools/.deps
-/engine/ColorTools/.libs
 /engine/ColorTools/Debug
 /engine/ColorTools/Makefile
 /engine/ColorTools/Makefile.in
 /engine/ColorTools/Release
 
 # /engine/MainCharacter/
-/engine/MainCharacter/*.swo
-/engine/MainCharacter/*.swp
-/engine/MainCharacter/.deps
-/engine/MainCharacter/.libs
 /engine/MainCharacter/Debug
 /engine/MainCharacter/Makefile
 /engine/MainCharacter/Makefile.in
 /engine/MainCharacter/Release
 
 # /engine/MazeCompiler/
-/engine/MazeCompiler/*.swo
-/engine/MazeCompiler/*.swp
-/engine/MazeCompiler/.deps
-/engine/MazeCompiler/.libs
 /engine/MazeCompiler/Debug
 /engine/MazeCompiler/Makefile
 /engine/MazeCompiler/Makefile.in
 /engine/MazeCompiler/Release
 
 # /engine/Model/
-/engine/Model/*.swo
-/engine/Model/*.swp
-/engine/Model/.deps
-/engine/Model/.libs
 /engine/Model/Debug
 /engine/Model/Makefile
 /engine/Model/Makefile.in
 /engine/Model/Release
 
 # /engine/Net/
-/engine/Net/*.swo
-/engine/Net/*.swp
-/engine/Net/.deps
-/engine/Net/.libs
 /engine/Net/Debug
 /engine/Net/Makefile
 /engine/Net/Makefile.in
@@ -218,30 +148,18 @@
 
 # /engine/ObjFac1/
 /engine/ObjFac1/*.aps
-/engine/ObjFac1/*.swo
-/engine/ObjFac1/*.swp
-/engine/ObjFac1/.deps
-/engine/ObjFac1/.libs
 /engine/ObjFac1/Debug
 /engine/ObjFac1/Makefile
 /engine/ObjFac1/Makefile.in
 /engine/ObjFac1/Release
 
 # /engine/ObjFacTools/
-/engine/ObjFacTools/*.swo
-/engine/ObjFacTools/*.swp
-/engine/ObjFacTools/.deps
-/engine/ObjFacTools/.libs
 /engine/ObjFacTools/Debug
 /engine/ObjFacTools/Makefile
 /engine/ObjFacTools/Makefile.in
 /engine/ObjFacTools/Release
 
 # /engine/Parcel/
-/engine/Parcel/*.swo
-/engine/Parcel/*.swp
-/engine/Parcel/.deps
-/engine/Parcel/.libs
 /engine/Parcel/Debug
 /engine/Parcel/Makefile
 /engine/Parcel/Makefile.in
@@ -250,10 +168,6 @@
 # /engine/Script/
 /engine/Script/*.APS
 /engine/Script/*.loT
-/engine/Script/*.swo
-/engine/Script/*.swp
-/engine/Script/.deps
-/engine/Script/.libs
 /engine/Script/Debug
 /engine/Script/Makefile
 /engine/Script/Makefile.in
@@ -261,18 +175,10 @@
 /engine/Script/libscript.la
 
 # /engine/Script/Help/
-/engine/Script/Help/*.swo
-/engine/Script/Help/*.swp
-/engine/Script/Help/.deps
-/engine/Script/Help/.dirstamp
 
 # /engine/Util/
 /engine/Util/*.APS
 /engine/Util/*.loT
-/engine/Util/*.swo
-/engine/Util/*.swp
-/engine/Util/.deps
-/engine/Util/.libs
 /engine/Util/Debug
 /engine/Util/Makefile
 /engine/Util/Makefile.in
@@ -280,19 +186,10 @@
 /engine/Util/libutil.la
 
 # /engine/Util/yaml/
-/engine/Util/yaml/*.swo
-/engine/Util/yaml/*.swp
-/engine/Util/yaml/.deps
-/engine/Util/yaml/.dirstamp
-/engine/Util/yaml/.libs
 /engine/Util/yaml/Makefile
 /engine/Util/yaml/Makefile.in
 
 # /engine/VideoServices/
-/engine/VideoServices/*.swo
-/engine/VideoServices/*.swp
-/engine/VideoServices/.deps
-/engine/VideoServices/.libs
 /engine/VideoServices/Debug
 /engine/VideoServices/Makefile
 /engine/VideoServices/Makefile.in
@@ -304,18 +201,11 @@
 /hovercad/*.sdf
 /hovercad/*.suo
 /hovercad/*.trk
-/hovercad/*.user
 /hovercad/Debug
 /hovercad/Release
 
 # /imr/
-/imr/*.swo
-/imr/*.swp
 /imr/logfile
-
-# /include/compat/
-/include/compat/*.swo
-/include/compat/*.swp
 
 # /lib/
 /lib/*.exp
@@ -328,14 +218,12 @@
 /lib/build/*.opensdf
 /lib/build/*.sdf
 /lib/build/*.suo
-/lib/build/*.swp
 /lib/build/_UpgradeReport_Files
 /lib/build/UpgradeLog*.XML
 /lib/build/ipch
 
 # /lib/build/curl/
 /lib/build/curl/*.old
-/lib/build/curl/*.user
 /lib/build/curl/Debug
 /lib/build/curl/Release
 /lib/build/curl/src
@@ -346,7 +234,6 @@
 /lib/build/curl/download/*.zip
 
 # /lib/build/lua/
-/lib/build/lua/*.user
 /lib/build/lua/Debug
 /lib/build/lua/Release
 /lib/build/lua/src
@@ -355,7 +242,6 @@
 /lib/build/lua/download/*.zip
 
 # /lib/build/luabind/
-/lib/build/luabind/*.user
 /lib/build/luabind/Debug
 /lib/build/luabind/Release
 /lib/build/luabind/dist
@@ -366,12 +252,10 @@
 /lib/build/luabind/download/*.zip
 
 # /lib/build/mfcleakfix/
-/lib/build/mfcleakfix/*.user
 /lib/build/mfcleakfix/Debug
 /lib/build/mfcleakfix/Release
 
 # /lib/build/ois/
-/lib/build/ois/*.user
 /lib/build/ois/Debug
 /lib/build/ois/Release
 /lib/build/ois/src
@@ -382,7 +266,6 @@
 /lib/build/ois/download/*.zip
 
 # /lib/build/sdl/
-/lib/build/sdl/*.user
 /lib/build/sdl/Debug
 /lib/build/sdl/Release
 /lib/build/sdl/src
@@ -392,7 +275,6 @@
 /lib/build/sdl/download/*.zip
 
 # /lib/build/yaml/
-/lib/build/yaml/*.user
 /lib/build/yaml/Debug
 /lib/build/yaml/Release
 /lib/build/yaml/src
@@ -403,8 +285,6 @@
 /lib/build/yaml/download/*.tar
 
 # /m4/
-/m4/*.swo
-/m4/*.swp
 /m4/argz.m4
 /m4/libtool.m4
 /m4/pkg.m4
@@ -415,8 +295,6 @@
 /po/*.mo
 /po/*.pot
 /po/*.sed
-/po/*.swo
-/po/*.swp
 /po/Makefile
 /po/Makefile.in
 /po/Makevars.template
@@ -441,6 +319,5 @@
 /srcdoc/warnings.txt
 
 # /updater/
-/updater/*.user
 /updater/Debug
 /updater/Release
