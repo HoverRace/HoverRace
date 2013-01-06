@@ -54,9 +54,9 @@
 #	include <libintl.h>
 #	define _(x) gettext(x)
 
-    // Our own little version of pgettext() so we don't need all of gettext.h.
+	// Our own little version of pgettext() so we don't need all of gettext.h.
 #	define pgettext(p,x) pgettextImpl(p "\004" x, x)
-    static inline const char *pgettextImpl(const char *full, const char *msg)
+	static inline const char *pgettextImpl(const char *full, const char *msg)
 	{
 		const char *retv = _(full);
 		return (retv == full) ? msg : retv;
