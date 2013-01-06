@@ -23,7 +23,7 @@
 
 #include <math.h>
 
-#include "Parser.h"
+#include "TrackSpecParser.h"
 
 #include "LevelBuilder.h"
 
@@ -43,7 +43,7 @@ struct MR_Connection
 static LevelBuilder *gsCurrentLevelBuilder = NULL;
 
 // Local helper functions
-static Model::SurfaceElement *sLoadTexture(Parser * pParser);
+static Model::SurfaceElement *sLoadTexture(TrackSpecParser * pParser);
 
 // class LevelBuilder
 BOOL LevelBuilder::InitFromFile(FILE * pFile)
@@ -73,7 +73,7 @@ BOOL LevelBuilder::Parse(FILE * pFile)
 {
 	BOOL lReturnValue = TRUE;
 	int lCounter;
-	Parser lParser(pFile);
+	TrackSpecParser lParser(pFile);
 
 	typedef std::map<int, int> lRoomList_t;
 	lRoomList_t lRoomList;
@@ -776,7 +776,7 @@ double LevelBuilder::ComputeShapeConst(Section * pSection)
 }
 
 // Helpers implementation
-Model::SurfaceElement *sLoadTexture(Parser * pParser)
+Model::SurfaceElement *sLoadTexture(TrackSpecParser *pParser)
 {
 	Model::SurfaceElement *lReturnValue = NULL;
 	Util::ObjectFromFactory *lTempPtr = NULL;

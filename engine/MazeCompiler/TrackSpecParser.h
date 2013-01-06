@@ -1,4 +1,4 @@
-// Parser.h
+// TrackSpecParser.h
 // Text file parser helper
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
@@ -35,7 +35,7 @@
 namespace HoverRace {
 namespace MazeCompiler {
 
-class MR_DllDeclare Parser
+class MR_DllDeclare TrackSpecParser
 {
 	protected:
 		FILE * mFile;
@@ -49,8 +49,8 @@ class MR_DllDeclare Parser
 		const char *InternalGetNextClass();
 
 	public:
-		Parser(FILE * pFile);
-		~Parser();
+		TrackSpecParser(FILE * pFile);
+		~TrackSpecParser();
 
 		void Reset();
 

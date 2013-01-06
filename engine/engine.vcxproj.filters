@@ -298,7 +298,7 @@
     <ClCompile Include="MazeCompiler\MapSprite.cpp">
       <Filter>MazeCompiler</Filter>
     </ClCompile>
-    <ClCompile Include="MazeCompiler\Parser.cpp">
+    <ClCompile Include="MazeCompiler\TrackSpecParser.cpp">
       <Filter>MazeCompiler</Filter>
     </ClCompile>
   </ItemGroup>
@@ -602,7 +602,7 @@
     <ClInclude Include="MazeCompiler\MapSprite.h">
       <Filter>MazeCompiler</Filter>
     </ClInclude>
-    <ClInclude Include="MazeCompiler\Parser.h">
+    <ClInclude Include="MazeCompiler\TrackSpecParser.h">
       <Filter>MazeCompiler</Filter>
     </ClInclude>
   </ItemGroup>

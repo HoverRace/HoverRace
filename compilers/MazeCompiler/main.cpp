@@ -30,7 +30,7 @@
 
 #include "../../engine/MazeCompiler/LevelBuilder.h"
 #include "../../engine/MazeCompiler/MapSprite.h"
-#include "../../engine/MazeCompiler/Parser.h"
+#include "../../engine/MazeCompiler/TrackSpecParser.h"
 
 using namespace HoverRace;
 using namespace HoverRace::MazeCompiler;
@@ -272,7 +272,7 @@ BOOL CreateHeader(FILE *pInputFile, Parcel::ObjStream &pArchive)
 	std::string lDescription;
 	int lSortingOrder = 50;
 	int lRegistration = MR_REGISTRED_TRACK;
-	Parser lParser(pInputFile);
+	TrackSpecParser lParser(pInputFile);
 
 	// Look in the registry to find the User name and member number
 
@@ -357,7 +357,7 @@ BOOL AddBackgroundImage(FILE * pInputFile, Parcel::ObjStream &pDestination)
 
 	std::string lBackFileName;
 
-	Parser lParser(pInputFile);
+	TrackSpecParser lParser(pInputFile);
 
 	if(lParser.GetNextClass("HEADER") == NULL) {
 		lReturnValue = FALSE;

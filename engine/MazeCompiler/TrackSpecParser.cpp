@@ -1,4 +1,4 @@
-// Parser.cpp
+// TrackSpecParser.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
@@ -21,26 +21,22 @@
 
 #include "StdAfx.h"
 
-#include "Parser.h"
-
-#ifdef _WIN32
-#	define new DEBUG_NEW
-#endif
+#include "TrackSpecParser.h"
 
 namespace HoverRace {
 namespace MazeCompiler {
 
-Parser::Parser(FILE * pFile)
+TrackSpecParser::TrackSpecParser(FILE * pFile)
 {
 	mFile = pFile;
 	Reset();
 }
 
-Parser::~Parser()
+TrackSpecParser::~TrackSpecParser()
 {
 }
 
-void Parser::Reset()
+void TrackSpecParser::Reset()
 {
 	ASSERT(mFile != NULL);
 
@@ -52,7 +48,7 @@ void Parser::Reset()
 	ReadNewLine();
 }
 
-BOOL Parser::ReadNewLine()
+BOOL TrackSpecParser::ReadNewLine()
 {
 	ASSERT(mFile != NULL);
 
@@ -110,7 +106,7 @@ BOOL Parser::ReadNewLine()
 	}
 }
 
-const char *Parser::InternalGetNextClass()
+const char *TrackSpecParser::InternalGetNextClass()
 {
 
 	if(mParsePtr != mLineBuffer) {
@@ -141,7 +137,7 @@ const char *Parser::InternalGetNextClass()
 
 }
 
-const char *Parser::GetNextClass(const char *pClassType)
+const char *TrackSpecParser::GetNextClass(const char *pClassType)
 {
 	const char *lReturnValue;
 
@@ -153,7 +149,7 @@ const char *Parser::GetNextClass(const char *pClassType)
 	return lReturnValue;
 }
 
-const char *Parser::GetNextAttrib(const char *pAttrib)
+const char *TrackSpecParser::GetNextAttrib(const char *pAttrib)
 {
 
 	if((mParsePtr != mLineBuffer) || (mLineNumber == 0)) {
@@ -189,7 +185,7 @@ const char *Parser::GetNextAttrib(const char *pAttrib)
 	return lReturnValue;
 }
 
-BOOL Parser::GetNextLine()
+BOOL TrackSpecParser::GetNextLine()
 {
 
 	if(!ReadNewLine()) {
@@ -204,12 +200,12 @@ BOOL Parser::GetNextLine()
 	}
 }
 
-const char *Parser::GetParams()
+const char *TrackSpecParser::GetParams()
 {
 	return mParsePtr;
 }
 
-const char *Parser::GetNextStrParam(const char *pDefault)
+const char *TrackSpecParser::GetNextStrParam(const char *pDefault)
 {
 	sscanf(mParsePtr, " %29[^,]", mReturnBuffer);
 	mParsePtr = strchr(mParsePtr, ',');
@@ -239,7 +235,7 @@ const char *Parser::GetNextStrParam(const char *pDefault)
 	}
 }
 
-double Parser::GetNextNumParam(double pDefaultValue)
+double TrackSpecParser::GetNextNumParam(double pDefaultValue)
 {
 	const char *lReturnValue = GetNextStrParam();
 
@@ -252,7 +248,7 @@ double Parser::GetNextNumParam(double pDefaultValue)
 
 }
 
-int Parser::GetErrorLine() const
+int TrackSpecParser::GetErrorLine() const
 {
 	return mLineNumber;
 }
