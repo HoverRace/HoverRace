@@ -17,6 +17,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sdl", "sdl\sdl.vcxproj", "{
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mfcleakfix", "mfcleakfix\mfcleakfix.vcxproj", "{DC4ADD42-4E45-4E72-AD47-7D67FFFE4F95}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SDLmain", "sdl\SDLmain.vcxproj", "{2C603B97-1144-4888-BD24-91C5C82B6338}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -51,6 +53,9 @@ Global
 		{DC4ADD42-4E45-4E72-AD47-7D67FFFE4F95}.Debug|Win32.Build.0 = Debug|Win32
 		{DC4ADD42-4E45-4E72-AD47-7D67FFFE4F95}.Release|Win32.ActiveCfg = Release|Win32
 		{DC4ADD42-4E45-4E72-AD47-7D67FFFE4F95}.Release|Win32.Build.0 = Release|Win32
+		{2C603B97-1144-4888-BD24-91C5C82B6338}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2C603B97-1144-4888-BD24-91C5C82B6338}.Release|Win32.ActiveCfg = Release|Win32
+		{2C603B97-1144-4888-BD24-91C5C82B6338}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

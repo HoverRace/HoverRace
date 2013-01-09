@@ -1,5 +1,5 @@
 
-Current supported SDL version: 1.2.14
+Current supported SDL version: 1.2.15
 
 
 == PowerShell Instructions ==
@@ -22,10 +22,10 @@ http://technet.microsoft.com/en-us/library/ee176949.aspx
 
 == Manual Instructions ==
 
-1. Download the SDL sources (SDL-1.2.14.zip) from here:
+1. Download the SDL sources (SDL-1.2.15.zip) from here:
 
 http://www.libsdl.org/release/
 
 2. Unpack the .zip file into this folder.
 
-3. Rename the "SDL-1.2.14" folder to "src".
+3. Rename the "SDL-1.2.15" folder to "src".
