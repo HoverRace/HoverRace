@@ -60,6 +60,16 @@
 #include "ResourceLibBuilder.h"
 #include "../../engine/ColorTools/ColorTools.h"
 
+#ifdef WITH_SDL
+#	ifdef _WIN32
+#		ifdef _DEBUG
+#			pragma comment(lib, "SDLmainD")
+#		else
+#			pragma comment(lib, "SDLmain")
+#		endif
+#	endif
+#endif
+
 using namespace HoverRace::ResourceCompiler;
 using namespace HoverRace::Util;
 
@@ -70,7 +80,7 @@ static void PrintUsage();
 // Local data
 static ResourceLibBuilder gsLib;
 
-int main(int pArgc, const char **pArgs)
+int main(int pArgc, char *pArgs[])
 {
 	BOOL lReturnValue = TRUE;
 

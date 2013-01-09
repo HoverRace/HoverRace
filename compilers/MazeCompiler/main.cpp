@@ -32,6 +32,16 @@
 #include "../../engine/MazeCompiler/MapSprite.h"
 #include "../../engine/MazeCompiler/TrackSpecParser.h"
 
+#ifdef WITH_SDL
+#	ifdef _WIN32
+#		ifdef _DEBUG
+#			pragma comment(lib, "SDLmainD")
+#		else
+#			pragma comment(lib, "SDLmain")
+#		endif
+#	endif
+#endif
+
 using namespace HoverRace;
 using namespace HoverRace::MazeCompiler;
 using namespace HoverRace::Util;
@@ -55,7 +65,7 @@ static int gMajorID = 0;
 static int gMinorID = 0;
 static unsigned char gKey[50];
 
-int main(int pArgCount, const char **pArgStrings)
+int main(int pArgCount, char *pArgStrings[])
 {
 	BOOL lPrintUsage = FALSE;
 	BOOL lError = FALSE;
