@@ -602,7 +602,7 @@ BOOL LevelBuilder::Parse(FILE * pFile)
 	// Print some statistics
 	if(lReturnValue) {
 		printf("   ");
-		printf(_("   This level contains:"));
+		printf(_("This level contains:"));
 		printf("\n %6d ", lRoomList.size());
 		printf(_("rooms"));
 		printf("\n %6d ", lFeatureList.size());
