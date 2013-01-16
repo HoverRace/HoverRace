@@ -22,6 +22,10 @@
 
 #include "StdAfx.h"
 
+#ifdef WITH_SDL
+#	include <SDL_Pango.h>
+#endif
+
 #include "../Util/Str.h"
 #include "Viewport2D.h"
 
@@ -130,7 +134,53 @@ void StaticText::Update()
 {
 	free(bitmap);
 
-#ifdef _WIN32
+#ifdef WITH_SDL
+	//TODO: Reuse the context.
+	SDLPango_Context *ctx = SDLPango_CreateContext();
+	SDLPango_SetDefaultColor(ctx, MATRIX_BLACK_BACK);
+	SDLPango_SetMinimumSize(ctx, 0, 0);
+	SDLPango_SetText(ctx, s.c_str(), -1);
+
+	width = SDLPango_GetLayoutWidth(ctx);
+	height = SDLPango_GetLayoutHeight(ctx);
+
+	// Draw the text onto an SDL surface.
+	SDL_Surface *surface = SDL_CreateRGBSurface(SDL_SWSURFACE,
+		width, height, 32,
+		(MR_UInt32)(255 << (8 * 3)),
+		(MR_UInt32)(255 << (8 * 2)),
+		(MR_UInt32)(255 << (8 * 1)),
+		255);
+	SDLPango_Draw(ctx, surface, 0, 0);
+
+	switch (effect) {
+		case StaticText::EFFECT_SHADOW:
+			realWidth = width + 1;
+			realHeight = height + 1;
+			break;
+		default:
+			realWidth = width;
+			realHeight = height;
+	}
+
+	// Copy the surface to our image buffer.
+	bitmap = (MR_UInt8*)malloc(realWidth * realHeight);
+	memset(bitmap, 0, realWidth * realHeight);
+
+	int destSkip = realWidth - width;
+	MR_UInt32 *src = static_cast<MR_UInt32*>(surface->pixels);
+	MR_UInt8 *dest = bitmap;
+	for (int y = 0; y < height; ++y) {
+		for (int x = 0; x < width; ++x) {
+			*dest++ = ((*src++ & 0xff00) > 0) ? 0xff : 0x00;
+		}
+		dest += destSkip;
+	}
+
+	SDL_FreeSurface(surface);
+	SDLPango_FreeContext(ctx);
+
+#elif defined(_WIN32)
 	HDC hdc = CreateCompatibleDC(NULL);
 
 	HFONT stdFont = CreateFont(
@@ -251,7 +301,6 @@ void StaticText::ApplyShadow()
  */
 void StaticText::Blt(int x, int y, Viewport2D *vp, bool centerX) const
 {
-#ifdef _WIN32
 	if (centerX) x -= width / 2;
 
 	int dw = vp->GetXRes();
@@ -282,7 +331,6 @@ void StaticText::Blt(int x, int y, Viewport2D *vp, bool centerX) const
 		}
 		dest = (destRow += rowLen);
 	}
-#endif
 }
 
 }  // namespace VideoServices

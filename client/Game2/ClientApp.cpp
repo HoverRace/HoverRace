@@ -23,6 +23,7 @@
 #include "StdAfx.h"
 
 #include <SDL/SDL_syswm.h>
+#include <SDL_Pango.h>
 
 #include "../../engine/Exception.h"
 #include "../../engine/MainCharacter/MainCharacter.h"
@@ -95,6 +96,7 @@ ClientApp::ClientApp() :
 
 	if (SDL_Init(SDL_INIT_VIDEO) == -1)
 		throw Exception("SDL initialization failed");
+	SDLPango_Init();
 
 	// Create the system console and execute the init script.
 	// This allows the script to modify the configuration (e.g. for unit tests).
