@@ -33,3 +33,6 @@
 
 // Uncomment this to use the SDL renderer and client.
 //#define WITH_SDL 1
+
+// Uncomment this to use SDL_Pango to render text.
+//#define WITH_SDL_PANGO
