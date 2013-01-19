@@ -47,8 +47,6 @@ struct MR_DllDeclare FontSpec {
 		bool bold=false, bool italic=false) :
 		name(name), size(size), bold(bold), italic(italic) { }
 
-	friend std::ostream &operator<<(std::ostream &os, const FontSpec &fs);
-
 	std::string name;
 	int size;
 	bool bold;
