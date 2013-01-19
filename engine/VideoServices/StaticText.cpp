@@ -22,7 +22,7 @@
 
 #include "StdAfx.h"
 
-#ifdef WITH_SDL
+#ifdef WITH_SDL_PANGO
 #	include <glib.h>
 #	include <SDL_Pango.h>
 #endif
@@ -135,7 +135,7 @@ void StaticText::Update()
 {
 	free(bitmap);
 
-#ifdef WITH_SDL
+#ifdef WITH_SDL_PANGO
 	char *escapedBuf = g_markup_escape_text(s.c_str(), -1);
 
 	std::ostringstream oss;
@@ -270,6 +270,9 @@ void StaticText::Update()
 	DeleteObject(stdFont);
 
 	DeleteDC(hdc);
+
+#else
+	throw UnimplementedExn("StaticText::Update");
 #endif
 
 	// Apply effect (we might refactor this out).
