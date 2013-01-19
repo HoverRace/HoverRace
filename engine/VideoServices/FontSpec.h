@@ -47,6 +47,8 @@ struct MR_DllDeclare FontSpec {
 		bool bold=false, bool italic=false) :
 		name(name), size(size), bold(bold), italic(italic) { }
 
+	friend std::ostream &operator<<(std::ostream &os, const FontSpec &fs);
+
 	std::string name;
 	int size;
 	bool bold;
@@ -60,6 +62,16 @@ MR_DllDeclare inline bool operator==(const FontSpec &a, const FontSpec &b)
 		a.bold == b.bold &&
 		a.italic == b.italic &&
 		a.name == b.name;
+}
+
+MR_DllDeclare inline std::ostream &operator<<(std::ostream &os, const FontSpec &fs) {
+	// For convenience, this is formatted for use by Pango.
+	os << fs.name;
+	if (fs.bold) os << " Bold";
+	if (fs.italic) os << " Italic";
+	os << ' ' << fs.size;
+
+	return os;
 }
 
 }  // namespace VideoServices

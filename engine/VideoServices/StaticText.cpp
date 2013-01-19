@@ -23,6 +23,7 @@
 #include "StdAfx.h"
 
 #ifdef WITH_SDL
+#	include <glib.h>
 #	include <SDL_Pango.h>
 #endif
 
@@ -135,11 +136,19 @@ void StaticText::Update()
 	free(bitmap);
 
 #ifdef WITH_SDL
+	char *escapedBuf = g_markup_escape_text(s.c_str(), -1);
+
+	std::ostringstream oss;
+	oss << "<span font=\"" << font << "\">" <<
+		escapedBuf << "</span>";
+
+	g_free(escapedBuf);
+
 	//TODO: Reuse the context.
 	SDLPango_Context *ctx = SDLPango_CreateContext();
 	SDLPango_SetDefaultColor(ctx, MATRIX_BLACK_BACK);
 	SDLPango_SetMinimumSize(ctx, 0, 0);
-	SDLPango_SetText(ctx, s.c_str(), -1);
+	SDLPango_SetMarkup(ctx, oss.str().c_str(), -1);
 
 	width = SDLPango_GetLayoutWidth(ctx);
 	height = SDLPango_GetLayoutHeight(ctx);
