@@ -182,7 +182,7 @@ void StaticText::Update()
 	MR_UInt8 *dest = bitmap;
 	for (int y = 0; y < height; ++y) {
 		for (int x = 0; x < width; ++x) {
-			*dest++ = ((*src++ & 0xff00) > 0) ? 0xff : 0x00;
+			*dest++ = ((*src++ & 0xff00) >= 0x7f00) ? 0xff : 0x00;
 		}
 		dest += destSkip;
 	}
