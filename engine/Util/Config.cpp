@@ -180,7 +180,9 @@ Config::Config(int verMajor, int verMinor, int verPatch, int verBuild,
 	userAgentId += shortVersion;
 	userAgentId += " (" PLATFORM_NAME ")";
 
-#	ifdef _WIN32
+#	ifdef WITH_SDL_PANGO
+		defaultFontName = "Arial,sans";
+#	elif defined(_WIN32)
 		defaultFontName = "Arial";
 #	else
 		defaultFontName = "sans";
