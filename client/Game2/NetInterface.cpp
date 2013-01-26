@@ -519,7 +519,7 @@ BOOL NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName, BOOL p
 			if(bind(mRegistrySocket, (LPSOCKADDR) &lAddr, sizeof(lAddr)) != 0) {
 				lReturnValue = FALSE;
 				MessageBoxW(pWindow, Str::UW(_("Unable to use the port, try to close some WINSOCK applications")),
-                 Str::UW(_("TCP Server")), MB_ICONERROR | MB_OK | MB_APPLMODAL);
+					Str::UW(_("TCP Server")), MB_ICONERROR | MB_OK | MB_APPLMODAL);
 			}
 			else {
 				lReturnValue = TRUE;
@@ -531,7 +531,7 @@ BOOL NetworkInterface::MasterConnect(HWND pWindow, const char *pGameName, BOOL p
 
 		if(!lReturnValue) {
 			MessageBoxW(pWindow, Str::UW(_("Unable to use UDP recv port; choose a different port or close some Winsock applications.")),
-              Str::UW(_("TCP Server")), MB_ICONERROR | MB_OK | MB_APPLMODAL);
+				Str::UW(_("TCP Server")), MB_ICONERROR | MB_OK | MB_APPLMODAL);
 		}
 
 		if(lReturnValue) {
@@ -609,7 +609,7 @@ BOOL NetworkInterface::SlavePreConnect(HWND pWindow, std::string &pGameName)
 		}
 		else {
 			MessageBoxW(pWindow, Str::UW(_("Unable to use UDP recv port; choose a different port or close some Winsock applications.")),
-              Str::UW(_("TCP Server")), MB_ICONERROR | MB_OK | MB_APPLMODAL);
+				Str::UW(_("TCP Server")), MB_ICONERROR | MB_OK | MB_APPLMODAL);
 		}
 	}
 
@@ -665,7 +665,7 @@ BOOL NetworkInterface::SlaveConnect(HWND pWindow, const char *pServerIP, unsigne
 
 			if(!lReturnValue) {
 				MessageBoxW(pWindow, Str::UW(_("Unable to use UDP recv port; choose a different port or close some Winsock applications.")),
-                 Str::UW(_("TCP Server")), MB_ICONERROR | MB_OK | MB_APPLMODAL);
+					Str::UW(_("TCP Server")), MB_ICONERROR | MB_OK | MB_APPLMODAL);
 			}
 
 			// figure out the game information
