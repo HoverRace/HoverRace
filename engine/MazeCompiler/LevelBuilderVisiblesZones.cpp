@@ -39,9 +39,9 @@ class MR_2DFloatPos
 		double mX;
 		double mY;
 
-		const MR_2DFloatPos & operator=(const MR_2DCoordinate & pPos);
-		BOOL operator==(const MR_2DFloatPos & pPos) const;
-		BOOL operator!=(const MR_2DFloatPos & pPos) const;
+		const MR_2DFloatPos &operator=(const MR_2DCoordinate &pPos);
+		bool operator==(const MR_2DFloatPos &pPos) const;
+		bool operator!=(const MR_2DFloatPos &pPos) const;
 
 };
 
@@ -71,9 +71,9 @@ static void AddZonetoArray(int pZone, int *pDestArray, int &pDestIndex);
 static double GetAngle(const MR_2DFloatPos & pPoint0, const MR_2DFloatPos & pPoint1, double pRef = 0.0);
 
 // Functions implementation
-BOOL LevelBuilder::ComputeVisibleZones()
+bool LevelBuilder::ComputeVisibleZones()
 {
-	BOOL lReturnValue = TRUE;
+	bool lReturnValue = true;
 
 	int lDestIndex;
 	int lDestArray[MR_MAX_VISIBLE_ZONES];
@@ -258,7 +258,7 @@ void LevelBuilder::TestForVisibility(VisibleStep *pPreviousStep, int *pDestArray
 	}
 }
 
-const MR_2DFloatPos & MR_2DFloatPos::operator=(const MR_2DCoordinate & pPos)
+const MR_2DFloatPos &MR_2DFloatPos::operator=(const MR_2DCoordinate &pPos)
 {
 	mX = pPos.mX / 1000.0;
 	mY = pPos.mY / 1000.0;
@@ -266,12 +266,12 @@ const MR_2DFloatPos & MR_2DFloatPos::operator=(const MR_2DCoordinate & pPos)
 	return *this;
 }
 
-BOOL MR_2DFloatPos::operator==(const MR_2DFloatPos & pPos) const
+bool MR_2DFloatPos::operator==(const MR_2DFloatPos &pPos) const
 {
 	return ((mX == pPos.mX) && (mY == pPos.mY));
 }
 
-BOOL MR_2DFloatPos::operator!=(const MR_2DFloatPos & pPos) const
+bool MR_2DFloatPos::operator!=(const MR_2DFloatPos &pPos) const
 {
 	return !(operator==(pPos));
 }

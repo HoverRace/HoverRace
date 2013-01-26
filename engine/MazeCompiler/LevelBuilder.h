@@ -48,9 +48,9 @@ class MR_DllDeclare LevelBuilder : public Model::Level
 
 		// Main methods
 
-		BOOL Parse(FILE * pFile);
-		BOOL ComputeVisibleZones();
-		BOOL ComputeAudibleZones();
+		bool Parse(FILE *pFile);
+		bool ComputeVisibleZones();
+		bool ComputeAudibleZones();
 
 		void OrderVisibleSurfaces();
 
@@ -61,9 +61,7 @@ class MR_DllDeclare LevelBuilder : public Model::Level
 		static int OrderCeiling(const void *pSurface0, const void *pSurface1);
 
 	public:
-
-		BOOL InitFromFile(FILE * pFile);
-
+		bool InitFromFile(FILE *pFile);
 };
 
 }  // namespace MazeCompiler

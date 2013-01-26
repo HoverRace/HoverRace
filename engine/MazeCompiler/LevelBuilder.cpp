@@ -51,9 +51,9 @@ static LevelBuilder *gsCurrentLevelBuilder = NULL;
 static Model::SurfaceElement *sLoadTexture(TrackSpecParser * pParser);
 
 // class LevelBuilder
-BOOL LevelBuilder::InitFromFile(FILE * pFile)
+bool LevelBuilder::InitFromFile(FILE *pFile)
 {
-	BOOL lReturnValue = TRUE;
+	bool lReturnValue = true;
 
 	if(lReturnValue) {
 		lReturnValue = Parse(pFile);
@@ -74,9 +74,9 @@ BOOL LevelBuilder::InitFromFile(FILE * pFile)
 	return lReturnValue;
 }
 
-BOOL LevelBuilder::Parse(FILE * pFile)
+bool LevelBuilder::Parse(FILE * pFile)
 {
-	BOOL lReturnValue = TRUE;
+	bool lReturnValue = true;
 	int lCounter;
 	TrackSpecParser lParser(pFile);
 
@@ -96,7 +96,7 @@ BOOL LevelBuilder::Parse(FILE * pFile)
 
 	while(lReturnValue && (lParser.GetNextClass("Room") != NULL)) {
 		if(lParser.GetNextAttrib("Id") == NULL) {
-			lReturnValue = FALSE;
+			lReturnValue = false;
 
 			printf(_("Section ID missing on line %d"), lParser.GetErrorLine());
 			printf("\n");
@@ -106,7 +106,7 @@ BOOL LevelBuilder::Parse(FILE * pFile)
 
 			lRoomList_t::const_iterator iter = lRoomList.find(lRoomId);
 			if (iter != lRoomList.end()) {
-				lReturnValue = FALSE;
+				lReturnValue = false;
 				printf(_("Duplicate section ID (%d) on line %d"), lRoomId, lParser.GetErrorLine());
 				printf("\n");
 			}
@@ -120,7 +120,7 @@ BOOL LevelBuilder::Parse(FILE * pFile)
 
 	while(lReturnValue && (lParser.GetNextClass("Feature") != NULL)) {
 		if(lParser.GetNextAttrib("Id") == NULL) {
-			lReturnValue = FALSE;
+			lReturnValue = false;
 			printf(_("Section ID missing on line %d"), lParser.GetErrorLine());
 			printf("\n");
 		}
@@ -129,7 +129,7 @@ BOOL LevelBuilder::Parse(FILE * pFile)
 
 			lFeatureList_t::const_iterator iter = lFeatureList.find(lFeatureId);
 			if (iter != lFeatureList.end()) {
-				lReturnValue = FALSE;
+				lReturnValue = false;
 				printf(_("Duplicate section ID (%d) on line %d"), lFeatureId, lParser.GetErrorLine());
 				printf("\n");
 			}
@@ -189,7 +189,7 @@ BOOL LevelBuilder::Parse(FILE * pFile)
 						mRoomList[lRoomIndex].mFloorTexture = sLoadTexture(&lParser);
 
 						if(mRoomList[lRoomIndex].mFloorTexture == NULL) {
-							lReturnValue = FALSE;
+							lReturnValue = false;
 						}
 					}
 					else if(!_stricmp(lAttrib, "Ceiling")) {
@@ -200,7 +200,7 @@ BOOL LevelBuilder::Parse(FILE * pFile)
 						mRoomList[lRoomIndex].mCeilingTexture = sLoadTexture(&lParser);
 
 						if(mRoomList[lRoomIndex].mCeilingTexture == NULL) {
-							lReturnValue = FALSE;
+							lReturnValue = false;
 						}
 					}
 				}
@@ -242,7 +242,7 @@ BOOL LevelBuilder::Parse(FILE * pFile)
 						mFeatureList[lFeatureIndex].mFloorTexture = sLoadTexture(&lParser);
 
 						if(mFeatureList[lFeatureIndex].mFloorTexture == NULL) {
-							lReturnValue = FALSE;
+							lReturnValue = false;
 						}
 					}
 					else if(!_stricmp(lAttrib, "Ceiling")) {
@@ -253,7 +253,7 @@ BOOL LevelBuilder::Parse(FILE * pFile)
 						mFeatureList[lFeatureIndex].mCeilingTexture = sLoadTexture(&lParser);
 
 						if(mFeatureList[lFeatureIndex].mCeilingTexture == NULL) {
-							lReturnValue = FALSE;
+							lReturnValue = false;
 						}
 					}
 					else if(!_stricmp(lAttrib, "Parent")) {
@@ -261,7 +261,7 @@ BOOL LevelBuilder::Parse(FILE * pFile)
 
 						lRoomList_t::const_iterator iter = lRoomList.find(lParentId);
 						if (iter == lRoomList.end()) {
-							lReturnValue = FALSE;
+							lReturnValue = false;
 							printf(_("Invalid parent room reference on line %d\n"), lParser.GetErrorLine());
 						}
 						else {
@@ -339,7 +339,7 @@ BOOL LevelBuilder::Parse(FILE * pFile)
 					mRoomList[lRoomIndex].mWallTexture[lVertex] = sLoadTexture(&lParser);
 
 					if(mRoomList[lRoomIndex].mWallTexture[lVertex] == NULL) {
-						lReturnValue = FALSE;
+						lReturnValue = false;
 					}
 					lVertex++;
 				}
@@ -378,7 +378,7 @@ BOOL LevelBuilder::Parse(FILE * pFile)
 					mFeatureList[lFeatureIndex].mWallTexture[lVertex] = sLoadTexture(&lParser);
 
 					if(mFeatureList[lFeatureIndex].mWallTexture[lVertex] == NULL) {
-						lReturnValue = FALSE;
+						lReturnValue = false;
 					}
 
 					lVertex++;
@@ -396,7 +396,7 @@ BOOL LevelBuilder::Parse(FILE * pFile)
 	lParser.Reset();
 
 	if(lParser.GetNextClass("Connection_List") == NULL) {
-		lReturnValue = FALSE;
+		lReturnValue = false;
 		puts(_("Connection list not found"));
 	}
 	else {
@@ -500,7 +500,7 @@ BOOL LevelBuilder::Parse(FILE * pFile)
 
 					lRoomList_t::const_iterator iter = lRoomList.find(lRoomId);
 					if (iter == lRoomList.end()) {
-						lReturnValue = FALSE;
+						lReturnValue = false;
 						printf(_("Invalid starting position room %d"), lRoomId);
 						printf("\n");
 					}
@@ -528,7 +528,7 @@ BOOL LevelBuilder::Parse(FILE * pFile)
 
 		if(lReturnValue) {
 			if(lNbStartingPosition == 0) {
-				lReturnValue = FALSE;
+				lReturnValue = false;
 				puts(_("No starting positions found"));
 			}
 		}
@@ -556,7 +556,7 @@ BOOL LevelBuilder::Parse(FILE * pFile)
 
 				lRoomList_t::const_iterator iter = lRoomList.find(lRoomId);
 				if (iter != lRoomList.end()) {
-					lReturnValue = FALSE;
+					lReturnValue = false;
 					printf(_("Invalid room index on line %d"), lParser.GetErrorLine());
 					printf("\n");
 				}
@@ -583,7 +583,7 @@ BOOL LevelBuilder::Parse(FILE * pFile)
 			Model::FreeElement *lElement = (Model::FreeElement*)Util::DllObjectFactory::CreateObject(lElementType);
 
 			if(lElement == NULL) {
-				lReturnValue = FALSE;
+				lReturnValue = false;
 				printf(_("Unable to create free element on line %d\n"), lParser.GetErrorLine());
 			}
 			else {
@@ -619,11 +619,10 @@ BOOL LevelBuilder::Parse(FILE * pFile)
 	return lReturnValue;
 }
 
-BOOL LevelBuilder::ComputeAudibleZones()
+bool LevelBuilder::ComputeAudibleZones()
 {
-	BOOL lReturnValue = TRUE;
-
-	return lReturnValue;
+	// Not implemented.
+	return true;
 }
 
 void LevelBuilder::OrderVisibleSurfaces()
