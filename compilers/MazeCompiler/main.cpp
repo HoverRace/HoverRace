@@ -62,11 +62,6 @@ static MR_UInt8 *PCXRead(FILE * pFile, int &pXRes, int &pYRes);
 static MR_UInt8 *LoadBitmap(FILE * pFile);
 static MR_UInt8 *LoadPalette(FILE * pFile);
 
-static char gOwner[81];
-static int gMajorID = 0;
-static int gMinorID = 0;
-static unsigned char gKey[50];
-
 int main(int pArgCount, char *pArgStrings[])
 {
 	bool lPrintUsage = false;
@@ -111,29 +106,6 @@ int main(int pArgCount, char *pArgStrings[])
 			outputFilename = pArgStrings[1];
 			inputFilename = pArgStrings[2];
 #		endif
-	}
-
-	if(!lError && !lPrintUsage) {
-		if((gMajorID != 0) && (gMajorID != 100)) {
-			lError = true;
-
-			const char *lStr = strrchr(pArgStrings[1], '[');
-
-			if(lStr != NULL) {
-				int lMajorID = -2;
-				int lMinorID = -2;
-
-				sscanf(lStr + 1, "%d-%d", &lMajorID, &lMinorID);
-
-				if((lMajorID == gMajorID) && (lMinorID == gMinorID)) {
-					lError = FALSE;
-				}
-			}
-
-			if(lError) {
-				puts(_("Track name must contain your registration number"));
-			}
-		}
 	}
 
 	if(!lError && !lPrintUsage) {
@@ -281,8 +253,6 @@ bool CreateHeader(std::istream &in, Parcel::ObjStream &pArchive)
 	int lRegistration = MR_REGISTRED_TRACK;
 	TrackSpecParser lParser(in);
 
-	// Look in the registry to find the User name and member number
-
 #ifdef _DEBUG
 	lSortingOrder = 30;
 	lRegistration = MR_FREE_TRACK;
@@ -312,8 +282,8 @@ bool CreateHeader(std::istream &in, Parcel::ObjStream &pArchive)
 		pArchive << (int) MR_MAGIC_TRACK_NUMBER;
 		pArchive << (int) 1;					  // version
 		pArchive << lDescription;
-		pArchive << (int) gMinorID;
-		pArchive << (int) gMajorID;
+		pArchive << (int) 0;  // Registration minor ID (obsolete)
+		pArchive << (int) 0;  // Registration major ID (obsolete)
 		pArchive << lSortingOrder;
 		pArchive << lRegistration;
 		if(lRegistration == MR_FREE_TRACK) {
