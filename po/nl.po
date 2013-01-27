@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
 "Report-Msgid-Bugs-To: bugs@hoverrace.com\n"
-"POT-Creation-Date: 2013-01-06 02:51-0500\n"
+"POT-Creation-Date: 2013-01-27 14:06-0500\n"
 "PO-Revision-Date: 2009-03-31 11:28-0700\n"
 "Last-Translator: Ryan Curtin <ryan@tortoise.igglybob.com>\n"
 "Language-Team: Dutch\n"
@@ -107,12 +107,12 @@ msgstr ""
 msgid "Checking server for updates.  Please wait."
 msgstr ""
 
-#: client/Game2/ClientApp.cpp:190 client/Game2/GameApp.cpp:826
+#: client/Game2/ClientApp.cpp:196 client/Game2/GameApp.cpp:826
 msgctxt "Version"
 msgid "testing"
 msgstr "test"
 
-#: client/Game2/ClientApp.cpp:193 client/Game2/GameApp.cpp:829
+#: client/Game2/ClientApp.cpp:199 client/Game2/GameApp.cpp:829
 msgid "silent mode"
 msgstr ""
 
@@ -1524,92 +1524,22 @@ msgid "HoverRace is currently in silent mode."
 msgstr ""
 
 #: client/Game2/main.cpp:367 client/Game2/main.cpp:373
+#: compilers/MazeCompiler/main.cpp:118
 msgid "You found a bug!"
 msgstr ""
 
-#: compilers/MazeCompiler/main.cpp:42
+#: compilers/MazeCompiler/main.cpp:57
 msgid "Usage: MazeCompiler <outputfile> <inputfile>"
 msgstr ""
 
-#: compilers/MazeCompiler/main.cpp:92
+#: compilers/MazeCompiler/main.cpp:94
 msgid "Wrong argument count"
 msgstr ""
 
-#: compilers/MazeCompiler/main.cpp:122
-msgid "Track name must contain your registration number"
-msgstr ""
-
-#: compilers/MazeCompiler/main.cpp:133
-#, fuzzy
-msgid "Unable to create the output file"
-msgstr "Kan geen socket creëren"
-
-#: compilers/MazeCompiler/main.cpp:136
-#, c-format, boost-format
-msgid "Compiling track (%s)"
-msgstr ""
-
-#: compilers/MazeCompiler/main.cpp:145
-#, fuzzy
-msgid "Unable to open the input file"
-msgstr "Kan vernieuw-informatie niet verzenden"
-
-#: compilers/MazeCompiler/main.cpp:153
-#, fuzzy
-msgid "Unable to add a header to the output file"
-msgstr "Kan geen socket creëren"
-
-#: compilers/MazeCompiler/main.cpp:169
-#, fuzzy
-msgid "Track creation error"
-msgstr "Baanselectie"
-
-#: compilers/MazeCompiler/main.cpp:177
-#, fuzzy
-msgid "Unable to add the track to the output file"
-msgstr "Kan geen socket creëren"
-
-#: compilers/MazeCompiler/main.cpp:191
-#, fuzzy
-msgid "Unable to add a background image record"
-msgstr "Kan chatbericht niet toevoegen"
-
-#: compilers/MazeCompiler/main.cpp:206
-#, fuzzy
-msgid "Unable to add a map record"
-msgstr "Kan spel niet toevoegen"
-
-#: compilers/MazeCompiler/main.cpp:235
-#, c-format, boost-format
-msgid "The output file now contains %d records"
-msgstr ""
-
-#: compilers/MazeCompiler/main.cpp:255
+#: compilers/MazeCompiler/main.cpp:135
 #, fuzzy
 msgid "Command line error"
 msgstr "Verbindingsfout"
-
-#: compilers/MazeCompiler/main.cpp:290 compilers/MazeCompiler/main.cpp:364
-msgid "Unable to find [HEADER] section"
-msgstr ""
-
-#: compilers/MazeCompiler/main.cpp:296
-msgid "Warning: unable to find description"
-msgstr ""
-
-#: compilers/MazeCompiler/main.cpp:369 compilers/MazeCompiler/main.cpp:381
-#: compilers/MazeCompiler/main.cpp:394
-#, fuzzy
-msgid "Unable to find background image"
-msgstr "Kan geen bericht toevoegen"
-
-#: compilers/MazeCompiler/main.cpp:417
-msgid "Bad palette format for background file"
-msgstr ""
-
-#: compilers/MazeCompiler/main.cpp:439
-msgid "Incorrect background resolution"
-msgstr ""
 
 #: compilers/ResourceCompiler/BitmapHelper.cpp:46
 #: compilers/ResourceCompiler/BitmapHelper.cpp:61
@@ -1618,12 +1548,12 @@ msgstr ""
 #: compilers/ResourceCompiler/ResActorBuilder.cpp:204
 #: compilers/ResourceCompiler/ResActorBuilder.cpp:213
 #: compilers/ResourceCompiler/ResSoundBuilder.cpp:64
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:141
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:159
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:180
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:198
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:217
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:236
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:151
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:169
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:190
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:208
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:227
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:246
 #: compilers/ResourceCompiler/ResourceLibBuilder.cpp:105
 #: compilers/ResourceCompiler/TextParsing.cpp:41
 #: compilers/ResourceCompiler/TextParsing.cpp:57
@@ -1692,25 +1622,25 @@ msgstr ""
 msgid "invalid WAV file"
 msgstr ""
 
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:141
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:151
 #, fuzzy
 msgid "unable to open input file"
 msgstr "Kan vernieuw-informatie niet verzenden"
 
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:159
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:169
 msgid "problem reading bitmap parameters"
 msgstr ""
 
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:180
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:190
 msgid "problem reading actor parameters"
 msgstr ""
 
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:198
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:208
 msgid "problem reading sprite parameters"
 msgstr ""
 
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:217
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:236
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:227
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:246
 msgid "problem reading sound parameters"
 msgstr ""
 
@@ -1732,109 +1662,109 @@ msgstr ""
 msgid "syntax error in defines file"
 msgstr ""
 
-#: engine/MazeCompiler/LevelBuilder.cpp:101
-#: engine/MazeCompiler/LevelBuilder.cpp:124
+#: engine/MazeCompiler/LevelBuilder.cpp:95
+#: engine/MazeCompiler/LevelBuilder.cpp:118
 #, c-format, boost-format
 msgid "Section ID missing on line %d"
 msgstr ""
 
-#: engine/MazeCompiler/LevelBuilder.cpp:110
-#: engine/MazeCompiler/LevelBuilder.cpp:133
+#: engine/MazeCompiler/LevelBuilder.cpp:104
+#: engine/MazeCompiler/LevelBuilder.cpp:127
 #, c-format, boost-format
 msgid "Duplicate section ID (%d) on line %d"
 msgstr ""
 
-#: engine/MazeCompiler/LevelBuilder.cpp:265
+#: engine/MazeCompiler/LevelBuilder.cpp:259
 #, fuzzy, c-format, boost-format
 msgid "Invalid parent room reference on line %d\n"
 msgstr "Kan geen socket creëren"
 
-#: engine/MazeCompiler/LevelBuilder.cpp:400
+#: engine/MazeCompiler/LevelBuilder.cpp:394
 #, fuzzy
 msgid "Connection list not found"
 msgstr "Verbinding ondebroken"
 
-#: engine/MazeCompiler/LevelBuilder.cpp:420
-#: engine/MazeCompiler/LevelBuilder.cpp:428
+#: engine/MazeCompiler/LevelBuilder.cpp:414
+#: engine/MazeCompiler/LevelBuilder.cpp:422
 #, fuzzy, c-format, boost-format
 msgid "Connection to a nonexistent section %d"
 msgstr "Connectie maken met de Internet-ontmoetingsruimte"
 
-#: engine/MazeCompiler/LevelBuilder.cpp:433
+#: engine/MazeCompiler/LevelBuilder.cpp:427
 #, c-format, boost-format
 msgid "Connection between sections %d and %d do not match"
 msgstr ""
 
-#: engine/MazeCompiler/LevelBuilder.cpp:458
+#: engine/MazeCompiler/LevelBuilder.cpp:452
 #, c-format, boost-format
 msgid "Warning: room %d seems to be very small"
 msgstr ""
 
-#: engine/MazeCompiler/LevelBuilder.cpp:463
+#: engine/MazeCompiler/LevelBuilder.cpp:457
 #, c-format, boost-format
 msgid "Warning: room %d seems to be very large"
 msgstr ""
 
-#: engine/MazeCompiler/LevelBuilder.cpp:477
+#: engine/MazeCompiler/LevelBuilder.cpp:471
 #, c-format, boost-format
 msgid "Warning: feature %d seems to be very small"
 msgstr ""
 
-#: engine/MazeCompiler/LevelBuilder.cpp:482
+#: engine/MazeCompiler/LevelBuilder.cpp:476
 #, c-format, boost-format
 msgid "Warning: feature %d seems to be very large"
 msgstr ""
 
-#: engine/MazeCompiler/LevelBuilder.cpp:504
+#: engine/MazeCompiler/LevelBuilder.cpp:498
 #, c-format, boost-format
 msgid "Invalid starting position room %d"
 msgstr ""
 
-#: engine/MazeCompiler/LevelBuilder.cpp:532
+#: engine/MazeCompiler/LevelBuilder.cpp:526
 msgid "No starting positions found"
 msgstr ""
 
-#: engine/MazeCompiler/LevelBuilder.cpp:560
+#: engine/MazeCompiler/LevelBuilder.cpp:554
 #, c-format, boost-format
 msgid "Invalid room index on line %d"
 msgstr ""
 
-#: engine/MazeCompiler/LevelBuilder.cpp:587
+#: engine/MazeCompiler/LevelBuilder.cpp:581
 #, fuzzy, c-format, boost-format
 msgid "Unable to create free element on line %d\n"
 msgstr "Kan geen socket creëren"
 
-#: engine/MazeCompiler/LevelBuilder.cpp:605
+#: engine/MazeCompiler/LevelBuilder.cpp:599
 #, c-format
-msgid "   This level contains:"
+msgid "This level contains:"
 msgstr ""
 
-#: engine/MazeCompiler/LevelBuilder.cpp:607
+#: engine/MazeCompiler/LevelBuilder.cpp:601
 #, c-format
 msgid "rooms"
 msgstr ""
 
-#: engine/MazeCompiler/LevelBuilder.cpp:609
+#: engine/MazeCompiler/LevelBuilder.cpp:603
 #, c-format
 msgid "features"
 msgstr ""
 
-#: engine/MazeCompiler/LevelBuilder.cpp:611
+#: engine/MazeCompiler/LevelBuilder.cpp:605
 #, fuzzy, c-format
 msgid "connections"
 msgstr "Verbinding maken"
 
-#: engine/MazeCompiler/LevelBuilder.cpp:613
+#: engine/MazeCompiler/LevelBuilder.cpp:607
 #, c-format
 msgid "elements"
 msgstr ""
 
-#: engine/MazeCompiler/LevelBuilder.cpp:615
+#: engine/MazeCompiler/LevelBuilder.cpp:609
 #, c-format
 msgid "starting positions"
 msgstr ""
 
-#: engine/MazeCompiler/LevelBuilder.cpp:805
+#: engine/MazeCompiler/LevelBuilder.cpp:798
 #, fuzzy, c-format, boost-format
 msgid "Unable to load texture %d %d on line %d\n"
 msgstr "Kan geen socket creëren"
@@ -1845,6 +1775,74 @@ msgstr ""
 
 #: engine/MazeCompiler/LevelBuilderVisiblesZones.cpp:320
 msgid "Two nodes with same position"
+msgstr ""
+
+#: engine/MazeCompiler/TrackCompiler.cpp:58
+#, fuzzy, c-format, boost-format
+msgid "Unable to open the input file: %s"
+msgstr "Kan vernieuw-informatie niet verzenden"
+
+#: engine/MazeCompiler/TrackCompiler.cpp:77
+#, fuzzy, c-format, boost-format
+msgid "Unable to create the output file: %s"
+msgstr "Kan geen socket creëren"
+
+#: engine/MazeCompiler/TrackCompiler.cpp:80
+#, c-format, boost-format
+msgid "Compiling track (%s)"
+msgstr ""
+
+#: engine/MazeCompiler/TrackCompiler.cpp:85
+#, fuzzy
+msgid "Unable to add a header to the output file"
+msgstr "Kan geen socket creëren"
+
+#: engine/MazeCompiler/TrackCompiler.cpp:98
+#, fuzzy
+msgid "Unable to add the track to the output file"
+msgstr "Kan geen socket creëren"
+
+#: engine/MazeCompiler/TrackCompiler.cpp:102
+#, fuzzy
+msgid "Track creation error"
+msgstr "Baanselectie"
+
+#: engine/MazeCompiler/TrackCompiler.cpp:114
+#, fuzzy
+msgid "Unable to add a background image record"
+msgstr "Kan chatbericht niet toevoegen"
+
+#: engine/MazeCompiler/TrackCompiler.cpp:126
+#, fuzzy
+msgid "Unable to add a map record"
+msgstr "Kan spel niet toevoegen"
+
+#: engine/MazeCompiler/TrackCompiler.cpp:161
+#: engine/MazeCompiler/TrackCompiler.cpp:190
+msgid "Unable to find [HEADER] section"
+msgstr ""
+
+#: engine/MazeCompiler/TrackCompiler.cpp:167
+msgid "Warning: unable to find description"
+msgstr ""
+
+#: engine/MazeCompiler/TrackCompiler.cpp:193
+#, fuzzy
+msgid "Unable to find background image filename"
+msgstr "Kan geen bericht toevoegen"
+
+#: engine/MazeCompiler/TrackCompiler.cpp:200
+#, fuzzy, c-format, boost-format
+msgid "Unable to find background image: %s"
+msgstr "Kan geen bericht toevoegen"
+
+#: engine/MazeCompiler/TrackCompiler.cpp:268
+#, fuzzy
+msgid "Bad palette format for background file"
+msgstr "Kan geen bericht toevoegen"
+
+#: engine/MazeCompiler/TrackCompiler.cpp:290
+msgid "Incorrect background resolution"
 msgstr ""
 
 #: engine/ObjFacTools/ResActor.cpp:190
@@ -1892,23 +1890,23 @@ msgstr ""
 msgid "or"
 msgstr ""
 
-#: engine/Util/Config.cpp:338
+#: engine/Util/Config.cpp:340
 #, fuzzy
 msgid "Unable to determine configuration directory"
 msgstr "Kan geen socket creëren"
 
-#: engine/Util/Config.cpp:351
+#: engine/Util/Config.cpp:353
 msgid ""
 "Unable to determine configuration directory (HOME environment variable not "
 "set)"
 msgstr ""
 
-#: engine/Util/Config.cpp:761
+#: engine/Util/Config.cpp:763
 #, fuzzy
 msgid "Unable to create directory"
 msgstr "Kan geen socket creëren"
 
-#: engine/Util/Config.cpp:770
+#: engine/Util/Config.cpp:772
 #, fuzzy
 msgid "Unable to create configuration file"
 msgstr "Kan geen socket creëren"
