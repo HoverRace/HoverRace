@@ -42,7 +42,6 @@ client/Game2/PrefsPage.cpp
 client/Game2/RoomList.cpp
 client/Game2/RoomListDialog.cpp
 client/Game2/SelectRoomDialog.cpp
-client/Game2/StdAfx.cpp
 client/Game2/TrackDownloadDialog.cpp
 client/Game2/TrackSelectDialog.cpp
 client/Game2/UpdateDownloader.cpp
@@ -63,6 +62,7 @@ engine/MainCharacter/MainCharacterRenderer.cpp
 engine/MazeCompiler/LevelBuilder.cpp
 engine/MazeCompiler/LevelBuilderVisiblesZones.cpp
 engine/MazeCompiler/MapSprite.cpp
+engine/MazeCompiler/TrackCompiler.cpp
 engine/MazeCompiler/TrackSpecParser.cpp
 engine/Model/ConcreteShape.cpp
 engine/Model/ContactEffect.cpp
