@@ -28,7 +28,6 @@
 #include "../../engine/Model/MazeElement.h"
 #include "../../engine/Util/Profiler.h"
 #include "../../engine/Util/Config.h"
-#include "resource.h"
 #include "../../engine/VideoServices/StaticText.h"
 
 #include <math.h>
