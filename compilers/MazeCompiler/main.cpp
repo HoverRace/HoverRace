@@ -257,9 +257,7 @@ bool CreateHeader(std::istream &in, Parcel::ObjStream &pArchive)
 	lSortingOrder = 30;
 	lRegistration = MR_FREE_TRACK;
 #else
-	if(gMajorID == 0) {
-		lSortingOrder = 40;
-	}
+	lSortingOrder = 40;
 #endif
 
 	if(lParser.GetNextClass("HEADER") == NULL) {
