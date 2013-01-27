@@ -121,7 +121,7 @@ int main(int pArgCount, char *pArgStrings[])
 		printf("\n");
 
 		// Open the input file
-		std::ifstream in = boost::filesystem::ifstream(inputFilename);
+		boost::filesystem::ifstream in(inputFilename);
 		if (in.fail()) {
 			lError = true;
 			puts(_("Unable to open the input file"));

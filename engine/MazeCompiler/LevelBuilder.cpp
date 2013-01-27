@@ -56,7 +56,8 @@ static Model::SurfaceElement *sLoadTexture(TrackSpecParser * pParser);
 
 bool LevelBuilder::InitFromFile(const OS::path_t &filename)
 {
-	return InitFromStream(boost::filesystem::ifstream(filename));
+	boost::filesystem::ifstream in(filename);
+	return InitFromStream(in);
 }
 
 bool LevelBuilder::InitFromStream(std::istream &in)
