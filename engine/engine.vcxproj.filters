@@ -301,6 +301,9 @@
     <ClCompile Include="MazeCompiler\TrackSpecParser.cpp">
       <Filter>MazeCompiler</Filter>
     </ClCompile>
+    <ClCompile Include="MazeCompiler\TrackCompiler.cpp">
+      <Filter>MazeCompiler</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColorTools\ColorTools.h">
@@ -603,6 +606,12 @@
       <Filter>MazeCompiler</Filter>
     </ClInclude>
     <ClInclude Include="MazeCompiler\TrackSpecParser.h">
+      <Filter>MazeCompiler</Filter>
+    </ClInclude>
+    <ClInclude Include="MazeCompiler\TrackCompiler.h">
+      <Filter>MazeCompiler</Filter>
+    </ClInclude>
+    <ClInclude Include="MazeCompiler\TrackCompileExn.h">
       <Filter>MazeCompiler</Filter>
     </ClInclude>
   </ItemGroup>

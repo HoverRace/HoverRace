@@ -116,6 +116,7 @@
     <ClCompile Include="MazeCompiler\LevelBuilder.cpp" />
     <ClCompile Include="MazeCompiler\LevelBuilderVisiblesZones.cpp" />
     <ClCompile Include="MazeCompiler\MapSprite.cpp" />
+    <ClCompile Include="MazeCompiler\TrackCompiler.cpp" />
     <ClCompile Include="MazeCompiler\TrackSpecParser.cpp" />
     <ClCompile Include="Model\ConcreteShape.cpp" />
     <ClCompile Include="Model\ContactEffect.cpp" />
@@ -208,6 +209,8 @@
     <ClInclude Include="MainCharacter\MainCharacterRenderer.h" />
     <ClInclude Include="MazeCompiler\LevelBuilder.h" />
     <ClInclude Include="MazeCompiler\MapSprite.h" />
+    <ClInclude Include="MazeCompiler\TrackCompileExn.h" />
+    <ClInclude Include="MazeCompiler\TrackCompiler.h" />
     <ClInclude Include="MazeCompiler\TrackSpecParser.h" />
     <ClInclude Include="Model\ConcreteShape.h" />
     <ClInclude Include="Model\ContactEffect.h" />
