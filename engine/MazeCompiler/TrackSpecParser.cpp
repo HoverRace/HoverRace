@@ -106,7 +106,7 @@ bool TrackSpecParser::ReadNewLine()
 		}
 	}
 
-	// S'assurer que la ligne n'est pas vide
+	// Make sure the line is not empty.
 	if(lJustBlank) {
 		return ReadNewLine();
 	}
@@ -130,9 +130,9 @@ const char *TrackSpecParser::InternalGetNextClass()
 		}
 	}
 
-	// Copier le mot dans le buffer de retour
+	// Copy the word in the buffer back
 
-	// Remplacer les ] car ils est impossible de les inclures dans un set pour scanf
+	// Replace "]" because they can not include them in a set for scanf
 	char *lBracketPtr = strchr(mLineBuffer, ']');
 
 	if(lBracketPtr != NULL) {
@@ -226,7 +226,7 @@ const char *TrackSpecParser::GetNextStrParam(const char *pDefault)
 		mParsePtr++;
 	}
 
-	// Enlever les espaces blancs que l'on pourrait avoir en fin de ligne
+	// Remove white space that could be the end of the line
 	for(int lCounter = strlen(mReturnBuffer) - 1; lCounter >= 0; lCounter--) {
 		if(mReturnBuffer[lCounter] == ' ') {
 			mReturnBuffer[lCounter] = 0;

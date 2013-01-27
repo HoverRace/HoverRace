@@ -55,7 +55,7 @@ class MR_DllDeclare TrackSpecParser : boost::noncopyable
 		void Reset();
 
 		const char *GetNextClass(const char *pClassType = NULL);
-												  // If the line does'nt begin by an attrib, you should use GetNextLine
+												  // If the line doesn't begin by an attrib, you should use GetNextLine
 		const char *GetNextAttrib(const char *pAttrib = NULL);
 		bool GetNextLine();
 		const char *GetNextStrParam(const char *pDefaultValue = NULL);
