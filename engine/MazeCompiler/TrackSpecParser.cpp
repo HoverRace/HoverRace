@@ -31,9 +31,8 @@
 namespace HoverRace {
 namespace MazeCompiler {
 
-TrackSpecParser::TrackSpecParser(FILE * pFile)
+TrackSpecParser::TrackSpecParser(std::istream &in) : in(in)
 {
-	mFile = pFile;
 	Reset();
 }
 
@@ -43,9 +42,8 @@ TrackSpecParser::~TrackSpecParser()
 
 void TrackSpecParser::Reset()
 {
-	ASSERT(mFile != NULL);
-
-	fseek(mFile, 0, SEEK_SET);
+	in.clear();
+	in.seekg(0, std::ios::beg);
 
 	mLineBuffer[0] = 0;
 	mParsePtr = mLineBuffer;
@@ -53,61 +51,67 @@ void TrackSpecParser::Reset()
 	ReadNewLine();
 }
 
-BOOL TrackSpecParser::ReadNewLine()
+/**
+ * Read the next meaningful line from the input stream into the buffer.
+ * @return @c true if successful,
+ *         @c false if the end of the stream has been reached.
+ */
+bool TrackSpecParser::ReadNewLine()
 {
-	ASSERT(mFile != NULL);
+	if (in.eof()) return false;
 
+	std::string ris;
 	mParsePtr = mLineBuffer;
 	mLineBuffer[0] = 0;
 
-	if(fgets(mLineBuffer, sizeof(mLineBuffer), mFile) != NULL) {
-		mLineBuffer[sizeof(mLineBuffer) - 1] = 0;
-		mLineNumber++;
+	std::getline(in, ris);
 
-		// Enlever le CR a la fin de la ligne et la mettre en majuscule
-		// Enlever les commentaires
-		char *lPtr = mLineBuffer;
-		BOOL lJustBlank = TRUE;
-		BOOL lAfterEqual = FALSE;
+	ASSERT(ris.length() < sizeof(mLineBuffer));
+	strncat(mLineBuffer, ris.c_str(), sizeof(mLineBuffer) - 1);
 
-		while(*lPtr != 0) {
+	mLineBuffer[sizeof(mLineBuffer) - 1] = 0;
+	mLineNumber++;
 
-			switch (*lPtr) {
+	char *lPtr = mLineBuffer;
+	bool lJustBlank = true;
+	bool lAfterEqual = false;
 
-				case ';':
-				case '#':
-				case 10:
-				case 13:
-					*lPtr = 0;
-					break;
+	while(*lPtr != 0) {
 
-				case '=':
-					lAfterEqual = TRUE;
+		switch (*lPtr) {
 
-				default:
-					if(lJustBlank && !isspace(*lPtr)) {
-						lJustBlank = FALSE;
-					}
-					if(!lAfterEqual) {
-						*lPtr = (char) toupper(*lPtr);
-					}
-			}
+			// Remove comments and ending CR/LF.
+			case ';':
+			case '#':
+			case 10:
+			case 13:
+				*lPtr = 0;
+				break;
 
-			if(*lPtr != 0) {
-				lPtr++;
-			}
+			case '=':
+				lAfterEqual = true;
+
+			// Convert to uppercase.
+			default:
+				if(lJustBlank && !isspace(*lPtr)) {
+					lJustBlank = false;
+				}
+				if(!lAfterEqual) {
+					*lPtr = (char) toupper(*lPtr);
+				}
 		}
 
-		// S'assurer que la ligne n'est pas vide
-		if(lJustBlank) {
-			return ReadNewLine();
-		}
-		else {
-			return TRUE;
+		if(*lPtr != 0) {
+			lPtr++;
 		}
 	}
+
+	// S'assurer que la ligne n'est pas vide
+	if(lJustBlank) {
+		return ReadNewLine();
+	}
 	else {
-		return FALSE;
+		return true;
 	}
 }
 
@@ -190,18 +194,18 @@ const char *TrackSpecParser::GetNextAttrib(const char *pAttrib)
 	return lReturnValue;
 }
 
-BOOL TrackSpecParser::GetNextLine()
+bool TrackSpecParser::GetNextLine()
 {
 
 	if(!ReadNewLine()) {
-		return FALSE;
+		return false;
 	}
 
 	if(mLineBuffer[0] == '[') {
-		return FALSE;
+		return false;
 	}
 	else {
-		return TRUE;
+		return true;
 	}
 }
 

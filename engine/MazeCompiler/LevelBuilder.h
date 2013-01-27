@@ -22,6 +22,7 @@
 #pragma once
 
 #include "../Model/Level.h"
+#include "../Util/OS.h"
 
 #ifdef _WIN32
 #	ifdef MR_ENGINE
@@ -48,7 +49,7 @@ class MR_DllDeclare LevelBuilder : public Model::Level
 
 		// Main methods
 
-		bool Parse(FILE *pFile);
+		bool Parse(std::istream &in);
 		bool ComputeVisibleZones();
 		bool ComputeAudibleZones();
 
@@ -61,7 +62,8 @@ class MR_DllDeclare LevelBuilder : public Model::Level
 		static int OrderCeiling(const void *pSurface0, const void *pSurface1);
 
 	public:
-		bool InitFromFile(FILE *pFile);
+		bool InitFromFile(const Util::OS::path_t &filename);
+		bool InitFromStream(std::istream &in);
 };
 
 }  // namespace MazeCompiler

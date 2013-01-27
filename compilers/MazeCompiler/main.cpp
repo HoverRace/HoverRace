@@ -21,6 +21,8 @@
 
 #include "StdAfx.h"
 
+#include <boost/filesystem/fstream.hpp>
+
 #include "../../engine/Model/TrackFileCommon.h"
 #include "../../engine/Parcel/ClassicRecordFile.h"
 #include "../../engine/Parcel/ObjStream.h"
@@ -52,8 +54,8 @@ static void PrintUsage()
 	puts(_("Usage: MazeCompiler <outputfile> <inputfile>"));
 }
 
-static BOOL CreateHeader(FILE *pInputFile, Parcel::ObjStream &pDestination);
-static BOOL AddBackgroundImage(FILE *pInputFile, Parcel::ObjStream &pDestination);
+static bool CreateHeader(std::istream &in, Parcel::ObjStream &pDestination);
+static bool AddBackgroundImage(std::istream &in, Parcel::ObjStream &pDestination);
 
 static std::string FormatStr(const char *pSrc);
 static MR_UInt8 *PCXRead(FILE * pFile, int &pXRes, int &pYRes);
@@ -67,8 +69,8 @@ static unsigned char gKey[50];
 
 int main(int pArgCount, char *pArgStrings[])
 {
-	BOOL lPrintUsage = FALSE;
-	BOOL lError = FALSE;
+	bool lPrintUsage = false;
+	bool lError = false;
 
 	//TODO: Process command-line options.
 
@@ -98,7 +100,7 @@ int main(int pArgCount, char *pArgStrings[])
 
 	// Analyse the input parameters
 	if(pArgCount != 3) {
-		lPrintUsage = TRUE;
+		lPrintUsage = true;
 		puts(_("Wrong argument count"));
 	}
 	else {
@@ -113,7 +115,7 @@ int main(int pArgCount, char *pArgStrings[])
 
 	if(!lError && !lPrintUsage) {
 		if((gMajorID != 0) && (gMajorID != 100)) {
-			lError = TRUE;
+			lError = true;
 
 			const char *lStr = strrchr(pArgStrings[1], '[');
 
@@ -139,7 +141,7 @@ int main(int pArgCount, char *pArgStrings[])
 
 		// Try to create the output file
 		if(!lOutputFile.CreateForWrite(outputFilename, 4, "\x8\rHoverRace track file\n\x1a")) {
-			lError = TRUE;
+			lError = true;
 			puts(_("Unable to create the output file"));
 		}
 		// Compile each level
@@ -147,39 +149,39 @@ int main(int pArgCount, char *pArgStrings[])
 		printf("\n");
 
 		// Open the input file
-		FILE *lFile = OS::FOpen(inputFilename, "r");
-
-		if(lFile == NULL) {
-			lError = TRUE;
-
+		std::ifstream in = boost::filesystem::ifstream(inputFilename);
+		if (in.fail()) {
+			lError = true;
 			puts(_("Unable to open the input file"));
 		}
+
 		// Compile the level
 		LevelBuilder *lNewLevel = new LevelBuilder;
 
 		if(!lError) {
 			if(!lOutputFile.BeginANewRecord()) {
-				lError = TRUE;
+				lError = true;
 				puts(_("Unable to add a header to the output file"));
 			}
 			else {
 				Parcel::ObjStreamPtr archivePtr(lOutputFile.StreamOut());
 				Parcel::ObjStream &lArchive = *archivePtr;
 
-				lError = !CreateHeader(lFile, lArchive);
+				lError = !CreateHeader(in, lArchive);
 			}
-			rewind(lFile);
+			in.seekg(0, std::ios::beg);
 		}
 
 		if(!lError) {
 			// Parse the input file
 			// and amze the preprocessing
-			if(!lNewLevel->InitFromFile(lFile)) {
+			if(!lNewLevel->InitFromStream(in)) {
 				lError = TRUE;
 				puts(_("Track creation error"));
 			}
-			rewind(lFile);
+			in.seekg(0, std::ios::beg);
 		}
+
 		// Add the level to the file
 		if(!lError) {
 			if(!lOutputFile.BeginANewRecord()) {
@@ -204,9 +206,9 @@ int main(int pArgCount, char *pArgStrings[])
 				Parcel::ObjStreamPtr archivePtr(lOutputFile.StreamOut());
 				Parcel::ObjStream &lArchive = *archivePtr;
 
-				lError = !AddBackgroundImage(lFile, lArchive);
+				lError = !AddBackgroundImage(in, lArchive);
 			}
-			rewind(lFile);
+			in.seekg(0, std::ios::beg);
 		}
 
 		if(!lError) {
@@ -245,11 +247,6 @@ int main(int pArgCount, char *pArgStrings[])
 			printf(_("The output file now contains %d records"), lOutputFile.GetNbRecords());
 			printf("\n");
 		}
-
-		if(lFile != NULL) {
-			fclose(lFile);
-		}
-
 	}
 
 	/*TODO
@@ -275,14 +272,14 @@ int main(int pArgCount, char *pArgStrings[])
 	return lError ? 255 : 0;
 }
 
-BOOL CreateHeader(FILE *pInputFile, Parcel::ObjStream &pArchive)
+bool CreateHeader(std::istream &in, Parcel::ObjStream &pArchive)
 {
-	BOOL lReturnValue = TRUE;
+	bool lReturnValue = true;
 
 	std::string lDescription;
 	int lSortingOrder = 50;
 	int lRegistration = MR_REGISTRED_TRACK;
-	TrackSpecParser lParser(pInputFile);
+	TrackSpecParser lParser(in);
 
 	// Look in the registry to find the User name and member number
 
@@ -296,7 +293,7 @@ BOOL CreateHeader(FILE *pInputFile, Parcel::ObjStream &pArchive)
 #endif
 
 	if(lParser.GetNextClass("HEADER") == NULL) {
-		lReturnValue = FALSE;
+		lReturnValue = false;
 		puts(_("Unable to find [HEADER] section"));
 	}
 	else {
@@ -361,21 +358,21 @@ std::string FormatStr(const char *pSrc)
 	return lReturnValue;
 }
 
-BOOL AddBackgroundImage(FILE * pInputFile, Parcel::ObjStream &pDestination)
+bool AddBackgroundImage(std::istream &in, Parcel::ObjStream &pDestination)
 {
-	BOOL lReturnValue = TRUE;
+	bool lReturnValue = true;
 
 	std::string lBackFileName;
 
-	TrackSpecParser lParser(pInputFile);
+	TrackSpecParser lParser(in);
 
 	if(lParser.GetNextClass("HEADER") == NULL) {
-		lReturnValue = FALSE;
+		lReturnValue = false;
 		puts(_("Unable to find [HEADER] section"));
 	}
 	else {
 		if(!lParser.GetNextAttrib("Background")) {
-			lReturnValue = FALSE;
+			lReturnValue = false;
 			puts(_("Unable to find background image"));
 		}
 		else {
@@ -387,7 +384,7 @@ BOOL AddBackgroundImage(FILE * pInputFile, Parcel::ObjStream &pDestination)
 		FILE *lBackFile = fopen(lBackFileName.c_str(), "rb");
 
 		if(lBackFile == NULL) {
-			lReturnValue = FALSE;
+			lReturnValue = false;
 			puts(_("Unable to find background image"));
 		}
 		else {

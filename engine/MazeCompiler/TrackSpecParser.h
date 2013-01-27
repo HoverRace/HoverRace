@@ -35,21 +35,21 @@
 namespace HoverRace {
 namespace MazeCompiler {
 
-class MR_DllDeclare TrackSpecParser
+class MR_DllDeclare TrackSpecParser : boost::noncopyable
 {
 	protected:
-		FILE * mFile;
+		std::istream &in;
 
 		char mLineBuffer[150];
 		char mReturnBuffer[30];
 		char *mParsePtr;
 		int mLineNumber;
 
-		BOOL ReadNewLine();
+		bool ReadNewLine();
 		const char *InternalGetNextClass();
 
 	public:
-		TrackSpecParser(FILE * pFile);
+		TrackSpecParser(std::istream &in);
 		~TrackSpecParser();
 
 		void Reset();
@@ -57,7 +57,7 @@ class MR_DllDeclare TrackSpecParser
 		const char *GetNextClass(const char *pClassType = NULL);
 												  // If the line does'nt begin by an attrib, you should use GetNextLine
 		const char *GetNextAttrib(const char *pAttrib = NULL);
-		BOOL GetNextLine();
+		bool GetNextLine();
 		const char *GetNextStrParam(const char *pDefaultValue = NULL);
 		double GetNextNumParam(double DefaultValue = 0.0);
 		const char *GetParams();

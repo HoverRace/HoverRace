@@ -23,6 +23,8 @@
 
 #include <math.h>
 
+#include <boost/filesystem/fstream.hpp>
+
 #include "TrackSpecParser.h"
 
 #include "LevelBuilder.h"
@@ -31,6 +33,8 @@
 #	include <strings.h>
 #	define _stricmp strcasecmp
 #endif
+
+using HoverRace::Util::OS;
 
 namespace HoverRace {
 namespace MazeCompiler {
@@ -50,35 +54,24 @@ static LevelBuilder *gsCurrentLevelBuilder = NULL;
 // Local helper functions
 static Model::SurfaceElement *sLoadTexture(TrackSpecParser * pParser);
 
-// class LevelBuilder
-bool LevelBuilder::InitFromFile(FILE *pFile)
+bool LevelBuilder::InitFromFile(const OS::path_t &filename)
 {
-	bool lReturnValue = true;
-
-	if(lReturnValue) {
-		lReturnValue = Parse(pFile);
-	}
-
-	if(lReturnValue) {
-		lReturnValue = ComputeVisibleZones();
-	}
-
-	if(lReturnValue) {
-		lReturnValue = ComputeAudibleZones();
-	}
-
-	if(lReturnValue) {
-		OrderVisibleSurfaces();
-	}
-
-	return lReturnValue;
+	return InitFromStream(boost::filesystem::ifstream(filename));
 }
 
-bool LevelBuilder::Parse(FILE * pFile)
+bool LevelBuilder::InitFromStream(std::istream &in)
+{
+	return Parse(in) &&
+		ComputeVisibleZones() &&
+		ComputeAudibleZones() &&
+		(OrderVisibleSurfaces(), true);
+}
+
+bool LevelBuilder::Parse(std::istream &in)
 {
 	bool lReturnValue = true;
 	int lCounter;
-	TrackSpecParser lParser(pFile);
+	TrackSpecParser lParser(in);
 
 	typedef std::map<int, int> lRoomList_t;
 	lRoomList_t lRoomList;
