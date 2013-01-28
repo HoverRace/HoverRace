@@ -10,6 +10,7 @@ libmazecompiler_la_SOURCES = \
 	LevelBuilderVisiblesZones.cpp \
 	MapSprite.cpp \
 	MapSprite.h \
+	TrackCompilationLog.h \
 	TrackCompileExn.h \
 	TrackCompiler.cpp \
 	TrackCompiler.h \
