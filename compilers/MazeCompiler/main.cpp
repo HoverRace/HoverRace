@@ -27,8 +27,10 @@
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/DllObjectFactory.h"
 #include "../../engine/Util/OS.h"
+#include "../../engine/Util/Str.h"
 #include "../../engine/VideoServices/SoundServer.h"
 
+#include "../../engine/MazeCompiler/TrackCompilationLog.h"
 #include "../../engine/MazeCompiler/TrackCompileExn.h"
 #include "../../engine/MazeCompiler/TrackCompiler.h"
 
@@ -50,6 +52,25 @@
 using namespace HoverRace;
 using namespace HoverRace::MazeCompiler;
 using namespace HoverRace::Util;
+
+namespace {
+	struct CompilationLog : public MazeCompiler::TrackCompilationLog {
+		virtual void Info(const std::string &msg) {
+#			ifdef _WIN32
+				std::wcout << static_cast<const wchar_t*>(Str::UW(msg.c_str())) << std::endl;
+#			else
+				std::cout << msg << std::endl;
+#			endif
+		}
+		virtual void Warn(const std::string &msg) {
+#			ifdef _WIN32
+				std::wcerr << static_cast<const wchar_t*>(Str::UW(msg.c_str())) << std::endl;
+#			else
+				std::cerr << msg << std::endl;
+#			endif
+		}
+	};
+}
 
 static void PrintUsage()
 {
@@ -103,22 +124,25 @@ int main(int pArgCount, char *pArgStrings[])
 #		endif
 	}
 
+	TrackCompilationLogPtr compileLog(new CompilationLog);
+
 	if (!lError && !lPrintUsage) {
 		try {
-			TrackCompiler(outputFilename).Compile(inputFilename);
+			TrackCompiler(compileLog, outputFilename).Compile(inputFilename);
 		}
 		catch (TrackCompileExn &ex) {
 			lError = true;
-			std::cerr << ex.what() << std::endl;
+			compileLog->Warn(ex.what());
 		}
 		catch (Exception &ex) {
 			lError = true;
-			std::cerr <<
+			std::ostringstream oss;
+			oss <<
 				"***\n\n" <<
 				_("You found a bug!") << "\n\n" <<
 				ex.what() << "\n\n" 
-				"***\n" <<
-				std::endl;
+				"***\n\n";
+			compileLog->Warn(oss.str());
 		}
 	}
 

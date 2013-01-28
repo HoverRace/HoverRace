@@ -40,8 +40,8 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace MazeCompiler {
 
-TrackCompiler::TrackCompiler(const Util::OS::path_t &outputFilename) :
-	outputFilename(outputFilename)
+TrackCompiler::TrackCompiler(const TrackCompilationLogPtr &log, const Util::OS::path_t &outputFilename) :
+	log(log), outputFilename(outputFilename)
 {
 }
 
@@ -77,8 +77,9 @@ void TrackCompiler::Compile(std::istream &in) const
 			boost::format(_("Unable to create the output file: %s")) %
 				Str::PU(outputFilename.file_string())));
 	}
-	printf(_("Compiling track (%s)"), outputFilename.file_string().c_str());
-	printf("\n");
+	log->Info(boost::str(
+		boost::format(_("Compiling track (%s)")) %
+			Str::PU(outputFilename.file_string())));
 
 	// Header.
 	if (!outFile.BeginANewRecord()) {
@@ -93,7 +94,7 @@ void TrackCompiler::Compile(std::istream &in) const
 	in.seekg(0, std::ios::beg);
 
 	// The track itself.
-	LevelBuilder builder;
+	LevelBuilder builder(log);
 	if (!outFile.BeginANewRecord()) {
 		throw TrackCompileExn(_("Unable to add the track to the output file"));
 	}
@@ -143,7 +144,7 @@ void TrackCompiler::Compile(std::istream &in) const
 	}
 }
 
-void TrackCompiler::CreateHeader(std::istream &in, Parcel::ObjStream &archive)
+void TrackCompiler::CreateHeader(std::istream &in, Parcel::ObjStream &archive) const
 {
 	std::string desc;
 	int sortOrder = 50;
@@ -164,7 +165,7 @@ void TrackCompiler::CreateHeader(std::istream &in, Parcel::ObjStream &archive)
 	if(!lParser.GetNextAttrib("Description")) {
 		// Don't crash, use empty description.
 		desc = "";
-		puts(_("Warning: unable to find description"));
+		log->Warn(_("Warning: unable to find description"));
 	}
 	else {
 		desc = FormatStr(lParser.GetParams());
@@ -256,7 +257,7 @@ std::string TrackCompiler::FormatStr(const char *pSrc)
 
 MR_UInt8 *TrackCompiler::LoadPalette(FILE * pFile)
 {
-	MR_UInt8 *lReturnValue = new MR_UInt8[MR_BACK_COLORS * 3];
+	MR_UInt8 *lReturnValue = NULL;
 
 	fseek(pFile, -769, SEEK_END);
 
@@ -265,11 +266,10 @@ MR_UInt8 *TrackCompiler::LoadPalette(FILE * pFile)
 	fread(&lMagicNumber, 1, 1, pFile);
 
 	if(lMagicNumber != 12) {
-		puts(_("Bad palette format for background file"));
-		delete[]lReturnValue;
-		lReturnValue = NULL;
+		throw TrackCompileExn(_("Bad palette format for background file"));
 	}
 	else {
+		lReturnValue = new MR_UInt8[MR_BACK_COLORS * 3];
 		fread(lReturnValue, 1, MR_BACK_COLORS * 3, pFile);
 	}
 
@@ -287,9 +287,7 @@ MR_UInt8 *TrackCompiler::LoadBitmap(FILE * pFile)
 
 	if(lReturnValue) {
 		if((pXRes != MR_BACK_X_RES) || (pYRes != MR_BACK_Y_RES)) {
-			puts(_("Incorrect background resolution"));
-			delete[]lReturnValue;
-			lReturnValue = NULL;
+			throw TrackCompileExn(_("Incorrect background resolution"));
 		}
 	}
 

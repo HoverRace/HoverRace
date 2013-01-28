@@ -25,6 +25,7 @@
 
 #include <boost/filesystem/fstream.hpp>
 
+#include "TrackCompileExn.h"
 #include "TrackSpecParser.h"
 
 #include "LevelBuilder.h"
@@ -35,6 +36,8 @@
 #endif
 
 using HoverRace::Util::OS;
+using boost::str;
+using boost::format;
 
 namespace HoverRace {
 namespace MazeCompiler {
@@ -53,6 +56,11 @@ static LevelBuilder *gsCurrentLevelBuilder = NULL;
 
 // Local helper functions
 static Model::SurfaceElement *sLoadTexture(TrackSpecParser * pParser);
+
+LevelBuilder::LevelBuilder(const TrackCompilationLogPtr &log) :
+	SUPER(), log(log)
+{
+}
 
 bool LevelBuilder::InitFromFile(const OS::path_t &filename)
 {
@@ -79,30 +87,22 @@ bool LevelBuilder::Parse(std::istream &in)
 	typedef std::map<int, int> lFeatureList_t;
 	lFeatureList_t lFeatureList;
 
-	/*
-	CMap < int, int, int, int >lRoomList;
-	CMap < int, int, int, int >lFeatureList;
-	*/
-
 	// First get the Room and feature count
 	mNbRoom = 0;
 	mNbFeature = 0;
 
 	while(lReturnValue && (lParser.GetNextClass("Room") != NULL)) {
 		if(lParser.GetNextAttrib("Id") == NULL) {
-			lReturnValue = false;
-
-			printf(_("Section ID missing on line %d"), lParser.GetErrorLine());
-			printf("\n");
+			throw TrackCompileExn(str(format(_("Section ID missing on line %d")) % lParser.GetErrorLine()));
 		}
 		else {
 			int lRoomId = (int) lParser.GetNextNumParam();
 
 			lRoomList_t::const_iterator iter = lRoomList.find(lRoomId);
 			if (iter != lRoomList.end()) {
-				lReturnValue = false;
-				printf(_("Duplicate section ID (%d) on line %d"), lRoomId, lParser.GetErrorLine());
-				printf("\n");
+				throw TrackCompileExn(str(
+					format(_("Duplicate section ID (%d) on line %d")) %
+						lRoomId % lParser.GetErrorLine()));
 			}
 			else {
 				lRoomList[lRoomId] = lRoomList.size();
@@ -114,18 +114,16 @@ bool LevelBuilder::Parse(std::istream &in)
 
 	while(lReturnValue && (lParser.GetNextClass("Feature") != NULL)) {
 		if(lParser.GetNextAttrib("Id") == NULL) {
-			lReturnValue = false;
-			printf(_("Section ID missing on line %d"), lParser.GetErrorLine());
-			printf("\n");
+			throw TrackCompileExn(str(format(_("Section ID missing on line %d")) % lParser.GetErrorLine()));
 		}
 		else {
 			int lFeatureId = (int) lParser.GetNextNumParam();
 
 			lFeatureList_t::const_iterator iter = lFeatureList.find(lFeatureId);
 			if (iter != lFeatureList.end()) {
-				lReturnValue = false;
-				printf(_("Duplicate section ID (%d) on line %d"), lFeatureId, lParser.GetErrorLine());
-				printf("\n");
+				throw TrackCompileExn(str(
+					format(_("Duplicate section ID (%d) on line %d")) %
+						lFeatureId % lParser.GetErrorLine()));
 			}
 			else {
 				lFeatureList[lFeatureId] = lFeatureList.size();
@@ -255,8 +253,9 @@ bool LevelBuilder::Parse(std::istream &in)
 
 						lRoomList_t::const_iterator iter = lRoomList.find(lParentId);
 						if (iter == lRoomList.end()) {
-							lReturnValue = false;
-							printf(_("Invalid parent room reference on line %d\n"), lParser.GetErrorLine());
+							throw TrackCompileExn(str(
+								format(_("Invalid parent room reference on line %d\n")) %
+								lParser.GetErrorLine()));
 						}
 						else {
 							mFeatureList[lFeatureIndex].mParentSectionIndex = iter->second;
@@ -390,8 +389,7 @@ bool LevelBuilder::Parse(std::istream &in)
 	lParser.Reset();
 
 	if(lParser.GetNextClass("Connection_List") == NULL) {
-		lReturnValue = false;
-		puts(_("Connection list not found"));
+		throw TrackCompileExn(_("Connection list not found"));
 	}
 	else {
 		while(lParser.GetNextLine()) {
@@ -411,26 +409,44 @@ bool LevelBuilder::Parse(std::istream &in)
 
 			iter = lRoomList.find(lConnection.mRoom0);
 			if (iter == lRoomList.end()) {
-				printf(_("Connection to a nonexistent section %d"), lConnection.mRoom0);
-				printf("\n");
-				continue;
+				throw TrackCompileExn(str(
+					format(_("Connection to a nonexistent section %d")) %
+					lConnection.mRoom0));
 			}
 			int lRoom0 = iter->second;
 			
 			iter = lRoomList.find(lConnection.mRoom1);
 			if (iter == lRoomList.end()) {
-				printf(_("Connection to a nonexistent section %d"), lConnection.mRoom1);
+				throw TrackCompileExn(str(
+					format(_("Connection to a nonexistent section %d")) %
+					lConnection.mRoom1));
 			}
 			int lRoom1 = iter->second;
 
-			if ((mRoomList[lRoom0].mVertexList[lConnection.mWall0] != mRoomList[lRoom1].mVertexList[(lConnection.mWall1 + 1) % mRoomList[lRoom1].mNbVertex]) || (mRoomList[lRoom1].mVertexList[lConnection.mWall1] != mRoomList[lRoom0].mVertexList[(lConnection.mWall0 + 1) % mRoomList[lRoom0].mNbVertex])) {
-				printf(_("Connection between sections %d and %d do not match"), lConnection.mRoom0, lConnection.mRoom1);
-				printf("\n");
-				printf("%3dA: %5d, %5d\n", lConnection.mRoom0, mRoomList[lRoom0].mVertexList[lConnection.mWall0].mX, mRoomList[lRoom0].mVertexList[lConnection.mWall0].mY);
-				printf("%3dB: %5d, %5d\n", lConnection.mRoom0, mRoomList[lRoom0].mVertexList[(lConnection.mWall0 + 1) % mRoomList[lRoom0].mNbVertex].mX, mRoomList[lRoom0].mVertexList[(lConnection.mWall0 + 1) % mRoomList[lRoom0].mNbVertex].mY);
-
-				printf("%3dA: %5d, %5d\n", lConnection.mRoom1, mRoomList[lRoom1].mVertexList[lConnection.mWall1].mX, mRoomList[lRoom1].mVertexList[lConnection.mWall1].mY);
-				printf("%3dB: %5d, %5d\n", lConnection.mRoom1, mRoomList[lRoom1].mVertexList[(lConnection.mWall1 + 1) % mRoomList[lRoom1].mNbVertex].mX, mRoomList[lRoom1].mVertexList[(lConnection.mWall1 + 1) % mRoomList[lRoom1].mNbVertex].mY);
+			if ((mRoomList[lRoom0].mVertexList[lConnection.mWall0] != mRoomList[lRoom1].mVertexList[(lConnection.mWall1 + 1) % mRoomList[lRoom1].mNbVertex]) ||
+				(mRoomList[lRoom1].mVertexList[lConnection.mWall1] != mRoomList[lRoom0].mVertexList[(lConnection.mWall0 + 1) % mRoomList[lRoom0].mNbVertex]))
+			{
+				log->Warn(_("Mismatched connections"));
+				log->Warn(str(format("%3dA: %5d, %5d\n") %
+					lConnection.mRoom0 %
+					mRoomList[lRoom0].mVertexList[lConnection.mWall0].mX %
+					mRoomList[lRoom0].mVertexList[lConnection.mWall0].mY));
+				log->Warn(str(format("%3dB: %5d, %5d\n") %
+					lConnection.mRoom0 %
+					(mRoomList[lRoom0].mVertexList[(lConnection.mWall0 + 1) % mRoomList[lRoom0].mNbVertex].mX) %
+					(mRoomList[lRoom0].mVertexList[(lConnection.mWall0 + 1) % mRoomList[lRoom0].mNbVertex].mY)));
+				log->Warn(str(format("%3dA: %5d, %5d\n") %
+					lConnection.mRoom1 %
+					mRoomList[lRoom1].mVertexList[lConnection.mWall1].mX %
+					mRoomList[lRoom1].mVertexList[lConnection.mWall1].mY));
+				log->Warn(str(format("%3dB: %5d, %5d\n") %
+					lConnection.mRoom1 %
+					(mRoomList[lRoom1].mVertexList[(lConnection.mWall1 + 1) % mRoomList[lRoom1].mNbVertex].mX) %
+					(mRoomList[lRoom1].mVertexList[(lConnection.mWall1 + 1) % mRoomList[lRoom1].mNbVertex].mY)));
+				throw TrackCompileExn(str(
+					format(_("Connection between sections %d and %d do not match")) %
+					lConnection.mRoom0 %
+					lConnection.mRoom1));
 			}
 			else {
 				// We can now do the connection
@@ -449,13 +465,11 @@ bool LevelBuilder::Parse(std::istream &in)
 			double lDiagSize = ComputeShapeConst(&(mRoomList[lRoomIndex]));
 
 			if(lDiagSize < 10.0) {
-				printf(_("Warning: room %d seems to be very small"), lRoomId);
-				printf("\n");
+				log->Warn(str(format(_("Warning: room %d seems to be very small")) % lRoomId));
 			}
 
 			if(lDiagSize > 100.0) {
-				printf(_("Warning: room %d seems to be very large"), lRoomId);
-				printf("\n");
+				log->Warn(str(format(_("Warning: room %d seems to be very large")) % lRoomId));
 			}
 		}
 	}
@@ -468,13 +482,11 @@ bool LevelBuilder::Parse(std::istream &in)
 			double lDiagSize = ComputeShapeConst(&(mFeatureList[lFeatureIndex]));
 
 			if(lDiagSize < 1.0) {
-				printf(_("Warning: feature %d seems to be very small"), lFeatureId);
-				printf("\n");
+				log->Warn(str(format(_("Warning: feature %d seems to be very small")) % lFeatureId));
 			}
 
 			if(lDiagSize > 25.0) {
-				printf(_("Warning: feature %d seems to be very large"), lFeatureId);
-				printf("\n");
+				log->Warn(str(format(_("Warning: feature %d seems to be very large")) % lFeatureId));
 			}
 		}
 	}
@@ -494,9 +506,8 @@ bool LevelBuilder::Parse(std::istream &in)
 
 					lRoomList_t::const_iterator iter = lRoomList.find(lRoomId);
 					if (iter == lRoomList.end()) {
-						lReturnValue = false;
-						printf(_("Invalid starting position room %d"), lRoomId);
-						printf("\n");
+						throw TrackCompileExn(str(
+							format(_("Invalid starting position room %d")) % lRoomId));
 					}
 					else {
 						mStartingRoom[lNbStartingPosition] = iter->second;
@@ -522,8 +533,7 @@ bool LevelBuilder::Parse(std::istream &in)
 
 		if(lReturnValue) {
 			if(lNbStartingPosition == 0) {
-				lReturnValue = false;
-				puts(_("No starting positions found"));
+				throw TrackCompileExn(_("No starting positions found"));
 			}
 		}
 		mNbPlayer = lNbStartingPosition;
@@ -550,9 +560,9 @@ bool LevelBuilder::Parse(std::istream &in)
 
 				lRoomList_t::const_iterator iter = lRoomList.find(lRoomId);
 				if (iter != lRoomList.end()) {
-					lReturnValue = false;
-					printf(_("Invalid room index on line %d"), lParser.GetErrorLine());
-					printf("\n");
+					throw TrackCompileExn(str(
+						format(_("Invalid room index on line %d")) %
+						lParser.GetErrorLine()));
 				}
 				else {
 					lRoomIndex = iter->second;
@@ -577,8 +587,9 @@ bool LevelBuilder::Parse(std::istream &in)
 			Model::FreeElement *lElement = (Model::FreeElement*)Util::DllObjectFactory::CreateObject(lElementType);
 
 			if(lElement == NULL) {
-				lReturnValue = false;
-				printf(_("Unable to create free element on line %d\n"), lParser.GetErrorLine());
+				throw TrackCompileExn(str(
+					format(_("Unable to create free element on line %d\n")) %
+					lParser.GetErrorLine()));
 			}
 			else {
 				// Initialise element position
@@ -595,19 +606,12 @@ bool LevelBuilder::Parse(std::istream &in)
 
 	// Print some statistics
 	if(lReturnValue) {
-		printf("   ");
-		printf(_("This level contains:"));
-		printf("\n %6d ", lRoomList.size());
-		printf(_("rooms"));
-		printf("\n %6d ", lFeatureList.size());
-		printf(_("features"));
-		printf("\n %6d ", lConnectionList.size());
-		printf(_("connections"));
-		printf("\n %6d ", lFreeElementCount);
-		printf(_("elements"));
-		printf("\n %6d ", mNbPlayer);
-		printf(_("starting positions"));
-		printf("\n");
+		log->Info(_("This level contains:"));
+		log->Info(str(format(" %6d %s") % lRoomList.size() % _("rooms")));
+		log->Info(str(format(" %6d %s") % lFeatureList.size() % _("features")));
+		log->Info(str(format(" %6d %s") % lConnectionList.size() % _("connections")));
+		log->Info(str(format(" %6d %s") % lFreeElementCount % _("elements")));
+		log->Info(str(format(" %6d %s") % mNbPlayer % _("starting positions")));
 	}
 
 	return lReturnValue;
@@ -795,7 +799,11 @@ Model::SurfaceElement *sLoadTexture(TrackSpecParser *pParser)
 	}
 
 	if(lReturnValue == NULL) {
-		printf(_("Unable to load texture %d %d on line %d\n"), lType.mDllId, lType.mClassId, pParser->GetErrorLine());
+		throw TrackCompileExn(str(
+			format(_("Unable to load texture %d %d on line %d\n")) %
+				lType.mDllId %
+				lType.mClassId %
+				pParser->GetErrorLine()));
 	}
 
 	return lReturnValue;

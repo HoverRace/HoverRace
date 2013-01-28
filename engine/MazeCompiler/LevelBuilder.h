@@ -23,6 +23,7 @@
 
 #include "../Model/Level.h"
 #include "../Util/OS.h"
+#include "TrackCompilationLog.h"
 
 #ifdef _WIN32
 #	ifdef MR_ENGINE
@@ -42,8 +43,11 @@ class VisibleStep;
 class MR_DllDeclare LevelBuilder : public Model::Level
 {
 	typedef Model::Level SUPER;
-	protected:
+	public:
+		LevelBuilder(const TrackCompilationLogPtr &log);
+		virtual ~LevelBuilder() {}
 
+	protected:
 		// Implementation helpers
 		static double ComputeShapeConst(Section * pSection);
 
@@ -64,6 +68,9 @@ class MR_DllDeclare LevelBuilder : public Model::Level
 	public:
 		bool InitFromFile(const Util::OS::path_t &filename);
 		bool InitFromStream(std::istream &in);
+
+	private:
+		TrackCompilationLogPtr log;
 };
 
 }  // namespace MazeCompiler

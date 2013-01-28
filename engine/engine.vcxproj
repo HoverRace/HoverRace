@@ -209,6 +209,7 @@
     <ClInclude Include="MainCharacter\MainCharacterRenderer.h" />
     <ClInclude Include="MazeCompiler\LevelBuilder.h" />
     <ClInclude Include="MazeCompiler\MapSprite.h" />
+    <ClInclude Include="MazeCompiler\TrackCompilationLog.h" />
     <ClInclude Include="MazeCompiler\TrackCompileExn.h" />
     <ClInclude Include="MazeCompiler\TrackCompiler.h" />
     <ClInclude Include="MazeCompiler\TrackSpecParser.h" />

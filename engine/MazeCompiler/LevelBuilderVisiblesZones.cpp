@@ -23,6 +23,8 @@
 
 #include <math.h>
 
+#include "TrackCompileExn.h"
+
 #include "LevelBuilder.h"
 
 #define MR_MAX_VISIBLE_ZONES   500
@@ -78,7 +80,7 @@ bool LevelBuilder::ComputeVisibleZones()
 	int lDestIndex;
 	int lDestArray[MR_MAX_VISIBLE_ZONES];
 
-	puts(_("Computing visible zones... be patient"));
+	log->Info(_("Computing visible zones... be patient"));
 
 	VisibleStep lStep;
 
@@ -317,9 +319,7 @@ double GetAngle(const MR_2DFloatPos & pPoint0, const MR_2DFloatPos & pPoint1, do
 
 	}
 	else {
-		puts(_("Two nodes with same position"));
-		lReturnValue = Pi;
-		exit(0);
+		throw TrackCompileExn(_("Two nodes with same position"));
 	}
 	return lReturnValue;
 }

@@ -614,6 +614,9 @@
     <ClInclude Include="MazeCompiler\TrackCompileExn.h">
       <Filter>MazeCompiler</Filter>
     </ClInclude>
+    <ClInclude Include="MazeCompiler\TrackCompilationLog.h">
+      <Filter>MazeCompiler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\lib\alut.dll">
