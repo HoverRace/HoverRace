@@ -75,3 +75,5 @@ class MR_DllDeclare LevelBuilder : public Model::Level
 
 }  // namespace MazeCompiler
 }  // namespace HoverRace
+
+#undef MR_DllDeclare

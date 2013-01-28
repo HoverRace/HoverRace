@@ -57,3 +57,5 @@ class MR_DllDeclare MapSprite : public VideoServices::Sprite
 
 }  // namespace MazeCompiler
 }  // namespace HoverRace
+
+#undef MR_DllDeclare

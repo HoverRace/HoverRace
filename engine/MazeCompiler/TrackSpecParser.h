@@ -68,3 +68,5 @@ class MR_DllDeclare TrackSpecParser : boost::noncopyable
 
 }  // namespace MazeCompiler
 }  // namespace HoverRace
+
+#undef MR_DllDeclare

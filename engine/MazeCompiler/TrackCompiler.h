@@ -74,3 +74,5 @@ class MR_DllDeclare TrackCompiler
 
 }  // namespace MazeCompiler
 }  // namespace HoverRace
+
+#undef MR_DllDeclare

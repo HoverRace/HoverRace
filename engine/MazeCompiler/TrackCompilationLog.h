@@ -47,3 +47,5 @@ typedef boost::shared_ptr<TrackCompilationLog> TrackCompilationLogPtr;
 
 }  // namespace MazeCompiler
 }  // namespace HoverRace
+
+#undef MR_DllDeclare

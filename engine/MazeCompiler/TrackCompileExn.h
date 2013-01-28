@@ -53,3 +53,5 @@ class MR_DllDeclare TrackCompileExn : public Exception
 
 }  // namespace MazeCompiler
 }  // namespace HoverRace
+
+#undef MR_DllDeclare
