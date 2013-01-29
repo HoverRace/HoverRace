@@ -22,6 +22,7 @@
 #pragma once
 
 #include "../Util/MR_Types.h"
+#include "../Util/OS.h"
 #include "TrackCompilationLog.h"
 
 #ifdef _WIN32
