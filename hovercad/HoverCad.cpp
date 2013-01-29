@@ -22,7 +22,14 @@
 //
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
+
+#include "../engine/Util/Config.h"
+#include "../engine/Util/DllObjectFactory.h"
+#include "../engine/Util/OS.h"
+#include "../engine/Util/Str.h"
+#include "../engine/VideoServices/SoundServer.h"
+
 #include "HoverCad.h"
 
 #include "SelectAttrib.h"
@@ -45,6 +52,9 @@ static char THIS_FILE[] = __FILE__;
 		static int foo = use_ignore_mfc_leaks();
 #	endif
 #endif
+
+using namespace HoverRace;
+using namespace HoverRace::Util;
 
 /////////////////////////////////////////////////////////////////////////////
 // The one and only CHoverCadApp object
@@ -173,11 +183,27 @@ CDocAttrib *CHoverCadApp::GetDocAttribBar()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CHoverCadApp initialization
+// CHoverCadApp lifecycle
 
 BOOL CHoverCadApp::InitInstance()
 {
-	// Standard initialization
+	// Standard engine init.
+
+	Config *cfg = Config::Init(0, 0, 0, 0, true, OS::path_t());
+	cfg->runtime.silent = true;
+
+#	ifdef ENABLE_NLS
+		// Gettext initialization.
+		OS::SetLocale();
+		bind_textdomain_codeset(PACKAGE, "UTF-8");
+		bindtextdomain(PACKAGE, LOCALEDIR);
+		textdomain(PACKAGE);
+#	endif
+
+	VideoServices::SoundServer::Init();
+	Util::DllObjectFactory::Init();
+
+	// Standard MFC initialization
 	// If you are not using these features and wish to reduce the size
 	//  of your final executable, you should remove from the following
 	//  the specific initialization routines you do not need.
@@ -222,6 +248,16 @@ BOOL CHoverCadApp::InitInstance()
 	pMainFrame->UpdateWindow();
 
 	return TRUE;
+}
+
+int CHoverCadApp::ExitInstance()
+{
+	Util::DllObjectFactory::Clean(FALSE);
+	VideoServices::SoundServer::Close();
+
+	Config::Shutdown();
+
+	return SUPER::ExitInstance();
 }
 
 /////////////////////////////////////////////////////////////////////////////

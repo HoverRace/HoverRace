@@ -37,8 +37,9 @@ class SelectAttrib;
 class CZoomBar;
 class CDocAttrib;
 
-class CHoverCadApp:public CWinApp
+class CHoverCadApp : public CWinApp
 {
+	typedef CWinApp SUPER;
 	protected:
 		int mCommandMode;
 
@@ -59,6 +60,7 @@ class CHoverCadApp:public CWinApp
 		//{{AFX_VIRTUAL(CHoverCadApp)
 	public:
 		virtual BOOL InitInstance();
+		virtual int ExitInstance();
 		//}}AFX_VIRTUAL
 
 		// Implementation
