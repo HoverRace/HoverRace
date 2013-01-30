@@ -70,7 +70,6 @@ ClassicRecordFileHeader::ClassicRecordFileHeader(MR_UInt32 numRecords) :
 {
 	ASSERT(numRecords > 0);
 
-	recordList = new MR_UInt32[numRecords];
 	for (MR_UInt32 i = 0; i < numRecords; ++i) {
 		recordList[i] = 0;
 	}
