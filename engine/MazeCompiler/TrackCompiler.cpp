@@ -142,6 +142,8 @@ void TrackCompiler::Compile(std::istream &in) const
 
 		mapSprite.Serialize(archive);
 	}
+
+	log->Info(_("Compiled track successfully!"));
 }
 
 void TrackCompiler::CreateHeader(std::istream &in, Parcel::ObjStream &archive) const
