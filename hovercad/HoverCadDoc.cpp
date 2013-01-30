@@ -22,10 +22,18 @@
 //
 //
 
-#include "stdafx.h"
+#include "StdAfx.h"
+
 #include <math.h>
 #include <process.h>
 #include <direct.h>
+
+#include "../engine/Util/OS.h"
+#include "../engine/Util/Str.h"
+
+#include "../engine/MazeCompiler/TrackCompilationLog.h"
+#include "../engine/MazeCompiler/TrackCompileExn.h"
+#include "../engine/MazeCompiler/TrackCompiler.h"
 
 #include "HoverCad.h"
 #include "HoverCadDoc.h"
@@ -37,6 +45,26 @@
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
+
+using namespace HoverRace;
+using namespace HoverRace::Util;
+
+namespace {
+	struct CompilationLog : public MazeCompiler::TrackCompilationLog {
+		private:
+			std::ostringstream &oss;
+
+		public:
+			CompilationLog(std::ostringstream &oss) : oss(oss) {}
+
+			virtual void Info(const std::string &msg) {
+				oss << msg << std::endl;
+			}
+			virtual void Warn(const std::string &msg) {
+				oss << msg << std::endl;
+			}
+	};
+}
 
 // Registry stuff
 static char gOwner[81];
@@ -1568,53 +1596,75 @@ void CHoverCadDoc::OnFileCompile()
 
 	lTitle += ".trk";
 
-	CFileDialog lDialog(FALSE, ".trk", lTitle, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, szFilter, NULL);
+	wchar_t defaultFilename[MAX_PATH] = L"";
+	wcsncat(defaultFilename, Str::UW((const char*)lTitle), MAX_PATH - 1);
 
-	if(lDialog.DoModal() == IDOK) {
+	wchar_t selectedFilename[MAX_PATH] = L"";
+	
+	OPENFILENAMEW ofn = { 0 };
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = AfxGetMainWnd()->m_hWnd;
+	ofn.lpstrFilter = L"HoverRace Track Files (*.trk)\0*.trk\0All Files (*.*)\0*.*\0";
+	ofn.nFilterIndex = 1;
+	ofn.lpstrFile = selectedFilename;
+	ofn.nMaxFile = MAX_PATH;
+	ofn.lpstrFileTitle = defaultFilename;
+	ofn.nMaxFileTitle = MAX_PATH;
+	ofn.lpstrInitialDir = NULL;  //TODO: Standard default personal directory.
+	ofn.lpstrTitle = NULL;
+	ofn.Flags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
+	ofn.lpstrDefExt = L".trk";
+
+	if (GetSaveFileNameW(&ofn)) {
 
 		// Create the temporary file
-		char lTempPath[300];
-		char lTempFileName[320];
+		wchar_t lTempPath[MAX_PATH + 1];
+		wchar_t lTempFileName[MAX_PATH + 1];
 
-		if(GetTempPath(sizeof(lTempPath), lTempPath)
-		&& GetTempFileName(lTempPath, "HC", 0, lTempFileName)) {
-			FILE *lFile = fopen(lTempFileName, "w");
+		if (GetTempPathW(MAX_PATH, lTempPath) &&
+			GetTempFileNameW(lTempPath, L"HC", 0, lTempFileName))
+		{
+			FILE *lFile = OS::FOpen(lTempFileName, "w");
 
 			if(lFile != NULL) {
 				// Generate output
 				BOOL lSuccess = GenerateOutputFile(lFile);
-
 				fclose(lFile);
 
-				// Call the compiler
-				if(lSuccess) {
-					char lExecPath[260];
-					char lCurrentDir[260];
+				if (lSuccess) {
+					OS::path_t inputFilename = lTempFileName;
+					OS::path_t outputFilename = selectedFilename;
+					std::ostringstream compilationLogStream;
+					MazeCompiler::TrackCompilationLogPtr compileLog(new CompilationLog(compilationLogStream));
 
-					GetModuleFileName(NULL, lExecPath, sizeof(lExecPath));
+					try {
+						MazeCompiler::TrackCompiler(compileLog, outputFilename).
+							Compile(inputFilename);
 
-					getcwd(lCurrentDir, sizeof(lCurrentDir));
-
-					if(strrchr(lExecPath, '\\') != NULL) {
-						strrchr(lExecPath, '\\')[1] = 0;
-
-						chdir(lExecPath);
+						std::ostringstream oss;
+						oss << _("Track compiled successfully.") <<
+							"\n\n" <<
+							_("Compiler log:") <<
+							"\n" <<
+							compilationLogStream.str();
+						MessageBoxW(NULL, Str::UW(oss.str()), L"Compile Track", MB_OK);
 					}
-
-					CString lCommand = CString("MazeCompiler \"") + lDialog.GetPathName() + "\" \"" + lTempFileName + '\"';
-
-					if(system(lCommand) != 0) {
-						CString lErrorMessage;
-						lErrorMessage.LoadString(IDS_CANNOTRUN_COMPILER);
-						AfxMessageBox(lErrorMessage);
+					catch (MazeCompiler::TrackCompileExn &ex) {
+						MessageBoxW(NULL, Str::UW(ex.what()), L"Compile Track", MB_OK | MB_ICONWARNING);
 					}
-
-					chdir(lCurrentDir);
-
+					catch (Exception &ex) {
+						std::ostringstream oss;
+						oss <<
+							"***\n\n" <<
+							_("You found a bug!") << "\n\n" <<
+							ex.what() << "\n\n" 
+							"***\n\n";
+						MessageBoxW(NULL, Str::UW(compilationLogStream.str()), L"Compile Track", MB_OK | MB_ICONWARNING);
+					}
 				}
 
 				// Delete temp file
-				unlink(lTempFileName);
+				_wunlink(lTempFileName);
 			}
 		}
 	}
