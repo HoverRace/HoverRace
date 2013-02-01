@@ -50,7 +50,8 @@ EXTRA_DIST = \
 # otherwise GCC will complain that the PCH was built with different
 # options.
 StdAfx.h.gch: StdAfx.h
-	$(CXXCOMPILE) $(HR_CPPFLAGS) $(HR_CXXFLAGS) -x c++-header -fPIC -DPIC \
+	$(AM_V_GEN)$(CXXCOMPILE) $(HR_CPPFLAGS) $(HR_CXXFLAGS) \
+		-x c++-header -fPIC -DPIC \
 		-MD -MP -MF StdAfx.h.Td \
 		-c -o $@ $<
 	mv StdAfx.h.Td StdAfx.h.d

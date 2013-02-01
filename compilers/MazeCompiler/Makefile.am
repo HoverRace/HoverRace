@@ -23,5 +23,5 @@ EXTRA_DIST = \
 
 # Build the precompiled header.
 StdAfx.h.gch: StdAfx.h
-	$(CXXCOMPILE) $(HR_CPPFLAGS) $(HR_CXXFLAGS) -x c++-header -c -o $@ $<
+	$(AM_V_GEN)$(CXXCOMPILE) $(HR_CPPFLAGS) $(HR_CXXFLAGS) -x c++-header -c -o $@ $<
 
