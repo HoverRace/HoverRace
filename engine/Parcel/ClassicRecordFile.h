@@ -56,6 +56,11 @@ class MR_DllDeclare ClassicRecordFile : public RecordFile
 		virtual bool OpenForWrite(const Util::OS::path_t &filename);
 		virtual bool OpenForRead(const Util::OS::path_t &filename, bool validateChecksum=false);
 
+	protected:
+		static DWORD ComputeSum(const Util::OS::path_t &filename);
+	public:
+		virtual bool ApplyChecksum(const Util::OS::path_t &filename);
+
 		virtual DWORD GetAlignMode();
 
 		virtual int GetNbRecords() const;

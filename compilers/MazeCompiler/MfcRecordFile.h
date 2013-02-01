@@ -60,7 +60,7 @@ class MfcRecordFile : public RecordFile, private CFile
 		void SelectRecord(int pRecordNumber);
 
 		// Checksum stuff
-		BOOL ReOpen(const Util::OS::path_t &filename);
+		bool ApplyChecksum(const Util::OS::path_t &filename);
 		DWORD GetAlignMode();
 
 		// File information functions

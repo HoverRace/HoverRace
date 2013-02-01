@@ -54,6 +54,9 @@ class MR_DllDeclare RecordFile : public Util::Inspectable {
 		virtual bool OpenForWrite(const Util::OS::path_t &filename) = 0;
 		virtual bool OpenForRead(const Util::OS::path_t &filename, bool validateChecksum=false) = 0;
 
+		// Checksum stuff
+		virtual bool ApplyChecksum(const Util::OS::path_t &filename) = 0;
+
 		virtual DWORD GetAlignMode() = 0;
 
 		virtual int GetNbRecords() const = 0;

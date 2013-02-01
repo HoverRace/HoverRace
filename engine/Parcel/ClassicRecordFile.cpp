@@ -213,6 +213,51 @@ bool ClassicRecordFile::OpenForRead(const Util::OS::path_t &filename, bool valid
 	return false;
 }
 
+DWORD ClassicRecordFile::ComputeSum(const OS::path_t &filename)
+{
+	DWORD lReturnValue = 0;
+	DWORD lBuffer[2048];
+
+	FILE *lFile = OS::FOpen(filename, "rb");
+
+	if(lFile != NULL) {
+		int lDataLen = fread(lBuffer, 1, sizeof(lBuffer), lFile);
+
+		if(lDataLen > 0) {
+			lDataLen /= sizeof(DWORD);
+
+			BOOL lSkippedDo = FALSE;
+
+			for(int lCounter = 0; lCounter < lDataLen; lCounter++) {
+				if(!lSkippedDo && (lBuffer[lCounter] == 0)) {
+					lSkippedDo = TRUE;
+					lCounter += 6;
+				}
+				else {
+					lReturnValue += lBuffer[lCounter] + ~(lBuffer[lCounter] >> 12);
+					lReturnValue = (lReturnValue << 1) + (lReturnValue >> 31);
+				}
+			}
+		}
+		fclose(lFile);
+	}
+	return lReturnValue;
+}
+
+bool ClassicRecordFile::ApplyChecksum(const OS::path_t &filename)
+{
+	DWORD sum = ComputeSum(filename);
+
+	if (OpenForWrite(filename)) {
+		header->sumValid = true;
+		header->checksum = sum;
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 DWORD ClassicRecordFile::GetAlignMode()
 {
 	return (header != NULL && header->recordList != NULL) ? header->checksum : 0;

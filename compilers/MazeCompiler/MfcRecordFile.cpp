@@ -321,9 +321,9 @@ bool MfcRecordFile::OpenForRead(const OS::path_t &filename, bool pValidateChkSum
 }
 
 // Checksum stuff (Renamed to Reopen for security purpose
-BOOL MfcRecordFile::ReOpen(const OS::path_t &filename)
+bool MfcRecordFile::ApplyChecksum(const OS::path_t &filename)
 {
-	BOOL lReturnValue = FALSE;
+	bool lReturnValue = false;
 
 	DWORD lSum = 0;
 
