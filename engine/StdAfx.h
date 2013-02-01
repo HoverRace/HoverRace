@@ -48,8 +48,12 @@
 #include <string>
 #include <vector>
 
-// For newer versions of boost where filesystem has a v3.
-#define BOOST_FILESYSTEM_VERSION 2
+// Prefer Boost::Filesystem v3 on Boost 1.44+.
+#if BOOST_VERSION >= 104400
+#	define BOOST_FILESYSTEM_VERSION 3
+#else
+#	define BOOST_FILESYSTEM_VERSION 2
+#endif
 
 #include <boost/filesystem/convenience.hpp>
 #include <boost/filesystem/path.hpp>
