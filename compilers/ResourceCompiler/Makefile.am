@@ -28,7 +28,7 @@ hr_resourcecompiler_SOURCES = \
 	TextParsing.h
 
 BUILT_SOURCES = StdAfx.h.gch
-CLEANFILES = $(BUILT_SOURCES)
+CLEANFILES = $(BUILT_SOURCES) StdAfx.h.Td StdAfx.h.d
 
 EXTRA_DIST = \
 	ResourceCompiler.vcxproj \
@@ -38,5 +38,9 @@ EXTRA_DIST = \
 # Build the precompiled header.
 StdAfx.h.gch: StdAfx.h
 	$(AM_V_GEN)$(CXXCOMPILE) $(HR_CPPFLAGS) $(HR_CXXFLAGS) \
+		-MD -MP -MF StdAfx.h.Td \
 		-x c++-header -c -o $@ $<
+	mv StdAfx.h.Td StdAfx.h.d
+
+-include StdAfx.h.d
 
