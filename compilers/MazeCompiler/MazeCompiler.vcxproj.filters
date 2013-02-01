@@ -4,9 +4,6 @@
     <Filter Include="Main">
       <UniqueIdentifier>{015f6883-eb3b-4dbe-9fe4-14560617f766}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Parcel">
-      <UniqueIdentifier>{e536217f-3601-4312-885b-82b0843521ed}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="StdAfx.cpp">
@@ -15,22 +12,10 @@
     <ClCompile Include="main.cpp">
       <Filter>Main</Filter>
     </ClCompile>
-    <ClCompile Include="MfcObjStream.cpp">
-      <Filter>Parcel</Filter>
-    </ClCompile>
-    <ClCompile Include="MfcRecordFile.cpp">
-      <Filter>Parcel</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StdAfx.h">
       <Filter>Main</Filter>
-    </ClInclude>
-    <ClInclude Include="MfcObjStream.h">
-      <Filter>Parcel</Filter>
-    </ClInclude>
-    <ClInclude Include="MfcRecordFile.h">
-      <Filter>Parcel</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
