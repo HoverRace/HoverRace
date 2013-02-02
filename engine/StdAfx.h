@@ -52,6 +52,7 @@
 #include <boost/version.hpp>
 #if BOOST_VERSION >= 104400
 #	define BOOST_FILESYSTEM_VERSION 3
+#	define BOOST_FILESYSTEM_DEPRECATED
 #else
 #	define BOOST_FILESYSTEM_VERSION 2
 #endif
