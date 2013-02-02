@@ -62,7 +62,7 @@ class MR_DllDeclare OS {
 			typedef Window wnd_t;
 #		endif
 
-#		ifdef WITH_WIDE_PATHS
+#		if defined(WITH_WIDE_PATHS) && BOOST_FILESYSTEM_VERSION == 2
 			typedef boost::filesystem::wpath path_t;
 			typedef boost::filesystem::wdirectory_iterator dirIter_t;
 			typedef boost::filesystem::wdirectory_entry dirEnt_t;
