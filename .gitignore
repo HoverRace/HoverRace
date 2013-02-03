@@ -69,6 +69,8 @@
 /compilers/MazeCompiler/Makefile
 /compilers/MazeCompiler/Makefile.in
 /compilers/MazeCompiler/Release
+/compilers/MazeCompiler/StdAfx.h.Td
+/compilers/MazeCompiler/StdAfx.h.d
 /compilers/MazeCompiler/StdAfx.h.gch
 /compilers/MazeCompiler/hr-mazecompiler
 
@@ -82,6 +84,8 @@
 /compilers/ParcelDump/Makefile
 /compilers/ParcelDump/Makefile.in
 /compilers/ParcelDump/Release
+/compilers/ParcelDump/StdAfx.h.Td
+/compilers/ParcelDump/StdAfx.h.d
 /compilers/ParcelDump/StdAfx.h.gch
 /compilers/ParcelDump/hr-parceldump
 
@@ -91,6 +95,8 @@
 /compilers/ResourceCompiler/Makefile
 /compilers/ResourceCompiler/Makefile.in
 /compilers/ResourceCompiler/Release
+/compilers/ResourceCompiler/StdAfx.h.Td
+/compilers/ResourceCompiler/StdAfx.h.d
 /compilers/ResourceCompiler/StdAfx.h.gch
 /compilers/ResourceCompiler/hr-resourcecompiler
 
