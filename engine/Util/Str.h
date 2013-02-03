@@ -136,37 +136,9 @@ namespace Str {
 #		endif
 	};
 
-	/** Wrapper for a UTF-8 string, so non-wide UP/PU can be used like UW/WU. */
-	class MR_DllDeclare UU
-	{
-		const char *cs;
-		public:
-			UU(const char *s=NULL) throw() : cs(s) { }
-			explicit UU(const std::string &s) throw() : cs(s.c_str()) { }
-			~UU() { }
-			operator const char*() const throw() { return cs; }
-			operator const std::string() const { return cs; }
-	};
-
 }  // namespace Str
 
 }  // namespace Util
 }  // namespace HoverRace
-
-// Convenience operators (to avoid explicit casts).
-
-/*
-inline HoverRace::Util::OS::path_t &operator/=(HoverRace::Util::OS::path_t &path,
-                                               const HoverRace::Util::Str::UP &s)
-{
-	return path /= static_cast<HoverRace::Util::OS::cpstr_t>(s);
-}
-
-inline HoverRace::Util::OS::path_t operator/(const HoverRace::Util::OS::path_t &path,
-                                             const HoverRace::Util::Str::UP &s)
-{
-	return path / static_cast<HoverRace::Util::OS::cpstr_t>(s);
-}
-*/
 
 #undef MR_DllDeclare
