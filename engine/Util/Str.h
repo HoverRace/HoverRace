@@ -107,7 +107,7 @@ namespace Str {
 		inline OS::path_t WP(const std::wstring &s) throw() { return OS::path_t(s); }
 #	else
 		inline OS::path_t WP(const wchar_t *s=NULL) throw() { return OS::path_t(WideToUtf8(s)); }
-		inline OS::path_t WP(const std::wstring &s) throw() { return OS::path_t(WideToUtf8(s.str())); }
+		inline OS::path_t WP(const std::wstring &s) throw() { return OS::path_t(WideToUtf8(s.c_str())); }
 #	endif
 
 	// Convert path_t to wide string.
@@ -132,7 +132,7 @@ namespace Str {
 					explicit PW(const OS::path_t &path) throw() : cs(path.string()) { }
 #				endif
 				operator const wchar_t*() const throw() { return (const wchar_t*)cs; }
-				operator const std::wstring() const { return (const std::wstring)cs; }
+				operator const std::wstring() const { return cs; }
 #		endif
 	};
 
