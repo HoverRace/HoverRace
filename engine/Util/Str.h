@@ -66,6 +66,76 @@ namespace Str {
 			operator const std::string() const { return cs; }
 	};
 
+	// Convert UTF-8 to path_t.
+#	ifdef WITH_WIDE_PATHS
+		inline OS::path_t UP(const char *s=NULL) throw() { return OS::path_t(Utf8ToWide(s)); }
+		inline OS::path_t UP(const std::string &s) throw() { return OS::path_t(Utf8ToWide(s.c_str())); }
+#	else
+		inline OS::path_t UP(const char *s=NULL) throw() { return OS::path_t(s); }
+		inline OS::path_t UP(const std::string &s) throw() { return OS::path_t(s); }
+#	endif
+
+	// Convert path_t to UTF-8.
+	class MR_DllDeclare PU
+	{
+#		ifdef WITH_WIDE_PATHS
+			WU cs;
+			public:
+#				if BOOST_FILESYSTEM_VERSION == 2
+					explicit PU(const OS::path_t &path) throw() : cs(path.file_string()) { }
+#				else
+					explicit PU(const OS::path_t &path) throw() : cs(path.wstring()) { }
+#				endif
+				operator const char*() const throw() { return (const char*)cs; }
+				operator const std::string() const { return (const std::string)cs; }
+#		else
+			std::string cs;
+			public:
+#				if BOOST_FILESYSTEM_VERSION == 2
+					explicit PU(const OS::path_t &path) throw() : cs(path.file_string()) { }
+#				else
+					explicit PU(const OS::path_t &path) throw() : cs(path.string()) { }
+#				endif
+				operator const char*() const throw() { return cs.c_str(); }
+				operator const std::string() const { return cs; }
+#		endif
+	};
+
+	// Convert wide strings to path_t.
+#	ifdef WITH_WIDE_PATHS
+		inline OS::path_t WP(const wchar_t *s=NULL) throw() { return OS::path_t(s); }
+		inline OS::path_t WP(const std::wstring &s) throw() { return OS::path_t(s); }
+#	else
+		inline OS::path_t WP(const wchar_t *s=NULL) throw() { return OS::path_t(WideToUtf8(s)); }
+		inline OS::path_t WP(const std::wstring &s) throw() { return OS::path_t(WideToUtf8(s.str())); }
+#	endif
+
+	// Convert path_t to wide string.
+	class MR_DllDeclare PW
+	{
+#		ifdef WITH_WIDE_PATHS
+			std::wstring cs;
+			public:
+#				if BOOST_FILESYSTEM_VERSION == 2
+					explicit PW(const OS::path_t &path) throw() : cs(path.file_string()) { }
+#				else
+					explicit PW(const OS::path_t &path) throw() : cs(path.wstring()) { }
+#				endif
+				operator const wchar_t*() const throw() { return cs.c_str(); }
+				operator const std::wstring() const { return cs; }
+#		else
+			UW cs;
+			public:
+#				if BOOST_FILESYSTEM_VERSION == 2
+					explicit PW(const OS::path_t &path) throw() : cs(path.file_string()) { }
+#				else
+					explicit PW(const OS::path_t &path) throw() : cs(path.string()) { }
+#				endif
+				operator const wchar_t*() const throw() { return (const wchar_t*)cs; }
+				operator const std::wstring() const { return (const std::wstring)cs; }
+#		endif
+	};
+
 	/** Wrapper for a UTF-8 string, so non-wide UP/PU can be used like UW/WU. */
 	class MR_DllDeclare UU
 	{
@@ -78,14 +148,6 @@ namespace Str {
 			operator const std::string() const { return cs; }
 	};
 
-#	ifdef WITH_WIDE_PATHS
-		typedef UW UP;
-		typedef WU PU;
-#	else
-		typedef UU UP;
-		typedef UU PU;
-#	endif
-
 }  // namespace Str
 
 }  // namespace Util
@@ -93,6 +155,7 @@ namespace Str {
 
 // Convenience operators (to avoid explicit casts).
 
+/*
 inline HoverRace::Util::OS::path_t &operator/=(HoverRace::Util::OS::path_t &path,
                                                const HoverRace::Util::Str::UP &s)
 {
@@ -104,5 +167,6 @@ inline HoverRace::Util::OS::path_t operator/(const HoverRace::Util::OS::path_t &
 {
 	return path / static_cast<HoverRace::Util::OS::cpstr_t>(s);
 }
+*/
 
 #undef MR_DllDeclare

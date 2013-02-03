@@ -196,9 +196,9 @@ static Config *InitConfig(
 	long verBuild = 0;
 	bool prerelease = true;
 	DWORD dummyHandle;
-	DWORD verInfoSize = GetFileVersionInfoSizeW(exePath.file_string().c_str(), &dummyHandle);
+	DWORD verInfoSize = GetFileVersionInfoSizeW(Str::PW(exePath), &dummyHandle);
 	void *verInfo = malloc(verInfoSize);
-	if (GetFileVersionInfoW(exePath.file_string().c_str(), 0, verInfoSize, verInfo)) {
+	if (GetFileVersionInfoW(Str::PW(exePath), 0, verInfoSize, verInfo)) {
 		UINT outSize;
 		void *outPtr;
 		if (VerQueryValueW(verInfo, L"\\", (LPVOID*)&outPtr, &outSize)) {
@@ -312,7 +312,7 @@ int main(int argc, char** argv)
 	OS::path_t exePath = FindExePath();
 
 	// Change the working directory to the app's directory.
-	_wchdir(exePath.parent_path().file_string().c_str());
+	_wchdir(Str::PW(exePath.parent_path()));
 
 	CoInitialize(NULL);
 #endif

@@ -152,5 +152,5 @@ int ScalarNode::AsInt(int def, int min, int max) const
  */
 OS::path_t ScalarNode::AsPath() const
 {
-	return OS::path_t((const OS::path_t::value_type*)Str::UP(value));
+	return Str::UP(value);
 }

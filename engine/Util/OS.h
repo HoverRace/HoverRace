@@ -71,6 +71,12 @@ class MR_DllDeclare OS {
 			typedef boost::filesystem::directory_iterator dirIter_t;
 			typedef boost::filesystem::directory_entry dirEnt_t;
 #		endif
+
+#		if BOOST_FILESYSTEM_VERSION == 2
+			typedef boost::filesystem::basic_filesystem_error<path_t> fs_error_t;
+#		else
+			typedef boost::filesystem::filesystem_error fs_error_t;
+#		endif
 		typedef path_t::value_type *pstr_t;
 		typedef const path_t::value_type *cpstr_t;
 		

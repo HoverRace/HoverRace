@@ -126,7 +126,7 @@ HRESULT IntroMovie::InitDirectShow(const Util::OS::path_t &movieFilename)
 
 	if (FAILED(hr = winCtl->SetVideoClippingWindow(hwnd))) return hr;
 
-	if (FAILED(hr = graph->RenderFile(movieFilename.file_string().c_str(), NULL))) return hr;
+	if (FAILED(hr = graph->RenderFile(Str::PW(movieFilename), NULL))) return hr;
 
 	if (FAILED(hr = graph->QueryInterface(IID_IMediaControl, (void**)&mediaCtl))) return hr;
 

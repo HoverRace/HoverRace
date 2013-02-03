@@ -192,15 +192,15 @@ Config::Config(int verMajor, int verMinor, int verPatch, int verBuild,
 	// Set initial defaults.
 	ResetToDefaults();
 
-	Str::UP tracksDirName("Tracks");
+	OS::path_t tracksDirName = Str::UP("Tracks");
 
 	userTrackPath = this->dataPath / tracksDirName;
 
 	Parcel::BundlePtr mediaTrackBundle(new Parcel::Bundle(this->mediaPath / tracksDirName));
 #	ifdef _WIN32
 		trackBundle = boost::make_shared<Parcel::TrackBundle>(userTrackPath,
-			boost::make_shared<Parcel::Bundle>((OS::cpstr_t)Str::UP("track_source"),  // Historical.
-			boost::make_shared<Parcel::Bundle>((OS::cpstr_t)tracksDirName,  // Historical.
+			boost::make_shared<Parcel::Bundle>(Str::UP("track_source"),  // Historical.
+			boost::make_shared<Parcel::Bundle>(tracksDirName,  // Historical.
 			mediaTrackBundle)));
 #	else
 		trackBundle = boost::make_shared<Parcel::TrackBundle>(userTrackPath,
@@ -409,10 +409,10 @@ OS::path_t Config::GetConfigFilename() const
 {
 	OS::path_t retv(cfgPath);
 	if (prerelease) {
-		retv /= (OS::cpstr_t)Str::UP(PREREL_CONFIG_FILENAME);
+		retv /= Str::UP(PREREL_CONFIG_FILENAME);
 	}
 	else {
-		retv /= (OS::cpstr_t)Str::UP(CONFIG_FILENAME);
+		retv /= Str::UP(CONFIG_FILENAME);
 	}
 	return retv;
 }
@@ -451,7 +451,7 @@ const OS::path_t &Config::GetMediaPath() const
  */
 OS::path_t Config::GetMediaPath(const std::string &file) const
 {
-	return mediaPath / (OS::cpstr_t)Str::UP(file.c_str());
+	return mediaPath / Str::UP(file.c_str());
 }
 
 /**
@@ -476,7 +476,7 @@ OS::path_t Config::GetUserTrackPath(const std::string &name) const
 	if (!boost::ends_with(filename, TRACK_EXT)) {
 		filename += TRACK_EXT;
 	}
-	return userTrackPath / (OS::cpstr_t)Str::UP(filename.c_str());
+	return userTrackPath / Str::UP(filename.c_str());
 }
 
 /**
@@ -499,9 +499,9 @@ OS::path_t Config::GetScriptHelpPath(const std::string &className) const
 	filename += ".yml";
 
 	OS::path_t retv(GetMediaPath());
-	retv /= (OS::cpstr_t)Str::UP("scripts");
-	retv /= (OS::cpstr_t)Str::UP("help");
-	retv /= (OS::cpstr_t)Str::UP(filename.c_str());
+	retv /= Str::UP("scripts");
+	retv /= Str::UP("help");
+	retv /= Str::UP(filename.c_str());
 	return retv;
 }
 

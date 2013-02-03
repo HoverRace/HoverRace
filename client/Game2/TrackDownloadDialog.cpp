@@ -393,7 +393,7 @@ bool TrackDownloadDialog::ExtractTrackFile()
 		retv = (unzRetv == ZR_OK);
 
 		if (retv) {
-			unzRetv = UnzipItemToFileW(huz, destFilename.file_string().c_str(), &zent);
+			unzRetv = UnzipItemToFileW(huz, Str::PW(destFilename), &zent);
 			retv = (unzRetv == ZR_OK);
 		}
 
@@ -401,7 +401,7 @@ bool TrackDownloadDialog::ExtractTrackFile()
 	}
 	else {
 		// Raw file.
-		FILE *outFile = _wfopen(destFilename.file_string().c_str(), L"wb");
+		FILE *outFile = _wfopen(Str::PW(destFilename), L"wb");
 		if (outFile != NULL) {
 			fwrite(dlBuf, bufSize, 1, outFile);
 			fclose(outFile);
@@ -411,15 +411,13 @@ bool TrackDownloadDialog::ExtractTrackFile()
 #ifdef _WIN32
 	/* fix modification time and creation time */
 
-	/* what the fuck? "CreateFile()" opens existing files?  Misnomer much? */
-	HANDLE file = CreateFileW(destFilename.file_string().c_str(),
+	HANDLE file = CreateFileW(Str::PW(destFilename),
 								FILE_WRITE_ATTRIBUTES,
 								FILE_SHARE_READ | FILE_SHARE_WRITE,
 								NULL,
 								OPEN_EXISTING,
 								FILE_ATTRIBUTE_NORMAL,
 								NULL);
-	/* that was WAY too hard */
 	FILETIME ft;
 	SYSTEMTIME st;
 

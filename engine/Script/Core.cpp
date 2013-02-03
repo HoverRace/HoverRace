@@ -423,7 +423,7 @@ void Core::LoadClassHelp(const std::string &className)
 	if (in == NULL) {
 #		ifdef _WIN32
 			OutputDebugStringW(L"Class help file not found: ");
-			OutputDebugStringW(filename.file_string().c_str());
+			OutputDebugStringW(Str::PW(filename));
 			OutputDebugStringW(L"\n");
 #		endif
 		return;

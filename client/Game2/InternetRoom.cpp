@@ -706,10 +706,10 @@ void InternetRoom::OpenChatLog()
 			fs::create_directories(logPath);
 		}
 	}
-	catch (fs::basic_filesystem_error<fs::path> &ex) {
+	catch (OS::fs_error_t &ex) {
 		AddChatLine(_("Unable to create chat log file:"));
 		AddChatLine(_("Unable to create directory:"));
-		AddChatLine(Str::PU(logPath.file_string().c_str()));
+		AddChatLine(Str::PU(logPath));
 		AddChatLine(ex.what());
 		return;
 	}
@@ -722,7 +722,7 @@ void InternetRoom::OpenChatLog()
 	char timestamp[128] = { 0 };
 	strftime(timestamp, 128, "%Y-%m-%d %H:%M:%S %z", &now);
 
-	logPath /= (OS::cpstr_t)Str::UP(filename);
+	logPath /= Str::UP(filename);
 
 	chatLog = new fs::ofstream(logPath, std::ios_base::app | std::ios_base::out);
 	if (chatLog->fail()) {
@@ -964,7 +964,7 @@ void InternetRoom::PlayMessageReceivedSound(HWND wnd) {
 	lastMessageReceivedSoundTs = curTime;
 
 	//TODO: Preload sounds into memory and use SND_MEMORY.
-	PlaySoundW(cfg->GetMediaPath("sounds/imr/message.wav").file_string().c_str(), NULL, SND_FILENAME);
+	PlaySoundW(Str::PW(cfg->GetMediaPath("sounds/imr/message.wav")), NULL, SND_FILENAME);
 }
 
 BOOL InternetRoom::VerifyError(HWND pParentWindow, const char *pAnswer)

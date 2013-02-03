@@ -597,7 +597,7 @@ bool OS::OpenPath(const path_t &path)
 {
 	if (!(fs::exists(path) && fs::is_directory(path))) return false;
 #	ifdef _WIN32
-		std::wstring s(path.file_string());
+		std::wstring s((const wchar_t*)Str::PW(path));
 		OutputDebugStringW(L"Opening Path: ");
 		OutputDebugStringW(s.c_str());
 		OutputDebugStringW(L"\n");
@@ -615,13 +615,13 @@ FILE *OS::FOpen(const path_t &path, const char *mode)
 {
 #	ifdef WITH_WIDE_PATHS
 #		ifdef _WIN32
-			return _wfopen(path.file_string().c_str(), Str::UW(mode));
+			return _wfopen((const wchar_t*)Str::PW(path), Str::UW(mode));
 #		else
 			// Unimplemented.
 			throw UnimplementedExn("OS::FOpen for non-Win32 wide paths");
 #		endif
 #	else
-		return fopen(path.file_string().c_str(), mode);
+		return fopen((const char*)Str::PU(path), mode);
 #	endif
 }
 
