@@ -433,8 +433,6 @@ void CDocAttrib::DetachDocument(CHoverCadDoc * pDoc)
 
 void CDocAttrib::Refresh()
 {
-	TRACE("Refresh\n");
-
 	if(mCurrentDoc == NULL) {
 		mSelectBackgroundName.EnableWindow(FALSE);
 		mBackgroundName.EnableWindow(FALSE);
