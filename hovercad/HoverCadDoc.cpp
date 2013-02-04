@@ -1671,10 +1671,6 @@ void CHoverCadDoc::OnFileCompile()
 
 	if (GetSaveFileNameW(&ofn)) {
 
-		// Create the temporary file
-		wchar_t lTempPath[MAX_PATH + 1];
-		wchar_t lTempFileName[MAX_PATH + 1];
-
 		std::stringstream levelData;
 		if (GenerateOutputFile(levelData)) {
 			levelData.seekg(0, std::ios::beg);
