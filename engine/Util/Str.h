@@ -68,8 +68,8 @@ namespace Str {
 
 	// Convert UTF-8 to path_t.
 #	ifdef WITH_WIDE_PATHS
-		inline OS::path_t UP(const char *s=NULL) throw() { return OS::path_t(Utf8ToWide(s)); }
-		inline OS::path_t UP(const std::string &s) throw() { return OS::path_t(Utf8ToWide(s.c_str())); }
+		inline OS::path_t UP(const char *s=NULL) throw() { return OS::path_t((const wchar_t*)Str::UW(s)); }
+		inline OS::path_t UP(const std::string &s) throw() { return OS::path_t((const wchar_t*)Str::UW(s)); }
 #	else
 		inline OS::path_t UP(const char *s=NULL) throw() { return OS::path_t(s); }
 		inline OS::path_t UP(const std::string &s) throw() { return OS::path_t(s); }
@@ -106,8 +106,8 @@ namespace Str {
 		inline OS::path_t WP(const wchar_t *s=NULL) throw() { return OS::path_t(s); }
 		inline OS::path_t WP(const std::wstring &s) throw() { return OS::path_t(s); }
 #	else
-		inline OS::path_t WP(const wchar_t *s=NULL) throw() { return OS::path_t(WideToUtf8(s)); }
-		inline OS::path_t WP(const std::wstring &s) throw() { return OS::path_t(WideToUtf8(s.c_str())); }
+		inline OS::path_t WP(const wchar_t *s=NULL) throw() { return OS::path_t((const char*)Str::WU(s)); }
+		inline OS::path_t WP(const std::wstring &s) throw() { return OS::path_t((const char*)Str::WU(s)); }
 #	endif
 
 	// Convert path_t to wide string.
