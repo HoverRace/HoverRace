@@ -654,12 +654,12 @@ bool CHoverCadDoc::GenerateOutputFile(std::ostream &os)
 		}
 	}
 
-	os << boost::str(boost::format(
+	os << boost::format(
 		"[Header]\n"
 		"Description=%s\n"
 		"Background=%s\n\n") %
 		(const char *) lDescription %
-		(const char *) mBackImageName);
+		(const char *) mBackImageName;
 
 	// Assign an ir to each polygon and anchor (for a faster output)
 	int lPolygonId = 1;
@@ -697,23 +697,23 @@ bool CHoverCadDoc::GenerateOutputFile(std::ostream &os)
 			}
 
 			if(lParent != -1) {
-				os << boost::str(boost::format(
+				os << boost::format(
 					"[Feature]\n"
 					"Id=%d\n"
 					"Parent=%d\n") %
 					lPolygon->mExportId %
-					lParent);
+					lParent;
 			}
 		}
 		else {
-			os << boost::str(boost::format(
+			os << boost::format(
 				"[Room]\n"
 				"Id=%d\n") %
-				lPolygon->mExportId);
+				lPolygon->mExportId;
 		}
 
 		if(lParent != -1) {
-			os << boost::str(boost::format(
+			os << boost::format(
 				"floor= %f, %d, %d\n"
 				"ceiling= %f, %d, %d\n") %
 				(lPolygon->mFloorLevel / 1000.0) %
@@ -721,19 +721,19 @@ bool CHoverCadDoc::GenerateOutputFile(std::ostream &os)
 				FloorTextureList[lPolygon->mFloorTexture].mTypeId %
 				(lPolygon->mCeilingLevel / 1000.0) %
 				CeilingTextureList[lPolygon->mCeilingTexture].mDllId %
-				CeilingTextureList[lPolygon->mCeilingTexture].mTypeId);
+				CeilingTextureList[lPolygon->mCeilingTexture].mTypeId;
 
 			POSITION lAnchorPos = lPolygon->mAnchorWallList.GetHeadPosition();
 
 			while(lAnchorPos != NULL) {
 				HCAnchorWall *lAnchor = lPolygon->mAnchorWallList.GetNext(lAnchorPos);
 
-				os << boost::str(boost::format(
+				os << boost::format(
 					"wall=%f, %f, %d, %d\n") %
 					(lAnchor->mNode->mX / 1000.0) %
 					(lAnchor->mNode->mY / 1000.0) %
 					WallTextureList[lAnchor->mWallTexture].mDllId %
-					WallTextureList[lAnchor->mWallTexture].mTypeId);
+					WallTextureList[lAnchor->mWallTexture].mTypeId;
 
 			}
 			os << '\n';
@@ -770,7 +770,7 @@ bool CHoverCadDoc::GenerateOutputFile(std::ostream &os)
 				AfxMessageBox(lMessage);
 			}
 			else {
-				os << boost::str(boost::format(
+				os << boost::format(
 					"[Initial_Position]\n"
 					"Section=%d\n"
 					"Position= %f, %f, %f\n"
@@ -781,7 +781,7 @@ bool CHoverCadDoc::GenerateOutputFile(std::ostream &os)
 					(lItem->mNode->mY / 1000.0) %
 					((lItem->mDistanceFromFloor + lParent->mFloorLevel) / 1000.0) %
 					(lItem->mOrientation / 1000.0) %
-					(lCounter + 1));
+					(lCounter + 1);
 			}
 		}
 	}
@@ -797,7 +797,7 @@ bool CHoverCadDoc::GenerateOutputFile(std::ostream &os)
 				HCPolygon *lParent = GetRoomForNode(lItem->mNode);
 
 				if(lParent != NULL) {
-					os << boost::str(boost::format(
+					os << boost::format(
 						"[Free_Element]\n"
 						"Section=%d\n"
 						"Position= %f, %f, %f\n"
@@ -809,7 +809,7 @@ bool CHoverCadDoc::GenerateOutputFile(std::ostream &os)
 						((lItem->mDistanceFromFloor + lParent->mFloorLevel) / 1000.0) %
 						(lItem->mOrientation / 1000.0) %
 						ObjectList[lItem->mElementType].mDllId %
-						ObjectList[lItem->mElementType].mTypeId);
+						ObjectList[lItem->mElementType].mTypeId;
 				}
 			}
 		}
@@ -839,12 +839,12 @@ bool CHoverCadDoc::GenerateOutputFile(std::ostream &os)
 							// Verify if they are the same wall
 							if(lAnchor->GetNext()->mNode == lAnchor2->GetPrev()->mNode) {
 								// They are the same, export the connection
-								os << boost::str(boost::format(
+								os << boost::format(
 									"%d, %d, %d, %d\n") %
 									lAnchor->mPolygon->mExportId %
 									lAnchor->mExportId %
 									lAnchor2->mPolygon->mExportId %
-									lAnchor2->GetPrev()->mExportId);
+									lAnchor2->GetPrev()->mExportId;
 
 								// mark this wall as being exported
 								lAnchor->mExportId = -1;
