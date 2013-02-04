@@ -1291,8 +1291,8 @@ void CHoverCadDoc::ScaleSelection(double pRatio)
 			HCNode *lNode = mNodeList.GetNext(lNodePos);
 
 			if(lNode->mSelected) {
-				lNode->mX = ((lNode->mX - lXCenter) * pRatio) + lXCenter;
-				lNode->mY = ((lNode->mY - lYCenter) * pRatio) + lYCenter;
+				lNode->mX = static_cast<int>(((lNode->mX - lXCenter) * pRatio) + lXCenter);
+				lNode->mY = static_cast<int>(((lNode->mY - lYCenter) * pRatio) + lYCenter);
 			}
 		}
 

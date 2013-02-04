@@ -64,7 +64,7 @@ void CZoomBar::AttachView(CHoverCadView * pView)
 		if(pView != NULL) {
 			mSlider.EnableWindow(TRUE);
 
-			int lSliderValue = 33.0 - 33.0 * log10(pView->GetDisplayRatio());
+			int lSliderValue = static_cast<int>(33.0 - 33.0 * log10(pView->GetDisplayRatio()));
 
 			mSlider.SetPos(lSliderValue);
 		}

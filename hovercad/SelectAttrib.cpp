@@ -54,7 +54,7 @@ int TextToNum(const char *pVal, int pMin, int pMax)
 	double lFloatValue;
 
 	if(sscanf(pVal, "%lf", &lFloatValue) == 1) {
-		lReturnValue = lFloatValue * 1000.0;
+		lReturnValue = static_cast<int>(lFloatValue * 1000.0);
 
 		if(lReturnValue < pMin) {
 			lReturnValue = pMin;

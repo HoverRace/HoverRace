@@ -138,14 +138,16 @@ BOOL CHoverCadView::PreCreateWindow(CREATESTRUCT & cs)
 
 CPoint CHoverCadView::ClientToDoc(CPoint pPoint)
 {
-	return CPoint( /*mDocSize.left+ */ (pPoint.x /*-HC_MARGIN*/ ) / mScaling,
-		/*mDocSize.top + */ (pPoint.y /*+HC_MARGIN */ ) / mScaling);
+	return CPoint(
+		static_cast<int>(/*mDocSize.left+ */ (pPoint.x /*-HC_MARGIN*/ ) / mScaling),
+		static_cast<int>(/*mDocSize.top + */ (pPoint.y /*+HC_MARGIN */ ) / mScaling));
 }
 
 CPoint CHoverCadView::DocToClient(CPoint pPoint)
 {
-	return CPoint((pPoint.x /*-mDocSize.left*/ ) * mScaling /*+HC_MARGIN */ ,
-		(pPoint.y /*-mDocSize.top*/ ) * mScaling /*-HC_MARGIN*/ );
+	return CPoint(
+		static_cast<int>((pPoint.x /*-mDocSize.left*/ ) * mScaling /*+HC_MARGIN */),
+		static_cast<int>((pPoint.y /*-mDocSize.top*/ ) * mScaling /*-HC_MARGIN*/ ));
 }
 
 HCNode *CHoverCadView::GetNodeAtPosition(CPoint pPoint, int pRay, HCNode * pException)
@@ -294,10 +296,10 @@ void CHoverCadView::SelectRegion(CPoint pStart, CPoint pEnd)
 					double lPrevLen = sqrt((double) lPrevPoint.x * lPrevPoint.x + lPrevPoint.y * lPrevPoint.y);
 					double lNextLen = sqrt((double) lNextPoint.x * lNextPoint.x + lNextPoint.y * lNextPoint.y);
 
-					lPrevPoint.x = lPrevPoint.x / lPrevLen;
-					lPrevPoint.y = lPrevPoint.y / lPrevLen;
-					lNextPoint.x = lNextPoint.x / lNextLen;
-					lNextPoint.y = lNextPoint.y / lNextLen;
+					lPrevPoint.x = static_cast<int>(lPrevPoint.x / lPrevLen);
+					lPrevPoint.y = static_cast<int>(lPrevPoint.y / lPrevLen);
+					lNextPoint.x = static_cast<int>(lNextPoint.x / lNextLen);
+					lNextPoint.y = static_cast<int>(lNextPoint.y / lNextLen);
 
 					lPrevPoint += lNodePoint;
 					lNextPoint += lNodePoint;
@@ -532,7 +534,11 @@ void CHoverCadView::OnUpdate(CView * pSender, LPARAM lHint, CObject * pHint)
 
 	mDocSize = CRect(lXMin, lYMin, lXMax, lYMax);
 	// CRect lSize( (lXMax-lXMin)*mScaling+2*HC_MARGIN, (lYMax-lYMin)*mScaling+2*HC_MARGIN ); // doc size in mm
-	CRect lDispSize(lXMin * mScaling - HC_MARGIN, lYMin * mScaling - HC_MARGIN, lXMax * mScaling + HC_MARGIN, lYMax * mScaling + HC_MARGIN);
+	CRect lDispSize(
+		static_cast<int>(lXMin * mScaling - HC_MARGIN),
+		static_cast<int>(lYMin * mScaling - HC_MARGIN),
+		static_cast<int>(lXMax * mScaling + HC_MARGIN),
+		static_cast<int>(lYMax * mScaling + HC_MARGIN));
 
 	// SetScrollSizes( HC_DISP_MODE, lSize );
 
