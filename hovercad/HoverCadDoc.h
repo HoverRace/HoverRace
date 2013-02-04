@@ -230,7 +230,7 @@ class CHoverCadDoc:public CDocument
 		HCNode *DetachAnchor(HCAnchorWall * pAnchor, int pX, int pY);
 		void MergeNode(HCNode * pDest, HCNode * pSrc);
 
-		BOOL GenerateOutputFile(FILE * pFile);
+		bool GenerateOutputFile(std::ostream &os);
 
 		// Info retrieving for drawing
 		POSITION GetNodeListHead();

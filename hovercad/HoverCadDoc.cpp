@@ -636,9 +636,9 @@ void CHoverCadDoc::MergeNode(HCNode * pDest, HCNode * pSrc)
 
 }
 
-BOOL CHoverCadDoc::GenerateOutputFile(FILE * pFile)
+bool CHoverCadDoc::GenerateOutputFile(std::ostream &os)
 {
-	BOOL lReturnValue = TRUE;
+	bool lReturnValue = true;
 	int lCounter;
 
 	// Create header section
@@ -654,7 +654,12 @@ BOOL CHoverCadDoc::GenerateOutputFile(FILE * pFile)
 		}
 	}
 
-	fprintf(pFile, "[Header]\n" "Description=%s\n" "Background=%s\n\n", (const char *) lDescription, (const char *) mBackImageName);
+	os << boost::str(boost::format(
+		"[Header]\n"
+		"Description=%s\n"
+		"Background=%s\n\n") %
+		(const char *) lDescription %
+		(const char *) mBackImageName);
 
 	// Assign an ir to each polygon and anchor (for a faster output)
 	int lPolygonId = 1;
@@ -692,25 +697,46 @@ BOOL CHoverCadDoc::GenerateOutputFile(FILE * pFile)
 			}
 
 			if(lParent != -1) {
-				fprintf(pFile, "[Feature]\n" "Id=%d\n" "Parent=%d\n", lPolygon->mExportId, lParent);
+				os << boost::str(boost::format(
+					"[Feature]\n"
+					"Id=%d\n"
+					"Parent=%d\n") %
+					lPolygon->mExportId %
+					lParent);
 			}
 		}
 		else {
-			fprintf(pFile, "[Room]\n" "Id=%d\n", lPolygon->mExportId);
+			os << boost::str(boost::format(
+				"[Room]\n"
+				"Id=%d\n") %
+				lPolygon->mExportId);
 		}
 
 		if(lParent != -1) {
-			fprintf(pFile, "floor= %f, %d, %d\n" "ceiling= %f, %d, %d\n", lPolygon->mFloorLevel / 1000.0, FloorTextureList[lPolygon->mFloorTexture].mDllId, FloorTextureList[lPolygon->mFloorTexture].mTypeId, lPolygon->mCeilingLevel / 1000.0, CeilingTextureList[lPolygon->mCeilingTexture].mDllId, CeilingTextureList[lPolygon->mCeilingTexture].mTypeId);
+			os << boost::str(boost::format(
+				"floor= %f, %d, %d\n"
+				"ceiling= %f, %d, %d\n") %
+				(lPolygon->mFloorLevel / 1000.0) %
+				FloorTextureList[lPolygon->mFloorTexture].mDllId %
+				FloorTextureList[lPolygon->mFloorTexture].mTypeId %
+				(lPolygon->mCeilingLevel / 1000.0) %
+				CeilingTextureList[lPolygon->mCeilingTexture].mDllId %
+				CeilingTextureList[lPolygon->mCeilingTexture].mTypeId);
 
 			POSITION lAnchorPos = lPolygon->mAnchorWallList.GetHeadPosition();
 
 			while(lAnchorPos != NULL) {
 				HCAnchorWall *lAnchor = lPolygon->mAnchorWallList.GetNext(lAnchorPos);
 
-				fprintf(pFile, "wall=%f, %f, %d, %d\n", lAnchor->mNode->mX / 1000.0, lAnchor->mNode->mY / 1000.0, WallTextureList[lAnchor->mWallTexture].mDllId, WallTextureList[lAnchor->mWallTexture].mTypeId);
+				os << boost::str(boost::format(
+					"wall=%f, %f, %d, %d\n") %
+					(lAnchor->mNode->mX / 1000.0) %
+					(lAnchor->mNode->mY / 1000.0) %
+					WallTextureList[lAnchor->mWallTexture].mDllId %
+					WallTextureList[lAnchor->mWallTexture].mTypeId);
 
 			}
-			fprintf(pFile, "\n");
+			os << '\n';
 		}
 	}
 
@@ -744,7 +770,18 @@ BOOL CHoverCadDoc::GenerateOutputFile(FILE * pFile)
 				AfxMessageBox(lMessage);
 			}
 			else {
-				fprintf(pFile, "[Initial_Position]\n" "Section=%d\n" "Position= %f, %f, %f\n" "Orientation= %f\n" "Team= %d\n\n", lParent->mExportId, lItem->mNode->mX / 1000.0, lItem->mNode->mY / 1000.0, (lItem->mDistanceFromFloor + lParent->mFloorLevel) / 1000.0, lItem->mOrientation / 1000.0, lCounter + 1);
+				os << boost::str(boost::format(
+					"[Initial_Position]\n"
+					"Section=%d\n"
+					"Position= %f, %f, %f\n"
+					"Orientation= %f\n"
+					"Team= %d\n\n") %
+					lParent->mExportId %
+					(lItem->mNode->mX / 1000.0) %
+					(lItem->mNode->mY / 1000.0) %
+					((lItem->mDistanceFromFloor + lParent->mFloorLevel) / 1000.0) %
+					(lItem->mOrientation / 1000.0) %
+					(lCounter + 1));
 			}
 		}
 	}
@@ -760,14 +797,26 @@ BOOL CHoverCadDoc::GenerateOutputFile(FILE * pFile)
 				HCPolygon *lParent = GetRoomForNode(lItem->mNode);
 
 				if(lParent != NULL) {
-					fprintf(pFile, "[Free_Element]\n" "Section=%d\n" "Position= %f, %f, %f\n" "Orientation= %f\n" "Element_Type= %d, %d\n\n", lParent->mExportId, lItem->mNode->mX / 1000.0, lItem->mNode->mY / 1000.0, (lItem->mDistanceFromFloor + lParent->mFloorLevel) / 1000.0, lItem->mOrientation / 1000.0, ObjectList[lItem->mElementType].mDllId, ObjectList[lItem->mElementType].mTypeId);
+					os << boost::str(boost::format(
+						"[Free_Element]\n"
+						"Section=%d\n"
+						"Position= %f, %f, %f\n"
+						"Orientation= %f\n"
+						"Element_Type= %d, %d\n\n") %
+						lParent->mExportId %
+						(lItem->mNode->mX / 1000.0) %
+						(lItem->mNode->mY / 1000.0) %
+						((lItem->mDistanceFromFloor + lParent->mFloorLevel) / 1000.0) %
+						(lItem->mOrientation / 1000.0) %
+						ObjectList[lItem->mElementType].mDllId %
+						ObjectList[lItem->mElementType].mTypeId);
 				}
 			}
 		}
 	}
 
 	// export connections
-	fprintf(pFile, "[Connection_List]\n");
+	os << "[Connection_List]\n";
 
 	lPolygonPos = mPolygonList.GetHeadPosition();
 
@@ -790,7 +839,12 @@ BOOL CHoverCadDoc::GenerateOutputFile(FILE * pFile)
 							// Verify if they are the same wall
 							if(lAnchor->GetNext()->mNode == lAnchor2->GetPrev()->mNode) {
 								// They are the same, export the connection
-								fprintf(pFile, "%d, %d, %d, %d\n", lAnchor->mPolygon->mExportId, lAnchor->mExportId, lAnchor2->mPolygon->mExportId, lAnchor2->GetPrev()->mExportId);
+								os << boost::str(boost::format(
+									"%d, %d, %d, %d\n") %
+									lAnchor->mPolygon->mExportId %
+									lAnchor->mExportId %
+									lAnchor2->mPolygon->mExportId %
+									lAnchor2->GetPrev()->mExportId);
 
 								// mark this wall as being exported
 								lAnchor->mExportId = -1;
@@ -803,7 +857,7 @@ BOOL CHoverCadDoc::GenerateOutputFile(FILE * pFile)
 		}
 	}
 
-	fprintf(pFile, "\n\n");
+	os << "\n\n";
 
 	return lReturnValue;
 }
@@ -1621,52 +1675,40 @@ void CHoverCadDoc::OnFileCompile()
 		wchar_t lTempPath[MAX_PATH + 1];
 		wchar_t lTempFileName[MAX_PATH + 1];
 
-		if (GetTempPathW(MAX_PATH, lTempPath) &&
-			GetTempFileNameW(lTempPath, L"HC", 0, lTempFileName))
-		{
-			FILE *lFile = OS::FOpen(lTempFileName, "w");
+		std::stringstream levelData;
+		if (GenerateOutputFile(levelData)) {
+			levelData.seekg(0, std::ios::beg);
 
-			if(lFile != NULL) {
-				// Generate output
-				BOOL lSuccess = GenerateOutputFile(lFile);
-				fclose(lFile);
+			OS::path_t outputFilename = selectedFilename;
+			std::ostringstream compilationLogStream;
+			MazeCompiler::TrackCompilationLogPtr compileLog(new CompilationLog(compilationLogStream));
 
-				if (lSuccess) {
-					OS::path_t inputFilename = lTempFileName;
-					OS::path_t outputFilename = selectedFilename;
-					std::ostringstream compilationLogStream;
-					MazeCompiler::TrackCompilationLogPtr compileLog(new CompilationLog(compilationLogStream));
+			try {
+				MazeCompiler::TrackCompiler(compileLog, outputFilename).
+					Compile(levelData);
 
-					try {
-						MazeCompiler::TrackCompiler(compileLog, outputFilename).
-							Compile(inputFilename);
-
-						std::ostringstream oss;
-						oss << _("Track compiled successfully.") <<
-							"\n\n" <<
-							_("Compiler log:") <<
-							"\n" <<
-							compilationLogStream.str();
-						MessageBoxW(NULL, Str::UW(oss.str()), L"Compile Track", MB_OK);
-					}
-					catch (MazeCompiler::TrackCompileExn &ex) {
-						MessageBoxW(NULL, Str::UW(ex.what()), L"Compile Track", MB_OK | MB_ICONWARNING);
-					}
-					catch (Exception &ex) {
-						std::ostringstream oss;
-						oss <<
-							"***\n\n" <<
-							_("You found a bug!") << "\n\n" <<
-							ex.what() << "\n\n" 
-							"***\n\n";
-						MessageBoxW(NULL, Str::UW(compilationLogStream.str()), L"Compile Track", MB_OK | MB_ICONWARNING);
-					}
-				}
-
-				// Delete temp file
-				_wunlink(lTempFileName);
+				std::ostringstream oss;
+				oss << _("Track compiled successfully.") <<
+					"\n\n" <<
+					_("Compiler log:") <<
+					"\n" <<
+					compilationLogStream.str();
+				MessageBoxW(NULL, Str::UW(oss.str()), L"Compile Track", MB_OK);
+			}
+			catch (MazeCompiler::TrackCompileExn &ex) {
+				MessageBoxW(NULL, Str::UW(ex.what()), L"Compile Track", MB_OK | MB_ICONWARNING);
+			}
+			catch (Exception &ex) {
+				std::ostringstream oss;
+				oss <<
+					"***\n\n" <<
+					_("You found a bug!") << "\n\n" <<
+					ex.what() << "\n\n" 
+					"***\n\n";
+				MessageBoxW(NULL, Str::UW(compilationLogStream.str()), L"Compile Track", MB_OK | MB_ICONWARNING);
 			}
 		}
+
 	}
 }
 
