@@ -40,6 +40,8 @@ using namespace HoverRace;
 using namespace HoverRace::Client;
 using namespace HoverRace::Util;
 
+namespace fs = boost::filesystem;
+
 namespace {
 	// CancelFlag that checks if the thread has been interrupted.
 	// Note: This cannot be moved to the engine since it must be in the same
@@ -102,36 +104,46 @@ void CheckUpdateServerDialog::ShowModal(HINSTANCE hinst, HWND parent)
 					// only update if the user hit ok
 					// strip updates.php from url
 					string baseUrl = url.substr(0, url.rfind('/'));
-					//FIXME: Use OS::path_t throughout.
-					std::string defaultPath((const char*)Str::PU(Config::GetInstance()->GetBaseDataPath().file_string().c_str()));
-					if(DownloadUpdateDialog(baseUrl, dlPtr->updateUrl, 
-						defaultPath).ShowModal(hinst, parent)) {
+					OS::path_t defaultPath = Config::GetInstance()->GetBaseDataPath();
+					if(DownloadUpdateDialog(baseUrl, Str::UP(dlPtr->updateUrl), defaultPath).
+						ShowModal(hinst, parent))
+					{
 						// download was successful
 						// assemble arguments for updater
 						// theoretically, the root directory of this instance of HoverRace should just
 						// be ../ but, it would be a good idea to write code that checks this in the future
-						string curPath = boost::filesystem::current_path().file_string();
-						_chdir("../");
-						string hrPath = boost::filesystem::current_path().file_string();
-						_chdir(curPath.c_str());
-						string patchFile = defaultPath + "\\" + dlPtr->updateUrl;
+#						if BOOST_FILESYSTEM_VERSION == 2
+							OS::path_t curPath = fs::current_path<OS::path_t>();
+#						else
+							OS::path_t curPath = fs::current_path();
+#						endif
+						_wchdir(L"../");
+#						if BOOST_FILESYSTEM_VERSION == 2
+							OS::path_t hrPath = fs::current_path<OS::path_t>();
+#						else
+							OS::path_t hrPath = fs::current_path();
+#						endif
+						_wchdir(Str::PW(curPath));
+						OS::path_t patchFile = defaultPath / Str::UP(dlPtr->updateUrl);
 
 						// temporarily move updater and dependencies into "safe" area
 						// these files should be checked for and removed at HR startup
-						string updaterDir = defaultPath + "\\updater_tmp\\";
-						if(boost::filesystem::exists(updaterDir)) // in case cleanup failed
-							boost::filesystem::remove_all(updaterDir);
-						boost::filesystem::create_directory(updaterDir);
-						boost::filesystem::copy_file("updater.exe", updaterDir + "updater.exe");
-						boost::filesystem::copy_file("LiteZip.dll", updaterDir + "LiteZip.dll");
-						boost::filesystem::copy_file("LiteUnzip.dll", updaterDir + "LiteUnzip.dll");
+						OS::path_t updaterDir = defaultPath / L"updater_tmp";
+						if (fs::exists(updaterDir)) // in case cleanup failed
+							fs::remove_all(updaterDir);
+						fs::create_directory(updaterDir);
+						fs::copy_file(L"updater.exe", updaterDir / L"updater.exe");
+						fs::copy_file(L"LiteZip.dll", updaterDir / L"LiteZip.dll");
+						fs::copy_file(L"LiteUnzip.dll", updaterDir / L"LiteUnzip.dll");
 
 						// now, run the updater
-						string cmdLine = "updater.exe \"" + hrPath + "\" \"" + patchFile + "\"";
-						_chdir(updaterDir.c_str());
-						if(system(cmdLine.c_str()) != 0)
+						wstring cmdLine = L"updater.exe "
+							L"\"" + (const wstring&)Str::PW(hrPath) + L"\" "
+							L"\"" + (const wstring&)Str::PW(patchFile) + L"\"";
+						_wchdir(Str::PW(updaterDir));
+						if(_wsystem(cmdLine.c_str()) != 0)
 							MessageBoxW(NULL, Str::UW(_("Problem running updater.exe!")), PACKAGE_NAME_L, MB_ICONWARNING | MB_OK);
-						_chdir(curPath.c_str()); // change back to original working directory
+						_wchdir(Str::PW(curPath)); // change back to original working directory
 					}
 					// If that was not executed, there was a failure during download of the update,
 					// but DownloadUpdateDialog notifies the user so we do not need to.

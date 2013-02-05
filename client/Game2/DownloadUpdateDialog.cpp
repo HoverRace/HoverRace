@@ -43,6 +43,8 @@ using HoverRace::Util::Config;
 using namespace std;
 using namespace HoverRace::Util;
 
+namespace fs = boost::filesystem;
+
 #define INIT_CAPACITY (5 * 1024 * 1024)
 #define MAX_CAPACITY (20 * 1024 * 1024)
 
@@ -56,7 +58,7 @@ namespace Client {
  * @param filename Name of file to download
  * @param destDir The destination directory we will put the update into
  */
-DownloadUpdateDialog::DownloadUpdateDialog(const string &baseUrl, const string &filename, const string &destDir) :
+DownloadUpdateDialog::DownloadUpdateDialog(const string &baseUrl, const OS::path_t &filename, const OS::path_t &destDir) :
 	baseUrl(baseUrl), filename(filename), destDir(destDir), dlgHwnd(NULL), state(ST_INITIALIZING),
 	bufSize(0), bufCapacity(INIT_CAPACITY)
 {
@@ -186,15 +188,15 @@ void DownloadUpdateDialog::ThreadProc()
 {
 	Config *cfg = Config::GetInstance();
 
-	boost::filesystem::create_directories(destDir);
+	fs::create_directories(destDir);
 
-	string destFile = destDir + "/" + filename;
+	OS::path_t destFile = destDir / filename;
 
-	outFile = fopen(destFile.c_str(), "wb");
+	outFile = OS::FOpen(destFile, "wb");
 
 	if(outFile == NULL) {
 		// opening file failed
-		string errMsg = boost::str(boost::format(_("Cannot open file %s for writing!"))	% destFile);
+		string errMsg = boost::str(boost::format(_("Cannot open file %s for writing!"))	% Str::PU(destFile));
 
 		MessageBoxW(NULL, Str::UW(errMsg.c_str()), PACKAGE_NAME_L, MB_ICONWARNING | MB_OK);
 
@@ -224,7 +226,7 @@ void DownloadUpdateDialog::ThreadProc()
 		*/
 		
 		curl_easy_setopt(updateDl, CURLOPT_USERAGENT, cfg->GetUserAgentId().c_str());
-		curl_easy_setopt(updateDl, CURLOPT_URL, (baseUrl + "/" + filename).c_str());
+		curl_easy_setopt(updateDl, CURLOPT_URL, (baseUrl + "/" + (const std::string&)Str::PU(filename)).c_str());
 
 		if(!cancel) {
 			SetState(ST_DOWNLOADING);
@@ -239,7 +241,7 @@ void DownloadUpdateDialog::ThreadProc()
 			if(bufSize <= 128) {
 				std::string message = boost::str(boost::format(
 					_("Cannot update!  File %s not found.  Contact a site administrator."))
-					% (baseUrl + "/" + filename));
+					% (baseUrl + "/" + (const std::string&)Str::PU(filename)));
 
 				MessageBoxW(dlgHwnd, Str::UW(message.c_str()), PACKAGE_NAME_L, MB_ICONWARNING | MB_OK);
 				cancel = true;
@@ -267,7 +269,7 @@ BOOL DownloadUpdateDialog::DlgProc(HWND hwnd, UINT message, WPARAM wparam, LPARA
 			dlgHwnd = hwnd;
 			SetWindowTextW(hwnd, Str::UW(_("Update Download")));
 			SetDlgItemTextW(hwnd, IDC_DLITEM, Str::UW(_("Downloading Update:")));
-			SetDlgItemTextW(hwnd, IDC_ITEM_NAME, Str::UW(filename.c_str()));
+			SetDlgItemTextW(hwnd, IDC_ITEM_NAME, Str::PW(filename));
 			UpdateDialogProgress(hwnd);
 			retv = TRUE;
 			break;

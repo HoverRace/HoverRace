@@ -23,6 +23,8 @@
 
 #include <string>
 
+#include "../../engine/Util/OS.h"
+
 typedef void CURL;
 
 namespace HoverRace {
@@ -37,7 +39,7 @@ namespace Client {
 class DownloadUpdateDialog
 {
 	public:
-		DownloadUpdateDialog(const std::string &baseUrl, const std::string &filename, const std::string &destDir);
+		DownloadUpdateDialog(const std::string &baseUrl, const Util::OS::path_t &filename, const Util::OS::path_t &destDir);
 		~DownloadUpdateDialog();
 
 		bool ShowModal(HINSTANCE hinst, HWND parent);
@@ -65,8 +67,8 @@ class DownloadUpdateDialog
 
 	private:
 		std::string baseUrl;
-		std::string filename;
-		std::string destDir;
+		Util::OS::path_t filename;
+		Util::OS::path_t destDir;
 
 		HWND dlgHwnd;
 
