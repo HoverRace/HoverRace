@@ -39,7 +39,7 @@
 #include <boost/version.hpp>
 #if BOOST_VERSION >= 104400
 #	define BOOST_FILESYSTEM_VERSION 3
-#	define BOOST_FILESYSTEM_DEPRECATED
+#	define BOOST_FILESYSTEM_NO_DEPRECATED
 #else
 #	define BOOST_FILESYSTEM_VERSION 2
 #endif
@@ -57,6 +57,8 @@
 #include <vector>
 
 #include <boost/bind.hpp>
+#include <boost/filesystem/convenience.hpp>
+#include <boost/filesystem/path.hpp>
 #include <boost/foreach.hpp>
 #include <boost/format.hpp>
 #include <boost/lexical_cast.hpp>
