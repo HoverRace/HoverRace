@@ -730,7 +730,7 @@ void InternetRoom::OpenChatLog()
 		chatLog = NULL;
 		AddChatLine(_("Unable to create chat log file:"));
 		AddChatLine(_("Unable to open file for writing:"));
-		AddChatLine(Str::PU(logPath.file_string().c_str()));
+		AddChatLine(Str::PU(logPath));
 		return;
 	}
 
@@ -744,7 +744,7 @@ void InternetRoom::OpenChatLog()
 		timestamp << std::endl << std::endl;
 
 	AddChatLine(_("Saving chat session to:"), true);
-	AddChatLine(Str::PU(logPath.string().c_str()), true);
+	AddChatLine(Str::PU(logPath), true);
 }
 
 /***

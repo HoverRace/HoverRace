@@ -306,5 +306,5 @@ void Emitter::Value(float val)
  */
 void Emitter::Value(const HoverRace::Util::OS::path_t &path)
 {
-	Value(static_cast<const char*>(Str::PU(path.file_string().c_str())));
+	Value(static_cast<const char*>(Str::PU(path)));
 }

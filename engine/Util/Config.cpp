@@ -762,7 +762,7 @@ void Config::Save()
 		if (!fs::create_directories(cfgPath)) {
 			std::string msg(_("Unable to create directory"));
 			msg += ": ";
-			msg += (const char*)Str::PU(cfgPath.file_string().c_str());
+			msg += (const char*)Str::PU(cfgPath);
 			throw ConfigExn(msg.c_str());
 		}
 	}
@@ -771,7 +771,7 @@ void Config::Save()
 	if (out == NULL) {
 		std::string msg(_("Unable to create configuration file"));
       msg += ": ";
-		msg += (const char*)Str::PU(cfgfile.file_string().c_str());
+		msg += (const char*)Str::PU(cfgfile);
 		throw ConfigExn(msg.c_str());
 	}
 

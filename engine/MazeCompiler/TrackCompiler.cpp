@@ -56,7 +56,7 @@ void TrackCompiler::Compile(const Util::OS::path_t &inputFilename) const
 	if (in.fail()) {
 		throw TrackCompileExn(boost::str(
 			boost::format(_("Unable to open the input file: %s")) %
-				Str::PU(inputFilename.file_string())));
+				Str::PU(inputFilename)));
 	}
 
 	Compile(in);
@@ -75,11 +75,11 @@ void TrackCompiler::Compile(std::istream &in) const
 	if (!outFile.CreateForWrite(outputFilename, 4, "\x8\rHoverRace track file\n\x1a")) {
 		throw TrackCompileExn(boost::str(
 			boost::format(_("Unable to create the output file: %s")) %
-				Str::PU(outputFilename.file_string())));
+				Str::PU(outputFilename)));
 	}
 	log->Info(boost::str(
 		boost::format(_("Compiling track (%s)")) %
-			Str::PU(outputFilename.file_string())));
+			Str::PU(outputFilename)));
 
 	// Header.
 	if (!outFile.BeginANewRecord()) {

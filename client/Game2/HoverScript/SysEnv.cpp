@@ -134,13 +134,13 @@ void SysEnv::RunScript(const OS::path_t &filename)
 	if (!fs::exists(scriptPath)) {
 		LogError(boost::str(
 			boost::format("Init script file not found: %s (interpreted as %s)") %
-				Str::PU(filename.file_string().c_str()) %
-				Str::PU(scriptPath.file_string().c_str())));
+				Str::PU(filename) %
+				Str::PU(scriptPath)));
 		return;
 	}
 	
 	std::string chunkName("@");
-	chunkName += (const char*)Str::PU(scriptPath.filename().c_str());
+	chunkName += (const char*)Str::PU(scriptPath);
 
 	// Read and submit the whole script at once.
 	fs::ifstream ifs(scriptPath, std::ios_base::in);

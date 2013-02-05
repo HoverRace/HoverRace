@@ -59,6 +59,7 @@
 #include "ResSoundBuilder.h"
 #include "ResourceLibBuilder.h"
 #include "../../engine/ColorTools/ColorTools.h"
+#include "../../engine/Util/Str.h"
 
 #ifdef WITH_SDL
 #	ifdef _WIN32
@@ -148,7 +149,7 @@ BOOL ParseInputFile(const OS::path_t &pFileName)
 
 	if(lFile == NULL) {
 		lReturnValue = FALSE;
-		fprintf(stderr, "%s: %s (%s).\n", _("ERROR"), _("unable to open input file"), pFileName.file_string().c_str());
+		fprintf(stderr, "%s: %s (%s).\n", _("ERROR"), _("unable to open input file"), Str::PU(pFileName));
 	}
 	else {
 		char lLineBuffer[250];

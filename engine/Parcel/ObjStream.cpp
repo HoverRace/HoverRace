@@ -32,7 +32,7 @@ namespace HoverRace {
 namespace Parcel {
 
 ObjStreamExn::ObjStreamExn(const Util::OS::path_t &path, const std::string &details) :
-	SUPER((const char*)Str::PU(path.file_string().c_str()))
+	SUPER((const char*)Str::PU(path))
 {
 	std::string &msg = GetMessage();
 	msg += ": ";
