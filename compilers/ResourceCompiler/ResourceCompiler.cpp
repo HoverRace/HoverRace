@@ -149,7 +149,7 @@ BOOL ParseInputFile(const OS::path_t &pFileName)
 
 	if(lFile == NULL) {
 		lReturnValue = FALSE;
-		fprintf(stderr, "%s: %s (%s).\n", _("ERROR"), _("unable to open input file"), Str::PU(pFileName));
+		fprintf(stderr, "%s: %s (%s).\n", _("ERROR"), _("unable to open input file"), (const char*)Str::PU(pFileName));
 	}
 	else {
 		char lLineBuffer[250];
