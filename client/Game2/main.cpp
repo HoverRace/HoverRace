@@ -55,13 +55,6 @@ using HoverRace::Util::Config;
 using HoverRace::Util::OS;
 namespace Str = HoverRace::Util::Str;
 
-#if 0
-#if defined(_WIN32) && defined(_DEBUG)
-#	include <mfcleakfix.h>
-	static int foo = use_ignore_mfc_leaks();
-#endif
-#endif
-
 #ifdef _WIN32
 	static HINSTANCE hinstance;
 #endif
