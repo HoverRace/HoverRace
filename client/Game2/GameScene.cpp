@@ -125,6 +125,15 @@ void GameScene::Render()
 				simTime, session->GetBackImage());
 		}
 	}
+
+	if (highObserver != NULL) {
+		highObserver->Render(videoBuf, session);
+	}
+	if (highConsole != NULL) {
+		highConsole->Render(videoBuf);
+	}
+
+	session->IncFrameCount();
 }
 
 }  // namespace HoverScript
