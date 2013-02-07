@@ -16,10 +16,8 @@
 // Neutral (Default) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEUD)
-#ifdef _WIN32
 LANGUAGE LANG_NEUTRAL, SUBLANG_DEFAULT
 #pragma code_page(1252)
-#endif //_WIN32
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -47,7 +45,7 @@ IDR_STATUS_IDS          BITMAP                  "res\\status_i.bmp"
 // Toolbar
 //
 
-IDR_MAINFRAME TOOLBAR  16, 15
+IDR_MAINFRAME TOOLBAR 16, 15
 BEGIN
     BUTTON      ID_FILE_NEW
     BUTTON      ID_FILE_OPEN
@@ -61,7 +59,7 @@ BEGIN
     BUTTON      ID_HELP_HELP
 END
 
-IDR_TOOLS_BAR TOOLBAR  16, 15
+IDR_TOOLS_BAR TOOLBAR 16, 15
 BEGIN
     BUTTON      IDC_SELECT
     BUTTON      IDC_HAMMER
@@ -75,7 +73,7 @@ BEGIN
     BUTTON      IDC_INSERT_NODE
 END
 
-IDR_STATUS_IDS TOOLBAR  16, 15
+IDR_STATUS_IDS TOOLBAR 16, 15
 BEGIN
     BUTTON      ID_MOUSE_POS
 END
@@ -86,7 +84,7 @@ END
 // Menu
 //
 
-IDR_MAINFRAME MENU 
+IDR_MAINFRAME MENU
 BEGIN
     POPUP "&File"
     BEGIN
@@ -114,7 +112,7 @@ BEGIN
     END
 END
 
-IDR_HCADTYPE MENU 
+IDR_HCADTYPE MENU
 BEGIN
     POPUP "&File"
     BEGIN
@@ -173,48 +171,37 @@ END
 // Dialog
 //
 
-IDD_ABOUTBOX DIALOG  0, 0, 188, 55
+IDD_ABOUTBOX DIALOG 0, 0, 188, 55
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "About HoverCad"
 FONT 8, "MS Sans Serif"
 BEGIN
     ICON            IDR_MAINFRAME,IDC_STATIC,7,7,21,20
     LTEXT           "HoverCAD",IDC_STATIC,40,10,101,8,SS_NOPREFIX
-    LTEXT           "Copyright ©1996,1997 GrokkSoft inc. ",IDC_STATIC,40,25,
-                    141,8
+    LTEXT           "Copyright ©1996,1997 GrokkSoft inc. ",IDC_STATIC,40,25,141,8
     DEFPUSHBUTTON   "OK",IDOK,149,7,32,14,WS_GROUP
 END
 
-IDD_ATTRIB_TOOL DIALOG  0, 0, 113, 206
+IDD_ATTRIB_TOOL DIALOG 0, 0, 113, 206
 STYLE DS_SETFONT | WS_CHILD
 FONT 8, "MS Sans Serif"
 BEGIN
-    COMBOBOX        IDC_WALL_TEXTURE,7,18,99,83,CBS_DROPDOWNLIST | CBS_SORT | 
-                    WS_VSCROLL | WS_TABSTOP
-    COMBOBOX        IDC_CEILING_TEXTURE,7,45,99,83,CBS_DROPDOWNLIST | 
-                    CBS_SORT | WS_VSCROLL | WS_TABSTOP
-    COMBOBOX        IDC_FLOOR_TEXTURE,7,73,99,83,CBS_DROPDOWNLIST | CBS_SORT | 
-                    WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_WALL_TEXTURE,7,18,99,83,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_CEILING_TEXTURE,7,45,99,83,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_FLOOR_TEXTURE,7,73,99,83,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
     EDITTEXT        IDC_CEILING_LEVEL,7,102,28,14,ES_AUTOHSCROLL
-    CONTROL         "Spin1",IDC_CEILING_LEVEL_SPIN,"msctls_updown32",
-                    UDS_ARROWKEYS | NOT WS_VISIBLE,35,102,10,14
+    CONTROL         "Spin1",IDC_CEILING_LEVEL_SPIN,"msctls_updown32",UDS_ARROWKEYS | NOT WS_VISIBLE,35,102,10,14
     EDITTEXT        IDC_FLOOR_LEVEL,61,102,28,14,ES_AUTOHSCROLL
-    CONTROL         "Spin1",IDC_FLOOR_LEVEL_SPIN,"msctls_updown32",
-                    UDS_ARROWKEYS | NOT WS_VISIBLE,90,102,10,14
+    CONTROL         "Spin1",IDC_FLOOR_LEVEL_SPIN,"msctls_updown32",UDS_ARROWKEYS | NOT WS_VISIBLE,90,102,10,14
     EDITTEXT        IDC_X_POS,17,134,28,14,ES_AUTOHSCROLL
-    CONTROL         "Spin1",IDC_X_POS_SPIN,"msctls_updown32",UDS_ARROWKEYS | 
-                    NOT WS_VISIBLE,45,134,10,14
+    CONTROL         "Spin1",IDC_X_POS_SPIN,"msctls_updown32",UDS_ARROWKEYS | NOT WS_VISIBLE,45,134,10,14
     EDITTEXT        IDC_Y_POS,68,134,28,14,ES_AUTOHSCROLL
-    CONTROL         "Spin1",IDC_Y_POS_SPIN,"msctls_updown32",UDS_ARROWKEYS | 
-                    NOT WS_VISIBLE,96,134,10,14
+    CONTROL         "Spin1",IDC_Y_POS_SPIN,"msctls_updown32",UDS_ARROWKEYS | NOT WS_VISIBLE,96,134,10,14
     EDITTEXT        IDC_Z_POS,17,158,28,14,ES_AUTOHSCROLL
-    CONTROL         "Spin1",IDC_Z_POS_SPIN,"msctls_updown32",UDS_ARROWKEYS | 
-                    NOT WS_VISIBLE,45,158,10,14
+    CONTROL         "Spin1",IDC_Z_POS_SPIN,"msctls_updown32",UDS_ARROWKEYS | NOT WS_VISIBLE,45,158,10,14
     EDITTEXT        IDC_DEG_POS,68,158,28,14,ES_AUTOHSCROLL
-    CONTROL         "Spin1",IDC_DEG_POS_SPIN,"msctls_updown32",UDS_ARROWKEYS | 
-                    NOT WS_VISIBLE,96,158,10,14
-    COMBOBOX        IDC_ITEM_TYPE,7,187,99,83,CBS_DROPDOWNLIST | CBS_SORT | 
-                    WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Spin1",IDC_DEG_POS_SPIN,"msctls_updown32",UDS_ARROWKEYS | NOT WS_VISIBLE,96,158,10,14
+    COMBOBOX        IDC_ITEM_TYPE,7,187,99,83,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
     LTEXT           "Wall texture",IDC_STATIC,7,7,46,8
     LTEXT           "Floor texture",IDC_STATIC,7,62,46,8
     LTEXT           "Ceiling texture",IDC_STATIC,7,34,46,8
@@ -228,42 +215,37 @@ BEGIN
     LTEXT           "Item type",IDC_STATIC,7,176,46,8
 END
 
-IDD_DIALOGBAR DIALOG  0, 0, 330, 36
+IDD_DIALOGBAR DIALOG 0, 0, 330, 36
 STYLE DS_SETFONT | WS_CHILD
 FONT 8, "MS Sans Serif"
 BEGIN
     LTEXT           "TODO: layout dialog bar",IDC_STATIC,126,4,77,8
     PUSHBUTTON      "Button1",IDC_TESTBTN1,9,13,50,14
-    CONTROL         "Slider1",IDC_TESTSLD1,"msctls_trackbar32",TBS_BOTH | 
-                    TBS_NOTICKS | WS_TABSTOP,76,14,100,15
-    CONTROL         "Spin1",IDC_TESTSPIN1,"msctls_updown32",UDS_ARROWKEYS,
-                    224,10,10,14
+    CONTROL         "Slider1",IDC_TESTSLD1,"msctls_trackbar32",TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,76,14,100,15
+    CONTROL         "Spin1",IDC_TESTSPIN1,"msctls_updown32",UDS_ARROWKEYS,224,10,10,14
 END
 
-IDD_ZOOM_BAR DIALOG  0, 0, 17, 83
+IDD_ZOOM_BAR DIALOG 0, 0, 17, 83
 STYLE DS_SETFONT | DS_3DLOOK | WS_CHILD
 FONT 8, "MS Sans Serif"
 BEGIN
-    CONTROL         "Slider1",IDC_ZOOM_SLIDER,"msctls_trackbar32",TBS_VERT | 
-                    TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,1,11,14,71
+    CONTROL         "Slider1",IDC_ZOOM_SLIDER,"msctls_trackbar32",TBS_VERT | TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,1,11,14,71
     CONTROL         142,IDC_STATIC,"Static",SS_BITMAP,6,5,6,6
 END
 
-IDD_DOC_ATTR DIALOG  0, 0, 112, 110
+IDD_DOC_ATTR DIALOG 0, 0, 112, 110
 STYLE DS_SETFONT | WS_CHILD
 FONT 8, "MS Sans Serif"
 BEGIN
     EDITTEXT        IDC_BACKGROUND_NAME,7,12,85,14,ES_AUTOHSCROLL
     PUSHBUTTON      "...",IDC_BROWSE,90,12,15,14,BS_NOTIFY | WS_GROUP
-    EDITTEXT        IDC_TRACK_DESC,7,38,98,69,ES_MULTILINE | ES_AUTOVSCROLL | 
-                    ES_WANTRETURN
+    EDITTEXT        IDC_TRACK_DESC,7,38,98,69,ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN
     LTEXT           "Background image:",IDC_STATIC,7,3,60,8
     LTEXT           "Track description:",IDC_STATIC,7,28,61,8
 END
 
-IDD_SCALE_SELECTION DIALOG  0, 0, 144, 65
-STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | 
-    WS_SYSMENU
+IDD_SCALE_SELECTION DIALOG 0, 0, 144, 65
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 CAPTION "Selection Scaling"
 FONT 8, "MS Sans Serif"
 BEGIN
@@ -281,8 +263,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,0,0
- PRODUCTVERSION 1,0,0,0
+ FILEVERSION 2,0,0,0
+ PRODUCTVERSION 2,0,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -299,12 +281,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "GrokkSoft inc."
             VALUE "FileDescription", "HOVERCAD MFC Application"
-            VALUE "FileVersion", "1, 0, 0, 0"
+            VALUE "FileVersion", "2.0.0.0"
             VALUE "InternalName", "HOVERCAD"
             VALUE "LegalCopyright", "Copyright © 1996"
             VALUE "OriginalFilename", "HOVERCAD.EXE"
             VALUE "ProductName", "HOVERCAD Application"
-            VALUE "ProductVersion", "1, 0, 0, 0"
+            VALUE "ProductVersion", "2.0.0.0"
         END
     END
     BLOCK "VarFileInfo"
@@ -320,7 +302,7 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO 
+GUIDELINES DESIGNINFO
 BEGIN
     IDD_ABOUTBOX, DIALOG
     BEGIN
@@ -389,19 +371,19 @@ IDC_POINTER_HAMMER      CURSOR                  "res\\cur00005.cur"
 // String Table
 //
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDR_MAINFRAME           "HoverCAD(v1.01)"
     IDR_HCADTYPE            "\nHCad\nHCad\nHCad Files (*.tr)\n.TR\nHCad\nHCad Document"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     AFX_IDS_APP_TITLE       "HoverCad"
     AFX_IDS_IDLEMESSAGE     "Ready"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_INDICATOR_EXT        "EXT"
     ID_INDICATOR_CAPS       "CAP"
@@ -411,7 +393,7 @@ BEGIN
     ID_INDICATOR_REC        "REC"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_FILE_NEW             "Create a new document\nNew"
     ID_FILE_OPEN            "Open an existing document\nOpen"
@@ -424,13 +406,13 @@ BEGIN
     ID_FILE_PRINT_PREVIEW   "Display full pages\nPrint Preview"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_APP_ABOUT            "Display program information, version number and copyright\nAbout"
     ID_APP_EXIT             "Quit the application; prompts to save documents\nExit"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_FILE_MRU_FILE1       "Open this document"
     ID_FILE_MRU_FILE2       "Open this document"
@@ -450,13 +432,13 @@ BEGIN
     ID_FILE_MRU_FILE16      "Open this document"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_NEXT_PANE            "Switch to the next window pane\nNext Pane"
     ID_PREV_PANE            "Switch back to the previous window pane\nPrevious Pane"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_WINDOW_NEW           "Open another window for the active document\nNew Window"
     ID_WINDOW_ARRANGE       "Arrange icons at the bottom of the window\nArrange Icons"
@@ -466,7 +448,7 @@ BEGIN
     ID_WINDOW_SPLIT         "Split the active window into panes\nSplit"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_EDIT_CLEAR           "Erase the selection\nErase"
     ID_EDIT_CLEAR_ALL       "Erase everything\nErase All"
@@ -481,13 +463,13 @@ BEGIN
     ID_EDIT_REDO            "Redo the previously undone action\nRedo"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_VIEW_TOOLBAR         "Show or hide the standard toolbar\nToggle Standard ToolBar"
     ID_VIEW_STATUS_BAR      "Show or hide the status bar\nToggle StatusBar"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     AFX_IDS_SCSIZE          "Change the window size"
     AFX_IDS_SCMOVE          "Change the window position"
@@ -498,14 +480,14 @@ BEGIN
     AFX_IDS_SCCLOSE         "Close the active window and prompts to save the documents"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     AFX_IDS_SCRESTORE       "Restore the window to normal size"
     AFX_IDS_SCTASKLIST      "Activate Task List"
     AFX_IDS_MDICHILD        "Activate this window"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     AFX_IDS_PREVIEW_CLOSE   "Close print preview mode\nCancel Preview"
     IDS_NONE                "[none]"
@@ -520,7 +502,7 @@ BEGIN
     IDS_RIGHT_YELLOW_NEON   "Right Yellow Neon"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_BUTTON32771          "Select"
     ID_BUTTON32772          "Zoom"
@@ -537,7 +519,7 @@ BEGIN
     IDC_INSERT_NODE         "Insert a node on the selected wall (select only 1 wall)(INSERT)"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDC_INSERT_OBJECT       "Insert a starting position or an other object"
     ID_MOUSE_POS            "    mouse position    "
@@ -555,7 +537,7 @@ BEGIN
     ID_EDIT_SCALESELECTION  "Scale the current selection"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_LEFT_YELLOW_NEON    "Left Yellow Neon"
     IDS_STEP_SIGN           "Step Sign"
@@ -575,7 +557,7 @@ BEGIN
     IDS_STARTPOS_2          "Starting Position 2"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_STARTPOS_3          "Starting Position 3"
     IDS_STARTPOS_4          "Starting Position 4"
@@ -594,7 +576,7 @@ BEGIN
     IDS_MINE                "Mine"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_BOOSTER             "Booster"
     IDS_BACKGROUND_FILTER   "PCX 128colors (*.pcx)|*.pcx||"
@@ -611,13 +593,11 @@ END
 
 
 /////////////////////////////////////////////////////////////////////////////
-// English (U.S.) resources
+// English (United States) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-#ifdef _WIN32
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
-#endif //_WIN32
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -671,7 +651,7 @@ END
 
 #endif    // APSTUDIO_INVOKED
 
-#endif    // English (U.S.) resources
+#endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
@@ -679,17 +659,15 @@ END
 // Neutral (Sys. Default) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEUSD)
-#ifdef _WIN32
 LANGUAGE LANG_NEUTRAL, SUBLANG_SYS_DEFAULT
 #pragma code_page(1252)
-#endif //_WIN32
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Accelerator
 //
 
-IDR_MAINFRAME ACCELERATORS 
+IDR_MAINFRAME ACCELERATORS
 BEGIN
     "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
     "N",            ID_FILE_NEW,            VIRTKEY, CONTROL, NOINVERT
