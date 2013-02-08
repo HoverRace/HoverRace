@@ -10,6 +10,7 @@
 *.swp
 *.tmp
 *.user
+memory_leak_report.txt
 
 # /
 /*.ncb
