@@ -307,7 +307,7 @@ void ClientApp::NewLocalSession(RulebookPtr rules)
 
 	//TODO: Prompt the user for a track name.
 	try {
-		scene = new GameScene(this, videoBuf, scripting, gamePeer, rules);
+		scene = new GameScene(this, videoBuf, controller, scripting, gamePeer, rules);
 	}
 	catch (Parcel::ObjStreamExn&) {
 		throw;
@@ -342,6 +342,7 @@ void ClientApp::AssignPalette()
 
 Control::InputEventController *ClientApp::ReloadController()
 {
+	//TODO: Notify current scene that controller is changing.
 	delete controller;
 	return (controller = new InputEventController(mainWnd, uiInput));
 }

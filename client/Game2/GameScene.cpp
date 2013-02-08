@@ -42,10 +42,11 @@ namespace HoverRace {
 namespace Client {
 
 GameScene::GameScene(GameDirector *director, VideoServices::VideoBuffer *videoBuf,
+                     Control::InputEventController *controller,
                      Script::Core *scripting, HoverScript::GamePeer *gamePeer,
                      RulebookPtr rules) :
 	SUPER(),
-	frame(0), numPlayers(1), videoBuf(videoBuf),
+	frame(0), numPlayers(1), videoBuf(videoBuf), controller(controller),
 	session(NULL), highObserver(NULL), highConsole(NULL)
 {
 	memset(observers, 0, sizeof(observers[0]) * MAX_OBSERVERS);
@@ -81,8 +82,15 @@ GameScene::GameScene(GameDirector *director, VideoServices::VideoBuffer *videoBu
 	observers[0] = Observer::New();
 	highObserver = new HighObserver();
 
+	// Set up the controller.
+	MainCharacter::MainCharacter* mc = session->GetPlayer(0);
+	controller->ClearActionMap();
+	controller->AddPlayerMaps(1, &mc);
+	controller->AddObserverMaps(observers, 1);
+
 	if (Config::GetInstance()->runtime.enableConsole) {
 		highConsole = new HighConsole(scripting, director, gamePeer, sessionPeer);
+		controller->SetConsole(highConsole);
 	}
 
 }
@@ -106,6 +114,8 @@ void GameScene::Cleanup()
 
 void GameScene::Advance(Util::OS::timestamp_t tick)
 {
+	controller->Poll();
+
 	if (highConsole != NULL && highConsole->IsVisible()) {
 		highConsole->Advance(tick);
 	}
