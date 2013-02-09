@@ -39,6 +39,7 @@
 /libltdl
 /libtool
 /stamp-h1
+/valgrind_report.txt
 /init.lua
 
 # /client/

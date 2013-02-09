@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+# valgrind-hr
+#   Run HoverRace with Valgrind.
+#   The report is written to "valgrind_report.txt".
+#
+# Usage:
+#   ./valgrind-hr [hr-options]
+#
+# Example:
+#   ./valgrind-hr --silent --fps --exec init-example.lua
+
+cd "$(dirname "$0")"
+
+SUPPDIR=valgrind
+
+export G_SLICE=always-malloc
+export G_DEBUG=gc-friendly,resident-modules
+
+libtool --mode=execute \
+	valgrind --tool=memcheck --leak-check=full \
+		--leak-resolution=high --num-callers=20 \
+		--suppressions="$SUPPDIR/GNOME/base.supp" \
+		--suppressions="$SUPPDIR/GNOME/fontconfig.supp" \
+		--suppressions="$SUPPDIR/GNOME/glib.supp" \
+		--suppressions="$SUPPDIR/GNOME/glibc.supp" \
+		--suppressions="$SUPPDIR/GNOME/pango.supp" \
+		--log-file=valgrind_report.txt \
+	client/Game2/hoverrace -D --media-path share "$@"
+
