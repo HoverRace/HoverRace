@@ -32,17 +32,12 @@ namespace HoverRace {
 namespace VideoServices {
 
 // Methods implementation
-Viewport3D::Viewport3D()
+Viewport3D::Viewport3D() :
+	mOrientation(0), mPosition(0, 0, 0),
+	mVAngle(1), mScroll(0),
+	mZBuffer(NULL), mBufferLine(NULL), mZBufferLine(NULL),
+	mBackgroundConst(NULL)
 {
-	mOrientation = 0;
-	mPosition = MR_3DCoordinate(0, 0, 0);
-	mVAngle = 1;
-	mScroll = 0;
-
-	mBufferLine = NULL;
-	mZBufferLine = NULL;
-	mBackgroundConst = NULL;
-
 }
 
 Viewport3D::~Viewport3D()
