@@ -608,8 +608,8 @@ void Config::ResetToDefaults()
 		player.nickName = DEFAULT_NICKNAME;
 	}
 #else
-	char *buf = getlogin();
-	if (buf != NULL) {
+	char buf[LOGIN_NAME_MAX];
+	if (getlogin_r(buf, sizeof(buf)) == 0) {
 		player.nickName = buf;
 	}
 	else {
