@@ -35,6 +35,7 @@ memory_leak_report.txt
 /configure
 /conftest*
 /cscope.out
+/grinder
 /hoverrace-*
 /ipch
 /libltdl
