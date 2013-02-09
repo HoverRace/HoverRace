@@ -56,7 +56,10 @@ StaticText::StaticText(const std::string &s,
                        const std::string &font,
                        int size, bool bold, bool italic,
                        MR_UInt8 color, effect_t effect) :
-	s(s), ws(Str::Utf8ToWide(s.c_str())), wsLen(wcslen(ws)),
+	s(s),
+#ifdef _WIN32
+	ws(Str::Utf8ToWide(s.c_str())), wsLen(wcslen(ws)),
+#endif
 	font(font, size, bold, italic), color(color), effect(effect),
 	bitmap(NULL), width(0), height(0)
 {
@@ -73,7 +76,10 @@ StaticText::StaticText(const std::string &s,
 StaticText::StaticText(const std::string &s,
                        const FontSpec &font,
                        MR_UInt8 color, effect_t effect) :
-	s(s), ws(Str::Utf8ToWide(s.c_str())), wsLen(wcslen(ws)),
+	s(s),
+#ifdef _WIN32
+	ws(Str::Utf8ToWide(s.c_str())), wsLen(wcslen(ws)),
+#endif
 	font(font), color(color), effect(effect),
 	bitmap(NULL), width(0), height(0), realWidth(0), realHeight(0)
 {
@@ -84,7 +90,9 @@ StaticText::StaticText(const std::string &s,
 StaticText::~StaticText()
 {
 	free(bitmap);
-	free(ws);
+#	ifdef _WIN32
+		free(ws);
+#	endif
 }
 
 int StaticText::GetWidth() const
@@ -111,9 +119,11 @@ void StaticText::SetText(const std::string &s)
 {
 	if (this->s != s) {
 		this->s = s;
-		free(ws);
-		ws = Str::Utf8ToWide(s.c_str());
-		wsLen = wcslen(ws);
+#		ifdef _WIN32
+			free(ws);
+			ws = Str::Utf8ToWide(s.c_str());
+			wsLen = wcslen(ws);
+#		endif
 		Update();
 	}
 }
