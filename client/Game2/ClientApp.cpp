@@ -265,7 +265,7 @@ void ClientApp::MainLoop()
 	while (!quit) {
 		OS::timestamp_t tick = OS::Time();
 
-		while (SDL_PollEvent(&evt)) {
+		while (SDL_PollEvent(&evt) && !quit) {
 			switch (evt.type) {
 				case SDL_QUIT:
 					quit = true;
@@ -285,6 +285,7 @@ void ClientApp::MainLoop()
 			}
 			//TODO: Check for resize event and call NotifyWindowResChange().
 		}
+		if (quit) break;
 
 		if (scene != NULL) {
 			scene->Advance(tick);
