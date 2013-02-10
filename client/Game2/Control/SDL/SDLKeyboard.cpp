@@ -29,10 +29,12 @@ The original distribution may be found at:
   http://sourceforge.net/projects/wgois/
 */
 
+#include "StdAfx.h"
+
 #include "SDLKeyboard.h"
 #include "SDLInputManager.h"
-#include "OISException.h"
-#include "OISEvents.h"
+#include <OIS/OISException.h>
+#include <OIS/OISEvents.h>
 #include <sstream>
 
 namespace HoverRace {

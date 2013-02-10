@@ -31,7 +31,7 @@ The original distribution may be found at:
 
 #pragma once
 
-#include "OISPrereqs.h"
+#include <OIS/OISPrereqs.h>
 
 #include <SDL/SDL.h>
 

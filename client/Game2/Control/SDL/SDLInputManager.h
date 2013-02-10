@@ -31,8 +31,8 @@ The original distribution may be found at:
 
 #pragma once
 
-#include "OISInputManager.h"
-#include "OISFactoryCreator.h"
+#include <OIS/OISInputManager.h>
+#include <OIS/OISFactoryCreator.h>
 #include "SDLPrereqs.h"
 
 namespace HoverRace {

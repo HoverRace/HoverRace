@@ -31,7 +31,7 @@ The original distribution may be found at:
 
 #pragma once
 
-#include "OISMouse.h"
+#include <OIS/OISMouse.h>
 #include "SDLPrereqs.h"
 
 namespace HoverRace {

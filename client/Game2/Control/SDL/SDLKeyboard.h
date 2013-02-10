@@ -31,7 +31,7 @@ The original distribution may be found at:
 
 #pragma once
 
-#include "OISKeyboard.h"
+#include <OIS/OISKeyboard.h>
 #include "SDLPrereqs.h"
 
 namespace HoverRace {
@@ -53,12 +53,14 @@ namespace SDL {
 
 		/** @copydoc Keyboard::isKeyDown */
 		virtual bool isKeyDown( OIS::KeyCode key ) const;
+		virtual bool isKeyDown( OIS::KeyCode key ) { return isKeyDown(key); }
 
 		/** @copydoc Keyboard::getAsString */
 		virtual const std::string& getAsString( OIS::KeyCode kc );
 
 		/** @copydoc Keyboard::copyKeyStates */
 		virtual void copyKeyStates( char keys[256] ) const;
+		virtual void copyKeyStates( char keys[256] ) { return copyKeyStates(keys); }
 
 		/** @copydoc Object::setBuffered */
 		virtual void setBuffered(bool buffered);
