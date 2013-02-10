@@ -61,6 +61,15 @@ InputEventController::~InputEventController()
 			delete itm->second;
 		}
 	}
+
+#	ifdef _WIN32
+		InputManager::destroyInputSystem(mgr);
+#	else
+		SDL::SDLInputManager::destroyInputSystem(mgr);
+#	endif
+
+	delete[] joyIds;
+	delete[] joys;
 }
 
 void InputEventController::Poll() 
