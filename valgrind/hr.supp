@@ -1,0 +1,43 @@
+
+# vim: set ts=3 sw=3 expandtab:
+
+# hr.supp
+#   Custom Valgrind suppressions for HoverRace.
+
+# Older versions of Fontconfig confuse Valgrind.
+# This might not be necessary for Fontconfig 2.9+
+{
+   FcConfigFilename
+   Memcheck:Addr4
+   ...
+   fun:FcConfigFilename
+}
+{
+   FcConfigParseAndLoad
+   Memcheck:Addr4
+   ...
+   fun:FcConfigParseAndLoad
+}
+{
+   FcConfigParseAndLoad
+   Memcheck:Leak
+   ...
+   fun:FcConfigParseAndLoad
+}
+
+# Ignore what SDL_Pango does for now.
+{
+   SDLPango
+   Memcheck:Leak
+   ...
+   fun:SDLPango_*
+}
+
+# Statically-allocated bits from libc.
+{
+   getlogin
+   Memcheck:Leak
+   ...
+   fun:getlogin*
+}
+

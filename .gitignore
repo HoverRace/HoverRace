@@ -35,13 +35,12 @@ memory_leak_report.txt
 /configure
 /conftest*
 /cscope.out
-/grinder
 /hoverrace-*
 /ipch
 /libltdl
 /libtool
 /stamp-h1
-/tags
+/valgrind_report.txt
 /init.lua
 
 # /client/
