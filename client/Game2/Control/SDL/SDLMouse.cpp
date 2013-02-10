@@ -29,8 +29,6 @@ The original distribution may be found at:
   http://sourceforge.net/projects/wgois/
 */
 
-#include "StdAfx.h"
-
 #include "SDLMouse.h"
 #include "SDLInputManager.h"
 #include <OIS/OISException.h>
