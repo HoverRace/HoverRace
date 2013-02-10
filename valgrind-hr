@@ -20,6 +20,7 @@ export G_DEBUG=gc-friendly,resident-modules
 libtool --mode=execute \
 	valgrind --tool=memcheck --leak-check=full \
 		--leak-resolution=high --num-callers=20 \
+		--suppressions="$SUPPDIR/hr.supp" \
 		--suppressions="$SUPPDIR/GNOME/base.supp" \
 		--suppressions="$SUPPDIR/GNOME/fontconfig.supp" \
 		--suppressions="$SUPPDIR/GNOME/glib.supp" \
