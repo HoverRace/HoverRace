@@ -25,6 +25,15 @@
    fun:FcConfigParseAndLoad
 }
 
+# This is fixed in later versions of Valgrind.
+# See: https://bugs.kde.org/show_bug.cgi?id=311407
+# and: https://bugs.kde.org/show_bug.cgi?id=307828
+{
+   wcscmp
+   Memcheck:Addr8
+   fun:wcscmp
+}
+
 # Ignore what SDL_Pango does for now.
 {
    SDLPango
