@@ -70,6 +70,12 @@
 #include <luabind/luabind.hpp>
 #include <luabind/object.hpp>
 
+// Determine if we need to use the SDL-OIS bridge.
+// On Win32 we can use OIS directly, everywhere else we play it safe.
+#ifndef _WIN32
+#	define WITH_SDL_OIS_INPUT
+#endif
+
 #ifndef _WIN32
 	// Xlib.h must be included *after* boost/foreach.hpp as a workaround for
 	// https://svn.boost.org/trac/boost/ticket/3000

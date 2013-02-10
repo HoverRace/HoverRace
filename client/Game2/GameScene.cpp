@@ -114,8 +114,6 @@ void GameScene::Cleanup()
 
 void GameScene::Advance(Util::OS::timestamp_t tick)
 {
-	controller->Poll();
-
 	if (highConsole != NULL && highConsole->IsVisible()) {
 		highConsole->Advance(tick);
 	}

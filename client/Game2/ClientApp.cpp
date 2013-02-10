@@ -262,6 +262,10 @@ void ClientApp::MainLoop()
 
 	DrawPalette();
 
+#	ifdef WITH_SDL_OIS_INPUT
+		std::vector<SDL_Event> deferredEvents;
+#	endif
+
 	while (!quit) {
 		OS::timestamp_t tick = OS::Time();
 
@@ -282,10 +286,27 @@ void ClientApp::MainLoop()
 						surface->pitch);
 					AssignPalette();
 					break;
+
+				// Certain SDL events need to be processed by the SDL-OIS
+				// bridge, so we need to save them for later.
+#				ifdef WITH_SDL_OIS_INPUT
+					case SDL_KEYDOWN:
+					case SDL_KEYUP:
+							deferredEvents.push_back(evt);
+						break;
+#				endif
 			}
 			//TODO: Check for resize event and call NotifyWindowResChange().
 		}
 		if (quit) break;
+
+#		ifdef WITH_SDL_OIS_INPUT
+			BOOST_FOREACH(SDL_Event &evt, deferredEvents) {
+				SDL_PushEvent(&evt);
+			}
+			deferredEvents.clear();
+#		endif
+		controller->Poll();
 
 		if (scene != NULL) {
 			scene->Advance(tick);
