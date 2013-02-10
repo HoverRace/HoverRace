@@ -312,6 +312,7 @@ VideoBuffer::~VideoBuffer()
 {
 #ifdef WITH_SDL
 	delete[] mZBuffer;
+	delete[] mBackPalette;
 #else
 	//   mFullScreen        = TRUE;
 	//   mSpecialWindowMode = FALSE;   // force real windows resolution
