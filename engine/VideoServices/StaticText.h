@@ -81,8 +81,10 @@ class MR_DllDeclare StaticText {
 
 	private:
 		std::string s;
-		wchar_t *ws;
-		size_t wsLen;
+#		ifdef _WIN32
+			wchar_t *ws;
+			size_t wsLen;
+#		endif
 
 		FontSpec font;
 		MR_UInt8 color;
