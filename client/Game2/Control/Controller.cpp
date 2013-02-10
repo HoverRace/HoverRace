@@ -6,7 +6,7 @@
 
 #include "StdAfx.h"
 
-#ifndef _WIN32
+#ifdef WITH_SDL_OIS_INPUT
 #	include "SDL/SDLInputManager.h"
 #endif
 
@@ -62,7 +62,7 @@ InputEventController::~InputEventController()
 		}
 	}
 
-#	ifdef _WIN32
+#	ifndef WITH_SDL_OIS_INPUT
 		InputManager::destroyInputSystem(mgr);
 #	else
 		SDL::SDLInputManager::destroyInputSystem(mgr);
@@ -514,7 +514,7 @@ void InputEventController::InitInputManager(Util::OS::wnd_t mainWindow)
 	pl.insert(make_pair(string("w32_mouse"), string("DISCL_NONEXCLUSIVE")));
 
 	// this throws an exception on errors
-#	ifdef _WIN32
+#	ifndef WITH_SDL_OIS_INPUT
 		mgr = InputManager::createInputSystem(pl);
 #	else
 		// Use the SDL-OIS bridge on Linux since SDL and OIS can't both
