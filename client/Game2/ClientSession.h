@@ -39,11 +39,12 @@ namespace Client {
 class ClientSession
 {
 	protected:
-		class ChatMessage
+		struct ChatMessage
 		{
-			public:
-				time_t mCreationTime;
-				std::string mBuffer;
+			ChatMessage() : mCreationTime(0) { }
+
+			time_t mCreationTime;
+			std::string mBuffer;
 		};
 
 		mutable boost::mutex chatMutex;
