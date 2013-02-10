@@ -50,3 +50,17 @@
    fun:getlogin*
 }
 
+# Extra detections we can't do anything about.
+{
+   Curl_gtls_init
+   Memcheck:Leak
+   ...
+   fun:Curl_gtls_init
+}
+{
+   SDL_VideoInit
+   Memcheck:Leak
+   ...
+   fun:SDL_VideoInit
+}
+
