@@ -476,32 +476,6 @@ void SoundServer::ApplyContinuousPlay()
 	SoundBuffer::ApplyCumCommandForAll();
 }
 
-/*
-void SoundServer::Pause(   ContinuousSound* pSound, int pCopy )
-{
-   if( pSound != NULL )
-   {
-	  pSound->Pause( pCopy );
-   }
-}
-
-void SoundServer::Restart( ContinuousSound* pSound, int pCopy )
-{
-   if( pSound != NULL )
-   {
-	  pSound->Restart( pCopy );
-   }
-}
-
-void SoundServer::SetParams( ContinuousSound* pSound, int pCopy, int pDB, double pSpeed, int pPan )
-{
-   if( pSound != NULL )
-   {
-	  pSound->SetParams( pCopy, pDB, pSpeed, pPan );
-   }
-}
-*/
-
 int SoundServer::GetNbCopy(ContinuousSound * pSound)
 {
 	if(pSound != NULL) {

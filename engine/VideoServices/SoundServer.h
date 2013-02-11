@@ -62,12 +62,6 @@ namespace SoundServer
 
 	MR_DllDeclare void Play(ContinuousSound * pSound, int pCopy, int pDB = 0, double pSpeed = 1.0, int pPan = 0);
 
-	/* Obsoletes
-	   MR_DllDeclare void                Pause(   ContinuousSound* pSound, int pCopy );
-	   MR_DllDeclare void                Restart( ContinuousSound* pSound, int pCopy );
-
-	   MR_DllDeclare void                SetParams( ContinuousSound* pSound, int pCopy, int pDB, double pSpeed = 1.0, int pPan = 0 );
-	 */
 	MR_DllDeclare int GetNbCopy(ContinuousSound * pSound);
 
 	MR_DllDeclare void ApplyContinuousPlay();
