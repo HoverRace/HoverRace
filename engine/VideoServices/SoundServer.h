@@ -44,11 +44,7 @@ class ContinuousSound;
 namespace SoundServer
 {
 
-	MR_DllDeclare bool Init(
-#		ifndef WITH_OPENAL
-			HWND pWindow
-#		endif
-		);
+	MR_DllDeclare bool Init();
 	MR_DllDeclare void Close();
 
 	MR_DllDeclare std::string GetInitError();

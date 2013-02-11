@@ -117,12 +117,6 @@ void CaptureScreen( VideoServices::VideoBuffer* pVideoBuffer );
 #define MR_WM_ON_INIT (WM_APP + 0x0042)
 #define MR_WM_REQ_NEW_SESSION (WM_APP + 0x0043)
 
-#ifdef WITH_OPENAL
-#	define SOUNDSERVER_INIT(s) SoundServer::Init()
-#else
-#	define SOUNDSERVER_INIT(s) SoundServer::Init(s)
-#endif
-
 using boost::format;
 using boost::str;
 
@@ -882,7 +876,7 @@ BOOL GameApp::InitGame()
 		// Attempt to create the sound service.
 		// We do this early so we can notify the user of any errors
 		// and let it switch to silent mode.
-		if (!SOUNDSERVER_INIT(mMainWindow)) {
+		if (!SoundServer::Init()) {
 			std::string errMsg;
 			errMsg += _("There was a problem setting up the sound device.");
 			errMsg += "\r\n";

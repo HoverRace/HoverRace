@@ -60,12 +60,6 @@
 
 #ifdef WITH_SDL
 
-#ifdef WITH_OPENAL
-#	define SOUNDSERVER_INIT(s) SoundServer::Init()
-#else
-#	define SOUNDSERVER_INIT(s) SoundServer::Init(s)
-#endif
-
 using namespace HoverRace::Client::HoverScript;
 using namespace HoverRace::Util;
 namespace SoundServer = HoverRace::VideoServices::SoundServer;
@@ -92,7 +86,7 @@ ClientApp::ClientApp() :
 	// Engine initialization.
 	MR_InitTrigoTables();
 	MR_InitFuzzyModule();
-	SOUNDSERVER_INIT(NULL);
+	SoundServer::Init();
 	DllObjectFactory::Init();
 	MainCharacter::MainCharacter::RegisterFactory();
 
