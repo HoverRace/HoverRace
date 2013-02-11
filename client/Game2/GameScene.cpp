@@ -24,6 +24,7 @@
 
 #include "../../engine/Model/Track.h"
 #include "../../engine/Parcel/TrackBundle.h"
+#include "../../engine/VideoServices/SoundServer.h"
 
 #include "Control/Controller.h"
 #include "HoverScript/GamePeer.h"
@@ -134,6 +135,15 @@ void GameScene::Render()
 	}
 
 	session->IncFrameCount();
+
+	// Trigger sounds.
+	for (int i = 0; i < MAX_OBSERVERS; ++i) {
+		Observer *obs = observers[i];
+		if (obs != NULL) {
+			obs->PlaySounds(session->GetCurrentLevel(), session->GetPlayer(i));
+		}
+	}
+	VideoServices::SoundServer::ApplyContinuousPlay();
 }
 
 }  // namespace HoverScript
