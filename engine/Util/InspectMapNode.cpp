@@ -23,7 +23,6 @@
 #include "StdAfx.h"
 
 #include <boost/foreach.hpp>
-#include <boost/make_shared.hpp>
 
 #include "yaml/Emitter.h"
 #include "yaml/MapNode.h"
@@ -98,12 +97,12 @@ void InspectMapNode::RenderToYaml(yaml::Emitter &emitter)
 void InspectMapNode::AddStringField(const std::string &name, const std::string &value)
 {
 	fields.push_back(fields_t::value_type(name,
-		boost::make_shared<InspectScalarNode>(value)));
+		std::make_shared<InspectScalarNode>(value)));
 }
 
 InspectMapNode &InspectMapNode::AddSubobject(const std::string &name, const Inspectable *obj)
 {
-	InspectMapNodePtr node = boost::make_shared<InspectMapNode>();
+	InspectMapNodePtr node = std::make_shared<InspectMapNode>();
 	if (obj != NULL)
 		obj->Inspect(*node);
 	fields.push_back(fields_t::value_type(name, node));

@@ -50,9 +50,9 @@ namespace Client {
 namespace Control {
 
 class InputHandler;
-typedef boost::shared_ptr<InputHandler> InputHandlerPtr;
+typedef std::shared_ptr<InputHandler> InputHandlerPtr;
 class UiHandler;
-typedef boost::shared_ptr<UiHandler> UiHandlerPtr;
+typedef std::shared_ptr<UiHandler> UiHandlerPtr;
 
 using namespace OIS;
 

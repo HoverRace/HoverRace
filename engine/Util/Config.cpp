@@ -43,7 +43,6 @@
 #include <boost/filesystem/convenience.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/foreach.hpp>
-#include <boost/make_shared.hpp>
 
 #include <OIS/OISPrereqs.h>
 #include <OIS/OISKeyboard.h>
@@ -198,12 +197,12 @@ Config::Config(int verMajor, int verMinor, int verPatch, int verBuild,
 
 	Parcel::BundlePtr mediaTrackBundle(new Parcel::Bundle(this->mediaPath / tracksDirName));
 #	ifdef _WIN32
-		trackBundle = boost::make_shared<Parcel::TrackBundle>(userTrackPath,
-			boost::make_shared<Parcel::Bundle>(Str::UP("track_source"),  // Historical.
-			boost::make_shared<Parcel::Bundle>(tracksDirName,  // Historical.
+		trackBundle = std::make_shared<Parcel::TrackBundle>(userTrackPath,
+			std::make_shared<Parcel::Bundle>(Str::UP("track_source"),  // Historical.
+			std::make_shared<Parcel::Bundle>(tracksDirName,  // Historical.
 			mediaTrackBundle)));
 #	else
-		trackBundle = boost::make_shared<Parcel::TrackBundle>(userTrackPath,
+		trackBundle = std::make_shared<Parcel::TrackBundle>(userTrackPath,
 			mediaTrackBundle);
 #	endif
 }

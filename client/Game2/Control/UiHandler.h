@@ -43,7 +43,7 @@ class UiHandler
 	public:
 		virtual void OnConsole() { }
 };
-typedef boost::shared_ptr<UiHandler> UiHandlerPtr;
+typedef std::shared_ptr<UiHandler> UiHandlerPtr;
 
 }  // namespace Control
 }  // namespace Client

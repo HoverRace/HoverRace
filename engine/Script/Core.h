@@ -42,7 +42,7 @@ namespace HoverRace {
 	namespace Script {
 		namespace Help {
 			class Class;
-			typedef boost::shared_ptr<Class> ClassPtr;
+			typedef std::shared_ptr<Class> ClassPtr;
 			class HelpHandler;
 		}
 	}
@@ -78,10 +78,10 @@ class MR_DllDeclare Core
 		static int ErrorFunc(lua_State *L);
 
 	private:
-		typedef std::list<boost::shared_ptr<std::ostream> > outs_t;
+		typedef std::list<std::shared_ptr<std::ostream> > outs_t;
 	public:
 		typedef outs_t::iterator OutHandle;
-		OutHandle AddOutput(boost::shared_ptr<std::ostream> out);
+		OutHandle AddOutput(std::shared_ptr<std::ostream> out);
 		void RemoveOutput(const OutHandle &handle);
 
 		std::string GetVersionString() const;

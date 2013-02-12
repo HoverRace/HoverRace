@@ -43,7 +43,7 @@ struct MR_DllDeclare TrackCompilationLog
 	virtual void Info(const std::string &msg) = 0;
 	virtual void Warn(const std::string &msg) = 0;
 };
-typedef boost::shared_ptr<TrackCompilationLog> TrackCompilationLogPtr;
+typedef std::shared_ptr<TrackCompilationLog> TrackCompilationLogPtr;
 
 }  // namespace MazeCompiler
 }  // namespace HoverRace

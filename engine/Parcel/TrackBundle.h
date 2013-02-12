@@ -37,9 +37,9 @@
 namespace HoverRace {
 	namespace Model {
 		class Track;
-		typedef boost::shared_ptr<Track> TrackPtr;
+		typedef std::shared_ptr<Track> TrackPtr;
 		class TrackEntry;
-		typedef boost::shared_ptr<TrackEntry> TrackEntryPtr;
+		typedef std::shared_ptr<TrackEntry> TrackEntryPtr;
 	}
 }
 
@@ -70,7 +70,7 @@ class MR_DllDeclare TrackBundle : public Bundle
 
 		MR_TrackAvail CheckAvail(const std::string &name) const;
 };
-typedef boost::shared_ptr<TrackBundle> TrackBundlePtr;
+typedef std::shared_ptr<TrackBundle> TrackBundlePtr;
 
 }  // namespace Parcel
 }  // namespace HoverRace

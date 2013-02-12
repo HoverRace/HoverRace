@@ -77,7 +77,7 @@ RulebookPtr TrackSelectDialog::ShowModal(HINSTANCE hinst, HWND parent)
 	if (DialogBoxParamW(hinst, MAKEINTRESOURCEW(IDD_TRACK_SELECT), parent,
 		DlgFunc, reinterpret_cast<LPARAM>(this)) == IDOK)
 	{
-		return boost::make_shared<Rulebook>(trackName, laps, opts);
+		return std::make_shared<Rulebook>(trackName, laps, opts);
 	}
 	else {
 		return RulebookPtr();

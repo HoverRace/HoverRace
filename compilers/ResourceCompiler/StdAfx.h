@@ -50,13 +50,12 @@
 #include <exception>
 #include <iostream>
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
 #include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
-#include <boost/make_shared.hpp>
-#include <boost/shared_ptr.hpp>
 
 #ifndef _WIN32
 	// Xlib.h must be included *after* boost/foreach.hpp as a workaround for

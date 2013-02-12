@@ -78,7 +78,7 @@ class ClientApp::UiInput : public Control::UiHandler
 
 ClientApp::ClientApp() :
 	SUPER(),
-	uiInput(boost::make_shared<UiInput>()),
+	uiInput(std::make_shared<UiInput>()),
 	scene(NULL)
 {
 	Config *cfg = Config::GetInstance();

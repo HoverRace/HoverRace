@@ -75,7 +75,7 @@ class MR_DllDeclare Method
 		sigs_t sigs;
 		examples_t examples;
 };
-typedef boost::shared_ptr<Method> MethodPtr;
+typedef std::shared_ptr<Method> MethodPtr;
 
 }  // namespace Help
 }  // namespace Script

@@ -37,7 +37,7 @@
 namespace HoverRace {
 	namespace Parcel {
 		class RecordFile;
-		typedef boost::shared_ptr<RecordFile> RecordFilePtr;
+		typedef std::shared_ptr<RecordFile> RecordFilePtr;
 	}
 }
 
@@ -66,7 +66,7 @@ class MR_DllDeclare Track : public Util::Inspectable
 		Parcel::RecordFilePtr recFile;
 		TrackEntry header;
 };
-typedef boost::shared_ptr<Track> TrackPtr;
+typedef std::shared_ptr<Track> TrackPtr;
 
 }  // namespace Model
 }  // namespace HoverRace

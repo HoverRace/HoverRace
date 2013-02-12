@@ -51,7 +51,7 @@ class MR_DllDeclare Event : public Method
 
 		virtual void Load(yaml::MapNode *node);
 };
-typedef boost::shared_ptr<Event> EventPtr;
+typedef std::shared_ptr<Event> EventPtr;
 
 }  // namespace Help
 }  // namespace Script

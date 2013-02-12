@@ -52,7 +52,7 @@ class MR_DllDeclare InspectNode
 	public:
 		virtual void RenderToYaml(yaml::Emitter &emitter) = 0;
 };
-typedef boost::shared_ptr<InspectNode> InspectNodePtr;
+typedef std::shared_ptr<InspectNode> InspectNodePtr;
 
 }  // namespace Util
 }  // namespace HoverRace

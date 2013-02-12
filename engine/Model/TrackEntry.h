@@ -91,7 +91,7 @@ class MR_DllDeclare TrackEntry : public Util::Inspectable
 		MR_Int32 registrationMode;
 		MR_Int32 sortingIndex;
 };
-typedef boost::shared_ptr<TrackEntry> TrackEntryPtr;
+typedef std::shared_ptr<TrackEntry> TrackEntryPtr;
 
 }  // namespace Model
 }  // namespace HoverRace

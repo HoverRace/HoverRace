@@ -22,7 +22,6 @@
 
 #pragma once
 
-#include <boost/make_shared.hpp>
 #include <boost/lexical_cast.hpp>
 
 #include "InspectNode.h"
@@ -59,7 +58,7 @@ class InspectScalarNode : public InspectNode {
 	private:
 		std::string value;
 };
-typedef boost::shared_ptr<InspectScalarNode> InspectScalarNodePtr;
+typedef std::shared_ptr<InspectScalarNode> InspectScalarNodePtr;
 
 class InspectSeqNode : public InspectNode
 {
@@ -84,7 +83,7 @@ class InspectSeqNode : public InspectNode
 		typedef std::vector<InspectNodePtr> fields_t;
 		fields_t fields;
 };
-typedef boost::shared_ptr<InspectSeqNode> InspectSeqNodePtr;
+typedef std::shared_ptr<InspectSeqNode> InspectSeqNodePtr;
 
 /**
  * An inspection node which maps field names to values
@@ -138,9 +137,9 @@ class MR_DllDeclare InspectMapNode : public InspectNode
 		InspectMapNode &AddArray(const std::string &name, T *elems,
 			size_t startIndex, size_t size)
 		{
-			InspectSeqNodePtr node = boost::make_shared<InspectSeqNode>(size);
+			InspectSeqNodePtr node = std::make_shared<InspectSeqNode>(size);
 			for (size_t i = startIndex; i < size; ++i)
-				node->Add(boost::make_shared<InspectScalarNode>(
+				node->Add(std::make_shared<InspectScalarNode>(
 					boost::lexical_cast<std::string>(elems[i])));
 			fields.push_back(fields_t::value_type(name, node));
 			return *this;
@@ -152,7 +151,7 @@ class MR_DllDeclare InspectMapNode : public InspectNode
 		typedef std::vector<std::pair<std::string,InspectNodePtr> > fields_t;
 		fields_t fields;
 };
-typedef boost::shared_ptr<InspectMapNode> InspectMapNodePtr;
+typedef std::shared_ptr<InspectMapNode> InspectMapNodePtr;
 
 }  // namespace Util
 }  // namespace HoverRace

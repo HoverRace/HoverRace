@@ -37,12 +37,12 @@ namespace HoverRace {
 		namespace HoverScript {
 			class GamePeer;
 			class SessionPeer;
-			typedef boost::shared_ptr<SessionPeer> SessionPeerPtr;
+			typedef std::shared_ptr<SessionPeer> SessionPeerPtr;
 			class SysEnv;
 		}
 		class ClientSession;
 		class Rulebook;
-		typedef boost::shared_ptr<Rulebook> RulebookPtr;
+		typedef std::shared_ptr<Rulebook> RulebookPtr;
 	}
 	class HighObserver;
 	namespace Script {

@@ -23,7 +23,6 @@
 #include "StdAfx.h"
 
 #include <boost/foreach.hpp>
-#include <boost/make_shared.hpp>
 
 #include "../../Util/yaml/MapNode.h"
 #include "../../Util/yaml/ScalarNode.h"
@@ -62,10 +61,10 @@ void Class::Load(yaml::MapNode *node)
 			root->ReadString("type", type);
 			MethodPtr method;
 			if (type == "event") {
-				method = boost::make_shared<Event>(methodName);
+				method = std::make_shared<Event>(methodName);
 			}
 			else {
-				method = boost::make_shared<Method>(methodName);
+				method = std::make_shared<Method>(methodName);
 			}
 
 			method->Load(root);

@@ -30,7 +30,6 @@
 #	undef Bool
 #endif
 #include <boost/foreach.hpp>
-#include <boost/make_shared.hpp>
 
 #include <luabind/luabind.hpp>
 
@@ -83,16 +82,16 @@ Core::Core() :
 	Help::ClassPtr cls;
 
 	/*
-	cls = boost::make_shared<Help::Class>("Game");
-	cls->AddMethod(boost::make_shared<Help::Method>("get_config"));
-	cls->AddMethod(boost::make_shared<Help::Event>("on_init"));
-	cls->AddMethod(boost::make_shared<Help::Event>("on_shutdown"));
-	cls->AddMethod(boost::make_shared<Help::Method>("is_initialized"));
+	cls = std::make_shared<Help::Class>("Game");
+	cls->AddMethod(std::make_shared<Help::Method>("get_config"));
+	cls->AddMethod(std::make_shared<Help::Event>("on_init"));
+	cls->AddMethod(std::make_shared<Help::Event>("on_shutdown"));
+	cls->AddMethod(std::make_shared<Help::Method>("is_initialized"));
 	helpClasses.insert(helpClasses_t::value_type(cls->GetName(), cls));
 	*/
 
-	cls = boost::make_shared<Help::Class>("Session");
-	cls->AddMethod(boost::make_shared<Help::Method>("get_num_players"));
+	cls = std::make_shared<Help::Class>("Session");
+	cls->AddMethod(std::make_shared<Help::Method>("get_num_players"));
 	helpClasses.insert(helpClasses_t::value_type(cls->GetName(), cls));
 }
 
@@ -225,7 +224,7 @@ int Core::ErrorFunc(lua_State *L)
  *            May be @c NULL to use the system default.
  * @return A handle for removing the stream later.
  */
-Core::OutHandle Core::AddOutput(boost::shared_ptr<std::ostream> out)
+Core::OutHandle Core::AddOutput(std::shared_ptr<std::ostream> out)
 {
 	outs.push_back(out);
 	return --(outs.end());
@@ -251,7 +250,7 @@ std::string Core::GetVersionString() const
  */
 void Core::Print(const std::string &s)
 {
-	BOOST_FOREACH(boost::shared_ptr<std::ostream> &out, outs) {
+	BOOST_FOREACH(std::shared_ptr<std::ostream> &out, outs) {
 		*out << s << std::endl;
 	}
 }
@@ -358,7 +357,7 @@ void Core::PrintStack()
 		oss << std::endl;
 	}
 	std::string s = oss.str();
-	BOOST_FOREACH(boost::shared_ptr<std::ostream> &out, outs) {
+	BOOST_FOREACH(std::shared_ptr<std::ostream> &out, outs) {
 		*out << s << std::flush;
 	}
 }
@@ -439,7 +438,7 @@ void Core::LoadClassHelp(const std::string &className)
 			std::string filenamestr = (const char*)Str::PU(filename);
 			throw yaml::ParserExn((filenamestr + ": Expected root node to be a map.").c_str());
 		}
-		Help::ClassPtr cls = boost::make_shared<Help::Class>(className);
+		Help::ClassPtr cls = std::make_shared<Help::Class>(className);
 		cls->Load(root);
 		helpClasses.insert(helpClasses_t::value_type(className, cls));
 
@@ -500,13 +499,13 @@ int Core::LPrint(lua_State *state)
 			lua_pop(state, 1);
 			continue;
 		}
-		BOOST_FOREACH(boost::shared_ptr<std::ostream> &oss, self->outs) {
+		BOOST_FOREACH(std::shared_ptr<std::ostream> &oss, self->outs) {
 			if (i > 1) *oss << '\t';
 			*oss << s;
 		}
 		lua_pop(state, 1);
 	}
-	BOOST_FOREACH(boost::shared_ptr<std::ostream> &oss, self->outs) {
+	BOOST_FOREACH(std::shared_ptr<std::ostream> &oss, self->outs) {
 		*oss << std::endl;
 	}
 

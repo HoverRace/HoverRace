@@ -126,7 +126,7 @@ class MR_DllDeclare ObjStream
 		int version;
 		bool writing;
 };
-typedef boost::shared_ptr<ObjStream> ObjStreamPtr;
+typedef std::shared_ptr<ObjStream> ObjStreamPtr;
 
 }  // namespace Parcel
 }  // namespace HoverRace

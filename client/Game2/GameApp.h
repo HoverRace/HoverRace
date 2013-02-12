@@ -35,13 +35,13 @@ namespace HoverRace {
 		namespace Control {
 			class Controller;
 			class UiHandler;
-			typedef boost::shared_ptr<UiHandler> UiHandlerPtr;
+			typedef std::shared_ptr<UiHandler> UiHandlerPtr;
 		}
 		namespace HoverScript {
 			class GamePeer;
 			class HighConsole;
 			class SessionPeer;
-			typedef boost::shared_ptr<SessionPeer> SessionPeerPtr;
+			typedef std::shared_ptr<SessionPeer> SessionPeerPtr;
 			class SysEnv;
 		}
 		class FullscreenTest;
@@ -49,7 +49,7 @@ namespace HoverRace {
 		class HighObserver;
 		class IntroMovie;
 		class Rulebook;
-		typedef boost::shared_ptr<Rulebook> RulebookPtr;
+		typedef std::shared_ptr<Rulebook> RulebookPtr;
 	}
 	namespace Script {
 		class Core;
@@ -110,7 +110,7 @@ class GameApp : public GameDirector
 		GameThread *mGameThread;
 		RulebookPtr requestedNewSession;
 		class UiInput;
-		boost::shared_ptr<UiInput> uiInput;
+		std::shared_ptr<UiInput> uiInput;
 
 		eViewMode mCurrentMode;
 

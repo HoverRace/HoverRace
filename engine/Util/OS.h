@@ -28,7 +28,6 @@
 #include <vector>
 
 #include <boost/filesystem.hpp>
-#include <boost/shared_ptr.hpp>
 
 #ifdef _WIN32
 #	ifdef MR_ENGINE
@@ -100,7 +99,7 @@ class MR_DllDeclare OS {
 			resolutions_t resolutions;
 		};
 		typedef std::vector<Monitor> monitors_t;
-		static boost::shared_ptr<monitors_t> GetMonitors();
+		static std::shared_ptr<monitors_t> GetMonitors();
 
 #		ifdef _WIN32
 			static std::string GuidToString(const GUID &guid);

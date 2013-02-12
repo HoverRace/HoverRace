@@ -273,7 +273,7 @@ GameApp::GameApp(HINSTANCE pInstance, bool safeMode) :
 	SUPER(),
 	nonInteractiveShutdown(false),
 	introMovie(NULL), scripting(NULL), gamePeer(NULL), sysEnv(NULL),
-	uiInput(boost::make_shared<UiInput>())
+	uiInput(std::make_shared<UiInput>())
 {
 	This = this;
 	mInstance = pInstance;
@@ -1206,7 +1206,7 @@ void GameApp::NewLocalSession(RulebookPtr rules)
 
 		// Create the new session
 		ClientSession *lCurrentSession = new ClientSession();
-		sessionPeer = boost::make_shared<SessionPeer>(scripting, lCurrentSession);
+		sessionPeer = std::make_shared<SessionPeer>(scripting, lCurrentSession);
 
 		controller->ClearActionMap();
 		if (Config::GetInstance()->runtime.enableConsole) {

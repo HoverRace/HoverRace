@@ -33,11 +33,11 @@ namespace HoverRace {
 		namespace HoverScript {
 			class ConfigPeer;
 			class SessionPeer;
-			typedef boost::shared_ptr<SessionPeer> SessionPeerPtr;
+			typedef std::shared_ptr<SessionPeer> SessionPeerPtr;
 		}
 		class GameDirector;
 		class Rulebook;
-		typedef boost::shared_ptr<Rulebook> RulebookPtr;
+		typedef std::shared_ptr<Rulebook> RulebookPtr;
 	}
 	namespace Script {
 		class Core;

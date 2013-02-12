@@ -54,7 +54,7 @@ GameScene::GameScene(GameDirector *director, VideoServices::VideoBuffer *videoBu
 
 	// Create the new session
 	session = new ClientSession();
-	sessionPeer = boost::make_shared<SessionPeer>(scripting, session);
+	sessionPeer = std::make_shared<SessionPeer>(scripting, session);
 
 	// Load the selected track
 	try {

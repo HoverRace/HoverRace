@@ -46,7 +46,7 @@ class MR_DllDeclare MR_PureVirtual CancelFlag
 	public:
 		virtual bool IsCanceled() = 0;
 };
-typedef boost::shared_ptr<CancelFlag> CancelFlagPtr;
+typedef std::shared_ptr<CancelFlag> CancelFlagPtr;
 
 }  // namespace Net
 }  // namespace HoverRace

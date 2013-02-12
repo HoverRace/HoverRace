@@ -32,12 +32,12 @@ namespace HoverRace {
 	namespace Client {
 		namespace Control {
 			class InputHandler;
-			typedef boost::shared_ptr<InputHandler> InputHandlerPtr;
+			typedef std::shared_ptr<InputHandler> InputHandlerPtr;
 		}
 		namespace HoverScript {
 			class GamePeer;
 			class SessionPeer;
-			typedef boost::shared_ptr<SessionPeer> SessionPeerPtr;
+			typedef std::shared_ptr<SessionPeer> SessionPeerPtr;
 		}
 		class GameDirector;
 	}
@@ -143,7 +143,7 @@ class HighConsole : public Console
 		LogLines *helpLines;
 
 		class Input;
-		boost::shared_ptr<Input> input;
+		std::shared_ptr<Input> input;
 
 		static const int PADDING_TOP = 2;
 		static const int PADDING_BOTTOM = 5;

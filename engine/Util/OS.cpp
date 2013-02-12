@@ -326,9 +326,9 @@ namespace {
  * Retrieve the list of monitors.
  * @return A shared pointer of monitor info (never @c NULL, never empty).
  */
-boost::shared_ptr<OS::monitors_t> OS::GetMonitors()
+std::shared_ptr<OS::monitors_t> OS::GetMonitors()
 {
-	boost::shared_ptr<monitors_t> retv(new monitors_t());
+	std::shared_ptr<monitors_t> retv(new monitors_t());
 #	ifdef _WIN32
 		HINSTANCE directDrawInst = LoadLibrary("ddraw.dll");
 		if (directDrawInst == NULL) {

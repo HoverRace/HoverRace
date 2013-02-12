@@ -66,7 +66,7 @@ Model::TrackPtr TrackBundle::OpenTrack(const std::string &name) const
 	RecordFilePtr recFile(OpenParcel(name));
 	return (recFile.get() == NULL) ?
 		Model::TrackPtr() :
-		boost::make_shared<Model::Track>(recFile);
+		std::make_shared<Model::Track>(recFile);
 }
 
 /**
@@ -83,7 +83,7 @@ Model::TrackEntryPtr TrackBundle::OpenTrackEntry(const std::string &name) const
 	}
 	else {
 		recFile->SelectRecord(0);
-		Model::TrackEntryPtr retv = boost::make_shared<Model::TrackEntry>();
+		Model::TrackEntryPtr retv = std::make_shared<Model::TrackEntry>();
 		if (boost::ends_with(name, Config::TRACK_EXT)) {
 			// Trim off ".trk".
 			retv->name.assign(name, 0, name.length() - Config::TRACK_EXT.length());

@@ -49,9 +49,9 @@ namespace yaml {
 namespace HoverRace {
 	namespace Parcel {
 		class Bundle;
-		typedef boost::shared_ptr<Bundle> BundlePtr;
+		typedef std::shared_ptr<Bundle> BundlePtr;
 		class TrackBundle;
-		typedef boost::shared_ptr<TrackBundle> TrackBundlePtr;
+		typedef std::shared_ptr<TrackBundle> TrackBundlePtr;
 	}
 }
 

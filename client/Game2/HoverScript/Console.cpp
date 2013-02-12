@@ -62,7 +62,7 @@ Console::Console(Script::Core *scripting) :
 	inputState(ISTATE_COMMAND)
 {
 	chunk.reserve(1024);
-	outHandle = scripting->AddOutput(boost::make_shared<LogStream>(this));
+	outHandle = scripting->AddOutput(std::make_shared<LogStream>(this));
 
 	SetHelpHandler(this);
 }

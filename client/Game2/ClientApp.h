@@ -40,12 +40,12 @@ namespace HoverRace {
 			class GamePeer;
 			class HighConsole;
 			class SessionPeer;
-			typedef boost::shared_ptr<SessionPeer> SessionPeerPtr;
+			typedef std::shared_ptr<SessionPeer> SessionPeerPtr;
 			class SysEnv;
 		}
 		class HighObserver;
 		class Rulebook;
-		typedef boost::shared_ptr<Rulebook> RulebookPtr;
+		typedef std::shared_ptr<Rulebook> RulebookPtr;
 		class Scene;
 	}
 	namespace Script {
@@ -91,7 +91,7 @@ class ClientApp : public GameDirector
 		Util::OS::wnd_t mainWnd;
 		VideoServices::VideoBuffer *videoBuf;
 		class UiInput;
-		boost::shared_ptr<UiInput> uiInput;
+		std::shared_ptr<UiInput> uiInput;
 		Control::InputEventController *controller;
 
 		Scene *scene;

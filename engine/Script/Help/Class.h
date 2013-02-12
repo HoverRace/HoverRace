@@ -70,7 +70,7 @@ class MR_DllDeclare Class
 		std::string name;
 		methods_t methods;
 };
-typedef boost::shared_ptr<Class> ClassPtr;
+typedef std::shared_ptr<Class> ClassPtr;
 
 }  // namespace Help
 }  // namespace Script

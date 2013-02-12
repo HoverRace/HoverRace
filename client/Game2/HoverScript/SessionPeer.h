@@ -66,7 +66,7 @@ class SessionPeer : public Script::Peer {
 		ClientSession *session;
 		Script::Core *scripting;
 };
-typedef boost::shared_ptr<SessionPeer> SessionPeerPtr;
+typedef std::shared_ptr<SessionPeer> SessionPeerPtr;
 
 }  // namespace HoverScript
 }  // namespace Client

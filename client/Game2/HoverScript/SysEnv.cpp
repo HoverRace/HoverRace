@@ -80,7 +80,7 @@ namespace HoverScript {
 
 SysEnv::SysEnv(Script::Core *scripting, GamePeer *gamePeer) :
 	SUPER(scripting), gamePeer(gamePeer),
-	outHandle(scripting->AddOutput(boost::make_shared<LogStream>()))
+	outHandle(scripting->AddOutput(std::make_shared<LogStream>()))
 {
 }
 

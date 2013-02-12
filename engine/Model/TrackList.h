@@ -37,7 +37,7 @@
 namespace HoverRace {
 	namespace Parcel {
 		class TrackBundle;
-		typedef boost::shared_ptr<TrackBundle> TrackBundlePtr;
+		typedef std::shared_ptr<TrackBundle> TrackBundlePtr;
 	}
 }
 

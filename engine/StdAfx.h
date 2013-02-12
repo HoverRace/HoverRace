@@ -43,6 +43,7 @@
 #include <exception>
 #include <list>
 #include <map>
+#include <memory>
 #include <set>
 #include <sstream>
 #include <string>
@@ -62,7 +63,6 @@
 #include <boost/foreach.hpp>
 #include <boost/format.hpp>
 #include <boost/lexical_cast.hpp>
-#include <boost/shared_ptr.hpp>
 
 #ifndef _WIN32
 	// Xlib.h must be included *after* boost/foreach.hpp as a workaround for

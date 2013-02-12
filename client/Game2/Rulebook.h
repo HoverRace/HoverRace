@@ -47,7 +47,7 @@ class Rulebook
 		int laps;
 		char gameOpts;
 };
-typedef boost::shared_ptr<Rulebook> RulebookPtr;
+typedef std::shared_ptr<Rulebook> RulebookPtr;
 
 }  // namespace Client
 }  // namespace HoverRace

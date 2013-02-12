@@ -252,7 +252,7 @@ void GamePeer::LStartPractice_R(const std::string &track, const luabind::object 
 	// a script concurrently, leading to undefined behavior.
 	// So, instead we defer the actual spawning of the new session until after
 	// the handlers are finished.
-	deferredStart = boost::make_shared<Rulebook>(
+	deferredStart = std::make_shared<Rulebook>(
 		hasExtension ? track : (track + Config::TRACK_EXT),
 		laps,
 		0x7f);

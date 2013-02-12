@@ -49,7 +49,7 @@ class InputHandler
 		virtual bool AxisMoved(const OIS::JoyStickState &state, int axis) { return true; }
 		virtual bool PovMoved(const OIS::JoyStickState &state, int pov) { return true; }
 };
-typedef boost::shared_ptr<InputHandler> InputHandlerPtr;
+typedef std::shared_ptr<InputHandler> InputHandlerPtr;
 
 } // namespace Control
 } // namespace Client

@@ -180,7 +180,7 @@ BOOL VideoAudioPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPA
 	static double lOriginalContrast;
 	static double lOriginalBrightness;
 	static float lOriginalSfxVolume;
-	static boost::shared_ptr<OS::monitors_t> monitors;
+	static std::shared_ptr<OS::monitors_t> monitors;
 
 	switch (pMsgId) {
 		// Catch environment modification events

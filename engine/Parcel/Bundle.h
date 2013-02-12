@@ -38,9 +38,9 @@ namespace HoverRace {
 namespace Parcel {
 
 class Bundle;
-typedef boost::shared_ptr<Bundle> BundlePtr;
+typedef std::shared_ptr<Bundle> BundlePtr;
 class RecordFile;
-typedef boost::shared_ptr<RecordFile> RecordFilePtr;
+typedef std::shared_ptr<RecordFile> RecordFilePtr;
 
 /**
  * A source of parcels.

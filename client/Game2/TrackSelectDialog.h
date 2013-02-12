@@ -42,7 +42,7 @@ namespace HoverRace {
 namespace Client {
 
 class Rulebook;
-typedef boost::shared_ptr<Rulebook> RulebookPtr;
+typedef std::shared_ptr<Rulebook> RulebookPtr;
 
 /**
  * Track selection dialog.

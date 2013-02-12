@@ -66,7 +66,7 @@ class UpdateDownloader
 		Version currentVersion;
 		Version updatedVersion;
 };
-typedef boost::shared_ptr<UpdateDownloader> UpdateDownloaderPtr;
+typedef std::shared_ptr<UpdateDownloader> UpdateDownloaderPtr;
 
 }  // namespace Client
 }  // namespace HoverRace
