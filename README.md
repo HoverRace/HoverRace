@@ -3,6 +3,9 @@ HoverRace
 
 <http://www.hoverrace.com/>
 
+**This is the _unstable_ branch of HoverRace.**
+The current stable branch is: [1.24](https://github.com/HoverRace/HoverRace/tree/1.24)
+
 HoverRace is an online racing game originally written by Grokksoft in the mid-1990s. After Grokksoft stopped maintaining the game in the late 1990s, HoverRace was abandonware for a number of years before the original developer, Richard Langlois, opened up the source code to the public. Since then, development has been ongoing to bring HoverRace into the 21st century.
 
 Features
