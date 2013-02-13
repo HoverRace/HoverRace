@@ -205,7 +205,7 @@ BOOL CALLBACK CheckUpdateServerDialog::DlgFunc(HWND hwnd, UINT message, WPARAM w
 	CheckUpdateServerDialog *dlg;
 	if (message == WM_INITDIALOG) {
 		dlg = reinterpret_cast<CheckUpdateServerDialog *>(lparam);
-		dlg->loadThread = boost::thread(boost::bind(&CheckUpdateServerDialog::ThreadProc, dlg, hwnd));
+		dlg->loadThread = boost::thread(std::bind(&CheckUpdateServerDialog::ThreadProc, dlg, hwnd));
 		SetWindowLong(hwnd, GWL_USERDATA, lparam);
 	} else {
 		dlg = reinterpret_cast<CheckUpdateServerDialog *>(GetWindowLong(hwnd, GWL_USERDATA));

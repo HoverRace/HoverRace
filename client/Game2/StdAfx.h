@@ -50,6 +50,7 @@
 
 #include <algorithm>
 #include <exception>
+#include <functional>
 #include <map>
 #include <memory>
 #include <set>
@@ -57,7 +58,6 @@
 #include <string>
 #include <vector>
 
-#include <boost/bind.hpp>
 #include <boost/filesystem/convenience.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/foreach.hpp>

@@ -95,7 +95,7 @@ bool DownloadUpdateDialog::ShowModal(HINSTANCE hinst, HWND parent)
 	bufTotal = 0;
 	cancel = false;
 
-	boost::thread thread(boost::bind(&DownloadUpdateDialog::ThreadProc, this));
+	boost::thread thread(std::bind(&DownloadUpdateDialog::ThreadProc, this));
 
 	DWORD dlgRetv = DialogBoxParamW(hinst, MAKEINTRESOURCEW(IDD_DOWNLOAD_PROGRESS),
 		parent, DlgFunc, reinterpret_cast<LPARAM>(this));
