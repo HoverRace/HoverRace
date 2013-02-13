@@ -42,226 +42,12 @@ static const BOOL gDebugMode = TRUE;
 static const BOOL gDebugMode = FALSE;
 #endif
 
-// Video card debuging traces
-
-// #define _CARD_DEBUG
-
-#ifdef _CARD_DEBUG
-
-#include <Mmsystem.h>
-
-static FILE *gOutputFile = NULL;
-
-#define OPEN_LOG() \
-if( gOutputFile == NULL ) \
-{ \
-	gOutputFile = fopen( "Video.log", "a" ); \
-}
-
-#define CLOSE_LOG() \
-if( gOutputFile != NULL ) \
-{ \
-	fclose( gOutputFile ); \
-	gOutputFile = NULL; \
-}
-
-static void PrintTimeAndLine(int pLine)
-{
-	if(gOutputFile != NULL) {
-		fprintf(gOutputFile, "%6d %4d : ", (int) timeGetTime(), pLine);
-	}
-}
-
-static int Assert(int pCondition, int pLine)
-{
-	if(!pCondition && (gOutputFile != NULL)) {
-		fprintf(gOutputFile, "%6d %4d : ASSERT FAILED", (int) timeGetTime(), pLine);
-	}
-
-	return pCondition;
-}
-
-static void PrintLog(const char *pFormat, ...)
-{
-	va_list lParamList;
-
-	va_start(lParamList, pFormat);
-
-	if(gOutputFile != NULL) {
-		vfprintf(gOutputFile, pFormat, lParamList);
-		fprintf(gOutputFile, "\n");
-		fflush(gOutputFile);
-	}
-}
-
-int DDrawCall(int pFuncResult, int pLine)
-{
-	const char *lErrStr = "DDERR_<other>";
-
-	switch (pFuncResult) {
-		case DD_OK:
-			lErrStr = "DD_OK";
-			break;
-
-		case DDERR_INVALIDPARAMS:
-			lErrStr = "DDERR_INVALIDPARAMS";
-			break;
-
-		case DDERR_INVALIDOBJECT:
-			lErrStr = "DDERR_INVALIDOBJECT";
-			break;
-
-		case DDERR_SURFACELOST:
-			lErrStr = "DDERR_SURFACELOST";
-			break;
-
-		case DDERR_SURFACEBUSY:
-			lErrStr = "DDERR_SURFACEBUSY";
-			break;
-
-		case DDERR_GENERIC:
-			lErrStr = "DDERR_GENERIC";
-			break;
-
-		case DDERR_WASSTILLDRAWING:
-			lErrStr = "DDERR_WASSTILLDRAWING";
-			break;
-
-		case DDERR_UNSUPPORTED:
-			lErrStr = "DDERR_UNSUPPORTED";
-			break;
-
-		case DDERR_NOTFLIPPABLE:
-			lErrStr = "DDERR_NOTFLIPPABLE";
-			break;
-
-		case DDERR_NOFLIPHW:
-			lErrStr = "DDERR_NOFLIPHW";
-			break;
-
-		case DDERR_INVALIDMODE:
-			lErrStr = "DDERR_INVALIDMODE";
-			break;
-
-		case DDERR_LOCKEDSURFACES:
-			lErrStr = "DDERR_LOCKEDSURFACES";
-			break;
-
-			/*
-			   case DDERR_WASSTILLDRAWING:
-			   lErrStr = "DDERR_WASSTILLDRAWING";
-			   break;
-			 */
-
-		case DDERR_NOEXCLUSIVEMODE:
-			lErrStr = "DDERR_NOEXCLUSIVEMODE";
-			break;
-
-			/*
-			   case DDERR_INVALIDPARAMS:
-			   lErrStr = "DDERR_INVALIDPARAMS";
-			   break;
-			 */
-
-		case DDERR_OUTOFVIDEOMEMORY:
-			lErrStr = "DDERR_OUTOFVIDEOMEMORY";
-			break;
-
-		case DDERR_NODIRECTDRAWHW:
-			lErrStr = "DDERR_NODIRECTDRAWHW";
-			break;
-
-		case DDERR_NOCOOPERATIVELEVELSET:
-			lErrStr = "DDERR_NOCOOPERATIVELEVELSET";
-			break;
-
-		case DDERR_INVALIDCAPS:
-			lErrStr = "DDERR_INVALIDCAPS";
-			break;
-
-		case DDERR_INVALIDPIXELFORMAT:
-			lErrStr = "DDERR_INVALIDPIXELFORMAT";
-			break;
-
-		case DDERR_NOALPHAHW:
-			lErrStr = "DDERR_NOALPHAHW";
-			break;
-
-			/*
-			   case DDERR_NOFLIPHW:
-			   lErrStr = "DDERR_NOFLIPHW";
-			   break;
-			 */
-
-		case DDERR_NOZBUFFERHW:
-			lErrStr = "DDERR_NOZBUFFERHW";
-			break;
-
-			/*
-			   case DDERR_NOEXCLUSIVEMODE:
-			   lErrStr = "DDERR_NOEXCLUSIVEMODE";
-			   break;
-			 */
-
-		case DDERR_OUTOFMEMORY:
-			lErrStr = "DDERR_OUTOFMEMORY";
-			break;
-
-		case DDERR_PRIMARYSURFACEALREADYEXISTS:
-			lErrStr = "DDERR_PRIMARYSURFACEALREADYEXISTS";
-			break;
-
-		case DDERR_NOEMULATION:
-			lErrStr = "DDERR_NOEMULATION";
-			break;
-
-		case DDERR_INCOMPATIBLEPRIMARY:
-			lErrStr = "DDERR_INCOMPATIBLEPRIMARY";
-			break;
-	}
-
-	if(gOutputFile != NULL) {
-		fprintf(gOutputFile, "%6d %4d : %d %s\n", (int) timeGetTime(), pLine, pFuncResult, lErrStr);
-		fflush(gOutputFile);
-	}
-
-	return pFuncResult;
-}
-
-#define PRINT_LOG   PrintTimeAndLine( __LINE__ );PrintLog
-
-#define DD_CALL( pFunc )   DDrawCall( pFunc, __LINE__ )
-
-#ifdef ASSERT
-#undef ASSERT
-#endif
-
-#define ASSERT( pCondition ) Assert( pCondition, __LINE__ )
-
-#else
-
-void PrintLog(const char *pFormat, ...);
-
-#define OPEN_LOG()
-#define CLOSE_LOG()
-
-#ifdef _DEBUG
-#define PRINT_LOG          1?NULL:
-#else
-#define PRINT_LOG          if( FALSE )PrintLog
-#endif
-#define DD_CALL( pFunc )   pFunc
-#endif
-
 static GUID zeroGuid = { 0, 0, 0, { 0, 0, 0, 0, 0, 0, 0, 0 } };
 
 VideoBuffer::VideoBuffer(Util::OS::wnd_t pWindow, double pGamma, double pContrast, double pBrightness) :
 	desktopWidth(0), desktopHeight(0),
 	mBackPalette(NULL)
 {
-	OPEN_LOG();
-	PRINT_LOG("VIDEO_BUFFER_CREATION");
-
 #ifndef WITH_SDL
 	mWindow = pWindow;
 	memset(&curMonitor, 0, sizeof(curMonitor));
@@ -564,8 +350,6 @@ void VideoBuffer::DeleteInternalSurfaces()
 
 void VideoBuffer::CreatePalette(double pGamma, double pContrast, double pBrightness)
 {
-	PRINT_LOG("CreatePalette");
-
 	ColorPalette::paletteEntry_t lPalette[256] = { 0 };
 
 	int lCounter;
@@ -655,7 +439,6 @@ void VideoBuffer::CreatePalette(double pGamma, double pContrast, double pBrightn
 		}
 		for(int i = 0; i < 256; i++) {
 			mPackedPalette[i] = PackRGB(lPalette[i]);
-			PRINT_LOG("Palette entry %d is %08xd", i, mPackedPalette[i]);
 		}
 	}
 
@@ -690,8 +473,6 @@ void VideoBuffer::SetBackPalette(MR_UInt8 * pPalette)
 
 void VideoBuffer::AssignPalette()
 {
-	PRINT_LOG("AssignPalette");
-
 #ifdef WITH_SDL
 	SDL_Surface *surface = SDL_GetVideoSurface();
 	if (surface != NULL) {
@@ -1317,8 +1098,6 @@ void VideoBuffer::Clear(MR_UInt8 pColor)
 
 void VideoBuffer::EnterIconMode()
 {
-	PRINT_LOG("EnterIconMode");
-
 	if(!mIconMode) {
 		mIconMode = TRUE;
 	}
@@ -1326,8 +1105,6 @@ void VideoBuffer::EnterIconMode()
 
 void VideoBuffer::ExitIconMode()
 {
-	PRINT_LOG("ExitIconMode");
-
 	if(mIconMode) {
 		mIconMode = FALSE;
 	}
