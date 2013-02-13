@@ -22,14 +22,10 @@
 
 #pragma once
 
-#include <SDL/SDL.h>
-
 #include "../../engine/Util/OS.h"
 
 #include "Observer.h"
 #include "GameDirector.h"
-
-#ifdef WITH_SDL
 
 namespace HoverRace {
 	namespace Client {
@@ -66,7 +62,6 @@ class ClientApp : public GameDirector
 
 	private:
 		void RefreshTitleBar();
-		void DrawPalette();
 		void RenderScene();
 
 	public:
@@ -105,5 +100,3 @@ class ClientApp : public GameDirector
 
 }  // namespace HoverScript
 }  // namespace Client
-
-#endif  // ifdef WITH_SDL

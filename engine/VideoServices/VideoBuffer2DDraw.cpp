@@ -29,8 +29,8 @@ namespace VideoServices {
 
 void VideoBuffer::DrawPoint(int pX, int pY, MR_UInt8 pColor)
 {
-	if(pX >= 0 && pY >= 0 && pX < mXRes && pY < mYRes) {
-		mBuffer[pY * mLineLen + pX] = pColor;
+	if (pX >= 0 && pY >= 0 && pX < width && pY < height) {
+		vbuf[pY * pitch + pX] = pColor;
 	}
 
 }
@@ -40,23 +40,23 @@ void VideoBuffer::DrawHorizontalLine(int pY, int pX0, int pX1, MR_UInt8 pColor)
 	int lTemp;
 
 	// Horizontal line
-	if((pY >= 0) && (pY < mYRes)) {
+	if((pY >= 0) && (pY < height)) {
 		if(pX0 > pX1) {
 			lTemp = pX0;
 			pX0 = pX1;
 			pX1 = lTemp;
 		}
 
-		if((pX0 < mXRes) && (pX1 >= 0)) {
+		if((pX0 < width) && (pX1 >= 0)) {
 			if(pX0 < 0) {
 				pX0 = 0;
 			}
 
-			if(pX1 >= mXRes) {
-				pX1 = mXRes - 1;
+			if(pX1 >= width) {
+				pX1 = width - 1;
 			}
 
-			memset(mBuffer + mLineLen * pY + pX0, pColor, pX1 - pX0 + 1);
+			memset(vbuf + pitch * pY + pX0, pColor, pX1 - pX0 + 1);
 		}
 	}
 
@@ -83,7 +83,7 @@ void VideoBuffer::DrawLine(int pX0, int pY0, int pX1, int pY1, MR_UInt8 pColor)
 
 		// Return if the line is not on screen
 
-		if((pY1 < 0) || (pY0 >= mYRes) || ((pX0 < 0) && (pX1 < 0)) || ((pX0 >= mXRes) && (pX1 >= mXRes))
+		if((pY1 < 0) || (pY0 >= height) || ((pX0 < 0) && (pX1 < 0)) || ((pX0 >= width) && (pX1 >= width))
 		) {
 			return;
 		}

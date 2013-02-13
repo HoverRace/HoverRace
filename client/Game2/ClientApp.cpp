@@ -22,6 +22,7 @@
 
 #include "StdAfx.h"
 
+#include <SDL/SDL.h>
 #include <SDL/SDL_syswm.h>
 #ifdef WITH_SDL_PANGO
 #	include <SDL_Pango.h>
@@ -58,12 +59,41 @@
 
 #include "ClientApp.h"
 
-#ifdef WITH_SDL
-
 using namespace HoverRace::Client::HoverScript;
 using namespace HoverRace::Util;
 namespace SoundServer = HoverRace::VideoServices::SoundServer;
 using HoverRace::Client::Control::InputEventController;
+
+namespace {
+	/**
+	 * Draws a color grid to debug the color palette.
+	 * @param surface The destination surface (must be an 8-bit surface).
+	 */
+	void DrawPalette(SDL_Surface *surface)
+	{
+		if (SDL_MUSTLOCK(surface)) {
+			if (SDL_LockSurface(surface) < 0) {
+				throw HoverRace::Exception("Unable to lock surface");
+			}
+		}
+
+		MR_UInt8 *buf = static_cast<MR_UInt8*>(surface->pixels);
+		for (int y = 0; y < 256; y++, buf += surface->pitch) {
+			if ((y % 16) == 0) continue;
+			MR_UInt8 *cur = buf;
+			for (int x = 0; x < 256; x++, cur++) {
+				if ((x % 16) == 0) continue;
+				*cur = ((y >> 4) << 4) + (x >> 4);
+			}
+		}
+
+		if (SDL_MUSTLOCK(surface)) {
+			SDL_UnlockSurface(surface);
+		}
+
+		SDL_Flip(surface);
+	}
+}
 
 namespace HoverRace {
 namespace Client {
@@ -113,7 +143,7 @@ ClientApp::ClientApp() :
 	int desktopHeight = videoInfo->current_h;
 
 	// Create the main window and SDL surface.
-	if (SDL_SetVideoMode(cfg->video.xRes, cfg->video.yRes, 8,
+	if (SDL_SetVideoMode(cfg->video.xRes, cfg->video.yRes, 0,
 		SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE) == NULL)
 	{
 		throw Exception("Unable to create video surface");
@@ -152,9 +182,8 @@ ClientApp::ClientApp() :
 #		endif
 	}
 
-	videoBuf = new VideoServices::VideoBuffer(mainWnd,
-		cfg->video.gamma, cfg->video.contrast, cfg->video.brightness);
-	videoBuf->NotifyDesktopModeChange(desktopWidth, desktopHeight);
+	videoBuf = new VideoServices::VideoBuffer();
+	videoBuf->OnDesktopModeChange(desktopWidth, desktopHeight);
 
 	AssignPalette();
 
@@ -196,47 +225,16 @@ void ClientApp::RefreshTitleBar()
 	SDL_WM_SetCaption(oss.str().c_str(), NULL);
 }
 
-/**
- * Draws a color grid to debug the color palette.
- */
-void ClientApp::DrawPalette()
-{
-	SDL_Surface *surface = SDL_GetVideoSurface();
-
-	if (SDL_MUSTLOCK(surface)) {
-		if (SDL_LockSurface(surface) < 0) {
-			throw Exception("Unable to lock surface");
-		}
-	}
-
-	MR_UInt8 *buf = static_cast<MR_UInt8*>(surface->pixels);
-	for (int y = 0; y < 256; y++, buf += surface->pitch) {
-		if ((y % 16) == 0) continue;
-		MR_UInt8 *cur = buf;
-		for (int x = 0; x < 256; x++, cur++) {
-			if ((x % 16) == 0) continue;
-			*cur = ((y >> 4) << 4) + (x >> 4);
-		}
-	}
-
-	if (SDL_MUSTLOCK(surface)) {
-		SDL_UnlockSurface(surface);
-	}
-
-	SDL_Flip(surface);
-}
-
 void ClientApp::RenderScene()
 {
-	if (videoBuf->Lock()) {
-		if (scene == NULL) {
-			videoBuf->Clear();
-		}
-		else {
-			scene->Render();
-		}
+	VideoServices::VideoBuffer::Lock lock(videoBuf);
+
+	if (scene == NULL) {
+		videoBuf->Clear();
 	}
-	videoBuf->Unlock();
+	else {
+		scene->Render();
+	}
 }
 
 void ClientApp::MainLoop()
@@ -252,9 +250,7 @@ void ClientApp::MainLoop()
 	}
 
 	SDL_Surface *surface = SDL_GetVideoSurface();
-	videoBuf->NotifyWindowResChange(surface->w, surface->h, surface->pitch);
-
-	DrawPalette();
+	videoBuf->OnWindowResChange();
 
 #	ifdef WITH_SDL_OIS_INPUT
 		std::vector<SDL_Event> deferredEvents;
@@ -276,8 +272,7 @@ void ClientApp::MainLoop()
 					{
 						throw Exception("Unable to resize video surface");
 					}
-					videoBuf->NotifyWindowResChange(surface->w, surface->h,
-						surface->pitch);
+					videoBuf->OnWindowResChange();
 					AssignPalette();
 					break;
 
@@ -351,8 +346,7 @@ void ClientApp::AssignPalette()
 {
 	Config *cfg = Config::GetInstance();
 
-	videoBuf->CreatePalette(
-		cfg->video.gamma, cfg->video.contrast, cfg->video.brightness);
+	videoBuf->CreatePalette();
 	videoBuf->AssignPalette();
 }
 
@@ -365,5 +359,3 @@ Control::InputEventController *ClientApp::ReloadController()
 
 }  // namespace HoverScript
 }  // namespace Client
-
-#endif  // ifdef WITH_SDL

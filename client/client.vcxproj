@@ -110,34 +110,58 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Game2\FolderViewer.cpp" />
+    <ClCompile Include="Game2\FullscreenTest.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Game2\GifDecoder.cpp" />
     <ClCompile Include="Game2\CheckRoomListDialog.cpp" />
     <ClCompile Include="Game2\CheckUpdateServerDialog.cpp" />
     <ClCompile Include="Game2\ClientApp.cpp" />
     <ClCompile Include="Game2\ClientSession.cpp" />
-    <ClCompile Include="Game2\ControlPrefsPage.cpp" />
+    <ClCompile Include="Game2\ControlPrefsPage.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Game2\Control\ActionPerformers.cpp" />
     <ClCompile Include="Game2\Control\ConsoleActions.cpp" />
     <ClCompile Include="Game2\Control\ObserverActions.cpp" />
     <ClCompile Include="Game2\DownloadUpdateDialog.cpp" />
     <ClCompile Include="Game2\FirstChoiceDialog.cpp" />
-    <ClCompile Include="Game2\FullscreenTest.cpp" />
-    <ClCompile Include="Game2\GameApp.cpp" />
+    <ClCompile Include="Game2\GameApp.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Game2\GameScene.cpp" />
     <ClCompile Include="Game2\HighObserver.cpp" />
     <ClCompile Include="Game2\InternetRoom.cpp" />
     <ClCompile Include="Game2\IntroMovie.cpp" />
     <ClCompile Include="Game2\main.cpp" />
     <ClCompile Include="Game2\MatchReport.cpp" />
-    <ClCompile Include="Game2\MiscPrefsPage.cpp" />
-    <ClCompile Include="Game2\MultiplayerPrefsPage.cpp" />
+    <ClCompile Include="Game2\MiscPrefsPage.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Game2\MultiplayerPrefsPage.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Game2\NetInterface.cpp" />
-    <ClCompile Include="Game2\NetworkPrefsPage.cpp" />
+    <ClCompile Include="Game2\NetworkPrefsPage.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Game2\NetworkSession.cpp" />
     <ClCompile Include="Game2\Observer.cpp" />
     <ClCompile Include="Game2\PathSelector.cpp" />
-    <ClCompile Include="Game2\PrefsDialog.cpp" />
-    <ClCompile Include="Game2\PrefsPage.cpp" />
+    <ClCompile Include="Game2\PrefsDialog.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Game2\PrefsPage.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Game2\RoomList.cpp" />
     <ClCompile Include="Game2\RoomListDialog.cpp" />
     <ClCompile Include="Game2\SelectRoomDialog.cpp" />
@@ -148,7 +172,10 @@
     <ClCompile Include="Game2\TrackDownloadDialog.cpp" />
     <ClCompile Include="Game2\TrackSelectDialog.cpp" />
     <ClCompile Include="Game2\UpdateDownloader.cpp" />
-    <ClCompile Include="Game2\VideoAudioPrefsPage.cpp" />
+    <ClCompile Include="Game2\VideoAudioPrefsPage.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Game2\Control\Controller.cpp" />
     <ClCompile Include="Game2\HoverScript\ClientScriptCore.cpp" />
     <ClCompile Include="Game2\HoverScript\ConfigPeer.cpp" />
@@ -165,35 +192,59 @@
     <ClInclude Include="Game2\Control\SDL\SDLMouse.h" />
     <ClInclude Include="Game2\Control\SDL\SDLPrereqs.h" />
     <ClInclude Include="Game2\FolderViewer.h" />
+    <ClInclude Include="Game2\FullscreenTest.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Game2\GifDecoder.h" />
     <ClInclude Include="Game2\CheckRoomListDialog.h" />
     <ClInclude Include="Game2\CheckUpdateServerDialog.h" />
     <ClInclude Include="Game2\ClientApp.h" />
     <ClInclude Include="Game2\ClientSession.h" />
-    <ClInclude Include="Game2\ControlPrefsPage.h" />
+    <ClInclude Include="Game2\ControlPrefsPage.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Game2\Control\ActionPerformers.h" />
     <ClInclude Include="Game2\Control\ConsoleActions.h" />
     <ClInclude Include="Game2\Control\ControlAction.h" />
     <ClInclude Include="Game2\Control\ObserverActions.h" />
     <ClInclude Include="Game2\DownloadUpdateDialog.h" />
     <ClInclude Include="Game2\FirstChoiceDialog.h" />
-    <ClInclude Include="Game2\FullscreenTest.h" />
-    <ClInclude Include="Game2\GameApp.h" />
+    <ClInclude Include="Game2\GameApp.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Game2\GameDirector.h" />
     <ClInclude Include="Game2\GameScene.h" />
     <ClInclude Include="Game2\HighObserver.h" />
     <ClInclude Include="Game2\InternetRoom.h" />
     <ClInclude Include="Game2\IntroMovie.h" />
     <ClInclude Include="Game2\MatchReport.h" />
-    <ClInclude Include="Game2\MiscPrefsPage.h" />
-    <ClInclude Include="Game2\MultiplayerPrefsPage.h" />
+    <ClInclude Include="Game2\MiscPrefsPage.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Game2\MultiplayerPrefsPage.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Game2\NetInterface.h" />
-    <ClInclude Include="Game2\NetworkPrefsPage.h" />
+    <ClInclude Include="Game2\NetworkPrefsPage.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Game2\NetworkSession.h" />
     <ClInclude Include="Game2\Observer.h" />
     <ClInclude Include="Game2\PathSelector.h" />
-    <ClInclude Include="Game2\PrefsDialog.h" />
-    <ClInclude Include="Game2\PrefsPage.h" />
+    <ClInclude Include="Game2\PrefsDialog.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Game2\PrefsPage.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Game2\resource.h" />
     <ClInclude Include="Game2\RoomList.h" />
     <ClInclude Include="Game2\RoomListDialog.h" />
@@ -204,7 +255,10 @@
     <ClInclude Include="Game2\TrackDownloadDialog.h" />
     <ClInclude Include="Game2\TrackSelectDialog.h" />
     <ClInclude Include="Game2\UpdateDownloader.h" />
-    <ClInclude Include="Game2\VideoAudioPrefsPage.h" />
+    <ClInclude Include="Game2\VideoAudioPrefsPage.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Game2\Control\Controller.h" />
     <ClInclude Include="Game2\Control\InputHandler.h" />
     <ClInclude Include="Game2\Control\UiHandler.h" />

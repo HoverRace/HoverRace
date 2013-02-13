@@ -75,16 +75,16 @@ void ClientSession::ReadLevelAttrib(Parcel::RecordFilePtr pRecordFile, VideoServ
 			lArchive >> lImageType;
 
 			if(lImageType == MR_RAWBITMAP) {
-				MR_UInt8 *lPalette = new MR_UInt8[MR_BACK_COLORS * 3];
+				auto lPalette = std::unique_ptr<MR_UInt8[]>(new MR_UInt8[MR_BACK_COLORS * 3]);
 
 				if(mBackImage == NULL) {
 					mBackImage = new MR_UInt8[MR_BACK_X_RES * MR_BACK_Y_RES];
 				}
 
-				lArchive.Read(lPalette, MR_BACK_COLORS * 3);
+				lArchive.Read(lPalette.get(), MR_BACK_COLORS * 3);
 				lArchive.Read(mBackImage, MR_BACK_X_RES * MR_BACK_Y_RES);
 
-				pVideo->SetBackPalette(lPalette);
+				pVideo->SetBackgroundPalette(lPalette);
 			}
 		}
 	}
