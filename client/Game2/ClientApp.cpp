@@ -227,7 +227,7 @@ void ClientApp::RefreshTitleBar()
 
 void ClientApp::RenderScene()
 {
-	VideoServices::VideoBuffer::Lock lock(videoBuf);
+	VideoServices::VideoBuffer::Lock lock(*videoBuf);
 
 	if (scene == NULL) {
 		videoBuf->Clear();

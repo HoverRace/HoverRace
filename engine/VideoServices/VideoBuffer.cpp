@@ -37,7 +37,7 @@ namespace VideoServices {
 VideoBuffer::VideoBuffer() :
 	desktopWidth(0), desktopHeight(0), width(0), height(0), pitch(0),
 	fullscreen(false),
-	zbuf(NULL), vbuf(NULL),
+	legacySurface(NULL), zbuf(NULL), vbuf(NULL),
 	bgPalette()
 {
 }
@@ -45,6 +45,9 @@ VideoBuffer::VideoBuffer() :
 VideoBuffer::~VideoBuffer()
 {
 	delete[] zbuf;
+	if (legacySurface != NULL) {
+		SDL_FreeSurface(legacySurface);
+	}
 }
 
 /**
@@ -69,6 +72,13 @@ void VideoBuffer::OnWindowResChange()
 	width = surface->w;
 	height = surface->h;
 	pitch = surface->pitch;
+
+	// The size of the legacy surface matches the screen surface,
+	// just has a different bit depth.
+	if (legacySurface != NULL) {
+		SDL_FreeSurface(legacySurface);
+	}
+	legacySurface = SDL_CreateRGBSurface(SDL_HWSURFACE, width, height, 8, 0, 0, 0, 0);
 
 	delete[] zbuf;
 	zbuf = new MR_UInt16[width * height];
@@ -123,9 +133,8 @@ void VideoBuffer::SetBackgroundPalette(std::unique_ptr<MR_UInt8[]> &palette)
 
 void VideoBuffer::AssignPalette()
 {
-	SDL_Surface *surface = SDL_GetVideoSurface();
-	if (surface != NULL) {
-		SDL_SetPalette(surface, SDL_PHYSPAL, palette, 0, 256);
+	if (legacySurface != NULL) {
+		SDL_SetPalette(legacySurface, SDL_LOGPAL, palette, 0, 256);
 	}
 }
 
@@ -139,25 +148,21 @@ VideoBuffer::pixelMeter_t VideoBuffer::GetPixelMeter() const
 	}
 }
 
-void VideoBuffer::LockScreenSurface()
+void VideoBuffer::LockLegacySurface()
 {
-	SDL_Surface *surface = SDL_GetVideoSurface();
-
-	if (SDL_MUSTLOCK(surface)) {
-		if (SDL_LockSurface(surface) < 0) {
+	if (SDL_MUSTLOCK(legacySurface)) {
+		if (SDL_LockSurface(legacySurface) < 0) {
 			throw Exception("Unable to lock surface");
 		}
 	}
 
-	vbuf = static_cast<MR_UInt8*>(surface->pixels);
+	vbuf = static_cast<MR_UInt8*>(legacySurface->pixels);
 }
 
-void VideoBuffer::UnlockScreenSurface()
+void VideoBuffer::UnlockLegacySurface()
 {
-	SDL_Surface *surface = SDL_GetVideoSurface();
-
-	if (SDL_MUSTLOCK(surface)) {
-		SDL_UnlockSurface(surface);
+	if (SDL_MUSTLOCK(legacySurface)) {
+		SDL_UnlockSurface(legacySurface);
 	}
 
 	Flip();
@@ -165,13 +170,17 @@ void VideoBuffer::UnlockScreenSurface()
 
 void VideoBuffer::Flip()
 {
-	SDL_Flip(SDL_GetVideoSurface());
+	SDL_Surface *screenSurface = SDL_GetVideoSurface();
+	if (legacySurface != NULL) {
+		SDL_BlitSurface(legacySurface, NULL, screenSurface, NULL);
+	}
+
+	SDL_Flip(screenSurface);
 }
 
 void VideoBuffer::Clear(MR_UInt8 color)
 {
-	SDL_Surface *surface = SDL_GetVideoSurface();
-	memset(surface->pixels, color, surface->pitch * surface->w);
+	memset(legacySurface->pixels, color, legacySurface->pitch * legacySurface->w);
 }
 
 }  // namespace VideoServices

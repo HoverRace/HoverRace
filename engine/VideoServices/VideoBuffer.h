@@ -45,10 +45,14 @@ class MR_DllDeclare VideoBuffer
 {
 	public:
 		class Lock {
-			VideoBuffer *videoBuffer;
+			VideoBuffer &videoBuffer;
 			public:
-				Lock(VideoBuffer *videoBuffer) : videoBuffer(videoBuffer) { videoBuffer->LockScreenSurface(); }
-				~Lock() { videoBuffer->UnlockScreenSurface(); }
+				Lock(VideoBuffer &videoBuffer) : videoBuffer(videoBuffer) {
+					videoBuffer.LockLegacySurface();
+				}
+				~Lock() {
+					videoBuffer.UnlockLegacySurface();
+				}
 		};
 
 	public:
@@ -64,8 +68,8 @@ class MR_DllDeclare VideoBuffer
 		void SetBackgroundPalette(std::unique_ptr<MR_UInt8[]> &palette);
 
 	private:
-		void LockScreenSurface();
-		void UnlockScreenSurface();
+		void LockLegacySurface();
+		void UnlockLegacySurface();
 		void Flip();
 
 	public:
@@ -96,6 +100,7 @@ class MR_DllDeclare VideoBuffer
 		int width, height, pitch;
 		bool fullscreen;
 
+		SDL_Surface *legacySurface;
 		MR_UInt8 *vbuf;
 		MR_UInt16 *zbuf;
 
