@@ -251,7 +251,6 @@ void ClientApp::MainLoop()
 
 	SDL_Surface *surface = SDL_GetVideoSurface();
 	videoBuf->OnWindowResChange();
-	AssignPalette();
 
 #	ifdef WITH_SDL_OIS_INPUT
 		std::vector<SDL_Event> deferredEvents;
@@ -274,7 +273,6 @@ void ClientApp::MainLoop()
 						throw Exception("Unable to resize video surface");
 					}
 					videoBuf->OnWindowResChange();
-					AssignPalette();
 					break;
 
 				// Certain SDL events need to be processed by the SDL-OIS

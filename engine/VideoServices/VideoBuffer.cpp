@@ -84,6 +84,7 @@ void VideoBuffer::OnWindowResChange()
 	}
 	vbuf = new MR_UInt8[height * pitch];
 	legacySurface = SDL_CreateRGBSurfaceFrom(vbuf, width, height, 8, pitch, 0, 0, 0, 0);
+	AssignPalette();
 
 	delete[] zbuf;
 	zbuf = new MR_UInt16[width * height];
