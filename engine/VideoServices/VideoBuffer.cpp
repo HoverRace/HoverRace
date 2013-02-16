@@ -47,6 +47,7 @@ VideoBuffer::~VideoBuffer()
 	delete[] zbuf;
 	if (legacySurface != NULL) {
 		SDL_FreeSurface(legacySurface);
+		delete[] vbuf;
 	}
 }
 
@@ -75,10 +76,14 @@ void VideoBuffer::OnWindowResChange()
 
 	// The size of the legacy surface matches the screen surface,
 	// just has a different bit depth.
+	// We're allocating our own buffer to work around an issue where on X11
+	// SDL doesn't seem to allocate a large enough buffer itself (??).
 	if (legacySurface != NULL) {
 		SDL_FreeSurface(legacySurface);
+		delete[] vbuf;
 	}
-	legacySurface = SDL_CreateRGBSurface(SDL_HWSURFACE, width, height, 8, 0, 0, 0, 0);
+	vbuf = new MR_UInt8[height * pitch];
+	legacySurface = SDL_CreateRGBSurfaceFrom(vbuf, width, height, 8, pitch, 0, 0, 0, 0);
 
 	delete[] zbuf;
 	zbuf = new MR_UInt16[width * height];
@@ -155,8 +160,6 @@ void VideoBuffer::LockLegacySurface()
 			throw Exception("Unable to lock surface");
 		}
 	}
-
-	vbuf = static_cast<MR_UInt8*>(legacySurface->pixels);
 }
 
 void VideoBuffer::UnlockLegacySurface()
