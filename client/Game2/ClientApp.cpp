@@ -328,7 +328,9 @@ void ClientApp::NewLocalSession(RulebookPtr rules)
 
 void ClientApp::RequestShutdown()
 {
-	throw UnimplementedExn("ClientApp::RequestShutdown()");
+	SDL_Event evt;
+	evt.type = SDL_QUIT;
+	SDL_PushEvent(&evt);
 }
 
 void ClientApp::SignalServerHasChanged()
