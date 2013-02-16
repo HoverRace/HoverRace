@@ -183,7 +183,7 @@ void VideoBuffer::Flip()
 
 void VideoBuffer::Clear(MR_UInt8 color)
 {
-	memset(legacySurface->pixels, color, legacySurface->pitch * legacySurface->w);
+	memset(legacySurface->pixels, color, legacySurface->pitch * legacySurface->h);
 }
 
 }  // namespace VideoServices
