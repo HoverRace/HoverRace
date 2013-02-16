@@ -71,7 +71,7 @@ void SessionPeer::OnSessionEnd()
 void SessionPeer::VerifySession() const
 {
 	if (session == NULL) {
-		luaL_error(scripting->GetState(), "Session has ended.");
+		luaL_error(GetScripting()->GetState(), "Session has ended.");
 	}
 }
 

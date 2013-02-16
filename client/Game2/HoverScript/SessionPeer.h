@@ -64,7 +64,6 @@ class SessionPeer : public Script::Peer {
 
 	private:
 		ClientSession *session;
-		Script::Core *scripting;
 };
 typedef std::shared_ptr<SessionPeer> SessionPeerPtr;
 

@@ -95,7 +95,6 @@ class GamePeer : public Script::Peer {
 		void LShutdown();
 
 	private:
-		Script::Core *scripting;
 		GameDirector *gameDirector;
 		bool initialized;
 		Script::Handlers onInit;
