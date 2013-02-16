@@ -58,6 +58,8 @@
 #include <string>
 #include <vector>
 
+#include "../../include/compat/boost_cxx11.h"
+
 #include <boost/filesystem/convenience.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/foreach.hpp>
