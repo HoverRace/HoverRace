@@ -51,7 +51,7 @@ void ConfigPeer::Register(Script::Core *scripting)
 	lua_State *L = scripting->GetState();
 
 	module(L) [
-		class_<ConfigPeer,SUPER>("Config")
+		class_<ConfigPeer,SUPER,std::shared_ptr<ConfigPeer>>("Config")
 			.def("unlink", &ConfigPeer::LUnlink)
 			.def("get_video_res", &ConfigPeer::LGetVideoRes)
 			.def("set_video_res", &ConfigPeer::LSetVideoRes)

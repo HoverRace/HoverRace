@@ -47,7 +47,7 @@ void Peer::Register(Core *scripting)
 	lua_State *L = scripting->GetState();
 
 	module(L) [
-		class_<Peer>("Object")
+		class_<Peer,std::shared_ptr<Peer>>("Object")
 			.def("help", &Peer::LHelp)
 			.def("help", &Peer::LHelp_M)
 	];

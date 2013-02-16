@@ -49,7 +49,7 @@ void SessionPeer::Register(Script::Core *scripting)
 	lua_State *L = scripting->GetState();
 
 	module(L) [
-		class_<SessionPeer,SUPER>("Session")
+		class_<SessionPeer,SUPER,std::shared_ptr<SessionPeer>>("Session")
 			.def("get_num_players", &SessionPeer::LGetNumPlayers)
 	];
 }
