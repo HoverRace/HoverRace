@@ -2,7 +2,7 @@
 # fetch.ps1
 #   Downloads, extracts, and patches.
 
-$srcVer = "0.9"
+$srcVer = "0.9.1"
 $src = "luabind-$srcVer"
 #TODO: Make the SourceForge mirror user-selectable.
 $url = "http://superb-sea2.dl.sourceforge.net/project/luabind/luabind/$srcVer/$src.zip"
@@ -22,7 +22,3 @@ $sh.NameSpace("$curDir").CopyHere($sh.NameSpace($destFile).ParseName($src))
 Write-Host "==> Renaming to: $srcDir"
 Remove-Item -Recurse $srcdir -ErrorAction SilentlyContinue
 Rename-Item "$curDir\$src" $srcDir
-
-Write-Host "==> Patching with: $patchFile"
-#FIXME: Replace with user-configurable patch binary.
-w-pat -p1 -d $srcDir -i "..\$patchFile"

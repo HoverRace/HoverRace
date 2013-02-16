@@ -1,5 +1,5 @@
 
-Current supported Luabind version: 0.9
+Current supported Luabind version: 0.9.1
 
 
 == PowerShell Instructions ==
@@ -22,12 +22,10 @@ http://technet.microsoft.com/en-us/library/ee176949.aspx
 
 == Manual Instructions ==
 
-1. Download the Luabind sources (luabind-0.9.zip) from here:
+1. Download the Luabind sources (luabind-0.9.1.zip) from here:
 
 http://sourceforge.net/projects/luabind/files/luabind/
 
 2. Unpack the .zip file into this folder.
 
-3. Rename the "luabind-0.9" folder to "src".
-
-4. Apply patches/0.9-nullptr.patch
+3. Rename the "luabind-0.9.1" folder to "src".
