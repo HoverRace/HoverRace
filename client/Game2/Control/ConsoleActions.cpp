@@ -63,7 +63,9 @@ void ConsoleKeyAction::operator()(int eventValue)
 			hc->OnChar((char) out);
 	}
 #else
-	throw UnimplementedExn("ConsoleKeyAction::operator()(int)");
+	if (eventValue > 0) {
+		hc->OnChar((char)eventValue);
+	}
 #endif
 }
 
