@@ -139,7 +139,7 @@ void VideoBuffer::SetBackgroundPalette(std::unique_ptr<MR_UInt8[]> &palette)
 void VideoBuffer::AssignPalette()
 {
 	if (legacySurface != NULL) {
-		SDL_SetPalette(legacySurface, SDL_LOGPAL, palette, 0, 256);
+		SDL_SetColors(legacySurface, palette, 0, 256);
 	}
 }
 
@@ -175,7 +175,9 @@ void VideoBuffer::Flip()
 {
 	SDL_Surface *screenSurface = SDL_GetVideoSurface();
 	if (legacySurface != NULL) {
-		SDL_BlitSurface(legacySurface, NULL, screenSurface, NULL);
+		SDL_Surface *tempSurface = SDL_DisplayFormat(legacySurface);
+		SDL_BlitSurface(tempSurface, NULL, screenSurface, NULL);
+		SDL_FreeSurface(tempSurface);
 	}
 
 	SDL_Flip(screenSurface);
