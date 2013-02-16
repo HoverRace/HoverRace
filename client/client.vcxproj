@@ -187,6 +187,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\compat\boost_cxx11.h" />
+    <ClInclude Include="..\include\compat\luabind_cxx11.h" />
     <ClInclude Include="Game2\AboutDialog.h" />
     <ClInclude Include="Game2\Control\SDL\SDLInputManager.h" />
     <ClInclude Include="Game2\Control\SDL\SDLKeyboard.h" />

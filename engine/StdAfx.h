@@ -58,6 +58,7 @@
 #	define BOOST_FILESYSTEM_VERSION 2
 #endif
 
+#include "../../include/compat/luabind_cxx11.h"
 #include "../../include/compat/boost_cxx11.h"
 
 #include <boost/filesystem/convenience.hpp>
