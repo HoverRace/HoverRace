@@ -34,16 +34,9 @@ namespace ColorPalette {
 namespace {
 	void AssignPaletteEntry(paletteEntry_t &ent, double r, double g, double b)
 	{
-#		ifdef WITH_SDL
-			ent.r = static_cast<MR_UInt8>(r);
-			ent.g = static_cast<MR_UInt8>(g);
-			ent.b = static_cast<MR_UInt8>(b);
-#		else
-			ent.peRed = static_cast<MR_UInt8>(r);
-			ent.peGreen = static_cast<MR_UInt8>(g);
-			ent.peBlue = static_cast<MR_UInt8>(b);
-			ent.peFlags = 0;  // PC_EXPLICIT
-#		endif
+		ent.r = static_cast<MR_UInt8>(r);
+		ent.g = static_cast<MR_UInt8>(g);
+		ent.b = static_cast<MR_UInt8>(b);
 	}
 }
 

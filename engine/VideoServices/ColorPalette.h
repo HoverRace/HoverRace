@@ -25,9 +25,7 @@
 
 #pragma once
 
-#ifdef WITH_SDL
-#	include <SDL/SDL.h>
-#endif
+#include <SDL/SDL.h>
 
 #include "../Util/MR_Types.h"
 
@@ -49,9 +47,6 @@ namespace ColorPalette {
 #define MR_NB_COLORS                  256
 #define MR_RESERVED_COLORS_BEGINNING   10
 #define MR_RESERVED_COLORS_END         15
-// THIS IS JUST A GUESS, IT IS PROBABLY WRONG
-// FIX ME
-// MR_RESERVED_COLORS added based on a guess
 #define MR_RESERVED_COLORS              6
 #define MR_BASIC_COLORS               100		  // Includes some extra space
 #define MR_BACK_COLORS                128
@@ -65,17 +60,10 @@ MR_DllDeclare extern MR_UInt8 colorAdditionTable[MR_NB_COLORS][MR_NB_COLORS];
 extern double basicPalette[][3];
 extern int basicPaletteSize;
 
-#ifdef WITH_SDL
-	typedef SDL_Color paletteEntry_t;
-	inline MR_UInt8 &PalR(paletteEntry_t &ent) { return ent.r; }
-	inline MR_UInt8 &PalG(paletteEntry_t &ent) { return ent.g; }
-	inline MR_UInt8 &PalB(paletteEntry_t &ent) { return ent.b; }
-#else
-	typedef PALETTEENTRY paletteEntry_t;
-	inline MR_UInt8 &PalR(paletteEntry_t &ent) { return ent.peRed; }
-	inline MR_UInt8 &PalG(paletteEntry_t &ent) { return ent.peGreen; }
-	inline MR_UInt8 &PalB(paletteEntry_t &ent) { return ent.peBlue; }
-#endif
+typedef SDL_Color paletteEntry_t;
+inline MR_UInt8 &PalR(paletteEntry_t &ent) { return ent.r; }
+inline MR_UInt8 &PalG(paletteEntry_t &ent) { return ent.g; }
+inline MR_UInt8 &PalB(paletteEntry_t &ent) { return ent.b; }
 
 MR_DllDeclare paletteEntry_t *GetColors(double pGamma, double pIntensity = 0.8, double pIntensityBase = 0.0);
 MR_DllDeclare const paletteEntry_t &ConvertColor(MR_UInt8 pRed, MR_UInt8 pGreen, MR_UInt8 pBlue, double pGamma, double pIntensity = 0.8, double pIntensityBase = 0.0);
