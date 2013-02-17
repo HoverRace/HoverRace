@@ -22,11 +22,13 @@
 
 #include "StdAfx.h"
 
-#include "VideoBuffer.h"
+#include <SDL/SDL.h>
 
 #include "../Exception.h"
 #include "../Util/Config.h"
 #include "../Util/OS.h"
+
+#include "VideoBuffer.h"
 
 using HoverRace::Util::Config;
 using HoverRace::Util::OS;

@@ -22,8 +22,6 @@
 
 #pragma once
 
-#include <SDL/SDL.h>
-
 #include "../Util/MR_Types.h"
 #include "../Util/OS.h"
 #include "ColorPalette.h"
@@ -37,6 +35,8 @@
 #else
 #	define MR_DllDeclare
 #endif
+
+struct SDL_Surface;
 
 namespace HoverRace {
 namespace VideoServices {
