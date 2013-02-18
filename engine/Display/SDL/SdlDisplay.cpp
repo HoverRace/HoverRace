@@ -48,7 +48,7 @@ SdlDisplay::~SdlDisplay()
 
 void SdlDisplay::AttachView(Label &model)
 {
-	model.SetView(new SdlLabelView(*this, model));
+	model.SetView(std::unique_ptr<View>(new SdlLabelView(*this, model)));
 }
 
 void SdlDisplay::OnDisplayConfigChanged()

@@ -22,6 +22,7 @@
 #pragma once
 
 #include "Display.h"
+#include "View.h"
 
 #include "ViewAttacher.h"
 
@@ -38,7 +39,6 @@
 namespace HoverRace {
 	namespace Display {
 		class Display;
-		class View;
 	}
 }
 
@@ -56,8 +56,8 @@ class MR_DllDeclare ViewModel
 {
 	public:
 		virtual void AttachView(Display *disp) = 0;
-		void SetView(View *view) { this->view = view; }
-		View *GetView() const { return view; }
+		void SetView(std::unique_ptr<View> &&view) { this->view = std::move(view); }
+		View *GetView() const { return view.get(); }
 
 	protected:
 		template<class T>
@@ -67,7 +67,7 @@ class MR_DllDeclare ViewModel
 		}
 
 	private:
-		View *view;
+		std::unique_ptr<View> view;
 };
 
 }  // namespace Display
