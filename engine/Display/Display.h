@@ -54,6 +54,18 @@ namespace Display {
 class MR_DllDeclare Display :
 	public ViewAttacher<Label>
 {
+	public:
+		/**
+		 * Reconfigure the display based on the new configuration.
+		 *
+		 * This should be called whenever the video configuration of
+		 * Util::Config changes.
+		 *
+		 * @warning Depending on the underlying API and what configuration
+		 * options changed, this may trigger resources to be reloaded or
+		 * regenerated.
+		 */
+		virtual void OnDisplayConfigChanged() = 0;
 };
 
 }  // namespace Display

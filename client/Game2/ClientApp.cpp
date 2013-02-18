@@ -2,7 +2,7 @@
 // ClientApp.cpp
 // Experimental game shell.
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2013 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@
 #endif
 
 #include "../../engine/Exception.h"
+#include "../../engine/Display/SDL/SdlDisplay.h"
 #include "../../engine/MainCharacter/MainCharacter.h"
 #include "../../engine/Model/Track.h"
 #include "../../engine/Parcel/TrackBundle.h"
@@ -143,11 +144,8 @@ ClientApp::ClientApp() :
 	int desktopHeight = videoInfo->current_h;
 
 	// Create the main window and SDL surface.
-	if (SDL_SetVideoMode(cfg->video.xRes, cfg->video.yRes, 0,
-		SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE) == NULL)
-	{
-		throw Exception("Unable to create video surface");
-	}
+	//TODO: Select which display to use.
+	display = new Display::SDL::SdlDisplay();
 
 	// Set window position and icon (platform-dependent).
 	SDL_SysWMinfo wm;
@@ -200,6 +198,7 @@ ClientApp::~ClientApp()
 	delete gamePeer;
 	delete scripting;
 	delete videoBuf;
+	delete display;
 	delete controller;
 
 	// Engine shutdown.
@@ -223,6 +222,21 @@ void ClientApp::RefreshTitleBar()
 	}
 
 	SDL_WM_SetCaption(oss.str().c_str(), NULL);
+}
+
+/**
+ * Handle when the window is resized.
+ * @param w The new width.
+ * @param h The new height.
+ */
+void ClientApp::OnWindowResize(int w, int h)
+{
+	Config::cfg_video_t &vidCfg = Config::GetInstance()->video;
+	vidCfg.xRes = w;
+	vidCfg.yRes = h;
+
+	display->OnDisplayConfigChanged();
+	videoBuf->OnWindowResChange();
 }
 
 void ClientApp::RenderScene()
@@ -249,7 +263,6 @@ void ClientApp::MainLoop()
 		NewLocalSession(rules);
 	}
 
-	SDL_Surface *surface = SDL_GetVideoSurface();
 	videoBuf->OnWindowResChange();
 
 #	ifdef WITH_SDL_OIS_INPUT
@@ -266,13 +279,7 @@ void ClientApp::MainLoop()
 					break;
 
 				case SDL_VIDEORESIZE:
-					if ((surface = SDL_SetVideoMode(evt.resize.w, evt.resize.h,
-						0, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE))
-						== NULL)
-					{
-						throw Exception("Unable to resize video surface");
-					}
-					videoBuf->OnWindowResChange();
+					OnWindowResize(evt.resize.w, evt.resize.h);
 					break;
 
 				// Certain SDL events need to be processed by the SDL-OIS

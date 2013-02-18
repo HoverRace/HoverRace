@@ -43,6 +43,10 @@ namespace HoverRace {
 namespace Display {
 namespace SDL {
 
+/**
+ * SDL-based software rendering.
+ * @author Michael Imamura
+ */
 class MR_DllDeclare SdlDisplay : public Display
 {
 	typedef Display SUPER;
@@ -51,7 +55,18 @@ class MR_DllDeclare SdlDisplay : public Display
 		virtual ~SdlDisplay();
 
 	public:
+		// ViewAttacher
 		virtual void AttachView(Label &model);
+
+	public:
+		// Display
+		virtual void OnDisplayConfigChanged();
+
+	private:
+		void ApplyVideoMode();
+
+	private:
+		int width, height;
 };
 
 }  // namespace SDL

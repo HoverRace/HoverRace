@@ -21,10 +21,16 @@
 
 #include "StdAfx.h"
 
+#include <SDL/SDL.h>
+
+#include "../../Util/Config.h"
+#include "../../Exception.h"
 #include "../Label.h"
 #include "SdlLabelView.h"
 
 #include "SdlDisplay.h"
+
+using namespace HoverRace::Util;
 
 namespace HoverRace {
 namespace Display {
@@ -33,6 +39,7 @@ namespace SDL {
 SdlDisplay::SdlDisplay() :
 	SUPER()
 {
+	ApplyVideoMode();
 }
 
 SdlDisplay::~SdlDisplay()
@@ -42,6 +49,40 @@ SdlDisplay::~SdlDisplay()
 void SdlDisplay::AttachView(Label &model)
 {
 	model.SetView(new SdlLabelView(*this, model));
+}
+
+void SdlDisplay::OnDisplayConfigChanged()
+{
+	Config::cfg_video_t &vidCfg = Config::GetInstance()->video;
+
+	bool resChanged = (vidCfg.xRes != width || vidCfg.yRes != height);
+
+	//TODO: Determine what settings actually changed and decide if resources
+	// need to be reloaded.
+
+	if (resChanged) {
+		ApplyVideoMode();
+	}
+}
+
+/**
+ * Apply the current video configuration to the display.
+ */
+void SdlDisplay::ApplyVideoMode()
+{
+	Config::cfg_video_t &vidCfg = Config::GetInstance()->video;
+
+	if (SDL_SetVideoMode(vidCfg.xRes, vidCfg.yRes, 0,
+		SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE) == NULL)
+	{
+		throw Exception(SDL_GetError());
+	}
+
+	// We keep track of the current state of the window so
+	// OnDisplayConfigChanged() can determine if anything special
+	// needs to be done.
+	width = vidCfg.xRes;
+	height = vidCfg.yRes;
 }
 
 }  // namespace SDL

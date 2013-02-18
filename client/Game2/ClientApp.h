@@ -44,6 +44,9 @@ namespace HoverRace {
 		typedef std::shared_ptr<Rulebook> RulebookPtr;
 		class Scene;
 	}
+	namespace Display {
+		class Display;
+	}
 	namespace Script {
 		class Core;
 	}
@@ -62,6 +65,7 @@ class ClientApp : public GameDirector
 
 	private:
 		void RefreshTitleBar();
+		void OnWindowResize(int w, int h);
 		void RenderScene();
 
 	public:
@@ -84,6 +88,7 @@ class ClientApp : public GameDirector
 
 	private:
 		Util::OS::wnd_t mainWnd;
+		Display::Display *display;
 		VideoServices::VideoBuffer *videoBuf;
 		class UiInput;
 		std::shared_ptr<UiInput> uiInput;
