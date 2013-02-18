@@ -130,12 +130,12 @@ void VideoBuffer::CreatePalette()
 	}
 
 	memcpy(palette, newPalette, 256 * sizeof(ColorPalette::paletteEntry_t));
+	AssignPalette();
 }
 
 void VideoBuffer::SetBackgroundPalette(std::unique_ptr<MR_UInt8[]> &palette)
 {
 	bgPalette = std::move(palette);
-
 	CreatePalette();
 }
 
