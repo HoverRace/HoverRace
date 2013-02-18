@@ -287,7 +287,7 @@ void ClientApp::MainLoop()
 #				ifdef WITH_SDL_OIS_INPUT
 					case SDL_KEYDOWN:
 					case SDL_KEYUP:
-							deferredEvents.push_back(evt);
+						deferredEvents.push_back(evt);
 						break;
 #				endif
 			}
