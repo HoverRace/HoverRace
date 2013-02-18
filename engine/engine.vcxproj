@@ -111,6 +111,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ColorTools\ColorTools.cpp" />
+    <ClCompile Include="Display\Label.cpp" />
+    <ClCompile Include="Display\SDL\SdlDisplay.cpp" />
+    <ClCompile Include="Display\SDL\SdlLabelView.cpp" />
     <ClCompile Include="MainCharacter\MainCharacter.cpp" />
     <ClCompile Include="MainCharacter\MainCharacterRenderer.cpp" />
     <ClCompile Include="MazeCompiler\LevelBuilder.cpp" />
@@ -205,6 +208,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColorTools\ColorTools.h" />
+    <ClInclude Include="Display\Display.h" />
+    <ClInclude Include="Display\Label.h" />
+    <ClInclude Include="Display\SDL\SdlDisplay.h" />
+    <ClInclude Include="Display\SDL\SdlLabelView.h" />
+    <ClInclude Include="Display\SDL\SdlView.h" />
+    <ClInclude Include="Display\ViewAttacher.h" />
+    <ClInclude Include="Display\View.h" />
+    <ClInclude Include="Display\ViewModel.h" />
     <ClInclude Include="MainCharacter\MainCharacter.h" />
     <ClInclude Include="MainCharacter\MainCharacterRenderer.h" />
     <ClInclude Include="MazeCompiler\LevelBuilder.h" />

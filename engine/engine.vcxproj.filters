@@ -43,6 +43,12 @@
     <Filter Include="MazeCompiler">
       <UniqueIdentifier>{f58b9dda-b47c-4c8e-988c-25eb60179a6e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Display">
+      <UniqueIdentifier>{76d96a70-30c7-48e1-aeb6-0885987d1bb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Display\SDL">
+      <UniqueIdentifier>{abb149d6-43c3-4353-b210-11327add68e3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ColorTools\ColorTools.cpp">
@@ -303,6 +309,15 @@
     </ClCompile>
     <ClCompile Include="MazeCompiler\TrackCompiler.cpp">
       <Filter>MazeCompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="Display\SDL\SdlDisplay.cpp">
+      <Filter>Display\SDL</Filter>
+    </ClCompile>
+    <ClCompile Include="Display\Label.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
+    <ClCompile Include="Display\SDL\SdlLabelView.cpp">
+      <Filter>Display\SDL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -616,6 +631,30 @@
     </ClInclude>
     <ClInclude Include="MazeCompiler\TrackCompilationLog.h">
       <Filter>MazeCompiler</Filter>
+    </ClInclude>
+    <ClInclude Include="Display\Display.h">
+      <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="Display\SDL\SdlDisplay.h">
+      <Filter>Display\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Display\ViewModel.h">
+      <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="Display\Label.h">
+      <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="Display\View.h">
+      <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="Display\SDL\SdlLabelView.h">
+      <Filter>Display\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Display\SDL\SdlView.h">
+      <Filter>Display\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Display\ViewAttacher.h">
+      <Filter>Display</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
