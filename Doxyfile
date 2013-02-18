@@ -102,6 +102,7 @@ INPUT                  = client/Game2 \
                          client/Game2/HoverScript \
                          engine \
                          engine/ColorTools \
+                         engine/Display \
                          engine/MainCharacter \
                          engine/MazeCompiler \
                          engine/Model \
