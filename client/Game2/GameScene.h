@@ -41,10 +41,13 @@ namespace HoverRace {
 			class SysEnv;
 		}
 		class ClientSession;
+		class HighObserver;
 		class Rulebook;
 		typedef std::shared_ptr<Rulebook> RulebookPtr;
 	}
-	class HighObserver;
+	namespace Display {
+		class Display;
+	}
 	namespace Script {
 		class Core;
 	}
@@ -57,7 +60,7 @@ class GameScene : public Scene
 {
 	typedef Scene SUPER;
 	public:
-		GameScene(GameDirector *director, VideoServices::VideoBuffer *videoBuf,
+		GameScene(GameDirector *director, Display::Display &display,
 			Control::InputEventController *controller,
 			Script::Core *scripting, HoverScript::GamePeer *gamePeer,
 			RulebookPtr rules);
@@ -75,7 +78,7 @@ class GameScene : public Scene
 		int frame;
 		int numPlayers;
 
-		VideoServices::VideoBuffer *videoBuf;
+		Display::Display &display;
 
 		static const int MAX_OBSERVERS = Util::Config::MAX_PLAYERS;
 		Observer *observers[MAX_OBSERVERS];

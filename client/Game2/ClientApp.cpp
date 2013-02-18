@@ -140,12 +140,11 @@ ClientApp::ClientApp() :
 	// With SDL we can only get the desktop resolution before the first call to
 	// SDL_SetVideoMode().
 	const SDL_VideoInfo *videoInfo = SDL_GetVideoInfo();
-	int desktopWidth = videoInfo->current_w;
-	int desktopHeight = videoInfo->current_h;
 
 	// Create the main window and SDL surface.
 	//TODO: Select which display to use.
 	display = new Display::SDL::SdlDisplay();
+	display->OnDesktopModeChanged(videoInfo->current_w, videoInfo->current_h);
 
 	// Set window position and icon (platform-dependent).
 	SDL_SysWMinfo wm;
@@ -180,11 +179,6 @@ ClientApp::ClientApp() :
 #		endif
 	}
 
-	videoBuf = new VideoServices::VideoBuffer();
-	videoBuf->OnDesktopModeChange(desktopWidth, desktopHeight);
-
-	AssignPalette();
-
 	controller = new InputEventController(mainWnd, uiInput);
 
 	RefreshTitleBar();
@@ -197,7 +191,6 @@ ClientApp::~ClientApp()
 	delete sysEnv;
 	delete gamePeer;
 	delete scripting;
-	delete videoBuf;
 	delete display;
 	delete controller;
 
@@ -236,15 +229,14 @@ void ClientApp::OnWindowResize(int w, int h)
 	vidCfg.yRes = h;
 
 	display->OnDisplayConfigChanged();
-	videoBuf->OnWindowResChange();
 }
 
 void ClientApp::RenderScene()
 {
-	VideoServices::VideoBuffer::Lock lock(*videoBuf);
+	VideoServices::VideoBuffer::Lock lock(display->GetLegacyDisplay());
 
 	if (scene == NULL) {
-		videoBuf->Clear();
+		display->GetLegacyDisplay().Clear();
 	}
 	else {
 		scene->Render();
@@ -262,8 +254,6 @@ void ClientApp::MainLoop()
 	if (rules != NULL) {
 		NewLocalSession(rules);
 	}
-
-	videoBuf->OnWindowResChange();
 
 #	ifdef WITH_SDL_OIS_INPUT
 		std::vector<SDL_Event> deferredEvents;
@@ -324,13 +314,11 @@ void ClientApp::NewLocalSession(RulebookPtr rules)
 
 	//TODO: Prompt the user for a track name.
 	try {
-		scene = new GameScene(this, videoBuf, controller, scripting, gamePeer, rules);
+		scene = new GameScene(this, *display, controller, scripting, gamePeer, rules);
 	}
 	catch (Parcel::ObjStreamExn&) {
 		throw;
 	}
-
-	AssignPalette();
 }
 
 void ClientApp::RequestShutdown()
@@ -352,10 +340,12 @@ void ClientApp::ChangeAutoUpdates(bool newSetting)
 
 void ClientApp::AssignPalette()
 {
-	Config *cfg = Config::GetInstance();
+	throw UnimplementedExn("ClientApp::AssignPalette()");
+}
 
-	videoBuf->CreatePalette();
-	videoBuf->AssignPalette();
+VideoServices::VideoBuffer *ClientApp::GetVideoBuffer() const
+{
+	return &display->GetLegacyDisplay();
 }
 
 Control::InputEventController *ClientApp::ReloadController()

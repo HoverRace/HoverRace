@@ -22,6 +22,7 @@
 
 #include "StdAfx.h"
 
+#include "../../engine/Display/Display.h"
 #include "../../engine/Model/Track.h"
 #include "../../engine/Parcel/TrackBundle.h"
 #include "../../engine/VideoServices/SoundServer.h"
@@ -42,12 +43,12 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace Client {
 
-GameScene::GameScene(GameDirector *director, VideoServices::VideoBuffer *videoBuf,
+GameScene::GameScene(GameDirector *director, Display::Display &display,
                      Control::InputEventController *controller,
                      Script::Core *scripting, HoverScript::GamePeer *gamePeer,
                      RulebookPtr rules) :
 	SUPER(),
-	frame(0), numPlayers(1), videoBuf(videoBuf), controller(controller),
+	frame(0), numPlayers(1), display(display), controller(controller),
 	session(NULL), highObserver(NULL), highConsole(NULL)
 {
 	memset(observers, 0, sizeof(observers[0]) * MAX_OBSERVERS);
@@ -63,7 +64,7 @@ GameScene::GameScene(GameDirector *director, VideoServices::VideoBuffer *videoBu
 		if (track.get() == NULL) throw Parcel::ObjStreamExn("Track does not exist.");
 		if (!session->LoadNew(
 			rules->GetTrackName().c_str(), track->GetRecordFile(),
-			rules->GetLaps(), rules->GetGameOpts(), videoBuf))
+			rules->GetLaps(), rules->GetGameOpts(), &display.GetLegacyDisplay()))
 		{
 			throw Parcel::ObjStreamExn("Track load failed.");
 		}
@@ -125,6 +126,7 @@ void GameScene::Advance(Util::OS::timestamp_t tick)
 void GameScene::Render()
 {
 	MR_SimulationTime simTime = session->GetSimulationTime();
+	VideoServices::VideoBuffer *videoBuf = &display.GetLegacyDisplay();
 
 	for (int i = 0; i < MAX_OBSERVERS; ++i) {
 		Observer *obs = observers[i];

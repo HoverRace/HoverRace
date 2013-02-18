@@ -24,6 +24,7 @@
 #include <SDL/SDL.h>
 
 #include "../../Util/Config.h"
+#include "../../VideoServices/VideoBuffer.h"
 #include "../../Exception.h"
 #include "../Label.h"
 #include "SdlLabelView.h"
@@ -31,15 +32,20 @@
 #include "SdlDisplay.h"
 
 using namespace HoverRace::Util;
+using HoverRace::VideoServices::VideoBuffer;
 
 namespace HoverRace {
 namespace Display {
 namespace SDL {
 
 SdlDisplay::SdlDisplay() :
-	SUPER()
+	SUPER(),
+	legacyDisplay(new VideoBuffer())
 {
 	ApplyVideoMode();
+
+	legacyDisplay->OnWindowResChange();
+	legacyDisplay->CreatePalette();
 }
 
 SdlDisplay::~SdlDisplay()
@@ -49,6 +55,11 @@ SdlDisplay::~SdlDisplay()
 void SdlDisplay::AttachView(Label &model)
 {
 	model.SetView(std::unique_ptr<View>(new SdlLabelView(*this, model)));
+}
+
+void SdlDisplay::OnDesktopModeChanged(int width, int height)
+{
+	legacyDisplay->OnDesktopModeChange(width, height);
 }
 
 void SdlDisplay::OnDisplayConfigChanged()
@@ -62,6 +73,7 @@ void SdlDisplay::OnDisplayConfigChanged()
 
 	if (resChanged) {
 		ApplyVideoMode();
+		legacyDisplay->OnWindowResChange();
 	}
 }
 

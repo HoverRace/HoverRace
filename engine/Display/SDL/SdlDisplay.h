@@ -60,6 +60,8 @@ class MR_DllDeclare SdlDisplay : public Display
 
 	public:
 		// Display
+		virtual VideoServices::VideoBuffer &GetLegacyDisplay() const { return *legacyDisplay; }
+		virtual void OnDesktopModeChanged(int width, int height);
 		virtual void OnDisplayConfigChanged();
 
 	private:
@@ -67,6 +69,7 @@ class MR_DllDeclare SdlDisplay : public Display
 
 	private:
 		int width, height;
+		std::unique_ptr<VideoServices::VideoBuffer> legacyDisplay;
 };
 
 }  // namespace SDL

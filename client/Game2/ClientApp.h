@@ -79,7 +79,7 @@ class ClientApp : public GameDirector
 		virtual void SignalServerHasChanged();
 		virtual void ChangeAutoUpdates(bool newSetting);
 		virtual void AssignPalette();
-		virtual VideoServices::VideoBuffer *GetVideoBuffer() const { return videoBuf; }
+		virtual VideoServices::VideoBuffer *GetVideoBuffer() const;
 		virtual Control::InputEventController *GetController() const { return controller; }
 		virtual Control::InputEventController *ReloadController();
 #	ifdef _WIN32
@@ -89,7 +89,6 @@ class ClientApp : public GameDirector
 	private:
 		Util::OS::wnd_t mainWnd;
 		Display::Display *display;
-		VideoServices::VideoBuffer *videoBuf;
 		class UiInput;
 		std::shared_ptr<UiInput> uiInput;
 		Control::InputEventController *controller;
