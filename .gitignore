@@ -130,6 +130,12 @@ memory_leak_report.txt
 /engine/ColorTools/Makefile.in
 /engine/ColorTools/Release
 
+# /engine/Display/
+/engine/Display/Debug
+/engine/Display/Makefile
+/engine/Display/Makefile.in
+/engine/Display/Release
+
 # /engine/MainCharacter/
 /engine/MainCharacter/Debug
 /engine/MainCharacter/Makefile
