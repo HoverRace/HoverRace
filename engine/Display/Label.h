@@ -48,7 +48,7 @@ namespace Display {
  * visibility.
  * @author Michael Imamura
  */
-class Label : public ViewModel
+class MR_DllDeclare Label : public ViewModel
 {
 	typedef ViewModel SUPER;
 	public:

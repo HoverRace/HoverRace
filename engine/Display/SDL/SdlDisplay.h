@@ -43,7 +43,7 @@ namespace HoverRace {
 namespace Display {
 namespace SDL {
 
-class SdlDisplay : public Display
+class MR_DllDeclare SdlDisplay : public Display
 {
 	typedef Display SUPER;
 	public:

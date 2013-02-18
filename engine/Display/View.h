@@ -39,7 +39,7 @@ namespace Display {
  * Views handle the actual API-specific rendering of view models.
  * @author Michael Imamura
  */
-class View
+class MR_DllDeclare View
 {
 };
 

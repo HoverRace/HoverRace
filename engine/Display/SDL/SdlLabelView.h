@@ -44,7 +44,7 @@ namespace HoverRace {
 namespace Display {
 namespace SDL {
 
-class SdlLabelView : public SdlView<Label>
+class MR_DllDeclare SdlLabelView : public SdlView<Label>
 {
 	typedef SdlView SUPER;
 	public:

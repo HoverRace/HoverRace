@@ -51,7 +51,7 @@ namespace Display {
  * @see SdlDisplay
  * @author Michael Imamura
  */
-class Display :
+class MR_DllDeclare Display :
 	public ViewAttacher<Label>
 {
 };

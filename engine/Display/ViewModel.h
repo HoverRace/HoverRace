@@ -52,7 +52,7 @@ namespace Display {
  * the the view model is added to the scene graph.
  * @author Michael Imamura
  */
-class ViewModel
+class MR_DllDeclare ViewModel
 {
 	public:
 		virtual void AttachView(Display *disp) = 0;
