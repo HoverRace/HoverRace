@@ -24,10 +24,10 @@
 #include <SDL/SDL.h>
 
 #include "../../Util/Config.h"
-#include "../../VideoServices/VideoBuffer.h"
 #include "../../Exception.h"
 #include "../Label.h"
 #include "SdlLabelView.h"
+#include "SdlLegacyDisplay.h"
 
 #include "SdlDisplay.h"
 
@@ -40,7 +40,7 @@ namespace SDL {
 
 SdlDisplay::SdlDisplay() :
 	SUPER(),
-	legacyDisplay(new VideoBuffer())
+	legacyDisplay(new SdlLegacyDisplay())
 {
 	ApplyVideoMode();
 

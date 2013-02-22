@@ -41,6 +41,10 @@ struct SDL_Surface;
 namespace HoverRace {
 namespace VideoServices {
 
+/**
+ * Video framebuffer for legacy (8-bit, palettized) rendering.
+ * @author Michael Imamura
+ */
 class MR_DllDeclare VideoBuffer
 {
 	public:
@@ -57,7 +61,7 @@ class MR_DllDeclare VideoBuffer
 
 	public:
 		VideoBuffer();
-		~VideoBuffer();
+		virtual ~VideoBuffer();
 
 		// Signals from ClientApp that certain settings have changed.
 		void OnDesktopModeChange(int width, int height);
@@ -67,10 +71,10 @@ class MR_DllDeclare VideoBuffer
 		void CreatePalette();
 		void SetBackgroundPalette(std::unique_ptr<MR_UInt8[]> &palette);
 
-	private:
+	protected:
 		void LockLegacySurface();
 		void UnlockLegacySurface();
-		void Flip();
+		virtual void Flip() = 0;
 
 	public:
 		int GetWidth() const { return width; }
@@ -83,6 +87,10 @@ class MR_DllDeclare VideoBuffer
 		int GetLineLen() const { return pitch; }  ///< @deprecated Use GetPitch() instead.
 		int GetZLineLen() const { return width; }  ///< @deprecated Use GetZPitch() instead.
 
+	protected:
+		SDL_Surface *GetLegacySurface() const { return legacySurface; }
+
+	public:
 		MR_UInt8 *GetBuffer() const { return vbuf; }
 		MR_UInt16 *GetZBuffer() const { return zbuf; }
 

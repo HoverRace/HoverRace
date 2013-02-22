@@ -319,6 +319,9 @@
     <ClCompile Include="Display\SDL\SdlLabelView.cpp">
       <Filter>Display\SDL</Filter>
     </ClCompile>
+    <ClCompile Include="Display\SDL\SdlLegacyDisplay.cpp">
+      <Filter>Display\SDL</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColorTools\ColorTools.h">
@@ -655,6 +658,9 @@
     </ClInclude>
     <ClInclude Include="Display\ViewAttacher.h">
       <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="Display\SDL\SdlLegacyDisplay.h">
+      <Filter>Display\SDL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

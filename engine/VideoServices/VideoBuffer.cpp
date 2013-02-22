@@ -160,7 +160,7 @@ void VideoBuffer::LockLegacySurface()
 {
 	if (SDL_MUSTLOCK(legacySurface)) {
 		if (SDL_LockSurface(legacySurface) < 0) {
-			throw Exception("Unable to lock surface");
+			throw Exception("Unable to lock legacy surface");
 		}
 	}
 }
@@ -172,18 +172,6 @@ void VideoBuffer::UnlockLegacySurface()
 	}
 
 	Flip();
-}
-
-void VideoBuffer::Flip()
-{
-	SDL_Surface *screenSurface = SDL_GetVideoSurface();
-	if (legacySurface != NULL) {
-		SDL_Surface *tempSurface = SDL_DisplayFormat(legacySurface);
-		SDL_BlitSurface(tempSurface, NULL, screenSurface, NULL);
-		SDL_FreeSurface(tempSurface);
-	}
-
-	SDL_Flip(screenSurface);
 }
 
 void VideoBuffer::Clear(MR_UInt8 color)
