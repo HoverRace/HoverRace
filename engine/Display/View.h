@@ -41,6 +41,8 @@ namespace Display {
  */
 class MR_DllDeclare View
 {
+	public:
+		virtual ~View() { }
 };
 
 }  // namespace Display

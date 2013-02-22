@@ -58,6 +58,9 @@ class MR_DllDeclare Display :
 	public ViewAttacher<Label>
 {
 	public:
+		virtual ~Display() { }
+
+	public:
 		/**
 		 * Retrieve the legacy (8-bit) framebuffer.
 		 *
