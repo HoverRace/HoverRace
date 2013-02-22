@@ -153,6 +153,7 @@
     </ClCompile>
     <ClCompile Include="Game2\NetworkSession.cpp" />
     <ClCompile Include="Game2\Observer.cpp" />
+    <ClCompile Include="Game2\PaletteScene.cpp" />
     <ClCompile Include="Game2\PathSelector.cpp" />
     <ClCompile Include="Game2\PrefsDialog.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -238,6 +239,7 @@
     </ClInclude>
     <ClInclude Include="Game2\NetworkSession.h" />
     <ClInclude Include="Game2\Observer.h" />
+    <ClInclude Include="Game2\PaletteScene.h" />
     <ClInclude Include="Game2\PathSelector.h" />
     <ClInclude Include="Game2\PrefsDialog.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>

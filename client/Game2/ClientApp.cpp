@@ -51,6 +51,7 @@
 #include "ClientSession.h"
 #include "GameScene.h"
 #include "HighObserver.h"
+#include "PaletteScene.h"
 #include "Rulebook.h"
 #include "Scene.h"
 
@@ -64,37 +65,6 @@ using namespace HoverRace::Client::HoverScript;
 using namespace HoverRace::Util;
 namespace SoundServer = HoverRace::VideoServices::SoundServer;
 using HoverRace::Client::Control::InputEventController;
-
-namespace {
-	/**
-	 * Draws a color grid to debug the color palette.
-	 * @param surface The destination surface (must be an 8-bit surface).
-	 */
-	void DrawPalette(SDL_Surface *surface)
-	{
-		if (SDL_MUSTLOCK(surface)) {
-			if (SDL_LockSurface(surface) < 0) {
-				throw HoverRace::Exception("Unable to lock surface");
-			}
-		}
-
-		MR_UInt8 *buf = static_cast<MR_UInt8*>(surface->pixels);
-		for (int y = 0; y < 256; y++, buf += surface->pitch) {
-			if ((y % 16) == 0) continue;
-			MR_UInt8 *cur = buf;
-			for (int x = 0; x < 256; x++, cur++) {
-				if ((x % 16) == 0) continue;
-				*cur = ((y >> 4) << 4) + (x >> 4);
-			}
-		}
-
-		if (SDL_MUSTLOCK(surface)) {
-			SDL_UnlockSurface(surface);
-		}
-
-		SDL_Flip(surface);
-	}
-}
 
 namespace HoverRace {
 namespace Client {
@@ -110,7 +80,7 @@ class ClientApp::UiInput : public Control::UiHandler
 ClientApp::ClientApp() :
 	SUPER(),
 	uiInput(std::make_shared<UiInput>()),
-	scene(NULL)
+	scene()
 {
 	Config *cfg = Config::GetInstance();
 
@@ -186,8 +156,6 @@ ClientApp::ClientApp() :
 
 ClientApp::~ClientApp()
 {
-	delete scene;
-
 	delete sysEnv;
 	delete gamePeer;
 	delete scripting;
@@ -254,6 +222,9 @@ void ClientApp::MainLoop()
 	if (rules != NULL) {
 		NewLocalSession(rules);
 	}
+	else {
+		scene.reset(new PaletteScene(*display));
+	}
 
 #	ifdef WITH_SDL_OIS_INPUT
 		std::vector<SDL_Event> deferredEvents;
@@ -300,21 +271,17 @@ void ClientApp::MainLoop()
 
 		RenderScene();
 	}
+
+	scene.reset();
 }
 
 void ClientApp::NewLocalSession(RulebookPtr rules)
 {
 	//TODO: Confirm ending the current session.
 
-	// Shut down the current session (if any).
-	if (scene != NULL) {
-		delete scene;
-		scene = NULL;
-	}
-
 	//TODO: Prompt the user for a track name.
 	try {
-		scene = new GameScene(this, *display, controller, scripting, gamePeer, rules);
+		scene.reset(new GameScene(this, *display, controller, scripting, gamePeer, rules));
 	}
 	catch (Parcel::ObjStreamExn&) {
 		throw;

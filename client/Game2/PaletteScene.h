@@ -1,8 +1,7 @@
 
-// Scene.h
-// Base class for scenes.
+// PaletteScene.h
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2013 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -22,21 +21,39 @@
 
 #pragma once
 
-#include "../../engine/Util/OS.h"
+#include "../../engine/Util/Config.h"
+
+#include "GameDirector.h"
+
+#include "Scene.h"
+
+namespace HoverRace {
+	namespace Display {
+		class Display;
+	}
+}
 
 namespace HoverRace {
 namespace Client {
 
-class Scene
+/**
+ * Draws a color grid to debug the color palette of the legacy display.
+ * @author Michael Imamura
+ */
+class PaletteScene : public Scene
 {
+	typedef Scene SUPER;
 	public:
-		virtual ~Scene() { }
+		PaletteScene(Display::Display &display);
+		virtual ~PaletteScene();
 
 	public:
-		virtual void Advance(Util::OS::timestamp_t tick) = 0;
-		virtual void Render() = 0;
+		virtual void Advance(Util::OS::timestamp_t tick);
+		virtual void Render();
+
+	private:
+		Display::Display &display;
 };
-typedef std::shared_ptr<Scene> ScenePtr;
 
 }  // namespace HoverScript
 }  // namespace Client

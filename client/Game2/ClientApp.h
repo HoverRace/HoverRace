@@ -43,6 +43,7 @@ namespace HoverRace {
 		class Rulebook;
 		typedef std::shared_ptr<Rulebook> RulebookPtr;
 		class Scene;
+		typedef std::shared_ptr<Scene> ScenePtr;
 	}
 	namespace Display {
 		class Display;
@@ -93,7 +94,7 @@ class ClientApp : public GameDirector
 		std::shared_ptr<UiInput> uiInput;
 		Control::InputEventController *controller;
 
-		Scene *scene;
+		ScenePtr scene;
 
 		Script::Core *scripting;
 		HoverScript::GamePeer *gamePeer;

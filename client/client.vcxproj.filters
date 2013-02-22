@@ -162,6 +162,9 @@
     <ClCompile Include="Game2\FullscreenTest.cpp">
       <Filter>Game2</Filter>
     </ClCompile>
+    <ClCompile Include="Game2\PaletteScene.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game2\AboutDialog.h">
@@ -335,6 +338,9 @@
     </ClInclude>
     <ClInclude Include="..\include\compat\boost_cxx11.h" />
     <ClInclude Include="..\include\compat\luabind_cxx11.h" />
+    <ClInclude Include="Game2\PaletteScene.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game2\Game2.rc">
