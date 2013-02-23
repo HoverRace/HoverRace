@@ -662,6 +662,9 @@
     <ClInclude Include="Display\SDL\SdlLegacyDisplay.h">
       <Filter>Display\SDL</Filter>
     </ClInclude>
+    <ClInclude Include="Display\Color.h">
+      <Filter>Display</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\lib\alut.dll">
