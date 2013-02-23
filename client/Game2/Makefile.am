@@ -58,6 +58,8 @@ hoverrace_SOURCES = \
 	HighObserver.h \
 	Observer.cpp \
 	Observer.h \
+	PaletteScene.cpp \
+	PaletteScene.h \
 	RoomList.cpp \
 	RoomList.h \
 	Rulebook.h \

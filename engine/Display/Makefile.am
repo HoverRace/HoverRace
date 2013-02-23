@@ -13,5 +13,7 @@ libdisplay_la_SOURCES = \
 	SDL/SdlDisplay.h \
 	SDL/SdlLabelView.cpp \
 	SDL/SdlLabelView.h \
+	SDL/SdlLegacyDisplay.cpp \
+	SDL/SdlLegacyDisplay.h \
 	SDL/SdlView.h
 
