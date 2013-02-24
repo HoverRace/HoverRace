@@ -27,6 +27,7 @@
 #	include <SDL_Pango.h>
 #endif
 
+#include "../Util/SelFmt.h"
 #include "../Util/Str.h"
 #include "Viewport2D.h"
 
@@ -149,7 +150,8 @@ void StaticText::Update()
 	char *escapedBuf = g_markup_escape_text(s.c_str(), -1);
 
 	std::ostringstream oss;
-	oss << "<span font=\"" << font << "\">" <<
+	oss << SelFmt<SEL_FMT_PANGO> <<
+		"<span font=\"" << font << "\">" <<
 		escapedBuf << "</span>";
 
 	g_free(escapedBuf);

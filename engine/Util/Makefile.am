@@ -40,6 +40,8 @@ libutil_la_SOURCES = \
 	OS.h \
 	Profiler.cpp \
 	Profiler.h \
+	SelFmt.cpp \
+	SelFmt.h \
 	Str.cpp \
 	Str.h \
 	WorldCoordinates.cpp \

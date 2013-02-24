@@ -28,9 +28,12 @@
 #	include <SDL_Pango.h>
 #endif
 
+#include "../Util/SelFmt.h"
 #include "../Label.h"
 
 #include "SdlLabelView.h"
+
+using namespace HoverRace::Util;
 
 namespace HoverRace {
 namespace Display {
@@ -76,7 +79,8 @@ void SdlLabelView::Update()
 		char *escapedBuf = g_markup_escape_text(s.c_str(), -1);
 
 		std::ostringstream oss;
-		oss << "<span font=\"" << model.GetFont() << "\">" <<
+		oss << SelFmt<SEL_FMT_PANGO> <<
+			"<span font=\"" << model.GetFont() << "\">" <<
 			escapedBuf << "</span>";
 
 		g_free(escapedBuf);
