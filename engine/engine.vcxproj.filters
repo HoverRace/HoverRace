@@ -322,6 +322,9 @@
     <ClCompile Include="Display\SDL\SdlLegacyDisplay.cpp">
       <Filter>Display\SDL</Filter>
     </ClCompile>
+    <ClCompile Include="Util\SelFmt.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColorTools\ColorTools.h">
@@ -664,6 +667,9 @@
     </ClInclude>
     <ClInclude Include="Display\Color.h">
       <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\SelFmt.h">
+      <Filter>Util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
