@@ -80,7 +80,8 @@ void SdlLabelView::Update()
 
 		std::ostringstream oss;
 		oss << SelFmt<SEL_FMT_PANGO> <<
-			"<span font=\"" << model.GetFont() << "\">" <<
+			"<span font=\"" << model.GetFont() << "\" "
+			"color=\"" << model.GetColor() << "\">" <<
 			escapedBuf << "</span>";
 
 		g_free(escapedBuf);
