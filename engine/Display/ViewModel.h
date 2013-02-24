@@ -66,6 +66,10 @@ class MR_DllDeclare ViewModel
 			dynamic_cast<ViewAttacher<T>*>(disp)->AttachView(*self);
 		}
 
+	public:
+		void PrepareRender() { if (view) view->PrepareRender(); }
+		void Render() { if (view) view->Render(); }
+
 	private:
 		std::unique_ptr<View> view;
 };

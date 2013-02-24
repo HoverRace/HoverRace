@@ -43,6 +43,10 @@ class MR_DllDeclare View
 {
 	public:
 		virtual ~View() { }
+
+	public:
+		virtual void PrepareRender() = 0;
+		virtual void Render() = 0;
 };
 
 }  // namespace Display

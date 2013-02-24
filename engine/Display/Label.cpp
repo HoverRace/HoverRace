@@ -21,14 +21,32 @@
 
 #include "StdAfx.h"
 
+#include "../Util/Str.h"
+#include "../VideoServices/FontSpec.h"
+
 #include "Label.h"
+
+using namespace HoverRace::Util;
 
 namespace HoverRace {
 namespace Display {
 
-Label::Label() :
-	SUPER()
+/**
+ * Constructor.
+ * @param s The text (UTF-8).
+ * @param font The font.
+ */
+Label::Label(const std::string &text,
+             const VideoServices::FontSpec &font,
+             Color color) :
+	SUPER(),
+	text(text),
+#	ifdef _WIN32
+		wtext((const wchar_t*)Str::UW(text)),
+#	endif
+	font(font), color(color)
 {
+
 }
 
 Label::~Label()
