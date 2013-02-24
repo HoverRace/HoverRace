@@ -206,6 +206,7 @@ void ClientApp::RenderScene()
 		display->GetLegacyDisplay().Clear();
 	}
 	else {
+		scene->PrepareRender();
 		scene->Render();
 	}
 
