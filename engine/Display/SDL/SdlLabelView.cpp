@@ -23,6 +23,11 @@
 
 #include <SDL/SDL.h>
 
+#ifdef WITH_SDL_PANGO
+#	include <glib.h>
+#	include <SDL_Pango.h>
+#endif
+
 #include "../Label.h"
 
 #include "SdlLabelView.h"
@@ -67,10 +72,11 @@ void SdlLabelView::Update()
 	if (surface) SDL_FreeSurface(surface);
 
 #	ifdef WITH_SDL_PANGO
+		const std::string &s = model.GetText();
 		char *escapedBuf = g_markup_escape_text(s.c_str(), -1);
 
 		std::ostringstream oss;
-		oss << "<span font=\"" << font << "\">" <<
+		oss << "<span font=\"" << model.GetFont() << "\">" <<
 			escapedBuf << "</span>";
 
 		g_free(escapedBuf);
