@@ -39,6 +39,7 @@ namespace HoverRace {
 		class Label;
 	}
 }
+struct SDL_Surface;
 
 namespace HoverRace {
 namespace Display {
@@ -50,6 +51,20 @@ class MR_DllDeclare SdlLabelView : public SdlView<Label>
 	public:
 		SdlLabelView(SdlDisplay &disp, Label &model);
 		virtual ~SdlLabelView();
+
+	public:
+		virtual void PrepareRender();
+		virtual void Render();
+
+	private:
+		void Update();
+
+	private:
+		SDL_Surface *surface;
+		int width;
+		int height;
+		int realWidth;
+		int realHeight;
 };
 
 }  // namespace SDL
