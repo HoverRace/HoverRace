@@ -84,7 +84,7 @@ void SdlLabelView::Update()
 		//TODO: Reuse the context.
 		SDLPango_Context *ctx = SDLPango_CreateContext();
 		SDLPango_SetDpi(ctx, 60, 60);
-		SDLPango_SetDefaultColor(ctx, MATRIX_BLACK_BACK);
+		SDLPango_SetDefaultColor(ctx, MATRIX_TRANSPARENT_BACK_WHITE_LETTER);
 		SDLPango_SetMinimumSize(ctx, 0, 0);
 		SDLPango_SetMarkup(ctx, oss.str().c_str(), -1);
 
