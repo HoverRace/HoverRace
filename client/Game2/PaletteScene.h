@@ -30,6 +30,7 @@
 namespace HoverRace {
 	namespace Display {
 		class Display;
+		class Label;
 	}
 }
 
@@ -49,10 +50,12 @@ class PaletteScene : public Scene
 
 	public:
 		virtual void Advance(Util::OS::timestamp_t tick);
+		virtual void PrepareRender();
 		virtual void Render();
 
 	private:
 		Display::Display &display;
+		Display::Label *label;
 };
 
 }  // namespace HoverScript
