@@ -37,15 +37,12 @@ void SdlLegacyDisplay::Flip()
 	// then blit.  This isn't particularly fast, but the speed isn't
 	// the point of the legacy display :)
 
-	SDL_Surface *screenSurface = SDL_GetVideoSurface();
 	SDL_Surface *legacySurface = GetLegacySurface();
 	if (legacySurface != NULL) {
 		SDL_Surface *tempSurface = SDL_DisplayFormat(legacySurface);
-		SDL_BlitSurface(tempSurface, NULL, screenSurface, NULL);
+		SDL_BlitSurface(tempSurface, NULL, SDL_GetVideoSurface(), NULL);
 		SDL_FreeSurface(tempSurface);
 	}
-
-	SDL_Flip(screenSurface);
 }
 
 }  // namespace SDL

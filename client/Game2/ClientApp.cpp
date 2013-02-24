@@ -201,14 +201,15 @@ void ClientApp::OnWindowResize(int w, int h)
 
 void ClientApp::RenderScene()
 {
-	VideoServices::VideoBuffer::Lock lock(display->GetLegacyDisplay());
-
 	if (scene == NULL) {
+		VideoServices::VideoBuffer::Lock lock(display->GetLegacyDisplay());
 		display->GetLegacyDisplay().Clear();
 	}
 	else {
 		scene->Render();
 	}
+
+	display->Flip();
 }
 
 void ClientApp::MainLoop()

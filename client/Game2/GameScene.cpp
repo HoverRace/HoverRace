@@ -26,6 +26,7 @@
 #include "../../engine/Model/Track.h"
 #include "../../engine/Parcel/TrackBundle.h"
 #include "../../engine/VideoServices/SoundServer.h"
+#include "../../engine/VideoServices/VideoBuffer.h"
 
 #include "Control/Controller.h"
 #include "HoverScript/GamePeer.h"
@@ -126,7 +127,9 @@ void GameScene::Advance(Util::OS::timestamp_t tick)
 void GameScene::Render()
 {
 	MR_SimulationTime simTime = session->GetSimulationTime();
+
 	VideoServices::VideoBuffer *videoBuf = &display.GetLegacyDisplay();
+	VideoServices::VideoBuffer::Lock lock(*videoBuf);
 
 	for (int i = 0; i < MAX_OBSERVERS; ++i) {
 		Observer *obs = observers[i];

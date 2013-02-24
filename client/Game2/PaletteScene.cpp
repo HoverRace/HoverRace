@@ -46,7 +46,9 @@ void PaletteScene::Advance(Util::OS::timestamp_t)
 
 void PaletteScene::Render()
 {
-	const VideoServices::VideoBuffer &legacyDisplay = display.GetLegacyDisplay();
+	VideoServices::VideoBuffer &legacyDisplay = display.GetLegacyDisplay();
+	VideoServices::VideoBuffer::Lock lock(legacyDisplay);
+
 	int pitch = legacyDisplay.GetPitch();
 	MR_UInt8 *buf = legacyDisplay.GetBuffer();
 	for (int y = 0; y < 256; y++, buf += pitch) {

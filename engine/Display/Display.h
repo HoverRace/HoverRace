@@ -94,6 +94,11 @@ class MR_DllDeclare Display :
 		 * regenerated.
 		 */
 		virtual void OnDisplayConfigChanged() = 0;
+
+		/**
+		 * Rendering for the frame has completed; update the screen.
+		 */
+		virtual void Flip() = 0;
 };
 
 }  // namespace Display

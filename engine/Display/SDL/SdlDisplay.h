@@ -63,6 +63,7 @@ class MR_DllDeclare SdlDisplay : public Display
 		virtual VideoServices::VideoBuffer &GetLegacyDisplay() const { return *legacyDisplay; }
 		virtual void OnDesktopModeChanged(int width, int height);
 		virtual void OnDisplayConfigChanged();
+		virtual void Flip();
 
 	private:
 		void ApplyVideoMode();

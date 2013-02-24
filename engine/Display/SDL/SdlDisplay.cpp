@@ -77,6 +77,11 @@ void SdlDisplay::OnDisplayConfigChanged()
 	}
 }
 
+void SdlDisplay::Flip()
+{
+	SDL_Flip(SDL_GetVideoSurface());
+}
+
 /**
  * Apply the current video configuration to the display.
  */
