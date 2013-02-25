@@ -28,7 +28,7 @@
 #	include <SDL_Pango.h>
 #endif
 
-#include "../Util/SelFmt.h"
+#include "../../Util/SelFmt.h"
 #include "../Label.h"
 
 #include "SdlLabelView.h"
@@ -120,7 +120,9 @@ void SdlLabelView::Update()
 			0, 0, 0,
 			font.bold ? FW_BOLD : FW_NORMAL,
 			font.italic ? TRUE : FALSE,
-			0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0,
+			ANTIALIASED_QUALITY,
+			0,
 			font.name.c_str());
 		HFONT oldFont = (HFONT)SelectObject(hdc, stdFont);
 
@@ -143,19 +145,18 @@ void SdlLabelView::Update()
 		bmih.biWidth = width;
 		bmih.biHeight = -height;
 		bmih.biPlanes = 1;
-		bmih.biBitCount = 8;
+		bmih.biBitCount = 32;
 		bmih.biCompression = BI_RGB;
-		bmih.biClrUsed = 2;
-		bmih.biClrImportant = 2;
-		bmpInfo->bmiColors[0] = RGB_BLACK;
-		bmpInfo->bmiColors[1] = RGB_WHITE;
 
-		MR_UInt8 *bits;
+		MR_UInt32 *bits;
 		HBITMAP bmp = CreateDIBSection(hdc, bmpInfo, DIB_RGB_COLORS,
 			(void**)&bits, NULL, 0);
 		HBITMAP oldBmp = (HBITMAP)SelectObject(hdc, bmp);
 
 		// Draw the text.
+		// Note that we draw the text as white so we can use it as the
+		// alpha channel (we blend in the color when copying to the SDL
+		// surface).
 		SetTextColor(hdc, RGB(0xff, 0xff, 0xff));
 		SetBkColor(hdc, RGB(0, 0, 0));
 		SetBkMode(hdc, OPAQUE);
@@ -172,22 +173,34 @@ void SdlLabelView::Update()
 			(MR_UInt32)(255 << (8 * 1)),
 			255);
 
+		// Note: The alpha component of the color is currently ignored.
+		const Color c = model.GetColor();
+		MR_UInt8 cr = c.bits.r;
+		MR_UInt8 cg = c.bits.g;
+		MR_UInt8 cb = c.bits.b;
+
 		// Now copy from the bitmap into our image buffer.
 		// DIB rows are 32-bit word-aligned.
-		int padding = 4 - (width & 3);
-		if (padding == 4) padding = 0;
+		char buf[9] = { 0 };
 		int destSkip = realWidth - width;
-		MR_UInt8 *src = bits;
+		MR_UInt32 *src = bits;
 		MR_UInt8 *dest = (MR_UInt8*)(surface->pixels);
 		memset(dest, 0, surface->h * surface->pitch);
 		for (int y = 0; y < height; ++y) {
 			MR_UInt8 *destRow = dest;
 			for (int x = 0; x < width; ++x) {
-				*((MR_UInt32*)dest) = (*src++ > 0) ? 0xffffffff : 0x00000000;
+				MR_UInt32 px = *src++;
+
+				MR_UInt8 alpha = px & 0xff;
+				px = ((MR_UInt32)(cr * alpha / 255) << 24) +
+					((MR_UInt32)(cg * alpha / 255) << 16) +
+					((MR_UInt32)(cb * alpha / 255) << 8) +
+					alpha;
+
+				*((MR_UInt32*)dest) = px;
 				dest += 4;
 			}
 			dest = destRow + surface->pitch;
-			src += padding;
 		}
 
 		SelectObject(hdc, oldBmp);
