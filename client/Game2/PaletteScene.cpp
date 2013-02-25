@@ -67,6 +67,9 @@ void PaletteScene::Render()
 		VideoServices::VideoBuffer &legacyDisplay = display.GetLegacyDisplay();
 		VideoServices::VideoBuffer::Lock lock(legacyDisplay);
 
+		// Clear the buffer since we don't write to all of it.
+		legacyDisplay.Clear(0);
+
 		int pitch = legacyDisplay.GetPitch();
 		MR_UInt8 *buf = legacyDisplay.GetBuffer();
 
