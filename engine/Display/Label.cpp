@@ -35,6 +35,7 @@ namespace Display {
  * Constructor.
  * @param s The text (UTF-8).
  * @param font The font.
+ * @param color The text foreground color.  The alpha component is ignored.
  */
 Label::Label(const std::string &text,
              const VideoServices::FontSpec &font,
