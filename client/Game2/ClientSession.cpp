@@ -36,8 +36,7 @@ namespace HoverRace {
 namespace Client {
 
 ClientSession::ClientSession() :
-	mSession(TRUE),
-	frameCount(0), lastTimestamp(0), fps(0.0)
+	mSession(TRUE)
 {
 	for (int i = 0; i < MAX_PLAYERS; ++i) {
 		mainCharacter[i] = NULL;
@@ -383,41 +382,6 @@ void ClientSession::AddMessage(const char *pMessage)
 	mMessageStack[0].mCreationTime = time(NULL);
 
 	mMessageStack[0].mBuffer = VideoServices::Ascii2Simple(pMessage);
-}
-
-/**
- * Increment the frame counter for stats purposes.
- * This should be called once after rendering each frame.
- */
-void ClientSession::IncFrameCount()
-{
-	// Don't start counting until the first frame.
-	if (lastTimestamp == 0) lastTimestamp = OS::Time();
-
-	++frameCount;
-	OS::timestamp_t curTimestamp = OS::Time();
-	OS::timestamp_t diff = OS::TimeDiff(curTimestamp, lastTimestamp);
-
-	if (diff > 1000) {
-		fps = ((double)frameCount) / (diff / 1000.0);
-		lastTimestamp = curTimestamp;
-		frameCount = 0;
-		/*
-		OutputDebugString(boost::str(boost::format("FPS: %0.2f\n") % fps).c_str());
-		*/
-	}
-}
-
-/**
- * Retrieve the current framerate.
- * The framerate is calculated about once per second, as long as IncFrameCount
- * is called.
- * @return The framerate in frames per second (may be zero if a second
- *         hasn't passed yet).
- */
-double ClientSession::GetCurrentFramerate() const
-{
-	return fps;
 }
 
 }  // namespace Client

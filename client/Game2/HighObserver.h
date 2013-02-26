@@ -64,9 +64,6 @@ class HighObserver
 
 	private:
 		VideoServices::Viewport2D *viewport;
-		VideoServices::FontSpec *statsFont; ///< Font used for stats HUD text.
-		VideoServices::NumericGlyphs *statsNumGlyphs;
-		VideoServices::MultipartText *fpsTxt;
 };
 
 }  // namespace Client

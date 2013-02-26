@@ -29,6 +29,7 @@
 #endif
 
 #include "../../engine/Exception.h"
+#include "../../engine/Display/Label.h"
 #include "../../engine/Display/SDL/SdlDisplay.h"
 #include "../../engine/MainCharacter/MainCharacter.h"
 #include "../../engine/Model/Track.h"
@@ -80,7 +81,8 @@ class ClientApp::UiInput : public Control::UiHandler
 ClientApp::ClientApp() :
 	SUPER(),
 	uiInput(std::make_shared<UiInput>()),
-	scene()
+	scene(),
+	fpsLbl(), frameCount(0), lastTimestamp(0), fps(0.0)
 {
 	Config *cfg = Config::GetInstance();
 
@@ -152,10 +154,16 @@ ClientApp::ClientApp() :
 	controller = new InputEventController(mainWnd, uiInput);
 
 	RefreshTitleBar();
+
+	fpsLbl = new Display::Label("FPS:",
+		VideoServices::FontSpec(cfg->GetDefaultFontName(), 20, true),
+		Display::Color(0xff, 0xff, 0x7f, 0x00));
+	display->AttachView(*fpsLbl);
 }
 
 ClientApp::~ClientApp()
 {
+	delete fpsLbl;
 	delete sysEnv;
 	delete gamePeer;
 	delete scripting;
@@ -199,17 +207,53 @@ void ClientApp::OnWindowResize(int w, int h)
 	display->OnDisplayConfigChanged();
 }
 
+/**
+ * Increment the frame counter for stats purposes.
+ * This should be called once per frame.
+ */
+void ClientApp::IncFrameCount()
+{
+	static boost::format fpsFmt("FPS: %0.2f\n");
+
+	// Don't start counting until the first frame.
+	if (lastTimestamp == 0) lastTimestamp = OS::Time();
+
+	++frameCount;
+	OS::timestamp_t curTimestamp = OS::Time();
+	OS::timestamp_t diff = OS::TimeDiff(curTimestamp, lastTimestamp);
+
+	if (diff > 1000) {
+		fps = ((double)frameCount) / (diff / 1000.0);
+		lastTimestamp = curTimestamp;
+		frameCount = 0;
+
+		if (Config::GetInstance()->runtime.showFramerate) {
+			fpsLbl->SetText(boost::str(fpsFmt % fps));
+		}
+		/*
+		OutputDebugString(boost::str(fpsFmt % fps).c_str());
+		*/
+	}
+}
+
 void ClientApp::RenderScene()
 {
+	bool showFps = Config::GetInstance()->runtime.showFramerate;
+
+	IncFrameCount();
+
 	if (scene == NULL) {
 		VideoServices::VideoBuffer::Lock lock(display->GetLegacyDisplay());
 		display->GetLegacyDisplay().Clear();
 	}
 	else {
 		scene->PrepareRender();
-		scene->Render();
-	}
+		if (showFps) fpsLbl->PrepareRender();
 
+		scene->Render();
+		if (showFps) fpsLbl->Render();
+	}
+	
 	display->Flip();
 }
 

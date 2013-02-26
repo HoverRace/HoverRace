@@ -147,8 +147,6 @@ void GameScene::Render()
 		highConsole->Render(videoBuf);
 	}
 
-	session->IncFrameCount();
-
 	// Trigger sounds.
 	for (int i = 0; i < MAX_OBSERVERS; ++i) {
 		Observer *obs = observers[i];

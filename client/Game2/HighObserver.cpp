@@ -51,22 +51,10 @@ HighObserver::HighObserver()
 	const Config *cfg = cfg->GetInstance();
 
 	viewport = new VideoServices::Viewport2D();
-
-	statsFont = new FontSpec("Arial", 12);
-	statsNumGlyphs = new NumericGlyphs(*statsFont, STATS_COLOR);
-
-	fpsTxt = new MultipartText(*statsFont, statsNumGlyphs, STATS_COLOR);
-	*fpsTxt << pgettext("HUD|Frames Per Second","FPS") << ": " <<
-		boost::format("%0.2f", OS::locale);
 }
 
 HighObserver::~HighObserver()
 {
-	delete fpsTxt;
-
-	delete statsNumGlyphs;
-	delete statsFont;
-
 	delete viewport;
 }
 
@@ -76,10 +64,6 @@ HighObserver::~HighObserver()
  */
 void HighObserver::RenderStats(const ClientSession *session) const
 {
-	Config *cfg = Config::GetInstance();
-
-	if (cfg->runtime.showFramerate)
-		fpsTxt->Blt(2, 2, viewport, session->GetCurrentFramerate());
 }
 
 /**

@@ -68,11 +68,6 @@ class ClientSession
 		int mNbLap;
 		char mGameOpts;
 
-		// Stats counters.
-		unsigned int frameCount;
-		Util::OS::timestamp_t lastTimestamp;
-		double fps;
-
 		void ReadLevelAttrib(Parcel::RecordFilePtr pFile, VideoServices::VideoBuffer *pVideo);
 	public:
 		// Creation and destruction
@@ -114,10 +109,6 @@ class ClientSession
 
 		// Rendering access to level
 		const Model::Level *GetCurrentLevel() const;
-
-		// Client stats.
-		void IncFrameCount();
-		double GetCurrentFramerate() const;
 };
 
 }  // namespace Client

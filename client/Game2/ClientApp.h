@@ -47,6 +47,7 @@ namespace HoverRace {
 	}
 	namespace Display {
 		class Display;
+		class Label;
 	}
 	namespace Script {
 		class Core;
@@ -67,6 +68,7 @@ class ClientApp : public GameDirector
 	private:
 		void RefreshTitleBar();
 		void OnWindowResize(int w, int h);
+		void IncFrameCount();
 		void RenderScene();
 
 	public:
@@ -101,6 +103,12 @@ class ClientApp : public GameDirector
 		HoverScript::SysEnv *sysEnv;
 
 		RulebookPtr requestedNewSession;
+
+		// Stats counters.
+		Display::Label *fpsLbl;
+		unsigned int frameCount;
+		Util::OS::timestamp_t lastTimestamp;
+		double fps;
 };
 
 }  // namespace HoverScript
