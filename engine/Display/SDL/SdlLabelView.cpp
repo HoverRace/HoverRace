@@ -87,6 +87,8 @@ void SdlLabelView::Update()
 {
 	if (surface) SDL_FreeSurface(surface);
 
+	SDL_Surface *tempSurface;
+
 #	ifdef WITH_SDL_PANGO
 		const std::string &s = model.GetText();
 		char *escapedBuf = g_markup_escape_text(s.c_str(), -1);
@@ -114,13 +116,13 @@ void SdlLabelView::Update()
 		realHeight = height;
 
 		// Draw the text onto an SDL surface.
-		surface = SDL_CreateRGBSurface(SDL_SWSURFACE,
+		tempSurface = SDL_CreateRGBSurface(SDL_SWSURFACE,
 			width, height, 32,
 			(MR_UInt32)(255 << (8 * 3)),
 			(MR_UInt32)(255 << (8 * 2)),
 			(MR_UInt32)(255 << (8 * 1)),
 			255);
-		SDLPango_Draw(ctx, surface, 0, 0);
+		SDLPango_Draw(ctx, tempSurface, 0, 0);
 
 		SDLPango_FreeContext(ctx);
 
@@ -179,7 +181,7 @@ void SdlLabelView::Update()
 		realWidth = width;
 		realHeight = height;
 
-		surface = SDL_CreateRGBSurface(SDL_SWSURFACE,
+		tempSurface = SDL_CreateRGBSurface(SDL_SWSURFACE,
 			width, height, 32,
 			(MR_UInt32)(255 << (8 * 3)),
 			(MR_UInt32)(255 << (8 * 2)),
@@ -197,8 +199,8 @@ void SdlLabelView::Update()
 		char buf[9] = { 0 };
 		int destSkip = realWidth - width;
 		MR_UInt32 *src = bits;
-		MR_UInt8 *dest = (MR_UInt8*)(surface->pixels);
-		memset(dest, 0, surface->h * surface->pitch);
+		MR_UInt8 *dest = (MR_UInt8*)(tempSurface->pixels);
+		memset(dest, 0, tempSurface->h * tempSurface->pitch);
 		for (int y = 0; y < height; ++y) {
 			MR_UInt8 *destRow = dest;
 			for (int x = 0; x < width; ++x) {
@@ -213,7 +215,7 @@ void SdlLabelView::Update()
 				*((MR_UInt32*)dest) = px;
 				dest += 4;
 			}
-			dest = destRow + surface->pitch;
+			dest = destRow + tempSurface->pitch;
 		}
 
 		SelectObject(hdc, oldBmp);
@@ -228,6 +230,10 @@ void SdlLabelView::Update()
 #	else
 		throw UnimplementedExn("SdlLabelView::Update");
 #	endif
+
+	// Convert the surface to the display format.
+	surface = SDL_DisplayFormatAlpha(tempSurface);
+	SDL_FreeSurface(tempSurface);
 }
 
 }  // namespace SDL
