@@ -52,6 +52,16 @@ union MR_DllDeclare Color
 	} bits;
 };
 
+MR_DllDeclare inline bool operator==(const Color &a, const Color &b)
+{
+	return a.argb == b.argb;
+}
+
+MR_DllDeclare inline bool operator!=(const Color &a, const Color &b)
+{
+	return !operator==(a, b);
+}
+
 MR_DllDeclare inline std::ostream &operator<<(std::ostream &os, const Color &c)
 {
 	switch (Util::GetSelFmt(os)) {
