@@ -57,6 +57,19 @@ SdlLabelView::~SdlLabelView()
 	}
 }
 
+void SdlLabelView::OnModelUpdate(int prop)
+{
+	switch (prop) {
+		case Label::Props::COLOR:
+		case Label::Props::FONT:
+		case Label::Props::TEXT:
+			if (surface) {
+				SDL_FreeSurface(surface);
+				surface = nullptr;
+			}
+	}
+}
+
 void SdlLabelView::PrepareRender()
 {
 	//TODO: Check if model has changed.

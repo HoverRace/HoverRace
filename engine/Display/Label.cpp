@@ -54,5 +54,32 @@ Label::~Label()
 {
 }
 
+void Label::SetColor(const Color color)
+{
+	if (this->color != color) {
+		this->color = color;
+		FireModelUpdate(Props::COLOR);
+	}
+}
+
+void Label::SetFont(VideoServices::FontSpec &font)
+{
+	if (this->font != font) {
+		this->font = font;
+		FireModelUpdate(Props::FONT);
+	}
+}
+
+void Label::SetText(const std::string &text)
+{
+	if (this->text != text) {
+		this->text = text;
+#		ifdef _WIN32
+			wtext = (const wchar_t*)Str::UW(text);
+#		endif
+		FireModelUpdate(Props::TEXT);
+	}
+}
+
 }  // namespace Display
 }  // namespace HoverRace

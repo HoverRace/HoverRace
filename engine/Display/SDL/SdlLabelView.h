@@ -53,6 +53,9 @@ class MR_DllDeclare SdlLabelView : public SdlView<Label>
 		virtual ~SdlLabelView();
 
 	public:
+		virtual void OnModelUpdate(int prop);
+
+	public:
 		virtual void PrepareRender();
 		virtual void Render();
 

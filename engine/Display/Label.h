@@ -54,6 +54,17 @@ namespace Display {
 class MR_DllDeclare Label : public ViewModel
 {
 	typedef ViewModel SUPER;
+
+	public:
+		struct Props
+		{
+			enum {
+				COLOR,
+				FONT,
+				TEXT,
+			};
+		};
+
 	public:
 		Label(const std::string &text, const VideoServices::FontSpec &font,
 			const Color color);
@@ -63,12 +74,17 @@ class MR_DllDeclare Label : public ViewModel
 		virtual void AttachView(Display *disp) { AttachViewDynamic(disp, this); }
 
 	public:
+		const Color GetColor() const { return color; }
+		void SetColor(const Color color);
+
+		const VideoServices::FontSpec &GetFont() const { return font; }
+		void SetFont(VideoServices::FontSpec &font);
+
 		const std::string &GetText() const { return text; }
+		void SetText(const std::string &text);
 #		ifdef _WIN32
 			const std::wstring &GetWText() const { return wtext; }
 #		endif
-		const VideoServices::FontSpec &GetFont() const { return font; }
-		const Color GetColor() const { return color; }
 
 	private:
 		std::string text;

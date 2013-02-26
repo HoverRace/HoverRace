@@ -45,6 +45,15 @@ class MR_DllDeclare View
 		virtual ~View() { }
 
 	public:
+		/**
+		 * Called by the view model to indicate that a property has changed.
+		 * The view can use this to decide if view-specific resources need to be
+		 * reloaded.
+		 * @param prop The model-specific ID of the property that changed.
+		 */
+		virtual void OnModelUpdate(int prop) { }
+
+	public:
 		virtual void PrepareRender() = 0;
 		virtual void Render() = 0;
 };
