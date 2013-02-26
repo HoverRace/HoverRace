@@ -62,6 +62,11 @@ MR_DllDeclare inline bool operator==(const FontSpec &a, const FontSpec &b)
 		a.name == b.name;
 }
 
+MR_DllDeclare inline bool operator!=(const FontSpec &a, const FontSpec &b)
+{
+	return !operator==(a, b);
+}
+
 MR_DllDeclare inline std::ostream &operator<<(std::ostream &os, const FontSpec &fs) {
 	// For convenience, this is formatted for use by Pango.
 	os << fs.name;
