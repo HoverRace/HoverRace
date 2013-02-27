@@ -325,6 +325,9 @@
     <ClCompile Include="Util\SelFmt.cpp">
       <Filter>Util</Filter>
     </ClCompile>
+    <ClCompile Include="Display\UiViewModel.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColorTools\ColorTools.h">
@@ -672,6 +675,9 @@
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="Display\Vec.h">
+      <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="Display\UiViewModel.h">
       <Filter>Display</Filter>
     </ClInclude>
   </ItemGroup>

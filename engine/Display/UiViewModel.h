@@ -1,5 +1,5 @@
 
-// Label.h
+// UiViewModel.h
 //
 // Copyright (c) 2013 Michael Imamura.
 //
@@ -21,10 +21,8 @@
 
 #pragma once
 
-#include "../VideoServices/FontSpec.h"
-#include "Color.h"
-
-#include "UiViewModel.h"
+#include "Vec.h"
+#include "ViewModel.h"
 
 #ifdef _WIN32
 #	ifdef MR_ENGINE
@@ -37,64 +35,39 @@
 #endif
 
 namespace HoverRace {
-	namespace Display {
-		class Display;
-	}
-}
-
-namespace HoverRace {
 namespace Display {
 
 /**
- * A static text label.
- * This is intended for text elements that rarely change over time, aside from
- * visibility.
+ * Base class for UI (2D) components.
  * @author Michael Imamura
  */
-class MR_DllDeclare Label : public UiViewModel
+class MR_DllDeclare UiViewModel : public ViewModel
 {
-	typedef UiViewModel SUPER;
+	typedef ViewModel SUPER;
 
 	public:
 		struct Props
 		{
 			enum {
-				COLOR = SUPER::Props::NEXT_,
-				FONT,
-				TEXT,
+				POS,
 				NEXT_,  ///< First index for subclasses.
 			};
 		};
 
 	public:
-		Label(const std::string &text, const VideoServices::FontSpec &font,
-			const Color color);
-		virtual ~Label();
+		UiViewModel() : SUPER(), pos(0, 0) { }
+		virtual ~UiViewModel() { }
 
 	public:
-		virtual void AttachView(Display *disp) { AttachViewDynamic(disp, this); }
-
-	public:
-		const Color GetColor() const { return color; }
-		void SetColor(const Color color);
-
-		const VideoServices::FontSpec &GetFont() const { return font; }
-		void SetFont(VideoServices::FontSpec &font);
-
-		const std::string &GetText() const { return text; }
-		void SetText(const std::string &text);
-#		ifdef _WIN32
-			const std::wstring &GetWText() const { return wtext; }
-#		endif
+		/**
+		 * Get the position of the component.
+		 * @return The position, relative to the parent (if any).
+		 */
+		const Vec2 &GetPos() const { return pos; }
+		void SetPos(const Vec2 &pos);
 
 	private:
-		std::string text;
-#		ifdef _WIN32
-			/// Cached wide string since that's how it's used in Win32.
-			std::wstring wtext;
-#		endif
-		VideoServices::FontSpec font;
-		Color color;
+		Vec2 pos;
 };
 
 }  // namespace Display

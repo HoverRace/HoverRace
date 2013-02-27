@@ -116,6 +116,7 @@
     <ClCompile Include="Display\SDL\SdlDisplay.cpp" />
     <ClCompile Include="Display\SDL\SdlLabelView.cpp" />
     <ClCompile Include="Display\SDL\SdlLegacyDisplay.cpp" />
+    <ClCompile Include="Display\UiViewModel.cpp" />
     <ClCompile Include="MainCharacter\MainCharacter.cpp" />
     <ClCompile Include="MainCharacter\MainCharacterRenderer.cpp" />
     <ClCompile Include="MazeCompiler\LevelBuilder.cpp" />
@@ -218,6 +219,7 @@
     <ClInclude Include="Display\SDL\SdlLabelView.h" />
     <ClInclude Include="Display\SDL\SdlLegacyDisplay.h" />
     <ClInclude Include="Display\SDL\SdlView.h" />
+    <ClInclude Include="Display\UiViewModel.h" />
     <ClInclude Include="Display\Vec.h" />
     <ClInclude Include="Display\ViewAttacher.h" />
     <ClInclude Include="Display\View.h" />
