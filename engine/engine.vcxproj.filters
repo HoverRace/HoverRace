@@ -671,6 +671,9 @@
     <ClInclude Include="Util\SelFmt.h">
       <Filter>Util</Filter>
     </ClInclude>
+    <ClInclude Include="Display\Vec.h">
+      <Filter>Display</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\lib\alut.dll">

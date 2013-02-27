@@ -218,6 +218,7 @@
     <ClInclude Include="Display\SDL\SdlLabelView.h" />
     <ClInclude Include="Display\SDL\SdlLegacyDisplay.h" />
     <ClInclude Include="Display\SDL\SdlView.h" />
+    <ClInclude Include="Display\Vec.h" />
     <ClInclude Include="Display\ViewAttacher.h" />
     <ClInclude Include="Display\View.h" />
     <ClInclude Include="Display\ViewModel.h" />

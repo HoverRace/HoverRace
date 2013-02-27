@@ -6,6 +6,7 @@ libdisplay_la_SOURCES = \
 	Display.h \
 	Label.cpp \
 	Label.h \
+	Vec.h \
 	View.h \
 	ViewAttacher.h \
 	ViewModel.h \
