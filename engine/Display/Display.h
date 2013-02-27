@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include "Vec.h"
 #include "ViewAttacher.h"
 
 #ifdef _WIN32
@@ -58,6 +59,7 @@ class MR_DllDeclare Display :
 	public ViewAttacher<Label>
 {
 	public:
+		Display() : uiOrigin(0, 0) { }
 		virtual ~Display() { }
 
 	public:
@@ -99,6 +101,27 @@ class MR_DllDeclare Display :
 		 * Rendering for the frame has completed; update the screen.
 		 */
 		virtual void Flip() = 0;
+
+	public:
+		Vec2 GetUiOrigin() const
+		{
+			return uiOrigin;
+		}
+
+		void SetUiOrigin(const Vec2 &vec)
+		{
+			uiOrigin = vec;
+		}
+
+		Vec2 AddUiOrigin(const Vec2 &vec)
+		{
+			Vec2 oldOrigin = uiOrigin;
+			uiOrigin += vec;
+			return oldOrigin;
+		}
+
+	private:
+		Vec2 uiOrigin;
 };
 
 }  // namespace Display

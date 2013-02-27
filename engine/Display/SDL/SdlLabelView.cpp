@@ -78,9 +78,7 @@ void SdlLabelView::PrepareRender()
 
 void SdlLabelView::Render()
 {
-	if (surface) {
-		SDL_BlitSurface(surface, nullptr, SDL_GetVideoSurface(), nullptr);
-	}
+	disp.DrawUiSurface(surface, model.GetPos());
 }
 
 void SdlLabelView::Update()

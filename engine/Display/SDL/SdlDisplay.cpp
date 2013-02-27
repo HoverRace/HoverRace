@@ -102,6 +102,24 @@ void SdlDisplay::ApplyVideoMode()
 	height = vidCfg.yRes;
 }
 
+/**
+ * Blit an SDL surface to the backbuffer.
+ * @param surface The surface to blit (may be @c NULL).
+ * @param relPos The UI-space position, relative to the current UI origin.
+ */
+void SdlDisplay::DrawUiSurface(SDL_Surface *surface, const Vec2 &relPos)
+{
+	if (surface) {
+		Vec2 adjustedPos = relPos;
+		adjustedPos += GetUiOrigin();
+
+		//TODO: Convert UI coords to screen coords.
+
+		SDL_Rect destRect = { (MR_Int16)adjustedPos.x, (MR_Int16)adjustedPos.y, 0, 0 };
+		SDL_BlitSurface(surface, nullptr, SDL_GetVideoSurface(), &destRect);
+	}
+}
+
 }  // namespace SDL
 }  // namespace Display
 }  // namespace HoverRace

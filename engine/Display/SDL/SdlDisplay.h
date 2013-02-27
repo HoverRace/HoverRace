@@ -68,6 +68,9 @@ class MR_DllDeclare SdlDisplay : public Display
 	private:
 		void ApplyVideoMode();
 
+	public:
+		void DrawUiSurface(SDL_Surface *surface, const Vec2 &relPos);
+
 	private:
 		int width, height;
 		std::unique_ptr<VideoServices::VideoBuffer> legacyDisplay;
