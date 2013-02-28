@@ -150,7 +150,7 @@ void SdlLabelView::Update()
 		width = sz.right - sz.left;
 		height = sz.bottom - sz.top;
 
-		// Create a monochrome DIB to draw the text onto.
+		// Create a 32-bit DIB to draw the text onto.
 		BITMAPINFO *bmpInfo =
 			(BITMAPINFO*)malloc(sizeof(BITMAPINFOHEADER) + 2 * sizeof(RGBQUAD));
 		BITMAPINFOHEADER &bmih = bmpInfo->bmiHeader;
