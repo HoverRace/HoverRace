@@ -298,7 +298,6 @@ void ClientApp::MainLoop()
 						break;
 #				endif
 			}
-			//TODO: Check for resize event and call NotifyWindowResChange().
 		}
 		if (quit) break;
 
