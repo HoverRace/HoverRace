@@ -29,6 +29,7 @@
 #endif
 
 #include "../../Util/SelFmt.h"
+#include "../../Util/Str.h"
 #include "../Label.h"
 
 #include "SdlLabelView.h"
@@ -128,7 +129,7 @@ void SdlLabelView::Update()
 		HDC hdc = CreateCompatibleDC(NULL);
 
 		const VideoServices::FontSpec font = model.GetFont();
-		HFONT stdFont = CreateFont(
+		HFONT stdFont = CreateFontW(
 			font.size,
 			0, 0, 0,
 			font.bold ? FW_BOLD : FW_NORMAL,
@@ -136,7 +137,7 @@ void SdlLabelView::Update()
 			0, 0, 0, 0, 0,
 			ANTIALIASED_QUALITY,
 			0,
-			font.name.c_str());
+			Str::UW(font.name));
 		HFONT oldFont = (HFONT)SelectObject(hdc, stdFont);
 
 		const wchar_t *ws = model.GetWText().c_str();
