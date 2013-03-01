@@ -40,7 +40,7 @@ PaletteScene::PaletteScene(Display::Display &display) :
 {
 	Config *cfg = Config::GetInstance();
 
-	VideoServices::FontSpec font(cfg->GetDefaultFontName(), 20);
+	Display::UiFont font(cfg->GetDefaultFontName(), 20);
 	label = new Display::Label("Palette", font, Display::Color(0xff, 0xff, 0x00, 0x00));
 
 	display.AttachView(*label);

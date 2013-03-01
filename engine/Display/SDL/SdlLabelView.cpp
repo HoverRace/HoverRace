@@ -128,12 +128,13 @@ void SdlLabelView::Update()
 #	elif defined(_WIN32)
 		HDC hdc = CreateCompatibleDC(NULL);
 
-		const VideoServices::FontSpec font = model.GetFont();
+		const UiFont font = model.GetFont();
 		HFONT stdFont = CreateFontW(
-			font.size,
+			//TODO: Support fractional sizes.
+			static_cast<int>(font.size),
 			0, 0, 0,
-			font.bold ? FW_BOLD : FW_NORMAL,
-			font.italic ? TRUE : FALSE,
+			(font.style & UiFont::BOLD) ? FW_BOLD : FW_NORMAL,
+			(font.style & UiFont::ITALIC) ? TRUE : FALSE,
 			0, 0, 0, 0, 0,
 			ANTIALIASED_QUALITY,
 			0,

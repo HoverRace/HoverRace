@@ -21,8 +21,8 @@
 
 #pragma once
 
-#include "../VideoServices/FontSpec.h"
 #include "Color.h"
+#include "UiFont.h"
 
 #include "UiViewModel.h"
 
@@ -67,8 +67,7 @@ class MR_DllDeclare Label : public UiViewModel
 		};
 
 	public:
-		Label(const std::string &text, const VideoServices::FontSpec &font,
-			const Color color);
+		Label(const std::string &text, const UiFont &font, const Color color);
 		virtual ~Label();
 
 	public:
@@ -78,8 +77,8 @@ class MR_DllDeclare Label : public UiViewModel
 		const Color GetColor() const { return color; }
 		void SetColor(const Color color);
 
-		const VideoServices::FontSpec &GetFont() const { return font; }
-		void SetFont(VideoServices::FontSpec &font);
+		const UiFont &GetFont() const { return font; }
+		void SetFont(UiFont &font);
 
 		const std::string &GetText() const { return text; }
 		void SetText(const std::string &text);
@@ -93,7 +92,7 @@ class MR_DllDeclare Label : public UiViewModel
 			/// Cached wide string since that's how it's used in Win32.
 			std::wstring wtext;
 #		endif
-		VideoServices::FontSpec font;
+		UiFont font;
 		Color color;
 };
 

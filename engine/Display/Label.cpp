@@ -22,7 +22,6 @@
 #include "StdAfx.h"
 
 #include "../Util/Str.h"
-#include "../VideoServices/FontSpec.h"
 
 #include "Label.h"
 
@@ -38,7 +37,7 @@ namespace Display {
  * @param color The text foreground color.  The alpha component is ignored.
  */
 Label::Label(const std::string &text,
-             const VideoServices::FontSpec &font,
+             const UiFont &font,
              Color color) :
 	SUPER(),
 	text(text),
@@ -62,7 +61,7 @@ void Label::SetColor(const Color color)
 	}
 }
 
-void Label::SetFont(VideoServices::FontSpec &font)
+void Label::SetFont(UiFont &font)
 {
 	if (this->font != font) {
 		this->font = font;

@@ -6,6 +6,8 @@ libdisplay_la_SOURCES = \
 	Display.h \
 	Label.cpp \
 	Label.h \
+	UiFont.cpp \
+	UiFont.h \
 	UiViewModel.cpp \
 	UiViewModel.h \
 	Vec.h \

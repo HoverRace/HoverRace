@@ -328,6 +328,9 @@
     <ClCompile Include="Display\UiViewModel.cpp">
       <Filter>Display</Filter>
     </ClCompile>
+    <ClCompile Include="Display\UiFont.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColorTools\ColorTools.h">
@@ -678,6 +681,9 @@
       <Filter>Display</Filter>
     </ClInclude>
     <ClInclude Include="Display\UiViewModel.h">
+      <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="Display\UiFont.h">
       <Filter>Display</Filter>
     </ClInclude>
   </ItemGroup>

@@ -156,7 +156,7 @@ ClientApp::ClientApp() :
 	RefreshTitleBar();
 
 	fpsLbl = new Display::Label("FPS:",
-		VideoServices::FontSpec(cfg->GetDefaultFontName(), 20, true),
+		Display::UiFont(cfg->GetDefaultFontName(), 20, Display::UiFont::BOLD),
 		Display::Color(0xff, 0xff, 0x7f, 0x00));
 	display->AttachView(*fpsLbl);
 }
