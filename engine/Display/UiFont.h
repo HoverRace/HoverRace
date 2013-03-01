@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include "../Util/SelFmt.h"
+
 #ifdef _WIN32
 #	ifdef MR_ENGINE
 #		define MR_DllDeclare   __declspec( dllexport )
@@ -48,6 +50,10 @@ struct MR_DllDeclare UiFont
 		ITALIC = 0x02,
 	};
 
+#	ifdef WITH_SDL_PANGO
+		std::ostream &WritePango(std::ostream &os) const;
+#	endif
+
 	std::string name;
 	double size;
 	int style;
@@ -66,12 +72,21 @@ MR_DllDeclare inline bool operator!=(const UiFont &a, const UiFont &b)
 	return !operator==(a, b);
 }
 
-MR_DllDeclare inline std::ostream &operator<<(std::ostream &os, const UiFont &fs) {
-	// For convenience, this is formatted for use by Pango.
-	os << fs.name;
-	if (fs.style & UiFont::BOLD) os << " Bold";
-	if (fs.style & UiFont::ITALIC) os << " Italic";
-	os << ' ' << fs.size;
+MR_DllDeclare inline std::ostream &operator<<(std::ostream &os,
+                                              const UiFont &fs)
+{
+	switch (Util::GetSelFmt(os)) {
+#		ifdef WITH_SDL_PANGO
+			case Util::SEL_FMT_PANGO:
+				return fs.WritePango(os);
+#		endif
+
+		default:
+			os << fs.name;
+			if (fs.style & UiFont::BOLD) os << " Bold";
+			if (fs.style & UiFont::ITALIC) os << " Italic";
+			os << ' ' << fs.size;
+	}
 
 	return os;
 }

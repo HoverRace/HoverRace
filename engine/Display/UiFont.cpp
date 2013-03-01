@@ -21,11 +21,42 @@
 
 #include "StdAfx.h"
 
+#ifdef WITH_SDL_PANGO
+#	include <boost/format.hpp>
+#	include <glib.h>
+#endif
+
+#include "../Util/OS.h"
+
 #include "UiFont.h"
+
+using namespace HoverRace::Util;
 
 namespace HoverRace {
 namespace Display {
 
+#ifdef WITH_SDL_PANGO
+// Render this font specification in Pango style.
+std::ostream &UiFont::WritePango(std::ostream &os) const
+{
+	// Using the "C" locale here just in case, for some reason, we need
+	// to use a font with a size in the thousands.  Pango doesn't
+	// interpret a size of "4.000,00" properly.  :)
+	static boost::format szFmt("%0.2f", OS::stdLocale);
+
+	// Escape the font name since we're writing to Pango markup.
+	char *escapedName = g_markup_escape_text(name.c_str(), -1);
+	os << escapedName;
+	g_free(escapedName);
+
+	if (style & UiFont::BOLD) os << " Bold";
+	if (style & UiFont::ITALIC) os << " Italic";
+
+	os << ' ' << szFmt % size;
+
+	return os;
+}
+#endif
 
 }  // namespace Display
 }  // namespace HoverRace
