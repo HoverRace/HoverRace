@@ -33,7 +33,7 @@ namespace Display {
 
 /**
  * Constructor.
- * @param s The text (UTF-8).
+ * @param text The text.
  * @param font The font.
  * @param color The text foreground color.  The alpha component is ignored.
  */
