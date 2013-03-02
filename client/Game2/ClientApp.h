@@ -87,6 +87,9 @@ class ClientApp : public GameDirector
 
 	public:
 		// GameDirector
+		virtual void RequestPushScene(const ScenePtr &scene);
+		virtual void RequestPopScene();
+		virtual void RequestReplaceScene(const ScenePtr &scene);
 		virtual void RequestShutdown();
 		virtual void SignalServerHasChanged();
 		virtual void ChangeAutoUpdates(bool newSetting);

@@ -70,6 +70,24 @@ using HoverRace::Client::Control::InputEventController;
 namespace HoverRace {
 namespace Client {
 
+namespace {
+	// SDL user event codes.
+	enum {
+		REQ_EVT_SCENE_PUSH,
+		REQ_EVT_SCENE_POP,
+		REQ_EVT_SCENE_REPLACE,
+	};
+
+	/**
+	 * Used by @c REQ_EVT_SCENE_PUSH and @c REQ_SCENE_REPLACE to transfer
+	 * the requested scene.
+	 */ 
+	struct SceneHolder {
+		SceneHolder(const ScenePtr &scene) : scene(scene) { }
+		ScenePtr scene;
+	};
+}
+
 class ClientApp::UiInput : public Control::UiHandler
 {
 	virtual void OnConsole()
@@ -315,6 +333,28 @@ void ClientApp::MainLoop()
 						deferredEvents.push_back(evt);
 						break;
 #				endif
+
+				case SDL_USEREVENT:
+					switch (evt.user.code) {
+						case REQ_EVT_SCENE_PUSH: {
+							SceneHolder *holder = static_cast<SceneHolder*>(evt.user.data1);
+							PushScene(holder->scene);
+							delete holder;
+							break;
+						}
+
+						case REQ_EVT_SCENE_POP:
+							PopScene();
+							break;
+
+						case REQ_EVT_SCENE_REPLACE: {
+							SceneHolder *holder = static_cast<SceneHolder*>(evt.user.data1);
+							ReplaceScene(holder->scene);
+							delete holder;
+							break;
+						}
+					}
+					break;
 			}
 		}
 		if (quit) break;
@@ -425,6 +465,32 @@ void ClientApp::TerminateAllScenes()
 	sceneStacks.clear();
 	sceneStacks.resize(1);
 	SetForegroundScene();
+}
+
+void ClientApp::RequestPushScene(const ScenePtr &scene)
+{
+	SDL_Event evt;
+	evt.type = SDL_USEREVENT;
+	evt.user.code = REQ_EVT_SCENE_PUSH;
+	evt.user.data1 = new SceneHolder(scene);
+	SDL_PushEvent(&evt);
+}
+
+void ClientApp::RequestPopScene()
+{
+	SDL_Event evt;
+	evt.type = SDL_USEREVENT;
+	evt.user.code = REQ_EVT_SCENE_POP;
+	SDL_PushEvent(&evt);
+}
+
+void ClientApp::RequestReplaceScene(const ScenePtr &scene)
+{
+	SDL_Event evt;
+	evt.type = SDL_USEREVENT;
+	evt.user.code = REQ_EVT_SCENE_REPLACE;
+	evt.user.data1 = new SceneHolder(scene);
+	SDL_PushEvent(&evt);
 }
 
 void ClientApp::RequestShutdown()

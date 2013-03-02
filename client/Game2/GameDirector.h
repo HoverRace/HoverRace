@@ -33,6 +33,9 @@ namespace HoverRace {
 namespace HoverRace {
 namespace Client {
 
+class Scene;
+typedef std::shared_ptr<Scene> ScenePtr;
+
 /**
  * Interface for game client shells.
  * @author Michael Imamura
@@ -41,6 +44,27 @@ class GameDirector
 {
 	public:
 		virtual ~GameDirector() { }
+
+		/**
+		 * Push a new scene to the foreground.
+		 * @note This may be called from any thread.
+		 * @param scene The scene to push.
+		 */
+		virtual void RequestPushScene(const ScenePtr &scene) = 0;
+
+		/**
+		 * Return to the previous scene, if any.
+		 * @note This may be called from any thread.
+		 */
+		virtual void RequestPopScene() = 0;
+
+		/**
+		 * Replace the current scene and all background scenes with a new
+		 * foreground scene.
+		 * @note This may be called from any thread.
+		 * @param scene The scene to push.
+		 */
+		virtual void RequestReplaceScene(const ScenePtr &scene) = 0;
 
 		/**
 		 * Request an orderly shutdown the of app.
