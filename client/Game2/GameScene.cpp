@@ -34,6 +34,7 @@
 
 #include "ClientSession.h"
 #include "HighObserver.h"
+#include "PaletteScene.h"
 #include "Rulebook.h"
 
 #include "GameScene.h"
@@ -49,8 +50,10 @@ GameScene::GameScene(GameDirector *director, Display::Display &display,
                      Script::Core *scripting, HoverScript::GamePeer *gamePeer,
                      RulebookPtr rules) :
 	SUPER(),
+	director(director),
 	frame(0), numPlayers(1), display(display), controller(controller),
-	session(NULL), highObserver(NULL), highConsole(NULL)
+	session(NULL), highObserver(NULL), highConsole(NULL),
+	firedOnRaceFinish(false)
 {
 	memset(observers, 0, sizeof(observers[0]) * MAX_OBSERVERS);
 
@@ -122,6 +125,11 @@ void GameScene::Advance(Util::OS::timestamp_t tick)
 	}
 
 	session->Process();
+
+	if (!firedOnRaceFinish && session->GetPlayer(0)->HasFinish()) {
+		OnRaceFinish();
+		firedOnRaceFinish = true;
+	}
 }
 
 void GameScene::Render()
@@ -155,6 +163,12 @@ void GameScene::Render()
 		}
 	}
 	VideoServices::SoundServer::ApplyContinuousPlay();
+}
+
+void GameScene::OnRaceFinish()
+{
+	// This is just a test of scene manipulation.
+	director->RequestPushScene(std::make_shared<PaletteScene>(display));
 }
 
 }  // namespace HoverScript

@@ -75,9 +75,13 @@ class GameScene : public Scene
 		void Render();
 
 	private:
+		void OnRaceFinish();
+
+	private:
 		int frame;
 		int numPlayers;
 
+		GameDirector *director;
 		Display::Display &display;
 
 		static const int MAX_OBSERVERS = Util::Config::MAX_PLAYERS;
@@ -89,6 +93,8 @@ class GameScene : public Scene
 		HoverScript::HighConsole *highConsole;
 
 		HoverScript::SessionPeerPtr sessionPeer;
+
+		bool firedOnRaceFinish;
 };
 
 }  // namespace HoverScript
