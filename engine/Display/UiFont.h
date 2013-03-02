@@ -76,10 +76,10 @@ MR_DllDeclare inline std::ostream &operator<<(std::ostream &os,
                                               const UiFont &fs)
 {
 	switch (Util::GetSelFmt(os)) {
-#		ifdef WITH_SDL_PANGO
-			case Util::SEL_FMT_PANGO:
+		case Util::SEL_FMT_PANGO:
+#			ifdef WITH_SDL_PANGO
 				return fs.WritePango(os);
-#		endif
+#			endif
 
 		default:
 			os << fs.name;
