@@ -69,12 +69,21 @@ class ClientApp : public GameDirector
 		void RefreshTitleBar();
 		void OnWindowResize(int w, int h);
 		void IncFrameCount();
-		void RenderScene();
+		void AdvanceScenes(Util::OS::timestamp_t tick);
+		void RenderScenes();
 
 	public:
 		void MainLoop();
 
 		void NewLocalSession(RulebookPtr rules=RulebookPtr());
+
+	private:
+		void SetForegroundScene();
+		void SetForegroundScene(const ScenePtr &scene);
+		void PushScene(const ScenePtr &scene);
+		void PopScene();
+		void ReplaceScene(const ScenePtr &scene);
+		void TerminateAllScenes();
 
 	public:
 		// GameDirector
@@ -96,7 +105,10 @@ class ClientApp : public GameDirector
 		std::shared_ptr<UiInput> uiInput;
 		Control::InputEventController *controller;
 
-		ScenePtr scene;
+		typedef std::list<ScenePtr> sceneStack_t;
+		typedef std::deque<sceneStack_t> sceneStacks_t;
+		sceneStacks_t sceneStacks;
+		ScenePtr fgScene;  ///< The scene that currently has input focus.
 
 		Script::Core *scripting;
 		HoverScript::GamePeer *gamePeer;

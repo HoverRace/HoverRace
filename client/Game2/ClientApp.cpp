@@ -81,7 +81,7 @@ class ClientApp::UiInput : public Control::UiHandler
 ClientApp::ClientApp() :
 	SUPER(),
 	uiInput(std::make_shared<UiInput>()),
-	scene(),
+	sceneStacks(1), fgScene(),
 	fpsLbl(), frameCount(0), lastTimestamp(0), fps(0.0)
 {
 	Config *cfg = Config::GetInstance();
@@ -236,21 +236,39 @@ void ClientApp::IncFrameCount()
 	}
 }
 
-void ClientApp::RenderScene()
+void ClientApp::AdvanceScenes(Util::OS::timestamp_t tick)
+{
+	BOOST_FOREACH(const sceneStack_t &sceneStack, sceneStacks) {
+		BOOST_FOREACH(const ScenePtr &scene, sceneStack) {
+			scene->Advance(tick);
+			//TODO: Check for scene change notification.
+		}
+	}
+}
+
+void ClientApp::RenderScenes()
 {
 	bool showFps = Config::GetInstance()->runtime.showFramerate;
 
 	IncFrameCount();
 
-	if (scene == NULL) {
+	if (sceneStacks.size() == 1 && sceneStacks.back().empty()) {
 		VideoServices::VideoBuffer::Lock lock(display->GetLegacyDisplay());
 		display->GetLegacyDisplay().Clear();
 	}
 	else {
-		scene->PrepareRender();
+		BOOST_FOREACH(const sceneStack_t &sceneStack, sceneStacks) {
+			BOOST_FOREACH(const ScenePtr &scene, sceneStack) {
+				scene->PrepareRender();
+			}
+		}
 		if (showFps) fpsLbl->PrepareRender();
 
-		scene->Render();
+		BOOST_FOREACH(const sceneStack_t &sceneStack, sceneStacks) {
+			BOOST_FOREACH(const ScenePtr &scene, sceneStack) {
+				scene->Render();
+			}
+		}
 		if (showFps) fpsLbl->Render();
 	}
 	
@@ -269,7 +287,7 @@ void ClientApp::MainLoop()
 		NewLocalSession(rules);
 	}
 	else {
-		scene.reset(new PaletteScene(*display));
+		ReplaceScene(std::make_shared<PaletteScene>(*display));
 	}
 
 #	ifdef WITH_SDL_OIS_INPUT
@@ -309,15 +327,11 @@ void ClientApp::MainLoop()
 #		endif
 		controller->Poll();
 
-		if (scene != NULL) {
-			scene->Advance(tick);
-			//TODO: Check for scene change notification.
-		}
-
-		RenderScene();
+		AdvanceScenes(tick);
+		RenderScenes();
 	}
 
-	scene.reset();
+	TerminateAllScenes();
 }
 
 void ClientApp::NewLocalSession(RulebookPtr rules)
@@ -326,11 +340,91 @@ void ClientApp::NewLocalSession(RulebookPtr rules)
 
 	//TODO: Prompt the user for a track name.
 	try {
-		scene.reset(new GameScene(this, *display, controller, scripting, gamePeer, rules));
+		ReplaceScene(std::make_shared<GameScene>(this, *display, controller, scripting, gamePeer, rules));
 	}
 	catch (Parcel::ObjStreamExn&) {
 		throw;
 	}
+}
+
+/**
+ * Remove the foreground scene.
+ * @note This must only be called from the main thread.
+ * This indicates that there is no scene capable of receiving input.
+ */
+void ClientApp::SetForegroundScene()
+{
+	fgScene.reset();
+	//TODO: Load failsafe controller mapping.
+}
+
+/**
+ * Switch which scene has input focus.
+ * @note This must only be called from the main thread.
+ * @param The scene with input focus (may not be @c NULL).
+ */
+void ClientApp::SetForegroundScene(const ScenePtr &scene)
+{
+	fgScene = scene;
+	//TODO: Load controller mapping from new foreground scene.
+}
+
+/**
+ * Push a new scene to the foreground.
+ * @note This must only be called from the main thread.
+ * @param scene The scene to push.
+ */
+void ClientApp::PushScene(const ScenePtr &scene)
+{
+	sceneStacks.back().push_back(scene);
+	SetForegroundScene(scene);
+}
+
+/**
+ * Return to the previous scene, if any.
+ * @note This must only be called from the main thread.
+ */
+void ClientApp::PopScene()
+{
+	sceneStack_t &fg = sceneStacks.back();
+	if (!fg.empty()) {
+		//TODO: Mark scene as exiting.
+		fg.pop_back();
+	}
+
+	// Determine the new foreground scene.
+	if (fg.empty()) {
+		SetForegroundScene();
+	}
+	else {
+		//TODO: Find the first non-exiting scene.
+		SetForegroundScene(fg.back());
+	}
+}
+
+/**
+ * Replace the current scene and all background scenes with a new
+ * foreground scene.
+ * @note This must only be called from the main thread.
+ * @param scene The scene to push.
+ */
+void ClientApp::ReplaceScene(const ScenePtr &scene)
+{
+	//TODO: Mark all scenes in the current stack as exiting,
+	//      then push a new scene stack.
+	sceneStacks.back().clear();
+	PushScene(scene);
+}
+
+/**
+ * Immediately remove all scenes.
+ * @note This must only be called from the main thread.
+ */
+void ClientApp::TerminateAllScenes()
+{
+	sceneStacks.clear();
+	sceneStacks.resize(1);
+	SetForegroundScene();
 }
 
 void ClientApp::RequestShutdown()
