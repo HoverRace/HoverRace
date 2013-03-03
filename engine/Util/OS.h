@@ -108,7 +108,7 @@ class MR_DllDeclare OS {
 
 		static void TimeInit();
 		static timestamp_t Time();
-		static timestamp_t TimeDiff(timestamp_t a, timestamp_t b);
+		static timestamp_t TimeDiff(timestamp_t laterTs, timestamp_t earlierTs);
 		static void TimeShutdown();
 
 		static bool OpenLink(const std::string &url);
