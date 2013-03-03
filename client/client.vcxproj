@@ -55,6 +55,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <AdditionalOptions>/Zm120 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_AFXDLL;_DEBUG;_MBNET_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -88,6 +89,7 @@
       <InlineFunctionExpansion>Default</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <AdditionalOptions>/Zm120 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>wsock32.lib;winmm.lib;version.lib;comctl32.lib;sdl.lib;libcurl.lib;LiteUnzip.lib;intl.lib;lua5.1.lib;luabind.lib;ois.lib;%(AdditionalDependencies)</AdditionalDependencies>
