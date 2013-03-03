@@ -418,6 +418,7 @@ void ClientApp::PushScene(const ScenePtr &scene)
 {
 	sceneStacks.back().push_back(scene);
 	SetForegroundScene(scene);
+	scene->SetPhase(Scene::Phase::STARTING);
 }
 
 /**

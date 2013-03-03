@@ -169,6 +169,7 @@
     </ClCompile>
     <ClCompile Include="Game2\RoomList.cpp" />
     <ClCompile Include="Game2\RoomListDialog.cpp" />
+    <ClCompile Include="Game2\Scene.cpp" />
     <ClCompile Include="Game2\SelectRoomDialog.cpp" />
     <ClCompile Include="Game2\StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

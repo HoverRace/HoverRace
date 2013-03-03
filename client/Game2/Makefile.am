@@ -64,6 +64,7 @@ hoverrace_SOURCES = \
 	RoomList.h \
 	Rulebook.h \
 	Scene.h \
+	Scene.cpp \
 	main.cpp \
 	version.h
 

@@ -165,6 +165,9 @@
     <ClCompile Include="Game2\PaletteScene.cpp">
       <Filter>Game2</Filter>
     </ClCompile>
+    <ClCompile Include="Game2\Scene.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game2\AboutDialog.h">
