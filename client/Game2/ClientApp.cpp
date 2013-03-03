@@ -99,7 +99,7 @@ class ClientApp::UiInput : public Control::UiHandler
 ClientApp::ClientApp() :
 	SUPER(),
 	uiInput(std::make_shared<UiInput>()),
-	sceneStack(), fgScene(),
+	sceneStack(), fgScene(sceneStack.rend()),
 	fpsLbl(), frameCount(0), lastTimestamp(0), fps(0.0)
 {
 	Config *cfg = Config::GetInstance();
@@ -256,9 +256,12 @@ void ClientApp::IncFrameCount()
 
 void ClientApp::AdvanceScenes(Util::OS::timestamp_t tick)
 {
-	BOOST_FOREACH(const ScenePtr &scene, sceneStack) {
-		scene->Advance(tick);
-		//TODO: Check for session change notification.
+	for (auto iter = sceneStack.begin(); iter != sceneStack.end(); ++iter) {
+		(*iter)->Advance(tick);
+		// If the scene has entered the STOPPED state, it's deletable.
+		if ((*iter)->GetPhase() == Scene::Phase::STOPPED) {
+			iter = sceneStack.erase(iter);
+		}
 	}
 }
 
@@ -388,19 +391,24 @@ void ClientApp::NewLocalSession(RulebookPtr rules)
  */
 void ClientApp::SetForegroundScene()
 {
-	fgScene.reset();
+	fgScene = sceneStack.rend();
 	//TODO: Load failsafe controller mapping.
 }
 
 /**
  * Switch which scene has input focus.
  * @note This must only be called from the main thread.
- * @param scene The scene with input focus (may not be @c NULL).
+ * @param iter An iterator pointing to the new foreground scene.
  */
-void ClientApp::SetForegroundScene(const ScenePtr &scene)
+void ClientApp::SetForegroundScene(const sceneStack_t::reverse_iterator &iter)
 {
-	fgScene = scene;
-	//TODO: Load controller mapping from new foreground scene.
+	if (iter == sceneStack.rend()) {
+		SetForegroundScene();
+	}
+	else {
+		fgScene = iter;
+		//TODO: Load controller mapping from new foreground scene.
+	}
 }
 
 /**
@@ -411,7 +419,7 @@ void ClientApp::SetForegroundScene(const ScenePtr &scene)
 void ClientApp::PushScene(const ScenePtr &scene)
 {
 	sceneStack.push_back(scene);
-	SetForegroundScene(scene);
+	SetForegroundScene(sceneStack.rbegin());
 	scene->SetPhase(Scene::Phase::STARTING);
 }
 
@@ -421,18 +429,20 @@ void ClientApp::PushScene(const ScenePtr &scene)
  */
 void ClientApp::PopScene()
 {
-	if (!sceneStack.empty()) {
-		//TODO: Mark scene as exiting.
-		sceneStack.pop_back();
-	}
+	if (fgScene != sceneStack.rend()) {
+		(*fgScene)->SetPhase(Scene::Phase::STOPPING);
 
-	// Determine the new foreground scene.
-	if (sceneStack.empty()) {
-		SetForegroundScene();
-	}
-	else {
-		//TODO: Find the first non-exiting scene.
-		SetForegroundScene(sceneStack.back());
+		// Find the first non-stopping scene.
+		bool found = false;
+		for (auto iter = sceneStack.rbegin(); iter != sceneStack.rend(); ++iter) {
+			Scene::Phase::phase_t phase = (*iter)->GetPhase();
+			if (phase != Scene::Phase::STOPPING && phase != Scene::Phase::STOPPED) {
+				SetForegroundScene(iter);
+				found = true;
+				break;
+			}
+		}
+		if (!found) SetForegroundScene();
 	}
 }
 
@@ -444,9 +454,9 @@ void ClientApp::PopScene()
  */
 void ClientApp::ReplaceScene(const ScenePtr &scene)
 {
-	//TODO: Mark all scenes in the current stack as exiting,
-	//      then push a new scene stack.
-	sceneStack.clear();
+	BOOST_FOREACH(ScenePtr &s, sceneStack) {
+		s->SetPhase(Scene::Phase::STOPPING);
+	}
 	PushScene(scene);
 }
 

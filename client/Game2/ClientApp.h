@@ -78,8 +78,9 @@ class ClientApp : public GameDirector
 		void NewLocalSession(RulebookPtr rules=RulebookPtr());
 
 	private:
+		typedef std::list<ScenePtr> sceneStack_t;
 		void SetForegroundScene();
-		void SetForegroundScene(const ScenePtr &scene);
+		void SetForegroundScene(const sceneStack_t::reverse_iterator &iter);
 		void PushScene(const ScenePtr &scene);
 		void PopScene();
 		void ReplaceScene(const ScenePtr &scene);
@@ -108,9 +109,8 @@ class ClientApp : public GameDirector
 		std::shared_ptr<UiInput> uiInput;
 		Control::InputEventController *controller;
 
-		typedef std::list<ScenePtr> sceneStack_t;
 		sceneStack_t sceneStack;
-		ScenePtr fgScene;  ///< The scene that currently has input focus.
+		sceneStack_t::reverse_iterator fgScene;  ///< The scene that currently has input focus.
 
 		Script::Core *scripting;
 		HoverScript::GamePeer *gamePeer;
