@@ -109,8 +109,7 @@ class ClientApp : public GameDirector
 		Control::InputEventController *controller;
 
 		typedef std::list<ScenePtr> sceneStack_t;
-		typedef std::deque<sceneStack_t> sceneStacks_t;
-		sceneStacks_t sceneStacks;
+		sceneStack_t sceneStack;
 		ScenePtr fgScene;  ///< The scene that currently has input focus.
 
 		Script::Core *scripting;
