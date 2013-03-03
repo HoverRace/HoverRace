@@ -22,6 +22,9 @@
 #include "StdAfx.h"
 
 #include <SDL/SDL.h>
+#ifdef WITH_SDL_PANGO
+#	include <SDL_Pango.h>
+#endif
 
 #include "../../Util/Config.h"
 #include "../../Exception.h"
@@ -46,10 +49,19 @@ SdlDisplay::SdlDisplay() :
 
 	legacyDisplay->OnWindowResChange();
 	legacyDisplay->CreatePalette();
+
+#	ifdef WITH_SDL_PANGO
+		pangoContext = SDLPango_CreateContext();
+		SDLPango_SetDpi(pangoContext, 60, 60);  // Match Windows native rendering sizing.
+		SDLPango_SetDefaultColor(pangoContext, MATRIX_TRANSPARENT_BACK_WHITE_LETTER);
+#	endif
 }
 
 SdlDisplay::~SdlDisplay()
 {
+#	ifdef WITH_SDL_PANGO
+		SDLPango_FreeContext(pangoContext);
+#	endif
 }
 
 void SdlDisplay::AttachView(Label &model)

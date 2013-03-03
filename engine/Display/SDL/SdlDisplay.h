@@ -21,6 +21,10 @@
 
 #pragma once
 
+#ifdef WITH_SDL_PANGO
+#	include <SDL_Pango.h>
+#endif
+
 #include "../Display.h"
 
 #ifdef _WIN32
@@ -69,11 +73,24 @@ class MR_DllDeclare SdlDisplay : public Display
 		void ApplyVideoMode();
 
 	public:
+#		ifdef WITH_SDL_PANGO
+			/**
+			 * Retrieve the shared SDL_Pango rendering context.
+			 * @return The context (never @c NULL).
+			 * @see SdlLabelView
+			 */
+			SDLPango_Context *GetPangoContext() { return pangoContext; }
+#		endif
+
+	public:
 		void DrawUiSurface(SDL_Surface *surface, const Vec2 &relPos);
 
 	private:
 		int width, height;
 		std::unique_ptr<VideoServices::VideoBuffer> legacyDisplay;
+#		ifdef WITH_SDL_PANGO
+			SDLPango_Context *pangoContext;
+#		endif
 };
 
 }  // namespace SDL

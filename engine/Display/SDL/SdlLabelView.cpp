@@ -101,9 +101,7 @@ void SdlLabelView::Update()
 		g_free(escapedBuf);
 
 		//TODO: Reuse the context.
-		SDLPango_Context *ctx = SDLPango_CreateContext();
-		SDLPango_SetDpi(ctx, 60, 60);
-		SDLPango_SetDefaultColor(ctx, MATRIX_TRANSPARENT_BACK_WHITE_LETTER);
+		SDLPango_Context *ctx = disp.GetPangoContext();
 		SDLPango_SetMinimumSize(ctx, 0, 0);
 		SDLPango_SetMarkup(ctx, oss.str().c_str(), -1);
 
@@ -122,8 +120,6 @@ void SdlLabelView::Update()
 			(MR_UInt32)(255 << (8 * 1)),
 			255);
 		SDLPango_Draw(ctx, tempSurface, 0, 0);
-
-		SDLPango_FreeContext(ctx);
 
 #	elif defined(_WIN32)
 		HDC hdc = CreateCompatibleDC(NULL);
