@@ -66,6 +66,7 @@
 #include <boost/foreach.hpp>
 #include <boost/format.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/signals2.hpp>
 
 #ifndef _WIN32
 	// Xlib.h must be included *after* boost/foreach.hpp as a workaround for

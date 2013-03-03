@@ -66,6 +66,7 @@
 #include <boost/foreach.hpp>
 #include <boost/format.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/signals2.hpp>
 #include <boost/thread/thread.hpp>
 
 #include <lua.hpp>

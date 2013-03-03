@@ -775,6 +775,13 @@ BOOST_DEFUN([Signals],
 ])# BOOST_SIGNALS
 
 
+# BOOST_SIGNALS2()
+# ---------------------------------
+# Look for Boost.Signals2.
+BOOST_DEFUN([Signals2],
+[BOOST_FIND_HEADER([boost/signals2.hpp])])
+
+
 # BOOST_SMART_PTR()
 # -----------------
 # Look for Boost.SmartPtr
