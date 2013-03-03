@@ -1585,10 +1585,10 @@ void BltTriangle()
 	if(lSecondStop > 0) {
 		// Cut what is below the screen bottom
 		if(lSecondStop > gsTriangleBltParam.mYRes) {
-			lSecondStop = gsTriangleBltParam.mYRes;
+			lSecondStop = gsTriangleBltParam.mYRes - 1;
 
 			if(lFirstStop > gsTriangleBltParam.mYRes) {
-				lFirstStop = gsTriangleBltParam.mYRes;
+				lFirstStop = gsTriangleBltParam.mYRes - 1;
 			}
 		}
 		// If the upper part of the triangle is below the screen top, draw it
