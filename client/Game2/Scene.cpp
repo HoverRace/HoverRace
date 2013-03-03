@@ -35,6 +35,9 @@ Scene::Scene() :
 
 /**
  * Switch to another phase.
+ * @warning Scenes should not switch to the @c STOPPING phase themselves.
+ *          Instead, they should call GameDirector::PopScene or
+ *          GameDirector::ReplaceScene.
  * @param phase The new phase.
  * @return @c true if the phase change was successful, @c false otherwise.
  */
