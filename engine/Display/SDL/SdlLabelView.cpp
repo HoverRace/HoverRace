@@ -100,7 +100,6 @@ void SdlLabelView::Update()
 
 		g_free(escapedBuf);
 
-		//TODO: Reuse the context.
 		SDLPango_Context *ctx = disp.GetPangoContext();
 		SDLPango_SetMinimumSize(ctx, 0, 0);
 		SDLPango_SetMarkup(ctx, oss.str().c_str(), -1);
