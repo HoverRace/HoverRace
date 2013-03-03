@@ -401,7 +401,7 @@ void ClientApp::SetForegroundScene()
 /**
  * Switch which scene has input focus.
  * @note This must only be called from the main thread.
- * @param The scene with input focus (may not be @c NULL).
+ * @param scene The scene with input focus (may not be @c NULL).
  */
 void ClientApp::SetForegroundScene(const ScenePtr &scene)
 {
