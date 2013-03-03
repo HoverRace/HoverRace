@@ -27,7 +27,6 @@
 #define IDD_INTERNET_MEETING_PUB        150
 #define IDD_LADDER_SUBMIT               152
 #define IDD_LADDER_RES_3                153
-#define IDD_FIRST_CHOICE                154
 #define IDD_LADDER_SUBMIT_QUIT          156
 #define IDD_LADDER_RETRY                157
 #define IDD_LADDER_RES_2                158
@@ -159,8 +158,6 @@
 #define IDC_TCP_SERV_PORT_C             1117
 #define IDC_TCP_RECV_PORT_C             1118
 #define IDC_UDP_RECV_PORT_C             1119
-#define IDC_CLICK_OK                    1120
-#define IDC_MAKE_SURE                   1121
 #define IDC_YOUR_ALIAS                  1122
 #define IDC_ROOM_C                      1123
 #define IDC_GAME_LIST_C                 1124
