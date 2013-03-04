@@ -55,15 +55,15 @@ namespace Display {
 class MR_DllDeclare ViewModel
 {
 	public:
-		virtual void AttachView(Display *disp) = 0;
+		virtual void AttachView(Display &disp) = 0;
 		void SetView(std::unique_ptr<View> &&view) { this->view = std::move(view); }
 		View *GetView() const { return view.get(); }
 
 	protected:
 		template<class T>
-		void AttachViewDynamic(Display *disp, T *self)
+		void AttachViewDynamic(Display &disp, T *self)
 		{
-			dynamic_cast<ViewAttacher<T>*>(disp)->AttachView(*self);
+			dynamic_cast<ViewAttacher<T>&>(disp).AttachView(*self);
 		}
 
 	public:

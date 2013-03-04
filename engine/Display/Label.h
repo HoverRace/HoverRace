@@ -71,7 +71,7 @@ class MR_DllDeclare Label : public UiViewModel
 		virtual ~Label();
 
 	public:
-		virtual void AttachView(Display *disp) { AttachViewDynamic(disp, this); }
+		virtual void AttachView(Display &disp) { AttachViewDynamic(disp, this); }
 
 	public:
 		const Color GetColor() const { return color; }

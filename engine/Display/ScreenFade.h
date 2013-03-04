@@ -67,7 +67,7 @@ class MR_DllDeclare ScreenFade : public ViewModel
 		virtual ~ScreenFade();
 
 	public:
-		virtual void AttachView(Display *disp) { AttachViewDynamic(disp, this); }
+		virtual void AttachView(Display &disp) { AttachViewDynamic(disp, this); }
 
 	public:
 		const Color GetColor() const { return color; }

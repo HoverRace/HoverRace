@@ -176,7 +176,7 @@ ClientApp::ClientApp() :
 	fpsLbl = new Display::Label("FPS:",
 		Display::UiFont(cfg->GetDefaultFontName(), 20, Display::UiFont::BOLD),
 		Display::Color(0xff, 0xff, 0x7f, 0x00));
-	fpsLbl->AttachView(display);
+	fpsLbl->AttachView(*display);
 }
 
 ClientApp::~ClientApp()

@@ -42,7 +42,7 @@ PaletteScene::PaletteScene(Display::Display &display) :
 
 	Display::UiFont font(cfg->GetDefaultFontName(), 20);
 	label = new Display::Label("Palette", font, Display::Color(0xff, 0xff, 0x00, 0x00));
-	label->AttachView(&display);
+	label->AttachView(display);
 }
 
 PaletteScene::~PaletteScene()
