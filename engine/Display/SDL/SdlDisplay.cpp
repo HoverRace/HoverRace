@@ -29,7 +29,9 @@
 #include "../../Util/Config.h"
 #include "../../Exception.h"
 #include "../Label.h"
+#include "../ScreenFade.h"
 #include "SdlLabelView.h"
+#include "SdlScreenFadeView.h"
 #include "SdlLegacyDisplay.h"
 
 #include "SdlDisplay.h"
@@ -68,6 +70,11 @@ SdlDisplay::~SdlDisplay()
 void SdlDisplay::AttachView(Label &model)
 {
 	model.SetView(std::unique_ptr<View>(new SdlLabelView(*this, model)));
+}
+
+void SdlDisplay::AttachView(ScreenFade &model)
+{
+	model.SetView(std::unique_ptr<View>(new SdlScreenFadeView(*this, model)));
 }
 
 void SdlDisplay::OnDesktopModeChanged(int width, int height)

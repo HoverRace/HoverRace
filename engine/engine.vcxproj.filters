@@ -334,6 +334,12 @@
     <ClCompile Include="Display\Display.cpp">
       <Filter>Display</Filter>
     </ClCompile>
+    <ClCompile Include="Display\ScreenFade.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
+    <ClCompile Include="Display\SDL\SdlScreenFadeView.cpp">
+      <Filter>Display\SDL</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColorTools\ColorTools.h">
@@ -688,6 +694,12 @@
     </ClInclude>
     <ClInclude Include="Display\UiFont.h">
       <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="Display\ScreenFade.h">
+      <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="Display\SDL\SdlScreenFadeView.h">
+      <Filter>Display\SDL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

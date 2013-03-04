@@ -1,5 +1,5 @@
 
-// SdlDisplay.h
+// SdlScreenFadeView.h
 //
 // Copyright (c) 2013 Michael Imamura.
 //
@@ -21,11 +21,8 @@
 
 #pragma once
 
-#ifdef WITH_SDL_PANGO
-#	include <SDL_Pango.h>
-#endif
-
-#include "../Display.h"
+#include "SdlDisplay.h"
+#include "SdlView.h"
 
 #ifdef _WIN32
 #	ifdef MR_ENGINE
@@ -42,59 +39,40 @@ namespace HoverRace {
 		class Label;
 	}
 }
+struct SDL_Surface;
 
 namespace HoverRace {
 namespace Display {
 namespace SDL {
 
 /**
- * SDL-based software rendering.
+ * SDL view for ScreenFade.
+ * This implementation uses a screen-size RGB surface with a per-surface alpha.
  * @author Michael Imamura
  */
-class MR_DllDeclare SdlDisplay : public Display
+class MR_DllDeclare SdlScreenFadeView : public SdlView<ScreenFade>
 {
-	typedef Display SUPER;
+	typedef SdlView<ScreenFade> SUPER;
 	public:
-		SdlDisplay();
-		virtual ~SdlDisplay();
+		SdlScreenFadeView(SdlDisplay &disp, ScreenFade &model);
+		virtual ~SdlScreenFadeView();
 
 	public:
-		// ViewAttacher
-		virtual void AttachView(Label &model);
-		virtual void AttachView(ScreenFade &model);
+		virtual void OnModelUpdate(int prop);
+	private:
+		void OnWindowResChange();
 
 	public:
-		// Display
-		virtual VideoServices::VideoBuffer &GetLegacyDisplay() const { return *legacyDisplay; }
-		virtual void OnDesktopModeChanged(int width, int height);
-		virtual void OnDisplayConfigChanged();
-		virtual void Flip();
+		virtual void PrepareRender();
+		virtual void Render();
 
 	private:
-		void ApplyVideoMode();
-
-	public:
-		int GetScreenWidth() const { return width; }
-		int GetScreenHeight() const { return height; }
-
-#		ifdef WITH_SDL_PANGO
-			/**
-			 * Retrieve the shared SDL_Pango rendering context.
-			 * @return The context (never @c NULL).
-			 * @see SdlLabelView
-			 */
-			SDLPango_Context *GetPangoContext() { return pangoContext; }
-#		endif
-
-	public:
-		void DrawUiSurface(SDL_Surface *surface, const Vec2 &relPos);
+		void Update();
 
 	private:
-		int width, height;
-		std::unique_ptr<VideoServices::VideoBuffer> legacyDisplay;
-#		ifdef WITH_SDL_PANGO
-			SDLPango_Context *pangoContext;
-#		endif
+		SDL_Surface *surface;
+		bool opacityChanged;  // Opacity can change without rebuilding surface.
+		boost::signals2::connection displayConfigChangedConn;
 };
 
 }  // namespace SDL

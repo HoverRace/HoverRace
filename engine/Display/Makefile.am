@@ -7,6 +7,8 @@ libdisplay_la_SOURCES = \
 	Display.h \
 	Label.cpp \
 	Label.h \
+	ScreenFade.cpp \
+	ScreenFade.h \
 	UiFont.cpp \
 	UiFont.h \
 	UiViewModel.cpp \
@@ -21,5 +23,7 @@ libdisplay_la_SOURCES = \
 	SDL/SdlLabelView.h \
 	SDL/SdlLegacyDisplay.cpp \
 	SDL/SdlLegacyDisplay.h \
+	SDL/SdlScreenFadeView.cpp \
+	SDL/SdlScreenFadeView.h \
 	SDL/SdlView.h
 

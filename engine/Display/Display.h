@@ -37,6 +37,7 @@
 namespace HoverRace {
 	namespace Display {
 		class Label;
+		class ScreenFade;
 	}
 	namespace VideoServices {
 		class VideoBuffer;
@@ -56,7 +57,8 @@ namespace Display {
  * @author Michael Imamura
  */
 class MR_DllDeclare Display :
-	public ViewAttacher<Label>
+	public ViewAttacher<Label>,
+	public ViewAttacher<ScreenFade>
 {
 	public:
 		Display() : uiOrigin(0, 0) { }
