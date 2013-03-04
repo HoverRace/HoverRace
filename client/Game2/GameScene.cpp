@@ -33,7 +33,7 @@
 
 #include "ClientSession.h"
 #include "HighObserver.h"
-#include "PaletteScene.h"
+#include "MessageScene.h"
 #include "Rulebook.h"
 
 #include "GameScene.h"
@@ -167,7 +167,9 @@ void GameScene::Render()
 void GameScene::OnRaceFinish()
 {
 	// This is just a test of scene manipulation.
-	director->RequestPushScene(std::make_shared<PaletteScene>(display));
+	director->RequestPushScene(std::make_shared<MessageScene>(display,
+		"Congratulations",
+		"Race complete!"));
 }
 
 }  // namespace HoverScript
