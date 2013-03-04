@@ -47,7 +47,7 @@ namespace SDL {
 
 class MR_DllDeclare SdlLabelView : public SdlView<Label>
 {
-	typedef SdlView SUPER;
+	typedef SdlView<Label> SUPER;
 	public:
 		SdlLabelView(SdlDisplay &disp, Label &model);
 		virtual ~SdlLabelView();
