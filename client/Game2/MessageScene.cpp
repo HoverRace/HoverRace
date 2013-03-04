@@ -104,9 +104,6 @@ void MessageScene::Advance(Util::OS::timestamp_t tick)
 
 void MessageScene::OnPhaseChanged(Phase::phase_t oldPhase)
 {
-	std::ostringstream oss;
-	oss << "Phase change: " << oldPhase << " -> " << GetPhase() << '\n';
-	OutputDebugString(oss.str().c_str());
 	// Do nothing.
 }
 
