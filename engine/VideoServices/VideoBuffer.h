@@ -39,6 +39,12 @@
 struct SDL_Surface;
 
 namespace HoverRace {
+	namespace Display {
+		class Display;
+	}
+}
+
+namespace HoverRace {
 namespace VideoServices {
 
 /**
@@ -60,13 +66,15 @@ class MR_DllDeclare VideoBuffer
 		};
 
 	public:
-		VideoBuffer();
+		VideoBuffer(Display::Display &display);
 		virtual ~VideoBuffer();
 
 		// Signals from ClientApp that certain settings have changed.
 		void OnDesktopModeChange(int width, int height);
+	private:
 		void OnWindowResChange();
 
+	public:
 		void AssignPalette();
 		void CreatePalette();
 		void SetBackgroundPalette(std::unique_ptr<MR_UInt8[]> &palette);

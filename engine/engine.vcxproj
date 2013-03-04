@@ -112,6 +112,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ColorTools\ColorTools.cpp" />
+    <ClCompile Include="Display\Display.cpp" />
     <ClCompile Include="Display\Label.cpp" />
     <ClCompile Include="Display\SDL\SdlDisplay.cpp" />
     <ClCompile Include="Display\SDL\SdlLabelView.cpp" />

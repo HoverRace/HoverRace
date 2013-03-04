@@ -24,6 +24,7 @@
 
 #include <SDL/SDL.h>
 
+#include "../Display/Display.h"
 #include "../Exception.h"
 #include "../Util/Config.h"
 #include "../Util/OS.h"
@@ -36,12 +37,19 @@ using HoverRace::Util::OS;
 namespace HoverRace {
 namespace VideoServices {
 
-VideoBuffer::VideoBuffer() :
+/**
+ * Constructor.
+ * @param display The display this is connected to.
+ */
+VideoBuffer::VideoBuffer(Display::Display &display) :
 	desktopWidth(0), desktopHeight(0), width(0), height(0), pitch(0),
 	fullscreen(false),
 	legacySurface(NULL), zbuf(NULL), vbuf(NULL),
 	bgPalette()
 {
+	// Be notified of window resizes so we can update the internal surface.
+	display.GetDisplayConfigChangedSignal().connect(
+		std::bind(&VideoBuffer::OnWindowResChange, this));
 }
 
 VideoBuffer::~VideoBuffer()

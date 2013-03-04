@@ -42,12 +42,13 @@ namespace Display {
 namespace SDL {
 
 SdlDisplay::SdlDisplay() :
-	SUPER(),
-	legacyDisplay(new SdlLegacyDisplay())
+	SUPER()
 {
 	ApplyVideoMode();
 
-	legacyDisplay->OnWindowResChange();
+	legacyDisplay.reset(new SdlLegacyDisplay(*this));
+	Config::cfg_video_t &vidCfg = Config::GetInstance()->video;
+	FireDisplayConfigChangedSignal(vidCfg.xRes, vidCfg.yRes);
 	legacyDisplay->CreatePalette();
 
 #	ifdef WITH_SDL_PANGO
@@ -85,7 +86,7 @@ void SdlDisplay::OnDisplayConfigChanged()
 
 	if (resChanged) {
 		ApplyVideoMode();
-		legacyDisplay->OnWindowResChange();
+		FireDisplayConfigChangedSignal(vidCfg.xRes, vidCfg.yRes);
 	}
 }
 

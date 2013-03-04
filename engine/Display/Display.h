@@ -94,9 +94,18 @@ class MR_DllDeclare Display :
 		 * @warning Depending on the underlying API and what configuration
 		 * options changed, this may trigger resources to be reloaded or
 		 * regenerated.
+		 * @note Subclasses should call FireDisplayConfigChangedSignal(int, int)
+		 *       to notify views.
 		 */
 		virtual void OnDisplayConfigChanged() = 0;
 
+	public:
+		typedef boost::signals2::signal<void(int, int)> displayConfigChangedSignal_t;
+		displayConfigChangedSignal_t &GetDisplayConfigChangedSignal() { return displayConfigChangedSignal; }
+	protected:
+		void FireDisplayConfigChangedSignal(int width, int height) const;
+
+	public:
 		/**
 		 * Rendering for the frame has completed; update the screen.
 		 */
@@ -122,6 +131,7 @@ class MR_DllDeclare Display :
 
 	private:
 		Vec2 uiOrigin;
+		displayConfigChangedSignal_t displayConfigChangedSignal;
 };
 
 }  // namespace Display

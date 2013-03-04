@@ -331,6 +331,9 @@
     <ClCompile Include="Display\UiFont.cpp">
       <Filter>Display</Filter>
     </ClCompile>
+    <ClCompile Include="Display\Display.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColorTools\ColorTools.h">

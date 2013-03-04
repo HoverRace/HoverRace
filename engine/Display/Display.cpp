@@ -1,5 +1,5 @@
 
-// SdlLegacyDisplay.h
+// Display.cpp
 //
 // Copyright (c) 2013 Michael Imamura.
 //
@@ -19,37 +19,21 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
-#pragma once
+#include "StdAfx.h"
 
-#include "../../VideoServices/VideoBuffer.h"
+#include "../Util/Config.h"
 
-#ifdef _WIN32
-#	ifdef MR_ENGINE
-#		define MR_DllDeclare   __declspec( dllexport )
-#	else
-#		define MR_DllDeclare   __declspec( dllimport )
-#	endif
-#else
-#	define MR_DllDeclare
-#endif
+#include "Display.h"
+
+using namespace HoverRace::Util;
 
 namespace HoverRace {
 namespace Display {
-namespace SDL {
 
-class MR_DllDeclare SdlLegacyDisplay : public VideoServices::VideoBuffer
+void Display::FireDisplayConfigChangedSignal(int width, int height) const
 {
-	typedef VideoServices::VideoBuffer SUPER;
-	public:
-		SdlLegacyDisplay(Display &display) : SUPER(display) { }
-		virtual ~SdlLegacyDisplay() { }
+	displayConfigChangedSignal(width, height);
+}
 
-	protected:
-		virtual void Flip();
-};
-
-}  // namespace SDL
 }  // namespace Display
 }  // namespace HoverRace
-
-#undef MR_DllDeclare
