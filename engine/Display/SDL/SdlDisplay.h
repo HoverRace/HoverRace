@@ -73,6 +73,9 @@ class MR_DllDeclare SdlDisplay : public Display
 		void ApplyVideoMode();
 
 	public:
+		int GetScreenWidth() const { return width; }
+		int GetScreenHeight() const { return height; }
+
 #		ifdef WITH_SDL_PANGO
 			/**
 			 * Retrieve the shared SDL_Pango rendering context.
