@@ -73,7 +73,6 @@ void SdlLabelView::OnModelUpdate(int prop)
 
 void SdlLabelView::PrepareRender()
 {
-	//TODO: Check if model has changed.
 	if (!surface) Update();
 }
 
