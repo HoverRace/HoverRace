@@ -56,6 +56,8 @@ hoverrace_SOURCES = \
 	GameScene.h \
 	HighObserver.cpp \
 	HighObserver.h \
+	MessageScene.cpp \
+	MessageScene.h \
 	Observer.cpp \
 	Observer.h \
 	PaletteScene.cpp \
