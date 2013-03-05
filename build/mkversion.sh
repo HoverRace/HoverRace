@@ -1,5 +1,13 @@
 #!/bin/sh
 
+# mkversion
+#   The version of the game is maintained in the Windows resource file
+#   (Game2.rc) so we only have to update it in one place.
+#
+#   This script is run via configure.ac to extract the version number from
+#   the resource file and generates version.h so that non-Windows builds
+#   can have access to the version number as well.
+
 INFILE=client/Game2/Game2.rc
 OUTFILE=client/Game2/version.h
 
