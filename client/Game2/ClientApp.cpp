@@ -310,8 +310,8 @@ void ClientApp::MainLoop()
 	if (!runtimeCfg.skipStartupWarning && runtimeCfg.initScript.empty()) {
 		PushScene(std::make_shared<MessageScene>(*display,
 			"Warning",
-			"This is the unstable branch of HoverRace.\n"
-			"For the current stable branch, check out the \"1.24\" branch.\n"
+			"This is the unstable \"2.0\" branch of HoverRace.\n"
+			"For the current stable branch, switch to the \"1.24\" branch.\n"
 			"To skip this warning, use --skip-startup-warning or specify a "
 			"startup script with --exec."));
 	}
