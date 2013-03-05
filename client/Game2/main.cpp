@@ -66,6 +66,7 @@ static bool safeMode = false;
 static bool allowMultipleInstances = false;
 static bool showVersion = false;
 static bool silentMode = false;
+static bool skipStartupWarning = false;
 static bool experimentalMode =
 #	ifdef _WIN32
 		false;
@@ -156,6 +157,9 @@ static bool ProcessCmdLine(int argc, char **argv)
 		}
 		else if (strcmp("--silent", arg) == 0) {
 			silentMode = true;
+		}
+		else if (strcmp("--skip-startup-warning", arg) == 0) {
+			skipStartupWarning = true;
 		}
 		else if (strcmp("-V", arg) == 0 || strcmp("--version", arg) == 0) {
 			showVersion = true;
@@ -326,6 +330,7 @@ int main(int argc, char** argv)
 	cfg->runtime.silent = silentMode;
 	cfg->runtime.aieeee = experimentalMode;
 	cfg->runtime.showFramerate = showFramerate;
+	cfg->runtime.skipStartupWarning = skipStartupWarning;
 	cfg->runtime.initScript = initScript;
 
 #ifdef ENABLE_NLS

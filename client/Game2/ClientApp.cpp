@@ -52,6 +52,7 @@
 #include "ClientSession.h"
 #include "GameScene.h"
 #include "HighObserver.h"
+#include "MessageScene.h"
 #include "PaletteScene.h"
 #include "Rulebook.h"
 #include "Scene.h"
@@ -303,6 +304,16 @@ void ClientApp::MainLoop()
 	}
 	else {
 		ReplaceScene(std::make_shared<PaletteScene>(*display));
+	}
+
+	Config::cfg_runtime_t &runtimeCfg = Config::GetInstance()->runtime;
+	if (!runtimeCfg.skipStartupWarning && runtimeCfg.initScript.empty()) {
+		PushScene(std::make_shared<MessageScene>(*display,
+			"Warning",
+			"This is the unstable branch of HoverRace.\n"
+			"For the current stable branch, check out the \"1.24\" branch.\n"
+			"To skip this warning, use --skip-startup-warning or specify a "
+			"startup script with --exec."));
 	}
 
 #	ifdef WITH_SDL_OIS_INPUT

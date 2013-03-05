@@ -683,6 +683,7 @@ void Config::ResetToDefaults()
 	runtime.aieeee = false;
 	runtime.showFramerate = false;
 	runtime.enableConsole = true;
+	runtime.skipStartupWarning = false;
 }
 
 /**

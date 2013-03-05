@@ -267,6 +267,7 @@ class MR_DllDeclare Config
 			bool aieeee;
 			bool showFramerate;
 			bool enableConsole;
+			bool skipStartupWarning;
 			OS::path_t initScript;
 		} runtime;
 };
