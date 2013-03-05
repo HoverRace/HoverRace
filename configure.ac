@@ -28,7 +28,7 @@ AC_SUBST([CXXFLAGS_STDCXX11])
 if test "$ax_cv_cxx_compile_cxx0x_cxx" = yes
 then
 	CXXFLAGS_STDCXX11=-std=c++0x
-elif test "ax_cv_cxx_compile_cxx0x_gxx" = yes
+elif test "$ax_cv_cxx_compile_cxx0x_gxx" = yes
 then
 	CXXFLAGS_STDCXX11=-std=gnu++0x
 fi
