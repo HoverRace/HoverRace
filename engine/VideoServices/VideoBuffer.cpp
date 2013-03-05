@@ -139,6 +139,9 @@ void VideoBuffer::CreatePalette()
 
 	memcpy(palette, newPalette, 256 * sizeof(ColorPalette::paletteEntry_t));
 	AssignPalette();
+
+	// Notify listeners that the palette changed.
+	paletteChangedSignal();
 }
 
 void VideoBuffer::SetBackgroundPalette(std::unique_ptr<MR_UInt8[]> &palette)

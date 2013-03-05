@@ -78,6 +78,8 @@ class MR_DllDeclare VideoBuffer
 		void AssignPalette();
 		void CreatePalette();
 		void SetBackgroundPalette(std::unique_ptr<MR_UInt8[]> &palette);
+		typedef boost::signals2::signal<void()> paletteChangedSignal_t;
+		paletteChangedSignal_t &GetPaletteChangedSignal() { return paletteChangedSignal; }
 
 	protected:
 		void LockLegacySurface();
@@ -123,6 +125,7 @@ class MR_DllDeclare VideoBuffer
 		std::unique_ptr<MR_UInt8[]> bgPalette;
 
 		ColorPalette::paletteEntry_t palette[256];
+		paletteChangedSignal_t paletteChangedSignal;
 };
 
 }  // namespace VideoServices
