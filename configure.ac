@@ -31,6 +31,9 @@ then
 elif test "$ax_cv_cxx_compile_cxx0x_gxx" = yes
 then
 	CXXFLAGS_STDCXX11=-std=gnu++0x
+elif test "$ax_cv_cxx_compile_cxx0x_native" != yes
+then
+	AC_MSG_ERROR([A C++ compiler with support for basic C++11 is required.])
 fi
 
 # pthread support.
