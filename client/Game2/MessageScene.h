@@ -25,7 +25,7 @@
 
 #include "GameDirector.h"
 
-#include "Scene.h"
+#include "UiScene.h"
 
 namespace HoverRace {
 	namespace Display {
@@ -42,9 +42,9 @@ namespace Client {
  * Displays a message to the user.
  * @author Michael Imamura
  */
-class MessageScene : public Scene
+class MessageScene : public UiScene
 {
-	typedef Scene SUPER;
+	typedef UiScene SUPER;
 	public:
 		MessageScene(Display::Display &display, const std::string &title,
 			const std::string &message);

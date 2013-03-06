@@ -1,5 +1,5 @@
 
-// PaletteScene.h
+// UiScene.cpp
 //
 // Copyright (c) 2013 Michael Imamura.
 //
@@ -19,44 +19,19 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
-#pragma once
+#include "StdAfx.h"
 
-#include "../../engine/Util/Config.h"
-
-#include "GameDirector.h"
+#include "Control/Controller.h"
 
 #include "UiScene.h"
 
 namespace HoverRace {
-	namespace Display {
-		class Display;
-		class Label;
-	}
-}
-
-namespace HoverRace {
 namespace Client {
 
-/**
- * Draws a color grid to debug the color palette of the legacy display.
- * @author Michael Imamura
- */
-class PaletteScene : public UiScene
+void UiScene::SetupController(Control::InputEventController &controller)
 {
-	typedef UiScene SUPER;
-	public:
-		PaletteScene(Display::Display &display);
-		virtual ~PaletteScene();
-
-	public:
-		virtual void Advance(Util::OS::timestamp_t tick);
-		virtual void PrepareRender();
-		virtual void Render();
-
-	private:
-		Display::Display &display;
-		Display::Label *label;
-};
+	//TODO
+}
 
 }  // namespace HoverScript
 }  // namespace Client

@@ -388,7 +388,7 @@ void ClientApp::NewLocalSession(RulebookPtr rules)
 
 	//TODO: Prompt the user for a track name.
 	try {
-		ReplaceScene(std::make_shared<GameScene>(this, *display, controller, scripting, gamePeer, rules));
+		ReplaceScene(std::make_shared<GameScene>(this, *display, scripting, gamePeer, rules));
 	}
 	catch (Parcel::ObjStreamExn&) {
 		throw;
@@ -404,6 +404,7 @@ void ClientApp::SetForegroundScene()
 {
 	fgScene = sceneStack.rend();
 	//TODO: Load failsafe controller mapping.
+	controller->ClearActionMap();
 }
 
 /**
@@ -418,7 +419,10 @@ void ClientApp::SetForegroundScene(const sceneStack_t::reverse_iterator &iter)
 	}
 	else {
 		fgScene = iter;
-		//TODO: Load controller mapping from new foreground scene.
+
+		// Load controller mapping from new foreground scene.
+		controller->ClearActionMap();
+		(*fgScene)->SetupController(*controller);
 	}
 }
 

@@ -25,6 +25,14 @@
 #include "../../engine/Util/OS.h"
 
 namespace HoverRace {
+	namespace Client {
+		namespace Control {
+			class InputEventController;
+		}
+	}
+}
+
+namespace HoverRace {
 namespace Client {
 
 /**
@@ -61,6 +69,15 @@ class Scene
 		 * @return The name (may be empty).
 		 */
 		const std::string &GetName() const { return name; }
+
+		/**
+		 * Configure the controller mappings.
+		 * This is called whenever the scene becomes the foreground scene
+		 * or the controller config needs to be rebuilt.
+		 * @param controller The current controller being used.  It can be assumed
+		 *                   that the controller's action mappings have been cleared.
+		 */
+		virtual void SetupController(Control::InputEventController &controller) = 0;
 
 	public:
 		Phase::phase_t GetPhase() const { return phase; }

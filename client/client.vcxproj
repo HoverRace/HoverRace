@@ -179,6 +179,7 @@
     </ClCompile>
     <ClCompile Include="Game2\TrackDownloadDialog.cpp" />
     <ClCompile Include="Game2\TrackSelectDialog.cpp" />
+    <ClCompile Include="Game2\UiScene.cpp" />
     <ClCompile Include="Game2\UpdateDownloader.cpp" />
     <ClCompile Include="Game2\VideoAudioPrefsPage.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -265,6 +266,7 @@
     <ClInclude Include="Game2\StdAfx.h" />
     <ClInclude Include="Game2\TrackDownloadDialog.h" />
     <ClInclude Include="Game2\TrackSelectDialog.h" />
+    <ClInclude Include="Game2\UiScene.h" />
     <ClInclude Include="Game2\UpdateDownloader.h" />
     <ClInclude Include="Game2\VideoAudioPrefsPage.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>

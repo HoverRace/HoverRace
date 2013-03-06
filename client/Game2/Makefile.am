@@ -67,6 +67,8 @@ hoverrace_SOURCES = \
 	Rulebook.h \
 	Scene.h \
 	Scene.cpp \
+	UiScene.h \
+	UiScene.cpp \
 	main.cpp \
 	version.h
 

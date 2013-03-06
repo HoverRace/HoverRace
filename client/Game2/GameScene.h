@@ -60,13 +60,15 @@ class GameScene : public Scene
 	typedef Scene SUPER;
 	public:
 		GameScene(GameDirector *director, Display::Display &display,
-			Control::InputEventController *controller,
 			Script::Core *scripting, HoverScript::GamePeer *gamePeer,
 			RulebookPtr rules);
 		virtual ~GameScene();
 
 	private:
 		void Cleanup();
+
+	public:
+		virtual void SetupController(Control::InputEventController &controller);
 
 	public:
 		void Advance(Util::OS::timestamp_t tick);
@@ -86,7 +88,6 @@ class GameScene : public Scene
 		static const int MAX_OBSERVERS = Util::Config::MAX_PLAYERS;
 		Observer *observers[MAX_OBSERVERS];
 		ClientSession *session;
-		Control::InputEventController *controller;
 
 		HighObserver *highObserver;
 		HoverScript::HighConsole *highConsole;
