@@ -49,6 +49,9 @@ class PaletteScene : public UiScene
 		virtual ~PaletteScene();
 
 	public:
+		virtual bool IsMouseCursorEnabled() const { return false; }
+
+	public:
 		virtual void Advance(Util::OS::timestamp_t tick);
 		virtual void PrepareRender();
 		virtual void Render();

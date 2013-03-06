@@ -79,6 +79,13 @@ class Scene
 		 */
 		virtual void SetupController(Control::InputEventController &controller) = 0;
 
+		/**
+		 * Determine if the mouse cursor is enabled for this scene.
+		 * @return @c true if the cursor should be shown,
+		 *         @c false if it should be hidden.
+		 */
+		virtual bool IsMouseCursorEnabled() const = 0;
+
 	public:
 		Phase::phase_t GetPhase() const { return phase; }
 		bool SetPhase(Phase::phase_t phase);

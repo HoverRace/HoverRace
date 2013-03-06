@@ -38,6 +38,9 @@ class UiScene : public Scene
 		virtual ~UiScene() { }
 
 	public:
+		virtual bool IsMouseCursorEnabled() const { return true; }
+
+	public:
 		virtual void SetupController(Control::InputEventController &controller);
 };
 

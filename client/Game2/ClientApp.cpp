@@ -405,6 +405,10 @@ void ClientApp::SetForegroundScene()
 	fgScene = sceneStack.rend();
 	//TODO: Load failsafe controller mapping.
 	controller->ClearActionMap();
+
+	// Enable the cursor to make it easier for users to click the "Close"
+	// button on the main window.
+	SDL_ShowCursor(SDL_ENABLE);
 }
 
 /**
@@ -422,7 +426,9 @@ void ClientApp::SetForegroundScene(const sceneStack_t::reverse_iterator &iter)
 
 		// Load controller mapping from new foreground scene.
 		controller->ClearActionMap();
-		(*fgScene)->SetupController(*controller);
+		Scene *scene = fgScene->get();
+		scene->SetupController(*controller);
+		SDL_ShowCursor(scene->IsMouseCursorEnabled() ? SDL_ENABLE : SDL_DISABLE);
 	}
 }
 

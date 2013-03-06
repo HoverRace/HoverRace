@@ -69,6 +69,7 @@ class GameScene : public Scene
 
 	public:
 		virtual void SetupController(Control::InputEventController &controller);
+		virtual bool IsMouseCursorEnabled() const { return false; }
 
 	public:
 		void Advance(Util::OS::timestamp_t tick);
