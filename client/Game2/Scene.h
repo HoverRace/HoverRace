@@ -50,8 +50,17 @@ class Scene
 		};
 
 	public:
-		Scene();
+		Scene(const std::string &name="Unnamed Scene");
 		virtual ~Scene() { }
+
+	public:
+		/**
+		 * Retrieve the name of the scene.
+		 * This is for debugging and logging purposes; it is otherwise not
+		 * intended to be user-visible (and thus should not be translated).
+		 * @return The name (may be empty).
+		 */
+		const std::string &GetName() const { return name; }
 
 	public:
 		Phase::phase_t GetPhase() const { return phase; }
@@ -88,6 +97,7 @@ class Scene
 		virtual void Render() = 0;
 
 	private:
+		std::string name;
 		Phase::phase_t phase;
 		Util::OS::timestamp_t phaseTs;  ///< Timestamp of when current phase was started.
 		Util::OS::timestamp_t startingPhaseTime;

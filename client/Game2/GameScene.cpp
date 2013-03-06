@@ -48,7 +48,7 @@ GameScene::GameScene(GameDirector *director, Display::Display &display,
                      Control::InputEventController *controller,
                      Script::Core *scripting, HoverScript::GamePeer *gamePeer,
                      RulebookPtr rules) :
-	SUPER(),
+	SUPER("Game"),
 	director(director),
 	frame(0), numPlayers(1), display(display), controller(controller),
 	session(NULL), highObserver(NULL), highConsole(NULL),

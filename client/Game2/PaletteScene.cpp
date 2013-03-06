@@ -35,7 +35,7 @@ namespace HoverRace {
 namespace Client {
 
 PaletteScene::PaletteScene(Display::Display &display) :
-	SUPER(),
+	SUPER("Palette Viewer"),
 	display(display)
 {
 	Config *cfg = Config::GetInstance();

@@ -40,7 +40,7 @@ namespace Client {
 MessageScene::MessageScene(Display::Display &display,
                            const std::string &title,
                            const std::string &message) :
-	SUPER(),
+	SUPER("Messsage (" + title + ")"),
 	display(display)
 {
 	Config *cfg = Config::GetInstance();

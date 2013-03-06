@@ -28,8 +28,12 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace Client {
 
-Scene::Scene() :
-	phase(Phase::INITIALIZED), phaseTs(0), startingPhaseTime(0)
+/**
+ * Constructor.
+ * @param name The name of the scene.  See Scene::GetName.
+ */
+Scene::Scene(const std::string &name) :
+	name(name), phase(Phase::INITIALIZED), phaseTs(0), startingPhaseTime(0)
 {
 }
 
