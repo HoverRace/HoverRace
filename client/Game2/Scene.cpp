@@ -52,11 +52,7 @@ bool Scene::SetPhase(Phase::phase_t phase)
 		if (phase == Phase::INITIALIZED) return false;
 
 		// Once shutdown has started, it can't be stopped.
-		if (this->phase == Phase::STOPPING ||
-			this->phase == Phase::STOPPED)
-		{
-			return false;
-		}
+		if (this->phase == Phase::STOPPING && phase != Phase::STOPPED) return false;
 
 		// Save the starting phase duration in case the subclass wants to
 		// use it later.
