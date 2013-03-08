@@ -170,7 +170,7 @@ void GameScene::Render()
 void GameScene::OnRaceFinish()
 {
 	// This is just a test of scene manipulation.
-	director->RequestPushScene(std::make_shared<MessageScene>(display,
+	director->RequestPushScene(std::make_shared<MessageScene>(display, *director,
 		"Congratulations",
 		"Race complete!"));
 }

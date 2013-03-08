@@ -46,12 +46,17 @@ class MessageScene : public UiScene
 {
 	typedef UiScene SUPER;
 	public:
-		MessageScene(Display::Display &display, const std::string &title,
-			const std::string &message);
+		MessageScene(Display::Display &display, GameDirector &director,
+			const std::string &title, const std::string &message);
 		virtual ~MessageScene();
+
+	private:
+		void OnOk();
+		void OnCancel();
 
 	public:
 		// Scene
+		virtual void SetupController(Control::InputEventController &controller);
 		virtual void OnPhaseChanged(Phase::phase_t oldPhase);
 		virtual void Advance(Util::OS::timestamp_t tick);
 		virtual void PrepareRender();
@@ -59,9 +64,14 @@ class MessageScene : public UiScene
 
 	private:
 		Display::Display &display;
+		GameDirector &director;
+
 		Display::ScreenFade *fader;
 		Display::Label *titleLbl;
 		Display::Label *messageLbl;
+
+		boost::signals2::connection okConn;
+		boost::signals2::connection cancelConn;
 };
 
 }  // namespace HoverScript

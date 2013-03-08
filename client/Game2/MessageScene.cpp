@@ -38,10 +38,11 @@ namespace HoverRace {
 namespace Client {
 
 MessageScene::MessageScene(Display::Display &display,
+                           GameDirector &director,
                            const std::string &title,
                            const std::string &message) :
 	SUPER("Messsage (" + title + ")"),
-	display(display)
+	display(display), director(director)
 {
 	Config *cfg = Config::GetInstance();
 
@@ -63,9 +64,30 @@ MessageScene::MessageScene(Display::Display &display,
 
 MessageScene::~MessageScene()
 {
+	cancelConn.disconnect();
+	okConn.disconnect();
 	delete messageLbl;
 	delete titleLbl;
 	delete fader;
+}
+
+void MessageScene::OnOk()
+{
+	//TODO: Fire "OK" event.
+	director.RequestPopScene();
+}
+
+void MessageScene::OnCancel()
+{
+	//TODO: Fire "Cancel" event.
+	director.RequestPopScene();
+}
+
+void MessageScene::SetupController(Control::InputEventController &controller)
+{
+	controller.AddMenuMaps();
+	okConn = controller.GetMenuOkSignal().connect(std::bind(&MessageScene::OnOk, this));
+	cancelConn = controller.GetMenuCancelSignal().connect(std::bind(&MessageScene::OnCancel, this));
 }
 
 void MessageScene::Advance(Util::OS::timestamp_t tick)

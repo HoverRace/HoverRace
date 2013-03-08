@@ -308,7 +308,7 @@ void ClientApp::MainLoop()
 
 	Config::cfg_runtime_t &runtimeCfg = Config::GetInstance()->runtime;
 	if (!runtimeCfg.skipStartupWarning && runtimeCfg.initScript.empty()) {
-		PushScene(std::make_shared<MessageScene>(*display,
+		PushScene(std::make_shared<MessageScene>(*display, *this,
 			"Warning",
 			"This is the unstable \"2.0\" branch of HoverRace.\n"
 			"For the current stable branch, switch to the \"1.24\" branch.\n"
