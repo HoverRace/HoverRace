@@ -169,10 +169,22 @@ class InputEventController : public KeyListener, public MouseListener, public Jo
 		 */
 		void AddObserverMaps(Observer** obs, int numObs);
 
+		/// Enable menu controls.
+		void AddMenuMaps();
+
 		/***
 		 * Convert a hash into an internationalized string.
 		 */
 		std::string HashToString(int hash);
+
+		/// Set up menu controls.
+		void LoadMenuMap();
+
+		/// Signals which are self-contained (no payload).
+		typedef boost::signals2::signal<void()> voidSignal_t;
+
+		voidSignal_t &GetMenuOkSignal() { return menuOkSignal; }
+		voidSignal_t &GetMenuCancelSignal() { return menuCancelSignal; }
 
 		/***
 		 * Set up controls for the console.
@@ -267,6 +279,9 @@ class InputEventController : public KeyListener, public MouseListener, public Jo
 		bool captureNextInput;
 		int  captureOldHash; /// stores the value of the hash we will be replacing when capturing input
 		std::string captureMap; /// name of the map we are capturing for
+
+		voidSignal_t menuOkSignal;
+		voidSignal_t menuCancelSignal;
 };
 
 } // namespace Control

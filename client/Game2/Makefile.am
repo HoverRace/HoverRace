@@ -30,6 +30,7 @@ hoverrace_SOURCES = \
 	Control/InputHandler.h \
 	Control/ObserverActions.cpp \
 	Control/ObserverActions.h \
+	Control/SignalAction.h \
 	Control/UiHandler.h \
 	HoverScript/ClientScriptCore.cpp \
 	HoverScript/ClientScriptCore.h \

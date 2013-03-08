@@ -15,10 +15,11 @@
 
 #include "Controller.h"
 
-#include "ControlAction.h"
 #include "ActionPerformers.h"
-#include "ObserverActions.h"
 #include "ConsoleActions.h"
+#include "ControlAction.h"
+#include "ObserverActions.h"
+#include "SignalAction.h"
 
 #include <sstream>
 
@@ -50,6 +51,7 @@ InputEventController::InputEventController(Util::OS::wnd_t mainWindow, UiHandler
 
 	InitInputManager(mainWindow);
 	LoadConfig();
+	LoadMenuMap();
 	LoadConsoleMap();
 }
 
@@ -355,6 +357,11 @@ void InputEventController::AddObserverMaps(Observer** obs, int numObs)
 	AddActionMap(_("Camera"));
 }
 
+void InputEventController::AddMenuMaps()
+{
+	AddActionMap(_("Menu"));
+}
+
 void InputEventController::SetConsole(HighConsole* hc)
 {
 	for(ActionMap::iterator it = allActionMaps["console-keys"].begin(); it != allActionMaps["console-keys"].end(); it++) {
@@ -589,6 +596,17 @@ void InputEventController::RebindKey(string mapname, int oldhash, int newhash)
 			map[newhash] = tmp; // bind old action to new control
 		}
 	}
+}
+
+void InputEventController::LoadMenuMap()
+{
+	ActionMap& cmap = allActionMaps[_("Menu")];
+	cmap.clear();
+	
+	Config* config = Config::GetInstance();
+
+	cmap[config->ui.menu_ok] = MakeSignalAction(_("OK"), 0, menuOkSignal);
+	cmap[config->ui.menu_cancel] = MakeSignalAction(_("Cancel"), 0, menuCancelSignal);
 }
 
 void InputEventController::LoadConsoleMap()

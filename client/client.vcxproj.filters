@@ -350,6 +350,9 @@
     <ClInclude Include="Game2\UiScene.h">
       <Filter>Game2</Filter>
     </ClInclude>
+    <ClInclude Include="Game2\Control\SignalAction.h">
+      <Filter>Control</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Game2\Game2.rc">
