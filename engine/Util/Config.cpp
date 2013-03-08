@@ -679,6 +679,9 @@ void Config::ResetToDefaults()
 	ui.console_bottom = OIS::KC_END      << 8;
 	ui.console_help   = OIS::KC_F1       << 8;
 
+	ui.menu_ok = OIS::KC_RETURN << 8;
+	ui.menu_cancel = OIS::KC_ESCAPE << 8;
+
 	runtime.silent = false;
 	runtime.aieeee = false;
 	runtime.showFramerate = false;
@@ -1031,6 +1034,9 @@ void Config::cfg_ui_t::Load(yaml::MapNode* root)
 	READ_INT(root, console_top, 0, INT_MAX);
 	READ_INT(root, console_bottom, 0, INT_MAX);
 	READ_INT(root, console_help, 0, INT_MAX);
+
+	READ_INT(root, menu_ok, 0, INT_MAX);
+	READ_INT(root, menu_cancel, 0, INT_MAX);
 }
 
 void Config::cfg_ui_t::Save(yaml::Emitter* emitter)
@@ -1044,6 +1050,9 @@ void Config::cfg_ui_t::Save(yaml::Emitter* emitter)
 	EMIT_VAR(emitter, console_top);
 	EMIT_VAR(emitter, console_bottom);
 	EMIT_VAR(emitter, console_help);
+
+	EMIT_VAR(emitter, menu_ok);
+	EMIT_VAR(emitter, menu_cancel);
 
 	emitter->EndMap();
 }

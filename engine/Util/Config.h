@@ -257,6 +257,8 @@ class MR_DllDeclare Config
 			int console_top;
 			int console_bottom;
 			int console_help;
+			int menu_ok;
+			int menu_cancel;
 
 			void Load(yaml::MapNode*);
 			void Save(yaml::Emitter*);
