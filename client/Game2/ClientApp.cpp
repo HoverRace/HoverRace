@@ -257,11 +257,15 @@ void ClientApp::IncFrameCount()
 
 void ClientApp::AdvanceScenes(Util::OS::timestamp_t tick)
 {
-	for (auto iter = sceneStack.begin(); iter != sceneStack.end(); ++iter) {
+	auto iter = sceneStack.begin();
+	while (iter != sceneStack.end()) {
 		(*iter)->Advance(tick);
 		// If the scene has entered the STOPPED state, it's deletable.
 		if ((*iter)->GetPhase() == Scene::Phase::STOPPED) {
 			iter = sceneStack.erase(iter);
+		}
+		else {
+			++iter;
 		}
 	}
 }
