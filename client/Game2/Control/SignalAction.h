@@ -33,7 +33,9 @@ namespace Control {
 template<class T>
 void PerformSignalAction(const T &signal, int value)
 {
-	throw UnimplementedExn("PerformSignalAction<" + typeid(T)->name() + ">");
+	std::ostringstream oss;
+	oss << "PerformSignalAction<" << typeid(T).name() << '>';
+	throw UnimplementedExn(oss.str());
 }
 
 template<>
