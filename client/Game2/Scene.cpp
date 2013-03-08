@@ -56,7 +56,7 @@ bool Scene::SetPhase(Phase::phase_t phase)
 
 		// Save the starting phase duration in case the subclass wants to
 		// use it later.
-		if (phase == Phase::STARTING) {
+		if (this->phase == Phase::STARTING) {
 			startingPhaseTime = GetPhaseDuration();
 		}
 
