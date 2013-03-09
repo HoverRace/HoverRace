@@ -287,6 +287,10 @@ void InputEventController::ClearActionMap()
 	// remove all active bindings
 	actionMap.clear();
 	activeMaps.clear();
+
+	// SignalActions just wrap the signals, so we need to clear them out.
+	menuOkSignal.disconnect_all_slots();
+	menuCancelSignal.disconnect_all_slots();
 }
 
 bool InputEventController::AddActionMap(string mapname)
