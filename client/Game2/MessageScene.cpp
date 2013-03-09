@@ -147,8 +147,10 @@ void MessageScene::PrepareRender()
 void MessageScene::Render()
 {
 	fader->Render();
-	titleLbl->Render();
-	messageLbl->Render();
+	if (GetPhase() != Phase::STOPPING) {
+		titleLbl->Render();
+		messageLbl->Render();
+	}
 }
 
 }  // namespace HoverScript
