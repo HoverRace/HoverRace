@@ -49,7 +49,7 @@ class Scene
 		{
 			enum phase_t
 			{
-				INITIALIZED,  ///< Scene has been created and is waiting to start.
+				INITIALIZING,  ///< Scene has been created and is waiting to start.
 				STARTING,  ///< Transitioning into the scene.
 				RUNNING,  ///< Started and running normally.
 				STOPPING,  ///< Transitioning away from the scene.

@@ -33,7 +33,7 @@ namespace Client {
  * @param name The name of the scene.  See Scene::GetName.
  */
 Scene::Scene(const std::string &name) :
-	name(name), phase(Phase::INITIALIZED), phaseTs(0), startingPhaseTime(0)
+	name(name), phase(Phase::INITIALIZING), phaseTs(0), startingPhaseTime(0)
 {
 }
 
@@ -49,7 +49,7 @@ bool Scene::SetPhase(Phase::phase_t phase)
 {
 	if (this->phase != phase) {
 		// Can't go back to the initial phase.
-		if (phase == Phase::INITIALIZED) return false;
+		if (phase == Phase::INITIALIZING) return false;
 
 		// Once shutdown has started, it can't be stopped.
 		if (this->phase == Phase::STOPPING && phase != Phase::STOPPED) return false;
