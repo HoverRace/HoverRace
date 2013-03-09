@@ -259,9 +259,16 @@ void ClientApp::AdvanceScenes(Util::OS::timestamp_t tick)
 {
 	auto iter = sceneStack.begin();
 	while (iter != sceneStack.end()) {
-		(*iter)->Advance(tick);
+		Scene &scene = **iter;
+		Scene::Phase::phase_t phase = scene.GetPhase();
+		if (phase != Scene::Phase::INITIALIZING &&
+			phase != Scene::Phase::STOPPED)
+		{
+			scene.Advance(tick);
+		}
+
 		// If the scene has entered the STOPPED state, it's deletable.
-		if ((*iter)->GetPhase() == Scene::Phase::STOPPED) {
+		if (scene.GetPhase() == Scene::Phase::STOPPED) {
 			iter = sceneStack.erase(iter);
 		}
 		else {
@@ -287,7 +294,12 @@ void ClientApp::RenderScenes()
 		if (showFps) fpsLbl->PrepareRender();
 
 		BOOST_FOREACH(const ScenePtr &scene, sceneStack) {
-			scene->Render();
+			Scene::Phase::phase_t phase = scene->GetPhase();
+			if (phase != Scene::Phase::INITIALIZING &&
+				phase != Scene::Phase::STOPPED)
+			{
+				scene->Render();
+			}
 		}
 		if (showFps) fpsLbl->Render();
 	}
