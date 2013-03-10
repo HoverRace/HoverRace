@@ -40,7 +40,7 @@ static RGBQUAD RGB_WHITE = { 0xff, 0xff, 0xff, 0 };
 
 SdlScreenFadeView::SdlScreenFadeView(SdlDisplay &disp, ScreenFade &model) :
 	SUPER(disp, model),
-	surface(), opacityChanged(true)
+	surface(), opacityChanged(true), opacityVisible(false)
 {
 	// Be notified of window resizes so we can update the internal surface.
 	displayConfigChangedConn =
@@ -112,15 +112,20 @@ void SdlScreenFadeView::PrepareRender()
 	}
 
 	if (opacityChanged) {
-		SDL_SetAlpha(surface, SDL_SRCALPHA | SDL_RLEACCEL,
-			static_cast<MR_UInt8>(model.GetOpacity() * 255.0));
+		double opacity = model.GetOpacity();
+		if ((opacityVisible = opacity > 0.0)) {
+			SDL_SetAlpha(surface, SDL_SRCALPHA | SDL_RLEACCEL,
+				static_cast<MR_UInt8>(opacity * 255.0));
+		}
 		opacityChanged = false;
 	}
 }
 
 void SdlScreenFadeView::Render()
 {
-	SDL_BlitSurface(surface, nullptr, SDL_GetVideoSurface(), nullptr);
+	if (opacityVisible) {
+		SDL_BlitSurface(surface, nullptr, SDL_GetVideoSurface(), nullptr);
+	}
 }
 
 }  // namespace SDL

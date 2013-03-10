@@ -72,6 +72,7 @@ class MR_DllDeclare SdlScreenFadeView : public SdlView<ScreenFade>
 	private:
 		SDL_Surface *surface;
 		bool opacityChanged;  // Opacity can change without rebuilding surface.
+		bool opacityVisible;
 		boost::signals2::connection displayConfigChangedConn;
 };
 
