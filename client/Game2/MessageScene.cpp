@@ -46,14 +46,14 @@ MessageScene::MessageScene(Display::Display &display,
 {
 	Config *cfg = Config::GetInstance();
 
-	fader = new Display::ScreenFade(Display::Color(0xff, 0x00, 0x00, 0x00), 0.0);
+	fader = new Display::ScreenFade(Display::COLOR_BLACK, 0.0);
 	fader->AttachView(display);
 
 	std::string fontName = cfg->GetDefaultFontName();
 
 	titleLbl = new Display::Label(title,
 		Display::UiFont(fontName, 40, Display::UiFont::BOLD),
-		Display::Color(0xff, 0xff, 0xff, 0xff));
+		Display::COLOR_WHITE);
 	titleLbl->AttachView(display);
 
 	messageLbl = new Display::Label(message,

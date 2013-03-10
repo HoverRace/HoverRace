@@ -52,6 +52,9 @@ union MR_DllDeclare Color
 	} bits;
 };
 
+static const Color COLOR_WHITE(0xff, 0xff, 0xff, 0xff);
+static const Color COLOR_BLACK(0xff, 0x00, 0x00, 0x00);
+
 MR_DllDeclare inline bool operator==(const Color &a, const Color &b)
 {
 	return a.argb == b.argb;
