@@ -52,8 +52,8 @@ union MR_DllDeclare Color
 	} bits;
 };
 
-static const Color COLOR_WHITE(0xff, 0xff, 0xff, 0xff);
-static const Color COLOR_BLACK(0xff, 0x00, 0x00, 0x00);
+extern MR_DllDeclare const Color COLOR_WHITE;
+extern MR_DllDeclare const Color COLOR_BLACK;
 
 MR_DllDeclare inline bool operator==(const Color &a, const Color &b)
 {

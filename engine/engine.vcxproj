@@ -112,6 +112,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ColorTools\ColorTools.cpp" />
+    <ClCompile Include="Display\Color.cpp" />
     <ClCompile Include="Display\Display.cpp" />
     <ClCompile Include="Display\Label.cpp" />
     <ClCompile Include="Display\ScreenFade.cpp" />
