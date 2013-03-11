@@ -3,6 +3,7 @@ noinst_LTLIBRARIES = libdisplay.la
 libdisplay_la_CPPFLAGS = -I.. $(HR_CPPFLAGS)
 libdisplay_la_CXXFLAGS = $(HR_CXXFLAGS)
 libdisplay_la_SOURCES = \
+	Color.cpp \
 	Color.h \
 	Display.cpp \
 	Display.h \
