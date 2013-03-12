@@ -64,8 +64,6 @@ MessageScene::MessageScene(Display::Display &display,
 
 MessageScene::~MessageScene()
 {
-	cancelConn.disconnect();
-	okConn.disconnect();
 	delete messageLbl;
 	delete titleLbl;
 	delete fader;
@@ -83,11 +81,17 @@ void MessageScene::OnCancel()
 	director.RequestPopScene();
 }
 
-void MessageScene::SetupController(Control::InputEventController &controller)
+void MessageScene::AttachController(Control::InputEventController &controller)
 {
 	controller.AddMenuMaps();
 	okConn = controller.GetMenuOkSignal().connect(std::bind(&MessageScene::OnOk, this));
 	cancelConn = controller.GetMenuCancelSignal().connect(std::bind(&MessageScene::OnCancel, this));
+}
+
+void MessageScene::DetachController(Control::InputEventController &controller)
+{
+	cancelConn.disconnect();
+	okConn.disconnect();
 }
 
 void MessageScene::Advance(Util::OS::timestamp_t tick)

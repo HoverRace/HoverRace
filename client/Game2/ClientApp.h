@@ -80,7 +80,7 @@ class ClientApp : public GameDirector
 	private:
 		typedef std::list<ScenePtr> sceneStack_t;
 		void SetForegroundScene();
-		void SetForegroundScene(const sceneStack_t::reverse_iterator &iter);
+		void SetForegroundScene(const ScenePtr &iter);
 		void PushScene(const ScenePtr &scene);
 		void PopScene();
 		void ReplaceScene(const ScenePtr &scene);
@@ -110,7 +110,7 @@ class ClientApp : public GameDirector
 		Control::InputEventController *controller;
 
 		sceneStack_t sceneStack;
-		sceneStack_t::reverse_iterator fgScene;  ///< The scene that currently has input focus.
+		ScenePtr fgScene;  ///< The scene that currently has input focus.
 
 		Script::Core *scripting;
 		HoverScript::GamePeer *gamePeer;

@@ -77,7 +77,14 @@ class Scene
 		 * @param controller The current controller being used.  It can be assumed
 		 *                   that the controller's action mappings have been cleared.
 		 */
-		virtual void SetupController(Control::InputEventController &controller) = 0;
+		virtual void AttachController(Control::InputEventController &controller) = 0;
+
+		/**
+		 * Remove the controller mappings.
+		 * @param controller The current controller being used.  It can be assumed
+		 *                   that the controller's action mappings have been cleared.
+		 */
+		virtual void DetachController(Control::InputEventController &controller) = 0;
 
 		/**
 		 * Determine if the mouse cursor is enabled for this scene.

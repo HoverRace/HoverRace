@@ -41,7 +41,8 @@ class UiScene : public Scene
 		virtual bool IsMouseCursorEnabled() const { return true; }
 
 	public:
-		virtual void SetupController(Control::InputEventController &controller);
+		virtual void AttachController(Control::InputEventController &controller);
+		virtual void DetachController(Control::InputEventController &controller);
 };
 
 }  // namespace HoverScript

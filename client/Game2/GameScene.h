@@ -68,7 +68,8 @@ class GameScene : public Scene
 		void Cleanup();
 
 	public:
-		virtual void SetupController(Control::InputEventController &controller);
+		virtual void AttachController(Control::InputEventController &controller);
+		virtual void DetachController(Control::InputEventController &controller);
 		virtual bool IsMouseCursorEnabled() const { return false; }
 
 	public:

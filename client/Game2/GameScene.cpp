@@ -109,7 +109,7 @@ void GameScene::Cleanup()
 	}
 }
 
-void GameScene::SetupController(Control::InputEventController &controller)
+void GameScene::AttachController(Control::InputEventController &controller)
 {
 	MainCharacter::MainCharacter* mc = session->GetPlayer(0);
 	controller.AddPlayerMaps(1, &mc);
@@ -118,6 +118,10 @@ void GameScene::SetupController(Control::InputEventController &controller)
 	if (highConsole) {
 		controller.SetConsole(highConsole);
 	}
+}
+
+void GameScene::DetachController(Control::InputEventController &controller)
+{
 }
 
 void GameScene::Advance(Util::OS::timestamp_t tick)

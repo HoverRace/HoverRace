@@ -56,7 +56,8 @@ class MessageScene : public UiScene
 
 	public:
 		// Scene
-		virtual void SetupController(Control::InputEventController &controller);
+		virtual void AttachController(Control::InputEventController &controller);
+		virtual void DetachController(Control::InputEventController &controller);
 		virtual void OnPhaseChanged(Phase::phase_t oldPhase);
 		virtual void Advance(Util::OS::timestamp_t tick);
 		virtual void PrepareRender();

@@ -28,7 +28,12 @@
 namespace HoverRace {
 namespace Client {
 
-void UiScene::SetupController(Control::InputEventController &controller)
+void UiScene::AttachController(Control::InputEventController &controller)
+{
+	//TODO
+}
+
+void UiScene::DetachController(Control::InputEventController &controller)
 {
 	//TODO
 }
