@@ -576,7 +576,7 @@ void Config::ResetToDefaults()
 	video.xPos = 150;
 	video.yPos = 150;
 	video.xRes = 800;
-	video.yRes = 600;
+	video.yRes = 450;
 
 	// set current resolution to default
 #ifdef _WIN32

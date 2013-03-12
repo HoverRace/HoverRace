@@ -12,7 +12,7 @@ do
 	cfg:unlink()  -- Prevent our modifications from being saved.
 	local w, h = cfg:get_video_res()
 	print("Configured window res: ", w, h)
-	cfg:set_video_res(800, 600)
+	cfg:set_video_res(800, 450)
 	w, h = cfg:get_video_res()
 	print("New window res: ", w, h)
 end
