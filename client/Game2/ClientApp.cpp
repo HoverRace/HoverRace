@@ -131,11 +131,13 @@ ClientApp::ClientApp() :
 	// With SDL we can only get the desktop resolution before the first call to
 	// SDL_SetVideoMode().
 	const SDL_VideoInfo *videoInfo = SDL_GetVideoInfo();
+	int desktopWidth = videoInfo->current_w;
+	int desktopHeight = videoInfo->current_h;
 
 	// Create the main window and SDL surface.
 	//TODO: Select which display to use.
 	display = new Display::SDL::SdlDisplay();
-	display->OnDesktopModeChanged(videoInfo->current_w, videoInfo->current_h);
+	display->OnDesktopModeChanged(desktopWidth, desktopHeight);
 
 	// Set window position and icon (platform-dependent).
 	SDL_SysWMinfo wm;
