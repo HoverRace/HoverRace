@@ -397,7 +397,7 @@ void InputEventController::SaveConfig()
 
 		for(ActionMap::iterator it = playerMap.begin(); it != playerMap.end(); it++) {
 			// tedious, unfortunately
-			switch(it->second->getListOrder()) {
+			switch(it->second->GetListOrder()) {
 				case 0: // throttle
 					cfg->controls_hash[i].motorOn = it->first;
 					break;
@@ -428,7 +428,7 @@ void InputEventController::SaveConfig()
 
 	// now save console map
 	for(ActionMap::iterator it = allActionMaps[_("Console")].begin(); it != allActionMaps[_("Console")].end(); it++) {
-		switch(it->second->getListOrder()) {
+		switch(it->second->GetListOrder()) {
 			case 0: // toggle console
 				cfg->ui.console_toggle = it->first;
 				break;
@@ -452,7 +452,7 @@ void InputEventController::SaveConfig()
 
 	// now save camera map
 	for(ActionMap::iterator it = allActionMaps[_("Camera")].begin(); it != allActionMaps[_("Camera")].end(); it++) {
-		switch(it->second->getListOrder()) {
+		switch(it->second->GetListOrder()) {
 			case 0: // zoom in
 				cfg->camera_hash.zoomIn = it->first;
 				break;

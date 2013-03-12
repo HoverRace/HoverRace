@@ -42,13 +42,13 @@ namespace Control {
  */
 class ControlAction {
 	public:
-		ControlAction(std::string name, int listOrder) : name(name), listOrder(listOrder) { }
+		ControlAction(const std::string &name, int listOrder) : name(name), listOrder(listOrder) { }
 		virtual ~ControlAction() { }
 
 		virtual void operator()(int eventValue) = 0;
 
-		std::string getName() { return name; }
-		int getListOrder() { return listOrder; }
+		const std::string &GetName() { return name; }
+		int GetListOrder() { return listOrder; }
 		
 	protected:
 		std::string name;
