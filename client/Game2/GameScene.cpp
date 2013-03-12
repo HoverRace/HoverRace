@@ -122,6 +122,10 @@ void GameScene::AttachController(Control::InputEventController &controller)
 
 void GameScene::DetachController(Control::InputEventController &controller)
 {
+	// Shut off the engine when the controller is detached (e.g. when showing a
+	// dialog) otherwise we'll just keep accelerating into the wall.
+	MainCharacter::MainCharacter* mc = session->GetPlayer(0);
+	mc->SetEngineState(false);
 }
 
 void GameScene::Advance(Util::OS::timestamp_t tick)
