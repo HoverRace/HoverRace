@@ -120,7 +120,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="Game2\GifDecoder.cpp" />
     <ClCompile Include="Game2\CheckRoomListDialog.cpp" />
     <ClCompile Include="Game2\CheckUpdateServerDialog.cpp" />
     <ClCompile Include="Game2\ClientApp.cpp" />
@@ -138,6 +137,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Game2\GameScene.cpp" />
+    <ClCompile Include="Game2\GifDecoder.cpp" />
     <ClCompile Include="Game2\HighObserver.cpp" />
     <ClCompile Include="Game2\InternetRoom.cpp" />
     <ClCompile Include="Game2\IntroMovie.cpp" />
@@ -198,17 +198,16 @@
     <ClInclude Include="..\include\compat\boost_cxx11.h" />
     <ClInclude Include="..\include\compat\luabind_cxx11.h" />
     <ClInclude Include="Game2\AboutDialog.h" />
+    <ClInclude Include="Game2\Control\Action.h" />
     <ClInclude Include="Game2\Control\SDL\SDLInputManager.h" />
     <ClInclude Include="Game2\Control\SDL\SDLKeyboard.h" />
     <ClInclude Include="Game2\Control\SDL\SDLMouse.h" />
     <ClInclude Include="Game2\Control\SDL\SDLPrereqs.h" />
-    <ClInclude Include="Game2\Control\SignalAction.h" />
     <ClInclude Include="Game2\FolderViewer.h" />
     <ClInclude Include="Game2\FullscreenTest.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClInclude>
-    <ClInclude Include="Game2\GifDecoder.h" />
     <ClInclude Include="Game2\CheckRoomListDialog.h" />
     <ClInclude Include="Game2\CheckUpdateServerDialog.h" />
     <ClInclude Include="Game2\ClientApp.h" />
@@ -228,6 +227,7 @@
     </ClInclude>
     <ClInclude Include="Game2\GameDirector.h" />
     <ClInclude Include="Game2\GameScene.h" />
+    <ClInclude Include="Game2\GifDecoder.h" />
     <ClInclude Include="Game2\HighObserver.h" />
     <ClInclude Include="Game2\InternetRoom.h" />
     <ClInclude Include="Game2\IntroMovie.h" />

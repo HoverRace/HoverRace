@@ -54,6 +54,7 @@ class ControlAction {
 		std::string name;
 		int listOrder;
 };
+typedef std::shared_ptr<ControlAction> ControlActionPtr;
 
 /***
  * \class BlankAction

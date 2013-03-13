@@ -138,9 +138,6 @@
     <ClCompile Include="Game2\GameScene.cpp">
       <Filter>Game2</Filter>
     </ClCompile>
-    <ClCompile Include="Game2\GifDecoder.cpp">
-      <Filter>Game2</Filter>
-    </ClCompile>
     <ClCompile Include="Game2\FolderViewer.cpp">
       <Filter>Game2</Filter>
     </ClCompile>
@@ -169,6 +166,9 @@
       <Filter>Game2</Filter>
     </ClCompile>
     <ClCompile Include="Game2\UiScene.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\GifDecoder.cpp">
       <Filter>Game2</Filter>
     </ClCompile>
   </ItemGroup>
@@ -315,9 +315,6 @@
     <ClInclude Include="Game2\Scene.h">
       <Filter>Game2</Filter>
     </ClInclude>
-    <ClInclude Include="Game2\GifDecoder.h">
-      <Filter>Game2</Filter>
-    </ClInclude>
     <ClInclude Include="Game2\FolderViewer.h">
       <Filter>Game2</Filter>
     </ClInclude>
@@ -350,8 +347,11 @@
     <ClInclude Include="Game2\UiScene.h">
       <Filter>Game2</Filter>
     </ClInclude>
-    <ClInclude Include="Game2\Control\SignalAction.h">
+    <ClInclude Include="Game2\Control\Action.h">
       <Filter>Control</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\GifDecoder.h">
+      <Filter>Game2</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -84,8 +84,8 @@ void MessageScene::OnCancel()
 void MessageScene::AttachController(Control::InputEventController &controller)
 {
 	controller.AddMenuMaps();
-	okConn = controller.GetMenuOkSignal().connect(std::bind(&MessageScene::OnOk, this));
-	cancelConn = controller.GetMenuCancelSignal().connect(std::bind(&MessageScene::OnCancel, this));
+	okConn = controller.actions.ui.menuOk->Connect(std::bind(&MessageScene::OnOk, this));
+	cancelConn = controller.actions.ui.menuCancel->Connect(std::bind(&MessageScene::OnCancel, this));
 }
 
 void MessageScene::DetachController(Control::InputEventController &controller)

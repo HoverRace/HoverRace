@@ -19,7 +19,6 @@
 #include "ConsoleActions.h"
 #include "ControlAction.h"
 #include "ObserverActions.h"
-#include "SignalAction.h"
 
 #include <sstream>
 
@@ -31,7 +30,13 @@ using HoverRace::Client::HoverScript::HighConsole;
 using HoverRace::Client::Observer;
 using namespace std;
 
-InputEventController::InputEventController(Util::OS::wnd_t mainWindow, UiHandlerPtr uiHandler) : uiHandler(uiHandler)
+InputEventController::actions_t::ui_t::ui_t() :
+	menuOk(std::make_shared<Action<voidSignal_t>>(_("OK"), 0)),
+	menuCancel(std::make_shared<Action<voidSignal_t>>(_("Cancel"), 0))
+	{ }
+
+InputEventController::InputEventController(Util::OS::wnd_t mainWindow, UiHandlerPtr uiHandler) :
+	uiHandler(uiHandler)
 {
 	captureNextInput = false;
 	captureOldHash = 0;
@@ -58,11 +63,13 @@ InputEventController::InputEventController(Util::OS::wnd_t mainWindow, UiHandler
 InputEventController::~InputEventController()
 {
 	// clean up all our ControlActions
+	/*
 	for(map<string, ActionMap>::iterator it = allActionMaps.begin(); it != allActionMaps.end(); it++) {
 		for(ActionMap::iterator itm = it->second.begin(); itm != it->second.end(); itm++) {
 			delete itm->second;
 		}
 	}
+	*/
 
 #	ifndef WITH_SDL_OIS_INPUT
 		InputManager::destroyInputSystem(mgr);
@@ -335,7 +342,7 @@ void InputEventController::AddPlayerMaps(int numPlayers, MainCharacter::MainChar
 			continue; // was not loaded for some reason...
 
 		for(ActionMap::iterator it = allActionMaps[mapname].begin(); it != allActionMaps[mapname].end(); it++) {
-			PlayerEffectAction* perf = dynamic_cast<PlayerEffectAction*>(it->second);
+			PlayerEffectAction* perf = dynamic_cast<PlayerEffectAction*>(it->second.get());
 			if(perf != NULL)
 				perf->SetMainCharacter(mcs[i]);
 			actionMap[it->first] = it->second; // add to active controls
@@ -349,7 +356,7 @@ void InputEventController::AddPlayerMaps(int numPlayers, MainCharacter::MainChar
 void InputEventController::AddObserverMaps(Observer** obs, int numObs)
 {
 	for(ActionMap::iterator it = allActionMaps[_("Camera")].begin(); it != allActionMaps[_("Camera")].end(); it++) {
-		ObserverAction* x = dynamic_cast<ObserverAction*>(it->second);
+		ObserverAction* x = dynamic_cast<ObserverAction*>(it->second.get());
 		if(x != NULL)
 			x->SetObservers(obs, numObs);
 	}
@@ -365,13 +372,13 @@ void InputEventController::AddMenuMaps()
 void InputEventController::SetConsole(HighConsole* hc)
 {
 	for(ActionMap::iterator it = allActionMaps["console-keys"].begin(); it != allActionMaps["console-keys"].end(); it++) {
-		ConsoleAction* x = dynamic_cast<ConsoleAction*>(it->second);
+		ConsoleAction* x = dynamic_cast<ConsoleAction*>(it->second.get());
 		if(x != NULL)
 			x->SetHighConsole(hc);
 	}
 
 	for(ActionMap::iterator it = allActionMaps[_("Console")].begin(); it != allActionMaps[_("Console")].end(); it++) {
-		ConsoleAction* x = dynamic_cast<ConsoleAction*>(it->second);
+		ConsoleAction* x = dynamic_cast<ConsoleAction*>(it->second.get());
 		if(x != NULL)
 			x->SetHighConsole(hc);
 	}
@@ -486,24 +493,24 @@ void InputEventController::LoadConfig()
 		str << _("Player") << " " << (i + 1);
 		ActionMap& playerMap = allActionMaps[str.str()];
 
-		playerMap[cfg->controls_hash[i].motorOn] = new EngineAction(_("Throttle"), 0, NULL);
-		playerMap[cfg->controls_hash[i].brake] = new BrakeAction(_("Brake"), 1, NULL);
-		playerMap[cfg->controls_hash[i].left] = new TurnLeftAction(_("Turn Left"), 2, NULL);
-		playerMap[cfg->controls_hash[i].right] = new TurnRightAction(_("Turn Right"), 3, NULL);
-		playerMap[cfg->controls_hash[i].jump] = new JumpAction(_("Jump"), 4, NULL);
-		playerMap[cfg->controls_hash[i].fire] = new PowerupAction(_("Fire"), 5, NULL);
-		playerMap[cfg->controls_hash[i].weapon] = new ChangeItemAction(_("Item"), 6, NULL);
-		playerMap[cfg->controls_hash[i].lookBack] = new LookBackAction(_("Look Back"), 7, NULL);
+		playerMap[cfg->controls_hash[i].motorOn].reset(new EngineAction(_("Throttle"), 0, NULL));
+		playerMap[cfg->controls_hash[i].brake].reset(new BrakeAction(_("Brake"), 1, NULL));
+		playerMap[cfg->controls_hash[i].left].reset(new TurnLeftAction(_("Turn Left"), 2, NULL));
+		playerMap[cfg->controls_hash[i].right].reset(new TurnRightAction(_("Turn Right"), 3, NULL));
+		playerMap[cfg->controls_hash[i].jump].reset(new JumpAction(_("Jump"), 4, NULL));
+		playerMap[cfg->controls_hash[i].fire].reset(new PowerupAction(_("Fire"), 5, NULL));
+		playerMap[cfg->controls_hash[i].weapon].reset(new ChangeItemAction(_("Item"), 6, NULL));
+		playerMap[cfg->controls_hash[i].lookBack].reset(new LookBackAction(_("Look Back"), 7, NULL));
 	}
 
 	/* load camera map */
 	ActionMap& cameraMap = allActionMaps[_("Camera")];
 
-	cameraMap[cfg->camera_hash.zoomIn]  = new ObserverZoomAction(_("Zoom In"), 0, NULL, 0, 1);
-	cameraMap[cfg->camera_hash.zoomOut] = new ObserverZoomAction(_("Zoom Out"), 1, NULL, 0, -1);
-	cameraMap[cfg->camera_hash.panUp]   = new ObserverTiltAction(_("Pan Up"), 2, NULL, 0, 1);
-	cameraMap[cfg->camera_hash.panDown] = new ObserverTiltAction(_("Pan Down"), 3, NULL, 0, -1);
-	cameraMap[cfg->camera_hash.reset]   = new ObserverResetAction(_("Reset Camera"), 4, NULL, 0);
+	cameraMap[cfg->camera_hash.zoomIn].reset(new ObserverZoomAction(_("Zoom In"), 0, NULL, 0, 1));
+	cameraMap[cfg->camera_hash.zoomOut].reset(new ObserverZoomAction(_("Zoom Out"), 1, NULL, 0, -1));
+	cameraMap[cfg->camera_hash.panUp].reset(new ObserverTiltAction(_("Pan Up"), 2, NULL, 0, 1));
+	cameraMap[cfg->camera_hash.panDown].reset(new ObserverTiltAction(_("Pan Down"), 3, NULL, 0, -1));
+	cameraMap[cfg->camera_hash.reset].reset(new ObserverResetAction(_("Reset Camera"), 4, NULL, 0));
 }
 
 void InputEventController::InitInputManager(Util::OS::wnd_t mainWindow)
@@ -585,13 +592,13 @@ void InputEventController::RebindKey(string mapname, int oldhash, int newhash)
 		ActionMap& map = allActionMaps[mapname];
 		// check anything exists at old hash
 		if(map.count(oldhash) > 0) {
-			ControlAction* tmp = map[oldhash];
+			ControlActionPtr tmp = map[oldhash];
 			map.erase(oldhash);
 			// check if we need to disable 
 			if(map.count(newhash) > 0) {
-					ControlAction* tmp2 = map[newhash];
-					map.erase(newhash);
-					map[GetNextAvailableDisabledHash()] = tmp2;
+				ControlActionPtr tmp2 = map[newhash];
+				map.erase(newhash);
+				map[GetNextAvailableDisabledHash()] = tmp2;
 			}
 			map[newhash] = tmp; // bind old action to new control
 		}
@@ -605,8 +612,8 @@ void InputEventController::LoadMenuMap()
 	
 	Config* config = Config::GetInstance();
 
-	cmap[config->ui.menu_ok] = MakeSignalAction(_("OK"), 0, menuOkSignal);
-	cmap[config->ui.menu_cancel] = MakeSignalAction(_("Cancel"), 0, menuCancelSignal);
+	AssignAction(cmap, config->ui.menu_ok, actions.ui.menuOk);
+	AssignAction(cmap, config->ui.menu_cancel, actions.ui.menuCancel);
 }
 
 void InputEventController::LoadConsoleMap()
@@ -615,13 +622,9 @@ void InputEventController::LoadConsoleMap()
 	// console-keys map is special because it won't appear in the configuration panel,
 	// so we don't need to internationalize the name of it.
 	for(int i = (int) OIS::KC_ESCAPE; i < (int) OIS::KC_MEDIASELECT; i++) {
-		int hash = HashKeyboardEvent((OIS::KeyCode) i);
-		if(allActionMaps["console-keys"].count(hash) > 0)
-			delete allActionMaps["console-keys"][hash];
-
-		allActionMaps["console-keys"][HashKeyboardEvent((OIS::KeyCode) i)] =
+		allActionMaps["console-keys"][HashKeyboardEvent((OIS::KeyCode) i)].reset(
 			new ConsoleKeyAction("" /* no name necessary */, 0 /* no ordering necessary */,
-					NULL, (OIS::KeyCode) i);
+					NULL, (OIS::KeyCode) i));
 	}
 
 	ActionMap& cmap = allActionMaps[_("Console")];
@@ -629,12 +632,12 @@ void InputEventController::LoadConsoleMap()
 	
 	Config* config = Config::GetInstance();
 
-	cmap[config->ui.console_toggle] = new ConsoleToggleAction(_("Toggle Console"), 0, NULL, this);
-	cmap[config->ui.console_up]     = new ConsoleScrollAction(_("Page Up"), 1, NULL, -HighConsole::SCROLL_SPEED);
-	cmap[config->ui.console_down]   = new ConsoleScrollAction(_("Page Down"), 2, NULL, HighConsole::SCROLL_SPEED);
-	cmap[config->ui.console_top]    = new ConsoleScrollTopAction(_("Top"), 3, NULL);
-	cmap[config->ui.console_bottom] = new ConsoleScrollBottomAction(_("Bottom"), 4, NULL);
-	cmap[config->ui.console_help]   = new ConsoleHelpAction(_("Help"), 5, NULL);
+	cmap[config->ui.console_toggle].reset(new ConsoleToggleAction(_("Toggle Console"), 0, NULL, this));
+	cmap[config->ui.console_up].reset(new ConsoleScrollAction(_("Page Up"), 1, NULL, -HighConsole::SCROLL_SPEED));
+	cmap[config->ui.console_down].reset(new ConsoleScrollAction(_("Page Down"), 2, NULL, HighConsole::SCROLL_SPEED));
+	cmap[config->ui.console_top].reset(new ConsoleScrollTopAction(_("Top"), 3, NULL));
+	cmap[config->ui.console_bottom].reset(new ConsoleScrollBottomAction(_("Bottom"), 4, NULL));
+	cmap[config->ui.console_help].reset(new ConsoleHelpAction(_("Help"), 5, NULL));
 }
 
 // 0x0000xx00; xx = keycode

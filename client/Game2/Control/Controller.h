@@ -23,6 +23,7 @@
 #include "../HoverScript/HighConsole.h"
 #include "../Observer.h"
 
+#include "Action.h"
 #include "ControlAction.h"
 
 #define	CTL_MOTOR_ON	1
@@ -78,7 +79,7 @@ class InputEventController : public KeyListener, public MouseListener, public Jo
 		~InputEventController();
 
 		// Typedef for the maps of hashes to controls
-		typedef std::map<int, ControlAction*> ActionMap;
+		typedef std::map<int, ControlActionPtr> ActionMap;
 
 		// event handlers
 		bool keyPressed(const KeyEvent &arg);
@@ -177,14 +178,17 @@ class InputEventController : public KeyListener, public MouseListener, public Jo
 		 */
 		std::string HashToString(int hash);
 
+	private:
+		template<class T>
+		void AssignAction(ActionMap &cmap, int hash, const T &action)
+		{
+			cmap[hash] = action;
+			action->SetPrimaryTrigger(hash);
+		}
+
+	public:
 		/// Set up menu controls.
 		void LoadMenuMap();
-
-		/// Signals which are self-contained (no payload).
-		typedef boost::signals2::signal<void()> voidSignal_t;
-
-		voidSignal_t &GetMenuOkSignal() { return menuOkSignal; }
-		voidSignal_t &GetMenuCancelSignal() { return menuCancelSignal; }
 
 		/***
 		 * Set up controls for the console.
@@ -280,8 +284,15 @@ class InputEventController : public KeyListener, public MouseListener, public Jo
 		int  captureOldHash; /// stores the value of the hash we will be replacing when capturing input
 		std::string captureMap; /// name of the map we are capturing for
 
-		voidSignal_t menuOkSignal;
-		voidSignal_t menuCancelSignal;
+	public:
+		typedef std::shared_ptr<Action<voidSignal_t>> VoidActionPtr;
+		struct actions_t {
+			struct ui_t {
+				ui_t();
+				VoidActionPtr menuOk;
+				VoidActionPtr menuCancel;
+			} ui;
+		} actions;
 };
 
 } // namespace Control
