@@ -70,6 +70,7 @@ class MessageScene : public UiScene
 		Display::ScreenFade *fader;
 		Display::Label *titleLbl;
 		Display::Label *messageLbl;
+		Display::Label *controlsLbl;
 
 		boost::signals2::connection okConn;
 		boost::signals2::connection cancelConn;

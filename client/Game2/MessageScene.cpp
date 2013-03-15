@@ -60,10 +60,16 @@ MessageScene::MessageScene(Display::Display &display,
 		Display::UiFont(fontName, 20),
 		Display::Color(0xff, 0xbf, 0xbf, 0xbf));
 	messageLbl->AttachView(display);
+
+	controlsLbl = new Display::Label("",
+		Display::UiFont(fontName, 20, Display::UiFont::BOLD),
+		Display::COLOR_WHITE);
+	controlsLbl->AttachView(display);
 }
 
 MessageScene::~MessageScene()
 {
+	delete controlsLbl;
 	delete messageLbl;
 	delete titleLbl;
 	delete fader;
@@ -84,8 +90,17 @@ void MessageScene::OnCancel()
 void MessageScene::AttachController(Control::InputEventController &controller)
 {
 	controller.AddMenuMaps();
-	okConn = controller.actions.ui.menuOk->Connect(std::bind(&MessageScene::OnOk, this));
-	cancelConn = controller.actions.ui.menuCancel->Connect(std::bind(&MessageScene::OnCancel, this));
+
+	auto &menuOkAction = controller.actions.ui.menuOk;
+	auto &menuCancelAction = controller.actions.ui.menuCancel;
+
+	okConn = menuOkAction->Connect(std::bind(&MessageScene::OnOk, this));
+	cancelConn = menuCancelAction->Connect(std::bind(&MessageScene::OnCancel, this));
+
+	std::ostringstream oss;
+	oss << '[' << controller.HashToString(menuOkAction->GetPrimaryTrigger()) <<
+		"] " << menuOkAction->GetName();
+	controlsLbl->SetText(oss.str());
 }
 
 void MessageScene::DetachController(Control::InputEventController &controller)
@@ -142,10 +157,12 @@ void MessageScene::PrepareRender()
 	int centerH = vidCfg.yRes / 2;
 	titleLbl->SetPos(Display::Vec2(leftMargin, centerH - 50));
 	messageLbl->SetPos(Display::Vec2(leftMargin, centerH));
+	controlsLbl->SetPos(Display::Vec2(leftMargin, vidCfg.yRes * 3 / 4));
 
 	fader->PrepareRender();
 	titleLbl->PrepareRender();
 	messageLbl->PrepareRender();
+	controlsLbl->PrepareRender();
 }
 
 void MessageScene::Render()
@@ -154,6 +171,7 @@ void MessageScene::Render()
 	if (GetPhase() != Phase::STOPPING) {
 		titleLbl->Render();
 		messageLbl->Render();
+		controlsLbl->Render();
 	}
 }
 
