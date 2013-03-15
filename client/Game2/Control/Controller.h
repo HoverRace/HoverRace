@@ -180,7 +180,7 @@ class InputEventController : public KeyListener, public MouseListener, public Jo
 
 	private:
 		template<class T>
-		void AssignAction(ActionMap &cmap, int hash, const T &action)
+		static void AssignAction(ActionMap &cmap, int hash, const T &action)
 		{
 			cmap[hash] = action;
 			action->SetPrimaryTrigger(hash);
