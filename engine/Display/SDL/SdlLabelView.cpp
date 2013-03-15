@@ -122,10 +122,18 @@ void SdlLabelView::Update()
 #	elif defined(_WIN32)
 		HDC hdc = CreateCompatibleDC(NULL);
 
+		// We will scale the viewport to be 1px = 100 viewport units.
+		SetGraphicsMode(hdc, GM_ADVANCED);
+		XFORM xform;
+		memset(&xform, 0, sizeof(xform));
+		xform.eM11 = 0.01f;
+		xform.eM22 = 0.01f;
+		SetWorldTransform(hdc, &xform);
+
 		const UiFont font = model.GetFont();
 		HFONT stdFont = CreateFontW(
 			//TODO: Support fractional sizes.
-			static_cast<int>(font.size),
+			static_cast<int>(font.size * 100.0),
 			0, 0, 0,
 			(font.style & UiFont::BOLD) ? FW_BOLD : FW_NORMAL,
 			(font.style & UiFont::ITALIC) ? TRUE : FALSE,
@@ -142,8 +150,8 @@ void SdlLabelView::Update()
 		RECT sz;
 		memset(&sz, 0, sizeof(sz));
 		DrawTextW(hdc, ws, wsLen, &sz, DT_CALCRECT | DT_NOPREFIX);
-		width = sz.right - sz.left;
-		height = sz.bottom - sz.top;
+		width = (sz.right - sz.left) / 100;
+		height = (sz.bottom - sz.top) / 100;
 
 		// Create a 32-bit DIB to draw the text onto.
 		BITMAPINFO *bmpInfo =
