@@ -62,15 +62,6 @@ InputEventController::InputEventController(Util::OS::wnd_t mainWindow, UiHandler
 
 InputEventController::~InputEventController()
 {
-	// clean up all our ControlActions
-	/*
-	for(map<string, ActionMap>::iterator it = allActionMaps.begin(); it != allActionMaps.end(); it++) {
-		for(ActionMap::iterator itm = it->second.begin(); itm != it->second.end(); itm++) {
-			delete itm->second;
-		}
-	}
-	*/
-
 #	ifndef WITH_SDL_OIS_INPUT
 		InputManager::destroyInputSystem(mgr);
 #	else
