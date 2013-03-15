@@ -120,7 +120,13 @@ class Scene
 			return (phase == Phase::STARTING) ? GetPhaseDuration() : startingPhaseTime;
 		}
 
-		virtual void OnPhaseChanged(Phase::phase_t oldPhase);
+	protected:
+		/**
+		 * Fired immediately after entering a new phase.
+		 * @param oldPhase The previous phase.
+		 * @see GetPhase()
+		 */
+		virtual void OnPhaseChanged(Phase::phase_t oldPhase) { }
 
 	public:
 		virtual void Advance(Util::OS::timestamp_t tick) = 0;

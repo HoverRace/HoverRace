@@ -73,24 +73,5 @@ bool Scene::SetPhase(Phase::phase_t phase)
 	}
 }
 
-/**
- * Fired immediately after entering a new phase.
- * @param oldPhase The previous phase.
- * @see GetPhase()
- */
-void Scene::OnPhaseChanged(Phase::phase_t oldPhase)
-{
-	// The default behavior is to act like the starting and stopping phases
-	// don't even exist.
-	switch (phase) {
-		case Phase::STARTING:
-			SetPhase(Phase::RUNNING);
-			break;
-		case Phase::STOPPING:
-			SetPhase(Phase::STOPPED);
-			break;
-	}
-}
-
 }  // namespace HoverScript
 }  // namespace Client

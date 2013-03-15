@@ -72,9 +72,11 @@ class GameScene : public Scene
 		virtual void DetachController(Control::InputEventController &controller);
 		virtual bool IsMouseCursorEnabled() const { return false; }
 
+	protected:
+		virtual void OnPhaseChanged(Phase::phase_t oldPhase);
+
 	public:
 		void Advance(Util::OS::timestamp_t tick);
-
 		void Render();
 
 	private:

@@ -143,11 +143,6 @@ void MessageScene::Advance(Util::OS::timestamp_t tick)
 	}
 }
 
-void MessageScene::OnPhaseChanged(Phase::phase_t oldPhase)
-{
-	// Do nothing.
-}
-
 void MessageScene::PrepareRender()
 {
 	//TODO: Only update positions when screen size changes.
