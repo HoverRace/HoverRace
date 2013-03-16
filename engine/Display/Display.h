@@ -36,6 +36,7 @@
 
 namespace HoverRace {
 	namespace Display {
+		class FillBox;
 		class Label;
 		class ScreenFade;
 	}
@@ -57,6 +58,7 @@ namespace Display {
  * @author Michael Imamura
  */
 class MR_DllDeclare Display :
+	public ViewAttacher<FillBox>,
 	public ViewAttacher<Label>,
 	public ViewAttacher<ScreenFade>
 {

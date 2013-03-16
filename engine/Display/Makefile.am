@@ -7,6 +7,8 @@ libdisplay_la_SOURCES = \
 	Color.h \
 	Display.cpp \
 	Display.h \
+	FillBox.cpp \
+	FillBox.h \
 	Label.cpp \
 	Label.h \
 	ScreenFade.cpp \
@@ -21,6 +23,8 @@ libdisplay_la_SOURCES = \
 	ViewModel.h \
 	SDL/SdlDisplay.cpp \
 	SDL/SdlDisplay.h \
+	SDL/SdlFillBoxView.cpp \
+	SDL/SdlFillBoxView.h \
 	SDL/SdlLabelView.cpp \
 	SDL/SdlLabelView.h \
 	SDL/SdlLegacyDisplay.cpp \

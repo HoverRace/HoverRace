@@ -343,6 +343,12 @@
     <ClCompile Include="Display\Color.cpp">
       <Filter>Display</Filter>
     </ClCompile>
+    <ClCompile Include="Display\FillBox.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
+    <ClCompile Include="Display\SDL\SdlFillBoxView.cpp">
+      <Filter>Display\SDL</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColorTools\ColorTools.h">
@@ -702,6 +708,12 @@
       <Filter>Display</Filter>
     </ClInclude>
     <ClInclude Include="Display\SDL\SdlScreenFadeView.h">
+      <Filter>Display\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Display\FillBox.h">
+      <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="Display\SDL\SdlFillBoxView.h">
       <Filter>Display\SDL</Filter>
     </ClInclude>
   </ItemGroup>

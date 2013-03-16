@@ -28,8 +28,10 @@
 
 #include "../../Util/Config.h"
 #include "../../Exception.h"
+#include "../FillBox.h"
 #include "../Label.h"
 #include "../ScreenFade.h"
+#include "SdlFillBoxView.h"
 #include "SdlLabelView.h"
 #include "SdlScreenFadeView.h"
 #include "SdlLegacyDisplay.h"
@@ -65,6 +67,11 @@ SdlDisplay::~SdlDisplay()
 #	ifdef WITH_SDL_PANGO
 		SDLPango_FreeContext(pangoContext);
 #	endif
+}
+
+void SdlDisplay::AttachView(FillBox &model)
+{
+	model.SetView(std::unique_ptr<View>(new SdlFillBoxView(*this, model)));
 }
 
 void SdlDisplay::AttachView(Label &model)
