@@ -33,11 +33,6 @@ namespace HoverRace {
 namespace Display {
 namespace SDL {
 
-#ifdef _WIN32
-static RGBQUAD RGB_BLACK = { 0, 0, 0, 0 };
-static RGBQUAD RGB_WHITE = { 0xff, 0xff, 0xff, 0 };
-#endif
-
 SdlScreenFadeView::SdlScreenFadeView(SdlDisplay &disp, ScreenFade &model) :
 	SUPER(disp, model),
 	surface(), opacityChanged(true), opacityVisible(false)
