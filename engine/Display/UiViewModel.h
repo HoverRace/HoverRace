@@ -65,6 +65,8 @@ class MR_DllDeclare UiViewModel : public ViewModel
 		 */
 		const Vec2 &GetPos() const { return pos; }
 		void SetPos(const Vec2 &pos);
+		/// Convenience function for SetPos(const Vec2&).
+		void SetPos(double x, double y) { SetPos(Vec2(x, y)); }
 
 	private:
 		Vec2 pos;
