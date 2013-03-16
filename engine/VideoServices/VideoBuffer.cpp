@@ -159,12 +159,8 @@ void VideoBuffer::AssignPalette()
 
 VideoBuffer::pixelMeter_t VideoBuffer::GetPixelMeter() const
 {
-	if (fullscreen) {
-		return pixelMeter_t(width * 3, height * 4);
-	}
-	else {
-		return pixelMeter_t(desktopWidth * 3, desktopHeight * 4);
-	}
+	// Assume square pixels.
+	return pixelMeter_t(1, 1);
 }
 
 void VideoBuffer::LockLegacySurface()
