@@ -177,6 +177,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Game2\TestLabScene.cpp" />
     <ClCompile Include="Game2\TrackDownloadDialog.cpp" />
     <ClCompile Include="Game2\TrackSelectDialog.cpp" />
     <ClCompile Include="Game2\UiScene.cpp" />
@@ -265,6 +266,7 @@
     <ClInclude Include="Game2\Scene.h" />
     <ClInclude Include="Game2\SelectRoomDialog.h" />
     <ClInclude Include="Game2\StdAfx.h" />
+    <ClInclude Include="Game2\TestLabScene.h" />
     <ClInclude Include="Game2\TrackDownloadDialog.h" />
     <ClInclude Include="Game2\TrackSelectDialog.h" />
     <ClInclude Include="Game2\UiScene.h" />

@@ -53,9 +53,9 @@
 #include "GameScene.h"
 #include "HighObserver.h"
 #include "MessageScene.h"
-#include "PaletteScene.h"
 #include "Rulebook.h"
 #include "Scene.h"
+#include "TestLabScene.h"
 
 #ifdef _WIN32
 #	include "resource.h"
@@ -321,7 +321,7 @@ void ClientApp::MainLoop()
 		NewLocalSession(rules);
 	}
 	else {
-		ReplaceScene(std::make_shared<PaletteScene>(*display));
+		ReplaceScene(std::make_shared<TestLabScene>(*display));
 	}
 
 	Config::cfg_runtime_t &runtimeCfg = Config::GetInstance()->runtime;
