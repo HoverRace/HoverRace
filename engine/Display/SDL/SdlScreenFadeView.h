@@ -36,7 +36,7 @@
 
 namespace HoverRace {
 	namespace Display {
-		class Label;
+		class ScreenFade;
 	}
 }
 struct SDL_Surface;
