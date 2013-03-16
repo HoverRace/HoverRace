@@ -22,7 +22,9 @@
 #include "StdAfx.h"
 
 #include "../../engine/Display/Display.h"
+#include "../../engine/Display/FillBox.h"
 #include "../../engine/Display/Label.h"
+#include "../../engine/Display/ScreenFade.h"
 #include "../../engine/VideoServices/FontSpec.h"
 #include "../../engine/VideoServices/VideoBuffer.h"
 #include "../../engine/Util/Config.h"
@@ -41,7 +43,16 @@ TestLabScene::TestLabScene(Display::Display &display) :
 	Config *cfg = Config::GetInstance();
 	std::string fontName = cfg->GetDefaultFontName();
 
+	// Clear the screen on every frame.
+	AddElem(new Display::ScreenFade(Display::COLOR_BLACK, 1.0));
+
+	Display::FillBox *fillBox;
 	Display::Label *lbl;
+
+	fillBox = AddElem(new Display::FillBox(100, 100, Display::Color(0x7fff0000)));
+	fillBox->SetPos(100, 20);
+	fillBox = AddElem(new Display::FillBox(100, 100, Display::Color(0x7f00ff00)));
+	fillBox->SetPos(150, 70);
 
 	lbl = AddElem(new Display::Label("Red 20 Normal",
 		Display::UiFont(fontName, 20),
