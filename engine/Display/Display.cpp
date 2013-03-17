@@ -30,6 +30,36 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace Display {
 
+namespace {
+	const double MIN_VIRT_WIDTH = 1280.0;
+	const double MIN_VIRT_HEIGHT = 720.0;
+}
+
+void Display::OnDisplayConfigChanged()
+{
+	Config::cfg_video_t &vidCfg = Config::GetInstance()->video;
+	int w = vidCfg.xRes;
+	int h = vidCfg.yRes;
+	double wd = static_cast<double>(w);
+	double hd = static_cast<double>(h);
+
+	// Recalculate the UI coordinates.
+	double uiScaleW = wd / MIN_VIRT_WIDTH;
+	double uiScaleH = hd / MIN_VIRT_HEIGHT;
+	if (uiScaleW < uiScaleH) {
+		uiScale = uiScaleW;
+		uiOffset.x = 0;
+		uiOffset.y = floor((hd - (MIN_VIRT_HEIGHT * uiScaleW)) / 2);
+	}
+	else {
+		uiScale = uiScaleH;
+		uiOffset.x = floor((wd - (MIN_VIRT_WIDTH * uiScaleH)) / 2);
+		uiOffset.y = 0;
+	}
+
+	FireDisplayConfigChangedSignal(w, h);
+}
+
 void Display::FireDisplayConfigChangedSignal(int width, int height) const
 {
 	displayConfigChangedSignal(width, height);

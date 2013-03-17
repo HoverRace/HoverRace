@@ -26,6 +26,8 @@
 namespace HoverRace {
 	namespace Display {
 		class Display;
+		class FillBox;
+		class Label;
 		class ViewModel;
 	}
 }
@@ -53,6 +55,9 @@ class TestLabScene : public UiScene
 			return elem;
 		}
 
+	private:
+		void OnDisplayConfigChanged();
+
 	protected:
 		virtual void OnPhaseChanged(Phase::phase_t oldPhase);
 
@@ -64,6 +69,9 @@ class TestLabScene : public UiScene
 	private:
 		Display::Display &display;
 		std::vector<std::unique_ptr<Display::ViewModel>> elems;
+		boost::signals2::connection displayConfigChangedConn;
+		Display::FillBox *displayInfoBox;
+		Display::Label *displayInfoLbl;
 };
 
 }  // namespace HoverScript

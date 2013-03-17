@@ -43,11 +43,21 @@ TestLabScene::TestLabScene(Display::Display &display) :
 	Config *cfg = Config::GetInstance();
 	std::string fontName = cfg->GetDefaultFontName();
 
+	displayConfigChangedConn = display.GetDisplayConfigChangedSignal().
+		connect(std::bind(&TestLabScene::OnDisplayConfigChanged, this));
+
 	// Clear the screen on every frame.
 	AddElem(new Display::ScreenFade(Display::COLOR_BLACK, 1.0));
 
 	Display::FillBox *fillBox;
 	Display::Label *lbl;
+
+	displayInfoBox = AddElem(new Display::FillBox(1280, 720, 0xff3f3f3f));
+	displayInfoLbl = AddElem(new Display::Label("Res",
+		Display::UiFont(fontName, 20),
+		Display::COLOR_WHITE));
+	displayInfoLbl->SetPos(200, 0);
+	OnDisplayConfigChanged();
 
 	fillBox = AddElem(new Display::FillBox(100, 100, Display::Color(0x7fff0000)));
 	fillBox->SetPos(100, 20);
@@ -70,6 +80,20 @@ TestLabScene::TestLabScene(Display::Display &display) :
 
 TestLabScene::~TestLabScene()
 {
+}
+
+void TestLabScene::OnDisplayConfigChanged()
+{
+	double uiScale = display.GetUiScale();
+	const Display::Vec2 &uiOffset = display.GetUiOffset();
+	Display::Vec2 boxSize(1280.0 * uiScale, 720.0 * uiScale);
+
+	static boost::format resFmt("UI Scale: %0.2f  Offset: %d,%d");
+	displayInfoLbl->SetText(boost::str(resFmt % uiScale % uiOffset.x % uiOffset.y));
+	displayInfoLbl->SetPos(uiOffset.x, uiOffset.y + boxSize.y - 20);
+
+	displayInfoBox->SetSize(boxSize);
+	displayInfoBox->SetPos(uiOffset);
 }
 
 void TestLabScene::OnPhaseChanged(Phase::phase_t oldPhase)

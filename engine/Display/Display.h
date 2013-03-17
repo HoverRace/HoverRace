@@ -63,7 +63,7 @@ class MR_DllDeclare Display :
 	public ViewAttacher<ScreenFade>
 {
 	public:
-		Display() : uiOrigin(0, 0) { }
+		Display() : uiOrigin(0, 0), uiScale(1.0), uiOffset(0, 0) { }
 		virtual ~Display() { }
 
 	public:
@@ -98,10 +98,10 @@ class MR_DllDeclare Display :
 		 * @warning Depending on the underlying API and what configuration
 		 * options changed, this may trigger resources to be reloaded or
 		 * regenerated.
-		 * @note Subclasses should call FireDisplayConfigChangedSignal(int, int)
-		 *       to notify views.
+		 * @note Subclasses should call the base class implementation to
+		 *       ensure that the UI scale is updated and views are notified.
 		 */
-		virtual void OnDisplayConfigChanged() = 0;
+		virtual void OnDisplayConfigChanged();
 
 	public:
 		typedef boost::signals2::signal<void(int, int)> displayConfigChangedSignal_t;
@@ -116,15 +116,8 @@ class MR_DllDeclare Display :
 		virtual void Flip() = 0;
 
 	public:
-		Vec2 GetUiOrigin() const
-		{
-			return uiOrigin;
-		}
-
-		void SetUiOrigin(const Vec2 &vec)
-		{
-			uiOrigin = vec;
-		}
+		const Vec2 &GetUiOrigin() const { return uiOrigin; }
+		void SetUiOrigin(const Vec2 &vec) { uiOrigin = vec; }
 
 		Vec2 AddUiOrigin(const Vec2 &vec)
 		{
@@ -133,8 +126,13 @@ class MR_DllDeclare Display :
 			return oldOrigin;
 		}
 
+		double GetUiScale() const { return uiScale; }
+		const Vec2 &GetUiOffset() const { return uiOffset; }
+
 	private:
 		Vec2 uiOrigin;
+		double uiScale;
+		Vec2 uiOffset;
 		displayConfigChangedSignal_t displayConfigChangedSignal;
 };
 

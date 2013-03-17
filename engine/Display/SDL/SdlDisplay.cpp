@@ -51,8 +51,7 @@ SdlDisplay::SdlDisplay() :
 	ApplyVideoMode();
 
 	legacyDisplay.reset(new SdlLegacyDisplay(*this));
-	Config::cfg_video_t &vidCfg = Config::GetInstance()->video;
-	FireDisplayConfigChangedSignal(vidCfg.xRes, vidCfg.yRes);
+	SUPER::OnDisplayConfigChanged();
 	legacyDisplay->CreatePalette();
 
 #	ifdef WITH_SDL_PANGO
@@ -100,7 +99,7 @@ void SdlDisplay::OnDisplayConfigChanged()
 
 	if (resChanged) {
 		ApplyVideoMode();
-		FireDisplayConfigChangedSignal(vidCfg.xRes, vidCfg.yRes);
+		SUPER::OnDisplayConfigChanged();
 	}
 }
 
