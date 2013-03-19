@@ -78,30 +78,17 @@ void SdlScreenFadeView::OnWindowResChange()
 void SdlScreenFadeView::PrepareRender()
 {
 	if (!surface) {
-		SDL_Surface *tempSurface = SDL_CreateRGBSurface(SDL_SWSURFACE,
-			disp.GetScreenWidth(), disp.GetScreenHeight(), 32,
-			(MR_UInt32)(255 << (8 * 3)),
-			(MR_UInt32)(255 << (8 * 2)),
-			(MR_UInt32)(255 << (8 * 1)),
-			255);
+		surface = disp.CreateHardwareSurface(
+			disp.GetScreenWidth(), disp.GetScreenHeight());
+
+		if (SDL_MUSTLOCK(surface)) SDL_LockSurface(surface);
 
 		const Color color = model.GetColor();
-		MR_UInt32 fillColor =
-			((MR_UInt32)(color.bits.r) << 24) +
-			((MR_UInt32)(color.bits.g) << 16) +
-			((MR_UInt32)(color.bits.b) << 8) +
-			0xff;
-		MR_UInt8 *buf = static_cast<MR_UInt8*>(tempSurface->pixels);
-		for (int y = 0; y < tempSurface->h; y++) {
-			MR_UInt32 *row = reinterpret_cast<MR_UInt32*>(buf);
-			for (int x = 0; x < tempSurface->w; x++) {
-				*row++ = fillColor;
-			}
-			buf += tempSurface->pitch;
-		}
+		SDL_FillRect(surface, nullptr,
+			SDL_MapRGBA(surface->format,
+				color.bits.r, color.bits.g, color.bits.b, 0xff));
 
-		surface = SDL_DisplayFormat(tempSurface);
-		SDL_FreeSurface(tempSurface);
+		if (SDL_MUSTLOCK(surface)) SDL_UnlockSurface(surface);
 
 		opacityChanged = true;
 	}

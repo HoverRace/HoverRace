@@ -63,30 +63,23 @@ void SdlFillBoxView::PrepareRender()
 {
 	if (!surface) {
 		const Vec2 &size = model.GetSize();
-		SDL_Surface *tempSurface = SDL_CreateRGBSurface(SDL_SWSURFACE,
-			static_cast<int>(size.x), static_cast<int>(size.y), 32,
-			(MR_UInt32)(255 << (8 * 3)),
-			(MR_UInt32)(255 << (8 * 2)),
-			(MR_UInt32)(255 << (8 * 1)),
-			255);
+		surface = disp.CreateHardwareSurface(
+			static_cast<int>(size.x), static_cast<int>(size.y));
+
+		if (SDL_MUSTLOCK(surface)) SDL_LockSurface(surface);
 
 		const Color color = model.GetColor();
-		MR_UInt32 fillColor =
-			((MR_UInt32)(color.bits.r) << 24) +
-			((MR_UInt32)(color.bits.g) << 16) +
-			((MR_UInt32)(color.bits.b) << 8) +
-			color.bits.a;
-		MR_UInt8 *buf = static_cast<MR_UInt8*>(tempSurface->pixels);
-		for (int y = 0; y < tempSurface->h; y++) {
-			MR_UInt32 *row = reinterpret_cast<MR_UInt32*>(buf);
-			for (int x = 0; x < tempSurface->w; x++) {
-				*row++ = fillColor;
-			}
-			buf += tempSurface->pitch;
-		}
+		SDL_FillRect(surface, nullptr,
+			SDL_MapRGBA(surface->format,
+				color.bits.r, color.bits.g, color.bits.b, 0xff));
 
-		surface = SDL_DisplayFormatAlpha(tempSurface);
-		SDL_FreeSurface(tempSurface);
+		if (SDL_MUSTLOCK(surface)) SDL_UnlockSurface(surface);
+
+		// The alpha component is the same across the entire surface,
+		// so we can use per-surface alpha.
+		if (color.bits.a != 0xff) {
+			SDL_SetAlpha(surface, SDL_SRCALPHA | SDL_RLEACCEL, color.bits.a);
+		}
 	}
 }
 
