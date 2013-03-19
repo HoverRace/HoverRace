@@ -76,7 +76,7 @@ class MR_DllDeclare FillBox : public UiViewModel
 
 		/**
 		 * Retrieve the size of the box.
-		 * @return The size, where @c x is the width and @y is the height.
+		 * @return The size, where @c x is the width and @c y is the height.
 		 */
 		const Vec2 &GetSize() const { return size; }
 		void SetSize(const Vec2 &size);
