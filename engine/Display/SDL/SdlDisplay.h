@@ -88,6 +88,8 @@ class MR_DllDeclare SdlDisplay : public Display
 #		endif
 
 	public:
+		// SDL-specific utilities.
+		static SDL_Surface *CreateHardwareSurface(int w, int h);
 		void DrawUiSurface(SDL_Surface *surface, const Vec2 &relPos);
 
 	private:

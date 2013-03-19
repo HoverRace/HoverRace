@@ -129,6 +129,30 @@ void SdlDisplay::ApplyVideoMode()
 }
 
 /**
+ * Create a screen-compatible hardware surface.
+ * This is useful for avoiding the creation of a temporary surface, with the
+ * caveat that the resulting surface will not have an alpha channel.
+ * @param w The desired surface width.
+ * @param h The desired surface height.
+ * @return The surface (never @c nullptr).
+ */
+SDL_Surface *SdlDisplay::CreateHardwareSurface(int w, int h)
+{
+	SDL_Surface *vidSurface = SDL_GetVideoSurface();
+	SDL_PixelFormat *pfmt = vidSurface->format;
+
+	SDL_Surface *retv = SDL_CreateRGBSurface(
+		vidSurface->flags & SDL_HWSURFACE,
+		w, h,
+		pfmt->BitsPerPixel,
+		pfmt->Rmask, pfmt->Gmask, pfmt->Bmask, pfmt->Amask);
+
+	if (!retv) throw Exception(SDL_GetError());
+
+	return retv;
+}
+
+/**
  * Blit an SDL surface to the backbuffer.
  * @param surface The surface to blit (may be @c NULL).
  * @param relPos The UI-space position, relative to the current UI origin.
