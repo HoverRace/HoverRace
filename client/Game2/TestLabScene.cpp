@@ -59,22 +59,20 @@ TestLabScene::TestLabScene(Display::Display &display) :
 	displayInfoLbl->SetPos(200, 0);
 	OnDisplayConfigChanged();
 
-	fillBox = AddElem(new Display::FillBox(100, 100, Display::Color(0x7fff0000)));
+	fillBox = AddElem(new Display::FillBox(100, 100, 0x7fff0000));
 	fillBox->SetPos(100, 20);
-	fillBox = AddElem(new Display::FillBox(100, 100, Display::Color(0x7f00ff00)));
+	fillBox = AddElem(new Display::FillBox(100, 100, 0x7f00ff00));
 	fillBox->SetPos(150, 70);
 
 	lbl = AddElem(new Display::Label("Red 20 Normal",
-		Display::UiFont(fontName, 20),
-		Display::Color(0xff, 0xff, 0x00, 0x00)));
+		Display::UiFont(fontName, 20), 0xffff0000));
 	lbl->SetPos(0, 20);
 	lbl = AddElem(new Display::Label("Yellow 25 Italic",
-		Display::UiFont(fontName, 25, Display::UiFont::ITALIC),
-		Display::Color(0xff, 0xff, 0xff, 0x00)));
+		Display::UiFont(fontName, 25, Display::UiFont::ITALIC), 0xffffff00));
 	lbl->SetPos(0, 40);
 	lbl = AddElem(new Display::Label("Magenta 30 Bold+Italic",
 		Display::UiFont(fontName, 30, Display::UiFont::BOLD | Display::UiFont::ITALIC),
-		Display::Color(0xff, 0xff, 0x00, 0xff)));
+		0xffff00ff));
 	lbl->SetPos(0, 65);
 }
 
