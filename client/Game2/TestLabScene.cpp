@@ -40,6 +40,8 @@ TestLabScene::TestLabScene(Display::Display &display) :
 	SUPER("Test Lab"),
 	display(display)
 {
+	typedef Display::UiViewModel::Alignment Alignment;
+
 	Config *cfg = Config::GetInstance();
 	std::string fontName = cfg->GetDefaultFontName();
 
@@ -57,6 +59,7 @@ TestLabScene::TestLabScene(Display::Display &display) :
 		Display::UiFont(fontName, 20),
 		Display::COLOR_WHITE));
 	displayInfoLbl->SetPos(200, 0);
+	displayInfoLbl->SetAlignment(Alignment::CENTER);
 	OnDisplayConfigChanged();
 
 	fillBox = AddElem(new Display::FillBox(100, 100, 0x7fff0000));
@@ -88,7 +91,9 @@ void TestLabScene::OnDisplayConfigChanged()
 
 	static boost::format resFmt("UI Scale: %0.2f  Offset: %d,%d");
 	displayInfoLbl->SetText(boost::str(resFmt % uiScale % uiOffset.x % uiOffset.y));
-	displayInfoLbl->SetPos(uiOffset.x, uiOffset.y + boxSize.y - 20);
+	displayInfoLbl->SetPos(
+		uiOffset.x + boxSize.x / 2.0,
+		uiOffset.y + boxSize.y / 2.0);
 
 	displayInfoBox->SetSize(boxSize);
 	displayInfoBox->SetPos(uiOffset);

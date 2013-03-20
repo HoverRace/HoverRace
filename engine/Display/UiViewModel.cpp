@@ -21,6 +21,8 @@
 
 #include "StdAfx.h"
 
+#include "../Exception.h"
+
 #include "UiViewModel.h"
 
 namespace HoverRace {
@@ -38,6 +40,41 @@ void UiViewModel::SetPos(const Vec2 &pos)
 	}
 }
 
+/**
+ * Set the alignment of the component.
+ * @param alignment The alignment (see Alignment).
+ */
+void UiViewModel::SetAlignment(Alignment::alignment_t alignment)
+{
+	if (this->alignment != alignment) {
+		this->alignment = alignment;
+		FireModelUpdate(Props::ALIGNMENT);
+	}
+}
+
+/**
+ * Retrieve the position adjusted by the current alignment.
+ * @param w The width of the component.
+ * @param h The height of the component.
+ * @return The adjusted position.
+ */
+Vec2 UiViewModel::GetAlignedPos(double w, double h) const
+{
+	switch (alignment) {
+		case Alignment::NW: return pos;
+		case Alignment::N: return Vec2(pos.x - (w / 2.0), pos.y);
+		case Alignment::NE: return Vec2(pos.x - w, pos.y);
+		case Alignment::E: return Vec2(pos.x - w, pos.y - (h / 2.0));
+		case Alignment::SE: return Vec2(pos.x - w, pos.y - h);
+		case Alignment::S: return Vec2(pos.x - (w / 2.0), pos.y - h);
+		case Alignment::SW: return Vec2(pos.x, pos.y - h);
+		case Alignment::W: return Vec2(pos.x, pos.y - (h / 2.0));
+		case Alignment::CENTER: return Vec2(pos.x - (w / 2.0), pos.y - (h / 2.0));
+		default:
+			throw Exception("Unknown alignment: " +
+				boost::lexical_cast<std::string>(alignment));
+	}
+}
 
 }  // namespace Display
 }  // namespace HoverRace

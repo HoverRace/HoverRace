@@ -50,26 +50,59 @@ class MR_DllDeclare UiViewModel : public ViewModel
 		{
 			enum {
 				POS,
+				ALIGNMENT,
 				NEXT_,  ///< First index for subclasses.
+			};
+		};
+		
+		/**
+		 * Imagine the component pinned to the container with a thumbtack.
+		 * The thumbtack's position is at GetPos(), and the alignment determines
+		 * which corner the component hangs from.
+		 */
+		struct Alignment
+		{
+			enum alignment_t {
+				NW,  ///< Northwest corner (default).
+				N,  ///< North (horizontally-centered).
+				NE,  ///< Northeast corner.
+				E,  ///< East (vertically-centered).
+				SE,  ///< Southeast corner.
+				S,  ///< South (horizontally-centered).
+				SW,  ///< Southwest corner.
+				W,  ///< West (vertically-centered).
+				CENTER,  ///< Horizontally @e and vertically centered.
 			};
 		};
 
 	public:
-		UiViewModel() : SUPER(), pos(0, 0) { }
+		UiViewModel() : SUPER(), pos(0, 0), alignment(Alignment::NW) { }
 		virtual ~UiViewModel() { }
 
 	public:
 		/**
 		 * Get the position of the component.
 		 * @return The position, relative to the parent (if any).
+		 * @see GetAlignment()
 		 */
 		const Vec2 &GetPos() const { return pos; }
 		void SetPos(const Vec2 &pos);
 		/// Convenience function for SetPos(const Vec2&).
 		void SetPos(double x, double y) { SetPos(Vec2(x, y)); }
 
+		/**
+		 * Retrieve the alignment of the component.
+		 * @return The alignment.
+		 * @see UiViewModel::Alignment
+		 */
+		const Alignment::alignment_t GetAlignment() const { return alignment; }
+		void SetAlignment(Alignment::alignment_t alignment);
+
+		Vec2 GetAlignedPos(double w, double h) const;
+
 	private:
 		Vec2 pos;
+		Alignment::alignment_t alignment;
 };
 
 }  // namespace Display
