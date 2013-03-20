@@ -30,7 +30,7 @@ namespace Display {
 
 /**
  * Constructor.
- * @param color The color of the fade (the alpha component is ignored).
+ * @param color The color of the fade (including alpha).
  * @param opacity The opacity (1.0 is fully-opaque, 0.0 is fully-transparent).
  */
 ScreenFade::ScreenFade(Color color, double opacity) :
@@ -45,7 +45,7 @@ ScreenFade::~ScreenFade()
 
 /**
  * Set the color of the overlay when fully-opaque.
- * @param color The color of the fade (the alpha component is ignored).
+ * @param color The color of the fade (including alpha).
  */
 void ScreenFade::SetColor(const Color color)
 {

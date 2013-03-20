@@ -29,7 +29,6 @@
 
 #include "MessageScene.h"
 
-#define FINAL_OPACITY 0.8
 #define START_DURATION 500
 
 using namespace HoverRace::Util;
@@ -46,7 +45,7 @@ MessageScene::MessageScene(Display::Display &display,
 {
 	Config *cfg = Config::GetInstance();
 
-	fader = new Display::ScreenFade(Display::COLOR_BLACK, 0.0);
+	fader = new Display::ScreenFade(0xcc000000, 0.0);
 	fader->AttachView(display);
 
 	std::string fontName = cfg->GetDefaultFontName();
@@ -57,8 +56,7 @@ MessageScene::MessageScene(Display::Display &display,
 	titleLbl->AttachView(display);
 
 	messageLbl = new Display::Label(message,
-		Display::UiFont(fontName, 20),
-		Display::Color(0xff, 0xbf, 0xbf, 0xbf));
+		Display::UiFont(fontName, 20), 0xffbfbfbf);
 	messageLbl->AttachView(display);
 
 	controlsLbl = new Display::Label("",
@@ -115,12 +113,12 @@ void MessageScene::Advance(Util::OS::timestamp_t tick)
 		case Phase::STARTING: {
 			Util::OS::timestamp_t duration = GetPhaseDuration(tick);
 			if (duration > START_DURATION) {
-				fader->SetOpacity(FINAL_OPACITY);
+				fader->SetOpacity(1.0);
 				SetPhase(Phase::RUNNING);
 			}
 			else {
 				// Fade-in the screen fader.
-				double opacity = static_cast<double>(duration) * FINAL_OPACITY / START_DURATION;
+				double opacity = static_cast<double>(duration) / START_DURATION;
 				fader->SetOpacity(opacity);
 			}
 			break;
@@ -135,7 +133,7 @@ void MessageScene::Advance(Util::OS::timestamp_t tick)
 			}
 			else {
 				// Fade-out the screen fader.
-				double opacity = static_cast<double>(startingDuration - duration) * FINAL_OPACITY / startingDuration;
+				double opacity = static_cast<double>(startingDuration - duration) / startingDuration;
 				fader->SetOpacity(opacity);
 			}
 			break;

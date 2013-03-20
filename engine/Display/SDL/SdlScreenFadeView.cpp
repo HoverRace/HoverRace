@@ -94,10 +94,11 @@ void SdlScreenFadeView::PrepareRender()
 	}
 
 	if (opacityChanged) {
+		double alpha = static_cast<double>(model.GetColor().bits.a);
 		double opacity = model.GetOpacity();
 		if ((opacityVisible = opacity > 0.0)) {
 			SDL_SetAlpha(surface, SDL_SRCALPHA | SDL_RLEACCEL,
-				static_cast<MR_UInt8>(opacity * 255.0));
+				static_cast<MR_UInt8>(opacity * alpha));
 		}
 		opacityChanged = false;
 	}
