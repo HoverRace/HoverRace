@@ -209,11 +209,11 @@ void SdlLabelView::Update()
 			for (int x = 0; x < width; ++x) {
 				MR_UInt32 px = *src++;
 
-				MR_UInt8 alpha = (ca * (px & 0xff)) / 255;
+				MR_UInt8 alpha = px & 0xff;
 				px = ((MR_UInt32)(cr * alpha / 255) << 24) +
 					((MR_UInt32)(cg * alpha / 255) << 16) +
 					((MR_UInt32)(cb * alpha / 255) << 8) +
-					alpha;
+					((ca * alpha) / 255);
 
 				*((MR_UInt32*)dest) = px;
 				dest += 4;
