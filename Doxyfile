@@ -5,7 +5,7 @@
 #---------------------------------------------------------------------------
 DOXYFILE_ENCODING      = UTF-8
 PROJECT_NAME           = HoverRace
-PROJECT_NUMBER         =
+PROJECT_NUMBER         = 2.0
 OUTPUT_DIRECTORY       = srcdoc
 CREATE_SUBDIRS         = NO
 OUTPUT_LANGUAGE        = English
