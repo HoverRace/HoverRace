@@ -195,6 +195,7 @@ void SdlLabelView::Update()
 		MR_UInt8 cr = c.bits.r;
 		MR_UInt8 cg = c.bits.g;
 		MR_UInt8 cb = c.bits.b;
+		MR_UInt8 ca = c.bits.a;
 
 		// Now copy from the bitmap into our image buffer.
 		// DIB rows are 32-bit word-aligned.
@@ -208,7 +209,7 @@ void SdlLabelView::Update()
 			for (int x = 0; x < width; ++x) {
 				MR_UInt32 px = *src++;
 
-				MR_UInt8 alpha = px & 0xff;
+				MR_UInt8 alpha = (ca * (px & 0xff)) / 255;
 				px = ((MR_UInt32)(cr * alpha / 255) << 24) +
 					((MR_UInt32)(cg * alpha / 255) << 16) +
 					((MR_UInt32)(cb * alpha / 255) << 8) +

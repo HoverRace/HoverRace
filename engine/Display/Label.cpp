@@ -34,7 +34,7 @@ namespace Display {
  * Constructor.
  * @param text The text.
  * @param font The font.
- * @param color The text foreground color.  The alpha component is ignored.
+ * @param color The text foreground color (including alpha).
  */
 Label::Label(const std::string &text,
              const UiFont &font,

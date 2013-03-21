@@ -70,12 +70,12 @@ TestLabScene::TestLabScene(Display::Display &display) :
 	lbl = AddElem(new Display::Label("Red 20 Normal",
 		Display::UiFont(fontName, 20), 0xffff0000));
 	lbl->SetPos(0, 20);
-	lbl = AddElem(new Display::Label("Yellow 25 Italic",
-		Display::UiFont(fontName, 25, Display::UiFont::ITALIC), 0xffffff00));
+	lbl = AddElem(new Display::Label("Yellow (75%) 25 Italic",
+		Display::UiFont(fontName, 25, Display::UiFont::ITALIC), 0xbfffff00));
 	lbl->SetPos(0, 40);
-	lbl = AddElem(new Display::Label("Magenta 30 Bold+Italic",
+	lbl = AddElem(new Display::Label("Magenta (50%) 30 Bold+Italic",
 		Display::UiFont(fontName, 30, Display::UiFont::BOLD | Display::UiFont::ITALIC),
-		0xffff00ff));
+		0x7fff00ff));
 	lbl->SetPos(0, 65);
 }
 
