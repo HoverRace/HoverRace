@@ -59,6 +59,7 @@ class MR_DllDeclare SdlFillBoxView : public SdlView<FillBox>
 
 	public:
 		virtual void OnModelUpdate(int prop);
+		void OnUiScaleChanged();
 
 	public:
 		virtual void PrepareRender();
@@ -69,6 +70,7 @@ class MR_DllDeclare SdlFillBoxView : public SdlView<FillBox>
 
 	private:
 		SDL_Surface *surface;
+		boost::signals2::connection uiScaleChangedConnection;
 };
 
 }  // namespace SDL

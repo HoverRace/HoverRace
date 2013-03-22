@@ -37,10 +37,13 @@ SdlFillBoxView::SdlFillBoxView(SdlDisplay &disp, FillBox &model) :
 	SUPER(disp, model),
 	surface()
 {
+	uiScaleChangedConnection = disp.GetUiScaleChangedSignal().connect(
+		std::bind(&SdlFillBoxView::OnUiScaleChanged, this));
 }
 
 SdlFillBoxView::~SdlFillBoxView()
 {
+	uiScaleChangedConnection.disconnect();
 	if (surface) {
 		SDL_FreeSurface(surface);
 	}
@@ -59,12 +62,21 @@ void SdlFillBoxView::OnModelUpdate(int prop)
 	}
 }
 
+void SdlFillBoxView::OnUiScaleChanged()
+{
+	if (surface) {
+		SDL_FreeSurface(surface);
+		surface = nullptr;
+	}
+}
+
 void SdlFillBoxView::PrepareRender()
 {
 	if (!surface) {
 		const Vec2 &size = model.GetSize();
+		double uiScale = disp.GetUiScale();
 		surface = disp.CreateHardwareSurface(
-			static_cast<int>(size.x), static_cast<int>(size.y));
+			static_cast<int>(size.x * uiScale), static_cast<int>(size.y * uiScale));
 
 		if (SDL_MUSTLOCK(surface)) SDL_LockSurface(surface);
 

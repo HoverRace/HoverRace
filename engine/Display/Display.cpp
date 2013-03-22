@@ -44,25 +44,36 @@ void Display::OnDisplayConfigChanged()
 	double hd = static_cast<double>(h);
 
 	// Recalculate the UI coordinates.
+	double newUiScale;
 	double uiScaleW = wd / MIN_VIRT_WIDTH;
 	double uiScaleH = hd / MIN_VIRT_HEIGHT;
 	if (uiScaleW < uiScaleH) {
-		uiScale = uiScaleW;
+		newUiScale = uiScaleW;
 		uiOffset.x = 0;
 		uiOffset.y = floor((hd - (MIN_VIRT_HEIGHT * uiScaleW)) / 2);
 	}
 	else {
-		uiScale = uiScaleH;
+		newUiScale = uiScaleH;
 		uiOffset.x = floor((wd - (MIN_VIRT_WIDTH * uiScaleH)) / 2);
 		uiOffset.y = 0;
 	}
 
 	FireDisplayConfigChangedSignal(w, h);
+
+	if (uiScale != newUiScale) {
+		uiScale = newUiScale;
+		FireUiScaleChangedSignal(uiScale);
+	}
 }
 
 void Display::FireDisplayConfigChangedSignal(int width, int height) const
 {
 	displayConfigChangedSignal(width, height);
+}
+
+void Display::FireUiScaleChangedSignal(double scale) const
+{
+	uiScaleChangedSignal(scale);
 }
 
 }  // namespace Display

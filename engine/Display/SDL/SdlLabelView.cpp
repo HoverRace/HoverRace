@@ -49,10 +49,13 @@ SdlLabelView::SdlLabelView(SdlDisplay &disp, Label &model) :
 	SUPER(disp, model),
 	surface(), width(0), height(0)
 {
+	uiScaleChangedConnection = disp.GetUiScaleChangedSignal().connect(
+		std::bind(&SdlLabelView::OnUiScaleChanged, this));
 }
 
 SdlLabelView::~SdlLabelView()
 {
+	uiScaleChangedConnection.disconnect();
 	if (surface) {
 		SDL_FreeSurface(surface);
 	}
@@ -68,6 +71,14 @@ void SdlLabelView::OnModelUpdate(int prop)
 				SDL_FreeSurface(surface);
 				surface = nullptr;
 			}
+	}
+}
+
+void SdlLabelView::OnUiScaleChanged()
+{
+	if (surface) {
+		SDL_FreeSurface(surface);
+		surface = nullptr;
 	}
 }
 
@@ -91,9 +102,12 @@ void SdlLabelView::Update()
 		const std::string &s = model.GetText();
 		char *escapedBuf = g_markup_escape_text(s.c_str(), -1);
 
+		UiFont font = model.GetFont();
+		font.size *= disp.GetUiScale();
+
 		std::ostringstream oss;
 		oss << SelFmt<SEL_FMT_PANGO> <<
-			"<span font=\"" << model.GetFont() << "\" "
+			"<span font=\"" << font << "\" "
 			"color=\"" << model.GetColor() << "\">" <<
 			escapedBuf << "</span>";
 
@@ -149,7 +163,7 @@ void SdlLabelView::Update()
 		const UiFont font = model.GetFont();
 		HFONT stdFont = CreateFontW(
 			//TODO: Support fractional sizes.
-			static_cast<int>(font.size * 100.0),
+			static_cast<int>(font.size * 100.0 * disp.GetUiScale()),
 			0, 0, 0,
 			(font.style & UiFont::BOLD) ? FW_BOLD : FW_NORMAL,
 			(font.style & UiFont::ITALIC) ? TRUE : FALSE,

@@ -54,6 +54,7 @@ class MR_DllDeclare SdlLabelView : public SdlView<Label>
 
 	public:
 		virtual void OnModelUpdate(int prop);
+		void OnUiScaleChanged();
 
 	public:
 		virtual void PrepareRender();
@@ -68,6 +69,7 @@ class MR_DllDeclare SdlLabelView : public SdlView<Label>
 		int height;
 		int realWidth;
 		int realHeight;
+		boost::signals2::connection uiScaleChangedConnection;
 };
 
 }  // namespace SDL

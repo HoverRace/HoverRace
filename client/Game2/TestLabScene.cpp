@@ -58,7 +58,7 @@ TestLabScene::TestLabScene(Display::Display &display) :
 	displayInfoLbl = AddElem(new Display::Label("Res",
 		Display::UiFont(fontName, 20),
 		Display::COLOR_WHITE));
-	displayInfoLbl->SetPos(200, 0);
+	displayInfoLbl->SetPos(640, 360);
 	displayInfoLbl->SetAlignment(Alignment::CENTER);
 	OnDisplayConfigChanged();
 
@@ -87,16 +87,9 @@ void TestLabScene::OnDisplayConfigChanged()
 {
 	double uiScale = display.GetUiScale();
 	const Display::Vec2 &uiOffset = display.GetUiOffset();
-	Display::Vec2 boxSize(1280.0 * uiScale, 720.0 * uiScale);
 
 	static boost::format resFmt("UI Scale: %0.2f  Offset: %d,%d");
 	displayInfoLbl->SetText(boost::str(resFmt % uiScale % uiOffset.x % uiOffset.y));
-	displayInfoLbl->SetPos(
-		uiOffset.x + boxSize.x / 2.0,
-		uiOffset.y + boxSize.y / 2.0);
-
-	displayInfoBox->SetSize(boxSize);
-	displayInfoBox->SetPos(uiOffset);
 }
 
 void TestLabScene::OnPhaseChanged(Phase::phase_t oldPhase)

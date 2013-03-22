@@ -162,8 +162,8 @@ void SdlDisplay::DrawUiSurface(SDL_Surface *surface, const Vec2 &relPos)
 	if (surface) {
 		Vec2 adjustedPos = relPos;
 		adjustedPos += GetUiOrigin();
-
-		//TODO: Convert UI coords to screen coords.
+		adjustedPos *= GetUiScale();
+		adjustedPos += GetUiOffset();
 
 		SDL_Rect destRect = { (MR_Int16)adjustedPos.x, (MR_Int16)adjustedPos.y, 0, 0 };
 		SDL_BlitSurface(surface, nullptr, SDL_GetVideoSurface(), &destRect);

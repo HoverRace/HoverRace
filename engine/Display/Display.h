@@ -110,6 +110,12 @@ class MR_DllDeclare Display :
 		void FireDisplayConfigChangedSignal(int width, int height) const;
 
 	public:
+		typedef boost::signals2::signal<void(double)> uiScaleChangedSignal_t;
+		uiScaleChangedSignal_t &GetUiScaleChangedSignal() { return uiScaleChangedSignal; }
+	protected:
+		void FireUiScaleChangedSignal(double scale) const;
+
+	public:
 		/**
 		 * Rendering for the frame has completed; update the screen.
 		 */
@@ -134,6 +140,7 @@ class MR_DllDeclare Display :
 		double uiScale;
 		Vec2 uiOffset;
 		displayConfigChangedSignal_t displayConfigChangedSignal;
+		uiScaleChangedSignal_t uiScaleChangedSignal;
 };
 
 }  // namespace Display
