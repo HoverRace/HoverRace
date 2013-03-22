@@ -119,6 +119,22 @@ void SdlLabelView::Update()
 			255);
 		SDLPango_Draw(ctx, tempSurface, 0, 0);
 
+		const Color c = model.GetColor();
+		MR_UInt8 ca = c.bits.a;
+
+		// Blend the alpha component from the label color.
+		if (ca != 0xff) {
+			MR_UInt8 *row = (MR_UInt8*)tempSurface->pixels;
+			for (int y = 0; y < height; y++) {
+				MR_UInt8 *buf = row;
+				for (int x = 0; x < width; x++) {
+					*buf = (*buf * ca) / 255;
+					buf += 4;
+				}
+				row += tempSurface->pitch;
+			}
+		}
+
 #	elif defined(_WIN32)
 		HDC hdc = CreateCompatibleDC(NULL);
 
