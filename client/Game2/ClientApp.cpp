@@ -176,9 +176,11 @@ ClientApp::ClientApp() :
 
 	RefreshTitleBar();
 
+	typedef Display::UiViewModel::LayoutFlags LayoutFlags;
 	fpsLbl = new Display::Label("FPS:",
 		Display::UiFont(cfg->GetDefaultFontName(), 20, Display::UiFont::BOLD),
-		Display::Color(0xff, 0xff, 0x7f, 0x00));
+		Display::Color(0xff, 0xff, 0x7f, 0x00),
+		LayoutFlags::UNSCALED | LayoutFlags::FLOATING);
 	fpsLbl->AttachView(*display);
 }
 
