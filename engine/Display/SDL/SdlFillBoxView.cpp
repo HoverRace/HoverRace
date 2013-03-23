@@ -106,7 +106,8 @@ void SdlFillBoxView::PrepareRender()
 void SdlFillBoxView::Render()
 {
 	disp.DrawUiSurface(surface,
-		model.GetAlignedPos(model.GetSize().x, model.GetSize().y));
+		model.GetAlignedPos(model.GetSize().x, model.GetSize().y),
+		model.GetLayoutFlags());
 }
 
 }  // namespace SDL

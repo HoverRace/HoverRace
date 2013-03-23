@@ -156,14 +156,18 @@ SDL_Surface *SdlDisplay::CreateHardwareSurface(int w, int h)
  * Blit an SDL surface to the backbuffer.
  * @param surface The surface to blit (may be @c NULL).
  * @param relPos The UI-space position, relative to the current UI origin.
+ * @param layoutFlags Optional layout flags, from the view model.
  */
-void SdlDisplay::DrawUiSurface(SDL_Surface *surface, const Vec2 &relPos)
+void SdlDisplay::DrawUiSurface(SDL_Surface *surface, const Vec2 &relPos,
+                               UiViewModel::layoutFlags_t layoutFlags)
 {
 	if (surface) {
 		Vec2 adjustedPos = relPos;
-		adjustedPos += GetUiOrigin();
-		adjustedPos *= GetUiScale();
-		adjustedPos += GetUiOffset();
+		if (!(layoutFlags & UiViewModel::LayoutFlags::FLOATING)) {
+			adjustedPos += GetUiOrigin();
+			adjustedPos *= GetUiScale();
+			adjustedPos += GetUiOffset();
+		}
 
 		SDL_Rect destRect = { (MR_Int16)adjustedPos.x, (MR_Int16)adjustedPos.y, 0, 0 };
 		SDL_BlitSurface(surface, nullptr, SDL_GetVideoSurface(), &destRect);

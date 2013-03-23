@@ -25,6 +25,7 @@
 #	include <SDL_Pango.h>
 #endif
 
+#include "../UiViewModel.h"
 #include "../Display.h"
 
 #ifdef _WIN32
@@ -90,7 +91,8 @@ class MR_DllDeclare SdlDisplay : public Display
 	public:
 		// SDL-specific utilities.
 		static SDL_Surface *CreateHardwareSurface(int w, int h);
-		void DrawUiSurface(SDL_Surface *surface, const Vec2 &relPos);
+		void DrawUiSurface(SDL_Surface *surface, const Vec2 &relPos,
+			UiViewModel::layoutFlags_t layoutFlags=0);
 
 	private:
 		int width, height;

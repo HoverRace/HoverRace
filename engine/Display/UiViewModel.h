@@ -60,6 +60,7 @@ class MR_DllDeclare UiViewModel : public ViewModel
 		{
 			enum {
 				UNSCALED = 0x01,  ///< Don't scale the component to the UI viewport.
+				FLOATING = 0x02,  ///< Use absolute (screen-space) coordinates.
 			};
 		};
 		typedef MR_UInt32 layoutFlags_t;
@@ -117,7 +118,9 @@ class MR_DllDeclare UiViewModel : public ViewModel
 		 */
 		layoutFlags_t GetLayoutFlags() const { return layoutFlags; }
 
-		bool IsLayoutUnscaled() const { return layoutFlags & LayoutFlags::UNSCALED; }
+		// Convenience functions for querying layout flags.
+		layoutFlags_t IsLayoutUnscaled() const { return layoutFlags & LayoutFlags::UNSCALED; }
+		layoutFlags_t IsLayoutFloating() const { return layoutFlags & LayoutFlags::FLOATING; }
 
 	private:
 		Vec2 pos;

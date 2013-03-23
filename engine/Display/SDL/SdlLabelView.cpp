@@ -89,7 +89,8 @@ void SdlLabelView::PrepareRender()
 
 void SdlLabelView::Render()
 {
-	disp.DrawUiSurface(surface, model.GetAlignedPos(surface->w, surface->h));
+	disp.DrawUiSurface(surface, model.GetAlignedPos(surface->w, surface->h),
+		model.GetLayoutFlags());
 }
 
 void SdlLabelView::Update()
