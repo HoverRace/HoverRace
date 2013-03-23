@@ -74,9 +74,17 @@ void SdlFillBoxView::PrepareRender()
 {
 	if (!surface) {
 		const Vec2 &size = model.GetSize();
-		double uiScale = disp.GetUiScale();
+		double w = size.x;
+		double h = size.y;
+
+		if (!model.IsLayoutUnscaled()) {
+			double uiScale = disp.GetUiScale();
+			w *= uiScale;
+			h *= uiScale;
+		}
+
 		surface = disp.CreateHardwareSurface(
-			static_cast<int>(size.x * uiScale), static_cast<int>(size.y * uiScale));
+			static_cast<int>(w), static_cast<int>(h));
 
 		if (SDL_MUSTLOCK(surface)) SDL_LockSurface(surface);
 

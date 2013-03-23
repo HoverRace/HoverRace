@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include "../Util/MR_Types.h"
 #include "Vec.h"
 #include "ViewModel.h"
 
@@ -55,6 +56,14 @@ class MR_DllDeclare UiViewModel : public ViewModel
 			};
 		};
 		
+		struct LayoutFlags
+		{
+			enum {
+				UNSCALED = 0x01,  ///< Don't scale the component to the UI viewport.
+			};
+		};
+		typedef MR_UInt32 layoutFlags_t;
+
 		/**
 		 * Imagine the component pinned to the container with a thumbtack.
 		 * The thumbtack's position is at GetPos(), and the alignment determines
@@ -76,7 +85,9 @@ class MR_DllDeclare UiViewModel : public ViewModel
 		};
 
 	public:
-		UiViewModel() : SUPER(), pos(0, 0), alignment(Alignment::NW) { }
+		UiViewModel(layoutFlags_t layoutFlags=0) :
+			SUPER(), pos(0, 0), alignment(Alignment::NW),
+			layoutFlags(layoutFlags) { }
 		virtual ~UiViewModel() { }
 
 	public:
@@ -100,9 +111,18 @@ class MR_DllDeclare UiViewModel : public ViewModel
 
 		Vec2 GetAlignedPos(double w, double h) const;
 
+		/**
+		 * Retrieve the layout flags.
+		 * @see UiViewModel::LayoutFlags
+		 */
+		layoutFlags_t GetLayoutFlags() const { return layoutFlags; }
+
+		bool IsLayoutUnscaled() const { return layoutFlags & LayoutFlags::UNSCALED; }
+
 	private:
 		Vec2 pos;
 		Alignment::alignment_t alignment;
+		layoutFlags_t layoutFlags;
 };
 
 }  // namespace Display

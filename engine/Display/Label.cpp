@@ -35,11 +35,13 @@ namespace Display {
  * @param text The text.
  * @param font The font.
  * @param color The text foreground color (including alpha).
+ * @param layoutFlags Optional layout flags.
  */
 Label::Label(const std::string &text,
              const UiFont &font,
-             Color color) :
-	SUPER(),
+             Color color,
+             layoutFlags_t layoutFlags) :
+	SUPER(layoutFlags),
 	text(text),
 #	ifdef _WIN32
 		wtext((const wchar_t*)Str::UW(text)),

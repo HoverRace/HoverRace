@@ -103,7 +103,9 @@ void SdlLabelView::Update()
 		char *escapedBuf = g_markup_escape_text(s.c_str(), -1);
 
 		UiFont font = model.GetFont();
-		font.size *= disp.GetUiScale();
+		if (!model.IsLayoutUnscaled()) {
+			font.size *= disp.GetUiScale();
+		}
 
 		std::ostringstream oss;
 		oss << SelFmt<SEL_FMT_PANGO> <<
@@ -161,9 +163,13 @@ void SdlLabelView::Update()
 		SetWorldTransform(hdc, &xform);
 
 		const UiFont font = model.GetFont();
+		double fontSize = font.size * 100.0;
+		if (!model.IsLayoutUnscaled()) {
+			fontSize *= disp.GetUiScale();
+		}
+
 		HFONT stdFont = CreateFontW(
-			//TODO: Support fractional sizes.
-			static_cast<int>(font.size * 100.0 * disp.GetUiScale()),
+			static_cast<int>(fontSize),
 			0, 0, 0,
 			(font.style & UiFont::BOLD) ? FW_BOLD : FW_NORMAL,
 			(font.style & UiFont::ITALIC) ? TRUE : FALSE,

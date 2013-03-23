@@ -67,7 +67,8 @@ class MR_DllDeclare Label : public UiViewModel
 		};
 
 	public:
-		Label(const std::string &text, const UiFont &font, const Color color);
+		Label(const std::string &text, const UiFont &font, const Color color,
+			layoutFlags_t layoutFlags=0);
 		virtual ~Label();
 
 	public:
