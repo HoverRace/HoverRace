@@ -2,9 +2,9 @@
 # fetch.ps1
 #   Downloads, extracts, and patches.
 
-$srcVer = "1.2.14"
-$src = "SDL-$srcVer"
-$url = "http://www.libsdl.org/release/$src.zip"
+$srcVer = "2.0.0-6940"
+$src = "SDL-2.0"
+$url = "http://www.libsdl.org/tmp/$src.zip"
 $curDir = Get-Location
 $destFile = "$curDir\download\$src.zip"
 $srcDir = "$curDir\src"

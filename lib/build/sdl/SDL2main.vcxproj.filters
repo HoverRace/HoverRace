@@ -2,11 +2,11 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="src">
-      <UniqueIdentifier>{09ea4bb1-ff81-4144-9445-e7695ad15496}</UniqueIdentifier>
+      <UniqueIdentifier>{1389d0cc-35e5-4434-9996-3223d23e280a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\src\main\win32\SDL_win32_main.c">
+    <ClCompile Include="src\src\main\windows\SDL_windows_main.c">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
