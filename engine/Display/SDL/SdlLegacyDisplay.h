@@ -22,6 +22,7 @@
 #pragma once
 
 #include "../../VideoServices/VideoBuffer.h"
+#include "SdlDisplay.h"
 
 #ifdef _WIN32
 #	ifdef MR_ENGINE
@@ -41,11 +42,15 @@ class MR_DllDeclare SdlLegacyDisplay : public VideoServices::VideoBuffer
 {
 	typedef VideoServices::VideoBuffer SUPER;
 	public:
-		SdlLegacyDisplay(Display &display) : SUPER(display) { }
+		SdlLegacyDisplay(SdlDisplay &sdlDisplay) :
+			SUPER(sdlDisplay), sdlDisplay(sdlDisplay) { }
 		virtual ~SdlLegacyDisplay() { }
 
 	protected:
 		virtual void Flip();
+
+	private:
+		SdlDisplay &sdlDisplay;
 };
 
 }  // namespace SDL
