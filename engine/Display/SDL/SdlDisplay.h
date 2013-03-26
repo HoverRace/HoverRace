@@ -80,6 +80,8 @@ class MR_DllDeclare SdlDisplay : public Display
 		int GetScreenWidth() const { return width; }
 		int GetScreenHeight() const { return height; }
 
+		SDL_Window *GetWindow() const { return window; }
+		SDL_Renderer *GetRenderer() const { return renderer; }
 #		ifdef WITH_SDL_PANGO
 			/**
 			 * Retrieve the shared SDL_Pango rendering context.
