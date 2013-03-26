@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 
 #include "../Util/MR_Types.h"
 

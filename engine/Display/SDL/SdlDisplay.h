@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include <SDL2/SDL.h>
 #ifdef WITH_SDL_PANGO
 #	include <SDL_Pango.h>
 #endif
@@ -56,7 +57,7 @@ class MR_DllDeclare SdlDisplay : public Display
 {
 	typedef Display SUPER;
 	public:
-		SdlDisplay();
+		SdlDisplay(const std::string &windowTitle="");
 		virtual ~SdlDisplay();
 
 	public:
@@ -91,10 +92,13 @@ class MR_DllDeclare SdlDisplay : public Display
 	public:
 		// SDL-specific utilities.
 		static SDL_Surface *CreateHardwareSurface(int w, int h);
-		void DrawUiSurface(SDL_Surface *surface, const Vec2 &relPos,
+		void DrawUiTexture(SDL_Texture *texture, const Vec2 &relPos,
 			UiViewModel::layoutFlags_t layoutFlags=0);
 
 	private:
+		std::string windowTitle;
+		SDL_Window *window;
+		SDL_Renderer *renderer;
 		int width, height;
 		std::unique_ptr<VideoServices::VideoBuffer> legacyDisplay;
 #		ifdef WITH_SDL_PANGO

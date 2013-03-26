@@ -21,7 +21,7 @@
 
 #include "StdAfx.h"
 
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 #ifdef WITH_SDL_PANGO
 #	include <SDL_Pango.h>
 #endif
@@ -45,8 +45,14 @@ namespace HoverRace {
 namespace Display {
 namespace SDL {
 
-SdlDisplay::SdlDisplay() :
-	SUPER()
+/**
+ * Constructor.
+ * This will create a new window with the specified title.
+ * Initial size and position will be pulled from the Config.
+ * @param windowTitle The window title.
+ */
+SdlDisplay::SdlDisplay(const std::string &windowTitle) :
+	SUPER(), windowTitle(windowTitle), window(nullptr), renderer(nullptr)
 {
 	ApplyVideoMode();
 
@@ -64,8 +70,10 @@ SdlDisplay::SdlDisplay() :
 SdlDisplay::~SdlDisplay()
 {
 #	ifdef WITH_SDL_PANGO
-		SDLPango_FreeContext(pangoContext);
+		if (pangoContext) SDLPango_FreeContext(pangoContext);
 #	endif
+	if (renderer) SDL_DestroyRenderer(renderer);
+	if (window) SDL_DestroyWindow(window);
 }
 
 void SdlDisplay::AttachView(FillBox &model)
@@ -98,14 +106,17 @@ void SdlDisplay::OnDisplayConfigChanged()
 	// need to be reloaded.
 
 	if (resChanged) {
-		ApplyVideoMode();
+		//ApplyVideoMode();
+		width = vidCfg.xRes;
+		height = vidCfg.yRes;
+
 		SUPER::OnDisplayConfigChanged();
 	}
 }
 
 void SdlDisplay::Flip()
 {
-	SDL_Flip(SDL_GetVideoSurface());
+	SDL_RenderPresent(renderer);
 }
 
 /**
@@ -115,9 +126,14 @@ void SdlDisplay::ApplyVideoMode()
 {
 	Config::cfg_video_t &vidCfg = Config::GetInstance()->video;
 
-	if (SDL_SetVideoMode(vidCfg.xRes, vidCfg.yRes, 0,
-		SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE) == NULL)
+	if (!(window = SDL_CreateWindow(windowTitle.c_str(),
+		vidCfg.xPos, vidCfg.yPos, vidCfg.xRes, vidCfg.yRes,
+		SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE)))
 	{
+		throw Exception(SDL_GetError());
+	}
+
+	if (!(renderer = SDL_CreateRenderer(window, -1, 0))) {
 		throw Exception(SDL_GetError());
 	}
 
@@ -138,6 +154,7 @@ void SdlDisplay::ApplyVideoMode()
  */
 SDL_Surface *SdlDisplay::CreateHardwareSurface(int w, int h)
 {
+	/* TODO
 	SDL_Surface *vidSurface = SDL_GetVideoSurface();
 	SDL_PixelFormat *pfmt = vidSurface->format;
 
@@ -150,18 +167,20 @@ SDL_Surface *SdlDisplay::CreateHardwareSurface(int w, int h)
 	if (!retv) throw Exception(SDL_GetError());
 
 	return retv;
+	*/
+	throw UnimplementedExn("SdlDisplay::CreateHardwareSurface");
 }
 
 /**
- * Blit an SDL surface to the backbuffer.
- * @param surface The surface to blit (may be @c NULL).
+ * Blit an SDL texture to the backbuffer with the current layout state.
+ * @param texture The texture to blit (may be @c NULL).
  * @param relPos The UI-space position, relative to the current UI origin.
  * @param layoutFlags Optional layout flags, from the view model.
  */
-void SdlDisplay::DrawUiSurface(SDL_Surface *surface, const Vec2 &relPos,
+void SdlDisplay::DrawUiTexture(SDL_Texture *texture, const Vec2 &relPos,
                                UiViewModel::layoutFlags_t layoutFlags)
 {
-	if (surface) {
+	if (texture) {
 		Vec2 adjustedPos = relPos;
 		if (!(layoutFlags & UiViewModel::LayoutFlags::FLOATING)) {
 			adjustedPos += GetUiOrigin();
@@ -169,8 +188,10 @@ void SdlDisplay::DrawUiSurface(SDL_Surface *surface, const Vec2 &relPos,
 			adjustedPos += GetUiOffset();
 		}
 
-		SDL_Rect destRect = { (MR_Int16)adjustedPos.x, (MR_Int16)adjustedPos.y, 0, 0 };
-		SDL_BlitSurface(surface, nullptr, SDL_GetVideoSurface(), &destRect);
+		int w, h;
+		SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
+		SDL_Rect destRect = { (int)adjustedPos.x, (int)adjustedPos.y, w, h };
+		SDL_RenderCopy(renderer, texture, nullptr, &destRect);
 	}
 }
 
