@@ -22,8 +22,8 @@
 
 #include "StdAfx.h"
 
-#include <SDL/SDL.h>
-#include <SDL/SDL_syswm.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_syswm.h>
 #ifdef WITH_SDL_PANGO
 #	include <SDL_Pango.h>
 #endif
@@ -128,23 +128,24 @@ ClientApp::ClientApp() :
 		sysEnv->RunScript(initScript);
 	}
 
-	// With SDL we can only get the desktop resolution before the first call to
-	// SDL_SetVideoMode().
-	const SDL_VideoInfo *videoInfo = SDL_GetVideoInfo();
-	int desktopWidth = videoInfo->current_w;
-	int desktopHeight = videoInfo->current_h;
+	//TODO: Select which display to use.
+	SDL_DisplayMode desktopMode;
+	if (SDL_GetDesktopDisplayMode(0, &desktopMode) < 0) {
+		throw Exception(SDL_GetError());
+	}
 
 	// Create the main window and SDL surface.
 	//TODO: Select which display to use.
-	display = new Display::SDL::SdlDisplay();
-	display->OnDesktopModeChanged(desktopWidth, desktopHeight);
+	display = new Display::SDL::SdlDisplay(GetWindowTitle());
+	display->OnDesktopModeChanged(desktopMode.w, desktopMode.h);
 
 	// Set window position and icon (platform-dependent).
+	// We don't throw an exception if this fails since it's not critical.
+	//TODO: Move to SdlDisplay.
 	SDL_SysWMinfo wm;
-	SDL_VERSION(&wm.version);
-	if (SDL_GetWMInfo(&wm) != 0) {
+	if (SDL_GetWindowWMInfo(static_cast<Display::SDL::SdlDisplay*>(display)->GetWindow(), &wm)) {
 #		ifdef _WIN32
-			HWND hwnd = mainWnd = wm.window;
+			HWND hwnd = mainWnd = wm.info.win.window;
 			SetWindowPos(hwnd, HWND_TOP,
 				cfg->video.xPos, cfg->video.yPos, 0, 0,
 				SWP_NOSIZE);
@@ -174,8 +175,6 @@ ClientApp::ClientApp() :
 
 	controller = new InputEventController(mainWnd, uiInput);
 
-	RefreshTitleBar();
-
 	typedef Display::UiViewModel::LayoutFlags LayoutFlags;
 	fpsLbl = new Display::Label("FPS:",
 		Display::UiFont(cfg->GetDefaultFontName(), 20, Display::UiFont::BOLD),
@@ -200,7 +199,7 @@ ClientApp::~ClientApp()
 	SDL_Quit();
 }
 
-void ClientApp::RefreshTitleBar()
+std::string ClientApp::GetWindowTitle()
 {
 	Config *cfg = Config::GetInstance();
 
@@ -213,7 +212,7 @@ void ClientApp::RefreshTitleBar()
 		oss << " (" << _("silent mode") << ')';
 	}
 
-	SDL_WM_SetCaption(oss.str().c_str(), NULL);
+	return oss.str();
 }
 
 /**
@@ -349,8 +348,12 @@ void ClientApp::MainLoop()
 					quit = true;
 					break;
 
-				case SDL_VIDEORESIZE:
-					OnWindowResize(evt.resize.w, evt.resize.h);
+				case SDL_WINDOWEVENT:
+					switch (evt.window.event) {
+						case SDL_WINDOWEVENT_RESIZED:
+							OnWindowResize(evt.window.data1, evt.window.data2);
+							break;
+					}
 					break;
 
 				// Certain SDL events need to be processed by the SDL-OIS

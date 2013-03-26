@@ -54,13 +54,12 @@ class MR_DllDeclare SdlScreenFadeView : public SdlView<ScreenFade>
 {
 	typedef SdlView<ScreenFade> SUPER;
 	public:
-		SdlScreenFadeView(SdlDisplay &disp, ScreenFade &model);
-		virtual ~SdlScreenFadeView();
+		SdlScreenFadeView(SdlDisplay &disp, ScreenFade &model) :
+			SUPER(disp, model), opacityChanged(true), computedAlpha(0) { }
+		virtual ~SdlScreenFadeView() { }
 
 	public:
 		virtual void OnModelUpdate(int prop);
-	private:
-		void OnWindowResChange();
 
 	public:
 		virtual void PrepareRender();
@@ -70,10 +69,8 @@ class MR_DllDeclare SdlScreenFadeView : public SdlView<ScreenFade>
 		void Update();
 
 	private:
-		SDL_Surface *surface;
-		bool opacityChanged;  // Opacity can change without rebuilding surface.
-		bool opacityVisible;
-		boost::signals2::connection displayConfigChangedConn;
+		bool opacityChanged;
+		MR_UInt8 computedAlpha;
 };
 
 }  // namespace SDL

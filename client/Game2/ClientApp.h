@@ -66,7 +66,7 @@ class ClientApp : public GameDirector
 		virtual ~ClientApp();
 
 	private:
-		void RefreshTitleBar();
+		std::string GetWindowTitle();
 		void OnWindowResize(int w, int h);
 		void IncFrameCount();
 		void AdvanceScenes(Util::OS::timestamp_t tick);
