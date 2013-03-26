@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="ColorTools">
@@ -757,10 +757,10 @@
     <CustomBuild Include="..\lib\ois.dll">
       <Filter>Libraries</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\lib\sdlD.dll">
+    <CustomBuild Include="..\lib\SDL2D.dll">
       <Filter>Libraries</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\lib\sdl.dll">
+    <CustomBuild Include="..\lib\SDL2.dll">
       <Filter>Libraries</Filter>
     </CustomBuild>
   </ItemGroup>
