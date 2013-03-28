@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="ColorTools">
@@ -716,6 +716,9 @@
     <ClInclude Include="Display\SDL\SdlFillBoxView.h">
       <Filter>Display\SDL</Filter>
     </ClInclude>
+    <ClInclude Include="Display\UiLayoutFlags.h">
+      <Filter>Display</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\lib\alut.dll">
@@ -760,8 +763,6 @@
     <CustomBuild Include="..\lib\SDL2D.dll">
       <Filter>Libraries</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\lib\SDL2.dll">
-      <Filter>Libraries</Filter>
-    </CustomBuild>
+    <CustomBuild Include="..\lib\SDL.dll" />
   </ItemGroup>
 </Project>

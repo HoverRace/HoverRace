@@ -30,6 +30,7 @@
 
 #include "../../engine/Exception.h"
 #include "../../engine/Display/Label.h"
+#include "../../engine/Display/UiLayoutFlags.h"
 #include "../../engine/Display/SDL/SdlDisplay.h"
 #include "../../engine/MainCharacter/MainCharacter.h"
 #include "../../engine/Model/Track.h"
@@ -175,7 +176,7 @@ ClientApp::ClientApp() :
 
 	controller = new InputEventController(mainWnd, uiInput);
 
-	typedef Display::UiViewModel::LayoutFlags LayoutFlags;
+	namespace LayoutFlags = Display::UiLayoutFlags;
 	fpsLbl = new Display::Label("FPS:",
 		Display::UiFont(cfg->GetDefaultFontName(), 20, Display::UiFont::BOLD),
 		Display::Color(0xff, 0xff, 0x7f, 0x00),

@@ -15,6 +15,7 @@ libdisplay_la_SOURCES = \
 	ScreenFade.h \
 	UiFont.cpp \
 	UiFont.h \
+	UiLayoutFlags.h \
 	UiViewModel.cpp \
 	UiViewModel.h \
 	Vec.h \

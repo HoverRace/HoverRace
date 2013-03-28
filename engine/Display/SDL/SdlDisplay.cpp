@@ -178,7 +178,7 @@ SDL_Surface *SdlDisplay::CreateHardwareSurface(int w, int h)
  * @param layoutFlags Optional layout flags, from the view model.
  */
 void SdlDisplay::DrawUiTexture(SDL_Texture *texture, const Vec2 &relPos,
-                               UiViewModel::layoutFlags_t layoutFlags)
+                               uiLayoutFlags_t layoutFlags)
 {
 	if (texture) {
 		Vec2 adjustedPos = relPos;

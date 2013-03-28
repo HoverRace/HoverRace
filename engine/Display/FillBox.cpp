@@ -35,7 +35,7 @@ namespace Display {
  * @param color The color of the box (including alpha).
  * @param layoutFlags Optional layout flags.
  */
-FillBox::FillBox(const Vec2 &size, Color color, layoutFlags_t layoutFlags) :
+FillBox::FillBox(const Vec2 &size, Color color, uiLayoutFlags_t layoutFlags) :
 	SUPER(layoutFlags),
 	size(size), color(color)
 {
@@ -48,7 +48,7 @@ FillBox::FillBox(const Vec2 &size, Color color, layoutFlags_t layoutFlags) :
  * @param color The color of the box (including alpha).
  * @param layoutFlags Optional layout flags.
  */
-FillBox::FillBox(double w, double h, Color color, layoutFlags_t layoutFlags) :
+FillBox::FillBox(double w, double h, Color color, uiLayoutFlags_t layoutFlags) :
 	SUPER(layoutFlags),
 	size(Vec2(w, h)), color(color)
 {

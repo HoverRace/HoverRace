@@ -40,7 +40,7 @@ namespace Display {
 Label::Label(const std::string &text,
              const UiFont &font,
              Color color,
-             layoutFlags_t layoutFlags) :
+             uiLayoutFlags_t layoutFlags) :
 	SUPER(layoutFlags),
 	text(text),
 #	ifdef _WIN32

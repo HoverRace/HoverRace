@@ -63,8 +63,8 @@ class MR_DllDeclare FillBox : public UiViewModel
 		};
 
 	public:
-		FillBox(const Vec2 &size, const Color color, layoutFlags_t layoutFlags=0);
-		FillBox(double w, double h, const Color color, layoutFlags_t layoutFlags=0);
+		FillBox(const Vec2 &size, const Color color, uiLayoutFlags_t layoutFlags=0);
+		FillBox(double w, double h, const Color color, uiLayoutFlags_t layoutFlags=0);
 		virtual ~FillBox() { }
 
 	public:
