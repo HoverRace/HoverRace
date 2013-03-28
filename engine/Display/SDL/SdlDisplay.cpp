@@ -181,12 +181,7 @@ void SdlDisplay::DrawUiTexture(SDL_Texture *texture, const Vec2 &relPos,
                                uiLayoutFlags_t layoutFlags)
 {
 	if (texture) {
-		Vec2 adjustedPos = relPos;
-		if (!(layoutFlags & UiViewModel::LayoutFlags::FLOATING)) {
-			adjustedPos += GetUiOrigin();
-			adjustedPos *= GetUiScale();
-			adjustedPos += GetUiOffset();
-		}
+		Vec2 adjustedPos = LayoutUiPosition(relPos);
 
 		int w, h;
 		SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
