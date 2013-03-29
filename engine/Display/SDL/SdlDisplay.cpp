@@ -106,7 +106,7 @@ void SdlDisplay::OnDisplayConfigChanged()
 	// need to be reloaded.
 
 	if (resChanged) {
-		//ApplyVideoMode();
+		SDL_RenderSetViewport(renderer, nullptr);
 		width = vidCfg.xRes;
 		height = vidCfg.yRes;
 
