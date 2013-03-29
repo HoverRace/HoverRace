@@ -148,9 +148,6 @@ ClientApp::ClientApp() :
 	if (SDL_GetWindowWMInfo(static_cast<Display::SDL::SdlDisplay*>(display)->GetWindow(), &wm)) {
 #		ifdef _WIN32
 			HWND hwnd = mainWnd = wm.info.win.window;
-			SetWindowPos(hwnd, HWND_TOP,
-				cfg->video.xPos, cfg->video.yPos, 0, 0,
-				SWP_NOSIZE);
 
 			// Set icon.
 			// On Windows, the icon is embedded as a resource.
