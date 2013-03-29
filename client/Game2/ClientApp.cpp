@@ -144,6 +144,7 @@ ClientApp::ClientApp() :
 	// We don't throw an exception if this fails since it's not critical.
 	//TODO: Move to SdlDisplay.
 	SDL_SysWMinfo wm;
+	SDL_VERSION(&wm.version);
 	if (SDL_GetWindowWMInfo(static_cast<Display::SDL::SdlDisplay*>(display)->GetWindow(), &wm)) {
 #		ifdef _WIN32
 			HWND hwnd = mainWnd = wm.info.win.window;
