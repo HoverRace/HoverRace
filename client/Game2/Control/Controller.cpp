@@ -519,15 +519,20 @@ void InputEventController::InitInputManager(Util::OS::wnd_t mainWindow)
 	pl.insert(make_pair(string("w32_mouse"), string("DISCL_NONEXCLUSIVE")));
 
 	// this throws an exception on errors
-#	ifndef WITH_SDL_OIS_INPUT
-		mgr = InputManager::createInputSystem(pl);
-#	else
-		// Use the SDL-OIS bridge on Linux since SDL and OIS can't both
-		// capture input events in X.
-		SDL::SDLInputManager *sdlMgr = new SDL::SDLInputManager();
-		sdlMgr->_initialize(pl);
-		mgr = sdlMgr;
-#	endif
+	try {
+#		ifndef WITH_SDL_OIS_INPUT
+			mgr = InputManager::createInputSystem(pl);
+#		else
+			// Use the SDL-OIS bridge on Linux since SDL and OIS can't both
+			// capture input events in X.
+			SDL::SDLInputManager *sdlMgr = new SDL::SDLInputManager();
+			sdlMgr->_initialize(pl);
+			mgr = sdlMgr;
+#		endif
+	}
+	catch (OIS::Exception &ex) {
+		throw Exception(ex.what());
+	}
 
 	// enable addons... I assume they will be useful
 	mgr->enableAddOnFactory(InputManager::AddOn_All);
