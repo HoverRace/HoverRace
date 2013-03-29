@@ -61,16 +61,6 @@
 #include "../../engine/ColorTools/ColorTools.h"
 #include "../../engine/Util/Str.h"
 
-#ifdef WITH_SDL
-#	ifdef _WIN32
-#		ifdef _DEBUG
-#			pragma comment(lib, "SDLmainD")
-#		else
-#			pragma comment(lib, "SDLmain")
-#		endif
-#	endif
-#endif
-
 using namespace HoverRace::ResourceCompiler;
 using namespace HoverRace::Util;
 

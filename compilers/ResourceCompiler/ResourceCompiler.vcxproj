@@ -69,7 +69,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>.\..\..\Debug/ResourceCompiler.pdb</ProgramDatabaseFile>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>intl.lib;SDL2D.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>intl.lib;SDL2D.lib;SDL2mainD.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
