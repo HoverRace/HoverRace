@@ -21,7 +21,7 @@
 
 #include "StdAfx.h"
 
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 
 #ifdef WITH_SDL_PANGO
 #	include <glib.h>
@@ -47,7 +47,7 @@ static RGBQUAD RGB_WHITE = { 0xff, 0xff, 0xff, 0 };
 
 SdlLabelView::SdlLabelView(SdlDisplay &disp, Label &model) :
 	SUPER(disp, model),
-	surface(), width(0), height(0)
+	texture(), width(0), height(0)
 {
 	uiScaleChangedConnection = disp.GetUiScaleChangedSignal().connect(
 		std::bind(&SdlLabelView::OnUiScaleChanged, this));
@@ -56,8 +56,8 @@ SdlLabelView::SdlLabelView(SdlDisplay &disp, Label &model) :
 SdlLabelView::~SdlLabelView()
 {
 	uiScaleChangedConnection.disconnect();
-	if (surface) {
-		SDL_FreeSurface(surface);
+	if (texture) {
+		SDL_DestroyTexture(texture);
 	}
 }
 
@@ -67,35 +67,37 @@ void SdlLabelView::OnModelUpdate(int prop)
 		case Label::Props::COLOR:
 		case Label::Props::FONT:
 		case Label::Props::TEXT:
-			if (surface) {
-				SDL_FreeSurface(surface);
-				surface = nullptr;
+			if (texture) {
+				SDL_DestroyTexture(texture);
+				texture = nullptr;
 			}
+			break;
 	}
 }
 
 void SdlLabelView::OnUiScaleChanged()
 {
-	if (surface) {
-		SDL_FreeSurface(surface);
-		surface = nullptr;
+	if (texture) {
+		SDL_DestroyTexture(texture);
+		texture = nullptr;
 	}
 }
 
 void SdlLabelView::PrepareRender()
 {
-	if (!surface) Update();
+	if (!texture) Update();
 }
 
 void SdlLabelView::Render()
 {
-	disp.DrawUiSurface(surface, model.GetAlignedPos(surface->w, surface->h),
-		model.GetLayoutFlags());
+	int w, h;
+	SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
+	disp.DrawUiTexture(texture, model.GetAlignedPos(w, h), model.GetLayoutFlags());
 }
 
 void SdlLabelView::Update()
 {
-	if (surface) SDL_FreeSurface(surface);
+	if (texture) SDL_DestroyTexture(texture);
 
 	SDL_Surface *tempSurface;
 
@@ -272,7 +274,7 @@ void SdlLabelView::Update()
 #	endif
 
 	// Convert the surface to the display format.
-	surface = SDL_DisplayFormatAlpha(tempSurface);
+	texture = SDL_CreateTextureFromSurface(disp.GetRenderer(), tempSurface);
 	SDL_FreeSurface(tempSurface);
 }
 
