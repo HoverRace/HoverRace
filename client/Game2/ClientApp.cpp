@@ -173,6 +173,9 @@ ClientApp::ClientApp() :
 			*/
 #		endif
 	}
+	else {
+		throw Exception(SDL_GetError());
+	}
 
 	controller = new InputEventController(mainWnd, uiInput);
 
