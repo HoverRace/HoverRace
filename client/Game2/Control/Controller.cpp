@@ -10,13 +10,13 @@
 #	include "SDL/SDLInputManager.h"
 #endif
 
-#include "InputHandler.h"
+//#include "InputHandler.h"
 #include "UiHandler.h"
 
 #include "Controller.h"
 
 #include "ActionPerformers.h"
-#include "ConsoleActions.h"
+//#include "ConsoleActions.h"
 #include "ControlAction.h"
 #include "ObserverActions.h"
 
@@ -25,7 +25,6 @@
 using namespace HoverRace;
 using namespace HoverRace::Client::Control;
 using namespace HoverRace::Util;
-using namespace OIS;
 using HoverRace::Client::HoverScript::HighConsole;
 using HoverRace::Client::Observer;
 using namespace std;
@@ -43,17 +42,6 @@ InputEventController::InputEventController(Util::OS::wnd_t mainWindow, UiHandler
 	captureMap = "";
 	nextAvailableDisabledHash = 0;
 
-	kbd = NULL;
-	mouse = NULL;
-	joys = NULL;
-	joyIds = NULL;
-
-//	mouseXLast = 0;
-//	mouseYLast = 0;
-//	mouseZLast = 0;
-
-//	updated = false;
-
 	InitInputManager(mainWindow);
 	LoadConfig();
 	LoadMenuMap();
@@ -62,18 +50,32 @@ InputEventController::InputEventController(Util::OS::wnd_t mainWindow, UiHandler
 
 InputEventController::~InputEventController()
 {
-#	ifndef WITH_SDL_OIS_INPUT
-		InputManager::destroyInputSystem(mgr);
-#	else
-		SDL::SDLInputManager::destroyInputSystem(mgr);
-#	endif
-
-	delete[] joyIds;
-	delete[] joys;
 }
 
 void InputEventController::Poll() 
 {
+	// We assume that all pending input events are at the front of the queue.
+
+	SDL_Event events[16];
+	int numEvents;
+
+	while ((numEvents = SDL_PeepEvents(events, sizeof(events) / sizeof(SDL_Event),
+		SDL_GETEVENT, SDL_KEYDOWN, SDL_MULTIGESTURE) > 0))
+	{
+		for (int i = 0; i < numEvents; i++) {
+			SDL_Event &evt = events[i];
+			switch (evt.type) {
+				case SDL_KEYUP: OnKeyPressed(evt.key); break;
+				case SDL_KEYDOWN: OnKeyReleased(evt.key); break;
+				default:
+					std::ostringstream oss;
+					oss << "Unhandled input event type: " << evt.type << "\n";
+					OutputDebugString(oss.str().c_str());
+			}
+		}
+	}
+
+	/*
 	try {
 		if(kbd)
 			kbd->capture();
@@ -86,59 +88,43 @@ void InputEventController::Poll()
 	} catch(Exception&) { // this should not happen, hence our error message
 		ASSERT(FALSE);
 	}
+	*/
 }
 
-bool InputEventController::keyPressed(const KeyEvent& arg)
+bool InputEventController::OnKeyPressed(const SDL_KeyboardEvent& arg)
 {
 	// make left and right modifiers equal
-	OIS::KeyCode kc = arg.key;
+	SDL_Keycode kc = arg.keysym.sym;
 
-	if(kc == KC_RSHIFT)
-		kc = KC_LSHIFT;
-	else if(kc == KC_RCONTROL)
-		kc = KC_LCONTROL;
-	else if(kc == KC_RMENU)
-		kc = KC_LMENU;
+	if (kc == SDLK_RSHIFT)
+		kc = SDLK_LSHIFT;
+	else if (kc == SDLK_RCTRL)
+		kc = SDLK_LCTRL;
+	else if (kc == SDLK_RGUI)
+		kc = SDLK_LGUI;
 
-	// we will take the key mapping and then perform the event
-	// value will be the char representation of the keycode (or 1 if none exists)
-	int value = arg.text;
-	if(value == 0)
-		value = 1; // just in case there is no text
-	HandleEvent(HashKeyboardEvent(kc), value);
+	HandleEvent(HashKeyboardEvent(kc), 1);
 	return true;
 }
 
-bool InputEventController::keyReleased(const KeyEvent& arg)
+bool InputEventController::OnKeyReleased(const SDL_KeyboardEvent& arg)
 {
 	// make left and right modifiers equal
-	OIS::KeyCode kc = arg.key;
+	SDL_Keycode kc = arg.keysym.sym;
 
-	if(kc == KC_RSHIFT) {
-		/**
-		 * Combat absolutely bizarre DirectInput bug where pressing an arrow key when right shift is down
-		 * causes a key-up notification for right shift to be sent; while DirectInput lies about this,
-		 * GetKeyState() does not;
-		 * References:
-		 * 
-		 * http://ogre3d.org/forums/viewtopic.php?f=2&t=17229
-		 * http://forum.teamspeak.com/archive/index.php/t-90.html
-		 * http://www.wreckedgames.com/forum/index.php?topic=893.0
-		 */
-#ifdef WIN32
-		if((GetKeyState(VK_RSHIFT) & 0x80) > 0)
-			return true; // ignore faulty event
-#endif
-		kc = KC_LSHIFT;
-	} else if(kc == KC_RCONTROL)
-		kc = KC_LCONTROL;
-	else if(kc == KC_RMENU)
-		kc = KC_LMENU;
+	if (kc == SDLK_RSHIFT)
+		kc = SDLK_LSHIFT;
+	else if (kc == SDLK_RCTRL)
+		kc = SDLK_LCTRL;
+	else if (kc == SDLK_RGUI)
+		kc = SDLK_LGUI;
 
 	// value will be 0 (since the key was released)
 	HandleEvent(HashKeyboardEvent(kc), 0);
 	return true;
 }
+
+/*TODO
 
 bool InputEventController::mouseMoved(const MouseEvent& arg)
 {
@@ -218,6 +204,8 @@ bool InputEventController::povMoved(const JoyStickEvent& arg, int pov)
 	HandleEvent(HashJoystickPovEvent(arg, pov, arg.state.mPOV[pov].direction), 0);
 	return true;
 }
+
+*/
 
 int InputEventController::GetNextAvailableDisabledHash()
 {
@@ -362,6 +350,7 @@ void InputEventController::AddMenuMaps()
 
 void InputEventController::SetConsole(HighConsole* hc)
 {
+	/*TODO
 	for(ActionMap::iterator it = allActionMaps["console-keys"].begin(); it != allActionMaps["console-keys"].end(); it++) {
 		ConsoleAction* x = dynamic_cast<ConsoleAction*>(it->second.get());
 		if(x != NULL)
@@ -373,6 +362,7 @@ void InputEventController::SetConsole(HighConsole* hc)
 		if(x != NULL)
 			x->SetHighConsole(hc);
 	}
+	*/
 }
 
 void InputEventController::SaveConfig()
@@ -506,79 +496,7 @@ void InputEventController::LoadConfig()
 
 void InputEventController::InitInputManager(Util::OS::wnd_t mainWindow)
 {
-	// collect parameters to give to init InputManager
-	ostringstream wnd;
-	wnd.imbue(OS::stdLocale);
-	wnd << (size_t) mainWindow;
-
-	ParamList pl;
-	pl.insert(make_pair(string("WINDOW"), wnd.str()));
-
-	// mice
-	pl.insert(make_pair(string("w32_mouse"), string("DISCL_FOREGROUND")));
-	pl.insert(make_pair(string("w32_mouse"), string("DISCL_NONEXCLUSIVE")));
-
-	// this throws an exception on errors
-	try {
-#		ifndef WITH_SDL_OIS_INPUT
-			mgr = InputManager::createInputSystem(pl);
-#		else
-			// Use the SDL-OIS bridge on Linux since SDL and OIS can't both
-			// capture input events in X.
-			SDL::SDLInputManager *sdlMgr = new SDL::SDLInputManager();
-			sdlMgr->_initialize(pl);
-			mgr = sdlMgr;
-#		endif
-	}
-	catch (OIS::Exception &ex) {
-		throw Exception(ex.what());
-	}
-
-	// enable addons... I assume they will be useful
-	mgr->enableAddOnFactory(InputManager::AddOn_All);
-
-	// set up our input devices
-	kbd = (Keyboard *) mgr->createInputObject(OISKeyboard, true);
-	mouse = (Mouse *) mgr->createInputObject(OISMouse, true);
-
-	// we can have more than one joystick
-	numJoys = mgr->getNumberOfDevices(OISJoyStick);
-	joys = new JoyStick*[numJoys];
-	joyIds = new int[numJoys];
-
-	for(int i = 0; i < numJoys; i++) {
-		joys[i] = NULL;
-
-		try {
-			joys[i] = (JoyStick *) mgr->createInputObject(OISJoyStick, true);
-			joyIds[i] = ((Object *) joys[i])->getID();
-		} catch(OIS::Exception&) {
-			ASSERT(false); // maybe some logging would be good here... #105
-		}
-	}
-
-	// it is very nice that OIS does this for us!
-	if(kbd)
-		kbd->setEventCallback(this);
-	else
-		ASSERT(false); // this should be logged... wait until #105 is done
-
-	if(mouse) {
-		mouse->setEventCallback(this);
-//		mouseXLast = mouse->getMouseState().X.abs;
-//		mouseYLast = mouse->getMouseState().Y.abs;
-//		mouseZLast = mouse->getMouseState().Z.abs;
-	} else
-		ASSERT(false); // this should be logged... wait until #105 is done
-	
-	for(int i = 0; i < numJoys; i++) {
-		if(joys[i])
-			joys[i]->setEventCallback(this);
-		else
-			ASSERT(false); // this should be logged... wait until #105 is done
-	}
-
-	// now everything is set up and hopefully it will working forever!
+	//FIXME
 }
 
 void InputEventController::RebindKey(string mapname, int oldhash, int newhash)
@@ -614,12 +532,13 @@ void InputEventController::LoadMenuMap()
 
 void InputEventController::LoadConsoleMap()
 {
+	/*TODO
 	// add console-keys map, which is all keys
 	// console-keys map is special because it won't appear in the configuration panel,
 	// so we don't need to internationalize the name of it.
 	for(int i = (int) OIS::KC_ESCAPE; i < (int) OIS::KC_MEDIASELECT; i++) {
 		allActionMaps["console-keys"][HashKeyboardEvent((OIS::KeyCode) i)].reset(
-			new ConsoleKeyAction("" /* no name necessary */, 0 /* no ordering necessary */,
+			new ConsoleKeyAction("" /* no name necessary /, 0 /* no ordering necessary /,
 					NULL, (OIS::KeyCode) i));
 	}
 
@@ -634,14 +553,16 @@ void InputEventController::LoadConsoleMap()
 	cmap[config->ui.console_top].reset(new ConsoleScrollTopAction(_("Top"), 3, NULL));
 	cmap[config->ui.console_bottom].reset(new ConsoleScrollBottomAction(_("Bottom"), 4, NULL));
 	cmap[config->ui.console_help].reset(new ConsoleHelpAction(_("Help"), 5, NULL));
+	*/
 }
 
 // 0x0000xx00; xx = keycode
-int InputEventController::HashKeyboardEvent(const OIS::KeyCode& key)
+int InputEventController::HashKeyboardEvent(const SDL_Keycode& key)
 {
 	return (key % 256) << 8;
 }
 
+/*TODO
 // 0x004xx000; xx = mouse button
 int InputEventController::HashMouseButtonEvent(const MouseEvent& arg, MouseButtonID id)
 {
@@ -679,6 +600,7 @@ int InputEventController::HashJoystickAxisEvent(const JoyStickEvent& arg, int ax
 	return (0x00B00000 | ((arg.device->getID() % 256) << 12) |
 						 ((axis % 16) << 8) | ((direction % 16) << 4));
 }
+*/
 
 string InputEventController::HashToString(int hash)
 {
@@ -687,7 +609,9 @@ string InputEventController::HashToString(int hash)
 			if((hash & 0x0000FF00) == 0)
 				return "Disabled";
 			else
-				return kbd->getAsString((OIS::KeyCode) ((hash & 0x0000FF00) >> 8));
+				//TODO
+				return "Unknown";
+		/*TODO
 		case 1: // mouse event
 			if((hash & 0x00300000) == 0) {
 				// OIS has no nice "getAsString" for mice so we have to do it by hand
@@ -814,6 +738,7 @@ string InputEventController::HashToString(int hash)
 					(((hash & 0x000000F0) >> 4) == 1) ? '+' : '-');
 				return joyax;
 			}
+		*/
 	}
 
 	return _("Unknown");

@@ -10,13 +10,8 @@
 #include <vector>
 #include <string>
 
-#include "OIS/OIS.h"
-#include "OIS/OISInputManager.h"
-#include "OIS/OISException.h"
-#include "OIS/OISKeyboard.h"
-#include "OIS/OISMouse.h"
-#include "OIS/OISJoyStick.h"
-#include "OIS/OISEvents.h"
+#include <SDL2/SDL.h>
+
 #include "../../../engine/Util/Config.h"
 #include "../../../engine/Util/OS.h"
 #include "../../../engine/MainCharacter/MainCharacter.h"
@@ -43,9 +38,6 @@
 
 #define SET_CONTROL		(WM_USER + 1)
 
-// maybe later... TODO
-//#include "OIS/OISForceFeedback.h"
-
 namespace HoverRace {
 namespace Client {
 namespace Control {
@@ -54,8 +46,6 @@ class InputHandler;
 typedef std::shared_ptr<InputHandler> InputHandlerPtr;
 class UiHandler;
 typedef std::shared_ptr<UiHandler> UiHandlerPtr;
-
-using namespace OIS;
 
 /***
  * Contains information on the current control state.  Eventually, its members should
@@ -73,7 +63,7 @@ struct ControlState {
 	bool left;
 };
 
-class InputEventController : public KeyListener, public MouseListener, public JoyStickListener {
+class InputEventController {
 	public:
 		InputEventController(Util::OS::wnd_t mainWindow, UiHandlerPtr uiHandler);
 		~InputEventController();
@@ -82,8 +72,9 @@ class InputEventController : public KeyListener, public MouseListener, public Jo
 		typedef std::map<int, ControlActionPtr> ActionMap;
 
 		// event handlers
-		bool keyPressed(const KeyEvent &arg);
-		bool keyReleased(const KeyEvent &arg);
+		bool OnKeyPressed(const SDL_KeyboardEvent &arg);
+		bool OnKeyReleased(const SDL_KeyboardEvent &arg);
+		/*TODO
 		bool mouseMoved(const MouseEvent &arg);
 		bool mousePressed(const MouseEvent &arg, MouseButtonID id);
 		bool mouseReleased(const MouseEvent &arg, MouseButtonID id);
@@ -91,6 +82,7 @@ class InputEventController : public KeyListener, public MouseListener, public Jo
 		bool buttonReleased(const JoyStickEvent &arg, int button);
 		bool axisMoved(const JoyStickEvent &arg, int axis);
 		bool povMoved(const JoyStickEvent &arg, int pov);
+		*/
 
 		void Poll();
 		void HandleEvent(int hash, int value);
@@ -250,13 +242,15 @@ class InputEventController : public KeyListener, public MouseListener, public Jo
 		//   b: axis id
 		//   c: direction
 		int GetNextAvailableDisabledHash();
-		int HashKeyboardEvent(const OIS::KeyCode& arg);
+		int HashKeyboardEvent(const SDL_Keycode& arg);
+		/*TODO
 		int HashMouseButtonEvent(const MouseEvent& arg, MouseButtonID id);
 		int HashMouseAxisEvent(const MouseEvent& arg, int axis, int direction);
 		int HashJoystickAxisEvent(const JoyStickEvent& arg, int axis, int direction);
 		int HashJoystickSliderEvent(const JoyStickEvent& arg, int slider);
 		int HashJoystickButtonEvent(const JoyStickEvent& arg, int button);
 		int HashJoystickPovEvent(const JoyStickEvent& arg, int pov, int direction);
+		*/
 
 		/***
 		 * We store several different action maps which we can choose from.
@@ -266,17 +260,16 @@ class InputEventController : public KeyListener, public MouseListener, public Jo
 		std::vector<std::string> activeMaps;
 		std::map<std::string, ActionMap> allActionMaps;
 
-		/// OIS input manager does most of the work for us
-		InputManager *mgr;
-
 		UiHandlerPtr uiHandler;
 
 		// now the input devices
+		/*FIXME
 		Keyboard *kbd;
 		Mouse *mouse;
 		int numJoys;
 		JoyStick **joys;
 		int *joyIds;
+		*/
 
 		int nextAvailableDisabledHash;
 
