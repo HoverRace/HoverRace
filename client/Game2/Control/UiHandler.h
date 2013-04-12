@@ -22,10 +22,6 @@
 
 #pragma once
 
-#include "OIS/OISKeyboard.h"
-#include "OIS/OISMouse.h"
-#include "OIS/OISJoyStick.h"
-
 namespace HoverRace {
 namespace Client {
 namespace Control {
