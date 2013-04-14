@@ -182,6 +182,7 @@ std::string InputEventController::HashToString(int hash)
 			if((hash & 0x0000FF00) == 0)
 				return _("Disabled");
 			else
+				//TODO: Handle negative keycodes.
 				return keyToString.Lookup(static_cast<SDL_Keycode>((hash & 0x0000FF00) >> 8));
 		/*TODO
 		case 1: // mouse event

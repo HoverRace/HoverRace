@@ -575,6 +575,7 @@ void InputEventController::LoadConsoleMap()
 // 0x0000xx00; xx = keycode
 int InputEventController::HashKeyboardEvent(const SDL_Keycode& key)
 {
+	//TODO: Handle negative keycodes.
 	return (key % 256) << 8;
 }
 
