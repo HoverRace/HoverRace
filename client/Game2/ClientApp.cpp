@@ -113,7 +113,7 @@ ClientApp::ClientApp() :
 	DllObjectFactory::Init();
 	MainCharacter::MainCharacter::RegisterFactory();
 
-	if (SDL_Init(SDL_INIT_VIDEO) == -1)
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) == -1)
 		throw Exception("SDL initialization failed");
 #	ifdef WITH_SDL_PANGO
 		SDLPango_Init();
