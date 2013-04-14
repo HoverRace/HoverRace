@@ -24,6 +24,8 @@
 
 #include "StdAfx.h"
 
+#if 0
+
 #include "../../engine/Exception.h"
 
 #include "ConsoleActions.h"
@@ -119,3 +121,5 @@ void ConsoleHelpAction::operator()(int eventValue)
 			hc->ToggleHelp();
 	}
 }
+
+#endif
