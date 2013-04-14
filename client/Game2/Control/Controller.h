@@ -46,10 +46,6 @@
 #define CTL_WEAPON		7
 #define CTL_LOOKBACK	8
 
-#define AXIS_X			1
-#define AXIS_Y			2
-#define AXIS_Z			3
-
 #define UNASSIGNED		-1
 
 #define SET_CONTROL		(WM_USER + 1)
@@ -87,13 +83,22 @@ class InputEventController {
 		// Typedef for the maps of hashes to controls
 		typedef std::map<int, ControlActionPtr> ActionMap;
 
+		enum axis_t {
+			AXIS_X = 1,
+			AXIS_Y,
+			AXIS_Z,
+			AXIS_WHEEL_X,
+			AXIS_WHEEL_Y,
+		};
+
 		// event handlers
 		bool OnKeyPressed(const SDL_KeyboardEvent &arg);
 		bool OnKeyReleased(const SDL_KeyboardEvent &arg);
+		bool OnMouseMoved(const SDL_MouseMotionEvent &evt);
+		bool OnMousePressed(const SDL_MouseButtonEvent &evt);
+		bool OnMouseReleased(const SDL_MouseButtonEvent &evt);
+		bool OnMouseWheel(const SDL_MouseWheelEvent &evt);
 		/*TODO
-		bool mouseMoved(const MouseEvent &arg);
-		bool mousePressed(const MouseEvent &arg, MouseButtonID id);
-		bool mouseReleased(const MouseEvent &arg, MouseButtonID id);
 		bool buttonPressed(const JoyStickEvent &arg, int button);
 		bool buttonReleased(const JoyStickEvent &arg, int button);
 		bool axisMoved(const JoyStickEvent &arg, int axis);
@@ -263,9 +268,9 @@ class InputEventController {
 
 	public:
 		int HashKeyboardEvent(const SDL_Keycode& arg);
+		int HashMouseButtonEvent(const SDL_MouseButtonEvent& arg);
+		int HashMouseAxisEvent(axis_t axis, int direction);
 		/*TODO
-		int HashMouseButtonEvent(const MouseEvent& arg, MouseButtonID id);
-		int HashMouseAxisEvent(const MouseEvent& arg, int axis, int direction);
 		int HashJoystickAxisEvent(const JoyStickEvent& arg, int axis, int direction);
 		int HashJoystickSliderEvent(const JoyStickEvent& arg, int slider);
 		int HashJoystickButtonEvent(const JoyStickEvent& arg, int button);

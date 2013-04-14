@@ -193,28 +193,19 @@ std::string InputEventController::HashToString(int hash)
 				}
 			}
 
-		/*TODO
 		case 1: // mouse event
 			if((hash & 0x00300000) == 0) {
-				// OIS has no nice "getAsString" for mice so we have to do it by hand
 				switch((hash & 0x000FF000) >> 12) {
-					case MB_Left:
+					case SDL_BUTTON_LEFT:
 						return _("Left Mouse Btn");
-					case MB_Right:
+					case SDL_BUTTON_RIGHT:
 						return _("Right Mouse Btn");
-					case MB_Middle:
+					case SDL_BUTTON_MIDDLE:
 						return _("Middle Mouse Btn");
-					case MB_Button3:
-						return _("Mouse Button 3");
-					case MB_Button4:
+					case SDL_BUTTON_X1:
 						return _("Mouse Button 4");
-					case MB_Button5:
+					case SDL_BUTTON_X2:
 						return _("Mouse Button 5");
-					case MB_Button6:
-						return _("Mouse Button 6");
-					case MB_Button7:
-						return _("Mouse Button 7");
-					// apparently there is no support for more than 7 mouse buttons
 					default:
 						return _("Unknown Mouse Button");
 				}
@@ -235,6 +226,16 @@ std::string InputEventController::HashToString(int hash)
 							return _("Mouse Z+ Axis");
 						else
 							return _("Mouse Z- Axis");
+					case AXIS_WHEEL_X:
+						if(((hash & 0x0000F000) >> 12) == 1)
+							return _("Mouse Wheel Right");
+						else
+							return _("Mouse Wheel Left");
+					case AXIS_WHEEL_Y:
+						if(((hash & 0x0000F000) >> 12) == 1)
+							return _("Mouse Wheel Down");
+						else
+							return _("Mouse Wheen Up");
 					default:
 						if(((hash & 0x0000F000) >> 12) == 1)
 							return _("Unknown Mouse Axis +");
@@ -242,6 +243,7 @@ std::string InputEventController::HashToString(int hash)
 							return _("Unknown Mouse Axis -");
 				}
 			}
+		/*
 		case 2: // joystick event
 			char joynum[100];
 			sprintf(joynum, "%s %d", _("Joystick"), (hash & 0x000FF000) >> 12);

@@ -73,6 +73,11 @@ void InputEventController::ProcessInputEvent(const SDL_Event &evt)
 	switch (evt.type) {
 		case SDL_KEYDOWN: OnKeyPressed(evt.key); break;
 		case SDL_KEYUP: OnKeyReleased(evt.key); break;
+
+		case SDL_MOUSEMOTION: OnMouseMoved(evt.motion); break;
+		case SDL_MOUSEBUTTONDOWN: OnMousePressed(evt.button); break;
+		case SDL_MOUSEBUTTONUP: OnMouseReleased(evt.button); break;
+
 		default:
 			std::ostringstream oss;
 			oss << "Unhandled input event type: " << evt.type << "\n";
@@ -113,56 +118,51 @@ bool InputEventController::OnKeyReleased(const SDL_KeyboardEvent& arg)
 	return true;
 }
 
+bool InputEventController::OnMouseMoved(const SDL_MouseMotionEvent& evt)
+{
+	int x = evt.xrel;
+	int y = evt.yrel;
+
+	int ax = abs(x);
+	int ay = abs(y);
+
+	if (ax > 0)
+		HandleEvent(HashMouseAxisEvent(AXIS_X, (x > 0) ? 1 : 0), ax);
+	if (ay > 0)
+		HandleEvent(HashMouseAxisEvent(AXIS_Y, (y > 0) ? 1 : 0), ay);
+
+	return true;
+}
+
+bool InputEventController::OnMousePressed(const SDL_MouseButtonEvent& evt)
+{
+	HandleEvent(HashMouseButtonEvent(evt), 1);
+	return true;
+}
+
+bool InputEventController::OnMouseReleased(const SDL_MouseButtonEvent& evt)
+{
+	HandleEvent(HashMouseButtonEvent(evt), 0);
+	return true;
+}
+
+bool InputEventController::OnMouseWheel(const SDL_MouseWheelEvent &evt)
+{
+	int x = evt.x;
+	int y = evt.y;
+
+	int ax = abs(x);
+	int ay = abs(y);
+
+	if (ax > 0)
+		HandleEvent(HashMouseAxisEvent(AXIS_WHEEL_X, (x > 0) ? 1 : 0), ax);
+	if (ay > 0)
+		HandleEvent(HashMouseAxisEvent(AXIS_WHEEL_Y, (y > 0) ? 1 : 0), ay);
+
+	return true;
+}
+
 /*TODO
-
-bool InputEventController::mouseMoved(const MouseEvent& arg)
-{
-	// value will be how far the mouse moved
-	// examine the axes to find the maximum
-	int x, y, z, ax, ay, az;
-
-	if(arg.state.X.absOnly)
-		x = arg.state.X.abs;
-	else
-		x = arg.state.X.rel;
-
-	if(arg.state.Y.absOnly)
-		y = arg.state.Y.abs;
-	else
-		y = arg.state.Y.rel;
-
-	if(arg.state.Z.absOnly)
-		z = arg.state.Z.abs;
-	else
-		z = arg.state.Z.rel;
-
-	// find magnitudes
-	ax = abs(x);
-	ay = abs(y);
-	az = abs(z);
-
-	// send up to three events if necessary
-	if(ax > 0)
-		HandleEvent(HashMouseAxisEvent(arg, AXIS_X, (x > 0) ? 1 : 0), ax);
-	if(ay > 0)
-		HandleEvent(HashMouseAxisEvent(arg, AXIS_Y, (y > 0) ? 1 : 0), ay);
-	if(az > 0)
-		HandleEvent(HashMouseAxisEvent(arg, AXIS_Z, (z > 0) ? 1 : 0), az);
-
-	return true;
-}
-
-bool InputEventController::mousePressed(const MouseEvent& arg, MouseButtonID id)
-{
-	HandleEvent(HashMouseButtonEvent(arg, id), 1);
-	return true;
-}
-
-bool InputEventController::mouseReleased(const MouseEvent& arg, MouseButtonID id)
-{
-	HandleEvent(HashMouseButtonEvent(arg, id), 0);
-	return true;
-}
 
 bool InputEventController::buttonPressed(const JoyStickEvent& arg, int button)
 {
@@ -559,19 +559,19 @@ int InputEventController::HashKeyboardEvent(const SDL_Keycode& key)
 	}
 }
 
-/*TODO
 // 0x004xx000; xx = mouse button
-int InputEventController::HashMouseButtonEvent(const MouseEvent& arg, MouseButtonID id)
+int InputEventController::HashMouseButtonEvent(const SDL_MouseButtonEvent& arg)
 {
-	return (0x00400000 | ((id % 256) << 12));
+	return (0x00400000 | ((arg.button % 256) << 12));
 }
 
 // 0x005xy000; x = axis id, y = direction
-int InputEventController::HashMouseAxisEvent(const MouseEvent& arg, int axis, int direction)
+int InputEventController::HashMouseAxisEvent(axis_t axis, int direction)
 {
 	return (0x00500000 | ((axis % 16) << 16) | ((direction % 16) << 12));
 }
 
+/*TODO
 // 0x008xxyy0; x = joystick id, y = button id
 int InputEventController::HashJoystickButtonEvent(const JoyStickEvent& arg, int button)
 {
