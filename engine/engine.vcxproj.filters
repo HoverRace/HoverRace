@@ -754,15 +754,8 @@
     <CustomBuild Include="..\lib\zlib1.dll">
       <Filter>Libraries</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\lib\oisD.dll">
-      <Filter>Libraries</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\lib\ois.dll">
-      <Filter>Libraries</Filter>
-    </CustomBuild>
     <CustomBuild Include="..\lib\SDL2D.dll">
       <Filter>Libraries</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\lib\SDL.dll" />
   </ItemGroup>
 </Project>
