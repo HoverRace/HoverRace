@@ -258,6 +258,8 @@ class InputEventController {
 		//   b: axis id
 		//   c: direction
 		int GetNextAvailableDisabledHash();
+
+	public:
 		int HashKeyboardEvent(const SDL_Keycode& arg);
 		/*TODO
 		int HashMouseButtonEvent(const MouseEvent& arg, MouseButtonID id);
@@ -268,6 +270,7 @@ class InputEventController {
 		int HashJoystickPovEvent(const JoyStickEvent& arg, int pov, int direction);
 		*/
 
+	private:
 		/***
 		 * We store several different action maps which we can choose from.
 		 * They are referenced by string.  See ClearActionMap(), AddActionMap().
