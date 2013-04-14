@@ -180,7 +180,7 @@ std::string InputEventController::HashToString(int hash)
 	switch((hash & 0x00C00000) >> 22) {
 		case 0: // keyboard event
 			if((hash & 0x0000FF00) == 0)
-				return "Disabled";
+				return _("Disabled");
 			else
 				return keyToString.Lookup(static_cast<SDL_Keycode>((hash & 0x0000FF00) >> 8));
 		/*TODO
