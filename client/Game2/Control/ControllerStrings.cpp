@@ -178,12 +178,19 @@ std::string InputEventController::HashToString(int hash)
 	static KeyToString keyToString;
 
 	switch((hash & 0x00C00000) >> 22) {
-		case 0: // keyboard event
+		case 0: // keyboard keycode event
 			if((hash & 0x0000FF00) == 0)
 				return _("Disabled");
 			else
-				//TODO: Handle negative keycodes.
 				return keyToString.Lookup(static_cast<SDL_Keycode>((hash & 0x0000FF00) >> 8));
+
+		case 1: // keyboard scancode event
+			if((hash & 0x0000FF00) == 0)
+				return _("Disabled");
+			else
+				return keyToString.Lookup(
+					static_cast<SDL_Keycode>(((hash & 0x000FFF00) >> 8) | SDLK_SCANCODE_MASK));
+
 		/*TODO
 		case 1: // mouse event
 			if((hash & 0x00300000) == 0) {

@@ -125,8 +125,14 @@ namespace {
 	//TODO: Remove when the controller bits are moved into the engine.
 	int HashKeyboardEvent(SDL_Keycode key)
 	{
-		//TODO: Handle negative keycodes.
-		return (key % 256) << 8;
+		if (key & SDLK_SCANCODE_MASK) {
+			ASSERT((key ^ SDLK_SCANCODE_MASK) < 0xfff);
+			return (0x00100000 | (key & 0xfff)) << 8;
+		}
+		else {
+			ASSERT(key <= 0xff);
+			return (key % 0xff) << 8;
+		}
 	}
 }
 
