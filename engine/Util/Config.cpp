@@ -44,8 +44,7 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/foreach.hpp>
 
-#include <OIS/OISPrereqs.h>
-#include <OIS/OISKeyboard.h>
+#include <SDL2/SDL_keycode.h>
 
 #include "yaml/Emitter.h"
 #include "yaml/MapNode.h"
@@ -120,6 +119,16 @@ namespace fs = boost::filesystem;
 
 namespace HoverRace {
 namespace Util {
+
+namespace {
+	// Copied from InputEventController::HashKeyboardEvent.
+	//TODO: Remove when the controller bits are moved into the engine.
+	int HashKeyboardEvent(SDL_Keycode key)
+	{
+		//TODO: Handle negative keycodes.
+		return (key % 256) << 8;
+	}
+}
 
 const std::string Config::TRACK_EXT(".trk");
 
@@ -629,23 +638,23 @@ void Config::ResetToDefaults()
 
 	// Default controls.
 	// values pulled from OIS
-	controls_hash[0].motorOn  = OIS::KC_LSHIFT   << 8;
-	controls_hash[0].right    = OIS::KC_RIGHT    << 8;
-	controls_hash[0].left     = OIS::KC_LEFT     << 8;
-	controls_hash[0].jump     = OIS::KC_UP       << 8;
-	controls_hash[0].fire     = OIS::KC_LCONTROL << 8;
-	controls_hash[0].brake    = OIS::KC_DOWN     << 8;
-	controls_hash[0].weapon   = OIS::KC_TAB      << 8;
-	controls_hash[0].lookBack = OIS::KC_END      << 8;
+	controls_hash[0].motorOn  = HashKeyboardEvent(SDLK_LSHIFT);
+	controls_hash[0].right    = HashKeyboardEvent(SDLK_RIGHT);
+	controls_hash[0].left     = HashKeyboardEvent(SDLK_LEFT);
+	controls_hash[0].jump     = HashKeyboardEvent(SDLK_UP);
+	controls_hash[0].fire     = HashKeyboardEvent(SDLK_LCTRL);
+	controls_hash[0].brake    = HashKeyboardEvent(SDLK_DOWN);
+	controls_hash[0].weapon   = HashKeyboardEvent(SDLK_TAB);
+	controls_hash[0].lookBack = HashKeyboardEvent(SDLK_END);
 
-	controls_hash[1].motorOn  = OIS::KC_F        << 8;
-	controls_hash[1].right    = OIS::KC_D        << 8;
-	controls_hash[1].left     = OIS::KC_A        << 8;
-	controls_hash[1].jump     = OIS::KC_S        << 8;
-	controls_hash[1].fire     = OIS::KC_R        << 8;
-	controls_hash[1].brake    = OIS::KC_W        << 8;
-	controls_hash[1].weapon   = OIS::KC_Q        << 8;
-	controls_hash[1].lookBack = OIS::KC_I        << 8;
+	controls_hash[1].motorOn  = HashKeyboardEvent(SDLK_f);
+	controls_hash[1].right    = HashKeyboardEvent(SDLK_d);
+	controls_hash[1].left     = HashKeyboardEvent(SDLK_a);
+	controls_hash[1].jump     = HashKeyboardEvent(SDLK_s);
+	controls_hash[1].fire     = HashKeyboardEvent(SDLK_r);
+	controls_hash[1].brake    = HashKeyboardEvent(SDLK_w);
+	controls_hash[1].weapon   = HashKeyboardEvent(SDLK_q);
+	controls_hash[1].lookBack = HashKeyboardEvent(SDLK_i);
 
 	// set these to disabled (0x0000<code>)
 	controls_hash[2].motorOn  = 0;
@@ -666,21 +675,21 @@ void Config::ResetToDefaults()
 	controls_hash[3].weapon   = 14;
 	controls_hash[3].lookBack = 15;
 
-	camera_hash.zoomIn  = OIS::KC_INSERT << 8;
-	camera_hash.zoomOut = OIS::KC_DELETE << 8;
-	camera_hash.panUp   = OIS::KC_PGUP   << 8;
-	camera_hash.panDown = OIS::KC_PGDOWN << 8;
-	camera_hash.reset   = OIS::KC_HOME   << 8;
+	camera_hash.zoomIn  = HashKeyboardEvent(SDLK_INSERT);
+	camera_hash.zoomOut = HashKeyboardEvent(SDLK_DELETE);
+	camera_hash.panUp   = HashKeyboardEvent(SDLK_PAGEUP);
+	camera_hash.panDown = HashKeyboardEvent(SDLK_PAGEDOWN);
+	camera_hash.reset   = HashKeyboardEvent(SDLK_HOME);
 
-	ui.console_toggle = OIS::KC_F12      << 8;
-	ui.console_up     = OIS::KC_PGUP     << 8;
-	ui.console_down   = OIS::KC_PGDOWN   << 8;
-	ui.console_top    = OIS::KC_HOME     << 8;
-	ui.console_bottom = OIS::KC_END      << 8;
-	ui.console_help   = OIS::KC_F1       << 8;
+	ui.console_toggle = HashKeyboardEvent(SDLK_F12);
+	ui.console_up     = HashKeyboardEvent(SDLK_PAGEUP);
+	ui.console_down   = HashKeyboardEvent(SDLK_PAGEDOWN);
+	ui.console_top    = HashKeyboardEvent(SDLK_HOME);
+	ui.console_bottom = HashKeyboardEvent(SDLK_END);
+	ui.console_help   = HashKeyboardEvent(SDLK_F1);
 
-	ui.menu_ok = OIS::KC_RETURN << 8;
-	ui.menu_cancel = OIS::KC_ESCAPE << 8;
+	ui.menu_ok = HashKeyboardEvent(SDLK_RETURN);
+	ui.menu_cancel = HashKeyboardEvent(SDLK_ESCAPE);
 
 	runtime.silent = false;
 	runtime.aieeee = false;
