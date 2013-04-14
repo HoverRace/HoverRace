@@ -22,9 +22,7 @@
 
 #pragma once
 
-#include "OIS/OISKeyboard.h"
-#include "OIS/OISMouse.h"
-#include "OIS/OISJoyStick.h"
+#include <SDL2/SDL_keycode.h>
 
 namespace HoverRace {
 namespace Client {
@@ -37,9 +35,10 @@ class InputHandler
 		virtual ~InputHandler() { }
 
 	public:
-		virtual bool KeyPressed(OIS::KeyCode kc, unsigned int text) { return true; }
-		virtual bool KeyReleased(OIS::KeyCode kc, unsigned int text) { return true; }
+		virtual bool KeyPressed(SDL_Keycode kc, unsigned int text) { return true; }
+		virtual bool KeyReleased(SDL_Keycode kc, unsigned int text) { return true; }
 
+		/*TODO
 		virtual bool MouseMoved(const OIS::MouseState &state) { return true; }
 		virtual bool MousePressed(const OIS::MouseState &state, OIS::MouseButtonID id) { return true; }
 		virtual bool MouseReleased(const OIS::MouseState &state, OIS::MouseButtonID id) { return true; }
@@ -48,6 +47,7 @@ class InputHandler
 		virtual bool ButtonReleased(const OIS::JoyStickState &state, int button) { return true; }
 		virtual bool AxisMoved(const OIS::JoyStickState &state, int axis) { return true; }
 		virtual bool PovMoved(const OIS::JoyStickState &state, int pov) { return true; }
+		*/
 };
 typedef std::shared_ptr<InputHandler> InputHandlerPtr;
 
