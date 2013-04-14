@@ -337,15 +337,13 @@ void ClientApp::MainLoop()
 			"startup script with --exec."));
 	}
 
-	std::vector<SDL_Event> deferredEvents;
-
 	while (!quit) {
 		OS::timestamp_t tick = OS::Time();
 
 		while (SDL_PollEvent(&evt) && !quit) {
 			if (evt.type >= SDL_KEYDOWN && evt.type <= SDL_MULTIGESTURE) {
 				// Input events are routed to the InputEventController.
-				deferredEvents.push_back(evt);
+				controller->ProcessInputEvent(evt);
 				continue;
 			}
 			switch (evt.type) {
@@ -385,12 +383,6 @@ void ClientApp::MainLoop()
 			}
 		}
 		if (quit) break;
-
-		BOOST_FOREACH(SDL_Event &evt, deferredEvents) {
-			SDL_PushEvent(&evt);
-		}
-		deferredEvents.clear();
-		controller->Poll();
 
 		AdvanceScenes(tick);
 		RenderScenes();

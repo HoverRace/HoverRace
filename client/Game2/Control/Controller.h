@@ -100,7 +100,7 @@ class InputEventController {
 		bool povMoved(const JoyStickEvent &arg, int pov);
 		*/
 
-		void Poll();
+		void ProcessInputEvent(const SDL_Event &evt);
 		void HandleEvent(int hash, int value);
 
 		/***

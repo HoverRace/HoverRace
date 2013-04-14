@@ -68,43 +68,16 @@ InputEventController::~InputEventController()
 {
 }
 
-void InputEventController::Poll() 
+void InputEventController::ProcessInputEvent(const SDL_Event &evt)
 {
-	// We assume that all pending input events are at the front of the queue.
-
-	SDL_Event events[16];
-	int numEvents;
-
-	while ((numEvents = SDL_PeepEvents(events, sizeof(events) / sizeof(SDL_Event),
-		SDL_GETEVENT, SDL_KEYDOWN, SDL_MULTIGESTURE) > 0))
-	{
-		for (int i = 0; i < numEvents; i++) {
-			SDL_Event &evt = events[i];
-			switch (evt.type) {
-				case SDL_KEYUP: OnKeyPressed(evt.key); break;
-				case SDL_KEYDOWN: OnKeyReleased(evt.key); break;
-				default:
-					std::ostringstream oss;
-					oss << "Unhandled input event type: " << evt.type << "\n";
-					OutputDebugString(oss.str().c_str());
-			}
-		}
+	switch (evt.type) {
+		case SDL_KEYDOWN: OnKeyPressed(evt.key); break;
+		case SDL_KEYUP: OnKeyReleased(evt.key); break;
+		default:
+			std::ostringstream oss;
+			oss << "Unhandled input event type: " << evt.type << "\n";
+			OutputDebugString(oss.str().c_str());
 	}
-
-	/*
-	try {
-		if(kbd)
-			kbd->capture();
-		if(mouse)
-			mouse->capture();
-		if(joys) {
-			for(int i = 0; i < numJoys; i++)
-				joys[i]->capture();
-		}
-	} catch(Exception&) { // this should not happen, hence our error message
-		ASSERT(FALSE);
-	}
-	*/
 }
 
 bool InputEventController::OnKeyPressed(const SDL_KeyboardEvent& arg)
