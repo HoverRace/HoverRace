@@ -181,15 +181,17 @@ std::string InputEventController::HashToString(int hash)
 		case 0: // keyboard keycode event
 			if((hash & 0x0000FF00) == 0)
 				return _("Disabled");
-			else
-				return keyToString.Lookup(static_cast<SDL_Keycode>((hash & 0x0000FF00) >> 8));
-
-		case 1: // keyboard scancode event
-			if((hash & 0x0000FF00) == 0)
-				return _("Disabled");
-			else
-				return keyToString.Lookup(
-					static_cast<SDL_Keycode>(((hash & 0x000FFF00) >> 8) | SDLK_SCANCODE_MASK));
+			else {
+				if (hash & 0x100000) {
+					// Scancode as keycode.
+					return keyToString.Lookup(
+						static_cast<SDL_Keycode>(((hash & 0x000FFF00) >> 8) | SDLK_SCANCODE_MASK));
+				}
+				else {
+					// Simple keycode.
+					return keyToString.Lookup(static_cast<SDL_Keycode>((hash & 0x0000FF00) >> 8));
+				}
+			}
 
 		/*TODO
 		case 1: // mouse event

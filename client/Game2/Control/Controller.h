@@ -234,8 +234,10 @@ class InputEventController {
 		// [000000000000000000][aaaaaaaaaaaa]
 		//   a: next available disabled id
 		// keyboard event
-		// [00000000][00][000000][aaaaaaaa][00000000]
+		// [00000000][00][000000][aaaaaaaa][00000000]: keycode
 		//	 a: int keycode
+		// [00000000][00][01][aaaaaaaaaaaa][00000000]: scancode as keycode
+		//	 a: int scancode as keycode
 		// mouse event
 		// [00000000][01][00][aaaaaaaa][000000000000]: button press
 		//   a: button id
