@@ -337,14 +337,17 @@ void ClientApp::MainLoop()
 			"startup script with --exec."));
 	}
 
-#	ifdef WITH_SDL_OIS_INPUT
-		std::vector<SDL_Event> deferredEvents;
-#	endif
+	std::vector<SDL_Event> deferredEvents;
 
 	while (!quit) {
 		OS::timestamp_t tick = OS::Time();
 
 		while (SDL_PollEvent(&evt) && !quit) {
+			if (evt.type >= SDL_KEYDOWN && evt.type <= SDL_MULTIGESTURE) {
+				// Input events are routed to the InputEventController.
+				deferredEvents.push_back(evt);
+				continue;
+			}
 			switch (evt.type) {
 				case SDL_QUIT:
 					quit = true;
@@ -357,15 +360,6 @@ void ClientApp::MainLoop()
 							break;
 					}
 					break;
-
-				// Certain SDL events need to be processed by the SDL-OIS
-				// bridge, so we need to save them for later.
-#				ifdef WITH_SDL_OIS_INPUT
-					case SDL_KEYDOWN:
-					case SDL_KEYUP:
-						deferredEvents.push_back(evt);
-						break;
-#				endif
 
 				case SDL_USEREVENT:
 					switch (evt.user.code) {
@@ -392,12 +386,10 @@ void ClientApp::MainLoop()
 		}
 		if (quit) break;
 
-#		ifdef WITH_SDL_OIS_INPUT
-			BOOST_FOREACH(SDL_Event &evt, deferredEvents) {
-				SDL_PushEvent(&evt);
-			}
-			deferredEvents.clear();
-#		endif
+		BOOST_FOREACH(SDL_Event &evt, deferredEvents) {
+			SDL_PushEvent(&evt);
+		}
+		deferredEvents.clear();
 		controller->Poll();
 
 		AdvanceScenes(tick);
