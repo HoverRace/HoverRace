@@ -104,24 +104,6 @@
   <ItemGroup>
     <ClCompile Include="Game2\AboutDialog.cpp" />
     <ClCompile Include="Game2\Control\ControllerStrings.cpp" />
-    <ClCompile Include="Game2\Control\SDL\SDLInputManager.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="Game2\Control\SDL\SDLKeyboard.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="Game2\Control\SDL\SDLMouse.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="Game2\FolderViewer.cpp" />
     <ClCompile Include="Game2\FullscreenTest.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -207,10 +189,6 @@
     <ClInclude Include="..\include\compat\luabind_cxx11.h" />
     <ClInclude Include="Game2\AboutDialog.h" />
     <ClInclude Include="Game2\Control\Action.h" />
-    <ClInclude Include="Game2\Control\SDL\SDLInputManager.h" />
-    <ClInclude Include="Game2\Control\SDL\SDLKeyboard.h" />
-    <ClInclude Include="Game2\Control\SDL\SDLMouse.h" />
-    <ClInclude Include="Game2\Control\SDL\SDLPrereqs.h" />
     <ClInclude Include="Game2\FolderViewer.h" />
     <ClInclude Include="Game2\FullscreenTest.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>

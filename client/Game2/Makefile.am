@@ -13,13 +13,6 @@ hoverrace_LDADD = \
 	$(DEPS_LIBS)
 hoverrace_SOURCES = \
 	StdAfx.h \
-	Control/SDL/SDLInputManager.cpp \
-	Control/SDL/SDLInputManager.h \
-	Control/SDL/SDLKeyboard.cpp \
-	Control/SDL/SDLKeyboard.h \
-	Control/SDL/SDLMouse.cpp \
-	Control/SDL/SDLMouse.h \
-	Control/SDL/SDLPrereqs.h \
 	Control/Action.h \
 	Control/ActionPerformers.cpp \
 	Control/ActionPerformers.h \

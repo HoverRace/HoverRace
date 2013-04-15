@@ -22,10 +22,6 @@
 
 #include "StdAfx.h"
 
-#ifdef WITH_SDL_OIS_INPUT
-#	include "SDL/SDLInputManager.h"
-#endif
-
 //#include "InputHandler.h"
 #include "UiHandler.h"
 
