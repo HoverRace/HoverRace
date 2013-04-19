@@ -61,7 +61,7 @@ PKG_CHECK_MODULES(DEPS, [
 	openal >= 0.0.8
 	OIS >= 1.2.0
 	sdl >= 1.2.10
-	SDL_Pango >= 0.1.2
+	SDL2_PangoDraw >= 1.0.0
 ])
 AC_SUBST(DEPS_CFLAGS)
 AC_SUBST(DEPS_LIBS)
