@@ -60,7 +60,7 @@ PKG_CHECK_MODULES(DEPS, [
 	libxdg-basedir >= 1.0
 	openal >= 0.0.8
 	OIS >= 1.OIS2.0
-	sdl >= 1.2.10
+	sdl2 >= 2.0
 ])
 AC_SUBST(DEPS_CFLAGS)
 AC_SUBST(DEPS_LIBS)
