@@ -40,7 +40,7 @@ namespace {
 		protected:
 			void MapKey(SDL_Keycode key, std::string &&s)
 			{
-				lookup.emplace(lookup_t::value_type(key, std::forward<std::string>(s)));
+				lookup.insert(lookup_t::value_type(key, std::forward<std::string>(s)));
 			}
 		public:
 			KeyToString() : lookup(), unknown(_("Unknown"))
