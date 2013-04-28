@@ -77,7 +77,11 @@ void InputEventController::ProcessInputEvent(const SDL_Event &evt)
 		default:
 			std::ostringstream oss;
 			oss << "Unhandled input event type: " << evt.type << "\n";
-			OutputDebugString(oss.str().c_str());
+#			ifdef _WIN32
+				OutputDebugString(oss.str().c_str());
+#			else
+				std::cerr << oss.str() << std::endl;
+#			endif
 	}
 }
 
