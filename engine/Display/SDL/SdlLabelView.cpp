@@ -164,16 +164,16 @@ void SdlLabelView::Update()
 
 		TTF_Font *ttfFont = disp.LoadTtfFont(font);
 
-		//TODO: Handle newline.
-
 		const Color c = model.GetColor();
 		SDL_Color color;
 		color.r = c.bits.r;
 		color.g = c.bits.g;
 		color.b = c.bits.b;
 
-		tempSurface = TTF_RenderUTF8_Blended(ttfFont,
-			model.GetText().c_str(), color);
+		//TODO: Handle newlines ourselves.
+
+		tempSurface = TTF_RenderUTF8_Blended_Wrapped(ttfFont,
+			model.GetText().c_str(), color, 4096);
 		realWidth = tempSurface->w;
 		realHeight = tempSurface->h;
 
