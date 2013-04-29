@@ -196,6 +196,8 @@ Config::Config(int verMajor, int verMinor, int verPatch, int verBuild,
 
 #	ifdef WITH_SDL_PANGO
 		defaultFontName = "Arial,sans";
+#	elif defined(WITH_SDL_TTF)
+		defaultFontName = "freefont/FreeSans";
 #	elif defined(_WIN32)
 		defaultFontName = "Arial";
 #	else
