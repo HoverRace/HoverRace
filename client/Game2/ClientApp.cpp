@@ -26,6 +26,8 @@
 #include <SDL2/SDL_syswm.h>
 #ifdef WITH_SDL_PANGO
 #	include <SDL_Pango.h>
+#elif defined(WITH_SDL_TTF)
+#	include <SDL2/SDL_ttf.h>
 #endif
 
 #include "../../engine/Exception.h"
@@ -115,8 +117,13 @@ ClientApp::ClientApp() :
 
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) == -1)
 		throw Exception("SDL initialization failed");
+
 #	ifdef WITH_SDL_PANGO
 		SDLPango_Init();
+#	elif defined(WITH_SDL_TTF)
+		if (TTF_Init() == -1) {
+			throw Exception(TTF_GetError());
+		}
 #	endif
 
 	// Create the system console and execute the init script.
@@ -197,6 +204,8 @@ ClientApp::~ClientApp()
 	// Engine shutdown.
 	DllObjectFactory::Clean(FALSE);
 	SoundServer::Close();
+
+	TTF_Quit();
 
 	SDL_Quit();
 }
