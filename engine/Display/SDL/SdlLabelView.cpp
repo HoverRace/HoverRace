@@ -157,7 +157,12 @@ void SdlLabelView::Update()
 		}
 
 #	elif defined(WITH_SDL_TTF)
-		TTF_Font *ttfFont = disp.LoadTtfFont(model.GetFont());
+		UiFont font = model.GetFont();
+		if (!model.IsLayoutUnscaled()) {
+			font.size *= disp.GetUiScale();
+		}
+
+		TTF_Font *ttfFont = disp.LoadTtfFont(font);
 
 		//TODO: Handle newline.
 
@@ -169,6 +174,8 @@ void SdlLabelView::Update()
 
 		tempSurface = TTF_RenderUTF8_Blended(ttfFont,
 			model.GetText().c_str(), color);
+		realWidth = tempSurface->w;
+		realHeight = tempSurface->h;
 
 		// Blend the alpha component.
 		MR_UInt8 ca = c.bits.a;
