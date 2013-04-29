@@ -24,6 +24,8 @@
 #include <SDL2/SDL.h>
 #ifdef WITH_SDL_PANGO
 #	include <SDL_Pango.h>
+#elif defined(WITH_SDL_TTF)
+#	include <SDL2/SDL_ttf.h>
 #endif
 
 #include "../UiViewModel.h"
@@ -42,6 +44,7 @@
 namespace HoverRace {
 	namespace Display {
 		class Label;
+		class UiFont;
 	}
 }
 
@@ -82,6 +85,9 @@ class MR_DllDeclare SdlDisplay : public Display
 
 		SDL_Window *GetWindow() const { return window; }
 		SDL_Renderer *GetRenderer() const { return renderer; }
+
+	public:
+		// Text-renderer-specific utilities.
 #		ifdef WITH_SDL_PANGO
 			/**
 			 * Retrieve the shared SDL_Pango rendering context.
@@ -89,6 +95,8 @@ class MR_DllDeclare SdlDisplay : public Display
 			 * @see SdlLabelView
 			 */
 			SDLPango_Context *GetPangoContext() { return pangoContext; }
+#		elif defined(WITH_SDL_TTF)
+			TTF_Font *LoadTtfFont(const UiFont &font);
 #		endif
 
 	public:
@@ -105,6 +113,10 @@ class MR_DllDeclare SdlDisplay : public Display
 		std::unique_ptr<VideoServices::VideoBuffer> legacyDisplay;
 #		ifdef WITH_SDL_PANGO
 			SDLPango_Context *pangoContext;
+#		elif defined(WITH_SDL_TTF)
+			typedef std::pair<std::string, int> loadedFontKey;
+			typedef std::map<loadedFontKey, TTF_Font*> loadedFonts_t;
+			loadedFonts_t loadedFonts;
 #		endif
 };
 

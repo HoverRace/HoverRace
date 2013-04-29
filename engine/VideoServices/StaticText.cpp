@@ -202,6 +202,13 @@ void StaticText::Update()
 	SDL_FreeSurface(surface);
 	SDLPango_FreeContext(ctx);
 
+#elif defined(WITH_SDL_TTF)
+	// Unimplemented -- StaticText is being phased out in favor of Label.
+	width = 0;
+	height = 0;
+	realWidth = 0;
+	realHeight = 0;
+
 #elif defined(_WIN32)
 	HDC hdc = CreateCompatibleDC(NULL);
 
@@ -326,6 +333,8 @@ void StaticText::ApplyShadow()
  */
 void StaticText::Blt(int x, int y, Viewport2D *vp, bool centerX) const
 {
+	if (realWidth == 0 || realHeight == 0) return;
+
 	if (centerX) x -= width / 2;
 
 	int dw = vp->GetXRes();

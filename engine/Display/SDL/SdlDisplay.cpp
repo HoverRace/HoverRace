@@ -27,10 +27,12 @@
 #endif
 
 #include "../../Util/Config.h"
+#include "../../Util/Str.h"
 #include "../../Exception.h"
 #include "../FillBox.h"
 #include "../Label.h"
 #include "../ScreenFade.h"
+#include "../UiFont.h"
 #include "SdlFillBoxView.h"
 #include "SdlLabelView.h"
 #include "SdlScreenFadeView.h"
@@ -71,6 +73,10 @@ SdlDisplay::~SdlDisplay()
 {
 #	ifdef WITH_SDL_PANGO
 		if (pangoContext) SDLPango_FreeContext(pangoContext);
+#	elif defined(WITH_SDL_TTF)
+		BOOST_FOREACH(auto &entry, loadedFonts) {
+			TTF_CloseFont(entry.second);
+		}
 #	endif
 	if (renderer) SDL_DestroyRenderer(renderer);
 	if (window) SDL_DestroyWindow(window);
@@ -143,6 +149,48 @@ void SdlDisplay::ApplyVideoMode()
 	width = vidCfg.xRes;
 	height = vidCfg.yRes;
 }
+
+#ifdef WITH_SDL_TTF
+/**
+ * Load the TTF font for a given name and size.
+ * The font is cached for future retrievals.
+ * @param font The font specification.
+ * @return The loaded SDL_ttf font (never @c nullptr).
+ * @throws HoverRace::Exception The font could not be loaded.
+ */
+TTF_Font *SdlDisplay::LoadTtfFont(const UiFont &font)
+{
+	// Scale the font size to match the DPI we use in SDL_Pango.
+	// SDL_ttf always assumes a DPI of 75.
+	int size = font.size * 60 / 75;
+
+	std::string fullFontName = font.name;
+	if (font.style & UiFont::Style::BOLD) fullFontName += "Bold";
+	if (font.style & UiFont::Style::ITALIC) fullFontName += "Oblique";
+	fullFontName += ".ttf";
+	loadedFontKey key(fullFontName, size);
+
+	auto iter = loadedFonts.find(key);
+	if (iter == loadedFonts.end()) {
+		Config *cfg = Config::GetInstance();
+		OS::path_t fontPath = cfg->GetMediaPath();
+		fontPath /= Str::UP("fonts");
+		fontPath /= Str::UP(fullFontName);
+
+		TTF_Font *retv = TTF_OpenFont((const char*)Str::PU(fontPath), size);
+		if (!retv) {
+			throw Exception(TTF_GetError());
+		}
+
+		loadedFonts.insert(loadedFonts_t::value_type(key, retv));
+
+		return retv;
+	}
+	else {
+		return iter->second;
+	}
+}
+#endif
 
 /**
  * Create a screen-compatible hardware surface.

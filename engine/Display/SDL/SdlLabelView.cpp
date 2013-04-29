@@ -26,6 +26,8 @@
 #ifdef WITH_SDL_PANGO
 #	include <glib.h>
 #	include <SDL_Pango.h>
+#elif defined(WITH_SDL_TTF)
+#	include <SDL2/SDL_ttf.h>
 #endif
 
 #include "../../Util/SelFmt.h"
@@ -142,6 +144,34 @@ void SdlLabelView::Update()
 		MR_UInt8 ca = c.bits.a;
 
 		// Blend the alpha component from the label color.
+		if (ca != 0xff) {
+			MR_UInt8 *row = (MR_UInt8*)tempSurface->pixels;
+			for (int y = 0; y < height; y++) {
+				MR_UInt8 *buf = row;
+				for (int x = 0; x < width; x++) {
+					*buf = (*buf * ca) / 255;
+					buf += 4;
+				}
+				row += tempSurface->pitch;
+			}
+		}
+
+#	elif defined(WITH_SDL_TTF)
+		TTF_Font *ttfFont = disp.LoadTtfFont(model.GetFont());
+
+		//TODO: Handle newline.
+
+		const Color c = model.GetColor();
+		SDL_Color color;
+		color.r = c.bits.r;
+		color.g = c.bits.g;
+		color.b = c.bits.b;
+
+		tempSurface = TTF_RenderUTF8_Blended(ttfFont,
+			model.GetText().c_str(), color);
+
+		// Blend the alpha component.
+		MR_UInt8 ca = c.bits.a;
 		if (ca != 0xff) {
 			MR_UInt8 *row = (MR_UInt8*)tempSurface->pixels;
 			for (int y = 0; y < height; y++) {
