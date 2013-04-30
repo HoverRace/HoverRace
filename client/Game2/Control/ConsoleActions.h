@@ -22,6 +22,8 @@
 // and limitations under the License.
 //
 
+#if 0
+
 #ifndef __CONTROL_ACTIONS_H
 #define __CONTROL_ACTIONS_H
 
@@ -173,5 +175,7 @@ class ConsoleHelpAction : public ConsoleAction {
 } // namespace Control
 } // namespace Client
 } // namespace HoverRace
+
+#endif
 
 #endif

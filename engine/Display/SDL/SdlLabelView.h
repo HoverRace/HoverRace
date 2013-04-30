@@ -64,7 +64,7 @@ class MR_DllDeclare SdlLabelView : public SdlView<Label>
 		void Update();
 
 	private:
-		SDL_Surface *surface;
+		SDL_Texture *texture;
 		int width;
 		int height;
 		int realWidth;

@@ -21,11 +21,13 @@
 
 #include "StdAfx.h"
 
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 
 #ifdef WITH_SDL_PANGO
 #	include <glib.h>
 #	include <SDL_Pango.h>
+#elif defined(WITH_SDL_TTF)
+#	include <SDL2/SDL_ttf.h>
 #endif
 
 #include "../../Util/SelFmt.h"
@@ -47,7 +49,7 @@ static RGBQUAD RGB_WHITE = { 0xff, 0xff, 0xff, 0 };
 
 SdlLabelView::SdlLabelView(SdlDisplay &disp, Label &model) :
 	SUPER(disp, model),
-	surface(), width(0), height(0)
+	texture(), width(0), height(0)
 {
 	uiScaleChangedConnection = disp.GetUiScaleChangedSignal().connect(
 		std::bind(&SdlLabelView::OnUiScaleChanged, this));
@@ -56,8 +58,8 @@ SdlLabelView::SdlLabelView(SdlDisplay &disp, Label &model) :
 SdlLabelView::~SdlLabelView()
 {
 	uiScaleChangedConnection.disconnect();
-	if (surface) {
-		SDL_FreeSurface(surface);
+	if (texture) {
+		SDL_DestroyTexture(texture);
 	}
 }
 
@@ -67,35 +69,37 @@ void SdlLabelView::OnModelUpdate(int prop)
 		case Label::Props::COLOR:
 		case Label::Props::FONT:
 		case Label::Props::TEXT:
-			if (surface) {
-				SDL_FreeSurface(surface);
-				surface = nullptr;
+			if (texture) {
+				SDL_DestroyTexture(texture);
+				texture = nullptr;
 			}
+			break;
 	}
 }
 
 void SdlLabelView::OnUiScaleChanged()
 {
-	if (surface) {
-		SDL_FreeSurface(surface);
-		surface = nullptr;
+	if (texture) {
+		SDL_DestroyTexture(texture);
+		texture = nullptr;
 	}
 }
 
 void SdlLabelView::PrepareRender()
 {
-	if (!surface) Update();
+	if (!texture) Update();
 }
 
 void SdlLabelView::Render()
 {
-	disp.DrawUiSurface(surface, model.GetAlignedPos(surface->w, surface->h),
-		model.GetLayoutFlags());
+	int w, h;
+	SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
+	disp.DrawUiTexture(texture, model.GetAlignedPos(w, h), model.GetLayoutFlags());
 }
 
 void SdlLabelView::Update()
 {
-	if (surface) SDL_FreeSurface(surface);
+	if (texture) SDL_DestroyTexture(texture);
 
 	SDL_Surface *tempSurface;
 
@@ -140,6 +144,41 @@ void SdlLabelView::Update()
 		MR_UInt8 ca = c.bits.a;
 
 		// Blend the alpha component from the label color.
+		if (ca != 0xff) {
+			MR_UInt8 *row = (MR_UInt8*)tempSurface->pixels;
+			for (int y = 0; y < height; y++) {
+				MR_UInt8 *buf = row;
+				for (int x = 0; x < width; x++) {
+					*buf = (*buf * ca) / 255;
+					buf += 4;
+				}
+				row += tempSurface->pitch;
+			}
+		}
+
+#	elif defined(WITH_SDL_TTF)
+		UiFont font = model.GetFont();
+		if (!model.IsLayoutUnscaled()) {
+			font.size *= disp.GetUiScale();
+		}
+
+		TTF_Font *ttfFont = disp.LoadTtfFont(font);
+
+		const Color c = model.GetColor();
+		SDL_Color color;
+		color.r = c.bits.r;
+		color.g = c.bits.g;
+		color.b = c.bits.b;
+
+		//TODO: Handle newlines ourselves.
+
+		tempSurface = TTF_RenderUTF8_Blended_Wrapped(ttfFont,
+			model.GetText().c_str(), color, 4096);
+		realWidth = tempSurface->w;
+		realHeight = tempSurface->h;
+
+		// Blend the alpha component.
+		MR_UInt8 ca = c.bits.a;
 		if (ca != 0xff) {
 			MR_UInt8 *row = (MR_UInt8*)tempSurface->pixels;
 			for (int y = 0; y < height; y++) {
@@ -272,7 +311,7 @@ void SdlLabelView::Update()
 #	endif
 
 	// Convert the surface to the display format.
-	surface = SDL_DisplayFormatAlpha(tempSurface);
+	texture = SDL_CreateTextureFromSurface(disp.GetRenderer(), tempSurface);
 	SDL_FreeSurface(tempSurface);
 }
 

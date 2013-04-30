@@ -54,23 +54,16 @@ class MR_DllDeclare SdlFillBoxView : public SdlView<FillBox>
 {
 	typedef SdlView<FillBox> SUPER;
 	public:
-		SdlFillBoxView(SdlDisplay &disp, FillBox &model);
-		virtual ~SdlFillBoxView();
+		SdlFillBoxView(SdlDisplay &disp, FillBox &model) :
+			SUPER(disp, model) { }
+		virtual ~SdlFillBoxView() { }
 
 	public:
-		virtual void OnModelUpdate(int prop);
-		void OnUiScaleChanged();
+		virtual void OnModelUpdate(int prop) { }
 
 	public:
-		virtual void PrepareRender();
+		virtual void PrepareRender() { }
 		virtual void Render();
-
-	private:
-		void Update();
-
-	private:
-		SDL_Surface *surface;
-		boost::signals2::connection uiScaleChangedConnection;
 };
 
 }  // namespace SDL

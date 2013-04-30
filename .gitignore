@@ -279,14 +279,14 @@ memory_leak_report.txt
 /lib/build/ois/download/*.tar
 /lib/build/ois/download/*.zip
 
-# /lib/build/sdl/
-/lib/build/sdl/Debug
-/lib/build/sdl/Release
-/lib/build/sdl/src
-/lib/build/sdl/old
+# /lib/build/sdl2/
+/lib/build/sdl2/Debug
+/lib/build/sdl2/Release
+/lib/build/sdl2/src
+/lib/build/sdl2/old
 
-# /lib/build/sdl/download/
-/lib/build/sdl/download/*.zip
+# /lib/build/sdl2/download/
+/lib/build/sdl2/download/*.zip
 
 # /lib/build/yaml/
 /lib/build/yaml/Debug

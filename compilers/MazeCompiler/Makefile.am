@@ -8,7 +8,7 @@ hr_mazecompiler_LDADD = \
 	$(BOOST_SYSTEM_LDFLAGS) $(BOOST_SYSTEM_LIBS) \
 	$(BOOST_THREADS_LDFLAGS) $(BOOST_THREADS_LIBS) \
 	$(LUA_LIBS) \
-	$(DEPS_LIBS)
+	$(DEPS_LIBS) $(TEXT_DEPS_LIBS)
 hr_mazecompiler_SOURCES = \
 	StdAfx.h \
 	main.cpp

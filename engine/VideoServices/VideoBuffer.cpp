@@ -22,7 +22,7 @@
 
 #include "StdAfx.h"
 
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 
 #include "../Display/Display.h"
 #include "../Exception.h"
@@ -79,10 +79,13 @@ void VideoBuffer::OnDesktopModeChange(int width, int height)
  */
 void VideoBuffer::OnWindowResChange()
 {
-	SDL_Surface *surface = SDL_GetVideoSurface();
-	width = surface->w;
-	height = surface->h;
-	pitch = surface->pitch;
+	Config::cfg_video_t &vidCfg = Config::GetInstance()->video;
+	width = vidCfg.xRes;
+	height = vidCfg.yRes;
+	pitch = width;
+
+	int remainder = width % 4;
+	if (remainder > 0) pitch += (4 - remainder);
 
 	// The size of the legacy surface matches the screen surface,
 	// just has a different bit depth.
@@ -153,7 +156,7 @@ void VideoBuffer::SetBackgroundPalette(std::unique_ptr<MR_UInt8[]> &palette)
 void VideoBuffer::AssignPalette()
 {
 	if (legacySurface != NULL) {
-		SDL_SetColors(legacySurface, palette, 0, 256);
+		SDL_SetPaletteColors(legacySurface->format->palette, palette, 0, 256);
 	}
 }
 

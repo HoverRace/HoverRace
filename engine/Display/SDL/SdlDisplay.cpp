@@ -21,16 +21,18 @@
 
 #include "StdAfx.h"
 
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 #ifdef WITH_SDL_PANGO
 #	include <SDL_Pango.h>
 #endif
 
 #include "../../Util/Config.h"
+#include "../../Util/Str.h"
 #include "../../Exception.h"
 #include "../FillBox.h"
 #include "../Label.h"
 #include "../ScreenFade.h"
+#include "../UiFont.h"
 #include "SdlFillBoxView.h"
 #include "SdlLabelView.h"
 #include "SdlScreenFadeView.h"
@@ -45,8 +47,14 @@ namespace HoverRace {
 namespace Display {
 namespace SDL {
 
-SdlDisplay::SdlDisplay() :
-	SUPER()
+/**
+ * Constructor.
+ * This will create a new window with the specified title.
+ * Initial size and position will be pulled from the Config.
+ * @param windowTitle The window title.
+ */
+SdlDisplay::SdlDisplay(const std::string &windowTitle) :
+	SUPER(), windowTitle(windowTitle), window(nullptr), renderer(nullptr)
 {
 	ApplyVideoMode();
 
@@ -64,8 +72,14 @@ SdlDisplay::SdlDisplay() :
 SdlDisplay::~SdlDisplay()
 {
 #	ifdef WITH_SDL_PANGO
-		SDLPango_FreeContext(pangoContext);
+		if (pangoContext) SDLPango_FreeContext(pangoContext);
+#	elif defined(WITH_SDL_TTF)
+		BOOST_FOREACH(auto &entry, loadedFonts) {
+			TTF_CloseFont(entry.second);
+		}
 #	endif
+	if (renderer) SDL_DestroyRenderer(renderer);
+	if (window) SDL_DestroyWindow(window);
 }
 
 void SdlDisplay::AttachView(FillBox &model)
@@ -98,14 +112,17 @@ void SdlDisplay::OnDisplayConfigChanged()
 	// need to be reloaded.
 
 	if (resChanged) {
-		ApplyVideoMode();
+		SDL_RenderSetViewport(renderer, nullptr);
+		width = vidCfg.xRes;
+		height = vidCfg.yRes;
+
 		SUPER::OnDisplayConfigChanged();
 	}
 }
 
 void SdlDisplay::Flip()
 {
-	SDL_Flip(SDL_GetVideoSurface());
+	SDL_RenderPresent(renderer);
 }
 
 /**
@@ -115,9 +132,14 @@ void SdlDisplay::ApplyVideoMode()
 {
 	Config::cfg_video_t &vidCfg = Config::GetInstance()->video;
 
-	if (SDL_SetVideoMode(vidCfg.xRes, vidCfg.yRes, 0,
-		SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_RESIZABLE) == NULL)
+	if (!(window = SDL_CreateWindow(windowTitle.c_str(),
+		vidCfg.xPos, vidCfg.yPos, vidCfg.xRes, vidCfg.yRes,
+		SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE)))
 	{
+		throw Exception(SDL_GetError());
+	}
+
+	if (!(renderer = SDL_CreateRenderer(window, -1, 0))) {
 		throw Exception(SDL_GetError());
 	}
 
@@ -127,6 +149,48 @@ void SdlDisplay::ApplyVideoMode()
 	width = vidCfg.xRes;
 	height = vidCfg.yRes;
 }
+
+#ifdef WITH_SDL_TTF
+/**
+ * Load the TTF font for a given name and size.
+ * The font is cached for future retrievals.
+ * @param font The font specification.
+ * @return The loaded SDL_ttf font (never @c nullptr).
+ * @throws HoverRace::Exception The font could not be loaded.
+ */
+TTF_Font *SdlDisplay::LoadTtfFont(const UiFont &font)
+{
+	// Scale the font size to match the DPI we use in SDL_Pango.
+	// SDL_ttf always assumes a DPI of 75.
+	int size = font.size * 60 / 75;
+
+	std::string fullFontName = font.name;
+	if (font.style & UiFont::Style::BOLD) fullFontName += "Bold";
+	if (font.style & UiFont::Style::ITALIC) fullFontName += "Oblique";
+	fullFontName += ".ttf";
+	loadedFontKey key(fullFontName, size);
+
+	auto iter = loadedFonts.find(key);
+	if (iter == loadedFonts.end()) {
+		Config *cfg = Config::GetInstance();
+		OS::path_t fontPath = cfg->GetMediaPath();
+		fontPath /= Str::UP("fonts");
+		fontPath /= Str::UP(fullFontName);
+
+		TTF_Font *retv = TTF_OpenFont((const char*)Str::PU(fontPath), size);
+		if (!retv) {
+			throw Exception(TTF_GetError());
+		}
+
+		loadedFonts.insert(loadedFonts_t::value_type(key, retv));
+
+		return retv;
+	}
+	else {
+		return iter->second;
+	}
+}
+#endif
 
 /**
  * Create a screen-compatible hardware surface.
@@ -138,6 +202,7 @@ void SdlDisplay::ApplyVideoMode()
  */
 SDL_Surface *SdlDisplay::CreateHardwareSurface(int w, int h)
 {
+	/* TODO
 	SDL_Surface *vidSurface = SDL_GetVideoSurface();
 	SDL_PixelFormat *pfmt = vidSurface->format;
 
@@ -150,27 +215,26 @@ SDL_Surface *SdlDisplay::CreateHardwareSurface(int w, int h)
 	if (!retv) throw Exception(SDL_GetError());
 
 	return retv;
+	*/
+	throw UnimplementedExn("SdlDisplay::CreateHardwareSurface");
 }
 
 /**
- * Blit an SDL surface to the backbuffer.
- * @param surface The surface to blit (may be @c NULL).
+ * Blit an SDL texture to the backbuffer with the current layout state.
+ * @param texture The texture to blit (may be @c NULL).
  * @param relPos The UI-space position, relative to the current UI origin.
  * @param layoutFlags Optional layout flags, from the view model.
  */
-void SdlDisplay::DrawUiSurface(SDL_Surface *surface, const Vec2 &relPos,
-                               UiViewModel::layoutFlags_t layoutFlags)
+void SdlDisplay::DrawUiTexture(SDL_Texture *texture, const Vec2 &relPos,
+                               uiLayoutFlags_t layoutFlags)
 {
-	if (surface) {
-		Vec2 adjustedPos = relPos;
-		if (!(layoutFlags & UiViewModel::LayoutFlags::FLOATING)) {
-			adjustedPos += GetUiOrigin();
-			adjustedPos *= GetUiScale();
-			adjustedPos += GetUiOffset();
-		}
+	if (texture) {
+		Vec2 adjustedPos = LayoutUiPosition(relPos);
 
-		SDL_Rect destRect = { (MR_Int16)adjustedPos.x, (MR_Int16)adjustedPos.y, 0, 0 };
-		SDL_BlitSurface(surface, nullptr, SDL_GetVideoSurface(), &destRect);
+		int w, h;
+		SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
+		SDL_Rect destRect = { (int)adjustedPos.x, (int)adjustedPos.y, w, h };
+		SDL_RenderCopy(renderer, texture, nullptr, &destRect);
 	}
 }
 

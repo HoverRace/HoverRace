@@ -716,6 +716,9 @@
     <ClInclude Include="Display\SDL\SdlFillBoxView.h">
       <Filter>Display\SDL</Filter>
     </ClInclude>
+    <ClInclude Include="Display\UiLayoutFlags.h">
+      <Filter>Display</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\lib\alut.dll">
@@ -751,16 +754,7 @@
     <CustomBuild Include="..\lib\zlib1.dll">
       <Filter>Libraries</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\lib\oisD.dll">
-      <Filter>Libraries</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\lib\ois.dll">
-      <Filter>Libraries</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\lib\sdlD.dll">
-      <Filter>Libraries</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\lib\sdl.dll">
+    <CustomBuild Include="..\lib\SDL2D.dll">
       <Filter>Libraries</Filter>
     </CustomBuild>
   </ItemGroup>

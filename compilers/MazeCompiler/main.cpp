@@ -34,16 +34,6 @@
 #include "../../engine/MazeCompiler/TrackCompileExn.h"
 #include "../../engine/MazeCompiler/TrackCompiler.h"
 
-#ifdef WITH_SDL
-#	ifdef _WIN32
-#		ifdef _DEBUG
-#			pragma comment(lib, "SDLmainD")
-#		else
-#			pragma comment(lib, "SDLmain")
-#		endif
-#	endif
-#endif
-
 #ifdef _WIN32
 	// Ignore the unreferenced pArgStrings parameter.
 #	pragma warning(disable: 4100)

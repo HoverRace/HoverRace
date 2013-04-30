@@ -22,14 +22,17 @@
 
 #include "StdAfx.h"
 
-#include <SDL/SDL.h>
-#include <SDL/SDL_syswm.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_syswm.h>
 #ifdef WITH_SDL_PANGO
 #	include <SDL_Pango.h>
+#elif defined(WITH_SDL_TTF)
+#	include <SDL2/SDL_ttf.h>
 #endif
 
 #include "../../engine/Exception.h"
 #include "../../engine/Display/Label.h"
+#include "../../engine/Display/UiLayoutFlags.h"
 #include "../../engine/Display/SDL/SdlDisplay.h"
 #include "../../engine/MainCharacter/MainCharacter.h"
 #include "../../engine/Model/Track.h"
@@ -112,10 +115,15 @@ ClientApp::ClientApp() :
 	DllObjectFactory::Init();
 	MainCharacter::MainCharacter::RegisterFactory();
 
-	if (SDL_Init(SDL_INIT_VIDEO) == -1)
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) == -1)
 		throw Exception("SDL initialization failed");
+
 #	ifdef WITH_SDL_PANGO
 		SDLPango_Init();
+#	elif defined(WITH_SDL_TTF)
+		if (TTF_Init() == -1) {
+			throw Exception(TTF_GetError());
+		}
 #	endif
 
 	// Create the system console and execute the init script.
@@ -128,26 +136,25 @@ ClientApp::ClientApp() :
 		sysEnv->RunScript(initScript);
 	}
 
-	// With SDL we can only get the desktop resolution before the first call to
-	// SDL_SetVideoMode().
-	const SDL_VideoInfo *videoInfo = SDL_GetVideoInfo();
-	int desktopWidth = videoInfo->current_w;
-	int desktopHeight = videoInfo->current_h;
+	//TODO: Select which display to use.
+	SDL_DisplayMode desktopMode;
+	if (SDL_GetDesktopDisplayMode(0, &desktopMode) < 0) {
+		throw Exception(SDL_GetError());
+	}
 
 	// Create the main window and SDL surface.
 	//TODO: Select which display to use.
-	display = new Display::SDL::SdlDisplay();
-	display->OnDesktopModeChanged(desktopWidth, desktopHeight);
+	display = new Display::SDL::SdlDisplay(GetWindowTitle());
+	display->OnDesktopModeChanged(desktopMode.w, desktopMode.h);
 
 	// Set window position and icon (platform-dependent).
+	// We don't throw an exception if this fails since it's not critical.
+	//TODO: Move to SdlDisplay.
 	SDL_SysWMinfo wm;
 	SDL_VERSION(&wm.version);
-	if (SDL_GetWMInfo(&wm) != 0) {
+	if (SDL_GetWindowWMInfo(static_cast<Display::SDL::SdlDisplay*>(display)->GetWindow(), &wm)) {
 #		ifdef _WIN32
-			HWND hwnd = mainWnd = wm.window;
-			SetWindowPos(hwnd, HWND_TOP,
-				cfg->video.xPos, cfg->video.yPos, 0, 0,
-				SWP_NOSIZE);
+			HWND hwnd = mainWnd = wm.info.win.window;
 
 			// Set icon.
 			// On Windows, the icon is embedded as a resource.
@@ -171,12 +178,13 @@ ClientApp::ClientApp() :
 			*/
 #		endif
 	}
+	else {
+		throw Exception(SDL_GetError());
+	}
 
 	controller = new InputEventController(mainWnd, uiInput);
 
-	RefreshTitleBar();
-
-	typedef Display::UiViewModel::LayoutFlags LayoutFlags;
+	namespace LayoutFlags = Display::UiLayoutFlags;
 	fpsLbl = new Display::Label("FPS:",
 		Display::UiFont(cfg->GetDefaultFontName(), 20, Display::UiFont::BOLD),
 		Display::Color(0xff, 0xff, 0x7f, 0x00),
@@ -197,10 +205,12 @@ ClientApp::~ClientApp()
 	DllObjectFactory::Clean(FALSE);
 	SoundServer::Close();
 
+	TTF_Quit();
+
 	SDL_Quit();
 }
 
-void ClientApp::RefreshTitleBar()
+std::string ClientApp::GetWindowTitle()
 {
 	Config *cfg = Config::GetInstance();
 
@@ -213,7 +223,7 @@ void ClientApp::RefreshTitleBar()
 		oss << " (" << _("silent mode") << ')';
 	}
 
-	SDL_WM_SetCaption(oss.str().c_str(), NULL);
+	return oss.str();
 }
 
 /**
@@ -336,31 +346,27 @@ void ClientApp::MainLoop()
 			"startup script with --exec."));
 	}
 
-#	ifdef WITH_SDL_OIS_INPUT
-		std::vector<SDL_Event> deferredEvents;
-#	endif
-
 	while (!quit) {
 		OS::timestamp_t tick = OS::Time();
 
 		while (SDL_PollEvent(&evt) && !quit) {
+			if (evt.type >= SDL_KEYDOWN && evt.type <= SDL_MULTIGESTURE) {
+				// Input events are routed to the InputEventController.
+				controller->ProcessInputEvent(evt);
+				continue;
+			}
 			switch (evt.type) {
 				case SDL_QUIT:
 					quit = true;
 					break;
 
-				case SDL_VIDEORESIZE:
-					OnWindowResize(evt.resize.w, evt.resize.h);
+				case SDL_WINDOWEVENT:
+					switch (evt.window.event) {
+						case SDL_WINDOWEVENT_RESIZED:
+							OnWindowResize(evt.window.data1, evt.window.data2);
+							break;
+					}
 					break;
-
-				// Certain SDL events need to be processed by the SDL-OIS
-				// bridge, so we need to save them for later.
-#				ifdef WITH_SDL_OIS_INPUT
-					case SDL_KEYDOWN:
-					case SDL_KEYUP:
-						deferredEvents.push_back(evt);
-						break;
-#				endif
 
 				case SDL_USEREVENT:
 					switch (evt.user.code) {
@@ -386,14 +392,6 @@ void ClientApp::MainLoop()
 			}
 		}
 		if (quit) break;
-
-#		ifdef WITH_SDL_OIS_INPUT
-			BOOST_FOREACH(SDL_Event &evt, deferredEvents) {
-				SDL_PushEvent(&evt);
-			}
-			deferredEvents.clear();
-#		endif
-		controller->Poll();
 
 		AdvanceScenes(tick);
 		RenderScenes();

@@ -63,7 +63,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>wsock32.lib;winmm.lib;version.lib;comctl32.lib;sdlD.lib;libcurlD.lib;LiteUnzip.lib;intl.lib;lua5.1D.lib;luabindD.lib;oisD.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>wsock32.lib;winmm.lib;version.lib;comctl32.lib;SDL2D.lib;libcurlD.lib;LiteUnzip.lib;intl.lib;lua5.1D.lib;luabindD.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalManifestDependencies>type=%27Win32%27 name=%27Microsoft.Windows.Common-Controls%27 version=%276.0.0.0%27 processorArchitecture=%27X86%27 publicKeyToken=%276595b64144ccf1df%27 language=%27*%27;%(AdditionalManifestDependencies)</AdditionalManifestDependencies>
@@ -92,7 +92,7 @@
       <AdditionalOptions>/Zm120 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>wsock32.lib;winmm.lib;version.lib;comctl32.lib;sdl.lib;libcurl.lib;LiteUnzip.lib;intl.lib;lua5.1.lib;luabind.lib;ois.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>wsock32.lib;winmm.lib;version.lib;comctl32.lib;SDL2.lib;libcurl.lib;LiteUnzip.lib;intl.lib;lua5.1.lib;luabind.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalManifestDependencies>type=%27Win32%27 name=%27Microsoft.Windows.Common-Controls%27 version=%276.0.0.0%27 processorArchitecture=%27X86%27 publicKeyToken=%276595b64144ccf1df%27 language=%27*%27;%(AdditionalManifestDependencies)</AdditionalManifestDependencies>
@@ -103,18 +103,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Game2\AboutDialog.cpp" />
-    <ClCompile Include="Game2\Control\SDL\SDLInputManager.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Game2\Control\SDL\SDLKeyboard.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Game2\Control\SDL\SDLMouse.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
+    <ClCompile Include="Game2\Control\ControllerStrings.cpp" />
     <ClCompile Include="Game2\FolderViewer.cpp" />
     <ClCompile Include="Game2\FullscreenTest.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -200,10 +189,6 @@
     <ClInclude Include="..\include\compat\luabind_cxx11.h" />
     <ClInclude Include="Game2\AboutDialog.h" />
     <ClInclude Include="Game2\Control\Action.h" />
-    <ClInclude Include="Game2\Control\SDL\SDLInputManager.h" />
-    <ClInclude Include="Game2\Control\SDL\SDLKeyboard.h" />
-    <ClInclude Include="Game2\Control\SDL\SDLMouse.h" />
-    <ClInclude Include="Game2\Control\SDL\SDLPrereqs.h" />
     <ClInclude Include="Game2\FolderViewer.h" />
     <ClInclude Include="Game2\FullscreenTest.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>

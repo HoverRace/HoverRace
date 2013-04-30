@@ -10,16 +10,9 @@ hoverrace_LDADD = \
 	$(BOOST_SYSTEM_LDFLAGS) $(BOOST_SYSTEM_LIBS) \
 	$(BOOST_THREAD_LDFLAGS) $(BOOST_THREAD_LIBS) \
 	$(LUA_LIBS) $(LUABIND_LDFLAGS) \
-	$(DEPS_LIBS)
+	$(DEPS_LIBS) $(TEXT_DEPS_LIBS)
 hoverrace_SOURCES = \
 	StdAfx.h \
-	Control/SDL/SDLInputManager.cpp \
-	Control/SDL/SDLInputManager.h \
-	Control/SDL/SDLKeyboard.cpp \
-	Control/SDL/SDLKeyboard.h \
-	Control/SDL/SDLMouse.cpp \
-	Control/SDL/SDLMouse.h \
-	Control/SDL/SDLPrereqs.h \
 	Control/Action.h \
 	Control/ActionPerformers.cpp \
 	Control/ActionPerformers.h \
@@ -28,6 +21,7 @@ hoverrace_SOURCES = \
 	Control/ControlAction.h \
 	Control/Controller.cpp \
 	Control/Controller.h \
+	Control/ControllerStrings.cpp \
 	Control/InputHandler.h \
 	Control/ObserverActions.cpp \
 	Control/ObserverActions.h \

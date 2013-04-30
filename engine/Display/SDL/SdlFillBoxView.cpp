@@ -21,7 +21,7 @@
 
 #include "StdAfx.h"
 
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 
 #include "../FillBox.h"
 
@@ -33,81 +33,33 @@ namespace HoverRace {
 namespace Display {
 namespace SDL {
 
-SdlFillBoxView::SdlFillBoxView(SdlDisplay &disp, FillBox &model) :
-	SUPER(disp, model),
-	surface()
+void SdlFillBoxView::Render()
 {
-	uiScaleChangedConnection = disp.GetUiScaleChangedSignal().connect(
-		std::bind(&SdlFillBoxView::OnUiScaleChanged, this));
-}
+	const Color color = model.GetColor();
+	if (color.bits.a > 0) {
+		SDL_Renderer *renderer = disp.GetRenderer();
+		SDL_SetRenderDrawColor(renderer,
+			color.bits.r, color.bits.g, color.bits.b, color.bits.a);
 
-SdlFillBoxView::~SdlFillBoxView()
-{
-	uiScaleChangedConnection.disconnect();
-	if (surface) {
-		SDL_FreeSurface(surface);
-	}
-}
+		SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
-void SdlFillBoxView::OnModelUpdate(int prop)
-{
-	switch (prop) {
-		case FillBox::Props::COLOR:
-		case FillBox::Props::SIZE:
-			if (surface) {
-				SDL_FreeSurface(surface);
-				surface = nullptr;
-			}
-			break;
-	}
-}
+		Vec2 pos = disp.LayoutUiPosition(
+			model.GetAlignedPos(model.GetSize().x, model.GetSize().y));
 
-void SdlFillBoxView::OnUiScaleChanged()
-{
-	if (surface) {
-		SDL_FreeSurface(surface);
-		surface = nullptr;
-	}
-}
-
-void SdlFillBoxView::PrepareRender()
-{
-	if (!surface) {
 		const Vec2 &size = model.GetSize();
 		double w = size.x;
 		double h = size.y;
-
 		if (!model.IsLayoutUnscaled()) {
 			double uiScale = disp.GetUiScale();
 			w *= uiScale;
 			h *= uiScale;
 		}
 
-		surface = disp.CreateHardwareSurface(
-			static_cast<int>(w), static_cast<int>(h));
-
-		if (SDL_MUSTLOCK(surface)) SDL_LockSurface(surface);
-
-		const Color color = model.GetColor();
-		SDL_FillRect(surface, nullptr,
-			SDL_MapRGBA(surface->format,
-				color.bits.r, color.bits.g, color.bits.b, 0xff));
-
-		if (SDL_MUSTLOCK(surface)) SDL_UnlockSurface(surface);
-
-		// The alpha component is the same across the entire surface,
-		// so we can use per-surface alpha.
-		if (color.bits.a != 0xff) {
-			SDL_SetAlpha(surface, SDL_SRCALPHA | SDL_RLEACCEL, color.bits.a);
-		}
+		SDL_Rect rect = {
+			static_cast<int>(pos.x), static_cast<int>(pos.y),
+			static_cast<int>(w), static_cast<int>(h) };
+		SDL_RenderFillRect(renderer, &rect);
 	}
-}
-
-void SdlFillBoxView::Render()
-{
-	disp.DrawUiSurface(surface,
-		model.GetAlignedPos(model.GetSize().x, model.GetSize().y),
-		model.GetLayoutFlags());
 }
 
 }  // namespace SDL

@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include "UiLayoutFlags.h"
 #include "Vec.h"
 #include "ViewAttacher.h"
 
@@ -134,6 +135,20 @@ class MR_DllDeclare Display :
 
 		double GetUiScale() const { return uiScale; }
 		const Vec2 &GetUiOffset() const { return uiOffset; }
+
+		Vec2 LayoutUiPosition(const Vec2 &relPos, uiLayoutFlags_t layoutFlags=0)
+		{
+			if (layoutFlags & UiLayoutFlags::FLOATING) {
+				return relPos;
+			}
+			else {
+				Vec2 adjustedPos = relPos;
+				adjustedPos += GetUiOrigin();
+				adjustedPos *= GetUiScale();
+				adjustedPos += GetUiOffset();
+				return adjustedPos;
+			}
+		}
 
 	private:
 		Vec2 uiOrigin;

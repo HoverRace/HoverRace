@@ -21,7 +21,7 @@
 
 #include "StdAfx.h"
 
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 
 #include "../../Exception.h"
 
@@ -39,9 +39,15 @@ void SdlLegacyDisplay::Flip()
 
 	SDL_Surface *legacySurface = GetLegacySurface();
 	if (legacySurface != NULL) {
-		SDL_Surface *tempSurface = SDL_DisplayFormat(legacySurface);
-		SDL_BlitSurface(tempSurface, NULL, SDL_GetVideoSurface(), NULL);
-		SDL_FreeSurface(tempSurface);
+		SDL_Renderer *renderer = sdlDisplay.GetRenderer();
+
+		//TODO: Use a streaming texture.
+		SDL_Texture *tex = SDL_CreateTextureFromSurface(renderer, legacySurface);
+		if (!tex) throw Exception(SDL_GetError());
+
+		SDL_RenderCopy(renderer, tex, nullptr, nullptr);
+
+		SDL_DestroyTexture(tex);
 	}
 }
 

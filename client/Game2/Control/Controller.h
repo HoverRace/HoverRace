@@ -1,8 +1,24 @@
+
 // Controller.h
 //
-// This file contains the definition for the HoverRace::Client::Controller
-// class.  It contains all the code to control input devices; joysticks, 
-// keyboards, and the like.
+// Copyright (c) 2010 Ryan Curtin.
+// Copyright (c) 2013 Michael Imamura.
+//
+// Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
+// you may not use this file except in compliance with the License.
+//
+// A copy of the license should have been attached to the package from which
+// you have taken this file. If you can not find the license you can not use
+// this file.
+//
+//
+// The author makes no representations about the suitability of
+// this software for any purpose.  It is provided "as is" "AS IS",
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+// implied.
+//
+// See the License for the specific language governing permissions
+// and limitations under the License.
 
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
@@ -10,13 +26,8 @@
 #include <vector>
 #include <string>
 
-#include "OIS/OIS.h"
-#include "OIS/OISInputManager.h"
-#include "OIS/OISException.h"
-#include "OIS/OISKeyboard.h"
-#include "OIS/OISMouse.h"
-#include "OIS/OISJoyStick.h"
-#include "OIS/OISEvents.h"
+#include <SDL2/SDL.h>
+
 #include "../../../engine/Util/Config.h"
 #include "../../../engine/Util/OS.h"
 #include "../../../engine/MainCharacter/MainCharacter.h"
@@ -35,16 +46,9 @@
 #define CTL_WEAPON		7
 #define CTL_LOOKBACK	8
 
-#define AXIS_X			1
-#define AXIS_Y			2
-#define AXIS_Z			3
-
 #define UNASSIGNED		-1
 
 #define SET_CONTROL		(WM_USER + 1)
-
-// maybe later... TODO
-//#include "OIS/OISForceFeedback.h"
 
 namespace HoverRace {
 namespace Client {
@@ -54,8 +58,6 @@ class InputHandler;
 typedef std::shared_ptr<InputHandler> InputHandlerPtr;
 class UiHandler;
 typedef std::shared_ptr<UiHandler> UiHandlerPtr;
-
-using namespace OIS;
 
 /***
  * Contains information on the current control state.  Eventually, its members should
@@ -73,7 +75,7 @@ struct ControlState {
 	bool left;
 };
 
-class InputEventController : public KeyListener, public MouseListener, public JoyStickListener {
+class InputEventController {
 	public:
 		InputEventController(Util::OS::wnd_t mainWindow, UiHandlerPtr uiHandler);
 		~InputEventController();
@@ -81,18 +83,29 @@ class InputEventController : public KeyListener, public MouseListener, public Jo
 		// Typedef for the maps of hashes to controls
 		typedef std::map<int, ControlActionPtr> ActionMap;
 
+		enum axis_t {
+			AXIS_X = 1,
+			AXIS_Y,
+			AXIS_Z,
+			AXIS_WHEEL_X,
+			AXIS_WHEEL_Y,
+		};
+
 		// event handlers
-		bool keyPressed(const KeyEvent &arg);
-		bool keyReleased(const KeyEvent &arg);
-		bool mouseMoved(const MouseEvent &arg);
-		bool mousePressed(const MouseEvent &arg, MouseButtonID id);
-		bool mouseReleased(const MouseEvent &arg, MouseButtonID id);
+		bool OnKeyPressed(const SDL_KeyboardEvent &arg);
+		bool OnKeyReleased(const SDL_KeyboardEvent &arg);
+		bool OnMouseMoved(const SDL_MouseMotionEvent &evt);
+		bool OnMousePressed(const SDL_MouseButtonEvent &evt);
+		bool OnMouseReleased(const SDL_MouseButtonEvent &evt);
+		bool OnMouseWheel(const SDL_MouseWheelEvent &evt);
+		/*TODO
 		bool buttonPressed(const JoyStickEvent &arg, int button);
 		bool buttonReleased(const JoyStickEvent &arg, int button);
 		bool axisMoved(const JoyStickEvent &arg, int axis);
 		bool povMoved(const JoyStickEvent &arg, int pov);
+		*/
 
-		void Poll();
+		void ProcessInputEvent(const SDL_Event &evt);
 		void HandleEvent(int hash, int value);
 
 		/***
@@ -226,8 +239,10 @@ class InputEventController : public KeyListener, public MouseListener, public Jo
 		// [000000000000000000][aaaaaaaaaaaa]
 		//   a: next available disabled id
 		// keyboard event
-		// [00000000][00][000000][aaaaaaaa][00000000]
+		// [00000000][00][000000][aaaaaaaa][00000000]: keycode
 		//	 a: int keycode
+		// [00000000][00][01][aaaaaaaaaaaa][00000000]: scancode as keycode
+		//	 a: int scancode as keycode
 		// mouse event
 		// [00000000][01][00][aaaaaaaa][000000000000]: button press
 		//   a: button id
@@ -250,14 +265,19 @@ class InputEventController : public KeyListener, public MouseListener, public Jo
 		//   b: axis id
 		//   c: direction
 		int GetNextAvailableDisabledHash();
-		int HashKeyboardEvent(const OIS::KeyCode& arg);
-		int HashMouseButtonEvent(const MouseEvent& arg, MouseButtonID id);
-		int HashMouseAxisEvent(const MouseEvent& arg, int axis, int direction);
+
+	public:
+		int HashKeyboardEvent(const SDL_Keycode& arg);
+		int HashMouseButtonEvent(const SDL_MouseButtonEvent& arg);
+		int HashMouseAxisEvent(axis_t axis, int direction);
+		/*TODO
 		int HashJoystickAxisEvent(const JoyStickEvent& arg, int axis, int direction);
 		int HashJoystickSliderEvent(const JoyStickEvent& arg, int slider);
 		int HashJoystickButtonEvent(const JoyStickEvent& arg, int button);
 		int HashJoystickPovEvent(const JoyStickEvent& arg, int pov, int direction);
+		*/
 
+	private:
 		/***
 		 * We store several different action maps which we can choose from.
 		 * They are referenced by string.  See ClearActionMap(), AddActionMap().
@@ -266,17 +286,16 @@ class InputEventController : public KeyListener, public MouseListener, public Jo
 		std::vector<std::string> activeMaps;
 		std::map<std::string, ActionMap> allActionMaps;
 
-		/// OIS input manager does most of the work for us
-		InputManager *mgr;
-
 		UiHandlerPtr uiHandler;
 
 		// now the input devices
+		/*FIXME
 		Keyboard *kbd;
 		Mouse *mouse;
 		int numJoys;
 		JoyStick **joys;
 		int *joyIds;
+		*/
 
 		int nextAvailableDisabledHash;
 
