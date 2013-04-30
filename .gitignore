@@ -10,6 +10,7 @@
 *.swp
 *.tmp
 *.user
+Thumbs.db
 memory_leak_report.txt
 
 # /
