@@ -44,7 +44,7 @@
 namespace HoverRace {
 	namespace Display {
 		class Label;
-		class UiFont;
+		struct UiFont;
 	}
 }
 
