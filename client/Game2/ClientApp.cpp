@@ -205,7 +205,9 @@ ClientApp::~ClientApp()
 	DllObjectFactory::Clean(FALSE);
 	SoundServer::Close();
 
-	TTF_Quit();
+#	ifdef WITH_SDL_TTF
+		TTF_Quit();
+#	endif
 
 	SDL_Quit();
 }
