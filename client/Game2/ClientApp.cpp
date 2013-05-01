@@ -246,7 +246,7 @@ void ClientApp::OnWindowResize(int w, int h)
  */
 void ClientApp::IncFrameCount()
 {
-	static boost::format fpsFmt("FPS: %0.2f\n");
+	static boost::format fpsFmt("FPS: %0.2f");
 
 	// Don't start counting until the first frame.
 	if (lastTimestamp == 0) lastTimestamp = OS::Time();
@@ -263,9 +263,6 @@ void ClientApp::IncFrameCount()
 		if (Config::GetInstance()->runtime.showFramerate) {
 			fpsLbl->SetText(boost::str(fpsFmt % fps));
 		}
-		/*
-		OutputDebugString(boost::str(fpsFmt % fps).c_str());
-		*/
 	}
 }
 
