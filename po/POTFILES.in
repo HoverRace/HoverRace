@@ -7,10 +7,8 @@ client/Game2/ClientSession.cpp
 client/Game2/Control/ActionPerformers.cpp
 client/Game2/Control/ConsoleActions.cpp
 client/Game2/Control/Controller.cpp
+client/Game2/Control/ControllerStrings.cpp
 client/Game2/Control/ObserverActions.cpp
-client/Game2/Control/SDL/SDLInputManager.cpp
-client/Game2/Control/SDL/SDLKeyboard.cpp
-client/Game2/Control/SDL/SDLMouse.cpp
 client/Game2/ControlPrefsPage.cpp
 client/Game2/DownloadUpdateDialog.cpp
 client/Game2/FolderViewer.cpp
