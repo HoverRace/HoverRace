@@ -82,10 +82,10 @@ namespace {
 				MapKey(SDLK_PAGEUP, _("PgUp"));
 				MapKey(SDLK_END, _("End"));
 				MapKey(SDLK_PAGEDOWN, _("PgDn"));
-				MapKey(SDLK_RIGHT, _("\xe2\x86\x92"));  // UTF-8: RIGHTWARDS ARROW
-				MapKey(SDLK_LEFT, _("\xe2\x86\x90"));   // UTF-8: LEFTWARDS ARROW
-				MapKey(SDLK_DOWN, _("\xe2\x86\x93"));   // UTF-8: DOWNWARDS ARROW
-				MapKey(SDLK_UP, _("\xe2\x86\x91"));     // UTF-8: UPWARDS ARROW
+				MapKey(SDLK_RIGHT, "\xe2\x86\x92");  // UTF-8: RIGHTWARDS ARROW
+				MapKey(SDLK_LEFT, "\xe2\x86\x90");   // UTF-8: LEFTWARDS ARROW
+				MapKey(SDLK_DOWN, "\xe2\x86\x93");   // UTF-8: DOWNWARDS ARROW
+				MapKey(SDLK_UP, "\xe2\x86\x91");     // UTF-8: UPWARDS ARROW
 				MapKey(SDLK_NUMLOCKCLEAR, _("Num Lock"));
 				MapKey(SDLK_KP_DIVIDE, _("Numpad /"));
 				MapKey(SDLK_KP_MULTIPLY, _("Numpad *"));
