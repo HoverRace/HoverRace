@@ -155,6 +155,7 @@ void SdlLabelView::UpdateTexture()
 		TTF_Font *ttfFont = disp.LoadTtfFont(font);
 
 		//TODO: Handle newlines ourselves.
+		SDL_Color color = { 0xff, 0xff, 0xff };
 
 		tempSurface = TTF_RenderUTF8_Blended_Wrapped(ttfFont,
 			model.GetText().c_str(), color, 4096);
