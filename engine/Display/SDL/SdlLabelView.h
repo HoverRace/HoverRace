@@ -61,10 +61,12 @@ class MR_DllDeclare SdlLabelView : public SdlView<Label>
 		virtual void Render();
 
 	private:
-		void Update();
+		void UpdateTexture();
+		void UpdateTextureColor();
 
 	private:
 		SDL_Texture *texture;
+		bool colorChanged;
 		int width;
 		int height;
 		int realWidth;

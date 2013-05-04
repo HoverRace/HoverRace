@@ -49,7 +49,7 @@ static RGBQUAD RGB_WHITE = { 0xff, 0xff, 0xff, 0 };
 
 SdlLabelView::SdlLabelView(SdlDisplay &disp, Label &model) :
 	SUPER(disp, model),
-	texture(), width(0), height(0)
+	texture(), colorChanged(true), width(0), height(0)
 {
 	uiScaleChangedConnection = disp.GetUiScaleChangedSignal().connect(
 		std::bind(&SdlLabelView::OnUiScaleChanged, this));
@@ -67,6 +67,9 @@ void SdlLabelView::OnModelUpdate(int prop)
 {
 	switch (prop) {
 		case Label::Props::COLOR:
+			colorChanged = true;
+			break;
+
 		case Label::Props::FONT:
 		case Label::Props::TEXT:
 			if (texture) {
@@ -87,7 +90,11 @@ void SdlLabelView::OnUiScaleChanged()
 
 void SdlLabelView::PrepareRender()
 {
-	if (!texture) Update();
+	if (!texture) {
+		UpdateTexture();
+	} else if (colorChanged) {
+		UpdateTextureColor();
+	}
 }
 
 void SdlLabelView::Render()
@@ -97,7 +104,7 @@ void SdlLabelView::Render()
 	disp.DrawUiTexture(texture, model.GetAlignedPos(w, h), model.GetLayoutFlags());
 }
 
-void SdlLabelView::Update()
+void SdlLabelView::UpdateTexture()
 {
 	if (texture) SDL_DestroyTexture(texture);
 
@@ -114,8 +121,7 @@ void SdlLabelView::Update()
 
 		std::ostringstream oss;
 		oss << SelFmt<SEL_FMT_PANGO> <<
-			"<span font=\"" << font << "\" "
-			"color=\"" << model.GetColor() << "\">" <<
+			"<span font=\"" << font << "\">" <<
 			escapedBuf << "</span>";
 
 		g_free(escapedBuf);
@@ -140,22 +146,6 @@ void SdlLabelView::Update()
 			255);
 		SDLPango_Draw(ctx, tempSurface, 0, 0);
 
-		const Color c = model.GetColor();
-		MR_UInt8 ca = c.bits.a;
-
-		// Blend the alpha component from the label color.
-		if (ca != 0xff) {
-			MR_UInt8 *row = (MR_UInt8*)tempSurface->pixels;
-			for (int y = 0; y < height; y++) {
-				MR_UInt8 *buf = row;
-				for (int x = 0; x < width; x++) {
-					*buf = (*buf * ca) / 255;
-					buf += 4;
-				}
-				row += tempSurface->pitch;
-			}
-		}
-
 #	elif defined(WITH_SDL_TTF)
 		UiFont font = model.GetFont();
 		if (!model.IsLayoutUnscaled()) {
@@ -164,32 +154,12 @@ void SdlLabelView::Update()
 
 		TTF_Font *ttfFont = disp.LoadTtfFont(font);
 
-		const Color c = model.GetColor();
-		SDL_Color color;
-		color.r = c.bits.r;
-		color.g = c.bits.g;
-		color.b = c.bits.b;
-
 		//TODO: Handle newlines ourselves.
 
 		tempSurface = TTF_RenderUTF8_Blended_Wrapped(ttfFont,
 			model.GetText().c_str(), color, 4096);
 		realWidth = tempSurface->w;
 		realHeight = tempSurface->h;
-
-		// Blend the alpha component.
-		MR_UInt8 ca = c.bits.a;
-		if (ca != 0xff) {
-			MR_UInt8 *row = (MR_UInt8*)tempSurface->pixels;
-			for (int y = 0; y < height; y++) {
-				MR_UInt8 *buf = row;
-				for (int x = 0; x < width; x++) {
-					*buf = (*buf * ca) / 255;
-					buf += 4;
-				}
-				row += tempSurface->pitch;
-			}
-		}
 
 #	elif defined(_WIN32)
 		HDC hdc = CreateCompatibleDC(NULL);
@@ -248,8 +218,7 @@ void SdlLabelView::Update()
 
 		// Draw the text.
 		// Note that we draw the text as white so we can use it as the
-		// alpha channel (we blend in the color when copying to the SDL
-		// surface).
+		// alpha channel.
 		SetTextColor(hdc, RGB(0xff, 0xff, 0xff));
 		SetBkColor(hdc, RGB(0, 0, 0));
 		SetBkMode(hdc, OPAQUE);
@@ -266,13 +235,6 @@ void SdlLabelView::Update()
 			(MR_UInt32)(255 << (8 * 1)),
 			255);
 
-		// Note: The alpha component of the color is currently ignored.
-		const Color c = model.GetColor();
-		MR_UInt8 cr = c.bits.r;
-		MR_UInt8 cg = c.bits.g;
-		MR_UInt8 cb = c.bits.b;
-		MR_UInt8 ca = c.bits.a;
-
 		// Now copy from the bitmap into our image buffer.
 		// DIB rows are 32-bit word-aligned.
 		char buf[9] = { 0 };
@@ -283,15 +245,8 @@ void SdlLabelView::Update()
 		for (int y = 0; y < height; ++y) {
 			MR_UInt8 *destRow = dest;
 			for (int x = 0; x < width; ++x) {
-				MR_UInt32 px = *src++;
-
-				MR_UInt8 alpha = px & 0xff;
-				px = ((MR_UInt32)(cr * alpha / 255) << 24) +
-					((MR_UInt32)(cg * alpha / 255) << 16) +
-					((MR_UInt32)(cb * alpha / 255) << 8) +
-					((ca * alpha) / 255);
-
-				*((MR_UInt32*)dest) = px;
+				const MR_UInt32 px = *src++;
+				*((MR_UInt32*)dest) = 0xffffff00 + (px & 0xff);
 				dest += 4;
 			}
 			dest = destRow + tempSurface->pitch;
@@ -313,6 +268,17 @@ void SdlLabelView::Update()
 	// Convert the surface to the display format.
 	texture = SDL_CreateTextureFromSurface(disp.GetRenderer(), tempSurface);
 	SDL_FreeSurface(tempSurface);
+
+	UpdateTextureColor();
+}
+
+void SdlLabelView::UpdateTextureColor()
+{
+	const Color cm = model.GetColor();
+	SDL_SetTextureColorMod(texture, cm.bits.r, cm.bits.g, cm.bits.b);
+	SDL_SetTextureAlphaMod(texture, cm.bits.a);
+
+	colorChanged = false;
 }
 
 }  // namespace SDL
