@@ -71,8 +71,8 @@ class MR_DllDeclare VideoBuffer
 
 		// Signals from ClientApp that certain settings have changed.
 		void OnDesktopModeChange(int width, int height);
-	private:
-		void OnWindowResChange();
+	protected:
+		virtual void OnWindowResChange();
 
 	public:
 		void AssignPalette();

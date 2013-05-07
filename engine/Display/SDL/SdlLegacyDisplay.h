@@ -43,14 +43,18 @@ class MR_DllDeclare SdlLegacyDisplay : public VideoServices::VideoBuffer
 	typedef VideoServices::VideoBuffer SUPER;
 	public:
 		SdlLegacyDisplay(SdlDisplay &sdlDisplay) :
-			SUPER(sdlDisplay), sdlDisplay(sdlDisplay) { }
-		virtual ~SdlLegacyDisplay() { }
+			SUPER(sdlDisplay), sdlDisplay(sdlDisplay),
+			nativeSurface(), texture() { }
+		virtual ~SdlLegacyDisplay();
 
 	protected:
+		virtual void OnWindowResChange();
 		virtual void Flip();
 
 	private:
 		SdlDisplay &sdlDisplay;
+		SDL_Surface *nativeSurface;
+		SDL_Texture *texture;
 };
 
 }  // namespace SDL

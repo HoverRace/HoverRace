@@ -31,23 +31,91 @@ namespace HoverRace {
 namespace Display {
 namespace SDL {
 
+SdlLegacyDisplay::~SdlLegacyDisplay()
+{
+	if (nativeSurface) {
+		SDL_FreeSurface(nativeSurface);
+	}
+	if (texture) {
+		SDL_DestroyTexture(texture);
+	}
+}
+
+void SdlLegacyDisplay::OnWindowResChange()
+{
+	SUPER::OnWindowResChange();
+
+	if (nativeSurface) {
+		SDL_FreeSurface(nativeSurface);
+	}
+	if (texture) {
+		SDL_DestroyTexture(texture);
+	}
+
+	// The pixel format is selected via SDL_CreateRGBSurface, then we make sure we
+	// use the same pixel format for SDL_CreateTexture, so the later
+	// SDL_ConvertPixels is fast (in theory).
+
+	nativeSurface = SDL_CreateRGBSurface(0, GetWidth(), GetHeight(), 32,
+		0, 0, 0, 0);
+	if (!nativeSurface) {
+		throw new Exception(SDL_GetError());
+	}
+
+	texture = SDL_CreateTexture(sdlDisplay.GetRenderer(),
+		nativeSurface->format->format, SDL_TEXTUREACCESS_STREAMING,
+		GetWidth(), GetHeight());
+	if (!texture) {
+		throw new Exception(SDL_GetError());
+	}
+}
+
 void SdlLegacyDisplay::Flip()
 {
 	// Convert the legacy surface to the bit depth of the screen surface,
-	// then blit.  This isn't particularly fast, but the speed isn't
-	// the point of the legacy display :)
+	// then blit.
 
 	SDL_Surface *legacySurface = GetLegacySurface();
-	if (legacySurface != NULL) {
+	if (legacySurface && texture) {
 		SDL_Renderer *renderer = sdlDisplay.GetRenderer();
 
-		//TODO: Use a streaming texture.
-		SDL_Texture *tex = SDL_CreateTextureFromSurface(renderer, legacySurface);
-		if (!tex) throw Exception(SDL_GetError());
+		// We can't use SDL_ConvertPixels to convert from an indexed format, so
+		// we use SDL_BlitSurface to do that, using the nativeSurface as a
+		// temporary buffer.
+		SDL_BlitSurface(legacySurface, nullptr, nativeSurface, nullptr);
 
-		SDL_RenderCopy(renderer, tex, nullptr, nullptr);
+		if (SDL_MUSTLOCK(nativeSurface)) {
+			if (SDL_LockSurface(nativeSurface) < 0) {
+				throw Exception(SDL_GetError());
+			}
+		}
 
-		SDL_DestroyTexture(tex);
+		void *pixels;
+		int pitch;
+		if (SDL_LockTexture(texture, nullptr, &pixels, &pitch) < 0) {
+			throw new Exception(SDL_GetError());
+		}
+
+		MR_UInt32 destFmt;
+		SDL_QueryTexture(texture, &destFmt, nullptr, nullptr, nullptr);
+
+		// Copy the (already converted) pixels from nativeSurface to the
+		// streaming texture.
+		//TODO: Can we just skip this and copy the buffers directly?
+		if (SDL_ConvertPixels(nativeSurface->w, nativeSurface->h,
+			nativeSurface->format->format, nativeSurface->pixels, nativeSurface->pitch,
+			destFmt, pixels, pitch) < 0)
+		{
+			throw new Exception(SDL_GetError());
+		}
+
+		SDL_UnlockTexture(texture);
+
+		if (SDL_MUSTLOCK(nativeSurface)) {
+			SDL_UnlockSurface(nativeSurface);
+		}
+
+		SDL_RenderCopy(renderer, texture, nullptr, nullptr);
 	}
 }
 
