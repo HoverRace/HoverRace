@@ -101,7 +101,8 @@ void SdlLegacyDisplay::Flip()
 
 		// Copy the (already converted) pixels from nativeSurface to the
 		// streaming texture.
-		//TODO: Can we just skip this and copy the buffers directly?
+		// Since the nativeSurface and destination texture use the same pixel
+		// format, this is effectively a memcpy with a some sanity checks.
 		if (SDL_ConvertPixels(nativeSurface->w, nativeSurface->h,
 			nativeSurface->format->format, nativeSurface->pixels, nativeSurface->pitch,
 			destFmt, pixels, pitch) < 0)
