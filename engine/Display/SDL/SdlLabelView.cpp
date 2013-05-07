@@ -268,6 +268,7 @@ void SdlLabelView::UpdateTexture()
 
 	// Convert the surface to the display format.
 	texture = SDL_CreateTextureFromSurface(disp.GetRenderer(), tempSurface);
+	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 	SDL_FreeSurface(tempSurface);
 
 	UpdateTextureColor();
