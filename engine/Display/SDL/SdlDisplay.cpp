@@ -140,13 +140,60 @@ void SdlDisplay::ApplyVideoMode()
 
 	if (!(window = SDL_CreateWindow(windowTitle.c_str(),
 		vidCfg.xPos, vidCfg.yPos, vidCfg.xRes, vidCfg.yRes,
-		SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE)))
+		SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL)))
 	{
 		throw Exception(SDL_GetError());
 	}
 
-	if (!(renderer = SDL_CreateRenderer(window, -1, 0))) {
+	// Try to find a usable renderer.
+	// We prefer an accelerated one, but we'll allow fallback to software.
+	int numDrivers = SDL_GetNumRenderDrivers();
+	int selDriverIdx = -1;
+	SDL_RendererInfo selDriver;
+	for (int i = 0; i < numDrivers; i++) {
+		SDL_RendererInfo info;
+		SDL_GetRenderDriverInfo(i, &info);
+
+		// Blacklisting the Direct3D driver since we prefer an OpenGL one.
+		// This also fixes issue #201 where SDL_SetTextureAlphaMod seems to stop
+		// working after a screen resize.
+		if (strncmp(info.name, "direct3d", 8) == 0) {
+			continue;
+		}
+
+		if (selDriverIdx == -1 ||
+			((info.flags & SDL_RENDERER_ACCELERATED) && (selDriver.flags & SDL_RENDERER_SOFTWARE)))
+		{
+			selDriverIdx = i;
+			selDriver = info;
+		}
+	}
+
+	if (selDriverIdx == -1) {
+		throw Exception("Unable to find a suitable renderer");
+	}
+
+	if (!(renderer = SDL_CreateRenderer(window, selDriverIdx, 0))) {
 		throw Exception(SDL_GetError());
+	}
+	else {
+		// Dump the renderer info for debugging purposes.
+		SDL_RendererInfo info;
+		SDL_GetRendererInfo(renderer, &info);
+		std::ostringstream oss;
+		oss << "Using renderer: " << info.name << " (";
+		if (info.flags & SDL_RENDERER_SOFTWARE) oss << ":SW";
+		if (info.flags & SDL_RENDERER_ACCELERATED) oss << ":Accel";
+		if (info.flags & SDL_RENDERER_PRESENTVSYNC) oss << ":VSync";
+		if (info.flags & SDL_RENDERER_TARGETTEXTURE) oss << ":RTT";
+		oss << ") Texture: " <<
+			info.max_texture_width << "x" << info.max_texture_height << "\n";
+
+#		ifdef _WIN32
+			OutputDebugString(oss.str().c_str());
+#		else
+			std::cout << oss.str();
+#		endif
 	}
 
 	// We keep track of the current state of the window so
