@@ -489,13 +489,13 @@ typedef struct SDL_HapticConstant
  *  over time.  The type determines the shape of the wave and the parameters
  *  determine the dimensions of the wave.
  *  
- *  Phase is given by hundredth of a cyle meaning that giving the phase a value
- *  of 9000 will displace it 25% of it's period.  Here are sample values:
+ *  Phase is given by hundredth of a cycle meaning that giving the phase a value
+ *  of 9000 will displace it 25% of its period.  Here are sample values:
  *   -     0: No phase displacement.
- *   -  9000: Displaced 25% of it's period.
- *   - 18000: Displaced 50% of it's period.
- *   - 27000: Displaced 75% of it's period.
- *   - 36000: Displaced 100% of it's period, same as 0, but 0 is preffered.
+ *   -  9000: Displaced 25% of its period.
+ *   - 18000: Displaced 50% of its period.
+ *   - 27000: Displaced 75% of its period.
+ *   - 36000: Displaced 100% of its period, same as 0, but 0 is preferred.
  *
  *  Examples:
  *  \verbatim
@@ -651,7 +651,7 @@ typedef struct SDL_HapticRamp
  *  \brief A structure containing a template for the ::SDL_HAPTIC_CUSTOM effect.
  *  
  *  A custom force feedback effect is much like a periodic effect, where the
- *  application can define it's exact shape.  You will have to allocate the
+ *  application can define its exact shape.  You will have to allocate the
  *  data yourself.  Data should consist of channels * samples Uint16 samples.
  *  
  *  If channels is one, the effect is rotated using the defined direction.
@@ -781,7 +781,7 @@ extern DECLSPEC int SDLCALL SDL_NumHaptics(void);
  *  This can be called before any joysticks are opened.
  *  If no name can be found, this function returns NULL.
  *  
- *  \param device_index Index of the device to get it's name.
+ *  \param device_index Index of the device to get its name.
  *  \return Name of the device or NULL on error.
  *
  *  \sa SDL_NumHaptics
@@ -794,7 +794,7 @@ extern DECLSPEC const char *SDLCALL SDL_HapticName(int device_index);
  *  The index passed as an argument refers to the N'th Haptic device on this 
  *  system.
  *
- *  When opening a haptic device, it's gain will be set to maximum and
+ *  When opening a haptic device, its gain will be set to maximum and
  *  autocenter will be disabled.  To modify these values use
  *  SDL_HapticSetGain() and SDL_HapticSetAutocenter().
  *
@@ -895,7 +895,7 @@ extern DECLSPEC void SDLCALL SDL_HapticClose(SDL_Haptic * haptic);
  *  \brief Returns the number of effects a haptic device can store.
  *  
  *  On some platforms this isn't fully supported, and therefore is an
- *  aproximation.  Always check to see if your created effect was actually
+ *  approximation.  Always check to see if your created effect was actually
  *  created and do not rely solely on SDL_HapticNumEffects().
  *  
  *  \param haptic The haptic device to query effect max.
@@ -912,7 +912,7 @@ extern DECLSPEC int SDLCALL SDL_HapticNumEffects(SDL_Haptic * haptic);
  *         time.
  *  
  *  This is not supported on all platforms, but will always return a value.  
- *  Added here for the sake of completness.
+ *  Added here for the sake of completeness.
  *  
  *  \param haptic The haptic device to query maximum playing effects.
  *  \return The number of effects the haptic device can play at the same time
@@ -999,7 +999,7 @@ extern DECLSPEC int SDLCALL SDL_HapticUpdateEffect(SDL_Haptic * haptic,
                                                    SDL_HapticEffect * data);
 
 /**
- *  \brief Runs the haptic effect on it's assosciated haptic device.
+ *  \brief Runs the haptic effect on its associated haptic device.
  *  
  *  If iterations are ::SDL_HAPTIC_INFINITY, it'll run the effect over and over
  *  repeating the envelope (attack and fade) every time.  If you only want the
@@ -1021,7 +1021,7 @@ extern DECLSPEC int SDLCALL SDL_HapticRunEffect(SDL_Haptic * haptic,
                                                 Uint32 iterations);
 
 /**
- *  \brief Stops the haptic effect on it's assosciated haptic device.
+ *  \brief Stops the haptic effect on its associated haptic device.
  *  
  *  \param haptic Haptic device to stop the effect on.
  *  \param effect Identifier of the effect to stop.
@@ -1053,7 +1053,7 @@ extern DECLSPEC void SDLCALL SDL_HapticDestroyEffect(SDL_Haptic * haptic,
  *  Device must support the ::SDL_HAPTIC_STATUS feature.
  *  
  *  \param haptic Haptic device to query the effect status on.
- *  \param effect Identifier of the effect to query it's status.
+ *  \param effect Identifier of the effect to query its status.
  *  \return 0 if it isn't playing, ::SDL_HAPTIC_PLAYING if it is playing
  *          or -1 on error.
  *  
@@ -1068,7 +1068,7 @@ extern DECLSPEC int SDLCALL SDL_HapticGetEffectStatus(SDL_Haptic * haptic,
  *  
  *  Device must support the ::SDL_HAPTIC_GAIN feature.
  *  
- *  The user may specify the maxmimum gain by setting the environment variable
+ *  The user may specify the maximum gain by setting the environment variable
  *  ::SDL_HAPTIC_GAIN_MAX which should be between 0 and 100.  All calls to
  *  SDL_HapticSetGain() will scale linearly using ::SDL_HAPTIC_GAIN_MAX as the
  *  maximum.
@@ -1164,7 +1164,7 @@ extern DECLSPEC int SDLCALL SDL_HapticRumbleInit(SDL_Haptic * haptic);
  *
  *  \param haptic Haptic device to play rumble effect on.
  *  \param strength Strength of the rumble to play as a 0-1 float value.
- *  \param length Length of the rumble to play in miliseconds.
+ *  \param length Length of the rumble to play in milliseconds.
  *  \return 0 on success or -1 on error.
  *
  *  \sa SDL_HapticRumbleSupported

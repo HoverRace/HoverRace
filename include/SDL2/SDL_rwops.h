@@ -138,6 +138,7 @@ typedef struct SDL_RWops
         struct
         {
             void *data1;
+            void *data2;
         } unknown;
     } hidden;
 

@@ -30,7 +30,6 @@
 
 #include "SDL_config.h"
 
-
 #ifdef HAVE_SYS_TYPES_H
 #include <sys/types.h>
 #endif
@@ -94,9 +93,11 @@
 #ifdef __cplusplus
 #define SDL_reinterpret_cast(type, expression) reinterpret_cast<type>(expression)
 #define SDL_static_cast(type, expression) static_cast<type>(expression)
+#define SDL_const_cast(type, expression) const_cast<type>(expression)
 #else
 #define SDL_reinterpret_cast(type, expression) ((type)(expression))
 #define SDL_static_cast(type, expression) ((type)(expression))
+#define SDL_const_cast(type, expression) ((type)(expression))
 #endif
 /*@}*//*Cast operators*/
 
@@ -282,7 +283,7 @@ SDL_FORCE_INLINE int SDL_setenv_inline(const char *name, const char *value, int 
 
 extern DECLSPEC void SDLCALL SDL_qsort(void *base, size_t nmemb, size_t size, int (*compare) (const void *, const void *));
 #ifdef HAVE_QSORT
-SDL_FORCE_INLINE void SDL_qsort_inline(void *base, size_t nmemb, size_t size, int (*compare) (const void *, const void *)) { return qsort(base, nmemb, size, compare); }
+SDL_FORCE_INLINE void SDL_qsort_inline(void *base, size_t nmemb, size_t size, int (*compare) (const void *, const void *)) { qsort(base, nmemb, size, compare); }
 #define SDL_qsort SDL_qsort_inline
 #endif
 
@@ -503,25 +504,25 @@ SDL_FORCE_INLINE char *SDL_strlwr_inline(char *str) { return _strlwr(str); }
 
 extern DECLSPEC char *SDLCALL SDL_strchr(const char *str, int c);
 #ifdef HAVE_STRCHR
-SDL_FORCE_INLINE char *SDL_strchr_inline(const char *str, int c) { return (char*)strchr(str, c); }
+SDL_FORCE_INLINE char *SDL_strchr_inline(const char *str, int c) { return SDL_const_cast(char*,strchr(str, c)); }
 #define SDL_strchr SDL_strchr_inline
 #elif defined(HAVE_INDEX)  /* !!! FIXME: is there anywhere that has this but not strchr? */
-SDL_FORCE_INLINE char *SDL_strchr_inline(const char *str, int c) { return index(str, c); }
+SDL_FORCE_INLINE char *SDL_strchr_inline(const char *str, int c) { return SDL_const_cast(char*,index(str, c)); }
 #define SDL_strchr SDL_strchr_inline
 #endif
 
 extern DECLSPEC char *SDLCALL SDL_strrchr(const char *str, int c);
 #ifdef HAVE_STRRCHR
-SDL_FORCE_INLINE char *SDL_strrchr_inline(const char *str, int c) { return (char*)strrchr(str, c); }
+SDL_FORCE_INLINE char *SDL_strrchr_inline(const char *str, int c) { return SDL_const_cast(char*,strrchr(str, c)); }
 #define SDL_strrchr SDL_strrchr_inline
 #elif defined(HAVE_RINDEX)  /* !!! FIXME: is there anywhere that has this but not strrchr? */
-SDL_FORCE_INLINE char *SDL_strrchr_inline(const char *str, int c) { return (char*)rindex(str, c); }
+SDL_FORCE_INLINE char *SDL_strrchr_inline(const char *str, int c) { return SDL_const_cast(char*,rindex(str, c)); }
 #define SDL_strrchr SDL_strrchr_inline
 #endif
 
 extern DECLSPEC char *SDLCALL SDL_strstr(const char *haystack, const char *needle);
 #ifdef HAVE_STRSTR
-SDL_FORCE_INLINE char *SDL_strstr_inline(const char *haystack, const char *needle) { return (char*)strstr(haystack, needle); }
+SDL_FORCE_INLINE char *SDL_strstr_inline(const char *haystack, const char *needle) { return SDL_const_cast(char*,strstr(haystack, needle)); }
 #define SDL_strstr SDL_strstr_inline
 #endif
 
@@ -592,7 +593,7 @@ SDL_FORCE_INLINE Uint64 SDL_strtoull_inline(const char *str, char **endp, int ba
 
 extern DECLSPEC double SDLCALL SDL_strtod(const char *str, char **endp);
 #ifdef HAVE_STRTOD
-SDL_FORCE_INLINE Uint64 SDL_strtod_inline(const char *str, char **endp) { return strtod(str, endp); }
+SDL_FORCE_INLINE double SDL_strtod_inline(const char *str, char **endp) { return strtod(str, endp); }
 #define SDL_strtod SDL_strtod_inline
 #endif
 
