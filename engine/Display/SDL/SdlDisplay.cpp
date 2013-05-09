@@ -47,6 +47,20 @@ namespace HoverRace {
 namespace Display {
 namespace SDL {
 
+namespace {
+	std::ostream &operator<<(std::ostream &oss, const SDL_RendererInfo &info) {
+		oss << info.name << " (";
+		if (info.flags & SDL_RENDERER_SOFTWARE) oss << ":SW";
+		if (info.flags & SDL_RENDERER_ACCELERATED) oss << ":Accel";
+		if (info.flags & SDL_RENDERER_PRESENTVSYNC) oss << ":VSync";
+		if (info.flags & SDL_RENDERER_TARGETTEXTURE) oss << ":RTT";
+		oss << ") Texture: " <<
+			info.max_texture_width << "x" << info.max_texture_height;
+
+		return oss;
+	}
+}
+
 /**
  * Constructor.
  * This will create a new window with the specified title.
@@ -150,6 +164,7 @@ void SdlDisplay::ApplyVideoMode()
 	int numDrivers = SDL_GetNumRenderDrivers();
 	int selDriverIdx = -1;
 	SDL_RendererInfo selDriver;
+	std::ostringstream rendOss;
 	for (int i = 0; i < numDrivers; i++) {
 		SDL_RendererInfo info;
 		SDL_GetRenderDriverInfo(i, &info);
@@ -161,6 +176,8 @@ void SdlDisplay::ApplyVideoMode()
 			continue;
 		}
 
+		rendOss << "renderer[" << i << "] " << info << '\n';
+
 		if (selDriverIdx == -1 ||
 			((info.flags & SDL_RENDERER_ACCELERATED) && (selDriver.flags & SDL_RENDERER_SOFTWARE)))
 		{
@@ -168,6 +185,11 @@ void SdlDisplay::ApplyVideoMode()
 			selDriver = info;
 		}
 	}
+#	ifdef _WIN32
+		OutputDebugString(rendOss.str().c_str());
+#	else
+		std::cout << rendOss.str();
+#	endif
 
 	if (selDriverIdx == -1) {
 		throw Exception("Unable to find a suitable renderer");
@@ -181,13 +203,7 @@ void SdlDisplay::ApplyVideoMode()
 		SDL_RendererInfo info;
 		SDL_GetRendererInfo(renderer, &info);
 		std::ostringstream oss;
-		oss << "Using renderer: " << info.name << " (";
-		if (info.flags & SDL_RENDERER_SOFTWARE) oss << ":SW";
-		if (info.flags & SDL_RENDERER_ACCELERATED) oss << ":Accel";
-		if (info.flags & SDL_RENDERER_PRESENTVSYNC) oss << ":VSync";
-		if (info.flags & SDL_RENDERER_TARGETTEXTURE) oss << ":RTT";
-		oss << ") Texture: " <<
-			info.max_texture_width << "x" << info.max_texture_height << "\n";
+		oss << "Selected renderer: " << info << '\n';
 
 #		ifdef _WIN32
 			OutputDebugString(oss.str().c_str());
