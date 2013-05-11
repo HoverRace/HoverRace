@@ -54,10 +54,49 @@ namespace {
 		if (info.flags & SDL_RENDERER_ACCELERATED) oss << ":Accel";
 		if (info.flags & SDL_RENDERER_PRESENTVSYNC) oss << ":VSync";
 		if (info.flags & SDL_RENDERER_TARGETTEXTURE) oss << ":RTT";
-		oss << ") Texture: " <<
-			info.max_texture_width << "x" << info.max_texture_height;
+		oss << ')';
+
+		if (info.max_texture_width != 0 || info.max_texture_height != 0) {
+			oss << " Texture: " <<
+				info.max_texture_width << "x" << info.max_texture_height;
+		}
 
 		return oss;
+	}
+
+	struct RendererInfo {
+		RendererInfo(int idx) : idx(idx), score(0) {
+			SDL_GetRenderDriverInfo(idx, &info);
+
+			// Blacklisting the Direct3D driver since we prefer an OpenGL one.
+			// This also fixes issue #201 where SDL_SetTextureAlphaMod seems to stop
+			// working after a screen resize.
+			blacklisted = (strncmp(info.name, "direct3d", 8) == 0);
+
+			score += (blacklisted ? 1000 : 9000);
+
+			if (info.flags & SDL_RENDERER_ACCELERATED) score += 900;
+			else if (info.flags & SDL_RENDERER_SOFTWARE) score += 100;
+			else score += 500;
+
+			if (info.flags & SDL_RENDERER_TARGETTEXTURE) score += 50;
+
+			if (info.flags & SDL_RENDERER_PRESENTVSYNC) score += 5;
+		}
+
+		SDL_RendererInfo info;
+		int idx;
+		int score;
+		bool blacklisted;
+	};
+
+	bool operator<(const RendererInfo &a, const RendererInfo &b) {
+		if (a.score == b.score) {
+			return strcmp(a.info.name, b.info.name) < 0;
+		}
+		else {
+			return b.score < a.score;
+		}
 	}
 }
 
@@ -161,55 +200,37 @@ void SdlDisplay::ApplyVideoMode()
 
 	// Try to find a usable renderer.
 	// We prefer an accelerated one, but we'll allow fallback to software.
+
+	std::set<RendererInfo> renderers;
 	int numDrivers = SDL_GetNumRenderDrivers();
-	int selDriverIdx = -1;
-	SDL_RendererInfo selDriver;
-	std::ostringstream rendOss;
 	for (int i = 0; i < numDrivers; i++) {
-		SDL_RendererInfo info;
-		SDL_GetRenderDriverInfo(i, &info);
+		renderers.insert(RendererInfo(i));
+	}
 
-		// Blacklisting the Direct3D driver since we prefer an OpenGL one.
-		// This also fixes issue #201 where SDL_SetTextureAlphaMod seems to stop
-		// working after a screen resize.
-		if (strncmp(info.name, "direct3d", 8) == 0) {
-			continue;
-		}
+	std::ostringstream rendOss;
+	int i = 0;
+	BOOST_FOREACH(const RendererInfo &info, renderers) {
+		rendOss << "renderer[" << i++ << "]: " << info.info << '\n';
+	}
 
-		rendOss << "renderer[" << i << "] " << info << '\n';
-
-		if (selDriverIdx == -1 ||
-			((info.flags & SDL_RENDERER_ACCELERATED) && (selDriver.flags & SDL_RENDERER_SOFTWARE)))
-		{
-			selDriverIdx = i;
-			selDriver = info;
+	// Find a working renderer.
+	for (auto iter = renderers.begin(); iter != renderers.end(); ++iter) {
+		if (renderer = SDL_CreateRenderer(window, iter->idx, 0)) {
+			SDL_RendererInfo info;
+			SDL_GetRendererInfo(renderer, &info);
+			rendOss << "Selected renderer: " << info << '\n';
+			break;
 		}
 	}
+
 #	ifdef _WIN32
 		OutputDebugString(rendOss.str().c_str());
 #	else
 		std::cout << rendOss.str();
 #	endif
 
-	if (selDriverIdx == -1) {
-		throw Exception("Unable to find a suitable renderer");
-	}
-
-	if (!(renderer = SDL_CreateRenderer(window, selDriverIdx, 0))) {
-		throw Exception(SDL_GetError());
-	}
-	else {
-		// Dump the renderer info for debugging purposes.
-		SDL_RendererInfo info;
-		SDL_GetRendererInfo(renderer, &info);
-		std::ostringstream oss;
-		oss << "Selected renderer: " << info << '\n';
-
-#		ifdef _WIN32
-			OutputDebugString(oss.str().c_str());
-#		else
-			std::cout << oss.str();
-#		endif
+	if (!renderer) {
+		throw Exception("Unable to find a compatible renderer");
 	}
 
 	// We keep track of the current state of the window so
