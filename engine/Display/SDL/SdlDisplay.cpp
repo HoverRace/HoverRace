@@ -191,11 +191,17 @@ void SdlDisplay::ApplyVideoMode()
 {
 	Config::cfg_video_t &vidCfg = Config::GetInstance()->video;
 
+	// First try to enable OpenGL support, otherwise go on without it.
 	if (!(window = SDL_CreateWindow(windowTitle.c_str(),
 		vidCfg.xPos, vidCfg.yPos, vidCfg.xRes, vidCfg.yRes,
 		SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL)))
 	{
-		throw Exception(SDL_GetError());
+		if (!(window = SDL_CreateWindow(windowTitle.c_str(),
+			vidCfg.xPos, vidCfg.yPos, vidCfg.xRes, vidCfg.yRes,
+			SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE)))
+		{
+			throw Exception(SDL_GetError());
+		}
 	}
 
 	// Try to find a usable renderer.
