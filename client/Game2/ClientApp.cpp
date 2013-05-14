@@ -48,6 +48,7 @@
 #include "Control/Controller.h"
 #include "Control/UiHandler.h"
 #include "HoverScript/ClientScriptCore.h"
+#include "HoverScript/ConsoleScene.h"
 #include "HoverScript/GamePeer.h"
 #include "HoverScript/HighConsole.h"
 #include "HoverScript/SessionPeer.h"
@@ -412,6 +413,24 @@ void ClientApp::NewLocalSession(RulebookPtr rules)
 	}
 }
 
+void ClientApp::OnConsoleToggle()
+{
+	if (auto scene = consoleScene.lock()) {
+		//TODO: Check if the console scene is the foreground scene first.
+		Scene::Phase::phase_t phase = scene->GetPhase();
+		if (phase != Scene::Phase::STOPPING &&
+			phase != Scene::Phase::STOPPED)
+		{
+			PopScene();
+			return;
+		}
+	}
+
+	auto newConsoleScene = std::make_shared<HoverScript::ConsoleScene>(*display, *this);
+	consoleScene = newConsoleScene;
+	PushScene(newConsoleScene);
+}
+
 /**
  * Remove the foreground scene.
  * @note This must only be called from the main thread.
@@ -447,6 +466,7 @@ void ClientApp::SetForegroundScene(const ScenePtr &scene)
 	else {
 		// Detach the controller from the previous foreground scene.
 		if (fgScene) {
+			consoleToggleConn.disconnect();
 			fgScene->DetachController(*controller);
 		}
 
@@ -455,6 +475,12 @@ void ClientApp::SetForegroundScene(const ScenePtr &scene)
 		// Load controller mapping from new foreground scene.
 		controller->ClearActionMap();
 		scene->AttachController(*controller);
+
+		// Enable the console toggle.
+		controller->AddConsoleToggleMaps();
+		auto &consoleToggleAction = controller->actions.sys.consoleToggle;
+		consoleToggleConn = consoleToggleAction->Connect(std::bind(&ClientApp::OnConsoleToggle, this));
+
 		SDL_ShowCursor(scene->IsMouseCursorEnabled() ? SDL_ENABLE : SDL_DISABLE);
 	}
 }

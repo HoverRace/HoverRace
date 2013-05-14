@@ -165,6 +165,9 @@
     <ClCompile Include="Game2\Control\ControllerStrings.cpp">
       <Filter>Control</Filter>
     </ClCompile>
+    <ClCompile Include="Game2\HoverScript\ConsoleScene.cpp">
+      <Filter>HoverScript</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game2\AboutDialog.h">
@@ -337,6 +340,9 @@
     </ClInclude>
     <ClInclude Include="Game2\TestLabScene.h">
       <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\HoverScript\ConsoleScene.h">
+      <Filter>HoverScript</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

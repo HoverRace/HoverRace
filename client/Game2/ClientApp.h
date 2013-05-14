@@ -33,6 +33,7 @@ namespace HoverRace {
 			class InputEventController;
 		}
 		namespace HoverScript {
+			class ConsoleScene;
 			class GamePeer;
 			class HighConsole;
 			class SessionPeer;
@@ -78,6 +79,9 @@ class ClientApp : public GameDirector
 		void NewLocalSession(RulebookPtr rules=RulebookPtr());
 
 	private:
+		void OnConsoleToggle();
+
+	private:
 		typedef std::list<ScenePtr> sceneStack_t;
 		void SetForegroundScene();
 		void SetForegroundScene(const ScenePtr &iter);
@@ -115,8 +119,11 @@ class ClientApp : public GameDirector
 		Script::Core *scripting;
 		HoverScript::GamePeer *gamePeer;
 		HoverScript::SysEnv *sysEnv;
+		std::weak_ptr<HoverScript::ConsoleScene> consoleScene;
 
 		RulebookPtr requestedNewSession;
+
+		boost::signals2::connection consoleToggleConn;
 
 		// Stats counters.
 		Display::Label *fpsLbl;
