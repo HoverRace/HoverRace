@@ -689,7 +689,7 @@ void Config::ResetToDefaults()
 	camera_hash.panDown = HashKeyboardEvent(SDLK_PAGEDOWN);
 	camera_hash.reset   = HashKeyboardEvent(SDLK_HOME);
 
-	ui.console_toggle = HashKeyboardEvent(SDLK_F12);
+	ui.console_toggle = HashKeyboardEvent(SDLK_F11);
 	ui.console_up     = HashKeyboardEvent(SDLK_PAGEUP);
 	ui.console_down   = HashKeyboardEvent(SDLK_PAGEDOWN);
 	ui.console_top    = HashKeyboardEvent(SDLK_HOME);
