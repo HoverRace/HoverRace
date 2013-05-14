@@ -74,5 +74,5 @@ class TestLabScene : public UiScene
 		Display::Label *displayInfoLbl;
 };
 
-}  // namespace HoverScript
 }  // namespace Client
+}  // namespace HoverRace

@@ -38,5 +38,5 @@ void UiScene::DetachController(Control::InputEventController &controller)
 	//TODO
 }
 
-}  // namespace HoverScript
 }  // namespace Client
+}  // namespace HoverRace

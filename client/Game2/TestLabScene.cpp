@@ -121,5 +121,5 @@ void TestLabScene::Render()
 		std::mem_fn(&Display::ViewModel::Render));
 }
 
-}  // namespace HoverScript
 }  // namespace Client
+}  // namespace HoverRace

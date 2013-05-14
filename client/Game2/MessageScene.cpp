@@ -168,5 +168,5 @@ void MessageScene::Render()
 	}
 }
 
-}  // namespace HoverScript
 }  // namespace Client
+}  // namespace HoverRace

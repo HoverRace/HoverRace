@@ -75,5 +75,5 @@ class MessageScene : public UiScene
 		boost::signals2::connection cancelConn;
 };
 
-}  // namespace HoverScript
 }  // namespace Client
+}  // namespace HoverRace

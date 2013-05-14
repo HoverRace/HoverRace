@@ -45,5 +45,5 @@ class UiScene : public Scene
 		virtual void DetachController(Control::InputEventController &controller);
 };
 
-}  // namespace HoverScript
 }  // namespace Client
+}  // namespace HoverRace
