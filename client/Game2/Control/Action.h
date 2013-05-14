@@ -45,9 +45,13 @@ inline void PerformAction(const T&, int)
 }
 
 template<>
-inline void PerformAction<voidSignal_t>(const voidSignal_t &signal, int)
+inline void PerformAction<voidSignal_t>(const voidSignal_t &signal, int value)
 {
-	signal();
+	// voidSignals are only triggered if the value is > 0.
+	// For keys and buttons, that means key-down / button-down.
+	if (value > 0) {
+		signal();
+	}
 }
 
 template<>
