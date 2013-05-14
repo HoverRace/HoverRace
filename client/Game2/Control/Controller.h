@@ -186,6 +186,9 @@ class InputEventController {
 		/// Enable menu controls.
 		void AddMenuMaps();
 
+		/// Enable console toggle.
+		void AddConsoleToggleMaps();
+
 		/***
 		 * Convert a hash into an internationalized string.
 		 */
@@ -202,6 +205,9 @@ class InputEventController {
 	public:
 		/// Set up menu controls.
 		void LoadMenuMap();
+
+		/// Set up the console toggle control.
+		void LoadConsoleToggleMap();
 
 		/***
 		 * Set up controls for the console.
@@ -311,6 +317,10 @@ class InputEventController {
 				VoidActionPtr menuOk;
 				VoidActionPtr menuCancel;
 			} ui;
+			struct sys_t {
+				sys_t();
+				VoidActionPtr consoleToggle;
+			} sys;
 		} actions;
 };
 

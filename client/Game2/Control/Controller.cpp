@@ -46,6 +46,10 @@ InputEventController::actions_t::ui_t::ui_t() :
 	menuCancel(std::make_shared<Action<voidSignal_t>>(_("Cancel"), 0))
 	{ }
 
+InputEventController::actions_t::sys_t::sys_t() :
+	consoleToggle(std::make_shared<Action<voidSignal_t>>(_("Toggle Console"), 0))
+	{ }
+
 InputEventController::InputEventController(Util::OS::wnd_t mainWindow, UiHandlerPtr uiHandler) :
 	uiHandler(uiHandler)
 {
@@ -57,6 +61,7 @@ InputEventController::InputEventController(Util::OS::wnd_t mainWindow, UiHandler
 	InitInputManager(mainWindow);
 	LoadConfig();
 	LoadMenuMap();
+	LoadConsoleToggleMap();
 	LoadConsoleMap();
 }
 
@@ -317,8 +322,6 @@ void InputEventController::AddPlayerMaps(int numPlayers, MainCharacter::MainChar
 		}
 		activeMaps.push_back(mapname);
 	}
-
-	AddActionMap(_("Console"));
 }
 
 void InputEventController::AddObserverMaps(Observer** obs, int numObs)
@@ -335,6 +338,11 @@ void InputEventController::AddObserverMaps(Observer** obs, int numObs)
 void InputEventController::AddMenuMaps()
 {
 	AddActionMap(_("Menu"));
+}
+
+void InputEventController::AddConsoleToggleMaps()
+{
+	AddActionMap(_("ConsoleToggle"));
 }
 
 void InputEventController::SetConsole(HighConsole* hc)
@@ -517,6 +525,16 @@ void InputEventController::LoadMenuMap()
 
 	AssignAction(cmap, config->ui.menu_ok, actions.ui.menuOk);
 	AssignAction(cmap, config->ui.menu_cancel, actions.ui.menuCancel);
+}
+
+void InputEventController::LoadConsoleToggleMap()
+{
+	ActionMap& cmap = allActionMaps[_("ConsoleToggle")];
+	cmap.clear();
+	
+	Config* config = Config::GetInstance();
+
+	AssignAction(cmap, config->ui.console_toggle, actions.sys.consoleToggle);
 }
 
 void InputEventController::LoadConsoleMap()
