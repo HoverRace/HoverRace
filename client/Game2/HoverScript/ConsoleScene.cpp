@@ -1,5 +1,5 @@
 
-// MessageScene.cpp
+// ConsoleScene.cpp
 //
 // Copyright (c) 2013 Michael Imamura.
 //
