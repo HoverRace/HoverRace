@@ -416,12 +416,10 @@ void ClientApp::NewLocalSession(RulebookPtr rules)
 void ClientApp::OnConsoleToggle()
 {
 	if (auto scene = consoleScene.lock()) {
-		//TODO: Check if the console scene is the foreground scene first.
 		Scene::Phase::phase_t phase = scene->GetPhase();
 		if (phase != Scene::Phase::STOPPING &&
 			phase != Scene::Phase::STOPPED)
 		{
-			PopScene();
 			return;
 		}
 	}

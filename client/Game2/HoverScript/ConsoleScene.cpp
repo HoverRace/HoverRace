@@ -46,12 +46,21 @@ ConsoleScene::~ConsoleScene()
 	delete(winShadeBox);
 }
 
+void ConsoleScene::OnConsoleToggle()
+{
+	director.RequestPopScene();
+}
+
 void ConsoleScene::AttachController(Control::InputEventController &controller)
 {
+	controller.AddConsoleToggleMaps();
+	auto &consoleToggleAction = controller.actions.sys.consoleToggle;
+	consoleToggleConn = consoleToggleAction->Connect(std::bind(&ConsoleScene::OnConsoleToggle, this));
 }
 
 void ConsoleScene::DetachController(Control::InputEventController &controller)
 {
+	consoleToggleConn.disconnect();
 }
 
 void ConsoleScene::Advance(Util::OS::timestamp_t tick)

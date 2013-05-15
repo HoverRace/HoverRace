@@ -44,6 +44,9 @@ class ConsoleScene : public UiScene
 		ConsoleScene(Display::Display &display, GameDirector &director);
 		virtual ~ConsoleScene();
 
+	private:
+		void OnConsoleToggle();
+
 	public:
 		// Scene
 		virtual void AttachController(Control::InputEventController &controller);
@@ -55,6 +58,8 @@ class ConsoleScene : public UiScene
 	private:
 		Display::Display &display;
 		GameDirector &director;
+
+		boost::signals2::connection consoleToggleConn;
 
 		Display::FillBox *winShadeBox;
 };
