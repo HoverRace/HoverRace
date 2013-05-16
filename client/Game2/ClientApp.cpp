@@ -119,6 +119,12 @@ ClientApp::ClientApp() :
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) == -1)
 		throw Exception("SDL initialization failed");
 
+#	ifdef _DEBUG
+		SDL_LogSetAllPriority(SDL_LOG_PRIORITY_INFO);
+#	else
+		SDL_LogSetAllPriority(SDL_LOG_PRIORITY_ERROR);
+#	endif
+
 #	ifdef WITH_SDL_PANGO
 		SDLPango_Init();
 #	elif defined(WITH_SDL_TTF)
