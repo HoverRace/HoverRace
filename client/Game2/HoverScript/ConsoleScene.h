@@ -26,6 +26,9 @@
 namespace HoverRace {
 	namespace Client {
 		class GameDirector;
+		namespace HoverScript {
+			class SysConsole;
+		}
 	}
 	namespace Display {
 		class Display;
@@ -37,11 +40,16 @@ namespace HoverRace {
 namespace Client {
 namespace HoverScript {
 
+/**
+ * UI for the system console.
+ * @author Michael Imamura
+ */
 class ConsoleScene : public UiScene
 {
 	typedef UiScene SUPER;
 	public:
-		ConsoleScene(Display::Display &display, GameDirector &director);
+		ConsoleScene(Display::Display &display, GameDirector &director,
+			SysConsole &console);
 		virtual ~ConsoleScene();
 
 	private:
@@ -58,6 +66,7 @@ class ConsoleScene : public UiScene
 	private:
 		Display::Display &display;
 		GameDirector &director;
+		SysConsole &console;
 
 		boost::signals2::connection consoleToggleConn;
 

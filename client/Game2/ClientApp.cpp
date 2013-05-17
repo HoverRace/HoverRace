@@ -52,6 +52,7 @@
 #include "HoverScript/GamePeer.h"
 #include "HoverScript/HighConsole.h"
 #include "HoverScript/SessionPeer.h"
+#include "HoverScript/SysConsole.h"
 #include "HoverScript/SysEnv.h"
 #include "ClientSession.h"
 #include "GameScene.h"
@@ -142,6 +143,7 @@ ClientApp::ClientApp() :
 	if (!initScript.empty()) {
 		sysEnv->RunScript(initScript);
 	}
+	sysConsole = new SysConsole(scripting);
 
 	//TODO: Select which display to use.
 	SDL_DisplayMode desktopMode;
@@ -202,6 +204,7 @@ ClientApp::ClientApp() :
 ClientApp::~ClientApp()
 {
 	delete fpsLbl;
+	delete sysConsole;
 	delete sysEnv;
 	delete gamePeer;
 	delete scripting;
@@ -430,7 +433,7 @@ void ClientApp::OnConsoleToggle()
 		}
 	}
 
-	auto newConsoleScene = std::make_shared<HoverScript::ConsoleScene>(*display, *this);
+	auto newConsoleScene = std::make_shared<HoverScript::ConsoleScene>(*display, *this, *sysConsole);
 	consoleScene = newConsoleScene;
 	PushScene(newConsoleScene);
 }

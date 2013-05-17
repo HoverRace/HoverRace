@@ -38,6 +38,7 @@ namespace HoverRace {
 			class HighConsole;
 			class SessionPeer;
 			typedef std::shared_ptr<SessionPeer> SessionPeerPtr;
+			class SysConsole;
 			class SysEnv;
 		}
 		class HighObserver;
@@ -119,6 +120,7 @@ class ClientApp : public GameDirector
 		Script::Core *scripting;
 		HoverScript::GamePeer *gamePeer;
 		HoverScript::SysEnv *sysEnv;
+		HoverScript::SysConsole *sysConsole;
 		std::weak_ptr<HoverScript::ConsoleScene> consoleScene;
 
 		RulebookPtr requestedNewSession;

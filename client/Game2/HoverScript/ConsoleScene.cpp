@@ -24,6 +24,7 @@
 #include "../../../engine/Display/Display.h"
 #include "../../../engine/Display/FillBox.h"
 #include "../GameDirector.h"
+#include "SysConsole.h"
 
 #include "ConsoleScene.h"
 
@@ -33,9 +34,10 @@ namespace HoverRace {
 namespace Client {
 namespace HoverScript {
 
-ConsoleScene::ConsoleScene(Display::Display &display, GameDirector &director) :
+ConsoleScene::ConsoleScene(Display::Display &display, GameDirector &director,
+                           SysConsole &console) :
 	SUPER("Console"),
-	display(display), director(director)
+	display(display), director(director), console(console)
 {
 	winShadeBox = new Display::FillBox(1280, 720, 0xbf000000);
 	winShadeBox->AttachView(display);
