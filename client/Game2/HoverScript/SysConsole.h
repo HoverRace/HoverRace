@@ -76,6 +76,9 @@ class SysConsole : public Console
 		virtual void LogError(const std::string &s);
 
 	public:
+		int GetEndLogIndex() const;
+
+	public:
 		/// Fired when the log is cleared.
 		typedef boost::signals2::signal<void()> logClearedSignal_t;
 		logClearedSignal_t &GetLogClearedSignal() { return logClearedSignal; }

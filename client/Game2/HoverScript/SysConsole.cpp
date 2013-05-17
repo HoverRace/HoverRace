@@ -93,6 +93,15 @@ void SysConsole::LogError(const std::string &s)
 	AddLogLine(LogLevel::ERROR, s);
 }
 
+/**
+ * Retrieve the index of the last log entry.
+ * @return The index or -1 if the log has been cleared.
+ */
+int SysConsole::GetEndLogIndex() const
+{
+	return logLines.empty() ? -1 : logLines.back().idx;
+}
+
 void SysConsole::HelpClass(const Script::Help::Class &cls)
 {
 	//TODO
