@@ -41,7 +41,7 @@ namespace Control {
  * concerns, most of these do not check if the pointer is NULL.  Given that that
  * condition should never happen, this should not be a problem.
  */
-class PlayerEffectAction : public ControlAction {
+class PlayerEffectAction : public ControlAction<int> {
 	public:
 		// C++0x should give us constructor inheritance... whenever that happens
 		PlayerEffectAction(std::string name, int listOrder, MainCharacter::MainCharacter* mc);

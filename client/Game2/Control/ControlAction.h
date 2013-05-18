@@ -40,12 +40,13 @@ namespace Control {
  *
  * To create a functor, derive the ControlAction class.
  */
+template<class T>
 class ControlAction {
 	public:
 		ControlAction(const std::string &name, int listOrder) : name(name), listOrder(listOrder) { }
 		virtual ~ControlAction() { }
 
-		virtual void operator()(int eventValue) = 0;
+		virtual void operator()(T eventValue) = 0;
 
 		const std::string &GetName() { return name; }
 		int GetListOrder() { return listOrder; }
@@ -54,7 +55,7 @@ class ControlAction {
 		std::string name;
 		int listOrder;
 };
-typedef std::shared_ptr<ControlAction> ControlActionPtr;
+typedef std::shared_ptr<ControlAction<int>> ControlActionPtr;
 
 /***
  * \class BlankAction
@@ -62,7 +63,7 @@ typedef std::shared_ptr<ControlAction> ControlActionPtr;
  * Provides a template for other classes that will be used as an
  * ActionPerformer.
  */
-class BlankAction : public ControlAction {
+class BlankAction : public ControlAction<int> {
 	public:
 		BlankAction(std::string name, int listOrder) : ControlAction(name, listOrder) { }
 		virtual void operator()(int value) { }

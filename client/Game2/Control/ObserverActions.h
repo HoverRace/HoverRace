@@ -38,7 +38,7 @@ namespace Control {
  *
  * Base class for all camera changing or otherwise observer-related actions.
  */
-class ObserverAction : public ControlAction {
+class ObserverAction : public ControlAction<int> {
 	public:
 		ObserverAction(std::string name, int listOrder, Observer** observers, int nObservers) : ControlAction(name, listOrder), observers(observers), nObservers(nObservers) { }
 		virtual ~ObserverAction() { }

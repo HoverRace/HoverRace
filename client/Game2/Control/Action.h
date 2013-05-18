@@ -70,16 +70,16 @@ inline void PerformAction<valueSignal_t>(const valueSignal_t &signal, int value)
  * @tparam T The signal type.
  * @author Michael Imamura
  */
-template<class T>
-class Action : public ControlAction
+template<class T, class Val=int>
+class Action : public ControlAction<Val>
 {
-	typedef ControlAction SUPER;
+	typedef ControlAction<Val> SUPER;
 	public:
 		Action(const std::string &name, int listOrder) :
 			SUPER(name, listOrder), primaryTrigger(0) { }
 		virtual ~Action() { }
 
-		virtual void operator()(int value) { PerformAction<T>(signal, value); }
+		virtual void operator()(Val value) { PerformAction<T>(signal, value); }
 
 		/**
 		 * Connect a slot to the signal.
