@@ -36,16 +36,21 @@ typedef boost::signals2::signal<void()> voidSignal_t;
 /// Signals which have a single (action-dependent) payload.
 typedef boost::signals2::signal<void(int)> valueSignal_t;
 
-template<class T>
-inline void PerformAction(const T&, int)
+/// Signals which have a single string payload.
+typedef boost::signals2::signal<void(const std::string&)> stringSignal_t;
+
+template<class T, class Val>
+inline void PerformAction(const T&, Val)
 {
 	std::ostringstream oss;
-	oss << "PerformAction<" << typeid(T).name() << '>';
+	oss << "PerformAction<" << typeid(T).name() << ", " <<
+		typeid(Val).name() << '>';
 	throw UnimplementedExn(oss.str());
 }
 
 template<>
-inline void PerformAction<voidSignal_t>(const voidSignal_t &signal, int value)
+inline void PerformAction<voidSignal_t, int>(const voidSignal_t &signal,
+                                             int value)
 {
 	// voidSignals are only triggered if the value is > 0.
 	// For keys and buttons, that means key-down / button-down.
@@ -55,9 +60,17 @@ inline void PerformAction<voidSignal_t>(const voidSignal_t &signal, int value)
 }
 
 template<>
-inline void PerformAction<valueSignal_t>(const valueSignal_t &signal, int value)
+inline void PerformAction<valueSignal_t, int>(const valueSignal_t &signal,
+                                              int value)
 {
 	signal(value);
+}
+
+template<>
+inline void PerformAction<stringSignal_t, const std::string &>(
+	const stringSignal_t &signal, const std::string &s)
+{
+	signal(s);
 }
 
 /**
@@ -79,7 +92,9 @@ class Action : public ControlAction<Val>
 			SUPER(name, listOrder), primaryTrigger(0) { }
 		virtual ~Action() { }
 
-		virtual void operator()(Val value) { PerformAction<T>(signal, value); }
+		virtual void operator()(Val value) {
+			PerformAction<T, Val>(signal, value);
+		}
 
 		/**
 		 * Connect a slot to the signal.
