@@ -58,10 +58,14 @@ void ConsoleScene::AttachController(Control::InputEventController &controller)
 	controller.AddConsoleToggleMaps();
 	auto &consoleToggleAction = controller.actions.sys.consoleToggle;
 	consoleToggleConn = consoleToggleAction->Connect(std::bind(&ConsoleScene::OnConsoleToggle, this));
+
+	SDL_StartTextInput();
 }
 
 void ConsoleScene::DetachController(Control::InputEventController &controller)
 {
+	SDL_StopTextInput();
+
 	consoleToggleConn.disconnect();
 }
 
