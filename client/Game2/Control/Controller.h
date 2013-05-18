@@ -37,7 +37,7 @@
 #include "Action.h"
 #include "ControlAction.h"
 
-#define	CTL_MOTOR_ON	1
+#define CTL_MOTOR_ON	1
 #define CTL_LEFT		2
 #define CTL_RIGHT		3
 #define CTL_JUMP		4
