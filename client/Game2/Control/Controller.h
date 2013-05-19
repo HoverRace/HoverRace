@@ -94,6 +94,7 @@ class InputEventController {
 		// event handlers
 		bool OnKeyPressed(const SDL_KeyboardEvent &arg);
 		bool OnKeyReleased(const SDL_KeyboardEvent &arg);
+		bool OnTextInput(const SDL_TextInputEvent &evt);
 		bool OnMouseMoved(const SDL_MouseMotionEvent &evt);
 		bool OnMousePressed(const SDL_MouseButtonEvent &evt);
 		bool OnMouseReleased(const SDL_MouseButtonEvent &evt);
@@ -311,11 +312,13 @@ class InputEventController {
 
 	public:
 		typedef std::shared_ptr<Action<voidSignal_t>> VoidActionPtr;
+		typedef std::shared_ptr<Action<stringSignal_t, const std::string&>> StringActionPtr;
 		struct actions_t {
 			struct ui_t {
 				ui_t();
 				VoidActionPtr menuOk;
 				VoidActionPtr menuCancel;
+				StringActionPtr text;
 			} ui;
 			struct sys_t {
 				sys_t();

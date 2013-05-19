@@ -43,7 +43,8 @@ using namespace std;
 
 InputEventController::actions_t::ui_t::ui_t() :
 	menuOk(std::make_shared<Action<voidSignal_t>>(_("OK"), 0)),
-	menuCancel(std::make_shared<Action<voidSignal_t>>(_("Cancel"), 0))
+	menuCancel(std::make_shared<Action<voidSignal_t>>(_("Cancel"), 0)),
+	text(std::make_shared<Action<stringSignal_t, const std::string&>>("", 0))
 	{ }
 
 InputEventController::actions_t::sys_t::sys_t() :
@@ -74,6 +75,7 @@ void InputEventController::ProcessInputEvent(const SDL_Event &evt)
 	switch (evt.type) {
 		case SDL_KEYDOWN: OnKeyPressed(evt.key); break;
 		case SDL_KEYUP: OnKeyReleased(evt.key); break;
+		case SDL_TEXTINPUT: OnTextInput(evt.text); break;
 
 		case SDL_MOUSEMOTION: OnMouseMoved(evt.motion); break;
 		case SDL_MOUSEBUTTONDOWN: OnMousePressed(evt.button); break;
@@ -120,6 +122,14 @@ bool InputEventController::OnKeyReleased(const SDL_KeyboardEvent& arg)
 
 	// value will be 0 (since the key was released)
 	HandleEvent(HashKeyboardEvent(kc), 0);
+	return true;
+}
+
+bool InputEventController::OnTextInput(const SDL_TextInputEvent &evt)
+{
+	(*actions.ui.text)(evt.text);
+	//std::cout << "Text input: " << evt.text << std::endl;
+
 	return true;
 }
 
