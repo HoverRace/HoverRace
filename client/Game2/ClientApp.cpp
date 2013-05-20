@@ -199,6 +199,10 @@ ClientApp::ClientApp() :
 		Display::Color(0xff, 0xff, 0x7f, 0x00),
 		LayoutFlags::UNSCALED | LayoutFlags::FLOATING);
 	fpsLbl->AttachView(*display);
+
+	// SDL2 automatically initiates text input mode.
+	// We want to have each scene decide whether they expect text input or not.
+	SDL_StopTextInput();
 }
 
 ClientApp::~ClientApp()
