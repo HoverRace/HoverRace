@@ -128,7 +128,6 @@ bool InputEventController::OnKeyReleased(const SDL_KeyboardEvent& arg)
 bool InputEventController::OnTextInput(const SDL_TextInputEvent &evt)
 {
 	(*actions.ui.text)(evt.text);
-	//std::cout << "Text input: " << evt.text << std::endl;
 
 	return true;
 }
