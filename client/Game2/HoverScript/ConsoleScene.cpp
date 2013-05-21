@@ -23,6 +23,7 @@
 
 #include "../../../engine/Display/Display.h"
 #include "../../../engine/Display/FillBox.h"
+#include "../../../engine/Display/Label.h"
 #include "../GameDirector.h"
 #include "SysConsole.h"
 
@@ -34,17 +35,38 @@ namespace HoverRace {
 namespace Client {
 namespace HoverScript {
 
+namespace {
+	static const std::string COMMAND_PROMPT(">> ");
+	static const std::string CONTINUE_PROMPT(":> ");
+}
+
 ConsoleScene::ConsoleScene(Display::Display &display, GameDirector &director,
                            SysConsole &console) :
 	SUPER("Console"),
 	display(display), director(director), console(console)
 {
+	typedef Display::UiViewModel::Alignment Alignment;
+
+	Config *cfg = Config::GetInstance();
+
+	submitBuffer.reserve(1024);
+	historyBuffer.reserve(1024);
+	commandLine.reserve(1024);
+
 	winShadeBox = new Display::FillBox(1280, 720, 0xbf000000);
 	winShadeBox->AttachView(display);
+
+	Display::UiFont font(cfg->GetDefaultMonospaceFontName(), 30);
+
+	inputLbl = new Display::Label(COMMAND_PROMPT, font, 0xffffffff);
+	inputLbl->SetPos(0, 719);
+	inputLbl->SetAlignment(Alignment::SW);
+	inputLbl->AttachView(display);
 }
 
 ConsoleScene::~ConsoleScene()
 {
+	delete(inputLbl);
 	delete(winShadeBox);
 }
 
@@ -53,11 +75,20 @@ void ConsoleScene::OnConsoleToggle()
 	director.RequestPopScene();
 }
 
+void ConsoleScene::OnTextInput(const std::string &s)
+{
+	commandLine += s;
+	inputLbl->SetText(COMMAND_PROMPT + commandLine);
+}
+
 void ConsoleScene::AttachController(Control::InputEventController &controller)
 {
 	controller.AddConsoleToggleMaps();
 	auto &consoleToggleAction = controller.actions.sys.consoleToggle;
 	consoleToggleConn = consoleToggleAction->Connect(std::bind(&ConsoleScene::OnConsoleToggle, this));
+
+	auto &textAction = controller.actions.ui.text;
+	textInputConn = textAction->Connect(std::bind(&ConsoleScene::OnTextInput, this, std::placeholders::_1));
 
 	SDL_StartTextInput();
 }
@@ -66,6 +97,7 @@ void ConsoleScene::DetachController(Control::InputEventController &controller)
 {
 	SDL_StopTextInput();
 
+	textInputConn.disconnect();
 	consoleToggleConn.disconnect();
 }
 
@@ -85,11 +117,13 @@ void ConsoleScene::Advance(Util::OS::timestamp_t tick)
 void ConsoleScene::PrepareRender()
 {
 	winShadeBox->PrepareRender();
+	inputLbl->PrepareRender();
 }
 
 void ConsoleScene::Render()
 {
 	winShadeBox->Render();
+	inputLbl->Render();
 }
 
 }  // namespace HoverScript

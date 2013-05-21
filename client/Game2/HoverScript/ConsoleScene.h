@@ -33,6 +33,7 @@ namespace HoverRace {
 	namespace Display {
 		class Display;
 		class FillBox;
+		class Label;
 	}
 }
 
@@ -54,6 +55,7 @@ class ConsoleScene : public UiScene
 
 	private:
 		void OnConsoleToggle();
+		void OnTextInput(const std::string &s);
 
 	public:
 		// Scene
@@ -69,8 +71,14 @@ class ConsoleScene : public UiScene
 		SysConsole &console;
 
 		boost::signals2::connection consoleToggleConn;
+		boost::signals2::connection textInputConn;
+
+		std::string submitBuffer;
+		std::string historyBuffer;
+		std::string commandLine;
 
 		Display::FillBox *winShadeBox;
+		Display::Label *inputLbl;
 };
 
 }  // namespace HoverScript
