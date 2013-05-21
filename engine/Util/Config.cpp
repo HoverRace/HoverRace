@@ -195,13 +195,13 @@ Config::Config(int verMajor, int verMinor, int verPatch, int verBuild,
 	userAgentId += " (" PLATFORM_NAME ")";
 
 #	ifdef WITH_SDL_PANGO
-		defaultFontName = "Arial,sans";
+		defaultFontName = "Arial,sans-serif";
 #	elif defined(WITH_SDL_TTF)
 		defaultFontName = "freefont/FreeSans";
 #	elif defined(_WIN32)
 		defaultFontName = "Arial";
 #	else
-		defaultFontName = "sans";
+		defaultFontName = "sans-serif";
 #	endif
 
 #	ifdef WITH_SDL_PANGO
