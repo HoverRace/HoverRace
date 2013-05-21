@@ -203,6 +203,17 @@ Config::Config(int verMajor, int verMinor, int verPatch, int verBuild,
 #	else
 		defaultFontName = "sans";
 #	endif
+
+#	ifdef WITH_SDL_PANGO
+		defaultMonospaceFontName = "Courier New,monospace";
+#	elif defined(WITH_SDL_TTF)
+		defaultMonospaceFontName = "freefont/FreeMono";
+#	elif defined(_WIN32)
+		defaultMonospaceFontName = "Courier New";
+#	else
+		defaultMonospaceFontName = "monospace";
+#	endif
+
 	//TODO: Check if we successfully loaded our private fonts.
 
 	// Set initial defaults.
@@ -579,6 +590,15 @@ OS::path_t Config::GetDefaultChatLogPath()
 const std::string &Config::GetDefaultFontName() const
 {
 	return defaultFontName;
+}
+
+/**
+ * Retrieve the default font name for monospace text (e.g. the console).
+ * @return The font name (never emepty).
+ */
+const std::string &Config::GetDefaultMonospaceFontName() const
+{
+	return defaultMonospaceFontName;
 }
 
 /**

@@ -96,6 +96,7 @@ class MR_DllDeclare Config
 		std::string fullVersion;
 		std::string userAgentId;
 		std::string defaultFontName;
+		std::string defaultMonospaceFontName;
 #		ifndef _WIN32
 			xdgHandle *xdg;
 #		endif
@@ -145,6 +146,7 @@ class MR_DllDeclare Config
 		static OS::path_t GetDefaultChatLogPath();
 
 		const std::string &GetDefaultFontName() const;
+		const std::string &GetDefaultMonospaceFontName() const;
 
 	public:
 		static Config *GetInstance() { return instance; }
