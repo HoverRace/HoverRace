@@ -23,6 +23,11 @@
 
 #include "Console.h"
 
+// Previously defined in WinGDI.h.
+#ifdef ERROR
+#	undef ERROR
+#endif
+
 namespace HoverRace {
 	namespace Client {
 		namespace HoverScript {
