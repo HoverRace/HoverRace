@@ -101,7 +101,6 @@ class MR_DllDeclare SdlDisplay : public Display
 
 	public:
 		// SDL-specific utilities.
-		static SDL_Surface *CreateHardwareSurface(int w, int h);
 		void DrawUiTexture(SDL_Texture *texture, const Vec2 &relPos,
 			uiLayoutFlags_t layoutFlags=0);
 
