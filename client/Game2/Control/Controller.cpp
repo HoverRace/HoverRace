@@ -44,7 +44,8 @@ using namespace std;
 InputEventController::actions_t::ui_t::ui_t() :
 	menuOk(std::make_shared<Action<voidSignal_t>>(_("OK"), 0)),
 	menuCancel(std::make_shared<Action<voidSignal_t>>(_("Cancel"), 0)),
-	text(std::make_shared<Action<stringSignal_t, const std::string&>>("", 0))
+	text(std::make_shared<Action<stringSignal_t, const std::string&>>("", 0)),
+	control(std::make_shared<Action<textControlSignal_t, TextControl::key_t>>("", 0))
 	{ }
 
 InputEventController::actions_t::sys_t::sys_t() :
@@ -94,22 +95,41 @@ void InputEventController::ProcessInputEvent(const SDL_Event &evt)
 
 bool InputEventController::OnKeyPressed(const SDL_KeyboardEvent& arg)
 {
-	// make left and right modifiers equal
 	SDL_Keycode kc = arg.keysym.sym;
 
-	if (kc == SDLK_RSHIFT)
-		kc = SDLK_LSHIFT;
-	else if (kc == SDLK_RCTRL)
-		kc = SDLK_LCTRL;
-	else if (kc == SDLK_RGUI)
-		kc = SDLK_LGUI;
+	if (SDL_IsTextInputActive()) {
+		// Map numpad enter to the "normal" enter so action subscribers don't need to
+		// check for both.
+		if (kc == SDLK_KP_ENTER)
+			kc = SDLK_RETURN;
 
-	HandleEvent(HashKeyboardEvent(kc), 1);
+		switch (kc) {
+			case SDLK_BACKSPACE:
+			case SDLK_RETURN:
+				// For now, key_t values are mapped directly to SDL keycodes for
+				// convenience.
+				(*actions.ui.control)(static_cast<TextControl::key_t>(kc));
+				break;
+		}
+	}
+	else {
+		// make left and right modifiers equal
+		if (kc == SDLK_RSHIFT)
+			kc = SDLK_LSHIFT;
+		else if (kc == SDLK_RCTRL)
+			kc = SDLK_LCTRL;
+		else if (kc == SDLK_RGUI)
+			kc = SDLK_LGUI;
+
+		HandleEvent(HashKeyboardEvent(kc), 1);
+	}
 	return true;
 }
 
 bool InputEventController::OnKeyReleased(const SDL_KeyboardEvent& arg)
 {
+	if (SDL_IsTextInputActive()) return true;
+
 	// make left and right modifiers equal
 	SDL_Keycode kc = arg.keysym.sym;
 

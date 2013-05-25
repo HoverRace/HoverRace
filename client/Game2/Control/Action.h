@@ -30,6 +30,14 @@ namespace HoverRace {
 namespace Client {
 namespace Control {
 
+namespace TextControl {
+	/// Keycodes used for text input control.
+	enum key_t {
+		BACKSPACE = SDLK_BACKSPACE,
+		ENTER = SDLK_RETURN
+	};
+};
+
 /// Signals which are self-contained (no payload).
 typedef boost::signals2::signal<void()> voidSignal_t;
 
@@ -38,6 +46,9 @@ typedef boost::signals2::signal<void(int)> valueSignal_t;
 
 /// Signals which have a single string payload.
 typedef boost::signals2::signal<void(const std::string&)> stringSignal_t;
+
+/// Signals for text input control.
+typedef boost::signals2::signal<void(TextControl::key_t)> textControlSignal_t;
 
 template<class T, class Val>
 inline void PerformAction(const T&, Val)
@@ -71,6 +82,13 @@ inline void PerformAction<stringSignal_t, const std::string &>(
 	const stringSignal_t &signal, const std::string &s)
 {
 	signal(s);
+}
+
+template<>
+inline void PerformAction<textControlSignal_t, TextControl::key_t>(
+	const textControlSignal_t &signal, TextControl::key_t key)
+{
+	signal(key);
 }
 
 /**

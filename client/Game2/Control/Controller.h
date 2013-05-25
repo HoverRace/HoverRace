@@ -312,13 +312,18 @@ class InputEventController {
 
 	public:
 		typedef std::shared_ptr<Action<voidSignal_t>> VoidActionPtr;
+		typedef std::shared_ptr<Action<valueSignal_t>> ValueActionPtr;
 		typedef std::shared_ptr<Action<stringSignal_t, const std::string&>> StringActionPtr;
+		typedef std::shared_ptr<Action<textControlSignal_t, TextControl::key_t>> TextControlActionPtr;
 		struct actions_t {
 			struct ui_t {
 				ui_t();
 				VoidActionPtr menuOk;
 				VoidActionPtr menuCancel;
-				StringActionPtr text;
+
+				// Text input mode.
+				StringActionPtr text;  ///< Text input.
+				TextControlActionPtr control;  ///< Text input control key (param is TextControl::key_t).
 			} ui;
 			struct sys_t {
 				sys_t();
