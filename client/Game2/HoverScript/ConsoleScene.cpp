@@ -78,6 +78,33 @@ void ConsoleScene::OnConsoleToggle()
 void ConsoleScene::OnTextInput(const std::string &s)
 {
 	commandLine += s;
+	UpdateCommandLine();
+}
+
+void ConsoleScene::OnTextControl(Control::TextControl::key_t key)
+{
+	switch (key) {
+		case Control::TextControl::BACKSPACE:
+			if (!commandLine.empty()) {
+				commandLine.resize(commandLine.length() - 1);
+				UpdateCommandLine();
+			}
+			break;
+
+		case Control::TextControl::ENTER:
+			//TODO: Submit line.
+			commandLine.clear();
+			UpdateCommandLine();
+			break;
+
+		default:
+			SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION,
+				"ConsoleScene: Unhandled text control key: %d\n", key);
+	}
+}
+
+void ConsoleScene::UpdateCommandLine()
+{
 	inputLbl->SetText(COMMAND_PROMPT + commandLine);
 }
 
@@ -90,6 +117,9 @@ void ConsoleScene::AttachController(Control::InputEventController &controller)
 	auto &textAction = controller.actions.ui.text;
 	textInputConn = textAction->Connect(std::bind(&ConsoleScene::OnTextInput, this, std::placeholders::_1));
 
+	auto &controlAction = controller.actions.ui.control;
+	textControlConn = controlAction->Connect(std::bind(&ConsoleScene::OnTextControl, this, std::placeholders::_1));
+
 	SDL_StartTextInput();
 }
 
@@ -97,6 +127,7 @@ void ConsoleScene::DetachController(Control::InputEventController &controller)
 {
 	SDL_StopTextInput();
 
+	textControlConn.disconnect();
 	textInputConn.disconnect();
 	consoleToggleConn.disconnect();
 }

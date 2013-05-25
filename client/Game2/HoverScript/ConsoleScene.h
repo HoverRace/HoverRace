@@ -56,6 +56,9 @@ class ConsoleScene : public UiScene
 	private:
 		void OnConsoleToggle();
 		void OnTextInput(const std::string &s);
+		void OnTextControl(Control::TextControl::key_t key);
+
+		void UpdateCommandLine();
 
 	public:
 		// Scene
@@ -72,6 +75,7 @@ class ConsoleScene : public UiScene
 
 		boost::signals2::connection consoleToggleConn;
 		boost::signals2::connection textInputConn;
+		boost::signals2::connection textControlConn;
 
 		std::string submitBuffer;
 		std::string historyBuffer;
