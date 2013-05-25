@@ -67,6 +67,10 @@ TestLabScene::TestLabScene(Display::Display &display) :
 	fillBox = AddElem(new Display::FillBox(100, 100, 0x7f00ff00));
 	fillBox->SetPos(150, 70);
 
+	AddAlignmentTestElem(Alignment::SW, "| Southwest", 0, 719);
+	AddAlignmentTestElem(Alignment::S, "South", 639, 719);
+	AddAlignmentTestElem(Alignment::SE, "Southeast |", 1279, 719);
+
 	lbl = AddElem(new Display::Label("Red 20 Normal",
 		Display::UiFont(fontName, 20), 0xffff0000));
 	lbl->SetPos(0, 20);
@@ -82,6 +86,24 @@ TestLabScene::TestLabScene(Display::Display &display) :
 TestLabScene::~TestLabScene()
 {
 }
+
+void TestLabScene::AddAlignmentTestElem(
+	Display::UiViewModel::Alignment::alignment_t alignment,
+	const std::string &label, double x, double y)
+{
+	Config *cfg = Config::GetInstance();
+	std::string fontName = cfg->GetDefaultFontName();
+
+	auto fillBox = AddElem(new Display::FillBox(50, 50, 0x7f00ffff));
+	fillBox->SetAlignment(alignment);
+	fillBox->SetPos(x, y);
+
+	auto lbl = AddElem(new Display::Label(label,
+		Display::UiFont(fontName, 40), 0xffffffff));
+	lbl->SetAlignment(alignment);
+	lbl->SetPos(x, y);
+}
+
 
 void TestLabScene::OnDisplayConfigChanged()
 {

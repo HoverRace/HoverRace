@@ -55,6 +55,9 @@ class TestLabScene : public UiScene
 			return elem;
 		}
 
+		void AddAlignmentTestElem(Display::UiViewModel::Alignment::alignment_t alignment,
+			const std::string &label, double x, double y);
+
 	private:
 		void OnDisplayConfigChanged();
 
