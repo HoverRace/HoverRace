@@ -62,6 +62,11 @@ void SdlFillBoxView::Render()
 	}
 }
 
+Vec3 SdlFillBoxView::Measure()
+{
+	return model.GetSize().Promote();
+}
+
 }  // namespace SDL
 }  // namespace Display
 }  // namespace HoverRace

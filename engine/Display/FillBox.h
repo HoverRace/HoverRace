@@ -83,6 +83,9 @@ class MR_DllDeclare FillBox : public UiViewModel
 		/// Convenience function for SetSize(const Vec2&).
 		void SetSize(double w, double h) { SetSize(Vec2(w, h)); }
 
+	public:
+		virtual Vec3 Measure() const { return size.Promote(); }
+
 	private:
 		Vec2 size;
 		Color color;

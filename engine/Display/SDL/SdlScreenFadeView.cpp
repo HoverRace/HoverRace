@@ -43,6 +43,11 @@ void SdlScreenFadeView::OnModelUpdate(int prop)
 	}
 }
 
+Vec3 SdlScreenFadeView::Measure()
+{
+	return Vec3(disp.GetScreenWidth(), disp.GetScreenHeight(), 0);
+}
+
 void SdlScreenFadeView::PrepareRender()
 {
 	if (opacityChanged) {

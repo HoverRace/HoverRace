@@ -62,6 +62,7 @@ class MR_DllDeclare SdlFillBoxView : public SdlView<FillBox>
 		virtual void OnModelUpdate(int prop) { }
 
 	public:
+		virtual Vec3 Measure();
 		virtual void PrepareRender() { }
 		virtual void Render();
 };

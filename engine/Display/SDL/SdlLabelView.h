@@ -57,6 +57,11 @@ class MR_DllDeclare SdlLabelView : public SdlView<Label>
 		void OnUiScaleChanged();
 
 	public:
+		virtual Vec3 Measure()
+		{
+			PrepareRender();
+			return Vec3(unscaledWidth, unscaledHeight, 0);
+		}
 		virtual void PrepareRender();
 		virtual void Render();
 

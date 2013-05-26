@@ -54,6 +54,7 @@ class MR_DllDeclare View
 		virtual void OnModelUpdate(int prop) { }
 
 	public:
+		virtual Vec3 Measure() = 0;
 		virtual void PrepareRender() = 0;
 		virtual void Render() = 0;
 };

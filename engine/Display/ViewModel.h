@@ -67,6 +67,17 @@ class MR_DllDeclare ViewModel
 		}
 
 	public:
+		/**
+		 * Calculate the size of the component.
+		 * For UI components, the return value is affected by layout flags.
+		 * @return The size (may be zero if the size cannot be determined yet).
+		 * @warning Depending on the view, this may be an expensive operation
+		 *          since the view may have to call View::PrepareRender to apply
+		 *          model changes. As such, it is recommended to call Measure in
+		 *          the PrepareRender phase itself.
+		 */
+		virtual Vec3 Measure() const { return view ? view->Measure() : Vec3(0, 0, 0); }
+
 		void PrepareRender() { if (view) view->PrepareRender(); }
 		void Render() { if (view) view->Render(); }
 

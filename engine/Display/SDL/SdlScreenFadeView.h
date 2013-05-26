@@ -62,6 +62,7 @@ class MR_DllDeclare SdlScreenFadeView : public SdlView<ScreenFade>
 		virtual void OnModelUpdate(int prop);
 
 	public:
+		virtual Vec3 Measure();
 		virtual void PrepareRender();
 		virtual void Render();
 
