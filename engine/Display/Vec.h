@@ -34,9 +34,13 @@
 namespace HoverRace {
 namespace Display {
 
+struct Vec3;
+
 struct MR_DllDeclare Vec2
 {
 	Vec2(double x, double y) : x(x), y(y) { }
+
+	Vec3 Promote(double z=0) const;
 
 	double x;
 	double y;
@@ -104,6 +108,11 @@ MR_DllDeclare inline Vec3 &operator*=(Vec3 &lhs, double scale)
 	lhs.y *= scale;
 	lhs.z *= scale;
 	return lhs;
+}
+
+inline Vec3 Vec2::Promote(double z) const
+{
+	return Vec3(x, y, z);
 }
 
 }  // namespace Display
