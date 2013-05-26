@@ -278,8 +278,8 @@ void SdlLabelView::UpdateTexture()
 	// normally throw off the size adjustments later, so we need to keep track
 	// of what the size would be (approximately) if we hadn't pre-scaled the
 	// texture.
-	unscaledWidth = static_cast<int>(width / scale);
-	unscaledHeight = static_cast<int>(height / scale);
+	unscaledWidth = width / scale;
+	unscaledHeight = height / scale;
 
 	UpdateTextureColor();
 }
