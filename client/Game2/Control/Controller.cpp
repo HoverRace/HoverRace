@@ -98,31 +98,32 @@ bool InputEventController::OnKeyPressed(const SDL_KeyboardEvent& arg)
 	SDL_Keycode kc = arg.keysym.sym;
 
 	if (SDL_IsTextInputActive()) {
+		SDL_Keycode nkc = kc;
+
 		// Map numpad enter to the "normal" enter so action subscribers don't need to
 		// check for both.
-		if (kc == SDLK_KP_ENTER)
-			kc = SDLK_RETURN;
+		if (nkc == SDLK_KP_ENTER)
+			nkc = SDLK_RETURN;
 
-		switch (kc) {
+		switch (nkc) {
 			case SDLK_BACKSPACE:
 			case SDLK_RETURN:
 				// For now, key_t values are mapped directly to SDL keycodes for
 				// convenience.
-				(*actions.ui.control)(static_cast<TextControl::key_t>(kc));
+				(*actions.ui.control)(static_cast<TextControl::key_t>(nkc));
 				break;
 		}
 	}
-	else {
-		// make left and right modifiers equal
-		if (kc == SDLK_RSHIFT)
-			kc = SDLK_LSHIFT;
-		else if (kc == SDLK_RCTRL)
-			kc = SDLK_LCTRL;
-		else if (kc == SDLK_RGUI)
-			kc = SDLK_LGUI;
 
-		HandleEvent(HashKeyboardEvent(kc), 1);
-	}
+	// make left and right modifiers equal
+	if (kc == SDLK_RSHIFT)
+		kc = SDLK_LSHIFT;
+	else if (kc == SDLK_RCTRL)
+		kc = SDLK_LCTRL;
+	else if (kc == SDLK_RGUI)
+		kc = SDLK_LGUI;
+
+	HandleEvent(HashKeyboardEvent(kc), 1);
 	return true;
 }
 
