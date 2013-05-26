@@ -101,7 +101,9 @@ void SdlLabelView::Render()
 {
 	int w, h;
 	SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
-	disp.DrawUiTexture(texture, model.GetAlignedPos(w, h), model.GetLayoutFlags());
+	disp.DrawUiTexture(texture,
+		model.GetAlignedPos(unscaledWidth, unscaledHeight),
+		model.GetLayoutFlags());
 }
 
 void SdlLabelView::UpdateTexture()
@@ -109,6 +111,7 @@ void SdlLabelView::UpdateTexture()
 	if (texture) SDL_DestroyTexture(texture);
 
 	SDL_Surface *tempSurface;
+	double scale = 1.0;
 
 #	ifdef WITH_SDL_PANGO
 		const std::string &s = model.GetText();
@@ -116,7 +119,7 @@ void SdlLabelView::UpdateTexture()
 
 		UiFont font = model.GetFont();
 		if (!model.IsLayoutUnscaled()) {
-			font.size *= disp.GetUiScale();
+			font.size *= (scale = disp.GetUiScale());
 		}
 
 		std::ostringstream oss;
@@ -149,7 +152,7 @@ void SdlLabelView::UpdateTexture()
 #	elif defined(WITH_SDL_TTF)
 		UiFont font = model.GetFont();
 		if (!model.IsLayoutUnscaled()) {
-			font.size *= disp.GetUiScale();
+			font.size *= (scale = disp.GetUiScale());
 		}
 
 		TTF_Font *ttfFont = disp.LoadTtfFont(font);
@@ -176,7 +179,7 @@ void SdlLabelView::UpdateTexture()
 		const UiFont font = model.GetFont();
 		double fontSize = font.size * 100.0;
 		if (!model.IsLayoutUnscaled()) {
-			fontSize *= disp.GetUiScale();
+			fontSize *= (scale = disp.GetUiScale());
 		}
 
 		HFONT stdFont = CreateFontW(
@@ -270,6 +273,13 @@ void SdlLabelView::UpdateTexture()
 	texture = SDL_CreateTextureFromSurface(disp.GetRenderer(), tempSurface);
 	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 	SDL_FreeSurface(tempSurface);
+
+	// We pre-scale the texture (by adjusting the font size) so that would
+	// normally throw off the size adjustments later, so we need to keep track
+	// of what the size would be (approximately) if we hadn't pre-scaled the
+	// texture.
+	unscaledWidth = static_cast<int>(width / scale);
+	unscaledHeight = static_cast<int>(height / scale);
 
 	UpdateTextureColor();
 }
