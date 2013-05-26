@@ -62,10 +62,18 @@ ConsoleScene::ConsoleScene(Display::Display &display, GameDirector &director,
 	inputLbl->SetPos(0, 719);
 	inputLbl->SetAlignment(Alignment::SW);
 	inputLbl->AttachView(display);
+
+	logClearedConn = console.GetLogClearedSignal().connect(
+		std::bind(&ConsoleScene::OnLogCleared, this));
+	logAddedConn = console.GetLogAddedSignal().connect(
+		std::bind(&ConsoleScene::OnLogAdded, this, std::placeholders::_1));
 }
 
 ConsoleScene::~ConsoleScene()
 {
+	logAddedConn.disconnect();
+	logClearedConn.disconnect();
+
 	delete(inputLbl);
 	delete(winShadeBox);
 }
@@ -101,6 +109,16 @@ void ConsoleScene::OnTextControl(Control::TextControl::key_t key)
 			SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION,
 				"ConsoleScene: Unhandled text control key: %d\n", key);
 	}
+}
+
+void ConsoleScene::OnLogCleared()
+{
+	//TODO
+}
+
+void ConsoleScene::OnLogAdded(int idx)
+{
+	//TODO
 }
 
 void ConsoleScene::UpdateCommandLine()
