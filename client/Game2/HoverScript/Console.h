@@ -68,12 +68,14 @@ class Console : public Script::Env, public Script::Help::HelpHandler
 		virtual void LogInfo(const std::string &s) = 0;
 		virtual void LogError(const std::string &s) = 0;
 
+	public:
 		enum inputState_t {
 			ISTATE_COMMAND,
 			ISTATE_CONTINUE,
 		};
-		void SetInputState(inputState_t newState);
 		inputState_t GetInputState() const;
+	protected:
+		void SetInputState(inputState_t newState);
 
 	private:
 		static int LClear(lua_State *state);
