@@ -22,13 +22,11 @@
 #pragma once
 
 #include "../UiScene.h"
+#include "SysConsole.h"
 
 namespace HoverRace {
 	namespace Client {
 		class GameDirector;
-		namespace HoverScript {
-			class SysConsole;
-		}
 	}
 	namespace Display {
 		class Display;
@@ -54,6 +52,8 @@ class ConsoleScene : public UiScene
 		virtual ~ConsoleScene();
 
 	private:
+		void OnDisplayConfigChanged();
+
 		void OnConsoleToggle();
 		void OnTextInput(const std::string &s);
 		void OnTextControl(Control::TextControl::key_t key);
@@ -61,7 +61,9 @@ class ConsoleScene : public UiScene
 		void OnLogCleared();
 		void OnLogAdded(int idx);
 
+		void AppendLogLine(const SysConsole::LogLine &line);
 		void UpdateCommandLine();
+		void Layout();
 
 	public:
 		// Scene
@@ -76,6 +78,8 @@ class ConsoleScene : public UiScene
 		GameDirector &director;
 		SysConsole &console;
 
+		boost::signals2::connection displayConfigChangedConn;
+
 		boost::signals2::connection consoleToggleConn;
 		boost::signals2::connection textInputConn;
 		boost::signals2::connection textControlConn;
@@ -87,8 +91,17 @@ class ConsoleScene : public UiScene
 		std::string historyBuffer;
 		std::string commandLine;
 
+		class LogLines;
+		LogLines *logLines;
+		int lastLogIdx;
+
+		bool layoutChanged;
+
 		Display::FillBox *winShadeBox;
 		Display::Label *inputLbl;
+
+		Display::Label *measureLbl;  ///< Used to measure the size of glyphs.
+		Display::Vec2 charSize;
 };
 
 }  // namespace HoverScript

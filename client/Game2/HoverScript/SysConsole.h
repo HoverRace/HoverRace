@@ -60,11 +60,12 @@ class SysConsole : public Console
 	public:
 		virtual void Advance(Util::OS::timestamp_t tick) { }
 		virtual void Clear();
+		void SubmitChunkWithHistory(const std::string &s);
 
 	public:
 		struct LogLevel
 		{
-			enum level_t { INFO, ERROR };
+			enum level_t { HISTORY, INFO, ERROR };
 		};
 		struct LogLine
 		{
@@ -76,12 +77,47 @@ class SysConsole : public Console
 		};
 	private:
 		void AddLogLine(LogLevel::level_t level, const std::string &line);
-	protected:
+	public:
+		void LogHistory(const std::string &s);
 		virtual void LogInfo(const std::string &s);
 		virtual void LogError(const std::string &s);
 
 	public:
 		int GetEndLogIndex() const;
+
+		/**
+		 * Read all log entries.
+		 * @param fn The callback function (will be passed a LogLine reference).
+		 */
+		template<class Function>
+		void ReadLogs(Function fn)
+		{
+			if (!logLines.empty()) {
+				std::for_each(logLines.cbegin(), logLines.cend(), fn);
+			}
+		}
+
+		/**
+		 * Read a subset of log entries.
+		 * @param start The starting log index (inclusive).
+		 * @param end The ending log index (inclusive).
+		 * @param fn The callback function (will be passed a LogLine reference).
+		 */
+		template<class Function>
+		void ReadLogs(int start, int end, Function fn)
+		{
+			if (logLines.empty()) return;
+			if (start > end) return;
+			int endIdx = baseLogIdx + logLines.size() - 1;
+			if (start > endIdx) return;
+			if (start == end) fn(logLines.at(start - baseLogIdx));
+			else {
+				if (start < baseLogIdx) start = baseLogIdx;
+				auto startIter = logLines.begin() + (start - baseLogIdx);
+				auto endIter = (end > endIdx) ? logLines.end() : startIter + (end - start + 1);
+				std::for_each(startIter, endIter, fn);
+			}
+		}
 
 	public:
 		/// Fired when the log is cleared.

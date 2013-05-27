@@ -68,7 +68,7 @@ void SysConsole::Clear()
 void SysConsole::AddLogLine(LogLevel::level_t level, const std::string &line)
 {
 	int sz = logLines.size();
-	int idx = baseLogIdx + sz + 1;
+	int idx = baseLogIdx + sz;
 
 	// Trim excess old log lines.
 	while (sz >= maxLogLines) {
@@ -81,6 +81,11 @@ void SysConsole::AddLogLine(LogLevel::level_t level, const std::string &line)
 
 	// Notify listeners.
 	logAddedSignal(idx);
+}
+
+void SysConsole::LogHistory(const std::string &s)
+{
+	AddLogLine(LogLevel::HISTORY, s);
 }
 
 void SysConsole::LogInfo(const std::string &s)

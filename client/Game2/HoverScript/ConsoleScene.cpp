@@ -25,7 +25,6 @@
 #include "../../../engine/Display/FillBox.h"
 #include "../../../engine/Display/Label.h"
 #include "../GameDirector.h"
-#include "SysConsole.h"
 
 #include "ConsoleScene.h"
 
@@ -40,14 +39,48 @@ namespace {
 	static const std::string CONTINUE_PROMPT(":> ");
 }
 
+class ConsoleScene::LogLines
+{
+	public:
+		LogLines(Display::Display &display, const Display::Vec2 &charSize);
+		~LogLines();
+
+	public:
+		void ScrollTop();
+		void Scroll(int i);
+		void ScrollBottom();
+
+	public:
+		void Add(const std::string &s, const Display::UiFont &font, Display::Color color);
+		void Clear();
+
+	public:
+		void PrepareRender();
+		void Render();
+
+	private:
+		Display::Display &display;
+
+		const Display::Vec2 &charSize;
+		std::deque<Display::Label*> lines;
+		unsigned int pos;
+		unsigned int num;
+
+		static const int MAX_LINES = 20;
+};
+
 ConsoleScene::ConsoleScene(Display::Display &display, GameDirector &director,
                            SysConsole &console) :
 	SUPER("Console"),
-	display(display), director(director), console(console)
+	display(display), director(director), console(console),
+	layoutChanged(true), charSize(0, 0)
 {
 	typedef Display::UiViewModel::Alignment Alignment;
 
 	Config *cfg = Config::GetInstance();
+
+	displayConfigChangedConn = display.GetDisplayConfigChangedSignal().
+		connect(std::bind(&ConsoleScene::OnDisplayConfigChanged, this));
 
 	submitBuffer.reserve(1024);
 	historyBuffer.reserve(1024);
@@ -63,19 +96,31 @@ ConsoleScene::ConsoleScene(Display::Display &display, GameDirector &director,
 	inputLbl->SetAlignment(Alignment::SW);
 	inputLbl->AttachView(display);
 
+	measureLbl = new Display::Label(" ", font, 0xffffffff);
+	measureLbl->AttachView(display);
+
 	logClearedConn = console.GetLogClearedSignal().connect(
 		std::bind(&ConsoleScene::OnLogCleared, this));
 	logAddedConn = console.GetLogAddedSignal().connect(
 		std::bind(&ConsoleScene::OnLogAdded, this, std::placeholders::_1));
+
+	logLines = new LogLines(display, charSize);
+
+	console.ReadLogs(std::bind(&ConsoleScene::AppendLogLine, this, std::placeholders::_1));
 }
 
 ConsoleScene::~ConsoleScene()
 {
-	logAddedConn.disconnect();
-	logClearedConn.disconnect();
+	delete logLines;
 
-	delete(inputLbl);
-	delete(winShadeBox);
+	delete measureLbl;
+	delete inputLbl;
+	delete winShadeBox;
+}
+
+void ConsoleScene::OnDisplayConfigChanged()
+{
+	layoutChanged = true;
 }
 
 void ConsoleScene::OnConsoleToggle()
@@ -100,7 +145,8 @@ void ConsoleScene::OnTextControl(Control::TextControl::key_t key)
 			break;
 
 		case Control::TextControl::ENTER:
-			//TODO: Submit line.
+			console.LogHistory(inputLbl->GetText());
+			console.SubmitChunk(commandLine);
 			commandLine.clear();
 			UpdateCommandLine();
 			break;
@@ -113,17 +159,52 @@ void ConsoleScene::OnTextControl(Control::TextControl::key_t key)
 
 void ConsoleScene::OnLogCleared()
 {
-	//TODO
+	logLines->Clear();
 }
 
 void ConsoleScene::OnLogAdded(int idx)
 {
-	//TODO
+	if (idx > lastLogIdx) {
+		console.ReadLogs(lastLogIdx + 1, idx,
+			std::bind(&ConsoleScene::AppendLogLine, this, std::placeholders::_1));
+	}
+}
+
+void ConsoleScene::AppendLogLine(const SysConsole::LogLine &line)
+{
+	Display::Color color(0xff7f7f7f);
+	switch (line.level) {
+		case SysConsole::LogLevel::HISTORY: color = 0xffffffff; break;
+		case SysConsole::LogLevel::INFO: color = 0xffbfbfbf; break;
+		case SysConsole::LogLevel::ERROR: color = 0xffff0000; break;
+		default:
+			SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION,
+				"ConsoleScene: Unhandled log level: %d\n", line.level);
+	}
+
+	// Colorize based on message type.
+	logLines->Add(line.line, measureLbl->GetFont(), color);
+
+	lastLogIdx = line.idx;
 }
 
 void ConsoleScene::UpdateCommandLine()
 {
-	inputLbl->SetText(COMMAND_PROMPT + commandLine);
+	inputLbl->SetText(
+		(console.GetInputState() == Console::ISTATE_COMMAND ?
+			COMMAND_PROMPT : CONTINUE_PROMPT) + commandLine);
+}
+
+void ConsoleScene::Layout()
+{
+	// Measure the size of a single character.
+	// We assume that the monospace font we're using really has the same height
+	// and width for all glyphs.
+	const Display::Vec3 charSize3 = measureLbl->Measure();
+	charSize.x = charSize3.x;
+	charSize.y = charSize3.y;
+
+	layoutChanged = false;
 }
 
 void ConsoleScene::AttachController(Control::InputEventController &controller)
@@ -165,14 +246,113 @@ void ConsoleScene::Advance(Util::OS::timestamp_t tick)
 
 void ConsoleScene::PrepareRender()
 {
+	if (layoutChanged) {
+		Layout();
+	}
+
 	winShadeBox->PrepareRender();
 	inputLbl->PrepareRender();
+	logLines->PrepareRender();
 }
 
 void ConsoleScene::Render()
 {
 	winShadeBox->Render();
 	inputLbl->Render();
+	logLines->Render();
+}
+
+// LogLines ////////////////////////////////////////////////////////////////////
+
+ConsoleScene::LogLines::LogLines(Display::Display &display,
+                                 const Display::Vec2 &charSize) :
+	display(display), charSize(charSize),
+	lines(), pos(0), num(10)
+{
+}
+
+ConsoleScene::LogLines::~LogLines()
+{
+	Clear();
+}
+
+void ConsoleScene::LogLines::ScrollTop()
+{
+	if (pos != 0) {
+		pos = 0;
+	}
+}
+
+void ConsoleScene::LogLines::Scroll(int i)
+{
+	if (i < 0) {
+		if ((unsigned int)-i >= pos) {
+			ScrollTop();
+		}
+		else {
+			pos += i;
+		}
+	}
+	else if (lines.size() > num) {
+		if (pos + i > lines.size() - num) {
+			ScrollBottom();
+		}
+		else {
+			pos += i;
+		}
+	}
+}
+
+void ConsoleScene::LogLines::ScrollBottom()
+{
+	pos = (lines.size() <= num) ? 0 : (lines.size() - num);
+}
+
+void ConsoleScene::LogLines::Add(const std::string &s,
+                                 const Display::UiFont &font,
+                                 Display::Color color)
+{
+	// Remove the top line if we're full.
+	if (lines.size() == MAX_LINES) {
+		delete lines.front();
+		lines.pop_front();
+	}
+
+	Display::Label *lbl = new Display::Label(s.empty() ? " " : s, font, color);
+	lbl->SetAlignment(Display::UiViewModel::Alignment::SW);
+	lbl->AttachView(display);
+
+	lines.push_back(lbl);
+	ScrollBottom();
+}
+
+void ConsoleScene::LogLines::Clear()
+{
+	for (auto iter = lines.begin(); iter != lines.end(); ++iter)
+	{
+		delete *iter;
+	}
+	lines.clear();
+	pos = 0;
+}
+
+void ConsoleScene::LogLines::PrepareRender()
+{
+	double y = 720.0 - charSize.y;
+
+	for (auto iter = lines.rbegin(); iter != lines.rend(); ++iter) {
+		Display::Label *lbl = *iter;
+		lbl->SetPos(0, y);
+		lbl->PrepareRender();
+		y -= charSize.y;
+	}
+}
+
+void ConsoleScene::LogLines::Render()
+{
+	for (auto iter = lines.rbegin(); iter != lines.rend(); ++iter) {
+		(*iter)->Render();
+	}
 }
 
 }  // namespace HoverScript
