@@ -59,6 +59,10 @@ SysConsole::~SysConsole()
 
 void SysConsole::Clear()
 {
+	// Bump the base log index so that AddLogLine() will generate the correct
+	// next log index.
+	baseLogIdx += logLines.size();
+
 	logLines.clear();
 
 	// Notify listeners.
