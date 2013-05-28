@@ -22,6 +22,7 @@
 #include "StdAfx.h"
 
 #include "../../../engine/Util/Config.h"
+#include "GamePeer.h"
 
 #include "SysConsole.h"
 
@@ -34,11 +35,14 @@ namespace HoverScript {
 /**
  * Constructor.
  * @param scripting The underlying scripting engine.
+ * @param gamePeer Game scripting peer.
  * @param maxLogLines The maximum number of log lines to store in the
  *                    log history.
  */
-SysConsole::SysConsole(Script::Core *scripting, int maxLogLines) :
+SysConsole::SysConsole(Script::Core *scripting, GamePeer *gamePeer,
+                       int maxLogLines) :
 	SUPER(scripting),
+	gamePeer(gamePeer),
 	maxLogLines(maxLogLines), logLines(), baseLogIdx(0)
 {
 	Config *cfg = Config::GetInstance();
@@ -55,6 +59,21 @@ SysConsole::SysConsole(Script::Core *scripting, int maxLogLines) :
 
 SysConsole::~SysConsole()
 {
+}
+
+void SysConsole::InitEnv()
+{
+	using namespace luabind;
+
+	SUPER::InitEnv();
+
+	lua_State *L = GetScripting()->GetState();
+
+	// Start with the standard global environment.
+	CopyGlobals();
+
+	object env(from_stack(L, -1));
+	env["game"] = gamePeer;
 }
 
 void SysConsole::Clear()

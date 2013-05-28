@@ -143,7 +143,7 @@ ClientApp::ClientApp() :
 	if (!initScript.empty()) {
 		sysEnv->RunScript(initScript);
 	}
-	sysConsole = new SysConsole(scripting);
+	sysConsole = new SysConsole(scripting, gamePeer);
 
 	//TODO: Select which display to use.
 	SDL_DisplayMode desktopMode;

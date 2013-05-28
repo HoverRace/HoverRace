@@ -54,8 +54,11 @@ class SysConsole : public Console
 {
 	typedef Console SUPER;
 	public:
-		SysConsole(Script::Core *scripting, int maxLogLines=512);
+		SysConsole(Script::Core *scripting, GamePeer *gamePeer, int maxLogLines=512);
 		virtual ~SysConsole();
+
+	protected:
+		virtual void InitEnv();
 
 	public:
 		virtual void Advance(Util::OS::timestamp_t tick) { }
@@ -134,6 +137,8 @@ class SysConsole : public Console
 		virtual void HelpMethod(const Script::Help::Class &cls, const Script::Help::Method &method);
 
 	private:
+		GamePeer *gamePeer;
+
 		int maxLogLines;
 		std::deque<LogLine> logLines;
 		int baseLogIdx;  ///< Index of the first item in logLines.
