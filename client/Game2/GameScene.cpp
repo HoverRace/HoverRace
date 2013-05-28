@@ -50,7 +50,7 @@ GameScene::GameScene(GameDirector *director, Display::Display &display,
 	SUPER("Game"),
 	director(director),
 	frame(0), numPlayers(1), display(display),
-	session(NULL), highObserver(NULL), highConsole(NULL),
+	session(NULL), highObserver(NULL),
 	firedOnRaceFinish(false)
 {
 	memset(observers, 0, sizeof(observers[0]) * MAX_OBSERVERS);
@@ -85,11 +85,6 @@ GameScene::GameScene(GameDirector *director, Display::Display &display,
 
 	observers[0] = Observer::New();
 	highObserver = new HighObserver();
-
-	if (Config::GetInstance()->runtime.enableConsole) {
-		highConsole = new HighConsole(scripting, director, gamePeer, sessionPeer);
-	}
-
 }
 
 GameScene::~GameScene()
@@ -99,7 +94,6 @@ GameScene::~GameScene()
 
 void GameScene::Cleanup()
 {
-	delete highConsole;
 	delete highObserver;
 	delete session;
 	for (int i = 0; i < numPlayers; i++) {
@@ -114,10 +108,6 @@ void GameScene::AttachController(Control::InputEventController &controller)
 	MainCharacter::MainCharacter* mc = session->GetPlayer(0);
 	controller.AddPlayerMaps(1, &mc);
 	controller.AddObserverMaps(observers, 1);
-
-	if (highConsole) {
-		controller.SetConsole(highConsole);
-	}
 }
 
 void GameScene::DetachController(Control::InputEventController &controller)
@@ -143,10 +133,6 @@ void GameScene::OnPhaseChanged(Phase::phase_t oldPhase)
 
 void GameScene::Advance(Util::OS::timestamp_t tick)
 {
-	if (highConsole != NULL && highConsole->IsVisible()) {
-		highConsole->Advance(tick);
-	}
-
 	session->Process();
 
 	if (!firedOnRaceFinish && session->GetPlayer(0)->HasFinish()) {
@@ -173,9 +159,6 @@ void GameScene::Render()
 
 	if (highObserver != NULL) {
 		highObserver->Render(videoBuf, session);
-	}
-	if (highConsole != NULL) {
-		highConsole->Render(videoBuf);
 	}
 
 	// Trigger sounds.

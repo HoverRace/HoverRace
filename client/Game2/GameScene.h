@@ -94,7 +94,6 @@ class GameScene : public Scene
 		ClientSession *session;
 
 		HighObserver *highObserver;
-		HoverScript::HighConsole *highConsole;
 
 		HoverScript::SessionPeerPtr sessionPeer;
 

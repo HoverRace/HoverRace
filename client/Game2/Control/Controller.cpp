@@ -28,7 +28,6 @@
 #include "Controller.h"
 
 #include "ActionPerformers.h"
-//#include "ConsoleActions.h"
 #include "ControlAction.h"
 #include "ObserverActions.h"
 
@@ -37,7 +36,6 @@
 using namespace HoverRace;
 using namespace HoverRace::Client::Control;
 using namespace HoverRace::Util;
-using HoverRace::Client::HoverScript::HighConsole;
 using HoverRace::Client::Observer;
 using namespace std;
 
@@ -375,23 +373,6 @@ void InputEventController::AddConsoleToggleMaps()
 	AddActionMap(_("ConsoleToggle"));
 }
 
-void InputEventController::SetConsole(HighConsole* hc)
-{
-	/*TODO
-	for(ActionMap::iterator it = allActionMaps["console-keys"].begin(); it != allActionMaps["console-keys"].end(); it++) {
-		ConsoleAction* x = dynamic_cast<ConsoleAction*>(it->second.get());
-		if(x != NULL)
-			x->SetHighConsole(hc);
-	}
-
-	for(ActionMap::iterator it = allActionMaps[_("Console")].begin(); it != allActionMaps[_("Console")].end(); it++) {
-		ConsoleAction* x = dynamic_cast<ConsoleAction*>(it->second.get());
-		if(x != NULL)
-			x->SetHighConsole(hc);
-	}
-	*/
-}
-
 void InputEventController::SaveConfig()
 {
 	Config *cfg = Config::GetInstance();
@@ -570,15 +551,6 @@ void InputEventController::LoadConsoleToggleMap()
 void InputEventController::LoadConsoleMap()
 {
 	/*TODO
-	// add console-keys map, which is all keys
-	// console-keys map is special because it won't appear in the configuration panel,
-	// so we don't need to internationalize the name of it.
-	for(int i = (int) OIS::KC_ESCAPE; i < (int) OIS::KC_MEDIASELECT; i++) {
-		allActionMaps["console-keys"][HashKeyboardEvent((OIS::KeyCode) i)].reset(
-			new ConsoleKeyAction("" /* no name necessary /, 0 /* no ordering necessary /,
-					NULL, (OIS::KeyCode) i));
-	}
-
 	ActionMap& cmap = allActionMaps[_("Console")];
 	cmap.clear();
 	

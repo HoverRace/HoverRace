@@ -31,7 +31,6 @@
 #include "../../../engine/Util/Config.h"
 #include "../../../engine/Util/OS.h"
 #include "../../../engine/MainCharacter/MainCharacter.h"
-#include "../HoverScript/HighConsole.h"
 #include "../Observer.h"
 
 #include "Action.h"
@@ -214,11 +213,6 @@ class InputEventController {
 		 * Set up controls for the console.
 		 */
 		void LoadConsoleMap();
-
-		/***
-		 * Update the pointer to the Console.
-		 */
-		void SetConsole(HoverScript::HighConsole* hc);
 
 		/***
 		 * Save the controller configuration to the Config object.

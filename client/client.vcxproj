@@ -118,7 +118,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Game2\Control\ActionPerformers.cpp" />
-    <ClCompile Include="Game2\Control\ConsoleActions.cpp" />
     <ClCompile Include="Game2\Control\ObserverActions.cpp" />
     <ClCompile Include="Game2\DownloadUpdateDialog.cpp" />
     <ClCompile Include="Game2\GameApp.cpp">
@@ -205,7 +204,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="Game2\Control\ActionPerformers.h" />
-    <ClInclude Include="Game2\Control\ConsoleActions.h" />
     <ClInclude Include="Game2\Control\ControlAction.h" />
     <ClInclude Include="Game2\Control\ObserverActions.h" />
     <ClInclude Include="Game2\DownloadUpdateDialog.h" />
