@@ -428,6 +428,8 @@ void ClientApp::NewLocalSession(RulebookPtr rules)
 
 void ClientApp::OnConsoleToggle()
 {
+	if (!Config::GetInstance()->runtime.enableConsole) return;
+
 	if (auto scene = consoleScene.lock()) {
 		Scene::Phase::phase_t phase = scene->GetPhase();
 		if (phase != Scene::Phase::STOPPING &&
