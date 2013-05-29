@@ -47,6 +47,8 @@ SysConsole::SysConsole(Script::Core *scripting, GamePeer *gamePeer,
 {
 	Config *cfg = Config::GetInstance();
 
+	commandLine.reserve(1024);
+
 	// Add introductory text.
 
 	LogInfo(PACKAGE_NAME " version " + cfg->GetVersion());

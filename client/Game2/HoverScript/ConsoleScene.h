@@ -87,10 +87,6 @@ class ConsoleScene : public UiScene
 		boost::signals2::connection logClearedConn;
 		boost::signals2::connection logAddedConn;
 
-		std::string submitBuffer;
-		std::string historyBuffer;
-		std::string commandLine;
-
 		class LogLines;
 		LogLines *logLines;
 		int lastLogIdx;

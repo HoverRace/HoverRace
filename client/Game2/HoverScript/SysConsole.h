@@ -122,6 +122,8 @@ class SysConsole : public Console
 			}
 		}
 
+		std::string &GetCommandLine() { return commandLine; }
+
 	public:
 		/// Fired when the log is cleared.
 		typedef boost::signals2::signal<void()> logClearedSignal_t;
@@ -142,6 +144,8 @@ class SysConsole : public Console
 		int maxLogLines;
 		std::deque<LogLine> logLines;
 		int baseLogIdx;  ///< Index of the first item in logLines.
+
+		std::string commandLine;
 
 		logClearedSignal_t logClearedSignal;
 		logAddedSignal_t logAddedSignal;

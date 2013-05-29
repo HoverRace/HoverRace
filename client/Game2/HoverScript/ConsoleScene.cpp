@@ -82,10 +82,6 @@ ConsoleScene::ConsoleScene(Display::Display &display, GameDirector &director,
 	displayConfigChangedConn = display.GetDisplayConfigChangedSignal().
 		connect(std::bind(&ConsoleScene::OnDisplayConfigChanged, this));
 
-	submitBuffer.reserve(1024);
-	historyBuffer.reserve(1024);
-	commandLine.reserve(1024);
-
 	winShadeBox = new Display::FillBox(1280, 720, 0xbf000000);
 	winShadeBox->AttachView(display);
 
@@ -106,6 +102,7 @@ ConsoleScene::ConsoleScene(Display::Display &display, GameDirector &director,
 
 	logLines = new LogLines(display, charSize);
 
+	UpdateCommandLine();
 	console.ReadLogs(std::bind(&ConsoleScene::AppendLogLine, this, std::placeholders::_1));
 }
 
@@ -130,12 +127,13 @@ void ConsoleScene::OnConsoleToggle()
 
 void ConsoleScene::OnTextInput(const std::string &s)
 {
-	commandLine += s;
+	console.GetCommandLine() += s;
 	UpdateCommandLine();
 }
 
 void ConsoleScene::OnTextControl(Control::TextControl::key_t key)
 {
+	std::string &commandLine = console.GetCommandLine();
 	switch (key) {
 		case Control::TextControl::BACKSPACE:
 			if (!commandLine.empty()) {
@@ -192,7 +190,7 @@ void ConsoleScene::UpdateCommandLine()
 {
 	inputLbl->SetText(
 		(console.GetInputState() == Console::ISTATE_COMMAND ?
-			COMMAND_PROMPT : CONTINUE_PROMPT) + commandLine);
+			COMMAND_PROMPT : CONTINUE_PROMPT) + console.GetCommandLine());
 }
 
 void ConsoleScene::Layout()
