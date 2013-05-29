@@ -73,7 +73,7 @@ ConsoleScene::ConsoleScene(Display::Display &display, GameDirector &director,
                            SysConsole &console) :
 	SUPER("Console"),
 	display(display), director(director), console(console),
-	layoutChanged(true), charSize(0, 0)
+	lastLogIdx(-1), layoutChanged(true), charSize(0, 0)
 {
 	typedef Display::UiViewModel::Alignment Alignment;
 
@@ -113,6 +113,9 @@ ConsoleScene::~ConsoleScene()
 	delete measureLbl;
 	delete inputLbl;
 	delete winShadeBox;
+
+	logAddedConn.disconnect();
+	logClearedConn.disconnect();
 }
 
 void ConsoleScene::OnDisplayConfigChanged()
