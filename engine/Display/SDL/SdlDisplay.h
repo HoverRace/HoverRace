@@ -109,7 +109,7 @@ class MR_DllDeclare SdlDisplay : public Display
 		SDL_Window *window;
 		SDL_Renderer *renderer;
 		int width, height;
-		std::unique_ptr<VideoServices::VideoBuffer> legacyDisplay;
+		VideoServices::VideoBuffer *legacyDisplay;
 #		ifdef WITH_SDL_PANGO
 			SDLPango_Context *pangoContext;
 #		elif defined(WITH_SDL_TTF)

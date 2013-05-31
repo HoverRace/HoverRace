@@ -107,11 +107,12 @@ namespace {
  * @param windowTitle The window title.
  */
 SdlDisplay::SdlDisplay(const std::string &windowTitle) :
-	SUPER(), windowTitle(windowTitle), window(nullptr), renderer(nullptr)
+	SUPER(), windowTitle(windowTitle), window(nullptr), renderer(nullptr),
+	legacyDisplay(nullptr)
 {
 	ApplyVideoMode();
 
-	legacyDisplay.reset(new SdlLegacyDisplay(*this));
+	legacyDisplay = new SdlLegacyDisplay(*this);
 	SUPER::OnDisplayConfigChanged();
 	legacyDisplay->CreatePalette();
 
@@ -124,6 +125,8 @@ SdlDisplay::SdlDisplay(const std::string &windowTitle) :
 
 SdlDisplay::~SdlDisplay()
 {
+	delete legacyDisplay;
+	
 #	ifdef WITH_SDL_PANGO
 		if (pangoContext) SDLPango_FreeContext(pangoContext);
 #	elif defined(WITH_SDL_TTF)
