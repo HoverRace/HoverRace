@@ -63,4 +63,14 @@
    ...
    fun:SDL_VideoInit
 }
+# Not 100% sure about this one.
+# It triggers on Valgrind 3.7.0.
+{
+   std_string
+   Memcheck:Leak
+   # operator new
+   fun:_Znwm
+   # std::string::_Rep::_S_create
+   fun:_ZNSs4_Rep9_S_createEmmRKSaIcE
+}
 
