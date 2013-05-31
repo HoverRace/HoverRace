@@ -14,6 +14,7 @@ cd "$(dirname "$0")"
 
 SUPPDIR=valgrind
 
+export GLIBCXX_FORCE_NEW=1
 export G_SLICE=always-malloc
 export G_DEBUG=gc-friendly,resident-modules
 
