@@ -63,6 +63,12 @@
    ...
    fun:SDL_VideoInit
 }
+{
+   _XimLocalCreateIC
+   Memcheck:Leak
+   ...
+   fun:_XimLocalCreateIC
+}
 # Not 100% sure about this one.
 # It triggers on Valgrind 3.7.0.
 {
