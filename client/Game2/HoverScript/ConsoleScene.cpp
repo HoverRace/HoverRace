@@ -116,6 +116,7 @@ ConsoleScene::~ConsoleScene()
 
 	logAddedConn.disconnect();
 	logClearedConn.disconnect();
+	displayConfigChangedConn.disconnect();
 }
 
 void ConsoleScene::OnDisplayConfigChanged()
