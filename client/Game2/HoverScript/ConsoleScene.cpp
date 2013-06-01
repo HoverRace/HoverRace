@@ -121,6 +121,11 @@ ConsoleScene::~ConsoleScene()
 void ConsoleScene::OnDisplayConfigChanged()
 {
 	layoutChanged = true;
+
+	// We need to redo the line-wrapping since the font size changed.
+	logLines->Clear();
+	lastLogIdx = -1;
+	logsChanged = true;
 }
 
 void ConsoleScene::OnConsoleToggle()
