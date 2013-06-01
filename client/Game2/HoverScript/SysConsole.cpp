@@ -21,6 +21,8 @@
 
 #include "StdAfx.h"
 
+#include "../../../engine/Script/Help/HelpHandler.h"
+#include "../../../engine/Script/Help/Class.h"
 #include "../../../engine/Util/Config.h"
 #include "GamePeer.h"
 
@@ -57,6 +59,13 @@ SysConsole::SysConsole(Script::Core *scripting, GamePeer *gamePeer,
 	std::string intro = env->GetVersionString();
 	intro += " :: Console active.";
 	LogInfo(intro);
+
+	LogInfo("Available global objects: game");
+
+	std::string helpInstructions = boost::str(boost::format(
+		_("For help on a class or method, call the %s method: %s")) %
+		"help()" % "game:help(); game:help(\"on_init\")");
+	LogInfo(helpInstructions);
 }
 
 SysConsole::~SysConsole()
@@ -134,13 +143,45 @@ int SysConsole::GetEndLogIndex() const
 
 void SysConsole::HelpClass(const Script::Help::Class &cls)
 {
-	//TODO
+	using Script::Help::Class;
+	using Script::Help::MethodPtr;
+
+	LogInfo(boost::str(boost::format(_("Methods for class %s:")) % cls.GetName()));
+
+	std::string s;
+	s.reserve(1024);
+	BOOST_FOREACH(const Class::methods_t::value_type &ent, cls.GetMethods()) {
+		MethodPtr method = ent.second;
+		s.clear();
+		s += "  ";
+		s += method->GetName();
+		
+		const std::string &brief = method->GetBrief();
+		if (!brief.empty()) {
+			s += " - ";
+			s += brief;
+		}
+
+		LogInfo(s);
+	}
 }
 
 void SysConsole::HelpMethod(const Script::Help::Class &cls,
                             const Script::Help::Method &method)
 {
-	//TODO
+	using Script::Help::Method;
+	
+	LogInfo("---");
+
+	BOOST_FOREACH(const std::string &s, method.GetSigs()) {
+		LogInfo(s);
+	}
+
+	LogInfo(method.GetBrief());
+	const std::string &desc = method.GetDesc();
+	if (!desc.empty()) {
+		LogInfo(method.GetDesc());
+	}
 }
 
 }  // namespace HoverScript
