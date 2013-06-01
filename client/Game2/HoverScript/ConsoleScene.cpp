@@ -73,7 +73,7 @@ ConsoleScene::ConsoleScene(Display::Display &display, GameDirector &director,
                            SysConsole &console) :
 	SUPER("Console"),
 	display(display), director(director), console(console),
-	lastLogIdx(-1), layoutChanged(true), charSize(0, 0)
+	lastLogIdx(-1), logsChanged(true), layoutChanged(true), charSize(0, 0)
 {
 	typedef Display::UiViewModel::Alignment Alignment;
 
@@ -103,7 +103,6 @@ ConsoleScene::ConsoleScene(Display::Display &display, GameDirector &director,
 	logLines = new LogLines(display, charSize);
 
 	UpdateCommandLine();
-	console.ReadLogs(std::bind(&ConsoleScene::AppendLogLine, this, std::placeholders::_1));
 }
 
 ConsoleScene::~ConsoleScene()
@@ -166,6 +165,11 @@ void ConsoleScene::OnLogCleared()
 
 void ConsoleScene::OnLogAdded(int idx)
 {
+	if (layoutChanged) {
+		// Haven't measured yet, so defer the update until later.
+		logsChanged = true;
+	}
+
 	if (idx > lastLogIdx) {
 		console.ReadLogs(lastLogIdx + 1, idx,
 			std::bind(&ConsoleScene::AppendLogLine, this, std::placeholders::_1));
@@ -174,6 +178,14 @@ void ConsoleScene::OnLogAdded(int idx)
 
 void ConsoleScene::AppendLogLine(const SysConsole::LogLine &line)
 {
+	if (layoutChanged) {
+		// Haven't measured yet, so defer the update until later.
+		logsChanged = true;
+	}
+
+	const Display::UiFont &font = measureLbl->GetFont();
+
+	// Colorize based on message type.
 	Display::Color color(0xff7f7f7f);
 	switch (line.level) {
 		case SysConsole::LogLevel::HISTORY: color = 0xffffffff; break;
@@ -184,8 +196,39 @@ void ConsoleScene::AppendLogLine(const SysConsole::LogLine &line)
 				"ConsoleScene: Unhandled log level: %d\n", line.level);
 	}
 
-	// Colorize based on message type.
-	logLines->Add(line.line, measureLbl->GetFont(), color);
+	// Split into into multiple lines based on the current font measurement.
+	const std::string &s = line.line;
+	std::string buf;
+	buf.reserve(1024);
+	double charWidth = charSize.x;
+	double consoleWidth = 1280;
+	int i = 0;
+	for (std::string::const_iterator iter = s.begin(); iter != s.end();
+		++iter, ++i)
+	{
+		char c = *iter;
+		switch (c) {
+			case '\t':
+				buf.resize(buf.length() + (8 - (buf.length() % 8)), ' ');
+				break;
+
+			case '\n':
+				logLines->Add(buf, font, color);
+				buf.clear();
+				break;
+
+			default:
+				if (c >= 32 && c < 127) {
+					// Line wrap if necessary.
+					if (static_cast<double>(buf.length() + 1) * charWidth > consoleWidth) {
+						logLines->Add(buf, font, color);
+						buf.clear();
+					}
+					buf += c;
+				}
+		}
+	}
+	logLines->Add(buf, font, color);
 
 	lastLogIdx = line.idx;
 }
@@ -250,6 +293,14 @@ void ConsoleScene::PrepareRender()
 {
 	if (layoutChanged) {
 		Layout();
+	}
+
+	// If there were logs that appeared before we measured the font size
+	// in Layout(), then we need to read them now to catch up.
+	if (logsChanged) {
+		console.ReadLogs(lastLogIdx + 1,
+			std::bind(&ConsoleScene::AppendLogLine, this, std::placeholders::_1));
+		logsChanged = false;
 	}
 
 	winShadeBox->PrepareRender();

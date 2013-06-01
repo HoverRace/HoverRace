@@ -101,7 +101,25 @@ class SysConsole : public Console
 		}
 
 		/**
-		 * Read a subset of log entries.
+		 * Read a subset of log entries, from a starting index to the end.
+		 * @param start The starting log index (inclusive).
+		 * @param fn The callback function (will be passed a LogLine reference).
+		 */
+		template<class Function>
+		void ReadLogs(int start, Function fn)
+		{
+			if (!logLines.empty()) {
+				if (start < baseLogIdx) {
+					ReadLogs(fn);
+				}
+				else {
+					ReadLogs(start, GetEndLogIndex(), fn);
+				}
+			}
+		}
+
+		/**
+		 * Read a subset of log entries, for a specific range.
 		 * @param start The starting log index (inclusive).
 		 * @param end The ending log index (inclusive).
 		 * @param fn The callback function (will be passed a LogLine reference).

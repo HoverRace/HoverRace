@@ -90,6 +90,7 @@ class ConsoleScene : public UiScene
 		class LogLines;
 		LogLines *logLines;
 		int lastLogIdx;
+		bool logsChanged;
 
 		bool layoutChanged;
 
