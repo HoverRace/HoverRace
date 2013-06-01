@@ -168,7 +168,12 @@ void SdlDisplay::OnDisplayConfigChanged()
 	// need to be reloaded.
 
 	if (resChanged) {
+		//TODO: As of the 2013-06-01 (rev 7250) SDL2 snapshot, this is no longer
+		// required.  Leaving it in for now since some people may try to build
+		// with an older snapshot.
+		// It should be removed when SDL2 is finally released.
 		SDL_RenderSetViewport(renderer, nullptr);
+
 		width = vidCfg.xRes;
 		height = vidCfg.yRes;
 
