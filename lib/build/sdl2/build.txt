@@ -1,13 +1,13 @@
 
-Current supported SDL version: 2.0.0-7024
+Current supported SDL version: 2.0.0-7250
 
 
 == Manual Instructions ==
 
-1. Download the SDL sources (SDL-2.0.zip) from here:
+1. Download the SDL sources (SDL-2.0.0-7250.zip) from here:
 
 http://www.libsdl.org/hg.php
 
 2. Unpack the .zip file into this folder.
 
-3. Rename the "SDL-2.0.0-7024" folder to "src".
+3. Rename the "SDL-2.0.0-7250" folder to "src".
