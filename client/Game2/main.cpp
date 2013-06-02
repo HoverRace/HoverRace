@@ -1,6 +1,7 @@
-// main.cpp              Fireball game entry point
+// main.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
+// Copyright (c) 2013 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -17,7 +18,7 @@
 //
 // See the License for the specific language governing permissions
 // and limitations under the License.
-//
+
 #include "StdAfx.h"
 
 #include <iostream>
