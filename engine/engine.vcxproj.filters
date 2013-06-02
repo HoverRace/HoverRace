@@ -349,6 +349,9 @@
     <ClCompile Include="Display\SDL\SdlFillBoxView.cpp">
       <Filter>Display\SDL</Filter>
     </ClCompile>
+    <ClCompile Include="Util\Log.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColorTools\ColorTools.h">
@@ -718,6 +721,9 @@
     </ClInclude>
     <ClInclude Include="Display\UiLayoutFlags.h">
       <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Log.h">
+      <Filter>Util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -27,6 +27,7 @@
 
 #include "../../engine/Exception.h"
 #include "../../engine/Util/Config.h"
+#include "../../engine/Util/Log.h"
 #include "../../engine/Util/OS.h"
 #include "../../engine/Util/Str.h"
 #include "ClientApp.h"
@@ -40,6 +41,7 @@ using boost::str;
 
 using HoverRace::Client::ClientApp;
 using HoverRace::Util::Config;
+namespace Log = HoverRace::Util::Log;
 using HoverRace::Util::OS;
 namespace Str = HoverRace::Util::Str;
 
@@ -311,6 +313,8 @@ int main(int argc, char** argv)
 	curl_global_init(CURL_GLOBAL_ALL);
 
 	OS::TimeInit();
+
+	Log::Init();
 
 	try {
 		lErrorCode = RunClient();

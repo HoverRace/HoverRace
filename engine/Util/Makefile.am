@@ -35,6 +35,8 @@ libutil_la_SOURCES = \
 	InspectMapNode.h \
 	InspectNode.h \
 	Inspectable.h \
+	Log.cpp \
+	Log.h \
 	MR_Types.h \
 	OS.cpp \
 	OS.h \

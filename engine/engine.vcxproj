@@ -170,6 +170,7 @@
     <ClCompile Include="Util\DllObjectFactory.cpp" />
     <ClCompile Include="Util\FuzzyLogic.cpp" />
     <ClCompile Include="Util\InspectMapNode.cpp" />
+    <ClCompile Include="Util\Log.cpp" />
     <ClCompile Include="Util\OS.cpp" />
     <ClCompile Include="Util\Profiler.cpp" />
     <ClCompile Include="Util\SelFmt.cpp" />
@@ -293,6 +294,7 @@
     <ClInclude Include="Util\Inspectable.h" />
     <ClInclude Include="Util\InspectMapNode.h" />
     <ClInclude Include="Util\InspectNode.h" />
+    <ClInclude Include="Util\Log.h" />
     <ClInclude Include="Util\MR_Types.h" />
     <ClInclude Include="Util\OS.h" />
     <ClInclude Include="Util\Profiler.h" />
