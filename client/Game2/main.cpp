@@ -315,6 +315,7 @@ int main(int argc, char** argv)
 		lErrorCode = RunClient();
 	}
 	catch (HoverRace::Exception &ex) {
+		lErrorCode = EXIT_FAILURE;
 		//TODO: Managed error handler.
 #		ifdef _WIN32
 			std::ostringstream oss;
