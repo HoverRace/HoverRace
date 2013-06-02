@@ -20,16 +20,6 @@
 //
 #include "StdAfx.h"
 
-#ifdef WITH_SDL
-#	include "ClientApp.h"
-#else
-#	include "GameApp.h"
-#endif
-
-#ifdef _WIN32
-#	include <direct.h>
-#endif
-
 #include <iostream>
 
 #include <curl/curl.h>
@@ -38,6 +28,7 @@
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/OS.h"
 #include "../../engine/Util/Str.h"
+#include "ClientApp.h"
 
 #ifndef _WIN32
 #	include "version.h"
@@ -46,11 +37,7 @@
 using boost::format;
 using boost::str;
 
-#ifdef WITH_SDL
 using HoverRace::Client::ClientApp;
-#else
-using HoverRace::Client::GameApp;
-#endif
 using HoverRace::Util::Config;
 using HoverRace::Util::OS;
 namespace Str = HoverRace::Util::Str;
@@ -258,39 +245,9 @@ static OS::path_t FindExePath()
 
 static int RunClient()
 {
-#	ifdef WITH_SDL
-		ClientApp game;
-		game.MainLoop();
-		return EXIT_SUCCESS;
-
-#	elif _WIN32
-		BOOL lReturnValue = TRUE;
-
-		GameApp lGame(hinstance, safeMode);
-
-		// Allow only one instance of HoverRace; press CAPS_LOCK to bypass or
-		// use the "-m" command-line option.
-		if (!allowMultipleInstances) {
-			GetAsyncKeyState(VK_CAPITAL);				  // Reset the function
-			if(!GetAsyncKeyState(VK_CAPITAL))
-				lReturnValue = lGame.IsFirstInstance();
-		}
-
-		if(lReturnValue)
-			lReturnValue = lGame.InitApplication();
-
-		if(lReturnValue)
-			lReturnValue = lGame.InitGame();
-
-		// this is where the game actually takes control
-		if(lReturnValue) {
-			return lGame.MainLoop();
-		}
-		else {
-			return EXIT_FAILURE;
-		}
-
-#	endif
+	ClientApp game;
+	game.MainLoop();
+	return EXIT_SUCCESS;
 }
 
 // Entry point
