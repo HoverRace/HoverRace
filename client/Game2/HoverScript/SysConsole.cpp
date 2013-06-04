@@ -29,6 +29,7 @@
 #include "SysConsole.h"
 
 using HoverRace::Util::Config;
+namespace Log = HoverRace::Util::Log;
 
 namespace HoverRace {
 namespace Client {
@@ -66,10 +67,15 @@ SysConsole::SysConsole(Script::Core *scripting, GamePeer *gamePeer,
 		_("For help on a class or method, call the %s method: %s")) %
 		"help()" % "game:help(); game:help(\"on_init\")");
 	LogInfo(helpInstructions);
+
+	logConn = Log::logAddedSignal.connect(
+		std::bind(&SysConsole::OnLog, this,
+			std::placeholders::_1, std::placeholders::_2));
 }
 
 SysConsole::~SysConsole()
 {
+	logConn.disconnect();
 }
 
 void SysConsole::InitEnv()
@@ -97,6 +103,24 @@ void SysConsole::Clear()
 
 	// Notify listeners.
 	logClearedSignal();
+}
+
+void SysConsole::OnLog(Log::Level::level_t level, const char *msg)
+{
+	LogLevel::level_t logLevel;
+	switch (level) {
+		case Log::Level::DEBUG:
+		case Log::Level::INFO:
+		case Log::Level::WARN:
+			logLevel = LogLevel::INFO;
+			break;
+		case Log::Level::ERROR:
+		case Log::Level::FATAL:
+		default:
+			logLevel = LogLevel::INFO;
+	}
+
+	AddLogLine(logLevel, msg);
 }
 
 void SysConsole::AddLogLine(LogLevel::level_t level, const std::string &line)

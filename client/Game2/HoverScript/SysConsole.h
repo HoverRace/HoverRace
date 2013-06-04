@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include "../../../engine/Util/Log.h"
+
 #include "Console.h"
 
 // Previously defined in WinGDI.h.
@@ -79,6 +81,7 @@ class SysConsole : public Console
 			const std::string line;
 		};
 	private:
+		void OnLog(Util::Log::Level::level_t level, const char *msg);
 		void AddLogLine(LogLevel::level_t level, const std::string &line);
 	public:
 		void LogHistory(const std::string &s);
@@ -164,6 +167,8 @@ class SysConsole : public Console
 		int baseLogIdx;  ///< Index of the first item in logLines.
 
 		std::string commandLine;
+
+		boost::signals2::connection logConn;
 
 		logClearedSignal_t logClearedSignal;
 		logAddedSignal_t logAddedSignal;
