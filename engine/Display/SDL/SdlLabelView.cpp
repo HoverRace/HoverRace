@@ -162,8 +162,8 @@ void SdlLabelView::UpdateTexture()
 
 		tempSurface = TTF_RenderUTF8_Blended_Wrapped(ttfFont,
 			model.GetText().c_str(), color, 4096);
-		realWidth = tempSurface->w;
-		realHeight = tempSurface->h;
+		realWidth = width = tempSurface->w;
+		realHeight = height = tempSurface->h;
 
 #	elif defined(_WIN32)
 		HDC hdc = CreateCompatibleDC(NULL);
