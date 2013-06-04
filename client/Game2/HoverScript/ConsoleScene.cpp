@@ -24,6 +24,7 @@
 #include "../../../engine/Display/Display.h"
 #include "../../../engine/Display/FillBox.h"
 #include "../../../engine/Display/Label.h"
+#include "../../../engine/Util/Log.h"
 #include "../GameDirector.h"
 
 #include "ConsoleScene.h"
@@ -158,8 +159,7 @@ void ConsoleScene::OnTextControl(Control::TextControl::key_t key)
 			break;
 
 		default:
-			SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION,
-				"ConsoleScene: Unhandled text control key: %d\n", key);
+			Log::Warn("ConsoleScene: Unhandled text control key: %d", key);
 	}
 }
 
@@ -197,8 +197,7 @@ void ConsoleScene::AppendLogLine(const SysConsole::LogLine &line)
 		case SysConsole::LogLevel::INFO: color = 0xffbfbfbf; break;
 		case SysConsole::LogLevel::ERROR: color = 0xffff0000; break;
 		default:
-			SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION,
-				"ConsoleScene: Unhandled log level: %d\n", line.level);
+			Log::Warn("ConsoleScene: Unhandled log level: %d", line.level);
 	}
 
 	// Split into into multiple lines based on the current font measurement.
