@@ -65,6 +65,46 @@ void Init()
 	SDL_LogSetOutputFunction(LogCallback, nullptr);
 }
 
+void Debug(const char *fmt, ...)
+{
+	va_list ap;
+	va_start(ap, fmt);
+	SDL_LogMessageV(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_DEBUG, fmt, ap);
+	va_end(ap);
+}
+
+void Info(const char *fmt, ...)
+{
+	va_list ap;
+	va_start(ap, fmt);
+	SDL_LogMessageV(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, fmt, ap);
+	va_end(ap);
+}
+
+void Warn(const char *fmt, ...)
+{
+	va_list ap;
+	va_start(ap, fmt);
+	SDL_LogMessageV(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_WARN, fmt, ap);
+	va_end(ap);
+}
+
+void Error(const char *fmt, ...)
+{
+	va_list ap;
+	va_start(ap, fmt);
+	SDL_LogMessageV(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, fmt, ap);
+	va_end(ap);
+}
+
+void Fatal(const char *fmt, ...)
+{
+	va_list ap;
+	va_start(ap, fmt);
+	SDL_LogMessageV(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_CRITICAL, fmt, ap);
+	va_end(ap);
+}
+
 };
 
 }  // namespace Util

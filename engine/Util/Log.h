@@ -56,6 +56,12 @@ namespace Log {
 	typedef boost::signals2::signal<void(Level::level_t, const char*)> logAdded_t;
 	MR_DllDeclare extern logAdded_t logAddedSignal;
 
+	MR_DllDeclare void Debug(const char *fmt, ...);
+	MR_DllDeclare void Info(const char *fmt, ...);
+	MR_DllDeclare void Warn(const char *fmt, ...);
+	MR_DllDeclare void Error(const char *fmt, ...);
+	MR_DllDeclare void Fatal(const char *fmt, ...);
+
 }
 
 }  // namespace Util
