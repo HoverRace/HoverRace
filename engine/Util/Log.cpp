@@ -61,6 +61,12 @@ namespace {
  */
 void Init()
 {
+#	ifdef _DEBUG
+		SDL_LogSetAllPriority(SDL_LOG_PRIORITY_INFO);
+#	else
+		SDL_LogSetAllPriority(SDL_LOG_PRIORITY_ERROR);
+#	endif
+
 	SDL_LogGetOutputFunction(&sdlBuiltinLog, nullptr);
 	SDL_LogSetOutputFunction(LogCallback, nullptr);
 }
