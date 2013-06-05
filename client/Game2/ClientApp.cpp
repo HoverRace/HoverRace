@@ -56,7 +56,6 @@
 #include "HoverScript/SysEnv.h"
 #include "ClientSession.h"
 #include "GameScene.h"
-#include "HighObserver.h"
 #include "MessageScene.h"
 #include "Rulebook.h"
 #include "Scene.h"

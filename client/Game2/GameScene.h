@@ -37,7 +37,6 @@ namespace HoverRace {
 			class SysEnv;
 		}
 		class ClientSession;
-		class HighObserver;
 		class Rulebook;
 		typedef std::shared_ptr<Rulebook> RulebookPtr;
 	}
@@ -92,8 +91,6 @@ class GameScene : public Scene
 		static const int MAX_OBSERVERS = Util::Config::MAX_PLAYERS;
 		Observer *observers[MAX_OBSERVERS];
 		ClientSession *session;
-
-		HighObserver *highObserver;
 
 		HoverScript::SessionPeerPtr sessionPeer;
 

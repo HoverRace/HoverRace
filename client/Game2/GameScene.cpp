@@ -32,7 +32,6 @@
 #include "HoverScript/SessionPeer.h"
 
 #include "ClientSession.h"
-#include "HighObserver.h"
 #include "MessageScene.h"
 #include "Rulebook.h"
 
@@ -50,7 +49,7 @@ GameScene::GameScene(GameDirector *director, Display::Display &display,
 	SUPER("Game"),
 	director(director),
 	frame(0), numPlayers(1), display(display),
-	session(NULL), highObserver(NULL),
+	session(nullptr),
 	firedOnRaceFinish(false)
 {
 	memset(observers, 0, sizeof(observers[0]) * MAX_OBSERVERS);
@@ -84,7 +83,6 @@ GameScene::GameScene(GameDirector *director, Display::Display &display,
 	}
 
 	observers[0] = Observer::New();
-	highObserver = new HighObserver();
 }
 
 GameScene::~GameScene()
@@ -94,7 +92,6 @@ GameScene::~GameScene()
 
 void GameScene::Cleanup()
 {
-	delete highObserver;
 	delete session;
 	for (int i = 0; i < numPlayers; i++) {
 		if (observers[i] != NULL) {
@@ -157,10 +154,6 @@ void GameScene::Render()
 				session->GetPlayer(i),
 				simTime, session->GetBackImage());
 		}
-	}
-
-	if (highObserver != NULL) {
-		highObserver->Render(videoBuf, session);
 	}
 
 	// Trigger sounds.
