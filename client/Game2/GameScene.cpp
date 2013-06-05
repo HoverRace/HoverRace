@@ -21,13 +21,13 @@
 
 #include "StdAfx.h"
 
+#include "../../engine/Control/Controller.h"
 #include "../../engine/Display/Display.h"
 #include "../../engine/Model/Track.h"
 #include "../../engine/Parcel/TrackBundle.h"
 #include "../../engine/VideoServices/SoundServer.h"
 #include "../../engine/VideoServices/VideoBuffer.h"
 
-#include "Control/Controller.h"
 #include "HoverScript/GamePeer.h"
 #include "HoverScript/SessionPeer.h"
 
@@ -107,7 +107,9 @@ void GameScene::AttachController(Control::InputEventController &controller)
 {
 	MainCharacter::MainCharacter* mc = session->GetPlayer(0);
 	controller.AddPlayerMaps(1, &mc);
+	/*TODO
 	controller.AddObserverMaps(observers, 1);
+	*/
 }
 
 void GameScene::DetachController(Control::InputEventController &controller)

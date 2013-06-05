@@ -21,8 +21,6 @@
 
 #include "StdAfx.h"
 
-#include "Control/Controller.h"
-
 #include "UiScene.h"
 
 namespace HoverRace {

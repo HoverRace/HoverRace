@@ -25,10 +25,8 @@
 #include "../../engine/Util/OS.h"
 
 namespace HoverRace {
-	namespace Client {
-		namespace Control {
-			class InputEventController;
-		}
+	namespace Control {
+		class InputEventController;
 	}
 }
 

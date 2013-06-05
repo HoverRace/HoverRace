@@ -31,6 +31,8 @@
 #endif
 
 #include "../../engine/Exception.h"
+#include "../../engine/Control/Controller.h"
+#include "../../engine/Control/UiHandler.h"
 #include "../../engine/Display/Label.h"
 #include "../../engine/Display/UiLayoutFlags.h"
 #include "../../engine/Display/SDL/SdlDisplay.h"
@@ -45,8 +47,6 @@
 #include "../../engine/VideoServices/SoundServer.h"
 #include "../../engine/VideoServices/VideoBuffer.h"
 
-#include "Control/Controller.h"
-#include "Control/UiHandler.h"
 #include "HoverScript/ClientScriptCore.h"
 #include "HoverScript/ConsoleScene.h"
 #include "HoverScript/GamePeer.h"
@@ -71,7 +71,7 @@
 using namespace HoverRace::Client::HoverScript;
 using namespace HoverRace::Util;
 namespace SoundServer = HoverRace::VideoServices::SoundServer;
-using HoverRace::Client::Control::InputEventController;
+using HoverRace::Control::InputEventController;
 
 namespace HoverRace {
 namespace Client {

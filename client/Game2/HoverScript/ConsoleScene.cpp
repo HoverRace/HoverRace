@@ -21,9 +21,11 @@
 
 #include "StdAfx.h"
 
+#include "../../../engine/Control/Controller.h"
 #include "../../../engine/Display/Display.h"
 #include "../../../engine/Display/FillBox.h"
 #include "../../../engine/Display/Label.h"
+#include "../../../engine/Util/Config.h"
 #include "../../../engine/Util/Log.h"
 #include "../GameDirector.h"
 

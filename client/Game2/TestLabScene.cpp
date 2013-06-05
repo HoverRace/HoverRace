@@ -21,6 +21,7 @@
 
 #include "StdAfx.h"
 
+#include "../../engine/Control/Controller.h"
 #include "../../engine/Display/Display.h"
 #include "../../engine/Display/FillBox.h"
 #include "../../engine/Display/Label.h"

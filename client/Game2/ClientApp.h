@@ -29,9 +29,6 @@
 
 namespace HoverRace {
 	namespace Client {
-		namespace Control {
-			class InputEventController;
-		}
 		namespace HoverScript {
 			class ConsoleScene;
 			class GamePeer;
@@ -46,6 +43,9 @@ namespace HoverRace {
 		typedef std::shared_ptr<Rulebook> RulebookPtr;
 		class Scene;
 		typedef std::shared_ptr<Scene> ScenePtr;
+	}
+	namespace Control {
+		class InputEventController;
 	}
 	namespace Display {
 		class Display;

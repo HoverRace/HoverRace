@@ -30,16 +30,16 @@
 
 namespace HoverRace {
 	namespace Client {
-		namespace Control {
-			class InputHandler;
-			typedef std::shared_ptr<InputHandler> InputHandlerPtr;
-		}
 		namespace HoverScript {
 			class GamePeer;
 			class SessionPeer;
 			typedef std::shared_ptr<SessionPeer> SessionPeerPtr;
 		}
 		class GameDirector;
+	}
+	namespace Control {
+		class InputHandler;
+		typedef std::shared_ptr<InputHandler> InputHandlerPtr;
 	}
 	namespace VideoServices {
 		struct FontSpec;
