@@ -24,10 +24,14 @@
 
 #include "StdAfx.h"
 
+#if 0
+
 #include "ObserverActions.h"
 
-using namespace HoverRace::Client::Control;
 using HoverRace::Client::Observer;
+
+namespace HoverRace {
+namespace Control {
 
 void ObserverAction::SetObservers(Observer** observers, int nObservers)
 {
@@ -58,3 +62,8 @@ void ObserverResetAction::operator()(int value)
 			observers[i]->Home();
 	}
 }
+
+} // namespace Control
+} // namespace HoverRace
+
+#endif

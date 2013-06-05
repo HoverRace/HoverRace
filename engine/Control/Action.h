@@ -21,13 +21,23 @@
 
 #pragma once
 
-#include "../../../engine/Exception.h"
+#include <SDL2/SDL_keycode.h>
+
+#include "../Exception.h"
 
 #include "ControlAction.h"
-#include "Controller.h"
+
+#ifdef _WIN32
+#	ifdef MR_ENGINE
+#		define MR_DllDeclare   __declspec( dllexport )
+#	else
+#		define MR_DllDeclare   __declspec( dllimport )
+#	endif
+#else
+#	define MR_DllDeclare
+#endif
 
 namespace HoverRace {
-namespace Client {
 namespace Control {
 
 namespace TextControl {
@@ -148,5 +158,6 @@ class Action : public ControlAction<Val>
 };
 
 } // namespace Control
-} // namespace Client
 } // namespace HoverRace
+
+#undef MR_DllDeclare

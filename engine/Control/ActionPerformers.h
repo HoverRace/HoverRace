@@ -22,15 +22,23 @@
 // and limitations under the License.
 //
 
-#ifndef __ACTION_PERFORMERS_H
-#define __ACTION_PERFORMERS_H
+#pragma once
 
 #include "Controller.h"
 #include "ControlAction.h"
-#include "../../../engine/MainCharacter/MainCharacter.h"
+#include "../MainCharacter/MainCharacter.h"
+
+#ifdef _WIN32
+#	ifdef MR_ENGINE
+#		define MR_DllDeclare   __declspec( dllexport )
+#	else
+#		define MR_DllDeclare   __declspec( dllimport )
+#	endif
+#else
+#	define MR_DllDeclare
+#endif
 
 namespace HoverRace {
-namespace Client {
 namespace Control {
 
 /***
@@ -41,7 +49,7 @@ namespace Control {
  * concerns, most of these do not check if the pointer is NULL.  Given that that
  * condition should never happen, this should not be a problem.
  */
-class PlayerEffectAction : public ControlAction<int> {
+class MR_DllDeclare PlayerEffectAction : public ControlAction<int> {
 	public:
 		// C++0x should give us constructor inheritance... whenever that happens
 		PlayerEffectAction(std::string name, int listOrder, MainCharacter::MainCharacter* mc);
@@ -59,7 +67,7 @@ class PlayerEffectAction : public ControlAction<int> {
  * 
  * Turns the motor on or off.
  */
-class EngineAction : public PlayerEffectAction {
+class MR_DllDeclare EngineAction : public PlayerEffectAction {
 	public:
 		EngineAction(std::string name, int listOrder, MainCharacter::MainCharacter* mc) : PlayerEffectAction(name, listOrder, mc) { }
 
@@ -75,7 +83,7 @@ class EngineAction : public PlayerEffectAction {
  *
  * Turns the craft left.
  */
-class TurnLeftAction : public PlayerEffectAction {
+class MR_DllDeclare TurnLeftAction : public PlayerEffectAction {
 	public:
 		TurnLeftAction(std::string name, int listOrder, MainCharacter::MainCharacter* mc) : PlayerEffectAction(name, listOrder, mc) { }
 
@@ -91,7 +99,7 @@ class TurnLeftAction : public PlayerEffectAction {
  *
  * Turns the craft right.
  */
-class TurnRightAction : public PlayerEffectAction {
+class MR_DllDeclare TurnRightAction : public PlayerEffectAction {
 	public:
 		TurnRightAction(std::string name, int listOrder, MainCharacter::MainCharacter* mc) : PlayerEffectAction(name, listOrder, mc) { }
 		
@@ -107,7 +115,7 @@ class TurnRightAction : public PlayerEffectAction {
  *
  * Makes the craft jump.
  */
-class JumpAction : public PlayerEffectAction {
+class MR_DllDeclare JumpAction : public PlayerEffectAction {
 	public:
 		JumpAction(std::string name, int listOrder, MainCharacter::MainCharacter* mc) : PlayerEffectAction(name, listOrder, mc) { }
 		
@@ -123,7 +131,7 @@ class JumpAction : public PlayerEffectAction {
  * Fires a missile, lays a mine, or uses a speed can, depending on the user's
  * selected item.
  */
-class PowerupAction : public PlayerEffectAction {
+class MR_DllDeclare PowerupAction : public PlayerEffectAction {
 	public:
 		PowerupAction(std::string name, int listOrder, MainCharacter::MainCharacter* mc) : PlayerEffectAction(name, listOrder, mc) { }
 		
@@ -138,7 +146,7 @@ class PowerupAction : public PlayerEffectAction {
  *
  * Changes the current item.
  */
-class ChangeItemAction : public PlayerEffectAction {
+class MR_DllDeclare ChangeItemAction : public PlayerEffectAction {
 	public:	
 		ChangeItemAction(std::string name, int listOrder, MainCharacter::MainCharacter* mc) : PlayerEffectAction(name, listOrder, mc) { }
 		
@@ -154,7 +162,7 @@ class ChangeItemAction : public PlayerEffectAction {
  * Brakes the craft (or turns it around so that if used in conjunction with the engine,
  * the craft slows down).
  */
-class BrakeAction : public PlayerEffectAction {
+class MR_DllDeclare BrakeAction : public PlayerEffectAction {
 	public:
 		BrakeAction(std::string name, int listOrder, MainCharacter::MainCharacter* mc) : PlayerEffectAction(name, listOrder, mc) { }
 		
@@ -171,7 +179,7 @@ class BrakeAction : public PlayerEffectAction {
  * Sets whether or not the player is looking back.  This is arguably not a
  * PlayerEffectAction but we'll leave it here for now.
  */
-class LookBackAction : public PlayerEffectAction {
+class MR_DllDeclare LookBackAction : public PlayerEffectAction {
 	public:
 		LookBackAction(std::string name, int listOrder, MainCharacter::MainCharacter* mc) : PlayerEffectAction(name, listOrder, mc) { }
 		
@@ -183,7 +191,6 @@ class LookBackAction : public PlayerEffectAction {
 };
 
 } // namespace Control
-} // namespace Client
 } // namespace HoverRace
 
-#endif
+#undef MR_DllDeclare

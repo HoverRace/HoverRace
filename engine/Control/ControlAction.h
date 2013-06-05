@@ -21,13 +21,21 @@
 // and limitations under the License.
 //
 
-#ifndef __CONTROL_ACTION_H
-#define __CONTROL_ACTION_H
+#pragma once
 
 #include <string>
 
+#ifdef _WIN32
+#	ifdef MR_ENGINE
+#		define MR_DllDeclare   __declspec( dllexport )
+#	else
+#		define MR_DllDeclare   __declspec( dllimport )
+#	endif
+#else
+#	define MR_DllDeclare
+#endif
+
 namespace HoverRace {
-namespace Client {
 namespace Control {
 
 /***
@@ -63,14 +71,13 @@ typedef std::shared_ptr<ControlAction<int>> ControlActionPtr;
  * Provides a template for other classes that will be used as an
  * ActionPerformer.
  */
-class BlankAction : public ControlAction<int> {
+class MR_DllDeclare BlankAction : public ControlAction<int> {
 	public:
 		BlankAction(std::string name, int listOrder) : ControlAction(name, listOrder) { }
 		virtual void operator()(int value) { }
 };
 
 } // namespace Control
-} // namespace Client
 } // namespace HoverRace
 
-#endif
+#undef MR_DllDeclare

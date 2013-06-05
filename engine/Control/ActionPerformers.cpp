@@ -26,8 +26,10 @@
 
 #include "ActionPerformers.h"
 
-using namespace HoverRace::Client::Control;
 using namespace HoverRace::MainCharacter;
+
+namespace HoverRace {
+namespace Control {
 
 // constructor does not need to do anything but save our pointer
 PlayerEffectAction::PlayerEffectAction(std::string name, int listOrder, HoverRace::MainCharacter::MainCharacter* pmc) : ControlAction(name, listOrder), mc(pmc) { }
@@ -91,3 +93,6 @@ void LookBackAction::operator()(int eventValue)
 	else
 		mc->SetLookBackState(false);
 }
+
+} // namespace Control
+} // namespace HoverRace

@@ -20,21 +20,29 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
-#ifndef CONTROLLER_H
-#define CONTROLLER_H
+#pragma once
 
 #include <vector>
 #include <string>
 
 #include <SDL2/SDL.h>
 
-#include "../../../engine/Util/Config.h"
-#include "../../../engine/Util/OS.h"
-#include "../../../engine/MainCharacter/MainCharacter.h"
-#include "../Observer.h"
+#include "../Util/Config.h"
+#include "../Util/OS.h"
+#include "../MainCharacter/MainCharacter.h"
 
 #include "Action.h"
 #include "ControlAction.h"
+
+#ifdef _WIN32
+#	ifdef MR_ENGINE
+#		define MR_DllDeclare   __declspec( dllexport )
+#	else
+#		define MR_DllDeclare   __declspec( dllimport )
+#	endif
+#else
+#	define MR_DllDeclare
+#endif
 
 #define CTL_MOTOR_ON	1
 #define CTL_LEFT		2
@@ -50,7 +58,6 @@
 #define SET_CONTROL		(WM_USER + 1)
 
 namespace HoverRace {
-namespace Client {
 namespace Control {
 
 class InputHandler;
@@ -62,7 +69,7 @@ typedef std::shared_ptr<UiHandler> UiHandlerPtr;
  * Contains information on the current control state.  Eventually, its members should
  * be made analog instead of digital (well, the ones that can, at least).
  */
-struct ControlState {
+struct MR_DllDeclare ControlState {
 	// TODO: make these inputs analog, not digital
 	bool motorOn;
 	bool jump;
@@ -74,7 +81,7 @@ struct ControlState {
 	bool left;
 };
 
-class InputEventController {
+class MR_DllDeclare InputEventController {
 	public:
 		InputEventController(Util::OS::wnd_t mainWindow, UiHandlerPtr uiHandler);
 		~InputEventController();
@@ -181,7 +188,9 @@ class InputEventController {
 		 * Update pointers to Observer objects and add "Camera" map to the active
 		 * action maps.
 		 */
+		/*TODO
 		void AddObserverMaps(Observer** obs, int numObs);
+		*/
 
 		/// Enable menu controls.
 		void AddMenuMaps();
@@ -327,7 +336,6 @@ class InputEventController {
 };
 
 } // namespace Control
-} // namespace Client
 } // namespace HoverRace
 
-#endif
+#undef MR_DllDeclare

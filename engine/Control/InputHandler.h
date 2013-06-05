@@ -24,11 +24,20 @@
 
 #include <SDL2/SDL_keycode.h>
 
+#ifdef _WIN32
+#	ifdef MR_ENGINE
+#		define MR_DllDeclare   __declspec( dllexport )
+#	else
+#		define MR_DllDeclare   __declspec( dllimport )
+#	endif
+#else
+#	define MR_DllDeclare
+#endif
+
 namespace HoverRace {
-namespace Client {
 namespace Control {
 
-class InputHandler
+class MR_DllDeclare InputHandler
 {
 	public:
 		InputHandler() { }
@@ -52,5 +61,6 @@ class InputHandler
 typedef std::shared_ptr<InputHandler> InputHandlerPtr;
 
 } // namespace Control
-} // namespace Client
 } // namespace HoverRace
+
+#undef MR_DllDeclare

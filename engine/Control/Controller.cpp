@@ -22,22 +22,22 @@
 
 #include "StdAfx.h"
 
-//#include "InputHandler.h"
 #include "UiHandler.h"
 
 #include "Controller.h"
 
 #include "ActionPerformers.h"
 #include "ControlAction.h"
-#include "ObserverActions.h"
+//#include "ObserverActions.h"
 
 #include <sstream>
 
 using namespace HoverRace;
-using namespace HoverRace::Client::Control;
 using namespace HoverRace::Util;
-using HoverRace::Client::Observer;
 using namespace std;
+
+namespace HoverRace {
+namespace Control {
 
 InputEventController::actions_t::ui_t::ui_t() :
 	menuOk(std::make_shared<Action<voidSignal_t>>(_("OK"), 0)),
@@ -352,6 +352,7 @@ void InputEventController::AddPlayerMaps(int numPlayers, MainCharacter::MainChar
 	}
 }
 
+/*TODO
 void InputEventController::AddObserverMaps(Observer** obs, int numObs)
 {
 	for(ActionMap::iterator it = allActionMaps[_("Camera")].begin(); it != allActionMaps[_("Camera")].end(); it++) {
@@ -362,6 +363,7 @@ void InputEventController::AddObserverMaps(Observer** obs, int numObs)
 
 	AddActionMap(_("Camera"));
 }
+*/
 
 void InputEventController::AddMenuMaps()
 {
@@ -495,11 +497,13 @@ void InputEventController::LoadConfig()
 	/* load camera map */
 	ActionMap& cameraMap = allActionMaps[_("Camera")];
 
+	/*TODO
 	cameraMap[cfg->camera_hash.zoomIn].reset(new ObserverZoomAction(_("Zoom In"), 0, NULL, 0, 1));
 	cameraMap[cfg->camera_hash.zoomOut].reset(new ObserverZoomAction(_("Zoom Out"), 1, NULL, 0, -1));
 	cameraMap[cfg->camera_hash.panUp].reset(new ObserverTiltAction(_("Pan Up"), 2, NULL, 0, 1));
 	cameraMap[cfg->camera_hash.panDown].reset(new ObserverTiltAction(_("Pan Down"), 3, NULL, 0, -1));
 	cameraMap[cfg->camera_hash.reset].reset(new ObserverResetAction(_("Reset Camera"), 4, NULL, 0));
+	*/
 }
 
 void InputEventController::InitInputManager(Util::OS::wnd_t mainWindow)
@@ -618,3 +622,6 @@ int InputEventController::HashJoystickAxisEvent(const JoyStickEvent& arg, int ax
 						 ((axis % 16) << 8) | ((direction % 16) << 4));
 }
 */
+
+} // namespace Control
+} // namespace HoverRace

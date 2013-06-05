@@ -22,15 +22,25 @@
 // and limitations under the License.
 //
 
-#ifndef __OBSERVER_ACTIONS_H
-#define __OBSERVER_ACTIONS_H
+#pragma once
+
+#if 0
 
 #include "Controller.h"
 #include "ControlAction.h"
 #include "../Observer.h"
 
+#ifdef _WIN32
+#	ifdef MR_ENGINE
+#		define MR_DllDeclare   __declspec( dllexport )
+#	else
+#		define MR_DllDeclare   __declspec( dllimport )
+#	endif
+#else
+#	define MR_DllDeclare
+#endif
+
 namespace HoverRace {
-namespace Client {
 namespace Control {
 
 /***
@@ -97,7 +107,8 @@ class ObserverResetAction : public ObserverAction {
 };
 
 } // namespace Control
-} // namespace Client
 } // namespace HoverRace
+
+#undef MR_DllDeclare
 
 #endif

@@ -27,7 +27,6 @@
 #include "Controller.h"
 
 namespace HoverRace {
-namespace Client {
 namespace Control {
 
 namespace {
@@ -329,5 +328,4 @@ std::string InputEventController::HashToString(int hash)
 }
 
 }  // namespace Control
-}  // namespace HoverScript
-}  // namespace Client
+}  // namespace HoverRace
