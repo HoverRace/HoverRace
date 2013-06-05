@@ -3,6 +3,7 @@ BUILT_SOURCES = StdAfx.h.gch
 
 SUBDIRS = \
 	ColorTools \
+	Control \
 	Display \
 	MainCharacter \
 	MazeCompiler \
@@ -20,6 +21,7 @@ libhoverrace_engine_la_CPPFLAGS = $(HR_CPPFLAGS)
 libhoverrace_engine_la_CXXFLAGS = $(HR_CXXFLAGS)
 libhoverrace_engine_la_LIBADD = \
 	ColorTools/libcolortools.la \
+	Control/libcontrol.la \
 	Display/libdisplay.la \
 	MainCharacter/libmainchar.la \
 	MazeCompiler/libmazecompiler.la \

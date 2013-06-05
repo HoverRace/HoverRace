@@ -4,9 +4,6 @@
     <Filter Include="Game2">
       <UniqueIdentifier>{e9a1b5c7-98c0-473f-8d11-ad9aec0b2073}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Control">
-      <UniqueIdentifier>{d121e2e4-7d5b-4460-9c30-3a6c66b380dd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="HoverScript">
       <UniqueIdentifier>{9bbec523-a9fb-421c-87f7-2f267225d8c5}</UniqueIdentifier>
     </Filter>
@@ -96,9 +93,6 @@
     <ClCompile Include="Game2\VideoAudioPrefsPage.cpp">
       <Filter>Game2</Filter>
     </ClCompile>
-    <ClCompile Include="Game2\Control\Controller.cpp">
-      <Filter>Control</Filter>
-    </ClCompile>
     <ClCompile Include="Game2\HoverScript\ClientScriptCore.cpp">
       <Filter>HoverScript</Filter>
     </ClCompile>
@@ -122,12 +116,6 @@
     </ClCompile>
     <ClCompile Include="Game2\ClientApp.cpp">
       <Filter>Game2</Filter>
-    </ClCompile>
-    <ClCompile Include="Game2\Control\ActionPerformers.cpp">
-      <Filter>Control</Filter>
-    </ClCompile>
-    <ClCompile Include="Game2\Control\ObserverActions.cpp">
-      <Filter>Control</Filter>
     </ClCompile>
     <ClCompile Include="Game2\GameScene.cpp">
       <Filter>Game2</Filter>
@@ -158,9 +146,6 @@
     </ClCompile>
     <ClCompile Include="Game2\TestLabScene.cpp">
       <Filter>Game2</Filter>
-    </ClCompile>
-    <ClCompile Include="Game2\Control\ControllerStrings.cpp">
-      <Filter>Control</Filter>
     </ClCompile>
     <ClCompile Include="Game2\HoverScript\ConsoleScene.cpp">
       <Filter>HoverScript</Filter>
@@ -257,15 +242,6 @@
     <ClInclude Include="Game2\VideoAudioPrefsPage.h">
       <Filter>Game2</Filter>
     </ClInclude>
-    <ClInclude Include="Game2\Control\Controller.h">
-      <Filter>Control</Filter>
-    </ClInclude>
-    <ClInclude Include="Game2\Control\InputHandler.h">
-      <Filter>Control</Filter>
-    </ClInclude>
-    <ClInclude Include="Game2\Control\UiHandler.h">
-      <Filter>Control</Filter>
-    </ClInclude>
     <ClInclude Include="Game2\HoverScript\ClientScriptCore.h">
       <Filter>HoverScript</Filter>
     </ClInclude>
@@ -294,15 +270,6 @@
     <ClInclude Include="Game2\ClientApp.h">
       <Filter>Game2</Filter>
     </ClInclude>
-    <ClInclude Include="Game2\Control\ControlAction.h">
-      <Filter>Control</Filter>
-    </ClInclude>
-    <ClInclude Include="Game2\Control\ActionPerformers.h">
-      <Filter>Control</Filter>
-    </ClInclude>
-    <ClInclude Include="Game2\Control\ObserverActions.h">
-      <Filter>Control</Filter>
-    </ClInclude>
     <ClInclude Include="Game2\GameScene.h">
       <Filter>Game2</Filter>
     </ClInclude>
@@ -328,9 +295,6 @@
     </ClInclude>
     <ClInclude Include="Game2\UiScene.h">
       <Filter>Game2</Filter>
-    </ClInclude>
-    <ClInclude Include="Game2\Control\Action.h">
-      <Filter>Control</Filter>
     </ClInclude>
     <ClInclude Include="Game2\GifDecoder.h">
       <Filter>Game2</Filter>

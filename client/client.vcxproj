@@ -103,7 +103,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Game2\AboutDialog.cpp" />
-    <ClCompile Include="Game2\Control\ControllerStrings.cpp" />
     <ClCompile Include="Game2\FolderViewer.cpp" />
     <ClCompile Include="Game2\FullscreenTest.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -117,8 +116,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="Game2\Control\ActionPerformers.cpp" />
-    <ClCompile Include="Game2\Control\ObserverActions.cpp" />
     <ClCompile Include="Game2\DownloadUpdateDialog.cpp" />
     <ClCompile Include="Game2\GameApp.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -176,7 +173,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="Game2\Control\Controller.cpp" />
     <ClCompile Include="Game2\HoverScript\ClientScriptCore.cpp" />
     <ClCompile Include="Game2\HoverScript\ConfigPeer.cpp" />
     <ClCompile Include="Game2\HoverScript\Console.cpp" />
@@ -189,7 +185,6 @@
     <ClInclude Include="..\include\compat\boost_cxx11.h" />
     <ClInclude Include="..\include\compat\luabind_cxx11.h" />
     <ClInclude Include="Game2\AboutDialog.h" />
-    <ClInclude Include="Game2\Control\Action.h" />
     <ClInclude Include="Game2\FolderViewer.h" />
     <ClInclude Include="Game2\FullscreenTest.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -203,9 +198,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClInclude>
-    <ClInclude Include="Game2\Control\ActionPerformers.h" />
-    <ClInclude Include="Game2\Control\ControlAction.h" />
-    <ClInclude Include="Game2\Control\ObserverActions.h" />
     <ClInclude Include="Game2\DownloadUpdateDialog.h" />
     <ClInclude Include="Game2\GameApp.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -262,9 +254,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClInclude>
-    <ClInclude Include="Game2\Control\Controller.h" />
-    <ClInclude Include="Game2\Control\InputHandler.h" />
-    <ClInclude Include="Game2\Control\UiHandler.h" />
     <ClInclude Include="Game2\HoverScript\ClientScriptCore.h" />
     <ClInclude Include="Game2\HoverScript\ConfigPeer.h" />
     <ClInclude Include="Game2\HoverScript\Console.h" />

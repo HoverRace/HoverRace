@@ -13,17 +13,6 @@ hoverrace_LDADD = \
 	$(DEPS_LIBS) $(TEXT_DEPS_LIBS)
 hoverrace_SOURCES = \
 	StdAfx.h \
-	Control/Action.h \
-	Control/ActionPerformers.cpp \
-	Control/ActionPerformers.h \
-	Control/ControlAction.h \
-	Control/Controller.cpp \
-	Control/Controller.h \
-	Control/ControllerStrings.cpp \
-	Control/InputHandler.h \
-	Control/ObserverActions.cpp \
-	Control/ObserverActions.h \
-	Control/UiHandler.h \
 	HoverScript/ClientScriptCore.cpp \
 	HoverScript/ClientScriptCore.h \
 	HoverScript/ConfigPeer.cpp \

@@ -112,6 +112,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ColorTools\ColorTools.cpp" />
+    <ClCompile Include="Control\ActionPerformers.cpp" />
+    <ClCompile Include="Control\Controller.cpp" />
+    <ClCompile Include="Control\ControllerStrings.cpp" />
+    <ClCompile Include="Control\ObserverActions.cpp" />
     <ClCompile Include="Display\Color.cpp" />
     <ClCompile Include="Display\Display.cpp" />
     <ClCompile Include="Display\FillBox.cpp" />
@@ -220,6 +224,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColorTools\ColorTools.h" />
+    <ClInclude Include="Control\Action.h" />
+    <ClInclude Include="Control\ActionPerformers.h" />
+    <ClInclude Include="Control\ControlAction.h" />
+    <ClInclude Include="Control\Controller.h" />
+    <ClInclude Include="Control\InputHandler.h" />
+    <ClInclude Include="Control\ObserverActions.h" />
+    <ClInclude Include="Control\UiHandler.h" />
     <ClInclude Include="Display\Color.h" />
     <ClInclude Include="Display\Display.h" />
     <ClInclude Include="Display\FillBox.h" />

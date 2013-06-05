@@ -49,6 +49,9 @@
     <Filter Include="Display\SDL">
       <UniqueIdentifier>{abb149d6-43c3-4353-b210-11327add68e3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Control">
+      <UniqueIdentifier>{b83578ff-d7cf-4c77-b5b9-b192af5b9d90}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ColorTools\ColorTools.cpp">
@@ -351,6 +354,18 @@
     </ClCompile>
     <ClCompile Include="Util\Log.cpp">
       <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Control\Controller.cpp">
+      <Filter>Control</Filter>
+    </ClCompile>
+    <ClCompile Include="Control\ControllerStrings.cpp">
+      <Filter>Control</Filter>
+    </ClCompile>
+    <ClCompile Include="Control\ObserverActions.cpp">
+      <Filter>Control</Filter>
+    </ClCompile>
+    <ClCompile Include="Control\ActionPerformers.cpp">
+      <Filter>Control</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -724,6 +739,27 @@
     </ClInclude>
     <ClInclude Include="Util\Log.h">
       <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Control\ControlAction.h">
+      <Filter>Control</Filter>
+    </ClInclude>
+    <ClInclude Include="Control\Controller.h">
+      <Filter>Control</Filter>
+    </ClInclude>
+    <ClInclude Include="Control\InputHandler.h">
+      <Filter>Control</Filter>
+    </ClInclude>
+    <ClInclude Include="Control\ObserverActions.h">
+      <Filter>Control</Filter>
+    </ClInclude>
+    <ClInclude Include="Control\UiHandler.h">
+      <Filter>Control</Filter>
+    </ClInclude>
+    <ClInclude Include="Control\Action.h">
+      <Filter>Control</Filter>
+    </ClInclude>
+    <ClInclude Include="Control\ActionPerformers.h">
+      <Filter>Control</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
