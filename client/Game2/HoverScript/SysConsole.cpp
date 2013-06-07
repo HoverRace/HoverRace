@@ -69,8 +69,7 @@ SysConsole::SysConsole(Script::Core *scripting, GamePeer *gamePeer,
 	LogInfo(helpInstructions);
 
 	logConn = Log::logAddedSignal.connect(
-		std::bind(&SysConsole::OnLog, this,
-			std::placeholders::_1, std::placeholders::_2));
+		std::bind(&SysConsole::OnLog, this, std::placeholders::_1));
 }
 
 SysConsole::~SysConsole()
@@ -105,10 +104,10 @@ void SysConsole::Clear()
 	logClearedSignal();
 }
 
-void SysConsole::OnLog(Log::Level::level_t level, const char *msg)
+void SysConsole::OnLog(const Util::Log::Entry &entry)
 {
 	LogLevel::level_t logLevel;
-	switch (level) {
+	switch (entry.level) {
 		case Log::Level::DEBUG:
 		case Log::Level::INFO:
 		case Log::Level::WARN:
@@ -120,7 +119,7 @@ void SysConsole::OnLog(Log::Level::level_t level, const char *msg)
 			logLevel = LogLevel::INFO;
 	}
 
-	AddLogLine(logLevel, msg);
+	AddLogLine(logLevel, entry.message);
 }
 
 void SysConsole::AddLogLine(LogLevel::level_t level, const std::string &line)

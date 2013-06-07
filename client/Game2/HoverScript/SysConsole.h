@@ -81,7 +81,7 @@ class SysConsole : public Console
 			const std::string line;
 		};
 	private:
-		void OnLog(Util::Log::Level::level_t level, const char *msg);
+		void OnLog(const Util::Log::Entry &entry);
 		void AddLogLine(LogLevel::level_t level, const std::string &line);
 	public:
 		void LogHistory(const std::string &s);

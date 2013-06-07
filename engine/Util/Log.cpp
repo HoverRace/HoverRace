@@ -49,7 +49,8 @@ namespace {
 		}
 
 		// Broadcast the log message to all subscribers.
-		logAddedSignal(pri, message);
+		Entry entry = { pri, message };
+		logAddedSignal(entry);
 
 		// Let SDL handle the platform-specific output.
 		sdlBuiltinLog(userData, category, priority, message);

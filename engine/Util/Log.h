@@ -53,7 +53,12 @@ namespace Log {
 		};
 	}
 
-	typedef boost::signals2::signal<void(Level::level_t, const char*)> logAdded_t;
+	struct Entry {
+		const Level::level_t level;
+		const char *message;
+	};
+
+	typedef boost::signals2::signal<void(const Entry&)> logAdded_t;
 	MR_DllDeclare extern logAdded_t logAddedSignal;
 
 	MR_DllDeclare void Debug(const char *fmt, ...);
