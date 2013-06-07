@@ -49,7 +49,6 @@
 #include "HoverScript/ClientScriptCore.h"
 #include "HoverScript/ConsoleScene.h"
 #include "HoverScript/GamePeer.h"
-#include "HoverScript/HighConsole.h"
 #include "HoverScript/SessionPeer.h"
 #include "HoverScript/SysConsole.h"
 #include "HoverScript/SysEnv.h"
