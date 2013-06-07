@@ -752,9 +752,6 @@
     <ClInclude Include="Control\ObserverActions.h">
       <Filter>Control</Filter>
     </ClInclude>
-    <ClInclude Include="Control\UiHandler.h">
-      <Filter>Control</Filter>
-    </ClInclude>
     <ClInclude Include="Control\Action.h">
       <Filter>Control</Filter>
     </ClInclude>

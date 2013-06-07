@@ -230,7 +230,6 @@
     <ClInclude Include="Control\Controller.h" />
     <ClInclude Include="Control\InputHandler.h" />
     <ClInclude Include="Control\ObserverActions.h" />
-    <ClInclude Include="Control\UiHandler.h" />
     <ClInclude Include="Display\Color.h" />
     <ClInclude Include="Display\Display.h" />
     <ClInclude Include="Display\FillBox.h" />

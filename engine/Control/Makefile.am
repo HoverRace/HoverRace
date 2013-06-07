@@ -14,5 +14,4 @@ libcontrol_la_SOURCES = \
 	ControllerStrings.cpp \
 	InputHandler.h \
 	ObserverActions.cpp \
-	ObserverActions.h \
-	UiHandler.h
+	ObserverActions.h

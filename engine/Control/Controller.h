@@ -62,8 +62,6 @@ namespace Control {
 
 class InputHandler;
 typedef std::shared_ptr<InputHandler> InputHandlerPtr;
-class UiHandler;
-typedef std::shared_ptr<UiHandler> UiHandlerPtr;
 
 /***
  * Contains information on the current control state.  Eventually, its members should
@@ -83,7 +81,7 @@ struct MR_DllDeclare ControlState {
 
 class MR_DllDeclare InputEventController {
 	public:
-		InputEventController(Util::OS::wnd_t mainWindow, UiHandlerPtr uiHandler);
+		InputEventController(Util::OS::wnd_t mainWindow);
 		~InputEventController();
 
 		// Typedef for the maps of hashes to controls
@@ -295,8 +293,6 @@ class MR_DllDeclare InputEventController {
 		ActionMap actionMap;
 		std::vector<std::string> activeMaps;
 		std::map<std::string, ActionMap> allActionMaps;
-
-		UiHandlerPtr uiHandler;
 
 		// now the input devices
 		/*FIXME

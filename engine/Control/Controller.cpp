@@ -22,8 +22,6 @@
 
 #include "StdAfx.h"
 
-#include "UiHandler.h"
-
 #include "Controller.h"
 
 #include "ActionPerformers.h"
@@ -50,8 +48,7 @@ InputEventController::actions_t::sys_t::sys_t() :
 	consoleToggle(std::make_shared<Action<voidSignal_t>>(_("Toggle Console"), 0))
 	{ }
 
-InputEventController::InputEventController(Util::OS::wnd_t mainWindow, UiHandlerPtr uiHandler) :
-	uiHandler(uiHandler)
+InputEventController::InputEventController(Util::OS::wnd_t mainWindow)
 {
 	captureNextInput = false;
 	captureOldHash = 0;

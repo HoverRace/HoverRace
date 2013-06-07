@@ -110,8 +110,6 @@ class ClientApp : public GameDirector
 	private:
 		Util::OS::wnd_t mainWnd;
 		Display::Display *display;
-		class UiInput;
-		std::shared_ptr<UiInput> uiInput;
 		Control::InputEventController *controller;
 
 		sceneStack_t sceneStack;

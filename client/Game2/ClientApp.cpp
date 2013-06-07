@@ -32,7 +32,6 @@
 
 #include "../../engine/Exception.h"
 #include "../../engine/Control/Controller.h"
-#include "../../engine/Control/UiHandler.h"
 #include "../../engine/Display/Label.h"
 #include "../../engine/Display/UiLayoutFlags.h"
 #include "../../engine/Display/SDL/SdlDisplay.h"
@@ -93,17 +92,8 @@ namespace {
 	};
 }
 
-class ClientApp::UiInput : public Control::UiHandler
-{
-	virtual void OnConsole()
-	{
-		throw UnimplementedExn("ClientApp::UiInput::OnConsole()");
-	}
-};
-
 ClientApp::ClientApp() :
 	SUPER(),
-	uiInput(std::make_shared<UiInput>()),
 	sceneStack(), fgScene(),
 	fpsLbl(), frameCount(0), lastTimestamp(0), fps(0.0)
 {
@@ -184,7 +174,7 @@ ClientApp::ClientApp() :
 		throw Exception(SDL_GetError());
 	}
 
-	controller = new InputEventController(mainWnd, uiInput);
+	controller = new InputEventController(mainWnd);
 
 	namespace LayoutFlags = Display::UiLayoutFlags;
 	fpsLbl = new Display::Label("FPS:",
@@ -607,7 +597,7 @@ Control::InputEventController *ClientApp::ReloadController()
 {
 	//TODO: Notify current scene that controller is changing.
 	delete controller;
-	return (controller = new InputEventController(mainWnd, uiInput));
+	return (controller = new InputEventController(mainWnd));
 }
 
 }  // namespace HoverScript
