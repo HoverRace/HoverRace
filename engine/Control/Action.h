@@ -109,6 +109,7 @@ inline void PerformAction<textControlSignal_t, TextControl::key_t>(
  * components to display to the user.
  *
  * @tparam T The signal type.
+ * @tparam Val The type of the value passed to the signal.
  * @author Michael Imamura
  */
 template<class T, class Val=int>
