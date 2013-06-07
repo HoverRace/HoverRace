@@ -174,7 +174,7 @@ ClientApp::ClientApp() :
 		throw Exception(SDL_GetError());
 	}
 
-	controller = new InputEventController(mainWnd);
+	controller = new InputEventController();
 
 	namespace LayoutFlags = Display::UiLayoutFlags;
 	fpsLbl = new Display::Label("FPS:",
@@ -597,7 +597,7 @@ Control::InputEventController *ClientApp::ReloadController()
 {
 	//TODO: Notify current scene that controller is changing.
 	delete controller;
-	return (controller = new InputEventController(mainWnd));
+	return (controller = new InputEventController());
 }
 
 }  // namespace HoverScript

@@ -48,11 +48,10 @@ InputEventController::actions_t::sys_t::sys_t() :
 	consoleToggle(std::make_shared<Action<voidSignal_t>>(_("Toggle Console"), 0))
 	{ }
 
-InputEventController::InputEventController(Util::OS::wnd_t mainWindow) :
+InputEventController::InputEventController() :
 	captureNextInput(false), captureOldHash(0), captureMap(),
 	nextAvailableDisabledHash(0)
 {
-	InitInputManager(mainWindow);
 	LoadConfig();
 	LoadMenuMap();
 	LoadConsoleToggleMap();
@@ -498,11 +497,6 @@ void InputEventController::LoadConfig()
 	cameraMap[cfg->camera_hash.panDown].reset(new ObserverTiltAction(_("Pan Down"), 3, NULL, 0, -1));
 	cameraMap[cfg->camera_hash.reset].reset(new ObserverResetAction(_("Reset Camera"), 4, NULL, 0));
 	*/
-}
-
-void InputEventController::InitInputManager(Util::OS::wnd_t mainWindow)
-{
-	//FIXME
 }
 
 void InputEventController::RebindKey(string mapname, int oldhash, int newhash)

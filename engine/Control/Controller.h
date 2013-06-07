@@ -81,7 +81,7 @@ struct MR_DllDeclare ControlState {
 
 class MR_DllDeclare InputEventController {
 	public:
-		InputEventController(Util::OS::wnd_t mainWindow);
+		InputEventController();
 		~InputEventController();
 
 		// Typedef for the maps of hashes to controls
@@ -237,8 +237,6 @@ class MR_DllDeclare InputEventController {
 		void LoadConfig();
 
 	private:
-		void InitInputManager(Util::OS::wnd_t mainWindow);
-
 		// Auxiliary functions
 		void RebindKey(std::string mapname, int oldhash, int newhash);
 
@@ -293,15 +291,6 @@ class MR_DllDeclare InputEventController {
 		ActionMap actionMap;
 		std::vector<std::string> activeMaps;
 		std::map<std::string, ActionMap> allActionMaps;
-
-		// now the input devices
-		/*FIXME
-		Keyboard *kbd;
-		Mouse *mouse;
-		int numJoys;
-		JoyStick **joys;
-		int *joyIds;
-		*/
 
 		int nextAvailableDisabledHash;
 
