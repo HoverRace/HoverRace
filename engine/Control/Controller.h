@@ -44,19 +44,6 @@
 #	define MR_DllDeclare
 #endif
 
-#define CTL_MOTOR_ON	1
-#define CTL_LEFT		2
-#define CTL_RIGHT		3
-#define CTL_JUMP		4
-#define CTL_BRAKE		5
-#define CTL_FIRE		6
-#define CTL_WEAPON		7
-#define CTL_LOOKBACK	8
-
-#define UNASSIGNED		-1
-
-#define SET_CONTROL		(WM_USER + 1)
-
 namespace HoverRace {
 namespace Control {
 
