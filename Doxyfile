@@ -98,7 +98,6 @@ WARN_LOGFILE           = srcdoc/warnings.txt
 # configuration options related to the input files
 #---------------------------------------------------------------------------
 INPUT                  = client/Game2 \
-                         client/Game2/Control \
                          client/Game2/HoverScript \
                          engine \
                          engine/ColorTools \
