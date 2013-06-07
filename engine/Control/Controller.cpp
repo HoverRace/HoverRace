@@ -48,13 +48,10 @@ InputEventController::actions_t::sys_t::sys_t() :
 	consoleToggle(std::make_shared<Action<voidSignal_t>>(_("Toggle Console"), 0))
 	{ }
 
-InputEventController::InputEventController(Util::OS::wnd_t mainWindow)
+InputEventController::InputEventController(Util::OS::wnd_t mainWindow) :
+	captureNextInput(false), captureOldHash(0), captureMap(),
+	nextAvailableDisabledHash(0)
 {
-	captureNextInput = false;
-	captureOldHash = 0;
-	captureMap = "";
-	nextAvailableDisabledHash = 0;
-
 	InitInputManager(mainWindow);
 	LoadConfig();
 	LoadMenuMap();
