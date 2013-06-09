@@ -361,9 +361,6 @@
     <ClCompile Include="Control\ControllerStrings.cpp">
       <Filter>Control</Filter>
     </ClCompile>
-    <ClCompile Include="Control\ObserverActions.cpp">
-      <Filter>Control</Filter>
-    </ClCompile>
     <ClCompile Include="Control\ActionPerformers.cpp">
       <Filter>Control</Filter>
     </ClCompile>
@@ -747,9 +744,6 @@
       <Filter>Control</Filter>
     </ClInclude>
     <ClInclude Include="Control\InputHandler.h">
-      <Filter>Control</Filter>
-    </ClInclude>
-    <ClInclude Include="Control\ObserverActions.h">
       <Filter>Control</Filter>
     </ClInclude>
     <ClInclude Include="Control\Action.h">
