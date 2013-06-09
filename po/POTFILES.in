@@ -4,11 +4,6 @@ client/Game2/CheckRoomListDialog.cpp
 client/Game2/CheckUpdateServerDialog.cpp
 client/Game2/ClientApp.cpp
 client/Game2/ClientSession.cpp
-client/Game2/Control/ActionPerformers.cpp
-client/Game2/Control/ConsoleActions.cpp
-client/Game2/Control/Controller.cpp
-client/Game2/Control/ControllerStrings.cpp
-client/Game2/Control/ObserverActions.cpp
 client/Game2/ControlPrefsPage.cpp
 client/Game2/DownloadUpdateDialog.cpp
 client/Game2/FolderViewer.cpp
@@ -16,13 +11,14 @@ client/Game2/FullscreenTest.cpp
 client/Game2/GameApp.cpp
 client/Game2/GameScene.cpp
 client/Game2/GifDecoder.cpp
-client/Game2/HighObserver.cpp
 client/Game2/HoverScript/ClientScriptCore.cpp
 client/Game2/HoverScript/ConfigPeer.cpp
 client/Game2/HoverScript/Console.cpp
+client/Game2/HoverScript/ConsoleScene.cpp
 client/Game2/HoverScript/GamePeer.cpp
 client/Game2/HoverScript/HighConsole.cpp
 client/Game2/HoverScript/SessionPeer.cpp
+client/Game2/HoverScript/SysConsole.cpp
 client/Game2/HoverScript/SysEnv.cpp
 client/Game2/InternetRoom.cpp
 client/Game2/IntroMovie.cpp
@@ -59,6 +55,9 @@ compilers/ResourceCompiler/ResourceCompiler.cpp
 compilers/ResourceCompiler/ResourceLibBuilder.cpp
 compilers/ResourceCompiler/TextParsing.cpp
 engine/ColorTools/ColorTools.cpp
+engine/Control/ActionPerformers.cpp
+engine/Control/Controller.cpp
+engine/Control/ControllerStrings.cpp
 engine/Display/Color.cpp
 engine/Display/Display.cpp
 engine/Display/FillBox.cpp
@@ -132,6 +131,7 @@ engine/Util/Config.cpp
 engine/Util/DllObjectFactory.cpp
 engine/Util/FuzzyLogic.cpp
 engine/Util/InspectMapNode.cpp
+engine/Util/Log.cpp
 engine/Util/OS.cpp
 engine/Util/Profiler.cpp
 engine/Util/SelFmt.cpp

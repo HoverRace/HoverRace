@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: HoverRace 1.24\n"
 "Report-Msgid-Bugs-To: bugs@hoverrace.com\n"
-"POT-Creation-Date: 2013-05-03 19:50-0400\n"
+"POT-Creation-Date: 2013-06-09 17:35-0400\n"
 "PO-Revision-Date: 2009-03-22 02:37-0500\n"
 "Last-Translator: Michael Imamura <zoogie@lugatgt.org>\n"
 "Language-Team: English\n"
@@ -68,10 +68,9 @@ msgstr ""
 
 #: client/Game2/CheckRoomListDialog.cpp:88
 #: client/Game2/CheckUpdateServerDialog.cpp:177
-#: client/Game2/Control/Controller.cpp:46
-#: client/Game2/Control/ControllerStrings.cpp:139
 #: client/Game2/SelectRoomDialog.cpp:120
-#: client/Game2/TrackSelectDialog.cpp:103
+#: client/Game2/TrackSelectDialog.cpp:103 engine/Control/Controller.cpp:41
+#: engine/Control/ControllerStrings.cpp:138
 msgid "Cancel"
 msgstr "Ancelcay"
 
@@ -108,561 +107,24 @@ msgstr ""
 msgid "Checking server for updates.  Please wait."
 msgstr ""
 
-#: client/Game2/ClientApp.cpp:222 client/Game2/GameApp.cpp:820
+#: client/Game2/ClientApp.cpp:218 client/Game2/GameApp.cpp:820
 msgctxt "Version"
 msgid "testing"
 msgstr "estingtay"
 
-#: client/Game2/ClientApp.cpp:225 client/Game2/GameApp.cpp:823
+#: client/Game2/ClientApp.cpp:221 client/Game2/GameApp.cpp:823
 msgid "silent mode"
-msgstr ""
-
-#: client/Game2/Control/ConsoleActions.cpp:87
-#: client/Game2/Control/Controller.cpp:321
-#: client/Game2/Control/Controller.cpp:400
-#: client/Game2/HoverScript/HighConsole.cpp:146
-#, fuzzy
-msgid "Console"
-msgstr "Oseclay"
-
-#: client/Game2/Control/Controller.cpp:45 client/Game2/NetInterface.cpp:1887
-#: client/Game2/PathSelector.cpp:93 client/Game2/SelectRoomDialog.cpp:119
-#: client/Game2/TrackSelectDialog.cpp:102
-msgid "OK"
-msgstr "OK"
-
-#: client/Game2/Control/Controller.cpp:307
-#: client/Game2/Control/Controller.cpp:365
-#: client/Game2/Control/Controller.cpp:463
-#: client/Game2/ControlPrefsPage.cpp:134 client/Game2/NetInterface.cpp:1068
-msgid "Player"
-msgstr "Ayerplay"
-
-#: client/Game2/Control/Controller.cpp:326
-#: client/Game2/Control/Controller.cpp:332
-#: client/Game2/Control/Controller.cpp:424
-#: client/Game2/Control/Controller.cpp:477
-msgid "Camera"
-msgstr ""
-
-#: client/Game2/Control/Controller.cpp:337
-#: client/Game2/Control/Controller.cpp:513
-#: client/Game2/Control/ControllerStrings.cpp:123
-msgid "Menu"
-msgstr ""
-
-#: client/Game2/Control/Controller.cpp:466
-msgid "Throttle"
-msgstr ""
-
-#: client/Game2/Control/Controller.cpp:467
-msgid "Brake"
-msgstr ""
-
-#: client/Game2/Control/Controller.cpp:468
-msgid "Turn Left"
-msgstr ""
-
-#: client/Game2/Control/Controller.cpp:469
-msgid "Turn Right"
-msgstr ""
-
-#: client/Game2/Control/Controller.cpp:470
-msgid "Jump"
-msgstr ""
-
-#: client/Game2/Control/Controller.cpp:471
-msgid "Fire"
-msgstr ""
-
-#: client/Game2/Control/Controller.cpp:472
-msgid "Item"
-msgstr ""
-
-#: client/Game2/Control/Controller.cpp:473
-msgid "Look Back"
-msgstr ""
-
-#: client/Game2/Control/Controller.cpp:479
-msgid "Zoom In"
-msgstr ""
-
-#: client/Game2/Control/Controller.cpp:480
-msgid "Zoom Out"
-msgstr ""
-
-#: client/Game2/Control/Controller.cpp:481
-msgid "Pan Up"
-msgstr ""
-
-#: client/Game2/Control/Controller.cpp:482
-msgid "Pan Down"
-msgstr ""
-
-#: client/Game2/Control/Controller.cpp:483
-msgid "Reset Camera"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:46
-#: client/Game2/Control/ControllerStrings.cpp:48
-#: client/Game2/Control/ControllerStrings.cpp:328
-#, fuzzy
-msgid "Unknown"
-msgstr "Unknownway aftcray"
-
-#: client/Game2/Control/ControllerStrings.cpp:49
-msgid "Backspace"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:50
-msgid "Tab"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:51
-msgid "Enter"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:52
-msgid "Esc"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:53
-msgid "Space"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:63
-msgid "Del"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:64
-msgid "Caps Lock"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:65
-msgid "F1"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:66
-msgid "F2"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:67
-msgid "F3"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:68
-msgid "F4"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:69
-msgid "F5"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:70
-msgid "F6"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:71
-msgid "F7"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:72
-msgid "F8"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:73
-msgid "F9"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:74
-msgid "F10"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:75
-msgid "F11"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:76
-msgid "F12"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:77
-#, fuzzy
-msgid "Print Screen"
-msgstr "Lit&spay Eenscray"
-
-#: client/Game2/Control/ControllerStrings.cpp:78
-msgid "Scroll Lock"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:79
-msgid "Pause"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:80
-msgid "Ins"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:81
-msgid "Home"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:82
-msgid "PgUp"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:83
-msgid "End"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:84
-msgid "PgDn"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:89
-msgid "Num Lock"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:90
-msgid "Numpad /"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:91
-msgid "Numpad *"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:92
-msgid "Numpad -"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:93
-msgid "Numpad +"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:94
-msgid "Numpad Enter"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:95
-msgid "Numpad 1"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:96
-msgid "Numpad 2"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:97
-msgid "Numpad 3"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:98
-msgid "Numpad 4"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:99
-msgid "Numpad 5"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:100
-msgid "Numpad 6"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:101
-msgid "Numpad 7"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:102
-msgid "Numpad 8"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:103
-msgid "Numpad 9"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:104
-msgid "Numpad 0"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:105
-msgid "Numpad ."
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:106
-msgid "App"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:107
-msgid "Power"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:108
-msgid "Numpad ="
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:109
-msgid "F13"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:110
-msgid "F14"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:111
-msgid "F15"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:112
-msgid "F16"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:113
-msgid "F17"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:114
-msgid "F18"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:115
-msgid "F19"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:116
-msgid "F20"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:117
-msgid "F21"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:118
-msgid "F22"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:119
-msgid "F23"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:120
-msgid "F24"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:121
-msgid "Execute"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:122
-#: client/Game2/HoverScript/HighConsole.cpp:156
-#, fuzzy
-msgid "Help"
-msgstr "Elp&hay"
-
-#: client/Game2/Control/ControllerStrings.cpp:124
-msgid "Select"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:125
-#: client/Game2/Control/ControllerStrings.cpp:162
-msgid "Stop"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:126
-msgid "Again"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:127
-msgid "Undo"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:128
-msgid "Cut"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:129
-msgid "Copy"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:130
-msgid "Paste"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:131
-msgid "Find"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:132
-#: client/Game2/Control/ControllerStrings.cpp:164
-msgid "Mute"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:133
-#, fuzzy
-msgid "Volume Up"
-msgstr "Olumevay"
-
-#: client/Game2/Control/ControllerStrings.cpp:134
-#, fuzzy
-msgid "Volume Down"
-msgstr "Olumevay"
-
-#: client/Game2/Control/ControllerStrings.cpp:135
-msgid "Numpad ,"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:138
-msgid "SysReq"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:140
-msgid "Clear"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:141
-msgid "Prior"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:149
-msgid "Numpad 00"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:150
-msgid "Numpad 000"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:151
-msgid "Left Ctrl"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:152
-msgid "Left Shift"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:153
-msgid "Left Alt"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:154
-msgid "Left GUI"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:155
-msgid "Right Ctrl"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:156
-msgid "Right Shift"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:157
-msgid "Right Alt"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:158
-msgid "Right GUI"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:159
-msgid "Mode"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:160
-#, fuzzy
-msgid "Next Track"
-msgstr "Ackstray"
-
-#: client/Game2/Control/ControllerStrings.cpp:161
-#, fuzzy
-msgid "Prev Track"
-msgstr "Ackstray"
-
-#: client/Game2/Control/ControllerStrings.cpp:163
-#, fuzzy
-msgid "Play"
-msgstr "Ayerplay"
-
-#: client/Game2/Control/ControllerStrings.cpp:165
-msgid "Media Select"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:183
-msgid "Disabled"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:200
-msgid "Left Mouse Btn"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:202
-msgid "Right Mouse Btn"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:204
-msgid "Middle Mouse Btn"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:206
-msgid "Mouse Button 4"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:208
-msgid "Mouse Button 5"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:210
-msgid "Unknown Mouse Button"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:216
-msgid "Mouse X+ Axis"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:218
-msgid "Mouse X- Axis"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:221
-msgid "Mouse Y+ Axis"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:223
-msgid "Mouse Y- Axis"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:226
-msgid "Mouse Z+ Axis"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:228
-msgid "Mouse Z- Axis"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:231
-msgid "Mouse Wheel Right"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:233
-msgid "Mouse Wheel Left"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:236
-msgid "Mouse Wheel Down"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:238
-msgid "Mouse Wheen Up"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:241
-msgid "Unknown Mouse Axis +"
-msgstr ""
-
-#: client/Game2/Control/ControllerStrings.cpp:243
-msgid "Unknown Mouse Axis -"
 msgstr ""
 
 #: client/Game2/ControlPrefsPage.cpp:51
 msgid "Controls"
 msgstr "Ontrolscay"
+
+#: client/Game2/ControlPrefsPage.cpp:134 client/Game2/NetInterface.cpp:1068
+#: engine/Control/Controller.cpp:341 engine/Control/Controller.cpp:380
+#: engine/Control/Controller.cpp:478
+msgid "Player"
+msgstr "Ayerplay"
 
 #: client/Game2/ControlPrefsPage.cpp:148
 #, fuzzy
@@ -952,9 +414,16 @@ msgid ""
 msgstr ""
 
 #: client/Game2/HoverScript/HighConsole.cpp:136
+#: client/Game2/HoverScript/SysConsole.cpp:67
 #, c-format, boost-format
 msgid "For help on a class or method, call the %s method: %s"
 msgstr ""
+
+#: client/Game2/HoverScript/HighConsole.cpp:146
+#: engine/Control/Controller.cpp:415
+#, fuzzy
+msgid "Console"
+msgstr "Oseclay"
 
 #: client/Game2/HoverScript/HighConsole.cpp:150
 msgid "Scroll"
@@ -966,7 +435,14 @@ msgstr ""
 msgid "Hide"
 msgstr "Ideovay"
 
+#: client/Game2/HoverScript/HighConsole.cpp:156
+#: engine/Control/ControllerStrings.cpp:121
+#, fuzzy
+msgid "Help"
+msgstr "Elp&hay"
+
 #: client/Game2/HoverScript/HighConsole.cpp:479
+#: client/Game2/HoverScript/SysConsole.cpp:172
 #, c-format, boost-format
 msgid "Methods for class %s:"
 msgstr ""
@@ -1432,6 +908,12 @@ msgstr ""
 msgid "Start NOW!"
 msgstr ""
 
+#: client/Game2/NetInterface.cpp:1887 client/Game2/PathSelector.cpp:93
+#: client/Game2/SelectRoomDialog.cpp:119
+#: client/Game2/TrackSelectDialog.cpp:102 engine/Control/Controller.cpp:40
+msgid "OK"
+msgstr "OK"
+
 #: client/Game2/NetInterface.cpp:2416
 msgid "no network connection"
 msgstr ""
@@ -1787,7 +1269,7 @@ msgstr ""
 msgid "HoverRace is currently in silent mode."
 msgstr ""
 
-#: client/Game2/main.cpp:365 client/Game2/main.cpp:371
+#: client/Game2/main.cpp:328 client/Game2/main.cpp:334
 #: compilers/MazeCompiler/main.cpp:132
 msgid "You found a bug!"
 msgstr ""
@@ -1923,6 +1405,529 @@ msgstr ""
 
 #: compilers/ResourceCompiler/TextParsing.cpp:57
 msgid "syntax error in defines file"
+msgstr ""
+
+#: engine/Control/Controller.cpp:47
+#, fuzzy
+msgid "Toggle Console"
+msgstr "Oseclay"
+
+#: engine/Control/Controller.cpp:51
+msgid "Zoom In"
+msgstr ""
+
+#: engine/Control/Controller.cpp:52
+msgid "Zoom Out"
+msgstr ""
+
+#: engine/Control/Controller.cpp:53
+msgid "Pan Up"
+msgstr ""
+
+#: engine/Control/Controller.cpp:54
+msgid "Pan Down"
+msgstr ""
+
+#: engine/Control/Controller.cpp:55
+msgid "Reset Camera"
+msgstr ""
+
+#: engine/Control/Controller.cpp:359 engine/Control/Controller.cpp:439
+#: engine/Control/Controller.cpp:492 engine/Control/Controller.cpp:518
+msgid "Camera"
+msgstr ""
+
+#: engine/Control/Controller.cpp:364 engine/Control/Controller.cpp:532
+#: engine/Control/ControllerStrings.cpp:122
+msgid "Menu"
+msgstr ""
+
+#: engine/Control/Controller.cpp:369 engine/Control/Controller.cpp:543
+#, fuzzy
+msgid "ConsoleToggle"
+msgstr "Oseclay"
+
+#: engine/Control/Controller.cpp:481
+msgid "Throttle"
+msgstr ""
+
+#: engine/Control/Controller.cpp:482
+msgid "Brake"
+msgstr ""
+
+#: engine/Control/Controller.cpp:483
+msgid "Turn Left"
+msgstr ""
+
+#: engine/Control/Controller.cpp:484
+msgid "Turn Right"
+msgstr ""
+
+#: engine/Control/Controller.cpp:485
+msgid "Jump"
+msgstr ""
+
+#: engine/Control/Controller.cpp:486
+msgid "Fire"
+msgstr ""
+
+#: engine/Control/Controller.cpp:487
+msgid "Item"
+msgstr ""
+
+#: engine/Control/Controller.cpp:488
+msgid "Look Back"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:45
+#: engine/Control/ControllerStrings.cpp:47
+#: engine/Control/ControllerStrings.cpp:327
+#, fuzzy
+msgid "Unknown"
+msgstr "Unknownway aftcray"
+
+#: engine/Control/ControllerStrings.cpp:48
+msgid "Backspace"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:49
+msgid "Tab"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:50
+msgid "Enter"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:51
+msgid "Esc"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:52
+msgid "Space"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:62
+msgid "Del"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:63
+msgid "Caps Lock"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:64
+msgid "F1"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:65
+msgid "F2"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:66
+msgid "F3"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:67
+msgid "F4"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:68
+msgid "F5"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:69
+msgid "F6"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:70
+msgid "F7"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:71
+msgid "F8"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:72
+msgid "F9"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:73
+msgid "F10"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:74
+msgid "F11"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:75
+msgid "F12"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:76
+#, fuzzy
+msgid "Print Screen"
+msgstr "Lit&spay Eenscray"
+
+#: engine/Control/ControllerStrings.cpp:77
+msgid "Scroll Lock"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:78
+msgid "Pause"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:79
+msgid "Ins"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:80
+msgid "Home"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:81
+msgid "PgUp"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:82
+msgid "End"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:83
+msgid "PgDn"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:88
+msgid "Num Lock"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:89
+msgid "Numpad /"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:90
+msgid "Numpad *"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:91
+msgid "Numpad -"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:92
+msgid "Numpad +"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:93
+msgid "Numpad Enter"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:94
+msgid "Numpad 1"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:95
+msgid "Numpad 2"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:96
+msgid "Numpad 3"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:97
+msgid "Numpad 4"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:98
+msgid "Numpad 5"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:99
+msgid "Numpad 6"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:100
+msgid "Numpad 7"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:101
+msgid "Numpad 8"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:102
+msgid "Numpad 9"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:103
+msgid "Numpad 0"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:104
+msgid "Numpad ."
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:105
+msgid "App"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:106
+msgid "Power"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:107
+msgid "Numpad ="
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:108
+msgid "F13"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:109
+msgid "F14"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:110
+msgid "F15"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:111
+msgid "F16"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:112
+msgid "F17"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:113
+msgid "F18"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:114
+msgid "F19"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:115
+msgid "F20"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:116
+msgid "F21"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:117
+msgid "F22"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:118
+msgid "F23"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:119
+msgid "F24"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:120
+msgid "Execute"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:123
+msgid "Select"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:124
+#: engine/Control/ControllerStrings.cpp:161
+msgid "Stop"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:125
+msgid "Again"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:126
+msgid "Undo"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:127
+msgid "Cut"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:128
+msgid "Copy"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:129
+msgid "Paste"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:130
+msgid "Find"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:131
+#: engine/Control/ControllerStrings.cpp:163
+msgid "Mute"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:132
+#, fuzzy
+msgid "Volume Up"
+msgstr "Olumevay"
+
+#: engine/Control/ControllerStrings.cpp:133
+#, fuzzy
+msgid "Volume Down"
+msgstr "Olumevay"
+
+#: engine/Control/ControllerStrings.cpp:134
+msgid "Numpad ,"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:137
+msgid "SysReq"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:139
+msgid "Clear"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:140
+msgid "Prior"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:148
+msgid "Numpad 00"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:149
+msgid "Numpad 000"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:150
+msgid "Left Ctrl"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:151
+msgid "Left Shift"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:152
+msgid "Left Alt"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:153
+msgid "Left GUI"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:154
+msgid "Right Ctrl"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:155
+msgid "Right Shift"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:156
+msgid "Right Alt"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:157
+msgid "Right GUI"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:158
+msgid "Mode"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:159
+#, fuzzy
+msgid "Next Track"
+msgstr "Ackstray"
+
+#: engine/Control/ControllerStrings.cpp:160
+#, fuzzy
+msgid "Prev Track"
+msgstr "Ackstray"
+
+#: engine/Control/ControllerStrings.cpp:162
+#, fuzzy
+msgid "Play"
+msgstr "Ayerplay"
+
+#: engine/Control/ControllerStrings.cpp:164
+msgid "Media Select"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:182
+msgid "Disabled"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:199
+msgid "Left Mouse Btn"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:201
+msgid "Right Mouse Btn"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:203
+msgid "Middle Mouse Btn"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:205
+msgid "Mouse Button 4"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:207
+msgid "Mouse Button 5"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:209
+msgid "Unknown Mouse Button"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:215
+msgid "Mouse X+ Axis"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:217
+msgid "Mouse X- Axis"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:220
+msgid "Mouse Y+ Axis"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:222
+msgid "Mouse Y- Axis"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:225
+msgid "Mouse Z+ Axis"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:227
+msgid "Mouse Z- Axis"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:230
+msgid "Mouse Wheel Right"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:232
+msgid "Mouse Wheel Left"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:235
+msgid "Mouse Wheel Down"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:237
+msgid "Mouse Wheen Up"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:240
+msgid "Unknown Mouse Axis +"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:242
+msgid "Unknown Mouse Axis -"
 msgstr ""
 
 #: engine/MazeCompiler/LevelBuilder.cpp:96
@@ -2157,23 +2162,23 @@ msgstr ""
 msgid "or"
 msgstr ""
 
-#: engine/Util/Config.cpp:356
+#: engine/Util/Config.cpp:367
 #, fuzzy
 msgid "Unable to determine configuration directory"
 msgstr "Unablay otay eatecray ocketsay"
 
-#: engine/Util/Config.cpp:369
+#: engine/Util/Config.cpp:380
 msgid ""
 "Unable to determine configuration directory (HOME environment variable not "
 "set)"
 msgstr ""
 
-#: engine/Util/Config.cpp:783
+#: engine/Util/Config.cpp:803
 #, fuzzy
 msgid "Unable to create directory"
 msgstr "Unablay otay eatecray ocketsay"
 
-#: engine/Util/Config.cpp:792
+#: engine/Util/Config.cpp:812
 #, fuzzy
 msgid "Unable to create configuration file"
 msgstr "Unablay otay eatecray ocketsay"
@@ -2181,10 +2186,6 @@ msgstr "Unablay otay eatecray ocketsay"
 #: engine/Util/OS.cpp:335 engine/Util/OS.cpp:345
 msgid "Could not load"
 msgstr ""
-
-#, fuzzy
-#~ msgid "Toggle Console"
-#~ msgstr "Oseclay"
 
 #, fuzzy
 #~ msgid "Unknown direction"
