@@ -169,13 +169,7 @@ class MR_DllDeclare InputEventController {
 		 */
 		void AddPlayerMaps(int numPlayers, MainCharacter::MainCharacter** mcs);
 
-		/***
-		 * Update pointers to Observer objects and add "Camera" map to the active
-		 * action maps.
-		 */
-		/*TODO
-		void AddObserverMaps(Observer** obs, int numObs);
-		*/
+		void AddCameraMaps();
 
 		/// Enable menu controls.
 		void AddMenuMaps();
@@ -197,6 +191,8 @@ class MR_DllDeclare InputEventController {
 		}
 
 	public:
+		void LoadCameraMap();
+
 		/// Set up menu controls.
 		void LoadMenuMap();
 
@@ -304,6 +300,14 @@ class MR_DllDeclare InputEventController {
 				sys_t();
 				VoidActionPtr consoleToggle;
 			} sys;
+			struct camera_t {
+				camera_t();
+				VoidActionPtr zoomIn;
+				VoidActionPtr zoomOut;
+				VoidActionPtr panUp;
+				VoidActionPtr panDown;
+				VoidActionPtr reset;
+			} camera;
 		} actions;
 };
 

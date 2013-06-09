@@ -26,7 +26,6 @@
 
 #include "ActionPerformers.h"
 #include "ControlAction.h"
-//#include "ObserverActions.h"
 
 #include <sstream>
 
@@ -48,11 +47,20 @@ InputEventController::actions_t::sys_t::sys_t() :
 	consoleToggle(std::make_shared<Action<voidSignal_t>>(_("Toggle Console"), 0))
 	{ }
 
+InputEventController::actions_t::camera_t::camera_t() :
+	zoomIn(std::make_shared<Action<voidSignal_t>>(_("Zoom In"), 0)),
+	zoomOut(std::make_shared<Action<voidSignal_t>>(_("Zoom Out"), 1)),
+	panUp(std::make_shared<Action<voidSignal_t>>(_("Pan Up"), 2)),
+	panDown(std::make_shared<Action<voidSignal_t>>(_("Pan Down"), 3)),
+	reset(std::make_shared<Action<voidSignal_t>>(_("Reset Camera"), 4))
+	{ }
+
 InputEventController::InputEventController() :
 	captureNextInput(false), captureOldHash(0), captureMap(),
 	nextAvailableDisabledHash(0)
 {
 	LoadConfig();
+	LoadCameraMap();
 	LoadMenuMap();
 	LoadConsoleToggleMap();
 	LoadConsoleMap();
@@ -345,18 +353,11 @@ void InputEventController::AddPlayerMaps(int numPlayers, MainCharacter::MainChar
 	}
 }
 
-/*TODO
-void InputEventController::AddObserverMaps(Observer** obs, int numObs)
+/// Enable camera controls.
+void InputEventController::AddCameraMaps()
 {
-	for(ActionMap::iterator it = allActionMaps[_("Camera")].begin(); it != allActionMaps[_("Camera")].end(); it++) {
-		ObserverAction* x = dynamic_cast<ObserverAction*>(it->second.get());
-		if(x != NULL)
-			x->SetObservers(obs, numObs);
-	}
-
 	AddActionMap(_("Camera"));
 }
-*/
 
 void InputEventController::AddMenuMaps()
 {
@@ -489,14 +490,6 @@ void InputEventController::LoadConfig()
 
 	/* load camera map */
 	ActionMap& cameraMap = allActionMaps[_("Camera")];
-
-	/*TODO
-	cameraMap[cfg->camera_hash.zoomIn].reset(new ObserverZoomAction(_("Zoom In"), 0, NULL, 0, 1));
-	cameraMap[cfg->camera_hash.zoomOut].reset(new ObserverZoomAction(_("Zoom Out"), 1, NULL, 0, -1));
-	cameraMap[cfg->camera_hash.panUp].reset(new ObserverTiltAction(_("Pan Up"), 2, NULL, 0, 1));
-	cameraMap[cfg->camera_hash.panDown].reset(new ObserverTiltAction(_("Pan Down"), 3, NULL, 0, -1));
-	cameraMap[cfg->camera_hash.reset].reset(new ObserverResetAction(_("Reset Camera"), 4, NULL, 0));
-	*/
 }
 
 void InputEventController::RebindKey(string mapname, int oldhash, int newhash)
@@ -517,6 +510,21 @@ void InputEventController::RebindKey(string mapname, int oldhash, int newhash)
 			map[newhash] = tmp; // bind old action to new control
 		}
 	}
+}
+
+/// Set up camera controls.
+void InputEventController::LoadCameraMap()
+{
+	ActionMap& cmap = allActionMaps[_("Camera")];
+	cmap.clear();
+
+	Config* config = Config::GetInstance();
+
+	AssignAction(cmap, config->camera_hash.zoomIn, actions.camera.zoomIn);
+	AssignAction(cmap, config->camera_hash.zoomOut, actions.camera.zoomOut);
+	AssignAction(cmap, config->camera_hash.panUp, actions.camera.panUp);
+	AssignAction(cmap, config->camera_hash.panDown, actions.camera.panDown);
+	AssignAction(cmap, config->camera_hash.reset, actions.camera.reset);
 }
 
 void InputEventController::LoadMenuMap()

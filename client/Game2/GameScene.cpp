@@ -104,9 +104,18 @@ void GameScene::AttachController(Control::InputEventController &controller)
 {
 	MainCharacter::MainCharacter* mc = session->GetPlayer(0);
 	controller.AddPlayerMaps(1, &mc);
-	/*TODO
-	controller.AddObserverMaps(observers, 1);
-	*/
+	controller.AddCameraMaps();
+
+	cameraZoomInConn = controller.actions.camera.zoomIn->Connect(
+		std::bind(&GameScene::OnCameraZoom, this, 1));
+	cameraZoomOutConn = controller.actions.camera.zoomOut->Connect(
+		std::bind(&GameScene::OnCameraZoom, this, -1));
+	cameraPanUpConn = controller.actions.camera.panUp->Connect(
+		std::bind(&GameScene::OnCameraPan, this, 1));
+	cameraPanDownConn = controller.actions.camera.panDown->Connect(
+		std::bind(&GameScene::OnCameraPan, this, -1));
+	cameraResetConn = controller.actions.camera.reset->Connect(
+		std::bind(&GameScene::OnCameraReset, this));
 }
 
 void GameScene::DetachController(Control::InputEventController &controller)
@@ -115,6 +124,42 @@ void GameScene::DetachController(Control::InputEventController &controller)
 	// dialog) otherwise we'll just keep accelerating into the wall.
 	MainCharacter::MainCharacter* mc = session->GetPlayer(0);
 	mc->SetEngineState(false);
+
+	cameraResetConn.disconnect();
+	cameraPanDownConn.disconnect();
+	cameraPanUpConn.disconnect();
+	cameraZoomOutConn.disconnect();
+	cameraZoomInConn.disconnect();
+}
+
+void GameScene::OnCameraZoom(int increment)
+{
+	for (int i = 0; i < MAX_OBSERVERS; ++i) {
+		Observer *obs = observers[i];
+		if (obs != NULL) {
+			obs->Zoom(increment);
+		}
+	}
+}
+
+void GameScene::OnCameraPan(int increment)
+{
+	for (int i = 0; i < MAX_OBSERVERS; ++i) {
+		Observer *obs = observers[i];
+		if (obs != NULL) {
+			obs->Scroll(increment);
+		}
+	}
+}
+
+void GameScene::OnCameraReset()
+{
+	for (int i = 0; i < MAX_OBSERVERS; ++i) {
+		Observer *obs = observers[i];
+		if (obs != NULL) {
+			obs->Home();
+		}
+	}
 }
 
 void GameScene::OnPhaseChanged(Phase::phase_t oldPhase)

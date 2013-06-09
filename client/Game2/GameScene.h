@@ -71,6 +71,10 @@ class GameScene : public Scene
 		virtual void DetachController(Control::InputEventController &controller);
 		virtual bool IsMouseCursorEnabled() const { return false; }
 
+	private:
+		void OnCameraZoom(int increment);
+		void OnCameraPan(int increment);
+		void OnCameraReset();
 	protected:
 		virtual void OnPhaseChanged(Phase::phase_t oldPhase);
 
@@ -91,6 +95,12 @@ class GameScene : public Scene
 		static const int MAX_OBSERVERS = Util::Config::MAX_PLAYERS;
 		Observer *observers[MAX_OBSERVERS];
 		ClientSession *session;
+
+		boost::signals2::connection cameraZoomInConn;
+		boost::signals2::connection cameraZoomOutConn;
+		boost::signals2::connection cameraPanUpConn;
+		boost::signals2::connection cameraPanDownConn;
+		boost::signals2::connection cameraResetConn;
 
 		HoverScript::SessionPeerPtr sessionPeer;
 
