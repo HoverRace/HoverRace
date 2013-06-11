@@ -359,16 +359,19 @@ void InputEventController::AddCameraMaps()
 	AddActionMap(_("Camera"));
 }
 
+/// Enable menu controls.
 void InputEventController::AddMenuMaps()
 {
 	AddActionMap(_("Menu"));
 }
 
+/// Enable console toggle.
 void InputEventController::AddConsoleToggleMaps()
 {
 	AddActionMap(_("ConsoleToggle"));
 }
 
+/// Save the controller configuration to the Config object.
 void InputEventController::SaveConfig()
 {
 	Config *cfg = Config::GetInstance();
@@ -457,6 +460,7 @@ void InputEventController::SaveConfig()
 	}
 }
 
+/// Clear and reload entire configuration.
 void InputEventController::ReloadConfig()
 {
 	allActionMaps.clear();
@@ -466,6 +470,7 @@ void InputEventController::ReloadConfig()
 	LoadConsoleMap();
 }
 
+/// Load the configuration from the Config object.
 void InputEventController::LoadConfig()
 {
 	// use the cfg_controls_t structure to load functors
@@ -527,6 +532,7 @@ void InputEventController::LoadCameraMap()
 	AssignAction(cmap, config->camera_hash.reset, actions.camera.reset);
 }
 
+/// Set up menu controls.
 void InputEventController::LoadMenuMap()
 {
 	ActionMap& cmap = allActionMaps[_("Menu")];
@@ -538,6 +544,7 @@ void InputEventController::LoadMenuMap()
 	AssignAction(cmap, config->ui.menu_cancel, actions.ui.menuCancel);
 }
 
+/// Set up the console toggle control.
 void InputEventController::LoadConsoleToggleMap()
 {
 	ActionMap& cmap = allActionMaps[_("ConsoleToggle")];
@@ -548,6 +555,7 @@ void InputEventController::LoadConsoleToggleMap()
 	AssignAction(cmap, config->ui.console_toggle, actions.sys.consoleToggle);
 }
 
+/// Set up the console navigation controls.
 void InputEventController::LoadConsoleMap()
 {
 	/*TODO

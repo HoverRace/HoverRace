@@ -172,6 +172,12 @@ namespace {
 	};
 }
 
+/**
+ * Convert a hash into an internationalized string.
+ * @param hash The control hash, from one of the hash functions,
+ *             e.g. HashKeyboardEvent.
+ * @return The translated string.
+ */
 std::string InputEventController::HashToString(int hash)
 {
 	static KeyToString keyToString;

@@ -66,6 +66,40 @@ struct MR_DllDeclare ControlState {
 	bool left;
 };
 
+/**
+ * Translates input events into actions.
+ *
+ * The app class (the one running the SDL event loop), passes along input events
+ * to this class, which then fires the mapped action.  Listeners can subscribe
+ * to the actions via the InputEventController#actions struct.
+ *
+ * <pre>
+ *                           [Util::Config]
+ *                                |
+ *                                |
+ *   [app] --(SDL_Event)--> [InputEventController] --(actions)--> [listeners]
+ * </pre>
+ *
+ * Typically, to listen to an action, the listener must call the appropriate
+ * Add* function to enable the group of actions then call Action#Connect on the
+ * desired action to bind a function to the action.  In subclasses of
+ * Client::Scene this is done in Client::Scene#AttachController.
+ *
+ * Example:
+ *
+ * <pre>
+ *   controller.AddCameraMaps();
+ *   cameraZoomInConn = controller.actions.camera.zoomIn->Connect(
+ *     std::bind(&GameScene::OnCameraZoom, this, 1));
+ * </pre>
+ *
+ * Action#Connect returns a boost::signals2::connection.  Be sure to call
+ * disconnect() on this connection to clean up.  In subclasses of Client::Scene
+ * this is done in Client::Scene#DetachController.
+ *
+ * @author Ryan Curtin
+ * @author Michael Imamura
+ */
 class MR_DllDeclare InputEventController {
 	public:
 		InputEventController();
@@ -170,16 +204,9 @@ class MR_DllDeclare InputEventController {
 		void AddPlayerMaps(int numPlayers, MainCharacter::MainCharacter** mcs);
 
 		void AddCameraMaps();
-
-		/// Enable menu controls.
 		void AddMenuMaps();
-
-		/// Enable console toggle.
 		void AddConsoleToggleMaps();
 
-		/***
-		 * Convert a hash into an internationalized string.
-		 */
 		std::string HashToString(int hash);
 
 	private:
@@ -192,31 +219,12 @@ class MR_DllDeclare InputEventController {
 
 	public:
 		void LoadCameraMap();
-
-		/// Set up menu controls.
 		void LoadMenuMap();
-
-		/// Set up the console toggle control.
 		void LoadConsoleToggleMap();
-
-		/***
-		 * Set up controls for the console.
-		 */
 		void LoadConsoleMap();
 
-		/***
-		 * Save the controller configuration to the Config object.
-		 */
 		void SaveConfig();
-
-		/***
-		 * Clear and reload entire configuration.
-		 */
 		void ReloadConfig();
-
-		/***
-		 * Load the configuration from the Config object.
-		 */
 		void LoadConfig();
 
 	private:
