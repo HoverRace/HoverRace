@@ -225,9 +225,6 @@ memory_leak_report.txt
 /hovercad/Debug
 /hovercad/Release
 
-# /imr/
-/imr/logfile
-
 # /lib/
 /lib/*.exp
 /lib/*.ilk
