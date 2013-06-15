@@ -59,14 +59,14 @@ void SdlLegacyDisplay::OnWindowResChange()
 	nativeSurface = SDL_CreateRGBSurface(0, GetWidth(), GetHeight(), 32,
 		0, 0, 0, 0);
 	if (!nativeSurface) {
-		throw new Exception(SDL_GetError());
+		throw Exception(SDL_GetError());
 	}
 
 	texture = SDL_CreateTexture(sdlDisplay.GetRenderer(),
 		nativeSurface->format->format, SDL_TEXTUREACCESS_STREAMING,
 		GetWidth(), GetHeight());
 	if (!texture) {
-		throw new Exception(SDL_GetError());
+		throw Exception(SDL_GetError());
 	}
 }
 
@@ -93,7 +93,7 @@ void SdlLegacyDisplay::Flip()
 		void *pixels;
 		int pitch;
 		if (SDL_LockTexture(texture, nullptr, &pixels, &pitch) < 0) {
-			throw new Exception(SDL_GetError());
+			throw Exception(SDL_GetError());
 		}
 
 		MR_UInt32 destFmt;
@@ -107,7 +107,7 @@ void SdlLegacyDisplay::Flip()
 			nativeSurface->format->format, nativeSurface->pixels, nativeSurface->pitch,
 			destFmt, pixels, pitch) < 0)
 		{
-			throw new Exception(SDL_GetError());
+			throw Exception(SDL_GetError());
 		}
 
 		SDL_UnlockTexture(texture);
