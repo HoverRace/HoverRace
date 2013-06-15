@@ -580,6 +580,8 @@ bool OS::OpenLink(const std::string &url)
 #	ifdef _WIN32
 		Str::UW urlw(url.c_str());
 		return (int)ShellExecuteW(NULL, L"open", urlw, NULL, NULL, SW_SHOWNORMAL) > 32;
+#	else
+		throw UnimplementedExn("OS::OpenLink");
 #	endif
 }
 
@@ -595,6 +597,8 @@ bool OS::OpenPath(const path_t &path)
 #	ifdef _WIN32
 		std::wstring s((const wchar_t*)Str::PW(path));
 		return (int)ShellExecuteW(NULL, L"open", s.c_str(), NULL, NULL, SW_SHOWNORMAL) > 32;
+#	else
+		throw UnimplementedExn("OS::OpenPath");
 #	endif
 }
 
