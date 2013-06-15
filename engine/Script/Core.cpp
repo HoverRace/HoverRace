@@ -34,6 +34,7 @@
 #include <luabind/luabind.hpp>
 
 #include "../Util/Config.h"
+#include "../Util/Log.h"
 #include "../Util/OS.h"
 #include "../Util/Str.h"
 #include "../Util/yaml/MapNode.h"
@@ -50,6 +51,7 @@
 
 using namespace HoverRace::Script;
 using HoverRace::Util::OS;
+namespace Log = HoverRace::Util::Log;
 namespace Str = HoverRace::Util::Str;
 
 #define REG_LUA_LIB(st, name, fn) \
@@ -420,11 +422,7 @@ void Core::LoadClassHelp(const std::string &className)
 
 	FILE *in = OS::FOpen(filename, "rb");
 	if (in == NULL) {
-#		ifdef _WIN32
-			OutputDebugStringW(L"Class help file not found: ");
-			OutputDebugStringW(Str::PW(filename));
-			OutputDebugStringW(L"\n");
-#		endif
+		Log::Warn("Class help file not found: %s", (const char*)Str::PU(filename));
 		return;
 	}
 

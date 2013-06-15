@@ -41,6 +41,7 @@
 #include <boost/format.hpp>
 
 #include "../Exception.h"
+#include "Log.h"
 #include "Str.h"
 
 #include "OS.h"
@@ -389,10 +390,6 @@ std::shared_ptr<OS::monitors_t> OS::GetMonitors()
 				monitor.id = (guid == NULL) ?
 					"{00000000-0000-0000-0000-000000000000}" :
 					GuidToString(*guid);
-				/*
-				OutputDebugString(monitor.id.c_str());
-				OutputDebugString("\n");
-				*/
 				
 				// Retrieve the supported resolutions.
 				for (int j = 0; ; ++j) {
@@ -579,11 +576,9 @@ void OS::Free(void *buf)
 bool OS::OpenLink(const std::string &url)
 {
 	//FIXME: Need to make sure we're only handling "http:", "https:", and "ftp:".
+	Log::Info("Opening URL: %s", url.c_str());
 #	ifdef _WIN32
 		Str::UW urlw(url.c_str());
-		OutputDebugStringW(L"Opening URL: ");
-		OutputDebugStringW(urlw);
-		OutputDebugStringW(L"\n");
 		return (int)ShellExecuteW(NULL, L"open", urlw, NULL, NULL, SW_SHOWNORMAL) > 32;
 #	endif
 }
@@ -596,11 +591,9 @@ bool OS::OpenLink(const std::string &url)
 bool OS::OpenPath(const path_t &path)
 {
 	if (!(fs::exists(path) && fs::is_directory(path))) return false;
+	Log::Info("Opening path: %s", (const char*)Str::PU(path));
 #	ifdef _WIN32
 		std::wstring s((const wchar_t*)Str::PW(path));
-		OutputDebugStringW(L"Opening Path: ");
-		OutputDebugStringW(s.c_str());
-		OutputDebugStringW(L"\n");
 		return (int)ShellExecuteW(NULL, L"open", s.c_str(), NULL, NULL, SW_SHOWNORMAL) > 32;
 #	endif
 }

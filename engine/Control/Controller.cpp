@@ -22,6 +22,8 @@
 
 #include "StdAfx.h"
 
+#include "../Util/Log.h"
+
 #include "Controller.h"
 
 #include "ActionPerformers.h"
@@ -82,13 +84,7 @@ void InputEventController::ProcessInputEvent(const SDL_Event &evt)
 		case SDL_MOUSEBUTTONUP: OnMouseReleased(evt.button); break;
 
 		default:
-			std::ostringstream oss;
-			oss << "Unhandled input event type: " << evt.type << "\n";
-#			ifdef _WIN32
-				OutputDebugString(oss.str().c_str());
-#			else
-				std::cerr << oss.str() << std::endl;
-#			endif
+			Log::Info("Unhandled input event type: %d", evt.type);
 	}
 }
 

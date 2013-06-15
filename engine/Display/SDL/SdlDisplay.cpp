@@ -27,6 +27,7 @@
 #endif
 
 #include "../../Util/Config.h"
+#include "../../Util/Log.h"
 #include "../../Util/Str.h"
 #include "../../Exception.h"
 #include "../FillBox.h"
@@ -237,11 +238,7 @@ void SdlDisplay::ApplyVideoMode()
 		}
 	}
 
-#	ifdef _WIN32
-		OutputDebugString(rendOss.str().c_str());
-#	else
-		std::cout << rendOss.str();
-#	endif
+	Log::Info("%s", rendOss.str().c_str());
 
 	if (!renderer) {
 		throw Exception("Unable to find a compatible renderer");
