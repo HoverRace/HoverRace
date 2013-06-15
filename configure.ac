@@ -107,7 +107,7 @@ AC_CONFIG_FILES([
 	compilers/ResourceCompiler/Makefile
 	engine/Makefile
 	engine/ColorTools/Makefile
-    engine/Control/Makefile
+	engine/Control/Makefile
 	engine/Display/Makefile
 	engine/MainCharacter/Makefile
 	engine/MazeCompiler/Makefile
