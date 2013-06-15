@@ -790,5 +790,8 @@
     <CustomBuild Include="..\lib\SDL2D.dll">
       <Filter>Libraries</Filter>
     </CustomBuild>
+    <CustomBuild Include="..\lib\SDL2.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>
