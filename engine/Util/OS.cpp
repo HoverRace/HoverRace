@@ -200,9 +200,7 @@ static BOOL CALLBACK SetLocaleProc(LPTSTR locale)
 	if (GetLocaleInfo(lcid, LOCALE_SENGCOUNTRY, fullRegion, 64) != 0) {
 		fullLocale.append("_").append(fullRegion);
 	}
-	OutputDebugString("Full locale name: ");
-	OutputDebugString(fullLocale.c_str());
-	OutputDebugString("\n");
+	Log::Info("Full locale name: %s", fullLocale.c_str());
 	try {
 		OS::locale = std::locale(fullLocale.c_str());
 	}
@@ -277,8 +275,7 @@ void OS::SetLocale()
 			locMatched = false;
 			EnumSystemLocales(SetLocaleProc, LCID_SUPPORTED);
 			if (!locMatched) {
-				//TODO: Log that we didn't find any matching language.
-				ASSERT(FALSE);
+				Log::Warn("Unsupported locale (falling back to default).");
 				SetThreadLocale(LOCALE_SYSTEM_DEFAULT);
 				locale = std::locale("C");
 			}
@@ -290,8 +287,7 @@ void OS::SetLocale()
 			locale = std::locale("");
 		}
 		catch (std::runtime_error&) {
-			std::cerr << "Unsupported locale (falling back to default)." <<
-				std::endl;
+			Log::Warn("Unsupported locale (falling back to default).");
 			locale = std::locale("C");
 		}
 #	endif
