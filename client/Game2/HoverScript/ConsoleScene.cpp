@@ -304,6 +304,7 @@ void ConsoleScene::PrepareRender()
 	// If there were logs that appeared before we measured the font size
 	// in Layout(), then we need to read them now to catch up.
 	if (logsChanged) {
+		console.AddIntroLines();
 		console.ReadLogs(lastLogIdx + 1,
 			std::bind(&ConsoleScene::AppendLogLine, this, std::placeholders::_1));
 		logsChanged = false;

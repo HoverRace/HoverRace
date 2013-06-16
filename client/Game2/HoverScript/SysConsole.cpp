@@ -46,27 +46,12 @@ SysConsole::SysConsole(Script::Core *scripting, GamePeer *gamePeer,
                        int maxLogLines) :
 	SUPER(scripting),
 	gamePeer(gamePeer),
-	maxLogLines(maxLogLines), logLines(), baseLogIdx(0)
+	introWritten(false), maxLogLines(maxLogLines), logLines(), baseLogIdx(0)
 {
-	Config *cfg = Config::GetInstance();
-
 	commandLine.reserve(1024);
 
 	// Add introductory text.
-
-	LogInfo(PACKAGE_NAME " version " + cfg->GetVersion());
-
-	Script::Core *env = GetScripting();
-	std::string intro = env->GetVersionString();
-	intro += " :: Console active.";
-	LogInfo(intro);
-
-	LogInfo("Available global objects: game");
-
-	std::string helpInstructions = boost::str(boost::format(
-		_("For help on a class or method, call the %s method: %s")) %
-		"help()" % "game:help(); game:help(\"on_init\")");
-	LogInfo(helpInstructions);
+	LogInfo(_("System console initialized."));
 
 	logConn = Log::logAddedSignal.connect(
 		std::bind(&SysConsole::OnLog, this, std::placeholders::_1));
@@ -138,6 +123,41 @@ void SysConsole::AddLogLine(LogLevel::level_t level, const std::string &line)
 
 	// Notify listeners.
 	logAddedSignal(idx);
+}
+
+/**
+ * Add the introductory text to the log.
+ * The text is only written once; after that, this function has no effect.
+ * The idea is that we wait until the console is first visible before writing
+ * the intro text -- otherwise, the intro text will get lost in the sea of
+ * other log entries.
+ */
+void SysConsole::AddIntroLines()
+{
+	if (introWritten) return;
+	introWritten = true;
+
+	Config *cfg = Config::GetInstance();
+
+	std::string heading = PACKAGE_NAME " version ";
+	heading += cfg->GetVersion();
+	std::string headingDecor(heading.length(), '-');
+
+	LogInfo(headingDecor);
+	LogInfo(heading);
+	LogInfo(headingDecor);
+
+	Script::Core *env = GetScripting();
+	std::string intro = env->GetVersionString();
+	intro += " :: Console active.";
+	LogInfo(intro);
+
+	LogInfo("Available global objects: game");
+
+	std::string helpInstructions = boost::str(boost::format(
+		_("For help on a class or method, call the %s method: %s")) %
+		"help()" % "game:help(); game:help(\"on_init\")");
+	LogInfo(helpInstructions);
 }
 
 void SysConsole::LogHistory(const std::string &s)

@@ -84,6 +84,7 @@ class SysConsole : public Console
 		void OnLog(const Util::Log::Entry &entry);
 		void AddLogLine(LogLevel::level_t level, const std::string &line);
 	public:
+		void AddIntroLines();
 		void LogHistory(const std::string &s);
 		virtual void LogInfo(const std::string &s);
 		virtual void LogError(const std::string &s);
@@ -162,6 +163,7 @@ class SysConsole : public Console
 	private:
 		GamePeer *gamePeer;
 
+		bool introWritten;
 		int maxLogLines;
 		std::deque<LogLine> logLines;
 		int baseLogIdx;  ///< Index of the first item in logLines.
