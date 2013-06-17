@@ -70,7 +70,7 @@ class SysConsole : public Console
 	public:
 		struct LogLevel
 		{
-			enum level_t { HISTORY, INFO, ERROR };
+			enum level_t { HISTORY, NOTE, INFO, ERROR };
 		};
 		struct LogLine
 		{
@@ -86,6 +86,7 @@ class SysConsole : public Console
 	public:
 		void AddIntroLines();
 		void LogHistory(const std::string &s);
+		void LogNote(const std::string &s);
 		virtual void LogInfo(const std::string &s);
 		virtual void LogError(const std::string &s);
 

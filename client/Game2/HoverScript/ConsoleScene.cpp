@@ -196,6 +196,7 @@ void ConsoleScene::AppendLogLine(const SysConsole::LogLine &line)
 	Display::Color color(0xff7f7f7f);
 	switch (line.level) {
 		case SysConsole::LogLevel::HISTORY: color = 0xffffffff; break;
+		case SysConsole::LogLevel::NOTE: color = 0xffffff00; break;
 		case SysConsole::LogLevel::INFO: color = 0xffbfbfbf; break;
 		case SysConsole::LogLevel::ERROR: color = 0xffff0000; break;
 		default:

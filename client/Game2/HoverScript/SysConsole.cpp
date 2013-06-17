@@ -143,26 +143,31 @@ void SysConsole::AddIntroLines()
 	heading += cfg->GetVersion();
 	std::string headingDecor(heading.length(), '-');
 
-	LogInfo(headingDecor);
-	LogInfo(heading);
-	LogInfo(headingDecor);
+	LogNote(headingDecor);
+	LogNote(heading);
+	LogNote(headingDecor);
 
 	Script::Core *env = GetScripting();
 	std::string intro = env->GetVersionString();
 	intro += " :: Console active.";
-	LogInfo(intro);
+	LogNote(intro);
 
-	LogInfo("Available global objects: game");
+	LogNote("Available global objects: game");
 
 	std::string helpInstructions = boost::str(boost::format(
 		_("For help on a class or method, call the %s method: %s")) %
 		"help()" % "game:help(); game:help(\"on_init\")");
-	LogInfo(helpInstructions);
+	LogNote(helpInstructions);
 }
 
 void SysConsole::LogHistory(const std::string &s)
 {
 	AddLogLine(LogLevel::HISTORY, s);
+}
+
+void SysConsole::LogNote(const std::string &s)
+{
+	AddLogLine(LogLevel::NOTE, s);
 }
 
 void SysConsole::LogInfo(const std::string &s)
