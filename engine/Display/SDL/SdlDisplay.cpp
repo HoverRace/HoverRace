@@ -44,27 +44,27 @@
 using namespace HoverRace::Util;
 using HoverRace::VideoServices::VideoBuffer;
 
+static std::ostream &operator<<(std::ostream &oss, const SDL_RendererInfo &info) {
+	oss << info.name << " (";
+	if (info.flags & SDL_RENDERER_SOFTWARE) oss << ":SW";
+	if (info.flags & SDL_RENDERER_ACCELERATED) oss << ":Accel";
+	if (info.flags & SDL_RENDERER_PRESENTVSYNC) oss << ":VSync";
+	if (info.flags & SDL_RENDERER_TARGETTEXTURE) oss << ":RTT";
+	oss << ')';
+
+	if (info.max_texture_width != 0 || info.max_texture_height != 0) {
+		oss << " Texture: " <<
+			info.max_texture_width << "x" << info.max_texture_height;
+	}
+
+	return oss;
+}
+
 namespace HoverRace {
 namespace Display {
 namespace SDL {
 
 namespace {
-	std::ostream &operator<<(std::ostream &oss, const SDL_RendererInfo &info) {
-		oss << info.name << " (";
-		if (info.flags & SDL_RENDERER_SOFTWARE) oss << ":SW";
-		if (info.flags & SDL_RENDERER_ACCELERATED) oss << ":Accel";
-		if (info.flags & SDL_RENDERER_PRESENTVSYNC) oss << ":VSync";
-		if (info.flags & SDL_RENDERER_TARGETTEXTURE) oss << ":RTT";
-		oss << ')';
-
-		if (info.max_texture_width != 0 || info.max_texture_height != 0) {
-			oss << " Texture: " <<
-				info.max_texture_width << "x" << info.max_texture_height;
-		}
-
-		return oss;
-	}
-
 	struct RendererInfo {
 		RendererInfo(int idx) : idx(idx), score(0) {
 			SDL_GetRenderDriverInfo(idx, &info);
@@ -222,10 +222,9 @@ void SdlDisplay::ApplyVideoMode()
 		renderers.insert(RendererInfo(i));
 	}
 
-	std::ostringstream rendOss;
 	int i = 0;
 	BOOST_FOREACH(const RendererInfo &info, renderers) {
-		rendOss << "renderer[" << i++ << "]: " << info.info << '\n';
+		Log::Info("renderer[%d]: %s", i++, boost::lexical_cast<std::string>(info.info).c_str());
 	}
 
 	// Find a working renderer.
@@ -233,12 +232,10 @@ void SdlDisplay::ApplyVideoMode()
 		if (renderer = SDL_CreateRenderer(window, iter->idx, 0)) {
 			SDL_RendererInfo info;
 			SDL_GetRendererInfo(renderer, &info);
-			rendOss << "Selected renderer: " << info << '\n';
+			Log::Info("Selected renderer: %s", boost::lexical_cast<std::string>(info).c_str());
 			break;
 		}
 	}
-
-	Log::Info("%s", rendOss.str().c_str());
 
 	if (!renderer) {
 		throw Exception("Unable to find a compatible renderer");
