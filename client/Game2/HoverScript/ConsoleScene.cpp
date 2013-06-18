@@ -76,7 +76,8 @@ ConsoleScene::ConsoleScene(Display::Display &display, GameDirector &director,
                            SysConsole &console) :
 	SUPER("Console"),
 	display(display), director(director), console(console),
-	lastLogIdx(-1), logsChanged(true), layoutChanged(true), charSize(0, 0)
+	lastLogIdx(-1), logsChanged(true), layoutChanged(true),
+	cursorOn(true), cursorTick(0), charSize(0, 0)
 {
 	typedef Display::UiViewModel::Alignment Alignment;
 
@@ -94,6 +95,10 @@ ConsoleScene::ConsoleScene(Display::Display &display, GameDirector &director,
 	inputLbl->SetPos(0, 719);
 	inputLbl->SetAlignment(Alignment::SW);
 	inputLbl->AttachView(display);
+
+	cursorLbl = new Display::Label("_", font, 0xffbfbfbf);
+	cursorLbl->SetAlignment(Alignment::SW);
+	cursorLbl->AttachView(display);
 
 	measureLbl = new Display::Label(" ", font, 0xffffffff);
 	measureLbl->AttachView(display);
@@ -113,6 +118,7 @@ ConsoleScene::~ConsoleScene()
 	delete logLines;
 
 	delete measureLbl;
+	delete cursorLbl;
 	delete inputLbl;
 	delete winShadeBox;
 
@@ -138,6 +144,8 @@ void ConsoleScene::OnConsoleToggle()
 
 void ConsoleScene::OnTextInput(const std::string &s)
 {
+	cursorTick = OS::Time();
+
 	console.GetCommandLine() += s;
 	UpdateCommandLine();
 }
@@ -284,6 +292,10 @@ void ConsoleScene::DetachController(Control::InputEventController &controller)
 
 void ConsoleScene::Advance(Util::OS::timestamp_t tick)
 {
+	// Cursor visibility is based on the last character typed
+	// (so that the cursor stays visible while typing).
+	cursorOn = (OS::TimeDiff(tick, cursorTick) % 1000) < 500;
+
 	// Act like the starting and stopping phases don't even exist.
 	switch (GetPhase()) {
 		case Phase::STARTING:
@@ -310,8 +322,13 @@ void ConsoleScene::PrepareRender()
 		logsChanged = false;
 	}
 
+	if (cursorOn) {
+		cursorLbl->SetPos(inputLbl->GetText().length() * charSize.x, 719);
+	}
+
 	winShadeBox->PrepareRender();
 	inputLbl->PrepareRender();
+	cursorLbl->PrepareRender();
 	logLines->PrepareRender();
 }
 
@@ -319,6 +336,9 @@ void ConsoleScene::Render()
 {
 	winShadeBox->Render();
 	inputLbl->Render();
+	if (cursorOn) {
+		cursorLbl->Render();
+	}
 	logLines->Render();
 }
 
