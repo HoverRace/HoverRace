@@ -290,12 +290,8 @@ void ConsoleScene::DetachController(Control::InputEventController &controller)
 	consoleToggleConn.disconnect();
 }
 
-void ConsoleScene::Advance(Util::OS::timestamp_t tick)
+void ConsoleScene::OnPhaseChanged(Phase::phase_t oldPhase)
 {
-	// Cursor visibility is based on the last character typed
-	// (so that the cursor stays visible while typing).
-	cursorOn = (OS::TimeDiff(tick, cursorTick) % 1000) < 500;
-
 	// Act like the starting and stopping phases don't even exist.
 	switch (GetPhase()) {
 		case Phase::STARTING:
@@ -305,6 +301,13 @@ void ConsoleScene::Advance(Util::OS::timestamp_t tick)
 			SetPhase(Phase::STOPPED);
 			break;
 	}
+}
+
+void ConsoleScene::Advance(Util::OS::timestamp_t tick)
+{
+	// Cursor visibility is based on the last character typed
+	// (so that the cursor stays visible while typing).
+	cursorOn = (OS::TimeDiff(tick, cursorTick) % 1000) < 500;
 }
 
 void ConsoleScene::PrepareRender()
