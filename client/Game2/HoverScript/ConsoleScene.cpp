@@ -262,14 +262,13 @@ void ConsoleScene::Layout()
 void ConsoleScene::AttachController(Control::InputEventController &controller)
 {
 	controller.AddConsoleToggleMaps();
-	auto &consoleToggleAction = controller.actions.sys.consoleToggle;
-	consoleToggleConn = consoleToggleAction->Connect(std::bind(&ConsoleScene::OnConsoleToggle, this));
+	consoleToggleConn = controller.actions.sys.consoleToggle->Connect(
+		std::bind(&ConsoleScene::OnConsoleToggle, this));
 
-	auto &textAction = controller.actions.ui.text;
-	textInputConn = textAction->Connect(std::bind(&ConsoleScene::OnTextInput, this, std::placeholders::_1));
-
-	auto &controlAction = controller.actions.ui.control;
-	textControlConn = controlAction->Connect(std::bind(&ConsoleScene::OnTextControl, this, std::placeholders::_1));
+	textInputConn = controller.actions.ui.text->Connect(
+		std::bind(&ConsoleScene::OnTextInput, this, std::placeholders::_1));
+	textControlConn = controller.actions.ui.control->Connect(
+		std::bind(&ConsoleScene::OnTextControl, this, std::placeholders::_1));
 
 	SDL_StartTextInput();
 }
