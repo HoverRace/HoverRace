@@ -57,6 +57,7 @@ static bool allowMultipleInstances = false;
 static bool showVersion = false;
 static bool silentMode = false;
 static bool skipStartupWarning = false;
+static bool noAccel = false;
 static bool experimentalMode =
 #	ifdef _WIN32
 		false;
@@ -141,6 +142,9 @@ static bool ProcessCmdLine(int argc, char **argv)
 				ShowMessage("Expected: --media-path (path to media files)");
 				return false;
 			}
+		}
+		else if (strcmp("--no-accel", arg) == 0) {
+			noAccel = true;
 		}
 		else if (strcmp("-s", arg) == 0) {
 			safeMode = true;
@@ -291,6 +295,7 @@ int main(int argc, char** argv)
 	cfg->runtime.aieeee = experimentalMode;
 	cfg->runtime.showFramerate = showFramerate;
 	cfg->runtime.skipStartupWarning = skipStartupWarning;
+	cfg->runtime.noAccel = noAccel;
 	cfg->runtime.initScript = initScript;
 
 #ifdef ENABLE_NLS

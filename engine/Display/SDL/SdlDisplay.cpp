@@ -74,6 +74,9 @@ namespace {
 			// working after a screen resize.
 			blacklisted = (strncmp(info.name, "direct3d", 8) == 0);
 
+			bool noAccel = Config::GetInstance()->runtime.noAccel;
+			if (noAccel && (info.flags & SDL_RENDERER_ACCELERATED)) blacklisted = true;
+
 			score += (blacklisted ? 1000 : 9000);
 
 			if (info.flags & SDL_RENDERER_ACCELERATED) score += 900;
@@ -198,10 +201,12 @@ void SdlDisplay::Flip()
  */
 void SdlDisplay::ApplyVideoMode()
 {
-	Config::cfg_video_t &vidCfg = Config::GetInstance()->video;
+	const Config *cfg = Config::GetInstance();
+	const Config::cfg_video_t &vidCfg = cfg->video;
 
 	// First try to enable OpenGL support, otherwise go on without it.
-	if (!(window = SDL_CreateWindow(windowTitle.c_str(),
+	if (cfg->runtime.noAccel ||
+		!(window = SDL_CreateWindow(windowTitle.c_str(),
 		vidCfg.xPos, vidCfg.yPos, vidCfg.xRes, vidCfg.yRes,
 		SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL)))
 	{

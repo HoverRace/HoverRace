@@ -271,6 +271,7 @@ class MR_DllDeclare Config
 			bool aieeee;
 			bool showFramerate;
 			bool enableConsole;
+			bool noAccel;  ///< Disable accelerated (OpenGL) rendering.
 			bool skipStartupWarning;
 			OS::path_t initScript;
 		} runtime;
