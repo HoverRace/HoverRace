@@ -69,7 +69,7 @@ class ConsoleScene::LogLines
 		unsigned int pos;
 		unsigned int num;
 
-		static const int MAX_LINES = 20;
+		static const int MAX_LINES = 100;
 };
 
 ConsoleScene::ConsoleScene(Display::Display &display, GameDirector &director,
@@ -421,19 +421,24 @@ void ConsoleScene::LogLines::Clear()
 
 void ConsoleScene::LogLines::PrepareRender()
 {
-	double y = 720.0 - charSize.y;
+	double charHeight = charSize.y;
+	double y = 720.0 - charHeight;
 
-	for (auto iter = lines.rbegin(); iter != lines.rend(); ++iter) {
+	num = 0;
+	for (auto iter = lines.rbegin();
+		iter != lines.rend() && y >= charHeight;
+		++iter, ++num, y -= charHeight)
+	{
 		Display::Label *lbl = *iter;
 		lbl->SetPos(0, y);
 		lbl->PrepareRender();
-		y -= charSize.y;
 	}
 }
 
 void ConsoleScene::LogLines::Render()
 {
-	for (auto iter = lines.rbegin(); iter != lines.rend(); ++iter) {
+	unsigned int i = 0;
+	for (auto iter = lines.rbegin(); iter != lines.rend() && i < num; ++iter, ++i) {
 		(*iter)->Render();
 	}
 }
