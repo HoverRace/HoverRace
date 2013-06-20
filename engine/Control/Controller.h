@@ -206,6 +206,7 @@ class MR_DllDeclare InputEventController {
 		void AddCameraMaps();
 		void AddMenuMaps();
 		void AddConsoleToggleMaps();
+		void AddConsoleMaps();
 
 		std::string HashToString(int hash);
 
@@ -299,6 +300,12 @@ class MR_DllDeclare InputEventController {
 				ui_t();
 				VoidActionPtr menuOk;
 				VoidActionPtr menuCancel;
+
+				// Console scrolling.
+				VoidActionPtr consoleUp;
+				VoidActionPtr consoleDown;
+				VoidActionPtr consoleTop;
+				VoidActionPtr consoleBottom;
 
 				// Text input mode.
 				StringActionPtr text;  ///< Text input.

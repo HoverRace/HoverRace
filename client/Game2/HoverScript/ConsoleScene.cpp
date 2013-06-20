@@ -142,6 +142,26 @@ void ConsoleScene::OnConsoleToggle()
 	director.RequestPopScene();
 }
 
+void ConsoleScene::OnConsoleUp()
+{
+	logLines->Scroll(1);
+}
+
+void ConsoleScene::OnConsoleDown()
+{
+	logLines->Scroll(-1);
+}
+
+void ConsoleScene::OnConsoleTop()
+{
+	logLines->ScrollTop();
+}
+
+void ConsoleScene::OnConsoleBottom()
+{
+	logLines->ScrollBottom();
+}
+
 void ConsoleScene::OnTextInput(const std::string &s)
 {
 	cursorTick = OS::Time();
@@ -273,6 +293,16 @@ void ConsoleScene::AttachController(Control::InputEventController &controller)
 	consoleToggleConn = controller.actions.sys.consoleToggle->Connect(
 		std::bind(&ConsoleScene::OnConsoleToggle, this));
 
+	controller.AddConsoleMaps();
+	consoleUpConn = controller.actions.ui.consoleUp->Connect(
+		std::bind(&ConsoleScene::OnConsoleUp, this));
+	consoleDownConn = controller.actions.ui.consoleDown->Connect(
+		std::bind(&ConsoleScene::OnConsoleDown, this));
+	consoleTopConn = controller.actions.ui.consoleTop->Connect(
+		std::bind(&ConsoleScene::OnConsoleTop, this));
+	consoleBottomConn = controller.actions.ui.consoleBottom->Connect(
+		std::bind(&ConsoleScene::OnConsoleBottom, this));
+
 	textInputConn = controller.actions.ui.text->Connect(
 		std::bind(&ConsoleScene::OnTextInput, this, std::placeholders::_1));
 	textControlConn = controller.actions.ui.control->Connect(
@@ -287,6 +317,10 @@ void ConsoleScene::DetachController(Control::InputEventController &controller)
 
 	textControlConn.disconnect();
 	textInputConn.disconnect();
+	consoleUpConn.disconnect();
+	consoleDownConn.disconnect();
+	consoleTopConn.disconnect();
+	consoleBottomConn.disconnect();
 	consoleToggleConn.disconnect();
 }
 
@@ -361,16 +395,14 @@ ConsoleScene::LogLines::~LogLines()
 
 void ConsoleScene::LogLines::ScrollTop()
 {
-	if (pos != 0) {
-		pos = 0;
-	}
+	pos = (lines.size() <= num) ? 0 : (lines.size() - num);
 }
 
 void ConsoleScene::LogLines::Scroll(int i)
 {
 	if (i < 0) {
 		if ((unsigned int)-i >= pos) {
-			ScrollTop();
+			ScrollBottom();
 		}
 		else {
 			pos += i;
@@ -378,7 +410,7 @@ void ConsoleScene::LogLines::Scroll(int i)
 	}
 	else if (lines.size() > num) {
 		if (pos + i > lines.size() - num) {
-			ScrollBottom();
+			ScrollTop();
 		}
 		else {
 			pos += i;
@@ -388,7 +420,7 @@ void ConsoleScene::LogLines::Scroll(int i)
 
 void ConsoleScene::LogLines::ScrollBottom()
 {
-	pos = (lines.size() <= num) ? 0 : (lines.size() - num);
+	pos = 0;
 }
 
 void ConsoleScene::LogLines::Add(const std::string &s,
@@ -425,7 +457,7 @@ void ConsoleScene::LogLines::PrepareRender()
 	double y = 720.0 - charHeight;
 
 	num = 0;
-	for (auto iter = lines.rbegin();
+	for (auto iter = lines.rbegin() + pos;
 		iter != lines.rend() && y >= charHeight;
 		++iter, ++num, y -= charHeight)
 	{
@@ -438,7 +470,7 @@ void ConsoleScene::LogLines::PrepareRender()
 void ConsoleScene::LogLines::Render()
 {
 	unsigned int i = 0;
-	for (auto iter = lines.rbegin(); iter != lines.rend() && i < num; ++iter, ++i) {
+	for (auto iter = lines.rbegin() + pos; iter != lines.rend() && i < num; ++iter, ++i) {
 		(*iter)->Render();
 	}
 }

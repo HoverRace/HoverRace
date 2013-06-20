@@ -56,6 +56,10 @@ class ConsoleScene : public UiScene
 		void OnDisplayConfigChanged();
 
 		void OnConsoleToggle();
+		void OnConsoleUp();
+		void OnConsoleDown();
+		void OnConsoleTop();
+		void OnConsoleBottom();
 		void OnTextInput(const std::string &s);
 		void OnTextControl(Control::TextControl::key_t key);
 
@@ -85,6 +89,10 @@ class ConsoleScene : public UiScene
 		boost::signals2::connection displayConfigChangedConn;
 
 		boost::signals2::connection consoleToggleConn;
+		boost::signals2::connection consoleUpConn;
+		boost::signals2::connection consoleDownConn;
+		boost::signals2::connection consoleTopConn;
+		boost::signals2::connection consoleBottomConn;
 		boost::signals2::connection textInputConn;
 		boost::signals2::connection textControlConn;
 

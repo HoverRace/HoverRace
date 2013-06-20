@@ -41,6 +41,10 @@ namespace Control {
 InputEventController::actions_t::ui_t::ui_t() :
 	menuOk(std::make_shared<Action<voidSignal_t>>(_("OK"), 0)),
 	menuCancel(std::make_shared<Action<voidSignal_t>>(_("Cancel"), 0)),
+	consoleUp(std::make_shared<Action<voidSignal_t>>(_("Page Up"), 0)),
+	consoleDown(std::make_shared<Action<voidSignal_t>>(_("Page Down"), 1)),
+	consoleTop(std::make_shared<Action<voidSignal_t>>(_("Top"), 2)),
+	consoleBottom(std::make_shared<Action<voidSignal_t>>(_("Bottom"), 3)),
 	text(std::make_shared<Action<stringSignal_t, const std::string&>>("", 0)),
 	control(std::make_shared<Action<textControlSignal_t, TextControl::key_t>>("", 0))
 	{ }
@@ -367,6 +371,12 @@ void InputEventController::AddConsoleToggleMaps()
 	AddActionMap(_("ConsoleToggle"));
 }
 
+/// Enable console scroll controls.
+void InputEventController::AddConsoleMaps()
+{
+	AddActionMap(_("Console"));
+}
+
 /// Save the controller configuration to the Config object.
 void InputEventController::SaveConfig()
 {
@@ -554,19 +564,15 @@ void InputEventController::LoadConsoleToggleMap()
 /// Set up the console navigation controls.
 void InputEventController::LoadConsoleMap()
 {
-	/*TODO
 	ActionMap& cmap = allActionMaps[_("Console")];
 	cmap.clear();
 	
 	Config* config = Config::GetInstance();
 
-	cmap[config->ui.console_toggle].reset(new ConsoleToggleAction(_("Toggle Console"), 0, NULL, this));
-	cmap[config->ui.console_up].reset(new ConsoleScrollAction(_("Page Up"), 1, NULL, -HighConsole::SCROLL_SPEED));
-	cmap[config->ui.console_down].reset(new ConsoleScrollAction(_("Page Down"), 2, NULL, HighConsole::SCROLL_SPEED));
-	cmap[config->ui.console_top].reset(new ConsoleScrollTopAction(_("Top"), 3, NULL));
-	cmap[config->ui.console_bottom].reset(new ConsoleScrollBottomAction(_("Bottom"), 4, NULL));
-	cmap[config->ui.console_help].reset(new ConsoleHelpAction(_("Help"), 5, NULL));
-	*/
+	AssignAction(cmap, config->ui.console_up, actions.ui.consoleUp);
+	AssignAction(cmap, config->ui.console_down, actions.ui.consoleDown);
+	AssignAction(cmap, config->ui.console_top, actions.ui.consoleTop);
+	AssignAction(cmap, config->ui.console_bottom, actions.ui.consoleBottom);
 }
 
 // 0x0000xx00; xx = keycode
