@@ -176,7 +176,6 @@
     <ClCompile Include="Game2\HoverScript\ConfigPeer.cpp" />
     <ClCompile Include="Game2\HoverScript\Console.cpp" />
     <ClCompile Include="Game2\HoverScript\GamePeer.cpp" />
-    <ClCompile Include="Game2\HoverScript\HighConsole.cpp" />
     <ClCompile Include="Game2\HoverScript\SessionPeer.cpp" />
     <ClCompile Include="Game2\HoverScript\SysEnv.cpp" />
   </ItemGroup>
@@ -256,7 +255,6 @@
     <ClInclude Include="Game2\HoverScript\ConfigPeer.h" />
     <ClInclude Include="Game2\HoverScript\Console.h" />
     <ClInclude Include="Game2\HoverScript\GamePeer.h" />
-    <ClInclude Include="Game2\HoverScript\HighConsole.h" />
     <ClInclude Include="Game2\HoverScript\SessionPeer.h" />
     <ClInclude Include="Game2\HoverScript\SysEnv.h" />
     <ClInclude Include="..\include\config-win32.h" />

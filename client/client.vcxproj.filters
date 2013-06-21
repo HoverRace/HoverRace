@@ -102,9 +102,6 @@
     <ClCompile Include="Game2\HoverScript\GamePeer.cpp">
       <Filter>HoverScript</Filter>
     </ClCompile>
-    <ClCompile Include="Game2\HoverScript\HighConsole.cpp">
-      <Filter>HoverScript</Filter>
-    </ClCompile>
     <ClCompile Include="Game2\HoverScript\SessionPeer.cpp">
       <Filter>HoverScript</Filter>
     </ClCompile>
@@ -246,9 +243,6 @@
       <Filter>HoverScript</Filter>
     </ClInclude>
     <ClInclude Include="Game2\HoverScript\GamePeer.h">
-      <Filter>HoverScript</Filter>
-    </ClInclude>
-    <ClInclude Include="Game2\HoverScript\HighConsole.h">
       <Filter>HoverScript</Filter>
     </ClInclude>
     <ClInclude Include="Game2\HoverScript\SessionPeer.h">

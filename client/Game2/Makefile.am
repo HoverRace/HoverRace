@@ -23,8 +23,6 @@ hoverrace_SOURCES = \
 	HoverScript/ConsoleScene.h \
 	HoverScript/GamePeer.cpp \
 	HoverScript/GamePeer.h \
-	HoverScript/HighConsole.cpp \
-	HoverScript/HighConsole.h \
 	HoverScript/SessionPeer.cpp \
 	HoverScript/SessionPeer.h \
 	HoverScript/SysConsole.cpp \
