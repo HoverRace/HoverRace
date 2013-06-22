@@ -15,6 +15,7 @@
     <ClInclude Include="src\lib\arpa_telnet.h" />
     <ClInclude Include="src\lib\asyn.h" />
     <ClInclude Include="src\lib\axtls.h" />
+    <ClInclude Include="src\lib\bundles.h" />
     <ClInclude Include="src\lib\config-amigaos.h" />
     <ClInclude Include="src\lib\config-dos.h" />
     <ClInclude Include="src\lib\config-mac.h" />
@@ -26,6 +27,7 @@
     <ClInclude Include="src\lib\config-vxworks.h" />
     <ClInclude Include="src\lib\config-win32.h" />
     <ClInclude Include="src\lib\config-win32ce.h" />
+    <ClInclude Include="src\lib\conncache.h" />
     <ClInclude Include="src\lib\connect.h" />
     <ClInclude Include="src\lib\content_encoding.h" />
     <ClInclude Include="src\lib\cookie.h" />
@@ -51,6 +53,8 @@
     <ClInclude Include="src\lib\curl_rtmp.h" />
     <ClInclude Include="src\lib\curl_sasl.h" />
     <ClInclude Include="src\lib\curl_schannel.h" />
+    <ClInclude Include="src\lib\curl_setup.h" />
+    <ClInclude Include="src\lib\curl_setup_once.h" />
     <ClInclude Include="src\lib\curl_sspi.h" />
     <ClInclude Include="src\lib\curl_threads.h" />
     <ClInclude Include="src\lib\cyassl.h" />
@@ -66,6 +70,7 @@
     <ClInclude Include="src\lib\gopher.h" />
     <ClInclude Include="src\lib\gtls.h" />
     <ClInclude Include="src\lib\hash.h" />
+    <ClInclude Include="src\lib\hostcheck.h" />
     <ClInclude Include="src\lib\hostip.h" />
     <ClInclude Include="src\lib\http.h" />
     <ClInclude Include="src\lib\http_chunks.h" />
@@ -79,6 +84,7 @@
     <ClInclude Include="src\lib\krb4.h" />
     <ClInclude Include="src\lib\llist.h" />
     <ClInclude Include="src\lib\memdebug.h" />
+    <ClInclude Include="src\lib\multihandle.h" />
     <ClInclude Include="src\lib\multiif.h" />
     <ClInclude Include="src\lib\netrc.h" />
     <ClInclude Include="src\lib\non-ascii.h" />
@@ -86,7 +92,9 @@
     <ClInclude Include="src\lib\nssg.h" />
     <ClInclude Include="src\lib\parsedate.h" />
     <ClInclude Include="src\lib\pingpong.h" />
+    <ClInclude Include="src\lib\pipeline.h" />
     <ClInclude Include="src\lib\polarssl.h" />
+    <ClInclude Include="src\lib\polarssl_threadlock.h" />
     <ClInclude Include="src\lib\pop3.h" />
     <ClInclude Include="src\lib\progress.h" />
     <ClInclude Include="src\lib\qssl.h" />
@@ -95,8 +103,6 @@
     <ClInclude Include="src\lib\select.h" />
     <ClInclude Include="src\lib\sendf.h" />
     <ClInclude Include="src\lib\setup-os400.h" />
-    <ClInclude Include="src\lib\setup.h" />
-    <ClInclude Include="src\lib\setup_once.h" />
     <ClInclude Include="src\lib\share.h" />
     <ClInclude Include="src\lib\slist.h" />
     <ClInclude Include="src\lib\smtp.h" />
@@ -127,6 +133,8 @@
     <ClCompile Include="src\lib\asyn-thread.c" />
     <ClCompile Include="src\lib\axtls.c" />
     <ClCompile Include="src\lib\base64.c" />
+    <ClCompile Include="src\lib\bundles.c" />
+    <ClCompile Include="src\lib\conncache.c" />
     <ClCompile Include="src\lib\connect.c" />
     <ClCompile Include="src\lib\content_encoding.c" />
     <ClCompile Include="src\lib\cookie.c" />
@@ -163,6 +171,7 @@
     <ClCompile Include="src\lib\hash.c" />
     <ClCompile Include="src\lib\hmac.c" />
     <ClCompile Include="src\lib\hostasyn.c" />
+    <ClCompile Include="src\lib\hostcheck.c" />
     <ClCompile Include="src\lib\hostip.c" />
     <ClCompile Include="src\lib\hostip4.c" />
     <ClCompile Include="src\lib\hostip6.c" />
@@ -196,7 +205,9 @@
     <ClCompile Include="src\lib\openldap.c" />
     <ClCompile Include="src\lib\parsedate.c" />
     <ClCompile Include="src\lib\pingpong.c" />
+    <ClCompile Include="src\lib\pipeline.c" />
     <ClCompile Include="src\lib\polarssl.c" />
+    <ClCompile Include="src\lib\polarssl_threadlock.c" />
     <ClCompile Include="src\lib\pop3.c" />
     <ClCompile Include="src\lib\progress.c" />
     <ClCompile Include="src\lib\qssl.c" />

@@ -276,12 +276,6 @@
     <ClInclude Include="src\lib\sendf.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\lib\setup.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\lib\setup_once.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="src\lib\setup-os400.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -331,6 +325,30 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\lib\telnet.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\bundles.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\conncache.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\curl_setup.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\curl_setup_once.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\hostcheck.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\multihandle.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\polarssl_threadlock.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\pipeline.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
@@ -654,6 +672,21 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\lib\wildcard.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\bundles.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\conncache.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\hostcheck.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\polarssl_threadlock.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\pipeline.c">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
