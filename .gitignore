@@ -273,16 +273,6 @@ memory_leak_report.txt
 /lib/build/mfcleakfix/Debug
 /lib/build/mfcleakfix/Release
 
-# /lib/build/ois/
-/lib/build/ois/Debug
-/lib/build/ois/Release
-/lib/build/ois/src
-
-# /lib/build/ois/download/
-/lib/build/ois/download/*.gz
-/lib/build/ois/download/*.tar
-/lib/build/ois/download/*.zip
-
 # /lib/build/sdl2/
 /lib/build/sdl2/Debug
 /lib/build/sdl2/Release
