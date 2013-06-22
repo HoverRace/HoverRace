@@ -104,10 +104,6 @@
   <ItemGroup>
     <ClCompile Include="Game2\AboutDialog.cpp" />
     <ClCompile Include="Game2\FolderViewer.cpp" />
-    <ClCompile Include="Game2\FullscreenTest.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="Game2\CheckRoomListDialog.cpp" />
     <ClCompile Include="Game2\CheckUpdateServerDialog.cpp" />
     <ClCompile Include="Game2\ClientApp.cpp" />
@@ -184,10 +180,6 @@
     <ClInclude Include="..\include\compat\luabind_cxx11.h" />
     <ClInclude Include="Game2\AboutDialog.h" />
     <ClInclude Include="Game2\FolderViewer.h" />
-    <ClInclude Include="Game2\FullscreenTest.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClInclude>
     <ClInclude Include="Game2\CheckRoomListDialog.h" />
     <ClInclude Include="Game2\CheckUpdateServerDialog.h" />
     <ClInclude Include="Game2\ClientApp.h" />
