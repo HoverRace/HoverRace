@@ -1,0 +1,19 @@
+*.old
+*.gz
+*.tar
+*.zip
+Debug/
+Release/
+dist/
+download/
+orig/
+src/
+
+# /
+/*.ncb
+/*.opensdf
+/*.sdf
+/*.suo
+/_UpgradeReport_Files
+/UpgradeLog*.XML
+/ipch
