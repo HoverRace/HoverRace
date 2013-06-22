@@ -61,6 +61,7 @@ PKG_CHECK_MODULES(DEPS, [
 	openal >= 0.0.8
 	OIS >= 1.OIS2.0
 	sdl2 >= 2.0
+	SDL2_image >= 2.0
 ])
 AC_SUBST(DEPS_CFLAGS)
 AC_SUBST(DEPS_LIBS)

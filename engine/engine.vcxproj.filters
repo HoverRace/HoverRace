@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="ColorTools">
@@ -784,6 +784,18 @@
     <CustomBuild Include="..\lib\mfcleakfix.dll">
       <Filter>Libraries</Filter>
     </CustomBuild>
+    <CustomBuild Include="..\lib\libjpeg-9.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\lib\libpng16-16.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\lib\libtiff-5.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\lib\libwebp-4.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
     <CustomBuild Include="..\lib\zlib1.dll">
       <Filter>Libraries</Filter>
     </CustomBuild>
@@ -791,6 +803,12 @@
       <Filter>Libraries</Filter>
     </CustomBuild>
     <CustomBuild Include="..\lib\SDL2.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\lib\SDL2_imageD.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\lib\SDL2_image.dll">
       <Filter>Libraries</Filter>
     </CustomBuild>
   </ItemGroup>

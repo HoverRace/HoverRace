@@ -282,6 +282,12 @@ memory_leak_report.txt
 # /lib/build/sdl2/download/
 /lib/build/sdl2/download/*.zip
 
+# /lib/build/sdl2_image/
+/lib/build/sdl2_image/Debug
+/lib/build/sdl2_image/Release
+/lib/build/sdl2_image/src
+/lib/build/sdl2_image/old
+
 # /lib/build/yaml/
 /lib/build/yaml/Debug
 /lib/build/yaml/Release

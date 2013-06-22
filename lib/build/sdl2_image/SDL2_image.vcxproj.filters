@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="src\IMG.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IMG_bmp.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IMG_gif.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IMG_jpg.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IMG_lbm.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IMG_pcx.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IMG_png.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IMG_pnm.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IMG_tga.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IMG_tif.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IMG_webp.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IMG_xcf.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IMG_xpm.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IMG_xv.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IMG_xxx.c">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{f8580983-7064-41f2-a79d-017af33350f6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\SDL_image.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="src\VisualC\Version.rc">
+      <Filter>src</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
