@@ -433,15 +433,22 @@ void ClientApp::OnConsoleToggle()
  */
 void ClientApp::SetForegroundScene()
 {
+	Log::Error("No foreground scene; entering failsafe mode.");
+
 	// Detach the controller from the previous foreground scene.
 	if (fgScene) {
+		consoleToggleConn.disconnect();
 		fgScene->DetachController(*controller);
 	}
 
 	fgScene.reset();
 
-	//TODO: Load failsafe controller mapping.
 	controller->ClearActionMap();
+
+	// Enable the console toggle.
+	controller->AddConsoleToggleMaps();
+	consoleToggleConn = controller->actions.sys.consoleToggle->Connect(
+		std::bind(&ClientApp::OnConsoleToggle, this));
 
 	// Enable the cursor to make it easier for users to click the "Close"
 	// button on the main window.
@@ -473,8 +480,8 @@ void ClientApp::SetForegroundScene(const ScenePtr &scene)
 
 		// Enable the console toggle.
 		controller->AddConsoleToggleMaps();
-		auto &consoleToggleAction = controller->actions.sys.consoleToggle;
-		consoleToggleConn = consoleToggleAction->Connect(std::bind(&ClientApp::OnConsoleToggle, this));
+		consoleToggleConn = controller->actions.sys.consoleToggle->Connect(
+			std::bind(&ClientApp::OnConsoleToggle, this));
 
 		SDL_ShowCursor(scene->IsMouseCursorEnabled() ? SDL_ENABLE : SDL_DISABLE);
 	}
