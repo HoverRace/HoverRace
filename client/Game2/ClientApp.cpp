@@ -84,7 +84,7 @@ namespace {
 	/**
 	 * Used by @c REQ_EVT_SCENE_PUSH and @c REQ_SCENE_REPLACE to transfer
 	 * the requested scene.
-	 */ 
+	 */
 	struct SceneHolder {
 		SceneHolder(const ScenePtr &scene) : scene(scene) { }
 		ScenePtr scene;
@@ -312,7 +312,7 @@ void ClientApp::RenderScenes()
 		}
 		if (showFps) fpsLbl->Render();
 	}
-	
+
 	display->Flip();
 }
 
@@ -433,8 +433,6 @@ void ClientApp::OnConsoleToggle()
  */
 void ClientApp::SetForegroundScene()
 {
-	Log::Error("No foreground scene; entering failsafe mode.");
-
 	// Detach the controller from the previous foreground scene.
 	if (fgScene) {
 		consoleToggleConn.disconnect();
@@ -518,7 +516,11 @@ void ClientApp::PopScene()
 				break;
 			}
 		}
-		if (!found) SetForegroundScene();
+
+		if (!found) {
+			Log::Error("No foreground scene; entering failsafe mode.");
+			SetForegroundScene();
+		}
 	}
 }
 
