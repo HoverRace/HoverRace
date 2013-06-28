@@ -1,8 +1,8 @@
-HoverRace 1.23 is brought to you by:
+HoverRace 2.0 is brought to you by:
 
 Richard Langlois (original author)
   Grokksoft Inc.
-  
+
 with contributions from (in alphabetical order):
 
 Austin L. Brock
