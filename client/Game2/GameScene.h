@@ -107,5 +107,5 @@ class GameScene : public Scene
 		bool firedOnRaceFinish;
 };
 
-}  // namespace HoverScript
 }  // namespace Client
+}  // namespace HoverRace
