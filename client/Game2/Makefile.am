@@ -35,6 +35,8 @@ hoverrace_SOURCES = \
 	ClientSession.h \
 	FolderViewer.cpp \
 	FolderViewer.h \
+	FormScene.cpp \
+	FormScene.h \
 	GameDirector.h \
 	GameScene.cpp \
 	GameScene.h \
