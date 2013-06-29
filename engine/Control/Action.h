@@ -23,6 +23,7 @@
 
 #include <SDL2/SDL_keycode.h>
 
+#include "../Display/Vec.h"
 #include "../Exception.h"
 
 #include "ControlAction.h"
@@ -46,7 +47,25 @@ namespace TextControl {
 		BACKSPACE = SDLK_BACKSPACE,
 		ENTER = SDLK_RETURN
 	};
-};
+}
+
+namespace Mouse {
+	/// Mouse buttons.
+	enum button_t {
+		LEFT = SDL_BUTTON_LEFT,
+		MIDDLE = SDL_BUTTON_MIDDLE,
+		RIGHT = SDL_BUTTON_RIGHT,
+		B4 = SDL_BUTTON_X1,
+		B5 = SDL_BUTTON_X2
+	};
+
+	/// Mouse click events.
+	struct Click {
+		Click(double x, double y, button_t btn) : pos(x, y), btn(btn) { }
+		Display::Vec2 pos;
+		button_t btn;
+	};
+}
 
 /// Signals which are self-contained (no payload).
 typedef boost::signals2::signal<void()> voidSignal_t;
@@ -59,6 +78,12 @@ typedef boost::signals2::signal<void(const std::string&)> stringSignal_t;
 
 /// Signals for text input control.
 typedef boost::signals2::signal<void(TextControl::key_t)> textControlSignal_t;
+
+/// Signals with have a Vec2 payload.
+typedef boost::signals2::signal<void(const Display::Vec2&)> vec2Signal_t;
+
+/// Signals for mouse clicks.
+typedef boost::signals2::signal<void(const Mouse::Click&)> mouseClickSignal_t;
 
 template<class T, class Val>
 inline void PerformAction(const T&, Val)
@@ -99,6 +124,20 @@ inline void PerformAction<textControlSignal_t, TextControl::key_t>(
 	const textControlSignal_t &signal, TextControl::key_t key)
 {
 	signal(key);
+}
+
+template<>
+inline void PerformAction<vec2Signal_t, const Display::Vec2&>(
+	const vec2Signal_t &signal, const Display::Vec2 &vec)
+{
+	signal(vec);
+}
+
+template<>
+inline void PerformAction<mouseClickSignal_t, const Mouse::Click&>(
+	const mouseClickSignal_t &signal, const Mouse::Click &vec)
+{
+	signal(vec);
 }
 
 /**
