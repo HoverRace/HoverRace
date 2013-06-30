@@ -5,6 +5,8 @@ libdisplay_la_CXXFLAGS = $(HR_CXXFLAGS)
 libdisplay_la_SOURCES = \
 	Color.cpp \
 	Color.h \
+	Container.cpp \
+	Container.h \
 	Display.cpp \
 	Display.h \
 	FillBox.cpp \
@@ -22,6 +24,8 @@ libdisplay_la_SOURCES = \
 	View.h \
 	ViewAttacher.h \
 	ViewModel.h \
+	SDL/SdlContainerView.cpp \
+	SDL/SdlContainerView.h \
 	SDL/SdlDisplay.cpp \
 	SDL/SdlDisplay.h \
 	SDL/SdlFillBoxView.cpp \

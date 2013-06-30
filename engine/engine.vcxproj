@@ -116,10 +116,12 @@
     <ClCompile Include="Control\Controller.cpp" />
     <ClCompile Include="Control\ControllerStrings.cpp" />
     <ClCompile Include="Display\Color.cpp" />
+    <ClCompile Include="Display\Container.cpp" />
     <ClCompile Include="Display\Display.cpp" />
     <ClCompile Include="Display\FillBox.cpp" />
     <ClCompile Include="Display\Label.cpp" />
     <ClCompile Include="Display\ScreenFade.cpp" />
+    <ClCompile Include="Display\SDL\SdlContainerView.cpp" />
     <ClCompile Include="Display\SDL\SdlDisplay.cpp" />
     <ClCompile Include="Display\SDL\SdlFillBoxView.cpp" />
     <ClCompile Include="Display\SDL\SdlLabelView.cpp" />
@@ -229,10 +231,12 @@
     <ClInclude Include="Control\Controller.h" />
     <ClInclude Include="Control\InputHandler.h" />
     <ClInclude Include="Display\Color.h" />
+    <ClInclude Include="Display\Container.h" />
     <ClInclude Include="Display\Display.h" />
     <ClInclude Include="Display\FillBox.h" />
     <ClInclude Include="Display\Label.h" />
     <ClInclude Include="Display\ScreenFade.h" />
+    <ClInclude Include="Display\SDL\SdlContainerView.h" />
     <ClInclude Include="Display\SDL\SdlDisplay.h" />
     <ClInclude Include="Display\SDL\SdlFillBoxView.h" />
     <ClInclude Include="Display\SDL\SdlLabelView.h" />

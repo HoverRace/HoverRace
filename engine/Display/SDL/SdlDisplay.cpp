@@ -30,10 +30,12 @@
 #include "../../Util/Log.h"
 #include "../../Util/Str.h"
 #include "../../Exception.h"
+#include "../Container.h"
 #include "../FillBox.h"
 #include "../Label.h"
 #include "../ScreenFade.h"
 #include "../UiFont.h"
+#include "SdlContainerView.h"
 #include "SdlFillBoxView.h"
 #include "SdlLabelView.h"
 #include "SdlScreenFadeView.h"
@@ -140,6 +142,11 @@ SdlDisplay::~SdlDisplay()
 #	endif
 	if (renderer) SDL_DestroyRenderer(renderer);
 	if (window) SDL_DestroyWindow(window);
+}
+
+void SdlDisplay::AttachView(Container &model)
+{
+	model.SetView(std::unique_ptr<View>(new SdlContainerView(*this, model)));
 }
 
 void SdlDisplay::AttachView(FillBox &model)

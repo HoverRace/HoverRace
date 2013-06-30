@@ -23,6 +23,7 @@
 
 #include "../../engine/Util/Log.h"
 #include "../../engine/Control/Controller.h"
+#include "../../engine/Display/Container.h"
 
 #include "FormScene.h"
 
@@ -34,6 +35,8 @@ namespace Client {
 FormScene::FormScene(Display::Display &display, const std::string &name) :
 	SUPER(name), display(display)
 {
+	root.reset(new Display::Container(Display::Vec2(1280, 720)));
+	root->AttachView(display);
 }
 
 FormScene::~FormScene()
@@ -72,6 +75,16 @@ void FormScene::OnMouseReleased(const Control::Mouse::Click &click)
 {
 	//TODO: Convert to UI coords and pass to root container.
 	Log::Info("Mouse released: %.2f, %.2f, %d", click.pos.x, click.pos.y, click.btn);
+}
+
+void FormScene::PrepareRender()
+{
+	root->PrepareRender();
+}
+
+void FormScene::Render()
+{
+	root->Render();
 }
 
 }  // namespace Client

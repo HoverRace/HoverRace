@@ -1,5 +1,5 @@
 
-// FormScene.h
+// SdlContainerView.h
 //
 // Copyright (c) 2013 Michael Imamura.
 //
@@ -21,51 +21,52 @@
 
 #pragma once
 
-#include "UiScene.h"
+#include "SdlDisplay.h"
+#include "SdlView.h"
+
+#ifdef _WIN32
+#	ifdef MR_ENGINE
+#		define MR_DllDeclare   __declspec( dllexport )
+#	else
+#		define MR_DllDeclare   __declspec( dllimport )
+#	endif
+#else
+#	define MR_DllDeclare
+#endif
 
 namespace HoverRace {
 	namespace Display {
 		class Container;
-		class Display;
 	}
 }
 
 namespace HoverRace {
-namespace Client {
+namespace Display {
+namespace SDL {
 
 /**
- * Base class for full-scene menus and the like.
+ * SDL view for Container.
  * @author Michael Imamura
  */
-class FormScene : public UiScene
+class MR_DllDeclare SdlContainerView : public SdlView<Container>
 {
-	typedef UiScene SUPER;
+	typedef SdlView<Container> SUPER;
 	public:
-		FormScene(Display::Display &display, const std::string &name="");
-		virtual ~FormScene();
+		SdlContainerView(SdlDisplay &disp, Container &model) :
+			SUPER(disp, model) { }
+		virtual ~SdlContainerView() { }
 
 	public:
-		virtual void AttachController(Control::InputEventController &controller);
-		virtual void DetachController(Control::InputEventController &controller);
-
-	private:
-		void OnMouseMoved(const Display::Vec2 &pos);
-		void OnMousePressed(const Control::Mouse::Click &click);
-		void OnMouseReleased(const Control::Mouse::Click &click);
+		virtual void OnModelUpdate(int prop) { }
 
 	public:
+		virtual Vec3 Measure();
 		virtual void PrepareRender();
 		virtual void Render();
-
-	protected:
-		Display::Display &display;
-	private:
-		std::unique_ptr<Display::Container> root;
-
-		boost::signals2::connection mouseMovedConn;
-		boost::signals2::connection mousePressedConn;
-		boost::signals2::connection mouseReleasedConn;
 };
 
-}  // namespace Client
+}  // namespace SDL
+}  // namespace Display
 }  // namespace HoverRace
+
+#undef MR_DllDeclare
