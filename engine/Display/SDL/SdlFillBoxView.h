@@ -39,7 +39,6 @@ namespace HoverRace {
 		class FillBox;
 	}
 }
-struct SDL_Surface;
 
 namespace HoverRace {
 namespace Display {
