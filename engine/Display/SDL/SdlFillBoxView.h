@@ -46,8 +46,7 @@ namespace Display {
 namespace SDL {
 
 /**
- * SDL view for ScreenFade.
- * This implementation uses a screen-size RGB surface with a per-surface alpha.
+ * SDL view for FillBox.
  * @author Michael Imamura
  */
 class MR_DllDeclare SdlFillBoxView : public SdlView<FillBox>
