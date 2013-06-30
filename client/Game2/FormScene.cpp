@@ -21,9 +21,12 @@
 
 #include "StdAfx.h"
 
+#include "../../engine/Util/Log.h"
 #include "../../engine/Control/Controller.h"
 
 #include "FormScene.h"
+
+namespace Log = HoverRace::Util::Log;
 
 namespace HoverRace {
 namespace Client {
@@ -59,14 +62,16 @@ void FormScene::OnMouseMoved(const Display::Vec2 &pos)
 	//TODO: Convert to UI coords and pass to root container.
 }
 
-void FormScene::OnMousePressed(const Control::Mouse::Click &pos)
+void FormScene::OnMousePressed(const Control::Mouse::Click &click)
 {
 	//TODO: Convert to UI coords and pass to root container.
+	Log::Info("Mouse pressed: %.2f, %.2f, %d", click.pos.x, click.pos.y, click.btn);
 }
 
-void FormScene::OnMouseReleased(const Control::Mouse::Click &pos)
+void FormScene::OnMouseReleased(const Control::Mouse::Click &click)
 {
 	//TODO: Convert to UI coords and pass to root container.
+	Log::Info("Mouse released: %.2f, %.2f, %d", click.pos.x, click.pos.y, click.btn);
 }
 
 }  // namespace Client

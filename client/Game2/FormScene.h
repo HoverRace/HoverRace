@@ -49,8 +49,8 @@ class FormScene : public UiScene
 
 	private:
 		void OnMouseMoved(const Display::Vec2 &pos);
-		void OnMousePressed(const Control::Mouse::Click &pos);
-		void OnMouseReleased(const Control::Mouse::Click &pos);
+		void OnMousePressed(const Control::Mouse::Click &click);
+		void OnMouseReleased(const Control::Mouse::Click &click);
 
 	protected:
 		Display::Display &display;
