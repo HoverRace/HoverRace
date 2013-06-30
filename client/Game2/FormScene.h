@@ -53,6 +53,9 @@ class FormScene : public UiScene
 		void OnMousePressed(const Control::Mouse::Click &click);
 		void OnMouseReleased(const Control::Mouse::Click &click);
 
+	protected:
+		Display::Container *GetRoot() const { return root.get(); }
+
 	public:
 		virtual void PrepareRender();
 		virtual void Render();
