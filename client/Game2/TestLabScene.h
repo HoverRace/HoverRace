@@ -73,8 +73,8 @@ class TestLabScene : public FormScene
 		Display::Display &display;
 		std::vector<std::unique_ptr<Display::ViewModel>> elems;
 		boost::signals2::connection displayConfigChangedConn;
-		Display::FillBox *displayInfoBox;
-		Display::Label *displayInfoLbl;
+		std::shared_ptr<Display::FillBox> displayInfoBox;
+		std::shared_ptr<Display::Label> displayInfoLbl;
 };
 
 }  // namespace Client
