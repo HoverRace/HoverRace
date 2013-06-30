@@ -33,7 +33,9 @@ namespace SDL {
 
 void SdlContainerView::PrepareRender()
 {
-	//TODO: Render all children.
+	auto &children = model.GetChildren();
+	std::for_each(children.begin(), children.end(),
+		std::mem_fn(&ViewModel::PrepareRender));
 }
 
 void SdlContainerView::Render()
@@ -64,7 +66,11 @@ void SdlContainerView::Render()
 		SDL_RenderSetClipRect(renderer, &clipRect);
 	}
 
-	// Render all children.
+	Vec2 oldOrigin = disp.AddUiOrigin(model.GetPos());
+	auto &children = model.GetChildren();
+	std::for_each(children.begin(), children.end(),
+		std::mem_fn(&ViewModel::Render));
+	disp.SetUiOrigin(oldOrigin);
 
 	if (clip) {
 		SDL_RenderSetClipRect(renderer, &oldClip);

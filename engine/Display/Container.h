@@ -70,6 +70,17 @@ class MR_DllDeclare Container : public UiViewModel
 		virtual void AttachView(Display &disp) { AttachViewDynamic(disp, this); }
 
 	public:
+		template<typename T>
+		typename std::enable_if<std::is_base_of<UiViewModel, T>::value, std::shared_ptr<T>>::type
+		AddChild(Display &display, T *child)
+		{
+			std::shared_ptr<T> sharedChild(child);
+			children.emplace_back(sharedChild);
+			child->AttachView(display);
+			return sharedChild;
+		}
+
+	public:
 		/**
 		 * Retrieve the size of the container.
 		 * @note If clipping is turned off, the size 
@@ -88,12 +99,15 @@ class MR_DllDeclare Container : public UiViewModel
 		bool IsClip() const { return clip; }
 		void SetClip(bool clip);
 
+		const std::vector<UiViewModelPtr> &GetChildren() const { return children; }
+
 	public:
 		virtual Vec3 Measure() const { return size.Promote(); }
 
 	private:
 		Vec2 size;
 		bool clip;
+		std::vector<UiViewModelPtr> children;
 };
 
 }  // namespace Display
