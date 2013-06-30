@@ -27,8 +27,6 @@
 
 #include "SdlFillBoxView.h"
 
-using namespace HoverRace::Util;
-
 namespace HoverRace {
 namespace Display {
 namespace SDL {
