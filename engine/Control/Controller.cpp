@@ -47,7 +47,9 @@ InputEventController::actions_t::ui_t::ui_t() :
 	consoleBottom(std::make_shared<Action<voidSignal_t>>(_("Bottom"), 3)),
 	text(std::make_shared<Action<stringSignal_t, const std::string&>>("", 0)),
 	control(std::make_shared<Action<textControlSignal_t, TextControl::key_t>>("", 0)),
-	mouseMoved(std::make_shared<Action<vec2Signal_t, const Display::Vec2&>>("", 0))
+	mouseMoved(std::make_shared<Action<vec2Signal_t, const Display::Vec2&>>("", 0)),
+	mousePressed(std::make_shared<Action<mouseClickSignal_t, const Mouse::Click&>>("", 0)),
+	mouseReleased(std::make_shared<Action<mouseClickSignal_t, const Mouse::Click&>>("", 0))
 	{ }
 
 InputEventController::actions_t::sys_t::sys_t() :
