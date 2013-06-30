@@ -47,7 +47,6 @@ namespace SDL {
 
 /**
  * SDL view for ScreenFade.
- * This implementation uses a screen-size RGB surface with a per-surface alpha.
  * @author Michael Imamura
  */
 class MR_DllDeclare SdlScreenFadeView : public SdlView<ScreenFade>
