@@ -119,6 +119,7 @@ class MR_DllDeclare UiViewModel : public ViewModel
 		Alignment::alignment_t alignment;
 		uiLayoutFlags_t layoutFlags;
 };
+typedef std::shared_ptr<UiViewModel> UiViewModelPtr;
 
 }  // namespace Display
 }  // namespace HoverRace
