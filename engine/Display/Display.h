@@ -123,9 +123,27 @@ class MR_DllDeclare Display :
 		virtual void Flip() = 0;
 
 	public:
+		/**
+		 * Retrieve the current UI origin coordinates.
+		 * @return The coordinates, in UI-space.
+		 */
 		const Vec2 &GetUiOrigin() const { return uiOrigin; }
+
+		/**
+		 * Explicitly set the UI origin coordinates.
+		 * All UI coordinates go through LayoutUiPosition will be translated by
+		 * this offset.  In other words, this shifts where in UI-space the
+		 * coordinates (0.0, 0.0) are.
+		 * @param vec The coordinates (in UI-space).
+		 */
 		void SetUiOrigin(const Vec2 &vec) { uiOrigin = vec; }
 
+		/**
+		 * Shift the current UI origin coordinates by an offset.
+		 * @param vec The offset (in UI-space).
+		 * @return The old offset, so it can be restored later.
+		 * @see #SetUiOrigin(const Vec2&)
+		 */
 		Vec2 AddUiOrigin(const Vec2 &vec)
 		{
 			Vec2 oldOrigin = uiOrigin;
