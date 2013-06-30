@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include "UiScene.h"
+#include "FormScene.h"
 
 namespace HoverRace {
 	namespace Display {
@@ -39,9 +39,9 @@ namespace Client {
  * A zoo of renderable components.
  * @author Michael Imamura
  */
-class TestLabScene : public UiScene
+class TestLabScene : public FormScene
 {
-	typedef UiScene SUPER;
+	typedef FormScene SUPER;
 	public:
 		TestLabScene(Display::Display &display);
 		virtual ~TestLabScene();

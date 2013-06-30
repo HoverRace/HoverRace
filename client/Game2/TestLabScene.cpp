@@ -38,7 +38,7 @@ namespace HoverRace {
 namespace Client {
 
 TestLabScene::TestLabScene(Display::Display &display) :
-	SUPER("Test Lab"),
+	SUPER(display, "Test Lab"),
 	display(display)
 {
 	typedef Display::UiViewModel::Alignment Alignment;
