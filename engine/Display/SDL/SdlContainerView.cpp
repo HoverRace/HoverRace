@@ -34,12 +34,17 @@ namespace SDL {
 void SdlContainerView::PrepareRender()
 {
 	auto &children = model.GetChildren();
+	if (children.empty()) return;
+
 	std::for_each(children.begin(), children.end(),
 		std::mem_fn(&ViewModel::PrepareRender));
 }
 
 void SdlContainerView::Render()
 {
+	auto &children = model.GetChildren();
+	if (children.empty()) return;
+
 	bool clip = model.IsClip();
 	SDL_Rect oldClip;
 	SDL_Renderer *renderer = disp.GetRenderer();
@@ -67,7 +72,6 @@ void SdlContainerView::Render()
 	}
 
 	Vec2 oldOrigin = disp.AddUiOrigin(model.GetPos());
-	auto &children = model.GetChildren();
 	std::for_each(children.begin(), children.end(),
 		std::mem_fn(&ViewModel::Render));
 	disp.SetUiOrigin(oldOrigin);
