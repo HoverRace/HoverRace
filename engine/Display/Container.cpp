@@ -28,21 +28,24 @@ namespace Display {
 
 /**
  * Constructor for an unsized container without clipping.
+ * @param display The display child elements will be attached to.
  * @param layoutFlags Optional layout flags.
  */
-Container::Container(uiLayoutFlags_t layoutFlags) :
-	SUPER(layoutFlags), size(0, 0), clip(false)
+Container::Container(Display &display, uiLayoutFlags_t layoutFlags) :
+	SUPER(layoutFlags), display(display), size(0, 0), clip(false)
 {
 }
 
 /**
  * Constructor for a sized container.
+ * @param display The display child elements will be attached to.
  * @param size The size of the container.
  * @param clip Enable (default) or disable clipping of child widgets.
  * @param layoutFlags Optional layout flags.
  */
-Container::Container(const Vec2 &size, bool clip, uiLayoutFlags_t layoutFlags) :
-	SUPER(layoutFlags), size(size), clip(clip)
+Container::Container(Display &display, const Vec2 &size, bool clip,
+                     uiLayoutFlags_t layoutFlags) :
+	SUPER(layoutFlags), display(display), size(size), clip(clip)
 {
 }
 

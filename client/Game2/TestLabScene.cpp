@@ -58,30 +58,30 @@ TestLabScene::TestLabScene(Display::Display &display) :
 
 	Display::Container *root = GetRoot();
 
-	displayInfoBox = root->AddChild(display, new Display::FillBox(1280, 720, 0xff3f3f3f));
-	displayInfoLbl = root->AddChild(display, new Display::Label("Res",
+	displayInfoBox = root->AddChild(new Display::FillBox(1280, 720, 0xff3f3f3f));
+	displayInfoLbl = root->AddChild(new Display::Label("Res",
 		Display::UiFont(fontName, 20),
 		Display::COLOR_WHITE));
 	displayInfoLbl->SetPos(640, 360);
 	displayInfoLbl->SetAlignment(Alignment::CENTER);
 	OnDisplayConfigChanged();
 
-	fillBox = root->AddChild(display, new Display::FillBox(100, 100, 0x7fff0000));
+	fillBox = root->AddChild(new Display::FillBox(100, 100, 0x7fff0000));
 	fillBox->SetPos(100, 20);
-	fillBox = root->AddChild(display, new Display::FillBox(100, 100, 0x7f00ff00));
+	fillBox = root->AddChild(new Display::FillBox(100, 100, 0x7f00ff00));
 	fillBox->SetPos(150, 70);
 
 	AddAlignmentTestElem(Alignment::SW, "| Southwest", 0, 719);
 	AddAlignmentTestElem(Alignment::S, "South", 639, 719);
 	AddAlignmentTestElem(Alignment::SE, "Southeast |", 1279, 719);
 
-	lbl = root->AddChild(display, new Display::Label("Red 20 Normal",
+	lbl = root->AddChild(new Display::Label("Red 20 Normal",
 		Display::UiFont(fontName, 20), 0xffff0000));
 	lbl->SetPos(0, 20);
-	lbl = root->AddChild(display, new Display::Label("Yellow (75%) 25 Italic",
+	lbl = root->AddChild(new Display::Label("Yellow (75%) 25 Italic",
 		Display::UiFont(fontName, 25, Display::UiFont::ITALIC), 0xbfffff00));
 	lbl->SetPos(0, 40);
-	lbl = root->AddChild(display, new Display::Label("Magenta (50%) 30 Bold+Italic",
+	lbl = root->AddChild(new Display::Label("Magenta (50%) 30 Bold+Italic",
 		Display::UiFont(fontName, 30, Display::UiFont::BOLD | Display::UiFont::ITALIC),
 		0x7fff00ff));
 	lbl->SetPos(0, 65);
@@ -98,11 +98,11 @@ void TestLabScene::AddAlignmentTestElem(
 	Config *cfg = Config::GetInstance();
 	std::string fontName = cfg->GetDefaultFontName();
 
-	auto fillBox = GetRoot()->AddChild(display, new Display::FillBox(50, 50, 0x7f00ffff));
+	auto fillBox = GetRoot()->AddChild(new Display::FillBox(50, 50, 0x7f00ffff));
 	fillBox->SetAlignment(alignment);
 	fillBox->SetPos(x, y);
 
-	auto lbl = GetRoot()->AddChild(display, new Display::Label(label,
+	auto lbl = GetRoot()->AddChild(new Display::Label(label,
 		Display::UiFont(fontName, 40), 0xffffffff));
 	lbl->SetAlignment(alignment);
 	lbl->SetPos(x, y);

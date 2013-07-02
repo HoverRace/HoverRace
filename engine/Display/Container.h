@@ -62,8 +62,9 @@ class MR_DllDeclare Container : public UiViewModel
 		};
 
 	public:
-		Container(uiLayoutFlags_t layoutFlags=0);
-		Container(const Vec2 &size, bool clip=true, uiLayoutFlags_t layoutFlags=0);
+		Container(Display &display, uiLayoutFlags_t layoutFlags=0);
+		Container(Display &display, const Vec2 &size, bool clip=true,
+			uiLayoutFlags_t layoutFlags=0);
 		virtual ~Container() { }
 
 	public:
@@ -72,7 +73,7 @@ class MR_DllDeclare Container : public UiViewModel
 	public:
 		template<typename T>
 		typename std::enable_if<std::is_base_of<UiViewModel, T>::value, std::shared_ptr<T>>::type
-		AddChild(Display &display, T *child)
+		AddChild(T *child)
 		{
 			std::shared_ptr<T> sharedChild(child);
 			children.emplace_back(sharedChild);
@@ -105,6 +106,7 @@ class MR_DllDeclare Container : public UiViewModel
 		virtual Vec3 Measure() const { return size.Promote(); }
 
 	private:
+		Display &display;
 		Vec2 size;
 		bool clip;
 		std::vector<UiViewModelPtr> children;

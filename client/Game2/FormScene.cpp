@@ -33,9 +33,9 @@ namespace HoverRace {
 namespace Client {
 
 FormScene::FormScene(Display::Display &display, const std::string &name) :
-	SUPER(name), display(display)
+	SUPER(name), display(display),
+	root(new Display::Container(display, Display::Vec2(1280, 720)))
 {
-	root.reset(new Display::Container(Display::Vec2(1280, 720)));
 	root->AttachView(display);
 }
 
