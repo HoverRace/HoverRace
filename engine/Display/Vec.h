@@ -65,10 +65,24 @@ MR_DllDeclare inline Vec2 &operator+=(Vec2 &lhs, const Vec2 &rhs)
 	return lhs;
 }
 
+MR_DllDeclare inline Vec2 &operator-=(Vec2 &lhs, const Vec2 &rhs)
+{
+	lhs.x -= rhs.x;
+	lhs.y -= rhs.y;
+	return lhs;
+}
+
 MR_DllDeclare inline Vec2 &operator*=(Vec2 &lhs, double scale)
 {
 	lhs.x *= scale;
 	lhs.y *= scale;
+	return lhs;
+}
+
+MR_DllDeclare inline Vec2 &operator/=(Vec2 &lhs, double scale)
+{
+	lhs.x /= scale;
+	lhs.y /= scale;
 	return lhs;
 }
 
@@ -102,11 +116,27 @@ MR_DllDeclare inline Vec3 &operator+=(Vec3 &lhs, const Vec3 &rhs)
 	return lhs;
 }
 
+MR_DllDeclare inline Vec3 &operator-=(Vec3 &lhs, const Vec3 &rhs)
+{
+	lhs.x -= rhs.x;
+	lhs.y -= rhs.y;
+	lhs.z -= rhs.z;
+	return lhs;
+}
+
 MR_DllDeclare inline Vec3 &operator*=(Vec3 &lhs, double scale)
 {
 	lhs.x *= scale;
 	lhs.y *= scale;
 	lhs.z *= scale;
+	return lhs;
+}
+
+MR_DllDeclare inline Vec3 &operator/=(Vec3 &lhs, double scale)
+{
+	lhs.x /= scale;
+	lhs.y /= scale;
+	lhs.z /= scale;
 	return lhs;
 }
 
