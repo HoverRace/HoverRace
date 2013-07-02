@@ -170,6 +170,15 @@ class MR_DllDeclare Display :
 			}
 		}
 
+		Vec2 ScreenToUiPosition(const Vec2 &pos)
+		{
+			Vec2 adjustedPos = pos;
+			adjustedPos -= GetUiOffset();
+			adjustedPos /= GetUiScale();
+			adjustedPos -= GetUiOrigin();
+			return adjustedPos;
+		}
+
 	private:
 		Vec2 uiOrigin;
 		double uiScale;
