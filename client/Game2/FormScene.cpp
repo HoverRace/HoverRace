@@ -62,19 +62,28 @@ void FormScene::DetachController(Control::InputEventController &controller)
 
 void FormScene::OnMouseMoved(const Display::Vec2 &pos)
 {
-	//TODO: Convert to UI coords and pass to root container.
+	Display::Vec2 uiPos = display.ScreenToUiPosition(pos);
+	root->OnMouseMoved(uiPos);
 }
 
 void FormScene::OnMousePressed(const Control::Mouse::Click &click)
 {
-	//TODO: Convert to UI coords and pass to root container.
-	Log::Info("Mouse pressed: %.2f, %.2f, %d", click.pos.x, click.pos.y, click.btn);
+	Control::Mouse::Click uiClick = click;
+	uiClick.pos = display.ScreenToUiPosition(uiClick.pos);
+
+	Log::Info("Mouse pressed: %.2f, %.2f, %d", uiClick.pos.x, uiClick.pos.y, click.btn);
+
+	root->OnMousePressed(uiClick);
 }
 
 void FormScene::OnMouseReleased(const Control::Mouse::Click &click)
 {
-	//TODO: Convert to UI coords and pass to root container.
-	Log::Info("Mouse released: %.2f, %.2f, %d", click.pos.x, click.pos.y, click.btn);
+	Control::Mouse::Click uiClick = click;
+	uiClick.pos = display.ScreenToUiPosition(uiClick.pos);
+
+	Log::Info("Mouse released: %.2f, %.2f, %d", uiClick.pos.x, uiClick.pos.y, click.btn);
+
+	root->OnMouseReleased(uiClick);
 }
 
 void FormScene::PrepareRender()

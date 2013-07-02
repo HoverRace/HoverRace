@@ -37,6 +37,14 @@
 #endif
 
 namespace HoverRace {
+	namespace Control {
+		namespace Mouse {
+			struct Click;
+		}
+	}
+}
+
+namespace HoverRace {
 namespace Display {
 
 /**
@@ -82,6 +90,11 @@ class MR_DllDeclare UiViewModel : public ViewModel
 			SUPER(), pos(0, 0), alignment(Alignment::NW),
 			layoutFlags(layoutFlags) { }
 		virtual ~UiViewModel() { }
+
+	public:
+		virtual void OnMouseMoved(const Vec2 &pos) { }
+		virtual void OnMousePressed(const Control::Mouse::Click &click) { }
+		virtual void OnMouseReleased(const Control::Mouse::Click &click) { }
 
 	public:
 		/**

@@ -49,6 +49,39 @@ Container::Container(Display &display, const Vec2 &size, bool clip,
 {
 }
 
+void Container::OnMouseMoved(const Vec2 &pos)
+{
+	if (children.empty()) return;
+
+	Vec2 oldOrigin = display.AddUiOrigin(GetPos());
+	BOOST_FOREACH(auto &child, children) {
+		child->OnMouseMoved(pos);
+	}
+	display.SetUiOrigin(oldOrigin);
+}
+
+void Container::OnMousePressed(const Control::Mouse::Click &click)
+{
+	if (children.empty()) return;
+
+	Vec2 oldOrigin = display.AddUiOrigin(GetPos());
+	BOOST_FOREACH(auto &child, children) {
+		child->OnMousePressed(click);
+	}
+	display.SetUiOrigin(oldOrigin);
+}
+
+void Container::OnMouseReleased(const Control::Mouse::Click &click)
+{
+	if (children.empty()) return;
+
+	Vec2 oldOrigin = display.AddUiOrigin(GetPos());
+	BOOST_FOREACH(auto &child, children) {
+		child->OnMouseReleased(click);
+	}
+	display.SetUiOrigin(oldOrigin);
+}
+
 /**
  * Set the size of the container.
  * @param size The size of the container, where @c x is the width
