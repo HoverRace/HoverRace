@@ -203,10 +203,12 @@ static Config *InitConfig(
 	}
 	free(verInfo);
 
-	// Format the version.
 	if (verMajor == 0 && verMinor == 0 && verPatch == 0 && verBuild == 0) {
-		//FIXME: Oh bother, this means the .exe was compiled without
-		//       version resources.  What do we do now?
+		MessageBoxW(NULL,
+			L"Version resources missing!\r\n\r\n"
+			L"Something went wrong when this snapshot was built.",
+			PACKAGE_NAME_L, MB_OK | MB_ICONERROR);
+		exit(1);
 	}
 
 	// Load the configuration, using the default OS-specific path.
