@@ -24,6 +24,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_syswm.h>
+#include <SDL2/SDL_image.h>
 #ifdef WITH_SDL_PANGO
 #	include <SDL_Pango.h>
 #elif defined(WITH_SDL_TTF)
@@ -107,6 +108,12 @@ ClientApp::ClientApp() :
 
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) == -1)
 		throw Exception("SDL initialization failed");
+
+	int imgInit = IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF;
+	int imgInitActual = IMG_Init(imgInit);
+	if ((imgInitActual & imgInit) != imgInit) {
+		throw Exception(IMG_GetError());
+	}
 
 #	ifdef WITH_SDL_PANGO
 		SDLPango_Init();
@@ -204,7 +211,7 @@ ClientApp::~ClientApp()
 #	ifdef WITH_SDL_TTF
 		TTF_Quit();
 #	endif
-
+	IMG_Quit();
 	SDL_Quit();
 }
 
