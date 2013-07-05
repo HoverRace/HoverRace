@@ -251,8 +251,6 @@ memory_leak_report.txt
 /po/stamp-po
 
 # /share/
-/share/*.avi
-/share/*.dat
 /share/*.db
 /share/Makefile
 /share/Makefile.in

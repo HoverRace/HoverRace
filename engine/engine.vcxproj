@@ -71,8 +71,10 @@
       <BaseAddress>0x61000000</BaseAddress>
     </Link>
     <PostBuildEvent>
-      <Command>copy ..\res\ObjFac1.dat ..\share</Command>
-      <Message>ObjFac1.dat</Message>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -106,8 +108,10 @@
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
     <PostBuildEvent>
-      <Command>copy ..\res\ObjFac1.dat ..\share</Command>
-      <Message>ObjFac1.dat</Message>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
