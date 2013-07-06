@@ -26,6 +26,9 @@ namespace HoverRace {
 	namespace Control {
 		class InputEventController;
 	}
+	namespace Display {
+		class Display;
+	}
 	namespace VideoServices {
 		class VideoBuffer;
 	}
@@ -90,6 +93,8 @@ class GameDirector
 		 * Notify this director that the video palette configuration has changed.
 		 */
 		virtual void AssignPalette() = 0;
+
+		virtual Display::Display *GetDisplay() const = 0;
 
 		virtual VideoServices::VideoBuffer *GetVideoBuffer() const = 0;
 
