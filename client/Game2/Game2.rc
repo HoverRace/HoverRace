@@ -34,7 +34,6 @@ BEGIN
     CONTROL         "Ask me this each time I launch a game alone",IDC_ASK_AGAIN,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,45,172,10
     LTEXT           "You are about to launch the race without any opponents.  You will be on your own.  It is preferable to wait for other players to join your game.  Are you sure?",IDC_TEXT_WARNING,37,7,142,34
-    ICON            IDI_WARNING2,IDC_STATIC,7,7,21,20
 END
 
 IDD_PRESS_ANY_KEY DIALOGEX 0, 0, 186, 41
@@ -250,7 +249,6 @@ FONT 8, "MS Shell Dlg", 0, 0, 0x0
 BEGIN
     DEFPUSHBUTTON   "OK",IDCANCEL,36,41,50,14
     PUSHBUTTON      "Start NOW!",IDOK,96,41,50,14
-    ICON            IDI_WARNING2,IDC_STATIC,7,7,20,20
     LTEXT           "It is highly preferable to wait until all players have successfully connected to the game before pressing the START buttton.",IDC_WARN_TEXT,34,7,141,30
 END
 
@@ -772,7 +770,6 @@ END
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDI_HOVER_ICON          ICON                    "icon3.ico"
-IDI_WARNING2            ICON                    "warning.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
