@@ -125,6 +125,7 @@
     <ClCompile Include="Game2\InternetRoom.cpp" />
     <ClCompile Include="Game2\IntroMovie.cpp" />
     <ClCompile Include="Game2\main.cpp" />
+    <ClCompile Include="Game2\MainMenuScene.cpp" />
     <ClCompile Include="Game2\MatchReport.cpp" />
     <ClCompile Include="Game2\MessageScene.cpp" />
     <ClCompile Include="Game2\MiscPrefsPage.cpp">
@@ -202,6 +203,7 @@
     <ClInclude Include="Game2\HoverScript\SysConsole.h" />
     <ClInclude Include="Game2\InternetRoom.h" />
     <ClInclude Include="Game2\IntroMovie.h" />
+    <ClInclude Include="Game2\MainMenuScene.h" />
     <ClInclude Include="Game2\MatchReport.h" />
     <ClInclude Include="Game2\MessageScene.h" />
     <ClInclude Include="Game2\MiscPrefsPage.h">
