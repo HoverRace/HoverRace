@@ -31,6 +31,7 @@ namespace HoverRace {
 	namespace Client {
 		namespace HoverScript {
 			class ConsoleScene;
+			class DebugPeer;
 			class GamePeer;
 			class HighConsole;
 			class SessionPeer;
@@ -117,6 +118,7 @@ class ClientApp : public GameDirector
 		ScenePtr fgScene;  ///< The scene that currently has input focus.
 
 		Script::Core *scripting;
+		HoverScript::DebugPeer *debugPeer;
 		HoverScript::GamePeer *gamePeer;
 		HoverScript::SysEnv *sysEnv;
 		HoverScript::SysConsole *sysConsole;

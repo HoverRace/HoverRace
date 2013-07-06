@@ -33,6 +33,7 @@
 #include "../../../engine/Script/Core.h"
 #include "../../../engine/Util/Str.h"
 
+#include "DebugPeer.h"
 #include "GamePeer.h"
 
 #include "SysEnv.h"
@@ -78,8 +79,9 @@ namespace HoverRace {
 namespace Client {
 namespace HoverScript {
 
-SysEnv::SysEnv(Script::Core *scripting, GamePeer *gamePeer) :
-	SUPER(scripting), gamePeer(gamePeer),
+SysEnv::SysEnv(Script::Core *scripting, DebugPeer *debugPeer,
+               GamePeer *gamePeer) :
+	SUPER(scripting), debugPeer(debugPeer), gamePeer(gamePeer),
 	outHandle(scripting->AddOutput(std::make_shared<LogStream>()))
 {
 }
@@ -100,6 +102,7 @@ void SysEnv::InitEnv()
 	CopyGlobals();
 
 	object env(from_stack(L, -1));
+	env["debug"] = debugPeer;
 	env["game"] = gamePeer;
 }
 

@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include "../../engine/Display/UiViewModel.h"
+
 #include "FormScene.h"
 
 namespace HoverRace {

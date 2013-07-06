@@ -1,0 +1,10 @@
+start_test_lab:
+  type: method
+  sig:
+    - debug:start_test_lab()
+  brief: >
+    Switch to the Test Lab scene.
+  desc: >
+    The Test Lab is used to test and debug the display engine.
+    
+    This will replace all currently-running scenes.

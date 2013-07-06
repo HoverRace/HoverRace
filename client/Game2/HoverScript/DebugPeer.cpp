@@ -1,8 +1,7 @@
 
-// ClientScriptCore.cpp
-// Scripting core configured for the client.
+// DebugPeer.cpp
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2013 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -22,42 +21,43 @@
 
 #include "StdAfx.h"
 
-#include "luabind/class_info.hpp"
+#include "../../../engine/Script/Core.h"
+#include "../GameDirector.h"
+#include "../TestLabScene.h"
 
-#include "ConfigPeer.h"
 #include "DebugPeer.h"
-#include "GamePeer.h"
-#include "SessionPeer.h"
-
-#include "ClientScriptCore.h"
 
 namespace HoverRace {
 namespace Client {
 namespace HoverScript {
 
-Script::Core *ClientScriptCore::Reset()
+DebugPeer::DebugPeer(Script::Core *scripting, GameDirector &gameDirector) :
+	SUPER(scripting, "Debug"),
+	gameDirector(gameDirector)
 {
-	SUPER::Reset();
+}
 
-	if (!classesRegistered) {
+DebugPeer::~DebugPeer()
+{
+}
 
-		lua_State *L = GetState();
+/**
+ * Register this peer in an environment.
+ */
+void DebugPeer::Register(Script::Core *scripting)
+{
+	using namespace luabind;
+	lua_State *L = scripting->GetState();
 
-		luabind::open(L);
-#		ifdef _DEBUG
-			// Enable class inspection.
-			luabind::bind_class_info(L);
-#		endif
+	module(L) [
+		class_<DebugPeer, SUPER, std::shared_ptr<DebugPeer>>("Debug")
+			.def("start_test_lab", &DebugPeer::LStartTestLab)
+	];
+}
 
-		ConfigPeer::Register(this);
-		DebugPeer::Register(this);
-		GamePeer::Register(this);
-		SessionPeer::Register(this);
-
-		classesRegistered = true;
-	}
-
-	return this;
+void DebugPeer::LStartTestLab()
+{
+	gameDirector.RequestReplaceScene(std::make_shared<TestLabScene>(*gameDirector.GetDisplay()));
 }
 
 }  // namespace HoverScript

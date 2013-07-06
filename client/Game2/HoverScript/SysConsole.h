@@ -33,6 +33,7 @@
 namespace HoverRace {
 	namespace Client {
 		namespace HoverScript {
+			class DebugPeer;
 			class GamePeer;
 			class SessionPeer;
 			typedef std::shared_ptr<SessionPeer> SessionPeerPtr;
@@ -56,7 +57,8 @@ class SysConsole : public Console
 {
 	typedef Console SUPER;
 	public:
-		SysConsole(Script::Core *scripting, GamePeer *gamePeer, int maxLogLines=512);
+		SysConsole(Script::Core *scripting, DebugPeer *debugPeer,
+			GamePeer *gamePeer, int maxLogLines=512);
 		virtual ~SysConsole();
 
 	protected:
@@ -162,6 +164,7 @@ class SysConsole : public Console
 		virtual void HelpMethod(const Script::Help::Class &cls, const Script::Help::Method &method);
 
 	private:
+		DebugPeer *debugPeer;
 		GamePeer *gamePeer;
 
 		bool introWritten;

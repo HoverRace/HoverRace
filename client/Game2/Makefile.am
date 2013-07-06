@@ -21,6 +21,8 @@ hoverrace_SOURCES = \
 	HoverScript/Console.h \
 	HoverScript/ConsoleScene.cpp \
 	HoverScript/ConsoleScene.h \
+	HoverScript/DebugPeer.cpp \
+	HoverScript/DebugPeer.h \
 	HoverScript/GamePeer.cpp \
 	HoverScript/GamePeer.h \
 	HoverScript/SessionPeer.cpp \

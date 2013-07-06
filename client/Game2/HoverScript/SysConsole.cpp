@@ -24,6 +24,7 @@
 #include "../../../engine/Script/Help/HelpHandler.h"
 #include "../../../engine/Script/Help/Class.h"
 #include "../../../engine/Util/Config.h"
+#include "DebugPeer.h"
 #include "GamePeer.h"
 
 #include "SysConsole.h"
@@ -38,14 +39,15 @@ namespace HoverScript {
 /**
  * Constructor.
  * @param scripting The underlying scripting engine.
+ * @param debugPeer Debug scripting peer.
  * @param gamePeer Game scripting peer.
  * @param maxLogLines The maximum number of log lines to store in the
  *                    log history.
  */
-SysConsole::SysConsole(Script::Core *scripting, GamePeer *gamePeer,
-                       int maxLogLines) :
+SysConsole::SysConsole(Script::Core *scripting, DebugPeer *debugPeer,
+                       GamePeer *gamePeer, int maxLogLines) :
 	SUPER(scripting),
-	gamePeer(gamePeer),
+	debugPeer(debugPeer), gamePeer(gamePeer),
 	introWritten(false), maxLogLines(maxLogLines), logLines(), baseLogIdx(0)
 {
 	commandLine.reserve(1024);
@@ -74,6 +76,7 @@ void SysConsole::InitEnv()
 	CopyGlobals();
 
 	object env(from_stack(L, -1));
+	env["debug"] = debugPeer;
 	env["game"] = gamePeer;
 }
 
@@ -152,7 +155,7 @@ void SysConsole::AddIntroLines()
 	intro += " :: Console active.";
 	LogNote(intro);
 
-	LogNote("Available global objects: game");
+	LogNote("Available global objects: debug, game");
 
 	std::string helpInstructions = boost::str(boost::format(
 		_("For help on a class or method, call the %s method: %s")) %

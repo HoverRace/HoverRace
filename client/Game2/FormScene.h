@@ -21,9 +21,16 @@
 
 #pragma once
 
+#include "../../engine/Display/Vec.h"
+
 #include "UiScene.h"
 
 namespace HoverRace {
+	namespace Control {
+		namespace Mouse {
+			struct Click;
+		}
+	}
 	namespace Display {
 		class Container;
 		class Display;

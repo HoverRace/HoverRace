@@ -1,8 +1,7 @@
 
-// SysEnv.h
-// The global system environment.
+// DebugPeer.h
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2013 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -22,15 +21,18 @@
 
 #pragma once
 
-#include "../../../engine/Script/Env.h"
-#include "../../../engine/Util/OS.h"
+#include <luabind/luabind.hpp>
+#include <luabind/object.hpp>
+
+#include "../../../engine/Script/Handlers.h"
+#include "../../../engine/Script/Peer.h"
 
 namespace HoverRace {
 	namespace Client {
-		namespace HoverScript {
-			class DebugPeer;
-			class GamePeer;
-		}
+		class GameDirector;
+	}
+	namespace Display {
+		class Display;
 	}
 	namespace Script {
 		class Core;
@@ -41,29 +43,24 @@ namespace HoverRace {
 namespace Client {
 namespace HoverScript {
 
-class SysEnv : private Script::Env
-{
-	typedef Script::Env SUPER;
+/**
+ * Provides access to debugging tools.
+ * @author Michael Imamura
+ */
+class DebugPeer : public Script::Peer {
+	typedef Script::Peer SUPER;
+	public:
+		DebugPeer(Script::Core *scripting, GameDirector &gameDirector);
+		virtual ~DebugPeer();
 
 	public:
-		SysEnv(Script::Core *scripting, DebugPeer *debugPeer,
-			GamePeer *gamePeer);
-		virtual ~SysEnv();
-
-	protected:
-		virtual void InitEnv();
-
-	protected:
-		virtual void LogInfo(const std::string &s);
-		virtual void LogError(const std::string &s);
+		static void Register(Script::Core *scripting);
 
 	public:
-		void RunScript(const Util::OS::path_t &filename);
+		void LStartTestLab();
 
 	private:
-		DebugPeer *debugPeer;
-		GamePeer *gamePeer;
-		Script::Core::OutHandle outHandle;
+		GameDirector &gameDirector;
 };
 
 }  // namespace HoverScript

@@ -49,6 +49,7 @@
 
 #include "HoverScript/ClientScriptCore.h"
 #include "HoverScript/ConsoleScene.h"
+#include "HoverScript/DebugPeer.h"
 #include "HoverScript/GamePeer.h"
 #include "HoverScript/SessionPeer.h"
 #include "HoverScript/SysConsole.h"
@@ -126,13 +127,14 @@ ClientApp::ClientApp() :
 	// Create the system console and execute the init script.
 	// This allows the script to modify the configuration (e.g. for unit tests).
 	scripting = (new ClientScriptCore())->Reset();
+	debugPeer = new DebugPeer(scripting, *this);
 	gamePeer = new GamePeer(scripting, this);
-	sysEnv = new SysEnv(scripting, gamePeer);
+	sysEnv = new SysEnv(scripting, debugPeer, gamePeer);
 	OS::path_t &initScript = cfg->runtime.initScript;
 	if (!initScript.empty()) {
 		sysEnv->RunScript(initScript);
 	}
-	sysConsole = new SysConsole(scripting, gamePeer);
+	sysConsole = new SysConsole(scripting, debugPeer, gamePeer);
 
 	//TODO: Select which display to use.
 	SDL_DisplayMode desktopMode;
