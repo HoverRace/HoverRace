@@ -97,7 +97,7 @@ void Container::SetSize(const Vec2 &size)
 
 /**
  * Set whether child elements are clipped to the container bounds.
- * @param clip @c true if clipping is enabled, @false if elements are
+ * @param clip @c true if clipping is enabled, @c false if elements are
  *             allowed to render outside of the bounds.
  */
 void Container::SetClip(bool clip)

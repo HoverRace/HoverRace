@@ -99,7 +99,7 @@ class MR_DllDeclare Container : public UiViewModel
 
 		/**
 		 * Check if child elements are clipped to the container bounds.
-		 * @return @c true if clipping is enabled, @false if elements are
+		 * @return @c true if clipping is enabled, @c false if elements are
 		 *         allowed to render outside of the bounds.
 		 */
 		bool IsClip() const { return clip; }
