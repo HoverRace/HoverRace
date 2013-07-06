@@ -17,8 +17,8 @@ EXTRA_DIST = config/config.rpath  \
 SUBDIRS = engine client compilers po
 
 pkgdata_DATA = \
-	res/Intro.avi \
-	res/ObjFac1.dat
+	share/Intro.avi \
+	share/ObjFac1.dat
 
 libtool: $(LIBTOOL_DEPS)
 	$(SHELL) ./config.status --recheck
