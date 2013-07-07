@@ -14,3 +14,7 @@ insert_final_newline = true
 [*.{c,cpp,h}]
 indent_brace_style = K&R
 
+[*.yml]
+indent_style = space
+indent_size = 2
+
