@@ -577,7 +577,19 @@ bool OS::OpenLink(const std::string &url)
 		Str::UW urlw(url.c_str());
 		return (int)ShellExecuteW(NULL, L"open", urlw, NULL, NULL, SW_SHOWNORMAL) > 32;
 #	else
-		throw UnimplementedExn("OS::OpenLink");
+		pid_t pid = fork();
+		if (pid == 0) {
+			execlp("xdg-open", "xdg-open", url.c_str(), nullptr);
+			perror("Failed to open link with xdg-open");
+			_exit(1);
+		}
+		else if (pid < 0) {
+			char err[256];
+			strerror_r(errno, err, sizeof(err));
+			std::string exs = "Failed to fork to run xdg-open: ";
+			exs += err;
+			throw std::runtime_error(exs.c_str());
+		}
 #	endif
 }
 
@@ -594,7 +606,20 @@ bool OS::OpenPath(const path_t &path)
 		std::wstring s((const wchar_t*)Str::PW(path));
 		return (int)ShellExecuteW(NULL, L"open", s.c_str(), NULL, NULL, SW_SHOWNORMAL) > 32;
 #	else
-		throw UnimplementedExn("OS::OpenPath");
+		std::string s((const char *)Str::PU(path));
+		pid_t pid = fork();
+		if (pid == 0) {
+			execlp("xdg-open", "xdg-open", s.c_str(), nullptr);
+			perror("Failed to open path with xdg-open");
+			_exit(1);
+		}
+		else if (pid < 0) {
+			char err[256];
+			strerror_r(errno, err, sizeof(err));
+			std::string exs = "Failed to fork to run xdg-open: ";
+			exs += err;
+			throw std::runtime_error(exs.c_str());
+		}
 #	endif
 }
 
