@@ -110,7 +110,7 @@ ClientApp::ClientApp() :
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) == -1)
 		throw Exception("SDL initialization failed");
 
-	int imgInit = IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_WEBP;
+	int imgInit = IMG_INIT_JPG | IMG_INIT_PNG;
 	int imgInitActual = IMG_Init(imgInit);
 	if ((imgInitActual & imgInit) != imgInit) {
 		throw Exception(IMG_GetError());
