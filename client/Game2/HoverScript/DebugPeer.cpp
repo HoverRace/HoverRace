@@ -59,7 +59,7 @@ void DebugPeer::Register(Script::Core *scripting)
 
 void DebugPeer::LShowPalette()
 {
-	gameDirector.RequestPushScene(std::make_shared<PaletteScene>(*gameDirector.GetDisplay()));
+	gameDirector.RequestPushScene(std::make_shared<PaletteScene>(gameDirector));
 }
 
 void DebugPeer::LStartTestLab()

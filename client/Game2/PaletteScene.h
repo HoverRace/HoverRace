@@ -45,7 +45,7 @@ class PaletteScene : public UiScene
 {
 	typedef UiScene SUPER;
 	public:
-		PaletteScene(Display::Display &display);
+		PaletteScene(GameDirector &director);
 		virtual ~PaletteScene();
 
 	public:
@@ -53,15 +53,21 @@ class PaletteScene : public UiScene
 
 	protected:
 		virtual void OnPhaseChanged(Phase::phase_t oldPhase);
+		virtual void OnOk();
 
 	public:
-		virtual void Advance(Util::OS::timestamp_t tick);
-		virtual void PrepareRender();
+		virtual void AttachController(Control::InputEventController &controller);
+		virtual void DetachController(Control::InputEventController &controller);
+		virtual void Advance(Util::OS::timestamp_t tick) { }
+		virtual void PrepareRender() { }
 		virtual void Render();
 
 	private:
+		GameDirector &director;
 		Display::Display &display;
-		Display::Label *label;
+
+		boost::signals2::connection okConn;
+		boost::signals2::connection cancelConn;
 };
 
 }  // namespace HoverScript
