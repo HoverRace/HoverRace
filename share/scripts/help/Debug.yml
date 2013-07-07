@@ -1,3 +1,13 @@
+show_palette:
+  type: method
+  sig:
+    - debug:show_palette()
+  brief: >
+    Show the palette scene.
+  desc: >
+    The legacy display engine uses a 256-color palette.
+    This scene displays it as an overlay.
+
 start_test_lab:
   type: method
   sig:

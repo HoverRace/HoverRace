@@ -57,6 +57,7 @@ class DebugPeer : public Script::Peer {
 		static void Register(Script::Core *scripting);
 
 	public:
+		void LShowPalette();
 		void LStartTestLab();
 
 	private:

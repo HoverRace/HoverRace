@@ -23,6 +23,7 @@
 
 #include "../../../engine/Script/Core.h"
 #include "../GameDirector.h"
+#include "../PaletteScene.h"
 #include "../TestLabScene.h"
 
 #include "DebugPeer.h"
@@ -51,8 +52,14 @@ void DebugPeer::Register(Script::Core *scripting)
 
 	module(L) [
 		class_<DebugPeer, SUPER, std::shared_ptr<DebugPeer>>("Debug")
+			.def("show_palette", &DebugPeer::LShowPalette)
 			.def("start_test_lab", &DebugPeer::LStartTestLab)
 	];
+}
+
+void DebugPeer::LShowPalette()
+{
+	gameDirector.RequestPushScene(std::make_shared<PaletteScene>(*gameDirector.GetDisplay()));
 }
 
 void DebugPeer::LStartTestLab()
