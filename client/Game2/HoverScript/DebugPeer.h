@@ -57,6 +57,8 @@ class DebugPeer : public Script::Peer {
 		static void Register(Script::Core *scripting);
 
 	public:
+		void LOpenLink(const std::string &url);
+		void LOpenPath(const std::string &path);
 		void LShowPalette();
 		void LStartTestLab();
 

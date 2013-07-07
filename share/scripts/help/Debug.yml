@@ -1,3 +1,23 @@
+open_link:
+  type: method
+  sig:
+    - debug:open_link(url)
+  brief: >
+    Open a URL in the default browser.
+  desc: >
+    The user's default browser (Firefox, Chrome, etc.) will be used to open
+    the URL.
+
+open_path:
+  type: method
+  sig:
+    - debug:open_path(path)
+  brief: >
+    Open a file path in the default file browser.
+  desc: >
+    The user's default file browser (Explorer, Nautilus, etc.) will be used
+    to open the URL.
+
 show_palette:
   type: method
   sig:

@@ -22,11 +22,15 @@
 #include "StdAfx.h"
 
 #include "../../../engine/Script/Core.h"
+#include "../../../engine/Util/OS.h"
+#include "../../../engine/Util/Str.h"
 #include "../GameDirector.h"
 #include "../PaletteScene.h"
 #include "../TestLabScene.h"
 
 #include "DebugPeer.h"
+
+using namespace HoverRace::Util;
 
 namespace HoverRace {
 namespace Client {
@@ -52,9 +56,21 @@ void DebugPeer::Register(Script::Core *scripting)
 
 	module(L) [
 		class_<DebugPeer, SUPER, std::shared_ptr<DebugPeer>>("Debug")
+			.def("open_link", &DebugPeer::LOpenLink)
+			.def("open_path", &DebugPeer::LOpenPath)
 			.def("show_palette", &DebugPeer::LShowPalette)
 			.def("start_test_lab", &DebugPeer::LStartTestLab)
 	];
+}
+
+void DebugPeer::LOpenLink(const std::string &url)
+{
+	OS::OpenLink(url);
+}
+
+void DebugPeer::LOpenPath(const std::string &path)
+{
+	OS::OpenPath(Str::UP(path));
 }
 
 void DebugPeer::LShowPalette()
