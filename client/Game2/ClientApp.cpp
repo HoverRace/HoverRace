@@ -501,6 +501,20 @@ void ClientApp::SetForegroundScene(const ScenePtr &scene)
  */
 void ClientApp::PushScene(const ScenePtr &scene)
 {
+	// If the console is visible, then the new scene replaces it.
+	if (Config::GetInstance()->runtime.enableConsole) {
+		if (auto cscene = consoleScene.lock()) {
+			if (cscene.get() != scene.get()) {
+				Scene::Phase::phase_t phase = cscene->GetPhase();
+				if (phase != Scene::Phase::STOPPING &&
+					phase != Scene::Phase::STOPPED)
+				{
+					PopScene();
+				}
+			}
+		}
+	}
+
 	sceneStack.push_back(scene);
 	SetForegroundScene(sceneStack.back());
 	scene->SetPhase(Scene::Phase::STARTING);
