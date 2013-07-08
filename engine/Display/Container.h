@@ -44,7 +44,6 @@ namespace Display {
 
 /**
  * An invisible container for other UI widgets.
- * The child 
  * @author Michael Imamura
  */
 class MR_DllDeclare Container : public UiViewModel
