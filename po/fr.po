@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
 "Report-Msgid-Bugs-To: bugs@hoverrace.com\n"
-"POT-Creation-Date: 2013-06-09 17:35-0400\n"
+"POT-Creation-Date: 2013-07-09 21:37-0400\n"
 "PO-Revision-Date: 2009-03-06 22:46-0500\n"
 "Last-Translator: Michael Imamura <zoogie@lugatgt.org>\n"
 "Language-Team: French <traduc@traduc.org>\n"
@@ -69,7 +69,7 @@ msgstr ""
 #: client/Game2/CheckRoomListDialog.cpp:88
 #: client/Game2/CheckUpdateServerDialog.cpp:177
 #: client/Game2/SelectRoomDialog.cpp:120
-#: client/Game2/TrackSelectDialog.cpp:103 engine/Control/Controller.cpp:41
+#: client/Game2/TrackSelectDialog.cpp:103 engine/Control/Controller.cpp:43
 #: engine/Control/ControllerStrings.cpp:138
 msgid "Cancel"
 msgstr "Annuler"
@@ -107,12 +107,12 @@ msgstr ""
 msgid "Checking server for updates.  Please wait."
 msgstr ""
 
-#: client/Game2/ClientApp.cpp:218 client/Game2/GameApp.cpp:820
+#: client/Game2/ClientApp.cpp:227 client/Game2/GameApp.cpp:820
 msgctxt "Version"
 msgid "testing"
 msgstr ""
 
-#: client/Game2/ClientApp.cpp:221 client/Game2/GameApp.cpp:823
+#: client/Game2/ClientApp.cpp:230 client/Game2/GameApp.cpp:823
 msgid "silent mode"
 msgstr ""
 
@@ -121,8 +121,8 @@ msgid "Controls"
 msgstr ""
 
 #: client/Game2/ControlPrefsPage.cpp:134 client/Game2/NetInterface.cpp:1068
-#: engine/Control/Controller.cpp:341 engine/Control/Controller.cpp:380
-#: engine/Control/Controller.cpp:478
+#: engine/Control/Controller.cpp:350 engine/Control/Controller.cpp:398
+#: engine/Control/Controller.cpp:498
 msgid "Player"
 msgstr ""
 
@@ -198,23 +198,6 @@ msgstr ""
 #: client/Game2/FolderViewer.cpp:101
 msgid "Failed to create directory."
 msgstr ""
-
-#: client/Game2/FullscreenTest.cpp:78
-msgid ""
-"Fullscreen settings have changed.  Would you like to test these changes?"
-msgstr ""
-
-#: client/Game2/FullscreenTest.cpp:108
-#, c-format, boost-format
-msgid "Returning in %d second."
-msgid_plural "Returning in %d seconds."
-msgstr[0] ""
-msgstr[1] ""
-
-#: client/Game2/FullscreenTest.cpp:126
-#, fuzzy
-msgid "HoverRace fullscreen test"
-msgstr "À Propos d'HoverRace"
 
 #: client/Game2/GameApp.cpp:482
 msgid "Abort current game?"
@@ -413,35 +396,16 @@ msgid ""
 "once a game is started"
 msgstr ""
 
-#: client/Game2/HoverScript/HighConsole.cpp:136
-#: client/Game2/HoverScript/SysConsole.cpp:67
+#: client/Game2/HoverScript/SysConsole.cpp:56
+msgid "System console initialized."
+msgstr ""
+
+#: client/Game2/HoverScript/SysConsole.cpp:161
 #, c-format, boost-format
 msgid "For help on a class or method, call the %s method: %s"
 msgstr ""
 
-#: client/Game2/HoverScript/HighConsole.cpp:146
-#: engine/Control/Controller.cpp:415
-#, fuzzy
-msgid "Console"
-msgstr "Fermer"
-
-#: client/Game2/HoverScript/HighConsole.cpp:150
-msgid "Scroll"
-msgstr ""
-
-#: client/Game2/HoverScript/HighConsole.cpp:151
-#: client/Game2/HoverScript/HighConsole.cpp:159
-msgid "Hide"
-msgstr ""
-
-#: client/Game2/HoverScript/HighConsole.cpp:156
-#: engine/Control/ControllerStrings.cpp:121
-#, fuzzy
-msgid "Help"
-msgstr "&Aide"
-
-#: client/Game2/HoverScript/HighConsole.cpp:479
-#: client/Game2/HoverScript/SysConsole.cpp:172
+#: client/Game2/HoverScript/SysConsole.cpp:200
 #, c-format, boost-format
 msgid "Methods for class %s:"
 msgstr ""
@@ -886,7 +850,7 @@ msgstr ""
 
 #: client/Game2/NetInterface.cpp:1887 client/Game2/PathSelector.cpp:93
 #: client/Game2/SelectRoomDialog.cpp:119
-#: client/Game2/TrackSelectDialog.cpp:102 engine/Control/Controller.cpp:40
+#: client/Game2/TrackSelectDialog.cpp:102 engine/Control/Controller.cpp:42
 msgid "OK"
 msgstr ""
 
@@ -1248,7 +1212,7 @@ msgstr ""
 msgid "HoverRace is currently in silent mode."
 msgstr ""
 
-#: client/Game2/main.cpp:328 client/Game2/main.cpp:334
+#: client/Game2/main.cpp:335 client/Game2/main.cpp:341
 #: compilers/MazeCompiler/main.cpp:132
 msgid "You found a bug!"
 msgstr ""
@@ -1381,81 +1345,103 @@ msgstr ""
 msgid "syntax error in defines file"
 msgstr ""
 
+#: engine/Control/Controller.cpp:44
+msgid "Page Up"
+msgstr ""
+
+#: engine/Control/Controller.cpp:45
+msgid "Page Down"
+msgstr ""
+
+#: engine/Control/Controller.cpp:46
+msgid "Top"
+msgstr ""
+
 #: engine/Control/Controller.cpp:47
+msgid "Bottom"
+msgstr ""
+
+#: engine/Control/Controller.cpp:56
 #, fuzzy
 msgid "Toggle Console"
 msgstr "Fermer"
 
-#: engine/Control/Controller.cpp:51
+#: engine/Control/Controller.cpp:60
 msgid "Zoom In"
 msgstr ""
 
-#: engine/Control/Controller.cpp:52
+#: engine/Control/Controller.cpp:61
 msgid "Zoom Out"
 msgstr ""
 
-#: engine/Control/Controller.cpp:53
+#: engine/Control/Controller.cpp:62
 msgid "Pan Up"
 msgstr ""
 
-#: engine/Control/Controller.cpp:54
+#: engine/Control/Controller.cpp:63
 msgid "Pan Down"
 msgstr ""
 
-#: engine/Control/Controller.cpp:55
+#: engine/Control/Controller.cpp:64
 msgid "Reset Camera"
 msgstr ""
 
-#: engine/Control/Controller.cpp:359 engine/Control/Controller.cpp:439
-#: engine/Control/Controller.cpp:492 engine/Control/Controller.cpp:518
+#: engine/Control/Controller.cpp:368 engine/Control/Controller.cpp:457
+#: engine/Control/Controller.cpp:512 engine/Control/Controller.cpp:538
 msgid "Camera"
 msgstr ""
 
-#: engine/Control/Controller.cpp:364 engine/Control/Controller.cpp:532
+#: engine/Control/Controller.cpp:374 engine/Control/Controller.cpp:553
 #: engine/Control/ControllerStrings.cpp:122
 msgid "Menu"
 msgstr ""
 
-#: engine/Control/Controller.cpp:369 engine/Control/Controller.cpp:543
+#: engine/Control/Controller.cpp:380 engine/Control/Controller.cpp:565
 #, fuzzy
 msgid "ConsoleToggle"
 msgstr "Fermer"
 
-#: engine/Control/Controller.cpp:481
+#: engine/Control/Controller.cpp:386 engine/Control/Controller.cpp:433
+#: engine/Control/Controller.cpp:576
+#, fuzzy
+msgid "Console"
+msgstr "Fermer"
+
+#: engine/Control/Controller.cpp:501
 msgid "Throttle"
 msgstr ""
 
-#: engine/Control/Controller.cpp:482
+#: engine/Control/Controller.cpp:502
 msgid "Brake"
 msgstr ""
 
-#: engine/Control/Controller.cpp:483
+#: engine/Control/Controller.cpp:503
 msgid "Turn Left"
 msgstr ""
 
-#: engine/Control/Controller.cpp:484
+#: engine/Control/Controller.cpp:504
 msgid "Turn Right"
 msgstr ""
 
-#: engine/Control/Controller.cpp:485
+#: engine/Control/Controller.cpp:505
 msgid "Jump"
 msgstr ""
 
-#: engine/Control/Controller.cpp:486
+#: engine/Control/Controller.cpp:506
 msgid "Fire"
 msgstr ""
 
-#: engine/Control/Controller.cpp:487
+#: engine/Control/Controller.cpp:507
 msgid "Item"
 msgstr ""
 
-#: engine/Control/Controller.cpp:488
+#: engine/Control/Controller.cpp:508
 msgid "Look Back"
 msgstr ""
 
 #: engine/Control/ControllerStrings.cpp:45
 #: engine/Control/ControllerStrings.cpp:47
-#: engine/Control/ControllerStrings.cpp:327
+#: engine/Control/ControllerStrings.cpp:333
 #, fuzzy
 msgid "Unknown"
 msgstr "Aéroglisseur Inconnu"
@@ -1701,6 +1687,11 @@ msgstr ""
 msgid "Execute"
 msgstr ""
 
+#: engine/Control/ControllerStrings.cpp:121
+#, fuzzy
+msgid "Help"
+msgstr "&Aide"
+
 #: engine/Control/ControllerStrings.cpp:123
 msgid "Select"
 msgstr ""
@@ -1825,79 +1816,79 @@ msgstr ""
 msgid "Media Select"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:182
+#: engine/Control/ControllerStrings.cpp:188
 msgid "Disabled"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:199
+#: engine/Control/ControllerStrings.cpp:205
 msgid "Left Mouse Btn"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:201
+#: engine/Control/ControllerStrings.cpp:207
 msgid "Right Mouse Btn"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:203
+#: engine/Control/ControllerStrings.cpp:209
 msgid "Middle Mouse Btn"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:205
+#: engine/Control/ControllerStrings.cpp:211
 msgid "Mouse Button 4"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:207
+#: engine/Control/ControllerStrings.cpp:213
 msgid "Mouse Button 5"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:209
+#: engine/Control/ControllerStrings.cpp:215
 msgid "Unknown Mouse Button"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:215
+#: engine/Control/ControllerStrings.cpp:221
 msgid "Mouse X+ Axis"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:217
+#: engine/Control/ControllerStrings.cpp:223
 msgid "Mouse X- Axis"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:220
+#: engine/Control/ControllerStrings.cpp:226
 msgid "Mouse Y+ Axis"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:222
+#: engine/Control/ControllerStrings.cpp:228
 msgid "Mouse Y- Axis"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:225
+#: engine/Control/ControllerStrings.cpp:231
 msgid "Mouse Z+ Axis"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:227
+#: engine/Control/ControllerStrings.cpp:233
 msgid "Mouse Z- Axis"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:230
+#: engine/Control/ControllerStrings.cpp:236
 msgid "Mouse Wheel Right"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:232
+#: engine/Control/ControllerStrings.cpp:238
 msgid "Mouse Wheel Left"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:235
+#: engine/Control/ControllerStrings.cpp:241
 msgid "Mouse Wheel Down"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:237
+#: engine/Control/ControllerStrings.cpp:243
 msgid "Mouse Wheen Up"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:240
+#: engine/Control/ControllerStrings.cpp:246
 msgid "Unknown Mouse Axis +"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:242
+#: engine/Control/ControllerStrings.cpp:248
 msgid "Unknown Mouse Axis -"
 msgstr ""
 
@@ -2103,23 +2094,23 @@ msgstr ""
 msgid "got"
 msgstr ""
 
-#: engine/Script/Core.cpp:154
+#: engine/Script/Core.cpp:156
 msgid "Out of stack space"
 msgstr ""
 
-#: engine/Script/Core.cpp:297
+#: engine/Script/Core.cpp:299
 msgid "No function on stack"
 msgstr ""
 
-#: engine/Script/Core.cpp:394
+#: engine/Script/Core.cpp:396
 msgid "has no documentation"
 msgstr ""
 
-#: engine/Script/Core.cpp:407
+#: engine/Script/Core.cpp:409
 msgid "has no method"
 msgstr ""
 
-#: engine/Script/Core.cpp:518
+#: engine/Script/Core.cpp:516
 msgid "Disallowed access to protected function"
 msgstr ""
 
@@ -2145,9 +2136,13 @@ msgstr ""
 msgid "Unable to create configuration file"
 msgstr ""
 
-#: engine/Util/OS.cpp:335 engine/Util/OS.cpp:345
+#: engine/Util/OS.cpp:332 engine/Util/OS.cpp:342
 msgid "Could not load"
 msgstr ""
+
+#, fuzzy
+#~ msgid "HoverRace fullscreen test"
+#~ msgstr "À Propos d'HoverRace"
 
 #, fuzzy
 #~ msgid "Unknown direction"

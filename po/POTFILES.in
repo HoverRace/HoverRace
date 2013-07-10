@@ -7,7 +7,7 @@ client/Game2/ClientSession.cpp
 client/Game2/ControlPrefsPage.cpp
 client/Game2/DownloadUpdateDialog.cpp
 client/Game2/FolderViewer.cpp
-client/Game2/FullscreenTest.cpp
+client/Game2/FormScene.cpp
 client/Game2/GameApp.cpp
 client/Game2/GameScene.cpp
 client/Game2/GifDecoder.cpp
@@ -15,13 +15,14 @@ client/Game2/HoverScript/ClientScriptCore.cpp
 client/Game2/HoverScript/ConfigPeer.cpp
 client/Game2/HoverScript/Console.cpp
 client/Game2/HoverScript/ConsoleScene.cpp
+client/Game2/HoverScript/DebugPeer.cpp
 client/Game2/HoverScript/GamePeer.cpp
-client/Game2/HoverScript/HighConsole.cpp
 client/Game2/HoverScript/SessionPeer.cpp
 client/Game2/HoverScript/SysConsole.cpp
 client/Game2/HoverScript/SysEnv.cpp
 client/Game2/InternetRoom.cpp
 client/Game2/IntroMovie.cpp
+client/Game2/MainMenuScene.cpp
 client/Game2/MatchReport.cpp
 client/Game2/MessageScene.cpp
 client/Game2/MiscPrefsPage.cpp
@@ -59,9 +60,11 @@ engine/Control/ActionPerformers.cpp
 engine/Control/Controller.cpp
 engine/Control/ControllerStrings.cpp
 engine/Display/Color.cpp
+engine/Display/Container.cpp
 engine/Display/Display.cpp
 engine/Display/FillBox.cpp
 engine/Display/Label.cpp
+engine/Display/SDL/SdlContainerView.cpp
 engine/Display/SDL/SdlDisplay.cpp
 engine/Display/SDL/SdlFillBoxView.cpp
 engine/Display/SDL/SdlLabelView.cpp
