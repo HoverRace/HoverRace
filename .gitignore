@@ -36,6 +36,7 @@ memory_leak_report.txt
 /config.status*
 /configure
 /conftest*
+/cppcheck_report.txt
 /cscope.out
 /hoverrace-*
 /ipch
