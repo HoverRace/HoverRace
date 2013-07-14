@@ -76,7 +76,7 @@ const std::locale OS::stdLocale("C");
 
 static inline bool isHex(const char &c)
 {
-	return 
+	return
 		(c >= '0' && c <= '9') ||
 		(c >= 'A' && c <= 'F') ||
 		(c >= 'a' && c <= 'f');
@@ -223,7 +223,7 @@ void OS::SetLocale()
 		// We need to map the ISO-abbreviated locale name from the env
 		// to a Win32 LCID by enumerating all of the supported locales
 		// and finding the one that matches.
-		
+
 		char *lang = getenv("LC_ALL");
 		if (lang == NULL || *lang == '\0') {
 			lang = getenv("LC_MESSAGES");
@@ -369,7 +369,7 @@ std::shared_ptr<OS::monitors_t> OS::GetMonitors()
 				// monitor.
 				guid = NULL;
 			}
-			
+
 			DISPLAY_DEVICE monInfo;
 			memset(&monInfo, 0, sizeof(monInfo));
 			monInfo.cb = sizeof(monInfo);
@@ -382,7 +382,7 @@ std::shared_ptr<OS::monitors_t> OS::GetMonitors()
 				monitor.id = (guid == NULL) ?
 					"{00000000-0000-0000-0000-000000000000}" :
 					GuidToString(*guid);
-				
+
 				// Retrieve the supported resolutions.
 				for (int j = 0; ; ++j) {
 					DEVMODE modeInfo;
@@ -472,7 +472,7 @@ void OS::StringToGuid(const std::string &s, GUID &guid)
 	if (*w++ != '}') return;
 
 	w = s.c_str();
-	
+
 	guid.Data1 =
 		(nibbles[w[ 1]] << 28) + (nibbles[w[ 2]] << 24) +
 		(nibbles[w[ 3]] << 20) + (nibbles[w[ 4]] << 16) +
