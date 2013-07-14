@@ -84,11 +84,6 @@ AC_C_CONST
 AC_C_BIGENDIAN
 AC_TYPE_LONG_LONG_INT
 
-# Checks for library functions.
-AC_CHECK_FUNC(setenv,
-	[AC_DEFINE([HAVE_SETENV], [1],
-		[Define to 1 if you have the setenv() function.])])
-
 PLATFORM_NAME=`uname -s`
 AC_DEFINE_UNQUOTED([PLATFORM_NAME], ["$PLATFORM_NAME"], [Platform name.])
 

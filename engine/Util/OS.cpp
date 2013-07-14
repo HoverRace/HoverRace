@@ -133,11 +133,7 @@ void OS::SetEnv(const char *key, const char *val)
 		}
 		privPutEnv(combined.c_str());
 #	else
-#		ifdef HAVE_SETENV
-			setenv(key, val, 1);
-#		else
-			putenv(strdup(combined.c_str()));
-#		endif
+		setenv(key, val, 1);
 #	endif
 }
 
