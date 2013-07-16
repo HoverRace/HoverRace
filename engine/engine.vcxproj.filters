@@ -370,6 +370,9 @@
     <ClCompile Include="Display\SDL\SdlContainerView.cpp">
       <Filter>Display\SDL</Filter>
     </ClCompile>
+    <ClCompile Include="Display\Button.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColorTools\ColorTools.h">
@@ -763,6 +766,9 @@
     </ClInclude>
     <ClInclude Include="Display\SDL\SdlContainerView.h">
       <Filter>Display\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Display\Button.h">
+      <Filter>Display</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
