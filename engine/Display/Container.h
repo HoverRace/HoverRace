@@ -88,7 +88,7 @@ class MR_DllDeclare Container : public UiViewModel
 	public:
 		/**
 		 * Retrieve the size of the container.
-		 * @note If clipping is turned off, the size 
+		 * @note If clipping is turned off, the size is undefined.
 		 * @return The size, where @c x is the width and @c y is the height.
 		 */
 		const Vec2 &GetSize() const { return size; }
