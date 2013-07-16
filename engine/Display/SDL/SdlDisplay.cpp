@@ -30,11 +30,13 @@
 #include "../../Util/Log.h"
 #include "../../Util/Str.h"
 #include "../../Exception.h"
+#include "../Button.h"
 #include "../Container.h"
 #include "../FillBox.h"
 #include "../Label.h"
 #include "../ScreenFade.h"
 #include "../UiFont.h"
+#include "SdlButtonView.h"
 #include "SdlContainerView.h"
 #include "SdlFillBoxView.h"
 #include "SdlLabelView.h"
@@ -142,6 +144,11 @@ SdlDisplay::~SdlDisplay()
 #	endif
 	if (renderer) SDL_DestroyRenderer(renderer);
 	if (window) SDL_DestroyWindow(window);
+}
+
+void SdlDisplay::AttachView(Button &model)
+{
+	model.SetView(std::unique_ptr<View>(new SdlButtonView(*this, model)));
 }
 
 void SdlDisplay::AttachView(Container &model)

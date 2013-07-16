@@ -126,6 +126,7 @@
     <ClCompile Include="Display\FillBox.cpp" />
     <ClCompile Include="Display\Label.cpp" />
     <ClCompile Include="Display\ScreenFade.cpp" />
+    <ClCompile Include="Display\SDL\SdlButtonView.cpp" />
     <ClCompile Include="Display\SDL\SdlContainerView.cpp" />
     <ClCompile Include="Display\SDL\SdlDisplay.cpp" />
     <ClCompile Include="Display\SDL\SdlFillBoxView.cpp" />
@@ -242,6 +243,7 @@
     <ClInclude Include="Display\FillBox.h" />
     <ClInclude Include="Display\Label.h" />
     <ClInclude Include="Display\ScreenFade.h" />
+    <ClInclude Include="Display\SDL\SdlButtonView.h" />
     <ClInclude Include="Display\SDL\SdlContainerView.h" />
     <ClInclude Include="Display\SDL\SdlDisplay.h" />
     <ClInclude Include="Display\SDL\SdlFillBoxView.h" />
