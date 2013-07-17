@@ -66,6 +66,9 @@ class MR_DllDeclare Button : public UiViewModel
 		virtual ~Button();
 
 	public:
+		virtual void AttachView(Display &disp) { AttachViewDynamic(disp, this); }
+
+	public:
 		virtual void OnMouseMoved(const Vec2 &pos);
 		virtual void OnMousePressed(const Control::Mouse::Click &click);
 		virtual void OnMouseReleased(const Control::Mouse::Click &click);
