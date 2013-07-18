@@ -21,7 +21,12 @@
 
 #include "StdAfx.h"
 
+#include "../Control/Action.h"
+#include "../Util/Log.h"
+
 #include "Button.h"
+
+namespace Log = HoverRace::Util::Log;
 
 namespace HoverRace {
 namespace Display {
@@ -55,21 +60,33 @@ Button::~Button()
 
 void Button::OnMouseMoved(const Vec2 &pos)
 {
-	//TODO: Check hitbox.
-	//TODO: Set focus.
+	if (TestHit(pos)) {
+		//TODO: Set focus.
+	}
 }
 
 void Button::OnMousePressed(const Control::Mouse::Click &click)
 {
-	//TODO: Check hitbox.
-	//TODO: Set pressed state.
+	if (TestHit(click.pos)) {
+		//TODO: Set pressed state.
+	}
 }
 
 void Button::OnMouseReleased(const Control::Mouse::Click &click)
 {
-	//TODO: Check hitbox.
-	//TODO: Unset pressed state.
-	//TODO: Call OnPressed listeners.
+	const Vec2 &sz = GetSize();
+	const Vec2 pui = display.ScreenToUiPosition(click.pos);
+	Log::Info("Clicked at: <%.2f, %.2f>, size is: <%.2f, %.2f>",
+		pui.x, pui.y, sz.x, sz.y);
+	if (TestHit(click.pos)) {
+		//TODO: Unset pressed state.
+		FireClickedSignal();
+	}
+}
+
+void Button::FireClickedSignal()
+{
+	clickedSignal(*this);
 }
 
 /**
@@ -119,6 +136,15 @@ void Button::SetAutoSize()
 		size.y = 0;
 		FireModelUpdate(Props::SIZE);
 	}
+}
+
+bool Button::TestHit(const Vec2 &pos) const
+{
+	const Vec2 pui = display.ScreenToUiPosition(pos);
+	const Vec2 &sz = GetSize();
+	return
+		pui.x >= 0 && pui.x < sz.x &&
+		pui.y >= 0 && pui.y < sz.y;
 }
 
 }  // namespace Display

@@ -74,6 +74,12 @@ class MR_DllDeclare Button : public UiViewModel
 		virtual void OnMouseReleased(const Control::Mouse::Click &click);
 
 	public:
+		typedef boost::signals2::signal<void(Button&)> clickedSignal_t;
+		clickedSignal_t &GetClickedSignal() { return clickedSignal; }
+	protected:
+		void FireClickedSignal();
+
+	public:
 		const Vec2 &GetSize() const;
 		void SetSize(const Vec2 &size);
 		/// Convenience function for SetSize(const Vec2&).
@@ -90,11 +96,15 @@ class MR_DllDeclare Button : public UiViewModel
 	public:
 		virtual Vec3 Measure() const { return size.Promote(); }
 
+	protected:
+		bool TestHit(const Vec2 &pos) const;
+
 	private:
 		Display &display;
 		mutable Vec2 size;
 		bool autoSize;
 		mutable bool needsSizing;
+		clickedSignal_t clickedSignal;
 };
 
 }  // namespace Display
