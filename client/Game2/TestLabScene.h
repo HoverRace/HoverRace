@@ -27,6 +27,7 @@
 
 namespace HoverRace {
 	namespace Display {
+		class Button;
 		class Display;
 		class FillBox;
 		class Label;
@@ -62,6 +63,7 @@ class TestLabScene : public FormScene
 
 	private:
 		void OnDisplayConfigChanged();
+		void OnDisplayInfoClicked();
 
 	protected:
 		virtual void OnPhaseChanged(Phase::phase_t oldPhase);
@@ -75,8 +77,12 @@ class TestLabScene : public FormScene
 		Display::Display &display;
 		std::vector<std::unique_ptr<Display::ViewModel>> elems;
 		boost::signals2::connection displayConfigChangedConn;
+		boost::signals2::connection displayInfoClickedConn;
 		std::shared_ptr<Display::FillBox> displayInfoBox;
 		std::shared_ptr<Display::Label> displayInfoLbl;
+		std::shared_ptr<Display::Button> displayInfoBtn;
+		/// Temporary box to highlight displayInfoBtn click area.
+		std::shared_ptr<Display::FillBox> displayInfoBtnBox;
 };
 
 }  // namespace Client

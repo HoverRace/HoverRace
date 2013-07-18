@@ -22,6 +22,7 @@
 #include "StdAfx.h"
 
 #include "../../engine/Control/Controller.h"
+#include "../../engine/Display/Button.h"
 #include "../../engine/Display/Container.h"
 #include "../../engine/Display/Display.h"
 #include "../../engine/Display/FillBox.h"
@@ -30,6 +31,7 @@
 #include "../../engine/VideoServices/FontSpec.h"
 #include "../../engine/VideoServices/VideoBuffer.h"
 #include "../../engine/Util/Config.h"
+#include "../../engine/Util/Log.h"
 
 #include "TestLabScene.h"
 
@@ -59,12 +61,23 @@ TestLabScene::TestLabScene(Display::Display &display) :
 	Display::Container *root = GetRoot();
 
 	displayInfoBox = root->AddChild(new Display::FillBox(1280, 720, 0xff3f3f3f));
+
+	displayInfoBtnBox = root->AddChild(new Display::FillBox(300, 200, 0x3f000000));
+	displayInfoBtnBox ->SetPos(640, 360);
+	displayInfoBtnBox ->SetAlignment(Alignment::CENTER);
+
 	displayInfoLbl = root->AddChild(new Display::Label("Res",
 		Display::UiFont(fontName, 20),
 		Display::COLOR_WHITE));
 	displayInfoLbl->SetPos(640, 360);
 	displayInfoLbl->SetAlignment(Alignment::CENTER);
 	OnDisplayConfigChanged();
+
+	displayInfoBtn = root->AddChild(new Display::Button(display, Display::Vec2(300, 200)));
+	displayInfoBtn->SetPos(640, 360);
+	displayInfoBtn->SetAlignment(Alignment::CENTER);
+	displayInfoClickedConn = displayInfoBtn->GetClickedSignal().connect(
+		std::bind(&TestLabScene::OnDisplayInfoClicked, this));
 
 	fillBox = root->AddChild(new Display::FillBox(100, 100, 0x7fff0000));
 	fillBox->SetPos(100, 20);
@@ -89,6 +102,8 @@ TestLabScene::TestLabScene(Display::Display &display) :
 
 TestLabScene::~TestLabScene()
 {
+	displayInfoClickedConn.disconnect();
+	displayConfigChangedConn.disconnect();
 }
 
 void TestLabScene::AddAlignmentTestElem(
@@ -116,6 +131,11 @@ void TestLabScene::OnDisplayConfigChanged()
 
 	static boost::format resFmt("UI Scale: %0.2f  Offset: %d,%d");
 	displayInfoLbl->SetText(boost::str(resFmt % uiScale % uiOffset.x % uiOffset.y));
+}
+
+void TestLabScene::OnDisplayInfoClicked()
+{
+	Log::Info("Display info clicked!");
 }
 
 void TestLabScene::OnPhaseChanged(Phase::phase_t oldPhase)
