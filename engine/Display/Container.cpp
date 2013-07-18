@@ -53,33 +53,36 @@ void Container::OnMouseMoved(const Vec2 &pos)
 {
 	if (children.empty()) return;
 
-	Vec2 oldOrigin = display.AddUiOrigin(GetPos());
+	Vec2 oldOrigin(0, 0);
 	BOOST_FOREACH(auto &child, children) {
+		oldOrigin = display.AddUiOrigin(child->GetPos());
 		child->OnMouseMoved(pos);
+		display.SetUiOrigin(oldOrigin);
 	}
-	display.SetUiOrigin(oldOrigin);
 }
 
 void Container::OnMousePressed(const Control::Mouse::Click &click)
 {
 	if (children.empty()) return;
 
-	Vec2 oldOrigin = display.AddUiOrigin(GetPos());
+	Vec2 oldOrigin(0, 0);
 	BOOST_FOREACH(auto &child, children) {
+		oldOrigin = display.AddUiOrigin(child->GetPos());
 		child->OnMousePressed(click);
+		display.SetUiOrigin(oldOrigin);
 	}
-	display.SetUiOrigin(oldOrigin);
 }
 
 void Container::OnMouseReleased(const Control::Mouse::Click &click)
 {
 	if (children.empty()) return;
 
-	Vec2 oldOrigin = display.AddUiOrigin(GetPos());
+	Vec2 oldOrigin(0, 0);
 	BOOST_FOREACH(auto &child, children) {
+		oldOrigin = display.AddUiOrigin(child->GetPos());
 		child->OnMouseReleased(click);
+		display.SetUiOrigin(oldOrigin);
 	}
-	display.SetUiOrigin(oldOrigin);
 }
 
 /**
