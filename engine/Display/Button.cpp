@@ -38,7 +38,8 @@ namespace Display {
  */
 Button::Button(Display &display, uiLayoutFlags_t layoutFlags) :
 	SUPER(layoutFlags), display(display),
-	size(0, 0), autoSize(true), needsSizing(true)
+	size(0, 0), autoSize(true), needsSizing(true),
+	pressed(false)
 {
 }
 
@@ -50,7 +51,8 @@ Button::Button(Display &display, uiLayoutFlags_t layoutFlags) :
  */
 Button::Button(Display &display, const Vec2 &size, uiLayoutFlags_t layoutFlags) :
 	SUPER(layoutFlags), display(display),
-	size(size), autoSize(false), needsSizing(false)
+	size(size), autoSize(false), needsSizing(false),
+	pressed(false)
 {
 }
 
@@ -63,26 +65,24 @@ void Button::OnMouseMoved(const Vec2 &pos)
 	if (TestHit(pos)) {
 		//TODO: Set focus.
 	}
+	else {
+		//TODO: Unset focus.
+	}
 }
 
 void Button::OnMousePressed(const Control::Mouse::Click &click)
 {
 	if (TestHit(click.pos)) {
-		//TODO: Set pressed state.
+		SetPressed(true);
 	}
 }
 
 void Button::OnMouseReleased(const Control::Mouse::Click &click)
 {
-	const Vec2 &sz = GetSize();
-	Vec2 pui = display.ScreenToUiPosition(click.pos);
-	pui = GetAlignedPos(pui, -sz.x, -sz.y);
-	Log::Info("Clicked at: <%.2f, %.2f>, size is: <%.2f, %.2f>",
-		pui.x, pui.y, sz.x, sz.y);
-	if (TestHit(click.pos)) {
-		//TODO: Unset pressed state.
+	if (IsPressed() && TestHit(click.pos)) {
 		FireClickedSignal();
 	}
+	SetPressed(false);
 }
 
 void Button::FireClickedSignal()
@@ -139,11 +139,18 @@ void Button::SetAutoSize()
 	}
 }
 
+void Button::SetPressed(bool pressed)
+{
+	if (this->pressed != pressed) {
+		this->pressed = pressed;
+		FireModelUpdate(Props::PRESSED);
+	}
+}
+
 bool Button::TestHit(const Vec2 &pos) const
 {
 	const Vec2 &sz = GetSize();
-	Vec2 pui = display.ScreenToUiPosition(pos);
-	pui = GetAlignedPos(pui, -sz.x, -sz.y);
+	const Vec2 pui = GetAlignedPos(display.ScreenToUiPosition(pos), -sz.x, -sz.y);
 	return
 		pui.x >= 0 && pui.x < sz.x &&
 		pui.y >= 0 && pui.y < sz.y;

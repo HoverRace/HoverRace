@@ -56,6 +56,7 @@ class MR_DllDeclare Button : public UiViewModel
 			enum {
 				/// Fired when a fixed size is set or auto-sizing is enabled.
 				SIZE = SUPER::Props::NEXT_,
+				PRESSED,
 				NEXT_,  ///< First index for subclasses.
 			};
 		};
@@ -93,6 +94,10 @@ class MR_DllDeclare Button : public UiViewModel
 		bool IsAutoSize() const { return autoSize; }
 		void SetAutoSize();
 
+	protected:
+		bool IsPressed() const { return pressed; }
+		void SetPressed(bool pressed);
+
 	public:
 		virtual Vec3 Measure() const { return size.Promote(); }
 
@@ -104,6 +109,7 @@ class MR_DllDeclare Button : public UiViewModel
 		mutable Vec2 size;
 		bool autoSize;
 		mutable bool needsSizing;
+		bool pressed;
 		clickedSignal_t clickedSignal;
 };
 
