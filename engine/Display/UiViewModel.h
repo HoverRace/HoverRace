@@ -115,7 +115,18 @@ class MR_DllDeclare UiViewModel : public ViewModel
 		const Alignment::alignment_t GetAlignment() const { return alignment; }
 		void SetAlignment(Alignment::alignment_t alignment);
 
-		Vec2 GetAlignedPos(double w, double h) const;
+		Vec2 GetAlignedPos(const Vec2 &pos, double w, double h) const;
+
+		/**
+		 * Retrieve the position adjusted by the current alignment.
+		 * @param w The width of the component.
+		 * @param h The height of the component.
+		 * @return The adjusted position.
+		 */
+		Vec2 GetAlignedPos(double w, double h) const
+		{
+			return GetAlignedPos(pos, w, h);
+		}
 
 		/**
 		 * Retrieve the layout flags.

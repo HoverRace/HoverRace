@@ -53,12 +53,13 @@ void UiViewModel::SetAlignment(Alignment::alignment_t alignment)
 }
 
 /**
- * Retrieve the position adjusted by the current alignment.
+ * Retrieve an arbitrary position adjusted by the current alignment.
+ * @param pos The position to adjust.
  * @param w The width of the component.
  * @param h The height of the component.
  * @return The adjusted position.
  */
-Vec2 UiViewModel::GetAlignedPos(double w, double h) const
+Vec2 UiViewModel::GetAlignedPos(const Vec2 &pos, double w, double h) const
 {
 	switch (alignment) {
 		case Alignment::NW: return pos;
