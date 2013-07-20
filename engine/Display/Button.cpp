@@ -75,7 +75,8 @@ void Button::OnMousePressed(const Control::Mouse::Click &click)
 void Button::OnMouseReleased(const Control::Mouse::Click &click)
 {
 	const Vec2 &sz = GetSize();
-	const Vec2 pui = display.ScreenToUiPosition(click.pos);
+	Vec2 pui = display.ScreenToUiPosition(click.pos);
+	pui = GetAlignedPos(pui, -sz.x, -sz.y);
 	Log::Info("Clicked at: <%.2f, %.2f>, size is: <%.2f, %.2f>",
 		pui.x, pui.y, sz.x, sz.y);
 	if (TestHit(click.pos)) {
@@ -140,8 +141,9 @@ void Button::SetAutoSize()
 
 bool Button::TestHit(const Vec2 &pos) const
 {
-	const Vec2 pui = display.ScreenToUiPosition(pos);
 	const Vec2 &sz = GetSize();
+	Vec2 pui = display.ScreenToUiPosition(pos);
+	pui = GetAlignedPos(pui, -sz.x, -sz.y);
 	return
 		pui.x >= 0 && pui.x < sz.x &&
 		pui.y >= 0 && pui.y < sz.y;
