@@ -1,5 +1,5 @@
 
-// Button.cpp
+// ClickRegion.cpp
 //
 // Copyright (c) 2013 Michael Imamura.
 //
@@ -24,7 +24,7 @@
 #include "../Control/Action.h"
 #include "../Util/Log.h"
 
-#include "Button.h"
+#include "ClickRegion.h"
 
 namespace Log = HoverRace::Util::Log;
 
@@ -36,7 +36,7 @@ namespace Display {
  * @param display The display child elements will be attached to.
  * @param layoutFlags Optional layout flags.
  */
-Button::Button(Display &display, uiLayoutFlags_t layoutFlags) :
+ClickRegion::ClickRegion(Display &display, uiLayoutFlags_t layoutFlags) :
 	SUPER(layoutFlags), display(display),
 	size(0, 0), autoSize(true), needsSizing(true),
 	pressed(false)
@@ -49,18 +49,18 @@ Button::Button(Display &display, uiLayoutFlags_t layoutFlags) :
  * @param size The fixed button size.
  * @param layoutFlags Optional layout flags.
  */
-Button::Button(Display &display, const Vec2 &size, uiLayoutFlags_t layoutFlags) :
+ClickRegion::ClickRegion(Display &display, const Vec2 &size, uiLayoutFlags_t layoutFlags) :
 	SUPER(layoutFlags), display(display),
 	size(size), autoSize(false), needsSizing(false),
 	pressed(false)
 {
 }
 
-Button::~Button()
+ClickRegion::~ClickRegion()
 {
 }
 
-void Button::OnMouseMoved(const Vec2 &pos)
+void ClickRegion::OnMouseMoved(const Vec2 &pos)
 {
 	if (TestHit(pos)) {
 		//TODO: Set focus.
@@ -70,14 +70,14 @@ void Button::OnMouseMoved(const Vec2 &pos)
 	}
 }
 
-void Button::OnMousePressed(const Control::Mouse::Click &click)
+void ClickRegion::OnMousePressed(const Control::Mouse::Click &click)
 {
 	if (TestHit(click.pos)) {
 		SetPressed(true);
 	}
 }
 
-void Button::OnMouseReleased(const Control::Mouse::Click &click)
+void ClickRegion::OnMouseReleased(const Control::Mouse::Click &click)
 {
 	if (IsPressed() && TestHit(click.pos)) {
 		FireClickedSignal();
@@ -85,7 +85,7 @@ void Button::OnMouseReleased(const Control::Mouse::Click &click)
 	SetPressed(false);
 }
 
-void Button::FireClickedSignal()
+void ClickRegion::FireClickedSignal()
 {
 	clickedSignal(*this);
 }
@@ -96,7 +96,7 @@ void Button::FireClickedSignal()
  * immediately (the same caveats as calling Measure()).
  * @return The size, where @c x is the width and @c y is the height.
  */
-const Vec2 &Button::GetSize() const
+const Vec2 &ClickRegion::GetSize() const
 {
 	if (needsSizing) {
 		Vec3 calcSize = Measure();
@@ -113,7 +113,7 @@ const Vec2 &Button::GetSize() const
  *             and @c y is the height.
  * @see SetAutoSize()
  */
-void Button::SetSize(const Vec2 &size)
+void ClickRegion::SetSize(const Vec2 &size)
 {
 	if (this->size != size) {
 		this->size = size;
@@ -128,7 +128,7 @@ void Button::SetSize(const Vec2 &size)
  * The size of the button will be determined by the contents.
  * To set a fixed size, call SetSize(const Vec2&).
  */
-void Button::SetAutoSize()
+void ClickRegion::SetAutoSize()
 {
 	if (!autoSize) {
 		autoSize = true;
@@ -139,7 +139,7 @@ void Button::SetAutoSize()
 	}
 }
 
-void Button::SetPressed(bool pressed)
+void ClickRegion::SetPressed(bool pressed)
 {
 	if (this->pressed != pressed) {
 		this->pressed = pressed;
@@ -147,7 +147,7 @@ void Button::SetPressed(bool pressed)
 	}
 }
 
-bool Button::TestHit(const Vec2 &pos) const
+bool ClickRegion::TestHit(const Vec2 &pos) const
 {
 	const Vec2 &sz = GetSize();
 	const Vec2 pui = GetAlignedPos(display.ScreenToUiPosition(pos), -sz.x, -sz.y);

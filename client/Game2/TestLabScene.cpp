@@ -22,7 +22,7 @@
 #include "StdAfx.h"
 
 #include "../../engine/Control/Controller.h"
-#include "../../engine/Display/Button.h"
+#include "../../engine/Display/ClickRegion.h"
 #include "../../engine/Display/Container.h"
 #include "../../engine/Display/Display.h"
 #include "../../engine/Display/FillBox.h"
@@ -73,7 +73,7 @@ TestLabScene::TestLabScene(Display::Display &display) :
 	displayInfoLbl->SetAlignment(Alignment::CENTER);
 	OnDisplayConfigChanged();
 
-	displayInfoBtn = root->AddChild(new Display::Button(display, Display::Vec2(300, 200)));
+	displayInfoBtn = root->AddChild(new Display::ClickRegion(display, Display::Vec2(300, 200)));
 	displayInfoBtn->SetPos(640, 360);
 	displayInfoBtn->SetAlignment(Alignment::CENTER);
 	displayInfoClickedConn = displayInfoBtn->GetClickedSignal().connect(

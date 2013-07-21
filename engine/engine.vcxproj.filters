@@ -370,10 +370,10 @@
     <ClCompile Include="Display\SDL\SdlContainerView.cpp">
       <Filter>Display\SDL</Filter>
     </ClCompile>
-    <ClCompile Include="Display\Button.cpp">
+    <ClCompile Include="Display\ClickRegion.cpp">
       <Filter>Display</Filter>
     </ClCompile>
-    <ClCompile Include="Display\SDL\SdlButtonView.cpp">
+    <ClCompile Include="Display\SDL\SdlClickRegionView.cpp">
       <Filter>Display\SDL</Filter>
     </ClCompile>
   </ItemGroup>
@@ -770,10 +770,10 @@
     <ClInclude Include="Display\SDL\SdlContainerView.h">
       <Filter>Display\SDL</Filter>
     </ClInclude>
-    <ClInclude Include="Display\Button.h">
+    <ClInclude Include="Display\ClickRegion.h">
       <Filter>Display</Filter>
     </ClInclude>
-    <ClInclude Include="Display\SDL\SdlButtonView.h">
+    <ClInclude Include="Display\SDL\SdlClickRegionView.h">
       <Filter>Display\SDL</Filter>
     </ClInclude>
   </ItemGroup>

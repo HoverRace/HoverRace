@@ -27,7 +27,7 @@
 
 namespace HoverRace {
 	namespace Display {
-		class Button;
+		class ClickRegion;
 		class Display;
 		class FillBox;
 		class Label;
@@ -80,7 +80,7 @@ class TestLabScene : public FormScene
 		boost::signals2::connection displayInfoClickedConn;
 		std::shared_ptr<Display::FillBox> displayInfoBox;
 		std::shared_ptr<Display::Label> displayInfoLbl;
-		std::shared_ptr<Display::Button> displayInfoBtn;
+		std::shared_ptr<Display::ClickRegion> displayInfoBtn;
 		/// Temporary box to highlight displayInfoBtn click area.
 		std::shared_ptr<Display::FillBox> displayInfoBtnBox;
 };

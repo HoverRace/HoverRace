@@ -23,15 +23,15 @@
 
 #include <SDL2/SDL.h>
 
-#include "../Button.h"
+#include "../ClickRegion.h"
 
-#include "SdlButtonView.h"
+#include "SdlClickRegionView.h"
 
 namespace HoverRace {
 namespace Display {
 namespace SDL {
 
-Vec3 SdlButtonView::Measure()
+Vec3 SdlClickRegionView::Measure()
 {
 	return model.GetSize().Promote();
 }

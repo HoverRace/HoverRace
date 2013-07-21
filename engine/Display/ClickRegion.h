@@ -1,5 +1,5 @@
 
-// Button.h
+// ClickRegion.h
 //
 // Copyright (c) 2013 Michael Imamura.
 //
@@ -46,7 +46,7 @@ namespace Display {
  * Base class for clickable areas.
  * @author Michael Imamura
  */
-class MR_DllDeclare Button : public UiViewModel
+class MR_DllDeclare ClickRegion : public UiViewModel
 {
 	typedef UiViewModel SUPER;
 
@@ -62,9 +62,9 @@ class MR_DllDeclare Button : public UiViewModel
 		};
 
 	public:
-		Button(Display &display, uiLayoutFlags_t layoutFlags=0);
-		Button(Display &display, const Vec2 &size, uiLayoutFlags_t layoutFlags=0);
-		virtual ~Button();
+		ClickRegion(Display &display, uiLayoutFlags_t layoutFlags=0);
+		ClickRegion(Display &display, const Vec2 &size, uiLayoutFlags_t layoutFlags=0);
+		virtual ~ClickRegion();
 
 	public:
 		virtual void AttachView(Display &disp) { AttachViewDynamic(disp, this); }
@@ -75,7 +75,7 @@ class MR_DllDeclare Button : public UiViewModel
 		virtual void OnMouseReleased(const Control::Mouse::Click &click);
 
 	public:
-		typedef boost::signals2::signal<void(Button&)> clickedSignal_t;
+		typedef boost::signals2::signal<void(ClickRegion&)> clickedSignal_t;
 		clickedSignal_t &GetClickedSignal() { return clickedSignal; }
 	protected:
 		void FireClickedSignal();

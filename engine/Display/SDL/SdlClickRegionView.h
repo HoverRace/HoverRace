@@ -36,7 +36,7 @@
 
 namespace HoverRace {
 	namespace Display {
-		class Button;
+		class ClickRegion;
 	}
 }
 
@@ -48,13 +48,13 @@ namespace SDL {
  * SDL view for basic (invisible) button.
  * @author Michael Imamura
  */
-class MR_DllDeclare SdlButtonView : public SdlView<Button>
+class MR_DllDeclare SdlClickRegionView : public SdlView<ClickRegion>
 {
-	typedef SdlView<Button> SUPER;
+	typedef SdlView<ClickRegion> SUPER;
 	public:
-		SdlButtonView(SdlDisplay &disp, Button &model) :
+		SdlClickRegionView(SdlDisplay &disp, ClickRegion &model) :
 			SUPER(disp, model) { }
-		virtual ~SdlButtonView() { }
+		virtual ~SdlClickRegionView() { }
 
 	public:
 		virtual void OnModelUpdate(int prop) { }
