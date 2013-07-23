@@ -21,8 +21,6 @@
 
 #include "StdAfx.h"
 
-#include <SDL2/SDL.h>
-
 #include "../ClickRegion.h"
 
 #include "SdlClickRegionView.h"
