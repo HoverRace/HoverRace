@@ -1,5 +1,5 @@
 
-// SdlButtonView.cpp
+// SdlClickRegionView.cpp
 //
 // Copyright (c) 2013 Michael Imamura.
 //
