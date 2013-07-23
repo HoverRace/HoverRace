@@ -55,6 +55,10 @@ namespace Display {
 class MR_DllDeclare ViewModel
 {
 	public:
+		ViewModel() : needsLayout(true) { }
+		virtual ~ViewModel() { }
+
+	public:
 		virtual void AttachView(Display &disp) = 0;
 		void SetView(std::unique_ptr<View> &&view) { this->view = std::move(view); }
 		View *GetView() const { return view.get(); }
@@ -65,6 +69,26 @@ class MR_DllDeclare ViewModel
 		{
 			dynamic_cast<ViewAttacher<T>&>(disp).AttachView(*self);
 		}
+
+	protected:
+		/**
+		 * Indicate that the current layout is out-of-date and needs to be adjusted.
+		 * Subclasses should call this when a property changes that affects the
+		 * layout (such as the size).
+		 */
+		void RequestLayout() { needsLayout = true; }
+
+		/**
+		 * Adjust the size and position of any child elements.
+		 *
+		 * Subclasses with child elements should override this function.
+		 *
+		 * This is called automatically during the PrepareRender() phase if
+		 * RequestLayout() has been called.  It is also called the first time
+		 * PrepareRender() is invoked.  After this function is called, it
+		 * will not be called again until another call to RequestLayout().
+		 */
+		virtual void Layout() { }
 
 	public:
 		/**
@@ -78,7 +102,15 @@ class MR_DllDeclare ViewModel
 		 */
 		virtual Vec3 Measure() const { return view ? view->Measure() : Vec3(0, 0, 0); }
 
-		void PrepareRender() { if (view) view->PrepareRender(); }
+		void PrepareRender()
+		{
+			if (needsLayout) {
+				Layout();
+				needsLayout = false;
+			}
+			if (view) view->PrepareRender();
+		}
+
 		void Render() { if (view) view->Render(); }
 
 	protected:
@@ -90,6 +122,7 @@ class MR_DllDeclare ViewModel
 		void FireModelUpdate(int prop) { if (view) view->OnModelUpdate(prop); }
 
 	private:
+		bool needsLayout;
 		std::unique_ptr<View> view;
 };
 
