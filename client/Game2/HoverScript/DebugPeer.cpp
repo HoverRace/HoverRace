@@ -80,7 +80,7 @@ void DebugPeer::LShowPalette()
 
 void DebugPeer::LStartTestLab()
 {
-	gameDirector.RequestReplaceScene(std::make_shared<TestLabScene>(*gameDirector.GetDisplay()));
+	gameDirector.RequestReplaceScene(std::make_shared<TestLabScene>(*gameDirector.GetDisplay(), gameDirector));
 }
 
 }  // namespace HoverScript

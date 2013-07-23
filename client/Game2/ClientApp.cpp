@@ -337,7 +337,7 @@ void ClientApp::MainLoop()
 		NewLocalSession(rules);
 	}
 	else {
-		ReplaceScene(std::make_shared<TestLabScene>(*display));
+		ReplaceScene(std::make_shared<TestLabScene>(*display, *this));
 	}
 
 	Config::cfg_runtime_t &runtimeCfg = Config::GetInstance()->runtime;

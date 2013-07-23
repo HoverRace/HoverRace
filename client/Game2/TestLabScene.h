@@ -23,10 +23,13 @@
 
 #include "../../engine/Display/UiViewModel.h"
 
+#include "GameDirector.h"
+
 #include "FormScene.h"
 
 namespace HoverRace {
 	namespace Display {
+		class Button;
 		class ClickRegion;
 		class Display;
 		class FillBox;
@@ -46,7 +49,7 @@ class TestLabScene : public FormScene
 {
 	typedef FormScene SUPER;
 	public:
-		TestLabScene(Display::Display &display);
+		TestLabScene(Display::Display &display, GameDirector &director);
 		virtual ~TestLabScene();
 
 	private:
@@ -64,6 +67,7 @@ class TestLabScene : public FormScene
 	private:
 		void OnDisplayConfigChanged();
 		void OnDisplayInfoClicked();
+		void OnMessageClicked();
 
 	protected:
 		virtual void OnPhaseChanged(Phase::phase_t oldPhase);
@@ -75,14 +79,19 @@ class TestLabScene : public FormScene
 
 	private:
 		Display::Display &display;
+		GameDirector &director;
 		std::vector<std::unique_ptr<Display::ViewModel>> elems;
+
 		boost::signals2::connection displayConfigChangedConn;
 		boost::signals2::connection displayInfoClickedConn;
+		boost::signals2::connection messageClickedConn;
+
 		std::shared_ptr<Display::FillBox> displayInfoBox;
 		std::shared_ptr<Display::Label> displayInfoLbl;
 		std::shared_ptr<Display::ClickRegion> displayInfoBtn;
 		/// Temporary box to highlight displayInfoBtn click area.
 		std::shared_ptr<Display::FillBox> displayInfoBtnBox;
+		std::shared_ptr<Display::Button> messageBtn;
 };
 
 }  // namespace Client

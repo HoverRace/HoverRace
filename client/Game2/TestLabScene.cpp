@@ -22,6 +22,7 @@
 #include "StdAfx.h"
 
 #include "../../engine/Control/Controller.h"
+#include "../../engine/Display/Button.h"
 #include "../../engine/Display/ClickRegion.h"
 #include "../../engine/Display/Container.h"
 #include "../../engine/Display/Display.h"
@@ -33,6 +34,8 @@
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/Log.h"
 
+#include "MessageScene.h"
+
 #include "TestLabScene.h"
 
 using namespace HoverRace::Util;
@@ -40,9 +43,9 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace Client {
 
-TestLabScene::TestLabScene(Display::Display &display) :
+TestLabScene::TestLabScene(Display::Display &display, GameDirector &director) :
 	SUPER(display, "Test Lab"),
-	display(display)
+	display(display), director(director)
 {
 	typedef Display::UiViewModel::Alignment Alignment;
 
@@ -79,6 +82,12 @@ TestLabScene::TestLabScene(Display::Display &display) :
 	displayInfoClickedConn = displayInfoBtn->GetClickedSignal().connect(
 		std::bind(&TestLabScene::OnDisplayInfoClicked, this));
 
+	messageBtn = root->AddChild(new Display::Button(display, "Show Message"));
+	messageBtn->SetPos(640, 0);
+	messageBtn->SetAlignment(Alignment::N);
+	messageClickedConn = messageBtn->GetClickedSignal().connect(
+		std::bind(&TestLabScene::OnMessageClicked, this));
+
 	fillBox = root->AddChild(new Display::FillBox(100, 100, 0x7fff0000));
 	fillBox->SetPos(100, 20);
 	fillBox = root->AddChild(new Display::FillBox(100, 100, 0x7f00ff00));
@@ -102,6 +111,7 @@ TestLabScene::TestLabScene(Display::Display &display) :
 
 TestLabScene::~TestLabScene()
 {
+	messageClickedConn.disconnect();
 	displayInfoClickedConn.disconnect();
 	displayConfigChangedConn.disconnect();
 }
@@ -123,7 +133,6 @@ void TestLabScene::AddAlignmentTestElem(
 	lbl->SetPos(x, y);
 }
 
-
 void TestLabScene::OnDisplayConfigChanged()
 {
 	double uiScale = display.GetUiScale();
@@ -136,6 +145,12 @@ void TestLabScene::OnDisplayConfigChanged()
 void TestLabScene::OnDisplayInfoClicked()
 {
 	Log::Info("Display info clicked!");
+}
+
+void TestLabScene::OnMessageClicked()
+{
+	director.RequestPushScene(std::make_shared<MessageScene>(display, director,
+		"Test Lab", "Hello, world!"));
 }
 
 void TestLabScene::OnPhaseChanged(Phase::phase_t oldPhase)
