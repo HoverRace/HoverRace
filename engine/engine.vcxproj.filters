@@ -376,6 +376,12 @@
     <ClCompile Include="Display\SDL\SdlClickRegionView.cpp">
       <Filter>Display\SDL</Filter>
     </ClCompile>
+    <ClCompile Include="Display\Button.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
+    <ClCompile Include="Display\SDL\SdlButtonView.cpp">
+      <Filter>Display\SDL</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColorTools\ColorTools.h">
@@ -774,6 +780,12 @@
       <Filter>Display</Filter>
     </ClInclude>
     <ClInclude Include="Display\SDL\SdlClickRegionView.h">
+      <Filter>Display\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Display\Button.h">
+      <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="Display\SDL\SdlButtonView.h">
       <Filter>Display\SDL</Filter>
     </ClInclude>
   </ItemGroup>

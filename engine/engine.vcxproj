@@ -119,6 +119,7 @@
     <ClCompile Include="Control\ActionPerformers.cpp" />
     <ClCompile Include="Control\Controller.cpp" />
     <ClCompile Include="Control\ControllerStrings.cpp" />
+    <ClCompile Include="Display\Button.cpp" />
     <ClCompile Include="Display\ClickRegion.cpp" />
     <ClCompile Include="Display\Color.cpp" />
     <ClCompile Include="Display\Container.cpp" />
@@ -126,6 +127,7 @@
     <ClCompile Include="Display\FillBox.cpp" />
     <ClCompile Include="Display\Label.cpp" />
     <ClCompile Include="Display\ScreenFade.cpp" />
+    <ClCompile Include="Display\SDL\SdlButtonView.cpp" />
     <ClCompile Include="Display\SDL\SdlClickRegionView.cpp" />
     <ClCompile Include="Display\SDL\SdlContainerView.cpp" />
     <ClCompile Include="Display\SDL\SdlDisplay.cpp" />
@@ -236,6 +238,7 @@
     <ClInclude Include="Control\ControlAction.h" />
     <ClInclude Include="Control\Controller.h" />
     <ClInclude Include="Control\InputHandler.h" />
+    <ClInclude Include="Display\Button.h" />
     <ClInclude Include="Display\ClickRegion.h" />
     <ClInclude Include="Display\Color.h" />
     <ClInclude Include="Display\Container.h" />
@@ -243,6 +246,7 @@
     <ClInclude Include="Display\FillBox.h" />
     <ClInclude Include="Display\Label.h" />
     <ClInclude Include="Display\ScreenFade.h" />
+    <ClInclude Include="Display\SDL\SdlButtonView.h" />
     <ClInclude Include="Display\SDL\SdlClickRegionView.h" />
     <ClInclude Include="Display\SDL\SdlContainerView.h" />
     <ClInclude Include="Display\SDL\SdlDisplay.h" />

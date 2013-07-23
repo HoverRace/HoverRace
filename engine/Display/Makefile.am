@@ -3,6 +3,8 @@ noinst_LTLIBRARIES = libdisplay.la
 libdisplay_la_CPPFLAGS = -I.. $(HR_CPPFLAGS)
 libdisplay_la_CXXFLAGS = $(HR_CXXFLAGS)
 libdisplay_la_SOURCES = \
+	Button.cpp \
+	Button.h \
 	ClickRegion.cpp \
 	ClickRegion.h \
 	Color.cpp \
@@ -26,6 +28,8 @@ libdisplay_la_SOURCES = \
 	View.h \
 	ViewAttacher.h \
 	ViewModel.h \
+	SDL/SdlButtonView.cpp \
+	SDL/SdlButtonView.h \
 	SDL/SdlClickRegionView.cpp \
 	SDL/SdlClickRegionView.h \
 	SDL/SdlContainerView.cpp \

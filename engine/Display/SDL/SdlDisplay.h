@@ -65,6 +65,7 @@ class MR_DllDeclare SdlDisplay : public Display
 
 	public:
 		// ViewAttacher
+		virtual void AttachView(Button &model);
 		virtual void AttachView(ClickRegion &model);
 		virtual void AttachView(Container &model);
 		virtual void AttachView(FillBox &model);
