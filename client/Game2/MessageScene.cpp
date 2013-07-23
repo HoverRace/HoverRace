@@ -30,7 +30,7 @@
 
 #include "MessageScene.h"
 
-#define START_DURATION 500
+#define START_DURATION 200
 
 using namespace HoverRace::Util;
 
