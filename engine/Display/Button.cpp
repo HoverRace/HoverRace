@@ -23,7 +23,6 @@
 
 #include "../Control/Action.h"
 #include "../Util/Config.h"
-#include "../Util/Log.h"
 #include "UiFont.h"
 #include "FillBox.h"
 #include "Label.h"
@@ -91,8 +90,6 @@ void Button::Init(const std::string &text)
 
 void Button::Layout()
 {
-	Log::Info("Button layout!");
-
 	const Vec2 size = GetSize();
 	
 	background->SetSize(size);
