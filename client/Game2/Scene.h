@@ -98,10 +98,14 @@ class Scene
 		/**
 		 * Calculate how much time we've spent in the current phase.
 		 * @param curTime The current (or simulated) timestamp.
+		 * @return The duration. If @p curTime is before the start of the
+		 *         phase, then zero is returned.
 		 */
 		Util::OS::timestamp_t GetPhaseDuration(Util::OS::timestamp_t curTime=Util::OS::Time())
 		{
-			return Util::OS::TimeDiff(curTime, phaseTs);
+			return (curTime >= phaseTs) ?
+				Util::OS::TimeDiff(curTime, phaseTs) :
+				0;
 		}
 
 		/**
