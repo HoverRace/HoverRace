@@ -99,6 +99,8 @@ void SdlLabelView::PrepareRender()
 
 void SdlLabelView::Render()
 {
+	if (model.GetText().empty()) return;
+
 	int w, h;
 	SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
 	disp.DrawUiTexture(texture,
@@ -106,9 +108,69 @@ void SdlLabelView::Render()
 		model.GetLayoutFlags());
 }
 
+/**
+ * Update the state when the text is an empty string.
+ * In this case, we measure the height of the string, and set the width to be 1
+ * (to prevent accidental divisions by zero).
+ */
+void SdlLabelView::UpdateBlank()
+{
+	double scale = 1.0;
+
+#	ifdef WITH_SDL_PANGO
+		throw UnimplementedExn("SdlLabelView::UpdateBlank for SDL_Pango");
+
+#	elif defined(WITH_SDL_TTF)
+		throw UnimplementedExn("SdlLabelView::UpdateBlank for SDL_ttf");
+
+#	elif defined(_WIN32)
+		HDC hdc = CreateCompatibleDC(NULL);
+
+		UiFont font = model.GetFont();
+		if (!model.IsLayoutUnscaled()) {
+			font.size *= (scale = disp.GetUiScale());
+		}
+
+		HFONT stdFont = CreateFontW(
+			static_cast<int>(font.size),
+			0, 0, 0,
+			(font.style & UiFont::BOLD) ? FW_BOLD : FW_NORMAL,
+			(font.style & UiFont::ITALIC) ? TRUE : FALSE,
+			0, 0, 0, 0, 0,
+			ANTIALIASED_QUALITY,
+			0,
+			Str::UW(font.name));
+		HFONT oldFont = (HFONT)SelectObject(hdc, stdFont);
+
+		RECT sz;
+		memset(&sz, 0, sizeof(sz));
+		DrawTextW(hdc, L" ", 1, &sz, DT_CALCRECT | DT_NOPREFIX);
+		realWidth = width = 1;
+		realHeight = height = sz.bottom - sz.top;
+
+		SelectObject(hdc, oldFont);
+		DeleteObject(stdFont);
+
+		DeleteDC(hdc);
+
+#	else
+		throw UnimplementedExn("SdlLabelView::UpdateBlank");
+#	endif
+
+	unscaledWidth = width / scale;
+	unscaledHeight = height / scale;
+
+	UpdateTextureColor();
+}
+
 void SdlLabelView::UpdateTexture()
 {
 	if (texture) SDL_DestroyTexture(texture);
+
+	if (model.GetText().empty()) {
+		UpdateBlank();
+		return;
+	}
 
 	SDL_Surface *tempSurface;
 	double scale = 1.0;
@@ -266,7 +328,7 @@ void SdlLabelView::UpdateTexture()
 		DeleteDC(hdc);
 
 #	else
-		throw UnimplementedExn("SdlLabelView::Update");
+		throw UnimplementedExn("SdlLabelView::UpdateTexture");
 #	endif
 
 	// Convert the surface to the display format.
@@ -286,9 +348,11 @@ void SdlLabelView::UpdateTexture()
 
 void SdlLabelView::UpdateTextureColor()
 {
-	const Color cm = model.GetColor();
-	SDL_SetTextureColorMod(texture, cm.bits.r, cm.bits.g, cm.bits.b);
-	SDL_SetTextureAlphaMod(texture, cm.bits.a);
+	if (!model.GetText().empty()) {
+		const Color cm = model.GetColor();
+		SDL_SetTextureColorMod(texture, cm.bits.r, cm.bits.g, cm.bits.b);
+		SDL_SetTextureAlphaMod(texture, cm.bits.a);
+	}
 
 	colorChanged = false;
 }
