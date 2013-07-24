@@ -177,14 +177,14 @@ void SdlLabelView::UpdateTexture()
 	SDL_Surface *tempSurface;
 	double scale = 1.0;
 
+	UiFont font = model.GetFont();
+	if (!model.IsLayoutUnscaled()) {
+		font.size *= (scale = disp.GetUiScale());
+	}
+
 #	ifdef WITH_SDL_PANGO
 		const std::string &s = model.GetText();
 		char *escapedBuf = g_markup_escape_text(s.c_str(), -1);
-
-		UiFont font = model.GetFont();
-		if (!model.IsLayoutUnscaled()) {
-			font.size *= (scale = disp.GetUiScale());
-		}
 
 		std::ostringstream oss;
 		oss << SelFmt<SEL_FMT_PANGO> <<
@@ -214,11 +214,6 @@ void SdlLabelView::UpdateTexture()
 		SDLPango_Draw(ctx, tempSurface, 0, 0);
 
 #	elif defined(WITH_SDL_TTF)
-		UiFont font = model.GetFont();
-		if (!model.IsLayoutUnscaled()) {
-			font.size *= (scale = disp.GetUiScale());
-		}
-
 		TTF_Font *ttfFont = disp.LoadTtfFont(font);
 
 		//TODO: Handle newlines ourselves.
@@ -240,14 +235,10 @@ void SdlLabelView::UpdateTexture()
 		xform.eM22 = 0.01f;
 		SetWorldTransform(hdc, &xform);
 
-		const UiFont font = model.GetFont();
-		double fontSize = font.size * 100.0;
-		if (!model.IsLayoutUnscaled()) {
-			fontSize *= (scale = disp.GetUiScale());
-		}
+		font.size *= 100.0;
 
 		HFONT stdFont = CreateFontW(
-			static_cast<int>(fontSize),
+			static_cast<int>(font.size),
 			0, 0, 0,
 			(font.style & UiFont::BOLD) ? FW_BOLD : FW_NORMAL,
 			(font.style & UiFont::ITALIC) ? TRUE : FALSE,
