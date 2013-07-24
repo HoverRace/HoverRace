@@ -117,19 +117,21 @@ void SdlLabelView::UpdateBlank()
 {
 	double scale = 1.0;
 
+	UiFont font = model.GetFont();
+	if (!model.IsLayoutUnscaled()) {
+		font.size *= (scale = disp.GetUiScale());
+	}
+
 #	ifdef WITH_SDL_PANGO
 		throw UnimplementedExn("SdlLabelView::UpdateBlank for SDL_Pango");
 
 #	elif defined(WITH_SDL_TTF)
-		throw UnimplementedExn("SdlLabelView::UpdateBlank for SDL_ttf");
+		TTF_Font *ttfFont = disp.LoadTtfFont(font);
+		realWidth = width = 1;
+		realHeight = height = TTF_FontHeight(ttfFont);
 
 #	elif defined(_WIN32)
 		HDC hdc = CreateCompatibleDC(NULL);
-
-		UiFont font = model.GetFont();
-		if (!model.IsLayoutUnscaled()) {
-			font.size *= (scale = disp.GetUiScale());
-		}
 
 		HFONT stdFont = CreateFontW(
 			static_cast<int>(font.size),
