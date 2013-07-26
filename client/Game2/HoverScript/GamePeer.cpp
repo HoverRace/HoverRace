@@ -42,8 +42,8 @@ namespace HoverRace {
 namespace Client {
 namespace HoverScript {
 
-GamePeer::GamePeer(Script::Core *scripting, GameDirector *gameDirector) :
-	SUPER(scripting, "Game"), gameDirector(gameDirector), initialized(false),
+GamePeer::GamePeer(Script::Core *scripting, GameDirector &director) :
+	SUPER(scripting, "Game"), director(director), initialized(false),
 	onInit(scripting), onShutdown(scripting),
 	onSessionStart(scripting), onSessionEnd(scripting)
 {
@@ -267,7 +267,7 @@ void GamePeer::LShutdown()
 
 	VerifyInitialized();
 
-	gameDirector->RequestShutdown();
+	director.RequestShutdown();
 }
 
 }  // namespace HoverScript

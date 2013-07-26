@@ -128,7 +128,7 @@ ClientApp::ClientApp() :
 	// This allows the script to modify the configuration (e.g. for unit tests).
 	scripting = (new ClientScriptCore())->Reset();
 	debugPeer = new DebugPeer(scripting, *this);
-	gamePeer = new GamePeer(scripting, this);
+	gamePeer = new GamePeer(scripting, *this);
 	sysEnv = new SysEnv(scripting, debugPeer, gamePeer);
 	OS::path_t &initScript = cfg->runtime.initScript;
 	if (!initScript.empty()) {

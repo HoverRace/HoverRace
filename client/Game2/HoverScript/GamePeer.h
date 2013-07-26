@@ -55,7 +55,7 @@ namespace HoverScript {
 class GamePeer : public Script::Peer {
 	typedef Script::Peer SUPER;
 	public:
-		GamePeer(Script::Core *scripting, GameDirector *gameDirector);
+		GamePeer(Script::Core *scripting, GameDirector &director);
 		virtual ~GamePeer();
 
 	public:
@@ -95,7 +95,7 @@ class GamePeer : public Script::Peer {
 		void LShutdown();
 
 	private:
-		GameDirector *gameDirector;
+		GameDirector &director;
 		bool initialized;
 		Script::Handlers onInit;
 		Script::Handlers onShutdown;
