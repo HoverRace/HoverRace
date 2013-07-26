@@ -29,6 +29,7 @@
 
 #include "../../../engine/Script/Core.h"
 #include "../../../engine/Util/Config.h"
+#include "../ClientApp.h"
 #include "../GameDirector.h"
 #include "../Rulebook.h"
 #include "ConfigPeer.h"
@@ -123,20 +124,6 @@ void GamePeer::OnSessionEnd(SessionPeerPtr sessionPeer)
 {
 	luabind::object sessionObj(GetScripting()->GetState(), sessionPeer);
 	onSessionEnd.CallHandlers(sessionObj);
-}
-
-/**
- * Check if the last script execution requested a new session.
- * After this is called, subsequent calls will return @c NULL until a script
- * requests a new session.
- * @return @c NULL if no new session was requested, a pointer to the selected
- *         rules otherwise.
- */
-RulebookPtr GamePeer::RequestedNewSession()
-{
-	RulebookPtr retv;
-	retv.swap(deferredStart);
-	return retv;
 }
 
 void GamePeer::VerifyInitialized() const
@@ -247,15 +234,10 @@ void GamePeer::LStartPractice_R(const std::string &track, const luabind::object 
 
 	//TODO: Check that the track actually exists and throw an error otherwise.
 
-	// We can't safely start a new session while handlers are still executing
-	// since a new thread will be spawned which will likely also try to execute
-	// a script concurrently, leading to undefined behavior.
-	// So, instead we defer the actual spawning of the new session until after
-	// the handlers are finished.
-	deferredStart = std::make_shared<Rulebook>(
+	static_cast<ClientApp&>(director).NewLocalSession(std::make_shared<Rulebook>(
 		hasExtension ? track : (track + Config::TRACK_EXT),
 		laps,
-		0x7f);
+		0x7f));
 }
 
 void GamePeer::LShutdown()

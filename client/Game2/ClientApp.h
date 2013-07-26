@@ -124,8 +124,6 @@ class ClientApp : public GameDirector
 		HoverScript::SysConsole *sysConsole;
 		std::weak_ptr<HoverScript::ConsoleScene> consoleScene;
 
-		RulebookPtr requestedNewSession;
-
 		boost::signals2::connection consoleToggleConn;
 
 		// Stats counters.

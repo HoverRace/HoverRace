@@ -330,15 +330,8 @@ void ClientApp::MainLoop()
 	bool quit = false;
 	SDL_Event evt;
 
-	// Fire all on_init handlers and check if a new session was requested.
+	// Fire all on_init handlers.
 	gamePeer->OnInit();
-	RulebookPtr rules = gamePeer->RequestedNewSession();
-	if (rules != NULL) {
-		NewLocalSession(rules);
-	}
-	else {
-		ReplaceScene(std::make_shared<TestLabScene>(*display, *this));
-	}
 
 	Config::cfg_runtime_t &runtimeCfg = Config::GetInstance()->runtime;
 	if (!runtimeCfg.skipStartupWarning && runtimeCfg.initScript.empty()) {
@@ -410,7 +403,7 @@ void ClientApp::NewLocalSession(RulebookPtr rules)
 
 	//TODO: Prompt the user for a track name.
 	try {
-		ReplaceScene(std::make_shared<GameScene>(this, *display, scripting, gamePeer, rules));
+		RequestReplaceScene(std::make_shared<GameScene>(this, *display, scripting, gamePeer, rules));
 	}
 	catch (Parcel::ObjStreamExn&) {
 		throw;

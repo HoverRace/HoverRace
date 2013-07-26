@@ -67,8 +67,6 @@ class GamePeer : public Script::Peer {
 		void OnSessionStart(SessionPeerPtr sessionPeer);
 		void OnSessionEnd(SessionPeerPtr sessionPeer);
 
-		RulebookPtr RequestedNewSession();
-
 	protected:
 		void VerifyInitialized() const;
 
