@@ -23,6 +23,12 @@
 #pragma once
 
 namespace HoverRace {
+	namespace Client {
+		class Scene;
+		typedef std::shared_ptr<Scene> ScenePtr;
+		class Rulebook;
+		typedef std::shared_ptr<Rulebook> RulebookPtr;
+	}
 	namespace Control {
 		class InputEventController;
 	}
@@ -36,9 +42,6 @@ namespace HoverRace {
 
 namespace HoverRace {
 namespace Client {
-
-class Scene;
-typedef std::shared_ptr<Scene> ScenePtr;
 
 /**
  * Interface for game client shells.
@@ -69,6 +72,12 @@ class GameDirector
 		 * @param scene The scene to push.
 		 */
 		virtual void RequestReplaceScene(const ScenePtr &scene) = 0;
+
+		/**
+		 * Request a new local practice session.
+		 * @param rules The settings for the session.
+		 */
+		virtual void RequestNewPracticeSession(RulebookPtr rules=RulebookPtr()) = 0;
 
 		/**
 		 * Request an orderly shutdown the of app.

@@ -397,7 +397,7 @@ void ClientApp::MainLoop()
 	TerminateAllScenes();
 }
 
-void ClientApp::NewLocalSession(RulebookPtr rules)
+void ClientApp::RequestNewPracticeSession(RulebookPtr rules)
 {
 	//TODO: Confirm ending the current session.
 

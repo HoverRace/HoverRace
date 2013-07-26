@@ -29,7 +29,6 @@
 
 #include "../../../engine/Script/Core.h"
 #include "../../../engine/Util/Config.h"
-#include "../ClientApp.h"
 #include "../GameDirector.h"
 #include "../Rulebook.h"
 #include "ConfigPeer.h"
@@ -234,7 +233,7 @@ void GamePeer::LStartPractice_R(const std::string &track, const luabind::object 
 
 	//TODO: Check that the track actually exists and throw an error otherwise.
 
-	static_cast<ClientApp&>(director).NewLocalSession(std::make_shared<Rulebook>(
+	director.RequestNewPracticeSession(std::make_shared<Rulebook>(
 		hasExtension ? track : (track + Config::TRACK_EXT),
 		laps,
 		0x7f));
