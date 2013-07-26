@@ -119,7 +119,7 @@ class MR_DllDeclare ViewModel
 		 * If a view is attached, it will be notified.
 		 * @param prop The model-specific ID of the property that changed.
 		 */
-		void FireModelUpdate(int prop) { if (view) view->OnModelUpdate(prop); }
+		virtual void FireModelUpdate(int prop) { if (view) view->OnModelUpdate(prop); }
 
 	private:
 		bool needsLayout;
