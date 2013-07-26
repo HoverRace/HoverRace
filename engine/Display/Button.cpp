@@ -112,5 +112,15 @@ Vec3 Button::Measure() const
 	}
 }
 
+void Button::FireModelUpdate(int prop)
+{
+	switch (prop) {
+		case SUPER::Props::SIZE:
+		case SUPER::Props::PRESSED:
+			RequestLayout();
+	}
+	SUPER::FireModelUpdate(prop);
+}
+
 }  // namespace Display
 }  // namespace HoverRace

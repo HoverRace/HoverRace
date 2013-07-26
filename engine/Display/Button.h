@@ -83,6 +83,7 @@ class MR_DllDeclare Button : public ClickRegion
 
 	public:
 		virtual Vec3 Measure() const;
+		virtual void FireModelUpdate(int prop);
 
 	private:
 		Display &display;
