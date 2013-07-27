@@ -202,6 +202,7 @@ ClientApp::~ClientApp()
 	delete sysConsole;
 	delete sysEnv;
 	delete gamePeer;
+	delete debugPeer;
 	delete scripting;
 	delete display;
 	delete controller;
