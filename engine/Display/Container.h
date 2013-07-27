@@ -80,10 +80,40 @@ class MR_DllDeclare Container : public UiViewModel
 			return sharedChild;
 		}
 
+	private:
+		template<typename P, bool(UiViewModel::*F)(P)>
+		bool PropagateMouseEvent(P param)
+		{
+			if (children.empty()) return false;
+
+			// We iterate over the child widgets in reverse since the widgets
+			// are rendered back to front, so we let the ones in front get
+			// first chance to handle the envents.
+
+			Vec2 oldOrigin(0, 0);
+			BOOST_REVERSE_FOREACH(auto &child, children) {
+				oldOrigin = display.AddUiOrigin(child->GetPos());
+				bool retv = (child.get()->*F)(param);
+				display.SetUiOrigin(oldOrigin);
+				if (retv) return true;
+			}
+
+			return false;
+		}
+		
 	public:
-		virtual bool OnMouseMoved(const Vec2 &pos);
-		virtual bool OnMousePressed(const Control::Mouse::Click &click);
-		virtual bool OnMouseReleased(const Control::Mouse::Click &click);
+		virtual bool OnMouseMoved(const Vec2 &pos)
+		{
+			return PropagateMouseEvent<const Vec2&, &UiViewModel::OnMouseMoved>(pos);
+		}
+		virtual bool OnMousePressed(const Control::Mouse::Click &click)
+		{
+			return PropagateMouseEvent<const Control::Mouse::Click&, &UiViewModel::OnMousePressed>(click);
+		}
+		virtual bool OnMouseReleased(const Control::Mouse::Click &click)
+		{
+			return PropagateMouseEvent<const Control::Mouse::Click&, &UiViewModel::OnMouseReleased>(click);
+		}
 
 	public:
 		/**

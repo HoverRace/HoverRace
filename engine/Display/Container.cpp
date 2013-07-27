@@ -49,51 +49,6 @@ Container::Container(Display &display, const Vec2 &size, bool clip,
 {
 }
 
-bool Container::OnMouseMoved(const Vec2 &pos)
-{
-	if (children.empty()) return false;
-
-	Vec2 oldOrigin(0, 0);
-	BOOST_REVERSE_FOREACH(auto &child, children) {
-		oldOrigin = display.AddUiOrigin(child->GetPos());
-		bool retv = child->OnMouseMoved(pos);
-		display.SetUiOrigin(oldOrigin);
-		if (retv) return true;
-	}
-
-	return false;
-}
-
-bool Container::OnMousePressed(const Control::Mouse::Click &click)
-{
-	if (children.empty()) return false;
-
-	Vec2 oldOrigin(0, 0);
-	BOOST_REVERSE_FOREACH(auto &child, children) {
-		oldOrigin = display.AddUiOrigin(child->GetPos());
-		bool retv = child->OnMousePressed(click);
-		display.SetUiOrigin(oldOrigin);
-		if (retv) return true;
-	}
-
-	return false;
-}
-
-bool Container::OnMouseReleased(const Control::Mouse::Click &click)
-{
-	if (children.empty()) return false;
-
-	Vec2 oldOrigin(0, 0);
-	BOOST_REVERSE_FOREACH(auto &child, children) {
-		oldOrigin = display.AddUiOrigin(child->GetPos());
-		bool retv = child->OnMouseReleased(click);
-		display.SetUiOrigin(oldOrigin);
-		if (retv) return true;
-	}
-
-	return false;
-}
-
 /**
  * Set the size of the container.
  * @param size The size of the container, where @c x is the width
