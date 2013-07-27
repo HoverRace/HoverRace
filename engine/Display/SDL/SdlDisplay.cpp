@@ -136,7 +136,7 @@ SdlDisplay::SdlDisplay(const std::string &windowTitle) :
 SdlDisplay::~SdlDisplay()
 {
 	delete legacyDisplay;
-	
+
 #	ifdef WITH_SDL_PANGO
 		if (pangoContext) SDLPango_FreeContext(pangoContext);
 #	elif defined(WITH_SDL_TTF)
@@ -205,6 +205,9 @@ void SdlDisplay::OnDisplayConfigChanged()
 #		ifdef WITH_SDL_TTF
 			// Clear the loaded font cache, since resizing will change the
 			// sizes of the UI-scaled text.
+			BOOST_FOREACH(auto &entry, loadedFonts) {
+				TTF_CloseFont(entry.second);
+			}
 			loadedFonts.clear();
 #		endif
 
