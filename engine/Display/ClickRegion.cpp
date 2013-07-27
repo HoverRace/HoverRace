@@ -60,29 +60,40 @@ ClickRegion::~ClickRegion()
 {
 }
 
-void ClickRegion::OnMouseMoved(const Vec2 &pos)
+bool ClickRegion::OnMouseMoved(const Vec2 &pos)
 {
 	if (IsEnabled() && TestHit(pos)) {
 		//TODO: Set focus.
+		return true;
 	}
 	else {
 		//TODO: Unset focus.
+		return false;
 	}
 }
 
-void ClickRegion::OnMousePressed(const Control::Mouse::Click &click)
+bool ClickRegion::OnMousePressed(const Control::Mouse::Click &click)
 {
 	if (IsEnabled() && TestHit(click.pos)) {
 		SetPressed(true);
+		return true;
+	}
+	else {
+		return false;
 	}
 }
 
-void ClickRegion::OnMouseReleased(const Control::Mouse::Click &click)
+bool ClickRegion::OnMouseReleased(const Control::Mouse::Click &click)
 {
+	bool retv = false;
+
 	if (IsPressed() && TestHit(click.pos)) {
 		FireClickedSignal();
+		retv = true;
 	}
 	SetPressed(false);
+
+	return retv;
 }
 
 void ClickRegion::FireClickedSignal()

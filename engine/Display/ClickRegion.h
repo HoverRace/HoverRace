@@ -71,9 +71,9 @@ class MR_DllDeclare ClickRegion : public UiViewModel
 		virtual void AttachView(Display &disp) { AttachViewDynamic(disp, this); }
 
 	public:
-		virtual void OnMouseMoved(const Vec2 &pos);
-		virtual void OnMousePressed(const Control::Mouse::Click &click);
-		virtual void OnMouseReleased(const Control::Mouse::Click &click);
+		virtual bool OnMouseMoved(const Vec2 &pos);
+		virtual bool OnMousePressed(const Control::Mouse::Click &click);
+		virtual bool OnMouseReleased(const Control::Mouse::Click &click);
 
 	public:
 		typedef boost::signals2::signal<void(ClickRegion&)> clickedSignal_t;

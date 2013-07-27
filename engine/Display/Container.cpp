@@ -49,40 +49,49 @@ Container::Container(Display &display, const Vec2 &size, bool clip,
 {
 }
 
-void Container::OnMouseMoved(const Vec2 &pos)
+bool Container::OnMouseMoved(const Vec2 &pos)
 {
-	if (children.empty()) return;
+	if (children.empty()) return false;
 
 	Vec2 oldOrigin(0, 0);
-	BOOST_FOREACH(auto &child, children) {
+	BOOST_REVERSE_FOREACH(auto &child, children) {
 		oldOrigin = display.AddUiOrigin(child->GetPos());
-		child->OnMouseMoved(pos);
+		bool retv = child->OnMouseMoved(pos);
 		display.SetUiOrigin(oldOrigin);
+		if (retv) return true;
 	}
+
+	return false;
 }
 
-void Container::OnMousePressed(const Control::Mouse::Click &click)
+bool Container::OnMousePressed(const Control::Mouse::Click &click)
 {
-	if (children.empty()) return;
+	if (children.empty()) return false;
 
 	Vec2 oldOrigin(0, 0);
-	BOOST_FOREACH(auto &child, children) {
+	BOOST_REVERSE_FOREACH(auto &child, children) {
 		oldOrigin = display.AddUiOrigin(child->GetPos());
-		child->OnMousePressed(click);
+		bool retv = child->OnMousePressed(click);
 		display.SetUiOrigin(oldOrigin);
+		if (retv) return true;
 	}
+
+	return false;
 }
 
-void Container::OnMouseReleased(const Control::Mouse::Click &click)
+bool Container::OnMouseReleased(const Control::Mouse::Click &click)
 {
-	if (children.empty()) return;
+	if (children.empty()) return false;
 
 	Vec2 oldOrigin(0, 0);
-	BOOST_FOREACH(auto &child, children) {
+	BOOST_REVERSE_FOREACH(auto &child, children) {
 		oldOrigin = display.AddUiOrigin(child->GetPos());
-		child->OnMouseReleased(click);
+		bool retv = child->OnMouseReleased(click);
 		display.SetUiOrigin(oldOrigin);
+		if (retv) return true;
 	}
+
+	return false;
 }
 
 /**
