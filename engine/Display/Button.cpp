@@ -95,15 +95,23 @@ void Button::Layout()
 	background->SetSize(size);
 
 	// Move label to center.
-	label->SetPos(size.x / 2.0, size.y / 2.0);
+	double midX = size.x / 2.0;
+	double midY = size.y / 2.0;
 
 	if (!IsEnabled()) {
 		background->SetColor(0x3f7f7f7f);
 		label->SetColor(0x7fffffff);
+		label->SetPos(midX, midY);
+	}
+	else if (IsPressed()) {
+		background->SetColor(0x7f00007f);
+		label->SetColor(0xffffffff);
+		label->SetPos(midX, midY + 4.0);
 	}
 	else {
 		background->SetColor(0x3f00007f);
 		label->SetColor(0xffffffff);
+		label->SetPos(midX, midY);
 	}
 }
 
