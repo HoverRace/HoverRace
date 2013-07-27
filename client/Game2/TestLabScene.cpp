@@ -58,6 +58,7 @@ TestLabScene::TestLabScene(Display::Display &display, GameDirector &director) :
 	// Clear the screen on every frame.
 	AddElem(new Display::ScreenFade(Display::COLOR_BLACK, 1.0));
 
+	std::shared_ptr<Display::Button> btn;
 	std::shared_ptr<Display::FillBox> fillBox;
 	std::shared_ptr<Display::Label> lbl;
 
@@ -87,6 +88,13 @@ TestLabScene::TestLabScene(Display::Display &display, GameDirector &director) :
 	messageBtn->SetAlignment(Alignment::N);
 	messageClickedConn = messageBtn->GetClickedSignal().connect(
 		std::bind(&TestLabScene::OnMessageClicked, this));
+
+	btn = root->AddChild(new Display::Button(display, "Disabled Button"));
+	btn->SetEnabled(false);
+	btn->SetPos(640, 60);
+	btn->SetAlignment(Alignment::N);
+	btn->GetClickedSignal().connect(
+		[](Display::ClickRegion&) { Log::Error("Clicked on disabled button :("); });
 
 	fillBox = root->AddChild(new Display::FillBox(100, 100, 0x7fff0000));
 	fillBox->SetPos(100, 20);

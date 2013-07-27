@@ -56,6 +56,7 @@ class MR_DllDeclare ClickRegion : public UiViewModel
 			enum {
 				/// Fired when a fixed size is set or auto-sizing is enabled.
 				SIZE = SUPER::Props::NEXT_,
+				ENABLED,
 				PRESSED,
 				NEXT_,  ///< First index for subclasses.
 			};
@@ -94,6 +95,14 @@ class MR_DllDeclare ClickRegion : public UiViewModel
 		bool IsAutoSize() const { return autoSize; }
 		void SetAutoSize();
 
+		/**
+		 * Check if the widget is enabled.
+		 * Disabled widgets are visible but not clickable or focusable.
+		 * @return @c true if enabled, @c false if disabled.
+		 */
+		bool IsEnabled() const { return enabled; }
+		void SetEnabled(bool enabled);
+
 	protected:
 		bool IsPressed() const { return pressed; }
 		void SetPressed(bool pressed);
@@ -109,6 +118,7 @@ class MR_DllDeclare ClickRegion : public UiViewModel
 		mutable Vec2 size;
 		bool autoSize;
 		mutable bool needsSizing;
+		bool enabled;
 		bool pressed;
 		clickedSignal_t clickedSignal;
 };

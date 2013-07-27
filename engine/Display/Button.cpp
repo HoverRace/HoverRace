@@ -96,6 +96,15 @@ void Button::Layout()
 
 	// Move label to center.
 	label->SetPos(size.x / 2.0, size.y / 2.0);
+
+	if (!IsEnabled()) {
+		background->SetColor(0x3f7f7f7f);
+		label->SetColor(0x7fffffff);
+	}
+	else {
+		background->SetColor(0x3f00007f);
+		label->SetColor(0xffffffff);
+	}
 }
 
 Vec3 Button::Measure() const
@@ -116,6 +125,7 @@ void Button::FireModelUpdate(int prop)
 {
 	switch (prop) {
 		case SUPER::Props::SIZE:
+		case SUPER::Props::ENABLED:
 		case SUPER::Props::PRESSED:
 			RequestLayout();
 	}

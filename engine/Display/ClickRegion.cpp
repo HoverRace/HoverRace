@@ -62,7 +62,7 @@ ClickRegion::~ClickRegion()
 
 void ClickRegion::OnMouseMoved(const Vec2 &pos)
 {
-	if (TestHit(pos)) {
+	if (IsEnabled() && TestHit(pos)) {
 		//TODO: Set focus.
 	}
 	else {
@@ -72,7 +72,7 @@ void ClickRegion::OnMouseMoved(const Vec2 &pos)
 
 void ClickRegion::OnMousePressed(const Control::Mouse::Click &click)
 {
-	if (TestHit(click.pos)) {
+	if (IsEnabled() && TestHit(click.pos)) {
 		SetPressed(true);
 	}
 }
@@ -144,6 +144,20 @@ void ClickRegion::SetPressed(bool pressed)
 	if (this->pressed != pressed) {
 		this->pressed = pressed;
 		FireModelUpdate(Props::PRESSED);
+	}
+}
+
+void ClickRegion::SetEnabled(bool enabled)
+{
+	if (this->enabled != enabled) {
+		this->enabled = enabled;
+		FireModelUpdate(Props::ENABLED);
+
+		// Change back to unpressed and unfocused if disabled.
+		if (!enabled) {
+			SetPressed(false);
+			//TODO: Unset focus.
+		}
 	}
 }
 
