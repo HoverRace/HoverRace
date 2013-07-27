@@ -39,7 +39,7 @@ namespace Display {
 ClickRegion::ClickRegion(Display &display, uiLayoutFlags_t layoutFlags) :
 	SUPER(layoutFlags), display(display),
 	size(0, 0), autoSize(true), needsSizing(true),
-	pressed(false)
+	enabled(true), pressed(false)
 {
 }
 
@@ -52,7 +52,7 @@ ClickRegion::ClickRegion(Display &display, uiLayoutFlags_t layoutFlags) :
 ClickRegion::ClickRegion(Display &display, const Vec2 &size, uiLayoutFlags_t layoutFlags) :
 	SUPER(layoutFlags), display(display),
 	size(size), autoSize(false), needsSizing(false),
-	pressed(false)
+	enabled(true), pressed(false)
 {
 }
 
