@@ -80,13 +80,13 @@ TestLabScene::TestLabScene(Display::Display &display, GameDirector &director) :
 	displayInfoBtn = root->AddChild(new Display::ClickRegion(display, Display::Vec2(300, 200)));
 	displayInfoBtn->SetPos(640, 360);
 	displayInfoBtn->SetAlignment(Alignment::CENTER);
-	displayInfoClickedConn = displayInfoBtn->GetClickedSignal().connect(
+	displayInfoBtn->GetClickedSignal().connect(
 		std::bind(&TestLabScene::OnDisplayInfoClicked, this));
 
 	messageBtn = root->AddChild(new Display::Button(display, "Show Message"));
 	messageBtn->SetPos(640, 0);
 	messageBtn->SetAlignment(Alignment::N);
-	messageClickedConn = messageBtn->GetClickedSignal().connect(
+	messageBtn->GetClickedSignal().connect(
 		std::bind(&TestLabScene::OnMessageClicked, this));
 
 	btn = root->AddChild(new Display::Button(display, "Disabled Button"));
@@ -119,9 +119,6 @@ TestLabScene::TestLabScene(Display::Display &display, GameDirector &director) :
 
 TestLabScene::~TestLabScene()
 {
-	messageClickedConn.disconnect();
-	displayInfoClickedConn.disconnect();
-	displayConfigChangedConn.disconnect();
 }
 
 void TestLabScene::AddAlignmentTestElem(

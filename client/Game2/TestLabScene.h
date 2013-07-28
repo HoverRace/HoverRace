@@ -82,9 +82,7 @@ class TestLabScene : public FormScene
 		GameDirector &director;
 		std::vector<std::unique_ptr<Display::ViewModel>> elems;
 
-		boost::signals2::connection displayConfigChangedConn;
-		boost::signals2::connection displayInfoClickedConn;
-		boost::signals2::connection messageClickedConn;
+		boost::signals2::scoped_connection displayConfigChangedConn;
 
 		std::shared_ptr<Display::FillBox> displayInfoBox;
 		std::shared_ptr<Display::Label> displayInfoLbl;
