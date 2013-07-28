@@ -30,7 +30,6 @@
 namespace HoverRace {
 	namespace Display {
 		class Button;
-		class ClickRegion;
 		class Display;
 		class FillBox;
 		class Label;
@@ -66,7 +65,6 @@ class TestLabScene : public FormScene
 
 	private:
 		void OnDisplayConfigChanged();
-		void OnDisplayInfoClicked();
 		void OnMessageClicked();
 
 	protected:
@@ -86,9 +84,6 @@ class TestLabScene : public FormScene
 
 		std::shared_ptr<Display::FillBox> displayInfoBox;
 		std::shared_ptr<Display::Label> displayInfoLbl;
-		std::shared_ptr<Display::ClickRegion> displayInfoBtn;
-		/// Temporary box to highlight displayInfoBtn click area.
-		std::shared_ptr<Display::FillBox> displayInfoBtnBox;
 		std::shared_ptr<Display::Button> messageBtn;
 };
 
