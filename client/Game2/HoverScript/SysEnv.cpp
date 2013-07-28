@@ -43,7 +43,7 @@ namespace Str = HoverRace::Util::Str;
 using HoverRace::Util::OS;
 
 namespace {
-	class LogStreamBuf : public std::stringbuf
+	class LogStreamBuf : public std::stringbuf /*{{{*/
 	{
 		typedef std::stringbuf SUPER;
 		public:
@@ -64,15 +64,15 @@ namespace {
 				str(std::string());
 				return 0;
 			}
-	};
+	}; //}}}
 
-	class LogStream : public std::ostream
+	class LogStream : public std::ostream /*{{{*/
 	{
 		typedef std::ostream SUPER;
 		public:
 			LogStream() : SUPER(new LogStreamBuf()) { }
 			virtual ~LogStream() { delete rdbuf(); }
-	};
+	}; //}}}
 }
 
 namespace HoverRace {
@@ -141,7 +141,7 @@ void SysEnv::RunScript(const OS::path_t &filename)
 				Str::PU(scriptPath)));
 		return;
 	}
-	
+
 	std::string chunkName("@");
 	chunkName += (const char*)Str::PU(scriptPath);
 

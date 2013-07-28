@@ -34,7 +34,7 @@ namespace HoverScript {
 
 // Stream bits to redirect output to the console log.
 
-class Console::LogStreamBuf : public std::stringbuf
+class Console::LogStreamBuf : public std::stringbuf /*{{{*/
 {
 	typedef std::stringbuf SUPER;
 	public:
@@ -46,16 +46,16 @@ class Console::LogStreamBuf : public std::stringbuf
 
 	private:
 		Console *console;
-};
+}; //}}}
 
-class Console::LogStream : public std::ostream
+class Console::LogStream : public std::ostream /*{{{*/
 {
 	typedef std::ostream SUPER;
 	public:
 		LogStream(Console *console) :
 			SUPER(new LogStreamBuf(console)) { }
 		virtual ~LogStream() { delete rdbuf(); }
-};
+}; //}}}
 
 Console::Console(Script::Core *scripting) :
 	SUPER(scripting), Script::Help::HelpHandler(),
@@ -168,7 +168,7 @@ int Console::LSandbox(lua_State *state)
 }
 */
 
-// Console::LogStreamBuf
+//{{{ Console::LogStreamBuf ////////////////////////////////////////////////////
 
 Console::LogStreamBuf::LogStreamBuf(Console *console) :
 	SUPER(), console(console)
@@ -205,6 +205,8 @@ int Console::LogStreamBuf::sync()
 
 	return 0;
 }
+
+//}}} Console::LogStreamBuf
 
 }  // namespace HoverScript
 }  // namespace Client

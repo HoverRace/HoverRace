@@ -42,7 +42,7 @@ namespace {
 	static const std::string CONTINUE_PROMPT(":> ");
 }
 
-class ConsoleScene::LogLines
+class ConsoleScene::LogLines /*{{{*/
 {
 	public:
 		LogLines(Display::Display &display, const Display::Vec2 &charSize);
@@ -70,7 +70,7 @@ class ConsoleScene::LogLines
 		unsigned int num;
 
 		static const int MAX_LINES = 100;
-};
+}; //}}}
 
 ConsoleScene::ConsoleScene(Display::Display &display, GameDirector &director,
                            SysConsole &console) :
@@ -379,7 +379,7 @@ void ConsoleScene::Render()
 	logLines->Render();
 }
 
-// LogLines ////////////////////////////////////////////////////////////////////
+//{{{ ConsoleScene::LogLines ///////////////////////////////////////////////////
 
 ConsoleScene::LogLines::LogLines(Display::Display &display,
                                  const Display::Vec2 &charSize) :
@@ -474,6 +474,8 @@ void ConsoleScene::LogLines::Render()
 		(*iter)->Render();
 	}
 }
+
+//}}} ConsoleScene::LogLines
 
 }  // namespace HoverScript
 }  // namespace Client

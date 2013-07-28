@@ -35,9 +35,7 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace Parcel {
 
-// ClassicRecordFileHeader
-
-class ClassicRecordFileHeader : public Util::Inspectable
+class ClassicRecordFileHeader : public Util::Inspectable /*{{{*/
 {
 	typedef Util::Inspectable SUPER;
 	public:
@@ -137,6 +135,8 @@ void ClassicRecordFileHeader::Inspect(Util::InspectMapNode &node) const
 		AddField("recordsMax", recordsMax).
 		AddArray("recordList", recordList, 0, recordsMax);
 }
+
+//}}} ClassicRecordFileHeader
 
 // ClassicRecordFile
 
