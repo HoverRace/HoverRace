@@ -25,7 +25,7 @@
 
 #include "GameDirector.h"
 
-#include "UiScene.h"
+#include "FormScene.h"
 
 namespace HoverRace {
 	namespace Display {
@@ -42,9 +42,9 @@ namespace Client {
  * Displays a message to the user.
  * @author Michael Imamura
  */
-class MessageScene : public UiScene
+class MessageScene : public FormScene
 {
-	typedef UiScene SUPER;
+	typedef FormScene SUPER;
 	public:
 		MessageScene(Display::Display &display, GameDirector &director,
 			const std::string &title, const std::string &message);
@@ -59,6 +59,7 @@ class MessageScene : public UiScene
 		virtual void AttachController(Control::InputEventController &controller);
 		virtual void DetachController(Control::InputEventController &controller);
 		virtual void Advance(Util::OS::timestamp_t tick);
+		virtual void Layout();
 		virtual void PrepareRender();
 		virtual void Render();
 
@@ -66,10 +67,10 @@ class MessageScene : public UiScene
 		Display::Display &display;
 		GameDirector &director;
 
-		Display::ScreenFade *fader;
-		Display::Label *titleLbl;
-		Display::Label *messageLbl;
-		Display::Label *controlsLbl;
+		std::unique_ptr<Display::ScreenFade> fader;
+		std::shared_ptr<Display::Label> titleLbl;
+		std::shared_ptr<Display::Label> messageLbl;
+		std::shared_ptr<Display::Label> controlsLbl;
 
 		boost::signals2::connection okConn;
 		boost::signals2::connection cancelConn;

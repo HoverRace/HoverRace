@@ -22,6 +22,7 @@
 #include "StdAfx.h"
 
 #include "../../engine/Control/Controller.h"
+#include "../../engine/Display/Container.h"
 #include "../../engine/Display/Display.h"
 #include "../../engine/Display/Label.h"
 #include "../../engine/Display/ScreenFade.h"
@@ -41,37 +42,32 @@ MessageScene::MessageScene(Display::Display &display,
                            GameDirector &director,
                            const std::string &title,
                            const std::string &message) :
-	SUPER("Messsage (" + title + ")"),
+	SUPER(display, "Messsage (" + title + ")"),
 	display(display), director(director)
 {
 	Config *cfg = Config::GetInstance();
 
-	fader = new Display::ScreenFade(0xcc000000, 0.0);
+	fader.reset(new Display::ScreenFade(0xcc000000, 0.0));
 	fader->AttachView(display);
 
 	std::string fontName = cfg->GetDefaultFontName();
 
-	titleLbl = new Display::Label(title,
+	Display::Container *root = GetRoot();
+
+	titleLbl = root->AddChild(new Display::Label(title,
 		Display::UiFont(fontName, 40, Display::UiFont::BOLD),
-		Display::COLOR_WHITE);
-	titleLbl->AttachView(display);
+		Display::COLOR_WHITE));
 
-	messageLbl = new Display::Label(message,
-		Display::UiFont(fontName, 20), 0xffbfbfbf);
-	messageLbl->AttachView(display);
+	messageLbl = root->AddChild(new Display::Label(message,
+		Display::UiFont(fontName, 20), 0xffbfbfbf));
 
-	controlsLbl = new Display::Label("",
+	controlsLbl = root->AddChild(new Display::Label("",
 		Display::UiFont(fontName, 20, Display::UiFont::BOLD),
-		Display::COLOR_WHITE);
-	controlsLbl->AttachView(display);
+		Display::COLOR_WHITE));
 }
 
 MessageScene::~MessageScene()
 {
-	delete controlsLbl;
-	delete messageLbl;
-	delete titleLbl;
-	delete fader;
 }
 
 void MessageScene::OnOk()
@@ -142,30 +138,30 @@ void MessageScene::Advance(Util::OS::timestamp_t tick)
 	}
 }
 
-void MessageScene::PrepareRender()
+void MessageScene::Layout()
 {
-	//TODO: Only update positions when screen size changes.
 	Config::cfg_video_t &vidCfg = Config::GetInstance()->video;
 
 	int leftMargin = vidCfg.xRes / 50;
 	int centerH = vidCfg.yRes / 2;
-	titleLbl->SetPos(Display::Vec2(leftMargin, centerH - 50));
-	messageLbl->SetPos(Display::Vec2(leftMargin, centerH));
-	controlsLbl->SetPos(Display::Vec2(leftMargin, vidCfg.yRes * 3 / 4));
+	titleLbl->SetPos(leftMargin, centerH - 50);
+	messageLbl->SetPos(leftMargin, centerH);
+	controlsLbl->SetPos(leftMargin, vidCfg.yRes * 3 / 4);
+}
 
+void MessageScene::PrepareRender()
+{
 	fader->PrepareRender();
-	titleLbl->PrepareRender();
-	messageLbl->PrepareRender();
-	controlsLbl->PrepareRender();
+
+	SUPER::PrepareRender();
 }
 
 void MessageScene::Render()
 {
 	fader->Render();
+
 	if (GetPhase() != Phase::STOPPING) {
-		titleLbl->Render();
-		messageLbl->Render();
-		controlsLbl->Render();
+		SUPER::Render();
 	}
 }
 
