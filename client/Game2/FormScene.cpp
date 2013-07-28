@@ -81,11 +81,15 @@ void FormScene::OnMouseReleased(const Control::Mouse::Click &click)
 
 void FormScene::PrepareRender()
 {
+	SUPER::PrepareRender();
+
 	root->PrepareRender();
 }
 
 void FormScene::Render()
 {
+	SUPER::Render();
+
 	root->Render();
 }
 

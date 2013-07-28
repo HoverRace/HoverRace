@@ -34,7 +34,8 @@ class UiScene : public Scene
 {
 	typedef Scene SUPER;
 	public:
-		UiScene(const std::string &name="") : SUPER(name) { }
+		UiScene(const std::string &name="") :
+			SUPER(name), needsLayout(true) { }
 		virtual ~UiScene() { }
 
 	public:
@@ -43,6 +44,41 @@ class UiScene : public Scene
 	public:
 		virtual void AttachController(Control::InputEventController &controller);
 		virtual void DetachController(Control::InputEventController &controller);
+
+	protected:
+		/**
+		 * Indicate that the current layout is out-of-date and needs to be adjusted.
+		 * Subclasses should call this when a property changes that affects the
+		 * layout (such as the size).
+		 */
+		void RequestLayout() { needsLayout = true; }
+
+		/**
+		 * Adjust the size and position of any child elements.
+		 *
+		 * Subclasses with child elements that are relative to each other should
+		 * override this function.
+		 *
+		 * This is called automatically during the PrepareRender() phase if
+		 * RequestLayout() has been called.  It is also called the first time
+		 * PrepareRender() is invoked.  After this function is called, it
+		 * will not be called again until another call to RequestLayout().
+		 */
+		virtual void Layout() { }
+
+	public:
+		virtual void PrepareRender()
+		{
+			if (needsLayout) {
+				Layout();
+				needsLayout = false;
+			}
+		}
+
+		virtual void Render() { }
+
+	private:
+		bool needsLayout;
 };
 
 }  // namespace Client
