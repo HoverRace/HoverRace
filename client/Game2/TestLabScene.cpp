@@ -236,7 +236,9 @@ LayoutModule::LayoutModule(Display::Display &display, GameDirector &director) :
 	displayConfigChangedConn = display.GetDisplayConfigChangedSignal().
 		connect(std::bind(&LayoutModule::OnDisplayConfigChanged, this));
 
-	displayInfoBox = root->AddChild(new Display::FillBox(1280, 720, 0xff3f3f3f));
+	// This box takes up the entire UI viewport, so we insert it at the
+	// beginning of the list so we don't render on top of the "Close" button.
+	displayInfoBox = root->InsertChild(0, new Display::FillBox(1280, 720, 0xff3f3f3f));
 
 	displayInfoLbl = root->AddChild(new Display::Label("Res",
 		Display::UiFont(fontName, 20),
