@@ -80,6 +80,18 @@ class MR_DllDeclare Container : public UiViewModel
 			return sharedChild;
 		}
 
+		template<typename T>
+		typename std::enable_if<std::is_base_of<UiViewModel, T>::value, std::shared_ptr<T>>::type
+		InsertChild(int pos, T *child)
+		{
+			std::shared_ptr<T> sharedChild(child);
+			auto iter = children.begin();
+			iter += pos;
+			children.emplace(iter, sharedChild);
+			child->AttachView(display);
+			return sharedChild;
+		}
+
 	private:
 		template<typename P, bool(UiViewModel::*F)(P)>
 		bool PropagateMouseEvent(P param)
