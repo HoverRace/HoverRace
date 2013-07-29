@@ -51,21 +51,7 @@ class TestLabScene : public FormScene
 		TestLabScene(Display::Display &display, GameDirector &director);
 		virtual ~TestLabScene();
 
-	private:
-		template<class T>
-		T *AddElem(T *elem)
-		{
-			elems.emplace_back(elem);
-			elem->AttachView(display);
-			return elem;
-		}
-
-		void AddAlignmentTestElem(Display::UiViewModel::Alignment::alignment_t alignment,
-			const std::string &label, double x, double y);
-
-	private:
-		void OnDisplayConfigChanged();
-		void OnMessageClicked();
+		class LabModule;
 
 	protected:
 		virtual void OnPhaseChanged(Phase::phase_t oldPhase);
@@ -78,13 +64,7 @@ class TestLabScene : public FormScene
 	private:
 		Display::Display &display;
 		GameDirector &director;
-		std::vector<std::unique_ptr<Display::ViewModel>> elems;
-
-		boost::signals2::scoped_connection displayConfigChangedConn;
-
-		std::shared_ptr<Display::FillBox> displayInfoBox;
-		std::shared_ptr<Display::Label> displayInfoLbl;
-		std::shared_ptr<Display::Button> messageBtn;
+		std::unique_ptr<Display::ScreenFade> fader;
 };
 
 }  // namespace Client
