@@ -75,6 +75,9 @@ class MR_DllDeclare Button : public ClickRegion
 		virtual void AttachView(Display &disp) { AttachViewDynamic(disp, this); }
 
 	public:
+		const std::string &GetText() const;
+		void SetText(const std::string &text);
+
 		FillBox *GetBackgroundChild() const { return background.get(); }
 		Label *GetLabelChild() const { return label.get(); }
 

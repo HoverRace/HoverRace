@@ -115,6 +115,16 @@ void Button::Layout()
 	}
 }
 
+const std::string &Button::GetText() const
+{
+	return label->GetText();
+}
+
+void Button::SetText(const std::string &text)
+{
+	label->SetText(text);
+}
+
 Vec3 Button::Measure() const
 {
 	if (IsAutoSize()) {
