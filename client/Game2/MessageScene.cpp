@@ -22,6 +22,7 @@
 #include "StdAfx.h"
 
 #include "../../engine/Control/Controller.h"
+#include "../../engine/Display/Button.h"
 #include "../../engine/Display/Container.h"
 #include "../../engine/Display/Display.h"
 #include "../../engine/Display/Label.h"
@@ -57,13 +58,15 @@ MessageScene::MessageScene(Display::Display &display,
 	titleLbl = root->AddChild(new Display::Label(title,
 		Display::UiFont(fontName, 40, Display::UiFont::BOLD),
 		Display::COLOR_WHITE));
+	titleLbl->SetPos(40, 180);
 
 	messageLbl = root->AddChild(new Display::Label(message,
-		Display::UiFont(fontName, 20), 0xffbfbfbf));
+		Display::UiFont(fontName, 30), 0xffbfbfbf));
+	// messageLbl position will be set in Layout().
 
-	controlsLbl = root->AddChild(new Display::Label("",
-		Display::UiFont(fontName, 20, Display::UiFont::BOLD),
-		Display::COLOR_WHITE));
+	controlsBtn = root->AddChild(new Display::Button(display, ""));
+	controlsBtn->SetPos(40, 480);
+	controlsBtn->GetClickedSignal().connect(std::bind(&MessageScene::OnOk, this));
 }
 
 MessageScene::~MessageScene()
@@ -84,6 +87,8 @@ void MessageScene::OnCancel()
 
 void MessageScene::AttachController(Control::InputEventController &controller)
 {
+	SUPER::AttachController(controller);
+
 	controller.AddMenuMaps();
 
 	auto &menuOkAction = controller.actions.ui.menuOk;
@@ -95,13 +100,15 @@ void MessageScene::AttachController(Control::InputEventController &controller)
 	std::ostringstream oss;
 	oss << '[' << controller.HashToString(menuOkAction->GetPrimaryTrigger()) <<
 		"] " << menuOkAction->GetName();
-	controlsLbl->SetText(oss.str());
+	controlsBtn->SetText(oss.str());
 }
 
 void MessageScene::DetachController(Control::InputEventController &controller)
 {
 	cancelConn.disconnect();
 	okConn.disconnect();
+
+	SUPER::DetachController(controller);
 }
 
 void MessageScene::Advance(Util::OS::timestamp_t tick)
@@ -140,13 +147,9 @@ void MessageScene::Advance(Util::OS::timestamp_t tick)
 
 void MessageScene::Layout()
 {
-	Config::cfg_video_t &vidCfg = Config::GetInstance()->video;
-
-	int leftMargin = vidCfg.xRes / 50;
-	int centerH = vidCfg.yRes / 2;
-	titleLbl->SetPos(leftMargin, centerH - 50);
-	messageLbl->SetPos(leftMargin, centerH);
-	controlsLbl->SetPos(leftMargin, vidCfg.yRes * 3 / 4);
+	// Set the message position relative to the title.
+	const Display::Vec2 titlePos = titleLbl->GetPos();
+	messageLbl->SetPos(titlePos.x, titlePos.y + titleLbl->Measure().y + 40);
 }
 
 void MessageScene::PrepareRender()

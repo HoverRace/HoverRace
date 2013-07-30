@@ -29,6 +29,7 @@
 
 namespace HoverRace {
 	namespace Display {
+		class Button;
 		class Display;
 		class Label;
 		class ScreenFade;
@@ -70,7 +71,7 @@ class MessageScene : public FormScene
 		std::unique_ptr<Display::ScreenFade> fader;
 		std::shared_ptr<Display::Label> titleLbl;
 		std::shared_ptr<Display::Label> messageLbl;
-		std::shared_ptr<Display::Label> controlsLbl;
+		std::shared_ptr<Display::Button> controlsBtn;
 
 		boost::signals2::connection okConn;
 		boost::signals2::connection cancelConn;
