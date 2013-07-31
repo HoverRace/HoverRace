@@ -111,7 +111,8 @@ namespace {
 	} globalFmts;
 }
 
-Observer::Observer()
+Observer::Observer() :
+	hudVisible(true)
 {
 	const Config *cfg = Config::GetInstance();
 
@@ -202,6 +203,16 @@ void Observer::Home()
 {
 	mScroll = 0;
 	mApperture = MR_PI / 2;
+}
+
+void Observer::ToggleHudVisible()
+{
+	hudVisible = !hudVisible;
+}
+
+void Observer::SetHudVisible(bool visible)
+{
+	hudVisible = visible;
 }
 
 void Observer::EnlargeMargin()
@@ -588,14 +599,16 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 	double lFuelLevel = pViewingCharacter->GetFuelLevel();
 	int lFuelLen = (int)(lFuelLevel * lFuelMeterLen);
 
-	m3DView.DrawHorizontalMeter(lXMargin, lSpeedMeterLen, lYMargin, lMeterHight, lAbsSpeedLen, 54, 56);
-	if(lDirSpeedLen < 0) {
-		m3DView.DrawHorizontalMeter(lXMargin, lSpeedMeterLen, lYMargin + lMeterHight, lMeterHight, -lDirSpeedLen, 44, 56);
+	if (hudVisible) {
+		m3DView.DrawHorizontalMeter(lXMargin, lSpeedMeterLen, lYMargin, lMeterHight, lAbsSpeedLen, 54, 56);
+		if(lDirSpeedLen < 0) {
+			m3DView.DrawHorizontalMeter(lXMargin, lSpeedMeterLen, lYMargin + lMeterHight, lMeterHight, -lDirSpeedLen, 44, 56);
+		}
+		else {
+			m3DView.DrawHorizontalMeter(lXMargin, lSpeedMeterLen, lYMargin + lMeterHight, lMeterHight, lDirSpeedLen, 54, 56);
+		}
+		m3DView.DrawHorizontalMeter(lXRes - lXMargin - lFuelMeterLen, lFuelMeterLen, lYMargin, lMeterHight * 2, lFuelLen, 54, (lFuelLevel < 0.20) ? 35 : 56);
 	}
-	else {
-		m3DView.DrawHorizontalMeter(lXMargin, lSpeedMeterLen, lYMargin + lMeterHight, lMeterHight, lDirSpeedLen, 54, 56);
-	}
-	m3DView.DrawHorizontalMeter(lXRes - lXMargin - lFuelMeterLen, lFuelMeterLen, lYMargin, lMeterHight * 2, lFuelLen, 54, (lFuelLevel < 0.20) ? 35 : 56);
 
 	// MissileLevel
 	ObjFac1::SpriteHandle *lWeaponSprite = NULL;
@@ -628,14 +641,14 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 
 	}
 
-	if(lWeaponSprite != NULL) {
+	if (hudVisible && lWeaponSprite != NULL) {
 		int lMissileScaling = 1 + (310 / lXRes);
 
 		lWeaponSprite->GetSprite()->Blt(lXRes, lYRes / 16, &m3DView, Sprite::eRight, Sprite::eTop, lWeaponSpriteIndex, lMissileScaling);
 	}
-	// Map
 
-	if(pSession->GetMap() != NULL) {
+	// Map
+	if (hudVisible && pSession->GetMap() != NULL) {
 		const Sprite *lHoverIcons = mHoverIcons->GetSprite();
 
 		int lMapScaling = 1 + (3 * pSession->GetMap()->GetItemHeight() / lYRes);
@@ -666,9 +679,9 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 			}
 		}
 	}
-	// Print text
 
-	if(mBaseFont != NULL) {
+	// Print text
+	if (hudVisible && mBaseFont != NULL) {
 		char lStrBuffer[170];
 
 		const Sprite *lFont = mBaseFont->GetSprite();
@@ -709,7 +722,7 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 		}
 	}
 
-	if((mBaseFont != NULL) && mDispPlayers) {
+	if (hudVisible && (mBaseFont != NULL) && mDispPlayers) {
 
 		int lNbResultAvail = pSession->ResultAvaillable();
 		int lNbPages = (lNbResultAvail + NB_PLAYER_PAGE - 1) / NB_PLAYER_PAGE;
@@ -790,7 +803,7 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 		}
 	}
 
-	if(mBaseFont != NULL) {
+	if (hudVisible && mBaseFont != NULL) {
 
 		// Display timers
 		char lMainLineBuffer[80];

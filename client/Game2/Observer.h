@@ -59,6 +59,7 @@ class Observer
 		MR_3DCoordinate mLastCameraPos;
 		BOOL mLastCameraPosValid;
 		BOOL mCockpitView;
+		bool hudVisible;
 
 		VideoServices::Viewport2D m2DDebugView;
 		VideoServices::Viewport3D mWireFrameView;
@@ -106,6 +107,8 @@ class Observer
 		void Scroll(int pOffset);
 		void Zoom(int factor); /// A positive factor zooms in; a negative factor zooms out.
 		void Home();
+		void ToggleHudVisible();
+		void SetHudVisible(bool visible);
 
 		void EnlargeMargin();
 		void ReduceMargin();
