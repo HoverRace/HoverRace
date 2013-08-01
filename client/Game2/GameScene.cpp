@@ -48,7 +48,7 @@ GameScene::GameScene(GameDirector *director, Display::Display &display,
                      RulebookPtr rules) :
 	SUPER("Game"),
 	director(director),
-	frame(0), numPlayers(1), display(display),
+	frame(0), numPlayers(1), muted(false), display(display),
 	session(nullptr),
 	firedOnRaceFinish(false)
 {
@@ -175,6 +175,21 @@ void GameScene::OnPhaseChanged(Phase::phase_t oldPhase)
 	}
 }
 
+void GameScene::SetHudVisible(bool visible)
+{
+	for (int i = 0; i < MAX_OBSERVERS; ++i) {
+		Observer *obs = observers[i];
+		if (obs) {
+			obs->SetHudVisible(visible);
+		}
+	}
+}
+
+void GameScene::SetMuted(bool muted)
+{
+	this->muted = muted;
+}
+
 void GameScene::Advance(Util::OS::timestamp_t tick)
 {
 	session->Process();
@@ -202,13 +217,15 @@ void GameScene::Render()
 	}
 
 	// Trigger sounds.
-	for (int i = 0; i < MAX_OBSERVERS; ++i) {
-		Observer *obs = observers[i];
-		if (obs != NULL) {
-			obs->PlaySounds(session->GetCurrentLevel(), session->GetPlayer(i));
+	if (!muted) {
+		for (int i = 0; i < MAX_OBSERVERS; ++i) {
+			Observer *obs = observers[i];
+			if (obs != NULL) {
+				obs->PlaySounds(session->GetCurrentLevel(), session->GetPlayer(i));
+			}
 		}
+		VideoServices::SoundServer::ApplyContinuousPlay();
 	}
-	VideoServices::SoundServer::ApplyContinuousPlay();
 }
 
 void GameScene::OnRaceFinish()

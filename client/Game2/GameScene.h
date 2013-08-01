@@ -79,6 +79,10 @@ class GameScene : public Scene
 		virtual void OnPhaseChanged(Phase::phase_t oldPhase);
 
 	public:
+		void SetHudVisible(bool visible);
+		void SetMuted(bool muted);
+
+	public:
 		void Advance(Util::OS::timestamp_t tick);
 		void Render();
 
@@ -88,6 +92,7 @@ class GameScene : public Scene
 	private:
 		int frame;
 		int numPlayers;
+		bool muted;
 
 		GameDirector *director;
 		Display::Display &display;
