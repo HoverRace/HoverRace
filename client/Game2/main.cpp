@@ -269,6 +269,8 @@ int main(int argc, char** argv)
 	// initialize return variables
 	int lErrorCode = EXIT_SUCCESS;
 
+	srand(static_cast<unsigned int>(time(nullptr)));
+
 #ifdef _WIN32
 	hinstance = pInstance;
 
