@@ -190,6 +190,19 @@ void GameScene::SetMuted(bool muted)
 	this->muted = muted;
 }
 
+void GameScene::StartDemoMode()
+{
+	SetHudVisible(false);
+	SetMuted(true);
+
+	for (int i = 0; i < MAX_OBSERVERS; ++i) {
+		Observer *obs = observers[i];
+		if (obs) {
+			obs->StartDemoMode();
+		}
+	}
+}
+
 void GameScene::Advance(Util::OS::timestamp_t tick)
 {
 	session->Process();

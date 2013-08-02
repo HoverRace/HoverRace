@@ -112,7 +112,7 @@ namespace {
 }
 
 Observer::Observer() :
-	hudVisible(true)
+	hudVisible(true), demoMode(false)
 {
 	const Config *cfg = Config::GetInstance();
 
@@ -213,6 +213,17 @@ void Observer::ToggleHudVisible()
 void Observer::SetHudVisible(bool visible)
 {
 	hudVisible = visible;
+}
+
+/**
+ * Switch to demo mode.
+ * While in demo mode, the camera switches to more "cinematic" views instead
+ * of just following behind the player's craft.
+ */
+void Observer::StartDemoMode()
+{
+	SetHudVisible(false);
+	demoMode = true;
 }
 
 void Observer::EnlargeMargin()
@@ -472,7 +483,14 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 
 		lOrientation = pViewingCharacter->mOrientation;
 
-		if(pTime < -3000) {
+		if (demoMode) {
+			//TODO: Cycle through a set of cinematic camera pans.
+			// For now, we just orbit the player at a fixed distance.
+			int factor = pTime % 11000;
+			lOrientation = MR_NORMALIZE_ANGLE(lOrientation + factor * 4096 / 11000);
+			lDist += 5000;
+		}
+		else if (pTime < -3000) {
 			int lFactor = (-pTime - 3000) * 2 / 3;
 			lOrientation = MR_NORMALIZE_ANGLE(lOrientation + lFactor * 4096 / 11000);
 			lDist += lFactor;

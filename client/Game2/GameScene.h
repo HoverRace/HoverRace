@@ -81,6 +81,7 @@ class GameScene : public Scene
 	public:
 		void SetHudVisible(bool visible);
 		void SetMuted(bool muted);
+		void StartDemoMode();
 
 	public:
 		void Advance(Util::OS::timestamp_t tick);

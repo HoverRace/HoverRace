@@ -60,6 +60,7 @@ class Observer
 		BOOL mLastCameraPosValid;
 		BOOL mCockpitView;
 		bool hudVisible;
+		bool demoMode;
 
 		VideoServices::Viewport2D m2DDebugView;
 		VideoServices::Viewport3D mWireFrameView;
@@ -109,6 +110,7 @@ class Observer
 		void Home();
 		void ToggleHudVisible();
 		void SetHudVisible(bool visible);
+		void StartDemoMode();
 
 		void EnlargeMargin();
 		void ReduceMargin();
