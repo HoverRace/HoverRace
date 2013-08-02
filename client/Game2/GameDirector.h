@@ -74,6 +74,11 @@ class GameDirector
 		virtual void RequestReplaceScene(const ScenePtr &scene) = 0;
 
 		/**
+		 * Request a return to the main menu.
+		 */
+		virtual void RequestMainMenu() = 0;
+
+		/**
 		 * Request a new local practice session.
 		 * @param rules The settings for the session.
 		 */

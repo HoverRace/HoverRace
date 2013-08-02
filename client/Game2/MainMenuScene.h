@@ -21,14 +21,15 @@
 
 #pragma once
 
+#include "GameDirector.h"
+
 #include "FormScene.h"
 
 namespace HoverRace {
 	namespace Display {
+		class Button;
+		class Container;
 		class Display;
-		class FillBox;
-		class Label;
-		class ViewModel;
 	}
 }
 
@@ -43,8 +44,32 @@ class MainMenuScene : public FormScene
 {
 	typedef FormScene SUPER;
 	public:
-		MainMenuScene(Display::Display &display);
+		MainMenuScene(Display::Display &display, GameDirector &director);
 		virtual ~MainMenuScene();
+
+	private:
+		std::shared_ptr<Display::Button> AddButton(const std::string &text, bool enabled=true);
+
+	private:
+		void OnPracticeClicked();
+		void OnMultiplayerClicked();
+		void OnSettingsClicked();
+
+	private:
+		void UpdateSliders(double interval);
+
+	public:
+		// Scene
+		virtual void Advance(Util::OS::timestamp_t tick);
+		virtual void Layout();
+
+	private:
+		Display::Display &display;
+		GameDirector &director;
+
+		std::shared_ptr<Display::Container> titleContainer;
+		std::shared_ptr<Display::Container> menuContainer;
+		std::vector<std::shared_ptr<Display::Button>> menuButtons;
 };
 
 }  // namespace Client

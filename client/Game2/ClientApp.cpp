@@ -56,6 +56,7 @@
 #include "HoverScript/SysEnv.h"
 #include "ClientSession.h"
 #include "GameScene.h"
+#include "MainMenuScene.h"
 #include "MessageScene.h"
 #include "Rulebook.h"
 #include "Scene.h"
@@ -331,6 +332,8 @@ void ClientApp::MainLoop()
 	bool quit = false;
 	SDL_Event evt;
 
+	RequestMainMenu();
+
 	// Fire all on_init handlers.
 	gamePeer->OnInit();
 
@@ -589,6 +592,36 @@ void ClientApp::RequestReplaceScene(const ScenePtr &scene)
 	evt.user.code = REQ_EVT_SCENE_REPLACE;
 	evt.user.data1 = new SceneHolder(scene);
 	SDL_PushEvent(&evt);
+}
+
+void ClientApp::RequestMainMenu()
+{
+	// Load the animated background scene, which is actually just a track without
+	// the HUD or game sounds.
+	// The menu scene is overlaid on top of the background scene.
+
+	// Pick a random track from our standard list.
+	const char *tracks[] = {
+		"ClassicH",
+		"Steeplechase",
+		//"The Alley2",
+		//"The River",
+	};
+	const char *trackName = tracks[rand() % (sizeof(tracks) / sizeof(tracks[0]))];
+	Log::Info("Selected main menu track: %s", trackName);
+
+	auto rules = std::make_shared<Rulebook>(trackName, 1, 0x7f);
+
+	try {
+		auto scene = std::make_shared<GameScene>(this, *display, scripting, gamePeer, rules);
+		scene->StartDemoMode();
+		RequestReplaceScene(scene);
+	}
+	catch (Parcel::ObjStreamExn&) {
+		throw;
+	}
+
+	RequestPushScene(std::make_shared<MainMenuScene>(*display, *this));
 }
 
 void ClientApp::RequestShutdown()

@@ -22,28 +22,159 @@
 #include "StdAfx.h"
 
 #include "../../engine/Control/Controller.h"
+#include "../../engine/Display/Button.h"
 #include "../../engine/Display/Container.h"
 #include "../../engine/Display/Display.h"
 #include "../../engine/Display/FillBox.h"
 #include "../../engine/Display/Label.h"
-#include "../../engine/Display/ScreenFade.h"
 #include "../../engine/VideoServices/FontSpec.h"
 #include "../../engine/Util/Config.h"
 
+#include "Rulebook.h"
+
 #include "MainMenuScene.h"
+
+#define START_DURATION 500
 
 using namespace HoverRace::Util;
 
 namespace HoverRace {
 namespace Client {
 
-MainMenuScene::MainMenuScene(Display::Display &display) :
-	SUPER(display, "Main Menu")
+MainMenuScene::MainMenuScene(Display::Display &display, GameDirector &director) :
+	SUPER(display, "Main Menu"),
+	display(display), director(director)
 {
+	typedef Display::UiViewModel::Alignment Alignment;
+
+	auto root = GetRoot();
+
+	//TODO: Letterbox mask.
+
+	double sliderHeight = 120;
+
+	titleContainer = root->AddChild(new Display::Container(display,
+		Display::Vec2(1280, sliderHeight)));
+
+	titleContainer->AddChild(new Display::FillBox(titleContainer->GetSize(), 0xff000000));
+
+	Config *cfg = Config::GetInstance();
+	auto titleLbl = titleContainer->AddChild(new Display::Label(
+		"[ logo goes here :) ]",
+		Display::UiFont(cfg->GetDefaultFontName(), 40, Display::UiFont::BOLD | Display::UiFont::ITALIC),
+		0xffffffff));
+	titleLbl->SetPos(40, sliderHeight);
+	titleLbl->SetAlignment(Alignment::SW);
+
+	menuContainer = root->AddChild(new Display::Container(display,
+		Display::Vec2(1280, sliderHeight)));
+
+	menuContainer->AddChild(new Display::FillBox(menuContainer->GetSize(), 0xff000000));
+
+	AddButton(_("Practice"))->GetClickedSignal().connect(
+		std::bind(&MainMenuScene::OnPracticeClicked, this));
+	AddButton(_("Multiplayer"), false)->GetClickedSignal().connect(
+		std::bind(&MainMenuScene::OnMultiplayerClicked, this));
+	AddButton(_("Settings"), false)->GetClickedSignal().connect(
+		std::bind(&MainMenuScene::OnSettingsClicked, this));
+	AddButton(_("Credits"), false)->GetClickedSignal().connect(
+		std::bind(&MainMenuScene::OnSettingsClicked, this));
+
+	AddButton(_("Quit"))->GetClickedSignal().connect([&](Display::ClickRegion&) {
+		director.RequestShutdown();
+	});
 }
 
 MainMenuScene::~MainMenuScene()
 {
+}
+
+std::shared_ptr<Display::Button> MainMenuScene::AddButton(const std::string &text, bool enabled)
+{
+	menuButtons.emplace_back(menuContainer->AddChild(new Display::Button(display, text)));
+	std::shared_ptr<Display::Button> &btn = menuButtons.back();
+	btn->SetEnabled(enabled);
+	return btn;
+}
+
+void MainMenuScene::OnPracticeClicked()
+{
+	//TODO: Push SessionSetupScene to get Rulebook
+	auto rules = std::make_shared<Rulebook>("ClassicH", 1, 0x7f);
+	director.RequestNewPracticeSession(rules);
+}
+
+void MainMenuScene::OnMultiplayerClicked()
+{
+	//TODO: Push MultiplayerModeSelectScene
+}
+
+void MainMenuScene::OnSettingsClicked()
+{
+	//TODO: Push SettingsScene
+}
+
+/**
+ * Update the starting/stopping animation state.
+ * @param interval The animation progress (0.0 is the start, 1.0 is the end).
+ */
+void MainMenuScene::UpdateSliders(double interval)
+{
+	double titleHeight = titleContainer->GetSize().y;
+	//titleContainer->SetOpacity(interval);
+	titleContainer->SetPos(0, titleHeight * interval - titleHeight);
+	//menuContainer->SetOpacity(interval);
+	menuContainer->SetPos(0, 720 - (menuContainer->GetSize().y * interval));
+}
+
+void MainMenuScene::Advance(Util::OS::timestamp_t tick)
+{
+	switch (GetPhase()) {
+		case Phase::STARTING: {
+			Util::OS::timestamp_t duration = GetPhaseDuration(tick);
+			if (duration > START_DURATION) {
+				UpdateSliders(1.0);
+				SetPhase(Phase::RUNNING);
+			}
+			else {
+				UpdateSliders(static_cast<double>(duration) / START_DURATION);
+			}
+			break;
+		}
+
+		case Phase::STOPPING: {
+			Util::OS::timestamp_t duration = GetPhaseDuration(tick);
+			Util::OS::timestamp_t startingDuration = GetStartingPhaseTime();
+			if (duration > startingDuration) {
+				UpdateSliders(0.0);
+				SetPhase(Phase::STOPPED);
+			}
+			else {
+				UpdateSliders(static_cast<double>(startingDuration - duration) / startingDuration);
+			}
+			break;
+		}
+	}
+}
+
+void MainMenuScene::Layout()
+{
+	// Set equal spacing between each of the buttons.
+
+	const double sidePadding = 40;
+
+	double totalWidth = 0;
+	BOOST_FOREACH(std::shared_ptr<Display::Button> &btn, menuButtons) {
+		totalWidth += btn->Measure().x;
+	}
+
+	double spacing = (1280.0 - totalWidth - (sidePadding * 2)) / (menuButtons.size() + 1);
+	
+	double x = sidePadding + spacing;
+	BOOST_FOREACH(std::shared_ptr<Display::Button> &btn, menuButtons) {
+		btn->SetPos(x, 0);
+		x += btn->Measure().x + spacing;
+	}
 }
 
 }  // namespace Client
