@@ -51,6 +51,15 @@ shutdown:
   desc: >
     All on_session_end and on_shutdown events will be fired as usual, but
     all normal confirmation prompts are disabled.
+    
+start_main_menu:
+  type: method
+  sig:
+    - game:start_main_menu()
+  brief: >
+    Return to the game main menu.
+  desc: >
+    Immediately exits any running game or menu and returns to the main menu.
 
 start_practice:
   type: method

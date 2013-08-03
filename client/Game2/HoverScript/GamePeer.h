@@ -87,6 +87,8 @@ class GamePeer : public Script::Peer {
 		void LOnSessionEnd(const luabind::object &fn);
 		void LOnSessionEnd_N(const std::string &name, const luabind::object &fn);
 
+		void LStartMenuMenu();
+
 		void LStartPractice(const std::string &track);
 		void LStartPractice_R(const std::string &track, const luabind::object &rules);
 
