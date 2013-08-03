@@ -610,7 +610,10 @@ void ClientApp::RequestMainMenu()
 	const char *trackName = tracks[rand() % (sizeof(tracks) / sizeof(tracks[0]))];
 	Log::Info("Selected main menu track: %s", trackName);
 
-	auto rules = std::make_shared<Rulebook>(trackName, 1, 0x7f);
+	// Pick a random craft.
+	char craftId = 1 << (rand() % 4);
+
+	auto rules = std::make_shared<Rulebook>(trackName, 1, 0x70 + craftId);
 
 	try {
 		auto scene = std::make_shared<GameScene>(this, *display, scripting, gamePeer, rules);
