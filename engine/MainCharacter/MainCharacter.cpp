@@ -27,7 +27,10 @@
 #include "../Model/RaceEffects.h"
 #include "../Model/ObstacleCollisionReport.h"
 #include "../Util/FuzzyLogic.h"
+#include "../Util/Log.h"
+#include "../Exception.h"
 
+using namespace HoverRace::Util;
 using namespace HoverRace::VideoServices;
 
 namespace HoverRace {
@@ -148,6 +151,40 @@ const double eFuelConsuming[MR_NB_HOVER_MODEL] =
 	1.0,
 	1.1,
 };
+
+namespace {
+	/// An invalid game config slipped through.
+	class TrackConfigExn : public Exception
+	{
+		typedef Exception SUPER;
+
+		public:
+			TrackConfigExn() : SUPER() { }
+			TrackConfigExn(const std::string &msg) : SUPER(msg) { }
+			TrackConfigExn(const char *msg) : SUPER(msg) { }
+			virtual ~TrackConfigExn() throw() { }
+	};
+
+	/**
+	 * Find the next craft that's allowed by the config.
+	 * @param gameOpts The current game options.
+	 * @param curCraft The currently-selected craft ID.
+	 * @param step The direction to search (1 = forwards, -1 backwards).
+	 * @return The next allowed craft ID.
+	 */
+	unsigned int NextAllowedCraft(char gameOpts, unsigned int curCraft, int step=1)
+	{
+		if ((gameOpts & 0x0f) == 0) {
+			throw TrackConfigExn("All crafts have been disabled");
+		}
+
+		do {
+			curCraft = ((curCraft + step + 4) % 4);
+		} while (!(gameOpts & (1 << curCraft)));
+
+		return curCraft;
+	}
+}
 
 // Functions implementations
 
@@ -278,9 +315,8 @@ MainCharacter *MainCharacter::New(int pNbLap, char pGameOpts)
 		lReturnValue->mNbLapForRace = pNbLap;
 		lReturnValue->mGameOpts = pGameOpts;
 	}
-	// if mGameOpts now outlaw basic craft, we must update
-	while(!(lReturnValue->mGameOpts & ((int) pow(2.0f, 3.0f - ((lReturnValue->mHoverModel + 4) % 4)))))
-		lReturnValue->mHoverModel++;
+
+	lReturnValue->mHoverModel = NextAllowedCraft(pGameOpts, 3);
 
 	return lReturnValue;
 }
@@ -414,13 +450,7 @@ void MainCharacter::SetTurnLeftState(bool leftState)
 {
 	if(leftState) {
 		if(mCurrentTime < 0) {
-			mHoverModel--;
-
-			// ensure we are using an allowed craft
-			while(!(mGameOpts & ((int) pow(2.0f, 3.0f - ((mHoverModel + 4) % 4)))))
-				mHoverModel--;
-		
-			mHoverModel = (mHoverModel + 4) % 4;
+			mHoverModel = NextAllowedCraft(mGameOpts, mHoverModel, -1);
 		}
 		mControlState |= eLeft;
 	} else
@@ -431,13 +461,7 @@ void MainCharacter::SetTurnRightState(bool rightState)
 {
 	if(rightState) {
 		if(mCurrentTime < 0) {
-			mHoverModel++;
-				
-			// ensure we are using an allowed craft
-			while(!(mGameOpts & ((int) pow(2.0f, 3.0f - ((mHoverModel + 4) % 4)))))
-				mHoverModel++;
-
-			mHoverModel = (mHoverModel + 4) % 4;
+			mHoverModel = NextAllowedCraft(mGameOpts, mHoverModel);
 		}
 		
 		mControlState |= eRight;
