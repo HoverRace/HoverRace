@@ -399,6 +399,8 @@ void ClientApp::MainLoop()
 	}
 
 	TerminateAllScenes();
+
+	gamePeer->OnShutdown();
 }
 
 void ClientApp::RequestNewPracticeSession(RulebookPtr rules)
