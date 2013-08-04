@@ -340,9 +340,9 @@ void ClientApp::MainLoop()
 	Config::cfg_runtime_t &runtimeCfg = Config::GetInstance()->runtime;
 	if (!runtimeCfg.skipStartupWarning && runtimeCfg.initScript.empty()) {
 		RequestPushScene(std::make_shared<MessageScene>(*display, *this,
-			"Warning",
+			"HoverRace 2.0 Developer Preview",
 			"This is the unstable \"2.0\" branch of HoverRace.\n"
-			"For the current stable branch, switch to the \"1.24\" branch.\n"
+			"For the current stable branch, switch to the \"1.24\" branch.\n\n"
 			"To skip this warning, use --skip-startup-warning or specify a "
 			"startup script with --exec."));
 	}
