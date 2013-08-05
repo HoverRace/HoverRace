@@ -119,6 +119,14 @@ namespace Module {
 		private:
 			std::shared_ptr<Display::Button> messageBtn;
 	}; //}}}
+
+	class LabelModule : public TestLabScene::LabModule /*{{{*/
+	{
+		typedef TestLabScene::LabModule SUPER;
+		public:
+			LabelModule(Display::Display &display, GameDirector &director);
+			virtual ~LabelModule() { }
+	}; //}}}
 }
 
 TestLabScene::TestLabScene(Display::Display &display, GameDirector &director) :
@@ -136,6 +144,8 @@ TestLabScene::TestLabScene(Display::Display &display, GameDirector &director) :
 	root->AddChild(new ModuleButton<Module::LayoutModule>(display, director, "Layout", 0, y));
 	y += yStep;
 	root->AddChild(new ModuleButton<Module::ButtonModule>(display, director, "Button", 0, y));
+	y += yStep;
+	root->AddChild(new ModuleButton<Module::LabelModule>(display, director, "Label", 0, y));
 }
 
 TestLabScene::~TestLabScene()
@@ -330,6 +340,48 @@ void ButtonModule::OnMessageClicked()
 }
 
 //}}} ButtonModule
+
+//{{{ LabelModule //////////////////////////////////////////////////////////////
+
+LabelModule::LabelModule(Display::Display &display, GameDirector &director) :
+	SUPER(display, director, "Button")
+{
+	Config *cfg = Config::GetInstance();
+	std::string fontName = cfg->GetDefaultFontName();
+
+	Display::Container *root = GetRoot();
+
+	std::shared_ptr<Display::FillBox> fillBox;
+	std::shared_ptr<Display::Label> lbl;
+
+	lbl = root->AddChild(new Display::Label("Red 20 Normal",
+		Display::UiFont(fontName, 20), 0xffff0000));
+	lbl->SetPos(0, 20);
+	lbl = root->AddChild(new Display::Label("Yellow (75%) 25 Italic",
+		Display::UiFont(fontName, 25, Display::UiFont::ITALIC), 0xbfffff00));
+	lbl->SetPos(0, 40);
+	lbl = root->AddChild(new Display::Label("Magenta (50%) 30 Bold+Italic",
+		Display::UiFont(fontName, 30, Display::UiFont::BOLD | Display::UiFont::ITALIC),
+		0x7fff00ff));
+	lbl->SetPos(0, 65);
+
+	// Wrapped text (with a background to visualize the width).
+
+	std::string wrapText =
+		"This is a string which should be wrapped to multiple lines to fit "
+		"the fixed width label.\n\n"
+		"ThisIsAVeryLongWordThatShouldBeClippedToTheFixedWidthOfTheLabel.\n\n"
+		"This is the third line of the text.";
+
+	fillBox = root->AddChild(new Display::FillBox(1280 / 4, 720 - 150, 0xff3f3f3f));
+	fillBox->SetPos(0, 150);
+
+	lbl = root->AddChild(new Display::Label(1280 / 4, wrapText,
+		Display::UiFont(fontName, 30), 0xffffffff));
+	lbl->SetPos(0, 150);
+}
+
+//}}} LabelModule
 
 }  // namespace Module
 

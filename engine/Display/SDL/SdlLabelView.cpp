@@ -182,6 +182,12 @@ void SdlLabelView::UpdateTexture()
 		font.size *= (scale = disp.GetUiScale());
 	}
 
+	bool fixedWidth = !model.IsAutoWidth();
+	double uiWrapWidth = model.GetWrapWidth();
+	int wrapWidth = model.IsLayoutUnscaled() ?
+		(int)uiWrapWidth :
+		(int)(uiWrapWidth * scale);
+
 #	ifdef WITH_SDL_PANGO
 		const std::string &s = model.GetText();
 		char *escapedBuf = g_markup_escape_text(s.c_str(), -1);
@@ -220,7 +226,8 @@ void SdlLabelView::UpdateTexture()
 		SDL_Color color = { 0xff, 0xff, 0xff };
 
 		tempSurface = TTF_RenderUTF8_Blended_Wrapped(ttfFont,
-			model.GetText().c_str(), color, 4096);
+			model.GetText().c_str(), color,
+			fixedWidth ? wrapWidth : 4096);
 		realWidth = width = tempSurface->w;
 		realHeight = height = tempSurface->h;
 
@@ -254,9 +261,23 @@ void SdlLabelView::UpdateTexture()
 		// Get the dimensions required for the font.
 		RECT sz;
 		memset(&sz, 0, sizeof(sz));
-		DrawTextW(hdc, ws, wsLen, &sz, DT_CALCRECT | DT_NOPREFIX);
+		UINT fmtFlags = 0;
+		if (fixedWidth) {
+			sz.right = wrapWidth * 100;
+			fmtFlags |= DT_WORDBREAK;
+		}
+		DrawTextW(hdc, ws, wsLen, &sz, fmtFlags | DT_CALCRECT | DT_NOPREFIX);
 		width = (sz.right - sz.left) / 100;
 		height = (sz.bottom - sz.top) / 100;
+
+		// If the calculated width is larger than the fixed width, then we'll
+		// intentionally create a large-height DIB and let the final DrawText()
+		// call tell us how high the rendered text was.
+		bool lateHeightCalc = fixedWidth && width > wrapWidth;
+		if (lateHeightCalc) {
+			width = wrapWidth;
+			sz.right = width * 100;
+		}
 
 		// Create a 32-bit DIB to draw the text onto.
 		BITMAPINFO *bmpInfo =
@@ -265,7 +286,7 @@ void SdlLabelView::UpdateTexture()
 		memset(&bmih, 0, sizeof(bmih));
 		bmih.biSize = sizeof(bmih);
 		bmih.biWidth = width;
-		bmih.biHeight = -height;
+		bmih.biHeight = lateHeightCalc ? -4096 : -height;
 		bmih.biPlanes = 1;
 		bmih.biBitCount = 32;
 		bmih.biCompression = BI_RGB;
@@ -281,7 +302,11 @@ void SdlLabelView::UpdateTexture()
 		SetTextColor(hdc, RGB(0xff, 0xff, 0xff));
 		SetBkColor(hdc, RGB(0, 0, 0));
 		SetBkMode(hdc, OPAQUE);
-		DrawTextW(hdc, ws, wsLen, &sz, DT_NOCLIP | DT_NOPREFIX);
+		int rendHeight = DrawTextW(hdc, ws, wsLen, &sz, fmtFlags | DT_NOCLIP | DT_NOPREFIX);
+
+		if (lateHeightCalc) {
+			height = rendHeight / 100;
+		}
 
 		//TODO: Handle text effect.
 		realWidth = width;

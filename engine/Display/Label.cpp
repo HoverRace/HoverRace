@@ -31,7 +31,7 @@ namespace HoverRace {
 namespace Display {
 
 /**
- * Constructor.
+ * Constructor for automatically-sized label.
  * @param text The text.
  * @param font The font.
  * @param color The text foreground color (including alpha).
@@ -46,13 +46,46 @@ Label::Label(const std::string &text,
 #	ifdef _WIN32
 		wtext((const wchar_t*)Str::UW(text)),
 #	endif
-	font(font), color(color)
+	wrapWidth(-1), font(font), color(color)
 {
+}
 
+/**
+ * Constructor for fixed-width label.
+ * @param warpWidth The width of the label.
+ * @param text The text.
+ * @param font The font.
+ * @param color The text foreground color (including alpha).
+ * @param layoutFlags Optional layout flags.
+ */
+Label::Label(double wrapWidth,
+             const std::string &text,
+             const UiFont &font,
+             Color color,
+             uiLayoutFlags_t layoutFlags) :
+	SUPER(layoutFlags),
+	text(text),
+#	ifdef _WIN32
+		wtext((const wchar_t*)Str::UW(text)),
+#	endif
+	wrapWidth(wrapWidth), font(font), color(color)
+{
 }
 
 Label::~Label()
 {
+}
+
+/**
+ * Automatically determine the width of the text.
+ * The width will be the longest line in the text.
+ */
+void Label::SetAutoWidth()
+{
+	if (wrapWidth > 0) {
+		wrapWidth = -1;
+		FireModelUpdate(Props::WRAP_WIDTH);
+	}
 }
 
 void Label::SetColor(const Color color)
@@ -79,6 +112,20 @@ void Label::SetText(const std::string &text)
 			wtext = (const wchar_t*)Str::UW(text);
 #		endif
 		FireModelUpdate(Props::TEXT);
+	}
+}
+
+/**
+ * Set a fixed width for the label.
+ * Text will be wrapped to fit the width.
+ * Single words which are longer than will fit in the width will be clipped.
+ * @param wrapWidth The fixed width.
+ */
+void Label::SetWrapWidth(double wrapWidth)
+{
+	if (this->wrapWidth != wrapWidth) {
+		this->wrapWidth = wrapWidth;
+		FireModelUpdate(Props::WRAP_WIDTH);
 	}
 }
 
