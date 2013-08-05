@@ -32,8 +32,6 @@
 
 #include "MessageScene.h"
 
-#define START_DURATION 200
-
 using namespace HoverRace::Util;
 
 namespace HoverRace {
@@ -47,6 +45,8 @@ MessageScene::MessageScene(Display::Display &display,
 	display(display), director(director)
 {
 	Config *cfg = Config::GetInstance();
+
+	SetTransitionDuration(200);
 
 	fader.reset(new Display::ScreenFade(0xcc000000, 0.0));
 	fader->AttachView(display);
@@ -111,38 +111,9 @@ void MessageScene::DetachController(Control::InputEventController &controller)
 	SUPER::DetachController(controller);
 }
 
-void MessageScene::Advance(Util::OS::timestamp_t tick)
+void MessageScene::OnTransition(double progress)
 {
-	switch (GetPhase()) {
-		case Phase::STARTING: {
-			Util::OS::timestamp_t duration = GetPhaseDuration(tick);
-			if (duration > START_DURATION) {
-				fader->SetOpacity(1.0);
-				SetPhase(Phase::RUNNING);
-			}
-			else {
-				// Fade-in the screen fader.
-				double opacity = static_cast<double>(duration) / START_DURATION;
-				fader->SetOpacity(opacity);
-			}
-			break;
-		}
-
-		case Phase::STOPPING: {
-			Util::OS::timestamp_t duration = GetPhaseDuration(tick);
-			Util::OS::timestamp_t startingDuration = GetStartingPhaseTime();
-			if (duration > startingDuration) {
-				fader->SetOpacity(0.0);
-				SetPhase(Phase::STOPPED);
-			}
-			else {
-				// Fade-out the screen fader.
-				double opacity = static_cast<double>(startingDuration - duration) / startingDuration;
-				fader->SetOpacity(opacity);
-			}
-			break;
-		}
-	}
+	fader->SetOpacity(progress);
 }
 
 void MessageScene::Layout()

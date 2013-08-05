@@ -33,7 +33,8 @@ namespace Client {
  * @param name The name of the scene.  See Scene::GetName.
  */
 Scene::Scene(const std::string &name) :
-	name(name), phase(Phase::INITIALIZING), phaseTs(0), startingPhaseTime(0)
+	name(name), phase(Phase::INITIALIZING), transitionDuration(0),
+	phaseTs(0), startingPhaseTime(0)
 {
 }
 
@@ -70,6 +71,37 @@ bool Scene::SetPhase(Phase::phase_t phase)
 	}
 	else {
 		return false;
+	}
+}
+
+void Scene::Advance(Util::OS::timestamp_t tick)
+{
+	// Handle the starting and stopping animation.
+	switch (GetPhase()) {
+		case Phase::STARTING: {
+			Util::OS::timestamp_t duration = GetPhaseDuration(tick);
+			if (duration >= transitionDuration) {
+				OnTransition(1.0);
+				SetPhase(Phase::RUNNING);
+			}
+			else {
+				OnTransition(static_cast<double>(duration) / transitionDuration);
+			}
+			break;
+		}
+
+		case Phase::STOPPING: {
+			Util::OS::timestamp_t duration = GetPhaseDuration(tick);
+			Util::OS::timestamp_t startingDuration = GetStartingPhaseTime();
+			if (duration >= startingDuration) {
+				OnTransition(0.0);
+				SetPhase(Phase::STOPPED);
+			}
+			else {
+				OnTransition(static_cast<double>(startingDuration - duration) / startingDuration);
+			}
+			break;
+		}
 	}
 }
 

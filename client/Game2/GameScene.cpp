@@ -205,6 +205,8 @@ void GameScene::StartDemoMode()
 
 void GameScene::Advance(Util::OS::timestamp_t tick)
 {
+	SUPER::Advance(tick);
+
 	session->Process();
 
 	if (!firedOnRaceFinish && session->GetPlayer(0)->HasFinish()) {

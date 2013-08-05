@@ -50,11 +50,7 @@ class TestLabScene::LabModule : public FormScene /*{{{*/
 			const std::string &title);
 		virtual ~LabModule() { }
 
-	protected:
-		void OnPhaseChanged(Phase::phase_t oldPhase);
-
 	public:
-		virtual void Advance(Util::OS::timestamp_t tick) { }
 		virtual void PrepareRender();
 		virtual void Render();
 
@@ -152,23 +148,6 @@ TestLabScene::~TestLabScene()
 {
 }
 
-void TestLabScene::OnPhaseChanged(Phase::phase_t oldPhase)
-{
-	// Act like the starting and stopping phases don't even exist.
-	switch (GetPhase()) {
-		case Phase::STARTING:
-			SetPhase(Phase::RUNNING);
-			break;
-		case Phase::STOPPING:
-			SetPhase(Phase::STOPPED);
-			break;
-	}
-}
-
-void TestLabScene::Advance(Util::OS::timestamp_t)
-{
-}
-
 void TestLabScene::PrepareRender()
 {
 	fader->PrepareRender();
@@ -200,19 +179,6 @@ TestLabScene::LabModule::LabModule(Display::Display &display,
 	btn->GetClickedSignal().connect([&](Display::ClickRegion&) {
 		director.RequestPopScene();
 	});
-}
-
-void TestLabScene::LabModule::OnPhaseChanged(Phase::phase_t oldPhase)
-{
-	// Act like the starting and stopping phases don't even exist.
-	switch (GetPhase()) {
-		case Phase::STARTING:
-			SetPhase(Phase::RUNNING);
-			break;
-		case Phase::STOPPING:
-			SetPhase(Phase::STOPPED);
-			break;
-	}
 }
 
 void TestLabScene::LabModule::PrepareRender()

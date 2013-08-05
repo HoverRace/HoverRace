@@ -74,8 +74,6 @@ class ConsoleScene : public UiScene
 		// Scene
 		virtual void AttachController(Control::InputEventController &controller);
 		virtual void DetachController(Control::InputEventController &controller);
-	protected:
-		virtual void OnPhaseChanged(Phase::phase_t oldPhase);
 	public:
 		virtual void Advance(Util::OS::timestamp_t tick);
 		virtual void PrepareRender();

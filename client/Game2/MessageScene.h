@@ -59,7 +59,7 @@ class MessageScene : public FormScene
 		// Scene
 		virtual void AttachController(Control::InputEventController &controller);
 		virtual void DetachController(Control::InputEventController &controller);
-		virtual void Advance(Util::OS::timestamp_t tick);
+		virtual void OnTransition(double progress);
 		virtual void Layout();
 		virtual void PrepareRender();
 		virtual void Render();

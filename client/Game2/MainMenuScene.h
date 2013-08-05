@@ -55,12 +55,9 @@ class MainMenuScene : public FormScene
 		void OnMultiplayerClicked();
 		void OnSettingsClicked();
 
-	private:
-		void UpdateSliders(double interval);
-
 	public:
 		// Scene
-		virtual void Advance(Util::OS::timestamp_t tick);
+		virtual void OnTransition(double interval);
 		virtual void Layout();
 
 	private:

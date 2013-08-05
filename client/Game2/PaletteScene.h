@@ -52,13 +52,11 @@ class PaletteScene : public UiScene
 		virtual bool IsMouseCursorEnabled() const { return false; }
 
 	protected:
-		virtual void OnPhaseChanged(Phase::phase_t oldPhase);
 		virtual void OnOk();
 
 	public:
 		virtual void AttachController(Control::InputEventController &controller);
 		virtual void DetachController(Control::InputEventController &controller);
-		virtual void Advance(Util::OS::timestamp_t tick) { }
 		virtual void PrepareRender() { }
 		virtual void Render();
 

@@ -34,8 +34,6 @@
 
 #include "MainMenuScene.h"
 
-#define START_DURATION 500
-
 using namespace HoverRace::Util;
 
 namespace HoverRace {
@@ -46,6 +44,8 @@ MainMenuScene::MainMenuScene(Display::Display &display, GameDirector &director) 
 	display(display), director(director)
 {
 	typedef Display::UiViewModel::Alignment Alignment;
+
+	SetTransitionDuration(200);
 
 	auto root = GetRoot();
 
@@ -114,47 +114,13 @@ void MainMenuScene::OnSettingsClicked()
 	//TODO: Push SettingsScene
 }
 
-/**
- * Update the starting/stopping animation state.
- * @param interval The animation progress (0.0 is the start, 1.0 is the end).
- */
-void MainMenuScene::UpdateSliders(double interval)
+void MainMenuScene::OnTransition(double interval)
 {
 	double titleHeight = titleContainer->GetSize().y;
 	//titleContainer->SetOpacity(interval);
 	titleContainer->SetPos(0, titleHeight * interval - titleHeight);
 	//menuContainer->SetOpacity(interval);
 	menuContainer->SetPos(0, 720 - (menuContainer->GetSize().y * interval));
-}
-
-void MainMenuScene::Advance(Util::OS::timestamp_t tick)
-{
-	switch (GetPhase()) {
-		case Phase::STARTING: {
-			Util::OS::timestamp_t duration = GetPhaseDuration(tick);
-			if (duration > START_DURATION) {
-				UpdateSliders(1.0);
-				SetPhase(Phase::RUNNING);
-			}
-			else {
-				UpdateSliders(static_cast<double>(duration) / START_DURATION);
-			}
-			break;
-		}
-
-		case Phase::STOPPING: {
-			Util::OS::timestamp_t duration = GetPhaseDuration(tick);
-			Util::OS::timestamp_t startingDuration = GetStartingPhaseTime();
-			if (duration > startingDuration) {
-				UpdateSliders(0.0);
-				SetPhase(Phase::STOPPED);
-			}
-			else {
-				UpdateSliders(static_cast<double>(startingDuration - duration) / startingDuration);
-			}
-			break;
-		}
-	}
 }
 
 void MainMenuScene::Layout()

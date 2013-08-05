@@ -45,19 +45,6 @@ PaletteScene::~PaletteScene()
 {
 }
 
-void PaletteScene::OnPhaseChanged(Phase::phase_t oldPhase)
-{
-	// Act like the starting and stopping phases don't even exist.
-	switch (GetPhase()) {
-		case Phase::STARTING:
-			SetPhase(Phase::RUNNING);
-			break;
-		case Phase::STOPPING:
-			SetPhase(Phase::STOPPED);
-			break;
-	}
-}
-
 void PaletteScene::OnOk()
 {
 	director.RequestPopScene();

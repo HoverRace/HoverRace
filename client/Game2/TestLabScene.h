@@ -53,11 +53,7 @@ class TestLabScene : public FormScene
 
 		class LabModule;
 
-	protected:
-		virtual void OnPhaseChanged(Phase::phase_t oldPhase);
-
 	public:
-		virtual void Advance(Util::OS::timestamp_t tick);
 		virtual void PrepareRender();
 		virtual void Render();
 

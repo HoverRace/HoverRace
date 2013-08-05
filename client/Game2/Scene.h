@@ -95,6 +95,27 @@ class Scene
 		Phase::phase_t GetPhase() const { return phase; }
 		bool SetPhase(Phase::phase_t phase);
 
+	protected:
+		/**
+		 * Set the maximum duration of the starting or stopping phases.
+		 *
+		 * Subclasses should call this function in the constructor or the first
+		 * tick in order to set how long the starting phase will last.  The
+		 * stopping phase always lasts as long as the starting phase.
+		 *
+		 * If set to zero (the default), then the starting and stopping phases
+		 * will be skipped.
+		 *
+		 * If set to non-zero, then the OnTransition() function will be called
+		 * during Advance() so subclasses can customize the animation.
+		 * @param ms The duration (may be zero to disable starting and
+		 *           stopping phases.
+		 */
+		void SetTransitionDuration(Util::OS::timestamp_t ms)
+		{
+			transitionDuration = static_cast<double>(ms);
+		}
+
 		/**
 		 * Calculate how much time we've spent in the current phase.
 		 * @param curTime The current (or simulated) timestamp.
@@ -130,14 +151,24 @@ class Scene
 		 */
 		virtual void OnPhaseChanged(Phase::phase_t oldPhase) { }
 
+		/**
+		 * Fired during the starting and stopping phases, if
+		 * SetTransitionDuration() was set.
+		 * @param progress The animation progress (during the @c STARTING phase
+		 *                 this goes from 0.0 to 1.0, and in reverse for the
+		 *                 @c STOPPING phase).
+		 */
+		virtual void OnTransition(double progress) { }
+
 	public:
-		virtual void Advance(Util::OS::timestamp_t tick) = 0;
+		virtual void Advance(Util::OS::timestamp_t tick);
 		virtual void PrepareRender() { }
 		virtual void Render() = 0;
 
 	private:
 		std::string name;
 		Phase::phase_t phase;
+		double transitionDuration;
 		Util::OS::timestamp_t phaseTs;  ///< Timestamp of when current phase was started.
 		Util::OS::timestamp_t startingPhaseTime;
 };
