@@ -52,7 +52,7 @@ Label::Label(const std::string &text,
 
 /**
  * Constructor for fixed-width label.
- * @param warpWidth The width of the label.
+ * @param wrapWidth The width of the label.
  * @param text The text.
  * @param font The font.
  * @param color The text foreground color (including alpha).
