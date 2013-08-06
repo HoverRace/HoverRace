@@ -826,9 +826,6 @@
     <CustomBuild Include="..\lib\libpng16-16.dll">
       <Filter>Libraries</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\lib\libwebp-4.dll">
-      <Filter>Libraries</Filter>
-    </CustomBuild>
     <CustomBuild Include="..\lib\zlib1.dll">
       <Filter>Libraries</Filter>
     </CustomBuild>
