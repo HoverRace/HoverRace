@@ -45,7 +45,7 @@ MainMenuScene::MainMenuScene(Display::Display &display, GameDirector &director) 
 {
 	typedef Display::UiViewModel::Alignment Alignment;
 
-	SetTransitionDuration(200);
+	SetTransitionDuration(500);
 
 	auto root = GetRoot();
 
