@@ -41,7 +41,7 @@ MessageScene::MessageScene(Display::Display &display,
                            GameDirector &director,
                            const std::string &title,
                            const std::string &message) :
-	SUPER(display, "Messsage (" + title + ")"),
+	SUPER(display, "Message (" + title + ")"),
 	display(display), director(director)
 {
 	Config *cfg = Config::GetInstance();
