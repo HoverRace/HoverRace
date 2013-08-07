@@ -146,6 +146,7 @@
     <ClCompile Include="Game2\Observer.cpp" />
     <ClCompile Include="Game2\PaletteScene.cpp" />
     <ClCompile Include="Game2\PathSelector.cpp" />
+    <ClCompile Include="Game2\PauseMenuScene.cpp" />
     <ClCompile Include="Game2\PrefsDialog.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -225,6 +226,7 @@
     <ClInclude Include="Game2\Observer.h" />
     <ClInclude Include="Game2\PaletteScene.h" />
     <ClInclude Include="Game2\PathSelector.h" />
+    <ClInclude Include="Game2\PauseMenuScene.h" />
     <ClInclude Include="Game2\PrefsDialog.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>

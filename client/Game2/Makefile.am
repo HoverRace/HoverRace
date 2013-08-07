@@ -50,6 +50,8 @@ hoverrace_SOURCES = \
 	Observer.h \
 	PaletteScene.cpp \
 	PaletteScene.h \
+	PauseMenuScene.cpp \
+	PauseMenuScene.h \
 	RoomList.cpp \
 	RoomList.h \
 	Rulebook.h \

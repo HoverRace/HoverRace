@@ -75,6 +75,7 @@ class GameScene : public Scene
 		void OnCameraZoom(int increment);
 		void OnCameraPan(int increment);
 		void OnCameraReset();
+		void OnPause();
 	protected:
 		virtual void OnPhaseChanged(Phase::phase_t oldPhase);
 
@@ -107,6 +108,8 @@ class GameScene : public Scene
 		boost::signals2::connection cameraPanUpConn;
 		boost::signals2::connection cameraPanDownConn;
 		boost::signals2::connection cameraResetConn;
+
+		boost::signals2::connection pauseConn;
 
 		HoverScript::SessionPeerPtr sessionPeer;
 

@@ -33,6 +33,7 @@
 
 #include "ClientSession.h"
 #include "MessageScene.h"
+#include "PauseMenuScene.h"
 #include "Rulebook.h"
 
 #include "GameScene.h"
@@ -106,6 +107,9 @@ void GameScene::AttachController(Control::InputEventController &controller)
 	controller.AddPlayerMaps(1, &mc);
 	controller.AddCameraMaps();
 
+	//TODO: Use separate action for pausing than ui.menuCancel.
+	controller.AddMenuMaps();
+
 	cameraZoomInConn = controller.actions.camera.zoomIn->Connect(
 		std::bind(&GameScene::OnCameraZoom, this, 1));
 	cameraZoomOutConn = controller.actions.camera.zoomOut->Connect(
@@ -116,6 +120,9 @@ void GameScene::AttachController(Control::InputEventController &controller)
 		std::bind(&GameScene::OnCameraPan, this, -1));
 	cameraResetConn = controller.actions.camera.reset->Connect(
 		std::bind(&GameScene::OnCameraReset, this));
+
+	pauseConn = controller.actions.ui.menuCancel->Connect(
+		std::bind(&GameScene::OnPause, this));
 }
 
 void GameScene::DetachController(Control::InputEventController &controller)
@@ -124,6 +131,8 @@ void GameScene::DetachController(Control::InputEventController &controller)
 	// dialog) otherwise we'll just keep accelerating into the wall.
 	MainCharacter::MainCharacter* mc = session->GetPlayer(0);
 	mc->SetEngineState(false);
+
+	pauseConn.disconnect();
 
 	cameraResetConn.disconnect();
 	cameraPanDownConn.disconnect();
@@ -160,6 +169,12 @@ void GameScene::OnCameraReset()
 			obs->Home();
 		}
 	}
+}
+
+/// Fired when the pause button (e.g. ESC) is pressed.
+void GameScene::OnPause()
+{
+	director->RequestPushScene(std::make_shared<PauseMenuScene>(display, *director));
 }
 
 void GameScene::OnPhaseChanged(Phase::phase_t oldPhase)
