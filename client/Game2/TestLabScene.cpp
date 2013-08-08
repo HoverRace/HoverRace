@@ -371,8 +371,10 @@ void LabelModule::AdjustWrapWidth(double amt)
 	const Display::Vec2 &curSize = wrapBox->GetSize();
 	double newWidth = curSize.x + amt;
 
-	wrapBox->SetSize(newWidth, curSize.y);
-	wrapLbl->SetWrapWidth(newWidth);
+	if (newWidth > 0 && newWidth < (1280.0 - wrapBox->GetPos().x)) {
+		wrapBox->SetSize(newWidth, curSize.y);
+		wrapLbl->SetWrapWidth(newWidth);
+	}
 }
 
 //}}} LabelModule
