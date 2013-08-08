@@ -122,6 +122,13 @@ namespace Module {
 		public:
 			LabelModule(Display::Display &display, GameDirector &director);
 			virtual ~LabelModule() { }
+
+		private:
+			void AdjustWrapWidth(double amt);
+
+		private:
+			std::shared_ptr<Display::FillBox> wrapBox;
+			std::shared_ptr<Display::Label> wrapLbl;
 	}; //}}}
 }
 
@@ -317,7 +324,7 @@ LabelModule::LabelModule(Display::Display &display, GameDirector &director) :
 
 	Display::Container *root = GetRoot();
 
-	std::shared_ptr<Display::FillBox> fillBox;
+	std::shared_ptr<Display::Button> btn;
 	std::shared_ptr<Display::Label> lbl;
 
 	lbl = root->AddChild(new Display::Label("Red 20 Normal",
@@ -339,12 +346,33 @@ LabelModule::LabelModule(Display::Display &display, GameDirector &director) :
 		"ThisIsAVeryLongWordThatShouldBeClippedToTheFixedWidthOfTheLabel.\n\n"
 		"This is the third line of the text.";
 
-	fillBox = root->AddChild(new Display::FillBox(1280 / 4, 720 - 150, 0xff3f3f3f));
-	fillBox->SetPos(0, 150);
+	wrapBox = root->AddChild(new Display::FillBox(1280 / 4, 720 - 150, 0xff3f3f3f));
+	wrapBox->SetPos(100, 150);
 
-	lbl = root->AddChild(new Display::Label(1280 / 4, wrapText,
+	wrapLbl = root->AddChild(new Display::Label(1280 / 4, wrapText,
 		Display::UiFont(fontName, 30), 0xffffffff));
-	lbl->SetPos(0, 150);
+	wrapLbl->SetPos(100, 150);
+
+	// Buttons to increase / decrease the wrap width.
+
+	btn = root->AddChild(new Display::Button(display, "->|"));
+	btn->SetPos(0, 150);
+	btn->GetClickedSignal().connect(std::bind(
+		&LabelModule::AdjustWrapWidth, this, 50));
+
+	btn = root->AddChild(new Display::Button(display, "|<-"));
+	btn->SetPos(0, 200);
+	btn->GetClickedSignal().connect(std::bind(
+		&LabelModule::AdjustWrapWidth, this, -50));
+}
+
+void LabelModule::AdjustWrapWidth(double amt)
+{
+	const Display::Vec2 &curSize = wrapBox->GetSize();
+	double newWidth = curSize.x + amt;
+
+	wrapBox->SetSize(newWidth, curSize.y);
+	wrapLbl->SetWrapWidth(newWidth);
 }
 
 //}}} LabelModule
