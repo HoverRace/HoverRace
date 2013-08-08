@@ -72,6 +72,7 @@ void SdlLabelView::OnModelUpdate(int prop)
 
 		case Label::Props::FONT:
 		case Label::Props::TEXT:
+		case Label::Props::WRAP_WIDTH:
 			if (texture) {
 				SDL_DestroyTexture(texture);
 				texture = nullptr;
