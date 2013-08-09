@@ -55,17 +55,21 @@ MessageScene::MessageScene(Display::Display &display,
 
 	Display::Container *root = GetRoot();
 
+	const double textWidth = 1280 - (HORZ_PADDING * 2);
+
 	titleLbl = root->AddChild(new Display::Label(title,
 		Display::UiFont(fontName, 40, Display::UiFont::BOLD),
 		Display::COLOR_WHITE));
-	titleLbl->SetPos(40, 180);
+	titleLbl->SetPos(HORZ_PADDING, 180);
+	titleLbl->SetWrapWidth(textWidth);
 
 	messageLbl = root->AddChild(new Display::Label(message,
 		Display::UiFont(fontName, 30), 0xffbfbfbf));
+	messageLbl->SetWrapWidth(textWidth);
 	// messageLbl position will be set in Layout().
 
 	controlsBtn = root->AddChild(new Display::Button(display, ""));
-	controlsBtn->SetPos(40, 480);
+	controlsBtn->SetPos(HORZ_PADDING, 480);
 	controlsBtn->GetClickedSignal().connect(std::bind(&MessageScene::OnOk, this));
 }
 
@@ -120,7 +124,7 @@ void MessageScene::Layout()
 {
 	// Set the message position relative to the title.
 	const Display::Vec2 titlePos = titleLbl->GetPos();
-	messageLbl->SetPos(titlePos.x, titlePos.y + titleLbl->Measure().y + 40);
+	messageLbl->SetPos(HORZ_PADDING, titlePos.y + titleLbl->Measure().y + 40);
 }
 
 void MessageScene::PrepareRender()

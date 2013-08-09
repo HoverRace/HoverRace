@@ -75,6 +75,8 @@ class MessageScene : public FormScene
 
 		boost::signals2::connection okConn;
 		boost::signals2::connection cancelConn;
+
+		static const int HORZ_PADDING = 40;
 };
 
 }  // namespace Client
