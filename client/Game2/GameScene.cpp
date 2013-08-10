@@ -181,19 +181,6 @@ void GameScene::OnPause()
 	director->RequestPushScene(std::make_shared<PauseMenuScene>(display, *director));
 }
 
-void GameScene::OnPhaseChanged(Phase::phase_t oldPhase)
-{
-	// Act like the starting and stopping phases don't even exist.
-	switch (GetPhase()) {
-		case Phase::STARTING:
-			SetPhase(Phase::RUNNING);
-			break;
-		case Phase::STOPPING:
-			SetPhase(Phase::STOPPED);
-			break;
-	}
-}
-
 void GameScene::SetHudVisible(bool visible)
 {
 	for (int i = 0; i < MAX_OBSERVERS; ++i) {

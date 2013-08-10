@@ -76,8 +76,6 @@ class GameScene : public Scene
 		void OnCameraPan(int increment);
 		void OnCameraReset();
 		void OnPause();
-	protected:
-		virtual void OnPhaseChanged(Phase::phase_t oldPhase);
 
 	public:
 		void SetHudVisible(bool visible);
