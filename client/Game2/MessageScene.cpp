@@ -153,6 +153,12 @@ void MessageScene::Layout()
 	// Set the message position relative to the title.
 	const Display::Vec2 titlePos = titleLbl->GetPos();
 	messageLbl->SetPos(HORZ_PADDING, titlePos.y + titleLbl->Measure().y + 40);
+
+	if (hasCancel) {
+		// Set the cancel button position relative to the OK button.
+		const Display::Vec2 okPos = okBtn->GetPos();
+		cancelBtn->SetPos(okPos.x + okBtn->Measure().x + 40, okPos.y);
+	}
 }
 
 void MessageScene::PrepareRender()
