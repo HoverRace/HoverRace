@@ -409,7 +409,7 @@ void ClientApp::RequestNewPracticeSession(RulebookPtr rules)
 
 	//TODO: Prompt the user for a track name.
 	try {
-		RequestReplaceScene(std::make_shared<GameScene>(this, *display, scripting, gamePeer, rules));
+		RequestReplaceScene(std::make_shared<GameScene>(*display, *this, scripting, gamePeer, rules));
 	}
 	catch (Parcel::ObjStreamExn&) {
 		throw;
@@ -618,7 +618,7 @@ void ClientApp::RequestMainMenu()
 	auto rules = std::make_shared<Rulebook>(trackName, 1, 0x70 + craftId);
 
 	try {
-		auto scene = std::make_shared<GameScene>(this, *display, scripting, gamePeer, rules);
+		auto scene = std::make_shared<GameScene>(*display, *this, scripting, gamePeer, rules);
 		scene->StartDemoMode();
 		RequestReplaceScene(scene);
 	}

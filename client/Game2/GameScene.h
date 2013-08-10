@@ -58,7 +58,7 @@ class GameScene : public Scene
 {
 	typedef Scene SUPER;
 	public:
-		GameScene(GameDirector *director, Display::Display &display,
+		GameScene(Display::Display &display, GameDirector &director,
 			Script::Core *scripting, HoverScript::GamePeer *gamePeer,
 			RulebookPtr rules);
 		virtual ~GameScene();
@@ -90,12 +90,12 @@ class GameScene : public Scene
 		void OnRaceFinish();
 
 	private:
+		Display::Display &display;
+		GameDirector &director;
+
 		int frame;
 		int numPlayers;
 		bool muted;
-
-		GameDirector *director;
-		Display::Display &display;
 
 		static const int MAX_OBSERVERS = Util::Config::MAX_PLAYERS;
 		Observer *observers[MAX_OBSERVERS];

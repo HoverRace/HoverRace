@@ -43,12 +43,12 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace Client {
 
-GameScene::GameScene(GameDirector *director, Display::Display &display,
+GameScene::GameScene(Display::Display &display, GameDirector &director,
                      Script::Core *scripting, HoverScript::GamePeer *gamePeer,
                      RulebookPtr rules) :
 	SUPER("Game"),
-	director(director),
-	frame(0), numPlayers(1), muted(false), display(display),
+	display(display), director(director),
+	frame(0), numPlayers(1), muted(false),
 	session(nullptr),
 	firedOnRaceFinish(false)
 {
@@ -177,7 +177,7 @@ void GameScene::OnCameraReset()
 /// Fired when the pause button (e.g. ESC) is pressed.
 void GameScene::OnPause()
 {
-	director->RequestPushScene(std::make_shared<PauseMenuScene>(display, *director));
+	director.RequestPushScene(std::make_shared<PauseMenuScene>(display, director));
 }
 
 void GameScene::SetHudVisible(bool visible)
