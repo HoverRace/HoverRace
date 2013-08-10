@@ -43,7 +43,7 @@ namespace {
 	template<class FN>
 	void ShowConfirmDialog(Display::Display &display, GameDirector &director,
 		const std::string &title, const std::string &message,
-		FN &callback)
+		const FN &callback)
 	{
 		std::string fullMsg = message;
 		fullMsg += "\n\n";
