@@ -131,6 +131,10 @@ void GameScene::DetachController(Control::InputEventController &controller)
 	// dialog) otherwise we'll just keep accelerating into the wall.
 	MainCharacter::MainCharacter* mc = session->GetPlayer(0);
 	mc->SetEngineState(false);
+	mc->SetBrakeState(false);
+	mc->SetTurnLeftState(false);
+	mc->SetTurnRightState(false);
+	mc->SetLookBackState(false);
 
 	pauseConn.disconnect();
 
