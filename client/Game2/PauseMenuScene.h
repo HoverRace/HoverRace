@@ -55,6 +55,8 @@ class PauseMenuScene : public FormScene
 
 	private:
 		void OnCancel();
+		void OnQuitToMainMenu();
+		void OnQuitToDesktop();
 
 	public:
 		// Scene

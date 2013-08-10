@@ -30,12 +30,32 @@
 #include "../../engine/VideoServices/FontSpec.h"
 #include "../../engine/Util/Config.h"
 
+#include "MessageScene.h"
+
 #include "PauseMenuScene.h"
 
 using namespace HoverRace::Util;
 
 namespace HoverRace {
 namespace Client {
+
+namespace {
+	template<class FN>
+	void ShowConfirmDialog(Display::Display &display, GameDirector &director,
+		const std::string &title, const std::string &message,
+		FN &callback)
+	{
+		std::string fullMsg = message;
+		fullMsg += "\n\n";
+		fullMsg += _("Any unsaved race records will be lost.");
+
+		auto scene = std::make_shared<MessageScene>(
+			display, director, title, fullMsg, true);
+		scene->GetOkSignal().connect(callback);
+
+		director.RequestPushScene(scene);
+	}
+}
 
 PauseMenuScene::PauseMenuScene(Display::Display &display,
                                GameDirector &director) :
@@ -57,14 +77,10 @@ PauseMenuScene::PauseMenuScene(Display::Display &display,
 
 	y += 40;
 
-	AddButton(_("Quit to Main Menu"), y)->GetClickedSignal().connect([&](Display::ClickRegion&) {
-		//TODO: Confirmation dialog.
-		director.RequestMainMenu();
-	});
-	AddButton(_("Quit to Desktop"), y)->GetClickedSignal().connect([&](Display::ClickRegion&) {
-		//TODO: Confirmation dialog.
-		director.RequestShutdown();
-	});
+	AddButton(_("Quit to Main Menu"), y)->GetClickedSignal().connect(std::bind(
+		&PauseMenuScene::OnQuitToMainMenu, this));
+	AddButton(_("Quit to Desktop"), y)->GetClickedSignal().connect(std::bind(
+		&PauseMenuScene::OnQuitToDesktop, this));
 }
 
 PauseMenuScene::~PauseMenuScene()
@@ -88,6 +104,22 @@ std::shared_ptr<Display::Button> PauseMenuScene::AddButton(
 void PauseMenuScene::OnCancel()
 {
 	director.RequestPopScene();
+}
+
+void PauseMenuScene::OnQuitToMainMenu()
+{
+	ShowConfirmDialog(display, director,
+		_("Quit to Main Menu"),
+		_("Are you sure you want to abandon the race and return to the main menu?"),
+		[&]() { director.RequestMainMenu(); });
+}
+
+void PauseMenuScene::OnQuitToDesktop()
+{
+	ShowConfirmDialog(display, director,
+		_("Quit to Desktop"),
+		_("Are you sure you want to abandon the race and exit the game?"),
+		[&]() { director.RequestShutdown(); });
 }
 
 void PauseMenuScene::AttachController(Control::InputEventController &controller)
