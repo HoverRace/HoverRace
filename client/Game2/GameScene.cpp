@@ -32,7 +32,6 @@
 #include "HoverScript/SessionPeer.h"
 
 #include "ClientSession.h"
-#include "MessageScene.h"
 #include "PauseMenuScene.h"
 #include "Rulebook.h"
 
@@ -251,10 +250,7 @@ void GameScene::Render()
 
 void GameScene::OnRaceFinish()
 {
-	// This is just a test of scene manipulation.
-	director->RequestPushScene(std::make_shared<MessageScene>(display, *director,
-		"Congratulations",
-		"Race complete!"));
+	//TODO: Fire script event handlers.
 }
 
 }  // namespace HoverScript
