@@ -48,7 +48,8 @@ class MessageScene : public FormScene
 	typedef FormScene SUPER;
 	public:
 		MessageScene(Display::Display &display, GameDirector &director,
-			const std::string &title, const std::string &message);
+			const std::string &title, const std::string &message,
+			bool hasCancel=false);
 		virtual ~MessageScene();
 
 	private:
@@ -67,11 +68,13 @@ class MessageScene : public FormScene
 	private:
 		Display::Display &display;
 		GameDirector &director;
+		bool hasCancel;
 
 		std::unique_ptr<Display::ScreenFade> fader;
 		std::shared_ptr<Display::Label> titleLbl;
 		std::shared_ptr<Display::Label> messageLbl;
-		std::shared_ptr<Display::Button> controlsBtn;
+		std::shared_ptr<Display::Button> okBtn;
+		std::shared_ptr<Display::Button> cancelBtn;
 
 		boost::signals2::connection okConn;
 		boost::signals2::connection cancelConn;

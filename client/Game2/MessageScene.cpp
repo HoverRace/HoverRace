@@ -37,12 +37,23 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace Client {
 
+/**
+ * Constructor.
+ * @param display The current display.
+ * @param director The current game director.
+ * @param title The title text (may be empty).
+ * @param message The message text (may be empty).
+ * @param hasCancel @c true for both "OK" and "Cancel" buttons,
+ *                  @c false for only an "OK" button.
+ */
 MessageScene::MessageScene(Display::Display &display,
                            GameDirector &director,
                            const std::string &title,
-                           const std::string &message) :
+                           const std::string &message,
+                           bool hasCancel) :
 	SUPER(display, "Message (" + title + ")"),
-	display(display), director(director)
+	display(display), director(director),
+	hasCancel(hasCancel)
 {
 	Config *cfg = Config::GetInstance();
 
@@ -68,9 +79,15 @@ MessageScene::MessageScene(Display::Display &display,
 	messageLbl->SetWrapWidth(textWidth);
 	// messageLbl position will be set in Layout().
 
-	controlsBtn = root->AddChild(new Display::Button(display, ""));
-	controlsBtn->SetPos(HORZ_PADDING, 480);
-	controlsBtn->GetClickedSignal().connect(std::bind(&MessageScene::OnOk, this));
+	okBtn = root->AddChild(new Display::Button(display, ""));
+	okBtn->SetPos(HORZ_PADDING, 480);
+	okBtn->GetClickedSignal().connect(std::bind(&MessageScene::OnOk, this));
+
+	if (hasCancel) {
+		cancelBtn = root->AddChild(new Display::Button(display, ""));
+		cancelBtn->SetPos(HORZ_PADDING + 200, 480);
+		cancelBtn->GetClickedSignal().connect(std::bind(&MessageScene::OnCancel, this));
+	}
 }
 
 MessageScene::~MessageScene()
@@ -95,16 +112,27 @@ void MessageScene::AttachController(Control::InputEventController &controller)
 
 	controller.AddMenuMaps();
 
+	// If the cancel button is not enabled, then both the "OK" and "Cancel"
+	// actions map to the "OnOk" handler.
+
 	auto &menuOkAction = controller.actions.ui.menuOk;
 	auto &menuCancelAction = controller.actions.ui.menuCancel;
 
 	okConn = menuOkAction->Connect(std::bind(&MessageScene::OnOk, this));
-	cancelConn = menuCancelAction->Connect(std::bind(&MessageScene::OnCancel, this));
+	cancelConn = menuCancelAction->Connect(std::bind(
+		hasCancel ? &MessageScene::OnCancel : &MessageScene::OnOk, this));
 
 	std::ostringstream oss;
 	oss << '[' << controller.HashToString(menuOkAction->GetPrimaryTrigger()) <<
 		"] " << menuOkAction->GetName();
-	controlsBtn->SetText(oss.str());
+	okBtn->SetText(oss.str());
+
+	if (hasCancel) {
+		oss.str("");
+		oss << '[' << controller.HashToString(menuCancelAction->GetPrimaryTrigger()) <<
+			"] " << menuCancelAction->GetName();
+		cancelBtn->SetText(oss.str());
+	}
 }
 
 void MessageScene::DetachController(Control::InputEventController &controller)
