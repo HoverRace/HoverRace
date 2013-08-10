@@ -96,14 +96,14 @@ MessageScene::~MessageScene()
 
 void MessageScene::OnOk()
 {
-	//TODO: Fire "OK" event.
 	director.RequestPopScene();
+	okSignal();
 }
 
 void MessageScene::OnCancel()
 {
-	//TODO: Fire "Cancel" event.
 	director.RequestPopScene();
+	cancelSignal();
 }
 
 void MessageScene::AttachController(Control::InputEventController &controller)

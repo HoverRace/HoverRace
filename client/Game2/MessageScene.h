@@ -57,6 +57,13 @@ class MessageScene : public FormScene
 		void OnCancel();
 
 	public:
+		typedef boost::signals2::signal<void()> okSignal_t;
+		okSignal_t &GetOkSignal() { return okSignal; }
+
+		typedef boost::signals2::signal<void()> cancelSignal_t;
+		cancelSignal_t &GetCancelSignal() { return cancelSignal; }
+
+	public:
 		// Scene
 		virtual void AttachController(Control::InputEventController &controller);
 		virtual void DetachController(Control::InputEventController &controller);
@@ -69,6 +76,9 @@ class MessageScene : public FormScene
 		Display::Display &display;
 		GameDirector &director;
 		bool hasCancel;
+
+		okSignal_t okSignal;
+		cancelSignal_t cancelSignal;
 
 		std::unique_ptr<Display::ScreenFade> fader;
 		std::shared_ptr<Display::Label> titleLbl;
