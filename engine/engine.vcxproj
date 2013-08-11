@@ -119,6 +119,7 @@
     <ClCompile Include="Control\ActionPerformers.cpp" />
     <ClCompile Include="Control\Controller.cpp" />
     <ClCompile Include="Control\ControllerStrings.cpp" />
+    <ClCompile Include="Display\ActionButton.cpp" />
     <ClCompile Include="Display\Button.cpp" />
     <ClCompile Include="Display\ClickRegion.cpp" />
     <ClCompile Include="Display\Color.cpp" />
@@ -238,6 +239,7 @@
     <ClInclude Include="Control\ControlAction.h" />
     <ClInclude Include="Control\Controller.h" />
     <ClInclude Include="Control\InputHandler.h" />
+    <ClInclude Include="Display\ActionButton.h" />
     <ClInclude Include="Display\Button.h" />
     <ClInclude Include="Display\ClickRegion.h" />
     <ClInclude Include="Display\Color.h" />
