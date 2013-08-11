@@ -52,6 +52,7 @@
 #include "yaml/SeqNode.h"
 #include "yaml/Parser.h"
 
+#include "../Control/Controller.h"
 #include "../Parcel/Bundle.h"
 #include "../Parcel/TrackBundle.h"
 #include "Str.h"
@@ -63,6 +64,7 @@
 #endif
 
 namespace fs = boost::filesystem;
+using HoverRace::Control::InputEventController;
 
 #ifdef _WIN32
 	#define DIRSEP "\\"
@@ -119,22 +121,6 @@ namespace fs = boost::filesystem;
 
 namespace HoverRace {
 namespace Util {
-
-namespace {
-	// Copied from InputEventController::HashKeyboardEvent.
-	//TODO: Remove when the controller bits are moved into the engine.
-	int HashKeyboardEvent(SDL_Keycode key)
-	{
-		if (key & SDLK_SCANCODE_MASK) {
-			ASSERT((key ^ SDLK_SCANCODE_MASK) < 0xfff);
-			return (0x00100000 | (key & 0xfff)) << 8;
-		}
-		else {
-			ASSERT(key <= 0xff);
-			return (key % 0xff) << 8;
-		}
-	}
-}
 
 const std::string Config::TRACK_EXT(".trk");
 
@@ -665,24 +651,23 @@ void Config::ResetToDefaults()
 	net.tcpServPort = cfg_net_t::DEFAULT_TCP_SERV_PORT;
 
 	// Default controls.
-	// values pulled from OIS
-	controls_hash[0].motorOn  = HashKeyboardEvent(SDLK_LSHIFT);
-	controls_hash[0].right    = HashKeyboardEvent(SDLK_RIGHT);
-	controls_hash[0].left     = HashKeyboardEvent(SDLK_LEFT);
-	controls_hash[0].jump     = HashKeyboardEvent(SDLK_UP);
-	controls_hash[0].fire     = HashKeyboardEvent(SDLK_LCTRL);
-	controls_hash[0].brake    = HashKeyboardEvent(SDLK_DOWN);
-	controls_hash[0].weapon   = HashKeyboardEvent(SDLK_TAB);
-	controls_hash[0].lookBack = HashKeyboardEvent(SDLK_END);
+	controls_hash[0].motorOn  = InputEventController::HashKeyboardEvent(SDLK_LSHIFT);
+	controls_hash[0].right    = InputEventController::HashKeyboardEvent(SDLK_RIGHT);
+	controls_hash[0].left     = InputEventController::HashKeyboardEvent(SDLK_LEFT);
+	controls_hash[0].jump     = InputEventController::HashKeyboardEvent(SDLK_UP);
+	controls_hash[0].fire     = InputEventController::HashKeyboardEvent(SDLK_LCTRL);
+	controls_hash[0].brake    = InputEventController::HashKeyboardEvent(SDLK_DOWN);
+	controls_hash[0].weapon   = InputEventController::HashKeyboardEvent(SDLK_TAB);
+	controls_hash[0].lookBack = InputEventController::HashKeyboardEvent(SDLK_END);
 
-	controls_hash[1].motorOn  = HashKeyboardEvent(SDLK_f);
-	controls_hash[1].right    = HashKeyboardEvent(SDLK_d);
-	controls_hash[1].left     = HashKeyboardEvent(SDLK_a);
-	controls_hash[1].jump     = HashKeyboardEvent(SDLK_s);
-	controls_hash[1].fire     = HashKeyboardEvent(SDLK_r);
-	controls_hash[1].brake    = HashKeyboardEvent(SDLK_w);
-	controls_hash[1].weapon   = HashKeyboardEvent(SDLK_q);
-	controls_hash[1].lookBack = HashKeyboardEvent(SDLK_i);
+	controls_hash[1].motorOn  = InputEventController::HashKeyboardEvent(SDLK_f);
+	controls_hash[1].right    = InputEventController::HashKeyboardEvent(SDLK_d);
+	controls_hash[1].left     = InputEventController::HashKeyboardEvent(SDLK_a);
+	controls_hash[1].jump     = InputEventController::HashKeyboardEvent(SDLK_s);
+	controls_hash[1].fire     = InputEventController::HashKeyboardEvent(SDLK_r);
+	controls_hash[1].brake    = InputEventController::HashKeyboardEvent(SDLK_w);
+	controls_hash[1].weapon   = InputEventController::HashKeyboardEvent(SDLK_q);
+	controls_hash[1].lookBack = InputEventController::HashKeyboardEvent(SDLK_i);
 
 	// set these to disabled (0x0000<code>)
 	controls_hash[2].motorOn  = 0;
@@ -703,21 +688,21 @@ void Config::ResetToDefaults()
 	controls_hash[3].weapon   = 14;
 	controls_hash[3].lookBack = 15;
 
-	camera_hash.zoomIn  = HashKeyboardEvent(SDLK_INSERT);
-	camera_hash.zoomOut = HashKeyboardEvent(SDLK_DELETE);
-	camera_hash.panUp   = HashKeyboardEvent(SDLK_PAGEUP);
-	camera_hash.panDown = HashKeyboardEvent(SDLK_PAGEDOWN);
-	camera_hash.reset   = HashKeyboardEvent(SDLK_HOME);
+	camera_hash.zoomIn  = InputEventController::HashKeyboardEvent(SDLK_INSERT);
+	camera_hash.zoomOut = InputEventController::HashKeyboardEvent(SDLK_DELETE);
+	camera_hash.panUp   = InputEventController::HashKeyboardEvent(SDLK_PAGEUP);
+	camera_hash.panDown = InputEventController::HashKeyboardEvent(SDLK_PAGEDOWN);
+	camera_hash.reset   = InputEventController::HashKeyboardEvent(SDLK_HOME);
 
-	ui.console_toggle = HashKeyboardEvent(SDLK_F11);
-	ui.console_up     = HashKeyboardEvent(SDLK_PAGEUP);
-	ui.console_down   = HashKeyboardEvent(SDLK_PAGEDOWN);
-	ui.console_top    = HashKeyboardEvent(SDLK_HOME);
-	ui.console_bottom = HashKeyboardEvent(SDLK_END);
-	ui.console_help   = HashKeyboardEvent(SDLK_F1);
+	ui.console_toggle = InputEventController::HashKeyboardEvent(SDLK_F11);
+	ui.console_up     = InputEventController::HashKeyboardEvent(SDLK_PAGEUP);
+	ui.console_down   = InputEventController::HashKeyboardEvent(SDLK_PAGEDOWN);
+	ui.console_top    = InputEventController::HashKeyboardEvent(SDLK_HOME);
+	ui.console_bottom = InputEventController::HashKeyboardEvent(SDLK_END);
+	ui.console_help   = InputEventController::HashKeyboardEvent(SDLK_F1);
 
-	ui.menu_ok = HashKeyboardEvent(SDLK_RETURN);
-	ui.menu_cancel = HashKeyboardEvent(SDLK_ESCAPE);
+	ui.menu_ok = InputEventController::HashKeyboardEvent(SDLK_RETURN);
+	ui.menu_cancel = InputEventController::HashKeyboardEvent(SDLK_ESCAPE);
 
 	runtime.silent = false;
 	runtime.aieeee = false;
