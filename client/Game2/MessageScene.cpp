@@ -22,7 +22,7 @@
 #include "StdAfx.h"
 
 #include "../../engine/Control/Controller.h"
-#include "../../engine/Display/Button.h"
+#include "../../engine/Display/ActionButton.h"
 #include "../../engine/Display/Container.h"
 #include "../../engine/Display/Display.h"
 #include "../../engine/Display/Label.h"
@@ -79,14 +79,12 @@ MessageScene::MessageScene(Display::Display &display,
 	messageLbl->SetWrapWidth(textWidth);
 	// messageLbl position will be set in Layout().
 
-	okBtn = root->AddChild(new Display::Button(display, ""));
+	okBtn = root->AddChild(new Display::ActionButton(display));
 	okBtn->SetPos(HORZ_PADDING, 480);
-	okBtn->GetClickedSignal().connect(std::bind(&MessageScene::OnOk, this));
 
 	if (hasCancel) {
-		cancelBtn = root->AddChild(new Display::Button(display, ""));
+		cancelBtn = root->AddChild(new Display::ActionButton(display));
 		cancelBtn->SetPos(HORZ_PADDING + 200, 480);
-		cancelBtn->GetClickedSignal().connect(std::bind(&MessageScene::OnCancel, this));
 	}
 }
 
@@ -122,17 +120,13 @@ void MessageScene::AttachController(Control::InputEventController &controller)
 	cancelConn = menuCancelAction->Connect(std::bind(
 		hasCancel ? &MessageScene::OnCancel : &MessageScene::OnOk, this));
 
-	std::ostringstream oss;
-	oss << '[' << controller.HashToString(menuOkAction->GetPrimaryTrigger()) <<
-		"] " << menuOkAction->GetName();
-	okBtn->SetText(oss.str());
-
+	okBtn->AttachAction(controller, menuOkAction);
 	if (hasCancel) {
-		oss.str("");
-		oss << '[' << controller.HashToString(menuCancelAction->GetPrimaryTrigger()) <<
-			"] " << menuCancelAction->GetName();
-		cancelBtn->SetText(oss.str());
+		cancelBtn->AttachAction(controller, menuCancelAction);
 	}
+
+	// Attaching the action may have changed the button size.
+	RequestLayout();
 }
 
 void MessageScene::DetachController(Control::InputEventController &controller)
