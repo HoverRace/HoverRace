@@ -79,7 +79,7 @@ class MR_DllDeclare ClickRegion : public UiViewModel
 		typedef boost::signals2::signal<void(ClickRegion&)> clickedSignal_t;
 		clickedSignal_t &GetClickedSignal() { return clickedSignal; }
 	protected:
-		void FireClickedSignal();
+		virtual void FireClickedSignal();
 
 	public:
 		const Vec2 &GetSize() const;
