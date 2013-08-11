@@ -265,14 +265,14 @@ class MR_DllDeclare InputEventController {
 		int GetNextAvailableDisabledHash();
 
 	public:
-		int HashKeyboardEvent(const SDL_Keycode& arg);
-		int HashMouseButtonEvent(const SDL_MouseButtonEvent& arg);
-		int HashMouseAxisEvent(axis_t axis, int direction);
+		static int HashKeyboardEvent(const SDL_Keycode& arg);
+		static int HashMouseButtonEvent(const SDL_MouseButtonEvent& arg);
+		static int HashMouseAxisEvent(axis_t axis, int direction);
 		/*TODO
-		int HashJoystickAxisEvent(const JoyStickEvent& arg, int axis, int direction);
-		int HashJoystickSliderEvent(const JoyStickEvent& arg, int slider);
-		int HashJoystickButtonEvent(const JoyStickEvent& arg, int button);
-		int HashJoystickPovEvent(const JoyStickEvent& arg, int pov, int direction);
+		static int HashJoystickAxisEvent(const JoyStickEvent& arg, int axis, int direction);
+		static int HashJoystickSliderEvent(const JoyStickEvent& arg, int slider);
+		static int HashJoystickButtonEvent(const JoyStickEvent& arg, int button);
+		static int HashJoystickPovEvent(const JoyStickEvent& arg, int pov, int direction);
 		*/
 
 	private:
