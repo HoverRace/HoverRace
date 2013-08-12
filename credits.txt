@@ -20,6 +20,9 @@ Thanks also to the following projects:
 
 The Boost C++ Libraries
   http://www.boost.org/
+  
+Font Awesome - Dave Gandy
+  http://fontawesome.io/
 
 libcurl - Daniel Stenberg and contributors.
   http://curl.haxx.se/
@@ -28,3 +31,4 @@ LibYAML - Kirill Simonov and contributors.
   http://pyyaml.org/wiki/LibYAML
 
 LiteUnzip - Jeff Glatt, based on work by Lucian Wischik, based on work by Jean-Loup Gailly and Mark Adler.
+
