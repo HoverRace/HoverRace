@@ -97,6 +97,7 @@ class MR_DllDeclare Config
 		std::string userAgentId;
 		std::string defaultFontName;
 		std::string defaultMonospaceFontName;
+		std::string defaultSymbolFontName;
 #		ifndef _WIN32
 			xdgHandle *xdg;
 #		endif
@@ -147,6 +148,7 @@ class MR_DllDeclare Config
 
 		const std::string &GetDefaultFontName() const;
 		const std::string &GetDefaultMonospaceFontName() const;
+		const std::string &GetDefaultSymbolFontName() const;
 
 	public:
 		static Config *GetInstance() { return instance; }

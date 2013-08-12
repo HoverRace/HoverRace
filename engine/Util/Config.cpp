@@ -200,6 +200,16 @@ Config::Config(int verMajor, int verMinor, int verPatch, int verBuild,
 		defaultMonospaceFontName = "monospace";
 #	endif
 
+#	ifdef WITH_SDL_PANGO
+		defaultSymbolFontName = "FontAwesome";
+#	elif defined(WITH_SDL_TTF)
+		defaultSymbolFontName = "fontawesome/fontawesome-webfont";
+#	elif defined(_WIN32)
+		defaultSymbolFontName = "FontAwesome";
+#	else
+		defaultSymbolFontName = "Unknown";
+#	endif
+
 	//TODO: Check if we successfully loaded our private fonts.
 
 	// Set initial defaults.
@@ -585,6 +595,15 @@ const std::string &Config::GetDefaultFontName() const
 const std::string &Config::GetDefaultMonospaceFontName() const
 {
 	return defaultMonospaceFontName;
+}
+
+/**
+ * Retrieve the default font name for symbols.
+ * @return The font name (never emepty).
+ */
+const std::string &Config::GetDefaultSymbolFontName() const
+{
+	return defaultSymbolFontName;
 }
 
 /**

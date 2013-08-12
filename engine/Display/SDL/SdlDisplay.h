@@ -100,6 +100,8 @@ class MR_DllDeclare SdlDisplay : public Display
 			SDLPango_Context *GetPangoContext() { return pangoContext; }
 #		elif defined(WITH_SDL_TTF)
 			TTF_Font *LoadTtfFont(const UiFont &font);
+#		elif defined(_WIN32)
+			void LoadPrivateFont(const std::string &filename);
 #		endif
 
 	public:

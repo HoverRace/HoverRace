@@ -122,6 +122,13 @@ SdlDisplay::SdlDisplay(const std::string &windowTitle) :
 {
 	ApplyVideoMode();
 
+	Config *cfg = Config::GetInstance();
+
+#	ifdef _WIN32
+		//TODO: Get the filename from the config.
+		LoadPrivateFont("fontawesome/fontawesome-webfont.ttf");
+#	endif
+
 	legacyDisplay = new SdlLegacyDisplay(*this);
 	SUPER::OnDisplayConfigChanged();
 	legacyDisplay->CreatePalette();
@@ -315,6 +322,27 @@ TTF_Font *SdlDisplay::LoadTtfFont(const UiFont &font)
 	}
 	else {
 		return iter->second;
+	}
+}
+#endif
+
+#ifdef _WIN32
+/**
+ * Load a private (visible only to this process) font.
+ * @param filename The filename of the font, relative to the media dir.
+ */
+void SdlDisplay::LoadPrivateFont(const std::string &filename)
+{
+	Config *cfg = Config::GetInstance();
+	OS::path_t fontPath = cfg->GetMediaPath();
+	fontPath /= Str::UP("fonts");
+	fontPath /= Str::UP(filename);
+
+	int fontsAdded = AddFontResourceExW((const wchar_t*)Str::PW(fontPath),
+		FR_PRIVATE | FR_NOT_ENUM, 0);
+	Log::Info("Loaded %d private font(s) from file: %s", fontsAdded, filename.c_str());
+	if (fontsAdded < 1) {
+		throw Exception("Failed to load private font: " + filename);
 	}
 }
 #endif

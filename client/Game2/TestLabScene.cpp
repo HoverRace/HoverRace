@@ -320,7 +320,9 @@ LabelModule::LabelModule(Display::Display &display, GameDirector &director) :
 	SUPER(display, director, "Button")
 {
 	Config *cfg = Config::GetInstance();
-	std::string fontName = cfg->GetDefaultFontName();
+	const std::string &fontName = cfg->GetDefaultFontName();
+	const std::string &monospaceFontName = cfg->GetDefaultMonospaceFontName();
+	const std::string &symbolFontName = cfg->GetDefaultSymbolFontName();
 
 	Display::Container *root = GetRoot();
 
@@ -337,6 +339,20 @@ LabelModule::LabelModule(Display::Display &display, GameDirector &director) :
 		Display::UiFont(fontName, 30, Display::UiFont::BOLD | Display::UiFont::ITALIC),
 		0x7fff00ff));
 	lbl->SetPos(0, 65);
+
+	lbl = root->AddChild(new Display::Label("Default Font",
+		Display::UiFont(fontName, 30), 0xffbfbfbf));
+	lbl->SetPos(640, 20);
+	lbl = root->AddChild(new Display::Label("Monospace Font",
+		Display::UiFont(monospaceFontName, 30), 0xffbfbfbf));
+	lbl->SetPos(640, 50);
+	lbl = root->AddChild(new Display::Label("Symbol Font < "
+		"\xef\x84\x9b "  // gamepad
+		"\xef\x82\x91 "  // trophy
+		"\xef\x83\xa4 "  // dashboard
+		">",
+		Display::UiFont(symbolFontName, 30), 0xffbfbfbf));
+	lbl->SetPos(640, 80);
 
 	// Wrapped text (with a background to visualize the width).
 
