@@ -346,7 +346,7 @@ LabelModule::LabelModule(Display::Display &display, GameDirector &director) :
 	lbl = root->AddChild(new Display::Label("Monospace Font",
 		Display::UiFont(monospaceFontName, 30), 0xffbfbfbf));
 	lbl->SetPos(640, 50);
-	lbl = root->AddChild(new Display::Label("Symbol Font < "
+	lbl = root->AddChild(new Display::Label("< "
 		"\xef\x84\x9b "  // gamepad
 		"\xef\x82\x91 "  // trophy
 		"\xef\x83\xa4 "  // dashboard
