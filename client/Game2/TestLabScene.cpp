@@ -22,6 +22,7 @@
 #include "StdAfx.h"
 
 #include "../../engine/Control/Controller.h"
+#include "../../engine/Display/ActionButton.h"
 #include "../../engine/Display/Button.h"
 #include "../../engine/Display/Container.h"
 #include "../../engine/Display/Display.h"
@@ -50,7 +51,12 @@ class TestLabScene::LabModule : public FormScene /*{{{*/
 			const std::string &title);
 		virtual ~LabModule() { }
 
+	private:
+		void OnCancel();
+
 	public:
+		virtual void AttachController(Control::InputEventController &controller);
+		virtual void DetachController(Control::InputEventController &controller);
 		virtual void PrepareRender();
 		virtual void Render();
 
@@ -60,6 +66,8 @@ class TestLabScene::LabModule : public FormScene /*{{{*/
 		const std::string title;
 	private:
 		std::unique_ptr<Display::ScreenFade> fader;
+		std::shared_ptr<Display::ActionButton> cancelBtn;
+		boost::signals2::connection cancelConn;
 }; //}}}
 
 namespace {
@@ -180,12 +188,37 @@ TestLabScene::LabModule::LabModule(Display::Display &display,
 	fader.reset(new Display::ScreenFade(Display::COLOR_BLACK, 1.0));
 	fader->AttachView(display);
 
-	auto btn = GetRoot()->AddChild(new Display::Button(display, "Close"));
-	btn->SetPos(1280, 0);
-	btn->SetAlignment(Alignment::NE);
-	btn->GetClickedSignal().connect([&](Display::ClickRegion&) {
-		director.RequestPopScene();
-	});
+	cancelBtn = GetRoot()->AddChild(new Display::ActionButton(display));
+	cancelBtn->SetPos(1280, 0);
+	cancelBtn->SetAlignment(Alignment::NE);
+}
+
+void TestLabScene::LabModule::OnCancel()
+{
+	director.RequestPopScene();
+}
+
+void TestLabScene::LabModule::AttachController(
+	Control::InputEventController &controller)
+{
+	SUPER::AttachController(controller);
+
+	controller.AddMenuMaps();
+
+	auto &menuCancelAction = controller.actions.ui.menuCancel;
+
+	cancelConn = menuCancelAction->Connect(std::bind(
+		&TestLabScene::LabModule::OnCancel, this));
+
+	cancelBtn->AttachAction(controller, menuCancelAction);
+}
+
+void TestLabScene::LabModule::DetachController(
+	Control::InputEventController &controller)
+{
+	cancelConn.disconnect();
+
+	SUPER::DetachController(controller);
 }
 
 void TestLabScene::LabModule::PrepareRender()
