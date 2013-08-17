@@ -46,5 +46,7 @@ libdisplay_la_SOURCES = \
 	SDL/SdlLegacyDisplay.h \
 	SDL/SdlScreenFadeView.cpp \
 	SDL/SdlScreenFadeView.h \
+	SDL/SdlSurfaceText.cpp \
+	SDL/SdlSurfaceText.h \
 	SDL/SdlView.h
 

@@ -136,6 +136,7 @@
     <ClCompile Include="Display\SDL\SdlLabelView.cpp" />
     <ClCompile Include="Display\SDL\SdlLegacyDisplay.cpp" />
     <ClCompile Include="Display\SDL\SdlScreenFadeView.cpp" />
+    <ClCompile Include="Display\SDL\SdlSurfaceText.cpp" />
     <ClCompile Include="Display\UiFont.cpp" />
     <ClCompile Include="Display\UiViewModel.cpp" />
     <ClCompile Include="MainCharacter\MainCharacter.cpp" />
@@ -256,6 +257,7 @@
     <ClInclude Include="Display\SDL\SdlLabelView.h" />
     <ClInclude Include="Display\SDL\SdlLegacyDisplay.h" />
     <ClInclude Include="Display\SDL\SdlScreenFadeView.h" />
+    <ClInclude Include="Display\SDL\SdlSurfaceText.h" />
     <ClInclude Include="Display\SDL\SdlView.h" />
     <ClInclude Include="Display\UiFont.h" />
     <ClInclude Include="Display\UiLayoutFlags.h" />
