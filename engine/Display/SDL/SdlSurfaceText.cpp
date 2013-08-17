@@ -45,8 +45,10 @@ namespace SDL {
 
 /**
  * Constructor.
+ * @param display The current display.
  */
-SdlSurfaceText::SdlSurfaceText() :
+SdlSurfaceText::SdlSurfaceText(SdlDisplay &display) :
+	display(display),
 	font(), color(COLOR_WHITE), wrapWidth(-1),
 	width(0), height(0)
 {
@@ -54,10 +56,13 @@ SdlSurfaceText::SdlSurfaceText() :
 
 /**
  * Constructor with initial font and color.
+ * @param display The current display.
  * @param font The font to render with.
  * @param color The text foreground color.
  */
-SdlSurfaceText::SdlSurfaceText(const UiFont &font, const Color color) :
+SdlSurfaceText::SdlSurfaceText(SdlDisplay &display, const UiFont &font,
+                               const Color color) :
+	display(display),
 	font(font), color(color), wrapWidth(-1),
 	width(0), height(0)
 {
@@ -79,7 +84,7 @@ int SdlSurfaceText::MeasureLineHeight()
 		throw UnimplementedExn("SdlSurfaceText::MeasureLineHeight for SDL_Pango");
 
 #	elif defined(WITH_SDL_TTF)
-		TTF_Font *ttfFont = disp.LoadTtfFont(font);
+		TTF_Font *ttfFont = display.LoadTtfFont(font);
 		width = 1;
 		height = TTF_FontHeight(ttfFont);
 
@@ -163,7 +168,7 @@ SDL_Surface *SdlSurfaceText::RenderToNewSurface(
 		throw UnimplementedExn("SdlSurfaceText::RenderToNewSurface for SDL_Pango");
 
 #	elif defined(WITH_SDL_TTF)
-		TTF_Font *ttfFont = disp.LoadTtfFont(font);
+		TTF_Font *ttfFont = display.LoadTtfFont(font);
 
 		//TODO: Handle newlines ourselves.
 		SDL_Color color = { 0xff, 0xff, 0xff };

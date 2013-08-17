@@ -23,6 +23,8 @@
 
 #include <SDL2/SDL.h>
 
+#include "SdlDisplay.h"
+
 #ifdef _WIN32
 #	ifdef MR_ENGINE
 #		define MR_DllDeclare   __declspec( dllexport )
@@ -55,8 +57,9 @@ namespace SDL {
 class MR_DllDeclare SdlSurfaceText
 {
 	public:
-		SdlSurfaceText();
-		SdlSurfaceText(const UiFont &font, const Color color=COLOR_WHITE);
+		SdlSurfaceText(SdlDisplay &display);
+		SdlSurfaceText(SdlDisplay &display, const UiFont &font,
+			const Color color=COLOR_WHITE);
 		~SdlSurfaceText() { }
 
 	public:
@@ -81,6 +84,8 @@ class MR_DllDeclare SdlSurfaceText
 		int GetHeight() const { return height; }
 
 	private:
+		SdlDisplay &display;
+
 		UiFont font;
 		Color color;
 		int wrapWidth;
