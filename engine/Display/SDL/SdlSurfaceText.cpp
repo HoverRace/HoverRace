@@ -50,6 +50,58 @@ SdlSurfaceText::SdlSurfaceText() :
 }
 
 /**
+ * Calculate the line-height of text using the current font.
+ *
+ * This is useful when needing to treat an empty string as if it were being
+ * rendered, since normally an empty string would be a zero-by-zero size.
+ *
+ * This will set the height to the line-height and the width to 1.
+ *
+ * @return The line-height (also available via GetHeight).
+ */
+int SdlSurfaceText::MeasureLineHeight()
+{
+#	ifdef WITH_SDL_PANGO
+		throw UnimplementedExn("SdlSurfaceText::MeasureLineHeight for SDL_Pango");
+
+#	elif defined(WITH_SDL_TTF)
+		TTF_Font *ttfFont = disp.LoadTtfFont(font);
+		width = 1;
+		height = TTF_FontHeight(ttfFont);
+
+#	elif defined(_WIN32)
+		HDC hdc = CreateCompatibleDC(NULL);
+
+		HFONT stdFont = CreateFontW(
+			static_cast<int>(font.size),
+			0, 0, 0,
+			(font.style & UiFont::BOLD) ? FW_BOLD : FW_NORMAL,
+			(font.style & UiFont::ITALIC) ? TRUE : FALSE,
+			0, 0, 0, 0, 0,
+			ANTIALIASED_QUALITY,
+			0,
+			Str::UW(font.name));
+		HFONT oldFont = (HFONT)SelectObject(hdc, stdFont);
+
+		RECT sz;
+		memset(&sz, 0, sizeof(sz));
+		DrawTextW(hdc, L" ", 1, &sz, DT_CALCRECT | DT_NOPREFIX);
+		width = 1;
+		height = sz.bottom - sz.top;
+
+		SelectObject(hdc, oldFont);
+		DeleteObject(stdFont);
+
+		DeleteDC(hdc);
+
+#	else
+		throw UnimplementedExn("SdlSurfaceText::UpdateBlank");
+#	endif
+
+	return height;
+}
+
+/**
  * Create a new SDL surface and render text onto it.
  * The new SDL surface will be sized to fit the rendered text.
  * @param s The text to render (may not be blank).

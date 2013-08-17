@@ -65,6 +65,7 @@ class MR_DllDeclare SdlSurfaceText
 		void SetWrapWidth(int wrapWidth) { this->wrapWidth = wrapWidth; }
 
 	public:
+		int MeasureLineHeight();
 		SDL_Surface *RenderToNewSurface(
 #			ifdef _WIN32
 				const std::wstring &s

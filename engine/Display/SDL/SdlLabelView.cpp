@@ -23,15 +23,6 @@
 
 #include <SDL2/SDL.h>
 
-#ifdef WITH_SDL_PANGO
-#	include <glib.h>
-#	include <SDL_Pango.h>
-#elif defined(WITH_SDL_TTF)
-#	include <SDL2/SDL_ttf.h>
-#endif
-
-#include "../../Util/SelFmt.h"
-#include "../../Util/Str.h"
 #include "../Label.h"
 #include "SdlSurfaceText.h"
 
@@ -42,11 +33,6 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace Display {
 namespace SDL {
-
-#ifdef _WIN32
-static RGBQUAD RGB_BLACK = { 0, 0, 0, 0 };
-static RGBQUAD RGB_WHITE = { 0xff, 0xff, 0xff, 0 };
-#endif
 
 SdlLabelView::SdlLabelView(SdlDisplay &disp, Label &model) :
 	SUPER(disp, model),
@@ -124,44 +110,11 @@ void SdlLabelView::UpdateBlank()
 		font.size *= (scale = disp.GetUiScale());
 	}
 
-#	ifdef WITH_SDL_PANGO
-		throw UnimplementedExn("SdlLabelView::UpdateBlank for SDL_Pango");
+	SdlSurfaceText textRenderer;
+	textRenderer.SetFont(font);
+	height = textRenderer.MeasureLineHeight();
 
-#	elif defined(WITH_SDL_TTF)
-		TTF_Font *ttfFont = disp.LoadTtfFont(font);
-		realWidth = width = 1;
-		realHeight = height = TTF_FontHeight(ttfFont);
-
-#	elif defined(_WIN32)
-		HDC hdc = CreateCompatibleDC(NULL);
-
-		HFONT stdFont = CreateFontW(
-			static_cast<int>(font.size),
-			0, 0, 0,
-			(font.style & UiFont::BOLD) ? FW_BOLD : FW_NORMAL,
-			(font.style & UiFont::ITALIC) ? TRUE : FALSE,
-			0, 0, 0, 0, 0,
-			ANTIALIASED_QUALITY,
-			0,
-			Str::UW(font.name));
-		HFONT oldFont = (HFONT)SelectObject(hdc, stdFont);
-
-		RECT sz;
-		memset(&sz, 0, sizeof(sz));
-		DrawTextW(hdc, L" ", 1, &sz, DT_CALCRECT | DT_NOPREFIX);
-		realWidth = width = 1;
-		realHeight = height = sz.bottom - sz.top;
-
-		SelectObject(hdc, oldFont);
-		DeleteObject(stdFont);
-
-		DeleteDC(hdc);
-
-#	else
-		throw UnimplementedExn("SdlLabelView::UpdateBlank");
-#	endif
-
-	unscaledWidth = width / scale;
+	unscaledWidth = width = 1;
 	unscaledHeight = height / scale;
 
 	UpdateTextureColor();
