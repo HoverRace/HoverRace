@@ -43,8 +43,22 @@ namespace HoverRace {
 namespace Display {
 namespace SDL {
 
+/**
+ * Constructor.
+ */
 SdlSurfaceText::SdlSurfaceText() :
 	font(), color(COLOR_WHITE), wrapWidth(-1),
+	width(0), height(0)
+{
+}
+
+/**
+ * Constructor with initial font and color.
+ * @param font The font to render with.
+ * @param color The text foreground color.
+ */
+SdlSurfaceText::SdlSurfaceText(const UiFont &font, const Color color) :
+	font(font), color(color), wrapWidth(-1),
 	width(0), height(0)
 {
 }

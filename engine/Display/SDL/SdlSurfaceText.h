@@ -56,6 +56,7 @@ class MR_DllDeclare SdlSurfaceText
 {
 	public:
 		SdlSurfaceText();
+		SdlSurfaceText(const UiFont &font, const Color color=COLOR_WHITE);
 		~SdlSurfaceText() { }
 
 	public:
