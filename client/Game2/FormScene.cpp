@@ -67,15 +67,11 @@ void FormScene::OnMouseMoved(const Display::Vec2 &pos)
 
 void FormScene::OnMousePressed(const Control::Mouse::Click &click)
 {
-	Log::Info("Mouse pressed: %.2f, %.2f, %d", click.pos.x, click.pos.y, click.btn);
-
 	root->OnMousePressed(click);
 }
 
 void FormScene::OnMouseReleased(const Control::Mouse::Click &click)
 {
-	Log::Info("Mouse released: %.2f, %.2f, %d", click.pos.x, click.pos.y, click.btn);
-
 	root->OnMouseReleased(click);
 }
 
