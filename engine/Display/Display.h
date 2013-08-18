@@ -43,6 +43,7 @@ namespace HoverRace {
 		class FillBox;
 		class Label;
 		class ScreenFade;
+		class SymbolIcon;
 	}
 	namespace VideoServices {
 		class VideoBuffer;
@@ -67,7 +68,8 @@ class MR_DllDeclare Display :
 	public ViewAttacher<Container>,
 	public ViewAttacher<FillBox>,
 	public ViewAttacher<Label>,
-	public ViewAttacher<ScreenFade>
+	public ViewAttacher<ScreenFade>,
+	public ViewAttacher<SymbolIcon>
 {
 	public:
 		Display() : uiOrigin(0, 0), uiScale(1.0), uiOffset(0, 0) { }

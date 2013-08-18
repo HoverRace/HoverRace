@@ -36,6 +36,7 @@
 #include "../FillBox.h"
 #include "../Label.h"
 #include "../ScreenFade.h"
+#include "../SymbolIcon.h"
 #include "../UiFont.h"
 #include "SdlButtonView.h"
 #include "SdlClickRegionView.h"
@@ -43,6 +44,7 @@
 #include "SdlFillBoxView.h"
 #include "SdlLabelView.h"
 #include "SdlScreenFadeView.h"
+#include "SdlSymbolIconView.h"
 #include "SdlLegacyDisplay.h"
 
 #include "SdlDisplay.h"
@@ -183,6 +185,11 @@ void SdlDisplay::AttachView(Label &model)
 void SdlDisplay::AttachView(ScreenFade &model)
 {
 	model.SetView(std::unique_ptr<View>(new SdlScreenFadeView(*this, model)));
+}
+
+void SdlDisplay::AttachView(SymbolIcon &model)
+{
+	model.SetView(std::unique_ptr<View>(new SdlSymbolIconView(*this, model)));
 }
 
 void SdlDisplay::OnDesktopModeChanged(int width, int height)

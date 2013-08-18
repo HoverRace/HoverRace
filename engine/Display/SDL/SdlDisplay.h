@@ -71,6 +71,7 @@ class MR_DllDeclare SdlDisplay : public Display
 		virtual void AttachView(FillBox &model);
 		virtual void AttachView(Label &model);
 		virtual void AttachView(ScreenFade &model);
+		virtual void AttachView(SymbolIcon &model);
 
 	public:
 		// Display

@@ -388,6 +388,12 @@
     <ClCompile Include="Display\SDL\SdlSurfaceText.cpp">
       <Filter>Display\SDL</Filter>
     </ClCompile>
+    <ClCompile Include="Display\SymbolIcon.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
+    <ClCompile Include="Display\SDL\SdlSymbolIconView.cpp">
+      <Filter>Display\SDL</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColorTools\ColorTools.h">
@@ -798,6 +804,12 @@
       <Filter>Display</Filter>
     </ClInclude>
     <ClInclude Include="Display\SDL\SdlSurfaceText.h">
+      <Filter>Display\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Display\SymbolIcon.h">
+      <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="Display\SDL\SdlSymbolIconView.h">
       <Filter>Display\SDL</Filter>
     </ClInclude>
   </ItemGroup>

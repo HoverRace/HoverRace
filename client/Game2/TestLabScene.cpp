@@ -29,6 +29,7 @@
 #include "../../engine/Display/FillBox.h"
 #include "../../engine/Display/Label.h"
 #include "../../engine/Display/ScreenFade.h"
+#include "../../engine/Display/SymbolIcon.h"
 #include "../../engine/VideoServices/FontSpec.h"
 #include "../../engine/VideoServices/VideoBuffer.h"
 #include "../../engine/Util/Config.h"
@@ -138,6 +139,14 @@ namespace Module {
 			std::shared_ptr<Display::FillBox> wrapBox;
 			std::shared_ptr<Display::Label> wrapLbl;
 	}; //}}}
+
+	class IconModule : public TestLabScene::LabModule /*{{{*/
+	{
+		typedef TestLabScene::LabModule SUPER;
+		public:
+			IconModule(Display::Display &display, GameDirector &director);
+			virtual ~IconModule() { }
+	}; //}}}
 }
 
 TestLabScene::TestLabScene(Display::Display &display, GameDirector &director) :
@@ -157,6 +166,8 @@ TestLabScene::TestLabScene(Display::Display &display, GameDirector &director) :
 	root->AddChild(new ModuleButton<Module::ButtonModule>(display, director, "Button", 0, y));
 	y += yStep;
 	root->AddChild(new ModuleButton<Module::LabelModule>(display, director, "Label", 0, y));
+	y += yStep;
+	root->AddChild(new ModuleButton<Module::IconModule>(display, director, "Icon", 0, y));
 }
 
 TestLabScene::~TestLabScene()
@@ -427,6 +438,24 @@ void LabelModule::AdjustWrapWidth(double amt)
 }
 
 //}}} LabelModule
+
+//{{{ IconModule //////////////////////////////////////////////////////////////
+
+IconModule::IconModule(Display::Display &display, GameDirector &director) :
+	SUPER(display, director, "Icon")
+{
+	Display::Container *root = GetRoot();
+
+	std::shared_ptr<Display::FillBox> box;
+	std::shared_ptr<Display::FillBox> icon;
+
+	box = root->AddChild(new Display::FillBox(60, 60, 0xff007f7f));
+	box->SetPos(0, 40);
+	icon = root->AddChild(new Display::SymbolIcon(60, 60, 0xf046, 0xbfffffff));
+	icon->SetPos(0, 40);
+}
+
+//}}} IconModule
 
 }  // namespace Module
 

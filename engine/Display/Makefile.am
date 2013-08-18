@@ -21,6 +21,8 @@ libdisplay_la_SOURCES = \
 	Label.h \
 	ScreenFade.cpp \
 	ScreenFade.h \
+	SymbolIcon.cpp \
+	SymbolIcon.h \
 	UiFont.cpp \
 	UiFont.h \
 	UiLayoutFlags.h \
@@ -46,6 +48,8 @@ libdisplay_la_SOURCES = \
 	SDL/SdlLegacyDisplay.h \
 	SDL/SdlScreenFadeView.cpp \
 	SDL/SdlScreenFadeView.h \
+	SDL/SdlSymbolIconView.cpp \
+	SDL/SdlSymbolIconView.h \
 	SDL/SdlSurfaceText.cpp \
 	SDL/SdlSurfaceText.h \
 	SDL/SdlView.h
