@@ -23,6 +23,8 @@
 
 #include <SDL2/SDL.h>
 
+#include "../UiFont.h"
+
 #include "SdlDisplay.h"
 
 #ifdef _WIN32
