@@ -29,11 +29,8 @@
 
 namespace HoverRace {
 	namespace Display {
-		class Button;
 		class Display;
-		class FillBox;
-		class Label;
-		class ViewModel;
+		class ScreenFade;
 	}
 }
 
