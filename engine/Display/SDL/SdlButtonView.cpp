@@ -42,6 +42,9 @@ void SdlButtonView::PrepareRender()
 {
 	model.GetBackgroundChild()->PrepareRender();
 	model.GetLabelChild()->PrepareRender();
+
+	FillBox *icon = model.GetIconChild();
+	if (icon) icon->PrepareRender();
 }
 
 void SdlButtonView::Render()
@@ -51,6 +54,9 @@ void SdlButtonView::Render()
 
 	model.GetBackgroundChild()->Render();
 	model.GetLabelChild()->Render();
+
+	FillBox *icon = model.GetIconChild();
+	if (icon) icon->Render();
 
 	disp.SetUiOrigin(oldOrigin);
 }

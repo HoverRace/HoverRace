@@ -57,6 +57,7 @@ class MR_DllDeclare Button : public ClickRegion
 		{
 			enum {
 				TEXT = SUPER::Props::NEXT_,
+				ICON,
 				NEXT_,  ///< First index for subclasses.
 			};
 		};
@@ -78,8 +79,12 @@ class MR_DllDeclare Button : public ClickRegion
 		const std::string &GetText() const;
 		void SetText(const std::string &text);
 
+		std::shared_ptr<FillBox> GetIcon() const { return icon; }
+		void SetIcon(std::shared_ptr<FillBox> icon);
+
 		FillBox *GetBackgroundChild() const { return background.get(); }
 		Label *GetLabelChild() const { return label.get(); }
+		FillBox *GetIconChild() const { return icon.get(); }
 
 	protected:
 		virtual void Layout();
@@ -92,7 +97,8 @@ class MR_DllDeclare Button : public ClickRegion
 		Display &display;
 		std::unique_ptr<FillBox> background;
 		std::unique_ptr<Label> label;
-		double paddingTop, paddingRight, paddingBottom, paddingLeft;
+		std::shared_ptr<FillBox> icon;
+		double paddingTop, paddingRight, paddingBottom, paddingLeft, iconGap;
 };
 
 }  // namespace Display

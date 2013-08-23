@@ -37,6 +37,7 @@ namespace Display {
 namespace {
 	const double DEFAULT_PADDING_HEIGHT = 10;
 	const double DEFAULT_PADDING_WIDTH = 30;
+	const double DEFAULT_ICON_GAP = 15;
 }
 
 /**
@@ -49,7 +50,8 @@ Button::Button(Display &display, const std::string &text,
                uiLayoutFlags_t layoutFlags) :
 	SUPER(display, layoutFlags), display(display),
 	paddingTop(DEFAULT_PADDING_HEIGHT), paddingRight(DEFAULT_PADDING_WIDTH),
-	paddingBottom(DEFAULT_PADDING_HEIGHT), paddingLeft(DEFAULT_PADDING_WIDTH)
+	paddingBottom(DEFAULT_PADDING_HEIGHT), paddingLeft(DEFAULT_PADDING_WIDTH),
+	iconGap(DEFAULT_ICON_GAP)
 {
 	Init(text);
 }
@@ -98,6 +100,14 @@ void Button::Layout()
 	double midX = size.x / 2.0;
 	double midY = size.y / 2.0;
 
+	// If there is an icon, resize it and shift the text to make room.
+	if (icon) {
+		double iconSize = size.y - (paddingTop + paddingBottom);
+		icon->SetSize(iconSize, iconSize);
+		icon->SetPos(paddingLeft, paddingTop);
+		midX += (iconSize + iconGap) / 2.0;
+	}
+
 	if (!IsEnabled()) {
 		background->SetColor(0x3f7f7f7f);
 		label->SetColor(0x7fffffff);
@@ -125,12 +135,32 @@ void Button::SetText(const std::string &text)
 	label->SetText(text);
 }
 
+/**
+ * Set the optional icon to appear on the button, in addition to the text.
+ *
+ * The icon will be sized to the standard size for the button (namely, the
+ * height of the text), so while it is safe to share the icon between
+ * buttons, be aware that it may be modified.
+ *
+ * @param icon A subclass of FillBox to use as an icon, or @c nullptr to
+ *             unset the icon.
+ */
+void Button::SetIcon(std::shared_ptr<FillBox> icon)
+{
+	if (this->icon != icon) {
+		this->icon = std::move(icon);
+		FireModelUpdate(Props::ICON);
+		RequestLayout();
+	}
+}
+
 Vec3 Button::Measure() const
 {
 	if (IsAutoSize()) {
 		const Vec3 labelSize = label->Measure();
+		double iconPart = icon ? (labelSize.y + iconGap) : 0;
 		return Vec3(
-			labelSize.x + paddingLeft + paddingRight,
+			labelSize.x + paddingLeft + paddingRight + iconPart,
 			labelSize.y + paddingTop + paddingBottom,
 			0);
 	}

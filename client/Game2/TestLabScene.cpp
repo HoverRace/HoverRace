@@ -335,19 +335,29 @@ ButtonModule::ButtonModule(Display::Display &display, GameDirector &director) :
 
 	Display::Container *root = GetRoot();
 
+	std::shared_ptr<Display::Button> btn;
+
 	messageBtn = root->AddChild(new Display::Button(display, "Show Message"));
 	messageBtn->SetPos(640, 0);
 	messageBtn->SetAlignment(Alignment::N);
 	messageBtn->GetClickedSignal().connect(
 		std::bind(&ButtonModule::OnMessageClicked, this));
 
-	auto btn = root->AddChild(new Display::Button(display, "Disabled Button"));
+	btn = root->AddChild(new Display::Button(display, "Disabled Button"));
 	btn->SetEnabled(false);
 	btn->SetPos(640, 60);
 	btn->SetAlignment(Alignment::N);
 	btn->GetClickedSignal().connect([](Display::ClickRegion&) {
 		Log::Error("Clicked on disabled button :(");
 	});
+
+	auto icon = std::make_shared<Display::SymbolIcon>(60, 60, 0xf046, 0xbfffffff);
+	icon->AttachView(display);
+
+	btn = root->AddChild(new Display::Button(display, "Button With Icon"));
+	btn->SetPos(640, 120);
+	btn->SetIcon(icon);
+	btn->SetAlignment(Alignment::N);
 }
 
 void ButtonModule::OnMessageClicked()
