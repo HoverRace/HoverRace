@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
-"Report-Msgid-Bugs-To: bugs@hoverrace.com\n"
-"POT-Creation-Date: 2013-07-09 21:37-0400\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-08-23 21:31+1000\n"
 "PO-Revision-Date: 2009-08-08 21:06-0400\n"
 "Last-Translator: SilverWolf2155 <silverwolf2155@gmail.com>\n"
 "Language-Team: Spanish\n"
@@ -39,12 +39,8 @@ msgid "with contributions from (in alphabetical order)"
 msgstr "Con contribuciones de (En orden alfabético)"
 
 #: client/Game2/AboutDialog.cpp:96
-msgid ""
-"and with the help of the many testers willing to put up with bugs and other "
-"strange happenings."
-msgstr ""
-"Y con ayuda de los muchos testers dispuestos a arreglar bugs y otras cosas "
-"raras que suceden en el juego."
+msgid "and with the help of the many testers willing to put up with bugs and other strange happenings."
+msgstr "Y con ayuda de los muchos testers dispuestos a arreglar bugs y otras cosas raras que suceden en el juego."
 
 #: client/Game2/AboutDialog.cpp:98
 msgid "visit us at"
@@ -69,8 +65,7 @@ msgstr ""
 #: client/Game2/CheckRoomListDialog.cpp:88
 #: client/Game2/CheckUpdateServerDialog.cpp:177
 #: client/Game2/SelectRoomDialog.cpp:120
-#: client/Game2/TrackSelectDialog.cpp:103 engine/Control/Controller.cpp:43
-#: engine/Control/ControllerStrings.cpp:138
+#: client/Game2/TrackSelectDialog.cpp:103
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -108,12 +103,12 @@ msgstr ""
 msgid "Checking server for updates.  Please wait."
 msgstr ""
 
-#: client/Game2/ClientApp.cpp:227 client/Game2/GameApp.cpp:820
+#: client/Game2/ClientApp.cpp:229 client/Game2/GameApp.cpp:820
 msgctxt "Version"
 msgid "testing"
 msgstr "Probando"
 
-#: client/Game2/ClientApp.cpp:230 client/Game2/GameApp.cpp:823
+#: client/Game2/ClientApp.cpp:232 client/Game2/GameApp.cpp:823
 msgid "silent mode"
 msgstr ""
 
@@ -122,8 +117,6 @@ msgid "Controls"
 msgstr "Controles"
 
 #: client/Game2/ControlPrefsPage.cpp:134 client/Game2/NetInterface.cpp:1068
-#: engine/Control/Controller.cpp:350 engine/Control/Controller.cpp:398
-#: engine/Control/Controller.cpp:498
 msgid "Player"
 msgstr "Jugador"
 
@@ -370,8 +363,7 @@ msgid "Sound will be disabled for this session."
 msgstr ""
 
 #: client/Game2/GameApp.cpp:885
-msgid ""
-"If this is your first time running HoverRace, try restarting your computer."
+msgid "If this is your first time running HoverRace, try restarting your computer."
 msgstr ""
 
 #: client/Game2/GameApp.cpp:887
@@ -387,49 +379,21 @@ msgid ""
 "Do you want to play in Window mode and switch to 256 color?"
 msgstr ""
 "Puedes jugar HoverRace en una ventana o en pantalla completa; \n"
-"Al jugar en una ventana, HoverRace cambiará la pantalla a 256 colores, en "
-"este momento debes estar usando 32 bits de colores, mucho más que estos. \n"
+"Al jugar en una ventana, HoverRace cambiará la pantalla a 256 colores, en este momento debes estar usando 32 bits de colores, mucho más que estos. \n"
 "Recomendamos que en vez de ventana use \"Pantalla completa\" en su lugar. \n"
-"¿Quieres jugar en la misma ventana y habilitar los 256 colores, o prefieres "
-"jugarlo en pantalla completa? Recuerda, el computador actual usaría más de "
-"32 bits mucho más que los 256 colores del juego, al cambiarse, la "
-"computadora se verá con menos colores, pero es lo normal.Si prefieres mejor "
-"Pantalla Completa, debes pulsar F9 luego de elegir cada nivel. Para salir de "
-"Pantalla completa debes pulsar ESC"
+"¿Quieres jugar en la misma ventana y habilitar los 256 colores, o prefieres jugarlo en pantalla completa? Recuerda, el computador actual usaría más de 32 bits mucho más que los 256 colores del juego, al cambiarse, la computadora se verá con menos colores, pero es lo normal.Si prefieres mejor Pantalla Completa, debes pulsar F9 luego de elegir cada nivel. Para salir de Pantalla completa debes pulsar ESC"
 
 #: client/Game2/GameApp.cpp:918
-msgid ""
-"HoverRace was unable to switch the video mode. You will need to play in full "
-"screen."
-msgstr ""
-"HoverRace no pudo encender el modo video. Tendrás que jugarlo en pantalla "
-"completa."
+msgid "HoverRace was unable to switch the video mode. You will need to play in full screen."
+msgstr "HoverRace no pudo encender el modo video. Tendrás que jugarlo en pantalla completa."
 
 #: client/Game2/GameApp.cpp:1991
 msgid "This build of HoverRace is not official; updates are not available."
 msgstr ""
 
 #: client/Game2/GameApp.cpp:2061
-msgid ""
-"Incompatible video mode. Select a compatible video mode by pressing F8 or F9 "
-"once a game is started"
-msgstr ""
-"Modo de video incompatible. Elije un modo de video compatible apretando F8 o "
-"F9 una vez que el juego empiece"
-
-#: client/Game2/HoverScript/SysConsole.cpp:56
-msgid "System console initialized."
-msgstr ""
-
-#: client/Game2/HoverScript/SysConsole.cpp:161
-#, c-format, boost-format
-msgid "For help on a class or method, call the %s method: %s"
-msgstr ""
-
-#: client/Game2/HoverScript/SysConsole.cpp:200
-#, c-format, boost-format
-msgid "Methods for class %s:"
-msgstr ""
+msgid "Incompatible video mode. Select a compatible video mode by pressing F8 or F9 once a game is started"
+msgstr "Modo de video incompatible. Elije un modo de video compatible apretando F8 o F9 una vez que el juego empiece"
 
 #: client/Game2/InternetRoom.cpp:467
 msgid "Connecting to the Internet Meeting Room..."
@@ -457,9 +421,7 @@ msgstr "Dando de baja el juego de la sala de encuentros por Internet..."
 
 #: client/Game2/InternetRoom.cpp:587
 msgid "Registering with the Internet Meeting Room..."
-msgstr ""
-"Registrándose con la sala de encuentros por Internet...  Espere unos "
-"instantes"
+msgstr "Registrándose con la sala de encuentros por Internet...  Espere unos instantes"
 
 #: client/Game2/InternetRoom.cpp:612
 msgid "Unregistering from the Internet Meeting Room..."
@@ -651,7 +613,7 @@ msgstr "Unirse al juego..."
 msgid "New Game..."
 msgstr "Nuevo juego..."
 
-#: client/Game2/InternetRoom.cpp:1253
+#: client/Game2/InternetRoom.cpp:1253 client/Game2/MainMenuScene.cpp:83
 msgid "Quit"
 msgstr "Salir"
 
@@ -672,6 +634,24 @@ msgstr "La conexión se interrumpió"
 msgid "Registering your best lap time to the server"
 msgstr "Registrando su mejor vuelta en el servidor"
 
+#: client/Game2/MainMenuScene.cpp:74
+#, fuzzy
+msgid "Practice"
+msgstr "&Practicar"
+
+#: client/Game2/MainMenuScene.cpp:76 client/Game2/MultiplayerPrefsPage.cpp:49
+msgid "Multiplayer"
+msgstr ""
+
+#: client/Game2/MainMenuScene.cpp:78
+#, fuzzy
+msgid "Settings"
+msgstr "&Opciones"
+
+#: client/Game2/MainMenuScene.cpp:80
+msgid "Credits"
+msgstr ""
+
 #: client/Game2/MiscPrefsPage.cpp:42
 msgid "Miscellaneous"
 msgstr "Misceláneo"
@@ -681,19 +661,12 @@ msgid "Disable Intro Movie"
 msgstr "Deshabilitar el vídeo inicial"
 
 #: client/Game2/MiscPrefsPage.cpp:62
-msgid ""
-"Disable the prompt to connect to the Internet each time HoverRace starts"
-msgstr ""
-"Deshabilitar la pregunta de conectarse a Internet cada vez que HoverRace es "
-"iniciado"
+msgid "Disable the prompt to connect to the Internet each time HoverRace starts"
+msgstr "Deshabilitar la pregunta de conectarse a Internet cada vez que HoverRace es iniciado"
 
 #: client/Game2/MiscPrefsPage.cpp:64
 msgid "Use desktop &color depth when switching to fullscreen"
 msgstr "Usar la profundidad de &colores cuando se cambia a pantalla completa"
-
-#: client/Game2/MultiplayerPrefsPage.cpp:49
-msgid "Multiplayer"
-msgstr ""
 
 #: client/Game2/MultiplayerPrefsPage.cpp:68
 msgid "Play a sound when a &message is received"
@@ -732,17 +705,12 @@ msgstr "Imposible de crear socket"
 
 #: client/Game2/NetInterface.cpp:521 client/Game2/NetInterface.cpp:758
 msgid "Unable to use the port, try to close some WINSOCK applications"
-msgstr ""
-"Imposible de usar ese puerto, pruebe cerrando algunas aplicaciones WINSOCK"
+msgstr "Imposible de usar ese puerto, pruebe cerrando algunas aplicaciones WINSOCK"
 
 #: client/Game2/NetInterface.cpp:533 client/Game2/NetInterface.cpp:611
 #: client/Game2/NetInterface.cpp:667
-msgid ""
-"Unable to use UDP recv port; choose a different port or close some Winsock "
-"applications."
-msgstr ""
-"Imposible de usar el puerto receptor UDP; elija otro puerto o cierre algunas "
-"aplicaciones Winsock."
+msgid "Unable to use UDP recv port; choose a different port or close some Winsock applications."
+msgstr "Imposible de usar el puerto receptor UDP; elija otro puerto o cierre algunas aplicaciones Winsock."
 
 #: client/Game2/NetInterface.cpp:748
 msgid "Port value must be greater than 0"
@@ -802,12 +770,8 @@ msgid "Connection refused by peer"
 msgstr "Conexión rechazada por igual"
 
 #: client/Game2/NetInterface.cpp:1734
-msgid ""
-"; perhaps they are behind a firewall and need to forward ports 9530 and 9531 "
-"TCP and UDP?"
-msgstr ""
-"¿Quizás estén detrás de un firewall y necesitan permiso los puertos 9530 y "
-"9531 TCP y UDP?"
+msgid "; perhaps they are behind a firewall and need to forward ports 9530 and 9531 TCP and UDP?"
+msgstr "¿Quizás estén detrás de un firewall y necesitan permiso los puertos 9530 y 9531 TCP y UDP?"
 
 #: client/Game2/NetInterface.cpp:1736 client/Game2/NetInterface.cpp:1775
 #: client/Game2/NetInterface.cpp:1801 client/Game2/NetInterface.cpp:1811
@@ -839,14 +803,8 @@ msgid "Warning!"
 msgstr "¡Atención!"
 
 #: client/Game2/NetInterface.cpp:1849
-msgid ""
-"You are about to launch the race without any opponents.  You will be on your "
-"own.  It is preferable to wait for other players to join your game.  Are you "
-"sure?"
-msgstr ""
-"Vas a empezar la carrera sin ningún oponente. Serás el único participante. "
-"Es preferible que esperes a que otros jugadores entren en tu juego. ¿Estás "
-"seguro de empezar?"
+msgid "You are about to launch the race without any opponents.  You will be on your own.  It is preferable to wait for other players to join your game.  Are you sure?"
+msgstr "Vas a empezar la carrera sin ningún oponente. Serás el único participante. Es preferible que esperes a que otros jugadores entren en tu juego. ¿Estás seguro de empezar?"
 
 #: client/Game2/NetInterface.cpp:1850
 msgid "Ask me this each time I launch a game alone"
@@ -861,12 +819,8 @@ msgid "No"
 msgstr "No"
 
 #: client/Game2/NetInterface.cpp:1885
-msgid ""
-"It is highly preferable to wait until all players have successfully "
-"connected to the game before pressing the start button."
-msgstr ""
-"Es extremadamente preferible que esperes a que todos los jugadores hayan "
-"sido conectados al juego antes de presionar el boton Empezar"
+msgid "It is highly preferable to wait until all players have successfully connected to the game before pressing the start button."
+msgstr "Es extremadamente preferible que esperes a que todos los jugadores hayan sido conectados al juego antes de presionar el boton Empezar"
 
 #: client/Game2/NetInterface.cpp:1886
 msgid "Start NOW!"
@@ -874,7 +828,7 @@ msgstr "¡Empieza AHORA!"
 
 #: client/Game2/NetInterface.cpp:1887 client/Game2/PathSelector.cpp:93
 #: client/Game2/SelectRoomDialog.cpp:119
-#: client/Game2/TrackSelectDialog.cpp:102 engine/Control/Controller.cpp:42
+#: client/Game2/TrackSelectDialog.cpp:102
 msgid "OK"
 msgstr "OK"
 
@@ -1046,9 +1000,33 @@ msgstr "Última Vuelta %d.%02d.%03d  Mejor %d.%02d.%03d"
 msgid "Current lap %d.%02d.%03d  Best %d.%02d.%03d"
 msgstr "Vuelta Actual %d.%02d.%03d  Mejor %d.%02d.%03d"
 
-#: client/Game2/Observer.cpp:150
+#: client/Game2/Observer.cpp:151
 msgid "Select your craft with the arrow keys"
 msgstr "Seleccione su nave con las flechas de dirección"
+
+#: client/Game2/PauseMenuScene.cpp:50
+msgid "Any unsaved race records will be lost."
+msgstr ""
+
+#: client/Game2/PauseMenuScene.cpp:75
+msgid "Return to Race"
+msgstr ""
+
+#: client/Game2/PauseMenuScene.cpp:80 client/Game2/PauseMenuScene.cpp:112
+msgid "Quit to Main Menu"
+msgstr ""
+
+#: client/Game2/PauseMenuScene.cpp:82 client/Game2/PauseMenuScene.cpp:120
+msgid "Quit to Desktop"
+msgstr ""
+
+#: client/Game2/PauseMenuScene.cpp:113
+msgid "Are you sure you want to abandon the race and return to the main menu?"
+msgstr ""
+
+#: client/Game2/PauseMenuScene.cpp:121
+msgid "Are you sure you want to abandon the race and exit the game?"
+msgstr ""
 
 #: client/Game2/PrefsDialog.cpp:87
 msgid "Preferences"
@@ -1092,12 +1070,8 @@ msgstr "Lo sentimos, la pista \"%s\" no esta disponible desde %s"
 
 #: client/Game2/TrackDownloadDialog.cpp:247
 #, c-format, boost-format
-msgid ""
-"Track download failed: The file \"%s\" was not found in the archive "
-"downloaded from %s"
-msgstr ""
-"La descarga de la pista ha fallado: El archivo \"%s\" no fue encontrado en "
-"el archivo descargado desde %s"
+msgid "Track download failed: The file \"%s\" was not found in the archive downloaded from %s"
+msgstr "La descarga de la pista ha fallado: El archivo \"%s\" no fue encontrado en el archivo descargado desde %s"
 
 #: client/Game2/TrackDownloadDialog.cpp:272
 msgid "Downloading Track:"
@@ -1228,1027 +1202,18 @@ msgstr "La Resolución de pantalla completa"
 
 #: client/Game2/VideoAudioPrefsPage.cpp:282
 msgid "Invalid resolution; reverting to default"
-msgstr ""
-"Estás usando una resolución no válida; revirtiendo a la resolución por "
-"defecto"
+msgstr "Estás usando una resolución no válida; revirtiendo a la resolución por defecto"
 
 #: client/Game2/VideoAudioPrefsPage.cpp:331
 msgid "HoverRace is currently in silent mode."
 msgstr ""
 
-#: client/Game2/main.cpp:335 client/Game2/main.cpp:341
-#: compilers/MazeCompiler/main.cpp:132
+#: client/Game2/main.cpp:337 client/Game2/main.cpp:343
 msgid "You found a bug!"
 msgstr ""
 
-#: compilers/MazeCompiler/main.cpp:68
-msgid "Usage: MazeCompiler <outputfile> <inputfile>"
-msgstr ""
-
-#: compilers/MazeCompiler/main.cpp:105
-msgid "Wrong argument count"
-msgstr ""
-
-#: compilers/MazeCompiler/main.cpp:149
-#, fuzzy
-msgid "Command line error"
-msgstr "Error de comunicación"
-
-#: compilers/ResourceCompiler/BitmapHelper.cpp:46
-#: compilers/ResourceCompiler/BitmapHelper.cpp:61
-#: compilers/ResourceCompiler/BitmapHelper.cpp:118
-#: compilers/ResourceCompiler/ResActorBuilder.cpp:49
-#: compilers/ResourceCompiler/ResActorBuilder.cpp:204
-#: compilers/ResourceCompiler/ResActorBuilder.cpp:213
-#: compilers/ResourceCompiler/ResSoundBuilder.cpp:64
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:142
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:160
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:181
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:199
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:218
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:237
-#: compilers/ResourceCompiler/ResourceLibBuilder.cpp:105
-#: compilers/ResourceCompiler/TextParsing.cpp:41
-#: compilers/ResourceCompiler/TextParsing.cpp:57
-msgid "ERROR"
-msgstr ""
-
-#: compilers/ResourceCompiler/BitmapHelper.cpp:46
-#, fuzzy
-msgid "Unable to open input file"
-msgstr "Imposible de enviar la información actualizada"
-
-#: compilers/ResourceCompiler/BitmapHelper.cpp:61
-msgid "Invalid file type"
-msgstr ""
-
-#: compilers/ResourceCompiler/BitmapHelper.cpp:118
-msgid "Unsupported format"
-msgstr ""
-
-#: compilers/ResourceCompiler/ResActorBuilder.cpp:49
-#, fuzzy
-msgid "unable to open actor file"
-msgstr "Imposible de crear socket"
-
-#: compilers/ResourceCompiler/ResActorBuilder.cpp:204
-msgid "No bitmap associated with the patch"
-msgstr ""
-
-#: compilers/ResourceCompiler/ResActorBuilder.cpp:213
-msgid "Bad bitmap ID"
-msgstr ""
-
-#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:297
-msgid "This image has invalid colors"
-msgstr ""
-
-#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:297
-#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:318
-msgid "WARNING"
-msgstr ""
-
-#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:299
-#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:306
-#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:313
-msgid "INFO"
-msgstr ""
-
-#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:299
-msgid "This image has transparent pixels"
-msgstr ""
-
-#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:306
-msgid "resampling"
-msgstr ""
-
-#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:313
-#, fuzzy
-msgid "computing plain color"
-msgstr "Calculando lag"
-
-#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:318
-msgid "bitmap too small; using single color"
-msgstr ""
-
-#: compilers/ResourceCompiler/ResSoundBuilder.cpp:64
-msgid "invalid WAV file"
-msgstr ""
-
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:142
-#, fuzzy
-msgid "unable to open input file"
-msgstr "Imposible de enviar la información actualizada"
-
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:160
-msgid "problem reading bitmap parameters"
-msgstr ""
-
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:181
-msgid "problem reading actor parameters"
-msgstr ""
-
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:199
-msgid "problem reading sprite parameters"
-msgstr ""
-
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:218
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:237
-msgid "problem reading sound parameters"
-msgstr ""
-
-#: compilers/ResourceCompiler/ResourceLibBuilder.cpp:105
-#, fuzzy
-msgid "unable to create output file"
-msgstr "Imposible de crear socket"
-
-#: compilers/ResourceCompiler/TextParsing.cpp:41
-#, fuzzy
-msgid "unable to open defines file"
-msgstr "Imposible de enviar la información actualizada"
-
-#: compilers/ResourceCompiler/TextParsing.cpp:57
-msgid "line"
-msgstr ""
-
-#: compilers/ResourceCompiler/TextParsing.cpp:57
-msgid "syntax error in defines file"
-msgstr ""
-
-#: engine/Control/Controller.cpp:44
-msgid "Page Up"
-msgstr ""
-
-#: engine/Control/Controller.cpp:45
-#, fuzzy
-msgid "Page Down"
-msgstr "Volumen"
-
-#: engine/Control/Controller.cpp:46
-msgid "Top"
-msgstr ""
-
-#: engine/Control/Controller.cpp:47
-msgid "Bottom"
-msgstr ""
-
-#: engine/Control/Controller.cpp:56
-#, fuzzy
-msgid "Toggle Console"
-msgstr "Cerrar"
-
-#: engine/Control/Controller.cpp:60
-msgid "Zoom In"
-msgstr ""
-
-#: engine/Control/Controller.cpp:61
-msgid "Zoom Out"
-msgstr ""
-
-#: engine/Control/Controller.cpp:62
-msgid "Pan Up"
-msgstr ""
-
-#: engine/Control/Controller.cpp:63
-msgid "Pan Down"
-msgstr ""
-
-#: engine/Control/Controller.cpp:64
-msgid "Reset Camera"
-msgstr ""
-
-#: engine/Control/Controller.cpp:368 engine/Control/Controller.cpp:457
-#: engine/Control/Controller.cpp:512 engine/Control/Controller.cpp:538
-msgid "Camera"
-msgstr ""
-
-#: engine/Control/Controller.cpp:374 engine/Control/Controller.cpp:553
-#: engine/Control/ControllerStrings.cpp:122
-msgid "Menu"
-msgstr ""
-
-#: engine/Control/Controller.cpp:380 engine/Control/Controller.cpp:565
-#, fuzzy
-msgid "ConsoleToggle"
-msgstr "Cerrar"
-
-#: engine/Control/Controller.cpp:386 engine/Control/Controller.cpp:433
-#: engine/Control/Controller.cpp:576
-#, fuzzy
-msgid "Console"
-msgstr "Cerrar"
-
-#: engine/Control/Controller.cpp:501
-msgid "Throttle"
-msgstr ""
-
-#: engine/Control/Controller.cpp:502
-#, fuzzy
-msgid "Brake"
-msgstr "Frenar:"
-
-#: engine/Control/Controller.cpp:503
-#, fuzzy
-msgid "Turn Left"
-msgstr "Girar a la izquierda:"
-
-#: engine/Control/Controller.cpp:504
-#, fuzzy
-msgid "Turn Right"
-msgstr "Girar a la derecha:"
-
-#: engine/Control/Controller.cpp:505
-#, fuzzy
-msgid "Jump"
-msgstr "Saltar:"
-
-#: engine/Control/Controller.cpp:506
-msgid "Fire"
-msgstr ""
-
-#: engine/Control/Controller.cpp:507
-msgid "Item"
-msgstr ""
-
-#: engine/Control/Controller.cpp:508
-#, fuzzy
-msgid "Look Back"
-msgstr "Mirar hacia atrás:"
-
-#: engine/Control/ControllerStrings.cpp:45
-#: engine/Control/ControllerStrings.cpp:47
-#: engine/Control/ControllerStrings.cpp:333
-#, fuzzy
-msgid "Unknown"
-msgstr "Nave Desconocida"
-
-#: engine/Control/ControllerStrings.cpp:48
-msgid "Backspace"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:49
-msgid "Tab"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:50
-msgid "Enter"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:51
-msgid "Esc"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:52
-msgid "Space"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:62
-msgid "Del"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:63
-msgid "Caps Lock"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:64
-msgid "F1"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:65
-msgid "F2"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:66
-msgid "F3"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:67
-msgid "F4"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:68
-msgid "F5"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:69
-msgid "F6"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:70
-msgid "F7"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:71
-msgid "F8"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:72
-msgid "F9"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:73
-msgid "F10"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:74
-msgid "F11"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:75
-msgid "F12"
-msgstr ""
-
-# ¿Y esto? Se supone que ya se sabe que es con varios jguadores, por eso es MULTIJUGADOR. Tampoco es que el que vaya a jugar sea tonto...
-#: engine/Control/ControllerStrings.cpp:76
-#, fuzzy
-msgid "Print Screen"
-msgstr "&Multijugador"
-
-#: engine/Control/ControllerStrings.cpp:77
-msgid "Scroll Lock"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:78
-msgid "Pause"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:79
-msgid "Ins"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:80
-msgid "Home"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:81
-msgid "PgUp"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:82
-#, fuzzy
-msgid "End"
-msgstr "Eon"
-
-#: engine/Control/ControllerStrings.cpp:83
-msgid "PgDn"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:88
-msgid "Num Lock"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:89
-msgid "Numpad /"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:90
-msgid "Numpad *"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:91
-msgid "Numpad -"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:92
-msgid "Numpad +"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:93
-msgid "Numpad Enter"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:94
-msgid "Numpad 1"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:95
-msgid "Numpad 2"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:96
-msgid "Numpad 3"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:97
-msgid "Numpad 4"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:98
-msgid "Numpad 5"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:99
-msgid "Numpad 6"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:100
-msgid "Numpad 7"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:101
-msgid "Numpad 8"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:102
-msgid "Numpad 9"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:103
-msgid "Numpad 0"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:104
-msgid "Numpad ."
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:105
-msgid "App"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:106
-msgid "Power"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:107
-msgid "Numpad ="
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:108
-msgid "F13"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:109
-msgid "F14"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:110
-msgid "F15"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:111
-msgid "F16"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:112
-msgid "F17"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:113
-msgid "F18"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:114
-msgid "F19"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:115
-msgid "F20"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:116
-msgid "F21"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:117
-msgid "F22"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:118
-msgid "F23"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:119
-msgid "F24"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:120
-msgid "Execute"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:121
-#, fuzzy
-msgid "Help"
-msgstr "&Ayuda"
-
-#: engine/Control/ControllerStrings.cpp:123
-#, fuzzy
-msgid "Select"
-msgstr "Seleccionar arma:"
-
-#: engine/Control/ControllerStrings.cpp:124
-#: engine/Control/ControllerStrings.cpp:161
-msgid "Stop"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:125
-msgid "Again"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:126
-msgid "Undo"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:127
-msgid "Cut"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:128
-msgid "Copy"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:129
-msgid "Paste"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:130
-msgid "Find"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:131
-#: engine/Control/ControllerStrings.cpp:163
-msgid "Mute"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:132
-#, fuzzy
-msgid "Volume Up"
-msgstr "Volumen"
-
-#: engine/Control/ControllerStrings.cpp:133
-#, fuzzy
-msgid "Volume Down"
-msgstr "Volumen"
-
-#: engine/Control/ControllerStrings.cpp:134
-msgid "Numpad ,"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:137
-msgid "SysReq"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:139
-msgid "Clear"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:140
-msgid "Prior"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:148
-msgid "Numpad 00"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:149
-msgid "Numpad 000"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:150
-msgid "Left Ctrl"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:151
-msgid "Left Shift"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:152
-msgid "Left Alt"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:153
-msgid "Left GUI"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:154
-msgid "Right Ctrl"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:155
-msgid "Right Shift"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:156
-msgid "Right Alt"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:157
-msgid "Right GUI"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:158
-msgid "Mode"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:159
-#, fuzzy
-msgid "Next Track"
-msgstr "Pistas"
-
-#: engine/Control/ControllerStrings.cpp:160
-#, fuzzy
-msgid "Prev Track"
-msgstr "Pistas"
-
-#: engine/Control/ControllerStrings.cpp:162
-#, fuzzy
-msgid "Play"
-msgstr "Jugador"
-
-#: engine/Control/ControllerStrings.cpp:164
-msgid "Media Select"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:188
-msgid "Disabled"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:205
-msgid "Left Mouse Btn"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:207
-msgid "Right Mouse Btn"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:209
-msgid "Middle Mouse Btn"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:211
-msgid "Mouse Button 4"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:213
-msgid "Mouse Button 5"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:215
-msgid "Unknown Mouse Button"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:221
-msgid "Mouse X+ Axis"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:223
-msgid "Mouse X- Axis"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:226
-msgid "Mouse Y+ Axis"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:228
-msgid "Mouse Y- Axis"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:231
-msgid "Mouse Z+ Axis"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:233
-msgid "Mouse Z- Axis"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:236
-msgid "Mouse Wheel Right"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:238
-msgid "Mouse Wheel Left"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:241
-msgid "Mouse Wheel Down"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:243
-msgid "Mouse Wheen Up"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:246
-msgid "Unknown Mouse Axis +"
-msgstr ""
-
-#: engine/Control/ControllerStrings.cpp:248
-msgid "Unknown Mouse Axis -"
-msgstr ""
-
-#: engine/MazeCompiler/LevelBuilder.cpp:96
-#: engine/MazeCompiler/LevelBuilder.cpp:117
-#, c-format, boost-format
-msgid "Section ID missing on line %d"
-msgstr ""
-
-#: engine/MazeCompiler/LevelBuilder.cpp:104
-#: engine/MazeCompiler/LevelBuilder.cpp:125
-#, c-format, boost-format
-msgid "Duplicate section ID (%d) on line %d"
-msgstr ""
-
-#: engine/MazeCompiler/LevelBuilder.cpp:257
-#, fuzzy, c-format, boost-format
-msgid "Invalid parent room reference on line %d\n"
-msgstr "Imposible de crear socket"
-
-#: engine/MazeCompiler/LevelBuilder.cpp:392
-#, fuzzy
-msgid "Connection list not found"
-msgstr "La conexión se interrumpió"
-
-#: engine/MazeCompiler/LevelBuilder.cpp:413
-#: engine/MazeCompiler/LevelBuilder.cpp:421
-#, fuzzy, c-format, boost-format
-msgid "Connection to a nonexistent section %d"
-msgstr "Conectando a una sala de Internet..."
-
-#: engine/MazeCompiler/LevelBuilder.cpp:429
-#, fuzzy
-msgid "Mismatched connections"
-msgstr "Conectando"
-
-#: engine/MazeCompiler/LevelBuilder.cpp:447
-#, c-format, boost-format
-msgid "Connection between sections %d and %d do not match"
-msgstr ""
-
-#: engine/MazeCompiler/LevelBuilder.cpp:468
-#, c-format, boost-format
-msgid "Warning: room %d seems to be very small"
-msgstr ""
-
-#: engine/MazeCompiler/LevelBuilder.cpp:472
-#, c-format, boost-format
-msgid "Warning: room %d seems to be very large"
-msgstr ""
-
-#: engine/MazeCompiler/LevelBuilder.cpp:485
-#, c-format, boost-format
-msgid "Warning: feature %d seems to be very small"
-msgstr ""
-
-#: engine/MazeCompiler/LevelBuilder.cpp:489
-#, c-format, boost-format
-msgid "Warning: feature %d seems to be very large"
-msgstr ""
-
-#: engine/MazeCompiler/LevelBuilder.cpp:510
-#, c-format, boost-format
-msgid "Invalid starting position room %d"
-msgstr ""
-
-#: engine/MazeCompiler/LevelBuilder.cpp:536
-msgid "No starting positions found"
-msgstr ""
-
-#: engine/MazeCompiler/LevelBuilder.cpp:564
-#, c-format, boost-format
-msgid "Invalid room index on line %d"
-msgstr ""
-
-#: engine/MazeCompiler/LevelBuilder.cpp:591
-#, fuzzy, c-format, boost-format
-msgid "Unable to create free element on line %d\n"
-msgstr "Imposible de crear socket"
-
-#: engine/MazeCompiler/LevelBuilder.cpp:609
-msgid "This level contains:"
-msgstr ""
-
-#: engine/MazeCompiler/LevelBuilder.cpp:610
-msgid "rooms"
-msgstr ""
-
-#: engine/MazeCompiler/LevelBuilder.cpp:611
-msgid "features"
-msgstr ""
-
-#: engine/MazeCompiler/LevelBuilder.cpp:612
-#, fuzzy
-msgid "connections"
-msgstr "Conectando"
-
-#: engine/MazeCompiler/LevelBuilder.cpp:613
-msgid "elements"
-msgstr ""
-
-#: engine/MazeCompiler/LevelBuilder.cpp:614
-msgid "starting positions"
-msgstr ""
-
-#: engine/MazeCompiler/LevelBuilder.cpp:803
-#, fuzzy, c-format, boost-format
-msgid "Unable to load texture %d %d on line %d\n"
-msgstr "Imposible de crear socket"
-
-#: engine/MazeCompiler/LevelBuilderVisiblesZones.cpp:83
-msgid "Computing visible zones... be patient"
-msgstr ""
-
-#: engine/MazeCompiler/LevelBuilderVisiblesZones.cpp:322
-msgid "Two nodes with same position"
-msgstr ""
-
-#: engine/MazeCompiler/TrackCompiler.cpp:58
-#, fuzzy, c-format, boost-format
-msgid "Unable to open the input file: %s"
-msgstr "Imposible de enviar la información actualizada"
-
-#: engine/MazeCompiler/TrackCompiler.cpp:77
-#, fuzzy, c-format, boost-format
-msgid "Unable to create the output file: %s"
-msgstr "Imposible de crear socket"
-
-#: engine/MazeCompiler/TrackCompiler.cpp:81
-#, c-format, boost-format
-msgid "Compiling track (%s)"
-msgstr ""
-
-#: engine/MazeCompiler/TrackCompiler.cpp:86
-#, fuzzy
-msgid "Unable to add a header to the output file"
-msgstr "Imposible de crear socket"
-
-#: engine/MazeCompiler/TrackCompiler.cpp:99
-#, fuzzy
-msgid "Unable to add the track to the output file"
-msgstr "Imposible de crear socket"
-
-#: engine/MazeCompiler/TrackCompiler.cpp:103
-#, fuzzy
-msgid "Track creation error"
-msgstr "Selección de pista"
-
-#: engine/MazeCompiler/TrackCompiler.cpp:115
-#, fuzzy
-msgid "Unable to add a background image record"
-msgstr "Imposible añadir el mensaje al Chat"
-
-#: engine/MazeCompiler/TrackCompiler.cpp:127
-#, fuzzy
-msgid "Unable to add a map record"
-msgstr "Imposible añadir el juego"
-
-#: engine/MazeCompiler/TrackCompiler.cpp:146
-msgid "Compiled track successfully!"
-msgstr ""
-
-#: engine/MazeCompiler/TrackCompiler.cpp:164
-#: engine/MazeCompiler/TrackCompiler.cpp:193
-msgid "Unable to find [HEADER] section"
-msgstr ""
-
-#: engine/MazeCompiler/TrackCompiler.cpp:170
-msgid "Warning: unable to find description"
-msgstr ""
-
-#: engine/MazeCompiler/TrackCompiler.cpp:196
-#, fuzzy
-msgid "Unable to find background image filename"
-msgstr "Imposible de añadir un mensaje"
-
-#: engine/MazeCompiler/TrackCompiler.cpp:203
-#, fuzzy, c-format, boost-format
-msgid "Unable to find background image: %s"
-msgstr "Imposible de añadir un mensaje"
-
-#: engine/MazeCompiler/TrackCompiler.cpp:271
-#, fuzzy
-msgid "Bad palette format for background file"
-msgstr "Imposible de añadir un mensaje"
-
-#: engine/MazeCompiler/TrackCompiler.cpp:292
-msgid "Incorrect background resolution"
-msgstr ""
-
-#: engine/ObjFacTools/ResActor.cpp:190
-msgid "Unhandled component type"
-msgstr ""
-
-#: engine/ObjFacTools/ResourceLib.cpp:81
-msgid "File not found or not readable"
-msgstr ""
-
-#: engine/ObjFacTools/ResourceLib.cpp:95 engine/Script/Handlers.cpp:128
-#: engine/Script/Handlers.cpp:157
-msgid "Expected"
-msgstr ""
-
-#: engine/ObjFacTools/ResourceLib.cpp:95
-msgid "Invalid magic number"
-msgstr ""
-
-#: engine/ObjFacTools/ResourceLib.cpp:96
-msgid "got"
-msgstr ""
-
-#: engine/Script/Core.cpp:156
-msgid "Out of stack space"
-msgstr ""
-
-#: engine/Script/Core.cpp:299
-msgid "No function on stack"
-msgstr ""
-
-#: engine/Script/Core.cpp:396
-msgid "has no documentation"
-msgstr ""
-
-#: engine/Script/Core.cpp:409
-msgid "has no method"
-msgstr ""
-
-#: engine/Script/Core.cpp:516
-msgid "Disallowed access to protected function"
-msgstr ""
-
-#: engine/Script/Handlers.cpp:128 engine/Script/Handlers.cpp:157
-msgid "or"
-msgstr ""
-
-#: engine/Util/Config.cpp:367
-#, fuzzy
-msgid "Unable to determine configuration directory"
-msgstr "Imposible de crear socket"
-
-#: engine/Util/Config.cpp:380
-msgid ""
-"Unable to determine configuration directory (HOME environment variable not "
-"set)"
-msgstr ""
-
-#: engine/Util/Config.cpp:803
-#, fuzzy
-msgid "Unable to create directory"
-msgstr "Imposible de crear socket"
-
-#: engine/Util/Config.cpp:812
-#, fuzzy
-msgid "Unable to create configuration file"
-msgstr "Imposible de crear socket"
-
-#: engine/Util/OS.cpp:332 engine/Util/OS.cpp:342
-msgid "Could not load"
-msgstr ""
-
-#, fuzzy
-#~ msgid "HoverRace fullscreen test"
-#~ msgstr "Versión de HoverRace"
-
-#, fuzzy
-#~ msgid "Hide"
-#~ msgstr "Video"
-
-#, fuzzy
-#~ msgid "Unknown direction"
-#~ msgstr "Nave Desconocida"
-
-#~ msgid "Click OK to play on the Internet against other people"
-#~ msgstr "Haga click en \"Ok\" para jugar en Internet contra otras personas"
-
-#~ msgid ""
-#~ "Make sure that you are connected to the Internet before clicking on OK.  "
-#~ "If you have any problems, visit our forums at http://www.hoverrace.com/bb "
-#~ "for help."
-#~ msgstr ""
-#~ "Asegúrese de estar conectado a Internet antes de hacer click en \"OK\". "
-#~ "Si usted tiene algún problema visite nuestros foros en http://www."
-#~ "hoverrace.com/bb para más ayuda."
-
-#, fuzzy
-#~ msgid "HoverRace track file"
-#~ msgstr "Versión de HoverRace"
-
-#~ msgid "Player 1"
-#~ msgstr "Jugador 1"
-
-#~ msgid "Player 2"
-#~ msgstr "Jugador 2"
-
-#~ msgid "Player 3"
-#~ msgstr "Jugador 3"
-
-#~ msgid "Player 4"
-#~ msgstr "Jugador 4"
-
-# amar@live.cl
-#~ msgid "Motor On:"
-#~ msgstr "Encender el motor:"
-
-#~ msgid "Fire Weapon:"
-#~ msgstr "Usar arma:"
-
-#~ msgid "HoverRace"
-#~ msgstr "HoverRace"
-
-#~ msgid "Rank            Result   Best Lap "
-#~ msgstr "Posición            Resultado   Mejor Vuelta"
-
-#~ msgid "Rank                 For   Against"
-#~ msgstr "Posición                 Por   En Contra"
-
-#~ msgid "Bad track file format"
-#~ msgstr "Formato erróneo del archivo la pista"
+#~ msgid "Resolution successfully set to"
+#~ msgstr "Resolución exitosamente puesta en"
 
 #~ msgid ""
 #~ "HoverRace for Linux is under development!\n"
@@ -2259,11 +1224,234 @@ msgstr ""
 #~ "Por favor visite %s para aprender cómo\n"
 #~ "contribuir al proyecto."
 
+#~ msgid "Rank                 For   Against"
+#~ msgstr "Posición                 Por   En Contra"
+
+#~ msgid "HoverRace"
+#~ msgstr "HoverRace"
+
+# amar@live.cl
+#~ msgid "Motor On:"
+#~ msgstr "Encender el motor:"
+
+#~ msgid "Player 3"
+#~ msgstr "Jugador 3"
+
+#~ msgid "Player 1"
+#~ msgstr "Jugador 1"
+
+#~ msgid "Make sure that you are connected to the Internet before clicking on OK.  If you have any problems, visit our forums at http://www.hoverrace.com/bb for help."
+#~ msgstr "Asegúrese de estar conectado a Internet antes de hacer click en \"OK\". Si usted tiene algún problema visite nuestros foros en http://www.hoverrace.com/bb para más ayuda."
+
+#, fuzzy
+#~ msgid "Unknown direction"
+#~ msgstr "Nave Desconocida"
+
+#, fuzzy
+#~ msgid "HoverRace fullscreen test"
+#~ msgstr "Versión de HoverRace"
+
+#, fuzzy
+#~ msgid "Unable to create configuration file"
+#~ msgstr "Imposible de crear socket"
+
+#, fuzzy
+#~ msgid "Bad palette format for background file"
+#~ msgstr "Imposible de añadir un mensaje"
+
+#, fuzzy
+#~ msgid "Unable to find background image filename"
+#~ msgstr "Imposible de añadir un mensaje"
+
+#, fuzzy
+#~ msgid "Unable to add a map record"
+#~ msgstr "Imposible añadir el juego"
+
+#, fuzzy
+#~ msgid "Track creation error"
+#~ msgstr "Selección de pista"
+
+#, fuzzy
+#~ msgid "Unable to add a header to the output file"
+#~ msgstr "Imposible de crear socket"
+
+#, fuzzy
+#~ msgid "Unable to create the output file: %s"
+#~ msgstr "Imposible de crear socket"
+
+#, fuzzy
+#~ msgid "Unable to load texture %d %d on line %d\n"
+#~ msgstr "Imposible de crear socket"
+
+#, fuzzy
+#~ msgid "End"
+#~ msgstr "Eon"
+
+#, fuzzy
+#~ msgid "Mismatched connections"
+#~ msgstr "Conectando"
+
+#, fuzzy
+#~ msgid "Connection list not found"
+#~ msgstr "La conexión se interrumpió"
+
+# ¿Y esto? Se supone que ya se sabe que es con varios jguadores, por eso es MULTIJUGADOR. Tampoco es que el que vaya a jugar sea tonto...
+#, fuzzy
+#~ msgid "Print Screen"
+#~ msgstr "&Multijugador"
+
+#, fuzzy
+#~ msgid "Play"
+#~ msgstr "Jugador"
+
+#, fuzzy
+#~ msgid "Next Track"
+#~ msgstr "Pistas"
+
+#, fuzzy
+#~ msgid "Volume Down"
+#~ msgstr "Volumen"
+
+#, fuzzy
+#~ msgid "Unknown"
+#~ msgstr "Nave Desconocida"
+
+#, fuzzy
+#~ msgid "Look Back"
+#~ msgstr "Mirar hacia atrás:"
+
+#, fuzzy
+#~ msgid "Select"
+#~ msgstr "Seleccionar arma:"
+
+#~ msgid "Rank            Result   Best Lap "
+#~ msgstr "Posición            Resultado   Mejor Vuelta"
+
+#, fuzzy
+#~ msgid "Jump"
+#~ msgstr "Saltar:"
+
+#~ msgid "Player 4"
+#~ msgstr "Jugador 4"
+
+#, fuzzy
+#~ msgid "Turn Right"
+#~ msgstr "Girar a la derecha:"
+
+#, fuzzy
+#~ msgid "HoverRace track file"
+#~ msgstr "Versión de HoverRace"
+
+#, fuzzy
+#~ msgid "Turn Left"
+#~ msgstr "Girar a la izquierda:"
+
+#, fuzzy
+#~ msgid "Hide"
+#~ msgstr "Video"
+
+#, fuzzy
+#~ msgid "Brake"
+#~ msgstr "Frenar:"
+
+#, fuzzy
+#~ msgid "Unable to create directory"
+#~ msgstr "Imposible de crear socket"
+
+#, fuzzy
+#~ msgid "Console"
+#~ msgstr "Cerrar"
+
+#, fuzzy
+#~ msgid "ConsoleToggle"
+#~ msgstr "Cerrar"
+
+#, fuzzy
+#~ msgid "Unable to find background image: %s"
+#~ msgstr "Imposible de añadir un mensaje"
+
+#, fuzzy
+#~ msgid "Unable to add the track to the output file"
+#~ msgstr "Imposible de crear socket"
+
+#, fuzzy
+#~ msgid "Unable to open the input file: %s"
+#~ msgstr "Imposible de enviar la información actualizada"
+
+#, fuzzy
+#~ msgid "Toggle Console"
+#~ msgstr "Cerrar"
+
+#, fuzzy
+#~ msgid "Connection to a nonexistent section %d"
+#~ msgstr "Conectando a una sala de Internet..."
+
+#, fuzzy
+#~ msgid "Page Down"
+#~ msgstr "Volumen"
+
+#, fuzzy
+#~ msgid "unable to open defines file"
+#~ msgstr "Imposible de enviar la información actualizada"
+
+#, fuzzy
+#~ msgid "unable to create output file"
+#~ msgstr "Imposible de crear socket"
+
+#, fuzzy
+#~ msgid "Volume Up"
+#~ msgstr "Volumen"
+
+#, fuzzy
+#~ msgid "unable to open input file"
+#~ msgstr "Imposible de enviar la información actualizada"
+
+#~ msgid "Bad track file format"
+#~ msgstr "Formato erróneo del archivo la pista"
+
+#, fuzzy
+#~ msgid "computing plain color"
+#~ msgstr "Calculando lag"
+
+#~ msgid "Player 2"
+#~ msgstr "Jugador 2"
+
+#, fuzzy
+#~ msgid "Unable to add a background image record"
+#~ msgstr "Imposible añadir el mensaje al Chat"
+
+#, fuzzy
+#~ msgid "Unable to create free element on line %d\n"
+#~ msgstr "Imposible de crear socket"
+
+#, fuzzy
+#~ msgid "unable to open actor file"
+#~ msgstr "Imposible de crear socket"
+
+#, fuzzy
+#~ msgid "Unable to open input file"
+#~ msgstr "Imposible de enviar la información actualizada"
+
+#, fuzzy
+#~ msgid "Command line error"
+#~ msgstr "Error de comunicación"
+
+#, fuzzy
+#~ msgid "Help"
+#~ msgstr "&Ayuda"
+
+#~ msgid "Click OK to play on the Internet against other people"
+#~ msgstr "Haga click en \"Ok\" para jugar en Internet contra otras personas"
+
 #~ msgid "You must enter an alias"
 #~ msgstr "Debe ingresar un alias"
 
 #~ msgid "You must select a room"
 #~ msgstr "Debe seleccionar una sala"
+
+#, fuzzy
+#~ msgid "Prev Track"
+#~ msgstr "Pistas"
 
 #~ msgid "Locating the main server..."
 #~ msgstr "Ubicando el servidor principal..."
@@ -2279,18 +1467,29 @@ msgstr ""
 #~ "Si el problema persiste, Usted puede reportarlo a los\n"
 #~ "Foros HoverRace, en la sección 'Help Desk'."
 
-#~ msgid "Server error; please contact the server administrator"
-#~ msgstr ""
-#~ "Error del servidor; por favor, contacte con el administrador del servidor"
+#~ msgid "Fire Weapon:"
+#~ msgstr "Usar arma:"
 
-#~ msgid ""
-#~ "Unable to activate your web browser. Please start your web browser and go "
-#~ "to:"
-#~ msgstr ""
-#~ "Imposible de activar su navegador web. Por favor inicielo y valla a:"
+#~ msgid "Server error; please contact the server administrator"
+#~ msgstr "Error del servidor; por favor, contacte con el administrador del servidor"
+
+#~ msgid "Unable to activate your web browser. Please start your web browser and go to:"
+#~ msgstr "Imposible de activar su navegador web. Por favor inicielo y valla a:"
+
+#, fuzzy
+#~ msgid "Invalid parent room reference on line %d\n"
+#~ msgstr "Imposible de crear socket"
 
 #~ msgid "HoverRace Error"
 #~ msgstr "Error de HoverRace"
+
+#, fuzzy
+#~ msgid "Unable to determine configuration directory"
+#~ msgstr "Imposible de crear socket"
+
+#, fuzzy
+#~ msgid "connections"
+#~ msgstr "Conectando"
 
 #~ msgid "Hit OK to test new resolution"
 #~ msgstr "Presione OK para probar la nueva resolución"
@@ -2300,6 +1499,3 @@ msgstr ""
 
 #~ msgid "now?"
 #~ msgstr "ahora?"
-
-#~ msgid "Resolution successfully set to"
-#~ msgstr "Resolución exitosamente puesta en"
