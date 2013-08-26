@@ -256,9 +256,7 @@ memory_leak_report.txt
 /share/*.db
 /share/Makefile
 /share/Makefile.in
-/share/Tracks
 /share/locale
-/share/tracks
 
 # /srcdoc/
 /srcdoc/html/
