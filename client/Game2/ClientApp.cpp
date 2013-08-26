@@ -606,8 +606,8 @@ void ClientApp::RequestMainMenu()
 	const char *tracks[] = {
 		"ClassicH",
 		"Steeplechase",
-		//"The Alley2",
-		//"The River",
+		"The Alley2",
+		"The River",
 	};
 	const char *trackName = tracks[rand() % (sizeof(tracks) / sizeof(tracks[0]))];
 	Log::Info("Selected main menu track: %s", trackName);
