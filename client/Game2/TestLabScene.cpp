@@ -24,6 +24,7 @@
 #include "../../engine/Control/Controller.h"
 #include "../../engine/Display/ActionButton.h"
 #include "../../engine/Display/Button.h"
+#include "../../engine/Display/Checkbox.h"
 #include "../../engine/Display/Container.h"
 #include "../../engine/Display/Display.h"
 #include "../../engine/Display/FillBox.h"
@@ -351,12 +352,16 @@ ButtonModule::ButtonModule(Display::Display &display, GameDirector &director) :
 		Log::Error("Clicked on disabled button :(");
 	});
 
-	auto icon = std::make_shared<Display::SymbolIcon>(60, 60, 0xf046, 0xbfffffff);
+	auto icon = std::make_shared<Display::SymbolIcon>(60, 60, 0xf0ad, 0xbfffffff);
 	icon->AttachView(display);
 
 	btn = root->AddChild(new Display::Button(display, "Button With Icon"));
 	btn->SetPos(640, 120);
 	btn->SetIcon(icon);
+	btn->SetAlignment(Alignment::N);
+
+	btn = root->AddChild(new Display::Checkbox(display, "Checkbox"));
+	btn->SetPos(640, 180);
 	btn->SetAlignment(Alignment::N);
 }
 

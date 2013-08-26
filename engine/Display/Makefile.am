@@ -7,6 +7,8 @@ libdisplay_la_SOURCES = \
 	ActionButton.h \
 	Button.cpp \
 	Button.h \
+	Checkbox.cpp \
+	Checkbox.h \
 	ClickRegion.cpp \
 	ClickRegion.h \
 	Color.cpp \

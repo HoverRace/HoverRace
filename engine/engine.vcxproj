@@ -121,6 +121,7 @@
     <ClCompile Include="Control\ControllerStrings.cpp" />
     <ClCompile Include="Display\ActionButton.cpp" />
     <ClCompile Include="Display\Button.cpp" />
+    <ClCompile Include="Display\Checkbox.cpp" />
     <ClCompile Include="Display\ClickRegion.cpp" />
     <ClCompile Include="Display\Color.cpp" />
     <ClCompile Include="Display\Container.cpp" />
@@ -244,6 +245,7 @@
     <ClInclude Include="Control\InputHandler.h" />
     <ClInclude Include="Display\ActionButton.h" />
     <ClInclude Include="Display\Button.h" />
+    <ClInclude Include="Display\Checkbox.h" />
     <ClInclude Include="Display\ClickRegion.h" />
     <ClInclude Include="Display\Color.h" />
     <ClInclude Include="Display\Container.h" />

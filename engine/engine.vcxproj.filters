@@ -394,6 +394,9 @@
     <ClCompile Include="Display\SDL\SdlSymbolIconView.cpp">
       <Filter>Display\SDL</Filter>
     </ClCompile>
+    <ClCompile Include="Display\Checkbox.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColorTools\ColorTools.h">
@@ -811,6 +814,9 @@
     </ClInclude>
     <ClInclude Include="Display\SDL\SdlSymbolIconView.h">
       <Filter>Display\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Display\Checkbox.h">
+      <Filter>Display</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
