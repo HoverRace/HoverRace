@@ -376,7 +376,7 @@ void ButtonModule::OnMessageClicked()
 //{{{ LabelModule //////////////////////////////////////////////////////////////
 
 LabelModule::LabelModule(Display::Display &display, GameDirector &director) :
-	SUPER(display, director, "Button")
+	SUPER(display, director, "Label")
 {
 	Config *cfg = Config::GetInstance();
 	const std::string &fontName = cfg->GetDefaultFontName();
