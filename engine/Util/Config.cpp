@@ -215,7 +215,7 @@ Config::Config(int verMajor, int verMinor, int verPatch, int verBuild,
 	// Set initial defaults.
 	ResetToDefaults();
 
-	OS::path_t tracksDirName = Str::UP("Tracks");
+	OS::path_t tracksDirName = Str::UP("tracks");
 
 	userTrackPath = this->dataPath / tracksDirName;
 
