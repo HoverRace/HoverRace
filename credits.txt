@@ -6,9 +6,9 @@ Richard Langlois (original author)
 with contributions from (in alphabetical order):
 
 Austin L. Brock
-Cong
-Ryan Curtin
-Michael Imamura
+Cong - https://github.com/cxong
+Ryan Curtin - https://github.com/rcurtin
+Michael Imamura - https://github.com/ZoogieZork
 Geoffrey White
 
 and with the help of the many testers willing to put up with bugs and other strange happenings.
