@@ -52,6 +52,8 @@ hoverrace_SOURCES = \
 	PaletteScene.h \
 	PauseMenuScene.cpp \
 	PauseMenuScene.h \
+	PracticeSetupScene.cpp \
+	PracticeSetupScene.h \
 	RoomList.cpp \
 	RoomList.h \
 	Rulebook.h \
@@ -59,6 +61,8 @@ hoverrace_SOURCES = \
 	Scene.cpp \
 	TestLabScene.h \
 	TestLabScene.cpp \
+	TrackSelectScene.h \
+	TrackSelectScene.cpp \
 	UiScene.h \
 	UiScene.cpp \
 	main.cpp \

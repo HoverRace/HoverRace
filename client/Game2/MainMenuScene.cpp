@@ -30,6 +30,7 @@
 #include "../../engine/VideoServices/FontSpec.h"
 #include "../../engine/Util/Config.h"
 
+#include "PracticeSetupScene.h"
 #include "Rulebook.h"
 
 #include "MainMenuScene.h"
@@ -99,9 +100,8 @@ std::shared_ptr<Display::Button> MainMenuScene::AddButton(const std::string &tex
 
 void MainMenuScene::OnPracticeClicked()
 {
-	//TODO: Push SessionSetupScene to get Rulebook
-	auto rules = std::make_shared<Rulebook>("ClassicH", 1, 0x7f);
-	director.RequestNewPracticeSession(rules);
+	director.RequestReplaceScene(
+		std::make_shared<PracticeSetupScene>(display, director));
 }
 
 void MainMenuScene::OnMultiplayerClicked()
