@@ -27,7 +27,6 @@
 #include "../../engine/Display/Display.h"
 #include "../../engine/Display/FillBox.h"
 #include "../../engine/Display/Label.h"
-#include "../../engine/VideoServices/FontSpec.h"
 #include "../../engine/Util/Config.h"
 
 #include "PracticeSetupScene.h"
