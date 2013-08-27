@@ -65,13 +65,7 @@ class MR_DllDeclare TrackEntry : public Util::Inspectable
 
 		bool operator<(const TrackEntry &elem2) const
 		{
-			int diff = sortingIndex - elem2.sortingIndex;
-			if (diff == 0) {
-				return name < elem2.name;
-			}
-			else {
-				return (diff < 0);
-			}
+			return name < elem2.name;
 		}
 
 		bool operator==(const TrackEntry &elem2) const
