@@ -85,6 +85,23 @@ class Scene
 		virtual void DetachController(Control::InputEventController &controller) = 0;
 
 		/**
+		 * Called when the scene is actually pushed to the stage.
+		 *
+		 * In terms of phases, this is called just <i>before</i> the scene
+		 * enters the @c STARTING phase, so the scene will be still in the
+		 * @c INITIALIZING phase.
+		 *
+		 * This is useful for handling anything that needs to be done just
+		 * before the first frame is rendered, but after the constructor has
+		 * run.
+		 *
+		 * An example is pushing another scene on top of this scene.  This
+		 * can't be done in the constructor since this scene hasn't been pushed
+		 * yet (so the scenes would be out-of-order on the stage).
+		 */
+		virtual void OnScenePushed() { }
+
+		/**
 		 * Determine if the mouse cursor is enabled for this scene.
 		 * @return @c true if the cursor should be shown,
 		 *         @c false if it should be hidden.
