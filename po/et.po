@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: hoverrace 1.24\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-23 21:31+1000\n"
+"Report-Msgid-Bugs-To: bugs@hoverrace.com\n"
+"POT-Creation-Date: 2013-08-28 16:31-0400\n"
 "PO-Revision-Date: 2009-03-07 15:05-0500\n"
 "Last-Translator:  <ryan@igglybob.com>\n"
 "Language-Team: Estonian <linux-ee@lists.eenet.ee>\n"
@@ -38,7 +38,9 @@ msgid "with contributions from (in alphabetical order)"
 msgstr ""
 
 #: client/Game2/AboutDialog.cpp:96
-msgid "and with the help of the many testers willing to put up with bugs and other strange happenings."
+msgid ""
+"and with the help of the many testers willing to put up with bugs and other "
+"strange happenings."
 msgstr ""
 
 #: client/Game2/AboutDialog.cpp:98
@@ -64,7 +66,8 @@ msgstr ""
 #: client/Game2/CheckRoomListDialog.cpp:88
 #: client/Game2/CheckUpdateServerDialog.cpp:177
 #: client/Game2/SelectRoomDialog.cpp:120
-#: client/Game2/TrackSelectDialog.cpp:103
+#: client/Game2/TrackSelectDialog.cpp:103 engine/Control/Controller.cpp:43
+#: engine/Control/ControllerStrings.cpp:138
 msgid "Cancel"
 msgstr ""
 
@@ -112,6 +115,8 @@ msgid "Controls"
 msgstr ""
 
 #: client/Game2/ControlPrefsPage.cpp:134 client/Game2/NetInterface.cpp:1068
+#: engine/Control/Controller.cpp:350 engine/Control/Controller.cpp:398
+#: engine/Control/Controller.cpp:498
 msgid "Player"
 msgstr ""
 
@@ -346,7 +351,8 @@ msgid "Sound will be disabled for this session."
 msgstr ""
 
 #: client/Game2/GameApp.cpp:885
-msgid "If this is your first time running HoverRace, try restarting your computer."
+msgid ""
+"If this is your first time running HoverRace, try restarting your computer."
 msgstr ""
 
 #: client/Game2/GameApp.cpp:887
@@ -363,7 +369,9 @@ msgid ""
 msgstr ""
 
 #: client/Game2/GameApp.cpp:918
-msgid "HoverRace was unable to switch the video mode. You will need to play in full screen."
+msgid ""
+"HoverRace was unable to switch the video mode. You will need to play in full "
+"screen."
 msgstr ""
 
 #: client/Game2/GameApp.cpp:1991
@@ -371,7 +379,23 @@ msgid "This build of HoverRace is not official; updates are not available."
 msgstr ""
 
 #: client/Game2/GameApp.cpp:2061
-msgid "Incompatible video mode. Select a compatible video mode by pressing F8 or F9 once a game is started"
+msgid ""
+"Incompatible video mode. Select a compatible video mode by pressing F8 or F9 "
+"once a game is started"
+msgstr ""
+
+#: client/Game2/HoverScript/SysConsole.cpp:56
+msgid "System console initialized."
+msgstr ""
+
+#: client/Game2/HoverScript/SysConsole.cpp:161
+#, c-format, boost-format
+msgid "For help on a class or method, call the %s method: %s"
+msgstr ""
+
+#: client/Game2/HoverScript/SysConsole.cpp:200
+#, c-format, boost-format
+msgid "Methods for class %s:"
 msgstr ""
 
 #: client/Game2/InternetRoom.cpp:467
@@ -635,7 +659,8 @@ msgid "Disable Intro Movie"
 msgstr ""
 
 #: client/Game2/MiscPrefsPage.cpp:62
-msgid "Disable the prompt to connect to the Internet each time HoverRace starts"
+msgid ""
+"Disable the prompt to connect to the Internet each time HoverRace starts"
 msgstr ""
 
 #: client/Game2/MiscPrefsPage.cpp:64
@@ -683,7 +708,9 @@ msgstr ""
 
 #: client/Game2/NetInterface.cpp:533 client/Game2/NetInterface.cpp:611
 #: client/Game2/NetInterface.cpp:667
-msgid "Unable to use UDP recv port; choose a different port or close some Winsock applications."
+msgid ""
+"Unable to use UDP recv port; choose a different port or close some Winsock "
+"applications."
 msgstr ""
 
 #: client/Game2/NetInterface.cpp:748
@@ -744,7 +771,9 @@ msgid "Connection refused by peer"
 msgstr ""
 
 #: client/Game2/NetInterface.cpp:1734
-msgid "; perhaps they are behind a firewall and need to forward ports 9530 and 9531 TCP and UDP?"
+msgid ""
+"; perhaps they are behind a firewall and need to forward ports 9530 and 9531 "
+"TCP and UDP?"
 msgstr ""
 
 #: client/Game2/NetInterface.cpp:1736 client/Game2/NetInterface.cpp:1775
@@ -777,7 +806,10 @@ msgid "Warning!"
 msgstr ""
 
 #: client/Game2/NetInterface.cpp:1849
-msgid "You are about to launch the race without any opponents.  You will be on your own.  It is preferable to wait for other players to join your game.  Are you sure?"
+msgid ""
+"You are about to launch the race without any opponents.  You will be on your "
+"own.  It is preferable to wait for other players to join your game.  Are you "
+"sure?"
 msgstr ""
 
 #: client/Game2/NetInterface.cpp:1850
@@ -793,7 +825,9 @@ msgid "No"
 msgstr ""
 
 #: client/Game2/NetInterface.cpp:1885
-msgid "It is highly preferable to wait until all players have successfully connected to the game before pressing the start button."
+msgid ""
+"It is highly preferable to wait until all players have successfully "
+"connected to the game before pressing the start button."
 msgstr ""
 
 #: client/Game2/NetInterface.cpp:1886
@@ -802,7 +836,7 @@ msgstr ""
 
 #: client/Game2/NetInterface.cpp:1887 client/Game2/PathSelector.cpp:93
 #: client/Game2/SelectRoomDialog.cpp:119
-#: client/Game2/TrackSelectDialog.cpp:102
+#: client/Game2/TrackSelectDialog.cpp:102 engine/Control/Controller.cpp:42
 msgid "OK"
 msgstr ""
 
@@ -1039,7 +1073,9 @@ msgstr ""
 
 #: client/Game2/TrackDownloadDialog.cpp:247
 #, c-format, boost-format
-msgid "Track download failed: The file \"%s\" was not found in the archive downloaded from %s"
+msgid ""
+"Track download failed: The file \"%s\" was not found in the archive "
+"downloaded from %s"
 msgstr ""
 
 #: client/Game2/TrackDownloadDialog.cpp:272
@@ -1175,5 +1211,916 @@ msgid "HoverRace is currently in silent mode."
 msgstr ""
 
 #: client/Game2/main.cpp:337 client/Game2/main.cpp:343
+#: compilers/MazeCompiler/main.cpp:132
 msgid "You found a bug!"
+msgstr ""
+
+#: compilers/MazeCompiler/main.cpp:68
+msgid "Usage: MazeCompiler <outputfile> <inputfile>"
+msgstr ""
+
+#: compilers/MazeCompiler/main.cpp:105
+msgid "Wrong argument count"
+msgstr ""
+
+#: compilers/MazeCompiler/main.cpp:149
+msgid "Command line error"
+msgstr ""
+
+#: compilers/ResourceCompiler/BitmapHelper.cpp:46
+#: compilers/ResourceCompiler/BitmapHelper.cpp:61
+#: compilers/ResourceCompiler/BitmapHelper.cpp:118
+#: compilers/ResourceCompiler/ResActorBuilder.cpp:49
+#: compilers/ResourceCompiler/ResActorBuilder.cpp:204
+#: compilers/ResourceCompiler/ResActorBuilder.cpp:213
+#: compilers/ResourceCompiler/ResSoundBuilder.cpp:64
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:142
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:160
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:181
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:199
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:218
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:237
+#: compilers/ResourceCompiler/ResourceLibBuilder.cpp:105
+#: compilers/ResourceCompiler/TextParsing.cpp:41
+#: compilers/ResourceCompiler/TextParsing.cpp:57
+msgid "ERROR"
+msgstr ""
+
+#: compilers/ResourceCompiler/BitmapHelper.cpp:46
+msgid "Unable to open input file"
+msgstr ""
+
+#: compilers/ResourceCompiler/BitmapHelper.cpp:61
+msgid "Invalid file type"
+msgstr ""
+
+#: compilers/ResourceCompiler/BitmapHelper.cpp:118
+msgid "Unsupported format"
+msgstr ""
+
+#: compilers/ResourceCompiler/ResActorBuilder.cpp:49
+msgid "unable to open actor file"
+msgstr ""
+
+#: compilers/ResourceCompiler/ResActorBuilder.cpp:204
+msgid "No bitmap associated with the patch"
+msgstr ""
+
+#: compilers/ResourceCompiler/ResActorBuilder.cpp:213
+msgid "Bad bitmap ID"
+msgstr ""
+
+#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:297
+msgid "This image has invalid colors"
+msgstr ""
+
+#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:297
+#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:318
+msgid "WARNING"
+msgstr ""
+
+#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:299
+#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:306
+#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:313
+msgid "INFO"
+msgstr ""
+
+#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:299
+msgid "This image has transparent pixels"
+msgstr ""
+
+#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:306
+msgid "resampling"
+msgstr ""
+
+#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:313
+msgid "computing plain color"
+msgstr ""
+
+#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:318
+msgid "bitmap too small; using single color"
+msgstr ""
+
+#: compilers/ResourceCompiler/ResSoundBuilder.cpp:64
+msgid "invalid WAV file"
+msgstr ""
+
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:142
+msgid "unable to open input file"
+msgstr ""
+
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:160
+msgid "problem reading bitmap parameters"
+msgstr ""
+
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:181
+msgid "problem reading actor parameters"
+msgstr ""
+
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:199
+msgid "problem reading sprite parameters"
+msgstr ""
+
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:218
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:237
+msgid "problem reading sound parameters"
+msgstr ""
+
+#: compilers/ResourceCompiler/ResourceLibBuilder.cpp:105
+msgid "unable to create output file"
+msgstr ""
+
+#: compilers/ResourceCompiler/TextParsing.cpp:41
+msgid "unable to open defines file"
+msgstr ""
+
+#: compilers/ResourceCompiler/TextParsing.cpp:57
+msgid "line"
+msgstr ""
+
+#: compilers/ResourceCompiler/TextParsing.cpp:57
+msgid "syntax error in defines file"
+msgstr ""
+
+#: engine/Control/Controller.cpp:44
+msgid "Page Up"
+msgstr ""
+
+#: engine/Control/Controller.cpp:45
+msgid "Page Down"
+msgstr ""
+
+#: engine/Control/Controller.cpp:46
+msgid "Top"
+msgstr ""
+
+#: engine/Control/Controller.cpp:47
+msgid "Bottom"
+msgstr ""
+
+#: engine/Control/Controller.cpp:56
+msgid "Toggle Console"
+msgstr ""
+
+#: engine/Control/Controller.cpp:60
+msgid "Zoom In"
+msgstr ""
+
+#: engine/Control/Controller.cpp:61
+msgid "Zoom Out"
+msgstr ""
+
+#: engine/Control/Controller.cpp:62
+msgid "Pan Up"
+msgstr ""
+
+#: engine/Control/Controller.cpp:63
+msgid "Pan Down"
+msgstr ""
+
+#: engine/Control/Controller.cpp:64
+msgid "Reset Camera"
+msgstr ""
+
+#: engine/Control/Controller.cpp:368 engine/Control/Controller.cpp:457
+#: engine/Control/Controller.cpp:512 engine/Control/Controller.cpp:538
+msgid "Camera"
+msgstr ""
+
+#: engine/Control/Controller.cpp:374 engine/Control/Controller.cpp:553
+#: engine/Control/ControllerStrings.cpp:122
+msgid "Menu"
+msgstr ""
+
+#: engine/Control/Controller.cpp:380 engine/Control/Controller.cpp:565
+msgid "ConsoleToggle"
+msgstr ""
+
+#: engine/Control/Controller.cpp:386 engine/Control/Controller.cpp:433
+#: engine/Control/Controller.cpp:576
+msgid "Console"
+msgstr ""
+
+#: engine/Control/Controller.cpp:501
+msgid "Throttle"
+msgstr ""
+
+#: engine/Control/Controller.cpp:502
+msgid "Brake"
+msgstr ""
+
+#: engine/Control/Controller.cpp:503
+msgid "Turn Left"
+msgstr ""
+
+#: engine/Control/Controller.cpp:504
+msgid "Turn Right"
+msgstr ""
+
+#: engine/Control/Controller.cpp:505
+msgid "Jump"
+msgstr ""
+
+#: engine/Control/Controller.cpp:506
+msgid "Fire"
+msgstr ""
+
+#: engine/Control/Controller.cpp:507
+msgid "Item"
+msgstr ""
+
+#: engine/Control/Controller.cpp:508
+msgid "Look Back"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:45
+#: engine/Control/ControllerStrings.cpp:47
+#: engine/Control/ControllerStrings.cpp:333
+msgid "Unknown"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:48
+msgid "Backspace"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:49
+msgid "Tab"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:50
+msgid "Enter"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:51
+msgid "Esc"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:52
+msgid "Space"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:62
+msgid "Del"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:63
+msgid "Caps Lock"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:64
+msgid "F1"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:65
+msgid "F2"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:66
+msgid "F3"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:67
+msgid "F4"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:68
+msgid "F5"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:69
+msgid "F6"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:70
+msgid "F7"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:71
+msgid "F8"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:72
+msgid "F9"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:73
+msgid "F10"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:74
+msgid "F11"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:75
+msgid "F12"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:76
+msgid "Print Screen"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:77
+msgid "Scroll Lock"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:78
+msgid "Pause"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:79
+msgid "Ins"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:80
+msgid "Home"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:81
+msgid "PgUp"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:82
+msgid "End"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:83
+msgid "PgDn"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:88
+msgid "Num Lock"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:89
+msgid "Numpad /"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:90
+msgid "Numpad *"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:91
+msgid "Numpad -"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:92
+msgid "Numpad +"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:93
+msgid "Numpad Enter"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:94
+msgid "Numpad 1"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:95
+msgid "Numpad 2"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:96
+msgid "Numpad 3"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:97
+msgid "Numpad 4"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:98
+msgid "Numpad 5"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:99
+msgid "Numpad 6"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:100
+msgid "Numpad 7"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:101
+msgid "Numpad 8"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:102
+msgid "Numpad 9"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:103
+msgid "Numpad 0"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:104
+msgid "Numpad ."
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:105
+msgid "App"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:106
+msgid "Power"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:107
+msgid "Numpad ="
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:108
+msgid "F13"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:109
+msgid "F14"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:110
+msgid "F15"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:111
+msgid "F16"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:112
+msgid "F17"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:113
+msgid "F18"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:114
+msgid "F19"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:115
+msgid "F20"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:116
+msgid "F21"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:117
+msgid "F22"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:118
+msgid "F23"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:119
+msgid "F24"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:120
+msgid "Execute"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:121
+msgid "Help"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:123
+msgid "Select"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:124
+#: engine/Control/ControllerStrings.cpp:161
+msgid "Stop"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:125
+msgid "Again"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:126
+msgid "Undo"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:127
+msgid "Cut"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:128
+msgid "Copy"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:129
+msgid "Paste"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:130
+msgid "Find"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:131
+#: engine/Control/ControllerStrings.cpp:163
+msgid "Mute"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:132
+msgid "Volume Up"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:133
+msgid "Volume Down"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:134
+msgid "Numpad ,"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:137
+msgid "SysReq"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:139
+msgid "Clear"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:140
+msgid "Prior"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:148
+msgid "Numpad 00"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:149
+msgid "Numpad 000"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:150
+msgid "Left Ctrl"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:151
+msgid "Left Shift"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:152
+msgid "Left Alt"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:153
+msgid "Left GUI"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:154
+msgid "Right Ctrl"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:155
+msgid "Right Shift"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:156
+msgid "Right Alt"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:157
+msgid "Right GUI"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:158
+msgid "Mode"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:159
+msgid "Next Track"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:160
+msgid "Prev Track"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:162
+msgid "Play"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:164
+msgid "Media Select"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:188
+msgid "Disabled"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:205
+msgid "Left Mouse Btn"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:207
+msgid "Right Mouse Btn"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:209
+msgid "Middle Mouse Btn"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:211
+msgid "Mouse Button 4"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:213
+msgid "Mouse Button 5"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:215
+msgid "Unknown Mouse Button"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:221
+msgid "Mouse X+ Axis"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:223
+msgid "Mouse X- Axis"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:226
+msgid "Mouse Y+ Axis"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:228
+msgid "Mouse Y- Axis"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:231
+msgid "Mouse Z+ Axis"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:233
+msgid "Mouse Z- Axis"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:236
+msgid "Mouse Wheel Right"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:238
+msgid "Mouse Wheel Left"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:241
+msgid "Mouse Wheel Down"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:243
+msgid "Mouse Wheen Up"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:246
+msgid "Unknown Mouse Axis +"
+msgstr ""
+
+#: engine/Control/ControllerStrings.cpp:248
+msgid "Unknown Mouse Axis -"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:96
+#: engine/MazeCompiler/LevelBuilder.cpp:117
+#, c-format, boost-format
+msgid "Section ID missing on line %d"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:104
+#: engine/MazeCompiler/LevelBuilder.cpp:125
+#, c-format, boost-format
+msgid "Duplicate section ID (%d) on line %d"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:257
+#, c-format, boost-format
+msgid "Invalid parent room reference on line %d\n"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:392
+msgid "Connection list not found"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:413
+#: engine/MazeCompiler/LevelBuilder.cpp:421
+#, c-format, boost-format
+msgid "Connection to a nonexistent section %d"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:429
+msgid "Mismatched connections"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:447
+#, c-format, boost-format
+msgid "Connection between sections %d and %d do not match"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:468
+#, c-format, boost-format
+msgid "Warning: room %d seems to be very small"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:472
+#, c-format, boost-format
+msgid "Warning: room %d seems to be very large"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:485
+#, c-format, boost-format
+msgid "Warning: feature %d seems to be very small"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:489
+#, c-format, boost-format
+msgid "Warning: feature %d seems to be very large"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:510
+#, c-format, boost-format
+msgid "Invalid starting position room %d"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:536
+msgid "No starting positions found"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:564
+#, c-format, boost-format
+msgid "Invalid room index on line %d"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:591
+#, c-format, boost-format
+msgid "Unable to create free element on line %d\n"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:609
+msgid "This level contains:"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:610
+msgid "rooms"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:611
+msgid "features"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:612
+msgid "connections"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:613
+msgid "elements"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:614
+msgid "starting positions"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilder.cpp:803
+#, c-format, boost-format
+msgid "Unable to load texture %d %d on line %d\n"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilderVisiblesZones.cpp:83
+msgid "Computing visible zones... be patient"
+msgstr ""
+
+#: engine/MazeCompiler/LevelBuilderVisiblesZones.cpp:322
+msgid "Two nodes with same position"
+msgstr ""
+
+#: engine/MazeCompiler/TrackCompiler.cpp:58
+#, c-format, boost-format
+msgid "Unable to open the input file: %s"
+msgstr ""
+
+#: engine/MazeCompiler/TrackCompiler.cpp:77
+#, c-format, boost-format
+msgid "Unable to create the output file: %s"
+msgstr ""
+
+#: engine/MazeCompiler/TrackCompiler.cpp:81
+#, c-format, boost-format
+msgid "Compiling track (%s)"
+msgstr ""
+
+#: engine/MazeCompiler/TrackCompiler.cpp:86
+msgid "Unable to add a header to the output file"
+msgstr ""
+
+#: engine/MazeCompiler/TrackCompiler.cpp:99
+msgid "Unable to add the track to the output file"
+msgstr ""
+
+#: engine/MazeCompiler/TrackCompiler.cpp:103
+msgid "Track creation error"
+msgstr ""
+
+#: engine/MazeCompiler/TrackCompiler.cpp:115
+msgid "Unable to add a background image record"
+msgstr ""
+
+#: engine/MazeCompiler/TrackCompiler.cpp:127
+msgid "Unable to add a map record"
+msgstr ""
+
+#: engine/MazeCompiler/TrackCompiler.cpp:146
+msgid "Compiled track successfully!"
+msgstr ""
+
+#: engine/MazeCompiler/TrackCompiler.cpp:164
+#: engine/MazeCompiler/TrackCompiler.cpp:193
+msgid "Unable to find [HEADER] section"
+msgstr ""
+
+#: engine/MazeCompiler/TrackCompiler.cpp:170
+msgid "Warning: unable to find description"
+msgstr ""
+
+#: engine/MazeCompiler/TrackCompiler.cpp:196
+msgid "Unable to find background image filename"
+msgstr ""
+
+#: engine/MazeCompiler/TrackCompiler.cpp:203
+#, c-format, boost-format
+msgid "Unable to find background image: %s"
+msgstr ""
+
+#: engine/MazeCompiler/TrackCompiler.cpp:271
+msgid "Bad palette format for background file"
+msgstr ""
+
+#: engine/MazeCompiler/TrackCompiler.cpp:292
+msgid "Incorrect background resolution"
+msgstr ""
+
+#: engine/ObjFacTools/ResActor.cpp:190
+msgid "Unhandled component type"
+msgstr ""
+
+#: engine/ObjFacTools/ResourceLib.cpp:81
+msgid "File not found or not readable"
+msgstr ""
+
+#: engine/ObjFacTools/ResourceLib.cpp:95 engine/Script/Handlers.cpp:128
+#: engine/Script/Handlers.cpp:157
+msgid "Expected"
+msgstr ""
+
+#: engine/ObjFacTools/ResourceLib.cpp:95
+msgid "Invalid magic number"
+msgstr ""
+
+#: engine/ObjFacTools/ResourceLib.cpp:96
+msgid "got"
+msgstr ""
+
+#: engine/Script/Core.cpp:156
+msgid "Out of stack space"
+msgstr ""
+
+#: engine/Script/Core.cpp:299
+msgid "No function on stack"
+msgstr ""
+
+#: engine/Script/Core.cpp:396
+msgid "has no documentation"
+msgstr ""
+
+#: engine/Script/Core.cpp:409
+msgid "has no method"
+msgstr ""
+
+#: engine/Script/Core.cpp:516
+msgid "Disallowed access to protected function"
+msgstr ""
+
+#: engine/Script/Handlers.cpp:128 engine/Script/Handlers.cpp:157
+msgid "or"
+msgstr ""
+
+#: engine/Util/Config.cpp:363
+msgid "Unable to determine configuration directory"
+msgstr ""
+
+#: engine/Util/Config.cpp:376
+msgid ""
+"Unable to determine configuration directory (HOME environment variable not "
+"set)"
+msgstr ""
+
+#: engine/Util/Config.cpp:807
+msgid "Unable to create directory"
+msgstr ""
+
+#: engine/Util/Config.cpp:816
+msgid "Unable to create configuration file"
+msgstr ""
+
+#: engine/Util/OS.cpp:328 engine/Util/OS.cpp:338
+msgid "Could not load"
 msgstr ""
