@@ -11,10 +11,10 @@ do
 	local cfg = game:get_config()
 	cfg:unlink()  -- Prevent our modifications from being saved.
 	local w, h = cfg:get_video_res()
-	print("Configured window res: ", w, h)
+	print("Configured window res: " .. w .. "x" .. h)
 	cfg:set_video_res(800, 450)
 	w, h = cfg:get_video_res()
-	print("New window res: ", w, h)
+	print("New window res: " .. w .. "x" .. h)
 end
 
 -- Some functions, such as game:start_practice(), can't be called until
@@ -54,7 +54,7 @@ function first_session(session)
 	game:on_session_begin("session_start", second_session)
 	print("Starting up the first session.  Num players:",
 		session:get_num_players())
-	
+
 	--[[ Some ideas for expanding the API...
 	local player = session:get_local_player()
 	-- local player = session:get_player(1)
