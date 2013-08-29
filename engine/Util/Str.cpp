@@ -41,7 +41,7 @@ using namespace HoverRace::Util;
 wchar_t *Str::Utf8ToWide(const char *s)
 {
 	ASSERT(s != NULL);
-	
+
 	size_t sz = strlen(s) + 1;
 	wchar_t *retv = (wchar_t*)malloc(sz * sizeof(wchar_t));
 	if (sz == 1) {
@@ -110,15 +110,16 @@ char *Str::WideToUtf8(const wchar_t *ws)
 {
 	ASSERT(ws != NULL);
 
-#	ifdef _WIN32
-		if (*ws == '\0') {
-			char *retv = (char*)malloc(1);
-			*retv = '\0';
-			return retv;
-		}
+	if (*ws == '\0') {
+		char *retv = (char*)malloc(1);
+		*retv = '\0';
+		return retv;
+	}
 
-		size_t sz = wcslen(ws) * 3 + 1;  // Initial guess.
-		char *retv = (char*)malloc(sz);
+	size_t sz = wcslen(ws) * 3 + 1;  // Initial guess.
+	char *retv = (char*)malloc(sz);
+
+#	ifdef _WIN32
 		int ct = WideCharToMultiByte(CP_UTF8, 0, ws, -1, retv, sz, NULL, NULL);
 		while (ct == 0 && GetLastError() == ERROR_INSUFFICIENT_BUFFER) {
 			if (GetLastError() == ERROR_INSUFFICIENT_BUFFER) {
@@ -135,7 +136,35 @@ char *Str::WideToUtf8(const wchar_t *ws)
 
 		return retv;
 #	else
-		//TODO: Use iconv.
-		throw UnimplementedExn("Str::WideToUtf8");
+		//TODO: Initialize icv only once per thread.
+		iconv_t icv = iconv_open("UTF-8", "WCHAR_T");
+		size_t origsz = sz - 1;
+		for (;;) {
+			char *inbuf = reinterpret_cast<char*>(const_cast<wchar_t*>(ws));
+			size_t insz = origsz * sizeof(wchar_t);
+			char *outbuf = const_cast<char*>(retv);
+			size_t outsz = sz - 1;
+			size_t ct = iconv(icv, &inbuf, &insz, &outbuf, &outsz);
+			if (ct == (size_t)-1) {
+				if (errno == E2BIG) {
+					sz *= 2;
+					retv = (char*)realloc(retv, sz);
+				}
+				else {
+					char err[256];
+					strerror_r(errno, err, sizeof(err));
+					std::string exs = "#<";
+					exs += err;
+					exs += '>';
+					return strdup(exs.c_str());
+				}
+			}
+			else {
+				*outbuf = '\0';
+				break;
+			}
+		}
+		iconv_close(icv);
+		return retv;
 #	endif
 }
