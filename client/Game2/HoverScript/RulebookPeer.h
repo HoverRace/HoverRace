@@ -1,8 +1,7 @@
 
-// ClientScriptCore.cpp
-// Scripting core configured for the client.
+// RulebookPeer.h
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2013 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -20,47 +19,45 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
-#include "StdAfx.h"
+#pragma once
 
-#include "luabind/class_info.hpp"
+#include <luabind/luabind.hpp>
+#include <luabind/object.hpp>
 
-#include "ConfigPeer.h"
-#include "DebugPeer.h"
-#include "GamePeer.h"
-#include "RulebookPeer.h"
-#include "SessionPeer.h"
+#include "../../../engine/Script/Peer.h"
+#include "../Rulebook.h"
 
-#include "ClientScriptCore.h"
+namespace HoverRace {
+	namespace Client {
+		class GameDirector;
+		class Rulebook;
+		typedef std::shared_ptr<Rulebook> RulebookPtr;
+	}
+	namespace Script {
+		class Core;
+	}
+}
 
 namespace HoverRace {
 namespace Client {
 namespace HoverScript {
 
-Script::Core *ClientScriptCore::Reset()
-{
-	SUPER::Reset();
+/**
+ * Enables subclassing Rulebook from Lua.
+ * @author Michael Imamura
+ */
+class RulebookPeer : public Script::Peer {
+	typedef Script::Peer SUPER;
+	public:
+		RulebookPeer(Script::Core *scripting, GameDirector &director);
+		virtual ~RulebookPeer();
 
-	if (!classesRegistered) {
+	public:
+		static void Register(Script::Core *scripting);
 
-		lua_State *L = GetState();
-
-		luabind::open(L);
-#		ifdef _DEBUG
-			// Enable class inspection.
-			luabind::bind_class_info(L);
-#		endif
-
-		ConfigPeer::Register(this);
-		DebugPeer::Register(this);
-		GamePeer::Register(this);
-		RulebookPeer::Register(this);
-		SessionPeer::Register(this);
-
-		classesRegistered = true;
-	}
-
-	return this;
-}
+	private:
+		GameDirector &director;
+};
 
 }  // namespace HoverScript
 }  // namespace Client
