@@ -30,7 +30,8 @@
 
 #include "Str.h"
 
-using namespace HoverRace::Util;
+namespace HoverRace {
+namespace Util {
 
 /**
  * Convert a UTF-8 string to a wide string.
@@ -168,3 +169,6 @@ char *Str::WideToUtf8(const wchar_t *ws)
 		return retv;
 #	endif
 }
+
+}  // namespace Util
+}  // namespace HoverRace
