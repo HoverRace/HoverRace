@@ -47,18 +47,18 @@ void SdlContainerView::Render()
 
 	bool clip = model.IsClip();
 	SDL_Rect oldClip;
-	SDL_Renderer *renderer = disp.GetRenderer();
+	SDL_Renderer *renderer = display.GetRenderer();
 
 	if (clip) {
 		// Translate our bounds into screen-space.
-		Vec2 pos = disp.LayoutUiPosition(
+		Vec2 pos = display.LayoutUiPosition(
 			model.GetAlignedPos(model.GetSize().x, model.GetSize().y));
 
 		const Vec2 &size = model.GetSize();
 		double w = size.x;
 		double h = size.y;
 		if (!model.IsLayoutUnscaled()) {
-			double uiScale = disp.GetUiScale();
+			double uiScale = display.GetUiScale();
 			w *= uiScale;
 			h *= uiScale;
 		}
@@ -71,10 +71,10 @@ void SdlContainerView::Render()
 		SDL_RenderSetClipRect(renderer, &clipRect);
 	}
 
-	Vec2 oldOrigin = disp.AddUiOrigin(model.GetPos());
+	Vec2 oldOrigin = display.AddUiOrigin(model.GetPos());
 	std::for_each(children.begin(), children.end(),
 		std::mem_fn(&ViewModel::Render));
-	disp.SetUiOrigin(oldOrigin);
+	display.SetUiOrigin(oldOrigin);
 
 	if (clip) {
 		SDL_RenderSetClipRect(renderer, &oldClip);

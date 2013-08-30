@@ -35,20 +35,20 @@ void SdlFillBoxView::Render()
 {
 	const Color color = model.GetColor();
 	if (color.bits.a > 0) {
-		SDL_Renderer *renderer = disp.GetRenderer();
+		SDL_Renderer *renderer = display.GetRenderer();
 		SDL_SetRenderDrawColor(renderer,
 			color.bits.r, color.bits.g, color.bits.b, color.bits.a);
 
 		SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
-		Vec2 pos = disp.LayoutUiPosition(
+		Vec2 pos = display.LayoutUiPosition(
 			model.GetAlignedPos(model.GetSize().x, model.GetSize().y));
 
 		const Vec2 &size = model.GetSize();
 		double w = size.x;
 		double h = size.y;
 		if (!model.IsLayoutUnscaled()) {
-			double uiScale = disp.GetUiScale();
+			double uiScale = display.GetUiScale();
 			w *= uiScale;
 			h *= uiScale;
 		}

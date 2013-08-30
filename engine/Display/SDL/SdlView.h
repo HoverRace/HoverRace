@@ -53,11 +53,12 @@ class SdlView : public View
 {
 	typedef View SUPER;
 	public:
-		SdlView(SdlDisplay &disp, T &model) : SUPER(), disp(disp), model(model) { }
+		SdlView(SdlDisplay &display, T &model) :
+			SUPER(), display(display), model(model) { }
 		virtual ~SdlView() { }
 
 	protected:
-		SdlDisplay &disp;
+		SdlDisplay &display;
 		T &model;
 };
 

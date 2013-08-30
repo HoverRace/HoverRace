@@ -94,7 +94,7 @@ void SdlSymbolIconView::Render()
 {
 	int w, h;
 	SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
-	disp.DrawUiTexture(texture,
+	display.DrawUiTexture(texture,
 		model.GetAlignedPos(unscaledWidth, unscaledHeight),
 		model.GetLayoutFlags());
 }
@@ -109,7 +109,7 @@ void SdlSymbolIconView::UpdateTexture()
 
 	UiFont font(cfg->GetDefaultSymbolFontName(), model.GetSize().y);
 	if (!model.IsLayoutUnscaled()) {
-		font.size *= (scale = disp.GetUiScale());
+		font.size *= (scale = display.GetUiScale());
 	}
 
 	wchar_t wtext[2] = { model.GetSymbol(), 0 };
@@ -120,13 +120,13 @@ void SdlSymbolIconView::UpdateTexture()
 #	endif
 
 	// Render the text onto a fresh new surface.
-	SdlSurfaceText textRenderer(disp, font);
+	SdlSurfaceText textRenderer(display, font);
 	SDL_Surface *tempSurface = textRenderer.RenderToNewSurface(text);
 	width = textRenderer.GetWidth();
 	height = textRenderer.GetHeight();
 
 	// Convert the surface to the display format.
-	texture = SDL_CreateTextureFromSurface(disp.GetRenderer(), tempSurface);
+	texture = SDL_CreateTextureFromSurface(display.GetRenderer(), tempSurface);
 	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 	SDL_FreeSurface(tempSurface);
 

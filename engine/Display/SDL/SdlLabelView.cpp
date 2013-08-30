@@ -91,7 +91,7 @@ void SdlLabelView::Render()
 
 	int w, h;
 	SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
-	disp.DrawUiTexture(texture,
+	display.DrawUiTexture(texture,
 		model.GetAlignedPos(unscaledWidth, unscaledHeight),
 		model.GetLayoutFlags());
 }
@@ -107,10 +107,10 @@ void SdlLabelView::UpdateBlank()
 
 	UiFont font = model.GetFont();
 	if (!model.IsLayoutUnscaled()) {
-		font.size *= (scale = disp.GetUiScale());
+		font.size *= (scale = display.GetUiScale());
 	}
 
-	height = SdlSurfaceText(disp, font).MeasureLineHeight();
+	height = SdlSurfaceText(display, font).MeasureLineHeight();
 
 	unscaledWidth = width = 1;
 	unscaledHeight = height / scale;
@@ -131,7 +131,7 @@ void SdlLabelView::UpdateTexture()
 
 	UiFont font = model.GetFont();
 	if (!model.IsLayoutUnscaled()) {
-		font.size *= (scale = disp.GetUiScale());
+		font.size *= (scale = display.GetUiScale());
 	}
 
 	bool fixedWidth = !model.IsAutoWidth();
@@ -141,7 +141,7 @@ void SdlLabelView::UpdateTexture()
 		(int)(uiWrapWidth * scale);
 
 	// Render the text onto a fresh new surface.
-	SdlSurfaceText textRenderer(disp, font);
+	SdlSurfaceText textRenderer(display, font);
 	textRenderer.SetWrapWidth(fixedWidth ? wrapWidth : -1);
 	SDL_Surface *tempSurface = textRenderer.RenderToNewSurface(
 #		ifdef _WIN32
@@ -154,7 +154,7 @@ void SdlLabelView::UpdateTexture()
 	realHeight = height = textRenderer.GetHeight();
 
 	// Convert the surface to the display format.
-	texture = SDL_CreateTextureFromSurface(disp.GetRenderer(), tempSurface);
+	texture = SDL_CreateTextureFromSurface(display.GetRenderer(), tempSurface);
 	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 	SDL_FreeSurface(tempSurface);
 

@@ -50,7 +50,7 @@ void SdlButtonView::PrepareRender()
 void SdlButtonView::Render()
 {
 	const Vec2 &size = model.GetSize();
-	Vec2 oldOrigin = disp.AddUiOrigin(model.GetAlignedPos(size.x, size.y));
+	Vec2 oldOrigin = display.AddUiOrigin(model.GetAlignedPos(size.x, size.y));
 
 	model.GetBackgroundChild()->Render();
 	model.GetLabelChild()->Render();
@@ -58,7 +58,7 @@ void SdlButtonView::Render()
 	FillBox *icon = model.GetIconChild();
 	if (icon) icon->Render();
 
-	disp.SetUiOrigin(oldOrigin);
+	display.SetUiOrigin(oldOrigin);
 }
 
 }  // namespace SDL
