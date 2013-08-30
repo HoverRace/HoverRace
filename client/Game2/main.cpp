@@ -45,10 +45,6 @@ namespace Log = HoverRace::Util::Log;
 using HoverRace::Util::OS;
 namespace Str = HoverRace::Util::Str;
 
-#ifdef _WIN32
-	static HINSTANCE hinstance;
-#endif
-
 static OS::path_t initScript;
 static OS::path_t mediaPath;
 static bool debugMode = false;
@@ -261,7 +257,7 @@ static int RunClient()
 
 // Entry point
 #ifdef _WIN32
-int WINAPI WinMain(HINSTANCE pInstance, HINSTANCE, LPSTR, int pCmdShow)
+int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 #else
 int main(int argc, char** argv)
 #endif
@@ -272,8 +268,6 @@ int main(int argc, char** argv)
 	srand(static_cast<unsigned int>(time(nullptr)));
 
 #ifdef _WIN32
-	hinstance = pInstance;
-
 	OS::path_t exePath = FindExePath();
 
 	// Change the working directory to the app's directory.
