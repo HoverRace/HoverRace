@@ -54,12 +54,6 @@ static bool showVersion = false;
 static bool silentMode = false;
 static bool skipStartupWarning = false;
 static bool noAccel = false;
-static bool experimentalMode =
-#	ifdef _WIN32
-		false;
-#	else
-		true;  // Always use experimental mode in non-Win32.
-#	endif
 static bool showFramerate = false;
 
 /**
@@ -154,11 +148,6 @@ static bool ProcessCmdLine(int argc, char **argv)
 		else if (strcmp("-V", arg) == 0 || strcmp("--version", arg) == 0) {
 			showVersion = true;
 		}
-#ifdef _WIN32
-		else if (strcmp("--yes-i-totally-want-to-break-my-system", arg) == 0) {
-			experimentalMode = true;
-		}
-#endif
 	}
 
 #	ifdef _WIN32
@@ -290,7 +279,6 @@ int main(int argc, char** argv)
 #endif
 		);
 	cfg->runtime.silent = silentMode;
-	cfg->runtime.aieeee = experimentalMode;
 	cfg->runtime.showFramerate = showFramerate;
 	cfg->runtime.skipStartupWarning = skipStartupWarning;
 	cfg->runtime.noAccel = noAccel;
