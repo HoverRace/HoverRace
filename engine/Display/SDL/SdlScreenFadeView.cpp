@@ -45,7 +45,7 @@ void SdlScreenFadeView::OnModelUpdate(int prop)
 
 Vec3 SdlScreenFadeView::Measure()
 {
-	return Vec3(disp.GetScreenWidth(), disp.GetScreenHeight(), 0);
+	return Vec3(display.GetScreenWidth(), display.GetScreenHeight(), 0);
 }
 
 void SdlScreenFadeView::PrepareRender()
@@ -63,13 +63,13 @@ void SdlScreenFadeView::Render()
 {
 	if (computedAlpha > 0) {
 		const Color color = model.GetColor();
-		SDL_Renderer *renderer = disp.GetRenderer();
+		SDL_Renderer *renderer = display.GetRenderer();
 		SDL_SetRenderDrawColor(renderer,
 			color.bits.r, color.bits.g, color.bits.b, computedAlpha);
 
 		SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
-		SDL_Rect rect = { 0, 0, disp.GetScreenWidth(), disp.GetScreenHeight() };
+		SDL_Rect rect = { 0, 0, display.GetScreenWidth(), display.GetScreenHeight() };
 		SDL_RenderFillRect(renderer, &rect);
 	}
 }
