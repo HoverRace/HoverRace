@@ -45,22 +45,24 @@ namespace Log = HoverRace::Util::Log;
 using HoverRace::Util::OS;
 namespace Str = HoverRace::Util::Str;
 
-static OS::path_t initScript;
-static OS::path_t mediaPath;
-static bool debugMode = false;
-static bool safeMode = false;
-static bool allowMultipleInstances = false;
-static bool showVersion = false;
-static bool silentMode = false;
-static bool skipStartupWarning = false;
-static bool noAccel = false;
-static bool showFramerate = false;
+namespace {
+
+OS::path_t initScript;
+OS::path_t mediaPath;
+bool debugMode = false;
+bool safeMode = false;
+bool allowMultipleInstances = false;
+bool showVersion = false;
+bool silentMode = false;
+bool skipStartupWarning = false;
+bool noAccel = false;
+bool showFramerate = false;
 
 /**
  * Display a message to the user.
  * On Windows, this will pop up a message box
  */
-static void ShowMessage(const std::string &s)
+void ShowMessage(const std::string &s)
 {
 #ifdef _WIN32
 	MessageBox(NULL, s.c_str(), PACKAGE_NAME, MB_OK);
@@ -75,7 +77,7 @@ static void ShowMessage(const std::string &s)
  * @param argv The original argument list.
  * @return @c true if successful.
  */
-static bool ProcessCmdLine(int argc, char **argv)
+bool ProcessCmdLine(int argc, char **argv)
 {
 #	ifdef _WIN32
 		int wargc;
@@ -158,7 +160,7 @@ static bool ProcessCmdLine(int argc, char **argv)
 }
 
 // Initialize (but not load) the config system.
-static Config *InitConfig(
+Config *InitConfig(
 #ifdef _WIN32
 	const OS::path_t &exePath
 #endif
@@ -212,7 +214,7 @@ static Config *InitConfig(
  * Find the path of the executable itself.
  * @return The path, including the executable name.
  */
-static OS::path_t FindExePath()
+OS::path_t FindExePath()
 {
 	DWORD curSize = MAX_PATH;
 	wchar_t *exePath = new wchar_t[curSize];
@@ -237,12 +239,14 @@ static OS::path_t FindExePath()
 }
 #endif
 
-static int RunClient()
+int RunClient()
 {
 	ClientApp game;
 	game.MainLoop();
 	return EXIT_SUCCESS;
 }
+
+}  // anonymous namespace
 
 // Entry point
 #ifdef _WIN32
