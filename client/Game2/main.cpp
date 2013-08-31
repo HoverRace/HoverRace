@@ -53,10 +53,12 @@ bool debugMode = false;
 bool safeMode = false;
 bool allowMultipleInstances = false;
 bool showVersion = false;
+
+// Runtime config options.
 bool silentMode = false;
-bool skipStartupWarning = false;
-bool noAccel = false;
 bool showFramerate = false;
+bool noAccel = false;
+bool skipStartupWarning = false;
 
 /**
  * Display a message to the user.
@@ -284,8 +286,8 @@ int main(int argc, char** argv)
 		);
 	cfg->runtime.silent = silentMode;
 	cfg->runtime.showFramerate = showFramerate;
-	cfg->runtime.skipStartupWarning = skipStartupWarning;
 	cfg->runtime.noAccel = noAccel;
+	cfg->runtime.skipStartupWarning = skipStartupWarning;
 	cfg->runtime.initScript = initScript;
 
 #ifdef ENABLE_NLS
