@@ -75,6 +75,7 @@ void Init()
 	SDL_LogSetOutputFunction(LogCallback, nullptr);
 }
 
+#ifdef _DEBUG
 void Debug(const char *fmt, ...)
 {
 	va_list ap;
@@ -82,6 +83,7 @@ void Debug(const char *fmt, ...)
 	SDL_LogMessageV(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_DEBUG, fmt, ap);
 	va_end(ap);
 }
+#endif
 
 void Info(const char *fmt, ...)
 {

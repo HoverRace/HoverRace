@@ -61,7 +61,12 @@ namespace Log {
 	typedef boost::signals2::signal<void(const Entry&)> logAdded_t;
 	MR_DllDeclare extern logAdded_t logAddedSignal;
 
+#ifdef _DEBUG
 	MR_DllDeclare void Debug(const char *fmt, ...);
+#else
+	// Not a great solution (params are still evaluated), but suffices for now.
+	MR_DllDeclare inline void Debug(...) { }
+#endif
 	MR_DllDeclare void Info(const char *fmt, ...);
 	MR_DllDeclare void Warn(const char *fmt, ...);
 	MR_DllDeclare void Error(const char *fmt, ...);
