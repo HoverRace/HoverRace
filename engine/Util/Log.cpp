@@ -23,6 +23,8 @@
 
 #include <SDL2/SDL_log.h>
 
+#include "Config.h"
+
 #include "Log.h"
 
 namespace HoverRace {
@@ -62,10 +64,11 @@ namespace {
  */
 void Init()
 {
+	const bool verboseLog = Config::GetInstance()->runtime.verboseLog;
 #	ifdef _DEBUG
-		SDL_LogSetAllPriority(SDL_LOG_PRIORITY_INFO);
+		SDL_LogSetAllPriority(verboseLog ? SDL_LOG_PRIORITY_DEBUG : SDL_LOG_PRIORITY_INFO);
 #	else
-		SDL_LogSetAllPriority(SDL_LOG_PRIORITY_ERROR);
+		SDL_LogSetAllPriority(verboseLog ? SDL_LOG_PRIORITY_INFO : SDL_LOG_PRIORITY_ERROR);
 #	endif
 
 	SDL_LogGetOutputFunction(&sdlBuiltinLog, nullptr);

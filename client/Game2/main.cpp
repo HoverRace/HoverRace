@@ -56,6 +56,7 @@ bool showVersion = false;
 
 // Runtime config options.
 bool silentMode = false;
+bool verboseLog = false;
 bool showFramerate = false;
 bool noAccel = false;
 bool skipStartupWarning = false;
@@ -148,6 +149,9 @@ bool ProcessCmdLine(int argc, char **argv)
 		}
 		else if (strcmp("--skip-startup-warning", arg) == 0) {
 			skipStartupWarning = true;
+		}
+		else if (strcmp("-v", arg) == 0 || strcmp("--verbose", arg) == 0) {
+			verboseLog = true;
 		}
 		else if (strcmp("-V", arg) == 0 || strcmp("--version", arg) == 0) {
 			showVersion = true;
@@ -285,6 +289,7 @@ int main(int argc, char** argv)
 #endif
 		);
 	cfg->runtime.silent = silentMode;
+	cfg->runtime.verboseLog = verboseLog;
 	cfg->runtime.showFramerate = showFramerate;
 	cfg->runtime.noAccel = noAccel;
 	cfg->runtime.skipStartupWarning = skipStartupWarning;
@@ -312,6 +317,8 @@ int main(int argc, char** argv)
 	OS::TimeInit();
 
 	Log::Init();
+	Log::Info("INFO level logging enabled.");
+	Log::Debug("DEBUG level logging enabled.");
 
 	try {
 		lErrorCode = RunClient();

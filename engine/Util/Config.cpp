@@ -724,6 +724,7 @@ void Config::ResetToDefaults()
 	ui.menu_cancel = InputEventController::HashKeyboardEvent(SDLK_ESCAPE);
 
 	runtime.silent = false;
+	runtime.verboseLog = false;
 	runtime.showFramerate = false;
 	runtime.enableConsole = true;
 	runtime.skipStartupWarning = false;
