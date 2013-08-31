@@ -190,7 +190,6 @@
     <ClCompile Include="Util\InspectMapNode.cpp" />
     <ClCompile Include="Util\Log.cpp" />
     <ClCompile Include="Util\OS.cpp" />
-    <ClCompile Include="Util\Profiler.cpp" />
     <ClCompile Include="Util\SelFmt.cpp" />
     <ClCompile Include="Util\Str.cpp" />
     <ClCompile Include="Util\WorldCoordinates.cpp" />
@@ -331,7 +330,6 @@
     <ClInclude Include="Util\Log.h" />
     <ClInclude Include="Util\MR_Types.h" />
     <ClInclude Include="Util\OS.h" />
-    <ClInclude Include="Util\Profiler.h" />
     <ClInclude Include="Util\SelFmt.h" />
     <ClInclude Include="Util\Str.h" />
     <ClInclude Include="Util\WorldCoordinates.h" />

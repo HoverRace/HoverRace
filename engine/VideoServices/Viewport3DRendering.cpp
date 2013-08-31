@@ -22,7 +22,6 @@
 #include "StdAfx.h"
 
 #include "Viewport3D.h"
-#include "../Util/Profiler.h"
 
 // #pragma optimize( "atw", on )
 

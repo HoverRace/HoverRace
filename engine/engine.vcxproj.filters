@@ -180,9 +180,6 @@
     <ClCompile Include="Util\OS.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="Util\Profiler.cpp">
-      <Filter>Util</Filter>
-    </ClCompile>
     <ClCompile Include="Util\Str.cpp">
       <Filter>Util</Filter>
     </ClCompile>
@@ -550,9 +547,6 @@
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="Util\OS.h">
-      <Filter>Util</Filter>
-    </ClInclude>
-    <ClInclude Include="Util\Profiler.h">
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="Util\Str.h">

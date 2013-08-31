@@ -26,7 +26,6 @@
 #include "Observer.h"
 #include "../../engine/Model/Level.h"
 #include "../../engine/Model/MazeElement.h"
-#include "../../engine/Util/Profiler.h"
 #include "../../engine/Util/Config.h"
 #include "../../engine/VideoServices/StaticText.h"
 
@@ -512,8 +511,6 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 
 	m3DView.SetupCameraPosition(lCameraPos, lOrientation, mScroll);
 
-	MR_SAMPLE_START(Clear, "ClearScreen");
-
 	// Clear background
 	if(pBackImage == NULL) {
 		m3DView.Clear(0);						  // Will have to be replace by a bitmapped background
@@ -522,17 +519,11 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 		m3DView.RenderBackground(pBackImage);
 	}
 
-	MR_SAMPLE_END(Clear);
-	MR_SAMPLE_START(ClearZ, "ClearZScreen");
-
 	m3DView.ClearZ();
-
-	MR_SAMPLE_END(ClearZ);
 
 	int lCounter;
 
 	// Floor and ceiling drawing
-	MR_SAMPLE_START(FloorRendering, "Floor Rendering");
 
 	int lTotalSections = lLevel->GetNbVisibleSurface(lRoom);
 	const Model::SectionId *lFloorList = lLevel->GetVisibleFloorList(lRoom);
@@ -547,10 +538,7 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 
 	}
 
-	MR_SAMPLE_END(FloorRendering);
-
 	// Draw the walls and features of the visibles rooms
-	MR_SAMPLE_START(WallRendering, "Wall Rendering");
 
 	int lRoomCount;
 	const int *lRoomList = lLevel->GetVisibleZones(lRoom, lRoomCount);
@@ -576,11 +564,7 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 		RenderRoomWalls(lLevel, lRoomId, pTime);
 	}
 
-	MR_SAMPLE_END(WallRendering);
-
 	// Draw all the elements of the visibles room
-	MR_SAMPLE_START(ActorRendering, "Actor Rendering");
-
 	for(lCounter = -1; lCounter < lRoomCount; lCounter++) {
 		int lRoomId;
 
@@ -887,8 +871,6 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 
 	}
 
-	MR_SAMPLE_END(ActorRendering);
-
 }
 
 void Observer::RenderRoomWalls(const Model::Level * pLevel, int lRoomId, MR_SimulationTime pTime)
@@ -1079,8 +1061,6 @@ void Observer::RenderDebugDisplay(VideoServices::VideoBuffer * pDest, const Clie
 
 void Observer::RenderNormalDisplay(VideoServices::VideoBuffer * pDest, const ClientSession *pSession, const MainCharacter::MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage)
 {
-	MR_SAMPLE_CONTEXT("RenderNormalDisplay");
-
 	int lXRes = pDest->GetXRes();
 	int lYRes = pDest->GetYRes();
 	int lYOffset = 0;
