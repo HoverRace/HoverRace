@@ -122,6 +122,7 @@
     <ClCompile Include="Game2\GifDecoder.cpp" />
     <ClCompile Include="Game2\HoverScript\ConsoleScene.cpp" />
     <ClCompile Include="Game2\HoverScript\DebugPeer.cpp" />
+    <ClCompile Include="Game2\HoverScript\RulebookPeer.cpp" />
     <ClCompile Include="Game2\HoverScript\SysConsole.cpp" />
     <ClCompile Include="Game2\InternetRoom.cpp" />
     <ClCompile Include="Game2\IntroMovie.cpp" />
@@ -205,6 +206,7 @@
     <ClInclude Include="Game2\GifDecoder.h" />
     <ClInclude Include="Game2\HoverScript\ConsoleScene.h" />
     <ClInclude Include="Game2\HoverScript\DebugPeer.h" />
+    <ClInclude Include="Game2\HoverScript\RulebookPeer.h" />
     <ClInclude Include="Game2\HoverScript\SysConsole.h" />
     <ClInclude Include="Game2\InternetRoom.h" />
     <ClInclude Include="Game2\IntroMovie.h" />
