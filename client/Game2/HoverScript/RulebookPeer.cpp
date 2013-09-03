@@ -44,7 +44,7 @@ namespace {
 }
 
 RulebookPeer::RulebookPeer(Script::Core *scripting, GameDirector &director) :
-	SUPER(scripting, "Game"), director(director)
+	SUPER(scripting, "Rulebook"), director(director)
 {
 }
 
