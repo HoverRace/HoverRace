@@ -210,8 +210,6 @@ Config::Config(int verMajor, int verMinor, int verPatch, int verBuild,
 		defaultSymbolFontName = "Unknown";
 #	endif
 
-	//TODO: Check if we successfully loaded our private fonts.
-
 	// Set initial defaults.
 	ResetToDefaults();
 
