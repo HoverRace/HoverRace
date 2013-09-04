@@ -42,8 +42,17 @@ namespace {
 			virtual ~RulebookWrapper() { }
 
 		public:
-			const std::string &GetTrackName() { return GetTrackEntry()->name; }
+			const std::string &GetTrackName() const
+			{
+				Model::TrackEntryPtr ent = GetTrackEntry();
+				return ent ? ent->name : DEFAULT_TRACK_NAME;
+			}
+
+		private:
+			static std::string DEFAULT_TRACK_NAME;
 	};
+
+	std::string RulebookWrapper::DEFAULT_TRACK_NAME = "(no track selected)";
 }
 
 RulebookPeer::RulebookPeer(Script::Core *scripting, GameDirector &director) :
