@@ -2,7 +2,7 @@
 // TrackList.cpp
 // Sorted list of track headers.
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2013 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -28,13 +28,13 @@
 #include "../Parcel/ObjStream.h"
 #include "../Parcel/TrackBundle.h"
 #include "../Util/Str.h"
+#include "../Util/Log.h"
 #include "../Util/OS.h"
 
 #include "TrackList.h"
 
 using namespace HoverRace::Parcel;
-using HoverRace::Util::OS;
-namespace Str = HoverRace::Util::Str;
+using namespace HoverRace::Util;
 
 namespace HoverRace {
 namespace Model {
@@ -93,12 +93,8 @@ void TrackList::Reload(Parcel::TrackBundlePtr trackBundle)
 			}
 		}
 		catch (Parcel::ObjStreamExn &ex) {
-			//TODO: Proper logging.
-#			ifdef _WIN32
-				OutputDebugString(ex.what());
-				OutputDebugString("\n");
-#			endif
 			// Ignore this bad track and continue.
+			Log::Warn("Skipping invalid track: %s: %s", name.c_str(), ex.what());
 		}
 	}
 
