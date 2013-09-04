@@ -616,7 +616,9 @@ void ClientApp::RequestMainMenu()
 	// Pick a random craft.
 	char craftId = 1 << (rand() % 4);
 
-	auto rules = std::make_shared<Rulebook>(trackName, 1, 0x70 + craftId);
+	auto rules = std::make_shared<Rulebook>();
+	rules->SetTrackEntry(Config::GetInstance()->GetTrackBundle()->OpenTrackEntry(trackName));
+	rules->SetGameOpts(0x70 + craftId);
 
 	try {
 		auto scene = std::make_shared<GameScene>(*display, *this, scripting, gamePeer, rules);

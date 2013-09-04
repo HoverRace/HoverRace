@@ -27,6 +27,7 @@
 #include <lua.hpp>
 #include <luabind/adopt_policy.hpp>
 
+#include "../../../engine/Parcel/TrackBundle.h"
 #include "../../../engine/Script/Core.h"
 #include "../../../engine/Util/Config.h"
 #include "../GameDirector.h"
@@ -239,10 +240,12 @@ void GamePeer::LStartPractice_R(const std::string &track, const luabind::object 
 
 	//TODO: Check that the track actually exists and throw an error otherwise.
 
-	director.RequestNewPracticeSession(std::make_shared<Rulebook>(
-		hasExtension ? track : (track + Config::TRACK_EXT),
-		laps,
-		0x7f));
+	auto rulebook = std::make_shared<Rulebook>();
+	rulebook->SetTrackEntry(Config::GetInstance()->GetTrackBundle()->OpenTrackEntry(
+		hasExtension ? track : (track + Config::TRACK_EXT)));
+	rulebook->SetLaps(laps);
+
+	director.RequestNewPracticeSession(rulebook);
 }
 
 void GamePeer::LShutdown()

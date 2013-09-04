@@ -75,7 +75,7 @@ TrackSelectScene::TrackSelectScene(Display::Display &display, GameDirector &dire
 		auto trackSel = root->AddChild(new TrackSelButton(display, ent));
 		trackSel->SetPos(60, y);
 		trackSel->GetClickedSignal().connect(std::bind(
-			&TrackSelectScene::OnTrackSelected, this, ent.get()));
+			&TrackSelectScene::OnTrackSelected, this, ent));
 		y += 50;
 	}
 }
@@ -84,11 +84,14 @@ TrackSelectScene::~TrackSelectScene()
 {
 }
 
-void TrackSelectScene::OnTrackSelected(Model::TrackEntry *entry)
+void TrackSelectScene::OnTrackSelected(Model::TrackEntryPtr entry)
 {
 	Log::Info("Selected track: %s", entry->name.c_str());
 
-	okSignal(std::make_shared<Rulebook>(entry->name, 1, 0x7f));
+	auto rules = std::make_shared<Rulebook>();
+	rules->SetTrackEntry(entry);
+
+	okSignal(rules);
 }
 
 }  // namespace Client

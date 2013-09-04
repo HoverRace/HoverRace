@@ -60,11 +60,12 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 
 	// Load the selected track
 	try {
+		Model::TrackEntryPtr entry = rules->GetTrackEntry();
 		Model::TrackPtr track = Config::GetInstance()->
-			GetTrackBundle()->OpenTrack(rules->GetTrackName());
-		if (track.get() == NULL) throw Parcel::ObjStreamExn("Track does not exist.");
+			GetTrackBundle()->OpenTrack(rules->GetTrackEntry());
+		if (!track) throw Parcel::ObjStreamExn("Track does not exist.");
 		if (!session->LoadNew(
-			rules->GetTrackName().c_str(), track->GetRecordFile(),
+			entry->name.c_str(), track->GetRecordFile(),
 			rules->GetLaps(), rules->GetGameOpts(), &display.GetLegacyDisplay()))
 		{
 			throw Parcel::ObjStreamExn("Track load failed.");

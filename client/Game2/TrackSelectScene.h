@@ -48,7 +48,7 @@ class TrackSelectScene : public FormScene
 		virtual ~TrackSelectScene();
 
 	private:
-		void OnTrackSelected(Model::TrackEntry *entry);
+		void OnTrackSelected(Model::TrackEntryPtr entry);
 
 	public:
 		typedef boost::signals2::signal<void(RulebookPtr)> okSignal_t;

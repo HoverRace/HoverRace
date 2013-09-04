@@ -23,6 +23,7 @@
 
 #include <lua.hpp>
 
+#include "../../../engine/Model/TrackEntry.h"
 #include "../../../engine/Script/Core.h"
 #include "../GameDirector.h"
 
@@ -37,9 +38,11 @@ namespace {
 	{
 		typedef Rulebook SUPER;
 		public:
-			RulebookWrapper(const std::string &trackName) :
-				SUPER(trackName, 0, 0x7f) { }
+			RulebookWrapper() : SUPER() { }
 			virtual ~RulebookWrapper() { }
+
+		public:
+			const std::string &GetTrackName() { return GetTrackEntry()->name; }
 	};
 }
 
@@ -62,8 +65,8 @@ void RulebookPeer::Register(Script::Core *scripting)
 
 	module(L) [
 		class_<Rulebook, RulebookWrapper, RulebookPtr>("Rulebook")
-			.def(constructor<const std::string&>())
-			.property("track_name", &Rulebook::GetTrackName)
+			.def(constructor<>())
+			.property("track_name", &RulebookWrapper::GetTrackName)
 	];
 }
 

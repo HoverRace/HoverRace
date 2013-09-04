@@ -23,6 +23,13 @@
 #pragma once
 
 namespace HoverRace {
+	namespace Model {
+		class TrackEntry;
+		typedef std::shared_ptr<TrackEntry> TrackEntryPtr;
+	}
+}
+
+namespace HoverRace {
 namespace Client {
 
 /**
@@ -34,16 +41,20 @@ namespace Client {
 class Rulebook
 {
 	public:
-		Rulebook(const std::string &trackName, int laps, char gameOpts) :
-			trackName(trackName), laps(laps), gameOpts(gameOpts) {}
+		Rulebook() : trackEntry(), laps(1), gameOpts(0x7f) {}
 
 	public:
-		const std::string &GetTrackName() const { return trackName; }
+		const Model::TrackEntryPtr &GetTrackEntry() const { return trackEntry; }
+		void SetTrackEntry(Model::TrackEntryPtr trackEntry) { this->trackEntry = std::move(trackEntry); }
+
+		// Temporary; will be generalized into RulebookOptions.
 		int GetLaps() const { return laps; }
+		void SetLaps(int laps) { this->laps = laps; }
 		char GetGameOpts() const { return gameOpts; }
+		void SetGameOpts(char gameOpts) { this->gameOpts = gameOpts; }
 
 	private:
-		std::string trackName;
+		Model::TrackEntryPtr trackEntry;
 		int laps;
 		char gameOpts;
 };
