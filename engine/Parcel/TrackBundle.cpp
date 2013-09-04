@@ -1,8 +1,7 @@
 
 // TrackBundle.cpp
-// A source of track parcels.
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2013 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -56,9 +55,9 @@ RecordFilePtr TrackBundle::OpenParcel(const std::string &name, bool writing) con
 }
 
 /**
- * Load a track.
+ * Load a track by name.
  * @param name The name of the track.  The ".trk" suffix may be omitted.
- * @return The track or @c NULL if the track does not exist.
+ * @return The track or @c nullptr if the track does not exist.
  * @throws ObjStreamExn The track failed to load.
  */
 Model::TrackPtr TrackBundle::OpenTrack(const std::string &name) const
@@ -67,6 +66,17 @@ Model::TrackPtr TrackBundle::OpenTrack(const std::string &name) const
 	return (recFile.get() == NULL) ?
 		Model::TrackPtr() :
 		std::make_shared<Model::Track>(recFile);
+}
+
+/**
+ * Load a track by track header.
+ * @param entry The entry for the track (may not be @c nullptr, see OpenTrackEntry).
+ * @return The track or @c nullptr if the track does not exist.
+ * @throws ObjStreamExn The track failed to load.
+ */
+Model::TrackPtr TrackBundle::OpenTrack(const Model::TrackEntryPtr &entry) const
+{
+	return OpenTrack(entry->name);
 }
 
 /**
