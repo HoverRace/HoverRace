@@ -37,6 +37,7 @@
 #include "TrackSelectScene.h"
 
 using HoverRace::Model::TrackEntry;
+using HoverRace::Model::TrackEntryPtr;
 using namespace HoverRace::Util;
 
 namespace HoverRace {
@@ -47,15 +48,15 @@ namespace {
 	{
 		typedef Display::Button SUPER;
 		public:
-			TrackSelButton(Display::Display &display, TrackEntry *entry) :
+			TrackSelButton(Display::Display &display, TrackEntryPtr entry) :
 				SUPER(display, entry->name), entry(entry) { }
 			virtual ~TrackSelButton() { }
 
 		public:
-			TrackEntry *GetTrackEntry() const { return entry; }
+			TrackEntry *GetTrackEntry() const { return entry.get(); }
 
 		private:
-			TrackEntry *entry;
+			TrackEntryPtr entry;
 	};
 }
 
@@ -70,11 +71,11 @@ TrackSelectScene::TrackSelectScene(Display::Display &display, GameDirector &dire
 
 	//TODO: A better list UI (categories, sorting, etc.).
 	double y = 60;
-	BOOST_FOREACH(TrackEntry *ent, trackList) {
+	BOOST_FOREACH(TrackEntryPtr ent, trackList) {
 		auto trackSel = root->AddChild(new TrackSelButton(display, ent));
 		trackSel->SetPos(60, y);
 		trackSel->GetClickedSignal().connect(std::bind(
-			&TrackSelectScene::OnTrackSelected, this, ent));
+			&TrackSelectScene::OnTrackSelected, this, ent.get()));
 		y += 50;
 	}
 }
