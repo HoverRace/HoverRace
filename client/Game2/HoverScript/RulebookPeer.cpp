@@ -38,7 +38,8 @@ namespace {
 	{
 		typedef Rulebook SUPER;
 		public:
-			RulebookWrapper() : SUPER() { }
+			RulebookWrapper(const std::string &name, const std::string &desc) :
+				SUPER(name, desc) { }
 			virtual ~RulebookWrapper() { }
 
 		public:
@@ -74,7 +75,7 @@ void RulebookPeer::Register(Script::Core *scripting)
 
 	module(L) [
 		class_<Rulebook, RulebookWrapper, RulebookPtr>("Rulebook")
-			.def(constructor<>())
+			.def(constructor<const std::string&, const std::string&>())
 			.property("track_name", &RulebookWrapper::GetTrackName)
 	];
 }

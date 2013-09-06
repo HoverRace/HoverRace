@@ -25,6 +25,8 @@
 #include "../../engine/Util/OS.h"
 
 #include "Observer.h"
+#include "RulebookLibrary.h"
+
 #include "GameDirector.h"
 
 namespace HoverRace {
@@ -113,9 +115,10 @@ class ClientApp : public GameDirector
 		Util::OS::wnd_t mainWnd;
 		Display::Display *display;
 		Control::InputEventController *controller;
-
 		sceneStack_t sceneStack;
 		ScenePtr fgScene;  ///< The scene that currently has input focus.
+
+		RulebookLibrary rulebookLibrary;
 
 		Script::Core *scripting;
 		HoverScript::DebugPeer *debugPeer;

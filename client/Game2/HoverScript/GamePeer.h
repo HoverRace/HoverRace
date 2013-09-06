@@ -38,6 +38,7 @@ namespace HoverRace {
 		class GameDirector;
 		class Rulebook;
 		typedef std::shared_ptr<Rulebook> RulebookPtr;
+		class RulebookLibrary;
 	}
 	namespace Script {
 		class Core;
@@ -55,7 +56,8 @@ namespace HoverScript {
 class GamePeer : public Script::Peer {
 	typedef Script::Peer SUPER;
 	public:
-		GamePeer(Script::Core *scripting, GameDirector &director);
+		GamePeer(Script::Core *scripting, GameDirector &director,
+			RulebookLibrary &rulebookLibrary);
 		virtual ~GamePeer();
 
 	public:
@@ -74,6 +76,8 @@ class GamePeer : public Script::Peer {
 		ConfigPeer *LGetConfig();
 
 		bool LIsInitialized();
+
+		void LNewRulebook(const luabind::object &defn);
 
 		void LOnInit(const luabind::object &fn);
 		void LOnInit_N(const std::string &name, const luabind::object &fn);
@@ -96,6 +100,7 @@ class GamePeer : public Script::Peer {
 
 	private:
 		GameDirector &director;
+		RulebookLibrary &rulebookLibrary;
 		bool initialized;
 		Script::Handlers onInit;
 		Script::Handlers onShutdown;

@@ -34,16 +34,19 @@ namespace Client {
 
 /**
  * Defines the rules for a particular game session.
- * @todo This is very basic right now; the idea is that later we will 
- *       make this a base class and move some game state logic into
- *       subclasses.
+ * @author Michael Imamura
  */
 class Rulebook
 {
 	public:
-		Rulebook() : trackEntry(), laps(1), gameOpts(0x7f) {}
+		Rulebook(const std::string &name="Race", const std::string &description="") :
+			name(name), description(description), trackEntry(),
+			laps(1), gameOpts(0x7f) { }
 
 	public:
+		const std::string &GetName() const { return name; }
+		const std::string &GetDescription() const { return description; }
+
 		const Model::TrackEntryPtr &GetTrackEntry() const { return trackEntry; }
 		void SetTrackEntry(Model::TrackEntryPtr trackEntry) { this->trackEntry = std::move(trackEntry); }
 
@@ -54,6 +57,8 @@ class Rulebook
 		void SetGameOpts(char gameOpts) { this->gameOpts = gameOpts; }
 
 	private:
+		std::string name;
+		std::string description;
 		Model::TrackEntryPtr trackEntry;
 		int laps;
 		char gameOpts;

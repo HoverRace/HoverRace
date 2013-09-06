@@ -96,7 +96,7 @@ namespace {
 
 ClientApp::ClientApp() :
 	SUPER(),
-	sceneStack(), fgScene(),
+	sceneStack(), fgScene(), rulebookLibrary(),
 	fpsLbl(), frameCount(0), lastTimestamp(0), fps(0.0)
 {
 	Config *cfg = Config::GetInstance();
@@ -129,7 +129,7 @@ ClientApp::ClientApp() :
 	// This allows the script to modify the configuration (e.g. for unit tests).
 	scripting = (new ClientScriptCore())->Reset();
 	debugPeer = new DebugPeer(scripting, *this);
-	gamePeer = new GamePeer(scripting, *this);
+	gamePeer = new GamePeer(scripting, *this, rulebookLibrary);
 	sysEnv = new SysEnv(scripting, debugPeer, gamePeer);
 	OS::path_t &initScript = cfg->runtime.initScript;
 	if (!initScript.empty()) {
