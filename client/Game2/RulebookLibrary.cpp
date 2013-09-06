@@ -35,7 +35,7 @@ RulebookLibrary::RulebookLibrary() :
 
 void RulebookLibrary::Add(RulebookPtr rulebook)
 {
-	library.emplace(library_t::value_type(rulebook->GetName(), rulebook));
+	library.insert(library_t::value_type(rulebook->GetName(), rulebook));
 }
 
 }  // namespace Client
