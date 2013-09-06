@@ -101,7 +101,6 @@ class GamePeer : public Script::Peer {
 		Script::Handlers onShutdown;
 		Script::Handlers onSessionStart;
 		Script::Handlers onSessionEnd;
-		RulebookPtr deferredStart;
 };
 
 }  // namespace HoverScript
