@@ -2,7 +2,7 @@
 // SysEnv.h
 // The global system environment.
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2013 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@
 #pragma once
 
 #include "../../../engine/Script/Env.h"
-#include "../../../engine/Util/OS.h"
 
 namespace HoverRace {
 	namespace Client {
@@ -58,7 +57,8 @@ class SysEnv : private Script::Env
 		virtual void LogError(const std::string &s);
 
 	public:
-		void RunScript(const Util::OS::path_t &filename);
+		// Expose privately-inherited function.
+		void RunScript(const Util::OS::path_t &filename) { SUPER::RunScript(filename); }
 
 	private:
 		DebugPeer *debugPeer;
