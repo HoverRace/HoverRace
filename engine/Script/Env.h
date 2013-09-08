@@ -66,7 +66,7 @@ class MR_DllDeclare Env
 		void Execute(const std::string &chunk, const std::string &name=Core::DEFAULT_CHUNK_NAME);
 
 	public:
-		void RunScript(const Util::OS::path_t &filename);
+		bool RunScript(const Util::OS::path_t &filename);
 
 	private:
 		Core *scripting;

@@ -129,9 +129,15 @@ void Env::Execute(const std::string &chunk, const std::string &name)
 
 /**
  * Execute a script from a file.
+ *
+ * If there is an error executing the script, then the error message will be
+ * written to the error log and the function will return @c false.
+ *
  * @param filename The script filename (must be an absolute path).
+ * @return @c true if the script executed successfully,
+ *         @c false if there was an error.
  */
-void Env::RunScript(const OS::path_t &filename)
+bool Env::RunScript(const OS::path_t &filename)
 {
 	OS::path_t scriptPath = fs::system_complete(filename);
 
@@ -139,7 +145,7 @@ void Env::RunScript(const OS::path_t &filename)
 		Log::Error("Script file not found: %s (interpreted as %s)",
 			(const char*)Str::PU(filename),
 			(const char*)Str::PU(scriptPath));
-		return;
+		return false;
 	}
 
 	std::string chunkName("@");
@@ -153,7 +159,10 @@ void Env::RunScript(const OS::path_t &filename)
 	}
 	catch (Script::ScriptExn &ex) {
 		Log::Error("%s", ex.what());
+		return false;
 	}
+
+	return true;
 }
 
 }  // namespace Script
