@@ -41,13 +41,15 @@ void RulebookLibrary::Add(RulebookPtr rulebook)
 /**
  * Search for the Rulebook with the given name.
  * @param name The name to search for (case-sensitive).
- * @return The requested Rulebook, or a null RulebookPtr if there is no
- *         Rulebook with the name.
+ * @return A copy of the requested Rulebook, or a null RulebookPtr if
+ *         there is no Rulebook with that name.
  */
 RulebookPtr RulebookLibrary::Find(const std::string &name)
 {
 	auto iter = library.find(name);
-	return iter == library.end() ? RulebookPtr() : iter->second;
+	return iter == library.end() ?
+		RulebookPtr() :
+		std::make_shared<Rulebook>(*(iter->second));
 }
 
 }  // namespace Client
