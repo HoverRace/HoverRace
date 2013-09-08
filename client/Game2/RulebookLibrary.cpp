@@ -38,5 +38,17 @@ void RulebookLibrary::Add(RulebookPtr rulebook)
 	library.insert(library_t::value_type(rulebook->GetName(), rulebook));
 }
 
+/**
+ * Search for the Rulebook with the given name.
+ * @param name The name to search for (case-sensitive).
+ * @return The requested Rulebook, or a null RulebookPtr if there is no
+ *         Rulebook with the name.
+ */
+RulebookPtr RulebookLibrary::Find(const std::string &name)
+{
+	auto iter = library.find(name);
+	return iter == library.end() ? RulebookPtr() : iter->second;
+}
+
 }  // namespace Client
 }  // namespace HoverRace

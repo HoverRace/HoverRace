@@ -41,6 +41,7 @@ class RulebookLibrary {
 
 	public:
 		void Add(RulebookPtr rulebook);
+		RulebookPtr Find(const std::string &name);
 
 	private:
 		typedef std::map<std::string, RulebookPtr> library_t;
