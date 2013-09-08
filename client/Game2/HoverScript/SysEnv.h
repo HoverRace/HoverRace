@@ -1,6 +1,5 @@
 
 // SysEnv.h
-// The global system environment.
 //
 // Copyright (c) 2010, 2013 Michael Imamura.
 //
@@ -40,6 +39,10 @@ namespace HoverRace {
 namespace Client {
 namespace HoverScript {
 
+/**
+ * The global system environment.
+ * @author Michael Imamura
+ */
 class SysEnv : private Script::Env
 {
 	typedef Script::Env SUPER;

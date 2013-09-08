@@ -1,6 +1,5 @@
 
 // SysEnv.cpp
-// The global system environment.
 //
 // Copyright (c) 2010, 2013 Michael Imamura.
 //
