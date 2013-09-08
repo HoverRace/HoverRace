@@ -27,6 +27,9 @@
 #include "FormScene.h"
 
 namespace HoverRace {
+	namespace Client {
+		class RulebookLibrary;
+	}
 	namespace Display {
 		class Button;
 		class Display;
@@ -44,7 +47,8 @@ class TrackSelectScene : public FormScene
 {
 	typedef FormScene SUPER;
 	public:
-		TrackSelectScene(Display::Display &display, GameDirector &director);
+		TrackSelectScene(Display::Display &display, GameDirector &director,
+			RulebookLibrary &rulebookLibrary);
 		virtual ~TrackSelectScene();
 
 	private:
@@ -60,6 +64,7 @@ class TrackSelectScene : public FormScene
 	private:
 		Display::Display &display;
 		GameDirector &director;
+		RulebookLibrary &rulebookLibrary;
 
 		Model::TrackList trackList;
 

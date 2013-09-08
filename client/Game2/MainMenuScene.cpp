@@ -39,9 +39,10 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace Client {
 
-MainMenuScene::MainMenuScene(Display::Display &display, GameDirector &director) :
+MainMenuScene::MainMenuScene(Display::Display &display, GameDirector &director,
+                             RulebookLibrary &rulebookLibrary) :
 	SUPER(display, "Main Menu"),
-	display(display), director(director)
+	display(display), director(director), rulebookLibrary(rulebookLibrary)
 {
 	typedef Display::UiViewModel::Alignment Alignment;
 
@@ -100,7 +101,7 @@ std::shared_ptr<Display::Button> MainMenuScene::AddButton(const std::string &tex
 void MainMenuScene::OnPracticeClicked()
 {
 	director.RequestReplaceScene(
-		std::make_shared<PracticeSetupScene>(display, director));
+		std::make_shared<PracticeSetupScene>(display, director, rulebookLibrary));
 }
 
 void MainMenuScene::OnMultiplayerClicked()

@@ -26,6 +26,8 @@
 #include "FormScene.h"
 
 namespace HoverRace {
+	namespace Client {
+	}
 	namespace Display {
 		class Button;
 		class Container;
@@ -44,7 +46,8 @@ class MainMenuScene : public FormScene
 {
 	typedef FormScene SUPER;
 	public:
-		MainMenuScene(Display::Display &display, GameDirector &director);
+		MainMenuScene(Display::Display &display, GameDirector &director,
+			RulebookLibrary &rulebookLibrary);
 		virtual ~MainMenuScene();
 
 	private:
@@ -63,6 +66,7 @@ class MainMenuScene : public FormScene
 	private:
 		Display::Display &display;
 		GameDirector &director;
+		RulebookLibrary &rulebookLibrary;
 
 		std::shared_ptr<Display::Container> titleContainer;
 		std::shared_ptr<Display::Container> menuContainer;

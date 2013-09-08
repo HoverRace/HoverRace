@@ -26,6 +26,9 @@
 #include "FormScene.h"
 
 namespace HoverRace {
+	namespace Client {
+		class RulebookLibrary;
+	}
 	namespace Display {
 		class Display;
 	}
@@ -42,7 +45,8 @@ class PracticeSetupScene : public FormScene
 {
 	typedef FormScene SUPER;
 	public:
-		PracticeSetupScene(Display::Display &display, GameDirector &director);
+		PracticeSetupScene(Display::Display &display, GameDirector &director,
+			RulebookLibrary &rulebookLibrary);
 		virtual ~PracticeSetupScene();
 
 	public:
@@ -53,6 +57,7 @@ class PracticeSetupScene : public FormScene
 	private:
 		Display::Display &display;
 		GameDirector &director;
+		RulebookLibrary &rulebookLibrary;
 		std::unique_ptr<Display::ScreenFade> fader;
 };
 

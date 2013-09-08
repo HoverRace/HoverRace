@@ -618,7 +618,8 @@ void ClientApp::RequestMainMenu()
 	// Pick a random craft.
 	char craftId = 1 << (rand() % 4);
 
-	auto rules = std::make_shared<Rulebook>();
+	//TODO: Use a special rulebook for the demo mode.
+	auto rules = rulebookLibrary.Find("Race");
 	rules->SetTrackEntry(Config::GetInstance()->GetTrackBundle()->OpenTrackEntry(trackName));
 	rules->SetGameOpts(0x70 + craftId);
 
@@ -631,7 +632,7 @@ void ClientApp::RequestMainMenu()
 		throw;
 	}
 
-	RequestPushScene(std::make_shared<MainMenuScene>(*display, *this));
+	RequestPushScene(std::make_shared<MainMenuScene>(*display, *this, rulebookLibrary));
 }
 
 void ClientApp::RequestShutdown()

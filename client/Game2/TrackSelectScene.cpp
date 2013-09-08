@@ -33,6 +33,7 @@
 #include "../../engine/Util/Log.h"
 
 #include "Rulebook.h"
+#include "RulebookLibrary.h"
 
 #include "TrackSelectScene.h"
 
@@ -60,9 +61,11 @@ namespace {
 	};
 }
 
-TrackSelectScene::TrackSelectScene(Display::Display &display, GameDirector &director) :
+TrackSelectScene::TrackSelectScene(Display::Display &display,
+                                   GameDirector &director,
+                                   RulebookLibrary &rulebookLibrary) :
 	SUPER(display, "Track Select"),
-	display(display), director(director),
+	display(display), director(director), rulebookLibrary(rulebookLibrary),
 	trackList()
 {
 	trackList.Reload(Config::GetInstance()->GetTrackBundle());
@@ -88,7 +91,7 @@ void TrackSelectScene::OnTrackSelected(Model::TrackEntryPtr entry)
 {
 	Log::Info("Selected track: %s", entry->name.c_str());
 
-	auto rules = std::make_shared<Rulebook>();
+	auto rules = rulebookLibrary.Find("Race");
 	rules->SetTrackEntry(entry);
 
 	okSignal(rules);

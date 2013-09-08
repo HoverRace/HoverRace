@@ -38,10 +38,13 @@ namespace Client {
  * Constructor.
  * @param display The current display.
  * @param director The current game director.
+ * @param rulebookLibrary The library of registered rulebooks.
  */
-PracticeSetupScene::PracticeSetupScene(Display::Display &display, GameDirector &director) :
+PracticeSetupScene::PracticeSetupScene(Display::Display &display,
+                                       GameDirector &director,
+                                       RulebookLibrary &rulebookLibrary) :
 	SUPER(display, "Practice Setup"),
-	display(display), director(director)
+	display(display), director(director), rulebookLibrary(rulebookLibrary)
 {
 	fader.reset(new Display::ScreenFade(Display::COLOR_BLACK, 1.0));
 	fader->AttachView(display);
@@ -54,7 +57,7 @@ PracticeSetupScene::~PracticeSetupScene()
 void PracticeSetupScene::OnScenePushed()
 {
 	// Immediately show the track selector.
-	auto selScene = std::make_shared<TrackSelectScene>(display, director);
+	auto selScene = std::make_shared<TrackSelectScene>(display, director, rulebookLibrary);
 	selScene->GetOkSignal().connect([&](RulebookPtr rules) {
 		director.RequestNewPracticeSession(rules);
 	});
