@@ -104,8 +104,8 @@ void SysEnv::InitEnv()
 void SysEnv::LogInfo(const std::string &s)
 {
 #	ifdef _WIN32
-		OutputDebugString(s.c_str());
-		OutputDebugString("\n");
+		OutputDebugStringW((const wchar_t*)Str::UW(s));
+		OutputDebugStringW(L"\n");
 #	else
 		std::cout << s << std::endl;
 #	endif
@@ -114,8 +114,8 @@ void SysEnv::LogInfo(const std::string &s)
 void SysEnv::LogError(const std::string &s)
 {
 #	ifdef _WIN32
-		OutputDebugString(s.c_str());
-		OutputDebugString("\n");
+		OutputDebugStringW((const wchar_t*)Str::UW(s));
+		OutputDebugStringW(L"\n");
 #	else
 		std::cerr << s << std::endl;
 #	endif
