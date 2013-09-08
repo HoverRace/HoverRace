@@ -45,6 +45,10 @@ namespace HoverRace {
 namespace Client {
 namespace HoverScript {
 
+namespace {
+	const std::string DEFAULT_RULEBOOK = "Race";
+}
+
 GamePeer::GamePeer(Script::Core *scripting, GameDirector &director,
                    RulebookLibrary &rulebookLibrary) :
 	SUPER(scripting, "Game"),
@@ -82,7 +86,8 @@ void GamePeer::Register(Script::Core *scripting)
 			.def("on_session_end", &GamePeer::LOnSessionEnd_N)
 			.def("start_main_menu", &GamePeer::LStartMenuMenu)
 			.def("start_practice", &GamePeer::LStartPractice)
-			.def("start_practice", &GamePeer::LStartPractice_R)
+			.def("start_practice", &GamePeer::LStartPractice_O)
+			.def("start_practice", &GamePeer::LStartPractice_RO)
 			.def("shutdown", &GamePeer::LShutdown)
 	];
 }
@@ -250,16 +255,49 @@ void GamePeer::LStartPractice(const std::string &track)
 	lua_State *L = GetScripting()->GetState();
 	lua_pushnil(L);
 	object nilobj(from_stack(L, -1));
-	LStartPractice_R(track, nilobj);
+	LStartPractice_RO(track, DEFAULT_RULEBOOK, nilobj);
 	lua_pop(L, 1);
 }
 
-void GamePeer::LStartPractice_R(const std::string &track, const luabind::object &rules)
+void GamePeer::LStartPractice_O(const std::string &track,
+                                const luabind::object &opts)
 {
-	// function start_practice(track, rules)
+	// This actually represents two different overloads, depending on the type
+	// of the second parameter.
+
+	using namespace luabind;
+
+	if (type(opts) == LUA_TSTRING) {
+		// function start_practice(track, rulebook)
+		// Start a new single-player practice session with default rules.
+		//   track - The track name to load (e.g. "ClassicH").
+		//   rulebook - The rulebook name (e.g. "Race").
+		lua_State *L = GetScripting()->GetState();
+		lua_pushnil(L);
+		object nilobj(from_stack(L, -1));
+		LStartPractice_RO(track, object_cast<std::string>(opts), nilobj);
+		lua_pop(L, 1);
+	}
+	else {
+		// function start_practice(track, opts)
+		// Start a new single-player practice session with default rules.
+		//   track - The track name to load (e.g. "ClassicH").
+		//   opts - Table listing the rulebook options for the session:
+		//             laps - Number of laps (between 1 and 99, inclusive).
+		LStartPractice_RO(track, DEFAULT_RULEBOOK, opts);
+	}
+
+}
+
+void GamePeer::LStartPractice_RO(const std::string &track,
+                                 const std::string &rulebook,
+                                 const luabind::object &opts)
+{
+	// function start_practice(track, rulebook, opts)
 	// Start a new single-player practice session.
 	//   track - The track name to load (e.g. "ClassicH").
-	//   rules - Table listing the rules for the session:
+	//   rulebook - The rulebook name (e.g. "Race").
+	//   opts - Table listing the rulebook options for the session:
 	//             laps - Number of laps (between 1 and 99, inclusive).
 	using namespace luabind;
 
@@ -271,11 +309,11 @@ void GamePeer::LStartPractice_R(const std::string &track, const luabind::object 
 
 	int laps = 5;
 
-	int rulesParamType = type(rules);
+	int rulesParamType = type(opts);
 	if (rulesParamType != LUA_TNIL) {
 		if (rulesParamType == LUA_TTABLE) {
 			try {
-				laps = boost::lexical_cast<int>(rules["laps"]);
+				laps = boost::lexical_cast<int>(opts["laps"]);
 				if (laps < 1) laps = 1;
 				else if (laps > 99) laps = 99;
 			}
@@ -289,12 +327,16 @@ void GamePeer::LStartPractice_R(const std::string &track, const luabind::object 
 
 	//TODO: Check that the track actually exists and throw an error otherwise.
 
-	auto rulebook = std::make_shared<Rulebook>();
-	rulebook->SetTrackEntry(Config::GetInstance()->GetTrackBundle()->OpenTrackEntry(
+	auto rules = rulebookLibrary.Find(rulebook);
+	if (!rules) {
+		luaL_error(L, "Rulebook '%s' does not exist.", rulebook.c_str());
+		return;
+	}
+	rules->SetTrackEntry(Config::GetInstance()->GetTrackBundle()->OpenTrackEntry(
 		hasExtension ? track : (track + Config::TRACK_EXT)));
-	rulebook->SetLaps(laps);
+	rules->SetLaps(laps);
 
-	director.RequestNewPracticeSession(rulebook);
+	director.RequestNewPracticeSession(rules);
 }
 
 void GamePeer::LShutdown()

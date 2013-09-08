@@ -94,7 +94,8 @@ class GamePeer : public Script::Peer {
 		void LStartMenuMenu();
 
 		void LStartPractice(const std::string &track);
-		void LStartPractice_R(const std::string &track, const luabind::object &rules);
+		void LStartPractice_O(const std::string &track, const luabind::object &opts);
+		void LStartPractice_RO(const std::string &track, const std::string &rulebook, const luabind::object &opts);
 
 		void LShutdown();
 
