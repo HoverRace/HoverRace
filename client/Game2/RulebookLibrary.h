@@ -40,12 +40,24 @@ class RulebookLibrary {
 		RulebookLibrary();
 
 	public:
-		void Add(RulebookPtr rulebook);
+		void Add(RulebookPtr &rulebook);
 		RulebookPtr Find(const std::string &name);
+
+	private:
+		typedef std::set<RulebookPtr, boost::less_pointees_t<RulebookPtr>> sorted_t;
+	public:
+		typedef sorted_t::const_iterator const_iterator;
+		typedef sorted_t::value_type value_type;
+
+		const_iterator begin() const { return sorted.cbegin(); }
+		const_iterator end() const { return sorted.cend(); }
+		const_iterator cbegin() const { return sorted.cbegin(); }
+		const_iterator cend() const { return sorted.cend(); }
 
 	private:
 		typedef std::map<std::string, RulebookPtr> library_t;
 		library_t library;
+		sorted_t sorted;
 };
 
 }  // namespace Client
