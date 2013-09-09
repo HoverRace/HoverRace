@@ -32,6 +32,7 @@ namespace HoverRace {
 	}
 	namespace Display {
 		class Button;
+		class Container;
 		class Display;
 	}
 }
@@ -52,6 +53,7 @@ class TrackSelectScene : public FormScene
 		virtual ~TrackSelectScene();
 
 	private:
+		void OnRulebookSelected(RulebookPtr entry);
 		void OnTrackSelected(Model::TrackEntryPtr entry);
 
 	public:
@@ -67,6 +69,10 @@ class TrackSelectScene : public FormScene
 		RulebookLibrary &rulebookLibrary;
 
 		Model::TrackList trackList;
+		RulebookPtr selRulebook;
+
+		std::shared_ptr<Display::Container> rulebookPanel;
+		std::shared_ptr<Display::Container> trackPanel;
 
 		okSignal_t okSignal;
 		cancelSignal_t cancelSignal;

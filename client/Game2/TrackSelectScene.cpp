@@ -25,8 +25,6 @@
 #include "../../engine/Display/Button.h"
 #include "../../engine/Display/Container.h"
 #include "../../engine/Display/Display.h"
-#include "../../engine/Display/FillBox.h"
-#include "../../engine/Display/Label.h"
 #include "../../engine/Model/TrackEntry.h"
 #include "../../engine/VideoServices/FontSpec.h"
 #include "../../engine/Util/Config.h"
@@ -45,6 +43,15 @@ namespace HoverRace {
 namespace Client {
 
 namespace {
+	class RulebookSelButton : public Display::Button
+	{
+		typedef Display::Button SUPER;
+		public:
+			RulebookSelButton(Display::Display &display, const RulebookPtr &rulebook) :
+				SUPER(display, rulebook->GetName()) { }
+			virtual ~RulebookSelButton() { }
+	};
+
 	class TrackSelButton : public Display::Button
 	{
 		typedef Display::Button SUPER;
@@ -73,28 +80,52 @@ TrackSelectScene::TrackSelectScene(Display::Display &display,
 	auto root = GetRoot();
 
 	//TODO: A better list UI (categories, sorting, etc.).
-	double y = 60;
+	double y = 0;
+
+	rulebookPanel = root->AddChild(new Display::Container(display));
+	rulebookPanel->SetPos(60, 60);
+	for (auto iter = rulebookLibrary.cbegin(); iter != rulebookLibrary.cend(); ++iter) {
+		const RulebookPtr rulebook = *iter;
+		auto ruleSel = rulebookPanel->AddChild(new RulebookSelButton(display, rulebook));
+		ruleSel->SetPos(0, y);
+		ruleSel->GetClickedSignal().connect(std::bind(
+			&TrackSelectScene::OnRulebookSelected, this, rulebook));
+		y += 50;
+	}
+
+	y = 0;
+	trackPanel = root->AddChild(new Display::Container(display));
+	trackPanel->SetPos(200, 60);
 	BOOST_FOREACH(TrackEntryPtr ent, trackList) {
-		auto trackSel = root->AddChild(new TrackSelButton(display, ent));
-		trackSel->SetPos(60, y);
+		auto trackSel = trackPanel->AddChild(new TrackSelButton(display, ent));
+		trackSel->SetPos(0, y);
 		trackSel->GetClickedSignal().connect(std::bind(
 			&TrackSelectScene::OnTrackSelected, this, ent));
 		y += 50;
 	}
+
+	selRulebook = rulebookLibrary.Find("Race");
 }
 
 TrackSelectScene::~TrackSelectScene()
 {
 }
 
+void TrackSelectScene::OnRulebookSelected(RulebookPtr rulebook)
+{
+	Log::Info("Selected rulebook: %s", rulebook->GetName().c_str());
+
+	// Always work with a copy of the rulebook instead of the rulebook itself.
+	selRulebook = rulebookLibrary.Find(rulebook->GetName());
+}
+
 void TrackSelectScene::OnTrackSelected(Model::TrackEntryPtr entry)
 {
 	Log::Info("Selected track: %s", entry->name.c_str());
 
-	auto rules = rulebookLibrary.Find("Race");
-	rules->SetTrackEntry(entry);
+	selRulebook->SetTrackEntry(entry);
 
-	okSignal(rules);
+	okSignal(selRulebook);
 }
 
 }  // namespace Client
