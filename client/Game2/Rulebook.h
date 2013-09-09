@@ -56,6 +56,10 @@ class Rulebook
 		char GetGameOpts() const { return gameOpts; }
 		void SetGameOpts(char gameOpts) { this->gameOpts = gameOpts; }
 
+	public:
+		friend bool operator==(const Rulebook &lhs, const Rulebook &rhs);
+		friend bool operator<(const Rulebook &lhs, const Rulebook &rhs);
+
 	private:
 		std::string name;
 		std::string description;
@@ -64,6 +68,18 @@ class Rulebook
 		char gameOpts;
 };
 typedef std::shared_ptr<Rulebook> RulebookPtr;
+
+inline bool operator==(const Rulebook &lhs, const Rulebook &rhs)
+{
+	// Rulebook names are unique.
+	return lhs.name == rhs.name;
+}
+
+inline bool operator<(const Rulebook &lhs, const Rulebook &rhs)
+{
+	//TODO: Sort by manually-defined sort index, then by name.
+	return lhs.name < rhs.name;
+}
 
 }  // namespace Client
 }  // namespace HoverRace
