@@ -125,7 +125,7 @@ void Handlers::AddHandler(const luabind::object &fn)
 	lua_State *L = scripting->GetState();
 
 	if (type(fn) != LUA_TFUNCTION) {
-		luaL_error(L, "%s: (function) %s (string, function) %s (string, nil)", _("Expected"), _("or"), _("or"));
+		luaL_error(L, "Expected: (function) or (string, function) or (string, nil)");
 		return;
 	}
 
