@@ -25,7 +25,6 @@
 #include "../../engine/Util/OS.h"
 
 #include "Observer.h"
-#include "RulebookLibrary.h"
 
 #include "GameDirector.h"
 
@@ -44,6 +43,7 @@ namespace HoverRace {
 		class HighObserver;
 		class Rulebook;
 		typedef std::shared_ptr<Rulebook> RulebookPtr;
+		class RulebookLibrary;
 		class Scene;
 		typedef std::shared_ptr<Scene> ScenePtr;
 	}
@@ -118,7 +118,7 @@ class ClientApp : public GameDirector
 		sceneStack_t sceneStack;
 		ScenePtr fgScene;  ///< The scene that currently has input focus.
 
-		RulebookLibrary rulebookLibrary;
+		RulebookLibrary *rulebookLibrary;
 
 		Script::Core *scripting;
 		HoverScript::DebugPeer *debugPeer;

@@ -60,6 +60,7 @@
 #include "MainMenuScene.h"
 #include "MessageScene.h"
 #include "Rulebook.h"
+#include "RulebookLibrary.h"
 #include "Scene.h"
 #include "TestLabScene.h"
 
@@ -97,7 +98,7 @@ namespace {
 
 ClientApp::ClientApp() :
 	SUPER(),
-	sceneStack(), fgScene(), rulebookLibrary(),
+	sceneStack(), fgScene(),
 	fpsLbl(), frameCount(0), lastTimestamp(0), fps(0.0)
 {
 	Config *cfg = Config::GetInstance();
@@ -129,9 +130,10 @@ ClientApp::ClientApp() :
 	// Create the system console and execute the initialization scripts.
 	// This allows the script to modify the configuration (e.g. for unit tests).
 	scripting = (new ClientScriptCore())->Reset();
+	rulebookLibrary = new RulebookLibrary();
 	debugPeer = new DebugPeer(scripting, *this);
-	gamePeer = new GamePeer(scripting, *this, rulebookLibrary);
-	RulebookEnv(scripting, gamePeer, rulebookLibrary).ReloadRulebooks();
+	gamePeer = new GamePeer(scripting, *this, *rulebookLibrary);
+	RulebookEnv(scripting, gamePeer, *rulebookLibrary).ReloadRulebooks();
 	sysEnv = new SysEnv(scripting, debugPeer, gamePeer);
 	OS::path_t &initScript = cfg->runtime.initScript;
 	if (!initScript.empty()) {
@@ -206,6 +208,7 @@ ClientApp::~ClientApp()
 	delete sysEnv;
 	delete gamePeer;
 	delete debugPeer;
+	delete rulebookLibrary;
 	delete scripting;
 	delete display;
 	delete controller;
@@ -619,7 +622,7 @@ void ClientApp::RequestMainMenu()
 	char craftId = 1 << (rand() % 4);
 
 	//TODO: Use a special rulebook for the demo mode.
-	auto rules = rulebookLibrary.Find("Race");
+	auto rules = rulebookLibrary->Find("Race");
 	rules->SetTrackEntry(Config::GetInstance()->GetTrackBundle()->OpenTrackEntry(trackName));
 	rules->SetGameOpts(0x70 + craftId);
 
@@ -632,7 +635,7 @@ void ClientApp::RequestMainMenu()
 		throw;
 	}
 
-	RequestPushScene(std::make_shared<MainMenuScene>(*display, *this, rulebookLibrary));
+	RequestPushScene(std::make_shared<MainMenuScene>(*display, *this, *rulebookLibrary));
 }
 
 void ClientApp::RequestShutdown()
