@@ -1,8 +1,7 @@
 
 // Rulebook.h
-// Defines the rules of a game session.
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2013 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
