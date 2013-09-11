@@ -36,7 +36,7 @@ RulebookLibrary::RulebookLibrary() :
 void RulebookLibrary::Add(RulebookPtr &rulebook)
 {
 	library.insert(library_t::value_type(rulebook->GetName(), rulebook));
-	sorted.emplace(rulebook);
+	sorted.insert(rulebook);
 }
 
 /**
