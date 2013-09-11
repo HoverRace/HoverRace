@@ -196,7 +196,7 @@ void GamePeer::LNewRulebook(const luabind::object &defn)
 
 	Log::Info("Registered: %s, %s", name.c_str(), desc.c_str());
 
-	auto rulebook = std::make_shared<Rulebook>(name, desc);
+	auto rulebook = std::make_shared<Rulebook>(GetScripting(), name, desc);
 
 	rulebookLibrary.Add(rulebook);
 }

@@ -92,6 +92,7 @@ class GameScene : public Scene
 	private:
 		Display::Display &display;
 		GameDirector &director;
+		RulebookPtr rules;
 
 		int frame;
 		int numPlayers;

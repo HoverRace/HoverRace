@@ -38,8 +38,9 @@ namespace {
 	{
 		typedef Rulebook SUPER;
 		public:
+			//FIXME: Pass script core to superclass ctor.
 			RulebookWrapper(const std::string &name, const std::string &desc) :
-				SUPER(name, desc) { }
+				SUPER(nullptr, name, desc) { }
 			virtual ~RulebookWrapper() { }
 
 		public:

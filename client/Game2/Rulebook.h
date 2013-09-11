@@ -21,10 +21,20 @@
 
 #pragma once
 
+#include "../../engine/Script/Handlers.h"
+
 namespace HoverRace {
+	namespace HoverScript {
+		class SessionPeer;
+		typedef std::shared_ptr<SessionPeer> SessionPeerPtr;
+	}
 	namespace Model {
 		class TrackEntry;
 		typedef std::shared_ptr<TrackEntry> TrackEntryPtr;
+	}
+	namespace Script {
+		class Core;
+		class Handlers;
 	}
 }
 
@@ -38,9 +48,9 @@ namespace Client {
 class Rulebook
 {
 	public:
-		Rulebook(const std::string &name="Race", const std::string &description="") :
-			name(name), description(description), trackEntry(),
-			laps(1), gameOpts(0x7f) { }
+		Rulebook(Script::Core *scripting,
+			const std::string &name="Race",
+			const std::string &description="");
 
 	public:
 		const std::string &GetName() const { return name; }
@@ -56,15 +66,24 @@ class Rulebook
 		void SetGameOpts(char gameOpts) { this->gameOpts = gameOpts; }
 
 	public:
+		void OnPreGame(HoverScript::SessionPeerPtr session);
+		void OnPostGame(HoverScript::SessionPeerPtr session);
+
+	public:
 		friend bool operator==(const Rulebook &lhs, const Rulebook &rhs);
 		friend bool operator<(const Rulebook &lhs, const Rulebook &rhs);
 
 	private:
+		Script::Core *scripting;
 		std::string name;
 		std::string description;
 		Model::TrackEntryPtr trackEntry;
+		
 		int laps;
 		char gameOpts;
+
+		Script::Handlers onPreGame;
+		Script::Handlers onPostGame;
 };
 typedef std::shared_ptr<Rulebook> RulebookPtr;
 

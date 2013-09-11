@@ -47,7 +47,7 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
                      Script::Core *scripting, HoverScript::GamePeer *gamePeer,
                      RulebookPtr rules) :
 	SUPER("Game"),
-	display(display), director(director),
+	display(display), director(director), rules(rules),
 	frame(0), numPlayers(1), muted(false),
 	session(nullptr),
 	firedOnRaceFinish(false)
@@ -84,6 +84,8 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 	}
 
 	observers[0] = Observer::New();
+
+	rules->OnPreGame(sessionPeer);
 }
 
 GameScene::~GameScene()
@@ -252,6 +254,8 @@ void GameScene::Render()
 void GameScene::OnRaceFinish()
 {
 	//TODO: Fire script event handlers.
+	
+	rules->OnPostGame(sessionPeer);
 }
 
 }  // namespace HoverScript
