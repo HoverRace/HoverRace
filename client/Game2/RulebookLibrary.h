@@ -26,6 +26,9 @@ namespace HoverRace {
 		class Rulebook;
 		typedef std::shared_ptr<Rulebook> RulebookPtr;
 	}
+	namespace Script {
+		class Core;
+	}
 }
 
 namespace HoverRace {
@@ -37,10 +40,11 @@ namespace Client {
  */
 class RulebookLibrary {
 	public:
-		RulebookLibrary();
+		RulebookLibrary(Script::Core *scripting);
 
 	public:
 		void Add(RulebookPtr &rulebook);
+		RulebookPtr GetDefault() const;
 		RulebookPtr Find(const std::string &name);
 
 	private:
@@ -55,9 +59,11 @@ class RulebookLibrary {
 		const_iterator cend() const { return sorted.cend(); }
 
 	private:
+		Script::Core *scripting;
 		typedef std::map<std::string, RulebookPtr> library_t;
 		library_t library;
 		sorted_t sorted;
+		RulebookPtr defaultRulebook;
 };
 
 }  // namespace Client

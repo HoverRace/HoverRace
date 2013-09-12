@@ -21,6 +21,8 @@
 
 #include "StdAfx.h"
 
+#include "../../engine/Script/Core.h"
+
 #include "Rulebook.h"
 
 #include "RulebookLibrary.h"
@@ -28,7 +30,8 @@
 namespace HoverRace {
 namespace Client {
 
-RulebookLibrary::RulebookLibrary() :
+RulebookLibrary::RulebookLibrary(Script::Core *scripting) :
+	scripting(scripting),
 	library(), sorted()
 {
 }
@@ -37,6 +40,29 @@ void RulebookLibrary::Add(RulebookPtr &rulebook)
 {
 	library.insert(library_t::value_type(rulebook->GetName(), rulebook));
 	sorted.insert(rulebook);
+
+	if (rulebook->GetName() == "Race") {
+		defaultRulebook = rulebook;
+	}
+}
+
+/**
+ * Retrieve the default rulebook.
+ * This is normally the "Race" rulebook, but if it's not defined, then
+ * the first rulebook in sorted order is returned instead.
+ * If no rulebooks are loaded, then a dummy rulebook will be returned.
+ * @return The default rulebook (never null).
+ */
+RulebookPtr RulebookLibrary::GetDefault() const
+{
+	if (defaultRulebook) {
+		return defaultRulebook;
+	}
+	else {
+		return library.empty() ?
+			std::make_shared<Rulebook>(scripting, "Dummy", "") :
+			*sorted.cbegin();
+	}
 }
 
 /**

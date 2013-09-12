@@ -130,7 +130,7 @@ ClientApp::ClientApp() :
 	// Create the system console and execute the initialization scripts.
 	// This allows the script to modify the configuration (e.g. for unit tests).
 	scripting = (new ClientScriptCore())->Reset();
-	rulebookLibrary = new RulebookLibrary();
+	rulebookLibrary = new RulebookLibrary(scripting);
 	debugPeer = new DebugPeer(scripting, *this);
 	gamePeer = new GamePeer(scripting, *this, *rulebookLibrary);
 	RulebookEnv(scripting, gamePeer, *rulebookLibrary).ReloadRulebooks();
@@ -622,7 +622,7 @@ void ClientApp::RequestMainMenu()
 	char craftId = 1 << (rand() % 4);
 
 	//TODO: Use a special rulebook for the demo mode.
-	auto rules = rulebookLibrary->Find("Race");
+	auto rules = rulebookLibrary->GetDefault();
 	rules->SetTrackEntry(Config::GetInstance()->GetTrackBundle()->OpenTrackEntry(trackName));
 	rules->SetGameOpts(0x70 + craftId);
 

@@ -45,10 +45,6 @@ namespace HoverRace {
 namespace Client {
 namespace HoverScript {
 
-namespace {
-	const std::string DEFAULT_RULEBOOK = "Race";
-}
-
 GamePeer::GamePeer(Script::Core *scripting, GameDirector &director,
                    RulebookLibrary &rulebookLibrary) :
 	SUPER(scripting, "Game"),
@@ -255,7 +251,7 @@ void GamePeer::LStartPractice(const std::string &track)
 	lua_State *L = GetScripting()->GetState();
 	lua_pushnil(L);
 	object nilobj(from_stack(L, -1));
-	LStartPractice_RO(track, DEFAULT_RULEBOOK, nilobj);
+	LStartPractice_RO(track, "", nilobj);
 	lua_pop(L, 1);
 }
 
@@ -284,7 +280,7 @@ void GamePeer::LStartPractice_O(const std::string &track,
 		//   track - The track name to load (e.g. "ClassicH").
 		//   opts - Table listing the rulebook options for the session:
 		//             laps - Number of laps (between 1 and 99, inclusive).
-		LStartPractice_RO(track, DEFAULT_RULEBOOK, opts);
+		LStartPractice_RO(track, "", opts);
 	}
 
 }
@@ -327,7 +323,9 @@ void GamePeer::LStartPractice_RO(const std::string &track,
 
 	//TODO: Check that the track actually exists and throw an error otherwise.
 
-	auto rules = rulebookLibrary.Find(rulebook);
+	auto rules = rulebook.empty() ?
+		rulebookLibrary.GetDefault() :
+		rulebookLibrary.Find(rulebook);
 	if (!rules) {
 		luaL_error(L, "Rulebook '%s' does not exist.", rulebook.c_str());
 		return;
