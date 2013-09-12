@@ -49,8 +49,8 @@ class Rulebook : private boost::noncopyable
 {
 	public:
 		Rulebook(Script::Core *scripting,
-			const std::string &name="Race",
-			const std::string &description="");
+			const std::string &name,
+			const std::string &description);
 
 	public:
 		const std::string &GetName() const { return name; }
