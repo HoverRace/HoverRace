@@ -38,6 +38,7 @@ namespace HoverRace {
 		class Track;
 		typedef std::shared_ptr<Track> TrackPtr;
 		class TrackEntry;
+		typedef std::shared_ptr<TrackEntry> TrackEntryPtr;
 	}
 }
 
