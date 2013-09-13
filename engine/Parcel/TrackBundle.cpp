@@ -74,7 +74,7 @@ Model::TrackPtr TrackBundle::OpenTrack(const std::string &name) const
  * @return The track or @c nullptr if the track does not exist.
  * @throws ObjStreamExn The track failed to load.
  */
-Model::TrackPtr TrackBundle::OpenTrack(const Model::TrackEntryPtr &entry) const
+Model::TrackPtr TrackBundle::OpenTrack(const std::shared_ptr<const Model::TrackEntry> &entry) const
 {
 	return OpenTrack(entry->name);
 }
