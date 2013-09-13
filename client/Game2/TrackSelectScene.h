@@ -28,6 +28,7 @@
 
 namespace HoverRace {
 	namespace Client {
+		class Rulebook;
 		class RulebookLibrary;
 	}
 	namespace Display {
@@ -53,11 +54,11 @@ class TrackSelectScene : public FormScene
 		virtual ~TrackSelectScene();
 
 	private:
-		void OnRulebookSelected(RulebookPtr entry);
+		void OnRulebookSelected(std::shared_ptr<const Rulebook> entry);
 		void OnTrackSelected(Model::TrackEntryPtr entry);
 
 	public:
-		typedef boost::signals2::signal<void(RulebookPtr)> okSignal_t;
+		typedef boost::signals2::signal<void(std::shared_ptr<Rules>)> okSignal_t;
 		okSignal_t &GetOkSignal() { return okSignal; }
 
 		typedef boost::signals2::signal<void()> cancelSignal_t;
@@ -69,7 +70,7 @@ class TrackSelectScene : public FormScene
 		RulebookLibrary &rulebookLibrary;
 
 		Model::TrackList trackList;
-		RulebookPtr selRulebook;
+		std::shared_ptr<Rules> rules;
 
 		std::shared_ptr<Display::Container> rulebookPanel;
 		std::shared_ptr<Display::Container> trackPanel;

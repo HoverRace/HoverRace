@@ -34,6 +34,7 @@
 #include "../GameDirector.h"
 #include "../Rulebook.h"
 #include "../RulebookLibrary.h"
+#include "../Rules.h"
 #include "ConfigPeer.h"
 #include "SessionPeer.h"
 
@@ -286,7 +287,7 @@ void GamePeer::LStartPractice_O(const std::string &track,
 }
 
 void GamePeer::LStartPractice_RO(const std::string &track,
-                                 const std::string &rulebook,
+                                 const std::string &rulebookName,
                                  const luabind::object &opts)
 {
 	// function start_practice(track, rulebook, opts)
@@ -323,13 +324,14 @@ void GamePeer::LStartPractice_RO(const std::string &track,
 
 	//TODO: Check that the track actually exists and throw an error otherwise.
 
-	auto rules = rulebook.empty() ?
+	auto rulebook = rulebookName.empty() ?
 		rulebookLibrary.GetDefault() :
-		rulebookLibrary.Find(rulebook);
-	if (!rules) {
-		luaL_error(L, "Rulebook '%s' does not exist.", rulebook.c_str());
+		rulebookLibrary.Find(rulebookName);
+	if (!rulebook) {
+		luaL_error(L, "Rulebook '%s' does not exist.", rulebookName.c_str());
 		return;
 	}
+	auto rules = std::make_shared<Rules>(rulebook);
 	rules->SetTrackEntry(Config::GetInstance()->GetTrackBundle()->OpenTrackEntry(
 		hasExtension ? track : (track + Config::TRACK_EXT)));
 	rules->SetLaps(laps);

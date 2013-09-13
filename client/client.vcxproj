@@ -262,6 +262,7 @@
     <ClInclude Include="Game2\RoomListDialog.h" />
     <ClInclude Include="Game2\Rulebook.h" />
     <ClInclude Include="Game2\RulebookLibrary.h" />
+    <ClInclude Include="Game2\Rules.h" />
     <ClInclude Include="Game2\Scene.h" />
     <ClInclude Include="Game2\SelectRoomDialog.h" />
     <ClInclude Include="Game2\StdAfx.h" />

@@ -32,6 +32,7 @@
 
 #include "Rulebook.h"
 #include "RulebookLibrary.h"
+#include "Rules.h"
 
 #include "TrackSelectScene.h"
 
@@ -104,28 +105,28 @@ TrackSelectScene::TrackSelectScene(Display::Display &display,
 		y += 50;
 	}
 
-	selRulebook = rulebookLibrary.Find("Race");
+	rules = std::make_shared<Rules>(rulebookLibrary.GetDefault());
 }
 
 TrackSelectScene::~TrackSelectScene()
 {
 }
 
-void TrackSelectScene::OnRulebookSelected(RulebookPtr rulebook)
+void TrackSelectScene::OnRulebookSelected(std::shared_ptr<const Rulebook> rulebook)
 {
 	Log::Info("Selected rulebook: %s", rulebook->GetName().c_str());
 
 	// Always work with a copy of the rulebook instead of the rulebook itself.
-	selRulebook = rulebookLibrary.Find(rulebook->GetName());
+	rules->SetRulebook(rulebookLibrary.Find(rulebook->GetName()));
 }
 
 void TrackSelectScene::OnTrackSelected(Model::TrackEntryPtr entry)
 {
 	Log::Info("Selected track: %s", entry->name.c_str());
 
-	selRulebook->SetTrackEntry(entry);
+	rules->SetTrackEntry(entry);
 
-	okSignal(selRulebook);
+	okSignal(rules);
 }
 
 }  // namespace Client

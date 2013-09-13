@@ -61,6 +61,7 @@
 #include "MessageScene.h"
 #include "Rulebook.h"
 #include "RulebookLibrary.h"
+#include "Rules.h"
 #include "Scene.h"
 #include "TestLabScene.h"
 
@@ -408,11 +409,8 @@ void ClientApp::MainLoop()
 	gamePeer->OnShutdown();
 }
 
-void ClientApp::RequestNewPracticeSession(RulebookPtr rules)
+void ClientApp::RequestNewPracticeSession(std::shared_ptr<Rules> rules)
 {
-	//TODO: Confirm ending the current session.
-
-	//TODO: Prompt the user for a track name.
 	try {
 		RequestReplaceScene(std::make_shared<GameScene>(*display, *this, scripting, gamePeer, rules));
 	}
@@ -622,7 +620,7 @@ void ClientApp::RequestMainMenu()
 	char craftId = 1 << (rand() % 4);
 
 	//TODO: Use a special rulebook for the demo mode.
-	auto rules = rulebookLibrary->GetDefault();
+	auto rules = std::make_shared<Rules>(rulebookLibrary->GetDefault());
 	rules->SetTrackEntry(Config::GetInstance()->GetTrackBundle()->OpenTrackEntry(trackName));
 	rules->SetGameOpts(0x70 + craftId);
 

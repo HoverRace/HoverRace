@@ -34,18 +34,16 @@ namespace Client {
 Rulebook::Rulebook(Script::Core *scripting, const std::string &name,
                    const std::string &description) :
 	scripting(scripting), name(name), description(description),
-	trackEntry(),
-	laps(1), gameOpts(0x7f),
 	onPreGame(scripting), onPostGame(scripting)
 {
 }
 
-void Rulebook::OnPreGame(HoverScript::SessionPeerPtr session)
+void Rulebook::OnPreGame(HoverScript::SessionPeerPtr session) const
 {
 	onPreGame.CallHandlers(luabind::object(scripting->GetState(), session));
 }
 
-void Rulebook::OnPostGame(HoverScript::SessionPeerPtr session)
+void Rulebook::OnPostGame(HoverScript::SessionPeerPtr session) const
 {
 	onPostGame.CallHandlers(luabind::object(scripting->GetState(), session));
 }

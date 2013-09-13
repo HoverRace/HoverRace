@@ -98,7 +98,7 @@ class ClientApp : public GameDirector
 		virtual void RequestPopScene();
 		virtual void RequestReplaceScene(const ScenePtr &scene);
 		virtual void RequestMainMenu();
-		virtual void RequestNewPracticeSession(RulebookPtr rules=RulebookPtr());
+		virtual void RequestNewPracticeSession(std::shared_ptr<Rules> rules);
 		virtual void RequestShutdown();
 		virtual void SignalServerHasChanged();
 		virtual void ChangeAutoUpdates(bool newSetting);

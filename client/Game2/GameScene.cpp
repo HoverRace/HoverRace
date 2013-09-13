@@ -34,6 +34,7 @@
 #include "ClientSession.h"
 #include "PauseMenuScene.h"
 #include "Rulebook.h"
+#include "Rules.h"
 
 #include "GameScene.h"
 
@@ -45,7 +46,7 @@ namespace Client {
 
 GameScene::GameScene(Display::Display &display, GameDirector &director,
                      Script::Core *scripting, HoverScript::GamePeer *gamePeer,
-                     RulebookPtr rules) :
+                     std::shared_ptr<Rules> rules) :
 	SUPER("Game"),
 	display(display), director(director), rules(rules),
 	frame(0), numPlayers(1), muted(false),
@@ -60,9 +61,8 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 
 	// Load the selected track
 	try {
-		Model::TrackEntryPtr entry = rules->GetTrackEntry();
-		Model::TrackPtr track = Config::GetInstance()->
-			GetTrackBundle()->OpenTrack(rules->GetTrackEntry());
+		auto entry = rules->GetTrackEntry();
+		auto track = Config::GetInstance()->GetTrackBundle()->OpenTrack(entry);
 		if (!track) throw Parcel::ObjStreamExn("Track does not exist.");
 		if (!session->LoadNew(
 			entry->name.c_str(), track->GetRecordFile(),
@@ -85,7 +85,7 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 
 	observers[0] = Observer::New();
 
-	rules->OnPreGame(sessionPeer);
+	rules->GetRulebook()->OnPreGame(sessionPeer);
 }
 
 GameScene::~GameScene()
@@ -253,9 +253,7 @@ void GameScene::Render()
 
 void GameScene::OnRaceFinish()
 {
-	//TODO: Fire script event handlers.
-	
-	rules->OnPostGame(sessionPeer);
+	rules->GetRulebook()->OnPostGame(sessionPeer);
 }
 
 }  // namespace HoverScript

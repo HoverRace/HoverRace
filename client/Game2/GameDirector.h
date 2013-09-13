@@ -26,8 +26,7 @@ namespace HoverRace {
 	namespace Client {
 		class Scene;
 		typedef std::shared_ptr<Scene> ScenePtr;
-		class Rulebook;
-		typedef std::shared_ptr<Rulebook> RulebookPtr;
+		class Rules;
 	}
 	namespace Control {
 		class InputEventController;
@@ -82,7 +81,7 @@ class GameDirector
 		 * Request a new local practice session.
 		 * @param rules The settings for the session.
 		 */
-		virtual void RequestNewPracticeSession(RulebookPtr rules=RulebookPtr()) = 0;
+		virtual void RequestNewPracticeSession(std::shared_ptr<Rules> rules) = 0;
 
 		/**
 		 * Request an orderly shutdown the of app.

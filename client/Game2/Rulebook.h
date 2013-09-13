@@ -56,18 +56,9 @@ class Rulebook : private boost::noncopyable
 		const std::string &GetName() const { return name; }
 		const std::string &GetDescription() const { return description; }
 
-		const Model::TrackEntryPtr &GetTrackEntry() const { return trackEntry; }
-		void SetTrackEntry(Model::TrackEntryPtr trackEntry) { this->trackEntry = std::move(trackEntry); }
-
-		// Temporary; will be generalized into RulebookOptions.
-		int GetLaps() const { return laps; }
-		void SetLaps(int laps) { this->laps = laps; }
-		char GetGameOpts() const { return gameOpts; }
-		void SetGameOpts(char gameOpts) { this->gameOpts = gameOpts; }
-
 	public:
-		void OnPreGame(HoverScript::SessionPeerPtr session);
-		void OnPostGame(HoverScript::SessionPeerPtr session);
+		void OnPreGame(HoverScript::SessionPeerPtr session) const;
+		void OnPostGame(HoverScript::SessionPeerPtr session) const;
 
 	public:
 		friend bool operator==(const Rulebook &lhs, const Rulebook &rhs);
@@ -77,11 +68,7 @@ class Rulebook : private boost::noncopyable
 		Script::Core *scripting;
 		std::string name;
 		std::string description;
-		Model::TrackEntryPtr trackEntry;
 		
-		int laps;
-		char gameOpts;
-
 		Script::Handlers onPreGame;
 		Script::Handlers onPostGame;
 };

@@ -58,7 +58,7 @@ void PracticeSetupScene::OnScenePushed()
 {
 	// Immediately show the track selector.
 	auto selScene = std::make_shared<TrackSelectScene>(display, director, rulebookLibrary);
-	selScene->GetOkSignal().connect([&](RulebookPtr rules) {
+	selScene->GetOkSignal().connect([&](std::shared_ptr<Rules> rules) {
 		director.RequestNewPracticeSession(rules);
 	});
 	selScene->GetCancelSignal().connect([&]() {
