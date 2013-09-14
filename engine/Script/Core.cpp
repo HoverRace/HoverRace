@@ -95,7 +95,7 @@ Core::Core() :
 
 Core::~Core()
 {
-	delete(NIL);
+	delete NIL;
 	lua_close(state);
 }
 
