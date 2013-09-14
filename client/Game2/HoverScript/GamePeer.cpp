@@ -46,6 +46,26 @@ namespace HoverRace {
 namespace Client {
 namespace HoverScript {
 
+namespace {
+	const luabind::object &ExpectHandler(Script::Core *scripting,
+	                                     const luabind::object &props,
+	                                     const char *name)
+	{
+		using namespace luabind;
+
+		const object &obj = props[name];
+
+		int objType = type(obj);
+		if (objType != LUA_TNIL && objType != LUA_TFUNCTION) {
+			luaL_error(scripting->GetState(),
+				"'%s' is required to be a function or nil", name);
+			return *scripting->NIL;
+		}
+
+		return obj;
+	}
+}
+
 GamePeer::GamePeer(Script::Core *scripting, GameDirector &director,
                    RulebookLibrary &rulebookLibrary) :
 	SUPER(scripting, "Game"),
@@ -162,9 +182,12 @@ void GamePeer::LNewRulebook(const luabind::object &defn)
 	//   defn - A table defining the rulebook:
 	//            name - The name (will be used to create instances).
 	//            description - (Optional) The one-line description.
+	//            on_pre_game - (Optional) Function to call before the session starts.
+	//            on_post_game - (Optional) Function to call after the session ends.
 	using namespace luabind;
 
-	lua_State *L = GetScripting()->GetState();
+	Script::Core *scripting = GetScripting();
+	lua_State *L = scripting->GetState();
 
 	if (type(defn) != LUA_TTABLE) {
 		luaL_error(L, "Expected table.");
@@ -193,7 +216,9 @@ void GamePeer::LNewRulebook(const luabind::object &defn)
 
 	Log::Info("Registered: %s, %s", name.c_str(), desc.c_str());
 
-	auto rulebook = std::make_shared<Rulebook>(GetScripting(), name, desc);
+	auto rulebook = std::make_shared<Rulebook>(scripting, name, desc);
+	rulebook->SetOnPreGame(ExpectHandler(scripting, defn, "on_pre_game"));
+	rulebook->SetOnPostGame(ExpectHandler(scripting, defn, "on_post_game"));
 
 	rulebookLibrary.Add(rulebook);
 }

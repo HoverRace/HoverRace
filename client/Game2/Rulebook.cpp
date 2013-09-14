@@ -38,9 +38,19 @@ Rulebook::Rulebook(Script::Core *scripting, const std::string &name,
 {
 }
 
+void Rulebook::SetOnPreGame(const luabind::object &fn)
+{
+	onPreGame.AddHandler(fn);
+}
+
 void Rulebook::OnPreGame(HoverScript::SessionPeerPtr session) const
 {
 	onPreGame.CallHandlers(luabind::object(scripting->GetState(), session));
+}
+
+void Rulebook::SetOnPostGame(const luabind::object &fn)
+{
+	onPostGame.AddHandler(fn);
 }
 
 void Rulebook::OnPostGame(HoverScript::SessionPeerPtr session) const

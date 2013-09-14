@@ -57,7 +57,10 @@ class Rulebook : private boost::noncopyable
 		const std::string &GetDescription() const { return description; }
 
 	public:
+		void SetOnPreGame(const luabind::object &fn);
 		void OnPreGame(HoverScript::SessionPeerPtr session) const;
+
+		void SetOnPostGame(const luabind::object &fn);
 		void OnPostGame(HoverScript::SessionPeerPtr session) const;
 
 	public:
