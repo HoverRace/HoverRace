@@ -77,6 +77,7 @@ Core::Core() :
 	curHelpHandler(NULL)
 {
 	state = luaL_newstate();
+	NIL = new luabind::object();
 
 	//TODO: Set panic handler.
 
@@ -99,6 +100,7 @@ Core::Core() :
 
 Core::~Core()
 {
+	delete(NIL);
 	lua_close(state);
 }
 
