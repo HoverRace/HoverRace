@@ -48,7 +48,8 @@ namespace {
 	{
 		typedef Display::Button SUPER;
 		public:
-			RulebookSelButton(Display::Display &display, const RulebookPtr &rulebook) :
+			RulebookSelButton(Display::Display &display,
+				const std::shared_ptr<const Rulebook> &rulebook) :
 				SUPER(display, rulebook->GetName()) { }
 			virtual ~RulebookSelButton() { }
 	};
@@ -86,7 +87,7 @@ TrackSelectScene::TrackSelectScene(Display::Display &display,
 	rulebookPanel = root->AddChild(new Display::Container(display));
 	rulebookPanel->SetPos(60, 60);
 	for (auto iter = rulebookLibrary.cbegin(); iter != rulebookLibrary.cend(); ++iter) {
-		const RulebookPtr rulebook = *iter;
+		auto rulebook = *iter;
 		auto ruleSel = rulebookPanel->AddChild(new RulebookSelButton(display, rulebook));
 		ruleSel->SetPos(0, y);
 		ruleSel->GetClickedSignal().connect(std::bind(

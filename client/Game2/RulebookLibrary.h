@@ -44,11 +44,11 @@ class RulebookLibrary {
 
 	public:
 		void Add(RulebookPtr &rulebook);
-		RulebookPtr GetDefault() const;
-		RulebookPtr Find(const std::string &name);
+		std::shared_ptr<const Rulebook> GetDefault() const;
+		std::shared_ptr<const Rulebook> Find(const std::string &name);
 
 	private:
-		typedef std::set<RulebookPtr, boost::less_pointees_t<RulebookPtr>> sorted_t;
+		typedef std::set<std::shared_ptr<const Rulebook>, boost::less_pointees_t<std::shared_ptr<const Rulebook>>> sorted_t;
 	public:
 		typedef sorted_t::const_iterator const_iterator;
 		typedef sorted_t::value_type value_type;

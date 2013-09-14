@@ -53,7 +53,7 @@ void RulebookLibrary::Add(RulebookPtr &rulebook)
  * If no rulebooks are loaded, then a dummy rulebook will be returned.
  * @return The default rulebook (never null).
  */
-RulebookPtr RulebookLibrary::GetDefault() const
+std::shared_ptr<const Rulebook> RulebookLibrary::GetDefault() const
 {
 	if (defaultRulebook) {
 		return defaultRulebook;
@@ -71,7 +71,7 @@ RulebookPtr RulebookLibrary::GetDefault() const
  * @return The requested Rulebook, or a null RulebookPtr if
  *         there is no Rulebook with that name.
  */
-RulebookPtr RulebookLibrary::Find(const std::string &name)
+std::shared_ptr<const Rulebook> RulebookLibrary::Find(const std::string &name)
 {
 	auto iter = library.find(name);
 	return iter == library.end() ? RulebookPtr() : iter->second;
