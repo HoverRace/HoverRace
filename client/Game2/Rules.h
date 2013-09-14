@@ -39,8 +39,7 @@ namespace Client {
  */
 class Rules {
 	public:
-		Rules() : laps(1), gameOpts(0x7f) { };
-		Rules(std::shared_ptr<const Rulebook> rulebook) :
+		Rules(std::shared_ptr<const Rulebook> rulebook=nullptr) :
 			rulebook(rulebook), laps(1), gameOpts(0x7f) { }
 
 	public:
