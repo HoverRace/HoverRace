@@ -2,7 +2,7 @@
 // Config.cpp
 // Configuration system.
 //
-// Copyright (c) 2008-2010, 2012 Michael Imamura.
+// Copyright (c) 2008-2010, 2012-2013 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -209,8 +209,6 @@ Config::Config(int verMajor, int verMinor, int verPatch, int verBuild,
 #	else
 		defaultSymbolFontName = "Unknown";
 #	endif
-
-	//TODO: Check if we successfully loaded our private fonts.
 
 	// Set initial defaults.
 	ResetToDefaults();

@@ -53,6 +53,18 @@ namespace HoverRace {
 namespace HoverRace {
 namespace Client {
 
+/**
+ * The actual, genuine gameplay scene.  Accept no imitations.
+ *
+ * This scene manages the lifetime of a single session, from start to finish.
+ * Pushing this scene onto the stage starts a new game session, and likewise
+ * popping this scene from the stage aborts the game session.
+ *
+ * Note that this scene may also be used non-interactively (demo mode),
+ * e.g. as a background for the main menu.
+ *
+ * @author Michael Imamura
+ */
 class GameScene : public Scene
 {
 	typedef Scene SUPER;

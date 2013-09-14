@@ -2,7 +2,7 @@
 // Config.h
 // Header for the configuration system.
 //
-// Copyright (c) 2008-2010, 2012 Michael Imamura.
+// Copyright (c) 2008-2010, 2012-2013 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.

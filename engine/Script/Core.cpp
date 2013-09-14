@@ -24,11 +24,6 @@
 
 #include <iostream>
 
-// The X headers define "Bool" with breaks Boost Foreach.
-// This workaround is only required for Boost < 1.40.
-#if !defined(_WIN32) && defined(Bool)
-#	undef Bool
-#endif
 #include <boost/foreach.hpp>
 
 #include <luabind/luabind.hpp>
@@ -485,7 +480,7 @@ int Core::LPrint(lua_State *state)
 	lua_getglobal(state, "tostring");
 
 	for (int i = 1; i <= numParams; ++i) {
-		// Call the global "tostring" function 
+		// Call the global "tostring" function
 		lua_pushvalue(state, -1);
 		lua_pushvalue(state, i);
 		lua_call(state, 1, 1);

@@ -23,9 +23,6 @@
 #include "StdAfx.h"
 
 #include "../Parcel/ClassicRecordFile.h"
-#if defined(_WIN32) && !defined(WITH_OBJSTREAM)
-#	include "../Parcel/MfcRecordFile.h"
-#endif
 #include "../Parcel/ObjStream.h"
 
 #include "ResourceLib.h"
@@ -71,11 +68,7 @@ namespace {
  */
 ResourceLib::ResourceLib(const Util::OS::path_t &filename)
 {
-#	if defined(_WIN32) && !defined(WITH_OBJSTREAM)
-		recordFile = MfcRecordFile::New();
-#	else
-		recordFile = new ClassicRecordFile();
-#	endif
+	recordFile = new ClassicRecordFile();
 
 	if (!recordFile->OpenForRead(filename)) {
 		throw ObjStreamExn(filename, _("File not found or not readable"));
