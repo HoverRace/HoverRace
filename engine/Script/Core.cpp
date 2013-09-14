@@ -478,7 +478,7 @@ int Core::LPrint(lua_State *state)
 	lua_getglobal(state, "tostring");
 
 	for (int i = 1; i <= numParams; ++i) {
-		// Call the global "tostring" function 
+		// Call the global "tostring" function
 		lua_pushvalue(state, -1);
 		lua_pushvalue(state, i);
 		lua_call(state, 1, 1);
