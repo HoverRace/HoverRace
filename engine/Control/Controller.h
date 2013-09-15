@@ -27,10 +27,6 @@
 
 #include <SDL2/SDL.h>
 
-#include "../Util/Config.h"
-#include "../Util/OS.h"
-#include "../MainCharacter/MainCharacter.h"
-
 #include "Action.h"
 #include "ControlAction.h"
 
@@ -43,6 +39,12 @@
 #else
 #	define MR_DllDeclare
 #endif
+
+namespace HoverRace {
+	namespace MainCharacter {
+		class MainCharacter;
+	}
+}
 
 namespace HoverRace {
 namespace Control {

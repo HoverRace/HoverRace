@@ -22,6 +22,7 @@
 
 #include "StdAfx.h"
 
+#include "../Util/Config.h"
 #include "../Util/Log.h"
 
 #include "Controller.h"
