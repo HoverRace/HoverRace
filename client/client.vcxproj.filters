@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Game2">
@@ -171,6 +171,9 @@
     <ClCompile Include="Game2\HoverScript\RulebookEnv.cpp">
       <Filter>HoverScript</Filter>
     </ClCompile>
+    <ClCompile Include="Game2\HoverScript\RuntimeEnv.cpp">
+      <Filter>HoverScript</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game2\AboutDialog.h">
@@ -339,6 +342,9 @@
       <Filter>Game2</Filter>
     </ClInclude>
     <ClInclude Include="Game2\HoverScript\RulebookEnv.h">
+      <Filter>HoverScript</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\HoverScript\RuntimeEnv.h">
       <Filter>HoverScript</Filter>
     </ClInclude>
     <ClInclude Include="Game2\Rules.h">

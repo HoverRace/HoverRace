@@ -1,5 +1,5 @@
 
-// RulebookEnv.h
+// RuntimeEnv.h
 //
 // Copyright (c) 2013 Michael Imamura.
 //
@@ -21,15 +21,9 @@
 
 #pragma once
 
-#include "RuntimeEnv.h"
+#include "../../../engine/Script/Env.h"
 
 namespace HoverRace {
-	namespace Client {
-		class RulebookLibrary;
-		namespace HoverScript {
-			class GamePeer;
-		}
-	}
 	namespace Script {
 		class Core;
 	}
@@ -40,25 +34,20 @@ namespace Client {
 namespace HoverScript {
 
 /**
- * Limited environment for defining rulebooks.
+ * Basic restricted environment for potentially untrusted code.
  * @author Michael Imamura
  */
-class RulebookEnv : public RuntimeEnv {
-	typedef RuntimeEnv SUPER;
+class RuntimeEnv : public Script::Env {
+	typedef Script::Env SUPER;
 	public:
-		RulebookEnv(Script::Core *scripting, GamePeer *gamePeer,
-			RulebookLibrary &rulebookLibrary);
-		virtual ~RulebookEnv();
-
-	protected:
-		virtual void InitEnv();
-
-	public:
-		void ReloadRulebooks();
+		RuntimeEnv(Script::Core *scripting);
+		virtual ~RuntimeEnv();
 
 	private:
-		GamePeer *gamePeer;
-		RulebookLibrary &rulebookLibrary;
+		Script::Core::OutHandle outHandle;
+
+		class LogStreamBuf;
+		class LogStream;
 };
 
 }  // namespace HoverScript

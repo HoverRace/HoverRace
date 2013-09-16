@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -123,6 +123,7 @@
     <ClCompile Include="Game2\HoverScript\ConsoleScene.cpp" />
     <ClCompile Include="Game2\HoverScript\DebugPeer.cpp" />
     <ClCompile Include="Game2\HoverScript\RulebookEnv.cpp" />
+    <ClCompile Include="Game2\HoverScript\RuntimeEnv.cpp" />
     <ClCompile Include="Game2\HoverScript\SysConsole.cpp" />
     <ClCompile Include="Game2\InternetRoom.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -218,6 +219,7 @@
     <ClInclude Include="Game2\HoverScript\ConsoleScene.h" />
     <ClInclude Include="Game2\HoverScript\DebugPeer.h" />
     <ClInclude Include="Game2\HoverScript\RulebookEnv.h" />
+    <ClInclude Include="Game2\HoverScript\RuntimeEnv.h" />
     <ClInclude Include="Game2\HoverScript\SysConsole.h" />
     <ClInclude Include="Game2\InternetRoom.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>

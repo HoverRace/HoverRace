@@ -27,6 +27,8 @@ hoverrace_SOURCES = \
 	HoverScript/GamePeer.h \
 	HoverScript/RulebookEnv.cpp \
 	HoverScript/RulebookEnv.h \
+	HoverScript/RuntimeEnv.cpp \
+	HoverScript/RuntimeEnv.h \
 	HoverScript/SessionPeer.cpp \
 	HoverScript/SessionPeer.h \
 	HoverScript/SysConsole.cpp \
