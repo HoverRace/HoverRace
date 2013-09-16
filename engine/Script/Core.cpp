@@ -72,6 +72,7 @@ Core::Core() :
 	curHelpHandler(NULL)
 {
 	state = luaL_newstate();
+	//FIXME: This causes segfaults in some versions of Luabind.
 	NIL = new luabind::object();
 
 	//TODO: Set panic handler.
