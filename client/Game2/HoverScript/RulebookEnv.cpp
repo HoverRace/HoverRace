@@ -92,6 +92,7 @@ void RulebookEnv::ReloadRulebooks()
 	for (OS::dirIter_t iter(dir); iter != END; ++iter) {
 		const OS::path_t &path = iter->path();
 		if (path.extension() == ".lua") {
+			Log::Info("Running: %s", (const char*)Str::PU(path));
 			if (RunScript(path)) rulebooksLoaded++;
 		}
 	}
