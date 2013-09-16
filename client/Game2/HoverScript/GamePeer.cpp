@@ -47,13 +47,13 @@ namespace Client {
 namespace HoverScript {
 
 namespace {
-	const luabind::object &ExpectHandler(Script::Core *scripting,
+	const luabind::object ExpectHandler(Script::Core *scripting,
 	                                     const luabind::object &props,
 	                                     const char *name)
 	{
 		using namespace luabind;
 
-		const object &obj = props[name];
+		const object obj = props[name];
 
 		int objType = type(obj);
 		if (objType != LUA_TNIL && objType != LUA_TFUNCTION) {
@@ -214,13 +214,13 @@ void GamePeer::LNewRulebook(const luabind::object &defn)
 			return;
 	}
 
-	Log::Info("Registered: %s, %s", name.c_str(), desc.c_str());
-
 	auto rulebook = std::make_shared<Rulebook>(scripting, name, desc);
 	rulebook->SetOnPreGame(ExpectHandler(scripting, defn, "on_pre_game"));
 	rulebook->SetOnPostGame(ExpectHandler(scripting, defn, "on_post_game"));
 
 	rulebookLibrary.Add(rulebook);
+
+	Log::Info("Registered: %s, %s", name.c_str(), desc.c_str());
 }
 
 void GamePeer::LOnInit(const luabind::object &fn)
