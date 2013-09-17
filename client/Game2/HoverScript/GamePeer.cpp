@@ -46,26 +46,6 @@ namespace HoverRace {
 namespace Client {
 namespace HoverScript {
 
-namespace {
-	const luabind::object ExpectHandler(Script::Core *scripting,
-	                                     const luabind::object &props,
-	                                     const char *name)
-	{
-		using namespace luabind;
-
-		const object obj = props[name];
-
-		int objType = type(obj);
-		if (objType != LUA_TNIL && objType != LUA_TFUNCTION) {
-			luaL_error(scripting->GetState(),
-				"'%s' is required to be a function or nil", name);
-			return *scripting->NIL;
-		}
-
-		return obj;
-	}
-}
-
 GamePeer::GamePeer(Script::Core *scripting, GameDirector &director,
                    RulebookLibrary &rulebookLibrary) :
 	SUPER(scripting, "Game"),
@@ -92,7 +72,6 @@ void GamePeer::Register(Script::Core *scripting)
 		class_<GamePeer,SUPER,std::shared_ptr<GamePeer>>("Game")
 			.def("is_initialized", &GamePeer::LIsInitialized)
 			.def("get_config", &GamePeer::LGetConfig, adopt(result))
-			.def("new_rulebook", &GamePeer::LNewRulebook)
 			.def("on_init", &GamePeer::LOnInit)
 			.def("on_init", &GamePeer::LOnInit_N)
 			.def("on_shutdown", &GamePeer::LOnShutdown)
@@ -173,54 +152,6 @@ ConfigPeer *GamePeer::LGetConfig()
 	// function get_config()
 	// Returns the game configuration, so it can be modified.
 	return new ConfigPeer(GetScripting());
-}
-
-void GamePeer::LNewRulebook(const luabind::object &defn)
-{
-	// function new_rulebook(defn)
-	// Defines a new rulebook.
-	//   defn - A table defining the rulebook:
-	//            name - The name (will be used to create instances).
-	//            description - (Optional) The one-line description.
-	//            on_pre_game - (Optional) Function to call before the session starts.
-	//            on_post_game - (Optional) Function to call after the session ends.
-	using namespace luabind;
-
-	Script::Core *scripting = GetScripting();
-	lua_State *L = scripting->GetState();
-
-	if (type(defn) != LUA_TTABLE) {
-		luaL_error(L, "Expected table.");
-		return;
-	}
-
-	const object &nameObj = defn["name"];
-	if (type(nameObj) != LUA_TSTRING) {
-		luaL_error(L, "'name' is required to be a string.");
-		return;
-	}
-	const std::string name = object_cast<std::string>(nameObj);
-
-	const object &descObj = defn["description"];
-	std::string desc;
-	switch (type(descObj)) {
-		case LUA_TNIL:
-			break;
-		case LUA_TSTRING:
-			desc = object_cast<std::string>(descObj);
-			break;
-		default:
-			luaL_error(L, "Expected 'desc' to be a string.");
-			return;
-	}
-
-	auto rulebook = std::make_shared<Rulebook>(scripting, name, desc);
-	rulebook->SetOnPreGame(ExpectHandler(scripting, defn, "on_pre_game"));
-	rulebook->SetOnPostGame(ExpectHandler(scripting, defn, "on_post_game"));
-
-	rulebookLibrary.Add(rulebook);
-
-	Log::Info("Registered: %s, %s", name.c_str(), desc.c_str());
 }
 
 void GamePeer::LOnInit(const luabind::object &fn)

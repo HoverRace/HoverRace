@@ -134,7 +134,7 @@ ClientApp::ClientApp() :
 	rulebookLibrary = new RulebookLibrary(scripting);
 	debugPeer = new DebugPeer(scripting, *this);
 	gamePeer = new GamePeer(scripting, *this, *rulebookLibrary);
-	RulebookEnv(scripting, gamePeer, *rulebookLibrary).ReloadRulebooks();
+	RulebookEnv(scripting, *rulebookLibrary).ReloadRulebooks();
 	sysEnv = new SysEnv(scripting, debugPeer, gamePeer);
 	OS::path_t &initScript = cfg->runtime.initScript;
 	if (!initScript.empty()) {

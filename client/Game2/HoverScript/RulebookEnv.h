@@ -46,8 +46,7 @@ namespace HoverScript {
 class RulebookEnv : public RuntimeEnv {
 	typedef RuntimeEnv SUPER;
 	public:
-		RulebookEnv(Script::Core *scripting, GamePeer *gamePeer,
-			RulebookLibrary &rulebookLibrary);
+		RulebookEnv(Script::Core *scripting, RulebookLibrary &rulebookLibrary);
 		virtual ~RulebookEnv();
 
 	protected:
@@ -55,9 +54,12 @@ class RulebookEnv : public RuntimeEnv {
 
 	public:
 		void ReloadRulebooks();
+		void DefineRulebook(const luabind::object &defn);
 
 	private:
-		GamePeer *gamePeer;
+		static int LRulebook(lua_State *L);
+
+	private:
 		RulebookLibrary &rulebookLibrary;
 };
 

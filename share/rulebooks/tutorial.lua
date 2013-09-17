@@ -1,5 +1,5 @@
 
-game:new_rulebook {
+Rulebook {
 	name = 'Tutorial',
 	description = 'Learn the basics of how to play',
 

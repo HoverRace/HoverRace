@@ -77,8 +77,6 @@ class GamePeer : public Script::Peer {
 
 		bool LIsInitialized();
 
-		void LNewRulebook(const luabind::object &defn);
-
 		void LOnInit(const luabind::object &fn);
 		void LOnInit_N(const std::string &name, const luabind::object &fn);
 
