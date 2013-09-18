@@ -32,8 +32,9 @@ namespace HoverRace {
 namespace Client {
 
 Rulebook::Rulebook(Script::Core *scripting, const std::string &name,
+                   const std::string &title,
                    const std::string &description) :
-	scripting(scripting), name(name), description(description),
+	scripting(scripting), name(name), title(title), description(description),
 	onPreGame(scripting), onPostGame(scripting)
 {
 }

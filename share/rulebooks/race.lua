@@ -1,6 +1,6 @@
 
-Rulebook {
-	name = 'Race',
+Rulebook 'Race' {
+	title = 'Race',
 	description = 'First player to complete the number of laps wins',
 
 	on_pre_game = function(session)

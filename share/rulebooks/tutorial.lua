@@ -1,6 +1,6 @@
 
-Rulebook {
-	name = 'Tutorial',
+Rulebook 'Tutorial' {
+	title = 'Tutorial',
 	description = 'Learn the basics of how to play',
 
 	on_pre_game = function(session) end,

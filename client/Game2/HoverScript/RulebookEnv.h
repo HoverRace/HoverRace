@@ -54,10 +54,11 @@ class RulebookEnv : public RuntimeEnv {
 
 	public:
 		void ReloadRulebooks();
-		void DefineRulebook(const luabind::object &defn);
+		void DefineRulebook(const std::string &name, const luabind::object &defn);
 
 	private:
-		static int LRulebook(lua_State *L);
+		static int LRulebookStage1(lua_State *L);
+		static int LRulebookStage2(lua_State *L);
 
 	private:
 		RulebookLibrary &rulebookLibrary;

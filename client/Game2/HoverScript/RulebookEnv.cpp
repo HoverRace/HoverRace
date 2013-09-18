@@ -86,7 +86,7 @@ void RulebookEnv::InitEnv()
 	CopyGlobals();
 
 	lua_pushlightuserdata(L, this);  // table this
-	lua_pushcclosure(L, RulebookEnv::LRulebook, 1);  // table fn
+	lua_pushcclosure(L, RulebookEnv::LRulebookStage1, 1);  // table fn
 	lua_pushstring(L, "Rulebook");  // table fn str
 	lua_insert(L, -2);  // table str fn
 	lua_rawset(L, -3);  // table
@@ -134,7 +134,8 @@ void RulebookEnv::ReloadRulebooks()
 	}
 }
 
-void RulebookEnv::DefineRulebook(const luabind::object &defn)
+void RulebookEnv::DefineRulebook(const std::string &name,
+                                 const luabind::object &defn)
 {
 	using namespace luabind;
 
@@ -146,12 +147,12 @@ void RulebookEnv::DefineRulebook(const luabind::object &defn)
 		return;
 	}
 
-	const object &nameObj = defn["name"];
-	if (type(nameObj) != LUA_TSTRING) {
-		luaL_error(L, "'name' is required to be a string.");
+	const object &titleObj = defn["title"];
+	if (type(titleObj) != LUA_TSTRING) {
+		luaL_error(L, "'title' is required to be a string.");
 		return;
 	}
-	const std::string name = object_cast<std::string>(nameObj);
+	const std::string title = object_cast<std::string>(titleObj);
 
 	const object &descObj = defn["description"];
 	std::string desc;
@@ -166,28 +167,61 @@ void RulebookEnv::DefineRulebook(const luabind::object &defn)
 			return;
 	}
 
-	auto rulebook = std::make_shared<Rulebook>(scripting, name, desc);
+	auto rulebook = std::make_shared<Rulebook>(scripting, name, title, desc);
 	rulebook->SetOnPreGame(ExpectHandler(scripting, defn, "on_pre_game"));
 	rulebook->SetOnPostGame(ExpectHandler(scripting, defn, "on_post_game"));
 
 	rulebookLibrary.Add(rulebook);
 
-	Log::Info("Registered: %s, %s", name.c_str(), desc.c_str());
+	Log::Info("Registered: %s: %s, %s", name.c_str(), title.c_str(), desc.c_str());
 }
 
-int RulebookEnv::LRulebook(lua_State *L)
+int RulebookEnv::LRulebookStage1(lua_State *L)
 {
-	// function Rulebook(defn)
+	// Rulebook name defn
+	//
 	// Defines a new rulebook.
+	//   name - The name of the rulebook.
 	//   defn - A table defining the rulebook:
-	//            name - The name (will be used to create instances).
+	//            title - The title.
 	//            description - (Optional) The one-line description.
 	//            on_pre_game - (Optional) Function to call before the session starts.
 	//            on_post_game - (Optional) Function to call after the session ends.
+
+	if (lua_gettop(L) != 1) {
+		luaL_error(L, "Usage: Rulebook 'name' { ... }");
+		return 0;
+	}
+
+	// This is a little syntax trick to make rulebooks look declarative.
+	// This stage captures the name of the rulebook, then returns the function
+	// (stage 2) that will combine it with the object.
+	// Inspired by Luabind's class definition mechanism.
+
+	lua_pushvalue(L, lua_upvalueindex(1));  // name self
+	lua_pushcclosure(L, &RulebookEnv::LRulebookStage2, 2);  // fn
+	return 1;
+}
+
+int RulebookEnv::LRulebookStage2(lua_State *L)
+{
 	using namespace luabind;
 
-	RulebookEnv *self = static_cast<RulebookEnv*>(lua_touserdata(L, lua_upvalueindex(1)));
-	self->DefineRulebook(object(from_stack(L, 1)));
+	if (lua_gettop(L) != 1) {
+		luaL_error(L, "Usage: Rulebook 'name' { ... }");
+		return 0;
+	}
+
+	const char *name = lua_tostring(L, lua_upvalueindex(1));
+	RulebookEnv *self = static_cast<RulebookEnv*>(lua_touserdata(L, lua_upvalueindex(2)));
+
+	if (!name) {
+		luaL_error(L, "Rulebook name must be a string.");
+		return 0;
+	}
+
+	self->DefineRulebook(name, object(from_stack(L, 1)));
+
 	return 0;
 }
 

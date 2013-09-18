@@ -50,10 +50,12 @@ class Rulebook : private boost::noncopyable
 	public:
 		Rulebook(Script::Core *scripting,
 			const std::string &name,
+			const std::string &title,
 			const std::string &description);
 
 	public:
 		const std::string &GetName() const { return name; }
+		const std::string &GetTitle() const { return title; }
 		const std::string &GetDescription() const { return description; }
 
 	public:
@@ -70,6 +72,7 @@ class Rulebook : private boost::noncopyable
 	private:
 		Script::Core *scripting;
 		std::string name;
+		std::string title;
 		std::string description;
 		
 		Script::Handlers onPreGame;
