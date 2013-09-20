@@ -51,12 +51,14 @@ class Rulebook : private boost::noncopyable
 		Rulebook(Script::Core *scripting,
 			const std::string &name,
 			const std::string &title,
-			const std::string &description);
+			const std::string &description,
+			int maxPlayers);
 
 	public:
 		const std::string &GetName() const { return name; }
 		const std::string &GetTitle() const { return title; }
 		const std::string &GetDescription() const { return description; }
+		int GetMaxPlayers() const { return maxPlayers; }
 
 	public:
 		void SetOnPreGame(const luabind::object &fn);
@@ -74,6 +76,7 @@ class Rulebook : private boost::noncopyable
 		std::string name;
 		std::string title;
 		std::string description;
+		int maxPlayers;
 		
 		Script::Handlers onPreGame;
 		Script::Handlers onPostGame;

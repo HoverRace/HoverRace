@@ -60,7 +60,7 @@ std::shared_ptr<const Rulebook> RulebookLibrary::GetDefault() const
 	}
 	else {
 		return library.empty() ?
-			std::make_shared<Rulebook>(scripting, "Dummy", "Dummy", "") :
+			std::make_shared<Rulebook>(scripting, "Dummy", "Dummy", "", 1) :
 			*sorted.cbegin();
 	}
 }

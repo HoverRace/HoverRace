@@ -167,7 +167,21 @@ void RulebookEnv::DefineRulebook(const std::string &name,
 			return;
 	}
 
-	auto rulebook = std::make_shared<Rulebook>(scripting, name, title, desc);
+	const object &maxPlayersObj = defn["max_players"];
+	int maxPlayers = 4;
+	switch (type(maxPlayersObj)) {
+		case LUA_TNIL:
+			break;
+		case LUA_TNUMBER:
+			maxPlayers = object_cast<int>(maxPlayersObj);
+			break;
+		default:
+			luaL_error(L, "Expected 'max_players' to be a number.");
+			return;
+	}
+
+	auto rulebook = std::make_shared<Rulebook>(scripting, name, title, desc,
+		maxPlayers);
 	rulebook->SetOnPreGame(ExpectHandler(scripting, defn, "on_pre_game"));
 	rulebook->SetOnPostGame(ExpectHandler(scripting, defn, "on_post_game"));
 
