@@ -66,6 +66,8 @@ class Rulebook : private boost::noncopyable
 		// Temporary until we get real rule classes.
 		void AddRule(const std::string &name, const luabind::object &obj);
 
+		luabind::object CreateDefaultRules() const;
+
 	public:
 		void SetOnPreGame(const luabind::object &fn);
 		void OnPreGame(HoverScript::SessionPeerPtr session) const;

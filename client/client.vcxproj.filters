@@ -174,6 +174,9 @@
     <ClCompile Include="Game2\HoverScript\RuntimeEnv.cpp">
       <Filter>HoverScript</Filter>
     </ClCompile>
+    <ClCompile Include="Game2\Rules.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game2\AboutDialog.h">

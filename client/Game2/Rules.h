@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include <luabind/object.hpp>
+
 namespace HoverRace {
 	namespace Client {
 		class Rulebook;
@@ -39,19 +41,18 @@ namespace Client {
  */
 class Rules {
 	public:
-		Rules(std::shared_ptr<const Rulebook> rulebook=nullptr) :
-			rulebook(rulebook), laps(1), gameOpts(0x7f) { }
+		Rules(std::shared_ptr<const Rulebook> rulebook=nullptr);
 
 	public:
 		std::shared_ptr<const Rulebook> GetRulebook() const { return rulebook; }
-		void SetRulebook(std::shared_ptr<const Rulebook> rulebook) { this->rulebook = std::move(rulebook); }
+		void SetRulebook(std::shared_ptr<const Rulebook> rulebook);
 
 		std::shared_ptr<const Model::TrackEntry> GetTrackEntry() const { return trackEntry; }
 		void SetTrackEntry(std::shared_ptr<const Model::TrackEntry> trackEntry) { this->trackEntry = std::move(trackEntry); }
 
 		// Temporary; will be generalized into RulebookOptions.
-		int GetLaps() const { return laps; }
-		void SetLaps(int laps) { this->laps = laps; }
+		int GetLaps() const { return luabind::object_cast<int>(rules["laps"]); }
+		void SetLaps(int laps) { rules["laps"] = laps; }
 		char GetGameOpts() const { return gameOpts; }
 		void SetGameOpts(char gameOpts) { this->gameOpts = gameOpts; }
 
@@ -59,7 +60,8 @@ class Rules {
 		std::shared_ptr<const Rulebook> rulebook;
 		std::shared_ptr<const Model::TrackEntry> trackEntry;
 
-		int laps;
+		luabind::object rules;
+
 		char gameOpts;
 };
 

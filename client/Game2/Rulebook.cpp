@@ -63,6 +63,17 @@ void Rulebook::AddRule(const std::string &name, const luabind::object &obj)
 	rules.insert(rules_t::value_type(name, std::make_shared<ConstantRule>(obj)));
 }
 
+luabind::object Rulebook::CreateDefaultRules() const
+{
+	luabind::object obj = luabind::newtable(scripting->GetState());
+
+	BOOST_FOREACH(auto ent, rules) {
+		obj[ent.first] = ent.second->GetDefault();
+	}
+
+	return obj;
+}
+
 void Rulebook::SetOnPreGame(const luabind::object &fn)
 {
 	onPreGame.AddHandler(fn);
