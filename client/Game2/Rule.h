@@ -1,5 +1,5 @@
 
-// RulebookEnv.h
+// Rule.h
 //
 // Copyright (c) 2013 Michael Imamura.
 //
@@ -21,52 +21,27 @@
 
 #pragma once
 
-#include "RuntimeEnv.h"
-
-namespace HoverRace {
-	namespace Client {
-		class Rulebook;
-		class RulebookLibrary;
-		namespace HoverScript {
-			class GamePeer;
-		}
-	}
-	namespace Script {
-		class Core;
-	}
-}
+#include <luabind/object.hpp>
 
 namespace HoverRace {
 namespace Client {
-namespace HoverScript {
 
 /**
- * Limited environment for defining rulebooks.
+ * Base class for a user-configurable rule in a Rulebook.
  * @author Michael Imamura
  */
-class RulebookEnv : public RuntimeEnv {
-	typedef RuntimeEnv SUPER;
+class Rule
+{
 	public:
-		RulebookEnv(Script::Core *scripting, RulebookLibrary &rulebookLibrary);
-		virtual ~RulebookEnv();
-
-	protected:
-		virtual void InitEnv();
+		Rule(const std::string &label="") : label(label) { }
+		virtual ~Rule() { }
 
 	public:
-		void ReloadRulebooks();
-		void DefineRulebook(const std::string &name, const luabind::object &defn);
-	private:
-		void DefineRules(std::shared_ptr<Rulebook> rulebook, const luabind::object &rulesObj);
+		virtual luabind::object GetDefault() const = 0;
 
 	private:
-		static int LRulebookStage1(lua_State *L);
-		static int LRulebookStage2(lua_State *L);
-
-	private:
-		RulebookLibrary &rulebookLibrary;
+		std::string label;
 };
 
-}  // namespace HoverScript
 }  // namespace Client
 }  // namespace HoverRace

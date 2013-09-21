@@ -23,6 +23,8 @@
 
 #include "../../engine/Script/Handlers.h"
 
+#include "Rule.h"
+
 namespace HoverRace {
 	namespace HoverScript {
 		class SessionPeer;
@@ -61,6 +63,10 @@ class Rulebook : private boost::noncopyable
 		int GetMaxPlayers() const { return maxPlayers; }
 
 	public:
+		// Temporary until we get real rule classes.
+		void AddRule(const std::string &name, const luabind::object &obj);
+
+	public:
 		void SetOnPreGame(const luabind::object &fn);
 		void OnPreGame(HoverScript::SessionPeerPtr session) const;
 
@@ -77,6 +83,9 @@ class Rulebook : private boost::noncopyable
 		std::string title;
 		std::string description;
 		int maxPlayers;
+
+		typedef std::map<std::string, std::shared_ptr<Rule>> rules_t;
+		rules_t rules;
 		
 		Script::Handlers onPreGame;
 		Script::Handlers onPostGame;

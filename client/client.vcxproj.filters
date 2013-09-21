@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Game2">
@@ -348,6 +348,9 @@
       <Filter>HoverScript</Filter>
     </ClInclude>
     <ClInclude Include="Game2\Rules.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\Rule.h">
       <Filter>Game2</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -262,6 +262,7 @@
     <ClInclude Include="Game2\resource.h" />
     <ClInclude Include="Game2\RoomList.h" />
     <ClInclude Include="Game2\RoomListDialog.h" />
+    <ClInclude Include="Game2\Rule.h" />
     <ClInclude Include="Game2\Rulebook.h" />
     <ClInclude Include="Game2\RulebookLibrary.h" />
     <ClInclude Include="Game2\Rules.h" />

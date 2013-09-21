@@ -31,14 +31,36 @@
 namespace HoverRace {
 namespace Client {
 
+namespace {
+	class ConstantRule : public Rule
+	{
+		typedef Rule SUPER;
+		public:
+			ConstantRule(const luabind::object &val) : SUPER(), val(val) { }
+			virtual ~ConstantRule() { }
+
+		public:
+			virtual luabind::object GetDefault() const { return val; }
+
+		private:
+			luabind::object val;
+	};
+}
+
 Rulebook::Rulebook(Script::Core *scripting, const std::string &name,
                    const std::string &title,
                    const std::string &description,
                    int maxPlayers) :
 	scripting(scripting), name(name), title(title), description(description),
 	maxPlayers(maxPlayers),
+	rules(),
 	onPreGame(scripting), onPostGame(scripting)
 {
+}
+
+void Rulebook::AddRule(const std::string &name, const luabind::object &obj)
+{
+	rules.insert(rules_t::value_type(name, std::make_shared<ConstantRule>(obj)));
 }
 
 void Rulebook::SetOnPreGame(const luabind::object &fn)

@@ -60,6 +60,7 @@ hoverrace_SOURCES = \
 	PracticeSetupScene.h \
 	RoomList.cpp \
 	RoomList.h \
+	Rule.h \
 	Rulebook.cpp \
 	Rulebook.h \
 	RulebookLibrary.cpp \

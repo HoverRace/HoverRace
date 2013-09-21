@@ -182,12 +182,42 @@ void RulebookEnv::DefineRulebook(const std::string &name,
 
 	auto rulebook = std::make_shared<Rulebook>(scripting, name, title, desc,
 		maxPlayers);
+
+	const object &rulesObj = defn["rules"];
+	switch (type(rulesObj)) {
+		case LUA_TNIL:
+			break;
+		case LUA_TTABLE:
+			DefineRules(rulebook, rulesObj);
+			break;
+		default:
+			luaL_error(L, "Expected 'rules' to be a table.");
+			return;
+	}
+
 	rulebook->SetOnPreGame(ExpectHandler(scripting, defn, "on_pre_game"));
 	rulebook->SetOnPostGame(ExpectHandler(scripting, defn, "on_post_game"));
 
 	rulebookLibrary.Add(rulebook);
 
 	Log::Info("Registered: %s: %s, %s", name.c_str(), title.c_str(), desc.c_str());
+}
+
+void RulebookEnv::DefineRules(std::shared_ptr<Rulebook> rulebook,
+                              const luabind::object &rulesObj)
+{
+	using namespace luabind;
+
+	for (iterator iter(rulesObj), end; iter != end; ++iter) {
+		const std::string name = object_cast<std::string>(iter.key());
+		const object ruleObj = *iter;
+
+		//TODO: Check type of ruleObj and cast to Rule if necessary.
+		rulebook->AddRule(name, ruleObj);
+
+		Log::Info("Added rule '%s' with type %d.", name.c_str(),
+			type(ruleObj));
+	}
 }
 
 int RulebookEnv::LRulebookStage1(lua_State *L)
