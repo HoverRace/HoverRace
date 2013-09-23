@@ -56,7 +56,7 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 	memset(observers, 0, sizeof(observers[0]) * MAX_OBSERVERS);
 
 	// Create the new session
-	session = new ClientSession();
+	session = new ClientSession(rules);
 	sessionPeer = std::make_shared<SessionPeer>(scripting, session);
 
 	// Load the selected track
@@ -66,7 +66,7 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 		if (!track) throw Parcel::ObjStreamExn("Track does not exist.");
 		if (!session->LoadNew(
 			entry->name.c_str(), track->GetRecordFile(),
-			rules->GetLaps(), rules->GetGameOpts(), &display.GetLegacyDisplay()))
+			&display.GetLegacyDisplay()))
 		{
 			throw Parcel::ObjStreamExn("Track load failed.");
 		}

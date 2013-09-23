@@ -1,6 +1,7 @@
 // ClientSession.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
+// Copyright (c) 2013 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -27,6 +28,8 @@
 #include "../../engine/Model/TrackFileCommon.h"
 #include "../../engine/VideoServices/VideoBuffer.h"
 
+#include "Rules.h"
+
 #include "ClientSession.h"
 
 using namespace HoverRace::Parcel;
@@ -35,16 +38,14 @@ using HoverRace::Util::OS;
 namespace HoverRace {
 namespace Client {
 
-ClientSession::ClientSession() :
-	mSession(TRUE)
+ClientSession::ClientSession(std::shared_ptr<Rules> rules) :
+	mSession(TRUE), rules(std::move(rules))
 {
 	for (int i = 0; i < MAX_PLAYERS; ++i) {
 		mainCharacter[i] = NULL;
 	}
 	mBackImage = NULL;
 	mMap = NULL;
-	mNbLap = 1;
-	mGameOpts = 0;
 }
 
 ClientSession::~ClientSession()
@@ -121,12 +122,10 @@ void ClientSession::ReadLevelAttrib(Parcel::RecordFilePtr pRecordFile, VideoServ
 }
 
 BOOL ClientSession::LoadNew(const char *pTitle, Parcel::RecordFilePtr pMazeFile,
-                            int pNbLap, char pGameOpts, VideoServices::VideoBuffer *pVideo)
+                            VideoServices::VideoBuffer *pVideo)
 {
 	BOOL lReturnValue;
-	mNbLap = pNbLap;
-	mGameOpts = pGameOpts;
-	lReturnValue = mSession.LoadNew(pTitle, pMazeFile, pGameOpts);
+	lReturnValue = mSession.LoadNew(pTitle, pMazeFile, rules->GetGameOpts());
 
 	if(lReturnValue) {
 		ReadLevelAttrib(pMazeFile, pVideo);
@@ -149,7 +148,8 @@ bool ClientSession::CreateMainCharacter(int i)
 	Model::Level *curLevel = mSession.GetCurrentLevel();
 	ASSERT(curLevel != NULL);
 
-	MainCharacter::MainCharacter *ch = mainCharacter[i] = MainCharacter::MainCharacter::New(mNbLap, mGameOpts);
+	MainCharacter::MainCharacter *ch = mainCharacter[i] =
+		MainCharacter::MainCharacter::New(rules->GetLaps(), rules->GetGameOpts());
 
 	int startingRoom = curLevel->GetStartingRoom(i);
 	ch->mRoom = startingRoom;
