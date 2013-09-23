@@ -50,7 +50,10 @@ class Rules {
 		std::shared_ptr<const Model::TrackEntry> GetTrackEntry() const { return trackEntry; }
 		void SetTrackEntry(std::shared_ptr<const Model::TrackEntry> trackEntry) { this->trackEntry = std::move(trackEntry); }
 
-		// Temporary; will be generalized into RulebookOptions.
+		/** Retrieve the the Lua view of the rules. */
+		luabind::object &GetRules() { return rules; }
+
+		// Temporary; will be removed once all logic is moved into Lua.
 		int GetLaps() const { return luabind::object_cast<int>(rules["laps"]); }
 		void SetLaps(int laps) { rules["laps"] = laps; }
 		char GetGameOpts() const { return gameOpts; }

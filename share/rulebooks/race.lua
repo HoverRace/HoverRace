@@ -9,6 +9,7 @@ Rulebook 'Race' {
 	
 	on_pre_game = function(session)
 		print('on_pre_game in rulebook')
+		print('laps = ' .. session.rules.laps)
 	end,
 
 	on_post_game = function(session)

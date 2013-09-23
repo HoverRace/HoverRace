@@ -64,6 +64,7 @@ class SessionPeer : public Script::Peer {
 
 	private:
 		ClientSession *session;
+		luabind::object rules;
 };
 typedef std::shared_ptr<SessionPeer> SessionPeerPtr;
 
