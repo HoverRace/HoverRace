@@ -127,8 +127,8 @@ class MainCharacter : public Model::FreeElement
 
 		eWeapon mCurrentWeapon;
 		MR_SimulationTime mMissileRefillDuration;  // Countdown
-		MR_FixedFastFifo < int, 2 > mMineList;
-		MR_FixedFastFifo < int, 4 > mPowerUpList;
+		MR_FixedFastFifo<int, 2> mMineList;
+		MR_FixedFastFifo<int, 4> mPowerUpList;
 		MR_SimulationTime mPowerUpLeft;
 
 		double mFuelLevel;
@@ -151,11 +151,11 @@ class MainCharacter : public Model::FreeElement
 		BOOL mCheckPoint1;
 		BOOL mCheckPoint2;
 
-		MR_FixedFastFifo < int, 6 > mLastHits;
+		MR_FixedFastFifo<int, 6> mLastHits;
 
 		// Sound events list
-		MR_FixedFastFifo < HoverRace::VideoServices::ShortSound *, 6 > mInternalSoundList;
-		MR_FixedFastFifo < HoverRace::VideoServices::ShortSound *, 6 > mExternalSoundList;
+		MR_FixedFastFifo<VideoServices::ShortSound*, 6> mInternalSoundList;
+		MR_FixedFastFifo<VideoServices::ShortSound*, 6> mExternalSoundList;
 
 		MainCharacter(const Util::ObjectFromFactoryId & pId);
 
