@@ -1,6 +1,5 @@
 
-// ClientScriptCore.cpp
-// Scripting core configured for the client.
+// PlayerPeer.h
 //
 // Copyright (c) 2010 Michael Imamura.
 //
@@ -20,47 +19,52 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
-#include "StdAfx.h"
+#pragma once
 
-#include "luabind/class_info.hpp"
+#include <luabind/luabind.hpp>
+#include <luabind/object.hpp>
 
-#include "ConfigPeer.h"
-#include "DebugPeer.h"
-#include "GamePeer.h"
-#include "PlayerPeer.h"
-#include "SessionPeer.h"
+#include "../../../engine/Script/Handlers.h"
+#include "../../../engine/Script/Peer.h"
 
-#include "ClientScriptCore.h"
+namespace HoverRace {
+	namespace Client {
+		namespace HoverScript {
+			class SessionPeer;
+		}
+	}
+	namespace MainCharacter {
+		class MainCharacter;
+	}
+	namespace Script {
+		class Core;
+	}
+}
 
 namespace HoverRace {
 namespace Client {
 namespace HoverScript {
 
-Script::Core *ClientScriptCore::Reset()
-{
-	SUPER::Reset();
+/**
+ * Scripting peer for players (main characters).
+ * @author Michael Imamura
+ */
+class PlayerPeer : public Script::Peer {
+	typedef Script::Peer SUPER;
+	public:
+		PlayerPeer(Script::Core *scripting, MainCharacter::MainCharacter *player);
+		virtual ~PlayerPeer();
 
-	if (!classesRegistered) {
+	public:
+		static void Register(Script::Core *scripting);
 
-		lua_State *L = GetState();
+	public:
+		double LGetFuel();
+		void LGetPos();
 
-		luabind::open(L);
-#		ifdef _DEBUG
-			// Enable class inspection.
-			luabind::bind_class_info(L);
-#		endif
-
-		ConfigPeer::Register(this);
-		DebugPeer::Register(this);
-		GamePeer::Register(this);
-		PlayerPeer::Register(this);
-		SessionPeer::Register(this);
-
-		classesRegistered = true;
-	}
-
-	return this;
-}
+	private:
+		MainCharacter::MainCharacter *player;
+};
 
 }  // namespace HoverScript
 }  // namespace Client
