@@ -25,6 +25,7 @@
 #include "../../engine/Script/Core.h"
 #include "../ClientSession.h"
 #include "../Rules.h"
+#include "PlayerPeer.h"
 
 #include "SessionPeer.h"
 
@@ -33,8 +34,15 @@ namespace Client {
 namespace HoverScript {
 
 SessionPeer::SessionPeer(Script::Core *scripting, ClientSession *session) :
-	SUPER(scripting, "Session"), session(session), rules(session->GetRules()->GetRules())
+	SUPER(scripting, "Session"), session(session),
+	rules(session->GetRules()->GetRules()),
+	players(luabind::newtable(scripting->GetState()))
 {
+	for (int i = 0; i < session->GetNbPlayers(); i++) {
+		playerRefs.push_back(std::make_shared<PlayerPeer>(
+			scripting, session->GetPlayer(i)));
+		players[i] = playerRefs.back();
+	}
 }
 
 SessionPeer::~SessionPeer()
@@ -52,6 +60,7 @@ void SessionPeer::Register(Script::Core *scripting)
 	module(L) [
 		class_<SessionPeer,SUPER,std::shared_ptr<SessionPeer>>("Session")
 			.def("get_num_players", &SessionPeer::LGetNumPlayers)
+			.def_readonly("players", &SessionPeer::players)
 			.def_readonly("rules", &SessionPeer::rules)
 	];
 }

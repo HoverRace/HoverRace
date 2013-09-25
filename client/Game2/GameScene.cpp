@@ -58,7 +58,6 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 
 	// Create the new session
 	session = new ClientSession(rules);
-	sessionPeer = std::make_shared<SessionPeer>(scripting, session);
 
 	// Load the selected track
 	try {
@@ -83,6 +82,7 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 		Cleanup();
 		throw Exception("Main character creation failed");
 	}
+	sessionPeer = std::make_shared<SessionPeer>(scripting, session);
 
 	observers[0] = Observer::New();
 
