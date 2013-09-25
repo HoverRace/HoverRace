@@ -266,7 +266,7 @@ void MainCharacter::SetHoverModel(int pModel)
 int MainCharacter::GetHoverModel() const
 {
 	return mHoverModel;
-} 
+}
 
 void MainCharacter::SetOrientation(MR_Angle pOrientation)
 {
@@ -277,7 +277,7 @@ void MainCharacter::SetOrientation(MR_Angle pOrientation)
 int MainCharacter::GetHoverId() const
 {
 	return mHoverId;
-} 
+}
 
 void MainCharacter::AddRenderer()
 {
@@ -463,7 +463,7 @@ void MainCharacter::SetTurnRightState(bool rightState)
 		if(mCurrentTime < 0) {
 			mHoverModel = NextAllowedCraft(mGameOpts, mHoverModel);
 		}
-		
+
 		mControlState |= eRight;
 	} else
 		mControlState &= ~eRight;
@@ -627,7 +627,7 @@ int MainCharacter::Simulate(MR_SimulationTime pDuration, Model::Level *pLevel, i
 		}
 	} else									  // Slave mode
 		pRoom = InternalSimulate(pDuration, pLevel, pRoom);
-	
+
 	return pRoom;
 }
 
@@ -827,12 +827,12 @@ void MainCharacter::ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationT
 	MR_Int32 pZMax, Model::Level * pLevel)
 {
 	MR_ContactEffect *lEffect = (MR_ContactEffect *) pEffect;
-	const MR_PhysicalCollision *lPhysCollision = dynamic_cast < MR_PhysicalCollision * >(lEffect);
-	const MR_SpeedDoubler *lSpeedDoubler = dynamic_cast < MR_SpeedDoubler * >(lEffect);
-	const MR_FuelGain *lFuelGain = dynamic_cast < MR_FuelGain * >(lEffect);
-	const MR_LostOfControl *lLostOfControl = dynamic_cast < MR_LostOfControl * >(lEffect);
-	const MR_CheckPoint *lLapCompleted = dynamic_cast < MR_CheckPoint * >(lEffect);
-	const MR_PowerUpEffect *lPowerUp = dynamic_cast < MR_PowerUpEffect * >(lEffect);
+	const MR_PhysicalCollision *lPhysCollision = dynamic_cast<MR_PhysicalCollision*>(lEffect);
+	const MR_SpeedDoubler *lSpeedDoubler = dynamic_cast<MR_SpeedDoubler*>(lEffect);
+	const MR_FuelGain *lFuelGain = dynamic_cast<MR_FuelGain*>(lEffect);
+	const MR_LostOfControl *lLostOfControl = dynamic_cast<MR_LostOfControl*>(lEffect);
+	const MR_CheckPoint *lLapCompleted = dynamic_cast<MR_CheckPoint*>(lEffect);
+	const MR_PowerUpEffect *lPowerUp = dynamic_cast<MR_PowerUpEffect*>(lEffect);
 
 	if((lPhysCollision != NULL) && pValidDirection) {
 		/*
