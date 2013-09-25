@@ -103,6 +103,7 @@ class GameScene : public Scene
 	private:
 		Display::Display &display;
 		GameDirector &director;
+		HoverScript::GamePeer *gamePeer;
 		std::shared_ptr<Rules> rules;
 
 		int frame;

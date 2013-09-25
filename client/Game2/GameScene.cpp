@@ -29,6 +29,7 @@
 #include "../../engine/VideoServices/VideoBuffer.h"
 
 #include "HoverScript/GamePeer.h"
+#include "HoverScript/PlayerPeer.h"
 #include "HoverScript/SessionPeer.h"
 
 #include "ClientSession.h"
@@ -48,7 +49,7 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
                      Script::Core *scripting, HoverScript::GamePeer *gamePeer,
                      std::shared_ptr<Rules> rules) :
 	SUPER("Game"),
-	display(display), director(director), rules(rules),
+	display(display), director(director), gamePeer(gamePeer), rules(rules),
 	frame(0), numPlayers(1), muted(false),
 	session(nullptr),
 	firedOnRaceFinish(false)
@@ -85,6 +86,7 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 
 	observers[0] = Observer::New();
 
+	gamePeer->OnSessionStart(sessionPeer);
 	rules->GetRulebook()->OnPreGame(sessionPeer);
 }
 
@@ -254,6 +256,7 @@ void GameScene::Render()
 void GameScene::OnRaceFinish()
 {
 	rules->GetRulebook()->OnPostGame(sessionPeer);
+	gamePeer->OnSessionEnd(sessionPeer);
 }
 
 }  // namespace HoverScript
