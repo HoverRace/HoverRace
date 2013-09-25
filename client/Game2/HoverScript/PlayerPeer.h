@@ -1,7 +1,7 @@
 
-// SysEnv.h
+// PlayerPeer.h
 //
-// Copyright (c) 2010, 2013 Michael Imamura.
+// Copyright (c) 2010 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -21,14 +21,20 @@
 
 #pragma once
 
-#include "../../../engine/Script/Env.h"
+#include <luabind/luabind.hpp>
+#include <luabind/object.hpp>
+
+#include "../../../engine/Script/Handlers.h"
+#include "../../../engine/Script/Peer.h"
 
 namespace HoverRace {
 	namespace Client {
 		namespace HoverScript {
-			class DebugPeer;
-			class GamePeer;
+			class SessionPeer;
 		}
+	}
+	namespace MainCharacter {
+		class MainCharacter;
 	}
 	namespace Script {
 		class Core;
@@ -40,33 +46,32 @@ namespace Client {
 namespace HoverScript {
 
 /**
- * The global system environment.
+ * Scripting peer for players (main characters).
  * @author Michael Imamura
  */
-class SysEnv : private Script::Env
-{
-	typedef Script::Env SUPER;
+class PlayerPeer : public Script::Peer {
+	typedef Script::Peer SUPER;
+	public:
+		PlayerPeer(Script::Core *scripting, MainCharacter::MainCharacter *player);
+		virtual ~PlayerPeer();
 
 	public:
-		SysEnv(Script::Core *scripting, DebugPeer *debugPeer,
-			GamePeer *gamePeer);
-		virtual ~SysEnv();
-
-	protected:
-		virtual void InitEnv();
-
-	protected:
-		virtual void LogInfo(const std::string &s);
-		virtual void LogError(const std::string &s);
+		static void Register(Script::Core *scripting);
 
 	public:
-		// Expose privately-inherited function.
-		void RunScript(const Util::OS::path_t &filename) { SUPER::RunScript(filename); }
+		double LGetFuel();
+
+		void LGetPos();
+
+		void LOnFinishLine(const luabind::object &fn);
+		void LOnFinishLine_N(const std::string &name, const luabind::object &fn);
 
 	private:
-		DebugPeer *debugPeer;
-		GamePeer *gamePeer;
-		Script::Core::OutHandle outHandle;
+		MainCharacter::MainCharacter *player;
+
+		Script::Handlers onFinishLine;
+
+		boost::signals2::scoped_connection finishLineConn;
 };
 
 }  // namespace HoverScript

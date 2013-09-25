@@ -29,11 +29,13 @@
 #include "../../engine/VideoServices/VideoBuffer.h"
 
 #include "HoverScript/GamePeer.h"
+#include "HoverScript/PlayerPeer.h"
 #include "HoverScript/SessionPeer.h"
 
 #include "ClientSession.h"
 #include "PauseMenuScene.h"
 #include "Rulebook.h"
+#include "Rules.h"
 
 #include "GameScene.h"
 
@@ -45,9 +47,9 @@ namespace Client {
 
 GameScene::GameScene(Display::Display &display, GameDirector &director,
                      Script::Core *scripting, HoverScript::GamePeer *gamePeer,
-                     RulebookPtr rules) :
+                     std::shared_ptr<Rules> rules) :
 	SUPER("Game"),
-	display(display), director(director),
+	display(display), director(director), gamePeer(gamePeer), rules(rules),
 	frame(0), numPlayers(1), muted(false),
 	session(nullptr),
 	firedOnRaceFinish(false)
@@ -55,17 +57,16 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 	memset(observers, 0, sizeof(observers[0]) * MAX_OBSERVERS);
 
 	// Create the new session
-	session = new ClientSession();
-	sessionPeer = std::make_shared<SessionPeer>(scripting, session);
+	session = new ClientSession(rules);
 
 	// Load the selected track
 	try {
-		Model::TrackPtr track = Config::GetInstance()->
-			GetTrackBundle()->OpenTrack(rules->GetTrackName());
-		if (track.get() == NULL) throw Parcel::ObjStreamExn("Track does not exist.");
+		auto entry = rules->GetTrackEntry();
+		auto track = Config::GetInstance()->GetTrackBundle()->OpenTrack(entry);
+		if (!track) throw Parcel::ObjStreamExn("Track does not exist.");
 		if (!session->LoadNew(
-			rules->GetTrackName().c_str(), track->GetRecordFile(),
-			rules->GetLaps(), rules->GetGameOpts(), &display.GetLegacyDisplay()))
+			entry->name.c_str(), track->GetRecordFile(),
+			&display.GetLegacyDisplay()))
 		{
 			throw Parcel::ObjStreamExn("Track load failed.");
 		}
@@ -81,8 +82,12 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 		Cleanup();
 		throw Exception("Main character creation failed");
 	}
+	sessionPeer = std::make_shared<SessionPeer>(scripting, session);
 
 	observers[0] = Observer::New();
+
+	gamePeer->OnSessionStart(sessionPeer);
+	rules->GetRulebook()->OnPreGame(sessionPeer);
 }
 
 GameScene::~GameScene()
@@ -250,7 +255,8 @@ void GameScene::Render()
 
 void GameScene::OnRaceFinish()
 {
-	//TODO: Fire script event handlers.
+	rules->GetRulebook()->OnPostGame(sessionPeer);
+	gamePeer->OnSessionEnd(sessionPeer);
 }
 
 }  // namespace HoverScript

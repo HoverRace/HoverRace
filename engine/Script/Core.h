@@ -47,6 +47,9 @@ namespace HoverRace {
 		}
 	}
 }
+namespace luabind {
+	class object;
+}
 
 namespace HoverRace {
 namespace Script {
@@ -100,6 +103,8 @@ class MR_DllDeclare Core
 		void ReqHelp(const std::string &className);
 		void ReqHelp(const std::string &className, const std::string &methodName);
 
+	public:
+		const luabind::object *NIL;
 	private:
 		void LoadClassHelp(const std::string &className);
 		std::string PopError();

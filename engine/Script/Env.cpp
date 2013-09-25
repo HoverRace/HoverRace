@@ -22,9 +22,18 @@
 
 #include "StdAfx.h"
 
+#include <boost/filesystem.hpp>
+#include <boost/filesystem/fstream.hpp>
+
+#include "../Util/Log.h"
+#include "../Util/Str.h"
+
 #include "Core.h"
 
 #include "Env.h"
+
+using namespace HoverRace::Util;
+namespace fs = boost::filesystem;
 
 namespace HoverRace {
 namespace Script {
@@ -116,6 +125,44 @@ void Env::Execute(const std::string &chunk, const std::string &name)
 
 	// May throw ScriptExn, but the function on the stack will be consumed anyway.
 	scripting->CallAndPrint(0, helpHandler);
+}
+
+/**
+ * Execute a script from a file.
+ *
+ * If there is an error executing the script, then the error message will be
+ * written to the error log and the function will return @c false.
+ *
+ * @param filename The script filename (must be an absolute path).
+ * @return @c true if the script executed successfully,
+ *         @c false if there was an error.
+ */
+bool Env::RunScript(const OS::path_t &filename)
+{
+	OS::path_t scriptPath = fs::system_complete(filename);
+
+	if (!fs::exists(scriptPath)) {
+		Log::Error("Script file not found: %s (interpreted as %s)",
+			(const char*)Str::PU(filename),
+			(const char*)Str::PU(scriptPath));
+		return false;
+	}
+
+	std::string chunkName("@");
+	chunkName += (const char*)Str::PU(scriptPath);
+
+	// Read and submit the whole script at once.
+	fs::ifstream ifs(scriptPath, std::ios_base::in);
+	std::string ris((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
+	try {
+		Execute(ris, chunkName);
+	}
+	catch (Script::ScriptExn &ex) {
+		Log::Error("%s", ex.what());
+		return false;
+	}
+
+	return true;
 }
 
 }  // namespace Script

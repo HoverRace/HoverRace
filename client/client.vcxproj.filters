@@ -72,6 +72,9 @@
     <ClCompile Include="Game2\RoomListDialog.cpp">
       <Filter>Game2</Filter>
     </ClCompile>
+    <ClCompile Include="Game2\Rulebook.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
     <ClCompile Include="Game2\SelectRoomDialog.cpp">
       <Filter>Game2</Filter>
     </ClCompile>
@@ -161,6 +164,21 @@
     </ClCompile>
     <ClCompile Include="Game2\PracticeSetupScene.cpp">
       <Filter>Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\RulebookLibrary.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\HoverScript\RulebookEnv.cpp">
+      <Filter>HoverScript</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\HoverScript\RuntimeEnv.cpp">
+      <Filter>HoverScript</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\Rules.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
+    <ClCompile Include="Game2\HoverScript\PlayerPeer.cpp">
+      <Filter>HoverScript</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -325,6 +343,24 @@
     </ClInclude>
     <ClInclude Include="Game2\PracticeSetupScene.h">
       <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\RulebookLibrary.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\HoverScript\RulebookEnv.h">
+      <Filter>HoverScript</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\HoverScript\RuntimeEnv.h">
+      <Filter>HoverScript</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\Rules.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\Rule.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\HoverScript\PlayerPeer.h">
+      <Filter>HoverScript</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

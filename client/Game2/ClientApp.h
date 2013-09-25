@@ -25,6 +25,7 @@
 #include "../../engine/Util/OS.h"
 
 #include "Observer.h"
+
 #include "GameDirector.h"
 
 namespace HoverRace {
@@ -42,6 +43,7 @@ namespace HoverRace {
 		class HighObserver;
 		class Rulebook;
 		typedef std::shared_ptr<Rulebook> RulebookPtr;
+		class RulebookLibrary;
 		class Scene;
 		typedef std::shared_ptr<Scene> ScenePtr;
 	}
@@ -96,7 +98,7 @@ class ClientApp : public GameDirector
 		virtual void RequestPopScene();
 		virtual void RequestReplaceScene(const ScenePtr &scene);
 		virtual void RequestMainMenu();
-		virtual void RequestNewPracticeSession(RulebookPtr rules=RulebookPtr());
+		virtual void RequestNewPracticeSession(std::shared_ptr<Rules> rules);
 		virtual void RequestShutdown();
 		virtual void SignalServerHasChanged();
 		virtual void ChangeAutoUpdates(bool newSetting);
@@ -113,9 +115,10 @@ class ClientApp : public GameDirector
 		Util::OS::wnd_t mainWnd;
 		Display::Display *display;
 		Control::InputEventController *controller;
-
 		sceneStack_t sceneStack;
 		ScenePtr fgScene;  ///< The scene that currently has input focus.
+
+		RulebookLibrary *rulebookLibrary;
 
 		Script::Core *scripting;
 		HoverScript::DebugPeer *debugPeer;

@@ -1,5 +1,5 @@
 
-// MainMenuScene.h
+// RulebookEnv.h
 //
 // Copyright (c) 2013 Michael Imamura.
 //
@@ -21,57 +21,52 @@
 
 #pragma once
 
-#include "GameDirector.h"
-
-#include "FormScene.h"
+#include "RuntimeEnv.h"
 
 namespace HoverRace {
 	namespace Client {
+		class Rulebook;
+		class RulebookLibrary;
+		namespace HoverScript {
+			class GamePeer;
+		}
 	}
-	namespace Display {
-		class Button;
-		class Container;
-		class Display;
+	namespace Script {
+		class Core;
 	}
 }
 
 namespace HoverRace {
 namespace Client {
+namespace HoverScript {
 
 /**
- * The title scene.
+ * Limited environment for defining rulebooks.
  * @author Michael Imamura
  */
-class MainMenuScene : public FormScene
-{
-	typedef FormScene SUPER;
+class RulebookEnv : public RuntimeEnv {
+	typedef RuntimeEnv SUPER;
 	public:
-		MainMenuScene(Display::Display &display, GameDirector &director,
-			RulebookLibrary &rulebookLibrary);
-		virtual ~MainMenuScene();
+		RulebookEnv(Script::Core *scripting, RulebookLibrary &rulebookLibrary);
+		virtual ~RulebookEnv();
 
-	private:
-		std::shared_ptr<Display::Button> AddButton(const std::string &text, bool enabled=true);
-
-	private:
-		void OnPracticeClicked();
-		void OnMultiplayerClicked();
-		void OnSettingsClicked();
+	protected:
+		virtual void InitEnv();
 
 	public:
-		// Scene
-		virtual void OnTransition(double interval);
-		virtual void Layout();
+		void ReloadRulebooks();
+		void DefineRulebook(const std::string &name, const luabind::object &defn);
+	private:
+		void DefineRules(std::shared_ptr<Rulebook> rulebook, const luabind::object &rulesObj);
 
 	private:
-		Display::Display &display;
-		GameDirector &director;
+		static int LRulebookStage1(lua_State *L);
+		static int LRulebookStage2(lua_State *L);
+
+	private:
 		RulebookLibrary &rulebookLibrary;
-
-		std::shared_ptr<Display::Container> titleContainer;
-		std::shared_ptr<Display::Container> menuContainer;
-		std::vector<std::shared_ptr<Display::Button>> menuButtons;
 };
 
+}  // namespace HoverScript
 }  // namespace Client
 }  // namespace HoverRace

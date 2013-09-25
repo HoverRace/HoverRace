@@ -122,8 +122,14 @@
     <ClCompile Include="Game2\GifDecoder.cpp" />
     <ClCompile Include="Game2\HoverScript\ConsoleScene.cpp" />
     <ClCompile Include="Game2\HoverScript\DebugPeer.cpp" />
+    <ClCompile Include="Game2\HoverScript\PlayerPeer.cpp" />
+    <ClCompile Include="Game2\HoverScript\RulebookEnv.cpp" />
+    <ClCompile Include="Game2\HoverScript\RuntimeEnv.cpp" />
     <ClCompile Include="Game2\HoverScript\SysConsole.cpp" />
-    <ClCompile Include="Game2\InternetRoom.cpp" />
+    <ClCompile Include="Game2\InternetRoom.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Game2\IntroMovie.cpp" />
     <ClCompile Include="Game2\main.cpp" />
     <ClCompile Include="Game2\MainMenuScene.cpp" />
@@ -142,7 +148,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="Game2\NetworkSession.cpp" />
+    <ClCompile Include="Game2\NetworkSession.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Game2\Observer.cpp" />
     <ClCompile Include="Game2\PaletteScene.cpp" />
     <ClCompile Include="Game2\PathSelector.cpp" />
@@ -158,6 +167,9 @@
     </ClCompile>
     <ClCompile Include="Game2\RoomList.cpp" />
     <ClCompile Include="Game2\RoomListDialog.cpp" />
+    <ClCompile Include="Game2\Rulebook.cpp" />
+    <ClCompile Include="Game2\RulebookLibrary.cpp" />
+    <ClCompile Include="Game2\Rules.cpp" />
     <ClCompile Include="Game2\Scene.cpp" />
     <ClCompile Include="Game2\SelectRoomDialog.cpp" />
     <ClCompile Include="Game2\StdAfx.cpp">
@@ -166,7 +178,10 @@
     </ClCompile>
     <ClCompile Include="Game2\TestLabScene.cpp" />
     <ClCompile Include="Game2\TrackDownloadDialog.cpp" />
-    <ClCompile Include="Game2\TrackSelectDialog.cpp" />
+    <ClCompile Include="Game2\TrackSelectDialog.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Game2\TrackSelectScene.cpp" />
     <ClCompile Include="Game2\UiScene.cpp" />
     <ClCompile Include="Game2\UpdateDownloader.cpp" />
@@ -205,8 +220,14 @@
     <ClInclude Include="Game2\GifDecoder.h" />
     <ClInclude Include="Game2\HoverScript\ConsoleScene.h" />
     <ClInclude Include="Game2\HoverScript\DebugPeer.h" />
+    <ClInclude Include="Game2\HoverScript\PlayerPeer.h" />
+    <ClInclude Include="Game2\HoverScript\RulebookEnv.h" />
+    <ClInclude Include="Game2\HoverScript\RuntimeEnv.h" />
     <ClInclude Include="Game2\HoverScript\SysConsole.h" />
-    <ClInclude Include="Game2\InternetRoom.h" />
+    <ClInclude Include="Game2\InternetRoom.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Game2\IntroMovie.h" />
     <ClInclude Include="Game2\MainMenuScene.h" />
     <ClInclude Include="Game2\MatchReport.h" />
@@ -224,7 +245,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClInclude>
-    <ClInclude Include="Game2\NetworkSession.h" />
+    <ClInclude Include="Game2\NetworkSession.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Game2\Observer.h" />
     <ClInclude Include="Game2\PaletteScene.h" />
     <ClInclude Include="Game2\PathSelector.h" />
@@ -241,13 +265,19 @@
     <ClInclude Include="Game2\resource.h" />
     <ClInclude Include="Game2\RoomList.h" />
     <ClInclude Include="Game2\RoomListDialog.h" />
+    <ClInclude Include="Game2\Rule.h" />
     <ClInclude Include="Game2\Rulebook.h" />
+    <ClInclude Include="Game2\RulebookLibrary.h" />
+    <ClInclude Include="Game2\Rules.h" />
     <ClInclude Include="Game2\Scene.h" />
     <ClInclude Include="Game2\SelectRoomDialog.h" />
     <ClInclude Include="Game2\StdAfx.h" />
     <ClInclude Include="Game2\TestLabScene.h" />
     <ClInclude Include="Game2\TrackDownloadDialog.h" />
-    <ClInclude Include="Game2\TrackSelectDialog.h" />
+    <ClInclude Include="Game2\TrackSelectDialog.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Game2\TrackSelectScene.h" />
     <ClInclude Include="Game2\UiScene.h" />
     <ClInclude Include="Game2\UpdateDownloader.h" />

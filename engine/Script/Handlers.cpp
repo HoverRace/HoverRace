@@ -116,16 +116,25 @@ void Handlers::CallHandlers(const luabind::object &p1) const
 
 /**
  * Add an unnamed event handler.
- * @param fn The function to register.
+ * @param fn The function to register (may be @c nil to do nothing).
  */
 void Handlers::AddHandler(const luabind::object &fn)
 {
 	using namespace luabind;
 
+	int paramType = type(fn);
+
+	if (paramType == LUA_TNIL) {
+		// Do nothing.
+		// This is a convenience so that we don't have to check for nil
+		// everywhere we are setting up a single event handler.
+		return;
+	}
+
 	lua_State *L = scripting->GetState();
 
 	if (type(fn) != LUA_TFUNCTION) {
-		luaL_error(L, "%s: (function) %s (string, function) %s (string, nil)", _("Expected"), _("or"), _("or"));
+		luaL_error(L, "Expected: (function) or (string, function) or (string, nil)");
 		return;
 	}
 
@@ -154,7 +163,7 @@ void Handlers::AddHandler(const std::string &name, const luabind::object &fn)
 
 	int paramType = type(fn);
 	if (paramType != LUA_TNIL && paramType != LUA_TFUNCTION) {
-		luaL_error(L, "%s: (function) %s (string, function) %s (string, nil)", _("Expected"), _("or"), _("or"));
+		luaL_error(L, "Expected: (function) or (string, function) or (string, nil)");
 		return;
 	}
 

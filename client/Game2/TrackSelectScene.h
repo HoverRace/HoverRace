@@ -27,8 +27,13 @@
 #include "FormScene.h"
 
 namespace HoverRace {
+	namespace Client {
+		class Rulebook;
+		class RulebookLibrary;
+	}
 	namespace Display {
 		class Button;
+		class Container;
 		class Display;
 	}
 }
@@ -44,14 +49,16 @@ class TrackSelectScene : public FormScene
 {
 	typedef FormScene SUPER;
 	public:
-		TrackSelectScene(Display::Display &display, GameDirector &director);
+		TrackSelectScene(Display::Display &display, GameDirector &director,
+			RulebookLibrary &rulebookLibrary);
 		virtual ~TrackSelectScene();
 
 	private:
-		void OnTrackSelected(Model::TrackEntry *entry);
+		void OnRulebookSelected(std::shared_ptr<const Rulebook> entry);
+		void OnTrackSelected(Model::TrackEntryPtr entry);
 
 	public:
-		typedef boost::signals2::signal<void(RulebookPtr)> okSignal_t;
+		typedef boost::signals2::signal<void(std::shared_ptr<Rules>)> okSignal_t;
 		okSignal_t &GetOkSignal() { return okSignal; }
 
 		typedef boost::signals2::signal<void()> cancelSignal_t;
@@ -60,8 +67,13 @@ class TrackSelectScene : public FormScene
 	private:
 		Display::Display &display;
 		GameDirector &director;
+		RulebookLibrary &rulebookLibrary;
 
 		Model::TrackList trackList;
+		std::shared_ptr<Rules> rules;
+
+		std::shared_ptr<Display::Container> rulebookPanel;
+		std::shared_ptr<Display::Container> trackPanel;
 
 		okSignal_t okSignal;
 		cancelSignal_t cancelSignal;

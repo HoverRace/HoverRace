@@ -27,6 +27,7 @@
 #include "ConfigPeer.h"
 #include "DebugPeer.h"
 #include "GamePeer.h"
+#include "PlayerPeer.h"
 #include "SessionPeer.h"
 
 #include "ClientScriptCore.h"
@@ -52,6 +53,7 @@ Script::Core *ClientScriptCore::Reset()
 		ConfigPeer::Register(this);
 		DebugPeer::Register(this);
 		GamePeer::Register(this);
+		PlayerPeer::Register(this);
 		SessionPeer::Register(this);
 
 		classesRegistered = true;

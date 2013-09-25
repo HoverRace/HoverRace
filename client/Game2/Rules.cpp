@@ -1,5 +1,5 @@
 
-// PracticeSetupScene.h
+// Rules.cpp
 //
 // Copyright (c) 2013 Michael Imamura.
 //
@@ -19,47 +19,33 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
-#pragma once
+#include "StdAfx.h"
 
-#include "GameDirector.h"
+#include "Rulebook.h"
 
-#include "FormScene.h"
-
-namespace HoverRace {
-	namespace Client {
-		class RulebookLibrary;
-	}
-	namespace Display {
-		class Display;
-	}
-}
+#include "Rules.h"
 
 namespace HoverRace {
 namespace Client {
 
-/**
- * Launcher for practice (single-player) session.
- * @author Michael Imamura
- */
-class PracticeSetupScene : public FormScene
+Rules::Rules(std::shared_ptr<const Rulebook> rulebook) :
+	rulebook(rulebook), rules(),
+	gameOpts(0x7f)
 {
-	typedef FormScene SUPER;
-	public:
-		PracticeSetupScene(Display::Display &display, GameDirector &director,
-			RulebookLibrary &rulebookLibrary);
-		virtual ~PracticeSetupScene();
+	if (rulebook) {
+		rules = rulebook->CreateDefaultRules();
+	}
+}
 
-	public:
-		virtual void OnScenePushed();
-		virtual void PrepareRender();
-		virtual void Render();
-
-	private:
-		Display::Display &display;
-		GameDirector &director;
-		RulebookLibrary &rulebookLibrary;
-		std::unique_ptr<Display::ScreenFade> fader;
-};
+/**
+ * Set the rulebook and reset the rules to their defaults.
+ * @param rulebook The rulebook (may be @c nullptr).
+ */
+void Rules::SetRulebook(std::shared_ptr<const Rulebook> rulebook)
+{
+	this->rulebook = std::move(rulebook);
+	rules = rulebook ? rulebook->CreateDefaultRules() : luabind::object();
+}
 
 }  // namespace Client
 }  // namespace HoverRace

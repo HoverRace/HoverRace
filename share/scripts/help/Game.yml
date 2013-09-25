@@ -65,14 +65,17 @@ start_practice:
   type: method
   sig:
     - game:start_practice(track_name)
+    - game:start_practice(track_name, rulebook)
     - game:start_practice(track_name, {opts...})
+    - game:start_practice(track_name, rulebook, {opts...})
   brief: >
     Start a single-player practice race.
   desc: >
     This may only be called after the game is initialized (e.g. in an on_init
     handler or later).
     
+    "rulebook" is the name of the rulebook (default is "Race").
+    
     "opts" is a table of options for the session.
   examples:
-    - game:start_practice("The Alley2", { laps = 2 })
-
+    - game:start_practice("The Alley2", "Race", { laps = 2 })

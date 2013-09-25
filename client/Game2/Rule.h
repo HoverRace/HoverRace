@@ -1,5 +1,5 @@
 
-// PracticeSetupScene.h
+// Rule.h
 //
 // Copyright (c) 2013 Michael Imamura.
 //
@@ -21,44 +21,26 @@
 
 #pragma once
 
-#include "GameDirector.h"
-
-#include "FormScene.h"
-
-namespace HoverRace {
-	namespace Client {
-		class RulebookLibrary;
-	}
-	namespace Display {
-		class Display;
-	}
-}
+#include <luabind/object.hpp>
 
 namespace HoverRace {
 namespace Client {
 
 /**
- * Launcher for practice (single-player) session.
+ * Base class for a user-configurable rule in a Rulebook.
  * @author Michael Imamura
  */
-class PracticeSetupScene : public FormScene
+class Rule
 {
-	typedef FormScene SUPER;
 	public:
-		PracticeSetupScene(Display::Display &display, GameDirector &director,
-			RulebookLibrary &rulebookLibrary);
-		virtual ~PracticeSetupScene();
+		Rule(const std::string &label="") : label(label) { }
+		virtual ~Rule() { }
 
 	public:
-		virtual void OnScenePushed();
-		virtual void PrepareRender();
-		virtual void Render();
+		virtual luabind::object GetDefault() const = 0;
 
 	private:
-		Display::Display &display;
-		GameDirector &director;
-		RulebookLibrary &rulebookLibrary;
-		std::unique_ptr<Display::ScreenFade> fader;
+		std::string label;
 };
 
 }  // namespace Client

@@ -1,8 +1,7 @@
 
 // SysEnv.cpp
-// The global system environment.
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2013 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -23,10 +22,6 @@
 #include "StdAfx.h"
 
 #include <iostream>
-
-#include <boost/filesystem.hpp>
-#include <boost/filesystem/fstream.hpp>
-#include <boost/format.hpp>
 
 #include <luabind/luabind.hpp>
 
@@ -109,8 +104,8 @@ void SysEnv::InitEnv()
 void SysEnv::LogInfo(const std::string &s)
 {
 #	ifdef _WIN32
-		OutputDebugString(s.c_str());
-		OutputDebugString("\n");
+		OutputDebugStringW((const wchar_t*)Str::UW(s));
+		OutputDebugStringW(L"\n");
 #	else
 		std::cout << s << std::endl;
 #	endif
@@ -119,41 +114,11 @@ void SysEnv::LogInfo(const std::string &s)
 void SysEnv::LogError(const std::string &s)
 {
 #	ifdef _WIN32
-		OutputDebugString(s.c_str());
-		OutputDebugString("\n");
+		OutputDebugStringW((const wchar_t*)Str::UW(s));
+		OutputDebugStringW(L"\n");
 #	else
 		std::cerr << s << std::endl;
 #	endif
-}
-
-/**
- * Execute a script from a file.
- * @param filename The script filename (must be an absolute path).
- */
-void SysEnv::RunScript(const OS::path_t &filename)
-{
-	OS::path_t scriptPath = fs::system_complete(filename);
-
-	if (!fs::exists(scriptPath)) {
-		LogError(boost::str(
-			boost::format("Init script file not found: %s (interpreted as %s)") %
-				Str::PU(filename) %
-				Str::PU(scriptPath)));
-		return;
-	}
-
-	std::string chunkName("@");
-	chunkName += (const char*)Str::PU(scriptPath);
-
-	// Read and submit the whole script at once.
-	fs::ifstream ifs(scriptPath, std::ios_base::in);
-	std::string ris((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
-	try {
-		Execute(ris, chunkName);
-	}
-	catch (Script::ScriptExn &ex) {
-		LogError(ex.what());
-	}
 }
 
 }  // namespace HoverScript

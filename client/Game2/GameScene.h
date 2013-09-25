@@ -25,6 +25,7 @@
 
 #include "Observer.h"
 #include "GameDirector.h"
+#include "Rules.h"
 
 #include "Scene.h"
 
@@ -37,8 +38,6 @@ namespace HoverRace {
 			class SysEnv;
 		}
 		class ClientSession;
-		class Rulebook;
-		typedef std::shared_ptr<Rulebook> RulebookPtr;
 	}
 	namespace Control {
 		class InputEventController;
@@ -72,7 +71,7 @@ class GameScene : public Scene
 	public:
 		GameScene(Display::Display &display, GameDirector &director,
 			Script::Core *scripting, HoverScript::GamePeer *gamePeer,
-			RulebookPtr rules);
+			std::shared_ptr<Rules> rules);
 		virtual ~GameScene();
 
 	private:
@@ -104,6 +103,8 @@ class GameScene : public Scene
 	private:
 		Display::Display &display;
 		GameDirector &director;
+		HoverScript::GamePeer *gamePeer;
+		std::shared_ptr<Rules> rules;
 
 		int frame;
 		int numPlayers;

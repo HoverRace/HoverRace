@@ -29,6 +29,9 @@
 
 namespace HoverRace {
 	namespace Client {
+		namespace HoverScript {
+			class PlayerPeer;
+		}
 		class ClientSession;
 	}
 	namespace Script {
@@ -64,6 +67,9 @@ class SessionPeer : public Script::Peer {
 
 	private:
 		ClientSession *session;
+		luabind::object rules;
+		luabind::object players;
+		std::vector<std::shared_ptr<PlayerPeer>> playerRefs;
 };
 typedef std::shared_ptr<SessionPeer> SessionPeerPtr;
 

@@ -2,7 +2,7 @@
 // TrackList.cpp
 // Sorted list of track headers.
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2013 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -28,27 +28,27 @@
 #include "../Parcel/ObjStream.h"
 #include "../Parcel/TrackBundle.h"
 #include "../Util/Str.h"
+#include "../Util/Log.h"
 #include "../Util/OS.h"
 
 #include "TrackList.h"
 
 using namespace HoverRace::Parcel;
-using HoverRace::Util::OS;
-namespace Str = HoverRace::Util::Str;
+using namespace HoverRace::Util;
 
 namespace HoverRace {
 namespace Model {
 
 namespace {
-	inline bool NameCmpFunc(const TrackEntry *ent1, const TrackEntry *ent2)
+	inline bool NameCmpFunc(const TrackEntryPtr &ent1, const TrackEntryPtr &ent2)
 	{
 		return ent1->name < ent2->name;
 	}
-	inline bool NameEqFunc(const TrackEntry *ent1, const TrackEntry *ent2)
+	inline bool NameEqFunc(const TrackEntryPtr &ent1, const TrackEntryPtr &ent2)
 	{
 		return ent1->name == ent2->name;
 	}
-	inline bool NaturalCmpFunc(const TrackEntry *ent1, const TrackEntry *ent2)
+	inline bool NaturalCmpFunc(const TrackEntryPtr &ent1, const TrackEntryPtr &ent2)
 	{
 		return *ent1 < *ent2;
 	}
@@ -57,19 +57,6 @@ namespace {
 TrackList::TrackList()
 {
 	tracks.reserve(1024);
-}
-
-/**
- * Clear the list of available tracks.
- */
-void TrackList::Clear()
-{
-	if (!tracks.empty()) {
-		tracks.clear();
-	}
-	if (!sorted.empty()) {
-		sorted.clear();
-	}
 }
 
 /**
@@ -84,38 +71,29 @@ void TrackList::Reload(Parcel::TrackBundlePtr trackBundle)
 	BOOST_FOREACH(const OS::dirEnt_t &ent, *trackBundle) {
 		std::string name((const char*)Str::PU(ent.path().filename().c_str()));
 		try {
-			Model::TrackEntryPtr trackEnt = trackBundle->OpenTrackEntry(name);
-			if (trackEnt.get() != NULL) {
-				tracks.push_back(*trackEnt);
+			TrackEntryPtr trackEnt = trackBundle->OpenTrackEntry(name);
+			if (trackEnt) {
+				tracks.emplace_back(trackEnt);
 #				ifdef _DEBUG
-					tracks.back().path = ent.path();
+					tracks.back()->path = ent.path();
 #				endif
 			}
 		}
 		catch (Parcel::ObjStreamExn &ex) {
-			//TODO: Proper logging.
-#			ifdef _WIN32
-				OutputDebugString(ex.what());
-				OutputDebugString("\n");
-#			endif
 			// Ignore this bad track and continue.
+			Log::Warn("Skipping invalid track: %s: %s", name.c_str(), ex.what());
 		}
-	}
-
-	sorted.reserve(tracks.size());
-	BOOST_FOREACH(TrackEntry &ent, tracks) {
-		sorted.push_back(&ent);
 	}
 
 	// Use a stable sort so that if there are multiple entries with the
 	// same name, then the bundle priority order will be preserved.
 	// Then, when we remove duplicates, the lower-priority entries will be
 	// the ones which are removed.
-	std::stable_sort(sorted.begin(), sorted.end(), NameCmpFunc);
-	sorted.erase(std::unique(sorted.begin(), sorted.end(), NameEqFunc), sorted.end());
+	std::stable_sort(tracks.begin(), tracks.end(), NameCmpFunc);
+	tracks.erase(std::unique(tracks.begin(), tracks.end(), NameEqFunc), tracks.end());
 
 	// Re-sort using the natural ordering.
-	std::sort(sorted.begin(), sorted.end(), NaturalCmpFunc);
+	std::sort(tracks.begin(), tracks.end(), NaturalCmpFunc);
 }
 
 }  // namespace Model

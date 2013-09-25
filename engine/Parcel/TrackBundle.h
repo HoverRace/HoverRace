@@ -1,8 +1,7 @@
 
 // TrackBundle.h
-// A source of track parcels.
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2013 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -66,6 +65,7 @@ class MR_DllDeclare TrackBundle : public Bundle
 		virtual RecordFilePtr OpenParcel(const std::string &name, bool writing=false) const;
 
 		Model::TrackPtr OpenTrack(const std::string &name) const;
+		Model::TrackPtr OpenTrack(const std::shared_ptr<const Model::TrackEntry> &entry) const;
 		Model::TrackEntryPtr OpenTrackEntry(const std::string &name) const;
 
 		MR_TrackAvail CheckAvail(const std::string &name) const;

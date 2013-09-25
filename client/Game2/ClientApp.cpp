@@ -51,6 +51,7 @@
 #include "HoverScript/ConsoleScene.h"
 #include "HoverScript/DebugPeer.h"
 #include "HoverScript/GamePeer.h"
+#include "HoverScript/RulebookEnv.h"
 #include "HoverScript/SessionPeer.h"
 #include "HoverScript/SysConsole.h"
 #include "HoverScript/SysEnv.h"
@@ -59,6 +60,8 @@
 #include "MainMenuScene.h"
 #include "MessageScene.h"
 #include "Rulebook.h"
+#include "RulebookLibrary.h"
+#include "Rules.h"
 #include "Scene.h"
 #include "TestLabScene.h"
 
@@ -125,11 +128,13 @@ ClientApp::ClientApp() :
 		}
 #	endif
 
-	// Create the system console and execute the init script.
+	// Create the system console and execute the initialization scripts.
 	// This allows the script to modify the configuration (e.g. for unit tests).
 	scripting = (new ClientScriptCore())->Reset();
+	rulebookLibrary = new RulebookLibrary(scripting);
 	debugPeer = new DebugPeer(scripting, *this);
-	gamePeer = new GamePeer(scripting, *this);
+	gamePeer = new GamePeer(scripting, *this, *rulebookLibrary);
+	RulebookEnv(scripting, *rulebookLibrary).ReloadRulebooks();
 	sysEnv = new SysEnv(scripting, debugPeer, gamePeer);
 	OS::path_t &initScript = cfg->runtime.initScript;
 	if (!initScript.empty()) {
@@ -204,6 +209,7 @@ ClientApp::~ClientApp()
 	delete sysEnv;
 	delete gamePeer;
 	delete debugPeer;
+	delete rulebookLibrary;
 	delete scripting;
 	delete display;
 	delete controller;
@@ -403,11 +409,8 @@ void ClientApp::MainLoop()
 	gamePeer->OnShutdown();
 }
 
-void ClientApp::RequestNewPracticeSession(RulebookPtr rules)
+void ClientApp::RequestNewPracticeSession(std::shared_ptr<Rules> rules)
 {
-	//TODO: Confirm ending the current session.
-
-	//TODO: Prompt the user for a track name.
 	try {
 		RequestReplaceScene(std::make_shared<GameScene>(*display, *this, scripting, gamePeer, rules));
 	}
@@ -616,7 +619,10 @@ void ClientApp::RequestMainMenu()
 	// Pick a random craft.
 	char craftId = 1 << (rand() % 4);
 
-	auto rules = std::make_shared<Rulebook>(trackName, 1, 0x70 + craftId);
+	//TODO: Use a special rulebook for the demo mode.
+	auto rules = std::make_shared<Rules>(rulebookLibrary->GetDefault());
+	rules->SetTrackEntry(Config::GetInstance()->GetTrackBundle()->OpenTrackEntry(trackName));
+	rules->SetGameOpts(0x70 + craftId);
 
 	try {
 		auto scene = std::make_shared<GameScene>(*display, *this, scripting, gamePeer, rules);
@@ -627,7 +633,7 @@ void ClientApp::RequestMainMenu()
 		throw;
 	}
 
-	RequestPushScene(std::make_shared<MainMenuScene>(*display, *this));
+	RequestPushScene(std::make_shared<MainMenuScene>(*display, *this, *rulebookLibrary));
 }
 
 void ClientApp::RequestShutdown()

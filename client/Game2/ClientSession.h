@@ -1,8 +1,7 @@
 // ClientSession.h
 //
-//
-//
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
+// Copyright (c) 2013 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -28,6 +27,9 @@
 #include "../../engine/Util/OS.h"
 
 namespace HoverRace {
+	namespace Client {
+		class Rules;
+	}
 	namespace MainCharacter {
 		class MainCharacter;
 	}
@@ -65,20 +67,19 @@ class ClientSession
 		int mWidthSprite;
 		int mHeightSprite;
 
-		int mNbLap;
-		char mGameOpts;
+		std::shared_ptr<Rules> rules;
 
 		void ReadLevelAttrib(Parcel::RecordFilePtr pFile, VideoServices::VideoBuffer *pVideo);
 	public:
 		// Creation and destruction
-		ClientSession();
+		ClientSession(std::shared_ptr<Rules> rules=nullptr);
 		virtual ~ClientSession();
 
 		// Simulation control
 												  // Simulation, speed factor can be used to reduce processing speed to create AVI files
 		virtual void Process(int pSpeedFactor = 1);
 
-		virtual BOOL LoadNew(const char *pTitle, Parcel::RecordFilePtr pMazeFile, int pNbLap, char pGameOpts, VideoServices::VideoBuffer *pVideo);
+		virtual BOOL LoadNew(const char *pTitle, Parcel::RecordFilePtr pMazeFile, VideoServices::VideoBuffer *pVideo);
 
 		// Main character control and interrogation
 		bool CreateMainCharacter(int i);
@@ -109,6 +110,8 @@ class ClientSession
 
 		// Rendering access to level
 		const Model::Level *GetCurrentLevel() const;
+
+		std::shared_ptr<Rules> GetRules() { return rules; }
 };
 
 }  // namespace Client

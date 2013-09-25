@@ -25,6 +25,12 @@ hoverrace_SOURCES = \
 	HoverScript/DebugPeer.h \
 	HoverScript/GamePeer.cpp \
 	HoverScript/GamePeer.h \
+	HoverScript/PlayerPeer.cpp \
+	HoverScript/PlayerPeer.h \
+	HoverScript/RulebookEnv.cpp \
+	HoverScript/RulebookEnv.h \
+	HoverScript/RuntimeEnv.cpp \
+	HoverScript/RuntimeEnv.h \
 	HoverScript/SessionPeer.cpp \
 	HoverScript/SessionPeer.h \
 	HoverScript/SysConsole.cpp \
@@ -56,7 +62,13 @@ hoverrace_SOURCES = \
 	PracticeSetupScene.h \
 	RoomList.cpp \
 	RoomList.h \
+	Rule.h \
+	Rulebook.cpp \
 	Rulebook.h \
+	RulebookLibrary.cpp \
+	RulebookLibrary.h \
+	Rules.cpp \
+	Rules.h \
 	Scene.h \
 	Scene.cpp \
 	TestLabScene.h \

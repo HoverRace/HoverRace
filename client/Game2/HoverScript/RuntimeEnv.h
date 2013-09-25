@@ -1,7 +1,7 @@
 
-// SysEnv.h
+// RuntimeEnv.h
 //
-// Copyright (c) 2010, 2013 Michael Imamura.
+// Copyright (c) 2013 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -24,12 +24,6 @@
 #include "../../../engine/Script/Env.h"
 
 namespace HoverRace {
-	namespace Client {
-		namespace HoverScript {
-			class DebugPeer;
-			class GamePeer;
-		}
-	}
 	namespace Script {
 		class Core;
 	}
@@ -40,33 +34,20 @@ namespace Client {
 namespace HoverScript {
 
 /**
- * The global system environment.
+ * Basic restricted environment for potentially untrusted code.
  * @author Michael Imamura
  */
-class SysEnv : private Script::Env
-{
+class RuntimeEnv : public Script::Env {
 	typedef Script::Env SUPER;
-
 	public:
-		SysEnv(Script::Core *scripting, DebugPeer *debugPeer,
-			GamePeer *gamePeer);
-		virtual ~SysEnv();
-
-	protected:
-		virtual void InitEnv();
-
-	protected:
-		virtual void LogInfo(const std::string &s);
-		virtual void LogError(const std::string &s);
-
-	public:
-		// Expose privately-inherited function.
-		void RunScript(const Util::OS::path_t &filename) { SUPER::RunScript(filename); }
+		RuntimeEnv(Script::Core *scripting);
+		virtual ~RuntimeEnv();
 
 	private:
-		DebugPeer *debugPeer;
-		GamePeer *gamePeer;
 		Script::Core::OutHandle outHandle;
+
+		class LogStreamBuf;
+		class LogStream;
 };
 
 }  // namespace HoverScript

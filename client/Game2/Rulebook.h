@@ -1,8 +1,7 @@
 
 // Rulebook.h
-// Defines the rules of a game session.
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2013 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -22,32 +21,90 @@
 
 #pragma once
 
+#include "../../engine/Script/Handlers.h"
+
+#include "Rule.h"
+
+namespace HoverRace {
+	namespace HoverScript {
+		class SessionPeer;
+		typedef std::shared_ptr<SessionPeer> SessionPeerPtr;
+	}
+	namespace Model {
+		class TrackEntry;
+		typedef std::shared_ptr<TrackEntry> TrackEntryPtr;
+	}
+	namespace Script {
+		class Core;
+		class Handlers;
+	}
+}
+
 namespace HoverRace {
 namespace Client {
 
 /**
  * Defines the rules for a particular game session.
- * @todo This is very basic right now; the idea is that later we will 
- *       make this a base class and move some game state logic into
- *       subclasses.
+ * @author Michael Imamura
  */
-class Rulebook
+class Rulebook : private boost::noncopyable
 {
 	public:
-		Rulebook(const std::string &trackName, int laps, char gameOpts) :
-			trackName(trackName), laps(laps), gameOpts(gameOpts) {}
+		Rulebook(Script::Core *scripting,
+			const std::string &name,
+			const std::string &title,
+			const std::string &description,
+			int maxPlayers);
 
 	public:
-		const std::string &GetTrackName() const { return trackName; }
-		int GetLaps() const { return laps; }
-		char GetGameOpts() const { return gameOpts; }
+		const std::string &GetName() const { return name; }
+		const std::string &GetTitle() const { return title; }
+		const std::string &GetDescription() const { return description; }
+		int GetMaxPlayers() const { return maxPlayers; }
+
+	public:
+		// Temporary until we get real rule classes.
+		void AddRule(const std::string &name, const luabind::object &obj);
+
+		luabind::object CreateDefaultRules() const;
+
+	public:
+		void SetOnPreGame(const luabind::object &fn);
+		void OnPreGame(HoverScript::SessionPeerPtr session) const;
+
+		void SetOnPostGame(const luabind::object &fn);
+		void OnPostGame(HoverScript::SessionPeerPtr session) const;
+
+	public:
+		friend bool operator==(const Rulebook &lhs, const Rulebook &rhs);
+		friend bool operator<(const Rulebook &lhs, const Rulebook &rhs);
 
 	private:
-		std::string trackName;
-		int laps;
-		char gameOpts;
+		Script::Core *scripting;
+		std::string name;
+		std::string title;
+		std::string description;
+		int maxPlayers;
+
+		typedef std::map<std::string, std::shared_ptr<Rule>> rules_t;
+		rules_t rules;
+		
+		Script::Handlers onPreGame;
+		Script::Handlers onPostGame;
 };
 typedef std::shared_ptr<Rulebook> RulebookPtr;
+
+inline bool operator==(const Rulebook &lhs, const Rulebook &rhs)
+{
+	// Rulebook names are unique.
+	return lhs.name == rhs.name;
+}
+
+inline bool operator<(const Rulebook &lhs, const Rulebook &rhs)
+{
+	//TODO: Sort by manually-defined sort index, then by name.
+	return lhs.name < rhs.name;
+}
 
 }  // namespace Client
 }  // namespace HoverRace
