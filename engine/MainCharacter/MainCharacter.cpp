@@ -1,6 +1,7 @@
 // MainCharacter.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
+// Copyright (c) 2013 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -945,6 +946,8 @@ void MainCharacter::ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationT
 				if(mCheckPoint2) {
 					mCheckPoint1 = FALSE;
 					mCheckPoint2 = FALSE;
+
+					finishLineSignal(this);
 
 					mLapCount++;
 					mLastLapDuration = pTime - mLastLapCompletion;

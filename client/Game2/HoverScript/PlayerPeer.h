@@ -60,10 +60,18 @@ class PlayerPeer : public Script::Peer {
 
 	public:
 		double LGetFuel();
+
 		void LGetPos();
+
+		void LOnFinishLine(const luabind::object &fn);
+		void LOnFinishLine_N(const std::string &name, const luabind::object &fn);
 
 	private:
 		MainCharacter::MainCharacter *player;
+
+		Script::Handlers onFinishLine;
+
+		boost::signals2::scoped_connection finishLineConn;
 };
 
 }  // namespace HoverScript

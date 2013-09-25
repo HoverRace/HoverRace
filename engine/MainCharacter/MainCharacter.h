@@ -1,7 +1,7 @@
 // MainCharacter.h
 //
-//
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
+// Copyright (c) 2013 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -241,6 +241,13 @@ class MainCharacter : public Model::FreeElement
 		// Sounds
 		void PlayInternalSounds();
 		void PlayExternalSounds(int pDB, int pPan);
+
+	public:
+		typedef boost::signals2::signal<void(MainCharacter*)> finishLineSignal_t;
+		finishLineSignal_t &GetFinishLineSignal() { return finishLineSignal; }
+
+	private:
+		finishLineSignal_t finishLineSignal;
 };
 
 }  // namespace MainCharacter

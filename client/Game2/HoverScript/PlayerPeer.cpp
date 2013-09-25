@@ -36,8 +36,13 @@ namespace HoverScript {
 PlayerPeer::PlayerPeer(Script::Core *scripting,
                        MainCharacter::MainCharacter *player) :
 	SUPER(scripting, "Player"),
-	player(player)
+	player(player),
+	onFinishLine(scripting)
 {
+	finishLineConn = player->GetFinishLineSignal().connect(
+		[&](MainCharacter::MainCharacter*) {
+			onFinishLine.CallHandlers();
+		});
 }
 
 PlayerPeer::~PlayerPeer()
@@ -56,6 +61,8 @@ void PlayerPeer::Register(Script::Core *scripting)
 		class_<PlayerPeer, SUPER, std::shared_ptr<PlayerPeer>>("Player")
 			.def_readonly("fuel", &PlayerPeer::LGetFuel)
 			.def("get_pos", &PlayerPeer::LGetPos)
+			.def("on_finish_line", &PlayerPeer::LOnFinishLine)
+			.def("on_finish_line", &PlayerPeer::LOnFinishLine_N)
 	];
 }
 
@@ -72,6 +79,16 @@ void PlayerPeer::LGetPos()
 	lua_pushnumber(L, pos.mX);
 	lua_pushnumber(L, pos.mY);
 	lua_pushnumber(L, pos.mZ);
+}
+
+void PlayerPeer::LOnFinishLine(const luabind::object &fn)
+{
+	onFinishLine.AddHandler(fn);
+}
+
+void PlayerPeer::LOnFinishLine_N(const std::string &name, const luabind::object &fn)
+{
+	onFinishLine.AddHandler(name, fn);
 }
 
 }  // namespace HoverScript
