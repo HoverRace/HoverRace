@@ -37,6 +37,7 @@ PlayerPeer::PlayerPeer(Script::Core *scripting,
                        MainCharacter::MainCharacter *player) :
 	SUPER(scripting, "Player"),
 	player(player),
+	props(luabind::newtable(scripting->GetState())),
 	onFinishLine(scripting)
 {
 	finishLineConn = player->GetFinishLineSignal().connect(
@@ -63,6 +64,7 @@ void PlayerPeer::Register(Script::Core *scripting)
 			.def("get_pos", &PlayerPeer::LGetPos)
 			.def("on_finish_line", &PlayerPeer::LOnFinishLine)
 			.def("on_finish_line", &PlayerPeer::LOnFinishLine_N)
+			.property("props", &PlayerPeer::props)
 	];
 }
 

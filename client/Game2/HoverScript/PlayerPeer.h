@@ -69,6 +69,8 @@ class PlayerPeer : public Script::Peer {
 	private:
 		MainCharacter::MainCharacter *player;
 
+		luabind::object props;
+
 		Script::Handlers onFinishLine;
 
 		boost::signals2::scoped_connection finishLineConn;
