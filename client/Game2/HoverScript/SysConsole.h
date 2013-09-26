@@ -174,7 +174,7 @@ class SysConsole : public Console
 
 		std::string commandLine;
 
-		boost::signals2::connection logConn;
+		boost::signals2::scoped_connection logConn;
 
 		logClearedSignal_t logClearedSignal;
 		logAddedSignal_t logAddedSignal;
