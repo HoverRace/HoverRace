@@ -149,7 +149,8 @@ bool ClientSession::CreateMainCharacter(int i)
 	ASSERT(curLevel != NULL);
 
 	MainCharacter::MainCharacter *ch = mainCharacter[i] =
-		MainCharacter::MainCharacter::New(rules->GetLaps(), rules->GetGameOpts());
+		MainCharacter::MainCharacter::New(i,
+			rules->GetLaps(), rules->GetGameOpts());
 
 	int startingRoom = curLevel->GetStartingRoom(i);
 	ch->mRoom = startingRoom;

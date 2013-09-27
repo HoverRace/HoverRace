@@ -63,6 +63,8 @@ class PlayerPeer : public Script::Peer {
 
 		double LGetFuel();
 
+		int LGetIndex();
+
 		void LGetPos();
 
 		void LOnFinishLine(const luabind::object &fn);

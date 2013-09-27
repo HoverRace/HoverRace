@@ -111,6 +111,7 @@ class MainCharacter : public Model::FreeElement
 		unsigned int mControlState;
 		BOOL mMotorOnState;
 		int mMotorDisplay;
+		int playerIdx;
 		char mGameOpts;
 
 		double mXSpeed;
@@ -166,7 +167,8 @@ class MainCharacter : public Model::FreeElement
 	public:
 		// Construction
 		MR_DllDeclare static void RegisterFactory();
-		MR_DllDeclare static MainCharacter *New(int pNbLap, char pGameOpts);
+		MR_DllDeclare static MainCharacter *New(int idx, int pNbLap,
+			char pGameOpts);
 
 		~MainCharacter();
 
@@ -212,6 +214,7 @@ class MainCharacter : public Model::FreeElement
 		MR_DllDeclare int GetPowerUpCount() const;
 		MR_DllDeclare int GetPowerUpFraction(int pNbLevel) const;
 
+		MR_DllDeclare int GetPlayerIndex() const { return playerIdx; }
 		MR_DllDeclare int GetLap() const;
 		MR_DllDeclare int GetTotalLap() const;
 		MR_DllDeclare MR_SimulationTime GetTotalTime() const;

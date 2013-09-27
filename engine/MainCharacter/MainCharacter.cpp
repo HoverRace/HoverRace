@@ -191,7 +191,7 @@ namespace {
 
 MainCharacter::MainCharacter(const Util::ObjectFromFactoryId & pId) :
 	Model::FreeElement(pId),
-	finished(false)
+	playerIdx(0), finished(false)
 {
 	mMasterMode = TRUE;
 	mRoom = -1;
@@ -307,18 +307,25 @@ void MainCharacter::RegisterFactory()
 	Util::DllObjectFactory::RegisterLocalDll(MR_MAIN_CHARACTER_DLL_ID, FactoryFunc);
 }
 
-MainCharacter *MainCharacter::New(int pNbLap, char pGameOpts)
+/**
+ * Create a new player.
+ * @param idx The player index (starting at 0 for player 1).
+ * @param laps The total number of laps in the race.
+ * @param gameopts The game options.
+ */
+MainCharacter *MainCharacter::New(int idx, int laps, char gameopts)
 {
 	Util::ObjectFromFactoryId lId = { MR_MAIN_CHARACTER_DLL_ID, MR_MAIN_CHARACTER_CLASS_ID };
 
 	MainCharacter *lReturnValue = (MainCharacter *) Util::DllObjectFactory::CreateObject(lId);
 
-	if(lReturnValue != NULL) {
-		lReturnValue->mNbLapForRace = pNbLap;
-		lReturnValue->mGameOpts = pGameOpts;
+	if (lReturnValue) {
+		lReturnValue->playerIdx = idx;
+		lReturnValue->mNbLapForRace = laps;
+		lReturnValue->mGameOpts = gameopts;
 	}
 
-	lReturnValue->mHoverModel = NextAllowedCraft(pGameOpts, 3);
+	lReturnValue->mHoverModel = NextAllowedCraft(gameopts, 3);
 
 	return lReturnValue;
 }
