@@ -190,7 +190,8 @@ namespace {
 // Functions implementations
 
 MainCharacter::MainCharacter(const Util::ObjectFromFactoryId & pId) :
-	Model::FreeElement(pId)
+	Model::FreeElement(pId),
+	finished(false)
 {
 	mMasterMode = TRUE;
 	mRoom = -1;
@@ -1114,9 +1115,22 @@ MR_SimulationTime MainCharacter::GetLastLapCompletion() const
 	return mLastLapCompletion;
 }
 
-BOOL MainCharacter::HasFinish() const
+/**
+ * Signal that the player's session has ended.
+ */
+void MainCharacter::Finish()
 {
-	return (mLapCount >= mNbLapForRace);
+	finished = true;
+}
+
+/**
+ * Determine if the player's session has ended.
+ * @return @c true if the session is over,
+ *         @c false if the player is still playing.
+ */
+bool MainCharacter::HasFinish() const
+{
+	return finished || (mLapCount >= mNbLapForRace);
 }
 
 int MainCharacter::HitQueueCount() const

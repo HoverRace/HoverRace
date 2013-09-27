@@ -60,12 +60,18 @@ void PlayerPeer::Register(Script::Core *scripting)
 
 	module(L) [
 		class_<PlayerPeer, SUPER, std::shared_ptr<PlayerPeer>>("Player")
+			.def("finish", &PlayerPeer::LFinish)
 			.def_readonly("fuel", &PlayerPeer::LGetFuel)
 			.def("get_pos", &PlayerPeer::LGetPos)
 			.def("on_finish_line", &PlayerPeer::LOnFinishLine)
 			.def("on_finish_line", &PlayerPeer::LOnFinishLine_N)
 			.property("props", &PlayerPeer::props)
 	];
+}
+
+void PlayerPeer::LFinish()
+{
+	player->Finish();
 }
 
 double PlayerPeer::LGetFuel()

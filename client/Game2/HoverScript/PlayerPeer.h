@@ -59,6 +59,8 @@ class PlayerPeer : public Script::Peer {
 		static void Register(Script::Core *scripting);
 
 	public:
+		void LFinish();
+
 		double LGetFuel();
 
 		void LGetPos();
