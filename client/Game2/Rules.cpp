@@ -43,8 +43,8 @@ Rules::Rules(std::shared_ptr<const Rulebook> rulebook) :
  */
 void Rules::SetRulebook(std::shared_ptr<const Rulebook> rulebook)
 {
-	this->rulebook = std::move(rulebook);
 	rules = rulebook ? rulebook->CreateDefaultRules() : luabind::object();
+	this->rulebook = std::move(rulebook);
 }
 
 }  // namespace Client
