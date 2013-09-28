@@ -197,6 +197,7 @@ void RulebookEnv::DefineRulebook(const std::string &name,
 
 	rulebook->SetOnPreGame(ExpectHandler(scripting, defn, "on_pre_game"));
 	rulebook->SetOnPostGame(ExpectHandler(scripting, defn, "on_post_game"));
+	rulebook->SetOnPlayerInit(ExpectHandler(scripting, defn, "on_player_init"));
 
 	rulebookLibrary.Add(rulebook);
 

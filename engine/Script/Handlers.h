@@ -1,8 +1,7 @@
 
 // Handlers.h
-// Tracks event handlers registered in scripts.
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2013 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -58,6 +57,8 @@ class MR_DllDeclare Handlers
 	public:
 		void CallHandlers() const;
 		void CallHandlers(const luabind::object &p1) const;
+		void CallHandlers(const luabind::object &p1,
+			const luabind::object &p2) const;
 
 		void AddHandler(const luabind::object &fn);
 		void AddHandler(const std::string &name, const luabind::object &fn);

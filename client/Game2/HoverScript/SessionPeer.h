@@ -57,6 +57,14 @@ class SessionPeer : public Script::Peer {
 		static void Register(Script::Core *scripting);
 
 	public:
+		template<class Fn>
+		void ForEachPlayer(Fn fn)
+		{
+			if (!playerRefs.empty()) {
+				std::for_each(playerRefs.begin(), playerRefs.end(), fn);
+			}
+		}
+
 		void OnSessionEnd();
 
 	protected:

@@ -87,7 +87,11 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 	observers[0] = Observer::New();
 
 	gamePeer->OnSessionStart(sessionPeer);
-	rules->GetRulebook()->OnPreGame(sessionPeer);
+	auto rulebook = rules->GetRulebook();
+	rulebook->OnPreGame(sessionPeer);
+	sessionPeer->ForEachPlayer([&](std::shared_ptr<PlayerPeer> &playerPeer) {
+		rulebook->OnPlayerInit(sessionPeer, playerPeer);
+	});
 }
 
 GameScene::~GameScene()
