@@ -54,7 +54,14 @@ class Rules {
 		luabind::object &GetRules() { return rules; }
 
 		// Temporary; will be removed once all logic is moved into Lua.
-		int GetLaps() const { return luabind::object_cast<int>(rules["laps"]); }
+		int GetLaps() const
+		{
+			try {
+				return luabind::object_cast<int>(rules["laps"]);
+			} catch (luabind::cast_failed&) {
+				return 1;
+			}
+		}
 		void SetLaps(int laps) { rules["laps"] = laps; }
 		char GetGameOpts() const { return gameOpts; }
 		void SetGameOpts(char gameOpts) { this->gameOpts = gameOpts; }
