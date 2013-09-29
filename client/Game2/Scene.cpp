@@ -21,7 +21,13 @@
 
 #include "StdAfx.h"
 
+#include "../../engine/Util/Log.h"
+
 #include "Scene.h"
+
+#ifdef min
+#	undef min
+#endif
 
 using namespace HoverRace::Util;
 
@@ -33,8 +39,11 @@ namespace Client {
  * @param name The name of the scene.  See Scene::GetName.
  */
 Scene::Scene(const std::string &name) :
-	name(name), phase(Phase::INITIALIZING), transitionDuration(0),
-	phaseTs(0), startingPhaseTime(0)
+	name(name),
+	phase(Phase::INITIALIZING), phaseTransitionDuration(0),
+	phaseTs(0), startingPhaseTime(0),
+	state(State::INITIALIZING), stateTransitionDuration(0),
+	stateTs(0), raisingStateTime(0)
 {
 }
 
@@ -55,10 +64,14 @@ bool Scene::SetPhase(Phase::phase_t phase)
 		// Once shutdown has started, it can't be stopped.
 		if (this->phase == Phase::STOPPING && phase != Phase::STOPPED) return false;
 
-		// Save the starting phase duration in case the subclass wants to
-		// use it later.
 		if (this->phase == Phase::STARTING) {
+			// Save the starting phase duration in case the subclass wants to
+			// use it later.
 			startingPhaseTime = GetPhaseDuration();
+		}
+		else if (this->phase == Phase::INITIALIZING) {
+			// Start in the BACKGROUND state.
+			SetState(State::BACKGROUND);
 		}
 
 		phaseTs = OS::Time();
@@ -74,18 +87,60 @@ bool Scene::SetPhase(Phase::phase_t phase)
 	}
 }
 
+/**
+ * Signal that the scene is moving into the foreground.
+ * @return @c true if the state changed.
+ */
+bool Scene::MoveToForeground()
+{
+	Log::Info("MoveToForeground: state = %d", state);
+	if (state == State::BACKGROUND || state == State::LOWERING) {
+		return SetState(State::RAISING);
+	}
+	return false;
+}
+
+/**
+ * Signal that the scene is moving into the background.
+ * @return @c true if the state changed.
+ */
+bool Scene::MoveToBackground()
+{
+	if (state == State::FOREGROUND || state == State::RAISING) {
+		return SetState(State::LOWERING);
+	}
+	return false;
+}
+
+bool Scene::SetState(State::state_t state)
+{
+	if (this->state != state) {
+
+		stateTs = OS::Time();
+		State::state_t oldState = this->state;
+		this->state = state;
+
+		OnStateChanged(oldState);
+
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 void Scene::Advance(Util::OS::timestamp_t tick)
 {
 	// Handle the starting and stopping animation.
 	switch (GetPhase()) {
 		case Phase::STARTING: {
 			Util::OS::timestamp_t duration = GetPhaseDuration(tick);
-			if (duration >= transitionDuration) {
-				OnTransition(1.0);
+			if (duration >= phaseTransitionDuration) {
+				OnPhaseTransition(1.0);
 				SetPhase(Phase::RUNNING);
 			}
 			else {
-				OnTransition(static_cast<double>(duration) / transitionDuration);
+				OnPhaseTransition(static_cast<double>(duration) / phaseTransitionDuration);
 			}
 			break;
 		}
@@ -94,11 +149,41 @@ void Scene::Advance(Util::OS::timestamp_t tick)
 			Util::OS::timestamp_t duration = GetPhaseDuration(tick);
 			Util::OS::timestamp_t startingDuration = GetStartingPhaseTime();
 			if (duration >= startingDuration) {
-				OnTransition(0.0);
+				OnPhaseTransition(0.0);
 				SetPhase(Phase::STOPPED);
 			}
 			else {
-				OnTransition(static_cast<double>(startingDuration - duration) / startingDuration);
+				OnPhaseTransition(static_cast<double>(startingDuration - duration) / startingDuration);
+			}
+			break;
+		}
+	}
+
+	// Handle the raising and lowering animation.
+	switch (GetState()) {
+		case State::RAISING: {
+			Util::OS::timestamp_t duration = GetStateDuration(tick);
+			if (duration >= stateTransitionDuration) {
+				OnStateTransition(1.0);
+				raisingStateTime = std::min<Util::OS::timestamp_t>(
+					duration,
+					static_cast<Util::OS::timestamp_t>(stateTransitionDuration));
+				SetState(State::FOREGROUND);
+			}
+			else {
+				OnStateTransition(static_cast<double>(duration) / stateTransitionDuration);
+			}
+			break;
+		}
+
+		case State::LOWERING: {
+			Util::OS::timestamp_t duration = GetStateDuration(tick);
+			if (duration >= raisingStateTime) {
+				OnStateTransition(0.0);
+				SetState(State::BACKGROUND);
+			}
+			else {
+				OnStateTransition(static_cast<double>(raisingStateTime - duration) / raisingStateTime);
 			}
 			break;
 		}

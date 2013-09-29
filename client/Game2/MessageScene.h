@@ -67,7 +67,7 @@ class MessageScene : public FormScene
 		// Scene
 		virtual void AttachController(Control::InputEventController &controller);
 		virtual void DetachController(Control::InputEventController &controller);
-		virtual void OnTransition(double progress);
+		virtual void OnPhaseTransition(double progress);
 		virtual void Layout();
 		virtual void PrepareRender();
 		virtual void Render();

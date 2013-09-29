@@ -56,7 +56,7 @@ MessageScene::MessageScene(Display::Display &display,
 {
 	Config *cfg = Config::GetInstance();
 
-	SetTransitionDuration(200);
+	SetPhaseTransitionDuration(200);
 
 	fader.reset(new Display::ScreenFade(0xcc000000, 0.0));
 	fader->AttachView(display);
@@ -136,7 +136,7 @@ void MessageScene::DetachController(Control::InputEventController &controller)
 	SUPER::DetachController(controller);
 }
 
-void MessageScene::OnTransition(double progress)
+void MessageScene::OnPhaseTransition(double progress)
 {
 	fader->SetOpacity(progress);
 }
