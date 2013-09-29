@@ -93,7 +93,6 @@ bool Scene::SetPhase(Phase::phase_t phase)
  */
 bool Scene::MoveToForeground()
 {
-	Log::Info("MoveToForeground: state = %d", state);
 	if (state == State::BACKGROUND || state == State::LOWERING) {
 		return SetState(State::RAISING);
 	}
