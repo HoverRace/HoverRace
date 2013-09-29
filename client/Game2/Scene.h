@@ -119,6 +119,14 @@ class Scene
 		 */
 		virtual bool IsMouseCursorEnabled() const = 0;
 
+	private:
+		Util::OS::timestamp_t TimeSincePrevTick(Util::OS::timestamp_t tick)
+		{
+			return (tick >= prevTick) ?
+				Util::OS::TimeDiff(tick, prevTick) :
+				0;
+		}
+
 	public:
 		Phase::phase_t GetPhase() const { return phase; }
 		bool SetPhase(Phase::phase_t phase);
@@ -207,7 +215,9 @@ class Scene
 		 */
 		void SetStateTransitionDuration(Util::OS::timestamp_t ms)
 		{
-			stateTransitionDuration = static_cast<double>(ms);
+			stateTransitionDuration = ms;
+			stateTransitionVelocity =
+				(ms == 0) ? 1.0 : (1.0 / static_cast<double>(ms));
 		}
 
 	protected:
@@ -250,14 +260,16 @@ class Scene
 
 	private:
 		std::string name;
+		Util::OS::timestamp_t prevTick;
 		Phase::phase_t phase;
 		double phaseTransitionDuration;
 		Util::OS::timestamp_t phaseTs;  ///< Timestamp of when current phase was started.
 		Util::OS::timestamp_t startingPhaseTime;
 		State::state_t state;
 		Util::OS::timestamp_t stateTs;  ///< Timestamp of when current state was started.
-		Util::OS::timestamp_t raisingStateTime;
-		double stateTransitionDuration;
+		Util::OS::timestamp_t stateTransitionDuration;
+		double stateTransitionVelocity;
+		double statePosition;
 };
 typedef std::shared_ptr<Scene> ScenePtr;
 

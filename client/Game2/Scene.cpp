@@ -39,11 +39,11 @@ namespace Client {
  * @param name The name of the scene.  See Scene::GetName.
  */
 Scene::Scene(const std::string &name) :
-	name(name),
+	name(name), prevTick(0),
 	phase(Phase::INITIALIZING), phaseTransitionDuration(0),
 	phaseTs(0), startingPhaseTime(0),
 	state(State::INITIALIZING), stateTransitionDuration(0),
-	stateTs(0), raisingStateTime(0)
+	stateTs(0), stateTransitionVelocity(1), statePosition(0)
 {
 }
 
@@ -130,6 +130,10 @@ bool Scene::SetState(State::state_t state)
 
 void Scene::Advance(Util::OS::timestamp_t tick)
 {
+	if (prevTick == 0) {
+		prevTick = tick;
+	}
+
 	// Handle the starting and stopping animation.
 	switch (GetPhase()) {
 		case Phase::STARTING: {
@@ -161,32 +165,35 @@ void Scene::Advance(Util::OS::timestamp_t tick)
 	// Handle the raising and lowering animation.
 	switch (GetState()) {
 		case State::RAISING: {
-			Util::OS::timestamp_t duration = GetStateDuration(tick);
-			if (duration >= stateTransitionDuration) {
+			double elapsed = static_cast<double>(TimeSincePrevTick(tick));
+			statePosition += elapsed * stateTransitionVelocity;
+			if (statePosition >= 1.0) {
+				statePosition = 1.0;
 				OnStateTransition(1.0);
-				raisingStateTime = std::min<Util::OS::timestamp_t>(
-					duration,
-					static_cast<Util::OS::timestamp_t>(stateTransitionDuration));
 				SetState(State::FOREGROUND);
 			}
 			else {
-				OnStateTransition(static_cast<double>(duration) / stateTransitionDuration);
+				OnStateTransition(statePosition);
 			}
 			break;
 		}
 
 		case State::LOWERING: {
-			Util::OS::timestamp_t duration = GetStateDuration(tick);
-			if (duration >= raisingStateTime) {
-				OnStateTransition(0.0);
+			double elapsed = static_cast<double>(TimeSincePrevTick(tick));
+			statePosition -= elapsed * stateTransitionVelocity;
+			if (statePosition <= 0) {
+				statePosition = 0;
+				OnStateTransition(0);
 				SetState(State::BACKGROUND);
 			}
 			else {
-				OnStateTransition(static_cast<double>(raisingStateTime - duration) / raisingStateTime);
+				OnStateTransition(statePosition);
 			}
 			break;
 		}
 	}
+
+	prevTick = tick;
 }
 
 }  // namespace HoverScript
