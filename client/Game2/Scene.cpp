@@ -153,7 +153,7 @@ void Scene::Advance(Util::OS::timestamp_t tick)
 				SetPhase(Phase::STOPPED);
 			}
 			else {
-				OnPhaseTransition(static_cast<double>(startingDuration - duration) / startingDuration);
+				OnPhaseTransition(static_cast<double>(startingDuration - duration) / phaseTransitionDuration);
 			}
 			break;
 		}
