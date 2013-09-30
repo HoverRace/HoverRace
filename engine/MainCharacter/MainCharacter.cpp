@@ -308,10 +308,9 @@ void MainCharacter::RegisterFactory()
 /**
  * Create a new player.
  * @param idx The player index (starting at 0 for player 1).
- * @param laps The total number of laps in the race.
  * @param gameopts The game options.
  */
-MainCharacter *MainCharacter::New(int idx, int laps, char gameopts)
+MainCharacter *MainCharacter::New(int idx, char gameopts)
 {
 	Util::ObjectFromFactoryId lId = { MR_MAIN_CHARACTER_DLL_ID, MR_MAIN_CHARACTER_CLASS_ID };
 

@@ -165,8 +165,7 @@ class MainCharacter : public Model::FreeElement
 	public:
 		// Construction
 		MR_DllDeclare static void RegisterFactory();
-		MR_DllDeclare static MainCharacter *New(int idx, int pNbLap,
-			char pGameOpts);
+		MR_DllDeclare static MainCharacter *New(int idx, char pGameOpts);
 
 		~MainCharacter();
 
