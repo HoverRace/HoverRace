@@ -54,6 +54,17 @@ class Scene
 				STOPPED,  ///< The scene is ready to be destroyed.
 			};
 		};
+		struct State
+		{
+			enum state_t
+			{
+				INITIALIZING,  ///< Scene has been created and is waiting to start.
+				BACKGROUND,  ///< Scene is in the background.
+				RAISING,  ///< Has focus, transitioning to the foreground.
+				FOREGROUND,  /// Has focus, in foreground.
+				LOWERING,  ///< Lost focus, transitioning to the background.
+			};
+		};
 
 	public:
 		Scene(const std::string &name="Unnamed Scene");
@@ -108,9 +119,23 @@ class Scene
 		 */
 		virtual bool IsMouseCursorEnabled() const = 0;
 
+	private:
+		Util::OS::timestamp_t TimeSincePrevTick(Util::OS::timestamp_t tick)
+		{
+			return (tick >= prevTick) ?
+				Util::OS::TimeDiff(tick, prevTick) :
+				0;
+		}
+
 	public:
 		Phase::phase_t GetPhase() const { return phase; }
 		bool SetPhase(Phase::phase_t phase);
+
+		State::state_t GetState() const { return state; }
+		bool MoveToForeground();
+		bool MoveToBackground();
+	private:
+		bool SetState(State::state_t state);
 
 	protected:
 		/**
@@ -123,14 +148,14 @@ class Scene
 		 * If set to zero (the default), then the starting and stopping phases
 		 * will be skipped.
 		 *
-		 * If set to non-zero, then the OnTransition() function will be called
-		 * during Advance() so subclasses can customize the animation.
+		 * If set to non-zero, then the OnPhaseTransition() function will be
+		 * called during Advance() so subclasses can customize the animation.
 		 * @param ms The duration (may be zero to disable starting and
-		 *           stopping phases.
+		 *           stopping phases).
 		 */
-		void SetTransitionDuration(Util::OS::timestamp_t ms)
+		void SetPhaseTransitionDuration(Util::OS::timestamp_t ms)
 		{
-			transitionDuration = static_cast<double>(ms);
+			phaseTransitionDuration = static_cast<double>(ms);
 		}
 
 		/**
@@ -160,6 +185,41 @@ class Scene
 			return (phase == Phase::STARTING) ? GetPhaseDuration() : startingPhaseTime;
 		}
 
+		/**
+		 * Calculate how much time we've spent in the current state.
+		 * @param curTime The current (or simulated) timestamp.
+		 * @return The duration. If @p curTime is before the start of the
+		 *         state, then zero is returned.
+		 */
+		Util::OS::timestamp_t GetStateDuration(Util::OS::timestamp_t curTime=Util::OS::Time())
+		{
+			return (curTime >= stateTs) ?
+				Util::OS::TimeDiff(curTime, stateTs) :
+				0;
+		}
+
+		/**
+		 * Set the maximum duration of the raising or lowering state.
+		 *
+		 * Subclasses should call this function in the constructor or the first
+		 * tick in order to set how long the raising state will last.  The
+		 * lowering state always lasts as long as the raising state.
+		 *
+		 * If set to zero (the default), then the raising and lowering states
+		 * will be skipped.
+		 *
+		 * If set to non-zero, then the OnStateTransition() function will be
+		 * called during Advance() so subclasses can customize the animation.
+		 * @param ms The duration (may be zero to disable raising and
+		 *           lowering states).
+		 */
+		void SetStateTransitionDuration(Util::OS::timestamp_t ms)
+		{
+			stateTransitionDuration = ms;
+			stateTransitionVelocity =
+				(ms == 0) ? 1.0 : (1.0 / static_cast<double>(ms));
+		}
+
 	protected:
 		/**
 		 * Fired immediately after entering a new phase.
@@ -169,13 +229,29 @@ class Scene
 		virtual void OnPhaseChanged(Phase::phase_t oldPhase) { }
 
 		/**
+		 * Fired immediately after entering a new state.
+		 * @param oldState The previous state.
+		 * @see GetState()
+		 */
+		virtual void OnStateChanged(State::state_t oldState) { }
+
+		/**
 		 * Fired during the starting and stopping phases, if
-		 * SetTransitionDuration() was set.
+		 * SetPhaseTransitionDuration() was set.
 		 * @param progress The animation progress (during the @c STARTING phase
 		 *                 this goes from 0.0 to 1.0, and in reverse for the
 		 *                 @c STOPPING phase).
 		 */
-		virtual void OnTransition(double progress) { }
+		virtual void OnPhaseTransition(double progress) { }
+
+		/**
+		 * Fired during the raising and lowering states, if
+		 * SetStateTransitionDuration() was set.
+		 * @param progress The animation progress (during the @c RAISING phase
+		 *                 this goes from 0.0 to 1.0, and in reverse for the
+		 *                 @c LOWERING phase).
+		 */
+		virtual void OnStateTransition(double progress) { }
 
 	public:
 		virtual void Advance(Util::OS::timestamp_t tick);
@@ -184,10 +260,16 @@ class Scene
 
 	private:
 		std::string name;
+		Util::OS::timestamp_t prevTick;
 		Phase::phase_t phase;
-		double transitionDuration;
+		double phaseTransitionDuration;
 		Util::OS::timestamp_t phaseTs;  ///< Timestamp of when current phase was started.
 		Util::OS::timestamp_t startingPhaseTime;
+		State::state_t state;
+		Util::OS::timestamp_t stateTs;  ///< Timestamp of when current state was started.
+		Util::OS::timestamp_t stateTransitionDuration;
+		double stateTransitionVelocity;
+		double statePosition;
 };
 typedef std::shared_ptr<Scene> ScenePtr;
 

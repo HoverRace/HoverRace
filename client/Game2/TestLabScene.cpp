@@ -148,6 +148,26 @@ namespace Module {
 			IconModule(Display::Display &display, GameDirector &director);
 			virtual ~IconModule() { }
 	}; //}}}
+
+	class TransitionModule : public TestLabScene::LabModule /*{{{*/
+	{
+		typedef TestLabScene::LabModule SUPER;
+		public:
+			TransitionModule(Display::Display &display, GameDirector &director);
+			virtual ~TransitionModule() { }
+
+		protected:
+			virtual void OnPhaseChanged(Phase::phase_t oldPhase);
+			virtual void OnStateChanged(State::state_t oldState);
+			virtual void OnPhaseTransition(double progress);
+			virtual void OnStateTransition(double progress);
+
+		private:
+			std::shared_ptr<Display::Label> phaseLbl;
+			std::shared_ptr<Display::FillBox> phaseBox;
+			std::shared_ptr<Display::Label> stateLbl;
+			std::shared_ptr<Display::FillBox> stateBox;
+	}; //}}}
 }
 
 TestLabScene::TestLabScene(Display::Display &display, GameDirector &director) :
@@ -169,6 +189,8 @@ TestLabScene::TestLabScene(Display::Display &display, GameDirector &director) :
 	root->AddChild(new ModuleButton<Module::LabelModule>(display, director, "Label", 0, y));
 	y += yStep;
 	root->AddChild(new ModuleButton<Module::IconModule>(display, director, "Icon", 0, y));
+	y += yStep;
+	root->AddChild(new ModuleButton<Module::TransitionModule>(display, director, "Transition", 0, y));
 }
 
 TestLabScene::~TestLabScene()
@@ -471,6 +493,85 @@ IconModule::IconModule(Display::Display &display, GameDirector &director) :
 }
 
 //}}} IconModule
+
+//{{{ TransitionModule ////////////////////////////////////////////////////////
+
+TransitionModule::TransitionModule(Display::Display &display,
+                                   GameDirector &director) :
+	SUPER(display, director, "Transition")
+{
+	SetPhaseTransitionDuration(3000);
+	SetStateTransitionDuration(3000);
+
+	Display::Container *root = GetRoot();
+
+	Config *cfg = Config::GetInstance();
+	const std::string &fontName = cfg->GetDefaultFontName();
+	Display::UiFont font(fontName, 40);
+
+	phaseLbl = root->AddChild(new Display::Label("", font, 0xffffff00));
+	phaseLbl->SetPos(60, 120);
+
+	phaseBox = root->AddChild(new Display::FillBox(0, 40, 0xffbfbf00));
+	phaseBox->SetPos(60, 160);
+
+	stateLbl = root->AddChild(new Display::Label("", font, 0xff00ffff));
+	stateLbl->SetPos(60, 200);
+
+	stateBox = root->AddChild(new Display::FillBox(0, 40, 0xff00bfbf));
+	stateBox->SetPos(60, 240);
+
+	auto msgBtn = root->AddChild(new Display::Button(display, "Click"));
+	msgBtn->SetPos(60, 300);
+	msgBtn->GetClickedSignal().connect([&](Display::ClickRegion&) {
+		director.RequestPushScene(std::make_shared<MessageScene>(display, director,
+			"Test Lab", "The lab module has been moved to the background."));
+	});
+}
+
+void TransitionModule::OnPhaseChanged(Phase::phase_t oldPhase)
+{
+	SUPER::OnPhaseChanged(oldPhase);
+
+	std::string s = "Phase: ";
+	switch (GetPhase()) {
+		case Phase::STARTING: s += "STARTING"; break;
+		case Phase::RUNNING: s += "RUNNING"; break;
+		case Phase::STOPPING: s += "STOPPING"; break;
+		case Phase::STOPPED: s += "STOPPED"; break;
+		default:
+			s += boost::str(boost::format("UNKNOWN: %d") % GetPhase());
+	}
+	phaseLbl->SetText(s);
+}
+
+void TransitionModule::OnStateChanged(State::state_t oldState)
+{
+	SUPER::OnStateChanged(oldState);
+
+	std::string s = "State: ";
+	switch (GetState()) {
+		case State::BACKGROUND: s += "BACKGROUND"; break;
+		case State::RAISING: s += "RAISING"; break;
+		case State::FOREGROUND: s += "FOREGROUND"; break;
+		case State::LOWERING: s += "LOWERING"; break;
+		default:
+			s += boost::str(boost::format("UNKNOWN: %d") % GetState());
+	}
+	stateLbl->SetText(s);
+}
+
+void TransitionModule::OnPhaseTransition(double progress)
+{
+	phaseBox->SetSize(progress * 200, 40);
+}
+
+void TransitionModule::OnStateTransition(double progress)
+{
+	stateBox->SetSize(progress * 200, 40);
+}
+
+//}}} TransitionModule
 
 }  // namespace Module
 

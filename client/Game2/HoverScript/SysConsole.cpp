@@ -61,7 +61,6 @@ SysConsole::SysConsole(Script::Core *scripting, DebugPeer *debugPeer,
 
 SysConsole::~SysConsole()
 {
-	logConn.disconnect();
 }
 
 void SysConsole::InitEnv()

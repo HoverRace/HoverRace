@@ -1,5 +1,5 @@
 
-// Rules.cpp
+// DialogScene.h
 //
 // Copyright (c) 2013 Michael Imamura.
 //
@@ -19,33 +19,36 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
-#include "StdAfx.h"
+#pragma once
 
-#include "Rulebook.h"
-
-#include "Rules.h"
+#include "FormScene.h"
 
 namespace HoverRace {
 namespace Client {
 
-Rules::Rules(std::shared_ptr<const Rulebook> rulebook) :
-	rulebook(rulebook), rules(),
-	gameOpts(0x7f)
-{
-	if (rulebook) {
-		rules = rulebook->CreateDefaultRules();
-	}
-}
-
 /**
- * Set the rulebook and reset the rules to their defaults.
- * @param rulebook The rulebook (may be @c nullptr).
+ * Base class for scenes with a title and status area.
+ * @author Michael Imamura
  */
-void Rules::SetRulebook(std::shared_ptr<const Rulebook> rulebook)
+class DialogScene : public FormScene
 {
-	rules = rulebook ? rulebook->CreateDefaultRules() : luabind::object();
-	this->rulebook = std::move(rulebook);
-}
+	typedef FormScene SUPER;
+	public:
+		DialogScene(Display::Display &display, const std::string &title="",
+			const std::string &name="");
+		virtual ~DialogScene();
+
+	protected:
+		Display::Container *GetContentRoot() const { return contentRoot.get(); }
+		Display::Container *GetStatusRoot() const { return statusRoot.get(); }
+
+	public:
+		static const double MARGIN_WIDTH;
+	private:
+		std::string title;
+		std::shared_ptr<Display::Container> contentRoot;
+		std::shared_ptr<Display::Container> statusRoot;
+};
 
 }  // namespace Client
 }  // namespace HoverRace

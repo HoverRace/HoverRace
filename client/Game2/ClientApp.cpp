@@ -479,12 +479,14 @@ void ClientApp::SetForegroundScene(const ScenePtr &scene)
 		if (fgScene) {
 			consoleToggleConn.disconnect();
 			fgScene->DetachController(*controller);
+			fgScene->MoveToBackground();
 		}
 
 		fgScene = scene;
 
 		// Load controller mapping from new foreground scene.
 		controller->ClearActionMap();
+		scene->MoveToForeground();
 		scene->AttachController(*controller);
 
 		// Enable the console toggle.
@@ -518,9 +520,9 @@ void ClientApp::PushScene(const ScenePtr &scene)
 	}
 
 	sceneStack.push_back(scene);
+	scene->SetPhase(Scene::Phase::STARTING);
 	SetForegroundScene(sceneStack.back());
 	scene->OnScenePushed();
-	scene->SetPhase(Scene::Phase::STARTING);
 }
 
 /**

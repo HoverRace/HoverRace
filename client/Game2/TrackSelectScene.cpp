@@ -117,7 +117,7 @@ void TrackSelectScene::OnRulebookSelected(std::shared_ptr<const Rulebook> rulebo
 {
 	Log::Info("Selected rulebook: %s", rulebook->GetName().c_str());
 
-	rules->SetRulebook(rulebookLibrary.Find(rulebook->GetName()));
+	rules->SetRulebook(rulebook);
 }
 
 void TrackSelectScene::OnTrackSelected(Model::TrackEntryPtr entry)

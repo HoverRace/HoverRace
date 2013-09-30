@@ -23,7 +23,7 @@
 
 #include "GameDirector.h"
 
-#include "FormScene.h"
+#include "DialogScene.h"
 
 namespace HoverRace {
 	namespace Client {
@@ -41,9 +41,9 @@ namespace Client {
  * Launcher for practice (single-player) session.
  * @author Michael Imamura
  */
-class PracticeSetupScene : public FormScene
+class PracticeSetupScene : public DialogScene
 {
-	typedef FormScene SUPER;
+	typedef DialogScene SUPER;
 	public:
 		PracticeSetupScene(Display::Display &display, GameDirector &director,
 			RulebookLibrary &rulebookLibrary);

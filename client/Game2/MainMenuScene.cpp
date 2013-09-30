@@ -46,7 +46,7 @@ MainMenuScene::MainMenuScene(Display::Display &display, GameDirector &director,
 {
 	typedef Display::UiViewModel::Alignment Alignment;
 
-	SetTransitionDuration(500);
+	SetPhaseTransitionDuration(500);
 
 	auto root = GetRoot();
 
@@ -114,7 +114,7 @@ void MainMenuScene::OnSettingsClicked()
 	//TODO: Push SettingsScene
 }
 
-void MainMenuScene::OnTransition(double interval)
+void MainMenuScene::OnPhaseTransition(double interval)
 {
 	double titleHeight = titleContainer->GetSize().y;
 	//titleContainer->SetOpacity(interval);
