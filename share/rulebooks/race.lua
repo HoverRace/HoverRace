@@ -21,8 +21,9 @@ Rulebook 'Race' {
 			local lap = player.props.lap + 1
 			player.props.lap = lap
 
-			print(player_name .. ' is on lap ' .. lap)
-			if lap == session.rules.lap then
+			print(player_name .. ' is on lap ' ..
+				lap .. '/' .. session.rules.laps)
+			if lap > session.rules.laps then
 				print(player_name .. ' finished race!')
 				player:finish()
 			end

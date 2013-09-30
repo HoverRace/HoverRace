@@ -805,18 +805,20 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 		}
 	}
 
+	/*TODO: Replace with modular HUD controlled from Lua.
 	if (hudVisible && mBaseFont != NULL) {
 
 		// Display timers
 		char lMainLineBuffer[80];
 		char lLapLineBuffer[80];
 
+		lMainLineBuffer[0] = 0;
 		lLapLineBuffer[0] = 0;
 
 		if(pTime < 0) {
 			pTime = -pTime;
 			sprintf(lMainLineBuffer, globalFmts.countdown.c_str(), (pTime % 60000) / 1000, (pTime % 1000) / 10, pViewingCharacter->GetTotalLap());
-			
+
 			int lFontScaling = 1 + (mBaseFont->GetSprite()->GetItemHeight() * 30) / (lYRes);
 			int lLineHeight = (mBaseFont->GetSprite()->GetItemHeight() / lFontScaling);
 
@@ -825,7 +827,7 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 			craftTxt->SetText(GetCraftName(pViewingCharacter->GetHoverModel()));
 			craftTxt->Blt(lXRes / 2, lYRes / 16 + lLineHeight + selectCraftTxt->GetHeight(), &m3DView, true);
 		}
-		else if(pViewingCharacter->GetTotalLap() <= pViewingCharacter->GetLap()) {
+		else if (pViewingCharacter->HasFinish()) {
 			MR_SimulationTime lTotalTime = pViewingCharacter->GetTotalTime();
 			MR_SimulationTime lBestLap = pViewingCharacter->GetBestLapDuration();
 
@@ -870,6 +872,7 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 		mBaseFont->GetSprite()->StrBlt(lXRes / 2, lYRes - 1, Ascii2Simple(lLapLineBuffer), &m3DView, Sprite::eCenter, Sprite::eBottom, lFontScaling);
 
 	}
+	*/
 
 }
 

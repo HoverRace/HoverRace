@@ -227,8 +227,6 @@ MainCharacter::MainCharacter(const Util::ObjectFromFactoryId & pId) :
 
 	mContactEffectList.push_back(&mContactEffect);
 
-	mNbLapForRace = 5;							  // Hard coded default
-	mLapCount = 0;
 	mLastLapCompletion = 0;
 	mLastLapDuration = 0;
 	mBestLapDuration = 0;
@@ -321,7 +319,6 @@ MainCharacter *MainCharacter::New(int idx, int laps, char gameopts)
 
 	if (lReturnValue) {
 		lReturnValue->playerIdx = idx;
-		lReturnValue->mNbLapForRace = laps;
 		lReturnValue->mGameOpts = gameopts;
 	}
 
@@ -433,11 +430,6 @@ void MainCharacter::SetNetState(int /*pDataLen */ , const MR_UInt8 *pData)
 	//      else
 	//              mCabinOrientation = MR_NORMALIZE_ANGLE(mOrientation + MR_PI / 2);
 	//}
-}
-
-void MainCharacter::SetNbLapForRace(int pNbLap)
-{
-	mNbLapForRace = pNbLap;
 }
 
 void MainCharacter::SetSimulationTime(MR_SimulationTime pTime)
@@ -940,7 +932,7 @@ void MainCharacter::ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationT
 		}
 	}
 
-	if((lLapCompleted != NULL) && mMasterMode && (mLapCount < mNbLapForRace)) {
+	if((lLapCompleted != NULL) && mMasterMode && !finished) {
 		switch (lLapCompleted->mType) {
 			case MR_CheckPoint::eCheck1:
 				mCheckPoint1 = TRUE;
@@ -957,15 +949,16 @@ void MainCharacter::ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationT
 
 					finishLineSignal(this);
 
-					mLapCount++;
 					mLastLapDuration = pTime - mLastLapCompletion;
 					mLastLapCompletion = pTime;
 
-					if((mLastLapDuration < mBestLapDuration) || (mLapCount == 1))
+					if ((mLastLapDuration < mBestLapDuration) ||
+						(mBestLapDuration == 0))
+					{
 						mBestLapDuration = mLastLapDuration;
-
+					}
 					if(mRenderer != NULL) {
-						if(mLapCount == mNbLapForRace) {
+						if (finished) {
 							mInternalSoundList.Add(mRenderer->GetFinishSound());
 							mExternalSoundList.Add(mRenderer->GetFinishSound());
 						} else {
@@ -1092,16 +1085,6 @@ double MainCharacter::GetDirectionalSpeed() const
 	return lReturnValue;
 }
 
-int MainCharacter::GetLap() const
-{
-	return mLapCount;
-}
-
-int MainCharacter::GetTotalLap() const
-{
-	return mNbLapForRace;
-}
-
 MR_SimulationTime MainCharacter::GetTotalTime() const
 {
 	return mLastLapCompletion;
@@ -1137,7 +1120,7 @@ void MainCharacter::Finish()
  */
 bool MainCharacter::HasFinish() const
 {
-	return finished || (mLapCount >= mNbLapForRace);
+	return finished;
 }
 
 int MainCharacter::HitQueueCount() const

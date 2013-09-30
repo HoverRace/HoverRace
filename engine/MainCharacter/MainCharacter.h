@@ -142,8 +142,6 @@ class MainCharacter : public Model::FreeElement
 		int mHoverId;
 
 		// Race stats
-		int mNbLapForRace;
-		int mLapCount;
 		MR_SimulationTime mLastLapCompletion;
 		MR_SimulationTime mLastLapDuration;
 		MR_SimulationTime mBestLapDuration;
@@ -215,8 +213,6 @@ class MainCharacter : public Model::FreeElement
 		MR_DllDeclare int GetPowerUpFraction(int pNbLevel) const;
 
 		MR_DllDeclare int GetPlayerIndex() const { return playerIdx; }
-		MR_DllDeclare int GetLap() const;
-		MR_DllDeclare int GetTotalLap() const;
 		MR_DllDeclare MR_SimulationTime GetTotalTime() const;
 		MR_DllDeclare MR_SimulationTime GetBestLapDuration() const;
 		MR_DllDeclare MR_SimulationTime GetLastLapDuration() const;
