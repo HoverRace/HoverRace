@@ -1,5 +1,5 @@
 
-// TrackSelectScene.h
+// GameSelectScene.h
 //
 // Copyright (c) 2013 Michael Imamura.
 //
@@ -29,11 +29,11 @@
 namespace HoverRace {
 	namespace Client {
 		class Rulebook;
+		class RulebookLibrary;
 	}
 	namespace Display {
 		class Container;
 		class Display;
-		class Label;
 	}
 }
 
@@ -41,23 +41,27 @@ namespace HoverRace {
 namespace Client {
 
 /**
- * Select the track for a new game.
+ * Select options for a new game (track, rules, etc.).
+ *
+ * This specific scene only handles selecting a rulebook; it will use
+ * TrackSelectScene to select the track and configure the game rules.
+ *
  * @author Michael Imamura
  */
-class TrackSelectScene : public DialogScene
+class GameSelectScene : public DialogScene
 {
 	typedef DialogScene SUPER;
 	public:
-		TrackSelectScene(Display::Display &display, GameDirector &director,
-			std::shared_ptr<const Rulebook> rulebook);
-		virtual ~TrackSelectScene();
+		GameSelectScene(Display::Display &display, GameDirector &director,
+			RulebookLibrary &rulebookLibrary, bool multiplayer);
+		virtual ~GameSelectScene();
 
 	private:
-		void OnTrackSelected(Model::TrackEntryPtr entry);
+		void OnRulebookSelected(std::shared_ptr<const Rulebook> rulebook);
 
 	protected:
 		virtual void OnPhaseTransition(double progress);
-
+		virtual void OnStateTransition(double progress);
 
 	public:
 		typedef boost::signals2::signal<void(std::shared_ptr<Rules>)> okSignal_t;
@@ -69,12 +73,9 @@ class TrackSelectScene : public DialogScene
 	private:
 		Display::Display &display;
 		GameDirector &director;
-		std::shared_ptr<Rules> rules;
+		RulebookLibrary &rulebookLibrary;
 
-		Model::TrackList trackList;
-
-		std::shared_ptr<Display::Label> rulebookLbl;
-		std::shared_ptr<Display::Container> trackPanel;
+		std::shared_ptr<Display::Container> rulebookPanel;
 
 		okSignal_t okSignal;
 		cancelSignal_t cancelSignal;

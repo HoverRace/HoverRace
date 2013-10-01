@@ -50,6 +50,8 @@ hoverrace_SOURCES = \
 	GameDirector.h \
 	GameScene.cpp \
 	GameScene.h \
+	GameSelectScene.cpp \
+	GameSelectScene.h \
 	MainMenuScene.cpp \
 	MainMenuScene.h \
 	MessageScene.cpp \

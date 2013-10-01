@@ -25,13 +25,12 @@
 #include "../../engine/Display/Button.h"
 #include "../../engine/Display/Container.h"
 #include "../../engine/Display/Display.h"
+#include "../../engine/Display/Label.h"
 #include "../../engine/Model/TrackEntry.h"
-#include "../../engine/VideoServices/FontSpec.h"
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/Log.h"
 
 #include "Rulebook.h"
-#include "RulebookLibrary.h"
 #include "Rules.h"
 
 #include "TrackSelectScene.h"
@@ -44,16 +43,6 @@ namespace HoverRace {
 namespace Client {
 
 namespace {
-	class RulebookSelButton : public Display::Button
-	{
-		typedef Display::Button SUPER;
-		public:
-			RulebookSelButton(Display::Display &display,
-				const std::shared_ptr<const Rulebook> &rulebook) :
-				SUPER(display, rulebook->GetName()) { }
-			virtual ~RulebookSelButton() { }
-	};
-
 	class TrackSelButton : public Display::Button
 	{
 		typedef Display::Button SUPER;
@@ -72,32 +61,30 @@ namespace {
 
 TrackSelectScene::TrackSelectScene(Display::Display &display,
                                    GameDirector &director,
-                                   RulebookLibrary &rulebookLibrary) :
-	SUPER(display, "Track Select"),
-	display(display), director(director), rulebookLibrary(rulebookLibrary),
+                                   std::shared_ptr<const Rulebook> rulebook) :
+	SUPER(display, "", "Track Select"),
+	display(display), director(director),
+	rules(std::make_shared<Rules>(rulebook)),
 	trackList()
 {
+	SetPhaseTransitionDuration(1000);
+
 	trackList.Reload(Config::GetInstance()->GetTrackBundle());
 
-	auto root = GetRoot();
+	Config *cfg = Config::GetInstance();
+	const std::string &fontName = cfg->GetDefaultFontName();
+
+	auto root = GetContentRoot();
 
 	//TODO: A better list UI (categories, sorting, etc.).
 	double y = 0;
 
-	rulebookPanel = root->AddChild(new Display::Container(display));
-	rulebookPanel->SetPos(60, 60);
-	for (auto iter = rulebookLibrary.cbegin(); iter != rulebookLibrary.cend(); ++iter) {
-		auto rulebook = *iter;
-		auto ruleSel = rulebookPanel->AddChild(new RulebookSelButton(display, rulebook));
-		ruleSel->SetPos(0, y);
-		ruleSel->GetClickedSignal().connect(std::bind(
-			&TrackSelectScene::OnRulebookSelected, this, rulebook));
-		y += 50;
-	}
+	rulebookLbl = root->AddChild(new Display::Label(rulebook->GetTitle(),
+		Display::UiFont(fontName, 40), 0xffbfbfbf));
+	rulebookLbl->SetPos(DialogScene::MARGIN_WIDTH, 0);
 
-	y = 0;
 	trackPanel = root->AddChild(new Display::Container(display));
-	trackPanel->SetPos(200, 60);
+	trackPanel->SetPos(DialogScene::MARGIN_WIDTH, 60);
 	BOOST_FOREACH(TrackEntryPtr ent, trackList) {
 		auto trackSel = trackPanel->AddChild(new TrackSelButton(display, ent));
 		trackSel->SetPos(0, y);
@@ -105,19 +92,10 @@ TrackSelectScene::TrackSelectScene(Display::Display &display,
 			&TrackSelectScene::OnTrackSelected, this, ent));
 		y += 50;
 	}
-
-	rules = std::make_shared<Rules>(rulebookLibrary.GetDefault());
 }
 
 TrackSelectScene::~TrackSelectScene()
 {
-}
-
-void TrackSelectScene::OnRulebookSelected(std::shared_ptr<const Rulebook> rulebook)
-{
-	Log::Info("Selected rulebook: %s", rulebook->GetName().c_str());
-
-	rules->SetRulebook(rulebook);
 }
 
 void TrackSelectScene::OnTrackSelected(Model::TrackEntryPtr entry)
@@ -127,6 +105,15 @@ void TrackSelectScene::OnTrackSelected(Model::TrackEntryPtr entry)
 	rules->SetTrackEntry(entry);
 
 	okSignal(rules);
+}
+
+void TrackSelectScene::OnPhaseTransition(double progress)
+{
+	double f = pow((1.0 - progress), 4);
+
+	MR_UInt8 alpha = static_cast<MR_UInt8>(255.0 * (1.0 - f));
+	rulebookLbl->SetColor(Display::Color(alpha, 0xbf, 0xbf, 0xbf));
+	trackPanel->SetPos(f * 1280.0 + MARGIN_WIDTH, 60);
 }
 
 }  // namespace Client

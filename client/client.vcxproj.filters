@@ -183,6 +183,9 @@
     <ClCompile Include="Game2\DialogScene.cpp">
       <Filter>Game2</Filter>
     </ClCompile>
+    <ClCompile Include="Game2\GameSelectScene.cpp">
+      <Filter>Game2</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game2\AboutDialog.h">
@@ -366,6 +369,9 @@
       <Filter>HoverScript</Filter>
     </ClInclude>
     <ClInclude Include="Game2\DialogScene.h">
+      <Filter>Game2</Filter>
+    </ClInclude>
+    <ClInclude Include="Game2\GameSelectScene.h">
       <Filter>Game2</Filter>
     </ClInclude>
   </ItemGroup>

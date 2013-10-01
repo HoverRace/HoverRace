@@ -25,7 +25,7 @@
 #include "../../engine/Display/ScreenFade.h"
 #include "../../engine/Util/Config.h"
 
-#include "TrackSelectScene.h"
+#include "GameSelectScene.h"
 
 #include "PracticeSetupScene.h"
 
@@ -56,8 +56,9 @@ PracticeSetupScene::~PracticeSetupScene()
 
 void PracticeSetupScene::OnScenePushed()
 {
-	// Immediately show the track selector.
-	auto selScene = std::make_shared<TrackSelectScene>(display, director, rulebookLibrary);
+	// Immediately show the rulebook selector.
+	auto selScene = std::make_shared<GameSelectScene>(display, director,
+		rulebookLibrary, false);
 	selScene->GetOkSignal().connect([&](std::shared_ptr<Rules> rules) {
 		director.RequestNewPracticeSession(rules);
 	});
