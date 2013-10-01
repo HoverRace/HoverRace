@@ -41,7 +41,7 @@ namespace Client {
  */
 class Rules {
 	public:
-		Rules(std::shared_ptr<const Rulebook> rulebook=nullptr);
+		Rules(std::shared_ptr<const Rulebook> rulebook=std::shared_ptr<const Rulebook>());
 
 	public:
 		std::shared_ptr<const Rulebook> GetRulebook() const { return rulebook; }
