@@ -59,7 +59,7 @@ DialogScene::DialogScene(Display::Display &display,
 	contentRoot->SetPos(0, 100);
 
 	statusRoot = root->AddChild(new Display::Container(
-		display, Display::Vec2(1280 - (MARGIN_WIDTH * 2), 40)));
+		display, Display::Vec2(1280 - (MARGIN_WIDTH * 2), 40), false));
 	statusRoot->SetPos(MARGIN_WIDTH, 720 - 80);
 
 	auto titleLbl = root->AddChild(new Display::Label(title,

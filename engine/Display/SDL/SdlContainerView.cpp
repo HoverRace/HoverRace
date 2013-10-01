@@ -23,6 +23,8 @@
 
 #include <SDL2/SDL.h>
 
+#include "../../Util/Log.h"
+
 #include "../Container.h"
 
 #include "SdlContainerView.h"
@@ -46,7 +48,7 @@ void SdlContainerView::Render()
 	if (children.empty()) return;
 
 	bool clip = model.IsClip();
-	SDL_Rect oldClip;
+	SDL_Rect oldClip = { 0 };
 	SDL_Renderer *renderer = display.GetRenderer();
 
 	if (clip) {
@@ -63,11 +65,34 @@ void SdlContainerView::Render()
 			h *= uiScale;
 		}
 
-		SDL_Rect clipRect = {
+		SDL_RenderGetClipRect(renderer, &oldClip);
+		SDL_Rect ourClip = {
 			static_cast<int>(pos.x), static_cast<int>(pos.y),
 			static_cast<int>(w), static_cast<int>(h) };
+		SDL_Rect clipRect = { 0 };
 
-		SDL_RenderGetClipRect(renderer, &oldClip);
+		// If there's an existing clip area, then set the clip rect to be
+		// the intersection of the two areas.
+		if (oldClip.w == 0 || oldClip.h == 0) {
+			clipRect = ourClip;
+		}
+		else {
+			if (!SDL_IntersectRect(&oldClip, &ourClip, &clipRect)) {
+				// If there's no intersection, set a tiny off-screen rect so
+				// the existing clip area check still works.
+				clipRect.x = -1;
+				clipRect.y = -1;
+				clipRect.w = 1;
+				clipRect.h = 1;
+			}
+		}
+
+		/*
+		Util::Log::Info("Clip: <%d, %d> (%d x %d)",
+			clipRect.x, clipRect.y,
+			clipRect.w, clipRect.h);
+		*/
+
 		SDL_RenderSetClipRect(renderer, &clipRect);
 	}
 

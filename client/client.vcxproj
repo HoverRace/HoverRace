@@ -120,6 +120,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Game2\GameScene.cpp" />
+    <ClCompile Include="Game2\GameSelectScene.cpp" />
     <ClCompile Include="Game2\GifDecoder.cpp" />
     <ClCompile Include="Game2\HoverScript\ConsoleScene.cpp" />
     <ClCompile Include="Game2\HoverScript\DebugPeer.cpp" />
@@ -219,6 +220,7 @@
     </ClInclude>
     <ClInclude Include="Game2\GameDirector.h" />
     <ClInclude Include="Game2\GameScene.h" />
+    <ClInclude Include="Game2\GameSelectScene.h" />
     <ClInclude Include="Game2\GifDecoder.h" />
     <ClInclude Include="Game2\HoverScript\ConsoleScene.h" />
     <ClInclude Include="Game2\HoverScript\DebugPeer.h" />
