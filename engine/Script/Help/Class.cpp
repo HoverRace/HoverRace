@@ -63,8 +63,11 @@ void Class::Load(yaml::MapNode *node)
 			if (type == "event") {
 				method = std::make_shared<Event>(methodName);
 			}
-			else {
+			else (type == "method") {
 				method = std::make_shared<Method>(methodName);
+			}
+			else {
+				//TODO
 			}
 
 			method->Load(root);
