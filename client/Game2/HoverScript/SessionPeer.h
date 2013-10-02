@@ -25,6 +25,7 @@
 #include <luabind/luabind.hpp>
 #include <luabind/object.hpp>
 
+#include "../../../engine/Util/WorldCoordinates.h"
 #include "../../../engine/Script/Peer.h"
 
 namespace HoverRace {
@@ -72,6 +73,7 @@ class SessionPeer : public Script::Peer {
 
 	public:
 		int LGetNumPlayers() const;
+		MR_SimulationTime LGetTime() const;
 
 	private:
 		ClientSession *session;

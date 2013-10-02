@@ -62,6 +62,7 @@ void SessionPeer::Register(Script::Core *scripting)
 			.def("get_num_players", &SessionPeer::LGetNumPlayers)
 			.def_readonly("players", &SessionPeer::players)
 			.def_readonly("rules", &SessionPeer::rules)
+			.property("time", &SessionPeer::LGetTime)
 	];
 }
 
@@ -91,6 +92,12 @@ int SessionPeer::LGetNumPlayers() const
 {
 	VerifySession();
 	return session->GetNbPlayers();
+}
+
+MR_SimulationTime SessionPeer::LGetTime() const
+{
+	VerifySession();
+	return session->GetSimulationTime();
 }
 
 }  // namespace HoverScript

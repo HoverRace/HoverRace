@@ -20,9 +20,10 @@ Rulebook 'Race' {
 		player:on_finish_line(function()
 			local lap = player.props.lap + 1
 			player.props.lap = lap
-
+			
 			print(player_name .. ' is on lap ' ..
-				lap .. '/' .. session.rules.laps)
+				lap .. '/' .. session.rules.laps ..
+				' (' .. (session.time / 1000) .. ')')
 			if lap > session.rules.laps then
 				print(player_name .. ' finished race!')
 				player:finish()
