@@ -1,0 +1,38 @@
+finish:
+  type: method
+  sig:
+    - player:finish()
+  brief: >
+    Indicate that this player has completed the match.
+  desc: >
+    The game ends when all players have called this method.
+
+fuel:
+  type: property
+  isa: number
+  brief: >
+    The amount of fuel the player has.
+
+get_pos:
+  type: method
+  sig:
+    - x, y, z = player:get_pos()
+  brief: >
+    Retrieve the current position of the player, all at once.
+
+index:
+  type: property
+  isa: number
+  brief: >
+    The position in the session:players list, starting at zero for player 1.
+
+on_finish_line:
+  type: event
+  brief: >
+    Called when the player has crossed the finish line.
+
+props:
+  type: property
+  isa: table
+  brief: >
+    Open-ended table for scripts to store player-specific data.
