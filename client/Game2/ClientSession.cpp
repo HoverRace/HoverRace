@@ -112,13 +112,6 @@ void ClientSession::ReadLevelAttrib(Parcel::RecordFilePtr pRecordFile, VideoServ
 			SetMap(lMapSprite, lX0, lY0, lX1, lY1);
 		}
 	}
-	// Read level midi stream
-	if(pRecordFile->GetNbRecords() >= 5) {
-		pRecordFile->SelectRecord(4);
-		{
-			// TODO
-		}
-	}
 }
 
 BOOL ClientSession::LoadNew(const char *pTitle, Parcel::RecordFilePtr pMazeFile,
