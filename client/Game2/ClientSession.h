@@ -76,8 +76,7 @@ class ClientSession
 		virtual ~ClientSession();
 
 		// Simulation control
-												  // Simulation, speed factor can be used to reduce processing speed to create AVI files
-		virtual void Process(int pSpeedFactor = 1);
+		virtual void Process();
 
 		virtual BOOL LoadNew(const char *pTitle, Parcel::RecordFilePtr pMazeFile, VideoServices::VideoBuffer *pVideo);
 

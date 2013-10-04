@@ -54,7 +54,7 @@ ClientSession::~ClientSession()
 	delete mMap;
 }
 
-void ClientSession::Process(int pSpeedFactor)
+void ClientSession::Process()
 {
 	UpdateCharacterSimulationTimes();
 	mSession.Simulate();
