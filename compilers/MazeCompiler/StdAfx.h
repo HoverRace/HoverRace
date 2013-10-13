@@ -3,7 +3,9 @@
 
 #ifdef _WIN32
 
-#	define VC_EXTRALEAN							// Exclude rarely-used stuff from Windows headers
+	// Exclude rarely-used stuff from Windows headers
+#	define VC_EXTRALEAN
+#	define WIN32_LEAN_AND_MEAN
 
 	// Minimum Windows version: XP
 #	define WINVER 0x0501

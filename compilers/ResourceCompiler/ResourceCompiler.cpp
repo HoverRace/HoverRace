@@ -52,6 +52,10 @@
 
 #include "StdAfx.h"
 
+#ifdef _WIN32
+#	include <shellapi.h>
+#endif
+
 #include "TextParsing.h"
 #include "ResBitmapBuilder.h"
 #include "ResActorBuilder.h"
