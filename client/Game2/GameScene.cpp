@@ -90,7 +90,7 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 	auto rulebook = rules->GetRulebook();
 	rulebook->OnPreGame(sessionPeer);
 	sessionPeer->ForEachPlayer([&](std::shared_ptr<PlayerPeer> &playerPeer) {
-		rulebook->OnPlayerInit(sessionPeer, playerPeer);
+		rulebook->OnPlayerJoined(sessionPeer, playerPeer);
 	});
 }
 

@@ -13,7 +13,7 @@ Rulebook 'Race' {
 		print('num players = ' .. #session.players)
 	end,
 
-	on_player_init = function(session, player)
+	on_player_joined = function(session, player)
 		local player_name = 'Player ' .. (player.index + 1)
 
 		player.props.lap = 1

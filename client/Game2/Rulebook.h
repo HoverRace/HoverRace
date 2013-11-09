@@ -76,8 +76,8 @@ class Rulebook : private boost::noncopyable
 		void SetOnPostGame(const luabind::object &fn);
 		void OnPostGame(HoverScript::SessionPeerPtr session) const;
 
-		void SetOnPlayerInit(const luabind::object &fn);
-		void OnPlayerInit(HoverScript::SessionPeerPtr session,
+		void SetOnPlayerJoined(const luabind::object &fn);
+		void OnPlayerJoined(HoverScript::SessionPeerPtr session,
 			std::shared_ptr<HoverScript::PlayerPeer> player) const;
 
 	public:
@@ -96,7 +96,7 @@ class Rulebook : private boost::noncopyable
 
 		Script::Handlers onPreGame;
 		Script::Handlers onPostGame;
-		Script::Handlers onPlayerInit;
+		Script::Handlers onPlayerJoined;
 };
 typedef std::shared_ptr<Rulebook> RulebookPtr;
 

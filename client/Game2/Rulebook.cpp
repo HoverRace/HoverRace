@@ -55,7 +55,7 @@ Rulebook::Rulebook(Script::Core *scripting, const std::string &name,
 	scripting(scripting), name(name), title(title), description(description),
 	maxPlayers(maxPlayers),
 	rules(),
-	onPreGame(scripting), onPostGame(scripting), onPlayerInit(scripting)
+	onPreGame(scripting), onPostGame(scripting), onPlayerJoined(scripting)
 {
 }
 
@@ -95,16 +95,16 @@ void Rulebook::OnPostGame(HoverScript::SessionPeerPtr session) const
 	onPostGame.CallHandlers(luabind::object(scripting->GetState(), session));
 }
 
-void Rulebook::SetOnPlayerInit(const luabind::object &fn)
+void Rulebook::SetOnPlayerJoined(const luabind::object &fn)
 {
-	onPlayerInit.AddHandler(fn);
+	onPlayerJoined.AddHandler(fn);
 }
 
-void Rulebook::OnPlayerInit(HoverScript::SessionPeerPtr session,
+void Rulebook::OnPlayerJoined(HoverScript::SessionPeerPtr session,
                             std::shared_ptr<HoverScript::PlayerPeer> player) const
 {
 	lua_State *L = scripting->GetState();
-	onPlayerInit.CallHandlers(luabind::object(L, session),
+	onPlayerJoined.CallHandlers(luabind::object(L, session),
 		luabind::object(L, player));
 }
 
