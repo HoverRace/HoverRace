@@ -112,6 +112,7 @@ class ClientApp : public GameDirector
 #	endif
 
 	private:
+		MR_UInt32 userEventId;
 		Util::OS::wnd_t mainWnd;
 		Display::Display *display;
 		Control::InputEventController *controller;

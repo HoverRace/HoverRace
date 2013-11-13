@@ -99,6 +99,7 @@ namespace {
 
 ClientApp::ClientApp() :
 	SUPER(),
+	userEventId(SDL_RegisterEvents(1)),
 	sceneStack(), fgScene(),
 	fpsLbl(), frameCount(0), lastTimestamp(0), fps(0.0)
 {
@@ -362,40 +363,41 @@ void ClientApp::MainLoop()
 				controller->ProcessInputEvent(evt);
 				continue;
 			}
-			switch (evt.type) {
-				case SDL_QUIT:
-					quit = true;
-					break;
-
-				case SDL_WINDOWEVENT:
-					switch (evt.window.event) {
-						case SDL_WINDOWEVENT_RESIZED:
-							OnWindowResize(evt.window.data1, evt.window.data2);
-							break;
+			if (evt.type == userEventId) {
+				switch (evt.user.code) {
+					case REQ_EVT_SCENE_PUSH: {
+						SceneHolder *holder = static_cast<SceneHolder*>(evt.user.data1);
+						PushScene(holder->scene);
+						delete holder;
+						break;
 					}
-					break;
 
-				case SDL_USEREVENT:
-					switch (evt.user.code) {
-						case REQ_EVT_SCENE_PUSH: {
-							SceneHolder *holder = static_cast<SceneHolder*>(evt.user.data1);
-							PushScene(holder->scene);
-							delete holder;
-							break;
-						}
+					case REQ_EVT_SCENE_POP:
+						PopScene();
+						break;
 
-						case REQ_EVT_SCENE_POP:
-							PopScene();
-							break;
-
-						case REQ_EVT_SCENE_REPLACE: {
-							SceneHolder *holder = static_cast<SceneHolder*>(evt.user.data1);
-							ReplaceScene(holder->scene);
-							delete holder;
-							break;
-						}
+					case REQ_EVT_SCENE_REPLACE: {
+						SceneHolder *holder = static_cast<SceneHolder*>(evt.user.data1);
+						ReplaceScene(holder->scene);
+						delete holder;
+						break;
 					}
-					break;
+				}
+			}
+			else {
+				switch (evt.type) {
+					case SDL_QUIT:
+						quit = true;
+						break;
+
+					case SDL_WINDOWEVENT:
+						switch (evt.window.event) {
+							case SDL_WINDOWEVENT_RESIZED:
+								OnWindowResize(evt.window.data1, evt.window.data2);
+								break;
+						}
+						break;
+				}
 			}
 		}
 		if (quit) break;
@@ -579,7 +581,7 @@ void ClientApp::TerminateAllScenes()
 void ClientApp::RequestPushScene(const ScenePtr &scene)
 {
 	SDL_Event evt;
-	evt.type = SDL_USEREVENT;
+	evt.type = userEventId;
 	evt.user.code = REQ_EVT_SCENE_PUSH;
 	evt.user.data1 = new SceneHolder(scene);
 	SDL_PushEvent(&evt);
@@ -588,7 +590,7 @@ void ClientApp::RequestPushScene(const ScenePtr &scene)
 void ClientApp::RequestPopScene()
 {
 	SDL_Event evt;
-	evt.type = SDL_USEREVENT;
+	evt.type = userEventId;
 	evt.user.code = REQ_EVT_SCENE_POP;
 	SDL_PushEvent(&evt);
 }
@@ -596,7 +598,7 @@ void ClientApp::RequestPopScene()
 void ClientApp::RequestReplaceScene(const ScenePtr &scene)
 {
 	SDL_Event evt;
-	evt.type = SDL_USEREVENT;
+	evt.type = userEventId;
 	evt.user.code = REQ_EVT_SCENE_REPLACE;
 	evt.user.data1 = new SceneHolder(scene);
 	SDL_PushEvent(&evt);
