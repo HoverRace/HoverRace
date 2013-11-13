@@ -1,5 +1,5 @@
-// MR_Types.h // Some usefull known size integer
-//
+
+// MR_Types.h
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
@@ -20,21 +20,18 @@
 // and limitations under the License.
 //
 
-#ifndef MR_TYPES_H
-#define MR_TYPES_H
+#pragma once
 
 #ifdef _WIN32
-#	include <windows.h>
-#	include <winnt.h>
 
-	typedef signed char MR_Int8;
-	typedef unsigned char MR_UInt8;
-	typedef signed short MR_Int16;
-	typedef unsigned short MR_UInt16;
-	typedef signed int MR_Int32;
-	typedef unsigned int MR_UInt32;
-	typedef LONGLONG MR_Int64;
-	typedef DWORDLONG MR_UInt64;
+	typedef signed __int8 MR_Int8;
+	typedef unsigned __int8 MR_UInt8;
+	typedef signed __int16 MR_Int16;
+	typedef unsigned __int16 MR_UInt16;
+	typedef signed __int32 MR_Int32;
+	typedef unsigned __int32 MR_UInt32;
+	typedef signed __int64 MR_Int64;
+	typedef unsigned __int64 MR_UInt64;
 
 #else
 #	include <inttypes.h>
@@ -47,7 +44,5 @@
 	typedef uint32_t MR_UInt32;
 	typedef int64_t MR_Int64;
 	typedef uint64_t MR_UInt64;
-
-#endif
 
 #endif
