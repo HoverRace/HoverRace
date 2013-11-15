@@ -15,7 +15,7 @@ Features
 Portability
 -----------
 
-HoverRace currently runs on Windows, but the code is slowing being rewritten to be portable.  A single-player proof-of-concept runs on Linux.
+HoverRace currently runs on Windows, but the code is slowly being rewritten to be portable.  A single-player proof-of-concept runs on Linux.
 
 Links
 -----
