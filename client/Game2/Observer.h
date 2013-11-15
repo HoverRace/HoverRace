@@ -86,9 +86,11 @@ class Observer
 		VideoServices::StaticText *selectCraftTxt;
 		VideoServices::StaticText *craftTxt;
 
+	public:
 		Observer();
 		~Observer();
 
+	private:
 		void Render2DDebugView(VideoServices::VideoBuffer * pDest, const Model::Level * pLevel, const MainCharacter::MainCharacter * pViewingCharacter);
 		void RenderWireFrameView(const Model::Level * pLevel, const MainCharacter::MainCharacter * pViewingCharacter);
 		void Render3DView(const HoverRace::Client::ClientSession * pSession, const MainCharacter::MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage);
@@ -101,9 +103,6 @@ class Observer
 		static void DrawBackground(VideoServices::VideoBuffer * pDest);
 
 	public:
-		static Observer *New();				  // Local construction and destruction
-		void Delete();							  // to be able to change the dll without problem
-
 		// Camera control
 		void Scroll(int pOffset);
 		void Zoom(int factor); ///< A positive factor zooms in; a negative factor zooms out.

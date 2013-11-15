@@ -168,16 +168,6 @@ Observer::~Observer()
 	delete mHoverIcons;
 }
 
-Observer *Observer::New()
-{
-	return new Observer;
-}
-
-void Observer::Delete()
-{
-	delete this;
-}
-
 void Observer::SetCockpitView(BOOL pOn)
 {
 	mCockpitView = pOn;
