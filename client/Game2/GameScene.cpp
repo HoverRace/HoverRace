@@ -23,6 +23,7 @@
 
 #include "../../engine/Control/Controller.h"
 #include "../../engine/Display/Display.h"
+#include "../../engine/Display/Hud.h"
 #include "../../engine/Model/Track.h"
 #include "../../engine/Parcel/TrackBundle.h"
 #include "../../engine/VideoServices/SoundServer.h"
@@ -45,6 +46,19 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace Client {
 
+GameScene::Viewport::Viewport(Display::Display &display, Observer *observer,
+                              Display::Hud *hud) :
+	observer(observer), hud(hud)
+{
+	hud->AttachView(display);
+}
+
+GameScene::Viewport::Viewport(Viewport &&viewport) :
+	observer(std::move(viewport.observer)),
+	hud(std::move(viewport.hud))
+{
+}
+
 GameScene::GameScene(Display::Display &display, GameDirector &director,
                      Script::Core *scripting, HoverScript::GamePeer *gamePeer,
                      std::shared_ptr<Rules> rules) :
@@ -54,8 +68,6 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 	session(nullptr),
 	firedOnRaceFinish(false)
 {
-	memset(observers, 0, sizeof(observers[0]) * MAX_OBSERVERS);
-
 	// Create the new session
 	session = new ClientSession(rules);
 
@@ -84,7 +96,9 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 	}
 	sessionPeer = std::make_shared<SessionPeer>(scripting, session);
 
-	observers[0] = Observer::New();
+	//TODO: Support split-screen with multiple viewports.
+	viewports.emplace_back(Viewport(display,
+		new Observer(), new Display::Hud(display, Display::Vec2(1280, 720))));
 
 	gamePeer->OnSessionStart(sessionPeer);
 	auto rulebook = rules->GetRulebook();
@@ -102,11 +116,6 @@ GameScene::~GameScene()
 void GameScene::Cleanup()
 {
 	delete session;
-	for (int i = 0; i < numPlayers; i++) {
-		if (observers[i] != NULL) {
-			observers[i]->Delete();
-		}
-	}
 }
 
 void GameScene::AttachController(Control::InputEventController &controller)
@@ -155,31 +164,22 @@ void GameScene::DetachController(Control::InputEventController &controller)
 
 void GameScene::OnCameraZoom(int increment)
 {
-	for (int i = 0; i < MAX_OBSERVERS; ++i) {
-		Observer *obs = observers[i];
-		if (obs != NULL) {
-			obs->Zoom(increment);
-		}
+	BOOST_FOREACH(auto &viewport, viewports) {
+		viewport.observer->Zoom(increment);
 	}
 }
 
 void GameScene::OnCameraPan(int increment)
 {
-	for (int i = 0; i < MAX_OBSERVERS; ++i) {
-		Observer *obs = observers[i];
-		if (obs != NULL) {
-			obs->Scroll(increment);
-		}
+	BOOST_FOREACH(auto &viewport, viewports) {
+		viewport.observer->Scroll(increment);
 	}
 }
 
 void GameScene::OnCameraReset()
 {
-	for (int i = 0; i < MAX_OBSERVERS; ++i) {
-		Observer *obs = observers[i];
-		if (obs != NULL) {
-			obs->Home();
-		}
+	BOOST_FOREACH(auto &viewport, viewports) {
+		viewport.observer->Home();
 	}
 }
 
@@ -191,11 +191,9 @@ void GameScene::OnPause()
 
 void GameScene::SetHudVisible(bool visible)
 {
-	for (int i = 0; i < MAX_OBSERVERS; ++i) {
-		Observer *obs = observers[i];
-		if (obs) {
-			obs->SetHudVisible(visible);
-		}
+	BOOST_FOREACH(auto &viewport, viewports) {
+		viewport.observer->SetHudVisible(visible);
+		viewport.hud->SetVisible(visible);
 	}
 }
 
@@ -209,11 +207,8 @@ void GameScene::StartDemoMode()
 	SetHudVisible(false);
 	SetMuted(true);
 
-	for (int i = 0; i < MAX_OBSERVERS; ++i) {
-		Observer *obs = observers[i];
-		if (obs) {
-			obs->StartDemoMode();
-		}
+	BOOST_FOREACH(auto &viewport, viewports) {
+		viewport.observer->StartDemoMode();
 	}
 }
 
@@ -229,29 +224,40 @@ void GameScene::Advance(Util::OS::timestamp_t tick)
 	}
 }
 
+void GameScene::PrepareRender()
+{
+	SUPER::PrepareRender();
+
+	BOOST_FOREACH(auto &viewport, viewports) {
+		viewport.hud->PrepareRender();
+	}
+}
+
 void GameScene::Render()
 {
 	MR_SimulationTime simTime = session->GetSimulationTime();
 
-	VideoServices::VideoBuffer *videoBuf = &display.GetLegacyDisplay();
-	VideoServices::VideoBuffer::Lock lock(*videoBuf);
+	{
+		VideoServices::VideoBuffer *videoBuf = &display.GetLegacyDisplay();
+		VideoServices::VideoBuffer::Lock lock(*videoBuf);
 
-	for (int i = 0; i < MAX_OBSERVERS; ++i) {
-		Observer *obs = observers[i];
-		if (obs != NULL) {
-			obs->RenderNormalDisplay(videoBuf, session,
-				session->GetPlayer(i),
+		int i = 0;
+		BOOST_FOREACH(auto &viewport, viewports) {
+			viewport.observer->RenderNormalDisplay(videoBuf, session,
+				session->GetPlayer(i++),
 				simTime, session->GetBackImage());
 		}
+	}
+	BOOST_FOREACH(auto &viewport, viewports) {
+		viewport.hud->Render();
 	}
 
 	// Trigger sounds.
 	if (!muted) {
-		for (int i = 0; i < MAX_OBSERVERS; ++i) {
-			Observer *obs = observers[i];
-			if (obs != NULL) {
-				obs->PlaySounds(session->GetCurrentLevel(), session->GetPlayer(i));
-			}
+		int i = 0;
+		BOOST_FOREACH(auto &viewport, viewports) {
+			viewport.observer->PlaySounds(session->GetCurrentLevel(),
+				session->GetPlayer(i++));
 		}
 		VideoServices::SoundServer::ApplyContinuousPlay();
 	}
