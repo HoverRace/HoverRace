@@ -58,6 +58,30 @@ class MR_DllDeclare Hud : public Container
 				NEXT_,  ///< First index for subclasses.
 			};
 		};
+		struct HudAlignment
+		{
+			enum type {
+				ABOVE,  ///< Centered in the top-half of the screen.
+				BELOW,  ///< Centered in the bottom-half of the screen.
+				N,      ///< Center-north, stacked left-to-right.
+				NNE,    ///< Northeast corner, stacked right-to-left.
+				NE,     ///< Northeast corner, only top is visible.
+				ENE,    ///< Northeast corner, stacked top-to-bottom.
+				E,      ///< Center-east, stacked top-to-bottom.
+				ESE,    ///< Southeast corner, stacked bottom-to-top.
+				SE,     ///< Southeast corner, only top is visible.
+				SSE,    ///< Southeast corner, stacked right-to-left.
+				S,      ///< Center-south, stacked left-to-right.
+				SSW,    ///< Southwest corner, stacked left-to-right.
+				SW,     ///< Southwest corner, only top is visible.
+				WSW,    ///< Southwest corner, stacked bottom-to-top.
+				W,      ///< Center-west, stacked top-to-bottom.
+				WNW,    ///< Northwest corner, stacked top-to-bottom.
+				NW,     ///< Northwest corner, only top is visible.
+				NNW,    ///< Northwest corner, stacked left-to-right.
+			};
+			static const size_t NUM = NNW + 1;
+		};
 
 	public:
 		Hud(Display &display, const Vec2 &size, bool clip=true,
@@ -71,6 +95,21 @@ class MR_DllDeclare Hud : public Container
 
 	public:
 		/**
+		 * Append a child element to the end of the list.
+		 * @param child The child element; must be a subclass of UiViewModel.
+		 * @return The child element, wrapped in a @c std::shared_ptr.
+		 */
+		template<typename T>
+		typename std::enable_if<std::is_base_of<UiViewModel, T>::value, std::shared_ptr<T>>::type
+		AddHudChild(HudAlignment::type alignment, T *child)
+		{
+			std::shared_ptr<T> sharedChild = AddChild(child);
+			hudChildren[alignment].emplace_back(sharedChild);
+			return sharedChild;
+		}
+
+	public:
+		/**
 		 * Check if the HUD is currently visible;
 		 * @return @c true if the HUD is visible, @c false otherwise.
 		 */
@@ -80,6 +119,7 @@ class MR_DllDeclare Hud : public Container
 	private:
 		Display &display;
 		bool visible;
+		std::array<std::vector<UiViewModelPtr>, HudAlignment::NUM> hudChildren;
 };
 
 }  // namespace Display
