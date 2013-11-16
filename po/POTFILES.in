@@ -5,11 +5,13 @@ client/Game2/CheckUpdateServerDialog.cpp
 client/Game2/ClientApp.cpp
 client/Game2/ClientSession.cpp
 client/Game2/ControlPrefsPage.cpp
+client/Game2/DialogScene.cpp
 client/Game2/DownloadUpdateDialog.cpp
 client/Game2/FolderViewer.cpp
 client/Game2/FormScene.cpp
 client/Game2/GameApp.cpp
 client/Game2/GameScene.cpp
+client/Game2/GameSelectScene.cpp
 client/Game2/GifDecoder.cpp
 client/Game2/HoverScript/ClientScriptCore.cpp
 client/Game2/HoverScript/ConfigPeer.cpp
@@ -17,6 +19,9 @@ client/Game2/HoverScript/Console.cpp
 client/Game2/HoverScript/ConsoleScene.cpp
 client/Game2/HoverScript/DebugPeer.cpp
 client/Game2/HoverScript/GamePeer.cpp
+client/Game2/HoverScript/PlayerPeer.cpp
+client/Game2/HoverScript/RulebookEnv.cpp
+client/Game2/HoverScript/RuntimeEnv.cpp
 client/Game2/HoverScript/SessionPeer.cpp
 client/Game2/HoverScript/SysConsole.cpp
 client/Game2/HoverScript/SysEnv.cpp
@@ -39,6 +44,9 @@ client/Game2/PrefsDialog.cpp
 client/Game2/PrefsPage.cpp
 client/Game2/RoomList.cpp
 client/Game2/RoomListDialog.cpp
+client/Game2/Rulebook.cpp
+client/Game2/RulebookLibrary.cpp
+client/Game2/Rules.cpp
 client/Game2/Scene.cpp
 client/Game2/SelectRoomDialog.cpp
 client/Game2/TestLabScene.cpp
@@ -148,7 +156,6 @@ engine/Util/FuzzyLogic.cpp
 engine/Util/InspectMapNode.cpp
 engine/Util/Log.cpp
 engine/Util/OS.cpp
-engine/Util/Profiler.cpp
 engine/Util/SelFmt.cpp
 engine/Util/Str.cpp
 engine/Util/WorldCoordinates.cpp
