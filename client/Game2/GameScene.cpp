@@ -249,7 +249,9 @@ void GameScene::Render()
 		}
 	}
 	BOOST_FOREACH(auto &viewport, viewports) {
-		viewport.hud->Render();
+		if (viewport.hud->IsVisible()) {
+			viewport.hud->Render();
+		}
 	}
 
 	// Trigger sounds.
