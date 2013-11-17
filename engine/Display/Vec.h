@@ -116,6 +116,13 @@ MR_DllDeclare inline Vec3 &operator+=(Vec3 &lhs, const Vec3 &rhs)
 	return lhs;
 }
 
+MR_DllDeclare inline Vec3 &operator+=(Vec3 &lhs, const Vec2 &rhs)
+{
+	lhs.x += rhs.x;
+	lhs.y += rhs.y;
+	return lhs;
+}
+
 MR_DllDeclare inline Vec3 &operator-=(Vec3 &lhs, const Vec3 &rhs)
 {
 	lhs.x -= rhs.x;
