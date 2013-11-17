@@ -21,6 +21,9 @@
 
 #pragma once
 
+#include "../Util/OS.h"
+#include "HudDecor.h"
+
 #include "Container.h"
 
 #ifdef _WIN32
@@ -36,6 +39,9 @@
 namespace HoverRace {
 	namespace Display {
 		class Display;
+	}
+	namespace MainCharacter {
+		class MainCharacter;
 	}
 }
 
@@ -54,7 +60,8 @@ class MR_DllDeclare Hud : public Container
 		struct Props
 		{
 			enum {
-				VISIBLE = SUPER::Props::NEXT_,
+				PLAYER = SUPER::Props::NEXT_,
+				VISIBLE,
 				NEXT_,  ///< First index for subclasses.
 			};
 		};
@@ -84,7 +91,8 @@ class MR_DllDeclare Hud : public Container
 		};
 
 	public:
-		Hud(Display &display, const Vec2 &size, bool clip=true,
+		Hud(Display &display, MainCharacter::MainCharacter *player,
+			const Vec2 &size, bool clip=true,
 			uiLayoutFlags_t layoutFlags=0);
 		virtual ~Hud() { }
 
@@ -100,15 +108,35 @@ class MR_DllDeclare Hud : public Container
 		 * @return The child element, wrapped in a @c std::shared_ptr.
 		 */
 		template<typename T>
-		typename std::enable_if<std::is_base_of<UiViewModel, T>::value, std::shared_ptr<T>>::type
+		typename std::enable_if<std::is_base_of<HudDecor, T>::value, std::shared_ptr<T>>::type
 		AddHudChild(HudAlignment::type alignment, T *child)
 		{
 			std::shared_ptr<T> sharedChild = AddChild(child);
+			sharedChild->SetPlayer(player);
 			hudChildren[alignment].emplace_back(sharedChild);
+			RequestLayout();
 			return sharedChild;
 		}
 
+	protected:
+		template<typename Fn>
+		void ForEachHudChild(Fn fn)
+		{
+			BOOST_FOREACH(auto &children, hudChildren) {
+				BOOST_FOREACH(auto &child, children) {
+					fn(child);
+				}
+			}
+		}
+
 	public:
+		/**
+		 * Retrieve the player being targeted by this HUD.
+		 * @return The player (may be @c nullptr).
+		 */
+		MainCharacter::MainCharacter *GetPlayer() const { return player; }
+		void SetPlayer(MainCharacter::MainCharacter *player);
+
 		/**
 		 * Check if the HUD is currently visible;
 		 * @return @c true if the HUD is visible, @c false otherwise.
@@ -116,9 +144,14 @@ class MR_DllDeclare Hud : public Container
 		bool IsVisible() const { return visible; }
 		void SetVisible(bool visible);
 
+	public:
+		void Advance(Util::OS::timestamp_t tick);
+
 	private:
+		MainCharacter::MainCharacter *player;
 		bool visible;
-		std::array<std::vector<UiViewModelPtr>, HudAlignment::NUM> hudChildren;
+		typedef std::vector<std::shared_ptr<HudDecor>> hudChildList_t;
+		std::array<hudChildList_t, HudAlignment::NUM> hudChildren;
 };
 
 }  // namespace Display

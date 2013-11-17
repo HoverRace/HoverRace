@@ -21,6 +21,8 @@ libdisplay_la_SOURCES = \
 	FillBox.h \
 	Hud.cpp \
 	Hud.h \
+	HudDecor.cpp \
+	HudDecor.h \
 	Label.cpp \
 	Label.h \
 	ScreenFade.cpp \

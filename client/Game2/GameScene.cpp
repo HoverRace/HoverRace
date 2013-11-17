@@ -97,8 +97,11 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 	sessionPeer = std::make_shared<SessionPeer>(scripting, session);
 
 	//TODO: Support split-screen with multiple viewports.
-	viewports.emplace_back(Viewport(display,
-		new Observer(), new Display::Hud(display, Display::Vec2(1280, 720))));
+	viewports.emplace_back(
+		Viewport(display,
+			new Observer(),
+			new Display::Hud(display, session->GetPlayer(0),
+				Display::Vec2(1280, 720))));
 
 	gamePeer->OnSessionStart(sessionPeer);
 	auto rulebook = rules->GetRulebook();
@@ -221,6 +224,11 @@ void GameScene::Advance(Util::OS::timestamp_t tick)
 	if (!firedOnRaceFinish && session->GetPlayer(0)->HasFinish()) {
 		OnRaceFinish();
 		firedOnRaceFinish = true;
+	}
+
+	// Update HUD state last, after game state is settled for this frame.
+	BOOST_FOREACH(auto &viewport, viewports) {
+		viewport.hud->Advance(tick);
 	}
 }
 

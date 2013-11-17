@@ -1,5 +1,5 @@
 
-// Hud.cpp
+// HudDecor.cpp
 //
 // Copyright (c) 2013 Michael Imamura.
 //
@@ -21,7 +21,7 @@
 
 #include "StdAfx.h"
 
-#include "Hud.h"
+#include "HudDecor.h"
 
 namespace HoverRace {
 namespace Display {
@@ -29,49 +29,24 @@ namespace Display {
 /**
  * Constructor.
  * @param display The display child elements will be attached to.
- * @param size The size of the container.
- * @param clip Enable (default) or disable clipping of child widgets.
  * @param layoutFlags Optional layout flags.
  */
-Hud::Hud(Display &display, MainCharacter::MainCharacter *player,
-         const Vec2 &size, bool clip,
-         uiLayoutFlags_t layoutFlags) :
-	SUPER(display, size, clip, layoutFlags),
-	player(player), visible(true)
+HudDecor::HudDecor(Display &display, uiLayoutFlags_t layoutFlags) :
+	SUPER(display, layoutFlags),
+	player(nullptr)
 {
 }
 
 /**
- * Change the player being targeted by the HUD.
- * @param player The target player (may be @c nullptr).
+ * Change the target player for this HUD element.
+ * @param player The player (may be @c nullptr).
  */
-void Hud::SetPlayer(MainCharacter::MainCharacter *player)
+void HudDecor::SetPlayer(MainCharacter::MainCharacter *player)
 {
 	if (this->player != player) {
 		this->player = player;
-		ForEachHudChild([&](std::shared_ptr<HudDecor> &child) {
-			child->SetPlayer(player);
-		});
+		FireModelUpdate(Props::PLAYER);
 	}
-}
-
-/**
- * Set the visibility of the HUD.
- * @param visible @c true for a visible HUD, @c false for invisible.
- */
-void Hud::SetVisible(bool visible)
-{
-	if (this->visible != visible) {
-		this->visible = visible;
-		FireModelUpdate(Props::VISIBLE);
-	}
-}
-
-void Hud::Advance(Util::OS::timestamp_t tick)
-{
-	ForEachHudChild([&](std::shared_ptr<HudDecor> &child) {
-		child->Advance(tick);
-	});
 }
 
 }  // namespace Display

@@ -397,6 +397,9 @@
     <ClCompile Include="Display\Hud.cpp">
       <Filter>Display</Filter>
     </ClCompile>
+    <ClCompile Include="Display\HudDecor.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColorTools\ColorTools.h">
@@ -816,6 +819,9 @@
       <Filter>Display</Filter>
     </ClInclude>
     <ClInclude Include="Display\Hud.h">
+      <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="Display\HudDecor.h">
       <Filter>Display</Filter>
     </ClInclude>
   </ItemGroup>
