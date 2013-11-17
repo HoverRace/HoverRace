@@ -58,9 +58,7 @@ typedef Util::BitPack<23> MainCharacterState;
 //   #define  MC_SOUNDFX      141,    5,     0
 // Total                 184  = 23 bytes
 
-#ifdef HAVE_STDCXX_0X
 static_assert(std::is_pod<MainCharacterState>::value, "MainCharacterState must be a POD type");
-#endif
 
 // Local constants
 #define TIME_SLICE                     5
