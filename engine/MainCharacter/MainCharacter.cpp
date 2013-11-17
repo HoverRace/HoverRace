@@ -1023,6 +1023,11 @@ MR_Angle MainCharacter::GetCabinOrientation() const
 	return mCabinOrientation;
 }
 
+/**
+ * Retrieve the relative amount of fuel remaining.
+ * @return The fuel level, where 1.0 or higher is full and
+ *         0.0 or lower is empty.
+ */
 double MainCharacter::GetFuelLevel() const
 {
 	return mFuelLevel / eFuelCapacity;
