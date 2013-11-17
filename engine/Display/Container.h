@@ -163,8 +163,9 @@ class MR_DllDeclare Container : public UiViewModel
 	public:
 		virtual Vec3 Measure() const { return size.Promote(); }
 
-	private:
+	protected:
 		Display &display;
+	private:
 		Vec2 size;
 		bool clip;
 		std::vector<UiViewModelPtr> children;

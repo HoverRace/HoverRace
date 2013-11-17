@@ -35,7 +35,7 @@ namespace Display {
  */
 Hud::Hud(Display &display, const Vec2 &size, bool clip,
          uiLayoutFlags_t layoutFlags) :
-	SUPER(display, size, clip, layoutFlags), display(display),
+	SUPER(display, size, clip, layoutFlags),
 	visible(true)
 {
 }

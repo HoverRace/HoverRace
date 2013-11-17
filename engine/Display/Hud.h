@@ -117,7 +117,6 @@ class MR_DllDeclare Hud : public Container
 		void SetVisible(bool visible);
 
 	private:
-		Display &display;
 		bool visible;
 		std::array<std::vector<UiViewModelPtr>, HudAlignment::NUM> hudChildren;
 };
