@@ -140,6 +140,8 @@ class MR_DllDeclare Container : public UiViewModel
 		}
 
 	public:
+		void ShrinkWrap();
+
 		/**
 		 * Retrieve the size of the container.
 		 * @note If clipping is turned off, the size is undefined.
