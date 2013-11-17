@@ -23,6 +23,7 @@
 
 #include "../../engine/Control/Controller.h"
 #include "../../engine/Display/Display.h"
+#include "../../engine/Display/FuelGauge.h"
 #include "../../engine/Display/Hud.h"
 #include "../../engine/Model/Track.h"
 #include "../../engine/Parcel/TrackBundle.h"
@@ -102,6 +103,12 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 			new Observer(),
 			new Display::Hud(display, session->GetPlayer(0),
 				Display::Vec2(1280, 720))));
+	auto &viewport = viewports.back();
+	auto fuelGauge = viewport.hud->AddHudChild(Display::Hud::HudAlignment::NE,
+		new Display::FuelGauge(display));
+
+	//HACK: Temporary until layout bits are added to HUD.
+	fuelGauge->SetPos(1280 - 20 - 300, 20);
 
 	gamePeer->OnSessionStart(sessionPeer);
 	auto rulebook = rules->GetRulebook();

@@ -599,7 +599,9 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 		else {
 			m3DView.DrawHorizontalMeter(lXMargin, lSpeedMeterLen, lYMargin + lMeterHight, lMeterHight, lDirSpeedLen, 54, 56);
 		}
+		/* Replaced by FuelGauge.
 		m3DView.DrawHorizontalMeter(lXRes - lXMargin - lFuelMeterLen, lFuelMeterLen, lYMargin, lMeterHight * 2, lFuelLen, 54, (lFuelLevel < 0.20) ? 35 : 56);
+		*/
 	}
 
 	// MissileLevel

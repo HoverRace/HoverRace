@@ -19,6 +19,8 @@ libdisplay_la_SOURCES = \
 	Display.h \
 	FillBox.cpp \
 	FillBox.h \
+	FuelGauge.cpp \
+	FuelGauge.h \
 	Hud.cpp \
 	Hud.h \
 	HudDecor.cpp \
