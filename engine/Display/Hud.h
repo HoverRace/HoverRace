@@ -88,10 +88,10 @@ class MR_DllDeclare Hud : public Container
 			uiLayoutFlags_t layoutFlags=0);
 		virtual ~Hud() { }
 
-/*
+	/* Using the view for Container.
 	public:
 		virtual void AttachView(Display &disp) { AttachViewDynamic(disp, this); }
-*/
+	*/
 
 	public:
 		/**
