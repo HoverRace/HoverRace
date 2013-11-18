@@ -74,6 +74,7 @@ class GameScene : public Scene
 			Viewport(Display::Display &display, Observer *observer,
 				Display::Hud *hud);
 			Viewport(Viewport &&viewport);
+			Viewport &operator=(Viewport &&viewport);
 
 			std::unique_ptr<Observer> observer;
 			std::unique_ptr<Display::Hud> hud;

@@ -61,6 +61,12 @@ GameScene::Viewport::Viewport(Viewport &&viewport) :
 {
 }
 
+GameScene::Viewport &GameScene::Viewport::operator=(Viewport &&viewport)
+{
+	observer = std::move(viewport.observer);
+	hud = std::move(viewport.hud);
+}
+
 GameScene::GameScene(Display::Display &display, GameDirector &director,
                      Script::Core *scripting, HoverScript::GamePeer *gamePeer,
                      std::shared_ptr<Rules> rules) :
