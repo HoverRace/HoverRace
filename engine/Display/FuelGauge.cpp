@@ -32,6 +32,9 @@ namespace Display {
 namespace {
 	const double GAUGE_WIDTH = 300;
 	const double GAUGE_HEIGHT = 40;
+	const Color BG_COLOR = 0xffc1cae7;
+	const Color FG_COLOR = 0xff5473cf;
+	const Color LOW_COLOR = 0xfff11b1b;
 }
 
 /**
@@ -45,8 +48,8 @@ FuelGauge::FuelGauge(Display &display, uiLayoutFlags_t layoutFlags) :
 	SetSize(GAUGE_WIDTH, GAUGE_HEIGHT);
 	SetClip(false);
 
-	bg = AddChild(new FillBox(GAUGE_WIDTH, GAUGE_HEIGHT, 0xffc1cae7));
-	fg = AddChild(new FillBox(GAUGE_WIDTH, GAUGE_HEIGHT, 0xff5473cf));
+	bg = AddChild(new FillBox(GAUGE_WIDTH, GAUGE_HEIGHT, BG_COLOR));
+	fg = AddChild(new FillBox(GAUGE_WIDTH, GAUGE_HEIGHT, FG_COLOR));
 }
 
 void FuelGauge::Advance(Util::OS::timestamp_t tick)
@@ -56,6 +59,7 @@ void FuelGauge::Advance(Util::OS::timestamp_t tick)
 	else if (fuel > 1.0) fuel = 1.0;
 
 	fg->SetSize(GAUGE_WIDTH * fuel, GAUGE_HEIGHT);
+	fg->SetColor(fuel < 0.20 ? LOW_COLOR : FG_COLOR);
 }
 
 }  // namespace Display
