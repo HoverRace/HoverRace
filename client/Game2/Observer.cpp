@@ -592,6 +592,7 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 	int lFuelLen = (int)(lFuelLevel * lFuelMeterLen);
 
 	if (hudVisible) {
+		/* Replaced by Speedometer.
 		m3DView.DrawHorizontalMeter(lXMargin, lSpeedMeterLen, lYMargin, lMeterHight, lAbsSpeedLen, 54, 56);
 		if(lDirSpeedLen < 0) {
 			m3DView.DrawHorizontalMeter(lXMargin, lSpeedMeterLen, lYMargin + lMeterHight, lMeterHight, -lDirSpeedLen, 44, 56);
@@ -599,6 +600,7 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 		else {
 			m3DView.DrawHorizontalMeter(lXMargin, lSpeedMeterLen, lYMargin + lMeterHight, lMeterHight, lDirSpeedLen, 54, 56);
 		}
+		*/
 		/* Replaced by FuelGauge.
 		m3DView.DrawHorizontalMeter(lXRes - lXMargin - lFuelMeterLen, lFuelMeterLen, lYMargin, lMeterHight * 2, lFuelLen, 54, (lFuelLevel < 0.20) ? 35 : 56);
 		*/

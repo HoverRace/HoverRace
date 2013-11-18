@@ -29,6 +29,8 @@ libdisplay_la_SOURCES = \
 	Label.h \
 	ScreenFade.cpp \
 	ScreenFade.h \
+	Speedometer.cpp \
+	Speedometer.h \
 	SymbolIcon.cpp \
 	SymbolIcon.h \
 	UiFont.cpp \

@@ -403,6 +403,9 @@
     <ClCompile Include="Display\FuelGauge.cpp">
       <Filter>Display</Filter>
     </ClCompile>
+    <ClCompile Include="Display\Speedometer.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColorTools\ColorTools.h">
@@ -828,6 +831,9 @@
       <Filter>Display</Filter>
     </ClInclude>
     <ClInclude Include="Display\FuelGauge.h">
+      <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="Display\Speedometer.h">
       <Filter>Display</Filter>
     </ClInclude>
   </ItemGroup>
