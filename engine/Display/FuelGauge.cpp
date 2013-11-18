@@ -59,7 +59,7 @@ void FuelGauge::Advance(Util::OS::timestamp_t tick)
 	else if (fuel > 1.0) fuel = 1.0;
 
 	fg->SetSize(GAUGE_WIDTH * fuel, GAUGE_HEIGHT);
-	fg->SetColor(fuel < 0.20 ? LOW_COLOR : FG_COLOR);
+	bg->SetColor(fuel < 0.20 ? LOW_COLOR : BG_COLOR);
 }
 
 }  // namespace Display
