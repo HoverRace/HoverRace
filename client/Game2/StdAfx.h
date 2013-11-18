@@ -51,6 +51,7 @@
 #include <stdlib.h>
 
 #include <algorithm>
+#include <array>
 #include <exception>
 #include <functional>
 #include <map>
