@@ -28,9 +28,13 @@
 #include "../../engine/Display/Container.h"
 #include "../../engine/Display/Display.h"
 #include "../../engine/Display/FillBox.h"
+#include "../../engine/Display/FuelGauge.h"
+#include "../../engine/Display/Hud.h"
 #include "../../engine/Display/Label.h"
 #include "../../engine/Display/ScreenFade.h"
+#include "../../engine/Display/Speedometer.h"
 #include "../../engine/Display/SymbolIcon.h"
+#include "../../engine/MainCharacter/MainCharacter.h"
 #include "../../engine/VideoServices/FontSpec.h"
 #include "../../engine/VideoServices/VideoBuffer.h"
 #include "../../engine/Util/Config.h"
@@ -168,6 +172,23 @@ namespace Module {
 			std::shared_ptr<Display::Label> stateLbl;
 			std::shared_ptr<Display::FillBox> stateBox;
 	}; //}}}
+
+	class HudModule : public TestLabScene::LabModule /*{{{*/
+	{
+		typedef TestLabScene::LabModule SUPER;
+		public:
+			HudModule(Display::Display &display, GameDirector &director);
+			virtual ~HudModule() { }
+
+		public:
+			virtual void Advance(Util::OS::timestamp_t tick);
+			virtual void PrepareRender();
+			virtual void Render();
+
+		private:
+			std::unique_ptr<MainCharacter::MainCharacter> player;
+			std::unique_ptr<Display::Hud> hud;
+	}; //}}}
 }
 
 TestLabScene::TestLabScene(Display::Display &display, GameDirector &director) :
@@ -191,6 +212,8 @@ TestLabScene::TestLabScene(Display::Display &display, GameDirector &director) :
 	root->AddChild(new ModuleButton<Module::IconModule>(display, director, "Icon", 0, y));
 	y += yStep;
 	root->AddChild(new ModuleButton<Module::TransitionModule>(display, director, "Transition", 0, y));
+	y += yStep;
+	root->AddChild(new ModuleButton<Module::HudModule>(display, director, "HUD", 0, y));
 }
 
 TestLabScene::~TestLabScene()
@@ -572,6 +595,47 @@ void TransitionModule::OnStateTransition(double progress)
 }
 
 //}}} TransitionModule
+
+//{{{ HudModule ///////////////////////////////////////////////////////////////
+
+HudModule::HudModule(Display::Display &display, GameDirector &director) :
+	SUPER(display, director, "HUD"),
+	player(MainCharacter::MainCharacter::New(0, 0x7f)),
+	hud(new Display::Hud(display, player.get(), Display::Vec2(1280, 720)))
+{
+	hud->AttachView(display);
+
+	// A common HUD style.
+	typedef Display::Hud::HudAlignment HudAlignment;
+	auto fuelGauge = hud->AddHudChild(HudAlignment::NE,
+		new Display::FuelGauge(display));
+	auto speedometer = hud->AddHudChild(HudAlignment::NW,
+		new Display::Speedometer(display));
+
+	//HACK: Temporary until layout bits are added to HUD.
+	fuelGauge->SetPos(1280 - 20 - 300, 20);
+	speedometer->SetPos(20, 20);
+}
+
+void HudModule::Advance(Util::OS::timestamp_t tick)
+{
+	SUPER::Advance(tick);
+	hud->Advance(tick);
+}
+
+void HudModule::PrepareRender()
+{
+	SUPER::PrepareRender();
+	hud->PrepareRender();
+}
+
+void HudModule::Render()
+{
+	SUPER::Render();
+	hud->Render();
+}
+
+//}}} HudModule
 
 }  // namespace Module
 
