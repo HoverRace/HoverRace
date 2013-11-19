@@ -65,6 +65,7 @@ GameScene::Viewport &GameScene::Viewport::operator=(Viewport &&viewport)
 {
 	observer = std::move(viewport.observer);
 	hud = std::move(viewport.hud);
+	return *this;
 }
 
 GameScene::GameScene(Display::Display &display, GameDirector &director,
