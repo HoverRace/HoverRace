@@ -106,6 +106,10 @@ class MR_DllDeclare OS {
 			static void StringToGuid(const std::string &s, GUID &guid);
 #		endif
 
+#		ifndef _WIN32
+			static std::string StrError(int errnum);
+#		endif
+
 		static void TimeInit();
 		static timestamp_t Time();
 		static timestamp_t TimeDiff(timestamp_t laterTs, timestamp_t earlierTs);

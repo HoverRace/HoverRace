@@ -85,6 +85,9 @@ AC_C_CONST
 AC_C_BIGENDIAN
 AC_TYPE_LONG_LONG_INT
 
+# Checks for library functions.
+AC_FUNC_STRERROR_R
+
 PLATFORM_NAME=`uname -s`
 AC_DEFINE_UNQUOTED([PLATFORM_NAME], ["$PLATFORM_NAME"], [Platform name.])
 
