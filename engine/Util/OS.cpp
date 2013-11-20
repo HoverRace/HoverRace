@@ -582,7 +582,7 @@ bool OS::OpenLink(const std::string &url)
 		}
 		else if (pid < 0) {
 			char err[256];
-			strerror_r(errno, err, sizeof(err));
+			if (strerror_r(errno, err, sizeof(err))) { /* Ignore. */ }
 			std::string exs = "Failed to fork to run xdg-open: ";
 			exs += err;
 			throw std::runtime_error(exs.c_str());
@@ -612,7 +612,7 @@ bool OS::OpenPath(const path_t &path)
 		}
 		else if (pid < 0) {
 			char err[256];
-			strerror_r(errno, err, sizeof(err));
+			if (strerror_r(errno, err, sizeof(err))) { /* Ignore. */ }
 			std::string exs = "Failed to fork to run xdg-open: ";
 			exs += err;
 			throw std::runtime_error(exs.c_str());

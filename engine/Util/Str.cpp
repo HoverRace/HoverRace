@@ -153,7 +153,7 @@ char *Str::WideToUtf8(const wchar_t *ws)
 				}
 				else {
 					char err[256];
-					strerror_r(errno, err, sizeof(err));
+					if (strerror_r(errno, err, sizeof(err))) { /* Ignore. */ }
 					std::string exs = "#<";
 					exs += err;
 					exs += '>';
