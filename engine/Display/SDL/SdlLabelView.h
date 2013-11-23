@@ -22,6 +22,7 @@
 #pragma once
 
 #include "SdlDisplay.h"
+#include "SdlTexture.h"
 #include "SdlView.h"
 
 #ifdef _WIN32
@@ -71,7 +72,7 @@ class MR_DllDeclare SdlLabelView : public SdlView<Label>
 		void UpdateTextureColor();
 
 	private:
-		SDL_Texture *texture;
+		std::unique_ptr<SdlTexture> texture;
 		bool colorChanged;
 		int width;
 		int height;

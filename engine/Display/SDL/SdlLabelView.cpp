@@ -45,9 +45,6 @@ SdlLabelView::SdlLabelView(SdlDisplay &disp, Label &model) :
 SdlLabelView::~SdlLabelView()
 {
 	uiScaleChangedConnection.disconnect();
-	if (texture) {
-		SDL_DestroyTexture(texture);
-	}
 }
 
 void SdlLabelView::OnModelUpdate(int prop)
@@ -60,20 +57,14 @@ void SdlLabelView::OnModelUpdate(int prop)
 		case Label::Props::FONT:
 		case Label::Props::TEXT:
 		case Label::Props::WRAP_WIDTH:
-			if (texture) {
-				SDL_DestroyTexture(texture);
-				texture = nullptr;
-			}
+			texture.release();
 			break;
 	}
 }
 
 void SdlLabelView::OnUiScaleChanged()
 {
-	if (texture) {
-		SDL_DestroyTexture(texture);
-		texture = nullptr;
-	}
+	texture.release();
 }
 
 void SdlLabelView::PrepareRender()
@@ -90,8 +81,8 @@ void SdlLabelView::Render()
 	if (model.GetText().empty()) return;
 
 	int w, h;
-	SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
-	display.DrawUiTexture(texture,
+	SDL_QueryTexture(texture->Get(), nullptr, nullptr, &w, &h);
+	display.DrawUiTexture(texture->Get(),
 		model.GetAlignedPos(unscaledWidth, unscaledHeight),
 		model.GetLayoutFlags());
 }
@@ -120,8 +111,6 @@ void SdlLabelView::UpdateBlank()
 
 void SdlLabelView::UpdateTexture()
 {
-	if (texture) SDL_DestroyTexture(texture);
-
 	if (model.GetText().empty()) {
 		UpdateBlank();
 		return;
@@ -154,9 +143,11 @@ void SdlLabelView::UpdateTexture()
 	realHeight = height = textRenderer.GetHeight();
 
 	// Convert the surface to the display format.
-	texture = SDL_CreateTextureFromSurface(display.GetRenderer(), tempSurface);
+	SDL_Texture *texture = SDL_CreateTextureFromSurface(
+		display.GetRenderer(), tempSurface);
 	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 	SDL_FreeSurface(tempSurface);
+	this->texture.reset(new SdlTexture(display, texture));
 
 	// We pre-scale the texture (by adjusting the font size) so that would
 	// normally throw off the size adjustments later, so we need to keep track
@@ -172,8 +163,8 @@ void SdlLabelView::UpdateTextureColor()
 {
 	if (!model.GetText().empty()) {
 		const Color cm = model.GetColor();
-		SDL_SetTextureColorMod(texture, cm.bits.r, cm.bits.g, cm.bits.b);
-		SDL_SetTextureAlphaMod(texture, cm.bits.a);
+		SDL_SetTextureColorMod(texture->Get(), cm.bits.r, cm.bits.g, cm.bits.b);
+		SDL_SetTextureAlphaMod(texture->Get(), cm.bits.a);
 	}
 
 	colorChanged = false;
