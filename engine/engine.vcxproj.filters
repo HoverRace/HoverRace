@@ -812,6 +812,12 @@
     <ClInclude Include="Display\Checkbox.h">
       <Filter>Display</Filter>
     </ClInclude>
+    <ClInclude Include="Display\Texture.h">
+      <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="Display\SDL\SdlTexture.h">
+      <Filter>Display\SDL</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\lib\alut.dll">
