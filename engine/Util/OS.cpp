@@ -493,6 +493,31 @@ void OS::StringToGuid(const std::string &s, GUID &guid)
 }
 #endif
 
+#ifndef _WIN32
+/**
+ * Convert an error number to a string.
+ * @param errnum The error number, usually @c errno.
+ * @return The error as a string.
+ */
+std::string OS::StrError(int errnum)
+{
+#	ifdef HAVE_STRERROR_R
+		char err[256];
+#		ifdef STRERROR_R_CHAR_P
+			// GNU version of strerror_r().
+			char *retv = strerror_r(errnum, err, sizeof(err));
+			return retv ? retv : "Unknown error";
+#		else
+			// POSIX version of strerror_r().
+			int retv = strerror_r(errnum, err, sizeof(err));
+			return retv ? "Unknown error" : err;
+#		endif
+#	else
+		return strerror(errnum);
+#	endif
+}
+#endif
+
 /**
  * Initialize the OS time source.
  * On Win32, this attempts to increase the precision to 1 ms.
@@ -581,10 +606,8 @@ bool OS::OpenLink(const std::string &url)
 			_exit(1);
 		}
 		else if (pid < 0) {
-			char err[256];
-			strerror_r(errno, err, sizeof(err));
 			std::string exs = "Failed to fork to run xdg-open: ";
-			exs += err;
+			exs += StrError(errno);
 			throw std::runtime_error(exs.c_str());
 		}
 #	endif
@@ -611,10 +634,8 @@ bool OS::OpenPath(const path_t &path)
 			_exit(1);
 		}
 		else if (pid < 0) {
-			char err[256];
-			strerror_r(errno, err, sizeof(err));
 			std::string exs = "Failed to fork to run xdg-open: ";
-			exs += err;
+			exs += StrError(errno);
 			throw std::runtime_error(exs.c_str());
 		}
 #	endif

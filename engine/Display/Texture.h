@@ -1,5 +1,5 @@
 
-// SdlLabelView.h
+// Texture.h
 //
 // Copyright (c) 2013 Michael Imamura.
 //
@@ -21,9 +21,7 @@
 
 #pragma once
 
-#include "SdlDisplay.h"
-#include "SdlTexture.h"
-#include "SdlView.h"
+#include <SDL2/SDL.h>
 
 #ifdef _WIN32
 #	ifdef MR_ENGINE
@@ -36,54 +34,19 @@
 #endif
 
 namespace HoverRace {
-	namespace Display {
-		class Label;
-	}
-}
-struct SDL_Surface;
-
-namespace HoverRace {
 namespace Display {
-namespace SDL {
 
-class MR_DllDeclare SdlLabelView : public SdlView<Label>
+/**
+ * A hardware texture.
+ * @author Michael Imamura
+ */
+class Texture
 {
-	typedef SdlView<Label> SUPER;
 	public:
-		SdlLabelView(SdlDisplay &disp, Label &model);
-		virtual ~SdlLabelView();
-
-	public:
-		virtual void OnModelUpdate(int prop);
-		void OnUiScaleChanged();
-
-	public:
-		virtual Vec3 Measure()
-		{
-			PrepareRender();
-			return Vec3(unscaledWidth, unscaledHeight, 0);
-		}
-		virtual void PrepareRender();
-		virtual void Render();
-
-	private:
-		void UpdateBlank();
-		void UpdateTexture();
-		void UpdateTextureColor();
-
-	private:
-		std::unique_ptr<SdlTexture> texture;
-		bool colorChanged;
-		int width;
-		int height;
-		int realWidth;
-		int realHeight;
-		double unscaledWidth;
-		double unscaledHeight;
-		boost::signals2::connection uiScaleChangedConnection;
+		Texture() { }
+		virtual ~Texture() { }
 };
 
-}  // namespace SDL
 }  // namespace Display
 }  // namespace HoverRace
 
