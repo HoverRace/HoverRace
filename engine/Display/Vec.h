@@ -36,7 +36,7 @@ namespace Display {
 
 struct Vec3;
 
-struct MR_DllDeclare Vec2
+struct Vec2
 {
 	Vec2(double x, double y) : x(x), y(y) { }
 
@@ -46,47 +46,47 @@ struct MR_DllDeclare Vec2
 	double y;
 };
 
-MR_DllDeclare inline bool operator==(const Vec2 &lhs, const Vec2 &rhs)
+inline bool operator==(const Vec2 &lhs, const Vec2 &rhs)
 {
 	return
 		lhs.x == rhs.x &&
 		lhs.y == rhs.y;
 }
 
-MR_DllDeclare inline bool operator!=(const Vec2 &lhs, const Vec2 &rhs)
+inline bool operator!=(const Vec2 &lhs, const Vec2 &rhs)
 {
 	return !operator==(lhs, rhs);
 }
 
-MR_DllDeclare inline Vec2 &operator+=(Vec2 &lhs, const Vec2 &rhs)
+inline Vec2 &operator+=(Vec2 &lhs, const Vec2 &rhs)
 {
 	lhs.x += rhs.x;
 	lhs.y += rhs.y;
 	return lhs;
 }
 
-MR_DllDeclare inline Vec2 &operator-=(Vec2 &lhs, const Vec2 &rhs)
+inline Vec2 &operator-=(Vec2 &lhs, const Vec2 &rhs)
 {
 	lhs.x -= rhs.x;
 	lhs.y -= rhs.y;
 	return lhs;
 }
 
-MR_DllDeclare inline Vec2 &operator*=(Vec2 &lhs, double scale)
+inline Vec2 &operator*=(Vec2 &lhs, double scale)
 {
 	lhs.x *= scale;
 	lhs.y *= scale;
 	return lhs;
 }
 
-MR_DllDeclare inline Vec2 &operator/=(Vec2 &lhs, double scale)
+inline Vec2 &operator/=(Vec2 &lhs, double scale)
 {
 	lhs.x /= scale;
 	lhs.y /= scale;
 	return lhs;
 }
 
-struct MR_DllDeclare Vec3
+struct Vec3
 {
 	Vec3(double x, double y, double z) : x(x), y(y), z(z) { }
 
@@ -95,7 +95,7 @@ struct MR_DllDeclare Vec3
 	double z;
 };
 
-MR_DllDeclare inline bool operator==(const Vec3 &lhs, const Vec3 &rhs)
+inline bool operator==(const Vec3 &lhs, const Vec3 &rhs)
 {
 	return
 		lhs.x == rhs.x &&
@@ -103,12 +103,12 @@ MR_DllDeclare inline bool operator==(const Vec3 &lhs, const Vec3 &rhs)
 		lhs.z == rhs.z;
 }
 
-MR_DllDeclare inline bool operator!=(const Vec3 &lhs, const Vec3 &rhs)
+inline bool operator!=(const Vec3 &lhs, const Vec3 &rhs)
 {
 	return !operator==(lhs, rhs);
 }
 
-MR_DllDeclare inline Vec3 &operator+=(Vec3 &lhs, const Vec3 &rhs)
+inline Vec3 &operator+=(Vec3 &lhs, const Vec3 &rhs)
 {
 	lhs.x += rhs.x;
 	lhs.y += rhs.y;
@@ -116,14 +116,14 @@ MR_DllDeclare inline Vec3 &operator+=(Vec3 &lhs, const Vec3 &rhs)
 	return lhs;
 }
 
-MR_DllDeclare inline Vec3 &operator+=(Vec3 &lhs, const Vec2 &rhs)
+inline Vec3 &operator+=(Vec3 &lhs, const Vec2 &rhs)
 {
 	lhs.x += rhs.x;
 	lhs.y += rhs.y;
 	return lhs;
 }
 
-MR_DllDeclare inline Vec3 &operator-=(Vec3 &lhs, const Vec3 &rhs)
+inline Vec3 &operator-=(Vec3 &lhs, const Vec3 &rhs)
 {
 	lhs.x -= rhs.x;
 	lhs.y -= rhs.y;
@@ -131,7 +131,7 @@ MR_DllDeclare inline Vec3 &operator-=(Vec3 &lhs, const Vec3 &rhs)
 	return lhs;
 }
 
-MR_DllDeclare inline Vec3 &operator*=(Vec3 &lhs, double scale)
+inline Vec3 &operator*=(Vec3 &lhs, double scale)
 {
 	lhs.x *= scale;
 	lhs.y *= scale;
@@ -139,7 +139,7 @@ MR_DllDeclare inline Vec3 &operator*=(Vec3 &lhs, double scale)
 	return lhs;
 }
 
-MR_DllDeclare inline Vec3 &operator/=(Vec3 &lhs, double scale)
+inline Vec3 &operator/=(Vec3 &lhs, double scale)
 {
 	lhs.x /= scale;
 	lhs.y /= scale;

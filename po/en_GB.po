@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hoverrace 2.0\n"
 "Report-Msgid-Bugs-To: https://github.com/HoverRace/HoverRace\n"
-"POT-Creation-Date: 2013-08-28 16:31-0400\n"
+"POT-Creation-Date: 2013-11-15 20:52-0500\n"
 "PO-Revision-Date: 2013-08-23 21:49+1000\n"
 "Last-Translator: Cong <congusbongus@gmail.com>\n"
 "Language-Team: English\n"
@@ -69,7 +69,7 @@ msgstr "Checking roomlist URL.  Please wait."
 #: client/Game2/CheckRoomListDialog.cpp:88
 #: client/Game2/CheckUpdateServerDialog.cpp:177
 #: client/Game2/SelectRoomDialog.cpp:120
-#: client/Game2/TrackSelectDialog.cpp:103 engine/Control/Controller.cpp:43
+#: client/Game2/TrackSelectDialog.cpp:103 engine/Control/Controller.cpp:44
 #: engine/Control/ControllerStrings.cpp:138
 msgid "Cancel"
 msgstr "Cancel"
@@ -104,12 +104,12 @@ msgstr "Error while checking for updates:"
 msgid "Checking server for updates.  Please wait."
 msgstr "Checking server for updates.  Please wait."
 
-#: client/Game2/ClientApp.cpp:229 client/Game2/GameApp.cpp:820
+#: client/Game2/ClientApp.cpp:236 client/Game2/GameApp.cpp:820
 msgctxt "Version"
 msgid "testing"
 msgstr "testing"
 
-#: client/Game2/ClientApp.cpp:232 client/Game2/GameApp.cpp:823
+#: client/Game2/ClientApp.cpp:239 client/Game2/GameApp.cpp:823
 msgid "silent mode"
 msgstr "silent mode"
 
@@ -118,8 +118,8 @@ msgid "Controls"
 msgstr "Controls"
 
 #: client/Game2/ControlPrefsPage.cpp:134 client/Game2/NetInterface.cpp:1068
-#: engine/Control/Controller.cpp:350 engine/Control/Controller.cpp:398
-#: engine/Control/Controller.cpp:498
+#: engine/Control/Controller.cpp:351 engine/Control/Controller.cpp:399
+#: engine/Control/Controller.cpp:499
 msgid "Player"
 msgstr "Player"
 
@@ -404,12 +404,12 @@ msgstr ""
 msgid "System console initialized."
 msgstr ""
 
-#: client/Game2/HoverScript/SysConsole.cpp:161
+#: client/Game2/HoverScript/SysConsole.cpp:160
 #, c-format, boost-format
 msgid "For help on a class or method, call the %s method: %s"
 msgstr ""
 
-#: client/Game2/HoverScript/SysConsole.cpp:200
+#: client/Game2/HoverScript/SysConsole.cpp:199
 #, c-format, boost-format
 msgid "Methods for class %s:"
 msgstr ""
@@ -629,7 +629,7 @@ msgstr "Join Game..."
 msgid "New Game..."
 msgstr "New Game..."
 
-#: client/Game2/InternetRoom.cpp:1253 client/Game2/MainMenuScene.cpp:83
+#: client/Game2/InternetRoom.cpp:1253 client/Game2/MainMenuScene.cpp:84
 msgid "Quit"
 msgstr "Quit"
 
@@ -650,19 +650,19 @@ msgstr "Connection timeout"
 msgid "Registering your best lap time to the server"
 msgstr "Registering your best lap time to the server"
 
-#: client/Game2/MainMenuScene.cpp:74
+#: client/Game2/MainMenuScene.cpp:75
 msgid "Practice"
 msgstr "Practice"
 
-#: client/Game2/MainMenuScene.cpp:76 client/Game2/MultiplayerPrefsPage.cpp:49
+#: client/Game2/MainMenuScene.cpp:77 client/Game2/MultiplayerPrefsPage.cpp:49
 msgid "Multiplayer"
 msgstr "Multiplayer"
 
-#: client/Game2/MainMenuScene.cpp:78
+#: client/Game2/MainMenuScene.cpp:79
 msgid "Settings"
 msgstr "Settings"
 
-#: client/Game2/MainMenuScene.cpp:80
+#: client/Game2/MainMenuScene.cpp:81
 msgid "Credits"
 msgstr "Credits"
 
@@ -862,7 +862,7 @@ msgstr "Start NOW!"
 
 #: client/Game2/NetInterface.cpp:1887 client/Game2/PathSelector.cpp:93
 #: client/Game2/SelectRoomDialog.cpp:119
-#: client/Game2/TrackSelectDialog.cpp:102 engine/Control/Controller.cpp:42
+#: client/Game2/TrackSelectDialog.cpp:102 engine/Control/Controller.cpp:43
 msgid "OK"
 msgstr "OK"
 
@@ -935,102 +935,102 @@ msgstr "%s has left"
 msgid "You are now alone"
 msgstr "You are now alone"
 
-#: client/Game2/Observer.cpp:49
+#: client/Game2/Observer.cpp:48
 msgid "Basic craft"
 msgstr "Basic craft"
 
-#: client/Game2/Observer.cpp:50
+#: client/Game2/Observer.cpp:49
 msgid "CX craft"
 msgstr "CX craft"
 
-#: client/Game2/Observer.cpp:51
+#: client/Game2/Observer.cpp:50
 msgid "Bi-Turbo craft"
 msgstr "Bi-Turbo craft"
 
-#: client/Game2/Observer.cpp:52
+#: client/Game2/Observer.cpp:51
 msgid "Eon craft"
 msgstr "Eon craft"
 
-#: client/Game2/Observer.cpp:54
+#: client/Game2/Observer.cpp:53
 msgid "Unknown craft"
 msgstr "Unknown craft"
 
-#: client/Game2/Observer.cpp:92
+#: client/Game2/Observer.cpp:91
 msgid "Best Lap"
 msgstr "Best Lap"
 
-#: client/Game2/Observer.cpp:92 client/Game2/Observer.cpp:94
+#: client/Game2/Observer.cpp:91 client/Game2/Observer.cpp:93
 msgid "Rank"
 msgstr "Rank"
 
-#: client/Game2/Observer.cpp:92
+#: client/Game2/Observer.cpp:91
 msgid "Result"
 msgstr "Result"
 
-#: client/Game2/Observer.cpp:94
+#: client/Game2/Observer.cpp:93
 msgid "Against"
 msgstr "Against"
 
-#: client/Game2/Observer.cpp:94
+#: client/Game2/Observer.cpp:93
 msgid "For"
 msgstr "For"
 
-#: client/Game2/Observer.cpp:97
+#: client/Game2/Observer.cpp:96
 #, c-format, boost-format
 msgid "%d %-0.10s #%d%*s   --First lap--  %c"
 msgstr "%d %-0.10s #%d%*s   --First lap--  %c"
 
-#: client/Game2/Observer.cpp:98
+#: client/Game2/Observer.cpp:97
 #, c-format, boost-format
 msgid "%d %-0.10s #%d%*s %2d.%02d.%03d %2d.%02d.%03d%c"
 msgstr "%d %-0.10s #%d%*s %2d.%02d.%03d %2d.%02d.%03d%c"
 
-#: client/Game2/Observer.cpp:99
+#: client/Game2/Observer.cpp:98
 #, c-format, boost-format
 msgid "%d %-0.10s #%d%*s lap:%-2d   %2d.%02d.%03d%c"
 msgstr "%d %-0.10s #%d%*s lap:%-2d   %2d.%02d.%03d%c"
 
-#: client/Game2/Observer.cpp:100
+#: client/Game2/Observer.cpp:99
 #, c-format, boost-format
 msgid "%d %-0.10s #%d%*s  %2d      %2d"
 msgstr "%d %-0.10s #%d%*s  %2d      %2d"
 
-#: client/Game2/Observer.cpp:101
+#: client/Game2/Observer.cpp:100
 #, c-format, boost-format
 msgid "Starting in %02d.%02d sec. for %d laps"
 msgstr "Starting in %02d.%02d sec. for %d laps"
 
-#: client/Game2/Observer.cpp:102
+#: client/Game2/Observer.cpp:101
 #, c-format, boost-format
 msgid "Finished in %d.%02d.%03d, placed %d of %d"
 msgstr "Finished in %d.%02d.%03d, placed %d of %d"
 
-#: client/Game2/Observer.cpp:103
+#: client/Game2/Observer.cpp:102
 #, c-format, boost-format
 msgid "Finished in %d.%02d.%03d"
 msgstr "Finished in %d.%02d.%03d"
 
-#: client/Game2/Observer.cpp:104
+#: client/Game2/Observer.cpp:103
 #, c-format, boost-format
 msgid "Best lap %d.%02d.%03d"
 msgstr "Best lap %d.%02d.%03d"
 
-#: client/Game2/Observer.cpp:105
+#: client/Game2/Observer.cpp:104
 #, c-format, boost-format
 msgid "%d.%02d.%02d  Lap:%d/%d"
 msgstr "%d.%02d.%02d  Lap:%d/%d"
 
-#: client/Game2/Observer.cpp:106
+#: client/Game2/Observer.cpp:105
 #, c-format, boost-format
 msgid "Last lap %d.%02d.%03d  Best %d.%02d.%03d"
 msgstr "Last lap %d.%02d.%03d  Best %d.%02d.%03d"
 
-#: client/Game2/Observer.cpp:107
+#: client/Game2/Observer.cpp:106
 #, c-format, boost-format
 msgid "Current lap %d.%02d.%03d  Best %d.%02d.%03d"
 msgstr "Current lap %d.%02d.%03d  Best %d.%02d.%03d"
 
-#: client/Game2/Observer.cpp:151
+#: client/Game2/Observer.cpp:150
 msgid "Select your craft with the arrow keys"
 msgstr "Select your craft with the arrow keys"
 
@@ -1240,20 +1240,20 @@ msgstr "Invalid resolution; reverting to default"
 msgid "HoverRace is currently in silent mode."
 msgstr "HoverRace is currently in silent mode."
 
-#: client/Game2/main.cpp:337 client/Game2/main.cpp:343
-#: compilers/MazeCompiler/main.cpp:132
+#: client/Game2/main.cpp:334 client/Game2/main.cpp:340
+#: compilers/MazeCompiler/main.cpp:136
 msgid "You found a bug!"
 msgstr "You found a bug!"
 
-#: compilers/MazeCompiler/main.cpp:68
+#: compilers/MazeCompiler/main.cpp:72
 msgid "Usage: MazeCompiler <outputfile> <inputfile>"
 msgstr ""
 
-#: compilers/MazeCompiler/main.cpp:105
+#: compilers/MazeCompiler/main.cpp:109
 msgid "Wrong argument count"
 msgstr ""
 
-#: compilers/MazeCompiler/main.cpp:149
+#: compilers/MazeCompiler/main.cpp:153
 #, fuzzy
 msgid "Command line error"
 msgstr "Communication error"
@@ -1265,12 +1265,12 @@ msgstr "Communication error"
 #: compilers/ResourceCompiler/ResActorBuilder.cpp:204
 #: compilers/ResourceCompiler/ResActorBuilder.cpp:213
 #: compilers/ResourceCompiler/ResSoundBuilder.cpp:64
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:142
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:160
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:181
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:199
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:218
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:237
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:146
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:164
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:185
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:203
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:222
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:241
 #: compilers/ResourceCompiler/ResourceLibBuilder.cpp:105
 #: compilers/ResourceCompiler/TextParsing.cpp:41
 #: compilers/ResourceCompiler/TextParsing.cpp:57
@@ -1339,25 +1339,25 @@ msgstr ""
 msgid "invalid WAV file"
 msgstr ""
 
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:142
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:146
 #, fuzzy
 msgid "unable to open input file"
 msgstr "Unable to open file for writing:"
 
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:160
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:164
 msgid "problem reading bitmap parameters"
 msgstr ""
 
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:181
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:185
 msgid "problem reading actor parameters"
 msgstr ""
 
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:199
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:203
 msgid "problem reading sprite parameters"
 msgstr ""
 
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:218
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:237
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:222
+#: compilers/ResourceCompiler/ResourceCompiler.cpp:241
 #, fuzzy
 msgid "problem reading sound parameters"
 msgstr "Problem running updater.exe!"
@@ -1380,94 +1380,94 @@ msgstr ""
 msgid "syntax error in defines file"
 msgstr ""
 
-#: engine/Control/Controller.cpp:44
+#: engine/Control/Controller.cpp:45
 msgid "Page Up"
 msgstr ""
 
-#: engine/Control/Controller.cpp:45
+#: engine/Control/Controller.cpp:46
 msgid "Page Down"
 msgstr ""
 
-#: engine/Control/Controller.cpp:46
+#: engine/Control/Controller.cpp:47
 msgid "Top"
 msgstr ""
 
-#: engine/Control/Controller.cpp:47
+#: engine/Control/Controller.cpp:48
 msgid "Bottom"
 msgstr ""
 
-#: engine/Control/Controller.cpp:56
+#: engine/Control/Controller.cpp:57
 msgid "Toggle Console"
 msgstr ""
 
-#: engine/Control/Controller.cpp:60
+#: engine/Control/Controller.cpp:61
 msgid "Zoom In"
 msgstr ""
 
-#: engine/Control/Controller.cpp:61
+#: engine/Control/Controller.cpp:62
 msgid "Zoom Out"
 msgstr ""
 
-#: engine/Control/Controller.cpp:62
+#: engine/Control/Controller.cpp:63
 msgid "Pan Up"
 msgstr ""
 
-#: engine/Control/Controller.cpp:63
+#: engine/Control/Controller.cpp:64
 msgid "Pan Down"
 msgstr ""
 
-#: engine/Control/Controller.cpp:64
+#: engine/Control/Controller.cpp:65
 msgid "Reset Camera"
 msgstr ""
 
-#: engine/Control/Controller.cpp:368 engine/Control/Controller.cpp:457
-#: engine/Control/Controller.cpp:512 engine/Control/Controller.cpp:538
+#: engine/Control/Controller.cpp:369 engine/Control/Controller.cpp:458
+#: engine/Control/Controller.cpp:513 engine/Control/Controller.cpp:539
 msgid "Camera"
 msgstr ""
 
-#: engine/Control/Controller.cpp:374 engine/Control/Controller.cpp:553
+#: engine/Control/Controller.cpp:375 engine/Control/Controller.cpp:554
 #: engine/Control/ControllerStrings.cpp:122
 msgid "Menu"
 msgstr ""
 
-#: engine/Control/Controller.cpp:380 engine/Control/Controller.cpp:565
+#: engine/Control/Controller.cpp:381 engine/Control/Controller.cpp:566
 msgid "ConsoleToggle"
 msgstr ""
 
-#: engine/Control/Controller.cpp:386 engine/Control/Controller.cpp:433
-#: engine/Control/Controller.cpp:576
+#: engine/Control/Controller.cpp:387 engine/Control/Controller.cpp:434
+#: engine/Control/Controller.cpp:577
 msgid "Console"
 msgstr ""
 
-#: engine/Control/Controller.cpp:501
+#: engine/Control/Controller.cpp:502
 msgid "Throttle"
 msgstr ""
 
-#: engine/Control/Controller.cpp:502
+#: engine/Control/Controller.cpp:503
 msgid "Brake"
 msgstr ""
 
-#: engine/Control/Controller.cpp:503
+#: engine/Control/Controller.cpp:504
 msgid "Turn Left"
 msgstr ""
 
-#: engine/Control/Controller.cpp:504
+#: engine/Control/Controller.cpp:505
 msgid "Turn Right"
 msgstr ""
 
-#: engine/Control/Controller.cpp:505
+#: engine/Control/Controller.cpp:506
 msgid "Jump"
 msgstr ""
 
-#: engine/Control/Controller.cpp:506
+#: engine/Control/Controller.cpp:507
 msgid "Fire"
 msgstr ""
 
-#: engine/Control/Controller.cpp:507
+#: engine/Control/Controller.cpp:508
 msgid "Item"
 msgstr ""
 
-#: engine/Control/Controller.cpp:508
+#: engine/Control/Controller.cpp:509
 msgid "Look Back"
 msgstr ""
 
@@ -2117,69 +2117,67 @@ msgstr ""
 msgid "Unhandled component type"
 msgstr ""
 
-#: engine/ObjFacTools/ResourceLib.cpp:81
+#: engine/ObjFacTools/ResourceLib.cpp:74
 msgid "File not found or not readable"
 msgstr ""
 
-#: engine/ObjFacTools/ResourceLib.cpp:95 engine/Script/Handlers.cpp:128
-#: engine/Script/Handlers.cpp:157
+#: engine/ObjFacTools/ResourceLib.cpp:88
 msgid "Expected"
 msgstr ""
 
-#: engine/ObjFacTools/ResourceLib.cpp:95
+#: engine/ObjFacTools/ResourceLib.cpp:88
 msgid "Invalid magic number"
 msgstr ""
 
-#: engine/ObjFacTools/ResourceLib.cpp:96
+#: engine/ObjFacTools/ResourceLib.cpp:89
 msgid "got"
 msgstr ""
 
-#: engine/Script/Core.cpp:156
+#: engine/Script/Core.cpp:155
 msgid "Out of stack space"
 msgstr ""
 
-#: engine/Script/Core.cpp:299
+#: engine/Script/Core.cpp:298
 msgid "No function on stack"
 msgstr ""
 
-#: engine/Script/Core.cpp:396
+#: engine/Script/Core.cpp:395
 msgid "has no documentation"
 msgstr ""
 
-#: engine/Script/Core.cpp:409
+#: engine/Script/Core.cpp:408
 msgid "has no method"
 msgstr ""
 
-#: engine/Script/Core.cpp:516
+#: engine/Script/Core.cpp:515
 msgid "Disallowed access to protected function"
 msgstr ""
 
-#: engine/Script/Handlers.cpp:128 engine/Script/Handlers.cpp:157
-#, fuzzy
-msgid "or"
-msgstr "For"
-
-#: engine/Util/Config.cpp:363
+#: engine/Util/Config.cpp:361
 #, fuzzy
 msgid "Unable to determine configuration directory"
 msgstr "Unable to create directory:"
 
-#: engine/Util/Config.cpp:376
+#: engine/Util/Config.cpp:374
 msgid ""
 "Unable to determine configuration directory (HOME environment variable not "
 "set)"
 msgstr ""
 
-#: engine/Util/Config.cpp:807
+#: engine/Util/Config.cpp:805
 #, fuzzy
 msgid "Unable to create directory"
 msgstr "Unable to create directory:"
 
-#: engine/Util/Config.cpp:816
+#: engine/Util/Config.cpp:814
 #, fuzzy
 msgid "Unable to create configuration file"
 msgstr "Unable to create chat log file:"
 
-#: engine/Util/OS.cpp:328 engine/Util/OS.cpp:338
+#: engine/Util/OS.cpp:329 engine/Util/OS.cpp:339
 msgid "Could not load"
 msgstr ""
+
+#, fuzzy
+#~ msgid "or"
+#~ msgstr "For"

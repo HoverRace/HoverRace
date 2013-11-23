@@ -24,6 +24,10 @@
 
 #include <iostream>
 
+#ifdef _WIN32
+#	include <shellapi.h>
+#endif
+
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/DllObjectFactory.h"
 #include "../../engine/Util/OS.h"

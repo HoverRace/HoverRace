@@ -25,6 +25,10 @@
 
 #include <curl/curl.h>
 
+#ifdef _WIN32
+#	include <shellapi.h>
+#endif
+
 #include "../../engine/Exception.h"
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/Log.h"
@@ -271,8 +275,6 @@ int main(int argc, char** argv)
 
 	// Change the working directory to the app's directory.
 	_wchdir(Str::PW(exePath.parent_path()));
-
-	CoInitialize(NULL);
 #endif
 
 	// Process command-line options.
@@ -348,10 +350,6 @@ int main(int argc, char** argv)
 	curl_global_cleanup();
 
 	Config::Shutdown();
-
-#ifdef _WIN32
-	CoUninitialize();
-#endif
 
 	return lErrorCode;
 }

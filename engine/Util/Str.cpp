@@ -152,10 +152,8 @@ char *Str::WideToUtf8(const wchar_t *ws)
 					retv = (char*)realloc(retv, sz);
 				}
 				else {
-					char err[256];
-					strerror_r(errno, err, sizeof(err));
 					std::string exs = "#<";
-					exs += err;
+					exs += OS::StrError(errno);
 					exs += '>';
 					return strdup(exs.c_str());
 				}

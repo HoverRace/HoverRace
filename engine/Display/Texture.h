@@ -1,7 +1,7 @@
 
-// MR_Types.h
+// Texture.h
 //
-// Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
+// Copyright (c) 2013 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -18,31 +18,36 @@
 //
 // See the License for the specific language governing permissions
 // and limitations under the License.
-//
 
 #pragma once
 
+#include <SDL2/SDL.h>
+
 #ifdef _WIN32
-
-	typedef signed __int8 MR_Int8;
-	typedef unsigned __int8 MR_UInt8;
-	typedef signed __int16 MR_Int16;
-	typedef unsigned __int16 MR_UInt16;
-	typedef signed __int32 MR_Int32;
-	typedef unsigned __int32 MR_UInt32;
-	typedef signed __int64 MR_Int64;
-	typedef unsigned __int64 MR_UInt64;
-
+#	ifdef MR_ENGINE
+#		define MR_DllDeclare   __declspec( dllexport )
+#	else
+#		define MR_DllDeclare   __declspec( dllimport )
+#	endif
 #else
-#	include <inttypes.h>
-	
-	typedef int8_t MR_Int8;
-	typedef uint8_t MR_UInt8;
-	typedef int16_t MR_Int16;
-	typedef uint16_t MR_UInt16;
-	typedef int32_t MR_Int32;
-	typedef uint32_t MR_UInt32;
-	typedef int64_t MR_Int64;
-	typedef uint64_t MR_UInt64;
-
+#	define MR_DllDeclare
 #endif
+
+namespace HoverRace {
+namespace Display {
+
+/**
+ * A hardware texture.
+ * @author Michael Imamura
+ */
+class Texture
+{
+	public:
+		Texture() { }
+		virtual ~Texture() { }
+};
+
+}  // namespace Display
+}  // namespace HoverRace
+
+#undef MR_DllDeclare

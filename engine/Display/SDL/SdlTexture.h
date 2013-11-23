@@ -1,5 +1,5 @@
 
-// SdlLabelView.h
+// SdlTexture.h
 //
 // Copyright (c) 2013 Michael Imamura.
 //
@@ -21,9 +21,9 @@
 
 #pragma once
 
-#include "SdlDisplay.h"
-#include "SdlTexture.h"
-#include "SdlView.h"
+#include <SDL2/SDL.h>
+
+#include "../Texture.h"
 
 #ifdef _WIN32
 #	ifdef MR_ENGINE
@@ -37,50 +37,36 @@
 
 namespace HoverRace {
 	namespace Display {
-		class Label;
+		class SdlDisplay;
 	}
 }
-struct SDL_Surface;
 
 namespace HoverRace {
 namespace Display {
 namespace SDL {
 
-class MR_DllDeclare SdlLabelView : public SdlView<Label>
+/**
+ * Wrapper for SDL_Texture.
+ * @author Michael Imamura
+ */
+class MR_DllDeclare SdlTexture : public Texture, private boost::noncopyable
 {
-	typedef SdlView<Label> SUPER;
+	typedef Texture SUPER;
 	public:
-		SdlLabelView(SdlDisplay &disp, Label &model);
-		virtual ~SdlLabelView();
+		SdlTexture(SdlDisplay &display, SDL_Texture *texture) :
+			SUPER(), texture(texture), display(display) { }
 
-	public:
-		virtual void OnModelUpdate(int prop);
-		void OnUiScaleChanged();
-
-	public:
-		virtual Vec3 Measure()
+		virtual ~SdlTexture()
 		{
-			PrepareRender();
-			return Vec3(unscaledWidth, unscaledHeight, 0);
+			if (texture) SDL_DestroyTexture(texture);
 		}
-		virtual void PrepareRender();
-		virtual void Render();
 
-	private:
-		void UpdateBlank();
-		void UpdateTexture();
-		void UpdateTextureColor();
+	public:
+		SDL_Texture *Get() const { return texture; }
 
-	private:
-		std::unique_ptr<SdlTexture> texture;
-		bool colorChanged;
-		int width;
-		int height;
-		int realWidth;
-		int realHeight;
-		double unscaledWidth;
-		double unscaledHeight;
-		boost::signals2::connection uiScaleChangedConnection;
+	protected:
+		SDL_Texture *texture;
+		SdlDisplay &display;
 };
 
 }  // namespace SDL

@@ -25,6 +25,7 @@
 #ifdef _WIN32
 #	include <fcntl.h>
 #	include <io.h>
+#	include <shellapi.h>
 #else
 #	include <locale.h>
 #	include <langinfo.h>

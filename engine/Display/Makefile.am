@@ -33,6 +33,7 @@ libdisplay_la_SOURCES = \
 	Speedometer.h \
 	SymbolIcon.cpp \
 	SymbolIcon.h \
+	Texture.h \
 	UiFont.cpp \
 	UiFont.h \
 	UiLayoutFlags.h \
@@ -62,5 +63,6 @@ libdisplay_la_SOURCES = \
 	SDL/SdlSymbolIconView.h \
 	SDL/SdlSurfaceText.cpp \
 	SDL/SdlSurfaceText.h \
+	SDL/SdlTexture.h \
 	SDL/SdlView.h
 

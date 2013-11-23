@@ -58,9 +58,7 @@ typedef Util::BitPack<23> MainCharacterState;
 //   #define  MC_SOUNDFX      141,    5,     0
 // Total                 184  = 23 bytes
 
-#ifdef HAVE_STDCXX_0X
 static_assert(std::is_pod<MainCharacterState>::value, "MainCharacterState must be a POD type");
-#endif
 
 // Local constants
 #define TIME_SLICE                     5
@@ -1025,6 +1023,11 @@ MR_Angle MainCharacter::GetCabinOrientation() const
 	return mCabinOrientation;
 }
 
+/**
+ * Retrieve the relative amount of fuel remaining.
+ * @return The fuel level, where 1.0 or higher is full and
+ *         0.0 or lower is empty.
+ */
 double MainCharacter::GetFuelLevel() const
 {
 	return mFuelLevel / eFuelCapacity;

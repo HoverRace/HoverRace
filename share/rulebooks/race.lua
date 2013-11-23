@@ -10,7 +10,7 @@ Rulebook 'Race' {
 	on_pre_game = function(session)
 		print('on_pre_game in rulebook')
 		print('laps = ' .. session.rules.laps)
-		print('num players = ' .. #session.players)
+		print('num players = ' .. session:get_num_players())
 	end,
 
 	on_player_joined = function(session, player)
@@ -20,7 +20,7 @@ Rulebook 'Race' {
 		player:on_finish_line(function()
 			local lap = player.props.lap + 1
 			player.props.lap = lap
-			
+
 			print(player_name .. ' is on lap ' ..
 				lap .. '/' .. session.rules.laps ..
 				' (' .. (session.time / 1000) .. ')')
