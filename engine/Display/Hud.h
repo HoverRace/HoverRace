@@ -154,7 +154,11 @@ class MR_DllDeclare Hud : public Container
 
 			// For corner elems, replace the elem instead of adding.
 			if (HudAlignment::IsCorner(alignment)) {
-				hudChildren[alignment].clear();
+				auto &elems = hudChildren[alignment];
+				if (!elems.empty()) {
+					RemoveChild(elems.back());
+					elems.clear();
+				}
 			}
 
 			sharedChild->SetAlignment(HudAlignment::AlignmentFor(alignment));
