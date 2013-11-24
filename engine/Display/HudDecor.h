@@ -66,7 +66,7 @@ class MR_DllDeclare HudDecor : public Container
 		};
 
 	public:
-		HudDecor(Display &display, uiLayoutFlags_t layoutFlags=0);
+		HudDecor(Display &display);
 		virtual ~HudDecor() { }
 
 	public:

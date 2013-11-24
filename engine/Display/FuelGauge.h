@@ -52,7 +52,7 @@ class MR_DllDeclare FuelGauge : public HudDecor
 	typedef HudDecor SUPER;
 
 	public:
-		FuelGauge(Display &display, uiLayoutFlags_t layoutFlags=0);
+		FuelGauge(Display &display);
 		virtual ~FuelGauge() { }
 
 	public:

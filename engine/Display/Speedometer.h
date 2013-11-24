@@ -51,7 +51,7 @@ class MR_DllDeclare Speedometer : public HudDecor
 {
 	typedef HudDecor SUPER;
 	public:
-		Speedometer(Display &display, uiLayoutFlags_t layoutFlags=0);
+		Speedometer(Display &display);
 		virtual ~Speedometer() { }
 
 	public:

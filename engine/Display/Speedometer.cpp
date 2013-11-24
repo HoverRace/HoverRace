@@ -40,10 +40,9 @@ namespace {
 /**
  * Constructor.
  * @param display The display child elements will be attached to.
- * @param layoutFlags Optional layout flags.
  */
-Speedometer::Speedometer(Display &display, uiLayoutFlags_t layoutFlags) :
-	SUPER(display, layoutFlags)
+Speedometer::Speedometer(Display &display) :
+	SUPER(display)
 {
 	SetSize(GAUGE_WIDTH, GAUGE_HEIGHT * 2);
 	SetClip(false);

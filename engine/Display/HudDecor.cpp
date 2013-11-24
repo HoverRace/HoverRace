@@ -29,10 +29,9 @@ namespace Display {
 /**
  * Constructor.
  * @param display The display child elements will be attached to.
- * @param layoutFlags Optional layout flags.
  */
-HudDecor::HudDecor(Display &display, uiLayoutFlags_t layoutFlags) :
-	SUPER(display, layoutFlags),
+HudDecor::HudDecor(Display &display) :
+	SUPER(display),
 	player(nullptr)
 {
 }

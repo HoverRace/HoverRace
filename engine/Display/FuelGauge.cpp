@@ -40,10 +40,9 @@ namespace {
 /**
  * Constructor.
  * @param display The display child elements will be attached to.
- * @param layoutFlags Optional layout flags.
  */
-FuelGauge::FuelGauge(Display &display, uiLayoutFlags_t layoutFlags) :
-	SUPER(display, layoutFlags)
+FuelGauge::FuelGauge(Display &display) :
+	SUPER(display)
 {
 	SetSize(GAUGE_WIDTH, GAUGE_HEIGHT);
 	SetClip(false);
