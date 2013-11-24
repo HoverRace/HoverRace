@@ -26,6 +26,11 @@
 namespace HoverRace {
 namespace Display {
 
+namespace {
+	const double HUD_MARGIN = 20;  ///< Margin around HUD edges.
+	const double DECOR_MARGIN = 5;  ///< Space between decor elements.
+}
+
 /**
  * Constructor.
  * @param display The display child elements will be attached to.
@@ -65,6 +70,61 @@ void Hud::SetVisible(bool visible)
 		this->visible = visible;
 		FireModelUpdate(Props::VISIBLE);
 	}
+}
+
+void Hud::LayoutCorner(HudAlignment::type alignCorner,
+                       HudAlignment::type alignH, HudAlignment::type alignV,
+                       double startX, double startY,
+                       double scaleX, double scaleY)
+{
+	double x = startX, y = startY;
+	double maxHeightH = 0;
+
+	auto &cornerElems = hudChildren[alignCorner];
+	if (!cornerElems.empty()) {
+		auto &elem = cornerElems.back();
+		elem->SetPos(x, y);
+		Vec3 sz = elem->Measure();
+		maxHeightH = sz.y;
+		x += scaleX * (sz.x + DECOR_MARGIN);
+	}
+
+	// Layout the horizontal elems.
+	BOOST_FOREACH(auto &elem, hudChildren[alignH]) {
+		elem->SetPos(x, y);
+		Vec3 sz = elem->Measure();
+		if (sz.y > maxHeightH) {
+			maxHeightH  = sz.y;
+		}
+		x += scaleX * (sz.x + DECOR_MARGIN);
+	}
+
+	// Layout the vertical elems.
+	y = startY + (scaleY * (maxHeightH + DECOR_MARGIN));
+	x = startX;
+	BOOST_FOREACH(auto &elem, hudChildren[alignV]) {
+		elem->SetPos(x, y);
+		Vec3 sz = elem->Measure();
+		y += scaleY * (sz.y + DECOR_MARGIN);
+	}
+}
+
+void Hud::Layout()
+{
+	SUPER::Layout();
+
+	const Vec2 &hudSize = GetSize();
+
+	//TODO: Only redo the corners or sides that changed.
+
+	LayoutCorner(HudAlignment::NW, HudAlignment::NNW, HudAlignment::WNW,
+		HUD_MARGIN, HUD_MARGIN, 1, 1);
+	LayoutCorner(HudAlignment::NE, HudAlignment::NNE, HudAlignment::ENE,
+		hudSize.x - HUD_MARGIN, HUD_MARGIN, -1, 1);
+	LayoutCorner(HudAlignment::SE, HudAlignment::SSE, HudAlignment::ESE,
+		hudSize.x - HUD_MARGIN, hudSize.y - HUD_MARGIN, -1, -1);
+	LayoutCorner(HudAlignment::SW, HudAlignment::SSE, HudAlignment::WSW,
+		HUD_MARGIN, hudSize.y - HUD_MARGIN, 1, -1);
 }
 
 void Hud::Advance(Util::OS::timestamp_t tick)

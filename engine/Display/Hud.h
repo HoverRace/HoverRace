@@ -88,6 +88,44 @@ class MR_DllDeclare Hud : public Container
 				NNW,    ///< Northwest corner, stacked left-to-right.
 			};
 			static const size_t NUM = NNW + 1;
+
+			static bool IsCorner(type t) {
+				return t == NW || t == NE || t == SE || t == SW;
+			}
+
+			static Alignment::alignment_t AlignmentFor(type t) {
+				switch (t) {
+					case ABOVE:
+						return Alignment::S;
+					case BELOW:
+						return Alignment::N;
+					case N:
+						return Alignment::N;
+					case NNE:
+					case NE:
+					case ENE:
+						return Alignment::NE;
+					case E:
+						return Alignment::E;
+					case ESE:
+					case SE:
+					case SSE:
+						return Alignment::SE;
+					case S:
+						return Alignment::S;
+					case SSW:
+					case SW:
+					case WSW:
+						return Alignment::SW;
+					case W:
+						return Alignment::W;
+					case WNW:
+					case NW:
+					case NNW:
+					default:
+						return Alignment::NW;
+				}
+			}
 		};
 
 	public:
@@ -113,7 +151,16 @@ class MR_DllDeclare Hud : public Container
 		{
 			std::shared_ptr<T> sharedChild = AddChild(child);
 			sharedChild->SetPlayer(player);
+
+			// For corner elems, replace the elem instead of adding.
+			if (HudAlignment::IsCorner(alignment)) {
+				hudChildren[alignment].clear();
+			}
+
+			sharedChild->SetAlignment(HudAlignment::AlignmentFor(alignment));
+
 			hudChildren[alignment].emplace_back(sharedChild);
+
 			RequestLayout();
 			return sharedChild;
 		}
@@ -143,6 +190,14 @@ class MR_DllDeclare Hud : public Container
 		 */
 		bool IsVisible() const { return visible; }
 		void SetVisible(bool visible);
+
+	private:
+		void LayoutCorner(HudAlignment::type alignCorner,
+			HudAlignment::type alignH, HudAlignment::type alignV,
+			double startX, double startY,
+			double scaleX, double scaleY);
+	protected:
+		virtual void Layout();
 
 	public:
 		void Advance(Util::OS::timestamp_t tick);

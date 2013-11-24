@@ -611,10 +611,6 @@ HudModule::HudModule(Display::Display &display, GameDirector &director) :
 		new Display::FuelGauge(display));
 	auto speedometer = hud->AddHudChild(HudAlignment::NW,
 		new Display::Speedometer(display));
-
-	//HACK: Temporary until layout bits are added to HUD.
-	fuelGauge->SetPos(1280 - 20 - 300, 20);
-	speedometer->SetPos(20, 20);
 }
 
 void HudModule::Advance(Util::OS::timestamp_t tick)
