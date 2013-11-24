@@ -104,6 +104,23 @@ class MR_DllDeclare Container : public UiViewModel
 			return sharedChild;
 		}
 
+		/**
+		 * Remove a child element.
+		 * @param child The child element; must be a shared_ptr to a subclass
+		 *              of UiViewModel.
+		 * @return The same child element that was passed in.
+		 */
+		template<typename T>
+		typename std::enable_if<std::is_base_of<UiViewModel, T>::value, std::shared_ptr<T>>::type
+		RemoveChild(const std::shared_ptr<T> &child)
+		{
+			auto iter = std::find(children.begin(), children.end(), child);
+			if (iter != children.end()) {
+				children.erase(iter);
+			}
+			return child;
+		}
+
 	private:
 		template<typename P, bool(UiViewModel::*F)(P)>
 		bool PropagateMouseEvent(P param)
