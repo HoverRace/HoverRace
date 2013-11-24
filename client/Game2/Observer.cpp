@@ -580,32 +580,6 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 	int lXRes = m3DView.GetXRes();
 	int lYRes = m3DView.GetYRes();
 
-	int lSpeedMeterLen = lXRes / 2;
-	int lFuelMeterLen = lXRes / 4;
-	int lMeterHight = lYRes / 32;
-	int lXMargin = lXRes / 32;
-	int lYMargin = lMeterHight;
-
-	int lAbsSpeedLen = (int)(lAbsSpeedRatio * lSpeedMeterLen);
-	int lDirSpeedLen = (int)(pViewingCharacter->GetDirectionalSpeed() * lSpeedMeterLen);
-	double lFuelLevel = pViewingCharacter->GetFuelLevel();
-	int lFuelLen = (int)(lFuelLevel * lFuelMeterLen);
-
-	if (hudVisible) {
-		/* Replaced by Speedometer.
-		m3DView.DrawHorizontalMeter(lXMargin, lSpeedMeterLen, lYMargin, lMeterHight, lAbsSpeedLen, 54, 56);
-		if(lDirSpeedLen < 0) {
-			m3DView.DrawHorizontalMeter(lXMargin, lSpeedMeterLen, lYMargin + lMeterHight, lMeterHight, -lDirSpeedLen, 44, 56);
-		}
-		else {
-			m3DView.DrawHorizontalMeter(lXMargin, lSpeedMeterLen, lYMargin + lMeterHight, lMeterHight, lDirSpeedLen, 54, 56);
-		}
-		*/
-		/* Replaced by FuelGauge.
-		m3DView.DrawHorizontalMeter(lXRes - lXMargin - lFuelMeterLen, lFuelMeterLen, lYMargin, lMeterHight * 2, lFuelLen, 54, (lFuelLevel < 0.20) ? 35 : 56);
-		*/
-	}
-
 	// MissileLevel
 	ObjFac1::SpriteHandle *lWeaponSprite = NULL;
 	int lWeaponSpriteIndex = 0;
