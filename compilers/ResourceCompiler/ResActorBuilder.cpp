@@ -21,6 +21,8 @@
 
 #include "StdAfx.h"
 
+#include "../../engine/Exception.h"
+
 #include "ResActorBuilder.h"
 #include "TextParsing.h"
 
@@ -31,6 +33,26 @@ using HoverRace::ObjFacTools::ResourceLib;
 
 namespace HoverRace {
 namespace ResourceCompiler {
+
+namespace {
+	// Temporary until this is rewritten.
+	char *sfgets(char *s, int sz, FILE *file)
+	{
+		char *retv = fgets(s, sz, file);
+		if (!retv) {
+			if (feof(file)) {
+				throw Exception("Unexpected end of file");
+			}
+			else if (ferror(file)) {
+				throw Exception("Read error");
+			}
+			else {
+				throw Exception("Unknown read error");
+			}
+		}
+		return retv;
+	}
+}
 
 ResActorBuilder::ResActorBuilder(int pResourceId) :
 	SUPER(pResourceId)
@@ -71,14 +93,14 @@ BOOL ResActorBuilder::BuildFromFile(const char *pFile, ResourceLib *pBitmapLib)
 		}
 
 		// Load the sequences
-		lBufferPtr = fgets(lBuffer, sizeof(lBuffer), lFile);
+		lBufferPtr = sfgets(lBuffer, sizeof(lBuffer), lFile);
 
 		while(lReturnValue && lBufferPtr) {
 			if(MR_BeginByKeyword(lBuffer, "SEQUENCE")) {
 				mNbSequence++;
 
 				// Load the Frames
-				lBufferPtr = fgets(lBuffer, sizeof(lBuffer), lFile);
+				lBufferPtr = sfgets(lBuffer, sizeof(lBuffer), lFile);
 
 				while(lReturnValue && lBufferPtr) {
 					if(MR_BeginByKeyword(lBuffer, "FRAME")) {
@@ -86,7 +108,7 @@ BOOL ResActorBuilder::BuildFromFile(const char *pFile, ResourceLib *pBitmapLib)
 						lCurrentFrame++;
 
 						// Load the parts
-						lBufferPtr = fgets(lBuffer, sizeof(lBuffer), lFile);
+						lBufferPtr = sfgets(lBuffer, sizeof(lBuffer), lFile);
 
 						while(lReturnValue && lBufferPtr) {
 
@@ -105,13 +127,13 @@ BOOL ResActorBuilder::BuildFromFile(const char *pFile, ResourceLib *pBitmapLib)
 								break;
 							}
 							else {
-								lBufferPtr = fgets(lBuffer, sizeof(lBuffer), lFile);
+								lBufferPtr = sfgets(lBuffer, sizeof(lBuffer), lFile);
 							}
 
 							if(lCurrentComponent != NULL) {
 								lComponentCount[lCurrentFrame]++;
 								lComponentList.push_back(lCurrentComponent);
-								lBufferPtr = fgets(lBuffer, sizeof(lBuffer), lFile);
+								lBufferPtr = sfgets(lBuffer, sizeof(lBuffer), lFile);
 							}
 						}
 					}
@@ -122,12 +144,12 @@ BOOL ResActorBuilder::BuildFromFile(const char *pFile, ResourceLib *pBitmapLib)
 						break;
 					}
 					else {
-						lBufferPtr = fgets(lBuffer, sizeof(lBuffer), lFile);
+						lBufferPtr = sfgets(lBuffer, sizeof(lBuffer), lFile);
 					}
 				}
 			}
 			else {
-				lBufferPtr = fgets(lBuffer, sizeof(lBuffer), lFile);
+				lBufferPtr = sfgets(lBuffer, sizeof(lBuffer), lFile);
 			}
 		}
 		fclose(lFile);
@@ -174,7 +196,7 @@ ResActorBuilder::Patch * ResActorBuilder::ReadPatch(FILE * pFile, ResourceLib * 
 	Patch *lReturnValue = new Patch;
 	char lBuffer[250];
 
-	fgets(lBuffer, sizeof(lBuffer), pFile);
+	sfgets(lBuffer, sizeof(lBuffer), pFile);
 	sscanf(lBuffer, " %d %d", &(lReturnValue->mURes), &(lReturnValue->mVRes));
 
 	lReturnValue->mVertexList = new MR_3DCoordinate[lReturnValue->mURes * lReturnValue->mVRes];
@@ -184,7 +206,7 @@ ResActorBuilder::Patch * ResActorBuilder::ReadPatch(FILE * pFile, ResourceLib * 
 		int lY;
 		int lZ;
 
-		fgets(lBuffer, sizeof(lBuffer), pFile);
+		sfgets(lBuffer, sizeof(lBuffer), pFile);
 		sscanf(lBuffer, " %d %d %d", &lX, &lY, &lZ);
 
 		lReturnValue->mVertexList[lCounter].mX = lX;
@@ -195,7 +217,7 @@ ResActorBuilder::Patch * ResActorBuilder::ReadPatch(FILE * pFile, ResourceLib * 
 	// Load the bitmap id
 	int lBitmapId;
 
-	fgets(lBuffer, sizeof(lBuffer), pFile);
+	sfgets(lBuffer, sizeof(lBuffer), pFile);
 
 	if(sscanf(MR_PreProcLine(lBuffer).c_str(), " %d ", &lBitmapId) != 1) {
 		delete lReturnValue;

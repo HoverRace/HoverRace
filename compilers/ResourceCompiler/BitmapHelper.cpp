@@ -21,6 +21,8 @@
 
 #include "StdAfx.h"
 
+#include "../../engine/Exception.h"
+
 #include "BitmapHelper.h"
 
 #ifndef _WIN32
@@ -30,6 +32,24 @@
 
 namespace HoverRace {
 namespace ResourceCompiler {
+
+namespace {
+	// Temporary until we offload the image loading to a library.
+	void sfread(void *buf, size_t sz, size_t num, FILE *file)
+	{
+		if (fread(buf, sz, num, file) < num) {
+			if (feof(file)) {
+				throw Exception("Unexpected end of file");
+			}
+			else if (ferror(file)) {
+				throw Exception("Read error");
+			}
+			else {
+				throw Exception("Unknown read error");
+			}
+		}
+	}
+}
 
 // Local prototypes
 static MR_UInt8 *BMPRead(FILE *pFile, int &pXRes, int &pYRes);
@@ -48,17 +68,23 @@ MR_UInt8 *LoadBitmap(const char *lFileName, int &pXRes, int &pYRes, bool pRevers
 	else {
 		const char *lExtension = strrchr(lFileName, '.');
 
-		if(!_stricmp(lExtension, ".PCX")) {
-			lReturnValue = PCXRead(lFile, pXRes, pYRes);
+		try {
+			if(!_stricmp(lExtension, ".PCX")) {
+				lReturnValue = PCXRead(lFile, pXRes, pYRes);
+			}
+			else if(!_stricmp(lExtension, ".BMP")) {
+				lReturnValue = BMPRead(lFile, pXRes, pYRes);
+			}
+			else if(!_stricmp(lExtension, ".IMG")) {
+				lReturnValue = IMGRead(lFile, pXRes, pYRes);
+			}
+			else {
+				printf("%s: %s.\n", _("ERROR"), _("Invalid file type"));
+			}
 		}
-		else if(!_stricmp(lExtension, ".BMP")) {
-			lReturnValue = BMPRead(lFile, pXRes, pYRes);
-		}
-		else if(!_stricmp(lExtension, ".IMG")) {
-			lReturnValue = IMGRead(lFile, pXRes, pYRes);
-		}
-		else {
-			printf("%s: %s.\n", _("ERROR"), _("Invalid file type"));
+		catch (...) {
+			fclose(lFile);
+			throw;
 		}
 
 		fclose(lFile);
@@ -94,11 +120,11 @@ MR_UInt8 *BMPRead(FILE * pFile, int &pXRes, int &pYRes)
 
 	// Read Header
 	fseek(pFile, 10, SEEK_SET);
-	fread(&lDataPos, 4, 1, pFile);
+	sfread(&lDataPos, 4, 1, pFile);
 
 	fseek(pFile, 18, SEEK_SET);
-	fread(&pXRes, 4, 1, pFile);
-	fread(&pYRes, 4, 1, pFile);
+	sfread(&pXRes, 4, 1, pFile);
+	sfread(&pYRes, 4, 1, pFile);
 
 	fseek(pFile, lDataPos, SEEK_SET);
 
@@ -107,7 +133,7 @@ MR_UInt8 *BMPRead(FILE * pFile, int &pXRes, int &pYRes)
 
 	lReturnValue = new MR_UInt8[pXRes * pYRes];
 
-	fread(lReturnValue, pXRes * pYRes, 1, pFile);
+	sfread(lReturnValue, pXRes * pYRes, 1, pFile);
 
 	return lReturnValue;
 
@@ -132,13 +158,13 @@ MR_UInt8 *PCXRead(FILE * pFile, int &pXRes, int &pYRes)
 	MR_Int16 lNbBytesPerLine;
 
 	fseek(pFile, 4, SEEK_SET);
-	fread(&lStartX, 2, 1, pFile);
-	fread(&lStartY, 2, 1, pFile);
-	fread(&lSizeX, 2, 1, pFile);
-	fread(&lSizeY, 2, 1, pFile);
+	sfread(&lStartX, 2, 1, pFile);
+	sfread(&lStartY, 2, 1, pFile);
+	sfread(&lSizeX, 2, 1, pFile);
+	sfread(&lSizeY, 2, 1, pFile);
 
 	fseek(pFile, 66, SEEK_SET);
-	fread(&lNbBytesPerLine, 2, 1, pFile);
+	sfread(&lNbBytesPerLine, 2, 1, pFile);
 
 	pXRes = lSizeX - lStartX + 1;
 	pYRes = lSizeY - lStartY + 1;
@@ -157,10 +183,10 @@ MR_UInt8 *PCXRead(FILE * pFile, int &pXRes, int &pYRes)
 			MR_UInt8 lBuffer;
 			MR_UInt8 lBuffer2;
 
-			fread(&lBuffer, 1, 1, pFile);
+			sfread(&lBuffer, 1, 1, pFile);
 
 			if((lBuffer & 0xc0) == 0xc0) {
-				fread(&lBuffer2, 1, 1, pFile);
+				sfread(&lBuffer2, 1, 1, pFile);
 				/*
 				   lBuffer2++;
 				   if( lBuffer2 == 255 )

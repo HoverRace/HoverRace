@@ -28,6 +28,7 @@
 #include "../Parcel/ClassicRecordFile.h"
 #include "../Parcel/ObjStream.h"
 #include "../Util/Str.h"
+#include "../Exception.h"
 #include "LevelBuilder.h"
 #include "MapSprite.h"
 #include "TrackCompileExn.h"
@@ -39,6 +40,24 @@ using namespace HoverRace::Util;
 
 namespace HoverRace {
 namespace MazeCompiler {
+
+namespace {
+	// Temporary until this is rewritten.
+	void sfread(void *buf, size_t sz, size_t num, FILE *file)
+	{
+		if (fread(buf, sz, num, file) < num) {
+			if (feof(file)) {
+				throw Exception("Unexpected end of file");
+			}
+			else if (ferror(file)) {
+				throw Exception("Read error");
+			}
+			else {
+				throw Exception("Unknown read error");
+			}
+		}
+	}
+}
 
 TrackCompiler::TrackCompiler(const TrackCompilationLogPtr &log, const Util::OS::path_t &outputFilename) :
 	log(log), outputFilename(outputFilename)
@@ -265,14 +284,14 @@ MR_UInt8 *TrackCompiler::LoadPalette(FILE * pFile)
 
 	char lMagicNumber = 0;
 
-	fread(&lMagicNumber, 1, 1, pFile);
+	sfread(&lMagicNumber, 1, 1, pFile);
 
 	if(lMagicNumber != 12) {
 		throw TrackCompileExn(_("Bad palette format for background file"));
 	}
 	else {
 		lReturnValue = new MR_UInt8[MR_BACK_COLORS * 3];
-		fread(lReturnValue, 1, MR_BACK_COLORS * 3, pFile);
+		sfread(lReturnValue, 1, MR_BACK_COLORS * 3, pFile);
 	}
 
 	return lReturnValue;
@@ -330,13 +349,13 @@ MR_UInt8 *TrackCompiler::PCXRead(FILE * pFile, int &pXRes, int &pYRes)
 	MR_Int16 lNbBytesPerLine;
 
 	fseek(pFile, 4, SEEK_SET);
-	fread(&lStartX, 2, 1, pFile);
-	fread(&lStartY, 2, 1, pFile);
-	fread(&lSizeX, 2, 1, pFile);
-	fread(&lSizeY, 2, 1, pFile);
+	sfread(&lStartX, 2, 1, pFile);
+	sfread(&lStartY, 2, 1, pFile);
+	sfread(&lSizeX, 2, 1, pFile);
+	sfread(&lSizeY, 2, 1, pFile);
 
 	fseek(pFile, 66, SEEK_SET);
-	fread(&lNbBytesPerLine, 2, 1, pFile);
+	sfread(&lNbBytesPerLine, 2, 1, pFile);
 
 	pXRes = lSizeX - lStartX + 1;
 	pYRes = lSizeY - lStartY + 1;
@@ -355,10 +374,10 @@ MR_UInt8 *TrackCompiler::PCXRead(FILE * pFile, int &pXRes, int &pYRes)
 			MR_UInt8 lBuffer;
 			MR_UInt8 lBuffer2;
 
-			fread(&lBuffer, 1, 1, pFile);
+			sfread(&lBuffer, 1, 1, pFile);
 
 			if((lBuffer & 0xc0) == 0xc0) {
-				fread(&lBuffer2, 1, 1, pFile);
+				sfread(&lBuffer2, 1, 1, pFile);
 				/*
 				   lBuffer2++;
 				   if( lBuffer2 == 255 )
