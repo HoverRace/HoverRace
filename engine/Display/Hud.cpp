@@ -72,6 +72,20 @@ void Hud::SetVisible(bool visible)
 	}
 }
 
+void Hud::LayoutStacked(HudAlignment::type align,
+                        double startX, double startY,
+                        double scaleX, double scaleY)
+{
+	double x = startX;
+	double y = startY;
+	BOOST_FOREACH(auto &elem, hudChildren[align]) {
+		elem->SetPos(startX, y);
+		Vec3 sz = elem->Measure();
+		x += scaleX * (sz.x + DECOR_MARGIN);
+		y += scaleY * (sz.y + DECOR_MARGIN);
+	}
+}
+
 void Hud::LayoutCorner(HudAlignment::type alignCorner,
                        HudAlignment::type alignH, HudAlignment::type alignV,
                        double startX, double startY,
@@ -115,16 +129,33 @@ void Hud::Layout()
 
 	const Vec2 &hudSize = GetSize();
 
+	const double midX = hudSize.x / 2.0;
+	const double midY = hudSize.y / 2.0;
+	const double divY = hudSize.y / 3.0;
+
+	const double north = HUD_MARGIN;
+	const double east = hudSize.x - HUD_MARGIN;
+	const double south = hudSize.y - HUD_MARGIN;
+	const double west = HUD_MARGIN;
+
 	//TODO: Only redo the corners or sides that changed.
 
 	LayoutCorner(HudAlignment::NW, HudAlignment::NNW, HudAlignment::WNW,
-		HUD_MARGIN, HUD_MARGIN, 1, 1);
+		west, north, 1, 1);
 	LayoutCorner(HudAlignment::NE, HudAlignment::NNE, HudAlignment::ENE,
-		hudSize.x - HUD_MARGIN, HUD_MARGIN, -1, 1);
+		east, north, -1, 1);
 	LayoutCorner(HudAlignment::SE, HudAlignment::SSE, HudAlignment::ESE,
-		hudSize.x - HUD_MARGIN, hudSize.y - HUD_MARGIN, -1, -1);
+		east, south, -1, -1);
 	LayoutCorner(HudAlignment::SW, HudAlignment::SSE, HudAlignment::WSW,
-		HUD_MARGIN, hudSize.y - HUD_MARGIN, 1, -1);
+		west, south, 1, -1);
+
+	LayoutStacked(HudAlignment::N, midX, north, 0, 1);
+	LayoutStacked(HudAlignment::E, east, midY, -1, 0);
+	LayoutStacked(HudAlignment::S, midX, south, 0, -1);
+	LayoutStacked(HudAlignment::W, west, midY, 1, 0);
+
+	LayoutStacked(HudAlignment::ABOVE, midX, divY, 0, -1);
+	LayoutStacked(HudAlignment::BELOW, midX, divY + divY, 0, 1);
 }
 
 void Hud::Advance(Util::OS::timestamp_t tick)

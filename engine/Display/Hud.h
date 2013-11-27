@@ -196,6 +196,9 @@ class MR_DllDeclare Hud : public Container
 		void SetVisible(bool visible);
 
 	private:
+		void LayoutStacked(HudAlignment::type align,
+			double startX, double startY,
+			double scaleX, double scaleY);
 		void LayoutCorner(HudAlignment::type alignCorner,
 			HudAlignment::type alignH, HudAlignment::type alignV,
 			double startX, double startY,
