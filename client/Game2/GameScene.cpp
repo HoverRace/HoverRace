@@ -23,15 +23,14 @@
 
 #include "../../engine/Control/Controller.h"
 #include "../../engine/Display/Display.h"
-#include "../../engine/Display/FuelGauge.h"
 #include "../../engine/Display/Hud.h"
-#include "../../engine/Display/Speedometer.h"
 #include "../../engine/Model/Track.h"
 #include "../../engine/Parcel/TrackBundle.h"
 #include "../../engine/VideoServices/SoundServer.h"
 #include "../../engine/VideoServices/VideoBuffer.h"
 
 #include "HoverScript/GamePeer.h"
+#include "HoverScript/HudPeer.h"
 #include "HoverScript/PlayerPeer.h"
 #include "HoverScript/SessionPeer.h"
 
@@ -111,17 +110,14 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 			new Observer(),
 			new Display::Hud(display, session->GetPlayer(0),
 				Display::Vec2(1280, 720))));
-	auto &viewport = viewports.back();
-	typedef Display::Hud::HudAlignment HudAlignment;
-	auto fuelGauge = viewport.hud->AddHudChild(HudAlignment::NE,
-		new Display::FuelGauge(display));
-	auto speedometer = viewport.hud->AddHudChild(HudAlignment::NW,
-		new Display::Speedometer(display));
 
 	gamePeer->OnSessionStart(sessionPeer);
 	auto rulebook = rules->GetRulebook();
 	rulebook->OnPreGame(sessionPeer);
 	sessionPeer->ForEachPlayer([&](std::shared_ptr<PlayerPeer> &playerPeer) {
+		//TODO: Look up the correct HUD for this player.
+		playerPeer->SetHud(std::make_shared<HudPeer>(scripting, display,
+			viewports.back().hud));
 		rulebook->OnPlayerJoined(sessionPeer, playerPeer);
 	});
 }

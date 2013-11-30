@@ -1,7 +1,7 @@
 
-// PlayerPeer.h
+// HudPeer.h
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2013 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -24,19 +24,12 @@
 #include <luabind/luabind.hpp>
 #include <luabind/object.hpp>
 
-#include "../../../engine/Script/Handlers.h"
 #include "../../../engine/Script/Peer.h"
 
-#include "HudPeer.h"
-
 namespace HoverRace {
-	namespace Client {
-		namespace HoverScript {
-			class SessionPeer;
-		}
-	}
-	namespace MainCharacter {
-		class MainCharacter;
+	namespace Display {
+		class Display;
+		class Hud;
 	}
 	namespace Script {
 		class Core;
@@ -48,45 +41,26 @@ namespace Client {
 namespace HoverScript {
 
 /**
- * Scripting peer for players (main characters).
+ * Scripting peer for access to the HUD for a player.
  * @author Michael Imamura
  */
-class PlayerPeer : public Script::Peer {
+class HudPeer : public Script::Peer {
 	typedef Script::Peer SUPER;
 	public:
-		PlayerPeer(Script::Core *scripting,
-			MainCharacter::MainCharacter *player);
-		virtual ~PlayerPeer();
+		HudPeer(Script::Core *scripting, Display::Display &display,
+			std::weak_ptr<Display::Hud> hud);
+		virtual ~HudPeer();
 
 	public:
 		static void Register(Script::Core *scripting);
 
 	public:
-		void SetHud(std::shared_ptr<HudPeer> hud);
-
-	public:
-		void LFinish();
-
-		double LGetFuel();
-
-		std::shared_ptr<HudPeer> LGetHud();
-
-		int LGetIndex();
-
-		void LGetPos();
-
-		void LOnFinishLine(const luabind::object &fn);
-		void LOnFinishLine_N(const std::string &name, const luabind::object &fn);
+		void LUseRaceDefault();
 
 	private:
-		MainCharacter::MainCharacter *player;
-		std::shared_ptr<HudPeer> hud;
-
-		luabind::object props;
-
-		Script::Handlers onFinishLine;
-
-		boost::signals2::scoped_connection finishLineConn;
+		Display::Display &display;
+		Script::Core *scripting;
+		std::weak_ptr<Display::Hud> hud;
 };
 
 }  // namespace HoverScript

@@ -1,0 +1,6 @@
+use_race_default:
+  type: method
+  sig:
+    - hud:reset_to_default()
+  brief: >
+    Set up the HUD to use the defaults for a race.

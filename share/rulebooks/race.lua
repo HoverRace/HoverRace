@@ -29,6 +29,8 @@ Rulebook 'Race' {
 				player:finish()
 			end
 		end)
+		
+		player.hud:use_race_default()
 	end,
 
 	on_post_game = function(session)

@@ -63,11 +63,17 @@ void PlayerPeer::Register(Script::Core *scripting)
 			.def("finish", &PlayerPeer::LFinish)
 			.def_readonly("fuel", &PlayerPeer::LGetFuel)
 			.def("get_pos", &PlayerPeer::LGetPos)
+			.def_readonly("hud", &PlayerPeer::LGetHud)
 			.def_readonly("index", &PlayerPeer::LGetIndex)
 			.def("on_finish_line", &PlayerPeer::LOnFinishLine)
 			.def("on_finish_line", &PlayerPeer::LOnFinishLine_N)
 			.property("props", &PlayerPeer::props)
 	];
+}
+
+void PlayerPeer::SetHud(std::shared_ptr<HudPeer> hud)
+{
+	this->hud = std::move(hud);
 }
 
 void PlayerPeer::LFinish()
@@ -78,6 +84,11 @@ void PlayerPeer::LFinish()
 double PlayerPeer::LGetFuel()
 {
 	return player->GetFuelLevel();
+}
+
+std::shared_ptr<HudPeer> PlayerPeer::LGetHud()
+{
+	return hud;
 }
 
 int PlayerPeer::LGetIndex()

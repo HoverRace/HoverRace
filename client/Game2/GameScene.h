@@ -77,7 +77,7 @@ class GameScene : public Scene
 			Viewport &operator=(Viewport &&viewport);
 
 			std::unique_ptr<Observer> observer;
-			std::unique_ptr<Display::Hud> hud;
+			std::shared_ptr<Display::Hud> hud;
 		};
 
 	public:
