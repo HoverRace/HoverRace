@@ -117,6 +117,7 @@ void Counter::Layout()
 	valueLbl->SetPos(titleSize.x + 5.0, 0);
 
 	ShrinkWrap();
+	//TODO: Notify parent container that size changed.
 }
 
 void Counter::Advance(Util::OS::timestamp_t tick)
