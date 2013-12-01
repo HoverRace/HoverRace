@@ -1,8 +1,8 @@
 add_counter:
   type: method
   sig:
-    - counter = hud:add_counter(alignment, title)
-    - counter = hud:add_counter(alignment, title, total)
+    - counter = hud:add_counter(alignment, title, initValue)
+    - counter = hud:add_counter(alignment, title, initValue, total)
   brief: >
     Add a generic counter (for lap number, score, etc.) to the HUD.
   desc: >
@@ -14,8 +14,8 @@ add_counter:
     The value may be updated later using the "value" property.
   examples:
     - |
-      local ctr = hud:add_counter(Hud.S, "Lap", 5)
-      ctr.value = 1
+      local ctr = hud:add_counter(Hud.S, "Lap", 1, 5)
+      ctr.value = 3
 
 add_fuel_gauge:
   type: method

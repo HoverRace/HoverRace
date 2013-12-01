@@ -47,11 +47,13 @@ const double Counter::NO_TOTAL = std::numeric_limits<double>::quiet_NaN();
  * Constructor.
  * @param display The display child elements will be attached to.
  * @param title The label text for the counter.
+ * @param initValue The initial value for the counter.
  * @param total The optional total value (may be NO_TOTAL to hide the total).
  */
-Counter::Counter(Display &display, const std::string &title, double total) :
+Counter::Counter(Display &display, const std::string &title, double initValue,
+                 double total) :
 	SUPER(display),
-	value(0), total(total),
+	value(initValue), total(total),
 	valueChanged(true)
 {
 	Config *cfg = Config::GetInstance();
@@ -62,7 +64,7 @@ Counter::Counter(Display &display, const std::string &title, double total) :
 	titleLbl = AddChild(new Label(title, titleFont, TITLE_COLOR));
 	titleLbl->SetAlignment(Alignment::W);
 
-	valueLbl = AddChild(new Label("0", valueFont, VALUE_COLOR));
+	valueLbl = AddChild(new Label("", valueFont, VALUE_COLOR));
 }
 
 /**

@@ -73,10 +73,10 @@ class HudPeer : public Script::Peer {
 		}
 
 	public:
-		std::shared_ptr<Display::Counter> LAddCounter_T(int align,
-			const std::string &title);
-		std::shared_ptr<Display::Counter> LAddCounter_TV(int align,
-			const std::string &title, double total);
+		std::shared_ptr<Display::Counter> LAddCounter_V(int align,
+			const std::string &title, double initValue);
+		std::shared_ptr<Display::Counter> LAddCounter_VT(int align,
+			const std::string &title, double initValue, double total);
 
 		template<class T>
 		std::shared_ptr<T> LAddDecor(int align)

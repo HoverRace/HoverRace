@@ -79,8 +79,8 @@ void HudPeer::Register(Script::Core *scripting)
 				value("NW", HudAlignment::NW),
 				value("NNW", HudAlignment::NNW)
 			]
-			.def("add_counter", &HudPeer::LAddCounter_T)
-			.def("add_counter", &HudPeer::LAddCounter_TV)
+			.def("add_counter", &HudPeer::LAddCounter_V)
+			.def("add_counter", &HudPeer::LAddCounter_VT)
 			.def("add_fuel_gauge", &HudPeer::LAddDecor<Display::FuelGauge>)
 			.def("add_speedometer", &HudPeer::LAddDecor<Display::Speedometer>)
 			.def("use_race_default", &HudPeer::LUseRaceDefault),
@@ -98,26 +98,26 @@ void HudPeer::Register(Script::Core *scripting)
 	];
 }
 
-std::shared_ptr<Display::Counter> HudPeer::LAddCounter_T(int align,
-	const std::string &title)
+std::shared_ptr<Display::Counter> HudPeer::LAddCounter_V(int align,
+	const std::string &title, double initValue)
 {
 	HudAlignment::type ha = ValidateAlignment(align);
 	if (auto sp = hud.lock()) {
 		return sp->AddHudChild(ha,
-			new Display::Counter(display, title));
+			new Display::Counter(display, title, initValue));
 	}
 	else {
 		return std::shared_ptr<Display::Counter>();
 	}
 }
 
-std::shared_ptr<Display::Counter> HudPeer::LAddCounter_TV(int align,
-	const std::string &title, double total)
+std::shared_ptr<Display::Counter> HudPeer::LAddCounter_VT(int align,
+	const std::string &title, double initValue, double total)
 {
 	HudAlignment::type ha = ValidateAlignment(align);
 	if (auto sp = hud.lock()) {
 		return sp->AddHudChild(ha,
-			new Display::Counter(display, title, total));
+			new Display::Counter(display, title, initValue, total));
 	}
 	else {
 		return std::shared_ptr<Display::Counter>();

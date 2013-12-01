@@ -37,9 +37,8 @@ Rulebook 'Race' {
 		-- We start with the default HUD for a race and add our lap counter.
 		local hud = player.hud
 		hud:use_race_default()
-		player.props.lap_counter = hud:add_counter(Hud.S, "Lap",
+		player.props.lap_counter = hud:add_counter(Hud.S, "Lap", 1,
 			session.rules.laps)
-		player.props.lap_counter.value = 1
 	end,
 
 	on_post_game = function(session)
