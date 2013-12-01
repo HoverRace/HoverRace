@@ -60,7 +60,6 @@ PKG_CHECK_MODULES(DEPS, [
 	libcurl >= 7.18
 	libxdg-basedir >= 1.0
 	openal >= 0.0.8
-	OIS >= 1.2.0
 	sdl2 >= 2.0
 	SDL2_image >= 2.0
 ])
