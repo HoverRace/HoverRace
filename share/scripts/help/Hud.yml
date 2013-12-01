@@ -1,3 +1,21 @@
+add_fuel_gauge:
+  type: method
+  sig:
+    - fuel_gauge = hud:add_fuel_gauge(alignment)
+  brief: >
+    Add a fuel indicator to the HUD.
+  examples:
+    - hud:add_fuel_gauge(Hud.NE)
+
+add_speedometer:
+  type: method
+  sig:
+    - speedometer = hud:add_speedometer(alignment)
+  brief: >
+    Add speed indicators to the HUD.
+  examples:
+    - hud:add_speedometer(Hud.NW)
+
 use_race_default:
   type: method
   sig:

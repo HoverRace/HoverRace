@@ -55,6 +55,18 @@ class HudPeer : public Script::Peer {
 		static void Register(Script::Core *scripting);
 
 	public:
+		template<class T>
+		std::shared_ptr<T> LAddDecor(int align)
+		{
+			if (auto sp = hud.lock()) {
+				return sp->AddHudChild(static_cast<HudAlignment::type>(align),
+					new T(display));
+			}
+			else {
+				return std::shared_ptr<T>();
+			}
+		}
+
 		void LUseRaceDefault();
 
 	private:

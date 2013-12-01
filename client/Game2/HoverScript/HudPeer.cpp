@@ -24,11 +24,13 @@
 #include "../../../engine/Script/Core.h"
 #include "../../../engine/Display/FuelGauge.h"
 #include "../../../engine/Display/Hud.h"
+#include "../../../engine/Display/HudDecor.h"
 #include "../../../engine/Display/Speedometer.h"
 
 #include "HudPeer.h"
 
 using namespace HoverRace::Util;
+typedef HoverRace::Display::Hud::HudAlignment HudAlignment;
 
 namespace HoverRace {
 namespace Client {
@@ -51,9 +53,9 @@ HudPeer::~HudPeer()
 void HudPeer::Register(Script::Core *scripting)
 {
 	using namespace luabind;
-	typedef Display::Hud::HudAlignment HudAlignment;
 	lua_State *L = scripting->GetState();
 
+	// Register base classes.
 	module(L) [
 		class_<HudPeer, SUPER, std::shared_ptr<HudPeer>>("Hud")
 			.enum_("HudAlignment") [
@@ -76,7 +78,17 @@ void HudPeer::Register(Script::Core *scripting)
 				value("NW", HudAlignment::NW),
 				value("NNW", HudAlignment::NNW)
 			]
-			.def("use_race_default", &HudPeer::LUseRaceDefault)
+			.def("add_fuel_gauge", &HudPeer::LAddDecor<Display::FuelGauge>)
+			.def("add_speedometer", &HudPeer::LAddDecor<Display::Speedometer>)
+			.def("use_race_default", &HudPeer::LUseRaceDefault),
+
+		class_<Display::HudDecor>("HudDecor")
+	];
+
+	// Register HUD elements.
+	module(L) [
+		class_<Display::FuelGauge, Display::HudDecor>("FuelGauge"),
+		class_<Display::Speedometer, Display::HudDecor>("Speedometer")
 	];
 }
 
