@@ -24,15 +24,13 @@
 #include <luabind/luabind.hpp>
 #include <luabind/object.hpp>
 
+#include "../../../engine/Display/Hud.h"
+#include "../../../engine/Script/Core.h"
 #include "../../../engine/Script/Peer.h"
 
 namespace HoverRace {
 	namespace Display {
 		class Display;
-		class Hud;
-	}
-	namespace Script {
-		class Core;
 	}
 }
 
@@ -58,6 +56,8 @@ class HudPeer : public Script::Peer {
 		template<class T>
 		std::shared_ptr<T> LAddDecor(int align)
 		{
+			typedef HoverRace::Display::Hud::HudAlignment HudAlignment;
+
 			HudAlignment::type ha;
 			try {
 				ha = HudAlignment::FromInt(align);
