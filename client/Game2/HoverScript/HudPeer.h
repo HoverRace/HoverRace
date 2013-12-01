@@ -44,6 +44,7 @@ namespace HoverScript {
  */
 class HudPeer : public Script::Peer {
 	typedef Script::Peer SUPER;
+	typedef HoverRace::Display::Hud::HudAlignment HudAlignment;
 	public:
 		HudPeer(Script::Core *scripting, Display::Display &display,
 			std::weak_ptr<Display::Hud> hud);
@@ -52,20 +53,29 @@ class HudPeer : public Script::Peer {
 	public:
 		static void Register(Script::Core *scripting);
 
+	private:
+		/**
+		 * Convert an int into an alignment value, raising a Lua error if the
+		 * the value is out of range.
+		 * @param align The alignment value passed from Lua.
+		 * @return The HUD alignment.
+		 */
+		HudAlignment::type ValidateAlignment(int align)
+		{
+			try {
+				return HudAlignment::FromInt(align);
+			}
+			catch (Exception &ex) {
+				luaL_error(GetScripting()->GetState(), "%s", ex.what());
+				throw;  // Never actually reached (luaL_error doesn't return).
+			}
+		}
+
 	public:
 		template<class T>
 		std::shared_ptr<T> LAddDecor(int align)
 		{
-			typedef HoverRace::Display::Hud::HudAlignment HudAlignment;
-
-			HudAlignment::type ha;
-			try {
-				ha = HudAlignment::FromInt(align);
-			}
-			catch (Exception &ex) {
-				luaL_error(GetScripting()->GetState(), "%s", ex.what());
-			}
-
+			HudAlignment::type ha = ValidateAlignment(align);
 			if (auto sp = hud.lock()) {
 				return sp->AddHudChild(ha, new T(display));
 			}
