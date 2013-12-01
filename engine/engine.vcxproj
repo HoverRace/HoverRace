@@ -125,6 +125,7 @@
     <ClCompile Include="Display\ClickRegion.cpp" />
     <ClCompile Include="Display\Color.cpp" />
     <ClCompile Include="Display\Container.cpp" />
+    <ClCompile Include="Display\Counter.cpp" />
     <ClCompile Include="Display\Display.cpp" />
     <ClCompile Include="Display\FillBox.cpp" />
     <ClCompile Include="Display\FuelGauge.cpp" />
@@ -252,6 +253,7 @@
     <ClInclude Include="Display\ClickRegion.h" />
     <ClInclude Include="Display\Color.h" />
     <ClInclude Include="Display\Container.h" />
+    <ClInclude Include="Display\Counter.h" />
     <ClInclude Include="Display\Display.h" />
     <ClInclude Include="Display\FillBox.h" />
     <ClInclude Include="Display\FuelGauge.h" />

@@ -15,6 +15,8 @@ libdisplay_la_SOURCES = \
 	Color.h \
 	Container.cpp \
 	Container.h \
+	Counter.cpp \
+	Counter.h \
 	Display.cpp \
 	Display.h \
 	FillBox.cpp \

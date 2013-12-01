@@ -406,6 +406,9 @@
     <ClCompile Include="Display\Speedometer.cpp">
       <Filter>Display</Filter>
     </ClCompile>
+    <ClCompile Include="Display\Counter.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColorTools\ColorTools.h">
@@ -841,6 +844,9 @@
     </ClInclude>
     <ClInclude Include="Display\SDL\SdlTexture.h">
       <Filter>Display\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Display\Counter.h">
+      <Filter>Display</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

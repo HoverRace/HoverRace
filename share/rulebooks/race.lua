@@ -16,6 +16,7 @@ Rulebook 'Race' {
 	on_player_joined = function(session, player)
 		local player_name = 'Player ' .. (player.index + 1)
 
+		-- Set up the player properties and events.
 		player.props.lap = 1
 		player:on_finish_line(function()
 			local lap = player.props.lap + 1
@@ -24,13 +25,21 @@ Rulebook 'Race' {
 			print(player_name .. ' is on lap ' ..
 				lap .. '/' .. session.rules.laps ..
 				' (' .. (session.time / 1000) .. ')')
+
+			player.props.lap_counter.value = lap
 			if lap > session.rules.laps then
 				print(player_name .. ' finished race!')
 				player:finish()
 			end
 		end)
-		
-		player.hud:use_race_default()
+
+		-- Set up the initial HUD for the player.
+		-- We start with the default HUD for a race and add our lap counter.
+		local hud = player.hud
+		hud:use_race_default()
+		player.props.lap_counter = hud:add_counter(Hud.S, "Lap",
+			session.rules.laps)
+		player.props.lap_counter.value = 1
 	end,
 
 	on_post_game = function(session)

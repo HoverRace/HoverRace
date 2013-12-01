@@ -30,6 +30,7 @@
 
 namespace HoverRace {
 	namespace Display {
+		class Counter;
 		class Display;
 	}
 }
@@ -72,6 +73,11 @@ class HudPeer : public Script::Peer {
 		}
 
 	public:
+		std::shared_ptr<Display::Counter> LAddCounter_T(int align,
+			const std::string &title);
+		std::shared_ptr<Display::Counter> LAddCounter_TV(int align,
+			const std::string &title, double total);
+
 		template<class T>
 		std::shared_ptr<T> LAddDecor(int align)
 		{

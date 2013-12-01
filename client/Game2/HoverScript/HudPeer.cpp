@@ -22,6 +22,7 @@
 #include "StdAfx.h"
 
 #include "../../../engine/Script/Core.h"
+#include "../../../engine/Display/Counter.h"
 #include "../../../engine/Display/FuelGauge.h"
 #include "../../../engine/Display/Hud.h"
 #include "../../../engine/Display/HudDecor.h"
@@ -78,6 +79,8 @@ void HudPeer::Register(Script::Core *scripting)
 				value("NW", HudAlignment::NW),
 				value("NNW", HudAlignment::NNW)
 			]
+			.def("add_counter", &HudPeer::LAddCounter_T)
+			.def("add_counter", &HudPeer::LAddCounter_TV)
 			.def("add_fuel_gauge", &HudPeer::LAddDecor<Display::FuelGauge>)
 			.def("add_speedometer", &HudPeer::LAddDecor<Display::Speedometer>)
 			.def("use_race_default", &HudPeer::LUseRaceDefault),
@@ -87,9 +90,38 @@ void HudPeer::Register(Script::Core *scripting)
 
 	// Register HUD elements.
 	module(L) [
+		class_<Display::Counter, Display::HudDecor>("Counter")
+			.property("value", &Display::Counter::GetValue, &Display::Counter::SetValue)
+			.property("total", &Display::Counter::GetTotal, &Display::Counter::SetTotal),
 		class_<Display::FuelGauge, Display::HudDecor>("FuelGauge"),
 		class_<Display::Speedometer, Display::HudDecor>("Speedometer")
 	];
+}
+
+std::shared_ptr<Display::Counter> HudPeer::LAddCounter_T(int align,
+	const std::string &title)
+{
+	HudAlignment::type ha = ValidateAlignment(align);
+	if (auto sp = hud.lock()) {
+		return sp->AddHudChild(ha,
+			new Display::Counter(display, title));
+	}
+	else {
+		return std::shared_ptr<Display::Counter>();
+	}
+}
+
+std::shared_ptr<Display::Counter> HudPeer::LAddCounter_TV(int align,
+	const std::string &title, double total)
+{
+	HudAlignment::type ha = ValidateAlignment(align);
+	if (auto sp = hud.lock()) {
+		return sp->AddHudChild(ha,
+			new Display::Counter(display, title, total));
+	}
+	else {
+		return std::shared_ptr<Display::Counter>();
+	}
 }
 
 void HudPeer::LUseRaceDefault()
