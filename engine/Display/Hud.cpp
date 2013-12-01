@@ -34,6 +34,7 @@ namespace {
 /**
  * Constructor.
  * @param display The display child elements will be attached to.
+ * @param player The target player this HUD is viewing.
  * @param size The size of the container.
  * @param clip Enable (default) or disable clipping of child widgets.
  * @param layoutFlags Optional layout flags.

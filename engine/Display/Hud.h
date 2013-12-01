@@ -159,6 +159,7 @@ class MR_DllDeclare Hud : public Container
 	public:
 		/**
 		 * Append a child element to the end of the list.
+		 * @param alignment Where to place the child element in the HUD.
 		 * @param child The child element; must be a subclass of UiViewModel.
 		 * @return The child element, wrapped in a @c std::shared_ptr.
 		 */
