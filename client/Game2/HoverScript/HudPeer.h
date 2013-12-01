@@ -58,9 +58,16 @@ class HudPeer : public Script::Peer {
 		template<class T>
 		std::shared_ptr<T> LAddDecor(int align)
 		{
+			HudAlignment::type ha;
+			try {
+				ha = HudAlignment::FromInt(align);
+			}
+			catch (Exception &ex) {
+				luaL_error(GetScripting()->GetState(), "%s", ex.what());
+			}
+
 			if (auto sp = hud.lock()) {
-				return sp->AddHudChild(static_cast<HudAlignment::type>(align),
-					new T(display));
+				return sp->AddHudChild(ha, new T(display));
 			}
 			else {
 				return std::shared_ptr<T>();
@@ -71,7 +78,6 @@ class HudPeer : public Script::Peer {
 
 	private:
 		Display::Display &display;
-		Script::Core *scripting;
 		std::weak_ptr<Display::Hud> hud;
 };
 

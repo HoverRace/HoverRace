@@ -22,6 +22,7 @@
 #pragma once
 
 #include "../Util/OS.h"
+#include "../Exception.h"
 #include "HudDecor.h"
 
 #include "Container.h"
@@ -88,6 +89,22 @@ class MR_DllDeclare Hud : public Container
 				NNW,    ///< Northwest corner, stacked left-to-right.
 			};
 			static const size_t NUM = NNW + 1;
+
+			/**
+			 * Safely convert from an int.
+			 * @param t The int value.
+			 * @return The HudAlignment enum value.
+			 * @throws Exception The int value is does not map to a valid
+			 *                   enum value.
+			 */
+			static type FromInt(int t) {
+				if (t < 0 || t > NNW) {
+					std::ostringstream oss;
+					oss << "Invalid HUD alignment: " << t;
+					throw Exception(oss.str());
+				}
+				return static_cast<type>(t);
+			}
 
 			static bool IsCorner(type t) {
 				return t == NW || t == NE || t == SE || t == SW;
