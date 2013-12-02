@@ -89,7 +89,7 @@ void HudPeer::Register(Script::Core *scripting)
 	];
 
 	// Register HUD elements.
-	module(L) [
+	module(L, "hud") [
 		class_<Display::Counter, Display::HudDecor>("Counter")
 			.property("value", &Display::Counter::GetValue, &Display::Counter::SetValue)
 			.property("total", &Display::Counter::GetTotal, &Display::Counter::SetTotal),
