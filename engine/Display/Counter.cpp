@@ -116,7 +116,8 @@ void Counter::Layout()
 	const Vec3 valueSize = valueLbl->Measure();
 
 	titleLbl->SetPos(0, valueSize.y / 2.0);
-	valueLbl->SetPos(titleSize.x + 5.0, 0);
+	double x = titleLbl->GetText().empty() ? 0 : (titleSize.x + 5.0);
+	valueLbl->SetPos(x, 0);
 
 	ShrinkWrap();
 	//TODO: Notify parent container that size changed.
