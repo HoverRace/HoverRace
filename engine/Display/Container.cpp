@@ -62,7 +62,7 @@ void Container::ShrinkWrap()
 		if (measured.x > max.x) max.x = measured.x;
 		if (measured.y > max.y) max.y = measured.y;
 	}
-	size = max;
+	SetSize(max);
 }
 
 /**
