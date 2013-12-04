@@ -36,6 +36,7 @@
 namespace HoverRace {
 	namespace Display {
 		class Display;
+		class FillBox;
 		class Label;
 	}
 }
@@ -83,6 +84,7 @@ class MR_DllDeclare Counter : public HudDecor
 		double value;
 		double total;
 		bool valueChanged;
+		std::shared_ptr<FillBox> bg;
 		std::shared_ptr<Label> titleLbl;
 		std::shared_ptr<Label> valueLbl;
 };

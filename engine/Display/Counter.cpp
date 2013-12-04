@@ -22,6 +22,7 @@
 #include "StdAfx.h"
 
 #include "../Util/Config.h"
+#include "FillBox.h"
 #include "Label.h"
 
 #include "Counter.h"
@@ -36,8 +37,11 @@ namespace HoverRace {
 namespace Display {
 
 namespace {
+	const Color BG_COLOR = 0x3f000000;
 	const Color TITLE_COLOR = 0xffe3063e;
 	const Color VALUE_COLOR = TITLE_COLOR;
+	const double MARGIN_WIDTH = 15;
+	const double MARGIN_HEIGHT = 10;
 }
 
 /// Indicator that the total should not be displayed.
@@ -60,6 +64,8 @@ Counter::Counter(Display &display, const std::string &title, double initValue,
 
 	const UiFont titleFont(cfg->GetDefaultFontName(), 20);
 	const UiFont valueFont(cfg->GetDefaultFontName(), 30, UiFont::BOLD);
+
+	bg = AddChild(new FillBox(0, 0, BG_COLOR));
 
 	titleLbl = AddChild(new Label(title, titleFont, TITLE_COLOR));
 	titleLbl->SetAlignment(Alignment::W);
@@ -115,11 +121,18 @@ void Counter::Layout()
 	const Vec3 titleSize = titleLbl->Measure();
 	const Vec3 valueSize = valueLbl->Measure();
 
-	titleLbl->SetPos(0, valueSize.y / 2.0);
-	double x = titleLbl->GetText().empty() ? 0 : (titleSize.x + 5.0);
-	valueLbl->SetPos(x, 0);
+	titleLbl->SetPos(MARGIN_WIDTH, MARGIN_HEIGHT + (valueSize.y / 2.0));
 
-	ShrinkWrap();
+	double x = MARGIN_WIDTH;
+	if (!titleLbl->GetText().empty()) {
+		x += titleSize.x + 10.0;
+	}
+	valueLbl->SetPos(x, MARGIN_HEIGHT);
+
+	Vec2 sz(x + valueSize.x + MARGIN_WIDTH,
+		MARGIN_HEIGHT + valueSize.y + MARGIN_HEIGHT);
+	bg->SetSize(sz);
+	SetSize(sz);
 	//TODO: Notify parent container that size changed.
 }
 
