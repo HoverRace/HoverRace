@@ -70,6 +70,13 @@ class MR_DllDeclare HudDecor : public Container
 		virtual ~HudDecor() { }
 
 	public:
+		typedef boost::signals2::signal<void(const Vec2&)> sizeChangedSignal_t;
+		sizeChangedSignal_t &GetSizeChangedSignal() { return sizeChangedSignal; }
+
+	protected:
+		virtual void FireModelUpdate(int prop);
+
+	public:
 		virtual void Advance(Util::OS::timestamp_t tick) { };
 
 	public:
@@ -78,6 +85,7 @@ class MR_DllDeclare HudDecor : public Container
 
 	private:
 		MainCharacter::MainCharacter *player;
+		sizeChangedSignal_t sizeChangedSignal;
 };
 
 }  // namespace Display

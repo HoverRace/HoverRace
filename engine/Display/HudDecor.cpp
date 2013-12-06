@@ -36,6 +36,16 @@ HudDecor::HudDecor(Display &display) :
 {
 }
 
+void HudDecor::FireModelUpdate(int prop)
+{
+	switch (prop) {
+		case Container::Props::SIZE:
+			sizeChangedSignal(GetSize());
+			break;
+	}
+	SUPER::FireModelUpdate(prop);
+}
+
 /**
  * Change the target player for this HUD element.
  * @param player The player (may be @c nullptr).

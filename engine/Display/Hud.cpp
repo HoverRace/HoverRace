@@ -31,6 +31,28 @@ namespace {
 	const double DECOR_MARGIN = 5;  ///< Space between decor elements.
 }
 
+//{{{ HudChild ////////////////////////////////////////////////////////////////
+
+Hud::HudChild::HudChild(std::shared_ptr<HudDecor> decor) :
+	decor(std::move(decor))
+{
+}
+
+Hud::HudChild::HudChild(HudChild &&other) :
+	decor(std::move(other.decor)),
+	sizeChangedConn(other.sizeChangedConn.release())
+{
+}
+
+Hud::HudChild &Hud::HudChild::operator=(HudChild &&other)
+{
+	decor = std::move(other.decor);
+	sizeChangedConn = other.sizeChangedConn.release();
+	return *this;
+}
+
+//}}} HudChild
+
 /**
  * Constructor.
  * @param display The display child elements will be attached to.
@@ -79,7 +101,8 @@ void Hud::LayoutStacked(HudAlignment::type align,
 {
 	double x = startX;
 	double y = startY;
-	BOOST_FOREACH(auto &elem, hudChildren[align]) {
+	BOOST_FOREACH(auto &child, hudChildren[align]) {
+		auto &elem = child.decor;
 		elem->SetPos(startX, y);
 		Vec3 sz = elem->Measure();
 		x += scaleX * (sz.x + DECOR_MARGIN);
@@ -97,7 +120,7 @@ void Hud::LayoutCorner(HudAlignment::type alignCorner,
 
 	auto &cornerElems = hudChildren[alignCorner];
 	if (!cornerElems.empty()) {
-		auto &elem = cornerElems.back();
+		auto &elem = cornerElems.back().decor;
 		elem->SetPos(x, y);
 		Vec3 sz = elem->Measure();
 		maxHeightH = sz.y;
@@ -105,7 +128,8 @@ void Hud::LayoutCorner(HudAlignment::type alignCorner,
 	}
 
 	// Layout the horizontal elems.
-	BOOST_FOREACH(auto &elem, hudChildren[alignH]) {
+	BOOST_FOREACH(auto &child, hudChildren[alignH]) {
+		auto &elem = child.decor;
 		elem->SetPos(x, y);
 		Vec3 sz = elem->Measure();
 		if (sz.y > maxHeightH) {
@@ -117,7 +141,8 @@ void Hud::LayoutCorner(HudAlignment::type alignCorner,
 	// Layout the vertical elems.
 	y = startY + (scaleY * (maxHeightH + DECOR_MARGIN));
 	x = startX;
-	BOOST_FOREACH(auto &elem, hudChildren[alignV]) {
+	BOOST_FOREACH(auto &child, hudChildren[alignV]) {
+		auto &elem = child.decor;
 		elem->SetPos(x, y);
 		Vec3 sz = elem->Measure();
 		y += scaleY * (sz.y + DECOR_MARGIN);

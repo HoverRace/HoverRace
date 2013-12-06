@@ -144,6 +144,16 @@ class MR_DllDeclare Hud : public Container
 				}
 			}
 		};
+	protected:
+		struct MR_DllDeclare HudChild : private boost::noncopyable
+		{
+			HudChild(std::shared_ptr<HudDecor> decor);
+			HudChild(HudChild &&other);
+			HudChild &operator=(HudChild &&other);
+
+			std::shared_ptr<HudDecor> decor;
+			boost::signals2::scoped_connection sizeChangedConn;
+		};
 
 	public:
 		Hud(Display &display, MainCharacter::MainCharacter *player,
@@ -174,14 +184,20 @@ class MR_DllDeclare Hud : public Container
 			if (HudAlignment::IsCorner(alignment)) {
 				auto &elems = hudChildren[alignment];
 				if (!elems.empty()) {
-					RemoveChild(elems.back());
+					RemoveChild(elems.back().decor);
 					elems.clear();
 				}
 			}
 
 			sharedChild->SetAlignment(HudAlignment::AlignmentFor(alignment));
 
-			hudChildren[alignment].emplace_back(sharedChild);
+			auto &children = hudChildren[alignment];
+			children.emplace_back(sharedChild);
+
+			// Trigger layout when the child changes size.
+			children.back().sizeChangedConn =
+				sharedChild->GetSizeChangedSignal().connect(
+					std::bind(&Hud::RequestLayout, this));
 
 			RequestLayout();
 			return sharedChild;
@@ -193,7 +209,7 @@ class MR_DllDeclare Hud : public Container
 		{
 			BOOST_FOREACH(auto &children, hudChildren) {
 				BOOST_FOREACH(auto &child, children) {
-					fn(child);
+					fn(child.decor);
 				}
 			}
 		}
@@ -230,7 +246,7 @@ class MR_DllDeclare Hud : public Container
 	private:
 		MainCharacter::MainCharacter *player;
 		bool visible;
-		typedef std::vector<std::shared_ptr<HudDecor>> hudChildList_t;
+		typedef std::vector<HudChild> hudChildList_t;
 		std::array<hudChildList_t, HudAlignment::NUM> hudChildren;
 };
 
