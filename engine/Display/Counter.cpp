@@ -133,7 +133,6 @@ void Counter::Layout()
 		MARGIN_HEIGHT + valueSize.y + MARGIN_HEIGHT);
 	bg->SetSize(sz);
 	SetSize(sz);
-	//TODO: Notify parent container that size changed.
 }
 
 void Counter::Advance(Util::OS::timestamp_t tick)
