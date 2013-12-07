@@ -138,8 +138,8 @@ void Counter::Layout()
 
 void Counter::Advance(Util::OS::timestamp_t tick)
 {
-	static boost::format VALUE_FMT("%0.2g");
-	static boost::format TOTAL_FMT("%0.2g / %0.2g");
+	static boost::format VALUE_FMT("%0.9g");
+	static boost::format TOTAL_FMT("%0.9g / %0.9g");
 
 	if (valueChanged) {
 		if (IsTotalHidden()) {
