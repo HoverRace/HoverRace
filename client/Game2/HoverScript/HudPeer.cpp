@@ -83,6 +83,7 @@ void HudPeer::Register(Script::Core *scripting)
 			.def("add_counter", &HudPeer::LAddCounter_VT)
 			.def("add_fuel_gauge", &HudPeer::LAddDecor<Display::FuelGauge>)
 			.def("add_speedometer", &HudPeer::LAddDecor<Display::Speedometer>)
+			.def("clear", &HudPeer::LClear)
 			.def("use_race_default", &HudPeer::LUseRaceDefault),
 
 		class_<Display::HudDecor>("HudDecor")
@@ -121,6 +122,13 @@ std::shared_ptr<Display::Counter> HudPeer::LAddCounter_VT(int align,
 	}
 	else {
 		return std::shared_ptr<Display::Counter>();
+	}
+}
+
+void HudPeer::LClear()
+{
+	if (auto sp = hud.lock()) {
+		sp->Clear();
 	}
 }
 

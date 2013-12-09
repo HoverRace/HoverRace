@@ -90,6 +90,8 @@ class HudPeer : public Script::Peer {
 			}
 		}
 
+		void LClear();
+
 		void LUseRaceDefault();
 
 	private:

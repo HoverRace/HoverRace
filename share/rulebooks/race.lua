@@ -42,7 +42,7 @@ Rulebook 'Race' {
 		end)
 		player:on_finish(function()
 			--TODO: Set up postgame HUD.
-			print(player_name .. ' on_finish')
+			player.hud:clear()
 		end)
 
 		--TODO: Set up the pregame HUD for the player.
