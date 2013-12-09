@@ -203,6 +203,14 @@ class MR_DllDeclare Hud : public Container
 			return sharedChild;
 		}
 
+		virtual void Clear()
+		{
+			BOOST_FOREACH(auto &children, hudChildren) {
+				children.clear();
+			}
+			SUPER::Clear();
+		}
+
 	protected:
 		template<typename Fn>
 		void ForEachHudChild(Fn fn)

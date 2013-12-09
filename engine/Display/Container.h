@@ -121,6 +121,14 @@ class MR_DllDeclare Container : public UiViewModel
 			return child;
 		}
 
+		/**
+		 * Remove all child elements.
+		 */
+		virtual void Clear()
+		{
+			children.clear();
+		}
+
 	private:
 		template<typename P, bool(UiViewModel::*F)(P)>
 		bool PropagateMouseEvent(P param)

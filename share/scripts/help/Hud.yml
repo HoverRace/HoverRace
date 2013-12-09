@@ -41,3 +41,5 @@ use_race_default:
     - hud:reset_to_default()
   brief: >
     Set up the HUD to use the defaults for a race.
+  desc: >
+    This will clear the current HUD and add a speedometer and fuel meter.
