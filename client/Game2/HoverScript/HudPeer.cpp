@@ -128,6 +128,7 @@ void HudPeer::LUseRaceDefault()
 {
 	if (auto sp = hud.lock()) {
 		typedef Display::Hud::HudAlignment HudAlignment;
+		sp->Clear();
 		sp->AddHudChild(HudAlignment::NE, new Display::FuelGauge(display));
 		sp->AddHudChild(HudAlignment::NW, new Display::Speedometer(display));
 	}
