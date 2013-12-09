@@ -18,6 +18,10 @@ Rulebook 'Race' {
 
 		-- Set up the player properties and events.
 		player.props.lap = 1
+		player:on_start(function()
+			--TODO: Set up the racing HUD.
+			print(player_name .. ' on_start')
+		end)
 		player:on_finish_line(function()
 			local lap = player.props.lap + 1
 			player.props.lap = lap
@@ -32,8 +36,12 @@ Rulebook 'Race' {
 				player:finish()
 			end
 		end)
+		player:on_finish(function()
+			--TODO: Set up postgame HUD.
+			print(player_name .. ' on_finish')
+		end)
 
-		-- Set up the initial HUD for the player.
+		-- Set up the pregame HUD for the player.
 		-- We start with the default HUD for a race and add our lap counter.
 		local hud = player.hud
 		hud:use_race_default()

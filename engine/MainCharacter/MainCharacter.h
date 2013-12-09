@@ -216,6 +216,7 @@ class MainCharacter : public Model::FreeElement
 		MR_DllDeclare MR_SimulationTime GetBestLapDuration() const;
 		MR_DllDeclare MR_SimulationTime GetLastLapDuration() const;
 		MR_DllDeclare MR_SimulationTime GetLastLapCompletion() const;
+		MR_DllDeclare bool HasStarted() const;
 		MR_DllDeclare void Finish();
 		MR_DllDeclare bool HasFinish() const;
 
@@ -246,6 +247,7 @@ class MainCharacter : public Model::FreeElement
 		finishLineSignal_t &GetFinishLineSignal() { return finishLineSignal; }
 
 	private:
+		bool started;
 		bool finished;
 		finishLineSignal_t finishLineSignal;
 };

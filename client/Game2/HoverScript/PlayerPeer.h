@@ -65,6 +65,10 @@ class PlayerPeer : public Script::Peer {
 		void SetHud(std::shared_ptr<HudPeer> hud);
 
 	public:
+		void OnStart();
+		void OnFinish();
+
+	public:
 		void LFinish();
 
 		double LGetFuel();
@@ -75,6 +79,12 @@ class PlayerPeer : public Script::Peer {
 
 		void LGetPos();
 
+		void LOnStart(const luabind::object &fn);
+		void LOnStart_N(const std::string &name, const luabind::object &fn);
+
+		void LOnFinish(const luabind::object &fn);
+		void LOnFinish_N(const std::string &name, const luabind::object &fn);
+
 		void LOnFinishLine(const luabind::object &fn);
 		void LOnFinishLine_N(const std::string &name, const luabind::object &fn);
 
@@ -84,6 +94,8 @@ class PlayerPeer : public Script::Peer {
 
 		luabind::object props;
 
+		Script::Handlers onStart;
+		Script::Handlers onFinish;
 		Script::Handlers onFinishLine;
 
 		boost::signals2::scoped_connection finishLineConn;

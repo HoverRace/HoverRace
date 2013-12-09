@@ -74,7 +74,7 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 	display(display), director(director), gamePeer(gamePeer), rules(rules),
 	frame(0), numPlayers(1), muted(false),
 	session(nullptr),
-	firedOnRaceFinish(false)
+	firedOnStart(false), firedOnRaceFinish(false)
 {
 	// Create the new session
 	session = new ClientSession(rules);
@@ -233,8 +233,13 @@ void GameScene::Advance(Util::OS::timestamp_t tick)
 	session->Process();
 
 	if (!firedOnRaceFinish && session->GetPlayer(0)->HasFinish()) {
+		sessionPeer->GetPlayer(0)->OnFinish();
 		OnRaceFinish();
 		firedOnRaceFinish = true;
+	}
+	else if (!firedOnStart && session->GetPlayer(0)->HasStarted()) {
+		sessionPeer->GetPlayer(0)->OnStart();
+		firedOnStart = true;
 	}
 
 	// Update HUD state last, after game state is settled for this frame.

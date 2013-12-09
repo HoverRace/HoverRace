@@ -38,7 +38,7 @@ PlayerPeer::PlayerPeer(Script::Core *scripting,
 	SUPER(scripting, "Player"),
 	player(player),
 	props(luabind::newtable(scripting->GetState())),
-	onFinishLine(scripting)
+	onStart(scripting), onFinish(scripting), onFinishLine(scripting)
 {
 	finishLineConn = player->GetFinishLineSignal().connect(
 		[&](MainCharacter::MainCharacter*) {
@@ -65,6 +65,10 @@ void PlayerPeer::Register(Script::Core *scripting)
 			.def("get_pos", &PlayerPeer::LGetPos)
 			.def_readonly("hud", &PlayerPeer::LGetHud)
 			.def_readonly("index", &PlayerPeer::LGetIndex)
+			.def("on_start", &PlayerPeer::LOnStart)
+			.def("on_start", &PlayerPeer::LOnStart_N)
+			.def("on_finish", &PlayerPeer::LOnFinish)
+			.def("on_finish", &PlayerPeer::LOnFinish_N)
 			.def("on_finish_line", &PlayerPeer::LOnFinishLine)
 			.def("on_finish_line", &PlayerPeer::LOnFinishLine_N)
 			.property("props", &PlayerPeer::props)
@@ -74,6 +78,16 @@ void PlayerPeer::Register(Script::Core *scripting)
 void PlayerPeer::SetHud(std::shared_ptr<HudPeer> hud)
 {
 	this->hud = std::move(hud);
+}
+
+void PlayerPeer::OnStart()
+{
+	onStart.CallHandlers();
+}
+
+void PlayerPeer::OnFinish()
+{
+	onFinish.CallHandlers();
 }
 
 void PlayerPeer::LFinish()
@@ -104,6 +118,26 @@ void PlayerPeer::LGetPos()
 	lua_pushnumber(L, pos.mX);
 	lua_pushnumber(L, pos.mY);
 	lua_pushnumber(L, pos.mZ);
+}
+
+void PlayerPeer::LOnStart(const luabind::object &fn)
+{
+	onStart.AddHandler(fn);
+}
+
+void PlayerPeer::LOnStart_N(const std::string &name, const luabind::object &fn)
+{
+	onStart.AddHandler(name, fn);
+}
+
+void PlayerPeer::LOnFinish(const luabind::object &fn)
+{
+	onFinish.AddHandler(fn);
+}
+
+void PlayerPeer::LOnFinish_N(const std::string &name, const luabind::object &fn)
+{
+	onFinish.AddHandler(name, fn);
 }
 
 void PlayerPeer::LOnFinishLine(const luabind::object &fn)

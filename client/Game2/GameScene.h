@@ -136,6 +136,7 @@ class GameScene : public Scene
 
 		HoverScript::SessionPeerPtr sessionPeer;
 
+		bool firedOnStart;
 		bool firedOnRaceFinish;
 };
 

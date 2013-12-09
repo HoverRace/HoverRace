@@ -5,6 +5,7 @@ finish:
   brief: >
     Indicate that this player has completed the match.
   desc: >
+    The player's on_finish event will be triggered.
     The game ends when all players have called this method.
 
 fuel:
@@ -25,6 +26,16 @@ index:
   isa: number
   brief: >
     The position in the session:players list, starting at zero for player 1.
+
+on_start:
+  type: event
+  brief: >
+    Called when pregame is over and the player has control.
+
+on_finish:
+  type: event
+  brief: >
+    Called when player's game is over and postgame starts.
 
 on_finish_line:
   type: event

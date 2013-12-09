@@ -189,7 +189,7 @@ namespace {
 
 MainCharacter::MainCharacter(const Util::ObjectFromFactoryId & pId) :
 	Model::FreeElement(pId),
-	playerIdx(0), finished(false)
+	playerIdx(0), started(false), finished(false)
 {
 	mMasterMode = TRUE;
 	mRoom = -1;
@@ -521,6 +521,7 @@ int MainCharacter::Simulate(MR_SimulationTime pDuration, Model::Level *pLevel, i
 
 	if(pDuration > 0) {
 		if(mMasterMode) {
+			started = true;
 			if((mMotorOnState) && (mFuelLevel > 0.0))
 				mMotorDisplay = 250;
 		}
@@ -1105,6 +1106,17 @@ MR_SimulationTime MainCharacter::GetLastLapDuration() const
 MR_SimulationTime MainCharacter::GetLastLapCompletion() const
 {
 	return mLastLapCompletion;
+}
+
+/**
+ * Determine if the player has started playing (pregame is over and the player
+ * has control of the craft).
+ * @return @c true if the play session has started,
+ *         @c false if still in pregame.
+ */
+bool MainCharacter::HasStarted() const
+{
+	return started;
 }
 
 /**
