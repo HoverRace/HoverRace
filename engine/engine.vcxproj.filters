@@ -409,6 +409,9 @@
     <ClCompile Include="Display\Counter.cpp">
       <Filter>Display</Filter>
     </ClCompile>
+    <ClCompile Include="Util\Clock.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColorTools\ColorTools.h">
@@ -847,6 +850,9 @@
     </ClInclude>
     <ClInclude Include="Display\Counter.h">
       <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Clock.h">
+      <Filter>Util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

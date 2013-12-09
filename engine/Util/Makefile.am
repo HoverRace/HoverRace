@@ -22,6 +22,8 @@ libutil_la_SOURCES = \
 	yaml/SeqNode.h \
 	yaml/YamlExn.h \
 	BitPacking.h \
+	Clock.cpp \
+	Clock.h \
 	Config.cpp \
 	Config.h \
 	DllObjectFactory.cpp \

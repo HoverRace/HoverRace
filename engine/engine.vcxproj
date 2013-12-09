@@ -189,6 +189,7 @@
     <ClCompile Include="ObjFacTools\ResSound.cpp" />
     <ClCompile Include="ObjFacTools\ResSprite.cpp" />
     <ClCompile Include="ObjFacTools\SpriteHandle.cpp" />
+    <ClCompile Include="Util\Clock.cpp" />
     <ClCompile Include="Util\Config.cpp" />
     <ClCompile Include="Util\DllObjectFactory.cpp" />
     <ClCompile Include="Util\FuzzyLogic.cpp" />
@@ -330,6 +331,7 @@
     <ClInclude Include="ObjFacTools\ResSprite.h" />
     <ClInclude Include="ObjFacTools\SpriteHandle.h" />
     <ClInclude Include="Util\BitPacking.h" />
+    <ClInclude Include="Util\Clock.h" />
     <ClInclude Include="Util\Config.h" />
     <ClInclude Include="Util\DllObjectFactory.h" />
     <ClInclude Include="Util\FastArray.h" />
