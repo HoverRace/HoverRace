@@ -46,13 +46,17 @@ class MR_DllDeclare Clock
 		Clock(OS::timestamp_t init=0);
 
 	public:
-		OS::timestamp_t GetTime() const {
-			return OS::TimeDiff(OS::Time(), offset);
-		}
+		/**
+		 * Retrieve the time of the last call to Advance().
+		 */
+		OS::timestamp_t GetTime() const { return lastRead; }
 
 		void SetTime(OS::timestamp_t ts=0);
 
+		OS::timestamp_t Advance();
+
 	private:
+		OS::timestamp_t lastRead;
 		OS::timestamp_t start;
 		OS::timestamp_t offset;
 };
