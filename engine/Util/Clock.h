@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include <iomanip>
+
 #include "OS.h"
 
 #ifdef _WIN32
@@ -50,7 +52,6 @@ class MR_DllDeclare Clock
 		 * Retrieve the time of the last call to Advance().
 		 */
 		OS::timestamp_t GetTime() const { return lastRead; }
-
 		void SetTime(OS::timestamp_t ts=0);
 
 		OS::timestamp_t Advance();
@@ -60,6 +61,27 @@ class MR_DllDeclare Clock
 		OS::timestamp_t start;
 		OS::timestamp_t offset;
 };
+
+inline std::ostream &operator<<(std::ostream &os, const Clock &clock)
+{
+	OS::timestamp_t ts = clock.GetTime();
+	auto ms = ts % 1000;
+	auto secs = (ts /= 1000) % 60;
+	auto mins = (ts /= 60) % 60;
+	ts /= 60;
+
+	auto oldFill = os.fill('0');
+
+	os << ts << ':' <<
+		std::setw(2) << mins << ':' <<
+		std::setw(2) << secs <<
+		std::use_facet<std::numpunct<char>>(OS::locale).decimal_point() <<
+		std::setw(3) << ms;
+
+	os.fill(oldFill);
+
+	return os;
+}
 
 }  // namespace Util
 }  // namespace HoverRace
