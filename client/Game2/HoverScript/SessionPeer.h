@@ -37,6 +37,9 @@ namespace HoverRace {
 	namespace Script {
 		class Core;
 	}
+	namespace Util {
+		class Clock;
+	}
 }
 
 namespace HoverRace {
@@ -77,6 +80,7 @@ class SessionPeer : public Script::Peer {
 	public:
 		int LGetNumPlayers() const;
 		MR_SimulationTime LGetTime() const;
+		std::shared_ptr<Util::Clock> LGetClock() const;
 
 	private:
 		ClientSession *session;

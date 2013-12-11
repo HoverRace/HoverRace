@@ -1,3 +1,11 @@
+clock:
+  type: property
+  isa: Clock
+  sig:
+    - clock = session.clock
+  brief: >
+    The game clock.
+
 get_num_players:
   type: method
   sig:

@@ -22,6 +22,7 @@
 #include "StdAfx.h"
 
 #include "../../engine/Script/Core.h"
+#include "../../engine/Util/Clock.h"
 #include "../ClientSession.h"
 #include "../Rules.h"
 #include "PlayerPeer.h"
@@ -61,6 +62,7 @@ void SessionPeer::Register(Script::Core *scripting)
 			.def("get_num_players", &SessionPeer::LGetNumPlayers)
 			.def_readonly("players", &SessionPeer::players)
 			.def_readonly("rules", &SessionPeer::rules)
+			.property("clock", &SessionPeer::LGetClock)
 			.property("time", &SessionPeer::LGetTime)
 	];
 }
@@ -97,6 +99,12 @@ MR_SimulationTime SessionPeer::LGetTime() const
 {
 	VerifySession();
 	return session->GetSimulationTime();
+}
+
+std::shared_ptr<Util::Clock> SessionPeer::LGetClock() const
+{
+	VerifySession();
+	return session->GetClock();
 }
 
 }  // namespace HoverScript

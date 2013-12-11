@@ -22,7 +22,10 @@
 
 #include "StdAfx.h"
 
-#include "luabind/class_info.hpp"
+#include <luabind/class_info.hpp>
+#include <luabind/operator.hpp>
+
+#include "../../../engine/Util/Clock.h"
 
 #include "ConfigPeer.h"
 #include "DebugPeer.h"
@@ -36,6 +39,25 @@
 namespace HoverRace {
 namespace Client {
 namespace HoverScript {
+
+/**
+ * Register miscellaneous classes that don't have peers and aren't
+ * associated with anything else.
+ */
+void ClientScriptCore::RegisterMiscClasses()
+{
+	using namespace luabind;
+	lua_State *L = GetState();
+
+	{
+		using Util::Clock;
+		module(L) [
+			class_<Clock>("Clock")
+				.def(tostring(self))
+				.property("time", &Clock::GetTime)
+		];
+	}
+}
 
 Script::Core *ClientScriptCore::Reset()
 {
@@ -57,6 +79,7 @@ Script::Core *ClientScriptCore::Reset()
 		HudPeer::Register(this);
 		PlayerPeer::Register(this);
 		SessionPeer::Register(this);
+		RegisterMiscClasses();
 
 		classesRegistered = true;
 	}

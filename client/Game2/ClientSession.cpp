@@ -27,6 +27,7 @@
 #include "../../engine/MainCharacter/MainCharacter.h"
 #include "../../engine/Model/TrackFileCommon.h"
 #include "../../engine/VideoServices/VideoBuffer.h"
+#include "../../engine/Util/Clock.h"
 
 #include "Rules.h"
 
@@ -39,7 +40,9 @@ namespace HoverRace {
 namespace Client {
 
 ClientSession::ClientSession(std::shared_ptr<Rules> rules) :
-	mSession(TRUE), rules(std::move(rules))
+	mSession(TRUE),
+	clock(std::make_shared<Util::Clock>()),
+	rules(std::move(rules))
 {
 	for (int i = 0; i < MAX_PLAYERS; ++i) {
 		mainCharacter[i] = NULL;
@@ -56,6 +59,17 @@ ClientSession::~ClientSession()
 
 void ClientSession::Process()
 {
+	auto simTime = mSession.GetSimulationTime();
+	if (clock->GetTime() == 0) {
+		if (simTime > 0) {
+			// Leaving pregame.
+			clock->SetTime(simTime);
+		}
+	}
+	else {
+		clock->Advance();
+	}
+
 	UpdateCharacterSimulationTimes();
 	mSession.Simulate();
 }
@@ -157,11 +171,13 @@ bool ClientSession::CreateMainCharacter(int i)
 
 void ClientSession::SetSimulationTime(MR_SimulationTime pTime)
 {
+	//TODO: Use the clock.
 	mSession.SetSimulationTime(pTime);
 }
 
 MR_SimulationTime ClientSession::GetSimulationTime() const
 {
+	//TODO: Use the clock.
 	return mSession.GetSimulationTime();
 }
 

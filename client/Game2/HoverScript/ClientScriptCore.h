@@ -35,6 +35,8 @@ class ClientScriptCore : public Script::Core
 		ClientScriptCore() : SUPER(), classesRegistered(false) { }
 		virtual ~ClientScriptCore() { }
 
+	private:
+		void RegisterMiscClasses();
 	public:
 		virtual Script::Core *Reset();
 

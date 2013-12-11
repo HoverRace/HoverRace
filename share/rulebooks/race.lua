@@ -25,6 +25,7 @@ Rulebook 'Race' {
 			hud:use_race_default()
 			player.props.lap_counter = hud:add_counter(Hud.S, "Lap", 1,
 				session.rules.laps)
+			print(player_name .. ' started at ' .. tostring(session.clock))
 		end)
 		player:on_finish_line(function()
 			local lap = player.props.lap + 1
@@ -43,6 +44,7 @@ Rulebook 'Race' {
 		player:on_finish(function()
 			--TODO: Set up postgame HUD.
 			player.hud:clear()
+			print(player_name .. ' finished at ' .. tostring(session.clock))
 		end)
 
 		--TODO: Set up the pregame HUD for the player.
