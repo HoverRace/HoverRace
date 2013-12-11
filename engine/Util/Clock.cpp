@@ -31,7 +31,7 @@ namespace Util {
  * @param init The initial simulation time.
  */
 Clock::Clock(OS::timestamp_t init) :
-	lastRead(0),
+	lastRead(init),
 	start(OS::Time()),
 	offset(OS::TimeDiff(start, init))
 {
@@ -39,7 +39,7 @@ Clock::Clock(OS::timestamp_t init) :
 
 void Clock::SetTime(OS::timestamp_t ts)
 {
-	lastRead = 0;
+	lastRead = ts;
 	start = OS::Time();
 	offset = OS::TimeDiff(start, ts);
 }
