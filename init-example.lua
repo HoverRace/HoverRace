@@ -56,10 +56,6 @@ local function first_session(session)
 		session:get_num_players())
 
 	--[[ Some ideas for expanding the API...
-	local player = session:get_local_player()
-	-- local player = session:get_player(1)
-	local track = session:get_track()
-	print("Track name: ", track:get_name())
 	local clock = session:get_clock()
 	-- Can also say clock:from_now("3s")
 	clock:at(clock:from_now(3000), function()
