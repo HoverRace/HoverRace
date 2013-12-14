@@ -19,6 +19,9 @@ Rulebook 'Race' {
 		-- Set up the player properties and events.
 		player.props.lap = 1
 		player:on_start(function()
+			-- Set up the stopwatch to time each lap.
+			player.props.stopwatch = Stopwatch(session.clock)
+			
 			-- Set up the racing HUD.
 			-- We start with the default HUD for a race and add our lap counter.
 			local hud = player.hud
@@ -28,9 +31,12 @@ Rulebook 'Race' {
 			print(player_name .. ' started at ' .. tostring(session.clock))
 		end)
 		player:on_finish_line(function()
-			local lap = player.props.lap + 1
+			local lap = player.props.lap
+			local lap_time = player.props.stopwatch:next_lap('Lap ' .. lap)
+			lap = lap + 1
 			player.props.lap = lap
 
+			print(player_name .. ' lap time: ' .. lap_time)
 			print(player_name .. ' is on lap ' ..
 				lap .. '/' .. session.rules.laps ..
 				' (' .. (session.time / 1000) .. ')')
