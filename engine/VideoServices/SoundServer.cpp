@@ -1,6 +1,5 @@
 
 // SoundServer.cpp
-// DirectSound / OpenAL encapsulation module
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
@@ -47,9 +46,9 @@ static ALenum initErrorCode = ALUT_ERROR_NO_ERROR;
 /// Convert millibels to linear.
 static float DirectXToLinear(int value)
 {
-	return (value == DSBVOLUME_MIN) ? 0.0f : 
+	return (value == DSBVOLUME_MIN) ? 0.0f :
 		powf(10.0f, (float)value / 2000.0f);
-} 
+}
 
 class SoundBuffer
 {
@@ -117,7 +116,6 @@ class ContinuousSound : public SoundBuffer
 
 };
 
-// Variables
 SoundBuffer *SoundBuffer::mList = NULL;
 
 static const char* const waveHeader =
@@ -125,7 +123,6 @@ static const char* const waveHeader =
 	"fmt \022\0\0\0" "----" "----" "----" "----\0\0"
 	"data----";
 
-// Implementation
 SoundBuffer::SoundBuffer()
 {
 	mNbCopy = 0;
@@ -168,7 +165,7 @@ SoundBuffer::~SoundBuffer()
 
 void SoundBuffer::ApplyCumCommand()
 {
-	// Do notting by default
+	// Do nothing by default
 }
 
 void SoundBuffer::ApplyCumCommandForAll()
@@ -213,7 +210,7 @@ BOOL SoundBuffer::Init(const char *pData, int pNbCopy)
 	// Parse pData
 	MR_UInt32 lBufferLen = *(MR_UInt32 *) pData;
 	const char *lSoundData = pData + sizeof(MR_UInt32);
-	
+
 	// Temporary WAV format buffer to pass to ALUT.
 	int bufSize = 12 + (8 + 18) + (8 + lBufferLen);
 	MR_UInt32 chunkSize = bufSize - 8;
@@ -226,9 +223,7 @@ BOOL SoundBuffer::Init(const char *pData, int pNbCopy)
 	memcpy(buf + 0x2e, lSoundData, lBufferLen);
 
 	mBuffer = alutCreateBufferFromFileImage(buf, bufSize);
-	//mBuffer = alutCreateBufferHelloWorld();
 	if (mBuffer == AL_NONE) {
-		//MessageBox(NULL, alutGetErrorString(alutGetError()), "AIEEE", MB_OK);
 		ASSERT(FALSE);
 		lReturnValue = FALSE;
 	} else {

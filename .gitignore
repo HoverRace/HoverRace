@@ -10,8 +10,8 @@
 *.swp
 *.tmp
 *.user
+=template.*
 Thumbs.db
-memory_leak_report.txt
 
 # /
 /.vimrc
@@ -43,6 +43,7 @@ memory_leak_report.txt
 /ipch
 /libltdl
 /libtool
+/memory_leak_report.txt
 /stamp-h1
 /valgrind_report.txt
 /init.lua
