@@ -10,6 +10,7 @@
 *.swp
 *.tmp
 *.user
+=template.*
 Thumbs.db
 
 # /
