@@ -44,6 +44,8 @@ libutil_la_SOURCES = \
 	OS.h \
 	SelFmt.cpp \
 	SelFmt.h \
+	Stopwatch.cpp \
+	Stopwatch.h \
 	Str.cpp \
 	Str.h \
 	WorldCoordinates.cpp \
