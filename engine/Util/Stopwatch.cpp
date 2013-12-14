@@ -50,6 +50,7 @@ Stopwatch::Stopwatch(std::shared_ptr<Clock> clock, OS::timestamp_t start) :
 /**
  * Start a new lap.
  * @param name The name of the lap that just ended.
+ * @return The elapsed time for the lap that just ended.
  */
 OS::timestamp_t Stopwatch::NextLap(const std::string &name)
 {

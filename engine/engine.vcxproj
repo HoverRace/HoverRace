@@ -197,6 +197,7 @@
     <ClCompile Include="Util\Log.cpp" />
     <ClCompile Include="Util\OS.cpp" />
     <ClCompile Include="Util\SelFmt.cpp" />
+    <ClCompile Include="Util\Stopwatch.cpp" />
     <ClCompile Include="Util\Str.cpp" />
     <ClCompile Include="Util\WorldCoordinates.cpp" />
     <ClCompile Include="VideoServices\FontSpec.cpp" />
@@ -345,6 +346,7 @@
     <ClInclude Include="Util\MR_Types.h" />
     <ClInclude Include="Util\OS.h" />
     <ClInclude Include="Util\SelFmt.h" />
+    <ClInclude Include="Util\Stopwatch.h" />
     <ClInclude Include="Util\Str.h" />
     <ClInclude Include="Util\WorldCoordinates.h" />
     <ClInclude Include="VideoServices\FontSpec.h" />

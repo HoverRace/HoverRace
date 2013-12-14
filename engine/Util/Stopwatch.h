@@ -48,9 +48,16 @@ class MR_DllDeclare Stopwatch
 		{
 			Lap(const std::string &name, OS::timestamp_t elapsed) :
 				name(name), elapsed(elapsed) { }
+			Lap(Lap &&lap) : name(std::move(lap.name)), elapsed(lap.elapsed) { }
+			Lap &operator=(Lap &&lap)
+			{
+				name = std::move(lap.name);
+				elapsed = lap.elapsed;
+				return *this;
+			}
 
-			const std::string name;
-			const OS::timestamp_t elapsed;
+			std::string name;
+			OS::timestamp_t elapsed;
 		};
 
 	public:
@@ -61,7 +68,7 @@ class MR_DllDeclare Stopwatch
 		template<typename Fn>
 		void ForEachLap(Fn fn)
 		{
-			std::for_each(laps.begin(), laps.end(), fn);
+			std::for_each(laps.cbegin(), laps.cend(), fn);
 		}
 
 	public:

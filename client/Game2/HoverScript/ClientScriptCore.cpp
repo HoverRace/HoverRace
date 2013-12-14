@@ -26,6 +26,7 @@
 #include <luabind/operator.hpp>
 
 #include "../../../engine/Util/Clock.h"
+#include "../../../engine/Util/Stopwatch.h"
 
 #include "ConfigPeer.h"
 #include "DebugPeer.h"
@@ -50,11 +51,15 @@ void ClientScriptCore::RegisterMiscClasses()
 	lua_State *L = GetState();
 
 	{
-		using Util::Clock;
+		using namespace HoverRace::Util;
 		module(L) [
 			class_<Clock>("Clock")
 				.def(tostring(self))
-				.property("time", &Clock::GetTime)
+				.property("time", &Clock::GetTime),
+			class_<Stopwatch>("Stopwatch")
+				.def(constructor<std::shared_ptr<Clock>>())
+				.def(constructor<std::shared_ptr<Clock>, OS::timestamp_t>())
+				.def("next_lap", &Stopwatch::NextLap)
 		];
 	}
 }
