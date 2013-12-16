@@ -86,16 +86,16 @@ void HudPeer::Register(Script::Core *scripting)
 			.def("clear", &HudPeer::LClear)
 			.def("use_race_default", &HudPeer::LUseRaceDefault),
 
-		class_<Display::HudDecor>("HudDecor")
+		class_<Display::HudDecor, std::shared_ptr<Display::HudDecor>>("HudDecor")
 	];
 
 	// Register HUD elements.
 	module(L, "hud") [
-		class_<Display::Counter, Display::HudDecor>("Counter")
+		class_<Display::Counter, Display::HudDecor, std::shared_ptr<Display::HudDecor>>("Counter")
 			.property("value", &Display::Counter::GetValue, &Display::Counter::SetValue)
 			.property("total", &Display::Counter::GetTotal, &Display::Counter::SetTotal),
-		class_<Display::FuelGauge, Display::HudDecor>("FuelGauge"),
-		class_<Display::Speedometer, Display::HudDecor>("Speedometer")
+		class_<Display::FuelGauge, Display::HudDecor, std::shared_ptr<Display::HudDecor>>("FuelGauge"),
+		class_<Display::Speedometer, Display::HudDecor, std::shared_ptr<Display::HudDecor>>("Speedometer")
 	];
 }
 
