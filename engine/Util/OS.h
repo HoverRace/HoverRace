@@ -78,7 +78,7 @@ class MR_DllDeclare OS {
 #		endif
 		typedef path_t::value_type *pstr_t;
 		typedef const path_t::value_type *cpstr_t;
-		
+
 		static void SetEnv(const char *key, const char *val);
 		static void SetLocale();
 
@@ -112,7 +112,26 @@ class MR_DllDeclare OS {
 
 		static void TimeInit();
 		static timestamp_t Time();
-		static timestamp_t TimeDiff(timestamp_t laterTs, timestamp_t earlierTs);
+		/**
+		 * Calculate the difference between two timestamps.
+		 * This properly handles wraparound in timestamps.
+		 * @param laterTs The later timestamp.
+		 * @param earlierTs The earlier timestamp.
+		 * @return @p laterTs - @p earlierTs
+		 */
+		static timestamp_t TimeDiff(timestamp_t laterTs, timestamp_t earlierTs)
+		{
+			if (laterTs >= earlierTs) {
+				return laterTs - earlierTs;
+			}
+			else {
+#				ifdef _WIN32
+					return 0xfffffffful - (earlierTs - laterTs) + 1;
+#				else
+					return 0xffffffffffffffffull - (earlierTs - laterTs) + 1;
+#				endif
+			}
+		}
 		static void TimeShutdown();
 
 		static bool OpenLink(const std::string &url);
