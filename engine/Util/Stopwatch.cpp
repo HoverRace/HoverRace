@@ -33,8 +33,9 @@ namespace Util {
  * @param clock The clock to use for timing.
  */
 Stopwatch::Stopwatch(std::shared_ptr<Clock> clock) :
-	clock(std::move(clock)), lastLap(clock->GetTime())
+	clock(std::move(clock))
 {
+	lastLap = this->clock->GetTime();
 }
 
 /**
