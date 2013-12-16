@@ -53,13 +53,13 @@ Stopwatch::Stopwatch(std::shared_ptr<Clock> clock, OS::timestamp_t start) :
  * @param name The name of the lap that just ended.
  * @return The elapsed time for the lap that just ended.
  */
-OS::timestamp_t Stopwatch::NextLap(const std::string &name)
+Duration Stopwatch::NextLap(const std::string &name)
 {
 	OS::timestamp_t ts = clock->GetTime();
-	OS::timestamp_t elapsed = OS::TimeDiff(ts, lastLap);
+	Duration elapsed = Duration(ts, lastLap);
 	lastLap = ts;
 
-	laps.emplace_back(Lap(name, elapsed));
+	laps.emplace_back(Lap(name, Duration(ts, lastLap)));
 
 	return elapsed;
 }

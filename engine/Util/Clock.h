@@ -21,8 +21,7 @@
 
 #pragma once
 
-#include <iomanip>
-
+#include "Duration.h"
 #include "OS.h"
 
 #ifdef _WIN32
@@ -64,22 +63,7 @@ class MR_DllDeclare Clock
 
 inline std::ostream &operator<<(std::ostream &os, const Clock &clock)
 {
-	OS::timestamp_t ts = clock.GetTime();
-	auto ms = ts % 1000;
-	auto secs = (ts /= 1000) % 60;
-	auto mins = (ts /= 60) % 60;
-	ts /= 60;
-
-	auto oldFill = os.fill('0');
-
-	os << ts << ':' <<
-		std::setw(2) << mins << ':' <<
-		std::setw(2) << secs <<
-		std::use_facet<std::numpunct<char>>(OS::locale).decimal_point() <<
-		std::setw(3) << ms;
-
-	os.fill(oldFill);
-
+	Duration(clock.GetTime()).FmtLong(os);
 	return os;
 }
 

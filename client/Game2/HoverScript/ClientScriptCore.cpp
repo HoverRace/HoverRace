@@ -26,6 +26,7 @@
 #include <luabind/operator.hpp>
 
 #include "../../../engine/Util/Clock.h"
+#include "../../../engine/Util/Duration.h"
 #include "../../../engine/Util/Stopwatch.h"
 
 #include "ConfigPeer.h"
@@ -56,6 +57,11 @@ void ClientScriptCore::RegisterMiscClasses()
 			class_<Clock, std::shared_ptr<Clock>>("Clock")
 				.def(tostring(self))
 				.property("time", &Clock::GetTime),
+			class_<Duration, std::shared_ptr<Duration>>("Duration")
+				.def(constructor<OS::timestamp_t, OS::timestamp_t>())
+				.def(tostring(self))
+				.def("fmt_long", (std::string(Duration::*)()const)&Duration::FmtLong)
+				.def("fmt_short", (std::string(Duration::*)()const)&Duration::FmtShort),
 			class_<Stopwatch, std::shared_ptr<Stopwatch>>("Stopwatch")
 				.def(constructor<std::shared_ptr<Clock>>())
 				.def(constructor<std::shared_ptr<Clock>, OS::timestamp_t>())

@@ -1,5 +1,5 @@
 
-// Stopwatch.h
+// Duration.h
 //
 // Copyright (c) 2013 Michael Imamura.
 //
@@ -21,8 +21,9 @@
 
 #pragma once
 
-#include "Clock.h"
-#include "Duration.h"
+#include <iomanip>
+
+#include "MR_Types.h"
 #include "OS.h"
 
 #ifdef _WIN32
@@ -39,47 +40,44 @@ namespace HoverRace {
 namespace Util {
 
 /**
- * Records lap times.
+ * The relative time between two timestamps.
+ * Unlike OS::timestamp_t, this can represent negative times.
  * @author Michael Imamura
  */
-class MR_DllDeclare Stopwatch
+class MR_DllDeclare Duration
 {
+	typedef MR_Int64 dur_t;
 	public:
-		struct Lap
-		{
-			Lap(const std::string &name, const Duration &elapsed) :
-				name(name), elapsed(elapsed) { }
-			Lap(Lap &&lap) : name(std::move(lap.name)), elapsed(lap.elapsed) { }
-			Lap &operator=(Lap &&lap)
-			{
-				name = std::move(lap.name);
-				elapsed = lap.elapsed;
-				return *this;
-			}
+		/**
+		 * Constructor.
+		 * @param later The later of the two timestamps.
+		 * @param earlier The earlier of the two timestamps.
+		 */
+		Duration(OS::timestamp_t later, OS::timestamp_t earlier) :
+			duration(later >= earlier ?
+				static_cast<dur_t>(OS::TimeDiff(later, earlier)) :
+				-static_cast<dur_t>(OS::TimeDiff(earlier, later))) { }
 
-			std::string name;
-			Duration elapsed;
-		};
-
-	public:
-		Stopwatch(std::shared_ptr<Clock> clock);
-		Stopwatch(std::shared_ptr<Clock> clock, OS::timestamp_t start);
+		/**
+		 * Constructor.
+		 * @param duration The time in milliseconds.
+		 */
+		Duration(dur_t duration) : duration(duration) { }
 
 	public:
-		template<typename Fn>
-		void ForEachLap(Fn fn)
-		{
-			std::for_each(laps.cbegin(), laps.cend(), fn);
-		}
-
-	public:
-		Duration NextLap(const std::string &name);
+		std::ostream &Duration::FmtLong(std::ostream &os) const;
+		std::string FmtLong() const;
+		std::ostream &FmtShort(std::ostream &os) const;
+		std::string FmtShort() const;
 
 	private:
-		std::shared_ptr<Clock> clock;
-		OS::timestamp_t lastLap;
-		std::vector<Lap> laps;
+		dur_t duration;
 };
+
+inline std::ostream &operator<<(std::ostream &os, const Duration &dur)
+{
+	return dur.FmtShort(os);
+}
 
 }  // namespace Util
 }  // namespace HoverRace

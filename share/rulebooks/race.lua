@@ -36,7 +36,7 @@ Rulebook 'Race' {
 			lap = lap + 1
 			player.props.lap = lap
 
-			print(player_name .. ' lap time: ' .. lap_time)
+			print(player_name .. ' lap time: ' .. tostring(lap_time))
 			print(player_name .. ' is on lap ' ..
 				lap .. '/' .. session.rules.laps ..
 				' (' .. (session.time / 1000) .. ')')

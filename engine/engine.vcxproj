@@ -192,6 +192,7 @@
     <ClCompile Include="Util\Clock.cpp" />
     <ClCompile Include="Util\Config.cpp" />
     <ClCompile Include="Util\DllObjectFactory.cpp" />
+    <ClCompile Include="Util\Duration.cpp" />
     <ClCompile Include="Util\FuzzyLogic.cpp" />
     <ClCompile Include="Util\InspectMapNode.cpp" />
     <ClCompile Include="Util\Log.cpp" />
@@ -335,6 +336,7 @@
     <ClInclude Include="Util\Clock.h" />
     <ClInclude Include="Util\Config.h" />
     <ClInclude Include="Util\DllObjectFactory.h" />
+    <ClInclude Include="Util\Duration.h" />
     <ClInclude Include="Util\FastArray.h" />
     <ClInclude Include="Util\FastFifo.h" />
     <ClInclude Include="Util\FastMemManip.h" />

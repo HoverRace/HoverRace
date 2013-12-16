@@ -415,6 +415,9 @@
     <ClCompile Include="Util\Stopwatch.cpp">
       <Filter>Util</Filter>
     </ClCompile>
+    <ClCompile Include="Util\Duration.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColorTools\ColorTools.h">
@@ -858,6 +861,9 @@
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="Util\Stopwatch.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Duration.h">
       <Filter>Util</Filter>
     </ClInclude>
   </ItemGroup>
