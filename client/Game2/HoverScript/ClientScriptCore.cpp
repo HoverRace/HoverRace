@@ -53,10 +53,10 @@ void ClientScriptCore::RegisterMiscClasses()
 	{
 		using namespace HoverRace::Util;
 		module(L) [
-			class_<Clock>("Clock")
+			class_<Clock, std::shared_ptr<Clock>>("Clock")
 				.def(tostring(self))
 				.property("time", &Clock::GetTime),
-			class_<Stopwatch>("Stopwatch")
+			class_<Stopwatch, std::shared_ptr<Stopwatch>>("Stopwatch")
 				.def(constructor<std::shared_ptr<Clock>>())
 				.def(constructor<std::shared_ptr<Clock>, OS::timestamp_t>())
 				.def("next_lap", &Stopwatch::NextLap)
