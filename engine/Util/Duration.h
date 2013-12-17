@@ -65,7 +65,7 @@ class MR_DllDeclare Duration
 		Duration(dur_t duration) : duration(duration) { }
 
 	public:
-		std::ostream &Duration::FmtLong(std::ostream &os) const;
+		std::ostream &FmtLong(std::ostream &os) const;
 		std::string FmtLong() const;
 		std::ostream &FmtShort(std::ostream &os) const;
 		std::string FmtShort() const;
