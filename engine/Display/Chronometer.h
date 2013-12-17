@@ -1,5 +1,5 @@
 
-// Clock.h
+// Chronometer.h
 //
 // Copyright (c) 2013 Michael Imamura.
 //
@@ -21,8 +21,7 @@
 
 #pragma once
 
-#include "Duration.h"
-#include "OS.h"
+#include "HudDecor.h"
 
 #ifdef _WIN32
 #	ifdef MR_ENGINE
@@ -35,43 +34,42 @@
 #endif
 
 namespace HoverRace {
-namespace Util {
-
-/**
- * A game clock that manages the current time in the simulation.
- * @author Michael Imamura
- */
-class MR_DllDeclare Clock
-{
-	public:
-		Clock(OS::timestamp_t init=0);
-
-	public:
-		std::string FmtLong() const { return Duration(lastRead).FmtLong(); }
-		std::string FmtShort() const { return Duration(lastRead).FmtShort(); }
-
-	public:
-		/**
-		 * Retrieve the time of the last call to Advance().
-		 */
-		OS::timestamp_t GetTime() const { return lastRead; }
-		void SetTime(OS::timestamp_t ts=0);
-
-		OS::timestamp_t Advance();
-
-	private:
-		OS::timestamp_t lastRead;
-		OS::timestamp_t start;
-		OS::timestamp_t offset;
-};
-
-inline std::ostream &operator<<(std::ostream &os, const Clock &clock)
-{
-	Duration(clock.GetTime()).FmtLong(os);
-	return os;
+	namespace Util {
+		class Clock;
+	}
 }
 
-}  // namespace Util
+namespace HoverRace {
+namespace Display {
+
+/**
+ * Display the current game time.
+ * @author Michael Imamura
+ */
+class MR_DllDeclare Chronometer : public HudDecor
+{
+	typedef HudDecor SUPER;
+	public:
+		Chronometer(Display &display, const std::string &title,
+			std::shared_ptr<Util::Clock> clock);
+		virtual ~Chronometer() { }
+
+	protected:
+		virtual void Layout();
+	public:
+		virtual void Advance(Util::OS::timestamp_t tick);
+
+	private:
+		std::shared_ptr<Util::Clock> clock;
+
+		Util::OS::timestamp_t lastTick;
+
+		std::shared_ptr<FillBox> bg;
+		std::shared_ptr<Label> titleLbl;
+		std::shared_ptr<Label> valueLbl;
+};
+
+}  // namespace Display
 }  // namespace HoverRace
 
 #undef MR_DllDeclare

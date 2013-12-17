@@ -30,8 +30,12 @@
 
 namespace HoverRace {
 	namespace Display {
+		class Chronometer;
 		class Counter;
 		class Display;
+	}
+	namespace Util {
+		class Clock;
 	}
 }
 
@@ -73,6 +77,9 @@ class HudPeer : public Script::Peer {
 		}
 
 	public:
+		std::shared_ptr<Display::Chronometer> LAddChronometer(int align,
+			const std::string &title, std::shared_ptr<Util::Clock> clock);
+
 		std::shared_ptr<Display::Counter> LAddCounter_V(int align,
 			const std::string &title, double initValue);
 		std::shared_ptr<Display::Counter> LAddCounter_VT(int align,

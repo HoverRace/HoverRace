@@ -9,6 +9,8 @@ libdisplay_la_SOURCES = \
 	Button.h \
 	Checkbox.cpp \
 	Checkbox.h \
+	Chronometer.cpp \
+	Chronometer.h \
 	ClickRegion.cpp \
 	ClickRegion.h \
 	Color.cpp \

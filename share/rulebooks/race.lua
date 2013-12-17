@@ -26,6 +26,7 @@ Rulebook 'Race' {
 			-- We start with the default HUD for a race and add our lap counter.
 			local hud = player.hud
 			hud:use_race_default()
+			hud:add_chronometer(Hud.S, "Time", session.clock)
 			player.props.lap_counter = hud:add_counter(Hud.S, "Lap", 1,
 				session.rules.laps)
 			print(player_name .. ' started at ' .. tostring(session.clock))

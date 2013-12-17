@@ -418,6 +418,9 @@
     <ClCompile Include="Util\Duration.cpp">
       <Filter>Util</Filter>
     </ClCompile>
+    <ClCompile Include="Display\Chronometer.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColorTools\ColorTools.h">
@@ -865,6 +868,9 @@
     </ClInclude>
     <ClInclude Include="Util\Duration.h">
       <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Display\Chronometer.h">
+      <Filter>Display</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
