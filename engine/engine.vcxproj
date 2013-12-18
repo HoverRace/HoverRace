@@ -132,6 +132,7 @@
     <ClCompile Include="Display\FuelGauge.cpp" />
     <ClCompile Include="Display\Hud.cpp" />
     <ClCompile Include="Display\HudDecor.cpp" />
+    <ClCompile Include="Display\HudText.cpp" />
     <ClCompile Include="Display\Label.cpp" />
     <ClCompile Include="Display\ScreenFade.cpp" />
     <ClCompile Include="Display\SDL\SdlButtonView.cpp" />
@@ -264,6 +265,7 @@
     <ClInclude Include="Display\FuelGauge.h" />
     <ClInclude Include="Display\Hud.h" />
     <ClInclude Include="Display\HudDecor.h" />
+    <ClInclude Include="Display\HudText.h" />
     <ClInclude Include="Display\Label.h" />
     <ClInclude Include="Display\ScreenFade.h" />
     <ClInclude Include="Display\SDL\SdlButtonView.h" />

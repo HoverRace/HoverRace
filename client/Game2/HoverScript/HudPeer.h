@@ -33,6 +33,7 @@ namespace HoverRace {
 		class Chronometer;
 		class Counter;
 		class Display;
+		class HudText;
 	}
 	namespace Util {
 		class Clock;
@@ -84,6 +85,9 @@ class HudPeer : public Script::Peer {
 			const std::string &title, double initValue);
 		std::shared_ptr<Display::Counter> LAddCounter_VT(int align,
 			const std::string &title, double initValue, double total);
+
+		std::shared_ptr<Display::HudText> LAddText(int align,
+			const std::string &text);
 
 		template<class T>
 		std::shared_ptr<T> LAddDecor(int align)

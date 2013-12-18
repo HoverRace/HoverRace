@@ -421,6 +421,9 @@
     <ClCompile Include="Display\Chronometer.cpp">
       <Filter>Display</Filter>
     </ClCompile>
+    <ClCompile Include="Display\HudText.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColorTools\ColorTools.h">
@@ -870,6 +873,9 @@
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="Display\Chronometer.h">
+      <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="Display\HudText.h">
       <Filter>Display</Filter>
     </ClInclude>
   </ItemGroup>

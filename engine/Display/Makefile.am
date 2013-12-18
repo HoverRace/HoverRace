@@ -29,6 +29,8 @@ libdisplay_la_SOURCES = \
 	Hud.h \
 	HudDecor.cpp \
 	HudDecor.h \
+	HudText.cpp \
+	HudText.h \
 	Label.cpp \
 	Label.h \
 	ScreenFade.cpp \
