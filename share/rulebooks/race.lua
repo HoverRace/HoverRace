@@ -49,8 +49,10 @@ Rulebook 'Race' {
 			end
 		end)
 		player:on_finish(function()
+			local hud = player.hud
 			--TODO: Set up postgame HUD.
-			player.hud:clear()
+			hud:clear()
+			hud:add_text(Hud.S, "Finished in " .. tostring(session.clock))
 			print(player_name .. ' finished at ' .. tostring(session.clock))
 		end)
 
