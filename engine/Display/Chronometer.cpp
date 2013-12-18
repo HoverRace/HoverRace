@@ -94,6 +94,9 @@ void Chronometer::Advance(Util::OS::timestamp_t tick)
 
 		valueLbl->SetText(clock->FmtLong());
 
+		// We assume that the digits in the font are the same width.
+		// Even if they're slightly off, we only change the position if the
+		// number of digits change so that the position remains stable.
 		size_t newLen = valueLbl->GetText().length();
 		if (oldLen != newLen) {
 			RequestLayout();
