@@ -1,5 +1,5 @@
 
-Rulebook 'Sandbox' {
-	title = 'Sandbox',
-	description = 'No rules, no time limit, just explore',
+Rulebook "Sandbox" {
+	title = "Sandbox",
+	description = "No rules, no time limit, just explore",
 }
