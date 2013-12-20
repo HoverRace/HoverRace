@@ -49,7 +49,7 @@ class MR_DllDeclare Duration
 	typedef MR_Int64 dur_t;
 	public:
 		/**
-		 * Constructor.
+		 * Constructor from two timestamps.
 		 * @param later The later of the two timestamps.
 		 * @param earlier The earlier of the two timestamps.
 		 */
@@ -62,7 +62,7 @@ class MR_DllDeclare Duration
 		 * Constructor.
 		 * @param duration The time in milliseconds.
 		 */
-		Duration(dur_t duration) : duration(duration) { }
+		Duration(dur_t duration=0) : duration(duration) { }
 
 	public:
 		std::ostream &FmtLong(std::ostream &os) const;
