@@ -1,7 +1,7 @@
 
 Rulebook 'Race' {
 	title = 'Race',
-	description = 'First player to complete the number of laps wins',
+	description = 'First player to finish all laps wins',
 
 	rules = {
 		laps = 5,
@@ -21,7 +21,7 @@ Rulebook 'Race' {
 		player:on_start(function()
 			-- Set up the stopwatch to time each lap.
 			player.props.stopwatch = Stopwatch(session.clock)
-			
+
 			-- Set up the racing HUD.
 			-- We start with the default HUD for a race and add our lap counter.
 			local hud = player.hud
