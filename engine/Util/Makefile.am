@@ -28,6 +28,7 @@ libutil_la_SOURCES = \
 	Config.h \
 	DllObjectFactory.cpp \
 	DllObjectFactory.h \
+	Duration.cpp \
 	Duration.h \
 	FastArray.h \
 	FastFifo.h \
