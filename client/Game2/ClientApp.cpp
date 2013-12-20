@@ -623,8 +623,9 @@ void ClientApp::RequestMainMenu()
 	// Pick a random craft.
 	char craftId = 1 << (rand() % 4);
 
-	//TODO: Use a special rulebook for the demo mode.
-	auto rules = std::make_shared<Rules>(rulebookLibrary->GetDefault());
+	// Use a special "dummy" rulebook for the demo mode.
+	auto rulebook = std::make_shared<Rulebook>(scripting, "*Demo", "", "", 1);
+	auto rules = std::make_shared<Rules>(rulebook);
 	rules->SetTrackEntry(Config::GetInstance()->GetTrackBundle()->OpenTrackEntry(trackName));
 	rules->SetGameOpts(0x70 + craftId);
 
