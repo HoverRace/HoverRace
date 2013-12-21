@@ -28,31 +28,42 @@ namespace Util {
 
 /**
  * Constructor.
- * @param init The initial simulation time.
+ * The initial simulation time will be zero.
  */
-Clock::Clock(OS::timestamp_t init) :
-	lastRead(init),
+Clock::Clock() :
+	lastRead(),
 	start(OS::Time()),
-	offset(OS::TimeDiff(start, init))
+	offset(start)
 {
 }
 
-void Clock::SetTime(OS::timestamp_t ts)
+/**
+ * Constructor.
+ * @param init The initial simulation time.
+ */
+Clock::Clock(const Duration &init) :
+	lastRead(init),
+	start(OS::Time()),
+	offset(start, init)
 {
-	lastRead = ts;
-	start = OS::Time();
-	offset = OS::TimeDiff(start, ts);
+}
+
+void Clock::SetTime(const Duration &duration)
+{
+	lastRead = duration;
+	start = Duration(OS::Time());
+	offset = Duration(start, duration);
 }
 
 /**
  * Advance the clock to the current time.
  * @return The elapsed time since the last time the clock was advanced.
  */
-OS::timestamp_t Clock::Advance()
+Duration Clock::Advance()
 {
-	OS::timestamp_t prev = lastRead;
-	lastRead = OS::TimeDiff(OS::Time(), offset);
-	return OS::TimeDiff(lastRead, prev);
+	Duration prev = lastRead;
+	lastRead = Duration(OS::Time(), offset);
+	return Duration(lastRead, prev);
 }
 
 }  // namespace Util

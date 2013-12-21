@@ -44,30 +44,31 @@ namespace Util {
 class MR_DllDeclare Clock
 {
 	public:
-		Clock(OS::timestamp_t init=0);
+		Clock();
+		Clock(const Duration &init);
 
 	public:
-		std::string FmtLong() const { return Duration(lastRead).FmtLong(); }
-		std::string FmtShort() const { return Duration(lastRead).FmtShort(); }
+		std::string FmtLong() const { return lastRead.FmtLong(); }
+		std::string FmtShort() const { return lastRead.FmtShort(); }
 
 	public:
 		/**
 		 * Retrieve the time of the last call to Advance().
 		 */
-		OS::timestamp_t GetTime() const { return lastRead; }
-		void SetTime(OS::timestamp_t ts=0);
+		const Duration &GetTime() const { return lastRead; }
+		void SetTime(const Duration &duration=Duration());
 
-		OS::timestamp_t Advance();
+		Duration Advance();
 
 	private:
-		OS::timestamp_t lastRead;
-		OS::timestamp_t start;
-		OS::timestamp_t offset;
+		Duration lastRead;
+		Duration start;
+		Duration offset;
 };
 
 inline std::ostream &operator<<(std::ostream &os, const Clock &clock)
 {
-	Duration(clock.GetTime()).FmtLong(os);
+	clock.GetTime().FmtLong(os);
 	return os;
 }
 

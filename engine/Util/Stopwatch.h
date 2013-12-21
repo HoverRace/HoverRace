@@ -63,7 +63,7 @@ class MR_DllDeclare Stopwatch
 
 	public:
 		Stopwatch(std::shared_ptr<Clock> clock);
-		Stopwatch(std::shared_ptr<Clock> clock, OS::timestamp_t start);
+		Stopwatch(std::shared_ptr<Clock> clock, const Duration &start);
 
 	public:
 		template<typename Fn>
@@ -77,7 +77,7 @@ class MR_DllDeclare Stopwatch
 
 	private:
 		std::shared_ptr<Clock> clock;
-		OS::timestamp_t lastLap;
+		Duration lastLap;
 		std::vector<Lap> laps;
 };
 

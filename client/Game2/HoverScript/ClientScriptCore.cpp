@@ -64,7 +64,7 @@ void ClientScriptCore::RegisterMiscClasses()
 				.def("fmt_short", (std::string(Duration::*)()const)&Duration::FmtShort),
 			class_<Stopwatch, std::shared_ptr<Stopwatch>>("Stopwatch")
 				.def(constructor<std::shared_ptr<Clock>>())
-				.def(constructor<std::shared_ptr<Clock>, OS::timestamp_t>())
+				.def(constructor<std::shared_ptr<Clock>, const Duration&>())
 				.def("next_lap", &Stopwatch::NextLap)
 		];
 	}

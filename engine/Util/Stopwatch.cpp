@@ -43,7 +43,7 @@ Stopwatch::Stopwatch(std::shared_ptr<Clock> clock) :
  * @param clock The clock to use for timing.
  * @param start The timestamp of the start of the first lap.
  */
-Stopwatch::Stopwatch(std::shared_ptr<Clock> clock, OS::timestamp_t start) :
+Stopwatch::Stopwatch(std::shared_ptr<Clock> clock, const Duration &start) :
 	clock(std::move(clock)), lastLap(start)
 {
 }
@@ -55,8 +55,8 @@ Stopwatch::Stopwatch(std::shared_ptr<Clock> clock, OS::timestamp_t start) :
  */
 Duration Stopwatch::NextLap(const std::string &name)
 {
-	OS::timestamp_t ts = clock->GetTime();
-	Duration elapsed = Duration(ts, lastLap);
+	Duration ts(clock->GetTime());
+	Duration elapsed(ts, lastLap);
 	lastLap = ts;
 
 	laps.emplace_back(Lap(name, Duration(ts, lastLap)));
