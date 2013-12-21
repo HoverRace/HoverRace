@@ -23,6 +23,8 @@
 
 #include <iomanip>
 
+#include <boost/operators.hpp>
+
 #include "MR_Types.h"
 #include "OS.h"
 
@@ -44,10 +46,13 @@ namespace Util {
  * Unlike OS::timestamp_t, this can represent negative times.
  * @author Michael Imamura
  */
-class MR_DllDeclare Duration
+class MR_DllDeclare Duration :
+	private boost::totally_ordered<Duration, Duration>,
+	private boost::totally_ordered<Duration, MR_Int64>
 {
-	typedef MR_Int64 dur_t;
 	public:
+		typedef MR_Int64 dur_t;
+
 		/**
 		 * Constructor from two timestamps.
 		 * @param later The later of the two timestamps.
@@ -57,6 +62,14 @@ class MR_DllDeclare Duration
 			duration(later >= earlier ?
 				static_cast<dur_t>(OS::TimeDiff(later, earlier)) :
 				-static_cast<dur_t>(OS::TimeDiff(earlier, later))) { }
+
+		/**
+		 * Constructor from two durations.
+		 * @param later The later of the two durations.
+		 * @param earlier The earlier of the two durations.
+		 */
+		Duration(const Duration &later, const Duration &earlier) :
+			duration(later.duration - earlier.duration) { }
 
 		/**
 		 * Constructor.
@@ -72,11 +85,48 @@ class MR_DllDeclare Duration
 
 	private:
 		dur_t duration;
+
+		friend bool operator==(const Duration &a, const Duration &b);
+		friend bool operator==(const Duration &duration, Duration::dur_t ts);
+		friend bool operator==(Duration::dur_t ts, const Duration &duration);
+		friend bool operator<(const Duration &a, const Duration &b);
+		friend bool operator<(const Duration &duration, Duration::dur_t ts);
+		friend bool operator<(Duration::dur_t ts, const Duration &duration);
 };
 
 inline std::ostream &operator<<(std::ostream &os, const Duration &dur)
 {
 	return dur.FmtShort(os);
+}
+
+inline bool operator==(const Duration &a, const Duration &b)
+{
+	return a.duration == b.duration;
+}
+
+inline bool operator==(const Duration &a, Duration::dur_t b)
+{
+	return a.duration == b;
+}
+
+inline bool operator==(Duration::dur_t a, const Duration &b)
+{
+	return a == b.duration;
+}
+
+inline bool operator<(const Duration &a, const Duration &b)
+{
+	return a.duration < b.duration;
+}
+
+inline bool operator<(const Duration &a, Duration::dur_t b)
+{
+	return a.duration < b;
+}
+
+inline bool operator<(Duration::dur_t a, const Duration &b)
+{
+	return a < b.duration;
 }
 
 }  // namespace Util
