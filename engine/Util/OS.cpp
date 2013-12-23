@@ -41,6 +41,8 @@
 
 #include <boost/format.hpp>
 
+#include <SDL2/SDL.h>
+
 #include "../Exception.h"
 #include "Log.h"
 #include "Str.h"
@@ -524,9 +526,7 @@ std::string OS::StrError(int errnum)
  */
 void OS::TimeInit()
 {
-#	ifdef _WIN32
-		timeBeginPeriod(1);
-#	endif
+	// Handled by SDL.
 }
 
 /**
@@ -537,13 +537,7 @@ void OS::TimeInit()
  */
 OS::timestamp_t OS::Time()
 {
-#	ifdef _WIN32
-		return timeGetTime();
-#	else
-		timeval tv;
-		gettimeofday(&tv, NULL);
-		return (((timestamp_t)tv.tv_sec) * 1000) + (tv.tv_usec / 1000);
-#	endif
+	return SDL_GetTicks();
 }
 
 /**
@@ -551,9 +545,7 @@ OS::timestamp_t OS::Time()
  */
 void OS::TimeShutdown()
 {
-#	ifdef _WIN32
-		timeEndPeriod(1);
-#	endif
+	// Handled by SDL.
 }
 
 /**

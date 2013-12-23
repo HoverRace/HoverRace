@@ -29,6 +29,8 @@
 
 #include <boost/filesystem.hpp>
 
+#include "MR_Types.h"
+
 #ifdef _WIN32
 #	ifdef MR_ENGINE
 #		define MR_DllDeclare   __declspec( dllexport )
@@ -53,11 +55,10 @@ class MR_DllDeclare OS {
 		static std::locale locale;
 		static const std::locale stdLocale;
 
+		typedef MR_UInt32 timestamp_t;
 #		ifdef _WIN32
-			typedef DWORD timestamp_t;
 			typedef HWND wnd_t;
 #		else
-			typedef unsigned long long timestamp_t;
 			typedef Window wnd_t;
 #		endif
 
@@ -125,11 +126,7 @@ class MR_DllDeclare OS {
 				return laterTs - earlierTs;
 			}
 			else {
-#				ifdef _WIN32
-					return 0xfffffffful - (earlierTs - laterTs) + 1;
-#				else
-					return 0xffffffffffffffffull - (earlierTs - laterTs) + 1;
-#				endif
+				return 0xfffffffful - (earlierTs - laterTs) + 1;
 			}
 		}
 		static void TimeShutdown();
