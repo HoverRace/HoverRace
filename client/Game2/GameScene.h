@@ -44,6 +44,7 @@ namespace HoverRace {
 	}
 	namespace Display {
 		class Display;
+		class Hud;
 	}
 	namespace Script {
 		class Core;
@@ -68,6 +69,17 @@ namespace Client {
 class GameScene : public Scene
 {
 	typedef Scene SUPER;
+	protected:
+		struct Viewport : private boost::noncopyable {
+			Viewport(Display::Display &display, Observer *observer,
+				Display::Hud *hud);
+			Viewport(Viewport &&viewport);
+			Viewport &operator=(Viewport &&viewport);
+
+			std::unique_ptr<Observer> observer;
+			std::shared_ptr<Display::Hud> hud;
+		};
+
 	public:
 		GameScene(Display::Display &display, GameDirector &director,
 			Script::Core *scripting, HoverScript::GamePeer *gamePeer,
@@ -94,8 +106,9 @@ class GameScene : public Scene
 		void StartDemoMode();
 
 	public:
-		void Advance(Util::OS::timestamp_t tick);
-		void Render();
+		virtual void Advance(Util::OS::timestamp_t tick);
+		virtual void PrepareRender();
+		virtual void Render();
 
 	private:
 		void OnRaceFinish();
@@ -110,8 +123,7 @@ class GameScene : public Scene
 		int numPlayers;
 		bool muted;
 
-		static const int MAX_OBSERVERS = Util::Config::MAX_PLAYERS;
-		Observer *observers[MAX_OBSERVERS];
+		std::vector<Viewport> viewports;
 		ClientSession *session;
 
 		boost::signals2::connection cameraZoomInConn;
@@ -124,6 +136,7 @@ class GameScene : public Scene
 
 		HoverScript::SessionPeerPtr sessionPeer;
 
+		bool firedOnStart;
 		bool firedOnRaceFinish;
 };
 

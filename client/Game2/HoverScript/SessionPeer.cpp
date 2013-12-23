@@ -1,8 +1,7 @@
 
 // SessionPeer.cpp
-// Scripting peer for a game session.
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2013 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -23,6 +22,7 @@
 #include "StdAfx.h"
 
 #include "../../engine/Script/Core.h"
+#include "../../engine/Util/Clock.h"
 #include "../ClientSession.h"
 #include "../Rules.h"
 #include "PlayerPeer.h"
@@ -62,6 +62,8 @@ void SessionPeer::Register(Script::Core *scripting)
 			.def("get_num_players", &SessionPeer::LGetNumPlayers)
 			.def_readonly("players", &SessionPeer::players)
 			.def_readonly("rules", &SessionPeer::rules)
+			.property("clock", &SessionPeer::LGetClock)
+			.property("time", &SessionPeer::LGetTime)
 	];
 }
 
@@ -91,6 +93,18 @@ int SessionPeer::LGetNumPlayers() const
 {
 	VerifySession();
 	return session->GetNbPlayers();
+}
+
+MR_SimulationTime SessionPeer::LGetTime() const
+{
+	VerifySession();
+	return session->GetSimulationTime();
+}
+
+std::shared_ptr<Util::Clock> SessionPeer::LGetClock() const
+{
+	VerifySession();
+	return session->GetClock();
 }
 
 }  // namespace HoverScript

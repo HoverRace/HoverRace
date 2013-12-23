@@ -21,6 +21,16 @@
 
 #pragma once
 
+#ifdef _WIN32
+#	ifdef MR_ENGINE
+#		define MR_DllDeclare   __declspec( dllexport )
+#	else
+#		define MR_DllDeclare   __declspec( dllimport )
+#	endif
+#else
+#	define MR_DllDeclare
+#endif
+
 namespace HoverRace {
 namespace Display {
 
@@ -106,6 +116,13 @@ inline Vec3 &operator+=(Vec3 &lhs, const Vec3 &rhs)
 	return lhs;
 }
 
+inline Vec3 &operator+=(Vec3 &lhs, const Vec2 &rhs)
+{
+	lhs.x += rhs.x;
+	lhs.y += rhs.y;
+	return lhs;
+}
+
 inline Vec3 &operator-=(Vec3 &lhs, const Vec3 &rhs)
 {
 	lhs.x -= rhs.x;
@@ -137,3 +154,5 @@ inline Vec3 Vec2::Promote(double z) const
 
 }  // namespace Display
 }  // namespace HoverRace
+
+#undef MR_DllDeclare

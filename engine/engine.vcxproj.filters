@@ -394,6 +394,36 @@
     <ClCompile Include="Display\Checkbox.cpp">
       <Filter>Display</Filter>
     </ClCompile>
+    <ClCompile Include="Display\Hud.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
+    <ClCompile Include="Display\HudDecor.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
+    <ClCompile Include="Display\FuelGauge.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
+    <ClCompile Include="Display\Speedometer.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
+    <ClCompile Include="Display\Counter.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\Clock.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\Stopwatch.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\Duration.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Display\Chronometer.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
+    <ClCompile Include="Display\HudText.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColorTools\ColorTools.h">
@@ -812,11 +842,41 @@
     <ClInclude Include="Display\Checkbox.h">
       <Filter>Display</Filter>
     </ClInclude>
+    <ClInclude Include="Display\Hud.h">
+      <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="Display\HudDecor.h">
+      <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="Display\FuelGauge.h">
+      <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="Display\Speedometer.h">
+      <Filter>Display</Filter>
+    </ClInclude>
     <ClInclude Include="Display\Texture.h">
       <Filter>Display</Filter>
     </ClInclude>
     <ClInclude Include="Display\SDL\SdlTexture.h">
       <Filter>Display\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Display\Counter.h">
+      <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Clock.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Stopwatch.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Duration.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Display\Chronometer.h">
+      <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="Display\HudText.h">
+      <Filter>Display</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -96,7 +96,8 @@ void SdlContainerView::Render()
 		SDL_RenderSetClipRect(renderer, &clipRect);
 	}
 
-	Vec2 oldOrigin = display.AddUiOrigin(model.GetPos());
+	const Vec2 &size = model.GetSize();
+	Vec2 oldOrigin = display.AddUiOrigin(model.GetAlignedPos(size.x, size.y));
 	std::for_each(children.begin(), children.end(),
 		std::mem_fn(&ViewModel::Render));
 	display.SetUiOrigin(oldOrigin);

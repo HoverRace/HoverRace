@@ -44,6 +44,7 @@
 
 // Commonly-used STL headers.
 #include <algorithm>
+#include <array>
 #include <exception>
 #include <list>
 #include <map>

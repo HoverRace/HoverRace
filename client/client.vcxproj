@@ -124,6 +124,7 @@
     <ClCompile Include="Game2\GifDecoder.cpp" />
     <ClCompile Include="Game2\HoverScript\ConsoleScene.cpp" />
     <ClCompile Include="Game2\HoverScript\DebugPeer.cpp" />
+    <ClCompile Include="Game2\HoverScript\HudPeer.cpp" />
     <ClCompile Include="Game2\HoverScript\PlayerPeer.cpp" />
     <ClCompile Include="Game2\HoverScript\RulebookEnv.cpp" />
     <ClCompile Include="Game2\HoverScript\RuntimeEnv.cpp" />
@@ -224,6 +225,7 @@
     <ClInclude Include="Game2\GifDecoder.h" />
     <ClInclude Include="Game2\HoverScript\ConsoleScene.h" />
     <ClInclude Include="Game2\HoverScript\DebugPeer.h" />
+    <ClInclude Include="Game2\HoverScript\HudPeer.h" />
     <ClInclude Include="Game2\HoverScript\PlayerPeer.h" />
     <ClInclude Include="Game2\HoverScript\RulebookEnv.h" />
     <ClInclude Include="Game2\HoverScript\RuntimeEnv.h" />

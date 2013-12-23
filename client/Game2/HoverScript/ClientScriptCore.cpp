@@ -22,11 +22,17 @@
 
 #include "StdAfx.h"
 
-#include "luabind/class_info.hpp"
+#include <luabind/class_info.hpp>
+#include <luabind/operator.hpp>
+
+#include "../../../engine/Util/Clock.h"
+#include "../../../engine/Util/Duration.h"
+#include "../../../engine/Util/Stopwatch.h"
 
 #include "ConfigPeer.h"
 #include "DebugPeer.h"
 #include "GamePeer.h"
+#include "HudPeer.h"
 #include "PlayerPeer.h"
 #include "SessionPeer.h"
 
@@ -35,6 +41,34 @@
 namespace HoverRace {
 namespace Client {
 namespace HoverScript {
+
+/**
+ * Register miscellaneous classes that don't have peers and aren't
+ * associated with anything else.
+ */
+void ClientScriptCore::RegisterMiscClasses()
+{
+	using namespace luabind;
+	lua_State *L = GetState();
+
+	{
+		using namespace HoverRace::Util;
+		module(L) [
+			class_<Clock, std::shared_ptr<Clock>>("Clock")
+				.def(tostring(self))
+				.property("time", &Clock::GetTime),
+			class_<Duration, std::shared_ptr<Duration>>("Duration")
+				.def(constructor<OS::timestamp_t, OS::timestamp_t>())
+				.def(tostring(self))
+				.def("fmt_long", (std::string(Duration::*)()const)&Duration::FmtLong)
+				.def("fmt_short", (std::string(Duration::*)()const)&Duration::FmtShort),
+			class_<Stopwatch, std::shared_ptr<Stopwatch>>("Stopwatch")
+				.def(constructor<std::shared_ptr<Clock>>())
+				.def(constructor<std::shared_ptr<Clock>, const Duration&>())
+				.def("next_lap", &Stopwatch::NextLap)
+		];
+	}
+}
 
 Script::Core *ClientScriptCore::Reset()
 {
@@ -53,8 +87,10 @@ Script::Core *ClientScriptCore::Reset()
 		ConfigPeer::Register(this);
 		DebugPeer::Register(this);
 		GamePeer::Register(this);
+		HudPeer::Register(this);
 		PlayerPeer::Register(this);
 		SessionPeer::Register(this);
+		RegisterMiscClasses();
 
 		classesRegistered = true;
 	}

@@ -23,6 +23,7 @@
 
 #include "../../engine/Script/Core.h"
 
+#include "HoverScript/PlayerPeer.h"
 #include "HoverScript/SessionPeer.h"
 #include "ClientSession.h"
 
@@ -54,7 +55,7 @@ Rulebook::Rulebook(Script::Core *scripting, const std::string &name,
 	scripting(scripting), name(name), title(title), description(description),
 	maxPlayers(maxPlayers),
 	rules(),
-	onPreGame(scripting), onPostGame(scripting)
+	onPreGame(scripting), onPostGame(scripting), onPlayerJoined(scripting)
 {
 }
 
@@ -92,6 +93,19 @@ void Rulebook::SetOnPostGame(const luabind::object &fn)
 void Rulebook::OnPostGame(HoverScript::SessionPeerPtr session) const
 {
 	onPostGame.CallHandlers(luabind::object(scripting->GetState(), session));
+}
+
+void Rulebook::SetOnPlayerJoined(const luabind::object &fn)
+{
+	onPlayerJoined.AddHandler(fn);
+}
+
+void Rulebook::OnPlayerJoined(HoverScript::SessionPeerPtr session,
+                            std::shared_ptr<HoverScript::PlayerPeer> player) const
+{
+	lua_State *L = scripting->GetState();
+	onPlayerJoined.CallHandlers(luabind::object(L, session),
+		luabind::object(L, player));
 }
 
 }  // namespace Client

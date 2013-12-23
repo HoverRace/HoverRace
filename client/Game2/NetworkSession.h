@@ -117,7 +117,7 @@ class NetworkSession : public ClientSession
 		~NetworkSession();
 
 		// Simulation control
-		void Process(int pSpeedFactor = 1);		  // Simulation, speed factor can be used to reduce processing speed to create AVI files
+		void Process();
 
 		BOOL LoadNew(const char *pTitle, HoverRace::Parcel::RecordFilePtr pMazeFile, int pNbLap, char pGameOpts, VideoServices::VideoBuffer * pVideo);
 

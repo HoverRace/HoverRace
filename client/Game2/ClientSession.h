@@ -33,6 +33,9 @@ namespace HoverRace {
 	namespace MainCharacter {
 		class MainCharacter;
 	}
+	namespace Util {
+		class Clock;
+	}
 }
 
 namespace HoverRace {
@@ -67,6 +70,7 @@ class ClientSession
 		int mWidthSprite;
 		int mHeightSprite;
 
+		std::shared_ptr<Util::Clock> clock;
 		std::shared_ptr<Rules> rules;
 
 		void ReadLevelAttrib(Parcel::RecordFilePtr pFile, VideoServices::VideoBuffer *pVideo);
@@ -76,14 +80,14 @@ class ClientSession
 		virtual ~ClientSession();
 
 		// Simulation control
-												  // Simulation, speed factor can be used to reduce processing speed to create AVI files
-		virtual void Process(int pSpeedFactor = 1);
+		virtual void Process();
 
 		virtual BOOL LoadNew(const char *pTitle, Parcel::RecordFilePtr pMazeFile, VideoServices::VideoBuffer *pVideo);
 
 		// Main character control and interrogation
 		bool CreateMainCharacter(int i);
 
+		std::shared_ptr<Util::Clock> GetClock() { return clock; }
 		virtual void SetSimulationTime(MR_SimulationTime pTime);
 		MR_SimulationTime GetSimulationTime() const;
 		void UpdateCharacterSimulationTimes();

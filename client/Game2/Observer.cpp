@@ -168,16 +168,6 @@ Observer::~Observer()
 	delete mHoverIcons;
 }
 
-Observer *Observer::New()
-{
-	return new Observer;
-}
-
-void Observer::Delete()
-{
-	delete this;
-}
-
 void Observer::SetCockpitView(BOOL pOn)
 {
 	mCockpitView = pOn;
@@ -590,28 +580,6 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 	int lXRes = m3DView.GetXRes();
 	int lYRes = m3DView.GetYRes();
 
-	int lSpeedMeterLen = lXRes / 2;
-	int lFuelMeterLen = lXRes / 4;
-	int lMeterHight = lYRes / 32;
-	int lXMargin = lXRes / 32;
-	int lYMargin = lMeterHight;
-
-	int lAbsSpeedLen = (int)(lAbsSpeedRatio * lSpeedMeterLen);
-	int lDirSpeedLen = (int)(pViewingCharacter->GetDirectionalSpeed() * lSpeedMeterLen);
-	double lFuelLevel = pViewingCharacter->GetFuelLevel();
-	int lFuelLen = (int)(lFuelLevel * lFuelMeterLen);
-
-	if (hudVisible) {
-		m3DView.DrawHorizontalMeter(lXMargin, lSpeedMeterLen, lYMargin, lMeterHight, lAbsSpeedLen, 54, 56);
-		if(lDirSpeedLen < 0) {
-			m3DView.DrawHorizontalMeter(lXMargin, lSpeedMeterLen, lYMargin + lMeterHight, lMeterHight, -lDirSpeedLen, 44, 56);
-		}
-		else {
-			m3DView.DrawHorizontalMeter(lXMargin, lSpeedMeterLen, lYMargin + lMeterHight, lMeterHight, lDirSpeedLen, 54, 56);
-		}
-		m3DView.DrawHorizontalMeter(lXRes - lXMargin - lFuelMeterLen, lFuelMeterLen, lYMargin, lMeterHight * 2, lFuelLen, 54, (lFuelLevel < 0.20) ? 35 : 56);
-	}
-
 	// MissileLevel
 	ObjFac1::SpriteHandle *lWeaponSprite = NULL;
 	int lWeaponSpriteIndex = 0;
@@ -805,18 +773,20 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 		}
 	}
 
+	/*TODO: Replace with modular HUD controlled from Lua.
 	if (hudVisible && mBaseFont != NULL) {
 
 		// Display timers
 		char lMainLineBuffer[80];
 		char lLapLineBuffer[80];
 
+		lMainLineBuffer[0] = 0;
 		lLapLineBuffer[0] = 0;
 
 		if(pTime < 0) {
 			pTime = -pTime;
 			sprintf(lMainLineBuffer, globalFmts.countdown.c_str(), (pTime % 60000) / 1000, (pTime % 1000) / 10, pViewingCharacter->GetTotalLap());
-			
+
 			int lFontScaling = 1 + (mBaseFont->GetSprite()->GetItemHeight() * 30) / (lYRes);
 			int lLineHeight = (mBaseFont->GetSprite()->GetItemHeight() / lFontScaling);
 
@@ -825,7 +795,7 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 			craftTxt->SetText(GetCraftName(pViewingCharacter->GetHoverModel()));
 			craftTxt->Blt(lXRes / 2, lYRes / 16 + lLineHeight + selectCraftTxt->GetHeight(), &m3DView, true);
 		}
-		else if(pViewingCharacter->GetTotalLap() <= pViewingCharacter->GetLap()) {
+		else if (pViewingCharacter->HasFinish()) {
 			MR_SimulationTime lTotalTime = pViewingCharacter->GetTotalTime();
 			MR_SimulationTime lBestLap = pViewingCharacter->GetBestLapDuration();
 
@@ -870,6 +840,7 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 		mBaseFont->GetSprite()->StrBlt(lXRes / 2, lYRes - 1, Ascii2Simple(lLapLineBuffer), &m3DView, Sprite::eCenter, Sprite::eBottom, lFontScaling);
 
 	}
+	*/
 
 }
 

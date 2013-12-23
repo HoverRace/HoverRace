@@ -188,7 +188,8 @@ namespace {
 // Functions implementations
 
 MainCharacter::MainCharacter(const Util::ObjectFromFactoryId & pId) :
-	Model::FreeElement(pId)
+	Model::FreeElement(pId),
+	playerIdx(0), started(false), finished(false)
 {
 	mMasterMode = TRUE;
 	mRoom = -1;
@@ -224,8 +225,6 @@ MainCharacter::MainCharacter(const Util::ObjectFromFactoryId & pId) :
 
 	mContactEffectList.push_back(&mContactEffect);
 
-	mNbLapForRace = 5;							  // Hard coded default
-	mLapCount = 0;
 	mLastLapCompletion = 0;
 	mLastLapDuration = 0;
 	mBestLapDuration = 0;
@@ -304,18 +303,23 @@ void MainCharacter::RegisterFactory()
 	Util::DllObjectFactory::RegisterLocalDll(MR_MAIN_CHARACTER_DLL_ID, FactoryFunc);
 }
 
-MainCharacter *MainCharacter::New(int pNbLap, char pGameOpts)
+/**
+ * Create a new player.
+ * @param idx The player index (starting at 0 for player 1).
+ * @param gameopts The game options.
+ */
+MainCharacter *MainCharacter::New(int idx, char gameopts)
 {
 	Util::ObjectFromFactoryId lId = { MR_MAIN_CHARACTER_DLL_ID, MR_MAIN_CHARACTER_CLASS_ID };
 
 	MainCharacter *lReturnValue = (MainCharacter *) Util::DllObjectFactory::CreateObject(lId);
 
-	if(lReturnValue != NULL) {
-		lReturnValue->mNbLapForRace = pNbLap;
-		lReturnValue->mGameOpts = pGameOpts;
+	if (lReturnValue) {
+		lReturnValue->playerIdx = idx;
+		lReturnValue->mGameOpts = gameopts;
 	}
 
-	lReturnValue->mHoverModel = NextAllowedCraft(pGameOpts, 3);
+	lReturnValue->mHoverModel = NextAllowedCraft(gameopts, 3);
 
 	return lReturnValue;
 }
@@ -425,11 +429,6 @@ void MainCharacter::SetNetState(int /*pDataLen */ , const MR_UInt8 *pData)
 	//}
 }
 
-void MainCharacter::SetNbLapForRace(int pNbLap)
-{
-	mNbLapForRace = pNbLap;
-}
-
 void MainCharacter::SetSimulationTime(MR_SimulationTime pTime)
 {
 	mCurrentTime = pTime;
@@ -522,6 +521,7 @@ int MainCharacter::Simulate(MR_SimulationTime pDuration, Model::Level *pLevel, i
 
 	if(pDuration > 0) {
 		if(mMasterMode) {
+			started = true;
 			if((mMotorOnState) && (mFuelLevel > 0.0))
 				mMotorDisplay = 250;
 		}
@@ -930,7 +930,7 @@ void MainCharacter::ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationT
 		}
 	}
 
-	if((lLapCompleted != NULL) && mMasterMode && (mLapCount < mNbLapForRace)) {
+	if((lLapCompleted != NULL) && mMasterMode && !finished) {
 		switch (lLapCompleted->mType) {
 			case MR_CheckPoint::eCheck1:
 				mCheckPoint1 = TRUE;
@@ -947,15 +947,16 @@ void MainCharacter::ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationT
 
 					finishLineSignal(this);
 
-					mLapCount++;
 					mLastLapDuration = pTime - mLastLapCompletion;
 					mLastLapCompletion = pTime;
 
-					if((mLastLapDuration < mBestLapDuration) || (mLapCount == 1))
+					if ((mLastLapDuration < mBestLapDuration) ||
+						(mBestLapDuration == 0))
+					{
 						mBestLapDuration = mLastLapDuration;
-
+					}
 					if(mRenderer != NULL) {
-						if(mLapCount == mNbLapForRace) {
+						if (finished) {
 							mInternalSoundList.Add(mRenderer->GetFinishSound());
 							mExternalSoundList.Add(mRenderer->GetFinishSound());
 						} else {
@@ -1087,16 +1088,6 @@ double MainCharacter::GetDirectionalSpeed() const
 	return lReturnValue;
 }
 
-int MainCharacter::GetLap() const
-{
-	return mLapCount;
-}
-
-int MainCharacter::GetTotalLap() const
-{
-	return mNbLapForRace;
-}
-
 MR_SimulationTime MainCharacter::GetTotalTime() const
 {
 	return mLastLapCompletion;
@@ -1117,9 +1108,33 @@ MR_SimulationTime MainCharacter::GetLastLapCompletion() const
 	return mLastLapCompletion;
 }
 
-BOOL MainCharacter::HasFinish() const
+/**
+ * Determine if the player has started playing (pregame is over and the player
+ * has control of the craft).
+ * @return @c true if the play session has started,
+ *         @c false if still in pregame.
+ */
+bool MainCharacter::HasStarted() const
 {
-	return (mLapCount >= mNbLapForRace);
+	return started;
+}
+
+/**
+ * Signal that the player's session has ended.
+ */
+void MainCharacter::Finish()
+{
+	finished = true;
+}
+
+/**
+ * Determine if the player's session has ended.
+ * @return @c true if the session is over,
+ *         @c false if the player is still playing.
+ */
+bool MainCharacter::HasFinish() const
+{
+	return finished;
 }
 
 int MainCharacter::HitQueueCount() const

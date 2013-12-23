@@ -9,20 +9,34 @@ libdisplay_la_SOURCES = \
 	Button.h \
 	Checkbox.cpp \
 	Checkbox.h \
+	Chronometer.cpp \
+	Chronometer.h \
 	ClickRegion.cpp \
 	ClickRegion.h \
 	Color.cpp \
 	Color.h \
 	Container.cpp \
 	Container.h \
+	Counter.cpp \
+	Counter.h \
 	Display.cpp \
 	Display.h \
 	FillBox.cpp \
 	FillBox.h \
+	FuelGauge.cpp \
+	FuelGauge.h \
+	Hud.cpp \
+	Hud.h \
+	HudDecor.cpp \
+	HudDecor.h \
+	HudText.cpp \
+	HudText.h \
 	Label.cpp \
 	Label.h \
 	ScreenFade.cpp \
 	ScreenFade.h \
+	Speedometer.cpp \
+	Speedometer.h \
 	SymbolIcon.cpp \
 	SymbolIcon.h \
 	Texture.h \

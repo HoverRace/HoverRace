@@ -27,6 +27,7 @@
 
 namespace HoverRace {
 	namespace HoverScript {
+		class PlayerPeer;
 		class SessionPeer;
 		typedef std::shared_ptr<SessionPeer> SessionPeerPtr;
 	}
@@ -75,6 +76,10 @@ class Rulebook : private boost::noncopyable
 		void SetOnPostGame(const luabind::object &fn);
 		void OnPostGame(HoverScript::SessionPeerPtr session) const;
 
+		void SetOnPlayerJoined(const luabind::object &fn);
+		void OnPlayerJoined(HoverScript::SessionPeerPtr session,
+			std::shared_ptr<HoverScript::PlayerPeer> player) const;
+
 	public:
 		friend bool operator==(const Rulebook &lhs, const Rulebook &rhs);
 		friend bool operator<(const Rulebook &lhs, const Rulebook &rhs);
@@ -88,9 +93,10 @@ class Rulebook : private boost::noncopyable
 
 		typedef std::map<std::string, std::shared_ptr<Rule>> rules_t;
 		rules_t rules;
-		
+
 		Script::Handlers onPreGame;
 		Script::Handlers onPostGame;
+		Script::Handlers onPlayerJoined;
 };
 typedef std::shared_ptr<Rulebook> RulebookPtr;
 

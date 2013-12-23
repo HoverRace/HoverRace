@@ -104,6 +104,31 @@ class MR_DllDeclare Container : public UiViewModel
 			return sharedChild;
 		}
 
+		/**
+		 * Remove a child element.
+		 * @param child The child element; must be a shared_ptr to a subclass
+		 *              of UiViewModel.
+		 * @return The same child element that was passed in.
+		 */
+		template<typename T>
+		typename std::enable_if<std::is_base_of<UiViewModel, T>::value, std::shared_ptr<T>>::type
+		RemoveChild(const std::shared_ptr<T> &child)
+		{
+			auto iter = std::find(children.begin(), children.end(), child);
+			if (iter != children.end()) {
+				children.erase(iter);
+			}
+			return child;
+		}
+
+		/**
+		 * Remove all child elements.
+		 */
+		virtual void Clear()
+		{
+			children.clear();
+		}
+
 	private:
 		template<typename P, bool(UiViewModel::*F)(P)>
 		bool PropagateMouseEvent(P param)
@@ -140,6 +165,8 @@ class MR_DllDeclare Container : public UiViewModel
 		}
 
 	public:
+		void ShrinkWrap();
+
 		/**
 		 * Retrieve the size of the container.
 		 * @note If clipping is turned off, the size is undefined.
@@ -163,8 +190,9 @@ class MR_DllDeclare Container : public UiViewModel
 	public:
 		virtual Vec3 Measure() const { return size.Promote(); }
 
-	private:
+	protected:
 		Display &display;
+	private:
 		Vec2 size;
 		bool clip;
 		std::vector<UiViewModelPtr> children;

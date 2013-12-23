@@ -111,6 +111,7 @@ class MainCharacter : public Model::FreeElement
 		unsigned int mControlState;
 		BOOL mMotorOnState;
 		int mMotorDisplay;
+		int playerIdx;
 		char mGameOpts;
 
 		double mXSpeed;
@@ -141,8 +142,6 @@ class MainCharacter : public Model::FreeElement
 		int mHoverId;
 
 		// Race stats
-		int mNbLapForRace;
-		int mLapCount;
 		MR_SimulationTime mLastLapCompletion;
 		MR_SimulationTime mLastLapDuration;
 		MR_SimulationTime mBestLapDuration;
@@ -166,7 +165,7 @@ class MainCharacter : public Model::FreeElement
 	public:
 		// Construction
 		MR_DllDeclare static void RegisterFactory();
-		MR_DllDeclare static MainCharacter *New(int pNbLap, char pGameOpts);
+		MR_DllDeclare static MainCharacter *New(int idx, char pGameOpts);
 
 		~MainCharacter();
 
@@ -212,13 +211,14 @@ class MainCharacter : public Model::FreeElement
 		MR_DllDeclare int GetPowerUpCount() const;
 		MR_DllDeclare int GetPowerUpFraction(int pNbLevel) const;
 
-		MR_DllDeclare int GetLap() const;
-		MR_DllDeclare int GetTotalLap() const;
+		MR_DllDeclare int GetPlayerIndex() const { return playerIdx; }
 		MR_DllDeclare MR_SimulationTime GetTotalTime() const;
 		MR_DllDeclare MR_SimulationTime GetBestLapDuration() const;
 		MR_DllDeclare MR_SimulationTime GetLastLapDuration() const;
 		MR_DllDeclare MR_SimulationTime GetLastLapCompletion() const;
-		MR_DllDeclare BOOL HasFinish() const;
+		MR_DllDeclare bool HasStarted() const;
+		MR_DllDeclare void Finish();
+		MR_DllDeclare bool HasFinish() const;
 
 		MR_DllDeclare int HitQueueCount() const;
 		MR_DllDeclare int GetHitQueue();
@@ -247,6 +247,8 @@ class MainCharacter : public Model::FreeElement
 		finishLineSignal_t &GetFinishLineSignal() { return finishLineSignal; }
 
 	private:
+		bool started;
+		bool finished;
 		finishLineSignal_t finishLineSignal;
 };
 

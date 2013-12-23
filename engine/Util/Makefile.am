@@ -22,10 +22,14 @@ libutil_la_SOURCES = \
 	yaml/SeqNode.h \
 	yaml/YamlExn.h \
 	BitPacking.h \
+	Clock.cpp \
+	Clock.h \
 	Config.cpp \
 	Config.h \
 	DllObjectFactory.cpp \
 	DllObjectFactory.h \
+	Duration.cpp \
+	Duration.h \
 	FastArray.h \
 	FastFifo.h \
 	FastMemManip.h \
@@ -42,6 +46,8 @@ libutil_la_SOURCES = \
 	OS.h \
 	SelFmt.cpp \
 	SelFmt.h \
+	Stopwatch.cpp \
+	Stopwatch.h \
 	Str.cpp \
 	Str.h \
 	WorldCoordinates.cpp \

@@ -1,3 +1,11 @@
+clock:
+  type: property
+  isa: Clock
+  sig:
+    - clock = session.clock
+  brief: >
+    The game clock.
+
 get_num_players:
   type: method
   sig:
@@ -5,3 +13,27 @@ get_num_players:
   brief: >
     Total count of local and network players.
 
+players:
+  type: property
+  isa: table
+  brief: >
+    List of Player instances, starting at zero.
+  examples:
+    - |
+      for i = 0, session:get_num_players() do
+        print(session.players[i].fuel)
+      end
+
+rules:
+  type: property
+  isa: table
+  brief: >
+    Table of the configured rules for this session.
+  desc: >
+    The keys and values for this table are described by the rulebook.
+
+time:
+  type: property
+  isa: number
+  brief: >
+    The current game time, in milliseconds.

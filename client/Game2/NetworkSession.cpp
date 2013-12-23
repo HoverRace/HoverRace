@@ -362,10 +362,10 @@ int NetworkSession::GetRank(const MainCharacter::MainCharacter * /*pPlayer */ ) 
 /**
  * The main game loop.  Read, process, write, read.  I wonder why we read twice.
  */
-void NetworkSession::Process(int pSpeedFactor)
+void NetworkSession::Process()
 {
 	ReadNet();
-	SUPER::Process(pSpeedFactor);
+	SUPER::Process();
 	WriteNet();
 	ReadNet();
 }

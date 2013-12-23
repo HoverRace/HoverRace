@@ -1,8 +1,7 @@
 
 // SessionPeer.h
-// Scripting peer for a game session.
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2013 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -25,6 +24,7 @@
 #include <luabind/luabind.hpp>
 #include <luabind/object.hpp>
 
+#include "../../../engine/Util/WorldCoordinates.h"
 #include "../../../engine/Script/Peer.h"
 
 namespace HoverRace {
@@ -36,6 +36,9 @@ namespace HoverRace {
 	}
 	namespace Script {
 		class Core;
+	}
+	namespace Util {
+		class Clock;
 	}
 }
 
@@ -57,6 +60,18 @@ class SessionPeer : public Script::Peer {
 		static void Register(Script::Core *scripting);
 
 	public:
+		template<class Fn>
+		void ForEachPlayer(Fn fn)
+		{
+			if (!playerRefs.empty()) {
+				std::for_each(playerRefs.begin(), playerRefs.end(), fn);
+			}
+		}
+		std::shared_ptr<PlayerPeer> &GetPlayer(unsigned idx)
+		{
+			return playerRefs[idx];
+		}
+
 		void OnSessionEnd();
 
 	protected:
@@ -64,6 +79,8 @@ class SessionPeer : public Script::Peer {
 
 	public:
 		int LGetNumPlayers() const;
+		MR_SimulationTime LGetTime() const;
+		std::shared_ptr<Util::Clock> LGetClock() const;
 
 	private:
 		ClientSession *session;

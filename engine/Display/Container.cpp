@@ -50,6 +50,22 @@ Container::Container(Display &display, const Vec2 &size, bool clip,
 }
 
 /**
+ * Resize the container to the minimum size that will fit all of the
+ * child elements.
+ */
+void Container::ShrinkWrap()
+{
+	Vec2 max(0, 0);
+	BOOST_FOREACH(auto &child, children) {
+		Vec3 measured = child->Measure();
+		measured += child->GetAlignedPos(measured.x, measured.y);
+		if (measured.x > max.x) max.x = measured.x;
+		if (measured.y > max.y) max.y = measured.y;
+	}
+	SetSize(max);
+}
+
+/**
  * Set the size of the container.
  * @param size The size of the container, where @c x is the width
  *             and @c y is the height.
