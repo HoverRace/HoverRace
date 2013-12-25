@@ -49,19 +49,18 @@ if(UNIX)
 elseif(WIN32)
 	# For Win32 builds, we include the bulk of the dependencies.
 	# Boost is the exception since it's simply too big.
-	#TODO: Use debug versions for DEBUG config.
 	set(DEPS_LIBRARIES
 		LiteUnzip
 		LiteZip
-		SDL2
-		SDL2main
-		SDL2_image
+		optimized SDL2 debug SDL2D
+		optimized SDL2main debug SDL2mainD
+		optimized SDL2_image debug SDL2_imageD
 		alut
 		intl
-		libcurl
-		lua5.1
-		luabind
-		yaml)
+		optimized libcurl debug libcurlD
+		optimized lua5.1 debug lua5.1D
+		optimized luabind debug luabindD
+		optimized yaml debug yamlD)
 	include_directories(${CMAKE_SOURCE_DIR}/include)
 	link_directories(${CMAKE_SOURCE_DIR}/lib)
 	file(GLOB DLLS RELATIVE ${CMAKE_SOURCE_DIR} lib/*.dll)
