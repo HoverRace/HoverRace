@@ -124,8 +124,6 @@ SdlDisplay::SdlDisplay(const std::string &windowTitle) :
 {
 	ApplyVideoMode();
 
-	Config *cfg = Config::GetInstance();
-
 #	ifdef _WIN32
 		//TODO: Get the filename from the config.
 		LoadPrivateFont("fontawesome/fontawesome-webfont.ttf");
