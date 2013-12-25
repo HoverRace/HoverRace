@@ -62,7 +62,9 @@ elseif(WIN32)
 		optimized lua5.1 debug lua5.1D
 		optimized luabind debug luabindD
 		optimized yaml debug yamlD)
-	include_directories(${CMAKE_SOURCE_DIR}/include)
+	include_directories(
+		${CMAKE_SOURCE_DIR}/include
+		${CMAKE_SOURCE_DIR}/include/lua)
 	link_directories(${CMAKE_SOURCE_DIR}/lib)
 	file(GLOB DLLS RELATIVE ${CMAKE_SOURCE_DIR} lib/*.dll)
 	file(COPY ${DLLS} DESTINATION ${CMAKE_BINARY_DIR})
