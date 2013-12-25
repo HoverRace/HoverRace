@@ -146,7 +146,7 @@ MR_DllDeclare inline bool operator==(const OS::Resolution &l, const OS::Resoluti
 
 MR_DllDeclare inline bool operator<(const OS::Resolution &l, const OS::Resolution &r)
 {
-	return l.w < r.w || !(r.w < l.w) && l.h < r.h;
+	return l.w < r.w || (!(r.w < l.w) && l.h < r.h);
 }
 
 }  // namespace Util

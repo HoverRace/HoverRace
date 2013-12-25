@@ -289,8 +289,8 @@ class MR_DllDeclare InputEventController {
 		int nextAvailableDisabledHash;
 
 		bool captureNextInput;
-		int  captureOldHash; /// stores the value of the hash we will be replacing when capturing input
-		std::string captureMap; /// name of the map we are capturing for
+		int  captureOldHash; ///< stores the value of the hash we will be replacing when capturing input
+		std::string captureMap; ///< name of the map we are capturing for
 
 	public:
 		typedef std::shared_ptr<Action<voidSignal_t>> VoidActionPtr;
