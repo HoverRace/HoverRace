@@ -1,9 +1,20 @@
 
-file(GLOB_RECURSE UTIL_SRCS Util/*.h Util/*.cpp)
-
 set(HR_ENGINE_SRCS
-	StdAfx.h
-	${UTIL_SRCS})
+	StdAfx.h)
+
+set(GROUPS
+	Util Util/yaml)
+
+foreach(group ${GROUPS})
+	file(GLOB srcs "${group}/*.h" "${group}/*.cpp")
+	set(HR_ENGINE_SRCS ${HR_ENGINE_SRCS} ${srcs})
+
+	# Arrange the files in Visual Studio by directory.
+	if(WIN32)
+		string(REGEX REPLACE "/" "\\\\" groupname ${group})
+		source_group(${groupname} FILES ${srcs})
+	endif()
+endforeach()
 
 add_library(hoverrace-engine SHARED ${HR_ENGINE_SRCS})
 set_target_properties(hoverrace-engine PROPERTIES LINKER_LANGUAGE CXX)
