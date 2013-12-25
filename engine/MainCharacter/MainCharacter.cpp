@@ -392,10 +392,6 @@ void MainCharacter::SetNetState(int /*pDataLen */ , const MR_UInt8 *pData)
 	mYSpeed = lState.Get(MC_SPEED_Y_256) / 256.0;
 	mZSpeed = lState.Get(MC_SPEED_Z_256) / 256.0;
 
-	// calculate actual speed
-	double totalSpeed = sqrt(mXSpeed * mXSpeed + mYSpeed * mYSpeed);
-	//TRACE("set player %d speed to %lf\n", this->GetHoverId(), totalSpeed);
-
 	mControlState = lState.Getu(MC_CONTROL_ST);
 	mOnFloor = lState.Get(MC_ON_FLOOR);
 	mHoverModel = lState.Getu(MC_HOVER_MODEL);
