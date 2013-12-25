@@ -19,7 +19,9 @@ endforeach()
 add_library(hoverrace-engine SHARED ${HR_ENGINE_SRCS})
 set_target_properties(hoverrace-engine PROPERTIES LINKER_LANGUAGE CXX)
 if(WIN32)
-	set_property(TARGET hoverrace-engine APPEND PROPERTY COMPILE_DEFINITIONS "MR_ENGINE")
+	set_property(TARGET hoverrace-engine APPEND PROPERTY COMPILE_DEFINITIONS
+		MR_ENGINE  # Enable dllexport.
+		YAML_DECLARE_STATIC)  # Use static linking for libYAML.
 endif()
 include_directories(".")
 target_link_libraries(hoverrace-engine ${Boost_LIBRARIES} ${DEPS_LIBRARIES})
