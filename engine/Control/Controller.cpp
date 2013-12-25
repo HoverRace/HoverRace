@@ -66,8 +66,8 @@ InputEventController::actions_t::camera_t::camera_t() :
 	{ }
 
 InputEventController::InputEventController() :
-	captureNextInput(false), captureOldHash(0), captureMap(),
-	nextAvailableDisabledHash(0)
+	nextAvailableDisabledHash(0),
+	captureNextInput(false), captureOldHash(0), captureMap()
 {
 	LoadConfig();
 	LoadCameraMap();
