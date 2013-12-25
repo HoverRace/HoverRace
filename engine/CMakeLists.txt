@@ -1,5 +1,6 @@
 
 set(HR_ENGINE_SRCS
+	StdAfx.cpp
 	StdAfx.h)
 
 set(GROUPS
@@ -25,3 +26,9 @@ if(WIN32)
 endif()
 include_directories(".")
 target_link_libraries(hoverrace-engine ${Boost_LIBRARIES} ${DEPS_LIBRARIES})
+
+set_target_properties(hoverrace-engine PROPERTIES
+	COTIRE_ADD_UNITY_BUILD FALSE)
+set_target_properties(hoverrace-engine PROPERTIES
+	COTIRE_CXX_PREFIX_HEADER_INIT StdAfx.h)
+cotire(hoverrace-engine)
