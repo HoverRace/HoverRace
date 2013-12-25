@@ -509,8 +509,10 @@ void InputEventController::LoadConfig()
 		playerMap[cfg->controls_hash[i].lookBack].reset(new LookBackAction(_("Look Back"), 7, NULL));
 	}
 
-	/* load camera map */
+	//TODO: Load camera map
+	/*
 	ActionMap& cameraMap = allActionMaps[_("Camera")];
+	*/
 }
 
 void InputEventController::RebindKey(string mapname, int oldhash, int newhash)
