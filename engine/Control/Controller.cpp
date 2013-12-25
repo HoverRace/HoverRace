@@ -247,7 +247,7 @@ int InputEventController::GetNextAvailableDisabledHash()
 		if(nextAvailableDisabledHash >= 16384)
 			nextAvailableDisabledHash = 0; // only allowed to use 14 bits for hash
 	}
-	
+
 	return nextAvailableDisabledHash;
 }
 
@@ -295,7 +295,7 @@ void InputEventController::DisableCaptureInput()
 		return;
 
 	RebindKey(captureMap, captureOldHash, GetNextAvailableDisabledHash());
-	
+
 	captureOldHash = 0;
 	captureMap = "";
 	captureNextInput = false;
@@ -522,7 +522,7 @@ void InputEventController::RebindKey(string mapname, int oldhash, int newhash)
 		if(map.count(oldhash) > 0) {
 			ControlActionPtr tmp = map[oldhash];
 			map.erase(oldhash);
-			// check if we need to disable 
+			// check if we need to disable
 			if(map.count(newhash) > 0) {
 				ControlActionPtr tmp2 = map[newhash];
 				map.erase(newhash);
@@ -553,7 +553,7 @@ void InputEventController::LoadMenuMap()
 {
 	ActionMap& cmap = allActionMaps[_("Menu")];
 	cmap.clear();
-	
+
 	Config* config = Config::GetInstance();
 
 	AssignAction(cmap, config->ui.menu_ok, actions.ui.menuOk);
@@ -565,7 +565,7 @@ void InputEventController::LoadConsoleToggleMap()
 {
 	ActionMap& cmap = allActionMaps[_("ConsoleToggle")];
 	cmap.clear();
-	
+
 	Config* config = Config::GetInstance();
 
 	AssignAction(cmap, config->ui.console_toggle, actions.sys.consoleToggle);
@@ -576,7 +576,7 @@ void InputEventController::LoadConsoleMap()
 {
 	ActionMap& cmap = allActionMaps[_("Console")];
 	cmap.clear();
-	
+
 	Config* config = Config::GetInstance();
 
 	AssignAction(cmap, config->ui.console_up, actions.ui.consoleUp);
