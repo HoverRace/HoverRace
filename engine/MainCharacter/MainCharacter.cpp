@@ -487,9 +487,8 @@ void MainCharacter::SetPowerup()
 void MainCharacter::SetChangeItem()
 {
 	if(!(mControlState & eSelectWeapon)) {
-		(*(int *) &mCurrentWeapon)++;
-		if(mCurrentWeapon == eNotAWeapon)
-			(*(int *) &mCurrentWeapon) = 0;
+		mCurrentWeapon = static_cast<eWeapon>(
+			(static_cast<int>(mCurrentWeapon) + 1) % eNotAWeapon);
 	}
 }
 
