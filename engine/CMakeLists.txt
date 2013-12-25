@@ -4,7 +4,19 @@ set(HR_ENGINE_SRCS
 	StdAfx.h)
 
 set(GROUPS
-	Util Util/yaml)
+	ColorTools
+	Control
+	Display Display/SDL
+	MainCharacter
+	MazeCompiler
+	Model
+	Net
+	ObjFac1
+	ObjFacTools
+	Parcel
+	Script
+	Util Util/yaml
+	VideoServices)
 
 foreach(group ${GROUPS})
 	file(GLOB srcs "${group}/*.h" "${group}/*.cpp")
