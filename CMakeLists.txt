@@ -53,16 +53,15 @@ elseif(WIN32)
 	set(DEPS_LIBRARIES
 		LiteUnzip
 		LiteZip
-		alut
-		intl
-		curl
-		lua5.1
-		luabind
-		yaml
 		SDL2
 		SDL2main
 		SDL2_image
-		SDL2_ttf)
+		alut
+		intl
+		libcurl
+		lua5.1
+		luabind
+		yaml)
 	include_directories(${CMAKE_SOURCE_DIR}/include)
 	link_directories(${CMAKE_SOURCE_DIR}/lib)
 	file(GLOB DLLS RELATIVE ${CMAKE_SOURCE_DIR} lib/*.dll)
