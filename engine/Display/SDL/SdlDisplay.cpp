@@ -270,7 +270,7 @@ void SdlDisplay::ApplyVideoMode()
 
 	// Find a working renderer.
 	for (auto iter = renderers.begin(); iter != renderers.end(); ++iter) {
-		if (renderer = SDL_CreateRenderer(window, iter->idx, 0)) {
+		if ((renderer = SDL_CreateRenderer(window, iter->idx, 0))) {
 			SDL_RendererInfo info;
 			SDL_GetRendererInfo(renderer, &info);
 			Log::Info("Selected renderer: %s", boost::lexical_cast<std::string>(info).c_str());
