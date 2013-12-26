@@ -49,7 +49,8 @@ if(UNIX)
 	set(DEPS_LIBRARIES ${DEPS_LIBRARIES} ${LUA_LIBRARIES})
 elseif(WIN32)
 	# For Win32 builds, we include the bulk of the dependencies.
-	# Boost is the exception since it's simply too big.
+	# Boost is the exception since it's simply too big and
+	# OpenAL for licensing reasons.
 	set(DEPS_LIBRARIES
 		LiteUnzip
 		LiteZip
@@ -62,6 +63,12 @@ elseif(WIN32)
 		optimized lua5.1 debug lua5.1D
 		optimized luabind debug luabindD
 		optimized yaml debug yamlD)
+
+	include(FindOpenAL)
+	find_package(OpenAL REQUIRED)
+	include_directories(${OPENAL_INCLUDE_DIR})
+	set(DEPS_LIBRARIES ${DEPS_LIBRARIES} ${OPENAL_LIBRARY})
+
 	include_directories(
 		${CMAKE_SOURCE_DIR}/include
 		${CMAKE_SOURCE_DIR}/include/lua)
