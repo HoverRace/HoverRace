@@ -2,6 +2,8 @@
 /* StdAfx.h
 	Precompiled header for client. */
 
+#pragma once
+
 #ifdef _WIN32
 
 	// Exclude rarely-used stuff from Windows headers
