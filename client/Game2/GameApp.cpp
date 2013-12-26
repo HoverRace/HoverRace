@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 // GameApp.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
@@ -2277,3 +2278,4 @@ void CaptureScreen(VideoServices::VideoBuffer * pVideoBuffer)
 }  // namespace HoverRace
 
 #endif  // ifndef WITH_SDL
+#endif

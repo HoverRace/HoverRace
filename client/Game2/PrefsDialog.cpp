@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 
 // PrefsDialog.cpp
 // The "Preferences" dialog.
@@ -102,3 +103,4 @@ void PrefsDialog::ShowModal(HINSTANCE hinst, HWND parent)
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

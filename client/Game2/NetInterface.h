@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 // NetInterface.h
 //
 //
@@ -221,3 +222,4 @@ class NetworkInterface
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

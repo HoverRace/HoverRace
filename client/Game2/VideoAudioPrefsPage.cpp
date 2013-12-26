@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 
 // VideoAudioPrefsPage.h
 // The "Video and Audio" preferences page.
@@ -335,3 +336,4 @@ void VideoAudioPrefsPage::UpdateAudioStatus(HWND hwnd)
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

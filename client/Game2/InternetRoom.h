@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 // InternetRoom.h
 //
 //
@@ -233,3 +234,4 @@ BOOL MR_SendLadderResult(HWND pParentWindow, const char *pWinAlias,
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

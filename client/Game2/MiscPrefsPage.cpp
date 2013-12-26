@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 
 // MiscPrefsPage.cpp
 // The "Miscellaneous" preferences page.
@@ -90,3 +91,4 @@ BOOL MiscPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM pL
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

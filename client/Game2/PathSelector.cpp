@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 
 // PathSelector.cpp
 // The directory selection dialog.
@@ -199,3 +200,4 @@ static bool SHGetTargetFolderPath(LPCITEMIDLIST pidlFolder, LPWSTR pszPath)
 
 	return *pszPath != 0;
 }
+#endif

@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 
 // AboutDialog.cpp
 // The "About" dialog.
@@ -145,3 +146,4 @@ BOOL CALLBACK AboutDialog::DlgFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LP
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

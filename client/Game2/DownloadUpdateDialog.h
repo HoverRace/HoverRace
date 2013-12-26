@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 // DownloadUpdateDialog.h
 // Dialog to download an update from the server and notify user of progress.
 //
@@ -87,3 +88,4 @@ class DownloadUpdateDialog
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

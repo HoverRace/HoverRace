@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 
 // ControlPrefsPage.h
 // The "Controls" preferences page.
@@ -398,3 +399,4 @@ LRESULT CALLBACK ControlPrefsPage::PressKeyDialogFunc(HWND hwnd, UINT message, W
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 // GifDecoder.cpp
 //
 //
@@ -149,3 +150,4 @@ int GifDecoder::GetDelay(int pImage) const
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

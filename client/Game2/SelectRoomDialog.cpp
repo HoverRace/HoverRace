@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 
 // SelectRoomDialog.h
 // The room list selector.
@@ -154,3 +155,4 @@ BOOL SelectRoomDialog::DlgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lp
 	return retv;
 }
 
+#endif

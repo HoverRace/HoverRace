@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 
 // SelectRoomDialog.h
 // Header for the room list selector.
@@ -59,3 +60,4 @@ class SelectRoomDialog : public RoomListDialog
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

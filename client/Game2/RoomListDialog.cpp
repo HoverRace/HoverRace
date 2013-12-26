@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 
 // RoomListDialog.cpp
 // The base room list dialog.
@@ -142,3 +143,4 @@ BOOL CALLBACK RoomListDialog::DlgFunc(HWND hwnd, UINT message, WPARAM wparam, LP
 	}
 	return retv;
 }
+#endif

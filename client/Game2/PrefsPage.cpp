@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 
 // PrefsPage.cpp
 // Base class for preferences pages.
@@ -82,3 +83,4 @@ BOOL CALLBACK PrefsPage::DlgFunc(HWND hwnd, UINT message, WPARAM wparam, LPARAM 
 
 	return (dlg == NULL) ? FALSE : dlg->DlgProc(hwnd, message, wparam, lparam);
 }
+#endif

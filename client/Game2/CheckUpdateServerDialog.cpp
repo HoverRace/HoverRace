@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 // CheckUpdateServerDialog.cpp
 // Checks the update server for any updates, and asks the user if they should
 // be applied (if necessary).
@@ -238,3 +239,4 @@ void CheckUpdateServerDialog::ThreadProc(HWND hwnd) {
 
 	PostMessageW(hwnd, WM_APP_UPDATE_CHECK_DONE, result, 0);
 }
+#endif

@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 
 // TrackDownloadDialog.h
 // Header for the track downloader.
@@ -85,3 +86,4 @@ class TrackDownloadDialog
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

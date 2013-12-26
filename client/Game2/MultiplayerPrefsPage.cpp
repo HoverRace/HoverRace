@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 
 // MultiplayerPrefsPage.cpp
 // The "Multiplayer" preferences page.
@@ -129,3 +130,4 @@ BOOL MultiplayerPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LP
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

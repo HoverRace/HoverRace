@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 
 // IntroMovie.cpp
 // The intro movie that plays at startup.
@@ -190,3 +191,4 @@ void IntroMovie::ResetPalette(bool background)
 	MCIWndRealize(movieWnd, background);
 #endif
 }
+#endif

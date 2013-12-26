@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 
 // VideoAudioPrefsPage.h
 // Header for the "Video and Audio" preferences page.
@@ -59,3 +60,4 @@ class VideoAudioPrefsPage : public PrefsPage
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

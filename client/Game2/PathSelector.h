@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 
 // PathSelector.h
 // Header for the directory selection dialog.
@@ -51,3 +52,4 @@ class PathSelector
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

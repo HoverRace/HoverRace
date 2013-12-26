@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 
 // CheckRoomListDialog.cpp
 // The room list URL checker.
@@ -104,3 +105,4 @@ BOOL CheckRoomListDialog::DlgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM
 	return retv;
 }
 
+#endif

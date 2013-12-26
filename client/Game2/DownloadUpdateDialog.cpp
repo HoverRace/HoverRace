@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 // DownloadUpdateDialog.cpp
 // Downloader for HoverRace updates with progress bar.
 //
@@ -342,3 +343,4 @@ size_t DownloadUpdateDialog::ProgressFunc(void *clientp, double dlTotal, double 
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 // InternetRoom.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
@@ -2303,3 +2304,4 @@ int FindFocusItem(HWND pWindow)
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

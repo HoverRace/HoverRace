@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 
 // TrackSelectDialog.cpp
 // Track selector.
@@ -256,3 +257,4 @@ BOOL CALLBACK TrackSelectDialog::ListCallBack(HWND hwnd, UINT message, WPARAM wp
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

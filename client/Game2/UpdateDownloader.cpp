@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 // UpdateDownloader.cpp
 // Downloads and applies updates from the central update server.
 //
@@ -212,3 +213,4 @@ bool UpdateDownloader::Version::operator==(UpdateDownloader::Version &x)
 {
 	return ((major == x.major) && (minor == x.minor) && (patch == x.patch) && (rev == x.rev));
 }
+#endif

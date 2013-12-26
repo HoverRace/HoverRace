@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 // NetworkSession.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
@@ -1507,3 +1508,4 @@ void NetworkSession::AddChatMessage(int pPlayerIndex, const char *pMessage, int 
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

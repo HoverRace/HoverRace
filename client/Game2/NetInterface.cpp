@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 // NetInterface.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
@@ -2453,3 +2454,4 @@ MR_UInt32 GetAddrFromStr(const char *pName)
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

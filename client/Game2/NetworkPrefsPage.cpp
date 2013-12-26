@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 
 // NetworkPrefsPage.cpp
 // The "Network" preferences page.
@@ -182,3 +183,4 @@ BOOL NetworkPrefsPage::DlgProc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LPARAM
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

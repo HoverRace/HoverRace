@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 // MatchReport.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
@@ -786,3 +787,4 @@ int GetLineLen(const char *pSrc)
 	}
 	return lReturnValue;
 }
+#endif

@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 
 // TrackDownloadDialog.cpp
 // Track downloader with UI.
@@ -438,3 +439,4 @@ bool TrackDownloadDialog::ExtractTrackFile()
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif
