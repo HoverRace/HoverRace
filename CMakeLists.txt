@@ -77,4 +77,5 @@ elseif(WIN32)
 	file(COPY ${DLLS} DESTINATION ${CMAKE_BINARY_DIR})
 endif()
 
+add_subdirectory(client)
 add_subdirectory(engine)
