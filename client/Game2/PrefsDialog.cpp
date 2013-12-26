@@ -22,6 +22,7 @@
 //
 
 #include "StdAfx.h"
+#ifdef HR_LEGACY_BUILD
 
 #include "../../engine/Util/Str.h"
 #include "GameApp.h"
@@ -102,3 +103,4 @@ void PrefsDialog::ShowModal(HINSTANCE hinst, HWND parent)
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

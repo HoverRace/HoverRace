@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 
 // PrefsDialog.h
 // Header for the "Preferences" dialog.
@@ -53,3 +54,4 @@ class PrefsDialog
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

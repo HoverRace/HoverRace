@@ -20,6 +20,7 @@
 //
 
 #include "StdAfx.h"
+#ifdef HR_LEGACY_BUILD
 
 #include <Mmsystem.h>
 
@@ -1507,3 +1508,4 @@ void NetworkSession::AddChatMessage(int pPlayerIndex, const char *pMessage, int 
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

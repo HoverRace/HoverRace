@@ -21,6 +21,7 @@
 //
 
 #include "StdAfx.h"
+#ifdef HR_LEGACY_BUILD
 
 #include "GifDecoder.h"
 #include "GameApp.h"
@@ -149,3 +150,4 @@ int GifDecoder::GetDelay(int pImage) const
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

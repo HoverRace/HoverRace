@@ -21,6 +21,7 @@
 // and limitations under the License.
 
 #include "StdAfx.h"
+#ifdef HR_LEGACY_BUILD
 
 #include "../../engine/Util/Str.h"
 
@@ -104,3 +105,4 @@ BOOL CheckRoomListDialog::DlgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM
 	return retv;
 }
 
+#endif

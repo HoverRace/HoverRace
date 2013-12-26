@@ -22,6 +22,7 @@
 //
 
 #include "StdAfx.h"
+#ifdef HR_LEGACY_BUILD
 
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/OS.h"
@@ -398,3 +399,4 @@ LRESULT CALLBACK ControlPrefsPage::PressKeyDialogFunc(HWND hwnd, UINT message, W
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

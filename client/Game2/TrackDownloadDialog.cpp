@@ -21,6 +21,7 @@
 // and limitations under the License.
 
 #include "StdAfx.h"
+#ifdef HR_LEGACY_BUILD
 
 #include "TrackDownloadDialog.h"
 
@@ -438,3 +439,4 @@ bool TrackDownloadDialog::ExtractTrackFile()
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

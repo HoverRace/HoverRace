@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 // GifDecoder.h
 //
 //
@@ -54,3 +55,4 @@ class GifDecoder
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

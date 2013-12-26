@@ -23,6 +23,7 @@
 //
 
 #include "StdAfx.h"
+#ifdef HR_LEGACY_BUILD
 
 #include <algorithm>
 
@@ -256,3 +257,4 @@ BOOL CALLBACK TrackSelectDialog::ListCallBack(HWND hwnd, UINT message, WPARAM wp
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

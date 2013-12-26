@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 
 // MiscPrefsPage.h
 // Header for the "Miscellaneous" preferences page.
@@ -46,3 +47,4 @@ class MiscPrefsPage : public PrefsPage
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

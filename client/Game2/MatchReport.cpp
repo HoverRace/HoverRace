@@ -20,6 +20,7 @@
 //
 
 #include "StdAfx.h"
+#ifdef HR_LEGACY_BUILD
 
 #include "MatchReport.h"
 
@@ -786,3 +787,4 @@ int GetLineLen(const char *pSrc)
 	}
 	return lReturnValue;
 }
+#endif

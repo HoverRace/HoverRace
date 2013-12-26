@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 
 // PrefsPage.h
 // Header for base class for preferences pages.
@@ -51,3 +52,4 @@ class PrefsPage
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

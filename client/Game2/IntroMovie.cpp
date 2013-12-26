@@ -21,6 +21,7 @@
 // and limitations under the License.
 
 #include "StdAfx.h"
+#ifdef HR_LEGACY_BUILD
 
 #ifdef WITH_DIRECTSHOW
 #	include <comdef.h>
@@ -190,3 +191,4 @@ void IntroMovie::ResetPalette(bool background)
 	MCIWndRealize(movieWnd, background);
 #endif
 }
+#endif

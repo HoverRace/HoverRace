@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 
 // AboutDialog.h
 // Header for the "About" dialog.
@@ -40,3 +41,4 @@ class AboutDialog
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

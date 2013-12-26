@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 
 // NetworkPrefsPage.h
 // Header for the "Network" preferences page.
@@ -47,3 +48,4 @@ class NetworkPrefsPage : public PrefsPage
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

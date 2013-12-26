@@ -20,6 +20,7 @@
 //
 
 #include "StdAfx.h"
+#ifdef HR_LEGACY_BUILD
 
 #include <richedit.h>
 
@@ -2303,3 +2304,4 @@ int FindFocusItem(HWND pWindow)
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

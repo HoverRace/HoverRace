@@ -22,6 +22,7 @@
 //
 
 #include "StdAfx.h"
+#ifdef HR_LEGACY_BUILD
 
 #include <richedit.h>
 
@@ -145,3 +146,4 @@ BOOL CALLBACK AboutDialog::DlgFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam, LP
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

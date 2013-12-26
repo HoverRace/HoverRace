@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 
 // ControlPrefsPage.h
 // Header for the "Controls" preferences page.
@@ -55,3 +56,4 @@ class ControlPrefsPage : public PrefsPage
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

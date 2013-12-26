@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 
 // IntroMovie.h
 // The intro movie that plays at startup.
@@ -65,3 +66,4 @@ class IntroMovie
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

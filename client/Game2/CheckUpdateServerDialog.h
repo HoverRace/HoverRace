@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 // CheckUpdateServer.h
 // Header for the update checker.
 //
@@ -74,4 +75,5 @@ class CheckUpdateServerDialog {
 } // namespace Client
 } // namespace HoverRace
 
+#endif
 #endif

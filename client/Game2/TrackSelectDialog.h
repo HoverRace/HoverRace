@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 
 // TrackSelectDialog.h
 // Track selector.
@@ -78,3 +79,4 @@ class TrackSelectDialog {
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

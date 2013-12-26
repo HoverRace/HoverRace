@@ -22,6 +22,7 @@
 //
 
 #include "StdAfx.h"
+#ifdef HR_LEGACY_BUILD
 
 #include "../../engine/Util/Str.h"
 
@@ -82,3 +83,4 @@ BOOL CALLBACK PrefsPage::DlgFunc(HWND hwnd, UINT message, WPARAM wparam, LPARAM 
 
 	return (dlg == NULL) ? FALSE : dlg->DlgProc(hwnd, message, wparam, lparam);
 }
+#endif

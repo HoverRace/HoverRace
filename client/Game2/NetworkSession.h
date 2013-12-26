@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 // NetworkSession.h
 //
 //
@@ -152,3 +153,4 @@ class NetworkSession : public ClientSession
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

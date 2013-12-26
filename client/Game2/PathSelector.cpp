@@ -22,6 +22,7 @@
 //
 
 #include "StdAfx.h"
+#ifdef HR_LEGACY_BUILD
 
 #include <shlobj.h>
 
@@ -199,3 +200,4 @@ static bool SHGetTargetFolderPath(LPCITEMIDLIST pidlFolder, LPWSTR pszPath)
 
 	return *pszPath != 0;
 }
+#endif

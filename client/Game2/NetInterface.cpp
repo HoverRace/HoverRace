@@ -20,6 +20,7 @@
 //
 
 #include "StdAfx.h"
+#ifdef HR_LEGACY_BUILD
 
 #include <Mmsystem.h>
 
@@ -2453,3 +2454,4 @@ MR_UInt32 GetAddrFromStr(const char *pName)
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

@@ -21,6 +21,7 @@
 // and limitations under the License.
 
 #include "StdAfx.h"
+#ifdef HR_LEGACY_BUILD
 
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/Str.h"
@@ -154,3 +155,4 @@ BOOL SelectRoomDialog::DlgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lp
 	return retv;
 }
 
+#endif

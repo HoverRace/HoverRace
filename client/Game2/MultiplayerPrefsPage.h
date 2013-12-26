@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 
 // MultiplayerPrefsPage.h
 // Header for the "Multiplayer" preferences page.
@@ -46,3 +47,4 @@ class MultiplayerPrefsPage : public PrefsPage
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

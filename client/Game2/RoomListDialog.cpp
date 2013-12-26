@@ -21,6 +21,7 @@
 // and limitations under the License.
 
 #include "StdAfx.h"
+#ifdef HR_LEGACY_BUILD
 
 #include "../../engine/Net/Agent.h"
 #include "../../engine/Net/NetExn.h"
@@ -142,3 +143,4 @@ BOOL CALLBACK RoomListDialog::DlgFunc(HWND hwnd, UINT message, WPARAM wparam, LP
 	}
 	return retv;
 }
+#endif

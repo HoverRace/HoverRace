@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 
 // UpdateDownloader.h
 // A class that can be used to download and apply updates for HoverRace.
@@ -71,4 +72,5 @@ typedef std::shared_ptr<UpdateDownloader> UpdateDownloaderPtr;
 }  // namespace Client
 }  // namespace HoverRace
 
+#endif
 #endif

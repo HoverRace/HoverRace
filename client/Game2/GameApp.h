@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 // GameApp.h
 //
 //
@@ -210,3 +211,4 @@ class GameApp : public GameDirector
 }  // namespace HoverRace
 
 #endif  // ifndef WITH_SDL
+#endif

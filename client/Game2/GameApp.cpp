@@ -20,6 +20,7 @@
 //
 
 #include "StdAfx.h"
+#ifdef HR_LEGACY_BUILD
 
 #include <sstream>
 
@@ -2277,3 +2278,4 @@ void CaptureScreen(VideoServices::VideoBuffer * pVideoBuffer)
 }  // namespace HoverRace
 
 #endif  // ifndef WITH_SDL
+#endif

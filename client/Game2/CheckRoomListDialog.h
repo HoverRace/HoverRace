@@ -1,3 +1,4 @@
+#ifdef HR_LEGACY_BUILD
 
 // CheckRoomListDialog.h
 // Header for the room list URL checker.
@@ -52,3 +53,4 @@ class CheckRoomListDialog : public RoomListDialog
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

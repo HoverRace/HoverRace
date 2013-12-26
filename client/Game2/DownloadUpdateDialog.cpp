@@ -20,6 +20,7 @@
 // and limitations under the License.
 
 #include "StdAfx.h"
+#ifdef HR_LEGACY_BUILD
 
 #include "DownloadUpdateDialog.h"
 #include "resource.h"
@@ -342,3 +343,4 @@ size_t DownloadUpdateDialog::ProgressFunc(void *clientp, double dlTotal, double 
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

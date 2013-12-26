@@ -20,6 +20,7 @@
 // and limitations under the License.
 
 #include "StdAfx.h"
+#ifdef HR_LEGACY_BUILD
 
 #include "../../engine/Util/Config.h"
 
@@ -212,3 +213,4 @@ bool UpdateDownloader::Version::operator==(UpdateDownloader::Version &x)
 {
 	return ((major == x.major) && (minor == x.minor) && (patch == x.patch) && (rev == x.rev));
 }
+#endif

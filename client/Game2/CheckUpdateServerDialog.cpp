@@ -21,6 +21,7 @@
 // and limitations under the License.
 
 #include "StdAfx.h"
+#ifdef HR_LEGACY_BUILD
 
 #include "CheckUpdateServerDialog.h"
 #include "DownloadUpdateDialog.h"
@@ -238,3 +239,4 @@ void CheckUpdateServerDialog::ThreadProc(HWND hwnd) {
 
 	PostMessageW(hwnd, WM_APP_UPDATE_CHECK_DONE, result, 0);
 }
+#endif
