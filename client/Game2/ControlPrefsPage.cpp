@@ -1,4 +1,3 @@
-#ifdef HR_LEGACY_BUILD
 
 // ControlPrefsPage.h
 // The "Controls" preferences page.
@@ -23,6 +22,7 @@
 //
 
 #include "StdAfx.h"
+#ifdef HR_LEGACY_BUILD
 
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/OS.h"

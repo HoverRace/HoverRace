@@ -1,4 +1,3 @@
-#ifdef HR_LEGACY_BUILD
 
 // RoomListDialog.cpp
 // The base room list dialog.
@@ -22,6 +21,7 @@
 // and limitations under the License.
 
 #include "StdAfx.h"
+#ifdef HR_LEGACY_BUILD
 
 #include "../../engine/Net/Agent.h"
 #include "../../engine/Net/NetExn.h"

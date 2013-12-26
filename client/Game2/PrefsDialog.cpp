@@ -1,4 +1,3 @@
-#ifdef HR_LEGACY_BUILD
 
 // PrefsDialog.cpp
 // The "Preferences" dialog.
@@ -23,6 +22,7 @@
 //
 
 #include "StdAfx.h"
+#ifdef HR_LEGACY_BUILD
 
 #include "../../engine/Util/Str.h"
 #include "GameApp.h"

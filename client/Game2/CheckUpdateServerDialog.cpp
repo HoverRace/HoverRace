@@ -1,4 +1,3 @@
-#ifdef HR_LEGACY_BUILD
 // CheckUpdateServerDialog.cpp
 // Checks the update server for any updates, and asks the user if they should
 // be applied (if necessary).
@@ -22,6 +21,7 @@
 // and limitations under the License.
 
 #include "StdAfx.h"
+#ifdef HR_LEGACY_BUILD
 
 #include "CheckUpdateServerDialog.h"
 #include "DownloadUpdateDialog.h"

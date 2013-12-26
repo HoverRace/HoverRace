@@ -1,4 +1,3 @@
-#ifdef HR_LEGACY_BUILD
 // DownloadUpdateDialog.cpp
 // Downloader for HoverRace updates with progress bar.
 //
@@ -21,6 +20,7 @@
 // and limitations under the License.
 
 #include "StdAfx.h"
+#ifdef HR_LEGACY_BUILD
 
 #include "DownloadUpdateDialog.h"
 #include "resource.h"

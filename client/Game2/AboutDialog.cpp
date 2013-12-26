@@ -1,4 +1,3 @@
-#ifdef HR_LEGACY_BUILD
 
 // AboutDialog.cpp
 // The "About" dialog.
@@ -23,6 +22,7 @@
 //
 
 #include "StdAfx.h"
+#ifdef HR_LEGACY_BUILD
 
 #include <richedit.h>
 

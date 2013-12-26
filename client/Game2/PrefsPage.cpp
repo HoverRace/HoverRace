@@ -1,4 +1,3 @@
-#ifdef HR_LEGACY_BUILD
 
 // PrefsPage.cpp
 // Base class for preferences pages.
@@ -23,6 +22,7 @@
 //
 
 #include "StdAfx.h"
+#ifdef HR_LEGACY_BUILD
 
 #include "../../engine/Util/Str.h"
 

@@ -1,4 +1,3 @@
-#ifdef HR_LEGACY_BUILD
 // NetInterface.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
@@ -21,6 +20,7 @@
 //
 
 #include "StdAfx.h"
+#ifdef HR_LEGACY_BUILD
 
 #include <Mmsystem.h>
 

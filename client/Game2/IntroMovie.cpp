@@ -1,4 +1,3 @@
-#ifdef HR_LEGACY_BUILD
 
 // IntroMovie.cpp
 // The intro movie that plays at startup.
@@ -22,6 +21,7 @@
 // and limitations under the License.
 
 #include "StdAfx.h"
+#ifdef HR_LEGACY_BUILD
 
 #ifdef WITH_DIRECTSHOW
 #	include <comdef.h>

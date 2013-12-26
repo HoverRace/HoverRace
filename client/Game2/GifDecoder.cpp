@@ -1,4 +1,3 @@
-#ifdef HR_LEGACY_BUILD
 // GifDecoder.cpp
 //
 //
@@ -22,6 +21,7 @@
 //
 
 #include "StdAfx.h"
+#ifdef HR_LEGACY_BUILD
 
 #include "GifDecoder.h"
 #include "GameApp.h"

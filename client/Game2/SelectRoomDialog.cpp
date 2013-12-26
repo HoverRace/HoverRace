@@ -1,4 +1,3 @@
-#ifdef HR_LEGACY_BUILD
 
 // SelectRoomDialog.h
 // The room list selector.
@@ -22,6 +21,7 @@
 // and limitations under the License.
 
 #include "StdAfx.h"
+#ifdef HR_LEGACY_BUILD
 
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/Str.h"

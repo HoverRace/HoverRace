@@ -1,4 +1,3 @@
-#ifdef HR_LEGACY_BUILD
 
 // PathSelector.cpp
 // The directory selection dialog.
@@ -23,6 +22,7 @@
 //
 
 #include "StdAfx.h"
+#ifdef HR_LEGACY_BUILD
 
 #include <shlobj.h>
 

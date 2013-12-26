@@ -1,4 +1,3 @@
-#ifdef HR_LEGACY_BUILD
 // UpdateDownloader.cpp
 // Downloads and applies updates from the central update server.
 //
@@ -21,6 +20,7 @@
 // and limitations under the License.
 
 #include "StdAfx.h"
+#ifdef HR_LEGACY_BUILD
 
 #include "../../engine/Util/Config.h"
 

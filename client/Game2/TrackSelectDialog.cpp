@@ -1,4 +1,3 @@
-#ifdef HR_LEGACY_BUILD
 
 // TrackSelectDialog.cpp
 // Track selector.
@@ -24,6 +23,7 @@
 //
 
 #include "StdAfx.h"
+#ifdef HR_LEGACY_BUILD
 
 #include <algorithm>
 
