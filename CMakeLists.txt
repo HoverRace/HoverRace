@@ -40,6 +40,12 @@ if(UNIX)
 	include_directories(${DEPS_INCLUDE_DIRS})
 	link_directories(${DEPS_LIBRARY_DIRS})
 
+	# Find LibYAML.
+	include(FindYAML)
+	find_package(YAML REQUIRED)
+	include_directories(${YAML_INCLUDE_DIR})
+	set(DEPS_LIBRARIES ${DEPS_LIBRARIES} ${YAML_LIBRARIES})
+
 	#TODO: Bundle Lua and Luabind.
 	include(FindLua51)
 	if(NOT LUA51_FOUND)
