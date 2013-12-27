@@ -23,7 +23,9 @@ if(WIN32)
 endif()
 
 # Increase memory for precompiled header.
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zm120")
+if(MSVC)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zm120")
+endif()
 
 set_target_properties(hoverrace PROPERTIES
 	COTIRE_ADD_UNITY_BUILD FALSE)
