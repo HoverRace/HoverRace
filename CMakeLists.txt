@@ -6,6 +6,7 @@ project(hoverrace CXX)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMakeModules)
 
 include(CXX11)
+include(GNUInstallDirs)
 include(cotire)
 
 check_for_cxx11_compiler(CXX11_COMPILER)
