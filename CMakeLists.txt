@@ -80,3 +80,6 @@ endif()
 
 add_subdirectory(client)
 add_subdirectory(engine)
+if(NOT WIN32)
+	add_subdirectory(external/luabind)
+endif()

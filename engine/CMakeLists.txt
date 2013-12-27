@@ -38,6 +38,9 @@ if(WIN32)
 endif()
 include_directories(".")
 target_link_libraries(hoverrace-engine ${Boost_LIBRARIES} ${DEPS_LIBRARIES})
+if(NOT WIN32)
+	target_link_libraries(hoverrace-engine luabind)
+endif()
 
 set_target_properties(hoverrace-engine PROPERTIES
 	COTIRE_ADD_UNITY_BUILD FALSE)
