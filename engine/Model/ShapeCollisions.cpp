@@ -245,10 +245,8 @@ BOOL MR_CylinderCylinderContact(const CylinderShape * pActor0, const CylinderSha
 		// Verify that the objects are in a relativly close range
 		int lRaySum = pActor0->RayLen() + pActor1->RayLen();
 
-		int lXDist, lXDistAbs;
-		int lYDist, lYDistAbs;
-		lXDist = lXDistAbs = pActor1->AxisX() - pActor0->AxisX();
-		lYDist = lYDistAbs = pActor1->AxisY() - pActor0->AxisY();
+		int lXDistAbs = pActor1->AxisX() - pActor0->AxisX();
+		int lYDistAbs = pActor1->AxisY() - pActor0->AxisY();
 
 		if(lXDistAbs < 0) {
 			lXDistAbs = -lXDistAbs;
@@ -612,6 +610,7 @@ BOOL MR_TestBoundingBox(const ShapeInterface * pActor0, const ShapeInterface * p
 	if(lXMax < lXMin) {
 		lReturnValue = FALSE;
 	}
+	/*FIXME: Dubious.
 	else {
 		int lYMin = max(pActor0->YMin(), pActor1->YMin());
 		int lYMax = min(pActor0->YMax(), pActor1->YMax());
@@ -620,6 +619,7 @@ BOOL MR_TestBoundingBox(const ShapeInterface * pActor0, const ShapeInterface * p
 			lReturnValue = FALSE;
 		}
 	}
+	*/
 	return lReturnValue;
 }
 
