@@ -60,7 +60,7 @@ namespace {
 }
 
 TrackCompiler::TrackCompiler(const TrackCompilationLogPtr &log, const Util::OS::path_t &outputFilename) :
-	log(log), outputFilename(outputFilename)
+	outputFilename(outputFilename), log(log)
 {
 }
 
