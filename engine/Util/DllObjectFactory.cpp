@@ -269,7 +269,7 @@ int ObjectFromFactoryId::operator ==(const ObjectFromFactoryId & pId) const
 }
 
 
-// class FactoryDll methods 
+// class FactoryDll methods
 FactoryDll::FactoryDll() :
 	mDynamic(FALSE), mRefCount(0)
 {
