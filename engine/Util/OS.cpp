@@ -581,6 +581,8 @@ bool OS::OpenLink(const std::string &url)
 			exs += StrError(errno);
 			throw std::runtime_error(exs.c_str());
 		}
+		//TODO: Wait for child process and return success/fail.
+		return true;
 #	endif
 }
 
@@ -609,6 +611,8 @@ bool OS::OpenPath(const path_t &path)
 			exs += StrError(errno);
 			throw std::runtime_error(exs.c_str());
 		}
+		//TODO: Wait for child process and return success/fail.
+		return true;
 #	endif
 }
 
