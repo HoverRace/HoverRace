@@ -99,7 +99,6 @@ void DllObjectFactory::Init()
 void DllObjectFactory::Clean(BOOL pOnlyDynamic)
 {
 	for (gsDllList_t::iterator iter = gsDllList.begin(); iter != gsDllList.end(); ) {
-		int dllId = iter->first;
 		FactoryDll* dllPtr = iter->second;
 
 		if ((dllPtr->mRefCount <= 0) && (dllPtr->mDynamic || !pOnlyDynamic)) {
@@ -270,7 +269,7 @@ int ObjectFromFactoryId::operator ==(const ObjectFromFactoryId & pId) const
 }
 
 
-// class FactoryDll methods 
+// class FactoryDll methods
 FactoryDll::FactoryDll() :
 	mDynamic(FALSE), mRefCount(0)
 {

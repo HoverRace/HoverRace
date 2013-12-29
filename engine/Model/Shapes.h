@@ -50,6 +50,8 @@ namespace Model {
 class MR_DllDeclare ShapeInterface
 {
 	public:
+		virtual ~ShapeInterface() { }
+
 		enum eShape { eCylinder = 0, eLineSegment = 1, ePolygon = 2 };
 
 		// Shape position

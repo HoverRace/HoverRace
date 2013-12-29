@@ -40,8 +40,9 @@ namespace VideoServices {
 class MR_DllDeclare Bitmap
 {
 	// Very flexible but may have to be change for performance issue
-
 	public:
+		virtual ~Bitmap() { }
+
 		// Bitmap related functions
 		virtual int GetWidth() const = 0;		  // in mm
 		virtual int GetHeight() const = 0;		  // in mm

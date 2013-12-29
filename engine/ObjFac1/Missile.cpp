@@ -342,7 +342,7 @@ Model::ElementNetState Missile::GetNetState() const
 
 	mOrientation = lState->mOrientation;
 
-	if(pDataLen >= sizeof(MissileState)) {
+	if(static_cast<unsigned>(pDataLen) >= sizeof(MissileState)) {
 		mHoverId = lState->mHoverId;
 		mLostOfControlEffect.mHoverId = mHoverId;
 	}

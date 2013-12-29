@@ -33,7 +33,7 @@ struct BitPack {
 	// Need three bytes of padding to be safe in case we write
 	// to the array starting at the last byte.
 	static const int REALSIZE = BYTES + 3;
-	MR_UInt8 mData[REALSIZE];
+	char bdata[REALSIZE];
 
 	void InitFrom(const MR_UInt8 *data);
 
@@ -48,7 +48,7 @@ static_assert(std::is_pod<BitPack<32>>::value, "BitPack must be a POD type");
 
 template<int BYTES>
 void BitPack<BYTES>::InitFrom(const MR_UInt8 *data) {
-	memcpy(mData, data, SIZE);
+	memcpy(bdata, data, SIZE);
 }
 
 template<int BYTES>
@@ -59,10 +59,12 @@ MR_Int32 BitPack<BYTES>::Get(int pOffset, int pLen, int pPrecision) const
 		MR_UInt32 u;
 	} lReturnValue;
 
-	lReturnValue.u = (*(MR_UInt32 *) (mData + pOffset / 8)) >> (pOffset % 8);
+	const char *cdata = static_cast<const char*>(bdata);
+
+	lReturnValue.u = (*(MR_UInt32 *) (cdata + pOffset / 8)) >> (pOffset % 8);
 
 	if((pLen + (pOffset % 8)) > 32) {
-		lReturnValue.u |= (*(MR_UInt32 *) (mData + (pOffset / 8) + 4)) << (32 - (pOffset % 8));
+		lReturnValue.u |= (*(MR_UInt32 *) (cdata + (pOffset / 8) + 4)) << (32 - (pOffset % 8));
 	}
 	// Clear overhead bits and preserve sign
 	lReturnValue.s = lReturnValue.s << (32 - pLen) >> (32 - pLen);
@@ -75,10 +77,12 @@ MR_UInt32 BitPack<BYTES>::Getu(int pOffset, int pLen, int pPrecision) const
 {
 	MR_UInt32 lReturnValue;
 
-	lReturnValue = (*(MR_UInt32 *) (mData + pOffset / 8)) >> (pOffset % 8);
+	const char *cdata = static_cast<const char*>(bdata);
+
+	lReturnValue = (*(MR_UInt32 *) (cdata + pOffset / 8)) >> (pOffset % 8);
 
 	if(pLen + (pOffset % 8) > 32) {
-		lReturnValue |= (*(MR_UInt32 *) (mData + (pOffset / 8) + 4)) << (32 - (pOffset % 8));
+		lReturnValue |= (*(MR_UInt32 *) (cdata + (pOffset / 8) + 4)) << (32 - (pOffset % 8));
 	}
 	// Clear overhead bits
 	lReturnValue = lReturnValue << (32 - pLen) >> (32 - pLen);
@@ -89,20 +93,22 @@ MR_UInt32 BitPack<BYTES>::Getu(int pOffset, int pLen, int pPrecision) const
 template<int BYTES>
 void BitPack<BYTES>::Clear()
 {
-	memset(mData, 0, REALSIZE);
+	memset(bdata, 0, REALSIZE);
 }
 
 template<int BYTES>
 inline void BitPack<BYTES>::Set(int pOffset, int pLen, int pPrecision, MR_Int32 pValue)
 {
+	char *cdata = static_cast<char*>(bdata);
+
 	MR_UInt32 lValue = pValue >> pPrecision;
 
 	lValue = lValue << (32 - pLen) >> (32 - pLen);
 
-	(*(MR_UInt32 *) (mData + pOffset / 8)) |= lValue << (pOffset % 8);
+	(*(MR_UInt32 *) (cdata + pOffset / 8)) |= lValue << (pOffset % 8);
 
 	if((pLen + (pOffset % 8)) > 32) {
-		(*(MR_UInt32 *) (mData + (pOffset / 8) + 4)) |= lValue >> (32 - (pOffset % 8));
+		(*(MR_UInt32 *) (cdata + (pOffset / 8) + 4)) |= lValue >> (32 - (pOffset % 8));
 	}
 }
 

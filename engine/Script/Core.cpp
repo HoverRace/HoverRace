@@ -69,7 +69,7 @@ namespace Script {
 const std::string Core::DEFAULT_CHUNK_NAME("=lua");
 
 Core::Core() :
-	curHelpHandler(NULL), NIL(nullptr)
+	NIL(nullptr), curHelpHandler(NULL)
 {
 	state = luaL_newstate();
 
