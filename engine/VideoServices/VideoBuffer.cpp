@@ -123,7 +123,7 @@ void VideoBuffer::CreatePalette()
 	const double intensity = contrast * brightness;
 	const double baseIntensity = brightness - intensity;
 
-	ColorPalette::paletteEntry_t newPalette[256] = { 0 };
+	ColorPalette::paletteEntry_t newPalette[256] = { { 0 } };
 
 	ColorPalette::paletteEntry_t *basicPalette =
 		ColorPalette::GetColors(invGamma, intensity, baseIntensity);
