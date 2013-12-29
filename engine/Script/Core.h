@@ -24,8 +24,7 @@
 
 #include <list>
 
-#include <lua.hpp>
-
+#include "Lua.h"
 #include "ScriptExn.h"
 
 #ifdef _WIN32

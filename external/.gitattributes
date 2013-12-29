@@ -1,0 +1,4 @@
+# Never normalize files in this directory or subdirectories.
+# This directory is for external bundled projects and normalization can cause
+# conflicts when updating the sources.
+* -text
