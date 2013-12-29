@@ -44,7 +44,7 @@ namespace VideoServices {
 VideoBuffer::VideoBuffer(Display::Display &display) :
 	desktopWidth(0), desktopHeight(0), width(0), height(0), pitch(0),
 	fullscreen(false),
-	legacySurface(NULL), zbuf(NULL), vbuf(NULL),
+	legacySurface(NULL), vbuf(NULL), zbuf(NULL),
 	bgPalette()
 {
 	// Be notified of window resizes so we can update the internal surface.
