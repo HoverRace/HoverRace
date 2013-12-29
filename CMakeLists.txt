@@ -14,11 +14,6 @@ if(CXX11_COMPILER)
 	enable_cxx11()
 endif()
 
-# Crank up the warning level.
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
-endif()
-
 # Set up the Boost dependency.
 # We only need to list the libraries that have libraries;
 # we assume that header-only libraries are available without checking.
@@ -26,6 +21,20 @@ include(FindBoost)
 set(Boost_USE_MULTITHREADED ON)
 find_package(Boost 1.40 REQUIRED COMPONENTS filesystem system thread)
 include_directories(${Boost_INCLUDE_DIRS})
+
+# Use bundled Lua and Luabind from source.
+# On Win32, we bundle the prebuilt libraries.
+if(NOT WIN32)
+	add_subdirectory(external/lua)
+	set(LUA_FOUND TRUE)
+	include_directories(
+		external/lua/src
+		${CMAKE_BINARY_DIR}/external/lua)
+	set(LUA_LIBRARIES liblua)
+
+	add_subdirectory(external/luabind)
+	include_directories(external/luabind)
+endif()
 
 if(UNIX)
 	include(FindPkgConfig)
@@ -70,18 +79,9 @@ elseif(WIN32)
 	file(COPY ${DLLS} DESTINATION ${CMAKE_BINARY_DIR})
 endif()
 
-# Use bundled Lua and Luabind from source.
-# On Win32, we bundle the prebuilt libraries.
-if(NOT WIN32)
-	add_subdirectory(external/lua)
-	set(LUA_FOUND TRUE)
-	include_directories(
-		external/lua/src
-		${CMAKE_BINARY_DIR}/external/lua)
-	set(LUA_LIBRARIES liblua)
-
-	add_subdirectory(external/luabind)
-	include_directories(external/luabind)
+# Crank up the warning level.
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 endif()
 
 add_subdirectory(client)
