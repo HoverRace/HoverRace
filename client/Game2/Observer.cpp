@@ -373,18 +373,10 @@ void Observer::RenderWireFrameView(const Model::Level * pLevel, const MainCharac
 
 	// Draw the walls and features of the visibles rooms
 	int lRoomCount;
-	const int *lRoomList = pLevel->GetVisibleZones(lRoom, lRoomCount);
+	pLevel->GetVisibleZones(lRoom, lRoomCount);
 
 	for(int lCounter = -1; lCounter < lRoomCount; lCounter++) {
-		int lRoomId;
 		MR_UInt8 lColor = 7;
-
-		if(lCounter == -1) {
-			lRoomId = lRoom;
-		}
-		else {
-			lRoomId = lRoomList[lCounter];
-		}
 
 		// Draw the room and all the features
 		for(int lCounter2 = -1; lCounter2 < pLevel->GetFeatureCount(lRoom); lCounter2++) {
@@ -459,7 +451,6 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 	MR_3DCoordinate lCameraPos;
 	MR_Angle lOrientation = pViewingCharacter->mOrientation;
 	int lRoom = pViewingCharacter->mRoom;
-	double lAbsSpeedRatio = pViewingCharacter->GetAbsoluteSpeed();
 
 	if(mCockpitView) {
 		lOrientation = pViewingCharacter->GetCabinOrientation();
