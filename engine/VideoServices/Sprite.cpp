@@ -230,7 +230,7 @@ const char *Ascii2Simple(const char *pSrc)
 		lBuffer[0] = 0;
 	}
 	else {
-		int lCounter = 0;
+		unsigned lCounter = 0;
 		while((lCounter < (sizeof(lBuffer) - 1)) && (*pSrc != 0)) {
 			if((*pSrc >= 32) && (*pSrc < 127)) {
 				lBuffer[lCounter++] = (char) (*pSrc - 32 + 1);
