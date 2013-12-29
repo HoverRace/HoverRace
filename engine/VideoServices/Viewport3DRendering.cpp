@@ -96,20 +96,12 @@ static struct MR_LineBltParam gsLineBltParam;
 static struct MR_TriangleDrawInfo gsTriangleBltParam;
 
 // Local functions
-/*
-static void InterpolateLine( const MR_3DCoordinate& p0,
-							 const MR_3DCoordinate& p1,
-							 MR_3DCoordinate& pMid );
-*/
 static void BltPlainColumn();
 static void BltColumn();
-static void BltColumnWithTransparent();
 
 static void BltPlainLineNoZCheck();
 static void BltLineNoZCheck();
-static void BltLineNoZCheckWithTransparent();
 
-static void BltPlainTriangle();
 static void BltTriangle();
 
 // Local Macros
@@ -124,39 +116,6 @@ void Viewport3D::RenderWallSurface(const MR_3DCoordinate & pUpperLeft, const MR_
 
 void Viewport3D::RenderAlternateWallSurface(const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, const Bitmap * pBitmap, const Bitmap * pBitmap2, int pSerialLen, int pSerialStart)
 {
-
-	// DEBUG -- prin bitmap
-	/* 
-	   MR_UInt8* lSrcTest  = pBitmap->GetBuffer(0);
-	   MR_UInt8* lDestTest = mBuffer;
-
-	   for( int lXTest = 0; lXTest<128; lXTest++ )
-	   {
-	   for( int lYTest = 0; lYTest<128; lYTest++ )
-	   {
-	   lDestTest[ lYTest ] = *lSrcTest;
-	   lSrcTest++;
-	   }
-	   lDestTest += mLineLen;
-	   }
-
-	   return;
-	 */
-
-	// Debug Print color tab
-	/*
-	   for( int lDebugColor = 0; lDebugColor<256; lDebugColor++ )
-	   {
-	   for( int lX = 0; lX<6; lX++ )
-	   {
-	   for( int lY = 0; lY<6; lY++ )
-	   {
-	   mBuffer[ (lDebugColor%16)*6+lX + mLineLen*((lDebugColor/16)*6+lY) ] = lDebugColor;
-	   }
-	   }
-	   }
-	 */
-
 	// Basic formulas
 	// lLen = (lColumn*mXVariationPerYInc*lY0Wall - lX0Wall)
 	//        /(lXWallVariationPerMM - lColumn*mXVariationPerYInc*lYWallVariationPerMM)
@@ -251,13 +210,6 @@ void Viewport3D::RenderAlternateWallSurface(const MR_3DCoordinate & pUpperLeft, 
 	int lScreenY1Top = -lLevel0_YRes_PlanDist_PlanVW_2 / lCutted1.mX + mYRes / 2 + mScroll;
 	int lScreenY1Bottom = -lLevel1_YRes_PlanDist_PlanVW_2 / lCutted1.mX + mYRes / 2 + mScroll;
 
-	/*
-	   int lScreenY0Top     = -MulDiv( lRotated0.mZ, mYRes_PlanDist, lCutted0.mX*mPlanVW*2 )+mYRes/2+mScroll;
-	   int lScreenY0Bottom  = -MulDiv( lRotated1.mZ, mYRes_PlanDist, lCutted0.mX*mPlanVW*2 )+mYRes/2+mScroll;
-	   int lScreenY1Top     = -MulDiv( lRotated0.mZ, mYRes_PlanDist, lCutted1.mX*mPlanVW*2 )+mYRes/2+mScroll;
-	   int lScreenY1Bottom  = -MulDiv( lRotated1.mZ, mYRes_PlanDist, lCutted1.mX*mPlanVW*2 )+mYRes/2+mScroll;
-	 */
-
 	// Select the bitmap that will be displayed
 	// This is realy not the good way to do it.. we will get low resolution bitmap for dutted surfaces
 
@@ -267,20 +219,13 @@ void Viewport3D::RenderAlternateWallSurface(const MR_3DCoordinate & pUpperLeft, 
 	int lYTop_4096 = lScreenY0Top * 4096;
 	int lYBottom_4096 = lScreenY0Bottom * 4096;
 
-	MR_Int32 lRatioVariationPerColumn_16384;
-
 	if(lScreenX1 > lScreenX0) {
 		lDYTop_4096 = ((lScreenY1Top - lScreenY0Top) * 4096) / (lScreenX1 - lScreenX0 /*-1*/ );
 		lDYBottom_4096 = ((lScreenY1Bottom - lScreenY0Bottom) * 4096) / (lScreenX1 - lScreenX0 /*-1*/ );
-
-		int variationX = ((lScreenY0Bottom - lScreenY0Top) * (lScreenX1 - lScreenX0));
-		lRatioVariationPerColumn_16384 = (variationX == 0) ? 0 : (((lScreenY0Bottom - lScreenY0Top) - (lScreenY1Bottom - lScreenY1Top)) * 16384 / variationX);
 	}
 	else {
 		lDYTop_4096 = 0;
 		lDYBottom_4096 = 0;
-
-		lRatioVariationPerColumn_16384 = 0;
 	}
 
 	// Out of horizontal field cut
@@ -383,7 +328,6 @@ void Viewport3D::RenderAlternateWallSurface(const MR_3DCoordinate & pUpperLeft, 
 			}
 
 			// Bitmap selection
-			// int lSelectedBitmap = pBitmap->GetBestBitmapForYRes( (lYBottom_4096-lYTop_4096)/lNbBitmapInHeight_4096 );
 			int lSelectedBitmap = pBitmap->GetBestBitmapForYRes(lBitmapHeight_256 / 256);
 
 			gsColumnBltParam.mColumn = lColumn;
@@ -445,7 +389,6 @@ void BltPlainColumn()
 	MR_UInt16 *lZBuffer;
 	int lNbPoints;
 	MR_UInt8 lColor = gsColumnBltParam.mColor;
-	// MR_UInt8   lColor = MR_ColorTable[ gsColumnBltParam.mLightIntensity ][ gsColumnBltParam.mColor ];
 
 	if(gsColumnBltParam.mYScreenStart_4096 < 0) {
 		lBuffer = gsColumnBltParam.mBuffer[0] + gsColumnBltParam.mColumn;
@@ -509,8 +452,6 @@ void BltColumn()
 
 	for(int lCounter = 0; lCounter < lNbPoints; lCounter++) {
 		if(*lZBuffer >= gsColumnBltParam.mZ) {
-			// *lBuffer =  MR_ColorTable[ gsColumnBltParam.mLightIntensity ]
-			//                         [ gsColumnBltParam.mBitmap[ (lBitmapOffset/MR_PIXEL_FRACT)&(gsColumnBltParam.mBitmapColMask) ] ];
 			*lBuffer = gsColumnBltParam.mBitmap[(lBitmapOffset / MR_PIXEL_FRACT) & (gsColumnBltParam.mBitmapColMask)];
 			*lZBuffer = gsColumnBltParam.mZ;
 		}
@@ -649,16 +590,6 @@ void Viewport3D::RenderHorizontalSurface(int pNbVertex, const MR_2DCoordinate * 
 					lNbOnBottom++;
 				}
 			}
-
-			// DEBUG, draw surface contour
-			/*
-			   for( lCounter = 0; lCounter<lNbCutted; lCounter++ )
-			   {
-			   int lNext = (lCounter+1)%lNbCutted;
-			   DrawLine( lScreenX[ lCounter ], lScreenY[ lCounter ], lScreenX[ lNext ], lScreenY[ lNext ], 7 );
-			   }
-			   return;
-			 */
 
 			if((lNbOnRight != lNbCutted) && (lNbOnLeft != lNbCutted)
 			&& (lNbOnTop != lNbCutted) && (lNbOnBottom != lNbCutted)) {
@@ -908,8 +839,6 @@ void Viewport3D::RenderHorizontalSurface(int pNbVertex, const MR_2DCoordinate * 
 				// Compute the rendering constants
 				MR_Int32 lCurrentLine_VVarPerDInc_16384 = (lCurrentLine - mYRes / 2 - mScroll) * mVVarPerDInc_16384;
 
-				// MR_Int32 lBitmapHColVariation_16384 = ( mPlanHW_PlanDist_2_XRes_16384*pBitmap->GetMaxXRes()/pBitmap->GetWidth()  ) * MR_Sin[ mOrientation ]/ MR_TRIGO_FRACT;
-				// MR_Int32 lBitmapHRowVariation_16384 = ( mPlanHW_PlanDist_2_XRes_16384*pBitmap->GetMaxYRes()/pBitmap->GetHeight() ) * MR_Cos[ mOrientation ]/ MR_TRIGO_FRACT;
 				MR_Int32 lBitmapHColVariation_16384_64 = MulDiv(mPlanHW_PlanDist_2_XRes_16384, 64 * MR_Sin[mOrientation] * pBitmap->GetMaxXRes(), pBitmap->GetWidth() * MR_TRIGO_FRACT);
 				MR_Int32 lBitmapHRowVariation_16384_64 = MulDiv(mPlanHW_PlanDist_2_XRes_16384, 64 * MR_Cos[mOrientation] * pBitmap->GetMaxYRes(), pBitmap->GetHeight() * MR_TRIGO_FRACT);
 
@@ -919,8 +848,6 @@ void Viewport3D::RenderHorizontalSurface(int pNbVertex, const MR_2DCoordinate * 
 
 				MR_Int32 lBitmapCol0_4096 = MulDiv(mPosition.mX, 4096 * pBitmap->GetMaxXRes(), pBitmap->GetWidth());
 				MR_Int32 lBitmapRow0_4096 = -MulDiv(mPosition.mY, 4096 * pBitmap->GetMaxYRes(), pBitmap->GetHeight());
-
-				MR_Int32 lBitmapW_XRes_PlanDist_2PlanHW_1024 = pBitmap->GetWidth() * (mXRes_PlanDist_2PlanHW_4096 / 4);
 
 				MR_UInt8 *lLineBuffer = mBufferLine[lCurrentLine];
 				MR_UInt16 *lZLineBuffer = mZBufferLine[lCurrentLine];
@@ -966,18 +893,6 @@ void Viewport3D::RenderHorizontalSurface(int pNbVertex, const MR_2DCoordinate * 
 							lNextLineStop = lRightStop;
 						}
 					}
-
-					/*
-					   if( lDXLeft_4096[  lLeftIndex  ] < 0 )
-					   {
-					   lLeftX_4096  += lDXLeft_4096[  lLeftIndex  ];
-					   }
-
-					   if( lDXRight_4096[ lRightIndex ] > 0 )
-					   {
-					   lRightX_4096 += lDXRight_4096[ lRightIndex ];
-					   }
-					 */
 
 					while(lCurrentLine < lNextLineStop) {
 
@@ -1032,8 +947,6 @@ void Viewport3D::RenderHorizontalSurface(int pNbVertex, const MR_2DCoordinate * 
 
 							gsLineBltParam.mLightIntensity = MR_NORMAL_INTENSITY;
 
-							// int lSelectedBitmap = pBitmap->GetBestBitmapForXRes( lBitmapW_XRes_PlanDist_2PlanHW_1024/(lDepth_8*(1024/8)) );
-
 							if(lSelectedBitmap == -1) {
 								gsLineBltParam.mColor = pBitmap->GetPlainColor();
 
@@ -1058,8 +971,6 @@ void Viewport3D::RenderHorizontalSurface(int pNbVertex, const MR_2DCoordinate * 
 								BltLineNoZCheck();
 							}
 
-							// mPlanDist_PlanHW_PlanDist_2_XRes_16384;
-							// memset( lBuffer+lLeft, 255 - lDepth_1024/(1024*1024), lRight-lLeft );
 						}
 
 						lCurrentLine++;
@@ -1100,8 +1011,6 @@ void Viewport3D::RenderHorizontalSurface(int pNbVertex, const MR_2DCoordinate * 
 void BltPlainLineNoZCheck()
 {
 	if(gsLineBltParam.mBltLen > 0) {
-		// memset( gsLineBltParam.mBuffer, MR_ColorTable[ gsLineBltParam.mLightIntensity ][ gsLineBltParam.mColor ], gsLineBltParam.mBltLen );
-
 		memset(gsLineBltParam.mBuffer, gsLineBltParam.mColor, gsLineBltParam.mBltLen);
 
 		for(int lCounter = 0; lCounter < gsLineBltParam.mBltLen; lCounter++) {
@@ -1121,11 +1030,6 @@ void BltLineNoZCheck()
 
 	for(int lCounter = 0; lCounter < gsLineBltParam.mBltLen; lCounter++) {
 
-		// *(lBuffer++) =  MR_ColorTable[ gsLineBltParam.mLightIntensity ]
-		//                              [ gsLineBltParam.mBitmap
-		//                                 [ (lColumn_4096/4096)&gsLineBltParam.mBitmapColMask ]
-		//                                 [ (lRow_4096/4096)&gsLineBltParam.mBitmapRowMask ]      ];
-
 		*(lBuffer++) = gsLineBltParam.mBitmap[(lColumn_4096 / 4096) & gsLineBltParam.mBitmapColMask]
 			[(lRow_4096 / 4096) & gsLineBltParam.mBitmapRowMask];
 		*(lZBuffer++) = gsLineBltParam.mZ;
@@ -1134,87 +1038,6 @@ void BltLineNoZCheck()
 		lRow_4096 += gsLineBltParam.mBitmapRowInc_4096;
 	}
 }
-
-/*
-__declspec( naked ) void BltLineNoZCheck()
-{
-
-   static MR_UInt32 lOldSP;
-
-   __asm
-   {
-
-	  push eax
-	  push ebx
-	  push ecx
-	  push edx
-	  push esi
-	  push edi
-	  push ebp
-
-	  mov lOldSP, esp
-
-	  mov ecx, gsLineBltParam.mBltLen
-	  cmp ecx,0
-	  je end
-
-	  mov edi, gsLineBltParam.mBuffer
-	  mov esi, gsLineBltParam.mColorTable
-	  xor eax, eax
-	  mov ah,  gsLineBltParam.mLightIntensity
-	  add esi, eax
-
-	  mov ebp, gsLineBltParam.mBitmap
-
-	  mov ebx, gsLineBltParam.mBitmapCol_4096
-	  mov edx, gsLineBltParam.mBitmapRow_4096
-
-	  loop_start:
-
-	  mov eax, ebx
-	  shr eax, 12
-	  and eax, gsLineBltParam.mBitmapColMask
-	  mov esp, [ebp][ eax*4 ]
-	  mov eax, edx
-	  shr eax, 12
-	  and eax, gsLineBltParam.mBitmapRowMask
-	  add esp, eax
-	  xor eax, eax
-	  mov al, [esp]
-	  mov al, [esi][eax]
-
-	  stosb
-
-	  add ebx, gsLineBltParam.mBitmapColInc_4096
-	  add edx, gsLineBltParam.mBitmapRowInc_4096
-
-	  loop loop_start
-
-	  mov ecx, gsLineBltParam.mBltLen
-	  mov edi, gsLineBltParam.mZBuffer
-	  mov ax,  gsLineBltParam.mZ
-
-	  rep stosw
-
-	  end:
-
-	  mov  esp, lOldSP
-
-	  pop  ebp
-	  pop  edi
-	  pop  esi
-	  pop  edx
-	  pop  ecx
-	  pop  ebx
-	  pop  eax
-
-	  ret
-
-   };
-
-}
-
-*/
 
 //
 // Patch section
@@ -1263,17 +1086,6 @@ void Viewport3D::RenderPatch(const Patch & pPatch, const PositionMatrix & pMatri
 		else {
 			gsScreenXPatch[lCounter] = MulDiv(-gsRotatedPatch[lCounter].mY, mXRes_PlanDist, gsRotatedPatch[lCounter].mX * mPlanHW * 2) + mXRes / 2;
 			gsScreenYPatch[lCounter] = -MulDiv(gsRotatedPatch[lCounter].mZ, mYRes_PlanDist, gsRotatedPatch[lCounter].mX * mPlanVW * 2) + mYRes / 2 + mScroll;
-
-			// Debug
-			// Display vertex
-			/*
-			   if(    gsScreenXPatch[ lCounter ] >= 0 && gsScreenXPatch[ lCounter ]<mXRes
-			   && gsScreenYPatch[ lCounter ] >= 0 && gsScreenYPatch[ lCounter ]<mYRes )
-			   {
-			   mBuffer[ gsScreenXPatch[ lCounter ] + mLineLen*gsScreenYPatch[ lCounter ] ] = 0;
-			   }
-			 */
-
 		}
 	}
 
@@ -1530,9 +1342,9 @@ void BltTriangle()
 	int lV_4096;
 	int lZ_4096;
 
-	int lDU_PerLine_4096;
-	int lDV_PerLine_4096;
-	int lDZ_PerLine_4096;
+	int lDU_PerLine_4096 = 0;
+	int lDV_PerLine_4096 = 0;
+	int lDZ_PerLine_4096 = 0;
 	int lDU_PerPixel_4096;
 	int lDV_PerPixel_4096;
 	int lDZ_PerPixel_4096;
@@ -1648,9 +1460,6 @@ void BltTriangle()
 						while(lXLeft < lXRight) {
 							if(lLineZBuffer[lXLeft] >= lLocalZ_4096 / (4096 * MR_ZBUFFER_UNIT)) {
 								lLineZBuffer[lXLeft] = lLocalZ_4096 / (4096 * MR_ZBUFFER_UNIT);
-								// lLineBuffer[ lXLeft ] = MR_ColorTable[ gsTriangleBltParam.mLightIntensity ]
-								//                                      [ gsTriangleBltParam.mBitmap[ (lLocalU_4096/4096)&gsTriangleBltParam.mBitmapColMask ]
-								//                                                                  [ (lLocalV_4096/4096)&gsTriangleBltParam.mBitmapRowMask ] ];
 								lLineBuffer[lXLeft] = gsTriangleBltParam.mBitmap[(lLocalU_4096 / 4096) & gsTriangleBltParam.mBitmapColMask]
 									[(lLocalV_4096 / 4096) & gsTriangleBltParam.mBitmapRowMask];
 							}
@@ -1815,9 +1624,6 @@ void BltTriangle()
 				while(lXLeft < lXRight) {
 					if(lLineZBuffer[lXLeft] >= lLocalZ_4096 / (4096 * MR_ZBUFFER_UNIT)) {
 						lLineZBuffer[lXLeft] = lLocalZ_4096 / (4096 * MR_ZBUFFER_UNIT);
-						// lLineBuffer[ lXLeft ] = MR_ColorTable[ gsTriangleBltParam.mLightIntensity ]
-						//                                      [ gsTriangleBltParam.mBitmap[ (lLocalU_4096/4096)&gsTriangleBltParam.mBitmapColMask ]
-						//                                                                  [ (lLocalV_4096/4096)&gsTriangleBltParam.mBitmapRowMask ] ];
 						lLineBuffer[lXLeft] = gsTriangleBltParam.mBitmap[(lLocalU_4096 / 4096) & gsTriangleBltParam.mBitmapColMask]
 							[(lLocalV_4096 / 4096) & gsTriangleBltParam.mBitmapRowMask];
 					}
@@ -1894,149 +1700,6 @@ void Viewport3D::RenderBackground(const MR_UInt8 * pBitmap)
 
 	}
 }
-
-// Old stuff.. keep until june 96
-
-/*
-
-void InterpolateLine( const MR_3DCoordinate& p0,
-					  const MR_3DCoordinate& p1,
-					  MR_3DCoordinate& pMid     )
-{
-   pMid.mY = p0.mY + MulDiv( p1.mY-p0.mY, pMid.mX-p0.mX, p1.mX-p0.mX );
-   pMid.mZ = p0.mZ + MulDiv( p1.mZ-p0.mZ, pMid.mX-p0.mX, p1.mX-p0.mX );
-}
-
-*/
-
-/*
-   // Cut out of depth
-   int lNbVertex = 0;
-   MR_3DCoordinate lCuttedCoordinate[ 8 ];
-
-   int lPointDepth[4] = { 0,0,0,0 };
-   int lNbFront = 0;
-   int lNbBack  = 0;
-
-   for( lCounter = 0; lCounter<4; lCounter++ )
-   {
-	  if( lRotatedCoordinate[lCounter].mX<mPlanDist )
-	  {
-		 lPointDepth[ lCounter ] = -1;
-		 lNbFront++;
-	  }
-	  else if( lRotatedCoordinate[lCounter].mX > MR_ZBUFFER_UNIT*0xFFFE )
-	  {
-		 lPointDepth[ lCounter ] = 1;
-		 lNbBack++;
-	  }
-   }
-
-   if( (lNbFront == 4)||(lNbBack==4) )
-   {
-	  // All the points are outside the view
-	  return;
-   }
-
-   for( lCounter = 0; lCounter < 4; lCounter++ )
-   {
-	  if( lPointDepth[ lCounter ] == -1 )
-	  {
-		 // check the previous
-		 if( lPointDepth[ (lCounter+3)%4 ] != -1 )
-		 {
-			lCuttedCoordinate[ lNbVertex ].mX = mPlanDist;
-			InterpolateLine( lRotatedCoordinate[ (lCounter+3)%4 ],
-							 lRotatedCoordinate[ lCounter ],
-							 lCuttedCoordinate[ lNbVertex ] );
-
-			lNbVertex++;
-		 }
-
-		 // Check the next
-		 if( lPointDepth[ (lCounter+1)%4 ] != -1 )
-		 {
-			lCuttedCoordinate[ lNbVertex ].mX = mPlanDist;
-			InterpolateLine( lRotatedCoordinate[ (lCounter+1)%4 ],
-							 lRotatedCoordinate[ lCounter ],
-							 lCuttedCoordinate[ lNbVertex ] );
-			lNbVertex++;
-		 }
-	  }
-	  else if( lPointDepth[ lCounter ] == 1 )
-	  {
-		 // check the previous
-		 if( lPointDepth[ (lCounter+3)%4 ] != 1 )
-		 {
-			lCuttedCoordinate[ lNbVertex ].mX = MR_ZBUFFER_UNIT*0xFFFE;
-			InterpolateLine( lRotatedCoordinate[ (lCounter+3)%4 ],
-							 lRotatedCoordinate[ lCounter ],
-							 lCuttedCoordinate[ lNbVertex ] );
-
-			lNbVertex++;
-		 }
-
-		 // Check the next
-		 if( lPointDepth[ (lCounter+1)%4 ] != 1 )
-		 {
-			lCuttedCoordinate[ lNbVertex ].mX = MR_ZBUFFER_UNIT*0xFFFE;
-			InterpolateLine( lRotatedCoordinate[ (lCounter+1)%4 ],
-							 lRotatedCoordinate[ lCounter ],
-							 lCuttedCoordinate[ lNbVertex ] );
-
-			lNbVertex++;
-		 }
-	  }
-	  else
-	  {
-		 lCuttedCoordinate[ lNbVertex++ ] = lRotatedCoordinate[ lCounter ];
-	  }
-   }
-
-   // Transform in screen coordinates
-   MR_2DCoordinate lScreenCoordinate[8];
-
-   for( lCounter = 0; lCounter<lNbVertex; lCounter++ )
-   {
-	  lScreenCoordinate[ lCounter ].mX = MulDiv( -lCuttedCoordinate[ lCounter ].mY,  mXRes * mPlanDist, lCuttedCoordinate[ lCounter ].mX*mPlanHW*2 ) + mXRes/2;
-	  lScreenCoordinate[ lCounter ].mY = MulDiv( -lCuttedCoordinate[ lCounter ].mZ,  mYRes * mPlanDist, lCuttedCoordinate[ lCounter ].mX*mPlanVW*2 ) + mYRes/2;
-   }
-
-   // Cut out of out of screen coordinates
-
-   // Determine the Depth Constant slope
-   MR_3DCoordinate lNormalVector;
-   int             lDepthDX;      // Virtual coordinates slope
-   int             lDepthDY;
-
-   lNormalVector.mX =  (lRotatedCoordinate[0].mZ-lRotatatedCoordinate[3].mZ)*(lRotatedCoordinate[0].mY-lRotatatedCoordinate[3].mY);
-   lNormalVector.mY = -(lRotatedCoordinate[0].mZ-lRotatatedCoordinate[3].mZ)*(lRotatedCoordinate[0].mX-lRotatatedCoordinate[3].mX);
-   lNormalVector.mZ = -(lRotatedCoordinate[0].mX-lRotatatedCoordinate[3].mX)*(lRotatedCoordinate[0].mY-lRotatatedCoordinate[3].mY);
-
-   if( lNormalVector.mY = 0 )
-   {
-	  lDepthSlope = 0;
-   }
-   else
-   {
-	  lDepthSlope = MulDiv( lNormalVector.mZ, 4096, -lNormalVector.mY );
-	  lDepthSlope = (lDepthSlope * mPlanVW * mXRes)/(mPlanHW * mYRes);
-   }
-
-   // Debug, draw the surface contour
-
-   for( lCounter = 0; lCounter< lNbVertex; lCounter++ )
-   {
-	  DrawLine( lScreenCoordinate[ lCounter ].mX,
-				lScreenCoordinate[ lCounter ].mY,
-				lScreenCoordinate[ (lCounter+1)%lNbVertex ].mX,
-				lScreenCoordinate[ (lCounter+1)%lNbVertex ].mY,
-				7 );
-   }
-
-   // Debug Draw a Depth constant line
-
-*/
 
 }  // namespace VideoServices
 }  // namespace HoverRace
