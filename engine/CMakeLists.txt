@@ -20,7 +20,7 @@ set(GROUPS
 
 foreach(group ${GROUPS})
 	file(GLOB srcs "${group}/*.h" "${group}/*.cpp")
-	set(HR_ENGINE_SRCS ${HR_ENGINE_SRCS} ${srcs})
+	list(APPEND HR_ENGINE_SRCS ${srcs})
 
 	# Arrange the files in Visual Studio by directory.
 	if(WIN32)
