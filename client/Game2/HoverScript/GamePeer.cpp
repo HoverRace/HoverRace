@@ -23,7 +23,6 @@
 
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
-#include <lua.hpp>
 #include <luabind/adopt_policy.hpp>
 
 #include "../../../engine/Parcel/TrackBundle.h"
