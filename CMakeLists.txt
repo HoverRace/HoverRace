@@ -40,14 +40,6 @@ if(UNIX)
 	include_directories(${DEPS_INCLUDE_DIRS})
 	link_directories(${DEPS_LIBRARY_DIRS})
 
-	#TODO: Bundle Lua and Luabind.
-	include(FindLua51)
-	if(NOT LUA51_FOUND)
-		message(SEND_ERROR "Lua 5.1 is required.")
-	endif()
-	include_directories(${LUA_INCLUDE_DIR})
-	link_directories(${LUA_LIBRARIES})
-	set(DEPS_LIBRARIES ${DEPS_LIBRARIES} ${LUA_LIBRARIES})
 elseif(WIN32)
 	# For Win32 builds, we include the bulk of the dependencies.
 	# Boost is the exception since it's simply too big and
@@ -78,8 +70,19 @@ elseif(WIN32)
 	file(COPY ${DLLS} DESTINATION ${CMAKE_BINARY_DIR})
 endif()
 
+# Use bundled Lua and Luabind from source.
+# On Win32, we bundle the prebuilt libraries.
+if(NOT WIN32)
+	add_subdirectory(external/lua)
+	set(LUA_FOUND TRUE)
+	include_directories(
+		external/lua/src
+		${CMAKE_BINARY_DIR}/external/lua)
+	set(LUA_LIBRARIES liblua)
+
+	add_subdirectory(external/luabind)
+	include_directories(external/luabind)
+endif()
+
 add_subdirectory(client)
 add_subdirectory(engine)
-if(NOT WIN32)
-	add_subdirectory(external/luabind)
-endif()
