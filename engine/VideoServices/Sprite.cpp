@@ -95,6 +95,10 @@ void Sprite::Blt(int pX, int pY, Viewport2D *pDest, eAlignment pHAlign, eAlignme
 		int lScaledLineStep = mWidth * pScaling;
 
 		switch (pHAlign) {
+			case eLeft:
+				// Do nothing.
+				break;
+
 			case eRight:
 				pX -= lScaledWidth;
 				break;
@@ -105,6 +109,10 @@ void Sprite::Blt(int pX, int pY, Viewport2D *pDest, eAlignment pHAlign, eAlignme
 		}
 
 		switch (pVAlign) {
+			case eTop:
+				// Do nothing.
+				break;
+
 			case eBottom:
 				pY -= lScaledHeight;
 				break;
@@ -173,6 +181,10 @@ void Sprite::StrBlt(int pX, int pY, const char *pStr, Viewport2D *pDest, eAlignm
 		}
 
 		switch (pHAlign) {
+			case eLeft:
+				// Do nothing.
+				break;
+
 			case eRight:
 				pX -= lStrLen * lStep;
 				break;
@@ -183,6 +195,10 @@ void Sprite::StrBlt(int pX, int pY, const char *pStr, Viewport2D *pDest, eAlignm
 		}
 
 		switch (pVAlign) {
+			case eTop:
+				// Do nothing.
+				break;
+
 			case eBottom:
 				pY -= mItemHeight / pScaling;
 				break;
