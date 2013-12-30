@@ -155,6 +155,10 @@ class MR_DllDeclare Config
 
 		void ResetToDefaults();
 
+	private:
+		void LoadSystem();
+		void LoadSystem(const OS::path_t &path);
+	public:
 		void Load();
 		void Save();
 
@@ -163,6 +167,12 @@ class MR_DllDeclare Config
 
 	public:
 		static const std::string TRACK_EXT;
+
+		struct cfg_app_t {
+			OS::path_t mediaPath;
+
+			void Load(yaml::MapNode*);
+		} app;
 
 		struct cfg_video_t {
 			double gamma;

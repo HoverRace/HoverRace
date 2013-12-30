@@ -91,5 +91,10 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Winvalid-pch -Wall")
 endif()
 
+# Generate the initial app config file.
+file(WRITE ${CMAKE_BINARY_DIR}/etc/config.yml
+	"app:\n"
+	"  mediaPath: \"${CMAKE_SOURCE_DIR}/share\"\n")
+
 add_subdirectory(client)
 add_subdirectory(engine)

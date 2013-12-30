@@ -55,6 +55,7 @@
 #include "../Control/Controller.h"
 #include "../Parcel/Bundle.h"
 #include "../Parcel/TrackBundle.h"
+#include "Log.h"
 #include "Str.h"
 
 #include "Config.h"
@@ -158,6 +159,8 @@ Config::Config(int verMajor, int verMinor, int verPatch, int verBuild,
 				"falling back to default." << std::endl;
 		}
 #	endif
+
+	LoadSystem();
 
 	// If the override path was specified, use that for both data and config.
 	this->dataPath = path.empty() ? GetBaseDataPath() : path;
@@ -440,6 +443,8 @@ OS::path_t Config::GetConfigFilename() const
 
 /**
  * Retrieve the OS-specific default media path.
+ * First, we look for a config file in the current directory, then in the
+ * system-global directory (if applicable), then finally the relative directory.
  * @return The directory path (may be relative).
  */
 OS::path_t Config::GetDefaultMediaPath()
@@ -728,6 +733,51 @@ void Config::ResetToDefaults()
 	runtime.skipStartupWarning = false;
 }
 
+void Config::LoadSystem()
+{
+	//FIXME: Use proper relative file path when binary dirs are sorted out.
+#	ifdef _WIN32
+		LoadSystem(Str::UP("../etc/" CONFIG_FILENAME));
+		LoadSystem(Str::UP("../../etc/" CONFIG_FILENAME));
+#	else
+		LoadSystem(Str::UP("/etc/hoverrace/" CONFIG_FILENAME));
+		LoadSystem(Str::UP("../etc/" CONFIG_FILENAME));
+#	endif
+}
+
+void Config::LoadSystem(const OS::path_t &path)
+{
+	FILE *in = OS::FOpen(path, "rb");
+	if (in == NULL) {
+		// File doesn't exist.
+		// That's perfectly fine; we'll use the defaults.
+		return;
+	}
+
+	yaml::Parser *parser = NULL;
+	try {
+		parser = new yaml::Parser(in);
+		yaml::Node *node = parser->GetRootNode();
+
+		yaml::MapNode *root = dynamic_cast<yaml::MapNode*>(node);
+		if (root != NULL) {
+			app.Load(dynamic_cast<yaml::MapNode*>(root->Get("app")));
+		}
+
+		delete parser;
+	}
+	catch (yaml::EmptyDocParserExn&) {
+		// Ignore.
+	}
+	catch (yaml::ParserExn &ex) {
+		if (parser != NULL) delete parser;
+		fclose(in);
+		throw ConfigExn(ex.what());
+	}
+
+	fclose(in);
+}
+
 /**
  * Load the configuration.
  * Does nothing if the configuration file doesn't exist.
@@ -856,6 +906,19 @@ void Config::SaveVersion(yaml::Emitter *emitter)
 {
 	std::string &version = shortVersion;
 	EMIT_VAR(emitter, version);
+}
+
+// app /////////////////////////////////////////////////////////////////////////
+
+void Config::cfg_app_t::Load(yaml::MapNode *root)
+{
+	if (root == NULL) return;
+
+	std::string mediaPath;
+	READ_STRING(root, mediaPath);
+	if (!mediaPath.empty()) {
+		this->mediaPath = Str::UP(mediaPath);
+	}
 }
 
 // video ///////////////////////////////////////////////////////////////////////
