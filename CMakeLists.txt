@@ -18,6 +18,7 @@ endif()
 # We only need to list the libraries that have libraries;
 # we assume that header-only libraries are available without checking.
 include(FindBoost)
+set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
 find_package(Boost 1.40 REQUIRED COMPONENTS filesystem system thread)
 include_directories(${Boost_INCLUDE_DIRS})
