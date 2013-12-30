@@ -3,7 +3,7 @@ set(GROUPS
 	Game2 Game2/HoverScript)
 
 foreach(group ${GROUPS})
-	file(GLOB srcs "${group}/*.h" "${group}/*.cpp")
+	file(GLOB srcs "${group}/*.h" "${group}/*.cpp" "${group}/*.rc")
 	list(APPEND HR_CLIENT_SRCS ${srcs})
 
 	# Arrange the files in Visual Studio by directory.
