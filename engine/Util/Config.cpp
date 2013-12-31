@@ -449,16 +449,7 @@ OS::path_t Config::GetConfigFilename() const
  */
 OS::path_t Config::GetDefaultMediaPath()
 {
-#	ifdef _WIN32
-		OS::path_t retv = L"..";
-		retv /= L"share";
-#	else
-		//TODO: Get directory from configure.
-		OS::path_t retv = "..";
-		retv /= "share";
-		retv /= PACKAGE;
-#	endif
-	return retv;
+	return app.mediaPath.empty() ? "share" : app.mediaPath;
 }
 
 /**
@@ -737,7 +728,6 @@ void Config::LoadSystem()
 {
 	//FIXME: Use proper relative file path when binary dirs are sorted out.
 #	ifdef _WIN32
-		LoadSystem(Str::UP("../etc/" CONFIG_FILENAME));
 		LoadSystem(Str::UP("../../etc/" CONFIG_FILENAME));
 #	else
 		LoadSystem(Str::UP("/etc/hoverrace/" CONFIG_FILENAME));

@@ -132,7 +132,7 @@ class MR_DllDeclare Config
 		OS::path_t GetBaseConfigPath() const;
 		OS::path_t GetConfigFilename() const;
 
-		static OS::path_t GetDefaultMediaPath();
+		OS::path_t GetDefaultMediaPath();
 		const OS::path_t &GetMediaPath() const;
 		OS::path_t GetMediaPath(const std::string &file) const;
 
