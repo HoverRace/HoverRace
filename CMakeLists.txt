@@ -84,9 +84,12 @@ elseif(WIN32)
 		${CMAKE_SOURCE_DIR}/include
 		${CMAKE_SOURCE_DIR}/include/lua)
 	link_directories(${CMAKE_SOURCE_DIR}/lib)
-	file(GLOB DLLS RELATIVE ${CMAKE_SOURCE_DIR} lib/*.dll)
-	file(COPY ${DLLS} DESTINATION ${CMAKE_BINARY_DIR})
 endif()
+
+# Gather the build artifacts into common directories.
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # Crank up the warning level.
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")

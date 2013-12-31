@@ -42,6 +42,40 @@ if(NOT WIN32)
 	target_link_libraries(hoverrace-engine luabind)
 endif()
 
+# Install prebuilt bundled DLLs into the right locations.
+if(WIN32)
+	#add_custom_command(TARGET hoverrace-engine PRE_BUILD
+	#	COMMAND ${CMAKE_COMMAND} -E make_directory
+	#	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug)
+	#add_custom_command(TARGET hoverrace-engine PRE_BUILD
+	#	COMMAND ${CMAKE_COMMAND} -E make_directory
+	#	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release)
+	
+	# DLLs that have only release versions.
+	set(COMMON_DLLS
+		alut intl libjpeg-9 libpng16-16 LiteUnzip LiteZip zlib1)
+	# DLLs that have both debug and release versions.
+	set(CONFIGURED_DLLS
+		libcurl lua5.1 luabind SDL2 SDL2_image)
+		
+	foreach(dll ${COMMON_DLLS})
+		add_custom_command(TARGET hoverrace-engine PRE_BUILD
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different
+			${CMAKE_SOURCE_DIR}/lib/${dll}.dll
+			${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIGURATION>/${dll}.dll)
+	endforeach()
+	foreach(dll ${CONFIGURED_DLLS})
+		add_custom_command(TARGET hoverrace-engine PRE_BUILD
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different
+			${CMAKE_SOURCE_DIR}/lib/${dll}D.dll
+			${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug/${dll}D.dll)
+		add_custom_command(TARGET hoverrace-engine PRE_BUILD
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different
+			${CMAKE_SOURCE_DIR}/lib/${dll}.dll
+			${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release/${dll}.dll)
+	endforeach()
+endif(WIN32)
+
 set_target_properties(hoverrace-engine PROPERTIES
 	COTIRE_ADD_UNITY_BUILD FALSE)
 set_target_properties(hoverrace-engine PROPERTIES
