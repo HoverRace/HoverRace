@@ -3,7 +3,7 @@ set(GROUPS
 	Game2 Game2/HoverScript)
 
 foreach(group ${GROUPS})
-	file(GLOB srcs "${group}/*.h" "${group}/*.cpp" "${group}/*.rc")
+	file(GLOB srcs "${group}/*.h" "${group}/*.cpp")
 	list(APPEND HR_CLIENT_SRCS ${srcs})
 
 	# Arrange the files in Visual Studio by directory.
@@ -12,6 +12,12 @@ foreach(group ${GROUPS})
 		source_group(${groupname} FILES ${srcs})
 	endif()
 endforeach()
+
+if(WIN32)
+	file(GLOB srcs Game2/*.rc Game2/*.ico Game2/*.bmp)
+	list(APPEND HR_CLIENT_SRCS ${srcs})
+	source_group(Resources FILES ${srcs})
+endif()
 
 add_executable(hoverrace WIN32 ${HR_CLIENT_SRCS})
 set_target_properties(hoverrace PROPERTIES LINKER_LANGUAGE CXX)
