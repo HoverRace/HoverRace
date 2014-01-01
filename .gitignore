@@ -30,6 +30,7 @@ Thumbs.db
 /UpgradeLog*.XML
 /aclocal.m4
 /autom4te.cache
+/build-*
 /confdefs.h
 /config.h
 /config.h.in
