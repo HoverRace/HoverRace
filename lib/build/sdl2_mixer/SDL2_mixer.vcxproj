@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -62,13 +62,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\lib\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Debug\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\lib\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\Release\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\</OutDir>
@@ -238,53 +238,53 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\dynamic_flac.c" />
-    <ClCompile Include="..\dynamic_fluidsynth.c" />
-    <ClCompile Include="..\dynamic_mod.c" />
-    <ClCompile Include="..\dynamic_modplug.c" />
-    <ClCompile Include="..\dynamic_mp3.c" />
-    <ClCompile Include="..\dynamic_ogg.c" />
-    <ClCompile Include="..\effect_position.c" />
-    <ClCompile Include="..\effect_stereoreverse.c" />
-    <ClCompile Include="..\effects_internal.c" />
-    <ClCompile Include="..\fluidsynth.c" />
-    <ClCompile Include="..\load_aiff.c" />
-    <ClCompile Include="..\load_flac.c" />
-    <ClCompile Include="..\load_mp3.c" />
-    <ClCompile Include="..\load_ogg.c" />
-    <ClCompile Include="..\load_voc.c" />
-    <ClCompile Include="..\mixer.c" />
-    <ClCompile Include="..\music.c" />
-    <ClCompile Include="..\music_cmd.c" />
-    <ClCompile Include="..\music_flac.c" />
-    <ClCompile Include="..\music_mad.c" />
-    <ClCompile Include="..\music_mod.c" />
-    <ClCompile Include="..\music_modplug.c" />
-    <ClCompile Include="..\music_ogg.c" />
-    <ClCompile Include="..\wavestream.c" />
+    <ClCompile Include="src\dynamic_flac.c" />
+    <ClCompile Include="src\dynamic_fluidsynth.c" />
+    <ClCompile Include="src\dynamic_mod.c" />
+    <ClCompile Include="src\dynamic_modplug.c" />
+    <ClCompile Include="src\dynamic_mp3.c" />
+    <ClCompile Include="src\dynamic_ogg.c" />
+    <ClCompile Include="src\effect_position.c" />
+    <ClCompile Include="src\effect_stereoreverse.c" />
+    <ClCompile Include="src\effects_internal.c" />
+    <ClCompile Include="src\fluidsynth.c" />
+    <ClCompile Include="src\load_aiff.c" />
+    <ClCompile Include="src\load_flac.c" />
+    <ClCompile Include="src\load_mp3.c" />
+    <ClCompile Include="src\load_ogg.c" />
+    <ClCompile Include="src\load_voc.c" />
+    <ClCompile Include="src\mixer.c" />
+    <ClCompile Include="src\music.c" />
+    <ClCompile Include="src\music_cmd.c" />
+    <ClCompile Include="src\music_flac.c" />
+    <ClCompile Include="src\music_mad.c" />
+    <ClCompile Include="src\music_mod.c" />
+    <ClCompile Include="src\music_modplug.c" />
+    <ClCompile Include="src\music_ogg.c" />
+    <ClCompile Include="src\wavestream.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\dynamic_flac.h" />
-    <ClInclude Include="..\dynamic_fluidsynth.h" />
-    <ClInclude Include="..\dynamic_mod.h" />
-    <ClInclude Include="..\dynamic_modplug.h" />
-    <ClInclude Include="..\dynamic_mp3.h" />
-    <ClInclude Include="..\dynamic_ogg.h" />
-    <ClInclude Include="..\effects_internal.h" />
-    <ClInclude Include="..\fluidsynth.h" />
-    <ClInclude Include="..\load_aiff.h" />
-    <ClInclude Include="..\load_flac.h" />
-    <ClInclude Include="..\load_mp3.h" />
-    <ClInclude Include="..\load_ogg.h" />
-    <ClInclude Include="..\load_voc.h" />
-    <ClInclude Include="..\music_cmd.h" />
-    <ClInclude Include="..\music_flac.h" />
-    <ClInclude Include="..\music_mad.h" />
-    <ClInclude Include="..\music_mod.h" />
-    <ClInclude Include="..\music_modplug.h" />
-    <ClInclude Include="..\music_ogg.h" />
-    <ClInclude Include="..\SDL_mixer.h" />
-    <ClInclude Include="..\wavestream.h" />
+    <ClInclude Include="src\dynamic_flac.h" />
+    <ClInclude Include="src\dynamic_fluidsynth.h" />
+    <ClInclude Include="src\dynamic_mod.h" />
+    <ClInclude Include="src\dynamic_modplug.h" />
+    <ClInclude Include="src\dynamic_mp3.h" />
+    <ClInclude Include="src\dynamic_ogg.h" />
+    <ClInclude Include="src\effects_internal.h" />
+    <ClInclude Include="src\fluidsynth.h" />
+    <ClInclude Include="src\load_aiff.h" />
+    <ClInclude Include="src\load_flac.h" />
+    <ClInclude Include="src\load_mp3.h" />
+    <ClInclude Include="src\load_ogg.h" />
+    <ClInclude Include="src\load_voc.h" />
+    <ClInclude Include="src\music_cmd.h" />
+    <ClInclude Include="src\music_flac.h" />
+    <ClInclude Include="src\music_mad.h" />
+    <ClInclude Include="src\music_mod.h" />
+    <ClInclude Include="src\music_modplug.h" />
+    <ClInclude Include="src\music_ogg.h" />
+    <ClInclude Include="src\SDL_mixer.h" />
+    <ClInclude Include="src\wavestream.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Version.rc">
@@ -305,8 +305,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="..\..\SDL\VisualC\SDL\$(Platform)\$(Configuration)\SDL2.lib" />
-    <Library Include="..\..\SDL\VisualC\SDLmain\$(Platform)\$(Configuration)\SDL2main.lib" />
+    <Library Include="..\..\SDL2.lib" />
+    <Library Include="..\..\SDL2main.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
