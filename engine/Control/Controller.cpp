@@ -434,22 +434,22 @@ void InputEventController::SaveConfig()
 	for(ActionMap::iterator it = allActionMaps[_("Console")].begin(); it != allActionMaps[_("Console")].end(); it++) {
 		switch(it->second->GetListOrder()) {
 			case 0: // toggle console
-				cfg->ui.console_toggle = it->first;
+				cfg->ui.consoleToggle = it->first;
 				break;
 			case 1: // page up
-				cfg->ui.console_up = it->first;
+				cfg->ui.consoleUp = it->first;
 				break;
 			case 2: // page down
-				cfg->ui.console_down = it->first;
+				cfg->ui.consoleDown = it->first;
 				break;
 			case 3: // top
-				cfg->ui.console_top = it->first;
+				cfg->ui.consoleTop = it->first;
 				break;
 			case 4: // bottom
-				cfg->ui.console_bottom = it->first;
+				cfg->ui.consoleBottom = it->first;
 				break;
 			case 5: // help
-				cfg->ui.console_help = it->first;
+				cfg->ui.consoleHelp = it->first;
 				break;
 		}
 	}
@@ -558,8 +558,8 @@ void InputEventController::LoadMenuMap()
 
 	Config* config = Config::GetInstance();
 
-	AssignAction(cmap, config->ui.menu_ok, actions.ui.menuOk);
-	AssignAction(cmap, config->ui.menu_cancel, actions.ui.menuCancel);
+	AssignAction(cmap, config->ui.menuOk, actions.ui.menuOk);
+	AssignAction(cmap, config->ui.menuCancel, actions.ui.menuCancel);
 }
 
 /// Set up the console toggle control.
@@ -570,7 +570,7 @@ void InputEventController::LoadConsoleToggleMap()
 
 	Config* config = Config::GetInstance();
 
-	AssignAction(cmap, config->ui.console_toggle, actions.sys.consoleToggle);
+	AssignAction(cmap, config->ui.consoleToggle, actions.sys.consoleToggle);
 }
 
 /// Set up the console navigation controls.
@@ -581,10 +581,10 @@ void InputEventController::LoadConsoleMap()
 
 	Config* config = Config::GetInstance();
 
-	AssignAction(cmap, config->ui.console_up, actions.ui.consoleUp);
-	AssignAction(cmap, config->ui.console_down, actions.ui.consoleDown);
-	AssignAction(cmap, config->ui.console_top, actions.ui.consoleTop);
-	AssignAction(cmap, config->ui.console_bottom, actions.ui.consoleBottom);
+	AssignAction(cmap, config->ui.consoleUp, actions.ui.consoleUp);
+	AssignAction(cmap, config->ui.consoleDown, actions.ui.consoleDown);
+	AssignAction(cmap, config->ui.consoleTop, actions.ui.consoleTop);
+	AssignAction(cmap, config->ui.consoleBottom, actions.ui.consoleBottom);
 }
 
 // 0x0000xx00; xx = keycode
