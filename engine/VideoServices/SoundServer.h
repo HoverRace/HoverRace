@@ -46,7 +46,7 @@ namespace SoundServer
 	MR_DllDeclare bool Init();
 	MR_DllDeclare void Close();
 
-	MR_DllDeclare std::string GetInitError();
+	MR_DllDeclare const std::string &GetInitError();
 
 	MR_DllDeclare ShortSound *CreateShortSound(const char *pData, int pNbCopy);
 	MR_DllDeclare void DeleteShortSound(ShortSound * pSound);

@@ -2,6 +2,7 @@
 // SoundServer.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
+// Copyright (c) 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -22,24 +23,26 @@
 
 #include "StdAfx.h"
 
-#include <math.h>
-
 #include <AL/alut.h>
+#include <SDL2/SDL_Mixer.h>
 
 #include "../Util/MR_Types.h"
 #include "../Util/Config.h"
+#include "../Util/Log.h"
 
 #include "SoundServer.h"
 
-using HoverRace::Util::Config;
+using namespace HoverRace::Util;
 
 namespace HoverRace {
 namespace VideoServices {
 
 #define MR_MAX_SOUND_COPY 6
 
-static bool soundDisabled = false;
-static ALenum initErrorCode = ALUT_ERROR_NO_ERROR;
+namespace {
+	bool soundDisabled = false;
+	std::string initErrorStr;
+}
 
 #define DSBVOLUME_MIN -10000
 
@@ -371,25 +374,26 @@ void ContinuousSound::CumPlay(int pCopy, int pDB, double pSpeed)
 
 bool SoundServer::Init()
 {
-	soundDisabled = Config::GetInstance()->runtime.silent;
+	auto &runtimeCfg = Config::GetInstance()->runtime;
+
+	soundDisabled = runtimeCfg.silent;
 	if (soundDisabled) return true;
 
-	bool lReturnValue = true;
-
-	lReturnValue = (alutInit(NULL, NULL) == AL_TRUE);
-	if (!lReturnValue) {
-		ALenum code = alutGetError();
-		if (code == ALUT_ERROR_INVALID_OPERATION) {
-			// OpenAL already initialized.
-			lReturnValue = true;
-		}
-		else {
-			initErrorCode = code;
-			Config::GetInstance()->runtime.silent = soundDisabled = true;
+	int reqFmts = MIX_INIT_OGG;
+	int actualFmts = Mix_Init(reqFmts);
+	if ((actualFmts & reqFmts) != reqFmts) {
+		initErrorStr = Mix_GetError();
+		soundDisabled = true;
+	} else {
+		if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 512) < 0) {
+			initErrorStr = Mix_GetError();
+			soundDisabled = true;
 		}
 	}
 
-	return lReturnValue;
+	runtimeCfg.silent = soundDisabled;
+
+	return !soundDisabled;
 }
 
 void SoundServer::Close()
@@ -398,7 +402,9 @@ void SoundServer::Close()
 
 	if (soundDisabled) return;
 
-	alutExit();
+	Mix_HaltChannel(-1);
+	Mix_CloseAudio();
+	Mix_Quit();
 }
 
 /**
@@ -406,10 +412,9 @@ void SoundServer::Close()
  * Use this function to get details if SoundServer::Init() failed.
  * @return The error message (will be empty if there was no error).
  */
-std::string SoundServer::GetInitError()
+const std::string &SoundServer::GetInitError()
 {
-	return (initErrorCode == ALUT_ERROR_NO_ERROR) ? "" :
-		alutGetErrorString(initErrorCode);
+	return initErrorStr;
 }
 
 ShortSound *SoundServer::CreateShortSound(const char *pData, int pNbCopy)
