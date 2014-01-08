@@ -19,18 +19,10 @@
 #define HAVE_LUABIND 1
 #define LUABIND_DYNAMIC_LINK 1
 
-// Only enable DirectShow support if a recent Windows SDK is installed.
-#if defined(VER_PRODUCTBUILD) && VER_PRODUCTBUILD >= 6001
-#	define WITH_DIRECTSHOW 1
-#endif
-
 // Use wide (Unicode) paths.
 #define WITH_WIDE_PATHS 1
 
 #define WITH_OBJSTREAM 1
-
-// Uncomment this to use the SDL renderer and client.
-#define WITH_SDL 1
 
 // Uncomment this to use SDL_Pango to render text.
 //#define WITH_SDL_PANGO
