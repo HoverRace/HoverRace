@@ -919,6 +919,15 @@
     <CustomBuild Include="..\lib\zlib1.dll">
       <Filter>Libraries</Filter>
     </CustomBuild>
+    <CustomBuild Include="..\lib\libogg-0.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\lib\libvorbis-0.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\lib\libvorbisfile-3.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
     <CustomBuild Include="..\lib\SDL2D.dll">
       <Filter>Libraries</Filter>
     </CustomBuild>

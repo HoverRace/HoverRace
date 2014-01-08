@@ -519,6 +519,30 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy "%(FullPath)" "$(OutDir)"</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
     </CustomBuild>
+    <CustomBuild Include="..\lib\libogg-0.dll">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(Filename)%(Extension)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy "%(FullPath)" "$(OutDir)"</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(Filename)%(Extension)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy "%(FullPath)" "$(OutDir)"</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\lib\libvorbis-0.dll">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(Filename)%(Extension)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy "%(FullPath)" "$(OutDir)"</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(Filename)%(Extension)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy "%(FullPath)" "$(OutDir)"</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="..\lib\libvorbisfile-3.dll">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(Filename)%(Extension)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy "%(FullPath)" "$(OutDir)"</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(Filename)%(Extension)</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">copy "%(FullPath)" "$(OutDir)"</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+    </CustomBuild>
     <CustomBuild Include="..\lib\SDL2D.dll">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">copy "%(FullPath)" "$(OutDir)"</Command>
