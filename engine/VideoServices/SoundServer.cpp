@@ -24,7 +24,9 @@
 #include "StdAfx.h"
 
 #include <AL/alut.h>
-#include <SDL2/SDL_Mixer.h>
+#ifdef WITH_SDL_MIXER
+#	include <SDL2/SDL_Mixer.h>
+#endif
 
 #include "../Util/MR_Types.h"
 #include "../Util/Config.h"
@@ -374,22 +376,38 @@ void ContinuousSound::CumPlay(int pCopy, int pDB, double pSpeed)
 
 bool SoundServer::Init()
 {
+	initErrorStr.clear();
+
 	auto &runtimeCfg = Config::GetInstance()->runtime;
 
 	soundDisabled = runtimeCfg.silent;
 	if (soundDisabled) return true;
 
-	int reqFmts = MIX_INIT_OGG;
-	int actualFmts = Mix_Init(reqFmts);
-	if ((actualFmts & reqFmts) != reqFmts) {
-		initErrorStr = Mix_GetError();
-		soundDisabled = true;
-	} else {
-		if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 512) < 0) {
+#	ifdef WITH_SDL_MIXER
+		int reqFmts = MIX_INIT_OGG;
+		int actualFmts = Mix_Init(reqFmts);
+		if ((actualFmts & reqFmts) != reqFmts) {
 			initErrorStr = Mix_GetError();
 			soundDisabled = true;
 		}
-	}
+		else {
+			if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 512) < 0) {
+				initErrorStr = Mix_GetError();
+				soundDisabled = true;
+			}
+		}
+#	else
+		if (alutInit(NULL, NULL) != AL_TRUE) {
+			ALenum code = alutGetError();
+			if (code == ALUT_ERROR_INVALID_OPERATION) {
+				// OpenAL already initialized.
+			}
+			else {
+				initErrorStr = alutGetErrorString(code);
+				soundDisabled = true;
+			}
+		}
+#	endif
 
 	runtimeCfg.silent = soundDisabled;
 
@@ -402,9 +420,13 @@ void SoundServer::Close()
 
 	if (soundDisabled) return;
 
-	Mix_HaltChannel(-1);
-	Mix_CloseAudio();
-	Mix_Quit();
+#	ifdef WITH_SDL_MIXER
+		Mix_HaltChannel(-1);
+		Mix_CloseAudio();
+		Mix_Quit();
+#	else
+		alutExit();
+#	endif
 }
 
 /**

@@ -26,3 +26,6 @@
 
 // Uncomment this to use SDL_Pango to render text.
 //#define WITH_SDL_PANGO
+
+// Uncomment this to use SDL_Mixer instead of OpenAL.
+#define WITH_SDL_MIXER
