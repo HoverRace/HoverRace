@@ -21,7 +21,7 @@ Thanks also to the following projects:
 
 The Boost C++ Libraries
   http://www.boost.org/
-  
+
 Font Awesome - Dave Gandy
   http://fontawesome.io/
 

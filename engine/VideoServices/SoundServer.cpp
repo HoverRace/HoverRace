@@ -397,7 +397,7 @@ ContinuousSound::~ContinuousSound()
 void ContinuousSound::ResetCumStat()
 {
 	/*TODO
-	for(int lCounter = 0; lCounter < mNbCopy; lCounter++) {
+	for(int lCounter = 0; lCounter < MR_MAX_SOUND_COPY;; lCounter++) {
 		mOn[lCounter] = FALSE;
 		mMaxSpeed[lCounter] = 0;
 		mMaxDB[lCounter] = -10000;
