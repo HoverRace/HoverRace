@@ -919,6 +919,9 @@
     <CustomBuild Include="..\lib\zlib1.dll">
       <Filter>Libraries</Filter>
     </CustomBuild>
+    <CustomBuild Include="..\lib\libmodplug-1.dll">
+      <Filter>Libraries</Filter>
+    </CustomBuild>
     <CustomBuild Include="..\lib\libogg-0.dll">
       <Filter>Libraries</Filter>
     </CustomBuild>
