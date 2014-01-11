@@ -116,9 +116,9 @@ class SoundBuffer
 
 	public:
 		SoundBuffer();
-		virtual ~ SoundBuffer();
+		virtual ~SoundBuffer();
 
-		BOOL Init(const char *pData, int pNbCopy);
+		virtual BOOL Init(const char *pData, int pNbCopy);
 
 		void SetParams(int pCopy, int pDB, double pSpeed, int pPan);
 
@@ -136,7 +136,7 @@ class SoundBuffer
 
 class ShortSound : public SoundBuffer
 {
-
+	typedef SoundBuffer SUPER;
 	protected:
 		int mCurrentCopy;
 
@@ -149,7 +149,12 @@ class ShortSound : public SoundBuffer
 
 class ContinuousSound : public SoundBuffer
 {
+	typedef SoundBuffer SUPER;
 	protected:
+#		ifdef WITH_SDL_MIXER
+			int mNbCopy;
+			int channels[MR_MAX_SOUND_COPY];
+#		endif
 		BOOL mOn[MR_MAX_SOUND_COPY];
 		int mMaxDB[MR_MAX_SOUND_COPY];
 		double mMaxSpeed[MR_MAX_SOUND_COPY];
@@ -159,6 +164,8 @@ class ContinuousSound : public SoundBuffer
 	public:
 		ContinuousSound();
 		~ContinuousSound();
+
+		virtual BOOL Init(const char *pData, int pNbCopy);
 
 		void Pause(int pCopy);
 		void Restart(int pCopy);
@@ -387,35 +394,61 @@ void ShortSound::Play(int pDB, double pSpeed, int pPan)
 // class ContinuousSound
 ContinuousSound::ContinuousSound()
 {
+#	ifdef WITH_SDL_MIXER
+		for (int i = 0; i < MR_MAX_SOUND_COPY; i++) {
+			channels[i] = -1;
+		}
+#	endif
 	ResetCumStat();
 }
 
 ContinuousSound::~ContinuousSound()
 {
+#	ifdef WITH_SDL_MIXER
+		for (int i = 0; i < MR_MAX_SOUND_COPY; i++) {
+			if (channels[i] >= 0) {
+				Mix_HaltChannel(channels[i]);
+			}
+		}
+#	endif
+}
+
+BOOL ContinuousSound::Init(const char *pData, int pNbCopy)
+{
+	auto retv = SUPER::Init(pData, pNbCopy);
+
+#	ifdef WITH_SDL_MIXER
+	if (retv) {
+		mNbCopy = pNbCopy;
+		for (int i = 0; i < pNbCopy; i++) {
+			channels[i] = AllocChannel();
+		}
+	}
+#	endif
+
+	return retv;
 }
 
 void ContinuousSound::ResetCumStat()
 {
-	/*TODO
-	for(int lCounter = 0; lCounter < MR_MAX_SOUND_COPY;; lCounter++) {
+	for(int lCounter = 0; lCounter < MR_MAX_SOUND_COPY; lCounter++) {
 		mOn[lCounter] = FALSE;
 		mMaxSpeed[lCounter] = 0;
 		mMaxDB[lCounter] = -10000;
 	}
-	*/
 }
 
 void ContinuousSound::Pause(int pCopy)
 {
 	if (soundDisabled) return;
 
+	if(pCopy >= mNbCopy) {
+		pCopy = mNbCopy - 1;
+	}
+
 #	ifdef WITH_SDL_MIXER
 		Mix_Pause(pCopy);
 #	else
-		if(pCopy >= mNbCopy) {
-			pCopy = mNbCopy - 1;
-		}
-
 		alSourcePause(mSoundBuffer[pCopy]);
 #	endif
 }
@@ -424,39 +457,52 @@ void ContinuousSound::Restart(int pCopy)
 {
 	if (soundDisabled) return;
 
-	/*TODO
 	if(pCopy >= mNbCopy) {
 		pCopy = mNbCopy - 1;
 	}
 
-	alSourcei(mSoundBuffer[pCopy], AL_LOOPING, AL_TRUE);
-	ALint state;
-	alGetSourcei(mSoundBuffer[pCopy], AL_SOURCE_STATE, &state);
-	if (state != AL_PLAYING) {
-		alSourcePlay(mSoundBuffer[pCopy]);
-	}
-	*/
+#	ifdef WITH_SDL_MIXER
+		int channel = channels[pCopy];
+		if (Mix_Paused(channel)) {
+			Mix_Resume(channel);
+		} else if (!Mix_Playing(channel)) {
+			if (Mix_PlayChannel(channel, chunk, -1) < 0) {
+				Log::Warn("Failed to play on channel %d: %s", channel,
+					Mix_GetError());
+			}
+		}
+#	else
+		alSourcei(mSoundBuffer[pCopy], AL_LOOPING, AL_TRUE);
+		ALint state;
+		alGetSourcei(mSoundBuffer[pCopy], AL_SOURCE_STATE, &state);
+		if (state != AL_PLAYING) {
+			alSourcePlay(mSoundBuffer[pCopy]);
+		}
+#	endif
 }
 
 void ContinuousSound::ApplyCumCommand()
 {
-	/*TODO
 	for(int lCounter = 0; lCounter < mNbCopy; lCounter++) {
+#		ifdef WITH_SDL_MIXER
+			int source = channels[lCounter];
+			if (source < 0) continue;
+#		else
+			int source = lCounter;
+#		endif
 		if(mOn[lCounter]) {
-			SetParams(lCounter, mMaxDB[lCounter], mMaxSpeed[lCounter], 0);
-			Restart(lCounter);
+			SetParams(source, mMaxDB[lCounter], mMaxSpeed[lCounter], 0);
+			Restart(source);
 		}
 		else {
-			Pause(lCounter);
+			Pause(source);
 		}
 	}
 	ResetCumStat();
-	*/
 }
 
 void ContinuousSound::CumPlay(int pCopy, int pDB, double pSpeed)
 {
-	/*TODO
 	if(pCopy >= mNbCopy) {
 		pCopy = mNbCopy - 1;
 	}
@@ -464,7 +510,6 @@ void ContinuousSound::CumPlay(int pCopy, int pDB, double pSpeed)
 	mOn[pCopy] = TRUE;
 	mMaxDB[pCopy] = max(mMaxDB[pCopy], pDB);
 	mMaxSpeed[pCopy] = max(mMaxSpeed[pCopy], pSpeed);
-	*/
 }
 
 // namespace SoundServer
