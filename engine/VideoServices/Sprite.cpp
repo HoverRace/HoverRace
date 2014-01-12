@@ -95,6 +95,10 @@ void Sprite::Blt(int pX, int pY, Viewport2D *pDest, eAlignment pHAlign, eAlignme
 		int lScaledLineStep = mWidth * pScaling;
 
 		switch (pHAlign) {
+			case eLeft:
+				// Do nothing.
+				break;
+
 			case eRight:
 				pX -= lScaledWidth;
 				break;
@@ -105,6 +109,10 @@ void Sprite::Blt(int pX, int pY, Viewport2D *pDest, eAlignment pHAlign, eAlignme
 		}
 
 		switch (pVAlign) {
+			case eTop:
+				// Do nothing.
+				break;
+
 			case eBottom:
 				pY -= lScaledHeight;
 				break;
@@ -173,6 +181,10 @@ void Sprite::StrBlt(int pX, int pY, const char *pStr, Viewport2D *pDest, eAlignm
 		}
 
 		switch (pHAlign) {
+			case eLeft:
+				// Do nothing.
+				break;
+
 			case eRight:
 				pX -= lStrLen * lStep;
 				break;
@@ -183,6 +195,10 @@ void Sprite::StrBlt(int pX, int pY, const char *pStr, Viewport2D *pDest, eAlignm
 		}
 
 		switch (pVAlign) {
+			case eTop:
+				// Do nothing.
+				break;
+
 			case eBottom:
 				pY -= mItemHeight / pScaling;
 				break;
@@ -214,7 +230,7 @@ const char *Ascii2Simple(const char *pSrc)
 		lBuffer[0] = 0;
 	}
 	else {
-		int lCounter = 0;
+		unsigned lCounter = 0;
 		while((lCounter < (sizeof(lBuffer) - 1)) && (*pSrc != 0)) {
 			if((*pSrc >= 32) && (*pSrc < 127)) {
 				lBuffer[lCounter++] = (char) (*pSrc - 32 + 1);

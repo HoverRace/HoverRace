@@ -44,7 +44,7 @@ namespace VideoServices {
 VideoBuffer::VideoBuffer(Display::Display &display) :
 	desktopWidth(0), desktopHeight(0), width(0), height(0), pitch(0),
 	fullscreen(false),
-	legacySurface(NULL), zbuf(NULL), vbuf(NULL),
+	legacySurface(NULL), vbuf(NULL), zbuf(NULL),
 	bgPalette()
 {
 	// Be notified of window resizes so we can update the internal surface.
@@ -123,7 +123,7 @@ void VideoBuffer::CreatePalette()
 	const double intensity = contrast * brightness;
 	const double baseIntensity = brightness - intensity;
 
-	ColorPalette::paletteEntry_t newPalette[256] = { 0 };
+	ColorPalette::paletteEntry_t newPalette[256] = { { 0 } };
 
 	ColorPalette::paletteEntry_t *basicPalette =
 		ColorPalette::GetColors(invGamma, intensity, baseIntensity);

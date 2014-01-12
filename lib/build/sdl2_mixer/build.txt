@@ -1,0 +1,9 @@
+
+Current supported SDL_mixer version: 2.0.0-668
+
+
+== Manual Instructions ==
+
+1. Clone the SDL_mixer Mercurial repository to "src".
+
+hg clone http://hg.libsdl.org/SDL_mixer/ src

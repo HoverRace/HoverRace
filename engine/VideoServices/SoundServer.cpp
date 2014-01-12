@@ -2,6 +2,7 @@
 // SoundServer.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
+// Copyright (c) 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -22,24 +23,69 @@
 
 #include "StdAfx.h"
 
-#include <math.h>
-
-#include <AL/alut.h>
+#ifdef WITH_SDL_MIXER
+#	include <SDL2/SDL_mixer.h>
+#else
+#	include <AL/alut.h>
+#endif
 
 #include "../Util/MR_Types.h"
 #include "../Util/Config.h"
+#include "../Util/Log.h"
 
 #include "SoundServer.h"
 
-using HoverRace::Util::Config;
+using namespace HoverRace::Util;
 
 namespace HoverRace {
 namespace VideoServices {
 
 #define MR_MAX_SOUND_COPY 6
 
-static bool soundDisabled = false;
-static ALenum initErrorCode = ALUT_ERROR_NO_ERROR;
+namespace {
+	bool soundDisabled = false;
+	std::string initErrorStr;
+}
+
+#ifdef WITH_SDL_MIXER
+	namespace {
+		std::stack<int> freeChannels;
+
+		/**
+		 * Allocate a free channel for use.
+		 * @return A free channel or -1 if no channels are available.
+		 */
+		int AllocChannel() {
+			int retv = -1;
+
+			SDL_LockAudio();
+
+			if (!freeChannels.empty()) {
+				retv = freeChannels.top();
+				freeChannels.pop();
+			}
+
+			SDL_UnlockAudio();
+
+			return retv;
+		}
+
+		/**
+		 * Free a previously-allocated channel.
+		 * This is called automatically by the mixer when a channel has
+		 * finished playing.  It may also be called if the channel allocated
+		 * by AllocChannel() is not used.
+		 * @param channel The channel to deallocate.
+		 */
+		void FreeChannel(int channel) {
+			if (channel >= 0) {
+				SDL_LockAudio();
+				freeChannels.push(channel);
+				SDL_UnlockAudio();
+			}
+		}
+	}
+#endif
 
 #define DSBVOLUME_MIN -10000
 
@@ -58,21 +104,27 @@ class SoundBuffer
 
 	protected:
 
-		int mNbCopy;
-		ALuint mBuffer;
-		ALuint mSoundBuffer[MR_MAX_SOUND_COPY];  // Actually the sources.
+#		ifdef WITH_SDL_MIXER
+			Mix_Chunk *chunk;
+#		else
+			int mNbCopy;
+			ALuint mBuffer;
+			ALuint mSoundBuffer[MR_MAX_SOUND_COPY];  // Actually the sources.
+#		endif
 
 		int mNormalFreq;
 
 	public:
 		SoundBuffer();
-		virtual ~ SoundBuffer();
+		virtual ~SoundBuffer();
 
-		BOOL Init(const char *pData, int pNbCopy);
+		virtual BOOL Init(const char *pData, int pNbCopy);
 
 		void SetParams(int pCopy, int pDB, double pSpeed, int pPan);
 
+		/*
 		int GetNbCopy() const;
+		*/
 
 		static void DeleteAll();
 
@@ -84,7 +136,7 @@ class SoundBuffer
 
 class ShortSound : public SoundBuffer
 {
-
+	typedef SoundBuffer SUPER;
 	protected:
 		int mCurrentCopy;
 
@@ -97,7 +149,12 @@ class ShortSound : public SoundBuffer
 
 class ContinuousSound : public SoundBuffer
 {
+	typedef SoundBuffer SUPER;
 	protected:
+#		ifdef WITH_SDL_MIXER
+			int mNbCopy;
+			int channels[MR_MAX_SOUND_COPY];
+#		endif
 		BOOL mOn[MR_MAX_SOUND_COPY];
 		int mMaxDB[MR_MAX_SOUND_COPY];
 		double mMaxSpeed[MR_MAX_SOUND_COPY];
@@ -107,6 +164,8 @@ class ContinuousSound : public SoundBuffer
 	public:
 		ContinuousSound();
 		~ContinuousSound();
+
+		virtual BOOL Init(const char *pData, int pNbCopy);
 
 		void Pause(int pCopy);
 		void Restart(int pCopy);
@@ -125,17 +184,20 @@ static const char* const waveHeader =
 
 SoundBuffer::SoundBuffer()
 {
-	mNbCopy = 0;
-	mBuffer = 0;
+#	ifdef WITH_SDL_MIXER
+		chunk = nullptr;
+#	else
+		mNbCopy = 0;
+		mBuffer = 0;
 
-	for(int lCounter = 0; lCounter < MR_MAX_SOUND_COPY; lCounter++) {
-		mSoundBuffer[lCounter] = 0;
-	}
+		for(int lCounter = 0; lCounter < MR_MAX_SOUND_COPY; lCounter++) {
+			mSoundBuffer[lCounter] = 0;
+		}
+#	endif
 
 	// Add the new buffer to the list
 	mNext = mList;
 	mList = this;
-
 }
 
 SoundBuffer::~SoundBuffer()
@@ -159,8 +221,12 @@ SoundBuffer::~SoundBuffer()
 	}
 
 	// Delete the sound buffers
-	alDeleteSources(mNbCopy, mSoundBuffer);
-	alDeleteBuffers(1, &mBuffer);
+#	ifdef WITH_SDL_MIXER
+		Mix_FreeChunk(chunk);
+#	else
+		alDeleteSources(mNbCopy, mSoundBuffer);
+		alDeleteBuffers(1, &mBuffer);
+#	endif
 }
 
 void SoundBuffer::ApplyCumCommand()
@@ -198,14 +264,16 @@ BOOL SoundBuffer::Init(const char *pData, int pNbCopy)
 
 	BOOL lReturnValue = TRUE;
 
-	ASSERT(!mSoundBuffer[0]);			  // Already initialized
+#	ifndef WITH_SDL_MIXER
+		ASSERT(!mSoundBuffer[0]);			  // Already initialized
 
-	if(pNbCopy > MR_MAX_SOUND_COPY) {
-		ASSERT(FALSE);
-		pNbCopy = MR_MAX_SOUND_COPY;
-	}
+		if(pNbCopy > MR_MAX_SOUND_COPY) {
+			ASSERT(FALSE);
+			pNbCopy = MR_MAX_SOUND_COPY;
+		}
 
-	mNbCopy = pNbCopy;
+		mNbCopy = pNbCopy;
+#	endif
 
 	// Parse pData
 	MR_UInt32 lBufferLen = *(MR_UInt32 *) pData;
@@ -222,16 +290,24 @@ BOOL SoundBuffer::Init(const char *pData, int pNbCopy)
 	lSoundData += 18;  // sizeof(WAVEFORMATEX)
 	memcpy(buf + 0x2e, lSoundData, lBufferLen);
 
-	mBuffer = alutCreateBufferFromFileImage(buf, bufSize);
-	if (mBuffer == AL_NONE) {
-		ASSERT(FALSE);
-		lReturnValue = FALSE;
-	} else {
-		alGenSources(mNbCopy, mSoundBuffer);
-		for (int i = 0; i < mNbCopy; ++i) {
-			alSourcei(mSoundBuffer[i], AL_BUFFER, mBuffer);
+#	ifdef WITH_SDL_MIXER
+		chunk = Mix_LoadWAV_RW(SDL_RWFromMem(buf, bufSize), 1);
+		if (!chunk) {
+			ASSERT(FALSE);
+			lReturnValue = FALSE;
 		}
-	}
+#	else
+		mBuffer = alutCreateBufferFromFileImage(buf, bufSize);
+		if (mBuffer == AL_NONE) {
+			ASSERT(FALSE);
+			lReturnValue = FALSE;
+		} else {
+			alGenSources(mNbCopy, mSoundBuffer);
+			for (int i = 0; i < mNbCopy; ++i) {
+				alSourcei(mSoundBuffer[i], AL_BUFFER, mBuffer);
+			}
+		}
+#	endif
 
 	free(buf);
 
@@ -242,9 +318,11 @@ void SoundBuffer::SetParams(int pCopy, int pDB, double pSpeed, int pPan)
 {
 	if (soundDisabled) return;
 
-	if(pCopy >= mNbCopy) {
-		pCopy = mNbCopy - 1;
-	}
+#	ifndef WITH_SDL_MIXER
+		if(pCopy >= mNbCopy) {
+			pCopy = mNbCopy - 1;
+		}
+#	endif
 
 	// Global sound effect volume setting.
 	float vol = Config::GetInstance()->audio.sfxVolume;
@@ -257,18 +335,26 @@ void SoundBuffer::SetParams(int pCopy, int pDB, double pSpeed, int pPan)
 
 	if (pSpeed < 0.01f) pSpeed = 0.01f;
 
-	ALuint src = mSoundBuffer[pCopy];
-	if (src) {
-		alSourcef(mSoundBuffer[pCopy], AL_GAIN, attenuatedVolume);
-		alSourcef(mSoundBuffer[pCopy], AL_PITCH, static_cast<float>(pSpeed));
-		//TODO: Simulate panning by changing position.
-	}
+#	ifdef WITH_SDL_MIXER
+		Mix_Volume(pCopy, static_cast<int>(attenuatedVolume * MIX_MAX_VOLUME));
+		// Note: SDL_Mixer does not do pitch shifting.
+		//TODO: Panning (currently unused anyway).
+#	else
+		ALuint src = mSoundBuffer[pCopy];
+		if (src) {
+			alSourcef(mSoundBuffer[pCopy], AL_GAIN, attenuatedVolume);
+			alSourcef(mSoundBuffer[pCopy], AL_PITCH, static_cast<float>(pSpeed));
+			//TODO: Simulate panning by changing position.
+		}
+#	endif
 }
 
+/*
 int SoundBuffer::GetNbCopy() const
 {
 	return mNbCopy;
 }
+*/
 
 // ShortSound
 ShortSound::ShortSound()
@@ -284,28 +370,68 @@ void ShortSound::Play(int pDB, double pSpeed, int pPan)
 {
 	if (soundDisabled) return;
 
-	SetParams(mCurrentCopy, pDB, pSpeed, pPan);
-	alSourcePlay(mSoundBuffer[mCurrentCopy]);
+#	ifdef WITH_SDL_MIXER
+		int channel = AllocChannel();
+		if (channel >= 0) {
+			SetParams(channel, pDB, pSpeed, pPan);
+			if (Mix_PlayChannel(channel, chunk, 0) < 0) {
+				Log::Warn("Failed to play on channel %d: %s", channel,
+					Mix_GetError());
+				FreeChannel(channel);
+			}
+		}
+#	else
+		SetParams(mCurrentCopy, pDB, pSpeed, pPan);
+		alSourcePlay(mSoundBuffer[mCurrentCopy]);
 
-	mCurrentCopy++;
-	if(mCurrentCopy >= mNbCopy) {
-		mCurrentCopy = 0;
-	}
+		mCurrentCopy++;
+		if(mCurrentCopy >= mNbCopy) {
+			mCurrentCopy = 0;
+		}
+#	endif
 }
 
 // class ContinuousSound
 ContinuousSound::ContinuousSound()
 {
+#	ifdef WITH_SDL_MIXER
+		for (int i = 0; i < MR_MAX_SOUND_COPY; i++) {
+			channels[i] = -1;
+		}
+#	endif
 	ResetCumStat();
 }
 
 ContinuousSound::~ContinuousSound()
 {
+#	ifdef WITH_SDL_MIXER
+		for (int i = 0; i < MR_MAX_SOUND_COPY; i++) {
+			if (channels[i] >= 0) {
+				Mix_HaltChannel(channels[i]);
+			}
+		}
+#	endif
+}
+
+BOOL ContinuousSound::Init(const char *pData, int pNbCopy)
+{
+	auto retv = SUPER::Init(pData, pNbCopy);
+
+#	ifdef WITH_SDL_MIXER
+	if (retv) {
+		mNbCopy = pNbCopy;
+		for (int i = 0; i < pNbCopy; i++) {
+			channels[i] = AllocChannel();
+		}
+	}
+#	endif
+
+	return retv;
 }
 
 void ContinuousSound::ResetCumStat()
 {
-	for(int lCounter = 0; lCounter < mNbCopy; lCounter++) {
+	for(int lCounter = 0; lCounter < MR_MAX_SOUND_COPY; lCounter++) {
 		mOn[lCounter] = FALSE;
 		mMaxSpeed[lCounter] = 0;
 		mMaxDB[lCounter] = -10000;
@@ -316,43 +442,63 @@ void ContinuousSound::Pause(int pCopy)
 {
 	if (soundDisabled) return;
 
-	if(pCopy >= mNbCopy) {
-		pCopy = mNbCopy - 1;
-	}
+#	ifdef WITH_SDL_MIXER
+		Mix_Pause(pCopy);
+#	else
+		if(pCopy >= mNbCopy) {
+			pCopy = mNbCopy - 1;
+		}
 
-	alSourcePause(mSoundBuffer[pCopy]);
+		alSourcePause(mSoundBuffer[pCopy]);
+#	endif
 }
 
 void ContinuousSound::Restart(int pCopy)
 {
 	if (soundDisabled) return;
 
-	if(pCopy >= mNbCopy) {
-		pCopy = mNbCopy - 1;
-	}
+#	ifdef WITH_SDL_MIXER
+		int channel = channels[pCopy];
+		if (Mix_Paused(channel)) {
+			Mix_Resume(channel);
+		} else if (!Mix_Playing(channel)) {
+			if (Mix_PlayChannel(channel, chunk, -1) < 0) {
+				Log::Warn("Failed to play on channel %d: %s", channel,
+					Mix_GetError());
+			}
+		}
+#	else
+		if(pCopy >= mNbCopy) {
+			pCopy = mNbCopy - 1;
+		}
 
-	alSourcei(mSoundBuffer[pCopy], AL_LOOPING, AL_TRUE);
-	ALint state;
-	alGetSourcei(mSoundBuffer[pCopy], AL_SOURCE_STATE, &state);
-	if (state != AL_PLAYING) {
-		alSourcePlay(mSoundBuffer[pCopy]);
-	}
+		alSourcei(mSoundBuffer[pCopy], AL_LOOPING, AL_TRUE);
+		ALint state;
+		alGetSourcei(mSoundBuffer[pCopy], AL_SOURCE_STATE, &state);
+		if (state != AL_PLAYING) {
+			alSourcePlay(mSoundBuffer[pCopy]);
+		}
+#	endif
 }
 
 void ContinuousSound::ApplyCumCommand()
 {
-
 	for(int lCounter = 0; lCounter < mNbCopy; lCounter++) {
+#		ifdef WITH_SDL_MIXER
+			int source = channels[lCounter];
+			if (source < 0) continue;
+#		else
+			int source = lCounter;
+#		endif
 		if(mOn[lCounter]) {
-			SetParams(lCounter, mMaxDB[lCounter], mMaxSpeed[lCounter], 0);
-			Restart(lCounter);
+			SetParams(source, mMaxDB[lCounter], mMaxSpeed[lCounter], 0);
+			Restart(source);
 		}
 		else {
-			Pause(lCounter);
+			Pause(source);
 		}
 	}
 	ResetCumStat();
-
 }
 
 void ContinuousSound::CumPlay(int pCopy, int pDB, double pSpeed)
@@ -364,32 +510,56 @@ void ContinuousSound::CumPlay(int pCopy, int pDB, double pSpeed)
 	mOn[pCopy] = TRUE;
 	mMaxDB[pCopy] = max(mMaxDB[pCopy], pDB);
 	mMaxSpeed[pCopy] = max(mMaxSpeed[pCopy], pSpeed);
-
 }
 
 // namespace SoundServer
 
 bool SoundServer::Init()
 {
-	soundDisabled = Config::GetInstance()->runtime.silent;
+	initErrorStr.clear();
+
+	auto &runtimeCfg = Config::GetInstance()->runtime;
+
+	soundDisabled = runtimeCfg.silent;
 	if (soundDisabled) return true;
 
-	bool lReturnValue = true;
-
-	lReturnValue = (alutInit(NULL, NULL) == AL_TRUE);
-	if (!lReturnValue) {
-		ALenum code = alutGetError();
-		if (code == ALUT_ERROR_INVALID_OPERATION) {
-			// OpenAL already initialized.
-			lReturnValue = true;
+#	ifdef WITH_SDL_MIXER
+		int reqFmts = MIX_INIT_OGG;
+		int actualFmts = Mix_Init(reqFmts);
+		if ((actualFmts & reqFmts) != reqFmts) {
+			initErrorStr = Mix_GetError();
+			soundDisabled = true;
 		}
 		else {
-			initErrorCode = code;
-			Config::GetInstance()->runtime.silent = soundDisabled = true;
+			if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 512) < 0) {
+				initErrorStr = Mix_GetError();
+				soundDisabled = true;
+			}
 		}
-	}
 
-	return lReturnValue;
+		if (!soundDisabled) {
+			int numChannels = Mix_AllocateChannels(-1);
+			for (int i = 0; i < numChannels; i++) {
+				freeChannels.push(i);
+			}
+		}
+		Mix_ChannelFinished(FreeChannel);
+#	else
+		if (alutInit(NULL, NULL) != AL_TRUE) {
+			ALenum code = alutGetError();
+			if (code == ALUT_ERROR_INVALID_OPERATION) {
+				// OpenAL already initialized.
+			}
+			else {
+				initErrorStr = alutGetErrorString(code);
+				soundDisabled = true;
+			}
+		}
+#	endif
+
+	runtimeCfg.silent = soundDisabled;
+
+	return !soundDisabled;
 }
 
 void SoundServer::Close()
@@ -398,7 +568,13 @@ void SoundServer::Close()
 
 	if (soundDisabled) return;
 
-	alutExit();
+#	ifdef WITH_SDL_MIXER
+		Mix_HaltChannel(-1);
+		Mix_CloseAudio();
+		Mix_Quit();
+#	else
+		alutExit();
+#	endif
 }
 
 /**
@@ -406,10 +582,9 @@ void SoundServer::Close()
  * Use this function to get details if SoundServer::Init() failed.
  * @return The error message (will be empty if there was no error).
  */
-std::string SoundServer::GetInitError()
+const std::string &SoundServer::GetInitError()
 {
-	return (initErrorCode == ALUT_ERROR_NO_ERROR) ? "" :
-		alutGetErrorString(initErrorCode);
+	return initErrorStr;
 }
 
 ShortSound *SoundServer::CreateShortSound(const char *pData, int pNbCopy)
@@ -434,6 +609,7 @@ void SoundServer::Play(ShortSound * pSound, int pDB, double pSpeed, int pPan)
 	}
 }
 
+/*
 int SoundServer::GetNbCopy(ShortSound * pSound)
 {
 	if(pSound != NULL) {
@@ -443,6 +619,7 @@ int SoundServer::GetNbCopy(ShortSound * pSound)
 		return 1;
 	}
 }
+*/
 
 ContinuousSound *SoundServer::CreateContinuousSound(const char *pData, int pNbCopy)
 {
@@ -471,6 +648,7 @@ void SoundServer::ApplyContinuousPlay()
 	SoundBuffer::ApplyCumCommandForAll();
 }
 
+/*
 int SoundServer::GetNbCopy(ContinuousSound * pSound)
 {
 	if(pSound != NULL) {
@@ -480,6 +658,7 @@ int SoundServer::GetNbCopy(ContinuousSound * pSound)
 		return 1;
 	}
 }
+*/
 
 }  // namespace VideoServices
 }  // namespace HoverRace

@@ -73,7 +73,7 @@ class ConfigExn : public std::exception
 	private:
 		std::string msg;
 };
-	
+
 /**
  * Global configuration manager, shared by all aspects of the system.
  */
@@ -108,7 +108,7 @@ class MR_DllDeclare Config
 			const OS::path_t &file=OS::path_t());
 	public:
 		~Config();
-	
+
 		static Config *Init(int verMajor, int verMinor, int verPatch, int verBuild,
 			bool prerelease, const OS::path_t &mediaPath,
 			const OS::path_t &path=OS::path_t());
@@ -265,14 +265,14 @@ class MR_DllDeclare Config
 		} camera_hash;
 
 		struct cfg_ui_t {
-			int console_toggle;
-			int console_up;
-			int console_down;
-			int console_top;
-			int console_bottom;
-			int console_help;
-			int menu_ok;
-			int menu_cancel;
+			int consoleToggle;
+			int consoleUp;
+			int consoleDown;
+			int consoleTop;
+			int consoleBottom;
+			int consoleHelp;
+			int menuOk;
+			int menuCancel;
 
 			void Load(yaml::MapNode*);
 			void Save(yaml::Emitter*);

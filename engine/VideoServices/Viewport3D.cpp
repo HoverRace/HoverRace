@@ -33,8 +33,8 @@ namespace VideoServices {
 
 // Methods implementation
 Viewport3D::Viewport3D() :
-	mOrientation(0), mPosition(0, 0, 0),
-	mVAngle(1), mScroll(0),
+	mPosition(0, 0, 0), mOrientation(0),
+	mScroll(0), mVAngle(1),
 	mZBuffer(NULL), mBufferLine(NULL), mZBufferLine(NULL),
 	mBackgroundConst(NULL)
 {

@@ -297,6 +297,7 @@ void StaticText::Update()
 
 	// Apply effect (we might refactor this out).
 	switch (effect) {
+		case EFFECT_NONE: break;
 		case EFFECT_SHADOW: ApplyShadow(); break;
 	}
 }

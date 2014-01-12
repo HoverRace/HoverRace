@@ -355,7 +355,7 @@ OS::path_t Config::GetDefaultBasePath()
 {
 #ifdef _WIN32
 	wchar_t dpath[MAX_PATH] = {0};
-	HRESULT hr = 
+	HRESULT hr =
 		SHGetFolderPathW(NULL, CSIDL_APPDATA, NULL, SHGFP_TYPE_CURRENT, dpath);
 	if (SUCCEEDED(hr)) {
 		return OS::path_t(dpath);
@@ -549,7 +549,7 @@ OS::path_t Config::GetDefaultChatLogPath()
 {
 #ifdef _WIN32
 	wchar_t dpath[MAX_PATH] = {0};
-	HRESULT hr = 
+	HRESULT hr =
 		SHGetFolderPathW(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, dpath);
 	if (SUCCEEDED(hr)) {
 		OS::path_t retv(dpath);
@@ -707,15 +707,15 @@ void Config::ResetToDefaults()
 	camera_hash.panDown = InputEventController::HashKeyboardEvent(SDLK_PAGEDOWN);
 	camera_hash.reset   = InputEventController::HashKeyboardEvent(SDLK_HOME);
 
-	ui.console_toggle = InputEventController::HashKeyboardEvent(SDLK_F11);
-	ui.console_up     = InputEventController::HashKeyboardEvent(SDLK_PAGEUP);
-	ui.console_down   = InputEventController::HashKeyboardEvent(SDLK_PAGEDOWN);
-	ui.console_top    = InputEventController::HashKeyboardEvent(SDLK_HOME);
-	ui.console_bottom = InputEventController::HashKeyboardEvent(SDLK_END);
-	ui.console_help   = InputEventController::HashKeyboardEvent(SDLK_F1);
+	ui.consoleToggle = InputEventController::HashKeyboardEvent(SDLK_F11);
+	ui.consoleUp     = InputEventController::HashKeyboardEvent(SDLK_PAGEUP);
+	ui.consoleDown   = InputEventController::HashKeyboardEvent(SDLK_PAGEDOWN);
+	ui.consoleTop    = InputEventController::HashKeyboardEvent(SDLK_HOME);
+	ui.consoleBottom = InputEventController::HashKeyboardEvent(SDLK_END);
+	ui.consoleHelp   = InputEventController::HashKeyboardEvent(SDLK_F1);
 
-	ui.menu_ok = InputEventController::HashKeyboardEvent(SDLK_RETURN);
-	ui.menu_cancel = InputEventController::HashKeyboardEvent(SDLK_ESCAPE);
+	ui.menuOk = InputEventController::HashKeyboardEvent(SDLK_RETURN);
+	ui.menuCancel = InputEventController::HashKeyboardEvent(SDLK_ESCAPE);
 
 	runtime.silent = false;
 	runtime.verboseLog = false;
@@ -776,7 +776,7 @@ void Config::LoadSystem(const OS::path_t &path)
 void Config::Load()
 {
 	const OS::path_t cfgfile(GetConfigFilename());
-	
+
 	FILE *in = OS::FOpen(cfgfile, "rb");
 	if (in == NULL) {
 		// File doesn't exist.
@@ -868,7 +868,7 @@ void Config::Save()
 		misc.Save(emitter);
 		player.Save(emitter);
 		net.Save(emitter);
-		
+
 		// Save list of controls.
 		emitter->MapKey("controls_hash");
 		emitter->StartSeq();
@@ -1120,15 +1120,15 @@ void Config::cfg_ui_t::Load(yaml::MapNode* root)
 {
 	if (root == NULL) return;
 
-	READ_INT(root, console_toggle, 0, INT_MAX);
-	READ_INT(root, console_up, 0, INT_MAX);
-	READ_INT(root, console_down, 0, INT_MAX);
-	READ_INT(root, console_top, 0, INT_MAX);
-	READ_INT(root, console_bottom, 0, INT_MAX);
-	READ_INT(root, console_help, 0, INT_MAX);
+	READ_INT(root, consoleToggle, 0, INT_MAX);
+	READ_INT(root, consoleUp, 0, INT_MAX);
+	READ_INT(root, consoleDown, 0, INT_MAX);
+	READ_INT(root, consoleTop, 0, INT_MAX);
+	READ_INT(root, consoleBottom, 0, INT_MAX);
+	READ_INT(root, consoleHelp, 0, INT_MAX);
 
-	READ_INT(root, menu_ok, 0, INT_MAX);
-	READ_INT(root, menu_cancel, 0, INT_MAX);
+	READ_INT(root, menuOk, 0, INT_MAX);
+	READ_INT(root, menuCancel, 0, INT_MAX);
 }
 
 void Config::cfg_ui_t::Save(yaml::Emitter* emitter)
@@ -1136,15 +1136,15 @@ void Config::cfg_ui_t::Save(yaml::Emitter* emitter)
 	emitter->MapKey("ui");
 	emitter->StartMap();
 
-	EMIT_VAR(emitter, console_toggle);
-	EMIT_VAR(emitter, console_up);
-	EMIT_VAR(emitter, console_down);
-	EMIT_VAR(emitter, console_top);
-	EMIT_VAR(emitter, console_bottom);
-	EMIT_VAR(emitter, console_help);
+	EMIT_VAR(emitter, consoleToggle);
+	EMIT_VAR(emitter, consoleUp);
+	EMIT_VAR(emitter, consoleDown);
+	EMIT_VAR(emitter, consoleTop);
+	EMIT_VAR(emitter, consoleBottom);
+	EMIT_VAR(emitter, consoleHelp);
 
-	EMIT_VAR(emitter, menu_ok);
-	EMIT_VAR(emitter, menu_cancel);
+	EMIT_VAR(emitter, menuOk);
+	EMIT_VAR(emitter, menuCancel);
 
 	emitter->EndMap();
 }

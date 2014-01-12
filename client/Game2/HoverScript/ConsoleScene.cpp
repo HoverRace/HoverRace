@@ -69,7 +69,7 @@ class ConsoleScene::LogLines /*{{{*/
 		unsigned int pos;
 		unsigned int num;
 
-		static const int MAX_LINES = 100;
+		static const unsigned int MAX_LINES = 100;
 }; //}}}
 
 ConsoleScene::ConsoleScene(Display::Display &display, GameDirector &director,
