@@ -994,9 +994,16 @@ void Observer::RenderDebugDisplay(VideoServices::VideoBuffer * pDest, const Clie
 	int lXRes = pDest->GetXRes();
 	int lYRes = pDest->GetYRes();
 	int lYOffset = 0;
-	int lXOffset = 0;
 
 	switch (mSplitMode) {
+		case eNotSplit:
+		case eUpperLeftSplit:
+		case eUpperRightSplit:
+		case eLowerLeftSplit:
+		case eLowerRightSplit:
+			// Nothing to do.
+			break;
+
 		case eUpperSplit:
 			lYRes /= 2;
 			break;
@@ -1031,6 +1038,10 @@ void Observer::RenderNormalDisplay(VideoServices::VideoBuffer * pDest, const Cli
 	int lXMargin_1024 = mXMargin_1024;
 
 	switch (mSplitMode) {
+		case eNotSplit:
+			// No adjustment.
+			break;
+
 		case eUpperSplit:
 			lYRes /= 2;
 			lYMargin_1024 -= 200;
