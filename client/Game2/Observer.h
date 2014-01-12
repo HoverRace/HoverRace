@@ -103,6 +103,8 @@ class Observer
 		static void DrawBackground(VideoServices::VideoBuffer * pDest);
 
 	public:
+		static const std::string &GetCraftName(int id);
+
 		// Camera control
 		void Scroll(int pOffset);
 		void Zoom(int factor); ///< A positive factor zooms in; a negative factor zooms out.
