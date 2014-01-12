@@ -24,7 +24,7 @@
 #include "StdAfx.h"
 
 #ifdef WITH_SDL_MIXER
-#	include <SDL2/SDL_Mixer.h>
+#	include <SDL2/SDL_mixer.h>
 #else
 #	include <AL/alut.h>
 #endif
