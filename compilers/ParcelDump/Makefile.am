@@ -8,7 +8,7 @@ hr_parceldump_LDADD = \
 	$(BOOST_SYSTEM_LDFLAGS) $(BOOST_SYSTEM_LIBS) \
 	$(BOOST_THREADS_LDFLAGS) $(BOOST_THREADS_LIBS) \
 	$(LUA_LIBS) \
-	$(DEPS_LIBS) $(TEXT_DEPS_LIBS)
+	$(DEPS_LIBS) $(TEXT_DEPS_LIBS) $(AUDIO_DEPS_LIBS)
 hr_parceldump_SOURCES = \
 	StdAfx.h \
 	main.cpp
