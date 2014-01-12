@@ -442,13 +442,13 @@ void ContinuousSound::Pause(int pCopy)
 {
 	if (soundDisabled) return;
 
-	if(pCopy >= mNbCopy) {
-		pCopy = mNbCopy - 1;
-	}
-
 #	ifdef WITH_SDL_MIXER
 		Mix_Pause(pCopy);
 #	else
+		if(pCopy >= mNbCopy) {
+			pCopy = mNbCopy - 1;
+		}
+
 		alSourcePause(mSoundBuffer[pCopy]);
 #	endif
 }
@@ -456,10 +456,6 @@ void ContinuousSound::Pause(int pCopy)
 void ContinuousSound::Restart(int pCopy)
 {
 	if (soundDisabled) return;
-
-	if(pCopy >= mNbCopy) {
-		pCopy = mNbCopy - 1;
-	}
 
 #	ifdef WITH_SDL_MIXER
 		int channel = channels[pCopy];
@@ -472,6 +468,10 @@ void ContinuousSound::Restart(int pCopy)
 			}
 		}
 #	else
+		if(pCopy >= mNbCopy) {
+			pCopy = mNbCopy - 1;
+		}
+
 		alSourcei(mSoundBuffer[pCopy], AL_LOOPING, AL_TRUE);
 		ALint state;
 		alGetSourcei(mSoundBuffer[pCopy], AL_SOURCE_STATE, &state);
