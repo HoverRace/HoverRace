@@ -30,13 +30,13 @@ include_directories(${Boost_INCLUDE_DIRS})
 if(NOT WIN32)
 	add_subdirectory(external/lua)
 	set(LUA_FOUND TRUE)
-	include_directories(
+	include_directories(SYSTEM
 		external/lua/src
 		${CMAKE_BINARY_DIR}/external/lua)
 	set(LUA_LIBRARIES liblua)
 
 	add_subdirectory(external/luabind)
-	include_directories(external/luabind)
+	include_directories(SYSTEM external/luabind)
 endif()
 
 if(UNIX)
@@ -49,7 +49,7 @@ if(UNIX)
 		sdl2>=2.0
 		SDL2_image>=2.0
 		SDL2_ttf>=2.0)
-	include_directories(${DEPS_INCLUDE_DIRS})
+	include_directories(SYSTEM ${DEPS_INCLUDE_DIRS})
 	link_directories(${DEPS_LIBRARY_DIRS})
 
 	# Find LibYAML.
