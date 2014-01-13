@@ -62,13 +62,8 @@ PauseMenuScene::PauseMenuScene(Display::Display &display,
 	SUPER(display, "Pause Menu"),
 	display(display), director(director)
 {
-
-	Config *cfg = Config::GetInstance();
-
 	fader.reset(new Display::ScreenFade(0xdd000000, 1.0));
 	fader->AttachView(display);
-
-	Display::Container *root = GetRoot();
 
 	double y = 200;
 
