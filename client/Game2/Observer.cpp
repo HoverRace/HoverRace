@@ -42,18 +42,6 @@ using HoverRace::VideoServices::Ascii2Simple;
 #define NB_PLAYER_PAGE 10
 #define MR_CHAT_EXPIRATION     20
 
-static const std::string &GetCraftName(int id)
-{
-	static const std::string names[4] = {
-		std::string(_("Basic craft")),
-		std::string(_("CX craft")),
-		std::string(_("Bi-Turbo craft")),
-		std::string(_("Eon craft")),
-		};
-	static const std::string unknown = std::string(_("Unknown craft"));
-	return (id >= 0 && id < 4) ? names[id] : unknown;
-}
-
 namespace HoverRace {
 namespace Client {
 
@@ -171,6 +159,18 @@ Observer::~Observer()
 void Observer::SetCockpitView(BOOL pOn)
 {
 	mCockpitView = pOn;
+}
+
+const std::string &Observer::GetCraftName(int id)
+{
+	static const std::string names[4] = {
+		std::string(_("Basic craft")),
+		std::string(_("CX craft")),
+		std::string(_("Bi-Turbo craft")),
+		std::string(_("Eon craft")),
+		};
+	static const std::string unknown = std::string(_("Unknown craft"));
+	return (id >= 0 && id < 4) ? names[id] : unknown;
 }
 
 void Observer::Scroll(int pOffset)
@@ -994,9 +994,16 @@ void Observer::RenderDebugDisplay(VideoServices::VideoBuffer * pDest, const Clie
 	int lXRes = pDest->GetXRes();
 	int lYRes = pDest->GetYRes();
 	int lYOffset = 0;
-	int lXOffset = 0;
 
 	switch (mSplitMode) {
+		case eNotSplit:
+		case eUpperLeftSplit:
+		case eUpperRightSplit:
+		case eLowerLeftSplit:
+		case eLowerRightSplit:
+			// Nothing to do.
+			break;
+
 		case eUpperSplit:
 			lYRes /= 2;
 			break;
@@ -1031,6 +1038,10 @@ void Observer::RenderNormalDisplay(VideoServices::VideoBuffer * pDest, const Cli
 	int lXMargin_1024 = mXMargin_1024;
 
 	switch (mSplitMode) {
+		case eNotSplit:
+			// No adjustment.
+			break;
+
 		case eUpperSplit:
 			lYRes /= 2;
 			lYMargin_1024 -= 200;
