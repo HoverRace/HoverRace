@@ -160,6 +160,9 @@ void Scene::Advance(Util::OS::timestamp_t tick)
 			}
 			break;
 		}
+
+		default:
+			break;
 	}
 
 	// Handle the raising and lowering animation.
@@ -191,6 +194,9 @@ void Scene::Advance(Util::OS::timestamp_t tick)
 			}
 			break;
 		}
+
+		default:
+			break;
 	}
 
 	prevTick = tick;
