@@ -946,11 +946,5 @@
     <CustomBuild Include="..\lib\SDL2_image.dll">
       <Filter>Libraries</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\lib\SDL2_mixerD.dll">
-      <Filter>Libraries</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\lib\SDL2_mixer.dll">
-      <Filter>Libraries</Filter>
-    </CustomBuild>
   </ItemGroup>
 </Project>
