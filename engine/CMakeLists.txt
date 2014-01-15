@@ -53,7 +53,7 @@ if(WIN32)
 	
 	# DLLs that have only release versions.
 	set(COMMON_DLLS
-		alut intl libjpeg-9 libpng16-16 LiteUnzip LiteZip zlib1)
+		alut intl libjpeg-9 libpng16-16 LiteUnzip LiteZip OpenAL32 zlib1)
 	# DLLs that have both debug and release versions.
 	set(CONFIGURED_DLLS
 		libcurl lua5.1 luabind SDL2 SDL2_image)
