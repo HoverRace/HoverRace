@@ -38,8 +38,10 @@ if(MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zm120")
 endif()
 
+# Enable precompiled headers.
+# Note: Explicitly setting the language to fix misdetection in some cases.
 set_target_properties(hoverrace PROPERTIES
 	COTIRE_ADD_UNITY_BUILD FALSE)
 set_target_properties(hoverrace PROPERTIES
 	COTIRE_CXX_PREFIX_HEADER_INIT Game2/StdAfx.h)
-cotire(hoverrace)
+cotire(hoverrace LANGUAGES CXX)

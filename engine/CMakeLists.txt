@@ -50,14 +50,14 @@ if(WIN32)
 	#add_custom_command(TARGET hoverrace-engine PRE_BUILD
 	#	COMMAND ${CMAKE_COMMAND} -E make_directory
 	#	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release)
-	
+
 	# DLLs that have only release versions.
 	set(COMMON_DLLS
 		alut intl libjpeg-9 libpng16-16 LiteUnzip LiteZip OpenAL32 zlib1)
 	# DLLs that have both debug and release versions.
 	set(CONFIGURED_DLLS
 		libcurl lua5.1 luabind SDL2 SDL2_image)
-		
+
 	foreach(dll ${COMMON_DLLS})
 		add_custom_command(TARGET hoverrace-engine PRE_BUILD
 			COMMAND ${CMAKE_COMMAND} -E copy_if_different
@@ -76,8 +76,10 @@ if(WIN32)
 	endforeach()
 endif(WIN32)
 
+# Enable precompiled headers.
+# Note: Explicitly setting the language to fix misdetection in some cases.
 set_target_properties(hoverrace-engine PROPERTIES
 	COTIRE_ADD_UNITY_BUILD FALSE)
 set_target_properties(hoverrace-engine PROPERTIES
 	COTIRE_CXX_PREFIX_HEADER_INIT StdAfx.h)
-cotire(hoverrace-engine)
+cotire(hoverrace-engine LANGUAGES CXX)
