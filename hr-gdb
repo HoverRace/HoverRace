@@ -10,7 +10,7 @@ echo '==> Updating resources...'
 
 echo '==> Updating locales...'
 ( cd po ; make update-gmo ) || exit 1
-build/mklocale.sh po/*.gmo || exit 1
+bin/mklocale.sh po/*.gmo || exit 1
 
 echo '==> Launching HoverRace in GDB!'
 libtool --mode=execute gdb client/Game2/hoverrace "$@"
