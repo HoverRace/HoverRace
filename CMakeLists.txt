@@ -94,9 +94,16 @@ elseif(MSVC)
 endif()
 
 # Generate the initial app config file.
+# We only do very basic escaping of the path here.
+# In reality, if you have a sufficiently wacky source path, then some of the
+# other CMake modules are more likely to fail before even reaching here :)
+set(HR_MEDIA_PATH "${CMAKE_SOURCE_DIR}/share")
+string(REPLACE "\\" "\\\\" HR_MEDIA_PATH "${HR_MEDIA_PATH}")
+string(REPLACE "\"" "\\\"" HR_MEDIA_PATH "${HR_MEDIA_PATH}")
+string(REPLACE "\n" "\\\n" HR_MEDIA_PATH "${HR_MEDIA_PATH}")
 file(WRITE ${CMAKE_BINARY_DIR}/etc/config.yml
 	"app:\n"
-	"  mediaPath: \"${CMAKE_SOURCE_DIR}/share\"\n")
+	"  mediaPath: \"${HR_MEDIA_PATH}\"\n")
 
 add_subdirectory(client)
 add_subdirectory(engine)
