@@ -22,8 +22,6 @@
 
 #pragma once
 
-#include <lua.hpp>
-
 #include "../../../engine/Script/Env.h"
 #include "../../../engine/Util/OS.h"
 #include "../../../engine/Script/Help/HelpHandler.h"

@@ -21,7 +21,6 @@
 
 #include "StdAfx.h"
 
-#include <lua.hpp>
 #include <luabind/luabind.hpp>
 #include <luabind/object.hpp>
 

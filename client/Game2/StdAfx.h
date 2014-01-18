@@ -2,6 +2,8 @@
 /* StdAfx.h
 	Precompiled header for client. */
 
+#pragma once
+
 #ifdef _WIN32
 
 	// Exclude rarely-used stuff from Windows headers
@@ -74,7 +76,7 @@
 #include <boost/signals2.hpp>
 #include <boost/thread/thread.hpp>
 
-#include <lua.hpp>
+#include "../../engine/Script/Lua.h"
 #include <luabind/luabind.hpp>
 #include <luabind/object.hpp>
 
