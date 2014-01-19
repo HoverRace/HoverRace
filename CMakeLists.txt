@@ -24,6 +24,7 @@ endif()
 set(Boost_USE_MULTITHREADED ON)
 find_package(Boost 1.40 REQUIRED COMPONENTS filesystem system thread)
 include_directories(${Boost_INCLUDE_DIRS})
+link_directories(${Boost_LIBRARY_DIRS})
 
 # Use bundled Lua and Luabind from source.
 # On Win32, we bundle the prebuilt libraries.
