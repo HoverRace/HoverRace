@@ -317,9 +317,8 @@ MainCharacter *MainCharacter::New(int idx, char gameopts)
 	if (lReturnValue) {
 		lReturnValue->playerIdx = idx;
 		lReturnValue->mGameOpts = gameopts;
+		lReturnValue->mHoverModel = NextAllowedCraft(gameopts, 3);
 	}
-
-	lReturnValue->mHoverModel = NextAllowedCraft(gameopts, 3);
 
 	return lReturnValue;
 }
