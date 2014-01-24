@@ -32,6 +32,7 @@
 
 #include <iostream>
 #include <string>
+#include <system_error>
 
 #ifdef _WIN32
 #	include <ddraw.h>
@@ -503,20 +504,7 @@ void OS::StringToGuid(const std::string &s, GUID &guid)
  */
 std::string OS::StrError(int errnum)
 {
-#	ifdef HAVE_STRERROR_R
-		char err[256];
-#		ifdef STRERROR_R_CHAR_P
-			// GNU version of strerror_r().
-			char *retv = strerror_r(errnum, err, sizeof(err));
-			return retv ? retv : "Unknown error";
-#		else
-			// POSIX version of strerror_r().
-			int retv = strerror_r(errnum, err, sizeof(err));
-			return retv ? "Unknown error" : err;
-#		endif
-#	else
-		return strerror(errnum);
-#	endif
+	return std::error_code(errnum, std::generic_category()).message();
 }
 #endif
 
