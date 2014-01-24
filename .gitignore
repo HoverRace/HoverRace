@@ -32,8 +32,6 @@ Thumbs.db
 /autom4te.cache
 /build-*
 /confdefs.h
-/config.h
-/config.h.in
 /config.log
 /config.status*
 /configure
