@@ -40,6 +40,8 @@ if(NOT WIN32)
 	include_directories(SYSTEM external/luabind)
 endif()
 
+set(ENABLE_NLS TRUE)
+
 if(UNIX)
 	include(FindPkgConfig)
 	pkg_check_modules(DEPS REQUIRED
@@ -58,6 +60,8 @@ if(UNIX)
 	find_package(YAML REQUIRED)
 	include_directories(${YAML_INCLUDE_DIR})
 	list(APPEND DEPS_LIBRARIES ${YAML_LIBRARIES})
+
+	set(WITH_SDL_TTF TRUE)
 
 elseif(WIN32)
 	# For Win32 builds, we include the bulk of the dependencies.
@@ -105,6 +109,11 @@ string(REPLACE "\n" "\\\n" HR_MEDIA_PATH "${HR_MEDIA_PATH}")
 file(WRITE ${CMAKE_BINARY_DIR}/etc/config.yml
 	"app:\n"
 	"  mediaPath: \"${HR_MEDIA_PATH}\"\n")
+
+set(CONFIG_HEADER_DIR ${CMAKE_BINARY_DIR}/config)
+configure_file(config-cmake.in.h ${CONFIG_HEADER_DIR}/hoverrace/hr-config.h
+	ESCAPE_QUOTES)
+include_directories(SYSTEM ${CONFIG_HEADER_DIR})
 
 add_subdirectory(client)
 add_subdirectory(engine)

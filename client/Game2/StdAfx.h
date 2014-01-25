@@ -34,7 +34,7 @@
 #else
 
 #	include "../../include/compat/unix.h"
-#	include "../../config.h"
+#	include <hoverrace/hr-config.h>
 
 #	include <string.h>
 #	include <strings.h>

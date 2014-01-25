@@ -60,10 +60,6 @@
 
 #include "Config.h"
 
-#ifndef _WIN32
-#	include "../../config.h"
-#endif
-
 namespace fs = boost::filesystem;
 using HoverRace::Control::InputEventController;
 
