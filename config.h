@@ -3,12 +3,6 @@
    language is requested. */
 #define ENABLE_NLS 1
 
-/* Define if you have the iconv() function and it works. */
-#define HAVE_ICONV 1
-
-/* Define as const if the declaration of iconv() needs const. */
-#define ICONV_CONST
-
 /* Name of package */
 #define PACKAGE "hoverrace"
 
@@ -26,9 +20,6 @@
 
 /* Version number of package */
 #define VERSION "2.0"
-
-/* Using OpenAL */
-#define WITH_OPENAL 1
 
 /* Using SDL2_ttf */
 #define WITH_SDL_TTF 1
