@@ -1,9 +1,6 @@
 
 #define PACKAGE "hoverrace"
 #define PACKAGE_NAME "HoverRace"
-#define PACKAGE_STRING "HoverRace 2.0"
-#define PACKAGE_VERSION "2.0"
-#define VERSION "2.0"
 
 #cmakedefine ENABLE_NLS
 
