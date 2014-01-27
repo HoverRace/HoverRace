@@ -1,4 +1,8 @@
 
+# Generate version info.
+configure_file(Game2/version.in.h ${CONFIG_HEADER_DIR}/hoverrace/hr-version.h
+    ESCAPE_QUOTES)
+
 set(GROUPS
 	Game2 Game2/HoverScript)
 

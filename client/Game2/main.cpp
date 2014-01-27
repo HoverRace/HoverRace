@@ -36,9 +36,7 @@
 #include "../../engine/Util/Str.h"
 #include "ClientApp.h"
 
-#ifndef _WIN32
-#	include "version.h"
-#endif
+#include <hoverrace/hr-version.h>
 
 using boost::format;
 using boost::str;
@@ -170,53 +168,9 @@ bool ProcessCmdLine(int argc, char **argv)
 }
 
 // Initialize (but not load) the config system.
-Config *InitConfig(
-#ifdef _WIN32
-	const OS::path_t &exePath
-#endif
-	)
+Config *InitConfig()
 {
-#ifdef _WIN32
-	// Load our own version info so we can pass it along to the config.
-	long verMajor = 0;
-	long verMinor = 0;
-	long verPatch = 0;
-	long verBuild = 0;
-	bool prerelease = true;
-	DWORD dummyHandle;
-	DWORD verInfoSize = GetFileVersionInfoSizeW(Str::PW(exePath), &dummyHandle);
-	void *verInfo = malloc(verInfoSize);
-	if (GetFileVersionInfoW(Str::PW(exePath), 0, verInfoSize, verInfo)) {
-		UINT outSize;
-		void *outPtr;
-		if (VerQueryValueW(verInfo, L"\\", (LPVOID*)&outPtr, &outSize)) {
-			VS_FIXEDFILEINFO *fixedInfo = (VS_FIXEDFILEINFO*)outPtr;
-			verMajor = (fixedInfo->dwProductVersionMS >> 16) & 0xffff;
-			verMinor = fixedInfo->dwProductVersionMS & 0xffff;
-			verPatch = (fixedInfo->dwProductVersionLS >> 16) & 0xffff;
-			verBuild = fixedInfo->dwProductVersionLS & 0xffff;
-			prerelease = (fixedInfo->dwFileFlagsMask & VS_FF_PRERELEASE & fixedInfo->dwFileFlags) > 0;
-		}
-	}
-	free(verInfo);
-
-	if (verMajor == 0 && verMinor == 0 && verPatch == 0 && verBuild == 0) {
-		MessageBoxW(NULL,
-			L"Version resources missing!\r\n\r\n"
-			L"Something went wrong when this snapshot was built.",
-			PACKAGE_NAME_L, MB_OK | MB_ICONERROR);
-		exit(1);
-	}
-
-	// Load the configuration, using the default OS-specific path.
-	return Config::Init(verMajor, verMinor, verPatch, verBuild, prerelease, mediaPath);
-
-#else
-	
-	//FIXME: Extract prerelease flag from ver resource at build time.
 	return Config::Init(HR_APP_VERSION, HR_APP_VERSION_PRERELEASE, mediaPath);
-
-#endif
 }
 
 #ifdef _WIN32
@@ -285,11 +239,7 @@ int main(int argc, char** argv)
 	if (!ProcessCmdLine(argc, argv))
 		return EXIT_FAILURE;
 
-	Config *cfg = InitConfig(
-#ifdef _WIN32
-		exePath
-#endif
-		);
+	Config *cfg = InitConfig();
 	cfg->runtime.silent = silentMode;
 	cfg->runtime.verboseLog = verboseLog;
 	cfg->runtime.showFramerate = showFramerate;
