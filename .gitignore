@@ -23,10 +23,8 @@ Thumbs.db
 /*.suo
 /_UpgradeReport_Files
 /ABOUT-NLS
-/Debug
 /Makefile
 /Makefile.in
-/Release
 /UpgradeLog*.XML
 /aclocal.m4
 /autom4te.cache
@@ -51,15 +49,10 @@ Thumbs.db
 # /client/
 /client/Makefile
 /client/Makefile.in
-/client/Debug
-/client/Release
 
 # /client/Game2/
-/client/Game2/*.aps
-/client/Game2/Debug
 /client/Game2/Makefile
 /client/Game2/Makefile.in
-/client/Game2/Release
 /client/Game2/StdAfx.h.Td
 /client/Game2/StdAfx.h.d
 /client/Game2/StdAfx.h.gch
@@ -70,37 +63,24 @@ Thumbs.db
 /compilers/Makefile.in
 
 # /compilers/MazeCompiler/
-/compilers/MazeCompiler/*.aps
-/compilers/MazeCompiler/Debug
 /compilers/MazeCompiler/Makefile
 /compilers/MazeCompiler/Makefile.in
-/compilers/MazeCompiler/Release
 /compilers/MazeCompiler/StdAfx.h.Td
 /compilers/MazeCompiler/StdAfx.h.d
 /compilers/MazeCompiler/StdAfx.h.gch
 /compilers/MazeCompiler/hr-mazecompiler
 
-# /compilers/PaletteCreator/
-/compilers/PaletteCreator/Debug
-/compilers/PaletteCreator/Release
-
 # /compilers/ParcelDump/
-/compilers/ParcelDump/*.aps
-/compilers/ParcelDump/Debug
 /compilers/ParcelDump/Makefile
 /compilers/ParcelDump/Makefile.in
-/compilers/ParcelDump/Release
 /compilers/ParcelDump/StdAfx.h.Td
 /compilers/ParcelDump/StdAfx.h.d
 /compilers/ParcelDump/StdAfx.h.gch
 /compilers/ParcelDump/hr-parceldump
 
 # /compilers/ResourceCompiler/
-/compilers/ResourceCompiler/*.aps
-/compilers/ResourceCompiler/Debug
 /compilers/ResourceCompiler/Makefile
 /compilers/ResourceCompiler/Makefile.in
-/compilers/ResourceCompiler/Release
 /compilers/ResourceCompiler/StdAfx.h.Td
 /compilers/ResourceCompiler/StdAfx.h.d
 /compilers/ResourceCompiler/StdAfx.h.gch
@@ -118,10 +98,6 @@ Thumbs.db
 /config/missing
 
 # /engine/
-/engine/*.ncb
-/engine/*.suo
-/engine/Debug
-/engine/Release
 /engine/Makefile
 /engine/Makefile.in
 /engine/StdAfx.h.Td
@@ -129,84 +105,55 @@ Thumbs.db
 /engine/StdAfx.h.gch
 
 # /engine/ColorTools/
-/engine/ColorTools/Debug
 /engine/ColorTools/Makefile
 /engine/ColorTools/Makefile.in
-/engine/ColorTools/Release
 
 # /engine/Control/
-/engine/Control/Debug
 /engine/Control/Makefile
 /engine/Control/Makefile.in
-/engine/Control/Release
 
 # /engine/Display/
-/engine/Display/Debug
 /engine/Display/Makefile
 /engine/Display/Makefile.in
-/engine/Display/Release
 
 # /engine/MainCharacter/
-/engine/MainCharacter/Debug
 /engine/MainCharacter/Makefile
 /engine/MainCharacter/Makefile.in
-/engine/MainCharacter/Release
 
 # /engine/MazeCompiler/
-/engine/MazeCompiler/Debug
 /engine/MazeCompiler/Makefile
 /engine/MazeCompiler/Makefile.in
-/engine/MazeCompiler/Release
 
 # /engine/Model/
-/engine/Model/Debug
 /engine/Model/Makefile
 /engine/Model/Makefile.in
-/engine/Model/Release
 
 # /engine/Net/
-/engine/Net/Debug
 /engine/Net/Makefile
 /engine/Net/Makefile.in
-/engine/Net/Release
 
 # /engine/ObjFac1/
-/engine/ObjFac1/*.aps
-/engine/ObjFac1/Debug
 /engine/ObjFac1/Makefile
 /engine/ObjFac1/Makefile.in
-/engine/ObjFac1/Release
 
 # /engine/ObjFacTools/
-/engine/ObjFacTools/Debug
 /engine/ObjFacTools/Makefile
 /engine/ObjFacTools/Makefile.in
-/engine/ObjFacTools/Release
 
 # /engine/Parcel/
-/engine/Parcel/Debug
 /engine/Parcel/Makefile
 /engine/Parcel/Makefile.in
-/engine/Parcel/Release
 
 # /engine/Script/
-/engine/Script/*.APS
 /engine/Script/*.loT
-/engine/Script/Debug
 /engine/Script/Makefile
 /engine/Script/Makefile.in
-/engine/Script/Release
 /engine/Script/libscript.la
 
-# /engine/Script/Help/
-
 # /engine/Util/
-/engine/Util/*.APS
 /engine/Util/*.loT
-/engine/Util/Debug
 /engine/Util/Makefile
 /engine/Util/Makefile.in
-/engine/Util/Release
 /engine/Util/libutil.la
 
 # /engine/Util/yaml/
@@ -214,10 +161,8 @@ Thumbs.db
 /engine/Util/yaml/Makefile.in
 
 # /engine/VideoServices/
-/engine/VideoServices/Debug
 /engine/VideoServices/Makefile
 /engine/VideoServices/Makefile.in
-/engine/VideoServices/Release
 
 # /hovercad/
 /hovercad/*.aps
