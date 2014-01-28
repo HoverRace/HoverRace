@@ -800,8 +800,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,0,0,0
- PRODUCTVERSION 2,0,0,0
+ FILEVERSION @HR_APP_VERSION_MAJOR@,@HR_APP_VERSION_MINOR@,@HR_APP_VERSION_PATCH@,@HR_APP_VERSION_BUILD@
+ PRODUCTVERSION @HR_APP_VERSION_MAJOR@,@HR_APP_VERSION_MINOR@,@HR_APP_VERSION_PATCH@,@HR_APP_VERSION_BUILD@
  FILEFLAGSMASK 0x1fL
 #ifdef _DEBUG
  FILEFLAGS 0x3L
@@ -817,12 +817,12 @@ BEGIN
         BLOCK "080004b0"
         BEGIN
             VALUE "FileDescription", "Online Racing Game"
-            VALUE "FileVersion", "2.0.0.0"
+            VALUE "FileVersion", "@HR_APP_VERSION_MAJOR@.@HR_APP_VERSION_MINOR@.@HR_APP_VERSION_PATCH@.@HR_APP_VERSION_BUILD@"
             VALUE "InternalName", "HoverRace"
             VALUE "LegalCopyright", "Copyright © 2013"
             VALUE "OriginalFilename", "HoverRace.exe"
             VALUE "ProductName", "HoverRace"
-            VALUE "ProductVersion", "2.0.0.0"
+            VALUE "ProductVersion", "@HR_APP_VERSION_MAJOR@.@HR_APP_VERSION_MINOR@.@HR_APP_VERSION_PATCH@.@HR_APP_VERSION_BUILD@"
         END
     END
     BLOCK "VarFileInfo"
