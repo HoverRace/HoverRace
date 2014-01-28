@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include <luabind/object.hpp>
+
 #ifdef _WIN32
 #	ifdef MR_ENGINE
 #		define MR_DllDeclare   __declspec( dllexport )
@@ -30,10 +32,6 @@
 #else
 #	define MR_DllDeclare
 #endif
-
-namespace luabind {
-	class object;
-}
 
 namespace HoverRace {
 namespace Script {

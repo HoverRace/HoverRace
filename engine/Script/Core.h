@@ -24,6 +24,8 @@
 
 #include <list>
 
+#include <luabind/object.hpp>
+
 #include "Lua.h"
 #include "ScriptExn.h"
 
@@ -45,9 +47,6 @@ namespace HoverRace {
 			class HelpHandler;
 		}
 	}
-}
-namespace luabind {
-	class object;
 }
 
 namespace HoverRace {
