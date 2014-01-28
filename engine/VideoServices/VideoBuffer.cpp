@@ -131,7 +131,7 @@ void VideoBuffer::CreatePalette()
 		MR_BASIC_COLORS * sizeof(ColorPalette::paletteEntry_t));
 	delete[] basicPalette;
 
-	if (bgPalette != NULL) {
+	if (bgPalette) {
 		ColorPalette::paletteEntry_t *pal = newPalette + MR_RESERVED_COLORS_BEGINNING + MR_BASIC_COLORS;
 		for (int i = 0; i < MR_BACK_COLORS; i++) {
 			*pal++ = ColorPalette::ConvertColor(

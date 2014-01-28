@@ -88,7 +88,7 @@ const Class::methods_t &Class::GetMethods() const
 
 void Class::AddMethod(MethodPtr method)
 {
-	if (method == NULL) return;
+	if (!method) return;
 
 	methods.insert(methods_t::value_type(method->GetName(), method));
 }

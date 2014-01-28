@@ -403,7 +403,7 @@ void Core::ReqHelp(const std::string &className, const std::string &methodName)
 	}
 	else {
 		Help::MethodPtr method = cls->GetMethod(methodName);
-		if (method == NULL) {
+		if (!method) {
 			luaL_error(state, "Class \"%s\" %s \"%s\"",
 				className.c_str(), _("has no method"), methodName.c_str());
 			return;

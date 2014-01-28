@@ -58,7 +58,7 @@ BaseTransfer::~BaseTransfer()
 void BaseTransfer::AssertCurlSuccess(CURLcode code, CancelFlagPtr cancelFlag)
 {
 	// One last check of the cancel flag.
-	if (cancelFlag != NULL && cancelFlag->IsCanceled()) {
+	if (cancelFlag && cancelFlag->IsCanceled()) {
 		code = CURLE_ABORTED_BY_CALLBACK;
 	}
 	switch (code) {

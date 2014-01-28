@@ -87,7 +87,7 @@ BOOL GameSession::LoadNew(const char *pTitle, RecordFilePtr pMazeFile, char pGam
 	BOOL lReturnValue = FALSE;
 
 	Clean();
-	if(pMazeFile != NULL) {
+	if (pMazeFile) {
 		mTitle = pTitle;
 		mCurrentMazeFile = pMazeFile;
 		lReturnValue = LoadLevel(1, pGameOpts);

@@ -58,7 +58,7 @@ BlockingTransfer::BlockingTransfer(const Agent &agent, std::ostream &buf,
 
 void BlockingTransfer::Init()
 {
-	if (cancelFlag == NULL) {
+	if (!cancelFlag) {
 		curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1);
 	}
 	else {
