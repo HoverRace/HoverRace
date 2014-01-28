@@ -1,7 +1,12 @@
 
 # Generate version info.
 configure_file(Game2/version.in.h ${CONFIG_HEADER_DIR}/hoverrace/hr-version.h
-    ESCAPE_QUOTES)
+	@ONLY ESCAPE_QUOTES)
+if(WIN32)
+	set(HR_CLIENT_VERSION_RC ${CONFIG_HEADER_DIR}/hoverrace/Game2.rc)
+	configure_file(Game2/Game2.in.rc ${HR_CLIENT_VERSION_RC}
+		@ONLY ESCAPE_QUOTES)
+endif()
 
 set(GROUPS
 	Game2 Game2/HoverScript)
@@ -18,7 +23,8 @@ foreach(group ${GROUPS})
 endforeach()
 
 if(WIN32)
-	file(GLOB srcs Game2/*.rc Game2/*.ico Game2/*.bmp)
+	file(GLOB srcs Game2/*.ico Game2/*.bmp)
+	list(APPEND srcs ${HR_CLIENT_VERSION_RC})
 	list(APPEND HR_CLIENT_SRCS ${srcs})
 	source_group(Resources FILES ${srcs})
 endif()
