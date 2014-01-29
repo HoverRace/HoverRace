@@ -1,4 +1,7 @@
 
+# Bump the warning level.
+include(SetWarningLevel)
+
 # Generate version info.
 configure_file(Game2/version.in.h ${CONFIG_HEADER_DIR}/hoverrace/hr-version.h
 	@ONLY ESCAPE_QUOTES)

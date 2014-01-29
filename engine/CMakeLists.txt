@@ -1,4 +1,7 @@
 
+# Bump the warning level.
+include(SetWarningLevel)
+
 set(HR_ENGINE_SRCS
 	StdAfx.cpp
 	StdAfx.h)
