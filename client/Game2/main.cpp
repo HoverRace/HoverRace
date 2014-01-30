@@ -84,13 +84,26 @@ void ShowMessage(const std::string &s)
  */
 bool ProcessCmdLine(int argc, char **argv)
 {
+	int i;
+
 #	ifdef _WIN32
 		int wargc;
 		wchar_t **wargv = CommandLineToArgvW(GetCommandLineW(), &wargc);
 		ASSERT(argc == wargc);
 #	endif
 
-	for (int i = 1; i < argc; ) {
+	// Pull the next argument as a path.
+	// On Windows we get the wide string version of the argument to handle
+	// Unicode in paths.
+	const auto argPath = [&]() -> OS::path_t {
+#		ifdef _WIN32
+			return wargv[i++];
+#		else
+			return argv[i++];
+#		endif
+	};
+
+	for (i = 1; i < argc; ) {
 		const char *arg = argv[i++];
 
 		if (strcmp("-D", arg) == 0) {
@@ -98,11 +111,7 @@ bool ProcessCmdLine(int argc, char **argv)
 		}
 		else if (strcmp("--exec", arg) == 0) {
 			if (i < argc) {
-#				ifdef _WIN32
-					initScript = wargv[i++];
-#				else
-					initScript = argv[i++];
-#				endif
+				initScript = argPath();
 			}
 			else {
 				ShowMessage("Expected: --exec (script filename)");
@@ -129,11 +138,7 @@ bool ProcessCmdLine(int argc, char **argv)
 		}
 		else if (strcmp("--media-path", arg) == 0) {
 			if (i < argc) {
-#				ifdef _WIN32
-					mediaPath = wargv[i++];
-#				else
-					mediaPath = argv[i++];
-#				endif
+				mediaPath = argPath();
 			}
 			else {
 				ShowMessage("Expected: --media-path (path to media files)");
@@ -196,7 +201,7 @@ OS::path_t FindExePath()
 		else {
 			break;
 		}
-	} 
+	}
 	OS::path_t retv(exePath);
 	delete[] exePath;
 	return retv;
@@ -288,7 +293,7 @@ int main(int argc, char** argv)
 			std::cerr <<
 				"***\n\n" <<
 				_("You found a bug!") << "\n\n" <<
-				ex.what() << "\n\n" 
+				ex.what() << "\n\n"
 				"***\n" <<
 				std::endl;
 #		endif
