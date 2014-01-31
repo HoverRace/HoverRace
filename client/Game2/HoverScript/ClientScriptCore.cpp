@@ -76,10 +76,8 @@ Script::Core *ClientScriptCore::Reset()
 
 	if (!classesRegistered) {
 
-		lua_State *L = GetState();
-
-		luabind::open(L);
 #		ifdef _DEBUG
+			lua_State *L = GetState();
 			// Enable class inspection.
 			luabind::bind_class_info(L);
 #		endif
