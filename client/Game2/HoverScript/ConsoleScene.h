@@ -80,7 +80,6 @@ class ConsoleScene : public UiScene
 		virtual void Render();
 
 	private:
-		Display::Display &display;
 		GameDirector &director;
 		SysConsole &console;
 

@@ -55,9 +55,6 @@ class ConfigPeer : public Script::Peer {
 
 		void LGetVideoRes();
 		void LSetVideoRes(int w, int h);
-
-	private:
-		Script::Core *scripting;
 };
 
 }  // namespace HoverScript

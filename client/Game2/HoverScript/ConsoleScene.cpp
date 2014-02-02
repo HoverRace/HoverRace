@@ -75,7 +75,7 @@ class ConsoleScene::LogLines /*{{{*/
 ConsoleScene::ConsoleScene(Display::Display &display, GameDirector &director,
                            SysConsole &console) :
 	SUPER("Console"),
-	display(display), director(director), console(console),
+	director(director), console(console),
 	lastLogIdx(-1), logsChanged(true), layoutChanged(true),
 	cursorOn(true), cursorTick(0), charSize(0, 0)
 {
