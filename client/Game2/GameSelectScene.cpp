@@ -52,7 +52,7 @@ GameSelectScene::GameSelectScene(Display::Display &display,
                                  RulebookLibrary &rulebookLibrary,
                                  bool multiplayer) :
 	SUPER(display, "", "Rulebook Select"),
-	display(display), director(director), rulebookLibrary(rulebookLibrary)
+	display(display), director(director)
 {
 	SetPhaseTransitionDuration(1000);
 	SetStateTransitionDuration(1000);

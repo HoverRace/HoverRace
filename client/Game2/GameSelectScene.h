@@ -73,7 +73,6 @@ class GameSelectScene : public DialogScene
 	private:
 		Display::Display &display;
 		GameDirector &director;
-		RulebookLibrary &rulebookLibrary;
 
 		std::shared_ptr<Display::Container> rulebookPanel;
 

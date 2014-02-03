@@ -119,8 +119,6 @@ class GameScene : public Scene
 		HoverScript::GamePeer *gamePeer;
 		std::shared_ptr<Rules> rules;
 
-		int frame;
-		int numPlayers;
 		bool muted;
 
 		std::vector<Viewport> viewports;

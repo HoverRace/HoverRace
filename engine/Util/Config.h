@@ -87,9 +87,6 @@ class MR_DllDeclare Config
 		OS::path_t mediaPath;
 		OS::path_t userTrackPath;
 		Parcel::TrackBundlePtr trackBundle;
-		int verMajor;
-		int verMinor;
-		int verPatch;
 		int verBuild;
 		bool prerelease;
 		std::string shortVersion;

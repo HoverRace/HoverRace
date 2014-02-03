@@ -51,7 +51,7 @@ MessageScene::MessageScene(Display::Display &display,
                            const std::string &message,
                            bool hasCancel) :
 	SUPER(display, "Message (" + title + ")"),
-	display(display), director(director),
+	director(director),
 	hasCancel(hasCancel)
 {
 	Config *cfg = Config::GetInstance();

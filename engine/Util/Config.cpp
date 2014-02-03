@@ -140,7 +140,7 @@ Config::Config(int verMajor, int verMinor, int verPatch, int verBuild,
                bool prerelease, const OS::path_t &mediaPath,
                const OS::path_t &path) :
 	unlinked(false),
-	verMajor(verMajor), verMinor(verMinor), verPatch(verPatch), verBuild(verBuild),
+	verBuild(verBuild),
 	prerelease(prerelease)
 {
 #	ifndef _WIN32

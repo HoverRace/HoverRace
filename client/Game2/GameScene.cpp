@@ -72,7 +72,7 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
                      std::shared_ptr<Rules> rules) :
 	SUPER("Game"),
 	display(display), director(director), gamePeer(gamePeer), rules(rules),
-	frame(0), numPlayers(1), muted(false),
+	muted(false),
 	session(nullptr),
 	firedOnStart(false), firedOnRaceFinish(false)
 {

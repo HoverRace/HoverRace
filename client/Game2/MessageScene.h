@@ -73,7 +73,6 @@ class MessageScene : public FormScene
 		virtual void Render();
 
 	private:
-		Display::Display &display;
 		GameDirector &director;
 		bool hasCancel;
 
