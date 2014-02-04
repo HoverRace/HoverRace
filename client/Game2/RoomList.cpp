@@ -145,7 +145,7 @@ void RoomList::LoadFromStream(std::istream &in)
  */
 void RoomList::SetSelectedRoom(size_t index)
 {
-	selectedRoom = (index >= 0 && index < rooms.size()) ? rooms.at(index) : NULL;
+	selectedRoom = (index < rooms.size()) ? rooms.at(index) : NULL;
 }
 
 /**
@@ -171,7 +171,7 @@ std::istream &HoverRace::Client::operator>>(std::istream &in, RoomList::IpAddr &
 	// to ease in the transition.
 
 	in >> ip.s;
-	
+
 	unsigned long i = 0;
 	unsigned int nibble = 0;
 	unsigned int components = 1;
