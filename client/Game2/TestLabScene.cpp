@@ -192,8 +192,7 @@ namespace Module {
 }
 
 TestLabScene::TestLabScene(Display::Display &display, GameDirector &director) :
-	SUPER(display, "Test Lab"),
-	display(display), director(director)
+	SUPER(display, "Test Lab")
 {
 	// Clear the screen on every frame.
 	fader.reset(new Display::ScreenFade(Display::COLOR_BLACK, 1.0));

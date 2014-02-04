@@ -67,8 +67,6 @@ class TrackSelectScene : public DialogScene
 		cancelSignal_t &GetCancelSignal() { return cancelSignal; }
 
 	private:
-		Display::Display &display;
-		GameDirector &director;
 		std::shared_ptr<Rules> rules;
 
 		Model::TrackList trackList;

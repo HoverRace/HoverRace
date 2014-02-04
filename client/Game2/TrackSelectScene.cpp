@@ -63,7 +63,6 @@ TrackSelectScene::TrackSelectScene(Display::Display &display,
                                    GameDirector &director,
                                    std::shared_ptr<const Rulebook> rulebook) :
 	SUPER(display, "", "Track Select"),
-	display(display), director(director),
 	rules(std::make_shared<Rules>(rulebook)),
 	trackList()
 {
