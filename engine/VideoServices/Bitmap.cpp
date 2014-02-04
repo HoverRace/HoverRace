@@ -50,8 +50,6 @@ int Bitmap::GetBestBitmapForYRes(int pYRes) const
 {
 	int lReturnValue = -1;
 
-	pYRes = pYRes;
-
 	int lCount = GetNbSubBitmap();
 
 	for(int lCounter = 0; lCounter < lCount; lCounter++) {
@@ -67,8 +65,6 @@ int Bitmap::GetBestBitmapForYRes(int pYRes) const
 int Bitmap::GetBestBitmapForXRes(int pXRes) const
 {
 	int lReturnValue = -1;
-
-	pXRes = pXRes;
 
 	int lCount = GetNbSubBitmap();
 
