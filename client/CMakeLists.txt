@@ -1,7 +1,4 @@
 
-# Bump the warning level.
-include(SetWarningLevel)
-
 # Generate version info.
 configure_file(Game2/version.in.h ${CONFIG_HEADER_DIR}/hoverrace/hr-version.h
 	@ONLY ESCAPE_QUOTES)
@@ -50,6 +47,10 @@ endif()
 if(MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zm120")
 endif()
+
+# Bump the warning level.
+include(SetWarningLevel)
+set_full_warnings(hoverrace)
 
 # Enable precompiled headers.
 # Note: Explicitly setting the language to fix misdetection in some cases.

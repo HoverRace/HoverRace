@@ -1,7 +1,4 @@
 
-# Bump the warning level.
-include(SetWarningLevel)
-
 set(HR_ENGINE_SRCS
 	StdAfx.cpp
 	StdAfx.h)
@@ -78,6 +75,10 @@ if(WIN32)
 			${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release/${dll}.dll)
 	endforeach()
 endif(WIN32)
+
+# Bump the warning level.
+include(SetWarningLevel)
+set_full_warnings(hoverrace-engine)
 
 # Enable precompiled headers.
 # Note: Explicitly setting the language to fix misdetection in some cases.
