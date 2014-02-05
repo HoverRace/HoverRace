@@ -43,15 +43,7 @@ link_directories(${Boost_LIBRARY_DIRS})
 # Use bundled Lua and Luabind from source.
 # On Win32, we bundle the prebuilt libraries.
 if(NOT WIN32)
-	add_subdirectory(external/lua)
-	set(LUA_FOUND TRUE)
-	include_directories(SYSTEM
-		external/lua/src
-		${CMAKE_BINARY_DIR}/external/lua)
-	set(LUA_LIBRARIES liblua)
-
-	add_subdirectory(external/luabind)
-	include_directories(SYSTEM external/luabind)
+	add_subdirectory(external)
 endif()
 
 set(ENABLE_NLS TRUE)
@@ -66,7 +58,7 @@ if(UNIX)
 		sdl2>=2.0
 		SDL2_image>=2.0
 		SDL2_ttf>=2.0)
-	include_directories(SYSTEM ${DEPS_INCLUDE_DIRS})
+	include_directories(SYSTEM ${DEPS_INCLUDE_DIRS} ${HR_EXTERNAL_INCLUDE_DIRS})
 	link_directories(${DEPS_LIBRARY_DIRS})
 
 	# Find LibYAML.
