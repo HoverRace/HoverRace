@@ -78,7 +78,7 @@ endif(WIN32)
 
 # Bump the warning level.
 include(SetWarningLevel)
-set_full_warnings(hoverrace-engine)
+set_full_warnings(TARGET hoverrace-engine)
 
 # Enable precompiled headers.
 # Note: Explicitly setting the language to fix misdetection in some cases.

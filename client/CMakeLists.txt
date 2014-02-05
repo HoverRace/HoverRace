@@ -50,7 +50,7 @@ endif()
 
 # Bump the warning level.
 include(SetWarningLevel)
-set_full_warnings(hoverrace)
+set_full_warnings(TARGET hoverrace)
 
 # Enable precompiled headers.
 # Note: Explicitly setting the language to fix misdetection in some cases.
