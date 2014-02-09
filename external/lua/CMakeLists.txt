@@ -134,6 +134,8 @@ if ( LUA_BUILD_AS_DLL )
   set_target_properties ( liblua PROPERTIES COMPILE_DEFINITIONS LUA_BUILD_AS_DLL )
 endif ()
 
+if(FALSE)  # HoverRace: Disable building and installing executables.
+
 add_executable ( lua ${SRC_LUA} src/lua.rc )
 target_link_libraries ( lua liblua )
 
@@ -155,3 +157,5 @@ install_header ( src/lua.h src/lualib.h src/lauxlib.h src/lua.hpp ${CMAKE_CURREN
 install_doc ( doc/ )
 install_foo ( etc/ )
 #install_test ( test/ )
+
+endif()   # HoverRace
