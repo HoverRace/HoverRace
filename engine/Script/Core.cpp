@@ -1,8 +1,7 @@
 
 // Core.cpp
-// Scripting support.
 //
-// Copyright (c) 2009, 2010 Michael Imamura.
+// Copyright (c) 2009, 2010, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -128,7 +127,7 @@ Core *Core::Reset()
 	// Remove the metatable protection from the global table.
 	// We don't need to do the same to the string metatable, since
 	// luaopen_string handles that for us.
-	lua_pushvalue(state, LUA_GLOBALSINDEX);
+	lua_rawgeti(state, LUA_REGISTRYINDEX, LUA_RIDX_GLOBALS);
 	lua_pushnil(state);
 	lua_setmetatable(state, 1);
 	lua_pop(state, 1);
@@ -164,7 +163,7 @@ void Core::ActivateSandbox()
 	// Protect the metatable for the global table.
 	// We do this instead of just destroying/replacing the "_G" global so that
 	// users can still query the table for a list of keys, etc.
-	lua_pushvalue(state, LUA_GLOBALSINDEX);
+	lua_rawgeti(state, LUA_REGISTRYINDEX, LUA_RIDX_GLOBALS);
 	lua_rawgeti(state, LUA_REGISTRYINDEX, metatableProtector);
 	lua_setmetatable(state, -2);
 	lua_pop(state, 1);
