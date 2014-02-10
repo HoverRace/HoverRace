@@ -82,7 +82,7 @@ elseif(WIN32)
 		alut
 		intl
 		optimized libcurl debug libcurlD
-		optimized lua5.1 debug lua5.1D
+		optimized lua5.2 debug lua5.2D
 		optimized luabind debug luabindD
 		optimized yaml debug yamlD)
 

@@ -2,11 +2,9 @@
 # fetch.ps1
 #   Downloads, extracts, and patches.
 
-$srcVer = "5.1.4"
-$srcNormVer = "5_1_4"
-$src = "lua5.1"
-#TODO: Make the SourceForge mirror user-selectable.
-$url = "http://superb-sea2.dl.sourceforge.net/project/luabinaries/$srcVer/Docs%20and%20Sources/lua$srcNormVer`_Sources.zip"
+$srcVer = "5.2.3"
+$src = "lua-$srcVer"
+$url = "http://www.lua.org/ftp/lua-$srcVer.tar.gz"
 $curDir = Get-Location
 $destFile = "$curDir\download\$src.zip"
 $srcDir = "$curDir\src"

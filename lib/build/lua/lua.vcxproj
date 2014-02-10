@@ -14,7 +14,10 @@
     <ClCompile Include="src\src\lapi.c" />
     <ClCompile Include="src\src\lauxlib.c" />
     <ClCompile Include="src\src\lbaselib.c" />
+    <ClCompile Include="src\src\lbitlib.c" />
     <ClCompile Include="src\src\lcode.c" />
+    <ClCompile Include="src\src\lcorolib.c" />
+    <ClCompile Include="src\src\lctype.c" />
     <ClCompile Include="src\src\ldblib.c" />
     <ClCompile Include="src\src\ldebug.c" />
     <ClCompile Include="src\src\ldo.c" />
@@ -37,17 +40,39 @@
     <ClCompile Include="src\src\ltable.c" />
     <ClCompile Include="src\src\ltablib.c" />
     <ClCompile Include="src\src\ltm.c" />
-    <ClCompile Include="src\src\luac.c" />
     <ClCompile Include="src\src\lundump.c" />
     <ClCompile Include="src\src\lvm.c" />
     <ClCompile Include="src\src\lzio.c" />
-    <ClCompile Include="src\src\print.c" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\src\lua5.1.def" />
+    <ClInclude Include="src\src\lapi.h" />
+    <ClInclude Include="src\src\lauxlib.h" />
+    <ClInclude Include="src\src\lcode.h" />
+    <ClInclude Include="src\src\lctype.h" />
+    <ClInclude Include="src\src\ldebug.h" />
+    <ClInclude Include="src\src\ldo.h" />
+    <ClInclude Include="src\src\lfunc.h" />
+    <ClInclude Include="src\src\lgc.h" />
+    <ClInclude Include="src\src\llex.h" />
+    <ClInclude Include="src\src\llimits.h" />
+    <ClInclude Include="src\src\lmem.h" />
+    <ClInclude Include="src\src\lobject.h" />
+    <ClInclude Include="src\src\lopcodes.h" />
+    <ClInclude Include="src\src\lparser.h" />
+    <ClInclude Include="src\src\lstate.h" />
+    <ClInclude Include="src\src\lstring.h" />
+    <ClInclude Include="src\src\ltable.h" />
+    <ClInclude Include="src\src\ltm.h" />
+    <ClInclude Include="src\src\lua.h" />
+    <ClInclude Include="src\src\lua.hpp" />
+    <ClInclude Include="src\src\luaconf.h" />
+    <ClInclude Include="src\src\lualib.h" />
+    <ClInclude Include="src\src\lundump.h" />
+    <ClInclude Include="src\src\lvm.h" />
+    <ClInclude Include="src\src\lzio.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>lua5.1</ProjectName>
+    <ProjectName>lua5.2</ProjectName>
     <ProjectGuid>{7243E30E-52D9-384A-91A2-C8783F1F808B}</ProjectGuid>
     <RootNamespace>lua5.1_dll</RootNamespace>
     <Keyword>Win32Proj</Keyword>
@@ -104,7 +129,6 @@
     <Link>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <AdditionalLibraryDirectories>../lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ModuleDefinitionFile>src/src/lua5.1.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)lua5.1.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
@@ -135,7 +159,6 @@
     <Link>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <AdditionalLibraryDirectories>../lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ModuleDefinitionFile>src/src/lua5.1.def</ModuleDefinitionFile>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>

@@ -56,7 +56,7 @@ if(WIN32)
 		alut intl libjpeg-9 libpng16-16 LiteUnzip LiteZip OpenAL32 zlib1)
 	# DLLs that have both debug and release versions.
 	set(CONFIGURED_DLLS
-		libcurl lua5.1 luabind SDL2 SDL2_image)
+		libcurl lua5.2 luabind SDL2 SDL2_image)
 
 	foreach(dll ${COMMON_DLLS})
 		add_custom_command(TARGET hoverrace-engine PRE_BUILD
