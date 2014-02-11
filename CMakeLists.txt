@@ -40,11 +40,14 @@ find_package(Boost ${BOOST_MIN_VER} REQUIRED COMPONENTS
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
+# Gather the build artifacts into common directories.
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 # Use bundled Lua and Luabind from source.
-# On Win32, we bundle the prebuilt libraries.
-if(NOT WIN32)
-	add_subdirectory(external)
-endif()
+add_subdirectory(external)
+include_directories(SYSTEM ${HR_EXTERNAL_INCLUDE_DIRS})
 
 set(ENABLE_NLS TRUE)
 
@@ -58,7 +61,7 @@ if(UNIX)
 		sdl2>=2.0
 		SDL2_image>=2.0
 		SDL2_ttf>=2.0)
-	include_directories(SYSTEM ${DEPS_INCLUDE_DIRS} ${HR_EXTERNAL_INCLUDE_DIRS})
+	include_directories(SYSTEM ${DEPS_INCLUDE_DIRS})
 	link_directories(${DEPS_LIBRARY_DIRS})
 
 	# Find LibYAML.
@@ -82,8 +85,6 @@ elseif(WIN32)
 		alut
 		intl
 		optimized libcurl debug libcurlD
-		optimized lua5.2 debug lua5.2D
-		optimized luabind debug luabindD
 		optimized yaml debug yamlD)
 
 	include_directories(
@@ -91,11 +92,6 @@ elseif(WIN32)
 		${CMAKE_SOURCE_DIR}/include/lua)
 	link_directories(${CMAKE_SOURCE_DIR}/lib)
 endif()
-
-# Gather the build artifacts into common directories.
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # Generate the initial app config file.
 # We only do very basic escaping of the path here.
