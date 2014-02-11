@@ -37,10 +37,8 @@ if(WIN32)
 		YAML_DECLARE_STATIC)  # Use static linking for libYAML.
 endif()
 include_directories(".")
-target_link_libraries(hoverrace-engine ${Boost_LIBRARIES} ${DEPS_LIBRARIES})
-if(NOT WIN32)
-	target_link_libraries(hoverrace-engine luabind)
-endif()
+target_link_libraries(hoverrace-engine ${Boost_LIBRARIES} ${DEPS_LIBRARIES}
+    liblua luabind)
 
 # Install prebuilt bundled DLLs into the right locations.
 if(WIN32)
@@ -49,7 +47,7 @@ if(WIN32)
 		alut intl libjpeg-9 libpng16-16 LiteUnzip LiteZip OpenAL32 zlib1)
 	# DLLs that have both debug and release versions.
 	set(CONFIGURED_DLLS
-		libcurl lua5.1 luabind SDL2 SDL2_image)
+		libcurl SDL2 SDL2_image)
 
 	foreach(dll ${COMMON_DLLS})
 		add_custom_command(TARGET hoverrace-engine PRE_BUILD

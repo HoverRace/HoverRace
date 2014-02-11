@@ -3,7 +3,6 @@ include(SetWarningLevel)
 
 add_subdirectory(lua)
 set_no_warnings(TARGET liblua)
-set_no_warnings(TARGET liblua_static)
 
 set(LUA_FOUND TRUE)
 include_directories(SYSTEM

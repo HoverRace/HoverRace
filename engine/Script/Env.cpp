@@ -1,8 +1,7 @@
 
 // Env.cpp
-// An environment in the scripting engine.
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -77,14 +76,16 @@ void Env::CopyGlobals()
 {
 	lua_State *state = scripting->GetState();
 
-	lua_pushnil(state);  // table nil
-	while (lua_next(state, LUA_GLOBALSINDEX) != 0) {
-		// table key value
-		lua_pushvalue(state, -2);  // table key value key
-		lua_insert(state, -2);  // table key key value
-		lua_rawset(state, -4);  // table key
+	lua_rawgeti(state, LUA_REGISTRYINDEX, LUA_RIDX_GLOBALS); // table _G
+	lua_pushnil(state);  // table _G nil
+	while (lua_next(state, -2)) {
+		// table _G key value
+		lua_pushvalue(state, -2);  // table _G key value key
+		lua_insert(state, -2);  // table _G key key value
+		lua_rawset(state, -5);  // table _G key
 	}
-	// table
+	// table _G
+	lua_pop(state, 1);  // table
 }
 
 void Env::SetHelpHandler(Help::HelpHandler *handler)
@@ -121,7 +122,7 @@ void Env::Execute(const std::string &chunk, const std::string &name)
 		lua_pushvalue(state, -1);
 		lua_rawseti(state, LUA_REGISTRYINDEX, envRef);
 	}
-	lua_setfenv(state, -2);
+	lua_setupvalue(state, -2, 1);
 
 	// May throw ScriptExn, but the function on the stack will be consumed anyway.
 	scripting->CallAndPrint(0, helpHandler);

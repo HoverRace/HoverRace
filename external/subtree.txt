@@ -1,5 +1,5 @@
 # This is a list of each external and which repository it came from.
 # dirname repository branch
-lua https://github.com/LuaDist/lua.git lua-5.1
+lua https://github.com/LuaDist/lua.git master
 luabind https://github.com/rpavlik/luabind.git master
 

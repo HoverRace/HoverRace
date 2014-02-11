@@ -1,5 +1,5 @@
 
-Current supported Lua version: 5.1.4
+Current supported Lua version: 5.2.3
 
 
 == PowerShell Instructions ==
@@ -22,9 +22,9 @@ http://technet.microsoft.com/en-us/library/ee176949.aspx
 
 == Manual Instructions ==
 
-1. Download the Lua sources (lua5_1_4_Sources.zip) from here:
+1. Download the Lua sources (lua-5.2.3.tar.gz) from here:
 
-http://luabinaries.sourceforge.net/download.html
+http://www.lua.org/ftp/
 
 2. Unpack the .zip file into this folder.
 
