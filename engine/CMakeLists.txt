@@ -44,13 +44,6 @@ endif()
 
 # Install prebuilt bundled DLLs into the right locations.
 if(WIN32)
-	#add_custom_command(TARGET hoverrace-engine PRE_BUILD
-	#	COMMAND ${CMAKE_COMMAND} -E make_directory
-	#	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug)
-	#add_custom_command(TARGET hoverrace-engine PRE_BUILD
-	#	COMMAND ${CMAKE_COMMAND} -E make_directory
-	#	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release)
-
 	# DLLs that have only release versions.
 	set(COMMON_DLLS
 		alut intl libjpeg-9 libpng16-16 LiteUnzip LiteZip OpenAL32 zlib1)
