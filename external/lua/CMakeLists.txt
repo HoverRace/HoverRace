@@ -6,7 +6,9 @@
 
 project ( lua C )
 cmake_minimum_required ( VERSION 2.8 )
+if(FALSE)  # HoverRace: Handling packaging in parent project.
 include ( cmake/dist.cmake )
+endif()  # HoverRace
 
 ## CONFIGURATION
 # Default configuration (we assume POSIX by default)
