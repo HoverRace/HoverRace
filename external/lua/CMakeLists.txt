@@ -66,6 +66,8 @@ else ( )
   endif ( )
 endif ( )
 
+if(FALSE)  # HoverRace: Skip Readline and Curses checks (no CLI).
+
 ## SETUP
 # Optional libraries
 find_package ( Readline )
@@ -77,6 +79,8 @@ find_package ( Curses )
 if ( CURSES_FOUND )
   option ( LUA_USE_CURSES "Use curses in the Lua CLI." ON )
 endif ( )
+
+endif()  # HoverRace
 
 # Setup needed variables and libraries
 if ( LUA_USE_POSIX )
