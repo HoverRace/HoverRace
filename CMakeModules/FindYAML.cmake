@@ -1,4 +1,6 @@
 
+include(FindPackageHandleStandardArgs)
+
 find_path(YAML_INCLUDE_DIR NAMES yaml.h)
 find_library(YAML_LIBRARIES NAMES yaml libyaml)
 find_package_handle_standard_args(YAML DEFAULT_MSG
