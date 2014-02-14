@@ -73,22 +73,6 @@ Core::Core() :
 	state = luaL_newstate();
 
 	//TODO: Set panic handler.
-
-	//TODO: Load class help on demand.
-	Help::ClassPtr cls;
-
-	/*
-	cls = std::make_shared<Help::Class>("Game");
-	cls->AddMethod(std::make_shared<Help::Method>("get_config"));
-	cls->AddMethod(std::make_shared<Help::Event>("on_init"));
-	cls->AddMethod(std::make_shared<Help::Event>("on_shutdown"));
-	cls->AddMethod(std::make_shared<Help::Method>("is_initialized"));
-	helpClasses.insert(helpClasses_t::value_type(cls->GetName(), cls));
-	*/
-
-	cls = std::make_shared<Help::Class>("Session");
-	cls->AddMethod(std::make_shared<Help::Method>("get_num_players"));
-	helpClasses.insert(helpClasses_t::value_type(cls->GetName(), cls));
 }
 
 Core::~Core()
