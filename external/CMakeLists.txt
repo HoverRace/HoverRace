@@ -1,6 +1,8 @@
 
 include(SetWarningLevel)
 
+set(BUILD_SHARED_LIBS TRUE)
+
 add_subdirectory(lua)
 set_no_warnings(TARGET liblua)
 
@@ -9,6 +11,8 @@ include_directories(SYSTEM
 	lua/src
 	${CMAKE_BINARY_DIR}/external/lua)
 set(LUA_LIBRARIES liblua)
+
+set(BUILD_SHARED_LUABIND TRUE)
 
 add_subdirectory(luabind)
 set_no_warnings(TARGET luabind)
