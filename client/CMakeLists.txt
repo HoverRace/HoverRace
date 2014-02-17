@@ -8,6 +8,10 @@ if(WIN32)
 		@ONLY ESCAPE_QUOTES)
 endif()
 
+set(HR_CLIENT_SRCS
+	StdAfx.cpp
+	StdAfx.h)
+
 set(GROUPS
 	Game2 Game2/HoverScript)
 
@@ -31,7 +35,7 @@ endif()
 
 add_executable(hoverrace WIN32 ${HR_CLIENT_SRCS})
 set_target_properties(hoverrace PROPERTIES LINKER_LANGUAGE CXX)
-include_directories(Game2)
+include_directories(".")
 target_link_libraries(hoverrace ${Boost_LIBRARIES} ${DEPS_LIBRARIES}
 	hoverrace-engine)
 if(WIN32)
@@ -57,5 +61,5 @@ set_full_warnings(TARGET hoverrace)
 set_target_properties(hoverrace PROPERTIES
 	COTIRE_ADD_UNITY_BUILD FALSE)
 set_target_properties(hoverrace PROPERTIES
-	COTIRE_CXX_PREFIX_HEADER_INIT Game2/StdAfx.h)
+	COTIRE_CXX_PREFIX_HEADER_INIT StdAfx.h)
 cotire(hoverrace LANGUAGES CXX)
