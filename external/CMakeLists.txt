@@ -12,6 +12,7 @@ include_directories(SYSTEM
 	${CMAKE_BINARY_DIR}/external/lua)
 set(LUA_LIBRARIES liblua)
 
+set(INSTALL_LUABIND FALSE)
 set(BUILD_SHARED_LUABIND TRUE)
 
 add_subdirectory(luabind)
