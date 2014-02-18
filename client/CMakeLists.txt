@@ -34,7 +34,9 @@ if(WIN32)
 endif()
 
 add_executable(hoverrace WIN32 ${HR_CLIENT_SRCS})
-set_target_properties(hoverrace PROPERTIES LINKER_LANGUAGE CXX)
+set_target_properties(hoverrace PROPERTIES
+	LINKER_LANGUAGE CXX
+	PROJECT_LABEL HoverRace)
 include_directories(".")
 target_link_libraries(hoverrace ${Boost_LIBRARIES} ${DEPS_LIBRARIES}
 	hoverrace-engine)

@@ -30,7 +30,9 @@ foreach(group ${GROUPS})
 endforeach()
 
 add_library(hoverrace-engine SHARED ${HR_ENGINE_SRCS})
-set_target_properties(hoverrace-engine PROPERTIES LINKER_LANGUAGE CXX)
+set_target_properties(hoverrace-engine PROPERTIES
+	LINKER_LANGUAGE CXX
+	PROJECT_LABEL "HoverRace Engine")
 if(WIN32)
 	set_property(TARGET hoverrace-engine APPEND PROPERTY COMPILE_DEFINITIONS
 		MR_ENGINE  # Enable dllexport.
