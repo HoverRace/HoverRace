@@ -78,9 +78,8 @@ void SessionPeer::OnSessionStart(ClientSession *session)
 
 	auto scripting = GetScripting();
 
-	rules.swap(session->GetRules()->GetRules());
-
-	players.swap(luabind::newtable(scripting->GetState()));
+	rules = session->GetRules()->GetRules();
+	players = luabind::newtable(scripting->GetState());
 
 	playerRefs.clear();
 	for (int i = 0; i < session->GetNbPlayers(); i++) {
