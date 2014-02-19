@@ -1,7 +1,7 @@
 
 // SessionPeer.cpp
 //
-// Copyright (c) 2010, 2013 Michael Imamura.
+// Copyright (c) 2010, 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -35,13 +35,11 @@ namespace HoverScript {
 
 SessionPeer::SessionPeer(Script::Core *scripting, ClientSession *session) :
 	SUPER(scripting, "Session"), session(session),
-	rules(session->GetRules()->GetRules()),
-	players(luabind::newtable(scripting->GetState()))
+	rules(),
+	players()
 {
-	for (int i = 0; i < session->GetNbPlayers(); i++) {
-		playerRefs.push_back(std::make_shared<PlayerPeer>(
-			scripting, session->GetPlayer(i)));
-		players[i] = playerRefs.back();
+	if (session) {
+		OnSessionStart(session);
 	}
 }
 
@@ -68,13 +66,40 @@ void SessionPeer::Register(Script::Core *scripting)
 }
 
 /**
+ * Attach a session.
+ * @param session The session to attach (may be @c nullptr).
+ */
+void SessionPeer::OnSessionStart(ClientSession *session)
+{
+	if (!session) {
+		OnSessionEnd();
+		return;
+	}
+
+	auto scripting = GetScripting();
+
+	rules.swap(session->GetRules()->GetRules());
+
+	players.swap(luabind::newtable(scripting->GetState()));
+
+	playerRefs.clear();
+	for (int i = 0; i < session->GetNbPlayers(); i++) {
+		playerRefs.push_back(std::make_shared<PlayerPeer>(
+			scripting, session->GetPlayer(i)));
+		players[i] = playerRefs.back();
+	}
+}
+
+/**
  * Signal that the session has ended.
  * This will detach this peer from the session.
  */
 void SessionPeer::OnSessionEnd()
 {
-	session = NULL;
+	session = nullptr;
 	rules = luabind::object();
+	players = luabind::object();
+	playerRefs.clear();
 }
 
 /**
@@ -84,7 +109,7 @@ void SessionPeer::OnSessionEnd()
  */
 void SessionPeer::VerifySession() const
 {
-	if (session == NULL) {
+	if (!session) {
 		luaL_error(GetScripting()->GetState(), "Session has ended.");
 	}
 }
