@@ -68,6 +68,7 @@ void Class::Load(yaml::MapNode *node)
 			}
 			else {
 				//TODO
+				continue;
 			}
 
 			method->Load(root);
