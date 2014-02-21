@@ -24,9 +24,10 @@
 
 namespace HoverRace {
 	namespace Client {
+		class ClientSession;
+		class Rules;
 		class Scene;
 		typedef std::shared_ptr<Scene> ScenePtr;
-		class Rules;
 	}
 	namespace Control {
 		class InputEventController;
@@ -118,6 +119,10 @@ class GameDirector
 		 * @return The new control settings.
 		 */
 		virtual Control::InputEventController *ReloadController() = 0;
+
+		typedef boost::signals2::signal<void(ClientSession*)> sessionChangedSignal_t;
+		virtual sessionChangedSignal_t &GetSessionChangedSignal() = 0;
+
 
 #	ifdef _WIN32
 		virtual HWND GetWindowHandle() const = 0;

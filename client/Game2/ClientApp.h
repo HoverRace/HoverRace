@@ -107,6 +107,7 @@ class ClientApp : public GameDirector
 		virtual VideoServices::VideoBuffer *GetVideoBuffer() const;
 		virtual Control::InputEventController *GetController() const { return controller; }
 		virtual Control::InputEventController *ReloadController();
+		virtual sessionChangedSignal_t &GetSessionChangedSignal() { return sessionChangedSignal; }
 #	ifdef _WIN32
 		virtual HWND GetWindowHandle() const { return mainWnd; }
 #	endif
@@ -127,6 +128,8 @@ class ClientApp : public GameDirector
 		HoverScript::SysEnv *sysEnv;
 		HoverScript::SysConsole *sysConsole;
 		std::weak_ptr<HoverScript::ConsoleScene> consoleScene;
+
+		sessionChangedSignal_t sessionChangedSignal;
 
 		boost::signals2::connection consoleToggleConn;
 

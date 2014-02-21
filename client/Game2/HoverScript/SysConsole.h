@@ -36,8 +36,9 @@ namespace HoverRace {
 			class DebugPeer;
 			class GamePeer;
 			class SessionPeer;
-			typedef std::shared_ptr<SessionPeer> SessionPeerPtr;
 		}
+		class ClientSession;
+		class GameDirector;
 	}
 }
 
@@ -57,8 +58,8 @@ class SysConsole : public Console
 {
 	typedef Console SUPER;
 	public:
-		SysConsole(Script::Core *scripting, DebugPeer *debugPeer,
-			GamePeer *gamePeer, int maxLogLines=512);
+		SysConsole(Script::Core *scripting, GameDirector &director,
+			DebugPeer *debugPeer, GamePeer *gamePeer, int maxLogLines=512);
 		virtual ~SysConsole();
 
 	protected:
@@ -66,6 +67,11 @@ class SysConsole : public Console
 
 	public:
 		virtual void Advance(Util::OS::timestamp_t tick) { }
+
+	private:
+		void OnSessionChanged(ClientSession *session);
+
+	public:
 		virtual void Clear();
 		void SubmitChunkWithHistory(const std::string &s);
 
@@ -166,6 +172,9 @@ class SysConsole : public Console
 	private:
 		DebugPeer *debugPeer;
 		GamePeer *gamePeer;
+		std::shared_ptr<SessionPeer> sessionPeer;
+
+		boost::signals2::scoped_connection sessionChangedConn;
 
 		bool introWritten;
 		int maxLogLines;

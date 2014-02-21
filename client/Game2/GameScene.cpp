@@ -103,6 +103,7 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 		throw Exception("Main character creation failed");
 	}
 	sessionPeer = std::make_shared<SessionPeer>(scripting, session);
+	director.GetSessionChangedSignal()(session);
 
 	//TODO: Support split-screen with multiple viewports.
 	viewports.emplace_back(
@@ -293,6 +294,7 @@ void GameScene::OnRaceFinish()
 {
 	rules->GetRulebook()->OnPostGame(sessionPeer);
 	gamePeer->OnSessionEnd(sessionPeer);
+	director.GetSessionChangedSignal()(nullptr);
 }
 
 }  // namespace HoverScript

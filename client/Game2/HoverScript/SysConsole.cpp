@@ -24,8 +24,11 @@
 #include "../../../engine/Script/Help/HelpHandler.h"
 #include "../../../engine/Script/Help/Class.h"
 #include "../../../engine/Util/Config.h"
+#include "../../../engine/Util/Log.h"
+#include "../GameDirector.h"
 #include "DebugPeer.h"
 #include "GamePeer.h"
+#include "SessionPeer.h"
 
 #include "SysConsole.h"
 
@@ -39,21 +42,29 @@ namespace HoverScript {
 /**
  * Constructor.
  * @param scripting The underlying scripting engine.
+ * @param director The game director.
  * @param debugPeer Debug scripting peer.
  * @param gamePeer Game scripting peer.
  * @param maxLogLines The maximum number of log lines to store in the
  *                    log history.
  */
-SysConsole::SysConsole(Script::Core *scripting, DebugPeer *debugPeer,
-                       GamePeer *gamePeer, int maxLogLines) :
+SysConsole::SysConsole(Script::Core *scripting,
+                       GameDirector &director,
+                       DebugPeer *debugPeer, GamePeer *gamePeer,
+                       int maxLogLines) :
 	SUPER(scripting),
 	debugPeer(debugPeer), gamePeer(gamePeer),
+	sessionPeer(std::make_shared<SessionPeer>(scripting, nullptr)),
 	introWritten(false), maxLogLines(maxLogLines), logLines(), baseLogIdx(0)
 {
 	commandLine.reserve(1024);
 
 	// Add introductory text.
 	LogInfo(_("System console initialized."));
+
+	sessionChangedConn = director.GetSessionChangedSignal().
+		connect(std::bind(&SysConsole::OnSessionChanged, this,
+			std::placeholders::_1));
 
 	logConn = Log::logAddedSignal.connect(
 		std::bind(&SysConsole::OnLog, this, std::placeholders::_1));
@@ -77,6 +88,15 @@ void SysConsole::InitEnv()
 	object env(from_stack(L, -1));
 	env["debug"] = debugPeer;
 	env["game"] = gamePeer;
+	env["session"] = sessionPeer;
+}
+
+void SysConsole::OnSessionChanged(ClientSession *session)
+{
+	sessionPeer->OnSessionEnd();
+	if (session) {
+		sessionPeer->OnSessionStart(session);
+	}
 }
 
 void SysConsole::Clear()
@@ -205,7 +225,7 @@ void SysConsole::HelpClass(const Script::Help::Class &cls)
 		s.clear();
 		s += "  ";
 		s += method->GetName();
-		
+
 		const std::string &brief = method->GetBrief();
 		if (!brief.empty()) {
 			s += " - ";
@@ -220,7 +240,7 @@ void SysConsole::HelpMethod(const Script::Help::Class &cls,
                             const Script::Help::Method &method)
 {
 	using Script::Help::Method;
-	
+
 	LogInfo("---");
 
 	BOOST_FOREACH(const std::string &s, method.GetSigs()) {
