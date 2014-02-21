@@ -75,6 +75,7 @@ void SessionPeer::OnSessionStart(ClientSession *session)
 		OnSessionEnd();
 		return;
 	}
+	this->session = session;
 
 	auto scripting = GetScripting();
 
