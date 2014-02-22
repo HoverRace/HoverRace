@@ -2,6 +2,7 @@
 set(HR_ENGINE_SRCS
 	StdAfx.cpp
 	StdAfx.h)
+source_group("Precompiled Header" FILES ${HR_ENGINE_SRCS})
 
 set(GROUPS
 	ColorTools

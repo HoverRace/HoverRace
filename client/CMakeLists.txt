@@ -11,6 +11,7 @@ endif()
 set(HR_CLIENT_SRCS
 	StdAfx.cpp
 	StdAfx.h)
+source_group("Precompiled Header" FILES ${HR_CLIENT_SRCS})
 
 set(GROUPS
 	Game2 Game2/HoverScript)
