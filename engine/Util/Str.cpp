@@ -22,13 +22,15 @@
 
 #include "StdAfx.h"
 
-#ifndef _WIN32
-#	include <iconv.h>
-#endif
+#include <utf8/utf8.h>
 
 #include "../Exception.h"
 
 #include "Str.h"
+
+#ifdef _WIN32
+#	pragma warning(disable: 4996)
+#endif
 
 namespace HoverRace {
 namespace Util {
@@ -43,62 +45,24 @@ wchar_t *Str::Utf8ToWide(const char *s)
 {
 	ASSERT(s != NULL);
 
-	size_t sz = strlen(s) + 1;
-	wchar_t *retv = (wchar_t*)malloc(sz * sizeof(wchar_t));
-	if (sz == 1) {
+	if (*s == '\0') {
+		wchar_t *retv = (wchar_t*)malloc(sizeof(wchar_t));
 		*retv = L'\0';
 		return retv;
 	}
 
-#	ifdef _WIN32
-		int ct = MultiByteToWideChar(CP_UTF8, 0, s, -1, retv, sz);
-		while (ct == 0 && GetLastError() == ERROR_INSUFFICIENT_BUFFER) {
-			if (GetLastError() == ERROR_INSUFFICIENT_BUFFER) {
-				sz *= 2;
-				retv = (wchar_t*)realloc(retv, sz * sizeof(wchar_t));
-				ct = MultiByteToWideChar(CP_UTF8, 0, s, -1, retv, sz);
-			}
-			else {
-				ASSERT(FALSE);
-				*retv = L'\0';
-				break;
-			}
-		}
+	size_t len = strlen(s);
+	std::wstring ws;
+	ws.reserve(len);
 
-		return retv;
-#	else
-		//TODO: Initialize icv only once per thread.
-		iconv_t icv = iconv_open("WCHAR_T", "UTF-8");
-		size_t origsz = sz - 1;
-		for (;;) {
-			char *inbuf = const_cast<char*>(s);
-			size_t insz = origsz;
-			char *outbuf = reinterpret_cast<char*>(retv);
-			size_t outsz = sz - 1;
-			size_t ct = iconv(icv, &inbuf, &insz, &outbuf, &outsz);
-			if (ct == (size_t)-1) {
-				switch (errno) {
-					case EILSEQ:
-						free(retv);
-						iconv_close(icv);
-						return wcsdup(L"#<Invalid UTF-8 sequence>");
-					case EINVAL:
-						free(retv);
-						iconv_close(icv);
-						return wcsdup(L"#<Incomplete UTF-8 sequence>");
-					case E2BIG:
-						sz *= 2;
-						retv = (wchar_t*)realloc(retv, sz * sizeof(wchar_t));
-				}
-			}
-			else {
-				*((wchar_t*)outbuf) = L'\0';
-				break;
-			}
-		}
-		iconv_close(icv);
-		return retv;
-#	endif
+	if (sizeof(wchar_t) == 2) {
+		utf8::utf8to16(s, s + len, std::back_inserter(ws));
+	}
+	else {
+		utf8::utf8to32(s, s + len, std::back_inserter(ws));
+	}
+
+	return wcsdup(ws.c_str());
 }
 
 /**
@@ -111,61 +75,24 @@ char *Str::WideToUtf8(const wchar_t *ws)
 {
 	ASSERT(ws != NULL);
 
-	if (*ws == '\0') {
+	if (*ws == L'\0') {
 		char *retv = (char*)malloc(1);
 		*retv = '\0';
 		return retv;
 	}
 
-	size_t sz = wcslen(ws) * 3 + 1;  // Initial guess.
-	char *retv = (char*)malloc(sz);
+	size_t len = wcslen(ws);
+	std::string s;
+	s.reserve(len * 3 + 1);  // Initial guess.
 
-#	ifdef _WIN32
-		int ct = WideCharToMultiByte(CP_UTF8, 0, ws, -1, retv, sz, NULL, NULL);
-		while (ct == 0 && GetLastError() == ERROR_INSUFFICIENT_BUFFER) {
-			if (GetLastError() == ERROR_INSUFFICIENT_BUFFER) {
-				sz *= 2;
-				retv = (char*)realloc(retv, sz);
-				ct = WideCharToMultiByte(CP_UTF8, 0, ws, -1, retv, sz, NULL, NULL);
-			}
-			else {
-				ASSERT(FALSE);
-				*retv = '\0';
-				break;
-			}
-		}
+	if (sizeof(wchar_t) == 2) {
+		utf8::utf16to8(ws, ws + len, std::back_inserter(s));
+	}
+	else {
+		utf8::utf32to8(ws, ws + len, std::back_inserter(s));
+	}
 
-		return retv;
-#	else
-		//TODO: Initialize icv only once per thread.
-		iconv_t icv = iconv_open("UTF-8", "WCHAR_T");
-		size_t origsz = sz - 1;
-		for (;;) {
-			char *inbuf = reinterpret_cast<char*>(const_cast<wchar_t*>(ws));
-			size_t insz = origsz * sizeof(wchar_t);
-			char *outbuf = const_cast<char*>(retv);
-			size_t outsz = sz - 1;
-			size_t ct = iconv(icv, &inbuf, &insz, &outbuf, &outsz);
-			if (ct == (size_t)-1) {
-				if (errno == E2BIG) {
-					sz *= 2;
-					retv = (char*)realloc(retv, sz);
-				}
-				else {
-					std::string exs = "#<";
-					exs += OS::StrError(errno);
-					exs += '>';
-					return strdup(exs.c_str());
-				}
-			}
-			else {
-				*outbuf = '\0';
-				break;
-			}
-		}
-		iconv_close(icv);
-		return retv;
-#	endif
+	return strdup(s.c_str());
 }
 
 }  // namespace Util
