@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include "../../engine/Display/Vec.h"
+#include "../../engine/Vec.h"
 
 #include "UiScene.h"
 
@@ -56,7 +56,7 @@ class FormScene : public UiScene
 		virtual void DetachController(Control::InputEventController &controller);
 
 	private:
-		void OnMouseMoved(const Display::Vec2 &pos);
+		void OnMouseMoved(const Vec2 &pos);
 		void OnMousePressed(const Control::Mouse::Click &click);
 		void OnMouseReleased(const Control::Mouse::Click &click);
 

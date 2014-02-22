@@ -55,7 +55,7 @@ MainMenuScene::MainMenuScene(Display::Display &display, GameDirector &director,
 	double sliderHeight = 120;
 
 	titleContainer = root->AddChild(new Display::Container(display,
-		Display::Vec2(1280, sliderHeight)));
+		Vec2(1280, sliderHeight)));
 
 	titleContainer->AddChild(new Display::FillBox(titleContainer->GetSize(), 0xff000000));
 
@@ -68,7 +68,7 @@ MainMenuScene::MainMenuScene(Display::Display &display, GameDirector &director,
 	titleLbl->SetAlignment(Alignment::SW);
 
 	menuContainer = root->AddChild(new Display::Container(display,
-		Display::Vec2(1280, sliderHeight)));
+		Vec2(1280, sliderHeight)));
 
 	menuContainer->AddChild(new Display::FillBox(menuContainer->GetSize(), 0xff000000));
 

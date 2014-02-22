@@ -1,7 +1,7 @@
 
 // Vec.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -32,7 +32,6 @@
 #endif
 
 namespace HoverRace {
-namespace Display {
 
 struct Vec3;
 
@@ -152,7 +151,6 @@ inline Vec3 Vec2::Promote(double z) const
 	return Vec3(x, y, z);
 }
 
-}  // namespace Display
 }  // namespace HoverRace
 
 #undef MR_DllDeclare

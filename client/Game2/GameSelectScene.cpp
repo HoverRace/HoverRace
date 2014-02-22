@@ -72,10 +72,10 @@ GameSelectScene::GameSelectScene(Display::Display &display,
 
 	double panelWidth = (rulebooks.size() * (BTN_WIDTH + BTN_GAP)) - BTN_GAP;
 	rulebookPanel = root->AddChild(new Display::Container(display,
-		Display::Vec2(panelWidth, BTN_HEIGHT)));
+		Vec2(panelWidth, BTN_HEIGHT)));
 	rulebookPanel->SetPos(DialogScene::MARGIN_WIDTH, 0);
 
-	const Display::Vec2 btnSize(BTN_WIDTH, BTN_HEIGHT);
+	const Vec2 btnSize(BTN_WIDTH, BTN_HEIGHT);
 	double x = 0;
 	BOOST_FOREACH(auto rulebook, rulebooks) {
 		auto btn = rulebookPanel->AddChild(

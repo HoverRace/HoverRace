@@ -34,7 +34,7 @@ namespace Client {
 
 FormScene::FormScene(Display::Display &display, const std::string &name) :
 	SUPER(name), display(display),
-	root(new Display::Container(display, Display::Vec2(1280, 720)))
+	root(new Display::Container(display, Vec2(1280, 720)))
 {
 	root->AttachView(display);
 }
@@ -60,7 +60,7 @@ void FormScene::DetachController(Control::InputEventController &controller)
 	mouseMovedConn.disconnect();
 }
 
-void FormScene::OnMouseMoved(const Display::Vec2 &pos)
+void FormScene::OnMouseMoved(const Vec2 &pos)
 {
 	root->OnMouseMoved(pos);
 }

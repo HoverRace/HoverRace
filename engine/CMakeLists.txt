@@ -4,6 +4,12 @@ set(HR_ENGINE_SRCS
 	StdAfx.h)
 source_group("Precompiled Header" FILES ${HR_ENGINE_SRCS})
 
+set(TOPLEVEL_SRCS
+	Exception.h
+	Vec.h)
+source_group("" FILES ${TOPLEVEL_SRCS})
+list(APPEND HR_ENGINE_SRCS ${TOPLEVEL_SRCS})
+
 set(GROUPS
 	ColorTools
 	Control

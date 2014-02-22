@@ -22,8 +22,8 @@
 #pragma once
 
 #include "../Util/MR_Types.h"
+#include "../Vec.h"
 #include "UiLayoutFlags.h"
-#include "Vec.h"
 #include "ViewModel.h"
 
 #ifdef _WIN32

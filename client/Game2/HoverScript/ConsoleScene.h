@@ -111,7 +111,7 @@ class ConsoleScene : public UiScene
 		Display::Label *cursorLbl;
 
 		Display::Label *measureLbl;  ///< Used to measure the size of glyphs.
-		Display::Vec2 charSize;
+		Vec2 charSize;
 };
 
 }  // namespace HoverScript

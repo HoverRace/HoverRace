@@ -21,8 +21,8 @@
 
 #pragma once
 
+#include "../Vec.h"
 #include "UiLayoutFlags.h"
-#include "Vec.h"
 #include "ViewAttacher.h"
 
 #ifdef _WIN32

@@ -297,7 +297,7 @@ class MR_DllDeclare InputEventController {
 		typedef std::shared_ptr<Action<valueSignal_t>> ValueActionPtr;
 		typedef std::shared_ptr<Action<stringSignal_t, const std::string&>> StringActionPtr;
 		typedef std::shared_ptr<Action<textControlSignal_t, TextControl::key_t>> TextControlActionPtr;
-		typedef std::shared_ptr<Action<vec2Signal_t, const Display::Vec2&>> Vec2ActionPtr;
+		typedef std::shared_ptr<Action<vec2Signal_t, const Vec2&>> Vec2ActionPtr;
 		typedef std::shared_ptr<Action<mouseClickSignal_t, const Mouse::Click&>> MouseClickActionPtr;
 		struct actions_t {
 			struct ui_t {

@@ -110,7 +110,7 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 		Viewport(display,
 			new Observer(),
 			new Display::Hud(display, session->GetPlayer(0),
-				Display::Vec2(1280, 720))));
+				Vec2(1280, 720))));
 
 	gamePeer->OnSessionStart(sessionPeer);
 	auto rulebook = rules->GetRulebook();

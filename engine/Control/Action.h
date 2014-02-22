@@ -24,7 +24,7 @@
 #include <SDL2/SDL_keycode.h>
 #include <SDL2/SDL_mouse.h>
 
-#include "../Display/Vec.h"
+#include "../Vec.h"
 #include "../Exception.h"
 
 #include "ControlAction.h"
@@ -63,7 +63,7 @@ namespace Mouse {
 	/// Mouse click events.
 	struct Click {
 		Click(double x, double y, button_t btn) : pos(x, y), btn(btn) { }
-		Display::Vec2 pos;
+		Vec2 pos;
 		button_t btn;
 	};
 }
@@ -81,7 +81,7 @@ typedef boost::signals2::signal<void(const std::string&)> stringSignal_t;
 typedef boost::signals2::signal<void(TextControl::key_t)> textControlSignal_t;
 
 /// Signals with have a Vec2 payload.
-typedef boost::signals2::signal<void(const Display::Vec2&)> vec2Signal_t;
+typedef boost::signals2::signal<void(const Vec2&)> vec2Signal_t;
 
 /// Signals for mouse clicks.
 typedef boost::signals2::signal<void(const Mouse::Click&)> mouseClickSignal_t;
@@ -128,8 +128,8 @@ inline void PerformAction<textControlSignal_t, TextControl::key_t>(
 }
 
 template<>
-inline void PerformAction<vec2Signal_t, const Display::Vec2&>(
-	const vec2Signal_t &signal, const Display::Vec2 &vec)
+inline void PerformAction<vec2Signal_t, const Vec2&>(
+	const vec2Signal_t &signal, const Vec2 &vec)
 {
 	signal(vec);
 }

@@ -55,11 +55,11 @@ DialogScene::DialogScene(Display::Display &display,
 	auto root = GetRoot();
 
 	contentRoot = root->AddChild(new Display::Container(
-		display, Display::Vec2(1280, 720 - 200)));
+		display, Vec2(1280, 720 - 200)));
 	contentRoot->SetPos(0, 100);
 
 	statusRoot = root->AddChild(new Display::Container(
-		display, Display::Vec2(1280 - (MARGIN_WIDTH * 2), 40), false));
+		display, Vec2(1280 - (MARGIN_WIDTH * 2), 40), false));
 	statusRoot->SetPos(MARGIN_WIDTH, 720 - 80);
 
 	auto titleLbl = root->AddChild(new Display::Label(title,

@@ -363,7 +363,7 @@ void LayoutModule::AddAlignmentTestElem(
 void LayoutModule::OnDisplayConfigChanged()
 {
 	double uiScale = display.GetUiScale();
-	const Display::Vec2 &uiOffset = display.GetUiOffset();
+	const Vec2 &uiOffset = display.GetUiOffset();
 
 	static boost::format resFmt("UI Scale: %0.2f  Offset: %d,%d");
 	displayInfoLbl->SetText(boost::str(resFmt % uiScale % uiOffset.x % uiOffset.y));
@@ -487,7 +487,7 @@ LabelModule::LabelModule(Display::Display &display, GameDirector &director) :
 
 void LabelModule::AdjustWrapWidth(double amt)
 {
-	const Display::Vec2 &curSize = wrapBox->GetSize();
+	const Vec2 &curSize = wrapBox->GetSize();
 	double newWidth = curSize.x + amt;
 
 	if (newWidth > 0 && newWidth < (1280.0 - wrapBox->GetPos().x)) {
@@ -600,7 +600,7 @@ void TransitionModule::OnStateTransition(double progress)
 HudModule::HudModule(Display::Display &display, GameDirector &director) :
 	SUPER(display, director, "HUD"),
 	player(MainCharacter::MainCharacter::New(0, 0x7f)),
-	hud(new Display::Hud(display, player.get(), Display::Vec2(1280, 720)))
+	hud(new Display::Hud(display, player.get(), Vec2(1280, 720)))
 {
 	hud->AttachView(display);
 

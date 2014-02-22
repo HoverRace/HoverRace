@@ -45,7 +45,7 @@ namespace {
 class ConsoleScene::LogLines /*{{{*/
 {
 	public:
-		LogLines(Display::Display &display, const Display::Vec2 &charSize);
+		LogLines(Display::Display &display, const Vec2 &charSize);
 		~LogLines();
 
 	public:
@@ -64,7 +64,7 @@ class ConsoleScene::LogLines /*{{{*/
 	private:
 		Display::Display &display;
 
-		const Display::Vec2 &charSize;
+		const Vec2 &charSize;
 		std::deque<Display::Label*> lines;
 		unsigned int pos;
 		unsigned int num;
@@ -280,7 +280,7 @@ void ConsoleScene::Layout()
 	// Measure the size of a single character.
 	// We assume that the monospace font we're using really has the same height
 	// and width for all glyphs.
-	const Display::Vec3 charSize3 = measureLbl->Measure();
+	const Vec3 charSize3 = measureLbl->Measure();
 	charSize.x = charSize3.x;
 	charSize.y = charSize3.y;
 
@@ -371,7 +371,7 @@ void ConsoleScene::Render()
 //{{{ ConsoleScene::LogLines ///////////////////////////////////////////////////
 
 ConsoleScene::LogLines::LogLines(Display::Display &display,
-                                 const Display::Vec2 &charSize) :
+                                 const Vec2 &charSize) :
 	display(display), charSize(charSize),
 	lines(), pos(0), num(10)
 {
