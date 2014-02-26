@@ -282,7 +282,7 @@ class MR_DllDeclare Config
 			bool enableConsole;
 			bool noAccel;  ///< Disable accelerated (OpenGL) rendering.
 			bool skipStartupWarning;
-			OS::path_t initScript;
+			std::vector<OS::path_t> initScripts;
 		} runtime;
 };
 

@@ -49,7 +49,7 @@ namespace Str = HoverRace::Util::Str;
 
 namespace {
 
-OS::path_t initScript;
+std::vector<OS::path_t> initScripts;
 OS::path_t mediaPath;
 bool debugMode = false;
 bool safeMode = false;
@@ -111,7 +111,7 @@ bool ProcessCmdLine(int argc, char **argv)
 		}
 		else if (strcmp("--exec", arg) == 0) {
 			if (i < argc) {
-				initScript = argPath();
+				initScripts.push_back(argPath());
 			}
 			else {
 				ShowMessage("Expected: --exec (script filename)");
@@ -250,7 +250,7 @@ int main(int argc, char** argv)
 	cfg->runtime.showFramerate = showFramerate;
 	cfg->runtime.noAccel = noAccel;
 	cfg->runtime.skipStartupWarning = skipStartupWarning;
-	cfg->runtime.initScript = initScript;
+	cfg->runtime.initScripts = initScripts;
 
 #ifdef ENABLE_NLS
 	// Gettext initialization.

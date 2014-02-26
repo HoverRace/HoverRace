@@ -137,9 +137,10 @@ ClientApp::ClientApp() :
 	gamePeer = new GamePeer(scripting, *this, *rulebookLibrary);
 	RulebookEnv(scripting, *rulebookLibrary).ReloadRulebooks();
 	sysEnv = new SysEnv(scripting, debugPeer, gamePeer);
-	OS::path_t &initScript = cfg->runtime.initScript;
-	if (!initScript.empty()) {
-		sysEnv->RunScript(initScript);
+	BOOST_FOREACH(OS::path_t &initScript, cfg->runtime.initScripts) {
+		if (!initScript.empty()) {
+			sysEnv->RunScript(initScript);
+		}
 	}
 	sysConsole = new SysConsole(scripting, *this, debugPeer, gamePeer);
 
@@ -345,7 +346,7 @@ void ClientApp::MainLoop()
 	gamePeer->OnInit();
 
 	Config::cfg_runtime_t &runtimeCfg = Config::GetInstance()->runtime;
-	if (!runtimeCfg.skipStartupWarning && runtimeCfg.initScript.empty()) {
+	if (!runtimeCfg.skipStartupWarning && runtimeCfg.initScripts.empty()) {
 		RequestPushScene(std::make_shared<MessageScene>(*display, *this,
 			"HoverRace 2.0 Developer Preview",
 			"This is the unstable \"2.0\" branch of HoverRace.\n"
