@@ -24,7 +24,7 @@
 
 #include <utf8/utf8.h>
 
-#include "../Exception.h"
+#include "Log.h"
 
 #include "Str.h"
 
@@ -55,11 +55,17 @@ wchar_t *Str::Utf8ToWide(const char *s)
 	std::wstring ws;
 	ws.reserve(len);
 
-	if (sizeof(wchar_t) == 2) {
-		utf8::utf8to16(s, s + len, std::back_inserter(ws));
+	try {
+		if (sizeof(wchar_t) == 2) {
+			utf8::utf8to16(s, s + len, std::back_inserter(ws));
+		}
+		else {
+			utf8::utf8to32(s, s + len, std::back_inserter(ws));
+		}
 	}
-	else {
-		utf8::utf8to32(s, s + len, std::back_inserter(ws));
+	catch (utf8::exception &e) {
+		Log::Warn("UTF-8 to wide string failed: %s", e.what());
+		return wcsdup(L"<invalid UTF-8 string>");
 	}
 
 	return wcsdup(ws.c_str());
@@ -85,11 +91,17 @@ char *Str::WideToUtf8(const wchar_t *ws)
 	std::string s;
 	s.reserve(len * 3 + 1);  // Initial guess.
 
-	if (sizeof(wchar_t) == 2) {
-		utf8::utf16to8(ws, ws + len, std::back_inserter(s));
+	try {
+		if (sizeof(wchar_t) == 2) {
+			utf8::utf16to8(ws, ws + len, std::back_inserter(s));
+		}
+		else {
+			utf8::utf32to8(ws, ws + len, std::back_inserter(s));
+		}
 	}
-	else {
-		utf8::utf32to8(ws, ws + len, std::back_inserter(s));
+	catch (utf8::exception &e) {
+		Log::Warn("Wide string to UTF-8 failed: %s", e.what());
+		return strdup("<invalid wide string>");
 	}
 
 	return strdup(s.c_str());
