@@ -121,6 +121,15 @@ class GameDirector
 		virtual Control::InputEventController *ReloadController() = 0;
 
 		typedef boost::signals2::signal<void(ClientSession*)> sessionChangedSignal_t;
+
+		/**
+		 * Access the signal that indicates that the gameplay session
+		 * started or stopped.
+		 *
+		 * Subscribers to this signal will get the ClientSession instance
+		 * if the session is starting or @c nullptr if the session has
+		 * ended.
+		 */
 		virtual sessionChangedSignal_t &GetSessionChangedSignal() = 0;
 
 
