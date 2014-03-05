@@ -728,6 +728,7 @@ void Config::LoadSystem()
 #	else
 		LoadSystem(Str::UP("/etc/hoverrace/" CONFIG_FILENAME));
 		LoadSystem(Str::UP("../etc/" CONFIG_FILENAME));
+		LoadSystem(Str::UP("etc/" CONFIG_FILENAME));
 #	endif
 }
 
