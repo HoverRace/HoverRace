@@ -1,8 +1,7 @@
 
 // Config.cpp
-// Configuration system.
 //
-// Copyright (c) 2008-2010, 2012-2013 Michael Imamura.
+// Copyright (c) 2008-2010, 2012-2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -132,14 +131,19 @@ Config *Config::instance = NULL;
  * @param prerelease Whether this build is a development version.
  * @param mediaPath (Optional) The directory for finding media files.
  *                  The default is to use {@link #GetDefaultMediaPath()}.
+ * @param sysCfgPath (Optional) The directory to use for the system config file.
+ *                   The default is to search a platform-specific list of
+ *                   directories.
  * @param path (Optional) The directory for storing configuration data.
  *             The default is to use {@link #GetBaseDataPath()} and
  *             {@link #GetBaseConfigPath()}.
  */
 Config::Config(int verMajor, int verMinor, int verPatch, int verBuild,
                bool prerelease, const OS::path_t &mediaPath,
+               const OS::path_t &sysCfgPath,
                const OS::path_t &path) :
 	unlinked(false),
+	sysCfgPath(sysCfgPath),
 	verBuild(verBuild),
 	prerelease(prerelease)
 {
@@ -248,6 +252,9 @@ Config::~Config()
  * @param prerelease Whether this build is a development version.
  * @param mediaPath (Optional) The directory for finding media files.
  *                  The default is to use {@link #GetDefaultMediaPath()}.
+ * @param sysCfgPath (Optional) The directory to use for the system config file.
+ *                   The default is to search a platform-specific list of
+ *                   directories.
  * @param path (Optional) The directory for storing configuration data.
  *             The default is to use {@link #GetBaseDataPath()} and
  *             {@link #GetBaseConfigPath()}.
@@ -255,10 +262,11 @@ Config::~Config()
  */
 Config *Config::Init(int verMajor, int verMinor, int verPatch, int verBuild,
                      bool prerelease, const OS::path_t &mediaPath,
+                     const OS::path_t &sysCfgPath,
                      const OS::path_t &path)
 {
 	if (instance == NULL) {
-		instance = new Config(verMajor, verMinor, verPatch, verBuild, prerelease, mediaPath, path);
+		instance = new Config(verMajor, verMinor, verPatch, verBuild, prerelease, mediaPath, sysCfgPath, path);
 	}
 	return instance;
 }
@@ -722,14 +730,18 @@ void Config::ResetToDefaults()
 
 void Config::LoadSystem()
 {
-	//FIXME: Use proper relative file path when binary dirs are sorted out.
-#	ifdef _WIN32
-		LoadSystem(Str::UP("../../etc/" CONFIG_FILENAME));
-#	else
-		LoadSystem(Str::UP("/etc/hoverrace/" CONFIG_FILENAME));
-		LoadSystem(Str::UP("../etc/" CONFIG_FILENAME));
-		LoadSystem(Str::UP("etc/" CONFIG_FILENAME));
-#	endif
+	if (sysCfgPath.empty()) {
+#		ifdef _WIN32
+			LoadSystem(Str::UP("../../etc/" CONFIG_FILENAME));
+#		else
+			LoadSystem(Str::UP("/etc/hoverrace/" CONFIG_FILENAME));
+			LoadSystem(Str::UP("../etc/" CONFIG_FILENAME));
+			LoadSystem(Str::UP("etc/" CONFIG_FILENAME));
+#		endif
+	}
+	else {
+		LoadSystem(sysCfgPath / Str::UP(CONFIG_FILENAME));
+	}
 }
 
 void Config::LoadSystem(const OS::path_t &path)

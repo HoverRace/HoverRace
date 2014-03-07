@@ -50,6 +50,7 @@ namespace Str = HoverRace::Util::Str;
 namespace {
 
 std::vector<OS::path_t> initScripts;
+OS::path_t sysCfgPath;
 OS::path_t mediaPath;
 bool debugMode = false;
 bool safeMode = false;
@@ -157,6 +158,16 @@ bool ProcessCmdLine(int argc, char **argv)
 		else if (strcmp("--skip-startup-warning", arg) == 0) {
 			skipStartupWarning = true;
 		}
+		else if (strcmp("--sys-cfg-path", arg) == 0) {
+			if (i < argc) {
+				sysCfgPath = argPath();
+			}
+			else {
+				ShowMessage("Expected: --sys-cfg-path (path to system "
+					"config files)");
+				return false;
+			}
+		}
 		else if (strcmp("-v", arg) == 0 || strcmp("--verbose", arg) == 0) {
 			verboseLog = true;
 		}
@@ -175,7 +186,8 @@ bool ProcessCmdLine(int argc, char **argv)
 // Initialize (but not load) the config system.
 Config *InitConfig()
 {
-	return Config::Init(HR_APP_VERSION, HR_APP_VERSION_PRERELEASE, mediaPath);
+	return Config::Init(HR_APP_VERSION, HR_APP_VERSION_PRERELEASE,
+		mediaPath, sysCfgPath);
 }
 
 #ifdef _WIN32

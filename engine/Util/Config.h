@@ -1,8 +1,7 @@
 
 // Config.h
-// Header for the configuration system.
 //
-// Copyright (c) 2008-2010, 2012-2013 Michael Imamura.
+// Copyright (c) 2008-2010, 2012-2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -85,6 +84,7 @@ class MR_DllDeclare Config
 		OS::path_t dataPath;  ///< Base path for data files.
 		OS::path_t cfgPath;  ///< Base path for config files.
 		OS::path_t mediaPath;
+		OS::path_t sysCfgPath;
 		OS::path_t userTrackPath;
 		Parcel::TrackBundlePtr trackBundle;
 		int verBuild;
@@ -102,12 +102,14 @@ class MR_DllDeclare Config
 	private:
 		Config(int verMajor, int verMinor, int verPatch, int verBuild,
 			bool prerelease, const OS::path_t &mediaPath,
+			const OS::path_t &sysCfgPath,
 			const OS::path_t &file=OS::path_t());
 	public:
 		~Config();
 
 		static Config *Init(int verMajor, int verMinor, int verPatch, int verBuild,
 			bool prerelease, const OS::path_t &mediaPath,
+			const OS::path_t &sysCfgPath,
 			const OS::path_t &path=OS::path_t());
 		static void Shutdown();
 
