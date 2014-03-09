@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+# hr-valgrind
+#   Run HoverRace with Valgrind.
+#   The report is written to "valgrind_report.txt".
+#
+# Usage:
+#   ./hr-valgrind [hr-options]
+#
+# Example:
+#   ./hr-valgrind --silent --fps --exec init-example.lua
+
+BASEDIR="$(dirname "$0")"
+SUPPDIR="${CMAKE_SOURCE_DIR}"/valgrind
+
+export GLIBCXX_FORCE_NEW=1
+export G_SLICE=always-malloc
+export G_DEBUG=gc-friendly,resident-modules
+
+valgrind --tool=memcheck --leak-check=full \
+	--leak-resolution=high --num-callers=20 \
+	--suppressions="$SUPPDIR/hr.supp" \
+	--suppressions="$SUPPDIR/GNOME/base.supp" \
+	--suppressions="$SUPPDIR/GNOME/fontconfig.supp" \
+	--suppressions="$SUPPDIR/GNOME/glib.supp" \
+	--suppressions="$SUPPDIR/GNOME/glibc.supp" \
+	--suppressions="$SUPPDIR/GNOME/pango.supp" \
+	--log-file=valgrind_report.txt \
+	"$BASEDIR/bin/hoverrace" -D --sys-cfg-path "$BASEDIR/etc" "$@"
+
