@@ -71,11 +71,5 @@ cotire(hoverrace LANGUAGES CXX)
 if(UNIX)
 	include(CopyWrapperScript)
 	copy_wrapper_script(hr.in hr)
-	#	configure_file(hr.in ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/hr)
-	#file(COPY ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/hr
-	#	DESTINATION ${CMAKE_BINARY_DIR}
-	#	FILE_PERMISSIONS
-	#		OWNER_READ OWNER_WRITE OWNER_EXECUTE
-	#		GROUP_READ GROUP_WRITE GROUP_EXECUTE
-	#		WORLD_READ             WORLD_EXECUTE)
+	copy_wrapper_script(hr-gdb.in hr-gdb)
 endif()

@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# hr
+#   Start up HoverRace attached to GDB for debugging.
+
+BASEDIR="$(dirname "$0")"
+
+gdb --args "$BASEDIR/bin/hoverrace" -D --sys-cfg-path "$BASEDIR/etc" "$@"
+
