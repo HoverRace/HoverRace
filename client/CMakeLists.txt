@@ -66,3 +66,14 @@ set_target_properties(hoverrace PROPERTIES
 set_target_properties(hoverrace PROPERTIES
 	COTIRE_CXX_PREFIX_HEADER_INIT StdAfx.h)
 cotire(hoverrace LANGUAGES CXX)
+
+# Install convenience wrapper scripts.
+if(UNIX)
+	configure_file(hr.in ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/hr)
+	file(COPY ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/hr
+		DESTINATION ${CMAKE_BINARY_DIR}
+		FILE_PERMISSIONS
+			OWNER_READ OWNER_WRITE OWNER_EXECUTE
+			GROUP_READ GROUP_WRITE GROUP_EXECUTE
+			WORLD_READ             WORLD_EXECUTE)
+endif()
