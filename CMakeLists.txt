@@ -112,3 +112,5 @@ include_directories(SYSTEM ${CONFIG_HEADER_DIR})
 
 add_subdirectory(client)
 add_subdirectory(engine)
+add_subdirectory(compilers)
+
