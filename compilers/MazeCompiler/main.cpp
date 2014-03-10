@@ -1,7 +1,7 @@
 // main.cpp                              MazeCompiler main file
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
-// Copyright (c) 2012, 2013 Michael Imamura.
+// Copyright (c) 2012-2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -79,7 +79,7 @@ int main(int pArgCount, char *pArgStrings[])
 
 	//TODO: Process command-line options.
 
-	Config *cfg = Config::Init(0, 0, 0, 0, true, OS::path_t());
+	Config *cfg = Config::Init(0, 0, 0, 0, true, OS::path_t(), OS::path_t());
 	cfg->runtime.silent = true;
 
 #	ifdef ENABLE_NLS
