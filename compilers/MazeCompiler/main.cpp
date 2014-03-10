@@ -134,7 +134,7 @@ int main(int pArgCount, char *pArgStrings[])
 			oss <<
 				"***\n\n" <<
 				_("You found a bug!") << "\n\n" <<
-				ex.what() << "\n\n" 
+				ex.what() << "\n\n"
 				"***\n\n";
 			compileLog->Warn(oss.str());
 		}
