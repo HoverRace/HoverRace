@@ -12,7 +12,7 @@ list(APPEND SRCS ${srcs})
 add_executable(hoverrace-resource-compiler ${SRCS})
 set_target_properties(hoverrace-resource-compiler PROPERTIES
 	LINKER_LANGUAGE CXX
-	PROJECT_LABEL ParcelDump)
+	PROJECT_LABEL ResourceCompiler)
 target_link_libraries(hoverrace-resource-compiler ${Boost_LIBRARIES}
 	${DEPS_LIBRARIES} hoverrace-engine)
 
