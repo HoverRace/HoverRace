@@ -1,6 +1,8 @@
 /* StdAfx.h
 	Precompiled header for mazecompiler. */
 
+#pragma once
+
 #ifdef _WIN32
 
 	// Exclude rarely-used stuff from Windows headers
@@ -28,7 +30,7 @@
 #else
 
 #	include "../../include/compat/unix.h"
-#	include "../../config.h"
+#	include <hoverrace/hr-config.h>
 
 #	include <string.h>
 #	include <strings.h>
