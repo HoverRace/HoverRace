@@ -4,8 +4,22 @@ set(SRCS
 	StdAfx.h)
 source_group("Precompiled Header" FILES ${SRCS})
 
-file(GLOB srcs "*.h" "*.cpp")
-list(REMOVE_ITEM srcs StdAfx.cpp StdAfx.h)
+set(srcs
+	BitmapHelper.cpp
+	BitmapHelper.h
+	ResActorBuilder.cpp
+	ResActorBuilder.h
+	ResBitmapBuilder.cpp
+	ResBitmapBuilder.h
+	ResourceCompiler.cpp
+	ResourceLibBuilder.cpp
+	ResourceLibBuilder.h
+	ResSoundBuilder.cpp
+	ResSoundBuilder.h
+	ResSpriteBuilder.cpp
+	ResSpriteBuilder.h
+	TextParsing.cpp
+	TextParsing.h)
 source_group("Resource Compiler" FILES ${srcs})
 list(APPEND SRCS ${srcs})
 
