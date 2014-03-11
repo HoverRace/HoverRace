@@ -1,6 +1,0 @@
-
-SUBDIRS = \
-	MazeCompiler \
-	ParcelDump \
-	ResourceCompiler
-
