@@ -1,11 +1,6 @@
-.deps
 .dirstamp
-.libs
 *~
 *.bak
-*.la
-*.lo
-*.o
 *.swo
 *.swp
 *.tmp
@@ -23,147 +18,17 @@ Thumbs.db
 /*.suo
 /_UpgradeReport_Files
 /ABOUT-NLS
-/Makefile
-/Makefile.in
 /UpgradeLog*.XML
-/aclocal.m4
 /autom4te.cache
 /build
 /build-*
-/confdefs.h
-/config.log
-/config.status*
-/configure
-/conftest*
 /cppcheck_report.txt
 /cscope.out
 /hoverrace-*
 /ipch
-/libltdl
-/libtool
 /memory_leak_report.txt
-/stamp-h1
 /valgrind_report.txt
 /init.lua
-
-# /client/
-/client/Makefile
-/client/Makefile.in
-
-# /client/Game2/
-/client/Game2/Makefile
-/client/Game2/Makefile.in
-/client/Game2/StdAfx.h.Td
-/client/Game2/StdAfx.h.d
-/client/Game2/StdAfx.h.gch
-/client/Game2/hoverrace
-/client/Game2/version.h
-
-# /compilers/
-/compilers/Makefile
-/compilers/Makefile.in
-
-# /compilers/MazeCompiler/
-/compilers/MazeCompiler/Makefile
-/compilers/MazeCompiler/Makefile.in
-/compilers/MazeCompiler/StdAfx.h.Td
-/compilers/MazeCompiler/StdAfx.h.d
-/compilers/MazeCompiler/StdAfx.h.gch
-/compilers/MazeCompiler/hr-mazecompiler
-
-# /compilers/ParcelDump/
-/compilers/ParcelDump/Makefile
-/compilers/ParcelDump/Makefile.in
-/compilers/ParcelDump/StdAfx.h.Td
-/compilers/ParcelDump/StdAfx.h.d
-/compilers/ParcelDump/StdAfx.h.gch
-/compilers/ParcelDump/hr-parceldump
-
-# /compilers/ResourceCompiler/
-/compilers/ResourceCompiler/Makefile
-/compilers/ResourceCompiler/Makefile.in
-/compilers/ResourceCompiler/StdAfx.h.Td
-/compilers/ResourceCompiler/StdAfx.h.d
-/compilers/ResourceCompiler/StdAfx.h.gch
-/compilers/ResourceCompiler/hr-resourcecompiler
-
-# /config/
-/config/argz.m4
-/config/config.guess
-/config/config.sub
-/config/depcomp
-/config/install-sh
-/config/libtool.m4
-/config/lt*.m4
-/config/ltmain.sh
-/config/missing
-
-# /engine/
-/engine/Makefile
-/engine/Makefile.in
-/engine/StdAfx.h.Td
-/engine/StdAfx.h.d
-/engine/StdAfx.h.gch
-
-# /engine/ColorTools/
-/engine/ColorTools/Makefile
-/engine/ColorTools/Makefile.in
-
-# /engine/Control/
-/engine/Control/Makefile
-/engine/Control/Makefile.in
-
-# /engine/Display/
-/engine/Display/Makefile
-/engine/Display/Makefile.in
-
-# /engine/MainCharacter/
-/engine/MainCharacter/Makefile
-/engine/MainCharacter/Makefile.in
-
-# /engine/MazeCompiler/
-/engine/MazeCompiler/Makefile
-/engine/MazeCompiler/Makefile.in
-
-# /engine/Model/
-/engine/Model/Makefile
-/engine/Model/Makefile.in
-
-# /engine/Net/
-/engine/Net/Makefile
-/engine/Net/Makefile.in
-
-# /engine/ObjFac1/
-/engine/ObjFac1/Makefile
-/engine/ObjFac1/Makefile.in
-
-# /engine/ObjFacTools/
-/engine/ObjFacTools/Makefile
-/engine/ObjFacTools/Makefile.in
-
-# /engine/Parcel/
-/engine/Parcel/Makefile
-/engine/Parcel/Makefile.in
-
-# /engine/Script/
-/engine/Script/*.loT
-/engine/Script/Makefile
-/engine/Script/Makefile.in
-/engine/Script/libscript.la
-
-# /engine/Util/
-/engine/Util/*.loT
-/engine/Util/Makefile
-/engine/Util/Makefile.in
-/engine/Util/libutil.la
-
-# /engine/Util/yaml/
-/engine/Util/yaml/Makefile
-/engine/Util/yaml/Makefile.in
-
-# /engine/VideoServices/
-/engine/VideoServices/Makefile
-/engine/VideoServices/Makefile.in
 
 # /hovercad/
 /hovercad/*.aps
@@ -179,19 +44,11 @@ Thumbs.db
 /lib/*.ilk
 /lib/*.pdb
 
-# /m4/
-/m4/argz.m4
-/m4/libtool.m4
-/m4/pkg.m4
-/m4/lt*.m4
-
 # /po/
 /po/*.gmo
 /po/*.mo
 /po/*.pot
 /po/*.sed
-/po/Makefile
-/po/Makefile.in
 /po/Makevars.template
 /po/POTFILES
 /po/Rules-quot
@@ -201,8 +58,6 @@ Thumbs.db
 
 # /share/
 /share/*.db
-/share/Makefile
-/share/Makefile.in
 /share/locale
 
 # /srcdoc/
