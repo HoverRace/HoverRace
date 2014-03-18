@@ -106,7 +106,7 @@ file(WRITE ${CMAKE_BINARY_DIR}/etc/config.yml
 	"  mediaPath: \"${HR_MEDIA_PATH}\"\n")
 
 set(CONFIG_HEADER_DIR ${CMAKE_BINARY_DIR}/config)
-configure_file(config-cmake.in.h ${CONFIG_HEADER_DIR}/hoverrace/hr-config.h
+configure_file(config.in.h ${CONFIG_HEADER_DIR}/hoverrace/hr-config.h
 	ESCAPE_QUOTES)
 include_directories(SYSTEM ${CONFIG_HEADER_DIR})
 
