@@ -11,21 +11,12 @@ Thumbs.db
 # /
 /.vimrc
 /*.log
-/*.ncb
 /*.old
-/*.opensdf
-/*.sdf
-/*.suo
-/_UpgradeReport_Files
-/ABOUT-NLS
-/UpgradeLog*.XML
-/autom4te.cache
 /build
 /build-*
 /cppcheck_report.txt
 /cscope.out
 /hoverrace-*
-/ipch
 /memory_leak_report.txt
 /valgrind_report.txt
 /init.lua
