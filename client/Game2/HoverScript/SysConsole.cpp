@@ -57,7 +57,7 @@ SysConsole::SysConsole(Script::Core *scripting,
 	debugPeer(debugPeer), gamePeer(gamePeer),
 	sessionPeer(std::make_shared<SessionPeer>(scripting, nullptr)),
 	introWritten(false), maxLogLines(maxLogLines), logLines(), baseLogIdx(0),
-	history(maxHistory)
+	history(maxHistory), curHistory(history.end())
 {
 	commandLine.reserve(1024);
 
@@ -125,6 +125,8 @@ void SysConsole::SubmitChunkWithHistory(const std::string &s)
 	if (!s.empty()) {
 		history.push_back(s);
 	}
+	curHistory = history.end();
+
 	SubmitChunk(s);
 }
 
@@ -217,6 +219,33 @@ void SysConsole::LogInfo(const std::string &s)
 void SysConsole::LogError(const std::string &s)
 {
 	AddLogLine(LogLevel::ERROR, s);
+}
+
+/**
+ * Replace the command line with the previous command from the history.
+ */
+void SysConsole::LoadPrevCmd()
+{
+	if (curHistory != history.begin()) {
+		--curHistory;
+		commandLine = *curHistory;
+	}
+}
+
+/**
+ * Replace the command line with the next command from the history.
+ */
+void SysConsole::LoadNextCmd()
+{
+	if (curHistory != history.end()) {
+		++curHistory;
+		if (curHistory == history.end()) {
+			commandLine = "";
+		}
+		else {
+			commandLine = *curHistory;
+		}
+	}
 }
 
 /**

@@ -164,12 +164,14 @@ void ConsoleScene::OnConsoleBottom()
 
 void ConsoleScene::OnConsolePrevCmd()
 {
-	Log::Info("Console Prev");
+	console.LoadPrevCmd();
+	UpdateCommandLine();
 }
 
 void ConsoleScene::OnConsoleNextCmd()
 {
-	Log::Info("Console Next");
+	console.LoadNextCmd();
+	UpdateCommandLine();
 }
 
 void ConsoleScene::OnTextInput(const std::string &s)

@@ -101,6 +101,9 @@ class SysConsole : public Console
 		virtual void LogInfo(const std::string &s);
 		virtual void LogError(const std::string &s);
 
+		void LoadPrevCmd();
+		void LoadNextCmd();
+
 	public:
 		int GetEndLogIndex() const;
 
@@ -184,7 +187,9 @@ class SysConsole : public Console
 		std::deque<LogLine> logLines;
 		int baseLogIdx;  ///< Index of the first item in logLines.
 
-		boost::circular_buffer<std::string> history;
+		typedef boost::circular_buffer<std::string> history_t;
+		history_t history;
+		history_t::iterator curHistory;
 
 		std::string commandLine;
 
