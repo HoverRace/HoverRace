@@ -269,6 +269,8 @@ class MR_DllDeclare Config
 			int consoleDown;
 			int consoleTop;
 			int consoleBottom;
+			int consolePrevCmd;
+			int consoleNextCmd;
 			int consoleHelp;
 			int menuOk;
 			int menuCancel;

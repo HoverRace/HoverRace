@@ -46,6 +46,8 @@ InputEventController::actions_t::ui_t::ui_t() :
 	consoleDown(std::make_shared<Action<voidSignal_t>>(_("Page Down"), 1)),
 	consoleTop(std::make_shared<Action<voidSignal_t>>(_("Top"), 2)),
 	consoleBottom(std::make_shared<Action<voidSignal_t>>(_("Bottom"), 3)),
+	consolePrevCmd(std::make_shared<Action<voidSignal_t>>(_("Prev Cmd"), 4)),
+	consoleNextCmd(std::make_shared<Action<voidSignal_t>>(_("Next Cmd"), 5)),
 	text(std::make_shared<Action<stringSignal_t, const std::string&>>("", 0)),
 	control(std::make_shared<Action<textControlSignal_t, TextControl::key_t>>("", 0)),
 	mouseMoved(std::make_shared<Action<vec2Signal_t, const Vec2&>>("", 0)),
@@ -585,6 +587,8 @@ void InputEventController::LoadConsoleMap()
 	AssignAction(cmap, config->ui.consoleDown, actions.ui.consoleDown);
 	AssignAction(cmap, config->ui.consoleTop, actions.ui.consoleTop);
 	AssignAction(cmap, config->ui.consoleBottom, actions.ui.consoleBottom);
+	AssignAction(cmap, config->ui.consolePrevCmd, actions.ui.consolePrevCmd);
+	AssignAction(cmap, config->ui.consoleNextCmd, actions.ui.consoleNextCmd);
 }
 
 // 0x0000xx00; xx = keycode

@@ -60,6 +60,8 @@ class ConsoleScene : public UiScene
 		void OnConsoleDown();
 		void OnConsoleTop();
 		void OnConsoleBottom();
+		void OnConsolePrevCmd();
+		void OnConsoleNextCmd();
 		void OnTextInput(const std::string &s);
 		void OnTextControl(Control::TextControl::key_t key);
 
@@ -90,6 +92,8 @@ class ConsoleScene : public UiScene
 		boost::signals2::connection consoleDownConn;
 		boost::signals2::connection consoleTopConn;
 		boost::signals2::connection consoleBottomConn;
+		boost::signals2::connection consolePrevCmdConn;
+		boost::signals2::connection consoleNextCmdConn;
 		boost::signals2::connection textInputConn;
 		boost::signals2::connection textControlConn;
 

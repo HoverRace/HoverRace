@@ -162,6 +162,16 @@ void ConsoleScene::OnConsoleBottom()
 	logLines->ScrollBottom();
 }
 
+void ConsoleScene::OnConsolePrevCmd()
+{
+	Log::Info("Console Prev");
+}
+
+void ConsoleScene::OnConsoleNextCmd()
+{
+	Log::Info("Console Next");
+}
+
 void ConsoleScene::OnTextInput(const std::string &s)
 {
 	cursorTick = OS::Time();
@@ -302,6 +312,10 @@ void ConsoleScene::AttachController(Control::InputEventController &controller)
 		std::bind(&ConsoleScene::OnConsoleTop, this));
 	consoleBottomConn = controller.actions.ui.consoleBottom->Connect(
 		std::bind(&ConsoleScene::OnConsoleBottom, this));
+	consolePrevCmdConn = controller.actions.ui.consolePrevCmd->Connect(
+		std::bind(&ConsoleScene::OnConsolePrevCmd, this));
+	consoleNextCmdConn = controller.actions.ui.consoleNextCmd->Connect(
+		std::bind(&ConsoleScene::OnConsoleNextCmd, this));
 
 	textInputConn = controller.actions.ui.text->Connect(
 		std::bind(&ConsoleScene::OnTextInput, this, std::placeholders::_1));
@@ -321,6 +335,8 @@ void ConsoleScene::DetachController(Control::InputEventController &controller)
 	consoleDownConn.disconnect();
 	consoleTopConn.disconnect();
 	consoleBottomConn.disconnect();
+	consolePrevCmdConn.disconnect();
+	consoleNextCmdConn.disconnect();
 	consoleToggleConn.disconnect();
 }
 

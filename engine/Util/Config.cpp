@@ -716,6 +716,8 @@ void Config::ResetToDefaults()
 	ui.consoleDown   = InputEventController::HashKeyboardEvent(SDLK_PAGEDOWN);
 	ui.consoleTop    = InputEventController::HashKeyboardEvent(SDLK_HOME);
 	ui.consoleBottom = InputEventController::HashKeyboardEvent(SDLK_END);
+	ui.consolePrevCmd = InputEventController::HashKeyboardEvent(SDLK_UP);
+	ui.consoleNextCmd = InputEventController::HashKeyboardEvent(SDLK_DOWN);
 	ui.consoleHelp   = InputEventController::HashKeyboardEvent(SDLK_F1);
 
 	ui.menuOk = InputEventController::HashKeyboardEvent(SDLK_RETURN);

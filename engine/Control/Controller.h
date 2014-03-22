@@ -310,6 +310,8 @@ class MR_DllDeclare InputEventController {
 				VoidActionPtr consoleDown;
 				VoidActionPtr consoleTop;
 				VoidActionPtr consoleBottom;
+				VoidActionPtr consolePrevCmd;
+				VoidActionPtr consoleNextCmd;
 
 				// Text input mode.
 				StringActionPtr text;  ///< Text input.
