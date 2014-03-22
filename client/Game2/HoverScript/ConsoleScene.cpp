@@ -183,7 +183,7 @@ void ConsoleScene::OnTextControl(Control::TextControl::key_t key)
 
 		case Control::TextControl::ENTER:
 			console.LogHistory(inputLbl->GetText());
-			console.SubmitChunk(commandLine);
+			console.SubmitChunkWithHistory(commandLine);
 			commandLine.clear();
 			UpdateCommandLine();
 			break;

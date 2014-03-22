@@ -47,15 +47,17 @@ namespace HoverScript {
  * @param gamePeer Game scripting peer.
  * @param maxLogLines The maximum number of log lines to store in the
  *                    log history.
+ * @param maxHistory The maximum number of commands to keep in the history.
  */
 SysConsole::SysConsole(Script::Core *scripting,
                        GameDirector &director,
                        DebugPeer *debugPeer, GamePeer *gamePeer,
-                       int maxLogLines) :
+                       int maxLogLines, int maxHistory) :
 	SUPER(scripting),
 	debugPeer(debugPeer), gamePeer(gamePeer),
 	sessionPeer(std::make_shared<SessionPeer>(scripting, nullptr)),
-	introWritten(false), maxLogLines(maxLogLines), logLines(), baseLogIdx(0)
+	introWritten(false), maxLogLines(maxLogLines), logLines(), baseLogIdx(0),
+	history(maxHistory)
 {
 	commandLine.reserve(1024);
 
@@ -109,6 +111,21 @@ void SysConsole::Clear()
 
 	// Notify listeners.
 	logClearedSignal();
+}
+
+/**
+ * Submit a chunk to the script engine and store it in the history.
+ *
+ * Empty chunks are not saved to the history.
+ *
+ * @param s The chunk.
+ */
+void SysConsole::SubmitChunkWithHistory(const std::string &s)
+{
+	if (!s.empty()) {
+		history.push_back(s);
+	}
+	SubmitChunk(s);
 }
 
 void SysConsole::OnLog(const Util::Log::Entry &entry)

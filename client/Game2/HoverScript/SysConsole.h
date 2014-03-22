@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include <boost/circular_buffer.hpp>
+
 #include "../../../engine/Util/Log.h"
 
 #include "Console.h"
@@ -59,7 +61,8 @@ class SysConsole : public Console
 	typedef Console SUPER;
 	public:
 		SysConsole(Script::Core *scripting, GameDirector &director,
-			DebugPeer *debugPeer, GamePeer *gamePeer, int maxLogLines=512);
+			DebugPeer *debugPeer, GamePeer *gamePeer, int maxLogLines=512,
+			int maxHistory=64);
 		virtual ~SysConsole();
 
 	protected:
@@ -180,6 +183,8 @@ class SysConsole : public Console
 		int maxLogLines;
 		std::deque<LogLine> logLines;
 		int baseLogIdx;  ///< Index of the first item in logLines.
+
+		boost::circular_buffer<std::string> history;
 
 		std::string commandLine;
 
