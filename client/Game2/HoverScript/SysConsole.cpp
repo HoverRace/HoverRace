@@ -240,7 +240,7 @@ void SysConsole::LoadNextCmd()
 	if (curHistory != history.end()) {
 		++curHistory;
 		if (curHistory == history.end()) {
-			commandLine = "";
+			commandLine.clear();
 		}
 		else {
 			commandLine = *curHistory;
