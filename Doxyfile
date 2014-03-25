@@ -103,6 +103,7 @@ INPUT                  = client/Game2 \
                          engine/ColorTools \
                          engine/Control \
                          engine/Display \
+                         engine/Display/SDL \
                          engine/MainCharacter \
                          engine/MazeCompiler \
                          engine/Model \
