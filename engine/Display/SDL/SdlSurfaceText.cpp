@@ -114,7 +114,7 @@ int SdlSurfaceText::MeasureLineHeight()
 		DeleteDC(hdc);
 
 #	else
-		throw UnimplementedExn("SdlSurfaceText::UpdateBlank");
+		throw UnimplementedExn("SdlSurfaceText::MeasureLineHeight");
 #	endif
 
 	return height;
