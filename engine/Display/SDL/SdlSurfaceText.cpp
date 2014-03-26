@@ -296,6 +296,32 @@ SDL_Surface *SdlSurfaceText::RenderToNewSurface(
 	return tempSurface;
 }
 
+/**
+ * Render text onto an existing surface.
+ * @param dest The destination surface (may not be @c nullptr).
+ * @param x The horizontal offset.
+ * @param y The vertical offset.
+ * @param s The text to render (may not be blank).
+ * @return The same surface.
+ */
+SDL_Surface *SdlSurfaceText::RenderToSurface(SDL_Surface *dest,
+                                                int x, int y,
+#	ifdef _WIN32
+		const std::wstring &s
+#	else
+		const std::string &s
+#	endif
+	)
+{
+	SDL_Rect destRect = { x, y, 0, 0 };
+
+	SDL_Surface *src = RenderToNewSurface(s);
+	SDL_BlitSurface(src, nullptr, dest, &destRect);
+	SDL_FreeSurface(src);
+
+	return dest;
+}
+
 }  // namespace SDL
 }  // namespace Display
 }  // namespace HoverRace

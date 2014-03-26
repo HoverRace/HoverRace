@@ -79,6 +79,13 @@ class MR_DllDeclare SdlSurfaceText
 				const std::string &s
 #			endif
 			);
+		SDL_Surface *RenderToSurface(SDL_Surface *dest, int x, int y,
+#			ifdef _WIN32
+				const std::wstring &s
+#			else
+				const std::string &s
+#			endif
+			);
 
 	public:
 		// Properties available after rendering.
