@@ -65,8 +65,12 @@ bool noAccel = false;
 bool skipStartupWarning = false;
 
 /**
- * Display a message to the user.
- * On Windows, this will pop up a message box
+ * Display a simple error message to the user.
+ *
+ * On Windows, this will pop up a message box, elsewhere this will just
+ * output to the console.
+ *
+ * @param s The message (ASCII-only, no Unicode).
  */
 void ShowMessage(const std::string &s)
 {
