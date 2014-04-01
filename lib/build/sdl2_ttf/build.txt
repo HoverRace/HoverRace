@@ -1,0 +1,9 @@
+
+Current supported SDL_ttf version: 2.0.0-261
+
+
+== Manual Instructions ==
+
+1. Clone the SDL_ttf Mercurial repository to "src".
+
+hg clone http://hg.libsdl.org/SDL_ttf/ src
