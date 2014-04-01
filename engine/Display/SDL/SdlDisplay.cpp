@@ -1,7 +1,7 @@
 
 // SdlDisplay.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -22,9 +22,6 @@
 #include "StdAfx.h"
 
 #include <SDL2/SDL.h>
-#ifdef WITH_SDL_PANGO
-#	include <SDL_Pango.h>
-#endif
 
 #include "../../Util/Config.h"
 #include "../../Util/Log.h"
@@ -124,33 +121,19 @@ SdlDisplay::SdlDisplay(const std::string &windowTitle) :
 {
 	ApplyVideoMode();
 
-#	ifdef _WIN32
-		//TODO: Get the filename from the config.
-		LoadPrivateFont("fontawesome/fontawesome-webfont.ttf");
-#	endif
-
 	legacyDisplay = new SdlLegacyDisplay(*this);
 	SUPER::OnDisplayConfigChanged();
 	legacyDisplay->CreatePalette();
-
-#	ifdef WITH_SDL_PANGO
-		pangoContext = SDLPango_CreateContext();
-		SDLPango_SetDpi(pangoContext, 60, 60);  // Match Windows native rendering sizing.
-		SDLPango_SetDefaultColor(pangoContext, MATRIX_TRANSPARENT_BACK_WHITE_LETTER);
-#	endif
 }
 
 SdlDisplay::~SdlDisplay()
 {
 	delete legacyDisplay;
 
-#	ifdef WITH_SDL_PANGO
-		if (pangoContext) SDLPango_FreeContext(pangoContext);
-#	elif defined(WITH_SDL_TTF)
-		BOOST_FOREACH(auto &entry, loadedFonts) {
-			TTF_CloseFont(entry.second);
-		}
-#	endif
+	BOOST_FOREACH(auto &entry, loadedFonts) {
+		TTF_CloseFont(entry.second);
+	}
+
 	if (renderer) SDL_DestroyRenderer(renderer);
 	if (window) SDL_DestroyWindow(window);
 }
@@ -289,7 +272,6 @@ void SdlDisplay::ApplyVideoMode()
 	height = vidCfg.yRes;
 }
 
-#ifdef WITH_SDL_TTF
 /**
  * Load the TTF font for a given name and size.
  * The font is cached for future retrievals.
@@ -301,7 +283,7 @@ TTF_Font *SdlDisplay::LoadTtfFont(const UiFont &font)
 {
 	// Scale the font size to match the DPI we use in SDL_Pango.
 	// SDL_ttf always assumes a DPI of 75.
-	int size = font.size * 60 / 75;
+	int size = static_cast<int>(font.size * 60.0 / 75.0);
 
 	std::string fullFontName = font.name;
 	if (font.style & UiFont::Style::BOLD) fullFontName += "Bold";
@@ -329,28 +311,6 @@ TTF_Font *SdlDisplay::LoadTtfFont(const UiFont &font)
 		return iter->second;
 	}
 }
-#endif
-
-#ifdef _WIN32
-/**
- * Load a private (visible only to this process) font.
- * @param filename The filename of the font, relative to the media dir.
- */
-void SdlDisplay::LoadPrivateFont(const std::string &filename)
-{
-	Config *cfg = Config::GetInstance();
-	OS::path_t fontPath = cfg->GetMediaPath();
-	fontPath /= Str::UP("fonts");
-	fontPath /= Str::UP(filename);
-
-	int fontsAdded = AddFontResourceExW((const wchar_t*)Str::PW(fontPath),
-		FR_PRIVATE | FR_NOT_ENUM, 0);
-	Log::Info("Loaded %d private font(s) from file: %s", fontsAdded, filename.c_str());
-	if (fontsAdded < 1) {
-		throw Exception("Failed to load private font: " + filename);
-	}
-}
-#endif
 
 /**
  * Blit an SDL texture to the backbuffer with the current layout state.

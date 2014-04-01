@@ -2,7 +2,7 @@
 // ClientApp.cpp
 // Experimental game shell.
 //
-// Copyright (c) 2010, 2013 Michael Imamura.
+// Copyright (c) 2010, 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -25,11 +25,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_syswm.h>
 #include <SDL2/SDL_image.h>
-#ifdef WITH_SDL_PANGO
-#	include <SDL_Pango.h>
-#elif defined(WITH_SDL_TTF)
-#	include <SDL2/SDL_ttf.h>
-#endif
+#include <SDL2/SDL_ttf.h>
 
 #include "../../engine/Exception.h"
 #include "../../engine/Control/Controller.h"
@@ -121,13 +117,9 @@ ClientApp::ClientApp() :
 		throw Exception(IMG_GetError());
 	}
 
-#	ifdef WITH_SDL_PANGO
-		SDLPango_Init();
-#	elif defined(WITH_SDL_TTF)
-		if (TTF_Init() == -1) {
-			throw Exception(TTF_GetError());
-		}
-#	endif
+	if (TTF_Init() == -1) {
+		throw Exception(TTF_GetError());
+	}
 
 	// Create the system console and execute the initialization scripts.
 	// This allows the script to modify the configuration (e.g. for unit tests).
@@ -220,9 +212,7 @@ ClientApp::~ClientApp()
 	DllObjectFactory::Clean(FALSE);
 	SoundServer::Close();
 
-#	ifdef WITH_SDL_TTF
-		TTF_Quit();
-#	endif
+	TTF_Quit();
 	IMG_Quit();
 	SDL_Quit();
 }

@@ -113,11 +113,7 @@ void SdlSymbolIconView::UpdateTexture()
 	}
 
 	wchar_t wtext[2] = { model.GetSymbol(), 0 };
-#	ifdef _WIN32
-		std::wstring text = wtext;
-#	else
-		std::string text = (const char*)Str::WU(wtext);
-#	endif
+	std::string text = (const char*)Str::WU(wtext);
 
 	// Render the text onto a fresh new surface.
 	SdlSurfaceText textRenderer(display, font);

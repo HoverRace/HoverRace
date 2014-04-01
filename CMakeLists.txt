@@ -50,6 +50,7 @@ add_subdirectory(external)
 include_directories(SYSTEM ${HR_EXTERNAL_INCLUDE_DIRS})
 
 set(ENABLE_NLS TRUE)
+set(WITH_SDL_TTF TRUE)
 
 if(UNIX)
 	include(FindPkgConfig)
@@ -70,8 +71,6 @@ if(UNIX)
 	include_directories(${YAML_INCLUDE_DIR})
 	list(APPEND DEPS_LIBRARIES ${YAML_LIBRARIES})
 
-	set(WITH_SDL_TTF TRUE)
-
 elseif(WIN32)
 	# For Win32 builds, we include the bulk of the dependencies.
 	# Boost is the exception since it's simply too big.
@@ -82,6 +81,7 @@ elseif(WIN32)
 		optimized SDL2 debug SDL2D
 		optimized SDL2main debug SDL2mainD
 		optimized SDL2_image debug SDL2_imageD
+        optimized SDL2_ttf debug SDL2_ttfD
 		alut
 		intl
 		optimized libcurl debug libcurlD

@@ -72,20 +72,9 @@ class MR_DllDeclare SdlSurfaceText
 
 	public:
 		int MeasureLineHeight();
-		SDL_Surface *RenderToNewSurface(
-#			ifdef _WIN32
-				const std::wstring &s
-#			else
-				const std::string &s
-#			endif
-			);
+		SDL_Surface *RenderToNewSurface(const std::string &s);
 		SDL_Surface *RenderToSurface(SDL_Surface *dest, int x, int y,
-#			ifdef _WIN32
-				const std::wstring &s
-#			else
-				const std::string &s
-#			endif
-			);
+			const std::string &s);
 
 	public:
 		// Properties available after rendering.

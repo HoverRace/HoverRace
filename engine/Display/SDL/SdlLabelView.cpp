@@ -133,12 +133,7 @@ void SdlLabelView::UpdateTexture()
 	SdlSurfaceText textRenderer(display, font);
 	textRenderer.SetWrapWidth(fixedWidth ? wrapWidth : -1);
 	SDL_Surface *tempSurface = textRenderer.RenderToNewSurface(
-#		ifdef _WIN32
-			model.GetWText()
-#		else
-			model.GetText()
-#		endif
-		);
+		model.GetText());
 	realWidth = width = textRenderer.GetWidth();
 	realHeight = height = textRenderer.GetHeight();
 

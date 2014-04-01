@@ -183,35 +183,9 @@ Config::Config(int verMajor, int verMinor, int verPatch, int verBuild,
 	userAgentId += shortVersion;
 	userAgentId += " (" PLATFORM_NAME ")";
 
-#	ifdef WITH_SDL_PANGO
-		defaultFontName = "Arial,sans-serif";
-#	elif defined(WITH_SDL_TTF)
-		defaultFontName = "freefont/FreeSans";
-#	elif defined(_WIN32)
-		defaultFontName = "Arial";
-#	else
-		defaultFontName = "sans-serif";
-#	endif
-
-#	ifdef WITH_SDL_PANGO
-		defaultMonospaceFontName = "Courier New,monospace";
-#	elif defined(WITH_SDL_TTF)
-		defaultMonospaceFontName = "freefont/FreeMono";
-#	elif defined(_WIN32)
-		defaultMonospaceFontName = "Courier New";
-#	else
-		defaultMonospaceFontName = "monospace";
-#	endif
-
-#	ifdef WITH_SDL_PANGO
-		defaultSymbolFontName = "FontAwesome";
-#	elif defined(WITH_SDL_TTF)
-		defaultSymbolFontName = "fontawesome/fontawesome-webfont";
-#	elif defined(_WIN32)
-		defaultSymbolFontName = "FontAwesome";
-#	else
-		defaultSymbolFontName = "Unknown";
-#	endif
+	defaultFontName = "freefont/FreeSans";
+	defaultMonospaceFontName = "freefont/FreeMono";
+	defaultSymbolFontName = "fontawesome/fontawesome-webfont";
 
 	// Set initial defaults.
 	ResetToDefaults();
