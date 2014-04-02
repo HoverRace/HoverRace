@@ -197,14 +197,12 @@ void SdlDisplay::OnDisplayConfigChanged()
 		width = vidCfg.xRes;
 		height = vidCfg.yRes;
 
-#		ifdef WITH_SDL_TTF
-			// Clear the loaded font cache, since resizing will change the
-			// sizes of the UI-scaled text.
-			BOOST_FOREACH(auto &entry, loadedFonts) {
-				TTF_CloseFont(entry.second);
-			}
-			loadedFonts.clear();
-#		endif
+		// Clear the loaded font cache, since resizing will change the
+		// sizes of the UI-scaled text.
+		BOOST_FOREACH(auto &entry, loadedFonts) {
+			TTF_CloseFont(entry.second);
+		}
+		loadedFonts.clear();
 
 		SUPER::OnDisplayConfigChanged();
 	}
