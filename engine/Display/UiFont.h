@@ -45,6 +45,9 @@ struct MR_DllDeclare UiFont
 	UiFont(const std::string &name="Arial", double size=20.0, int style=0) :
 		name(name), size(size), style(style) { }
 
+	bool isBold() const { return !!(style & BOLD); }
+	bool isItalic() const { return !!(style & ITALIC); }
+
 	enum Style {
 		BOLD = 0x01,
 		ITALIC = 0x02,
@@ -83,8 +86,8 @@ MR_DllDeclare inline std::ostream &operator<<(std::ostream &os,
 
 		default:
 			os << fs.name;
-			if (fs.style & UiFont::BOLD) os << " Bold";
-			if (fs.style & UiFont::ITALIC) os << " Italic";
+			if (fs.isBold()) os << " Bold";
+			if (fs.isItalic()) os << " Italic";
 			os << ' ' << fs.size;
 	}
 

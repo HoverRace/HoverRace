@@ -49,8 +49,8 @@ std::ostream &UiFont::WritePango(std::ostream &os) const
 	os << escapedName;
 	g_free(escapedName);
 
-	if (style & UiFont::BOLD) os << " Bold";
-	if (style & UiFont::ITALIC) os << " Italic";
+	if (isBold()) os << " Bold";
+	if (isItalic()) os << " Italic";
 
 	os << ' ' << szFmt % size;
 

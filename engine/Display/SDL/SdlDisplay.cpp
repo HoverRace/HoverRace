@@ -284,8 +284,8 @@ TTF_Font *SdlDisplay::LoadTtfFont(const UiFont &font)
 	int size = static_cast<int>(font.size * 60.0 / 75.0);
 
 	std::string fullFontName = font.name;
-	if (font.style & UiFont::Style::BOLD) fullFontName += "Bold";
-	if (font.style & UiFont::Style::ITALIC) fullFontName += "Oblique";
+	if (font.isBold()) fullFontName += "Bold";
+	if (font.isItalic()) fullFontName += "Oblique";
 	fullFontName += ".ttf";
 	loadedFontKey key(fullFontName, size);
 
