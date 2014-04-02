@@ -31,8 +31,8 @@ namespace HoverRace {
 	}
 	namespace Display {
 		class Display;
-		class FillBox;
 		class Label;
+		class ScreenFade;
 	}
 }
 
@@ -107,7 +107,7 @@ class ConsoleScene : public UiScene
 
 		bool layoutChanged;
 
-		Display::FillBox *winShadeBox;
+		std::unique_ptr<Display::ScreenFade> fader;
 		Display::Label *inputLbl;
 
 		bool cursorOn;

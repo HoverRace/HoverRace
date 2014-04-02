@@ -23,8 +23,8 @@
 
 #include "../../../engine/Control/Controller.h"
 #include "../../../engine/Display/Display.h"
-#include "../../../engine/Display/FillBox.h"
 #include "../../../engine/Display/Label.h"
+#include "../../../engine/Display/ScreenFade.h"
 #include "../../../engine/Util/Config.h"
 #include "../../../engine/Util/Log.h"
 #include "../GameDirector.h"
@@ -86,9 +86,9 @@ ConsoleScene::ConsoleScene(Display::Display &display, GameDirector &director,
 	displayConfigChangedConn = display.GetDisplayConfigChangedSignal().
 		connect(std::bind(&ConsoleScene::OnDisplayConfigChanged, this));
 
-	winShadeBox = new Display::FillBox(1280, 720, 0xbf000000);
-	winShadeBox->AttachView(display);
-
+	fader.reset(new Display::ScreenFade(0xbf000000, 1.0));
+	fader->AttachView(display);
+	
 	Display::UiFont font(cfg->GetDefaultMonospaceFontName(), 30);
 
 	inputLbl = new Display::Label(COMMAND_PROMPT, font, 0xffffffff);
@@ -120,7 +120,6 @@ ConsoleScene::~ConsoleScene()
 	delete measureLbl;
 	delete cursorLbl;
 	delete inputLbl;
-	delete winShadeBox;
 
 	logAddedConn.disconnect();
 	logClearedConn.disconnect();
@@ -353,6 +352,8 @@ void ConsoleScene::Advance(Util::OS::timestamp_t tick)
 
 void ConsoleScene::PrepareRender()
 {
+	fader->PrepareRender();
+
 	if (layoutChanged) {
 		Layout();
 	}
@@ -370,7 +371,6 @@ void ConsoleScene::PrepareRender()
 		cursorLbl->SetPos(inputLbl->GetText().length() * charSize.x, 719);
 	}
 
-	winShadeBox->PrepareRender();
 	inputLbl->PrepareRender();
 	cursorLbl->PrepareRender();
 	logLines->PrepareRender();
@@ -378,7 +378,7 @@ void ConsoleScene::PrepareRender()
 
 void ConsoleScene::Render()
 {
-	winShadeBox->Render();
+	fader->Render();
 	inputLbl->Render();
 	if (cursorOn) {
 		cursorLbl->Render();
