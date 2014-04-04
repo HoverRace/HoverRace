@@ -33,9 +33,6 @@ namespace HoverRace {
 	namespace Model {
 		class SectionId;
 	}
-	namespace VideoServices {
-		class StaticText;
-	}
 }
 
 namespace HoverRace {
@@ -82,9 +79,6 @@ class Observer
 		ObjFac1::SpriteHandle *mMineDisp;
 		ObjFac1::SpriteHandle *mPowerUpDisp;
 		ObjFac1::SpriteHandle *mHoverIcons;
-
-		VideoServices::StaticText *selectCraftTxt;
-		VideoServices::StaticText *craftTxt;
 
 	public:
 		Observer();

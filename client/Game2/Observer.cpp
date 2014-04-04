@@ -27,7 +27,6 @@
 #include "../../engine/Model/Level.h"
 #include "../../engine/Model/MazeElement.h"
 #include "../../engine/Util/Config.h"
-#include "../../engine/VideoServices/StaticText.h"
 
 #include <math.h>
 
@@ -36,7 +35,6 @@
 #endif
 
 using HoverRace::Util::Config;
-using HoverRace::VideoServices::StaticText;
 using HoverRace::VideoServices::Ascii2Simple;
 
 #define NB_PLAYER_PAGE 10
@@ -137,18 +135,10 @@ Observer::Observer() :
 	std::string selectStr("<==   ");
 	selectStr += _("Select your craft with the arrow keys");
 	selectStr += "   ==>";
-	selectCraftTxt = new StaticText(selectStr, cfg->GetDefaultFontName(), 16,
-		true, true, 0x2c, StaticText::EFFECT_SHADOW);
-
-	craftTxt = new StaticText("", cfg->GetDefaultFontName(), 20, true, false,
-		0x47, StaticText::EFFECT_SHADOW);
 }
 
 Observer::~Observer()
 {
-	delete craftTxt;
-	delete selectCraftTxt;
-
 	delete mBaseFont;
 	delete mMissileLevel;
 	delete mMineDisp;
