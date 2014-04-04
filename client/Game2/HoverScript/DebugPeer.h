@@ -61,6 +61,7 @@ class DebugPeer : public Script::Peer {
 		void LOpenPath(const std::string &path);
 		void LShowPalette();
 		void LStartTestLab();
+		void LTest();
 
 	private:
 		GameDirector &gameDirector;

@@ -22,6 +22,7 @@
 #include "StdAfx.h"
 
 #include "../../../engine/Script/Core.h"
+#include "../../../engine/Util/Log.h"
 #include "../../../engine/Util/OS.h"
 #include "../../../engine/Util/Str.h"
 #include "../GameDirector.h"
@@ -60,6 +61,7 @@ void DebugPeer::Register(Script::Core *scripting)
 			.def("open_path", &DebugPeer::LOpenPath)
 			.def("show_palette", &DebugPeer::LShowPalette)
 			.def("start_test_lab", &DebugPeer::LStartTestLab)
+			.def("test", &DebugPeer::LTest)
 	];
 }
 
@@ -81,6 +83,12 @@ void DebugPeer::LShowPalette()
 void DebugPeer::LStartTestLab()
 {
 	gameDirector.RequestReplaceScene(std::make_shared<TestLabScene>(*gameDirector.GetDisplay(), gameDirector));
+}
+
+void DebugPeer::LTest()
+{
+	// This is just a dummy method for arbitrary test code :)
+	Log::Info("debug:test() called");
 }
 
 }  // namespace HoverScript
