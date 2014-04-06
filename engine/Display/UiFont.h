@@ -53,10 +53,6 @@ struct MR_DllDeclare UiFont
 		ITALIC = 0x02,
 	};
 
-#	ifdef WITH_SDL_PANGO
-		std::ostream &WritePango(std::ostream &os) const;
-#	endif
-
 	std::string name;
 	double size;
 	int style;
@@ -78,18 +74,10 @@ MR_DllDeclare inline bool operator!=(const UiFont &a, const UiFont &b)
 MR_DllDeclare inline std::ostream &operator<<(std::ostream &os,
                                               const UiFont &fs)
 {
-	switch (Util::GetSelFmt(os)) {
-		case Util::SEL_FMT_PANGO:
-#			ifdef WITH_SDL_PANGO
-				return fs.WritePango(os);
-#			endif
-
-		default:
-			os << fs.name;
-			if (fs.isBold()) os << " Bold";
-			if (fs.isItalic()) os << " Italic";
-			os << ' ' << fs.size;
-	}
+	os << fs.name;
+	if (fs.isBold()) os << " Bold";
+	if (fs.isItalic()) os << " Italic";
+	os << ' ' << fs.size;
 
 	return os;
 }
