@@ -50,7 +50,6 @@ add_subdirectory(external)
 include_directories(SYSTEM ${HR_EXTERNAL_INCLUDE_DIRS})
 
 set(ENABLE_NLS TRUE)
-set(WITH_SDL_TTF TRUE)
 
 if(UNIX)
 	include(FindPkgConfig)
