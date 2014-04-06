@@ -45,8 +45,19 @@ struct MR_DllDeclare UiFont
 	UiFont(const std::string &name="Arial", double size=20.0, int style=0) :
 		name(name), size(size), style(style) { }
 
+	UiFont(const UiFont &o) :
+		name(o.name), size(o.size), style(o.style) { }
+
 	UiFont(UiFont &&o) :
 		name(std::move(o.name)), size(o.size), style(o.style) { }
+
+	UiFont &operator=(const UiFont &o)
+	{
+		name = o.name;
+		size = o.size;
+		style = o.style;
+		return *this;
+	}
 
 	UiFont &operator=(UiFont &&o)
 	{
