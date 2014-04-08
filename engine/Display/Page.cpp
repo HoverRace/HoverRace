@@ -76,14 +76,14 @@ void Page::ParseSource(const std::string &src)
 	}
 
 	Config *cfg = Config::GetInstance();
-	Style defaultStyle(UiFont(cfg->GetDefaultFontName()));
+	Style defaultStyle(UiFont(cfg->GetDefaultFontName()), COLOR_WHITE);
 
 	Processor(*this, *(doc.first_node()), defaultStyle);
 }
 
-void Page::AddChunk(const Chunk &chunk)
+void Page::AddChunk(const std::string &text, const Style &style)
 {
-	Log::Info("Adding chunk: %s", chunk.text.c_str());
+	chunks.emplace_back(Chunk(text, style));
 }
 
 //{{{ Page::Processor //////////////////////////////////////////////////////////
@@ -101,7 +101,7 @@ void Page::Processor::ProcessNode(const xml::xml_node<> &node)
 	switch (node.type()) {
 		case xml::node_data:
 		case xml::node_cdata:
-			page.AddChunk(Chunk(node.value(), styles.top()));
+			page.AddChunk(node.value(), styles.top());
 			break;
 
 		case xml::node_element:
@@ -119,13 +119,18 @@ void Page::Processor::ProcessElement(const xml::xml_node<> &node)
 	styles.push(styles.top());
 	Style &style = styles.top();
 
-	// Inspired by HTML 1.0.
+	// Inspired by HTML 2.0.
 	std::string name = node.name();
 	if (name == "i") {
 		style.font.style ^= UiFont::ITALIC;
 	}
 	else if (name == "b") {
 		style.font.style ^= UiFont::BOLD;
+	}
+	else if (name == "a") {
+		//TODO: Track click destination.
+		// For now, we just color it differently.
+		style.color = Color(0xffbfffff);
 	}
 	else {
 		Log::Info("Ignoring unhandled element: %s", name.c_str());

@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include "Color.h"
 #include "UiFont.h"
 
 #ifdef _WIN32
@@ -57,26 +58,29 @@ class MR_DllDeclare Page
 
 		struct Style
 		{
-			Style(const UiFont &font) :
-				font(font) { }
+			Style(const UiFont &font, Color color) :
+				font(font), color(color) { }
 			Style(const Style &o) :
-				font(o.font) { }
+				font(o.font), color(o.color) { }
 			Style(Style &&o) :
-				font(std::move(o.font)) { }
+				font(std::move(o.font)), color(o.color) { }
 
 			Style &operator=(const Style &o)
 			{
 				font = o.font;
+				color = o.color;
 				return *this;
 			}
 
 			Style &operator=(Style &&o)
 			{
 				font = std::move(o.font);
+				color = o.color;
 				return *this;
 			}
 
 			UiFont font;
+			Color color;
 		};
 
 		struct Chunk
@@ -108,10 +112,11 @@ class MR_DllDeclare Page
 
 	private:
 		void ParseSource(const std::string &src);
-		void AddChunk(const Chunk &chunk);
+		void AddChunk(const std::string &text, const Style &style);
 
 	private:
 		std::string src;
+		std::vector<Chunk> chunks;
 };
 
 }  // namespace Display
