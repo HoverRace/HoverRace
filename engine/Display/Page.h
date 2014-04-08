@@ -59,8 +59,16 @@ class MR_DllDeclare Page
 		{
 			Style(const UiFont &font) :
 				font(font) { }
+			Style(const Style &o) :
+				font(o.font) { }
 			Style(Style &&o) :
 				font(std::move(o.font)) { }
+
+			Style &operator=(const Style &o)
+			{
+				font = o.font;
+				return *this;
+			}
 
 			Style &operator=(Style &&o)
 			{
@@ -75,8 +83,17 @@ class MR_DllDeclare Page
 		{
 			Chunk(const std::string &text, const Style &style) :
 				text(text), style(style) { }
+			Chunk(const Chunk &o) :
+				text(o.text), style(o.style) { }
 			Chunk(Chunk &&o) :
 				text(std::move(o.text)), style(std::move(o.style)) { }
+
+			Chunk &operator=(const Chunk &o)
+			{
+				text = o.text;
+				style = o.style;
+				return *this;
+			}
 
 			Chunk &operator=(Chunk &&o)
 			{
