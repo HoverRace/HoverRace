@@ -68,22 +68,7 @@ MR_DllDeclare inline bool operator!=(const Color &a, const Color &b)
 
 MR_DllDeclare inline std::ostream &operator<<(std::ostream &os, const Color &c)
 {
-	switch (Util::GetSelFmt(os)) {
-		case Util::SEL_FMT_PANGO: {
-			// Pango doesn't support the alpha component in the color
-			// specification.
-			os << '#' << boost::format("%02x%02x%02x") %
-				static_cast<unsigned int>(c.bits.r) %
-				static_cast<unsigned int>(c.bits.g) %
-				static_cast<unsigned int>(c.bits.b);
-			break;
-		}
-
-		default: {
-			os << "0x" << boost::format("%08x") % c.argb;
-		}
-	}
-
+	os << "0x" << boost::format("%08x") % c.argb;
 	return os;
 }
 
