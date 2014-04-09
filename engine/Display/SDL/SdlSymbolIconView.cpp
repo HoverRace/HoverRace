@@ -107,7 +107,10 @@ void SdlSymbolIconView::UpdateTexture()
 
 	Config *cfg = Config::GetInstance();
 
-	UiFont font(cfg->GetDefaultSymbolFontName(), model.GetSize().y);
+	// Scale the symbol font to fit the bounds.
+	double iconFontSize = model.GetSize().y * 1.20;
+
+	UiFont font(cfg->GetDefaultSymbolFontName(), iconFontSize);
 	if (!model.IsLayoutUnscaled()) {
 		font.size *= (scale = display.GetUiScale());
 	}
