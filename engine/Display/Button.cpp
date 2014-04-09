@@ -78,11 +78,9 @@ Button::~Button()
 
 void Button::Init(const std::string &text)
 {
-	//TODO: Get background, font, and padding from theme.
-	Config *cfg = Config::GetInstance();
-	UiFont font(cfg->GetDefaultFontName(), 30);
+	const auto &s = display.styles;
 
-	label.reset(new Label(text, font, 0xffffffff));
+	label.reset(new Label(text, s.formFont, s.formColor));
 	label->SetAlignment(Alignment::CENTER);
 	label->AttachView(display);
 

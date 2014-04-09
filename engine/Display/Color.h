@@ -41,6 +41,7 @@ namespace Display {
 
 union MR_DllDeclare Color
 {
+	Color() : argb(0) { }
 	Color(MR_UInt32 argb) : argb(argb) { }
 	Color(MR_UInt8 a, MR_UInt8 r, MR_UInt8 g, MR_UInt8 b) :
 		argb(((MR_UInt32)a << 24) + ((MR_UInt32)r << 16) + ((MR_UInt32)g << 8) + (MR_UInt32)b)

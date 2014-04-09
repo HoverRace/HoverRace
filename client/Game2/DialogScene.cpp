@@ -49,8 +49,7 @@ DialogScene::DialogScene(Display::Display &display,
 {
 	typedef Display::UiViewModel::Alignment Alignment;
 
-	Config *cfg = Config::GetInstance();
-	const std::string &fontName = cfg->GetDefaultFontName();
+	const auto &s = display.styles;
 
 	auto root = GetRoot();
 
@@ -63,8 +62,7 @@ DialogScene::DialogScene(Display::Display &display,
 	statusRoot->SetPos(MARGIN_WIDTH, 720 - 80);
 
 	auto titleLbl = root->AddChild(new Display::Label(title,
-		Display::UiFont(fontName, 40, Display::UiFont::BOLD),
-		Display::COLOR_WHITE));
+		s.headingFont, s.headingColor));
 	titleLbl->SetPos(MARGIN_WIDTH, 80);
 	titleLbl->SetAlignment(Alignment::SW);
 }
