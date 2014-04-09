@@ -22,6 +22,8 @@
 #pragma once
 
 #include "../Vec.h"
+#include "UiFont.h"
+#include "Color.h"
 #include "UiLayoutFlags.h"
 #include "ViewAttacher.h"
 
@@ -191,6 +193,25 @@ class MR_DllDeclare Display :
 		Vec2 uiOffset;
 		displayConfigChangedSignal_t displayConfigChangedSignal;
 		uiScaleChangedSignal_t uiScaleChangedSignal;
+
+	public:
+		struct styles_t {
+			styles_t();
+
+			// Standard text.
+			UiFont bodyFont;
+			Color bodyColor;
+
+			// UI widgets (buttons, etc.).
+			UiFont formFont;
+			Color formColor;
+
+			// Headings, titles.
+			UiFont headingFont;
+			Color headingColor;
+
+			void Reload();
+		} styles;
 };
 
 }  // namespace Display

@@ -76,5 +76,29 @@ void Display::FireUiScaleChangedSignal(double scale) const
 	uiScaleChangedSignal(scale);
 }
 
+//{{{ styles_t /////////////////////////////////////////////////////////////////
+
+Display::styles_t::styles_t()
+{
+	Reload();
+}
+
+void Display::styles_t::Reload()
+{
+	const Config *cfg = Config::GetInstance();
+	const std::string defaultFontName = cfg->GetDefaultFontName();
+
+	bodyFont.Set(defaultFontName, 30, 0);
+	bodyColor = Color(0xffbfbfbf);
+
+	formFont = bodyFont;
+	formColor = COLOR_WHITE;
+
+	headingFont.Set(defaultFontName, 40, UiFont::BOLD);
+	headingColor = COLOR_WHITE;
+}
+
+//}}} styles_t
+
 }  // namespace Display
 }  // namespace HoverRace
