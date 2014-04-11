@@ -93,6 +93,11 @@ void Display::styles_t::Reload()
 
 	formFont = bodyFont;
 	formColor = COLOR_WHITE;
+	formDisabledColor = Color(0x7fffffff);
+
+	buttonBg = Color(0x3f00007f);
+	buttonDisabledBg = Color(0x3f7f7f7f);
+	buttonPressedBg = Color(0x7f00007f);
 
 	headingFont.Set(defaultFontName, 40, UiFont::BOLD);
 	headingColor = COLOR_WHITE;

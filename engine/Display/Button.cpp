@@ -91,6 +91,7 @@ void Button::Init(const std::string &text)
 void Button::Layout()
 {
 	const Vec2 size = GetSize();
+	const auto &s = display.styles;
 	
 	background->SetSize(size);
 
@@ -107,18 +108,18 @@ void Button::Layout()
 	}
 
 	if (!IsEnabled()) {
-		background->SetColor(0x3f7f7f7f);
-		label->SetColor(0x7fffffff);
+		background->SetColor(s.buttonDisabledBg);
+		label->SetColor(s.formDisabledColor);
 		label->SetPos(midX, midY);
 	}
 	else if (IsPressed()) {
-		background->SetColor(0x7f00007f);
-		label->SetColor(0xffffffff);
+		background->SetColor(s.buttonPressedBg);
+		label->SetColor(s.formColor);
 		label->SetPos(midX, midY + 4.0);
 	}
 	else {
-		background->SetColor(0x3f00007f);
-		label->SetColor(0xffffffff);
+		background->SetColor(s.buttonBg);
+		label->SetColor(s.formColor);
 		label->SetPos(midX, midY);
 	}
 }

@@ -205,6 +205,12 @@ class MR_DllDeclare Display :
 			// UI widgets (buttons, etc.).
 			UiFont formFont;
 			Color formColor;
+			Color formDisabledColor;
+			
+			// Colors specific to button-like widgets.
+			Color buttonBg;
+			Color buttonDisabledBg;
+			Color buttonPressedBg;
 
 			// Headings, titles.
 			UiFont headingFont;
