@@ -89,18 +89,18 @@ void Display::styles_t::Reload()
 	const std::string defaultFontName = cfg->GetDefaultFontName();
 
 	bodyFont.Set(defaultFontName, 30, 0);
-	bodyColor = Color(0xffbfbfbf);
+	bodyFg = Color(0xffbfbfbf);
 
 	formFont = bodyFont;
-	formColor = COLOR_WHITE;
-	formDisabledColor = Color(0x7fffffff);
+	formFg = COLOR_WHITE;
+	formDisabledFg = Color(0x7fffffff);
 
 	buttonBg = Color(0x3f00007f);
 	buttonDisabledBg = Color(0x3f7f7f7f);
 	buttonPressedBg = Color(0x7f00007f);
 
 	headingFont.Set(defaultFontName, 40, UiFont::BOLD);
-	headingColor = COLOR_WHITE;
+	headingFg = COLOR_WHITE;
 }
 
 //}}} styles_t

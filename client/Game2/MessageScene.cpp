@@ -66,12 +66,12 @@ MessageScene::MessageScene(Display::Display &display,
 	const double textWidth = 1280 - (HORZ_PADDING * 2);
 
 	titleLbl = root->AddChild(new Display::Label(title,
-		s.headingFont, s.headingColor));
+		s.headingFont, s.headingFg));
 	titleLbl->SetPos(HORZ_PADDING, 180);
 	titleLbl->SetWrapWidth(textWidth);
 
 	messageLbl = root->AddChild(new Display::Label(message,
-		s.bodyFont, s.bodyColor));
+		s.bodyFont, s.bodyFg));
 	messageLbl->SetWrapWidth(textWidth);
 	// messageLbl position will be set in Layout().
 

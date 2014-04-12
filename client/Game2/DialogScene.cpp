@@ -62,7 +62,7 @@ DialogScene::DialogScene(Display::Display &display,
 	statusRoot->SetPos(MARGIN_WIDTH, 720 - 80);
 
 	auto titleLbl = root->AddChild(new Display::Label(title,
-		s.headingFont, s.headingColor));
+		s.headingFont, s.headingFg));
 	titleLbl->SetPos(MARGIN_WIDTH, 80);
 	titleLbl->SetAlignment(Alignment::SW);
 }

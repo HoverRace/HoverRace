@@ -200,12 +200,12 @@ class MR_DllDeclare Display :
 
 			// Standard text.
 			UiFont bodyFont;
-			Color bodyColor;
+			Color bodyFg;
 
 			// UI widgets (buttons, etc.).
 			UiFont formFont;
-			Color formColor;
-			Color formDisabledColor;
+			Color formFg;
+			Color formDisabledFg;
 			
 			// Colors specific to button-like widgets.
 			Color buttonBg;
@@ -214,7 +214,7 @@ class MR_DllDeclare Display :
 
 			// Headings, titles.
 			UiFont headingFont;
-			Color headingColor;
+			Color headingFg;
 
 			void Reload();
 		} styles;

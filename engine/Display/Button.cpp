@@ -80,7 +80,7 @@ void Button::Init(const std::string &text)
 {
 	const auto &s = display.styles;
 
-	label.reset(new Label(text, s.formFont, s.formColor));
+	label.reset(new Label(text, s.formFont, s.formFg));
 	label->SetAlignment(Alignment::CENTER);
 	label->AttachView(display);
 
@@ -109,17 +109,17 @@ void Button::Layout()
 
 	if (!IsEnabled()) {
 		background->SetColor(s.buttonDisabledBg);
-		label->SetColor(s.formDisabledColor);
+		label->SetColor(s.formDisabledFg);
 		label->SetPos(midX, midY);
 	}
 	else if (IsPressed()) {
 		background->SetColor(s.buttonPressedBg);
-		label->SetColor(s.formColor);
+		label->SetColor(s.formFg);
 		label->SetPos(midX, midY + 4.0);
 	}
 	else {
 		background->SetColor(s.buttonBg);
-		label->SetColor(s.formColor);
+		label->SetColor(s.formFg);
 		label->SetPos(midX, midY);
 	}
 }
