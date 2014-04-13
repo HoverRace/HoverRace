@@ -1,7 +1,7 @@
 
 // TestLabScene.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -45,17 +45,26 @@ class TestLabScene : public FormScene
 {
 	typedef FormScene SUPER;
 	public:
-		TestLabScene(Display::Display &display, GameDirector &director);
+		TestLabScene(Display::Display &display, GameDirector &director,
+			const std::string &startingModuleName="");
 		virtual ~TestLabScene();
 
+	public:
 		class LabModule;
+		class ModuleButtonBase;
+	private:
+		void AddModuleButton(ModuleButtonBase *btn);
 
 	public:
+		virtual void OnScenePushed();
 		virtual void PrepareRender();
 		virtual void Render();
 
 	private:
+		const std::string startingModuleName;
+		double btnPosY;
 		std::unique_ptr<Display::ScreenFade> fader;
+		std::shared_ptr<ModuleButtonBase> startingModuleBtn;
 };
 
 }  // namespace Client

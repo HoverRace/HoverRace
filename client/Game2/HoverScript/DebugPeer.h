@@ -1,7 +1,7 @@
 
 // DebugPeer.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -61,6 +61,7 @@ class DebugPeer : public Script::Peer {
 		void LOpenPath(const std::string &path);
 		void LShowPalette();
 		void LStartTestLab();
+		void LStartTestLab_N(const std::string &startingModuleName);
 		void LTest();
 
 	private:

@@ -1,7 +1,7 @@
 
 // TestLabScene.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -76,20 +76,39 @@ class TestLabScene::LabModule : public FormScene /*{{{*/
 		boost::signals2::connection cancelConn;
 }; //}}}
 
+class TestLabScene::ModuleButtonBase : public Display::Button /*{{{*/
+{
+	typedef Display::Button SUPER;
+	public:
+		ModuleButtonBase(Display::Display &display, GameDirector &director,
+			const std::string &text) :
+			SUPER(display, text), display(display), director(director)
+		{
+		}
+
+		virtual void LaunchScene() = 0;
+
+	protected:
+		Display::Display &display;
+		GameDirector &director;
+}; //}}}
+
 namespace {
 	template<typename Module>
-	class ModuleButton : public Display::Button /*{{{*/
+	class ModuleButton : public TestLabScene::ModuleButtonBase /*{{{*/
 	{
-		typedef Display::Button SUPER;
+		typedef TestLabScene::ModuleButtonBase SUPER;
 		public:
 			ModuleButton(Display::Display &display, GameDirector &director,
-				const std::string &text, double x, double y) :
-				SUPER(display, text)
+				const std::string &text) :
+				SUPER(display, director, text)
 			{
-				SetPos(x, y);
-				GetClickedSignal().connect([&](Display::ClickRegion&) {
-					director.RequestPushScene(std::make_shared<Module>(display, director));
-				});
+				GetClickedSignal().connect(std::bind(&ModuleButton::LaunchScene, this));
+			}
+
+			virtual void LaunchScene()
+			{
+				director.RequestPushScene(std::make_shared<Module>(display, director));
 			}
 	}; //}}}
 }
@@ -191,32 +210,44 @@ namespace Module {
 	}; //}}}
 }
 
-TestLabScene::TestLabScene(Display::Display &display, GameDirector &director) :
-	SUPER(display, "Test Lab")
+TestLabScene::TestLabScene(Display::Display &display, GameDirector &director,
+                           const std::string &startingModuleName) :
+	SUPER(display, "Test Lab"),
+	startingModuleName(startingModuleName), btnPosY(60)
 {
 	// Clear the screen on every frame.
 	fader.reset(new Display::ScreenFade(Display::COLOR_BLACK, 1.0));
 	fader->AttachView(display);
 
-	auto root = GetRoot();
-
-	const double yStep = 60;
-	double y = 60;
-	root->AddChild(new ModuleButton<Module::LayoutModule>(display, director, "Layout", 0, y));
-	y += yStep;
-	root->AddChild(new ModuleButton<Module::ButtonModule>(display, director, "Button", 0, y));
-	y += yStep;
-	root->AddChild(new ModuleButton<Module::LabelModule>(display, director, "Label", 0, y));
-	y += yStep;
-	root->AddChild(new ModuleButton<Module::IconModule>(display, director, "Icon", 0, y));
-	y += yStep;
-	root->AddChild(new ModuleButton<Module::TransitionModule>(display, director, "Transition", 0, y));
-	y += yStep;
-	root->AddChild(new ModuleButton<Module::HudModule>(display, director, "HUD", 0, y));
+	AddModuleButton(new ModuleButton<Module::LayoutModule>(display, director, "Layout"));
+	AddModuleButton(new ModuleButton<Module::ButtonModule>(display, director, "Button"));
+	AddModuleButton(new ModuleButton<Module::LabelModule>(display, director, "Label"));
+	AddModuleButton(new ModuleButton<Module::IconModule>(display, director, "Icon"));
+	AddModuleButton(new ModuleButton<Module::TransitionModule>(display, director, "Transition"));
+	AddModuleButton(new ModuleButton<Module::HudModule>(display, director, "HUD"));
 }
 
 TestLabScene::~TestLabScene()
 {
+}
+
+void TestLabScene::AddModuleButton(ModuleButtonBase *btn)
+{
+	auto mbtn = GetRoot()->AddChild(btn);
+	btn->SetPos(0, btnPosY);
+	btnPosY += 60;
+
+	if (btn->GetText() == startingModuleName) {
+		startingModuleBtn = mbtn;
+	}
+}
+
+void TestLabScene::OnScenePushed()
+{
+	if (startingModuleBtn) {
+		startingModuleBtn->LaunchScene();
+		startingModuleBtn.reset();
+	}
 }
 
 void TestLabScene::PrepareRender()
