@@ -235,6 +235,10 @@ TestLabScene::TestLabScene(Display::Display &display, GameDirector &director,
 	AddModuleButton(new ModuleButton<Module::TransitionModule>(display, director, "Transition"));
 	AddModuleButton(new ModuleButton<Module::HudModule>(display, director, "HUD"));
 	AddModuleButton(new ModuleButton<Module::FlexGridModule>(display, director, "FlexGrid"));
+
+	if (!startingModuleName.empty() && !startingModuleBtn) {
+		Log::Warn("Not a test lab module: %s", startingModuleName.c_str());
+	}
 }
 
 TestLabScene::~TestLabScene()
