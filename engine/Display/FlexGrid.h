@@ -66,7 +66,7 @@ class MR_DllDeclare FlexGrid : public Container
 	public:
 		class Cell
 		{
-			friend FlexGrid;
+			friend class FlexGrid;
 			public:
 				Cell() { }
 				virtual ~Cell() { }
