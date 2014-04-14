@@ -121,7 +121,7 @@ class MR_DllDeclare FlexGrid : public Container
 		/**
 		 * Append a child element to the grid.
 		 *
-		 * If the cell coordinates is outside of the current grid size, then
+		 * If the cell coordinates are outside of the current grid size, then
 		 * the grid is automatically resized to fit the cell.
 		 *
 		 * @param row The row coordinate (starting at zero).
