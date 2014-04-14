@@ -28,6 +28,7 @@
 #include "../../engine/Display/Container.h"
 #include "../../engine/Display/Display.h"
 #include "../../engine/Display/FillBox.h"
+#include "../../engine/Display/FlexGrid.h"
 #include "../../engine/Display/FuelGauge.h"
 #include "../../engine/Display/Hud.h"
 #include "../../engine/Display/Label.h"
@@ -208,6 +209,14 @@ namespace Module {
 			std::unique_ptr<MainCharacter::MainCharacter> player;
 			std::unique_ptr<Display::Hud> hud;
 	}; //}}}
+
+	class FlexGridModule : public TestLabScene::LabModule /*{{{*/
+	{
+		typedef TestLabScene::LabModule SUPER;
+		public:
+			FlexGridModule(Display::Display &display, GameDirector &director);
+			virtual ~FlexGridModule() { }
+	}; //}}}
 }
 
 TestLabScene::TestLabScene(Display::Display &display, GameDirector &director,
@@ -225,6 +234,7 @@ TestLabScene::TestLabScene(Display::Display &display, GameDirector &director,
 	AddModuleButton(new ModuleButton<Module::IconModule>(display, director, "Icon"));
 	AddModuleButton(new ModuleButton<Module::TransitionModule>(display, director, "Transition"));
 	AddModuleButton(new ModuleButton<Module::HudModule>(display, director, "HUD"));
+	AddModuleButton(new ModuleButton<Module::FlexGridModule>(display, director, "FlexGrid"));
 }
 
 TestLabScene::~TestLabScene()
@@ -662,6 +672,47 @@ void HudModule::Render()
 }
 
 //}}} HudModule
+
+//{{{ FlexGridModule //////////////////////////////////////////////////////////
+
+FlexGridModule::FlexGridModule(Display::Display &display, GameDirector &director) :
+	SUPER(display, director, "FlexGrid")
+{
+	const auto &s = display.styles;
+
+	Display::Container *root = GetRoot();
+
+	auto grid = root->AddChild(new Display::FlexGrid(display));
+
+	size_t r = 0;
+	size_t c = 0;
+
+	c = 1;
+	grid->AddGridCell(r, c++, new Display::Label("Name",
+		s.headingFont, s.headingFg));
+	grid->AddGridCell(r, c++, new Display::Label("Time",
+		s.headingFont, s.headingFg));
+
+	r++;
+	c = 0;
+	grid->AddGridCell(r, c++, new Display::Label("1.",
+		s.bodyFont, s.bodyFg));
+	grid->AddGridCell(r, c++, new Display::Label("Foo Bar",
+		s.bodyFont, s.bodyFg));
+	grid->AddGridCell(r, c++, new Display::Label("3:44",
+		s.bodyFont, s.bodyFg));
+
+	r++;
+	c = 0;
+	grid->AddGridCell(r, c++, new Display::Label("2.",
+		s.bodyFont, s.bodyFg));
+	grid->AddGridCell(r, c++, new Display::Label("Baz Quux",
+		s.bodyFont, s.bodyFg));
+	grid->AddGridCell(r, c++, new Display::Label("12:33",
+		s.bodyFont, s.bodyFg));
+}
+
+//}}} FlexGridModule
 
 }  // namespace Module
 
