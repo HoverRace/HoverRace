@@ -206,6 +206,10 @@ class MR_DllDeclare Display :
 			UiFont formFont;
 			Color formFg;
 			Color formDisabledFg;
+
+			// Attributes for grid containers.
+			Vec2 gridMargin;
+			Vec2 gridPadding;
 			
 			// Colors specific to button-like widgets.
 			Color buttonBg;

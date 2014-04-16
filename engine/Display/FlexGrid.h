@@ -55,13 +55,22 @@ class MR_DllDeclare FlexGrid : public Container
 		struct Props
 		{
 			enum {
-				NEXT_ = SUPER::Props::NEXT_,
+				MARGIN = SUPER::Props::NEXT_,
+				PADDING,
+				NEXT_,  ///< First index for subclasses.
 			};
 		};
 
 	public:
 		FlexGrid(Display &display, uiLayoutFlags_t layoutFlags=0);
 		virtual ~FlexGrid() { }
+
+	public:
+		const Vec2 &GetMargin() const { return margin; }
+		void SetMargin(double width, double height);
+
+		const Vec2 &GetPadding() const { return padding; }
+		void SetPadding(double width, double height);
 
 	public:
 		class Cell
@@ -80,7 +89,7 @@ class MR_DllDeclare FlexGrid : public Container
 				 * @param h The height of the cell.
 				 */
 				virtual void SetExtents(double x, double y,
-					double w, double h) = 0;
+					double w, double h, double paddingX, double paddingY) = 0;
 
 				/**
 				 * Measure the size of the cell contents.
@@ -100,9 +109,9 @@ class MR_DllDeclare FlexGrid : public Container
 
 			protected:
 				virtual void SetExtents(double x, double y,
-					double w, double h)
+					double w, double h, double paddingX, double paddingY)
 				{
-					contents->SetPos(x, y);
+					contents->SetPos(x + paddingX, y + paddingY);
 				}
 
 				virtual Vec3 Measure()
@@ -168,6 +177,8 @@ class MR_DllDeclare FlexGrid : public Container
 		virtual Vec3 Measure() const;
 
 	private:
+		Vec2 margin;
+		Vec2 padding;
 		size_t numCols;
 		typedef std::vector<std::shared_ptr<Cell>> cells_t;
 		std::vector<cells_t> rows;

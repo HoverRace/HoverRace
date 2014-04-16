@@ -78,7 +78,8 @@ void Display::FireUiScaleChangedSignal(double scale) const
 
 //{{{ styles_t /////////////////////////////////////////////////////////////////
 
-Display::styles_t::styles_t()
+Display::styles_t::styles_t() :
+	gridMargin(0, 0), gridPadding(0, 0)
 {
 	Reload();
 }
@@ -94,6 +95,11 @@ void Display::styles_t::Reload()
 	formFont = bodyFont;
 	formFg = COLOR_WHITE;
 	formDisabledFg = Color(0x7fffffff);
+
+	gridMargin.x = 1;
+	gridMargin.y = 1;
+	gridPadding.x = 6;
+	gridPadding.y = 6;
 
 	buttonBg = Color(0x3f00007f);
 	buttonDisabledBg = Color(0x3f7f7f7f);

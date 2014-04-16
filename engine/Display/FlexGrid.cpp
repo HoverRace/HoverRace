@@ -32,8 +32,32 @@ namespace Display {
  * @param layoutFlags Optional layout flags.
  */
 FlexGrid::FlexGrid(Display &display, uiLayoutFlags_t layoutFlags) :
-	SUPER(display, layoutFlags), numCols(0)
+	SUPER(display, layoutFlags),
+	margin(display.styles.gridMargin), padding(display.styles.gridPadding),
+	numCols(0)
 {
+}
+
+void FlexGrid::SetMargin(double width, double height)
+{
+	if (margin.x != width || margin.y != height) {
+		margin.x = width;
+		margin.y = height;
+
+		FireModelUpdate(Props::MARGIN);
+		RequestLayout();
+	}
+}
+
+void FlexGrid::SetPadding(double width, double height)
+{
+	if (padding.x != width || padding.y != height) {
+		padding.x = width;
+		padding.y = height;
+
+		FireModelUpdate(Props::MARGIN);
+		RequestLayout();
+	}
 }
 
 void FlexGrid::Clear()
@@ -80,13 +104,14 @@ void FlexGrid::Layout()
 	BOOST_FOREACH(auto &cols, rows) {
 		BOOST_FOREACH(auto &cell, cols) {
 			if (cell) {
-				cell->SetExtents(x, y, *widthIter, *heightIter);
+				cell->SetExtents(x, y, *widthIter, *heightIter,
+					padding.x, padding.y);
 			}
-			x += *widthIter;
+			x += *widthIter + (2 * padding.x) + margin.x;
 			++widthIter;
 		}
 
-		y += *heightIter;
+		y += *heightIter + (2 * padding.y) + margin.y;
 		++heightIter;
 		x = 0;
 		widthIter = widths.begin();
