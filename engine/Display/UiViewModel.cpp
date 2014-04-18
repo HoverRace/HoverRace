@@ -1,7 +1,7 @@
 
 // UiViewModel.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ void UiViewModel::SetPos(const Vec2 &pos)
  * Set the alignment of the component.
  * @param alignment The alignment (see Alignment).
  */
-void UiViewModel::SetAlignment(Alignment::alignment_t alignment)
+void UiViewModel::SetAlignment(Alignment::type alignment)
 {
 	if (this->alignment != alignment) {
 		this->alignment = alignment;
