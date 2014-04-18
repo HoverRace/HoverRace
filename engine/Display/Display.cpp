@@ -87,10 +87,16 @@ Display::styles_t::styles_t() :
 void Display::styles_t::Reload()
 {
 	const Config *cfg = Config::GetInstance();
-	const std::string defaultFontName = cfg->GetDefaultFontName();
+	const std::string &defaultFontName = cfg->GetDefaultFontName();
+	const std::string &monospaceFontName = cfg->GetDefaultMonospaceFontName();
 
 	bodyFont.Set(defaultFontName, 30, 0);
 	bodyFg = Color(0xffbfbfbf);
+
+	consoleFont.Set(monospaceFontName, 30);
+	consoleFg = COLOR_WHITE;
+	consoleCursorFg = Color(0xffbfbfbf);
+	consoleBg = Color(0xbf000000);
 
 	formFont = bodyFont;
 	formFg = COLOR_WHITE;
