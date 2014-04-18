@@ -73,12 +73,23 @@ class MR_DllDeclare FlexGrid : public Container
 		void SetPadding(double width, double height);
 
 	public:
+		static Vec2 AlignCellContents(double x, double y, double w, double h,
+			Alignment::type alignment);
+
 		class Cell
 		{
 			friend class FlexGrid;
 			public:
 				Cell() { }
 				virtual ~Cell() { }
+
+			public:
+				/**
+				 * Set the how the widget is aligned inside the cell when
+				 * the cell is larger than the widget.
+				 * @param alignment The alignment (default is @c NW).
+				 */
+				virtual void SetAlignment(Alignment::type alignment) = 0;
 
 			protected:
 				/**
@@ -103,15 +114,30 @@ class MR_DllDeclare FlexGrid : public Container
 		{
 			typedef Cell SUPER;
 			public:
-				BasicCell(std::shared_ptr<T> contents) :
-					SUPER(), contents(std::move(contents)) { }
+				BasicCell(FlexGrid *parent, std::shared_ptr<T> contents) :
+					SUPER(), parent(parent), contents(std::move(contents)) { }
 				virtual ~BasicCell() { }
+
+			public:
+				virtual void SetAlignment(Alignment::type alignment)
+				{
+					// We track the alignment using the contents' own alignment
+					// since the caller has implicitly given us control over
+					// the position.
+					if (alignment != contents->GetAlignment()) {
+						contents->SetAlignment(alignment);
+						parent->RequestLayout();
+					}
+				}
 
 			protected:
 				virtual void SetExtents(double x, double y,
 					double w, double h, double paddingX, double paddingY)
 				{
-					contents->SetPos(x + paddingX, y + paddingY);
+					Vec2 pos = FlexGrid::AlignCellContents(x, y,
+						w - (paddingX * 2), h - (paddingY * 2),
+						contents->GetAlignment());
+					contents->SetPos(pos.x + paddingX, pos.y + paddingY);
 				}
 
 				virtual Vec3 Measure()
@@ -123,6 +149,7 @@ class MR_DllDeclare FlexGrid : public Container
 				std::shared_ptr<T> &GetContents() { return contents; }
 
 			private:
+				FlexGrid *parent;
 				std::shared_ptr<T> contents;
 		};
 
@@ -148,7 +175,7 @@ class MR_DllDeclare FlexGrid : public Container
 		{
 			std::shared_ptr<T> sharedChild = AddChild(child);
 			std::shared_ptr<BasicCell<T>> cell =
-				std::make_shared<BasicCell<T>>(sharedChild);
+				std::make_shared<BasicCell<T>>(this, sharedChild);
 
 			// Resize the grid to accomodate the cell.
 			if (row >= rows.size()) {

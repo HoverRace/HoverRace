@@ -682,6 +682,8 @@ void HudModule::Render()
 FlexGridModule::FlexGridModule(Display::Display &display, GameDirector &director) :
 	SUPER(display, director, "FlexGrid")
 {
+	typedef Display::UiViewModel::Alignment Alignment;
+
 	const auto &s = display.styles;
 
 	Display::Container *root = GetRoot();
@@ -703,8 +705,9 @@ FlexGridModule::FlexGridModule(Display::Display &display, GameDirector &director
 		s.bodyFont, s.bodyFg));
 	grid->AddGridCell(r, c++, new Display::Label("Foo Bar",
 		s.bodyFont, s.bodyFg));
-	grid->AddGridCell(r, c++, new Display::Label("3:44",
+	auto cell = grid->AddGridCell(r, c++, new Display::Label("3:44",
 		s.bodyFont, s.bodyFg));
+	cell->SetAlignment(Alignment::NE);
 
 	r++;
 	c = 0;
@@ -712,8 +715,9 @@ FlexGridModule::FlexGridModule(Display::Display &display, GameDirector &director
 		s.bodyFont, s.bodyFg));
 	grid->AddGridCell(r, c++, new Display::Label("Baz Quux",
 		s.bodyFont, s.bodyFg));
-	grid->AddGridCell(r, c++, new Display::Label("12:33",
+	cell = grid->AddGridCell(r, c++, new Display::Label("12:33",
 		s.bodyFont, s.bodyFg));
+	cell->SetAlignment(Alignment::NE);
 }
 
 //}}} FlexGridModule

@@ -21,6 +21,8 @@
 
 #include "StdAfx.h"
 
+#include "../Exception.h"
+
 #include "FlexGrid.h"
 
 namespace HoverRace {
@@ -60,6 +62,35 @@ void FlexGrid::SetPadding(double width, double height)
 	}
 }
 
+/**
+ * Adjust the cell origin position to the position of the contents,
+ * based on the contents' alignment.
+ * @param x The upper-left corner of the cell, relative to the grid.
+ * @param y The upper-left corner of the cell, relative to the grid.
+ * @param w The width of the cell, not including padding.
+ * @param h The height of the cell, not including padding.
+ * @param alignment The alignment of the cell contents.
+ * @return The adjusted position.
+ */
+Vec2 FlexGrid::AlignCellContents(double x, double y, double w, double h,
+                                 Alignment::type alignment)
+{
+	switch (alignment) {
+		case Alignment::NW: return Vec2(x, y);
+		case Alignment::N: return Vec2(x + (w / 2.0), y);
+		case Alignment::NE: return Vec2(x + w, y);
+		case Alignment::E: return Vec2(x + w, y + (h / 2.0));
+		case Alignment::SE: return Vec2(x + w, y + h);
+		case Alignment::S: return Vec2(x + (w / 2.0), y + h);
+		case Alignment::SW: return Vec2(x, y + h);
+		case Alignment::W: return Vec2(x, y + (h / 2.0));
+		case Alignment::CENTER: return Vec2(x + (w / 2.0), y + (h / 2.0));
+		default:
+			throw Exception("Unknown alignment: " +
+				boost::lexical_cast<std::string>(alignment));
+	}
+}
+
 void FlexGrid::Clear()
 {
 	numCols = 0;
@@ -73,6 +104,9 @@ void FlexGrid::Layout()
 	std::vector<double> heights(rows.size(), 0.0);
 	std::vector<double> widths(numCols, 0.0);
 
+	Vec2 padding2x = padding;
+	padding2x *= 2;
+
 	// First, measure each of the cells to determine the height of each row
 	// and width of each column.
 	auto heightIter = heights.begin();
@@ -81,6 +115,7 @@ void FlexGrid::Layout()
 		BOOST_FOREACH(auto &cell, cols) {
 			if (cell) {
 				Vec3 size = cell->Measure();
+				size += padding2x;
 
 				if (size.x > *widthIter) {
 					*widthIter = size.x;
