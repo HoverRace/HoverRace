@@ -95,21 +95,21 @@ void Display::styles_t::Reload()
 
 	consoleFont.Set(monospaceFontName, 30);
 	consoleFg = COLOR_WHITE;
-	consoleCursorFg = Color(0xffbfbfbf);
-	consoleBg = Color(0xbf000000);
+	consoleCursorFg = 0xffbfbfbf;
+	consoleBg = 0xbf000000;
 
 	formFont = bodyFont;
 	formFg = COLOR_WHITE;
-	formDisabledFg = Color(0x7fffffff);
+	formDisabledFg = 0x7fffffff;
 
 	gridMargin.x = 1;
 	gridMargin.y = 1;
 	gridPadding.x = 6;
 	gridPadding.y = 6;
 
-	buttonBg = Color(0x3f00007f);
-	buttonDisabledBg = Color(0x3f7f7f7f);
-	buttonPressedBg = Color(0x7f00007f);
+	buttonBg = 0x3f00007f;
+	buttonDisabledBg = 0x3f7f7f7f;
+	buttonPressedBg = 0x7f00007f;
 
 	headingFont.Set(defaultFontName, 40, UiFont::BOLD);
 	headingFg = COLOR_WHITE;
