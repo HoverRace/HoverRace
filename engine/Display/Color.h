@@ -47,6 +47,12 @@ union MR_DllDeclare Color
 		argb(((MR_UInt32)a << 24) + ((MR_UInt32)r << 16) + ((MR_UInt32)g << 8) + (MR_UInt32)b)
 		{ }
 
+	Color &operator=(MR_UInt32 argb)
+	{
+		this->argb = argb;
+		return *this;
+	}
+
 	MR_UInt32 argb;
 	struct
 	{
