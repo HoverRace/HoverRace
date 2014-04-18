@@ -44,7 +44,7 @@ namespace Log {
 	MR_DllDeclare void Init();
 
 	namespace Level {
-		enum level_t {
+		enum type {
 			DEBUG,
 			INFO,
 			WARN,
@@ -54,7 +54,7 @@ namespace Log {
 	}
 
 	struct Entry {
-		const Level::level_t level;
+		const Level::type level;
 		const char *message;
 	};
 
