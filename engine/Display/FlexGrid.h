@@ -206,6 +206,7 @@ class MR_DllDeclare FlexGrid : public Container
 	private:
 		Vec2 margin;
 		Vec2 padding;
+		Vec2 size;
 		size_t numCols;
 		typedef std::vector<std::shared_ptr<Cell>> cells_t;
 		std::vector<cells_t> rows;

@@ -36,7 +36,7 @@ namespace Display {
 FlexGrid::FlexGrid(Display &display, uiLayoutFlags_t layoutFlags) :
 	SUPER(display, layoutFlags),
 	margin(display.styles.gridMargin), padding(display.styles.gridPadding),
-	numCols(0)
+	size(0, 0), numCols(0)
 {
 }
 
@@ -103,6 +103,7 @@ void FlexGrid::Layout()
 {
 	std::vector<double> heights(rows.size(), 0.0);
 	std::vector<double> widths(numCols, 0.0);
+	Vec2 totalSize(0, 0);
 
 	Vec2 padding2x = padding;
 	padding2x *= 2;
@@ -142,21 +143,28 @@ void FlexGrid::Layout()
 				cell->SetExtents(x, y, *widthIter, *heightIter,
 					padding.x, padding.y);
 			}
-			x += *widthIter + (2 * padding.x) + margin.x;
+			totalSize.x = x;
+			x += *widthIter + padding2x.x + margin.x;
 			++widthIter;
 		}
 
-		y += *heightIter + (2 * padding.y) + margin.y;
+		totalSize.y = y;
+		y += *heightIter + padding2x.y + margin.y;
 		++heightIter;
 		x = 0;
 		widthIter = widths.begin();
 	}
+
+	// Update the calculated size of the grid.
+	size = totalSize;
 }
 
 Vec3 FlexGrid::Measure() const
 {
-	//TODO: Perform layout then measure.
-	return Vec3(0, 0, 0);
+	//FIXME: Measure() really should be non-const because we already document
+	//       the caveat that this operation may change state.
+	const_cast<FlexGrid*>(this)->PrepareRender();
+	return size.Promote();
 }
 
 }  // namespace Display
