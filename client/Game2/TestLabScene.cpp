@@ -708,6 +708,7 @@ FlexGridModule::FlexGridModule(Display::Display &display, GameDirector &director
 	auto cell = grid->AddGridCell(r, c++, new Display::Label("3:44",
 		s.bodyFont, s.bodyFg));
 	cell->SetAlignment(Alignment::NE);
+	grid->AddGridCell(r, c++, new Display::Button(display, "Profile"));
 
 	r++;
 	c = 0;
@@ -718,6 +719,7 @@ FlexGridModule::FlexGridModule(Display::Display &display, GameDirector &director
 	cell = grid->AddGridCell(r, c++, new Display::Label("12:33",
 		s.bodyFont, s.bodyFg));
 	cell->SetAlignment(Alignment::NE);
+	grid->AddGridCell(r, c++, new Display::Checkbox(display, "Save Friend"));
 }
 
 //}}} FlexGridModule
