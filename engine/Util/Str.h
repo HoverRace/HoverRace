@@ -87,7 +87,7 @@ namespace Str {
 					explicit PU(const OS::path_t &path) throw() : cs(path.wstring()) { }
 #				endif
 				operator const char*() const throw() { return (const char*)cs; }
-				operator const std::string() const { return (const std::string)cs; }
+				operator const std::string() const { return std::string((const char*)cs); }
 #		else
 			std::string cs;
 			public:
