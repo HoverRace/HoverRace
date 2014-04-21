@@ -99,8 +99,6 @@ namespace {
 Observer::Observer() :
 	hudVisible(true), demoMode(false)
 {
-	const Config *cfg = Config::GetInstance();
-
 	globalFmts.Init();
 
 	mLastCameraPosValid = FALSE;
