@@ -28,7 +28,7 @@ set_target_properties(hoverrace-resource-compiler PROPERTIES
 	LINKER_LANGUAGE CXX
 	PROJECT_LABEL ResourceCompiler)
 target_link_libraries(hoverrace-resource-compiler ${Boost_LIBRARIES}
-	${DEPS_LIBRARIES} hoverrace-engine)
+	${DEPS_LIBRARIES} hrengine)
 
 if(NOT WIN32)
 	set_property(TARGET hoverrace-resource-compiler

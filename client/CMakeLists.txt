@@ -40,7 +40,7 @@ set_target_properties(hoverrace PROPERTIES
 	PROJECT_LABEL HoverRace)
 include_directories(".")
 target_link_libraries(hoverrace ${Boost_LIBRARIES} ${DEPS_LIBRARIES}
-	hoverrace-engine)
+	hrengine)
 if(WIN32)
 	target_link_libraries(hoverrace version comctl32)
 endif()
