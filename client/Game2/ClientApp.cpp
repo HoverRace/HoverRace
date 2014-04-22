@@ -129,7 +129,7 @@ ClientApp::ClientApp() :
 	gamePeer = new GamePeer(scripting, *this, *rulebookLibrary);
 	RulebookEnv(scripting, *rulebookLibrary).ReloadRulebooks();
 	sysEnv = new SysEnv(scripting, debugPeer, gamePeer);
-	BOOST_FOREACH(OS::path_t &initScript, cfg->runtime.initScripts) {
+	for (OS::path_t &initScript : cfg->runtime.initScripts) {
 		if (!initScript.empty()) {
 			sysEnv->RunScript(initScript);
 		}
@@ -306,12 +306,12 @@ void ClientApp::RenderScenes()
 		display->GetLegacyDisplay().Clear();
 	}
 	else {
-		BOOST_FOREACH(const ScenePtr &scene, sceneStack) {
+		for (const ScenePtr &scene : sceneStack) {
 			scene->PrepareRender();
 		}
 		if (showFps) fpsLbl->PrepareRender();
 
-		BOOST_FOREACH(const ScenePtr &scene, sceneStack) {
+		for (const ScenePtr &scene : sceneStack) {
 			Scene::Phase::phase_t phase = scene->GetPhase();
 			if (phase != Scene::Phase::INITIALIZING &&
 				phase != Scene::Phase::STOPPED)
@@ -553,7 +553,7 @@ void ClientApp::PopScene()
  */
 void ClientApp::ReplaceScene(const ScenePtr &scene)
 {
-	BOOST_FOREACH(ScenePtr &s, sceneStack) {
+	for (ScenePtr &s : sceneStack) {
 		s->SetPhase(Scene::Phase::STOPPING);
 	}
 	PushScene(scene);

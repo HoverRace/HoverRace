@@ -112,8 +112,8 @@ void FlexGrid::Layout()
 	// and width of each column.
 	auto heightIter = heights.begin();
 	auto widthIter = widths.begin();
-	BOOST_FOREACH(auto &cols, rows) {
-		BOOST_FOREACH(auto &cell, cols) {
+	for (auto &cols : rows) {
+		for (auto &cell : cols) {
 			if (cell) {
 				Vec3 size = cell->Measure();
 				size += padding2x;
@@ -137,8 +137,8 @@ void FlexGrid::Layout()
 	widthIter = widths.begin();
 	double x = 0;
 	double y = 0;
-	BOOST_FOREACH(auto &cols, rows) {
-		BOOST_FOREACH(auto &cell, cols) {
+	for (auto &cols : rows) {
+		for (auto &cell : cols) {
 			if (cell) {
 				cell->SetExtents(x, y, *widthIter, *heightIter,
 					padding.x, padding.y);

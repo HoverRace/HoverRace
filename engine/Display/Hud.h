@@ -205,7 +205,7 @@ class MR_DllDeclare Hud : public Container
 
 		virtual void Clear()
 		{
-			BOOST_FOREACH(auto &children, hudChildren) {
+			for (auto &children : hudChildren) {
 				children.clear();
 			}
 			SUPER::Clear();
@@ -215,8 +215,8 @@ class MR_DllDeclare Hud : public Container
 		template<typename Fn>
 		void ForEachHudChild(Fn fn)
 		{
-			BOOST_FOREACH(auto &children, hudChildren) {
-				BOOST_FOREACH(auto &child, children) {
+			for (auto &children : hudChildren) {
+				for (auto &child : children) {
 					fn(child.decor);
 				}
 			}

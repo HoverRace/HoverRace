@@ -130,14 +130,14 @@ void MainMenuScene::Layout()
 	const double sidePadding = 40;
 
 	double totalWidth = 0;
-	BOOST_FOREACH(std::shared_ptr<Display::Button> &btn, menuButtons) {
+	for (std::shared_ptr<Display::Button> &btn : menuButtons) {
 		totalWidth += btn->Measure().x;
 	}
 
 	double spacing = (1280.0 - totalWidth - (sidePadding * 2)) / (menuButtons.size() + 1);
 	
 	double x = sidePadding + spacing;
-	BOOST_FOREACH(std::shared_ptr<Display::Button> &btn, menuButtons) {
+	for (std::shared_ptr<Display::Button> &btn : menuButtons) {
 		btn->SetPos(x, 0);
 		x += btn->Measure().x + spacing;
 	}
