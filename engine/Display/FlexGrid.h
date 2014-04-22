@@ -116,7 +116,11 @@ class MR_DllDeclare FlexGrid : public Container
 			public:
 				BasicCell(FlexGrid *parent, std::shared_ptr<T> contents) :
 					SUPER(), parent(parent), contents(std::move(contents)) { }
-				virtual ~BasicCell() { }
+
+				virtual ~BasicCell()
+				{
+					parent->RemoveChild(contents);
+				}
 
 			public:
 				virtual void SetAlignment(Alignment::type alignment)
@@ -188,6 +192,8 @@ class MR_DllDeclare FlexGrid : public Container
 					numCols = col + 1;
 				}
 			}
+
+			// Add the new cell, replacing the old one if necessary.
 			cols[col] = cell;
 
 			RequestLayout();
