@@ -36,7 +36,7 @@ namespace Display {
 FlexGrid::FlexGrid(Display &display, uiLayoutFlags_t layoutFlags) :
 	SUPER(display, layoutFlags),
 	margin(display.styles.gridMargin), padding(display.styles.gridPadding),
-	size(0, 0), numCols(0)
+	size(0, 0)
 {
 }
 
@@ -93,7 +93,7 @@ Vec2 FlexGrid::AlignCellContents(double x, double y, double w, double h,
 
 void FlexGrid::Clear()
 {
-	numCols = 0;
+	defaultCols.clear();
 	rows.clear();
 
 	SUPER::Clear();
@@ -102,7 +102,7 @@ void FlexGrid::Clear()
 void FlexGrid::Layout()
 {
 	std::vector<double> heights(rows.size(), 0.0);
-	std::vector<double> widths(numCols, 0.0);
+	std::vector<double> widths(defaultCols.size(), 0.0);
 	Vec2 totalSize(0, 0);
 
 	Vec2 padding2x = padding;

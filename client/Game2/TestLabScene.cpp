@@ -693,6 +693,24 @@ FlexGridModule::FlexGridModule(Display::Display &display, GameDirector &director
 	size_t r = 0;
 	size_t c = 0;
 
+	c = 0;
+	{
+		auto &column = grid->GetColumnDefault(c++);
+		column.SetAlignment(Alignment::E);
+	}
+	{
+		auto &column = grid->GetColumnDefault(c++);
+		column.SetAlignment(Alignment::W);
+	}
+	{
+		auto &column = grid->GetColumnDefault(c++);
+		column.SetAlignment(Alignment::E);
+	}
+	{
+		auto &column = grid->GetColumnDefault(c++);
+		column.SetAlignment(Alignment::CENTER);
+	}
+
 	c = 1;
 	grid->AddGridCell(r, c++, new Display::Label("Name",
 		s.headingFont, s.headingFg));
@@ -705,9 +723,8 @@ FlexGridModule::FlexGridModule(Display::Display &display, GameDirector &director
 		s.bodyFont, s.bodyFg));
 	grid->AddGridCell(r, c++, new Display::Label("Foo Bar",
 		s.bodyFont, s.bodyFg));
-	auto cell = grid->AddGridCell(r, c++, new Display::Label("3:44",
+	grid->AddGridCell(r, c++, new Display::Label("3:44",
 		s.bodyFont, s.bodyFg));
-	cell->SetAlignment(Alignment::NE);
 	grid->AddGridCell(r, c++, new Display::Button(display, "Profile"));
 
 	r++;
@@ -716,9 +733,8 @@ FlexGridModule::FlexGridModule(Display::Display &display, GameDirector &director
 		s.bodyFont, s.bodyFg));
 	grid->AddGridCell(r, c++, new Display::Label("Baz Quux",
 		s.bodyFont, s.bodyFg));
-	cell = grid->AddGridCell(r, c++, new Display::Label("12:33",
+	grid->AddGridCell(r, c++, new Display::Label("12:33",
 		s.bodyFont, s.bodyFg));
-	cell->SetAlignment(Alignment::NE);
 	grid->AddGridCell(r, c++, new Display::Checkbox(display, "Save Friend"));
 }
 

@@ -109,13 +109,43 @@ class MR_DllDeclare FlexGrid : public Container
 				virtual Vec3 Measure() = 0;
 		};
 
+	protected:
+		class DefaultCell : public Cell
+		{
+			typedef Cell SUPER;
+			public:
+				DefaultCell() : SUPER(), alignment(Alignment::NW) { }
+				virtual ~DefaultCell() { }
+
+			public:
+				Alignment::type GetAlignment() const { return alignment; }
+
+				virtual void SetAlignment(Alignment::type alignment) override
+				{
+					this->alignment = alignment;
+				}
+
+			protected:
+				virtual void SetExtents(double x, double y,
+					double w, double h,
+					double paddingX, double paddingY) override { }
+				virtual Vec3 Measure() override { return Vec3(0, 0, 0);  }
+
+			private:
+				Alignment::type alignment;
+		};
+
 		template<typename T>
 		class BasicCell : public Cell
 		{
 			typedef Cell SUPER;
 			public:
-				BasicCell(FlexGrid *parent, std::shared_ptr<T> contents) :
-					SUPER(), parent(parent), contents(std::move(contents)) { }
+				BasicCell(FlexGrid *parent, const DefaultCell &defaultCell,
+					std::shared_ptr<T> contents) :
+					SUPER(), parent(parent), contents(std::move(contents))
+				{
+					SetAlignment(defaultCell.GetAlignment());
+				}
 
 				virtual ~BasicCell()
 				{
@@ -159,6 +189,24 @@ class MR_DllDeclare FlexGrid : public Container
 
 	public:
 		/**
+		 * Set the default cell settings for a column.
+		 *
+		 * This does not retro-actively set the defaults for cells already
+		 * added.
+		 *
+		 * @param col The column coordinate (starting at zero).
+		 * @return A mutable cell that will be used as the default template.
+		 */
+		Cell &GetColumnDefault(size_t col)
+		{
+			if (col >= defaultCols.size()) {
+				defaultCols.resize(col + 1);
+			}
+
+			return defaultCols[col];
+		}
+
+		/**
 		 * Append a child element to the grid.
 		 *
 		 * If the cell coordinates are outside of the current grid size, then
@@ -178,8 +226,6 @@ class MR_DllDeclare FlexGrid : public Container
 		AddGridCell(size_t row, size_t col, T *child)
 		{
 			std::shared_ptr<T> sharedChild = AddChild(child);
-			std::shared_ptr<BasicCell<T>> cell =
-				std::make_shared<BasicCell<T>>(this, sharedChild);
 
 			// Resize the grid to accomodate the cell.
 			if (row >= rows.size()) {
@@ -188,10 +234,14 @@ class MR_DllDeclare FlexGrid : public Container
 			auto &cols = rows[row];
 			if (col >= cols.size()) {
 				cols.resize(col + 1);
-				if (col + 1 > numCols) {
-					numCols = col + 1;
+				if (col >= defaultCols.size()) {
+					defaultCols.resize(col + 1);
 				}
 			}
+
+			std::shared_ptr<BasicCell<T>> cell =
+				std::make_shared<BasicCell<T>>(this, defaultCols[col],
+					sharedChild);
 
 			// Add the new cell, replacing the old one if necessary.
 			cols[col] = cell;
@@ -213,8 +263,8 @@ class MR_DllDeclare FlexGrid : public Container
 		Vec2 margin;
 		Vec2 padding;
 		Vec2 size;
-		size_t numCols;
 		typedef std::vector<std::shared_ptr<Cell>> cells_t;
+		std::vector<DefaultCell> defaultCols;
 		std::vector<cells_t> rows;
 };
 
