@@ -102,10 +102,10 @@ void Display::styles_t::Reload()
 	formFg = COLOR_WHITE;
 	formDisabledFg = 0x7fffffff;
 
-	gridMargin.x = 1;
-	gridMargin.y = 1;
-	gridPadding.x = 6;
-	gridPadding.y = 6;
+	gridMargin.x = 6;
+	gridMargin.y = 6;
+	gridPadding.x = 1;
+	gridPadding.y = 1;
 
 	buttonBg = 0x3f00007f;
 	buttonDisabledBg = 0x3f7f7f7f;
