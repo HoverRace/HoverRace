@@ -112,6 +112,13 @@ namespace {
 				director.RequestPushScene(std::make_shared<Module>(display, director));
 			}
 	}; //}}}
+
+	template<class T>
+	void AddModule(TestLabScene &scene, Display::Display &display,
+                   GameDirector &director, const std::string &name)
+	{
+		scene.AddModuleButton(new ModuleButton<T>(display, director, name));
+	}
 }
 
 namespace Module {
@@ -228,13 +235,13 @@ TestLabScene::TestLabScene(Display::Display &display, GameDirector &director,
 	fader.reset(new Display::ScreenFade(Display::COLOR_BLACK, 1.0));
 	fader->AttachView(display);
 
-	AddModuleButton(new ModuleButton<Module::LayoutModule>(display, director, "Layout"));
-	AddModuleButton(new ModuleButton<Module::ButtonModule>(display, director, "Button"));
-	AddModuleButton(new ModuleButton<Module::LabelModule>(display, director, "Label"));
-	AddModuleButton(new ModuleButton<Module::IconModule>(display, director, "Icon"));
-	AddModuleButton(new ModuleButton<Module::TransitionModule>(display, director, "Transition"));
-	AddModuleButton(new ModuleButton<Module::HudModule>(display, director, "HUD"));
-	AddModuleButton(new ModuleButton<Module::FlexGridModule>(display, director, "FlexGrid"));
+	AddModule<Module::LayoutModule>(*this, display, director, "Layout");
+	AddModule<Module::ButtonModule>(*this, display, director, "Button");
+	AddModule<Module::LabelModule>(*this, display, director, "Label");
+	AddModule<Module::IconModule>(*this, display, director, "Icon");
+	AddModule<Module::TransitionModule>(*this, display, director, "Transition");
+	AddModule<Module::HudModule>(*this, display, director, "HUD");
+	AddModule<Module::FlexGridModule>(*this, display, director, "FlexGrid");
 
 	if (!startingModuleName.empty() && !startingModuleBtn) {
 		Log::Warn("Not a test lab module: %s", startingModuleName.c_str());

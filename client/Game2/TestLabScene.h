@@ -52,7 +52,6 @@ class TestLabScene : public FormScene
 	public:
 		class LabModule;
 		class ModuleButtonBase;
-	private:
 		void AddModuleButton(ModuleButtonBase *btn);
 
 	public:
