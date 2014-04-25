@@ -149,7 +149,15 @@ namespace Display {
 			public:
 				DefaultCell() : SUPER(),
 					alignment(Alignment::NW), fill(false) { }
+				DefaultCell(DefaultCell &&o) : SUPER(),
+					alignment(o.alignment) { }
 				virtual ~DefaultCell() { }
+
+			public:
+				DefaultCell &operator=(DefaultCell &&o) {
+					alignment = o.alignment;
+					return *this;
+				}
 
 			public:
 				Alignment GetAlignment() const { return alignment; }
