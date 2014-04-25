@@ -110,6 +110,8 @@ namespace Display {
 				 * @param y The Y position of the cell.
 				 * @param w The width of the cell.
 				 * @param h The height of the cell.
+				 * @param paddingX The horizontal padding on the cell.
+				 * @param paddingY The vertical padding on the cell.
 				 */
 				virtual void SetExtents(double x, double y,
 					double w, double h, double paddingX, double paddingY) = 0;
