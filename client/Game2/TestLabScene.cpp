@@ -717,11 +717,19 @@ FlexGridModule::FlexGridModule(Display::Display &display, GameDirector &director
 		auto &column = grid->GetColumnDefault(c++);
 		column.SetAlignment(Alignment::CENTER);
 	}
+	{
+		auto &column = grid->GetColumnDefault(c++);
+		column.SetAlignment(Alignment::CENTER);
+		column.SetFill(true);
+	}
 
 	c = 1;
 	grid->AddGridCell(r, c++, new Display::Label("Name",
 		s.headingFont, s.headingFg));
 	grid->AddGridCell(r, c++, new Display::Label("Time",
+		s.headingFont, s.headingFg));
+	c++;
+	grid->AddGridCell(r, c++, new Display::Label("P",
 		s.headingFont, s.headingFg));
 
 	r++;
@@ -733,6 +741,7 @@ FlexGridModule::FlexGridModule(Display::Display &display, GameDirector &director
 	grid->AddGridCell(r, c++, new Display::Label("3:44",
 		s.bodyFont, s.bodyFg));
 	grid->AddGridCell(r, c++, new Display::Button(display, "Profile"));
+	grid->AddGridCell(r, c++, new Display::Button(display, "View Statistics"));
 
 	r++;
 	c = 0;
@@ -743,6 +752,7 @@ FlexGridModule::FlexGridModule(Display::Display &display, GameDirector &director
 	grid->AddGridCell(r, c++, new Display::Label("12:33",
 		s.bodyFont, s.bodyFg));
 	grid->AddGridCell(r, c++, new Display::Checkbox(display, "Save Friend"));
+	grid->AddGridCell(r, c++, new Display::Button(display, "Spectate"));
 }
 
 //}}} FlexGridModule

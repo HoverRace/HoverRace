@@ -47,14 +47,15 @@ namespace Display {
  * sized to the contents.
  * @author Michael Imamura
  */
-class MR_DllDeclare FlexGrid : public Container
-{
-	typedef Container SUPER;
+	class MR_DllDeclare FlexGrid : public Container
+	{
+		typedef Container SUPER;
 
 	public:
 		struct Props
 		{
-			enum {
+			enum
+			{
 				MARGIN = SUPER::Props::NEXT_,
 				PADDING,
 				NEXT_,  ///< First index for subclasses.
@@ -62,7 +63,7 @@ class MR_DllDeclare FlexGrid : public Container
 		};
 
 	public:
-		FlexGrid(Display &display, uiLayoutFlags_t layoutFlags=0);
+		FlexGrid(Display &display, uiLayoutFlags_t layoutFlags = 0);
 		virtual ~FlexGrid() { }
 
 	public:
@@ -91,6 +92,17 @@ class MR_DllDeclare FlexGrid : public Container
 				 */
 				virtual void SetAlignment(Alignment::type alignment) = 0;
 
+				/**
+				 * Set whether the widget is resized to fill the space of the
+				 * cell.
+				 *
+				 * If the widget cannot be resized, then nothing will be done.
+				 *
+				 * @param fill @c true To resize the widget,
+				 *             @c false to leave it alone.
+				 */
+				virtual void SetFill(bool fill) = 0;
+
 			protected:
 				/**
 				 * Set the position and size of the cell.
@@ -110,11 +122,31 @@ class MR_DllDeclare FlexGrid : public Container
 		};
 
 	protected:
+		// Determine if a class as a SetSize(Vec2).
+		template<class C>
+		struct HasSetSize
+		{
+		private:
+			template<class T>
+			static auto check(T*) ->
+				decltype(std::declval<T>().SetSize(std::declval<Vec2>()),
+				std::true_type());
+
+			template<class>
+			static std::false_type check(...);
+
+			typedef decltype(check<C>(nullptr)) type;
+
+		public:
+			static const bool value = type::value;
+		};
+
 		class DefaultCell : public Cell
 		{
 			typedef Cell SUPER;
 			public:
-				DefaultCell() : SUPER(), alignment(Alignment::NW) { }
+				DefaultCell() : SUPER(),
+					alignment(Alignment::NW), fill(false) { }
 				virtual ~DefaultCell() { }
 
 			public:
@@ -125,6 +157,13 @@ class MR_DllDeclare FlexGrid : public Container
 					this->alignment = alignment;
 				}
 
+				bool IsFill() const { return fill; }
+
+				virtual void SetFill(bool fill) override
+				{
+					this->fill = fill;
+				}
+
 			protected:
 				virtual void SetExtents(double x, double y,
 					double w, double h,
@@ -133,6 +172,7 @@ class MR_DllDeclare FlexGrid : public Container
 
 			private:
 				Alignment::type alignment;
+				bool fill;
 		};
 
 		template<typename T>
@@ -142,7 +182,8 @@ class MR_DllDeclare FlexGrid : public Container
 			public:
 				BasicCell(FlexGrid *parent, const DefaultCell &defaultCell,
 					std::shared_ptr<T> contents) :
-					SUPER(), parent(parent), contents(std::move(contents))
+					SUPER(), parent(parent), contents(std::move(contents)),
+					fill(defaultCell.IsFill())
 				{
 					SetAlignment(defaultCell.GetAlignment());
 				}
@@ -164,7 +205,26 @@ class MR_DllDeclare FlexGrid : public Container
 					}
 				}
 
+				virtual void SetFill(bool fill) override
+				{
+					this->fill = fill;
+				}
+
 			protected:
+				template<class U>
+				typename std::enable_if<HasSetSize<U>::value, void>::type
+				SetSize(double w, double h)
+				{
+					contents->SetSize(Vec2(w, h));
+				}
+
+				template<class U>
+				typename std::enable_if<!HasSetSize<U>::value, void>::type
+				SetSize(double w, double h)
+				{
+					// Do nothing.
+				}
+
 				virtual void SetExtents(double x, double y,
 					double w, double h, double paddingX, double paddingY)
 				{
@@ -172,6 +232,9 @@ class MR_DllDeclare FlexGrid : public Container
 						w - (paddingX * 2), h - (paddingY * 2),
 						contents->GetAlignment());
 					contents->SetPos(pos.x + paddingX, pos.y + paddingY);
+					if (fill) {
+						SetSize<T>(w, h);
+					}
 				}
 
 				virtual Vec3 Measure()
@@ -185,6 +248,7 @@ class MR_DllDeclare FlexGrid : public Container
 			private:
 				FlexGrid *parent;
 				std::shared_ptr<T> contents;
+				bool fill;
 		};
 
 	public:
