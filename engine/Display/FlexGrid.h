@@ -75,7 +75,7 @@ namespace Display {
 
 	public:
 		static Vec2 AlignCellContents(double x, double y, double w, double h,
-			Alignment::type alignment);
+			Alignment alignment);
 
 		class Cell
 		{
@@ -90,7 +90,7 @@ namespace Display {
 				 * the cell is larger than the widget.
 				 * @param alignment The alignment (default is @c NW).
 				 */
-				virtual void SetAlignment(Alignment::type alignment) = 0;
+				virtual void SetAlignment(Alignment alignment) = 0;
 
 				/**
 				 * Set whether the widget is resized to fill the space of the
@@ -150,9 +150,9 @@ namespace Display {
 				virtual ~DefaultCell() { }
 
 			public:
-				Alignment::type GetAlignment() const { return alignment; }
+				Alignment GetAlignment() const { return alignment; }
 
-				virtual void SetAlignment(Alignment::type alignment) override
+				virtual void SetAlignment(Alignment alignment) override
 				{
 					this->alignment = alignment;
 				}
@@ -171,7 +171,7 @@ namespace Display {
 				virtual Vec3 Measure() override { return Vec3(0, 0, 0);  }
 
 			private:
-				Alignment::type alignment;
+				Alignment alignment;
 				bool fill;
 		};
 
@@ -194,7 +194,7 @@ namespace Display {
 				}
 
 			public:
-				virtual void SetAlignment(Alignment::type alignment)
+				virtual void SetAlignment(Alignment alignment)
 				{
 					// We track the alignment using the contents' own alignment
 					// since the caller has implicitly given us control over

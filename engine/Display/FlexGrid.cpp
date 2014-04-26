@@ -73,7 +73,7 @@ void FlexGrid::SetPadding(double width, double height)
  * @return The adjusted position.
  */
 Vec2 FlexGrid::AlignCellContents(double x, double y, double w, double h,
-                                 Alignment::type alignment)
+                                 Alignment alignment)
 {
 	switch (alignment) {
 		case Alignment::NW: return Vec2(x, y);
@@ -87,7 +87,7 @@ Vec2 FlexGrid::AlignCellContents(double x, double y, double w, double h,
 		case Alignment::CENTER: return Vec2(x + (w / 2.0), y + (h / 2.0));
 		default:
 			throw Exception("Unknown alignment: " +
-				boost::lexical_cast<std::string>(alignment));
+				boost::lexical_cast<std::string>(static_cast<int>(alignment)));
 	}
 }
 

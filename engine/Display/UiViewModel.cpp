@@ -44,7 +44,7 @@ void UiViewModel::SetPos(const Vec2 &pos)
  * Set the alignment of the component.
  * @param alignment The alignment (see Alignment).
  */
-void UiViewModel::SetAlignment(Alignment::type alignment)
+void UiViewModel::SetAlignment(Alignment alignment)
 {
 	if (this->alignment != alignment) {
 		this->alignment = alignment;
@@ -73,7 +73,7 @@ Vec2 UiViewModel::GetAlignedPos(const Vec2 &pos, double w, double h) const
 		case Alignment::CENTER: return Vec2(pos.x - (w / 2.0), pos.y - (h / 2.0));
 		default:
 			throw Exception("Unknown alignment: " +
-				boost::lexical_cast<std::string>(alignment));
+				boost::lexical_cast<std::string>(static_cast<int>(alignment)));
 	}
 }
 

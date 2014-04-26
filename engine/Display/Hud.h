@@ -110,7 +110,7 @@ class MR_DllDeclare Hud : public Container
 				return t == NW || t == NE || t == SE || t == SW;
 			}
 
-			static Alignment::type AlignmentFor(type t) {
+			static Alignment AlignmentFor(type t) {
 				switch (t) {
 					case ABOVE:
 						return Alignment::S;

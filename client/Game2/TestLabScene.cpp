@@ -131,7 +131,7 @@ namespace Module {
 
 		private:
 			void AddAlignmentTestElem(
-				Display::UiViewModel::Alignment::type alignment,
+				Display::UiViewModel::Alignment alignment,
 				const std::string &label, double x, double y);
 
 		public:
@@ -396,7 +396,7 @@ LayoutModule::LayoutModule(Display::Display &display, GameDirector &director) :
 }
 
 void LayoutModule::AddAlignmentTestElem(
-	Display::UiViewModel::Alignment::type alignment,
+	Display::UiViewModel::Alignment alignment,
 	const std::string &label, double x, double y)
 {
 	Config *cfg = Config::GetInstance();

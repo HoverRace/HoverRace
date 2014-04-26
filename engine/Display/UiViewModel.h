@@ -70,19 +70,17 @@ class MR_DllDeclare UiViewModel : public ViewModel
 		 * The thumbtack's position is at GetPos(), and the alignment determines
 		 * which corner the component hangs from.
 		 */
-		struct Alignment
+		enum class Alignment
 		{
-			enum type {
-				NW,  ///< Northwest corner (default).
-				N,  ///< North (horizontally-centered).
-				NE,  ///< Northeast corner.
-				E,  ///< East (vertically-centered).
-				SE,  ///< Southeast corner.
-				S,  ///< South (horizontally-centered).
-				SW,  ///< Southwest corner.
-				W,  ///< West (vertically-centered).
-				CENTER,  ///< Horizontally @e and vertically centered.
-			};
+			NW,  ///< Northwest corner (default).
+			N,  ///< North (horizontally-centered).
+			NE,  ///< Northeast corner.
+			E,  ///< East (vertically-centered).
+			SE,  ///< Southeast corner.
+			S,  ///< South (horizontally-centered).
+			SW,  ///< Southwest corner.
+			W,  ///< West (vertically-centered).
+			CENTER,  ///< Horizontally @e and vertically centered.
 		};
 
 	public:
@@ -112,8 +110,8 @@ class MR_DllDeclare UiViewModel : public ViewModel
 		 * @return The alignment.
 		 * @see UiViewModel::Alignment
 		 */
-		const Alignment::type GetAlignment() const { return alignment; }
-		void SetAlignment(Alignment::type alignment);
+		const Alignment GetAlignment() const { return alignment; }
+		void SetAlignment(Alignment alignment);
 
 		Vec2 GetAlignedPos(const Vec2 &pos, double w, double h) const;
 
@@ -140,7 +138,7 @@ class MR_DllDeclare UiViewModel : public ViewModel
 
 	private:
 		Vec2 pos;
-		Alignment::type alignment;
+		Alignment alignment;
 		uiLayoutFlags_t layoutFlags;
 };
 typedef std::shared_ptr<UiViewModel> UiViewModelPtr;
