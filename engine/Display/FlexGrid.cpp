@@ -157,6 +157,7 @@ void FlexGrid::Layout()
 
 	// Update the calculated size of the grid.
 	size = totalSize;
+	SUPER::SetSize(totalSize);
 }
 
 Vec3 FlexGrid::Measure() const
