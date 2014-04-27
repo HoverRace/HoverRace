@@ -1,7 +1,7 @@
 
 // TrackSelectScene.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@
 #include "../../engine/Display/Button.h"
 #include "../../engine/Display/Container.h"
 #include "../../engine/Display/Display.h"
+#include "../../engine/Display/FlexGrid.h"
 #include "../../engine/Display/Label.h"
 #include "../../engine/Model/TrackEntry.h"
 #include "../../engine/Util/Config.h"
@@ -75,21 +76,25 @@ TrackSelectScene::TrackSelectScene(Display::Display &display,
 
 	auto root = GetContentRoot();
 
-	//TODO: A better list UI (categories, sorting, etc.).
-	double y = 0;
-
 	rulebookLbl = root->AddChild(new Display::Label(rulebook->GetTitle(),
 		Display::UiFont(fontName, 40), 0xffbfbfbf));
 	rulebookLbl->SetPos(DialogScene::MARGIN_WIDTH, 0);
 
 	trackPanel = root->AddChild(new Display::Container(display));
 	trackPanel->SetPos(DialogScene::MARGIN_WIDTH, 60);
-	BOOST_FOREACH(TrackEntryPtr ent, trackList) {
-		auto trackSel = trackPanel->AddChild(new TrackSelButton(display, ent));
-		trackSel->SetPos(0, y);
-		trackSel->GetClickedSignal().connect(std::bind(
+
+	//TODO: A better list UI (categories, sorting, etc.).
+	trackGrid = trackPanel->AddChild(new Display::FlexGrid(display));
+
+	auto &cell = trackGrid->GetColumnDefault(0);
+	cell.SetFill(true);
+
+	size_t row = 0;
+	for (TrackEntryPtr ent : trackList) {
+		auto trackCell = trackGrid->AddGridCell(row++, 0,
+			new TrackSelButton(display, ent));
+		trackCell->GetContents()->GetClickedSignal().connect(std::bind(
 			&TrackSelectScene::OnTrackSelected, this, ent));
-		y += 50;
 	}
 }
 

@@ -1,7 +1,7 @@
 
 // TrackSelectScene.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ namespace HoverRace {
 	namespace Display {
 		class Container;
 		class Display;
+		class FlexGrid;
 		class Label;
 	}
 }
@@ -58,7 +59,6 @@ class TrackSelectScene : public DialogScene
 	protected:
 		virtual void OnPhaseTransition(double progress);
 
-
 	public:
 		typedef boost::signals2::signal<void(std::shared_ptr<Rules>)> okSignal_t;
 		okSignal_t &GetOkSignal() { return okSignal; }
@@ -73,6 +73,7 @@ class TrackSelectScene : public DialogScene
 
 		std::shared_ptr<Display::Label> rulebookLbl;
 		std::shared_ptr<Display::Container> trackPanel;
+		std::shared_ptr<Display::FlexGrid> trackGrid;
 
 		okSignal_t okSignal;
 		cancelSignal_t cancelSignal;
