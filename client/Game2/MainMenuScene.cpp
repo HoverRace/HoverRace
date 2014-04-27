@@ -31,6 +31,7 @@
 
 #include "PracticeSetupScene.h"
 #include "Rulebook.h"
+#include "SettingsMenuScene.h"
 
 #include "MainMenuScene.h"
 
@@ -76,7 +77,7 @@ MainMenuScene::MainMenuScene(Display::Display &display, GameDirector &director,
 		std::bind(&MainMenuScene::OnPracticeClicked, this));
 	AddButton(_("Multiplayer"), false)->GetClickedSignal().connect(
 		std::bind(&MainMenuScene::OnMultiplayerClicked, this));
-	AddButton(_("Settings"), false)->GetClickedSignal().connect(
+	AddButton(_("Settings"))->GetClickedSignal().connect(
 		std::bind(&MainMenuScene::OnSettingsClicked, this));
 	AddButton(_("Credits"), false)->GetClickedSignal().connect(
 		std::bind(&MainMenuScene::OnSettingsClicked, this));
@@ -111,7 +112,7 @@ void MainMenuScene::OnMultiplayerClicked()
 
 void MainMenuScene::OnSettingsClicked()
 {
-	//TODO: Push SettingsScene
+	director.RequestPushScene(std::make_shared<SettingsMenuScene>(display, director));
 }
 
 void MainMenuScene::OnPhaseTransition(double interval)
