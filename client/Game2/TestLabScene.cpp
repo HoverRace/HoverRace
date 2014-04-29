@@ -188,8 +188,8 @@ namespace Module {
 			virtual ~TransitionModule() { }
 
 		protected:
-			virtual void OnPhaseChanged(Phase::phase_t oldPhase);
-			virtual void OnStateChanged(State::state_t oldState);
+			virtual void OnPhaseChanged(Phase oldPhase);
+			virtual void OnStateChanged(State oldState);
 			virtual void OnPhaseTransition(double progress);
 			virtual void OnStateTransition(double progress);
 
@@ -603,7 +603,7 @@ TransitionModule::TransitionModule(Display::Display &display,
 	});
 }
 
-void TransitionModule::OnPhaseChanged(Phase::phase_t oldPhase)
+void TransitionModule::OnPhaseChanged(Phase oldPhase)
 {
 	SUPER::OnPhaseChanged(oldPhase);
 
@@ -614,12 +614,12 @@ void TransitionModule::OnPhaseChanged(Phase::phase_t oldPhase)
 		case Phase::STOPPING: s += "STOPPING"; break;
 		case Phase::STOPPED: s += "STOPPED"; break;
 		default:
-			s += boost::str(boost::format("UNKNOWN: %d") % GetPhase());
+			s += boost::str(boost::format("UNKNOWN: %d") % (int)GetPhase());
 	}
 	phaseLbl->SetText(s);
 }
 
-void TransitionModule::OnStateChanged(State::state_t oldState)
+void TransitionModule::OnStateChanged(State oldState)
 {
 	SUPER::OnStateChanged(oldState);
 
@@ -630,7 +630,7 @@ void TransitionModule::OnStateChanged(State::state_t oldState)
 		case State::FOREGROUND: s += "FOREGROUND"; break;
 		case State::LOWERING: s += "LOWERING"; break;
 		default:
-			s += boost::str(boost::format("UNKNOWN: %d") % GetState());
+			s += boost::str(boost::format("UNKNOWN: %d") % (int)GetState());
 	}
 	stateLbl->SetText(s);
 }

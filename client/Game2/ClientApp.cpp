@@ -278,7 +278,7 @@ void ClientApp::AdvanceScenes(Util::OS::timestamp_t tick)
 	auto iter = sceneStack.begin();
 	while (iter != sceneStack.end()) {
 		Scene &scene = **iter;
-		Scene::Phase::phase_t phase = scene.GetPhase();
+		Scene::Phase phase = scene.GetPhase();
 		if (phase != Scene::Phase::INITIALIZING &&
 			phase != Scene::Phase::STOPPED)
 		{
@@ -312,7 +312,7 @@ void ClientApp::RenderScenes()
 		if (showFps) fpsLbl->PrepareRender();
 
 		for (const ScenePtr &scene : sceneStack) {
-			Scene::Phase::phase_t phase = scene->GetPhase();
+			Scene::Phase phase = scene->GetPhase();
 			if (phase != Scene::Phase::INITIALIZING &&
 				phase != Scene::Phase::STOPPED)
 			{
@@ -417,7 +417,7 @@ void ClientApp::OnConsoleToggle()
 	if (!Config::GetInstance()->runtime.enableConsole) return;
 
 	if (auto scene = consoleScene.lock()) {
-		Scene::Phase::phase_t phase = scene->GetPhase();
+		Scene::Phase phase = scene->GetPhase();
 		if (phase != Scene::Phase::STOPPING &&
 			phase != Scene::Phase::STOPPED)
 		{
@@ -502,7 +502,7 @@ void ClientApp::PushScene(const ScenePtr &scene)
 	if (Config::GetInstance()->runtime.enableConsole) {
 		if (auto cscene = consoleScene.lock()) {
 			if (cscene.get() != scene.get()) {
-				Scene::Phase::phase_t phase = cscene->GetPhase();
+				Scene::Phase phase = cscene->GetPhase();
 				if (phase != Scene::Phase::STOPPING &&
 					phase != Scene::Phase::STOPPED)
 				{
@@ -530,7 +530,7 @@ void ClientApp::PopScene()
 		// Find the first non-stopping scene.
 		bool found = false;
 		for (auto iter = sceneStack.rbegin(); iter != sceneStack.rend(); ++iter) {
-			Scene::Phase::phase_t phase = (*iter)->GetPhase();
+			Scene::Phase phase = (*iter)->GetPhase();
 			if (phase != Scene::Phase::STOPPING && phase != Scene::Phase::STOPPED) {
 				SetForegroundScene(*iter);
 				found = true;

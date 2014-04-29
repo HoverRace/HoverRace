@@ -55,7 +55,7 @@ Scene::Scene(const std::string &name) :
  * @param phase The new phase.
  * @return @c true if the phase change was successful, @c false otherwise.
  */
-bool Scene::SetPhase(Phase::phase_t phase)
+bool Scene::SetPhase(Phase phase)
 {
 	if (this->phase != phase) {
 		// Can't go back to the initial phase.
@@ -75,7 +75,7 @@ bool Scene::SetPhase(Phase::phase_t phase)
 		}
 
 		phaseTs = OS::Time();
-		Phase::phase_t oldPhase = this->phase;
+		Phase oldPhase = this->phase;
 		this->phase = phase;
 
 		OnPhaseChanged(oldPhase);
@@ -111,12 +111,12 @@ bool Scene::MoveToBackground()
 	return false;
 }
 
-bool Scene::SetState(State::state_t state)
+bool Scene::SetState(State state)
 {
 	if (this->state != state) {
 
 		stateTs = OS::Time();
-		State::state_t oldState = this->state;
+		State oldState = this->state;
 		this->state = state;
 
 		OnStateChanged(oldState);
