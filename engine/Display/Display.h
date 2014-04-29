@@ -213,6 +213,9 @@ class MR_DllDeclare Display :
 			Color formFg;
 			Color formDisabledFg;
 
+			// Dialog background shading color.
+			Color dialogBg;
+
 			// Attributes for grid containers.
 			Vec2 gridMargin;
 			Vec2 gridPadding;

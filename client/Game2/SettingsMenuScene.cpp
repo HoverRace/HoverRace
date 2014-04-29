@@ -67,11 +67,6 @@ SettingsMenuScene::SettingsMenuScene(Display::Display &display,
 {
 	typedef Display::UiViewModel::Alignment Alignment;
 
-	SetPhaseTransitionDuration(200);
-
-	fader.reset(new Display::ScreenFade(0xcc000000, 0.0));
-	fader->AttachView(display);
-
 	auto root = GetContentRoot();
 
 	menuGrid = root->AddChild(new Display::FlexGrid(display));
@@ -95,27 +90,6 @@ SettingsMenuScene::SettingsMenuScene(Display::Display &display,
 
 SettingsMenuScene::~SettingsMenuScene()
 {
-}
-
-void SettingsMenuScene::OnPhaseTransition(double progress)
-{
-	fader->SetOpacity(progress);
-}
-
-void SettingsMenuScene::PrepareRender()
-{
-	fader->PrepareRender();
-
-	SUPER::PrepareRender();
-}
-
-void SettingsMenuScene::Render()
-{
-	fader->Render();
-
-	if (GetPhase() != Phase::STOPPING) {
-		SUPER::Render();
-	}
 }
 
 }  // namespace Client

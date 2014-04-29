@@ -102,6 +102,8 @@ void Display::styles_t::Reload()
 	formFg = COLOR_WHITE;
 	formDisabledFg = 0x7fffffff;
 
+	dialogBg = 0xcc000000;
+
 	gridMargin.x = 6;
 	gridMargin.y = 6;
 	gridPadding.x = 1;

@@ -48,13 +48,7 @@ class SettingsMenuScene : public DialogScene
 		SettingsMenuScene(Display::Display &display, GameDirector &director);
 		virtual ~SettingsMenuScene();
 
-	public:
-		virtual void OnPhaseTransition(double progress) override;
-		virtual void PrepareRender() override;
-		virtual void Render() override;
-
 	private:
-		std::unique_ptr<Display::ScreenFade> fader;
 		std::shared_ptr<Display::FlexGrid> menuGrid;
 };
 

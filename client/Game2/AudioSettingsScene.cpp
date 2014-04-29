@@ -45,11 +45,6 @@ AudioSettingsScene::AudioSettingsScene(Display::Display &display,
 	typedef Display::UiViewModel::Alignment Alignment;
 	const auto &s = display.styles;
 
-	SetPhaseTransitionDuration(200);
-
-	fader.reset(new Display::ScreenFade(0xcc000000, 0.0));
-	fader->AttachView(display);
-
 	auto root = GetContentRoot();
 
 	settingsGrid = root->AddChild(new Display::FlexGrid(display));
@@ -78,28 +73,6 @@ AudioSettingsScene::AudioSettingsScene(Display::Display &display,
 
 AudioSettingsScene::~AudioSettingsScene()
 {
-}
-
-
-void AudioSettingsScene::OnPhaseTransition(double progress)
-{
-	fader->SetOpacity(progress);
-}
-
-void AudioSettingsScene::PrepareRender()
-{
-	fader->PrepareRender();
-
-	SUPER::PrepareRender();
-}
-
-void AudioSettingsScene::Render()
-{
-	fader->Render();
-
-	if (GetPhase() != Phase::STOPPING) {
-		SUPER::Render();
-	}
 }
 
 }  // namespace Client
