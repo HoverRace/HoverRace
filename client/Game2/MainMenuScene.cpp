@@ -48,6 +48,7 @@ MainMenuScene::MainMenuScene(Display::Display &display, GameDirector &director,
 	typedef Display::UiViewModel::Alignment Alignment;
 
 	SetPhaseTransitionDuration(500);
+	SetStateTransitionDuration(500);
 
 	auto root = GetRoot();
 
@@ -115,7 +116,7 @@ void MainMenuScene::OnSettingsClicked()
 	director.RequestPushScene(std::make_shared<SettingsMenuScene>(display, director));
 }
 
-void MainMenuScene::OnPhaseTransition(double interval)
+void MainMenuScene::OnStateTransition(double interval)
 {
 	double titleHeight = titleContainer->GetSize().y;
 	//titleContainer->SetOpacity(interval);
