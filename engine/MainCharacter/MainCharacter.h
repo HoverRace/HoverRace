@@ -53,7 +53,7 @@ namespace MainCharacter {
 #define OPT_ALLOW_CX		0x04
 #define OPT_ALLOW_EON		0x01
 
-class MainCharacter : public Model::FreeElement
+class MR_DllDeclare MainCharacter : public Model::FreeElement
 {
 	public:
 		enum {
@@ -165,65 +165,65 @@ class MainCharacter : public Model::FreeElement
 
 	public:
 		// Construction
-		MR_DllDeclare static void RegisterFactory();
-		MR_DllDeclare static MainCharacter *New(int idx, char pGameOpts);
+		static void RegisterFactory();
+		static MainCharacter *New(int idx, char pGameOpts);
 
 		virtual ~MainCharacter();
 
-		MR_DllDeclare void SetAsMaster();
-		MR_DllDeclare void SetAsSlave();
+		void SetAsMaster();
+		void SetAsSlave();
 
-		MR_DllDeclare void SetHoverId(int pId);
-		MR_DllDeclare int GetHoverId() const;
+		void SetHoverId(int pId);
+		int GetHoverId() const;
 
-		MR_DllDeclare void SetHoverModel(int pModel);
-		MR_DllDeclare int GetHoverModel() const;
+		void SetHoverModel(int pModel);
+		int GetHoverModel() const;
 
-		MR_DllDeclare void SetOrientation(MR_Angle pOrientation);
+		void SetOrientation(MR_Angle pOrientation);
 
 		void AddRenderer();
 		void Render(VideoServices::Viewport3D * pDest, MR_SimulationTime pTime);
 
-		MR_DllDeclare Model::ElementNetState GetNetState() const;
-		MR_DllDeclare void SetNetState(int pDataLen, const MR_UInt8 * pData);
-		MR_DllDeclare void SetNbLapForRace(int pNbLap);
+		Model::ElementNetState GetNetState() const;
+		void SetNetState(int pDataLen, const MR_UInt8 * pData);
+		void SetNbLapForRace(int pNbLap);
 
 		// Movement inputs
-		MR_DllDeclare void SetSimulationTime(MR_SimulationTime pTime);
-		MR_DllDeclare void SetEngineState(bool engineState); // TODO: analog
-		MR_DllDeclare void SetTurnLeftState(bool leftState); // TODO: analog
-		MR_DllDeclare void SetTurnRightState(bool rightState); // TODO: analog
-		MR_DllDeclare void SetJump();
-		MR_DllDeclare void SetPowerup();
-		MR_DllDeclare void SetChangeItem();
-		MR_DllDeclare void SetBrakeState(bool brakeState); // TODO: analog? maybe not
-		MR_DllDeclare void SetLookBackState(bool lookBackState);
+		void SetSimulationTime(MR_SimulationTime pTime);
+		void SetEngineState(bool engineState); // TODO: analog
+		void SetTurnLeftState(bool leftState); // TODO: analog
+		void SetTurnRightState(bool rightState); // TODO: analog
+		void SetJump();
+		void SetPowerup();
+		void SetChangeItem();
+		void SetBrakeState(bool brakeState); // TODO: analog? maybe not
+		void SetLookBackState(bool lookBackState);
 
 		// State interogation functions
-		MR_DllDeclare MR_Angle GetCabinOrientation() const;
+		MR_Angle GetCabinOrientation() const;
 
-		MR_DllDeclare double GetFuelLevel() const;
-		MR_DllDeclare double GetAbsoluteSpeed() const;
-		MR_DllDeclare double GetDirectionalSpeed() const;
+		double GetFuelLevel() const;
+		double GetAbsoluteSpeed() const;
+		double GetDirectionalSpeed() const;
 
-		MR_DllDeclare eWeapon GetCurrentWeapon() const;
-		MR_DllDeclare int GetMissileRefillLevel(int pNbLevel) const;
-		MR_DllDeclare int GetMineCount() const;
-		MR_DllDeclare int GetPowerUpCount() const;
-		MR_DllDeclare int GetPowerUpFraction(int pNbLevel) const;
+		eWeapon GetCurrentWeapon() const;
+		int GetMissileRefillLevel(int pNbLevel) const;
+		int GetMineCount() const;
+		int GetPowerUpCount() const;
+		int GetPowerUpFraction(int pNbLevel) const;
 
-		MR_DllDeclare int GetPlayerIndex() const { return playerIdx; }
-		MR_DllDeclare const std::string &GetName() const { return name; }
-		MR_DllDeclare MR_SimulationTime GetTotalTime() const;
-		MR_DllDeclare MR_SimulationTime GetBestLapDuration() const;
-		MR_DllDeclare MR_SimulationTime GetLastLapDuration() const;
-		MR_DllDeclare MR_SimulationTime GetLastLapCompletion() const;
-		MR_DllDeclare bool HasStarted() const;
-		MR_DllDeclare void Finish();
-		MR_DllDeclare bool HasFinish() const;
+		int GetPlayerIndex() const { return playerIdx; }
+		const std::string &GetName() const { return name; }
+		MR_SimulationTime GetTotalTime() const;
+		MR_SimulationTime GetBestLapDuration() const;
+		MR_SimulationTime GetLastLapDuration() const;
+		MR_SimulationTime GetLastLapCompletion() const;
+		bool HasStarted() const;
+		void Finish();
+		bool HasFinish() const;
 
-		MR_DllDeclare int HitQueueCount() const;
-		MR_DllDeclare int GetHitQueue();
+		int HitQueueCount() const;
+		int GetHitQueue();
 
 	protected:
 		// Logic interface
