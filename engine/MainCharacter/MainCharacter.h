@@ -167,7 +167,7 @@ class MainCharacter : public Model::FreeElement
 		MR_DllDeclare static void RegisterFactory();
 		MR_DllDeclare static MainCharacter *New(int idx, char pGameOpts);
 
-		~MainCharacter();
+		virtual ~MainCharacter();
 
 		MR_DllDeclare void SetAsMaster();
 		MR_DllDeclare void SetAsSlave();
