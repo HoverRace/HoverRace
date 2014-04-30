@@ -113,6 +113,7 @@ class MainCharacter : public Model::FreeElement
 		int mMotorDisplay;
 		int playerIdx;
 		char mGameOpts;
+		std::string name;
 
 		double mXSpeed;
 		double mYSpeed;
@@ -212,6 +213,7 @@ class MainCharacter : public Model::FreeElement
 		MR_DllDeclare int GetPowerUpFraction(int pNbLevel) const;
 
 		MR_DllDeclare int GetPlayerIndex() const { return playerIdx; }
+		MR_DllDeclare const std::string &GetName() const { return name; }
 		MR_DllDeclare MR_SimulationTime GetTotalTime() const;
 		MR_DllDeclare MR_SimulationTime GetBestLapDuration() const;
 		MR_DllDeclare MR_SimulationTime GetLastLapDuration() const;

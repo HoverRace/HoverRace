@@ -316,6 +316,7 @@ MainCharacter *MainCharacter::New(int idx, char gameopts)
 
 	if (lReturnValue) {
 		lReturnValue->playerIdx = idx;
+		lReturnValue->name = boost::str(boost::format("Player %d") % (idx + 1));
 		lReturnValue->mGameOpts = gameopts;
 		lReturnValue->mHoverModel = NextAllowedCraft(gameopts, 3);
 	}
