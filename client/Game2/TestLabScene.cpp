@@ -1,7 +1,7 @@
 
 // TestLabScene.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@
 #include "../../engine/Display/Container.h"
 #include "../../engine/Display/Display.h"
 #include "../../engine/Display/FillBox.h"
+#include "../../engine/Display/FlexGrid.h"
 #include "../../engine/Display/FuelGauge.h"
 #include "../../engine/Display/Hud.h"
 #include "../../engine/Display/Label.h"
@@ -76,22 +77,48 @@ class TestLabScene::LabModule : public FormScene /*{{{*/
 		boost::signals2::connection cancelConn;
 }; //}}}
 
+class TestLabScene::ModuleButtonBase : public Display::Button /*{{{*/
+{
+	typedef Display::Button SUPER;
+	public:
+		ModuleButtonBase(Display::Display &display, GameDirector &director,
+			const std::string &text) :
+			SUPER(display, text), display(display), director(director)
+		{
+		}
+
+		virtual void LaunchScene() = 0;
+
+	protected:
+		Display::Display &display;
+		GameDirector &director;
+}; //}}}
+
 namespace {
 	template<typename Module>
-	class ModuleButton : public Display::Button /*{{{*/
+	class ModuleButton : public TestLabScene::ModuleButtonBase /*{{{*/
 	{
-		typedef Display::Button SUPER;
+		typedef TestLabScene::ModuleButtonBase SUPER;
 		public:
 			ModuleButton(Display::Display &display, GameDirector &director,
-				const std::string &text, double x, double y) :
-				SUPER(display, text)
+				const std::string &text) :
+				SUPER(display, director, text)
 			{
-				SetPos(x, y);
-				GetClickedSignal().connect([&](Display::ClickRegion&) {
-					director.RequestPushScene(std::make_shared<Module>(display, director));
-				});
+				GetClickedSignal().connect(std::bind(&ModuleButton::LaunchScene, this));
+			}
+
+			virtual void LaunchScene()
+			{
+				director.RequestPushScene(std::make_shared<Module>(display, director));
 			}
 	}; //}}}
+
+	template<class T>
+	void AddModule(TestLabScene &scene, Display::Display &display,
+                   GameDirector &director, const std::string &name)
+	{
+		scene.AddModuleButton(new ModuleButton<T>(display, director, name));
+	}
 }
 
 namespace Module {
@@ -104,7 +131,7 @@ namespace Module {
 
 		private:
 			void AddAlignmentTestElem(
-				Display::UiViewModel::Alignment::alignment_t alignment,
+				Display::UiViewModel::Alignment alignment,
 				const std::string &label, double x, double y);
 
 		public:
@@ -161,8 +188,8 @@ namespace Module {
 			virtual ~TransitionModule() { }
 
 		protected:
-			virtual void OnPhaseChanged(Phase::phase_t oldPhase);
-			virtual void OnStateChanged(State::state_t oldState);
+			virtual void OnPhaseChanged(Phase oldPhase);
+			virtual void OnStateChanged(State oldState);
 			virtual void OnPhaseTransition(double progress);
 			virtual void OnStateTransition(double progress);
 
@@ -189,34 +216,66 @@ namespace Module {
 			std::unique_ptr<MainCharacter::MainCharacter> player;
 			std::unique_ptr<Display::Hud> hud;
 	}; //}}}
+
+	class FlexGridModule : public TestLabScene::LabModule /*{{{*/
+	{
+		typedef TestLabScene::LabModule SUPER;
+		public:
+			FlexGridModule(Display::Display &display, GameDirector &director);
+			virtual ~FlexGridModule() { }
+
+		public:
+			virtual void Layout() override;
+
+		private:
+			std::shared_ptr<Display::FlexGrid> grid;
+			std::shared_ptr<Display::FillBox> gridSizeBox;
+	}; //}}}
 }
 
-TestLabScene::TestLabScene(Display::Display &display, GameDirector &director) :
-	SUPER(display, "Test Lab")
+TestLabScene::TestLabScene(Display::Display &display, GameDirector &director,
+                           const std::string &startingModuleName) :
+	SUPER(display, "Test Lab"),
+	startingModuleName(startingModuleName), btnPosY(60)
 {
 	// Clear the screen on every frame.
 	fader.reset(new Display::ScreenFade(Display::COLOR_BLACK, 1.0));
 	fader->AttachView(display);
 
-	auto root = GetRoot();
+	AddModule<Module::LayoutModule>(*this, display, director, "Layout");
+	AddModule<Module::ButtonModule>(*this, display, director, "Button");
+	AddModule<Module::LabelModule>(*this, display, director, "Label");
+	AddModule<Module::IconModule>(*this, display, director, "Icon");
+	AddModule<Module::TransitionModule>(*this, display, director, "Transition");
+	AddModule<Module::HudModule>(*this, display, director, "HUD");
+	AddModule<Module::FlexGridModule>(*this, display, director, "FlexGrid");
 
-	const double yStep = 60;
-	double y = 60;
-	root->AddChild(new ModuleButton<Module::LayoutModule>(display, director, "Layout", 0, y));
-	y += yStep;
-	root->AddChild(new ModuleButton<Module::ButtonModule>(display, director, "Button", 0, y));
-	y += yStep;
-	root->AddChild(new ModuleButton<Module::LabelModule>(display, director, "Label", 0, y));
-	y += yStep;
-	root->AddChild(new ModuleButton<Module::IconModule>(display, director, "Icon", 0, y));
-	y += yStep;
-	root->AddChild(new ModuleButton<Module::TransitionModule>(display, director, "Transition", 0, y));
-	y += yStep;
-	root->AddChild(new ModuleButton<Module::HudModule>(display, director, "HUD", 0, y));
+	if (!startingModuleName.empty() && !startingModuleBtn) {
+		Log::Warn("Not a test lab module: %s", startingModuleName.c_str());
+	}
 }
 
 TestLabScene::~TestLabScene()
 {
+}
+
+void TestLabScene::AddModuleButton(ModuleButtonBase *btn)
+{
+	auto mbtn = GetRoot()->AddChild(btn);
+	btn->SetPos(0, btnPosY);
+	btnPosY += 60;
+
+	if (btn->GetText() == startingModuleName) {
+		startingModuleBtn = mbtn;
+	}
+}
+
+void TestLabScene::OnScenePushed()
+{
+	if (startingModuleBtn) {
+		startingModuleBtn->LaunchScene();
+		startingModuleBtn.reset();
+	}
 }
 
 void TestLabScene::PrepareRender()
@@ -344,7 +403,7 @@ LayoutModule::LayoutModule(Display::Display &display, GameDirector &director) :
 }
 
 void LayoutModule::AddAlignmentTestElem(
-	Display::UiViewModel::Alignment::alignment_t alignment,
+	Display::UiViewModel::Alignment alignment,
 	const std::string &label, double x, double y)
 {
 	Config *cfg = Config::GetInstance();
@@ -551,7 +610,7 @@ TransitionModule::TransitionModule(Display::Display &display,
 	});
 }
 
-void TransitionModule::OnPhaseChanged(Phase::phase_t oldPhase)
+void TransitionModule::OnPhaseChanged(Phase oldPhase)
 {
 	SUPER::OnPhaseChanged(oldPhase);
 
@@ -562,12 +621,12 @@ void TransitionModule::OnPhaseChanged(Phase::phase_t oldPhase)
 		case Phase::STOPPING: s += "STOPPING"; break;
 		case Phase::STOPPED: s += "STOPPED"; break;
 		default:
-			s += boost::str(boost::format("UNKNOWN: %d") % GetPhase());
+			s += boost::str(boost::format("UNKNOWN: %d") % (int)GetPhase());
 	}
 	phaseLbl->SetText(s);
 }
 
-void TransitionModule::OnStateChanged(State::state_t oldState)
+void TransitionModule::OnStateChanged(State oldState)
 {
 	SUPER::OnStateChanged(oldState);
 
@@ -578,7 +637,7 @@ void TransitionModule::OnStateChanged(State::state_t oldState)
 		case State::FOREGROUND: s += "FOREGROUND"; break;
 		case State::LOWERING: s += "LOWERING"; break;
 		default:
-			s += boost::str(boost::format("UNKNOWN: %d") % GetState());
+			s += boost::str(boost::format("UNKNOWN: %d") % (int)GetState());
 	}
 	stateLbl->SetText(s);
 }
@@ -631,6 +690,87 @@ void HudModule::Render()
 }
 
 //}}} HudModule
+
+//{{{ FlexGridModule //////////////////////////////////////////////////////////
+
+FlexGridModule::FlexGridModule(Display::Display &display, GameDirector &director) :
+	SUPER(display, director, "FlexGrid")
+{
+	typedef Display::UiViewModel::Alignment Alignment;
+
+	const auto &s = display.styles;
+
+	Display::Container *root = GetRoot();
+
+	gridSizeBox = root->AddChild(new Display::FillBox(0, 0, 0xff00003f));
+
+	grid = root->AddChild(new Display::FlexGrid(display));
+
+	size_t r = 0;
+	size_t c = 0;
+
+	c = 0;
+	{
+		auto &column = grid->GetColumnDefault(c++);
+		column.SetAlignment(Alignment::E);
+	}
+	{
+		auto &column = grid->GetColumnDefault(c++);
+		column.SetAlignment(Alignment::W);
+	}
+	{
+		auto &column = grid->GetColumnDefault(c++);
+		column.SetAlignment(Alignment::E);
+	}
+	{
+		auto &column = grid->GetColumnDefault(c++);
+		column.SetAlignment(Alignment::CENTER);
+	}
+	{
+		auto &column = grid->GetColumnDefault(c++);
+		column.SetAlignment(Alignment::CENTER);
+		column.SetFill(true);
+	}
+
+	c = 1;
+	grid->AddGridCell(r, c++, new Display::Label("Name",
+		s.headingFont, s.headingFg));
+	grid->AddGridCell(r, c++, new Display::Label("Time",
+		s.headingFont, s.headingFg));
+	c++;
+	grid->AddGridCell(r, c++, new Display::Label("P",
+		s.headingFont, s.headingFg));
+
+	r++;
+	c = 0;
+	grid->AddGridCell(r, c++, new Display::Label("1.",
+		s.bodyFont, s.bodyFg));
+	grid->AddGridCell(r, c++, new Display::Label("Foo Bar",
+		s.bodyFont, s.bodyFg));
+	grid->AddGridCell(r, c++, new Display::Label("3:44",
+		s.bodyFont, s.bodyFg));
+	grid->AddGridCell(r, c++, new Display::Button(display, "Profile"));
+	grid->AddGridCell(r, c++, new Display::Button(display, "View Statistics"));
+
+	r++;
+	c = 0;
+	grid->AddGridCell(r, c++, new Display::Label("2.",
+		s.bodyFont, s.bodyFg));
+	grid->AddGridCell(r, c++, new Display::Label("Baz Quux",
+		s.bodyFont, s.bodyFg));
+	grid->AddGridCell(r, c++, new Display::Label("12:33",
+		s.bodyFont, s.bodyFg));
+	grid->AddGridCell(r, c++, new Display::Checkbox(display, "Save Friend"));
+	grid->AddGridCell(r, c++, new Display::Button(display, "Spectate"));
+}
+
+void FlexGridModule::Layout()
+{
+	auto gridSize = grid->Measure();
+	gridSizeBox->SetSize(gridSize.x, gridSize.y);
+}
+
+//}}} FlexGridModule
 
 }  // namespace Module
 

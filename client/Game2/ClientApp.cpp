@@ -129,7 +129,7 @@ ClientApp::ClientApp() :
 	gamePeer = new GamePeer(scripting, *this, *rulebookLibrary);
 	RulebookEnv(scripting, *rulebookLibrary).ReloadRulebooks();
 	sysEnv = new SysEnv(scripting, debugPeer, gamePeer);
-	BOOST_FOREACH(OS::path_t &initScript, cfg->runtime.initScripts) {
+	for (OS::path_t &initScript : cfg->runtime.initScripts) {
 		if (!initScript.empty()) {
 			sysEnv->RunScript(initScript);
 		}
@@ -278,7 +278,7 @@ void ClientApp::AdvanceScenes(Util::OS::timestamp_t tick)
 	auto iter = sceneStack.begin();
 	while (iter != sceneStack.end()) {
 		Scene &scene = **iter;
-		Scene::Phase::phase_t phase = scene.GetPhase();
+		Scene::Phase phase = scene.GetPhase();
 		if (phase != Scene::Phase::INITIALIZING &&
 			phase != Scene::Phase::STOPPED)
 		{
@@ -306,13 +306,13 @@ void ClientApp::RenderScenes()
 		display->GetLegacyDisplay().Clear();
 	}
 	else {
-		BOOST_FOREACH(const ScenePtr &scene, sceneStack) {
+		for (const ScenePtr &scene : sceneStack) {
 			scene->PrepareRender();
 		}
 		if (showFps) fpsLbl->PrepareRender();
 
-		BOOST_FOREACH(const ScenePtr &scene, sceneStack) {
-			Scene::Phase::phase_t phase = scene->GetPhase();
+		for (const ScenePtr &scene : sceneStack) {
+			Scene::Phase phase = scene->GetPhase();
 			if (phase != Scene::Phase::INITIALIZING &&
 				phase != Scene::Phase::STOPPED)
 			{
@@ -417,7 +417,7 @@ void ClientApp::OnConsoleToggle()
 	if (!Config::GetInstance()->runtime.enableConsole) return;
 
 	if (auto scene = consoleScene.lock()) {
-		Scene::Phase::phase_t phase = scene->GetPhase();
+		Scene::Phase phase = scene->GetPhase();
 		if (phase != Scene::Phase::STOPPING &&
 			phase != Scene::Phase::STOPPED)
 		{
@@ -502,7 +502,7 @@ void ClientApp::PushScene(const ScenePtr &scene)
 	if (Config::GetInstance()->runtime.enableConsole) {
 		if (auto cscene = consoleScene.lock()) {
 			if (cscene.get() != scene.get()) {
-				Scene::Phase::phase_t phase = cscene->GetPhase();
+				Scene::Phase phase = cscene->GetPhase();
 				if (phase != Scene::Phase::STOPPING &&
 					phase != Scene::Phase::STOPPED)
 				{
@@ -530,7 +530,7 @@ void ClientApp::PopScene()
 		// Find the first non-stopping scene.
 		bool found = false;
 		for (auto iter = sceneStack.rbegin(); iter != sceneStack.rend(); ++iter) {
-			Scene::Phase::phase_t phase = (*iter)->GetPhase();
+			Scene::Phase phase = (*iter)->GetPhase();
 			if (phase != Scene::Phase::STOPPING && phase != Scene::Phase::STOPPED) {
 				SetForegroundScene(*iter);
 				found = true;
@@ -553,7 +553,7 @@ void ClientApp::PopScene()
  */
 void ClientApp::ReplaceScene(const ScenePtr &scene)
 {
-	BOOST_FOREACH(ScenePtr &s, sceneStack) {
+	for (ScenePtr &s : sceneStack) {
 		s->SetPhase(Scene::Phase::STOPPING);
 	}
 	PushScene(scene);

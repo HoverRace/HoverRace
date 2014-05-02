@@ -43,27 +43,21 @@ namespace Client {
 class Scene
 {
 	public:
-		struct Phase
+		enum class Phase
 		{
-			enum phase_t
-			{
-				INITIALIZING,  ///< Scene has been created and is waiting to start.
-				STARTING,  ///< Transitioning into the scene.
-				RUNNING,  ///< Started and running normally.
-				STOPPING,  ///< Transitioning away from the scene.
-				STOPPED,  ///< The scene is ready to be destroyed.
-			};
+			INITIALIZING,  ///< Scene has been created and is waiting to start.
+			STARTING,  ///< Transitioning into the scene.
+			RUNNING,  ///< Started and running normally.
+			STOPPING,  ///< Transitioning away from the scene.
+			STOPPED,  ///< The scene is ready to be destroyed.
 		};
-		struct State
+		enum class State
 		{
-			enum state_t
-			{
-				INITIALIZING,  ///< Scene has been created and is waiting to start.
-				BACKGROUND,  ///< Scene is in the background.
-				RAISING,  ///< Has focus, transitioning to the foreground.
-				FOREGROUND,  /// Has focus, in foreground.
-				LOWERING,  ///< Lost focus, transitioning to the background.
-			};
+			INITIALIZING,  ///< Scene has been created and is waiting to start.
+			BACKGROUND,  ///< Scene is in the background.
+			RAISING,  ///< Has focus, transitioning to the foreground.
+			FOREGROUND,  /// Has focus, in foreground.
+			LOWERING,  ///< Lost focus, transitioning to the background.
 		};
 
 	public:
@@ -128,14 +122,14 @@ class Scene
 		}
 
 	public:
-		Phase::phase_t GetPhase() const { return phase; }
-		bool SetPhase(Phase::phase_t phase);
+		Phase GetPhase() const { return phase; }
+		bool SetPhase(Phase phase);
 
-		State::state_t GetState() const { return state; }
+		State GetState() const { return state; }
 		bool MoveToForeground();
 		bool MoveToBackground();
 	private:
-		bool SetState(State::state_t state);
+		bool SetState(State state);
 
 	protected:
 		/**
@@ -226,14 +220,14 @@ class Scene
 		 * @param oldPhase The previous phase.
 		 * @see GetPhase()
 		 */
-		virtual void OnPhaseChanged(Phase::phase_t oldPhase) { }
+		virtual void OnPhaseChanged(Phase oldPhase) { }
 
 		/**
 		 * Fired immediately after entering a new state.
 		 * @param oldState The previous state.
 		 * @see GetState()
 		 */
-		virtual void OnStateChanged(State::state_t oldState) { }
+		virtual void OnStateChanged(State oldState) { }
 
 		/**
 		 * Fired during the starting and stopping phases, if
@@ -261,11 +255,11 @@ class Scene
 	private:
 		std::string name;
 		Util::OS::timestamp_t prevTick;
-		Phase::phase_t phase;
+		Phase phase;
 		double phaseTransitionDuration;
 		Util::OS::timestamp_t phaseTs;  ///< Timestamp of when current phase was started.
 		Util::OS::timestamp_t startingPhaseTime;
-		State::state_t state;
+		State state;
 		Util::OS::timestamp_t stateTransitionDuration;
 		Util::OS::timestamp_t stateTs;  ///< Timestamp of when current state was started.
 		double stateTransitionVelocity;

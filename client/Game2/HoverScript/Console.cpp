@@ -1,8 +1,7 @@
 
 // Console.cpp
-// Base class for debug consoles.
 //
-// Copyright (c) 2009 Michael Imamura.
+// Copyright (c) 2009, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -59,7 +58,7 @@ class Console::LogStream : public std::ostream /*{{{*/
 
 Console::Console(Script::Core *scripting) :
 	SUPER(scripting), Script::Help::HelpHandler(),
-	inputState(ISTATE_COMMAND)
+	inputState(InputState::COMMAND)
 {
 	chunk.reserve(1024);
 	outHandle = scripting->AddOutput(std::make_shared<LogStream>(this));
@@ -108,7 +107,7 @@ void Console::SubmitChunk(const std::string &s)
 		Execute(chunk);
 	}
 	catch (const IncompleteExn&) {
-		SetInputState(ISTATE_CONTINUE);
+		SetInputState(InputState::CONTINUE);
 		return;
 	}
 	catch (const ScriptExn &exn) {
@@ -116,15 +115,15 @@ void Console::SubmitChunk(const std::string &s)
 	}
 
 	chunk.clear();
-	SetInputState(ISTATE_COMMAND);
+	SetInputState(InputState::COMMAND);
 }
 
-void Console::SetInputState(inputState_t newState)
+void Console::SetInputState(InputState newState)
 {
 	inputState = newState;
 }
 
-Console::inputState_t Console::GetInputState() const
+Console::InputState Console::GetInputState() const
 {
 	return inputState;
 }

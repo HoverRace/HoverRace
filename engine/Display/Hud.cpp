@@ -101,7 +101,7 @@ void Hud::LayoutStacked(HudAlignment::type align,
 {
 	double x = startX;
 	double y = startY;
-	BOOST_FOREACH(auto &child, hudChildren[align]) {
+	for (auto &child : hudChildren[align]) {
 		auto &elem = child.decor;
 		elem->SetPos(startX, y);
 		Vec3 sz = elem->Measure();
@@ -128,7 +128,7 @@ void Hud::LayoutCorner(HudAlignment::type alignCorner,
 	}
 
 	// Layout the horizontal elems.
-	BOOST_FOREACH(auto &child, hudChildren[alignH]) {
+	for (auto &child : hudChildren[alignH]) {
 		auto &elem = child.decor;
 		elem->SetPos(x, y);
 		Vec3 sz = elem->Measure();
@@ -141,7 +141,7 @@ void Hud::LayoutCorner(HudAlignment::type alignCorner,
 	// Layout the vertical elems.
 	y = startY + (scaleY * (maxHeightH + DECOR_MARGIN));
 	x = startX;
-	BOOST_FOREACH(auto &child, hudChildren[alignV]) {
+	for (auto &child : hudChildren[alignV]) {
 		auto &elem = child.decor;
 		elem->SetPos(x, y);
 		Vec3 sz = elem->Measure();

@@ -1,7 +1,7 @@
 
-// TestLabScene.h
+// SettingsMenuScene.h
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -21,15 +21,15 @@
 
 #pragma once
 
-#include "../../engine/Display/UiViewModel.h"
-
-#include "GameDirector.h"
-
-#include "FormScene.h"
+#include "DialogScene.h"
 
 namespace HoverRace {
+	namespace Client {
+		class GameDirector;
+	}
 	namespace Display {
 		class Display;
+		class FlexGrid;
 		class ScreenFade;
 	}
 }
@@ -38,32 +38,18 @@ namespace HoverRace {
 namespace Client {
 
 /**
- * A zoo of renderable components.
+ * Settings main menu.
  * @author Michael Imamura
  */
-class TestLabScene : public FormScene
+class SettingsMenuScene : public DialogScene
 {
-	typedef FormScene SUPER;
+	typedef DialogScene SUPER;
 	public:
-		TestLabScene(Display::Display &display, GameDirector &director,
-			const std::string &startingModuleName="");
-		virtual ~TestLabScene();
-
-	public:
-		class LabModule;
-		class ModuleButtonBase;
-		void AddModuleButton(ModuleButtonBase *btn);
-
-	public:
-		virtual void OnScenePushed();
-		virtual void PrepareRender();
-		virtual void Render();
+		SettingsMenuScene(Display::Display &display, GameDirector &director);
+		virtual ~SettingsMenuScene();
 
 	private:
-		const std::string startingModuleName;
-		double btnPosY;
-		std::unique_ptr<Display::ScreenFade> fader;
-		std::shared_ptr<ModuleButtonBase> startingModuleBtn;
+		std::shared_ptr<Display::FlexGrid> menuGrid;
 };
 
 }  // namespace Client

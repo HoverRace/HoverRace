@@ -1,7 +1,7 @@
 
 // Log.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -43,18 +43,16 @@ namespace Log {
 
 	MR_DllDeclare void Init();
 
-	namespace Level {
-		enum level_t {
-			DEBUG,
-			INFO,
-			WARN,
-			ERROR,
-			FATAL,
-		};
-	}
+	enum class Level {
+		DEBUG,
+		INFO,
+		WARN,
+		ERROR,
+		FATAL,
+	};
 
 	struct Entry {
-		const Level::level_t level;
+		const Level level;
 		const char *message;
 	};
 

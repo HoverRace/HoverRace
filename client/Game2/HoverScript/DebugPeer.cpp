@@ -1,7 +1,7 @@
 
 // DebugPeer.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -61,6 +61,7 @@ void DebugPeer::Register(Script::Core *scripting)
 			.def("open_path", &DebugPeer::LOpenPath)
 			.def("show_palette", &DebugPeer::LShowPalette)
 			.def("start_test_lab", &DebugPeer::LStartTestLab)
+			.def("start_test_lab", &DebugPeer::LStartTestLab_N)
 			.def("test", &DebugPeer::LTest)
 	];
 }
@@ -82,13 +83,19 @@ void DebugPeer::LShowPalette()
 
 void DebugPeer::LStartTestLab()
 {
-	gameDirector.RequestReplaceScene(std::make_shared<TestLabScene>(*gameDirector.GetDisplay(), gameDirector));
+	LStartTestLab_N("");
+}
+
+void DebugPeer::LStartTestLab_N(const std::string &startingModuleName)
+{
+	gameDirector.RequestReplaceScene(
+		std::make_shared<TestLabScene>(
+			*gameDirector.GetDisplay(), gameDirector, startingModuleName));
 }
 
 void DebugPeer::LTest()
 {
 	// This is just a dummy method for arbitrary test code :)
-	Log::Info("debug:test() called");
 }
 
 }  // namespace HoverScript

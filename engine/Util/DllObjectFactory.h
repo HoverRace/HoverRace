@@ -51,34 +51,29 @@ namespace HoverRace {
 namespace HoverRace {
 namespace Util {
 
+/// Unique identifier for a Factory Object.
 class ObjectFromFactoryId
 {
-	// Simple structure that hold the necessary information
-	// tu uniquely identify a Factory Object
 	public:
 		MR_UInt16 mDllId;
 		MR_UInt16 mClassId;
 
 		void Serialize(HoverRace::Parcel::ObjStream &pArchive);
 
-		MR_DllDeclare int operator ==(const ObjectFromFactoryId & pId) const;
+		MR_DllDeclare int operator==(const ObjectFromFactoryId &pId) const;
 };
 
-class MR_DllDeclare ObjectFromFactory/*:public CObject*/
+/// Base class for object created with a Dll Factory
+class MR_DllDeclare ObjectFromFactory
 {
-	// Base class for object created with a Dll Factory
-
 	private:
-
 		ObjectFromFactoryId mId;
 
 	public:
+		ObjectFromFactory(const ObjectFromFactoryId &pId);
+		virtual ~ObjectFromFactory();
 
-		// Construction and destruction
-		ObjectFromFactory(const ObjectFromFactoryId & pId);
-		virtual ~ ObjectFromFactory();
-
-		const ObjectFromFactoryId & GetTypeId() const;
+		const ObjectFromFactoryId &GetTypeId() const;
 
 		// Serialisation functions
 		//
@@ -93,19 +88,14 @@ namespace DllObjectFactory
 {
 	typedef ObjectFromFactory* (*getObject_t) (MR_UInt16);
 
-	MR_DllDeclare void Init();					  // Must be called at the begining of the program
-	MR_DllDeclare void Clean(BOOL pOnlyDynamic);  // Must be called at the end of the program
-	// Can also be called to remove unused DLL
+	MR_DllDeclare void Init();					  ///< Must be called at the begining of the program
+	MR_DllDeclare void Clean(BOOL pOnlyDynamic);  ///< Must be called at the end of the program
 
-	// Low level function
-	//MR_DllDeclare BOOL OpenDll(MR_UInt16 pDllId);  // Usually don't need to be called
-												  // Usually don't need to be called
 	MR_DllDeclare void IncrementReferenceCount(int pDllId);
-												  // Usually don't need to be called
 	MR_DllDeclare void DecrementReferenceCount(int pDllId);
 
-	// Fast Object Creation function
-	MR_DllDeclare ObjectFromFactory *CreateObject(const ObjectFromFactoryId & pId);
+	/// Fast Object Creation function
+	MR_DllDeclare ObjectFromFactory *CreateObject(const ObjectFromFactoryId &pId);
 
 	// Local Dll
 	MR_DllDeclare void RegisterLocalDll(int pDLLId, getObject_t pFunc);

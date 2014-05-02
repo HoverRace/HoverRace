@@ -60,7 +60,7 @@ class MainMenuScene : public FormScene
 
 	public:
 		// Scene
-		virtual void OnPhaseTransition(double interval);
+		virtual void OnStateTransition(double interval);
 		virtual void Layout();
 
 	private:

@@ -67,6 +67,13 @@ struct MR_DllDeclare UiFont
 		return *this;
 	}
 
+	void Set(const std::string &name="Arial", double size=20.0, int style=0)
+	{
+		this->name = name;
+		this->size = size;
+		this->style = style;
+	}
+
 	bool isBold() const { return !!(style & BOLD); }
 	bool isItalic() const { return !!(style & ITALIC); }
 

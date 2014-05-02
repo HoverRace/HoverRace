@@ -76,5 +76,48 @@ void Display::FireUiScaleChangedSignal(double scale) const
 	uiScaleChangedSignal(scale);
 }
 
+//{{{ styles_t /////////////////////////////////////////////////////////////////
+
+Display::styles_t::styles_t() :
+	gridMargin(0, 0), gridPadding(0, 0)
+{
+	Reload();
+}
+
+void Display::styles_t::Reload()
+{
+	const Config *cfg = Config::GetInstance();
+	const std::string &defaultFontName = cfg->GetDefaultFontName();
+	const std::string &monospaceFontName = cfg->GetDefaultMonospaceFontName();
+
+	bodyFont.Set(defaultFontName, 30, 0);
+	bodyFg = Color(0xffbfbfbf);
+
+	consoleFont.Set(monospaceFontName, 30);
+	consoleFg = COLOR_WHITE;
+	consoleCursorFg = 0xffbfbfbf;
+	consoleBg = 0xbf000000;
+
+	formFont = bodyFont;
+	formFg = COLOR_WHITE;
+	formDisabledFg = 0x7fffffff;
+
+	dialogBg = 0xcc000000;
+
+	gridMargin.x = 6;
+	gridMargin.y = 6;
+	gridPadding.x = 1;
+	gridPadding.y = 1;
+
+	buttonBg = 0x3f00007f;
+	buttonDisabledBg = 0x3f7f7f7f;
+	buttonPressedBg = 0x7f00007f;
+
+	headingFont.Set(defaultFontName, 40, UiFont::BOLD);
+	headingFg = COLOR_WHITE;
+}
+
+//}}} styles_t
+
 }  // namespace Display
 }  // namespace HoverRace

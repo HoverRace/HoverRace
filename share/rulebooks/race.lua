@@ -14,7 +14,7 @@ Rulebook "Race" {
 	end,
 
 	on_player_joined = function(session, player)
-		local player_name = "Player " .. (player.index + 1)
+		local player_name = player.name
 
 		-- Set up the player properties and events.
 		player.props.lap = 1

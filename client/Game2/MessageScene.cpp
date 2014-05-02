@@ -54,27 +54,24 @@ MessageScene::MessageScene(Display::Display &display,
 	director(director),
 	hasCancel(hasCancel)
 {
-	Config *cfg = Config::GetInstance();
-
 	SetPhaseTransitionDuration(200);
 
 	fader.reset(new Display::ScreenFade(0xcc000000, 0.0));
 	fader->AttachView(display);
 
-	std::string fontName = cfg->GetDefaultFontName();
+	const auto &s = display.styles;
 
 	Display::Container *root = GetRoot();
 
 	const double textWidth = 1280 - (HORZ_PADDING * 2);
 
 	titleLbl = root->AddChild(new Display::Label(title,
-		Display::UiFont(fontName, 40, Display::UiFont::BOLD),
-		Display::COLOR_WHITE));
+		s.headingFont, s.headingFg));
 	titleLbl->SetPos(HORZ_PADDING, 180);
 	titleLbl->SetWrapWidth(textWidth);
 
 	messageLbl = root->AddChild(new Display::Label(message,
-		Display::UiFont(fontName, 30), 0xffbfbfbf));
+		s.bodyFont, s.bodyFg));
 	messageLbl->SetWrapWidth(textWidth);
 	// messageLbl position will be set in Layout().
 

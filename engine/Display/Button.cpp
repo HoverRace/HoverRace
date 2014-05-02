@@ -78,11 +78,9 @@ Button::~Button()
 
 void Button::Init(const std::string &text)
 {
-	//TODO: Get background, font, and padding from theme.
-	Config *cfg = Config::GetInstance();
-	UiFont font(cfg->GetDefaultFontName(), 30);
+	const auto &s = display.styles;
 
-	label.reset(new Label(text, font, 0xffffffff));
+	label.reset(new Label(text, s.formFont, s.formFg));
 	label->SetAlignment(Alignment::CENTER);
 	label->AttachView(display);
 
@@ -93,6 +91,7 @@ void Button::Init(const std::string &text)
 void Button::Layout()
 {
 	const Vec2 size = GetSize();
+	const auto &s = display.styles;
 	
 	background->SetSize(size);
 
@@ -109,18 +108,18 @@ void Button::Layout()
 	}
 
 	if (!IsEnabled()) {
-		background->SetColor(0x3f7f7f7f);
-		label->SetColor(0x7fffffff);
+		background->SetColor(s.buttonDisabledBg);
+		label->SetColor(s.formDisabledFg);
 		label->SetPos(midX, midY);
 	}
 	else if (IsPressed()) {
-		background->SetColor(0x7f00007f);
-		label->SetColor(0xffffffff);
+		background->SetColor(s.buttonPressedBg);
+		label->SetColor(s.formFg);
 		label->SetPos(midX, midY + 4.0);
 	}
 	else {
-		background->SetColor(0x3f00007f);
-		label->SetColor(0xffffffff);
+		background->SetColor(s.buttonBg);
+		label->SetColor(s.formFg);
 		label->SetPos(midX, midY);
 	}
 }
@@ -154,7 +153,7 @@ void Button::SetIcon(std::shared_ptr<FillBox> icon)
 	}
 }
 
-Vec3 Button::Measure() const
+Vec3 Button::Measure()
 {
 	if (IsAutoSize()) {
 		const Vec3 labelSize = label->Measure();

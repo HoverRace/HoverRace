@@ -1,8 +1,7 @@
 
-// GamePeer.cpp
-// Scripting peer for system-level control of the game.
+// PlayerPeer.cpp
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -65,6 +64,7 @@ void PlayerPeer::Register(Script::Core *scripting)
 			.def("get_pos", &PlayerPeer::LGetPos)
 			.def_readonly("hud", &PlayerPeer::LGetHud)
 			.def_readonly("index", &PlayerPeer::LGetIndex)
+			.def_readonly("name", &PlayerPeer::LGetName)
 			.def("on_start", &PlayerPeer::LOnStart)
 			.def("on_start", &PlayerPeer::LOnStart_N)
 			.def("on_finish", &PlayerPeer::LOnFinish)
@@ -108,6 +108,11 @@ std::shared_ptr<HudPeer> PlayerPeer::LGetHud()
 int PlayerPeer::LGetIndex()
 {
 	return player->GetPlayerIndex();
+}
+
+const std::string &PlayerPeer::LGetName()
+{
+	return player->GetName();
 }
 
 void PlayerPeer::LGetPos()

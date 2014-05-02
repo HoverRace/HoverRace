@@ -22,6 +22,8 @@
 #pragma once
 
 #include "../Vec.h"
+#include "UiFont.h"
+#include "Color.h"
 #include "UiLayoutFlags.h"
 #include "ViewAttacher.h"
 
@@ -191,6 +193,44 @@ class MR_DllDeclare Display :
 		Vec2 uiOffset;
 		displayConfigChangedSignal_t displayConfigChangedSignal;
 		uiScaleChangedSignal_t uiScaleChangedSignal;
+
+	public:
+		struct styles_t {
+			styles_t();
+
+			// Standard text.
+			UiFont bodyFont;
+			Color bodyFg;
+
+			// Console text.
+			UiFont consoleFont;
+			Color consoleFg;
+			Color consoleCursorFg;
+			Color consoleBg;
+
+			// UI widgets (buttons, etc.).
+			UiFont formFont;
+			Color formFg;
+			Color formDisabledFg;
+
+			// Dialog background shading color.
+			Color dialogBg;
+
+			// Attributes for grid containers.
+			Vec2 gridMargin;
+			Vec2 gridPadding;
+			
+			// Colors specific to button-like widgets.
+			Color buttonBg;
+			Color buttonDisabledBg;
+			Color buttonPressedBg;
+
+			// Headings, titles.
+			UiFont headingFont;
+			Color headingFg;
+
+			void Reload();
+		} styles;
 };
 
 }  // namespace Display

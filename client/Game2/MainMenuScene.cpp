@@ -31,6 +31,7 @@
 
 #include "PracticeSetupScene.h"
 #include "Rulebook.h"
+#include "SettingsMenuScene.h"
 
 #include "MainMenuScene.h"
 
@@ -47,6 +48,7 @@ MainMenuScene::MainMenuScene(Display::Display &display, GameDirector &director,
 	typedef Display::UiViewModel::Alignment Alignment;
 
 	SetPhaseTransitionDuration(500);
+	SetStateTransitionDuration(500);
 
 	auto root = GetRoot();
 
@@ -76,7 +78,7 @@ MainMenuScene::MainMenuScene(Display::Display &display, GameDirector &director,
 		std::bind(&MainMenuScene::OnPracticeClicked, this));
 	AddButton(_("Multiplayer"), false)->GetClickedSignal().connect(
 		std::bind(&MainMenuScene::OnMultiplayerClicked, this));
-	AddButton(_("Settings"), false)->GetClickedSignal().connect(
+	AddButton(_("Settings"))->GetClickedSignal().connect(
 		std::bind(&MainMenuScene::OnSettingsClicked, this));
 	AddButton(_("Credits"), false)->GetClickedSignal().connect(
 		std::bind(&MainMenuScene::OnSettingsClicked, this));
@@ -111,10 +113,10 @@ void MainMenuScene::OnMultiplayerClicked()
 
 void MainMenuScene::OnSettingsClicked()
 {
-	//TODO: Push SettingsScene
+	director.RequestPushScene(std::make_shared<SettingsMenuScene>(display, director));
 }
 
-void MainMenuScene::OnPhaseTransition(double interval)
+void MainMenuScene::OnStateTransition(double interval)
 {
 	double titleHeight = titleContainer->GetSize().y;
 	//titleContainer->SetOpacity(interval);
@@ -130,14 +132,14 @@ void MainMenuScene::Layout()
 	const double sidePadding = 40;
 
 	double totalWidth = 0;
-	BOOST_FOREACH(std::shared_ptr<Display::Button> &btn, menuButtons) {
+	for (std::shared_ptr<Display::Button> &btn : menuButtons) {
 		totalWidth += btn->Measure().x;
 	}
 
 	double spacing = (1280.0 - totalWidth - (sidePadding * 2)) / (menuButtons.size() + 1);
 	
 	double x = sidePadding + spacing;
-	BOOST_FOREACH(std::shared_ptr<Display::Button> &btn, menuButtons) {
+	for (std::shared_ptr<Display::Button> &btn : menuButtons) {
 		btn->SetPos(x, 0);
 		x += btn->Measure().x + spacing;
 	}

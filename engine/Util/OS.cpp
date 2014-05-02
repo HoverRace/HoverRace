@@ -2,7 +2,7 @@
 // OS.cpp
 // Operating system support utilities.
 //
-// Copyright (c) 2009 Michael Imamura.
+// Copyright (c) 2009, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -111,33 +111,44 @@ std::string OS::Resolution::AsString() const
  * Set an environment variable.
  * @param key The variable name (may not be NULL).
  * @param val The variable value (may not be NULL).
+ * @throw Exception
  */
 void OS::SetEnv(const char *key, const char *val)
 {
 	ASSERT(key != NULL);
 	ASSERT(val != NULL);
 
-	std::string combined(key);
-	combined += '=';
-	combined += val;
-
 #	ifdef _WIN32
+		std::string combined(key);
+		combined += '=';
+		combined += val;
+
 		// Windows has several environments; we need to update them all.
-		_putenv(combined.c_str());
-		SetEnvironmentVariable(key, val);
+		if (_putenv(combined.c_str()) < 0) {
+			throw Exception("_putenv failed.");
+		}
+		if (SetEnvironmentVariable(key, val) == 0) {
+			throw Exception("SetEnvironmentVariable failed.");
+		}
 
 		// MSVC6-linked libraries have a separate environment.
+		// If the MSVC6 runtime library hasn't been loaded, then we just
+		// skip this step since nothing pulled it in as a dependency.
 		typedef int (_cdecl *putenv_t)(const char *);
-		static putenv_t privPutEnv = NULL;
-		if (privPutEnv == NULL) {
+		static putenv_t privPutEnv = nullptr;
+		if (!privPutEnv) {
 			HMODULE hmod = GetModuleHandle("msvcrt");
-			if (hmod == NULL) return;
+			if (!hmod) return;
 			privPutEnv = (putenv_t)GetProcAddress(hmod, "_putenv");
-			if (privPutEnv == NULL) return;
+			if (!privPutEnv) return;
 		}
-		privPutEnv(combined.c_str());
+		if (privPutEnv(combined.c_str()) < 0) {
+			throw Exception("msvcrt _putenv failed.");
+		}
 #	else
-		setenv(key, val, 1);
+		if (setenv(key, val, 1) < 0) {
+			throw Exception("setenv failed: " + StrError(errno));
+		}
 #	endif
 }
 

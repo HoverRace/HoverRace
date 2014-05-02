@@ -1,7 +1,7 @@
 
 // SysConsole.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -79,21 +79,18 @@ class SysConsole : public Console
 		void SubmitChunkWithHistory(const std::string &s);
 
 	public:
-		struct LogLevel
-		{
-			enum level_t { HISTORY, NOTE, INFO, ERROR };
-		};
+		enum class LogLevel { HISTORY, NOTE, INFO, ERROR };
 		struct LogLine
 		{
-			LogLine(int idx, LogLevel::level_t level, const std::string &line) :
+			LogLine(int idx, LogLevel level, const std::string &line) :
 				idx(idx), level(level), line(line) { }
 			const int idx;
-			const LogLevel::level_t level;
+			const LogLevel level;
 			const std::string line;
 		};
 	private:
 		void OnLog(const Util::Log::Entry &entry);
-		void AddLogLine(LogLevel::level_t level, const std::string &line);
+		void AddLogLine(LogLevel level, const std::string &line);
 	public:
 		void AddIntroLines();
 		void LogHistory(const std::string &s);

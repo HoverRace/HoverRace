@@ -81,26 +81,26 @@ ConsoleScene::ConsoleScene(Display::Display &display, GameDirector &director,
 {
 	typedef Display::UiViewModel::Alignment Alignment;
 
-	Config *cfg = Config::GetInstance();
+	const auto &s = display.styles;
 
 	displayConfigChangedConn = display.GetDisplayConfigChangedSignal().
 		connect(std::bind(&ConsoleScene::OnDisplayConfigChanged, this));
 
-	fader.reset(new Display::ScreenFade(0xbf000000, 1.0));
+	fader.reset(new Display::ScreenFade(s.consoleBg, 1.0));
 	fader->AttachView(display);
-	
-	Display::UiFont font(cfg->GetDefaultMonospaceFontName(), 30);
 
-	inputLbl = new Display::Label(COMMAND_PROMPT, font, 0xffffffff);
+	const auto &font = s.consoleFont;
+
+	inputLbl = new Display::Label(COMMAND_PROMPT, font, s.consoleFg);
 	inputLbl->SetPos(0, 719);
 	inputLbl->SetAlignment(Alignment::SW);
 	inputLbl->AttachView(display);
 
-	cursorLbl = new Display::Label("_", font, 0xffbfbfbf);
+	cursorLbl = new Display::Label("_", font, s.consoleCursorFg);
 	cursorLbl->SetAlignment(Alignment::SW);
 	cursorLbl->AttachView(display);
 
-	measureLbl = new Display::Label(" ", font, 0xffffffff);
+	measureLbl = new Display::Label(" ", font, s.consoleFg);
 	measureLbl->AttachView(display);
 
 	logClearedConn = console.GetLogClearedSignal().connect(
@@ -282,7 +282,7 @@ void ConsoleScene::AppendLogLine(const SysConsole::LogLine &line)
 void ConsoleScene::UpdateCommandLine()
 {
 	inputLbl->SetText(
-		(console.GetInputState() == Console::ISTATE_COMMAND ?
+		(console.GetInputState() == Console::InputState::COMMAND ?
 			COMMAND_PROMPT : CONTINUE_PROMPT) + console.GetCommandLine());
 }
 

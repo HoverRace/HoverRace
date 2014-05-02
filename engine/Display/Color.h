@@ -41,10 +41,17 @@ namespace Display {
 
 union MR_DllDeclare Color
 {
+	Color() : argb(0) { }
 	Color(MR_UInt32 argb) : argb(argb) { }
 	Color(MR_UInt8 a, MR_UInt8 r, MR_UInt8 g, MR_UInt8 b) :
 		argb(((MR_UInt32)a << 24) + ((MR_UInt32)r << 16) + ((MR_UInt32)g << 8) + (MR_UInt32)b)
 		{ }
+
+	Color &operator=(MR_UInt32 argb)
+	{
+		this->argb = argb;
+		return *this;
+	}
 
 	MR_UInt32 argb;
 	struct
@@ -68,22 +75,7 @@ MR_DllDeclare inline bool operator!=(const Color &a, const Color &b)
 
 MR_DllDeclare inline std::ostream &operator<<(std::ostream &os, const Color &c)
 {
-	switch (Util::GetSelFmt(os)) {
-		case Util::SEL_FMT_PANGO: {
-			// Pango doesn't support the alpha component in the color
-			// specification.
-			os << '#' << boost::format("%02x%02x%02x") %
-				static_cast<unsigned int>(c.bits.r) %
-				static_cast<unsigned int>(c.bits.g) %
-				static_cast<unsigned int>(c.bits.b);
-			break;
-		}
-
-		default: {
-			os << "0x" << boost::format("%08x") % c.argb;
-		}
-	}
-
+	os << "0x" << boost::format("%08x") % c.argb;
 	return os;
 }
 

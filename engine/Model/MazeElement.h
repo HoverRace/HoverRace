@@ -1,7 +1,5 @@
 // MazeElement.h
 //
-//
-//
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
@@ -79,6 +77,7 @@ class MR_DllDeclare Element : public Util::ObjectFromFactory
 {
 	public:
 		Element(const Util::ObjectFromFactoryId & pId);
+		virtual ~Element() { }
 
 		virtual void AddRenderer();
 												  // Initialisation string used during maze creation
@@ -103,7 +102,8 @@ class MR_DllDeclare Element : public Util::ObjectFromFactory
 class MR_DllDeclare SurfaceElement : public Element
 {
 	public:
-		SurfaceElement(const Util::ObjectFromFactoryId & pId);
+		SurfaceElement(const Util::ObjectFromFactoryId &pId);
+		virtual ~SurfaceElement() { }
 
 		virtual void RenderWallSurface(VideoServices::Viewport3D * pDest, const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, MR_SimulationTime pTime);
 
@@ -117,7 +117,8 @@ class MR_DllDeclare FreeElement : public Element
 		MR_Angle mOrientation;
 
 	public:
-		FreeElement(const Util::ObjectFromFactoryId & pId);
+		FreeElement(const Util::ObjectFromFactoryId &pId);
+		virtual ~FreeElement() { }
 
 		virtual void Render(VideoServices::Viewport3D * pDest, MR_SimulationTime pTime);
 

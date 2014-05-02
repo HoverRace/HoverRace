@@ -1,7 +1,7 @@
 
 // UiViewModel.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -64,25 +64,23 @@ class MR_DllDeclare UiViewModel : public ViewModel
 				NEXT_,  ///< First index for subclasses.
 			};
 		};
-		
+
 		/**
 		 * Imagine the component pinned to the container with a thumbtack.
 		 * The thumbtack's position is at GetPos(), and the alignment determines
 		 * which corner the component hangs from.
 		 */
-		struct Alignment
+		enum class Alignment
 		{
-			enum alignment_t {
-				NW,  ///< Northwest corner (default).
-				N,  ///< North (horizontally-centered).
-				NE,  ///< Northeast corner.
-				E,  ///< East (vertically-centered).
-				SE,  ///< Southeast corner.
-				S,  ///< South (horizontally-centered).
-				SW,  ///< Southwest corner.
-				W,  ///< West (vertically-centered).
-				CENTER,  ///< Horizontally @e and vertically centered.
-			};
+			NW,  ///< Northwest corner (default).
+			N,  ///< North (horizontally-centered).
+			NE,  ///< Northeast corner.
+			E,  ///< East (vertically-centered).
+			SE,  ///< Southeast corner.
+			S,  ///< South (horizontally-centered).
+			SW,  ///< Southwest corner.
+			W,  ///< West (vertically-centered).
+			CENTER,  ///< Horizontally @e and vertically centered.
 		};
 
 	public:
@@ -112,8 +110,8 @@ class MR_DllDeclare UiViewModel : public ViewModel
 		 * @return The alignment.
 		 * @see UiViewModel::Alignment
 		 */
-		const Alignment::alignment_t GetAlignment() const { return alignment; }
-		void SetAlignment(Alignment::alignment_t alignment);
+		const Alignment GetAlignment() const { return alignment; }
+		void SetAlignment(Alignment alignment);
 
 		Vec2 GetAlignedPos(const Vec2 &pos, double w, double h) const;
 
@@ -140,7 +138,7 @@ class MR_DllDeclare UiViewModel : public ViewModel
 
 	private:
 		Vec2 pos;
-		Alignment::alignment_t alignment;
+		Alignment alignment;
 		uiLayoutFlags_t layoutFlags;
 };
 typedef std::shared_ptr<UiViewModel> UiViewModelPtr;

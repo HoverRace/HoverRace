@@ -100,7 +100,7 @@ class MR_DllDeclare ViewModel
 		 *          model changes. As such, it is recommended to call Measure in
 		 *          the PrepareRender phase itself.
 		 */
-		virtual Vec3 Measure() const { return view ? view->Measure() : Vec3(0, 0, 0); }
+		virtual Vec3 Measure() { return view ? view->Measure() : Vec3(0, 0, 0); }
 
 		void PrepareRender()
 		{

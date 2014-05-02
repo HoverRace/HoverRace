@@ -9,7 +9,7 @@ set_target_properties(hoverrace-parceldump PROPERTIES
 	LINKER_LANGUAGE CXX
 	PROJECT_LABEL ParcelDump)
 target_link_libraries(hoverrace-parceldump ${Boost_LIBRARIES} ${DEPS_LIBRARIES}
-	hoverrace-engine)
+	hrengine)
 
 # Bump the warning level.
 include(SetWarningLevel)

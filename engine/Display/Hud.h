@@ -1,7 +1,7 @@
 
 // Hud.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -110,7 +110,7 @@ class MR_DllDeclare Hud : public Container
 				return t == NW || t == NE || t == SE || t == SW;
 			}
 
-			static Alignment::alignment_t AlignmentFor(type t) {
+			static Alignment AlignmentFor(type t) {
 				switch (t) {
 					case ABOVE:
 						return Alignment::S;
@@ -205,7 +205,7 @@ class MR_DllDeclare Hud : public Container
 
 		virtual void Clear()
 		{
-			BOOST_FOREACH(auto &children, hudChildren) {
+			for (auto &children : hudChildren) {
 				children.clear();
 			}
 			SUPER::Clear();
@@ -215,8 +215,8 @@ class MR_DllDeclare Hud : public Container
 		template<typename Fn>
 		void ForEachHudChild(Fn fn)
 		{
-			BOOST_FOREACH(auto &children, hudChildren) {
-				BOOST_FOREACH(auto &child, children) {
+			for (auto &children : hudChildren) {
+				for (auto &child : children) {
 					fn(child.decor);
 				}
 			}

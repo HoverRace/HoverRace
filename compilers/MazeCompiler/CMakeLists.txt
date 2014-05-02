@@ -9,7 +9,7 @@ set_target_properties(hoverrace-maze-compiler PROPERTIES
 	LINKER_LANGUAGE CXX
 	PROJECT_LABEL MazeCompiler)
 target_link_libraries(hoverrace-maze-compiler ${Boost_LIBRARIES}
-	${DEPS_LIBRARIES} hoverrace-engine)
+	${DEPS_LIBRARIES} hrengine)
 
 if(NOT WIN32)
 	set_property(TARGET hoverrace-maze-compiler

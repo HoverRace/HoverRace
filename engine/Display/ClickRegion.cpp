@@ -107,7 +107,7 @@ void ClickRegion::FireClickedSignal()
  * immediately (the same caveats as calling Measure()).
  * @return The size, where @c x is the width and @c y is the height.
  */
-const Vec2 &ClickRegion::GetSize() const
+const Vec2 &ClickRegion::GetSize()
 {
 	if (needsSizing) {
 		Vec3 calcSize = Measure();
@@ -172,7 +172,7 @@ void ClickRegion::SetEnabled(bool enabled)
 	}
 }
 
-bool ClickRegion::TestHit(const Vec2 &pos) const
+bool ClickRegion::TestHit(const Vec2 &pos)
 {
 	const Vec2 &sz = GetSize();
 	const Vec2 pui = GetAlignedPos(display.ScreenToUiPosition(pos), -sz.x, -sz.y);

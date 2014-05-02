@@ -1,7 +1,7 @@
 
 // FormScene.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@
 
 #include "../../engine/Display/Container.h"
 #include "../../engine/Display/Label.h"
+#include "../../engine/Display/ScreenFade.h"
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/Log.h"
 
@@ -49,8 +50,12 @@ DialogScene::DialogScene(Display::Display &display,
 {
 	typedef Display::UiViewModel::Alignment Alignment;
 
-	Config *cfg = Config::GetInstance();
-	const std::string &fontName = cfg->GetDefaultFontName();
+	const auto &s = display.styles;
+
+	SetPhaseTransitionDuration(200);
+
+	fader.reset(new Display::ScreenFade(s.dialogBg, 0.0));
+	fader->AttachView(display);
 
 	auto root = GetRoot();
 
@@ -63,14 +68,36 @@ DialogScene::DialogScene(Display::Display &display,
 	statusRoot->SetPos(MARGIN_WIDTH, 720 - 80);
 
 	auto titleLbl = root->AddChild(new Display::Label(title,
-		Display::UiFont(fontName, 40, Display::UiFont::BOLD),
-		Display::COLOR_WHITE));
+		s.headingFont, s.headingFg));
 	titleLbl->SetPos(MARGIN_WIDTH, 80);
 	titleLbl->SetAlignment(Alignment::SW);
 }
 
 DialogScene::~DialogScene()
 {
+}
+
+void DialogScene::OnPhaseTransition(double progress)
+{
+	fader->SetOpacity(progress);
+
+	SUPER::OnPhaseTransition(progress);
+}
+
+void DialogScene::PrepareRender()
+{
+	fader->PrepareRender();
+
+	SUPER::PrepareRender();
+}
+
+void DialogScene::Render()
+{
+	fader->Render();
+
+	if (GetPhase() != Phase::STOPPING) {
+		SUPER::Render();
+	}
 }
 
 }  // namespace Client

@@ -209,11 +209,11 @@ SoundBuffer::~SoundBuffer()
 	}
 	else {
 		SoundBuffer *mPrev = mList;
+		ASSERT(mPrev != NULL);
 
-		while(mPrev->mNext != this) {
-			ASSERT(mPrev != NULL);
-
+		while (mPrev->mNext != this) {
 			mPrev = mPrev->mNext;
+			ASSERT(mPrev != NULL);
 		}
 
 		mPrev->mNext = mNext;
@@ -246,8 +246,10 @@ void SoundBuffer::ApplyCumCommandForAll()
 
 void SoundBuffer::DeleteAll()
 {
-	while(mList != NULL) {
+	while (mList) {
+		auto next = mList->mNext;
 		delete mList;
+		mList = next;
 	}
 }
 

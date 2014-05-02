@@ -1,7 +1,8 @@
+
 // main.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -128,7 +129,13 @@ bool ProcessCmdLine(int argc, char **argv)
 				arg = argv[i++];
 				// Set the language by updating the environment.
 				// This may allow for more languages than setlocale() allows.
-				OS::SetEnv("LC_ALL", arg);
+				try {
+					OS::SetEnv("LC_ALL", arg);
+				}
+				catch (HoverRace::Exception &ex) {
+					ShowMessage(std::string("Unable to set locale: ") + ex.what());
+					return false;
+				}
 			}
 			else {
 				ShowMessage("Expected: -L (language)");

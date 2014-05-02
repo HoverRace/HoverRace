@@ -1,7 +1,7 @@
 
 // DialogScene.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -24,6 +24,12 @@
 #include "FormScene.h"
 
 namespace HoverRace {
+	namespace Display {
+		class ScreenFade;
+	}
+}
+
+namespace HoverRace {
 namespace Client {
 
 /**
@@ -43,9 +49,15 @@ class DialogScene : public FormScene
 		Display::Container *GetStatusRoot() const { return statusRoot.get(); }
 
 	public:
+		virtual void OnPhaseTransition(double progress) override;
+		virtual void PrepareRender() override;
+		virtual void Render() override;
+
+	public:
 		static const double MARGIN_WIDTH;
 	private:
 		std::string title;
+		std::unique_ptr<Display::ScreenFade> fader;
 		std::shared_ptr<Display::Container> contentRoot;
 		std::shared_ptr<Display::Container> statusRoot;
 };
