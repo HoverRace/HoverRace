@@ -120,7 +120,7 @@ void RulebookEnv::ReloadRulebooks()
 
 		if (!fs::is_directory(path)) {
 			Log::Warn("Ignored file in rulebook dir (old rulebook?): %s",
-				(const char*)Str::PU(dir));
+				(const char*)Str::PU(path));
 			continue;
 		}
 
