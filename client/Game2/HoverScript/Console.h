@@ -1,8 +1,7 @@
 
 // Console.h
-// Header for the debug console base class.
 //
-// Copyright (c) 2009 Michael Imamura.
+// Copyright (c) 2009, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -67,13 +66,13 @@ class Console : public Script::Env, public Script::Help::HelpHandler
 		virtual void LogError(const std::string &s) = 0;
 
 	public:
-		enum inputState_t {
-			ISTATE_COMMAND,
-			ISTATE_CONTINUE,
+		enum class InputState {
+			COMMAND,
+			CONTINUE,
 		};
-		inputState_t GetInputState() const;
+		InputState GetInputState() const;
 	protected:
-		void SetInputState(inputState_t newState);
+		void SetInputState(InputState newState);
 
 	private:
 		static int LClear(lua_State *state);
@@ -83,7 +82,7 @@ class Console : public Script::Env, public Script::Help::HelpHandler
 		*/
 
 	private:
-		inputState_t inputState;
+		InputState inputState;
 		Script::Core::OutHandle outHandle;
 		std::string chunk;
 

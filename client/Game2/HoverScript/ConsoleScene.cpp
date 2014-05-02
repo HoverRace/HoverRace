@@ -88,7 +88,7 @@ ConsoleScene::ConsoleScene(Display::Display &display, GameDirector &director,
 
 	fader.reset(new Display::ScreenFade(s.consoleBg, 1.0));
 	fader->AttachView(display);
-	
+
 	const auto &font = s.consoleFont;
 
 	inputLbl = new Display::Label(COMMAND_PROMPT, font, s.consoleFg);
@@ -282,7 +282,7 @@ void ConsoleScene::AppendLogLine(const SysConsole::LogLine &line)
 void ConsoleScene::UpdateCommandLine()
 {
 	inputLbl->SetText(
-		(console.GetInputState() == Console::ISTATE_COMMAND ?
+		(console.GetInputState() == Console::InputState::COMMAND ?
 			COMMAND_PROMPT : CONTINUE_PROMPT) + console.GetCommandLine());
 }
 
