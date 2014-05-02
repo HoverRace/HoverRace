@@ -143,13 +143,15 @@ void FlexGrid::Layout()
 				cell->SetExtents(x, y, *widthIter, *heightIter,
 					padding.x, padding.y);
 			}
+			x += *widthIter + padding2x.x;
 			totalSize.x = x;
-			x += *widthIter + padding2x.x + margin.x;
+			x += margin.x;
 			++widthIter;
 		}
 
+		y += *heightIter + padding2x.y;
 		totalSize.y = y;
-		y += *heightIter + padding2x.y + margin.y;
+		y += margin.y;
 		++heightIter;
 		x = 0;
 		widthIter = widths.begin();
