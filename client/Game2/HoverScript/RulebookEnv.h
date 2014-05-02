@@ -1,7 +1,7 @@
 
 // RulebookEnv.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -58,13 +58,15 @@ class RulebookEnv : public RuntimeEnv {
 		void DefineRulebook(const std::string &name, const luabind::object &defn);
 	private:
 		void DefineRules(std::shared_ptr<Rulebook> rulebook, const luabind::object &rulesObj);
+		bool RunRulebookScript(const Util::OS::path_t &path);
 
-	private:
+		static int LRequire(lua_State *L);
 		static int LRulebookStage1(lua_State *L);
 		static int LRulebookStage2(lua_State *L);
 
 	private:
 		RulebookLibrary &rulebookLibrary;
+		Util::OS::path_t curRulebookPath;
 };
 
 }  // namespace HoverScript

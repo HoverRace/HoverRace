@@ -85,6 +85,14 @@ void RulebookEnv::InitEnv()
 	// Start with the standard global environment.
 	CopyGlobals();
 
+	// Register our custom rulebook-aware "require()".
+	lua_pushlightuserdata(L, this);  // table this
+	lua_pushcclosure(L, RulebookEnv::LRequire, 1);  // table fn
+	lua_pushstring(L, "require");  // table fn str
+	lua_insert(L, -2);  // table str fn
+	lua_rawset(L, -3);  // table
+
+	// Register our Rulebook factory.
 	lua_pushlightuserdata(L, this);  // table this
 	lua_pushcclosure(L, RulebookEnv::LRulebookStage1, 1);  // table fn
 	lua_pushstring(L, "Rulebook");  // table fn str
@@ -124,13 +132,7 @@ void RulebookEnv::ReloadRulebooks()
 			continue;
 		}
 
-		auto bootPath = path;
-		bootPath /= Str::UP("rulebook.lua");
-
-		if (fs::exists(bootPath)) {
-			Log::Info("Running: %s", (const char*)Str::PU(bootPath));
-			if (RunScript(bootPath)) rulebooksLoaded++;
-		}
+		if (RunRulebookScript(path)) rulebooksLoaded++;
 	}
 
 	if (rulebooksLoaded == 0) {
@@ -229,6 +231,67 @@ void RulebookEnv::DefineRules(std::shared_ptr<Rulebook> rulebook,
 		Log::Info("Added rule '%s' with type %d.", name.c_str(),
 			type(ruleObj));
 	}
+}
+
+/**
+ * Run the boot script for a rulebook.
+ */
+bool RulebookEnv::RunRulebookScript(const Util::OS::path_t &path)
+{
+	auto bootPath = path;
+	bootPath /= Str::UP("rulebook.lua");
+
+	if (!fs::exists(bootPath)) {
+		Log::Info("Rulebook path does not have a rulebook.lua: %s",
+			(const char*)Str::PU(path));
+		return false;
+	}
+
+	Log::Info("Running: %s", (const char*)Str::PU(bootPath));
+
+	curRulebookPath = path;
+	bool retv = RunScript(bootPath);
+	curRulebookPath.clear();
+
+	return retv;
+}
+
+int RulebookEnv::LRequire(lua_State *L)
+{
+	// require(module_name)
+	//
+	// Loads a module from the current rulebook base directory.
+	//   module_name - The name of the module (the filename, minus the ".lua"
+	//                 extension.
+	//
+	// Returns the return value of executing the script.
+
+	RulebookEnv *self = static_cast<RulebookEnv*>(lua_touserdata(L, lua_upvalueindex(1)));
+
+	const auto &basePath = self->curRulebookPath;
+
+	if (basePath.empty()) {
+		Log::Error("Rulebook require() called outside of Rulebook context.");
+		return 0;
+	}
+	
+	if (lua_gettop(L) != 1) {
+		luaL_error(L, "Usage: require 'module_name'");
+		return 0;
+	}
+
+	std::string name = lua_tostring(L, 1);
+	name += ".lua";
+
+	auto modulePath = basePath;
+	modulePath /= Str::UP(name);
+
+	Log::Info("Loading module '%s' from: %s", name.c_str(),
+		(const char*)Str::PU(modulePath));
+
+	//TODO
+
+	return 0;
 }
 
 int RulebookEnv::LRulebookStage1(lua_State *L)
