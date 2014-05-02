@@ -1,7 +1,7 @@
 
 // SysConsole.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -132,7 +132,7 @@ void SysConsole::SubmitChunkWithHistory(const std::string &s)
 
 void SysConsole::OnLog(const Util::Log::Entry &entry)
 {
-	LogLevel::level_t logLevel;
+	LogLevel logLevel;
 	switch (entry.level) {
 		case Log::Level::DEBUG:
 		case Log::Level::INFO:
@@ -148,7 +148,7 @@ void SysConsole::OnLog(const Util::Log::Entry &entry)
 	AddLogLine(logLevel, entry.message);
 }
 
-void SysConsole::AddLogLine(LogLevel::level_t level, const std::string &line)
+void SysConsole::AddLogLine(LogLevel level, const std::string &line)
 {
 	int sz = logLines.size();
 	int idx = baseLogIdx + sz;
