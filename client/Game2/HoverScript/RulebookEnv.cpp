@@ -1,7 +1,7 @@
 
 // RulebookEnv.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -117,9 +117,19 @@ void RulebookEnv::ReloadRulebooks()
 	const OS::dirIter_t END;
 	for (OS::dirIter_t iter(dir); iter != END; ++iter) {
 		const OS::path_t &path = iter->path();
-		if (path.extension() == ".lua") {
-			Log::Info("Running: %s", (const char*)Str::PU(path));
-			if (RunScript(path)) rulebooksLoaded++;
+
+		if (!fs::is_directory(path)) {
+			Log::Warn("Ignored file in rulebook dir (old rulebook?): %s",
+				(const char*)Str::PU(dir));
+			continue;
+		}
+
+		auto bootPath = path;
+		bootPath /= Str::UP("rulebook.lua");
+
+		if (fs::exists(bootPath)) {
+			Log::Info("Running: %s", (const char*)Str::PU(bootPath));
+			if (RunScript(bootPath)) rulebooksLoaded++;
 		}
 	}
 
