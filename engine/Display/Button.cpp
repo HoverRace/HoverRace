@@ -153,7 +153,7 @@ void Button::SetIcon(std::shared_ptr<FillBox> icon)
 	}
 }
 
-Vec3 Button::Measure() const
+Vec3 Button::Measure()
 {
 	if (IsAutoSize()) {
 		const Vec3 labelSize = label->Measure();

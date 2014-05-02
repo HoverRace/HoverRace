@@ -82,7 +82,7 @@ class MR_DllDeclare ClickRegion : public UiViewModel
 		virtual void FireClickedSignal();
 
 	public:
-		const Vec2 &GetSize() const;
+		const Vec2 &GetSize();
 		void SetSize(const Vec2 &size);
 		/// Convenience function for SetSize(const Vec2&).
 		void SetSize(double w, double h) { SetSize(Vec2(w, h)); }
@@ -108,16 +108,16 @@ class MR_DllDeclare ClickRegion : public UiViewModel
 		void SetPressed(bool pressed);
 
 	public:
-		virtual Vec3 Measure() const { return size.Promote(); }
+		virtual Vec3 Measure() { return size.Promote(); }
 
 	protected:
-		bool TestHit(const Vec2 &pos) const;
+		bool TestHit(const Vec2 &pos);
 
 	private:
 		Display &display;
-		mutable Vec2 size;
+		Vec2 size;
 		bool autoSize;
-		mutable bool needsSizing;
+		bool needsSizing;
 		bool enabled;
 		bool pressed;
 		clickedSignal_t clickedSignal;

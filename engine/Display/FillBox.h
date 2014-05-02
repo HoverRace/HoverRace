@@ -84,7 +84,7 @@ class MR_DllDeclare FillBox : public UiViewModel
 		void SetSize(double w, double h) { SetSize(Vec2(w, h)); }
 
 	public:
-		virtual Vec3 Measure() const { return size.Promote(); }
+		virtual Vec3 Measure() { return size.Promote(); }
 
 	private:
 		Vec2 size;

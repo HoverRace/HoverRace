@@ -331,7 +331,7 @@ namespace Display {
 		virtual void Layout();
 
 	public:
-		virtual Vec3 Measure() const;
+		virtual Vec3 Measure();
 
 	private:
 		Vec2 margin;

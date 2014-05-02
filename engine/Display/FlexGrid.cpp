@@ -162,7 +162,7 @@ void FlexGrid::Layout()
 	SUPER::SetSize(totalSize);
 }
 
-Vec3 FlexGrid::Measure() const
+Vec3 FlexGrid::Measure()
 {
 	//FIXME: Measure() really should be non-const because we already document
 	//       the caveat that this operation may change state.
