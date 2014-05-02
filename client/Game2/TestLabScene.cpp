@@ -223,6 +223,13 @@ namespace Module {
 		public:
 			FlexGridModule(Display::Display &display, GameDirector &director);
 			virtual ~FlexGridModule() { }
+
+		public:
+			virtual void Layout() override;
+
+		private:
+			std::shared_ptr<Display::FlexGrid> grid;
+			std::shared_ptr<Display::FillBox> gridSizeBox;
 	}; //}}}
 }
 
@@ -695,7 +702,9 @@ FlexGridModule::FlexGridModule(Display::Display &display, GameDirector &director
 
 	Display::Container *root = GetRoot();
 
-	auto grid = root->AddChild(new Display::FlexGrid(display));
+	gridSizeBox = root->AddChild(new Display::FillBox(0, 0, 0xff00003f));
+
+	grid = root->AddChild(new Display::FlexGrid(display));
 
 	size_t r = 0;
 	size_t c = 0;
@@ -753,6 +762,12 @@ FlexGridModule::FlexGridModule(Display::Display &display, GameDirector &director
 		s.bodyFont, s.bodyFg));
 	grid->AddGridCell(r, c++, new Display::Checkbox(display, "Save Friend"));
 	grid->AddGridCell(r, c++, new Display::Button(display, "Spectate"));
+}
+
+void FlexGridModule::Layout()
+{
+	auto gridSize = grid->Measure();
+	gridSizeBox->SetSize(gridSize.x, gridSize.y);
 }
 
 //}}} FlexGridModule
