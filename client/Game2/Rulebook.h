@@ -1,7 +1,7 @@
 
 // Rulebook.h
 //
-// Copyright (c) 2010, 2013 Michael Imamura.
+// Copyright (c) 2010, 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@
 #pragma once
 
 #include "../../engine/Script/Handlers.h"
+#include "../../engine/Util/OS.h"
 
 #include "Rule.h"
 
@@ -52,12 +53,14 @@ class Rulebook : private boost::noncopyable
 {
 	public:
 		Rulebook(Script::Core *scripting,
+			const Util::OS::path_t &basePath,
 			const std::string &name,
 			const std::string &title,
 			const std::string &description,
 			int maxPlayers);
 
 	public:
+		const Util::OS::path_t &GetBasePath() const { return basePath; }
 		const std::string &GetName() const { return name; }
 		const std::string &GetTitle() const { return title; }
 		const std::string &GetDescription() const { return description; }
@@ -68,6 +71,13 @@ class Rulebook : private boost::noncopyable
 		void AddRule(const std::string &name, const luabind::object &obj);
 
 		luabind::object CreateDefaultRules() const;
+
+		void Load();
+
+	public:
+		void SetOnLoad(const luabind::object &fn);
+	protected:
+		void OnLoad() const;
 
 	public:
 		void SetOnPreGame(const luabind::object &fn);
@@ -86,6 +96,7 @@ class Rulebook : private boost::noncopyable
 
 	private:
 		Script::Core *scripting;
+		Util::OS::path_t basePath;
 		std::string name;
 		std::string title;
 		std::string description;
@@ -94,9 +105,12 @@ class Rulebook : private boost::noncopyable
 		typedef std::map<std::string, std::shared_ptr<Rule>> rules_t;
 		rules_t rules;
 
+		Script::Handlers onLoad;
 		Script::Handlers onPreGame;
 		Script::Handlers onPostGame;
 		Script::Handlers onPlayerJoined;
+
+		bool loaded;
 };
 typedef std::shared_ptr<Rulebook> RulebookPtr;
 

@@ -1,7 +1,7 @@
 
 // RulebookLibrary.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -26,6 +26,8 @@
 #include "Rulebook.h"
 
 #include "RulebookLibrary.h"
+
+using namespace HoverRace::Util;
 
 namespace HoverRace {
 namespace Client {
@@ -60,7 +62,7 @@ std::shared_ptr<const Rulebook> RulebookLibrary::GetDefault() const
 	}
 	else {
 		return library.empty() ?
-			std::make_shared<Rulebook>(scripting, "Dummy", "Dummy", "", 1) :
+			std::make_shared<Rulebook>(scripting, OS::path_t(), "Dummy", "Dummy", "", 1) :
 			*sorted.cbegin();
 	}
 }

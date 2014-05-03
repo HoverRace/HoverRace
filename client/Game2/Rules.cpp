@@ -33,6 +33,7 @@ Rules::Rules(std::shared_ptr<const Rulebook> rulebook) :
 	gameOpts(0x7f)
 {
 	if (rulebook) {
+		rulebook->Load();
 		rules = rulebook->CreateDefaultRules();
 	}
 }

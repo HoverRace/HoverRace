@@ -1,7 +1,7 @@
 
 // Rulebook.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -48,14 +48,19 @@ namespace {
 	};
 }
 
-Rulebook::Rulebook(Script::Core *scripting, const std::string &name,
+Rulebook::Rulebook(Script::Core *scripting, const Util::OS::path_t &basePath,
+                   const std::string &name,
                    const std::string &title,
                    const std::string &description,
                    int maxPlayers) :
-	scripting(scripting), name(name), title(title), description(description),
+	scripting(scripting),
+	basePath(basePath),
+	name(name), title(title), description(description),
 	maxPlayers(maxPlayers),
 	rules(),
-	onPreGame(scripting), onPostGame(scripting), onPlayerJoined(scripting)
+	onLoad(scripting), onPreGame(scripting), onPostGame(scripting),
+	onPlayerJoined(scripting),
+	loaded(false)
 {
 }
 
@@ -73,6 +78,23 @@ luabind::object Rulebook::CreateDefaultRules() const
 	}
 
 	return obj;
+}
+
+void Rulebook::Load()
+{
+	if (!loaded) {
+		OnLoad();
+	}
+}
+
+void Rulebook::SetOnLoad(const luabind::object &fn)
+{
+	onLoad.AddHandler(fn);
+}
+
+void Rulebook::OnLoad() const
+{
+	onLoad.CallHandlers();
 }
 
 void Rulebook::SetOnPreGame(const luabind::object &fn)

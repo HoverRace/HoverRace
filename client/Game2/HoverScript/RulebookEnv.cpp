@@ -192,8 +192,8 @@ void RulebookEnv::DefineRulebook(const std::string &name,
 			return;
 	}
 
-	auto rulebook = std::make_shared<Rulebook>(scripting, name, title, desc,
-		maxPlayers);
+	auto rulebook = std::make_shared<Rulebook>(scripting, curRulebookPath,
+		name, title, desc, maxPlayers);
 
 	const object &rulesObj = defn["rules"];
 	switch (type(rulesObj)) {
