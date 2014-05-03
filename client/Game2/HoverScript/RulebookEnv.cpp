@@ -100,52 +100,6 @@ void RulebookEnv::InitEnv()
 	lua_rawset(L, -3);  // table
 }
 
-/**
- * Run all rulebook scripts to re-populate the rulebook library.
- */
-void RulebookEnv::ReloadRulebooks()
-{
-	Config *cfg = Config::GetInstance();
-
-	OS::path_t dir = cfg->GetMediaPath();
-	dir /= Str::UP("rulebooks");
-
-	if (!fs::exists(dir)) {
-		Log::Error("Rulebook path does not exist: %s",
-			(const char*)Str::PU(dir));
-		return;
-	}
-	if (!fs::is_directory(dir)) {
-		Log::Error("Rulebook path is not a directory (skipping): %s",
-			(const char*)Str::PU(dir));
-		return;
-	}
-
-	int rulebooksLoaded = 0;
-	const OS::dirIter_t END;
-	for (OS::dirIter_t iter(dir); iter != END; ++iter) {
-		const OS::path_t &path = iter->path();
-
-		if (!fs::is_directory(path)) {
-			Log::Warn("Ignored file in rulebook dir (old rulebook?): %s",
-				(const char*)Str::PU(path));
-			continue;
-		}
-
-		if (RunRulebookScript(path)) rulebooksLoaded++;
-	}
-
-	if (rulebooksLoaded == 0) {
-		Log::Error("Rulebook path contains no rulebooks: %s",
-			(const char*)Str::PU(dir));
-	}
-	else {
-		Log::Info("Loaded %d rulebook(s): %s",
-			rulebooksLoaded,
-			(const char*)Str::PU(dir));
-	}
-}
-
 void RulebookEnv::DefineRulebook(const std::string &name,
                                  const luabind::object &defn)
 {

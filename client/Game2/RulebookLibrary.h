@@ -1,7 +1,7 @@
 
 // RulebookLibrary.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -43,6 +43,7 @@ class RulebookLibrary {
 		RulebookLibrary(Script::Core *scripting);
 
 	public:
+		void Reload();
 		void Add(RulebookPtr &rulebook);
 		std::shared_ptr<const Rulebook> GetDefault() const;
 		std::shared_ptr<const Rulebook> Find(const std::string &name);

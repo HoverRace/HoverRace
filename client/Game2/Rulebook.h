@@ -27,10 +27,12 @@
 #include "Rule.h"
 
 namespace HoverRace {
-	namespace HoverScript {
-		class PlayerPeer;
-		class SessionPeer;
-		typedef std::shared_ptr<SessionPeer> SessionPeerPtr;
+	namespace Client {
+		namespace HoverScript {
+			class PlayerPeer;
+			class SessionPeer;
+			typedef std::shared_ptr<SessionPeer> SessionPeerPtr;
+		}
 	}
 	namespace Model {
 		class TrackEntry;

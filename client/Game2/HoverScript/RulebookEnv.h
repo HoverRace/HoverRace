@@ -54,10 +54,10 @@ class RulebookEnv : public RuntimeEnv {
 		virtual void InitEnv();
 
 	public:
-		void ReloadRulebooks();
 		void DefineRulebook(const std::string &name, const luabind::object &defn);
 	private:
 		void DefineRules(std::shared_ptr<Rulebook> rulebook, const luabind::object &rulesObj);
+	public:
 		bool RunRulebookScript(const Util::OS::path_t &path);
 
 		static int LRequire(lua_State *L);
