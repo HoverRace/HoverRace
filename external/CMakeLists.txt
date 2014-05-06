@@ -3,6 +3,12 @@ include(SetWarningLevel)
 
 set(BUILD_SHARED_LIBS TRUE)
 
+set(BUILD_CURL_EXE FALSE)
+set(BUILD_CURL_TESTS FALSE)
+set(HTTP_ONLY TRUE)
+add_subdirectory(curl)
+set_no_warnings(TARGET libcurl)
+
 add_subdirectory(lua)
 set_no_warnings(TARGET liblua)
 

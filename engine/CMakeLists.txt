@@ -47,7 +47,7 @@ if(WIN32)
 endif()
 include_directories(".")
 target_link_libraries(hrengine ${Boost_LIBRARIES} ${DEPS_LIBRARIES}
-    liblua luabind)
+    libcurl liblua luabind)
 
 # Install prebuilt bundled DLLs into the right locations.
 if(WIN32)
@@ -57,7 +57,7 @@ if(WIN32)
 		OpenAL32 zlib1)
 	# DLLs that have both debug and release versions.
 	set(CONFIGURED_DLLS
-		libcurl SDL2 SDL2_image SDL2_ttf)
+		SDL2 SDL2_image SDL2_ttf)
 
 	foreach(dll ${COMMON_DLLS})
 		add_custom_command(TARGET hrengine PRE_BUILD

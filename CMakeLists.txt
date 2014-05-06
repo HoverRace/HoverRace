@@ -55,7 +55,6 @@ if(UNIX)
 	include(FindPkgConfig)
 	pkg_check_modules(DEPS REQUIRED
 		freealut>=1.1
-		libcurl>=7.18
 		libxdg-basedir>=1.0
 		openal>=0.0.8
 		sdl2>=2.0
@@ -83,7 +82,6 @@ elseif(WIN32)
         optimized SDL2_ttf debug SDL2_ttfD
 		alut
 		intl
-		optimized libcurl debug libcurlD
 		optimized yaml debug yamlD)
 
 	include_directories(
