@@ -4,9 +4,9 @@
 #   Generates a list of files which might contain translatable strings.
 #
 # Usage:
-#   ./update-potfiles > po/POTFILES.in
+#   bin/update-potfiles > po/POTFILES.in
 
-cd "$(dirname "$0")"
+cd "$(dirname "$0")"/..
 
 SRCDIRS=(
 	client/Game2
