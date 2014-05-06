@@ -1,5 +1,6 @@
 # This is a list of each external and which repository it came from.
 # dirname repository branch
+curl https://github.com/bagder/curl.git curl-7_36_0
 lua https://github.com/LuaDist/lua.git master
 luabind https://github.com/rpavlik/luabind.git master
 
