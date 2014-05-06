@@ -139,9 +139,6 @@
     <ClCompile Include="src\src\events\SDL_events.c">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\src\SDL_fatal.c">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\src\video\SDL_fillrect.c">
       <Filter>src</Filter>
     </ClCompile>
@@ -340,6 +337,7 @@
     <ClCompile Include="src\src\render\SDL_yuv_sw.c">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\src\thread\windows\SDL_systls.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\src\events\blank_cursor.h">
@@ -466,9 +464,6 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\src\events\SDL_events_c.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\src\SDL_fatal.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\include\SDL_gamecontroller.h">
