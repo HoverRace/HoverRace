@@ -1,8 +1,0 @@
-
-Current supported Luabind version:
-https://github.com/rpavlik/luabind
-
-
-== Manual Instructions ==
-
-1. Copy the Luabind sources from ../../../external/luabind to "src".
