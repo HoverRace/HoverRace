@@ -6,37 +6,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\lib\tftp.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\lib\timeval.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\lib\transfer.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\lib\url.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\lib\urldata.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\lib\warnless.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\lib\wildcard.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\lib\amigaos.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="src\lib\arpa_telnet.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\lib\asyn.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\lib\axtls.h">
+    <ClInclude Include="src\lib\bundles.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\lib\config-amigaos.h">
@@ -60,9 +36,6 @@
     <ClInclude Include="src\lib\config-tpf.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\lib\config-vms.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="src\lib\config-vxworks.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -70,6 +43,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\lib\config-win32ce.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\conncache.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\lib\connect.h">
@@ -85,9 +61,6 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\lib\curl_base64.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\lib\curl_darwinssl.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\lib\curl_fnmatch.h">
@@ -132,16 +105,19 @@
     <ClInclude Include="src\lib\curl_ntlm_wb.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\lib\curl_rand.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="src\lib\curl_rtmp.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\lib\curl_sasl.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\lib\curl_schannel.h">
+    <ClInclude Include="src\lib\curl_sec.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\curl_setup.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\curl_setup_once.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\lib\curl_sspi.h">
@@ -153,10 +129,10 @@
     <ClInclude Include="src\lib\curlx.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\lib\cyassl.h">
+    <ClInclude Include="src\lib\dict.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\lib\dict.h">
+    <ClInclude Include="src\lib\dotdot.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\lib\easyif.h">
@@ -186,10 +162,10 @@
     <ClInclude Include="src\lib\gopher.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\lib\gtls.h">
+    <ClInclude Include="src\lib\hash.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\lib\hash.h">
+    <ClInclude Include="src\lib\hostcheck.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\lib\hostip.h">
@@ -210,6 +186,9 @@
     <ClInclude Include="src\lib\http_proxy.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\lib\http2.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="src\lib\if2ip.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -222,13 +201,13 @@
     <ClInclude Include="src\lib\inet_pton.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\lib\krb4.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="src\lib\llist.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\lib\memdebug.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\multihandle.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\lib\multiif.h">
@@ -243,25 +222,19 @@
     <ClInclude Include="src\lib\nonblock.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\lib\nssg.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="src\lib\parsedate.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\lib\pingpong.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\lib\polarssl.h">
+    <ClInclude Include="src\lib\pipeline.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\lib\pop3.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\lib\progress.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\lib\qssl.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\lib\rawstr.h">
@@ -279,7 +252,13 @@
     <ClInclude Include="src\lib\setup-os400.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\lib\setup-vms.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="src\lib\share.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\sigpipe.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\lib\slist.h">
@@ -303,12 +282,6 @@
     <ClInclude Include="src\lib\ssh.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\lib\sslgen.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\lib\ssluse.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="src\lib\strdup.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -327,45 +300,84 @@
     <ClInclude Include="src\lib\telnet.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\lib\bundles.h">
+    <ClInclude Include="src\lib\tftp.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\lib\conncache.h">
+    <ClInclude Include="src\lib\timeval.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\lib\curl_setup.h">
+    <ClInclude Include="src\lib\transfer.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\lib\curl_setup_once.h">
+    <ClInclude Include="src\lib\url.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\lib\hostcheck.h">
+    <ClInclude Include="src\lib\urldata.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\lib\multihandle.h">
+    <ClInclude Include="src\lib\warnless.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\lib\polarssl_threadlock.h">
+    <ClInclude Include="src\lib\wildcard.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\lib\pipeline.h">
+    <ClInclude Include="src\lib\x509asn1.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\amigaos.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\vtls\axtls.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\vtls\curl_darwinssl.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\vtls\curl_schannel.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\vtls\cyassl.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\vtls\gskit.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\vtls\gtls.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\vtls\nssg.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\vtls\openssl.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\vtls\polarssl.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\vtls\polarssl_threadlock.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\vtls\qssl.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\vtls\vtls.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\lib\amigaos.c">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\lib\asyn-ares.c">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\lib\asyn-thread.c">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\lib\axtls.c">
+    <ClCompile Include="src\lib\base64.c">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\lib\base64.c">
+    <ClCompile Include="src\lib\bundles.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\conncache.c">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\lib\connect.c">
@@ -378,9 +390,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\lib\curl_addrinfo.c">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\lib\curl_darwinssl.c">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\lib\curl_fnmatch.c">
@@ -410,16 +419,10 @@
     <ClCompile Include="src\lib\curl_ntlm_wb.c">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\lib\curl_rand.c">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\lib\curl_rtmp.c">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\lib\curl_sasl.c">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\lib\curl_schannel.c">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\lib\curl_sspi.c">
@@ -428,10 +431,10 @@
     <ClCompile Include="src\lib\curl_threads.c">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\lib\cyassl.c">
+    <ClCompile Include="src\lib\dict.c">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\lib\dict.c">
+    <ClCompile Include="src\lib\dotdot.c">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\lib\easy.c">
@@ -464,9 +467,6 @@
     <ClCompile Include="src\lib\gopher.c">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\lib\gtls.c">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\lib\hash.c">
       <Filter>src</Filter>
     </ClCompile>
@@ -474,6 +474,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\lib\hostasyn.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\hostcheck.c">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\lib\hostip.c">
@@ -506,6 +509,9 @@
     <ClCompile Include="src\lib\http_proxy.c">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\lib\http2.c">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="src\lib\idn_win32.c">
       <Filter>src</Filter>
     </ClCompile>
@@ -519,9 +525,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\lib\inet_pton.c">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\lib\krb4.c">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\lib\krb5.c">
@@ -557,9 +560,6 @@
     <ClCompile Include="src\lib\nonblock.c">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\lib\nss.c">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\lib\nwlib.c">
       <Filter>src</Filter>
     </ClCompile>
@@ -575,16 +575,13 @@
     <ClCompile Include="src\lib\pingpong.c">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\lib\polarssl.c">
+    <ClCompile Include="src\lib\pipeline.c">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\lib\pop3.c">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\lib\progress.c">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\lib\qssl.c">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\lib\rawstr.c">
@@ -629,12 +626,6 @@
     <ClCompile Include="src\lib\ssh.c">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\lib\sslgen.c">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\lib\ssluse.c">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\lib\strdup.c">
       <Filter>src</Filter>
     </ClCompile>
@@ -674,20 +665,164 @@
     <ClCompile Include="src\lib\wildcard.c">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\lib\bundles.c">
+    <ClCompile Include="src\lib\x509asn1.c">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\lib\conncache.c">
+    <ClCompile Include="src\lib\amigaos.c">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\lib\hostcheck.c">
+    <ClCompile Include="src\lib\vtls\axtls.c">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\lib\polarssl_threadlock.c">
+    <ClCompile Include="src\lib\vtls\curl_darwinssl.c">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\lib\pipeline.c">
+    <ClCompile Include="src\lib\vtls\curl_schannel.c">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\lib\vtls\cyassl.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\vtls\gskit.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\vtls\gtls.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\vtls\nss.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\vtls\openssl.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\vtls\polarssl.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\vtls\polarssl_threadlock.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\vtls\qssl.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\vtls\vtls.c">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\lib\checksrc.pl">
+      <Filter>src</Filter>
+    </None>
+    <None Include="src\lib\curl_config.h.cmake">
+      <Filter>src</Filter>
+    </None>
+    <None Include="src\lib\curl_config.h.in">
+      <Filter>src</Filter>
+    </None>
+    <None Include="src\lib\firefox-db2pem.sh">
+      <Filter>src</Filter>
+    </None>
+    <None Include="src\lib\libcurl.plist">
+      <Filter>src</Filter>
+    </None>
+    <None Include="src\lib\libcurl.vers.in">
+      <Filter>src</Filter>
+    </None>
+    <None Include="src\lib\Makefile.am">
+      <Filter>src</Filter>
+    </None>
+    <None Include="src\lib\makefile.amiga">
+      <Filter>src</Filter>
+    </None>
+    <None Include="src\lib\Makefile.b32">
+      <Filter>src</Filter>
+    </None>
+    <None Include="src\lib\makefile.dj">
+      <Filter>src</Filter>
+    </None>
+    <None Include="src\lib\Makefile.in">
+      <Filter>src</Filter>
+    </None>
+    <None Include="src\lib\Makefile.inc">
+      <Filter>src</Filter>
+    </None>
+    <None Include="src\lib\Makefile.m32">
+      <Filter>src</Filter>
+    </None>
+    <None Include="src\lib\Makefile.netware">
+      <Filter>src</Filter>
+    </None>
+    <None Include="src\lib\Makefile.vc6">
+      <Filter>src</Filter>
+    </None>
+    <None Include="src\lib\Makefile.vc8">
+      <Filter>src</Filter>
+    </None>
+    <None Include="src\lib\Makefile.vc9">
+      <Filter>src</Filter>
+    </None>
+    <None Include="src\lib\Makefile.vc10">
+      <Filter>src</Filter>
+    </None>
+    <None Include="src\lib\Makefile.vxworks">
+      <Filter>src</Filter>
+    </None>
+    <None Include="src\lib\Makefile.Watcom">
+      <Filter>src</Filter>
+    </None>
+    <None Include="src\lib\mk-ca-bundle.pl">
+      <Filter>src</Filter>
+    </None>
+    <None Include="src\lib\mk-ca-bundle.vbs">
+      <Filter>src</Filter>
+    </None>
+    <None Include="src\lib\objnames.inc">
+      <Filter>src</Filter>
+    </None>
+    <None Include="src\lib\objnames-test08.sh">
+      <Filter>src</Filter>
+    </None>
+    <None Include="src\lib\objnames-test10.sh">
+      <Filter>src</Filter>
+    </None>
+    <None Include="src\lib\README.ares">
+      <Filter>src</Filter>
+    </None>
+    <None Include="src\lib\README.curl_off_t">
+      <Filter>src</Filter>
+    </None>
+    <None Include="src\lib\README.curlx">
+      <Filter>src</Filter>
+    </None>
+    <None Include="src\lib\README.encoding">
+      <Filter>src</Filter>
+    </None>
+    <None Include="src\lib\README.hostip">
+      <Filter>src</Filter>
+    </None>
+    <None Include="src\lib\README.httpauth">
+      <Filter>src</Filter>
+    </None>
+    <None Include="src\lib\README.memoryleak">
+      <Filter>src</Filter>
+    </None>
+    <None Include="src\lib\README.multi_socket">
+      <Filter>src</Filter>
+    </None>
+    <None Include="src\lib\README.pingpong">
+      <Filter>src</Filter>
+    </None>
+    <None Include="src\lib\README.pipelining">
+      <Filter>src</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="src\lib\CMakeLists.txt">
+      <Filter>src</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="src\lib\libcurl.rc">
+      <Filter>src</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
