@@ -78,7 +78,7 @@ void RulebookLibrary::Reload()
 
 		// Create a separate environment for each rulebook.
 		HoverScript::RulebookEnv env(scripting, *this, path);
-		if (env.RunRulebookScript(path)) rulebooksLoaded++;
+		if (env.RunRulebookScript()) rulebooksLoaded++;
 	}
 
 	if (rulebooksLoaded == 0) {

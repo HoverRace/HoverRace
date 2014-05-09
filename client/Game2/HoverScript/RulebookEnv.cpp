@@ -204,14 +204,14 @@ void RulebookEnv::DefineRules(std::shared_ptr<Rulebook> rulebook,
 /**
  * Run the boot script for a rulebook.
  */
-bool RulebookEnv::RunRulebookScript(const Util::OS::path_t &path)
+bool RulebookEnv::RunRulebookScript()
 {
-	auto bootPath = path;
+	auto bootPath = basePath;
 	bootPath /= Str::UP("rulebook.lua");
 
 	if (!fs::exists(bootPath)) {
 		Log::Info("Rulebook path does not have a rulebook.lua: %s",
-			(const char*)Str::PU(path));
+			(const char*)Str::PU(basePath));
 		return false;
 	}
 
