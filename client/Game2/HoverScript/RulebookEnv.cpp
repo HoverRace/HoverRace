@@ -143,7 +143,7 @@ void RulebookEnv::DefineRulebook(const std::string &name,
 			desc = object_cast<std::string>(descObj);
 			break;
 		default:
-			luaL_error(L, "Expected 'desc' to be a string.");
+			luaL_error(L, "Expected 'description' to be a string.");
 			return;
 	}
 
