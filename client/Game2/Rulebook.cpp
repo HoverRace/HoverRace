@@ -80,10 +80,17 @@ luabind::object Rulebook::CreateDefaultRules() const
 	return obj;
 }
 
-void Rulebook::Load()
+/**
+ * Ensure that the rulebook is fully-loaded.
+ *
+ * Initially, the rulebook is only partially loaded for speed.
+ * This function must be called before a game session starts.
+ */
+void Rulebook::Load() const
 {
 	if (!loaded) {
 		OnLoad();
+		loaded = true;
 	}
 }
 

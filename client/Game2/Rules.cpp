@@ -34,6 +34,7 @@ Rules::Rules(std::shared_ptr<const Rulebook> rulebook) :
 {
 	if (rulebook) {
 		rules = rulebook->CreateDefaultRules();
+		rulebook->Load();
 	}
 }
 

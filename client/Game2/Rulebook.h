@@ -74,7 +74,7 @@ class Rulebook : private boost::noncopyable
 
 		luabind::object CreateDefaultRules() const;
 
-		void Load();
+		void Load() const;
 
 	public:
 		void SetOnLoad(const luabind::object &fn);
@@ -112,7 +112,7 @@ class Rulebook : private boost::noncopyable
 		Script::Handlers onPostGame;
 		Script::Handlers onPlayerJoined;
 
-		bool loaded;
+		mutable bool loaded;
 };
 typedef std::shared_ptr<Rulebook> RulebookPtr;
 
