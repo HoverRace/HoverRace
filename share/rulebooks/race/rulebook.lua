@@ -6,9 +6,9 @@ Rulebook "Race" {
 	rules = {
 		laps = 5,
 	},
-	
-	on_load = function(loader)
-		local foo = loader:require("session")
+
+	on_load = function()
+		local foo = require("session")
 		print("required session: " .. foo)
 	end,
 

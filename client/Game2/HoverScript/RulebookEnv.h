@@ -47,7 +47,8 @@ namespace HoverScript {
 class RulebookEnv : public RuntimeEnv {
 	typedef RuntimeEnv SUPER;
 	public:
-		RulebookEnv(Script::Core *scripting, RulebookLibrary &rulebookLibrary);
+		RulebookEnv(Script::Core *scripting, RulebookLibrary &rulebookLibrary,
+			const Util::OS::path_t &basePath);
 		virtual ~RulebookEnv();
 
 	protected:
@@ -66,7 +67,7 @@ class RulebookEnv : public RuntimeEnv {
 
 	private:
 		RulebookLibrary &rulebookLibrary;
-		Util::OS::path_t curRulebookPath;
+		Util::OS::path_t basePath;
 };
 
 }  // namespace HoverScript

@@ -62,10 +62,24 @@ namespace {
 	}
 }
 
+/**
+ * Constructor.
+ *
+ * The root directory of the rulebook is where the rulebook scripts will be
+ * found; a rulebook is not allowed to access any scripts outside of its
+ * root directory.
+ *
+ * @param scripting The scripting context.
+ * @param rulebookLibrary The rulebook library in which to register new
+ *                        rulebooks.
+ * @param basePath The root directory of the rulebook.
+ */
 RulebookEnv::RulebookEnv(Script::Core *scripting,
-                         RulebookLibrary &rulebookLibrary) :
+                         RulebookLibrary &rulebookLibrary,
+                         const Util::OS::path_t &basePath) :
 	SUPER(scripting),
-	rulebookLibrary(rulebookLibrary)
+	rulebookLibrary(rulebookLibrary),
+	basePath(basePath)
 {
 }
 
@@ -146,7 +160,7 @@ void RulebookEnv::DefineRulebook(const std::string &name,
 			return;
 	}
 
-	auto rulebook = std::make_shared<Rulebook>(scripting, curRulebookPath,
+	auto rulebook = std::make_shared<Rulebook>(scripting, basePath,
 		name, title, desc, maxPlayers);
 
 	const object &rulesObj = defn["rules"];
@@ -203,11 +217,7 @@ bool RulebookEnv::RunRulebookScript(const Util::OS::path_t &path)
 
 	Log::Info("Running: %s", (const char*)Str::PU(bootPath));
 
-	curRulebookPath = path;
-	bool retv = RunScript(bootPath);
-	curRulebookPath.clear();
-
-	return retv;
+	return RunScript(bootPath);
 }
 
 int RulebookEnv::LRequire(lua_State *L)
@@ -222,13 +232,13 @@ int RulebookEnv::LRequire(lua_State *L)
 
 	RulebookEnv *self = static_cast<RulebookEnv*>(lua_touserdata(L, lua_upvalueindex(1)));
 
-	const auto &basePath = self->curRulebookPath;
+	const auto &basePath = self->basePath;
 
 	if (basePath.empty()) {
 		Log::Error("Rulebook require() called outside of Rulebook context.");
 		return 0;
 	}
-	
+
 	if (lua_gettop(L) != 1) {
 		luaL_error(L, "Usage: require 'module_name'");
 		return 0;
