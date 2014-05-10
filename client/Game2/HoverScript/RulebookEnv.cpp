@@ -30,7 +30,6 @@
 #include "../../../engine/Util/Str.h"
 
 #include "../Rulebook.h"
-#include "../RulebookLibrary.h"
 
 #include "RulebookEnv.h"
 
@@ -70,16 +69,15 @@ namespace {
  * root directory.
  *
  * @param scripting The scripting context.
- * @param rulebookLibrary The rulebook library in which to register new
- *                        rulebooks.
  * @param basePath The root directory of the rulebook.
+ * @param rulebook The rulebook bound to this environment.
  */
 RulebookEnv::RulebookEnv(Script::Core *scripting,
-                         RulebookLibrary &rulebookLibrary,
-                         const Util::OS::path_t &basePath) :
+                         const Util::OS::path_t &basePath,
+                         Rulebook &rulebook) :
 	SUPER(scripting),
-	rulebookLibrary(rulebookLibrary),
-	basePath(basePath)
+	basePath(basePath),
+	rulebook(rulebook)
 {
 }
 
@@ -160,33 +158,29 @@ void RulebookEnv::DefineRulebook(const std::string &name,
 			return;
 	}
 
-	auto rulebook = std::make_shared<Rulebook>(scripting, basePath,
-		name, title, desc, maxPlayers);
+	rulebook.SetMetadata(name, title, desc, maxPlayers);
 
 	const object &rulesObj = defn["rules"];
 	switch (type(rulesObj)) {
 		case LUA_TNIL:
 			break;
 		case LUA_TTABLE:
-			DefineRules(rulebook, rulesObj);
+			DefineRules(rulesObj);
 			break;
 		default:
 			luaL_error(L, "Expected 'rules' to be a table.");
 			return;
 	}
 
-	rulebook->SetOnLoad(ExpectHandler(scripting, defn, "on_load"));
-	rulebook->SetOnPreGame(ExpectHandler(scripting, defn, "on_pre_game"));
-	rulebook->SetOnPostGame(ExpectHandler(scripting, defn, "on_post_game"));
-	rulebook->SetOnPlayerJoined(ExpectHandler(scripting, defn, "on_player_joined"));
-
-	rulebookLibrary.Add(rulebook);
+	rulebook.SetOnLoad(ExpectHandler(scripting, defn, "on_load"));
+	rulebook.SetOnPreGame(ExpectHandler(scripting, defn, "on_pre_game"));
+	rulebook.SetOnPostGame(ExpectHandler(scripting, defn, "on_post_game"));
+	rulebook.SetOnPlayerJoined(ExpectHandler(scripting, defn, "on_player_joined"));
 
 	Log::Info("Registered: %s: %s, %s", name.c_str(), title.c_str(), desc.c_str());
 }
 
-void RulebookEnv::DefineRules(std::shared_ptr<Rulebook> rulebook,
-                              const luabind::object &rulesObj)
+void RulebookEnv::DefineRules(const luabind::object &rulesObj)
 {
 	using namespace luabind;
 
@@ -195,7 +189,7 @@ void RulebookEnv::DefineRules(std::shared_ptr<Rulebook> rulebook,
 		const object ruleObj = *iter;
 
 		//TODO: Check type of ruleObj and cast to Rule if necessary.
-		rulebook->AddRule(name, ruleObj);
+		rulebook.AddRule(name, ruleObj);
 
 		Log::Info("Added rule '%s' with type %d.", name.c_str(),
 			type(ruleObj));

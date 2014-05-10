@@ -26,7 +26,6 @@
 namespace HoverRace {
 	namespace Client {
 		class Rulebook;
-		class RulebookLibrary;
 		namespace HoverScript {
 			class GamePeer;
 		}
@@ -47,8 +46,8 @@ namespace HoverScript {
 class RulebookEnv : public RuntimeEnv {
 	typedef RuntimeEnv SUPER;
 	public:
-		RulebookEnv(Script::Core *scripting, RulebookLibrary &rulebookLibrary,
-			const Util::OS::path_t &basePath);
+		RulebookEnv(Script::Core *scripting, const Util::OS::path_t &basePath,
+			Rulebook &rulebook);
 		virtual ~RulebookEnv();
 
 	protected:
@@ -57,7 +56,7 @@ class RulebookEnv : public RuntimeEnv {
 	public:
 		void DefineRulebook(const std::string &name, const luabind::object &defn);
 	private:
-		void DefineRules(std::shared_ptr<Rulebook> rulebook, const luabind::object &rulesObj);
+		void DefineRules(const luabind::object &rulesObj);
 	public:
 		bool RunRulebookScript();
 
@@ -66,8 +65,8 @@ class RulebookEnv : public RuntimeEnv {
 		static int LRulebookStage2(lua_State *L);
 
 	private:
-		RulebookLibrary &rulebookLibrary;
 		Util::OS::path_t basePath;
+		Rulebook &rulebook;
 };
 
 }  // namespace HoverScript

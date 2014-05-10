@@ -30,6 +30,7 @@ namespace HoverRace {
 	namespace Client {
 		namespace HoverScript {
 			class PlayerPeer;
+			class RulebookEnv;
 			class SessionPeer;
 			typedef std::shared_ptr<SessionPeer> SessionPeerPtr;
 		}
@@ -55,17 +56,24 @@ class Rulebook : private boost::noncopyable
 {
 	public:
 		Rulebook(Script::Core *scripting,
-			const Util::OS::path_t &basePath,
-			const std::string &name,
-			const std::string &title,
-			const std::string &description,
-			int maxPlayers);
+			const Util::OS::path_t &basePath);
 
 	public:
 		const Util::OS::path_t &GetBasePath() const { return basePath; }
+
+		void SetMetadata(const std::string &name, const std::string &title,
+			const std::string &description, int maxPlayers)
+		{
+			this->name = name;
+			this->title = title;
+			this->description = description;
+			this->maxPlayers = maxPlayers;
+		}
+
 		const std::string &GetName() const { return name; }
 		const std::string &GetTitle() const { return title; }
 		const std::string &GetDescription() const { return description; }
+
 		int GetMaxPlayers() const { return maxPlayers; }
 
 	public:
@@ -74,6 +82,7 @@ class Rulebook : private boost::noncopyable
 
 		luabind::object CreateDefaultRules() const;
 
+		bool LoadMetadata();
 		void Load() const;
 
 	public:
@@ -99,6 +108,8 @@ class Rulebook : private boost::noncopyable
 	private:
 		Script::Core *scripting;
 		Util::OS::path_t basePath;
+		std::shared_ptr<HoverScript::RulebookEnv> env;
+		std::string defaultName;
 		std::string name;
 		std::string title;
 		std::string description;

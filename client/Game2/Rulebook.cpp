@@ -22,12 +22,16 @@
 #include "StdAfx.h"
 
 #include "../../engine/Script/Core.h"
+#include "../../engine/Util/Str.h"
 
 #include "HoverScript/PlayerPeer.h"
+#include "HoverScript/RulebookEnv.h"
 #include "HoverScript/SessionPeer.h"
 #include "ClientSession.h"
 
 #include "Rulebook.h"
+
+using namespace HoverRace::Util;
 
 namespace HoverRace {
 namespace Client {
@@ -48,20 +52,18 @@ namespace {
 	};
 }
 
-Rulebook::Rulebook(Script::Core *scripting, const Util::OS::path_t &basePath,
-                   const std::string &name,
-                   const std::string &title,
-                   const std::string &description,
-                   int maxPlayers) :
+Rulebook::Rulebook(Script::Core *scripting, const Util::OS::path_t &basePath) :
 	scripting(scripting),
 	basePath(basePath),
-	name(name), title(title), description(description),
-	maxPlayers(maxPlayers),
+	defaultName((const char*)Str::PU(basePath.filename())),
+	name(defaultName), title(defaultName), description(),
+	maxPlayers(0),
 	rules(),
 	onLoad(scripting), onPreGame(scripting), onPostGame(scripting),
 	onPlayerJoined(scripting),
 	loaded(false)
 {
+	env = std::make_shared<HoverScript::RulebookEnv>(scripting, basePath, *this);
 }
 
 void Rulebook::AddRule(const std::string &name, const luabind::object &obj)
@@ -78,6 +80,27 @@ luabind::object Rulebook::CreateDefaultRules() const
 	}
 
 	return obj;
+}
+
+/**
+ * Load just enough of the rulebook to retrieve the metadata (title, etc.).
+ *
+ * In practice, this just runs the "bootstrap" script in the rulebook directory.
+ * If an error occurred while running the script, then this rulebook's metadata
+ * will be reset to their default values.
+ *
+ * @return @c true If the rulebook loaded successfully, @c false otherwise.
+ */
+bool Rulebook::LoadMetadata()
+{
+	bool retv = env->RunRulebookScript();
+	if (!retv) {
+		name = defaultName;
+		title = defaultName;
+		description.clear();
+		loaded = false;
+	}
+	return retv;
 }
 
 /**

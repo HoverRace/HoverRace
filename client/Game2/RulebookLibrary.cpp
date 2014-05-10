@@ -76,9 +76,11 @@ void RulebookLibrary::Reload()
 			continue;
 		}
 
-		// Create a separate environment for each rulebook.
-		HoverScript::RulebookEnv env(scripting, *this, path);
-		if (env.RunRulebookScript()) rulebooksLoaded++;
+		// We add the rulebook to the library even if it failed to load
+		// so that we can display an error to the user in the selection screen.
+		auto rulebook = std::make_shared<Rulebook>(scripting, path);
+		Add(rulebook);
+		if (rulebook->LoadMetadata()) rulebooksLoaded++;
 	}
 
 	if (rulebooksLoaded == 0) {
@@ -116,7 +118,7 @@ std::shared_ptr<const Rulebook> RulebookLibrary::GetDefault() const
 	}
 	else {
 		return library.empty() ?
-			std::make_shared<Rulebook>(scripting, OS::path_t(), "Dummy", "Dummy", "", 1) :
+			std::make_shared<Rulebook>(scripting, OS::path_t()) :
 			*sorted.cbegin();
 	}
 }
