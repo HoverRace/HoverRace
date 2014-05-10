@@ -109,20 +109,29 @@ void Env::Execute(const std::string &chunk, const std::string &name)
 {
 	lua_State *state = scripting->GetState();
 
-	// May throw ScriptExn or IncompleteExn, in which case stack will be unchanged.
-	scripting->Compile(chunk, name);
+	// fn - The compiled function.
+	// env - The table that will be the environment for the function.
+
+	// May throw ScriptExn or IncompleteExn, in which case the stack
+	// will be unchanged.
+	scripting->Compile(chunk, name);  // fn
 
 	if (initialized) {
-		lua_rawgeti(state, LUA_REGISTRYINDEX, envRef);
+		lua_rawgeti(state, LUA_REGISTRYINDEX, envRef);  // fn env
 	}
 	else {
-		lua_newtable(state);
-		InitEnv();
+		lua_newtable(state);  // fn env
+		InitEnv();  // fn env
 		initialized = true;
-		lua_pushvalue(state, -1);
-		lua_rawseti(state, LUA_REGISTRYINDEX, envRef);
+		lua_pushvalue(state, -1);  // fn env env
+		lua_rawseti(state, LUA_REGISTRYINDEX, envRef);  // fn env
 	}
-	lua_setupvalue(state, -2, 1);
+	// fn env
+
+	// Apply the environment to the function.
+	// Compiled Lua functions have one upvalue, which is the environment
+	// it will execute in.
+	lua_setupvalue(state, -2, 1);  // fn
 
 	// May throw ScriptExn, but the function on the stack will be consumed anyway.
 	scripting->CallAndPrint(0, helpHandler);
