@@ -135,7 +135,7 @@ Core *Core::Reset()
 void Core::ActivateSandbox()
 {
 	if (!lua_checkstack(state, 2))
-		throw ScriptExn(boost::str(boost::format("%s.") % _("Out of stack space")));
+		throw ScriptExn("Out of stack space");
 
 	// Create a reusable metatable protector.
 	// This prevents modification of the metatable.
@@ -278,7 +278,7 @@ void Core::CallAndPrint(int numParams, Help::HelpHandler *helpHandler)
 {
 	int initStack = lua_gettop(state);
 	if (initStack == 0) {
-		throw ScriptExn(boost::str(boost::format("%s.") % _("No function on stack")));
+		throw ScriptExn("No function on stack.");
 	}
 	initStack -= (1 + numParams);
 
@@ -375,7 +375,8 @@ void Core::ReqHelp(const std::string &className, const std::string &methodName)
 		LoadClassHelp(className);
 		iter = helpClasses.find(className);
 		if (iter == helpClasses.end()) {
-			luaL_error(state, "Class \"%s\" %s", className.c_str(), _("has no documentation"));
+			luaL_error(state, "Class \"%s\" %s", className.c_str(),
+				"has no documentation");
 			return;
 		}
 	}
@@ -388,7 +389,7 @@ void Core::ReqHelp(const std::string &className, const std::string &methodName)
 		Help::MethodPtr method = cls->GetMethod(methodName);
 		if (!method) {
 			luaL_error(state, "Class \"%s\" %s \"%s\"",
-				className.c_str(), _("has no method"), methodName.c_str());
+				className.c_str(), "has no method", methodName.c_str());
 			return;
 		}
 		else {
@@ -416,7 +417,8 @@ void Core::LoadClassHelp(const std::string &className)
 		yaml::MapNode *root = dynamic_cast<yaml::MapNode*>(node);
 		if (root == NULL) {
 			std::string filenamestr = (const char*)Str::PU(filename);
-			throw yaml::ParserExn((filenamestr + ": Expected root node to be a map.").c_str());
+			throw yaml::ParserExn(
+				(filenamestr + ": Expected root node to be a map.").c_str());
 		}
 		Help::ClassPtr cls = std::make_shared<Help::Class>(className);
 		cls->Load(root);
@@ -495,7 +497,8 @@ int Core::LPrint(lua_State *state)
 int Core::LSandboxedFunction(lua_State *state)
 {
 	const char *name = lua_tostring(state, lua_upvalueindex(1));
-	return luaL_error(state, "%s: %s", _("Disallowed access to protected function"), name);
+	return luaL_error(state, "%s: %s",
+		"Disallowed access to protected function", name);
 }
 
 }  // namespace Script
