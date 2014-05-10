@@ -75,7 +75,7 @@ luabind::object Rulebook::CreateDefaultRules() const
 {
 	luabind::object obj = luabind::newtable(scripting->GetState());
 
-	BOOST_FOREACH(auto ent, rules) {
+	for (auto ent : rules) {
 		obj[ent.first] = ent.second->GetDefault();
 	}
 
