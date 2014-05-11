@@ -430,11 +430,9 @@ void Core::LoadClassHelp(const std::string &className)
 		// Ignore.
 	}
 	catch (yaml::ParserExn &ex) {
+		Log::Error("%s", ex.what());
 		if (parser != NULL) delete parser;
 		fclose(in);
-#		ifdef _WIN32
-			OutputDebugString(ex.what());
-#		endif
 	}
 
 	fclose(in);
