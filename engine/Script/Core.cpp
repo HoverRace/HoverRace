@@ -242,18 +242,18 @@ void Core::Print(const std::string &s)
 /**
  * Compile a chunk of code.
  * Upon successful execution, the compiled chunk will be pushed to the stack.
- * @param chunk The code to compile.
- * @param name Optional name for the chunk.  This name is used in error messages.
- *             Prefix the name with @c "=" to use the name verbatim, without
- *             decoration, in error messages.
+ * @param chunk The chunk to compile.
  * @throw IncompleteExn If the code does not complete a statement; i.e.,
  *                      expecting more tokens.  Callers can catch this
  *                      to keep reading more data to finish the statement.
  * @throw ScriptExn The code failed to compile.
  */
-void Core::Compile(const std::string &chunk, const std::string &name)
+void Core::Compile(const Chunk &chunk)
 {
-	int status = luaL_loadbuffer(state, chunk.c_str(), chunk.length(), name.c_str());
+	auto &src = chunk.src;
+	int status = luaL_loadbuffer(state, src.c_str(), src.length(),
+		chunk.name.c_str());
+
 	if (status != 0) {
 		std::string msg = PopError();
 		if (msg.find("<eof>") != std::string::npos) {

@@ -87,10 +87,29 @@ class MR_DllDeclare Core
 		std::string GetVersionString() const;
 
 	public:
+		struct Chunk
+		{
+			/**
+			 * Constructor.
+			 * @param src The source code of the chunk.
+			 * @param name Optional name for the chunk.
+			 *             This name is used in error messages.
+			 *             Prefix the name with @c "=" to use the name verbatim,
+			 *             without decoration, in error messages.
+			 */
+			Chunk(const std::string &src,
+				const std::string &name=DEFAULT_CHUNK_NAME) :
+				src(src), name(name) { }
+
+			std::string src;
+			std::string name;
+		};
+
+	public:
 		void Print(const std::string &s);
 
 		static const std::string DEFAULT_CHUNK_NAME;
-		void Compile(const std::string &chunk, const std::string &name=DEFAULT_CHUNK_NAME);
+		void Compile(const Chunk &chunk);
 		void CallAndPrint(int numParams=0, Help::HelpHandler *helpHandler=NULL);
 
 		void Execute(const std::string &chunk, Help::HelpHandler *helpHandler=NULL);
