@@ -17,15 +17,19 @@ include(CXX11)
 include(GNUInstallDirs)
 include(cotire)
 
-check_for_cxx11_compiler(CXX11_COMPILER)
-if(CXX11_COMPILER)
-	enable_cxx11()
-endif()
-
 if(MSVC)
 	if(MSVC_VERSION LESS 1800)
 		message(FATAL_ERROR "Visual Studio 2013 (aka Visual Studio 12) or later is required.")
+	elseif(MSVC_VERSION EQUAL 1800)
+		message(STATUS "Enabling Visual C++ November 2013 CTP compiler")
+		message(STATUS "  http://www.microsoft.com/en-us/download/details.aspx?id=41151")
+		set(CMAKE_GENERATOR_TOOLSET "CTP_Nov2013" CACHE STRING "Platform Toolset" FORCE)
 	endif()
+endif()
+
+check_for_cxx11_compiler(CXX11_COMPILER)
+if(CXX11_COMPILER)
+	enable_cxx11()
 endif()
 
 # Set up the Boost dependency.
