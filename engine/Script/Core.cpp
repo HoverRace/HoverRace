@@ -234,7 +234,7 @@ std::string Core::GetVersionString() const
  */
 void Core::Print(const std::string &s)
 {
-	BOOST_FOREACH(std::shared_ptr<std::ostream> &out, outs) {
+	for (auto &out : outs) {
 		*out << s << std::endl;
 	}
 }
@@ -341,7 +341,7 @@ void Core::PrintStack()
 		oss << std::endl;
 	}
 	std::string s = oss.str();
-	BOOST_FOREACH(std::shared_ptr<std::ostream> &out, outs) {
+	for (auto &out : outs) {
 		*out << s << std::flush;
 	}
 }
@@ -479,13 +479,13 @@ int Core::LPrint(lua_State *state)
 			lua_pop(state, 1);
 			continue;
 		}
-		BOOST_FOREACH(std::shared_ptr<std::ostream> &oss, self->outs) {
+		for (auto &oss : self->outs) {
 			if (i > 1) *oss << '\t';
 			*oss << s;
 		}
 		lua_pop(state, 1);
 	}
-	BOOST_FOREACH(std::shared_ptr<std::ostream> &oss, self->outs) {
+	for (auto &oss : self->outs) {
 		*oss << std::endl;
 	}
 
