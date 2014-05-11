@@ -22,6 +22,12 @@ if(CXX11_COMPILER)
 	enable_cxx11()
 endif()
 
+if(MSVC)
+	if(MSVC_VERSION LESS 1800)
+		message(FATAL_ERROR "Visual Studio 2013 (aka Visual Studio 12) or later is required.")
+	endif()
+endif()
+
 # Set up the Boost dependency.
 # We only need to list the libraries that have libraries;
 # we assume that header-only libraries are available without checking.
