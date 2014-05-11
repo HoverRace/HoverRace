@@ -156,10 +156,10 @@ Core::Chunk Env::LoadChunkFromFile(const Util::OS::path_t &filename)
 	chunkName += (const char*)Str::PU(scriptPath);
 
 	// Read the whole script at once.
+	fs::ifstream ifs(scriptPath, std::ios_base::in);
 	return Core::Chunk(std::string{
-		std::istreambuf_iterator<char>{fs::ifstream(scriptPath, std::ios_base::in)},
-		std::istreambuf_iterator<char>{}
-	}, chunkName);
+		std::istreambuf_iterator<char>{ifs},
+		std::istreambuf_iterator<char>{}}, chunkName);
 }
 
 }  // namespace Script
