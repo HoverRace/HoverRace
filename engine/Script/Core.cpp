@@ -313,7 +313,7 @@ void Core::CallAndPrint(int numParams, Help::HelpHandler *helpHandler)
  * @throw ScriptExn The code either failed to compile or signaled an error
  *                  while executing.
  */
-void Core::Execute(const std::string &chunk, Help::HelpHandler *helpHandler)
+void Core::Execute(const Chunk &chunk, Help::HelpHandler *helpHandler)
 {
 	Compile(chunk);
 	CallAndPrint(0, helpHandler);

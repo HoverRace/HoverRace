@@ -112,7 +112,7 @@ class MR_DllDeclare Core
 		void Compile(const Chunk &chunk);
 		void CallAndPrint(int numParams=0, Help::HelpHandler *helpHandler=NULL);
 
-		void Execute(const std::string &chunk, Help::HelpHandler *helpHandler=NULL);
+		void Execute(const Chunk &chunk, Help::HelpHandler *helpHandler=NULL);
 
 		void PrintStack();
 
