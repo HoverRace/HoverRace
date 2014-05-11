@@ -1,8 +1,7 @@
 
 // yaml/Emitter.cpp
-// Implementation for the LibYAML emitter wrapper.
 //
-// Copyright (c) 2008, 2009 Michael Imamura.
+// Copyright (c) 2008, 2009, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -24,10 +23,12 @@
 
 #include <boost/format.hpp>
 
+#include "../Log.h"
 #include "../Str.h"
 
 #include "Emitter.h"
 
+namespace Log = HoverRace::Util::Log;
 namespace Str = HoverRace::Util::Str;
 using namespace yaml;
 
@@ -90,14 +91,16 @@ Emitter::~Emitter()
 	yaml_document_end_event_initialize(&event, 1);
 	if(!yaml_emitter_emit(&emitter, &event)) {
 		yaml_emitter_delete(&emitter);
-		throw EmitterExn("Unable to end document");
+		Log::Error("Unable to end document.");
+		return;
 	}
 
 	// End the stream.
 	yaml_stream_end_event_initialize(&event);
 	if(!yaml_emitter_emit(&emitter, &event)) {
 		yaml_emitter_delete(&emitter);
-		throw EmitterExn("Unable to end stream");
+		Log::Error("Unable to end document.");
+		return;
 	}
 
 	yaml_emitter_delete(&emitter);
