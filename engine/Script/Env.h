@@ -84,8 +84,6 @@ class MR_DllDeclare Env
 		 */
 		void Execute(const Core::Chunk &chunk)
 		{
-			lua_State *state = scripting->GetState();
-
 			// May throw ScriptExn or IncompleteExn, in which case the stack
 			// will be unchanged.
 			scripting->Compile(chunk);
