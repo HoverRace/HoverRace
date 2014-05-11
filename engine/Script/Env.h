@@ -61,15 +61,68 @@ class MR_DllDeclare Env
 	protected:
 		Core *GetScripting() const { return scripting; }
 
+		void LogScriptError(const Script::ScriptExn &ex);
+
 		virtual void InitEnv() = 0;
 		void CopyGlobals();
 
 		void SetHelpHandler(Help::HelpHandler *helpHandler);
 
-		void Execute(const std::string &chunk, const std::string &name=Core::DEFAULT_CHUNK_NAME);
+	private:
+		void SetupEnv();
+
+	protected:
+		/**
+		 * Execute a chunk of code in the current environment.
+		 * @param chunk The code to execute.
+		 * @throw IncompleteExn If the code does not complete a statement; i.e.,
+		 *                      expecting more tokens.  Callers can catch this
+		 *                      to keep reading more data to finish the
+		 *                      statement.
+		 * @throw ScriptExn The code either failed to compile or signaled an
+		 *                  error while executing.
+		 */
+		void Execute(const Core::Chunk &chunk)
+		{
+			lua_State *state = scripting->GetState();
+
+			// May throw ScriptExn or IncompleteExn, in which case the stack
+			// will be unchanged.
+			scripting->Compile(chunk);
+
+			SetupEnv();
+
+			//TODO: Use custom return value handler.
+			// May throw ScriptExn, but the function on the stack will be
+			// consumed anyway.
+			scripting->CallAndPrint(0, helpHandler);
+		}
+
+	private:
+		Core::Chunk LoadChunkFromFile(const Util::OS::path_t &filename);
 
 	public:
-		bool RunScript(const Util::OS::path_t &filename);
+		/**
+		 * Execute a script from a file.
+		 *
+		 * If there is an error executing the script, then the error message will be
+		 * written to the error log and the function will return @c false.
+		 *
+		 * @param filename The script filename (must be an absolute path).
+		 * @return @c true if the script executed successfully,
+		 *         @c false if there was an error.
+		 */
+		bool RunScript(const Util::OS::path_t &filename)
+		{
+			try {
+				Execute(LoadChunkFromFile(filename));
+				return true;
+			}
+			catch (Script::ScriptExn &ex) {
+				LogScriptError(ex);
+				return false;
+			}
+		}
 
 	private:
 		Core *scripting;

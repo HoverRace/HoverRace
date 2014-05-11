@@ -56,6 +56,11 @@ Env::~Env()
 	luaL_unref(scripting->GetState(), LUA_REGISTRYINDEX, envRef);
 }
 
+void Env::LogScriptError(const Script::ScriptExn &ex)
+{
+	Log::Error("%s", ex.what());
+}
+
 /**
  * Initialize the environment in which scripts will run in.
  * Upon entry, the Lua stack will have at least one entry, the table which
@@ -94,27 +99,20 @@ void Env::SetHelpHandler(Help::HelpHandler *handler)
 }
 
 /**
- * Execute a chunk of code in the current environment.
- * @param chunk The code to execute.
- * @param name Optional name for the chunk.  This name is used in error messages.
- *             Prefix the name with @c "=" to use the name verbatim, without
- *             decoration, in error messages.
- * @throw IncompleteExn If the code does not complete a statement; i.e.,
- *                      expecting more tokens.  Callers can catch this
- *                      to keep reading more data to finish the statement.
- * @throw ScriptExn The code either failed to compile or signaled an error
- *                  while executing.
+ * Apply the environment to the function on the top of the stack.
+ *
+ * The environment will be initialized for the first time if needed.
+ *
+ * The function will remain on the stack afterwards.
  */
-void Env::Execute(const std::string &chunk, const std::string &name)
+void Env::SetupEnv()
 {
 	lua_State *state = scripting->GetState();
 
 	// fn - The compiled function.
 	// env - The table that will be the environment for the function.
 
-	// May throw ScriptExn or IncompleteExn, in which case the stack
-	// will be unchanged.
-	scripting->Compile(chunk, name);  // fn
+	// Initial stack: fn
 
 	if (initialized) {
 		lua_rawgeti(state, LUA_REGISTRYINDEX, envRef);  // fn env
@@ -132,47 +130,36 @@ void Env::Execute(const std::string &chunk, const std::string &name)
 	// Compiled Lua functions have one upvalue, which is the environment
 	// it will execute in.
 	lua_setupvalue(state, -2, 1);  // fn
-
-	// May throw ScriptExn, but the function on the stack will be consumed anyway.
-	scripting->CallAndPrint(0, helpHandler);
 }
 
 /**
- * Execute a script from a file.
+ * Load a chunk from a file.
  *
- * If there is an error executing the script, then the error message will be
- * written to the error log and the function will return @c false.
+ * The chunk name will be based on the filename.
  *
- * @param filename The script filename (must be an absolute path).
- * @return @c true if the script executed successfully,
- *         @c false if there was an error.
+ * @param filename The filename.
+ * @return The loaded chunk, ready for compilation.
+ * @throws Script::ScriptExn The script file was not found.
  */
-bool Env::RunScript(const OS::path_t &filename)
+Core::Chunk Env::LoadChunkFromFile(const Util::OS::path_t &filename)
 {
 	OS::path_t scriptPath = fs::system_complete(filename);
 
 	if (!fs::exists(scriptPath)) {
-		Log::Error("Script file not found: %s (interpreted as %s)",
-			(const char*)Str::PU(filename),
-			(const char*)Str::PU(scriptPath));
-		return false;
+		throw Script::ScriptExn(boost::str(
+			boost::format("Script file not found: %s (interpreted as %s)") %
+				(const char*)Str::PU(filename) %
+				(const char*)Str::PU(scriptPath)));
 	}
 
 	std::string chunkName("@");
 	chunkName += (const char*)Str::PU(scriptPath);
 
-	// Read and submit the whole script at once.
-	fs::ifstream ifs(scriptPath, std::ios_base::in);
-	std::string ris((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
-	try {
-		Execute(ris, chunkName);
-	}
-	catch (Script::ScriptExn &ex) {
-		Log::Error("%s", ex.what());
-		return false;
-	}
-
-	return true;
+	// Read the whole script at once.
+	return Core::Chunk(std::string{
+		std::istreambuf_iterator<char>{fs::ifstream(scriptPath, std::ios_base::in)},
+		std::istreambuf_iterator<char>{}
+	}, chunkName);
 }
 
 }  // namespace Script
