@@ -75,6 +75,8 @@ class MR_DllDeclare Env
 		/**
 		 * Execute a chunk of code in the current environment.
 		 * @param chunk The code to execute.
+		 * @return The number of return values remaining on the stack,
+		 *         determined by the ReturnPolicy.
 		 * @throw IncompleteExn If the code does not complete a statement; i.e.,
 		 *                      expecting more tokens.  Callers can catch this
 		 *                      to keep reading more data to finish the
@@ -83,21 +85,17 @@ class MR_DllDeclare Env
 		 *                  error while executing.
 		 */
 		template<class ReturnPolicy=Core::PrintReturn>
-		void Execute(const Core::Chunk &chunk,
-			ReturnPolicy rp=ReturnPolicy())
+		int Execute(const Core::Chunk &chunk, ReturnPolicy rp=ReturnPolicy())
 		{
-			Core::StackRestore sr(scripting->GetState());
-
 			// May throw ScriptExn or IncompleteExn, in which case the stack
 			// will be unchanged.
 			scripting->Compile(chunk);
 
 			SetupEnv();
 
-			//TODO: Use custom return value handler.
 			// May throw ScriptExn, but the function on the stack will be
 			// consumed anyway.
-			scripting->Invoke(0, helpHandler, rp);
+			return scripting->Invoke(0, helpHandler, rp);
 		}
 
 	private:
