@@ -112,7 +112,7 @@ class MR_DllDeclare Core
 
 	public:
 		/// Ensures that the Lua stack is unchanged in a block.
-		struct StackRestore
+		struct MR_DllDeclare StackRestore
 		{
 			StackRestore(lua_State *state);
 			~StackRestore();
