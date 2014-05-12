@@ -151,7 +151,7 @@ class MR_DllDeclare Core
 		 */
 		template<class ReturnPolicy=PrintReturn>
 		int Invoke(int numParams=0, Help::HelpHandler *helpHandler=nullptr,
-			const ReturnPolicy &rp = ReturnPolicy())
+			ReturnPolicy rp=ReturnPolicy())
 		{
 			return rp(state, Call(numParams, helpHandler));
 		}
@@ -175,9 +175,9 @@ class MR_DllDeclare Core
 		 * @throw ScriptExn The code either failed to compile or signaled an error
 		 *                  while executing.
 		 */
-		template<class ReturnPolicy = PrintReturn>
+		template<class ReturnPolicy=PrintReturn>
 		void Execute(const Chunk &chunk, Help::HelpHandler *helpHandler=nullptr,
-			const ReturnPolicy &rp=ReturnPolicy())
+			ReturnPolicy rp=ReturnPolicy())
 		{
 			// Explicitly throw away any return values leftover from the
 			// return policy so that the stack is exactly how we began.

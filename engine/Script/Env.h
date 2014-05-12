@@ -84,7 +84,7 @@ class MR_DllDeclare Env
 		 */
 		template<class ReturnPolicy=Core::PrintReturn>
 		void Execute(const Core::Chunk &chunk,
-			const ReturnPolicy &rp=ReturnPolicy())
+			ReturnPolicy rp=ReturnPolicy())
 		{
 			Core::StackRestore sr(scripting->GetState());
 
