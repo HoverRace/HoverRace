@@ -82,7 +82,9 @@ class MR_DllDeclare Env
 		 * @throw ScriptExn The code either failed to compile or signaled an
 		 *                  error while executing.
 		 */
-		void Execute(const Core::Chunk &chunk)
+		template<class ReturnPolicy=Core::PrintReturn>
+		void Execute(const Core::Chunk &chunk,
+			const ReturnPolicy &rp=ReturnPolicy())
 		{
 			Core::StackRestore sr(scripting->GetState());
 
@@ -95,7 +97,7 @@ class MR_DllDeclare Env
 			//TODO: Use custom return value handler.
 			// May throw ScriptExn, but the function on the stack will be
 			// consumed anyway.
-			scripting->Invoke(0, helpHandler);
+			scripting->Invoke(0, helpHandler, rp);
 		}
 
 	private:
