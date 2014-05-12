@@ -75,6 +75,7 @@ class MR_DllDeclare Env
 		/**
 		 * Execute a chunk of code in the current environment.
 		 * @param chunk The code to execute.
+		 * @param rp Optional policy to handle return values.
 		 * @return The number of return values remaining on the stack,
 		 *         determined by the ReturnPolicy.
 		 * @throw IncompleteExn If the code does not complete a statement; i.e.,

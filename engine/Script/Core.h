@@ -172,6 +172,7 @@ class MR_DllDeclare Core
 		 *
 		 * @param chunk The code to execute.
 		 * @param helpHandler Optional callback for when a script requests API help.
+		 * @param rp Optional policy to handle return values.
 		 * @throw IncompleteExn If the code does not complete a statement; i.e.,
 		 *                      expecting more tokens.  Callers can catch this
 		 *                      to keep reading more data to finish the statement.
