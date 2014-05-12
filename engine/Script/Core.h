@@ -181,7 +181,7 @@ class MR_DllDeclare Core
 		{
 			// Explicitly throw away any return values leftover from the
 			// return policy so that the stack is exactly how we began.
-			StackRestore sr;
+			StackRestore sr(state);
 
 			Compile(chunk);
 			Invoke(0, helpHandler, rp);
