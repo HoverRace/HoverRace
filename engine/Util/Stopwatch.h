@@ -49,13 +49,11 @@ class MR_DllDeclare Stopwatch
 		{
 			Lap(const std::string &name, const Duration &elapsed) :
 				name(name), elapsed(elapsed) { }
-			Lap(Lap &&lap) : name(std::move(lap.name)), elapsed(lap.elapsed) { }
-			Lap &operator=(Lap &&lap)
-			{
-				name = std::move(lap.name);
-				elapsed = lap.elapsed;
-				return *this;
-			}
+			Lap(const Lap &o) = default;
+			Lap(Lap &&o) = default;
+
+			Lap &operator=(const Lap &o) = default;
+			Lap &operator=(Lap &&lap) = default;
 
 			std::string name;
 			Duration elapsed;

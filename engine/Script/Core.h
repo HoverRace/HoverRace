@@ -100,22 +100,11 @@ class MR_DllDeclare Core
 			Chunk(const std::string &src,
 				const std::string &name=DEFAULT_CHUNK_NAME) :
 				src(src), name(name) { }
-			Chunk(const Chunk &o) : src(o.src), name(o.name) { }
-			Chunk(Chunk &&o) : src(std::move(o.src)), name(std::move(o.name)) { }
+			Chunk(const Chunk &o) = default;
+			Chunk(Chunk &&o) = default;
 
-			Chunk &operator=(const Chunk &o)
-			{
-				src = o.src;
-				name = o.name;
-				return *this;
-			}
-
-			Chunk &operator=(Chunk &&o)
-			{
-				src = std::move(o.src);
-				name = std::move(o.name);
-				return *this;
-			}
+			Chunk &operator=(const Chunk &o) = default;
+			Chunk &operator=(Chunk &&o) = default;
 
 			std::string src;
 			std::string name;

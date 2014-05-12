@@ -54,19 +54,6 @@ GameScene::Viewport::Viewport(Display::Display &display, Observer *observer,
 	hud->AttachView(display);
 }
 
-GameScene::Viewport::Viewport(Viewport &&viewport) :
-	observer(std::move(viewport.observer)),
-	hud(std::move(viewport.hud))
-{
-}
-
-GameScene::Viewport &GameScene::Viewport::operator=(Viewport &&viewport)
-{
-	observer = std::move(viewport.observer);
-	hud = std::move(viewport.hud);
-	return *this;
-}
-
 GameScene::GameScene(Display::Display &display, GameDirector &director,
                      Script::Core *scripting, HoverScript::GamePeer *gamePeer,
                      std::shared_ptr<Rules> rules) :

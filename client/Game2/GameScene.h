@@ -70,11 +70,15 @@ class GameScene : public Scene
 {
 	typedef Scene SUPER;
 	protected:
-		struct Viewport : private boost::noncopyable {
+		struct Viewport {
 			Viewport(Display::Display &display, Observer *observer,
 				Display::Hud *hud);
-			Viewport(Viewport &&viewport);
-			Viewport &operator=(Viewport &&viewport);
+
+			Viewport(const Viewport &o) = delete;
+			Viewport(Viewport &&viewport) = default;
+
+			Viewport &operator=(const Viewport &o) = delete;
+			Viewport &operator=(Viewport &&viewport) = default;
 
 			std::unique_ptr<Observer> observer;
 			std::shared_ptr<Display::Hud> hud;
