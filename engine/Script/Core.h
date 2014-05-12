@@ -111,13 +111,81 @@ class MR_DllDeclare Core
 		};
 
 	public:
+		/// Ensures that the Lua stack is unchanged in a block.
+		struct StackRestore
+		{
+			StackRestore(lua_State *state);
+			~StackRestore();
+
+			lua_State *state;
+			int initStack;
+		};
+
+	private:
+		static void PrintFromStack(lua_State *state, int n);
+	public:
+		/// Return policy that calls LUa's print() function on each value.
+		struct PrintReturn
+		{
+			int operator()(lua_State *state, int n)
+			{
+				PrintFromStack(state, n);
+				return 0;
+			}
+		};
+
+	public:
 		void Print(const std::string &s);
 
 		static const std::string DEFAULT_CHUNK_NAME;
 		void Compile(const Chunk &chunk);
-		void CallAndPrint(int numParams=0, Help::HelpHandler *helpHandler=NULL);
+		int Call(int numParams=0, Help::HelpHandler *helpHandler=nullptr);
 
-		void Execute(const Chunk &chunk, Help::HelpHandler *helpHandler=NULL);
+		/**
+		 * Pop a function off the stack and execute it, printing any return values.
+		 * @param numParams The number of params being passed to the function.
+		 * @param helpHandler Optional callback for when a script requests API help.
+		 * @param rp Optional policy to handle return values.
+		 * @return The number of return values remaining on the stack.
+		 * @throw ScriptExn The code signaled an error while executing.
+		 */
+		template<class ReturnPolicy=PrintReturn>
+		int Invoke(int numParams=0, Help::HelpHandler *helpHandler=nullptr,
+			ReturnPolicy &rp=ReturnPolicy())
+		{
+			return rp(state, Call(numParams, helpHandler));
+		}
+
+		/// @deprecated Use Invoke instead.
+		void CallAndPrint(int numParams=0, Help::HelpHandler *helpHandler=nullptr)
+		{
+			Invoke(numParams, helpHandler);
+		}
+
+		/**
+		 * Safely compile and execute a chunk of code.
+		 *
+		 * This is a convenience function.
+		 *
+		 * @param chunk The code to execute.
+		 * @param helpHandler Optional callback for when a script requests API help.
+		 * @throw IncompleteExn If the code does not complete a statement; i.e.,
+		 *                      expecting more tokens.  Callers can catch this
+		 *                      to keep reading more data to finish the statement.
+		 * @throw ScriptExn The code either failed to compile or signaled an error
+		 *                  while executing.
+		 */
+		template<class ReturnPolicy = PrintReturn>
+		void Execute(const Chunk &chunk, Help::HelpHandler *helpHandler=nullptr,
+			ReturnPolicy &rp=ReturnPolicy())
+		{
+			// Explicitly throw away any return values leftover from the
+			// return policy so that the stack is exactly how we began.
+			StackRestore sr;
+
+			Compile(chunk);
+			Invoke(0, helpHandler, rp);
+		}
 
 		void PrintStack();
 
@@ -128,7 +196,7 @@ class MR_DllDeclare Core
 		const luabind::object *NIL;
 	private:
 		void LoadClassHelp(const std::string &className);
-		std::string PopError();
+		static std::string PopError(lua_State *state);
 
 		static int LPrint(lua_State *state);
 		static int LSandboxedFunction(lua_State *state);

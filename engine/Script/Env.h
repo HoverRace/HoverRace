@@ -84,6 +84,8 @@ class MR_DllDeclare Env
 		 */
 		void Execute(const Core::Chunk &chunk)
 		{
+			Core::StackRestore sr(scripting->GetState());
+
 			// May throw ScriptExn or IncompleteExn, in which case the stack
 			// will be unchanged.
 			scripting->Compile(chunk);
@@ -93,7 +95,7 @@ class MR_DllDeclare Env
 			//TODO: Use custom return value handler.
 			// May throw ScriptExn, but the function on the stack will be
 			// consumed anyway.
-			scripting->CallAndPrint(0, helpHandler);
+			scripting->Invoke(0, helpHandler);
 		}
 
 	private:

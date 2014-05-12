@@ -81,7 +81,7 @@ void Handlers::Call(int numParams) const
 				lua_pushvalue(L, paramsStart + j);
 			}
 			// (params...) (fns...) (params...)
-			scripting->CallAndPrint(numParams);
+			scripting->Invoke(numParams);
 		}
 		catch (Script::ScriptExn &ex) {
 			scripting->Print(ex.what());

@@ -228,6 +228,19 @@ std::string Core::GetVersionString() const
 	return LUA_VERSION;
 }
 
+void Core::PrintFromStack(lua_State *state, int n)
+{
+	// Initial stack: args...
+
+	if (n > 0) {
+		lua_getglobal(state, "print");  // args... fn
+		lua_insert(state, -(n + 1));  // fn args...
+		if (lua_pcall(state, n, 0, 0) != 0) {
+			throw ScriptExn(PopError(state));
+		}
+	}
+}
+
 /**
  * Print a message to all registered output streams.
  * @param s The message to broadcast (a newline will be appended automatically).
@@ -255,7 +268,7 @@ void Core::Compile(const Chunk &chunk)
 		chunk.name.c_str());
 
 	if (status != 0) {
-		std::string msg = PopError();
+		std::string msg = PopError(state);
 		if (msg.find("<eof>") != std::string::npos) {
 			// Incomplete chunk.
 			// Callers can use this to keep reading more data.
@@ -269,12 +282,14 @@ void Core::Compile(const Chunk &chunk)
 }
 
 /**
- * Pop a function off the stack and execute it, printing any return values.
+ * Pop a function off the stack and execute it.
  * @param numParams The number of params being passed to the function.
  * @param helpHandler Optional callback for when a script requests API help.
+ * @return The number of return values from the function that remain
+ *         on the stack.
  * @throw ScriptExn The code signaled an error while executing.
  */
-void Core::CallAndPrint(int numParams, Help::HelpHandler *helpHandler)
+int Core::Call(int numParams, Help::HelpHandler *helpHandler)
 {
 	int initStack = lua_gettop(state);
 	if (initStack == 0) {
@@ -287,36 +302,10 @@ void Core::CallAndPrint(int numParams, Help::HelpHandler *helpHandler)
 	int status = lua_pcall(state, numParams, LUA_MULTRET, 0);
 	curHelpHandler = NULL;
 	if (status != 0) {
-		throw ScriptExn(PopError());
+		throw ScriptExn(PopError(state));
 	}
 
-	int numReturns = lua_gettop(state) - initStack;
-
-	// If there were any return values, pass them to print().
-	if (numReturns > 0) {
-		lua_getglobal(state, "print");
-		lua_insert(state, initStack + 1);
-		status = lua_pcall(state, numReturns, 0, 0);
-		if (status != 0) {
-			throw ScriptExn(PopError());
-		}
-	}
-}
-
-/**
- * Compile and execute a chunk of code.
- * @param chunk The code to execute.
- * @param helpHandler Optional callback for when a script requests API help.
- * @throw IncompleteExn If the code does not complete a statement; i.e.,
- *                      expecting more tokens.  Callers can catch this
- *                      to keep reading more data to finish the statement.
- * @throw ScriptExn The code either failed to compile or signaled an error
- *                  while executing.
- */
-void Core::Execute(const Chunk &chunk, Help::HelpHandler *helpHandler)
-{
-	Compile(chunk);
-	CallAndPrint(0, helpHandler);
+	return lua_gettop(state) - initStack;
 }
 
 void Core::PrintStack()
@@ -440,10 +429,13 @@ void Core::LoadClassHelp(const std::string &className)
 
 /**
  * Pop the error message off the stack.
+ *
  * Only call this if you KNOW that there is an error on the top of the stack.
+ *
+ * @param state The Lua context.
  * @return The error as a string.
  */
-std::string Core::PopError()
+std::string Core::PopError(lua_State *state)
 {
 	size_t len;
 	const char *s = lua_tolstring(state, -1, &len);
@@ -498,6 +490,20 @@ int Core::LSandboxedFunction(lua_State *state)
 	return luaL_error(state, "%s: %s",
 		"Disallowed access to protected function", name);
 }
+
+//{{{ StackRestore ////////////////////////////////////////////////////////////
+
+Core::StackRestore::StackRestore(lua_State *state) :
+	state(state), initStack(lua_gettop(state))
+{
+}
+
+Core::StackRestore::~StackRestore()
+{
+	lua_settop(state, initStack);
+}
+
+//}}} StackRestore
 
 }  // namespace Script
 }  // namespace HoverRace
