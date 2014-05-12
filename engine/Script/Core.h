@@ -127,7 +127,7 @@ class MR_DllDeclare Core
 		/// Return policy that calls LUa's print() function on each value.
 		struct PrintReturn
 		{
-			int operator()(lua_State *state, int n)
+			int operator()(lua_State *state, int n) const
 			{
 				PrintFromStack(state, n);
 				return 0;
@@ -151,7 +151,7 @@ class MR_DllDeclare Core
 		 */
 		template<class ReturnPolicy=PrintReturn>
 		int Invoke(int numParams=0, Help::HelpHandler *helpHandler=nullptr,
-			ReturnPolicy &rp=ReturnPolicy())
+			const ReturnPolicy &rp = ReturnPolicy())
 		{
 			return rp(state, Call(numParams, helpHandler));
 		}
@@ -177,7 +177,7 @@ class MR_DllDeclare Core
 		 */
 		template<class ReturnPolicy = PrintReturn>
 		void Execute(const Chunk &chunk, Help::HelpHandler *helpHandler=nullptr,
-			ReturnPolicy &rp=ReturnPolicy())
+			const ReturnPolicy &rp=ReturnPolicy())
 		{
 			// Explicitly throw away any return values leftover from the
 			// return policy so that the stack is exactly how we began.
