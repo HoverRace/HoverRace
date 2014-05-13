@@ -239,6 +239,8 @@ int RulebookEnv::LRequire(lua_State *L)
 		return 0;
 	}
 
+	//TODO: Sanity-check module name.
+
 	std::string name = lua_tostring(L, 1);
 	name += ".lua";
 
@@ -248,9 +250,13 @@ int RulebookEnv::LRequire(lua_State *L)
 	Log::Info("Loading module '%s' from: %s", name.c_str(),
 		(const char*)Str::PU(modulePath));
 
-	//TODO
-
-	return 0;
+	try {
+		return self->Execute(LoadChunkFromFile(modulePath), Core::PassReturn());
+	}
+	catch (Script::ScriptExn &ex) {
+		Log::Error("%s", ex.what());
+		return 0;
+	}
 }
 
 int RulebookEnv::LRulebookStage1(lua_State *L)
