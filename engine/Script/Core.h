@@ -124,6 +124,15 @@ class MR_DllDeclare Core
 	private:
 		static void PrintFromStack(lua_State *state, int n);
 	public:
+		/// Return policy that leaves the return values on the stack.
+		struct PassReturn
+		{
+			int operator()(lua_State*, int n) const
+			{
+				return n;
+			}
+		};
+
 		/**
 		 * Return policy that calls Lua's print() function on each value.
 		 * All return values are consumed.
