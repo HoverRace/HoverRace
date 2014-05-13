@@ -99,8 +99,8 @@ class MR_DllDeclare Env
 			return scripting->Invoke(0, helpHandler, rp);
 		}
 
-	private:
-		Core::Chunk LoadChunkFromFile(const Util::OS::path_t &filename);
+	protected:
+		static Core::Chunk LoadChunkFromFile(const Util::OS::path_t &filename);
 
 	public:
 		/**
