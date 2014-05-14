@@ -52,11 +52,14 @@ namespace Client {
  * Defines the rules for a particular game session.
  * @author Michael Imamura
  */
-class Rulebook : private boost::noncopyable
+class Rulebook
 {
 	public:
 		Rulebook(Script::Core *scripting,
 			const Util::OS::path_t &basePath);
+		Rulebook(const Rulebook&) = delete;
+
+		Rulebook &operator=(const Rulebook&) = delete;
 
 	public:
 		const Util::OS::path_t &GetBasePath() const { return basePath; }

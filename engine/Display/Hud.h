@@ -145,10 +145,13 @@ class MR_DllDeclare Hud : public Container
 			}
 		};
 	protected:
-		struct MR_DllDeclare HudChild : private boost::noncopyable
+		struct MR_DllDeclare HudChild
 		{
 			HudChild(std::shared_ptr<HudDecor> decor);
+			HudChild(const HudChild&) = delete;
 			HudChild(HudChild &&other);
+
+			HudChild &operator=(const HudChild&) = delete;
 			HudChild &operator=(HudChild &&other);
 
 			std::shared_ptr<HudDecor> decor;
