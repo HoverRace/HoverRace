@@ -79,8 +79,8 @@ void RulebookLibrary::Reload()
 		// We add the rulebook to the library even if it failed to load
 		// so that we can display an error to the user in the selection screen.
 		auto rulebook = std::make_shared<Rulebook>(scripting, path);
-		Add(rulebook);
 		if (rulebook->LoadMetadata()) rulebooksLoaded++;
+		Add(rulebook);
 	}
 
 	if (rulebooksLoaded == 0) {
