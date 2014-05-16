@@ -23,6 +23,9 @@
 
 #include <boost/filesystem.hpp>
 
+#include <luabind/class.hpp>
+#include <luabind/detail/class_rep.hpp>
+
 #include "../../../engine/Script/Core.h"
 #include "../../../engine/Util/Config.h"
 #include "../../../engine/Util/Log.h"
@@ -96,6 +99,13 @@ void RulebookEnv::InitEnv()
 
 	// Start with the standard global environment.
 	CopyGlobals();
+
+	// Register our MetaPlayer subclasser.
+	lua_pushlightuserdata(L, this);  // table this
+	lua_pushcclosure(L, RulebookEnv::LPlayer, 1);  // table fn
+	lua_pushstring(L, "Player");  // table fn str
+	lua_insert(L, -2);  // table str fn
+	lua_rawset(L, -3);  // table
 
 	// Register our custom rulebook-aware "require()".
 	lua_pushlightuserdata(L, this);  // table this
@@ -213,6 +223,62 @@ bool RulebookEnv::RunRulebookScript()
 	Log::Info("Running: %s", (const char*)Str::PU(bootPath));
 
 	return RunScript(bootPath);
+}
+
+int RulebookEnv::LPlayer(lua_State *L)
+{
+	// Player defn
+	//
+	// Defines a new player class.
+	//   defn - A table defining the player:
+	//            on_init - (Optional) Set initial properties.
+
+	using namespace luabind;
+
+	RulebookEnv *self = static_cast<RulebookEnv*>(lua_touserdata(L, lua_upvalueindex(1)));
+	auto scripting = self->GetScripting();
+
+	if (lua_gettop(L) != 1) {
+		luaL_error(L, "Usage: Player { ... }");
+		return 0;
+	}
+
+	// defn - The table defining the player.
+	// class - The Luabind subclass representation.
+	// stage2 - Luabind's class creator closure.
+	// MetaPlayer - The MetaPlayer Luabind class representation.
+	// ctable - The Lua table representing the subclass.
+	// fn - A compiled Lua function.
+	// ctor - The compiled constructor function.
+
+	// Initial stack: defn
+
+	void *c = lua_newuserdata(L, sizeof(detail::class_rep));  // defn class
+	detail::class_rep *rep = new (c) detail::class_rep(L, "Todo");
+	lua_pushvalue(L, -1);  // defn class class
+
+	lua_pushcclosure(L, &detail::create_class::stage2, 1);  // defn class stage2
+
+	// Invoke Luabind's class creator.
+	lua_getglobal(L, "MetaPlayer");  // defn class stage2 MetaPlayer
+	lua_call(L, 1, 0);  // defn class
+
+	// Define a constructor for the newly-created subclass.
+	rep->get_table(L);  // defn class ctable
+	scripting->Compile(Script::Core::Chunk(
+		"return function (self, player) MetaPlayer.__init(self, player) end",
+		"=Player(Internal)"));
+		// defn class ctable fn
+	scripting->Call();  // defn class ctable ctor
+	lua_setfield(L, -2, "__init");  // defn class ctable
+	lua_pop(L, 1);  // defn class
+
+	//TODO: Initialize the class representation from defn.
+
+	// Return the class representation.
+	lua_insert(L, -2);  // class defn
+	lua_pop(L, 1);  // class
+	return 1;
 }
 
 int RulebookEnv::LRequire(lua_State *L)

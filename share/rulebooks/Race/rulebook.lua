@@ -8,8 +8,9 @@ Rulebook "Race" {
 	},
 
 	on_load = function()
-		local foo = require("session")
-		print("required session: " .. foo)
+		return {
+			player = require("player"),
+		}
 	end,
 
 	on_pre_game = function(session)

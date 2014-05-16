@@ -1,8 +1,7 @@
 
 // ClientScriptCore.cpp
-// Scripting core configured for the client.
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -33,6 +32,7 @@
 #include "DebugPeer.h"
 #include "GamePeer.h"
 #include "HudPeer.h"
+#include "MetaPlayer.h"
 #include "PlayerPeer.h"
 #include "SessionPeer.h"
 
@@ -86,6 +86,7 @@ Script::Core *ClientScriptCore::Reset()
 		DebugPeer::Register(this);
 		GamePeer::Register(this);
 		HudPeer::Register(this);
+		MetaPlayer::Register(this);
 		PlayerPeer::Register(this);
 		SessionPeer::Register(this);
 		RegisterMiscClasses();

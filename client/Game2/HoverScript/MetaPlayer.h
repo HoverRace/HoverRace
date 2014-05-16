@@ -1,7 +1,7 @@
 
-// RulebookEnv.h
+// MetaPlayer.h
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -21,17 +21,13 @@
 
 #pragma once
 
-#include "RuntimeEnv.h"
+#include "../../../engine/Script/Peer.h"
 
 namespace HoverRace {
 	namespace Client {
-		class Rulebook;
 		namespace HoverScript {
-			class GamePeer;
+			class PlayerPeer;
 		}
-	}
-	namespace Script {
-		class Core;
 	}
 }
 
@@ -40,34 +36,20 @@ namespace Client {
 namespace HoverScript {
 
 /**
- * Limited environment for defining rulebooks.
+ * Native base class for scripted players.
  * @author Michael Imamura
  */
-class RulebookEnv : public RuntimeEnv {
-	typedef RuntimeEnv SUPER;
+class MetaPlayer
+{
 	public:
-		RulebookEnv(Script::Core *scripting, const Util::OS::path_t &basePath,
-			Rulebook &rulebook);
-		virtual ~RulebookEnv();
-
-	protected:
-		virtual void InitEnv();
+		MetaPlayer(std::shared_ptr<PlayerPeer> player);
+		virtual ~MetaPlayer();
 
 	public:
-		void DefineRulebook(const std::string &name, const luabind::object &defn);
-	private:
-		void DefineRules(const luabind::object &rulesObj);
-	public:
-		bool RunRulebookScript();
-
-		static int LPlayer(lua_State *L);
-		static int LRequire(lua_State *L);
-		static int LRulebookStage1(lua_State *L);
-		static int LRulebookStage2(lua_State *L);
+		static void Register(Script::Core *scripting);
 
 	private:
-		Util::OS::path_t basePath;
-		Rulebook &rulebook;
+		std::shared_ptr<PlayerPeer> player;
 };
 
 }  // namespace HoverScript
