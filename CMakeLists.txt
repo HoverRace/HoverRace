@@ -107,7 +107,7 @@ elseif(WIN32)
 		optimized SDL2 debug SDL2D
 		optimized SDL2main debug SDL2mainD
 		optimized SDL2_image debug SDL2_imageD
-        optimized SDL2_ttf debug SDL2_ttfD
+		optimized SDL2_ttf debug SDL2_ttfD
 		alut
 		intl
 		optimized libcurl debug libcurlD
