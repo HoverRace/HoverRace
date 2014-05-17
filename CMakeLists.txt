@@ -13,6 +13,7 @@ set(HR_APP_PRERELEASE TRUE CACHE BOOL
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMakeModules)
 
+include(CheckCXXSourceCompiles)
 include(CXX11)
 include(GNUInstallDirs)
 include(cotire)
@@ -22,8 +23,24 @@ if(MSVC)
 		message(FATAL_ERROR "Visual Studio 2013 (aka Visual Studio 12) or later is required.")
 	elseif(MSVC_VERSION EQUAL 1800)
 		message(STATUS "Enabling Visual C++ November 2013 CTP compiler")
-		message(STATUS "  http://www.microsoft.com/en-us/download/details.aspx?id=41151")
 		set(CMAKE_GENERATOR_TOOLSET "CTP_Nov2013" CACHE STRING "Platform Toolset" FORCE)
+
+		# Check that the toolset is available.
+		if(NOT HAVE_NOV_2013_CTP)
+			unset(HAVE_NOV_2013_CTP CACHE)  # Force recheck.
+			check_cxx_source_compiles(
+				"// Default move ops are only available in the CTP.
+				struct TestMove {
+					TestMove(TestMove&&) = default;
+					TestMove &operator=(TestMove&&) = default;
+				};
+				int main() { return 0; }" HAVE_NOV_2013_CTP)
+			if(NOT HAVE_NOV_2013_CTP)
+				message(FATAL_ERROR "The Visual C++ November 2013 CTP compiler is not installed.
+The compiler update can be downloaded from:
+	http://www.microsoft.com/en-us/download/details.aspx?id=41151")
+			endif()
+		endif()
 	endif()
 endif()
 
@@ -90,7 +107,7 @@ elseif(WIN32)
 		optimized SDL2 debug SDL2D
 		optimized SDL2main debug SDL2mainD
 		optimized SDL2_image debug SDL2_imageD
-        optimized SDL2_ttf debug SDL2_ttfD
+		optimized SDL2_ttf debug SDL2_ttfD
 		alut
 		intl
 		optimized libcurl debug libcurlD
