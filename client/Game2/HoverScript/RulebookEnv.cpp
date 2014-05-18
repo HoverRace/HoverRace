@@ -225,6 +225,32 @@ bool RulebookEnv::RunRulebookScript()
 	return RunScript(bootPath);
 }
 
+/**
+ * Copy the contents of one Lua table into another.
+ *
+ * The top of the stack must be source.
+ * Below that is the destination.
+ *
+ * The stack is unchanged upon return.
+ */
+void RulebookEnv::MergeTables(lua_State *L)
+{
+	// dest - The destination table.
+	// src - The source table.
+
+	// Initial stack: dest src
+
+	lua_pushnil(L);  // dest src nil
+
+	while (lua_next(L, -2)) {
+		// dest src key value
+		lua_pushvalue(L, -2);  // dest src key value key
+		lua_insert(L, -2); // dest src key key value
+		lua_settable(L, -5); // dest src key
+	}
+	// dest src
+}
+
 int RulebookEnv::LPlayer(lua_State *L)
 {
 	// Player defn
@@ -273,11 +299,14 @@ int RulebookEnv::LPlayer(lua_State *L)
 	lua_setfield(L, -2, "__init");  // defn class ctable
 	lua_pop(L, 1);  // defn class
 
-	//TODO: Initialize the class representation from defn.
+	// Initialize the class representation from defn.
+	lua_insert(L, -2);  // class defn
+	rep->get_table(L);  // class defn ctable
+	lua_insert(L, -2);  // class ctable defn
+	MergeTables(L);  // class ctable defn
 
 	// Return the class representation.
-	lua_insert(L, -2);  // class defn
-	lua_pop(L, 1);  // class
+	lua_pop(L, 2);  // class
 	return 1;
 }
 
