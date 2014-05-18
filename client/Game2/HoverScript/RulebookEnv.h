@@ -59,10 +59,7 @@ class RulebookEnv : public RuntimeEnv {
 		void DefineRules(const luabind::object &rulesObj);
 	public:
 		bool RunRulebookScript();
-	protected:
-		static void MergeTables(lua_State *L);
 
-	public:
 		static int LPlayer(lua_State *L);
 		static int LRequire(lua_State *L);
 		static int LRulebookStage1(lua_State *L);

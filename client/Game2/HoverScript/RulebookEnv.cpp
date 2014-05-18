@@ -45,6 +45,42 @@ namespace Client {
 namespace HoverScript {
 
 namespace {
+	/**
+	 * Convert a Lua index into an absolute index.
+	 * @param L The current Lua state.
+	 * @param i The index to convert (may be relative or absolute).
+	 * @return The absolute index.
+	 */
+	int LuaAbsIndex(lua_State *L, int i)
+	{
+		// Same logic as lauxlib's abs_index macro.
+		return (i > 0 || i <= LUA_REGISTRYINDEX ? i : lua_gettop(L) + i + 1);
+	}
+
+	/**
+	 * Copy the contents of one Lua table into another.
+	 * The stack is unchanged upon return.
+	 * @param destIdx The stack index of the destination table.
+	 * @param srcIdx The stack index of the source table.
+	 */
+	void LuaMergeTables(lua_State *L, int destIdx, int srcIdx)
+	{
+		destIdx = LuaAbsIndex(L, destIdx);
+		srcIdx = LuaAbsIndex(L, srcIdx);
+
+		// Initial stack: (empty)
+
+		lua_pushnil(L);  // nil
+
+		while (lua_next(L, srcIdx)) {
+			// key value
+			lua_pushvalue(L, -2);  // key value key
+			lua_insert(L, -2); // key key value
+			lua_settable(L, destIdx); // key
+		}
+		// (empty)
+	}
+
 	const luabind::object ExpectHandler(Script::Core *scripting,
 	                                     const luabind::object &props,
 	                                     const char *name)
@@ -225,32 +261,6 @@ bool RulebookEnv::RunRulebookScript()
 	return RunScript(bootPath);
 }
 
-/**
- * Copy the contents of one Lua table into another.
- *
- * The top of the stack must be source.
- * Below that is the destination.
- *
- * The stack is unchanged upon return.
- */
-void RulebookEnv::MergeTables(lua_State *L)
-{
-	// dest - The destination table.
-	// src - The source table.
-
-	// Initial stack: dest src
-
-	lua_pushnil(L);  // dest src nil
-
-	while (lua_next(L, -2)) {
-		// dest src key value
-		lua_pushvalue(L, -2);  // dest src key value key
-		lua_insert(L, -2); // dest src key key value
-		lua_settable(L, -5); // dest src key
-	}
-	// dest src
-}
-
 int RulebookEnv::LPlayer(lua_State *L)
 {
 	// Player defn
@@ -302,8 +312,7 @@ int RulebookEnv::LPlayer(lua_State *L)
 	// Initialize the class representation from defn.
 	lua_insert(L, -2);  // class defn
 	rep->get_table(L);  // class defn ctable
-	lua_insert(L, -2);  // class ctable defn
-	MergeTables(L);  // class ctable defn
+	LuaMergeTables(L, -1, -2);  // class defn ctable
 
 	// Return the class representation.
 	lua_pop(L, 2);  // class
