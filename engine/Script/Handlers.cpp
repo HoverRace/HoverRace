@@ -1,7 +1,7 @@
 
 // Handlers.cpp
 //
-// Copyright (c) 2010, 2013 Michael Imamura.
+// Copyright (c) 2010, 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -36,17 +36,11 @@ namespace Script {
  * @param scripting The scripting core (may not be @c NULL).
  */
 Handlers::Handlers(Core *scripting) :
-	scripting(scripting), seq(1)
+	scripting(scripting), seq(1), ref(scripting)
 {
 	lua_State *L = scripting->GetState();
 	lua_newtable(L);
-	ref = luaL_ref(L, LUA_REGISTRYINDEX);
-}
-
-Handlers::~Handlers()
-{
-	lua_State *L = scripting->GetState();
-	luaL_unref(L, LUA_REGISTRYINDEX, ref);
+	ref.SetFromStack();
 }
 
 /**
@@ -59,7 +53,7 @@ void Handlers::Call(int numParams) const
 
 	int paramsStart = lua_gettop(L) + 1 - numParams;
 
-	lua_rawgeti(L, LUA_REGISTRYINDEX, ref);  // (params...) table
+	ref.Push();  // (parms...) table
 
 	int functionsToCall = 0;
 
@@ -150,7 +144,7 @@ void Handlers::AddHandler(const luabind::object &fn)
 
 	fn.push(L);  // fn
 
-	lua_rawgeti(L, LUA_REGISTRYINDEX, ref);  // fn table
+	ref.Push();  // fn table
 
 	lua_pushinteger(L, seq++); // fn table key
 	lua_pushvalue(L, -3); // fn table key fn
@@ -179,7 +173,7 @@ void Handlers::AddHandler(const std::string &name, const luabind::object &fn)
 
 	fn.push(L);  // fn
 
-	lua_rawgeti(L, LUA_REGISTRYINDEX, ref);  // fn table
+	ref.Push();  // fn table
 
 	lua_pushstring(L, name.c_str()); // fn table key
 	lua_pushvalue(L, -3); // fn table key fn

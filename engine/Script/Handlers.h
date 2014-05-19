@@ -1,7 +1,7 @@
 
 // Handlers.h
 //
-// Copyright (c) 2010, 2013 Michael Imamura.
+// Copyright (c) 2010, 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -22,6 +22,8 @@
 #pragma once
 
 #include <luabind/object.hpp>
+
+#include "RegistryRef.h"
 
 #ifdef _WIN32
 #	ifdef MR_ENGINE
@@ -44,11 +46,9 @@ class Core;
  */
 class MR_DllDeclare Handlers
 {
-	private:
-		Handlers() { }
 	public:
-		Handlers(Core *scripting);
-		virtual ~Handlers();
+		Handlers(Core *scripting=nullptr);
+		virtual ~Handlers() { }
 
 	protected:
 		void Call(int numParams) const;
@@ -64,7 +64,7 @@ class MR_DllDeclare Handlers
 	private:
 		Core *scripting;
 		int seq;
-		int ref;
+		RegistryRef ref;
 };
 
 }  // namespace Script
