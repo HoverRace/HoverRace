@@ -81,6 +81,27 @@ class Rulebook
 		const std::string &GetTitle() const { return title; }
 		const std::string &GetDescription() const { return description; }
 
+	public:
+		struct metas_t
+		{
+			metas_t(Script::Core *scripting) : player(scripting) { }
+			metas_t(const metas_t&) = default;
+			metas_t(metas_t&&) = default;
+
+			metas_t &operator=(const metas_t&) = default;
+			metas_t &operator=(metas_t&&) = default;
+
+			Script::WrapperFactory<HoverScript::MetaPlayer, HoverScript::PlayerPeer> player;
+		};
+
+		const metas_t &GetMetas() const
+		{
+			if (!loaded) {
+				Load();
+			}
+			return metas;
+		}
+
 		int GetMaxPlayers() const { return maxPlayers; }
 
 	public:
@@ -130,17 +151,6 @@ class Rulebook
 		Script::Handlers onPostGame;
 		Script::Handlers onPlayerJoined;
 
-		struct metas_t
-		{
-			metas_t(Script::Core *scripting) : player(scripting) { }
-			metas_t(const metas_t&) = default;
-			metas_t(metas_t&&) = default;
-
-			metas_t &operator=(const metas_t&) = default;
-			metas_t &operator=(metas_t&&) = default;
-
-			Script::WrapperFactory<HoverScript::MetaPlayer, HoverScript::PlayerPeer> player;
-		};
 		mutable metas_t metas;
 
 		mutable bool loaded;
