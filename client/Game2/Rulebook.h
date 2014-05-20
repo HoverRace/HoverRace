@@ -91,7 +91,7 @@ class Rulebook
 			metas_t &operator=(const metas_t&) = default;
 			metas_t &operator=(metas_t&&) = default;
 
-			Script::WrapperFactory<HoverScript::MetaPlayer, HoverScript::PlayerPeer> player;
+			Script::WrapperFactory<HoverScript::PlayerPeer, HoverScript::MetaPlayer> player;
 		};
 
 		const metas_t &GetMetas() const
