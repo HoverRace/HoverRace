@@ -31,6 +31,7 @@
 namespace HoverRace {
 	namespace Client {
 		namespace HoverScript {
+			class MetaPlayer;
 			class PlayerPeer;
 			class RulebookEnv;
 			class SessionPeer;
@@ -128,6 +129,19 @@ class Rulebook
 		Script::Handlers onPreGame;
 		Script::Handlers onPostGame;
 		Script::Handlers onPlayerJoined;
+
+		struct facs_t
+		{
+			facs_t(Script::Core *scripting) : player(scripting) { }
+			facs_t(const facs_t&) = default;
+			facs_t(facs_t&&) = default;
+
+			facs_t &operator=(const facs_t&) = default;
+			facs_t &operator=(facs_t&&) = default;
+
+			Script::WrapperFactory<HoverScript::MetaPlayer, HoverScript::PlayerPeer> player;
+		};
+		mutable facs_t facs;
 
 		mutable bool loaded;
 };

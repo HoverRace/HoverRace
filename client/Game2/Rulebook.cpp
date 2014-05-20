@@ -63,6 +63,7 @@ Rulebook::Rulebook(Script::Core *scripting, const Util::OS::path_t &basePath) :
 	onLoad(scripting),
 	onPreGame(scripting), onPostGame(scripting),
 	onPlayerJoined(scripting),
+	facs(scripting),
 	loaded(false)
 {
 	env = std::make_shared<HoverScript::RulebookEnv>(scripting, basePath, *this);
@@ -129,12 +130,16 @@ void Rulebook::SetOnLoad(const luabind::object &fn)
 
 	lua_State *L = scripting->GetState();
 
-	if (type(fn) != LUA_TFUNCTION) {
-		luaL_error(L, "Expected: (function)");
-		return;
+	switch (type(fn)) {
+		case LUA_TFUNCTION:
+			onLoad = fn;
+			break;
+		case LUA_TNIL:
+			onLoad.Clear();
+			break;
+		default:
+			luaL_error(L, "Expected: (function)");
 	}
-
-	onLoad = fn;
 }
 
 void Rulebook::OnLoad() const
@@ -168,9 +173,16 @@ void Rulebook::OnLoad() const
 
 			object playerFac(classes["player"]);
 
-			Log::Info("Player factory is a: %d", type(playerFac));
-			if (type(playerFac) != LUA_TFUNCTION && type(playerFac) != LUA_TNIL) {
-				Log::Warn("Player factory is not a function.");
+			switch (type(playerFac)) {
+				case LUA_TFUNCTION:
+				case LUA_TUSERDATA:
+					facs.player = playerFac;
+					break;
+				case LUA_TNIL:
+					// Ignore.
+					break;
+				default:
+					Log::Warn("\"player\" is not a function or constructor.");
 			}
 
 			lua_pop(L, num);

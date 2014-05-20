@@ -52,27 +52,31 @@ template<class Inside, class Outside>
 class WrapperFactory
 {
 	public:
-		WrapperFactory(Script::Core *scripting) : scripting(scripting) { }
+		WrapperFactory(Script::Core *scripting) :
+			scripting(scripting), ref(scripting) { }
 		WrapperFactory(const WrapperFactory&) = default;
 		WrapperFactory(WrapperFactory&&) = default;
-		~WrapperFactory();
 
 		WrapperFactory &operator=(const WrapperFactory&) = default;
 		WrapperFactory &operator=(WrapperFactory&&) = default;
 
 		WrapperFactory &operator=(const luabind::object &obj)
 		{
+			Set(obj);
+			return *this;
+		}
+
+		void Set(const luabind::object &obj)
+		{
 			using namespace luabind;
 
-			auto type = type(obj);
-			if (type == LUA_TUSERDATA || type == LUA_TFUNCTION) {
+			auto t = type(obj);
+			if (t == LUA_TUSERDATA || t == LUA_TFUNCTION) {
 				ref = obj;
 			}
 			else {
 				throw ScriptExn("Expected a constructor or function.");
 			}
-
-			return *this;
 		}
 
 		std::shared_ptr<Outside> operator()(std::shared_ptr<Inside> inside)
