@@ -79,9 +79,19 @@ class WrapperFactory
 			}
 		}
 
+		/**
+		 * Wrap a native object in the wrapper.
+		 * @param inside The native object to wrap.
+		 * @return The wrapped object, or @c nullptr if no wrapper factory has
+		 *         been set.
+		 */
 		std::shared_ptr<Outside> operator()(std::shared_ptr<Inside> inside)
 		{
 			using namespace luabind;
+
+			if (!ref) {
+				return std::shared_ptr<Outside>();
+			}
 
 			object obj(inside);
 			std::shared_ptr<Outside> retv;
