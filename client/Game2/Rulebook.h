@@ -130,18 +130,18 @@ class Rulebook
 		Script::Handlers onPostGame;
 		Script::Handlers onPlayerJoined;
 
-		struct facs_t
+		struct metas_t
 		{
-			facs_t(Script::Core *scripting) : player(scripting) { }
-			facs_t(const facs_t&) = default;
-			facs_t(facs_t&&) = default;
+			metas_t(Script::Core *scripting) : player(scripting) { }
+			metas_t(const metas_t&) = default;
+			metas_t(metas_t&&) = default;
 
-			facs_t &operator=(const facs_t&) = default;
-			facs_t &operator=(facs_t&&) = default;
+			metas_t &operator=(const metas_t&) = default;
+			metas_t &operator=(metas_t&&) = default;
 
 			Script::WrapperFactory<HoverScript::MetaPlayer, HoverScript::PlayerPeer> player;
 		};
-		mutable facs_t facs;
+		mutable metas_t metas;
 
 		mutable bool loaded;
 };

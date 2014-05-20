@@ -63,7 +63,7 @@ Rulebook::Rulebook(Script::Core *scripting, const Util::OS::path_t &basePath) :
 	onLoad(scripting),
 	onPreGame(scripting), onPostGame(scripting),
 	onPlayerJoined(scripting),
-	facs(scripting),
+	metas(scripting),
 	loaded(false)
 {
 	env = std::make_shared<HoverScript::RulebookEnv>(scripting, basePath, *this);
@@ -149,7 +149,7 @@ void Rulebook::OnLoad() const
 	// Initial stack: (empty)
 
 	if (onLoad) {
-		facs_t facs(scripting);
+		metas_t metas(scripting);
 
 		// Call the function.
 		onLoad.Push();  // fn
@@ -178,7 +178,7 @@ void Rulebook::OnLoad() const
 			switch (type(playerFac)) {
 				case LUA_TFUNCTION:
 				case LUA_TUSERDATA:
-					facs.player = playerFac;
+					metas.player = playerFac;
 					break;
 				case LUA_TNIL:
 					// Ignore.
@@ -193,7 +193,7 @@ void Rulebook::OnLoad() const
 
 		// If we got this far without a ScriptExn, then we're ready to set
 		// the factories.
-		this->facs = std::move(facs);
+		this->metas = std::move(metas);
 	}
 }
 
