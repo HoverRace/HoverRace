@@ -85,7 +85,7 @@ class WrapperFactory
 		 * @return The wrapped object, or @c nullptr if no wrapper factory has
 		 *         been set.
 		 */
-		std::shared_ptr<Outside> operator()(std::shared_ptr<Inside> inside)
+		std::shared_ptr<Outside> operator()(std::shared_ptr<Inside> inside) const
 		{
 			using namespace luabind;
 
