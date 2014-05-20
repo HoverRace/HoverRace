@@ -22,6 +22,7 @@
 #include "StdAfx.h"
 
 #include "../../engine/Script/Core.h"
+#include "../../engine/Util/Log.h"
 #include "../../engine/Util/Str.h"
 
 #include "HoverScript/PlayerPeer.h"
@@ -59,11 +60,16 @@ Rulebook::Rulebook(Script::Core *scripting, const Util::OS::path_t &basePath) :
 	name(defaultName), title(defaultName), description(),
 	maxPlayers(0),
 	rules(),
-	onLoad(scripting), onPreGame(scripting), onPostGame(scripting),
+	onLoad(scripting),
+	onPreGame(scripting), onPostGame(scripting),
 	onPlayerJoined(scripting),
 	loaded(false)
 {
 	env = std::make_shared<HoverScript::RulebookEnv>(scripting, basePath, *this);
+}
+
+Rulebook::~Rulebook()
+{
 }
 
 void Rulebook::AddRule(const std::string &name, const luabind::object &obj)
@@ -119,12 +125,58 @@ void Rulebook::Load() const
 
 void Rulebook::SetOnLoad(const luabind::object &fn)
 {
-	onLoad.AddHandler(fn);
+	using namespace luabind;
+
+	lua_State *L = scripting->GetState();
+
+	if (type(fn) != LUA_TFUNCTION) {
+		luaL_error(L, "Expected: (function)");
+		return;
+	}
+
+	onLoad = fn;
 }
 
 void Rulebook::OnLoad() const
 {
-	onLoad.CallHandlers();
+	lua_State *L = scripting->GetState();
+
+	// Initial stack: (empty)
+
+	if (onLoad) {
+		// Call the function.
+		onLoad.Push();  // fn
+		scripting->Invoke(0, nullptr, [&](lua_State *L, int num) {
+			using namespace luabind;
+
+			if (num == 0) {
+				Log::Warn("on_init function did not return a table.");
+				return 0;
+			}
+			else if (num > 1) {
+				Log::Warn("Ignoring extra return values from on_init function.");
+			}
+
+			// fn (return values)
+			object classes(from_stack(L, -num));
+
+			if (type(classes) != LUA_TTABLE) {
+				Log::Error("on_init function did not return a table.");
+				lua_pop(L, num);
+				return 0;
+			}
+
+			object playerFac(classes["player"]);
+
+			Log::Info("Player factory is a: %d", type(playerFac));
+			if (type(playerFac) != LUA_TFUNCTION && type(playerFac) != LUA_TNIL) {
+				Log::Warn("Player factory is not a function.");
+			}
+
+			lua_pop(L, num);
+			return 0;
+		});
+	}
 }
 
 void Rulebook::SetOnPreGame(const luabind::object &fn)

@@ -22,6 +22,8 @@
 #pragma once
 
 #include "../../engine/Script/Handlers.h"
+#include "../../engine/Script/RegistryRef.h"
+#include "../../engine/Script/WrapperFactory.h"
 #include "../../engine/Util/OS.h"
 
 #include "Rule.h"
@@ -58,6 +60,7 @@ class Rulebook
 		Rulebook(Script::Core *scripting,
 			const Util::OS::path_t &basePath);
 		Rulebook(const Rulebook&) = delete;
+		~Rulebook();
 
 		Rulebook &operator=(const Rulebook&) = delete;
 
@@ -121,7 +124,7 @@ class Rulebook
 		typedef std::map<std::string, std::shared_ptr<Rule>> rules_t;
 		rules_t rules;
 
-		Script::Handlers onLoad;
+		Script::RegistryRef onLoad;
 		Script::Handlers onPreGame;
 		Script::Handlers onPostGame;
 		Script::Handlers onPlayerJoined;

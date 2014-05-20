@@ -77,6 +77,11 @@ class MR_DllDeclare RegistryRef
 			return *this;
 		}
 
+		operator bool() const
+		{
+			return ref != LUA_NOREF && ref != LUA_REFNIL;
+		}
+
 	public:
 		Core *GetScripting() const { return scripting; }
 
