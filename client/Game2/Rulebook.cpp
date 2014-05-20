@@ -149,6 +149,8 @@ void Rulebook::OnLoad() const
 	// Initial stack: (empty)
 
 	if (onLoad) {
+		facs_t facs(scripting);
+
 		// Call the function.
 		onLoad.Push();  // fn
 		scripting->Invoke(0, nullptr, [&](lua_State *L, int num) {
@@ -188,6 +190,10 @@ void Rulebook::OnLoad() const
 			lua_pop(L, num);
 			return 0;
 		});
+
+		// If we got this far without a ScriptExn, then we're ready to set
+		// the factories.
+		this->facs = std::move(facs);
 	}
 }
 
