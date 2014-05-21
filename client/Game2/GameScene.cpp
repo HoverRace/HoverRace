@@ -31,6 +31,7 @@
 
 #include "HoverScript/GamePeer.h"
 #include "HoverScript/HudPeer.h"
+#include "HoverScript/MetaPlayer.h"
 #include "HoverScript/PlayerPeer.h"
 #include "HoverScript/SessionPeer.h"
 
@@ -107,6 +108,12 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 		playerPeer->SetHud(std::make_shared<HudPeer>(scripting, display,
 			viewports.back().hud));
 		rulebook->OnPlayerJoined(sessionPeer, playerPeer);
+
+		//FIXME: Temporary to test on_init method.
+		auto metaPlayer = rulebook->GetMetas().player(playerPeer);
+		if (metaPlayer) {
+			metaPlayer->OnInit();
+		}
 	});
 }
 

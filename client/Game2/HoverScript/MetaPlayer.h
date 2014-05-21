@@ -46,6 +46,9 @@ class MetaPlayer
 		virtual ~MetaPlayer();
 
 	public:
+		virtual void OnInit() { }
+
+	public:
 		static void Register(Script::Core *scripting);
 
 	private:

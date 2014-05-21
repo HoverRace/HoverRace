@@ -41,6 +41,10 @@ namespace {
 		public:
 			Wrapper(std::shared_ptr<PlayerPeer> player) : SUPER(player) { }
 			virtual ~Wrapper() { }
+
+		public:
+			void OnInit() override { call<void>("on_init"); }
+			static void OnInit_def(SUPER *super) { super->SUPER::OnInit(); }
 	};
 }
 
@@ -64,6 +68,7 @@ void MetaPlayer::Register(Script::Core *scripting)
 	module(L)[
 		class_<MetaPlayer, Wrapper, std::shared_ptr<MetaPlayer>>("MetaPlayer")
 			.def(constructor<std::shared_ptr<PlayerPeer>>())
+			.def("on_init", &MetaPlayer::OnInit, &Wrapper::OnInit_def)
 	];
 }
 
