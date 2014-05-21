@@ -62,7 +62,7 @@ void MetaPlayer::Register(Script::Core *scripting)
 	lua_State *L = scripting->GetState();
 
 	module(L)[
-		class_<MetaPlayer, Wrapper>("MetaPlayer")
+		class_<MetaPlayer, Wrapper, std::shared_ptr<MetaPlayer>>("MetaPlayer")
 			.def(constructor<std::shared_ptr<PlayerPeer>>())
 	];
 }
