@@ -69,6 +69,7 @@ void MetaPlayer::Register(Script::Core *scripting)
 		class_<MetaPlayer, Wrapper, std::shared_ptr<MetaPlayer>>("MetaPlayer")
 			.def(constructor<std::shared_ptr<PlayerPeer>>())
 			.def("on_init", &MetaPlayer::OnInit, &Wrapper::OnInit_def)
+			.def_readonly("player", &MetaPlayer::player)
 	];
 }
 
