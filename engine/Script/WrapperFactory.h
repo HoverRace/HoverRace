@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include "../Util/Log.h"
+
 #include "Core.h"
 #include "RegistryRef.h"
 #include "ScriptExn.h"
@@ -88,28 +90,31 @@ class WrapperFactory
 		std::shared_ptr<Outside> operator()(std::shared_ptr<Inside> inside) const
 		{
 			using namespace luabind;
+			using namespace Util;
 
 			if (!ref) {
 				return std::shared_ptr<Outside>();
 			}
 
-			object obj(inside);
+			lua_State *L = scripting->GetState();
+
+			object obj(L, inside);
 			std::shared_ptr<Outside> retv;
 
 			ref.Push();
-			obj.push();
+			obj.push(L);
 			scripting->Invoke(1, nullptr, [&](lua_State *L, int num) {
 				if (num < 1) {
-					//TODO
+					Log::Error("Expected a return value.");
 				}
 				else {
+					object retObj(from_stack(L, -num));
 					try {
-						retv = object_cast<std::shared_ptr<Outside>>(
-							object(from_stack(L, -n)));
+						retv = object_cast<std::shared_ptr<Outside>>(retObj);
 					}
 					catch (cast_failed &ex)
 					{
-						//TODO
+						Log::Error("Unexpected return value: %s", ex.what());
 					}
 				}
 				lua_pop(L, num);
