@@ -32,6 +32,7 @@ namespace HoverRace {
 	namespace Client {
 		namespace HoverScript {
 			class MetaPlayer;
+			class MetaSession;
 			class PlayerPeer;
 			class RulebookEnv;
 			class SessionPeer;
@@ -84,7 +85,8 @@ class Rulebook
 	public:
 		struct metas_t
 		{
-			metas_t(Script::Core *scripting) : player(scripting) { }
+			metas_t(Script::Core *scripting) :
+				player(scripting), session(scripting) { }
 			metas_t(const metas_t&) = default;
 			metas_t(metas_t&&) = default;
 
@@ -92,6 +94,7 @@ class Rulebook
 			metas_t &operator=(metas_t&&) = default;
 
 			Script::WrapperFactory<HoverScript::PlayerPeer, HoverScript::MetaPlayer> player;
+			Script::WrapperFactory<HoverScript::SessionPeer, HoverScript::MetaSession> session;
 		};
 
 		const metas_t &GetMetas() const

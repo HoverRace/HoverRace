@@ -173,19 +173,8 @@ void Rulebook::OnLoad() const
 				return 0;
 			}
 
-			object playerFac(classes["player"]);
-
-			switch (type(playerFac)) {
-				case LUA_TFUNCTION:
-				case LUA_TUSERDATA:
-					metas.player = playerFac;
-					break;
-				case LUA_TNIL:
-					// Ignore.
-					break;
-				default:
-					Log::Warn("\"player\" is not a function or constructor.");
-			}
+			metas.player = classes["player"];
+			metas.session = classes["session"];
 
 			lua_pop(L, num);
 			return 0;
