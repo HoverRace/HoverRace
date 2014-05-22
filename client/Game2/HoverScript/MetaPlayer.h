@@ -21,8 +21,6 @@
 
 #pragma once
 
-#include "../../../engine/Script/Peer.h"
-
 namespace HoverRace {
 	namespace Client {
 		namespace HoverScript {
