@@ -48,15 +48,6 @@ namespace {
 	};
 }
 
-MetaPlayer::MetaPlayer(std::shared_ptr<PlayerPeer> player) :
-	player(std::move(player))
-{
-}
-
-MetaPlayer::~MetaPlayer()
-{
-}
-
 /**
  * Register this peer in an environment.
  */
