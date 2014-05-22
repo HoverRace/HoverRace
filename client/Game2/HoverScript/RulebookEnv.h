@@ -69,6 +69,7 @@ class RulebookEnv : public RuntimeEnv {
 		static int LRequire(lua_State *L);
 		static int LRulebookStage1(lua_State *L);
 		static int LRulebookStage2(lua_State *L);
+		static int LSession(lua_State *L);
 
 	private:
 		Util::OS::path_t basePath;

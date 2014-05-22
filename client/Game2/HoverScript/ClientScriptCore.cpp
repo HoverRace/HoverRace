@@ -33,6 +33,7 @@
 #include "GamePeer.h"
 #include "HudPeer.h"
 #include "MetaPlayer.h"
+#include "MetaSession.h"
 #include "PlayerPeer.h"
 #include "SessionPeer.h"
 
@@ -87,6 +88,7 @@ Script::Core *ClientScriptCore::Reset()
 		GamePeer::Register(this);
 		HudPeer::Register(this);
 		MetaPlayer::Register(this);
+		MetaSession::Register(this);
 		PlayerPeer::Register(this);
 		SessionPeer::Register(this);
 		RegisterMiscClasses();

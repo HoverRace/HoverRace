@@ -162,6 +162,13 @@ void RulebookEnv::InitEnv()
 	lua_insert(L, -2);  // table str fn
 	lua_rawset(L, -3);  // table
 
+	// Register our MetaSession subclasser.
+	lua_pushlightuserdata(L, this);  // table this
+	lua_pushcclosure(L, RulebookEnv::LSession, 1);  // table fn
+	lua_pushstring(L, "Session");  // table fn str
+	lua_insert(L, -2);  // table str fn
+	lua_rawset(L, -3);  // table
+
 	// Register our custom rulebook-aware "require()".
 	lua_pushlightuserdata(L, this);  // table this
 	lua_pushcclosure(L, RulebookEnv::LRequire, 1);  // table fn
@@ -447,6 +454,17 @@ int RulebookEnv::LRulebookStage2(lua_State *L)
 	self->DefineRulebook(name, object(from_stack(L, 1)));
 
 	return 0;
+}
+
+int RulebookEnv::LSession(lua_State *L)
+{
+	// Session defn
+	//
+	// Defines a new session class.
+	//   defn - A table defining the session:
+	//            on_init - (Optional) Set initial properties.
+
+	return GenerateSubclass(L, "MetaSession", "Session");
 }
 
 }  // namespace HoverScript

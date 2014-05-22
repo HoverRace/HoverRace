@@ -10,6 +10,7 @@ Rulebook "Race" {
 	on_load = function()
 		return {
 			player = require("player"),
+			session = require("session"),
 		}
 	end,
 
