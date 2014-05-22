@@ -72,12 +72,16 @@ class WrapperFactory
 		{
 			using namespace luabind;
 
-			auto t = type(obj);
-			if (t == LUA_TUSERDATA || t == LUA_TFUNCTION) {
-				ref = obj;
-			}
-			else {
-				throw ScriptExn("Expected a constructor or function.");
+			switch (type(obj)) {
+				case LUA_TUSERDATA:
+				case LUA_TFUNCTION:
+					ref = obj;
+					break;
+				case LUA_TNIL:
+					ref.Clear();
+					break;
+				default:
+					throw ScriptExn("Expected a constructor or function.");
 			}
 		}
 
