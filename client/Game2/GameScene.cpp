@@ -32,6 +32,7 @@
 #include "HoverScript/GamePeer.h"
 #include "HoverScript/HudPeer.h"
 #include "HoverScript/MetaPlayer.h"
+#include "HoverScript/MetaSession.h"
 #include "HoverScript/PlayerPeer.h"
 #include "HoverScript/SessionPeer.h"
 
@@ -64,6 +65,8 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 	session(nullptr),
 	firedOnStart(false), firedOnRaceFinish(false)
 {
+	auto rulebook = rules->GetRulebook();
+
 	// Create the new session
 	session = new ClientSession(rules);
 
@@ -91,6 +94,10 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 		throw Exception("Main character creation failed");
 	}
 	sessionPeer = std::make_shared<SessionPeer>(scripting, session);
+	metaSession = rulebook->GetMetas().session(sessionPeer);
+	if (metaSession) {
+		metaSession->OnInit();
+	}
 	director.GetSessionChangedSignal()(session);
 
 	//TODO: Support split-screen with multiple viewports.
@@ -101,8 +108,10 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 				Vec2(1280, 720))));
 
 	gamePeer->OnSessionStart(sessionPeer);
-	auto rulebook = rules->GetRulebook();
 	rulebook->OnPreGame(sessionPeer);
+	if (metaSession) {
+		metaSession->OnPregame();
+	}
 	sessionPeer->ForEachPlayer([&](std::shared_ptr<PlayerPeer> &playerPeer) {
 		//TODO: Look up the correct HUD for this player.
 		playerPeer->SetHud(std::make_shared<HudPeer>(scripting, display,
@@ -287,6 +296,9 @@ void GameScene::Render()
 void GameScene::OnRaceFinish()
 {
 	rules->GetRulebook()->OnPostGame(sessionPeer);
+	if (metaSession) {
+		metaSession->OnPostgame();
+	}
 	gamePeer->OnSessionEnd(sessionPeer);
 	director.GetSessionChangedSignal()(nullptr);
 }

@@ -45,12 +45,18 @@ namespace {
 		public:
 			void OnInit() override { call<void>("on_init"); }
 			static void OnInit_def(SUPER *super) { super->SUPER::OnInit(); }
+
+			void OnPregame() override { call<void>("on_pregame"); }
+			static void OnPregame_def(SUPER *super) { super->SUPER::OnPregame(); }
+
+			void OnPostgame() override { call<void>("on_postgame"); }
+			static void OnPostgame_def(SUPER *super) { super->SUPER::OnPostgame(); }
 	};
 }
 
 /**
-* Register this peer in an environment.
-*/
+ * Register this peer in an environment.
+ */
 void MetaSession::Register(Script::Core *scripting)
 {
 	using namespace luabind;
@@ -60,6 +66,8 @@ void MetaSession::Register(Script::Core *scripting)
 		class_<MetaSession, Wrapper, std::shared_ptr<MetaSession>>("MetaSession")
 			.def(constructor<std::shared_ptr<SessionPeer>>())
 			.def("on_init", &MetaSession::OnInit, &Wrapper::OnInit_def)
+			.def("on_pregame", &MetaSession::OnPregame, &Wrapper::OnPregame_def)
+			.def("on_postgame", &MetaSession::OnPostgame, &Wrapper::OnPostgame_def)
 			.def_readonly("session", &MetaSession::session)
 	];
 }

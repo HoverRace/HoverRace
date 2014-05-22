@@ -33,6 +33,8 @@ namespace HoverRace {
 	namespace Client {
 		namespace HoverScript {
 			class GamePeer;
+			class MetaPlayer;
+			class MetaSession;
 			class SessionPeer;
 			typedef std::shared_ptr<SessionPeer> SessionPeerPtr;
 			class SysEnv;
@@ -137,6 +139,7 @@ class GameScene : public Scene
 		boost::signals2::connection pauseConn;
 
 		HoverScript::SessionPeerPtr sessionPeer;
+		std::shared_ptr<HoverScript::MetaSession> metaSession;
 
 		bool firedOnStart;
 		bool firedOnRaceFinish;

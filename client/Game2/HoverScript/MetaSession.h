@@ -48,6 +48,10 @@ class MetaSession
 	public:
 		virtual void OnInit() { }
 
+		// Phases
+		virtual void OnPregame() { }
+		virtual void OnPostgame() { }
+
 	public:
 		static void Register(Script::Core *scripting);
 
