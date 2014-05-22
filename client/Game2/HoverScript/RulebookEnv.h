@@ -60,6 +60,11 @@ class RulebookEnv : public RuntimeEnv {
 	public:
 		bool RunRulebookScript();
 
+	private:
+		static int GenerateSubclass(lua_State *L, const std::string &base,
+			const std::string &name);
+
+	public:
 		static int LPlayer(lua_State *L);
 		static int LRequire(lua_State *L);
 		static int LRulebookStage1(lua_State *L);
