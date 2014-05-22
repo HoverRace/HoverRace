@@ -304,10 +304,15 @@ int RulebookEnv::GenerateSubclass(lua_State *L, const std::string &base,
 		lua_touserdata(L, lua_upvalueindex(1)));
 	auto scripting = self->GetScripting();
 
-	if (lua_gettop(L) != 1) {
+	auto numParams = lua_gettop(L);
+	if (numParams < 1) {
 		luaL_error(L, boost::str(
 			boost::format("Usage: %s { ... }") % name).c_str());
 		return 0;
+	}
+	else if (numParams > 1) {
+		// Pop all but the first param.
+		lua_pop(L, -(numParams - 1));
 	}
 
 	// defn - The table defining the player.
