@@ -98,6 +98,24 @@ namespace {
 
 		return obj;
 	}
+
+	/**
+	 * Generate a unique name for a Lua subclass for class registration.
+	 *
+	 * This name is only for debugging purposes; subclasses generated via
+	 * the "Player", "Session", etc. functions are returned as values, so the
+	 * script can choose whatever "name" it wants, or leave it unnamed
+	 * altogether (which is the common case).
+	 *
+	 * @return The new unique global name.
+	 */
+	std::string AutoName()
+	{
+		static int idx = 0;
+		std::ostringstream oss;
+		oss << "[RulebookEnv]#autoclass_" << idx++;
+		return oss.str();
+	}
 }
 
 /**
@@ -290,7 +308,7 @@ int RulebookEnv::LPlayer(lua_State *L)
 	// Initial stack: defn
 
 	void *c = lua_newuserdata(L, sizeof(detail::class_rep));  // defn class
-	detail::class_rep *rep = new (c) detail::class_rep(L, "Todo");
+	detail::class_rep *rep = new (c) detail::class_rep(L, AutoName().c_str());
 	lua_pushvalue(L, -1);  // defn class class
 
 	lua_pushcclosure(L, &detail::create_class::stage2, 1);  // defn class stage2
