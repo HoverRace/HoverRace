@@ -138,7 +138,6 @@ class GameScene : public Scene
 
 		boost::signals2::connection pauseConn;
 
-		HoverScript::SessionPeerPtr sessionPeer;
 		std::shared_ptr<HoverScript::MetaSession> metaSession;
 
 		bool firedOnStart;

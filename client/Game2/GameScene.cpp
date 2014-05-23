@@ -93,8 +93,8 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 		Cleanup();
 		throw Exception("Main character creation failed");
 	}
-	sessionPeer = std::make_shared<SessionPeer>(scripting, session);
-	metaSession = rulebook->GetMetas().session(sessionPeer);
+	metaSession = rulebook->GetMetas().session(
+		std::make_shared<SessionPeer>(scripting, session));
 	metaSession->OnInit();
 	director.GetSessionChangedSignal()(session);
 
@@ -105,9 +105,8 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 			new Display::Hud(display, session->GetPlayer(0),
 				Vec2(1280, 720))));
 
-	gamePeer->OnSessionStart(sessionPeer);
-	rulebook->OnPreGame(sessionPeer);
 	metaSession->OnPregame();
+	auto sessionPeer = metaSession->GetSession();
 	sessionPeer->ForEachPlayer([&](std::shared_ptr<PlayerPeer> &playerPeer) {
 		//TODO: Look up the correct HUD for this player.
 		playerPeer->SetHud(std::make_shared<HudPeer>(scripting, display,
@@ -231,12 +230,14 @@ void GameScene::Advance(Util::OS::timestamp_t tick)
 	session->Process();
 
 	if (!firedOnRaceFinish && session->GetPlayer(0)->HasFinish()) {
-		sessionPeer->GetPlayer(0)->OnFinish();
+		//TODO
+		//sessionPeer->GetPlayer(0)->OnFinish();
 		OnRaceFinish();
 		firedOnRaceFinish = true;
 	}
 	else if (!firedOnStart && session->GetPlayer(0)->HasStarted()) {
-		sessionPeer->GetPlayer(0)->OnStart();
+		//TODO
+		//sessionPeer->GetPlayer(0)->OnStart();
 		firedOnStart = true;
 	}
 
@@ -289,9 +290,7 @@ void GameScene::Render()
 
 void GameScene::OnRaceFinish()
 {
-	rules->GetRulebook()->OnPostGame(sessionPeer);
 	metaSession->OnPostgame();
-	gamePeer->OnSessionEnd(sessionPeer);
 	director.GetSessionChangedSignal()(nullptr);
 }
 
