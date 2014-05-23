@@ -45,6 +45,9 @@ class MetaPlayer
 		virtual ~MetaPlayer() { }
 
 	public:
+		std::shared_ptr<PlayerPeer> GetPlayer() const { return player; }
+
+	public:
 		virtual void OnInit() { }
 
 	public:

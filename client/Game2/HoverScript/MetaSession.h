@@ -45,6 +45,9 @@ class MetaSession
 		virtual ~MetaSession() { }
 
 	public:
+		std::shared_ptr<SessionPeer> GetSession() const { return session; }
+
+	public:
 		virtual void OnInit() { }
 
 		// Phases
