@@ -30,7 +30,7 @@
 namespace HoverRace {
 	namespace Client {
 		namespace HoverScript {
-			class PlayerPeer;
+			class MetaPlayer;
 		}
 		class ClientSession;
 	}
@@ -67,7 +67,7 @@ class SessionPeer : public Script::Peer {
 				std::for_each(playerRefs.begin(), playerRefs.end(), fn);
 			}
 		}
-		std::shared_ptr<PlayerPeer> &GetPlayer(unsigned idx)
+		std::shared_ptr<MetaPlayer> &GetPlayer(unsigned idx)
 		{
 			return playerRefs[idx];
 		}
@@ -87,7 +87,7 @@ class SessionPeer : public Script::Peer {
 		ClientSession *session;
 		luabind::object rules;
 		luabind::object players;
-		std::vector<std::shared_ptr<PlayerPeer>> playerRefs;
+		std::vector<std::shared_ptr<MetaPlayer>> playerRefs;
 };
 typedef std::shared_ptr<SessionPeer> SessionPeerPtr;
 
