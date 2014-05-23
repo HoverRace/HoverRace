@@ -88,8 +88,9 @@ class WrapperFactory
 		/**
 		 * Wrap a native object in the wrapper.
 		 * @param inside The native object to wrap.
-		 * @return The wrapped object, or @c nullptr if no wrapper factory has
-		 *         been set.
+		 * @return The wrapped object.  If no factory has been set or there was
+		 *         an error while executing the factory, then a
+		 *         new instance of the Outside class will be returned.
 		 */
 		std::shared_ptr<Outside> operator()(std::shared_ptr<Inside> inside) const
 		{
@@ -97,7 +98,7 @@ class WrapperFactory
 			using namespace Util;
 
 			if (!ref) {
-				return std::shared_ptr<Outside>();
+				return std::make_shared<Outside>(inside);
 			}
 
 			lua_State *L = scripting->GetState();
@@ -125,7 +126,7 @@ class WrapperFactory
 				return 0;
 			});
 
-			return retv;
+			return retv ? retv : std::make_shared<Outside>(inside);
 		}
 
 	private:

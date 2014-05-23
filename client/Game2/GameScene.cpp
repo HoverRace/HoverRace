@@ -95,9 +95,7 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 	}
 	sessionPeer = std::make_shared<SessionPeer>(scripting, session);
 	metaSession = rulebook->GetMetas().session(sessionPeer);
-	if (metaSession) {
-		metaSession->OnInit();
-	}
+	metaSession->OnInit();
 	director.GetSessionChangedSignal()(session);
 
 	//TODO: Support split-screen with multiple viewports.
@@ -109,9 +107,7 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 
 	gamePeer->OnSessionStart(sessionPeer);
 	rulebook->OnPreGame(sessionPeer);
-	if (metaSession) {
-		metaSession->OnPregame();
-	}
+	metaSession->OnPregame();
 	sessionPeer->ForEachPlayer([&](std::shared_ptr<PlayerPeer> &playerPeer) {
 		//TODO: Look up the correct HUD for this player.
 		playerPeer->SetHud(std::make_shared<HudPeer>(scripting, display,
@@ -120,9 +116,7 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 
 		//FIXME: Temporary to test on_init method.
 		auto metaPlayer = rulebook->GetMetas().player(playerPeer);
-		if (metaPlayer) {
-			metaPlayer->OnInit();
-		}
+		metaPlayer->OnInit();
 	});
 }
 
@@ -296,9 +290,7 @@ void GameScene::Render()
 void GameScene::OnRaceFinish()
 {
 	rules->GetRulebook()->OnPostGame(sessionPeer);
-	if (metaSession) {
-		metaSession->OnPostgame();
-	}
+	metaSession->OnPostgame();
 	gamePeer->OnSessionEnd(sessionPeer);
 	director.GetSessionChangedSignal()(nullptr);
 }
