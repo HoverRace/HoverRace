@@ -27,16 +27,6 @@
 #include "RegistryRef.h"
 #include "ScriptExn.h"
 
-#ifdef _WIN32
-#	ifdef MR_ENGINE
-#		define MR_DllDeclare   __declspec( dllexport )
-#	else
-#		define MR_DllDeclare   __declspec( dllimport )
-#	endif
-#else
-#	define MR_DllDeclare
-#endif
-
 namespace HoverRace {
 	namespace Script {
 		class Core;
@@ -136,5 +126,3 @@ class WrapperFactory
 
 }  // namespace Script
 }  // namespace HoverRace
-
-#undef MR_DllDeclare
