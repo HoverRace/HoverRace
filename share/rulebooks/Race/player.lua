@@ -15,15 +15,15 @@ return Player {
 	
 	on_start = function(self, session)
 		local player_name = self.player.name;
-	
+
 		-- Set up the stopwatch to time each lap.
-		self.stopwatch = Stopwatch(session.clock)
+		self.stopwatch = Stopwatch(session.session.clock)
 
 		-- Set up the racing HUD.
 		-- We start with the default HUD for a race and add our lap counter.
 		local hud = self.player.hud
 		hud:use_race_default()
-		hud:add_chronometer(Hud.S, "Time", session.clock)
+		hud:add_chronometer(Hud.S, "Time", session.session.clock)
 		self.lap_counter = hud:add_counter(Hud.S, "Lap", 1,
 			session.session.rules.laps)
 		print(player_name .. " started at " .. tostring(session.clock))
