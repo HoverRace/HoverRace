@@ -227,14 +227,12 @@ void GameScene::Advance(Util::OS::timestamp_t tick)
 	session->Process();
 
 	if (!firedOnRaceFinish && session->GetPlayer(0)->HasFinish()) {
-		//TODO
-		//sessionPeer->GetPlayer(0)->OnFinish();
+		metaSession->GetSession()->GetPlayer(0)->OnFinish(metaSession);
 		OnRaceFinish();
 		firedOnRaceFinish = true;
 	}
 	else if (!firedOnStart && session->GetPlayer(0)->HasStarted()) {
-		//TODO
-		//sessionPeer->GetPlayer(0)->OnStart();
+		metaSession->GetSession()->GetPlayer(0)->OnStart(metaSession);
 		firedOnStart = true;
 	}
 
