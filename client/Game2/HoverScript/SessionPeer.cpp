@@ -24,6 +24,7 @@
 #include "../../engine/Script/Core.h"
 #include "../../engine/Util/Clock.h"
 #include "../ClientSession.h"
+#include "../Rulebook.h"
 #include "../Rules.h"
 #include "MetaPlayer.h"
 #include "PlayerPeer.h"
@@ -85,10 +86,12 @@ void SessionPeer::OnSessionStart(ClientSession *session)
 
 	playerRefs.clear();
 	for (int i = 0; i < session->GetNbPlayers(); i++) {
-		playerRefs.push_back(std::make_shared<MetaPlayer>(
-			std::make_shared<PlayerPeer>(
-				scripting, session->GetPlayer(i))));
-		players[i] = playerRefs.back();
+		auto player = session->GetRules()->GetRulebook()->GetMetas().player(
+			std::make_shared<PlayerPeer>(scripting, session->GetPlayer(i)));
+		player->OnInit();
+
+		playerRefs.push_back(player);
+		players[i] = player;
 	}
 }
 

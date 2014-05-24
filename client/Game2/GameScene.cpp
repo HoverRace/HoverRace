@@ -112,11 +112,7 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 		//TODO: Look up the correct HUD for this player.
 		playerPeer->SetHud(std::make_shared<HudPeer>(scripting, display,
 			viewports.back().hud));
-		rulebook->OnPlayerJoined(sessionPeer, playerPeer);
-
-		//FIXME: Temporary to test on_init method.
-		auto metaPlayer = rulebook->GetMetas().player(playerPeer);
-		metaPlayer->OnInit();
+		player->OnJoined(metaSession);
 	});
 }
 
