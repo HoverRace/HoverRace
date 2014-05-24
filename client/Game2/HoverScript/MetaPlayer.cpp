@@ -24,6 +24,7 @@
 #include "../../../engine/Script/Core.h"
 #include "../../../engine/Util/Log.h"
 
+#include "MetaSession.h"
 #include "PlayerPeer.h"
 
 #include "MetaPlayer.h"
@@ -45,6 +46,18 @@ namespace {
 		public:
 			void OnInit() override { call<void>("on_init"); }
 			static void OnInit_def(SUPER *super) { super->SUPER::OnInit(); }
+
+			void OnJoined(std::shared_ptr<MetaSession> session) override { call<void>("on_joined", session); }
+			static void OnJoined_def(SUPER *super, std::shared_ptr<MetaSession> session) { super->SUPER::OnJoined(session); }
+
+			void OnStart(std::shared_ptr<MetaSession> session) override { call<void>("on_start", session); }
+			static void OnStart_def(SUPER *super, std::shared_ptr<MetaSession> session) { super->SUPER::OnStart(session); }
+
+			void OnFinishLine(std::shared_ptr<MetaSession> session) override { call<void>("on_finish_line", session); }
+			static void OnFinishLine_def(SUPER *super, std::shared_ptr<MetaSession> session) { super->SUPER::OnFinishLine(session); }
+
+			void OnFinish(std::shared_ptr<MetaSession> session) override { call<void>("on_finish", session); }
+			static void OnFinish_def(SUPER *super, std::shared_ptr<MetaSession> session) { super->SUPER::OnFinish(session); }
 	};
 }
 
@@ -60,6 +73,10 @@ void MetaPlayer::Register(Script::Core *scripting)
 		class_<MetaPlayer, Wrapper, std::shared_ptr<MetaPlayer>>("MetaPlayer")
 			.def(constructor<std::shared_ptr<PlayerPeer>>())
 			.def("on_init", &MetaPlayer::OnInit, &Wrapper::OnInit_def)
+			.def("on_joined", &MetaPlayer::OnJoined, &Wrapper::OnJoined_def)
+			.def("on_start", &MetaPlayer::OnStart, &Wrapper::OnStart_def)
+			.def("on_finish_line", &MetaPlayer::OnFinishLine, &Wrapper::OnFinishLine_def)
+			.def("on_finish", &MetaPlayer::OnFinish, &Wrapper::OnFinish_def)
 			.def_readonly("player", &MetaPlayer::player)
 	];
 }
