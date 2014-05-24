@@ -21,10 +21,25 @@
 
 #include "StdAfx.h"
 
+#include "Log.h"
+
 #include "Stopwatch.h"
 
 namespace HoverRace {
 namespace Util {
+
+namespace {
+
+	std::shared_ptr<Clock> &CheckedClock(std::shared_ptr<Clock> &clock)
+	{
+		if (!clock) {
+			Log::Warn("Stopwatch created with null clock (using default)");
+			clock.reset(new Clock());
+		}
+		return clock;
+	}
+
+}
 
 /**
  * Constructor.
@@ -33,7 +48,7 @@ namespace Util {
  * @param clock The clock to use for timing.
  */
 Stopwatch::Stopwatch(std::shared_ptr<Clock> clock) :
-	clock(std::move(clock))
+	clock(std::move(CheckedClock(clock)))
 {
 	lastLap = this->clock->GetTime();
 }
@@ -44,7 +59,7 @@ Stopwatch::Stopwatch(std::shared_ptr<Clock> clock) :
  * @param start The timestamp of the start of the first lap.
  */
 Stopwatch::Stopwatch(std::shared_ptr<Clock> clock, const Duration &start) :
-	clock(std::move(clock)), lastLap(start)
+	clock(std::move(CheckedClock(clock))), lastLap(start)
 {
 }
 
