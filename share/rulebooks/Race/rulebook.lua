@@ -14,6 +14,7 @@ Rulebook "Race" {
 		}
 	end,
 
+	--[[
 	on_pre_game = function(session)
 		print("on_pre_game in rulebook")
 		print("laps = " .. session.rules.laps)
@@ -69,4 +70,5 @@ Rulebook "Race" {
 	on_post_game = function(session)
 		print("on_session_end in rulebook")
 	end,
+	]]--
 }
