@@ -77,6 +77,12 @@ class MR_DllDeclare Duration :
 		 */
 		Duration(dur_t duration=0) : duration(duration) { }
 
+		Duration(const Duration&) = default;
+		Duration(Duration&&) = default;
+
+		Duration &operator=(const Duration&) = default;
+		Duration &operator=(Duration&&) = default;
+
 	public:
 		std::ostream &FmtLong(std::ostream &os) const;
 		std::string FmtLong() const;
