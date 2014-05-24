@@ -22,6 +22,7 @@
 #include "StdAfx.h"
 
 #include "../../../engine/Script/Core.h"
+#include "../../../engine/Script/Wrapper.h"
 #include "../../../engine/Util/Log.h"
 
 #include "MetaSession.h"
@@ -36,7 +37,7 @@ namespace Client {
 namespace HoverScript {
 
 namespace {
-	class Wrapper : public MetaPlayer, public luabind::wrap_base
+	class Wrapper : public MetaPlayer, public Script::Wrapper
 	{
 		typedef MetaPlayer SUPER;
 		public:
@@ -44,19 +45,19 @@ namespace {
 			virtual ~Wrapper() { }
 
 		public:
-			void OnInit() override { call<void>("on_init"); }
+			void OnInit() override { pcall<void>("on_init"); }
 			static void OnInit_def(SUPER *super) { super->SUPER::OnInit(); }
 
-			void OnJoined(std::shared_ptr<MetaSession> session) override { call<void>("on_joined", session); }
+			void OnJoined(std::shared_ptr<MetaSession> session) override { pcall<void>("on_joined", session); }
 			static void OnJoined_def(SUPER *super, std::shared_ptr<MetaSession> session) { super->SUPER::OnJoined(session); }
 
-			void OnStart(std::shared_ptr<MetaSession> session) override { call<void>("on_start", session); }
+			void OnStart(std::shared_ptr<MetaSession> session) override { pcall<void>("on_start", session); }
 			static void OnStart_def(SUPER *super, std::shared_ptr<MetaSession> session) { super->SUPER::OnStart(session); }
 
-			void OnFinishLine(std::shared_ptr<MetaSession> session) override { call<void>("on_finish_line", session); }
+			void OnFinishLine(std::shared_ptr<MetaSession> session) override { pcall<void>("on_finish_line", session); }
 			static void OnFinishLine_def(SUPER *super, std::shared_ptr<MetaSession> session) { super->SUPER::OnFinishLine(session); }
 
-			void OnFinish(std::shared_ptr<MetaSession> session) override { call<void>("on_finish", session); }
+			void OnFinish(std::shared_ptr<MetaSession> session) override { pcall<void>("on_finish", session); }
 			static void OnFinish_def(SUPER *super, std::shared_ptr<MetaSession> session) { super->SUPER::OnFinish(session); }
 	};
 }

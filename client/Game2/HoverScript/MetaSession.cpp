@@ -22,6 +22,7 @@
 #include "StdAfx.h"
 
 #include "../../../engine/Script/Core.h"
+#include "../../../engine/Script/Wrapper.h"
 #include "../../../engine/Util/Log.h"
 
 #include "SessionPeer.h"
@@ -35,7 +36,7 @@ namespace Client {
 namespace HoverScript {
 
 namespace {
-	class Wrapper : public MetaSession, public luabind::wrap_base
+	class Wrapper : public MetaSession, public Script::Wrapper
 	{
 		typedef MetaSession SUPER;
 		public:
@@ -43,13 +44,13 @@ namespace {
 			virtual ~Wrapper() { }
 
 		public:
-			void OnInit() override { call<void>("on_init"); }
+			void OnInit() override { pcall<void>("on_init"); }
 			static void OnInit_def(SUPER *super) { super->SUPER::OnInit(); }
 
-			void OnPregame() override { call<void>("on_pregame"); }
+			void OnPregame() override { pcall<void>("on_pregame"); }
 			static void OnPregame_def(SUPER *super) { super->SUPER::OnPregame(); }
 
-			void OnPostgame() override { call<void>("on_postgame"); }
+			void OnPostgame() override { pcall<void>("on_postgame"); }
 			static void OnPostgame_def(SUPER *super) { super->SUPER::OnPostgame(); }
 	};
 }
