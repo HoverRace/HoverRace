@@ -55,6 +55,18 @@ namespace {
 	};
 }
 
+MetaSession::MetaSession(std::shared_ptr<SessionPeer> session) :
+	session(std::move(session))
+{
+	session->SetMeta(this);
+}
+
+MetaSession::~MetaSession()
+{
+	session->SetMeta(nullptr);
+}
+
+
 /**
  * Register this peer in an environment.
  */

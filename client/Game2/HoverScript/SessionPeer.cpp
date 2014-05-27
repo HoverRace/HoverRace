@@ -36,7 +36,7 @@ namespace Client {
 namespace HoverScript {
 
 SessionPeer::SessionPeer(Script::Core *scripting, ClientSession *session) :
-	SUPER(scripting, "Session"), session(session),
+	SUPER(scripting, "Session"), session(session), meta(nullptr),
 	rules(),
 	players()
 {

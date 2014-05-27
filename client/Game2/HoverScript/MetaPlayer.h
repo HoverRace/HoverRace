@@ -41,9 +41,8 @@ namespace HoverScript {
 class MetaPlayer
 {
 	public:
-		MetaPlayer(std::shared_ptr<PlayerPeer> player) :
-			player(std::move(player)) { }
-		virtual ~MetaPlayer() { }
+		MetaPlayer(std::shared_ptr<PlayerPeer> player);
+		virtual ~MetaPlayer();
 
 	public:
 		std::shared_ptr<PlayerPeer> GetPlayer() const { return player; }

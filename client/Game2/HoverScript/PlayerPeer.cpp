@@ -24,6 +24,8 @@
 #include "../../../engine/MainCharacter/MainCharacter.h"
 #include "../../../engine/Script/Core.h"
 
+#include "MetaPlayer.h"
+
 #include "PlayerPeer.h"
 
 using namespace HoverRace::Util;
@@ -35,7 +37,7 @@ namespace HoverScript {
 PlayerPeer::PlayerPeer(Script::Core *scripting,
                        MainCharacter::MainCharacter *player) :
 	SUPER(scripting, "Player"),
-	player(player),
+	player(player), meta(nullptr),
 	props(luabind::newtable(scripting->GetState())),
 	onStart(scripting), onFinish(scripting), onFinishLine(scripting)
 {

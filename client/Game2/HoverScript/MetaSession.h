@@ -40,9 +40,8 @@ namespace HoverScript {
 class MetaSession
 {
 	public:
-		MetaSession(std::shared_ptr<SessionPeer> session) :
-			session(std::move(session)) { }
-		virtual ~MetaSession() { }
+		MetaSession(std::shared_ptr<SessionPeer> session);
+		virtual ~MetaSession();
 
 	public:
 		std::shared_ptr<SessionPeer> GetSession() const { return session; }

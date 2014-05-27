@@ -32,6 +32,7 @@
 namespace HoverRace {
 	namespace Client {
 		namespace HoverScript {
+			class MetaPlayer;
 			class SessionPeer;
 		}
 	}
@@ -62,6 +63,7 @@ class PlayerPeer : public Script::Peer {
 		static void Register(Script::Core *scripting);
 
 	public:
+		void SetMeta(MetaPlayer *meta) { this->meta = meta; }
 		void SetHud(std::shared_ptr<HudPeer> hud);
 
 	public:
@@ -92,6 +94,7 @@ class PlayerPeer : public Script::Peer {
 
 	private:
 		MainCharacter::MainCharacter *player;
+		MetaPlayer *meta;
 		std::shared_ptr<HudPeer> hud;
 
 		luabind::object props;

@@ -31,6 +31,7 @@ namespace HoverRace {
 	namespace Client {
 		namespace HoverScript {
 			class MetaPlayer;
+			class MetaSession;
 		}
 		class ClientSession;
 	}
@@ -60,6 +61,9 @@ class SessionPeer : public Script::Peer {
 		static void Register(Script::Core *scripting);
 
 	public:
+		void SetMeta(MetaSession *meta) { this->meta = meta; }
+
+	public:
 		template<class Fn>
 		void ForEachPlayer(Fn fn)
 		{
@@ -85,6 +89,7 @@ class SessionPeer : public Script::Peer {
 
 	private:
 		ClientSession *session;
+		MetaSession *meta;
 		luabind::object rules;
 		luabind::object players;
 		std::vector<std::shared_ptr<MetaPlayer>> playerRefs;
