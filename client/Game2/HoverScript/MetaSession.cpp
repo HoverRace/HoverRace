@@ -58,7 +58,7 @@ namespace {
 MetaSession::MetaSession(std::shared_ptr<SessionPeer> session) :
 	session(std::move(session))
 {
-	session->SetMeta(this);
+	this->session->SetMeta(this);
 }
 
 MetaSession::~MetaSession()

@@ -65,7 +65,7 @@ namespace {
 MetaPlayer::MetaPlayer(std::shared_ptr<PlayerPeer> player) :
 	player(std::move(player))
 {
-	player->SetMeta(this);
+	this->player->SetMeta(this);
 }
 
 MetaPlayer::~MetaPlayer()
