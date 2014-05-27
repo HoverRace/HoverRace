@@ -51,9 +51,9 @@ class MetaPlayer
 		virtual void OnInit() { }
 
 		virtual void OnJoined(std::shared_ptr<MetaSession> session) { }
-		virtual void OnStart(std::shared_ptr<MetaSession> session) { }
-		virtual void OnFinishLine(std::shared_ptr<MetaSession> session) { }
-		virtual void OnFinish(std::shared_ptr<MetaSession> session) { }
+		virtual void OnStart() { }
+		virtual void OnFinishLine() { }
+		virtual void OnFinish() { }
 
 	public:
 		static void Register(Script::Core *scripting);

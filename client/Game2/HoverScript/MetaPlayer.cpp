@@ -51,14 +51,14 @@ namespace {
 			void OnJoined(std::shared_ptr<MetaSession> session) override { pcall<void>("on_joined", session); }
 			static void OnJoined_def(SUPER *super, std::shared_ptr<MetaSession> session) { super->SUPER::OnJoined(session); }
 
-			void OnStart(std::shared_ptr<MetaSession> session) override { pcall<void>("on_start", session); }
-			static void OnStart_def(SUPER *super, std::shared_ptr<MetaSession> session) { super->SUPER::OnStart(session); }
+			void OnStart() override { pcall<void>("on_start"); }
+			static void OnStart_def(SUPER *super) { super->SUPER::OnStart(); }
 
-			void OnFinishLine(std::shared_ptr<MetaSession> session) override { pcall<void>("on_finish_line", session); }
-			static void OnFinishLine_def(SUPER *super, std::shared_ptr<MetaSession> session) { super->SUPER::OnFinishLine(session); }
+			void OnFinishLine() override { pcall<void>("on_finish_line"); }
+			static void OnFinishLine_def(SUPER *super) { super->SUPER::OnFinishLine(); }
 
-			void OnFinish(std::shared_ptr<MetaSession> session) override { pcall<void>("on_finish", session); }
-			static void OnFinish_def(SUPER *super, std::shared_ptr<MetaSession> session) { super->SUPER::OnFinish(session); }
+			void OnFinish() override { pcall<void>("on_finish"); }
+			static void OnFinish_def(SUPER *super) { super->SUPER::OnFinish(); }
 	};
 }
 
