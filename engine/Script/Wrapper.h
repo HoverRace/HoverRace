@@ -51,11 +51,11 @@ class Wrapper : public luabind::wrap_base
 		}
 
 		//TODO: Support other returns than void.
-		template<typename Ret, class... Params>
-		void pcall(Params... params)
+		template<class Ret, class... Params>
+		void pcall(Params&&... params)
 		{
 			try {
-				call<void>(params...);
+				call<void>(std::forward<Params>(params)...);
 			}
 			catch (luabind::error &ex) {
 				HandleError(ex);
