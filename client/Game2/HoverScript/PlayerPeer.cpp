@@ -44,6 +44,9 @@ PlayerPeer::PlayerPeer(Script::Core *scripting,
 	finishLineConn = player->GetFinishLineSignal().connect(
 		[&](MainCharacter::MainCharacter*) {
 			onFinishLine.CallHandlers();
+			if (meta) {
+				meta->OnFinishLine();
+			}
 		});
 }
 
