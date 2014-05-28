@@ -24,6 +24,7 @@
 #include "../Util/OS.h"
 
 #include "Core.h"
+#include "RegistryRef.h"
 
 #ifdef _WIN32
 #	ifdef MR_ENGINE
@@ -52,8 +53,6 @@ namespace Script {
  */
 class MR_DllDeclare Env
 {
-	private:
-		Env() { }
 	public:
 		Env(Core *scripting);
 		virtual ~Env();
@@ -128,7 +127,7 @@ class MR_DllDeclare Env
 	private:
 		Core *scripting;
 		bool initialized;
-		int envRef;
+		RegistryRef envRef;
 		Help::HelpHandler *helpHandler;
 };
 

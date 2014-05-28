@@ -42,18 +42,17 @@ namespace Script {
  * @param scripting The scripting engine (may not be @c NULL).
  */
 Env::Env(Core *scripting) :
-	scripting(scripting), initialized(false)
+	scripting(scripting), initialized(false), envRef(scripting)
 {
 	lua_State *state = scripting->GetState();
 
 	// Store a placeholder at the registry location.
 	lua_pushinteger(state, 1);
-	envRef = luaL_ref(state, LUA_REGISTRYINDEX);
+	envRef.SetFromStack();
 }
 
 Env::~Env()
 {
-	luaL_unref(scripting->GetState(), LUA_REGISTRYINDEX, envRef);
 }
 
 void Env::LogScriptError(const Script::ScriptExn &ex)
@@ -115,14 +114,14 @@ void Env::SetupEnv()
 	// Initial stack: fn
 
 	if (initialized) {
-		lua_rawgeti(state, LUA_REGISTRYINDEX, envRef);  // fn env
+		envRef.Push();  // fn env
 	}
 	else {
 		lua_newtable(state);  // fn env
 		InitEnv();  // fn env
 		initialized = true;
 		lua_pushvalue(state, -1);  // fn env env
-		lua_rawseti(state, LUA_REGISTRYINDEX, envRef);  // fn env
+		envRef.SetFromStack();  // fn env
 	}
 	// fn env
 
