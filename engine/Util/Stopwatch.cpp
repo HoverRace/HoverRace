@@ -74,7 +74,7 @@ Duration Stopwatch::NextLap(const std::string &name)
 	Duration elapsed(ts, lastLap);
 	lastLap = ts;
 
-	laps.emplace_back(Lap(name, Duration(ts, lastLap)));
+	laps.emplace_back(name, Duration(ts, lastLap));
 
 	return elapsed;
 }

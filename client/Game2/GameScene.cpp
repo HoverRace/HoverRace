@@ -99,10 +99,10 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 
 	//TODO: Support split-screen with multiple viewports.
 	viewports.emplace_back(
-		Viewport(display,
-			new Observer(),
-			new Display::Hud(display, session->GetPlayer(0),
-				Vec2(1280, 720))));
+		display,
+		new Observer(),
+		new Display::Hud(display, session->GetPlayer(0),
+			Vec2(1280, 720)));
 
 	metaSession->OnPregame();
 	auto sessionPeer = metaSession->GetSession();

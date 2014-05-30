@@ -163,7 +163,7 @@ void SysConsole::AddLogLine(LogLevel level, const std::string &line)
 		baseLogIdx++;
 	}
 
-	logLines.emplace_back(LogLine(idx, level, line));
+	logLines.emplace_back(idx, level, line);
 
 	// Notify listeners.
 	logAddedSignal(idx);
