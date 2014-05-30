@@ -96,9 +96,7 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 	metaSession = rulebook->GetMetas().session(
 		std::make_shared<SessionPeer>(scripting, session));
 	metaSession->OnInit();
-	/*FIXME: Causing OnSessionStart() to be fired twice.
-	director.GetSessionChangedSignal()(session);
-	*/
+	director.GetSessionChangedSignal()(metaSession);
 
 	//TODO: Support split-screen with multiple viewports.
 	viewports.emplace_back(
@@ -125,6 +123,7 @@ GameScene::~GameScene()
 
 void GameScene::Cleanup()
 {
+	director.GetSessionChangedSignal()(nullptr);
 	delete session;
 }
 
