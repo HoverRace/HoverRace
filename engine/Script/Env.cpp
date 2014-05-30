@@ -98,6 +98,26 @@ void Env::SetHelpHandler(Help::HelpHandler *handler)
 }
 
 /**
+ * Push the environment onto the stack.
+ * InitEnv() will be called if the initial environment hasn't been set.
+ */
+void Env::PushEnv()
+{
+	lua_State *L = scripting->GetState();
+
+	if (initialized) {
+		envRef.Push();  // env
+	}
+	else {
+		lua_newtable(L);  // env
+		InitEnv();  // env
+		initialized = true;
+		lua_pushvalue(L, -1);  // env env
+		envRef.SetFromStack();  // env
+	}
+}
+
+/**
  * Apply the environment to the function on the top of the stack.
  *
  * The environment will be initialized for the first time if needed.
@@ -113,17 +133,7 @@ void Env::SetupEnv()
 
 	// Initial stack: fn
 
-	if (initialized) {
-		envRef.Push();  // fn env
-	}
-	else {
-		lua_newtable(state);  // fn env
-		InitEnv();  // fn env
-		initialized = true;
-		lua_pushvalue(state, -1);  // fn env env
-		envRef.SetFromStack();  // fn env
-	}
-	// fn env
+	PushEnv();  // fn env
 
 	// Apply the environment to the function.
 	// Compiled Lua functions have one upvalue, which is the environment

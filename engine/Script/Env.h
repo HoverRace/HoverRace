@@ -67,6 +67,8 @@ class MR_DllDeclare Env
 
 		void SetHelpHandler(Help::HelpHandler *helpHandler);
 
+	protected:
+		void PushEnv();
 	private:
 		void SetupEnv();
 
