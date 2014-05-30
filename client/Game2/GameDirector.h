@@ -23,7 +23,9 @@
 
 namespace HoverRace {
 	namespace Client {
-		class ClientSession;
+		namespace HoverScript {
+			class MetaSession;
+		}
 		class Rules;
 		class Scene;
 		typedef std::shared_ptr<Scene> ScenePtr;
@@ -119,7 +121,7 @@ class GameDirector
 		 */
 		virtual Control::InputEventController *ReloadController() = 0;
 
-		typedef boost::signals2::signal<void(ClientSession*)> sessionChangedSignal_t;
+		typedef boost::signals2::signal<void(std::shared_ptr<HoverScript::MetaSession>)> sessionChangedSignal_t;
 
 		/**
 		 * Access the signal that indicates that the gameplay session

@@ -28,7 +28,7 @@
 #include "../GameDirector.h"
 #include "DebugPeer.h"
 #include "GamePeer.h"
-#include "SessionPeer.h"
+#include "MetaSession.h"
 
 #include "SysConsole.h"
 
@@ -55,7 +55,6 @@ SysConsole::SysConsole(Script::Core *scripting,
                        int maxLogLines, int maxHistory) :
 	SUPER(scripting),
 	debugPeer(debugPeer), gamePeer(gamePeer),
-	sessionPeer(std::make_shared<SessionPeer>(scripting, nullptr)),
 	introWritten(false), maxLogLines(maxLogLines), logLines(), baseLogIdx(0),
 	history(maxHistory), curHistory(history.end())
 {
@@ -90,15 +89,19 @@ void SysConsole::InitEnv()
 	object env(from_stack(L, -1));
 	env["debug"] = debugPeer;
 	env["game"] = gamePeer;
-	env["session"] = sessionPeer;
+	env["session"] = metaSession;
 }
 
-void SysConsole::OnSessionChanged(ClientSession *session)
+void SysConsole::OnSessionChanged(std::shared_ptr<MetaSession> metaSession)
 {
-	sessionPeer->OnSessionEnd();
-	if (session) {
-		sessionPeer->OnSessionStart(session);
-	}
+	using namespace luabind;
+
+	lua_State *L = GetScripting()->GetState();
+
+	PushEnv();
+
+	object env(from_stack(L, -1));
+	env["session"] = metaSession;
 }
 
 void SysConsole::Clear()

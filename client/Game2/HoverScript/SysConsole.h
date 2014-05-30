@@ -37,7 +37,7 @@ namespace HoverRace {
 		namespace HoverScript {
 			class DebugPeer;
 			class GamePeer;
-			class SessionPeer;
+			class MetaSession;
 		}
 		class ClientSession;
 		class GameDirector;
@@ -72,7 +72,7 @@ class SysConsole : public Console
 		virtual void Advance(Util::OS::timestamp_t tick) { }
 
 	private:
-		void OnSessionChanged(ClientSession *session);
+		void OnSessionChanged(std::shared_ptr<MetaSession> metaSession);
 
 	public:
 		virtual void Clear();
@@ -175,7 +175,7 @@ class SysConsole : public Console
 	private:
 		DebugPeer *debugPeer;
 		GamePeer *gamePeer;
-		std::shared_ptr<SessionPeer> sessionPeer;
+		std::shared_ptr<MetaSession> metaSession;
 
 		boost::signals2::scoped_connection sessionChangedConn;
 
