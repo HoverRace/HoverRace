@@ -404,7 +404,7 @@ void ClientApp::MainLoop()
 void ClientApp::RequestNewPracticeSession(std::shared_ptr<Rules> rules)
 {
 	try {
-		RequestReplaceScene(std::make_shared<GameScene>(*display, *this, scripting, gamePeer, rules));
+		RequestReplaceScene(std::make_shared<GameScene>(*display, *this, scripting, rules));
 	}
 	catch (Parcel::ObjStreamExn&) {
 		throw;
@@ -620,7 +620,7 @@ void ClientApp::RequestMainMenu()
 	rules->SetGameOpts(0x70 + craftId);
 
 	try {
-		auto scene = std::make_shared<GameScene>(*display, *this, scripting, gamePeer, rules);
+		auto scene = std::make_shared<GameScene>(*display, *this, scripting, rules);
 		scene->StartDemoMode();
 		RequestReplaceScene(scene);
 	}

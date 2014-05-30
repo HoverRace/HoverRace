@@ -57,10 +57,9 @@ GameScene::Viewport::Viewport(Display::Display &display, Observer *observer,
 }
 
 GameScene::GameScene(Display::Display &display, GameDirector &director,
-                     Script::Core *scripting, HoverScript::GamePeer *gamePeer,
-                     std::shared_ptr<Rules> rules) :
+                     Script::Core *scripting, std::shared_ptr<Rules> rules) :
 	SUPER("Game"),
-	display(display), director(director), gamePeer(gamePeer), rules(rules),
+	display(display), director(director), rules(rules),
 	muted(false),
 	session(nullptr),
 	firedOnStart(false), firedOnRaceFinish(false)

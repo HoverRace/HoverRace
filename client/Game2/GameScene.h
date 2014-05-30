@@ -32,7 +32,6 @@
 namespace HoverRace {
 	namespace Client {
 		namespace HoverScript {
-			class GamePeer;
 			class MetaPlayer;
 			class MetaSession;
 			class SessionPeer;
@@ -88,8 +87,7 @@ class GameScene : public Scene
 
 	public:
 		GameScene(Display::Display &display, GameDirector &director,
-			Script::Core *scripting, HoverScript::GamePeer *gamePeer,
-			std::shared_ptr<Rules> rules);
+			Script::Core *scripting, std::shared_ptr<Rules> rules);
 		virtual ~GameScene();
 
 	private:
@@ -122,7 +120,6 @@ class GameScene : public Scene
 	private:
 		Display::Display &display;
 		GameDirector &director;
-		HoverScript::GamePeer *gamePeer;
 		std::shared_ptr<Rules> rules;
 
 		bool muted;
