@@ -144,8 +144,6 @@ void Rulebook::SetOnLoad(const luabind::object &fn)
 
 void Rulebook::OnLoad() const
 {
-	lua_State *L = scripting->GetState();
-
 	// Initial stack: (empty)
 
 	if (onLoad) {
