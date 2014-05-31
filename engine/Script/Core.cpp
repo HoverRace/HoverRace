@@ -197,7 +197,13 @@ int Core::ErrorFunc(lua_State *L)
 	if (d.name != 0) {
 		msg << '(' << d.namewhat << ' ' << d.name << ')';
 	}
-	msg << ' ' << err;
+	msg << ' ' << err << '\n';
+
+	// Generate the traceback and append it to the error.
+	luaL_traceback(L, L, nullptr, 1);
+	msg << lua_tostring(L, -1);
+	lua_pop(L, 1);
+
 	lua_pushstring(L, msg.str().c_str());
 	return 1;
 }
