@@ -404,7 +404,7 @@ bool LevelBuilder::Parse(std::istream &in)
 		}
 
 		// Assign the connections to the MR_Level
-		BOOST_FOREACH(MR_Connection &lConnection, lConnectionList) {
+		for (MR_Connection &lConnection : lConnectionList) {
 			lRoomList_t::const_iterator iter;
 
 			iter = lRoomList.find(lConnection.mRoom0);
@@ -458,7 +458,7 @@ bool LevelBuilder::Parse(std::istream &in)
 
 	// Compute the bounding box of each Room and do some validation
 	if(lReturnValue) {
-		BOOST_FOREACH(lRoomList_t::value_type &item, lRoomList) {
+		for (lRoomList_t::value_type &item : lRoomList) {
 			int lRoomId = item.first;
 			int lRoomIndex = item.second;
 
@@ -475,7 +475,7 @@ bool LevelBuilder::Parse(std::istream &in)
 	}
 
 	if(lReturnValue) {
-		BOOST_FOREACH(lFeatureList_t::value_type &item, lFeatureList) {
+		for (lFeatureList_t::value_type &item : lFeatureList) {
 			int lFeatureId = item.first;
 			int lFeatureIndex = item.second;
 

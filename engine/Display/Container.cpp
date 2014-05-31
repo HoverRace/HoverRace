@@ -56,7 +56,7 @@ Container::Container(Display &display, const Vec2 &size, bool clip,
 void Container::ShrinkWrap()
 {
 	Vec2 max(0, 0);
-	BOOST_FOREACH(auto &child, children) {
+	for (auto &child : children) {
 		Vec3 measured = child->Measure();
 		measured += child->GetAlignedPos(measured.x, measured.y);
 		if (measured.x > max.x) max.x = measured.x;

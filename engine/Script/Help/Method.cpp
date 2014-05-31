@@ -23,7 +23,6 @@
 #include "StdAfx.h"
 
 #include <boost/algorithm/string/trim.hpp>
-#include <boost/foreach.hpp>
 
 #include "../../Util/yaml/MapNode.h"
 #include "../../Util/yaml/ScalarNode.h"
@@ -65,7 +64,7 @@ void Method::Load(yaml::MapNode *node)
 	else {
 		yaml::SeqNode *seq = dynamic_cast<yaml::SeqNode*>(sigNode);
 		if (seq != NULL) {
-			BOOST_FOREACH(yaml::Node *seqNode, *seq) {
+			for (yaml::Node *seqNode : *seq) {
 				yaml::ScalarNode *scalar = dynamic_cast<yaml::ScalarNode*>(seqNode);
 				if (scalar != NULL) {
 					sigs.push_back(scalar->AsString());

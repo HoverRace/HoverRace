@@ -98,11 +98,11 @@ ResourceLib::ResourceLib(const Util::OS::path_t &filename)
 
 ResourceLib::~ResourceLib()
 {
-	BOOST_FOREACH(const bitmaps_t::value_type &ent, bitmaps) delete ent.second;
-	BOOST_FOREACH(const actors_t::value_type &ent, actors) delete ent.second;
-	BOOST_FOREACH(const sprites_t::value_type &ent, sprites) delete ent.second;
-	BOOST_FOREACH(const shortSounds_t::value_type &ent, shortSounds) delete ent.second;
-	BOOST_FOREACH(const continuousSounds_t::value_type &ent, continuousSounds) delete ent.second;
+	for (const auto &ent : bitmaps) delete ent.second;
+	for (const auto &ent : actors) delete ent.second;
+	for (const auto &ent : sprites) delete ent.second;
+	for (const auto &ent : shortSounds) delete ent.second;
+	for (const auto &ent : continuousSounds) delete ent.second;
 
 	delete recordFile;
 }

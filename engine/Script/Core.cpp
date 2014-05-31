@@ -23,8 +23,6 @@
 
 #include <iostream>
 
-#include <boost/foreach.hpp>
-
 #include <luabind/luabind.hpp>
 
 #include "../Util/Config.h"

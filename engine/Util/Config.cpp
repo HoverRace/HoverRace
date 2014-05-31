@@ -41,7 +41,6 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem/convenience.hpp>
 #include <boost/filesystem/path.hpp>
-#include <boost/foreach.hpp>
 
 #include <SDL2/SDL_keycode.h>
 

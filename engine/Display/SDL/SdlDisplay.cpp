@@ -130,7 +130,7 @@ SdlDisplay::~SdlDisplay()
 {
 	delete legacyDisplay;
 
-	BOOST_FOREACH(auto &entry, loadedFonts) {
+	for (auto &entry : loadedFonts) {
 		TTF_CloseFont(entry.second);
 	}
 
@@ -199,7 +199,7 @@ void SdlDisplay::OnDisplayConfigChanged()
 
 		// Clear the loaded font cache, since resizing will change the
 		// sizes of the UI-scaled text.
-		BOOST_FOREACH(auto &entry, loadedFonts) {
+		for (auto &entry : loadedFonts) {
 			TTF_CloseFont(entry.second);
 		}
 		loadedFonts.clear();
@@ -245,7 +245,7 @@ void SdlDisplay::ApplyVideoMode()
 	}
 
 	int i = 0;
-	BOOST_FOREACH(const RendererInfo &info, renderers) {
+	for (const RendererInfo &info : renderers) {
 		Log::Info("renderer[%d]: %s", i++, boost::lexical_cast<std::string>(info.info).c_str());
 	}
 

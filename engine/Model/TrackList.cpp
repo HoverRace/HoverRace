@@ -22,7 +22,6 @@
 
 #include "StdAfx.h"
 
-#include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
 
 #include "../Parcel/ObjStream.h"
@@ -68,7 +67,7 @@ void TrackList::Reload(Parcel::TrackBundlePtr trackBundle)
 {
 	Clear();
 
-	BOOST_FOREACH(const OS::dirEnt_t &ent, *trackBundle) {
+	for (const OS::dirEnt_t &ent : *trackBundle) {
 		std::string name((const char*)Str::PU(ent.path().filename().c_str()));
 		try {
 			TrackEntryPtr trackEnt = trackBundle->OpenTrackEntry(name);

@@ -140,7 +140,10 @@ class MR_DllDeclare Container : public UiViewModel
 			// first chance to handle the envents.
 
 			Vec2 oldOrigin(0, 0);
-			BOOST_REVERSE_FOREACH(auto &child, children) {
+			for (auto iter = children.rbegin();
+				iter != children.rend(); ++iter)
+			{
+				auto &child = *iter;
 				oldOrigin = display.AddUiOrigin(child->GetPos());
 				bool retv = (child.get()->*F)(param);
 				display.SetUiOrigin(oldOrigin);

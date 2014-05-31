@@ -46,7 +46,7 @@ namespace yaml
 
 			void ReadString(const std::string &key, std::string &dest) const;
 
-			// STL-like iteration, so we can use BOOST_FOREACH on the node itself.
+			// STL-like iteration, so we can use range-for on the node itself.
 			typedef children_t::iterator iterator;
 			typedef children_t::const_iterator const_iterator;
 			typedef children_t::value_type value_type;

@@ -22,8 +22,6 @@
 
 #include "StdAfx.h"
 
-#include <boost/foreach.hpp>
-
 #include "../../Util/yaml/MapNode.h"
 #include "../../Util/yaml/ScalarNode.h"
 
@@ -50,7 +48,7 @@ Class::~Class()
 
 void Class::Load(yaml::MapNode *node)
 {
-	BOOST_FOREACH(const yaml::MapNode::value_type &ent, *node) {
+	for (const yaml::MapNode::value_type &ent : *node) {
 		yaml::MapNode *root = dynamic_cast<yaml::MapNode*>(ent.second);
 
 		if (root != NULL) {

@@ -22,8 +22,6 @@
 
 #include "StdAfx.h"
 
-#include <boost/foreach.hpp>
-
 #include "yaml/Emitter.h"
 #include "yaml/MapNode.h"
 #include "yaml/ScalarNode.h"
@@ -82,7 +80,7 @@ void InspectMapNode::RenderToString(std::string &s)
 void InspectMapNode::RenderToYaml(yaml::Emitter &emitter)
 {
 	emitter.StartMap();
-	BOOST_FOREACH(fields_t::value_type &ent, fields) {
+	for (fields_t::value_type &ent : fields) {
 		emitter.MapKey(ent.first);
 		if (ent.second.get() == NULL) {
 			emitter.Value("NULL");
@@ -117,7 +115,7 @@ void InspectScalarNode::RenderToYaml(yaml::Emitter &emitter)
 void InspectSeqNode::RenderToYaml(yaml::Emitter &emitter)
 {
 	emitter.StartSeq();
-	BOOST_FOREACH(InspectNodePtr field, fields) {
+	for (InspectNodePtr field : fields) {
 		if (field.get() == NULL) {
 			emitter.Value("NULL");
 		}
