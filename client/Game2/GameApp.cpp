@@ -24,8 +24,6 @@
 
 #include <sstream>
 
-#include <boost/foreach.hpp>
-
 #include "Control/Controller.h"
 #include "Control/UiHandler.h"
 #include "HoverScript/ClientScriptCore.h"
@@ -1947,14 +1945,14 @@ LRESULT CALLBACK GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam
 
 				case ID_VIEW_3DACTION:
 					This->mCurrentMode = e3DView;
-					BOOST_FOREACH(Observer *obs, This->observers) {
+					for (Observer *obs : This->observers) {
 						if (obs != NULL) obs->SetCockpitView(FALSE);
 					}
 					return 0;
 
 				case ID_VIEW_COCKPIT:
 					This->mCurrentMode = e3DView;
-					BOOST_FOREACH(Observer *obs, This->observers) {
+					for (Observer *obs : This->observers) {
 						if (obs != NULL) obs->SetCockpitView(TRUE);
 					}
 					return 0;
@@ -1964,13 +1962,13 @@ LRESULT CALLBACK GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam
 					return 0;
 
 					case ID_VIEW_PLAYERSLIST:
-						BOOST_FOREACH(Observer *obs, This->observers) {
+						for (Observer *obs : This->observers) {
 							if (obs != NULL) obs->PlayersListPageDn();
 						}
 						return 0;
 	
 					case ID_VIEW_MOREMESSAGES:
-						BOOST_FOREACH(Observer *obs, This->observers) {
+						for (Observer *obs : This->observers) {
 							if (obs != NULL) obs->MoreMessages();
 						}
 						return 0;

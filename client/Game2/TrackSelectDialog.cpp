@@ -114,7 +114,7 @@ BOOL TrackSelectDialog::DlgProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM l
 			SetDlgItemTextW(hwnd, IDC_CANS_CHK, Str::UW(_("Boost Cans")));
 
 			// Init track file list
-			BOOST_FOREACH(TrackEntry *ent, trackList) {
+			for (TrackEntry *ent : trackList) {
 				SendDlgItemMessageW(hwnd, IDC_LIST, LB_ADDSTRING, 0,
 					(LPARAM)((const wchar_t*)Str::UW(ent->name.c_str())));
 			}

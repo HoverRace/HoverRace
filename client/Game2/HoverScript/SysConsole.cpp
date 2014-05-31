@@ -269,7 +269,7 @@ void SysConsole::HelpClass(const Script::Help::Class &cls)
 
 	std::string s;
 	s.reserve(1024);
-	BOOST_FOREACH(const Class::methods_t::value_type &ent, cls.GetMethods()) {
+	for (const auto &ent : cls.GetMethods()) {
 		MethodPtr method = ent.second;
 		s.clear();
 		s += "  ";
@@ -292,7 +292,7 @@ void SysConsole::HelpMethod(const Script::Help::Class &cls,
 
 	LogInfo("---");
 
-	BOOST_FOREACH(const std::string &s, method.GetSigs()) {
+	for (const auto &s : method.GetSigs()) {
 		LogInfo(s);
 	}
 

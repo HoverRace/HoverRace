@@ -77,7 +77,7 @@ GameSelectScene::GameSelectScene(Display::Display &display,
 
 	const Vec2 btnSize(BTN_WIDTH, BTN_HEIGHT);
 	double x = 0;
-	BOOST_FOREACH(auto rulebook, rulebooks) {
+	for (auto rulebook : rulebooks) {
 		auto btn = rulebookPanel->AddChild(
 			new Display::Button(display, btnSize, rulebook->GetTitle()));
 		btn->SetPos(x, 0);

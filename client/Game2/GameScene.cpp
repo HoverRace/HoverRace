@@ -172,21 +172,21 @@ void GameScene::DetachController(Control::InputEventController &controller)
 
 void GameScene::OnCameraZoom(int increment)
 {
-	BOOST_FOREACH(auto &viewport, viewports) {
+	for (auto &viewport : viewports) {
 		viewport.observer->Zoom(increment);
 	}
 }
 
 void GameScene::OnCameraPan(int increment)
 {
-	BOOST_FOREACH(auto &viewport, viewports) {
+	for (auto &viewport : viewports) {
 		viewport.observer->Scroll(increment);
 	}
 }
 
 void GameScene::OnCameraReset()
 {
-	BOOST_FOREACH(auto &viewport, viewports) {
+	for (auto &viewport : viewports) {
 		viewport.observer->Home();
 	}
 }
@@ -199,7 +199,7 @@ void GameScene::OnPause()
 
 void GameScene::SetHudVisible(bool visible)
 {
-	BOOST_FOREACH(auto &viewport, viewports) {
+	for (auto &viewport : viewports) {
 		viewport.observer->SetHudVisible(visible);
 		viewport.hud->SetVisible(visible);
 	}
@@ -215,7 +215,7 @@ void GameScene::StartDemoMode()
 	SetHudVisible(false);
 	SetMuted(true);
 
-	BOOST_FOREACH(auto &viewport, viewports) {
+	for (auto &viewport : viewports) {
 		viewport.observer->StartDemoMode();
 	}
 }
@@ -237,7 +237,7 @@ void GameScene::Advance(Util::OS::timestamp_t tick)
 	}
 
 	// Update HUD state last, after game state is settled for this frame.
-	BOOST_FOREACH(auto &viewport, viewports) {
+	for (auto &viewport : viewports) {
 		viewport.hud->Advance(tick);
 	}
 }
@@ -246,7 +246,7 @@ void GameScene::PrepareRender()
 {
 	SUPER::PrepareRender();
 
-	BOOST_FOREACH(auto &viewport, viewports) {
+	for (auto &viewport : viewports) {
 		viewport.hud->PrepareRender();
 	}
 }
@@ -260,13 +260,13 @@ void GameScene::Render()
 		VideoServices::VideoBuffer::Lock lock(*videoBuf);
 
 		int i = 0;
-		BOOST_FOREACH(auto &viewport, viewports) {
+		for (auto &viewport : viewports) {
 			viewport.observer->RenderNormalDisplay(videoBuf, session,
 				session->GetPlayer(i++),
 				simTime, session->GetBackImage());
 		}
 	}
-	BOOST_FOREACH(auto &viewport, viewports) {
+	for (auto &viewport : viewports) {
 		if (viewport.hud->IsVisible()) {
 			viewport.hud->Render();
 		}
@@ -275,7 +275,7 @@ void GameScene::Render()
 	// Trigger sounds.
 	if (!muted) {
 		int i = 0;
-		BOOST_FOREACH(auto &viewport, viewports) {
+		for (auto &viewport : viewports) {
 			viewport.observer->PlaySounds(session->GetCurrentLevel(),
 				session->GetPlayer(i++));
 		}
