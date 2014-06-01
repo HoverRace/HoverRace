@@ -39,20 +39,6 @@ using namespace std;
 namespace HoverRace {
 namespace Control {
 
-namespace {
-	/**
-	 * Retrieve the keycode for a key name.
-	 * @param s The key name.
-	 * @return The keycode, or @c SDLK_UNKNOWN if no keycode corresponds to
-	 *         the key name.
-	 */
-	SDL_Keycode StringToKeycode(const std::string &s)
-	{
-		//TODO
-		return SDLK_UNKNOWN;
-	}
-}
-
 InputEventController::actions_t::ui_t::ui_t() :
 	menuOk(std::make_shared<Action<voidSignal_t>>(_("OK"), 0)),
 	menuCancel(std::make_shared<Action<voidSignal_t>>(_("Cancel"), 0)),
@@ -423,7 +409,7 @@ void InputEventController::AddConsoleMaps()
  */
 InputEventController::VoidActionPtr InputEventController::Hotkey(const std::string &key)
 {
-	SDL_Keycode code = StringToKeycode(key);
+	SDL_Keycode code = StringToKey(key);
 
 	if (code != SDLK_UNKNOWN) {
 		auto action = std::make_shared<Action<voidSignal_t>>("", 0);

@@ -32,18 +32,33 @@ namespace Control {
 namespace {
 	class KeyToString
 	{
-		typedef std::unordered_map<SDL_Keycode, std::string> lookup_t;
-		lookup_t lookup;
+		/// Keycode to user-visible name.
+		std::unordered_map<SDL_Keycode, std::string> k2s;
+		/// Canonical key name to keycode.
+		std::unordered_map<std::string, SDL_Keycode> s2k;
 		std::string unknown;
 
 		protected:
-			void MapKey(SDL_Keycode key, std::string &&s)
+			template<class Name>
+			void MapKey(SDL_Keycode key, Name &&name)
 			{
-				lookup.insert(lookup_t::value_type(key, std::forward<std::string>(s)));
+				k2s.emplace(key, std::forward<Name>(name));
 			}
-		public:
-			KeyToString() : lookup(), unknown(_("Unknown"))
+
+			template<class Name, class Val>
+			void MapKey(SDL_Keycode key, Name &&name, Val &&val)
 			{
+				MapKey(key, std::forward<Name>(name));
+				s2k.emplace(std::forward<Val>(val), key);
+			}
+
+		public:
+			KeyToString() : unknown(_("Unknown"))
+			{
+				// Note: By convention, the user-visible key names are
+				//       mixed-case, while the canonical key names are
+				//       lower-case.
+
 				MapKey(SDLK_UNKNOWN, _("Unknown"));
 				MapKey(SDLK_BACKSPACE, _("Backspace"));
 				MapKey(SDLK_TAB, _("Tab"));
@@ -61,18 +76,18 @@ namespace {
 				}
 				MapKey(SDLK_DELETE, _("Del"));
 				MapKey(SDLK_CAPSLOCK, _("Caps Lock"));
-				MapKey(SDLK_F1, _("F1"));
-				MapKey(SDLK_F2, _("F2"));
-				MapKey(SDLK_F3, _("F3"));
-				MapKey(SDLK_F4, _("F4"));
-				MapKey(SDLK_F5, _("F5"));
-				MapKey(SDLK_F6, _("F6"));
-				MapKey(SDLK_F7, _("F7"));
-				MapKey(SDLK_F8, _("F8"));
-				MapKey(SDLK_F9, _("F9"));
-				MapKey(SDLK_F10, _("F10"));
-				MapKey(SDLK_F11, _("F11"));
-				MapKey(SDLK_F12, _("F12"));
+				MapKey(SDLK_F1, _("F1"), "f1");
+				MapKey(SDLK_F2, _("F2"), "f2");
+				MapKey(SDLK_F3, _("F3"), "f3");
+				MapKey(SDLK_F4, _("F4"), "f4");
+				MapKey(SDLK_F5, _("F5"), "f5");
+				MapKey(SDLK_F6, _("F6"), "f6");
+				MapKey(SDLK_F7, _("F7"), "f7");
+				MapKey(SDLK_F8, _("F8"), "f8");
+				MapKey(SDLK_F9, _("F9"), "f9");
+				MapKey(SDLK_F10, _("F10"), "f10");
+				MapKey(SDLK_F11, _("F11"), "f11");
+				MapKey(SDLK_F12, _("F12"), "f12");
 				MapKey(SDLK_PRINTSCREEN, _("Print Screen"));
 				MapKey(SDLK_SCROLLLOCK, _("Scroll Lock"));
 				MapKey(SDLK_PAUSE, _("Pause"));
@@ -166,10 +181,22 @@ namespace {
 
 			const std::string &Lookup(SDL_Keycode key)
 			{
-				lookup_t::iterator iter = lookup.find(key);
-				return (iter == lookup.end()) ? unknown : iter->second;
+				auto iter = k2s.find(key);
+				return (iter == k2s.end()) ? unknown : iter->second;
+			}
+
+			SDL_Keycode Lookup(const std::string &s)
+			{
+				auto iter = s2k.find(s);
+				return (iter == s2k.end()) ? SDLK_UNKNOWN : iter->second;
 			}
 	};
+
+	KeyToString &GetKeyToString()
+	{
+		static KeyToString keyToString;
+		return keyToString;
+	}
 }
 
 /**
@@ -180,7 +207,7 @@ namespace {
  */
 std::string InputEventController::HashToString(int hash)
 {
-	static KeyToString keyToString;
+	KeyToString &keyToString = GetKeyToString();
 
 	switch((hash & 0x00C00000) >> 22) {
 		case 0: // keyboard keycode event
@@ -331,6 +358,17 @@ std::string InputEventController::HashToString(int hash)
 	}
 
 	return _("Unknown");
+}
+
+/**
+ * Convert a canonical key name into a keycode.
+ * The canonical key name is used in scripts and isn't translated.
+ * @param s The key name.
+ * @return The keycode, or @c SDLK_UNKNOWN if the key name is unknown.
+ */
+SDL_Keycode InputEventController::StringToKey(const std::string &s)
+{
+	return GetKeyToString().Lookup(s);
 }
 
 }  // namespace Control

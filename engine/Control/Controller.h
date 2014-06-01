@@ -220,6 +220,7 @@ class MR_DllDeclare InputEventController {
 		VoidActionPtr Hotkey(const std::string &key);
 
 		std::string HashToString(int hash);
+		SDL_Keycode StringToKey(const std::string &s);
 
 	private:
 		template<class T>
