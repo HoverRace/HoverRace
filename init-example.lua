@@ -15,6 +15,13 @@ do
 	cfg:set_video_res(800, 450)
 	w, h = cfg:get_video_res()
 	print("New window res: " .. w .. "x" .. h)
+	
+	-- Map some useful hotkeys.
+	-- Note that F11 is the default key to bring up the console
+	-- and F12 is used to break into the debugger in some IDEs.
+	input:hotkey("f10", function ()
+		debug:start_test_lab()
+	end)
 end
 
 -- Some functions, such as game:start_practice(), can't be called until
