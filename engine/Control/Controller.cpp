@@ -2,7 +2,7 @@
 // Controller.cpp
 //
 // Copyright (c) 2010 Ryan Curtin.
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -38,6 +38,20 @@ using namespace std;
 
 namespace HoverRace {
 namespace Control {
+
+namespace {
+	/**
+	 * Retrieve the keycode for a key name.
+	 * @param s The key name.
+	 * @return The keycode, or @c SDLK_UNKNOWN if no keycode corresponds to
+	 *         the key name.
+	 */
+	SDL_Keycode StringToKeycode(const std::string &s)
+	{
+		//TODO
+		return SDLK_UNKNOWN;
+	}
+}
 
 InputEventController::actions_t::ui_t::ui_t() :
 	menuOk(std::make_shared<Action<voidSignal_t>>(_("OK"), 0)),
@@ -101,8 +115,9 @@ void InputEventController::ProcessInputEvent(const SDL_Event &evt)
 bool InputEventController::OnKeyPressed(const SDL_KeyboardEvent& arg)
 {
 	SDL_Keycode kc = arg.keysym.sym;
+	auto textInputActive = SDL_IsTextInputActive();
 
-	if (SDL_IsTextInputActive()) {
+	if (textInputActive) {
 		SDL_Keycode nkc = kc;
 
 		// Map numpad enter to the "normal" enter so action subscribers don't need to
@@ -127,6 +142,15 @@ bool InputEventController::OnKeyPressed(const SDL_KeyboardEvent& arg)
 		kc = SDLK_LCTRL;
 	else if (kc == SDLK_RGUI)
 		kc = SDLK_LGUI;
+
+	// Hotkeys are fired in addition to the normal bound action, but we don't
+	// want to interfere with text input.
+	if (!textInputActive) {
+		auto iter = hotkeys.find(kc);
+		if (iter != hotkeys.end()) {
+			(*(iter->second))(1);
+		}
+	}
 
 	HandleEvent(HashKeyboardEvent(kc), 1);
 	return true;
@@ -387,6 +411,28 @@ void InputEventController::AddConsoleToggleMaps()
 void InputEventController::AddConsoleMaps()
 {
 	AddActionMap(_("Console"));
+}
+
+/**
+ * Assign an action to a hotkey.
+ * Hotkey actions are activated in *addition* to any normal action assigned
+ * to the key.
+ * @param key The string representation of the key.
+ * @return The action for the hotkey, or @c nullptr if the key is an invalid
+ *         key for a hotkey.
+ */
+InputEventController::VoidActionPtr InputEventController::Hotkey(const std::string &key)
+{
+	SDL_Keycode code = StringToKeycode(key);
+
+	if (code != SDLK_UNKNOWN) {
+		auto action = std::make_shared<Action<voidSignal_t>>("", 0);
+		hotkeys[code] = action;
+		return action;
+	}
+	else {
+		return VoidActionPtr();
+	}
 }
 
 /// Save the controller configuration to the Config object.

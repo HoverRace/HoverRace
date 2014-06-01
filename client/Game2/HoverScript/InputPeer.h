@@ -1,7 +1,7 @@
 
-// SysEnv.h
+// InputPeer.h
 //
-// Copyright (c) 2010, 2013, 2014 Michael Imamura.
+// Copyright (c) 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -21,54 +21,45 @@
 
 #pragma once
 
-#include "../../../engine/Script/Env.h"
+#include "../../../engine/Script/Handlers.h"
+#include "../../../engine/Script/Peer.h"
 
 namespace HoverRace {
-	namespace Client {
-		namespace HoverScript {
-			class DebugPeer;
-			class GamePeer;
-			class InputPeer;
-		}
+	namespace Control {
+		class InputEventController;
 	}
 	namespace Script {
 		class Core;
 	}
 }
 
+
 namespace HoverRace {
 namespace Client {
 namespace HoverScript {
 
 /**
- * The global system environment.
+ * Scripting peer for input.
  * @author Michael Imamura
  */
-class SysEnv : private Script::Env
+class InputPeer : public Script::Peer
 {
-	typedef Script::Env SUPER;
+	typedef Script::Peer SUPER;
+	public:
+		InputPeer(Script::Core *scripting,
+			Control::InputEventController *controller);
+		virtual ~InputPeer() { }
 
 	public:
-		SysEnv(Script::Core *scripting, DebugPeer *debugPeer,
-			GamePeer *gamePeer, InputPeer *inputPeer);
-		virtual ~SysEnv();
-
-	protected:
-		virtual void InitEnv();
-
-	protected:
-		virtual void LogInfo(const std::string &s);
-		virtual void LogError(const std::string &s);
+		static void Register(Script::Core *scripting);
 
 	public:
-		// Expose privately-inherited function.
-		void RunScript(const Util::OS::path_t &filename) { SUPER::RunScript(filename); }
+		void LHotkey(const std::string &key, const luabind::object &fn);
 
 	private:
-		DebugPeer *debugPeer;
-		GamePeer *gamePeer;
-		InputPeer *inputPeer;
-		Script::Core::OutHandle outHandle;
+		Control::InputEventController *controller;
+		std::vector<Script::Handlers> hotkeyHandlers;
+		std::vector<std::unique_ptr<boost::signals2::scoped_connection>> hotkeyConns;
 };
 
 }  // namespace HoverScript

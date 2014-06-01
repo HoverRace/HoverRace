@@ -47,6 +47,7 @@
 #include "HoverScript/ConsoleScene.h"
 #include "HoverScript/DebugPeer.h"
 #include "HoverScript/GamePeer.h"
+#include "HoverScript/InputPeer.h"
 #include "HoverScript/SessionPeer.h"
 #include "HoverScript/SysConsole.h"
 #include "HoverScript/SysEnv.h"
@@ -120,6 +121,8 @@ ClientApp::ClientApp() :
 		throw Exception(TTF_GetError());
 	}
 
+	controller = new InputEventController();
+
 	// Create the system console and execute the initialization scripts.
 	// This allows the script to modify the configuration (e.g. for unit tests).
 	scripting = (new ClientScriptCore())->Reset();
@@ -127,7 +130,8 @@ ClientApp::ClientApp() :
 	rulebookLibrary->Reload();
 	debugPeer = new DebugPeer(scripting, *this);
 	gamePeer = new GamePeer(scripting, *this, *rulebookLibrary);
-	sysEnv = new SysEnv(scripting, debugPeer, gamePeer);
+	inputPeer = new InputPeer(scripting, controller);
+	sysEnv = new SysEnv(scripting, debugPeer, gamePeer, inputPeer);
 	for (OS::path_t &initScript : cfg->runtime.initScripts) {
 		if (!initScript.empty()) {
 			sysEnv->RunScript(initScript);
@@ -180,8 +184,6 @@ ClientApp::ClientApp() :
 	else {
 		throw Exception(SDL_GetError());
 	}
-
-	controller = new InputEventController();
 
 	namespace LayoutFlags = Display::UiLayoutFlags;
 	fpsLbl = new Display::Label("FPS:",

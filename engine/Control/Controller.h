@@ -2,7 +2,7 @@
 // Controller.h
 //
 // Copyright (c) 2010 Ryan Curtin.
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -118,6 +118,13 @@ class MR_DllDeclare InputEventController {
 			AXIS_WHEEL_Y,
 		};
 
+		typedef std::shared_ptr<Action<voidSignal_t>> VoidActionPtr;
+		typedef std::shared_ptr<Action<valueSignal_t>> ValueActionPtr;
+		typedef std::shared_ptr<Action<stringSignal_t, const std::string&>> StringActionPtr;
+		typedef std::shared_ptr<Action<textControlSignal_t, TextControl::key_t>> TextControlActionPtr;
+		typedef std::shared_ptr<Action<vec2Signal_t, const Vec2&>> Vec2ActionPtr;
+		typedef std::shared_ptr<Action<mouseClickSignal_t, const Mouse::Click&>> MouseClickActionPtr;
+
 		// event handlers
 		bool OnKeyPressed(const SDL_KeyboardEvent &arg);
 		bool OnKeyReleased(const SDL_KeyboardEvent &arg);
@@ -210,6 +217,8 @@ class MR_DllDeclare InputEventController {
 		void AddConsoleToggleMaps();
 		void AddConsoleMaps();
 
+		VoidActionPtr Hotkey(const std::string &key);
+
 		std::string HashToString(int hash);
 
 	private:
@@ -285,6 +294,7 @@ class MR_DllDeclare InputEventController {
 		ActionMap actionMap;
 		std::vector<std::string> activeMaps;
 		std::map<std::string, ActionMap> allActionMaps;
+		std::unordered_map<SDL_Keycode, VoidActionPtr> hotkeys;
 
 		int nextAvailableDisabledHash;
 
@@ -293,12 +303,6 @@ class MR_DllDeclare InputEventController {
 		std::string captureMap; ///< name of the map we are capturing for
 
 	public:
-		typedef std::shared_ptr<Action<voidSignal_t>> VoidActionPtr;
-		typedef std::shared_ptr<Action<valueSignal_t>> ValueActionPtr;
-		typedef std::shared_ptr<Action<stringSignal_t, const std::string&>> StringActionPtr;
-		typedef std::shared_ptr<Action<textControlSignal_t, TextControl::key_t>> TextControlActionPtr;
-		typedef std::shared_ptr<Action<vec2Signal_t, const Vec2&>> Vec2ActionPtr;
-		typedef std::shared_ptr<Action<mouseClickSignal_t, const Mouse::Click&>> MouseClickActionPtr;
 		struct actions_t {
 			struct ui_t {
 				ui_t();

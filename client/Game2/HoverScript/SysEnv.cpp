@@ -1,7 +1,7 @@
 
 // SysEnv.cpp
 //
-// Copyright (c) 2010, 2013 Michael Imamura.
+// Copyright (c) 2010, 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@
 
 #include "DebugPeer.h"
 #include "GamePeer.h"
+#include "InputPeer.h"
 
 #include "SysEnv.h"
 
@@ -75,8 +76,9 @@ namespace Client {
 namespace HoverScript {
 
 SysEnv::SysEnv(Script::Core *scripting, DebugPeer *debugPeer,
-               GamePeer *gamePeer) :
+               GamePeer *gamePeer, InputPeer *inputPeer) :
 	SUPER(scripting), debugPeer(debugPeer), gamePeer(gamePeer),
+	inputPeer(inputPeer),
 	outHandle(scripting->AddOutput(std::make_shared<LogStream>()))
 {
 }
@@ -99,6 +101,7 @@ void SysEnv::InitEnv()
 	object env(from_stack(L, -1));
 	env["debug"] = debugPeer;
 	env["game"] = gamePeer;
+	env["input"] = inputPeer;
 }
 
 void SysEnv::LogInfo(const std::string &s)

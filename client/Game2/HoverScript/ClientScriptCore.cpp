@@ -32,6 +32,7 @@
 #include "DebugPeer.h"
 #include "GamePeer.h"
 #include "HudPeer.h"
+#include "InputPeer.h"
 #include "MetaPlayer.h"
 #include "MetaSession.h"
 #include "PlayerPeer.h"
@@ -87,6 +88,7 @@ Script::Core *ClientScriptCore::Reset()
 		DebugPeer::Register(this);
 		GamePeer::Register(this);
 		HudPeer::Register(this);
+		InputPeer::Register(this);
 		MetaPlayer::Register(this);
 		MetaSession::Register(this);
 		PlayerPeer::Register(this);

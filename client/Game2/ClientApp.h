@@ -35,6 +35,7 @@ namespace HoverRace {
 			class DebugPeer;
 			class GamePeer;
 			class HighConsole;
+			class InputPeer;
 			class SessionPeer;
 			typedef std::shared_ptr<SessionPeer> SessionPeerPtr;
 			class SysConsole;
@@ -125,6 +126,7 @@ class ClientApp : public GameDirector
 		Script::Core *scripting;
 		HoverScript::DebugPeer *debugPeer;
 		HoverScript::GamePeer *gamePeer;
+		HoverScript::InputPeer *inputPeer;
 		HoverScript::SysEnv *sysEnv;
 		HoverScript::SysConsole *sysConsole;
 		std::weak_ptr<HoverScript::ConsoleScene> consoleScene;
