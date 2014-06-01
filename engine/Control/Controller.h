@@ -136,7 +136,7 @@ class MR_DllDeclare InputEventController {
 		void ProcessInputEvent(const SDL_Event &evt);
 		void HandleEvent(int hash, int value);
 
-		/***
+		/**
 		 * This function tells the InputEventController to capture the next user input
 		 * event and assign the action currently residing at 'oldhash' to the hash of
 		 * the new input.  Behavior is undefined if there is no action assigned to the
@@ -148,31 +148,31 @@ class MR_DllDeclare InputEventController {
 		 */
 		void CaptureNextInput(int oldhash, std::string mapname);
 
-		/***
+		/**
 		 * This function indicates whether or not the controller is capturing an input.
 		 * It can be used to check whether or not an input has been captured.
 		 */
 		bool IsCapturing();
 
-		/***
+		/**
 		 * This function stops a capture.
 		 */
 		void StopCapture();
 
-		/***
+		/**
 		 * This function assigns the next disabled hash to the current capture control.
 		 * Nothing will be done if the InputEventController is not in capture mode.  This
 		 * function will also disable capture mode.
 		 */
 		void DisableCaptureInput();
 
-		/***
+		/**
 		 * Clears all of the active control bindings.  Does not delete the bindings
 		 * but simply removes them from the active action map.
 		 */
 		void ClearActionMap();
 
-		/***
+		/**
 		 * Add an action map into the current action map.  The available maps are
 		 * referenced by string.  Maps include:
 		 *
@@ -182,22 +182,22 @@ class MR_DllDeclare InputEventController {
 		 */
 		bool AddActionMap(std::string mapname);
 
-		/***
+		/**
 		 * Return a vector containing the current maps.
 		 */
 		const std::vector<std::string>& GetActiveMaps();
 
-		/***
+		/**
 		 * Return the map with the given key.
 		 */
 		ActionMap& GetActionMap(std::string key);
 
-		/***
+		/**
 		 * Return a vector containing the names of all the available maps.
 		 */
 		std::vector<std::string> GetAvailableMaps();
 
-		/***
+		/**
 		 * Update player mappings to point to correct MainCharacter objects, then
 		 * add them to the active action map.  If NULL is passed as any of the pointers
 		 * that map will not be added.
@@ -278,7 +278,7 @@ class MR_DllDeclare InputEventController {
 		*/
 
 	private:
-		/***
+		/**
 		 * We store several different action maps which we can choose from.
 		 * They are referenced by string.  See ClearActionMap(), AddActionMap().
 		 */
