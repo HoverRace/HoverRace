@@ -11,7 +11,7 @@ return Player {
 
 	on_joined = function(self, session)
 		self.session = session
-		self.lap = 0
+		self.lap = 1
 	end,
 	
 	on_start = function(self)
