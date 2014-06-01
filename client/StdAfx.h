@@ -63,6 +63,7 @@
 #include <set>
 #include <sstream>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include "../../include/compat/luabind_cxx11.h"

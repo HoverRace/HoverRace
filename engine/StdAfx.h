@@ -54,6 +54,7 @@
 #include <set>
 #include <sstream>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 // Prefer Boost::Filesystem v3 on Boost 1.44+.
