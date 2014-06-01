@@ -61,8 +61,6 @@ Rulebook::Rulebook(Script::Core *scripting, const Util::OS::path_t &basePath) :
 	maxPlayers(0),
 	rules(),
 	onLoad(scripting),
-	onPreGame(scripting), onPostGame(scripting),
-	onPlayerJoined(scripting),
 	metas(scripting),
 	loaded(false)
 {
@@ -182,39 +180,6 @@ void Rulebook::OnLoad() const
 		// the factories.
 		this->metas = std::move(metas);
 	}
-}
-
-void Rulebook::SetOnPreGame(const luabind::object &fn)
-{
-	onPreGame.AddHandler(fn);
-}
-
-void Rulebook::OnPreGame(HoverScript::SessionPeerPtr session) const
-{
-	onPreGame.CallHandlers(luabind::object(scripting->GetState(), session));
-}
-
-void Rulebook::SetOnPostGame(const luabind::object &fn)
-{
-	onPostGame.AddHandler(fn);
-}
-
-void Rulebook::OnPostGame(HoverScript::SessionPeerPtr session) const
-{
-	onPostGame.CallHandlers(luabind::object(scripting->GetState(), session));
-}
-
-void Rulebook::SetOnPlayerJoined(const luabind::object &fn)
-{
-	onPlayerJoined.AddHandler(fn);
-}
-
-void Rulebook::OnPlayerJoined(HoverScript::SessionPeerPtr session,
-                            std::shared_ptr<HoverScript::PlayerPeer> player) const
-{
-	lua_State *L = scripting->GetState();
-	onPlayerJoined.CallHandlers(luabind::object(L, session),
-		luabind::object(L, player));
 }
 
 }  // namespace Client

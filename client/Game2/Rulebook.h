@@ -122,17 +122,6 @@ class Rulebook
 		void OnLoad() const;
 
 	public:
-		void SetOnPreGame(const luabind::object &fn);
-		void OnPreGame(HoverScript::SessionPeerPtr session) const;
-
-		void SetOnPostGame(const luabind::object &fn);
-		void OnPostGame(HoverScript::SessionPeerPtr session) const;
-
-		void SetOnPlayerJoined(const luabind::object &fn);
-		void OnPlayerJoined(HoverScript::SessionPeerPtr session,
-			std::shared_ptr<HoverScript::PlayerPeer> player) const;
-
-	public:
 		friend bool operator==(const Rulebook &lhs, const Rulebook &rhs);
 		friend bool operator<(const Rulebook &lhs, const Rulebook &rhs);
 
@@ -150,9 +139,6 @@ class Rulebook
 		rules_t rules;
 
 		Script::RegistryRef onLoad;
-		Script::Handlers onPreGame;
-		Script::Handlers onPostGame;
-		Script::Handlers onPlayerJoined;
 
 		mutable metas_t metas;
 
