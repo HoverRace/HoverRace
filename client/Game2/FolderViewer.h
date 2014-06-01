@@ -1,4 +1,4 @@
-
+#ifdef HR_LEGACY_BUILD
 // FolderViewer.h
 // Header for the folder viewer.
 //
@@ -53,3 +53,4 @@ class FolderViewer
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif

@@ -22,6 +22,7 @@
 //
 
 #include "StdAfx.h"
+#ifdef HR_LEGACY_BUILD
 
 #include "../../engine/Exception.h"
 #include "../../engine/Util/OS.h"
@@ -114,3 +115,4 @@ bool FolderViewer::VerifyDirectory(OS::wnd_t parentWnd)
 
 }  // namespace Client
 }  // namespace HoverRace
+#endif
