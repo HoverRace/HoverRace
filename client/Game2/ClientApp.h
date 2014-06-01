@@ -109,13 +109,9 @@ class ClientApp : public GameDirector
 		virtual Control::InputEventController *GetController() const { return controller; }
 		virtual Control::InputEventController *ReloadController();
 		virtual sessionChangedSignal_t &GetSessionChangedSignal() { return sessionChangedSignal; }
-#	ifdef _WIN32
-		virtual HWND GetWindowHandle() const { return mainWnd; }
-#	endif
 
 	private:
 		MR_UInt32 userEventId;
-		Util::OS::wnd_t mainWnd;
 		Display::Display *display;
 		Control::InputEventController *controller;
 		sceneStack_t sceneStack;

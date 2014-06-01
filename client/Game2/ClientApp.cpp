@@ -157,7 +157,7 @@ ClientApp::ClientApp() :
 	SDL_VERSION(&wm.version);
 	if (SDL_GetWindowWMInfo(static_cast<Display::SDL::SdlDisplay*>(display)->GetWindow(), &wm)) {
 #		ifdef _WIN32
-			HWND hwnd = mainWnd = wm.info.win.window;
+			HWND hwnd = wm.info.win.window;
 
 			// Set icon.
 			// On Windows, the icon is embedded as a resource.
@@ -173,7 +173,7 @@ ClientApp::ClientApp() :
 			if (ico != NULL)
 				SendMessageW(hwnd, WM_SETICON, ICON_SMALL, reinterpret_cast<LPARAM>(ico));
 #		else
-			mainWnd = wm.info.x11.window;
+			auto mainWnd = wm.info.x11.window;
 			// On non-Win32 we prefer to let the window manager decide the
 			// position of the window.
 			/*TODO

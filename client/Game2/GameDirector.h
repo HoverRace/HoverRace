@@ -132,11 +132,6 @@ class GameDirector
 		 * ended.
 		 */
 		virtual sessionChangedSignal_t &GetSessionChangedSignal() = 0;
-
-
-#	ifdef _WIN32
-		virtual HWND GetWindowHandle() const = 0;
-#	endif
 };
 
 }  // namespace HoverScript

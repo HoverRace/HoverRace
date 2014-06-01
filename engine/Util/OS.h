@@ -56,11 +56,6 @@ class MR_DllDeclare OS {
 		static const std::locale stdLocale;
 
 		typedef MR_UInt32 timestamp_t;
-#		ifdef _WIN32
-			typedef HWND wnd_t;
-#		else
-			typedef Window wnd_t;
-#		endif
 
 #		if defined(WITH_WIDE_PATHS) && BOOST_FILESYSTEM_VERSION == 2
 			typedef boost::filesystem::wpath path_t;
