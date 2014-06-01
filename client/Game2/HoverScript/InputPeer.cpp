@@ -1,5 +1,5 @@
 
-// PlayerPeer.cpp
+// InputPeer.cpp
 //
 // Copyright (c) 2010, 2014 Michael Imamura.
 //
