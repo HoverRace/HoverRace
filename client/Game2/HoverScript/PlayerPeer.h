@@ -85,8 +85,6 @@ class PlayerPeer : public Script::Peer {
 		MainCharacter::MainCharacter *player;
 		MetaPlayer *meta;
 		std::shared_ptr<HudPeer> hud;
-
-		luabind::object props;
 };
 
 }  // namespace HoverScript

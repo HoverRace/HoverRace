@@ -37,8 +37,7 @@ namespace HoverScript {
 PlayerPeer::PlayerPeer(Script::Core *scripting,
                        MainCharacter::MainCharacter *player) :
 	SUPER(scripting, "Player"),
-	player(player), meta(nullptr),
-	props(luabind::newtable(scripting->GetState()))
+	player(player), meta(nullptr)
 {
 }
 
@@ -62,7 +61,6 @@ void PlayerPeer::Register(Script::Core *scripting)
 			.def_readonly("hud", &PlayerPeer::LGetHud)
 			.def_readonly("index", &PlayerPeer::LGetIndex)
 			.def_readonly("name", &PlayerPeer::LGetName)
-			.property("props", &PlayerPeer::props)
 	];
 }
 
