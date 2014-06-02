@@ -37,6 +37,7 @@ namespace HoverRace {
 		namespace HoverScript {
 			class DebugPeer;
 			class GamePeer;
+			class InputPeer;
 			class MetaSession;
 		}
 		class ClientSession;
@@ -61,7 +62,8 @@ class SysConsole : public Console
 	typedef Console SUPER;
 	public:
 		SysConsole(Script::Core *scripting, GameDirector &director,
-			DebugPeer *debugPeer, GamePeer *gamePeer, int maxLogLines=512,
+			DebugPeer *debugPeer, GamePeer *gamePeer, InputPeer *inputPeer,
+			int maxLogLines=512,
 			int maxHistory=64);
 		virtual ~SysConsole();
 
@@ -175,6 +177,7 @@ class SysConsole : public Console
 	private:
 		DebugPeer *debugPeer;
 		GamePeer *gamePeer;
+		InputPeer *inputPeer;
 		std::shared_ptr<MetaSession> metaSession;
 
 		boost::signals2::scoped_connection sessionChangedConn;

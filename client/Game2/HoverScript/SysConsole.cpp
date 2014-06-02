@@ -28,6 +28,7 @@
 #include "../GameDirector.h"
 #include "DebugPeer.h"
 #include "GamePeer.h"
+#include "InputPeer.h"
 #include "MetaSession.h"
 
 #include "SysConsole.h"
@@ -52,9 +53,10 @@ namespace HoverScript {
 SysConsole::SysConsole(Script::Core *scripting,
                        GameDirector &director,
                        DebugPeer *debugPeer, GamePeer *gamePeer,
+                       InputPeer *inputPeer,
                        int maxLogLines, int maxHistory) :
 	SUPER(scripting),
-	debugPeer(debugPeer), gamePeer(gamePeer),
+	debugPeer(debugPeer), gamePeer(gamePeer), inputPeer(inputPeer),
 	introWritten(false), maxLogLines(maxLogLines), logLines(), baseLogIdx(0),
 	history(maxHistory), curHistory(history.end())
 {
@@ -89,6 +91,7 @@ void SysConsole::InitEnv()
 	object env(from_stack(L, -1));
 	env["debug"] = debugPeer;
 	env["game"] = gamePeer;
+	env["input"] = inputPeer;
 	env["session"] = metaSession;
 }
 
@@ -196,7 +199,7 @@ void SysConsole::AddIntroLines()
 	intro += " :: Console active.";
 	LogNote(intro);
 
-	LogNote("Available global objects: debug, game");
+	LogNote("Available global objects: debug, game, input");
 
 	std::string helpInstructions = boost::str(boost::format(
 		_("For help on a class or method, call the %s method: %s")) %

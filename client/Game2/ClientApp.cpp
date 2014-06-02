@@ -137,7 +137,8 @@ ClientApp::ClientApp() :
 			sysEnv->RunScript(initScript);
 		}
 	}
-	sysConsole = new SysConsole(scripting, *this, debugPeer, gamePeer);
+	sysConsole = new SysConsole(scripting, *this,
+		debugPeer, gamePeer, inputPeer);
 
 	//TODO: Select which display to use.
 	SDL_DisplayMode desktopMode;
