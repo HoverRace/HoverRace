@@ -11,6 +11,8 @@ return Player {
 
 	on_joined = function(self, session)
 		self.session = session
+		
+		self.best_lap = nil
 		self.lap = 1
 	end,
 	
@@ -40,7 +42,10 @@ return Player {
 		lap = lap + 1
 		self.lap = lap
 
-		--TODO: Track best lap.
+		-- Track best lap.
+		if self.best_lap == nil or lap_time < self.best_lap then
+			self.best_lap = lap_time
+		end
 
 		print(player_name .. " lap time: " .. tostring(lap_time))
 		print(player_name .. " is on lap " ..
@@ -56,13 +61,16 @@ return Player {
 	
 	on_finish = function(self)
 		local session = self.session.session
+		local player_name = self.player.name
+		
 		self.finish_time = session.clock
 
 		local hud = self.player.hud
 		--TODO: Set up postgame HUD.
 		hud:clear()
 		hud:add_text(Hud.S, "Finished in " .. tostring(self.finish_time))
-		print(self.player.name .. " finished at " .. tostring(self.finish_time))
+		print(player_name .. " finished at " .. tostring(self.finish_time))
+		print(player_name .. " best lap: " .. tostring(self.best_lap))
 	end,
 
 }
