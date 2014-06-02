@@ -63,6 +63,8 @@ class PlayerPeer : public Script::Peer {
 		static void Register(Script::Core *scripting);
 
 	public:
+		MainCharacter::MainCharacter *GetPlayer() const { return player; }
+
 		void SetMeta(MetaPlayer *meta) { this->meta = meta; }
 		void SetHud(std::shared_ptr<HudPeer> hud);
 
@@ -85,8 +87,6 @@ class PlayerPeer : public Script::Peer {
 		std::shared_ptr<HudPeer> hud;
 
 		luabind::object props;
-
-		boost::signals2::scoped_connection finishLineConn;
 };
 
 }  // namespace HoverScript

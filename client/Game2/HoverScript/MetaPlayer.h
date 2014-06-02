@@ -60,6 +60,7 @@ class MetaPlayer
 
 	private:
 		std::shared_ptr<PlayerPeer> player;
+		boost::signals2::scoped_connection finishLineConn;
 };
 
 }  // namespace HoverScript

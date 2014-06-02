@@ -40,12 +40,6 @@ PlayerPeer::PlayerPeer(Script::Core *scripting,
 	player(player), meta(nullptr),
 	props(luabind::newtable(scripting->GetState()))
 {
-	finishLineConn = player->GetFinishLineSignal().connect(
-		[&](MainCharacter::MainCharacter*) {
-			if (meta) {
-				meta->OnFinishLine();
-			}
-		});
 }
 
 PlayerPeer::~PlayerPeer()

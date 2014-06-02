@@ -21,6 +21,7 @@
 
 #include "StdAfx.h"
 
+#include "../../../engine/MainCharacter/MainCharacter.h"
 #include "../../../engine/Script/Core.h"
 #include "../../../engine/Script/Wrapper.h"
 #include "../../../engine/Util/Log.h"
@@ -66,6 +67,11 @@ MetaPlayer::MetaPlayer(std::shared_ptr<PlayerPeer> player) :
 	player(std::move(player))
 {
 	this->player->SetMeta(this);
+
+	finishLineConn = this->player->GetPlayer()->GetFinishLineSignal().connect(
+		[&](MainCharacter::MainCharacter*) {
+			OnFinishLine();
+		});
 }
 
 MetaPlayer::~MetaPlayer()
