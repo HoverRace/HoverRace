@@ -1,7 +1,7 @@
 // ClientSession.h
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -43,6 +43,10 @@ namespace Client {
 
 class ClientSession
 {
+	public:
+		ClientSession(std::shared_ptr<Rules> rules=nullptr);
+		virtual ~ClientSession();
+
 	protected:
 		struct ChatMessage
 		{
@@ -52,33 +56,7 @@ class ClientSession
 			std::string mBuffer;
 		};
 
-		mutable boost::mutex chatMutex;
-		static const int CHAT_MESSAGE_STACK = 8;
-		ChatMessage mMessageStack[CHAT_MESSAGE_STACK];
-
-		Model::GameSession mSession;
-		static const int MAX_PLAYERS = 4;
-		MainCharacter::MainCharacter *mainCharacter[MAX_PLAYERS];
-
-		MR_UInt8 *mBackImage;
-
-		VideoServices::Sprite *mMap;
-		int mX0Map;
-		int mY0Map;
-		int mWidthMap;
-		int mHeightMap;
-		int mWidthSprite;
-		int mHeightSprite;
-
-		std::shared_ptr<Util::Clock> clock;
-		std::shared_ptr<Rules> rules;
-
-		void ReadLevelAttrib(Parcel::RecordFilePtr pFile, VideoServices::VideoBuffer *pVideo);
 	public:
-		// Creation and destruction
-		ClientSession(std::shared_ptr<Rules> rules=nullptr);
-		virtual ~ClientSession();
-
 		// Simulation control
 		virtual void Process();
 
@@ -116,6 +94,30 @@ class ClientSession
 		const Model::Level *GetCurrentLevel() const;
 
 		std::shared_ptr<Rules> GetRules() { return rules; }
+
+	private:
+		mutable boost::mutex chatMutex;
+		static const int CHAT_MESSAGE_STACK = 8;
+		ChatMessage mMessageStack[CHAT_MESSAGE_STACK];
+
+		Model::GameSession mSession;
+		static const int MAX_PLAYERS = 4;
+		MainCharacter::MainCharacter *mainCharacter[MAX_PLAYERS];
+
+		MR_UInt8 *mBackImage;
+
+		VideoServices::Sprite *mMap;
+		int mX0Map;
+		int mY0Map;
+		int mWidthMap;
+		int mHeightMap;
+		int mWidthSprite;
+		int mHeightSprite;
+
+		std::shared_ptr<Util::Clock> clock;
+		std::shared_ptr<Rules> rules;
+
+		void ReadLevelAttrib(Parcel::RecordFilePtr pFile, VideoServices::VideoBuffer *pVideo);
 };
 
 }  // namespace Client
