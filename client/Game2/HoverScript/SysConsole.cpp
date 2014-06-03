@@ -46,6 +46,7 @@ namespace HoverScript {
  * @param director The game director.
  * @param debugPeer Debug scripting peer.
  * @param gamePeer Game scripting peer.
+ * @param inputPeer Input scripting peer.
  * @param maxLogLines The maximum number of log lines to store in the
  *                    log history.
  * @param maxHistory The maximum number of commands to keep in the history.
