@@ -47,7 +47,7 @@ if(WIN32)
 endif()
 include_directories(".")
 target_link_libraries(hrengine ${Boost_LIBRARIES} ${DEPS_LIBRARIES}
-    liblua luabind)
+	liblua luabind)
 
 # Install prebuilt bundled DLLs into the right locations.
 if(WIN32)
