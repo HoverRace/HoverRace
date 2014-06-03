@@ -5,6 +5,4 @@ Rulebook "Tutorial" {
 
 	max_players = 1,
 
-	on_pre_game = function(session) end,
-	on_post_game = function(session) end,
 }
