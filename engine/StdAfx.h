@@ -75,6 +75,11 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/signals2.hpp>
 
+#include "../../engine/Script/Lua.h"
+
+#include <luabind/luabind.hpp>
+#include <luabind/object.hpp>
+
 // Don't use the min/max macros; use std::min and std::max from the STL.
 #ifdef min
 #	undef min
