@@ -78,17 +78,8 @@
 
 #include "../../engine/Script/Lua.h"
 
-#ifdef _MSC_VER
-#	pragma warning(push)
-#	pragma warning(disable:4297)  // "function assumed not to throw an exception but does" from Luabind
-#endif
-
 #include <luabind/luabind.hpp>
 #include <luabind/object.hpp>
-
-#ifdef _MSC_VER
-#	pragma warning(pop)
-#endif
 
 #define PACKAGE_NAME_WIDEN(x) L ## x
 #define PACKAGE_NAME_APPLY(x) PACKAGE_NAME_WIDEN(x)
