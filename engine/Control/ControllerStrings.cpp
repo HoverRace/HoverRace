@@ -57,25 +57,27 @@ namespace {
 			{
 				// Note: By convention, the user-visible key names are
 				//       mixed-case, while the canonical key names are
-				//       lower-case.
+				//       lower-case with underscores.
 
 				MapKey(SDLK_UNKNOWN, _("Unknown"));
-				MapKey(SDLK_BACKSPACE, _("Backspace"));
-				MapKey(SDLK_TAB, _("Tab"));
-				MapKey(SDLK_RETURN, _("Enter"));
-				MapKey(SDLK_ESCAPE, _("Esc"));
-				MapKey(SDLK_SPACE, _("Space"));
+				MapKey(SDLK_BACKSPACE, _("Backspace"), "backspace");
+				MapKey(SDLK_TAB, _("Tab"), "tab");
+				MapKey(SDLK_RETURN, _("Enter"), "enter");
+				MapKey(SDLK_ESCAPE, _("Esc"), "esc");
+				MapKey(SDLK_SPACE, _("Space"), "space");
 				for (SDL_Keycode i = SDLK_EXCLAIM; i <= SDLK_AT; i++) {
-					MapKey(i, std::string(1, i));
+					std::string c(1, i);
+					MapKey(i, c, c);
 				}
 				for (SDL_Keycode i = SDLK_LEFTBRACKET; i <= SDLK_BACKQUOTE; i++) {
-					MapKey(i, std::string(1, i));
+					std::string c(1, i);
+					MapKey(i, c, c);
 				}
 				for (SDL_Keycode i = SDLK_a; i <= SDLK_z; i++) {
-					MapKey(i, std::string(1, i - 32));
+					MapKey(i, std::string(1, i - 32), std::string(1, i));
 				}
-				MapKey(SDLK_DELETE, _("Del"));
-				MapKey(SDLK_CAPSLOCK, _("Caps Lock"));
+				MapKey(SDLK_DELETE, _("Del"), "del");
+				MapKey(SDLK_CAPSLOCK, _("Caps Lock"), "caps_lock");
 				MapKey(SDLK_F1, _("F1"), "f1");
 				MapKey(SDLK_F2, _("F2"), "f2");
 				MapKey(SDLK_F3, _("F3"), "f3");
@@ -88,19 +90,19 @@ namespace {
 				MapKey(SDLK_F10, _("F10"), "f10");
 				MapKey(SDLK_F11, _("F11"), "f11");
 				MapKey(SDLK_F12, _("F12"), "f12");
-				MapKey(SDLK_PRINTSCREEN, _("Print Screen"));
-				MapKey(SDLK_SCROLLLOCK, _("Scroll Lock"));
-				MapKey(SDLK_PAUSE, _("Pause"));
-				MapKey(SDLK_INSERT, _("Ins"));
-				MapKey(SDLK_HOME, _("Home"));
-				MapKey(SDLK_PAGEUP, _("PgUp"));
-				MapKey(SDLK_END, _("End"));
-				MapKey(SDLK_PAGEDOWN, _("PgDn"));
+				MapKey(SDLK_PRINTSCREEN, _("Print Screen"), "prtscr");
+				MapKey(SDLK_SCROLLLOCK, _("Scroll Lock"), "scroll_lock");
+				MapKey(SDLK_PAUSE, _("Pause"), "pause");
+				MapKey(SDLK_INSERT, _("Ins"), "ins");
+				MapKey(SDLK_HOME, _("Home"), "home");
+				MapKey(SDLK_PAGEUP, _("PgUp"), "pgup");
+				MapKey(SDLK_END, _("End"), "end");
+				MapKey(SDLK_PAGEDOWN, _("PgDn"), "pgdn");
 				MapKey(SDLK_RIGHT, std::string("\xe2\x86\x92"));  // UTF-8: RIGHTWARDS ARROW
 				MapKey(SDLK_LEFT, std::string("\xe2\x86\x90"));   // UTF-8: LEFTWARDS ARROW
 				MapKey(SDLK_DOWN, std::string("\xe2\x86\x93"));   // UTF-8: DOWNWARDS ARROW
 				MapKey(SDLK_UP, std::string("\xe2\x86\x91"));     // UTF-8: UPWARDS ARROW
-				MapKey(SDLK_NUMLOCKCLEAR, _("Num Lock"));
+				MapKey(SDLK_NUMLOCKCLEAR, _("Num Lock"), "num_lock");
 				MapKey(SDLK_KP_DIVIDE, _("Numpad /"));
 				MapKey(SDLK_KP_MULTIPLY, _("Numpad *"));
 				MapKey(SDLK_KP_MINUS, _("Numpad -"));
@@ -120,18 +122,18 @@ namespace {
 				MapKey(SDLK_APPLICATION, _("App"));
 				MapKey(SDLK_POWER, _("Power"));
 				MapKey(SDLK_KP_EQUALS, _("Numpad ="));
-				MapKey(SDLK_F13, _("F13"));
-				MapKey(SDLK_F14, _("F14"));
-				MapKey(SDLK_F15, _("F15"));
-				MapKey(SDLK_F16, _("F16"));
-				MapKey(SDLK_F17, _("F17"));
-				MapKey(SDLK_F18, _("F18"));
-				MapKey(SDLK_F19, _("F19"));
-				MapKey(SDLK_F20, _("F20"));
-				MapKey(SDLK_F21, _("F21"));
-				MapKey(SDLK_F22, _("F22"));
-				MapKey(SDLK_F23, _("F23"));
-				MapKey(SDLK_F24, _("F24"));
+				MapKey(SDLK_F13, _("F13"), "f13");
+				MapKey(SDLK_F14, _("F14"), "f14");
+				MapKey(SDLK_F15, _("F15"), "f15");
+				MapKey(SDLK_F16, _("F16"), "f16");
+				MapKey(SDLK_F17, _("F17"), "f17");
+				MapKey(SDLK_F18, _("F18"), "f18");
+				MapKey(SDLK_F19, _("F19"), "f19");
+				MapKey(SDLK_F20, _("F20"), "f20");
+				MapKey(SDLK_F21, _("F21"), "f21");
+				MapKey(SDLK_F22, _("F22"), "f22");
+				MapKey(SDLK_F23, _("F23"), "f23");
+				MapKey(SDLK_F24, _("F24"), "f24");
 				MapKey(SDLK_EXECUTE, _("Execute"));
 				MapKey(SDLK_HELP, _("Help"));
 				MapKey(SDLK_MENU, _("Menu"));
