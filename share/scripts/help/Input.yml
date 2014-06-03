@@ -1,0 +1,17 @@
+hotkey:
+  type: method
+  sig:
+    - input:hotkey(key, fn)
+  brief: >
+    Assign a global action to a keyboard key.
+  desc: >
+    When the key is pressed, then the function will be executed.
+    
+    All key names are in lowercase, e.g. "f1", "home", etc.
+    
+    Once a hotkey is assigned, it cannot be unassigned.
+  examples:
+    - |
+      input:hotkey("f10", function()
+        game:start_main_menu()
+      end)
