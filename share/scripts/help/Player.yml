@@ -26,24 +26,3 @@ index:
   isa: number
   brief: >
     The position in the session:players list, starting at zero for player 1.
-
-on_start:
-  type: event
-  brief: >
-    Called when pregame is over and the player has control.
-
-on_finish:
-  type: event
-  brief: >
-    Called when player's game is over and postgame starts.
-
-on_finish_line:
-  type: event
-  brief: >
-    Called when the player has crossed the finish line.
-
-props:
-  type: property
-  isa: table
-  brief: >
-    Open-ended table for scripts to store player-specific data.
