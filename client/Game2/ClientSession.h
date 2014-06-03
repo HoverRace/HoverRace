@@ -47,6 +47,15 @@ class ClientSession
 		ClientSession(std::shared_ptr<Rules> rules=nullptr);
 		virtual ~ClientSession();
 
+	public:
+		enum class Phase
+		{
+			PREGAME,  ///< Players are at the starting line.
+			PLAYING,  ///< Players are released and the clock is running.
+			POSTGAME,  ///< The first player has finished; waiting for others.
+			DONE  ///< All players have finished.
+		};
+
 	protected:
 		struct ChatMessage
 		{
@@ -57,6 +66,9 @@ class ClientSession
 		};
 
 	public:
+		Phase GetPhase() const { return phase; }
+		bool AdvancePhase(Phase nextPhase);
+
 		// Simulation control
 		virtual void Process();
 
@@ -96,6 +108,8 @@ class ClientSession
 		std::shared_ptr<Rules> GetRules() { return rules; }
 
 	private:
+		Phase phase;
+
 		mutable boost::mutex chatMutex;
 		static const int CHAT_MESSAGE_STACK = 8;
 		ChatMessage mMessageStack[CHAT_MESSAGE_STACK];

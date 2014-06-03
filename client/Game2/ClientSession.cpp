@@ -1,7 +1,7 @@
 // ClientSession.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -28,18 +28,20 @@
 #include "../../engine/Model/TrackFileCommon.h"
 #include "../../engine/VideoServices/VideoBuffer.h"
 #include "../../engine/Util/Clock.h"
+#include "../../engine/Util/Log.h"
 
 #include "Rules.h"
 
 #include "ClientSession.h"
 
 using namespace HoverRace::Parcel;
-using HoverRace::Util::OS;
+using namespace HoverRace::Util;
 
 namespace HoverRace {
 namespace Client {
 
 ClientSession::ClientSession(std::shared_ptr<Rules> rules) :
+	phase(Phase::PREGAME),
 	mSession(TRUE),
 	clock(std::make_shared<Util::Clock>()),
 	rules(std::move(rules))
@@ -55,6 +57,26 @@ ClientSession::~ClientSession()
 {
 	delete[]mBackImage;
 	delete mMap;
+}
+
+/**
+ * Advance the current phase.
+ *
+ * The new phase must be equal to or later than the current phase.
+ *
+ * @param nextPhase The requested next phase.
+ * @return @c true if the new phase was set successfully, @c false otherwise.
+ */
+bool ClientSession::AdvancePhase(Phase nextPhase)
+{
+	if (phase < nextPhase) {
+		phase = nextPhase;
+		return true;
+	}
+	else if (nextPhase < phase) {
+		Log::Error("Attempted to go backwards in phase!");
+	}
+	return false;
 }
 
 void ClientSession::Process()

@@ -233,6 +233,9 @@ void GameScene::Advance(Util::OS::timestamp_t tick)
 	}
 	else if (!firedOnStart && session->GetPlayer(0)->HasStarted()) {
 		metaSession->GetSession()->GetPlayer(0)->OnStart();
+		if (session->AdvancePhase(ClientSession::Phase::PLAYING)) {
+			metaSession->OnPlaying();
+		}
 		firedOnStart = true;
 	}
 
@@ -285,7 +288,9 @@ void GameScene::Render()
 
 void GameScene::OnRaceFinish()
 {
-	metaSession->OnPostgame();
+	if (session->AdvancePhase(ClientSession::Phase::POSTGAME)) {
+		metaSession->OnPostgame();
+	}
 	director.GetSessionChangedSignal()(nullptr);
 }
 
