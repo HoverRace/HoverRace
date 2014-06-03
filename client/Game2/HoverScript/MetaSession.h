@@ -51,6 +51,7 @@ class MetaSession
 
 		// Phases
 		virtual void OnPregame() { }
+		virtual void OnPlaying() { }
 		virtual void OnPostgame() { }
 
 	public:

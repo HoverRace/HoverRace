@@ -50,6 +50,9 @@ namespace {
 			void OnPregame() override { pcall<void>("on_pregame"); }
 			static void OnPregame_def(SUPER *super) { super->SUPER::OnPregame(); }
 
+			void OnPlaying() override { pcall<void>("on_playing"); }
+			static void OnPlaying_def(SUPER *super) { super->SUPER::OnPlaying(); }
+
 			void OnPostgame() override { pcall<void>("on_postgame"); }
 			static void OnPostgame_def(SUPER *super) { super->SUPER::OnPostgame(); }
 	};
@@ -66,7 +69,6 @@ MetaSession::~MetaSession()
 	session->SetMeta(nullptr);
 }
 
-
 /**
  * Register this peer in an environment.
  */
@@ -80,6 +82,7 @@ void MetaSession::Register(Script::Core *scripting)
 			.def(constructor<std::shared_ptr<SessionPeer>>())
 			.def("on_init", &MetaSession::OnInit, &Wrapper::OnInit_def)
 			.def("on_pregame", &MetaSession::OnPregame, &Wrapper::OnPregame_def)
+			.def("on_playing", &MetaSession::OnPlaying, &Wrapper::OnPlaying_def)
 			.def("on_postgame", &MetaSession::OnPostgame, &Wrapper::OnPostgame_def)
 			.def_readonly("session", &MetaSession::session)
 	];
