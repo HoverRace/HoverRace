@@ -28,6 +28,9 @@
 
 namespace HoverRace {
 	namespace Client {
+		namespace HoverScript {
+			class MetaSession;
+		}
 		class Rules;
 	}
 	namespace MainCharacter {
@@ -50,6 +53,7 @@ class ClientSession
 	public:
 		enum class Phase
 		{
+			INIT,
 			PREGAME,  ///< Players are at the starting line.
 			PLAYING,  ///< Players are released and the clock is running.
 			POSTGAME,  ///< The first player has finished; waiting for others.
@@ -68,6 +72,9 @@ class ClientSession
 	public:
 		Phase GetPhase() const { return phase; }
 		bool AdvancePhase(Phase nextPhase);
+
+		std::shared_ptr<HoverScript::MetaSession> GetMeta() const { return meta; };
+		void SetMeta(std::shared_ptr<HoverScript::MetaSession> meta);
 
 		// Simulation control
 		virtual void Process();
@@ -117,6 +124,8 @@ class ClientSession
 		Model::GameSession mSession;
 		static const int MAX_PLAYERS = 4;
 		MainCharacter::MainCharacter *mainCharacter[MAX_PLAYERS];
+
+		std::shared_ptr<HoverScript::MetaSession> meta;
 
 		MR_UInt8 *mBackImage;
 

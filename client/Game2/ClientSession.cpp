@@ -30,6 +30,7 @@
 #include "../../engine/Util/Clock.h"
 #include "../../engine/Util/Log.h"
 
+#include "HoverScript/MetaSession.h"
 #include "Rules.h"
 
 #include "ClientSession.h"
@@ -41,7 +42,7 @@ namespace HoverRace {
 namespace Client {
 
 ClientSession::ClientSession(std::shared_ptr<Rules> rules) :
-	phase(Phase::PREGAME),
+	phase(Phase::INIT),
 	mSession(TRUE),
 	clock(std::make_shared<Util::Clock>()),
 	rules(std::move(rules))
@@ -62,7 +63,9 @@ ClientSession::~ClientSession()
 /**
  * Advance the current phase.
  *
- * The new phase must be equal to or later than the current phase.
+ * The new phase must be equal to or later than the current phase.  If any
+ * phases are skipped, then then the events for the skipped phases will still
+ * be called.
  *
  * @param nextPhase The requested next phase.
  * @return @c true if the new phase was set successfully, @c false otherwise.
@@ -70,13 +73,28 @@ ClientSession::~ClientSession()
 bool ClientSession::AdvancePhase(Phase nextPhase)
 {
 	if (phase < nextPhase) {
-		phase = nextPhase;
+		do {
+			phase = static_cast<Phase>(static_cast<int>(phase) + 1);
+			switch (phase) {
+				case Phase::PREGAME: meta->OnPregame(); break;
+				case Phase::PLAYING: meta->OnPlaying(); break;
+				case Phase::POSTGAME: meta->OnPostgame(); break;
+				case Phase::DONE: /*TODO*/ break;
+				default:
+					Log::Warn("No MetaSession event for phase: %d", phase);
+			}
+		} while (phase < nextPhase);
 		return true;
 	}
 	else if (nextPhase < phase) {
 		Log::Error("Attempted to go backwards in phase!");
 	}
 	return false;
+}
+
+void ClientSession::SetMeta(std::shared_ptr<HoverScript::MetaSession> meta)
+{
+	this->meta = std::move(meta);
 }
 
 void ClientSession::Process()

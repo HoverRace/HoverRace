@@ -92,9 +92,12 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 		Cleanup();
 		throw Exception("Main character creation failed");
 	}
+
 	metaSession = rulebook->GetMetas().session(
 		std::make_shared<SessionPeer>(scripting, session));
 	metaSession->OnInit();
+	session->SetMeta(metaSession);
+
 	director.GetSessionChangedSignal()(metaSession);
 
 	//TODO: Support split-screen with multiple viewports.
@@ -104,7 +107,8 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 		new Display::Hud(display, session->GetPlayer(0),
 			Vec2(1280, 720)));
 
-	metaSession->OnPregame();
+	session->AdvancePhase(ClientSession::Phase::PREGAME);
+
 	auto sessionPeer = metaSession->GetSession();
 	sessionPeer->ForEachPlayer([&](std::shared_ptr<MetaPlayer> &player) {
 		auto playerPeer = player->GetPlayer();
@@ -233,9 +237,7 @@ void GameScene::Advance(Util::OS::timestamp_t tick)
 	}
 	else if (!firedOnStart && session->GetPlayer(0)->HasStarted()) {
 		metaSession->GetSession()->GetPlayer(0)->OnStart();
-		if (session->AdvancePhase(ClientSession::Phase::PLAYING)) {
-			metaSession->OnPlaying();
-		}
+		session->AdvancePhase(ClientSession::Phase::PLAYING);
 		firedOnStart = true;
 	}
 
@@ -288,9 +290,9 @@ void GameScene::Render()
 
 void GameScene::OnRaceFinish()
 {
-	if (session->AdvancePhase(ClientSession::Phase::POSTGAME)) {
-		metaSession->OnPostgame();
-	}
+	//TODO: Currently assuming only one player, so we go directly from PLAYING
+	//      to DONE (AdvancePhase will ensure that the POSTGAME event is fired).
+	session->AdvancePhase(ClientSession::Phase::DONE);
 	director.GetSessionChangedSignal()(nullptr);
 }
 
