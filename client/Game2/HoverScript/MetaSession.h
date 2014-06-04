@@ -27,6 +27,9 @@ namespace HoverRace {
 			class SessionPeer;
 		}
 	}
+	namespace Script {
+		class Core;
+	}
 }
 
 namespace HoverRace {
