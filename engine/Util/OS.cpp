@@ -78,6 +78,7 @@ std::locale OS::locale("C");
 /// The standard "C" locale for things that should be not be affected by locale.
 const std::locale OS::stdLocale("C");
 
+#ifdef _WIN32
 static inline bool isHex(const char &c)
 {
 	return
@@ -85,6 +86,7 @@ static inline bool isHex(const char &c)
 		(c >= 'A' && c <= 'F') ||
 		(c >= 'a' && c <= 'f');
 }
+#endif
 
 /**
  * Parse the resolution from a string.
