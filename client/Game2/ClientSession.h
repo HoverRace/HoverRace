@@ -71,6 +71,7 @@ class ClientSession
 
 	public:
 		Phase GetPhase() const { return phase; }
+		bool AdvancePhase();
 		bool AdvancePhase(Phase nextPhase);
 
 		std::shared_ptr<HoverScript::MetaSession> GetMeta() const { return meta; };

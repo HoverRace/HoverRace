@@ -41,6 +41,25 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace Client {
 
+namespace {
+	using Phase = ClientSession::Phase;
+
+	/**
+	 * Determine next phase for a given phase.
+	 * @param phase The phase.
+	 * @return The next phase, if there is one.
+	 */
+	Phase NextPhase(Phase phase)
+	{
+		if (phase == Phase::DONE) {
+			return Phase::DONE;
+		}
+		else {
+			return static_cast<Phase>(static_cast<int>(phase) + 1);
+		}
+	}
+}
+
 ClientSession::ClientSession(std::shared_ptr<Rules> rules) :
 	phase(Phase::INIT),
 	mSession(TRUE),
@@ -61,6 +80,15 @@ ClientSession::~ClientSession()
 }
 
 /**
+ * Advance to the next phase.
+ * @return @c true if the new phase was set successfully, @c false otherwise.
+ */
+bool ClientSession::AdvancePhase()
+{
+	return AdvancePhase(NextPhase(phase));
+}
+
+/**
  * Advance the current phase.
  *
  * The new phase must be equal to or later than the current phase.  If any
@@ -74,7 +102,7 @@ bool ClientSession::AdvancePhase(Phase nextPhase)
 {
 	if (phase < nextPhase) {
 		do {
-			phase = static_cast<Phase>(static_cast<int>(phase) + 1);
+			phase = NextPhase(phase);
 			switch (phase) {
 				case Phase::PREGAME: meta->OnPregame(); break;
 				case Phase::PLAYING: meta->OnPlaying(); break;
