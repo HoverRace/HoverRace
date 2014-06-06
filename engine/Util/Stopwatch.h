@@ -71,7 +71,7 @@ class MR_DllDeclare Stopwatch
 		}
 
 	public:
-		Duration NextLap(const std::string &name);
+		std::shared_ptr<Duration> NextLap(const std::string &name);
 
 	private:
 		std::shared_ptr<Clock> clock;

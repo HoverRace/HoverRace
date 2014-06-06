@@ -68,10 +68,10 @@ Stopwatch::Stopwatch(std::shared_ptr<Clock> clock, const Duration &start) :
  * @param name The name of the lap that just ended.
  * @return The elapsed time for the lap that just ended.
  */
-Duration Stopwatch::NextLap(const std::string &name)
+std::shared_ptr<Duration> Stopwatch::NextLap(const std::string &name)
 {
 	Duration ts(clock->GetTime());
-	Duration elapsed(ts, lastLap);
+	std::shared_ptr<Duration> elapsed = std::make_shared<Duration>(ts, lastLap);
 	lastLap = ts;
 
 	laps.emplace_back(name, Duration(ts, lastLap));
