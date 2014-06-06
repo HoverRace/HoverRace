@@ -23,11 +23,12 @@
 #define LUABIND_BUILDING
 
 #include <luabind/lua_include.hpp>
-
 #include <luabind/scope.hpp>
 #include <luabind/detail/debug.hpp>
 #include <luabind/detail/stack_utils.hpp>
+
 #include <cassert>
+#include <memory>
 
 #if LUA_VERSION_NUM < 502
 # define lua_pushglobaltable(L) lua_pushvalue(L, LUA_GLOBALSINDEX)
@@ -52,7 +53,7 @@ namespace luabind { namespace detail {
     {
     }
     
-    scope::scope(std::auto_ptr<detail::registration> reg)
+    scope::scope(std::unique_ptr<detail::registration> reg)
         : m_chain(reg.release())
     {
     }
@@ -196,7 +197,7 @@ namespace luabind {
     };
 
     namespace_::namespace_(char const* name)
-        : scope(std::auto_ptr<detail::registration>(
+        : scope(std::unique_ptr<detail::registration>(
               m_registration = new registration_(name)))
     {
     }

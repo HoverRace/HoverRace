@@ -32,7 +32,9 @@
 
 #include <luabind/detail/policy.hpp>
 #include <luabind/back_reference_fwd.hpp>
+
 #include <boost/type_traits/is_polymorphic.hpp>
+#include <memory>
 
 namespace luabind { namespace detail 
 {
@@ -95,7 +97,7 @@ namespace luabind { namespace detail
     template <class T>
     struct pointer_or_default<void, T>
     {
-        typedef std::auto_ptr<T> type;
+        typedef std::unique_ptr<T> type;
     };
 
 	template <class Pointer>

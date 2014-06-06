@@ -3,7 +3,9 @@
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #include "test.hpp"
+
 #include <luabind/luabind.hpp>
+#include <memory>
 
 struct Base
 {
@@ -41,14 +43,14 @@ struct Unregistered : Base
     {}
 };
 
-std::auto_ptr<Base> make_derived()
+std::unique_ptr<Base> make_derived()
 {
-    return std::auto_ptr<Base>(new Derived);
+    return std::unique_ptr<Base>(new Derived);
 }
 
-std::auto_ptr<Base> make_unregistered()
+std::unique_ptr<Base> make_unregistered()
 {
-    return std::auto_ptr<Base>(new Unregistered);
+    return std::unique_ptr<Base>(new Unregistered);
 }
 
 void test_main(lua_State* L)
