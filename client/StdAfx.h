@@ -66,7 +66,6 @@
 #include <unordered_map>
 #include <vector>
 
-#include "../../include/compat/luabind_cxx11.h"
 #include "../../include/compat/boost_cxx11.h"
 
 #include <boost/filesystem/convenience.hpp>
