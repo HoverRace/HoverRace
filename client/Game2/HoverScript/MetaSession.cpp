@@ -55,6 +55,9 @@ namespace {
 
 			void OnPostgame() override { pcall<void>("on_postgame"); }
 			static void OnPostgame_def(SUPER *super) { super->SUPER::OnPostgame(); }
+
+			void OnDone() override { pcall<void>("on_done"); }
+			static void OnDone_def(SUPER *super) { super->SUPER::OnDone(); }
 	};
 }
 
@@ -84,6 +87,7 @@ void MetaSession::Register(Script::Core *scripting)
 			.def("on_pregame", &MetaSession::OnPregame, &Wrapper::OnPregame_def)
 			.def("on_playing", &MetaSession::OnPlaying, &Wrapper::OnPlaying_def)
 			.def("on_postgame", &MetaSession::OnPostgame, &Wrapper::OnPostgame_def)
+			.def("on_done", &MetaSession::OnPostgame, &Wrapper::OnDone_def)
 			.def_readonly("session", &MetaSession::session)
 	];
 }

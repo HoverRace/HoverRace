@@ -107,7 +107,7 @@ bool ClientSession::AdvancePhase(Phase nextPhase)
 				case Phase::PREGAME: meta->OnPregame(); break;
 				case Phase::PLAYING: meta->OnPlaying(); break;
 				case Phase::POSTGAME: meta->OnPostgame(); break;
-				case Phase::DONE: /*TODO*/ break;
+				case Phase::DONE: meta->OnDone(); break;
 				default:
 					Log::Warn("No MetaSession event for phase: %d", phase);
 			}

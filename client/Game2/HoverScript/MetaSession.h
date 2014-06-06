@@ -56,6 +56,7 @@ class MetaSession
 		virtual void OnPregame() { }
 		virtual void OnPlaying() { }
 		virtual void OnPostgame() { }
+		virtual void OnDone() { }
 
 	public:
 		static void Register(Script::Core *scripting);

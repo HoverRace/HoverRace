@@ -26,4 +26,24 @@ return Session {
 		]]--
 	end,
 
+	-- Called when all players have called finish() or the timer ran out.
+	on_done = function(self)
+		--[[
+		local results = Results(self.session.players)
+
+		--TODO: Support teams?
+		for player in results:each_player() do
+			results.add_rank {
+				total_time = player.finish_time,
+				best_lap = player.best_lap,
+			}
+		end
+
+		results.add_meta {
+			total_time = self.session.clock
+		}
+
+		self.session:post_results(results)
+		]]--
+	end,
 }
