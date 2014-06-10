@@ -26,6 +26,8 @@
 #include <luabind/class.hpp>
 #include <luabind/detail/class_rep.hpp>
 
+#include <utf8/utf8.h>
+
 #include "../../../engine/Script/Core.h"
 #include "../../../engine/Util/Config.h"
 #include "../../../engine/Util/Log.h"
@@ -117,6 +119,28 @@ namespace {
 		return oss.str();
 	}
 
+	/**
+	 * Check if the module path passed to @c require() is allowed.
+	 * @param s The module path.
+	 * @return @c true if valid, @c false if not.
+	 */
+	bool IsValidModulePath(const std::string &s)
+	{
+		MR_UInt32 ch;
+		for (auto iter = s.cbegin(), iend = s.cend(); iter != iend;) {
+			ch = utf8::next(iter, iend);
+
+			if (!(ch == '-' ||
+				(ch >= '0' && ch <= '9') ||
+				(ch >= 'A' && ch <= 'Z') ||
+				ch == '_' ||
+				(ch >= 'a' && ch <= 'z')))
+			{
+				return false;
+			}
+		}
+		return true;
+	}
 }
 
 /**
@@ -385,13 +409,14 @@ int RulebookEnv::LRequire(lua_State *L)
 	}
 
 	if (lua_gettop(L) != 1) {
-		luaL_error(L, "Usage: require 'module_name'");
-		return 0;
+		return luaL_error(L, "Usage: require 'module_name'");
 	}
 
-	//TODO: Sanity-check module name.
-
 	std::string name = lua_tostring(L, 1);
+
+	if (!IsValidModulePath(name)) {
+		return luaL_error(L, "Invalid module filename: %s", name.c_str());
+	}
 	name += ".lua";
 
 	auto modulePath = basePath;
