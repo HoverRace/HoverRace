@@ -78,6 +78,8 @@ class MR_DllDeclare Clock
 		 *
 		 * @param duration The clock timestamp.
 		 * @param fn The function to invoke.
+		 * @return The signal connection; use this to cancel the alarm by
+		 *         disconnecting it.
 		 */
 		template<class Fn>
 		boost::signals2::connection At(const Duration &duration, Fn &&fn)
