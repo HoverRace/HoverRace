@@ -47,6 +47,12 @@ class MR_DllDeclare Clock
 		Clock();
 		Clock(const Duration &init);
 
+		// We can't copy the alarm signals, so we can't be copyable either.
+		Clock(const Clock&) = delete;
+		Clock(Clock&&) = default;
+		Clock &operator=(const Clock&) = delete;
+		Clock &operator=(Clock&&) = default;
+
 	public:
 		std::string FmtLong() const { return lastRead.FmtLong(); }
 		std::string FmtShort() const { return lastRead.FmtShort(); }
@@ -60,10 +66,38 @@ class MR_DllDeclare Clock
 
 		Duration Advance();
 
+	public:
+		typedef boost::signals2::signal<void()> alarmSignal_t;
+
+		/**
+		 * Set a one-shot alarm to run at a specific time.
+		 *
+		 * It's not guaranteed that the alarm will be fired at the exact time
+		 * since alarms are only fired when Advance() is called; however,
+		 * an alarm will never be fired before it's timestamp.
+		 *
+		 * @param duration The clock timestamp.
+		 * @param fn The function to invoke.
+		 */
+		template<class Fn>
+		boost::signals2::connection At(const Duration &duration, Fn &&fn)
+		{
+			auto &sig = alarms[duration];
+			if (!sig) {
+				sig.reset(new alarmSignal_t());
+			}
+			return sig->connect(std::forward<Fn>(fn));
+		}
+
 	private:
 		Duration lastRead;
 		Duration start;
 		Duration offset;
+
+		// Sorted list of pending alarms.
+		// We need to wrap the signal in a unique_ptr because depending on the
+		// Boost version, it may not have move semantics.
+		std::map<Duration, std::unique_ptr<alarmSignal_t>> alarms;
 };
 
 inline std::ostream &operator<<(std::ostream &os, const Clock &clock)

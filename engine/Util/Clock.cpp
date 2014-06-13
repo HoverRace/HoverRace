@@ -33,7 +33,8 @@ namespace Util {
 Clock::Clock() :
 	lastRead(),
 	start(OS::Time()),
-	offset(start)
+	offset(start),
+	alarms()
 {
 }
 
@@ -63,6 +64,21 @@ Duration Clock::Advance()
 {
 	Duration prev = lastRead;
 	lastRead = Duration(OS::Time(), offset);
+
+	// Fire any alarms that have passed.
+	// Alarms are sorted by duration, so we can just fire alarms until we
+	// find an alarm that hasn't happened yet.
+	if (!alarms.empty()) {
+		for (auto iter = alarms.begin(), iend = alarms.end(); iter != iend; )
+		{
+			if (iter->first > lastRead) break;
+
+			// Fire the alarm and remove it.
+			(*(iter->second))();
+			alarms.erase(iter++);
+		}
+	}
+
 	return Duration(lastRead, prev);
 }
 
