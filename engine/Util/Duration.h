@@ -83,6 +83,17 @@ class MR_DllDeclare Duration :
 		Duration &operator=(const Duration&) = default;
 		Duration &operator=(Duration&&) = default;
 
+		Duration operator-() const
+		{
+			return Duration(-duration);
+		}
+
+		/**
+		 * Convert the duration to milliseconds.
+		 * @return This duration.
+		 */
+		dur_t ToMs() const { return duration; }
+
 	public:
 		std::ostream &FmtLong(std::ostream &os) const;
 		std::string FmtLong() const;
