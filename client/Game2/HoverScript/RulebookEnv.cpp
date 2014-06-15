@@ -159,8 +159,11 @@ RulebookEnv::RulebookEnv(Script::Core *scripting,
                          Rulebook &rulebook) :
 	SUPER(scripting),
 	basePath(basePath),
-	rulebook(rulebook)
+	rulebook(rulebook),
+	requireCache(scripting)
 {
+	lua_newtable(scripting->GetState());
+	requireCache.SetFromStack();
 }
 
 RulebookEnv::~RulebookEnv()
@@ -422,15 +425,45 @@ int RulebookEnv::LRequire(lua_State *L)
 	auto modulePath = basePath;
 	modulePath /= Str::UP(name);
 
-	Log::Info("Loading module '%s' from: %s", name.c_str(),
-		(const char*)Str::PU(modulePath));
+	self->requireCache.Push();  // cache
+	lua_getfield(L, -1, (const char*)Str::PU(modulePath));  // cache val
+	if (!lua_isnil(L, -1)) {
+		// Return the cached value.
+		lua_remove(L, -2);  // val
 
-	try {
-		return self->Execute(LoadChunkFromFile(modulePath), Core::PassReturn());
+		Log::Info("Returning cached module '%s' from: %s", name.c_str(),
+			(const char*)Str::PU(modulePath));
+
+		return 1;
 	}
-	catch (Script::ScriptExn &ex) {
-		Log::Error("%s", ex.what());
-		return 0;
+	else {
+		// Not in the cache.
+		lua_pop(L, 1);  // cache
+
+		Log::Info("Loading module '%s' from: %s", name.c_str(),
+			(const char*)Str::PU(modulePath));
+
+		try {
+			int retv = self->Execute(LoadChunkFromFile(modulePath),
+				Core::PassReturn());
+
+			// cache (returns...)
+			if (retv >= 1) {
+				lua_pushvalue(L, -1 - retv);  // cache (returns...) cache
+				lua_remove(L, -2 - retv);  // (returns...) cache
+				// For now, we only save the first return value.
+				lua_pushvalue(L, -1 - retv);  // (returns...) cache ret
+				lua_setfield(L, -2,
+					(const char*)Str::PU(modulePath)); // (returns...) cache
+				lua_pop(L, 1);  // (returns...)
+			}
+
+			return retv;
+		}
+		catch (Script::ScriptExn &ex) {
+			Log::Error("%s", ex.what());
+			return 0;
+		}
 	}
 }
 

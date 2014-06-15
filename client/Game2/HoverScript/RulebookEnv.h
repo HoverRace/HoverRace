@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include "../../engine/Script/RegistryRef.h"
+
 #include "RuntimeEnv.h"
 
 namespace HoverRace {
@@ -74,6 +76,7 @@ class RulebookEnv : public RuntimeEnv {
 	private:
 		Util::OS::path_t basePath;
 		Rulebook &rulebook;
+		Script::RegistryRef requireCache;
 };
 
 }  // namespace HoverScript
