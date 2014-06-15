@@ -77,8 +77,12 @@ class MR_DllDeclare Duration :
 		 */
 		Duration(dur_t duration=0) : duration(duration) { }
 
-		explicit Duration(const std::string &s) : Duration(ParseDuration(s)) { }
-		explicit Duration(const char *s) : Duration(std::string(s)) { }
+		Duration(const std::string &s) : Duration(ParseDuration(s)) { }
+
+		// Fix ambiguity between char* and dur_t.
+		// See specialization for T=char below.
+		template<class T>
+		Duration(const T *s);
 
 		Duration(const Duration&) = default;
 		Duration(Duration&&) = default;
@@ -116,6 +120,9 @@ class MR_DllDeclare Duration :
 		friend bool operator<(const Duration &duration, Duration::dur_t ts);
 		friend bool operator<(Duration::dur_t ts, const Duration &duration);
 };
+
+template<>
+inline Duration::Duration(const char *s) : Duration(std::string(s)) { }
 
 inline std::ostream &operator<<(std::ostream &os, const Duration &dur)
 {
