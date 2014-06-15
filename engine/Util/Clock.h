@@ -70,6 +70,14 @@ class MR_DllDeclare Clock
 		typedef boost::signals2::signal<void()> alarmSignal_t;
 
 		/**
+		 * Remove all alarms.
+		 */
+		void ClearAlarms()
+		{
+			alarms.clear();
+		}
+
+		/**
 		 * Set a one-shot alarm to run at a specific time.
 		 *
 		 * It's not guaranteed that the alarm will be fired at the exact time
