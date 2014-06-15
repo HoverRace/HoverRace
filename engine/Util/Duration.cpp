@@ -21,6 +21,10 @@
 
 #include "StdAfx.h"
 
+#include <utf8/utf8.h>
+
+#include "../Exception.h"
+
 #include "Duration.h"
 
 namespace HoverRace {
@@ -125,6 +129,65 @@ std::string Duration::FmtShort() const
 	std::ostringstream oss;
 	FmtShort(oss);
 	return oss.str();
+}
+
+/**
+ * Parse a duration from a string.
+ *
+ * Example strings:
+ * - "300" or "300ms" - 300 milliseconds.
+ * - "4s" - 4 seconds.
+ * - "12m" - 12 minutes.
+ *
+ * @param s The duration.
+ * @return The parsed duration.
+ * @throws Exception The duration could not be parsed.
+ */
+Duration::dur_t Duration::ParseDuration(const std::string &s)
+{
+	dur_t retv = 0;
+	std::string suffix;
+
+	bool expectDigit = true;
+
+	for (auto iter = s.cbegin(), iend = s.cend(); iter != iend;) {
+		MR_UInt32 ch = utf8::next(iter, iend);
+
+		if (expectDigit && (ch >= '0' && ch <= '9')) {
+			retv = retv * 10 + (ch - '0');
+		}
+		else if (ch >= 'a' && ch <= 'z') {
+			expectDigit = false;
+			suffix += ch;
+		}
+		else {
+			std::stringstream oss;
+			oss << "Invalid duration: " << s;
+			throw Exception(oss.str());
+		}
+	}
+
+	if (!suffix.empty()) {
+		if (suffix == "ms") {
+			// Do nothing, this is the default.
+		}
+		else if (suffix == "s") {
+			retv *= 1000;
+		}
+		else if (suffix == "m") {
+			retv *= 60 * 1000;
+		}
+		else if (suffix == "h") {
+			retv *= 60 * 60 * 1000;
+		}
+		else {
+			std::stringstream oss;
+			oss << "Invalid duration '" << s << "': unknown suffix: " << suffix;
+			throw Exception(oss.str());
+		}
+	}
+
+	return retv;
 }
 
 }  // namespace Util

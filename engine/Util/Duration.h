@@ -77,6 +77,9 @@ class MR_DllDeclare Duration :
 		 */
 		Duration(dur_t duration=0) : duration(duration) { }
 
+		explicit Duration(const std::string &s) : Duration(ParseDuration(s)) { }
+		explicit Duration(const char *s) : Duration(std::string(s)) { }
+
 		Duration(const Duration&) = default;
 		Duration(Duration&&) = default;
 
@@ -93,6 +96,9 @@ class MR_DllDeclare Duration :
 		 * @return This duration.
 		 */
 		dur_t ToMs() const { return duration; }
+
+	private:
+		static dur_t ParseDuration(const std::string &s);
 
 	public:
 		std::ostream &FmtLong(std::ostream &os) const;

@@ -107,7 +107,7 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 			Vec2(1280, 720)));
 
 	session->AdvancePhase(ClientSession::Phase::PREGAME);
-	session->CountdownToNextPhase(6000);
+	session->CountdownToNextPhase(Duration("6s"));
 
 	auto sessionPeer = metaSession->GetSession();
 	sessionPeer->ForEachPlayer([&](std::shared_ptr<MetaPlayer> &player) {
