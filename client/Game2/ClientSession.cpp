@@ -28,6 +28,7 @@
 #include "../../engine/Model/TrackFileCommon.h"
 #include "../../engine/VideoServices/VideoBuffer.h"
 #include "../../engine/Util/Clock.h"
+#include "../../engine/Util/Duration.h"
 #include "../../engine/Util/Log.h"
 
 #include "HoverScript/MetaSession.h"
@@ -102,6 +103,11 @@ bool ClientSession::AdvancePhase(Phase nextPhase)
 {
 	if (phase < nextPhase) {
 		do {
+			if (countdown) {
+				countdownConn.disconnect();
+				countdown.reset();
+			}
+
 			phase = NextPhase(phase);
 			switch (phase) {
 				case Phase::PREGAME: meta->OnPregame(); break;
@@ -127,6 +133,12 @@ void ClientSession::SetMeta(std::shared_ptr<HoverScript::MetaSession> meta)
 
 void ClientSession::Process()
 {
+	if (countdown) {
+		// Create a local reference since the alarm resets the shared_ptr.
+		auto cd = countdown;
+		cd->Advance();
+	}
+
 	auto simTime = mSession.GetSimulationTime();
 	if (clock->GetTime() == 0) {
 		if (simTime > 0) {
@@ -235,6 +247,29 @@ bool ClientSession::CreateMainCharacter(int i)
 	curLevel->InsertElement(ch, startingRoom);
 
 	return true;
+}
+
+/**
+ * Set a countdown timer to the next phase.
+ * @param duration The duration (must be positive).
+ */
+void ClientSession::CountdownToNextPhase(const Util::Duration &duration)
+{
+	if (countdown) {
+		// Cancel the alarm.
+		// We can't depend on the countdown clock going away, since a
+		// shared_ptr to it might still be held by something else.
+		countdownConn.disconnect();
+	}
+	countdown = std::make_shared<Util::Clock>(-duration);
+	countdownConn = countdown->At(0, [&]() {
+		AdvancePhase();
+	});
+
+	// Update the simulation time so we play the pregame animation.
+	if (phase == Phase::PREGAME) {
+		SetSimulationTime(-static_cast<MR_SimulationTime>(duration.ToMs()));
+	}
 }
 
 void ClientSession::SetSimulationTime(MR_SimulationTime pTime)

@@ -38,6 +38,7 @@ namespace HoverRace {
 	}
 	namespace Util {
 		class Clock;
+		class Duration;
 	}
 }
 
@@ -86,6 +87,8 @@ class ClientSession
 		bool CreateMainCharacter(int i);
 
 		std::shared_ptr<Util::Clock> GetClock() { return clock; }
+		std::shared_ptr<Util::Clock> GetCountdown() { return countdown; }
+		void CountdownToNextPhase(const Util::Duration &duration);
 		virtual void SetSimulationTime(MR_SimulationTime pTime);
 		MR_SimulationTime GetSimulationTime() const;
 		void UpdateCharacterSimulationTimes();
@@ -139,6 +142,8 @@ class ClientSession
 		int mHeightSprite;
 
 		std::shared_ptr<Util::Clock> clock;
+		std::shared_ptr<Util::Clock> countdown;
+		boost::signals2::scoped_connection countdownConn;
 		std::shared_ptr<Rules> rules;
 
 		void ReadLevelAttrib(Parcel::RecordFilePtr pFile, VideoServices::VideoBuffer *pVideo);

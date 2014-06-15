@@ -26,6 +26,7 @@
 #include "../../engine/Display/Hud.h"
 #include "../../engine/Model/Track.h"
 #include "../../engine/Parcel/TrackBundle.h"
+#include "../../engine/Util/Duration.h"
 #include "../../engine/VideoServices/SoundServer.h"
 #include "../../engine/VideoServices/VideoBuffer.h"
 
@@ -86,8 +87,6 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 		throw;
 	}
 
-	session->SetSimulationTime(-6000);
-
 	if (!session->CreateMainCharacter(0)) {
 		Cleanup();
 		throw Exception("Main character creation failed");
@@ -108,6 +107,7 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 			Vec2(1280, 720)));
 
 	session->AdvancePhase(ClientSession::Phase::PREGAME);
+	session->CountdownToNextPhase(6000);
 
 	auto sessionPeer = metaSession->GetSession();
 	sessionPeer->ForEachPlayer([&](std::shared_ptr<MetaPlayer> &player) {
@@ -237,7 +237,6 @@ void GameScene::Advance(Util::OS::timestamp_t tick)
 	}
 	else if (!firedOnStart && session->GetPlayer(0)->HasStarted()) {
 		metaSession->GetSession()->GetPlayer(0)->OnStart();
-		session->AdvancePhase(ClientSession::Phase::PLAYING);
 		firedOnStart = true;
 	}
 
