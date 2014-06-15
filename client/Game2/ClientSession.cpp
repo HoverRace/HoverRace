@@ -134,9 +134,7 @@ void ClientSession::SetMeta(std::shared_ptr<HoverScript::MetaSession> meta)
 void ClientSession::Process()
 {
 	if (countdown) {
-		// Create a local reference since the alarm resets the shared_ptr.
-		auto cd = countdown;
-		cd->Advance();
+		countdown->Advance();
 	}
 
 	auto simTime = mSession.GetSimulationTime();

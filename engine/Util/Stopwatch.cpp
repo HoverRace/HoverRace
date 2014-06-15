@@ -34,7 +34,7 @@ namespace {
 	{
 		if (!clock) {
 			Log::Warn("Stopwatch created with null clock (using default)");
-			clock.reset(new Clock());
+			clock = std::make_shared<Clock>();
 		}
 		return clock;
 	}

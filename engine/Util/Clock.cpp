@@ -69,9 +69,16 @@ Duration Clock::Advance()
 	// Alarms are sorted by duration, so we can just fire alarms until we
 	// find an alarm that hasn't happened yet.
 	if (!alarms.empty()) {
-		for (auto iter = alarms.begin(), iend = alarms.end(); iter != iend; )
-		{
+		// Hold a reference so the alarms can unref their own reference while
+		// we fire the rest of the alarms.
+		std::shared_ptr<Clock> holdRef;
+
+		for (auto iter = alarms.begin(), iend = alarms.end(); iter != iend;) {
 			if (iter->first > lastRead) break;
+
+			if (!holdRef) {
+				holdRef = shared_from_this();
+			}
 
 			// Fire the alarm and remove it.
 			(*(iter->second))();

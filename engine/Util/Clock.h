@@ -41,7 +41,7 @@ namespace Util {
  * A game clock that manages the current time in the simulation.
  * @author Michael Imamura
  */
-class MR_DllDeclare Clock
+class MR_DllDeclare Clock : public std::enable_shared_from_this<Clock>
 {
 	public:
 		Clock();
@@ -52,6 +52,8 @@ class MR_DllDeclare Clock
 		Clock(Clock&&) = default;
 		Clock &operator=(const Clock&) = delete;
 		Clock &operator=(Clock&&) = default;
+
+		virtual ~Clock() { }
 
 	public:
 		std::string FmtLong() const { return lastRead.FmtLong(); }
