@@ -11,6 +11,9 @@ return Player {
 
 	on_joined = function(self, session)
 		self.session = session
+
+		local hud = self.player.hud
+		hud:add_chronometer(Hud.ABOVE, "", session.session.countdown)
 		
 		self.best_lap = nil
 		self.lap = 1
