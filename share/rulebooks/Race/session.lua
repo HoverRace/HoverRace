@@ -8,13 +8,14 @@ return Session {
 
 	on_pregame = function(self)
 		local session = self.session
+		local num_players = session:get_num_players()
 
-		--[[ TODO: Session phases
-		session:countdown_to_next_phase("10s")
-		]]--
+		session:countdown_to_next_phase(
+			num_players == 1 and "6s" or "20s")
+
 		print("on_pregame in Session")
 		print("laps = " .. session.rules.laps)
-		print("num players = " .. session:get_num_players())
+		print("num players = " .. num_players)
 	end,
 
 	-- Called when the *first* player calls finish().

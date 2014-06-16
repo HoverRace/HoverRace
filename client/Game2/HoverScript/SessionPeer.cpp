@@ -23,6 +23,7 @@
 
 #include "../../engine/Script/Core.h"
 #include "../../engine/Util/Clock.h"
+#include "../../engine/Util/Log.h"
 #include "../ClientSession.h"
 #include "../Rulebook.h"
 #include "../Rules.h"
@@ -30,6 +31,8 @@
 #include "PlayerPeer.h"
 
 #include "SessionPeer.h"
+
+using namespace HoverRace::Util;
 
 namespace HoverRace {
 namespace Client {
@@ -59,6 +62,7 @@ void SessionPeer::Register(Script::Core *scripting)
 
 	module(L) [
 		class_<SessionPeer,SUPER,std::shared_ptr<SessionPeer>>("Session")
+			.def("countdown_to_next_phase", &SessionPeer::LCountdownToNextPhase)
 			.def("get_num_players", &SessionPeer::LGetNumPlayers)
 			.def_readonly("players", &SessionPeer::players)
 			.def_readonly("rules", &SessionPeer::rules)
@@ -135,6 +139,13 @@ std::shared_ptr<Util::Clock> SessionPeer::LGetClock() const
 {
 	VerifySession();
 	return session->GetClock();
+}
+
+void SessionPeer::LCountdownToNextPhase(const std::string &s) const
+{
+	VerifySession();
+	Log::Info("Setting countdown on %08x", reinterpret_cast<MR_UInt32>(session));
+	session->CountdownToNextPhase(s);
 }
 
 }  // namespace HoverScript
