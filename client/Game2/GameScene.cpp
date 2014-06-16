@@ -107,7 +107,6 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 			Vec2(1280, 720)));
 
 	session->AdvancePhase(ClientSession::Phase::PREGAME);
-	session->CountdownToNextPhase("6s");
 
 	auto sessionPeer = metaSession->GetSession();
 	sessionPeer->ForEachPlayer([&](std::shared_ptr<MetaPlayer> &player) {
@@ -127,6 +126,7 @@ GameScene::~GameScene()
 void GameScene::Cleanup()
 {
 	director.GetSessionChangedSignal()(nullptr);
+	metaSession->GetSession()->OnSessionEnd();
 	delete session;
 }
 
