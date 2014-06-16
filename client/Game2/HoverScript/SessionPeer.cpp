@@ -151,7 +151,6 @@ std::shared_ptr<Util::Clock> SessionPeer::LGetCountdown() const
 void SessionPeer::LCountdownToNextPhase(const std::string &s) const
 {
 	VerifySession();
-	Log::Info("Setting countdown on %08x", reinterpret_cast<MR_UInt32>(session));
 	session->CountdownToNextPhase(s);
 }
 
