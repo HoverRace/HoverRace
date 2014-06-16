@@ -67,6 +67,7 @@ void SessionPeer::Register(Script::Core *scripting)
 			.def_readonly("players", &SessionPeer::players)
 			.def_readonly("rules", &SessionPeer::rules)
 			.property("clock", &SessionPeer::LGetClock)
+			.property("countdown", &SessionPeer::LGetCountdown)
 			.property("time", &SessionPeer::LGetTime)
 	];
 }
@@ -139,6 +140,12 @@ std::shared_ptr<Util::Clock> SessionPeer::LGetClock() const
 {
 	VerifySession();
 	return session->GetClock();
+}
+
+std::shared_ptr<Util::Clock> SessionPeer::LGetCountdown() const
+{
+	VerifySession();
+	return session->GetCountdown();
 }
 
 void SessionPeer::LCountdownToNextPhase(const std::string &s) const

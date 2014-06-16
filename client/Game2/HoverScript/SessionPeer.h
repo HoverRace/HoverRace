@@ -86,6 +86,7 @@ class SessionPeer : public Script::Peer {
 		int LGetNumPlayers() const;
 		MR_SimulationTime LGetTime() const;
 		std::shared_ptr<Util::Clock> LGetClock() const;
+		std::shared_ptr<Util::Clock> LGetCountdown() const;
 		void LCountdownToNextPhase(const std::string &s) const;
 
 	private:
