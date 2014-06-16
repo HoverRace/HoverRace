@@ -36,7 +36,8 @@ GameSession::GameSession(BOOL pAllowRendering) :
 	mAllowRendering(pAllowRendering),
 	mCurrentLevelNumber(-1),
 	mCurrentLevel(NULL),
-	mSimulationTime(-3000)  // 3 sec countdown
+	mSimulationTime(-3000),  // 3 sec countdown
+	mLastSimulateCallTime(Util::OS::Time())
 {
 }
 
