@@ -92,7 +92,12 @@ void Chronometer::Advance(Util::OS::timestamp_t tick)
 		lastTick = tick;
 		size_t oldLen = valueLbl->GetText().length();
 
-		valueLbl->SetText(clock->FmtLong());
+		// Negative times are countdowns, so leave off the negative sign.
+		std::string text = clock->FmtLong();
+		if (!text.empty() && text[0] == '-') {
+			text.erase(0, 1);
+		}
+		valueLbl->SetText(text);
 
 		// We assume that the digits in the font are the same width.
 		// Even if they're slightly off, we only change the position if the
