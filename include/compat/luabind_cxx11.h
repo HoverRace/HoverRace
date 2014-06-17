@@ -3,8 +3,6 @@
 
 #include <memory>
 
-#ifdef _MSC_VER
-
 // See boost_cxx11.h.
 // Luabind's has_get_pointer_ doesn't notice the definitions in the boost
 // namespace, even though it'll use them.  We don't actually need to
@@ -19,5 +17,3 @@ template<class T> T * get_pointer( std::shared_ptr<T> const& p );
 }  // namespace has_get_pointer_
 }  // namespace detail
 }  // namespace luabind
-
-#endif
