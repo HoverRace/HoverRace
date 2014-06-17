@@ -21,7 +21,9 @@
 
 #include "StdAfx.h"
 
+#include "../../engine/Display/ActionButton.h"
 #include "../../engine/Display/Container.h"
+#include "../../engine/Display/FlexGrid.h"
 #include "../../engine/Display/Label.h"
 #include "../../engine/Display/ScreenFade.h"
 #include "../../engine/Util/Config.h"
@@ -71,10 +73,48 @@ DialogScene::DialogScene(Display::Display &display,
 		s.headingFont, s.headingFg));
 	titleLbl->SetPos(MARGIN_WIDTH, 80);
 	titleLbl->SetAlignment(Alignment::SW);
+
+	// The default action buttons (OK, Cancel).
+
+	actionGrid = statusRoot->AddChild(new Display::FlexGrid(display));
+	actionGrid->SetPos(1280 - (MARGIN_WIDTH * 2), 0);
+	actionGrid->SetAlignment(Alignment::NE);
+
+	size_t r = 0;
+	size_t c = 0;
+
+	okBtn = actionGrid->AddGridCell(r, c++,
+		new Display::ActionButton(display))->GetContents();
+	cancelBtn = actionGrid->AddGridCell(r, c++,
+		new Display::ActionButton(display))->GetContents();
 }
 
 DialogScene::~DialogScene()
 {
+}
+
+void DialogScene::AttachController(Control::InputEventController &controller)
+{
+	SUPER::AttachController(controller);
+
+	controller.AddMenuMaps();
+
+	// If the cancel button is not enabled, then both the "OK" and "Cancel"
+	// actions map to the "OnOk" handler.
+
+	auto &menuOkAction = controller.actions.ui.menuOk;
+	auto &menuCancelAction = controller.actions.ui.menuCancel;
+
+	okBtn->AttachAction(controller, menuOkAction);
+	cancelBtn->AttachAction(controller, menuCancelAction);
+
+	// Attaching the action may have changed the button size.
+	RequestLayout();
+}
+
+void DialogScene::DetachController(Control::InputEventController &controller)
+{
+	SUPER::DetachController(controller);
 }
 
 void DialogScene::OnPhaseTransition(double progress)

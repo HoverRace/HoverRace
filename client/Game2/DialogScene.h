@@ -25,6 +25,7 @@
 
 namespace HoverRace {
 	namespace Display {
+		class ActionButton;
 		class FlexGrid;
 		class ScreenFade;
 	}
@@ -50,6 +51,8 @@ class DialogScene : public FormScene
 		Display::Container *GetStatusRoot() const { return statusRoot.get(); }
 
 	public:
+		virtual void AttachController(Control::InputEventController &controller);
+		virtual void DetachController(Control::InputEventController &controller);
 		virtual void OnPhaseTransition(double progress) override;
 		virtual void PrepareRender() override;
 		virtual void Render() override;
@@ -62,6 +65,8 @@ class DialogScene : public FormScene
 		std::shared_ptr<Display::Container> contentRoot;
 		std::shared_ptr<Display::Container> statusRoot;
 		std::shared_ptr<Display::FlexGrid> actionGrid;
+		std::shared_ptr<Display::ActionButton> okBtn;
+		std::shared_ptr<Display::ActionButton> cancelBtn;
 };
 
 }  // namespace Client
