@@ -25,6 +25,7 @@
 
 namespace HoverRace {
 	namespace Display {
+		class FlexGrid;
 		class ScreenFade;
 	}
 }
@@ -60,6 +61,7 @@ class DialogScene : public FormScene
 		std::unique_ptr<Display::ScreenFade> fader;
 		std::shared_ptr<Display::Container> contentRoot;
 		std::shared_ptr<Display::Container> statusRoot;
+		std::shared_ptr<Display::FlexGrid> actionGrid;
 };
 
 }  // namespace Client
