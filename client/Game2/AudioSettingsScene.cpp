@@ -40,7 +40,7 @@ namespace Client {
 
 AudioSettingsScene::AudioSettingsScene(Display::Display &display,
                                        GameDirector &director) :
-	SUPER(display, "Settings > Audio", "Audio Settings")
+	SUPER(display, director, "Settings > Audio", "Audio Settings")
 {
 	typedef Display::UiViewModel::Alignment Alignment;
 	const auto &s = display.styles;

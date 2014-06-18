@@ -63,7 +63,7 @@ namespace {
 
 SettingsMenuScene::SettingsMenuScene(Display::Display &display,
                                      GameDirector &director) :
-	SUPER(display, "Settings", "Settings")
+	SUPER(display, director, "Settings", "Settings")
 {
 	typedef Display::UiViewModel::Alignment Alignment;
 

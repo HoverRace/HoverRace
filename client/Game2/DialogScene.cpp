@@ -41,14 +41,15 @@ const double DialogScene::MARGIN_WIDTH = 40;
 /**
  * Constructor.
  * @param display The display.
+ * @param director The current game director.
  * @param title The title to display.
  * @param name The name of the scene.  See Scene::GetName.
  */
-DialogScene::DialogScene(Display::Display &display,
+DialogScene::DialogScene(Display::Display &display, GameDirector &director,
                          const std::string &title,
                          const std::string &name) :
 	SUPER(display, name),
-	title(title)
+	director(director), title(title)
 {
 	typedef Display::UiViewModel::Alignment Alignment;
 
@@ -93,6 +94,18 @@ DialogScene::~DialogScene()
 {
 }
 
+/// Called when the "OK" action is fired.
+void DialogScene::OnOk()
+{
+	director.RequestPopScene();
+}
+
+/// Called when the "Cancel" action is fired.
+void DialogScene::OnCancel()
+{
+	director.RequestPopScene();
+}
+
 void DialogScene::AttachController(Control::InputEventController &controller)
 {
 	SUPER::AttachController(controller);
@@ -105,6 +118,11 @@ void DialogScene::AttachController(Control::InputEventController &controller)
 	auto &menuOkAction = controller.actions.ui.menuOk;
 	auto &menuCancelAction = controller.actions.ui.menuCancel;
 
+	okConn = menuOkAction->Connect(
+		std::bind(&DialogScene::OnOk, this));
+	cancelConn = menuCancelAction->Connect(
+		std::bind(&DialogScene::OnCancel, this));
+
 	okBtn->AttachAction(controller, menuOkAction);
 	cancelBtn->AttachAction(controller, menuCancelAction);
 
@@ -114,6 +132,9 @@ void DialogScene::AttachController(Control::InputEventController &controller)
 
 void DialogScene::DetachController(Control::InputEventController &controller)
 {
+	cancelConn.disconnect();
+	okConn.disconnect();
+
 	SUPER::DetachController(controller);
 }
 

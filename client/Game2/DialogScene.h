@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include "GameDirector.h"
+
 #include "FormScene.h"
 
 namespace HoverRace {
@@ -42,13 +44,17 @@ class DialogScene : public FormScene
 {
 	typedef FormScene SUPER;
 	public:
-		DialogScene(Display::Display &display, const std::string &title="",
-			const std::string &name="");
+		DialogScene(Display::Display &display, GameDirector &director,
+			const std::string &title="", const std::string &name="");
 		virtual ~DialogScene();
 
 	protected:
 		Display::Container *GetContentRoot() const { return contentRoot.get(); }
 		Display::Container *GetStatusRoot() const { return statusRoot.get(); }
+
+	protected:
+		virtual void OnOk();
+		virtual void OnCancel();
 
 	public:
 		virtual void AttachController(Control::InputEventController &controller);
@@ -60,13 +66,19 @@ class DialogScene : public FormScene
 	public:
 		static const double MARGIN_WIDTH;
 	private:
+		GameDirector &director;
+
 		std::string title;
+
 		std::unique_ptr<Display::ScreenFade> fader;
 		std::shared_ptr<Display::Container> contentRoot;
 		std::shared_ptr<Display::Container> statusRoot;
 		std::shared_ptr<Display::FlexGrid> actionGrid;
 		std::shared_ptr<Display::ActionButton> okBtn;
 		std::shared_ptr<Display::ActionButton> cancelBtn;
+
+		boost::signals2::connection okConn;
+		boost::signals2::connection cancelConn;
 };
 
 }  // namespace Client

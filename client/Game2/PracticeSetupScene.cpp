@@ -43,7 +43,7 @@ namespace Client {
 PracticeSetupScene::PracticeSetupScene(Display::Display &display,
                                        GameDirector &director,
                                        RulebookLibrary &rulebookLibrary) :
-	SUPER(display, "PRACTICE", "Practice Setup"),
+	SUPER(display, director, "PRACTICE", "Practice Setup"),
 	display(display), director(director), rulebookLibrary(rulebookLibrary)
 {
 	fader.reset(new Display::ScreenFade(Display::COLOR_BLACK, 1.0));
