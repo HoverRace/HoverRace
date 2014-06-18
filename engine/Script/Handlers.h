@@ -48,7 +48,12 @@ class MR_DllDeclare Handlers
 {
 	public:
 		Handlers(Core *scripting=nullptr);
+		Handlers(const Handlers&) = default;
+		Handlers(Handlers&&) = default;
 		virtual ~Handlers() { }
+
+		Handlers &operator=(const Handlers&) = default;
+		Handlers &operator=(Handlers&&) = default;
 
 	protected:
 		void Call(int numParams) const;
