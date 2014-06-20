@@ -67,7 +67,7 @@ void InputPeer::LHotkey(const std::string &key, const luabind::object &fn)
 		auto &handler = hotkeyHandlers.back();
 		handler.AddHandler(fn);
 
-		int idx = hotkeyHandlers.size() - 1;
+		auto idx = hotkeyHandlers.size() - 1;
 
 		hotkeyConns.emplace_back(
 			new boost::signals2::scoped_connection(action->Connect([=]() {
