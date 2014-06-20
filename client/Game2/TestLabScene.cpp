@@ -229,6 +229,7 @@ namespace Module {
 
 		private:
 			std::shared_ptr<Display::FlexGrid> grid;
+			std::shared_ptr<Display::FlexGrid> sideGrid;
 			std::shared_ptr<Display::FillBox> gridSizeBox;
 	}; //}}}
 }
@@ -762,6 +763,14 @@ FlexGridModule::FlexGridModule(Display::Display &display, GameDirector &director
 		s.bodyFont, s.bodyFg));
 	grid->AddGridCell(r, c++, new Display::Checkbox(display, "Save Friend"));
 	grid->AddGridCell(r, c++, new Display::Button(display, "Spectate"));
+
+	sideGrid = root->AddChild(new Display::FlexGrid(display));
+	sideGrid->SetPos(1280, 400);
+	sideGrid->SetAlignment(Alignment::E);
+
+	r = 0;
+	sideGrid->AddGridCell(r++, 0, new Display::Button(display, "Option 1"));
+	sideGrid->AddGridCell(r++, 0, new Display::Button(display, "Option 2"));
 }
 
 void FlexGridModule::Layout()
