@@ -318,10 +318,10 @@ void ConsoleScene::AttachController(Control::InputEventController &controller)
 	consoleNextCmdConn = controller.actions.ui.consoleNextCmd->Connect(
 		std::bind(&ConsoleScene::OnConsoleNextCmd, this));
 
-	textInputConn = controller.actions.ui.text->Connect(
-		std::bind(&ConsoleScene::OnTextInput, this, std::placeholders::_1));
 	textControlConn = controller.actions.ui.control->Connect(
 		std::bind(&ConsoleScene::OnTextControl, this, std::placeholders::_1));
+	textInputConn = controller.actions.ui.text->Connect(
+		std::bind(&ConsoleScene::OnTextInput, this, std::placeholders::_1));
 
 	SDL_StartTextInput();
 }
@@ -330,8 +330,8 @@ void ConsoleScene::DetachController(Control::InputEventController &controller)
 {
 	SDL_StopTextInput();
 
-	textControlConn.disconnect();
 	textInputConn.disconnect();
+	textControlConn.disconnect();
 	consoleUpConn.disconnect();
 	consoleDownConn.disconnect();
 	consoleTopConn.disconnect();
