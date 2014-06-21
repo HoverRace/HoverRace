@@ -6,6 +6,29 @@ clock:
   brief: >
     The game clock.
 
+countdown:
+  type: property
+  isa: Clock
+  sig:
+    - countdown = session.countdown
+  brief: >
+    The currently-running countdown timer, or nil if no timer is running.
+  see: Session:countdown_to_next_phase
+
+countdown_to_next_phase:
+  type: method
+  sig:
+    - session:countdown_to_next_phase(time)
+  brief: >
+    Start a countdown timer to the next phase of the session.
+  desc: >
+    Once the countdown timer is started, the countdown is available via the
+    session.countdown property.
+  examples:
+    - |
+      -- Start a 30-second countdown.
+      session:countdown_to_next_phase("30s")
+
 get_num_players:
   type: method
   sig:
