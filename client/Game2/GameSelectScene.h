@@ -60,6 +60,10 @@ class GameSelectScene : public DialogScene
 		void OnRulebookSelected(std::shared_ptr<const Rulebook> rulebook);
 
 	protected:
+		virtual void OnOk();
+		virtual void OnCancel();
+
+	protected:
 		virtual void OnPhaseTransition(double progress);
 		virtual void OnStateTransition(double progress);
 

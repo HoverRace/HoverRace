@@ -106,6 +106,15 @@ void GameSelectScene::OnRulebookSelected(std::shared_ptr<const Rulebook> ruleboo
 	director.RequestPushScene(scene);
 }
 
+void GameSelectScene::OnOk()
+{
+}
+
+void GameSelectScene::OnCancel()
+{
+	cancelSignal();
+}
+
 void GameSelectScene::OnPhaseTransition(double progress)
 {
 	double f = pow((1.0 - progress), 4);
