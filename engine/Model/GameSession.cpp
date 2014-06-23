@@ -46,11 +46,11 @@ GameSession::~GameSession()
 	Clean();
 }
 
-BOOL GameSession::LoadLevel(int pLevel, char pGameOpts)
+bool GameSession::LoadLevel(int pLevel, char pGameOpts)
 {
-	ASSERT(mCurrentMazeFile.get() != NULL);
+	ASSERT(mCurrentMazeFile);
 
-	BOOL lReturnValue = TRUE;
+	bool lReturnValue = true;
 
 	// delete the current level
 	delete mCurrentLevel;
@@ -68,7 +68,7 @@ BOOL GameSession::LoadLevel(int pLevel, char pGameOpts)
 
 		mCurrentLevelNumber = pLevel;
 	} else
-		lReturnValue = FALSE;
+		lReturnValue = false;
 
 	return lReturnValue;
 }
@@ -83,9 +83,9 @@ void GameSession::Clean()
 	mCurrentLevelNumber = -1;
 }
 
-BOOL GameSession::LoadNew(const char *pTitle, RecordFilePtr pMazeFile, char pGameOpts)
+bool GameSession::LoadNew(const char *pTitle, RecordFilePtr pMazeFile, char pGameOpts)
 {
-	BOOL lReturnValue = FALSE;
+	bool lReturnValue = false;
 
 	Clean();
 	if (pMazeFile) {

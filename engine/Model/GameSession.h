@@ -51,7 +51,7 @@ class GameSession
 		MR_SimulationTime mSimulationTime;		  // Time simulated since the session start
 		Util::OS::timestamp_t mLastSimulateCallTime;			  // Time in ms obtainend by timeGetTime
 
-		BOOL LoadLevel(int pLevelIndex, char pGameOpts);
+		bool LoadLevel(int pLevelIndex, char pGameOpts);
 		void Clean();							  // Clean up before destruction or clean-up
 
 		void SimulateFreeElems(MR_SimulationTime pDuration);
@@ -65,7 +65,7 @@ class GameSession
 		MR_DllDeclare GameSession(BOOL pAllowRendering = FALSE);
 		MR_DllDeclare ~GameSession();
 
-		MR_DllDeclare BOOL LoadNew(const char *pTitle, Parcel::RecordFilePtr pMazeFile, char pGameOpts);
+		MR_DllDeclare bool LoadNew(const char *pTitle, Parcel::RecordFilePtr pMazeFile, char pGameOpts);
 
 		MR_DllDeclare void SetSimulationTime(MR_SimulationTime);
 		MR_DllDeclare MR_SimulationTime GetSimulationTime() const;
