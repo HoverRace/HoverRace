@@ -32,6 +32,7 @@ namespace HoverRace {
 		namespace HoverScript {
 			class MetaPlayer;
 			class MetaSession;
+			class TrackPeer;
 		}
 		class ClientSession;
 	}
@@ -88,6 +89,7 @@ class SessionPeer : public Script::Peer {
 		std::shared_ptr<Util::Clock> LGetClock() const;
 		std::shared_ptr<Util::Clock> LGetCountdown() const;
 		void LCountdownToNextPhase(const std::string &s) const;
+		std::shared_ptr<TrackPeer> LGetTrack() const;
 
 	private:
 		ClientSession *session;

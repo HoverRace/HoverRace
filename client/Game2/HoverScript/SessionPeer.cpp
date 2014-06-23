@@ -29,6 +29,7 @@
 #include "../Rules.h"
 #include "MetaPlayer.h"
 #include "PlayerPeer.h"
+#include "TrackPeer.h"
 
 #include "SessionPeer.h"
 
@@ -69,6 +70,7 @@ void SessionPeer::Register(Script::Core *scripting)
 			.property("clock", &SessionPeer::LGetClock)
 			.property("countdown", &SessionPeer::LGetCountdown)
 			.property("time", &SessionPeer::LGetTime)
+			.property("track", &SessionPeer::LGetTrack)
 	];
 }
 
@@ -152,6 +154,12 @@ void SessionPeer::LCountdownToNextPhase(const std::string &s) const
 {
 	VerifySession();
 	session->CountdownToNextPhase(s);
+}
+
+std::shared_ptr<TrackPeer> SessionPeer::LGetTrack() const
+{
+	VerifySession();
+	return session->GetTrackPeer();
 }
 
 }  // namespace HoverScript

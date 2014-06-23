@@ -75,9 +75,8 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 		auto entry = rules->GetTrackEntry();
 		auto track = Config::GetInstance()->GetTrackBundle()->OpenTrack(entry);
 		if (!track) throw Parcel::ObjStreamExn("Track does not exist.");
-		if (!session->LoadNew(
-			entry->name.c_str(), track->GetRecordFile(),
-			&display.GetLegacyDisplay()))
+		if (!session->LoadNew(entry->name.c_str(), scripting,
+			track->GetRecordFile(), &display.GetLegacyDisplay()))
 		{
 			throw Parcel::ObjStreamExn("Track load failed.");
 		}

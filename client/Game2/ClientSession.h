@@ -30,11 +30,15 @@ namespace HoverRace {
 	namespace Client {
 		namespace HoverScript {
 			class MetaSession;
+			class TrackPeer;
 		}
 		class Rules;
 	}
 	namespace MainCharacter {
 		class MainCharacter;
+	}
+	namespace Script {
+		class Core;
 	}
 	namespace Util {
 		class Clock;
@@ -81,7 +85,9 @@ class ClientSession
 		// Simulation control
 		virtual void Process();
 
-		virtual BOOL LoadNew(const char *pTitle, Parcel::RecordFilePtr pMazeFile, VideoServices::VideoBuffer *pVideo);
+		virtual bool LoadNew(const char *pTitle, Script::Core *scripting,
+			Parcel::RecordFilePtr pMazeFile,
+			VideoServices::VideoBuffer *pVideo);
 
 		// Main character control and interrogation
 		bool CreateMainCharacter(int i);
@@ -113,8 +119,8 @@ class ClientSession
 		BOOL GetMessageStack(int pLevel, char *pDest, int pExpiration) const;
 		void AddMessage(const char *pMessage);
 
-		// Rendering access to level
 		const Model::Level *GetCurrentLevel() const;
+		std::shared_ptr<HoverScript::TrackPeer> GetTrackPeer() const { return trackPeer; }
 
 		std::shared_ptr<Rules> GetRules() { return rules; }
 
@@ -130,6 +136,7 @@ class ClientSession
 		MainCharacter::MainCharacter *mainCharacter[MAX_PLAYERS];
 
 		std::shared_ptr<HoverScript::MetaSession> meta;
+		std::shared_ptr<HoverScript::TrackPeer> trackPeer;
 
 		MR_UInt8 *mBackImage;
 

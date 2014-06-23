@@ -32,6 +32,7 @@
 #include "../../engine/Util/Log.h"
 
 #include "HoverScript/MetaSession.h"
+#include "HoverScript/TrackPeer.h"
 #include "Rules.h"
 
 #include "ClientSession.h"
@@ -206,17 +207,19 @@ void ClientSession::ReadLevelAttrib(Parcel::RecordFilePtr pRecordFile, VideoServ
 	}
 }
 
-BOOL ClientSession::LoadNew(const char *pTitle, Parcel::RecordFilePtr pMazeFile,
+bool ClientSession::LoadNew(const char *pTitle, Script::Core *scripting,
+                            Parcel::RecordFilePtr pMazeFile,
                             VideoServices::VideoBuffer *pVideo)
 {
-	BOOL lReturnValue;
-	lReturnValue = mSession.LoadNew(pTitle, pMazeFile, rules->GetGameOpts());
+	bool retv = mSession.LoadNew(pTitle, pMazeFile, rules->GetGameOpts());
 
-	if(lReturnValue) {
+	if (retv) {
 		ReadLevelAttrib(pMazeFile, pVideo);
+		trackPeer = std::make_shared<HoverScript::TrackPeer>(scripting,
+			mSession.GetCurrentLevel());
 	}
 
-	return lReturnValue;
+	return retv;
 }
 
 const MR_UInt8 *ClientSession::GetBackImage() const
