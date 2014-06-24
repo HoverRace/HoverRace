@@ -25,6 +25,7 @@
 #include <boost/thread/locks.hpp>
 
 #include "../../engine/MainCharacter/MainCharacter.h"
+#include "../../engine/Model/Track.h"
 #include "../../engine/Model/TrackFileCommon.h"
 #include "../../engine/VideoServices/VideoBuffer.h"
 #include "../../engine/Util/Clock.h"
@@ -208,13 +209,13 @@ void ClientSession::ReadLevelAttrib(Parcel::RecordFilePtr pRecordFile, VideoServ
 }
 
 bool ClientSession::LoadNew(const char *pTitle, Script::Core *scripting,
-                            Parcel::RecordFilePtr pMazeFile,
+                            std::shared_ptr<Model::Track> track,
                             VideoServices::VideoBuffer *pVideo)
 {
-	bool retv = mSession.LoadNew(pTitle, pMazeFile, rules->GetGameOpts());
+	bool retv = mSession.LoadNew(pTitle, track, rules->GetGameOpts());
 
 	if (retv) {
-		ReadLevelAttrib(pMazeFile, pVideo);
+		ReadLevelAttrib(track->GetRecordFile(), pVideo);
 		trackPeer = std::make_shared<HoverScript::TrackPeer>(scripting,
 			mSession.GetCurrentLevel());
 	}

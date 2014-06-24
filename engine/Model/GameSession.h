@@ -22,6 +22,7 @@
 #pragma once
 
 #include "Level.h"
+#include "Track.h"
 #include "ContactEffect.h"
 #include "../Parcel/RecordFile.h"
 
@@ -65,7 +66,7 @@ class GameSession
 		MR_DllDeclare GameSession(BOOL pAllowRendering = FALSE);
 		MR_DllDeclare ~GameSession();
 
-		MR_DllDeclare bool LoadNew(const char *pTitle, Parcel::RecordFilePtr pMazeFile, char pGameOpts);
+		MR_DllDeclare bool LoadNew(const char *pTitle, std::shared_ptr<Track> track, char pGameOpts);
 
 		MR_DllDeclare void SetSimulationTime(MR_SimulationTime);
 		MR_DllDeclare MR_SimulationTime GetSimulationTime() const;

@@ -37,6 +37,9 @@ namespace HoverRace {
 	namespace MainCharacter {
 		class MainCharacter;
 	}
+	namespace Model {
+		class Track;
+	}
 	namespace Script {
 		class Core;
 	}
@@ -86,7 +89,7 @@ class ClientSession
 		virtual void Process();
 
 		virtual bool LoadNew(const char *pTitle, Script::Core *scripting,
-			Parcel::RecordFilePtr pMazeFile,
+			std::shared_ptr<Model::Track> track,
 			VideoServices::VideoBuffer *pVideo);
 
 		// Main character control and interrogation

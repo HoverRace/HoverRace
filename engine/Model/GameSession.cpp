@@ -83,14 +83,14 @@ void GameSession::Clean()
 	mCurrentLevelNumber = -1;
 }
 
-bool GameSession::LoadNew(const char *pTitle, RecordFilePtr pMazeFile, char pGameOpts)
+bool GameSession::LoadNew(const char *pTitle, std::shared_ptr<Track> track, char pGameOpts)
 {
 	bool lReturnValue = false;
 
 	Clean();
-	if (pMazeFile) {
+	if (track) {
 		mTitle = pTitle;
-		mCurrentMazeFile = pMazeFile;
+		mCurrentMazeFile = track->GetRecordFile();
 		lReturnValue = LoadLevel(1, pGameOpts);
 
 		if(!lReturnValue)
