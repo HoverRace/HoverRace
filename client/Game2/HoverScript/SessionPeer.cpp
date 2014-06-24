@@ -21,6 +21,8 @@
 
 #include "StdAfx.h"
 
+#include <luabind/operator.hpp>
+
 #include "../../engine/Script/Core.h"
 #include "../../engine/Util/Clock.h"
 #include "../../engine/Util/Log.h"
@@ -38,6 +40,12 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace Client {
 namespace HoverScript {
+
+std::ostream &operator<<(std::ostream &os, const SessionPeer &sessionPeer)
+{
+	os << "SessionPeer";
+	return os;
+}
 
 SessionPeer::SessionPeer(Script::Core *scripting, ClientSession *session) :
 	SUPER(scripting, "Session"), session(session), meta(nullptr),
@@ -63,6 +71,7 @@ void SessionPeer::Register(Script::Core *scripting)
 
 	module(L) [
 		class_<SessionPeer,SUPER,std::shared_ptr<SessionPeer>>("Session")
+			.def(tostring(self))
 			.def("countdown_to_next_phase", &SessionPeer::LCountdownToNextPhase)
 			.def("get_num_players", &SessionPeer::LGetNumPlayers)
 			.def_readonly("players", &SessionPeer::players)

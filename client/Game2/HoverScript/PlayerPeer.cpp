@@ -21,6 +21,8 @@
 
 #include "StdAfx.h"
 
+#include <luabind/operator.hpp>
+
 #include "../../../engine/MainCharacter/MainCharacter.h"
 #include "../../../engine/Script/Core.h"
 
@@ -33,6 +35,14 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace Client {
 namespace HoverScript {
+
+std::ostream &operator<<(std::ostream &os, const PlayerPeer &playerPeer)
+{
+	os << "PlayerPeer{index=" << playerPeer.LGetIndex() << ", "
+		"name=" << playerPeer.LGetName() << '}';
+	return os;
+}
+
 
 PlayerPeer::PlayerPeer(Script::Core *scripting,
                        MainCharacter::MainCharacter *player) :
@@ -55,6 +65,7 @@ void PlayerPeer::Register(Script::Core *scripting)
 
 	module(L) [
 		class_<PlayerPeer, SUPER, std::shared_ptr<PlayerPeer>>("Player")
+			.def(tostring(self))
 			.def("finish", &PlayerPeer::LFinish)
 			.def("get_pos", &PlayerPeer::LGetPos)
 			.property("fuel", &PlayerPeer::LGetFuel)

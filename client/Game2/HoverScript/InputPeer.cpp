@@ -21,6 +21,8 @@
 
 #include "StdAfx.h"
 
+#include <luabind/operator.hpp>
+
 #include "../../../engine/Control/Controller.h"
 #include "../../../engine/Script/Core.h"
 
@@ -29,6 +31,12 @@
 namespace HoverRace {
 namespace Client {
 namespace HoverScript {
+
+std::ostream &operator<<(std::ostream &os, const InputPeer&)
+{
+	os << "InputPeer";
+	return os;
+}
 
 InputPeer::InputPeer(Script::Core *scripting,
                      Control::InputEventController *controller) :
@@ -47,6 +55,7 @@ void InputPeer::Register(Script::Core *scripting)
 
 	module(L)[
 		class_<InputPeer, SUPER, std::shared_ptr<InputPeer>>("Input")
+			.def(tostring(self))
 			.def("hotkey", &InputPeer::LHotkey)
 	];
 }

@@ -21,6 +21,8 @@
 
 #include "StdAfx.h"
 
+#include <luabind/operator.hpp>
+
 #include "../../engine/Script/Core.h"
 #include "../../engine/Util/Log.h"
 
@@ -31,6 +33,12 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace Client {
 namespace HoverScript {
+
+std::ostream &operator<<(std::ostream &os, const TrackPeer&)
+{
+	os << "TrackPeer";
+	return os;
+}
 
 TrackPeer::TrackPeer(Script::Core *scripting, Model::Level *track) :
 	SUPER(scripting, "Track"), track(track)
@@ -51,6 +59,7 @@ void TrackPeer::Register(Script::Core *scripting)
 
 	module(L)[
 		class_<TrackPeer, SUPER, std::shared_ptr<TrackPeer>>("Track")
+			.def(tostring(self))
 	];
 }
 
