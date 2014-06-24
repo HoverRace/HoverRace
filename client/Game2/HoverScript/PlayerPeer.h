@@ -71,13 +71,13 @@ class PlayerPeer : public Script::Peer {
 	public:
 		void LFinish();
 
-		double LGetFuel();
+		double LGetFuel() const;
 
-		std::shared_ptr<HudPeer> LGetHud();
+		std::shared_ptr<HudPeer> LGetHud() const;
 
-		int LGetIndex();
+		int LGetIndex() const;
 
-		const std::string &LGetName();
+		const std::string &LGetName() const;
 
 		void LGetPos();
 

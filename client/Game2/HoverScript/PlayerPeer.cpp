@@ -56,11 +56,11 @@ void PlayerPeer::Register(Script::Core *scripting)
 	module(L) [
 		class_<PlayerPeer, SUPER, std::shared_ptr<PlayerPeer>>("Player")
 			.def("finish", &PlayerPeer::LFinish)
-			.def_readonly("fuel", &PlayerPeer::LGetFuel)
 			.def("get_pos", &PlayerPeer::LGetPos)
-			.def_readonly("hud", &PlayerPeer::LGetHud)
-			.def_readonly("index", &PlayerPeer::LGetIndex)
-			.def_readonly("name", &PlayerPeer::LGetName)
+			.property("fuel", &PlayerPeer::LGetFuel)
+			.property("hud", &PlayerPeer::LGetHud)
+			.property("index", &PlayerPeer::LGetIndex)
+			.property("name", &PlayerPeer::LGetName)
 	];
 }
 
@@ -74,22 +74,22 @@ void PlayerPeer::LFinish()
 	player->Finish();
 }
 
-double PlayerPeer::LGetFuel()
+double PlayerPeer::LGetFuel() const
 {
 	return player->GetFuelLevel();
 }
 
-std::shared_ptr<HudPeer> PlayerPeer::LGetHud()
+std::shared_ptr<HudPeer> PlayerPeer::LGetHud() const
 {
 	return hud;
 }
 
-int PlayerPeer::LGetIndex()
+int PlayerPeer::LGetIndex() const
 {
 	return player->GetPlayerIndex();
 }
 
-const std::string &PlayerPeer::LGetName()
+const std::string &PlayerPeer::LGetName() const
 {
 	return player->GetName();
 }
