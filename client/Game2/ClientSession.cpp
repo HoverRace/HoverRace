@@ -65,7 +65,7 @@ namespace {
 
 ClientSession::ClientSession(std::shared_ptr<Rules> rules) :
 	phase(Phase::INIT),
-	mSession(TRUE),
+	mSession(true),
 	clock(std::make_shared<Util::Clock>()),
 	rules(std::move(rules))
 {

@@ -39,19 +39,24 @@
 namespace HoverRace {
 namespace Model {
 
-class GameSession
+class MR_DllDeclare GameSession
 {
+	public:
+		GameSession(bool pAllowRendering = true);
+		~GameSession();
+
+		bool LoadNew(const char *pTitle, std::shared_ptr<Track> track, char pGameOpts);
+
+		void SetSimulationTime(MR_SimulationTime);
+		MR_SimulationTime GetSimulationTime() const;
+		void Simulate();
+		void SimulateLateElement(MR_FreeElementHandle pElement, MR_SimulationTime pDuration, int pRoom);
+
+		Level *GetCurrentLevel() const;
+		const char *GetTitle() const;
+		Parcel::RecordFilePtr GetCurrentMazeFile();
+
 	private:
-		BOOL mAllowRendering;
-		int mCurrentLevelNumber;
-
-		std::string mTitle;
-		Parcel::RecordFilePtr mCurrentMazeFile;
-		Level *mCurrentLevel;
-
-		MR_SimulationTime mSimulationTime;		  // Time simulated since the session start
-		Util::OS::timestamp_t mLastSimulateCallTime;			  // Time in ms obtainend by timeGetTime
-
 		bool LoadLevel(int pLevelIndex, char pGameOpts);
 		void Clean();							  // Clean up before destruction or clean-up
 
@@ -62,20 +67,16 @@ class GameSession
 		// SimulateFreeElem sub-functions
 		void ComputeShapeContactEffects(int pCurrentRoom, FreeElement *pActor, const RoomContactSpec &pLastSpec, MR_FastArrayBase<int> *pVisitedRooms, int pMaxDepth, MR_SimulationTime pDuration);
 
-	public:
-		MR_DllDeclare GameSession(BOOL pAllowRendering = FALSE);
-		MR_DllDeclare ~GameSession();
+	private:
+		bool mAllowRendering;
+		int mCurrentLevelNumber;
 
-		MR_DllDeclare bool LoadNew(const char *pTitle, std::shared_ptr<Track> track, char pGameOpts);
+		std::string mTitle;
+		Parcel::RecordFilePtr mCurrentMazeFile;
+		Level *mCurrentLevel;
 
-		MR_DllDeclare void SetSimulationTime(MR_SimulationTime);
-		MR_DllDeclare MR_SimulationTime GetSimulationTime() const;
-		MR_DllDeclare void Simulate();
-		MR_DllDeclare void SimulateLateElement(MR_FreeElementHandle pElement, MR_SimulationTime pDuration, int pRoom);
-
-		MR_DllDeclare Level *GetCurrentLevel() const;
-		MR_DllDeclare const char *GetTitle() const;
-		MR_DllDeclare Parcel::RecordFilePtr GetCurrentMazeFile();
+		MR_SimulationTime mSimulationTime;  ///< Time simulated since the session start
+		Util::OS::timestamp_t mLastSimulateCallTime;  ///< Time in ms obtained by timeGetTime
 };
 
 }  // namespace Model

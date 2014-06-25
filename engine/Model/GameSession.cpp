@@ -32,7 +32,7 @@ using namespace HoverRace::Parcel;
 namespace HoverRace {
 namespace Model {
 
-GameSession::GameSession(BOOL pAllowRendering) :
+GameSession::GameSession(bool pAllowRendering) :
 	mAllowRendering(pAllowRendering),
 	mCurrentLevelNumber(-1),
 	mCurrentLevel(NULL),
