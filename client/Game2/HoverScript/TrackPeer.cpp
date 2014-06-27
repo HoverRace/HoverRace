@@ -26,6 +26,7 @@
 #include "../../engine/Model/Track.h"
 #include "../../engine/Script/Core.h"
 #include "../../engine/Util/Log.h"
+#include "../../engine/Util/Str.h"
 
 #include "TrackPeer.h"
 
@@ -35,9 +36,9 @@ namespace HoverRace {
 namespace Client {
 namespace HoverScript {
 
-std::ostream &operator<<(std::ostream &os, const TrackPeer&)
+std::ostream &operator<<(std::ostream &os, const TrackPeer &peer)
 {
-	os << "TrackPeer";
+	os << "TrackPeer{\"" << Str::Lua(peer.LGetName()) << "\"}";
 	return os;
 }
 
