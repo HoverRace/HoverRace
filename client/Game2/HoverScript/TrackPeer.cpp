@@ -38,7 +38,7 @@ namespace HoverScript {
 
 std::ostream &operator<<(std::ostream &os, const TrackPeer &peer)
 {
-	os << "TrackPeer{\"" << Str::Lua(peer.LGetName()) << "\"}";
+	os << "TrackPeer{name=\"" << Str::Lua(peer.LGetName()) << "\"}";
 	return os;
 }
 
