@@ -35,7 +35,6 @@ namespace Model {
 GameSession::GameSession(bool pAllowRendering) :
 	mAllowRendering(pAllowRendering),
 	mCurrentLevelNumber(-1),
-	mCurrentLevel(NULL),
 	mSimulationTime(-3000),  // 3 sec countdown
 	mLastSimulateCallTime(Util::OS::Time())
 {
@@ -46,40 +45,14 @@ GameSession::~GameSession()
 	Clean();
 }
 
-bool GameSession::LoadLevel(int pLevel, char pGameOpts)
+bool GameSession::LoadLevel(char gameOpts)
 {
-	ASSERT(mCurrentMazeFile);
-
-	bool lReturnValue = true;
-
-	// delete the current level
-	delete mCurrentLevel;
-	mCurrentLevelNumber = -1;
-
-	// Load the new level
-	if(pLevel < mCurrentMazeFile->GetNbRecords()) {
-		mCurrentLevel = new Level(mAllowRendering, pGameOpts);
-		mCurrentMazeFile->SelectRecord(pLevel);
-
-		ObjStreamPtr archivePtr(mCurrentMazeFile->StreamIn());
-		ObjStream &lArchive = *archivePtr;
-
-		mCurrentLevel->Serialize(lArchive);
-
-		mCurrentLevelNumber = pLevel;
-	} else
-		lReturnValue = false;
-
-	return lReturnValue;
+	track->Load(mAllowRendering, gameOpts);
+	return true;
 }
 
 void GameSession::Clean()
 {
-	mCurrentMazeFile.reset();
-
-	delete mCurrentLevel;
-	mCurrentLevel = NULL;
-
 	mCurrentLevelNumber = -1;
 }
 
@@ -90,8 +63,8 @@ bool GameSession::LoadNew(const char *pTitle, std::shared_ptr<Track> track, char
 	Clean();
 	if (track) {
 		mTitle = pTitle;
-		mCurrentMazeFile = track->GetRecordFile();
-		lReturnValue = LoadLevel(1, pGameOpts);
+		this->track = track;
+		lReturnValue = LoadLevel(pGameOpts);
 
 		if(!lReturnValue)
 			Clean();
@@ -113,7 +86,8 @@ MR_SimulationTime GameSession::GetSimulationTime() const
 
 void GameSession::Simulate()
 {
-	ASSERT(mCurrentLevel != NULL);
+	Level *mCurrentLevel = track->GetLevel();
+	ASSERT(mCurrentLevel != nullptr);
 
 	Util::OS::timestamp_t lSimulateCallTime = Util::OS::Time();
 	MR_SimulationTime lTimeToSimulate;
@@ -155,7 +129,8 @@ void GameSession::Simulate()
 
 void GameSession::SimulateLateElement(MR_FreeElementHandle pElement, MR_SimulationTime pDuration, int pRoom)
 {
-	ASSERT(mCurrentLevel != NULL);
+	Level *mCurrentLevel = track->GetLevel();
+	ASSERT(mCurrentLevel != nullptr);
 
 	MR_SimulationTime lTimeToSimulate = pDuration;
 
@@ -195,6 +170,8 @@ void GameSession::SimulateSurfaceElems(MR_SimulationTime /*pTimeToSimulate */ )
 
 int GameSession::SimulateOneFreeElem(MR_SimulationTime pTimeToSimulate, MR_FreeElementHandle pElementHandle, int pRoom)
 {
+	Level *mCurrentLevel = track->GetLevel();
+
 	BOOL lDeleteElem = FALSE;
 	FreeElement *lElement = mCurrentLevel->GetFreeElement(pElementHandle);
 
@@ -231,6 +208,8 @@ int GameSession::SimulateOneFreeElem(MR_SimulationTime pTimeToSimulate, MR_FreeE
 
 void GameSession::SimulateFreeElems(MR_SimulationTime pTimeToSimulate)
 {
+	Level *mCurrentLevel = track->GetLevel();
+
 	// Do the simulation
 	int lRoomIndex;
 
@@ -252,6 +231,8 @@ void GameSession::SimulateFreeElems(MR_SimulationTime pTimeToSimulate)
 
 void GameSession::ComputeShapeContactEffects(int pCurrentRoom, FreeElement * pActor, const RoomContactSpec & pLastSpec, MR_FastArrayBase < int >*pVisitedRooms, int pMaxDepth, MR_SimulationTime pDuration)
 {
+	Level *mCurrentLevel = track->GetLevel();
+
 	int lCounter;
 	ContactSpec lSpec;
 
@@ -400,17 +381,12 @@ void GameSession::ComputeShapeContactEffects(int pCurrentRoom, FreeElement * pAc
 
 Level *GameSession::GetCurrentLevel() const
 {
-	return mCurrentLevel;
+	return track->GetLevel();
 }
 
 const char *GameSession::GetTitle() const
 {
 	return mTitle.c_str();
-}
-
-HoverRace::Parcel::RecordFilePtr GameSession::GetCurrentMazeFile()
-{
-	return mCurrentMazeFile;
 }
 
 }  // namespace Model

@@ -1,8 +1,7 @@
 
 // Track.h
-// A track.
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -35,6 +34,9 @@
 #endif
 
 namespace HoverRace {
+	namespace Model {
+		class Level;
+	}
 	namespace Parcel {
 		class RecordFile;
 		typedef std::shared_ptr<RecordFile> RecordFilePtr;
@@ -57,14 +59,17 @@ class MR_DllDeclare Track : public Util::Inspectable
 		Track(Parcel::RecordFilePtr recFile);
 		virtual ~Track();
 
+		Parcel::RecordFilePtr GetRecordFile() const { return recFile; }
+		Level *GetLevel() const { return level; }
+
 		virtual void Inspect(Util::InspectMapNode &node) const;
 
-		//HACK: Temporary until track data loading moved into this class.
-		Parcel::RecordFilePtr GetRecordFile() const { return recFile; }
+		void Load(bool allowRendering, char gameOpts);
 
 	private:
 		Parcel::RecordFilePtr recFile;
 		TrackEntry header;
+		Level *level;
 };
 typedef std::shared_ptr<Track> TrackPtr;
 

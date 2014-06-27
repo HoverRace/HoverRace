@@ -1,8 +1,7 @@
 
 // Track.cpp
-// A track.
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -25,6 +24,8 @@
 #include "../Parcel/RecordFile.h"
 #include "../Util/InspectMapNode.h"
 
+#include "Level.h"
+
 #include "Track.h"
 
 namespace HoverRace {
@@ -36,7 +37,7 @@ namespace Model {
  * @throw Parcel::ObjStreamExn
  */
 Track::Track(Parcel::RecordFilePtr recFile) :
-	SUPER(), recFile(recFile)
+	SUPER(), recFile(recFile), level(nullptr)
 {
 	recFile->SelectRecord(0);
 	header.Serialize(*recFile->StreamIn());
@@ -44,12 +45,28 @@ Track::Track(Parcel::RecordFilePtr recFile) :
 
 Track::~Track()
 {
+	if (level) delete level;
 }
 
 void Track::Inspect(Util::InspectMapNode &node) const
 {
 	node.
 		AddSubobject("metadata", &header);
+}
+
+void Track::Load(bool allowRendering, char gameOpts)
+{
+	using namespace HoverRace::Parcel;
+
+	if (level) delete level;
+
+	level = new Level(allowRendering, gameOpts);
+	recFile->SelectRecord(1);
+
+	ObjStreamPtr archivePtr(recFile->StreamIn());
+	ObjStream &lArchive = *archivePtr;
+
+	level->Serialize(lArchive);
 }
 
 }  // namespace Model

@@ -54,10 +54,9 @@ class MR_DllDeclare GameSession
 
 		Level *GetCurrentLevel() const;
 		const char *GetTitle() const;
-		Parcel::RecordFilePtr GetCurrentMazeFile();
 
 	private:
-		bool LoadLevel(int pLevelIndex, char pGameOpts);
+		bool LoadLevel(char gameOpts);
 		void Clean();							  // Clean up before destruction or clean-up
 
 		void SimulateFreeElems(MR_SimulationTime pDuration);
@@ -72,8 +71,7 @@ class MR_DllDeclare GameSession
 		int mCurrentLevelNumber;
 
 		std::string mTitle;
-		Parcel::RecordFilePtr mCurrentMazeFile;
-		Level *mCurrentLevel;
+		std::shared_ptr<Track> track;
 
 		MR_SimulationTime mSimulationTime;  ///< Time simulated since the session start
 		Util::OS::timestamp_t mLastSimulateCallTime;  ///< Time in ms obtained by timeGetTime
