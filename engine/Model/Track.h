@@ -60,6 +60,7 @@ class MR_DllDeclare Track : public Util::Inspectable
 		virtual ~Track();
 
 		Parcel::RecordFilePtr GetRecordFile() const { return recFile; }
+		const TrackEntry &GetHeader() const { return header; }
 		Level *GetLevel() const { return level; }
 
 		virtual void Inspect(Util::InspectMapNode &node) const;

@@ -53,6 +53,10 @@ class TrackPeer : public Script::Peer
 	public:
 		static void Register(Script::Core *scripting);
 
+	public:
+		const std::string &LGetDescription() const;
+		const std::string &LGetName() const;
+
 	private:
 		std::shared_ptr<Model::Track> track;
 };

@@ -62,7 +62,19 @@ void TrackPeer::Register(Script::Core *scripting)
 	module(L)[
 		class_<TrackPeer, SUPER, std::shared_ptr<TrackPeer>>("Track")
 			.def(tostring(self))
+			.property("description", &TrackPeer::LGetDescription)
+			.property("name", &TrackPeer::LGetName)
 	];
+}
+
+const std::string &TrackPeer::LGetDescription() const
+{
+	return track->GetHeader().description;
+}
+
+const std::string &TrackPeer::LGetName() const
+{
+	return track->GetHeader().name;
 }
 
 }  // namespace HoverScript
