@@ -25,6 +25,7 @@
 
 #include "../../../engine/MainCharacter/MainCharacter.h"
 #include "../../../engine/Script/Core.h"
+#include "../../../engine/Util/Str.h"
 
 #include "MetaPlayer.h"
 
@@ -39,7 +40,7 @@ namespace HoverScript {
 std::ostream &operator<<(std::ostream &os, const PlayerPeer &playerPeer)
 {
 	os << "PlayerPeer{index=" << playerPeer.LGetIndex() << ", "
-		"name=" << playerPeer.LGetName() << '}';
+		"name=\"" << Str::Lua(playerPeer.LGetName()) << "\"}";
 	return os;
 }
 
