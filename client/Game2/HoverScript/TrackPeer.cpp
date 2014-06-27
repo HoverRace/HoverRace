@@ -23,6 +23,7 @@
 
 #include <luabind/operator.hpp>
 
+#include "../../engine/Model/Track.h"
 #include "../../engine/Script/Core.h"
 #include "../../engine/Util/Log.h"
 
@@ -40,7 +41,8 @@ std::ostream &operator<<(std::ostream &os, const TrackPeer&)
 	return os;
 }
 
-TrackPeer::TrackPeer(Script::Core *scripting, Model::Level *track) :
+TrackPeer::TrackPeer(Script::Core *scripting,
+                     std::shared_ptr<Model::Track> track) :
 	SUPER(scripting, "Track"), track(track)
 {
 }

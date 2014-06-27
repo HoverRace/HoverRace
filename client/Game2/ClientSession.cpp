@@ -216,8 +216,7 @@ bool ClientSession::LoadNew(const char *pTitle, Script::Core *scripting,
 
 	if (retv) {
 		ReadLevelAttrib(track->GetRecordFile(), pVideo);
-		trackPeer = std::make_shared<HoverScript::TrackPeer>(scripting,
-			mSession.GetCurrentLevel());
+		trackPeer = std::make_shared<HoverScript::TrackPeer>(scripting, track);
 	}
 
 	return retv;

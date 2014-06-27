@@ -25,7 +25,7 @@
 
 namespace HoverRace {
 	namespace Model {
-		class Level;
+		class Track;
 	}
 	namespace Script {
 		class Core;
@@ -47,14 +47,14 @@ class TrackPeer : public Script::Peer
 {
 	typedef Script::Peer SUPER;
 	public:
-		TrackPeer(Script::Core *scripting, Model::Level *track);
+		TrackPeer(Script::Core *scripting, std::shared_ptr<Model::Track> track);
 		virtual ~TrackPeer();
 
 	public:
 		static void Register(Script::Core *scripting);
 
 	private:
-		Model::Level *track;
+		std::shared_ptr<Model::Track> track;
 };
 
 }  // namespace HoverScript
