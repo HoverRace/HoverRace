@@ -21,6 +21,8 @@
 
 #include "StdAfx.h"
 
+#include <iomanip>
+
 #include <utf8/utf8.h>
 
 #include "Log.h"
@@ -104,6 +106,46 @@ char *Str::WideToUtf8(const wchar_t *ws)
 	}
 
 	return strdup(s.c_str());
+}
+
+std::ostream &Str::Lua::StreamOut(std::ostream &os) const
+{
+	std::ios::fmtflags flags(os.flags());
+
+	os << std::setfill('0') << std::dec;
+
+	// Lua strings are simple character arrays without any specific
+	// support for Unicode, so our UTF-8 strings are escaped as a
+	// series of bytes.
+
+	for (auto iter = s.cbegin(), iend = s.cend(); iter != iend; ++iter) {
+		unsigned char ch = *iter;
+
+		switch (ch) {
+			case '\a': os << "\\a"; break;
+			case '\b': os << "\\b"; break;
+			case '\f': os << "\\f"; break;
+			case '\n': os << "\\n"; break;
+			case '\r': os << "\\r"; break;
+			case '\t': os << "\\t"; break;
+			case '\v': os << "\\v"; break;
+			case '\\': os << "\\\\"; break;
+			case '"': os << "\\\""; break;
+			case '\'': os << "\\'"; break;
+			default:
+				if (ch < 32 || ch >= 127) {
+					os << '\\' << std::setw(3) <<
+						static_cast<unsigned int>(ch);
+				}
+				else {
+					os << ch;
+				}
+		}
+	}
+
+	os.flags(flags);
+
+	return os;
 }
 
 }  // namespace Util

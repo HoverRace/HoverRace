@@ -1,8 +1,7 @@
 
 // Str.h
-// Header for string support functions.
 //
-// Copyright (c) 2009 Michael Imamura.
+// Copyright (c) 2009, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -135,6 +134,34 @@ namespace Str {
 				operator const std::wstring() const { return cs; }
 #		endif
 	};
+
+	/**
+	 * Mark a string to be streamed out escaped for Lua.
+	 *
+	 * The surrounding quote marks are *not* included in the output.
+	 *
+	 * Example:
+	 * @code
+	 *   std::string str = ...
+	 *   std::cout << '"' << Str::Lua(str) << '"' << std::endl;
+	 * @endcode
+	 */
+	class MR_DllDeclare Lua
+	{
+		public:
+			explicit Lua(const std::string &s) : s(s) { }
+
+		public:
+			std::ostream &StreamOut(std::ostream &os) const;
+
+		private:
+			std::string s;
+	};
+
+	inline std::ostream &operator<<(std::ostream &os, const Lua &lua)
+	{
+		return lua.StreamOut(os);
+	}
 
 }  // namespace Str
 
