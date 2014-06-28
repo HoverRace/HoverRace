@@ -75,7 +75,13 @@ class MR_DllDeclare TrackEntry : public Util::Inspectable
 		}
 
 	public:
+		/**
+		 * The name of the track.
+		 * @note This is not contained in the track itself; it is up to the
+		 *       owner of this instance to fill this in if possible.
+		 */
 		std::string name;
+
 #		ifdef _DEBUG
 			Util::OS::path_t path;  // For parcel debugging.
 #		endif
