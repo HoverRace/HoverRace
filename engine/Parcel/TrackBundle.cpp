@@ -65,7 +65,7 @@ Model::TrackPtr TrackBundle::OpenTrack(const std::string &name) const
 	RecordFilePtr recFile(OpenParcel(name));
 	return !recFile ?
 		Model::TrackPtr() :
-		std::make_shared<Model::Track>(recFile);
+		std::make_shared<Model::Track>(name, recFile);
 }
 
 /**

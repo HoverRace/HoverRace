@@ -33,14 +33,16 @@ namespace Model {
 
 /**
  * Constructor.
+ * @param name The name of the track.
  * @param recFile The record file to load the track from (may not be @c NULL).
  * @throw Parcel::ObjStreamExn
  */
-Track::Track(Parcel::RecordFilePtr recFile) :
+Track::Track(const std::string &name, Parcel::RecordFilePtr recFile) :
 	SUPER(), recFile(recFile), level(nullptr)
 {
 	recFile->SelectRecord(0);
 	header.Serialize(*recFile->StreamIn());
+	header.name = name;
 }
 
 Track::~Track()

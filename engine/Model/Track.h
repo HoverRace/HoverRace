@@ -56,7 +56,7 @@ class MR_DllDeclare Track : public Util::Inspectable
 	private:
 		Track() { }
 	public:
-		Track(Parcel::RecordFilePtr recFile);
+		Track(const std::string &name, Parcel::RecordFilePtr recFile);
 		virtual ~Track();
 
 		Parcel::RecordFilePtr GetRecordFile() const { return recFile; }
