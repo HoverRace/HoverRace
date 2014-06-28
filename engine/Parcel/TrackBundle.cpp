@@ -1,7 +1,7 @@
 
 // TrackBundle.cpp
 //
-// Copyright (c) 2010, 2013 Michael Imamura.
+// Copyright (c) 2010, 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -63,7 +63,7 @@ RecordFilePtr TrackBundle::OpenParcel(const std::string &name, bool writing) con
 Model::TrackPtr TrackBundle::OpenTrack(const std::string &name) const
 {
 	RecordFilePtr recFile(OpenParcel(name));
-	return (recFile.get() == NULL) ?
+	return !recFile ?
 		Model::TrackPtr() :
 		std::make_shared<Model::Track>(recFile);
 }
@@ -88,7 +88,7 @@ Model::TrackPtr TrackBundle::OpenTrack(const std::shared_ptr<const Model::TrackE
 Model::TrackEntryPtr TrackBundle::OpenTrackEntry(const std::string &name) const
 {
 	RecordFilePtr recFile(OpenParcel(name));
-	if (recFile.get() == NULL) {
+	if (!recFile) {
 		return Model::TrackEntryPtr();
 	}
 	else {
@@ -114,7 +114,7 @@ Model::TrackEntryPtr TrackBundle::OpenTrackEntry(const std::string &name) const
 MR_TrackAvail TrackBundle::CheckAvail(const std::string &name) const
 {
 	try {
-		return (OpenTrack(name).get() == NULL) ? eTrackNotFound : eTrackAvail;
+		return OpenTrack(name) ? eTrackNotFound : eTrackAvail;
 	}
 	catch (ObjStreamExn&) {
 		return eTrackNotFound;
