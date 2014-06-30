@@ -22,8 +22,6 @@
 
 #include "StdAfx.h"
 
-#include <boost/algorithm/string/replace.hpp>
-
 #include "../Model/TrackFileCommon.h"
 #include "../Parcel/ObjStream.h"
 #include "../Util/InspectMapNode.h"
@@ -52,9 +50,6 @@ void TrackEntry::Serialize(Parcel::ObjStream &os)
 			throw std::exception();  //TODO: Throw invalid format exception.
 
 		os >> description >> regMinor >> regMajor >> sortingIndex >> registrationMode;
-#		ifdef _WIN32
-			boost::algorithm::replace_all(description, "\n", "\r\n");
-#		endif
 
 		if (registrationMode == MR_FREE_TRACK) {
 			os >> magicNumber;
