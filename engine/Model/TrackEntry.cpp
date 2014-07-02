@@ -25,6 +25,7 @@
 #include "../Parcel/ObjStream.h"
 #include "../Util/InspectMapNode.h"
 #include "../Exception.h"
+#include "TrackFormatExn.h"
 
 #include "TrackEntry.h"
 
@@ -42,18 +43,21 @@ void TrackEntry::Serialize(Parcel::ObjStream &os)
 
 		os >> magicNumber;
 		if (magicNumber != MR_MAGIC_TRACK_NUMBER)
-			throw std::exception();  //TODO: Throw invalid format exception.
+			throw TrackFormatExn(boost::str(boost::format(
+				"Bad magic number: 0x%08x") % magicNumber));
 
 		os >> version;
 		if (version != 1)
-			throw std::exception();  //TODO: Throw invalid format exception.
+			throw TrackFormatExn(boost::str(boost::format(
+				"Unknown track version: %d") % version));
 
 		os >> description >> regMinor >> regMajor >> sortingIndex >> registrationMode;
 
 		if (registrationMode == MR_FREE_TRACK) {
 			os >> magicNumber;
 			if (magicNumber != MR_MAGIC_TRACK_NUMBER)
-				throw std::exception();  //TODO: Throw invalid format exception.
+				throw TrackFormatExn(boost::str(boost::format(
+					"Bad magic number for free track: 0x%08x") % magicNumber));
 		}
 	}
 }
