@@ -48,9 +48,9 @@ class MR_DllDeclare Exception : public std::exception
 		Exception() : SUPER() { }
 		Exception(const std::string &msg) : SUPER(), msg(msg) { }
 		Exception(const char *msg) : SUPER(), msg(msg) { }
-		virtual ~Exception() throw() { }
+		virtual ~Exception() noexcept { }
 
-		virtual const char* what() const throw() { return msg.c_str(); }
+		virtual const char* what() const noexcept{ return msg.c_str(); }
 
 	protected:
 		std::string &GetMessage() { return msg; }
@@ -71,7 +71,7 @@ class MR_DllDeclare UnimplementedExn : public Exception
 		UnimplementedExn() : SUPER() { }
 		UnimplementedExn(const std::string &msg) : SUPER(msg) { }
 		UnimplementedExn(const char *msg) : SUPER(msg) { }
-		virtual ~UnimplementedExn() throw() { }
+		virtual ~UnimplementedExn() noexcept { }
 };
 
 }  // namespace HoverRace
