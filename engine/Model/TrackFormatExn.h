@@ -37,9 +37,9 @@ namespace HoverRace {
 namespace Model {
 
 /**
-* Exception indicating an unimplemented bit of code has been hit.
-* @author Michael Imamura
-*/
+ * Exception thrown when a track could not be loaded.
+ * @author Michael Imamura
+ */
 class MR_DllDeclare TrackFormatExn : public Exception
 {
 	typedef Exception SUPER;
