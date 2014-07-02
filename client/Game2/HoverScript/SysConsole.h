@@ -174,7 +174,11 @@ class SysConsole : public Console
 		virtual void HelpClass(const Script::Help::Class &cls);
 		virtual void HelpMethod(const Script::Help::Class &cls, const Script::Help::Method &method);
 
+	public:
+		static int LQuit(lua_State *L);
+
 	private:
+		GameDirector &director;
 		DebugPeer *debugPeer;
 		GamePeer *gamePeer;
 		InputPeer *inputPeer;

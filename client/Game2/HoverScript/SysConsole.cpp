@@ -56,7 +56,7 @@ SysConsole::SysConsole(Script::Core *scripting,
                        DebugPeer *debugPeer, GamePeer *gamePeer,
                        InputPeer *inputPeer,
                        int maxLogLines, int maxHistory) :
-	SUPER(scripting),
+	SUPER(scripting), director(director),
 	debugPeer(debugPeer), gamePeer(gamePeer), inputPeer(inputPeer),
 	introWritten(false), maxLogLines(maxLogLines), logLines(), baseLogIdx(0),
 	history(maxHistory), curHistory(history.end())
@@ -88,6 +88,13 @@ void SysConsole::InitEnv()
 
 	// Start with the standard global environment.
 	CopyGlobals();
+
+	// Register our "quit" alias.
+	lua_pushlightuserdata(L, this);  // table this
+	lua_pushcclosure(L, SysConsole::LQuit, 1);  // table fn
+	lua_pushstring(L, "quit");  // table fn str
+	lua_insert(L, -2);  // table str fn
+	lua_rawset(L, -3);  // table
 
 	object env(from_stack(L, -1));
 	env["debug"] = debugPeer;
@@ -305,6 +312,13 @@ void SysConsole::HelpMethod(const Script::Help::Class &cls,
 	if (!desc.empty()) {
 		LogInfo(method.GetDesc());
 	}
+}
+
+int SysConsole::LQuit(lua_State *L)
+{
+	SysConsole *self = static_cast<SysConsole*>(lua_touserdata(L, lua_upvalueindex(1)));
+	self->director.RequestShutdown();
+	return 0;
 }
 
 }  // namespace HoverScript
