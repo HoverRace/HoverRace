@@ -9,7 +9,7 @@ function(set_warning_level_direct scope gcc_opt msvc_opt)
 endfunction()
 
 function(set_full_warnings)
-	set_warning_level_direct("${ARGN}" "-Wall -Wextra -Wconversion -Winvalid-pch" "/W3")
+	set_warning_level_direct("${ARGN}" "-Wall -Winvalid-pch" "/W3")
 endfunction()
 
 function(set_no_warnings)
