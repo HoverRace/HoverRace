@@ -1,7 +1,7 @@
 
 // SelFmt.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ std::ostream &SelFmt(std::ostream &os)
 	return os;
 }
 
-inline int GetSelFmt(std::ostream &os)
+inline long GetSelFmt(std::ostream &os)
 {
 	return os.iword(SEL_FMT_INDEX);
 }
