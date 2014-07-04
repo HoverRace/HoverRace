@@ -38,10 +38,11 @@ struct BitPack {
 	void InitFrom(const MR_UInt8 *data);
 
 	void Clear();
-	void Set(int pOffset, int pLen, int pPrecision, MR_Int32 pValue);
+	void Set(MR_UInt32 pOffset, MR_UInt32 pLen, MR_UInt32 pPrecision, MR_Int32 pValue);
+	void Set(MR_UInt32 pOffset, MR_UInt32 pLen, MR_UInt32 pPrecision, MR_UInt32 pValue);
 
-	MR_Int32 Get(int pOffset, int pLen, int pPrecision) const;
-	MR_UInt32 Getu(int pOffset, int pLen, int pPrecision) const;
+	MR_Int32 Get(MR_UInt32 pOffset, MR_UInt32 pLen, MR_UInt32 pPrecision) const;
+	MR_UInt32 Getu(MR_UInt32 pOffset, MR_UInt32 pLen, MR_UInt32 pPrecision) const;
 };
 
 static_assert(std::is_pod<BitPack<32>>::value, "BitPack must be a POD type");
@@ -52,7 +53,7 @@ void BitPack<BYTES>::InitFrom(const MR_UInt8 *data) {
 }
 
 template<int BYTES>
-MR_Int32 BitPack<BYTES>::Get(int pOffset, int pLen, int pPrecision) const
+MR_Int32 BitPack<BYTES>::Get(MR_UInt32 pOffset, MR_UInt32 pLen, MR_UInt32 pPrecision) const
 {
 	union {
 		MR_Int32 s;
@@ -73,7 +74,7 @@ MR_Int32 BitPack<BYTES>::Get(int pOffset, int pLen, int pPrecision) const
 }
 
 template<int BYTES>
-MR_UInt32 BitPack<BYTES>::Getu(int pOffset, int pLen, int pPrecision) const
+MR_UInt32 BitPack<BYTES>::Getu(MR_UInt32 pOffset, MR_UInt32 pLen, MR_UInt32 pPrecision) const
 {
 	MR_UInt32 lReturnValue;
 
@@ -97,7 +98,29 @@ void BitPack<BYTES>::Clear()
 }
 
 template<int BYTES>
-inline void BitPack<BYTES>::Set(int pOffset, int pLen, int pPrecision, MR_Int32 pValue)
+inline void BitPack<BYTES>::Set(MR_UInt32 pOffset, MR_UInt32 pLen, MR_UInt32 pPrecision, MR_Int32 pValue)
+{
+	char *cdata = static_cast<char*>(bdata);
+
+	union {
+		MR_Int32 s;
+		MR_UInt32 u;
+	} conv;
+
+	conv.s = pValue >> pPrecision;
+	MR_UInt32 lValue = conv.u;
+
+	lValue = lValue << (32 - pLen) >> (32 - pLen);
+
+	(*(MR_UInt32 *) (cdata + pOffset / 8)) |= lValue << (pOffset % 8);
+
+	if((pLen + (pOffset % 8)) > 32) {
+		(*(MR_UInt32 *) (cdata + (pOffset / 8) + 4)) |= lValue >> (32 - (pOffset % 8));
+	}
+}
+
+template<int BYTES>
+inline void BitPack<BYTES>::Set(MR_UInt32 pOffset, MR_UInt32 pLen, MR_UInt32 pPrecision, MR_UInt32 pValue)
 {
 	char *cdata = static_cast<char*>(bdata);
 
