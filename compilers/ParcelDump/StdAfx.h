@@ -62,3 +62,5 @@
 #	include <X11/Xlib.h>
 #endif
 
+// Mark unused parameters so we can keep both the compiler and Doxygen happy.
+#define HR_UNUSED(x) do { (void)(x); } while (0);

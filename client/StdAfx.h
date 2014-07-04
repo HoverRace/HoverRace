@@ -125,3 +125,6 @@
 #endif  // ENABLE_NLS
 
 #define HR_WEBSITE "http://www.hoverrace.com/"
+
+// Mark unused parameters so we can keep both the compiler and Doxygen happy.
+#define HR_UNUSED(x) do { (void)(x); } while (0);
