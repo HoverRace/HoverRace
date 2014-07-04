@@ -1,8 +1,7 @@
 
 // RoomList.h
-// Header for the server room list.
 //
-// Copyright (c) 2009 Michael Imamura.
+// Copyright (c) 2009, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -27,6 +26,10 @@
 namespace HoverRace {
 namespace Client {
 
+/**
+ * Server room list.
+ * @author Michael Imamura
+ */
 class RoomList
 {
 	public:
@@ -71,11 +74,11 @@ class RoomList
 		typedef std::vector<Banner*> banners_t;
 
 		const Server &GetScoreServer() const { return scoreServer; }
-		
+
 		const rooms_t &GetRooms() const { return rooms; }
 		const Server *GetSelectedRoom() const { return selectedRoom; }
 		void SetSelectedRoom(size_t index);
-		
+
 		const banners_t &GetBanners() const { return banners; }
 		const bool HasBanners() const { return !banners.empty(); }
 		Banner *GetCurrentBanner() const { return curBanner; }
