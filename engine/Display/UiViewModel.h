@@ -110,7 +110,7 @@ class MR_DllDeclare UiViewModel : public ViewModel
 		 * @return The alignment.
 		 * @see UiViewModel::Alignment
 		 */
-		const Alignment GetAlignment() const { return alignment; }
+		Alignment GetAlignment() const { return alignment; }
 		void SetAlignment(Alignment alignment);
 
 		Vec2 GetAlignedPos(const Vec2 &pos, double w, double h) const;
