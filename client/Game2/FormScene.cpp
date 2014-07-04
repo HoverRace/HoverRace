@@ -1,7 +1,7 @@
 
 // FormScene.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ void FormScene::AttachController(Control::InputEventController &controller)
 		std::bind(&FormScene::OnMouseReleased, this, std::placeholders::_1));
 }
 
-void FormScene::DetachController(Control::InputEventController &controller)
+void FormScene::DetachController(Control::InputEventController&)
 {
 	mouseReleasedConn.disconnect();
 	mousePressedConn.disconnect();

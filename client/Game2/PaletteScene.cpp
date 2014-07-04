@@ -1,7 +1,7 @@
 
 // PaletteScene.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ void PaletteScene::AttachController(Control::InputEventController &controller)
 	cancelConn = controller.actions.ui.menuCancel->Connect(std::bind(&PaletteScene::OnOk, this));
 }
 
-void PaletteScene::DetachController(Control::InputEventController &controller)
+void PaletteScene::DetachController(Control::InputEventController&)
 {
 	cancelConn.disconnect();
 	okConn.disconnect();

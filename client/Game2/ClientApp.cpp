@@ -1,6 +1,5 @@
 
 // ClientApp.cpp
-// Experimental game shell.
 //
 // Copyright (c) 2010, 2013, 2014 Michael Imamura.
 //
@@ -645,7 +644,7 @@ void ClientApp::SignalServerHasChanged()
 	throw UnimplementedExn("ClientApp::SignalServerHasChanged()");
 }
 
-void ClientApp::ChangeAutoUpdates(bool newSetting)
+void ClientApp::ChangeAutoUpdates(bool)
 {
 	throw UnimplementedExn("ClientApp::ChangeAutoUpdates(bool)");
 }

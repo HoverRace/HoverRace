@@ -319,6 +319,8 @@ TTF_Font *SdlDisplay::LoadTtfFont(const UiFont &font)
 void SdlDisplay::DrawUiTexture(SDL_Texture *texture, const Vec2 &relPos,
                                uiLayoutFlags_t layoutFlags)
 {
+	HR_UNUSED(layoutFlags);
+
 	if (texture) {
 		Vec2 adjustedPos = LayoutUiPosition(relPos);
 

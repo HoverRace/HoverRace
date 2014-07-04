@@ -1,7 +1,7 @@
 
 // Counter.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -135,7 +135,7 @@ void Counter::Layout()
 	SetSize(sz);
 }
 
-void Counter::Advance(Util::OS::timestamp_t tick)
+void Counter::Advance(Util::OS::timestamp_t)
 {
 	static boost::format VALUE_FMT("%0.9g");
 	static boost::format TOTAL_FMT("%0.9g / %0.9g");

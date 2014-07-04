@@ -1,7 +1,7 @@
 
 // Speedometer.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ Speedometer::Speedometer(Display &display) :
 	dirFg->SetPos(0, GAUGE_HEIGHT);
 }
 
-void Speedometer::Advance(Util::OS::timestamp_t tick)
+void Speedometer::Advance(Util::OS::timestamp_t)
 {
 	auto player = GetPlayer();
 	double absSpeed = player->GetAbsoluteSpeed();

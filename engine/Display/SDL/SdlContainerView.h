@@ -1,7 +1,7 @@
 
 // SdlContainerView.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -57,12 +57,12 @@ class MR_DllDeclare SdlContainerView : public SdlView<Container>
 		virtual ~SdlContainerView() { }
 
 	public:
-		virtual void OnModelUpdate(int prop) { }
+		void OnModelUpdate(int) override { }
 
 	public:
-		virtual Vec3 Measure();
-		virtual void PrepareRender();
-		virtual void Render();
+		Vec3 Measure() override;
+		void PrepareRender() override;
+		void Render() override;
 };
 
 }  // namespace SDL

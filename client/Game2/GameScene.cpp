@@ -1,7 +1,7 @@
 
 // GameScene.cpp
 //
-// Copyright (c) 2010, 2013 Michael Imamura.
+// Copyright (c) 2010, 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -153,7 +153,7 @@ void GameScene::AttachController(Control::InputEventController &controller)
 		std::bind(&GameScene::OnPause, this));
 }
 
-void GameScene::DetachController(Control::InputEventController &controller)
+void GameScene::DetachController(Control::InputEventController&)
 {
 	// Shut off the engine when the controller is detached (e.g. when showing a
 	// dialog) otherwise we'll just keep accelerating into the wall.
