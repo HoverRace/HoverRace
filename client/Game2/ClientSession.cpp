@@ -309,16 +309,17 @@ int ClientSession::ResultAvaillable() const
 }
 
 /** @deprecated */
-void ClientSession::GetResult(int, const char *&pPlayerName, int &, BOOL &,
-                              int &, MR_SimulationTime &, MR_SimulationTime &) const
+void ClientSession::GetResult(int, const char *&pPlayerName, int&, BOOL&,
+                              int&, MR_SimulationTime&,
+                              MR_SimulationTime&) const
 {
 	pPlayerName = "?";
 	ASSERT(FALSE);
 }
 
 /** @deprecated */
-void ClientSession::GetHitResult(int pPosition, const char *&pPlayerName,
-                                 int &pId, BOOL & pConnected, int &pNbHitOther, int &pNbHitHimself) const
+void ClientSession::GetHitResult(int, const char *&pPlayerName,
+                                 int&, BOOL&, int&, int&) const
 {
 	pPlayerName = "?";
 	ASSERT(FALSE);

@@ -109,7 +109,7 @@ const Model::ShapeInterface *BumperGate::GetGivingContactEffectShape()
 }
 
 // Simulation
-int BumperGate::Simulate(MR_SimulationTime pDuration, Model::Level * pLevel, int pRoom)
+int BumperGate::Simulate(MR_SimulationTime pDuration, Model::Level*, int pRoom)
 {
 
 	if(pDuration >= 0) {
@@ -132,7 +132,10 @@ int BumperGate::Simulate(MR_SimulationTime pDuration, Model::Level * pLevel, int
 	return pRoom;
 }
 
-void BumperGate::ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 /*pZMin */ , MR_Int32 /*pZMax */ , Model::Level * /*pLevel */ )
+void BumperGate::ApplyEffect(const MR_ContactEffect *pEffect,
+                             MR_SimulationTime, MR_SimulationTime,
+                             BOOL, MR_Angle,
+                             MR_Int32, MR_Int32, Model::Level*)
 {
 	MR_ContactEffect *lEffect = (MR_ContactEffect *) pEffect;
 	const MR_PhysicalCollision *lPhysCollision = dynamic_cast < MR_PhysicalCollision * >(lEffect);

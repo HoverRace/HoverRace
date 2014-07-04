@@ -817,8 +817,13 @@ const Model::ShapeInterface *MainCharacter::GetObstacleShape()
 	return &mCollisionShape;
 }
 
-void MainCharacter::ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 /*pZMin */ ,
-	MR_Int32 pZMax, Model::Level * pLevel)
+void MainCharacter::ApplyEffect(const MR_ContactEffect *pEffect,
+                                MR_SimulationTime pTime,
+                                MR_SimulationTime pDuration,
+                                BOOL pValidDirection,
+                                MR_Angle pHorizontalDirection,
+                                MR_Int32, MR_Int32,
+                                Model::Level * pLevel)
 {
 	MR_ContactEffect *lEffect = (MR_ContactEffect *) pEffect;
 	const MR_PhysicalCollision *lPhysCollision = dynamic_cast<MR_PhysicalCollision*>(lEffect);

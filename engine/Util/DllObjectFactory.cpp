@@ -169,7 +169,7 @@ ObjectFromFactory *DllObjectFactory::CreateObject(const ObjectFromFactoryId &pId
 /**
  * Get a handle to the factory DLL.  The option of choosing which DLL has been deprecated.
  */
-FactoryDll *GetDll(MR_UInt16 pDllId, BOOL pThrowOnError)
+FactoryDll *GetDll(MR_UInt16 pDllId, BOOL)
 {
 	FactoryDll *lDllPtr;
 
@@ -242,7 +242,7 @@ void ObjectFromFactory::SerializePtr(ObjStream & pArchive, ObjectFromFactory * &
 	}
 }
 
-void ObjectFromFactory::Serialize(ObjStream &pArchive)
+void ObjectFromFactory::Serialize(ObjStream&)
 {
 	//CObject::Serialize(pArchive);
 

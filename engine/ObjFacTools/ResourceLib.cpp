@@ -1,8 +1,7 @@
 
-// ResourceLib.h
-// Loadable resource manager.
+// ResourceLib.cpp
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -34,7 +33,7 @@ namespace ObjFacTools {
 
 namespace {
 	template<class T>
-	void NewRes(T *val, ObjStream &os, ResourceLib *self)
+	void NewRes(T *val, ObjStream &os, ResourceLib*)
 	{
 		val->Serialize(os);
 	}
