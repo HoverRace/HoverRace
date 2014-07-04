@@ -119,7 +119,7 @@ std::ostream &Str::Lua::StreamOut(std::ostream &os) const
 	// series of bytes.
 
 	for (auto iter = s.cbegin(), iend = s.cend(); iter != iend; ++iter) {
-		unsigned char ch = *iter;
+		auto ch = static_cast<unsigned char>(*iter);
 
 		switch (ch) {
 			case '\a': os << "\\a"; break;
