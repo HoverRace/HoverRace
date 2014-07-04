@@ -59,7 +59,7 @@ class MR_DllDeclare TrackList
 		void Clear() { tracks.clear(); }
 		bool IsEmpty() const { return tracks.empty(); }
 
-		TrackEntryPtr &operator[](int i) { return tracks[i]; }
+		TrackEntryPtr &operator[](size_t i) { return tracks[i]; }
 
 	private:
 		typedef std::vector<TrackEntryPtr> tracks_t;
