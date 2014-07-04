@@ -296,7 +296,7 @@ void SysConsole::HelpClass(const Script::Help::Class &cls)
 	}
 }
 
-void SysConsole::HelpMethod(const Script::Help::Class &cls,
+void SysConsole::HelpMethod(const Script::Help::Class&,
                             const Script::Help::Method &method)
 {
 	using Script::Help::Method;
