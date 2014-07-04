@@ -608,11 +608,11 @@ void ClientApp::RequestMainMenu()
 		"The Alley2",
 		"The River",
 	};
-	const char *trackName = tracks[rand() % (sizeof(tracks) / sizeof(tracks[0]))];
+	const char *trackName = tracks[(unsigned)rand() % (sizeof(tracks) / sizeof(tracks[0]))];
 	Log::Info("Selected main menu track: %s", trackName);
 
 	// Pick a random craft.
-	char craftId = 1 << (rand() % 4);
+	char craftId = static_cast<char>(1 << (rand() % 4));
 
 	// Use a special "dummy" rulebook for the demo mode.
 	auto rulebook = std::make_shared<Rulebook>(scripting, OS::path_t());
