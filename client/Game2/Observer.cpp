@@ -168,7 +168,7 @@ void Observer::Scroll(int pOffset)
 
 void Observer::Zoom(int factor)
 {
-	int oldAperture = mApperture;
+	auto oldAperture = mApperture;
 	// positive factor zooms in, negative zooms out
 	mApperture = MR_Angle(mApperture * pow(0.8, factor));
 
@@ -641,7 +641,7 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 
 		int lXMargin = 2 * lFont->GetItemWidth() / lFontScaling;
 		int lYMargin = lYRes - lYRes / 15 - lLineSpacing;
-		int lPrintLen = (int)((lXRes - lXMargin) * 3.9 / (lFont->GetItemWidth() * 3 / lFontScaling));
+		unsigned int lPrintLen = (unsigned int)((lXRes - lXMargin) * 3.9 / (lFont->GetItemWidth() * 3 / lFontScaling));
 		// subject to div/0
 
 		pSession->GetCurrentMessage(lStrBuffer);
@@ -657,7 +657,7 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 		int lStackLevel = 0;
 		int lLineLevel = 0;
 		while(pSession->GetMessageStack(lStackLevel++, lStrBuffer, lMessageLife) && (lLineLevel < lMaxDepth) && (lYMargin > lYRes / 4)) {
-			int lStrLen = strlen(lStrBuffer);
+			size_t lStrLen = strlen(lStrBuffer);
 
 			if(lStrLen > lPrintLen) {
 				lFont->StrBlt(lXMargin, lYMargin, lStrBuffer + lPrintLen, &m3DView, Sprite::eLeft, Sprite::eTop, lFontScaling);
@@ -727,7 +727,7 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 					pSession->GetResult(lCounter, lPlayerName, lHoverId, lConnected, lNbLap, lFinishTime, lBestLap);
 				}
 
-				int lPlayerNameLen = std::min(strlen(lPlayerName), static_cast<size_t>(10));
+				size_t lPlayerNameLen = std::min(strlen(lPlayerName), static_cast<size_t>(10));
 
 				if(lShowHits) {
 					sprintf(lBuffer, globalFmts.hitChart.c_str(), lCounter + 1, lPlayerName, lHoverId + 1, 10 - lPlayerNameLen, "", lNbFor, lNbAgain);
