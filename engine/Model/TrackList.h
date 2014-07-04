@@ -1,8 +1,7 @@
 
 // TrackList.h
-// Sorted list of track headers.
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -44,6 +43,10 @@ namespace HoverRace {
 namespace HoverRace {
 namespace Model {
 
+/**
+ * Sorted list of track headers.
+ * @author Michael Imamura
+ */
 class MR_DllDeclare TrackList
 {
 	public:
