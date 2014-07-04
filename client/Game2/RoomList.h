@@ -80,7 +80,7 @@ class RoomList
 		void SetSelectedRoom(size_t index);
 
 		const banners_t &GetBanners() const { return banners; }
-		const bool HasBanners() const { return !banners.empty(); }
+		bool HasBanners() const { return !banners.empty(); }
 		Banner *GetCurrentBanner() const { return curBanner; }
 		Banner *NextBanner();
 		Banner *PeekNextBanner() const;
