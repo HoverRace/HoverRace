@@ -326,7 +326,7 @@ void ConsoleScene::AttachController(Control::InputEventController &controller)
 	SDL_StartTextInput();
 }
 
-void ConsoleScene::DetachController(Control::InputEventController &controller)
+void ConsoleScene::DetachController(Control::InputEventController&)
 {
 	SDL_StopTextInput();
 

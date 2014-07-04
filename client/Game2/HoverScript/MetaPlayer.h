@@ -50,7 +50,7 @@ class MetaPlayer
 	public:
 		virtual void OnInit() { }
 
-		virtual void OnJoined(std::shared_ptr<MetaSession> session) { }
+		virtual void OnJoined(std::shared_ptr<MetaSession> session) { HR_UNUSED(session); }
 		virtual void OnStart() { }
 		virtual void OnFinishLine() { }
 		virtual void OnFinish() { }

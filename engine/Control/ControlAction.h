@@ -58,7 +58,7 @@ class ControlAction {
 
 		const std::string &GetName() { return name; }
 		int GetListOrder() { return listOrder; }
-		
+
 	protected:
 		std::string name;
 		int listOrder;
@@ -74,7 +74,7 @@ typedef std::shared_ptr<ControlAction<int>> ControlActionPtr;
 class MR_DllDeclare BlankAction : public ControlAction<int> {
 	public:
 		BlankAction(std::string name, int listOrder) : ControlAction(name, listOrder) { }
-		virtual void operator()(int value) { }
+		virtual void operator()(int) { }
 };
 
 } // namespace Control

@@ -1,7 +1,7 @@
 
 // HudDecor.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -77,7 +77,7 @@ class MR_DllDeclare HudDecor : public Container
 		virtual void FireModelUpdate(int prop);
 
 	public:
-		virtual void Advance(Util::OS::timestamp_t tick) { };
+		virtual void Advance(Util::OS::timestamp_t) { };
 
 	public:
 		MainCharacter::MainCharacter *GetPlayer() const { return player; }

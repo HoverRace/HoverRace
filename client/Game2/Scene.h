@@ -1,8 +1,7 @@
 
 // Scene.h
-// Base class for scenes.
 //
-// Copyright (c) 2010, 2013 Michael Imamura.
+// Copyright (c) 2010, 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -220,14 +219,14 @@ class Scene
 		 * @param oldPhase The previous phase.
 		 * @see GetPhase()
 		 */
-		virtual void OnPhaseChanged(Phase oldPhase) { }
+		virtual void OnPhaseChanged(Phase oldPhase) { HR_UNUSED(oldPhase); }
 
 		/**
 		 * Fired immediately after entering a new state.
 		 * @param oldState The previous state.
 		 * @see GetState()
 		 */
-		virtual void OnStateChanged(State oldState) { }
+		virtual void OnStateChanged(State oldState) { HR_UNUSED(oldState); }
 
 		/**
 		 * Fired during the starting and stopping phases, if
@@ -236,7 +235,7 @@ class Scene
 		 *                 this goes from 0.0 to 1.0, and in reverse for the
 		 *                 @c STOPPING phase).
 		 */
-		virtual void OnPhaseTransition(double progress) { }
+		virtual void OnPhaseTransition(double progress) { HR_UNUSED(progress); }
 
 		/**
 		 * Fired during the raising and lowering states, if
@@ -245,7 +244,7 @@ class Scene
 		 *                 this goes from 0.0 to 1.0, and in reverse for the
 		 *                 @c LOWERING phase).
 		 */
-		virtual void OnStateTransition(double progress) { }
+		virtual void OnStateTransition(double progress) { HR_UNUSED(progress); }
 
 	public:
 		virtual void Advance(Util::OS::timestamp_t tick);

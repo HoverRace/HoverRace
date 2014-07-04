@@ -1,7 +1,7 @@
 
 // View.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@ class MR_DllDeclare View
 		 * reloaded.
 		 * @param prop The model-specific ID of the property that changed.
 		 */
-		virtual void OnModelUpdate(int prop) { }
+		virtual void OnModelUpdate(int prop) { HR_UNUSED(prop); }
 
 	public:
 		virtual Vec3 Measure() = 0;

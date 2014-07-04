@@ -90,9 +90,9 @@ class MR_DllDeclare UiViewModel : public ViewModel
 		virtual ~UiViewModel() { }
 
 	public:
-		virtual bool OnMouseMoved(const Vec2 &pos) { return false; }
-		virtual bool OnMousePressed(const Control::Mouse::Click &click) { return false; }
-		virtual bool OnMouseReleased(const Control::Mouse::Click &click) { return false; }
+		virtual bool OnMouseMoved(const Vec2&) { return false; }
+		virtual bool OnMousePressed(const Control::Mouse::Click&) { return false; }
+		virtual bool OnMouseReleased(const Control::Mouse::Click&) { return false; }
 
 	public:
 		/**

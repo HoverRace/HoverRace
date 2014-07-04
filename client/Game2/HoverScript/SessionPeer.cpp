@@ -41,7 +41,7 @@ namespace HoverRace {
 namespace Client {
 namespace HoverScript {
 
-std::ostream &operator<<(std::ostream &os, const SessionPeer &sessionPeer)
+std::ostream &operator<<(std::ostream &os, const SessionPeer&)
 {
 	os << "SessionPeer";
 	return os;

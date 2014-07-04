@@ -162,23 +162,22 @@ namespace Display {
 			public:
 				Alignment GetAlignment() const { return alignment; }
 
-				virtual void SetAlignment(Alignment alignment) override
+				void SetAlignment(Alignment alignment) override
 				{
 					this->alignment = alignment;
 				}
 
 				bool IsFill() const { return fill; }
 
-				virtual void SetFill(bool fill) override
+				void SetFill(bool fill) override
 				{
 					this->fill = fill;
 				}
 
 			protected:
-				virtual void SetExtents(double x, double y,
-					double w, double h,
-					double paddingX, double paddingY) override { }
-				virtual Vec3 Measure() override { return Vec3(0, 0, 0);  }
+				void SetExtents(double, double, double, double,
+					double, double) override { }
+				Vec3 Measure() override { return Vec3(0, 0, 0);  }
 
 			private:
 				Alignment alignment;
@@ -230,13 +229,14 @@ namespace Display {
 
 				template<class U>
 				typename std::enable_if<!HasSetSize<U>::value, void>::type
-				SetSize(double w, double h)
+				SetSize(double, double)
 				{
 					// Do nothing.
 				}
 
-				virtual void SetExtents(double x, double y,
-					double w, double h, double paddingX, double paddingY)
+				void SetExtents(double x, double y,
+					double w, double h,
+					double paddingX, double paddingY) override
 				{
 					Vec2 pos = FlexGrid::AlignCellContents(x, y,
 						w - (paddingX * 2), h - (paddingY * 2),
@@ -247,7 +247,7 @@ namespace Display {
 					}
 				}
 
-				virtual Vec3 Measure()
+				Vec3 Measure() override
 				{
 					return contents->Measure();
 				}

@@ -71,7 +71,7 @@ class SysConsole : public Console
 		virtual void InitEnv();
 
 	public:
-		virtual void Advance(Util::OS::timestamp_t tick) { }
+		void Advance(Util::OS::timestamp_t tick) override { HR_UNUSED(tick); }
 
 	private:
 		void OnSessionChanged(std::shared_ptr<MetaSession> metaSession);
