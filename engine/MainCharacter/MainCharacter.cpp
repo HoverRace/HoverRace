@@ -1,7 +1,7 @@
 // MainCharacter.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@
 #include "MainCharacter.h"
 #include "../Model/RaceEffects.h"
 #include "../Model/ObstacleCollisionReport.h"
+#include "../Util/BitPacking.h"
 #include "../Util/FuzzyLogic.h"
 #include "../Util/Log.h"
 #include "../Exception.h"
