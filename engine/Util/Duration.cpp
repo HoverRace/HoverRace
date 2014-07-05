@@ -1,7 +1,7 @@
 
 // Duration.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -107,7 +107,7 @@ std::ostream &Duration::FmtShort(std::ostream &os) const
 	if (next || mins > 0) {
 		os << mins << ':' << std::setw(2);
 	}
-	os << secs << 
+	os << secs <<
 		std::use_facet<std::numpunct<char>>(OS::locale).decimal_point() <<
 		std::setw(3) << ms;
 
@@ -158,7 +158,7 @@ Duration::dur_t Duration::ParseDuration(const std::string &s)
 		}
 		else if (ch >= 'a' && ch <= 'z') {
 			expectDigit = false;
-			suffix += ch;
+			suffix += static_cast<char>(ch);
 		}
 		else {
 			std::stringstream oss;
