@@ -185,6 +185,12 @@ bool ProcessCmdLine(int argc, char **argv)
 		else if (strcmp("-V", arg) == 0 || strcmp("--version", arg) == 0) {
 			showVersion = true;
 		}
+		else {
+			std::ostringstream oss;
+			oss << "Unknown option: " << arg;
+			ShowMessage(oss.str());
+			return false;
+		}
 	}
 
 #	ifdef _WIN32
