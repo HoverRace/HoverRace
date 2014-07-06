@@ -201,6 +201,7 @@ ClientApp::~ClientApp()
 	delete fpsLbl;
 	delete sysConsole;
 	delete sysEnv;
+	delete inputPeer;
 	delete gamePeer;
 	delete debugPeer;
 	delete rulebookLibrary;
