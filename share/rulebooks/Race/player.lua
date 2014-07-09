@@ -2,8 +2,6 @@
 return Player {
 
 	on_init = function(self)
-		print("In overloaded on_init!")
-	
 		-- Constructor-ish initialization.
 		self.stopwatch = nil
 		self.finish_time = nil
@@ -14,11 +12,11 @@ return Player {
 
 		local hud = self.player.hud
 		hud:add_chronometer(Hud.ABOVE, "", session.session.countdown)
-		
+
 		self.best_lap = nil
 		self.lap = 1
 	end,
-	
+
 	on_start = function(self)
 		local session = self.session.session
 		local player_name = self.player.name;
@@ -35,11 +33,11 @@ return Player {
 			session.rules.laps)
 		print(player_name .. " started at " .. tostring(session.clock))
 	end,
-	
+
 	on_finish_line = function(self)
 		local session = self.session.session
 		local player_name = self.player.name
-		
+
 		local lap = self.lap
 		local lap_time = self.stopwatch:next_lap("Lap " .. lap)
 		lap = lap + 1
@@ -61,11 +59,11 @@ return Player {
 			self.player:finish()
 		end
 	end,
-	
+
 	on_finish = function(self)
 		local session = self.session.session
 		local player_name = self.player.name
-		
+
 		self.finish_time = session.clock
 
 		local hud = self.player.hud
