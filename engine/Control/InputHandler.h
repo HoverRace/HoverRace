@@ -24,7 +24,7 @@
 
 #include <SDL2/SDL_keycode.h>
 
-#ifdef _WIN32
+#if defined(_WIN32) && defined(HR_ENGINE_SHARED)
 #	ifdef MR_ENGINE
 #		define MR_DllDeclare   __declspec( dllexport )
 #	else
