@@ -36,13 +36,12 @@ foreach(group ${GROUPS})
 	endif()
 endforeach()
 
-add_library(hrengine SHARED ${HR_ENGINE_SRCS})
+add_library(hrengine STATIC ${HR_ENGINE_SRCS})
 set_target_properties(hrengine PROPERTIES
 	LINKER_LANGUAGE CXX
 	PROJECT_LABEL "HoverRace Engine")
 if(WIN32)
 	set_property(TARGET hrengine APPEND PROPERTY COMPILE_DEFINITIONS
-		MR_ENGINE  # Enable dllexport.
 		YAML_DECLARE_STATIC)  # Use static linking for libYAML.
 endif()
 include_directories(".")
