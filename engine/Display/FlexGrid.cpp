@@ -25,8 +25,39 @@
 
 #include "FlexGrid.h"
 
+#ifdef _WIN32
+#	define isnan _isnan
+#endif
+
 namespace HoverRace {
 namespace Display {
+
+namespace {
+
+void ScaleDimension(std::vector<double> &measured, double desired,
+                    double padding, double margin)
+{
+	double num = (double)measured.size();
+	double spaces = (padding * num) + (margin * (num - 1));
+
+	double totalMeasured = 0;
+	for (auto cell : measured) totalMeasured += cell;
+	totalMeasured -= spaces;
+
+	double desiredTotal = desired - spaces;
+
+	double scale = desiredTotal / totalMeasured;
+
+	for (auto &cell: measured) cell *= scale;
+}
+
+}  // namespace
+
+/**
+ * Indicator that the dimension of the column or table is automatic
+ * (instead of fixed).
+ */
+const double FlexGrid::AUTOSIZE = std::numeric_limits<double>::quiet_NaN();
 
 /**
  * Constructor.
@@ -36,7 +67,7 @@ namespace Display {
 FlexGrid::FlexGrid(Display &display, uiLayoutFlags_t layoutFlags) :
 	SUPER(display, layoutFlags),
 	margin(display.styles.gridMargin), padding(display.styles.gridPadding),
-	size(0, 0)
+	size(0, 0), fixedSize(AUTOSIZE, AUTOSIZE)
 {
 }
 
@@ -60,6 +91,34 @@ void FlexGrid::SetPadding(double width, double height)
 		FireModelUpdate(Props::MARGIN);
 		RequestLayout();
 	}
+}
+
+bool FlexGrid::IsFixedWidth() const
+{
+	return isnan(fixedSize.x) == 0;
+}
+
+bool FlexGrid::IsFixedHeight() const
+{
+	return isnan(fixedSize.y) == 0;
+}
+
+void FlexGrid::SetFixedSize(double w, double h)
+{
+	SetFixedWidth(w);
+	SetFixedHeight(h);
+}
+
+void FlexGrid::SetFixedWidth(double w)
+{
+	fixedSize.x = w;
+	RequestLayout();
+}
+
+void FlexGrid::SetFixedHeight(double h)
+{
+	fixedSize.y = h;
+	RequestLayout();
 }
 
 /**
@@ -130,6 +189,14 @@ void FlexGrid::Layout()
 
 		++heightIter;
 		widthIter = widths.begin();
+	}
+
+	// If a fixed size is set, then scale the dimensions.
+	if (IsFixedWidth()) {
+		ScaleDimension(widths, fixedSize.x, padding.x, margin.x);
+	}
+	if (IsFixedHeight()) {
+		ScaleDimension(heights, fixedSize.y, padding.y, margin.y);
 	}
 
 	// Move each cell contents into position.

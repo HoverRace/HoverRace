@@ -73,6 +73,14 @@ namespace Display {
 		const Vec2 &GetPadding() const { return padding; }
 		void SetPadding(double width, double height);
 
+		static const double AUTOSIZE;
+
+		bool IsFixedWidth() const;
+		bool IsFixedHeight() const;
+		void SetFixedSize(double w, double h);
+		void SetFixedWidth(double w);
+		void SetFixedHeight(double h);
+
 	public:
 		static Vec2 AlignCellContents(double x, double y, double w, double h,
 			Alignment alignment);
@@ -337,6 +345,7 @@ namespace Display {
 		Vec2 margin;
 		Vec2 padding;
 		Vec2 size;
+		Vec2 fixedSize;
 		typedef std::vector<std::shared_ptr<Cell>> cells_t;
 		std::vector<DefaultCell> defaultCols;
 		std::vector<cells_t> rows;

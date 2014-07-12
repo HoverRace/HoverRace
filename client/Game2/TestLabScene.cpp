@@ -765,12 +765,21 @@ FlexGridModule::FlexGridModule(Display::Display &display, GameDirector &director
 	grid->AddGridCell(r, c++, new Display::Button(display, "Spectate"));
 
 	sideGrid = root->AddChild(new Display::FlexGrid(display));
-	sideGrid->SetPos(1280, 400);
-	sideGrid->SetAlignment(Alignment::E);
+	sideGrid->SetPos(0, 400);
+	//sideGrid->SetPos(1280, 400);
+	//sideGrid->SetAlignment(Alignment::E);
+
+	const auto AUTOSIZE = Display::FlexGrid::AUTOSIZE;
 
 	r = 0;
-	sideGrid->AddGridCell(r++, 0, new Display::Button(display, "Option 1"));
-	sideGrid->AddGridCell(r++, 0, new Display::Button(display, "Option 2"));
+	sideGrid->AddGridCell(r++, 0, new Display::Button(display, "Width"))->
+		GetContents()->GetClickedSignal().connect([&](Display::ClickRegion&) {
+			grid->SetFixedWidth(grid->IsFixedWidth() ? AUTOSIZE : 1280.0);
+		});
+	sideGrid->AddGridCell(r++, 0, new Display::Button(display, "Height"))->
+		GetContents()->GetClickedSignal().connect([&](Display::ClickRegion&) {
+			grid->SetFixedHeight(grid->IsFixedHeight() ? AUTOSIZE : 720.0);
+		});
 }
 
 void FlexGridModule::Layout()
