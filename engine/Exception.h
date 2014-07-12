@@ -1,8 +1,7 @@
 
 // Exception.h
-// Base exception.
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -50,7 +49,7 @@ class MR_DllDeclare Exception : public std::exception
 		Exception(const char *msg) : SUPER(), msg(msg) { }
 		virtual ~Exception() noexcept { }
 
-		virtual const char* what() const noexcept{ return msg.c_str(); }
+		virtual const char* what() const noexcept { return msg.c_str(); }
 
 	protected:
 		std::string &GetMessage() { return msg; }
