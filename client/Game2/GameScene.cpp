@@ -256,6 +256,7 @@ void GameScene::PrepareRender()
 
 void GameScene::Render()
 {
+	auto cfg = Config::GetInstance();
 	MR_SimulationTime simTime = session->GetSimulationTime();
 
 	{
@@ -269,9 +270,12 @@ void GameScene::Render()
 				simTime, session->GetBackImage());
 		}
 	}
-	for (auto &viewport : viewports) {
-		if (viewport.hud->IsVisible()) {
-			viewport.hud->Render();
+
+	if (cfg->runtime.enableHud) {
+		for (auto &viewport : viewports) {
+			if (viewport.hud->IsVisible()) {
+				viewport.hud->Render();
+			}
 		}
 	}
 

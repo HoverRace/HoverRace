@@ -20,6 +20,9 @@ end
 -- Map some useful hotkeys.
 -- Note that F11 is the default key to bring up the console
 -- and F12 is used to break into the debugger in some IDEs.
+input:hotkey("f2", function()
+	game:toggle_hud()
+end)
 input:hotkey("f10", function ()
 	debug:start_test_lab()
 end)

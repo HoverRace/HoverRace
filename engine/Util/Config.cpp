@@ -700,6 +700,7 @@ void Config::ResetToDefaults()
 	runtime.verboseLog = false;
 	runtime.showFramerate = false;
 	runtime.enableConsole = true;
+	runtime.enableHud = true;
 	runtime.skipStartupWarning = false;
 }
 

@@ -79,3 +79,16 @@ start_practice:
     "opts" is a table of options for the session.
   examples:
     - game:start_practice("The Alley2", "Race", { laps = 2 })
+
+toggle_hud:
+  type: method
+  sig:
+    - visible = game:toggle_hud()
+  brief: >
+    Toggle the in-game HUD.
+  desc: >
+    This toggles the visibility of the in-game HUD for all players while
+    playing.
+    
+    The return value is true if the HUD is now visible, false if the HUD
+    is now hidden.

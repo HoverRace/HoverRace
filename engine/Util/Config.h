@@ -284,6 +284,7 @@ class MR_DllDeclare Config
 			bool verboseLog;
 			bool showFramerate;
 			bool enableConsole;
+			bool enableHud;
 			bool noAccel;  ///< Disable accelerated (OpenGL) rendering.
 			bool skipStartupWarning;
 			std::vector<OS::path_t> initScripts;

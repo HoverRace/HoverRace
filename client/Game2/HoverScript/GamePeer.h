@@ -97,6 +97,8 @@ class GamePeer : public Script::Peer {
 
 		void LShutdown();
 
+		bool LToggleHud();
+
 	private:
 		GameDirector &director;
 		RulebookLibrary &rulebookLibrary;

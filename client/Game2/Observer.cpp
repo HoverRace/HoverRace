@@ -434,6 +434,8 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 {
 	using HoverRace::VideoServices::Sprite;
 
+	const bool drawHud = hudVisible && Config::GetInstance()->runtime.enableHud;
+
 	const Model::Level *lLevel = pSession->GetCurrentLevel();
 
 	MR_3DCoordinate lCameraPos;
@@ -590,14 +592,14 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 
 	}
 
-	if (hudVisible && lWeaponSprite != NULL) {
+	if (drawHud && lWeaponSprite != NULL) {
 		int lMissileScaling = 1 + (310 / lXRes);
 
 		lWeaponSprite->GetSprite()->Blt(lXRes, lYRes / 16, &m3DView, Sprite::eRight, Sprite::eTop, lWeaponSpriteIndex, lMissileScaling);
 	}
 
 	// Map
-	if (hudVisible && pSession->GetMap() != NULL) {
+	if (drawHud && pSession->GetMap() != NULL) {
 		const Sprite *lHoverIcons = mHoverIcons->GetSprite();
 
 		int lMapScaling = 1 + (3 * pSession->GetMap()->GetItemHeight() / lYRes);
@@ -630,7 +632,7 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 	}
 
 	// Print text
-	if (hudVisible && mBaseFont != NULL) {
+	if (drawHud && mBaseFont != NULL) {
 		char lStrBuffer[170];
 
 		const Sprite *lFont = mBaseFont->GetSprite();
@@ -671,7 +673,7 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 		}
 	}
 
-	if (hudVisible && (mBaseFont != NULL) && mDispPlayers) {
+	if (drawHud && (mBaseFont != NULL) && mDispPlayers) {
 
 		int lNbResultAvail = pSession->ResultAvaillable();
 		int lNbPages = (lNbResultAvail + NB_PLAYER_PAGE - 1) / NB_PLAYER_PAGE;
@@ -753,7 +755,7 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 	}
 
 	/*TODO: Replace with modular HUD controlled from Lua.
-	if (hudVisible && mBaseFont != NULL) {
+	if (drawHud && mBaseFont != NULL) {
 
 		// Display timers
 		char lMainLineBuffer[80];

@@ -83,6 +83,7 @@ void GamePeer::Register(Script::Core *scripting)
 			.def("start_practice", &GamePeer::LStartPractice_O)
 			.def("start_practice", &GamePeer::LStartPractice_RO)
 			.def("shutdown", &GamePeer::LShutdown)
+			.def("toggle_hud", &GamePeer::LToggleHud)
 	];
 }
 
@@ -305,6 +306,15 @@ void GamePeer::LShutdown()
 	director.RequestShutdown();
 }
 
+bool GamePeer::LToggleHud()
+{
+	// function toggle_hud()
+	// Enable or disable the in-game HUD.
+	auto &enabled = Config::GetInstance()->runtime.enableHud;
+	return (enabled = !enabled);
+}
+
 }  // namespace HoverScript
 }  // namespace Client
 }  // namespace HoverRace
+
