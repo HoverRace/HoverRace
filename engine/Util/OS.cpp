@@ -1,6 +1,5 @@
 
 // OS.cpp
-// Operating system support utilities.
 //
 // Copyright (c) 2009, 2014 Michael Imamura.
 //
