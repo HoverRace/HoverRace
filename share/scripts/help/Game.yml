@@ -42,6 +42,13 @@ on_shutdown:
   brief: >
     Called immediately before the game shuts down.
 
+screenshot:
+  type: method
+  sig:
+    - game:screenshot()
+  brief: >
+    Take a screenshot.
+
 shutdown:
   type: method
   sig:
