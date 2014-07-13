@@ -97,11 +97,11 @@ SDL_Surface *SdlSurfaceText::RenderToNewSurface(const std::string &s)
 	TTF_Font *ttfFont = display.LoadTtfFont(font);
 
 	//TODO: Handle newlines ourselves.
-	SDL_Color color = { 0xff, 0xff, 0xff };
+	SDL_Color color = { 0xff, 0xff, 0xff, 0xff };
 
 	tempSurface = TTF_RenderUTF8_Blended_Wrapped(ttfFont,
 		s.c_str(), color,
-		fixedWidth ? wrapWidth : 4096);
+		fixedWidth ? static_cast<unsigned>(wrapWidth) : 4096);
 	width = tempSurface->w;
 	height = tempSurface->h;
 
