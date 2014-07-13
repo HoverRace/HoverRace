@@ -548,12 +548,27 @@ OS::timestamp_t OS::Time()
  */
 std::string OS::FileTimeString()
 {
+	/* std::put_time is unavailable in libstdc++ 4.8.
 	auto now = std::chrono::system_clock::to_time_t(
 		std::chrono::system_clock::now());
 
 	std::ostringstream oss;
 	oss << std::put_time(std::localtime(&now), "%Y-%m-%d %H.%M.%S %z");
 	return oss.str();
+	*/
+
+	tm now;
+	const time_t curTime = time(nullptr);
+	memcpy(&now, localtime(&curTime), sizeof(now));
+	char retv[128] = "";
+	if (strftime(retv, sizeof(retv), "%Y-%m-%d %H.%M.%S %z", &now) == 0) {
+		std::ostringstream oss;
+		oss << "Filename timestamp exceeded limit: " << sizeof(retv);
+		throw Exception(oss.str());
+	}
+	else {
+		return std::string(retv);
+	}
 }
 
 /**
