@@ -1,7 +1,7 @@
 
 // UiScene.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -26,12 +26,12 @@
 namespace HoverRace {
 namespace Client {
 
-void UiScene::AttachController(Control::InputEventController &controller)
+void UiScene::AttachController(Control::InputEventController&)
 {
 	//TODO
 }
 
-void UiScene::DetachController(Control::InputEventController &controller)
+void UiScene::DetachController(Control::InputEventController&)
 {
 	//TODO
 }
