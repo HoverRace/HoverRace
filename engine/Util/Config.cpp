@@ -24,12 +24,14 @@
 #include <limits.h>
 #include <stdlib.h>
 
+#include <iomanip>
 #include <string>
 #include <sstream>
 #include <exception>
 
 #ifdef _WIN32
 #	include <windows.h>
+#	include <comdef.h>
 #	include <shlobj.h>
 #	include <lmcons.h>
 #else
@@ -116,6 +118,54 @@ using HoverRace::Control::InputEventController;
 
 namespace HoverRace {
 namespace Util {
+
+namespace {
+
+/**
+ * Find the user's OS-specific "personal" data directory.
+ *
+ * On Windows, this is the "My Documents" folder.
+ * Everywhere else, this is the user's home directory.
+ *
+ * @return The directory path (empty if the directory couldn't be determined).
+ */
+OS::path_t FindPersonalDir()
+{
+	// Only log the warning once.
+	static bool loggedWarning = false;
+
+#	ifdef _WIN32
+		//TODO: SHGetFolderPath is deprecated; use SHGetKnownFolderPath.
+		wchar_t dpath[MAX_PATH] = L"";
+		HRESULT hr = SHGetFolderPathW(NULL, CSIDL_PERSONAL, NULL,
+			SHGFP_TYPE_CURRENT, dpath);
+		if (SUCCEEDED(hr)) {
+			return OS::path_t(dpath);
+		}
+		else {
+			if (!loggedWarning) {
+				Log::Warn("Unable to look up the \"My Documents\" folder: %s",
+					_com_error(hr).ErrorMessage());
+				loggedWarning = true;
+			}
+			return OS::path_t();
+		}
+#	else
+		char *home = getenv("HOME");
+		if (home) {
+			return OS::path_t(home);
+		}
+		else {
+			if (!loggedWarning) {
+				Log::Warn("Unable to look up the home directory.");
+				loggedWarning = true;
+			}
+			return OS::path_t();
+		}
+#	endif
+}
+
+}  // namespace
 
 const std::string Config::TRACK_EXT(".trk");
 
@@ -500,6 +550,57 @@ OS::path_t Config::GetScriptHelpPath(const std::string &className) const
 }
 
 /**
+ * Generates a new unique file for the screenshot.
+ * @param ext The extension to use on the generated filename.
+ * @return The generated path.  The file will exist and will be empty, ready
+ *         for writing.
+ * @throw Exception The path could not be generated.
+ */
+OS::path_t Config::GenerateScreenshotPath(const std::string &ext) const
+{
+	// This isn't intended to be secure; we assume that we have the destination
+	// directory to ourselves, and we just want to avoid filename collisions
+	// when done in rapid succession.
+
+	OS::path_t path = misc.screenshotPath;
+	if (path.empty()) {
+		throw Exception("Screenshot path is not configured.");
+	}
+	if (!fs::exists(path)) {
+		if (!fs::create_directories(path)) {
+			throw Exception(
+				std::string("Unable to create screenshot directory: ") +
+					(const char*)Str::PU(path));
+		}
+	}
+	else {
+		if (!fs::is_directory(path)) {
+			throw Exception(std::string("Screenshot path is not a directory: ") +
+				(const char*)Str::PU(path));
+		}
+	}
+
+	// The filename is based on the timestamp.
+	std::string base = OS::FileTimeString();
+
+	// Loop until we find a filename that doesn't exist.
+	for (int i = 0;; i++) {
+		std::ostringstream oss;
+		oss << base;
+		if (i > 0) oss << ' ' << i;
+		oss << ext;
+
+		OS::path_t retv = path / oss.str();
+
+		//TODO: Try to open with O_CREAT and O_EXCL and check writing.
+
+		if (!fs::exists(retv)) {
+			return retv;
+		}
+	}
+}
+
+/**
  * Retrieve the default URL for the IMR room list.
  * @return The URL (without the initial "http://").
  */
@@ -524,30 +625,25 @@ std::string Config::GetDefaultUpdateServerUrl()
  */
 OS::path_t Config::GetDefaultChatLogPath()
 {
-#ifdef _WIN32
-	wchar_t dpath[MAX_PATH] = {0};
-	HRESULT hr =
-		SHGetFolderPathW(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, dpath);
-	if (SUCCEEDED(hr)) {
-		OS::path_t retv(dpath);
+	OS::path_t retv = FindPersonalDir();
+	if (!retv.empty()) {
 		retv /= L"HoverRace Chat";
-		return retv;
 	}
-	else {
-		ASSERT(FALSE);
-		return OS::path_t();
+	return retv;
+}
+
+/**
+ * Retrieve the default path for screenshots.
+ * @return The fully-qualified path (may be empty if base path could not
+ *         be retrieved from the system).
+ */
+OS::path_t Config::GetDefaultScreenshotPath()
+{
+	OS::path_t retv = FindPersonalDir();
+	if (!retv.empty()) {
+		retv /= L"HoverRace Screenshots";
 	}
-#else
-	char *home = getenv("HOME");
-	if (home != NULL) {
-		OS::path_t retv(home);
-		retv /= "HoverRace Chat";
-		return retv;
-	}
-	else {
-		return OS::path_t();
-	}
-#endif
+	return retv;
 }
 
 /**
@@ -607,6 +703,7 @@ void Config::ResetToDefaults()
 	misc.displayFirstScreen = true;
 	misc.introMovie = true;
 	misc.aloneWarning = true;
+	misc.screenshotPath = GetDefaultScreenshotPath();
 
 	// Get current user name as default nickname.
 #ifdef _WIN32
@@ -967,6 +1064,7 @@ void Config::cfg_misc_t::Load(yaml::MapNode *root)
 	READ_BOOL(root, displayFirstScreen);
 	READ_BOOL(root, introMovie);
 	READ_BOOL(root, aloneWarning);
+	READ_PATH(root, screenshotPath);
 }
 
 void Config::cfg_misc_t::Save(yaml::Emitter *emitter)
@@ -977,6 +1075,7 @@ void Config::cfg_misc_t::Save(yaml::Emitter *emitter)
 	EMIT_VAR(emitter, displayFirstScreen);
 	EMIT_VAR(emitter, introMovie);
 	EMIT_VAR(emitter, aloneWarning);
+	EMIT_VAR(emitter, screenshotPath);
 
 	emitter->EndMap();
 }

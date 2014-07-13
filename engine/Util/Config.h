@@ -141,9 +141,12 @@ class MR_DllDeclare Config
 
 		OS::path_t GetScriptHelpPath(const std::string &className) const;
 
+		OS::path_t GenerateScreenshotPath(const std::string &ext) const;
+
 		static std::string GetDefaultRoomListUrl();
 		static std::string GetDefaultUpdateServerUrl();
 		static OS::path_t GetDefaultChatLogPath();
+		static OS::path_t GetDefaultScreenshotPath();
 
 		const std::string &GetDefaultFontName() const;
 		const std::string &GetDefaultMonospaceFontName() const;
@@ -203,6 +206,7 @@ class MR_DllDeclare Config
 			bool displayFirstScreen;
 			bool introMovie;
 			bool aloneWarning; /// warn a player if he launches a game alone
+			OS::path_t screenshotPath;
 
 			void Load(yaml::MapNode*);
 			void Save(yaml::Emitter*);

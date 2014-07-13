@@ -217,9 +217,8 @@ void SdlDisplay::Screenshot()
 {
 	const auto cfg = Config::GetInstance();
 	const auto &vidCfg = cfg->video;
-	//TODO: Get output from Config.
 
-	OS::path_t path("screenshot.bmp");
+	OS::path_t path = cfg->GenerateScreenshotPath(".bmp");
 
 	SDL_Surface *surface =
 		SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
