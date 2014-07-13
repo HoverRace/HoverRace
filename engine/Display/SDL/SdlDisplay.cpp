@@ -241,7 +241,7 @@ void SdlDisplay::Screenshot()
 			SDL_GetError());
 	}
 
-	Log::Info("Saved screenshot: %s", Str::PU(path));
+	Log::Info("Saved screenshot: %s", (const char*)Str::PU(path));
 
 	SDL_FreeSurface(surface);
 }
