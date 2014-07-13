@@ -216,7 +216,6 @@ void SdlDisplay::Flip()
 void SdlDisplay::Screenshot()
 {
 	const auto cfg = Config::GetInstance();
-	const auto &vidCfg = cfg->video;
 
 	OS::path_t path = cfg->GenerateScreenshotPath(".bmp");
 
