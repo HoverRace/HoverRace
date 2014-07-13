@@ -184,6 +184,8 @@ ClientApp::ClientApp() :
 		throw Exception(SDL_GetError());
 	}
 
+	gamePeer->SetDisplay(display);
+
 	namespace LayoutFlags = Display::UiLayoutFlags;
 	fpsLbl = new Display::Label("FPS:",
 		Display::UiFont(cfg->GetDefaultFontName(), 20, Display::UiFont::BOLD),
@@ -198,6 +200,8 @@ ClientApp::ClientApp() :
 
 ClientApp::~ClientApp()
 {
+	gamePeer->SetDisplay(nullptr);
+
 	delete fpsLbl;
 	delete sysConsole;
 	delete sysEnv;

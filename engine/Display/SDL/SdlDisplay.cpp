@@ -213,6 +213,41 @@ void SdlDisplay::Flip()
 	SDL_RenderPresent(renderer);
 }
 
+void SdlDisplay::Screenshot()
+{
+	const auto cfg = Config::GetInstance();
+	const auto &vidCfg = cfg->video;
+	//TODO: Get output from Config.
+
+	OS::path_t path("screenshot.bmp");
+
+	SDL_Surface *surface =
+		SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
+	if (!surface) {
+		throw Exception(std::string("Unable to create screenshot surface: ") +
+			SDL_GetError());
+	}
+
+	if (SDL_RenderReadPixels(renderer, nullptr,
+		SDL_PIXELFORMAT_ARGB8888,
+		surface->pixels, surface->pitch) < 0)
+	{
+		SDL_FreeSurface(surface);
+		throw Exception(std::string("Failed reading screen for screenshot: ") +
+			SDL_GetError());
+	}
+
+	if (SDL_SaveBMP(surface, Str::PU(path)) < 0) {
+		SDL_FreeSurface(surface);
+		throw Exception(std::string("Failed to save screenshot: ") +
+			SDL_GetError());
+	}
+
+	Log::Info("Saved screenshot: %s", Str::PU(path));
+
+	SDL_FreeSurface(surface);
+}
+
 /**
  * Apply the current video configuration to the display.
  */

@@ -132,6 +132,11 @@ class MR_DllDeclare Display :
 		 */
 		virtual void Flip() = 0;
 
+		/**
+		 * Take a screenshot.
+		 */
+		virtual void Screenshot() = 0;
+
 	public:
 		/**
 		 * Retrieve the current UI origin coordinates.

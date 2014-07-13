@@ -25,6 +25,7 @@
 #include <boost/lexical_cast.hpp>
 #include <luabind/adopt_policy.hpp>
 
+#include "../../../engine/Display/Display.h"
 #include "../../../engine/Parcel/TrackBundle.h"
 #include "../../../engine/Script/Core.h"
 #include "../../../engine/Util/Config.h"
@@ -47,7 +48,7 @@ namespace HoverScript {
 GamePeer::GamePeer(Script::Core *scripting, GameDirector &director,
                    RulebookLibrary &rulebookLibrary) :
 	SUPER(scripting, "Game"),
-	director(director), rulebookLibrary(rulebookLibrary),
+	director(director), rulebookLibrary(rulebookLibrary), display(nullptr),
 	initialized(false),
 	onInit(scripting), onShutdown(scripting),
 	onSessionStart(scripting), onSessionEnd(scripting)
@@ -78,6 +79,7 @@ void GamePeer::Register(Script::Core *scripting)
 			.def("on_session_begin", &GamePeer::LOnSessionBegin_N)
 			.def("on_session_end", &GamePeer::LOnSessionEnd)
 			.def("on_session_end", &GamePeer::LOnSessionEnd_N)
+			.def("screenshot", &GamePeer::LScreenshot)
 			.def("start_main_menu", &GamePeer::LStartMenuMenu)
 			.def("start_practice", &GamePeer::LStartPractice)
 			.def("start_practice", &GamePeer::LStartPractice_O)
@@ -191,6 +193,17 @@ void GamePeer::LOnSessionEnd(const luabind::object &fn)
 void GamePeer::LOnSessionEnd_N(const std::string &name, const luabind::object &fn)
 {
 	onSessionEnd.AddHandler(name, fn);
+}
+
+void GamePeer::LScreenshot()
+{
+	if (!display) {
+		luaL_error(GetScripting()->GetState(),
+			"Cannot take screenshot because window hasn't been created yet.");
+		return;
+	}
+
+	display->Screenshot();
 }
 
 void GamePeer::LStartMenuMenu()

@@ -75,6 +75,7 @@ class MR_DllDeclare SdlDisplay : public Display
 		virtual void OnDesktopModeChanged(int width, int height);
 		virtual void OnDisplayConfigChanged();
 		virtual void Flip();
+		void Screenshot() override;
 
 	private:
 		void ApplyVideoMode();
