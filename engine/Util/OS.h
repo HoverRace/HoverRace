@@ -124,6 +124,7 @@ class MR_DllDeclare OS {
 				return 0xfffffffful - (earlierTs - laterTs) + 1;
 			}
 		}
+		static std::string FileTimeString();
 		static void TimeShutdown();
 
 		static bool OpenLink(const std::string &url);

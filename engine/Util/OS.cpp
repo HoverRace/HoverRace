@@ -30,6 +30,8 @@
 #	include <time.h>
 #endif
 
+#include <chrono>
+#include <iomanip>
 #include <iostream>
 #include <string>
 #include <system_error>
@@ -539,6 +541,20 @@ void OS::TimeInit()
 OS::timestamp_t OS::Time()
 {
 	return SDL_GetTicks();
+}
+
+/**
+ * Generate a string representing the current timestamp, suitable for filenames.
+ * @return The string (in "YYYY-MM-DD HH.MM.SS TZ" format).
+ */
+std::string OS::FileTimeString()
+{
+	auto now = std::chrono::system_clock::to_time_t(
+		std::chrono::system_clock::now());
+
+	std::ostringstream oss;
+	oss << std::put_time(std::localtime(&now), "%Y-%m-%d %H.%M.%S %z");
+	return oss.str();
 }
 
 /**
