@@ -133,16 +133,11 @@ void TrackSelectScene::OnTrackSelected(Model::TrackEntryPtr entry)
 
 void TrackSelectScene::OnPhaseTransition(double progress)
 {
-	double f = pow((1.0 - progress), 4);
+	double f = 1 - pow(1.0 - progress, 4);
 
-	MR_UInt8 alpha = static_cast<MR_UInt8>(255.0 * (1.0 - f));
-	rulebookLbl->SetColor(Display::Color(alpha, 0xbf, 0xbf, 0xbf));
-	trackPanel->SetPos(f * 1280.0 + MARGIN_WIDTH, 100);
-
-	f = 1 - pow(1.0 - progress, 4);
-
-	subtitleGrid->SetPos(DialogScene::MARGIN_WIDTH, 720.0 + f * -720.0);
-	subtitleRule->SetPos(DialogScene::MARGIN_WIDTH, 780.0 + f * -720.0);
+	subtitleGrid->SetPos(MARGIN_WIDTH, 720.0 + f * -720.0);
+	subtitleRule->SetPos(MARGIN_WIDTH, 780.0 + f * -720.0);
+	trackPanel->SetPos(MARGIN_WIDTH, 820.0 + f * -720.0);
 }
 
 }  // namespace Client
