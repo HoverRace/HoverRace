@@ -141,8 +141,8 @@ void TrackSelectScene::OnPhaseTransition(double progress)
 
 	f = 1 - pow(1.0 - progress, 4);
 
-	subtitleGrid->SetPos(DialogScene::MARGIN_WIDTH, 720.0f + f * -720.0f);
-	subtitleRule->SetPos(DialogScene::MARGIN_WIDTH, 780.0f + f * -720.0f);
+	subtitleGrid->SetPos(DialogScene::MARGIN_WIDTH, 720.0 + f * -720.0);
+	subtitleRule->SetPos(DialogScene::MARGIN_WIDTH, 780.0 + f * -720.0);
 }
 
 }  // namespace Client
