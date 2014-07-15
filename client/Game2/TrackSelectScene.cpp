@@ -25,6 +25,7 @@
 #include "../../engine/Display/Button.h"
 #include "../../engine/Display/Container.h"
 #include "../../engine/Display/Display.h"
+#include "../../engine/Display/FillBox.h"
 #include "../../engine/Display/FlexGrid.h"
 #include "../../engine/Display/Label.h"
 #include "../../engine/Model/TrackEntry.h"
@@ -67,6 +68,8 @@ TrackSelectScene::TrackSelectScene(Display::Display &display,
 	rules(std::make_shared<Rules>(rulebook)),
 	trackList()
 {
+	typedef Display::UiViewModel::Alignment Alignment;
+
 	SetPhaseTransitionDuration(1000);
 
 	trackList.Reload(Config::GetInstance()->GetTrackBundle());
@@ -76,15 +79,32 @@ TrackSelectScene::TrackSelectScene(Display::Display &display,
 
 	auto root = GetContentRoot();
 
-	rulebookLbl = root->AddChild(new Display::Label(rulebook->GetTitle(),
-		Display::UiFont(fontName, 40), 0xffbfbfbf));
-	rulebookLbl->SetPos(DialogScene::MARGIN_WIDTH, 0);
+	subtitleGrid = root->AddChild(new Display::FlexGrid(display));
+	subtitleGrid->SetMargin(10, 0);
+	subtitleGrid->SetPadding(0, 0);
+	subtitleGrid->SetFixedHeight(40);
+	subtitleGrid->SetPos(DialogScene::MARGIN_WIDTH, 0);
+
+	rulebookLbl = subtitleGrid->AddGridCell(0, 0, new Display::Label(
+		rulebook->GetTitle() + " //",
+		Display::UiFont(fontName, 30), 0xffd0d0d0))->GetContents();
+	rulebookLbl->SetAlignment(Alignment::SW);
+
+	rulebookDescLbl = subtitleGrid->AddGridCell(0, 1, new Display::Label(
+		rulebook->GetDescription(),
+		Display::UiFont(fontName, 25), 0xff6d6d6d))->GetContents();
+	rulebookDescLbl->SetAlignment(Alignment::SW);
+
+	subtitleRule = root->AddChild(new Display::FillBox(
+		Vec2(1280 - (DialogScene::MARGIN_WIDTH * 2), 1), 0xffffffff));
+	subtitleRule->SetPos(DialogScene::MARGIN_WIDTH, 60);
 
 	trackPanel = root->AddChild(new Display::Container(display));
-	trackPanel->SetPos(DialogScene::MARGIN_WIDTH, 60);
+	trackPanel->SetPos(DialogScene::MARGIN_WIDTH, 100);
 
 	//TODO: A better list UI (categories, sorting, etc.).
 	trackGrid = trackPanel->AddChild(new Display::FlexGrid(display));
+	trackGrid->SetFixedWidth(360);
 
 	auto &cell = trackGrid->GetColumnDefault(0);
 	cell.SetFill(true);
@@ -117,7 +137,12 @@ void TrackSelectScene::OnPhaseTransition(double progress)
 
 	MR_UInt8 alpha = static_cast<MR_UInt8>(255.0 * (1.0 - f));
 	rulebookLbl->SetColor(Display::Color(alpha, 0xbf, 0xbf, 0xbf));
-	trackPanel->SetPos(f * 1280.0 + MARGIN_WIDTH, 60);
+	trackPanel->SetPos(f * 1280.0 + MARGIN_WIDTH, 100);
+
+	f = 1 - pow(1.0 - progress, 4);
+
+	subtitleGrid->SetPos(DialogScene::MARGIN_WIDTH, 720.0f + f * -720.0f);
+	subtitleRule->SetPos(DialogScene::MARGIN_WIDTH, 780.0f + f * -720.0f);
 }
 
 }  // namespace Client

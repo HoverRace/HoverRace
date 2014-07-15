@@ -71,7 +71,10 @@ class TrackSelectScene : public DialogScene
 
 		Model::TrackList trackList;
 
+		std::shared_ptr<Display::FlexGrid> subtitleGrid;
 		std::shared_ptr<Display::Label> rulebookLbl;
+		std::shared_ptr<Display::Label> rulebookDescLbl;
+		std::shared_ptr<Display::FillBox> subtitleRule;
 		std::shared_ptr<Display::Container> trackPanel;
 		std::shared_ptr<Display::FlexGrid> trackGrid;
 
