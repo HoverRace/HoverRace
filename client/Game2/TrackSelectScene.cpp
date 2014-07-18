@@ -28,6 +28,7 @@
 #include "../../engine/Display/FillBox.h"
 #include "../../engine/Display/FlexGrid.h"
 #include "../../engine/Display/Label.h"
+#include "../../engine/Display/RuleLine.h"
 #include "../../engine/Model/TrackEntry.h"
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/Log.h"
@@ -95,8 +96,9 @@ TrackSelectScene::TrackSelectScene(Display::Display &display,
 		Display::UiFont(fontName, 25), 0xff6d6d6d))->GetContents();
 	rulebookDescLbl->SetAlignment(Alignment::SW);
 
-	subtitleRule = root->AddChild(new Display::FillBox(
-		Vec2(1280 - (DialogScene::MARGIN_WIDTH * 2), 1), 0xffffffff));
+	subtitleRule = root->AddChild(new Display::RuleLine(
+		Display::RuleLine::Direction::H,
+		1280 - (DialogScene::MARGIN_WIDTH * 2), 1, 0xffffffff));
 	subtitleRule->SetPos(DialogScene::MARGIN_WIDTH, 60);
 
 	trackPanel = root->AddChild(new Display::Container(display));

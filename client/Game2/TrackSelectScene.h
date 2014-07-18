@@ -35,6 +35,7 @@ namespace HoverRace {
 		class Display;
 		class FlexGrid;
 		class Label;
+		class RuleLine;
 	}
 }
 
@@ -74,7 +75,7 @@ class TrackSelectScene : public DialogScene
 		std::shared_ptr<Display::FlexGrid> subtitleGrid;
 		std::shared_ptr<Display::Label> rulebookLbl;
 		std::shared_ptr<Display::Label> rulebookDescLbl;
-		std::shared_ptr<Display::FillBox> subtitleRule;
+		std::shared_ptr<Display::RuleLine> subtitleRule;
 		std::shared_ptr<Display::Container> trackPanel;
 		std::shared_ptr<Display::FlexGrid> trackGrid;
 

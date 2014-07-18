@@ -32,6 +32,7 @@
 #include "../Container.h"
 #include "../FillBox.h"
 #include "../Label.h"
+#include "../RuleLine.h"
 #include "../ScreenFade.h"
 #include "../SymbolIcon.h"
 #include "../UiFont.h"
@@ -40,6 +41,7 @@
 #include "SdlContainerView.h"
 #include "SdlFillBoxView.h"
 #include "SdlLabelView.h"
+#include "SdlRuleLineView.h"
 #include "SdlScreenFadeView.h"
 #include "SdlSymbolIconView.h"
 #include "SdlLegacyDisplay.h"
@@ -161,6 +163,11 @@ void SdlDisplay::AttachView(FillBox &model)
 void SdlDisplay::AttachView(Label &model)
 {
 	model.SetView(std::unique_ptr<View>(new SdlLabelView(*this, model)));
+}
+
+void SdlDisplay::AttachView(RuleLine &model)
+{
+	model.SetView(std::unique_ptr<View>(new SdlRuleLineView(*this, model)));
 }
 
 void SdlDisplay::AttachView(ScreenFade &model)
