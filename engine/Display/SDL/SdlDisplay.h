@@ -24,8 +24,9 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
-#include "../UiViewModel.h"
 #include "../Display.h"
+#include "../Res.h"
+#include "../UiViewModel.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
 #	ifdef MR_ENGINE
