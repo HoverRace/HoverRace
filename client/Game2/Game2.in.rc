@@ -818,7 +818,7 @@ BEGIN
             VALUE "FileDescription", "Online Racing Game"
             VALUE "FileVersion", "@HR_APP_VERSION_MAJOR@.@HR_APP_VERSION_MINOR@.@HR_APP_VERSION_PATCH@.@HR_APP_VERSION_BUILD@"
             VALUE "InternalName", "HoverRace"
-            VALUE "LegalCopyright", "Copyright © 2013"
+            VALUE "LegalCopyright", "Copyright © 2014"
             VALUE "OriginalFilename", "HoverRace.exe"
             VALUE "ProductName", "HoverRace"
             VALUE "ProductVersion", "@HR_APP_VERSION_MAJOR@.@HR_APP_VERSION_MINOR@.@HR_APP_VERSION_PATCH@.@HR_APP_VERSION_BUILD@"
