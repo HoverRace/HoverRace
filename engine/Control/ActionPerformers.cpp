@@ -24,6 +24,8 @@
 
 #include "StdAfx.h"
 
+#include "../MainCharacter/MainCharacter.h"
+
 #include "ActionPerformers.h"
 
 using namespace HoverRace::MainCharacter;

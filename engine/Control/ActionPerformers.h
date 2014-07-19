@@ -26,7 +26,6 @@
 
 #include "Controller.h"
 #include "ControlAction.h"
-#include "../MainCharacter/MainCharacter.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
 #	ifdef MR_ENGINE
@@ -37,6 +36,12 @@
 #else
 #	define MR_DllDeclare
 #endif
+
+namespace HoverRace {
+	namespace MainCharacter {
+		class MainCharacter;
+	}
+}
 
 namespace HoverRace {
 namespace Control {
