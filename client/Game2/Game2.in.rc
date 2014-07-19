@@ -106,14 +106,6 @@ BEGIN
     CONTROL         "",IDC_CONTROL_BINDING,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,4,26,361,143,WS_EX_STATICEDGE
 END
 
-IDD_BAD_MODE4 DIALOGEX 10, 10, 153, 41
-STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | DS_FIXEDSYS | DS_CONTROL | DS_CENTER | WS_POPUP | WS_VISIBLE
-FONT 8, "MS Shell Dlg", 0, 0, 0x0
-BEGIN
-    CTEXT           "You must select a full screen mode because this version of the application only support 8bit/pixel display modes.",IDC_BADMODE_FULLSCREEN_LBL,2,1,149,26
-    DEFPUSHBUTTON   "Switch to full screen mode",IDC_FULL_MENU_MODE,22,27,109,14
-END
-
 IDD_ABOUT DIALOGEX 0, 0, 365, 322
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 CAPTION "About HoverRace"
@@ -225,20 +217,6 @@ BEGIN
     LTEXT           "Time left:",IDC_STATIC,63,35,30,8
     LTEXT           "hours",IDC_STATIC,135,35,22,8
     LTEXT           "minutes",IDC_STATIC,135,52,26,8
-END
-
-IDD_BAD_MODE1 DIALOGEX 10, 10, 153, 37
-STYLE DS_SETFONT | DS_3DLOOK | DS_FIXEDSYS | DS_CONTROL | DS_CENTER | WS_POPUP | WS_VISIBLE
-FONT 8, "MS Shell Dlg", 0, 0, 0x0
-BEGIN
-    PUSHBUTTON      "You must select a full screen mode because this version of the application only supports 8 bit/pixel display modes.",IDC_FULL_MENU_MODE,2,1,149,35,BS_MULTILINE
-END
-
-IDD_BAD_MODE3 DIALOGEX 10, 10, 153, 28
-STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | DS_FIXEDSYS | DS_CONTROL | DS_CENTER | WS_POPUP | WS_VISIBLE
-FONT 8, "MS Shell Dlg", 0, 0, 0x0
-BEGIN
-    CTEXT           "Incompatible video mode. Select a compatible video mode by pressing F8 or F9 once a game is started",IDC_STATIC,2,1,149,25
 END
 
 IDD_WAIT_ALL DIALOGEX 0, 0, 182, 62
@@ -838,13 +816,6 @@ END
 
 STRINGTABLE
 BEGIN
-    IDS_MODE_SWITCH_TRY     "You can play HoverRace in a Window or Fullscreen; to play in a Window, HoverRace will have to switch to 256 color mode.\nIt is recommended you use Fullscreen mode instead.\n\nDo you want to play in Window mode and switch to 256 color?"
-    IDS_CANT_SWITCH_MODE    "HoverRace was unable to switch the video mode. You will need to play in full screen."
-    IDS_BAD_MODE            "Incompatible video mode. You will need to play in full screen."
-END
-
-STRINGTABLE
-BEGIN
     IDS_COMM_ERROR          "Communication error"
     IDS_CANT_ADDUSER        "Unable to add user"
     IDS_NOMORE_USER         "No more user allowed"
@@ -912,63 +883,6 @@ END
 
 STRINGTABLE
 BEGIN
-    IDS_RANK_TITLE          "Rank            Result   Best Lap "
-    IDS_FLAP_STR            "%d %-0.10s #%d%*s   --First lap--  %c"
-    IDS_CHART_FINISH        "%d %-0.10s #%d%*s %2d.%02d.%03d %2d.%02d.%03d%c"
-    IDS_CHART               "%d %-0.10s #%d%*s lap:%-2d   %2d.%02d.%03d%c"
-    IDS_COUNTDOWN           "Starting in %02d.%02d sec. for %d laps"
-    IDS_FINISH              "Finished in %d.%02d.%03d, placed %d of %d"
-    IDS_FINISH_SINGLE       "Finished in %d.%02d.%03d"
-    IDS_BEST_LAP            "Best lap %d.%02d.%03d  "
-    IDS_HEADER              "%d.%02d.%02d  Lap:%d/%d"
-    IDS_LAST_LAP            "Last lap %d.%02d.%03d  Best %d.%02d.%03d"
-    IDS_CUR_LAP             "Current lap %d.%02d.%03d  Best %d.%02d.%03d"
-    IDS_HIT_TITLE           "Rank                 For   Against"
-    IDS_HIT_CHART           "%d %-0.10s #%d%*s  %2d      %2d"
-END
-
-STRINGTABLE
-BEGIN
-    IDS_JOY1BTN5            "Joystick Btn5"
-    IDS_JOY1BTN6            "Joystick Btn6"
-    IDS_JOY1BTN7            "Joystick Btn7"
-    IDS_JOY1BTN8            "Joystick Btn8"
-    IDS_JOY2BTN5            "Joystick2 Btn5"
-    IDS_JOY2BTN6            "Joystick2 Btn6"
-    IDS_JOY2BTN7            "Joystick2 Btn7"
-    IDS_JOY2BTN8            "Joystick2 Btn8"
-    IDS_JOY3BTN1            "Joystick3 Btn1"
-    IDS_JOY3BTN2            "Joystick3 Btn2"
-    IDS_JOY3BTN3            "Joystick3 Btn3"
-    IDS_JOY3BTN4            "Joystick3 Btn4"
-    IDS_JOY3BTN5            "Joystick3 Btn5"
-    IDS_JOY3BTN6            "Joystick3 Btn6"
-    IDS_JOY3BTN7            "Joystick3 Btn7"
-    IDS_JOY3BTN8            "Joystick3 Btn8"
-END
-
-STRINGTABLE
-BEGIN
-    IDS_JOY3TOP             "Joystick3 Top"
-    IDS_JOY3DOWN            "Joystick3 Down"
-    IDS_JOY3RIGHT           "Joystick3 Right"
-    IDS_JOY3LEFT            "Joystick3 Left"
-    IDS_JOY4BTN1            "Joystick4 Btn1"
-    IDS_JOY4BTN2            "Joystick4 Btn2"
-    IDS_JOY4BTN3            "Joystick4 Btn3"
-    IDS_JOY4BTN4            "Joystick4 Btn4"
-    IDS_JOY4BTN5            "Joystick4 Btn5"
-    IDS_JOY4BTN6            "Joystick4 Btn6"
-    IDS_JOY4BTN7            "Joystick4 Btn7"
-    IDS_JOY4BTN8            "Joystick4 Btn8"
-    IDS_JOY4TOP             "Joystick4 Top"
-    IDS_JOY4DOWN            "Joystick4 Down"
-    IDS_JOY4LEFT            "Joystick4 Left"
-    IDS_JOY4RIGHT           "Joystick4 Right"
-END
-
-STRINGTABLE
-BEGIN
     IDS_CANT_USE_UDP_PORT   "Unable to use UDP recv port; choose a different port or close some Winsock applications."
     IDS_GAME_CANCELLED      "Game cancelled by server"
     IDS_CONN_REFUSED1       "Connection refused by peer "
@@ -978,14 +892,6 @@ BEGIN
     IDS_SAMEADDRPORT1       "Main server and peer "
     IDS_SAMEADDRPORT2       " are using the same IP and port!"
     IDS_CONN_ERROR          "Connection error with "
-END
-
-STRINGTABLE
-BEGIN
-    IDS_INVALID_RESOLUTION  "Invalid resolution; reverting to default %dx%d"
-    IDS_TEST_RESOLUTION     "Hit OK to test new resolution"
-    IDS_SET_RESOLUTION      "Resolution successfully set to %dx%d"
-    IDS_INVALID_RESOLUTION2 "Invalid resolution; reverting to %dx%d"
 END
 
 #endif    // Neutral (Default) resources
