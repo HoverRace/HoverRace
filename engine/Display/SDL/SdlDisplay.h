@@ -76,7 +76,7 @@ class MR_DllDeclare SdlDisplay : public Display
 		virtual void AttachView(SymbolIcon &model);
 
 	public:
-		std::shared_ptr<SdlTexture> LoadRes(const Res<Texture> &res);
+		std::shared_ptr<SdlTexture> LoadRes(std::shared_ptr<Res<Texture>> res);
 
 	public:
 		// Display

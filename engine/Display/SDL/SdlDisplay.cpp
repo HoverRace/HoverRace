@@ -300,9 +300,9 @@ void SdlDisplay::AttachView(SymbolIcon &model)
  * @return The loaded resource.
  * @throw ResLoadExn
  */
-std::shared_ptr<SdlTexture> SdlDisplay::LoadRes(const Res<Texture> &res)
+std::shared_ptr<SdlTexture> SdlDisplay::LoadRes(std::shared_ptr<Res<Texture>> res)
 {
-	auto is = res.Open();
+	auto is = res->Open();
 	InputStreamRwOps ops(is.get());
 
 	SDL_Surface *surface = IMG_Load_RW(ops.ops, 1);
