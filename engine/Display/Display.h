@@ -47,6 +47,7 @@ namespace HoverRace {
 		class RuleLine;
 		class ScreenFade;
 		class SymbolIcon;
+		class Wallpaper;
 	}
 	namespace VideoServices {
 		class VideoBuffer;
@@ -73,7 +74,8 @@ class MR_DllDeclare Display :
 	public ViewAttacher<Label>,
 	public ViewAttacher<RuleLine>,
 	public ViewAttacher<ScreenFade>,
-	public ViewAttacher<SymbolIcon>
+	public ViewAttacher<SymbolIcon>,
+	public ViewAttacher<Wallpaper>
 {
 	public:
 		Display() : uiOrigin(0, 0), uiScale(1.0), uiOffset(0, 0) { }

@@ -38,6 +38,7 @@
 #include "../ScreenFade.h"
 #include "../SymbolIcon.h"
 #include "../UiFont.h"
+#include "../Wallpaper.h"
 #include "SdlButtonView.h"
 #include "SdlClickRegionView.h"
 #include "SdlContainerView.h"
@@ -48,6 +49,7 @@
 #include "SdlSymbolIconView.h"
 #include "SdlTexture.h"
 #include "SdlLegacyDisplay.h"
+#include "SdlWallpaperView.h"
 
 #include "SdlDisplay.h"
 
@@ -292,6 +294,11 @@ void SdlDisplay::AttachView(ScreenFade &model)
 void SdlDisplay::AttachView(SymbolIcon &model)
 {
 	model.SetView(std::unique_ptr<View>(new SdlSymbolIconView(*this, model)));
+}
+
+void SdlDisplay::AttachView(Wallpaper &model)
+{
+	model.SetView(std::unique_ptr<View>(new SdlWallpaperView(*this, model)));
 }
 
 /**
