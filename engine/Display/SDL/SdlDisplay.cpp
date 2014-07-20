@@ -22,6 +22,7 @@
 #include "StdAfx.h"
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 
 #include "../../Util/Config.h"
 #include "../../Util/Log.h"
@@ -32,6 +33,7 @@
 #include "../Container.h"
 #include "../FillBox.h"
 #include "../Label.h"
+#include "../Res.h"
 #include "../RuleLine.h"
 #include "../ScreenFade.h"
 #include "../SymbolIcon.h"
@@ -44,6 +46,7 @@
 #include "SdlRuleLineView.h"
 #include "SdlScreenFadeView.h"
 #include "SdlSymbolIconView.h"
+#include "SdlTexture.h"
 #include "SdlLegacyDisplay.h"
 
 #include "SdlDisplay.h"
@@ -72,6 +75,117 @@ namespace Display {
 namespace SDL {
 
 namespace {
+
+	/**
+	 * Wraps an istream in a SDL_RWops struct.
+	 */
+	class InputStreamRwOps
+	{
+		public:
+			InputStreamRwOps(std::istream *is) :
+				ops(SDL_AllocRW())
+			{
+				ops->size = &InputStreamRwOps::RSize;
+				ops->seek = &InputStreamRwOps::RSeek;
+				ops->read = &InputStreamRwOps::RRead;
+				ops->write = &InputStreamRwOps::RWrite;
+				ops->close = &InputStreamRwOps::RClose;
+				ops->type = SDL_RWOPS_UNKNOWN;
+				ops->hidden.unknown.data1 = this;
+				ops->hidden.unknown.data2 = is;
+			}
+			
+			~InputStreamRwOps()
+			{
+				if (ops) {
+					SDL_FreeRW(ops);
+				}
+			}
+
+		private:
+			static InputStreamRwOps *Self(SDL_RWops *ctx)
+			{
+				return static_cast<InputStreamRwOps*>(
+					ctx->hidden.unknown.data1);
+			}
+
+			static std::istream *Stream(SDL_RWops *ctx)
+			{
+				return static_cast<std::istream*>(
+					ctx->hidden.unknown.data2);
+			}
+
+			static MR_Int64 RSize(SDL_RWops *ctx)
+			{
+				auto is = Stream(ctx);
+				auto pos = is->tellg();
+
+				is->seekg(0, std::ios::end);
+				if (!is) return -1;
+
+				MR_Int64 retv = is->tellg();
+				is->seekg(pos, std::ios::beg);
+				return is ? retv : -1;
+			}
+
+			static MR_Int64 RSeek(SDL_RWops *ctx, MR_Int64 offset, int whence)
+			{
+				auto is = Stream(ctx);
+				switch (whence) {
+					case RW_SEEK_SET:
+						is->seekg(offset, std::ios::beg);
+						break;
+					case RW_SEEK_CUR:
+						is->seekg(offset, std::ios::cur);
+						break;
+					case RW_SEEK_END:
+						is->seekg(offset, std::ios::end);
+						break;
+					default: {
+						std::ostringstream oss;
+						oss << "Unknown SDL_RWops seek whence: " << whence;
+						throw UnimplementedExn(oss.str());
+					}
+				}
+				return is ? is->tellg() : -1;
+			}
+
+			static size_t RRead(SDL_RWops *ctx, void *ptr,
+				size_t size, size_t maxnum)
+			{
+				auto is = Stream(ctx);
+				auto buf = static_cast<char*>(ptr);
+				size_t num = 0;
+				for (size_t i = 0; i < maxnum; i++) {
+					is->read(buf, size);
+					if (is) {
+						buf += size;
+						num++;
+					}
+					else {
+						break;
+					}
+				}
+				return num;
+			}
+
+			static size_t RWrite(SDL_RWops*, const void*, size_t, size_t)
+			{
+				return -1;
+			}
+
+			static int RClose(SDL_RWops *ctx)
+			{
+				auto self = Self(ctx);
+				SDL_FreeRW(self->ops);
+				self->ops = nullptr;
+				return 0;
+			}
+
+		public:
+			SDL_RWops *ops;
+	};
+
 	struct RendererInfo {
 		RendererInfo(int idx) : idx(idx), score(0) {
 			SDL_GetRenderDriverInfo(idx, &info);
@@ -178,6 +292,31 @@ void SdlDisplay::AttachView(ScreenFade &model)
 void SdlDisplay::AttachView(SymbolIcon &model)
 {
 	model.SetView(std::unique_ptr<View>(new SdlSymbolIconView(*this, model)));
+}
+
+/**
+ * Loads a texture resource.
+ * @param res The resource.
+ * @return The loaded resource.
+ * @throw ResLoadExn
+ */
+std::shared_ptr<SdlTexture> SdlDisplay::LoadRes(const Res<Texture> &res)
+{
+	auto is = res.Open();
+	InputStreamRwOps ops(is.get());
+
+	SDL_Surface *surface = IMG_Load_RW(ops.ops, 1);
+	if (!surface) {
+		throw ResLoadExn(IMG_GetError());
+	}
+
+	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+	if (!texture) {
+		SDL_FreeSurface(surface);
+		throw ResLoadExn(SDL_GetError());
+	}
+
+	return std::make_shared<SdlTexture>(*this, texture);
 }
 
 void SdlDisplay::OnDesktopModeChanged(int width, int height)
