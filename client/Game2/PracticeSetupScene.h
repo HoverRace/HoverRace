@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include "../../engine/Display/Res.h"
+
 #include "GameDirector.h"
 
 #include "DialogScene.h"
@@ -31,6 +33,8 @@ namespace HoverRace {
 	}
 	namespace Display {
 		class Display;
+		class Texture;
+		class Wallpaper;
 	}
 }
 
@@ -58,7 +62,8 @@ class PracticeSetupScene : public DialogScene
 		Display::Display &display;
 		GameDirector &director;
 		RulebookLibrary &rulebookLibrary;
-		std::unique_ptr<Display::ScreenFade> fader;
+		std::shared_ptr<Display::Res<Display::Texture>> bgTex;
+		std::unique_ptr<Display::Wallpaper> bg;
 };
 
 }  // namespace Client

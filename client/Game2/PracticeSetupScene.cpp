@@ -22,7 +22,10 @@
 #include "StdAfx.h"
 
 #include "../../engine/Control/Controller.h"
+#include "../../engine/Display/MediaRes.h"
 #include "../../engine/Display/ScreenFade.h"
+#include "../../engine/Display/Texture.h"
+#include "../../engine/Display/Wallpaper.h"
 #include "../../engine/Util/Config.h"
 
 #include "GameSelectScene.h"
@@ -46,8 +49,12 @@ PracticeSetupScene::PracticeSetupScene(Display::Display &display,
 	SUPER(display, director, "PRACTICE", "Practice Setup"),
 	display(display), director(director), rulebookLibrary(rulebookLibrary)
 {
-	fader.reset(new Display::ScreenFade(Display::COLOR_BLACK, 1.0));
-	fader->AttachView(display);
+	using namespace Display;
+
+	bgTex = std::make_shared<MediaRes<Texture>>("ui/bg/practice.png");
+
+	bg.reset(new Wallpaper(bgTex));
+	bg->AttachView(display);
 }
 
 PracticeSetupScene::~PracticeSetupScene()
@@ -70,14 +77,14 @@ void PracticeSetupScene::OnScenePushed()
 
 void PracticeSetupScene::PrepareRender()
 {
-	fader->PrepareRender();
+	bg->PrepareRender();
 
 	SUPER::PrepareRender();
 }
 
 void PracticeSetupScene::Render()
 {
-	fader->Render();
+	bg->Render();
 
 	SUPER::Render();
 }
