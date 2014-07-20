@@ -54,7 +54,7 @@ class Res
 		 * @return The input stream.
 		 * @throw ResourceLoadExn
 		 */
-		virtual std::istream Open() const;
+		virtual std::unique_ptr<std::istream> Open() const = 0;
 };
 
 /**
