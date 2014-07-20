@@ -96,7 +96,7 @@ namespace {
 				ops->hidden.unknown.data1 = this;
 				ops->hidden.unknown.data2 = is;
 			}
-			
+
 			~InputStreamRwOps()
 			{
 				if (ops) {
@@ -149,7 +149,7 @@ namespace {
 						throw UnimplementedExn(oss.str());
 					}
 				}
-				return is ? is->tellg() : -1;
+				return is ? static_cast<MR_Int64>(is->tellg()) : -1;
 			}
 
 			static size_t RRead(SDL_RWops *ctx, void *ptr,
@@ -159,7 +159,7 @@ namespace {
 				auto buf = static_cast<char*>(ptr);
 				size_t num = 0;
 				for (size_t i = 0; i < maxnum; i++) {
-					is->read(buf, size);
+					is->read(buf, static_cast<std::streamsize>(size));
 					if (is) {
 						buf += size;
 						num++;
@@ -173,7 +173,7 @@ namespace {
 
 			static size_t RWrite(SDL_RWops*, const void*, size_t, size_t)
 			{
-				return -1;
+				return 0;
 			}
 
 			static int RClose(SDL_RWops *ctx)
