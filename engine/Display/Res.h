@@ -50,6 +50,21 @@ class Res
 
 	public:
 		/**
+		 * Retrieve the ID for this resource.
+		 * 
+		 * The ID should be unique for every resource being pointed at,
+		 * so two instances that point to the same resource (e.g. a file)
+		 * should return the same ID.
+		 *
+		 * This allows loaded resources to be cached, so if two instances
+		 * point to, say, the same file, then the resource will be loaded once
+		 * (although this is left as an exercise for the Display).
+		 *
+		 * @return The identifier.
+		 */
+		virtual std::string GetId() const = 0;
+
+		/**
 		 * Open the stream for reading.
 		 * @return The input stream.
 		 * @throw ResourceLoadExn

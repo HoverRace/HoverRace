@@ -25,6 +25,7 @@
 
 #include "../Util/Config.h"
 #include "../Util/OS.h"
+#include "../Util/Str.h"
 
 #include "Res.h"
 
@@ -54,15 +55,16 @@ class MediaRes : public Res<T>
 		 * Constructor.
 		 * @param path File path, relative to the media directory.
 		 */
-		MediaRes(const Util::OS::path_t &path) : SUPER(), path(path) { }
+		MediaRes(const Util::OS::path_t &path) : SUPER(), path(path),
+			id(std::string("media:") + (const char*)Util::Str::PU(path)) { }
 		virtual ~MediaRes() { }
 
 	public:
-		/**
-		 * Open the stream for reading.
-		 * @return The input stream.
-		 * @throw ResourceLoadExn
-		 */
+		std::string GetId() const override
+		{
+			return id;
+		}
+
 		std::unique_ptr<std::istream> Open() const override
 		{
 			namespace fs = boost::filesystem;
@@ -74,6 +76,7 @@ class MediaRes : public Res<T>
 
 	private:
 		Util::OS::path_t path;
+		std::string id;
 };
 
 }  // namespace Display
