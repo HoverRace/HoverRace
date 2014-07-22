@@ -53,11 +53,7 @@ class MR_DllDeclare SdlWallpaperView : public SdlView<Wallpaper>
 {
 	typedef SdlView<Wallpaper> SUPER;
 	public:
-		SdlWallpaperView(SdlDisplay &disp, Wallpaper &model) :
-			SUPER(disp, model), fillChanged(true), opacityChanged(true),
-			computedAlpha(0)
-		{
-		}
+		SdlWallpaperView(SdlDisplay &disp, Wallpaper &model);
 		virtual ~SdlWallpaperView() { }
 
 	public:
@@ -75,7 +71,10 @@ class MR_DllDeclare SdlWallpaperView : public SdlView<Wallpaper>
 		bool fillChanged;
 		bool opacityChanged;
 		MR_UInt8 computedAlpha;
+		SDL_Rect destRect;
+		const SDL_Rect *destRectPtr;
 		std::shared_ptr<SdlTexture> texture;
+		boost::signals2::connection displayConfigChangedConn;
 };
 
 }  // namespace SDL

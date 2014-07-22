@@ -34,6 +34,44 @@ namespace HoverRace {
 namespace Display {
 namespace SDL {
 
+namespace {
+
+void CalcFill(SDL_Texture *tex, int destW, int destH, SDL_Rect &dest)
+{
+	int w, h;
+	if (SDL_QueryTexture(tex, nullptr, nullptr, &w, &h) < 0) {
+		throw Exception(SDL_GetError());
+	}
+
+	double wd = (double)w;
+	double hd = (double)h;
+	double destWd = (double)destW;
+	double destHd = (double)destH;
+
+	double srcRatio = wd / hd;
+	double destRatio = destWd / destHd;
+	double zoom = (srcRatio > destRatio) ? (destHd / hd) : (destWd / wd);
+	int zw = (int)(wd * zoom);
+	int zh = (int)(hd * zoom);
+	
+	dest.x = (destW - zw) / 2;
+	dest.y = (destH - zh) / 2;
+	dest.w = zw;
+	dest.h = zh;
+}
+
+}  // namespace
+
+SdlWallpaperView::SdlWallpaperView(SdlDisplay &disp, Wallpaper &model) :
+	SUPER(disp, model), fillChanged(true), opacityChanged(true),
+	computedAlpha(0), destRectPtr(nullptr)
+{
+	displayConfigChangedConn =
+		disp.GetDisplayConfigChangedSignal().connect([&](int, int) {
+			fillChanged = true;
+		});
+}
+
 void SdlWallpaperView::OnModelUpdate(int prop)
 {
 	switch (prop) {
@@ -53,14 +91,31 @@ Vec3 SdlWallpaperView::Measure()
 
 void SdlWallpaperView::PrepareRender()
 {
+	if (!texture) {
+		texture = display.LoadRes(model.GetTexture());
+	}
 	if (fillChanged) {
-		//TODO
+		switch (model.GetFill()) {
+			case Wallpaper::Fill::ZOOM:
+				CalcFill(texture->Get(), display.GetScreenWidth(),
+					display.GetScreenHeight(), destRect);
+				destRectPtr = &destRect;
+				break;
+
+			case Wallpaper::Fill::STRETCH:
+				destRectPtr = nullptr;
+				break;
+
+			default: {
+				std::ostringstream oss;
+				oss << "SdlWallpaperView::PrepareRender: fill=" <<
+					static_cast<int>(model.GetFill());
+				throw UnimplementedExn(oss.str());
+			}
+		}
 	}
 	if (opacityChanged) {
 		computedAlpha = static_cast<MR_UInt8>(model.GetOpacity() * 255.0);
-	}
-	if (!texture) {
-		texture = display.LoadRes(model.GetTexture());
 	}
 }
 
@@ -72,7 +127,7 @@ void SdlWallpaperView::Render()
 		SDL_SetTextureBlendMode(tex, SDL_BLENDMODE_BLEND);
 		SDL_SetTextureAlphaMod(tex, computedAlpha);
 		SDL_SetTextureColorMod(tex, 255, 255, 255);
-		SDL_RenderCopy(renderer, tex, nullptr, nullptr);
+		SDL_RenderCopy(renderer, tex, nullptr, destRectPtr);
 	}
 }
 

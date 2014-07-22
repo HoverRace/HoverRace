@@ -67,12 +67,13 @@ class MR_DllDeclare Wallpaper : public ViewModel
 
 		enum class Fill
 		{
+			ZOOM,  ///< Zoom to fill, maintaining the original aspect ratio.
 			STRETCH,  ///< Stretch to fit, ignoring the original aspect ratio.
 		};
 
 	public:
 		Wallpaper(std::shared_ptr<Res<Texture>> texture,
-			Fill fill = Fill::STRETCH, double opacity = 1.0);
+			Fill fill = Fill::ZOOM, double opacity = 1.0);
 		virtual ~Wallpaper();
 
 	public:
