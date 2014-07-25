@@ -22,6 +22,7 @@
 #pragma once
 
 #include "Container.h"
+#include "MPL.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
 #	ifdef MR_ENGINE
@@ -132,25 +133,6 @@ class MR_DllDeclare FlexGrid : public Container
 		};
 
 	protected:
-		// Determine if a class as a SetSize(Vec2).
-		template<class C>
-		struct HasSetSize
-		{
-		private:
-			template<class T>
-			static auto check(T*) ->
-				decltype(std::declval<T>().SetSize(std::declval<Vec2>()),
-				std::true_type());
-
-			template<class>
-			static std::false_type check(...);
-
-			typedef decltype(check<C>(nullptr)) type;
-
-		public:
-			static const bool value = type::value;
-		};
-
 		class DefaultCell : public Cell
 		{
 			typedef Cell SUPER;
@@ -228,18 +210,9 @@ class MR_DllDeclare FlexGrid : public Container
 				}
 
 			protected:
-				template<class U>
-				typename std::enable_if<HasSetSize<U>::value, void>::type
-				SetSize(double w, double h)
+				void SetSize(double w, double h)
 				{
-					contents->SetSize(Vec2(w, h));
-				}
-
-				template<class U>
-				typename std::enable_if<!HasSetSize<U>::value, void>::type
-				SetSize(double, double)
-				{
-					// Do nothing.
+					MPL::SetSize(*contents, w, h);
 				}
 
 				void SetExtents(double x, double y,
@@ -251,7 +224,7 @@ class MR_DllDeclare FlexGrid : public Container
 						contents->GetAlignment());
 					contents->SetPos(pos.x + paddingX, pos.y + paddingY);
 					if (fill) {
-						SetSize<T>(w, h);
+						SetSize(w, h);
 					}
 				}
 
