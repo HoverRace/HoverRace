@@ -1,4 +1,5 @@
 .dirstamp
+.vim-template*
 *~
 *.bak
 *.swo
