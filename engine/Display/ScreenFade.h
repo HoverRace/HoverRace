@@ -1,7 +1,7 @@
 
 // ScreenFade.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@
 
 #include "Color.h"
 
-#include "ViewModel.h"
+#include "Background.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
 #	ifdef MR_ENGINE
@@ -48,16 +48,15 @@ namespace Display {
  * Paints a solid color over the whole screen with adjustable opacity.
  * @author Michael Imamura
  */
-class MR_DllDeclare ScreenFade : public ViewModel
+class MR_DllDeclare ScreenFade : public Background
 {
-	typedef ViewModel SUPER;
+	typedef Background SUPER;
 
 	public:
 		struct Props
 		{
 			enum {
-				COLOR,
-				OPACITY,
+				COLOR = SUPER::Props::NEXT_,
 				NEXT_,  ///< First index for subclasses.
 			};
 		};
@@ -73,12 +72,8 @@ class MR_DllDeclare ScreenFade : public ViewModel
 		const Color GetColor() const { return color; }
 		void SetColor(const Color color);
 
-		double GetOpacity() const { return opacity; }
-		void SetOpacity(double opacity);
-
 	private:
 		Color color;
-		double opacity;
 };
 
 }  // namespace Display

@@ -1,5 +1,5 @@
 
-// Wallpaper.cpp
+// Background.cpp
 //
 // Copyright (c) 2014 Michael Imamura.
 //
@@ -21,40 +21,47 @@
 
 #include "StdAfx.h"
 
-#include "Wallpaper.h"
-
-using namespace HoverRace::Util;
+#include "Background.h"
 
 namespace HoverRace {
 namespace Display {
 
+namespace {
+
+double ClampOpacity(double opacity)
+{
+	if (opacity < 0.0) return 0.0;
+	else if (opacity > 1.0) return 1.0;
+	else return opacity;
+}
+
+}  // namespace
+
 /**
  * Constructor.
- * @param fill The fill mode.
- * @param texture The texture.
- * @param opacity The initial opacity.
+ * @param opacity The opacity (1.0 is fully-opaque, 0.0 is fully-transparent).
  */
-Wallpaper::Wallpaper(std::shared_ptr<Res<Texture>> texture,
-                     Fill fill, double opacity) :
-	SUPER(opacity),
-	fill(fill), texture(texture)
+Background::Background(double opacity) :
+	opacity(ClampOpacity(opacity))
 {
-
 }
 
-Wallpaper::~Wallpaper()
+Background::~Background()
 {
 }
 
 /**
- * Sets the fill mode.
- * @param fill The fill mode.
+ * Set the opacity of the overlay.
+ * The value will be clamped to the range 0.0 to 1.0 inclusive.
+ * @param opacity The opacity (1.0 is fully-opaque, 0.0 is fully-transparent).
  */
-void Wallpaper::SetFill(Fill fill)
+void Background::SetOpacity(double opacity)
 {
-	if (this->fill != fill) {
-		this->fill = fill;
-		FireModelUpdate(Props::FILL);
+	opacity = ClampOpacity(opacity);
+
+	if (this->opacity != opacity) {
+		this->opacity = opacity;
+		FireModelUpdate(Props::OPACITY);
 	}
 }
 

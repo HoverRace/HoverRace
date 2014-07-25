@@ -1,5 +1,5 @@
 
-// Wallpaper.h
+// Background.h
 //
 // Copyright (c) 2014 Michael Imamura.
 //
@@ -21,10 +21,7 @@
 
 #pragma once
 
-#include "Color.h"
-#include "Res.h"
-
-#include "Background.h"
+#include "ViewModel.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
 #	ifdef MR_ENGINE
@@ -37,56 +34,34 @@
 #endif
 
 namespace HoverRace {
-	namespace Display {
-		class Display;
-		class Texture;
-	}
-}
-
-namespace HoverRace {
 namespace Display {
 
 /**
- * Paints a texture across the entire screen.
+ * Base class for views that fill the entire screen.
  * @author Michael Imamura
  */
-class MR_DllDeclare Wallpaper : public Background
+class Background : public ViewModel
 {
-	typedef Background SUPER;
+	typedef ViewModel SUPER;
 
 	public:
 		struct Props
 		{
-			enum
-			{
-				FILL = SUPER::Props::NEXT_,
+			enum {
+				OPACITY,
 				NEXT_,  ///< First index for subclasses.
 			};
 		};
 
-		enum class Fill
-		{
-			ZOOM,  ///< Zoom to fill, maintaining the original aspect ratio.
-			STRETCH,  ///< Stretch to fit, ignoring the original aspect ratio.
-		};
-
 	public:
-		Wallpaper(std::shared_ptr<Res<Texture>> texture,
-			Fill fill = Fill::ZOOM, double opacity = 1.0);
-		virtual ~Wallpaper();
+		Background(double opacity = 1.0);
+		virtual ~Background() = 0;
 
-	public:
-		virtual void AttachView(Display &disp) { AttachViewDynamic(disp, this); }
-
-	public:
-		Fill GetFill() const { return fill; }
-		void SetFill(Fill fill);
-
-		std::shared_ptr<Res<Texture>> GetTexture() const { return texture; }
+		double GetOpacity() const { return opacity; }
+		void SetOpacity(double opacity);
 
 	private:
-		Fill fill;
-		std::shared_ptr<Res<Texture>> texture;
+		double opacity;
 };
 
 }  // namespace Display

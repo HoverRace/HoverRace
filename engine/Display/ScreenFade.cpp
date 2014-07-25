@@ -1,7 +1,7 @@
 
 // ScreenFade.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -34,8 +34,8 @@ namespace Display {
  * @param opacity The opacity (1.0 is fully-opaque, 0.0 is fully-transparent).
  */
 ScreenFade::ScreenFade(Color color, double opacity) :
-	SUPER(),
-	color(color), opacity(opacity)
+	SUPER(opacity),
+	color(color)
 {
 }
 
@@ -52,22 +52,6 @@ void ScreenFade::SetColor(const Color color)
 	if (this->color != color) {
 		this->color = color;
 		FireModelUpdate(Props::COLOR);
-	}
-}
-
-/**
- * Set the opacity of the overlay.
- * The value will be clamped to the range 0.0 to 1.0 inclusive.
- * @param opacity The opacity (1.0 is fully-opaque, 0.0 is fully-transparent).
- */
-void ScreenFade::SetOpacity(double opacity)
-{
-	if (opacity < 0.0) opacity = 0.0;
-	else if (opacity > 1.0) opacity = 1.0;
-
-	if (this->opacity != opacity) {
-		this->opacity = opacity;
-		FireModelUpdate(Props::OPACITY);
 	}
 }
 

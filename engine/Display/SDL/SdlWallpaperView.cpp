@@ -53,7 +53,7 @@ void CalcFill(SDL_Texture *tex, int destW, int destH, SDL_Rect &dest)
 	double zoom = (srcRatio > destRatio) ? (destHd / hd) : (destWd / wd);
 	int zw = (int)(wd * zoom);
 	int zh = (int)(hd * zoom);
-	
+
 	dest.x = (destW - zw) / 2;
 	dest.y = (destH - zh) / 2;
 	dest.w = zw;
@@ -75,11 +75,11 @@ SdlWallpaperView::SdlWallpaperView(SdlDisplay &disp, Wallpaper &model) :
 void SdlWallpaperView::OnModelUpdate(int prop)
 {
 	switch (prop) {
+		case Background::Props::OPACITY:
+			opacityChanged = true;
+			break;
 		case Wallpaper::Props::FILL:
 			fillChanged = true;
-			break;
-		case Wallpaper::Props::OPACITY:
-			opacityChanged = true;
 			break;
 	}
 }
