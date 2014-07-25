@@ -47,9 +47,9 @@ namespace Display {
  * sized to the contents.
  * @author Michael Imamura
  */
-	class MR_DllDeclare FlexGrid : public Container
-	{
-		typedef Container SUPER;
+class MR_DllDeclare FlexGrid : public Container
+{
+	typedef Container SUPER;
 
 	public:
 		struct Props
