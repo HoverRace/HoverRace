@@ -57,11 +57,11 @@ class DialogScene : public FormScene
 		virtual void OnCancel();
 
 	public:
-		virtual void AttachController(Control::InputEventController &controller);
-		virtual void DetachController(Control::InputEventController &controller);
-		virtual void OnPhaseTransition(double progress) override;
-		virtual void PrepareRender() override;
-		virtual void Render() override;
+		void AttachController(Control::InputEventController &controller) override;
+		void DetachController(Control::InputEventController &controller) override;
+		void OnPhaseTransition(double progress) override;
+		void PrepareRender() override;
+		void Render() override;
 
 	public:
 		static const double MARGIN_WIDTH;

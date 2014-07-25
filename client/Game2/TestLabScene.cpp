@@ -225,7 +225,7 @@ namespace Module {
 			virtual ~FlexGridModule() { }
 
 		public:
-			virtual void Layout() override;
+			void Layout() override;
 
 		private:
 			std::shared_ptr<Display::FlexGrid> grid;

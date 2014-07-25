@@ -204,7 +204,7 @@ class MR_DllDeclare FlexGrid : public Container
 					}
 				}
 
-				virtual void SetFill(bool fill) override
+				void SetFill(bool fill) override
 				{
 					this->fill = fill;
 				}
