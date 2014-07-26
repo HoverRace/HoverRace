@@ -57,6 +57,8 @@ GameSelectScene::GameSelectScene(Display::Display &display,
 	SetPhaseTransitionDuration(1000);
 	SetStateTransitionDuration(1000);
 
+	SetBackground(nullptr);
+
 	auto root = GetContentRoot();
 
 	// Build the list of valid rulebooks.
@@ -120,6 +122,8 @@ void GameSelectScene::OnPhaseTransition(double progress)
 	double f = pow((1.0 - progress), 4);
 
 	rulebookPanel->SetPos(f * 1280.0 + MARGIN_WIDTH, 0);
+
+	SUPER::OnPhaseTransition(progress);
 }
 
 void GameSelectScene::OnStateTransition(double progress)
@@ -129,6 +133,8 @@ void GameSelectScene::OnStateTransition(double progress)
 	double f = 1 - pow(progress, 4);
 
 	rulebookPanel->SetPos(DialogScene::MARGIN_WIDTH, f * -(BTN_HEIGHT + 1));
+
+	SUPER::OnStateTransition(progress);
 }
 
 }  // namespace Client

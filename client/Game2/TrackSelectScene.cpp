@@ -73,6 +73,8 @@ TrackSelectScene::TrackSelectScene(Display::Display &display,
 
 	SetPhaseTransitionDuration(1000);
 
+	SetBackground(nullptr);
+
 	trackList.Reload(Config::GetInstance()->GetTrackBundle());
 
 	Config *cfg = Config::GetInstance();
@@ -140,6 +142,8 @@ void TrackSelectScene::OnPhaseTransition(double progress)
 	subtitleGrid->SetPos(MARGIN_WIDTH, 720.0 + f * -720.0);
 	subtitleRule->SetPos(MARGIN_WIDTH, 780.0 + f * -720.0);
 	trackPanel->SetPos(MARGIN_WIDTH, 820.0 + f * -720.0);
+
+	SUPER::OnPhaseTransition(progress);
 }
 
 }  // namespace Client
