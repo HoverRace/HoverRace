@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include "../Util/MR_Types.h"
 #include "../Exception.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
@@ -34,24 +35,26 @@
 #endif
 
 namespace HoverRace {
+	namespace Display {
+		class Texture;
+	}
+}
+
+
+namespace HoverRace {
 namespace Display {
 
 class ResLoadExn;
 
-/**
- * Base class for loadable resources.
- * @author Michael Imamura
- */
-template<class T>
-class Res
+class BaseRes
 {
 	public:
-		virtual ~Res() { }
+		virtual ~BaseRes() { }
 
 	public:
 		/**
 		 * Retrieve the ID for this resource.
-		 * 
+		 *
 		 * The ID should be unique for every resource being pointed at,
 		 * so two instances that point to the same resource (e.g. a file)
 		 * should return the same ID.
@@ -70,6 +73,53 @@ class Res
 		 * @throw ResourceLoadExn
 		 */
 		virtual std::unique_ptr<std::istream> Open() const = 0;
+};
+
+/**
+ * Base class for loadable resources.
+ * @author Michael Imamura
+ */
+template<class T>
+class Res : public BaseRes
+{
+	public:
+		virtual ~Res() { }
+};
+
+/**
+ * Base class for loadable textures.
+ * @author Michael Imamura
+ */
+template<>
+class Res<Texture> : public BaseRes
+{
+	public:
+		virtual ~Res() { }
+
+	public:
+		struct ImageData
+		{
+			void *pixels;
+			int width;
+			int height;
+			int depth;
+			int pitch;
+			MR_UInt32 rMask;
+			MR_UInt32 gMask;
+			MR_UInt32 bMask;
+			MR_UInt32 aMask;
+		};
+
+	public:
+		virtual bool IsGenerated() const
+		{
+			return false;
+		}
+
+		virtual const ImageData *GetImageData()
+		{
+			return nullptr;
+		}
 };
 
 /**
