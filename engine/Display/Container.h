@@ -56,6 +56,7 @@ class MR_DllDeclare Container : public UiViewModel
 			enum {
 				SIZE = SUPER::Props::NEXT_,
 				CLIP,
+				VISIBLE,
 				NEXT_,  ///< First index for subclasses.
 			};
 		};
@@ -133,7 +134,7 @@ class MR_DllDeclare Container : public UiViewModel
 		template<typename P, bool(UiViewModel::*F)(P)>
 		bool PropagateMouseEvent(P param)
 		{
-			if (children.empty()) return false;
+			if (!visible || children.empty()) return false;
 
 			// We iterate over the child widgets in reverse since the widgets
 			// are rendered back to front, so we let the ones in front get
@@ -188,6 +189,13 @@ class MR_DllDeclare Container : public UiViewModel
 		bool IsClip() const { return clip; }
 		void SetClip(bool clip);
 
+		/**
+		 * Check if the children of this container are shown.
+		 * @return @c true if visible, @c false if not.
+		 */
+		bool IsVisible() const { return visible; }
+		void SetVisible(bool visible);
+
 		const std::vector<UiViewModelPtr> &GetChildren() const { return children; }
 
 	public:
@@ -198,6 +206,7 @@ class MR_DllDeclare Container : public UiViewModel
 	private:
 		Vec2 size;
 		bool clip;
+		bool visible;
 		std::vector<UiViewModelPtr> children;
 };
 

@@ -32,7 +32,8 @@ namespace Display {
  * @param layoutFlags Optional layout flags.
  */
 Container::Container(Display &display, uiLayoutFlags_t layoutFlags) :
-	SUPER(layoutFlags), display(display), size(0, 0), clip(false)
+	SUPER(layoutFlags), display(display), size(0, 0), clip(false),
+	visible(true)
 {
 }
 
@@ -45,7 +46,8 @@ Container::Container(Display &display, uiLayoutFlags_t layoutFlags) :
  */
 Container::Container(Display &display, const Vec2 &size, bool clip,
                      uiLayoutFlags_t layoutFlags) :
-	SUPER(layoutFlags), display(display), size(size), clip(clip)
+	SUPER(layoutFlags), display(display), size(size), clip(clip),
+	visible(true)
 {
 }
 
@@ -88,6 +90,18 @@ void Container::SetClip(bool clip)
 	if (this->clip != clip) {
 		this->clip = clip;
 		FireModelUpdate(Props::CLIP);
+	}
+}
+
+/**
+ * Sets whether the widgets in this container are visible.
+ * @param visible @c true to show, @c false to hide.
+ */
+void Container::SetVisible(bool visible)
+{
+	if (this->visible != visible) {
+		this->visible = visible;
+		FireModelUpdate(Props::VISIBLE);
 	}
 }
 

@@ -35,6 +35,8 @@ namespace SDL {
 
 void SdlContainerView::PrepareRender()
 {
+	if (!model.IsVisible()) return;
+
 	auto &children = model.GetChildren();
 	if (children.empty()) return;
 
@@ -44,6 +46,8 @@ void SdlContainerView::PrepareRender()
 
 void SdlContainerView::Render()
 {
+	if (!model.IsVisible()) return;
+
 	auto &children = model.GetChildren();
 	if (children.empty()) return;
 
