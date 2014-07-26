@@ -69,6 +69,7 @@ DialogScene::DialogScene(Display::Display &display, GameDirector &director,
 	statusRoot = root->AddChild(new Display::Container(
 		display, Vec2(1280 - (MARGIN_WIDTH * 2), 40), false));
 	statusRoot->SetPos(MARGIN_WIDTH, 720 - 80);
+	statusRoot->SetVisible(false);
 
 	auto titleLbl = root->AddChild(new Display::Label(title,
 		s.headingFont, s.headingFg));
@@ -140,6 +141,8 @@ void DialogScene::AttachController(Control::InputEventController &controller)
 	okBtn->AttachAction(controller, menuOkAction);
 	cancelBtn->AttachAction(controller, menuCancelAction);
 
+	statusRoot->SetVisible(true);
+
 	// Attaching the action may have changed the button size.
 	RequestLayout();
 }
@@ -148,6 +151,8 @@ void DialogScene::DetachController(Control::InputEventController &controller)
 {
 	cancelConn.disconnect();
 	okConn.disconnect();
+
+	statusRoot->SetVisible(false);
 
 	SUPER::DetachController(controller);
 }
