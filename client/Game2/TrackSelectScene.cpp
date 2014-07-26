@@ -73,6 +73,7 @@ TrackSelectScene::TrackSelectScene(Display::Display &display,
 
 	SetPhaseTransitionDuration(1000);
 
+	SetStoppingTransitionEnabled(true);
 	SetBackground(nullptr);
 
 	trackList.Reload(Config::GetInstance()->GetTrackBundle());
@@ -137,7 +138,10 @@ void TrackSelectScene::OnTrackSelected(Model::TrackEntryPtr entry)
 
 void TrackSelectScene::OnPhaseTransition(double progress)
 {
-	double f = 1 - pow(1.0 - progress, 4);
+	double f = 
+		GetPhase() == Phase::STOPPING ?
+		pow(progress, 4) :
+		1 - pow(1.0 - progress, 4);
 
 	subtitleGrid->SetPos(MARGIN_WIDTH, 720.0 + f * -720.0);
 	subtitleRule->SetPos(MARGIN_WIDTH, 780.0 + f * -720.0);

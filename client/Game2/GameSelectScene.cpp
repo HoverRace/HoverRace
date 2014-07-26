@@ -57,6 +57,7 @@ GameSelectScene::GameSelectScene(Display::Display &display,
 	SetPhaseTransitionDuration(1000);
 	SetStateTransitionDuration(1000);
 
+	SetStoppingTransitionEnabled(true);
 	SetBackground(nullptr);
 
 	auto root = GetContentRoot();
@@ -130,7 +131,10 @@ void GameSelectScene::OnStateTransition(double progress)
 {
 	if (GetPhase() != Phase::RUNNING) return;
 
-	double f = 1 - pow(progress, 4);
+	double f =
+		GetState() == State::LOWERING ?
+		1 - pow(progress, 4) :
+		pow(1.0 - progress, 4);
 
 	rulebookPanel->SetPos(DialogScene::MARGIN_WIDTH, f * -(BTN_HEIGHT + 1));
 
