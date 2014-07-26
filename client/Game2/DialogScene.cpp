@@ -94,6 +94,20 @@ DialogScene::~DialogScene()
 {
 }
 
+/**
+ * Set the background, replacing the currently set background.
+ * @param fader The background of the scene
+ *              (may be @c nullptr for no background).
+ *              Ownership is passed to the DialogScene.
+ */
+void DialogScene::SetBackground(Display::Background *fader)
+{
+	this->fader.reset(fader);
+	if (fader) {
+		fader->AttachView(display);
+	}
+}
+
 /// Called when the "OK" action is fired.
 void DialogScene::OnOk()
 {
@@ -140,21 +154,27 @@ void DialogScene::DetachController(Control::InputEventController &controller)
 
 void DialogScene::OnPhaseTransition(double progress)
 {
-	fader->SetOpacity(progress);
+	if (fader) {
+		fader->SetOpacity(progress);
+	}
 
 	SUPER::OnPhaseTransition(progress);
 }
 
 void DialogScene::PrepareRender()
 {
-	fader->PrepareRender();
+	if (fader) {
+		fader->PrepareRender();
+	}
 
 	SUPER::PrepareRender();
 }
 
 void DialogScene::Render()
 {
-	fader->Render();
+	if (fader) {
+		fader->Render();
+	}
 
 	if (GetPhase() != Phase::STOPPING) {
 		SUPER::Render();

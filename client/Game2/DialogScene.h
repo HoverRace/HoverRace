@@ -29,7 +29,7 @@ namespace HoverRace {
 	namespace Display {
 		class ActionButton;
 		class FlexGrid;
-		class ScreenFade;
+		class Background;
 	}
 }
 
@@ -51,6 +51,8 @@ class DialogScene : public FormScene
 	protected:
 		Display::Container *GetContentRoot() const { return contentRoot.get(); }
 		Display::Container *GetStatusRoot() const { return statusRoot.get(); }
+		
+		void SetBackground(Display::Background *fader);
 
 	protected:
 		virtual void OnOk();
@@ -70,7 +72,7 @@ class DialogScene : public FormScene
 
 		std::string title;
 
-		std::unique_ptr<Display::ScreenFade> fader;
+		std::unique_ptr<Display::Background> fader;
 		std::shared_ptr<Display::Container> contentRoot;
 		std::shared_ptr<Display::Container> statusRoot;
 		std::shared_ptr<Display::FlexGrid> actionGrid;
