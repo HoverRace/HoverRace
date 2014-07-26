@@ -52,9 +52,7 @@ PracticeSetupScene::PracticeSetupScene(Display::Display &display,
 	using namespace Display;
 
 	bgTex = std::make_shared<MediaRes<Texture>>("ui/bg/practice.png");
-
-	bg.reset(new Wallpaper(bgTex));
-	bg->AttachView(display);
+	SetBackground(new Wallpaper(bgTex, Wallpaper::Fill::ZOOM, 1.0, 0xff333333));
 }
 
 PracticeSetupScene::~PracticeSetupScene()
@@ -73,20 +71,6 @@ void PracticeSetupScene::OnScenePushed()
 		director.RequestMainMenu();
 	});
 	director.RequestPushScene(selScene);
-}
-
-void PracticeSetupScene::PrepareRender()
-{
-	bg->PrepareRender();
-
-	SUPER::PrepareRender();
-}
-
-void PracticeSetupScene::Render()
-{
-	bg->Render();
-
-	SUPER::Render();
 }
 
 }  // namespace Client

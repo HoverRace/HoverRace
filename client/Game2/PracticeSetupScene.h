@@ -34,7 +34,6 @@ namespace HoverRace {
 	namespace Display {
 		class Display;
 		class Texture;
-		class Wallpaper;
 	}
 }
 
@@ -55,15 +54,12 @@ class PracticeSetupScene : public DialogScene
 
 	public:
 		virtual void OnScenePushed();
-		virtual void PrepareRender();
-		virtual void Render();
 
 	private:
 		Display::Display &display;
 		GameDirector &director;
 		RulebookLibrary &rulebookLibrary;
 		std::shared_ptr<Display::Res<Display::Texture>> bgTex;
-		std::unique_ptr<Display::Wallpaper> bg;
 };
 
 }  // namespace Client
