@@ -35,9 +35,9 @@ namespace Display {
  * @param opacity The initial opacity.
  */
 Wallpaper::Wallpaper(std::shared_ptr<Res<Texture>> texture,
-                     Fill fill, double opacity) :
+                     Fill fill, double opacity, Color color) :
 	SUPER(opacity),
-	fill(fill), texture(texture)
+	fill(fill), texture(texture), color(color)
 {
 
 }
@@ -55,6 +55,18 @@ void Wallpaper::SetFill(Fill fill)
 	if (this->fill != fill) {
 		this->fill = fill;
 		FireModelUpdate(Props::FILL);
+	}
+}
+
+/**
+ * Set the color modulation of the texture.
+ * @param color The modulation color (including alpha).
+ */
+void Wallpaper::SetColor(const Color color)
+{
+	if (this->color != color) {
+		this->color = color;
+		FireModelUpdate(Props::COLOR);
 	}
 }
 

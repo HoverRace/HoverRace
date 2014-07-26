@@ -76,6 +76,7 @@ void SdlWallpaperView::OnModelUpdate(int prop)
 {
 	switch (prop) {
 		case Background::Props::OPACITY:
+		case Wallpaper::Props::COLOR:
 			opacityChanged = true;
 			break;
 		case Wallpaper::Props::FILL:
@@ -115,18 +116,22 @@ void SdlWallpaperView::PrepareRender()
 		}
 	}
 	if (opacityChanged) {
-		computedAlpha = static_cast<MR_UInt8>(model.GetOpacity() * 255.0);
+		double alpha = static_cast<double>(model.GetColor().bits.a);
+		double opacity = model.GetOpacity();
+		computedAlpha = static_cast<MR_UInt8>(opacity * alpha);
 	}
 }
 
 void SdlWallpaperView::Render()
 {
 	if (computedAlpha > 0) {
+		Color color = model.GetColor();
+
 		SDL_Renderer *renderer = display.GetRenderer();
 		SDL_Texture *tex = texture->Get();
 		SDL_SetTextureBlendMode(tex, SDL_BLENDMODE_BLEND);
 		SDL_SetTextureAlphaMod(tex, computedAlpha);
-		SDL_SetTextureColorMod(tex, 255, 255, 255);
+		SDL_SetTextureColorMod(tex, color.bits.r, color.bits.g, color.bits.b);
 		SDL_RenderCopy(renderer, tex, nullptr, destRectPtr);
 	}
 }

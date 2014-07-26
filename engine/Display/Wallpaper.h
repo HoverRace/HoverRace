@@ -60,6 +60,7 @@ class MR_DllDeclare Wallpaper : public Background
 			enum
 			{
 				FILL = SUPER::Props::NEXT_,
+				COLOR,
 				NEXT_,  ///< First index for subclasses.
 			};
 		};
@@ -72,7 +73,8 @@ class MR_DllDeclare Wallpaper : public Background
 
 	public:
 		Wallpaper(std::shared_ptr<Res<Texture>> texture,
-			Fill fill = Fill::ZOOM, double opacity = 1.0);
+			Fill fill = Fill::ZOOM, double opacity = 1.0,
+			const Color color = COLOR_WHITE);
 		virtual ~Wallpaper();
 
 	public:
@@ -82,11 +84,15 @@ class MR_DllDeclare Wallpaper : public Background
 		Fill GetFill() const { return fill; }
 		void SetFill(Fill fill);
 
+		const Color GetColor() const { return color; }
+		void SetColor(const Color color);
+
 		std::shared_ptr<Res<Texture>> GetTexture() const { return texture; }
 
 	private:
 		Fill fill;
 		std::shared_ptr<Res<Texture>> texture;
+		Color color;
 };
 
 }  // namespace Display
