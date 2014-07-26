@@ -49,6 +49,8 @@ class DialogScene : public FormScene
 		virtual ~DialogScene();
 
 	protected:
+		void SetStoppingTransitionEnabled(bool enabled);
+
 		Display::Container *GetContentRoot() const { return contentRoot.get(); }
 		Display::Container *GetStatusRoot() const { return statusRoot.get(); }
 		
@@ -71,6 +73,7 @@ class DialogScene : public FormScene
 		GameDirector &director;
 
 		std::string title;
+		bool stoppingTransitionEnabled;
 
 		std::unique_ptr<Display::Background> fader;
 		std::shared_ptr<Display::Container> contentRoot;

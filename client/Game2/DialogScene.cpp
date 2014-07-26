@@ -49,7 +49,8 @@ DialogScene::DialogScene(Display::Display &display, GameDirector &director,
                          const std::string &title,
                          const std::string &name) :
 	SUPER(display, name),
-	director(director), title(title)
+	director(director), title(title),
+	stoppingTransitionEnabled(false)
 {
 	typedef Display::UiViewModel::Alignment Alignment;
 
@@ -93,6 +94,20 @@ DialogScene::DialogScene(Display::Display &display, GameDirector &director,
 
 DialogScene::~DialogScene()
 {
+}
+
+/**
+ * Enable or disable content visibility while scene is stopping.
+ *
+ * By default, dialog scenes hide the root container immediately when the
+ * scene enters the @c STOPPING phase.  Setting this to @c true keeps the
+ * root container visible so that transitions can be applied.
+ *
+ * @param enabled true to enable, false to disable.
+ */
+void DialogScene::SetStoppingTransitionEnabled(bool enabled)
+{
+	stoppingTransitionEnabled = enabled;
 }
 
 /**
@@ -181,7 +196,7 @@ void DialogScene::Render()
 		fader->Render();
 	}
 
-	if (GetPhase() != Phase::STOPPING) {
+	if (stoppingTransitionEnabled || GetPhase() != Phase::STOPPING) {
 		SUPER::Render();
 	}
 }
