@@ -1,7 +1,7 @@
 // VideoBuffer.h
 // Header for rendering system.
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -75,6 +75,7 @@ class MR_DllDeclare VideoBuffer
 		virtual void OnWindowResChange();
 
 	public:
+		const ColorPalette::paletteEntry_t *GetPalette() const { return palette; }
 		void AssignPalette();
 		void CreatePalette();
 		void SetBackgroundPalette(std::unique_ptr<MR_UInt8[]> &palette);
