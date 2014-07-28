@@ -309,21 +309,26 @@ void SdlDisplay::AttachView(Wallpaper &model)
  */
 std::shared_ptr<SdlTexture> SdlDisplay::LoadRes(std::shared_ptr<Res<Texture>> res)
 {
-	auto is = res->Open();
-	InputStreamRwOps ops(is.get());
-
-	SDL_Surface *surface = IMG_Load_RW(ops.ops, 1);
-	if (!surface) {
-		throw ResLoadExn(IMG_GetError());
+	if (res->IsGenerated()) {
+		throw UnimplementedExn("SdlDisplay::LoadRes: Generated texture");
 	}
+	else {
+		auto is = res->Open();
+		InputStreamRwOps ops(is.get());
 
-	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
-	if (!texture) {
-		SDL_FreeSurface(surface);
-		throw ResLoadExn(SDL_GetError());
+		SDL_Surface *surface = IMG_Load_RW(ops.ops, 1);
+		if (!surface) {
+			throw ResLoadExn(IMG_GetError());
+		}
+
+		SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+		if (!texture) {
+			SDL_FreeSurface(surface);
+			throw ResLoadExn(SDL_GetError());
+		}
+
+		return std::make_shared<SdlTexture>(*this, texture);
 	}
-
-	return std::make_shared<SdlTexture>(*this, texture);
 }
 
 void SdlDisplay::OnDesktopModeChanged(int width, int height)
