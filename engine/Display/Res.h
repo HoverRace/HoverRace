@@ -111,11 +111,25 @@ class Res<Texture> : public BaseRes
 		};
 
 	public:
+		/**
+		 * Check if this texture is generated from memory rather than an
+		 * input stream.
+		 *
+		 * If this texture is generated, then the image data is retrieved
+		 * via GetImageData() instead of Open().
+		 *
+		 * @return @c true if generated, @c false if not.
+		 */
 		virtual bool IsGenerated() const
 		{
 			return false;
 		}
 
+		/**
+		 * If IsGenerated() is @c true, returns the image data necessary
+		 * to create the texture.
+		 * @return The image data, or @c nullptr if not a generated texture.
+		 */
 		virtual const ImageData *GetImageData()
 		{
 			return nullptr;
