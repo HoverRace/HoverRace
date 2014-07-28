@@ -23,6 +23,8 @@
 
 #include <boost/algorithm/string.hpp>
 
+#include "../Display/SpriteTextureRes.h"
+#include "../Display/Texture.h"
 #include "../Model/Track.h"
 #include "../Model/TrackEntry.h"
 #include "../Parcel/RecordFile.h"
@@ -78,6 +80,27 @@ Model::TrackPtr TrackBundle::OpenTrack(const std::shared_ptr<const Model::TrackE
 {
 	return OpenTrack(entry->name);
 }
+
+std::shared_ptr<Display::Res<Display::Texture>> TrackBundle::LoadMap(
+	std::shared_ptr<const Model::TrackEntry> entry) const
+{
+	RecordFilePtr recFile(OpenParcel(entry->name));
+	if (!recFile || recFile->GetNbRecords() < 4) {
+		return std::shared_ptr<Display::Res<Display::Texture>>();
+	}
+
+	recFile->SelectRecord(3);
+	ObjStreamPtr archivePtr(recFile->StreamIn());
+	ObjStream &archive = *archivePtr;
+
+	MR_Int32 x0, x1, y0, y1;
+	archive >> x0 >> x1 >> y0 >> y1;
+	//TODO: Do we need to do anything with these coords?
+	
+	return std::make_shared<Display::SpriteTextureRes>(
+		"map:" + entry->name, archive);
+}
+
 
 /**
  * Load a track header.

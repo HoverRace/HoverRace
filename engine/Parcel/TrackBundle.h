@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include "../Display/Res.h"
+
 #include "Bundle.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
@@ -66,6 +68,8 @@ class MR_DllDeclare TrackBundle : public Bundle
 
 		Model::TrackPtr OpenTrack(const std::string &name) const;
 		Model::TrackPtr OpenTrack(const std::shared_ptr<const Model::TrackEntry> &entry) const;
+		std::shared_ptr<Display::Res<Display::Texture>> LoadMap(
+			std::shared_ptr<const Model::TrackEntry> entry) const;
 		Model::TrackEntryPtr OpenTrackEntry(const std::string &name) const;
 
 		MR_TrackAvail CheckAvail(const std::string &name) const;
