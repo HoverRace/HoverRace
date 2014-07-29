@@ -39,7 +39,6 @@ namespace HoverRace {
 		class Wallpaper;
 	}
 }
-struct SDL_Texture;
 
 namespace HoverRace {
 namespace Display {
