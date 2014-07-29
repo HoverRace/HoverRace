@@ -37,9 +37,8 @@ namespace Display {
 Wallpaper::Wallpaper(std::shared_ptr<Res<Texture>> texture,
                      Fill fill, double opacity, Color color) :
 	SUPER(opacity),
-	fill(fill), texture(texture), color(color)
+	fill(fill), texture(std::move(texture)), color(color)
 {
-
 }
 
 Wallpaper::~Wallpaper()
