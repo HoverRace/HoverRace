@@ -28,8 +28,10 @@
 #include "../../engine/Display/FillBox.h"
 #include "../../engine/Display/FlexGrid.h"
 #include "../../engine/Display/Label.h"
+#include "../../engine/Display/Picture.h"
 #include "../../engine/Display/RuleLine.h"
 #include "../../engine/Model/TrackEntry.h"
+#include "../../engine/Parcel/TrackBundle.h"
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/Log.h"
 
@@ -67,9 +69,10 @@ TrackSelectScene::TrackSelectScene(Display::Display &display,
                                    std::shared_ptr<const Rulebook> rulebook) :
 	SUPER(display, director, "", "Track Select"),
 	rules(std::make_shared<Rules>(rulebook)),
-	trackList()
+	trackList(), selectedTrack()
 {
-	typedef Display::UiViewModel::Alignment Alignment;
+	using namespace Display;
+	typedef UiViewModel::Alignment Alignment;
 
 	SetPhaseTransitionDuration(1000);
 
@@ -83,32 +86,32 @@ TrackSelectScene::TrackSelectScene(Display::Display &display,
 
 	auto root = GetContentRoot();
 
-	subtitleGrid = root->AddChild(new Display::FlexGrid(display));
+	subtitleGrid = root->AddChild(new FlexGrid(display));
 	subtitleGrid->SetMargin(10, 0);
 	subtitleGrid->SetPadding(0, 0);
 	subtitleGrid->SetFixedHeight(40);
 	subtitleGrid->SetPos(DialogScene::MARGIN_WIDTH, 0);
 
-	rulebookLbl = subtitleGrid->AddGridCell(0, 0, new Display::Label(
+	rulebookLbl = subtitleGrid->AddGridCell(0, 0, new Label(
 		rulebook->GetTitle() + " //",
-		Display::UiFont(fontName, 30), 0xffd0d0d0))->GetContents();
+		UiFont(fontName, 30), 0xffd0d0d0))->GetContents();
 	rulebookLbl->SetAlignment(Alignment::SW);
 
-	rulebookDescLbl = subtitleGrid->AddGridCell(0, 1, new Display::Label(
+	rulebookDescLbl = subtitleGrid->AddGridCell(0, 1, new Label(
 		rulebook->GetDescription(),
-		Display::UiFont(fontName, 25), 0xff6d6d6d))->GetContents();
+		UiFont(fontName, 25), 0xff6d6d6d))->GetContents();
 	rulebookDescLbl->SetAlignment(Alignment::SW);
 
-	subtitleRule = root->AddChild(new Display::RuleLine(
-		Display::RuleLine::Direction::H,
+	subtitleRule = root->AddChild(new RuleLine(
+		RuleLine::Direction::H,
 		1280 - (DialogScene::MARGIN_WIDTH * 2), 1, 0xffffffff));
 	subtitleRule->SetPos(DialogScene::MARGIN_WIDTH, 60);
 
-	trackPanel = root->AddChild(new Display::Container(display));
+	trackPanel = root->AddChild(new Container(display));
 	trackPanel->SetPos(DialogScene::MARGIN_WIDTH, 100);
 
 	//TODO: A better list UI (categories, sorting, etc.).
-	trackGrid = trackPanel->AddChild(new Display::FlexGrid(display));
+	trackGrid = trackPanel->AddChild(new FlexGrid(display));
 	trackGrid->SetFixedWidth(360);
 
 	auto &cell = trackGrid->GetColumnDefault(0);
@@ -121,6 +124,21 @@ TrackSelectScene::TrackSelectScene(Display::Display &display,
 		trackCell->GetContents()->GetClickedSignal().connect(std::bind(
 			&TrackSelectScene::OnTrackSelected, this, ent));
 	}
+
+	selTrackPanel = trackPanel->AddChild(new Container(display));
+	selTrackPanel->SetPos(380, 0);
+	selTrackPanel->SetVisible(false);
+
+	trackPic = selTrackPanel->AddChild(new Picture(
+		std::shared_ptr<Res<Texture>>(), 260, 260));
+	trackPic->SetPos(0, 20);
+
+	readyBtn = trackPanel->AddChild(new Button(display, _("Ready")));
+	readyBtn->SetPos(1280 - (MARGIN_WIDTH * 2), 360);
+	readyBtn->SetAlignment(Alignment::NE);
+	readyBtn->SetEnabled(false);
+	readyBtn->GetClickedSignal().connect(std::bind(
+		&TrackSelectScene::OnReady, this));
 }
 
 TrackSelectScene::~TrackSelectScene()
@@ -131,8 +149,18 @@ void TrackSelectScene::OnTrackSelected(Model::TrackEntryPtr entry)
 {
 	Log::Info("Selected track: %s", entry->name.c_str());
 
+	auto trackBundle = Config::GetInstance()->GetTrackBundle();
+
 	rules->SetTrackEntry(entry);
 
+	selectedTrack = entry;
+	selTrackPanel->SetVisible(true);
+	trackPic->SetTexture(trackBundle->LoadMap(entry));
+	readyBtn->SetEnabled(true);
+}
+
+void TrackSelectScene::OnReady()
+{
 	okSignal(rules);
 }
 

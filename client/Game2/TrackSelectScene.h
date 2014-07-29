@@ -35,6 +35,7 @@ namespace HoverRace {
 		class Display;
 		class FlexGrid;
 		class Label;
+		class Picture;
 		class RuleLine;
 	}
 }
@@ -56,6 +57,7 @@ class TrackSelectScene : public DialogScene
 
 	private:
 		void OnTrackSelected(Model::TrackEntryPtr entry);
+		void OnReady();
 
 	protected:
 		virtual void OnPhaseTransition(double progress);
@@ -71,6 +73,7 @@ class TrackSelectScene : public DialogScene
 		std::shared_ptr<Rules> rules;
 
 		Model::TrackList trackList;
+		std::shared_ptr<Model::TrackEntry> selectedTrack;
 
 		std::shared_ptr<Display::FlexGrid> subtitleGrid;
 		std::shared_ptr<Display::Label> rulebookLbl;
@@ -78,6 +81,11 @@ class TrackSelectScene : public DialogScene
 		std::shared_ptr<Display::RuleLine> subtitleRule;
 		std::shared_ptr<Display::Container> trackPanel;
 		std::shared_ptr<Display::FlexGrid> trackGrid;
+
+		std::shared_ptr<Display::Container> selTrackPanel;
+		std::shared_ptr<Display::Picture> trackPic;
+
+		std::shared_ptr<Display::Button> readyBtn;
 
 		okSignal_t okSignal;
 		cancelSignal_t cancelSignal;
