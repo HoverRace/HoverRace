@@ -114,11 +114,13 @@ void SdlWallpaperView::PrepareRender()
 				throw UnimplementedExn(oss.str());
 			}
 		}
+		fillChanged = false;
 	}
 	if (opacityChanged) {
 		double alpha = static_cast<double>(model.GetColor().bits.a);
 		double opacity = model.GetOpacity();
 		computedAlpha = static_cast<MR_UInt8>(opacity * alpha);
+		opacityChanged = false;
 	}
 }
 
