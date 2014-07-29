@@ -309,26 +309,60 @@ void SdlDisplay::AttachView(Wallpaper &model)
  */
 std::shared_ptr<SdlTexture> SdlDisplay::LoadRes(std::shared_ptr<Res<Texture>> res)
 {
+	SDL_Surface *surface = nullptr;
+
 	if (res->IsGenerated()) {
-		throw UnimplementedExn("SdlDisplay::LoadRes: Generated texture");
+		auto imageData = res->GetImageData();
+		if (!imageData) {
+			throw ResLoadExn(res->GetId() + ": "
+				"Generated image has no image data");
+		}
+
+		switch (imageData->depth) {
+			case 8:
+			case 16:
+			case 32:
+				break;
+			default: {
+				std::ostringstream oss;
+				oss << res->GetId() << ": Unsupported color depth: " <<
+					imageData->depth;
+				throw ResLoadExn(oss.str());
+			}
+		}
+
+		surface = SDL_CreateRGBSurfaceFrom(imageData->pixels,
+			imageData->width, imageData->height,
+			imageData->depth, imageData->pitch,
+			imageData->rMask, imageData->gMask,
+			imageData->bMask, imageData->aMask);
+		if (!surface) {
+			throw ResLoadExn(res->GetId() + ": " + SDL_GetError());
+		}
+
+		// Assign palette if 8-bit.
+		if (imageData->depth == 8) {
+			SDL_SetPaletteColors(surface->format->palette,
+				GetLegacyDisplay().GetPalette(), 0, 256);
+		}
 	}
 	else {
 		auto is = res->Open();
 		InputStreamRwOps ops(is.get());
 
-		SDL_Surface *surface = IMG_Load_RW(ops.ops, 1);
+		surface = IMG_Load_RW(ops.ops, 1);
 		if (!surface) {
-			throw ResLoadExn(IMG_GetError());
+			throw ResLoadExn(res->GetId() + ": " + IMG_GetError());
 		}
-
-		SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
-		if (!texture) {
-			SDL_FreeSurface(surface);
-			throw ResLoadExn(SDL_GetError());
-		}
-
-		return std::make_shared<SdlTexture>(*this, texture);
 	}
+
+	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+	if (!texture) {
+		SDL_FreeSurface(surface);
+		throw ResLoadExn(res->GetId() + ": " + SDL_GetError());
+	}
+
+	return std::make_shared<SdlTexture>(*this, texture);
 }
 
 void SdlDisplay::OnDesktopModeChanged(int width, int height)
