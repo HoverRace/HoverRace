@@ -1,7 +1,7 @@
 
 // FillBox.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -49,8 +49,7 @@ FillBox::FillBox(const Vec2 &size, Color color, uiLayoutFlags_t layoutFlags) :
  * @param layoutFlags Optional layout flags.
  */
 FillBox::FillBox(double w, double h, Color color, uiLayoutFlags_t layoutFlags) :
-	SUPER(layoutFlags),
-	size(Vec2(w, h)), color(color)
+	FillBox(Vec2(w, h), color, layoutFlags)
 {
 }
 
