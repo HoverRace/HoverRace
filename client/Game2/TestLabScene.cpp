@@ -32,6 +32,8 @@
 #include "../../engine/Display/FuelGauge.h"
 #include "../../engine/Display/Hud.h"
 #include "../../engine/Display/Label.h"
+#include "../../engine/Display/MediaRes.h"
+#include "../../engine/Display/Picture.h"
 #include "../../engine/Display/ScreenFade.h"
 #include "../../engine/Display/Speedometer.h"
 #include "../../engine/Display/SymbolIcon.h"
@@ -232,6 +234,17 @@ namespace Module {
 			std::shared_ptr<Display::FlexGrid> sideGrid;
 			std::shared_ptr<Display::FillBox> gridSizeBox;
 	}; //}}}
+
+	class PictureModule : public TestLabScene::LabModule /*{{{*/
+	{
+		typedef TestLabScene::LabModule SUPER;
+		public:
+			PictureModule(Display::Display &display, GameDirector &director);
+			virtual ~PictureModule() { }
+
+		private:
+			std::shared_ptr<Display::Picture> picture;
+	}; //}}}
 }
 
 TestLabScene::TestLabScene(Display::Display &display, GameDirector &director,
@@ -250,6 +263,7 @@ TestLabScene::TestLabScene(Display::Display &display, GameDirector &director,
 	AddModule<Module::TransitionModule>(*this, display, director, "Transition");
 	AddModule<Module::HudModule>(*this, display, director, "HUD");
 	AddModule<Module::FlexGridModule>(*this, display, director, "FlexGrid");
+	AddModule<Module::PictureModule>(*this, display, director, "Picture");
 
 	if (!startingModuleName.empty() && !startingModuleBtn) {
 		Log::Warn("Not a test lab module: %s", startingModuleName.c_str());
@@ -789,6 +803,22 @@ void FlexGridModule::Layout()
 }
 
 //}}} FlexGridModule
+
+//{{{ PictureModule ////////////////////////////////////////////////////////////
+
+PictureModule::PictureModule(Display::Display &display, GameDirector &director) :
+	SUPER(display, director, "Picture")
+{
+	using namespace Display;
+	typedef UiViewModel::Alignment Alignment;
+
+	auto root = GetRoot();
+
+	auto tex = std::make_shared<MediaRes<Texture>>("ui/bg/practice.png");
+	root->AddChild(new Picture(tex, 640, 360));
+}
+
+//}}} PictureModule
 
 }  // namespace Module
 

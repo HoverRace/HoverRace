@@ -44,6 +44,7 @@ namespace HoverRace {
 		class Container;
 		class FillBox;
 		class Label;
+		class Picture;
 		class RuleLine;
 		class ScreenFade;
 		class SymbolIcon;
@@ -72,6 +73,7 @@ class MR_DllDeclare Display :
 	public ViewAttacher<Container>,
 	public ViewAttacher<FillBox>,
 	public ViewAttacher<Label>,
+	public ViewAttacher<Picture>,
 	public ViewAttacher<RuleLine>,
 	public ViewAttacher<ScreenFade>,
 	public ViewAttacher<SymbolIcon>,
