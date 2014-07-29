@@ -57,12 +57,12 @@ class MR_DllDeclare SdlWallpaperView : public SdlView<Wallpaper>
 		virtual ~SdlWallpaperView() { }
 
 	public:
-		virtual void OnModelUpdate(int prop);
+		void OnModelUpdate(int prop) override;
 
 	public:
-		virtual Vec3 Measure();
-		virtual void PrepareRender();
-		virtual void Render();
+		Vec3 Measure() override;
+		void PrepareRender() override;
+		void Render() override;
 
 	private:
 		void Update();
