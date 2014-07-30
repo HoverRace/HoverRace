@@ -212,6 +212,8 @@ class MR_DllDeclare Display :
 			// Standard text.
 			UiFont bodyFont;
 			Color bodyFg;
+			UiFont bodyAsideFont;
+			Color bodyAsideFg;
 
 			// Console text.
 			UiFont consoleFont;

@@ -92,6 +92,8 @@ void Display::styles_t::Reload()
 
 	bodyFont.Set(defaultFontName, 30, 0);
 	bodyFg = Color(0xffbfbfbf);
+	bodyAsideFont.Set(defaultFontName, 20, 0);
+	bodyAsideFg = Color(0xffbfbfbf);
 
 	consoleFont.Set(monospaceFontName, 30);
 	consoleFg = COLOR_WHITE;
