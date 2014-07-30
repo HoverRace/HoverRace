@@ -85,6 +85,10 @@ class TrackSelectScene : public DialogScene
 		std::shared_ptr<Display::Container> selTrackPanel;
 		std::shared_ptr<Display::Picture> trackPic;
 
+		std::shared_ptr<Display::FlexGrid> trackMetaGrid;
+		std::shared_ptr<Display::Label> trackNameLbl;
+		std::shared_ptr<Display::Label> trackDescLbl;
+
 		std::shared_ptr<Display::Button> readyBtn;
 
 		okSignal_t okSignal;

@@ -83,6 +83,7 @@ TrackSelectScene::TrackSelectScene(Display::Display &display,
 
 	Config *cfg = Config::GetInstance();
 	const std::string &fontName = cfg->GetDefaultFontName();
+	const auto &s = display.styles;
 
 	auto root = GetContentRoot();
 
@@ -133,6 +134,17 @@ TrackSelectScene::TrackSelectScene(Display::Display &display,
 		std::shared_ptr<Res<Texture>>(), 260, 260));
 	trackPic->SetPos(0, 20);
 
+	trackMetaGrid = selTrackPanel->AddChild(new FlexGrid(display));
+	trackMetaGrid->SetPos(280, 20);
+	trackMetaGrid->SetMargin(0, 0);
+	trackMetaGrid->SetPadding(0, 0);
+	
+	trackNameLbl = trackMetaGrid->AddGridCell(0, 0,
+		new Label(520, "Name", s.bodyFont, s.bodyFg))->GetContents();
+
+	trackDescLbl = trackMetaGrid->AddGridCell(1, 0,
+		new Label(520, "Desc", s.bodyAsideFont, s.bodyAsideFg))->GetContents();
+
 	readyBtn = trackPanel->AddChild(new Button(display, _("Ready")));
 	readyBtn->SetPos(1280 - (MARGIN_WIDTH * 2), 360);
 	readyBtn->SetAlignment(Alignment::NE);
@@ -156,6 +168,9 @@ void TrackSelectScene::OnTrackSelected(Model::TrackEntryPtr entry)
 	selectedTrack = entry;
 	selTrackPanel->SetVisible(true);
 	trackPic->SetTexture(trackBundle->LoadMap(entry));
+	trackNameLbl->SetText(entry->name);
+	trackDescLbl->SetText(entry->description);
+
 	readyBtn->SetEnabled(true);
 }
 
