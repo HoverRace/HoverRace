@@ -810,7 +810,6 @@ PictureModule::PictureModule(Display::Display &display, GameDirector &director) 
 	SUPER(display, director, "Picture")
 {
 	using namespace Display;
-	typedef UiViewModel::Alignment Alignment;
 
 	auto root = GetRoot();
 
