@@ -55,6 +55,9 @@ namespace {
 			void OnStart() override { pcall<void>("on_start"); }
 			static void OnStart_def(SUPER *super) { super->SUPER::OnStart(); }
 
+			void OnCheckpoint(int i) override { pcall<void>("on_checkpoint", i); }
+			static void OnCheckpoint_def(SUPER *super, int i) { super->SUPER::OnCheckpoint(i); }
+
 			void OnFinishLine() override { pcall<void>("on_finish_line"); }
 			static void OnFinishLine_def(SUPER *super) { super->SUPER::OnFinishLine(); }
 
@@ -68,7 +71,12 @@ MetaPlayer::MetaPlayer(std::shared_ptr<PlayerPeer> player) :
 {
 	this->player->SetMeta(this);
 
-	finishLineConn = this->player->GetPlayer()->GetFinishLineSignal().connect(
+	auto mainChar = this->player->GetPlayer();
+	checkpointConn = mainChar->GetCheckpointSignal().connect(
+		[&](MainCharacter::MainCharacter*, int i) {
+			OnCheckpoint(i);
+		});
+	finishLineConn = mainChar->GetFinishLineSignal().connect(
 		[&](MainCharacter::MainCharacter*) {
 			OnFinishLine();
 		});
@@ -93,6 +101,7 @@ void MetaPlayer::Register(Script::Core *scripting)
 			.def("on_init", &MetaPlayer::OnInit, &Wrapper::OnInit_def)
 			.def("on_joined", &MetaPlayer::OnJoined, &Wrapper::OnJoined_def)
 			.def("on_start", &MetaPlayer::OnStart, &Wrapper::OnStart_def)
+			.def("on_checkpoint", &MetaPlayer::OnCheckpoint, &Wrapper::OnCheckpoint_def)
 			.def("on_finish_line", &MetaPlayer::OnFinishLine, &Wrapper::OnFinishLine_def)
 			.def("on_finish", &MetaPlayer::OnFinish, &Wrapper::OnFinish_def)
 			.def_readonly("player", &MetaPlayer::player)

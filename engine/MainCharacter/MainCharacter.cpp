@@ -934,18 +934,27 @@ void MainCharacter::ApplyEffect(const MR_ContactEffect *pEffect,
 	if((lLapCompleted != NULL) && mMasterMode && !finished) {
 		switch (lLapCompleted->mType) {
 			case MR_CheckPoint::eCheck1:
-				mCheckPoint1 = TRUE;
-				mCheckPoint2 = FALSE;
+				if (!mCheckPoint1 && !mCheckPoint2) {
+					checkpointSignal(this, 1);
+					mCheckPoint1 = TRUE;
+					mCheckPoint2 = FALSE;
+				}
 				break;
 			case MR_CheckPoint::eCheck2:
-				if(mCheckPoint1)
-					mCheckPoint2 = TRUE;
+				if (mCheckPoint1)
+					if (!mCheckPoint2) {
+						checkpointSignal(this, 2);
+						mCheckPoint2 = TRUE;
+					}
 				break;
 			case MR_CheckPoint::eFinishLine:
 				if(mCheckPoint2) {
 					mCheckPoint1 = FALSE;
 					mCheckPoint2 = FALSE;
 
+					// The finish line is the first checkpoint, but we fire
+					// a separate signal for convenience.
+					checkpointSignal(this, 0);
 					finishLineSignal(this);
 
 					mLastLapDuration = pTime - mLastLapCompletion;

@@ -52,6 +52,7 @@ class MetaPlayer
 
 		virtual void OnJoined(std::shared_ptr<MetaSession> session) { HR_UNUSED(session); }
 		virtual void OnStart() { }
+		virtual void OnCheckpoint(int i) { }
 		virtual void OnFinishLine() { }
 		virtual void OnFinish() { }
 
@@ -60,6 +61,7 @@ class MetaPlayer
 
 	private:
 		std::shared_ptr<PlayerPeer> player;
+		boost::signals2::scoped_connection checkpointConn;
 		boost::signals2::scoped_connection finishLineConn;
 };
 

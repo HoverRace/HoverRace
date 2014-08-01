@@ -34,6 +34,14 @@ return Player {
 		print(player_name .. " started at " .. tostring(session.clock))
 	end,
 
+	on_checkpoint = function(self, i)
+		local player_name = self.player.name;
+
+		--TODO: If multiplayer, recalculate the standings.
+
+		print(player_name .. " passed checkpoint " .. i);
+	end,
+
 	on_finish_line = function(self)
 		local session = self.session.session
 		local player_name = self.player.name
