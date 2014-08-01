@@ -140,7 +140,7 @@ TrackSelectScene::TrackSelectScene(Display::Display &display,
 	trackMetaGrid->SetPadding(0, 0);
 	
 	trackNameLbl = trackMetaGrid->AddGridCell(0, 0,
-		new Label(520, "Name", s.bodyFont, s.bodyFg))->GetContents();
+		new Label(520, "Name", s.bodyHeadFont, s.bodyHeadFg))->GetContents();
 
 	trackDescLbl = trackMetaGrid->AddGridCell(1, 0,
 		new Label(520, "Desc", s.bodyAsideFont, s.bodyAsideFg))->GetContents();
