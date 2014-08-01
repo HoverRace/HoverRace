@@ -212,6 +212,8 @@ class MR_DllDeclare Display :
 			// Standard text.
 			UiFont bodyFont;
 			Color bodyFg;
+			UiFont bodyHeadFont;
+			Color bodyHeadFg;
 			UiFont bodyAsideFont;
 			Color bodyAsideFg;
 
@@ -232,7 +234,7 @@ class MR_DllDeclare Display :
 			// Attributes for grid containers.
 			Vec2 gridMargin;
 			Vec2 gridPadding;
-			
+
 			// Colors specific to button-like widgets.
 			Color buttonBg;
 			Color buttonDisabledBg;

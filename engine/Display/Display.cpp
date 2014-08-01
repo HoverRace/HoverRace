@@ -1,7 +1,7 @@
 
 // Display.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -92,6 +92,8 @@ void Display::styles_t::Reload()
 
 	bodyFont.Set(defaultFontName, 30, 0);
 	bodyFg = Color(0xffbfbfbf);
+	bodyHeadFont.Set(defaultFontName, 30, 0);
+	bodyHeadFg = Color(0xffffffff);
 	bodyAsideFont.Set(defaultFontName, 20, 0);
 	bodyAsideFg = Color(0xffbfbfbf);
 
