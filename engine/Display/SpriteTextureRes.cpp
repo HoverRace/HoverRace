@@ -23,8 +23,11 @@
 
 #include "../engine/Display/Texture.h"
 #include "../engine/Parcel/ObjStream.h"
+#include "../engine/Util/Log.h"
 
 #include "SpriteTextureRes.h"
+
+using namespace HoverRace::Util;
 
 namespace HoverRace {
 namespace Display {
@@ -62,6 +65,9 @@ SpriteTextureRes::SpriteTextureRes(const std::string &recordName,
 		free(imageData.pixels);
 		throw;
 	}
+
+	Log::Debug("Loaded sprite resource (%ux%u, %u items): %s",
+		width, totalHeight, numItems, recordName.c_str());
 }
 
 SpriteTextureRes::~SpriteTextureRes()
