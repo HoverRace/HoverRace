@@ -21,12 +21,16 @@
 
 #include "StdAfx.h"
 
+#include "../Display/SpriteTextureRes.h"
 #include "../Parcel/RecordFile.h"
 #include "../Util/InspectMapNode.h"
+#include "../Util/Log.h"
 
 #include "Level.h"
 
 #include "Track.h"
+
+using namespace HoverRace::Util;
 
 namespace HoverRace {
 namespace Model {
@@ -38,7 +42,7 @@ namespace Model {
  * @throw Parcel::ObjStreamExn
  */
 Track::Track(const std::string &name, Parcel::RecordFilePtr recFile) :
-	SUPER(), recFile(recFile), level(nullptr)
+	SUPER(), recFile(recFile), level(nullptr), map()
 {
 	recFile->SelectRecord(0);
 	header.Serialize(*recFile->StreamIn());
@@ -56,19 +60,48 @@ void Track::Inspect(Util::InspectMapNode &node) const
 		AddSubobject("metadata", &header);
 }
 
-void Track::Load(bool allowRendering, char gameOpts)
+void Track::LoadLevel(bool allowRendering, char gameOpts)
 {
 	using namespace HoverRace::Parcel;
 
-	if (level) delete level;
-
 	level = new Level(allowRendering, gameOpts);
+
 	recFile->SelectRecord(1);
-
 	ObjStreamPtr archivePtr(recFile->StreamIn());
-	ObjStream &lArchive = *archivePtr;
+	ObjStream &archive = *archivePtr;
+	level->Serialize(archive);
+}
 
-	level->Serialize(lArchive);
+void Track::LoadMap()
+{
+	using namespace HoverRace::Parcel;
+
+	if (recFile->GetNbRecords() < 4) {
+		Log::Warn("Track does not have a map: %s", header.name.c_str());
+		return;
+	}
+
+	recFile->SelectRecord(3);
+	ObjStreamPtr archivePtr(recFile->StreamIn());
+	ObjStream &archive = *archivePtr;
+
+	//TODO: Refactor into shared code with TrackBundle::LoadMap().
+
+	MR_Int32 x0, x1, y0, y1;
+	archive >> x0 >> x1 >> y0 >> y1;
+	//TODO: Do we need to do anything with these coords?
+	
+	map = std::make_shared<Display::SpriteTextureRes>(
+		"map:" + header.name, archive);
+}
+
+void Track::Load(bool allowRendering, char gameOpts)
+{
+	if (level) delete level;
+	if (map) map.reset();
+
+	LoadLevel(allowRendering, gameOpts);
+	LoadMap();
 }
 
 }  // namespace Model

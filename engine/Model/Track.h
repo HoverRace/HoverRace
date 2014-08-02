@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include "../Display/Res.h"
+
 #include "TrackEntry.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
@@ -62,15 +64,22 @@ class MR_DllDeclare Track : public Util::Inspectable
 		Parcel::RecordFilePtr GetRecordFile() const { return recFile; }
 		const TrackEntry &GetHeader() const { return header; }
 		Level *GetLevel() const { return level; }
+		std::shared_ptr<Display::Res<Display::Texture>> GetMap() const { return map; }
 
 		virtual void Inspect(Util::InspectMapNode &node) const;
 
+	private:
+		void LoadLevel(bool allowRendering, char gameOpts);
+		void LoadMap();
+
+	public:
 		void Load(bool allowRendering, char gameOpts);
 
 	private:
 		Parcel::RecordFilePtr recFile;
 		TrackEntry header;
 		Level *level;
+		std::shared_ptr<Display::Res<Display::Texture>> map;
 };
 typedef std::shared_ptr<Track> TrackPtr;
 

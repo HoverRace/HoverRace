@@ -89,6 +89,8 @@ std::shared_ptr<Display::Res<Display::Texture>> TrackBundle::LoadMap(
 		return std::shared_ptr<Display::Res<Display::Texture>>();
 	}
 
+	//TODO: Refactor into shared code with Track::LoadMap().
+
 	recFile->SelectRecord(3);
 	ObjStreamPtr archivePtr(recFile->StreamIn());
 	ObjStream &archive = *archivePtr;
