@@ -1,7 +1,7 @@
 
 // Speedometer.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ class MR_DllDeclare Speedometer : public HudDecor
 		virtual ~Speedometer() { }
 
 	public:
-		void Advance(Util::OS::timestamp_t tick);
+		void Advance(Util::OS::timestamp_t tick) override;
 
 	private:
 		// Absolute speed.

@@ -74,7 +74,7 @@ class MR_DllDeclare HudDecor : public Container
 		sizeChangedSignal_t &GetSizeChangedSignal() { return sizeChangedSignal; }
 
 	protected:
-		virtual void FireModelUpdate(int prop);
+		void FireModelUpdate(int prop) override;
 
 	public:
 		virtual void Advance(Util::OS::timestamp_t) { };

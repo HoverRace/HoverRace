@@ -1,7 +1,7 @@
 
 // HudText.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ class MR_DllDeclare HudText : public HudDecor
 		void SetText(const std::string &text);
 
 	protected:
-		virtual void Layout();
+		void Layout() override;
 
 	private:
 		std::shared_ptr<FillBox> bg;
