@@ -71,7 +71,7 @@ void SdlPictureView::PrepareRender()
 void SdlPictureView::Render()
 {
 	const Color color = model.GetColor();
-	if (color.bits.a > 0) {
+	if (texture && color.bits.a > 0) {
 		SDL_Renderer *renderer = display.GetRenderer();
 
 		SDL_Texture *tex = texture->Get();
