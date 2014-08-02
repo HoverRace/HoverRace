@@ -1,3 +1,16 @@
+add_chronometer:
+  type: method
+  sig:
+    - chronometer = hud:add_chronometer(alignment, title, clock)
+  brief: >
+    Add a clock display to the HUD.
+  desc: >
+    The clock must be a Clock object, such as session.clock.
+
+    The title may be a blank string.
+  examples:
+    - hud:add_chronometer(Hud.S, "Time", session.clock)
+
 add_counter:
   type: method
   sig:
@@ -43,6 +56,15 @@ add_speedometer:
     Add speed indicators to the HUD.
   examples:
     - hud:add_speedometer(Hud.NW)
+
+add_text:
+  type: method
+  sig:
+    - hud:add_text(alignment, text)
+  brief: >
+    Add arbitrary text to the HUD.
+  examples:
+    - hud:add_text(Hud.ABOVE, "Finished!")
 
 use_race_default:
   type: method
