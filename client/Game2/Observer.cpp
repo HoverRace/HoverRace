@@ -599,6 +599,7 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 	}
 
 	// Map
+	/*
 	if (drawHud && pSession->GetMap() != NULL) {
 		const Sprite *lHoverIcons = mHoverIcons->GetSprite();
 
@@ -630,6 +631,7 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 			}
 		}
 	}
+	*/
 
 	// Print text
 	if (drawHud && mBaseFont != NULL) {

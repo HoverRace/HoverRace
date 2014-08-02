@@ -1,7 +1,7 @@
 
 // HudPeer.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@
 #include "../../../engine/Display/Hud.h"
 #include "../../../engine/Display/HudDecor.h"
 #include "../../../engine/Display/HudText.h"
+#include "../../../engine/Display/Minimap.h"
 #include "../../../engine/Display/Speedometer.h"
 
 #include "HudPeer.h"
@@ -171,6 +172,7 @@ void HudPeer::LUseRaceDefault()
 		sp->Clear();
 		sp->AddHudChild(HudAlignment::NE, new Display::FuelGauge(display));
 		sp->AddHudChild(HudAlignment::NW, new Display::Speedometer(display));
+		sp->AddHudChild(HudAlignment::WNW, new Display::Minimap(display));
 	}
 }
 
