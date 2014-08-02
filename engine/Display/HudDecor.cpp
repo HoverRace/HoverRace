@@ -32,7 +32,7 @@ namespace Display {
  */
 HudDecor::HudDecor(Display &display) :
 	SUPER(display),
-	player(nullptr)
+	player(nullptr), track()
 {
 }
 
@@ -55,6 +55,18 @@ void HudDecor::SetPlayer(MainCharacter::MainCharacter *player)
 	if (this->player != player) {
 		this->player = player;
 		FireModelUpdate(Props::PLAYER);
+	}
+}
+
+/**
+ * Change the track currently being played.
+ * @param track The track (may not be @c nullptr).
+ */
+void HudDecor::SetTrack(std::shared_ptr<Model::Track> track)
+{
+	if (this->track != track) {
+		this->track = track;
+		FireModelUpdate(Props::TRACK);
 	}
 }
 

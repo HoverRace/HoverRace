@@ -674,7 +674,8 @@ void TransitionModule::OnStateTransition(double progress)
 HudModule::HudModule(Display::Display &display, GameDirector &director) :
 	SUPER(display, director, "HUD"),
 	player(MainCharacter::MainCharacter::New(0, 0x7f)),
-	hud(new Display::Hud(display, player.get(), Vec2(1280, 720)))
+	hud(new Display::Hud(display, player.get(), std::shared_ptr<Model::Track>(),
+		Vec2(1280, 720)))
 {
 	hud->AttachView(display);
 

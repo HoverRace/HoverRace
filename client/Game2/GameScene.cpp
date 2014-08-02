@@ -71,9 +71,10 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 	session = new ClientSession(rules);
 
 	// Load the selected track
+	std::shared_ptr<Model::Track> track;
 	try {
 		auto entry = rules->GetTrackEntry();
-		auto track = Config::GetInstance()->GetTrackBundle()->OpenTrack(entry);
+		track = Config::GetInstance()->GetTrackBundle()->OpenTrack(entry);
 		if (!track) throw Parcel::ObjStreamExn("Track does not exist.");
 		if (!session->LoadNew(entry->name.c_str(), scripting,
 			track, &display.GetLegacyDisplay()))
@@ -102,7 +103,7 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 	viewports.emplace_back(
 		display,
 		new Observer(),
-		new Display::Hud(display, session->GetPlayer(0),
+		new Display::Hud(display, session->GetPlayer(0), track,
 			Vec2(1280, 720)));
 
 	session->AdvancePhase(ClientSession::Phase::PREGAME);

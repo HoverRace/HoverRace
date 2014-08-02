@@ -42,6 +42,9 @@ namespace HoverRace {
 	namespace MainCharacter {
 		class MainCharacter;
 	}
+	namespace Model {
+		class Track;
+	}
 }
 
 namespace HoverRace {
@@ -61,6 +64,7 @@ class MR_DllDeclare HudDecor : public Container
 		{
 			enum {
 				PLAYER = SUPER::Props::NEXT_,
+				TRACK,
 				NEXT_,  ///< First index for subclasses.
 			};
 		};
@@ -83,8 +87,12 @@ class MR_DllDeclare HudDecor : public Container
 		MainCharacter::MainCharacter *GetPlayer() const { return player; }
 		void SetPlayer(MainCharacter::MainCharacter *player);
 
+		std::shared_ptr<Model::Track> GetTrack() const { return track; }
+		void SetTrack(std::shared_ptr<Model::Track> track);
+
 	private:
 		MainCharacter::MainCharacter *player;
+		std::shared_ptr<Model::Track> track;
 		sizeChangedSignal_t sizeChangedSignal;
 };
 

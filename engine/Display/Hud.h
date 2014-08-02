@@ -44,6 +44,9 @@ namespace HoverRace {
 	namespace MainCharacter {
 		class MainCharacter;
 	}
+	namespace Model {
+		class Track;
+	}
 }
 
 namespace HoverRace {
@@ -62,6 +65,7 @@ class MR_DllDeclare Hud : public Container
 		{
 			enum {
 				PLAYER = SUPER::Props::NEXT_,
+				TRACK,
 				NEXT_,  ///< First index for subclasses.
 			};
 		};
@@ -159,6 +163,7 @@ class MR_DllDeclare Hud : public Container
 
 	public:
 		Hud(Display &display, MainCharacter::MainCharacter *player,
+			std::shared_ptr<Model::Track> track,
 			const Vec2 &size, bool clip=true,
 			uiLayoutFlags_t layoutFlags=0);
 		virtual ~Hud() { }
@@ -181,6 +186,7 @@ class MR_DllDeclare Hud : public Container
 		{
 			std::shared_ptr<T> sharedChild = AddChild(child);
 			sharedChild->SetPlayer(player);
+			sharedChild->SetTrack(track);
 
 			// For corner elems, replace the elem instead of adding.
 			if (HudAlignment::IsCorner(alignment)) {
@@ -232,6 +238,9 @@ class MR_DllDeclare Hud : public Container
 		MainCharacter::MainCharacter *GetPlayer() const { return player; }
 		void SetPlayer(MainCharacter::MainCharacter *player);
 
+		std::shared_ptr<Model::Track> GetTrack() const { return track; }
+		void SetTrack(std::shared_ptr<Model::Track> track);
+
 	private:
 		void LayoutStacked(HudAlignment::type align,
 			double startX, double startY,
@@ -247,6 +256,7 @@ class MR_DllDeclare Hud : public Container
 		void Advance(Util::OS::timestamp_t tick);
 
 	private:
+		std::shared_ptr<Model::Track> track;
 		MainCharacter::MainCharacter *player;
 		typedef std::vector<HudChild> hudChildList_t;
 		std::array<hudChildList_t, HudAlignment::NUM> hudChildren;

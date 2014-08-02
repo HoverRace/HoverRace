@@ -1,7 +1,7 @@
 
 // Hud.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -57,15 +57,17 @@ Hud::HudChild &Hud::HudChild::operator=(HudChild &&other)
  * Constructor.
  * @param display The display child elements will be attached to.
  * @param player The target player this HUD is viewing.
+ * @param track The track being played.
  * @param size The size of the container.
  * @param clip Enable (default) or disable clipping of child widgets.
  * @param layoutFlags Optional layout flags.
  */
 Hud::Hud(Display &display, MainCharacter::MainCharacter *player,
+         std::shared_ptr<Model::Track> track,
          const Vec2 &size, bool clip,
          uiLayoutFlags_t layoutFlags) :
 	SUPER(display, size, clip, layoutFlags),
-	player(player)
+	player(player), track(track)
 {
 }
 
@@ -79,6 +81,20 @@ void Hud::SetPlayer(MainCharacter::MainCharacter *player)
 		this->player = player;
 		ForEachHudChild([&](std::shared_ptr<HudDecor> &child) {
 			child->SetPlayer(player);
+		});
+	}
+}
+
+/**
+ * Change the track being played.
+ * @param track The track (may not be @c nullptr).
+ */
+void Hud::SetTrack(std::shared_ptr<Model::Track> track)
+{
+	if (this->track != track) {
+		this->track = track;
+		ForEachHudChild([&](std::shared_ptr<HudDecor> &child) {
+			child->SetTrack(track);
 		});
 	}
 }
