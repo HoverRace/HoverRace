@@ -65,7 +65,7 @@ Hud::Hud(Display &display, MainCharacter::MainCharacter *player,
          const Vec2 &size, bool clip,
          uiLayoutFlags_t layoutFlags) :
 	SUPER(display, size, clip, layoutFlags),
-	player(player), visible(true)
+	player(player)
 {
 }
 
@@ -80,18 +80,6 @@ void Hud::SetPlayer(MainCharacter::MainCharacter *player)
 		ForEachHudChild([&](std::shared_ptr<HudDecor> &child) {
 			child->SetPlayer(player);
 		});
-	}
-}
-
-/**
- * Set the visibility of the HUD.
- * @param visible @c true for a visible HUD, @c false for invisible.
- */
-void Hud::SetVisible(bool visible)
-{
-	if (this->visible != visible) {
-		this->visible = visible;
-		FireModelUpdate(Props::VISIBLE);
 	}
 }
 

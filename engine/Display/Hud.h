@@ -62,7 +62,6 @@ class MR_DllDeclare Hud : public Container
 		{
 			enum {
 				PLAYER = SUPER::Props::NEXT_,
-				VISIBLE,
 				NEXT_,  ///< First index for subclasses.
 			};
 		};
@@ -233,13 +232,6 @@ class MR_DllDeclare Hud : public Container
 		MainCharacter::MainCharacter *GetPlayer() const { return player; }
 		void SetPlayer(MainCharacter::MainCharacter *player);
 
-		/**
-		 * Check if the HUD is currently visible;
-		 * @return @c true if the HUD is visible, @c false otherwise.
-		 */
-		bool IsVisible() const { return visible; }
-		void SetVisible(bool visible);
-
 	private:
 		void LayoutStacked(HudAlignment::type align,
 			double startX, double startY,
@@ -256,7 +248,6 @@ class MR_DllDeclare Hud : public Container
 
 	private:
 		MainCharacter::MainCharacter *player;
-		bool visible;
 		typedef std::vector<HudChild> hudChildList_t;
 		std::array<hudChildList_t, HudAlignment::NUM> hudChildren;
 };
