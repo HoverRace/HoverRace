@@ -82,6 +82,7 @@ void Hud::SetPlayer(MainCharacter::MainCharacter *player)
 		ForEachHudChild([&](std::shared_ptr<HudDecor> &child) {
 			child->SetPlayer(player);
 		});
+		FireModelUpdate(Props::PLAYER);
 	}
 }
 
@@ -96,6 +97,7 @@ void Hud::SetTrack(std::shared_ptr<Model::Track> track)
 		ForEachHudChild([&](std::shared_ptr<HudDecor> &child) {
 			child->SetTrack(track);
 		});
+		FireModelUpdate(Props::TRACK);
 	}
 }
 
