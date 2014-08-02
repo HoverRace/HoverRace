@@ -1,5 +1,4 @@
-// Observer.h// MR_Observer object interface
-//
+// Observer.h
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
