@@ -86,6 +86,7 @@ void HudPeer::Register(Script::Core *scripting)
 			.def("add_counter", &HudPeer::LAddCounter_V)
 			.def("add_counter", &HudPeer::LAddCounter_VT)
 			.def("add_fuel_gauge", &HudPeer::LAddDecor<Display::FuelGauge>)
+			.def("add_minimap", &HudPeer::LAddDecor<Display::Minimap>)
 			.def("add_speedometer", &HudPeer::LAddDecor<Display::Speedometer>)
 			.def("add_text", &HudPeer::LAddText)
 			.def("clear", &HudPeer::LClear)
@@ -103,6 +104,7 @@ void HudPeer::Register(Script::Core *scripting)
 		class_<Display::FuelGauge, Display::HudDecor, std::shared_ptr<Display::HudDecor>>("FuelGauge"),
 		class_<Display::HudText, Display::HudDecor, std::shared_ptr<Display::HudDecor>>("Text")
 			.property("text", &Display::HudText::GetText, &Display::HudText::SetText),
+		class_<Display::Minimap, Display::HudDecor, std::shared_ptr<Display::HudDecor>>("Minimap"),
 		class_<Display::Speedometer, Display::HudDecor, std::shared_ptr<Display::HudDecor>>("Speedometer")
 	];
 }

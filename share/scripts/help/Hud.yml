@@ -26,6 +26,15 @@ add_fuel_gauge:
   examples:
     - hud:add_fuel_gauge(Hud.NE)
 
+add_minimap:
+  type: method
+  sig:
+    - minimap = hud:add_minimap(alignment)
+  brief: >
+    Add a miniature map of the track.
+  examples:
+    - hud:add_minimap(Hud.WNW)
+
 add_speedometer:
   type: method
   sig:
