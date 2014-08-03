@@ -37,7 +37,9 @@
 
 namespace HoverRace {
 	namespace Display {
-		class SdlDisplay;
+		namespace SDL {
+			class SdlDisplay;
+		}
 	}
 }
 
