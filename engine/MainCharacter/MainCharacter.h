@@ -23,6 +23,7 @@
 #pragma once
 
 #include "MainCharacterRenderer.h"
+#include "../Display/Color.h"
 #include "../Model/MazeElement.h"
 #include "../Model/PhysicalCollision.h"
 #include "../Util/FastFifo.h"
@@ -212,7 +213,11 @@ class MR_DllDeclare MainCharacter : public Model::FreeElement
 		int GetPowerUpFraction(int pNbLevel) const;
 
 		int GetPlayerIndex() const { return playerIdx; }
+
+		//TODO: Get from profile.  For now, these use the player index.
 		const std::string &GetName() const { return name; }
+		const Display::Color GetPrimaryColor() const { return primaryColor; }
+
 		MR_SimulationTime GetTotalTime() const;
 		MR_SimulationTime GetBestLapDuration() const;
 		MR_SimulationTime GetLastLapDuration() const;
@@ -251,6 +256,7 @@ class MR_DllDeclare MainCharacter : public Model::FreeElement
 		finishLineSignal_t &GetFinishLineSignal() { return finishLineSignal; }
 
 	private:
+		Display::Color primaryColor;
 		bool started;
 		bool finished;
 		checkpointSignal_t checkpointSignal;

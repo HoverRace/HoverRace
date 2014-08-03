@@ -311,6 +311,15 @@ void MainCharacter::RegisterFactory()
  */
 MainCharacter *MainCharacter::New(int idx, char gameopts)
 {
+	//TODO: Retrieve from player profile.  For now, use player index.
+	static Display::Color COLORS[] = {
+		0xffd8063b,
+		0xff002ab8,
+		0xff88439f,
+		0xffefef00,
+		0xfffc8611,
+	};
+
 	Util::ObjectFromFactoryId lId = { MR_MAIN_CHARACTER_DLL_ID, MR_MAIN_CHARACTER_CLASS_ID };
 
 	MainCharacter *lReturnValue = (MainCharacter *) Util::DllObjectFactory::CreateObject(lId);
@@ -318,6 +327,7 @@ MainCharacter *MainCharacter::New(int idx, char gameopts)
 	if (lReturnValue) {
 		lReturnValue->playerIdx = idx;
 		lReturnValue->name = boost::str(boost::format("Player %d") % (idx + 1));
+		lReturnValue->primaryColor = COLORS[idx % 5];
 		lReturnValue->mGameOpts = gameopts;
 		lReturnValue->mHoverModel = NextAllowedCraft(gameopts, 3);
 	}
