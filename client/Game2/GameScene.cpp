@@ -127,7 +127,9 @@ GameScene::~GameScene()
 void GameScene::Cleanup()
 {
 	director.GetSessionChangedSignal()(nullptr);
-	metaSession->GetSession()->OnSessionEnd();
+	if (metaSession) {
+		metaSession->GetSession()->OnSessionEnd();
+	}
 	delete session;
 }
 
