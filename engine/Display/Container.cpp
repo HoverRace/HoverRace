@@ -32,8 +32,7 @@ namespace Display {
  * @param layoutFlags Optional layout flags.
  */
 Container::Container(Display &display, uiLayoutFlags_t layoutFlags) :
-	SUPER(layoutFlags), display(display), size(0, 0), clip(false),
-	visible(true)
+	Container(display, Vec2(0, 0), false, layoutFlags)
 {
 }
 
