@@ -476,7 +476,16 @@ OS::path_t Config::GetConfigFilename() const
  */
 OS::path_t Config::GetDefaultMediaPath()
 {
-	return app.mediaPath.empty() ? "share" : app.mediaPath;
+	if (app.mediaPath.empty()) {
+#		ifdef _WIN32
+			return "../share";
+#		else
+			return "share";
+#		endif
+	}
+	else {
+		return app.mediaPath;
+	}
 }
 
 /**
