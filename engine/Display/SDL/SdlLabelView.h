@@ -79,7 +79,7 @@ class MR_DllDeclare SdlLabelView : public SdlView<Label>
 		int realHeight;
 		double unscaledWidth;
 		double unscaledHeight;
-		boost::signals2::connection uiScaleChangedConnection;
+		boost::signals2::scoped_connection uiScaleChangedConnection;
 };
 
 }  // namespace SDL

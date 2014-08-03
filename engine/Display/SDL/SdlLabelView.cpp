@@ -44,7 +44,6 @@ SdlLabelView::SdlLabelView(SdlDisplay &disp, Label &model) :
 
 SdlLabelView::~SdlLabelView()
 {
-	uiScaleChangedConnection.disconnect();
 }
 
 void SdlLabelView::OnModelUpdate(int prop)
