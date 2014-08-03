@@ -1,7 +1,7 @@
 
 // SdlContainerView.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -24,8 +24,8 @@
 #include <SDL2/SDL.h>
 
 #include "../../Util/Log.h"
-
 #include "../Container.h"
+#include "SdlTexture.h"
 
 #include "SdlContainerView.h"
 
@@ -33,12 +33,68 @@ namespace HoverRace {
 namespace Display {
 namespace SDL {
 
+SdlContainerView::SdlContainerView(SdlDisplay &disp, Container &model) :
+	SUPER(disp, model), rttChanged(true)
+{
+	displayConfigChangedConn =
+		disp.GetDisplayConfigChangedSignal().connect([&](int, int) {
+			rttChanged = true;
+			if (rttTarget) rttTarget.reset();
+		});
+}
+
+SdlContainerView::~SdlContainerView()
+{
+}
+
+void SdlContainerView::OnModelUpdate(int prop)
+{
+	switch (prop) {
+		case Container::Props::CLIP:
+		case Container::Props::OPACITY:
+			rttChanged = true;
+			break;
+	}
+}
+
 void SdlContainerView::PrepareRender()
 {
 	if (!model.IsVisible()) return;
 
 	auto &children = model.GetChildren();
 	if (children.empty()) return;
+
+	// Determine if we need to render to a texture first then draw later.
+	if (rttChanged) {
+		bool rttNeeded = (model.GetOpacity() < 1.0);
+
+		if (rttNeeded) {
+			//TODO: Use fixed size of container if clipping is on.
+			int width = display.GetScreenWidth();
+			int height = display.GetScreenHeight();
+
+			if (rttTarget) {
+				//TODO: Check if texture size needs to change.
+			}
+			else {
+				SDL_Texture *texture = SDL_CreateTexture(display.GetRenderer(),
+					SDL_PIXELFORMAT_ARGB8888,
+					SDL_TEXTUREACCESS_TARGET,
+					width, height);
+				if (!texture) {
+					std::ostringstream oss;
+					oss << "Unable to create " << width << 'x' << height <<
+						" target texture for container: " << SDL_GetError();
+					throw Exception(oss.str());
+				}
+
+				rttTarget.reset(new SdlTexture(display, texture));
+			}
+		}
+		else {
+			if (rttTarget) rttTarget.reset();
+		}
+	}
 
 	std::for_each(children.begin(), children.end(),
 		std::mem_fn(&ViewModel::PrepareRender));
@@ -51,9 +107,19 @@ void SdlContainerView::Render()
 	auto &children = model.GetChildren();
 	if (children.empty()) return;
 
+	SDL_Renderer *renderer = display.GetRenderer();
+
+	//TODO: Currently, we assume that the render target is the whole screen.
+	SDL_Texture *oldRenderTarget = nullptr;
+	if (rttTarget) {
+		oldRenderTarget = SDL_GetRenderTarget(renderer);
+		SDL_SetRenderTarget(renderer, rttTarget->Get());
+		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+		SDL_RenderClear(renderer);
+	}
+
 	bool clip = model.IsClip();
 	SDL_Rect oldClip = { 0 };
-	SDL_Renderer *renderer = display.GetRenderer();
 
 	if (clip) {
 		// Translate our bounds into screen-space.
@@ -108,6 +174,19 @@ void SdlContainerView::Render()
 
 	if (clip) {
 		SDL_RenderSetClipRect(renderer, &oldClip);
+	}
+
+	if (rttTarget) {
+		SDL_SetRenderTarget(renderer, oldRenderTarget);
+
+		// Draw the render target with the selected opacity.
+		SDL_Texture *tex = rttTarget->Get();
+		SDL_SetTextureBlendMode(tex, SDL_BLENDMODE_BLEND);
+		SDL_SetTextureAlphaMod(tex,
+			static_cast<MR_UInt8>(255.0 * model.GetOpacity()));
+		SDL_SetTextureColorMod(tex, 0xff, 0xff, 0xff);
+
+		SDL_RenderCopy(renderer, tex, nullptr, nullptr);
 	}
 }
 

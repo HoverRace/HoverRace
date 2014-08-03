@@ -37,6 +37,9 @@
 namespace HoverRace {
 	namespace Display {
 		class Container;
+		namespace SDL {
+			class SdlTexture;
+		}
 	}
 }
 
@@ -52,17 +55,21 @@ class MR_DllDeclare SdlContainerView : public SdlView<Container>
 {
 	typedef SdlView<Container> SUPER;
 	public:
-		SdlContainerView(SdlDisplay &disp, Container &model) :
-			SUPER(disp, model) { }
-		virtual ~SdlContainerView() { }
+		SdlContainerView(SdlDisplay &disp, Container &model);
+		virtual ~SdlContainerView();
 
 	public:
-		void OnModelUpdate(int) override { }
+		void OnModelUpdate(int prop) override;
 
 	public:
 		Vec3 Measure() override;
 		void PrepareRender() override;
 		void Render() override;
+
+	private:
+		bool rttChanged;  ///< Render-to-texture may need to be re-evaluated.
+		std::unique_ptr<SdlTexture> rttTarget;
+		boost::signals2::connection displayConfigChangedConn;
 };
 
 }  // namespace SDL

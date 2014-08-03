@@ -1,7 +1,7 @@
 
 // Container.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -56,6 +56,7 @@ class MR_DllDeclare Container : public UiViewModel
 			enum {
 				SIZE = SUPER::Props::NEXT_,
 				CLIP,
+				OPACITY,
 				VISIBLE,
 				NEXT_,  ///< First index for subclasses.
 			};
@@ -190,6 +191,13 @@ class MR_DllDeclare Container : public UiViewModel
 		void SetClip(bool clip);
 
 		/**
+		 * Retrieve the opacity.
+		 * @return The opacity (1.0 is fully-opaque, 0.0 is fully-transparent).
+		 */
+		double GetOpacity() const { return opacity; }
+		void SetOpacity(double opacity);
+
+		/**
 		 * Check if the children of this container are shown.
 		 * @return @c true if visible, @c false if not.
 		 */
@@ -206,6 +214,7 @@ class MR_DllDeclare Container : public UiViewModel
 	private:
 		Vec2 size;
 		bool clip;
+		double opacity;
 		bool visible;
 		std::vector<UiViewModelPtr> children;
 };

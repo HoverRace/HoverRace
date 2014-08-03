@@ -1,7 +1,7 @@
 
 // Container.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ Container::Container(Display &display, uiLayoutFlags_t layoutFlags) :
 Container::Container(Display &display, const Vec2 &size, bool clip,
                      uiLayoutFlags_t layoutFlags) :
 	SUPER(layoutFlags), display(display), size(size), clip(clip),
-	visible(true)
+	opacity(1.0), visible(true)
 {
 }
 
@@ -89,6 +89,28 @@ void Container::SetClip(bool clip)
 	if (this->clip != clip) {
 		this->clip = clip;
 		FireModelUpdate(Props::CLIP);
+	}
+}
+
+/**
+ * Set the opacity of the container.
+ * 
+ * The opacity is applied to the container as a whole; the container is first
+ * rendered off-screen, then the opacity is applied when drawing the buffer
+ * to the screen.
+ * 
+ * The value will be clamped to the range 0.0 to 1.0 inclusive.
+ * 
+ * @param opacity The opacity (1.0 is fully-opaque, 0.0 is fully-transparent).
+ */
+void Container::SetOpacity(double opacity)
+{
+	if (opacity < 0.0) opacity = 0.0;
+	else if (opacity > 1.0) opacity = 1.0;
+
+	if (this->opacity != opacity) {
+		this->opacity = opacity;
+		FireModelUpdate(Props::OPACITY);
 	}
 }
 
