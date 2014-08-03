@@ -22,6 +22,7 @@
 #pragma once
 
 #include "../Display/Res.h"
+#include "../Vec.h"
 
 #include "TrackEntry.h"
 
@@ -56,7 +57,7 @@ class MR_DllDeclare Track : public Util::Inspectable
 {
 	typedef Util::Inspectable SUPER;
 	private:
-		Track() { }
+		Track() = delete;
 	public:
 		Track(const std::string &name, Parcel::RecordFilePtr recFile);
 		virtual ~Track();
@@ -64,6 +65,19 @@ class MR_DllDeclare Track : public Util::Inspectable
 		Parcel::RecordFilePtr GetRecordFile() const { return recFile; }
 		const TrackEntry &GetHeader() const { return header; }
 		Level *GetLevel() const { return level; }
+
+		/**
+		 * Retrieve the coordinates of the north-west corner of the track.
+		 * @return The coordinates, or (0, 0) if the track hasn't been loaded.
+		 */
+		const Vec2 &GetOffset() const { return offset; }
+
+		/**
+		 * Retrieve the size of the track.
+		 * @return The size, or (0, 0) if the track hasn't been loaded.
+		 */
+		const Vec2 &GetSize() const { return size; }
+
 		std::shared_ptr<Display::Res<Display::Texture>> GetMap() const { return map; }
 
 		virtual void Inspect(Util::InspectMapNode &node) const;
@@ -79,6 +93,8 @@ class MR_DllDeclare Track : public Util::Inspectable
 		Parcel::RecordFilePtr recFile;
 		TrackEntry header;
 		Level *level;
+		Vec2 offset;
+		Vec2 size;
 		std::shared_ptr<Display::Res<Display::Texture>> map;
 };
 typedef std::shared_ptr<Track> TrackPtr;

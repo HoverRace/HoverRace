@@ -42,7 +42,7 @@ namespace Model {
  * @throw Parcel::ObjStreamExn
  */
 Track::Track(const std::string &name, Parcel::RecordFilePtr recFile) :
-	SUPER(), recFile(recFile), level(nullptr), map()
+	SUPER(), recFile(recFile), level(nullptr), offset(0, 0), size(0, 0), map()
 {
 	recFile->SelectRecord(0);
 	header.Serialize(*recFile->StreamIn());
@@ -89,7 +89,12 @@ void Track::LoadMap()
 
 	MR_Int32 x0, x1, y0, y1;
 	archive >> x0 >> x1 >> y0 >> y1;
-	//TODO: Do we need to do anything with these coords?
+	Log::Debug("Track bounds: x = <%d, %d>  y = <%d, %d>", x0, y0, x1, y1);
+
+	offset.x = static_cast<double>(x0);
+	offset.y = static_cast<double>(y0);
+	size.x = static_cast<double>(x1) - offset.x;
+	size.y = static_cast<double>(y1) - offset.y;
 	
 	map = std::make_shared<Display::SpriteTextureRes>(
 		"map:" + header.name, archive);
