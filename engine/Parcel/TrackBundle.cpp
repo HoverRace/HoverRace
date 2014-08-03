@@ -95,9 +95,9 @@ std::shared_ptr<Display::Res<Display::Texture>> TrackBundle::LoadMap(
 	ObjStreamPtr archivePtr(recFile->StreamIn());
 	ObjStream &archive = *archivePtr;
 
-	MR_Int32 x0, x1, y0, y1;
-	archive >> x0 >> x1 >> y0 >> y1;
-	//TODO: Do we need to do anything with these coords?
+	// Ignore track bounds.
+	MR_Int32 i;
+	archive >> i >> i >> i >> i;
 	
 	return std::make_shared<Display::SpriteTextureRes>(
 		"map:" + entry->name, archive);
