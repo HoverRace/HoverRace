@@ -59,7 +59,13 @@ SpriteTextureRes::SpriteTextureRes(const std::string &recordName,
 	imageData.aMask = 0;
 
 	try {
-		archive.Read(imageData.pixels, width * totalHeight);
+		// Sprites are stored upside-down.
+		MR_UInt8 *buf = static_cast<MR_UInt8*>(imageData.pixels);
+		buf += (totalHeight - 1) * width;
+		for (unsigned row = 0; row < totalHeight; ++row) {
+			archive.Read(buf, width);
+			buf -= width;
+		}
 	}
 	catch (Parcel::ObjStreamExn&) {
 		free(imageData.pixels);
