@@ -74,6 +74,7 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 	std::shared_ptr<Model::Track> track;
 	try {
 		auto entry = rules->GetTrackEntry();
+		if (!entry) throw Parcel::ObjStreamExn("Track does not exist.");
 		track = Config::GetInstance()->GetTrackBundle()->OpenTrack(entry);
 		if (!track) throw Parcel::ObjStreamExn("Track does not exist.");
 		if (!session->LoadNew(entry->name.c_str(), scripting,
