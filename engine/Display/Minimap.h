@@ -37,6 +37,7 @@ namespace HoverRace {
 	namespace Display {
 		class Display;
 		class Picture;
+		class SymbolIcon;
 	}
 }
 
@@ -50,6 +51,8 @@ namespace Display {
 class MR_DllDeclare Minimap : public HudDecor
 {
 	typedef HudDecor SUPER;
+	private:
+		Minimap() = delete;
 	public:
 		Minimap(Display &display);
 		virtual ~Minimap() { }
@@ -60,7 +63,9 @@ class MR_DllDeclare Minimap : public HudDecor
 		void Advance(Util::OS::timestamp_t tick) override;
 
 	private:
+		Vec2 mapScale;
 		std::shared_ptr<Picture> mapPic;
+		std::shared_ptr<SymbolIcon> playerIcon;
 };
 
 }  // namespace Display
