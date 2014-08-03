@@ -34,12 +34,12 @@ namespace Display {
 namespace SDL {
 
 SdlContainerView::SdlContainerView(SdlDisplay &disp, Container &model) :
-	SUPER(disp, model), rttChanged(true)
+	SUPER(disp, model), rttChanged(true), rttSizeChanged(true)
 {
 	displayConfigChangedConn =
 		disp.GetDisplayConfigChangedSignal().connect([&](int, int) {
 			rttChanged = true;
-			if (rttTarget) rttTarget.reset();
+			rttSizeChanged = true;
 		});
 }
 
@@ -74,9 +74,10 @@ void SdlContainerView::PrepareRender()
 			int height = display.GetScreenHeight();
 
 			if (rttTarget) {
-				//TODO: Check if texture size needs to change.
+				//TODO: Check if texture size really needs to change.
 			}
-			else {
+
+			if (rttSizeChanged || !rttTarget) {
 				SDL_Texture *texture = SDL_CreateTexture(display.GetRenderer(),
 					SDL_PIXELFORMAT_ARGB8888,
 					SDL_TEXTUREACCESS_TARGET,
@@ -92,8 +93,11 @@ void SdlContainerView::PrepareRender()
 			}
 		}
 		else {
-			if (rttTarget) rttTarget.reset();
+			if (rttTarget) rttTarget.release();
 		}
+
+		rttChanged = false;
+		rttSizeChanged = false;
 	}
 
 	std::for_each(children.begin(), children.end(),

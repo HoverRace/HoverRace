@@ -68,6 +68,7 @@ class MR_DllDeclare SdlContainerView : public SdlView<Container>
 
 	private:
 		bool rttChanged;  ///< Render-to-texture may need to be re-evaluated.
+		bool rttSizeChanged;
 		std::unique_ptr<SdlTexture> rttTarget;
 		boost::signals2::connection displayConfigChangedConn;
 };
