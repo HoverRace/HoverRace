@@ -40,7 +40,6 @@ namespace HoverRace {
 		class Label;
 	}
 }
-struct SDL_Surface;
 
 namespace HoverRace {
 namespace Display {
