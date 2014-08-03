@@ -73,13 +73,11 @@ ClientSession::ClientSession(std::shared_ptr<Rules> rules) :
 		mainCharacter[i] = NULL;
 	}
 	mBackImage = NULL;
-	mMap = NULL;
 }
 
 ClientSession::~ClientSession()
 {
 	delete[]mBackImage;
-	delete mMap;
 }
 
 /**
@@ -180,30 +178,6 @@ void ClientSession::ReadLevelAttrib(Parcel::RecordFilePtr pRecordFile, VideoServ
 
 				pVideo->SetBackgroundPalette(lPalette);
 			}
-		}
-	}
-	// Read map section
-	if(pRecordFile->GetNbRecords() >= 4) {
-		pRecordFile->SelectRecord(3);
-		{
-			ObjStreamPtr archivePtr(pRecordFile->StreamIn());
-			ObjStream &lArchive = *archivePtr;
-
-			int lX0;
-			int lX1;
-			int lY0;
-			int lY1;
-
-			VideoServices::Sprite *lMapSprite = new VideoServices::Sprite;
-
-			lArchive >> lX0;
-			lArchive >> lX1;
-			lArchive >> lY0;
-			lArchive >> lY1;
-
-			lMapSprite->Serialize(lArchive);
-
-			SetMap(lMapSprite, lX0, lY0, lX1, lY1);
 		}
 	}
 }
@@ -422,33 +396,6 @@ int ClientSession::GetRank(const MainCharacter::MainCharacter *pPlayer) const
 		}
 	}
 	return lReturnValue;
-}
-
-void ClientSession::SetMap(VideoServices::Sprite * pMap, int pX0, int pY0, int pX1, int pY1)
-{
-	delete mMap;
-
-	mMap = pMap;
-
-	mX0Map = pX0;
-	mY0Map = pY0;
-	mWidthMap = pX1 - pX0;
-	mHeightMap = pY1 - pY0;
-
-	mWidthSprite = mMap->GetItemWidth();
-	mHeightSprite = mMap->GetItemHeight();
-
-}
-
-const VideoServices::Sprite *ClientSession::GetMap() const
-{
-	return mMap;
-}
-
-void ClientSession::ConvertMapCoordinate(int &pX, int &pY, int pRatio) const
-{
-	pX = (pX - mX0Map) * mWidthSprite / (mWidthMap * pRatio);
-	pY = (mHeightSprite - 1 - (pY - mY0Map) * mHeightSprite / mHeightMap) / pRatio;
 }
 
 MainCharacter::MainCharacter *ClientSession::GetPlayer(int i) const

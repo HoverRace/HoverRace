@@ -104,10 +104,6 @@ class ClientSession
 
 		const MR_UInt8 *GetBackImage() const;
 
-		void SetMap(VideoServices::Sprite *pMap, int pX0, int pY0, int pX1, int pY1);
-		const VideoServices::Sprite *GetMap() const;
-		void ConvertMapCoordinate(int &pX, int &pY, int pRatio) const;
-
 		virtual int ResultAvaillable() const;	  // Return the number of players desc avail
 		virtual void GetResult(int pPosition, const char *&pPlayerName, int &pId, BOOL & pConnected, int &pNbLap, MR_SimulationTime &pFinishTime, MR_SimulationTime &pBestLap) const;
 		virtual void GetHitResult(int pPosition, const char *&pPlayerName, int &pId, BOOL & pConnected, int &pNbHitOther, int &pNbHitHimself) const;
@@ -142,14 +138,6 @@ class ClientSession
 		std::shared_ptr<HoverScript::TrackPeer> trackPeer;
 
 		MR_UInt8 *mBackImage;
-
-		VideoServices::Sprite *mMap;
-		int mX0Map;
-		int mY0Map;
-		int mWidthMap;
-		int mHeightMap;
-		int mWidthSprite;
-		int mHeightSprite;
 
 		std::shared_ptr<Util::Clock> clock;
 		std::shared_ptr<Util::Clock> countdown;

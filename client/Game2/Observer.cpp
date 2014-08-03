@@ -598,41 +598,6 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 		lWeaponSprite->GetSprite()->Blt(lXRes, lYRes / 16, &m3DView, Sprite::eRight, Sprite::eTop, lWeaponSpriteIndex, lMissileScaling);
 	}
 
-	// Map
-	/*
-	if (drawHud && pSession->GetMap() != NULL) {
-		const Sprite *lHoverIcons = mHoverIcons->GetSprite();
-
-		int lMapScaling = 1 + (3 * pSession->GetMap()->GetItemHeight() / lYRes);
-		int lIconsScaling = 1 + (14 * lHoverIcons->GetItemHeight() / lYRes);
-		int lMargin = lHoverIcons->GetItemHeight() / lIconsScaling;
-
-		pSession->GetMap()->Blt(lMargin, lMargin, &m3DView, Sprite::eLeft, Sprite::eTop, 0, lMapScaling);
-
-		// display all the car icons
-		int lNbPlayers = pSession->GetNbPlayers();
-		int lNbIcons = lHoverIcons->GetNbItem();
-
-		for(int lCounter = 0; (lCounter < 20) && (lNbPlayers > 0); lCounter++) {
-			int lX;
-			int lY;
-
-			const MainCharacter::MainCharacter *lPlayer = pSession->GetPlayer(lCounter);
-
-			if(lPlayer != NULL) {
-				lNbPlayers--;
-
-				lX = lPlayer->mPosition.mX;
-				lY = lPlayer->mPosition.mY;
-
-				pSession->ConvertMapCoordinate(lX, lY, lMapScaling);
-
-				lHoverIcons->Blt(lX + lMargin, lY + lMargin, &m3DView, Sprite::eCenter, Sprite::eCenter, (lPlayer->GetHoverId()) % lNbIcons, lIconsScaling);
-			}
-		}
-	}
-	*/
-
 	// Print text
 	if (drawHud && mBaseFont != NULL) {
 		char lStrBuffer[170];
