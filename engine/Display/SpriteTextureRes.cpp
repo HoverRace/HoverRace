@@ -32,6 +32,11 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace Display {
 
+namespace {
+const MR_UInt32 MAX_TEXTURE_WIDTH = 4096;
+const MR_UInt32 MAX_TEXTURE_HEIGHT = 4096;
+}
+
 /**
  * Constructor.
  * @param recordName The name of the record being loaded.
@@ -47,6 +52,21 @@ SpriteTextureRes::SpriteTextureRes(const std::string &recordName,
 	MR_UInt32 numItems, itemHeight, totalHeight, width;
 
 	archive >> numItems >> itemHeight >> totalHeight >> width;
+
+	if (numItems == 0) {
+		throw Parcel::ObjStreamExn(recordName + ": No items in sprite.");
+	}
+	else if (numItems > 1) {
+		Log::Warn("%s: More than one item in sprite texture "
+			"(entire sprite will be used): %u", recordName.c_str(), numItems);
+	}
+
+	if (width > MAX_TEXTURE_WIDTH || totalHeight > MAX_TEXTURE_HEIGHT) {
+		throw Parcel::ObjStreamExn(boost::str(boost::format(
+			"%s: Texture size (%ux%u) exceeds maximum size (%ux%u)") %
+			recordName % width % totalHeight %
+			MAX_TEXTURE_WIDTH % MAX_TEXTURE_HEIGHT));
+	}
 
 	imageData.pixels = malloc(width * totalHeight);
 	imageData.width = width;
