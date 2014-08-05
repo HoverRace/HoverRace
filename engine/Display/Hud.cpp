@@ -67,7 +67,7 @@ Hud::Hud(Display &display, MainCharacter::MainCharacter *player,
          const Vec2 &size, bool clip,
          uiLayoutFlags_t layoutFlags) :
 	SUPER(display, size, clip, layoutFlags),
-	player(player), track(track)
+	track(track), player(player)
 {
 }
 
