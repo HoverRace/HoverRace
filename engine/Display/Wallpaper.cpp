@@ -30,9 +30,10 @@ namespace Display {
 
 /**
  * Constructor.
- * @param fill The fill mode.
  * @param texture The texture.
- * @param opacity The initial opacity.
+ * @param fill The fill mode.
+ * @param opacity The initial opacity (default is fully-opaque).
+ * @param color The color modulation (default is white, i.e., no modulation).
  */
 Wallpaper::Wallpaper(std::shared_ptr<Res<Texture>> texture,
                      Fill fill, double opacity, Color color) :

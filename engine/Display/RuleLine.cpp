@@ -32,6 +32,9 @@ namespace Display {
 
 /**
  * Constructor.
+ * @param direction Whether the line is horizontal or vertical.
+ * @param length The length of the line.
+ * @param width The thickness of the line.
  * @param color The color of the line (including alpha).
  * @param layoutFlags Optional layout flags.
  */
