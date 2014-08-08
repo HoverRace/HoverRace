@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # cppcheck
 #   Runs cppcheck, a static code analyzer, against all C++ sources.

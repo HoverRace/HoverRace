@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # doxyclean
 #   Performs a "clean" run of Doxygen.

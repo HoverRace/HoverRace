@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # sync-external.sh
 #   Get latest updates for a 3rd-party library in external.
