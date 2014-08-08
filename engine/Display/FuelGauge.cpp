@@ -32,7 +32,7 @@ namespace Display {
 namespace {
 	const double GAUGE_WIDTH = 300;
 	const double GAUGE_HEIGHT = 40;
-	const Color BG_COLOR = 0xffc1cae7;
+	const Color BG_COLOR = 0xbfc1cae7;
 	const Color FG_COLOR = 0xff5473cf;
 	const Color LOW_COLOR = 0xfff11b1b;
 }
