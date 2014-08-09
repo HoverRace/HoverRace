@@ -351,13 +351,6 @@ void SoundBuffer::SetParams(int pCopy, int pDB, double pSpeed, int pPan)
 #	endif
 }
 
-/*
-int SoundBuffer::GetNbCopy() const
-{
-	return mNbCopy;
-}
-*/
-
 // ShortSound
 ShortSound::ShortSound()
 {
@@ -611,18 +604,6 @@ void SoundServer::Play(ShortSound * pSound, int pDB, double pSpeed, int pPan)
 	}
 }
 
-/*
-int SoundServer::GetNbCopy(ShortSound * pSound)
-{
-	if(pSound != NULL) {
-		return pSound->GetNbCopy();
-	}
-	else {
-		return 1;
-	}
-}
-*/
-
 ContinuousSound *SoundServer::CreateContinuousSound(const char *pData, int pNbCopy)
 {
 	ContinuousSound *lReturnValue = new ContinuousSound;
@@ -649,18 +630,6 @@ void SoundServer::ApplyContinuousPlay()
 {
 	SoundBuffer::ApplyCumCommandForAll();
 }
-
-/*
-int SoundServer::GetNbCopy(ContinuousSound * pSound)
-{
-	if(pSound != NULL) {
-		return pSound->GetNbCopy();
-	}
-	else {
-		return 1;
-	}
-}
-*/
 
 }  // namespace VideoServices
 }  // namespace HoverRace
