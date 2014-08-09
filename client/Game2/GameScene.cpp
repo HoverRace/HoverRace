@@ -131,6 +131,9 @@ void GameScene::Cleanup()
 		metaSession->GetSession()->OnSessionEnd();
 	}
 	delete session;
+
+	// Apply sound state to halt currently-playing continuous sounds.
+	VideoServices::SoundServer::ApplyContinuousPlay();
 }
 
 void GameScene::AttachController(Control::InputEventController &controller)
