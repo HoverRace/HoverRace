@@ -86,7 +86,7 @@ class MR_DllDeclare UiViewModel : public ViewModel
 	public:
 		UiViewModel(uiLayoutFlags_t layoutFlags=0) :
 			SUPER(), pos(0, 0), alignment(Alignment::NW),
-			layoutFlags(layoutFlags) { }
+			layoutFlags(layoutFlags), id(0) { }
 		virtual ~UiViewModel() { }
 
 	public:
@@ -136,10 +136,24 @@ class MR_DllDeclare UiViewModel : public ViewModel
 		uiLayoutFlags_t IsLayoutUnscaled() const { return layoutFlags & UiLayoutFlags::UNSCALED; }
 		uiLayoutFlags_t IsLayoutFloating() const { return layoutFlags & UiLayoutFlags::FLOATING; }
 
+		/**
+		 * Retrieve the non-unique identifier for this widget.
+		 * @return The identifier.
+		 */
+		MR_UInt32 GetId() const { return id; }
+
+		/**
+		 * Set the non-unique identifier for this widget.
+		 * This is used mainly for debugging.  Default ID is zero.
+		 * @param id The identifier.
+		 */
+		void SetId(MR_UInt32 id) { this->id = id; }
+
 	private:
 		Vec2 pos;
 		Alignment alignment;
 		uiLayoutFlags_t layoutFlags;
+		MR_UInt32 id;
 };
 typedef std::shared_ptr<UiViewModel> UiViewModelPtr;
 
