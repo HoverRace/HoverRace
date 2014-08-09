@@ -257,6 +257,7 @@ int main(int argc, char** argv)
 	int lErrorCode = EXIT_SUCCESS;
 
 	srand(static_cast<unsigned int>(time(nullptr)));
+	std::ios::sync_with_stdio(false);
 
 #ifdef _WIN32
 	OS::path_t exePath = FindExePath();
