@@ -52,8 +52,8 @@ class FormScene : public UiScene
 		virtual ~FormScene();
 
 	public:
-		virtual void AttachController(Control::InputEventController &controller);
-		virtual void DetachController(Control::InputEventController &controller);
+		void AttachController(Control::InputEventController &controller) override;
+		void DetachController(Control::InputEventController &controller) override;
 
 	private:
 		void OnMouseMoved(const Vec2 &pos);
@@ -64,8 +64,8 @@ class FormScene : public UiScene
 		Display::Container *GetRoot() const { return root.get(); }
 
 	public:
-		virtual void PrepareRender();
-		virtual void Render();
+		void PrepareRender() override;
+		void Render() override;
 
 	protected:
 		Display::Display &display;
