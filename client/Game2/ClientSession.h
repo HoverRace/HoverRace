@@ -54,8 +54,10 @@ namespace Client {
 
 class ClientSession
 {
+	private:
+		ClientSession() = delete;
 	public:
-		ClientSession(std::shared_ptr<Rules> rules=nullptr);
+		ClientSession(std::shared_ptr<Rules> rules);
 		virtual ~ClientSession();
 
 	public:
