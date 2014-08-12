@@ -39,6 +39,7 @@ namespace HoverRace {
 			class SysEnv;
 		}
 		class ClientSession;
+		class LoadingScene;
 	}
 	namespace Control {
 		class InputEventController;
@@ -87,7 +88,8 @@ class GameScene : public Scene
 
 	public:
 		GameScene(Display::Display &display, GameDirector &director,
-			Script::Core *scripting, std::shared_ptr<Rules> rules);
+			Script::Core *scripting, std::shared_ptr<Rules> rules,
+			std::shared_ptr<LoadingScene> loadingScene);
 		virtual ~GameScene();
 
 	private:
@@ -99,6 +101,7 @@ class GameScene : public Scene
 		virtual bool IsMouseCursorEnabled() const { return false; }
 
 	private:
+		void OnFinishedLoading();
 		void OnCameraZoom(int increment);
 		void OnCameraPan(int increment);
 		void OnCameraReset();
@@ -121,11 +124,15 @@ class GameScene : public Scene
 		Display::Display &display;
 		GameDirector &director;
 		std::shared_ptr<Rules> rules;
+		std::shared_ptr<LoadingScene> loadingScene;
 
+		bool finishedLoading;
 		bool muted;
 
 		std::vector<Viewport> viewports;
 		ClientSession *session;
+
+		boost::signals2::scoped_connection finishedLoadingConn;
 
 		boost::signals2::connection cameraZoomInConn;
 		boost::signals2::connection cameraZoomOutConn;

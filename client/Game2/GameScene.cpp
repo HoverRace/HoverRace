@@ -38,6 +38,7 @@
 #include "HoverScript/SessionPeer.h"
 
 #include "ClientSession.h"
+#include "LoadingScene.h"
 #include "PauseMenuScene.h"
 #include "Rulebook.h"
 #include "Rules.h"
@@ -58,13 +59,19 @@ GameScene::Viewport::Viewport(Display::Display &display, Observer *observer,
 }
 
 GameScene::GameScene(Display::Display &display, GameDirector &director,
-                     Script::Core *scripting, std::shared_ptr<Rules> rules) :
+                     Script::Core *scripting, std::shared_ptr<Rules> rules,
+                     std::shared_ptr<LoadingScene> loadingScene) :
 	SUPER("Game"),
 	display(display), director(director), rules(rules),
-	muted(false),
+	finishedLoading(false), muted(false),
 	session(nullptr),
-	firedOnStart(false), firedOnRaceFinish(false)
+	firedOnStart(false), firedOnRaceFinish(false),
+	loadingScene(std::move(loadingScene))
 {
+	finishedLoadingConn =
+		this->loadingScene->GetFinishedLoadingSignal().connect(
+			std::bind(&GameScene::OnFinishedLoading, this));
+
 	auto rulebook = rules->GetRulebook();
 
 	// Create the new session
@@ -180,6 +187,11 @@ void GameScene::DetachController(Control::InputEventController&)
 	cameraZoomInConn.disconnect();
 }
 
+void GameScene::OnFinishedLoading()
+{
+	finishedLoading = true;
+}
+
 void GameScene::OnCameraZoom(int increment)
 {
 	for (auto &viewport : viewports) {
@@ -263,6 +275,8 @@ void GameScene::PrepareRender()
 
 void GameScene::Render()
 {
+	if (!finishedLoading) return;
+
 	auto cfg = Config::GetInstance();
 	MR_SimulationTime simTime = session->GetSimulationTime();
 

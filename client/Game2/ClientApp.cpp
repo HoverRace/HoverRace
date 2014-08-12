@@ -52,6 +52,7 @@
 #include "HoverScript/SysEnv.h"
 #include "ClientSession.h"
 #include "GameScene.h"
+#include "LoadingScene.h"
 #include "MainMenuScene.h"
 #include "MessageScene.h"
 #include "Rulebook.h"
@@ -409,8 +410,12 @@ void ClientApp::MainLoop()
 
 void ClientApp::RequestNewPracticeSession(std::shared_ptr<Rules> rules)
 {
+	auto loadingScene = std::make_shared<LoadingScene>(*display, *this, "Load");
+
 	try {
-		RequestReplaceScene(std::make_shared<GameScene>(*display, *this, scripting, rules));
+		RequestReplaceScene(std::make_shared<GameScene>(
+			*display, *this, scripting, rules, loadingScene));
+		RequestPushScene(loadingScene);
 	}
 	catch (Parcel::ObjStreamExn&) {
 		throw;
@@ -625,8 +630,11 @@ void ClientApp::RequestMainMenu()
 	rules->SetTrackEntry(Config::GetInstance()->GetTrackBundle()->OpenTrackEntry(trackName));
 	rules->SetGameOpts(0x70 + craftId);
 
+	auto loadingScene = std::make_shared<LoadingScene>(*display, *this, "Load");
+
 	try {
-		auto scene = std::make_shared<GameScene>(*display, *this, scripting, rules);
+		auto scene = std::make_shared<GameScene>(
+			*display, *this, scripting, rules, loadingScene);
 		scene->StartDemoMode();
 		RequestReplaceScene(scene);
 	}
@@ -635,6 +643,7 @@ void ClientApp::RequestMainMenu()
 	}
 
 	RequestPushScene(std::make_shared<MainMenuScene>(*display, *this, *rulebookLibrary));
+	RequestPushScene(loadingScene);
 }
 
 void ClientApp::RequestShutdown()
