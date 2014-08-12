@@ -95,6 +95,7 @@ namespace {
 
 ClientApp::ClientApp() :
 	SUPER(),
+	needsDevWarning(false),
 	userEventId(SDL_RegisterEvents(1)),
 	sceneStack(), fgScene(),
 	fpsLbl(), frameCount(0), lastTimestamp(0), fps(0.0)
@@ -336,20 +337,15 @@ void ClientApp::MainLoop()
 	bool quit = false;
 	SDL_Event evt;
 
+	Config::cfg_runtime_t &runtimeCfg = Config::GetInstance()->runtime;
+	needsDevWarning =
+		!runtimeCfg.skipStartupWarning &&
+		runtimeCfg.initScripts.empty();
+
 	RequestMainMenu();
 
 	// Fire all on_init handlers.
 	gamePeer->OnInit();
-
-	Config::cfg_runtime_t &runtimeCfg = Config::GetInstance()->runtime;
-	if (!runtimeCfg.skipStartupWarning && runtimeCfg.initScripts.empty()) {
-		RequestPushScene(std::make_shared<MessageScene>(*display, *this,
-			"HoverRace 2.0 Developer Preview",
-			"This is the unstable \"2.0\" branch of HoverRace.\n"
-			"For the current stable branch, switch to the \"1.24\" branch.\n\n"
-			"To skip this warning, use --skip-startup-warning or specify a "
-			"startup script with --exec."));
-	}
 
 	while (!quit) {
 		OS::timestamp_t tick = OS::Time();
@@ -643,6 +639,20 @@ void ClientApp::RequestMainMenu()
 	}
 
 	RequestPushScene(std::make_shared<MainMenuScene>(*display, *this, *rulebookLibrary));
+
+	loadingScene->GetFinishedLoadingSignal().connect([&]() {
+		if (needsDevWarning) {
+			needsDevWarning = false;
+			RequestPushScene(std::make_shared<MessageScene>(*display, *this,
+				"HoverRace 2.0 Developer Preview",
+				"This is the unstable 2.0 branch of HoverRace.\n"
+				"For the stable branch, switch to the \"1.24\" branch.\n"
+				"\n"
+				"To skip this warning, use --skip-startup-warning or specify a "
+				"startup script with --exec."));
+		}
+	});
+
 	RequestPushScene(loadingScene);
 }
 
