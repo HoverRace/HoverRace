@@ -93,22 +93,6 @@ class GameDirector
 		 */
 		virtual void RequestShutdown() = 0;
 
-		/**
-		 * Notify this director that the IMR server configuration has changed.
-		 */
-		virtual void SignalServerHasChanged() = 0;
-
-		/**
-		 * Notify this director that the auto-update configuration has changed.
-		 * @param newSetting The new value of the auto-update setting.
-		 */
-		virtual void ChangeAutoUpdates(bool newSetting) = 0;
-
-		/**
-		 * Notify this director that the video palette configuration has changed.
-		 */
-		virtual void AssignPalette() = 0;
-
 		virtual Display::Display *GetDisplay() const = 0;
 
 		virtual VideoServices::VideoBuffer *GetVideoBuffer() const = 0;

@@ -104,9 +104,6 @@ class ClientApp : public GameDirector
 		virtual void RequestMainMenu();
 		virtual void RequestNewPracticeSession(std::shared_ptr<Rules> rules);
 		virtual void RequestShutdown();
-		virtual void SignalServerHasChanged();
-		virtual void ChangeAutoUpdates(bool newSetting);
-		virtual void AssignPalette();
 		virtual Display::Display *GetDisplay() const { return display; }
 		virtual VideoServices::VideoBuffer *GetVideoBuffer() const;
 		virtual Control::InputEventController *GetController() const { return controller; }

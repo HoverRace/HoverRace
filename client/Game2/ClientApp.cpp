@@ -644,21 +644,6 @@ void ClientApp::RequestShutdown()
 	SDL_PushEvent(&evt);
 }
 
-void ClientApp::SignalServerHasChanged()
-{
-	throw UnimplementedExn("ClientApp::SignalServerHasChanged()");
-}
-
-void ClientApp::ChangeAutoUpdates(bool)
-{
-	throw UnimplementedExn("ClientApp::ChangeAutoUpdates(bool)");
-}
-
-void ClientApp::AssignPalette()
-{
-	throw UnimplementedExn("ClientApp::AssignPalette()");
-}
-
 VideoServices::VideoBuffer *ClientApp::GetVideoBuffer() const
 {
 	return &display->GetLegacyDisplay();
