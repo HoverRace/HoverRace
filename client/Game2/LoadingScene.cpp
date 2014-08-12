@@ -75,8 +75,12 @@ void LoadingScene::PrepareRender()
 		//TODO: Only finish when actually finished.
 		if (true) {
 			loading = false;
-			finishedLoadingSignal();
+
+			// We assume that we're the foreground scene.
+			// We pop ourselves before triggering the signal so that the
+			// handler can push a new scene in response.
 			director.RequestPopScene();
+			finishedLoadingSignal();
 		}
 	}
 
