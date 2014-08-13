@@ -47,7 +47,7 @@ class LoadingScene : public FormScene
 	typedef FormScene SUPER;
 	public:
 		LoadingScene(Display::Display &display, GameDirector &director,
-			const std::string &name="");
+			const std::string &name="Loading");
 		virtual ~LoadingScene();
 
 	public:
