@@ -70,6 +70,7 @@ class TrackSelectScene : public DialogScene
 		cancelSignal_t &GetCancelSignal() { return cancelSignal; }
 
 	private:
+		bool trackSelected;  ///< Are we exiting because a track was selected?
 		std::shared_ptr<Rules> rules;
 
 		Model::TrackList trackList;

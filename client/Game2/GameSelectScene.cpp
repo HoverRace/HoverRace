@@ -52,7 +52,8 @@ GameSelectScene::GameSelectScene(Display::Display &display,
                                  RulebookLibrary &rulebookLibrary,
                                  bool multiplayer) :
 	SUPER(display, director, "", "Rulebook Select"),
-	display(display), director(director)
+	display(display), director(director),
+	trackSelected(false)
 {
 	SetPhaseTransitionDuration(1000);
 	SetStateTransitionDuration(1000);
@@ -99,6 +100,7 @@ void GameSelectScene::OnRulebookSelected(std::shared_ptr<const Rulebook> ruleboo
 {
 	auto scene = std::make_shared<TrackSelectScene>(display, director, rulebook);
 	scene->GetOkSignal().connect([&](std::shared_ptr<Rules> rules) {
+		trackSelected = true;
 		director.RequestPopScene();
 		okSignal(rules);
 	});
@@ -139,6 +141,15 @@ void GameSelectScene::OnStateTransition(double progress)
 	rulebookPanel->SetPos(DialogScene::MARGIN_WIDTH, f * -(BTN_HEIGHT + 1));
 
 	SUPER::OnStateTransition(progress);
+}
+
+void GameSelectScene::Render()
+{
+	// If we're exiting because a track was selected, then don't render
+	// anything since the track select scene will be sliding up.
+	if (!trackSelected) {
+		SUPER::Render();
+	}
 }
 
 }  // namespace Client

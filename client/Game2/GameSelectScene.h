@@ -74,9 +74,13 @@ class GameSelectScene : public DialogScene
 		typedef boost::signals2::signal<void()> cancelSignal_t;
 		cancelSignal_t &GetCancelSignal() { return cancelSignal; }
 
+	public:
+		void Render() override;
+
 	private:
 		Display::Display &display;
 		GameDirector &director;
+		bool trackSelected;  ///< Are we exiting because a track was selected?
 
 		std::shared_ptr<Display::Container> rulebookPanel;
 

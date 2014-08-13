@@ -68,6 +68,7 @@ TrackSelectScene::TrackSelectScene(Display::Display &display,
                                    GameDirector &director,
                                    std::shared_ptr<const Rulebook> rulebook) :
 	SUPER(display, director, "", "Track Select"),
+	trackSelected(false),
 	rules(std::make_shared<Rules>(rulebook)),
 	trackList(), selectedTrack()
 {
@@ -176,19 +177,32 @@ void TrackSelectScene::OnTrackSelected(Model::TrackEntryPtr entry)
 
 void TrackSelectScene::OnReady()
 {
+	trackSelected = true;
 	okSignal(rules);
 }
 
 void TrackSelectScene::OnPhaseTransition(double progress)
 {
-	double f = 
-		GetPhase() == Phase::STOPPING ?
-		pow(progress, 4) :
-		1 - pow(1.0 - progress, 4);
+	double f;
+	double slideOffset = 720.0;
+	if (GetPhase() == Phase::STOPPING) {
+		// Slide up if a track was selected, slide down otherwise.
+		if (trackSelected) {
+			slideOffset = 0;
+			f = 1.0 - pow(progress, 4);
+		}
+		else {
+			f = pow(progress, 4);
+		}
+	}
+	else {
+		// Slide up.
+		f = 1 - pow(1.0 - progress, 4);
+	}
 
-	subtitleGrid->SetPos(MARGIN_WIDTH, 720.0 + f * -720.0);
-	subtitleRule->SetPos(MARGIN_WIDTH, 780.0 + f * -720.0);
-	trackPanel->SetPos(MARGIN_WIDTH, 820.0 + f * -720.0);
+	subtitleGrid->SetPos(MARGIN_WIDTH, slideOffset + f * -720.0);
+	subtitleRule->SetPos(MARGIN_WIDTH, slideOffset + 60.0 + f * -720.0);
+	trackPanel->SetPos(MARGIN_WIDTH, slideOffset + 100.0 + f * -720.0);
 
 	SUPER::OnPhaseTransition(progress);
 }
