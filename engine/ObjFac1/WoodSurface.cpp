@@ -19,7 +19,7 @@
 // and limitations under the License.
 //
 
-#include "StdAfx.h"
+#include "../StdAfx.h"
 
 #include "WoodSurface.h"
 #include "ObjFac1Res.h"
