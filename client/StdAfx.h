@@ -29,11 +29,11 @@
 #	define ASSERT(e) assert(e)
 #	define TRACE __noop
 
-#	include "../../include/config-win32.h"
+#	include "../include/config-win32.h"
 
 #else
 
-#	include "../../include/compat/unix.h"
+#	include "../include/compat/unix.h"
 #	include <hoverrace/hr-config.h>
 
 #	include <string.h>

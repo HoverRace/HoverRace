@@ -20,7 +20,7 @@
 // and limitations under the License.
 //
 
-#include "StdAfx.h"
+#include "../StdAfx.h"
 
 #include "DefaultSurface.h"
 #include "WoodSurface.h"
