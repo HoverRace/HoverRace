@@ -26,6 +26,7 @@ namespace HoverRace {
 		namespace HoverScript {
 			class MetaSession;
 		}
+		class LoadingScene;
 		class Rules;
 		class Scene;
 		typedef std::shared_ptr<Scene> ScenePtr;
@@ -76,14 +77,17 @@ class GameDirector
 
 		/**
 		 * Request a return to the main menu.
+		 * @param loadingScene Optional loading scene instead of default.
 		 */
-		virtual void RequestMainMenu() = 0;
+		virtual void RequestMainMenu(std::shared_ptr<LoadingScene> loadingScene = std::shared_ptr<LoadingScene>()) = 0;
 
 		/**
 		 * Request a new local practice session.
 		 * @param rules The settings for the session.
+		 * @param loadingScene Optional loading scene instead of default.
 		 */
-		virtual void RequestNewPracticeSession(std::shared_ptr<Rules> rules) = 0;
+		virtual void RequestNewPracticeSession(std::shared_ptr<Rules> rules,
+			std::shared_ptr<LoadingScene> loadingScene = std::shared_ptr<LoadingScene>()) = 0;
 
 		/**
 		 * Request an orderly shutdown the of app.

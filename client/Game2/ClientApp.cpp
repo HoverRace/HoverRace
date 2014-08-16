@@ -404,20 +404,6 @@ void ClientApp::MainLoop()
 	gamePeer->OnShutdown();
 }
 
-void ClientApp::RequestNewPracticeSession(std::shared_ptr<Rules> rules)
-{
-	auto loadingScene = std::make_shared<LoadingScene>(*display, *this, "Load");
-
-	try {
-		RequestReplaceScene(std::make_shared<GameScene>(
-			*display, *this, scripting, rules, loadingScene));
-		RequestPushScene(loadingScene);
-	}
-	catch (Parcel::ObjStreamExn&) {
-		throw;
-	}
-}
-
 void ClientApp::OnConsoleToggle()
 {
 	if (!Config::GetInstance()->runtime.enableConsole) return;
@@ -601,7 +587,7 @@ void ClientApp::RequestReplaceScene(const ScenePtr &scene)
 	SDL_PushEvent(&evt);
 }
 
-void ClientApp::RequestMainMenu()
+void ClientApp::RequestMainMenu(std::shared_ptr<LoadingScene> loadingScene)
 {
 	// Load the animated background scene, which is actually just a track without
 	// the HUD or game sounds.
@@ -626,7 +612,9 @@ void ClientApp::RequestMainMenu()
 	rules->SetTrackEntry(Config::GetInstance()->GetTrackBundle()->OpenTrackEntry(trackName));
 	rules->SetGameOpts(0x70 + craftId);
 
-	auto loadingScene = std::make_shared<LoadingScene>(*display, *this, "Load");
+	if (!loadingScene) {
+		loadingScene = std::make_shared<LoadingScene>(*display, *this, "Load");
+	}
 
 	try {
 		auto scene = std::make_shared<GameScene>(
@@ -654,6 +642,23 @@ void ClientApp::RequestMainMenu()
 	});
 
 	RequestPushScene(loadingScene);
+}
+
+void ClientApp::RequestNewPracticeSession(std::shared_ptr<Rules> rules,
+                                          std::shared_ptr<LoadingScene> loadingScene)
+{
+	if (!loadingScene) {
+		loadingScene = std::make_shared<LoadingScene>(*display, *this, "Load");
+	}
+
+	try {
+		RequestReplaceScene(std::make_shared<GameScene>(
+			*display, *this, scripting, rules, loadingScene));
+		RequestPushScene(loadingScene);
+	}
+	catch (Parcel::ObjStreamExn&) {
+		throw;
+	}
 }
 
 void ClientApp::RequestShutdown()

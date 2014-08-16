@@ -41,6 +41,7 @@ namespace HoverRace {
 			class SysEnv;
 		}
 		class HighObserver;
+		class LoadingScene;
 		class Rulebook;
 		typedef std::shared_ptr<Rulebook> RulebookPtr;
 		class RulebookLibrary;
@@ -101,8 +102,8 @@ class ClientApp : public GameDirector
 		virtual void RequestPushScene(const ScenePtr &scene);
 		virtual void RequestPopScene();
 		virtual void RequestReplaceScene(const ScenePtr &scene);
-		virtual void RequestMainMenu();
-		virtual void RequestNewPracticeSession(std::shared_ptr<Rules> rules);
+		virtual void RequestMainMenu(std::shared_ptr<LoadingScene> loadingScene = std::shared_ptr<LoadingScene>());
+		virtual void RequestNewPracticeSession(std::shared_ptr<Rules> rules, std::shared_ptr<LoadingScene> loadingScene = std::shared_ptr<LoadingScene>());
 		virtual void RequestShutdown();
 		virtual Display::Display *GetDisplay() const { return display; }
 		virtual VideoServices::VideoBuffer *GetVideoBuffer() const;
