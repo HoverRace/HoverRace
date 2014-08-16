@@ -84,7 +84,7 @@ void PaletteScene::Render()
 		MR_UInt8 *cur = buf;
 		for (int x = 0; x < 256; x++, cur++) {
 			if ((x % 16) == 0) continue;
-			*cur = ((y >> 4) << 4) + (x >> 4);
+			*cur = static_cast<MR_UInt8>(((y >> 4) << 4) + (x >> 4));
 		}
 	}
 }
