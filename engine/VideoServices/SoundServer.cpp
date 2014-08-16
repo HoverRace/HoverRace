@@ -21,7 +21,7 @@
 // and limitations under the License.
 //
 
-#include "StdAfx.h"
+#include "../StdAfx.h"
 
 #ifdef WITH_SDL_MIXER
 #	include <SDL2/SDL_mixer.h>

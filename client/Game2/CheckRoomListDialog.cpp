@@ -20,7 +20,7 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
-#include "StdAfx.h"
+#include "../StdAfx.h"
 #ifdef HR_LEGACY_BUILD
 
 #include "../../engine/Util/Str.h"

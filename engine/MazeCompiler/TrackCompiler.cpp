@@ -19,7 +19,7 @@
 // and limitations under the License.
 //
 
-#include "StdAfx.h"
+#include "../StdAfx.h"
 
 #include <boost/filesystem/fstream.hpp>
 #include <boost/scoped_array.hpp>
