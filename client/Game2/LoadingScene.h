@@ -62,11 +62,31 @@ class LoadingScene : public FormScene
 			return finishedLoadingSignal;
 		}
 
+	private:
+		typedef std::pair<std::string, std::function<void()>> loader_t;
 	public:
+		/**
+		 * Add a new named loader.
+		 * The loader name is used for logging purposes only.
+		 * @param s The name of the loader.
+		 * @param fn The loader function.
+		 */
+		template<class Fn>
+		void AddLoader(const std::string &s, Fn fn)
+		{
+			loaders.emplace_back(s, fn);
+		}
+
+		/**
+		 * Add a new unnamed loader.
+		 * @param fn The loader function.
+		 */
 		template<class Fn>
 		void AddLoader(Fn fn)
 		{
-			loaders.emplace_back(fn);
+			std::ostringstream oss;
+			oss << "Loader " << loaders.size();
+			loaders.emplace_back(oss.str(), fn);
 		}
 
 	protected:
@@ -82,7 +102,7 @@ class LoadingScene : public FormScene
 		bool loading;
 		std::unique_ptr<Display::ScreenFade> fader;
 
-		std::deque<std::function<void()>> loaders;
+		std::deque<loader_t> loaders;
 
 		finishedLoadingSignal_t finishedLoadingSignal;
 };

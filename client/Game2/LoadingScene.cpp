@@ -83,7 +83,10 @@ void LoadingScene::PrepareRender()
 			finishedLoadingSignal();
 		}
 		else {
-			loaders.front()();
+			auto &loader = loaders.front();
+			Log::Info("%s: Loading: %s",
+				GetName().c_str(), loader.first.c_str());
+			loader.second();
 			loaders.pop_front();
 		}
 	}
