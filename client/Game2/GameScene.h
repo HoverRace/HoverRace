@@ -95,6 +95,8 @@ class GameScene : public Scene
 	private:
 		void Cleanup();
 
+		void ScheduleLoad();
+
 	public:
 		virtual void AttachController(Control::InputEventController &controller);
 		virtual void DetachController(Control::InputEventController &controller);
@@ -111,6 +113,8 @@ class GameScene : public Scene
 		void SetHudVisible(bool visible);
 		void SetMuted(bool muted);
 		void StartDemoMode();
+	private:
+		void InitDemoMode();
 
 	public:
 		virtual void Advance(Util::OS::timestamp_t tick);
@@ -123,11 +127,13 @@ class GameScene : public Scene
 	private:
 		Display::Display &display;
 		GameDirector &director;
+		Script::Core *scripting;
 		std::shared_ptr<Rules> rules;
 		std::shared_ptr<LoadingScene> loadingScene;
 
 		bool finishedLoading;
 		bool muted;
+		bool demoMode;
 
 		std::vector<Viewport> viewports;
 		ClientSession *session;

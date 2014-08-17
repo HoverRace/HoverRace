@@ -62,8 +62,8 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
                      Script::Core *scripting, std::shared_ptr<Rules> rules,
                      std::shared_ptr<LoadingScene> loadingScene) :
 	SUPER("Game"),
-	display(display), director(director), rules(rules),
-	finishedLoading(false), muted(false),
+	display(display), director(director), scripting(scripting), rules(rules),
+	finishedLoading(false), muted(false), demoMode(false),
 	session(nullptr),
 	firedOnStart(false), firedOnRaceFinish(false),
 	loadingScene(std::move(loadingScene))
@@ -72,58 +72,10 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
 		this->loadingScene->GetFinishedLoadingSignal().connect(
 			std::bind(&GameScene::OnFinishedLoading, this));
 
-	auto rulebook = rules->GetRulebook();
-
-	// Create the new session
 	session = new ClientSession(rules);
 
-	// Load the selected track
-	std::shared_ptr<Model::Track> track;
-	try {
-		auto entry = rules->GetTrackEntry();
-		if (!entry) throw Parcel::ObjStreamExn("Track does not exist.");
-		track = Config::GetInstance()->GetTrackBundle()->OpenTrack(entry);
-		if (!track) throw Parcel::ObjStreamExn("Track does not exist.");
-		if (!session->LoadNew(entry->name.c_str(), scripting,
-			track, &display.GetLegacyDisplay()))
-		{
-			throw Parcel::ObjStreamExn("Track load failed.");
-		}
-	}
-	catch (Parcel::ObjStreamExn&) {
-		Cleanup();
-		throw;
-	}
-
-	if (!session->CreateMainCharacter(0)) {
-		Cleanup();
-		throw Exception("Main character creation failed");
-	}
-
-	metaSession = rulebook->GetMetas().session(
-		std::make_shared<SessionPeer>(scripting, session));
-	metaSession->OnInit();
-	session->SetMeta(metaSession);
-
-	director.GetSessionChangedSignal()(metaSession);
-
-	//TODO: Support split-screen with multiple viewports.
-	viewports.emplace_back(
-		display,
-		new Observer(),
-		new Display::Hud(display, session->GetPlayer(0), track,
-			Vec2(1280, 720)));
-
-	session->AdvancePhase(ClientSession::Phase::PREGAME);
-
-	auto sessionPeer = metaSession->GetSession();
-	sessionPeer->ForEachPlayer([&](std::shared_ptr<MetaPlayer> &player) {
-		auto playerPeer = player->GetPlayer();
-		//TODO: Look up the correct HUD for this player.
-		playerPeer->SetHud(std::make_shared<HudPeer>(scripting, display,
-			viewports.back().hud));
-		player->OnJoined(metaSession);
-	});
+	// Schedule the remaining load items.
+	ScheduleLoad();
 }
 
 GameScene::~GameScene()
@@ -143,11 +95,65 @@ void GameScene::Cleanup()
 	VideoServices::SoundServer::ApplyContinuousPlay();
 }
 
+void GameScene::ScheduleLoad()
+{
+	auto rulebook = rules->GetRulebook();
+
+	loadingScene->AddLoader("Track and players", [=]{
+		// Load the selected track
+		std::shared_ptr<Model::Track> track;
+
+		auto entry = this->rules->GetTrackEntry();
+		if (!entry) throw Parcel::ObjStreamExn("Track does not exist.");
+		track = Config::GetInstance()->GetTrackBundle()->OpenTrack(entry);
+		if (!track) throw Parcel::ObjStreamExn("Track does not exist.");
+		if (!session->LoadNew(entry->name.c_str(), scripting,
+			track, &display.GetLegacyDisplay()))
+		{
+			throw Parcel::ObjStreamExn("Track load failed.");
+		}
+
+		// This must be done after the track has loaded.
+		if (!session->CreateMainCharacter(0)) {
+			throw Exception("Main character creation failed");
+		}
+
+		//TODO: Support split-screen with multiple viewports.
+		viewports.emplace_back(
+			display,
+			new Observer(),
+			new Display::Hud(display, session->GetPlayer(0), track,
+				Vec2(1280, 720)));
+	});
+
+	loadingScene->AddLoader("Session", [=]{
+		metaSession = rulebook->GetMetas().session(
+			std::make_shared<SessionPeer>(scripting, session));
+		metaSession->OnInit();
+		session->SetMeta(metaSession);
+
+		director.GetSessionChangedSignal()(metaSession);
+
+		session->AdvancePhase(ClientSession::Phase::PREGAME);
+
+		auto sessionPeer = metaSession->GetSession();
+		sessionPeer->ForEachPlayer([&](std::shared_ptr<MetaPlayer> &player) {
+			auto playerPeer = player->GetPlayer();
+			//TODO: Look up the correct HUD for this player.
+			playerPeer->SetHud(std::make_shared<HudPeer>(scripting, display,
+				viewports.back().hud));
+			player->OnJoined(metaSession);
+		});
+	});
+}
+
 void GameScene::AttachController(Control::InputEventController &controller)
 {
 	MainCharacter::MainCharacter* mc = session->GetPlayer(0);
-	controller.AddPlayerMaps(1, &mc);
-	controller.AddCameraMaps();
+	if (mc) {
+		controller.AddPlayerMaps(1, &mc);
+		controller.AddCameraMaps();
+	}
 
 	//TODO: Use separate action for pausing than ui.menuCancel.
 	controller.AddMenuMaps();
@@ -172,11 +178,13 @@ void GameScene::DetachController(Control::InputEventController&)
 	// Shut off the engine when the controller is detached (e.g. when showing a
 	// dialog) otherwise we'll just keep accelerating into the wall.
 	MainCharacter::MainCharacter* mc = session->GetPlayer(0);
-	mc->SetEngineState(false);
-	mc->SetBrakeState(false);
-	mc->SetTurnLeftState(false);
-	mc->SetTurnRightState(false);
-	mc->SetLookBackState(false);
+	if (mc) {
+		mc->SetEngineState(false);
+		mc->SetBrakeState(false);
+		mc->SetTurnLeftState(false);
+		mc->SetTurnRightState(false);
+		mc->SetLookBackState(false);
+	}
 
 	pauseConn.disconnect();
 
@@ -190,6 +198,10 @@ void GameScene::DetachController(Control::InputEventController&)
 void GameScene::OnFinishedLoading()
 {
 	finishedLoading = true;
+
+	if (demoMode) {
+		InitDemoMode();
+	}
 }
 
 void GameScene::OnCameraZoom(int increment)
@@ -234,6 +246,18 @@ void GameScene::SetMuted(bool muted)
 
 void GameScene::StartDemoMode()
 {
+	demoMode = true;
+	if (finishedLoading) {
+		InitDemoMode();
+	}
+}
+
+void GameScene::InitDemoMode()
+{
+	if (!finishedLoading) {
+		throw Exception("Cannot initialize demo mode before finished loading");
+	}
+
 	SetHudVisible(false);
 	SetMuted(true);
 
@@ -245,6 +269,8 @@ void GameScene::StartDemoMode()
 void GameScene::Advance(Util::OS::timestamp_t tick)
 {
 	SUPER::Advance(tick);
+
+	if (!finishedLoading) return;
 
 	session->Process();
 
@@ -267,6 +293,8 @@ void GameScene::Advance(Util::OS::timestamp_t tick)
 void GameScene::PrepareRender()
 {
 	SUPER::PrepareRender();
+
+	if (!finishedLoading) return;
 
 	for (auto &viewport : viewports) {
 		viewport.hud->PrepareRender();
