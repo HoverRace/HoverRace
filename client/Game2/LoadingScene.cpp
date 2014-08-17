@@ -73,7 +73,7 @@ void LoadingScene::PrepareRender()
 	if (loading) {
 		//TODO: Load the next loadable.
 		//TODO: Only finish when actually finished.
-		if (true) {
+		if (loaders.empty()) {
 			loading = false;
 
 			// We assume that we're the foreground scene.
@@ -81,6 +81,10 @@ void LoadingScene::PrepareRender()
 			// handler can push a new scene in response.
 			director.RequestPopScene();
 			finishedLoadingSignal();
+		}
+		else {
+			loaders.front()();
+			loaders.pop_front();
 		}
 	}
 

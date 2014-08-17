@@ -62,6 +62,13 @@ class LoadingScene : public FormScene
 			return finishedLoadingSignal;
 		}
 
+	public:
+		template<class Fn>
+		void AddLoader(Fn fn)
+		{
+			loaders.emplace_back(fn);
+		}
+
 	protected:
 		void OnPhaseChanged(Phase oldPhase) override;
 
@@ -74,6 +81,8 @@ class LoadingScene : public FormScene
 		GameDirector &director;
 		bool loading;
 		std::unique_ptr<Display::ScreenFade> fader;
+
+		std::deque<std::function<void()>> loaders;
 
 		finishedLoadingSignal_t finishedLoadingSignal;
 };
