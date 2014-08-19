@@ -67,15 +67,6 @@ local function first_session(session)
 	game:on_session_begin("session_start", second_session)
 	print("Starting up the first session.  Num players:",
 		session:get_num_players())
-
-	--[[ Some ideas for expanding the API...
-	local clock = session:get_clock()
-	-- Can also say clock:from_now("3s")
-	clock:at(clock:from_now(3000), function()
-		-- Start the next session
-		game:start_practice("The Alley2")
-	end)
-	--]]
 end
 
 game:on_session_begin("session_begin", first_session)
