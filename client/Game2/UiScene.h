@@ -42,8 +42,8 @@ class UiScene : public Scene
 		virtual bool IsMouseCursorEnabled() const { return true; }
 
 	public:
-		virtual void AttachController(Control::InputEventController &controller);
-		virtual void DetachController(Control::InputEventController &controller);
+		void AttachController(Control::InputEventController &controller) override;
+		void DetachController(Control::InputEventController &controller) override;
 
 	protected:
 		/**
@@ -67,7 +67,7 @@ class UiScene : public Scene
 		virtual void Layout() { }
 
 	public:
-		virtual void PrepareRender()
+		void PrepareRender() override
 		{
 			if (needsLayout) {
 				Layout();
@@ -75,7 +75,7 @@ class UiScene : public Scene
 			}
 		}
 
-		virtual void Render() { }
+		void Render() override { }
 
 	private:
 		bool needsLayout;
