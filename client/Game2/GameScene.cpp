@@ -63,7 +63,7 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
                      std::shared_ptr<LoadingScene> loadingScene) :
 	SUPER("Game"),
 	display(display), director(director), scripting(scripting), rules(rules),
-	finishedLoading(false), muted(false), demoMode(false),
+	finishedLoading(false), muted(false),
 	session(nullptr),
 	firedOnStart(false), firedOnRaceFinish(false),
 	loadingScene(std::move(loadingScene))
@@ -198,10 +198,6 @@ void GameScene::DetachController(Control::InputEventController&)
 void GameScene::OnFinishedLoading()
 {
 	finishedLoading = true;
-
-	if (demoMode) {
-		InitDemoMode();
-	}
 }
 
 void GameScene::OnCameraZoom(int increment)
@@ -242,28 +238,6 @@ void GameScene::SetHudVisible(bool visible)
 void GameScene::SetMuted(bool muted)
 {
 	this->muted = muted;
-}
-
-void GameScene::StartDemoMode()
-{
-	demoMode = true;
-	if (finishedLoading) {
-		InitDemoMode();
-	}
-}
-
-void GameScene::InitDemoMode()
-{
-	if (!finishedLoading) {
-		throw Exception("Cannot initialize demo mode before finished loading");
-	}
-
-	SetHudVisible(false);
-	SetMuted(true);
-
-	for (auto &viewport : viewports) {
-		viewport.observer->StartDemoMode();
-	}
 }
 
 void GameScene::Advance(Util::OS::timestamp_t tick)

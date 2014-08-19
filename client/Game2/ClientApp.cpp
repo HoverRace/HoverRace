@@ -51,7 +51,7 @@
 #include "HoverScript/SysConsole.h"
 #include "HoverScript/SysEnv.h"
 #include "ClientSession.h"
-#include "GameScene.h"
+#include "DemoGameScene.h"
 #include "LoadingScene.h"
 #include "MainMenuScene.h"
 #include "MessageScene.h"
@@ -593,34 +593,13 @@ void ClientApp::RequestMainMenu(std::shared_ptr<LoadingScene> loadingScene)
 	// the HUD or game sounds.
 	// The menu scene is overlaid on top of the background scene.
 
-	// Pick a random track from our standard list.
-	const char *tracks[] = {
-		"ClassicH",
-		"Steeplechase",
-		"The Alley2",
-		"The River",
-	};
-	const char *trackName = tracks[(unsigned)rand() % (sizeof(tracks) / sizeof(tracks[0]))];
-	Log::Info("Selected main menu track: %s", trackName);
-
-	// Pick a random craft.
-	char craftId = static_cast<char>(1 << (rand() % 4));
-
-	// Use a special "dummy" rulebook for the demo mode.
-	auto rulebook = std::make_shared<Rulebook>(scripting, OS::path_t());
-	auto rules = std::make_shared<Rules>(rulebook);
-	rules->SetTrackEntry(Config::GetInstance()->GetTrackBundle()->OpenTrackEntry(trackName));
-	rules->SetGameOpts(0x70 + craftId);
-
 	if (!loadingScene) {
 		loadingScene = std::make_shared<LoadingScene>(*display, *this, "Load");
 	}
 
 	try {
-		auto scene = std::make_shared<GameScene>(
-			*display, *this, scripting, rules, loadingScene);
-		scene->StartDemoMode();
-		RequestReplaceScene(scene);
+		RequestReplaceScene(std::make_shared<DemoGameScene>(
+			*display, *this, scripting, loadingScene));
 	}
 	catch (Parcel::ObjStreamExn&) {
 		throw;

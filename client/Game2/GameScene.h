@@ -102,8 +102,9 @@ class GameScene : public Scene
 		virtual void DetachController(Control::InputEventController &controller);
 		virtual bool IsMouseCursorEnabled() const { return false; }
 
+	protected:
+		virtual void OnFinishedLoading();
 	private:
-		void OnFinishedLoading();
 		void OnCameraZoom(int increment);
 		void OnCameraPan(int increment);
 		void OnCameraReset();
@@ -112,9 +113,6 @@ class GameScene : public Scene
 	public:
 		void SetHudVisible(bool visible);
 		void SetMuted(bool muted);
-		void StartDemoMode();
-	private:
-		void InitDemoMode();
 
 	public:
 		virtual void Advance(Util::OS::timestamp_t tick);
@@ -133,11 +131,12 @@ class GameScene : public Scene
 
 		bool finishedLoading;
 		bool muted;
-		bool demoMode;
 
+	protected:
 		std::vector<Viewport> viewports;
 		ClientSession *session;
 
+	private:
 		boost::signals2::scoped_connection finishedLoadingConn;
 
 		boost::signals2::connection cameraZoomInConn;
