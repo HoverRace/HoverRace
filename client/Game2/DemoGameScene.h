@@ -36,7 +36,7 @@ class DemoGameScene : public GameScene
 	public:
 		DemoGameScene(Display::Display &display, GameDirector &director,
 			Script::Core *scripting,
-			std::shared_ptr<LoadingScene> loadingScene);
+			std::shared_ptr<Util::Loader> loader);
 		virtual ~DemoGameScene();
 
 	protected:

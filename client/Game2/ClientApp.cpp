@@ -35,8 +35,9 @@
 #include "../../engine/Model/Track.h"
 #include "../../engine/Parcel/TrackBundle.h"
 #include "../../engine/Util/Config.h"
-#include "../../engine/Util/FuzzyLogic.h"
 #include "../../engine/Util/DllObjectFactory.h"
+#include "../../engine/Util/FuzzyLogic.h"
+#include "../../engine/Util/Loader.h"
 #include "../../engine/Util/Str.h"
 #include "../../engine/Util/WorldCoordinates.h"
 #include "../../engine/VideoServices/SoundServer.h"
@@ -599,7 +600,7 @@ void ClientApp::RequestMainMenu(std::shared_ptr<LoadingScene> loadingScene)
 
 	try {
 		RequestReplaceScene(std::make_shared<DemoGameScene>(
-			*display, *this, scripting, loadingScene));
+			*display, *this, scripting, loadingScene->GetLoader()));
 	}
 	catch (Parcel::ObjStreamExn&) {
 		throw;
@@ -607,7 +608,7 @@ void ClientApp::RequestMainMenu(std::shared_ptr<LoadingScene> loadingScene)
 
 	RequestPushScene(std::make_shared<MainMenuScene>(*display, *this, *rulebookLibrary));
 
-	loadingScene->GetFinishedLoadingSignal().connect([&]() {
+	loadingScene->GetLoader()->GetFinishedLoadingSignal().connect([&]() {
 		if (needsDevWarning) {
 			needsDevWarning = false;
 			RequestPushScene(std::make_shared<MessageScene>(*display, *this,
@@ -632,7 +633,7 @@ void ClientApp::RequestNewPracticeSession(std::shared_ptr<Rules> rules,
 
 	try {
 		RequestReplaceScene(std::make_shared<GameScene>(
-			*display, *this, scripting, rules, loadingScene));
+			*display, *this, scripting, rules, loadingScene->GetLoader()));
 		RequestPushScene(loadingScene);
 	}
 	catch (Parcel::ObjStreamExn&) {

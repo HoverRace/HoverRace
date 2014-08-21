@@ -27,6 +27,7 @@
 #include "../../engine/Model/Track.h"
 #include "../../engine/Parcel/TrackBundle.h"
 #include "../../engine/Util/Duration.h"
+#include "../../engine/Util/Loader.h"
 #include "../../engine/VideoServices/SoundServer.h"
 #include "../../engine/VideoServices/VideoBuffer.h"
 
@@ -60,16 +61,16 @@ GameScene::Viewport::Viewport(Display::Display &display, Observer *observer,
 
 GameScene::GameScene(Display::Display &display, GameDirector &director,
                      Script::Core *scripting, std::shared_ptr<Rules> rules,
-                     std::shared_ptr<LoadingScene> loadingScene) :
+                     std::shared_ptr<Loader> loader) :
 	SUPER("Game"),
 	display(display), director(director), scripting(scripting), rules(rules),
 	finishedLoading(false), muted(false),
 	session(nullptr),
 	firedOnStart(false), firedOnRaceFinish(false),
-	loadingScene(std::move(loadingScene))
+	loader(std::move(loader))
 {
 	finishedLoadingConn =
-		this->loadingScene->GetFinishedLoadingSignal().connect(
+		this->loader->GetFinishedLoadingSignal().connect(
 			std::bind(&GameScene::OnFinishedLoading, this));
 
 	session = new ClientSession(rules);
@@ -99,7 +100,7 @@ void GameScene::ScheduleLoad()
 {
 	auto rulebook = rules->GetRulebook();
 
-	loadingScene->AddLoader("Track and players", [=]{
+	loader->AddLoader("Track and players", [=]{
 		// Load the selected track
 		std::shared_ptr<Model::Track> track;
 
@@ -126,7 +127,7 @@ void GameScene::ScheduleLoad()
 				Vec2(1280, 720)));
 	});
 
-	loadingScene->AddLoader("Session", [=]{
+	loader->AddLoader("Session", [=]{
 		metaSession = rulebook->GetMetas().session(
 			std::make_shared<SessionPeer>(scripting, session));
 		metaSession->OnInit();

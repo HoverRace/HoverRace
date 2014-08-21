@@ -29,6 +29,9 @@ namespace HoverRace {
 	namespace Display {
 		class ScreenFade;
 	}
+	namespace Util {
+		class Loader;
+	}
 }
 
 namespace HoverRace {
@@ -51,43 +54,7 @@ class LoadingScene : public FormScene
 		virtual ~LoadingScene();
 
 	public:
-		typedef boost::signals2::signal<void()> finishedLoadingSignal_t;
-		/**
-		 * Fired when all resources have been loaded and the loading scene
-		 * is shutting down.
-		 * @return The finished loading signal.
-		 */ 
-		finishedLoadingSignal_t &GetFinishedLoadingSignal()
-		{
-			return finishedLoadingSignal;
-		}
-
-	private:
-		typedef std::pair<std::string, std::function<void()>> loader_t;
-	public:
-		/**
-		 * Add a new named loader.
-		 * The loader name is used for logging purposes only.
-		 * @param s The name of the loader.
-		 * @param fn The loader function.
-		 */
-		template<class Fn>
-		void AddLoader(const std::string &s, Fn fn)
-		{
-			loaders.emplace_back(s, fn);
-		}
-
-		/**
-		 * Add a new unnamed loader.
-		 * @param fn The loader function.
-		 */
-		template<class Fn>
-		void AddLoader(Fn fn)
-		{
-			std::ostringstream oss;
-			oss << "Loader " << loaders.size();
-			loaders.emplace_back(oss.str(), fn);
-		}
+		std::shared_ptr<Util::Loader> GetLoader() const { return loader; }
 
 	protected:
 		void OnPhaseChanged(Phase oldPhase) override;
@@ -100,11 +67,8 @@ class LoadingScene : public FormScene
 	private:
 		GameDirector &director;
 		bool loading;
+		std::shared_ptr<Util::Loader> loader;
 		std::unique_ptr<Display::ScreenFade> fader;
-
-		std::deque<loader_t> loaders;
-
-		finishedLoadingSignal_t finishedLoadingSignal;
 };
 
 }  // namespace Client

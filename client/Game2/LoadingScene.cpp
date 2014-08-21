@@ -22,6 +22,7 @@
 #include "../StdAfx.h"
 
 #include "../../engine/Display/ScreenFade.h"
+#include "../../engine/Util/Loader.h"
 #include "../../engine/Util/Log.h"
 
 #include "LoadingScene.h"
@@ -34,7 +35,8 @@ namespace Client {
 LoadingScene::LoadingScene(Display::Display &display, GameDirector &director,
                            const std::string &name) :
 	SUPER(display, name),
-	director(director), loading(false)
+	director(director), loading(false),
+	loader(std::make_shared<Util::Loader>())
 {
 	using namespace Display;
 
@@ -71,23 +73,15 @@ void LoadingScene::OnPhaseTransition(double progress)
 void LoadingScene::PrepareRender()
 {
 	if (loading) {
-		//TODO: Load the next loadable.
-		//TODO: Only finish when actually finished.
-		if (loaders.empty()) {
+		if (!loader->LoadNext()) {
 			loading = false;
 
 			// We assume that we're the foreground scene.
 			// We pop ourselves before triggering the signal so that the
 			// handler can push a new scene in response.
 			director.RequestPopScene();
-			finishedLoadingSignal();
-		}
-		else {
-			auto &loader = loaders.front();
-			Log::Info("%s: Loading: %s",
-				GetName().c_str(), loader.first.c_str());
-			loader.second();
-			loaders.pop_front();
+
+			loader->FireFinishedLoadingSignal();
 		}
 	}
 

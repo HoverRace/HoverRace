@@ -51,6 +51,9 @@ namespace HoverRace {
 	namespace Script {
 		class Core;
 	}
+	namespace Util {
+		class Loader;
+	}
 }
 
 namespace HoverRace {
@@ -89,7 +92,7 @@ class GameScene : public Scene
 	public:
 		GameScene(Display::Display &display, GameDirector &director,
 			Script::Core *scripting, std::shared_ptr<Rules> rules,
-			std::shared_ptr<LoadingScene> loadingScene);
+			std::shared_ptr<Util::Loader> loader);
 		virtual ~GameScene();
 
 	private:
@@ -127,7 +130,7 @@ class GameScene : public Scene
 		GameDirector &director;
 		Script::Core *scripting;
 		std::shared_ptr<Rules> rules;
-		std::shared_ptr<LoadingScene> loadingScene;
+		std::shared_ptr<Util::Loader> loader;
 
 		bool finishedLoading;
 		bool muted;
