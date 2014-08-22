@@ -29,6 +29,7 @@
 #include "../../engine/Util/Config.h"
 
 #include "GameSelectScene.h"
+#include "SessionLoadingScene.h"
 
 #include "PracticeSetupScene.h"
 
@@ -65,9 +66,10 @@ void PracticeSetupScene::OnScenePushed()
 	auto selScene = std::make_shared<GameSelectScene>(display, director,
 		rulebookLibrary, false);
 	selScene->GetOkSignal().connect([&](std::shared_ptr<Rules> rules,
-		std::shared_ptr<Display::Res<Display::Texture>>)
+		std::shared_ptr<Display::Res<Display::Texture>> mapRes)
 	{
-		director.RequestNewPracticeSession(rules);
+		director.RequestNewPracticeSession(rules,
+			std::make_shared<SessionLoadingScene>(display, director, mapRes));
 	});
 	selScene->GetCancelSignal().connect([&]() {
 		director.RequestMainMenu();
