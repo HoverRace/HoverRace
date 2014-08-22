@@ -18,6 +18,10 @@ set(GROUPS
 
 foreach(group ${GROUPS})
 	file(GLOB srcs "${group}/*.h" "${group}/*.cpp")
+	file(GLOB excludes "${group}/.*.h" "${group}/.*.cpp")
+	if(excludes)
+		list(REMOVE_ITEM srcs ${excludes})
+	endif()
 	list(APPEND HR_CLIENT_SRCS ${srcs})
 
 	# Arrange the files in Visual Studio by directory.
