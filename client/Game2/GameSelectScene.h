@@ -1,7 +1,7 @@
 
 // GameSelectScene.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -68,7 +68,7 @@ class GameSelectScene : public DialogScene
 		virtual void OnStateTransition(double progress);
 
 	public:
-		typedef boost::signals2::signal<void(std::shared_ptr<Rules>)> okSignal_t;
+		typedef boost::signals2::signal<void(std::shared_ptr<Rules>, std::shared_ptr<Display::Res<Display::Texture>>)> okSignal_t;
 		okSignal_t &GetOkSignal() { return okSignal; }
 
 		typedef boost::signals2::signal<void()> cancelSignal_t;

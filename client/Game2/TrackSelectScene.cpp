@@ -165,10 +165,11 @@ void TrackSelectScene::OnTrackSelected(Model::TrackEntryPtr entry)
 	auto trackBundle = Config::GetInstance()->GetTrackBundle();
 
 	rules->SetTrackEntry(entry);
+	mapTexture = trackBundle->LoadMap(entry);
 
 	selectedTrack = entry;
 	selTrackPanel->SetVisible(true);
-	trackPic->SetTexture(trackBundle->LoadMap(entry));
+	trackPic->SetTexture(mapTexture);
 	trackNameLbl->SetText(entry->name);
 	trackDescLbl->SetText(entry->description);
 
@@ -178,7 +179,7 @@ void TrackSelectScene::OnTrackSelected(Model::TrackEntryPtr entry)
 void TrackSelectScene::OnReady()
 {
 	trackSelected = true;
-	okSignal(rules);
+	okSignal(rules, mapTexture);
 }
 
 void TrackSelectScene::OnPhaseTransition(double progress)

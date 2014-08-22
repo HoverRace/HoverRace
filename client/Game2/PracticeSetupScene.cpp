@@ -1,7 +1,7 @@
 
 // PracticeSetupScene.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -64,7 +64,9 @@ void PracticeSetupScene::OnScenePushed()
 	// Immediately show the rulebook selector.
 	auto selScene = std::make_shared<GameSelectScene>(display, director,
 		rulebookLibrary, false);
-	selScene->GetOkSignal().connect([&](std::shared_ptr<Rules> rules) {
+	selScene->GetOkSignal().connect([&](std::shared_ptr<Rules> rules,
+		std::shared_ptr<Display::Res<Display::Texture>>)
+	{
 		director.RequestNewPracticeSession(rules);
 	});
 	selScene->GetCancelSignal().connect([&]() {

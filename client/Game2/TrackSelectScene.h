@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include "../../engine/Display/Res.h"
 #include "../../engine/Model/TrackList.h"
 #include "GameDirector.h"
 
@@ -37,6 +38,7 @@ namespace HoverRace {
 		class Label;
 		class Picture;
 		class RuleLine;
+		class Texture;
 	}
 }
 
@@ -63,7 +65,7 @@ class TrackSelectScene : public DialogScene
 		virtual void OnPhaseTransition(double progress);
 
 	public:
-		typedef boost::signals2::signal<void(std::shared_ptr<Rules>)> okSignal_t;
+		typedef boost::signals2::signal<void(std::shared_ptr<Rules>, std::shared_ptr<Display::Res<Display::Texture>>)> okSignal_t;
 		okSignal_t &GetOkSignal() { return okSignal; }
 
 		typedef boost::signals2::signal<void()> cancelSignal_t;
@@ -85,6 +87,7 @@ class TrackSelectScene : public DialogScene
 
 		std::shared_ptr<Display::Container> selTrackPanel;
 		std::shared_ptr<Display::Picture> trackPic;
+		std::shared_ptr<Display::Res<Display::Texture>> mapTexture;
 
 		std::shared_ptr<Display::FlexGrid> trackMetaGrid;
 		std::shared_ptr<Display::Label> trackNameLbl;

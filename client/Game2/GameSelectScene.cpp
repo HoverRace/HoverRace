@@ -1,7 +1,7 @@
 
 // GameSelectScene.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -99,10 +99,12 @@ GameSelectScene::~GameSelectScene()
 void GameSelectScene::OnRulebookSelected(std::shared_ptr<const Rulebook> rulebook)
 {
 	auto scene = std::make_shared<TrackSelectScene>(display, director, rulebook);
-	scene->GetOkSignal().connect([&](std::shared_ptr<Rules> rules) {
+	scene->GetOkSignal().connect([&](std::shared_ptr<Rules> rules,
+		std::shared_ptr<Display::Res<Display::Texture>> mapRes)
+	{
 		trackSelected = true;
 		director.RequestPopScene();
-		okSignal(rules);
+		okSignal(rules, mapRes);
 	});
 	scene->GetCancelSignal().connect([&]() {
 		director.RequestPopScene();
