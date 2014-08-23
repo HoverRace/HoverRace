@@ -21,7 +21,6 @@
 
 #include "../StdAfx.h"
 
-#include "../../engine/Control/Controller.h"
 #include "../../engine/Display/Display.h"
 #include "../../engine/Display/Hud.h"
 #include "../../engine/Model/Track.h"
@@ -39,8 +38,6 @@
 #include "HoverScript/SessionPeer.h"
 
 #include "ClientSession.h"
-#include "LoadingScene.h"
-#include "PauseMenuScene.h"
 #include "Rulebook.h"
 #include "Rules.h"
 
@@ -148,84 +145,9 @@ void GameScene::ScheduleLoad()
 	});
 }
 
-void GameScene::AttachController(Control::InputEventController &controller)
-{
-	MainCharacter::MainCharacter* mc = session->GetPlayer(0);
-	if (mc) {
-		controller.AddPlayerMaps(1, &mc);
-		controller.AddCameraMaps();
-	}
-
-	//TODO: Use separate action for pausing than ui.menuCancel.
-	controller.AddMenuMaps();
-
-	cameraZoomInConn = controller.actions.camera.zoomIn->Connect(
-		std::bind(&GameScene::OnCameraZoom, this, 1));
-	cameraZoomOutConn = controller.actions.camera.zoomOut->Connect(
-		std::bind(&GameScene::OnCameraZoom, this, -1));
-	cameraPanUpConn = controller.actions.camera.panUp->Connect(
-		std::bind(&GameScene::OnCameraPan, this, 1));
-	cameraPanDownConn = controller.actions.camera.panDown->Connect(
-		std::bind(&GameScene::OnCameraPan, this, -1));
-	cameraResetConn = controller.actions.camera.reset->Connect(
-		std::bind(&GameScene::OnCameraReset, this));
-
-	pauseConn = controller.actions.ui.menuCancel->Connect(
-		std::bind(&GameScene::OnPause, this));
-}
-
-void GameScene::DetachController(Control::InputEventController&)
-{
-	// Shut off the engine when the controller is detached (e.g. when showing a
-	// dialog) otherwise we'll just keep accelerating into the wall.
-	MainCharacter::MainCharacter* mc = session->GetPlayer(0);
-	if (mc) {
-		mc->SetEngineState(false);
-		mc->SetBrakeState(false);
-		mc->SetTurnLeftState(false);
-		mc->SetTurnRightState(false);
-		mc->SetLookBackState(false);
-	}
-
-	pauseConn.disconnect();
-
-	cameraResetConn.disconnect();
-	cameraPanDownConn.disconnect();
-	cameraPanUpConn.disconnect();
-	cameraZoomOutConn.disconnect();
-	cameraZoomInConn.disconnect();
-}
-
 void GameScene::OnFinishedLoading()
 {
 	finishedLoading = true;
-}
-
-void GameScene::OnCameraZoom(int increment)
-{
-	for (auto &viewport : viewports) {
-		viewport.observer->Zoom(increment);
-	}
-}
-
-void GameScene::OnCameraPan(int increment)
-{
-	for (auto &viewport : viewports) {
-		viewport.observer->Scroll(increment);
-	}
-}
-
-void GameScene::OnCameraReset()
-{
-	for (auto &viewport : viewports) {
-		viewport.observer->Home();
-	}
-}
-
-/// Fired when the pause button (e.g. ESC) is pressed.
-void GameScene::OnPause()
-{
-	director.RequestPushScene(std::make_shared<PauseMenuScene>(display, director));
 }
 
 void GameScene::SetHudVisible(bool visible)

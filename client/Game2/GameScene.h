@@ -60,15 +60,7 @@ namespace HoverRace {
 namespace Client {
 
 /**
- * The actual, genuine gameplay scene.  Accept no imitations.
- *
- * This scene manages the lifetime of a single session, from start to finish.
- * Pushing this scene onto the stage starts a new game session, and likewise
- * popping this scene from the stage aborts the game session.
- *
- * Note that this scene may also be used non-interactively (demo mode),
- * e.g. as a background for the main menu.
- *
+ * Base for scenes that render and interact with tracks.
  * @author Michael Imamura
  */
 class GameScene : public Scene
@@ -101,17 +93,10 @@ class GameScene : public Scene
 		void ScheduleLoad();
 
 	public:
-		virtual void AttachController(Control::InputEventController &controller);
-		virtual void DetachController(Control::InputEventController &controller);
 		virtual bool IsMouseCursorEnabled() const { return false; }
 
 	protected:
 		virtual void OnFinishedLoading();
-	private:
-		void OnCameraZoom(int increment);
-		void OnCameraPan(int increment);
-		void OnCameraReset();
-		void OnPause();
 
 	public:
 		void SetHudVisible(bool visible);
@@ -125,13 +110,14 @@ class GameScene : public Scene
 	private:
 		void OnRaceFinish();
 
-	private:
+	protected:
 		Display::Display &display;
 		GameDirector &director;
 		Script::Core *scripting;
 		std::shared_ptr<Rules> rules;
 		std::shared_ptr<Util::Loader> loader;
 
+	private:
 		bool finishedLoading;
 		bool muted;
 
@@ -141,14 +127,6 @@ class GameScene : public Scene
 
 	private:
 		boost::signals2::scoped_connection finishedLoadingConn;
-
-		boost::signals2::connection cameraZoomInConn;
-		boost::signals2::connection cameraZoomOutConn;
-		boost::signals2::connection cameraPanUpConn;
-		boost::signals2::connection cameraPanDownConn;
-		boost::signals2::connection cameraResetConn;
-
-		boost::signals2::connection pauseConn;
 
 		std::shared_ptr<HoverScript::MetaSession> metaSession;
 

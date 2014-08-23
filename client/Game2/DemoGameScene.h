@@ -39,6 +39,10 @@ class DemoGameScene : public GameScene
 			std::shared_ptr<Util::Loader> loader);
 		virtual ~DemoGameScene();
 
+	public:
+		void AttachController(Control::InputEventController&) override { }
+		void DetachController(Control::InputEventController&) override { }
+
 	protected:
 		void OnFinishedLoading() override;
 };

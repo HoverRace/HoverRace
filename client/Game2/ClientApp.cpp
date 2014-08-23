@@ -56,6 +56,7 @@
 #include "LoadingScene.h"
 #include "MainMenuScene.h"
 #include "MessageScene.h"
+#include "PlayGameScene.h"
 #include "Rulebook.h"
 #include "RulebookLibrary.h"
 #include "Rules.h"
@@ -632,7 +633,7 @@ void ClientApp::RequestNewPracticeSession(std::shared_ptr<Rules> rules,
 	}
 
 	try {
-		RequestReplaceScene(std::make_shared<GameScene>(
+		RequestReplaceScene(std::make_shared<PlayGameScene>(
 			*display, *this, scripting, rules, loadingScene->GetLoader()));
 		RequestPushScene(loadingScene);
 	}
