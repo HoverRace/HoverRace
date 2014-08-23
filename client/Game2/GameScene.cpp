@@ -61,10 +61,10 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
                      std::shared_ptr<Loader> loader) :
 	SUPER("Game"),
 	display(display), director(director), scripting(scripting), rules(rules),
+	loader(std::move(loader)),
 	finishedLoading(false), muted(false),
 	session(nullptr),
-	firedOnStart(false), firedOnRaceFinish(false),
-	loader(std::move(loader))
+	firedOnStart(false), firedOnRaceFinish(false)
 {
 	finishedLoadingConn =
 		this->loader->GetFinishedLoadingSignal().connect(
