@@ -90,7 +90,7 @@ class GameScene : public Scene
 	private:
 		void Cleanup();
 
-		void ScheduleLoad();
+		void ScheduleLoad(std::shared_ptr<Util::Loader> loader);
 
 	public:
 		bool IsMouseCursorEnabled() const override { return false; }
@@ -115,7 +115,6 @@ class GameScene : public Scene
 		GameDirector &director;
 		Script::Core *scripting;
 		std::shared_ptr<Rules> rules;
-		std::shared_ptr<Util::Loader> loader;
 
 	private:
 		bool finishedLoading;

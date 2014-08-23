@@ -61,19 +61,18 @@ GameScene::GameScene(Display::Display &display, GameDirector &director,
                      std::shared_ptr<Loader> loader) :
 	SUPER("Game"),
 	display(display), director(director), scripting(scripting), rules(rules),
-	loader(std::move(loader)),
 	finishedLoading(false), muted(false),
 	session(nullptr),
 	firedOnStart(false), firedOnRaceFinish(false)
 {
 	finishedLoadingConn =
-		this->loader->GetFinishedLoadingSignal().connect(
+		loader->GetFinishedLoadingSignal().connect(
 			std::bind(&GameScene::OnFinishedLoading, this));
 
 	session = new ClientSession(rules);
 
 	// Schedule the remaining load items.
-	ScheduleLoad();
+	ScheduleLoad(loader);
 }
 
 GameScene::~GameScene()
@@ -93,7 +92,7 @@ void GameScene::Cleanup()
 	VideoServices::SoundServer::ApplyContinuousPlay();
 }
 
-void GameScene::ScheduleLoad()
+void GameScene::ScheduleLoad(std::shared_ptr<Loader> loader)
 {
 	auto rulebook = rules->GetRulebook();
 
