@@ -62,7 +62,7 @@ class TrackSelectScene : public DialogScene
 		void OnReady();
 
 	protected:
-		virtual void OnPhaseTransition(double progress);
+		void OnPhaseTransition(double progress) override;
 
 	public:
 		typedef boost::signals2::signal<void(std::shared_ptr<Rules>, std::shared_ptr<Display::Res<Display::Texture>>)> okSignal_t;

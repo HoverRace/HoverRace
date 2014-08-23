@@ -60,12 +60,12 @@ class GameSelectScene : public DialogScene
 		void OnRulebookSelected(std::shared_ptr<const Rulebook> rulebook);
 
 	protected:
-		virtual void OnOk();
-		virtual void OnCancel();
+		void OnOk() override;
+		void OnCancel() override;
 
 	protected:
-		virtual void OnPhaseTransition(double progress);
-		virtual void OnStateTransition(double progress);
+		void OnPhaseTransition(double progress) override;
+		void OnStateTransition(double progress) override;
 
 	public:
 		typedef boost::signals2::signal<void(std::shared_ptr<Rules>, std::shared_ptr<Display::Res<Display::Texture>>)> okSignal_t;

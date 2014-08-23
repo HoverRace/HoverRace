@@ -93,7 +93,7 @@ class GameScene : public Scene
 		void ScheduleLoad();
 
 	public:
-		virtual bool IsMouseCursorEnabled() const { return false; }
+		bool IsMouseCursorEnabled() const override { return false; }
 
 	protected:
 		virtual void OnFinishedLoading();
@@ -103,9 +103,9 @@ class GameScene : public Scene
 		void SetMuted(bool muted);
 
 	public:
-		virtual void Advance(Util::OS::timestamp_t tick);
-		virtual void PrepareRender();
-		virtual void Render();
+		void Advance(Util::OS::timestamp_t tick) override;
+		void PrepareRender() override;
+		void Render() override;
 
 	private:
 		void OnRaceFinish();
