@@ -23,6 +23,11 @@
 
 #include <boost/log/core.hpp>
 #include <boost/log/expressions.hpp>
+#ifdef _WIN32
+#	include <boost/log/expressions/predicates/is_debugger_present.hpp>
+#	include <boost/log/sinks/sync_frontend.hpp>
+#	include <boost/log/sinks/debug_output_backend.hpp>
+#endif
 
 #include <SDL2/SDL_log.h>
 
@@ -99,30 +104,45 @@ std::string Fmt(const char *fmt, va_list ap)
 void Init()
 {
 	using namespace boost::log;
+	namespace expr = boost::log::expressions;
+
 	const bool verboseLog = Config::GetInstance()->runtime.verboseLog;
+	auto core = core::get();
+
+#	ifdef _WIN32
+		{
+			// Enable logging to the debugger output window.
+			typedef sinks::synchronous_sink<sinks::basic_debug_output_backend<wchar_t>> sink_t;
+			auto sink = boost::make_shared<sink_t>();
+			sink->set_filter(expr::is_debugger_present());
+			sink->set_formatter(expr::stream << expr::message << L'\n');
+			core->add_sink(sink);
+		}
+#	endif
+
 #	ifdef _DEBUG
 		if (verboseLog) {
 			SDL_LogSetAllPriority(SDL_LOG_PRIORITY_DEBUG);
-			core::get()->set_filter(
+			core->set_filter(
 				trivial::severity >= trivial::debug
 			);
 		}
 		else {
 			SDL_LogSetAllPriority(SDL_LOG_PRIORITY_INFO);
-			core::get()->set_filter(
+			core->set_filter(
 				trivial::severity >= trivial::info
 			);
 		}
 #	else
 		if (verboseLog) {
 			SDL_LogSetAllPriority(SDL_LOG_PRIORITY_INFO);
-			core::get()->set_filter(
+			core->set_filter(
 				trivial::severity >= trivial::info
 			);
 		}
 		else {
 			SDL_LogSetAllPriority(SDL_LOG_PRIORITY_ERROR);
-			core::get()->set_filter(
+			core->set_filter(
 				trivial::severity >= trivial::error
 			);
 		}
