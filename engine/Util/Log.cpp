@@ -35,28 +35,40 @@ namespace Log {
 logAdded_t logAddedSignal;
 
 namespace {
-	SDL_LogOutputFunction sdlBuiltinLog = nullptr;
 
-	void LogCallback(void *userData, int category, SDL_LogPriority priority,
-                     const char *message)
-	{
-		Level pri;
-		switch (priority) {
-			case SDL_LOG_PRIORITY_DEBUG: pri = Level::DEBUG; break;
-			case SDL_LOG_PRIORITY_INFO: pri = Level::INFO; break;
-			case SDL_LOG_PRIORITY_WARN: pri = Level::WARN; break;
-			case SDL_LOG_PRIORITY_ERROR: pri = Level::ERROR; break;
-			case SDL_LOG_PRIORITY_CRITICAL: pri = Level::FATAL; break;
-			default: return; // Every other log level is ignored.
-		}
-
-		// Broadcast the log message to all subscribers.
-		Entry entry = { pri, message };
-		logAddedSignal(entry);
-
-		// Let SDL handle the platform-specific output.
-		sdlBuiltinLog(userData, category, priority, message);
+void LogCallback(void *userData, int category, SDL_LogPriority priority,
+                    const char *message)
+{
+	Level pri;
+	switch (priority) {
+		case SDL_LOG_PRIORITY_DEBUG:
+			pri = Level::DEBUG;
+			BOOST_LOG_TRIVIAL(debug) << message;
+			break;
+		case SDL_LOG_PRIORITY_INFO:
+			pri = Level::INFO;
+			BOOST_LOG_TRIVIAL(info) << message;
+			break;
+		case SDL_LOG_PRIORITY_WARN:
+			pri = Level::DEBUG;
+			BOOST_LOG_TRIVIAL(warning) << message;
+			break;
+		case SDL_LOG_PRIORITY_ERROR:
+			pri = Level::DEBUG;
+			BOOST_LOG_TRIVIAL(error) << message;
+			break;
+		case SDL_LOG_PRIORITY_CRITICAL:
+			pri = Level::FATAL;
+			BOOST_LOG_TRIVIAL(fatal) << message;
+			break;
+		default: return; // Every other log level is ignored.
 	}
+
+	// Broadcast the log message to all subscribers.
+	Entry entry = { pri, message };
+	logAddedSignal(entry);
+}
+
 }  // namespace
 
 namespace detail {
@@ -90,7 +102,6 @@ void Init()
 		SDL_LogSetAllPriority(verboseLog ? SDL_LOG_PRIORITY_INFO : SDL_LOG_PRIORITY_ERROR);
 #	endif
 
-	SDL_LogGetOutputFunction(&sdlBuiltinLog, nullptr);
 	SDL_LogSetOutputFunction(LogCallback, nullptr);
 }
 
