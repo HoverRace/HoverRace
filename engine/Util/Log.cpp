@@ -112,7 +112,9 @@ void Init()
 #	ifdef _WIN32
 		{
 			// Enable logging to the debugger output window.
-			typedef sinks::synchronous_sink<sinks::basic_debug_output_backend<wchar_t>> sink_t;
+			// Make sure we log using the wchar_t version.
+			typedef sinks::basic_debug_output_backend<wchar_t> backend_t;
+			typedef sinks::synchronous_sink<backend_t> sink_t;
 			auto sink = boost::make_shared<sink_t>();
 			sink->set_filter(expr::is_debugger_present());
 			sink->set_formatter(expr::stream << expr::message << L'\n');
