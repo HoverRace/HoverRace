@@ -44,21 +44,9 @@ namespace Util {
 namespace Log {
 
 	namespace detail {
-		const size_t MAX_LOG = 512;
+		const size_t MAX_LOG = 512; ///< The maximum length of a vararg log.
 
-		inline std::string Fmt(const char *fmt, va_list ap)
-		{
-			char buf[MAX_LOG];
-			memset(buf, 0, sizeof(buf));
-			if (vsnprintf(buf, sizeof(buf) - 1, fmt, ap) == -1) {
-				std::string retv{buf};
-				retv += "...<output truncated>";
-				return retv;
-			}
-			else {
-				return std::string(buf);
-			}
-		}
+		MR_DllDeclare std::string Fmt(const char *fmt, va_list ap);
 	}
 
 	MR_DllDeclare void Init();
@@ -87,18 +75,37 @@ namespace Log {
 		va_end(ap);
 	}
 
-#if 0
-#ifdef _DEBUG
-	MR_DllDeclare void Debug(const char *fmt, ...);
-#else
-	// Not a great solution (params are still evaluated), but suffices for now.
-	MR_DllDeclare inline void Debug(...) { }
-#endif
-#endif
-	MR_DllDeclare void Info(const char *fmt, ...);
-	MR_DllDeclare void Warn(const char *fmt, ...);
-	MR_DllDeclare void Error(const char *fmt, ...);
-	MR_DllDeclare void Fatal(const char *fmt, ...);
+	inline void Info(const char *fmt, ...)
+	{
+		va_list ap;
+		va_start(ap, fmt);
+		BOOST_LOG_TRIVIAL(info) << detail::Fmt(fmt, ap);
+		va_end(ap);
+	}
+
+	inline void Warn(const char *fmt, ...)
+	{
+		va_list ap;
+		va_start(ap, fmt);
+		BOOST_LOG_TRIVIAL(warning) << detail::Fmt(fmt, ap);
+		va_end(ap);
+	}
+
+	inline void Error(const char *fmt, ...)
+	{
+		va_list ap;
+		va_start(ap, fmt);
+		BOOST_LOG_TRIVIAL(error) << detail::Fmt(fmt, ap);
+		va_end(ap);
+	}
+
+	inline void Fatal(const char *fmt, ...)
+	{
+		va_list ap;
+		va_start(ap, fmt);
+		BOOST_LOG_TRIVIAL(fatal) << detail::Fmt(fmt, ap);
+		va_end(ap);
+	}
 
 }
 

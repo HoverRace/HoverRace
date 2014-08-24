@@ -57,7 +57,26 @@ namespace {
 		// Let SDL handle the platform-specific output.
 		sdlBuiltinLog(userData, category, priority, message);
 	}
+}  // namespace
+
+namespace detail {
+
+std::string Fmt(const char *fmt, va_list ap)
+{
+	char buf[MAX_LOG];
+	memset(buf, 0, sizeof(buf));
+	if (vsnprintf(buf, sizeof(buf) - 1, fmt, ap) == -1) {
+		std::string retv{buf};
+		retv += "...<output truncated>";
+		return retv;
+	}
+	else {
+		return std::string(buf);
+	}
 }
+
+}  // namespace detail
+
 
 /**
  * Initialize the system log.
@@ -73,48 +92,6 @@ void Init()
 
 	SDL_LogGetOutputFunction(&sdlBuiltinLog, nullptr);
 	SDL_LogSetOutputFunction(LogCallback, nullptr);
-}
-
-#ifdef _DEBUG
-void Debug(const char *fmt, ...)
-{
-	va_list ap;
-	va_start(ap, fmt);
-	SDL_LogMessageV(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_DEBUG, fmt, ap);
-	va_end(ap);
-}
-#endif
-
-void Info(const char *fmt, ...)
-{
-	va_list ap;
-	va_start(ap, fmt);
-	SDL_LogMessageV(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, fmt, ap);
-	va_end(ap);
-}
-
-void Warn(const char *fmt, ...)
-{
-	va_list ap;
-	va_start(ap, fmt);
-	SDL_LogMessageV(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_WARN, fmt, ap);
-	va_end(ap);
-}
-
-void Error(const char *fmt, ...)
-{
-	va_list ap;
-	va_start(ap, fmt);
-	SDL_LogMessageV(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR, fmt, ap);
-	va_end(ap);
-}
-
-void Fatal(const char *fmt, ...)
-{
-	va_list ap;
-	va_start(ap, fmt);
-	SDL_LogMessageV(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_CRITICAL, fmt, ap);
-	va_end(ap);
 }
 
 };
