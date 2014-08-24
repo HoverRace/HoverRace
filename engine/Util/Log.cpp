@@ -21,6 +21,9 @@
 
 #include "../StdAfx.h"
 
+#include <boost/log/core.hpp>
+#include <boost/log/expressions.hpp>
+
 #include <SDL2/SDL_log.h>
 
 #include "Config.h"
@@ -95,11 +98,34 @@ std::string Fmt(const char *fmt, va_list ap)
  */
 void Init()
 {
+	using namespace boost::log;
 	const bool verboseLog = Config::GetInstance()->runtime.verboseLog;
 #	ifdef _DEBUG
-		SDL_LogSetAllPriority(verboseLog ? SDL_LOG_PRIORITY_DEBUG : SDL_LOG_PRIORITY_INFO);
+		if (verboseLog) {
+			SDL_LogSetAllPriority(SDL_LOG_PRIORITY_DEBUG);
+			core::get()->set_filter(
+				trivial::severity >= trivial::debug
+			);
+		}
+		else {
+			SDL_LogSetAllPriority(SDL_LOG_PRIORITY_INFO);
+			core::get()->set_filter(
+				trivial::severity >= trivial::info
+			);
+		}
 #	else
-		SDL_LogSetAllPriority(verboseLog ? SDL_LOG_PRIORITY_INFO : SDL_LOG_PRIORITY_ERROR);
+		if (verboseLog) {
+			SDL_LogSetAllPriority(SDL_LOG_PRIORITY_INFO);
+			core::get()->set_filter(
+				trivial::severity >= trivial::info
+			);
+		}
+		else {
+			SDL_LogSetAllPriority(SDL_LOG_PRIORITY_ERROR);
+			core::get()->set_filter(
+				trivial::severity >= trivial::error
+			);
+		}
 #	endif
 
 	SDL_LogSetOutputFunction(LogCallback, nullptr);
