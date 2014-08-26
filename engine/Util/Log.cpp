@@ -101,13 +101,16 @@ void AddStreamLog() {
  * Enable logging to the Windows debugger output window.
  */
 void AddWindowsDebugLog() {
+	using namespace boost::log;
+	namespace expr = boost::log::expressions;
+
 	// Make sure we log using the wchar_t version.
 	typedef sinks::basic_debug_output_backend<wchar_t> backend_t;
 	typedef sinks::synchronous_sink<backend_t> sink_t;
 	auto sink = boost::make_shared<sink_t>();
 	sink->set_filter(expr::is_debugger_present());
 	sink->set_formatter(expr::stream << expr::message << L'\n');
-	core->add_sink(sink);
+	core::get()->add_sink(sink);
 }
 #endif
 
@@ -138,7 +141,6 @@ std::string Fmt(const char *fmt, va_list ap)
 void Init()
 {
 	using namespace boost::log;
-	namespace expr = boost::log::expressions;
 
 	const bool verboseLog = Config::GetInstance()->runtime.verboseLog;
 	auto core = core::get();
