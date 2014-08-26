@@ -84,6 +84,7 @@ void LogCallback(void *userData, int category, SDL_LogPriority priority,
  */
 void AddStreamLog() {
 	using namespace boost::log;
+	namespace expr = boost::log::expressions;
 
 	typedef sinks::text_ostream_backend backend_t;
 	auto backend = boost::make_shared<backend_t>();
@@ -93,6 +94,8 @@ void AddStreamLog() {
 
 	typedef sinks::synchronous_sink<backend_t> sink_t;
 	auto sink = boost::make_shared<sink_t>(backend);
+	sink->set_formatter(expr::stream << L'[' << trivial::severity << L"] " <<
+		expr::message);
 	core::get()->add_sink(sink);
 }
 
@@ -109,7 +112,8 @@ void AddWindowsDebugLog() {
 	typedef sinks::synchronous_sink<backend_t> sink_t;
 	auto sink = boost::make_shared<sink_t>();
 	sink->set_filter(expr::is_debugger_present());
-	sink->set_formatter(expr::stream << expr::message << L'\n');
+	sink->set_formatter(expr::stream << L'[' << trivial::severity << L"] " <<
+		expr::message << L'\n');
 	core::get()->add_sink(sink);
 }
 #endif
