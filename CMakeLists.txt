@@ -57,6 +57,8 @@ endif()
 include(FindBoost)
 if(WIN32)
 	set(Boost_USE_STATIC_LIBS ON)
+else()
+	add_compile_options(-DBOOST_ALL_DYN_LINK)
 endif()
 set(Boost_USE_MULTITHREADED ON)
 set(BOOST_MIN_VER 1.54)
@@ -64,11 +66,6 @@ find_package(Boost ${BOOST_MIN_VER} REQUIRED COMPONENTS
 	filesystem log system thread)
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
-if(NOT WIN32)
-	# Fix Boost.Log link errors with some Boost packages.
-	add_compile_options(-DBOOST_LOG_DYN_LINK)
-endif()
-
 
 # Gather the build artifacts into common directories.
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
