@@ -47,7 +47,7 @@ logAdded_t logAddedSignal;
 namespace {
 
 void LogCallback(void *userData, int category, SDL_LogPriority priority,
-                    const char *message)
+                 const char *message)
 {
 	Level pri;
 	switch (priority) {
