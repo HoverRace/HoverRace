@@ -30,7 +30,6 @@
 #	include <boost/log/sinks/debug_output_backend.hpp>
 #endif
 #include <boost/make_shared.hpp>
-#include <boost/serialization/shared_ptr.hpp>
 
 #include <SDL2/SDL_log.h>
 
@@ -80,6 +79,38 @@ void LogCallback(void *userData, int category, SDL_LogPriority priority,
 	logAddedSignal(entry);
 }
 
+/**
+ * Add a streaming sink to the logger.
+ */
+void AddStreamLog() {
+	using namespace boost::log;
+
+	typedef sinks::text_ostream_backend backend_t;
+	auto backend = boost::make_shared<backend_t>();
+	backend->add_stream(boost::shared_ptr<std::ostream>(
+		&std::clog, [](const void*){}));
+	backend->auto_flush(true);
+
+	typedef sinks::synchronous_sink<backend_t> sink_t;
+	auto sink = boost::make_shared<sink_t>(backend);
+	core::get()->add_sink(sink);
+}
+
+#ifdef _WIN32
+/**
+ * Enable logging to the Windows debugger output window.
+ */
+void AddWindowsDebugLog() {
+	// Make sure we log using the wchar_t version.
+	typedef sinks::basic_debug_output_backend<wchar_t> backend_t;
+	typedef sinks::synchronous_sink<backend_t> sink_t;
+	auto sink = boost::make_shared<sink_t>();
+	sink->set_filter(expr::is_debugger_present());
+	sink->set_formatter(expr::stream << expr::message << L'\n');
+	core->add_sink(sink);
+}
+#endif
+
 }  // namespace
 
 namespace detail {
@@ -112,30 +143,9 @@ void Init()
 	const bool verboseLog = Config::GetInstance()->runtime.verboseLog;
 	auto core = core::get();
 
-	// Enable logging to stderr.
-	{
-		typedef sinks::text_ostream_backend backend_t;
-		auto backend = boost::make_shared<backend_t>();
-		backend->add_stream(boost::shared_ptr<std::ostream>(
-			&std::clog, [](const void*){}));
-		backend->auto_flush(true);
-
-		typedef sinks::synchronous_sink<backend_t> sink_t;
-		auto sink = boost::make_shared<sink_t>(backend);
-		core->add_sink(sink);
-	}
-
+	AddStreamLog();
 #	ifdef _WIN32
-		{
-			// Enable logging to the debugger output window.
-			// Make sure we log using the wchar_t version.
-			typedef sinks::basic_debug_output_backend<wchar_t> backend_t;
-			typedef sinks::synchronous_sink<backend_t> sink_t;
-			auto sink = boost::make_shared<sink_t>();
-			sink->set_filter(expr::is_debugger_present());
-			sink->set_formatter(expr::stream << expr::message << L'\n');
-			core->add_sink(sink);
-		}
+		AddWindowsDebugLog();
 #	endif
 
 #	ifdef _DEBUG
