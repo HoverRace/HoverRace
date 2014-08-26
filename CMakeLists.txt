@@ -64,6 +64,11 @@ find_package(Boost ${BOOST_MIN_VER} REQUIRED COMPONENTS
 	filesystem log system thread)
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
+if(NOT WIN32)
+	# Fix Boost.Log link errors with some Boost packages.
+	add_compile_options(-DBOOST_LOG_DYN_LINK)
+endif()
+
 
 # Gather the build artifacts into common directories.
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
