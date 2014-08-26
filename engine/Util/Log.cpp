@@ -23,11 +23,14 @@
 
 #include <boost/log/core.hpp>
 #include <boost/log/expressions.hpp>
+#include <boost/log/sinks/sync_frontend.hpp>
+#include <boost/log/sinks/text_ostream_backend.hpp>
 #ifdef _WIN32
 #	include <boost/log/expressions/predicates/is_debugger_present.hpp>
-#	include <boost/log/sinks/sync_frontend.hpp>
 #	include <boost/log/sinks/debug_output_backend.hpp>
 #endif
+#include <boost/make_shared.hpp>
+#include <boost/serialization/shared_ptr.hpp>
 
 #include <SDL2/SDL_log.h>
 
@@ -108,6 +111,19 @@ void Init()
 
 	const bool verboseLog = Config::GetInstance()->runtime.verboseLog;
 	auto core = core::get();
+
+	// Enable logging to stderr.
+	{
+		typedef sinks::text_ostream_backend backend_t;
+		auto backend = boost::make_shared<backend_t>();
+		backend->add_stream(boost::shared_ptr<std::ostream>(
+			&std::clog, [](const void*){}));
+		backend->auto_flush(true);
+
+		typedef sinks::synchronous_sink<backend_t> sink_t;
+		auto sink = boost::make_shared<sink_t>(backend);
+		core->add_sink(sink);
+	}
 
 #	ifdef _WIN32
 		{
