@@ -155,6 +155,8 @@ void SysConsole::OnLog(const Util::Log::Entry &entry)
 			break;
 		case Log::Level::ERROR:
 		case Log::Level::FATAL:
+			logLevel = LogLevel::ERROR;
+			break;
 		default:
 			logLevel = LogLevel::INFO;
 	}
