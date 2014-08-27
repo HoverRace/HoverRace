@@ -52,11 +52,13 @@ namespace Log {
 	MR_DllDeclare void Init();
 
 	enum class Level {
-		DEBUG,
-		INFO,
-		WARN,
-		ERROR,
-		FATAL,
+		// Intentionally aligned with boost::log::trivial to avoid conversions.
+		TRACE = boost::log::trivial::trace,
+		DEBUG = boost::log::trivial::debug,
+		INFO = boost::log::trivial::info,
+		WARN = boost::log::trivial::warning,
+		ERROR = boost::log::trivial::error,
+		FATAL = boost::log::trivial::fatal,
 	};
 
 	struct Entry {

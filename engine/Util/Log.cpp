@@ -70,14 +70,8 @@ class LogSignalSinkBackend :
 
 			Level pri = Level::INFO;
 			visit(trivial::severity, rec, [&pri](trivial::severity_level sev) {
-				switch (sev) {
-					case trivial::debug: pri = Level::DEBUG; break;
-					case trivial::info: pri = Level::INFO; break;
-					case trivial::warning: pri = Level::WARN; break;
-					case trivial::error: pri = Level::ERROR; break;
-					case trivial::fatal: pri = Level::FATAL; break;
-					default: return; // Every other log level is ignored.
-				}
+				// Level and boost::log::severity_level intentionally line up.
+				pri = static_cast<Level>(sev);
 			});
 
 			// Broadcast the log message to all subscribers.
