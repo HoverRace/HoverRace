@@ -434,7 +434,7 @@ void SdlDisplay::Screenshot()
 			SDL_GetError());
 	}
 
-	Log::Info("Saved screenshot: %s", (const char*)Str::PU(path));
+	HR_LOG(info) << "Saved screenshot: " << path;
 
 	SDL_FreeSurface(surface);
 }
@@ -472,7 +472,8 @@ void SdlDisplay::ApplyVideoMode()
 
 	int i = 0;
 	for (const RendererInfo &info : renderers) {
-		Log::Info("renderer[%d]: %s", i++, boost::lexical_cast<std::string>(info.info).c_str());
+		HR_LOG(info) << "renderer[" << i << "]: " << info.info;
+		i++;
 	}
 
 	// Find a working renderer.
@@ -480,7 +481,7 @@ void SdlDisplay::ApplyVideoMode()
 		if ((renderer = SDL_CreateRenderer(window, iter->idx, 0))) {
 			SDL_RendererInfo info;
 			SDL_GetRendererInfo(renderer, &info);
-			Log::Info("Selected renderer: %s", boost::lexical_cast<std::string>(info).c_str());
+			HR_LOG(info) << "Selected renderer: " << info;
 			break;
 		}
 	}
