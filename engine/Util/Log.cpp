@@ -86,8 +86,7 @@ class LogSignalSinkBackend :
 		}
 };
 
-void LogCallback(void *userData, int category, SDL_LogPriority priority,
-                 const char *message)
+void LogCallback(void*, int, SDL_LogPriority priority, const char *message)
 {
 	switch (priority) {
 		case SDL_LOG_PRIORITY_DEBUG:
