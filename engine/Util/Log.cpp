@@ -125,7 +125,7 @@ void AddStreamLog()
 
 	typedef sinks::synchronous_sink<backend_t> sink_t;
 	auto sink = boost::make_shared<sink_t>(backend);
-	sink->set_formatter(expr::stream << L'[' << trivial::severity << L"] " <<
+	sink->set_formatter(expr::stream << '[' << trivial::severity << "] " <<
 		expr::message);
 	core::get()->add_sink(sink);
 }
