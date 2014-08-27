@@ -38,6 +38,9 @@
 #	undef ERROR
 #endif
 
+/// Alias for BOOST_LOG_TRIVIAL.
+#define HR_LOG(lvl) BOOST_LOG_TRIVIAL(lvl)
+
 namespace HoverRace {
 namespace Util {
 
