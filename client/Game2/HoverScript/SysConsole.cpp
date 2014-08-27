@@ -148,6 +148,7 @@ void SysConsole::OnLog(const Util::Log::Entry &entry)
 {
 	LogLevel logLevel;
 	switch (entry.level) {
+		case Log::Level::TRACE:
 		case Log::Level::DEBUG:
 		case Log::Level::INFO:
 		case Log::Level::WARN:
