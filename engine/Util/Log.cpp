@@ -46,43 +46,74 @@ logAdded_t logAddedSignal;
 
 namespace {
 
+/**
+ * Query if there is anybody listening to log events.
+ * @return @c true if there are listeners, @c false otherwise.
+ */
+bool HasLogAddedSlots()
+{
+	return !logAddedSignal.empty();
+}
+
+/**
+ * Custom backend that fires log events.
+ */
+class LogSignalSinkBackend :
+	public boost::log::sinks::basic_formatted_sink_backend<
+		char,
+		boost::log::sinks::synchronized_feeding>
+{
+	public:
+		void consume(const boost::log::record_view &rec, const string_type &s)
+		{
+			using namespace boost::log;
+
+			Level pri = Level::INFO;
+			visit(trivial::severity, rec, [&pri](trivial::severity_level sev) {
+				switch (sev) {
+					case trivial::debug: pri = Level::DEBUG; break;
+					case trivial::info: pri = Level::INFO; break;
+					case trivial::warning: pri = Level::WARN; break;
+					case trivial::error: pri = Level::ERROR; break;
+					case trivial::fatal: pri = Level::FATAL; break;
+					default: return; // Every other log level is ignored.
+				}
+			});
+
+			// Broadcast the log message to all subscribers.
+			Entry entry = { pri, s.c_str() };
+			logAddedSignal(entry);
+		}
+};
+
 void LogCallback(void *userData, int category, SDL_LogPriority priority,
                  const char *message)
 {
-	Level pri;
 	switch (priority) {
 		case SDL_LOG_PRIORITY_DEBUG:
-			pri = Level::DEBUG;
 			BOOST_LOG_TRIVIAL(debug) << message;
 			break;
 		case SDL_LOG_PRIORITY_INFO:
-			pri = Level::INFO;
 			BOOST_LOG_TRIVIAL(info) << message;
 			break;
 		case SDL_LOG_PRIORITY_WARN:
-			pri = Level::DEBUG;
 			BOOST_LOG_TRIVIAL(warning) << message;
 			break;
 		case SDL_LOG_PRIORITY_ERROR:
-			pri = Level::DEBUG;
 			BOOST_LOG_TRIVIAL(error) << message;
 			break;
 		case SDL_LOG_PRIORITY_CRITICAL:
-			pri = Level::FATAL;
 			BOOST_LOG_TRIVIAL(fatal) << message;
 			break;
 		default: return; // Every other log level is ignored.
 	}
-
-	// Broadcast the log message to all subscribers.
-	Entry entry = { pri, message };
-	logAddedSignal(entry);
 }
 
 /**
  * Add a streaming sink to the logger.
  */
-void AddStreamLog() {
+void AddStreamLog()
+{
 	using namespace boost::log;
 	namespace expr = boost::log::expressions;
 
@@ -99,11 +130,34 @@ void AddStreamLog() {
 	core::get()->add_sink(sink);
 }
 
+/**
+ * Add a sink to notify event listeners.
+ */
+void AddLogSignalLog()
+{
+	using namespace boost::log;
+	namespace expr = boost::log::expressions;
+
+	typedef LogSignalSinkBackend backend_t;
+	auto backend = boost::make_shared<backend_t>();
+
+	typedef sinks::synchronous_sink<backend_t> sink_t;
+	auto sink = boost::make_shared<sink_t>(backend);
+	// Only fire the backend if there are any actual listeners.
+	// Using std::bind here to throw away the parameters since we don't use
+	// them.
+	sink->set_filter(std::bind(HasLogAddedSlots));
+	sink->set_formatter(expr::stream << '[' << trivial::severity << "] " <<
+		expr::message);
+	core::get()->add_sink(sink);
+}
+
 #ifdef _WIN32
 /**
  * Enable logging to the Windows debugger output window.
  */
-void AddWindowsDebugLog() {
+void AddWindowsDebugLog()
+{
 	using namespace boost::log;
 	namespace expr = boost::log::expressions;
 
@@ -150,6 +204,7 @@ void Init()
 	auto core = core::get();
 
 	AddStreamLog();
+	AddLogSignalLog();
 #	ifdef _WIN32
 		AddWindowsDebugLog();
 #	endif
