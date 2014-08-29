@@ -55,6 +55,8 @@ class TrackPeer : public Script::Peer
 
 	public:
 		const std::string &LGetDescription() const;
+		double LGetGravity() const;
+		void LSetGravity(double gravity);
 		const std::string &LGetName() const;
 
 	private:

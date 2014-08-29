@@ -80,6 +80,9 @@ class MR_DllDeclare Track : public Util::Inspectable
 
 		std::shared_ptr<Display::Res<Display::Texture>> GetMap() const { return map; }
 
+		double GetGravity() const;
+		void SetGravity(double gravity);
+
 		virtual void Inspect(Util::InspectMapNode &node) const;
 
 	private:

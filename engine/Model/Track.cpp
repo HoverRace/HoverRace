@@ -54,6 +54,26 @@ Track::~Track()
 	if (level) delete level;
 }
 
+/**
+ * Gets the gravity multiplier.
+ * @return The gravity multiplier (1.0 is normal gravity).
+ */
+double Track::GetGravity() const
+{
+	return level ? level->GetGravity() : 1.0;
+}
+
+/**
+ * Set the current gravity multiplier.
+ * @param gravity The gravity multiplier (1.0 is normal gravity).
+ */
+void Track::SetGravity(double gravity)
+{
+	if (level) {
+		level->SetGravity(gravity);
+	}
+}
+
 void Track::Inspect(Util::InspectMapNode &node) const
 {
 	node.

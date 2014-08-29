@@ -64,6 +64,7 @@ void TrackPeer::Register(Script::Core *scripting)
 		class_<TrackPeer, SUPER, std::shared_ptr<TrackPeer>>("Track")
 			.def(tostring(self))
 			.property("description", &TrackPeer::LGetDescription)
+			.property("gravity", &TrackPeer::LGetGravity, &TrackPeer::LSetGravity)
 			.property("name", &TrackPeer::LGetName)
 	];
 }
@@ -71,6 +72,16 @@ void TrackPeer::Register(Script::Core *scripting)
 const std::string &TrackPeer::LGetDescription() const
 {
 	return track->GetHeader().description;
+}
+
+double TrackPeer::LGetGravity() const
+{
+	return track->GetGravity();
+}
+
+void TrackPeer::LSetGravity(double gravity)
+{
+	track->SetGravity(gravity);
 }
 
 const std::string &TrackPeer::LGetName() const
