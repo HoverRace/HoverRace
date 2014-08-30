@@ -56,10 +56,11 @@ GameScene::Viewport::Viewport(Display::Display &display, Observer *observer,
 	hud->AttachView(display);
 }
 
-GameScene::GameScene(Display::Display &display, GameDirector &director,
+GameScene::GameScene(const std::string &name,
+                     Display::Display &display, GameDirector &director,
                      Script::Core *scripting, std::shared_ptr<Rules> rules,
                      std::shared_ptr<Loader> loader) :
-	SUPER("Game"),
+	SUPER(name),
 	display(display), director(director), scripting(scripting), rules(rules),
 	finishedLoading(false), muted(false),
 	session(nullptr),

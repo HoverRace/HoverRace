@@ -38,7 +38,7 @@ PlayGameScene::PlayGameScene(Display::Display &display, GameDirector &director,
                              Script::Core *scripting,
                              std::shared_ptr<Rules> rules,
                              std::shared_ptr<Loader> loader) :
-	SUPER(display, director, scripting, rules, loader)
+	SUPER("Game", display, director, scripting, rules, loader)
 {
 }
 

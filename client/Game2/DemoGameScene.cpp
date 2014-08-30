@@ -66,7 +66,7 @@ std::shared_ptr<Rules> GenRules(Script::Core *scripting)
 DemoGameScene::DemoGameScene(Display::Display &display, GameDirector &director,
                              Script::Core *scripting,
                              std::shared_ptr<Loader> loader) :
-	SUPER(display, director, scripting, GenRules(scripting), loader)
+	SUPER("Demo", display, director, scripting, GenRules(scripting), loader)
 {
 }
 

@@ -82,7 +82,8 @@ class GameScene : public Scene
 		};
 
 	public:
-		GameScene(Display::Display &display, GameDirector &director,
+		GameScene(const std::string &name,
+			Display::Display &display, GameDirector &director,
 			Script::Core *scripting, std::shared_ptr<Rules> rules,
 			std::shared_ptr<Util::Loader> loader);
 		virtual ~GameScene();
