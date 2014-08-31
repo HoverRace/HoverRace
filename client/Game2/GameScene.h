@@ -99,7 +99,7 @@ class GameScene : public Scene
 	protected:
 		virtual void OnFinishedLoading();
 
-	public:
+	protected:
 		void SetHudVisible(bool visible);
 		void SetMuted(bool muted);
 
