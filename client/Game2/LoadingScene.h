@@ -56,6 +56,9 @@ class LoadingScene : public FormScene
 	public:
 		std::shared_ptr<Util::Loader> GetLoader() const { return loader; }
 
+	public:
+		bool IsMouseCursorEnabled() const override { return false; }
+
 	protected:
 		void OnPhaseChanged(Phase oldPhase) override;
 
