@@ -21,9 +21,9 @@
 
 #include "../StdAfx.h"
 
-#include "../engine/Display/Texture.h"
-#include "../engine/Parcel/ObjStream.h"
-#include "../engine/Util/Log.h"
+#include "../Display/Texture.h"
+#include "../Parcel/ObjStream.h"
+#include "../Util/Log.h"
 
 #include "SpriteTextureRes.h"
 
