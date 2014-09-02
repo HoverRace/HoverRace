@@ -19,7 +19,7 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
-#include "StdAfx.h"
+#include "../../StdAfx.h"
 
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
