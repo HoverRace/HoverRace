@@ -48,7 +48,6 @@ if(WIN32)
 	set_property(TARGET hrengine APPEND PROPERTY COMPILE_DEFINITIONS
 		YAML_DECLARE_STATIC)  # Use static linking for libYAML.
 endif()
-include_directories(".")
 target_link_libraries(hrengine ${Boost_LIBRARIES} ${DEPS_LIBRARIES}
 	liblua luabind)
 
