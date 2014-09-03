@@ -1,0 +1,25 @@
+description:
+  type: property
+  isa: string
+  readonly: true
+  brief: >
+    The track description (may contain newlines).
+
+gravity:
+  type: property
+  isa: number
+  brief: >
+    The gravity multiplier (default is 1.0).
+  desc: >
+    A value of zero disables gravity, while negative values invert gravity.
+  examples: >
+    - |
+      track.gravity = 0.1  -- 10% gravity
+      track.gravity = -1   -- Inverted gravity
+
+name:
+  type: property
+  isa: string
+  readonly: true
+  brief: >
+    The name of the track.
