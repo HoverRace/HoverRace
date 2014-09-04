@@ -1,6 +1,7 @@
 clock:
   type: property
   isa: Clock
+  readonly: true
   sig:
     - clock = session.clock
   brief: >
@@ -9,6 +10,7 @@ clock:
 countdown:
   type: property
   isa: Clock
+  readonly: true
   sig:
     - countdown = session.countdown
   brief: >
@@ -39,6 +41,7 @@ get_num_players:
 players:
   type: property
   isa: table
+  readonly: true
   brief: >
     List of Player instances, starting at zero.
   examples:
@@ -50,6 +53,7 @@ players:
 rules:
   type: property
   isa: table
+  readonly: true
   brief: >
     Table of the configured rules for this session.
   desc: >
@@ -58,5 +62,6 @@ rules:
 time:
   type: property
   isa: number
+  readonly: true
   brief: >
     The current game time, in milliseconds.

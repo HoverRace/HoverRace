@@ -1,6 +1,7 @@
 time:
   type: property
   isa: number
+  readonly: true
   brief: >
     The number of milliseconds since the pregame ended and the player gained control.
     During pregame, this is zero.
