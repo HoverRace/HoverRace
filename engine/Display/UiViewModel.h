@@ -85,7 +85,7 @@ class MR_DllDeclare UiViewModel : public ViewModel
 
 	public:
 		UiViewModel(uiLayoutFlags_t layoutFlags=0) :
-			SUPER(), pos(0, 0), alignment(Alignment::NW),
+			SUPER(), pos(0, 0), translation(0, 0), alignment(Alignment::NW),
 			layoutFlags(layoutFlags), id(0) { }
 		virtual ~UiViewModel() { }
 
@@ -106,6 +106,15 @@ class MR_DllDeclare UiViewModel : public ViewModel
 		void SetPos(double x, double y) { SetPos(Vec2(x, y)); }
 
 		/**
+		 * Retrieves the position translation.
+		 * @return The translation.
+		 */
+		const Vec2 &GetTranslation() const { return translation; }
+		void SetTranslation(const Vec2 &translation);
+		/// Convenience function for SetTranslation(const Vec2&).
+		void SetTranslation(double x, double y) { SetTranslation(Vec2(x, y)); }
+
+		/**
 		 * Retrieve the alignment of the component.
 		 * @return The alignment.
 		 * @see UiViewModel::Alignment
@@ -123,7 +132,7 @@ class MR_DllDeclare UiViewModel : public ViewModel
 		 */
 		Vec2 GetAlignedPos(double w, double h) const
 		{
-			return GetAlignedPos(pos, w, h);
+			return GetAlignedPos(pos + translation, w, h);
 		}
 
 		/**
@@ -151,6 +160,7 @@ class MR_DllDeclare UiViewModel : public ViewModel
 
 	private:
 		Vec2 pos;
+		Vec2 translation;
 		Alignment alignment;
 		uiLayoutFlags_t layoutFlags;
 		MR_UInt32 id;

@@ -41,6 +41,24 @@ void UiViewModel::SetPos(const Vec2 &pos)
 }
 
 /**
+ * Sets the position translation.
+ *
+ * The translation allows the position to be adjusted (e.g. for animations)
+ * without adjusting the actual position.
+ *
+ * @param translation The translation.
+ */
+void UiViewModel::SetTranslation(const Vec2 &translation)
+{
+	if (this->translation != translation) {
+		this->translation = translation;
+		// As far as the view is concerned, the translation is part of the
+		// position.
+		FireModelUpdate(Props::POS);
+	}
+}
+
+/**
  * Set the alignment of the component.
  * @param alignment The alignment (see Alignment).
  */
