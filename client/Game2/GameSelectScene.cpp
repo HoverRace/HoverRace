@@ -126,7 +126,7 @@ void GameSelectScene::OnPhaseTransition(double progress)
 {
 	double f = pow((1.0 - progress), 4);
 
-	rulebookPanel->SetPos(f * 1280.0 + MARGIN_WIDTH, 0);
+	rulebookPanel->SetTranslation(f * 1280.0, 0);
 
 	SUPER::OnPhaseTransition(progress);
 }
@@ -140,7 +140,7 @@ void GameSelectScene::OnStateTransition(double progress)
 		1 - pow(progress, 4) :
 		pow(1.0 - progress, 4);
 
-	rulebookPanel->SetPos(DialogScene::MARGIN_WIDTH, f * -(BTN_HEIGHT + 1));
+	rulebookPanel->SetTranslation(0, f * -(BTN_HEIGHT + 1));
 
 	SUPER::OnStateTransition(progress);
 }
