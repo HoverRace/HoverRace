@@ -21,6 +21,7 @@ set(GROUPS
 	ObjFac1
 	ObjFacTools
 	Parcel
+	Player
 	Script Script/Help
 	Util Util/yaml
 	VideoServices)
