@@ -53,16 +53,23 @@ class MR_DllDeclare SdlFillBoxView : public SdlView<FillBox>
 	typedef SdlView<FillBox> SUPER;
 	public:
 		SdlFillBoxView(SdlDisplay &disp, FillBox &model) :
-			SUPER(disp, model) { }
+			SUPER(disp, model),
+			screenPos(0, 0), screenSize(0, 0) { }
 		virtual ~SdlFillBoxView() { }
 
 	public:
 		void OnModelUpdate(int) override { }
 
 	public:
+		Vec2 GetScreenPos() const override { return screenPos; }
+		Vec2 GetScreenSize() const override { return screenSize; }
 		Vec3 Measure() override;
 		void PrepareRender() override { }
 		void Render() override;
+
+	private:
+		Vec2 screenPos;
+		Vec2 screenSize;
 };
 
 }  // namespace SDL

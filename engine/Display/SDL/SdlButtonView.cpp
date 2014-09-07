@@ -33,6 +33,20 @@ namespace HoverRace {
 namespace Display {
 namespace SDL {
 
+Vec2 SdlButtonView::GetScreenPos() const
+{
+	// We assume that the background box is sized to the button.
+	auto bgView = model.GetBackgroundChild()->GetView();
+	return bgView ? bgView->GetScreenPos() : Vec2(0, 0);
+}
+
+Vec2 SdlButtonView::GetScreenSize() const
+{
+	// We assume that the background box is sized to the button.
+	auto bgView = model.GetBackgroundChild()->GetView();
+	return bgView ? bgView->GetScreenSize() : Vec2(0, 0);
+}
+
 Vec3 SdlButtonView::Measure()
 {
 	return model.GetSize().Promote();
