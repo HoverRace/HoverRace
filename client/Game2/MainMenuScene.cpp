@@ -63,7 +63,7 @@ MainMenuScene::MainMenuScene(Display::Display &display, GameDirector &director,
 
 	Config *cfg = Config::GetInstance();
 	auto titleLbl = titleContainer->AddChild(new Display::Label(
-		"[ logo goes here :) ]",
+		"HoverRace",
 		Display::UiFont(cfg->GetDefaultFontName(), 40, Display::UiFont::BOLD | Display::UiFont::ITALIC),
 		0xffffffff));
 	titleLbl->SetPos(40, sliderHeight);
