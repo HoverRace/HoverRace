@@ -236,7 +236,7 @@ std::string ClientApp::GetWindowTitle()
 		oss << " (" << pgettext("Version", "testing") << ')';
 	}
 	if (SoundServer::IsDisabled()) {
-		oss << " (" << _("silent mode") << ')';
+		oss << " (" << _("Silent Mode") << ')';
 	}
 
 	return oss.str();
