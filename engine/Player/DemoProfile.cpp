@@ -31,13 +31,13 @@ namespace Player {
 
 namespace {
 	// {a7626e92-26e2-417c-8d40-3b77f24815f0}
-	const boost::uuids::uuid DEMO_UUID = {
+	const boost::uuids::uuid DEMO_UUID = {{
 		0xa7, 0x62, 0x6e, 0x92,
 		0x26, 0xe2,
 		0x41, 0x7c,
 		0x8d, 0x40,
 		0x3b, 0x77, 0xf2, 0x48, 0x15, 0xf0
-	};
+	}};
 }
 
 DemoProfile::DemoProfile() :
