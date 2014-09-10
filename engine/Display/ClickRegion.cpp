@@ -172,13 +172,20 @@ void ClickRegion::SetEnabled(bool enabled)
 	}
 }
 
+/**
+ * Check if the coordinates of an event are within the bounds of this component.
+ * @param pos The screen-space position.
+ * @return true if the test passes, false if the test fails.
+ */
 bool ClickRegion::TestHit(const Vec2 &pos)
 {
-	const Vec2 &sz = GetSize();
-	const Vec2 pui = GetAlignedPos(display.ScreenToUiPosition(pos), -sz.x, -sz.y);
-	return
-		pui.x >= 0 && pui.x < sz.x &&
-		pui.y >= 0 && pui.y < sz.y;
+	// We assume that the view has made the screen-space bounds available.
+	Vec2 boundsPos = GetView()->GetScreenPos();
+	Vec2 boundsSize = GetView()->GetScreenSize();
+	return pos.x >= boundsPos.x &&
+		pos.y >= boundsPos.y &&
+		(pos.x < boundsPos.x + boundsSize.x) &&
+		(pos.y < boundsPos.y + boundsSize.y);
 }
 
 }  // namespace Display

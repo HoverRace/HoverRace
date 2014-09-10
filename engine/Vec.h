@@ -57,11 +57,21 @@ inline bool operator!=(const Vec2 &lhs, const Vec2 &rhs)
 	return !operator==(lhs, rhs);
 }
 
+inline Vec2 operator+(const Vec2 &lhs, const Vec2 &rhs)
+{
+	return Vec2(lhs.x + rhs.x, lhs.y + rhs.y);
+}
+
 inline Vec2 &operator+=(Vec2 &lhs, const Vec2 &rhs)
 {
 	lhs.x += rhs.x;
 	lhs.y += rhs.y;
 	return lhs;
+}
+
+inline Vec2 operator-(const Vec2 &lhs, const Vec2 &rhs)
+{
+	return Vec2(lhs.x - rhs.x, lhs.y - rhs.y);
 }
 
 inline Vec2 &operator-=(Vec2 &lhs, const Vec2 &rhs)
@@ -71,11 +81,21 @@ inline Vec2 &operator-=(Vec2 &lhs, const Vec2 &rhs)
 	return lhs;
 }
 
+inline Vec2 operator*(const Vec2 &lhs, double scale)
+{
+	return Vec2(lhs.x * scale, lhs.y * scale);
+}
+
 inline Vec2 &operator*=(Vec2 &lhs, double scale)
 {
 	lhs.x *= scale;
 	lhs.y *= scale;
 	return lhs;
+}
+
+inline Vec2 operator/(const Vec2 &lhs, double scale)
+{
+	return Vec2(lhs.x / scale, lhs.y / scale);
 }
 
 inline Vec2 &operator/=(Vec2 &lhs, double scale)
@@ -107,6 +127,11 @@ inline bool operator!=(const Vec3 &lhs, const Vec3 &rhs)
 	return !operator==(lhs, rhs);
 }
 
+inline Vec3 operator+(const Vec3 &lhs, const Vec3 &rhs)
+{
+	return Vec3(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z);
+}
+
 inline Vec3 &operator+=(Vec3 &lhs, const Vec3 &rhs)
 {
 	lhs.x += rhs.x;
@@ -115,11 +140,21 @@ inline Vec3 &operator+=(Vec3 &lhs, const Vec3 &rhs)
 	return lhs;
 }
 
+inline Vec3 operator+(const Vec3 &lhs, const Vec2 &rhs)
+{
+	return Vec3(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z);
+}
+
 inline Vec3 &operator+=(Vec3 &lhs, const Vec2 &rhs)
 {
 	lhs.x += rhs.x;
 	lhs.y += rhs.y;
 	return lhs;
+}
+
+inline Vec3 operator-(const Vec3 &lhs, const Vec3 &rhs)
+{
+	return Vec3(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z);
 }
 
 inline Vec3 &operator-=(Vec3 &lhs, const Vec3 &rhs)
@@ -130,12 +165,22 @@ inline Vec3 &operator-=(Vec3 &lhs, const Vec3 &rhs)
 	return lhs;
 }
 
+inline Vec3 operator*(const Vec3 &lhs, double scale)
+{
+	return Vec3(lhs.x * scale, lhs.y * scale, lhs.z * scale);
+}
+
 inline Vec3 &operator*=(Vec3 &lhs, double scale)
 {
 	lhs.x *= scale;
 	lhs.y *= scale;
 	lhs.z *= scale;
 	return lhs;
+}
+
+inline Vec3 operator/(const Vec3 &lhs, double scale)
+{
+	return Vec3(lhs.x / scale, lhs.y / scale, lhs.z / scale);
 }
 
 inline Vec3 &operator/=(Vec3 &lhs, double scale)

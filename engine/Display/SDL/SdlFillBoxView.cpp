@@ -53,6 +53,10 @@ void SdlFillBoxView::Render()
 			h *= uiScale;
 		}
 
+		screenPos = pos;
+		screenSize.x = w;
+		screenSize.y = h;
+
 		SDL_Rect rect = {
 			static_cast<int>(pos.x), static_cast<int>(pos.y),
 			static_cast<int>(w), static_cast<int>(h) };

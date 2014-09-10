@@ -235,8 +235,8 @@ std::string ClientApp::GetWindowTitle()
 	if (cfg->IsPrerelease()) {
 		oss << " (" << pgettext("Version", "testing") << ')';
 	}
-	if (cfg->runtime.silent) {
-		oss << " (" << _("silent mode") << ')';
+	if (SoundServer::IsDisabled()) {
+		oss << " (" << _("Silent Mode") << ')';
 	}
 
 	return oss.str();

@@ -139,7 +139,7 @@ class MR_DllDeclare Container : public UiViewModel
 
 			// We iterate over the child widgets in reverse since the widgets
 			// are rendered back to front, so we let the ones in front get
-			// first chance to handle the envents.
+			// first chance to handle the events.
 
 			Vec2 oldOrigin(0, 0);
 			for (auto iter = children.rbegin();

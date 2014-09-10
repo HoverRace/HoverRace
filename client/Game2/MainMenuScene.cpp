@@ -1,7 +1,7 @@
 
 // MainMenuScene.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -27,8 +27,11 @@
 #include "../../engine/Display/Display.h"
 #include "../../engine/Display/FillBox.h"
 #include "../../engine/Display/Label.h"
+#include "../../engine/Display/SymbolIcon.h"
 #include "../../engine/Util/Config.h"
+#include "../../engine/VideoServices/SoundServer.h"
 
+#include "MessageScene.h"
 #include "PracticeSetupScene.h"
 #include "Rulebook.h"
 #include "SettingsMenuScene.h"
@@ -36,6 +39,7 @@
 #include "MainMenuScene.h"
 
 using namespace HoverRace::Util;
+using namespace HoverRace::VideoServices;
 
 namespace HoverRace {
 namespace Client {
@@ -63,7 +67,7 @@ MainMenuScene::MainMenuScene(Display::Display &display, GameDirector &director,
 
 	Config *cfg = Config::GetInstance();
 	auto titleLbl = titleContainer->AddChild(new Display::Label(
-		"[ logo goes here :) ]",
+		"HoverRace",
 		Display::UiFont(cfg->GetDefaultFontName(), 40, Display::UiFont::BOLD | Display::UiFont::ITALIC),
 		0xffffffff));
 	titleLbl->SetPos(40, sliderHeight);
@@ -86,6 +90,21 @@ MainMenuScene::MainMenuScene(Display::Display &display, GameDirector &director,
 	AddButton(_("Quit"))->GetClickedSignal().connect([&](Display::ClickRegion&) {
 		director.RequestShutdown();
 	});
+
+	if (SoundServer::IsDisabled()) {
+		using namespace Display;
+
+		auto icon = std::make_shared<SymbolIcon>(1, 1, 0xf026, COLOR_WHITE);
+		icon->AttachView(display);
+
+		auto mutedBtn = titleContainer->AddChild(
+			new Button(display, _("Silent Mode")));
+		mutedBtn->SetIcon(icon);
+		mutedBtn->SetAlignment(UiViewModel::Alignment::NE);
+		mutedBtn->SetPos(1280, 0);
+		mutedBtn->GetClickedSignal().connect(
+			std::bind(&MainMenuScene::OnMutedClicked, this));
+	}
 }
 
 MainMenuScene::~MainMenuScene()
@@ -114,6 +133,25 @@ void MainMenuScene::OnMultiplayerClicked()
 void MainMenuScene::OnSettingsClicked()
 {
 	director.RequestPushScene(std::make_shared<SettingsMenuScene>(display, director));
+}
+
+void MainMenuScene::OnMutedClicked()
+{
+	std::string msg;
+
+	if (Config::GetInstance()->runtime.silent) {
+		msg = _("Sound has been disabled because the --silent command-line "
+			"parameter was set.");
+	}
+	else {
+		msg = boost::str(boost::format(
+			_("There was a problem starting the sound system.\n\n"
+			"The error was:\n%s")) %
+			SoundServer::GetInitError());
+	}
+
+	director.RequestPushScene(std::make_shared<MessageScene>(display, director,
+		_("Silent Mode"), msg));
 }
 
 void MainMenuScene::OnStateTransition(double interval)

@@ -64,7 +64,7 @@ void SessionLoadingScene::OnPhaseTransition(double progress)
 	} else {
 		// Slide up.
 		double f = 1 - pow(1.0 - progress, 4);
-		mapPic->SetPos(640, 720.0 + 360.0 + (f * -720.0));
+		mapPic->SetTranslation(0, 720.0 + (f * -720.0));
 		mapPic->SetColor(Display::COLOR_WHITE);
 	}
 

@@ -780,9 +780,8 @@ FlexGridModule::FlexGridModule(Display::Display &display, GameDirector &director
 	grid->AddGridCell(r, c++, new Display::Button(display, "Spectate"));
 
 	sideGrid = root->AddChild(new Display::FlexGrid(display));
-	sideGrid->SetPos(0, 400);
-	//sideGrid->SetPos(1280, 400);
-	//sideGrid->SetAlignment(Alignment::E);
+	sideGrid->SetPos(1280, 400);
+	sideGrid->SetAlignment(Alignment::E);
 
 	const auto AUTOSIZE = Display::FlexGrid::AUTOSIZE;
 

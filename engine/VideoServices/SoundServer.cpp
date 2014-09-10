@@ -552,8 +552,6 @@ bool SoundServer::Init()
 		}
 #	endif
 
-	runtimeCfg.silent = soundDisabled;
-
 	return !soundDisabled;
 }
 
@@ -570,6 +568,16 @@ void SoundServer::Close()
 #	else
 		alutExit();
 #	endif
+}
+
+/**
+ * Determine if the sound is currently disabled.
+ * @return true if disabled, false if not.
+ * @see GetInitError()
+ */
+bool SoundServer::IsDisabled()
+{
+	return soundDisabled;
 }
 
 /**

@@ -57,6 +57,7 @@ class MainMenuScene : public FormScene
 		void OnPracticeClicked();
 		void OnMultiplayerClicked();
 		void OnSettingsClicked();
+		void OnMutedClicked();
 
 	public:
 		// Scene

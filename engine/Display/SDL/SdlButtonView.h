@@ -60,6 +60,8 @@ class MR_DllDeclare SdlButtonView : public SdlView<Button>
 		void OnModelUpdate(int) override { }
 
 	public:
+		Vec2 GetScreenPos() const override;
+		Vec2 GetScreenSize() const override;
 		Vec3 Measure() override;
 		void PrepareRender() override;
 		void Render() override;

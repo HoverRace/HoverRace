@@ -201,9 +201,9 @@ void TrackSelectScene::OnPhaseTransition(double progress)
 		f = 1 - pow(1.0 - progress, 4);
 	}
 
-	subtitleGrid->SetPos(MARGIN_WIDTH, slideOffset + f * -720.0);
-	subtitleRule->SetPos(MARGIN_WIDTH, slideOffset + 60.0 + f * -720.0);
-	trackPanel->SetPos(MARGIN_WIDTH, slideOffset + 100.0 + f * -720.0);
+	subtitleGrid->SetTranslation(0, slideOffset + f * -720.0);
+	subtitleRule->SetTranslation(0, slideOffset + f * -720.0);
+	trackPanel->SetTranslation(0, slideOffset + f * -720.0);
 
 	SUPER::OnPhaseTransition(progress);
 }

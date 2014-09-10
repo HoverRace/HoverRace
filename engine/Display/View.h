@@ -54,6 +54,20 @@ class MR_DllDeclare View
 		virtual void OnModelUpdate(int prop) { HR_UNUSED(prop); }
 
 	public:
+		/**
+		 * Retrieve the screen-space position, if available.
+		 * The availability of this information varies from view to view.
+		 * @return The screen position, or (0, 0) if unavailable..
+		 */
+		virtual Vec2 GetScreenPos() const { return Vec2(0, 0); }
+
+		/**
+		 * Retrieve the screen-space size, if available.
+		 * The availability of this information varies from view to view.
+		 * @return The screen size, or (0, 0) if unavailable.
+		 */
+		virtual Vec2 GetScreenSize() const { return Vec2(0, 0); }
+
 		virtual Vec3 Measure() = 0;
 		virtual void PrepareRender() = 0;
 		virtual void Render() = 0;
