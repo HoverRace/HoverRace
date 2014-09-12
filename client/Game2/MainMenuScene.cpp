@@ -49,7 +49,8 @@ MainMenuScene::MainMenuScene(Display::Display &display, GameDirector &director,
 	SUPER(display, "Main Menu"),
 	display(display), director(director), rulebookLibrary(rulebookLibrary)
 {
-	typedef Display::UiViewModel::Alignment Alignment;
+	using namespace Display;
+	typedef UiViewModel::Alignment Alignment;
 
 	SetPhaseTransitionDuration(500);
 	SetStateTransitionDuration(500);
@@ -60,23 +61,23 @@ MainMenuScene::MainMenuScene(Display::Display &display, GameDirector &director,
 
 	double sliderHeight = 120;
 
-	titleContainer = root->AddChild(new Display::Container(display,
+	titleContainer = root->AddChild(new Container(display,
 		Vec2(1280, sliderHeight)));
 
-	titleContainer->AddChild(new Display::FillBox(titleContainer->GetSize(), 0xff000000));
+	titleContainer->AddChild(new FillBox(titleContainer->GetSize(), 0xff000000));
 
 	Config *cfg = Config::GetInstance();
-	auto titleLbl = titleContainer->AddChild(new Display::Label(
+	auto titleLbl = titleContainer->AddChild(new Label(
 		"HoverRace",
-		Display::UiFont(cfg->GetDefaultFontName(), 40, Display::UiFont::BOLD | Display::UiFont::ITALIC),
+		UiFont(cfg->GetDefaultFontName(), 40, UiFont::BOLD | UiFont::ITALIC),
 		0xffffffff));
 	titleLbl->SetPos(40, sliderHeight);
 	titleLbl->SetAlignment(Alignment::SW);
 
-	menuContainer = root->AddChild(new Display::Container(display,
+	menuContainer = root->AddChild(new Container(display,
 		Vec2(1280, sliderHeight)));
 
-	menuContainer->AddChild(new Display::FillBox(menuContainer->GetSize(), 0xff000000));
+	menuContainer->AddChild(new FillBox(menuContainer->GetSize(), 0xff000000));
 
 	AddButton(_("Practice"))->GetClickedSignal().connect(
 		std::bind(&MainMenuScene::OnPracticeClicked, this));
@@ -87,20 +88,18 @@ MainMenuScene::MainMenuScene(Display::Display &display, GameDirector &director,
 	AddButton(_("Credits"), false)->GetClickedSignal().connect(
 		std::bind(&MainMenuScene::OnSettingsClicked, this));
 
-	AddButton(_("Quit"))->GetClickedSignal().connect([&](Display::ClickRegion&) {
+	AddButton(_("Quit"))->GetClickedSignal().connect([&](ClickRegion&) {
 		director.RequestShutdown();
 	});
 
 	if (SoundServer::IsDisabled()) {
-		using namespace Display;
-
 		auto icon = std::make_shared<SymbolIcon>(1, 1, 0xf026, COLOR_WHITE);
 		icon->AttachView(display);
 
 		auto mutedBtn = titleContainer->AddChild(
 			new Button(display, _("Silent Mode")));
 		mutedBtn->SetIcon(icon);
-		mutedBtn->SetAlignment(UiViewModel::Alignment::NE);
+		mutedBtn->SetAlignment(Alignment::NE);
 		mutedBtn->SetPos(1280, 0);
 		mutedBtn->GetClickedSignal().connect(
 			std::bind(&MainMenuScene::OnMutedClicked, this));
