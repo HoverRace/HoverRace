@@ -42,6 +42,10 @@ namespace Client {
  *
  * These scenes provide a way to wait for the previous scene stack to finish
  * unloading resources then allow the new scene to load.
+ * 
+ * To use this scene, enqueue tasks to the loader, then push the scene that
+ * depends on the loader, then push this scene.  When all of the resources
+ * have been loaded, this scene will automatically pop itself.
  *
  * @author Michael Imamura
  */
