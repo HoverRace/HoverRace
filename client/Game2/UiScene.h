@@ -1,7 +1,7 @@
 
 // UiScene.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ class UiScene : public Scene
 		virtual ~UiScene() { }
 
 	public:
-		virtual bool IsMouseCursorEnabled() const { return true; }
+		bool IsMouseCursorEnabled() const override { return true; }
 
 	public:
 		void AttachController(Control::InputEventController &controller) override;

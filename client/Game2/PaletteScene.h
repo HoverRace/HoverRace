@@ -1,7 +1,7 @@
 
 // PaletteScene.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -49,16 +49,16 @@ class PaletteScene : public UiScene
 		virtual ~PaletteScene();
 
 	public:
-		virtual bool IsMouseCursorEnabled() const { return false; }
+		bool IsMouseCursorEnabled() const override { return false; }
 
 	protected:
 		virtual void OnOk();
 
 	public:
-		virtual void AttachController(Control::InputEventController &controller);
-		virtual void DetachController(Control::InputEventController &controller);
-		virtual void PrepareRender() { }
-		virtual void Render();
+		void AttachController(Control::InputEventController &controller) override;
+		void DetachController(Control::InputEventController &controller) override;
+		void PrepareRender() override { }
+		void Render() override;
 
 	private:
 		GameDirector &director;
