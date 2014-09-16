@@ -47,6 +47,7 @@ namespace HoverRace {
 		class RulebookLibrary;
 		class Scene;
 		typedef std::shared_ptr<Scene> ScenePtr;
+		class StatusOverlayScene;
 	}
 	namespace Control {
 		class InputEventController;
@@ -118,6 +119,8 @@ class ClientApp : public GameDirector
 		Control::InputEventController *controller;
 		sceneStack_t sceneStack;
 		ScenePtr fgScene;  ///< The scene that currently has input focus.
+		std::unique_ptr<StatusOverlayScene> statusOverlayScene;
+		bool showOverlay;
 
 		RulebookLibrary *rulebookLibrary;
 

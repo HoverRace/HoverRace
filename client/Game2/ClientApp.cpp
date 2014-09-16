@@ -61,6 +61,7 @@
 #include "RulebookLibrary.h"
 #include "Rules.h"
 #include "Scene.h"
+#include "StatusOverlayScene.h"
 #include "TestLabScene.h"
 
 #ifdef _WIN32
@@ -99,7 +100,7 @@ ClientApp::ClientApp() :
 	SUPER(),
 	needsDevWarning(false),
 	userEventId(SDL_RegisterEvents(1)),
-	sceneStack(), fgScene(),
+	sceneStack(), fgScene(), statusOverlayScene(), showOverlay(false),
 	fpsLbl(), frameCount(0), lastTimestamp(0), fps(0.0)
 {
 	Config *cfg = Config::GetInstance();
@@ -318,6 +319,7 @@ void ClientApp::RenderScenes()
 		for (const ScenePtr &scene : sceneStack) {
 			scene->PrepareRender();
 		}
+		if (showOverlay) statusOverlayScene->PrepareRender();
 		if (showFps) fpsLbl->PrepareRender();
 
 		for (const ScenePtr &scene : sceneStack) {
@@ -328,6 +330,7 @@ void ClientApp::RenderScenes()
 				scene->Render();
 			}
 		}
+		if (showOverlay) statusOverlayScene->Render();
 		if (showFps) fpsLbl->Render();
 	}
 
@@ -338,6 +341,8 @@ void ClientApp::MainLoop()
 {
 	bool quit = false;
 	SDL_Event evt;
+
+	statusOverlayScene.reset(new StatusOverlayScene(*display, *this));
 
 	Config::cfg_runtime_t &runtimeCfg = Config::GetInstance()->runtime;
 	needsDevWarning =
@@ -402,6 +407,7 @@ void ClientApp::MainLoop()
 	}
 
 	TerminateAllScenes();
+	statusOverlayScene.reset();
 
 	gamePeer->OnShutdown();
 }
@@ -462,11 +468,17 @@ void ClientApp::SetForegroundScene(const ScenePtr &scene)
 		SetForegroundScene();
 	}
 	else {
+		bool uiMode = scene->IsMouseCursorEnabled();
+
 		// Detach the controller from the previous foreground scene.
 		if (fgScene) {
 			consoleToggleConn.disconnect();
 			fgScene->DetachController(*controller);
 			fgScene->MoveToBackground();
+		}
+		if (showOverlay && !uiMode) {
+			statusOverlayScene->DetachController(*controller);
+			statusOverlayScene->MoveToBackground();
 		}
 
 		fgScene = scene;
@@ -475,13 +487,19 @@ void ClientApp::SetForegroundScene(const ScenePtr &scene)
 		controller->ClearActionMap();
 		scene->MoveToForeground();
 		scene->AttachController(*controller);
+		if (!showOverlay && uiMode) {
+			statusOverlayScene->MoveToForeground();
+			statusOverlayScene->AttachController(*controller);
+		}
+
+		showOverlay = uiMode;
 
 		// Enable the console toggle.
 		controller->AddConsoleToggleMaps();
 		consoleToggleConn = controller->actions.sys.consoleToggle->Connect(
 			std::bind(&ClientApp::OnConsoleToggle, this));
 
-		SDL_ShowCursor(scene->IsMouseCursorEnabled() ? SDL_ENABLE : SDL_DISABLE);
+		SDL_ShowCursor(uiMode ? SDL_ENABLE : SDL_DISABLE);
 	}
 }
 
