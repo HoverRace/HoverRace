@@ -443,6 +443,14 @@ void ClientApp::SetForegroundScene()
 		fgScene->DetachController(*controller);
 	}
 
+	// Don't display the overlay scene since we're in an unusual state and
+	// probably can't properly deal with overlay interactions.
+	if (showOverlay) {
+		statusOverlayScene->DetachController(*controller);
+		statusOverlayScene->MoveToBackground();
+		showOverlay = false;
+	}
+
 	fgScene.reset();
 
 	controller->ClearActionMap();
