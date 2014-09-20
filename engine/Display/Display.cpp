@@ -97,6 +97,13 @@ void Display::styles_t::Reload()
 	bodyAsideFont.Set(defaultFontName, 20, 0);
 	bodyAsideFg = Color(0xffbfbfbf);
 
+	announcementHeadFont.Set(defaultFontName, 30);
+	announcementHeadFg = COLOR_WHITE;
+	announcementBodyFont.Set(defaultFontName, 20);
+	announcementBodyFg = Color(0xff7f7f7f);
+	announcementSymbolFg = Color(0xbfffffff);
+	announcementBg = Color(0xbf000000);
+
 	consoleFont.Set(monospaceFontName, 30);
 	consoleFg = COLOR_WHITE;
 	consoleCursorFg = 0xffbfbfbf;

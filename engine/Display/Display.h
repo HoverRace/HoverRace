@@ -217,6 +217,14 @@ class MR_DllDeclare Display :
 			UiFont bodyAsideFont;
 			Color bodyAsideFg;
 
+			// Announcements.
+			UiFont announcementHeadFont;
+			Color announcementHeadFg;
+			UiFont announcementBodyFont;
+			Color announcementBodyFg;
+			Color announcementSymbolFg;
+			Color announcementBg;
+
 			// Console text.
 			UiFont consoleFont;
 			Color consoleFg;
