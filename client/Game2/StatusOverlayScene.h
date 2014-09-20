@@ -26,6 +26,9 @@
 #include "UiScene.h"
 
 namespace HoverRace {
+	namespace Client {
+		class Announcement;
+	}
 	namespace Display {
 		class Display;
 	}
@@ -49,6 +52,9 @@ class StatusOverlayScene : public UiScene
 		bool IsMouseCursorEnabled() const override { return true; }
 
 	public:
+		void Announce(std::shared_ptr<Announcement> ann);
+
+	public:
 		void AttachController(Control::InputEventController &controller) override;
 		void DetachController(Control::InputEventController &controller) override;
 		void PrepareRender() override;
@@ -57,6 +63,7 @@ class StatusOverlayScene : public UiScene
 	private:
 		Display::Display &display;
 		GameDirector &director;
+		std::list<std::shared_ptr<Announcement>> announcements;
 };
 
 }  // namespace HoverScript

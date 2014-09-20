@@ -84,15 +84,27 @@ namespace {
 		REQ_EVT_SCENE_PUSH,
 		REQ_EVT_SCENE_POP,
 		REQ_EVT_SCENE_REPLACE,
+		REQ_EVT_ANN_ADD,
 	};
 
 	/**
 	 * Used by @c REQ_EVT_SCENE_PUSH and @c REQ_SCENE_REPLACE to transfer
 	 * the requested scene.
 	 */
-	struct SceneHolder {
+	struct SceneHolder
+	{
 		SceneHolder(const ScenePtr &scene) : scene(scene) { }
 		ScenePtr scene;
+	};
+
+	/**
+	 * Used by @c REQ_EVT_ANN_ADD to transfer the requested announcement.
+	 */
+	struct AnnouncementHolder
+	{
+		AnnouncementHolder(std::shared_ptr<Announcement> ann) :
+			ann(std::move(ann)) { }
+		std::shared_ptr<Announcement> ann;
 	};
 }
 
@@ -382,6 +394,13 @@ void ClientApp::MainLoop()
 						delete holder;
 						break;
 					}
+
+					case REQ_EVT_ANN_ADD: {
+						AnnouncementHolder *holder = static_cast<AnnouncementHolder*>(evt.user.data1);
+						statusOverlayScene->Announce(holder->ann);
+						delete holder;
+						break;
+					}
 				}
 			}
 			else {
@@ -666,6 +685,15 @@ void ClientApp::RequestNewPracticeSession(std::shared_ptr<Rules> rules,
 	catch (Parcel::ObjStreamExn&) {
 		throw;
 	}
+}
+
+void ClientApp::RequestAnnouncement(std::shared_ptr<Announcement> ann)
+{
+	SDL_Event evt;
+	evt.type = userEventId;
+	evt.user.code = REQ_EVT_ANN_ADD;
+	evt.user.data1 = new AnnouncementHolder(ann);
+	SDL_PushEvent(&evt);
 }
 
 void ClientApp::RequestShutdown()

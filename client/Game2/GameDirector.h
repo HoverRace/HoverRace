@@ -26,6 +26,7 @@ namespace HoverRace {
 		namespace HoverScript {
 			class MetaSession;
 		}
+		class Announcement;
 		class LoadingScene;
 		class Rules;
 		class Scene;
@@ -88,6 +89,13 @@ class GameDirector
 		 */
 		virtual void RequestNewPracticeSession(std::shared_ptr<Rules> rules,
 			std::shared_ptr<LoadingScene> loadingScene = std::shared_ptr<LoadingScene>()) = 0;
+
+		/**
+		 * Request an announcement to be displayed.
+		 * @note This may be called from any thread.
+		 * @param ann The announcement (may not be @c nullptr).
+		 */
+		virtual void RequestAnnouncement(std::shared_ptr<Announcement> ann) = 0;
 
 		/**
 		 * Request an orderly shutdown the of app.

@@ -40,6 +40,7 @@ namespace HoverRace {
 			class SysConsole;
 			class SysEnv;
 		}
+		class Announcement;
 		class HighObserver;
 		class LoadingScene;
 		class Rulebook;
@@ -105,6 +106,7 @@ class ClientApp : public GameDirector
 		virtual void RequestReplaceScene(const ScenePtr &scene);
 		virtual void RequestMainMenu(std::shared_ptr<LoadingScene> loadingScene = std::shared_ptr<LoadingScene>());
 		virtual void RequestNewPracticeSession(std::shared_ptr<Rules> rules, std::shared_ptr<LoadingScene> loadingScene = std::shared_ptr<LoadingScene>());
+		void RequestAnnouncement(std::shared_ptr<Announcement> ann) override;
 		virtual void RequestShutdown();
 		virtual Display::Display *GetDisplay() const { return display; }
 		virtual VideoServices::VideoBuffer *GetVideoBuffer() const;
@@ -121,6 +123,7 @@ class ClientApp : public GameDirector
 		ScenePtr fgScene;  ///< The scene that currently has input focus.
 		std::unique_ptr<StatusOverlayScene> statusOverlayScene;
 		bool showOverlay;
+		std::list<std::shared_ptr<Announcement>> announcements;
 
 		RulebookLibrary *rulebookLibrary;
 

@@ -43,6 +43,16 @@ StatusOverlayScene::~StatusOverlayScene()
 {
 }
 
+/**
+ * Display an announcement.
+ * @param ann The announcement (may not be @c nullptr).
+ */
+void StatusOverlayScene::Announce(std::shared_ptr<Announcement> ann)
+{
+	HR_LOG(debug) << "Announcing: " << ann;
+	announcements.emplace_front(std::move(ann));
+}
+
 void StatusOverlayScene::AttachController(Control::InputEventController &controller)
 {
 	HR_LOG(info) << "Attaching overlay scene.";
