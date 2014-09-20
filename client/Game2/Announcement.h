@@ -55,7 +55,7 @@ class Announcement
 		virtual ~Announcement() { }
 
 	public:
-		virtual std::ostream &StreamOut(std::ostream &os)
+		virtual std::ostream &StreamOut(std::ostream &os) const
 		{
 			os << label;
 			return os;
