@@ -55,6 +55,13 @@ class Announcement
 		virtual ~Announcement() { }
 
 	public:
+		virtual std::ostream &StreamOut(std::ostream &os)
+		{
+			os << label;
+			return os;
+		}
+
+	public:
 		const std::string &GetPostType() const { return postType; }
 		const std::string &GetLabel() const { return label; }
 		std::shared_ptr<Player::Player> GetPlayer() const { return player; }
@@ -81,6 +88,12 @@ class Announcement
 		const std::string label;
 		std::shared_ptr<Player::Player> player;
 };
+
+inline std::ostream &operator<<(std::ostream &os,
+                                const Announcement &ann)
+{
+	return ann.StreamOut(os);
+}
 
 }  // namespace Client
 }  // namespace HoverRace
