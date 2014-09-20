@@ -101,18 +101,18 @@ class ClientApp : public GameDirector
 
 	public:
 		// GameDirector
-		virtual void RequestPushScene(const ScenePtr &scene);
-		virtual void RequestPopScene();
-		virtual void RequestReplaceScene(const ScenePtr &scene);
-		virtual void RequestMainMenu(std::shared_ptr<LoadingScene> loadingScene = std::shared_ptr<LoadingScene>());
-		virtual void RequestNewPracticeSession(std::shared_ptr<Rules> rules, std::shared_ptr<LoadingScene> loadingScene = std::shared_ptr<LoadingScene>());
+		void RequestPushScene(const ScenePtr &scene) override;
+		void RequestPopScene() override;
+		void RequestReplaceScene(const ScenePtr &scene) override;
+		void RequestMainMenu(std::shared_ptr<LoadingScene> loadingScene = std::shared_ptr<LoadingScene>()) override;
+		void RequestNewPracticeSession(std::shared_ptr<Rules> rules, std::shared_ptr<LoadingScene> loadingScene = std::shared_ptr<LoadingScene>()) override;
 		void RequestAnnouncement(std::shared_ptr<Announcement> ann) override;
-		virtual void RequestShutdown();
-		virtual Display::Display *GetDisplay() const { return display; }
-		virtual VideoServices::VideoBuffer *GetVideoBuffer() const;
-		virtual Control::InputEventController *GetController() const { return controller; }
-		virtual Control::InputEventController *ReloadController();
-		virtual sessionChangedSignal_t &GetSessionChangedSignal() { return sessionChangedSignal; }
+		void RequestShutdown() override;
+		Display::Display *GetDisplay() const override { return display; }
+		VideoServices::VideoBuffer *GetVideoBuffer() const override;
+		Control::InputEventController *GetController() const override { return controller; }
+		Control::InputEventController *ReloadController() override;
+		sessionChangedSignal_t &GetSessionChangedSignal() override { return sessionChangedSignal; }
 
 	private:
 		bool needsDevWarning;  ///< Display dev release warning on next menu.
