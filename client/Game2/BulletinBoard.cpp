@@ -21,6 +21,9 @@
 
 #include "../StdAfx.h"
 
+#include "../../engine/Display/FillBox.h"
+#include "../../engine/Display/Label.h"
+
 #include "Announcement.h"
 
 #include "BulletinBoard.h"
@@ -38,10 +41,12 @@ public:
 
 private:
 	std::shared_ptr<Announcement> ann;
+	std::shared_ptr<Display::FillBox> bg;
+	std::shared_ptr<Display::Label> labelLbl;
 }; //}}}
 
 BulletinBoard::BulletinBoard(Display::Display &display) :
-	SUPER(display)
+	SUPER(display, Vec2(580, 720), false)
 {
 }
 
@@ -55,7 +60,7 @@ BulletinBoard::~BulletinBoard()
  */
 void BulletinBoard::Announce(std::shared_ptr<Announcement> ann)
 {
-	bulletins.emplace_front(ann, std::make_shared<Bulletin>(display, ann));
+	bulletins.emplace_front(ann, AddChild(new Bulletin(display, ann)));
 	//TODO: Update layout.
 }
 
@@ -63,8 +68,23 @@ void BulletinBoard::Announce(std::shared_ptr<Announcement> ann)
 
 BulletinBoard::Bulletin::Bulletin(Display::Display &display,
 	std::shared_ptr<Announcement> ann) :
-	SUPER(display), ann(std::move(ann))
+	SUPER(display, Vec2(580, 100), false), ann(std::move(ann))
 {
+	using namespace Display;
+
+	const auto &s = display.styles;
+
+	bg = AddChild(new FillBox(580, 100, s.announcementBg));
+
+	labelLbl = AddChild(new Label(420, this->ann->GetLabel(),
+		s.announcementHeadFont, s.announcementHeadFg));
+	labelLbl->SetPos(120, 20);
+
+	auto icon = AddChild(this->ann->CreateIcon(display));
+	icon->SetPos(40, 20);
+	icon->SetSize(60, 60);
+
+	//TODO: Player avatar.
 }
 
 //}}} Bulletin
