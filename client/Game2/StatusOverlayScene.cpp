@@ -59,7 +59,7 @@ StatusOverlayScene::~StatusOverlayScene()
  */
 void StatusOverlayScene::Announce(std::shared_ptr<Announcement> ann)
 {
-	HR_LOG(debug) << "Announcing: " << ann;
+	HR_LOG(debug) << "Announcing: " << *ann;
 	bulletinBoard->Announce(ann);
 }
 
