@@ -1,5 +1,5 @@
 
-// StatusOverlayScene.h
+// BulletinBoard.h
 //
 // Copyright (c) 2014 Michael Imamura.
 //
@@ -21,14 +21,11 @@
 
 #pragma once
 
-#include "GameDirector.h"
-
-#include "UiScene.h"
+#include "../../engine/Display/Container.h"
 
 namespace HoverRace {
 	namespace Client {
 		class Announcement;
-		class BulletinBoard;
 	}
 	namespace Display {
 		class Display;
@@ -39,32 +36,25 @@ namespace HoverRace {
 namespace Client {
 
 /**
- * Overlay for showing connected players, pop-up messages, etc.
+ * Container for active announcements.
  * @author Michael Imamura
  */
-class StatusOverlayScene : public UiScene
+class BulletinBoard : public Display::Container
 {
-	typedef UiScene SUPER;
-	public:
-		StatusOverlayScene(Display::Display &display, GameDirector &director);
-		virtual ~StatusOverlayScene();
+	typedef Display::Container SUPER;
+public:
+	BulletinBoard(Display::Display &display);
+	virtual ~BulletinBoard();
 
-	public:
-		bool IsMouseCursorEnabled() const override { return true; }
+public:
+	void Announce(std::shared_ptr<Announcement> ann);
 
-	public:
-		void Announce(std::shared_ptr<Announcement> ann);
-
-	public:
-		void AttachController(Control::InputEventController &controller) override;
-		void DetachController(Control::InputEventController &controller) override;
-		void PrepareRender() override;
-		void Render() override;
-
-	private:
-		Display::Display &display;
-		GameDirector &director;
-		std::unique_ptr<BulletinBoard> bulletinBoard;
+private:
+	class Bulletin;
+	typedef std::tuple<
+		std::shared_ptr<Announcement>,
+		std::shared_ptr<Bulletin>> bulletin_t;
+	std::list<bulletin_t> bulletins;
 };
 
 }  // namespace HoverScript

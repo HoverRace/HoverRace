@@ -22,8 +22,12 @@
 #include "../StdAfx.h"
 
 #include "../../engine/Control/Controller.h"
+#include "../../engine/Display/Container.h"
 #include "../../engine/Display/Display.h"
 #include "../../engine/Util/Log.h"
+
+#include "Announcement.h"
+#include "BulletinBoard.h"
 
 #include "StatusOverlayScene.h"
 
@@ -35,8 +39,14 @@ namespace Client {
 StatusOverlayScene::StatusOverlayScene(Display::Display &display,
 	GameDirector &director) :
 	SUPER("Status Overlay"),
-	display(display), director(director)
+	display(display), director(director),
+	bulletinBoard(new BulletinBoard(display))
 {
+	using namespace Display;
+	typedef UiViewModel::Alignment Alignment;
+
+	bulletinBoard->SetAlignment(Alignment::CENTER);
+	bulletinBoard->SetPos(640, 0);
 }
 
 StatusOverlayScene::~StatusOverlayScene()
@@ -50,7 +60,7 @@ StatusOverlayScene::~StatusOverlayScene()
 void StatusOverlayScene::Announce(std::shared_ptr<Announcement> ann)
 {
 	HR_LOG(debug) << "Announcing: " << ann;
-	announcements.emplace_front(std::move(ann));
+	bulletinBoard->Announce(ann);
 }
 
 void StatusOverlayScene::AttachController(Control::InputEventController &controller)
@@ -66,11 +76,15 @@ void StatusOverlayScene::DetachController(Control::InputEventController &control
 void StatusOverlayScene::PrepareRender()
 {
 	SUPER::PrepareRender();
+
+	bulletinBoard->PrepareRender();
 }
 
 void StatusOverlayScene::Render()
 {
 	SUPER::Render();
+
+	bulletinBoard->Render();
 }
 
 }  // namespace HoverScript
