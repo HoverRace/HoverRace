@@ -45,7 +45,8 @@ StatusOverlayScene::StatusOverlayScene(Display::Display &display,
 	using namespace Display;
 	typedef UiViewModel::Alignment Alignment;
 
-	bulletinBoard->SetAlignment(Alignment::CENTER);
+	bulletinBoard->AttachView(display);
+	bulletinBoard->SetAlignment(Alignment::N);
 	bulletinBoard->SetPos(640, 0);
 }
 
