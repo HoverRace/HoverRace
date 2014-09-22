@@ -315,6 +315,8 @@ void ClientApp::AdvanceScenes(Util::OS::timestamp_t tick)
 			++iter;
 		}
 	}
+
+	if (showOverlay) statusOverlayScene->Advance(tick);
 }
 
 void ClientApp::RenderScenes()
