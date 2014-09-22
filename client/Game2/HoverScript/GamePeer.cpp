@@ -1,7 +1,7 @@
 
 // GamePeer.cpp
 //
-// Copyright (c) 2010, 2013 Michael Imamura.
+// Copyright (c) 2010, 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@
 #include "../../../engine/Util/Config.h"
 #include "../../../engine/Util/Log.h"
 #include "../GameDirector.h"
+#include "../MessageAnnouncement.h"
 #include "../Rulebook.h"
 #include "../RulebookLibrary.h"
 #include "../Rules.h"
@@ -69,6 +70,8 @@ void GamePeer::Register(Script::Core *scripting)
 
 	module(L) [
 		class_<GamePeer,SUPER,std::shared_ptr<GamePeer>>("Game")
+			.def("announce", &GamePeer::LAnnounce)
+			.def("announce", &GamePeer::LAnnounce_T)
 			.def("is_initialized", &GamePeer::LIsInitialized)
 			.def("get_config", &GamePeer::LGetConfig, adopt(result))
 			.def("on_init", &GamePeer::LOnInit)
@@ -141,6 +144,17 @@ void GamePeer::VerifyInitialized() const
 		luaL_error(GetScripting()->GetState(), "Game is not yet initialized.");
 		return;
 	}
+}
+
+void GamePeer::LAnnounce(const std::string &label)
+{
+	LAnnounce_T(label, "");
+}
+
+void GamePeer::LAnnounce_T(const std::string &label, const std::string &text)
+{
+	director.RequestAnnouncement(
+		std::make_shared<MessageAnnouncement>(label, text));
 }
 
 bool GamePeer::LIsInitialized()

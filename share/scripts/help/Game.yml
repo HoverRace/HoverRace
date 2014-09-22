@@ -1,3 +1,11 @@
+announce:
+  type: method
+  sig:
+    - game:announce(label)
+    - game:announce(label, text)
+  brief: >
+    Post an announcement.
+
 get_config:
   type: method
   sig:

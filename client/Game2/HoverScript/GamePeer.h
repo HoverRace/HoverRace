@@ -1,8 +1,7 @@
 
 // GamePeer.h
-// Scripting peer for system-level control of the game.
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -80,6 +79,9 @@ class GamePeer : public Script::Peer {
 
 	public:
 		ConfigPeer *LGetConfig();
+
+		void LAnnounce(const std::string &label);
+		void LAnnounce_T(const std::string &label, const std::string &text);
 
 		bool LIsInitialized();
 
