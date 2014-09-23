@@ -52,6 +52,12 @@ public:
 protected:
 	void Layout() override;
 
+public:
+	void OnBulletinSizeUpdated()
+	{
+		RequestLayout();
+	}
+
 private:
 	class Bulletin;
 	typedef std::tuple<

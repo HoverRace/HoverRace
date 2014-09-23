@@ -22,6 +22,7 @@
 #include "../StdAfx.h"
 
 #include "../../engine/Display/FillBox.h"
+#include "../../engine/Display/FlexGrid.h"
 #include "../../engine/Display/Label.h"
 
 #include "Announcement.h"
@@ -36,13 +37,19 @@ class BulletinBoard::Bulletin : public Display::Container /*{{{*/
 {
 	typedef Display::Container SUPER;
 public:
-	Bulletin(Display::Display &display, std::shared_ptr<Announcement> ann);
+	Bulletin(BulletinBoard *board, Display::Display &display,
+		std::shared_ptr<Announcement> ann);
 	virtual ~Bulletin() { }
 
+protected:
+	void Layout() override;
+
 private:
+	BulletinBoard *board;
 	std::shared_ptr<Announcement> ann;
 	std::shared_ptr<Display::FillBox> bg;
 	std::shared_ptr<Display::Label> labelLbl;
+	std::shared_ptr<Display::FlexGrid> contentGrid;
 }; //}}}
 
 BulletinBoard::BulletinBoard(Display::Display &display) :
@@ -60,7 +67,7 @@ BulletinBoard::~BulletinBoard()
  */
 void BulletinBoard::Announce(std::shared_ptr<Announcement> ann)
 {
-	bulletins.emplace_front(ann, AddChild(new Bulletin(display, ann)));
+	bulletins.emplace_front(ann, AddChild(new Bulletin(this, display, ann)));
 	RequestLayout();
 }
 
@@ -68,33 +75,59 @@ void BulletinBoard::Layout()
 {
 	Vec2 pos{ 0, 0 };
 	for (auto &bulletin : bulletins) {
-		std::get<1>(bulletin)->SetPos(pos);
-		pos.y += 100;
-		//TODO: Check actual size of the bulletin.
+		auto &b = std::get<1>(bulletin);
+		if (b->IsVisible()) {
+			b->SetPos(pos);
+			pos.y += b->GetSize().y;
+		}
 	}
 }
 
 //{{{ Bulletin /////////////////////////////////////////////////////////////////
 
-BulletinBoard::Bulletin::Bulletin(Display::Display &display,
-	std::shared_ptr<Announcement> ann) :
-	SUPER(display, Vec2(580, 100), false), ann(std::move(ann))
+BulletinBoard::Bulletin::Bulletin(BulletinBoard *board,
+	Display::Display &display, std::shared_ptr<Announcement> announcement) :
+	SUPER(display, Vec2(580, 0), false),
+	board(board), ann(std::move(announcement))
 {
 	using namespace Display;
 
 	const auto &s = display.styles;
 
+	// The initial height of the Bulletin is zero and it starts hidden so that
+	// it's not displayed until the first layout.
+	SetVisible(false);
+
 	bg = AddChild(new FillBox(580, 100, s.announcementBg));
 
-	labelLbl = AddChild(new Label(420, this->ann->GetLabel(),
+	labelLbl = AddChild(new Label(420, ann->GetLabel(),
 		s.announcementHeadFont, s.announcementHeadFg));
 	labelLbl->SetPos(120, 20);
 
-	auto icon = AddChild(this->ann->CreateIcon(display));
+	auto icon = AddChild(ann->CreateIcon(display));
 	icon->SetPos(40, 20);
 	icon->SetSize(60, 60);
 
 	//TODO: Player avatar.
+	
+	contentGrid = AddChild(new FlexGrid(display));
+	contentGrid->SetMargin(3, 0);
+	contentGrid->SetPos(120, 60);
+	contentGrid->SetFixedWidth(420);
+	ann->CreateContents(display, contentGrid.get());
+}
+
+void BulletinBoard::Bulletin::Layout()
+{
+	SetVisible(true);
+
+	Vec3 gridSize = contentGrid->Measure();
+	Vec2 fullSize{ GetSize().x, 60 + gridSize.y + 10 };
+	if (GetSize() != fullSize) {
+		SetSize(fullSize);
+		bg->SetSize(fullSize);
+		board->OnBulletinSizeUpdated();
+	}
 }
 
 //}}} Bulletin
