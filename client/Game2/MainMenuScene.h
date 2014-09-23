@@ -1,7 +1,7 @@
 
 // MainMenuScene.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -61,8 +61,8 @@ class MainMenuScene : public FormScene
 
 	public:
 		// Scene
-		virtual void OnStateTransition(double interval);
-		virtual void Layout();
+		void OnStateTransition(double interval) override;
+		void Layout() override;
 
 	private:
 		Display::Display &display;
