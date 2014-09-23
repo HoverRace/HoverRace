@@ -49,6 +49,9 @@ public:
 public:
 	void Announce(std::shared_ptr<Announcement> ann);
 
+protected:
+	void Layout() override;
+
 private:
 	class Bulletin;
 	typedef std::tuple<

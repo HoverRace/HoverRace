@@ -61,7 +61,17 @@ BulletinBoard::~BulletinBoard()
 void BulletinBoard::Announce(std::shared_ptr<Announcement> ann)
 {
 	bulletins.emplace_front(ann, AddChild(new Bulletin(display, ann)));
-	//TODO: Update layout.
+	RequestLayout();
+}
+
+void BulletinBoard::Layout()
+{
+	Vec2 pos{ 0, 0 };
+	for (auto &bulletin : bulletins) {
+		std::get<1>(bulletin)->SetPos(pos);
+		pos.y += 100;
+		//TODO: Check actual size of the bulletin.
+	}
 }
 
 //{{{ Bulletin /////////////////////////////////////////////////////////////////
