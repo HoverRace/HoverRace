@@ -30,8 +30,14 @@
 
 #include "BulletinBoard.h"
 
+using namespace HoverRace::Util;
+
 namespace HoverRace {
 namespace Client {
+
+namespace {
+	OS::timestamp_t BULLETIN_TIMEOUT = 3000;
+}
 
 /// Displays a single announcement.
 class BulletinBoard::Bulletin : public Display::Container /*{{{*/
@@ -44,13 +50,19 @@ public:
 
 public:
 	Announcement *GetAnnouncement() const { return ann.get(); }
+	bool IsExpired() const { return expired; }
 
 protected:
 	void Layout() override;
 
+public:
+	void Advance(OS::timestamp_t tick);
+
 private:
 	BulletinBoard *board;
 	std::shared_ptr<Announcement> ann;
+	bool expired;
+	OS::timestamp_t expiration;
 	std::shared_ptr<Display::FillBox> bg;
 	std::shared_ptr<Display::ClickRegion> clickBox;
 	std::shared_ptr<Display::Label> labelLbl;
@@ -80,9 +92,20 @@ void BulletinBoard::Layout()
 {
 	Vec2 pos{ 0, 0 };
 	for (auto &bulletin : bulletins) {
-		if (bulletin->IsVisible()) {
+		if (bulletin->IsVisible() && !bulletin->IsExpired()) {
 			bulletin->SetPos(pos);
 			pos.y += bulletin->GetSize().y;
+		}
+	}
+}
+
+void BulletinBoard::Advance(Util::OS::timestamp_t tick)
+{
+	for (auto &bulletin : bulletins) {
+		bulletin->Advance(tick);
+		if (bulletin->IsExpired()) {
+			RemoveChild(bulletin);
+			//TODO: Remove from list of bulletins.
 		}
 	}
 }
@@ -92,7 +115,8 @@ void BulletinBoard::Layout()
 BulletinBoard::Bulletin::Bulletin(BulletinBoard *board,
 	Display::Display &display, std::shared_ptr<Announcement> announcement) :
 	SUPER(display, Vec2(580, 0), false),
-	board(board), ann(std::move(announcement))
+	board(board), ann(std::move(announcement)),
+	expired(false), expiration(0)
 {
 	using namespace Display;
 
@@ -136,6 +160,18 @@ void BulletinBoard::Bulletin::Layout()
 		bg->SetSize(fullSize);
 		clickBox->SetSize(fullSize);
 		board->OnBulletinSizeUpdated();
+	}
+}
+
+void BulletinBoard::Bulletin::Advance(OS::timestamp_t tick)
+{
+	if (!expired) {
+		if (expiration == 0) {
+			expiration = tick + BULLETIN_TIMEOUT;
+		}
+		else if (tick > expiration) {
+			expired = true;
+		}
 	}
 }
 

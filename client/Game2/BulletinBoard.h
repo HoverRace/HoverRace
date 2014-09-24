@@ -22,6 +22,7 @@
 #pragma once
 
 #include "../../engine/Display/Container.h"
+#include "../../engine/Util/OS.h"
 
 namespace HoverRace {
 	namespace Client {
@@ -51,6 +52,9 @@ public:
 
 protected:
 	void Layout() override;
+
+public:
+	void Advance(Util::OS::timestamp_t tick);
 
 public:
 	void OnBulletinSizeUpdated()

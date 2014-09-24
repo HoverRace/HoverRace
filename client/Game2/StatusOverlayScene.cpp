@@ -96,6 +96,11 @@ void StatusOverlayScene::OnMouseReleased(const Control::Mouse::Click &click)
 	bulletinBoard->OnMouseReleased(click);
 }
 
+void StatusOverlayScene::Advance(Util::OS::timestamp_t tick)
+{
+	bulletinBoard->Advance(tick);
+}
+
 void StatusOverlayScene::PrepareRender()
 {
 	SUPER::PrepareRender();

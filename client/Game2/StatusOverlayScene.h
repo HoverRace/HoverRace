@@ -65,6 +65,7 @@ class StatusOverlayScene : public UiScene
 		void OnMouseReleased(const Control::Mouse::Click &click);
 
 	public:
+		void Advance(Util::OS::timestamp_t tick) override;
 		void PrepareRender() override;
 		void Render() override;
 
