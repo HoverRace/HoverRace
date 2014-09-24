@@ -34,6 +34,27 @@ Vec3 SdlClickRegionView::Measure()
 	return model.GetSize().Promote();
 }
 
+void SdlClickRegionView::Render()
+{
+	//TODO: Only recalculate if necessary.
+
+	Vec2 pos = display.LayoutUiPosition(
+		model.GetAlignedPos(model.GetSize().x, model.GetSize().y));
+
+	const Vec2 &size = model.GetSize();
+	double w = size.x;
+	double h = size.y;
+	if (!model.IsLayoutUnscaled()) {
+		double uiScale = display.GetUiScale();
+		w *= uiScale;
+		h *= uiScale;
+	}
+
+	screenPos = pos;
+	screenSize.x = w;
+	screenSize.y = h;
+}
+
 }  // namespace SDL
 }  // namespace Display
 }  // namespace HoverRace

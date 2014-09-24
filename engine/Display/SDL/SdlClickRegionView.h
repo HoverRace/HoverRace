@@ -53,16 +53,23 @@ class MR_DllDeclare SdlClickRegionView : public SdlView<ClickRegion>
 	typedef SdlView<ClickRegion> SUPER;
 	public:
 		SdlClickRegionView(SdlDisplay &disp, ClickRegion &model) :
-			SUPER(disp, model) { }
+			SUPER(disp, model),
+			screenPos(0, 0), screenSize(0, 0) { }
 		virtual ~SdlClickRegionView() { }
 
 	public:
 		void OnModelUpdate(int) override { }
 
 	public:
+		Vec2 GetScreenPos() const override { return screenPos; }
+		Vec2 GetScreenSize() const override { return screenSize; }
 		Vec3 Measure() override;
 		void PrepareRender() override { }
-		void Render() override { }
+		void Render() override;
+
+	private:
+		Vec2 screenPos;
+		Vec2 screenSize;
 };
 
 }  // namespace SDL
