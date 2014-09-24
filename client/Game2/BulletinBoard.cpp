@@ -117,7 +117,7 @@ BulletinBoard::Bulletin::Bulletin(BulletinBoard *board,
 	icon->SetSize(60, 60);
 
 	//TODO: Player avatar.
-	
+
 	contentGrid = AddChild(new FlexGrid(display));
 	contentGrid->SetMargin(3, 0);
 	contentGrid->SetPos(120, 60);
