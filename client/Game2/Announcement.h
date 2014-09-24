@@ -83,6 +83,11 @@ class Announcement
 		virtual void CreateContents(Display::Display &display,
 			Display::FlexGrid *grid) const = 0;
 
+		/**
+		 * Handle when the announcement is clicked.
+		 */
+		virtual void OnClick() { }
+
 	private:
 		const std::string postType;
 		const std::string label;

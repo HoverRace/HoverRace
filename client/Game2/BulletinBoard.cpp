@@ -21,6 +21,7 @@
 
 #include "../StdAfx.h"
 
+#include "../../engine/Display/ClickRegion.h"
 #include "../../engine/Display/FillBox.h"
 #include "../../engine/Display/FlexGrid.h"
 #include "../../engine/Display/Label.h"
@@ -48,6 +49,7 @@ private:
 	BulletinBoard *board;
 	std::shared_ptr<Announcement> ann;
 	std::shared_ptr<Display::FillBox> bg;
+	std::shared_ptr<Display::ClickRegion> clickBox;
 	std::shared_ptr<Display::Label> labelLbl;
 	std::shared_ptr<Display::FlexGrid> contentGrid;
 }; //}}}
@@ -100,6 +102,10 @@ BulletinBoard::Bulletin::Bulletin(BulletinBoard *board,
 
 	bg = AddChild(new FillBox(580, 100, s.announcementBg));
 
+	clickBox = AddChild(new ClickRegion(display, Vec2(580, 100)));
+	clickBox->GetClickedSignal().connect(std::bind(&Announcement::OnClick,
+		ann.get()));
+
 	labelLbl = AddChild(new Label(420, ann->GetLabel(),
 		s.announcementHeadFont, s.announcementHeadFg));
 	labelLbl->SetPos(120, 20);
@@ -126,6 +132,7 @@ void BulletinBoard::Bulletin::Layout()
 	if (GetSize() != fullSize) {
 		SetSize(fullSize);
 		bg->SetSize(fullSize);
+		clickBox->SetSize(fullSize);
 		board->OnBulletinSizeUpdated();
 	}
 }
