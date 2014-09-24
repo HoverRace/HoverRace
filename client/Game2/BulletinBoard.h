@@ -60,10 +60,7 @@ public:
 
 private:
 	class Bulletin;
-	typedef std::tuple<
-		std::shared_ptr<Announcement>,
-		std::shared_ptr<Bulletin>> bulletin_t;
-	std::list<bulletin_t> bulletins;
+	std::list<std::shared_ptr<Bulletin>> bulletins;
 };
 
 }  // namespace HoverScript

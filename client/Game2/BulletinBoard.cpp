@@ -42,6 +42,9 @@ public:
 		std::shared_ptr<Announcement> ann);
 	virtual ~Bulletin() { }
 
+public:
+	Announcement *GetAnnouncement() const { return ann.get(); }
+
 protected:
 	void Layout() override;
 
@@ -69,7 +72,7 @@ BulletinBoard::~BulletinBoard()
  */
 void BulletinBoard::Announce(std::shared_ptr<Announcement> ann)
 {
-	bulletins.emplace_front(ann, AddChild(new Bulletin(this, display, ann)));
+	bulletins.emplace_front(AddChild(new Bulletin(this, display, ann)));
 	RequestLayout();
 }
 
@@ -77,10 +80,9 @@ void BulletinBoard::Layout()
 {
 	Vec2 pos{ 0, 0 };
 	for (auto &bulletin : bulletins) {
-		auto &b = std::get<1>(bulletin);
-		if (b->IsVisible()) {
-			b->SetPos(pos);
-			pos.y += b->GetSize().y;
+		if (bulletin->IsVisible()) {
+			bulletin->SetPos(pos);
+			pos.y += bulletin->GetSize().y;
 		}
 	}
 }
