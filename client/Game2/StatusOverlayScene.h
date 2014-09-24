@@ -58,6 +58,13 @@ class StatusOverlayScene : public UiScene
 	public:
 		void AttachController(Control::InputEventController &controller) override;
 		void DetachController(Control::InputEventController &controller) override;
+
+	private:
+		void OnMouseMoved(const Vec2 &pos);
+		void OnMousePressed(const Control::Mouse::Click &click);
+		void OnMouseReleased(const Control::Mouse::Click &click);
+
+	public:
 		void PrepareRender() override;
 		void Render() override;
 
@@ -65,6 +72,9 @@ class StatusOverlayScene : public UiScene
 		Display::Display &display;
 		GameDirector &director;
 		std::unique_ptr<BulletinBoard> bulletinBoard;
+		boost::signals2::connection mouseMovedConn;
+		boost::signals2::connection mousePressedConn;
+		boost::signals2::connection mouseReleasedConn;
 };
 
 }  // namespace HoverScript
