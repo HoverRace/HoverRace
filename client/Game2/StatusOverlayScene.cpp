@@ -40,7 +40,7 @@ StatusOverlayScene::StatusOverlayScene(Display::Display &display,
 	GameDirector &director) :
 	SUPER("Status Overlay"),
 	display(display), director(director),
-	bulletinBoard(new BulletinBoard(display))
+	bulletinBoard(new BulletinBoard(display, Display::UiLayoutFlags::FLOATING))
 {
 	using namespace Display;
 	typedef UiViewModel::Alignment Alignment;

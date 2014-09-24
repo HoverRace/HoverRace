@@ -69,8 +69,9 @@ private:
 	std::shared_ptr<Display::FlexGrid> contentGrid;
 }; //}}}
 
-BulletinBoard::BulletinBoard(Display::Display &display) :
-	SUPER(display, Vec2(580, 720), false)
+BulletinBoard::BulletinBoard(Display::Display &display,
+	Display::uiLayoutFlags_t layoutFlags) :
+	SUPER(display, Vec2(580, 720), false, layoutFlags)
 {
 }
 

@@ -44,7 +44,8 @@ class BulletinBoard : public Display::Container
 {
 	typedef Display::Container SUPER;
 public:
-	BulletinBoard(Display::Display &display);
+	BulletinBoard(Display::Display &display,
+		Display::uiLayoutFlags_t layoutFlags = 0);
 	virtual ~BulletinBoard();
 
 public:
