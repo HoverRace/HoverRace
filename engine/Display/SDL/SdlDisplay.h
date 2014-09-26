@@ -66,26 +66,26 @@ class MR_DllDeclare SdlDisplay : public Display
 
 	public:
 		// ViewAttacher
-		virtual void AttachView(Button &model);
-		virtual void AttachView(ClickRegion &model);
-		virtual void AttachView(Container &model);
-		virtual void AttachView(FillBox &model);
-		virtual void AttachView(Label &model);
-		virtual void AttachView(Picture &model);
-		virtual void AttachView(RuleLine &model);
-		virtual void AttachView(ScreenFade &model);
-		virtual void AttachView(SymbolIcon &model);
-		virtual void AttachView(Wallpaper &model);
+		void AttachView(Button &model) override;
+		void AttachView(ClickRegion &model) override;
+		void AttachView(Container &model) override;
+		void AttachView(FillBox &model) override;
+		void AttachView(Label &model) override;
+		void AttachView(Picture &model) override;
+		void AttachView(RuleLine &model) override;
+		void AttachView(ScreenFade &model) override;
+		void AttachView(SymbolIcon &model) override;
+		void AttachView(Wallpaper &model) override;
 
 	public:
 		std::shared_ptr<SdlTexture> LoadRes(std::shared_ptr<Res<Texture>> res);
 
 	public:
 		// Display
-		virtual VideoServices::VideoBuffer &GetLegacyDisplay() const { return *legacyDisplay; }
-		virtual void OnDesktopModeChanged(int width, int height);
-		virtual void OnDisplayConfigChanged();
-		virtual void Flip();
+		VideoServices::VideoBuffer &GetLegacyDisplay() const override { return *legacyDisplay; }
+		void OnDesktopModeChanged(int width, int height) override;
+		void OnDisplayConfigChanged() override;
+		void Flip() override;
 		void Screenshot() override;
 
 	private:
