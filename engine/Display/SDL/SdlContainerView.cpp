@@ -172,8 +172,10 @@ void SdlContainerView::Render()
 
 	const Vec2 &size = model.GetSize();
 	Vec2 oldOrigin = display.AddUiOrigin(model.GetAlignedPos(size.x, size.y));
+	auto oldFlags = display.AddUiLayoutFlags(model.GetLayoutFlags());
 	std::for_each(children.begin(), children.end(),
 		std::mem_fn(&ViewModel::Render));
+	display.SetUiLayoutFlags(oldFlags);
 	display.SetUiOrigin(oldOrigin);
 
 	if (clip) {

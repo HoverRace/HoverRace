@@ -80,7 +80,8 @@ class MR_DllDeclare Display :
 	public ViewAttacher<Wallpaper>
 {
 	public:
-		Display() : uiOrigin(0, 0), uiScale(1.0), uiOffset(0, 0) { }
+		Display() : uiOrigin(0, 0), uiLayoutFlags(0), uiScale(1.0),
+			uiOffset(0, 0) { }
 		virtual ~Display() { }
 
 	public:
@@ -172,21 +173,39 @@ class MR_DllDeclare Display :
 			return oldOrigin;
 		}
 
+		/**
+		 * Explicitly set the current UI layout flags.
+		 * Calls to LayoutUiPosition combine the current layout flags with
+		 * the widget layout flags when determining the adjusted position.
+		 * @param flags The new flags.
+		 */
+		void SetUiLayoutFlags(uiLayoutFlags_t flags) { uiLayoutFlags = flags; }
+
+		/**
+		 * Combine the current UI layout flags with new flags.
+		 * @param flags The new flags.
+		 * @return The old flags.
+		 * @see #SetUiLayoutFlags
+		 */
+		uiLayoutFlags_t AddUiLayoutFlags(uiLayoutFlags_t flags)
+		{
+			auto oldFlags = uiLayoutFlags;
+			uiLayoutFlags |= flags;
+			return oldFlags;
+		}
+
 		double GetUiScale() const { return uiScale; }
 		const Vec2 &GetUiOffset() const { return uiOffset; }
 
 		Vec2 LayoutUiPosition(const Vec2 &relPos, uiLayoutFlags_t layoutFlags=0)
 		{
-			if (layoutFlags & UiLayoutFlags::FLOATING) {
-				return relPos;
-			}
-			else {
-				Vec2 adjustedPos = relPos;
-				adjustedPos += GetUiOrigin();
-				adjustedPos *= GetUiScale();
+			Vec2 adjustedPos = relPos;
+			adjustedPos += GetUiOrigin();
+			adjustedPos *= GetUiScale();
+			if (!((layoutFlags | uiLayoutFlags) & UiLayoutFlags::FLOATING)) {
 				adjustedPos += GetUiOffset();
-				return adjustedPos;
 			}
+			return adjustedPos;
 		}
 
 		Vec2 ScreenToUiPosition(const Vec2 &pos)
@@ -200,6 +219,7 @@ class MR_DllDeclare Display :
 
 	private:
 		Vec2 uiOrigin;
+		uiLayoutFlags_t uiLayoutFlags;
 		double uiScale;
 		Vec2 uiOffset;
 		displayConfigChangedSignal_t displayConfigChangedSignal;
