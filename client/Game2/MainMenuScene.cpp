@@ -28,7 +28,6 @@
 #include "../../engine/Display/FillBox.h"
 #include "../../engine/Display/Label.h"
 #include "../../engine/Display/SymbolIcon.h"
-#include "../../engine/Util/Config.h"
 #include "../../engine/VideoServices/SoundServer.h"
 
 #include "MessageScene.h"
@@ -66,10 +65,9 @@ MainMenuScene::MainMenuScene(Display::Display &display, GameDirector &director,
 
 	titleContainer->AddChild(new FillBox(titleContainer->GetSize(), 0xff000000));
 
-	Config *cfg = Config::GetInstance();
 	auto titleLbl = titleContainer->AddChild(new Label(
 		"HoverRace",
-		UiFont(cfg->GetDefaultFontName(), 40, UiFont::BOLD | UiFont::ITALIC),
+		UiFont("", 40, UiFont::BOLD | UiFont::ITALIC),
 		0xffffffff));
 	titleLbl->SetPos(40, sliderHeight);
 	titleLbl->SetAlignment(Alignment::SW);
