@@ -42,7 +42,7 @@ namespace Display {
  */
 struct MR_DllDeclare UiFont
 {
-	UiFont(const std::string &name="Arial", double size=20.0, int style=0) :
+	UiFont(const std::string &name="", double size=20.0, int style=0) :
 		name(name), size(size), style(style) { }
 
 	UiFont(const UiFont &o) = default;
@@ -51,7 +51,7 @@ struct MR_DllDeclare UiFont
 	UiFont &operator=(const UiFont &o) = default;
 	UiFont &operator=(UiFont &&o) = default;
 
-	void Set(const std::string &name="Arial", double size=20.0, int style=0)
+	void Set(const std::string &name="", double size=20.0, int style=0)
 	{
 		this->name = name;
 		this->size = size;
