@@ -1,7 +1,7 @@
 
 // Chronometer.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@
 #include "../StdAfx.h"
 
 #include "../Util/Clock.h"
-#include "../Util/Config.h"
 #include "FillBox.h"
 #include "Label.h"
 
@@ -52,10 +51,8 @@ Chronometer::Chronometer(Display &display, const std::string &title,
 	SUPER(display),
 	clock(std::move(clock)), lastTick(0)
 {
-	Config *cfg = Config::GetInstance();
-
-	const UiFont titleFont(cfg->GetDefaultFontName(), 20);
-	const UiFont valueFont(cfg->GetDefaultFontName(), 30, UiFont::BOLD);
+	const UiFont titleFont(20);
+	const UiFont valueFont(30, UiFont::BOLD);
 
 	bg = AddChild(new FillBox(0, 0, BG_COLOR));
 

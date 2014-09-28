@@ -21,7 +21,6 @@
 
 #include "../StdAfx.h"
 
-#include "../Util/Config.h"
 #include "FillBox.h"
 #include "Label.h"
 
@@ -60,10 +59,8 @@ Counter::Counter(Display &display, const std::string &title, double initValue,
 	value(initValue), total(total),
 	valueChanged(true)
 {
-	Config *cfg = Config::GetInstance();
-
-	const UiFont titleFont(cfg->GetDefaultFontName(), 20);
-	const UiFont valueFont(cfg->GetDefaultFontName(), 30, UiFont::BOLD);
+	const UiFont titleFont(20);
+	const UiFont valueFont(30, UiFont::BOLD);
 
 	bg = AddChild(new FillBox(0, 0, BG_COLOR));
 

@@ -83,7 +83,6 @@ TrackSelectScene::TrackSelectScene(Display::Display &display,
 	trackList.Reload(Config::GetInstance()->GetTrackBundle());
 
 	Config *cfg = Config::GetInstance();
-	const std::string &fontName = cfg->GetDefaultFontName();
 	const auto &s = display.styles;
 
 	auto root = GetContentRoot();
@@ -96,12 +95,12 @@ TrackSelectScene::TrackSelectScene(Display::Display &display,
 
 	rulebookLbl = subtitleGrid->AddGridCell(0, 0, new Label(
 		rulebook->GetTitle() + " //",
-		UiFont(fontName, 30), 0xffd0d0d0))->GetContents();
+		UiFont(30), 0xffd0d0d0))->GetContents();
 	rulebookLbl->SetAlignment(Alignment::SW);
 
 	rulebookDescLbl = subtitleGrid->AddGridCell(0, 1, new Label(
 		rulebook->GetDescription(),
-		UiFont(fontName, 25), 0xff6d6d6d))->GetContents();
+		UiFont(25), 0xff6d6d6d))->GetContents();
 	rulebookDescLbl->SetAlignment(Alignment::SW);
 
 	subtitleRule = root->AddChild(new RuleLine(

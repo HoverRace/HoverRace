@@ -87,19 +87,18 @@ Display::styles_t::styles_t() :
 void Display::styles_t::Reload()
 {
 	const Config *cfg = Config::GetInstance();
-	const std::string &defaultFontName = cfg->GetDefaultFontName();
 	const std::string &monospaceFontName = cfg->GetDefaultMonospaceFontName();
 
-	bodyFont.Set(defaultFontName, 30, 0);
+	bodyFont.Set(30, 0);
 	bodyFg = Color(0xffbfbfbf);
-	bodyHeadFont.Set(defaultFontName, 30, 0);
+	bodyHeadFont.Set(30, 0);
 	bodyHeadFg = Color(0xffffffff);
-	bodyAsideFont.Set(defaultFontName, 20, 0);
+	bodyAsideFont.Set(20, 0);
 	bodyAsideFg = Color(0xffbfbfbf);
 
-	announcementHeadFont.Set(defaultFontName, 30);
+	announcementHeadFont.Set(30);
 	announcementHeadFg = COLOR_WHITE;
-	announcementBodyFont.Set(defaultFontName, 20);
+	announcementBodyFont.Set(20);
 	announcementBodyFg = Color(0xff7f7f7f);
 	announcementSymbolFg = Color(0xbfffffff);
 	announcementBg = Color(0xbf000000);
@@ -124,7 +123,7 @@ void Display::styles_t::Reload()
 	buttonDisabledBg = 0x3f7f7f7f;
 	buttonPressedBg = 0x7f00007f;
 
-	headingFont.Set(defaultFontName, 40, UiFont::BOLD);
+	headingFont.Set(40, UiFont::BOLD);
 	headingFg = COLOR_WHITE;
 }
 

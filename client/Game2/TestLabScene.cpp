@@ -376,9 +376,6 @@ LayoutModule::LayoutModule(Display::Display &display, GameDirector &director) :
 
 	Display::Container *root = GetRoot();
 
-	Config *cfg = Config::GetInstance();
-	std::string fontName = cfg->GetDefaultFontName();
-
 	displayConfigChangedConn = display.GetDisplayConfigChangedSignal().
 		connect(std::bind(&LayoutModule::OnDisplayConfigChanged, this));
 
@@ -387,7 +384,7 @@ LayoutModule::LayoutModule(Display::Display &display, GameDirector &director) :
 	displayInfoBox = root->InsertChild(0, new Display::FillBox(1280, 720, 0xff3f3f3f));
 
 	displayInfoLbl = root->AddChild(new Display::Label("Res",
-		Display::UiFont(fontName, 20),
+		Display::UiFont(20),
 		Display::COLOR_WHITE));
 	displayInfoLbl->SetPos(640, 360);
 	displayInfoLbl->SetAlignment(Alignment::CENTER);
@@ -406,13 +403,13 @@ LayoutModule::LayoutModule(Display::Display &display, GameDirector &director) :
 	AddAlignmentTestElem(Alignment::SE, "Southeast |", 1279, 719);
 
 	lbl = root->AddChild(new Display::Label("Red 20 Normal",
-		Display::UiFont(fontName, 20), 0xffff0000));
+		Display::UiFont(20), 0xffff0000));
 	lbl->SetPos(0, 20);
 	lbl = root->AddChild(new Display::Label("Yellow (75%) 25 Italic",
-		Display::UiFont(fontName, 25, Display::UiFont::ITALIC), 0xbfffff00));
+		Display::UiFont(25, Display::UiFont::ITALIC), 0xbfffff00));
 	lbl->SetPos(0, 40);
 	lbl = root->AddChild(new Display::Label("Magenta (50%) 30 Bold+Italic",
-		Display::UiFont(fontName, 30, Display::UiFont::BOLD | Display::UiFont::ITALIC),
+		Display::UiFont(30, Display::UiFont::BOLD | Display::UiFont::ITALIC),
 		0x7fff00ff));
 	lbl->SetPos(0, 65);
 }
@@ -421,15 +418,12 @@ void LayoutModule::AddAlignmentTestElem(
 	Display::UiViewModel::Alignment alignment,
 	const std::string &label, double x, double y)
 {
-	Config *cfg = Config::GetInstance();
-	std::string fontName = cfg->GetDefaultFontName();
-
 	auto fillBox = GetRoot()->AddChild(new Display::FillBox(50, 50, 0x7f00ffff));
 	fillBox->SetAlignment(alignment);
 	fillBox->SetPos(x, y);
 
 	auto lbl = GetRoot()->AddChild(new Display::Label(label,
-		Display::UiFont(fontName, 40), 0xffffffff));
+		Display::UiFont(40), 0xffffffff));
 	lbl->SetAlignment(alignment);
 	lbl->SetPos(x, y);
 }
@@ -497,7 +491,6 @@ LabelModule::LabelModule(Display::Display &display, GameDirector &director) :
 	SUPER(display, director, "Label")
 {
 	Config *cfg = Config::GetInstance();
-	const std::string &fontName = cfg->GetDefaultFontName();
 	const std::string &monospaceFontName = cfg->GetDefaultMonospaceFontName();
 	const std::string &symbolFontName = cfg->GetDefaultSymbolFontName();
 
@@ -507,18 +500,18 @@ LabelModule::LabelModule(Display::Display &display, GameDirector &director) :
 	std::shared_ptr<Display::Label> lbl;
 
 	lbl = root->AddChild(new Display::Label("Red 20 Normal",
-		Display::UiFont(fontName, 20), 0xffff0000));
+		Display::UiFont(20), 0xffff0000));
 	lbl->SetPos(0, 20);
 	lbl = root->AddChild(new Display::Label("Yellow (75%) 25 Italic",
-		Display::UiFont(fontName, 25, Display::UiFont::ITALIC), 0xbfffff00));
+		Display::UiFont(25, Display::UiFont::ITALIC), 0xbfffff00));
 	lbl->SetPos(0, 40);
 	lbl = root->AddChild(new Display::Label("Magenta (50%) 30 Bold+Italic",
-		Display::UiFont(fontName, 30, Display::UiFont::BOLD | Display::UiFont::ITALIC),
+		Display::UiFont(30, Display::UiFont::BOLD | Display::UiFont::ITALIC),
 		0x7fff00ff));
 	lbl->SetPos(0, 65);
 
 	lbl = root->AddChild(new Display::Label("Default Font",
-		Display::UiFont(fontName, 30), 0xffbfbfbf));
+		Display::UiFont(30), 0xffbfbfbf));
 	lbl->SetPos(640, 20);
 	lbl = root->AddChild(new Display::Label("Monospace Font",
 		Display::UiFont(monospaceFontName, 30), 0xffbfbfbf));
@@ -543,7 +536,7 @@ LabelModule::LabelModule(Display::Display &display, GameDirector &director) :
 	wrapBox->SetPos(100, 150);
 
 	wrapLbl = root->AddChild(new Display::Label(1280 / 4, wrapText,
-		Display::UiFont(fontName, 30), 0xffffffff));
+		Display::UiFont(30), 0xffffffff));
 	wrapLbl->SetPos(100, 150);
 
 	// Buttons to increase / decrease the wrap width.

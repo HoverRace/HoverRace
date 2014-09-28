@@ -205,7 +205,7 @@ ClientApp::ClientApp() :
 
 	namespace LayoutFlags = Display::UiLayoutFlags;
 	fpsLbl = new Display::Label("FPS:",
-		Display::UiFont(cfg->GetDefaultFontName(), 20, Display::UiFont::BOLD),
+		Display::UiFont(20, Display::UiFont::BOLD),
 		Display::Color(0xff, 0xff, 0x7f, 0x00),
 		LayoutFlags::UNSCALED | LayoutFlags::FLOATING);
 	fpsLbl->AttachView(*display);

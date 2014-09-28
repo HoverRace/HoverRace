@@ -1,7 +1,7 @@
 
 // HudText.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@
 
 #include "../StdAfx.h"
 
-#include "../Util/Config.h"
 #include "FillBox.h"
 #include "Label.h"
 
@@ -47,9 +46,7 @@ namespace {
 HudText::HudText(Display &display, const std::string &text) :
 	SUPER(display)
 {
-	Config *cfg = Config::GetInstance();
-
-	const UiFont textFont(cfg->GetDefaultFontName(), 30, UiFont::BOLD);
+	const UiFont textFont(30, UiFont::BOLD);
 
 	bg = AddChild(new FillBox(0, 0, BG_COLOR));
 
