@@ -506,13 +506,15 @@ void SdlDisplay::ApplyVideoMode()
  */
 TTF_Font *SdlDisplay::LoadTtfFont(const UiFont &font)
 {
+	const Config *cfg = Config::GetInstance();
+
 	// Scale the font size to match the DPI we use in SDL_Pango.
 	// SDL_ttf always assumes a DPI of 75.
-	int size = static_cast<int>(font.size * 60.0 / 75.0);
+	int size = static_cast<int>(cfg->video.textScale * font.size * 60.0 / 75.0);
 
 	std::string fullFontName = font.name;
 	if (fullFontName.empty()) {
-		fullFontName = Config::GetInstance()->GetDefaultFontName();
+		fullFontName = cfg->GetDefaultFontName();
 	}
 
 	if (font.isBold()) fullFontName += "Bold";

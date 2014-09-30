@@ -690,6 +690,7 @@ void Config::ResetToDefaults()
 	video.gamma = 1.2;
 	video.contrast = 0.95;
 	video.brightness = 0.95;
+	video.textScale = 1.0;
 	video.xPos = 150;
 	video.yPos = 150;
 	video.xRes = 800;
@@ -1011,6 +1012,8 @@ void Config::cfg_video_t::Load(yaml::MapNode *root)
 	READ_DOUBLE(root, contrast, 0.0, 1.0);
 	READ_DOUBLE(root, brightness, 0.0, 1.0);
 
+	READ_DOUBLE(root, textScale, 0.1, 2.0);
+
 	READ_INT(root, xPos, -32768, 32768);
 	READ_INT(root, yPos, -32768, 32768);
 	READ_INT(root, xRes, 0, 32768);
@@ -1028,6 +1031,8 @@ void Config::cfg_video_t::Save(yaml::Emitter *emitter)
 	EMIT_VAR(emitter, gamma);
 	EMIT_VAR(emitter, contrast);
 	EMIT_VAR(emitter, brightness);
+
+	EMIT_VAR(emitter, textScale);
 
 	EMIT_VAR(emitter, xPos);
 	EMIT_VAR(emitter, yPos);

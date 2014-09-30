@@ -181,6 +181,8 @@ class MR_DllDeclare Config
 			double contrast;
 			double brightness;
 
+			double textScale;
+
 			int xPos;
 			int yPos;
 			int xRes;
