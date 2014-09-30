@@ -181,8 +181,6 @@ class MR_DllDeclare Config
 			double contrast;
 			double brightness;
 
-			bool nativeBppFullscreen;
-
 			int xPos;
 			int yPos;
 			int xRes;
