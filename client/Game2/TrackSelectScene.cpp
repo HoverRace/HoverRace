@@ -82,7 +82,6 @@ TrackSelectScene::TrackSelectScene(Display::Display &display,
 
 	trackList.Reload(Config::GetInstance()->GetTrackBundle());
 
-	Config *cfg = Config::GetInstance();
 	const auto &s = display.styles;
 
 	auto root = GetContentRoot();
@@ -138,7 +137,7 @@ TrackSelectScene::TrackSelectScene(Display::Display &display,
 	trackMetaGrid->SetPos(280, 20);
 	trackMetaGrid->SetMargin(0, 0);
 	trackMetaGrid->SetPadding(0, 0);
-	
+
 	trackNameLbl = trackMetaGrid->AddGridCell(0, 0,
 		new Label(520, "Name", s.bodyHeadFont, s.bodyHeadFg))->GetContents();
 
