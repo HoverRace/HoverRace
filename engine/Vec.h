@@ -45,6 +45,12 @@ struct Vec2
 	double y;
 };
 
+inline std::ostream &operator<<(std::ostream &os, const Vec2 &v)
+{
+	os << '<' << v.x << ", " << v.y << '>';
+	return os;
+}
+
 inline bool operator==(const Vec2 &lhs, const Vec2 &rhs)
 {
 	return
@@ -113,6 +119,12 @@ struct Vec3
 	double y;
 	double z;
 };
+
+inline std::ostream &operator<<(std::ostream &os, const Vec3 &v)
+{
+	os << '<' << v.x << ", " << v.y << ", " << v.z << '>';
+	return os;
+}
 
 inline bool operator==(const Vec3 &lhs, const Vec3 &rhs)
 {
