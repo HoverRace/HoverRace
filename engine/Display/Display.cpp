@@ -58,10 +58,17 @@ void Display::OnDisplayConfigChanged()
 		uiOffset.y = 0;
 	}
 
+	// Save the new UI scale before firing displayConfigChanged.
+	// This way, handlers that need to know both the new dimensions and scale
+	// can do so, even though we only pass the dimensions.
+	bool scaleChanged = uiScale != newUiScale;
+	if (scaleChanged) {
+		uiScale = newUiScale;
+	}
+
 	FireDisplayConfigChangedSignal(w, h);
 
-	if (uiScale != newUiScale) {
-		uiScale = newUiScale;
+	if (scaleChanged) {
 		FireUiScaleChangedSignal(uiScale);
 	}
 }
