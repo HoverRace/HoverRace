@@ -349,8 +349,11 @@ std::shared_ptr<SdlTexture> SdlDisplay::LoadRes(std::shared_ptr<Res<Texture>> re
 
 		// Assign palette if 8-bit.
 		if (imageData->depth == 8) {
-			SDL_SetPaletteColors(surface->format->palette,
-				GetLegacyDisplay().GetPalette(), 0, 256);
+			if (SDL_SetPaletteColors(surface->format->palette,
+				GetLegacyDisplay().GetPalette(), 0, 256) < 0)
+			{
+				throw ResLoadExn(res->GetId() + ": " + SDL_GetError());
+			}
 		}
 	}
 	else {
