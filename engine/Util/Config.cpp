@@ -1012,7 +1012,7 @@ void Config::cfg_video_t::Load(yaml::MapNode *root)
 	READ_DOUBLE(root, contrast, 0.0, 1.0);
 	READ_DOUBLE(root, brightness, 0.0, 1.0);
 
-	READ_DOUBLE(root, textScale, 0.1, 2.0);
+	READ_DOUBLE(root, textScale, 0.5, 1.5);
 
 	READ_INT(root, xPos, -32768, 32768);
 	READ_INT(root, yPos, -32768, 32768);
