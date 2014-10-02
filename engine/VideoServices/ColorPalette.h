@@ -68,6 +68,13 @@ inline MR_UInt8 &PalB(paletteEntry_t &ent) { return ent.b; }
 MR_DllDeclare paletteEntry_t *GetColors(double pGamma, double pIntensity = 0.8, double pIntensityBase = 0.0);
 MR_DllDeclare const paletteEntry_t &ConvertColor(MR_UInt8 pRed, MR_UInt8 pGreen, MR_UInt8 pBlue, double pGamma, double pIntensity = 0.8, double pIntensityBase = 0.0);
 
+inline std::ostream &operator<<(std::ostream &os, const paletteEntry_t &ent)
+{
+	os << boost::format("#%02x%02x%02x%02x") %
+		ent.a % ent.r % ent.g % ent.b;
+	return os;
+}
+
 }  // namespace ColorPalette
 
 }  // namespace VideoServices
