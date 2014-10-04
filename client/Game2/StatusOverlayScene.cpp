@@ -79,7 +79,7 @@ void StatusOverlayScene::AttachController(Control::InputEventController &control
 		std::bind(&StatusOverlayScene::OnMouseReleased, this, std::placeholders::_1));
 }
 
-void StatusOverlayScene::DetachController(Control::InputEventController &controller)
+void StatusOverlayScene::DetachController(Control::InputEventController&)
 {
 	mouseReleasedConn.disconnect();
 	mousePressedConn.disconnect();
