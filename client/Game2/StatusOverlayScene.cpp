@@ -24,6 +24,7 @@
 #include "../../engine/Control/Controller.h"
 #include "../../engine/Display/Container.h"
 #include "../../engine/Display/Display.h"
+#include "../../engine/Util/Config.h"
 #include "../../engine/Util/Log.h"
 
 #include "Announcement.h"
@@ -48,6 +49,10 @@ StatusOverlayScene::StatusOverlayScene(Display::Display &display,
 	bulletinBoard->AttachView(display);
 	bulletinBoard->SetAlignment(Alignment::N);
 	bulletinBoard->SetPos(640, 0);
+
+	displayConfigChangedConn =
+		display.GetDisplayConfigChangedSignal().connect(
+			std::bind(&StatusOverlayScene::RequestLayout, this));
 }
 
 StatusOverlayScene::~StatusOverlayScene()
@@ -94,6 +99,12 @@ void StatusOverlayScene::OnMousePressed(const Control::Mouse::Click &click)
 void StatusOverlayScene::OnMouseReleased(const Control::Mouse::Click &click)
 {
 	bulletinBoard->OnMouseReleased(click);
+}
+
+void StatusOverlayScene::Layout()
+{
+	// Keep the board at the top-center of the screen.
+	bulletinBoard->SetPos(display.GetUiScreenSize().x / 2.0, 0);
 }
 
 void StatusOverlayScene::Advance(Util::OS::timestamp_t tick)

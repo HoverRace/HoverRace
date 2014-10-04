@@ -60,11 +60,13 @@ class StatusOverlayScene : public UiScene
 		void DetachController(Control::InputEventController &controller) override;
 
 	private:
+		void OnDisplayConfigChanged();
 		void OnMouseMoved(const Vec2 &pos);
 		void OnMousePressed(const Control::Mouse::Click &click);
 		void OnMouseReleased(const Control::Mouse::Click &click);
 
 	public:
+		void Layout() override;
 		void Advance(Util::OS::timestamp_t tick) override;
 		void PrepareRender() override;
 		void Render() override;
@@ -73,6 +75,7 @@ class StatusOverlayScene : public UiScene
 		Display::Display &display;
 		GameDirector &director;
 		std::unique_ptr<BulletinBoard> bulletinBoard;
+		boost::signals2::scoped_connection displayConfigChangedConn;
 		boost::signals2::connection mouseMovedConn;
 		boost::signals2::connection mousePressedConn;
 		boost::signals2::connection mouseReleasedConn;
