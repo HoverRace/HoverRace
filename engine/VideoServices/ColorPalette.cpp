@@ -22,6 +22,8 @@
 
 #include "../StdAfx.h"
 
+#include <boost/format.hpp>
+
 #include <math.h>
 
 #include "ColorPalette.h"
@@ -139,6 +141,13 @@ const paletteEntry_t &ConvertColor(MR_UInt8 pRed, MR_UInt8 pGreen, MR_UInt8 pBlu
 	AssignPaletteEntry(lReturnValue, lRed, lGreen, lBlue);
 
 	return lReturnValue;
+}
+
+std::ostream &operator<<(std::ostream &os, const paletteEntry_t &ent)
+{
+	os << boost::format("#%02x%02x%02x%02x") %
+		ent.a % ent.r % ent.g % ent.b;
+	return os;
 }
 
 }  // namespace ColorPalette
