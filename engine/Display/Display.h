@@ -220,7 +220,8 @@ class MR_DllDeclare Display :
 		/**
 		 * Retrieve the dimensions of the screen, in UI coordinates.
 		 *
-		 * This is useful for components with UiLayoutFlags::FLOATING set.
+		 * This is useful for components with UiLayoutFlags::FLOATING set,
+		 * but without UiLayoutFlags::UNSCALED.
 		 *
 		 * @return The dimensions.
 		 */
