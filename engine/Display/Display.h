@@ -208,15 +208,6 @@ class MR_DllDeclare Display :
 			return adjustedPos;
 		}
 
-		Vec2 ScreenToUiPosition(const Vec2 &pos)
-		{
-			Vec2 adjustedPos = pos;
-			adjustedPos -= GetUiOffset();
-			adjustedPos /= GetUiScale();
-			adjustedPos -= GetUiOrigin();
-			return adjustedPos;
-		}
-
 		/**
 		 * Retrieve the dimensions of the screen, in UI coordinates.
 		 *
