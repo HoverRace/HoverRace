@@ -81,7 +81,7 @@ class MR_DllDeclare Display :
 {
 	public:
 		Display() : uiOrigin(0, 0), uiLayoutFlags(0), uiScale(1.0),
-			uiOffset(0, 0) { }
+			uiOffset(0, 0), uiScreenSize(1280, 720) { }
 		virtual ~Display() { }
 
 	public:
@@ -217,11 +217,21 @@ class MR_DllDeclare Display :
 			return adjustedPos;
 		}
 
+		/**
+		 * Retrieve the dimensions of the screen, in UI coordinates.
+		 *
+		 * This is useful for components with UiLayoutFlags::FLOATING set.
+		 *
+		 * @return The dimensions.
+		 */
+		const Vec2 &GetUiScreenSize() const { return uiScreenSize; }
+
 	private:
 		Vec2 uiOrigin;
 		uiLayoutFlags_t uiLayoutFlags;
 		double uiScale;
 		Vec2 uiOffset;
+		Vec2 uiScreenSize;
 		displayConfigChangedSignal_t displayConfigChangedSignal;
 		uiScaleChangedSignal_t uiScaleChangedSignal;
 

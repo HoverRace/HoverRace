@@ -66,6 +66,10 @@ void Display::OnDisplayConfigChanged()
 		uiScale = newUiScale;
 	}
 
+	uiScreenSize.x = 1280.0;
+	uiScreenSize.y = 720.0;
+	uiScreenSize += (uiOffset * 2.0) / uiScale;
+
 	FireDisplayConfigChangedSignal(w, h);
 
 	if (scaleChanged) {
