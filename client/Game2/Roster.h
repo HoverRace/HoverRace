@@ -40,10 +40,15 @@ public:
 	Roster();
 
 public:
+	typedef boost::signals2::signal<void(std::shared_ptr<Player::Player>)>
+		playerAddedSignal_t;
+	playerAddedSignal_t &GetPlayerAddedSignal() { return playerAddedSignal; }
+
 	void AddPlayer(std::shared_ptr<Player::Player> player);
 
 private:
 	std::list<std::shared_ptr<Player::Player>> players;
+	playerAddedSignal_t playerAddedSignal;
 };
 
 }  // namespace Client

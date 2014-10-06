@@ -34,7 +34,8 @@ Roster::Roster()
 
 void Roster::AddPlayer(std::shared_ptr<Player::Player> player)
 {
-	players.emplace_back(std::move(player));
+	players.emplace_back(player);
+	playerAddedSignal(player);
 }
 
 }  // namespace Client
