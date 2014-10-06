@@ -24,11 +24,13 @@
 #include "../../engine/Control/Controller.h"
 #include "../../engine/Display/Container.h"
 #include "../../engine/Display/Display.h"
+#include "../../engine/Player/Player.h"
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/Log.h"
 
 #include "Announcement.h"
 #include "BulletinBoard.h"
+#include "Roster.h"
 
 #include "StatusOverlayScene.h"
 
@@ -53,6 +55,11 @@ StatusOverlayScene::StatusOverlayScene(Display::Display &display,
 	displayConfigChangedConn =
 		display.GetDisplayConfigChangedSignal().connect(
 			std::bind(&StatusOverlayScene::RequestLayout, this));
+
+	playerAddedConn =
+		director.GetConnectedPlayers()->GetPlayerAddedSignal().connect(
+			std::bind(&StatusOverlayScene::OnPlayerAdded, this,
+				std::placeholders::_1));
 }
 
 StatusOverlayScene::~StatusOverlayScene()
@@ -84,6 +91,11 @@ void StatusOverlayScene::DetachController(Control::InputEventController&)
 	mouseReleasedConn.disconnect();
 	mousePressedConn.disconnect();
 	mouseMovedConn.disconnect();
+}
+
+void StatusOverlayScene::OnPlayerAdded(std::shared_ptr<Player::Player> player)
+{
+	HR_LOG(info) << "Player added: " << player->GetProfile()->GetName();
 }
 
 void StatusOverlayScene::OnMouseMoved(const Vec2 &pos)
