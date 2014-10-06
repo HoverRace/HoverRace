@@ -112,6 +112,7 @@ class ClientApp : public GameDirector
 		VideoServices::VideoBuffer *GetVideoBuffer() const override;
 		Control::InputEventController *GetController() const override { return controller; }
 		Control::InputEventController *ReloadController() override;
+		Roster *GetConnectedPlayers() const override { return connectedPlayers; }
 		sessionChangedSignal_t &GetSessionChangedSignal() override { return sessionChangedSignal; }
 
 	private:
@@ -119,6 +120,7 @@ class ClientApp : public GameDirector
 		MR_UInt32 userEventId;
 		Display::Display *display;
 		Control::InputEventController *controller;
+		Roster *connectedPlayers;
 		sceneStack_t sceneStack;
 		ScenePtr fgScene;  ///< The scene that currently has input focus.
 		std::unique_ptr<StatusOverlayScene> statusOverlayScene;

@@ -28,6 +28,7 @@ namespace HoverRace {
 		}
 		class Announcement;
 		class LoadingScene;
+		class Roster;
 		class Rules;
 		class Scene;
 		typedef std::shared_ptr<Scene> ScenePtr;
@@ -116,6 +117,12 @@ class GameDirector
 		 * @return The new control settings.
 		 */
 		virtual Control::InputEventController *ReloadController() = 0;
+
+		/**
+		 * Retrieve the list of players connected to this game instance.
+		 * @return The list (may be @c nullptr).
+		 */
+		virtual Roster *GetConnectedPlayers() const = 0;
 
 		typedef boost::signals2::signal<void(std::shared_ptr<HoverScript::MetaSession>)> sessionChangedSignal_t;
 
