@@ -57,6 +57,7 @@
 #include "MainMenuScene.h"
 #include "MessageScene.h"
 #include "PlayGameScene.h"
+#include "Roster.h"
 #include "Rulebook.h"
 #include "RulebookLibrary.h"
 #include "Rules.h"
@@ -138,6 +139,8 @@ ClientApp::ClientApp() :
 	}
 
 	controller = new InputEventController();
+
+	connectedPlayers = new Roster();
 
 	// Create the system console and execute the initialization scripts.
 	// This allows the script to modify the configuration (e.g. for unit tests).
@@ -228,6 +231,7 @@ ClientApp::~ClientApp()
 	delete rulebookLibrary;
 	delete scripting;
 	delete display;
+	delete connectedPlayers;
 	delete controller;
 
 	// Engine shutdown.
