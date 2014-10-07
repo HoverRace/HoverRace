@@ -203,9 +203,6 @@ class MR_DllDeclare Config
 		} audio;
 
 		struct cfg_misc_t {
-			bool displayFirstScreen;
-			bool introMovie;
-			bool aloneWarning; /// warn a player if he launches a game alone
 			OS::path_t screenshotPath;
 
 			void Load(yaml::MapNode*);

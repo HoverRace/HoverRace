@@ -709,9 +709,6 @@ void Config::ResetToDefaults()
 
 	audio.sfxVolume = 1.0;
 
-	misc.displayFirstScreen = true;
-	misc.introMovie = true;
-	misc.aloneWarning = true;
 	misc.screenshotPath = GetDefaultScreenshotPath();
 
 	// Get current user name as default nickname.
@@ -1070,9 +1067,6 @@ void Config::cfg_misc_t::Load(yaml::MapNode *root)
 {
 	if (root == NULL) return;
 
-	READ_BOOL(root, displayFirstScreen);
-	READ_BOOL(root, introMovie);
-	READ_BOOL(root, aloneWarning);
 	READ_PATH(root, screenshotPath);
 }
 
@@ -1081,9 +1075,6 @@ void Config::cfg_misc_t::Save(yaml::Emitter *emitter)
 	emitter->MapKey("misc");
 	emitter->StartMap();
 
-	EMIT_VAR(emitter, displayFirstScreen);
-	EMIT_VAR(emitter, introMovie);
-	EMIT_VAR(emitter, aloneWarning);
 	EMIT_VAR(emitter, screenshotPath);
 
 	emitter->EndMap();
