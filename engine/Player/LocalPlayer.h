@@ -46,7 +46,7 @@ class MR_DllDeclare LocalPlayer : public Player
 public:
 	LocalPlayer() = delete;
 	LocalPlayer(std::shared_ptr<Profile> profile);
-	virtual ~LocalPlayer();
+	virtual ~LocalPlayer() { }
 
 private:
 	void Disconnect() override;
