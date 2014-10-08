@@ -31,5 +31,10 @@ LocalPlayer::LocalPlayer(std::shared_ptr<Profile> profile) :
 {
 }
 
+void LocalPlayer::Disconnect()
+{
+	//TODO
+}
+
 }  // namespace Player
 }  // namespace HoverRace

@@ -43,10 +43,13 @@ namespace Player {
 class LocalPlayer : public Player
 {
 	typedef Player SUPER;
-	public:
-		LocalPlayer() = delete;
-		LocalPlayer(std::shared_ptr<Profile> profile);
-		virtual ~LocalPlayer();
+public:
+	LocalPlayer() = delete;
+	LocalPlayer(std::shared_ptr<Profile> profile);
+	virtual ~LocalPlayer();
+
+private:
+	void Disconnect() override;
 };
 
 }  // namespace Player
