@@ -42,7 +42,7 @@ namespace Player {
  * Base class for player profiles.
  * @author Michael Imamura
  */
-class Profile
+class MR_DllDeclare Profile
 {
 	public:
 		Profile();

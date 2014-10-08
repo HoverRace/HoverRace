@@ -40,7 +40,7 @@ namespace Player {
  * Base class for connected players.
  * @author Michael Imamura
  */
-class Player
+class MR_DllDeclare Player
 {
 	public:
 		enum class ConnectionState

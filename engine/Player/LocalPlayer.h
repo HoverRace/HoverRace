@@ -40,7 +40,7 @@ namespace Player {
  * A player connected to a local input device.
  * @author Michael Imamura
  */
-class LocalPlayer : public Player
+class MR_DllDeclare LocalPlayer : public Player
 {
 	typedef Player SUPER;
 public:

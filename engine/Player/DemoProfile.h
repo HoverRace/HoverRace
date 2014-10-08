@@ -40,7 +40,7 @@ namespace Player {
  * Profile for "guest" accounts that aren't persisted.
  * @author Michael Imamura
  */
-class DemoProfile : public Profile
+class MR_DllDeclare DemoProfile : public Profile
 {
 	typedef Profile SUPER;
 	public:
