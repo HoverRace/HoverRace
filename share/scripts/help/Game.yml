@@ -1,3 +1,10 @@
+add_local_player:
+  type: method
+  sig:
+    - game:add_local_player()
+  brief: >
+    Add a new local player.
+
 announce:
   type: method
   sig:

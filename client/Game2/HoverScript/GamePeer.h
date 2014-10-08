@@ -80,6 +80,8 @@ class GamePeer : public Script::Peer {
 	public:
 		ConfigPeer *LGetConfig();
 
+		void LAddLocalPlayer();
+
 		void LAnnounce(const std::string &label);
 		void LAnnounce_T(const std::string &label, const std::string &text);
 

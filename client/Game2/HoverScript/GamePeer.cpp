@@ -27,11 +27,14 @@
 
 #include "../../../engine/Display/Display.h"
 #include "../../../engine/Parcel/TrackBundle.h"
+#include "../../../engine/Player/DemoProfile.h"
+#include "../../../engine/Player/LocalPlayer.h"
 #include "../../../engine/Script/Core.h"
 #include "../../../engine/Util/Config.h"
 #include "../../../engine/Util/Log.h"
 #include "../GameDirector.h"
 #include "../MessageAnnouncement.h"
+#include "../Roster.h"
 #include "../Rulebook.h"
 #include "../RulebookLibrary.h"
 #include "../Rules.h"
@@ -70,6 +73,7 @@ void GamePeer::Register(Script::Core *scripting)
 
 	module(L) [
 		class_<GamePeer,SUPER,std::shared_ptr<GamePeer>>("Game")
+			.def("add_local_player", &GamePeer::LAddLocalPlayer)
 			.def("announce", &GamePeer::LAnnounce)
 			.def("announce", &GamePeer::LAnnounce_T)
 			.def("is_initialized", &GamePeer::LIsInitialized)
@@ -144,6 +148,21 @@ void GamePeer::VerifyInitialized() const
 		luaL_error(GetScripting()->GetState(), "Game is not yet initialized.");
 		return;
 	}
+}
+
+void GamePeer::LAddLocalPlayer()
+{
+	auto connectedPlayers = director.GetConnectedPlayers();
+	if (!connectedPlayers) {
+		luaL_error(GetScripting()->GetState(), "Not ready to connect players.");
+		return;
+	}
+
+	//TODO: Use the same profile as the "main" player.
+
+	connectedPlayers->AddPlayer(
+		std::make_shared<Player::LocalPlayer>(
+			std::make_shared<Player::DemoProfile>()));
 }
 
 void GamePeer::LAnnounce(const std::string &label)
