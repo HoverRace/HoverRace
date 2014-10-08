@@ -29,6 +29,7 @@ namespace HoverRace {
 	namespace Client {
 		class Announcement;
 		class BulletinBoard;
+		class PlayerBar;
 	}
 	namespace Display {
 		class Display;
@@ -64,7 +65,6 @@ class StatusOverlayScene : public UiScene
 
 	private:
 		void OnDisplayConfigChanged();
-		void OnPlayerAdded(std::shared_ptr<Player::Player> player);
 		void OnMouseMoved(const Vec2 &pos);
 		void OnMousePressed(const Control::Mouse::Click &click);
 		void OnMouseReleased(const Control::Mouse::Click &click);
@@ -79,8 +79,8 @@ class StatusOverlayScene : public UiScene
 		Display::Display &display;
 		GameDirector &director;
 		std::unique_ptr<BulletinBoard> bulletinBoard;
+		std::unique_ptr<PlayerBar> playerBar;
 		boost::signals2::scoped_connection displayConfigChangedConn;
-		boost::signals2::scoped_connection playerAddedConn;
 		boost::signals2::connection mouseMovedConn;
 		boost::signals2::connection mousePressedConn;
 		boost::signals2::connection mouseReleasedConn;

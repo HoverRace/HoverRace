@@ -30,6 +30,7 @@
 
 #include "Announcement.h"
 #include "BulletinBoard.h"
+#include "PlayerBar.h"
 #include "Roster.h"
 
 #include "StatusOverlayScene.h"
@@ -43,7 +44,8 @@ StatusOverlayScene::StatusOverlayScene(Display::Display &display,
 	GameDirector &director) :
 	SUPER("Status Overlay"),
 	display(display), director(director),
-	bulletinBoard(new BulletinBoard(display, Display::UiLayoutFlags::FLOATING))
+	bulletinBoard(new BulletinBoard(display, Display::UiLayoutFlags::FLOATING)),
+	playerBar(new PlayerBar(display, director, Display::UiLayoutFlags::FLOATING))
 {
 	using namespace Display;
 	typedef UiViewModel::Alignment Alignment;
@@ -52,14 +54,13 @@ StatusOverlayScene::StatusOverlayScene(Display::Display &display,
 	bulletinBoard->SetAlignment(Alignment::N);
 	bulletinBoard->SetPos(640, 0);
 
+	playerBar->AttachView(display);
+	playerBar->SetAlignment(Alignment::W);
+	playerBar->SetPos(0, 360);
+
 	displayConfigChangedConn =
 		display.GetDisplayConfigChangedSignal().connect(
 			std::bind(&StatusOverlayScene::RequestLayout, this));
-
-	playerAddedConn =
-		director.GetConnectedPlayers()->GetPlayerAddedSignal().connect(
-			std::bind(&StatusOverlayScene::OnPlayerAdded, this,
-				std::placeholders::_1));
 }
 
 StatusOverlayScene::~StatusOverlayScene()
@@ -93,11 +94,6 @@ void StatusOverlayScene::DetachController(Control::InputEventController&)
 	mouseMovedConn.disconnect();
 }
 
-void StatusOverlayScene::OnPlayerAdded(std::shared_ptr<Player::Player> player)
-{
-	HR_LOG(info) << "Player added: " << player->GetProfile()->GetName();
-}
-
 void StatusOverlayScene::OnMouseMoved(const Vec2 &pos)
 {
 	bulletinBoard->OnMouseMoved(pos);
@@ -129,6 +125,7 @@ void StatusOverlayScene::PrepareRender()
 	SUPER::PrepareRender();
 
 	bulletinBoard->PrepareRender();
+	playerBar->PrepareRender();
 }
 
 void StatusOverlayScene::Render()
@@ -136,6 +133,7 @@ void StatusOverlayScene::Render()
 	SUPER::Render();
 
 	bulletinBoard->Render();
+	playerBar->Render();
 }
 
 }  // namespace HoverScript
