@@ -1,7 +1,7 @@
 
 // ClickRegion.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -37,10 +37,11 @@ namespace Display {
  * @param layoutFlags Optional layout flags.
  */
 ClickRegion::ClickRegion(Display &display, uiLayoutFlags_t layoutFlags) :
-	SUPER(layoutFlags), display(display),
+	SUPER(layoutFlags),
 	size(0, 0), autoSize(true), needsSizing(true),
 	enabled(true), pressed(false)
 {
+	HR_UNUSED(display);
 }
 
 /**
@@ -50,10 +51,11 @@ ClickRegion::ClickRegion(Display &display, uiLayoutFlags_t layoutFlags) :
  * @param layoutFlags Optional layout flags.
  */
 ClickRegion::ClickRegion(Display &display, const Vec2 &size, uiLayoutFlags_t layoutFlags) :
-	SUPER(layoutFlags), display(display),
+	SUPER(layoutFlags),
 	size(size), autoSize(false), needsSizing(false),
 	enabled(true), pressed(false)
 {
+	HR_UNUSED(display);
 }
 
 ClickRegion::~ClickRegion()
