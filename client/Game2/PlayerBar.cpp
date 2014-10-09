@@ -48,7 +48,7 @@ PlayerBar::~PlayerBar()
 
 void PlayerBar::OnPlayerAdded(std::shared_ptr<Player::Player> player)
 {
-	HR_LOG(info) << "Player added: " << player->GetProfile()->GetName();
+	HR_LOG(info) << "Player added: " << *player;
 }
 
 }  // namespace Client

@@ -57,6 +57,9 @@ class MR_DllDeclare Player
 		virtual ~Player() { }
 
 	public:
+		virtual std::ostream &StreamOut(std::ostream &os) const;
+
+	public:
 		Profile *GetProfile() const { return profile.get(); }
 
 		ConnectionState GetConnectionState() const { return connectionState; }
@@ -69,6 +72,11 @@ class MR_DllDeclare Player
 		std::shared_ptr<Profile> profile;
 		ConnectionState connectionState;
 };
+
+inline std::ostream &operator<<(std::ostream &os, const Player &p)
+{
+	return p.StreamOut(os);
+}
 
 }  // namespace Player
 }  // namespace HoverRace

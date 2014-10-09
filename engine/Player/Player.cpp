@@ -32,6 +32,17 @@ Player::Player(std::shared_ptr<Profile> profile) :
 {
 }
 
+std::ostream &Player::StreamOut(std::ostream &os) const
+{
+	if (profile) {
+		os << profile->GetName();
+	}
+	else {
+		os << "(no profile)";
+	}
+	return os;
+}
+	
 void Player::SetConnectionState(Player::ConnectionState state)
 {
 	if (this->connectionState != state) {
