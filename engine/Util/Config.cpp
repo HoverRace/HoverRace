@@ -696,16 +696,18 @@ void Config::ResetToDefaults()
 	video.xRes = 800;
 	video.yRes = 450;
 
-	// set current resolution to default
-#ifdef _WIN32
-	// use the primary monitor resolution (don't default to multiple monitors)
-	video.xResFullscreen = GetSystemMetrics(SM_CXSCREEN);
-	video.yResFullscreen = GetSystemMetrics(SM_CYSCREEN);
-#else
-	// I'm sure there's an X call that would do this, but that's for another day
-	video.xResFullscreen = 800;
-	video.yResFullscreen = 600;
-#endif
+	// Set current resolution as default.
+	SDL_DisplayMode displayMode;
+	if (SDL_GetCurrentDisplayMode(0, &displayMode) == 0) {
+		HR_LOG(warning) << "Unable to retrieve current screen resolution: " <<
+			SDL_GetError();
+		video.xResFullscreen = 800;
+		video.yResFullscreen = 600;
+	}
+	else {
+		video.xResFullscreen = displayMode.w;
+		video.yResFullscreen = displayMode.h;
+	}
 
 	audio.sfxVolume = 1.0;
 
