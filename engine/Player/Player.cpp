@@ -69,14 +69,17 @@ void Player::SetNameSuffix(const std::string &suffix)
 		newName += suffix;
 	}
 
-	name = std::move(newName);
+	if (name != newName) {
+		name = std::move(newName);
+		nameChangedSignal();
+	}
 }
 
 void Player::SetConnectionState(Player::ConnectionState state)
 {
 	if (this->connectionState != state) {
 		this->connectionState = state;
-		//TODO: Fire state changed signal.
+		connectionStateChangedSignal();
 	}
 }
 

@@ -78,6 +78,13 @@ public:
 
 	ConnectionState GetConnectionState() const { return connectionState; }
 
+public:
+	typedef boost::signals2::signal<void()> nameChangedSignal_t;
+	nameChangedSignal_t &GetNameChangedSignal() { return nameChangedSignal; }
+
+	typedef boost::signals2::signal<void()> connectionStateChanged_t;
+	connectionStateChanged_t &GetConnectionStateChangedSignal() { return connectionStateChangedSignal; }
+
 protected:
 	void SetConnectionState(ConnectionState state);
 	virtual void Disconnect() = 0;
@@ -86,6 +93,8 @@ private:
 	std::string name;
 	std::shared_ptr<Profile> profile;
 	ConnectionState connectionState;
+	nameChangedSignal_t nameChangedSignal;
+	connectionStateChanged_t connectionStateChangedSignal;
 };
 
 inline std::ostream &operator<<(std::ostream &os, const Player &p)
