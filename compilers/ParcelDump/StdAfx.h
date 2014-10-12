@@ -11,7 +11,7 @@
 #	define WIN32_LEAN_AND_MEAN
 
 	// Minimum Windows version: XP
-#	define WINVER 0x0501
+#	define WINVER _WIN32_WINNT_VISTA
 
 #	define _CRT_SECURE_NO_DEPRECATE
 #	define _SCL_SECURE_NO_DEPRECATE
