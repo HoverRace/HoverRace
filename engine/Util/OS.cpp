@@ -63,6 +63,8 @@ namespace {
 #ifdef _WIN32
 	LARGE_INTEGER qpcFreq = { 0 };
 	LARGE_INTEGER qpcStart = { 0 };
+#else
+	timeval tvStart = { 0, 0 };
 #endif
 
 }  // namespace
@@ -544,6 +546,11 @@ void OS::TimeInit()
 		else {
 			QueryPerformanceCounter(&qpcStart);
 		}
+#	else
+		if (gettimeofday(&tvStart, nullptr) < 0) {
+			throw Exception("High-resolution timer not available: " +
+				StrError(errno));
+		}
 #	endif
 }
 
@@ -565,7 +572,15 @@ OS::timestamp_t OS::Time()
 		count.QuadPart *= 1000;
 		return static_cast<timestamp_t>(count.QuadPart / qpcFreq.QuadPart);
 #	else
-		return static_cast<timestamp_t>(SDL_GetTicks());
+		timeval count;
+		gettimeofday(&count, nullptr);
+
+		timestamp_t retv = static_cast<timestamp_t>(
+			count.tv_sec - tvStart.tv_sec) * 1000;
+		retv += static_cast<timestamp_t>(
+			count.tv_usec - tvStart.tv_usec) / 1000;
+
+		return retv;
 #	endif
 }
 
