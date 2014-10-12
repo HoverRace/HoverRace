@@ -59,9 +59,7 @@ class MR_DllDeclare Duration :
 		 * @param earlier The earlier of the two timestamps.
 		 */
 		Duration(OS::timestamp_t later, OS::timestamp_t earlier) :
-			duration(later >= earlier ?
-				static_cast<dur_t>(OS::TimeDiff(later, earlier)) :
-				-static_cast<dur_t>(OS::TimeDiff(earlier, later))) { }
+			duration(OS::TimeDiff(later, earlier)) { }
 
 		/**
 		 * Constructor from two durations.
