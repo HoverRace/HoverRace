@@ -544,6 +544,10 @@ void OS::TimeInit()
 {
 #	ifdef WITH_CHRONO_TIMESTAMP
 		chronoStart = clock_t::now();
+		if (!clock_t::is_steady) {
+			HR_LOG(debug) << "High-resolution clock may not be monotonic "
+				"(this is usually not a problem)";
+		}
 #	elif defined(_WIN32)
 		if (QueryPerformanceFrequency(&qpcFreq) == FALSE) {
 			throw Exception("High-resolution timer not available.");
