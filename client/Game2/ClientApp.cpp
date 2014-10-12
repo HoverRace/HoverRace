@@ -289,7 +289,8 @@ void ClientApp::IncFrameCount()
 	OS::timestamp_t diff = OS::TimeDiff(curTimestamp, lastTimestamp);
 
 	if (diff > 1000) {
-		fps = ((double)frameCount) / (diff / 1000.0);
+		fps = static_cast<double>(frameCount) /
+			static_cast<double>(diff / 1000);
 		lastTimestamp = curTimestamp;
 		frameCount = 0;
 
