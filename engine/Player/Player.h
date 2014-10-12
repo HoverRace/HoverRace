@@ -42,50 +42,50 @@ namespace Player {
  */
 class MR_DllDeclare Player
 {
-	public:
-		enum class ConnectionState
-		{
-			DISCONNECTED,
-			CONNECTING,
-			CONNECTED,
-			DISCONNECTING,
-		};
+public:
+	enum class ConnectionState
+	{
+		DISCONNECTED,
+		CONNECTING,
+		CONNECTED,
+		DISCONNECTING,
+	};
 
-	public:
-		Player() = delete;
-		Player(std::shared_ptr<Profile> profile);
-		virtual ~Player() { }
+public:
+	Player() = delete;
+	Player(std::shared_ptr<Profile> profile);
+	virtual ~Player() { }
 
-	public:
-		virtual std::ostream &StreamOut(std::ostream &os) const;
+public:
+	virtual std::ostream &StreamOut(std::ostream &os) const;
 
-	public:
-		/**
-		 * Retrieve the display name of the player.
-		 *
-		 * This is not necessarily the same name as the profile, although it
-		 * is based on the profile name.  In the case of multiple players
-		 * with the same name, a suffix may be added to disambiguate them.
-		 *
-		 * @return The display name.
-		 * @see SetNameSuffix(const std::string&)
-		 */
-		const std::string &GetName() const { return name; }
+public:
+	/**
+	 * Retrieve the display name of the player.
+	 *
+	 * This is not necessarily the same name as the profile, although it
+	 * is based on the profile name.  In the case of multiple players
+	 * with the same name, a suffix may be added to disambiguate them.
+	 *
+	 * @return The display name.
+	 * @see SetNameSuffix(const std::string&)
+	 */
+	const std::string &GetName() const { return name; }
 
-		void SetNameSuffix(const std::string &suffix);
+	void SetNameSuffix(const std::string &suffix);
 
-		Profile *GetProfile() const { return profile.get(); }
+	Profile *GetProfile() const { return profile.get(); }
 
-		ConnectionState GetConnectionState() const { return connectionState; }
+	ConnectionState GetConnectionState() const { return connectionState; }
 
-	protected:
-		void SetConnectionState(ConnectionState state);
-		virtual void Disconnect() = 0;
+protected:
+	void SetConnectionState(ConnectionState state);
+	virtual void Disconnect() = 0;
 
-	private:
-		std::string name;
-		std::shared_ptr<Profile> profile;
-		ConnectionState connectionState;
+private:
+	std::string name;
+	std::shared_ptr<Profile> profile;
+	ConnectionState connectionState;
 };
 
 inline std::ostream &operator<<(std::ostream &os, const Player &p)
