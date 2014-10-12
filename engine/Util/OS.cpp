@@ -58,6 +58,15 @@ using boost::str;
 namespace HoverRace {
 namespace Util {
 
+namespace {
+
+#ifdef _WIN32
+	LARGE_INTEGER qpcFreq = { 0 };
+	LARGE_INTEGER qpcStart = { 0 };
+#endif
+
+}  // namespace
+
 /// Lookup table for converting from hex.
 int OS::nibbles[256] = {
 	 0,  0,  0,  0,  0,  0,  0,  0,   0,  0,  0,  0,  0,  0,  0,  0, // 00
@@ -528,7 +537,14 @@ std::string OS::StrError(int errnum)
  */
 void OS::TimeInit()
 {
-	// Handled by SDL.
+#	ifdef _WIN32
+		if (QueryPerformanceFrequency(&qpcFreq) == FALSE) {
+			throw Exception("High-resolution timer not available.");
+		}
+		else {
+			QueryPerformanceCounter(&qpcStart);
+		}
+#	endif
 }
 
 /**
@@ -539,7 +555,18 @@ void OS::TimeInit()
  */
 OS::timestamp_t OS::Time()
 {
-	return SDL_GetTicks();
+#	ifdef _WIN32
+		LARGE_INTEGER count;
+		QueryPerformanceCounter(&count);
+
+		// Try to keep the values low, for sanity's sake when debugging.
+		count.QuadPart -= qpcStart.QuadPart;
+
+		count.QuadPart *= 1000;
+		return static_cast<timestamp_t>(count.QuadPart / qpcFreq.QuadPart);
+#	else
+		return static_cast<timestamp_t>(SDL_GetTicks());
+#	endif
 }
 
 /**
@@ -576,7 +603,7 @@ std::string OS::FileTimeString()
  */
 void OS::TimeShutdown()
 {
-	// Handled by SDL.
+	// Currently unnecessary.
 }
 
 /**

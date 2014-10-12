@@ -93,7 +93,8 @@ void GameSession::Simulate()
 	MR_SimulationTime lTimeToSimulate;
 
 	// Determine the duration of the simulation step
-	lTimeToSimulate = lSimulateCallTime - mLastSimulateCallTime;
+	lTimeToSimulate = static_cast<MR_SimulationTime>(
+		lSimulateCallTime - mLastSimulateCallTime);
 
 	if(lTimeToSimulate < 0)
 		lTimeToSimulate = 0;
@@ -122,7 +123,8 @@ void GameSession::Simulate()
 		lTimeToSimulate = 0;
 	}
 
-	SimulateSurfaceElems(lSimulateCallTime - lTimeToSimulate - mLastSimulateCallTime);
+	SimulateSurfaceElems(static_cast<MR_SimulationTime>(
+		lSimulateCallTime - lTimeToSimulate - mLastSimulateCallTime));
 
 	mLastSimulateCallTime = lSimulateCallTime - lTimeToSimulate;
 }

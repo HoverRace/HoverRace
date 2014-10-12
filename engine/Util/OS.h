@@ -54,7 +54,7 @@ class MR_DllDeclare OS {
 		static std::locale locale;
 		static const std::locale stdLocale;
 
-		typedef MR_UInt32 timestamp_t;
+		typedef MR_Int64 timestamp_t;
 
 #		if defined(WITH_WIDE_PATHS) && BOOST_FILESYSTEM_VERSION == 2
 			typedef boost::filesystem::wpath path_t;
@@ -116,12 +116,9 @@ class MR_DllDeclare OS {
 		 */
 		static timestamp_t TimeDiff(timestamp_t laterTs, timestamp_t earlierTs)
 		{
-			if (laterTs >= earlierTs) {
-				return laterTs - earlierTs;
-			}
-			else {
-				return 0xfffffffful - (earlierTs - laterTs) + 1;
-			}
+			// We assume that signed 64-bit values won't have to deal with
+			// wraparound.
+			return laterTs - earlierTs;
 		}
 		static std::string FileTimeString();
 		static void TimeShutdown();
