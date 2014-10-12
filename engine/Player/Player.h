@@ -60,6 +60,20 @@ class MR_DllDeclare Player
 		virtual std::ostream &StreamOut(std::ostream &os) const;
 
 	public:
+		/**
+		 * Retrieve the display name of the player.
+		 *
+		 * This is not necessarily the same name as the profile, although it
+		 * is based on the profile name.  In the case of multiple players
+		 * with the same name, a suffix may be added to disambiguate them.
+		 *
+		 * @return The display name.
+		 * @see SetNameSuffix(const std::string&)
+		 */
+		const std::string &GetName() const { return name; }
+
+		void SetNameSuffix(const std::string &suffix);
+
 		Profile *GetProfile() const { return profile.get(); }
 
 		ConnectionState GetConnectionState() const { return connectionState; }
@@ -69,6 +83,7 @@ class MR_DllDeclare Player
 		virtual void Disconnect() = 0;
 
 	private:
+		std::string name;
 		std::shared_ptr<Profile> profile;
 		ConnectionState connectionState;
 };

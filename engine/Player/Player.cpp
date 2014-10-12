@@ -26,7 +26,22 @@
 namespace HoverRace {
 namespace Player {
 
+namespace {
+
+std::string NameForProfile(Profile *profile)
+{
+	if (profile) {
+		return profile->GetName();
+	}
+	else {
+		return "(no profile)";
+	}
+}
+
+}  // namespace
+
 Player::Player(std::shared_ptr<Profile> profile) :
+	name(NameForProfile(profile.get())),
 	profile(std::move(profile)),
 	connectionState(ConnectionState::CONNECTING)
 {
@@ -34,15 +49,29 @@ Player::Player(std::shared_ptr<Profile> profile) :
 
 std::ostream &Player::StreamOut(std::ostream &os) const
 {
-	if (profile) {
-		os << profile->GetName();
-	}
-	else {
-		os << "(no profile)";
-	}
+	os << name;
 	return os;
 }
-	
+
+/**
+ * Sets the suffix on the display name.
+ *
+ * The suffix is used to disambiguate the player name when multiple
+ * players have the same name (e.g. they are sharing the same profile).
+ *
+ * @param suffix The suffix (may be empty for no suffix).
+ */
+void Player::SetNameSuffix(const std::string &suffix)
+{
+	std::string newName = NameForProfile(profile.get());
+	if (!suffix.empty()) {
+		newName += ' ';
+		newName += suffix;
+	}
+
+	name = std::move(newName);
+}
+
 void Player::SetConnectionState(Player::ConnectionState state)
 {
 	if (this->connectionState != state) {
