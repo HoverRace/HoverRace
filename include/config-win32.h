@@ -23,3 +23,5 @@
 
 // Uncomment this to use SDL_Mixer instead of OpenAL.
 //#define WITH_SDL_MIXER
+
+#define WITH_CHRONO_TIMESTAMP

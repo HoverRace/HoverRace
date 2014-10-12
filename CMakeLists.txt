@@ -51,6 +51,9 @@ if(CXX11_COMPILER)
 	enable_cxx11()
 endif()
 
+# Enable use of std::chrono for timestamps for all platforms for now.
+set(WITH_CHRONO_TIMESTAMP TRUE)
+
 # Set up the Boost dependency.
 # We only need to list the libraries that have libraries;
 # we assume that header-only libraries are available without checking.

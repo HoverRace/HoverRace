@@ -5,3 +5,5 @@
 #cmakedefine ENABLE_NLS
 
 #define PLATFORM_NAME "${CMAKE_SYSTEM_NAME}"
+
+#cmakedefine WITH_CHRONO_TIMESTAMP

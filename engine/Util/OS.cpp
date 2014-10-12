@@ -60,7 +60,10 @@ namespace Util {
 
 namespace {
 
-#ifdef _WIN32
+#ifdef WITH_CHRONO_TIMESTAMP
+	typedef std::chrono::high_resolution_clock clock_t;
+	clock_t::time_point chronoStart;
+#elif defined(_WIN32)
 	LARGE_INTEGER qpcFreq = { 0 };
 	LARGE_INTEGER qpcStart = { 0 };
 #else
@@ -539,7 +542,9 @@ std::string OS::StrError(int errnum)
  */
 void OS::TimeInit()
 {
-#	ifdef _WIN32
+#	ifdef WITH_CHRONO_TIMESTAMP
+		chronoStart = clock_t::now();
+#	elif defined(_WIN32)
 		if (QueryPerformanceFrequency(&qpcFreq) == FALSE) {
 			throw Exception("High-resolution timer not available.");
 		}
@@ -562,7 +567,11 @@ void OS::TimeInit()
  */
 OS::timestamp_t OS::Time()
 {
-#	ifdef _WIN32
+#	ifdef WITH_CHRONO_TIMESTAMP
+		return static_cast<timestamp_t>(
+			std::chrono::duration_cast<std::chrono::milliseconds>(
+				clock_t::now() - chronoStart).count());
+#	elif defined(_WIN32)
 		LARGE_INTEGER count;
 		QueryPerformanceCounter(&count);
 
