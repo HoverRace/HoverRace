@@ -92,8 +92,9 @@ SpriteTextureRes::SpriteTextureRes(const std::string &recordName,
 		throw;
 	}
 
-	Log::Debug("Loaded sprite resource (%ux%u, %u items): %s",
-		width, totalHeight, numItems, recordName.c_str());
+	HR_LOG(debug) << "Loaded sprite resource "
+		"(" << width << "x" << totalHeight << ", " <<
+		numItems << " items): " << recordName;
 }
 
 SpriteTextureRes::~SpriteTextureRes()
