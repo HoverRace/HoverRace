@@ -38,7 +38,7 @@ namespace Display {
  * A hardware texture.
  * @author Michael Imamura
  */
-class Texture
+class MR_DllDeclare Texture
 {
 	public:
 		Texture() { }
