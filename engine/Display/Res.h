@@ -48,31 +48,31 @@ class ResLoadExn;
 
 class BaseRes
 {
-	public:
-		virtual ~BaseRes() { }
+public:
+	virtual ~BaseRes() { }
 
-	public:
-		/**
-		 * Retrieve the ID for this resource.
-		 *
-		 * The ID should be unique for every resource being pointed at,
-		 * so two instances that point to the same resource (e.g. a file)
-		 * should return the same ID.
-		 *
-		 * This allows loaded resources to be cached, so if two instances
-		 * point to, say, the same file, then the resource will be loaded once
-		 * (although this is left as an exercise for the Display).
-		 *
-		 * @return The identifier.
-		 */
-		virtual std::string GetId() const = 0;
+public:
+	/**
+	 * Retrieve the ID for this resource.
+	 *
+	 * The ID should be unique for every resource being pointed at,
+	 * so two instances that point to the same resource (e.g. a file)
+	 * should return the same ID.
+	 *
+	 * This allows loaded resources to be cached, so if two instances
+	 * point to, say, the same file, then the resource will be loaded once
+	 * (although this is left as an exercise for the Display).
+	 *
+	 * @return The identifier.
+	 */
+	virtual std::string GetId() const = 0;
 
-		/**
-		 * Open the stream for reading.
-		 * @return The input stream.
-		 * @throw ResourceLoadExn
-		 */
-		virtual std::unique_ptr<std::istream> Open() const = 0;
+	/**
+	 * Open the stream for reading.
+	 * @return The input stream.
+	 * @throw ResourceLoadExn
+	 */
+	virtual std::unique_ptr<std::istream> Open() const = 0;
 };
 
 /**
@@ -82,8 +82,8 @@ class BaseRes
 template<class T>
 class Res : public BaseRes
 {
-	public:
-		virtual ~Res() { }
+public:
+	virtual ~Res() { }
 };
 
 /**
@@ -93,47 +93,47 @@ class Res : public BaseRes
 template<>
 class Res<Texture> : public BaseRes
 {
-	public:
-		virtual ~Res() { }
+public:
+	virtual ~Res() { }
 
-	public:
-		struct ImageData
-		{
-			void *pixels;
-			int width;
-			int height;
-			int depth;
-			int pitch;
-			MR_UInt32 rMask;
-			MR_UInt32 gMask;
-			MR_UInt32 bMask;
-			MR_UInt32 aMask;
-		};
+public:
+	struct ImageData
+	{
+		void *pixels;
+		int width;
+		int height;
+		int depth;
+		int pitch;
+		MR_UInt32 rMask;
+		MR_UInt32 gMask;
+		MR_UInt32 bMask;
+		MR_UInt32 aMask;
+	};
 
-	public:
-		/**
-		 * Check if this texture is generated from memory rather than an
-		 * input stream.
-		 *
-		 * If this texture is generated, then the image data is retrieved
-		 * via GetImageData() instead of Open().
-		 *
-		 * @return @c true if generated, @c false if not.
-		 */
-		virtual bool IsGenerated() const
-		{
-			return false;
-		}
+public:
+	/**
+	 * Check if this texture is generated from memory rather than an
+	 * input stream.
+	 *
+	 * If this texture is generated, then the image data is retrieved
+	 * via GetImageData() instead of Open().
+	 *
+	 * @return @c true if generated, @c false if not.
+	 */
+	virtual bool IsGenerated() const
+	{
+		return false;
+	}
 
-		/**
-		 * If IsGenerated() is @c true, returns the image data necessary
-		 * to create the texture.
-		 * @return The image data, or @c nullptr if not a generated texture.
-		 */
-		virtual const ImageData *GetImageData()
-		{
-			return nullptr;
-		}
+	/**
+	 * If IsGenerated() is @c true, returns the image data necessary
+	 * to create the texture.
+	 * @return The image data, or @c nullptr if not a generated texture.
+	 */
+	virtual const ImageData *GetImageData()
+	{
+		return nullptr;
+	}
 };
 
 /**
@@ -144,11 +144,11 @@ class ResLoadExn : Exception
 {
 	typedef Exception SUPER;
 
-	public:
-		ResLoadExn() : SUPER() { }
-		ResLoadExn(const std::string &msg) : SUPER(msg) { }
-		ResLoadExn(const char *msg) : SUPER(msg) { }
-		virtual ~ResLoadExn() noexcept { }
+public:
+	ResLoadExn() : SUPER() { }
+	ResLoadExn(const std::string &msg) : SUPER(msg) { }
+	ResLoadExn(const char *msg) : SUPER(msg) { }
+	virtual ~ResLoadExn() noexcept { }
 };
 
 }  // namespace Display

@@ -40,9 +40,9 @@ namespace Display {
  */
 class MR_DllDeclare Texture
 {
-	public:
-		Texture() { }
-		virtual ~Texture() { }
+public:
+	Texture() { }
+	virtual ~Texture() { }
 };
 
 }  // namespace Display
