@@ -1,7 +1,7 @@
 
 // Texture.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -20,8 +20,6 @@
 // and limitations under the License.
 
 #pragma once
-
-#include <SDL2/SDL.h>
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
 #	ifdef MR_ENGINE
