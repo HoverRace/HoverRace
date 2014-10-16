@@ -24,6 +24,7 @@
 #include <boost/uuid/uuid.hpp>
 
 #include "../Display/Color.h"
+#include "../Display/Res.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
 #	ifdef MR_ENGINE
@@ -34,6 +35,12 @@
 #else
 #	define MR_DllDeclare
 #endif
+
+namespace HoverRace {
+	namespace Display {
+		class Texture;
+	}
+}
 
 namespace HoverRace {
 namespace Player {
@@ -68,6 +75,9 @@ class MR_DllDeclare Profile
 		Display::Color GetPrimaryColor() const { return primaryColor; }
 
 		Display::Color GetSecondaryColor() const { return secondaryColor; }
+
+		virtual std::shared_ptr<Display::Res<Display::Texture>>
+			GetAvatar() const;
 
 	public:
 		virtual void Save() = 0;

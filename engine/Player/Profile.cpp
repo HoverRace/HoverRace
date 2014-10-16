@@ -36,5 +36,14 @@ Profile::Profile() :
 {
 }
 
+/**
+ * Retrieve the user's avatar, if available.
+ * @return The avatar resource (may be @c nullptr).
+ */
+std::shared_ptr<Display::Res<Display::Texture>> Profile::GetAvatar() const
+{
+	return { };
+}
+
 }  // namespace Player
 }  // namespace HoverRace
