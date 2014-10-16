@@ -310,7 +310,7 @@ void SdlDisplay::AttachView(Wallpaper &model)
 
 /**
  * Loads a texture resource.
- * @param res The resource.
+ * @param res The resource (may be @c nullptr).
  * @return The loaded resource.
  * @throw ResLoadExn
  */
@@ -318,7 +318,23 @@ std::shared_ptr<SdlTexture> SdlDisplay::LoadRes(std::shared_ptr<Res<Texture>> re
 {
 	SDL_Surface *surface = nullptr;
 
-	if (res->IsGenerated()) {
+	if (!res) {
+		// Return the default texture.
+		// Generally, this shouldn't happen.
+		// We generate a new instance of the default texture in case something
+		// modifies the texture with SDL_UpdateTexture().
+		surface = SDL_CreateRGBSurface(0, 2, 2, 32, 0, 0, 0, 0);
+		if (!surface) {
+			throw ResLoadExn(
+				std::string("Failed to create default texture surface: ") +
+				SDL_GetError());
+		}
+
+#		ifdef _DEBUG
+			//TODO: Fill in the surface with a checkerboard pattern.
+#		endif
+	}
+	else if (res->IsGenerated()) {
 		auto imageData = res->GetImageData();
 		if (!imageData) {
 			throw ResLoadExn(res->GetId() + ": "
