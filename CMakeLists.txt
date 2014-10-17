@@ -49,6 +49,8 @@ endif()
 check_for_cxx11_compiler(CXX11_COMPILER)
 if(CXX11_COMPILER)
 	enable_cxx11()
+else()
+	message(WARNING "A C++11-capable compiler was not detected, but we'll attempt to build anyway.")
 endif()
 
 # Enable use of std::chrono for timestamps for all platforms for now.
