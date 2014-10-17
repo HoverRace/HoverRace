@@ -49,6 +49,9 @@ public:
 	virtual ~DemoProfile() { }
 
 public:
+	std::shared_ptr<Display::Res<Display::Texture>> GetAvatar() const override;
+
+public:
 	void Save() override {
 		// Demo profiles aren't saved.
 	};
