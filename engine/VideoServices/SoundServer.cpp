@@ -316,7 +316,7 @@ BOOL SoundBuffer::Init(const char *pData, int pNbCopy)
 	return lReturnValue;
 }
 
-void SoundBuffer::SetParams(int pCopy, int pDB, double pSpeed, int pPan)
+void SoundBuffer::SetParams(int pCopy, int pDB, double pSpeed, int)
 {
 	if (soundDisabled) return;
 
