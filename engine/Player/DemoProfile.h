@@ -43,14 +43,15 @@ namespace Player {
 class MR_DllDeclare DemoProfile : public Profile
 {
 	typedef Profile SUPER;
-	public:
-		DemoProfile();
-		virtual ~DemoProfile() { }
 
-	public:
-		void Save() override {
-			// Demo profiles aren't saved.
-		};
+public:
+	DemoProfile();
+	virtual ~DemoProfile() { }
+
+public:
+	void Save() override {
+		// Demo profiles aren't saved.
+	};
 };
 
 }  // namespace Player
