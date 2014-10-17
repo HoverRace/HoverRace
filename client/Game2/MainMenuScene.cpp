@@ -171,8 +171,10 @@ void MainMenuScene::Layout()
 		totalWidth += btn->Measure().x;
 	}
 
-	double spacing = (1280.0 - totalWidth - (sidePadding * 2)) / (menuButtons.size() + 1);
-	
+	double spacing =
+		(1280.0 - totalWidth - (sidePadding * 2)) /
+		static_cast<double>(menuButtons.size() + 1);
+
 	double x = sidePadding + spacing;
 	for (std::shared_ptr<Display::Button> &btn : menuButtons) {
 		btn->SetPos(x, 0);

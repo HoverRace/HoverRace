@@ -56,7 +56,7 @@ std::shared_ptr<Rules> GenRules(Script::Core *scripting)
 	auto rules = std::make_shared<Rules>(rulebook);
 	rules->SetTrackEntry(Config::GetInstance()->GetTrackBundle()->
 		OpenTrackEntry(trackName));
-	rules->SetGameOpts(0x70 + craftId);
+	rules->SetGameOpts(static_cast<char>(0x70 + craftId));
 
 	return rules;
 }
