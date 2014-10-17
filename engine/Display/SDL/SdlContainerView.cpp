@@ -123,7 +123,7 @@ void SdlContainerView::Render()
 	}
 
 	bool clip = model.IsClip();
-	SDL_Rect oldClip = { 0 };
+	SDL_Rect oldClip = { 0, 0, 0, 0 };
 
 	if (clip) {
 		// Translate our bounds into screen-space.
@@ -143,7 +143,7 @@ void SdlContainerView::Render()
 		SDL_Rect ourClip = {
 			static_cast<int>(pos.x), static_cast<int>(pos.y),
 			static_cast<int>(w), static_cast<int>(h) };
-		SDL_Rect clipRect = { 0 };
+		SDL_Rect clipRect = { 0, 0, 0, 0 };
 
 		// If there's an existing clip area, then set the clip rect to be
 		// the intersection of the two areas.
