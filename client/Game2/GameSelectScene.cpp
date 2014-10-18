@@ -74,7 +74,8 @@ GameSelectScene::GameSelectScene(Display::Display &display,
 		}
 	}
 
-	double panelWidth = (rulebooks.size() * (BTN_WIDTH + BTN_GAP)) - BTN_GAP;
+	double numRulebooks = static_cast<double>(rulebooks.size());
+	double panelWidth = (numRulebooks * (BTN_WIDTH + BTN_GAP)) - BTN_GAP;
 	rulebookPanel = root->AddChild(new Display::Container(display,
 		Vec2(panelWidth, BTN_HEIGHT)));
 	rulebookPanel->SetPos(DialogScene::MARGIN_WIDTH, 0);
