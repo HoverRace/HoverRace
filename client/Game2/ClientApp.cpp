@@ -140,7 +140,7 @@ ClientApp::ClientApp() :
 
 	controller = new InputEventController();
 
-	connectedPlayers = new Roster();
+	party = new Roster();
 
 	// Create the system console and execute the initialization scripts.
 	// This allows the script to modify the configuration (e.g. for unit tests).
@@ -231,7 +231,7 @@ ClientApp::~ClientApp()
 	delete rulebookLibrary;
 	delete scripting;
 	delete display;
-	delete connectedPlayers;
+	delete party;
 	delete controller;
 
 	// Engine shutdown.

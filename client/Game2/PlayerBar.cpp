@@ -37,7 +37,7 @@ PlayerBar::PlayerBar(Display::Display &display, GameDirector &director,
 	SUPER(display, layoutFlags)
 {
 	playerAddedConn =
-		director.GetConnectedPlayers()->GetPlayerAddedSignal().connect(
+		director.GetParty()->GetPlayerAddedSignal().connect(
 			std::bind(&PlayerBar::OnPlayerAdded, this,
 				std::placeholders::_1));
 }

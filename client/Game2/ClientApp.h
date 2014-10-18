@@ -117,7 +117,7 @@ public:
 	VideoServices::VideoBuffer *GetVideoBuffer() const override;
 	Control::InputEventController *GetController() const override { return controller; }
 	Control::InputEventController *ReloadController() override;
-	Roster *GetConnectedPlayers() const override { return connectedPlayers; }
+	Roster *GetParty() const override { return party; }
 	sessionChangedSignal_t &GetSessionChangedSignal() override { return sessionChangedSignal; }
 
 private:
@@ -125,7 +125,7 @@ private:
 	MR_UInt32 userEventId;
 	Display::Display *display;
 	Control::InputEventController *controller;
-	Roster *connectedPlayers;
+	Roster *party;
 	sceneStack_t sceneStack;
 	ScenePtr fgScene;  ///< The scene that currently has input focus.
 	std::unique_ptr<StatusOverlayScene> statusOverlayScene;

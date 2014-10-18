@@ -152,15 +152,15 @@ void GamePeer::VerifyInitialized() const
 
 void GamePeer::LAddLocalPlayer()
 {
-	auto connectedPlayers = director.GetConnectedPlayers();
-	if (!connectedPlayers) {
+	auto party = director.GetParty();
+	if (!party) {
 		luaL_error(GetScripting()->GetState(), "Not ready to connect players.");
 		return;
 	}
 
 	//TODO: Use the same profile as the "main" player.
 
-	connectedPlayers->AddPlayer(
+	party->AddPlayer(
 		std::make_shared<Player::LocalPlayer>(
 			std::make_shared<Player::DemoProfile>()));
 }

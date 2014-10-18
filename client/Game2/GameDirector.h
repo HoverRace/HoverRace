@@ -126,7 +126,7 @@ public:
 	 * Retrieve the list of players connected to this game instance.
 	 * @return The list (may be @c nullptr).
 	 */
-	virtual Roster *GetConnectedPlayers() const = 0;
+	virtual Roster *GetParty() const = 0;
 
 	typedef boost::signals2::signal<void(std::shared_ptr<HoverScript::MetaSession>)> sessionChangedSignal_t;
 
