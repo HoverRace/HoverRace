@@ -73,79 +73,84 @@ class ClientApp : public GameDirector
 {
 	typedef GameDirector SUPER;
 
-	public:
-		ClientApp();
-		virtual ~ClientApp();
+public:
+	ClientApp();
+	virtual ~ClientApp();
 
-	private:
-		std::string GetWindowTitle();
-		void OnWindowResize(int w, int h);
-		void IncFrameCount();
-		void AdvanceScenes(Util::OS::timestamp_t tick);
-		void RenderScenes();
+private:
+	std::string GetWindowTitle();
+	void OnWindowResize(int w, int h);
+	void IncFrameCount();
+	void AdvanceScenes(Util::OS::timestamp_t tick);
+	void RenderScenes();
 
-	public:
-		void MainLoop();
+public:
+	void MainLoop();
 
-	private:
-		void OnConsoleToggle();
+private:
+	void OnConsoleToggle();
 
-	private:
-		typedef std::list<ScenePtr> sceneStack_t;
-		void SetForegroundScene();
-		void SetForegroundScene(const ScenePtr &iter);
-		void PushScene(const ScenePtr &scene);
-		void PopScene();
-		void ReplaceScene(const ScenePtr &scene);
-		void TerminateAllScenes();
+private:
+	typedef std::list<ScenePtr> sceneStack_t;
+	void SetForegroundScene();
+	void SetForegroundScene(const ScenePtr &iter);
+	void PushScene(const ScenePtr &scene);
+	void PopScene();
+	void ReplaceScene(const ScenePtr &scene);
+	void TerminateAllScenes();
 
-	public:
-		// GameDirector
-		void RequestPushScene(const ScenePtr &scene) override;
-		void RequestPopScene() override;
-		void RequestReplaceScene(const ScenePtr &scene) override;
-		void RequestMainMenu(std::shared_ptr<LoadingScene> loadingScene = std::shared_ptr<LoadingScene>()) override;
-		void RequestNewPracticeSession(std::shared_ptr<Rules> rules, std::shared_ptr<LoadingScene> loadingScene = std::shared_ptr<LoadingScene>()) override;
-		void RequestAnnouncement(std::shared_ptr<Announcement> ann) override;
-		void RequestShutdown() override;
-		Display::Display *GetDisplay() const override { return display; }
-		VideoServices::VideoBuffer *GetVideoBuffer() const override;
-		Control::InputEventController *GetController() const override { return controller; }
-		Control::InputEventController *ReloadController() override;
-		Roster *GetConnectedPlayers() const override { return connectedPlayers; }
-		sessionChangedSignal_t &GetSessionChangedSignal() override { return sessionChangedSignal; }
+public:
+	// GameDirector
+	void RequestPushScene(const ScenePtr &scene) override;
+	void RequestPopScene() override;
+	void RequestReplaceScene(const ScenePtr &scene) override;
+	void RequestMainMenu(
+		std::shared_ptr<LoadingScene> loadingScene =
+			std::shared_ptr<LoadingScene>()) override;
+	void RequestNewPracticeSession(
+		std::shared_ptr<Rules> rules,
+		std::shared_ptr<LoadingScene> loadingScene =
+			std::shared_ptr<LoadingScene>()) override;
+	void RequestAnnouncement(std::shared_ptr<Announcement> ann) override;
+	void RequestShutdown() override;
+	Display::Display *GetDisplay() const override { return display; }
+	VideoServices::VideoBuffer *GetVideoBuffer() const override;
+	Control::InputEventController *GetController() const override { return controller; }
+	Control::InputEventController *ReloadController() override;
+	Roster *GetConnectedPlayers() const override { return connectedPlayers; }
+	sessionChangedSignal_t &GetSessionChangedSignal() override { return sessionChangedSignal; }
 
-	private:
-		bool needsDevWarning;  ///< Display dev release warning on next menu.
-		MR_UInt32 userEventId;
-		Display::Display *display;
-		Control::InputEventController *controller;
-		Roster *connectedPlayers;
-		sceneStack_t sceneStack;
-		ScenePtr fgScene;  ///< The scene that currently has input focus.
-		std::unique_ptr<StatusOverlayScene> statusOverlayScene;
-		bool showOverlay;
-		std::list<std::shared_ptr<Announcement>> announcements;
+private:
+	bool needsDevWarning;  ///< Display dev release warning on next menu.
+	MR_UInt32 userEventId;
+	Display::Display *display;
+	Control::InputEventController *controller;
+	Roster *connectedPlayers;
+	sceneStack_t sceneStack;
+	ScenePtr fgScene;  ///< The scene that currently has input focus.
+	std::unique_ptr<StatusOverlayScene> statusOverlayScene;
+	bool showOverlay;
+	std::list<std::shared_ptr<Announcement>> announcements;
 
-		RulebookLibrary *rulebookLibrary;
+	RulebookLibrary *rulebookLibrary;
 
-		Script::Core *scripting;
-		HoverScript::DebugPeer *debugPeer;
-		HoverScript::GamePeer *gamePeer;
-		HoverScript::InputPeer *inputPeer;
-		HoverScript::SysEnv *sysEnv;
-		HoverScript::SysConsole *sysConsole;
-		std::weak_ptr<HoverScript::ConsoleScene> consoleScene;
+	Script::Core *scripting;
+	HoverScript::DebugPeer *debugPeer;
+	HoverScript::GamePeer *gamePeer;
+	HoverScript::InputPeer *inputPeer;
+	HoverScript::SysEnv *sysEnv;
+	HoverScript::SysConsole *sysConsole;
+	std::weak_ptr<HoverScript::ConsoleScene> consoleScene;
 
-		sessionChangedSignal_t sessionChangedSignal;
+	sessionChangedSignal_t sessionChangedSignal;
 
-		boost::signals2::connection consoleToggleConn;
+	boost::signals2::connection consoleToggleConn;
 
-		// Stats counters.
-		Display::Label *fpsLbl;
-		unsigned int frameCount;
-		Util::OS::timestamp_t lastTimestamp;
-		double fps;
+	// Stats counters.
+	Display::Label *fpsLbl;
+	unsigned int frameCount;
+	Util::OS::timestamp_t lastTimestamp;
+	double fps;
 };
 
 }  // namespace HoverScript
