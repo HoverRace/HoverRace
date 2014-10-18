@@ -26,8 +26,6 @@
 #include "FormScene.h"
 
 namespace HoverRace {
-	namespace Client {
-	}
 	namespace Display {
 		class Button;
 		class Container;
