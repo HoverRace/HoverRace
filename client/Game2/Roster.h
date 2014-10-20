@@ -46,6 +46,12 @@ public:
 
 	void AddPlayer(std::shared_ptr<Player::Player> player);
 
+	template<typename Fn>
+	void ForEach(Fn fn)
+	{
+		std::for_each(players.begin(), players.end(), fn);
+	}
+
 private:
 	std::list<std::shared_ptr<Player::Player>> players;
 	playerAddedSignal_t playerAddedSignal;
