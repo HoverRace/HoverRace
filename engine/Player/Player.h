@@ -34,6 +34,12 @@
 #endif
 
 namespace HoverRace {
+	namespace MainCharacter {
+		class MainCharacter;
+	}
+}
+
+namespace HoverRace {
 namespace Player {
 
 /**
@@ -78,6 +84,29 @@ public:
 
 	ConnectionState GetConnectionState() const { return connectionState; }
 
+	/**
+	 * Retrieve the main character, if attached.
+	 * @return The main character (may be @c nullptr if detached).
+	 */
+	MainCharacter::MainCharacter *GetMainCharacter() const { return mainCharacter; }
+
+	/**
+	 * Attach the main character (when joining a game session).
+	 * @param mainCharacter The main character (may be @nullptr to detach).
+	 */
+	void AttachMainCharacter(MainCharacter::MainCharacter *mainCharacter)
+	{
+		this->mainCharacter = mainCharacter;
+	}
+
+	/**
+	 * Detach the main character (when leaving a game session).
+	 */
+	void DetachMainCharacter()
+	{
+		this->mainCharacter = nullptr;
+	}
+
 public:
 	typedef boost::signals2::signal<void()> nameChangedSignal_t;
 	nameChangedSignal_t &GetNameChangedSignal() { return nameChangedSignal; }
@@ -93,6 +122,7 @@ private:
 	std::string name;
 	std::shared_ptr<Profile> profile;
 	ConnectionState connectionState;
+	MainCharacter::MainCharacter *mainCharacter;
 	nameChangedSignal_t nameChangedSignal;
 	connectionStateChanged_t connectionStateChangedSignal;
 };

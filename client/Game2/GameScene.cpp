@@ -25,6 +25,7 @@
 #include "../../engine/Display/Hud.h"
 #include "../../engine/Model/Track.h"
 #include "../../engine/Parcel/TrackBundle.h"
+#include "../../engine/Player/Player.h"
 #include "../../engine/Util/Duration.h"
 #include "../../engine/Util/Loader.h"
 #include "../../engine/VideoServices/SoundServer.h"
@@ -38,6 +39,7 @@
 #include "HoverScript/SessionPeer.h"
 
 #include "ClientSession.h"
+#include "Roster.h"
 #include "Rulebook.h"
 #include "Rules.h"
 
@@ -83,6 +85,10 @@ GameScene::~GameScene()
 
 void GameScene::Cleanup()
 {
+	director.GetParty()->ForEach([&](std::shared_ptr<Player::Player> &p) {
+		p->DetachMainCharacter();
+	});
+
 	director.GetSessionChangedSignal()(nullptr);
 	if (metaSession) {
 		metaSession->GetSession()->OnSessionEnd();
@@ -113,9 +119,16 @@ void GameScene::ScheduleLoad(std::shared_ptr<Loader> loader)
 		}
 
 		// This must be done after the track has loaded.
-		if (!session->CreateMainCharacter(0)) {
-			throw Exception("Main character creation failed");
-		}
+		int i = 0;
+		director.GetParty()->ForEach([&](std::shared_ptr<Player::Player> &p) {
+			if (!session->CreateMainCharacter(i)) {
+				throw Exception(boost::str(boost::format(
+					"Failed to create main character %d, player: %s") %
+					i % *p));
+			}
+			p->AttachMainCharacter(session->GetPlayer(i));
+			i++;
+		});
 
 		//TODO: Support split-screen with multiple viewports.
 		viewports.emplace_back(

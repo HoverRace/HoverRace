@@ -43,7 +43,8 @@ std::string NameForProfile(Profile *profile)
 Player::Player(std::shared_ptr<Profile> profile) :
 	name(NameForProfile(profile.get())),
 	profile(std::move(profile)),
-	connectionState(ConnectionState::CONNECTING)
+	connectionState(ConnectionState::CONNECTING),
+	mainCharacter(nullptr)
 {
 }
 
