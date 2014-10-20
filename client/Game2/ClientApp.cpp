@@ -34,6 +34,8 @@
 #include "../../engine/MainCharacter/MainCharacter.h"
 #include "../../engine/Model/Track.h"
 #include "../../engine/Parcel/TrackBundle.h"
+#include "../../engine/Player/DemoProfile.h"
+#include "../../engine/Player/LocalPlayer.h"
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/DllObjectFactory.h"
 #include "../../engine/Util/FuzzyLogic.h"
@@ -141,6 +143,12 @@ ClientApp::ClientApp() :
 	controller = new InputEventController();
 
 	party = new Roster();
+
+	// Add an initial single player with a fake profile.
+	// Later, this will be done at the title scene, but for now we'll have
+	// this hard-coded.
+	party->AddPlayer(std::make_shared<Player::LocalPlayer>(
+		std::make_shared<Player::DemoProfile>()));
 
 	// Create the system console and execute the initialization scripts.
 	// This allows the script to modify the configuration (e.g. for unit tests).
