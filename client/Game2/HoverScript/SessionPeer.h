@@ -54,49 +54,50 @@ namespace HoverScript {
  */
 class SessionPeer : public Script::Peer {
 	typedef Script::Peer SUPER;
-	public:
-		SessionPeer(Script::Core *scripting, ClientSession *session);
-		virtual ~SessionPeer();
 
-	public:
-		static void Register(Script::Core *scripting);
+public:
+	SessionPeer(Script::Core *scripting, ClientSession *session);
+	virtual ~SessionPeer();
 
-	public:
-		void SetMeta(MetaSession *meta) { this->meta = meta; }
+public:
+	static void Register(Script::Core *scripting);
 
-	public:
-		template<class Fn>
-		void ForEachPlayer(Fn fn)
-		{
-			if (!playerRefs.empty()) {
-				std::for_each(playerRefs.begin(), playerRefs.end(), fn);
-			}
+public:
+	void SetMeta(MetaSession *meta) { this->meta = meta; }
+
+public:
+	template<class Fn>
+	void ForEachPlayer(Fn fn)
+	{
+		if (!playerRefs.empty()) {
+			std::for_each(playerRefs.begin(), playerRefs.end(), fn);
 		}
-		std::shared_ptr<MetaPlayer> &GetPlayer(unsigned idx)
-		{
-			return playerRefs[idx];
-		}
+	}
+	std::shared_ptr<MetaPlayer> &GetPlayer(unsigned idx)
+	{
+		return playerRefs[idx];
+	}
 
-		void OnSessionStart(ClientSession *session);
-		void OnSessionEnd();
+	void OnSessionStart(ClientSession *session);
+	void OnSessionEnd();
 
-	protected:
-		void VerifySession() const;
+protected:
+	void VerifySession() const;
 
-	public:
-		int LGetNumPlayers() const;
-		MR_SimulationTime LGetTime() const;
-		std::shared_ptr<Util::Clock> LGetClock() const;
-		std::shared_ptr<Util::Clock> LGetCountdown() const;
-		void LCountdownToNextPhase(const std::string &s) const;
-		std::shared_ptr<TrackPeer> LGetTrack() const;
+public:
+	int LGetNumPlayers() const;
+	MR_SimulationTime LGetTime() const;
+	std::shared_ptr<Util::Clock> LGetClock() const;
+	std::shared_ptr<Util::Clock> LGetCountdown() const;
+	void LCountdownToNextPhase(const std::string &s) const;
+	std::shared_ptr<TrackPeer> LGetTrack() const;
 
-	private:
-		ClientSession *session;
-		MetaSession *meta;
-		luabind::object rules;
-		luabind::object players;
-		std::vector<std::shared_ptr<MetaPlayer>> playerRefs;
+private:
+	ClientSession *session;
+	MetaSession *meta;
+	luabind::object rules;
+	luabind::object players;
+	std::vector<std::shared_ptr<MetaPlayer>> playerRefs;
 };
 typedef std::shared_ptr<SessionPeer> SessionPeerPtr;
 
