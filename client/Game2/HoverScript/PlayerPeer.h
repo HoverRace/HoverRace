@@ -54,37 +54,38 @@ namespace HoverScript {
  */
 class PlayerPeer : public Script::Peer {
 	typedef Script::Peer SUPER;
-	public:
-		PlayerPeer(Script::Core *scripting,
-			MainCharacter::MainCharacter *player);
-		virtual ~PlayerPeer();
 
-	public:
-		static void Register(Script::Core *scripting);
+public:
+	PlayerPeer(Script::Core *scripting,
+		MainCharacter::MainCharacter *player);
+	virtual ~PlayerPeer();
 
-	public:
-		MainCharacter::MainCharacter *GetPlayer() const { return player; }
+public:
+	static void Register(Script::Core *scripting);
 
-		void SetMeta(MetaPlayer *meta) { this->meta = meta; }
-		void SetHud(std::shared_ptr<HudPeer> hud);
+public:
+	MainCharacter::MainCharacter *GetPlayer() const { return player; }
 
-	public:
-		void LFinish();
+	void SetMeta(MetaPlayer *meta) { this->meta = meta; }
+	void SetHud(std::shared_ptr<HudPeer> hud);
 
-		double LGetFuel() const;
+public:
+	void LFinish();
 
-		std::shared_ptr<HudPeer> LGetHud() const;
+	double LGetFuel() const;
 
-		int LGetIndex() const;
+	std::shared_ptr<HudPeer> LGetHud() const;
 
-		const std::string &LGetName() const;
+	int LGetIndex() const;
 
-		void LGetPos();
+	const std::string &LGetName() const;
 
-	private:
-		MainCharacter::MainCharacter *player;
-		MetaPlayer *meta;
-		std::shared_ptr<HudPeer> hud;
+	void LGetPos();
+
+private:
+	MainCharacter::MainCharacter *player;
+	MetaPlayer *meta;
+	std::shared_ptr<HudPeer> hud;
 };
 
 }  // namespace HoverScript
