@@ -37,6 +37,9 @@ namespace HoverRace {
 	namespace MainCharacter {
 		class MainCharacter;
 	}
+	namespace Player {
+		class Player;
+	}
 	namespace Model {
 		class Track;
 	}
@@ -94,8 +97,7 @@ class ClientSession
 			std::shared_ptr<Model::Track> track,
 			VideoServices::VideoBuffer *pVideo);
 
-		// Main character control and interrogation
-		bool CreateMainCharacter(int i);
+		void AttachPlayer(int i, std::shared_ptr<Player::Player> player);
 
 		std::shared_ptr<Util::Clock> GetClock() { return clock; }
 		std::shared_ptr<Util::Clock> GetCountdown() { return countdown; }
@@ -112,7 +114,16 @@ class ClientSession
 
 		virtual int GetNbPlayers() const;
 		virtual int GetRank(const MainCharacter::MainCharacter * pPlayer) const;
-		virtual MainCharacter::MainCharacter *GetPlayer(int pPlayerIndex) const;
+
+		virtual Player::Player *GetPlayer(int i) const
+		{
+			return players[static_cast<size_t>(i)].get();
+		}
+
+		virtual std::shared_ptr<Player::Player> SharePlayer(int i) const
+		{
+			return players[static_cast<size_t>(i)];
+		}
 
 		// Chat related functions (all messages are already converted in internal ASCII
 		virtual void AddMessageKey(char pKey);
@@ -134,7 +145,7 @@ class ClientSession
 
 		Model::GameSession mSession;
 		static const int MAX_PLAYERS = 4;
-		MainCharacter::MainCharacter *mainCharacter[MAX_PLAYERS];
+		std::array<std::shared_ptr<Player::Player>, MAX_PLAYERS> players;
 
 		std::shared_ptr<HoverScript::MetaSession> meta;
 		std::shared_ptr<HoverScript::TrackPeer> trackPeer;

@@ -23,6 +23,7 @@
 
 #include "../../engine/Control/Controller.h"
 #include "../../engine/MainCharacter/MainCharacter.h"
+#include "../../engine/Player/Player.h"
 
 #include "ClientSession.h"
 #include "PauseMenuScene.h"
@@ -48,10 +49,11 @@ PlayGameScene::~PlayGameScene()
 
 void PlayGameScene::AttachController(Control::InputEventController &controller)
 {
-	MainCharacter::MainCharacter* mc = session->GetPlayer(0);
-	if (mc) {
-		controller.AddPlayerMaps(1, &mc);
-		controller.AddCameraMaps();
+	if (auto player = session->GetPlayer(0)) {
+		if (auto mc = player->GetMainCharacter()) {
+			controller.AddPlayerMaps(1, &mc);
+			controller.AddCameraMaps();
+		}
 	}
 
 	//TODO: Use separate action for pausing than ui.menuCancel.
@@ -76,13 +78,14 @@ void PlayGameScene::DetachController(Control::InputEventController&)
 {
 	// Shut off the engine when the controller is detached (e.g. when showing a
 	// dialog) otherwise we'll just keep accelerating into the wall.
-	MainCharacter::MainCharacter* mc = session->GetPlayer(0);
-	if (mc) {
-		mc->SetEngineState(false);
-		mc->SetBrakeState(false);
-		mc->SetTurnLeftState(false);
-		mc->SetTurnRightState(false);
-		mc->SetLookBackState(false);
+	if (auto player = session->GetPlayer(0)) {
+		if (auto mc = player->GetMainCharacter()) {
+			mc->SetEngineState(false);
+			mc->SetBrakeState(false);
+			mc->SetTurnLeftState(false);
+			mc->SetTurnRightState(false);
+			mc->SetLookBackState(false);
+		}
 	}
 
 	pauseConn.disconnect();

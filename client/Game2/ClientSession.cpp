@@ -27,6 +27,7 @@
 #include "../../engine/MainCharacter/MainCharacter.h"
 #include "../../engine/Model/Track.h"
 #include "../../engine/Model/TrackFileCommon.h"
+#include "../../engine/Player/Player.h"
 #include "../../engine/VideoServices/VideoBuffer.h"
 #include "../../engine/Util/Clock.h"
 #include "../../engine/Util/Duration.h"
@@ -61,23 +62,31 @@ namespace {
 			return static_cast<Phase>(static_cast<int>(phase) + 1);
 		}
 	}
+
+	MainCharacter::MainCharacter *GetMainChar(Player::Player *player)
+	{
+		return player ? player->GetMainCharacter() : nullptr;
+	}
 }
 
 ClientSession::ClientSession(std::shared_ptr<Rules> rules) :
 	phase(Phase::INIT),
 	mSession(true),
 	clock(std::make_shared<Util::Clock>()),
-	rules(std::move(rules))
+	rules(std::move(rules)),
+	mBackImage(nullptr)
 {
-	for (int i = 0; i < MAX_PLAYERS; ++i) {
-		mainCharacter[i] = NULL;
-	}
-	mBackImage = NULL;
 }
 
 ClientSession::~ClientSession()
 {
-	delete[]mBackImage;
+	for (auto &player : players) {
+		if (player) {
+			player->DetachMainCharacter();
+		}
+	}
+
+	delete[] mBackImage;
 }
 
 /**
@@ -201,17 +210,28 @@ const MR_UInt8 *ClientSession::GetBackImage() const
 	return mBackImage;
 }
 
-// Main character control and interrogation
-
-bool ClientSession::CreateMainCharacter(int i)
+/**
+ * Attach a player to the session.
+ * @param i Zero-based index of the player slot.
+ * @param player The player (may not be @c nullptr).
+ */
+void ClientSession::AttachPlayer(int i, std::shared_ptr<Player::Player> player)
 {
-	ASSERT(mainCharacter[i] == NULL);
+	ASSERT(player);
+	ASSERT(i >= 0 && i < MAX_PLAYERS);
+
+	auto &playerSlot = players[static_cast<size_t>(i)];
+	if (playerSlot) {
+		playerSlot->DetachMainCharacter();
+	}
+	playerSlot = std::move(player);
 
 	Model::Level *curLevel = mSession.GetCurrentLevel();
-	ASSERT(curLevel != NULL);
+	ASSERT(curLevel);
 
-	MainCharacter::MainCharacter *ch = mainCharacter[i] =
+	MainCharacter::MainCharacter *ch =
 		MainCharacter::MainCharacter::New(i, rules->GetGameOpts());
+	playerSlot->AttachMainCharacter(ch);
 
 	int startingRoom = curLevel->GetStartingRoom(i);
 	ch->mRoom = startingRoom;
@@ -220,8 +240,6 @@ bool ClientSession::CreateMainCharacter(int i)
 	ch->SetHoverId(i);
 
 	curLevel->InsertElement(ch, startingRoom);
-
-	return true;
 }
 
 /**
@@ -261,15 +279,13 @@ MR_SimulationTime ClientSession::GetSimulationTime() const
 
 void ClientSession::UpdateCharacterSimulationTimes()
 {
-	// pass to main characters
-	if(mainCharacter[0] != NULL)
-		mainCharacter[0]->SetSimulationTime(mSession.GetSimulationTime());
-	if(mainCharacter[1] != NULL)
-		mainCharacter[1]->SetSimulationTime(mSession.GetSimulationTime());
-	if(mainCharacter[2] != NULL)
-		mainCharacter[2]->SetSimulationTime(mSession.GetSimulationTime());
-	if(mainCharacter[3] != NULL)
-		mainCharacter[3]->SetSimulationTime(mSession.GetSimulationTime());
+	for (auto &player : players) {
+		if (player) {
+			if (auto mainCharacter = player->GetMainCharacter()) {
+				mainCharacter->SetSimulationTime(mSession.GetSimulationTime());
+			}
+		}
+	}
 }
 
 const Model::Level *ClientSession::GetCurrentLevel() const
@@ -303,9 +319,11 @@ int ClientSession::GetNbPlayers() const
 {
 	int retv = 0;
 
-	for (int i = 0; i < MAX_PLAYERS; ++i)
-		if (mainCharacter[i] != NULL)
+	for (auto &player : players) {
+		if (player && player->GetMainCharacter()) {
 			++retv;
+		}
+	}
 
 	return retv;
 }
@@ -314,10 +332,10 @@ int ClientSession::GetRank(const MainCharacter::MainCharacter *pPlayer) const
 {
 	int lReturnValue = 1;
 
-	MainCharacter::MainCharacter *mMainCharacter1 = mainCharacter[0];
-	MainCharacter::MainCharacter *mMainCharacter2 = mainCharacter[1];
-	MainCharacter::MainCharacter *mMainCharacter3 = mainCharacter[2];
-	MainCharacter::MainCharacter *mMainCharacter4 = mainCharacter[3];
+	MainCharacter::MainCharacter *mMainCharacter1 = GetMainChar(players[0].get());
+	MainCharacter::MainCharacter *mMainCharacter2 = GetMainChar(players[1].get());
+	MainCharacter::MainCharacter *mMainCharacter3 = GetMainChar(players[2].get());
+	MainCharacter::MainCharacter *mMainCharacter4 = GetMainChar(players[3].get());
 
 	if(mMainCharacter1 != NULL) {
 		if(pPlayer == mMainCharacter1) {
@@ -396,12 +414,6 @@ int ClientSession::GetRank(const MainCharacter::MainCharacter *pPlayer) const
 		}
 	}
 	return lReturnValue;
-}
-
-MainCharacter::MainCharacter *ClientSession::GetPlayer(int i) const
-{
-	ASSERT(i >= 0 && i < MAX_PLAYERS);
-	return mainCharacter[i];
 }
 
 void ClientSession::AddMessageKey(char /*pKey */ )

@@ -22,6 +22,7 @@
 #include "../../StdAfx.h"
 
 #include "../../../engine/MainCharacter/MainCharacter.h"
+#include "../../../engine/Player/Player.h"
 #include "../../../engine/Script/Core.h"
 #include "../../../engine/Script/Wrapper.h"
 #include "../../../engine/Util/Log.h"
@@ -71,7 +72,7 @@ MetaPlayer::MetaPlayer(std::shared_ptr<PlayerPeer> player) :
 {
 	this->player->SetMeta(this);
 
-	auto mainChar = this->player->GetPlayer();
+	auto mainChar = this->player->GetPlayer()->GetMainCharacter();
 	checkpointConn = mainChar->GetCheckpointSignal().connect(
 		[&](MainCharacter::MainCharacter*, int i) {
 			OnCheckpoint(i);

@@ -85,10 +85,6 @@ GameScene::~GameScene()
 
 void GameScene::Cleanup()
 {
-	director.GetParty()->ForEach([&](std::shared_ptr<Player::Player> &p) {
-		p->DetachMainCharacter();
-	});
-
 	director.GetSessionChangedSignal()(nullptr);
 	if (metaSession) {
 		metaSession->GetSession()->OnSessionEnd();
@@ -121,12 +117,7 @@ void GameScene::ScheduleLoad(std::shared_ptr<Loader> loader)
 		// This must be done after the track has loaded.
 		int i = 0;
 		director.GetParty()->ForEach([&](std::shared_ptr<Player::Player> &p) {
-			if (!session->CreateMainCharacter(i)) {
-				throw Exception(boost::str(boost::format(
-					"Failed to create main character %d, player: %s") %
-					i % *p));
-			}
-			p->AttachMainCharacter(session->GetPlayer(i));
+			session->AttachPlayer(i, p);
 			i++;
 		});
 
@@ -134,7 +125,8 @@ void GameScene::ScheduleLoad(std::shared_ptr<Loader> loader)
 		viewports.emplace_back(
 			display,
 			new Observer(),
-			new Display::Hud(display, session->GetPlayer(0), track,
+			new Display::Hud(display,
+				session->GetPlayer(0)->GetMainCharacter(), track,
 				Vec2(1280, 720)));
 	});
 
@@ -185,12 +177,14 @@ void GameScene::Advance(Util::OS::timestamp_t tick)
 
 	session->Process();
 
-	if (!firedOnRaceFinish && session->GetPlayer(0)->HasFinish()) {
+	auto mainChar = session->GetPlayer(0)->GetMainCharacter();
+
+	if (!firedOnRaceFinish && mainChar->HasFinish()) {
 		metaSession->GetSession()->GetPlayer(0)->OnFinish();
 		OnRaceFinish();
 		firedOnRaceFinish = true;
 	}
-	else if (!firedOnStart && session->GetPlayer(0)->HasStarted()) {
+	else if (!firedOnStart && mainChar->HasStarted()) {
 		metaSession->GetSession()->GetPlayer(0)->OnStart();
 		firedOnStart = true;
 	}
@@ -226,7 +220,7 @@ void GameScene::Render()
 		int i = 0;
 		for (auto &viewport : viewports) {
 			viewport.observer->RenderNormalDisplay(videoBuf, session,
-				session->GetPlayer(i++),
+				session->GetPlayer(i++)->GetMainCharacter(),
 				simTime, session->GetBackImage());
 		}
 	}
@@ -244,7 +238,7 @@ void GameScene::Render()
 		int i = 0;
 		for (auto &viewport : viewports) {
 			viewport.observer->PlaySounds(session->GetCurrentLevel(),
-				session->GetPlayer(i++));
+				session->GetPlayer(i++)->GetMainCharacter());
 		}
 		VideoServices::SoundServer::ApplyContinuousPlay();
 	}
