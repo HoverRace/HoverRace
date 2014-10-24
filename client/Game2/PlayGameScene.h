@@ -38,31 +38,31 @@ namespace Client {
 class PlayGameScene : public GameScene
 {
 	typedef GameScene SUPER;
-	public:
-		PlayGameScene(Display::Display &display, GameDirector &director,
-			Script::Core *scripting, std::shared_ptr<Rules> rules,
-			std::shared_ptr<Util::Loader> loader);
-		virtual ~PlayGameScene();
 
-	public:
-		void AttachController(Control::InputEventController &controller) override;
-		void DetachController(Control::InputEventController &controller) override;
+public:
+	PlayGameScene(Display::Display &display, GameDirector &director,
+		Script::Core *scripting, std::shared_ptr<Rules> rules,
+		std::shared_ptr<Util::Loader> loader);
+	virtual ~PlayGameScene();
 
-	private:
-		void OnCameraZoom(int increment);
-		void OnCameraPan(int increment);
-		void OnCameraReset();
-		void OnPause();
+public:
+	void AttachController(Control::InputEventController &controller) override;
+	void DetachController(Control::InputEventController &controller) override;
 
-	public:
-		boost::signals2::connection cameraZoomInConn;
-		boost::signals2::connection cameraZoomOutConn;
-		boost::signals2::connection cameraPanUpConn;
-		boost::signals2::connection cameraPanDownConn;
-		boost::signals2::connection cameraResetConn;
+private:
+	void OnCameraZoom(int increment);
+	void OnCameraPan(int increment);
+	void OnCameraReset();
+	void OnPause();
 
-		boost::signals2::connection pauseConn;
+public:
+	boost::signals2::connection cameraZoomInConn;
+	boost::signals2::connection cameraZoomOutConn;
+	boost::signals2::connection cameraPanUpConn;
+	boost::signals2::connection cameraPanDownConn;
+	boost::signals2::connection cameraResetConn;
 
+	boost::signals2::connection pauseConn;
 };
 
 }  // namespace Client

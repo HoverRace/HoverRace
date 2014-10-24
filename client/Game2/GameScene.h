@@ -66,72 +66,72 @@ namespace Client {
 class GameScene : public Scene
 {
 	typedef Scene SUPER;
-	protected:
-		struct Viewport {
-			Viewport(Display::Display &display, Observer *observer,
-				Display::Hud *hud);
+protected:
+	struct Viewport {
+		Viewport(Display::Display &display, Observer *observer,
+			Display::Hud *hud);
 
-			Viewport(const Viewport &o) = delete;
-			Viewport(Viewport &&viewport) = default;
+		Viewport(const Viewport &o) = delete;
+		Viewport(Viewport &&viewport) = default;
 
-			Viewport &operator=(const Viewport &o) = delete;
-			Viewport &operator=(Viewport &&viewport) = default;
+		Viewport &operator=(const Viewport &o) = delete;
+		Viewport &operator=(Viewport &&viewport) = default;
 
-			std::unique_ptr<Observer> observer;
-			std::shared_ptr<Display::Hud> hud;
-		};
+		std::unique_ptr<Observer> observer;
+		std::shared_ptr<Display::Hud> hud;
+	};
 
-	public:
-		GameScene(const std::string &name,
-			Display::Display &display, GameDirector &director,
-			Script::Core *scripting, std::shared_ptr<Rules> rules,
-			std::shared_ptr<Util::Loader> loader);
-		virtual ~GameScene();
+public:
+	GameScene(const std::string &name,
+		Display::Display &display, GameDirector &director,
+		Script::Core *scripting, std::shared_ptr<Rules> rules,
+		std::shared_ptr<Util::Loader> loader);
+	virtual ~GameScene();
 
-	private:
-		void Cleanup();
+private:
+	void Cleanup();
 
-		void ScheduleLoad(std::shared_ptr<Util::Loader> loader);
+	void ScheduleLoad(std::shared_ptr<Util::Loader> loader);
 
-	public:
-		bool IsMouseCursorEnabled() const override { return false; }
+public:
+	bool IsMouseCursorEnabled() const override { return false; }
 
-	protected:
-		virtual void OnFinishedLoading();
+protected:
+	virtual void OnFinishedLoading();
 
-	protected:
-		void SetHudVisible(bool visible);
-		void SetMuted(bool muted);
+protected:
+	void SetHudVisible(bool visible);
+	void SetMuted(bool muted);
 
-	public:
-		void Advance(Util::OS::timestamp_t tick) override;
-		void PrepareRender() override;
-		void Render() override;
+public:
+	void Advance(Util::OS::timestamp_t tick) override;
+	void PrepareRender() override;
+	void Render() override;
 
-	private:
-		void OnRaceFinish();
+private:
+	void OnRaceFinish();
 
-	protected:
-		Display::Display &display;
-		GameDirector &director;
-		Script::Core *scripting;
-		std::shared_ptr<Rules> rules;
+protected:
+	Display::Display &display;
+	GameDirector &director;
+	Script::Core *scripting;
+	std::shared_ptr<Rules> rules;
 
-	private:
-		bool finishedLoading;
-		bool muted;
+private:
+	bool finishedLoading;
+	bool muted;
 
-	protected:
-		std::vector<Viewport> viewports;
-		ClientSession *session;
+protected:
+	std::vector<Viewport> viewports;
+	ClientSession *session;
 
-	private:
-		boost::signals2::scoped_connection finishedLoadingConn;
+private:
+	boost::signals2::scoped_connection finishedLoadingConn;
 
-		std::shared_ptr<HoverScript::MetaSession> metaSession;
+	std::shared_ptr<HoverScript::MetaSession> metaSession;
 
-		bool firedOnStart;
-		bool firedOnRaceFinish;
+	bool firedOnStart;
+	bool firedOnRaceFinish;
 };
 
 }  // namespace Client
