@@ -24,6 +24,7 @@
 #include <luabind/operator.hpp>
 
 #include "../../../engine/MainCharacter/MainCharacter.h"
+#include "../../../engine/Player/Player.h"
 #include "../../../engine/Script/Core.h"
 #include "../../../engine/Util/Str.h"
 
@@ -46,9 +47,9 @@ std::ostream &operator<<(std::ostream &os, const PlayerPeer &playerPeer)
 
 
 PlayerPeer::PlayerPeer(Script::Core *scripting,
-                       MainCharacter::MainCharacter *player) :
+	std::shared_ptr<Player::Player> player) :
 	SUPER(scripting, "Player"),
-	player(player), meta(nullptr)
+	player(std::move(player)), meta(nullptr)
 {
 }
 
@@ -81,14 +82,31 @@ void PlayerPeer::SetHud(std::shared_ptr<HudPeer> hud)
 	this->hud = std::move(hud);
 }
 
+MainCharacter::MainCharacter *PlayerPeer::VerifyAttached() const
+{
+	auto mchar = player->GetMainCharacter();
+	if (!mchar) {
+		luaL_error(GetScripting()->GetState(),
+			"Player is not attached to the current session.");
+	}
+	return mchar;
+}
+
 void PlayerPeer::LFinish()
 {
-	player->Finish();
+	if (auto mchar = VerifyAttached()) {
+		mchar->Finish();
+	}
 }
 
 double PlayerPeer::LGetFuel() const
 {
-	return player->GetFuelLevel();
+	if (auto mchar = VerifyAttached()) {
+		return mchar->GetFuelLevel();
+	}
+	else {
+		return 0.0;
+	}
 }
 
 std::shared_ptr<HudPeer> PlayerPeer::LGetHud() const
@@ -98,7 +116,12 @@ std::shared_ptr<HudPeer> PlayerPeer::LGetHud() const
 
 int PlayerPeer::LGetIndex() const
 {
-	return player->GetPlayerIndex();
+	if (auto mchar = VerifyAttached()) {
+		mchar->GetPlayerIndex();
+	}
+	else {
+		return -1;
+	}
 }
 
 const std::string &PlayerPeer::LGetName() const
@@ -108,12 +131,19 @@ const std::string &PlayerPeer::LGetName() const
 
 void PlayerPeer::LGetPos()
 {
-	MR_3DCoordinate &pos = player->mPosition;
-
 	lua_State *L = GetScripting()->GetState();
-	lua_pushnumber(L, pos.mX);
-	lua_pushnumber(L, pos.mY);
-	lua_pushnumber(L, pos.mZ);
+
+	if (auto mchar = VerifyAttached()) {
+		MR_3DCoordinate &pos = mchar->mPosition;
+		lua_pushnumber(L, pos.mX);
+		lua_pushnumber(L, pos.mY);
+		lua_pushnumber(L, pos.mZ);
+	}
+	else {
+		lua_pushnumber(L, 0);
+		lua_pushnumber(L, 0);
+		lua_pushnumber(L, 0);
+	}
 }
 
 }  // namespace HoverScript

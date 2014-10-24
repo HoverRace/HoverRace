@@ -103,7 +103,7 @@ void SessionPeer::OnSessionStart(ClientSession *session)
 	playerRefs.clear();
 	for (int i = 0; i < session->GetNbPlayers(); i++) {
 		auto player = session->GetRules()->GetRulebook()->GetMetas().player(
-			std::make_shared<PlayerPeer>(scripting, session->GetPlayer(i)));
+			std::make_shared<PlayerPeer>(scripting, session->SharePlayer(i)));
 		player->OnInit();
 
 		playerRefs.push_back(player);

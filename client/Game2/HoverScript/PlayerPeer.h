@@ -39,6 +39,9 @@ namespace HoverRace {
 	namespace MainCharacter {
 		class MainCharacter;
 	}
+	namespace Player {
+		class Player;
+	}
 	namespace Script {
 		class Core;
 	}
@@ -56,18 +59,20 @@ class PlayerPeer : public Script::Peer {
 	typedef Script::Peer SUPER;
 
 public:
-	PlayerPeer(Script::Core *scripting,
-		MainCharacter::MainCharacter *player);
+	PlayerPeer(Script::Core *scripting, std::shared_ptr<Player::Player> player);
 	virtual ~PlayerPeer();
 
 public:
 	static void Register(Script::Core *scripting);
 
 public:
-	MainCharacter::MainCharacter *GetPlayer() const { return player; }
+	Player::Player *GetPlayer() const { return player.get(); }
 
 	void SetMeta(MetaPlayer *meta) { this->meta = meta; }
 	void SetHud(std::shared_ptr<HudPeer> hud);
+
+protected:
+	MainCharacter::MainCharacter *VerifyAttached() const;
 
 public:
 	void LFinish();
@@ -83,7 +88,7 @@ public:
 	void LGetPos();
 
 private:
-	MainCharacter::MainCharacter *player;
+	std::shared_ptr<Player::Player> player;
 	MetaPlayer *meta;
 	std::shared_ptr<HudPeer> hud;
 };
