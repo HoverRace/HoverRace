@@ -117,7 +117,7 @@ std::shared_ptr<HudPeer> PlayerPeer::LGetHud() const
 int PlayerPeer::LGetIndex() const
 {
 	if (auto mchar = VerifyAttached()) {
-		mchar->GetPlayerIndex();
+		return mchar->GetPlayerIndex();
 	}
 	else {
 		return -1;
