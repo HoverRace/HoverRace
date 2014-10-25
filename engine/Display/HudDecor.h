@@ -87,7 +87,8 @@ public:
 	MainCharacter::MainCharacter *GetPlayer() const { return player; }
 	void SetPlayer(MainCharacter::MainCharacter *player);
 
-	std::shared_ptr<Model::Track> GetTrack() const { return track; }
+	Model::Track *GetTrack() const { return track.get(); }
+	std::shared_ptr<Model::Track> ShareTrack() const { return track; }
 	void SetTrack(std::shared_ptr<Model::Track> track);
 
 private:

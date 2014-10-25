@@ -79,7 +79,8 @@ public:
 	const std::string &GetText() const;
 	void SetText(const std::string &text);
 
-	std::shared_ptr<FillBox> GetIcon() const { return icon; }
+	FillBox *GetIcon() const { return icon.get(); }
+	std::shared_ptr<FillBox> ShareIcon() const { return icon; }
 	void SetIcon(std::shared_ptr<FillBox> icon);
 
 	FillBox *GetBackgroundChild() const { return background.get(); }
