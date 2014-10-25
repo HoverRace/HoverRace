@@ -72,9 +72,9 @@ namespace {
 ClientSession::ClientSession(std::shared_ptr<Rules> rules) :
 	phase(Phase::INIT),
 	mSession(true),
+	mBackImage(nullptr),
 	clock(std::make_shared<Util::Clock>()),
-	rules(std::move(rules)),
-	mBackImage(nullptr)
+	rules(std::move(rules))
 {
 }
 
