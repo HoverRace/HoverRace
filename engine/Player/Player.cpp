@@ -40,9 +40,17 @@ std::string NameForProfile(Profile *profile)
 
 }  // namespace
 
-Player::Player(std::shared_ptr<Profile> profile) :
+/**
+ * Constructor.
+ * @param profile The profile.
+ * @param human @c true if the player is controlled by a human.
+ * @param competing @c true if the player can compete in game sessions or
+ *                  @c false if the player can only spectate.
+ */
+Player::Player(std::shared_ptr<Profile> profile, bool human, bool competing) :
 	name(NameForProfile(profile.get())),
 	profile(std::move(profile)),
+	human(human), competing(competing),
 	connectionState(ConnectionState::CONNECTING),
 	mainCharacter(nullptr)
 {

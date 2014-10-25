@@ -45,7 +45,7 @@ class MR_DllDeclare LocalPlayer : public Player
 	typedef Player SUPER;
 public:
 	LocalPlayer() = delete;
-	LocalPlayer(std::shared_ptr<Profile> profile);
+	LocalPlayer(std::shared_ptr<Profile> profile, bool human, bool competing);
 	virtual ~LocalPlayer() { }
 
 private:

@@ -148,7 +148,7 @@ ClientApp::ClientApp() :
 	// Later, this will be done at the title scene, but for now we'll have
 	// this hard-coded.
 	party->AddPlayer(std::make_shared<Player::LocalPlayer>(
-		std::make_shared<Player::DemoProfile>()));
+		std::make_shared<Player::DemoProfile>(), true, true));
 
 	// Create the system console and execute the initialization scripts.
 	// This allows the script to modify the configuration (e.g. for unit tests).

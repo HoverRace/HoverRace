@@ -162,7 +162,7 @@ void GamePeer::LAddLocalPlayer()
 
 	party->AddPlayer(
 		std::make_shared<Player::LocalPlayer>(
-			std::make_shared<Player::DemoProfile>()));
+			std::make_shared<Player::DemoProfile>(), true, true));
 }
 
 void GamePeer::LAnnounce(const std::string &label)

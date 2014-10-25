@@ -26,8 +26,9 @@
 namespace HoverRace {
 namespace Player {
 
-LocalPlayer::LocalPlayer(std::shared_ptr<Profile> profile) :
-	SUPER(std::move(profile))
+LocalPlayer::LocalPlayer(std::shared_ptr<Profile> profile,
+	bool human, bool competing) :
+	SUPER(std::move(profile), human, competing)
 {
 }
 
