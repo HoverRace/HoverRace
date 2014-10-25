@@ -60,206 +60,206 @@ class MR_DllDeclare Hud : public Container
 {
 	typedef Container SUPER;
 
-	public:
-		struct Props
-		{
-			enum {
-				PLAYER = SUPER::Props::NEXT_,
-				TRACK,
-				NEXT_,  ///< First index for subclasses.
-			};
+public:
+	struct Props
+	{
+		enum {
+			PLAYER = SUPER::Props::NEXT_,
+			TRACK,
+			NEXT_,  ///< First index for subclasses.
 		};
-		struct HudAlignment
-		{
-			enum type {
-				ABOVE,  ///< Centered in the top-half of the screen.
-				BELOW,  ///< Centered in the bottom-half of the screen.
-				N,      ///< Center-north, stacked left-to-right.
-				NNE,    ///< Northeast corner, stacked right-to-left.
-				NE,     ///< Northeast corner, only top is visible.
-				ENE,    ///< Northeast corner, stacked top-to-bottom.
-				E,      ///< Center-east, stacked top-to-bottom.
-				ESE,    ///< Southeast corner, stacked bottom-to-top.
-				SE,     ///< Southeast corner, only top is visible.
-				SSE,    ///< Southeast corner, stacked right-to-left.
-				S,      ///< Center-south, stacked left-to-right.
-				SSW,    ///< Southwest corner, stacked left-to-right.
-				SW,     ///< Southwest corner, only top is visible.
-				WSW,    ///< Southwest corner, stacked bottom-to-top.
-				W,      ///< Center-west, stacked top-to-bottom.
-				WNW,    ///< Northwest corner, stacked top-to-bottom.
-				NW,     ///< Northwest corner, only top is visible.
-				NNW,    ///< Northwest corner, stacked left-to-right.
-			};
-			static const size_t NUM = NNW + 1;
-
-			/**
-			 * Safely convert from an int.
-			 * @param t The int value.
-			 * @return The HudAlignment enum value.
-			 * @throws Exception The int value is does not map to a valid
-			 *                   enum value.
-			 */
-			static type FromInt(int t) {
-				if (t < 0 || t > NNW) {
-					std::ostringstream oss;
-					oss << "Invalid HUD alignment: " << t;
-					throw Exception(oss.str());
-				}
-				return static_cast<type>(t);
-			}
-
-			static bool IsCorner(type t) {
-				return t == NW || t == NE || t == SE || t == SW;
-			}
-
-			static Alignment AlignmentFor(type t) {
-				switch (t) {
-					case ABOVE:
-						return Alignment::S;
-					case BELOW:
-						return Alignment::N;
-					case N:
-						return Alignment::N;
-					case NNE:
-					case NE:
-					case ENE:
-						return Alignment::NE;
-					case E:
-						return Alignment::E;
-					case ESE:
-					case SE:
-					case SSE:
-						return Alignment::SE;
-					case S:
-						return Alignment::S;
-					case SSW:
-					case SW:
-					case WSW:
-						return Alignment::SW;
-					case W:
-						return Alignment::W;
-					case WNW:
-					case NW:
-					case NNW:
-					default:
-						return Alignment::NW;
-				}
-			}
+	};
+	struct HudAlignment
+	{
+		enum type {
+			ABOVE,  ///< Centered in the top-half of the screen.
+			BELOW,  ///< Centered in the bottom-half of the screen.
+			N,      ///< Center-north, stacked left-to-right.
+			NNE,    ///< Northeast corner, stacked right-to-left.
+			NE,     ///< Northeast corner, only top is visible.
+			ENE,    ///< Northeast corner, stacked top-to-bottom.
+			E,      ///< Center-east, stacked top-to-bottom.
+			ESE,    ///< Southeast corner, stacked bottom-to-top.
+			SE,     ///< Southeast corner, only top is visible.
+			SSE,    ///< Southeast corner, stacked right-to-left.
+			S,      ///< Center-south, stacked left-to-right.
+			SSW,    ///< Southwest corner, stacked left-to-right.
+			SW,     ///< Southwest corner, only top is visible.
+			WSW,    ///< Southwest corner, stacked bottom-to-top.
+			W,      ///< Center-west, stacked top-to-bottom.
+			WNW,    ///< Northwest corner, stacked top-to-bottom.
+			NW,     ///< Northwest corner, only top is visible.
+			NNW,    ///< Northwest corner, stacked left-to-right.
 		};
-	protected:
-		struct MR_DllDeclare HudChild
-		{
-			HudChild(std::shared_ptr<HudDecor> decor);
-			HudChild(const HudChild&) = delete;
-			HudChild(HudChild &&other);
+		static const size_t NUM = NNW + 1;
 
-			HudChild &operator=(const HudChild&) = delete;
-			HudChild &operator=(HudChild &&other);
-
-			std::shared_ptr<HudDecor> decor;
-			boost::signals2::scoped_connection sizeChangedConn;
-		};
-
-	public:
-		Hud(Display &display, MainCharacter::MainCharacter *player,
-			std::shared_ptr<Model::Track> track,
-			const Vec2 &size, bool clip=true,
-			uiLayoutFlags_t layoutFlags=0);
-		virtual ~Hud() { }
-
-	/* Using the view for Container.
-	public:
-		virtual void AttachView(Display &disp) { AttachViewDynamic(disp, this); }
-	*/
-
-	public:
 		/**
-		 * Append a child element to the end of the list.
-		 * @param alignment Where to place the child element in the HUD.
-		 * @param child The child element; must be a subclass of UiViewModel.
-		 * @return The child element, wrapped in a @c std::shared_ptr.
+		 * Safely convert from an int.
+		 * @param t The int value.
+		 * @return The HudAlignment enum value.
+		 * @throws Exception The int value is does not map to a valid
+		 *                   enum value.
 		 */
-		template<typename T>
-		typename std::enable_if<std::is_base_of<HudDecor, T>::value, std::shared_ptr<T>>::type
-		AddHudChild(HudAlignment::type alignment, T *child)
-		{
-			std::shared_ptr<T> sharedChild = AddChild(child);
-			sharedChild->SetPlayer(player);
-			sharedChild->SetTrack(track);
-
-			// For corner elems, replace the elem instead of adding.
-			if (HudAlignment::IsCorner(alignment)) {
-				auto &elems = hudChildren[alignment];
-				if (!elems.empty()) {
-					RemoveChild(elems.back().decor);
-					elems.clear();
-				}
+		static type FromInt(int t) {
+			if (t < 0 || t > NNW) {
+				std::ostringstream oss;
+				oss << "Invalid HUD alignment: " << t;
+				throw Exception(oss.str());
 			}
-
-			sharedChild->SetAlignment(HudAlignment::AlignmentFor(alignment));
-
-			auto &children = hudChildren[alignment];
-			children.emplace_back(sharedChild);
-
-			// Trigger layout when the child changes size.
-			children.back().sizeChangedConn =
-				sharedChild->GetSizeChangedSignal().connect(
-					std::bind(&Hud::RequestLayout, this));
-
-			RequestLayout();
-			return sharedChild;
+			return static_cast<type>(t);
 		}
 
-		virtual void Clear()
-		{
-			for (auto &children : hudChildren) {
-				children.clear();
-			}
-			SUPER::Clear();
+		static bool IsCorner(type t) {
+			return t == NW || t == NE || t == SE || t == SW;
 		}
 
-	protected:
-		template<typename Fn>
-		void ForEachHudChild(Fn fn)
-		{
-			for (auto &children : hudChildren) {
-				for (auto &child : children) {
-					fn(child.decor);
-				}
+		static Alignment AlignmentFor(type t) {
+			switch (t) {
+				case ABOVE:
+					return Alignment::S;
+				case BELOW:
+					return Alignment::N;
+				case N:
+					return Alignment::N;
+				case NNE:
+				case NE:
+				case ENE:
+					return Alignment::NE;
+				case E:
+					return Alignment::E;
+				case ESE:
+				case SE:
+				case SSE:
+					return Alignment::SE;
+				case S:
+					return Alignment::S;
+				case SSW:
+				case SW:
+				case WSW:
+					return Alignment::SW;
+				case W:
+					return Alignment::W;
+				case WNW:
+				case NW:
+				case NNW:
+				default:
+					return Alignment::NW;
+			}
+		}
+	};
+protected:
+	struct MR_DllDeclare HudChild
+	{
+		HudChild(std::shared_ptr<HudDecor> decor);
+		HudChild(const HudChild&) = delete;
+		HudChild(HudChild &&other);
+
+		HudChild &operator=(const HudChild&) = delete;
+		HudChild &operator=(HudChild &&other);
+
+		std::shared_ptr<HudDecor> decor;
+		boost::signals2::scoped_connection sizeChangedConn;
+	};
+
+public:
+	Hud(Display &display, MainCharacter::MainCharacter *player,
+		std::shared_ptr<Model::Track> track,
+		const Vec2 &size, bool clip=true,
+		uiLayoutFlags_t layoutFlags=0);
+	virtual ~Hud() { }
+
+/* Using the view for Container.
+public:
+	virtual void AttachView(Display &disp) { AttachViewDynamic(disp, this); }
+*/
+
+public:
+	/**
+	 * Append a child element to the end of the list.
+	 * @param alignment Where to place the child element in the HUD.
+	 * @param child The child element; must be a subclass of UiViewModel.
+	 * @return The child element, wrapped in a @c std::shared_ptr.
+	 */
+	template<typename T>
+	typename std::enable_if<std::is_base_of<HudDecor, T>::value, std::shared_ptr<T>>::type
+	AddHudChild(HudAlignment::type alignment, T *child)
+	{
+		std::shared_ptr<T> sharedChild = AddChild(child);
+		sharedChild->SetPlayer(player);
+		sharedChild->SetTrack(track);
+
+		// For corner elems, replace the elem instead of adding.
+		if (HudAlignment::IsCorner(alignment)) {
+			auto &elems = hudChildren[alignment];
+			if (!elems.empty()) {
+				RemoveChild(elems.back().decor);
+				elems.clear();
 			}
 		}
 
-	public:
-		/**
-		 * Retrieve the player being targeted by this HUD.
-		 * @return The player (may be @c nullptr).
-		 */
-		MainCharacter::MainCharacter *GetPlayer() const { return player; }
-		void SetPlayer(MainCharacter::MainCharacter *player);
+		sharedChild->SetAlignment(HudAlignment::AlignmentFor(alignment));
 
-		std::shared_ptr<Model::Track> GetTrack() const { return track; }
-		void SetTrack(std::shared_ptr<Model::Track> track);
+		auto &children = hudChildren[alignment];
+		children.emplace_back(sharedChild);
 
-	private:
-		void LayoutStacked(HudAlignment::type align,
-			double startX, double startY,
-			double scaleX, double scaleY);
-		void LayoutCorner(HudAlignment::type alignCorner,
-			HudAlignment::type alignH, HudAlignment::type alignV,
-			double startX, double startY,
-			double scaleX, double scaleY);
-	protected:
-		virtual void Layout();
+		// Trigger layout when the child changes size.
+		children.back().sizeChangedConn =
+			sharedChild->GetSizeChangedSignal().connect(
+				std::bind(&Hud::RequestLayout, this));
 
-	public:
-		void Advance(Util::OS::timestamp_t tick);
+		RequestLayout();
+		return sharedChild;
+	}
 
-	private:
-		std::shared_ptr<Model::Track> track;
-		MainCharacter::MainCharacter *player;
-		typedef std::vector<HudChild> hudChildList_t;
-		std::array<hudChildList_t, HudAlignment::NUM> hudChildren;
+	virtual void Clear()
+	{
+		for (auto &children : hudChildren) {
+			children.clear();
+		}
+		SUPER::Clear();
+	}
+
+protected:
+	template<typename Fn>
+	void ForEachHudChild(Fn fn)
+	{
+		for (auto &children : hudChildren) {
+			for (auto &child : children) {
+				fn(child.decor);
+			}
+		}
+	}
+
+public:
+	/**
+	 * Retrieve the player being targeted by this HUD.
+	 * @return The player (may be @c nullptr).
+	 */
+	MainCharacter::MainCharacter *GetPlayer() const { return player; }
+	void SetPlayer(MainCharacter::MainCharacter *player);
+
+	std::shared_ptr<Model::Track> GetTrack() const { return track; }
+	void SetTrack(std::shared_ptr<Model::Track> track);
+
+private:
+	void LayoutStacked(HudAlignment::type align,
+		double startX, double startY,
+		double scaleX, double scaleY);
+	void LayoutCorner(HudAlignment::type alignCorner,
+		HudAlignment::type alignH, HudAlignment::type alignV,
+		double startX, double startY,
+		double scaleX, double scaleY);
+protected:
+	virtual void Layout();
+
+public:
+	void Advance(Util::OS::timestamp_t tick);
+
+private:
+	std::shared_ptr<Model::Track> track;
+	MainCharacter::MainCharacter *player;
+	typedef std::vector<HudChild> hudChildList_t;
+	std::array<hudChildList_t, HudAlignment::NUM> hudChildren;
 };
 
 }  // namespace Display

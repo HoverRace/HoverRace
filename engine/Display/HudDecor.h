@@ -59,41 +59,41 @@ class MR_DllDeclare HudDecor : public Container
 {
 	typedef Container SUPER;
 
-	public:
-		struct Props
-		{
-			enum {
-				PLAYER = SUPER::Props::NEXT_,
-				TRACK,
-				NEXT_,  ///< First index for subclasses.
-			};
+public:
+	struct Props
+	{
+		enum {
+			PLAYER = SUPER::Props::NEXT_,
+			TRACK,
+			NEXT_,  ///< First index for subclasses.
 		};
+	};
 
-	public:
-		HudDecor(Display &display);
-		virtual ~HudDecor() { }
+public:
+	HudDecor(Display &display);
+	virtual ~HudDecor() { }
 
-	public:
-		typedef boost::signals2::signal<void(const Vec2&)> sizeChangedSignal_t;
-		sizeChangedSignal_t &GetSizeChangedSignal() { return sizeChangedSignal; }
+public:
+	typedef boost::signals2::signal<void(const Vec2&)> sizeChangedSignal_t;
+	sizeChangedSignal_t &GetSizeChangedSignal() { return sizeChangedSignal; }
 
-	protected:
-		void FireModelUpdate(int prop) override;
+protected:
+	void FireModelUpdate(int prop) override;
 
-	public:
-		virtual void Advance(Util::OS::timestamp_t) { };
+public:
+	virtual void Advance(Util::OS::timestamp_t) { };
 
-	public:
-		MainCharacter::MainCharacter *GetPlayer() const { return player; }
-		void SetPlayer(MainCharacter::MainCharacter *player);
+public:
+	MainCharacter::MainCharacter *GetPlayer() const { return player; }
+	void SetPlayer(MainCharacter::MainCharacter *player);
 
-		std::shared_ptr<Model::Track> GetTrack() const { return track; }
-		void SetTrack(std::shared_ptr<Model::Track> track);
+	std::shared_ptr<Model::Track> GetTrack() const { return track; }
+	void SetTrack(std::shared_ptr<Model::Track> track);
 
-	private:
-		MainCharacter::MainCharacter *player;
-		std::shared_ptr<Model::Track> track;
-		sizeChangedSignal_t sizeChangedSignal;
+private:
+	MainCharacter::MainCharacter *player;
+	std::shared_ptr<Model::Track> track;
+	sizeChangedSignal_t sizeChangedSignal;
 };
 
 }  // namespace Display
