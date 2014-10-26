@@ -56,7 +56,7 @@ namespace MainCharacter {
 class MR_DllDeclare MainCharacter : public Model::FreeElement
 {
 	public:
-		enum {
+		enum : unsigned int {
 			eMotorOn = 1,
 			eRight = 2,
 			eLeft = 4,
