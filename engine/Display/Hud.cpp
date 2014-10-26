@@ -21,6 +21,8 @@
 
 #include "../StdAfx.h"
 
+#include "../Player/Player.h"
+
 #include "Hud.h"
 
 namespace HoverRace {
@@ -62,12 +64,12 @@ Hud::HudChild &Hud::HudChild::operator=(HudChild &&other)
  * @param clip Enable (default) or disable clipping of child widgets.
  * @param layoutFlags Optional layout flags.
  */
-Hud::Hud(Display &display, MainCharacter::MainCharacter *player,
-         std::shared_ptr<Model::Track> track,
-         const Vec2 &size, bool clip,
-         uiLayoutFlags_t layoutFlags) :
+Hud::Hud(Display &display, std::shared_ptr<Player::Player> player,
+	std::shared_ptr<Model::Track> track,
+	const Vec2 &size, bool clip,
+	uiLayoutFlags_t layoutFlags) :
 	SUPER(display, size, clip, layoutFlags),
-	track(track), player(player)
+	track(std::move(track)), player(std::move(player))
 {
 }
 
@@ -75,7 +77,7 @@ Hud::Hud(Display &display, MainCharacter::MainCharacter *player,
  * Change the player being targeted by the HUD.
  * @param player The target player (may be @c nullptr).
  */
-void Hud::SetPlayer(MainCharacter::MainCharacter *player)
+void Hud::SetPlayer(std::shared_ptr<Player::Player> player)
 {
 	if (this->player != player) {
 		this->player = player;

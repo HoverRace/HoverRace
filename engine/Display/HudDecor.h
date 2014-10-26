@@ -39,8 +39,8 @@ namespace HoverRace {
 	namespace Display {
 		class Display;
 	}
-	namespace MainCharacter {
-		class MainCharacter;
+	namespace Player {
+		class Player;
 	}
 	namespace Model {
 		class Track;
@@ -84,15 +84,16 @@ public:
 	virtual void Advance(Util::OS::timestamp_t) { };
 
 public:
-	MainCharacter::MainCharacter *GetPlayer() const { return player; }
-	void SetPlayer(MainCharacter::MainCharacter *player);
+	Player::Player *GetPlayer() const { return player.get(); }
+	std::shared_ptr<Player::Player> SharePlayer() const { return player; }
+	void SetPlayer(std::shared_ptr<Player::Player> player);
 
 	Model::Track *GetTrack() const { return track.get(); }
 	std::shared_ptr<Model::Track> ShareTrack() const { return track; }
 	void SetTrack(std::shared_ptr<Model::Track> track);
 
 private:
-	MainCharacter::MainCharacter *player;
+	std::shared_ptr<Player::Player> player;
 	std::shared_ptr<Model::Track> track;
 	sizeChangedSignal_t sizeChangedSignal;
 };

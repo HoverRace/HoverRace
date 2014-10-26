@@ -22,6 +22,7 @@
 #include "../StdAfx.h"
 
 #include "../../engine/MainCharacter/MainCharacter.h"
+#include "../../engine/Player/Player.h"
 #include "FillBox.h"
 
 #include "FuelGauge.h"
@@ -53,7 +54,12 @@ FuelGauge::FuelGauge(Display &display) :
 
 void FuelGauge::Advance(Util::OS::timestamp_t)
 {
-	double fuel = GetPlayer()->GetFuelLevel();
+	auto player = GetPlayer();
+	if (!player) return;
+	auto mchar = player->GetMainCharacter();
+	if (!mchar) return;
+
+	double fuel = mchar->GetFuelLevel();
 	if (fuel < 0.0) fuel = 0.0;
 	else if (fuel > 1.0) fuel = 1.0;
 

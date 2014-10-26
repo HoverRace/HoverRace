@@ -47,6 +47,9 @@ namespace HoverRace {
 	namespace Model {
 		class Track;
 	}
+	namespace Player {
+		class Player;
+	}
 }
 
 namespace HoverRace {
@@ -162,7 +165,7 @@ protected:
 	};
 
 public:
-	Hud(Display &display, MainCharacter::MainCharacter *player,
+	Hud(Display &display, std::shared_ptr<Player::Player> player,
 		std::shared_ptr<Model::Track> track,
 		const Vec2 &size, bool clip=true,
 		uiLayoutFlags_t layoutFlags=0);
@@ -231,12 +234,7 @@ protected:
 	}
 
 public:
-	/**
-	 * Retrieve the player being targeted by this HUD.
-	 * @return The player (may be @c nullptr).
-	 */
-	MainCharacter::MainCharacter *GetPlayer() const { return player; }
-	void SetPlayer(MainCharacter::MainCharacter *player);
+	void SetPlayer(std::shared_ptr<Player::Player> player);
 
 	Model::Track *GetTrack() const { return track.get(); }
 	std::shared_ptr<Model::Track> ShareTrack() const { return track; }
@@ -258,7 +256,7 @@ public:
 
 private:
 	std::shared_ptr<Model::Track> track;
-	MainCharacter::MainCharacter *player;
+	std::shared_ptr<Player::Player> player;
 	typedef std::vector<HudChild> hudChildList_t;
 	std::array<hudChildList_t, HudAlignment::NUM> hudChildren;
 };

@@ -1,7 +1,7 @@
 
 // HudDecor.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -50,10 +50,10 @@ void HudDecor::FireModelUpdate(int prop)
  * Change the target player for this HUD element.
  * @param player The player (may be @c nullptr).
  */
-void HudDecor::SetPlayer(MainCharacter::MainCharacter *player)
+void HudDecor::SetPlayer(std::shared_ptr<Player::Player> player)
 {
 	if (this->player != player) {
-		this->player = player;
+		this->player = std::move(player);
 		FireModelUpdate(Props::PLAYER);
 	}
 }

@@ -38,6 +38,8 @@
 #include "../../engine/Display/Speedometer.h"
 #include "../../engine/Display/SymbolIcon.h"
 #include "../../engine/MainCharacter/MainCharacter.h"
+#include "../../engine/Player/DemoProfile.h"
+#include "../../engine/Player/LocalPlayer.h"
 #include "../../engine/VideoServices/FontSpec.h"
 #include "../../engine/VideoServices/VideoBuffer.h"
 #include "../../engine/Util/Config.h"
@@ -207,7 +209,10 @@ namespace Module {
 		typedef TestLabScene::LabModule SUPER;
 		public:
 			HudModule(Display::Display &display, GameDirector &director);
-			virtual ~HudModule() { }
+			virtual ~HudModule();
+
+		private:
+			static std::unique_ptr<Player::Player> InitPlayer();
 
 		public:
 			virtual void Advance(Util::OS::timestamp_t tick);
@@ -215,7 +220,7 @@ namespace Module {
 			virtual void Render();
 
 		private:
-			std::unique_ptr<MainCharacter::MainCharacter> player;
+			std::shared_ptr<Player::Player> player;
 			std::unique_ptr<Display::Hud> hud;
 	}; //}}}
 
@@ -666,8 +671,8 @@ void TransitionModule::OnStateTransition(double progress)
 
 HudModule::HudModule(Display::Display &display, GameDirector &director) :
 	SUPER(display, director, "HUD"),
-	player(MainCharacter::MainCharacter::New(0, 0x7f)),
-	hud(new Display::Hud(display, player.get(), std::shared_ptr<Model::Track>(),
+	player(InitPlayer()),
+	hud(new Display::Hud(display, player, std::shared_ptr<Model::Track>(),
 		Vec2(1280, 720)))
 {
 	hud->AttachView(display);
@@ -678,6 +683,20 @@ HudModule::HudModule(Display::Display &display, GameDirector &director) :
 		new Display::FuelGauge(display));
 	auto speedometer = hud->AddHudChild(HudAlignment::NW,
 		new Display::Speedometer(display));
+}
+
+HudModule::~HudModule()
+{
+	player->DetachMainCharacter();
+}
+
+std::unique_ptr<Player::Player> HudModule::InitPlayer()
+{
+	auto player = new Player::LocalPlayer(
+		std::make_shared<Player::DemoProfile>(), false, true);
+	player->AttachMainCharacter(MainCharacter::MainCharacter::New(0, 0x7f));
+
+	return std::unique_ptr<Player::Player>(player);
 }
 
 void HudModule::Advance(Util::OS::timestamp_t tick)

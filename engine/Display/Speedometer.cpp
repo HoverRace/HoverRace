@@ -22,6 +22,7 @@
 #include "../StdAfx.h"
 
 #include "../../engine/MainCharacter/MainCharacter.h"
+#include "../../engine/Player/Player.h"
 #include "FillBox.h"
 
 #include "Speedometer.h"
@@ -59,8 +60,12 @@ Speedometer::Speedometer(Display &display) :
 void Speedometer::Advance(Util::OS::timestamp_t)
 {
 	auto player = GetPlayer();
-	double absSpeed = player->GetAbsoluteSpeed();
-	double dirSpeed = player->GetDirectionalSpeed();
+	if (!player) return;
+	auto mchar = player->GetMainCharacter();
+	if (!mchar) return;
+
+	double absSpeed = mchar->GetAbsoluteSpeed();
+	double dirSpeed = mchar->GetDirectionalSpeed();
 
 	absFg->SetSize(GAUGE_WIDTH * absSpeed, GAUGE_HEIGHT);
 	if (dirSpeed < 0) {

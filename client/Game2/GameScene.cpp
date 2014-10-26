@@ -126,7 +126,7 @@ void GameScene::ScheduleLoad(std::shared_ptr<Loader> loader)
 			display,
 			new Observer(),
 			new Display::Hud(display,
-				session->GetPlayer(0)->GetMainCharacter(), track,
+				session->SharePlayer(0), track,
 				Vec2(1280, 720)));
 	});
 

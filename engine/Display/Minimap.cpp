@@ -22,6 +22,7 @@
 #include "../StdAfx.h"
 
 #include "../../engine/MainCharacter/MainCharacter.h"
+#include "../../engine/Player/Player.h"
 #include "../../engine/Model/Track.h"
 #include "Picture.h"
 #include "SymbolIcon.h"
@@ -87,11 +88,15 @@ void Minimap::Advance(Util::OS::timestamp_t)
 
 	//TODO: Update all players, not just the current player.
 	auto player = GetPlayer();
+	if (!player) return;
+	auto mchar = player->GetMainCharacter();
+	if (!mchar) return;
+
 	Vec2 pos{
-		static_cast<double>(player->mPosition.mX),
-		static_cast<double>(player->mPosition.mY)
+		static_cast<double>(mchar->mPosition.mX),
+		static_cast<double>(mchar->mPosition.mY)
 	};
-	playerIcon->SetColor(player->GetPrimaryColor());
+	playerIcon->SetColor(player->GetProfile()->GetPrimaryColor());
 	playerIcon->SetPos(
 		(pos.x - trackOffset.x) * mapScale.x,
 		(pos.y - trackOffset.y) * mapScale.y);
