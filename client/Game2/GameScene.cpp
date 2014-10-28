@@ -51,9 +51,10 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace Client {
 
-GameScene::Viewport::Viewport(Display::Display &display, Observer *observer,
-                              Display::Hud *hud) :
-	observer(observer), hud(hud)
+GameScene::Viewport::Viewport(Display::Display &display,
+	std::shared_ptr<Player::Player> player, Observer *observer,
+	Display::Hud *hud) :
+	player(std::move(player)), observer(observer), hud(hud)
 {
 	hud->AttachView(display);
 }
@@ -116,16 +117,22 @@ void GameScene::ScheduleLoad(std::shared_ptr<Loader> loader)
 
 		// This must be done after the track has loaded.
 		int i = 0;
+		std::vector<std::shared_ptr<Player::Player>> localHumans;
 		director.GetParty()->ForEach([&](std::shared_ptr<Player::Player> &p) {
 			if (p->IsCompeting()) {
 				session->AttachPlayer(i, p);
+				i++;
+
+				if (p->IsLocal() && p->IsHuman()) {
+					localHumans.emplace_back(p);
+				}
 			}
-			i++;
 		});
 
 		//TODO: Support split-screen with multiple viewports.
 		viewports.emplace_back(
 			display,
+			localHumans.back(),
 			new Observer(),
 			new Display::Hud(display,
 				session->SharePlayer(0), track,

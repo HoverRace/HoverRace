@@ -48,6 +48,9 @@ namespace HoverRace {
 		class Display;
 		class Hud;
 	}
+	namespace Player {
+		class Player;
+	}
 	namespace Script {
 		class Core;
 	}
@@ -68,8 +71,9 @@ class GameScene : public Scene
 	typedef Scene SUPER;
 protected:
 	struct Viewport {
-		Viewport(Display::Display &display, Observer *observer,
-			Display::Hud *hud);
+		Viewport(Display::Display &display,
+			std::shared_ptr<Player::Player> player,
+			Observer *observer, Display::Hud *hud);
 
 		Viewport(const Viewport &o) = delete;
 		Viewport(Viewport &&viewport) = default;
@@ -77,6 +81,7 @@ protected:
 		Viewport &operator=(const Viewport &o) = delete;
 		Viewport &operator=(Viewport &&viewport) = default;
 
+		std::shared_ptr<Player::Player> player;
 		std::unique_ptr<Observer> observer;
 		std::shared_ptr<Display::Hud> hud;
 	};
