@@ -117,7 +117,9 @@ void GameScene::ScheduleLoad(std::shared_ptr<Loader> loader)
 		// This must be done after the track has loaded.
 		int i = 0;
 		director.GetParty()->ForEach([&](std::shared_ptr<Player::Player> &p) {
-			session->AttachPlayer(i, p);
+			if (p->IsCompeting()) {
+				session->AttachPlayer(i, p);
+			}
 			i++;
 		});
 
