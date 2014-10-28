@@ -152,9 +152,17 @@ void GameScene::ScheduleLoad(std::shared_ptr<Loader> loader)
 		auto sessionPeer = metaSession->GetSession();
 		sessionPeer->ForEachPlayer([&](std::shared_ptr<MetaPlayer> &player) {
 			auto playerPeer = player->GetPlayer();
-			//TODO: Look up the correct HUD for this player.
-			playerPeer->SetHud(std::make_shared<HudPeer>(scripting, display,
-				viewports.back().hud));
+
+			// Look up the correct HUD for this player.
+			for (auto &viewport : viewports) {
+				if (viewport.player.get() == playerPeer->GetPlayer()) {
+					playerPeer->SetHud(
+						std::make_shared<HudPeer>(scripting, display,
+							viewport.hud));
+					break;
+				}
+			}
+
 			player->OnJoined(metaSession);
 		});
 	});
