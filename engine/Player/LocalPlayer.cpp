@@ -28,7 +28,7 @@ namespace Player {
 
 LocalPlayer::LocalPlayer(std::shared_ptr<Profile> profile,
 	bool human, bool competing) :
-	SUPER(std::move(profile), human, competing)
+	SUPER(std::move(profile), true, human, competing)
 {
 }
 

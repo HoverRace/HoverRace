@@ -59,7 +59,8 @@ public:
 
 public:
 	Player() = delete;
-	Player(std::shared_ptr<Profile> profile, bool human, bool competing);
+	Player(std::shared_ptr<Profile> profile,
+		bool local, bool human, bool competing);
 	virtual ~Player() { }
 
 public:
@@ -81,6 +82,8 @@ public:
 	void SetNameSuffix(const std::string &suffix);
 
 	Profile *GetProfile() const { return profile.get(); }
+
+	bool IsLocal() const { return local; }
 
 	bool IsHuman() const { return human; }
 
@@ -125,6 +128,7 @@ protected:
 private:
 	std::string name;
 	std::shared_ptr<Profile> profile;
+	bool local;
 	bool human;
 	bool competing;
 	ConnectionState connectionState;
