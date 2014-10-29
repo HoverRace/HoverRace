@@ -239,6 +239,9 @@ public:
 	std::shared_ptr<Model::Track> ShareTrack() const { return track; }
 	void SetTrack(std::shared_ptr<Model::Track> track);
 
+public:
+	void OnScreenSizeChanged();
+
 private:
 	void LayoutStacked(HudAlignment::type align,
 		double startX, double startY,
@@ -258,6 +261,7 @@ private:
 	std::shared_ptr<Player::Player> player;
 	typedef std::vector<HudChild> hudChildList_t;
 	std::array<hudChildList_t, HudAlignment::NUM> hudChildren;
+	boost::signals2::scoped_connection displayConfigChangedConn;
 };
 
 }  // namespace Display

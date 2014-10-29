@@ -67,9 +67,14 @@ Hud::HudChild &Hud::HudChild::operator=(HudChild &&other)
 Hud::Hud(Display &display, std::shared_ptr<Player::Player> player,
 	std::shared_ptr<Model::Track> track,
 	uiLayoutFlags_t layoutFlags) :
-	SUPER(display, Vec2(1280, 720), true, layoutFlags),
+	SUPER(display, Vec2(1280, 720), false, layoutFlags),
 	track(std::move(track)), player(std::move(player))
 {
+	displayConfigChangedConn =
+		display.GetDisplayConfigChangedSignal().connect(
+			std::bind(&Hud::OnScreenSizeChanged, this));
+
+	OnScreenSizeChanged();
 }
 
 /**
@@ -100,6 +105,16 @@ void Hud::SetTrack(std::shared_ptr<Model::Track> track)
 		});
 		FireModelUpdate(Props::TRACK);
 	}
+}
+
+/**
+ * Fired when the screen size changes.
+ */
+void Hud::OnScreenSizeChanged()
+{
+	//TODO: Adjust bounds for splitscreen viewports.
+	SetSize(display.GetUiScreenSize());
+	RequestLayout();
 }
 
 void Hud::LayoutStacked(HudAlignment::type align,
