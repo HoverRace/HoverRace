@@ -149,6 +149,16 @@ public:
 					return Alignment::NW;
 			}
 		}
+	};  // HudAlignment
+
+	enum class HudCell {
+		FILL,   ///< Fill the screen.
+		NE,     ///< Upper-right quadrant.
+		E,      ///< Right half.
+		SE,     ///< Lower-right quadrant.
+		SW,     ///< Lower-left quadrant.
+		W,      ///< Left half.
+		NW,     ///< Upper-left quadrant.
 	};
 protected:
 	struct MR_DllDeclare HudChild
@@ -239,6 +249,9 @@ public:
 	std::shared_ptr<Model::Track> ShareTrack() const { return track; }
 	void SetTrack(std::shared_ptr<Model::Track> track);
 
+	HudCell GetCell() const { return cell; }
+	void SetCell(HudCell cell);
+
 public:
 	void OnScreenSizeChanged();
 
@@ -259,6 +272,7 @@ public:
 private:
 	std::shared_ptr<Model::Track> track;
 	std::shared_ptr<Player::Player> player;
+	HudCell cell;
 	typedef std::vector<HudChild> hudChildList_t;
 	std::array<hudChildList_t, HudAlignment::NUM> hudChildren;
 	boost::signals2::scoped_connection displayConfigChangedConn;

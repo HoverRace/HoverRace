@@ -68,7 +68,8 @@ Hud::Hud(Display &display, std::shared_ptr<Player::Player> player,
 	std::shared_ptr<Model::Track> track,
 	uiLayoutFlags_t layoutFlags) :
 	SUPER(display, Vec2(1280, 720), false, layoutFlags),
-	track(std::move(track)), player(std::move(player))
+	track(std::move(track)), player(std::move(player)),
+	cell(HudCell::FILL)
 {
 	displayConfigChangedConn =
 		display.GetDisplayConfigChangedSignal().connect(
@@ -104,6 +105,17 @@ void Hud::SetTrack(std::shared_ptr<Model::Track> track)
 			child->SetTrack(track);
 		});
 		FireModelUpdate(Props::TRACK);
+	}
+}
+
+/**
+ * Set the subsection of the screen where this HUD should be rendered.
+ */
+void Hud::SetCell(HudCell cell)
+{
+	if (this->cell != cell) {
+		this->cell = cell;
+		OnScreenSizeChanged();
 	}
 }
 

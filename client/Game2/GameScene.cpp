@@ -129,14 +129,17 @@ void GameScene::ScheduleLoad(std::shared_ptr<Loader> loader)
 			}
 		});
 
-		//TODO: Support split-screen with multiple viewports.
-		viewports.emplace_back(
-			display,
-			localHumans.back(),
-			new Observer(),
-			new Display::Hud(display,
-				session->SharePlayer(0), track,
-				Display::UiLayoutFlags::FLOATING));
+		// Split-screen with multiple viewports.
+		// The bounds of each viewport will be set in LayoutViewports().
+		for (auto &player : localHumans) {
+			viewports.emplace_back(
+				display,
+				player,
+				new Observer(),
+				new Display::Hud(display,
+					player, track,
+					Display::UiLayoutFlags::FLOATING));
+		}
 	});
 
 	loader->AddLoader("Session", [=]{
@@ -171,6 +174,8 @@ void GameScene::ScheduleLoad(std::shared_ptr<Loader> loader)
 void GameScene::OnFinishedLoading()
 {
 	finishedLoading = true;
+
+	RequestLayout();
 }
 
 void GameScene::SetHudVisible(bool visible)
@@ -210,6 +215,12 @@ void GameScene::Advance(Util::OS::timestamp_t tick)
 	for (auto &viewport : viewports) {
 		viewport.hud->Advance(tick);
 	}
+}
+
+void GameScene::Layout()
+{
+	SUPER::Layout();
+	LayoutViewports();
 }
 
 void GameScene::PrepareRender()
@@ -258,6 +269,41 @@ void GameScene::Render()
 				session->GetPlayer(i++)->GetMainCharacter());
 		}
 		VideoServices::SoundServer::ApplyContinuousPlay();
+	}
+}
+
+/**
+ * Redefine the bounds of each viewport based on the number of connected local
+ * players.
+ */
+void GameScene::LayoutViewports()
+{
+	using Cell = Display::Hud::HudCell;
+
+	// There will be no viewports until the scene has finished loading.
+	if (viewports.empty()) return;
+
+	HR_LOG(info) << "There are " << viewports.size() << " viewports!";
+
+	switch (viewports.size()) {
+		case 1:
+			viewports[0].hud->SetCell(Cell::FILL);
+			break;
+		case 2:
+			viewports[0].hud->SetCell(Cell::W);
+			viewports[1].hud->SetCell(Cell::E);
+			break;
+		case 4:
+			viewports[3].hud->SetCell(Cell::SE);
+			// Implicit fallthrough.
+		case 3:
+			viewports[0].hud->SetCell(Cell::NW);
+			viewports[1].hud->SetCell(Cell::NE);
+			viewports[2].hud->SetCell(Cell::SW);
+			break;
+		default:
+			throw UnimplementedExn("Unhandled number of viewports: " +
+				boost::lexical_cast<std::string>(viewports.size()));
 	}
 }
 

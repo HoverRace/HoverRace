@@ -27,7 +27,7 @@
 #include "GameDirector.h"
 #include "Rules.h"
 
-#include "Scene.h"
+#include "UiScene.h"
 
 namespace HoverRace {
 	namespace Client {
@@ -66,9 +66,10 @@ namespace Client {
  * Base for scenes that render and interact with tracks.
  * @author Michael Imamura
  */
-class GameScene : public Scene
+class GameScene : public UiScene
 {
-	typedef Scene SUPER;
+	typedef UiScene SUPER;
+
 protected:
 	struct Viewport {
 		Viewport(Display::Display &display,
@@ -110,8 +111,12 @@ protected:
 
 public:
 	void Advance(Util::OS::timestamp_t tick) override;
+	void Layout() override;
 	void PrepareRender() override;
 	void Render() override;
+
+private:
+	void LayoutViewports();
 
 private:
 	void OnRaceFinish();
