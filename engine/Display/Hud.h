@@ -167,7 +167,6 @@ protected:
 public:
 	Hud(Display &display, std::shared_ptr<Player::Player> player,
 		std::shared_ptr<Model::Track> track,
-		const Vec2 &size, bool clip=true,
 		uiLayoutFlags_t layoutFlags=0);
 	virtual ~Hud() { }
 

@@ -136,7 +136,7 @@ void GameScene::ScheduleLoad(std::shared_ptr<Loader> loader)
 			new Observer(),
 			new Display::Hud(display,
 				session->SharePlayer(0), track,
-				Vec2(1280, 720)));
+				Display::UiLayoutFlags::FLOATING));
 	});
 
 	loader->AddLoader("Session", [=]{

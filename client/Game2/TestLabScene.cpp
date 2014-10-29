@@ -673,7 +673,7 @@ HudModule::HudModule(Display::Display &display, GameDirector &director) :
 	SUPER(display, director, "HUD"),
 	player(InitPlayer()),
 	hud(new Display::Hud(display, player, std::shared_ptr<Model::Track>(),
-		Vec2(1280, 720)))
+		Display::UiLayoutFlags::FLOATING))
 {
 	hud->AttachView(display);
 

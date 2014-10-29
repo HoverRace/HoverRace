@@ -66,9 +66,8 @@ Hud::HudChild &Hud::HudChild::operator=(HudChild &&other)
  */
 Hud::Hud(Display &display, std::shared_ptr<Player::Player> player,
 	std::shared_ptr<Model::Track> track,
-	const Vec2 &size, bool clip,
 	uiLayoutFlags_t layoutFlags) :
-	SUPER(display, size, clip, layoutFlags),
+	SUPER(display, Vec2(1280, 720), true, layoutFlags),
 	track(std::move(track)), player(std::move(player))
 {
 }
