@@ -290,8 +290,8 @@ void GameScene::LayoutViewports()
 			viewports[0].hud->SetCell(Cell::FILL);
 			break;
 		case 2:
-			viewports[0].hud->SetCell(Cell::W);
-			viewports[1].hud->SetCell(Cell::E);
+			viewports[0].hud->SetCell(Cell::N);
+			viewports[1].hud->SetCell(Cell::S);
 			break;
 		case 4:
 			viewports[3].hud->SetCell(Cell::SE);
