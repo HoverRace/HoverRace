@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include "../../engine/Display/Hud.h"
 #include "../../engine/Util/Config.h"
 
 #include "Observer.h"
@@ -81,6 +82,8 @@ protected:
 
 		Viewport &operator=(const Viewport &o) = delete;
 		Viewport &operator=(Viewport &&viewport) = default;
+
+		void SetCell(Display::Hud::HudCell cell);
 
 		std::shared_ptr<Player::Player> player;
 		std::unique_ptr<Observer> observer;

@@ -59,6 +59,30 @@ GameScene::Viewport::Viewport(Display::Display &display,
 	hud->AttachView(display);
 }
 
+void GameScene::Viewport::SetCell(Display::Hud::HudCell cell)
+{
+	using Cell = Display::Hud::HudCell;
+
+	hud->SetCell(cell);
+
+	Observer::eSplitMode mode;
+	switch (cell) {
+		case Cell::FILL: mode = Observer::eNotSplit; break;
+		case Cell::N:    mode = Observer::eUpperSplit; break;
+		case Cell::NE:   mode = Observer::eUpperRightSplit; break;
+		case Cell::SE:   mode = Observer::eLowerRightSplit; break;
+		case Cell::S:    mode = Observer::eLowerSplit; break;
+		case Cell::SW:   mode = Observer::eLowerLeftSplit; break;
+		case Cell::NW:   mode = Observer::eUpperLeftSplit; break;
+		default:
+			throw UnimplementedExn(
+				"Viewport::SetCell(): Unhandled HudCell: " +
+				boost::lexical_cast<std::string>(
+					static_cast<int>(cell)));
+	}
+	observer->SetSplitMode(mode);
+}
+
 GameScene::GameScene(const std::string &name,
                      Display::Display &display, GameDirector &director,
                      Script::Core *scripting, std::shared_ptr<Rules> rules,
@@ -287,19 +311,19 @@ void GameScene::LayoutViewports()
 
 	switch (viewports.size()) {
 		case 1:
-			viewports[0].hud->SetCell(Cell::FILL);
+			viewports[0].SetCell(Cell::FILL);
 			break;
 		case 2:
-			viewports[0].hud->SetCell(Cell::N);
-			viewports[1].hud->SetCell(Cell::S);
+			viewports[0].SetCell(Cell::N);
+			viewports[1].SetCell(Cell::S);
 			break;
 		case 4:
-			viewports[3].hud->SetCell(Cell::SE);
+			viewports[3].SetCell(Cell::SE);
 			// Implicit fallthrough.
 		case 3:
-			viewports[0].hud->SetCell(Cell::NW);
-			viewports[1].hud->SetCell(Cell::NE);
-			viewports[2].hud->SetCell(Cell::SW);
+			viewports[0].SetCell(Cell::NW);
+			viewports[1].SetCell(Cell::NE);
+			viewports[2].SetCell(Cell::SW);
 			break;
 		default:
 			throw UnimplementedExn("Unhandled number of viewports: " +
