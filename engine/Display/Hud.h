@@ -23,6 +23,7 @@
 
 #include "../Util/OS.h"
 #include "../Exception.h"
+#include "HudCell.h"
 #include "HudDecor.h"
 
 #include "Container.h"
@@ -151,17 +152,6 @@ public:
 		}
 	};  // HudAlignment
 
-	enum class HudCell {
-		FILL,   ///< Fill the screen.
-		N,      ///< Upper half.
-		NE,     ///< Upper-right quadrant.
-		E,      ///< Right half.
-		SE,     ///< Lower-right quadrant.
-		S,      ///< Lower half.
-		SW,     ///< Lower-left quadrant.
-		W,      ///< Left half.
-		NW,     ///< Upper-left quadrant.
-	};
 protected:
 	struct MR_DllDeclare HudChild
 	{

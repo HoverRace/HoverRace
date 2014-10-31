@@ -59,9 +59,9 @@ GameScene::Viewport::Viewport(Display::Display &display,
 	hud->AttachView(display);
 }
 
-void GameScene::Viewport::SetCell(Display::Hud::HudCell cell)
+void GameScene::Viewport::SetCell(Display::HudCell cell)
 {
-	using Cell = Display::Hud::HudCell;
+	using Cell = Display::HudCell;
 
 	hud->SetCell(cell);
 
@@ -302,7 +302,7 @@ void GameScene::Render()
  */
 void GameScene::LayoutViewports()
 {
-	using Cell = Display::Hud::HudCell;
+	using Cell = Display::HudCell;
 
 	// There will be no viewports until the scene has finished loading.
 	if (viewports.empty()) return;
