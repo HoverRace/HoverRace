@@ -61,26 +61,8 @@ GameScene::Viewport::Viewport(Display::Display &display,
 
 void GameScene::Viewport::SetCell(Display::HudCell cell)
 {
-	using Cell = Display::HudCell;
-
 	hud->SetCell(cell);
-
-	Observer::eSplitMode mode;
-	switch (cell) {
-		case Cell::FILL: mode = Observer::eNotSplit; break;
-		case Cell::N:    mode = Observer::eUpperSplit; break;
-		case Cell::NE:   mode = Observer::eUpperRightSplit; break;
-		case Cell::SE:   mode = Observer::eLowerRightSplit; break;
-		case Cell::S:    mode = Observer::eLowerSplit; break;
-		case Cell::SW:   mode = Observer::eLowerLeftSplit; break;
-		case Cell::NW:   mode = Observer::eUpperLeftSplit; break;
-		default:
-			throw UnimplementedExn(
-				"Viewport::SetCell(): Unhandled HudCell: " +
-				boost::lexical_cast<std::string>(
-					static_cast<int>(cell)));
-	}
-	observer->SetSplitMode(mode);
+	observer->SetSplitMode(cell);
 }
 
 GameScene::GameScene(const std::string &name,

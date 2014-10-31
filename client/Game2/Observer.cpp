@@ -97,7 +97,8 @@ namespace {
 }
 
 Observer::Observer() :
-	hudVisible(true), demoMode(false)
+	hudVisible(true), demoMode(false),
+	splitMode(Display::HudCell::FILL)
 {
 	globalFmts.Init();
 
@@ -110,8 +111,6 @@ Observer::Observer() :
 
 	mMoreMessages = FALSE;
 	mDispPlayers = 1;
-
-	mSplitMode = eNotSplit;
 
 	mCockpitView = FALSE;
 
@@ -228,9 +227,9 @@ void Observer::ReduceMargin()
 	}
 }
 
-void Observer::SetSplitMode(eSplitMode pMode)
+void Observer::SetSplitMode(Display::HudCell splitMode)
 {
-	mSplitMode = pMode;
+	this->splitMode = splitMode;
 }
 
 void Observer::MoreMessages()
@@ -948,27 +947,33 @@ void Observer::RenderFloorOrCeiling(const Model::Level * pLevel, const Model::Se
 
 void Observer::RenderDebugDisplay(VideoServices::VideoBuffer * pDest, const ClientSession *pSession, const MainCharacter::MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage)
 {
+	using Cell = Display::HudCell;
+
 	int lXRes = pDest->GetXRes();
 	int lYRes = pDest->GetYRes();
 	int lYOffset = 0;
 
-	switch (mSplitMode) {
-		case eNotSplit:
-		case eUpperLeftSplit:
-		case eUpperRightSplit:
-		case eLowerLeftSplit:
-		case eLowerRightSplit:
+	switch (splitMode) {
+		case Cell::FILL:
+		case Cell::NW:
+		case Cell::NE:
+		case Cell::SW:
+		case Cell::SE:
 			// Nothing to do.
 			break;
 
-		case eUpperSplit:
+		case Cell::N:
 			lYRes /= 2;
 			break;
 
-		case eLowerSplit:
+		case Cell::S:
 			lYRes /= 2;
 			lYOffset = lYRes;
 			break;
+
+		default:
+			throw UnimplementedExn("Observer::RenderDebugDisplay: Cell type: " +
+				boost::lexical_cast<std::string>(splitMode));
 	}
 
 	mWireFrameView.Setup(pDest, 0, lYOffset, lXRes / 2, lYRes / 2, mApperture);
@@ -987,6 +992,8 @@ void Observer::RenderDebugDisplay(VideoServices::VideoBuffer * pDest, const Clie
 
 void Observer::RenderNormalDisplay(VideoServices::VideoBuffer * pDest, const ClientSession *pSession, const MainCharacter::MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage)
 {
+	using Cell = Display::HudCell;
+
 	int lXRes = pDest->GetXRes();
 	int lYRes = pDest->GetYRes();
 	int lYOffset = 0;
@@ -994,12 +1001,12 @@ void Observer::RenderNormalDisplay(VideoServices::VideoBuffer * pDest, const Cli
 	int lYMargin_1024 = mYMargin_1024;
 	int lXMargin_1024 = mXMargin_1024;
 
-	switch (mSplitMode) {
-		case eNotSplit:
+	switch (splitMode) {
+		case Cell::FILL:
 			// No adjustment.
 			break;
 
-		case eUpperSplit:
+		case Cell::N:
 			lYRes /= 2;
 			lYMargin_1024 -= 200;
 			if(lYMargin_1024 < 0) {
@@ -1008,7 +1015,7 @@ void Observer::RenderNormalDisplay(VideoServices::VideoBuffer * pDest, const Cli
 
 			break;
 
-		case eLowerSplit:
+		case Cell::S:
 			lYRes /= 2;
 			lYOffset = lYRes;
 			lYMargin_1024 -= 200;
@@ -1018,7 +1025,7 @@ void Observer::RenderNormalDisplay(VideoServices::VideoBuffer * pDest, const Cli
 
 			break;
 
-		case eUpperLeftSplit:
+		case Cell::NW:
 			lYRes /= 2;
 			lXRes /= 2;
 			lYMargin_1024 -= 200;
@@ -1032,7 +1039,7 @@ void Observer::RenderNormalDisplay(VideoServices::VideoBuffer * pDest, const Cli
 
 			break;
 
-		case eUpperRightSplit:
+		case Cell::NE:
 			lYRes /= 2;
 			lXRes /= 2;
 			lXOffset = lXRes;
@@ -1047,7 +1054,7 @@ void Observer::RenderNormalDisplay(VideoServices::VideoBuffer * pDest, const Cli
 
 			break;
 
-		case eLowerLeftSplit:
+		case Cell::SW:
 			lYRes /= 2;
 			lXRes /= 2;
 			lYOffset = lYRes;
@@ -1061,7 +1068,7 @@ void Observer::RenderNormalDisplay(VideoServices::VideoBuffer * pDest, const Cli
 			}
 			break;
 
-		case eLowerRightSplit:
+		case Cell::SE:
 			lYRes /= 2;
 			lXRes /= 2;
 			lYOffset = lYRes;
@@ -1075,6 +1082,11 @@ void Observer::RenderNormalDisplay(VideoServices::VideoBuffer * pDest, const Cli
 				lXMargin_1024 = 0;
 			}
 			break;
+
+		default:
+			throw UnimplementedExn(
+				"Observer::RenderNormalDisplay: Cell type: " +
+					boost::lexical_cast<std::string>(splitMode));
 	}
 
 												  // rounded to 32 bit boundary for best performances
