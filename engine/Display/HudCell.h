@@ -37,5 +37,22 @@ enum class HudCell {
 	NW,     ///< Upper-left quadrant.
 };
 
+inline std::ostream &operator<<(std::ostream &os, const HudCell cell)
+{
+	switch (cell) {
+		case HudCell::FILL: os << "FILL"; break;
+		case HudCell::N:    os << "N"; break;
+		case HudCell::NE:   os << "NE"; break;
+		case HudCell::E:    os << "E"; break;
+		case HudCell::SE:   os << "SE"; break;
+		case HudCell::S:    os << "S"; break;
+		case HudCell::SW:   os << "SW"; break;
+		case HudCell::W:    os << "W"; break;
+		case HudCell::NW:   os << "NW"; break;
+		default: os << static_cast<int>(cell);
+	}
+	return os;
+}
+
 }  // namespace Display
 }  // namespace HoverRace
