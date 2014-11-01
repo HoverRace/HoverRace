@@ -124,8 +124,58 @@ void Hud::SetCell(HudCell cell)
  */
 void Hud::OnScreenSizeChanged()
 {
-	//TODO: Adjust bounds for splitscreen viewports.
-	SetSize(display.GetUiScreenSize());
+	
+	auto size = display.GetUiScreenSize();
+	auto pos = Vec2{0, 0};
+
+	// Adjust size for splitscreen viewports.
+	switch (cell) {
+		case HudCell::FILL:
+			// No size adjustment.
+			break;
+
+		case HudCell::N:
+		case HudCell::S:
+			size.y /= 2.0;
+			break;
+
+		case HudCell::NW:
+		case HudCell::NE:
+		case HudCell::SE:
+		case HudCell::SW:
+			size.x /= 2.0;
+			size.y /= 2.0;
+			break;
+
+		default:
+			throw UnimplementedExn("Hud::OnScreenSizeChanged: Cell type: " +
+				boost::lexical_cast<std::string>(cell));
+	}
+	SetSize(size);
+
+	// Adjust pos for splitscreen viewports.
+	switch (cell) {
+		case HudCell::FILL:
+		case HudCell::N:
+		case HudCell::NW:
+			// No pos adjustment.
+			break;
+		case HudCell::S:
+		case HudCell::SW:
+			pos.y = size.y;
+			break;
+		case HudCell::NE:
+			pos.x = size.x;
+			break;
+		case HudCell::SE:
+			pos = size;
+			break;
+		default:
+			throw UnimplementedExn("Hud::OnScreenSizeChanged: Cell type: " +
+				boost::lexical_cast<std::string>(cell));
+	}
+	SetPos(pos);
+
 	RequestLayout();
 }
 
