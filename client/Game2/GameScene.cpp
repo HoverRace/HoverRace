@@ -299,13 +299,16 @@ void GameScene::LayoutViewports()
 			viewports[0].SetCell(Cell::N);
 			viewports[1].SetCell(Cell::S);
 			break;
-		case 4:
-			viewports[3].SetCell(Cell::SE);
-			// Implicit fallthrough.
 		case 3:
+			viewports[0].SetCell(Cell::N);
+			viewports[1].SetCell(Cell::SW);
+			viewports[2].SetCell(Cell::SE);
+			break;
+		case 4:
 			viewports[0].SetCell(Cell::NW);
 			viewports[1].SetCell(Cell::NE);
 			viewports[2].SetCell(Cell::SW);
+			viewports[3].SetCell(Cell::SE);
 			break;
 		default:
 			throw UnimplementedExn("Unhandled number of viewports: " +
