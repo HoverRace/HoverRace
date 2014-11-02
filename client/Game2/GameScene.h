@@ -142,9 +142,6 @@ private:
 	boost::signals2::scoped_connection finishedLoadingConn;
 
 	std::shared_ptr<HoverScript::MetaSession> metaSession;
-
-	bool firedOnStart;
-	bool firedOnRaceFinish;
 };
 
 }  // namespace Client

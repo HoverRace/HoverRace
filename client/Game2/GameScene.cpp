@@ -72,8 +72,7 @@ GameScene::GameScene(const std::string &name,
 	SUPER(name),
 	display(display), director(director), scripting(scripting), rules(rules),
 	finishedLoading(false), muted(false),
-	session(nullptr),
-	firedOnStart(false), firedOnRaceFinish(false)
+	session(nullptr)
 {
 	finishedLoadingConn =
 		loader->GetFinishedLoadingSignal().connect(
@@ -206,16 +205,6 @@ void GameScene::Advance(Util::OS::timestamp_t tick)
 	session->Process();
 
 	auto mainChar = session->GetPlayer(0)->GetMainCharacter();
-
-	if (!firedOnRaceFinish && mainChar->HasFinish()) {
-		metaSession->GetSession()->GetPlayer(0)->OnFinish();
-		OnRaceFinish();
-		firedOnRaceFinish = true;
-	}
-	else if (!firedOnStart && mainChar->HasStarted()) {
-		metaSession->GetSession()->GetPlayer(0)->OnStart();
-		firedOnStart = true;
-	}
 
 	// Update HUD state last, after game state is settled for this frame.
 	for (auto &viewport : viewports) {

@@ -516,7 +516,10 @@ int MainCharacter::Simulate(MR_SimulationTime pDuration, Model::Level *pLevel, i
 
 	if(pDuration > 0) {
 		if(mMasterMode) {
-			started = true;
+			if (!started) {
+				started = true;
+				startedSignal(this);
+			}
 			if((mMotorOnState) && (mFuelLevel > 0.0))
 				mMotorDisplay = 250;
 		}
@@ -1134,6 +1137,7 @@ bool MainCharacter::HasStarted() const
 void MainCharacter::Finish()
 {
 	finished = true;
+	finishedSignal(this);
 }
 
 /**
