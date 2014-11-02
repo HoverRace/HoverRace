@@ -204,8 +204,6 @@ void GameScene::Advance(Util::OS::timestamp_t tick)
 
 	session->Process();
 
-	auto mainChar = session->GetPlayer(0)->GetMainCharacter();
-
 	// Update HUD state last, after game state is settled for this frame.
 	for (auto &viewport : viewports) {
 		viewport.hud->Advance(tick);
