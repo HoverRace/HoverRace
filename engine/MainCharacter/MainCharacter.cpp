@@ -1136,8 +1136,10 @@ bool MainCharacter::HasStarted() const
  */
 void MainCharacter::Finish()
 {
-	finished = true;
-	finishedSignal(this);
+	if (!finished) {
+		finished = true;
+		finishedSignal(this);
+	}
 }
 
 /**
