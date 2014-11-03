@@ -171,6 +171,11 @@ void GameScene::ScheduleLoad(std::shared_ptr<Loader> loader)
 				}
 			}
 
+			// Get notified when each player finishes.
+			auto mainChar = player->GetPlayer()->GetPlayer()->GetMainCharacter();
+			mainChar->GetFinishedSignal().connect(
+				std::bind(&GameScene::OnRaceFinish, this));
+
 			player->OnJoined(metaSession);
 		});
 	});
@@ -203,6 +208,8 @@ void GameScene::Advance(Util::OS::timestamp_t tick)
 	if (!finishedLoading) return;
 
 	session->Process();
+
+	//TODO: Check finished state?  Wait for signal from SessionPeer?
 
 	// Update HUD state last, after game state is settled for this frame.
 	for (auto &viewport : viewports) {
@@ -305,10 +312,32 @@ void GameScene::LayoutViewports()
 
 void GameScene::OnRaceFinish()
 {
-	//TODO: Currently assuming only one player, so we go directly from PLAYING
-	//      to DONE (AdvancePhase will ensure that the POSTGAME event is fired).
-	session->AdvancePhase(ClientSession::Phase::DONE);
-	director.GetSessionChangedSignal()(nullptr);
+	// Check if all players are finished.
+	// If not all players have finished, then we're just entering postgame.
+	
+	bool done = true;
+	
+	for (int i = 0; i < session->GetNbPlayers(); i++) {
+		auto player = session->GetPlayer(i);
+		if (!player) continue;  // Player slot may have been vacated.
+
+		auto mchar = player->GetMainCharacter();
+		assert(mchar);
+
+		if (!mchar->HasFinish()) {
+			done = false;
+			break;
+		}
+	}
+
+	if (done) {
+		HR_LOG(info) << "Ending completed session.";
+		session->AdvancePhase(ClientSession::Phase::DONE);
+		director.GetSessionChangedSignal()(nullptr);
+	}
+	else {
+		session->AdvancePhase(ClientSession::Phase::POSTGAME);
+	}
 }
 
 }  // namespace HoverScript
