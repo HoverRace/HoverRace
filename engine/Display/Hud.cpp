@@ -129,6 +129,7 @@ void Hud::OnScreenSizeChanged()
 	auto pos = Vec2{0, 0};
 
 	// Adjust size for splitscreen viewports.
+	auto hudScale = Vec2{1, 1};
 	switch (cell) {
 		case HudCell::FILL:
 			// No size adjustment.
@@ -136,21 +137,23 @@ void Hud::OnScreenSizeChanged()
 
 		case HudCell::N:
 		case HudCell::S:
-			size.y /= 2.0;
+			hudScale.y = 0.5;
 			break;
 
 		case HudCell::NW:
 		case HudCell::NE:
 		case HudCell::SE:
 		case HudCell::SW:
-			size.x /= 2.0;
-			size.y /= 2.0;
+			hudScale.x = 0.5;
+			hudScale.y = 0.5;
 			break;
 
 		default:
 			throw UnimplementedExn("Hud::OnScreenSizeChanged: Cell type: " +
 				boost::lexical_cast<std::string>(cell));
 	}
+	size.x *= hudScale.x;
+	size.y *= hudScale.y;
 	SetSize(size);
 
 	// Adjust pos for splitscreen viewports.
@@ -175,6 +178,11 @@ void Hud::OnScreenSizeChanged()
 				boost::lexical_cast<std::string>(cell));
 	}
 	SetPos(pos);
+
+	// Notify all HUD elements of the new scale.
+	ForEachHudChild([&](std::shared_ptr<HudDecor> &child) {
+		child->SetHudScale(hudScale);
+	});
 
 	RequestLayout();
 }
