@@ -55,10 +55,15 @@ public:
 	FuelGauge(Display &display);
 	virtual ~FuelGauge() { }
 
+protected:
+	void OnHudRescaled(const Vec2 &hudScale) override;
+
 public:
 	void Advance(Util::OS::timestamp_t tick) override;
 
 private:
+	Vec2 gaugeSize;
+
 	std::shared_ptr<FillBox> bg;
 	std::shared_ptr<FillBox> fg;
 };

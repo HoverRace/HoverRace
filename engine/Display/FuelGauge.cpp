@@ -43,13 +43,24 @@ namespace {
  * @param display The display child elements will be attached to.
  */
 FuelGauge::FuelGauge(Display &display) :
-	SUPER(display)
+	SUPER(display),
+	gaugeSize(GAUGE_WIDTH, GAUGE_HEIGHT)
 {
 	SetSize(GAUGE_WIDTH, GAUGE_HEIGHT);
 	SetClip(false);
 
 	bg = AddChild(new FillBox(GAUGE_WIDTH, GAUGE_HEIGHT, BG_COLOR));
 	fg = AddChild(new FillBox(GAUGE_WIDTH, GAUGE_HEIGHT, FG_COLOR));
+}
+
+void FuelGauge::OnHudRescaled(const Vec2 &hudScale)
+{
+	gaugeSize.x = GAUGE_WIDTH * hudScale.x;
+	gaugeSize.y = GAUGE_HEIGHT * hudScale.y;
+
+	bg->SetSize(gaugeSize);
+
+	SetSize(gaugeSize);
 }
 
 void FuelGauge::Advance(Util::OS::timestamp_t)
@@ -63,7 +74,7 @@ void FuelGauge::Advance(Util::OS::timestamp_t)
 	if (fuel < 0.0) fuel = 0.0;
 	else if (fuel > 1.0) fuel = 1.0;
 
-	fg->SetSize(GAUGE_WIDTH * fuel, GAUGE_HEIGHT);
+	fg->SetSize(gaugeSize.x * fuel, gaugeSize.y);
 	bg->SetColor(fuel < 0.20 ? LOW_COLOR : BG_COLOR);
 }
 
