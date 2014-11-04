@@ -55,10 +55,15 @@ public:
 	Speedometer(Display &display);
 	virtual ~Speedometer() { }
 
+protected:
+	void OnHudRescaled(const Vec2 &hudScale) override;
+
 public:
 	void Advance(Util::OS::timestamp_t tick) override;
 
 private:
+	Vec2 gaugeSize;
+
 	// Absolute speed.
 	std::shared_ptr<FillBox> absBg;
 	std::shared_ptr<FillBox> absFg;

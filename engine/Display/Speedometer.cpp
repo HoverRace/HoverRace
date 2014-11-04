@@ -23,6 +23,7 @@
 
 #include "../../engine/MainCharacter/MainCharacter.h"
 #include "../../engine/Player/Player.h"
+#include "../../engine/Util/Log.h"
 #include "FillBox.h"
 
 #include "Speedometer.h"
@@ -43,7 +44,8 @@ namespace {
  * @param display The display child elements will be attached to.
  */
 Speedometer::Speedometer(Display &display) :
-	SUPER(display)
+	SUPER(display),
+	gaugeSize(GAUGE_WIDTH, GAUGE_HEIGHT)
 {
 	SetSize(GAUGE_WIDTH, GAUGE_HEIGHT * 2);
 	SetClip(false);
@@ -57,6 +59,23 @@ Speedometer::Speedometer(Display &display) :
 	dirFg->SetPos(0, GAUGE_HEIGHT);
 }
 
+void Speedometer::OnHudRescaled(const Vec2 &hudScale)
+{
+	HR_LOG(info) << "Speedometer rescaled: " << hudScale;
+
+	gaugeSize.x = GAUGE_WIDTH * hudScale.x;
+	gaugeSize.y = GAUGE_HEIGHT * hudScale.y;
+
+	SetSize(gaugeSize.x, gaugeSize.y * 2.0);
+
+	absBg->SetSize(gaugeSize);
+
+	dirBg->SetSize(gaugeSize);
+	dirBg->SetPos(0, gaugeSize.y);
+
+	dirFg->SetPos(0, gaugeSize.y);
+}
+
 void Speedometer::Advance(Util::OS::timestamp_t)
 {
 	auto player = GetPlayer();
@@ -67,13 +86,13 @@ void Speedometer::Advance(Util::OS::timestamp_t)
 	double absSpeed = mchar->GetAbsoluteSpeed();
 	double dirSpeed = mchar->GetDirectionalSpeed();
 
-	absFg->SetSize(GAUGE_WIDTH * absSpeed, GAUGE_HEIGHT);
+	absFg->SetSize(gaugeSize.x * absSpeed, gaugeSize.y);
 	if (dirSpeed < 0) {
-		dirFg->SetSize(GAUGE_WIDTH * -dirSpeed, GAUGE_HEIGHT);
+		dirFg->SetSize(gaugeSize.x * -dirSpeed, gaugeSize.y);
 		dirFg->SetColor(REVERSE_COLOR);
 	}
 	else {
-		dirFg->SetSize(GAUGE_WIDTH * dirSpeed, GAUGE_HEIGHT);
+		dirFg->SetSize(gaugeSize.x * dirSpeed, gaugeSize.y);
 		dirFg->SetColor(FG_COLOR);
 	}
 }
