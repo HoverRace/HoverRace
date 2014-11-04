@@ -69,7 +69,7 @@ Hud::Hud(Display &display, std::shared_ptr<Player::Player> player,
 	uiLayoutFlags_t layoutFlags) :
 	SUPER(display, Vec2(1280, 720), false, layoutFlags),
 	track(std::move(track)), player(std::move(player)),
-	cell(HudCell::FILL)
+	cell(HudCell::FILL), hudScale(1, 1)
 {
 	displayConfigChangedConn =
 		display.GetDisplayConfigChangedSignal().connect(
@@ -152,6 +152,8 @@ void Hud::OnScreenSizeChanged()
 			throw UnimplementedExn("Hud::OnScreenSizeChanged: Cell type: " +
 				boost::lexical_cast<std::string>(cell));
 	}
+	this->hudScale = hudScale;
+
 	size.x *= hudScale.x;
 	size.y *= hudScale.y;
 	SetSize(size);

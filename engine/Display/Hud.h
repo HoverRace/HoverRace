@@ -191,6 +191,7 @@ public:
 		std::shared_ptr<T> sharedChild = AddChild(child);
 		sharedChild->SetPlayer(player);
 		sharedChild->SetTrack(track);
+		sharedChild->SetHudScale(hudScale);
 
 		// For corner elems, replace the elem instead of adding.
 		if (HudAlignment::IsCorner(alignment)) {
@@ -265,6 +266,7 @@ private:
 	std::shared_ptr<Model::Track> track;
 	std::shared_ptr<Player::Player> player;
 	HudCell cell;
+	Vec2 hudScale;
 	typedef std::vector<HudChild> hudChildList_t;
 	std::array<hudChildList_t, HudAlignment::NUM> hudChildren;
 	boost::signals2::scoped_connection displayConfigChangedConn;
