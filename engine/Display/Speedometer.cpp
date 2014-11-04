@@ -23,7 +23,6 @@
 
 #include "../../engine/MainCharacter/MainCharacter.h"
 #include "../../engine/Player/Player.h"
-#include "../../engine/Util/Log.h"
 #include "FillBox.h"
 
 #include "Speedometer.h"
@@ -61,8 +60,6 @@ Speedometer::Speedometer(Display &display) :
 
 void Speedometer::OnHudRescaled(const Vec2 &hudScale)
 {
-	HR_LOG(info) << "Speedometer rescaled: " << hudScale;
-
 	gaugeSize.x = GAUGE_WIDTH * hudScale.x;
 	gaugeSize.y = GAUGE_HEIGHT * hudScale.y;
 
