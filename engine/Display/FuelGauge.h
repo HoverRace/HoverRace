@@ -51,16 +51,16 @@ class MR_DllDeclare FuelGauge : public HudDecor
 {
 	typedef HudDecor SUPER;
 
-	public:
-		FuelGauge(Display &display);
-		virtual ~FuelGauge() { }
+public:
+	FuelGauge(Display &display);
+	virtual ~FuelGauge() { }
 
-	public:
-		void Advance(Util::OS::timestamp_t tick) override;
+public:
+	void Advance(Util::OS::timestamp_t tick) override;
 
-	private:
-		std::shared_ptr<FillBox> bg;
-		std::shared_ptr<FillBox> fg;
+private:
+	std::shared_ptr<FillBox> bg;
+	std::shared_ptr<FillBox> fg;
 };
 
 }  // namespace Display

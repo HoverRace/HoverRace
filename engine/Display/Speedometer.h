@@ -50,20 +50,21 @@ namespace Display {
 class MR_DllDeclare Speedometer : public HudDecor
 {
 	typedef HudDecor SUPER;
-	public:
-		Speedometer(Display &display);
-		virtual ~Speedometer() { }
 
-	public:
-		void Advance(Util::OS::timestamp_t tick) override;
+public:
+	Speedometer(Display &display);
+	virtual ~Speedometer() { }
 
-	private:
-		// Absolute speed.
-		std::shared_ptr<FillBox> absBg;
-		std::shared_ptr<FillBox> absFg;
-		// Directional speed.
-		std::shared_ptr<FillBox> dirBg;
-		std::shared_ptr<FillBox> dirFg;
+public:
+	void Advance(Util::OS::timestamp_t tick) override;
+
+private:
+	// Absolute speed.
+	std::shared_ptr<FillBox> absBg;
+	std::shared_ptr<FillBox> absFg;
+	// Directional speed.
+	std::shared_ptr<FillBox> dirBg;
+	std::shared_ptr<FillBox> dirFg;
 };
 
 }  // namespace Display
