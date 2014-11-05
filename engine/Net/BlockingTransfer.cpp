@@ -1,8 +1,7 @@
 
 // BlockingTransfer.h
-// The simple blocking transfer.
 //
-// Copyright (c) 2009 Michael Imamura.
+// Copyright (c) 2009, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -80,6 +79,7 @@ void BlockingTransfer::Go()
 size_t BlockingTransfer::StringWriteFunc(void *ptr, size_t size, size_t nmemb, void *stream)
 {
 	std::string *out = (std::string*)stream;
+	// This is safe from overflow since Curl limits the maximum write size.
 	size_t sz = size * nmemb;
 	if (sz > 0) out->append((const char*)ptr, sz);
 	return sz;
@@ -88,9 +88,10 @@ size_t BlockingTransfer::StringWriteFunc(void *ptr, size_t size, size_t nmemb, v
 size_t BlockingTransfer::StreamWriteFunc(void *ptr, size_t size, size_t nmemb, void *stream)
 {
 	std::ostream *out = (std::ostream*)stream;
-	size_t sz = size * nmemb;
-	if (sz > 0) out->write((const char*)ptr, size * nmemb);
-	return sz;
+	// This is safe from overflow since Curl limits the maximum write size.
+	auto sz = static_cast<std::streamsize>(size * nmemb);
+	if (sz > 0) out->write((const char*)ptr, sz);
+	return static_cast<size_t>(sz);
 }
 
 size_t BlockingTransfer::ProgressFunc(void *cancelFlag, double, double, double, double)
