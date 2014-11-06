@@ -51,15 +51,14 @@ Chronometer::Chronometer(Display &display, const std::string &title,
 	SUPER(display),
 	clock(std::move(clock)), lastTick(0)
 {
-	const UiFont titleFont(20);
-	const UiFont valueFont(30, UiFont::BOLD);
+	const auto &s = display.styles;
 
 	bg = AddChild(new FillBox(0, 0, BG_COLOR));
 
-	titleLbl = AddChild(new Label(title, titleFont, TITLE_COLOR));
+	titleLbl = AddChild(new Label(title, s.hudNormalHeadFont, TITLE_COLOR));
 	titleLbl->SetAlignment(Alignment::W);
 
-	valueLbl = AddChild(new Label("", valueFont, VALUE_COLOR));
+	valueLbl = AddChild(new Label("", s.hudNormalFont, VALUE_COLOR));
 }
 
 void Chronometer::Layout()

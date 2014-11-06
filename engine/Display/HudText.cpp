@@ -46,11 +46,9 @@ namespace {
 HudText::HudText(Display &display, const std::string &text) :
 	SUPER(display)
 {
-	const UiFont textFont(30, UiFont::BOLD);
-
 	bg = AddChild(new FillBox(0, 0, BG_COLOR));
 
-	textLbl = AddChild(new Label(text, textFont, FG_COLOR));
+	textLbl = AddChild(new Label(text, display.styles.hudNormalFont, FG_COLOR));
 }
 
 /**
