@@ -20,6 +20,8 @@ include(CXX11)
 include(GNUInstallDirs)
 include(cotire)
 
+message(STATUS "${CLANG_VERSION_MAJOR} ${CLANG_VERSION_MINOR}")
+
 if(MSVC)
 	if(MSVC_VERSION LESS 1800)
 		message(FATAL_ERROR "Visual Studio 2013 (aka Visual Studio 12) or later is required.")
@@ -43,6 +45,20 @@ The compiler update can be downloaded from:
 	http://www.microsoft.com/en-us/download/details.aspx?id=41151")
 			endif()
 		endif()
+	endif()
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+	execute_process(COMMAND ${CMAKE_CXX_COMPILER} --version
+		OUTPUT_VARIABLE CLANG_VERSION_OUT)
+	string(REGEX MATCH "clang version [0-9]+\\.[0-9]+" CLANG_VERSION_STRING
+		"${CLANG_VERSION_OUT}")
+	string(REGEX MATCH "[0-9]+\\.[0-9]+" CLANG_VERSION
+		"${CLANG_VERSION_STRING}")
+
+	message(STATUS "Clang version: ${CLANG_VERSION}")
+
+	if(CLANG_VERSION VERSION_EQUAL 3.4 OR CLANG VERSION_GREATER 3.4)
+		message(WARNING "There are known issues when using Clang 3.4 or later.
+For more info: https://github.com/HoverRace/HoverRace/issues/262")
 	endif()
 endif()
 
