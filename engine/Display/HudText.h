@@ -54,6 +54,9 @@ public:
 	HudText(Display &display, const std::string &text);
 	virtual ~HudText() { }
 
+protected:
+	void OnHudRescaled(const Vec2 &hudScale) override;
+
 public:
 	const std::string &GetText() const;
 	void SetText(const std::string &text);

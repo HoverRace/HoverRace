@@ -51,6 +51,21 @@ HudText::HudText(Display &display, const std::string &text) :
 	textLbl = AddChild(new Label(text, display.styles.hudNormalFont, FG_COLOR));
 }
 
+void HudText::OnHudRescaled(const Vec2 &hudScale)
+{
+	const auto &s = display.styles;
+	bool small = hudScale.x < 1.0 || hudScale.y < 1.0;
+
+	if (small) {
+		textLbl->SetFont(s.hudSmallFont);
+	}
+	else {
+		textLbl->SetFont(s.hudNormalFont);
+	}
+
+	RequestLayout();
+}
+
 /**
  * Get the text.
  * @return The current text.
