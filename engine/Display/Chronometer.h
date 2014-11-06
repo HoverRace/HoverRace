@@ -56,6 +56,9 @@ public:
 	virtual ~Chronometer() { }
 
 protected:
+	void OnHudRescaled(const Vec2 &hudScale) override;
+
+protected:
 	void Layout() override;
 public:
 	void Advance(Util::OS::timestamp_t tick) override;

@@ -61,6 +61,23 @@ Chronometer::Chronometer(Display &display, const std::string &title,
 	valueLbl = AddChild(new Label("", s.hudNormalFont, VALUE_COLOR));
 }
 
+void Chronometer::OnHudRescaled(const Vec2 &hudScale)
+{
+	const auto &s = display.styles;
+	bool small = hudScale.x < 1.0 || hudScale.y < 1.0;
+
+	if (small) {
+		titleLbl->SetFont(s.hudSmallHeadFont);
+		valueLbl->SetFont(s.hudSmallFont);
+	}
+	else {
+		titleLbl->SetFont(s.hudNormalHeadFont);
+		valueLbl->SetFont(s.hudNormalFont);
+	}
+
+	RequestLayout();
+}
+
 void Chronometer::Layout()
 {
 	SUPER::Layout();

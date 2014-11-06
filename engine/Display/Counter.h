@@ -60,6 +60,9 @@ public:
 		double total=NO_TOTAL);
 	virtual ~Counter() { }
 
+protected:
+	void OnHudRescaled(const Vec2 &hudScale) override;
+
 public:
 	/// Retrieve the current value.
 	double GetValue() const { return value; }
