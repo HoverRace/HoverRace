@@ -386,7 +386,7 @@ void MainCharacter::SetNetState(int /*pDataLen */ , const MR_UInt8 *pData)
 	if(mRoom < -1)
 		mRoom = lState.Getu(MC_ROOM);
 
-	mOrientation = lState.Getu(MC_ORIENTATION);
+	mOrientation = static_cast<MR_Angle>(lState.Getu(MC_ORIENTATION));
 
 	mXSpeed = lState.Get(MC_SPEED_X_256) / 256.0;
 	mYSpeed = lState.Get(MC_SPEED_Y_256) / 256.0;
