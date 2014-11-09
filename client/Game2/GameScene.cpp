@@ -59,6 +59,12 @@ GameScene::Viewport::Viewport(Display::Display &display,
 	hud->AttachView(display);
 }
 
+void GameScene::Viewport::SetCell(Display::HudCell cell)
+{
+	hud->SetCell(cell);
+	observer->SetSplitMode(cell);
+}
+
 GameScene::GameScene(const std::string &name,
                      Display::Display &display, GameDirector &director,
                      Script::Core *scripting, std::shared_ptr<Rules> rules,
@@ -66,8 +72,7 @@ GameScene::GameScene(const std::string &name,
 	SUPER(name),
 	display(display), director(director), scripting(scripting), rules(rules),
 	finishedLoading(false), muted(false),
-	session(nullptr),
-	firedOnStart(false), firedOnRaceFinish(false)
+	session(nullptr)
 {
 	finishedLoadingConn =
 		loader->GetFinishedLoadingSignal().connect(
@@ -129,14 +134,17 @@ void GameScene::ScheduleLoad(std::shared_ptr<Loader> loader)
 			}
 		});
 
-		//TODO: Support split-screen with multiple viewports.
-		viewports.emplace_back(
-			display,
-			localHumans.back(),
-			new Observer(),
-			new Display::Hud(display,
-				session->SharePlayer(0), track,
-				Display::UiLayoutFlags::FLOATING));
+		// Split-screen with multiple viewports.
+		// The bounds of each viewport will be set in LayoutViewports().
+		for (auto &player : localHumans) {
+			viewports.emplace_back(
+				display,
+				player,
+				new Observer(),
+				new Display::Hud(display,
+					player, track,
+					Display::UiLayoutFlags::FLOATING));
+		}
 	});
 
 	loader->AddLoader("Session", [=]{
@@ -163,6 +171,11 @@ void GameScene::ScheduleLoad(std::shared_ptr<Loader> loader)
 				}
 			}
 
+			// Get notified when each player finishes.
+			auto mainChar = player->GetPlayer()->GetPlayer()->GetMainCharacter();
+			mainChar->GetFinishedSignal().connect(
+				std::bind(&GameScene::OnRaceFinish, this));
+
 			player->OnJoined(metaSession);
 		});
 	});
@@ -171,6 +184,8 @@ void GameScene::ScheduleLoad(std::shared_ptr<Loader> loader)
 void GameScene::OnFinishedLoading()
 {
 	finishedLoading = true;
+
+	RequestLayout();
 }
 
 void GameScene::SetHudVisible(bool visible)
@@ -194,22 +209,18 @@ void GameScene::Advance(Util::OS::timestamp_t tick)
 
 	session->Process();
 
-	auto mainChar = session->GetPlayer(0)->GetMainCharacter();
-
-	if (!firedOnRaceFinish && mainChar->HasFinish()) {
-		metaSession->GetSession()->GetPlayer(0)->OnFinish();
-		OnRaceFinish();
-		firedOnRaceFinish = true;
-	}
-	else if (!firedOnStart && mainChar->HasStarted()) {
-		metaSession->GetSession()->GetPlayer(0)->OnStart();
-		firedOnStart = true;
-	}
+	//TODO: Check finished state?  Wait for signal from SessionPeer?
 
 	// Update HUD state last, after game state is settled for this frame.
 	for (auto &viewport : viewports) {
 		viewport.hud->Advance(tick);
 	}
+}
+
+void GameScene::Layout()
+{
+	SUPER::Layout();
+	LayoutViewports();
 }
 
 void GameScene::PrepareRender()
@@ -261,12 +272,72 @@ void GameScene::Render()
 	}
 }
 
+/**
+ * Redefine the bounds of each viewport based on the number of connected local
+ * players.
+ */
+void GameScene::LayoutViewports()
+{
+	using Cell = Display::HudCell;
+
+	// There will be no viewports until the scene has finished loading.
+	if (viewports.empty()) return;
+
+	HR_LOG(info) << "There are " << viewports.size() << " viewports!";
+
+	switch (viewports.size()) {
+		case 1:
+			viewports[0].SetCell(Cell::FILL);
+			break;
+		case 2:
+			viewports[0].SetCell(Cell::N);
+			viewports[1].SetCell(Cell::S);
+			break;
+		case 3:
+			viewports[0].SetCell(Cell::N);
+			viewports[1].SetCell(Cell::SW);
+			viewports[2].SetCell(Cell::SE);
+			break;
+		case 4:
+			viewports[0].SetCell(Cell::NW);
+			viewports[1].SetCell(Cell::NE);
+			viewports[2].SetCell(Cell::SW);
+			viewports[3].SetCell(Cell::SE);
+			break;
+		default:
+			throw UnimplementedExn("Unhandled number of viewports: " +
+				boost::lexical_cast<std::string>(viewports.size()));
+	}
+}
+
 void GameScene::OnRaceFinish()
 {
-	//TODO: Currently assuming only one player, so we go directly from PLAYING
-	//      to DONE (AdvancePhase will ensure that the POSTGAME event is fired).
-	session->AdvancePhase(ClientSession::Phase::DONE);
-	director.GetSessionChangedSignal()(nullptr);
+	// Check if all players are finished.
+	// If not all players have finished, then we're just entering postgame.
+	
+	bool done = true;
+	
+	for (int i = 0; i < session->GetNbPlayers(); i++) {
+		auto player = session->GetPlayer(i);
+		if (!player) continue;  // Player slot may have been vacated.
+
+		auto mchar = player->GetMainCharacter();
+		assert(mchar);
+
+		if (!mchar->HasFinish()) {
+			done = false;
+			break;
+		}
+	}
+
+	if (done) {
+		HR_LOG(info) << "Ending completed session.";
+		session->AdvancePhase(ClientSession::Phase::DONE);
+		director.GetSessionChangedSignal()(nullptr);
+	}
+	else {
+		session->AdvancePhase(ClientSession::Phase::POSTGAME);
+	}
 }
 
 }  // namespace HoverScript

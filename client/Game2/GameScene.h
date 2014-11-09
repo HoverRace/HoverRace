@@ -21,13 +21,14 @@
 
 #pragma once
 
+#include "../../engine/Display/HudCell.h"
 #include "../../engine/Util/Config.h"
 
 #include "Observer.h"
 #include "GameDirector.h"
 #include "Rules.h"
 
-#include "Scene.h"
+#include "UiScene.h"
 
 namespace HoverRace {
 	namespace Client {
@@ -66,9 +67,10 @@ namespace Client {
  * Base for scenes that render and interact with tracks.
  * @author Michael Imamura
  */
-class GameScene : public Scene
+class GameScene : public UiScene
 {
-	typedef Scene SUPER;
+	typedef UiScene SUPER;
+
 protected:
 	struct Viewport {
 		Viewport(Display::Display &display,
@@ -80,6 +82,8 @@ protected:
 
 		Viewport &operator=(const Viewport &o) = delete;
 		Viewport &operator=(Viewport &&viewport) = default;
+
+		void SetCell(Display::HudCell cell);
 
 		std::shared_ptr<Player::Player> player;
 		std::unique_ptr<Observer> observer;
@@ -110,8 +114,12 @@ protected:
 
 public:
 	void Advance(Util::OS::timestamp_t tick) override;
+	void Layout() override;
 	void PrepareRender() override;
 	void Render() override;
+
+private:
+	void LayoutViewports();
 
 private:
 	void OnRaceFinish();
@@ -134,9 +142,6 @@ private:
 	boost::signals2::scoped_connection finishedLoadingConn;
 
 	std::shared_ptr<HoverScript::MetaSession> metaSession;
-
-	bool firedOnStart;
-	bool firedOnRaceFinish;
 };
 
 }  // namespace Client

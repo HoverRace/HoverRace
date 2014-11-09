@@ -330,7 +330,7 @@ Model::ElementNetState Missile::GetNetState() const
 
 	lsState.mOrientation = mOrientation;
 
-	lsState.mHoverId = mHoverId;
+	lsState.mHoverId = static_cast<MR_Int8>(mHoverId);
 
 	return lReturnValue;
 

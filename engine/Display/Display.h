@@ -247,6 +247,12 @@ class MR_DllDeclare Display :
 			Color announcementSymbolFg;
 			Color announcementBg;
 
+			// HUD text.
+			UiFont hudNormalFont;
+			UiFont hudNormalHeadFont;
+			UiFont hudSmallFont;
+			UiFont hudSmallHeadFont;
+
 			// Console text.
 			UiFont consoleFont;
 			Color consoleFg;

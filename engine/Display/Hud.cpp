@@ -68,7 +68,8 @@ Hud::Hud(Display &display, std::shared_ptr<Player::Player> player,
 	std::shared_ptr<Model::Track> track,
 	uiLayoutFlags_t layoutFlags) :
 	SUPER(display, Vec2(1280, 720), false, layoutFlags),
-	track(std::move(track)), player(std::move(player))
+	track(std::move(track)), player(std::move(player)),
+	cell(HudCell::FILL), hudScale(1, 1)
 {
 	displayConfigChangedConn =
 		display.GetDisplayConfigChangedSignal().connect(
@@ -108,12 +109,83 @@ void Hud::SetTrack(std::shared_ptr<Model::Track> track)
 }
 
 /**
+ * Set the subsection of the screen where this HUD should be rendered.
+ */
+void Hud::SetCell(HudCell cell)
+{
+	if (this->cell != cell) {
+		this->cell = cell;
+		OnScreenSizeChanged();
+	}
+}
+
+/**
  * Fired when the screen size changes.
  */
 void Hud::OnScreenSizeChanged()
 {
-	//TODO: Adjust bounds for splitscreen viewports.
-	SetSize(display.GetUiScreenSize());
+	
+	auto size = display.GetUiScreenSize();
+	auto pos = Vec2{0, 0};
+
+	// Adjust size for splitscreen viewports.
+	auto hudScale = Vec2{1, 1};
+	switch (cell) {
+		case HudCell::FILL:
+			// No size adjustment.
+			break;
+
+		case HudCell::N:
+		case HudCell::S:
+			hudScale.y = 0.5;
+			break;
+
+		case HudCell::NW:
+		case HudCell::NE:
+		case HudCell::SE:
+		case HudCell::SW:
+			hudScale.x = 0.5;
+			hudScale.y = 0.5;
+			break;
+
+		default:
+			throw UnimplementedExn("Hud::OnScreenSizeChanged: Cell type: " +
+				boost::lexical_cast<std::string>(cell));
+	}
+	this->hudScale = hudScale;
+
+	size.x *= hudScale.x;
+	size.y *= hudScale.y;
+	SetSize(size);
+
+	// Adjust pos for splitscreen viewports.
+	switch (cell) {
+		case HudCell::FILL:
+		case HudCell::N:
+		case HudCell::NW:
+			// No pos adjustment.
+			break;
+		case HudCell::S:
+		case HudCell::SW:
+			pos.y = size.y;
+			break;
+		case HudCell::NE:
+			pos.x = size.x;
+			break;
+		case HudCell::SE:
+			pos = size;
+			break;
+		default:
+			throw UnimplementedExn("Hud::OnScreenSizeChanged: Cell type: " +
+				boost::lexical_cast<std::string>(cell));
+	}
+	SetPos(pos);
+
+	// Notify all HUD elements of the new scale.
+	ForEachHudChild([&](std::shared_ptr<HudDecor> &child) {
+		child->SetHudScale(hudScale);
+	});
+
 	RequestLayout();
 }
 

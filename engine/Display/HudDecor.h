@@ -65,6 +65,7 @@ public:
 		enum {
 			PLAYER = SUPER::Props::NEXT_,
 			TRACK,
+			HUD_SCALE,
 			NEXT_,  ///< First index for subclasses.
 		};
 	};
@@ -80,6 +81,19 @@ public:
 protected:
 	void FireModelUpdate(int prop) override;
 
+	/**
+	 * Called when the containing HUD changes the scaling factor (that is,
+	 * when the viewport changes).
+	 *
+	 * Each HUD element should initially assume (in the constructor) that
+	 * there is no scaling factor.  It is up to each HUD element to decide
+	 * whether it should be scaled when the viewport changes, and by how
+	 * much in relation to the scaling factor.
+	 *
+	 * @param hudScale The new scaling factor.
+	 */
+	virtual void OnHudRescaled(const Vec2 &hudScale) { HR_UNUSED(hudScale); }
+
 public:
 	virtual void Advance(Util::OS::timestamp_t) { };
 
@@ -92,9 +106,13 @@ public:
 	std::shared_ptr<Model::Track> ShareTrack() const { return track; }
 	void SetTrack(std::shared_ptr<Model::Track> track);
 
+	const Vec2 &GetHudScale() const { return hudScale; }
+	void SetHudScale(const Vec2 &hudScale);
+
 private:
 	std::shared_ptr<Player::Player> player;
 	std::shared_ptr<Model::Track> track;
+	Vec2 hudScale;
 	sizeChangedSignal_t sizeChangedSignal;
 };
 

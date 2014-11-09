@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include "../../engine/Display/HudCell.h"
 #include "../../engine/VideoServices/Viewport3D.h"
 #include "../../engine/MainCharacter/MainCharacter.h"
 #include "../../engine/ObjFacTools/SpriteHandle.h"
@@ -39,18 +40,6 @@ namespace Client {
 
 class Observer
 {
-	public:
-		enum eSplitMode
-		{
-			eNotSplit,
-			eUpperSplit,
-			eLowerSplit,
-			eUpperLeftSplit,
-			eUpperRightSplit,
-			eLowerLeftSplit,
-			eLowerRightSplit,
-		};
-
 	private:
 		MR_3DCoordinate mLastCameraPos;
 		BOOL mLastCameraPosValid;
@@ -62,7 +51,7 @@ class Observer
 		VideoServices::Viewport3D mWireFrameView;
 		VideoServices::Viewport3D m3DView;
 
-		eSplitMode mSplitMode;
+		Display::HudCell splitMode;
 
 		int mScroll;
 		MR_Angle mApperture;
@@ -114,7 +103,7 @@ class Observer
 
 		void SetCockpitView(BOOL pOn);
 
-		void SetSplitMode(eSplitMode pMode);
+		void SetSplitMode(Display::HudCell pMode);
 
 		// Rendering function
 		void RenderDebugDisplay(VideoServices::VideoBuffer * pDest, const HoverRace::Client::ClientSession *pSession, const MainCharacter::MainCharacter * pViewingCharacter, MR_SimulationTime pTime, const MR_UInt8 * pBackImage);

@@ -114,6 +114,13 @@ void Display::styles_t::Reload()
 	announcementSymbolFg = Color(0xbfffffff);
 	announcementBg = Color(0xbf000000);
 
+	// 100% HUD scale.
+	hudNormalFont.Set(30, UiFont::BOLD);
+	hudNormalHeadFont.Set(20, 0);
+	// 50% HUD scale.
+	hudSmallFont.Set(20, UiFont::BOLD);
+	hudSmallHeadFont.Set(15, 0);
+
 	consoleFont.Set(monospaceFontName, 30);
 	consoleFg = COLOR_WHITE;
 	consoleCursorFg = 0xffbfbfbf;

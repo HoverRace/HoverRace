@@ -49,24 +49,28 @@ namespace Display {
 class MR_DllDeclare Chronometer : public HudDecor
 {
 	typedef HudDecor SUPER;
-	public:
-		Chronometer(Display &display, const std::string &title,
-			std::shared_ptr<Util::Clock> clock);
-		virtual ~Chronometer() { }
 
-	protected:
-		void Layout() override;
-	public:
-		void Advance(Util::OS::timestamp_t tick) override;
+public:
+	Chronometer(Display &display, const std::string &title,
+		std::shared_ptr<Util::Clock> clock);
+	virtual ~Chronometer() { }
 
-	private:
-		std::shared_ptr<Util::Clock> clock;
+protected:
+	void OnHudRescaled(const Vec2 &hudScale) override;
 
-		Util::OS::timestamp_t lastTick;
+protected:
+	void Layout() override;
+public:
+	void Advance(Util::OS::timestamp_t tick) override;
 
-		std::shared_ptr<FillBox> bg;
-		std::shared_ptr<Label> titleLbl;
-		std::shared_ptr<Label> valueLbl;
+private:
+	std::shared_ptr<Util::Clock> clock;
+
+	Util::OS::timestamp_t lastTick;
+
+	std::shared_ptr<FillBox> bg;
+	std::shared_ptr<Label> titleLbl;
+	std::shared_ptr<Label> valueLbl;
 };
 
 }  // namespace Display

@@ -32,7 +32,7 @@ namespace Display {
  */
 HudDecor::HudDecor(Display &display) :
 	SUPER(display),
-	player(nullptr), track()
+	player(nullptr), track(), hudScale(1, 1)
 {
 }
 
@@ -67,6 +67,19 @@ void HudDecor::SetTrack(std::shared_ptr<Model::Track> track)
 	if (this->track != track) {
 		this->track = track;
 		FireModelUpdate(Props::TRACK);
+	}
+}
+
+/**
+ * Sets HUD scale factor.
+ * @param hudScale The HUD scale.
+ */
+void HudDecor::SetHudScale(const Vec2 &hudScale)
+{
+	if (this->hudScale != hudScale) {
+		this->hudScale = hudScale;
+		FireModelUpdate(Props::HUD_SCALE);
+		OnHudRescaled(hudScale);
 	}
 }
 

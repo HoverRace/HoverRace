@@ -1,7 +1,7 @@
 
 // Label.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -91,7 +91,7 @@ class MR_DllDeclare Label : public UiViewModel
 		void SetColor(const Color color);
 
 		const UiFont &GetFont() const { return font; }
-		void SetFont(UiFont &font);
+		void SetFont(const UiFont &font);
 
 		const std::string &GetText() const { return text; }
 		void SetText(const std::string &text);

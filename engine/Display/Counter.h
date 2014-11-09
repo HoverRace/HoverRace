@@ -51,42 +51,46 @@ namespace Display {
 class MR_DllDeclare Counter : public HudDecor
 {
 	typedef HudDecor SUPER;
-	private:
-		static const double NO_TOTAL;
 
-	public:
-		Counter(Display &display, const std::string &title, double initValue,
-			double total=NO_TOTAL);
-		virtual ~Counter() { }
+private:
+	static const double NO_TOTAL;
 
-	public:
-		/// Retrieve the current value.
-		double GetValue() const { return value; }
-		void SetValue(double value);
+public:
+	Counter(Display &display, const std::string &title, double initValue,
+		double total=NO_TOTAL);
+	virtual ~Counter() { }
 
-		/**
-		 * Retrieve the total value.
-		 * @note Use IsTotalHidden() to determine if the total is hidden.
-		 * @return The value.
-		 */
-		double GetTotal() const { return total; }
-		void SetTotal(double total);
+protected:
+	void OnHudRescaled(const Vec2 &hudScale) override;
 
-		bool IsTotalHidden() const;
-		void HideTotal();
+public:
+	/// Retrieve the current value.
+	double GetValue() const { return value; }
+	void SetValue(double value);
 
-	protected:
-		void Layout() override;
-	public:
-		void Advance(Util::OS::timestamp_t tick) override;
+	/**
+	 * Retrieve the total value.
+	 * @note Use IsTotalHidden() to determine if the total is hidden.
+	 * @return The value.
+	 */
+	double GetTotal() const { return total; }
+	void SetTotal(double total);
 
-	private:
-		double value;
-		double total;
-		bool valueChanged;
-		std::shared_ptr<FillBox> bg;
-		std::shared_ptr<Label> titleLbl;
-		std::shared_ptr<Label> valueLbl;
+	bool IsTotalHidden() const;
+	void HideTotal();
+
+protected:
+	void Layout() override;
+public:
+	void Advance(Util::OS::timestamp_t tick) override;
+
+private:
+	double value;
+	double total;
+	bool valueChanged;
+	std::shared_ptr<FillBox> bg;
+	std::shared_ptr<Label> titleLbl;
+	std::shared_ptr<Label> valueLbl;
 };
 
 }  // namespace Display

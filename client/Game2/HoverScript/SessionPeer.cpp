@@ -23,6 +23,8 @@
 
 #include <luabind/operator.hpp>
 
+#include "../../engine/MainCharacter/MainCharacter.h"
+#include "../../engine/Player/Player.h"
 #include "../../engine/Script/Core.h"
 #include "../../engine/Util/Clock.h"
 #include "../../engine/Util/Log.h"
@@ -45,6 +47,20 @@ std::ostream &operator<<(std::ostream &os, const SessionPeer&)
 {
 	os << "SessionPeer";
 	return os;
+}
+
+SessionPeer::PlayerRef::PlayerRef(std::shared_ptr<MetaPlayer> meta) :
+	meta(std::move(meta))
+{
+	auto mainChar = this->meta->GetPlayer()->GetPlayer()->GetMainCharacter();
+	assert(mainChar);
+	auto pmeta = this->meta.get();
+
+	// Hook up signals from MainCharacter to MetaPlayer.
+	startedConn = mainChar->GetStartedSignal().connect(
+		std::bind(&MetaPlayer::OnStart, pmeta));
+	finishedConn = mainChar->GetFinishedSignal().connect(
+		std::bind(&MetaPlayer::OnFinish, pmeta));
 }
 
 SessionPeer::SessionPeer(Script::Core *scripting, ClientSession *session) :
@@ -106,7 +122,7 @@ void SessionPeer::OnSessionStart(ClientSession *session)
 			std::make_shared<PlayerPeer>(scripting, session->SharePlayer(i)));
 		player->OnInit();
 
-		playerRefs.push_back(player);
+		playerRefs.emplace_back(new PlayerRef(player));
 		players[i] = player;
 	}
 }

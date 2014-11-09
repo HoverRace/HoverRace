@@ -49,20 +49,24 @@ namespace Display {
 class MR_DllDeclare HudText : public HudDecor
 {
 	typedef HudDecor SUPER;
-	public:
-		HudText(Display &display, const std::string &text);
-		virtual ~HudText() { }
 
-	public:
-		const std::string &GetText() const;
-		void SetText(const std::string &text);
+public:
+	HudText(Display &display, const std::string &text);
+	virtual ~HudText() { }
 
-	protected:
-		void Layout() override;
+protected:
+	void OnHudRescaled(const Vec2 &hudScale) override;
 
-	private:
-		std::shared_ptr<FillBox> bg;
-		std::shared_ptr<Label> textLbl;
+public:
+	const std::string &GetText() const;
+	void SetText(const std::string &text);
+
+protected:
+	void Layout() override;
+
+private:
+	std::shared_ptr<FillBox> bg;
+	std::shared_ptr<Label> textLbl;
 };
 
 }  // namespace Display

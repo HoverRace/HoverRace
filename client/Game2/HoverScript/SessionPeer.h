@@ -52,8 +52,22 @@ namespace HoverScript {
  * Scripting peer for a game session.
  * @author Michael Imamura
  */
-class SessionPeer : public Script::Peer {
+class SessionPeer : public Script::Peer
+{
 	typedef Script::Peer SUPER;
+
+protected:
+	class PlayerRef
+	{
+	public:
+		PlayerRef(std::shared_ptr<MetaPlayer> meta);
+
+	public:
+		std::shared_ptr<MetaPlayer> meta;
+	private:
+		boost::signals2::scoped_connection startedConn;
+		boost::signals2::scoped_connection finishedConn;
+	};
 
 public:
 	SessionPeer(Script::Core *scripting, ClientSession *session);
@@ -69,13 +83,13 @@ public:
 	template<class Fn>
 	void ForEachPlayer(Fn fn)
 	{
-		if (!playerRefs.empty()) {
-			std::for_each(playerRefs.begin(), playerRefs.end(), fn);
+		for (auto &ref : playerRefs) {
+			fn(ref->meta);
 		}
 	}
 	std::shared_ptr<MetaPlayer> &GetPlayer(unsigned idx)
 	{
-		return playerRefs[idx];
+		return playerRefs[idx]->meta;
 	}
 
 	void OnSessionStart(ClientSession *session);
@@ -97,7 +111,7 @@ private:
 	MetaSession *meta;
 	luabind::object rules;
 	luabind::object players;
-	std::vector<std::shared_ptr<MetaPlayer>> playerRefs;
+	std::vector<std::unique_ptr<PlayerRef>> playerRefs;
 };
 typedef std::shared_ptr<SessionPeer> SessionPeerPtr;
 

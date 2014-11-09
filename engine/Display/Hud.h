@@ -23,6 +23,7 @@
 
 #include "../Util/OS.h"
 #include "../Exception.h"
+#include "HudCell.h"
 #include "HudDecor.h"
 
 #include "Container.h"
@@ -149,7 +150,8 @@ public:
 					return Alignment::NW;
 			}
 		}
-	};
+	};  // HudAlignment
+
 protected:
 	struct MR_DllDeclare HudChild
 	{
@@ -189,6 +191,7 @@ public:
 		std::shared_ptr<T> sharedChild = AddChild(child);
 		sharedChild->SetPlayer(player);
 		sharedChild->SetTrack(track);
+		sharedChild->SetHudScale(hudScale);
 
 		// For corner elems, replace the elem instead of adding.
 		if (HudAlignment::IsCorner(alignment)) {
@@ -239,6 +242,9 @@ public:
 	std::shared_ptr<Model::Track> ShareTrack() const { return track; }
 	void SetTrack(std::shared_ptr<Model::Track> track);
 
+	HudCell GetCell() const { return cell; }
+	void SetCell(HudCell cell);
+
 public:
 	void OnScreenSizeChanged();
 
@@ -259,6 +265,8 @@ public:
 private:
 	std::shared_ptr<Model::Track> track;
 	std::shared_ptr<Player::Player> player;
+	HudCell cell;
+	Vec2 hudScale;
 	typedef std::vector<HudChild> hudChildList_t;
 	std::array<hudChildList_t, HudAlignment::NUM> hudChildren;
 	boost::signals2::scoped_connection displayConfigChangedConn;

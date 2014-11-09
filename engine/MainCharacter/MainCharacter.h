@@ -244,6 +244,12 @@ class MR_DllDeclare MainCharacter : public Model::FreeElement
 		void PlayExternalSounds(int pDB, int pPan);
 
 	public:
+		typedef boost::signals2::signal<void(MainCharacter*)> startedSignal_t;
+		startedSignal_t &GetStartedSignal() { return startedSignal; }
+
+		typedef boost::signals2::signal<void(MainCharacter*)> finishedSignal_t;
+		finishedSignal_t &GetFinishedSignal() { return finishedSignal; }
+
 		typedef boost::signals2::signal<void(MainCharacter*, int)> checkpointSignal_t;
 		checkpointSignal_t &GetCheckpointSignal() { return checkpointSignal; }
 
@@ -253,6 +259,8 @@ class MR_DllDeclare MainCharacter : public Model::FreeElement
 	private:
 		bool started;
 		bool finished;
+		startedSignal_t startedSignal;
+		finishedSignal_t finishedSignal;
 		checkpointSignal_t checkpointSignal;
 		finishLineSignal_t finishLineSignal;
 };
