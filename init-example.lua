@@ -39,6 +39,11 @@ print("Initialized: ", game:is_initialized())
 game:on_init(function()
 	print("In on_init handler")
 	print("Initialized: ", game:is_initialized())
+
+	-- Add dummy local players to test split-screen.
+	--game:add_local_player()
+	--game:add_local_player()
+
 	-- The session won't actually start until all on_init handlers
 	-- have finished executing.
 	game:start_practice("ClassicH", {
