@@ -5,6 +5,9 @@ add_local_player:
   brief: >
     Add a new local player.
 
+    The player will not be connected to a controller, but it can me manipulated
+    from scripts.
+
 announce:
   type: method
   sig:
