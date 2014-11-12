@@ -55,6 +55,7 @@ void ConfigPeer::Register(Script::Core *scripting)
 			.def("unlink", &ConfigPeer::LUnlink)
 			.def("get_video_res", &ConfigPeer::LGetVideoRes)
 			.def("set_video_res", &ConfigPeer::LSetVideoRes)
+			.property("stacked_splitscreen", &ConfigPeer::LIsStackedSplitscreen, &ConfigPeer::LSetStackedSplitscreen)
 	];
 }
 
@@ -87,6 +88,16 @@ void ConfigPeer::LSetVideoRes(int w, int h)
 	Config *cfg = Config::GetInstance();
 	cfg->video.xRes = w;
 	cfg->video.yRes = h;
+}
+
+bool ConfigPeer::LIsStackedSplitscreen() const
+{
+	return Config::GetInstance()->video.stackedSplitscreen;
+}
+
+void ConfigPeer::LSetStackedSplitscreen(bool stacked)
+{
+	Config::GetInstance()->video.stackedSplitscreen = stacked;
 }
 
 }  // namespace HoverScript

@@ -952,6 +952,7 @@ void Observer::RenderDebugDisplay(VideoServices::VideoBuffer * pDest, const Clie
 	int lXRes = pDest->GetXRes();
 	int lYRes = pDest->GetYRes();
 	int lYOffset = 0;
+	int lXOffset = 0;
 
 	switch (splitMode) {
 		case Cell::FILL:
@@ -971,13 +972,22 @@ void Observer::RenderDebugDisplay(VideoServices::VideoBuffer * pDest, const Clie
 			lYOffset = lYRes;
 			break;
 
+		case Cell::W:
+			lXRes /= 2;
+			break;
+
+		case Cell::E:
+			lXRes /= 2;
+			lXOffset = lXRes;
+			break;
+
 		default:
 			throw UnimplementedExn("Observer::RenderDebugDisplay: Cell type: " +
 				boost::lexical_cast<std::string>(splitMode));
 	}
 
-	mWireFrameView.Setup(pDest, 0, lYOffset, lXRes / 2, lYRes / 2, mApperture);
-	m3DView.Setup(pDest, 0, lYOffset + lYRes / 2, lXRes / 2, lYRes / 2, mApperture);
+	mWireFrameView.Setup(pDest, lXOffset, lYOffset, lXRes / 2, lYRes / 2, mApperture);
+	m3DView.Setup(pDest, lXOffset, lYOffset + lYRes / 2, lXRes / 2, lYRes / 2, mApperture);
 	m2DDebugView.Setup(pDest, lXRes / 2, lYOffset, lXRes / 2, lYRes);
 
 	if(pViewingCharacter->mRoom != -1) {
@@ -1012,7 +1022,6 @@ void Observer::RenderNormalDisplay(VideoServices::VideoBuffer * pDest, const Cli
 			if(lYMargin_1024 < 0) {
 				lYMargin_1024 = 0;
 			}
-
 			break;
 
 		case Cell::S:
@@ -1022,7 +1031,23 @@ void Observer::RenderNormalDisplay(VideoServices::VideoBuffer * pDest, const Cli
 			if(lYMargin_1024 < 0) {
 				lYMargin_1024 = 0;
 			}
+			break;
 
+		case Cell::W:
+			lXRes /= 2;
+			lXMargin_1024 -= 200;
+			if(lXMargin_1024 < 0) {
+				lXMargin_1024 = 0;
+			}
+			break;
+
+		case Cell::E:
+			lXRes /= 2;
+			lXOffset = lXRes;
+			lXMargin_1024 -= 200;
+			if(lXMargin_1024 < 0) {
+				lXMargin_1024 = 0;
+			}
 			break;
 
 		case Cell::NW:
@@ -1036,7 +1061,6 @@ void Observer::RenderNormalDisplay(VideoServices::VideoBuffer * pDest, const Cli
 			if(lXMargin_1024 < 0) {
 				lXMargin_1024 = 0;
 			}
-
 			break;
 
 		case Cell::NE:
@@ -1051,7 +1075,6 @@ void Observer::RenderNormalDisplay(VideoServices::VideoBuffer * pDest, const Cli
 			if(lXMargin_1024 < 0) {
 				lXMargin_1024 = 0;
 			}
-
 			break;
 
 		case Cell::SW:

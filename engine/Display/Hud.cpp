@@ -140,6 +140,11 @@ void Hud::OnScreenSizeChanged()
 			hudScale.y = 0.5;
 			break;
 
+		case HudCell::E:
+		case HudCell::W:
+			hudScale.x = 0.5;
+			break;
+
 		case HudCell::NW:
 		case HudCell::NE:
 		case HudCell::SE:
@@ -163,6 +168,7 @@ void Hud::OnScreenSizeChanged()
 		case HudCell::FILL:
 		case HudCell::N:
 		case HudCell::NW:
+		case HudCell::W:
 			// No pos adjustment.
 			break;
 		case HudCell::S:
@@ -170,6 +176,7 @@ void Hud::OnScreenSizeChanged()
 			pos.y = size.y;
 			break;
 		case HudCell::NE:
+		case HudCell::E:
 			pos.x = size.x;
 			break;
 		case HudCell::SE:

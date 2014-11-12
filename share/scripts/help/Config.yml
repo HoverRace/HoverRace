@@ -30,3 +30,14 @@ set_video_res:
     This only works before the game is initialized (i.e. before the on_init
     event is fired).
 
+stacked_splitscreen:
+  type: property
+  isa: boolean
+  brief: >
+    Set the orientation for splitscreen mode.
+  desc: >
+    true (default) stacks the viewports on top of each other,
+    false lays out the viewports side-by-side.
+    
+    This only applies to 2-player and 3-player splitscreen.
+

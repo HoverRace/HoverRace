@@ -279,6 +279,7 @@ void GameScene::Render()
 void GameScene::LayoutViewports()
 {
 	using Cell = Display::HudCell;
+	auto stacked = Config::GetInstance()->video.stackedSplitscreen;
 
 	// There will be no viewports until the scene has finished loading.
 	if (viewports.empty()) return;
@@ -290,12 +291,24 @@ void GameScene::LayoutViewports()
 			viewports[0].SetCell(Cell::FILL);
 			break;
 		case 2:
-			viewports[0].SetCell(Cell::N);
-			viewports[1].SetCell(Cell::S);
+			if (stacked) {
+				viewports[0].SetCell(Cell::N);
+				viewports[1].SetCell(Cell::S);
+			}
+			else {
+				viewports[0].SetCell(Cell::W);
+				viewports[1].SetCell(Cell::E);
+			}
 			break;
 		case 3:
-			viewports[0].SetCell(Cell::N);
-			viewports[1].SetCell(Cell::SW);
+			if (stacked) {
+				viewports[0].SetCell(Cell::N);
+				viewports[1].SetCell(Cell::SW);
+			}
+			else {
+				viewports[0].SetCell(Cell::W);
+				viewports[1].SetCell(Cell::NE);
+			}
 			viewports[2].SetCell(Cell::SE);
 			break;
 		case 4:

@@ -191,6 +191,8 @@ class MR_DllDeclare Config
 			int xResFullscreen; ///< for fullscreen
 			int yResFullscreen; ///< for fullscreen
 
+			bool stackedSplitscreen;
+
 			void Load(yaml::MapNode*);
 			void Save(yaml::Emitter*);
 		} video;

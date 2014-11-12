@@ -708,6 +708,7 @@ void Config::ResetToDefaults()
 		video.xResFullscreen = displayMode.w;
 		video.yResFullscreen = displayMode.h;
 	}
+	video.stackedSplitscreen = true;
 
 	audio.sfxVolume = 1.0;
 
@@ -1020,6 +1021,8 @@ void Config::cfg_video_t::Load(yaml::MapNode *root)
 	READ_STRING(root, fullscreenMonitor);
 	READ_INT(root, xResFullscreen, 0, 32768);
 	READ_INT(root, yResFullscreen, 0, 32768);
+
+	READ_BOOL(root, stackedSplitscreen);
 }
 
 void Config::cfg_video_t::Save(yaml::Emitter *emitter)
@@ -1040,6 +1043,8 @@ void Config::cfg_video_t::Save(yaml::Emitter *emitter)
 	EMIT_VAR(emitter, fullscreenMonitor);
 	EMIT_VAR(emitter, xResFullscreen);
 	EMIT_VAR(emitter, yResFullscreen);
+
+	EMIT_VAR(emitter, stackedSplitscreen);
 
 	emitter->EndMap();
 }

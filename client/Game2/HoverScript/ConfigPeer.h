@@ -55,6 +55,9 @@ class ConfigPeer : public Script::Peer {
 
 		void LGetVideoRes();
 		void LSetVideoRes(int w, int h);
+
+		bool LIsStackedSplitscreen() const;
+		void LSetStackedSplitscreen(bool stacked);
 };
 
 }  // namespace HoverScript
