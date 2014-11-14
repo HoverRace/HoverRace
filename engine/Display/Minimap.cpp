@@ -99,7 +99,7 @@ void Minimap::Advance(Util::OS::timestamp_t)
 	playerIcon->SetColor(player->GetProfile()->GetPrimaryColor());
 	playerIcon->SetPos(
 		(pos.x - trackOffset.x) * mapScale.x,
-		(pos.y - trackOffset.y) * mapScale.y);
+		MAP_HEIGHT - ((pos.y - trackOffset.y) * mapScale.y));
 }
 
 }  // namespace Display

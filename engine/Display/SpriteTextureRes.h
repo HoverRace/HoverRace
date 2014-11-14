@@ -55,7 +55,7 @@ class SpriteTextureRes : public Res<Texture>
 
 	public:
 		SpriteTextureRes(const std::string &recordName,
-			Parcel::ObjStream &archive);
+			Parcel::ObjStream &archive, bool flipped=false);
 		virtual ~SpriteTextureRes();
 
 	public:
@@ -72,6 +72,7 @@ class SpriteTextureRes : public Res<Texture>
 	private:
 		std::string id;
 		ImageData imageData;
+		bool flipped;
 };
 
 }  // namespace Display

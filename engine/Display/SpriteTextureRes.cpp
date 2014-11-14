@@ -41,11 +41,12 @@ const MR_UInt32 MAX_TEXTURE_HEIGHT = 4096;
  * Constructor.
  * @param recordName The name of the record being loaded.
  * @param archive The input object stream.
+ * @param flipped @c true if the sprite data is stored upside-down.
  */
 SpriteTextureRes::SpriteTextureRes(const std::string &recordName,
-	Parcel::ObjStream &archive) :
+	Parcel::ObjStream &archive, bool flipped) :
 	SUPER(),
-	id("spriteTexture:" + recordName)
+	id("spriteTexture:" + recordName), flipped(flipped)
 {
 	imageData.pixels = nullptr;
 
@@ -79,12 +80,18 @@ SpriteTextureRes::SpriteTextureRes(const std::string &recordName,
 	imageData.aMask = 0;
 
 	try {
-		// Sprites are stored upside-down.
-		MR_UInt8 *buf = static_cast<MR_UInt8*>(imageData.pixels);
-		buf += (totalHeight - 1) * width;
-		for (unsigned row = 0; row < totalHeight; ++row) {
-			archive.Read(buf, width);
-			buf -= width;
+		if (flipped) {
+			// Sprites are stored upside-down.
+			MR_UInt8 *buf = static_cast<MR_UInt8*>(imageData.pixels);
+			buf += (totalHeight - 1) * width;
+			for (unsigned row = 0; row < totalHeight; ++row) {
+				archive.Read(buf, width);
+				buf -= width;
+			}
+		}
+		else {
+			// Sprites are not upside-down.
+			archive.Read(imageData.pixels, width * totalHeight);
 		}
 	}
 	catch (Parcel::ObjStreamExn&) {
