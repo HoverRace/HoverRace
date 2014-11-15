@@ -25,6 +25,7 @@
 
 #include "../ObjFac1/ObjFac1.h"
 #include "../Parcel/ObjStream.h"
+#include "../Util/Log.h"
 
 #include "DllObjectFactory.h"
 
@@ -308,7 +309,15 @@ LocalFactoryDll::~LocalFactoryDll()
 
 ObjectFromFactory* LocalFactoryDll::GetObject(int classId) const
 {
-	return getObject(classId);
+	if (classId < 0 ||
+		classId > static_cast<int>(std::numeric_limits<MR_UInt16>::max()))
+	{
+		HR_LOG(warning) << "Out-of-range classId: " << classId;
+		return nullptr;
+	}
+	else {
+		return getObject(static_cast<MR_UInt16>(classId));
+	}
 }
 
 }  // namespace Util
