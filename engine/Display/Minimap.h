@@ -59,11 +59,15 @@ public:
 	virtual ~Minimap() { }
 
 protected:
+	void OnHudRescaled(const Vec2 &hudScale) override;
+
+protected:
 	void FireModelUpdate(int prop) override;
 public:
 	void Advance(Util::OS::timestamp_t tick) override;
 
 private:
+	double rescale;
 	Vec2 mapScale;
 	std::shared_ptr<Picture> mapPic;
 	std::shared_ptr<SymbolIcon> playerIcon;

@@ -24,6 +24,7 @@
 #include "../../engine/MainCharacter/MainCharacter.h"
 #include "../../engine/Player/Player.h"
 #include "../../engine/Model/Track.h"
+#include "../../engine/Util/Log.h"
 #include "Picture.h"
 #include "SymbolIcon.h"
 
@@ -43,7 +44,7 @@ const double MAP_HEIGHT = 200;
  * @param display The display child elements will be attached to.
  */
 Minimap::Minimap(Display &display) :
-	SUPER(display), mapScale(0, 0), mapPic(), playerIcon()
+	SUPER(display), rescale(1.0), mapScale(0, 0), mapPic(), playerIcon()
 {
 	typedef UiViewModel::Alignment Alignment;
 
@@ -55,6 +56,18 @@ Minimap::Minimap(Display &display) :
 
 	playerIcon = AddChild(new SymbolIcon(10, 10, ICON_SYMBOL));
 	playerIcon->SetAlignment(Alignment::CENTER);
+}
+
+void Minimap::OnHudRescaled(const Vec2 &hudScale)
+{
+	// Maintain the map aspect ratio.
+	rescale = std::min(hudScale.x, hudScale.y);
+	
+	Vec2 sz{MAP_WIDTH * rescale, MAP_HEIGHT * rescale};
+	SetSize(sz);
+	mapPic->SetSize(sz);
+
+	RequestLayout();
 }
 
 void Minimap::FireModelUpdate(int prop)
@@ -92,14 +105,16 @@ void Minimap::Advance(Util::OS::timestamp_t)
 	auto mchar = player->GetMainCharacter();
 	if (!mchar) return;
 
+	auto scale = mapScale * rescale;
+
 	Vec2 pos{
 		static_cast<double>(mchar->mPosition.mX),
 		static_cast<double>(mchar->mPosition.mY)
 	};
 	playerIcon->SetColor(player->GetProfile()->GetPrimaryColor());
 	playerIcon->SetPos(
-		(pos.x - trackOffset.x) * mapScale.x,
-		MAP_HEIGHT - ((pos.y - trackOffset.y) * mapScale.y));
+		(pos.x - trackOffset.x) * scale.x,
+		GetSize().y - ((pos.y - trackOffset.y) * scale.y));
 }
 
 }  // namespace Display
