@@ -96,6 +96,7 @@ SpriteTextureRes::SpriteTextureRes(const std::string &recordName,
 	}
 	catch (Parcel::ObjStreamExn&) {
 		free(imageData.pixels);
+		imageData.pixels = nullptr;
 		throw;
 	}
 
