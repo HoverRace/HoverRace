@@ -121,10 +121,11 @@ void GameScene::ScheduleLoad(std::shared_ptr<Loader> loader)
 		}
 
 		// This must be done after the track has loaded.
+		const auto maxPlayers = rules->GetRulebook()->GetMaxPlayers();
 		int i = 0;
 		std::vector<std::shared_ptr<Player::Player>> localHumans;
 		director.GetParty()->ForEach([&](std::shared_ptr<Player::Player> &p) {
-			if (p->IsCompeting()) {
+			if (p->IsCompeting() && i < maxPlayers) {
 				session->AttachPlayer(i, p);
 				i++;
 
