@@ -25,16 +25,19 @@
 #include "../../engine/Player/Player.h"
 #include "../../engine/Model/Track.h"
 #include "../../engine/Util/Log.h"
+#include "../../engine/Util/Symbol.h"
 #include "Picture.h"
 #include "SymbolIcon.h"
 
 #include "Minimap.h"
 
+using namespace HoverRace::Util;
+
 namespace HoverRace {
 namespace Display {
 
 namespace {
-const int ICON_SYMBOL = 0xf111;  // circle
+const int ICON_SYMBOL = Symbol::CIRCLE;
 const double MAP_WIDTH = 200;
 const double MAP_HEIGHT = 200;
 }  // namespace
@@ -50,7 +53,7 @@ Minimap::Minimap(Display &display) :
 
 	SetSize(MAP_WIDTH, MAP_HEIGHT);
 	SetClip(false);
-	
+
 	mapPic = AddChild(new Picture(std::shared_ptr<Res<Texture>>(),
 		MAP_WIDTH, MAP_HEIGHT));
 
@@ -62,7 +65,7 @@ void Minimap::OnHudRescaled(const Vec2 &hudScale)
 {
 	// Maintain the map aspect ratio.
 	rescale = std::min(hudScale.x, hudScale.y);
-	
+
 	Vec2 sz{MAP_WIDTH * rescale, MAP_HEIGHT * rescale};
 	SetSize(sz);
 	mapPic->SetSize(sz);
