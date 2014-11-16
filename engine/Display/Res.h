@@ -99,6 +99,10 @@ public:
 public:
 	struct ImageData
 	{
+		ImageData() : pixels(nullptr),
+			width(0), height(0), depth(32), pitch(0),
+			rMask(0), gMask(0), bMask(0), aMask(0) { }
+
 		void *pixels;
 		int width;
 		int height;
