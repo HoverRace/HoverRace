@@ -354,7 +354,7 @@ std::shared_ptr<SdlTexture> SdlDisplay::LoadRes(std::shared_ptr<Res<Texture>> re
 			}
 		}
 
-		surface = SDL_CreateRGBSurfaceFrom(imageData->pixels,
+		surface = SDL_CreateRGBSurfaceFrom(imageData->pixels.get(),
 			imageData->width, imageData->height,
 			imageData->depth, imageData->pitch,
 			imageData->rMask, imageData->gMask,

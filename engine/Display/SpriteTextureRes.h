@@ -56,7 +56,7 @@ class SpriteTextureRes : public Res<Texture>
 public:
 	SpriteTextureRes(const std::string &recordName,
 		Parcel::ObjStream &archive, bool flipped = false);
-	virtual ~SpriteTextureRes();
+	virtual ~SpriteTextureRes() { }
 
 public:
 	std::string GetId() const override { return id; }

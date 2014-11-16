@@ -48,8 +48,6 @@ SpriteTextureRes::SpriteTextureRes(const std::string &recordName,
 	SUPER(),
 	id("spriteTexture:" + recordName), flipped(flipped)
 {
-	imageData.pixels = nullptr;
-
 	MR_UInt32 numItems, itemHeight, totalHeight, width;
 
 	archive >> numItems >> itemHeight >> totalHeight >> width;
@@ -69,7 +67,8 @@ SpriteTextureRes::SpriteTextureRes(const std::string &recordName,
 			MAX_TEXTURE_WIDTH % MAX_TEXTURE_HEIGHT));
 	}
 
-	imageData.pixels = malloc(width * totalHeight);
+	ImageData imageData;
+	imageData.pixels.reset(new MR_UInt8[width * totalHeight]);
 	imageData.width = width;
 	imageData.height = totalHeight;
 	imageData.depth = 8;
@@ -79,37 +78,24 @@ SpriteTextureRes::SpriteTextureRes(const std::string &recordName,
 	imageData.bMask = 0;
 	imageData.aMask = 0;
 
-	try {
-		if (flipped) {
-			// Sprites are stored upside-down.
-			MR_UInt8 *buf = static_cast<MR_UInt8*>(imageData.pixels);
-			buf += (totalHeight - 1) * width;
-			for (unsigned row = 0; row < totalHeight; ++row) {
-				archive.Read(buf, width);
-				buf -= width;
-			}
-		}
-		else {
-			// Sprites are not upside-down.
-			archive.Read(imageData.pixels, width * totalHeight);
+	if (flipped) {
+		// Sprites are stored upside-down.
+		MR_UInt8 *buf = imageData.pixels.get();
+		buf += (totalHeight - 1) * width;
+		for (unsigned row = 0; row < totalHeight; ++row) {
+			archive.Read(buf, width);
+			buf -= width;
 		}
 	}
-	catch (Parcel::ObjStreamExn&) {
-		free(imageData.pixels);
-		imageData.pixels = nullptr;
-		throw;
+	else {
+		// Sprites are not upside-down.
+		archive.Read(imageData.pixels.get(), width * totalHeight);
 	}
 
+	this->imageData = std::move(imageData);
 	HR_LOG(debug) << "Loaded sprite resource "
 		"(" << width << "x" << totalHeight << ", " <<
 		numItems << " items): " << recordName;
-}
-
-SpriteTextureRes::~SpriteTextureRes()
-{
-	if (imageData.pixels) {
-		free(imageData.pixels);
-	}
 }
 
 }  // namespace Display
