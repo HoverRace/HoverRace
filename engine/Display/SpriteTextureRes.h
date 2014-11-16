@@ -53,26 +53,26 @@ class SpriteTextureRes : public Res<Texture>
 {
 	typedef Res<Texture> SUPER;
 
-	public:
-		SpriteTextureRes(const std::string &recordName,
-			Parcel::ObjStream &archive, bool flipped=false);
-		virtual ~SpriteTextureRes();
+public:
+	SpriteTextureRes(const std::string &recordName,
+		Parcel::ObjStream &archive, bool flipped = false);
+	virtual ~SpriteTextureRes();
 
-	public:
-		std::string GetId() const override { return id; }
+public:
+	std::string GetId() const override { return id; }
 
-		std::unique_ptr<std::istream> Open() const override
-		{
-			throw ResLoadExn("Attempted to open internal texture.");
-		}
+	std::unique_ptr<std::istream> Open() const override
+	{
+		throw ResLoadExn("Attempted to open internal texture.");
+	}
 
-		bool IsGenerated() const override { return true; }
-		const ImageData *GetImageData() override { return &imageData; }
+	bool IsGenerated() const override { return true; }
+	const ImageData *GetImageData() override { return &imageData; }
 
-	private:
-		std::string id;
-		ImageData imageData;
-		bool flipped;
+private:
+	std::string id;
+	ImageData imageData;
+	bool flipped;
 };
 
 }  // namespace Display
