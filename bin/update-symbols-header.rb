@@ -21,7 +21,6 @@ if !version
 end
 
 class FaCategory
-	attr_reader :name, :symbols
 
 	def initialize(name)
 		@name = name
@@ -48,19 +47,18 @@ class FaCategory
 end
 
 class FaSymbol
-	attr_reader :id, :unicode
 
 	def initialize(id, unicode)
 		@id = ident(id)
 		@unicode = unicode
 	end
-	
+
 	def ident(s)
 		s.upcase.gsub(/[^A-Z0-9]/, '_')
 	end
 
 	def draw
-		puts "\t#{@id} = 0x#{unicode},"
+		puts "\t#{@id} = 0x#{@unicode},"
 	end
 end
 
