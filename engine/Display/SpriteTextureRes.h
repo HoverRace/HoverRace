@@ -72,7 +72,6 @@ public:
 private:
 	std::string id;
 	ImageData imageData;
-	bool flipped;
 };
 
 }  // namespace Display

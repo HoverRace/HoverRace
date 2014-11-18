@@ -46,7 +46,7 @@ const MR_UInt32 MAX_TEXTURE_HEIGHT = 4096;
 SpriteTextureRes::SpriteTextureRes(const std::string &recordName,
 	Parcel::ObjStream &archive, bool flipped) :
 	SUPER(),
-	id("spriteTexture:" + recordName), flipped(flipped)
+	id("spriteTexture:" + recordName)
 {
 	MR_UInt32 numItems, itemHeight, totalHeight, width;
 
