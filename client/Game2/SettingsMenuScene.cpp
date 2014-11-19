@@ -63,7 +63,7 @@ namespace {
 
 SettingsMenuScene::SettingsMenuScene(Display::Display &display,
                                      GameDirector &director) :
-	SUPER(display, director, "Settings", "Settings")
+	SUPER(display, director, _("Settings"), "Settings")
 {
 	typedef Display::UiViewModel::Alignment Alignment;
 
@@ -77,15 +77,15 @@ SettingsMenuScene::SettingsMenuScene(Display::Display &display,
 
 	size_t row = 0;
 	menuGrid->AddGridCell(row++, 0,
-		new MenuItemButton<AudioSettingsScene>(display, director, "Profile", false));
+		new MenuItemButton<AudioSettingsScene>(display, director, _("Profile"), false));
 	menuGrid->AddGridCell(row++, 0,
-		new MenuItemButton<AudioSettingsScene>(display, director, "Audio"));
+		new MenuItemButton<AudioSettingsScene>(display, director, _("Audio")));
 	menuGrid->AddGridCell(row++, 0,
-		new MenuItemButton<AudioSettingsScene>(display, director, "Video", false));
+		new MenuItemButton<AudioSettingsScene>(display, director, _("Video"), false));
 	menuGrid->AddGridCell(row++, 0,
-		new MenuItemButton<AudioSettingsScene>(display, director, "Network", false));
+		new MenuItemButton<AudioSettingsScene>(display, director, _("Network"), false));
 	menuGrid->AddGridCell(row++, 0,
-		new MenuItemButton<AudioSettingsScene>(display, director, "Advanced", false));
+		new MenuItemButton<AudioSettingsScene>(display, director, _("Advanced"), false));
 }
 
 SettingsMenuScene::~SettingsMenuScene()
