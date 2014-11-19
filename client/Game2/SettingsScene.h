@@ -1,5 +1,5 @@
 
-// AudioSettingsScene.h
+// SettingsScene.h
 //
 // Copyright (c) 2014 Michael Imamura.
 //
@@ -21,22 +21,46 @@
 
 #pragma once
 
-#include "SettingsScene.h"
+#include "../../engine/Display/FlexGrid.h"
+
+#include "DialogScene.h"
 
 namespace HoverRace {
 namespace Client {
 
 /**
- * Audio settings dialog.
+ * Base for settings pages.
  * @author Michael Imamura
  */
-class AudioSettingsScene : public SettingsScene
+class SettingsScene : public DialogScene
 {
-	using SUPER = SettingsScene;
+	using SUPER = DialogScene;
 
 public:
-	AudioSettingsScene(Display::Display &display, GameDirector &director);
-	virtual ~AudioSettingsScene() { }
+	SettingsScene(Display::Display &display, GameDirector &director,
+		const std::string &title, const std::string &name);
+	virtual ~SettingsScene() { }
+
+private:
+	void AddSettingLabel(size_t row, const std::string &label);
+
+public:
+	template<typename T>
+	typename std::enable_if<
+		std::is_base_of<Display::UiViewModel, T>::value,
+		std::shared_ptr<T>
+		>::type
+		AddSetting(const std::string &label, T *child)
+	{
+		AddSettingLabel(curRow, label);
+		auto cell = settingsGrid->AddGridCell(curRow, 1, child);
+		curRow++;
+		return cell->GetContents();
+	}
+
+private:
+	std::shared_ptr<Display::FlexGrid> settingsGrid;
+	size_t curRow;
 };
 
 }  // namespace Client

@@ -21,15 +21,7 @@
 
 #include "../StdAfx.h"
 
-#include "../../engine/Control/Controller.h"
-#include "../../engine/Display/Button.h"
-#include "../../engine/Display/Display.h"
-#include "../../engine/Display/FlexGrid.h"
 #include "../../engine/Display/Label.h"
-#include "../../engine/Display/ScreenFade.h"
-#include "../../engine/Util/Log.h"
-
-#include "GameDirector.h"
 
 #include "AudioSettingsScene.h"
 
@@ -39,40 +31,13 @@ namespace HoverRace {
 namespace Client {
 
 AudioSettingsScene::AudioSettingsScene(Display::Display &display,
-                                       GameDirector &director) :
-	SUPER(display, director, "Settings > Audio", "Audio Settings")
+	GameDirector &director) :
+	SUPER(display, director, _("Audio"), "Audio Settings")
 {
-	typedef Display::UiViewModel::Alignment Alignment;
 	const auto &s = display.styles;
 
-	auto root = GetContentRoot();
-
-	settingsGrid = root->AddChild(new Display::FlexGrid(display));
-	settingsGrid->SetPos(640, 60);
-	settingsGrid->SetAlignment(Alignment::N);
-
-	size_t col = 0;
-	{
-		auto &cell = settingsGrid->GetColumnDefault(col++);
-		cell.SetAlignment(Alignment::E);
-		cell.SetFill(true);
-	}
-	{
-		auto &cell = settingsGrid->GetColumnDefault(col++);
-		cell.SetAlignment(Alignment::W);
-		cell.SetFill(true);
-	}
-
-	size_t row = 0;
-	col = 0;
-	settingsGrid->AddGridCell(row, col++,
-		new Display::Label("Sound Effects", s.bodyFont, s.bodyFg));
-	settingsGrid->AddGridCell(row, col++,
+	AddSetting(_("Sound Effects"),
 		new Display::Label("( disabled )", s.bodyFont, s.bodyFg));
-}
-
-AudioSettingsScene::~AudioSettingsScene()
-{
 }
 
 }  // namespace Client
