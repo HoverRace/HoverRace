@@ -84,7 +84,7 @@ void Button::Init(const std::string &text)
 	label->SetAlignment(Alignment::CENTER);
 	label->AttachView(display);
 
-	background.reset(new FillBox(0, 0, 0x3f00007f));
+	background.reset(new FillBox(0, 0, s.buttonBg));
 	background->AttachView(display);
 }
 
