@@ -10,8 +10,8 @@
 #	define VC_EXTRALEAN
 #	define WIN32_LEAN_AND_MEAN
 
-// Minimum Windows version: XP
-#	define WINVER _WIN32_WINNT_VISTA 
+	// Minimum Windows version: 7
+#	define WINVER _WIN32_WINNT_WIN7
 
 #	define _CRT_SECURE_NO_DEPRECATE
 #	define _SCL_SECURE_NO_DEPRECATE
