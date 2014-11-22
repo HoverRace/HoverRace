@@ -43,27 +43,28 @@ namespace Client {
  */
 class TestLabScene : public FormScene
 {
-	typedef FormScene SUPER;
-	public:
-		TestLabScene(Display::Display &display, GameDirector &director,
-			const std::string &startingModuleName="");
-		virtual ~TestLabScene();
+	using SUPER = FormScene;
 
-	public:
-		class LabModule;
-		class ModuleButtonBase;
-		void AddModuleButton(ModuleButtonBase *btn);
+public:
+	TestLabScene(Display::Display &display, GameDirector &director,
+		const std::string &startingModuleName = "");
+	virtual ~TestLabScene();
 
-	public:
-		virtual void OnScenePushed();
-		virtual void PrepareRender();
-		virtual void Render();
+public:
+	class LabModule;
+	class ModuleButtonBase;
+	void AddModuleButton(ModuleButtonBase *btn);
 
-	private:
-		const std::string startingModuleName;
-		double btnPosY;
-		std::unique_ptr<Display::ScreenFade> fader;
-		std::shared_ptr<ModuleButtonBase> startingModuleBtn;
+public:
+	virtual void OnScenePushed();
+	virtual void PrepareRender();
+	virtual void Render();
+
+private:
+	const std::string startingModuleName;
+	double btnPosY;
+	std::unique_ptr<Display::ScreenFade> fader;
+	std::shared_ptr<ModuleButtonBase> startingModuleBtn;
 };
 
 }  // namespace Client
