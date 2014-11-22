@@ -28,8 +28,7 @@
 
 #include "Emitter.h"
 
-namespace Log = HoverRace::Util::Log;
-namespace Str = HoverRace::Util::Str;
+using namespace HoverRace::Util;
 using namespace yaml;
 
 #define YAML_STR(s) ((yaml_char_t*)(s))
@@ -42,6 +41,9 @@ namespace {
 	const std::locale stdLocale("C");
 	boost::format intFmt("%d", stdLocale);
 	boost::format floatFmt("%g", stdLocale);
+
+	const size_t MAX_STRING_LEN =
+		static_cast<size_t>(std::numeric_limits<int>::max());
 }
 
 /**
@@ -231,10 +233,19 @@ void Emitter::EndSeq()
  */
 void Emitter::Value(const std::string &val)
 {
+	int len;
+	if (val.length() > MAX_STRING_LEN) {
+		HR_LOG(warning) <<
+			"YAML string exceeds maximum length (truncated): " << val.length();
+		len = static_cast<int>(MAX_STRING_LEN);
+	}
+	else {
+		len = static_cast<int>(val.length());
+	}
+
 	yaml_event_t event;
-	yaml_scalar_event_initialize(&event, NULL, NULL,
-		YAML_STR(val.c_str()), val.length(),
-		1, 1, YAML_ANY_SCALAR_STYLE);
+	yaml_scalar_event_initialize(&event, nullptr, nullptr,
+		YAML_STR(val.c_str()), len, 1, 1, YAML_ANY_SCALAR_STYLE);
 	if(!yaml_emitter_emit(&emitter, &event)) {
 		throw EmitterExn("Unable to write scalar value");
 	}
@@ -242,14 +253,24 @@ void Emitter::Value(const std::string &val)
 
 /**
  * Write a single string value.
- * @param val The value (may not be NULL).
+ * @param val The value (may not be @c nullptr).
  */
 void Emitter::Value(const char *val)
 {
+	size_t slen = strlen(val);
+	int len;
+	if (slen > MAX_STRING_LEN) {
+		HR_LOG(warning) <<
+			"YAML string exceeds maximum length (truncated): " << slen;
+		len = static_cast<int>(MAX_STRING_LEN);
+	}
+	else {
+		len = static_cast<int>(slen);
+	}
+
 	yaml_event_t event;
-	yaml_scalar_event_initialize(&event, NULL, NULL,
-		YAML_STR(val), strlen(val),
-		1, 1, YAML_ANY_SCALAR_STYLE);
+	yaml_scalar_event_initialize(&event, nullptr, nullptr,
+		YAML_STR(val), len, 1, 1, YAML_ANY_SCALAR_STYLE);
 	if(!yaml_emitter_emit(&emitter, &event)) {
 		throw EmitterExn("Unable to write scalar value");
 	}
