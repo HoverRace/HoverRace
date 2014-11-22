@@ -8,6 +8,7 @@
 	// Exclude rarely-used stuff from Windows headers
 #	define VC_EXTRALEAN
 #	define WIN32_LEAN_AND_MEAN
+#	define NOMINMAX
 
 	// Minimum Windows version: 7
 #	define WINVER _WIN32_WINNT_WIN7

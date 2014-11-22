@@ -9,6 +9,7 @@
 	// Exclude rarely-used stuff from Windows headers
 #	define VC_EXTRALEAN
 #	define WIN32_LEAN_AND_MEAN
+#	define NOMINMAX
 
 	// Minimum Windows version: 7
 #	define WINVER _WIN32_WINNT_WIN7
@@ -80,16 +81,6 @@
 
 #include <luabind/luabind.hpp>
 #include <luabind/object.hpp>
-
-// Don't use the min/max macros; use std::min and std::max from the STL.
-#ifdef min
-#	undef min
-#endif
-#ifdef max
-#	undef max
-#endif
-using std::min;
-using std::max;
 
 #ifdef _
 #	undef _

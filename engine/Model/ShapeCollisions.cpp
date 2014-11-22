@@ -25,6 +25,9 @@
 
 #include "ShapeCollisions.h"
 
+using std::min;
+using std::max;
+
 namespace HoverRace {
 namespace Model {
 

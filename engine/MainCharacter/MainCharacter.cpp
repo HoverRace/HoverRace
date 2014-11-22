@@ -644,7 +644,7 @@ int MainCharacter::InternalSimulate(MR_SimulationTime pDuration, Model::Level *p
 			if(lAbsoluteSpeed < eSteadySpeed[mHoverModel] / 3)
 				lFrictionAmplifier = 0.4;
 			else if((lAbsoluteSpeed > eSteadySpeed[mHoverModel]) && (lAbsoluteSpeed < 2.5 * eSteadySpeed[mHoverModel]))
-				lFrictionAmplifier = min(1.7, 1.1 + 2.5 * (lAbsoluteSpeed / eSteadySpeed[0] - 1.0));
+				lFrictionAmplifier = std::min(1.7, 1.1 + 2.5 * (lAbsoluteSpeed / eSteadySpeed[0] - 1.0));
 
 			double lConstantPart = pDuration * lFrictionAmplifier * eFrictionAccell[mHoverModel] / lAbsoluteSpeed;
 
