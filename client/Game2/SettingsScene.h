@@ -58,6 +58,9 @@ public:
 		return cell->GetContents();
 	}
 
+protected:
+	static Vec2 SLIDER_SIZE;
+
 private:
 	std::shared_ptr<Display::FlexGrid> settingsGrid;
 	size_t curRow;

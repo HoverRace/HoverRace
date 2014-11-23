@@ -28,6 +28,10 @@
 namespace HoverRace {
 namespace Client {
 
+/// Default size for settings sliders.
+Vec2 SettingsScene::SLIDER_SIZE = Vec2(200, 20);
+
+
 SettingsScene::SettingsScene(Display::Display &display, GameDirector &director,
 	const std::string &title, const std::string &name) :
 	SUPER(display, director, std::string(_("Settings")) + " // " + title, name),

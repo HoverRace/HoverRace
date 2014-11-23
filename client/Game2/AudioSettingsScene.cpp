@@ -37,11 +37,10 @@ AudioSettingsScene::AudioSettingsScene(Display::Display &display,
 	audioCfg(Config::GetInstance()->audio), origAudioCfg(audioCfg)
 {
 	using namespace Display;
-	const auto &s = display.styles;
 
 	auto sfxVolumeSlider = AddSetting(_("Sound Effects"),
 		new Slider(display, 0, 1.0, 0.1));
-	sfxVolumeSlider->SetSize(200, 20);
+	sfxVolumeSlider->SetSize(SLIDER_SIZE);
 	sfxVolumeSlider->SetValue(audioCfg.sfxVolume);
 	sfxVolumeSlider->GetValueChangedSignal().connect([&](double val) {
 		audioCfg.sfxVolume = val;
