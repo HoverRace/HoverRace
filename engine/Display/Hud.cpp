@@ -60,8 +60,6 @@ Hud::HudChild &Hud::HudChild::operator=(HudChild &&other)
  * @param display The display child elements will be attached to.
  * @param player The target player this HUD is viewing.
  * @param track The track being played.
- * @param size The size of the container.
- * @param clip Enable (default) or disable clipping of child widgets.
  * @param layoutFlags Optional layout flags.
  */
 Hud::Hud(Display &display, std::shared_ptr<Player::Player> player,
