@@ -517,6 +517,18 @@ ButtonModule::ButtonModule(Display::Display &display, GameDirector &director) :
 	slider->SetSize(sliderSize);
 	slider->SetValue(-30);
 	slider->SetAlignment(Alignment::N);
+
+	slider = root->AddChild(new Slider(display, 50, 150, 10));
+	slider->SetPos(640, 420);
+	slider->SetSize(sliderSize);
+	slider->SetValue(80);
+	slider->SetAlignment(Alignment::N);
+
+	slider = root->AddChild(new Slider(display, -150, -50, 10));
+	slider->SetPos(640, 480);
+	slider->SetSize(sliderSize);
+	slider->SetValue(-80);
+	slider->SetAlignment(Alignment::N);
 }
 
 void ButtonModule::OnMessageClicked()

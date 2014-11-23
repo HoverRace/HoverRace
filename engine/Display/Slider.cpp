@@ -91,19 +91,29 @@ void Slider::Layout()
 	background->SetSize(size);
 	
 	double scale = w / (max - min);
-	double zeroPoint = -min * scale;
 	double offset, len;
-	if (value < 0) {
-		len = -value * scale;
-		offset = zeroPoint - len;
+	if (min > 0) {
+		len = (value - min) * scale;
+		offset = 0;
 	}
-	else if (value > 0) {
-		len = value * scale;
-		offset = zeroPoint;
+	else if (max < 0) {
+		len = -(value - max) * scale;
+		offset = w - len;
 	}
 	else {
-		len = 0;
-		offset = zeroPoint;
+		double zeroPoint = -min * scale;
+		if (value < 0) {
+			len = -value * scale;
+			offset = zeroPoint - len;
+		}
+		else if (value > 0) {
+			len = value * scale;
+			offset = zeroPoint;
+		}
+		else {
+			len = 0;
+			offset = zeroPoint;
+		}
 	}
 
 	indicator->SetPos(offset, 0);
