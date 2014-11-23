@@ -56,204 +56,219 @@ namespace Client {
 
 class TestLabScene::LabModule : public FormScene /*{{{*/
 {
-	typedef FormScene SUPER;
-	public:
-		LabModule(Display::Display &display, GameDirector &director,
-			const std::string &title);
-		virtual ~LabModule() { }
+	using SUPER = FormScene;
 
-	private:
-		void OnCancel();
+public:
+	LabModule(Display::Display &display, GameDirector &director,
+		const std::string &title);
+	virtual ~LabModule() { }
 
-	public:
-		virtual void AttachController(Control::InputEventController &controller);
-		virtual void DetachController(Control::InputEventController &controller);
-		virtual void PrepareRender();
-		virtual void Render();
+private:
+	void OnCancel();
 
-	protected:
-		Display::Display &display;
-		GameDirector &director;
-		const std::string title;
-	private:
-		std::unique_ptr<Display::ScreenFade> fader;
-		std::shared_ptr<Display::ActionButton> cancelBtn;
-		boost::signals2::connection cancelConn;
+public:
+	virtual void AttachController(Control::InputEventController &controller);
+	virtual void DetachController(Control::InputEventController &controller);
+	virtual void PrepareRender();
+	virtual void Render();
+
+protected:
+	Display::Display &display;
+	GameDirector &director;
+	const std::string title;
+private:
+	std::unique_ptr<Display::ScreenFade> fader;
+	std::shared_ptr<Display::ActionButton> cancelBtn;
+	boost::signals2::connection cancelConn;
 }; //}}}
 
 class TestLabScene::ModuleButtonBase : public Display::Button /*{{{*/
 {
-	typedef Display::Button SUPER;
-	public:
-		ModuleButtonBase(Display::Display &display, GameDirector &director,
-			const std::string &text) :
-			SUPER(display, text), display(display), director(director)
-		{
-		}
+	using SUPER = Display::Button;
 
-		virtual void LaunchScene() = 0;
+public:
+	ModuleButtonBase(Display::Display &display, GameDirector &director,
+		const std::string &text) :
+		SUPER(display, text), display(display), director(director)
+	{
+	}
 
-	protected:
-		Display::Display &display;
-		GameDirector &director;
+	virtual void LaunchScene() = 0;
+
+protected:
+	Display::Display &display;
+	GameDirector &director;
 }; //}}}
 
 namespace {
-	template<typename Module>
-	class ModuleButton : public TestLabScene::ModuleButtonBase /*{{{*/
-	{
-		typedef TestLabScene::ModuleButtonBase SUPER;
-		public:
-			ModuleButton(Display::Display &display, GameDirector &director,
-				const std::string &text) :
-				SUPER(display, director, text)
-			{
-				GetClickedSignal().connect(std::bind(&ModuleButton::LaunchScene, this));
-			}
 
-			virtual void LaunchScene()
-			{
-				director.RequestPushScene(std::make_shared<Module>(display, director));
-			}
-	}; //}}}
+template<typename Module>
+class ModuleButton : public TestLabScene::ModuleButtonBase /*{{{*/
+{
+	using SUPER = TestLabScene::ModuleButtonBase;
 
-	template<class T>
-	void AddModule(TestLabScene &scene, Display::Display &display,
-                   GameDirector &director, const std::string &name)
+public:
+	ModuleButton(Display::Display &display, GameDirector &director,
+		const std::string &text) :
+		SUPER(display, director, text)
 	{
-		scene.AddModuleButton(new ModuleButton<T>(display, director, name));
+		GetClickedSignal().connect(std::bind(&ModuleButton::LaunchScene, this));
 	}
+
+	virtual void LaunchScene()
+	{
+		director.RequestPushScene(std::make_shared<Module>(display, director));
+	}
+}; //}}}
+
+template<class T>
+void AddModule(TestLabScene &scene, Display::Display &display,
+	GameDirector &director, const std::string &name)
+{
+	scene.AddModuleButton(new ModuleButton<T>(display, director, name));
 }
+
+}  // namespace
 
 namespace Module {
-	class LayoutModule : public TestLabScene::LabModule /*{{{*/
-	{
-		typedef TestLabScene::LabModule SUPER;
-		public:
-			LayoutModule(Display::Display &display, GameDirector &director);
-			virtual ~LayoutModule() { }
 
-		private:
-			void AddAlignmentTestElem(
-				Display::UiViewModel::Alignment alignment,
-				const std::string &label, double x, double y);
+class LayoutModule : public TestLabScene::LabModule /*{{{*/
+{
+	using SUPER = TestLabScene::LabModule;
 
-		public:
-			void OnDisplayConfigChanged();
+public:
+	LayoutModule(Display::Display &display, GameDirector &director);
+	virtual ~LayoutModule() { }
 
-		private:
-			boost::signals2::scoped_connection displayConfigChangedConn;
-			std::shared_ptr<Display::FillBox> displayInfoBox;
-			std::shared_ptr<Display::Label> displayInfoLbl;
-	}; //}}}
+private:
+	void AddAlignmentTestElem(
+		Display::UiViewModel::Alignment alignment,
+		const std::string &label, double x, double y);
 
-	class ButtonModule : public TestLabScene::LabModule /*{{{*/
-	{
-		typedef TestLabScene::LabModule SUPER;
-		public:
-			ButtonModule(Display::Display &display, GameDirector &director);
-			virtual ~ButtonModule() { }
+public:
+	void OnDisplayConfigChanged();
 
-		private:
-			void OnMessageClicked();
+private:
+	boost::signals2::scoped_connection displayConfigChangedConn;
+	std::shared_ptr<Display::FillBox> displayInfoBox;
+	std::shared_ptr<Display::Label> displayInfoLbl;
+}; //}}}
 
-		private:
-			std::shared_ptr<Display::Button> messageBtn;
-	}; //}}}
+class ButtonModule : public TestLabScene::LabModule /*{{{*/
+{
+	using SUPER = TestLabScene::LabModule;
 
-	class LabelModule : public TestLabScene::LabModule /*{{{*/
-	{
-		typedef TestLabScene::LabModule SUPER;
-		public:
-			LabelModule(Display::Display &display, GameDirector &director);
-			virtual ~LabelModule() { }
+public:
+	ButtonModule(Display::Display &display, GameDirector &director);
+	virtual ~ButtonModule() { }
 
-		private:
-			void AdjustWrapWidth(double amt);
+private:
+	void OnMessageClicked();
 
-		private:
-			std::shared_ptr<Display::FillBox> wrapBox;
-			std::shared_ptr<Display::Label> wrapLbl;
-	}; //}}}
+private:
+	std::shared_ptr<Display::Button> messageBtn;
+}; //}}}
 
-	class IconModule : public TestLabScene::LabModule /*{{{*/
-	{
-		typedef TestLabScene::LabModule SUPER;
-		public:
-			IconModule(Display::Display &display, GameDirector &director);
-			virtual ~IconModule() { }
-	}; //}}}
+class LabelModule : public TestLabScene::LabModule /*{{{*/
+{
+	using SUPER = TestLabScene::LabModule;
 
-	class TransitionModule : public TestLabScene::LabModule /*{{{*/
-	{
-		typedef TestLabScene::LabModule SUPER;
-		public:
-			TransitionModule(Display::Display &display, GameDirector &director);
-			virtual ~TransitionModule() { }
+public:
+	LabelModule(Display::Display &display, GameDirector &director);
+	virtual ~LabelModule() { }
 
-		protected:
-			virtual void OnPhaseChanged(Phase oldPhase);
-			virtual void OnStateChanged(State oldState);
-			virtual void OnPhaseTransition(double progress);
-			virtual void OnStateTransition(double progress);
+private:
+	void AdjustWrapWidth(double amt);
 
-		private:
-			std::shared_ptr<Display::Label> phaseLbl;
-			std::shared_ptr<Display::FillBox> phaseBox;
-			std::shared_ptr<Display::Label> stateLbl;
-			std::shared_ptr<Display::FillBox> stateBox;
-	}; //}}}
+private:
+	std::shared_ptr<Display::FillBox> wrapBox;
+	std::shared_ptr<Display::Label> wrapLbl;
+}; //}}}
 
-	class HudModule : public TestLabScene::LabModule /*{{{*/
-	{
-		typedef TestLabScene::LabModule SUPER;
-		public:
-			HudModule(Display::Display &display, GameDirector &director);
-			virtual ~HudModule();
+class IconModule : public TestLabScene::LabModule /*{{{*/
+{
+	using SUPER = TestLabScene::LabModule;
 
-		private:
-			static std::unique_ptr<Player::Player> InitPlayer();
+public:
+	IconModule(Display::Display &display, GameDirector &director);
+	virtual ~IconModule() { }
+}; //}}}
 
-		public:
-			virtual void Advance(Util::OS::timestamp_t tick);
-			virtual void PrepareRender();
-			virtual void Render();
+class TransitionModule : public TestLabScene::LabModule /*{{{*/
+{
+	using SUPER = TestLabScene::LabModule;
 
-		private:
-			std::shared_ptr<Player::Player> player;
-			std::unique_ptr<Display::Hud> hud;
-	}; //}}}
+public:
+	TransitionModule(Display::Display &display, GameDirector &director);
+	virtual ~TransitionModule() { }
 
-	class FlexGridModule : public TestLabScene::LabModule /*{{{*/
-	{
-		typedef TestLabScene::LabModule SUPER;
-		public:
-			FlexGridModule(Display::Display &display, GameDirector &director);
-			virtual ~FlexGridModule() { }
+protected:
+	virtual void OnPhaseChanged(Phase oldPhase);
+	virtual void OnStateChanged(State oldState);
+	virtual void OnPhaseTransition(double progress);
+	virtual void OnStateTransition(double progress);
 
-		public:
-			void Layout() override;
+private:
+	std::shared_ptr<Display::Label> phaseLbl;
+	std::shared_ptr<Display::FillBox> phaseBox;
+	std::shared_ptr<Display::Label> stateLbl;
+	std::shared_ptr<Display::FillBox> stateBox;
+}; //}}}
 
-		private:
-			std::shared_ptr<Display::FlexGrid> grid;
-			std::shared_ptr<Display::FlexGrid> sideGrid;
-			std::shared_ptr<Display::FillBox> gridSizeBox;
-	}; //}}}
+class HudModule : public TestLabScene::LabModule /*{{{*/
+{
+	using SUPER = TestLabScene::LabModule;
 
-	class PictureModule : public TestLabScene::LabModule /*{{{*/
-	{
-		typedef TestLabScene::LabModule SUPER;
-		public:
-			PictureModule(Display::Display &display, GameDirector &director);
-			virtual ~PictureModule() { }
+public:
+	HudModule(Display::Display &display, GameDirector &director);
+	virtual ~HudModule();
 
-		private:
-			std::shared_ptr<Display::Picture> picture;
-	}; //}}}
-}
+private:
+	static std::unique_ptr<Player::Player> InitPlayer();
+
+public:
+	virtual void Advance(Util::OS::timestamp_t tick);
+	virtual void PrepareRender();
+	virtual void Render();
+
+private:
+	std::shared_ptr<Player::Player> player;
+	std::unique_ptr<Display::Hud> hud;
+}; //}}}
+
+class FlexGridModule : public TestLabScene::LabModule /*{{{*/
+{
+	using SUPER = TestLabScene::LabModule;
+
+public:
+	FlexGridModule(Display::Display &display, GameDirector &director);
+	virtual ~FlexGridModule() { }
+
+public:
+	void Layout() override;
+
+private:
+	std::shared_ptr<Display::FlexGrid> grid;
+	std::shared_ptr<Display::FlexGrid> sideGrid;
+	std::shared_ptr<Display::FillBox> gridSizeBox;
+}; //}}}
+
+class PictureModule : public TestLabScene::LabModule /*{{{*/
+{
+	using SUPER = TestLabScene::LabModule;
+
+public:
+	PictureModule(Display::Display &display, GameDirector &director);
+	virtual ~PictureModule() { }
+
+private:
+	std::shared_ptr<Display::Picture> picture;
+}; //}}}
+
+}  // namespace Module
 
 TestLabScene::TestLabScene(Display::Display &display, GameDirector &director,
-                           const std::string &startingModuleName) :
+	const std::string &startingModuleName) :
 	SUPER(display, "Test Lab"),
 	startingModuleName(startingModuleName), btnPosY(60)
 {
@@ -313,8 +328,7 @@ void TestLabScene::Render()
 //{{{ TestLabScene::LabModule //////////////////////////////////////////////////
 
 TestLabScene::LabModule::LabModule(Display::Display &display,
-                                   GameDirector &director,
-                                   const std::string &title) :
+	GameDirector &director, const std::string &title) :
 	SUPER(display, "Lab Module (" + title + ")"),
 	display(display), director(director), title(title)
 {
@@ -591,7 +605,7 @@ IconModule::IconModule(Display::Display &display, GameDirector &director) :
 //{{{ TransitionModule ////////////////////////////////////////////////////////
 
 TransitionModule::TransitionModule(Display::Display &display,
-                                   GameDirector &director) :
+	GameDirector &director) :
 	SUPER(display, director, "Transition")
 {
 	SetPhaseTransitionDuration(3000);
