@@ -22,6 +22,7 @@
 #include "../StdAfx.h"
 
 #include "../../engine/Display/Label.h"
+#include "../../engine/Display/Slider.h"
 
 #include "AudioSettingsScene.h"
 
@@ -32,12 +33,31 @@ namespace Client {
 
 AudioSettingsScene::AudioSettingsScene(Display::Display &display,
 	GameDirector &director) :
-	SUPER(display, director, _("Audio"), "Audio Settings")
+	SUPER(display, director, _("Audio"), "Audio Settings"),
+	audioCfg(Config::GetInstance()->audio), origAudioCfg(audioCfg)
 {
+	using namespace Display;
 	const auto &s = display.styles;
 
-	AddSetting(_("Sound Effects"),
-		new Display::Label("( disabled )", s.bodyFont, s.bodyFg));
+	auto sfxVolumeSlider = AddSetting(_("Sound Effects"),
+		new Slider(display, 0, 1.0, 0.1));
+	sfxVolumeSlider->SetSize(200, 20);
+	sfxVolumeSlider->SetValue(audioCfg.sfxVolume);
+	sfxVolumeSlider->GetValueChangedSignal().connect([&](double val) {
+		audioCfg.sfxVolume = val;
+	});
+}
+
+void AudioSettingsScene::OnOk()
+{
+	Config::GetInstance()->Save();
+	SUPER::OnOk();
+}
+
+void AudioSettingsScene::OnCancel()
+{
+	audioCfg = origAudioCfg;
+	SUPER::OnCancel();
 }
 
 }  // namespace Client

@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include "../../engine/Util/Config.h"
+
 #include "SettingsScene.h"
 
 namespace HoverRace {
@@ -37,6 +39,16 @@ class AudioSettingsScene : public SettingsScene
 public:
 	AudioSettingsScene(Display::Display &display, GameDirector &director);
 	virtual ~AudioSettingsScene() { }
+
+protected:
+	void OnOk() override;
+	void OnCancel() override;
+
+private:
+	Util::Config::cfg_audio_t &audioCfg;
+	const Util::Config::cfg_audio_t origAudioCfg;
+
+	boost::signals2::scoped_connection sfxVolumeConn;
 };
 
 }  // namespace Client
