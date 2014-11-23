@@ -38,10 +38,10 @@ namespace Display {
  */
 ClickRegion::ClickRegion(Display &display, uiLayoutFlags_t layoutFlags) :
 	SUPER(layoutFlags),
+	display(display),
 	size(0, 0), autoSize(true), needsSizing(true),
 	enabled(true), pressed(false)
 {
-	HR_UNUSED(display);
 }
 
 /**
@@ -50,12 +50,13 @@ ClickRegion::ClickRegion(Display &display, uiLayoutFlags_t layoutFlags) :
  * @param size The fixed button size.
  * @param layoutFlags Optional layout flags.
  */
-ClickRegion::ClickRegion(Display &display, const Vec2 &size, uiLayoutFlags_t layoutFlags) :
+ClickRegion::ClickRegion(Display &display, const Vec2 &size,
+	uiLayoutFlags_t layoutFlags) :
 	SUPER(layoutFlags),
+	display(display),
 	size(size), autoSize(false), needsSizing(false),
 	enabled(true), pressed(false)
 {
-	HR_UNUSED(display);
 }
 
 ClickRegion::~ClickRegion()

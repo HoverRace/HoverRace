@@ -1,7 +1,7 @@
 
 // Checkbox.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -39,8 +39,8 @@ namespace Display {
  * @param layoutFlags Optional layout flags.
  */
 Checkbox::Checkbox(Display &display, const std::string &text,
-                   uiLayoutFlags_t layoutFlags) :
-	SUPER(display, text, layoutFlags), display(display),
+	uiLayoutFlags_t layoutFlags) :
+	SUPER(display, text, layoutFlags),
 	checked(false)
 {
 	Init();
@@ -54,8 +54,8 @@ Checkbox::Checkbox(Display &display, const std::string &text,
  * @param layoutFlags Optional layout flags.
  */
 Checkbox::Checkbox(Display &display, const Vec2 &size, const std::string &text,
-                   uiLayoutFlags_t layoutFlags) :
-	SUPER(display, size, text, layoutFlags), display(display),
+	uiLayoutFlags_t layoutFlags) :
+	SUPER(display, size, text, layoutFlags),
 	checked(false)
 {
 	Init();

@@ -114,6 +114,8 @@ public:
 protected:
 	bool TestHit(const Vec2 &pos);
 
+protected:
+	Display &display;
 private:
 	Vec2 size;
 	bool autoSize;

@@ -89,7 +89,6 @@ public:
 	virtual void FireModelUpdate(int prop);
 
 private:
-	Display &display;
 	bool checked;
 
 	typedef std::pair<bool, bool> iconsKey_t;  ///< enabled, checked

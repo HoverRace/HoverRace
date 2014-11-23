@@ -1,7 +1,7 @@
 
 // Button.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ namespace {
  */
 Button::Button(Display &display, const std::string &text,
                uiLayoutFlags_t layoutFlags) :
-	SUPER(display, layoutFlags), display(display),
+	SUPER(display, layoutFlags),
 	paddingTop(DEFAULT_PADDING_HEIGHT), paddingRight(DEFAULT_PADDING_WIDTH),
 	paddingBottom(DEFAULT_PADDING_HEIGHT), paddingLeft(DEFAULT_PADDING_WIDTH),
 	iconGap(DEFAULT_ICON_GAP)
@@ -65,7 +65,7 @@ Button::Button(Display &display, const std::string &text,
  */
 Button::Button(Display &display, const Vec2 &size, const std::string &text,
                uiLayoutFlags_t layoutFlags) :
-	SUPER(display, size, layoutFlags), display(display),
+	SUPER(display, size, layoutFlags),
 	paddingTop(DEFAULT_PADDING_HEIGHT), paddingRight(DEFAULT_PADDING_WIDTH),
 	paddingBottom(DEFAULT_PADDING_HEIGHT), paddingLeft(DEFAULT_PADDING_WIDTH)
 {

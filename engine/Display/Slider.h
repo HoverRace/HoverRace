@@ -88,7 +88,6 @@ public:
 	virtual void FireModelUpdate(int prop);
 
 private:
-	Display &display;
 	double min;
 	double max;
 	double step;

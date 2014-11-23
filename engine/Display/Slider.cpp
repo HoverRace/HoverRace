@@ -44,7 +44,7 @@ namespace Display {
  */
 Slider::Slider(Display &display, double min, double max, double step,
 	uiLayoutFlags_t layoutFlags) :
-	SUPER(display, layoutFlags), display(display),
+	SUPER(display, layoutFlags),
 	min(min), max(max), step(step),
 	value(min)
 {
