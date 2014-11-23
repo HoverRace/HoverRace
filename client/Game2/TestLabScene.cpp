@@ -463,35 +463,36 @@ void LayoutModule::OnDisplayConfigChanged()
 ButtonModule::ButtonModule(Display::Display &display, GameDirector &director) :
 	SUPER(display, director, "Button")
 {
-	typedef Display::UiViewModel::Alignment Alignment;
+	using namespace Display;
+	using Alignment = UiViewModel::Alignment;
 
-	Display::Container *root = GetRoot();
+	Container *root = GetRoot();
 
-	std::shared_ptr<Display::Button> btn;
+	std::shared_ptr<Button> btn;
 
-	messageBtn = root->AddChild(new Display::Button(display, "Show Message"));
+	messageBtn = root->AddChild(new Button(display, "Show Message"));
 	messageBtn->SetPos(640, 0);
 	messageBtn->SetAlignment(Alignment::N);
 	messageBtn->GetClickedSignal().connect(
 		std::bind(&ButtonModule::OnMessageClicked, this));
 
-	btn = root->AddChild(new Display::Button(display, "Disabled Button"));
+	btn = root->AddChild(new Button(display, "Disabled Button"));
 	btn->SetEnabled(false);
 	btn->SetPos(640, 60);
 	btn->SetAlignment(Alignment::N);
-	btn->GetClickedSignal().connect([](Display::ClickRegion&) {
+	btn->GetClickedSignal().connect([](ClickRegion&) {
 		Log::Error("Clicked on disabled button :(");
 	});
 
-	auto icon = std::make_shared<Display::SymbolIcon>(60, 60, 0xf0ad, 0xbfffffff);
+	auto icon = std::make_shared<SymbolIcon>(60, 60, 0xf0ad, 0xbfffffff);
 	icon->AttachView(display);
 
-	btn = root->AddChild(new Display::Button(display, "Button With Icon"));
+	btn = root->AddChild(new Button(display, "Button With Icon"));
 	btn->SetPos(640, 120);
 	btn->SetIcon(icon);
 	btn->SetAlignment(Alignment::N);
 
-	btn = root->AddChild(new Display::Checkbox(display, "Checkbox"));
+	btn = root->AddChild(new Checkbox(display, "Checkbox"));
 	btn->SetPos(640, 180);
 	btn->SetAlignment(Alignment::N);
 }
