@@ -48,78 +48,79 @@ namespace Display {
  */
 class MR_DllDeclare ClickRegion : public UiViewModel
 {
-	typedef UiViewModel SUPER;
+	using SUPER = UiViewModel;
 
-	public:
-		struct Props
-		{
-			enum {
-				/// Fired when a fixed size is set or auto-sizing is enabled.
-				SIZE = SUPER::Props::NEXT_,
-				ENABLED,
-				PRESSED,
-				NEXT_,  ///< First index for subclasses.
-			};
+public:
+	struct Props
+	{
+		enum {
+			/// Fired when a fixed size is set or auto-sizing is enabled.
+			SIZE = SUPER::Props::NEXT_,
+			ENABLED,
+			PRESSED,
+			NEXT_,  ///< First index for subclasses.
 		};
+	};
 
-	public:
-		ClickRegion(Display &display, uiLayoutFlags_t layoutFlags=0);
-		ClickRegion(Display &display, const Vec2 &size, uiLayoutFlags_t layoutFlags=0);
-		virtual ~ClickRegion();
+public:
+	ClickRegion(Display &display, uiLayoutFlags_t layoutFlags = 0);
+	ClickRegion(Display &display, const Vec2 &size,
+		uiLayoutFlags_t layoutFlags = 0);
+	virtual ~ClickRegion();
 
-	public:
-		virtual void AttachView(Display &disp) { AttachViewDynamic(disp, this); }
+public:
+	virtual void AttachView(Display &disp) { AttachViewDynamic(disp, this); }
 
-	public:
-		virtual bool OnMouseMoved(const Vec2 &pos);
-		virtual bool OnMousePressed(const Control::Mouse::Click &click);
-		virtual bool OnMouseReleased(const Control::Mouse::Click &click);
+public:
+	virtual bool OnMouseMoved(const Vec2 &pos);
+	virtual bool OnMousePressed(const Control::Mouse::Click &click);
+	virtual bool OnMouseReleased(const Control::Mouse::Click &click);
 
-	public:
-		typedef boost::signals2::signal<void(ClickRegion&)> clickedSignal_t;
-		clickedSignal_t &GetClickedSignal() { return clickedSignal; }
-	protected:
-		virtual void FireClickedSignal();
+public:
+	typedef boost::signals2::signal<void(ClickRegion&)> clickedSignal_t;
+	clickedSignal_t &GetClickedSignal() { return clickedSignal; }
+protected:
+	virtual void FireClickedSignal();
 
-	public:
-		const Vec2 &GetSize();
-		void SetSize(const Vec2 &size);
-		/// Convenience function for SetSize(const Vec2&).
-		void SetSize(double w, double h) { SetSize(Vec2(w, h)); }
+public:
+	const Vec2 &GetSize();
+	void SetSize(const Vec2 &size);
+	/// Convenience function for SetSize(const Vec2&).
+	void SetSize(double w, double h) { SetSize(Vec2(w, h)); }
 
-		/**
-		 * Check if automatic sizing is enabled.
-		 * @return @c true if the size is determined by the contents of the
-		 *         button, @c false if using a fixed size.
-		 */
-		bool IsAutoSize() const { return autoSize; }
-		void SetAutoSize();
+	/**
+	 * Check if automatic sizing is enabled.
+	 * @return @c true if the size is determined by the contents of the
+	 *         button, @c false if using a fixed size.
+	 */
+	bool IsAutoSize() const { return autoSize; }
+	void SetAutoSize();
 
-		/**
-		 * Check if the widget is enabled.
-		 * Disabled widgets are visible but not clickable or focusable.
-		 * @return @c true if enabled, @c false if disabled.
-		 */
-		bool IsEnabled() const { return enabled; }
-		void SetEnabled(bool enabled);
+	/**
+	 * Check if the widget is enabled.
+	 * Disabled widgets are visible but not clickable or focusable.
+	 * @return @c true if enabled, @c false if disabled.
+	 */
+	bool IsEnabled() const { return enabled; }
+	void SetEnabled(bool enabled);
 
-	protected:
-		bool IsPressed() const { return pressed; }
-		void SetPressed(bool pressed);
+protected:
+	bool IsPressed() const { return pressed; }
+	void SetPressed(bool pressed);
 
-	public:
-		virtual Vec3 Measure() { return size.Promote(); }
+public:
+	virtual Vec3 Measure() { return size.Promote(); }
 
-	protected:
-		bool TestHit(const Vec2 &pos);
+protected:
+	bool TestHit(const Vec2 &pos);
 
-	private:
-		Vec2 size;
-		bool autoSize;
-		bool needsSizing;
-		bool enabled;
-		bool pressed;
-		clickedSignal_t clickedSignal;
+private:
+	Vec2 size;
+	bool autoSize;
+	bool needsSizing;
+	bool enabled;
+	bool pressed;
+	clickedSignal_t clickedSignal;
 };
 
 }  // namespace Display
