@@ -87,7 +87,8 @@ void Slider::SetValue(double value)
 	if (value < min) value = min;
 	else if (value > max) value = max;
 	else {
-		//TODO: Clamp to interval.
+		// Clamp to the nearest step.
+		value = round(value * (1.0 / step)) * step;
 	}
 
 	if (this->value != value) {
