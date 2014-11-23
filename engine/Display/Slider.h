@@ -74,6 +74,10 @@ protected:
 	void OnMouseDrag(const Vec2 &relPos) override;
 
 public:
+	using valueChangedSignal_t = boost::signals2::signal<void(double)>;
+	valueChangedSignal_t &GetValueChangedSignal() { return valueChangedSignal; }
+
+public:
 	double GetMin() const { return min; }
 	double GetMax() const { return max; }
 	double GetStep() const { return step; }
@@ -97,6 +101,9 @@ private:
 	double max;
 	double step;
 	double value;
+
+	valueChangedSignal_t valueChangedSignal;
+
 	std::unique_ptr<FillBox> background;
 	std::unique_ptr<FillBox> indicator;
 	std::unique_ptr<RuleLine> zeroLine;

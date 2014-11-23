@@ -94,6 +94,7 @@ void Slider::SetValue(double value)
 	if (this->value != value) {
 		this->value = value;
 		FireModelUpdate(Props::VALUE);
+		valueChangedSignal(value);
 		RequestLayout();
 	}
 }
