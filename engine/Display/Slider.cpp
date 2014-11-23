@@ -26,6 +26,7 @@
 #include "UiFont.h"
 #include "FillBox.h"
 #include "Label.h"
+#include "RuleLine.h"
 
 #include "Slider.h"
 
@@ -57,6 +58,11 @@ Slider::Slider(Display &display, double min, double max, double step,
 
 	indicator.reset(new FillBox(0, 0, s.buttonBg));
 	indicator->AttachView(display);
+
+	if (min <= 0 && max >= 0) {
+		zeroLine.reset(new RuleLine(RuleLine::Direction::V, 1, 1, s.formFg));
+		zeroLine->AttachView(display);
+	}
 }
 
 Slider::~Slider()
@@ -102,6 +108,9 @@ void Slider::Layout()
 	}
 	else {
 		double zeroPoint = -min * scale;
+		zeroLine->SetLength(size.y);
+		zeroLine->SetPos(zeroPoint, 0);
+
 		if (value < 0) {
 			len = -value * scale;
 			offset = zeroPoint - len;

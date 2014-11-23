@@ -23,6 +23,7 @@
 
 #include <SDL2/SDL.h>
 
+#include "../RuleLine.h"
 #include "../Slider.h"
 #include "../FillBox.h"
 
@@ -57,6 +58,9 @@ void SdlSliderView::PrepareRender()
 	if (model.GetValue() != 0) {
 		model.GetIndicatorChild()->PrepareRender();
 	}
+	if (auto zeroLine = model.GetZeroLineChild()) {
+		zeroLine->PrepareRender();
+	}
 }
 
 void SdlSliderView::Render()
@@ -67,6 +71,9 @@ void SdlSliderView::Render()
 	model.GetBackgroundChild()->Render();
 	if (model.GetValue() != 0) {
 		model.GetIndicatorChild()->Render();
+	}
+	if (auto zeroLine = model.GetZeroLineChild()) {
+		zeroLine->Render();
 	}
 
 	display.SetUiOrigin(oldOrigin);

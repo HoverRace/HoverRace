@@ -38,6 +38,7 @@ namespace HoverRace {
 		class Display;
 		class FillBox;
 		class Label;
+		class RuleLine;
 	}
 }
 
@@ -79,6 +80,7 @@ public:
 
 	FillBox *GetBackgroundChild() const { return background.get(); }
 	FillBox *GetIndicatorChild() const { return indicator.get(); }
+	RuleLine *GetZeroLineChild() const { return zeroLine.get(); }
 
 protected:
 	virtual void Layout();
@@ -94,6 +96,7 @@ private:
 	double value;
 	std::unique_ptr<FillBox> background;
 	std::unique_ptr<FillBox> indicator;
+	std::unique_ptr<RuleLine> zeroLine;
 };
 
 }  // namespace Display
