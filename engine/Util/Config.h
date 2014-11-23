@@ -198,7 +198,7 @@ class MR_DllDeclare Config
 		} video;
 
 		struct cfg_audio_t {
-			float sfxVolume;
+			double sfxVolume;
 
 			void Load(yaml::MapNode*);
 			void Save(yaml::Emitter*);

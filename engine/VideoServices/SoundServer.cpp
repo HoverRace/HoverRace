@@ -327,7 +327,7 @@ void SoundBuffer::SetParams(int pCopy, int pDB, double pSpeed, int)
 #	endif
 
 	// Global sound effect volume setting.
-	float vol = Config::GetInstance()->audio.sfxVolume;
+	float vol = static_cast<float>(Config::GetInstance()->audio.sfxVolume);
 
 	float attenuatedVolume = vol * DirectXToLinear(pDB);
 
