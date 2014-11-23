@@ -44,6 +44,7 @@ SettingsScene::SettingsScene(Display::Display &display, GameDirector &director,
 
 	settingsGrid = root->AddChild(new FlexGrid(display));
 	settingsGrid->SetPos(640, 60);
+	settingsGrid->SetMargin(20, 10);
 	settingsGrid->SetAlignment(Alignment::N);
 
 	size_t col = 0;
