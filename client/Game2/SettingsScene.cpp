@@ -39,7 +39,6 @@ SettingsScene::SettingsScene(Display::Display &display, GameDirector &director,
 {
 	using namespace Display;
 	using Alignment = UiViewModel::Alignment;
-	const auto &s = display.styles;
 
 	auto root = GetContentRoot();
 
