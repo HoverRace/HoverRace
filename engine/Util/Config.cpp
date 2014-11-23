@@ -1055,7 +1055,7 @@ void Config::cfg_audio_t::Load(yaml::MapNode *root)
 {
 	if (root == NULL) return;
 
-	READ_FLOAT(root, sfxVolume, 0.0f, 1.0f);
+	READ_DOUBLE(root, sfxVolume, 0.0f, 1.0f);
 }
 
 void Config::cfg_audio_t::Save(yaml::Emitter *emitter)
