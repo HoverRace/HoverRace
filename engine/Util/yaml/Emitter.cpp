@@ -42,8 +42,7 @@ namespace {
 	boost::format intFmt("%d", stdLocale);
 	boost::format floatFmt("%g", stdLocale);
 
-	const size_t MAX_STRING_LEN =
-		static_cast<size_t>(std::numeric_limits<int>::max());
+	const size_t MAX_STRING_LEN = 65536;
 }
 
 /**
@@ -236,7 +235,10 @@ void Emitter::Value(const std::string &val)
 	int len;
 	if (val.length() > MAX_STRING_LEN) {
 		HR_LOG(warning) <<
-			"YAML string exceeds maximum length (truncated): " << val.length();
+			"Truncated YAML string "
+			"(size is " << val.length() << ", "
+			"max is " << MAX_STRING_LEN << "): \"" <<
+			val.substr(0, 64) << "\"...";
 		len = static_cast<int>(MAX_STRING_LEN);
 	}
 	else {
@@ -260,8 +262,12 @@ void Emitter::Value(const char *val)
 	size_t slen = strlen(val);
 	int len;
 	if (slen > MAX_STRING_LEN) {
+		std::string excerpt(val, 64);
 		HR_LOG(warning) <<
-			"YAML string exceeds maximum length (truncated): " << slen;
+			"Truncated YAML string "
+			"(size is " << slen << ", "
+			"max is " << MAX_STRING_LEN << "): \"" <<
+			excerpt << "\"...";
 		len = static_cast<int>(MAX_STRING_LEN);
 	}
 	else {
