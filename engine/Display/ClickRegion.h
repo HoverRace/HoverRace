@@ -76,6 +76,13 @@ public:
 	bool OnMousePressed(const Control::Mouse::Click &click) override;
 	bool OnMouseReleased(const Control::Mouse::Click &click) override;
 
+protected:
+	/**
+	 * Handle when the mouse is dragged over the widget.
+	 * @param relPos The relative position.
+	 */
+	virtual void OnMouseDrag(const Vec2 &relPos) { }
+
 public:
 	typedef boost::signals2::signal<void(ClickRegion&)> clickedSignal_t;
 	clickedSignal_t &GetClickedSignal() { return clickedSignal; }
@@ -113,6 +120,7 @@ public:
 
 protected:
 	bool TestHit(const Vec2 &pos);
+	Vec2 ScreenPosToRel(const Vec2 &pos);
 
 protected:
 	Display &display;

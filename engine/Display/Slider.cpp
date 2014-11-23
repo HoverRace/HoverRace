@@ -23,6 +23,7 @@
 
 #include "../Control/Action.h"
 #include "../Util/Config.h"
+#include "../Util/Log.h"
 #include "UiFont.h"
 #include "FillBox.h"
 #include "Label.h"
@@ -69,6 +70,11 @@ Slider::~Slider()
 {
 }
 
+void Slider::OnMouseDrag(const Vec2 &relPos)
+{
+	SetValue(((relPos.x * (max - min)) / GetSize().x) + min);
+}
+
 /**
  * Set the value.
  *
@@ -80,6 +86,9 @@ void Slider::SetValue(double value)
 {
 	if (value < min) value = min;
 	else if (value > max) value = max;
+	else {
+		//TODO: Clamp to interval.
+	}
 
 	if (this->value != value) {
 		this->value = value;

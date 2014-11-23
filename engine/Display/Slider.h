@@ -70,6 +70,9 @@ public:
 public:
 	virtual void AttachView(Display &disp) { AttachViewDynamic(disp, this); }
 
+protected:
+	void OnMouseDrag(const Vec2 &relPos) override;
+
 public:
 	double GetMin() const { return min; }
 	double GetMax() const { return max; }

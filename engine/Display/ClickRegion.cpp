@@ -67,6 +67,9 @@ bool ClickRegion::OnMouseMoved(const Vec2 &pos)
 {
 	if (IsEnabled() && TestHit(pos)) {
 		//TODO: Set focus.
+		if (IsPressed()) {
+			OnMouseDrag(ScreenPosToRel(pos));
+		}
 		return true;
 	}
 	else {
@@ -79,6 +82,7 @@ bool ClickRegion::OnMousePressed(const Control::Mouse::Click &click)
 {
 	if (IsEnabled() && TestHit(click.pos)) {
 		SetPressed(true);
+		OnMouseDrag(ScreenPosToRel(click.pos));
 		return true;
 	}
 	else {
@@ -189,6 +193,25 @@ bool ClickRegion::TestHit(const Vec2 &pos)
 		pos.y >= boundsPos.y &&
 		(pos.x < boundsPos.x + boundsSize.x) &&
 		(pos.y < boundsPos.y + boundsSize.y);
+}
+
+/**
+ * Convert screen coordinates to relative (widget) coordinates.
+ * @param pos The screen coordinates.
+ * @return The relative coordinates.
+ */
+Vec2 ClickRegion::ScreenPosToRel(const Vec2 &pos)
+{
+	auto boundsPos = GetView()->GetScreenPos();
+	auto boundsSize = GetView()->GetScreenSize();
+	auto &widgetSize = GetSize();
+
+	auto relScrPos = pos - boundsPos;
+
+	return {
+		(relScrPos.x * widgetSize.x) / boundsSize.x,
+		(relScrPos.y * widgetSize.y) / boundsSize.y
+	};
 }
 
 }  // namespace Display
