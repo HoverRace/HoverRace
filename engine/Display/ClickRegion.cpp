@@ -65,12 +65,11 @@ ClickRegion::~ClickRegion()
 
 bool ClickRegion::OnMouseMoved(const Vec2 &pos)
 {
-	if (IsEnabled() && TestHit(pos)) {
-		//TODO: Set focus.
+	if (IsEnabled()) {
 		if (IsPressed()) {
 			OnMouseDrag(ScreenPosToRel(pos));
 		}
-		return true;
+		return TestHit(pos);
 	}
 	else {
 		//TODO: Unset focus.
