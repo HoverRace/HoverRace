@@ -37,6 +37,7 @@
 #include "../Res.h"
 #include "../RuleLine.h"
 #include "../ScreenFade.h"
+#include "../Slider.h"
 #include "../SymbolIcon.h"
 #include "../UiFont.h"
 #include "../Wallpaper.h"
@@ -48,6 +49,7 @@
 #include "SdlPictureView.h"
 #include "SdlRuleLineView.h"
 #include "SdlScreenFadeView.h"
+#include "SdlSliderView.h"
 #include "SdlSymbolIconView.h"
 #include "SdlTexture.h"
 #include "SdlLegacyDisplay.h"
@@ -296,6 +298,11 @@ void SdlDisplay::AttachView(RuleLine &model)
 void SdlDisplay::AttachView(ScreenFade &model)
 {
 	model.SetView(std::unique_ptr<View>(new SdlScreenFadeView(*this, model)));
+}
+
+void SdlDisplay::AttachView(Slider &model)
+{
+	model.SetView(std::unique_ptr<View>(new SdlSliderView(*this, model)));
 }
 
 void SdlDisplay::AttachView(SymbolIcon &model)

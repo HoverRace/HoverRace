@@ -74,6 +74,7 @@ class MR_DllDeclare SdlDisplay : public Display
 		void AttachView(Picture &model) override;
 		void AttachView(RuleLine &model) override;
 		void AttachView(ScreenFade &model) override;
+		void AttachView(Slider &model) override;
 		void AttachView(SymbolIcon &model) override;
 		void AttachView(Wallpaper &model) override;
 

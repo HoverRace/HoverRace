@@ -47,6 +47,7 @@ namespace HoverRace {
 		class Picture;
 		class RuleLine;
 		class ScreenFade;
+		class Slider;
 		class SymbolIcon;
 		class Wallpaper;
 	}
@@ -76,6 +77,7 @@ class MR_DllDeclare Display :
 	public ViewAttacher<Picture>,
 	public ViewAttacher<RuleLine>,
 	public ViewAttacher<ScreenFade>,
+	public ViewAttacher<Slider>,
 	public ViewAttacher<SymbolIcon>,
 	public ViewAttacher<Wallpaper>
 {

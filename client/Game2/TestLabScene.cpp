@@ -35,6 +35,7 @@
 #include "../../engine/Display/MediaRes.h"
 #include "../../engine/Display/Picture.h"
 #include "../../engine/Display/ScreenFade.h"
+#include "../../engine/Display/Slider.h"
 #include "../../engine/Display/Speedometer.h"
 #include "../../engine/Display/SymbolIcon.h"
 #include "../../engine/MainCharacter/MainCharacter.h"
@@ -469,6 +470,7 @@ ButtonModule::ButtonModule(Display::Display &display, GameDirector &director) :
 	Container *root = GetRoot();
 
 	std::shared_ptr<Button> btn;
+	std::shared_ptr<Slider> slider;
 
 	messageBtn = root->AddChild(new Button(display, "Show Message"));
 	messageBtn->SetPos(640, 0);
@@ -495,6 +497,26 @@ ButtonModule::ButtonModule(Display::Display &display, GameDirector &director) :
 	btn = root->AddChild(new Checkbox(display, "Checkbox"));
 	btn->SetPos(640, 180);
 	btn->SetAlignment(Alignment::N);
+
+	auto sliderSize = Vec2(200, 20);
+
+	slider = root->AddChild(new Slider(display, 0, 100, 10));
+	slider->SetPos(640, 240);
+	slider->SetSize(sliderSize);
+	slider->SetValue(30);
+	slider->SetAlignment(Alignment::N);
+
+	slider = root->AddChild(new Slider(display, -50, 50, 10));
+	slider->SetPos(640, 300);
+	slider->SetSize(sliderSize);
+	slider->SetValue(-30);
+	slider->SetAlignment(Alignment::N);
+
+	slider = root->AddChild(new Slider(display, -100, 0, 10));
+	slider->SetPos(640, 360);
+	slider->SetSize(sliderSize);
+	slider->SetValue(-30);
+	slider->SetAlignment(Alignment::N);
 }
 
 void ButtonModule::OnMessageClicked()
