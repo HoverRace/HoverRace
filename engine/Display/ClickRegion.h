@@ -69,12 +69,12 @@ public:
 	virtual ~ClickRegion();
 
 public:
-	virtual void AttachView(Display &disp) { AttachViewDynamic(disp, this); }
+	void AttachView(Display &disp) override { AttachViewDynamic(disp, this); }
 
 public:
-	virtual bool OnMouseMoved(const Vec2 &pos);
-	virtual bool OnMousePressed(const Control::Mouse::Click &click);
-	virtual bool OnMouseReleased(const Control::Mouse::Click &click);
+	bool OnMouseMoved(const Vec2 &pos) override;
+	bool OnMousePressed(const Control::Mouse::Click &click) override;
+	bool OnMouseReleased(const Control::Mouse::Click &click) override;
 
 public:
 	typedef boost::signals2::signal<void(ClickRegion&)> clickedSignal_t;
