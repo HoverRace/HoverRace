@@ -81,7 +81,7 @@ protected:
 	 * Handle when the mouse is dragged over the widget.
 	 * @param relPos The relative position.
 	 */
-	virtual void OnMouseDrag(const Vec2 &relPos) { }
+	virtual void OnMouseDrag(const Vec2 &relPos) { HR_UNUSED(relPos); }
 
 public:
 	typedef boost::signals2::signal<void(ClickRegion&)> clickedSignal_t;
