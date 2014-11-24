@@ -164,8 +164,11 @@ void Sprite::Blt(int pX, int pY, Viewport2D *pDest, eAlignment pHAlign, eAlignme
 
 void Sprite::StrBlt(int pX, int pY, const char *pStr, Viewport2D *pDest, eAlignment pHAlign, eAlignment pVAlign, int pScaling) const
 {
+	const size_t MAX_LEN = 1024;
+
 	if((pStr != NULL) && (pStr[0] != 0)) {
-		int lStrLen = strlen(pStr);
+		size_t slen = strlen(pStr);
+		int lStrLen = static_cast<int>(std::min(slen, MAX_LEN));
 		int lStep;
 
 		if(pScaling == 0) {
@@ -257,8 +260,8 @@ char Ascii2Simple(char pSrc)
 {
 	char lReturnValue = 0;
 
-	if((pSrc >= 32) && (pSrc < 127)) {
-		lReturnValue = pSrc - 32 + 1;
+	if ((pSrc >= 32) && (pSrc < 127)) {
+		lReturnValue = static_cast<char>(static_cast<int>(pSrc) - 32 + 1);
 	}
 	return lReturnValue;
 }
