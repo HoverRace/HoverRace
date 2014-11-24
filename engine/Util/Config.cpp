@@ -696,18 +696,12 @@ void Config::ResetToDefaults()
 	video.xRes = 800;
 	video.yRes = 450;
 
-	// Set current resolution as default.
-	SDL_DisplayMode displayMode;
-	if (SDL_GetCurrentDisplayMode(0, &displayMode) < 0) {
-		HR_LOG(warning) << "Unable to retrieve current screen resolution: " <<
-			SDL_GetError();
-		video.xResFullscreen = 800;
-		video.yResFullscreen = 600;
-	}
-	else {
-		video.xResFullscreen = displayMode.w;
-		video.yResFullscreen = displayMode.h;
-	}
+	// Use this as a sensible default.
+	// We used to try to detect the current screen resolution, but we
+	// initialize these defaults before the SDL video subsystem is initialized.
+	video.xResFullscreen = 1280;
+	video.yResFullscreen = 720;
+
 	video.stackedSplitscreen = true;
 
 	audio.sfxVolume = 1.0;
