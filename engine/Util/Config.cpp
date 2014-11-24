@@ -698,7 +698,7 @@ void Config::ResetToDefaults()
 
 	// Set current resolution as default.
 	SDL_DisplayMode displayMode;
-	if (SDL_GetCurrentDisplayMode(0, &displayMode) == 0) {
+	if (SDL_GetCurrentDisplayMode(0, &displayMode) < 0) {
 		HR_LOG(warning) << "Unable to retrieve current screen resolution: " <<
 			SDL_GetError();
 		video.xResFullscreen = 800;
