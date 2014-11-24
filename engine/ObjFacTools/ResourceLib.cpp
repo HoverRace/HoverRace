@@ -70,7 +70,7 @@ ResourceLib::ResourceLib(const Util::OS::path_t &filename)
 	recordFile = new ClassicRecordFile();
 
 	if (!recordFile->OpenForRead(filename)) {
-		throw ObjStreamExn(filename, _("File not found or not readable"));
+		throw ObjStreamExn(filename, "File not found or not readable");
 	}
 
 	recordFile->SelectRecord(0);
@@ -83,9 +83,9 @@ ResourceLib::ResourceLib(const Util::OS::path_t &filename)
 	os >> magic;
 	if (magic != expectedMagic) {
 		throw ObjStreamExn(filename,
-			boost::str(boost::format("%s: %s %08x, %s %08x") %
-            _("Invalid magic number") % _("Expected") %
-				expectedMagic % _("got") % magic));
+			boost::str(boost::format(
+				"Invalid magic number: Expected %08x, got %08x") %
+				expectedMagic % magic));
 	}
 
 	LoadRes(os, bitmaps, this);
