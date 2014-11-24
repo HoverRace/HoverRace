@@ -59,65 +59,66 @@ namespace SDL {
  */
 class MR_DllDeclare SdlDisplay : public Display
 {
-	typedef Display SUPER;
-	public:
-		SdlDisplay(const std::string &windowTitle="");
-		virtual ~SdlDisplay();
+	using SUPER = Display;
 
-	public:
-		// ViewAttacher
-		void AttachView(Button &model) override;
-		void AttachView(ClickRegion &model) override;
-		void AttachView(Container &model) override;
-		void AttachView(FillBox &model) override;
-		void AttachView(Label &model) override;
-		void AttachView(Picture &model) override;
-		void AttachView(RuleLine &model) override;
-		void AttachView(ScreenFade &model) override;
-		void AttachView(Slider &model) override;
-		void AttachView(SymbolIcon &model) override;
-		void AttachView(Wallpaper &model) override;
+public:
+	SdlDisplay(const std::string &windowTitle="");
+	virtual ~SdlDisplay();
 
-	public:
-		std::shared_ptr<SdlTexture> LoadRes(std::shared_ptr<Res<Texture>> res);
+public:
+	// ViewAttacher
+	void AttachView(Button &model) override;
+	void AttachView(ClickRegion &model) override;
+	void AttachView(Container &model) override;
+	void AttachView(FillBox &model) override;
+	void AttachView(Label &model) override;
+	void AttachView(Picture &model) override;
+	void AttachView(RuleLine &model) override;
+	void AttachView(ScreenFade &model) override;
+	void AttachView(Slider &model) override;
+	void AttachView(SymbolIcon &model) override;
+	void AttachView(Wallpaper &model) override;
 
-	public:
-		// Display
-		VideoServices::VideoBuffer &GetLegacyDisplay() const override { return *legacyDisplay; }
-		void OnDesktopModeChanged(int width, int height) override;
-		void OnDisplayConfigChanged() override;
-		void Flip() override;
-		void Screenshot() override;
+public:
+	std::shared_ptr<SdlTexture> LoadRes(std::shared_ptr<Res<Texture>> res);
 
-	private:
-		void ApplyVideoMode();
+public:
+	// Display
+	VideoServices::VideoBuffer &GetLegacyDisplay() const override { return *legacyDisplay; }
+	void OnDesktopModeChanged(int width, int height) override;
+	void OnDisplayConfigChanged() override;
+	void Flip() override;
+	void Screenshot() override;
 
-	public:
-		int GetScreenWidth() const { return width; }
-		int GetScreenHeight() const { return height; }
+private:
+	void ApplyVideoMode();
 
-		SDL_Window *GetWindow() const { return window; }
-		SDL_Renderer *GetRenderer() const { return renderer; }
+public:
+	int GetScreenWidth() const { return width; }
+	int GetScreenHeight() const { return height; }
 
-	public:
-		// Text-renderer-specific utilities.
-		TTF_Font *LoadTtfFont(const UiFont &font);
+	SDL_Window *GetWindow() const { return window; }
+	SDL_Renderer *GetRenderer() const { return renderer; }
 
-	public:
-		// SDL-specific utilities.
-		void DrawUiTexture(SDL_Texture *texture, const Vec2 &relPos,
-			uiLayoutFlags_t layoutFlags=0);
+public:
+	// Text-renderer-specific utilities.
+	TTF_Font *LoadTtfFont(const UiFont &font);
 
-	private:
-		std::string windowTitle;
-		SDL_Window *window;
-		SDL_Renderer *renderer;
-		int width, height;
-		VideoServices::VideoBuffer *legacyDisplay;
+public:
+	// SDL-specific utilities.
+	void DrawUiTexture(SDL_Texture *texture, const Vec2 &relPos,
+		uiLayoutFlags_t layoutFlags = 0);
 
-		typedef std::pair<std::string, int> loadedFontKey;
-		typedef std::map<loadedFontKey, TTF_Font*> loadedFonts_t;
-		loadedFonts_t loadedFonts;
+private:
+	std::string windowTitle;
+	SDL_Window *window;
+	SDL_Renderer *renderer;
+	int width, height;
+	VideoServices::VideoBuffer *legacyDisplay;
+
+	typedef std::pair<std::string, int> loadedFontKey;
+	typedef std::map<loadedFontKey, TTF_Font*> loadedFonts_t;
+	loadedFonts_t loadedFonts;
 };
 
 }  // namespace SDL
