@@ -59,14 +59,15 @@ int Sprite::GetItemWidth() const
 
 void Sprite::Serialize(Parcel::ObjStream &pArchive)
 {
+	using namespace Parcel;
+
 	if(pArchive.IsWriting()) {
 		pArchive << mNbItem;
 		pArchive << mItemHeight;
 		pArchive << mTotalHeight;
 		pArchive << mWidth;
 
-		pArchive.Write(mData, mWidth * mTotalHeight);
-
+		pArchive.Write(mData, static_cast<size_t>(mWidth * mTotalHeight));
 	}
 	else {
 		delete[]mData;
@@ -77,9 +78,14 @@ void Sprite::Serialize(Parcel::ObjStream &pArchive)
 		pArchive >> mTotalHeight;
 		pArchive >> mWidth;
 
-		mData = new MR_UInt8[mWidth * mTotalHeight];
+		if (mNbItem <= 0) throw ObjStreamExn("mNbItem must be > 0");
+		if (mItemHeight <= 0) throw ObjStreamExn("mItemHeight must be > 0");
+		if (mTotalHeight <= 0) throw ObjStreamExn("mTotalHeight must be > 0");
+		if (mWidth <= 0) throw ObjStreamExn("mWidth must be > 0");
 
-		pArchive.Read(mData, mWidth * mTotalHeight);
+		size_t totalSz = static_cast<size_t>(mWidth * mTotalHeight);
+		mData = new MR_UInt8[totalSz];
+		pArchive.Read(mData, totalSz);
 
 	}
 }
