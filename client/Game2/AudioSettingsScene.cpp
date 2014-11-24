@@ -23,10 +23,16 @@
 
 #include "../../engine/Display/Label.h"
 #include "../../engine/Display/Slider.h"
+#include "../../engine/ObjFac1/ObjFac1Res.h"
+#include "../../engine/ObjFacTools/ResourceLib.h"
+#include "../../engine/Util/DllObjectFactory.h"
+#include "../../engine/Util/Log.h"
+#include "../../engine/VideoServices/SoundServer.h"
 
 #include "AudioSettingsScene.h"
 
 using namespace HoverRace::Util;
+namespace SoundServer = HoverRace::VideoServices::SoundServer;
 
 namespace HoverRace {
 namespace Client {
@@ -34,7 +40,8 @@ namespace Client {
 AudioSettingsScene::AudioSettingsScene(Display::Display &display,
 	GameDirector &director) :
 	SUPER(display, director, _("Audio"), "Audio Settings"),
-	audioCfg(Config::GetInstance()->audio), origAudioCfg(audioCfg)
+	audioCfg(Config::GetInstance()->audio), origAudioCfg(audioCfg),
+	testSound(LoadSound(MR_SND_START))
 {
 	using namespace Display;
 
@@ -44,7 +51,24 @@ AudioSettingsScene::AudioSettingsScene(Display::Display &display,
 	sfxVolumeSlider->SetValue(audioCfg.sfxVolume);
 	sfxVolumeSlider->GetValueChangedSignal().connect([&](double val) {
 		audioCfg.sfxVolume = val;
+		SoundServer::Play(testSound);
 	});
+}
+
+/**
+ * Loads a sound from the resources.
+ * @param id The resource ID.
+ * @return The sound effect, or @c nullptr if it fails to load.
+ */
+VideoServices::ShortSound *AudioSettingsScene::LoadSound(int id)
+{
+	auto res = DllObjectFactory::GetResourceLib().GetShortSound(id);
+	if (!res) {
+		HR_LOG(warning) << "Unable to load sound ID: " << id;
+		return nullptr;
+	}
+
+	return res->GetSound();
 }
 
 void AudioSettingsScene::OnOk()

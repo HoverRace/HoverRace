@@ -26,6 +26,12 @@
 #include "SettingsScene.h"
 
 namespace HoverRace {
+	namespace VideoServices {
+		class ShortSound;
+	}
+}
+
+namespace HoverRace {
 namespace Client {
 
 /**
@@ -40,6 +46,9 @@ public:
 	AudioSettingsScene(Display::Display &display, GameDirector &director);
 	virtual ~AudioSettingsScene() { }
 
+private:
+	static VideoServices::ShortSound *LoadSound(int id);
+
 protected:
 	void OnOk() override;
 	void OnCancel() override;
@@ -47,6 +56,8 @@ protected:
 private:
 	Util::Config::cfg_audio_t &audioCfg;
 	const Util::Config::cfg_audio_t origAudioCfg;
+
+	VideoServices::ShortSound *testSound;
 
 	boost::signals2::scoped_connection sfxVolumeConn;
 };
