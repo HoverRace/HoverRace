@@ -53,51 +53,51 @@ namespace Display {
  */
 class MR_DllDeclare RuleLine : public UiViewModel
 {
-	typedef UiViewModel SUPER;
+	using SUPER = UiViewModel;
 
-	public:
-		struct Props
+public:
+	struct Props
+	{
+		enum
 		{
-			enum
-			{
-				DIRECTION = SUPER::Props::NEXT_,
-				SIZE,
-				COLOR,
-				NEXT_,  ///< First index for subclasses.
-			};
+			DIRECTION = SUPER::Props::NEXT_,
+			SIZE,
+			COLOR,
+			NEXT_,  ///< First index for subclasses.
 		};
+	};
 
-		enum class Direction { H, V };
+	enum class Direction { H, V };
 
-	public:
-		RuleLine(Direction direction, double length, double width,
-			const Color color, uiLayoutFlags_t layoutFlags = 0);
-		virtual ~RuleLine() { }
+public:
+	RuleLine(Direction direction, double length, double width,
+		const Color color, uiLayoutFlags_t layoutFlags = 0);
+	virtual ~RuleLine() { }
 
-	public:
-		virtual void AttachView(Display &disp) { AttachViewDynamic(disp, this); }
+public:
+	virtual void AttachView(Display &disp) { AttachViewDynamic(disp, this); }
 
-	public:
-		Direction GetDirection() const { return direction; }
-		void SetDirection(Direction direction);
+public:
+	Direction GetDirection() const { return direction; }
+	void SetDirection(Direction direction);
 
-		double GetLength() const { return length; }
-		void SetLength(double length);
+	double GetLength() const { return length; }
+	void SetLength(double length);
 
-		double GetWidth() const { return width; }
-		void SetWidth(double width);
+	double GetWidth() const { return width; }
+	void SetWidth(double width);
 
-		const Color GetColor() const { return color; }
-		void SetColor(const Color color);
+	const Color GetColor() const { return color; }
+	void SetColor(const Color color);
 
-	public:
-		Vec3 Measure() override;
+public:
+	Vec3 Measure() override;
 
-	private:
-		Direction direction;
-		double length;
-		double width;
-		Color color;
+private:
+	Direction direction;
+	double length;
+	double width;
+	Color color;
 };
 
 }  // namespace Display

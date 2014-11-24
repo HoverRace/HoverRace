@@ -50,19 +50,20 @@ namespace SDL {
  */
 class MR_DllDeclare SdlRuleLineView : public SdlView<RuleLine>
 {
-	typedef SdlView<RuleLine> SUPER;
-	public:
-		SdlRuleLineView(SdlDisplay &disp, RuleLine &model) :
-			SUPER(disp, model) { }
-		virtual ~SdlRuleLineView() { }
+	using SUPER = SdlView<RuleLine>;
 
-	public:
-		void OnModelUpdate(int) override { }
+public:
+	SdlRuleLineView(SdlDisplay &disp, RuleLine &model) :
+		SUPER(disp, model) { }
+	virtual ~SdlRuleLineView() { }
 
-	public:
-		Vec3 Measure() override;
-		void PrepareRender() override { }
-		void Render() override;
+public:
+	void OnModelUpdate(int) override { }
+
+public:
+	Vec3 Measure() override;
+	void PrepareRender() override { }
+	void Render() override;
 };
 
 }  // namespace SDL

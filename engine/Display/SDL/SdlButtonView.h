@@ -50,21 +50,22 @@ namespace SDL {
  */
 class MR_DllDeclare SdlButtonView : public SdlView<Button>
 {
-	typedef SdlView<Button> SUPER;
-	public:
-		SdlButtonView(SdlDisplay &disp, Button &model) :
-			SUPER(disp, model) { }
-		virtual ~SdlButtonView() { }
+	using SUPER = SdlView<Button>;
 
-	public:
-		void OnModelUpdate(int) override { }
+public:
+	SdlButtonView(SdlDisplay &disp, Button &model) :
+		SUPER(disp, model) { }
+	virtual ~SdlButtonView() { }
 
-	public:
-		Vec2 GetScreenPos() const override;
-		Vec2 GetScreenSize() const override;
-		Vec3 Measure() override;
-		void PrepareRender() override;
-		void Render() override;
+public:
+	void OnModelUpdate(int) override { }
+
+public:
+	Vec2 GetScreenPos() const override;
+	Vec2 GetScreenSize() const override;
+	Vec3 Measure() override;
+	void PrepareRender() override;
+	void Render() override;
 };
 
 }  // namespace SDL
