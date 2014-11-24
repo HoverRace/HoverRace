@@ -140,12 +140,13 @@ class MR_DllDeclare FlexGrid : public Container
 				DefaultCell() : SUPER(),
 					alignment(Alignment::NW), fill(false) { }
 				DefaultCell(DefaultCell &&o) : SUPER(),
-					alignment(o.alignment) { }
+					alignment(o.alignment), fill(o.fill) { }
 				virtual ~DefaultCell() { }
 
 			public:
 				DefaultCell &operator=(DefaultCell &&o) {
 					alignment = o.alignment;
+					fill = o.fill;
 					return *this;
 				}
 
