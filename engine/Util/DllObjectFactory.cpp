@@ -26,6 +26,7 @@
 #include "../ObjFac1/ObjFac1.h"
 #include "../Parcel/ObjStream.h"
 #include "../Util/Log.h"
+#include "../Exception.h"
 
 #include "DllObjectFactory.h"
 
@@ -44,6 +45,7 @@ class FactoryDll
 		int mRefCount;
 
 		virtual ObjectFromFactory* GetObject(int classId) const = 0;
+		virtual ObjFacTools::ResourceLib &GetResourceLib() const = 0;
 
 		// Initialisation
 		FactoryDll();
@@ -60,7 +62,12 @@ class PackageFactoryDll : public FactoryDll
 		PackageFactoryDll();
 		virtual ~PackageFactoryDll();
 
-		virtual ObjectFromFactory* GetObject(int classId) const;
+		ObjectFromFactory* GetObject(int classId) const override;
+
+		ObjFacTools::ResourceLib &GetResourceLib() const override
+		{
+			return *(package->GetResourceLib());
+		}
 
 	private:
 		ObjFac1::ObjFac1 *package;
@@ -77,7 +84,12 @@ class LocalFactoryDll : public FactoryDll
 		LocalFactoryDll(DllObjectFactory::getObject_t getObject);
 		virtual ~LocalFactoryDll();
 
-		virtual ObjectFromFactory* GetObject(int classId) const;
+		ObjectFromFactory* GetObject(int classId) const override;
+
+		ObjFacTools::ResourceLib &GetResourceLib() const override
+		{
+			throw UnimplementedExn("LocalFactoryDll::GetResourceLib");
+		}
 
 	private:
 		DllObjectFactory::getObject_t getObject;
@@ -165,6 +177,16 @@ ObjectFromFactory *DllObjectFactory::CreateObject(const ObjectFromFactoryId &pId
 	lReturnValue = lDllPtr->GetObject(pId.mClassId);
 
 	return lReturnValue;
+}
+
+/**
+ * Gets the resource library for an object factory.
+ * @param dllId Identifier for the DLL.
+ * @return The resource library.
+ */
+ObjFacTools::ResourceLib &DllObjectFactory::GetResourceLib(int dllId)
+{
+	return GetDll(dllId, TRUE)->GetResourceLib();
 }
 
 /**

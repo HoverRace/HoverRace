@@ -46,6 +46,9 @@ namespace HoverRace {
 	namespace Parcel {
 		class ObjStream;
 	}
+	namespace ObjFacTools {
+		class ResourceLib;
+	}
 }
 
 namespace HoverRace {
@@ -96,6 +99,8 @@ namespace DllObjectFactory
 
 	/// Fast Object Creation function
 	MR_DllDeclare ObjectFromFactory *CreateObject(const ObjectFromFactoryId &pId);
+
+	MR_DllDeclare ObjFacTools::ResourceLib &GetResourceLib(int dllId = 1);
 
 	// Local Dll
 	MR_DllDeclare void RegisterLocalDll(int pDLLId, getObject_t pFunc);
