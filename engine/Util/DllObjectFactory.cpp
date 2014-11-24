@@ -184,7 +184,7 @@ ObjectFromFactory *DllObjectFactory::CreateObject(const ObjectFromFactoryId &pId
  * @param dllId Identifier for the DLL.
  * @return The resource library.
  */
-ObjFacTools::ResourceLib &DllObjectFactory::GetResourceLib(int dllId)
+ObjFacTools::ResourceLib &DllObjectFactory::GetResourceLib(MR_UInt16 dllId)
 {
 	return GetDll(dllId, TRUE)->GetResourceLib();
 }
