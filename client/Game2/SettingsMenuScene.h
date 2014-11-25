@@ -43,13 +43,14 @@ namespace Client {
  */
 class SettingsMenuScene : public DialogScene
 {
-	typedef DialogScene SUPER;
-	public:
-		SettingsMenuScene(Display::Display &display, GameDirector &director);
-		virtual ~SettingsMenuScene();
+	using SUPER = DialogScene;
 
-	private:
-		std::shared_ptr<Display::FlexGrid> menuGrid;
+public:
+	SettingsMenuScene(Display::Display &display, GameDirector &director);
+	virtual ~SettingsMenuScene();
+
+private:
+	std::shared_ptr<Display::FlexGrid> menuGrid;
 };
 
 }  // namespace Client

@@ -39,30 +39,33 @@ namespace HoverRace {
 namespace Client {
 
 namespace {
-	template<class T>
-	class MenuItemButton : public Display::Button
+
+template<class T>
+class MenuItemButton : public Display::Button
+{
+	using SUPER = Display::Button;
+
+public:
+	MenuItemButton(Display::Display &display, GameDirector &director,
+		const std::string &label, bool enabled = true) :
+		SUPER(display, label)
 	{
-		typedef Display::Button SUPER;
-		public:
-			MenuItemButton(Display::Display &display, GameDirector &director,
-				const std::string &label, bool enabled=true) :
-				SUPER(display, label)
-			{
-				SetEnabled(enabled);
+		SetEnabled(enabled);
 
-				clickedConn = GetClickedSignal().connect([&](Display::ClickRegion&) {
-					director.RequestPushScene(std::make_shared<T>(display, director));
-				});
-			}
-			virtual ~MenuItemButton() { }
+		clickedConn = GetClickedSignal().connect([&](Display::ClickRegion&) {
+			director.RequestPushScene(std::make_shared<T>(display, director));
+		});
+	}
+	virtual ~MenuItemButton() { }
 
-		private:
-			boost::signals2::scoped_connection clickedConn;
-	};
-}
+private:
+	boost::signals2::scoped_connection clickedConn;
+};
+
+}  // namespace
 
 SettingsMenuScene::SettingsMenuScene(Display::Display &display,
-                                     GameDirector &director) :
+	GameDirector &director) :
 	SUPER(display, director, _("Settings"), "Settings")
 {
 	typedef Display::UiViewModel::Alignment Alignment;
