@@ -21,12 +21,8 @@
 
 #include "../StdAfx.h"
 
-#include "../../engine/Control/Controller.h"
 #include "../../engine/Display/Button.h"
-#include "../../engine/Display/Display.h"
 #include "../../engine/Display/FlexGrid.h"
-#include "../../engine/Display/ScreenFade.h"
-#include "../../engine/Util/Log.h"
 
 #include "AudioSettingsScene.h"
 #include "GameDirector.h"
