@@ -26,6 +26,7 @@
 
 #include "AudioSettingsScene.h"
 #include "GameDirector.h"
+#include "VideoSettingsScene.h"
 
 #include "SettingsMenuScene.h"
 
@@ -80,7 +81,7 @@ SettingsMenuScene::SettingsMenuScene(Display::Display &display,
 	menuGrid->AddGridCell(row++, 0,
 		new MenuItemButton<AudioSettingsScene>(display, director, _("Audio")));
 	menuGrid->AddGridCell(row++, 0,
-		new MenuItemButton<AudioSettingsScene>(display, director, _("Video"), false));
+		new MenuItemButton<VideoSettingsScene>(display, director, _("Video")));
 	menuGrid->AddGridCell(row++, 0,
 		new MenuItemButton<AudioSettingsScene>(display, director, _("Network"), false));
 	menuGrid->AddGridCell(row++, 0,
