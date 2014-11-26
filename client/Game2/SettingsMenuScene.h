@@ -30,7 +30,6 @@ namespace HoverRace {
 	namespace Display {
 		class Display;
 		class FlexGrid;
-		class ScreenFade;
 	}
 }
 
