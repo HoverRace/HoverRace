@@ -48,7 +48,7 @@ AudioSettingsScene::AudioSettingsScene(Display::Display &display,
 		new Slider(display, 0, 1.0, 0.1));
 	sfxVolumeSlider->SetSize(SLIDER_SIZE);
 	sfxVolumeSlider->SetValue(audioCfg.sfxVolume);
-	sfxVolumeSlider->GetValueChangedSignal().connect([&](double val) {
+	sfxVolumeConn = sfxVolumeSlider->GetValueChangedSignal().connect([&](double val) {
 		audioCfg.sfxVolume = val;
 		SoundServer::Play(testSound);
 	});
