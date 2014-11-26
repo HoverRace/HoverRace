@@ -55,21 +55,12 @@ struct MR_DllDeclare OS
 
 	using timestamp_t = MR_Int64;
 
-#	if defined(WITH_WIDE_PATHS) && BOOST_FILESYSTEM_VERSION == 2
-		typedef boost::filesystem::wpath path_t;
-		typedef boost::filesystem::wdirectory_iterator dirIter_t;
-		typedef boost::filesystem::wdirectory_entry dirEnt_t;
-#	else
-		typedef boost::filesystem::path path_t;
-		typedef boost::filesystem::directory_iterator dirIter_t;
-		typedef boost::filesystem::directory_entry dirEnt_t;
-#	endif
+	using path_t = boost::filesystem::path;
+	using dirIter_t = boost::filesystem::directory_iterator;
+	using dirEnt_t =  boost::filesystem::directory_entry;
 
-#	if BOOST_FILESYSTEM_VERSION == 2
-		typedef boost::filesystem::basic_filesystem_error<path_t> fs_error_t;
-#	else
-		typedef boost::filesystem::filesystem_error fs_error_t;
-#	endif
+	using fs_error_t = boost::filesystem::filesystem_error;
+
 	using pstr_t = path_t::value_type*;
 	using cpstr_t = const path_t::value_type*;
 

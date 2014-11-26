@@ -113,17 +113,9 @@ void CheckUpdateServerDialog::ShowModal(HINSTANCE hinst, HWND parent)
 						// assemble arguments for updater
 						// theoretically, the root directory of this instance of HoverRace should just
 						// be ../ but, it would be a good idea to write code that checks this in the future
-#						if BOOST_FILESYSTEM_VERSION == 2
-							OS::path_t curPath = fs::current_path<OS::path_t>();
-#						else
-							OS::path_t curPath = fs::current_path();
-#						endif
+						OS::path_t curPath = fs::current_path();
 						_wchdir(L"../");
-#						if BOOST_FILESYSTEM_VERSION == 2
-							OS::path_t hrPath = fs::current_path<OS::path_t>();
-#						else
-							OS::path_t hrPath = fs::current_path();
-#						endif
+						OS::path_t hrPath = fs::current_path();
 						_wchdir(Str::PW(curPath));
 						OS::path_t patchFile = defaultPath / Str::UP(dlPtr->updateUrl);
 

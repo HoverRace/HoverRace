@@ -42,14 +42,7 @@
 
 #endif
 
-// Prefer Boost::Filesystem v3 on Boost 1.44+.
-#include <boost/version.hpp>
-#if BOOST_VERSION >= 104400
-#	define BOOST_FILESYSTEM_VERSION 3
-#	define BOOST_FILESYSTEM_NO_DEPRECATED
-#else
-#	define BOOST_FILESYSTEM_VERSION 2
-#endif
+#define BOOST_FILESYSTEM_NO_DEPRECATED
 
 #include <locale.h>
 #include <stdio.h>

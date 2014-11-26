@@ -80,21 +80,13 @@ class MR_DllDeclare PU
 #	ifdef WITH_WIDE_PATHS
 		WU cs;
 	public:
-#		if BOOST_FILESYSTEM_VERSION == 2
-			explicit PU(const OS::path_t &path) throw() : cs(path.file_string()) { }
-#		else
-			explicit PU(const OS::path_t &path) throw() : cs(path.wstring()) { }
-#		endif
+		explicit PU(const OS::path_t &path) throw() : cs(path.wstring()) { }
 		operator const char*() const throw() { return (const char*)cs; }
 		operator const std::string() const { return std::string((const char*)cs); }
 #	else
 		std::string cs;
 	public:
-#		if BOOST_FILESYSTEM_VERSION == 2
-			explicit PU(const OS::path_t &path) throw() : cs(path.file_string()) { }
-#		else
-			explicit PU(const OS::path_t &path) throw() : cs(path.string()) { }
-#		endif
+		explicit PU(const OS::path_t &path) throw() : cs(path.string()) { }
 		operator const char*() const throw() { return cs.c_str(); }
 		operator const std::string() const { return cs; }
 #	endif
@@ -115,21 +107,13 @@ class MR_DllDeclare PW
 #	ifdef WITH_WIDE_PATHS
 		std::wstring cs;
 		public:
-#			if BOOST_FILESYSTEM_VERSION == 2
-				explicit PW(const OS::path_t &path) throw() : cs(path.file_string()) { }
-#			else
-				explicit PW(const OS::path_t &path) throw() : cs(path.wstring()) { }
-#			endif
+			explicit PW(const OS::path_t &path) throw() : cs(path.wstring()) { }
 			operator const wchar_t*() const throw() { return cs.c_str(); }
 			operator const std::wstring() const { return cs; }
 #	else
 		UW cs;
 		public:
-#			if BOOST_FILESYSTEM_VERSION == 2
-				explicit PW(const OS::path_t &path) throw() : cs(path.file_string()) { }
-#			else
-				explicit PW(const OS::path_t &path) throw() : cs(path.string()) { }
-#			endif
+			explicit PW(const OS::path_t &path) throw() : cs(path.string()) { }
 			operator const wchar_t*() const throw() { return (const wchar_t*)cs; }
 			operator const std::wstring() const { return cs; }
 #	endif
