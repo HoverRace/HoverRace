@@ -52,7 +52,9 @@ public:
 		>::type
 		AddSetting(const std::string &label, T *child)
 	{
-		AddSettingLabel(curRow, label);
+		if (!label.empty()) {
+			AddSettingLabel(curRow, label);
+		}
 		auto cell = settingsGrid->AddGridCell(curRow, 1, child);
 		curRow++;
 		return cell->GetContents();
