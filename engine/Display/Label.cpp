@@ -38,9 +38,9 @@ namespace Display {
  * @param layoutFlags Optional layout flags.
  */
 Label::Label(const std::string &text,
-             const UiFont &font,
-             Color color,
-             uiLayoutFlags_t layoutFlags) :
+	const UiFont &font,
+	Color color,
+	uiLayoutFlags_t layoutFlags) :
 	SUPER(layoutFlags),
 	text(text),
 #	ifdef _WIN32

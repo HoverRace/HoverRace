@@ -1,7 +1,7 @@
 
 // SdlLabelView.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -47,39 +47,40 @@ namespace SDL {
 
 class MR_DllDeclare SdlLabelView : public SdlView<Label>
 {
-	typedef SdlView<Label> SUPER;
-	public:
-		SdlLabelView(SdlDisplay &disp, Label &model);
-		virtual ~SdlLabelView();
+	using SUPER = SdlView<Label>;
 
-	public:
-		virtual void OnModelUpdate(int prop);
-		void OnUiScaleChanged();
+public:
+	SdlLabelView(SdlDisplay &disp, Label &model);
+	virtual ~SdlLabelView();
 
-	public:
-		virtual Vec3 Measure()
-		{
-			PrepareRender();
-			return Vec3(unscaledWidth, unscaledHeight, 0);
-		}
-		virtual void PrepareRender();
-		virtual void Render();
+public:
+	virtual void OnModelUpdate(int prop);
+	void OnUiScaleChanged();
 
-	private:
-		void UpdateBlank();
-		void UpdateTexture();
-		void UpdateTextureColor();
+public:
+	virtual Vec3 Measure()
+	{
+		PrepareRender();
+		return Vec3(unscaledWidth, unscaledHeight, 0);
+	}
+	virtual void PrepareRender();
+	virtual void Render();
 
-	private:
-		std::unique_ptr<SdlTexture> texture;
-		bool colorChanged;
-		int width;
-		int height;
-		int realWidth;
-		int realHeight;
-		double unscaledWidth;
-		double unscaledHeight;
-		boost::signals2::scoped_connection uiScaleChangedConnection;
+private:
+	void UpdateBlank();
+	void UpdateTexture();
+	void UpdateTextureColor();
+
+private:
+	std::unique_ptr<SdlTexture> texture;
+	bool colorChanged;
+	int width;
+	int height;
+	int realWidth;
+	int realHeight;
+	double unscaledWidth;
+	double unscaledHeight;
+	boost::signals2::scoped_connection uiScaleChangedConnection;
 };
 
 }  // namespace SDL

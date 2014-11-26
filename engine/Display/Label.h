@@ -53,69 +53,69 @@ namespace Display {
  */
 class MR_DllDeclare Label : public UiViewModel
 {
-	typedef UiViewModel SUPER;
+	using SUPER = UiViewModel;
 
-	public:
-		struct Props
-		{
-			enum {
-				COLOR = SUPER::Props::NEXT_,
-				FONT,
-				TEXT,
-				WRAP_WIDTH,  ///< Fired when a fixed width is set or auto-width is enabled.
-				NEXT_,  ///< First index for subclasses.
-			};
+public:
+	struct Props
+	{
+		enum {
+			COLOR = SUPER::Props::NEXT_,
+			FONT,
+			TEXT,
+			WRAP_WIDTH,  ///< Fired when a fixed width is set or auto-width is enabled.
+			NEXT_,  ///< First index for subclasses.
 		};
+	};
 
-	public:
-		Label(const std::string &text, const UiFont &font, const Color color,
-			uiLayoutFlags_t layoutFlags=0);
-		Label(double wrapWidth, const std::string &text, const UiFont &font,
-			const Color color, uiLayoutFlags_t layoutFlags=0);
-		virtual ~Label();
+public:
+	Label(const std::string &text, const UiFont &font, const Color color,
+		uiLayoutFlags_t layoutFlags = 0);
+	Label(double wrapWidth, const std::string &text, const UiFont &font,
+		const Color color, uiLayoutFlags_t layoutFlags = 0);
+	virtual ~Label();
 
-	public:
-		virtual void AttachView(Display &disp) { AttachViewDynamic(disp, this); }
+public:
+	virtual void AttachView(Display &disp) { AttachViewDynamic(disp, this); }
 
-	public:
-		/**
-		 * Check if automatic width sizing is enabled.
-		 * @return @c true if the width is determined by the longest line in
-		 *         the text, or @c false if the text is wrapped to fit a
-		 *         specific width.
-		 */
-		bool IsAutoWidth() const { return wrapWidth <= 0; }
-		void SetAutoWidth();
+public:
+	/**
+	 * Check if automatic width sizing is enabled.
+	 * @return @c true if the width is determined by the longest line in
+	 *         the text, or @c false if the text is wrapped to fit a
+	 *         specific width.
+	 */
+	bool IsAutoWidth() const { return wrapWidth <= 0; }
+	void SetAutoWidth();
 
-		const Color GetColor() const { return color; }
-		void SetColor(const Color color);
+	const Color GetColor() const { return color; }
+	void SetColor(const Color color);
 
-		const UiFont &GetFont() const { return font; }
-		void SetFont(const UiFont &font);
+	const UiFont &GetFont() const { return font; }
+	void SetFont(const UiFont &font);
 
-		const std::string &GetText() const { return text; }
-		void SetText(const std::string &text);
-#		ifdef _WIN32
-			const std::wstring &GetWText() const { return wtext; }
-#		endif
+	const std::string &GetText() const { return text; }
+	void SetText(const std::string &text);
+#	ifdef _WIN32
+		const std::wstring &GetWText() const { return wtext; }
+#	endif
 
-		/**
-		 * Returns the set width, if a fixed width is set.
-		 * @return The width.  If auto-width is enabled, the result is
-		 *         undefined (always check IsAutoWidth() first).
-		 */
-		double GetWrapWidth() const { return wrapWidth; }
-		void SetWrapWidth(double wrapWidth);
+	/**
+	 * Returns the set width, if a fixed width is set.
+	 * @return The width.  If auto-width is enabled, the result is
+	 *         undefined (always check IsAutoWidth() first).
+	 */
+	double GetWrapWidth() const { return wrapWidth; }
+	void SetWrapWidth(double wrapWidth);
 
-	private:
-		std::string text;
-#		ifdef _WIN32
-			/// Cached wide string since that's how it's used in Win32.
-			std::wstring wtext;
-#		endif
-		double wrapWidth;
-		UiFont font;
-		Color color;
+private:
+	std::string text;
+#	ifdef _WIN32
+		/// Cached wide string since that's how it's used in Win32.
+		std::wstring wtext;
+#	endif
+	double wrapWidth;
+	UiFont font;
+	Color color;
 };
 
 }  // namespace Display
