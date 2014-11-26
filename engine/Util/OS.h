@@ -47,88 +47,87 @@ namespace Util {
  * Operating system support utilities.
  * @author Michael Imamura
  */
-class MR_DllDeclare OS {
+struct MR_DllDeclare OS
+{
+	static int nibbles[256];
+	static std::locale locale;
+	static const std::locale stdLocale;
 
-	public:
-		static int nibbles[256];
-		static std::locale locale;
-		static const std::locale stdLocale;
+	using timestamp_t = MR_Int64;
 
-		typedef MR_Int64 timestamp_t;
+#	if defined(WITH_WIDE_PATHS) && BOOST_FILESYSTEM_VERSION == 2
+		typedef boost::filesystem::wpath path_t;
+		typedef boost::filesystem::wdirectory_iterator dirIter_t;
+		typedef boost::filesystem::wdirectory_entry dirEnt_t;
+#	else
+		typedef boost::filesystem::path path_t;
+		typedef boost::filesystem::directory_iterator dirIter_t;
+		typedef boost::filesystem::directory_entry dirEnt_t;
+#	endif
 
-#		if defined(WITH_WIDE_PATHS) && BOOST_FILESYSTEM_VERSION == 2
-			typedef boost::filesystem::wpath path_t;
-			typedef boost::filesystem::wdirectory_iterator dirIter_t;
-			typedef boost::filesystem::wdirectory_entry dirEnt_t;
-#		else
-			typedef boost::filesystem::path path_t;
-			typedef boost::filesystem::directory_iterator dirIter_t;
-			typedef boost::filesystem::directory_entry dirEnt_t;
-#		endif
+#	if BOOST_FILESYSTEM_VERSION == 2
+		typedef boost::filesystem::basic_filesystem_error<path_t> fs_error_t;
+#	else
+		typedef boost::filesystem::filesystem_error fs_error_t;
+#	endif
+	using pstr_t = path_t::value_type*;
+	using cpstr_t = const path_t::value_type*;
 
-#		if BOOST_FILESYSTEM_VERSION == 2
-			typedef boost::filesystem::basic_filesystem_error<path_t> fs_error_t;
-#		else
-			typedef boost::filesystem::filesystem_error fs_error_t;
-#		endif
-		typedef path_t::value_type *pstr_t;
-		typedef const path_t::value_type *cpstr_t;
+	static void SetEnv(const char *key, const char *val);
+	static void SetLocale();
 
-		static void SetEnv(const char *key, const char *val);
-		static void SetLocale();
+	struct MR_DllDeclare Resolution
+	{
+		int w;
+		int h;
+		Resolution(int w, int h) : w(w), h(h) { }
+		Resolution(const std::string &s);
+		std::string AsString() const;
+	};
+	using resolutions_t = std::set<Resolution>;
+	struct MR_DllDeclare Monitor
+	{
+		bool primary;
+		std::string id;
+		std::string name;
+		resolutions_t resolutions;
+	};
+	using monitors_t = std::vector<Monitor>;
+	static std::shared_ptr<monitors_t> GetMonitors();
 
-		struct MR_DllDeclare Resolution
-		{
-			int w;
-			int h;
-			Resolution(int w, int h) : w(w), h(h) { }
-			Resolution(const std::string &s);
-			std::string AsString() const;
-		};
-		typedef std::set<Resolution> resolutions_t;
-		struct MR_DllDeclare Monitor
-		{
-			bool primary;
-			std::string id;
-			std::string name;
-			resolutions_t resolutions;
-		};
-		typedef std::vector<Monitor> monitors_t;
-		static std::shared_ptr<monitors_t> GetMonitors();
+#	ifdef _WIN32
+		static std::string GuidToString(const GUID &guid);
+		static void StringToGuid(const std::string &s, GUID &guid);
+#	endif
 
-#		ifdef _WIN32
-			static std::string GuidToString(const GUID &guid);
-			static void StringToGuid(const std::string &s, GUID &guid);
-#		endif
+#	ifndef _WIN32
+		static std::string StrError(int errnum);
+#	endif
 
-#		ifndef _WIN32
-			static std::string StrError(int errnum);
-#		endif
+	static void TimeInit();
+	static timestamp_t Time();
+	/**
+	 * Calculate the difference between two timestamps.
+	 * This properly handles wraparound in timestamps.
+	 * @param laterTs The later timestamp.
+	 * @param earlierTs The earlier timestamp.
+	 * @return @p laterTs - @p earlierTs
+	 */
+	static timestamp_t TimeDiff(timestamp_t laterTs, timestamp_t earlierTs)
+	{
+		// We assume that signed 64-bit values won't have to deal with
+		// wraparound.
+		return laterTs - earlierTs;
+	}
+	static std::string FileTimeString();
+	static void TimeShutdown();
 
-		static void TimeInit();
-		static timestamp_t Time();
-		/**
-		 * Calculate the difference between two timestamps.
-		 * This properly handles wraparound in timestamps.
-		 * @param laterTs The later timestamp.
-		 * @param earlierTs The earlier timestamp.
-		 * @return @p laterTs - @p earlierTs
-		 */
-		static timestamp_t TimeDiff(timestamp_t laterTs, timestamp_t earlierTs)
-		{
-			// We assume that signed 64-bit values won't have to deal with
-			// wraparound.
-			return laterTs - earlierTs;
-		}
-		static std::string FileTimeString();
-		static void TimeShutdown();
+	static bool OpenLink(const std::string &url);
+	static bool OpenPath(const path_t &path);
 
-		static bool OpenLink(const std::string &url);
-		static bool OpenPath(const path_t &path);
+	static FILE *FOpen(const path_t &path, const char *mode);
 
-		static FILE *FOpen(const path_t &path, const char *mode);
-
-		static void Free(void *buf);
+	static void Free(void *buf);
 };
 
 MR_DllDeclare inline bool operator==(const OS::Resolution &l, const OS::Resolution &r)
