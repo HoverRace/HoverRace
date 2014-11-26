@@ -95,9 +95,6 @@ public:
 
 	const std::string &GetText() const { return text; }
 	void SetText(const std::string &text);
-#	ifdef _WIN32
-		const std::wstring &GetWText() const { return wtext; }
-#	endif
 
 	/**
 	 * Returns the set width, if a fixed width is set.
@@ -109,10 +106,6 @@ public:
 
 private:
 	std::string text;
-#	ifdef _WIN32
-		/// Cached wide string since that's how it's used in Win32.
-		std::wstring wtext;
-#	endif
 	double wrapWidth;
 	UiFont font;
 	Color color;

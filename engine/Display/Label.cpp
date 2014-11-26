@@ -65,9 +65,6 @@ Label::Label(double wrapWidth,
              uiLayoutFlags_t layoutFlags) :
 	SUPER(layoutFlags),
 	text(text),
-#	ifdef _WIN32
-		wtext((const wchar_t*)Str::UW(text)),
-#	endif
 	wrapWidth(wrapWidth), font(font), color(color)
 {
 }
@@ -108,9 +105,6 @@ void Label::SetText(const std::string &text)
 {
 	if (this->text != text) {
 		this->text = text;
-#		ifdef _WIN32
-			wtext = (const wchar_t*)Str::UW(text);
-#		endif
 		FireModelUpdate(Props::TEXT);
 	}
 }
