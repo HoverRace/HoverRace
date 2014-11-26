@@ -21,7 +21,6 @@
 
 #include "../StdAfx.h"
 
-#include "../../engine/Display/Label.h"
 #include "../../engine/Display/Slider.h"
 #include "../../engine/ObjFac1/ObjFac1Res.h"
 #include "../../engine/ObjFacTools/ResourceLib.h"
