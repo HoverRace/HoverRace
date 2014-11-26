@@ -41,6 +41,7 @@
 #	include <shellapi.h>
 #endif
 
+#include <boost/algorithm/string/predicate.hpp>
 #include <boost/format.hpp>
 
 #include <SDL2/SDL.h>
@@ -511,8 +512,16 @@ void OS::Free(void *buf)
  */
 bool OS::OpenLink(const std::string &url)
 {
-	//FIXME: Need to make sure we're only handling "http:", "https:", and "ftp:".
-	Log::Info("Opening URL: %s", url.c_str());
+	HR_LOG(info) << "Opening URL: " << url;
+
+	if (!(boost::starts_with(url, "http://") ||
+		boost::starts_with(url, "https://") ||
+		boost::starts_with(url, "ftp://")))
+	{
+		HR_LOG(error) << "Blocked opening link (unsupported protocol): " << url;
+		return false;
+	}
+
 #	ifdef _WIN32
 		Str::UW urlw(url.c_str());
 		return (int)ShellExecuteW(NULL, L"open", urlw, NULL, NULL, SW_SHOWNORMAL) > 32;
