@@ -45,14 +45,18 @@ VideoSettingsScene::VideoSettingsScene(Display::Display &display,
 	textScaleSlider->SetSize(SLIDER_SIZE);
 	textScaleSlider->SetValue(videoCfg.textScale);
 	textScaleConn = textScaleSlider->GetValueChangedSignal().connect([&](double val) {
-		this->textScalePreviewLbl->SetScale(val);
+		this->textScalePreviewLbl->SetScale(val / 2.0);
 		videoCfg.textScale = val;
 	});
 
+	// Use a 2x scaled font so the >1.x preview doesn't get blurred / pixelated.
+	auto scaledFont = s.bodyFont;
+	scaledFont.size *= 2;
+
 	textScalePreviewLbl = AddSetting("",
-		new Label(_("This is sample text."), s.bodyFont, s.bodyFg));
+		new Label(_("This is sample text."), scaledFont, s.bodyFg));
 	textScalePreviewLbl->SetFixedScale(true);
-	textScalePreviewLbl->SetScale(videoCfg.textScale);
+	textScalePreviewLbl->SetScale(videoCfg.textScale / 2.0);
 }
 
 void VideoSettingsScene::OnOk()
