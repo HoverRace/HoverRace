@@ -21,6 +21,7 @@
 
 #include "../StdAfx.h"
 
+#include "../../engine/Display/Label.h"
 #include "../../engine/Display/Slider.h"
 #include "../../engine/Util/Log.h"
 
@@ -37,14 +38,21 @@ VideoSettingsScene::VideoSettingsScene(Display::Display &display,
 	videoCfg(Config::GetInstance()->video), origVideoCfg(videoCfg)
 {
 	using namespace Display;
+	const auto &s = display.styles;
 
 	auto textScaleSlider = AddSetting(_("Text Scale"),
 		new Slider(display, 0.5, 1.5, 0.1));
 	textScaleSlider->SetSize(SLIDER_SIZE);
 	textScaleSlider->SetValue(videoCfg.textScale);
 	textScaleConn = textScaleSlider->GetValueChangedSignal().connect([&](double val) {
+		this->textScalePreviewLbl->SetScale(val);
 		videoCfg.textScale = val;
 	});
+
+	textScalePreviewLbl = AddSetting("",
+		new Label(_("This is sample text."), s.bodyFont, s.bodyFg));
+	textScalePreviewLbl->SetFixedScale(true);
+	textScalePreviewLbl->SetScale(videoCfg.textScale);
 }
 
 void VideoSettingsScene::OnOk()

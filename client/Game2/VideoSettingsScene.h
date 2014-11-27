@@ -48,6 +48,8 @@ private:
 	Util::Config::cfg_video_t &videoCfg;
 	const Util::Config::cfg_video_t origVideoCfg;
 
+	std::shared_ptr<Display::Label> textScalePreviewLbl;
+
 	boost::signals2::scoped_connection textScaleConn;
 };
 
