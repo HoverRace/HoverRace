@@ -580,7 +580,7 @@ TTF_Font *SdlDisplay::LoadTtfFont(const UiFont &font, bool uiScale)
  * @param layoutFlags Optional layout flags, from the view model.
  */
 void SdlDisplay::DrawUiTexture(SDL_Texture *texture, const Vec2 &relPos,
-                               uiLayoutFlags_t layoutFlags)
+	uiLayoutFlags_t layoutFlags)
 {
 	HR_UNUSED(layoutFlags);
 
@@ -589,6 +589,31 @@ void SdlDisplay::DrawUiTexture(SDL_Texture *texture, const Vec2 &relPos,
 
 		int w, h;
 		SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
+		SDL_Rect destRect = { (int)adjustedPos.x, (int)adjustedPos.y, w, h };
+		SDL_RenderCopy(renderer, texture, nullptr, &destRect);
+	}
+}
+/**
+ * Blit a scaled SDL texture to the backbuffer with the current layout state.
+ * @param texture The texture to blit (may be @c NULL).
+ * @param relPos The UI-space position, relative to the current UI origin.
+ * @param scale The scaling to apply to the texture.
+ * @param layoutFlags Optional layout flags, from the view model.
+ */
+void SdlDisplay::DrawUiTexture(SDL_Texture *texture, const Vec2 &relPos,
+	const Vec2 &scale, uiLayoutFlags_t layoutFlags)
+{
+	HR_UNUSED(layoutFlags);
+
+	if (texture) {
+		Vec2 adjustedPos = LayoutUiPosition(relPos);
+
+		int w, h;
+		SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
+
+		w = static_cast<int>(static_cast<double>(w) * scale.x);
+		h = static_cast<int>(static_cast<double>(h) * scale.y);
+
 		SDL_Rect destRect = { (int)adjustedPos.x, (int)adjustedPos.y, w, h };
 		SDL_RenderCopy(renderer, texture, nullptr, &destRect);
 	}

@@ -108,6 +108,8 @@ public:
 	// SDL-specific utilities.
 	void DrawUiTexture(SDL_Texture *texture, const Vec2 &relPos,
 		uiLayoutFlags_t layoutFlags = 0);
+	void DrawUiTexture(SDL_Texture *texture, const Vec2 &relPos,
+		const Vec2 &scale, uiLayoutFlags_t layoutFlags = 0);
 
 private:
 	std::string windowTitle;
