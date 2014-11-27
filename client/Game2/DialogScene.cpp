@@ -52,34 +52,35 @@ DialogScene::DialogScene(Display::Display &display, GameDirector &director,
 	director(director), title(title),
 	stoppingTransitionEnabled(false)
 {
-	typedef Display::UiViewModel::Alignment Alignment;
+	using namespace Display;
+	using Alignment = UiViewModel::Alignment;
 
 	const auto &s = display.styles;
 
 	SetPhaseTransitionDuration(200);
 
-	fader.reset(new Display::ScreenFade(s.dialogBg, 0.0));
+	fader.reset(new ScreenFade(s.dialogBg, 0.0));
 	fader->AttachView(display);
 
 	auto root = GetRoot();
 
-	contentRoot = root->AddChild(new Display::Container(
-		display, Vec2(1280, 720 - 200)));
+	contentRoot = root->AddChild(
+		new Container(display, Vec2(1280, 720 - 200)));
 	contentRoot->SetPos(0, 100);
 
-	statusRoot = root->AddChild(new Display::Container(
-		display, Vec2(1280 - (MARGIN_WIDTH * 2), 40), false));
+	statusRoot = root->AddChild(
+		new Container(display, Vec2(1280 - (MARGIN_WIDTH * 2), 40), false));
 	statusRoot->SetPos(MARGIN_WIDTH, 720 - 80);
 	statusRoot->SetVisible(false);
 
-	auto titleLbl = root->AddChild(new Display::Label(title,
-		s.headingFont, s.headingFg));
+	auto titleLbl = root->AddChild(
+		new Label(title, s.headingFont, s.headingFg));
 	titleLbl->SetPos(MARGIN_WIDTH, 80);
 	titleLbl->SetAlignment(Alignment::SW);
 
 	// The default action buttons (OK, Cancel).
 
-	actionGrid = statusRoot->AddChild(new Display::FlexGrid(display));
+	actionGrid = statusRoot->AddChild(new FlexGrid(display));
 	actionGrid->SetPos(1280 - (MARGIN_WIDTH * 2), 0);
 	actionGrid->SetAlignment(Alignment::NE);
 
@@ -87,9 +88,9 @@ DialogScene::DialogScene(Display::Display &display, GameDirector &director,
 	size_t c = 0;
 
 	okBtn = actionGrid->AddGridCell(r, c++,
-		new Display::ActionButton(display))->GetContents();
+		new ActionButton(display))->GetContents();
 	cancelBtn = actionGrid->AddGridCell(r, c++,
-		new Display::ActionButton(display))->GetContents();
+		new ActionButton(display))->GetContents();
 }
 
 DialogScene::~DialogScene()
