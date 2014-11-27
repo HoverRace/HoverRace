@@ -1,7 +1,7 @@
 
 // SdlSurfaceText.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -58,38 +58,38 @@ namespace SDL {
  */
 class MR_DllDeclare SdlSurfaceText
 {
-	public:
-		SdlSurfaceText(SdlDisplay &display);
-		SdlSurfaceText(SdlDisplay &display, const UiFont &font,
-			const Color color=COLOR_WHITE);
-		~SdlSurfaceText() { }
+public:
+	SdlSurfaceText(SdlDisplay &display);
+	SdlSurfaceText(SdlDisplay &display, const UiFont &font,
+		const Color color = COLOR_WHITE);
+	~SdlSurfaceText() { }
 
-	public:
-		// Properties to control rendering.
-		void SetFont(const UiFont &font) { this->font = font; }
-		void SetColor(const Color color) { this->color = color; }
-		void SetWrapWidth(int wrapWidth) { this->wrapWidth = wrapWidth; }
+public:
+	// Properties to control rendering.
+	void SetFont(const UiFont &font) { this->font = font; }
+	void SetColor(const Color color) { this->color = color; }
+	void SetWrapWidth(int wrapWidth) { this->wrapWidth = wrapWidth; }
 
-	public:
-		int MeasureLineHeight();
-		SDL_Surface *RenderToNewSurface(const std::string &s);
-		SDL_Surface *RenderToSurface(SDL_Surface *dest, int x, int y,
-			const std::string &s);
+public:
+	int MeasureLineHeight();
+	SDL_Surface *RenderToNewSurface(const std::string &s);
+	SDL_Surface *RenderToSurface(SDL_Surface *dest, int x, int y,
+		const std::string &s);
 
-	public:
-		// Properties available after rendering.
-		int GetWidth() const { return width; }
-		int GetHeight() const { return height; }
+public:
+	// Properties available after rendering.
+	int GetWidth() const { return width; }
+	int GetHeight() const { return height; }
 
-	private:
-		SdlDisplay &display;
+private:
+	SdlDisplay &display;
 
-		UiFont font;
-		Color color;
-		int wrapWidth;
+	UiFont font;
+	Color color;
+	int wrapWidth;
 
-		int width;
-		int height;
+	int width;
+	int height;
 };
 
 }  // namespace SDL

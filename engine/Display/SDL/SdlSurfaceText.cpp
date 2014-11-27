@@ -55,7 +55,7 @@ SdlSurfaceText::SdlSurfaceText(SdlDisplay &display) :
  * @param color The text foreground color.
  */
 SdlSurfaceText::SdlSurfaceText(SdlDisplay &display, const UiFont &font,
-                               const Color color) :
+	const Color color) :
 	display(display),
 	font(font), color(color), wrapWidth(-1),
 	width(0), height(0)
@@ -116,9 +116,10 @@ SDL_Surface *SdlSurfaceText::RenderToNewSurface(const std::string &s)
  * @param s The text to render (may not be blank).
  * @return The same surface.
  */
-SDL_Surface *SdlSurfaceText::RenderToSurface(SDL_Surface *dest,
-                                             int x, int y,
-                                             const std::string &s)
+SDL_Surface *SdlSurfaceText::RenderToSurface(
+	SDL_Surface *dest,
+	int x, int y,
+	const std::string &s)
 {
 	SDL_Rect destRect = { x, y, 0, 0 };
 
