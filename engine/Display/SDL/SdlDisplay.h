@@ -102,7 +102,7 @@ public:
 
 public:
 	// Text-renderer-specific utilities.
-	TTF_Font *LoadTtfFont(const UiFont &font);
+	TTF_Font *LoadTtfFont(const UiFont &font, bool uiScale = true);
 
 public:
 	// SDL-specific utilities.

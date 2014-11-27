@@ -63,6 +63,7 @@ public:
 			FONT,
 			TEXT,
 			WRAP_WIDTH,  ///< Fired when a fixed width is set or auto-width is enabled.
+			FIXED_SCALE,
 			NEXT_,  ///< First index for subclasses.
 		};
 	};
@@ -90,6 +91,13 @@ public:
 	const Color GetColor() const { return color; }
 	void SetColor(const Color color);
 
+	/**
+	 * Check if the scaling is fixed (i.e., ignores user text scale config).
+	 * @return @c true if fixed scale, @c false if not.
+	 */
+	bool IsFixedScale() const { return fixedScale; }
+	void SetFixedScale(bool fixedScale);
+
 	const UiFont &GetFont() const { return font; }
 	void SetFont(const UiFont &font);
 
@@ -109,6 +117,7 @@ private:
 	double wrapWidth;
 	UiFont font;
 	Color color;
+	bool fixedScale;
 };
 
 }  // namespace Display

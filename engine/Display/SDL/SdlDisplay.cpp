@@ -527,16 +527,20 @@ void SdlDisplay::ApplyVideoMode()
  * Load the TTF font for a given name and size.
  * The font is cached for future retrievals.
  * @param font The font specification.
+ * @param uiScale Apply the user-selected scaling.
+ *                False is useful if scaling will be applied later.
  * @return The loaded SDL_ttf font (never @c nullptr).
  * @throws HoverRace::Exception The font could not be loaded.
  */
-TTF_Font *SdlDisplay::LoadTtfFont(const UiFont &font)
+TTF_Font *SdlDisplay::LoadTtfFont(const UiFont &font, bool uiScale)
 {
 	const Config *cfg = Config::GetInstance();
 
 	// Scale the font size to match the DPI we use in SDL_Pango.
 	// SDL_ttf always assumes a DPI of 75.
-	int size = static_cast<int>(cfg->video.textScale * font.size * 60.0 / 75.0);
+	double dsize = font.size * 60.0;
+	if (uiScale) dsize *= cfg->video.textScale;
+	int size = static_cast<int>(dsize / 75.0);
 
 	std::string fullFontName = font.name;
 	if (fullFontName.empty()) {

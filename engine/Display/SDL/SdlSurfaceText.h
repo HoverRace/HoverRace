@@ -69,6 +69,7 @@ public:
 	void SetFont(const UiFont &font) { this->font = font; }
 	void SetColor(const Color color) { this->color = color; }
 	void SetWrapWidth(int wrapWidth) { this->wrapWidth = wrapWidth; }
+	void SetFixedScale(bool fixedScale) { this->fixedScale = fixedScale; }
 
 public:
 	int MeasureLineHeight();
@@ -87,6 +88,7 @@ private:
 	UiFont font;
 	Color color;
 	int wrapWidth;
+	bool fixedScale;
 
 	int width;
 	int height;

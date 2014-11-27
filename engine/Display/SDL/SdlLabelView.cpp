@@ -100,7 +100,10 @@ void SdlLabelView::UpdateBlank()
 		font.size *= (scale = display.GetUiScale());
 	}
 
-	height = SdlSurfaceText(display, font).MeasureLineHeight();
+	auto surfaceText = SdlSurfaceText(display, font);
+	surfaceText.SetFixedScale(model.IsFixedScale());
+
+	height = surfaceText.MeasureLineHeight();
 
 	unscaledWidth = width = 1;
 	unscaledHeight = height / scale;
@@ -131,6 +134,7 @@ void SdlLabelView::UpdateTexture()
 	// Render the text onto a fresh new surface.
 	SdlSurfaceText textRenderer(display, font);
 	textRenderer.SetWrapWidth(fixedWidth ? wrapWidth : -1);
+	textRenderer.SetFixedScale(model.IsFixedScale());
 	SDL_Surface *tempSurface = textRenderer.RenderToNewSurface(
 		model.GetText());
 	realWidth = width = textRenderer.GetWidth();

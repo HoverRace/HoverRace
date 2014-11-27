@@ -43,7 +43,7 @@ namespace SDL {
  */
 SdlSurfaceText::SdlSurfaceText(SdlDisplay &display) :
 	display(display),
-	font(), color(COLOR_WHITE), wrapWidth(-1),
+	font(), color(COLOR_WHITE), wrapWidth(-1), fixedScale(false),
 	width(0), height(0)
 {
 }
@@ -57,7 +57,7 @@ SdlSurfaceText::SdlSurfaceText(SdlDisplay &display) :
 SdlSurfaceText::SdlSurfaceText(SdlDisplay &display, const UiFont &font,
 	const Color color) :
 	display(display),
-	font(font), color(color), wrapWidth(-1),
+	font(font), color(color), wrapWidth(-1), fixedScale(false),
 	width(0), height(0)
 {
 }
@@ -74,7 +74,7 @@ SdlSurfaceText::SdlSurfaceText(SdlDisplay &display, const UiFont &font,
  */
 int SdlSurfaceText::MeasureLineHeight()
 {
-	TTF_Font *ttfFont = display.LoadTtfFont(font);
+	TTF_Font *ttfFont = display.LoadTtfFont(font, !fixedScale);
 
 	width = 1;
 	height = TTF_FontHeight(ttfFont);
@@ -94,7 +94,7 @@ SDL_Surface *SdlSurfaceText::RenderToNewSurface(const std::string &s)
 
 	bool fixedWidth = wrapWidth > 0;
 
-	TTF_Font *ttfFont = display.LoadTtfFont(font);
+	TTF_Font *ttfFont = display.LoadTtfFont(font, !fixedScale);
 
 	//TODO: Handle newlines ourselves.
 	SDL_Color color = { 0xff, 0xff, 0xff, 0xff };
