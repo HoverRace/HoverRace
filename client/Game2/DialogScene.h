@@ -42,48 +42,49 @@ namespace Client {
  */
 class DialogScene : public FormScene
 {
-	typedef FormScene SUPER;
-	public:
-		DialogScene(Display::Display &display, GameDirector &director,
-			const std::string &title="", const std::string &name="");
-		virtual ~DialogScene();
+	using SUPER = FormScene;
 
-	protected:
-		void SetStoppingTransitionEnabled(bool enabled);
+public:
+	DialogScene(Display::Display &display, GameDirector &director,
+		const std::string &title = "", const std::string &name = "");
+	virtual ~DialogScene();
 
-		Display::Container *GetContentRoot() const { return contentRoot.get(); }
-		Display::Container *GetStatusRoot() const { return statusRoot.get(); }
-		
-		void SetBackground(Display::Background *fader);
+protected:
+	void SetStoppingTransitionEnabled(bool enabled);
 
-	protected:
-		virtual void OnOk();
-		virtual void OnCancel();
+	Display::Container *GetContentRoot() const { return contentRoot.get(); }
+	Display::Container *GetStatusRoot() const { return statusRoot.get(); }
 
-	public:
-		void AttachController(Control::InputEventController &controller) override;
-		void DetachController(Control::InputEventController &controller) override;
-		void OnPhaseTransition(double progress) override;
-		void PrepareRender() override;
-		void Render() override;
+	void SetBackground(Display::Background *fader);
 
-	public:
-		static const double MARGIN_WIDTH;
-	private:
-		GameDirector &director;
+protected:
+	virtual void OnOk();
+	virtual void OnCancel();
 
-		std::string title;
-		bool stoppingTransitionEnabled;
+public:
+	void AttachController(Control::InputEventController &controller) override;
+	void DetachController(Control::InputEventController &controller) override;
+	void OnPhaseTransition(double progress) override;
+	void PrepareRender() override;
+	void Render() override;
 
-		std::unique_ptr<Display::Background> fader;
-		std::shared_ptr<Display::Container> contentRoot;
-		std::shared_ptr<Display::Container> statusRoot;
-		std::shared_ptr<Display::FlexGrid> actionGrid;
-		std::shared_ptr<Display::ActionButton> okBtn;
-		std::shared_ptr<Display::ActionButton> cancelBtn;
+public:
+	static const double MARGIN_WIDTH;
+private:
+	GameDirector &director;
 
-		boost::signals2::connection okConn;
-		boost::signals2::connection cancelConn;
+	std::string title;
+	bool stoppingTransitionEnabled;
+
+	std::unique_ptr<Display::Background> fader;
+	std::shared_ptr<Display::Container> contentRoot;
+	std::shared_ptr<Display::Container> statusRoot;
+	std::shared_ptr<Display::FlexGrid> actionGrid;
+	std::shared_ptr<Display::ActionButton> okBtn;
+	std::shared_ptr<Display::ActionButton> cancelBtn;
+
+	boost::signals2::connection okConn;
+	boost::signals2::connection cancelConn;
 };
 
 }  // namespace Client
