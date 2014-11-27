@@ -61,8 +61,15 @@ VideoSettingsScene::VideoSettingsScene(Display::Display &display,
 
 void VideoSettingsScene::OnOk()
 {
+	bool needsMainMenu =
+		origVideoCfg.textScale != videoCfg.textScale;
+
 	Config::GetInstance()->Save();
 	SUPER::OnOk();
+
+	if (needsMainMenu) {
+		director.RequestMainMenu();
+	}
 }
 
 void VideoSettingsScene::OnCancel()
