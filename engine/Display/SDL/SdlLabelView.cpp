@@ -87,8 +87,6 @@ void SdlLabelView::Render()
 {
 	if (model.GetText().empty()) return;
 
-	int w, h;
-	SDL_QueryTexture(texture->Get(), nullptr, nullptr, &w, &h);
 	double scale = model.GetScale();
 	display.DrawUiTexture(texture->Get(),
 		model.GetAlignedPos(unscaledWidth, unscaledHeight),
