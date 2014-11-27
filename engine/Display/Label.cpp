@@ -43,9 +43,6 @@ Label::Label(const std::string &text,
 	uiLayoutFlags_t layoutFlags) :
 	SUPER(layoutFlags),
 	text(text),
-#	ifdef _WIN32
-		wtext((const wchar_t*)Str::UW(text)),
-#	endif
 	wrapWidth(-1), font(font), color(color)
 {
 }
@@ -59,10 +56,10 @@ Label::Label(const std::string &text,
  * @param layoutFlags Optional layout flags.
  */
 Label::Label(double wrapWidth,
-             const std::string &text,
-             const UiFont &font,
-             Color color,
-             uiLayoutFlags_t layoutFlags) :
+	const std::string &text,
+	const UiFont &font,
+	Color color,
+	uiLayoutFlags_t layoutFlags) :
 	SUPER(layoutFlags),
 	text(text),
 	wrapWidth(wrapWidth), font(font), color(color)
