@@ -21,8 +21,6 @@
 
 #include "../StdAfx.h"
 
-#include "../Util/Str.h"
-
 #include "Label.h"
 
 using namespace HoverRace::Util;
