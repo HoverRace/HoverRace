@@ -70,9 +70,11 @@ public:
 
 public:
 	static const double MARGIN_WIDTH;
-private:
+
+protected:
 	GameDirector &director;
 
+private:
 	std::string title;
 	bool stoppingTransitionEnabled;
 
