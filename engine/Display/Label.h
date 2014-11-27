@@ -64,6 +64,7 @@ public:
 			TEXT,
 			WRAP_WIDTH,  ///< Fired when a fixed width is set or auto-width is enabled.
 			FIXED_SCALE,
+			SCALE,
 			NEXT_,  ///< First index for subclasses.
 		};
 	};
@@ -101,6 +102,13 @@ public:
 	const UiFont &GetFont() const { return font; }
 	void SetFont(const UiFont &font);
 
+	/**
+	 * Gets the scaling of this label.
+	 * @return The scale.
+	 */
+	double GetScale() const { return scale; }
+	void SetScale(const double scale);
+
 	const std::string &GetText() const { return text; }
 	void SetText(const std::string &text);
 
@@ -118,6 +126,7 @@ private:
 	UiFont font;
 	Color color;
 	bool fixedScale;
+	double scale;
 };
 
 }  // namespace Display

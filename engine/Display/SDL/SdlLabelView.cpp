@@ -66,6 +66,14 @@ void SdlLabelView::OnUiScaleChanged()
 	texture.release();
 }
 
+Vec3 SdlLabelView::Measure()
+{
+	PrepareRender();
+
+	double scale = model.GetScale();
+	return { unscaledWidth * scale, unscaledHeight * scale, 0 };
+}
+
 void SdlLabelView::PrepareRender()
 {
 	if (!texture) {
@@ -81,8 +89,10 @@ void SdlLabelView::Render()
 
 	int w, h;
 	SDL_QueryTexture(texture->Get(), nullptr, nullptr, &w, &h);
+	double scale = model.GetScale();
 	display.DrawUiTexture(texture->Get(),
 		model.GetAlignedPos(unscaledWidth, unscaledHeight),
+		Vec2(scale, scale),
 		model.GetLayoutFlags());
 }
 

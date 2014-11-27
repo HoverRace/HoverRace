@@ -41,7 +41,8 @@ Label::Label(const std::string &text,
 	uiLayoutFlags_t layoutFlags) :
 	SUPER(layoutFlags),
 	text(text),
-	wrapWidth(-1), fixedScale(false), font(font), color(color)
+	wrapWidth(-1), font(font), color(color), 
+	fixedScale(false), scale(1.0)
 {
 }
 
@@ -60,7 +61,8 @@ Label::Label(double wrapWidth,
 	uiLayoutFlags_t layoutFlags) :
 	SUPER(layoutFlags),
 	text(text),
-	wrapWidth(wrapWidth), fixedScale(false), font(font), color(color)
+	wrapWidth(wrapWidth), font(font), color(color),
+	fixedScale(false), scale(1.0)
 {
 }
 
@@ -101,6 +103,14 @@ void Label::SetFont(const UiFont &font)
 	if (this->font != font) {
 		this->font = font;
 		FireModelUpdate(Props::FONT);
+	}
+}
+
+void Label::SetScale(double scale)
+{
+	if (this->scale != scale) {
+		this->scale = scale;
+		FireModelUpdate(Props::SCALE);
 	}
 }
 

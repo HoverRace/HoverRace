@@ -54,17 +54,13 @@ public:
 	virtual ~SdlLabelView();
 
 public:
-	virtual void OnModelUpdate(int prop);
+	void OnModelUpdate(int prop) override;
 	void OnUiScaleChanged();
 
 public:
-	virtual Vec3 Measure()
-	{
-		PrepareRender();
-		return Vec3(unscaledWidth, unscaledHeight, 0);
-	}
-	virtual void PrepareRender();
-	virtual void Render();
+	Vec3 Measure() override;
+	void PrepareRender() override;
+	void Render() override;
 
 private:
 	void UpdateBlank();
