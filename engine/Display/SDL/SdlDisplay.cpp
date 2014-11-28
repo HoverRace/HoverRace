@@ -405,7 +405,7 @@ void SdlDisplay::OnDesktopModeChanged(int width, int height)
 
 void SdlDisplay::OnDisplayConfigChanged()
 {
-	Config::cfg_video_t &vidCfg = Config::GetInstance()->video;
+	const auto &vidCfg = Config::GetInstance()->video;
 
 	bool resChanged = (vidCfg.xRes != width || vidCfg.yRes != height);
 
@@ -470,8 +470,8 @@ void SdlDisplay::Screenshot()
  */
 void SdlDisplay::ApplyVideoMode()
 {
-	const Config *cfg = Config::GetInstance();
-	const Config::cfg_video_t &vidCfg = cfg->video;
+	const auto *cfg = Config::GetInstance();
+	const auto &vidCfg = cfg->video;
 
 	// First try to enable OpenGL support, otherwise go on without it.
 	if (cfg->runtime.noAccel ||

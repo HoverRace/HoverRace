@@ -437,28 +437,28 @@ void InputEventController::SaveConfig()
 			// tedious, unfortunately
 			switch(it->second->GetListOrder()) {
 				case 0: // throttle
-					cfg->controls_hash[i].motorOn = it->first;
+					cfg->controlsHash[i].motorOn = it->first;
 					break;
 				case 1: // brake
-					cfg->controls_hash[i].brake = it->first;
+					cfg->controlsHash[i].brake = it->first;
 					break;
 				case 2: // turn left
-					cfg->controls_hash[i].left = it->first;
+					cfg->controlsHash[i].left = it->first;
 					break;
 				case 3: // turn right
-					cfg->controls_hash[i].right = it->first;
+					cfg->controlsHash[i].right = it->first;
 					break;
 				case 4: // jump
-					cfg->controls_hash[i].jump = it->first;
+					cfg->controlsHash[i].jump = it->first;
 					break;
 				case 5: // powerup
-					cfg->controls_hash[i].fire = it->first;
+					cfg->controlsHash[i].fire = it->first;
 					break;
 				case 6: // change item
-					cfg->controls_hash[i].weapon = it->first;
+					cfg->controlsHash[i].weapon = it->first;
 					break;
 				case 7: // look back
-					cfg->controls_hash[i].lookBack = it->first;
+					cfg->controlsHash[i].lookBack = it->first;
 					break;
 			}
 		}
@@ -492,19 +492,19 @@ void InputEventController::SaveConfig()
 	for(ActionMap::iterator it = allActionMaps[_("Camera")].begin(); it != allActionMaps[_("Camera")].end(); it++) {
 		switch(it->second->GetListOrder()) {
 			case 0: // zoom in
-				cfg->camera_hash.zoomIn = it->first;
+				cfg->cameraHash.zoomIn = it->first;
 				break;
 			case 1: // zoom out
-				cfg->camera_hash.zoomOut = it->first;
+				cfg->cameraHash.zoomOut = it->first;
 				break;
 			case 2: // pan up
-				cfg->camera_hash.panUp = it->first;
+				cfg->cameraHash.panUp = it->first;
 				break;
 			case 3: // pan down
-				cfg->camera_hash.panDown = it->first;
+				cfg->cameraHash.panDown = it->first;
 				break;
 			case 4: // reset
-				cfg->camera_hash.reset = it->first;
+				cfg->cameraHash.reset = it->first;
 				break;
 		}
 	}
@@ -533,14 +533,14 @@ void InputEventController::LoadConfig()
 		str << _("Player") << " " << (i + 1);
 		ActionMap& playerMap = allActionMaps[str.str()];
 
-		playerMap[cfg->controls_hash[i].motorOn].reset(new EngineAction(_("Throttle"), 0, NULL));
-		playerMap[cfg->controls_hash[i].brake].reset(new BrakeAction(_("Brake"), 1, NULL));
-		playerMap[cfg->controls_hash[i].left].reset(new TurnLeftAction(_("Turn Left"), 2, NULL));
-		playerMap[cfg->controls_hash[i].right].reset(new TurnRightAction(_("Turn Right"), 3, NULL));
-		playerMap[cfg->controls_hash[i].jump].reset(new JumpAction(_("Jump"), 4, NULL));
-		playerMap[cfg->controls_hash[i].fire].reset(new PowerupAction(_("Fire"), 5, NULL));
-		playerMap[cfg->controls_hash[i].weapon].reset(new ChangeItemAction(_("Item"), 6, NULL));
-		playerMap[cfg->controls_hash[i].lookBack].reset(new LookBackAction(_("Look Back"), 7, NULL));
+		playerMap[cfg->controlsHash[i].motorOn].reset(new EngineAction(_("Throttle"), 0, NULL));
+		playerMap[cfg->controlsHash[i].brake].reset(new BrakeAction(_("Brake"), 1, NULL));
+		playerMap[cfg->controlsHash[i].left].reset(new TurnLeftAction(_("Turn Left"), 2, NULL));
+		playerMap[cfg->controlsHash[i].right].reset(new TurnRightAction(_("Turn Right"), 3, NULL));
+		playerMap[cfg->controlsHash[i].jump].reset(new JumpAction(_("Jump"), 4, NULL));
+		playerMap[cfg->controlsHash[i].fire].reset(new PowerupAction(_("Fire"), 5, NULL));
+		playerMap[cfg->controlsHash[i].weapon].reset(new ChangeItemAction(_("Item"), 6, NULL));
+		playerMap[cfg->controlsHash[i].lookBack].reset(new LookBackAction(_("Look Back"), 7, NULL));
 	}
 
 	//TODO: Load camera map
@@ -577,11 +577,11 @@ void InputEventController::LoadCameraMap()
 
 	Config* config = Config::GetInstance();
 
-	AssignAction(cmap, config->camera_hash.zoomIn, actions.camera.zoomIn);
-	AssignAction(cmap, config->camera_hash.zoomOut, actions.camera.zoomOut);
-	AssignAction(cmap, config->camera_hash.panUp, actions.camera.panUp);
-	AssignAction(cmap, config->camera_hash.panDown, actions.camera.panDown);
-	AssignAction(cmap, config->camera_hash.reset, actions.camera.reset);
+	AssignAction(cmap, config->cameraHash.zoomIn, actions.camera.zoomIn);
+	AssignAction(cmap, config->cameraHash.zoomOut, actions.camera.zoomOut);
+	AssignAction(cmap, config->cameraHash.panUp, actions.camera.panUp);
+	AssignAction(cmap, config->cameraHash.panDown, actions.camera.panDown);
+	AssignAction(cmap, config->cameraHash.reset, actions.camera.reset);
 }
 
 /// Set up menu controls.

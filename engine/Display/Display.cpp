@@ -37,7 +37,7 @@ namespace {
 
 void Display::OnDisplayConfigChanged()
 {
-	Config::cfg_video_t &vidCfg = Config::GetInstance()->video;
+	const auto &vidCfg = Config::GetInstance()->video;
 	int w = vidCfg.xRes;
 	int h = vidCfg.yRes;
 	double wd = static_cast<double>(w);

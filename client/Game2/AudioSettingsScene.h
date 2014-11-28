@@ -54,8 +54,8 @@ protected:
 	void OnCancel() override;
 
 private:
-	Util::Config::cfg_audio_t &audioCfg;
-	const Util::Config::cfg_audio_t origAudioCfg;
+	Util::Config::audio_t &audioCfg;
+	const Util::Config::audio_t origAudioCfg;
 
 	VideoServices::ShortSound *testSound;
 

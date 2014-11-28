@@ -694,48 +694,48 @@ void Config::ResetToDefaults()
 	net.ResetToDefaults();
 
 	// Default controls.
-	controls_hash[0].motorOn  = InputEventController::HashKeyboardEvent(SDLK_LSHIFT);
-	controls_hash[0].right    = InputEventController::HashKeyboardEvent(SDLK_RIGHT);
-	controls_hash[0].left     = InputEventController::HashKeyboardEvent(SDLK_LEFT);
-	controls_hash[0].jump     = InputEventController::HashKeyboardEvent(SDLK_UP);
-	controls_hash[0].fire     = InputEventController::HashKeyboardEvent(SDLK_LCTRL);
-	controls_hash[0].brake    = InputEventController::HashKeyboardEvent(SDLK_DOWN);
-	controls_hash[0].weapon   = InputEventController::HashKeyboardEvent(SDLK_TAB);
-	controls_hash[0].lookBack = InputEventController::HashKeyboardEvent(SDLK_END);
+	controlsHash[0].motorOn  = InputEventController::HashKeyboardEvent(SDLK_LSHIFT);
+	controlsHash[0].right    = InputEventController::HashKeyboardEvent(SDLK_RIGHT);
+	controlsHash[0].left     = InputEventController::HashKeyboardEvent(SDLK_LEFT);
+	controlsHash[0].jump     = InputEventController::HashKeyboardEvent(SDLK_UP);
+	controlsHash[0].fire     = InputEventController::HashKeyboardEvent(SDLK_LCTRL);
+	controlsHash[0].brake    = InputEventController::HashKeyboardEvent(SDLK_DOWN);
+	controlsHash[0].weapon   = InputEventController::HashKeyboardEvent(SDLK_TAB);
+	controlsHash[0].lookBack = InputEventController::HashKeyboardEvent(SDLK_END);
 
-	controls_hash[1].motorOn  = InputEventController::HashKeyboardEvent(SDLK_f);
-	controls_hash[1].right    = InputEventController::HashKeyboardEvent(SDLK_d);
-	controls_hash[1].left     = InputEventController::HashKeyboardEvent(SDLK_a);
-	controls_hash[1].jump     = InputEventController::HashKeyboardEvent(SDLK_s);
-	controls_hash[1].fire     = InputEventController::HashKeyboardEvent(SDLK_r);
-	controls_hash[1].brake    = InputEventController::HashKeyboardEvent(SDLK_w);
-	controls_hash[1].weapon   = InputEventController::HashKeyboardEvent(SDLK_q);
-	controls_hash[1].lookBack = InputEventController::HashKeyboardEvent(SDLK_i);
+	controlsHash[1].motorOn  = InputEventController::HashKeyboardEvent(SDLK_f);
+	controlsHash[1].right    = InputEventController::HashKeyboardEvent(SDLK_d);
+	controlsHash[1].left     = InputEventController::HashKeyboardEvent(SDLK_a);
+	controlsHash[1].jump     = InputEventController::HashKeyboardEvent(SDLK_s);
+	controlsHash[1].fire     = InputEventController::HashKeyboardEvent(SDLK_r);
+	controlsHash[1].brake    = InputEventController::HashKeyboardEvent(SDLK_w);
+	controlsHash[1].weapon   = InputEventController::HashKeyboardEvent(SDLK_q);
+	controlsHash[1].lookBack = InputEventController::HashKeyboardEvent(SDLK_i);
 
 	// set these to disabled (0x0000<code>)
-	controls_hash[2].motorOn  = 0;
-	controls_hash[2].right    = 1;
-	controls_hash[2].left     = 2;
-	controls_hash[2].jump     = 3;
-	controls_hash[2].fire     = 4;
-	controls_hash[2].brake    = 5;
-	controls_hash[2].weapon   = 6;
-	controls_hash[2].lookBack = 7;
+	controlsHash[2].motorOn  = 0;
+	controlsHash[2].right    = 1;
+	controlsHash[2].left     = 2;
+	controlsHash[2].jump     = 3;
+	controlsHash[2].fire     = 4;
+	controlsHash[2].brake    = 5;
+	controlsHash[2].weapon   = 6;
+	controlsHash[2].lookBack = 7;
 
-	controls_hash[3].motorOn  = 8;
-	controls_hash[3].right    = 9;
-	controls_hash[3].left     = 10;
-	controls_hash[3].jump     = 11;
-	controls_hash[3].fire     = 12;
-	controls_hash[3].brake    = 13;
-	controls_hash[3].weapon   = 14;
-	controls_hash[3].lookBack = 15;
+	controlsHash[3].motorOn  = 8;
+	controlsHash[3].right    = 9;
+	controlsHash[3].left     = 10;
+	controlsHash[3].jump     = 11;
+	controlsHash[3].fire     = 12;
+	controlsHash[3].brake    = 13;
+	controlsHash[3].weapon   = 14;
+	controlsHash[3].lookBack = 15;
 
-	camera_hash.zoomIn  = InputEventController::HashKeyboardEvent(SDLK_INSERT);
-	camera_hash.zoomOut = InputEventController::HashKeyboardEvent(SDLK_DELETE);
-	camera_hash.panUp   = InputEventController::HashKeyboardEvent(SDLK_PAGEUP);
-	camera_hash.panDown = InputEventController::HashKeyboardEvent(SDLK_PAGEDOWN);
-	camera_hash.reset   = InputEventController::HashKeyboardEvent(SDLK_HOME);
+	cameraHash.zoomIn  = InputEventController::HashKeyboardEvent(SDLK_INSERT);
+	cameraHash.zoomOut = InputEventController::HashKeyboardEvent(SDLK_DELETE);
+	cameraHash.panUp   = InputEventController::HashKeyboardEvent(SDLK_PAGEUP);
+	cameraHash.panDown = InputEventController::HashKeyboardEvent(SDLK_PAGEDOWN);
+	cameraHash.reset   = InputEventController::HashKeyboardEvent(SDLK_HOME);
 
 	ui.consoleToggle = InputEventController::HashKeyboardEvent(SDLK_F11);
 	ui.consoleUp     = InputEventController::HashKeyboardEvent(SDLK_PAGEUP);
@@ -846,11 +846,11 @@ void Config::Load()
 			if (ctlseqh != NULL) {
 				int i = 0;
 				for (yaml::Node *node : *ctlseqh) {
-					controls_hash[i++].Load(dynamic_cast<yaml::MapNode*>(node));
+					controlsHash[i++].Load(dynamic_cast<yaml::MapNode*>(node));
 				}
 			}
 
-			camera_hash.Load(dynamic_cast<yaml::MapNode*>(root->Get("camera_hash")));
+			cameraHash.Load(dynamic_cast<yaml::MapNode*>(root->Get("camera_hash")));
 		}
 
 		delete parser;
@@ -911,11 +911,11 @@ void Config::Save() const
 		emitter->MapKey("controls_hash");
 		emitter->StartSeq();
 		for (int i = 0; i < MAX_PLAYERS; ++i) {
-			controls_hash[i].Save(emitter);
+			controlsHash[i].Save(emitter);
 		}
 		emitter->EndSeq();
 
-		camera_hash.Save(emitter);
+		cameraHash.Save(emitter);
 		ui.Save(emitter);
 
 		emitter->EndMap();
@@ -938,7 +938,7 @@ void Config::SaveVersion(yaml::Emitter *emitter) const
 
 // app /////////////////////////////////////////////////////////////////////////
 
-void Config::cfg_app_t::Load(yaml::MapNode *root)
+void Config::app_t::Load(yaml::MapNode *root)
 {
 	if (root == NULL) return;
 
@@ -951,7 +951,7 @@ void Config::cfg_app_t::Load(yaml::MapNode *root)
 
 // video ///////////////////////////////////////////////////////////////////////
 
-void Config::cfg_video_t::ResetToDefaults()
+void Config::video_t::ResetToDefaults()
 {
 	gamma = 1.2;
 	contrast = 0.95;
@@ -971,7 +971,7 @@ void Config::cfg_video_t::ResetToDefaults()
 	stackedSplitscreen = true;
 }
 
-void Config::cfg_video_t::Load(yaml::MapNode *root)
+void Config::video_t::Load(yaml::MapNode *root)
 {
 	if (root == NULL) return;
 
@@ -992,7 +992,7 @@ void Config::cfg_video_t::Load(yaml::MapNode *root)
 	READ_BOOL(root, stackedSplitscreen);
 }
 
-void Config::cfg_video_t::Save(yaml::Emitter *emitter) const
+void Config::video_t::Save(yaml::Emitter *emitter) const
 {
 	emitter->MapKey("video");
 	emitter->StartMap();
@@ -1018,19 +1018,19 @@ void Config::cfg_video_t::Save(yaml::Emitter *emitter) const
 
 // audio ///////////////////////////////////////////////////////////////////////
 
-void Config::cfg_audio_t::ResetToDefaults()
+void Config::audio_t::ResetToDefaults()
 {
 	sfxVolume = 1.0;
 }
 
-void Config::cfg_audio_t::Load(yaml::MapNode *root)
+void Config::audio_t::Load(yaml::MapNode *root)
 {
 	if (root == NULL) return;
 
 	READ_DOUBLE(root, sfxVolume, 0.0f, 1.0f);
 }
 
-void Config::cfg_audio_t::Save(yaml::Emitter *emitter) const
+void Config::audio_t::Save(yaml::Emitter *emitter) const
 {
 	emitter->MapKey("audio");
 	emitter->StartMap();
@@ -1042,19 +1042,19 @@ void Config::cfg_audio_t::Save(yaml::Emitter *emitter) const
 
 // misc ////////////////////////////////////////////////////////////////////////
 
-void Config::cfg_misc_t::ResetToDefaults()
+void Config::misc_t::ResetToDefaults()
 {
 	screenshotPath = GetDefaultScreenshotPath();
 }
 
-void Config::cfg_misc_t::Load(yaml::MapNode *root)
+void Config::misc_t::Load(yaml::MapNode *root)
 {
 	if (root == NULL) return;
 
 	READ_PATH(root, screenshotPath);
 }
 
-void Config::cfg_misc_t::Save(yaml::Emitter *emitter) const
+void Config::misc_t::Save(yaml::Emitter *emitter) const
 {
 	emitter->MapKey("misc");
 	emitter->StartMap();
@@ -1066,7 +1066,7 @@ void Config::cfg_misc_t::Save(yaml::Emitter *emitter) const
 
 // player //////////////////////////////////////////////////////////////////////
 
-void Config::cfg_player_t::ResetToDefaults()
+void Config::player_t::ResetToDefaults()
 {
 	// Get current user name as default nickname.
 #ifdef _WIN32
@@ -1091,14 +1091,14 @@ void Config::cfg_player_t::ResetToDefaults()
 #endif
 }
 
-void Config::cfg_player_t::Load(yaml::MapNode *root)
+void Config::player_t::Load(yaml::MapNode *root)
 {
 	if (root == NULL) return;
 
 	READ_STRING(root, nickName);
 }
 
-void Config::cfg_player_t::Save(yaml::Emitter *emitter) const
+void Config::player_t::Save(yaml::Emitter *emitter) const
 {
 	emitter->MapKey("player");
 	emitter->StartMap();
@@ -1110,7 +1110,7 @@ void Config::cfg_player_t::Save(yaml::Emitter *emitter) const
 
 // net /////////////////////////////////////////////////////////////////////////
 
-void Config::cfg_net_t::ResetToDefaults()
+void Config::net_t::ResetToDefaults()
 {
 	mainServer = DEFAULT_MAIN_SERVER;
 	updateServer = DEFAULT_UPDATE_SERVER;
@@ -1119,12 +1119,12 @@ void Config::cfg_net_t::ResetToDefaults()
 	messageReceivedSoundOnlyBg = true;
 	logChats = false;
 	logChatsPath = GetDefaultChatLogPath();
-	udpRecvPort = cfg_net_t::DEFAULT_UDP_RECV_PORT;
-	tcpRecvPort = cfg_net_t::DEFAULT_TCP_RECV_PORT;
-	tcpServPort = cfg_net_t::DEFAULT_TCP_SERV_PORT;
+	udpRecvPort = net_t::DEFAULT_UDP_RECV_PORT;
+	tcpRecvPort = net_t::DEFAULT_TCP_RECV_PORT;
+	tcpServPort = net_t::DEFAULT_TCP_SERV_PORT;
 }
 
-void Config::cfg_net_t::Load(yaml::MapNode *root)
+void Config::net_t::Load(yaml::MapNode *root)
 {
 	if (root == NULL) return;
 
@@ -1147,7 +1147,7 @@ void Config::cfg_net_t::Load(yaml::MapNode *root)
 	}
 }
 
-void Config::cfg_net_t::Save(yaml::Emitter *emitter) const
+void Config::net_t::Save(yaml::Emitter *emitter) const
 {
 	emitter->MapKey("net");
 	emitter->StartMap();
@@ -1168,7 +1168,7 @@ void Config::cfg_net_t::Save(yaml::Emitter *emitter) const
 
 // controls ////////////////////////////////////////////////////////////////////
 
-void Config::cfg_controls_hash_t::Load(yaml::MapNode* root)
+void Config::controlsHash_t::Load(yaml::MapNode* root)
 {
 	if (root == NULL) return;
 
@@ -1182,7 +1182,7 @@ void Config::cfg_controls_hash_t::Load(yaml::MapNode* root)
 	READ_INT(root, lookBack, 0, INT_MAX);
 }
 
-void Config::cfg_controls_hash_t::Save(yaml::Emitter* emitter) const
+void Config::controlsHash_t::Save(yaml::Emitter* emitter) const
 {
 	emitter->StartMap();
 
@@ -1198,7 +1198,7 @@ void Config::cfg_controls_hash_t::Save(yaml::Emitter* emitter) const
 	emitter->EndMap();
 }
 
-void Config::cfg_camera_hash_t::Load(yaml::MapNode* root)
+void Config::cameraHash_t::Load(yaml::MapNode* root)
 {
 	if (root == NULL) return;
 
@@ -1209,7 +1209,7 @@ void Config::cfg_camera_hash_t::Load(yaml::MapNode* root)
 	READ_INT(root, reset, 0, INT_MAX);
 }
 
-void Config::cfg_camera_hash_t::Save(yaml::Emitter* emitter) const
+void Config::cameraHash_t::Save(yaml::Emitter* emitter) const
 {
 	emitter->MapKey("camera_hash");
 	emitter->StartMap();
@@ -1223,7 +1223,7 @@ void Config::cfg_camera_hash_t::Save(yaml::Emitter* emitter) const
 	emitter->EndMap();
 }
 
-void Config::cfg_ui_t::Load(yaml::MapNode* root)
+void Config::ui_t::Load(yaml::MapNode* root)
 {
 	if (root == NULL) return;
 
@@ -1238,7 +1238,7 @@ void Config::cfg_ui_t::Load(yaml::MapNode* root)
 	READ_INT(root, menuCancel, 0, INT_MAX);
 }
 
-void Config::cfg_ui_t::Save(yaml::Emitter* emitter) const
+void Config::ui_t::Save(yaml::Emitter* emitter) const
 {
 	emitter->MapKey("ui");
 	emitter->StartMap();

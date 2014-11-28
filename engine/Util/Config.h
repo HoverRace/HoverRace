@@ -171,13 +171,13 @@ private:
 #	endif
 
 public:
-	struct cfg_app_t {
+	struct app_t {
 		OS::path_t mediaPath;
 
 		void Load(yaml::MapNode*);
 	} app;
 
-	struct cfg_video_t {
+	struct video_t {
 		double gamma;
 		double contrast;
 		double brightness;
@@ -199,7 +199,7 @@ public:
 		void Save(yaml::Emitter*) const;
 	} video;
 
-	struct cfg_audio_t {
+	struct audio_t {
 		double sfxVolume;
 
 		void ResetToDefaults();
@@ -207,7 +207,7 @@ public:
 		void Save(yaml::Emitter*) const;
 	} audio;
 
-	struct cfg_misc_t {
+	struct misc_t {
 		OS::path_t screenshotPath;
 
 		void ResetToDefaults();
@@ -215,7 +215,7 @@ public:
 		void Save(yaml::Emitter*) const;
 	} misc;
 
-	struct cfg_player_t {
+	struct player_t {
 		std::string nickName;
 
 		void ResetToDefaults();
@@ -223,7 +223,7 @@ public:
 		void Save(yaml::Emitter*) const;
 	} player;
 
-	struct cfg_net_t {
+	struct net_t {
 		std::string mainServer;
 		std::string updateServer;
 		bool autoUpdates;
@@ -247,7 +247,7 @@ public:
 	static const int MAX_PLAYERS = 4;
 
 	/// See Client/Control/Controller.h for the hash function
-	struct cfg_controls_hash_t {
+	struct controlsHash_t {
 		int motorOn;
 		int right;
 		int left;
@@ -259,9 +259,9 @@ public:
 
 		void Load(yaml::MapNode*);
 		void Save(yaml::Emitter*) const;
-	} controls_hash[MAX_PLAYERS];
+	} controlsHash[MAX_PLAYERS];
 
-	struct cfg_camera_hash_t {
+	struct cameraHash_t {
 		int zoomIn;
 		int zoomOut;
 		int panUp;
@@ -270,9 +270,9 @@ public:
 
 		void Load(yaml::MapNode*);
 		void Save(yaml::Emitter*) const;
-	} camera_hash;
+	} cameraHash;
 
-	struct cfg_ui_t {
+	struct ui_t {
 		int consoleToggle;
 		int consoleUp;
 		int consoleDown;
@@ -288,7 +288,7 @@ public:
 		void Save(yaml::Emitter*) const;
 	} ui;
 
-	struct cfg_runtime_t {
+	struct runtime_t {
 		bool silent;
 		bool verboseLog;
 		bool showFramerate;

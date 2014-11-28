@@ -79,7 +79,7 @@ void VideoBuffer::OnDesktopModeChange(int width, int height)
  */
 void VideoBuffer::OnWindowResChange()
 {
-	Config::cfg_video_t &vidCfg = Config::GetInstance()->video;
+	const auto &vidCfg = Config::GetInstance()->video;
 	width = vidCfg.xRes;
 	height = vidCfg.yRes;
 	pitch = width;
@@ -105,7 +105,7 @@ void VideoBuffer::OnWindowResChange()
 
 void VideoBuffer::CreatePalette()
 {
-	Config::cfg_video_t &vidcfg = Config::GetInstance()->video;
+	const auto &vidcfg = Config::GetInstance()->video;
 	double gamma = vidcfg.gamma;
 	double contrast = vidcfg.contrast;
 	double brightness = vidcfg.brightness;

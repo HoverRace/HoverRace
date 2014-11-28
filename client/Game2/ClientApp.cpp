@@ -274,7 +274,7 @@ std::string ClientApp::GetWindowTitle()
  */
 void ClientApp::OnWindowResize(int w, int h)
 {
-	Config::cfg_video_t &vidCfg = Config::GetInstance()->video;
+	auto &vidCfg = Config::GetInstance()->video;
 	vidCfg.xRes = w;
 	vidCfg.yRes = h;
 
@@ -371,7 +371,7 @@ void ClientApp::MainLoop()
 
 	statusOverlayScene.reset(new StatusOverlayScene(*display, *this));
 
-	Config::cfg_runtime_t &runtimeCfg = Config::GetInstance()->runtime;
+	const auto &runtimeCfg = Config::GetInstance()->runtime;
 	needsDevWarning =
 		!runtimeCfg.skipStartupWarning &&
 		runtimeCfg.initScripts.empty();

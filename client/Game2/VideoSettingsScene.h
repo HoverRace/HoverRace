@@ -45,8 +45,8 @@ protected:
 	void OnCancel() override;
 
 private:
-	Util::Config::cfg_video_t &videoCfg;
-	const Util::Config::cfg_video_t origVideoCfg;
+	Util::Config::video_t &videoCfg;
+	const Util::Config::video_t origVideoCfg;
 
 	std::shared_ptr<Display::Label> textScalePreviewLbl;
 
