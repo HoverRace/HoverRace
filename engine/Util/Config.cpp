@@ -918,7 +918,7 @@ void Config::Load()
  * Save the configuration.
  * @throws std::exception If an error occurs while saving.
  */
-void Config::Save()
+void Config::Save() const
 {
 	if (unlinked) return;
 
@@ -977,9 +977,9 @@ void Config::Save()
 	fclose(out);
 }
 
-void Config::SaveVersion(yaml::Emitter *emitter)
+void Config::SaveVersion(yaml::Emitter *emitter) const
 {
-	std::string &version = shortVersion;
+	const auto &version = shortVersion;
 	EMIT_VAR(emitter, version);
 }
 
@@ -1019,7 +1019,7 @@ void Config::cfg_video_t::Load(yaml::MapNode *root)
 	READ_BOOL(root, stackedSplitscreen);
 }
 
-void Config::cfg_video_t::Save(yaml::Emitter *emitter)
+void Config::cfg_video_t::Save(yaml::Emitter *emitter) const
 {
 	emitter->MapKey("video");
 	emitter->StartMap();
@@ -1052,7 +1052,7 @@ void Config::cfg_audio_t::Load(yaml::MapNode *root)
 	READ_DOUBLE(root, sfxVolume, 0.0f, 1.0f);
 }
 
-void Config::cfg_audio_t::Save(yaml::Emitter *emitter)
+void Config::cfg_audio_t::Save(yaml::Emitter *emitter) const
 {
 	emitter->MapKey("audio");
 	emitter->StartMap();
@@ -1071,7 +1071,7 @@ void Config::cfg_misc_t::Load(yaml::MapNode *root)
 	READ_PATH(root, screenshotPath);
 }
 
-void Config::cfg_misc_t::Save(yaml::Emitter *emitter)
+void Config::cfg_misc_t::Save(yaml::Emitter *emitter) const
 {
 	emitter->MapKey("misc");
 	emitter->StartMap();
@@ -1090,7 +1090,7 @@ void Config::cfg_player_t::Load(yaml::MapNode *root)
 	READ_STRING(root, nickName);
 }
 
-void Config::cfg_player_t::Save(yaml::Emitter *emitter)
+void Config::cfg_player_t::Save(yaml::Emitter *emitter) const
 {
 	emitter->MapKey("player");
 	emitter->StartMap();
@@ -1125,7 +1125,7 @@ void Config::cfg_net_t::Load(yaml::MapNode *root)
 	}
 }
 
-void Config::cfg_net_t::Save(yaml::Emitter *emitter)
+void Config::cfg_net_t::Save(yaml::Emitter *emitter) const
 {
 	emitter->MapKey("net");
 	emitter->StartMap();
@@ -1160,7 +1160,7 @@ void Config::cfg_controls_hash_t::Load(yaml::MapNode* root)
 	READ_INT(root, lookBack, 0, INT_MAX);
 }
 
-void Config::cfg_controls_hash_t::Save(yaml::Emitter* emitter)
+void Config::cfg_controls_hash_t::Save(yaml::Emitter* emitter) const
 {
 	emitter->StartMap();
 
@@ -1187,7 +1187,7 @@ void Config::cfg_camera_hash_t::Load(yaml::MapNode* root)
 	READ_INT(root, reset, 0, INT_MAX);
 }
 
-void Config::cfg_camera_hash_t::Save(yaml::Emitter* emitter)
+void Config::cfg_camera_hash_t::Save(yaml::Emitter* emitter) const
 {
 	emitter->MapKey("camera_hash");
 	emitter->StartMap();
@@ -1216,7 +1216,7 @@ void Config::cfg_ui_t::Load(yaml::MapNode* root)
 	READ_INT(root, menuCancel, 0, INT_MAX);
 }
 
-void Config::cfg_ui_t::Save(yaml::Emitter* emitter)
+void Config::cfg_ui_t::Save(yaml::Emitter* emitter) const
 {
 	emitter->MapKey("ui");
 	emitter->StartMap();

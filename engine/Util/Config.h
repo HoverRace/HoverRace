@@ -141,10 +141,10 @@ private:
 	void LoadSystem(const OS::path_t &path);
 public:
 	void Load();
-	void Save();
+	void Save() const;
 
 private:
-	void SaveVersion(yaml::Emitter*);
+	void SaveVersion(yaml::Emitter*) const;
 
 public:
 	static const std::string TRACK_EXT;
@@ -195,28 +195,28 @@ public:
 		bool stackedSplitscreen;
 
 		void Load(yaml::MapNode*);
-		void Save(yaml::Emitter*);
+		void Save(yaml::Emitter*) const;
 	} video;
 
 	struct cfg_audio_t {
 		double sfxVolume;
 
 		void Load(yaml::MapNode*);
-		void Save(yaml::Emitter*);
+		void Save(yaml::Emitter*) const;
 	} audio;
 
 	struct cfg_misc_t {
 		OS::path_t screenshotPath;
 
 		void Load(yaml::MapNode*);
-		void Save(yaml::Emitter*);
+		void Save(yaml::Emitter*) const;
 	} misc;
 
 	struct cfg_player_t {
 		std::string nickName;
 
 		void Load(yaml::MapNode*);
-		void Save(yaml::Emitter*);
+		void Save(yaml::Emitter*) const;
 	} player;
 
 	struct cfg_net_t {
@@ -236,7 +236,7 @@ public:
 		//TODO: Proxy server settings.
 
 		void Load(yaml::MapNode*);
-		void Save(yaml::Emitter*);
+		void Save(yaml::Emitter*) const;
 	} net;
 
 	static const int MAX_PLAYERS = 4;
@@ -253,7 +253,7 @@ public:
 		int lookBack;
 
 		void Load(yaml::MapNode*);
-		void Save(yaml::Emitter*);
+		void Save(yaml::Emitter*) const;
 	} controls_hash[MAX_PLAYERS];
 
 	struct cfg_camera_hash_t {
@@ -264,7 +264,7 @@ public:
 		int reset;
 
 		void Load(yaml::MapNode*);
-		void Save(yaml::Emitter*);
+		void Save(yaml::Emitter*) const;
 	} camera_hash;
 
 	struct cfg_ui_t {
@@ -280,7 +280,7 @@ public:
 		int menuCancel;
 
 		void Load(yaml::MapNode*);
-		void Save(yaml::Emitter*);
+		void Save(yaml::Emitter*) const;
 	} ui;
 
 	struct cfg_runtime_t {
