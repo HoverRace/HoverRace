@@ -516,6 +516,11 @@ void SdlDisplay::ApplyVideoMode()
 		throw Exception("Unable to find a compatible renderer");
 	}
 
+	if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear")) {
+		// If this fails, then SDL will just use the default ("nearest").
+		HR_LOG(info) << "Failed to set \"linear\" render scale quality.";
+	}
+
 	// We keep track of the current state of the window so
 	// OnDisplayConfigChanged() can determine if anything special
 	// needs to be done.
