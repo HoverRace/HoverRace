@@ -687,58 +687,11 @@ const std::string &Config::GetDefaultSymbolFontName() const
  */
 void Config::ResetToDefaults()
 {
-	video.gamma = 1.2;
-	video.contrast = 0.95;
-	video.brightness = 0.95;
-	video.textScale = 1.0;
-	video.xPos = 150;
-	video.yPos = 150;
-	video.xRes = 800;
-	video.yRes = 450;
-
-	// Use this as a sensible default.
-	// We used to try to detect the current screen resolution, but we
-	// initialize these defaults before the SDL video subsystem is initialized.
-	video.xResFullscreen = 1280;
-	video.yResFullscreen = 720;
-
-	video.stackedSplitscreen = true;
-
-	audio.sfxVolume = 1.0;
-
-	misc.screenshotPath = GetDefaultScreenshotPath();
-
-	// Get current user name as default nickname.
-#ifdef _WIN32
-	char buf[UNLEN + 1];
-	DWORD bsize = sizeof(buf);
-	if (GetUserName(buf, &bsize)) {
-		buf[UNLEN] = '\0';
-		player.nickName = buf;
-	}
-	else {
-		player.nickName = DEFAULT_NICKNAME;
-	}
-#else
-	char buf[LOGIN_NAME_MAX];
-	if (getlogin_r(buf, sizeof(buf)) == 0) {
-		player.nickName = buf;
-	}
-	else {
-		player.nickName = DEFAULT_NICKNAME;
-	}
-#endif
-
-	net.mainServer = DEFAULT_MAIN_SERVER;
-	net.updateServer = DEFAULT_UPDATE_SERVER;
-	net.autoUpdates = true;
-	net.messageReceivedSound = true;
-	net.messageReceivedSoundOnlyBg = true;
-	net.logChats = false;
-	net.logChatsPath = GetDefaultChatLogPath();
-	net.udpRecvPort = cfg_net_t::DEFAULT_UDP_RECV_PORT;
-	net.tcpRecvPort = cfg_net_t::DEFAULT_TCP_RECV_PORT;
-	net.tcpServPort = cfg_net_t::DEFAULT_TCP_SERV_PORT;
+	video.ResetToDefaults();
+	audio.ResetToDefaults();
+	misc.ResetToDefaults();
+	player.ResetToDefaults();
+	net.ResetToDefaults();
 
 	// Default controls.
 	controls_hash[0].motorOn  = InputEventController::HashKeyboardEvent(SDLK_LSHIFT);
@@ -998,6 +951,26 @@ void Config::cfg_app_t::Load(yaml::MapNode *root)
 
 // video ///////////////////////////////////////////////////////////////////////
 
+void Config::cfg_video_t::ResetToDefaults()
+{
+	gamma = 1.2;
+	contrast = 0.95;
+	brightness = 0.95;
+	textScale = 1.0;
+	xPos = 150;
+	yPos = 150;
+	xRes = 800;
+	yRes = 450;
+
+	// Use this as a sensible default.
+	// We used to try to detect the current screen resolution, but we
+	// initialize these defaults before the SDL video subsystem is initialized.
+	xResFullscreen = 1280;
+	yResFullscreen = 720;
+
+	stackedSplitscreen = true;
+}
+
 void Config::cfg_video_t::Load(yaml::MapNode *root)
 {
 	if (root == NULL) return;
@@ -1045,6 +1018,11 @@ void Config::cfg_video_t::Save(yaml::Emitter *emitter) const
 
 // audio ///////////////////////////////////////////////////////////////////////
 
+void Config::cfg_audio_t::ResetToDefaults()
+{
+	sfxVolume = 1.0;
+}
+
 void Config::cfg_audio_t::Load(yaml::MapNode *root)
 {
 	if (root == NULL) return;
@@ -1063,6 +1041,11 @@ void Config::cfg_audio_t::Save(yaml::Emitter *emitter) const
 }
 
 // misc ////////////////////////////////////////////////////////////////////////
+
+void Config::cfg_misc_t::ResetToDefaults()
+{
+	screenshotPath = GetDefaultScreenshotPath();
+}
 
 void Config::cfg_misc_t::Load(yaml::MapNode *root)
 {
@@ -1083,6 +1066,31 @@ void Config::cfg_misc_t::Save(yaml::Emitter *emitter) const
 
 // player //////////////////////////////////////////////////////////////////////
 
+void Config::cfg_player_t::ResetToDefaults()
+{
+	// Get current user name as default nickname.
+#ifdef _WIN32
+	char buf[UNLEN + 1];
+	DWORD bsize = sizeof(buf);
+	//TODO: Handle Unicode names.
+	if (GetUserName(buf, &bsize)) {
+		buf[UNLEN] = '\0';
+		nickName = buf;
+	}
+	else {
+		nickName = DEFAULT_NICKNAME;
+	}
+#else
+	char buf[LOGIN_NAME_MAX];
+	if (getlogin_r(buf, sizeof(buf)) == 0) {
+		nickName = buf;
+	}
+	else {
+		nickName = DEFAULT_NICKNAME;
+	}
+#endif
+}
+
 void Config::cfg_player_t::Load(yaml::MapNode *root)
 {
 	if (root == NULL) return;
@@ -1101,6 +1109,20 @@ void Config::cfg_player_t::Save(yaml::Emitter *emitter) const
 }
 
 // net /////////////////////////////////////////////////////////////////////////
+
+void Config::cfg_net_t::ResetToDefaults()
+{
+	mainServer = DEFAULT_MAIN_SERVER;
+	updateServer = DEFAULT_UPDATE_SERVER;
+	autoUpdates = true;
+	messageReceivedSound = true;
+	messageReceivedSoundOnlyBg = true;
+	logChats = false;
+	logChatsPath = GetDefaultChatLogPath();
+	udpRecvPort = cfg_net_t::DEFAULT_UDP_RECV_PORT;
+	tcpRecvPort = cfg_net_t::DEFAULT_TCP_RECV_PORT;
+	tcpServPort = cfg_net_t::DEFAULT_TCP_SERV_PORT;
+}
 
 void Config::cfg_net_t::Load(yaml::MapNode *root)
 {

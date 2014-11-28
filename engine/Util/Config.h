@@ -194,6 +194,7 @@ public:
 
 		bool stackedSplitscreen;
 
+		void ResetToDefaults();
 		void Load(yaml::MapNode*);
 		void Save(yaml::Emitter*) const;
 	} video;
@@ -201,6 +202,7 @@ public:
 	struct cfg_audio_t {
 		double sfxVolume;
 
+		void ResetToDefaults();
 		void Load(yaml::MapNode*);
 		void Save(yaml::Emitter*) const;
 	} audio;
@@ -208,6 +210,7 @@ public:
 	struct cfg_misc_t {
 		OS::path_t screenshotPath;
 
+		void ResetToDefaults();
 		void Load(yaml::MapNode*);
 		void Save(yaml::Emitter*) const;
 	} misc;
@@ -215,6 +218,7 @@ public:
 	struct cfg_player_t {
 		std::string nickName;
 
+		void ResetToDefaults();
 		void Load(yaml::MapNode*);
 		void Save(yaml::Emitter*) const;
 	} player;
@@ -235,6 +239,7 @@ public:
 		static const int DEFAULT_TCP_SERV_PORT = 9530;
 		//TODO: Proxy server settings.
 
+		void ResetToDefaults();
 		void Load(yaml::MapNode*);
 		void Save(yaml::Emitter*) const;
 	} net;
