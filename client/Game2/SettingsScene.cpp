@@ -35,7 +35,7 @@ Vec2 SettingsScene::SLIDER_SIZE = Vec2(300, 20);
 SettingsScene::SettingsScene(Display::Display &display, GameDirector &director,
 	const std::string &title, const std::string &name) :
 	SUPER(display, director, std::string(_("Settings")) + " // " + title, name),
-	curRow(0)
+	curRow(0), needsLoadFromConfig(true)
 {
 	using namespace Display;
 	using Alignment = UiViewModel::Alignment;
@@ -66,6 +66,16 @@ void SettingsScene::AddSettingLabel(size_t row, const std::string &label)
 
 	settingsGrid->AddGridCell(row, 0,
 		new Display::Label(label, s.bodyFont, s.bodyFg));
+}
+
+void SettingsScene::PrepareRender()
+{
+	if (needsLoadFromConfig) {
+		LoadFromConfig();
+		needsLoadFromConfig = false;
+	}
+
+	SUPER::PrepareRender();
 }
 
 }  // namespace Client

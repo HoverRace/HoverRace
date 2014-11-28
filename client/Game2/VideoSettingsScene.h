@@ -26,6 +26,12 @@
 #include "SettingsScene.h"
 
 namespace HoverRace {
+	namespace Display {
+		class Slider;
+	}
+}
+
+namespace HoverRace {
 namespace Client {
 
 /**
@@ -41,13 +47,16 @@ public:
 	virtual ~VideoSettingsScene() { }
 
 protected:
+	void LoadFromConfig() override;
+
 	void OnOk() override;
 	void OnCancel() override;
 
 private:
 	Util::Config::video_t &videoCfg;
-	const Util::Config::video_t origVideoCfg;
+	Util::Config::video_t origVideoCfg;
 
+	std::shared_ptr<Display::Slider> textScaleSlider;
 	std::shared_ptr<Display::Label> textScalePreviewLbl;
 
 	boost::signals2::scoped_connection textScaleConn;

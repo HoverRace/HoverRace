@@ -44,14 +44,19 @@ AudioSettingsScene::AudioSettingsScene(Display::Display &display,
 {
 	using namespace Display;
 
-	auto sfxVolumeSlider = AddSetting(_("Sound Effects"),
+	sfxVolumeSlider = AddSetting(_("Sound Effects"),
 		new Slider(display, 0, 1.0, 0.1));
 	sfxVolumeSlider->SetSize(SLIDER_SIZE);
-	sfxVolumeSlider->SetValue(audioCfg.sfxVolume);
 	sfxVolumeConn = sfxVolumeSlider->GetValueChangedSignal().connect([&](double val) {
 		audioCfg.sfxVolume = val;
 		SoundServer::Play(testSound);
 	});
+}
+
+void AudioSettingsScene::LoadFromConfig()
+{
+	origAudioCfg = audioCfg;
+	sfxVolumeSlider->SetValue(audioCfg.sfxVolume);
 }
 
 /**

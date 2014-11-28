@@ -26,6 +26,9 @@
 #include "SettingsScene.h"
 
 namespace HoverRace {
+	namespace Display {
+		class Slider;
+	}
 	namespace VideoServices {
 		class ShortSound;
 	}
@@ -46,6 +49,9 @@ public:
 	AudioSettingsScene(Display::Display &display, GameDirector &director);
 	virtual ~AudioSettingsScene() { }
 
+protected:
+	void LoadFromConfig() override;
+
 private:
 	static VideoServices::ShortSound *LoadSound(int id);
 
@@ -55,9 +61,11 @@ protected:
 
 private:
 	Util::Config::audio_t &audioCfg;
-	const Util::Config::audio_t origAudioCfg;
+	Util::Config::audio_t origAudioCfg;
 
 	VideoServices::ShortSound *testSound;
+
+	std::shared_ptr<Display::Slider> sfxVolumeSlider;
 
 	boost::signals2::scoped_connection sfxVolumeConn;
 };

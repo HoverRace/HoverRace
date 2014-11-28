@@ -44,6 +44,10 @@ public:
 private:
 	void AddSettingLabel(size_t row, const std::string &label);
 
+protected:
+	/// 
+	virtual void LoadFromConfig() = 0;
+
 public:
 	template<typename T>
 	typename std::enable_if<
@@ -60,12 +64,16 @@ public:
 		return cell->GetContents();
 	}
 
+public:
+	void PrepareRender() override;
+
 protected:
 	static Vec2 SLIDER_SIZE;
 
 private:
 	std::shared_ptr<Display::FlexGrid> settingsGrid;
 	size_t curRow;
+	bool needsLoadFromConfig;
 };
 
 }  // namespace Client

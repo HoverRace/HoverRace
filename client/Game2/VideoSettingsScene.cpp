@@ -40,10 +40,9 @@ VideoSettingsScene::VideoSettingsScene(Display::Display &display,
 	using namespace Display;
 	const auto &s = display.styles;
 
-	auto textScaleSlider = AddSetting(_("Text Scale"),
+	textScaleSlider = AddSetting(_("Text Scale"),
 		new Slider(display, 0.5, 1.5, 0.1));
 	textScaleSlider->SetSize(SLIDER_SIZE);
-	textScaleSlider->SetValue(videoCfg.textScale);
 	textScaleConn = textScaleSlider->GetValueChangedSignal().connect([&](double val) {
 		this->textScalePreviewLbl->SetScale(val / 2.0);
 		videoCfg.textScale = val;
@@ -57,6 +56,12 @@ VideoSettingsScene::VideoSettingsScene(Display::Display &display,
 		new Label(_("This is sample text."), scaledFont, s.bodyFg));
 	textScalePreviewLbl->SetFixedScale(true);
 	textScalePreviewLbl->SetScale(videoCfg.textScale / 2.0);
+}
+
+void VideoSettingsScene::LoadFromConfig()
+{
+	origVideoCfg = videoCfg;
+	textScaleSlider->SetValue(videoCfg.textScale);
 }
 
 void VideoSettingsScene::OnOk()
