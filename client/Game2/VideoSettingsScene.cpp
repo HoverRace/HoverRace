@@ -64,6 +64,11 @@ void VideoSettingsScene::LoadFromConfig()
 	textScaleSlider->SetValue(videoCfg.textScale);
 }
 
+void VideoSettingsScene::ResetToDefaults()
+{
+	videoCfg.ResetToDefaults();
+}
+
 void VideoSettingsScene::OnOk()
 {
 	bool needsMainMenu =

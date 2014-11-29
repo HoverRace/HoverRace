@@ -59,6 +59,11 @@ void AudioSettingsScene::LoadFromConfig()
 	sfxVolumeSlider->SetValue(audioCfg.sfxVolume);
 }
 
+void AudioSettingsScene::ResetToDefaults()
+{
+	audioCfg.ResetToDefaults();
+}
+
 /**
  * Loads a sound from the resources.
  * @param id The resource ID.

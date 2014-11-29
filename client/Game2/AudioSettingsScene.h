@@ -51,6 +51,7 @@ public:
 
 protected:
 	void LoadFromConfig() override;
+	void ResetToDefaults() override;
 
 private:
 	static VideoServices::ShortSound *LoadSound(int id);

@@ -21,6 +21,7 @@
 
 #include "../StdAfx.h"
 
+#include "../../engine/Display/Button.h"
 #include "../../engine/Display/Label.h"
 
 #include "SettingsScene.h"
@@ -39,6 +40,15 @@ SettingsScene::SettingsScene(Display::Display &display, GameDirector &director,
 {
 	using namespace Display;
 	using Alignment = UiViewModel::Alignment;
+
+	auto statusRoot = GetStatusRoot();
+
+	auto resetBtn = statusRoot->AddChild(
+		new Button(display, _("Reset to defaults")));
+	resetConn = resetBtn->GetClickedSignal().connect([&](ClickRegion&) {
+		ResetToDefaults();
+		LoadFromConfig();
+	});
 
 	auto root = GetContentRoot();
 

@@ -45,8 +45,11 @@ private:
 	void AddSettingLabel(size_t row, const std::string &label);
 
 protected:
-	/// 
+	/// Refresh the form widgets with values from the config.
 	virtual void LoadFromConfig() = 0;
+
+	/// Reset the config values to their defaults (if possible).
+	virtual void ResetToDefaults() = 0;
 
 public:
 	template<typename T>
@@ -74,6 +77,8 @@ private:
 	std::shared_ptr<Display::FlexGrid> settingsGrid;
 	size_t curRow;
 	bool needsLoadFromConfig;
+
+	boost::signals2::scoped_connection resetConn;
 };
 
 }  // namespace Client

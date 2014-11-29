@@ -48,6 +48,7 @@ public:
 
 protected:
 	void LoadFromConfig() override;
+	void ResetToDefaults() override;
 
 	void OnOk() override;
 	void OnCancel() override;
