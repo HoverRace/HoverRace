@@ -71,6 +71,7 @@ MainMenuScene::MainMenuScene(Display::Display &display, GameDirector &director,
 		0xffffffff));
 	titleLbl->SetPos(40, sliderHeight);
 	titleLbl->SetAlignment(Alignment::SW);
+	titleLbl->SetFixedScale(true);
 
 	menuContainer = root->AddChild(new Container(display,
 		Vec2(1280, sliderHeight)));

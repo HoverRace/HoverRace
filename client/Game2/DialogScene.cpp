@@ -76,6 +76,7 @@ DialogScene::DialogScene(Display::Display &display, GameDirector &director,
 		new Label(title, s.headingFont, s.headingFg));
 	titleLbl->SetPos(MARGIN_WIDTH, 80);
 	titleLbl->SetAlignment(Alignment::SW);
+	titleLbl->SetFixedScale(true);
 
 	// The default action buttons (OK, Cancel).
 

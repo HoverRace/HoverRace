@@ -98,11 +98,13 @@ TrackSelectScene::TrackSelectScene(Display::Display &display,
 		rulebook->GetTitle() + " //",
 		UiFont(30), 0xffd0d0d0))->GetContents();
 	rulebookLbl->SetAlignment(Alignment::SW);
+	rulebookLbl->SetFixedScale(true);
 
 	rulebookDescLbl = subtitleGrid->AddGridCell(0, 1, new Label(
 		rulebook->GetDescription(),
 		UiFont(25), 0xff6d6d6d))->GetContents();
 	rulebookDescLbl->SetAlignment(Alignment::SW);
+	rulebookDescLbl->SetFixedScale(true);
 
 	subtitleRule = root->AddChild(new RuleLine(
 		RuleLine::Direction::H,
