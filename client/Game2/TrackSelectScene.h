@@ -51,52 +51,53 @@ namespace Client {
  */
 class TrackSelectScene : public DialogScene
 {
-	typedef DialogScene SUPER;
-	public:
-		TrackSelectScene(Display::Display &display, GameDirector &director,
-			std::shared_ptr<const Rulebook> rulebook);
-		virtual ~TrackSelectScene();
+	using SUPER = DialogScene;
 
-	private:
-		void OnTrackSelected(Model::TrackEntryPtr entry);
-		void OnReady();
+public:
+	TrackSelectScene(Display::Display &display, GameDirector &director,
+		std::shared_ptr<const Rulebook> rulebook);
+	virtual ~TrackSelectScene();
 
-	protected:
-		void OnPhaseTransition(double progress) override;
+private:
+	void OnTrackSelected(Model::TrackEntryPtr entry);
+	void OnReady();
 
-	public:
-		typedef boost::signals2::signal<void(std::shared_ptr<Rules>, std::shared_ptr<Display::Res<Display::Texture>>)> okSignal_t;
-		okSignal_t &GetOkSignal() { return okSignal; }
+protected:
+	void OnPhaseTransition(double progress) override;
 
-		typedef boost::signals2::signal<void()> cancelSignal_t;
-		cancelSignal_t &GetCancelSignal() { return cancelSignal; }
+public:
+	typedef boost::signals2::signal<void(std::shared_ptr<Rules>, std::shared_ptr<Display::Res<Display::Texture>>)> okSignal_t;
+	okSignal_t &GetOkSignal() { return okSignal; }
 
-	private:
-		bool trackSelected;  ///< Are we exiting because a track was selected?
-		std::shared_ptr<Rules> rules;
+	typedef boost::signals2::signal<void()> cancelSignal_t;
+	cancelSignal_t &GetCancelSignal() { return cancelSignal; }
 
-		Model::TrackList trackList;
-		std::shared_ptr<Model::TrackEntry> selectedTrack;
+private:
+	bool trackSelected;  ///< Are we exiting because a track was selected?
+	std::shared_ptr<Rules> rules;
 
-		std::shared_ptr<Display::FlexGrid> subtitleGrid;
-		std::shared_ptr<Display::Label> rulebookLbl;
-		std::shared_ptr<Display::Label> rulebookDescLbl;
-		std::shared_ptr<Display::RuleLine> subtitleRule;
-		std::shared_ptr<Display::Container> trackPanel;
-		std::shared_ptr<Display::FlexGrid> trackGrid;
+	Model::TrackList trackList;
+	std::shared_ptr<Model::TrackEntry> selectedTrack;
 
-		std::shared_ptr<Display::Container> selTrackPanel;
-		std::shared_ptr<Display::Picture> trackPic;
-		std::shared_ptr<Display::Res<Display::Texture>> mapTexture;
+	std::shared_ptr<Display::FlexGrid> subtitleGrid;
+	std::shared_ptr<Display::Label> rulebookLbl;
+	std::shared_ptr<Display::Label> rulebookDescLbl;
+	std::shared_ptr<Display::RuleLine> subtitleRule;
+	std::shared_ptr<Display::Container> trackPanel;
+	std::shared_ptr<Display::FlexGrid> trackGrid;
 
-		std::shared_ptr<Display::FlexGrid> trackMetaGrid;
-		std::shared_ptr<Display::Label> trackNameLbl;
-		std::shared_ptr<Display::Label> trackDescLbl;
+	std::shared_ptr<Display::Container> selTrackPanel;
+	std::shared_ptr<Display::Picture> trackPic;
+	std::shared_ptr<Display::Res<Display::Texture>> mapTexture;
 
-		std::shared_ptr<Display::Button> readyBtn;
+	std::shared_ptr<Display::FlexGrid> trackMetaGrid;
+	std::shared_ptr<Display::Label> trackNameLbl;
+	std::shared_ptr<Display::Label> trackDescLbl;
 
-		okSignal_t okSignal;
-		cancelSignal_t cancelSignal;
+	std::shared_ptr<Display::Button> readyBtn;
+
+	okSignal_t okSignal;
+	cancelSignal_t cancelSignal;
 };
 
 }  // namespace Client

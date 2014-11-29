@@ -48,32 +48,34 @@ namespace HoverRace {
 namespace Client {
 
 namespace {
-	class TrackSelButton : public Display::Button
-	{
-		typedef Display::Button SUPER;
-		public:
-			TrackSelButton(Display::Display &display, TrackEntryPtr entry) :
-				SUPER(display, entry->name), entry(entry) { }
-			virtual ~TrackSelButton() { }
 
-		public:
-			TrackEntry *GetTrackEntry() const { return entry.get(); }
+class TrackSelButton : public Display::Button
+{
+	using SUPER = Display::Button;
 
-		private:
-			TrackEntryPtr entry;
-	};
-}
+public:
+	TrackSelButton(Display::Display &display, TrackEntryPtr entry) :
+		SUPER(display, entry->name), entry(entry) { }
+	virtual ~TrackSelButton() { }
+
+public:
+	TrackEntry *GetTrackEntry() const { return entry.get(); }
+
+private:
+	TrackEntryPtr entry;
+};
+
+}  // namespace
 
 TrackSelectScene::TrackSelectScene(Display::Display &display,
-                                   GameDirector &director,
-                                   std::shared_ptr<const Rulebook> rulebook) :
+	GameDirector &director, std::shared_ptr<const Rulebook> rulebook) :
 	SUPER(display, director, "", "Track Select"),
 	trackSelected(false),
 	rules(std::make_shared<Rules>(rulebook)),
 	trackList(), selectedTrack()
 {
 	using namespace Display;
-	typedef UiViewModel::Alignment Alignment;
+	using Alignment = UiViewModel::Alignment;
 
 	SetPhaseTransitionDuration(1000);
 

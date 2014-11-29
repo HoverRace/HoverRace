@@ -46,8 +46,7 @@ const double DialogScene::MARGIN_WIDTH = 40;
  * @param name The name of the scene.  See Scene::GetName.
  */
 DialogScene::DialogScene(Display::Display &display, GameDirector &director,
-                         const std::string &title,
-                         const std::string &name) :
+	const std::string &title, const std::string &name) :
 	SUPER(display, name),
 	director(director), title(title),
 	stoppingTransitionEnabled(false)

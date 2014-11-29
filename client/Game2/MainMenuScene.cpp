@@ -44,12 +44,12 @@ namespace HoverRace {
 namespace Client {
 
 MainMenuScene::MainMenuScene(Display::Display &display, GameDirector &director,
-                             RulebookLibrary &rulebookLibrary) :
+	RulebookLibrary &rulebookLibrary) :
 	SUPER(display, "Main Menu"),
 	display(display), director(director), rulebookLibrary(rulebookLibrary)
 {
 	using namespace Display;
-	typedef UiViewModel::Alignment Alignment;
+	using Alignment = UiViewModel::Alignment;
 
 	SetPhaseTransitionDuration(500);
 	SetStateTransitionDuration(500);

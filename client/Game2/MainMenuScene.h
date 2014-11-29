@@ -42,34 +42,35 @@ namespace Client {
  */
 class MainMenuScene : public FormScene
 {
-	typedef FormScene SUPER;
-	public:
-		MainMenuScene(Display::Display &display, GameDirector &director,
-			RulebookLibrary &rulebookLibrary);
-		virtual ~MainMenuScene();
+	using SUPER = FormScene;
 
-	private:
-		std::shared_ptr<Display::Button> AddButton(const std::string &text, bool enabled=true);
+public:
+	MainMenuScene(Display::Display &display, GameDirector &director,
+		RulebookLibrary &rulebookLibrary);
+	virtual ~MainMenuScene();
 
-	private:
-		void OnPracticeClicked();
-		void OnMultiplayerClicked();
-		void OnSettingsClicked();
-		void OnMutedClicked();
+private:
+	std::shared_ptr<Display::Button> AddButton(const std::string &text, bool enabled=true);
 
-	public:
-		// Scene
-		void OnStateTransition(double interval) override;
-		void Layout() override;
+private:
+	void OnPracticeClicked();
+	void OnMultiplayerClicked();
+	void OnSettingsClicked();
+	void OnMutedClicked();
 
-	private:
-		Display::Display &display;
-		GameDirector &director;
-		RulebookLibrary &rulebookLibrary;
+public:
+	// Scene
+	void OnStateTransition(double interval) override;
+	void Layout() override;
 
-		std::shared_ptr<Display::Container> titleContainer;
-		std::shared_ptr<Display::Container> menuContainer;
-		std::vector<std::shared_ptr<Display::Button>> menuButtons;
+private:
+	Display::Display &display;
+	GameDirector &director;
+	RulebookLibrary &rulebookLibrary;
+
+	std::shared_ptr<Display::Container> titleContainer;
+	std::shared_ptr<Display::Container> menuContainer;
+	std::vector<std::shared_ptr<Display::Button>> menuButtons;
 };
 
 }  // namespace Client
