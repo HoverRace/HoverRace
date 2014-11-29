@@ -25,6 +25,7 @@
 #include "../../engine/Display/Slider.h"
 #include "../../engine/Util/Log.h"
 
+#include "MessageScene.h"
 #include "VideoSettingsScene.h"
 
 using namespace HoverRace::Util;
@@ -70,14 +71,25 @@ void VideoSettingsScene::ResetToDefaults()
 
 void VideoSettingsScene::OnOk()
 {
-	bool needsMainMenu =
+	const bool needsMainMenu =
 		origVideoCfg.textScale != videoCfg.textScale;
 
-	Config::GetInstance()->Save();
-	SUPER::OnOk();
-
 	if (needsMainMenu) {
-		director.RequestMainMenu();
+		auto confirmScene = std::make_shared<MessageScene>(display, director,
+			_("Settings changed"),
+			_("To apply these changes, the game must return to the main menu.\n"
+			"\n"
+			"This will abandon any race in progress."),
+			true);
+		confirmOkConn = confirmScene->GetOkSignal().connect([&]() {
+			Config::GetInstance()->Save();
+			director.RequestMainMenu();
+		});
+		director.RequestPushScene(confirmScene);
+	}
+	else {
+		Config::GetInstance()->Save();
+		SUPER::OnOk();
 	}
 }
 

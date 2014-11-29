@@ -61,6 +61,7 @@ private:
 	std::shared_ptr<Display::Label> textScalePreviewLbl;
 
 	boost::signals2::scoped_connection textScaleConn;
+	boost::signals2::scoped_connection confirmOkConn;
 };
 
 }  // namespace Client
