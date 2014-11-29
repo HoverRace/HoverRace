@@ -60,7 +60,6 @@ VideoSettingsScene::VideoSettingsScene(Display::Display &display,
 
 void VideoSettingsScene::LoadFromConfig()
 {
-	origVideoCfg = videoCfg;
 	textScaleSlider->SetValue(videoCfg.textScale);
 }
 

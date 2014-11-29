@@ -55,7 +55,6 @@ AudioSettingsScene::AudioSettingsScene(Display::Display &display,
 
 void AudioSettingsScene::LoadFromConfig()
 {
-	origAudioCfg = audioCfg;
 	sfxVolumeSlider->SetValue(audioCfg.sfxVolume);
 }
 
