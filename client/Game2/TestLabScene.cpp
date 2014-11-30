@@ -155,13 +155,13 @@ private:
 	std::shared_ptr<Display::Label> displayInfoLbl;
 }; //}}}
 
-class ButtonModule : public TestLabScene::LabModule /*{{{*/
+class ClickablesModule : public TestLabScene::LabModule /*{{{*/
 {
 	using SUPER = TestLabScene::LabModule;
 
 public:
-	ButtonModule(Display::Display &display, GameDirector &director);
-	virtual ~ButtonModule() { }
+	ClickablesModule(Display::Display &display, GameDirector &director);
+	virtual ~ClickablesModule() { }
 
 private:
 	void OnMessageClicked();
@@ -278,7 +278,7 @@ TestLabScene::TestLabScene(Display::Display &display, GameDirector &director,
 	fader->AttachView(display);
 
 	AddModule<Module::LayoutModule>(*this, display, director, "Layout");
-	AddModule<Module::ButtonModule>(*this, display, director, "Button");
+	AddModule<Module::ClickablesModule>(*this, display, director, "Clickables");
 	AddModule<Module::LabelModule>(*this, display, director, "Label");
 	AddModule<Module::IconModule>(*this, display, director, "Icon");
 	AddModule<Module::TransitionModule>(*this, display, director, "Transition");
@@ -459,9 +459,9 @@ void LayoutModule::OnDisplayConfigChanged()
 
 //}}} LayoutModule
 
-//{{{ ButtonModule /////////////////////////////////////////////////////////////
+//{{{ ClickablesModule /////////////////////////////////////////////////////////////
 
-ButtonModule::ButtonModule(Display::Display &display, GameDirector &director) :
+ClickablesModule::ClickablesModule(Display::Display &display, GameDirector &director) :
 	SUPER(display, director, "Button")
 {
 	using namespace Display;
@@ -476,7 +476,7 @@ ButtonModule::ButtonModule(Display::Display &display, GameDirector &director) :
 	messageBtn->SetPos(640, 0);
 	messageBtn->SetAlignment(Alignment::N);
 	messageBtn->GetClickedSignal().connect(
-		std::bind(&ButtonModule::OnMessageClicked, this));
+		std::bind(&ClickablesModule::OnMessageClicked, this));
 
 	btn = root->AddChild(new Button(display, "Disabled Button"));
 	btn->SetEnabled(false);
@@ -531,13 +531,13 @@ ButtonModule::ButtonModule(Display::Display &display, GameDirector &director) :
 	slider->SetAlignment(Alignment::N);
 }
 
-void ButtonModule::OnMessageClicked()
+void ClickablesModule::OnMessageClicked()
 {
 	director.RequestPushScene(std::make_shared<MessageScene>(display, director,
 		"Test Lab", "Hello, world!"));
 }
 
-//}}} ButtonModule
+//}}} ClickablesModule
 
 //{{{ LabelModule //////////////////////////////////////////////////////////////
 
