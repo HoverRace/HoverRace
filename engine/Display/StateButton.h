@@ -84,7 +84,7 @@ protected:
 	void SetStateIcon(bool enabled, bool checked,
 		std::shared_ptr<FillBox> icon)
 	{
-		icons[{enabled, checked}] = icon;
+		icons[{enabled, checked}] = std::move(icon);
 		if (enabled == IsEnabled() && checked == IsChecked()) {
 			UpdateIcon();
 		}
