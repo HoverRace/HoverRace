@@ -34,6 +34,7 @@
 #include "../../engine/Display/Label.h"
 #include "../../engine/Display/MediaRes.h"
 #include "../../engine/Display/Picture.h"
+#include "../../engine/Display/RadioButton.h"
 #include "../../engine/Display/ScreenFade.h"
 #include "../../engine/Display/Slider.h"
 #include "../../engine/Display/Speedometer.h"
@@ -482,9 +483,11 @@ ClickablesModule::ClickablesModule(Display::Display &display, GameDirector &dire
 
 	grid->AddGridCell(0, 0, new Label("Buttons", s.bodyHeadFont, s.bodyHeadFg));
 	grid->AddGridCell(0, 1, new Label("Sliders", s.bodyHeadFont, s.bodyHeadFg));
+	grid->AddGridCell(0, 2, new Label("Radio", s.bodyHeadFont, s.bodyHeadFg));
 
 	std::shared_ptr<Button> btn;
 	std::shared_ptr<Slider> slider;
+	std::shared_ptr<RadioButton> radio;
 
 	size_t row = 1;
 
@@ -526,6 +529,15 @@ ClickablesModule::ClickablesModule(Display::Display &display, GameDirector &dire
 
 	slider = AddSlider(new Slider(display, -150, -50, 10));
 	slider->SetValue(-80);
+
+	row = 1;
+
+	radio = grid->AddGridCell(row++, 2,
+		new RadioButton(display, "Radio 1"))->GetContents();
+	radio->SetChecked(true);
+
+	radio = grid->AddGridCell(row++, 2,
+		new RadioButton(display, "Radio 2"))->GetContents();
 }
 
 std::shared_ptr<Display::Slider> ClickablesModule::AddSlider(
