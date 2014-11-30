@@ -23,6 +23,7 @@
 
 #include "../Util/Config.h"
 #include "../Util/Log.h"
+#include "../Util/Symbol.h"
 #include "SymbolIcon.h"
 
 #include "Checkbox.h"
@@ -86,7 +87,7 @@ void Checkbox::InitIcon(bool enabled, bool checked)
 
 	auto icon = std::make_shared<SymbolIcon>(
 		1, 1,  // Size will be set the superclass in Layout().
-		checked ? 0xf046 : 0xf096,
+		checked ? Symbol::CHECK_SQUARE_O : Symbol::SQUARE_O,
 		enabled ? COLOR_WHITE : 0x7fffffff);
 	icon->AttachView(display);
 
