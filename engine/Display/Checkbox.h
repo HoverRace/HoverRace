@@ -36,7 +36,6 @@
 namespace HoverRace {
 	namespace Display {
 		class Display;
-		class FillBox;
 	}
 }
 
