@@ -513,8 +513,6 @@ ClickablesModule::ClickablesModule(Display::Display &display, GameDirector &dire
 	btn = grid->AddGridCell(row++, 0,
 		new Checkbox(display, "Checkbox"))->GetContents();
 
-	auto sliderSize = Vec2(200, 20);
-
 	slider = AddSlider(new Slider(display, 0, 100, 10));
 	slider->SetValue(30);
 
