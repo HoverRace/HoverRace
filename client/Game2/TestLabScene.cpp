@@ -164,9 +164,14 @@ public:
 	virtual ~ClickablesModule() { }
 
 private:
+	std::shared_ptr<Display::Slider> AddSlider(Display::Slider *slider);
+
+private:
 	void OnMessageClicked();
 
 private:
+	size_t curSliderRow;
+	std::shared_ptr<Display::FlexGrid> grid;
 	std::shared_ptr<Display::Button> messageBtn;
 }; //}}}
 
@@ -462,26 +467,35 @@ void LayoutModule::OnDisplayConfigChanged()
 //{{{ ClickablesModule /////////////////////////////////////////////////////////////
 
 ClickablesModule::ClickablesModule(Display::Display &display, GameDirector &director) :
-	SUPER(display, director, "Button")
+	SUPER(display, director, "Button"),
+	curSliderRow(1)
 {
 	using namespace Display;
 	using Alignment = UiViewModel::Alignment;
+	const auto &s = display.styles;
 
 	Container *root = GetRoot();
+
+	grid = root->AddChild(new FlexGrid(display));
+	grid->SetPos(640, 360);
+	grid->SetAlignment(Alignment::CENTER);
+
+	grid->AddGridCell(0, 0, new Label("Buttons", s.bodyHeadFont, s.bodyHeadFg));
+	grid->AddGridCell(0, 1, new Label("Sliders", s.bodyHeadFont, s.bodyHeadFg));
 
 	std::shared_ptr<Button> btn;
 	std::shared_ptr<Slider> slider;
 
-	messageBtn = root->AddChild(new Button(display, "Show Message"));
-	messageBtn->SetPos(640, 0);
-	messageBtn->SetAlignment(Alignment::N);
+	size_t row = 1;
+
+	messageBtn = grid->AddGridCell(row++, 0,
+		new Button(display, "Show Message"))->GetContents();
 	messageBtn->GetClickedSignal().connect(
 		std::bind(&ClickablesModule::OnMessageClicked, this));
 
-	btn = root->AddChild(new Button(display, "Disabled Button"));
+	btn = grid->AddGridCell(row++, 0,
+		new Button(display, "Disabled Button"))->GetContents();
 	btn->SetEnabled(false);
-	btn->SetPos(640, 60);
-	btn->SetAlignment(Alignment::N);
 	btn->GetClickedSignal().connect([](ClickRegion&) {
 		Log::Error("Clicked on disabled button :(");
 	});
@@ -489,46 +503,37 @@ ClickablesModule::ClickablesModule(Display::Display &display, GameDirector &dire
 	auto icon = std::make_shared<SymbolIcon>(60, 60, 0xf0ad, 0xbfffffff);
 	icon->AttachView(display);
 
-	btn = root->AddChild(new Button(display, "Button With Icon"));
-	btn->SetPos(640, 120);
+	btn = grid->AddGridCell(row++, 0,
+		new Button(display, "Button With Icon"))->GetContents();
 	btn->SetIcon(icon);
-	btn->SetAlignment(Alignment::N);
 
-	btn = root->AddChild(new Checkbox(display, "Checkbox"));
-	btn->SetPos(640, 180);
-	btn->SetAlignment(Alignment::N);
+	btn = grid->AddGridCell(row++, 0,
+		new Checkbox(display, "Checkbox"))->GetContents();
 
 	auto sliderSize = Vec2(200, 20);
 
-	slider = root->AddChild(new Slider(display, 0, 100, 10));
-	slider->SetPos(640, 240);
-	slider->SetSize(sliderSize);
+	slider = AddSlider(new Slider(display, 0, 100, 10));
 	slider->SetValue(30);
-	slider->SetAlignment(Alignment::N);
 
-	slider = root->AddChild(new Slider(display, -50, 50, 10));
-	slider->SetPos(640, 300);
-	slider->SetSize(sliderSize);
+	slider = AddSlider(new Slider(display, -50, 50, 10));
 	slider->SetValue(-30);
-	slider->SetAlignment(Alignment::N);
 
-	slider = root->AddChild(new Slider(display, -100, 0, 10));
-	slider->SetPos(640, 360);
-	slider->SetSize(sliderSize);
+	slider = AddSlider(new Slider(display, -100, 0, 10));
 	slider->SetValue(-30);
-	slider->SetAlignment(Alignment::N);
 
-	slider = root->AddChild(new Slider(display, 50, 150, 10));
-	slider->SetPos(640, 420);
-	slider->SetSize(sliderSize);
+	slider = AddSlider(new Slider(display, 50, 150, 10));
 	slider->SetValue(80);
-	slider->SetAlignment(Alignment::N);
 
-	slider = root->AddChild(new Slider(display, -150, -50, 10));
-	slider->SetPos(640, 480);
-	slider->SetSize(sliderSize);
+	slider = AddSlider(new Slider(display, -150, -50, 10));
 	slider->SetValue(-80);
-	slider->SetAlignment(Alignment::N);
+}
+
+std::shared_ptr<Display::Slider> ClickablesModule::AddSlider(
+	Display::Slider *slider)
+{
+	auto retv = grid->AddGridCell(curSliderRow++, 1, slider)->GetContents();
+	retv->SetSize(200, 20);
+	return retv;
 }
 
 void ClickablesModule::OnMessageClicked()
