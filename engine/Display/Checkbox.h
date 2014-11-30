@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include "Button.h"
+#include "StateButton.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
 #	ifdef MR_ENGINE
@@ -47,54 +47,20 @@ namespace Display {
  * A checkbox widget.
  * @author Michael Imamura
  */
-class MR_DllDeclare Checkbox : public Button
+class MR_DllDeclare Checkbox : public StateButton
 {
-	using SUPER = Button;
-
-public:
-	struct Props
-	{
-		enum {
-			CHECKED = SUPER::Props::NEXT_,
-			NEXT_,  ///< First index for subclasses.
-		};
-	};
+	using SUPER = StateButton;
 
 public:
 	Checkbox(Display &display, const std::string &text,
 		uiLayoutFlags_t layoutFlags = 0);
 	Checkbox(Display &display, const Vec2 &size, const std::string &text,
 		uiLayoutFlags_t layoutFlags = 0);
-	virtual ~Checkbox();
+	virtual ~Checkbox() { }
 
 private:
 	void Init();
 	void InitIcon(bool enabled, bool checked);
-
-	/* Currently uses the same view as Button.
-public:
-	virtual void AttachView(Display &disp) { AttachViewDynamic(disp, this); }
-	*/
-
-protected:
-	virtual void FireClickedSignal();
-
-public:
-	bool IsChecked() const { return checked; }
-	void SetChecked(bool checked);
-
-protected:
-	void UpdateIcon();
-public:
-	virtual void FireModelUpdate(int prop);
-
-private:
-	bool checked;
-
-	typedef std::pair<bool, bool> iconsKey_t;  ///< enabled, checked
-	typedef std::shared_ptr<FillBox> iconsVal_t;
-	typedef std::map<iconsKey_t, iconsVal_t> icons_t;
-	icons_t icons;
 };
 
 }  // namespace Display

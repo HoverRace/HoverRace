@@ -21,8 +21,6 @@
 
 #include "../StdAfx.h"
 
-#include "../Util/Config.h"
-#include "../Util/Log.h"
 #include "../Util/Symbol.h"
 #include "SymbolIcon.h"
 
@@ -41,8 +39,7 @@ namespace Display {
  */
 Checkbox::Checkbox(Display &display, const std::string &text,
 	uiLayoutFlags_t layoutFlags) :
-	SUPER(display, text, layoutFlags),
-	checked(false)
+	SUPER(display, text, layoutFlags)
 {
 	Init();
 }
@@ -56,14 +53,9 @@ Checkbox::Checkbox(Display &display, const std::string &text,
  */
 Checkbox::Checkbox(Display &display, const Vec2 &size, const std::string &text,
 	uiLayoutFlags_t layoutFlags) :
-	SUPER(display, size, text, layoutFlags),
-	checked(false)
+	SUPER(display, size, text, layoutFlags)
 {
 	Init();
-}
-
-Checkbox::~Checkbox()
-{
 }
 
 void Checkbox::Init()
@@ -72,8 +64,6 @@ void Checkbox::Init()
 	InitIcon(false, true);
 	InitIcon(true, false);
 	InitIcon(true, true);
-
-	UpdateIcon();
 }
 
 /**
@@ -91,43 +81,7 @@ void Checkbox::InitIcon(bool enabled, bool checked)
 		enabled ? COLOR_WHITE : 0x7fffffff);
 	icon->AttachView(display);
 
-	icons.insert(icons_t::value_type(iconsKey_t(enabled, checked), icon));
-}
-
-void Checkbox::FireClickedSignal()
-{
-	SetChecked(!IsChecked());
-	SUPER::FireClickedSignal();
-}
-
-/**
- * Set the checkbox state.
- * @param checked @c true for checked, @c false for unchecked.
- */
-void Checkbox::SetChecked(bool checked)
-{
-	if (this->checked != checked) {
-		this->checked = checked;
-		FireModelUpdate(Props::CHECKED);
-		UpdateIcon();
-	}
-}
-
-/**
- * Set the appropriate icon for the current widget state.
- */
-void Checkbox::UpdateIcon()
-{
-	SetIcon(icons[iconsKey_t(IsEnabled(), IsChecked())]);
-}
-
-void Checkbox::FireModelUpdate(int prop)
-{
-	if (prop == ClickRegion::Props::ENABLED) {
-		UpdateIcon();
-	}
-
-	SUPER::FireModelUpdate(prop);
+	SetStateIcon(enabled, checked, icon);
 }
 
 }  // namespace Display
