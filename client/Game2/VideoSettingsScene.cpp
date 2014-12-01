@@ -25,6 +25,7 @@
 #include "../../engine/Display/Slider.h"
 #include "../../engine/Util/Log.h"
 
+#include "DisplaySelectScene.h"
 #include "MessageScene.h"
 #include "VideoSettingsScene.h"
 
@@ -40,6 +41,11 @@ VideoSettingsScene::VideoSettingsScene(Display::Display &display,
 {
 	using namespace Display;
 	const auto &s = display.styles;
+
+	displayBtn = AddSetting(_("Monitor Resolution"),
+		new Button(display, "Monitor"));
+	displayConn = displayBtn->GetClickedSignal().connect(std::bind(
+		&VideoSettingsScene::OnDisplayClicked, this));
 
 	textScaleSlider = AddSetting(_("Text Scale"),
 		new Slider(display, 0.5, 1.5, 0.1));
@@ -97,6 +103,14 @@ void VideoSettingsScene::OnCancel()
 {
 	videoCfg = origVideoCfg;
 	SUPER::OnCancel();
+}
+
+void VideoSettingsScene::OnDisplayClicked()
+{
+	//TODO: Use currently-selected display settings.
+	auto scene = std::make_shared<DisplaySelectScene>(display, director,
+		0, 0, 0);
+	director.RequestPushScene(scene);
 }
 
 }  // namespace Client

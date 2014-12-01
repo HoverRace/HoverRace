@@ -1,5 +1,5 @@
 
-// VideoSettingsScene.h
+// DisplaySelectScene.h
 //
 // Copyright (c) 2014 Michael Imamura.
 //
@@ -21,15 +21,16 @@
 
 #pragma once
 
-#include "../../engine/Util/Config.h"
+#include "../../engine/Display/RadioButton.h"
 
-#include "SettingsScene.h"
+#include "DialogScene.h"
 
 namespace HoverRace {
+	namespace Client {
+		class GameDirector;
+	}
 	namespace Display {
-		class Button;
-		class Label;
-		class Slider;
+		class Display;
 	}
 }
 
@@ -37,37 +38,27 @@ namespace HoverRace {
 namespace Client {
 
 /**
- * Video settings dialog.
+ * Selector for monitor and resolution.
  * @author Michael Imamura
  */
-class VideoSettingsScene : public SettingsScene
+class DisplaySelectScene : public DialogScene
 {
-	using SUPER = SettingsScene;
+	using SUPER = DialogScene;
 
 public:
-	VideoSettingsScene(Display::Display &display, GameDirector &director);
-	virtual ~VideoSettingsScene() { }
-
-protected:
-	void LoadFromConfig() override;
-	void ResetToDefaults() override;
-
-	void OnOk() override;
-	void OnCancel() override;
-
-	void OnDisplayClicked();
+	DisplaySelectScene(Display::Display &display, GameDirector &director,
+		int monitorIdx, int xRes, int yRes);
+	virtual ~DisplaySelectScene() { }
 
 private:
-	Util::Config::video_t &videoCfg;
-	Util::Config::video_t origVideoCfg;
+	void UpdateResGrid();
 
-	std::shared_ptr<Display::Button> displayBtn;
-	std::shared_ptr<Display::Slider> textScaleSlider;
-	std::shared_ptr<Display::Label> textScalePreviewLbl;
+private:
+	Display::RadioGroup<int> monitorGroup;
+	std::unique_ptr<Display::RadioGroup<int>> resGroup;
+	std::shared_ptr<Display::FlexGrid> resGrid;
 
-	boost::signals2::scoped_connection displayConn;
-	boost::signals2::scoped_connection textScaleConn;
-	boost::signals2::scoped_connection confirmOkConn;
+	boost::signals2::scoped_connection monitorConn;
 };
 
 }  // namespace Client
