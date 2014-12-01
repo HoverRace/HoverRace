@@ -61,12 +61,6 @@ StateButton::~StateButton()
 {
 }
 
-void StateButton::FireClickedSignal()
-{
-	SetChecked(!IsChecked());
-	SUPER::FireClickedSignal();
-}
-
 /**
  * Set the button state.
  * @param checked @c true for checked, @c false for unchecked.

@@ -60,6 +60,9 @@ public:
 private:
 	void Init();
 	void InitIcon(bool enabled, bool checked);
+
+protected:
+	void FireClickedSignal() override;
 };
 
 }  // namespace Display

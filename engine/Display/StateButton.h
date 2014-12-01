@@ -67,9 +67,6 @@ public:
 		uiLayoutFlags_t layoutFlags = 0);
 	virtual ~StateButton();
 
-protected:
-	void FireClickedSignal() override;
-
 public:
 	bool IsChecked() const { return checked; }
 	void SetChecked(bool checked);

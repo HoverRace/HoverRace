@@ -84,5 +84,11 @@ void Checkbox::InitIcon(bool enabled, bool checked)
 	SetStateIcon(enabled, checked, icon);
 }
 
+void Checkbox::FireClickedSignal()
+{
+	SetChecked(!IsChecked());
+	SUPER::FireClickedSignal();
+}
+
 }  // namespace Display
 }  // namespace HoverRace
