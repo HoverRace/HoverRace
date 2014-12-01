@@ -174,6 +174,9 @@ private:
 	size_t curSliderRow;
 	std::shared_ptr<Display::FlexGrid> grid;
 	std::shared_ptr<Display::Button> messageBtn;
+	std::unique_ptr<Display::RadioGroup<int>> group;
+
+	boost::signals2::scoped_connection groupValueConn;
 }; //}}}
 
 class LabelModule : public TestLabScene::LabModule /*{{{*/
@@ -469,7 +472,7 @@ void LayoutModule::OnDisplayConfigChanged()
 
 ClickablesModule::ClickablesModule(Display::Display &display, GameDirector &director) :
 	SUPER(display, director, "Button"),
-	curSliderRow(1)
+	curSliderRow(1), group(new Display::RadioGroup<int>())
 {
 	using namespace Display;
 	using Alignment = UiViewModel::Alignment;
@@ -532,10 +535,15 @@ ClickablesModule::ClickablesModule(Display::Display &display, GameDirector &dire
 
 	radio = grid->AddGridCell(row++, 2,
 		new RadioButton<int>(display, "Radio 1", 1))->GetContents();
-	radio->SetChecked(true);
+	group->Add(radio);
 
 	radio = grid->AddGridCell(row++, 2,
 		new RadioButton<int>(display, "Radio 2", 2))->GetContents();
+	group->Add(radio);
+
+	groupValueConn = group->GetValueChangedSignal().connect([&]() {
+		HR_LOG(info) << "Radio value: " << group->GetValue();
+	});
 }
 
 std::shared_ptr<Display::Slider> ClickablesModule::AddSlider(
