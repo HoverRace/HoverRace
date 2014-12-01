@@ -43,23 +43,48 @@ namespace HoverRace {
 namespace Display {
 
 /**
- * A checkbox widget.
+ * Base class for radio buttons.
  * @author Michael Imamura
  */
-class MR_DllDeclare RadioButton : public StateButton
+class MR_DllDeclare RadioButtonBase : public StateButton
 {
 	using SUPER = StateButton;
 
 public:
-	RadioButton(Display &display, const std::string &text,
+	RadioButtonBase(Display &display, const std::string &text,
 		uiLayoutFlags_t layoutFlags = 0);
-	RadioButton(Display &display, const Vec2 &size, const std::string &text,
+	RadioButtonBase(Display &display, const Vec2 &size, const std::string &text,
 		uiLayoutFlags_t layoutFlags = 0);
-	virtual ~RadioButton() { }
+	virtual ~RadioButtonBase() { }
 
 private:
 	void Init();
 	void InitIcon(bool enabled, bool checked);
+};
+
+/**
+ * A radio button.
+ * @tparam T The type of the value held by the radio button.
+ */
+template<class T>
+class RadioButton : public RadioButtonBase
+{
+	using SUPER = RadioButtonBase;
+
+public:
+	RadioButton(Display &display, const std::string &text, const T &value,
+		uiLayoutFlags_t layoutFlags = 0) :
+		SUPER(display, text, layoutFlags), value(value) { }
+	RadioButton(Display &display, const Vec2 &size, const std::string &text,
+		const T &value, uiLayoutFlags_t layoutFlags = 0) :
+		SUPER(display, size, text, layoutFlags), value(value) { }
+	virtual ~RadioButton() { }
+
+public:
+	const T &GetValue() const { return value; }
+
+private:
+	T value;
 };
 
 }  // namespace Display

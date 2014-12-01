@@ -487,7 +487,7 @@ ClickablesModule::ClickablesModule(Display::Display &display, GameDirector &dire
 
 	std::shared_ptr<Button> btn;
 	std::shared_ptr<Slider> slider;
-	std::shared_ptr<RadioButton> radio;
+	std::shared_ptr<RadioButton<int>> radio;
 
 	size_t row = 1;
 
@@ -531,11 +531,11 @@ ClickablesModule::ClickablesModule(Display::Display &display, GameDirector &dire
 	row = 1;
 
 	radio = grid->AddGridCell(row++, 2,
-		new RadioButton(display, "Radio 1"))->GetContents();
+		new RadioButton<int>(display, "Radio 1", 1))->GetContents();
 	radio->SetChecked(true);
 
 	radio = grid->AddGridCell(row++, 2,
-		new RadioButton(display, "Radio 2"))->GetContents();
+		new RadioButton<int>(display, "Radio 2", 2))->GetContents();
 }
 
 std::shared_ptr<Display::Slider> ClickablesModule::AddSlider(
