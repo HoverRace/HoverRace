@@ -204,8 +204,9 @@ Config::Config(int verMajor, int verMinor, int verPatch, int verBuild,
 			free(xdg);
 			xdg = NULL;
 
-			std::cerr << "Unable to use XDG directories for configuration, "
-				"falling back to default." << std::endl;
+			HR_LOG(warning) <<
+				"Unable to use XDG directories for configuration; "
+				"falling back to default.";
 		}
 #	endif
 
