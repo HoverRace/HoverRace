@@ -79,4 +79,14 @@
    # std::string::_Rep::_S_create
    fun:_ZNSs4_Rep9_S_createEmmRKSaIcE
 }
+# Known bug in xdg-basedir 1.2.0.
+# https://bugzilla.redhat.com/show_bug.cgi?id=1018527
+{
+   xdgUpdateData
+   Memcheck:Leak
+   ...
+   fun:strdup
+   fun:xdgUpdateData
+   fun:xdgInitHandle
+}
 
