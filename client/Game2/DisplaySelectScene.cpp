@@ -131,11 +131,15 @@ void DisplaySelectScene::UpdateResGrid()
 			continue;
 		}
 
-		auto name = boost::str(boost::format("%dx%d (%d Hz)", OS::stdLocale) %
-			mode.w % mode.h % mode.refresh_rate);
+		std::ostringstream oss;
+		oss.imbue(OS::stdLocale);
+		oss << mode.w << 'x' << mode.h;
+		if (mode.refresh_rate > 0) {
+			oss << " (" << mode.refresh_rate << " Hz)";
+		}
 
 		auto cell = resGrid->AddGridCell(row++, 0,
-			new RadioButton<int>(display, name, i));
+			new RadioButton<int>(display, oss.str(), i));
 		resGroup->Add(cell->GetContents());
 	}
 }
