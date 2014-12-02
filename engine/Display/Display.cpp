@@ -100,15 +100,19 @@ void Display::styles_t::Reload()
 	const Config *cfg = Config::GetInstance();
 	const std::string &monospaceFontName = cfg->GetDefaultMonospaceFontName();
 
+	// Hack fix for broken alpha blending when HW acceleration is off.
+	// Only full-brightness, fully-opaque white is affected.
+	const Color WHITE(cfg->runtime.noAccel ? 0xfffefefe : COLOR_WHITE);
+
 	bodyFont.Set(30, 0);
 	bodyFg = Color(0xffbfbfbf);
 	bodyHeadFont.Set(30, 0);
-	bodyHeadFg = Color(0xffffffff);
+	bodyHeadFg = WHITE;
 	bodyAsideFont.Set(20, 0);
 	bodyAsideFg = Color(0xffbfbfbf);
 
 	announcementHeadFont.Set(30);
-	announcementHeadFg = COLOR_WHITE;
+	announcementHeadFg = WHITE;
 	announcementBodyFont.Set(20);
 	announcementBodyFg = Color(0xff7f7f7f);
 	announcementSymbolFg = Color(0xbfffffff);
@@ -122,12 +126,12 @@ void Display::styles_t::Reload()
 	hudSmallHeadFont.Set(15, 0);
 
 	consoleFont.Set(monospaceFontName, 30);
-	consoleFg = COLOR_WHITE;
+	consoleFg = WHITE;
 	consoleCursorFg = 0xffbfbfbf;
 	consoleBg = 0xbf000000;
 
 	formFont = bodyFont;
-	formFg = COLOR_WHITE;
+	formFg = WHITE;
 	formDisabledFg = 0x7fffffff;
 
 	dialogBg = 0xcc000000;
@@ -142,7 +146,7 @@ void Display::styles_t::Reload()
 	buttonPressedBg = 0x7f00007f;
 
 	headingFont.Set(40, UiFont::BOLD);
-	headingFg = COLOR_WHITE;
+	headingFg = WHITE;
 }
 
 //}}} styles_t
