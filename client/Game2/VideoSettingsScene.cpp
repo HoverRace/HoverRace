@@ -24,6 +24,7 @@
 #include "../../engine/Display/Label.h"
 #include "../../engine/Display/Slider.h"
 #include "../../engine/Util/Log.h"
+#include "../../engine/Util/OS.h"
 
 #include "DisplaySelectScene.h"
 #include "MessageScene.h"
@@ -43,7 +44,7 @@ VideoSettingsScene::VideoSettingsScene(Display::Display &display,
 	const auto &s = display.styles;
 
 	displayBtn = AddSetting(_("Fullscreen Resolution"),
-		new Button(display, "Monitor"));
+		new Button(display, "Select"));
 	displayConn = displayBtn->GetClickedSignal().connect(std::bind(
 		&VideoSettingsScene::OnDisplayClicked, this));
 
@@ -67,6 +68,12 @@ VideoSettingsScene::VideoSettingsScene(Display::Display &display,
 
 void VideoSettingsScene::LoadFromConfig()
 {
+	auto dispStr = boost::str(
+		boost::format(_("Monitor %d: %dx%d"), OS::stdLocale) %
+			(videoCfg.fullscreenMonitorIndex + 1) %
+			videoCfg.xResFullscreen % videoCfg.yResFullscreen);
+	displayBtn->SetText(dispStr);
+
 	textScaleSlider->SetValue(videoCfg.textScale);
 }
 
