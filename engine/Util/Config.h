@@ -188,7 +188,7 @@ public:
 		int yPos;
 		int xRes;
 		int yRes;
-		std::string fullscreenMonitor;
+		int fullscreenMonitorIndex;
 		int xResFullscreen;
 		int yResFullscreen;
 
