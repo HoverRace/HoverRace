@@ -508,6 +508,11 @@ void SdlDisplay::ApplyVideoMode()
 			SDL_RendererInfo info;
 			SDL_GetRendererInfo(renderer, &info);
 			HR_LOG(info) << "Selected renderer: " << info;
+
+			// Track whether we're in SW mode, so we can make appropriate
+			// quality decisions later.
+			Config::GetInstance()->runtime.noAccel =
+				!(info.flags & SDL_RENDERER_ACCELERATED);
 			break;
 		}
 	}
