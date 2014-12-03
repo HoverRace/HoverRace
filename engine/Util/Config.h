@@ -189,8 +189,8 @@ public:
 		int xRes;
 		int yRes;
 		std::string fullscreenMonitor;
-		int xResFullscreen; ///< for fullscreen
-		int yResFullscreen; ///< for fullscreen
+		int xResFullscreen;
+		int yResFullscreen;
 
 		bool stackedSplitscreen;
 
