@@ -42,7 +42,7 @@ VideoSettingsScene::VideoSettingsScene(Display::Display &display,
 	using namespace Display;
 	const auto &s = display.styles;
 
-	displayBtn = AddSetting(_("Monitor Resolution"),
+	displayBtn = AddSetting(_("Fullscreen Resolution"),
 		new Button(display, "Monitor"));
 	displayConn = displayBtn->GetClickedSignal().connect(std::bind(
 		&VideoSettingsScene::OnDisplayClicked, this));
