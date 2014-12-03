@@ -470,7 +470,7 @@ void SdlDisplay::Screenshot()
  */
 void SdlDisplay::ApplyVideoMode()
 {
-	const auto *cfg = Config::GetInstance();
+	auto *cfg = Config::GetInstance();
 	const auto &vidCfg = cfg->video;
 
 	// First try to enable OpenGL support, otherwise go on without it.
@@ -511,8 +511,12 @@ void SdlDisplay::ApplyVideoMode()
 
 			// Track whether we're in SW mode, so we can make appropriate
 			// quality decisions later.
-			Config::GetInstance()->runtime.noAccel =
-				!(info.flags & SDL_RENDERER_ACCELERATED);
+			bool noAccel = !(info.flags & SDL_RENDERER_ACCELERATED);
+			if (cfg->runtime.noAccel != noAccel) {
+				cfg->runtime.noAccel = noAccel;
+				styles.Reload();
+			}
+
 			break;
 		}
 	}
