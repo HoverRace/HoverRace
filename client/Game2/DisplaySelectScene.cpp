@@ -33,8 +33,8 @@
 using namespace HoverRace::Util;
 
 namespace {
-const int MIN_RES_W = 800;
-const int MIN_RES_H = 600;
+const int MIN_RES_W = 1024;
+const int MIN_RES_H = 576;
 }
 
 namespace HoverRace {
