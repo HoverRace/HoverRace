@@ -58,10 +58,10 @@ private:
 	void OnCancel();
 
 public:
-	typedef boost::signals2::signal<void()> okSignal_t;
+	using okSignal_t = boost::signals2::signal<void()>;
 	okSignal_t &GetOkSignal() { return okSignal; }
 
-	typedef boost::signals2::signal<void()> cancelSignal_t;
+	using cancelSignal_t = boost::signals2::signal<void()>;
 	cancelSignal_t &GetCancelSignal() { return cancelSignal; }
 
 public:
