@@ -51,12 +51,39 @@ public:
 	virtual ~DisplaySelectScene() { }
 
 private:
+	struct Resolution
+	{
+		int xRes;
+		int yRes;
+		int refreshRate;
+
+		bool operator==(const Resolution &o) const
+		{
+			return xRes == o.xRes &&
+				yRes == o.yRes;
+			// Ignoring refresh rate for now.
+		}
+	};
+
+public:
+	const int GetMonitorIdx() const;
+	const Resolution &GetResolution() const;
+
+private:
 	void UpdateResGrid();
+
+public:
+	using okSignal_t = boost::signals2::signal<void()>;
+	okSignal_t &GetOkSignal() { return okSignal; }
+
+	void OnOk() override;
 
 private:
 	Display::RadioGroup<int> monitorGroup;
-	std::unique_ptr<Display::RadioGroup<int>> resGroup;
+	std::unique_ptr<Display::RadioGroup<Resolution>> resGroup;
 	std::shared_ptr<Display::FlexGrid> resGrid;
+
+	okSignal_t okSignal;
 
 	boost::signals2::scoped_connection monitorConn;
 };

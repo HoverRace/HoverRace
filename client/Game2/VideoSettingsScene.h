@@ -52,6 +52,8 @@ protected:
 	void LoadFromConfig() override;
 	void ResetToDefaults() override;
 
+	void UpdateDisplayButton();
+
 	void OnOk() override;
 	void OnCancel() override;
 
@@ -68,6 +70,7 @@ private:
 	boost::signals2::scoped_connection displayConn;
 	boost::signals2::scoped_connection textScaleConn;
 	boost::signals2::scoped_connection confirmOkConn;
+	boost::signals2::scoped_connection displaySelConn;
 };
 
 }  // namespace Client

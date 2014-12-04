@@ -84,6 +84,18 @@ DisplaySelectScene::DisplaySelectScene(Display::Display &display,
 			&DisplaySelectScene::UpdateResGrid, this));
 	}
 	UpdateResGrid();
+
+	resGroup->SetValue({ xRes, yRes, 0 });
+}
+
+const int DisplaySelectScene::GetMonitorIdx() const
+{
+	return monitorGroup.GetValue();
+}
+
+const DisplaySelectScene::Resolution &DisplaySelectScene::GetResolution() const
+{
+	return resGroup->GetValue();
 }
 
 void DisplaySelectScene::UpdateResGrid()
@@ -100,7 +112,7 @@ void DisplaySelectScene::UpdateResGrid()
 	resGrid->SetPos(640, 60);
 	resGrid->SetAlignment(Alignment::N);
 
-	resGroup.reset(new RadioGroup<int>());
+	resGroup.reset(new RadioGroup<Resolution>());
 
 	int selMonitor = monitorGroup.GetValue();
 	int numRes = SDL_GetNumDisplayModes(selMonitor);
@@ -139,9 +151,16 @@ void DisplaySelectScene::UpdateResGrid()
 		}
 
 		auto cell = resGrid->AddGridCell(row++, 0,
-			new RadioButton<int>(display, oss.str(), i));
+			new RadioButton<Resolution>(display, oss.str(),
+				{ mode.w, mode.h, mode.refresh_rate }));
 		resGroup->Add(cell->GetContents());
 	}
+}
+
+void DisplaySelectScene::OnOk()
+{
+	okSignal();
+	SUPER::OnOk();
 }
 
 }  // namespace Client

@@ -68,18 +68,22 @@ VideoSettingsScene::VideoSettingsScene(Display::Display &display,
 
 void VideoSettingsScene::LoadFromConfig()
 {
-	auto dispStr = boost::str(
-		boost::format(_("Monitor %d: %dx%d"), OS::stdLocale) %
-			(videoCfg.fullscreenMonitorIndex + 1) %
-			videoCfg.xResFullscreen % videoCfg.yResFullscreen);
-	displayBtn->SetText(dispStr);
-
+	UpdateDisplayButton();
 	textScaleSlider->SetValue(videoCfg.textScale);
 }
 
 void VideoSettingsScene::ResetToDefaults()
 {
 	videoCfg.ResetToDefaults();
+}
+
+void VideoSettingsScene::UpdateDisplayButton()
+{
+	auto dispStr = boost::str(
+		boost::format(_("Monitor %d: %dx%d"), OS::stdLocale) %
+			(videoCfg.fullscreenMonitorIndex + 1) %
+			videoCfg.xResFullscreen % videoCfg.yResFullscreen);
+	displayBtn->SetText(dispStr);
 }
 
 void VideoSettingsScene::OnOk()
@@ -114,9 +118,21 @@ void VideoSettingsScene::OnCancel()
 
 void VideoSettingsScene::OnDisplayClicked()
 {
-	//TODO: Use currently-selected display settings.
 	auto scene = std::make_shared<DisplaySelectScene>(display, director,
-		0, 0, 0);
+		videoCfg.fullscreenMonitorIndex,
+		videoCfg.xResFullscreen,
+		videoCfg.yResFullscreen);
+
+	displaySelConn = scene->GetOkSignal().connect([=]() {
+		videoCfg.fullscreenMonitorIndex = scene->GetMonitorIdx();
+
+		const auto &res = scene->GetResolution();
+		videoCfg.xResFullscreen = res.xRes;
+		videoCfg.yResFullscreen = res.yRes;
+
+		RequestLoadFromConfig();
+	});
+
 	director.RequestPushScene(scene);
 }
 
