@@ -66,12 +66,12 @@ public:
 
 public:
 	// Scene
-	virtual void AttachController(Control::InputEventController &controller);
-	virtual void DetachController(Control::InputEventController &controller);
-	virtual void OnPhaseTransition(double progress);
-	virtual void Layout();
-	virtual void PrepareRender();
-	virtual void Render();
+	void AttachController(Control::InputEventController &controller) override;
+	void DetachController(Control::InputEventController &controller) override;
+	void OnPhaseTransition(double progress) override;
+	void Layout() override;
+	void PrepareRender() override;
+	void Render() override;
 
 private:
 	GameDirector &director;
