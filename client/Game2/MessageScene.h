@@ -1,7 +1,7 @@
 
 // MessageScene.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -45,50 +45,51 @@ namespace Client {
  */
 class MessageScene : public FormScene
 {
-	typedef FormScene SUPER;
-	public:
-		MessageScene(Display::Display &display, GameDirector &director,
-			const std::string &title, const std::string &message,
-			bool hasCancel=false);
-		virtual ~MessageScene();
+	using SUPER = FormScene;
 
-	private:
-		void OnOk();
-		void OnCancel();
+public:
+	MessageScene(Display::Display &display, GameDirector &director,
+		const std::string &title, const std::string &message,
+		bool hasCancel = false);
+	virtual ~MessageScene();
 
-	public:
-		typedef boost::signals2::signal<void()> okSignal_t;
-		okSignal_t &GetOkSignal() { return okSignal; }
+private:
+	void OnOk();
+	void OnCancel();
 
-		typedef boost::signals2::signal<void()> cancelSignal_t;
-		cancelSignal_t &GetCancelSignal() { return cancelSignal; }
+public:
+	typedef boost::signals2::signal<void()> okSignal_t;
+	okSignal_t &GetOkSignal() { return okSignal; }
 
-	public:
-		// Scene
-		virtual void AttachController(Control::InputEventController &controller);
-		virtual void DetachController(Control::InputEventController &controller);
-		virtual void OnPhaseTransition(double progress);
-		virtual void Layout();
-		virtual void PrepareRender();
-		virtual void Render();
+	typedef boost::signals2::signal<void()> cancelSignal_t;
+	cancelSignal_t &GetCancelSignal() { return cancelSignal; }
 
-	private:
-		GameDirector &director;
-		bool hasCancel;
+public:
+	// Scene
+	virtual void AttachController(Control::InputEventController &controller);
+	virtual void DetachController(Control::InputEventController &controller);
+	virtual void OnPhaseTransition(double progress);
+	virtual void Layout();
+	virtual void PrepareRender();
+	virtual void Render();
 
-		okSignal_t okSignal;
-		cancelSignal_t cancelSignal;
+private:
+	GameDirector &director;
+	bool hasCancel;
 
-		std::unique_ptr<Display::ScreenFade> fader;
-		std::shared_ptr<Display::Label> titleLbl;
-		std::shared_ptr<Display::Label> messageLbl;
-		std::shared_ptr<Display::ActionButton> okBtn;
-		std::shared_ptr<Display::ActionButton> cancelBtn;
+	okSignal_t okSignal;
+	cancelSignal_t cancelSignal;
 
-		boost::signals2::connection okConn;
-		boost::signals2::connection cancelConn;
+	std::unique_ptr<Display::ScreenFade> fader;
+	std::shared_ptr<Display::Label> titleLbl;
+	std::shared_ptr<Display::Label> messageLbl;
+	std::shared_ptr<Display::ActionButton> okBtn;
+	std::shared_ptr<Display::ActionButton> cancelBtn;
 
-		static const int HORZ_PADDING = 40;
+	boost::signals2::connection okConn;
+	boost::signals2::connection cancelConn;
+
+	static const int HORZ_PADDING = 40;
 };
 
 }  // namespace Client

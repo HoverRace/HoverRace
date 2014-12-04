@@ -46,10 +46,10 @@ namespace Client {
  *                  @c false for only an "OK" button.
  */
 MessageScene::MessageScene(Display::Display &display,
-                           GameDirector &director,
-                           const std::string &title,
-                           const std::string &message,
-                           bool hasCancel) :
+	GameDirector &director,
+	const std::string &title,
+	const std::string &message,
+	bool hasCancel) :
 	SUPER(display, "Message (" + title + ")"),
 	director(director),
 	hasCancel(hasCancel)
