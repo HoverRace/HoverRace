@@ -48,6 +48,12 @@ protected:
 	/// Refresh the form widgets with values from the config.
 	virtual void LoadFromConfig() = 0;
 
+	/// Indicate that the form needs to be refreshed from the config.
+	void RequestLoadFromConfig()
+	{
+		needsLoadFromConfig = true;
+	}
+
 	/// Reset the config values to their defaults (if possible).
 	virtual void ResetToDefaults() = 0;
 
