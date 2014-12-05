@@ -1,7 +1,7 @@
 
 // SdlView.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -51,15 +51,16 @@ namespace SDL {
 template<class T>
 class SdlView : public View
 {
-	typedef View SUPER;
-	public:
-		SdlView(SdlDisplay &display, T &model) :
-			SUPER(), display(display), model(model) { }
-		virtual ~SdlView() { }
+	using SUPER = View;
 
-	protected:
-		SdlDisplay &display;
-		T &model;
+public:
+	SdlView(SdlDisplay &display, T &model) :
+		SUPER(), display(display), model(model) { }
+	virtual ~SdlView() { }
+
+protected:
+	SdlDisplay &display;
+	T &model;
 };
 
 }  // namespace SDL
