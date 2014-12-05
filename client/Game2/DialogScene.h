@@ -63,6 +63,10 @@ protected:
 	virtual void OnOk();
 	virtual void OnCancel();
 
+protected:
+	static std::string JoinTitles(const std::string &parent,
+		const std::string &title);
+
 public:
 	void AttachController(Control::InputEventController &controller) override;
 	void DetachController(Control::InputEventController &controller) override;

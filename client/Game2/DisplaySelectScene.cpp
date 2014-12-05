@@ -162,7 +162,7 @@ private:
 DisplaySelectScene::DisplaySelectScene(Display::Display &display,
 	GameDirector &director, const std::string &parentTitle,
 	int monitorIdx, int xRes, int yRes) :
-	SUPER(display, director, parentTitle + " // " +_("Select Resolution"),
+	SUPER(display, director, JoinTitles(parentTitle, _("Select Resolution")),
 		"Display Select"),
 	monitorGroup()
 {

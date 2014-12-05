@@ -137,6 +137,19 @@ void DialogScene::OnCancel()
 	director.RequestPopScene();
 }
 
+/**
+ * Combine a parent dialog title to the child dialog title.
+ * @param parent The parent title (may be empty).
+ * @param title The child title.
+ * @return The combined title.
+ */
+std::string DialogScene::JoinTitles(const std::string &parent,
+	const std::string &title)
+{
+	return parent.empty() ? title : (parent + " // " + title);
+}
+
+
 void DialogScene::AttachController(Control::InputEventController &controller)
 {
 	SUPER::AttachController(controller);
