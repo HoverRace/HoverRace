@@ -23,6 +23,11 @@
 #	pragma warning(disable: 4251)
 #	pragma warning(disable: 4275)
 
+	// Common warnings from system / library headers.
+#	pragma warning(disable: 4503)  // decorated name length exceeded, name was truncated
+#	pragma warning(disable: 4702)  // unreachable code
+#	pragma warning(disable: 4714)  // function marked as __forceinline not inlined
+
 #	include "../../include/config-win32.h"
 
 #else
@@ -47,8 +52,16 @@
 #include <string>
 #include <vector>
 
+#ifdef _WIN32
+#	pragma warning(push, 0)
+#endif
+
 #include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
+
+#ifdef _WIN32
+#	pragma warning(pop)
+#endif
 
 #ifndef _WIN32
 	// Xlib.h must be included *after* boost/foreach.hpp as a workaround for

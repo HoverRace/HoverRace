@@ -21,6 +21,10 @@
 
 #include "../StdAfx.h"
 
+#ifdef _WIN32
+#	pragma warning(push, 0)
+#endif
+
 #include <boost/log/core.hpp>
 #include <boost/log/expressions.hpp>
 #include <boost/log/sinks/sync_frontend.hpp>
@@ -30,6 +34,10 @@
 #	include <boost/log/sinks/debug_output_backend.hpp>
 #endif
 #include <boost/make_shared.hpp>
+
+#ifdef _WIN32
+#	pragma warning(pop)
+#endif
 
 #include <SDL2/SDL_log.h>
 

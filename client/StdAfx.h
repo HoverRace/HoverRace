@@ -26,6 +26,11 @@
 #	pragma warning(disable: 4251)
 #	pragma warning(disable: 4275)
 
+	// Common warnings from system / library headers.
+#	pragma warning(disable: 4503)  // decorated name length exceeded, name was truncated
+#	pragma warning(disable: 4702)  // unreachable code
+#	pragma warning(disable: 4714)  // function marked as __forceinline not inlined
+
 #	include <assert.h>
 #	define ASSERT(e) assert(e)
 #	define TRACE __noop
@@ -60,6 +65,10 @@
 #include <unordered_map>
 #include <vector>
 
+#ifdef _WIN32
+#	pragma warning(push, 0)
+#endif
+
 #include "../../include/compat/luabind_cxx11.h"
 #include "../../include/compat/boost_cxx11.h"
 
@@ -75,6 +84,10 @@
 
 #include <luabind/luabind.hpp>
 #include <luabind/object.hpp>
+
+#ifdef _WIN32
+#	pragma warning(pop)
+#endif
 
 #define PACKAGE_NAME_WIDEN(x) L ## x
 #define PACKAGE_NAME_APPLY(x) PACKAGE_NAME_WIDEN(x)
