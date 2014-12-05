@@ -68,7 +68,11 @@ protected:
 	 * @param res The resolution.
 	 * @return @c true if the resolution matches, @c false otherwise.
 	 */
-	virtual bool Match(const Resolution &res) { return true; }
+	virtual bool Match(const Resolution &res)
+	{
+		HR_UNUSED(res);
+		return true;
+	}
 
 	/**
 	 * Generate the column heading.
