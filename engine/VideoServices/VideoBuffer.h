@@ -1,5 +1,5 @@
+
 // VideoBuffer.h
-// Header for rendering system.
 //
 // Copyright (c) 2013, 2014 Michael Imamura.
 //
@@ -53,80 +53,82 @@ namespace VideoServices {
  */
 class MR_DllDeclare VideoBuffer
 {
+public:
+	class Lock {
+		VideoBuffer &videoBuffer;
 	public:
-		class Lock {
-			VideoBuffer &videoBuffer;
-			public:
-				Lock(VideoBuffer &videoBuffer) : videoBuffer(videoBuffer) {
-					videoBuffer.LockLegacySurface();
-				}
-				~Lock() {
-					videoBuffer.UnlockLegacySurface();
-				}
-		};
+		Lock(VideoBuffer &videoBuffer) : videoBuffer(videoBuffer)
+		{
+			videoBuffer.LockLegacySurface();
+		}
+		~Lock()
+		{
+			videoBuffer.UnlockLegacySurface();
+		}
+	};
 
-	public:
-		VideoBuffer(Display::Display &display);
-		virtual ~VideoBuffer();
+public:
+	VideoBuffer(Display::Display &display);
+	virtual ~VideoBuffer();
 
-		// Signals from ClientApp that certain settings have changed.
-		void OnDesktopModeChange(int width, int height);
-	protected:
-		virtual void OnWindowResChange();
+	// Signals from ClientApp that certain settings have changed.
+	void OnDesktopModeChange(int width, int height);
+protected:
+	virtual void OnWindowResChange();
 
-	public:
-		const ColorPalette::paletteEntry_t *GetPalette() const { return palette; }
-		void AssignPalette();
-		void CreatePalette();
-		void SetBackgroundPalette(std::unique_ptr<MR_UInt8[]> &palette);
-		typedef boost::signals2::signal<void()> paletteChangedSignal_t;
-		paletteChangedSignal_t &GetPaletteChangedSignal() { return paletteChangedSignal; }
+public:
+	const ColorPalette::paletteEntry_t *GetPalette() const { return palette; }
+	void AssignPalette();
+	void CreatePalette();
+	void SetBackgroundPalette(std::unique_ptr<MR_UInt8[]> &palette);
+	typedef boost::signals2::signal<void()> paletteChangedSignal_t;
+	paletteChangedSignal_t &GetPaletteChangedSignal() { return paletteChangedSignal; }
 
-	protected:
-		void LockLegacySurface();
-		void UnlockLegacySurface();
-		virtual void Flip() = 0;
+protected:
+	void LockLegacySurface();
+	void UnlockLegacySurface();
+	virtual void Flip() = 0;
 
-	public:
-		int GetWidth() const { return width; }
-		int GetHeight() const { return height; }
-		int GetPitch() const { return pitch; }
-		int GetZPitch() const { return width; }
+public:
+	int GetWidth() const { return width; }
+	int GetHeight() const { return height; }
+	int GetPitch() const { return pitch; }
+	int GetZPitch() const { return width; }
 
-		int GetXRes() const { return width; }  ///< @deprecated Use GetWidth() instead.
-		int GetYRes() const { return height; }  ///< @deprecated Use GetHeight() instead.
-		int GetLineLen() const { return pitch; }  ///< @deprecated Use GetPitch() instead.
-		int GetZLineLen() const { return width; }  ///< @deprecated Use GetZPitch() instead.
+	int GetXRes() const { return width; }  ///< @deprecated Use GetWidth() instead.
+	int GetYRes() const { return height; }  ///< @deprecated Use GetHeight() instead.
+	int GetLineLen() const { return pitch; }  ///< @deprecated Use GetPitch() instead.
+	int GetZLineLen() const { return width; }  ///< @deprecated Use GetZPitch() instead.
 
-	protected:
-		SDL_Surface *GetLegacySurface() const { return legacySurface; }
+protected:
+	SDL_Surface *GetLegacySurface() const { return legacySurface; }
 
-	public:
-		MR_UInt8 *GetBuffer() const { return vbuf; }
-		MR_UInt16 *GetZBuffer() const { return zbuf; }
+public:
+	MR_UInt8 *GetBuffer() const { return vbuf; }
+	MR_UInt16 *GetZBuffer() const { return zbuf; }
 
-		void Clear(MR_UInt8 color = 0);
+	void Clear(MR_UInt8 color = 0);
 
-		typedef std::pair<int,int> pixelMeter_t;
-		pixelMeter_t GetPixelMeter() const;
+	typedef std::pair<int,int> pixelMeter_t;
+	pixelMeter_t GetPixelMeter() const;
 
-		void DrawPoint(int pX, int pY, MR_UInt8 pColor);
-		void DrawLine(int pX0, int pY0, int pX1, int pY1, MR_UInt8 pColor);
-		void DrawHorizontalLine(int pY, int pX0, int pX1, MR_UInt8 pColor);
+	void DrawPoint(int pX, int pY, MR_UInt8 pColor);
+	void DrawLine(int pX0, int pY0, int pX1, int pY1, MR_UInt8 pColor);
+	void DrawHorizontalLine(int pY, int pX0, int pX1, MR_UInt8 pColor);
 
-	private:
-		int desktopWidth, desktopHeight;
-		int width, height, pitch;
-		bool fullscreen;
+private:
+	int desktopWidth, desktopHeight;
+	int width, height, pitch;
+	bool fullscreen;
 
-		SDL_Surface *legacySurface;
-		MR_UInt8 *vbuf;
-		MR_UInt16 *zbuf;
+	SDL_Surface *legacySurface;
+	MR_UInt8 *vbuf;
+	MR_UInt16 *zbuf;
 
-		std::unique_ptr<MR_UInt8[]> bgPalette;
+	std::unique_ptr<MR_UInt8[]> bgPalette;
 
-		ColorPalette::paletteEntry_t palette[256];
-		paletteChangedSignal_t paletteChangedSignal;
+	ColorPalette::paletteEntry_t palette[256];
+	paletteChangedSignal_t paletteChangedSignal;
 };
 
 }  // namespace VideoServices

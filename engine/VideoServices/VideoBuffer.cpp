@@ -1,7 +1,7 @@
+
 // VideoBuffer.cpp
-// Rendering system.
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ namespace VideoServices {
 VideoBuffer::VideoBuffer(Display::Display &display) :
 	desktopWidth(0), desktopHeight(0), width(0), height(0), pitch(0),
 	fullscreen(false),
-	legacySurface(NULL), vbuf(NULL), zbuf(NULL),
+	legacySurface(nullptr), vbuf(nullptr), zbuf(nullptr),
 	bgPalette()
 {
 	// Be notified of window resizes so we can update the internal surface.
@@ -55,7 +55,7 @@ VideoBuffer::VideoBuffer(Display::Display &display) :
 VideoBuffer::~VideoBuffer()
 {
 	delete[] zbuf;
-	if (legacySurface != NULL) {
+	if (legacySurface) {
 		SDL_FreeSurface(legacySurface);
 		delete[] vbuf;
 	}
