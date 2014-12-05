@@ -66,7 +66,7 @@ public:
 	};
 
 public:
-	const int GetMonitorIdx() const;
+	int GetMonitorIdx() const;
 	const Resolution &GetResolution() const;
 
 private:

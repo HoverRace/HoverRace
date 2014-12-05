@@ -127,7 +127,7 @@ private:
 class AspectBucket : public ResBucket
 {
 	using SUPER = ResBucket;
-	
+
 public:
 	AspectBucket(Display::Display &display, Display::FlexGrid &grid,
 		Display::RadioGroup<Resolution> &resGroup, size_t col, int rx, int ry) :
@@ -207,7 +207,7 @@ DisplaySelectScene::DisplaySelectScene(Display::Display &display,
 	resGroup->SetValue({ xRes, yRes, 0 });
 }
 
-const int DisplaySelectScene::GetMonitorIdx() const
+int DisplaySelectScene::GetMonitorIdx() const
 {
 	return monitorGroup.GetValue();
 }
