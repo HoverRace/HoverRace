@@ -25,6 +25,7 @@
 
 #include "../../engine/Display/Button.h"
 #include "../../engine/Display/FlexGrid.h"
+#include "../../engine/Display/Label.h"
 #include "../../engine/Util/Log.h"
 #include "../../engine/Util/OS.h"
 
@@ -35,10 +36,128 @@ using namespace HoverRace::Util;
 namespace {
 const int MIN_RES_W = 1024;
 const int MIN_RES_H = 576;
-}
+}  // namespace
 
 namespace HoverRace {
 namespace Client {
+
+namespace {
+
+/**
+ * A column in the resolution selection grid.
+ *
+ * This base class represents the "Other" column for non-standard aspect ratios.
+ *
+ * @author Michael Imamura
+ */
+class ResBucket
+{
+protected:
+	using Resolution = DisplaySelectScene::Resolution;
+
+public:
+	ResBucket(Display::Display &display, Display::FlexGrid &grid,
+		Display::RadioGroup<Resolution> &resGroup, size_t col) :
+		display(display), grid(grid), resGroup(resGroup), col(col), row(0) { }
+	ResBucket(const ResBucket&) = delete;
+	virtual ~ResBucket() { }
+
+protected:
+	/**
+	 * Determine if a monitor resolution belongs to this column.
+	 * @param res The resolution.
+	 * @return @c true if the resolution matches, @c false otherwise.
+	 */
+	virtual bool Match(const Resolution &res) { return true; }
+
+	/**
+	 * Generate the column heading.
+	 * @return The formatted title.
+	 */
+	virtual std::string FormatTitle() const { return _("Other"); }
+
+public:
+	/**
+	 * Try to add a resolution to the column.
+	 * @param res The resolution.
+	 * @return @c true if the resolution was added,
+	 *         @c false if it was ignored (belongs to another column).
+	 */
+	bool Add(const Resolution &res)
+	{
+		using namespace Display;
+		const auto &s = display.styles;
+
+		if (!Match(res)) return false;
+
+		// Add heading if necessary.
+		if (row == 0) {
+			grid.AddGridCell(0, col,
+				new Label(FormatTitle(), s.bodyHeadFont, s.bodyHeadFg));
+			row = 1;
+		}
+
+		std::ostringstream oss;
+		oss.imbue(OS::stdLocale);
+		oss << res.xRes << 'x' << res.yRes;
+		if (res.refreshRate > 0) {
+			oss << " (" << res.refreshRate << " Hz)";
+		}
+
+		resGroup.Add(
+			grid.AddGridCell(row++, col,
+				new RadioButton<Resolution>(display, oss.str(), res))->
+					GetContents());
+
+		return true;
+	}
+
+private:
+	Display::Display &display;
+	Display::FlexGrid &grid;
+	Display::RadioGroup<Resolution> &resGroup;
+	size_t col;
+	size_t row;
+};
+
+/**
+ * A column for a specific aspect ratio.
+ * @author Michael Imamura
+ */
+class AspectBucket : public ResBucket
+{
+	using SUPER = ResBucket;
+	
+public:
+	AspectBucket(Display::Display &display, Display::FlexGrid &grid,
+		Display::RadioGroup<Resolution> &resGroup, size_t col, int rx, int ry) :
+		SUPER(display, grid, resGroup, col), rx(rx), ry(ry) { }
+	AspectBucket(const AspectBucket&) = delete;
+	virtual ~AspectBucket() { }
+
+public:
+	bool Match(const Resolution &res) override
+	{
+		return
+			(res.xRes % rx) == 0 &&
+			(res.yRes % ry) == 0 &&
+			(res.xRes / rx) == (res.yRes / ry);
+	}
+
+	std::string FormatTitle() const override
+	{
+		std::ostringstream oss;
+		oss.imbue(OS::stdLocale);
+		oss << rx << ':' << ry;
+		return oss.str();
+	}
+
+private:
+	int rx;
+	int ry;
+};
+
+}  // namespace
 
 DisplaySelectScene::DisplaySelectScene(Display::Display &display,
 	GameDirector &director, int monitorIdx, int xRes, int yRes) :
@@ -126,8 +245,16 @@ void DisplaySelectScene::UpdateResGrid()
 			SDL_GetError()));
 	}
 
-	//TODO: Arrange by aspect ratio.
-	size_t row = 0;
+	std::vector<std::unique_ptr<ResBucket>> buckets;
+	size_t col = 0;
+	buckets.emplace_back(
+		new AspectBucket(display, *resGrid, *resGroup, col++, 4, 3));
+	buckets.emplace_back(
+		new AspectBucket(display, *resGrid, *resGroup, col++, 16, 9));
+	buckets.emplace_back(
+		new AspectBucket(display, *resGrid, *resGroup, col++, 16, 10));
+	buckets.emplace_back(
+		new ResBucket(display, *resGrid, *resGroup, col));
 
 	for (int i = 0; i < numRes; i++) {
 		SDL_DisplayMode mode;
@@ -143,17 +270,9 @@ void DisplaySelectScene::UpdateResGrid()
 			continue;
 		}
 
-		std::ostringstream oss;
-		oss.imbue(OS::stdLocale);
-		oss << mode.w << 'x' << mode.h;
-		if (mode.refresh_rate > 0) {
-			oss << " (" << mode.refresh_rate << " Hz)";
+		for (auto &bucket : buckets) {
+			if (bucket->Add({ mode.w, mode.h, mode.refresh_rate })) break;
 		}
-
-		auto cell = resGrid->AddGridCell(row++, 0,
-			new RadioButton<Resolution>(display, oss.str(),
-				{ mode.w, mode.h, mode.refresh_rate }));
-		resGroup->Add(cell->GetContents());
 	}
 }
 

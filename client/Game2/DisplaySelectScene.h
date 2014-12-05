@@ -50,7 +50,7 @@ public:
 		int monitorIdx, int xRes, int yRes);
 	virtual ~DisplaySelectScene() { }
 
-private:
+public:
 	struct Resolution
 	{
 		int xRes;
