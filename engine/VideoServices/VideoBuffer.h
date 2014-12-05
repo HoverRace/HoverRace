@@ -61,10 +61,15 @@ public:
 		{
 			videoBuffer.LockLegacySurface();
 		}
+
+		Lock(const Lock&) = delete;
+
 		~Lock()
 		{
 			videoBuffer.UnlockLegacySurface();
 		}
+
+		Lock &operator=(const Lock&) = delete;
 	};
 
 public:
