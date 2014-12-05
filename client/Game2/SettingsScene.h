@@ -38,7 +38,8 @@ class SettingsScene : public DialogScene
 
 public:
 	SettingsScene(Display::Display &display, GameDirector &director,
-		const std::string &title, const std::string &name);
+		const std::string &parentTitle, const std::string &title,
+		const std::string &name);
 	virtual ~SettingsScene() { }
 
 private:

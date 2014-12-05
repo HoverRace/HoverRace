@@ -37,8 +37,8 @@ namespace HoverRace {
 namespace Client {
 
 AudioSettingsScene::AudioSettingsScene(Display::Display &display,
-	GameDirector &director) :
-	SUPER(display, director, _("Audio"), "Audio Settings"),
+	GameDirector &director, const std::string &parentTitle) :
+	SUPER(display, director, parentTitle, _("Audio"), "Audio Settings"),
 	audioCfg(Config::GetInstance()->audio), origAudioCfg(audioCfg),
 	testSound(LoadSound(MR_SND_START))
 {

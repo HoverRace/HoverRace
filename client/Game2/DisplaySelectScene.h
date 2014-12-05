@@ -47,7 +47,7 @@ class DisplaySelectScene : public DialogScene
 
 public:
 	DisplaySelectScene(Display::Display &display, GameDirector &director,
-		int monitorIdx, int xRes, int yRes);
+		const std::string &parentTitle, int monitorIdx, int xRes, int yRes);
 	virtual ~DisplaySelectScene() { }
 
 public:

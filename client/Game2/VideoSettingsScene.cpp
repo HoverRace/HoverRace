@@ -36,8 +36,8 @@ namespace HoverRace {
 namespace Client {
 
 VideoSettingsScene::VideoSettingsScene(Display::Display &display,
-	GameDirector &director) :
-	SUPER(display, director, _("Video"), "Video Settings"),
+	GameDirector &director, const std::string &parentTitle) :
+	SUPER(display, director, parentTitle, _("Video"), "Video Settings"),
 	videoCfg(Config::GetInstance()->video), origVideoCfg(videoCfg)
 {
 	using namespace Display;
@@ -119,6 +119,7 @@ void VideoSettingsScene::OnCancel()
 void VideoSettingsScene::OnDisplayClicked()
 {
 	auto scene = std::make_shared<DisplaySelectScene>(display, director,
+		GetTitle(),
 		videoCfg.fullscreenMonitorIndex,
 		videoCfg.xResFullscreen,
 		videoCfg.yResFullscreen);

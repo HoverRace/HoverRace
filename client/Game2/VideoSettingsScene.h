@@ -45,7 +45,8 @@ class VideoSettingsScene : public SettingsScene
 	using SUPER = SettingsScene;
 
 public:
-	VideoSettingsScene(Display::Display &display, GameDirector &director);
+	VideoSettingsScene(Display::Display &display, GameDirector &director,
+		const std::string &parentTitle);
 	virtual ~VideoSettingsScene() { }
 
 protected:

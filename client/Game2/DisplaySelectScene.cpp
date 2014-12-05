@@ -160,11 +160,9 @@ private:
 }  // namespace
 
 DisplaySelectScene::DisplaySelectScene(Display::Display &display,
-	GameDirector &director, int monitorIdx, int xRes, int yRes) :
-	SUPER(display, director,
-		std::string(_("Settings")) + " // " +
-			_("Video") + " // " +
-			_("Select Resolution"),
+	GameDirector &director, const std::string &parentTitle,
+	int monitorIdx, int xRes, int yRes) :
+	SUPER(display, director, parentTitle + " // " +_("Select Resolution"),
 		"Display Select"),
 	monitorGroup()
 {

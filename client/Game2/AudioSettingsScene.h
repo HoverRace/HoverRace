@@ -46,7 +46,8 @@ class AudioSettingsScene : public SettingsScene
 	using SUPER = SettingsScene;
 
 public:
-	AudioSettingsScene(Display::Display &display, GameDirector &director);
+	AudioSettingsScene(Display::Display &display, GameDirector &director,
+		const std::string &parentTitle);
 	virtual ~AudioSettingsScene() { }
 
 protected:

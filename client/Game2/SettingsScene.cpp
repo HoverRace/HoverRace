@@ -34,8 +34,9 @@ Vec2 SettingsScene::SLIDER_SIZE = Vec2(300, 20);
 
 
 SettingsScene::SettingsScene(Display::Display &display, GameDirector &director,
-	const std::string &title, const std::string &name) :
-	SUPER(display, director, std::string(_("Settings")) + " // " + title, name),
+	const std::string &parentTitle, const std::string &title,
+	const std::string &name) :
+	SUPER(display, director, parentTitle + " // " + title, name),
 	curRow(0), needsLoadFromConfig(true)
 {
 	using namespace Display;
