@@ -23,6 +23,8 @@
 
 #include <SDL2/SDL.h>
 
+#include <utf8/utf8.h>
+
 #include "../../Util/Config.h"
 #include "../../Util/Str.h"
 #include "../SymbolIcon.h"
@@ -115,8 +117,9 @@ void SdlSymbolIconView::UpdateTexture()
 		font.size *= (scale = display.GetUiScale());
 	}
 
-	wchar_t wtext[2] = { model.GetSymbol(), 0 };
-	std::string text = (const char*)Str::WU(wtext);
+	int wtext[] = { model.GetSymbol() };
+	std::string text;
+	utf8::utf32to8(wtext, wtext + 1, std::back_inserter(text));
 
 	// Render the text onto a fresh new surface.
 	SdlSurfaceText textRenderer(display, font);
