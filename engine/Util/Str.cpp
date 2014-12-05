@@ -36,6 +36,46 @@
 namespace HoverRace {
 namespace Util {
 
+namespace {
+
+// Helpers to pick the appropriate conversion function for the size of wchar_t.
+
+template<size_t SZ>
+struct Widen { };
+
+template<>
+struct Widen<2>
+{
+	template<class... Args>
+	Widen(Args&&... args) { utf8::utf8to16(std::forward<Args>(args)...); }
+};
+
+template<>
+struct Widen<4>
+{
+	template<class... Args>
+	Widen(Args&&... args) { utf8::utf8to32(std::forward<Args>(args)...); }
+};
+
+template<size_t SZ>
+struct Narrow { };
+
+template<>
+struct Narrow<2>
+{
+	template<class... Args>
+	Narrow(Args&&... args) { utf8::utf16to8(std::forward<Args>(args)...); }
+};
+
+template<>
+struct Narrow<4>
+{
+	template<class... Args>
+	Narrow(Args&&... args) { utf8::utf32to8(std::forward<Args>(args)...); }
+};
+
+}  // namespace
+
 /**
  * Convert a UTF-8 string to a wide string.
  * The caller must use OS::Free() on the result.
@@ -57,12 +97,7 @@ wchar_t *Str::Utf8ToWide(const char *s)
 	ws.reserve(len);
 
 	try {
-		if (sizeof(wchar_t) == 2) {
-			utf8::utf8to16(s, s + len, std::back_inserter(ws));
-		}
-		else {
-			utf8::utf8to32(s, s + len, std::back_inserter(ws));
-		}
+		Widen<sizeof(wchar_t)>(s, s + len, std::back_inserter(ws));
 	}
 	catch (utf8::exception &e) {
 		Log::Warn("UTF-8 to wide string failed: %s", e.what());
@@ -93,12 +128,7 @@ char *Str::WideToUtf8(const wchar_t *ws)
 	s.reserve(len * 3 + 1);  // Initial guess.
 
 	try {
-		if (sizeof(wchar_t) == 2) {
-			utf8::utf16to8(ws, ws + len, std::back_inserter(s));
-		}
-		else {
-			utf8::utf32to8(ws, ws + len, std::back_inserter(s));
-		}
+		Narrow<sizeof(wchar_t)>(ws, ws + len, std::back_inserter(s));
 	}
 	catch (utf8::exception &e) {
 		Log::Warn("Wide string to UTF-8 failed: %s", e.what());
