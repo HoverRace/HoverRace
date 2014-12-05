@@ -231,7 +231,7 @@ int Missile::InternalSimulate(MR_SimulationTime pDuration, Model::Level * pLevel
 	lShape.mAxis.mX = mPosition.mX + lTranslation.mX;
 	lShape.mAxis.mY = mPosition.mY + lTranslation.mY;
 
-	while(1) {
+	for (;;) {
 		lSuccessfullTry = FALSE;
 
 		lReport.GetContactWithObstacles(pLevel, &lShape, pRoom, this);
