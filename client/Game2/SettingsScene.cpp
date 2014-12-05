@@ -61,12 +61,10 @@ SettingsScene::SettingsScene(Display::Display &display, GameDirector &director,
 	{
 		auto &cell = settingsGrid->GetColumnDefault(col++);
 		cell.SetAlignment(Alignment::E);
-		cell.SetFill(true);
 	}
 	{
 		auto &cell = settingsGrid->GetColumnDefault(col++);
 		cell.SetAlignment(Alignment::W);
-		cell.SetFill(true);
 	}
 }
 
