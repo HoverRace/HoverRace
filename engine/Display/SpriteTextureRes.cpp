@@ -69,10 +69,10 @@ SpriteTextureRes::SpriteTextureRes(const std::string &recordName,
 
 	ImageData imageData;
 	imageData.pixels.reset(new MR_UInt8[width * totalHeight]);
-	imageData.width = width;
-	imageData.height = totalHeight;
+	imageData.width = static_cast<int>(width);
+	imageData.height = static_cast<int>(totalHeight);
 	imageData.depth = 8;
-	imageData.pitch = width;
+	imageData.pitch = static_cast<int>(width);
 	imageData.rMask = 0;
 	imageData.gMask = 0;
 	imageData.bMask = 0;
