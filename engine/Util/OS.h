@@ -67,30 +67,6 @@ struct MR_DllDeclare OS
 	static void SetEnv(const char *key, const char *val);
 	static void SetLocale();
 
-	struct MR_DllDeclare Resolution
-	{
-		int w;
-		int h;
-		Resolution(int w, int h) : w(w), h(h) { }
-		Resolution(const std::string &s);
-		std::string AsString() const;
-	};
-	using resolutions_t = std::set<Resolution>;
-	struct MR_DllDeclare Monitor
-	{
-		bool primary;
-		std::string id;
-		std::string name;
-		resolutions_t resolutions;
-	};
-	using monitors_t = std::vector<Monitor>;
-	static std::shared_ptr<monitors_t> GetMonitors();
-
-#	ifdef _WIN32
-		static std::string GuidToString(const GUID &guid);
-		static void StringToGuid(const std::string &s, GUID &guid);
-#	endif
-
 #	ifndef _WIN32
 		static std::string StrError(int errnum);
 #	endif
@@ -120,16 +96,6 @@ struct MR_DllDeclare OS
 
 	static void Free(void *buf);
 };
-
-MR_DllDeclare inline bool operator==(const OS::Resolution &l, const OS::Resolution &r)
-{
-	return l.w == r.w && l.h == r.h;
-}
-
-MR_DllDeclare inline bool operator<(const OS::Resolution &l, const OS::Resolution &r)
-{
-	return l.w < r.w || (!(r.w < l.w) && l.h < r.h);
-}
 
 }  // namespace Util
 }  // namespace HoverRace

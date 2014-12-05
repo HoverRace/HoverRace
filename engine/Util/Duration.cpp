@@ -100,8 +100,8 @@ std::ostream &Duration::FmtShort(std::ostream &os) const
 		os << '-';
 	}
 
-	bool next;
-	if ((next = ts > 0)) {
+	bool next = ts > 0;
+	if (next) {
 		os << ts << ':' << std::setw(2);
 	}
 	if (next || mins > 0) {

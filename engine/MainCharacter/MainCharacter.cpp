@@ -733,7 +733,7 @@ int MainCharacter::InternalSimulate(MR_SimulationTime pDuration, Model::Level *p
 	lShape.mPosition.mY = mPosition.mY + lTranslation.mY;
 	lShape.mPosition.mZ = mPosition.mZ + lTranslation.mZ;
 
-	while(1) {
+	for (;;) {
 		lSuccessfullTry = FALSE;
 
 		lReport.GetContactWithObstacles(pLevel, &lShape, pRoom, this);

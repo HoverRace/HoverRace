@@ -475,13 +475,13 @@ void SdlDisplay::ApplyVideoMode()
 
 	// First try to enable OpenGL support, otherwise go on without it.
 	if (cfg->runtime.noAccel ||
-		!(window = SDL_CreateWindow(windowTitle.c_str(),
-		vidCfg.xPos, vidCfg.yPos, vidCfg.xRes, vidCfg.yRes,
-		SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL)))
-	{
-		if (!(window = SDL_CreateWindow(windowTitle.c_str(),
+		(window = SDL_CreateWindow(windowTitle.c_str(),
 			vidCfg.xPos, vidCfg.yPos, vidCfg.xRes, vidCfg.yRes,
-			SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE)))
+			SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL)) == nullptr)
+	{
+		if ((window = SDL_CreateWindow(windowTitle.c_str(),
+				vidCfg.xPos, vidCfg.yPos, vidCfg.xRes, vidCfg.yRes,
+				SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE)) == nullptr)
 		{
 			throw Exception(SDL_GetError());
 		}
@@ -504,7 +504,7 @@ void SdlDisplay::ApplyVideoMode()
 
 	// Find a working renderer.
 	for (auto iter = renderers.begin(); iter != renderers.end(); ++iter) {
-		if ((renderer = SDL_CreateRenderer(window, iter->idx, 0))) {
+		if ((renderer = SDL_CreateRenderer(window, iter->idx, 0)) != nullptr) {
 			SDL_RendererInfo info;
 			SDL_GetRendererInfo(renderer, &info);
 			HR_LOG(info) << "Selected renderer: " << info;

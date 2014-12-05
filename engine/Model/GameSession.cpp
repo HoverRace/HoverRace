@@ -240,8 +240,8 @@ void GameSession::ComputeShapeContactEffects(int pCurrentRoom, FreeElement * pAc
 
 	const ShapeInterface *lActorShape = pActor->GetGivingContactEffectShape();
 
-	BOOL lValidDirection;
-	MR_Angle lDirectionAngle;
+	BOOL lValidDirection = FALSE;
+	MR_Angle lDirectionAngle = 0;
 
 	pVisitedRooms->Add(pCurrentRoom);
 

@@ -99,8 +99,8 @@ void Viewport2D::Setup(VideoBuffer * pBuffer, int pX0, int pY0, int pSizeX, int 
 		pMetrics |= eYPitch | eBuffer;
 	}
 
-	if(pBuffer->GetLineLen() != mLineLen) {
-		mLineLen = pBuffer->GetLineLen();
+	if (pBuffer->GetPitch() != mLineLen) {
+		mLineLen = pBuffer->GetPitch();
 		pMetrics |= eBuffer;
 	}
 

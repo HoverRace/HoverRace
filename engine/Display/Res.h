@@ -149,7 +149,7 @@ public:
  * A resource failed to load.
  * @author Michael Imamura
  */
-class ResLoadExn : Exception
+class ResLoadExn : public Exception
 {
 	typedef Exception SUPER;
 

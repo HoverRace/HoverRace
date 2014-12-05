@@ -66,15 +66,17 @@ namespace {
 				MapKey(SDLK_ESCAPE, _("Esc"), "esc");
 				MapKey(SDLK_SPACE, _("Space"), "space");
 				for (SDL_Keycode i = SDLK_EXCLAIM; i <= SDLK_AT; i++) {
-					std::string c(1, i);
+					std::string c(1, static_cast<char>(i));
 					MapKey(i, c, c);
 				}
 				for (SDL_Keycode i = SDLK_LEFTBRACKET; i <= SDLK_BACKQUOTE; i++) {
-					std::string c(1, i);
+					std::string c(1, static_cast<char>(i));
 					MapKey(i, c, c);
 				}
 				for (SDL_Keycode i = SDLK_a; i <= SDLK_z; i++) {
-					MapKey(i, std::string(1, i - 32), std::string(1, i));
+					MapKey(i,
+						std::string(1, static_cast<char>(i - 32)),
+						std::string(1, static_cast<char>(i)));
 				}
 				MapKey(SDLK_DELETE, _("Del"), "del");
 				MapKey(SDLK_CAPSLOCK, _("Caps Lock"), "caps_lock");

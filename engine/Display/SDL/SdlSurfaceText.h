@@ -64,6 +64,8 @@ public:
 		const Color color = COLOR_WHITE);
 	~SdlSurfaceText() { }
 
+	SdlSurfaceText &operator=(const SdlSurfaceText&) = delete;
+
 public:
 	// Properties to control rendering.
 	void SetFont(const UiFont &font) { this->font = font; }

@@ -41,36 +41,40 @@ namespace Display {
  */
 class MR_DllDeclare View
 {
-	public:
-		virtual ~View() { }
+public:
+	virtual ~View() { }
 
-	public:
-		/**
-		 * Called by the view model to indicate that a property has changed.
-		 * The view can use this to decide if view-specific resources need to be
-		 * reloaded.
-		 * @param prop The model-specific ID of the property that changed.
-		 */
-		virtual void OnModelUpdate(int prop) { HR_UNUSED(prop); }
+	// Disable assignment by default; a view should only be bound to the model
+	// once at construction time.
+	View &operator=(const View&) = delete;
 
-	public:
-		/**
-		 * Retrieve the screen-space position, if available.
-		 * The availability of this information varies from view to view.
-		 * @return The screen position, or (0, 0) if unavailable..
-		 */
-		virtual Vec2 GetScreenPos() const { return Vec2(0, 0); }
+public:
+	/**
+	 * Called by the view model to indicate that a property has changed.
+	 * The view can use this to decide if view-specific resources need to be
+	 * reloaded.
+	 * @param prop The model-specific ID of the property that changed.
+	 */
+	virtual void OnModelUpdate(int prop) { HR_UNUSED(prop); }
 
-		/**
-		 * Retrieve the screen-space size, if available.
-		 * The availability of this information varies from view to view.
-		 * @return The screen size, or (0, 0) if unavailable.
-		 */
-		virtual Vec2 GetScreenSize() const { return Vec2(0, 0); }
+public:
+	/**
+	 * Retrieve the screen-space position, if available.
+	 * The availability of this information varies from view to view.
+	 * @return The screen position, or (0, 0) if unavailable..
+	 */
+	virtual Vec2 GetScreenPos() const { return Vec2(0, 0); }
 
-		virtual Vec3 Measure() = 0;
-		virtual void PrepareRender() = 0;
-		virtual void Render() = 0;
+	/**
+	 * Retrieve the screen-space size, if available.
+	 * The availability of this information varies from view to view.
+	 * @return The screen size, or (0, 0) if unavailable.
+	 */
+	virtual Vec2 GetScreenSize() const { return Vec2(0, 0); }
+
+	virtual Vec3 Measure() = 0;
+	virtual void PrepareRender() = 0;
+	virtual void Render() = 0;
 };
 
 }  // namespace Display
