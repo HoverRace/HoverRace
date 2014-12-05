@@ -65,6 +65,10 @@ namespace Log {
 	};
 
 	struct Entry {
+		Entry(const Level level, const char *message) :
+			level(level), message(message) { }
+		Entry &operator=(const Entry&) = delete;
+
 		const Level level;
 		const char *message;
 	};
