@@ -50,6 +50,8 @@ public:
 	virtual ~DialogScene();
 
 protected:
+	const std::string &GetTitle() const { return title; }
+
 	void SetStoppingTransitionEnabled(bool enabled);
 
 	Display::Container *GetContentRoot() const { return contentRoot.get(); }
