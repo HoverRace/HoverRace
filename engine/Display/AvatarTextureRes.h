@@ -54,6 +54,8 @@ public:
 	AvatarTextureRes(const std::string &avatarId);
 	virtual ~AvatarTextureRes() { }
 
+	AvatarTextureRes &operator=(const AvatarTextureRes&) = delete;
+
 public:
 	std::string GetId() const override { return id; }
 

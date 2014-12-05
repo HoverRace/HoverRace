@@ -44,6 +44,10 @@ class MR_DllDeclare View
 public:
 	virtual ~View() { }
 
+	// Disable assignment by default; a view should only be bound to the model
+	// once at construction time.
+	View &operator=(const View&) = delete;
+
 public:
 	/**
 	 * Called by the view model to indicate that a property has changed.
