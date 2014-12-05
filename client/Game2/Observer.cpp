@@ -949,8 +949,8 @@ void Observer::RenderDebugDisplay(VideoServices::VideoBuffer * pDest, const Clie
 {
 	using Cell = Display::HudCell;
 
-	int lXRes = pDest->GetXRes();
-	int lYRes = pDest->GetYRes();
+	int lXRes = pDest->GetWidth();
+	int lYRes = pDest->GetHeight();
 	int lYOffset = 0;
 	int lXOffset = 0;
 
@@ -1004,8 +1004,8 @@ void Observer::RenderNormalDisplay(VideoServices::VideoBuffer * pDest, const Cli
 {
 	using Cell = Display::HudCell;
 
-	int lXRes = pDest->GetXRes();
-	int lYRes = pDest->GetYRes();
+	int lXRes = pDest->GetWidth();
+	int lYRes = pDest->GetHeight();
 	int lYOffset = 0;
 	int lXOffset = 0;
 	int lYMargin_1024 = mYMargin_1024;

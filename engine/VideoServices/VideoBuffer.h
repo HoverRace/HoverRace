@@ -95,11 +95,6 @@ public:
 	int GetPitch() const { return pitch; }
 	int GetZPitch() const { return width; }
 
-	int GetXRes() const { return width; }  ///< @deprecated Use GetWidth() instead.
-	int GetYRes() const { return height; }  ///< @deprecated Use GetHeight() instead.
-	int GetLineLen() const { return pitch; }  ///< @deprecated Use GetPitch() instead.
-	int GetZLineLen() const { return width; }  ///< @deprecated Use GetZPitch() instead.
-
 protected:
 	SDL_Surface *GetLegacySurface() const { return legacySurface; }
 

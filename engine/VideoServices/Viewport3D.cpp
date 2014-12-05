@@ -96,7 +96,7 @@ void Viewport3D::OnMetricsChange(int pMetrics)
 
 void Viewport3D::Setup(VideoBuffer * pBuffer, int pX0, int pY0, int pSizeX, int pSizeY, MR_Angle pApperture, int pMetrics)
 {
-	mZLineLen = pBuffer->GetZLineLen();
+	mZLineLen = pBuffer->GetZPitch();
 	MR_UInt16 *lNewZBuffer = pBuffer->GetZBuffer() + pX0 + mZLineLen * pY0;
 
 	if(lNewZBuffer != mZBuffer) {
