@@ -85,4 +85,4 @@
 #endif  // ENABLE_NLS
 
 // Mark unused parameters so we can keep both the compiler and Doxygen happy.
-#define HR_UNUSED(x) do { (void)(x); } while (0);
+template<class... T> void HR_UNUSED(T&&...) { }
