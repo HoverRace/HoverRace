@@ -201,7 +201,7 @@ bool ClassicRecordFile::OpenForWrite(const Util::OS::path_t &filename)
 	return true;
 }
 
-bool ClassicRecordFile::OpenForRead(const Util::OS::path_t &filename, bool validateChecksum)
+bool ClassicRecordFile::OpenForRead(const Util::OS::path_t &filename, bool)
 {
 	if (OpenForWrite(filename)) {
 		constructionMode = false;
