@@ -36,8 +36,6 @@
 #include <system_error>
 
 #ifdef _WIN32
-#	include <ddraw.h>
-#	include <mmsystem.h>
 #	include <shellapi.h>
 #endif
 
