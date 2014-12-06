@@ -75,14 +75,14 @@ void ClassicObjStream::WriteString(const std::string &s)
 void ClassicObjStream::WriteStringLength(MR_UInt32 len)
 {
 	if (len < 0xff) {
-		WriteUInt8(len);
+		WriteUInt8(static_cast<MR_UInt8>(len));
 		return;
 	}
 
 	WriteUInt8(0xff);
 	// 0xfffe is the marker for Unicode strings.
 	if (len < 0xfffe) {
-		WriteUInt16(len);
+		WriteUInt16(static_cast<MR_UInt16>(len));
 		return;
 	}
 
