@@ -666,7 +666,7 @@ void Viewport3D::RenderHorizontalSurface(int pNbVertex, const MR_2DCoordinate * 
 					// First find the first non-visible index of each column
 
 					if(lScreenY[lLeftStripe[0]] < 0) {
-						while(1) {
+						for (;;) {
 							int lIndex = lLeftStripe[0] - 1;
 
 							if(lIndex == -1) {
@@ -683,7 +683,7 @@ void Viewport3D::RenderHorizontalSurface(int pNbVertex, const MR_2DCoordinate * 
 					}
 
 					if(lScreenY[lRightStripe[0]] < 0) {
-						while(1) {
+						for (;;) {
 							int lIndex = lRightStripe[0] + 1;
 
 							if(lIndex == lNbCutted) {
@@ -722,7 +722,7 @@ void Viewport3D::RenderHorizontalSurface(int pNbVertex, const MR_2DCoordinate * 
 				}
 				else {
 					if(lScreenY[lLeftStripe[0]] < 0) {
-						while(1) {
+						for (;;) {
 							int lIndex = lLeftStripe[0] + 1;
 
 							if(lIndex == lNbCutted) {
@@ -739,7 +739,7 @@ void Viewport3D::RenderHorizontalSurface(int pNbVertex, const MR_2DCoordinate * 
 					}
 
 					if(lScreenY[lRightStripe[0]] < 0) {
-						while(1) {
+						for (;;) {
 							int lIndex = lRightStripe[0] - 1;
 
 							if(lIndex == -1) {
@@ -854,7 +854,7 @@ void Viewport3D::RenderHorizontalSurface(int pNbVertex, const MR_2DCoordinate * 
 
 				MR_Int32 lPreviousDepth_8 = -1;
 
-				while(1) {
+				for (;;) {
 					if(lLeftStop <= lRightStop) {
 						if(lLeftStop >= mYRes) {
 							lNextStopSide = 0;
