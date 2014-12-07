@@ -54,6 +54,8 @@ public:
 		postType(postType), label(label), player(std::move(player)) { }
 	virtual ~Announcement() { }
 
+	Announcement &operator=(const Announcement&) = delete;
+
 public:
 	virtual std::ostream &StreamOut(std::ostream &os) const
 	{

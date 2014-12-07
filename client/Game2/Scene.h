@@ -63,6 +63,8 @@ public:
 	Scene(const std::string &name = "Unnamed Scene");
 	virtual ~Scene() { }
 
+	Scene &operator=(const Scene&) = delete;
+
 public:
 	/**
 	 * Retrieve the name of the scene.

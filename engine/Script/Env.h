@@ -57,6 +57,8 @@ public:
 	Env(Core *scripting);
 	virtual ~Env();
 
+	Env &operator=(const Env&) = delete;
+
 protected:
 	Core *GetScripting() const { return scripting; }
 

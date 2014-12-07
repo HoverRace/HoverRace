@@ -86,6 +86,9 @@ class SysConsole : public Console
 		{
 			LogLine(int idx, LogLevel level, const std::string &line) :
 				idx(idx), level(level), line(line) { }
+
+			LogLine &operator=(const LogLine&) = delete;
+
 			const int idx;
 			const LogLevel level;
 			const std::string line;

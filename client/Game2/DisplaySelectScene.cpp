@@ -62,6 +62,8 @@ public:
 	ResBucket(const ResBucket&) = delete;
 	virtual ~ResBucket() { }
 
+	ResBucket &operator=(const ResBucket&) = delete;
+
 protected:
 	/**
 	 * Determine if a monitor resolution belongs to this column.

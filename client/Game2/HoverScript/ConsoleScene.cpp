@@ -48,6 +48,8 @@ public:
 	LogLines(Display::Display &display, const Vec2 &charSize);
 	~LogLines();
 
+	LogLines &operator=(const LogLines&) = delete;
+
 public:
 	void ScrollTop();
 	void Scroll(int i);

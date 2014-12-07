@@ -51,6 +51,8 @@ public:
 	Peer(Core *scripting, const std::string &name);
 	virtual ~Peer();
 
+	Peer &operator=(const Peer&) = delete;
+
 	static void Register(Core *scripting);
 
 	Core *GetScripting() const { return scripting; }
