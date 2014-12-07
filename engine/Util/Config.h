@@ -188,6 +188,7 @@ public:
 		int yPos;
 		int xRes;
 		int yRes;
+		bool fullscreen;
 		int fullscreenMonitorIndex;
 		int xResFullscreen;
 		int yResFullscreen;

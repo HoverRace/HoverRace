@@ -21,6 +21,8 @@
 
 #include "../StdAfx.h"
 
+#include "../../engine/Display/Button.h"
+#include "../../engine/Display/Checkbox.h"
 #include "../../engine/Display/Label.h"
 #include "../../engine/Display/Slider.h"
 #include "../../engine/Util/Log.h"
@@ -42,6 +44,12 @@ VideoSettingsScene::VideoSettingsScene(Display::Display &display,
 {
 	using namespace Display;
 	const auto &s = display.styles;
+
+	fullscreenChk = AddSetting(_("Display Mode"),
+		new Checkbox(display, _("Fullscreen")));
+	fullscreenConn = fullscreenChk->GetClickedSignal().connect([&](ClickRegion&) {
+		videoCfg.fullscreen = !videoCfg.fullscreen;
+	});
 
 	displayBtn = AddSetting(_("Fullscreen Resolution"),
 		new Button(display, "Select"));
@@ -68,6 +76,7 @@ VideoSettingsScene::VideoSettingsScene(Display::Display &display,
 
 void VideoSettingsScene::LoadFromConfig()
 {
+	fullscreenChk->SetChecked(videoCfg.fullscreen);
 	UpdateDisplayButton();
 	textScaleSlider->SetValue(videoCfg.textScale);
 }

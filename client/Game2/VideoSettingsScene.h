@@ -28,6 +28,7 @@
 namespace HoverRace {
 	namespace Display {
 		class Button;
+		class Checkbox;
 		class Label;
 		class Slider;
 	}
@@ -64,10 +65,12 @@ private:
 	Util::Config::video_t &videoCfg;
 	Util::Config::video_t origVideoCfg;
 
+	std::shared_ptr<Display::Checkbox> fullscreenChk;
 	std::shared_ptr<Display::Button> displayBtn;
 	std::shared_ptr<Display::Slider> textScaleSlider;
 	std::shared_ptr<Display::Label> textScalePreviewLbl;
 
+	boost::signals2::scoped_connection fullscreenConn;
 	boost::signals2::scoped_connection displayConn;
 	boost::signals2::scoped_connection textScaleConn;
 	boost::signals2::scoped_connection confirmOkConn;
