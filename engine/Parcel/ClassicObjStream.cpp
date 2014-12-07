@@ -143,7 +143,7 @@ void ClassicObjStream::ReadString(std::string &s)
 	if (len > MAX_STRING_LEN) {
 		HR_LOG(warning) << "String length (" << len << ") exceeds max (" <<
 			MAX_STRING_LEN << "); truncatng.";
-		remaining = len - MAX_STRING_LEN;
+		remaining = len - static_cast<MR_Int32>(MAX_STRING_LEN);
 		len = MAX_STRING_LEN;
 	}
 
