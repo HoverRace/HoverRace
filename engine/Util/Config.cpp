@@ -969,6 +969,7 @@ void Config::video_t::ResetToDefaults()
 	fullscreenMonitorIndex = 0;
 	xResFullscreen = 1280;
 	yResFullscreen = 720;
+	fullscreenRefreshRate = 0;
 
 	stackedSplitscreen = true;
 }

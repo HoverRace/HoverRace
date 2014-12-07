@@ -47,7 +47,8 @@ class DisplaySelectScene : public DialogScene
 
 public:
 	DisplaySelectScene(Display::Display &display, GameDirector &director,
-		const std::string &parentTitle, int monitorIdx, int xRes, int yRes);
+		const std::string &parentTitle, int monitorIdx, int xRes, int yRes,
+		int refreshRate);
 	virtual ~DisplaySelectScene() { }
 
 public:
@@ -60,8 +61,8 @@ public:
 		bool operator==(const Resolution &o) const
 		{
 			return xRes == o.xRes &&
-				yRes == o.yRes;
-			// Ignoring refresh rate for now.
+				yRes == o.yRes &&
+				refreshRate == o.refreshRate;
 		}
 	};
 
@@ -79,6 +80,9 @@ public:
 	void OnOk() override;
 
 private:
+	int reqXRes;
+	int reqYRes;
+	int reqRefreshRate;
 	Display::RadioGroup<int> monitorGroup;
 	std::unique_ptr<Display::RadioGroup<Resolution>> resGroup;
 	std::shared_ptr<Display::FlexGrid> resGrid;

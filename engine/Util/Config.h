@@ -191,6 +191,7 @@ public:
 		int fullscreenMonitorIndex;
 		int xResFullscreen;
 		int yResFullscreen;
+		int fullscreenRefreshRate;
 
 		bool stackedSplitscreen;
 

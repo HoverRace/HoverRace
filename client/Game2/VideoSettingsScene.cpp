@@ -122,7 +122,8 @@ void VideoSettingsScene::OnDisplayClicked()
 		GetTitle(),
 		videoCfg.fullscreenMonitorIndex,
 		videoCfg.xResFullscreen,
-		videoCfg.yResFullscreen);
+		videoCfg.yResFullscreen,
+		videoCfg.fullscreenRefreshRate);
 
 	displaySelConn = scene->GetOkSignal().connect([=]() {
 		videoCfg.fullscreenMonitorIndex = scene->GetMonitorIdx();
@@ -130,6 +131,7 @@ void VideoSettingsScene::OnDisplayClicked()
 		const auto &res = scene->GetResolution();
 		videoCfg.xResFullscreen = res.xRes;
 		videoCfg.yResFullscreen = res.yRes;
+		videoCfg.fullscreenRefreshRate = res.refreshRate;
 
 		RequestLoadFromConfig();
 	});

@@ -167,9 +167,10 @@ private:
 
 DisplaySelectScene::DisplaySelectScene(Display::Display &display,
 	GameDirector &director, const std::string &parentTitle,
-	int monitorIdx, int xRes, int yRes) :
+	int monitorIdx, int xRes, int yRes, int refreshRate) :
 	SUPER(display, director, JoinTitles(parentTitle, _("Select Resolution")),
 		"Display Select"),
+	reqXRes(xRes), reqYRes(yRes), reqRefreshRate(refreshRate),
 	monitorGroup()
 {
 	using namespace Display;
@@ -208,7 +209,7 @@ DisplaySelectScene::DisplaySelectScene(Display::Display &display,
 	}
 	UpdateResGrid();
 
-	resGroup->SetValue({ xRes, yRes, 0 });
+	resGroup->SetValue({ xRes, yRes, refreshRate });
 }
 
 int DisplaySelectScene::GetMonitorIdx() const
