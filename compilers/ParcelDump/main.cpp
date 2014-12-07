@@ -1,8 +1,7 @@
 
 // main.cpp
-// Debug dumper for parcel files.
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -86,7 +85,7 @@ static void DumpTrack(const OS::path_t &path, const std::string &name)
 	InspectAndPrint("Track", track.get());
 }
 
-int main(int argc, char**)
+int main(int argc, char **argv)
 {
 #	ifdef _WIN32
 		/*
@@ -103,6 +102,7 @@ int main(int argc, char**)
 	if (argc < 2) return EXIT_FAILURE;
 
 #	ifdef _WIN32
+		HR_UNUSED(argv);
 		int wargc;
 		wchar_t **wargv = CommandLineToArgvW(GetCommandLineW(), &wargc);
 		OS::path_t filename(wargv[1]);

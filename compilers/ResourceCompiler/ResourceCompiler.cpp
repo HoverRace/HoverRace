@@ -75,7 +75,7 @@ static void PrintUsage();
 // Local data
 static ResourceLibBuilder gsLib;
 
-int main(int pArgc, char**)
+int main(int pArgc, char **pArgs)
 {
 	BOOL lReturnValue = TRUE;
 
@@ -92,6 +92,7 @@ int main(int pArgc, char**)
 #	endif
 
 #	ifdef _WIN32
+		HR_UNUSED(pArgs);
 		int wargc;
 		wchar_t **wargv = CommandLineToArgvW(GetCommandLineW(), &wargc);
 #	endif
