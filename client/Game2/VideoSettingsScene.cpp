@@ -88,10 +88,29 @@ void VideoSettingsScene::UpdateDisplayButton()
 
 void VideoSettingsScene::OnOk()
 {
+	const bool needsSoftRestart =
+		origVideoCfg.fullscreen != videoCfg.fullscreen ||
+		origVideoCfg.fullscreenMonitorIndex != videoCfg.fullscreenMonitorIndex ||
+		origVideoCfg.xResFullscreen != videoCfg.xResFullscreen ||
+		origVideoCfg.yResFullscreen != videoCfg.yResFullscreen ||
+		origVideoCfg.fullscreenRefreshRate != videoCfg.fullscreenRefreshRate;
 	const bool needsMainMenu =
 		origVideoCfg.textScale != videoCfg.textScale;
 
-	if (needsMainMenu) {
+	if (needsSoftRestart) {
+		auto confirmScene = std::make_shared<MessageScene>(display, director,
+			_("Settings changed"),
+			_("To apply these changes, the game must restart.\n"
+			"\n"
+			"This will abandon any race in progress."),
+			true);
+		confirmOkConn = confirmScene->GetOkSignal().connect([&]() {
+			Config::GetInstance()->Save();
+			director.RequestSoftRestart();
+		});
+		director.RequestPushScene(confirmScene);
+	}
+	else if (needsMainMenu) {
 		auto confirmScene = std::make_shared<MessageScene>(display, director,
 			_("Settings changed"),
 			_("To apply these changes, the game must return to the main menu.\n"
