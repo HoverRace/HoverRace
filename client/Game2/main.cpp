@@ -239,8 +239,9 @@ OS::path_t FindExePath()
 
 int RunClient()
 {
-	ClientApp game;
-	game.MainLoop();
+	while (ClientApp().MainLoop() == ClientApp::ExitMode::SOFT_RESTART) {
+		HR_LOG(info) << "Soft restart commenced.";
+	}
 	return EXIT_SUCCESS;
 }
 

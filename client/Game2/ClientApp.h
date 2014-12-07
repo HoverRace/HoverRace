@@ -85,7 +85,12 @@ private:
 	void RenderScenes();
 
 public:
-	void MainLoop();
+	enum class ExitMode
+	{
+		QUITTING,  ///< Normal exit.
+		SOFT_RESTART,  ///< Create and run a new ClientApp instance.
+	};
+	ExitMode MainLoop();
 
 private:
 	void OnConsoleToggle();
@@ -113,6 +118,7 @@ public:
 			std::shared_ptr<LoadingScene>()) override;
 	void RequestAnnouncement(std::shared_ptr<Announcement> ann) override;
 	void RequestShutdown() override;
+	void RequestSoftRestart() override;
 	Display::Display *GetDisplay() const override { return display; }
 	VideoServices::VideoBuffer *GetVideoBuffer() const override;
 	Control::InputEventController *GetController() const override { return controller; }

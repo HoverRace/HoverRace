@@ -88,6 +88,7 @@ namespace {
 		REQ_EVT_SCENE_POP,
 		REQ_EVT_SCENE_REPLACE,
 		REQ_EVT_ANN_ADD,
+		REQ_EVT_SOFT_RESTART,
 	};
 
 	/**
@@ -364,9 +365,10 @@ void ClientApp::RenderScenes()
 	display->Flip();
 }
 
-void ClientApp::MainLoop()
+ClientApp::ExitMode ClientApp::MainLoop()
 {
 	bool quit = false;
+	ExitMode retv = ExitMode::QUITTING;
 	SDL_Event evt;
 
 	statusOverlayScene.reset(new StatusOverlayScene(*display, *this));
@@ -416,6 +418,11 @@ void ClientApp::MainLoop()
 						delete holder;
 						break;
 					}
+
+					case REQ_EVT_SOFT_RESTART:
+						quit = true;
+						retv = ExitMode::SOFT_RESTART;
+						break;
 				}
 			}
 			else {
@@ -444,6 +451,8 @@ void ClientApp::MainLoop()
 	statusOverlayScene.reset();
 
 	gamePeer->OnShutdown();
+
+	return retv;
 }
 
 void ClientApp::OnConsoleToggle()
@@ -715,6 +724,14 @@ void ClientApp::RequestShutdown()
 {
 	SDL_Event evt;
 	evt.type = SDL_QUIT;
+	SDL_PushEvent(&evt);
+}
+
+void ClientApp::RequestSoftRestart()
+{
+	SDL_Event evt;
+	evt.type = userEventId;
+	evt.user.code = REQ_EVT_SOFT_RESTART;
 	SDL_PushEvent(&evt);
 }
 

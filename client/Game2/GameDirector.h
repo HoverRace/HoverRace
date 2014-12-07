@@ -110,6 +110,11 @@ public:
 	 */
 	virtual void RequestShutdown() = 0;
 
+	/**
+	 * Request a restart of the app without restarting the whole process.
+	 */
+	virtual void RequestSoftRestart() = 0;
+
 	virtual Display::Display *GetDisplay() const = 0;
 
 	virtual VideoServices::VideoBuffer *GetVideoBuffer() const = 0;
