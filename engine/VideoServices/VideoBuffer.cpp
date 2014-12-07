@@ -133,7 +133,7 @@ void VideoBuffer::CreatePalette()
 
 	if (bgPalette) {
 		ColorPalette::paletteEntry_t *pal = newPalette + MR_RESERVED_COLORS_BEGINNING + MR_BASIC_COLORS;
-		for (int i = 0; i < MR_BACK_COLORS; i++) {
+		for (unsigned int i = 0; i < MR_BACK_COLORS; i++) {
 			*pal++ = ColorPalette::ConvertColor(
 				bgPalette[i * 3], bgPalette[i * 3 + 1], bgPalette[i * 3 + 2],
 				invGamma, intensity, baseIntensity);
@@ -186,7 +186,8 @@ void VideoBuffer::UnlockLegacySurface()
 
 void VideoBuffer::Clear(MR_UInt8 color)
 {
-	memset(legacySurface->pixels, color, legacySurface->pitch * legacySurface->h);
+	memset(legacySurface->pixels, color,
+		static_cast<size_t>(legacySurface->pitch * legacySurface->h));
 }
 
 }  // namespace VideoServices
