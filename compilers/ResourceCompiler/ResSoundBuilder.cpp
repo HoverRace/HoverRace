@@ -78,8 +78,10 @@ bool ParseSoundFile(const char *filename, const char *&destData, int &destLen)
 	*(MR_UInt16*)(hdr + 2) = spec.channels;  // nChannels
 	*(MR_UInt32*)(hdr + 4) = spec.freq;  // nSamplesPerSec
 	*(MR_UInt32*)(hdr + 8) = spec.freq * spec.channels * (bitsPerSample / 8);  // nAvgBytesPerSec
-	*(MR_UInt16*)(hdr + 12) = spec.channels * (bitsPerSample / 8);  // nBlockAlign
-	*(MR_UInt16*)(hdr + 14) = bitsPerSample;  // wBitsPerSample
+	*(MR_UInt16*)(hdr + 12) =  // nBlockAlign
+		static_cast<MR_UInt16>(spec.channels * (bitsPerSample / 8));
+	*(MR_UInt16*)(hdr + 14) =  // wBitsPerSample
+		static_cast<MR_UInt16>(bitsPerSample);
 
 	memcpy((void*)(destData + sizeof(MR_UInt32) + 18), audioBuf, bufLen);
 
