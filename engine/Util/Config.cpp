@@ -991,6 +991,7 @@ void Config::video_t::Load(yaml::MapNode *root)
 	READ_INT(root, fullscreenMonitorIndex, 0, 15);
 	READ_INT(root, xResFullscreen, 0, 32768);
 	READ_INT(root, yResFullscreen, 0, 32768);
+	READ_INT(root, fullscreenRefreshRate, 0, 32768);
 
 	READ_BOOL(root, stackedSplitscreen);
 }
@@ -1013,6 +1014,7 @@ void Config::video_t::Save(yaml::Emitter *emitter) const
 	EMIT_VAR(emitter, fullscreenMonitorIndex);
 	EMIT_VAR(emitter, xResFullscreen);
 	EMIT_VAR(emitter, yResFullscreen);
+	EMIT_VAR(emitter, fullscreenRefreshRate);
 
 	EMIT_VAR(emitter, stackedSplitscreen);
 
