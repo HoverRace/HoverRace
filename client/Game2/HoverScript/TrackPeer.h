@@ -45,22 +45,23 @@ namespace HoverScript {
 */
 class TrackPeer : public Script::Peer
 {
-	typedef Script::Peer SUPER;
-	public:
-		TrackPeer(Script::Core *scripting, std::shared_ptr<Model::Track> track);
-		virtual ~TrackPeer();
+	using SUPER = Script::Peer;
 
-	public:
-		static void Register(Script::Core *scripting);
+public:
+	TrackPeer(Script::Core *scripting, std::shared_ptr<Model::Track> track);
+	virtual ~TrackPeer();
 
-	public:
-		const std::string &LGetDescription() const;
-		double LGetGravity() const;
-		void LSetGravity(double gravity);
-		const std::string &LGetName() const;
+public:
+	static void Register(Script::Core *scripting);
 
-	private:
-		std::shared_ptr<Model::Track> track;
+public:
+	const std::string &LGetDescription() const;
+	double LGetGravity() const;
+	void LSetGravity(double gravity);
+	const std::string &LGetName() const;
+
+private:
+	std::shared_ptr<Model::Track> track;
 };
 
 }  // namespace HoverScript

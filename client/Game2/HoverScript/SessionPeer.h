@@ -54,7 +54,7 @@ namespace HoverScript {
  */
 class SessionPeer : public Script::Peer
 {
-	typedef Script::Peer SUPER;
+	using SUPER = Script::Peer;
 
 protected:
 	class PlayerRef

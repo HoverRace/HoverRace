@@ -44,22 +44,23 @@ namespace HoverScript {
  */
 class InputPeer : public Script::Peer
 {
-	typedef Script::Peer SUPER;
-	public:
-		InputPeer(Script::Core *scripting,
-			Control::InputEventController *controller);
-		virtual ~InputPeer() { }
+	using SUPER = Script::Peer;
 
-	public:
-		static void Register(Script::Core *scripting);
+public:
+	InputPeer(Script::Core *scripting,
+		Control::InputEventController *controller);
+	virtual ~InputPeer() { }
 
-	public:
-		void LHotkey(const std::string &key, const luabind::object &fn);
+public:
+	static void Register(Script::Core *scripting);
 
-	private:
-		Control::InputEventController *controller;
-		std::vector<Script::Handlers> hotkeyHandlers;
-		std::vector<std::unique_ptr<boost::signals2::scoped_connection>> hotkeyConns;
+public:
+	void LHotkey(const std::string &key, const luabind::object &fn);
+
+private:
+	Control::InputEventController *controller;
+	std::vector<Script::Handlers> hotkeyHandlers;
+	std::vector<std::unique_ptr<boost::signals2::scoped_connection>> hotkeyConns;
 };
 
 }  // namespace HoverScript

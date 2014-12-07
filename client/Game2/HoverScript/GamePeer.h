@@ -55,71 +55,73 @@ namespace HoverScript {
  * Scripting peer for system-level control of the game.
  * @author Michael Imamura
  */
-class GamePeer : public Script::Peer {
-	typedef Script::Peer SUPER;
-	public:
-		GamePeer(Script::Core *scripting, GameDirector &director,
-			RulebookLibrary &rulebookLibrary);
-		virtual ~GamePeer();
+class GamePeer : public Script::Peer
+{
+	using SUPER = Script::Peer;
 
-	public:
-		static void Register(Script::Core *scripting);
+public:
+	GamePeer(Script::Core *scripting, GameDirector &director,
+		RulebookLibrary &rulebookLibrary);
+	virtual ~GamePeer();
 
-	public:
-		void SetDisplay(Display::Display *display) { this->display = display; }
+public:
+	static void Register(Script::Core *scripting);
 
-	public:
-		void OnInit();
-		void OnShutdown();
-		void OnSessionStart(SessionPeerPtr sessionPeer);
-		void OnSessionEnd(SessionPeerPtr sessionPeer);
+public:
+	void SetDisplay(Display::Display *display) { this->display = display; }
 
-	protected:
-		void VerifyInitialized() const;
+public:
+	void OnInit();
+	void OnShutdown();
+	void OnSessionStart(SessionPeerPtr sessionPeer);
+	void OnSessionEnd(SessionPeerPtr sessionPeer);
 
-	public:
-		ConfigPeer *LGetConfig();
+protected:
+	void VerifyInitialized() const;
 
-		void LAddLocalPlayer();
+public:
+	ConfigPeer *LGetConfig();
 
-		void LAnnounce(const std::string &label);
-		void LAnnounce_T(const std::string &label, const std::string &text);
+	void LAddLocalPlayer();
 
-		bool LIsInitialized();
+	void LAnnounce(const std::string &label);
+	void LAnnounce_T(const std::string &label, const std::string &text);
 
-		void LOnInit(const luabind::object &fn);
-		void LOnInit_N(const std::string &name, const luabind::object &fn);
+	bool LIsInitialized();
 
-		void LOnShutdown(const luabind::object &fn);
-		void LOnShutdown_N(const std::string &name, const luabind::object &fn);
+	void LOnInit(const luabind::object &fn);
+	void LOnInit_N(const std::string &name, const luabind::object &fn);
 
-		void LOnSessionBegin(const luabind::object &fn);
-		void LOnSessionBegin_N(const std::string &name, const luabind::object &fn);
+	void LOnShutdown(const luabind::object &fn);
+	void LOnShutdown_N(const std::string &name, const luabind::object &fn);
 
-		void LOnSessionEnd(const luabind::object &fn);
-		void LOnSessionEnd_N(const std::string &name, const luabind::object &fn);
+	void LOnSessionBegin(const luabind::object &fn);
+	void LOnSessionBegin_N(const std::string &name, const luabind::object &fn);
 
-		void LScreenshot();
+	void LOnSessionEnd(const luabind::object &fn);
+	void LOnSessionEnd_N(const std::string &name, const luabind::object &fn);
 
-		void LStartMenuMenu();
+	void LScreenshot();
 
-		void LStartPractice(const std::string &track);
-		void LStartPractice_O(const std::string &track, const luabind::object &opts);
-		void LStartPractice_RO(const std::string &track, const std::string &rulebookName, const luabind::object &opts);
+	void LStartMenuMenu();
 
-		void LShutdown();
+	void LStartPractice(const std::string &track);
+	void LStartPractice_O(const std::string &track, const luabind::object &opts);
+	void LStartPractice_RO(const std::string &track, const std::string &rulebookName, const luabind::object &opts);
 
-		bool LToggleHud();
+	void LShutdown();
 
-	private:
-		GameDirector &director;
-		RulebookLibrary &rulebookLibrary;
-		Display::Display *display;
-		bool initialized;
-		Script::Handlers onInit;
-		Script::Handlers onShutdown;
-		Script::Handlers onSessionStart;
-		Script::Handlers onSessionEnd;
+	bool LToggleHud();
+
+private:
+	GameDirector &director;
+	RulebookLibrary &rulebookLibrary;
+	Display::Display *display;
+	bool initialized;
+	Script::Handlers onInit;
+	Script::Handlers onShutdown;
+	Script::Handlers onSessionStart;
+	Script::Handlers onSessionEnd;
 };
 
 }  // namespace HoverScript

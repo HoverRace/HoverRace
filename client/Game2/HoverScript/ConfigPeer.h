@@ -1,8 +1,7 @@
 
 // ConfigPeer.h
-// Scripting peer for access to the game configuration.
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -41,23 +40,25 @@ namespace HoverScript {
  * Scripting peer for access to the game configuration.
  * @author Michael Imamura
  */
-class ConfigPeer : public Script::Peer {
-	typedef Script::Peer SUPER;
-	public:
-		ConfigPeer(Script::Core *scripting);
-		virtual ~ConfigPeer();
+class ConfigPeer : public Script::Peer
+{
+	using SUPER = Script::Peer;
 
-	public:
-		static void Register(Script::Core *scripting);
+public:
+	ConfigPeer(Script::Core *scripting);
+	virtual ~ConfigPeer();
 
-	public:
-		void LUnlink();
+public:
+	static void Register(Script::Core *scripting);
 
-		void LGetVideoRes();
-		void LSetVideoRes(int w, int h);
+public:
+	void LUnlink();
 
-		bool LIsStackedSplitscreen() const;
-		void LSetStackedSplitscreen(bool stacked);
+	void LGetVideoRes();
+	void LSetVideoRes(int w, int h);
+
+	bool LIsStackedSplitscreen() const;
+	void LSetStackedSplitscreen(bool stacked);
 };
 
 }  // namespace HoverScript

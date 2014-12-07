@@ -56,7 +56,7 @@ namespace HoverScript {
  * @author Michael Imamura
  */
 class PlayerPeer : public Script::Peer {
-	typedef Script::Peer SUPER;
+	using SUPER = Script::Peer;
 
 public:
 	PlayerPeer(Script::Core *scripting, std::shared_ptr<Player::Player> player);

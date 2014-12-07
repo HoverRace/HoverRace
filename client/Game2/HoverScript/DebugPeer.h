@@ -47,25 +47,27 @@ namespace HoverScript {
  * Provides access to debugging tools.
  * @author Michael Imamura
  */
-class DebugPeer : public Script::Peer {
-	typedef Script::Peer SUPER;
-	public:
-		DebugPeer(Script::Core *scripting, GameDirector &gameDirector);
-		virtual ~DebugPeer();
+class DebugPeer : public Script::Peer
+{
+	using SUPER = Script::Peer;
 
-	public:
-		static void Register(Script::Core *scripting);
+public:
+	DebugPeer(Script::Core *scripting, GameDirector &gameDirector);
+	virtual ~DebugPeer();
 
-	public:
-		void LOpenLink(const std::string &url);
-		void LOpenPath(const std::string &path);
-		void LShowPalette();
-		void LStartTestLab();
-		void LStartTestLab_N(const std::string &startingModuleName);
-		void LTest();
+public:
+	static void Register(Script::Core *scripting);
 
-	private:
-		GameDirector &gameDirector;
+public:
+	void LOpenLink(const std::string &url);
+	void LOpenPath(const std::string &path);
+	void LShowPalette();
+	void LStartTestLab();
+	void LStartTestLab_N(const std::string &startingModuleName);
+	void LTest();
+
+private:
+	GameDirector &gameDirector;
 };
 
 }  // namespace HoverScript

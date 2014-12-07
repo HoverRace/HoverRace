@@ -1,7 +1,7 @@
 
 // HudPeer.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -48,66 +48,68 @@ namespace HoverScript {
  * Scripting peer for access to the HUD for a player.
  * @author Michael Imamura
  */
-class HudPeer : public Script::Peer {
-	typedef Script::Peer SUPER;
-	typedef HoverRace::Display::Hud::HudAlignment HudAlignment;
-	public:
-		HudPeer(Script::Core *scripting, Display::Display &display,
-			std::weak_ptr<Display::Hud> hud);
-		virtual ~HudPeer();
+class HudPeer : public Script::Peer
+{
+	using SUPER = Script::Peer;
+	using HudAlignment = Display::Hud::HudAlignment;
 
-	public:
-		static void Register(Script::Core *scripting);
+public:
+	HudPeer(Script::Core *scripting, Display::Display &display,
+		std::weak_ptr<Display::Hud> hud);
+	virtual ~HudPeer();
 
-	private:
-		/**
-		 * Convert an int into an alignment value, raising a Lua error if the
-		 * the value is out of range.
-		 * @param align The alignment value passed from Lua.
-		 * @return The HUD alignment.
-		 */
-		HudAlignment::type ValidateAlignment(int align)
-		{
-			try {
-				return HudAlignment::FromInt(align);
-			}
-			catch (Exception &ex) {
-				luaL_error(GetScripting()->GetState(), "%s", ex.what());
-				throw;  // Never actually reached (luaL_error doesn't return).
-			}
+public:
+	static void Register(Script::Core *scripting);
+
+private:
+	/**
+	 * Convert an int into an alignment value, raising a Lua error if the
+	 * the value is out of range.
+	 * @param align The alignment value passed from Lua.
+	 * @return The HUD alignment.
+	 */
+	HudAlignment::type ValidateAlignment(int align)
+	{
+		try {
+			return HudAlignment::FromInt(align);
 		}
-
-	public:
-		std::shared_ptr<Display::Chronometer> LAddChronometer(int align,
-			const std::string &title, std::shared_ptr<Util::Clock> clock);
-
-		std::shared_ptr<Display::Counter> LAddCounter_V(int align,
-			const std::string &title, double initValue);
-		std::shared_ptr<Display::Counter> LAddCounter_VT(int align,
-			const std::string &title, double initValue, double total);
-
-		std::shared_ptr<Display::HudText> LAddText(int align,
-			const std::string &text);
-
-		template<class T>
-		std::shared_ptr<T> LAddDecor(int align)
-		{
-			HudAlignment::type ha = ValidateAlignment(align);
-			if (auto sp = hud.lock()) {
-				return sp->AddHudChild(ha, new T(display));
-			}
-			else {
-				return std::shared_ptr<T>();
-			}
+		catch (Exception &ex) {
+			luaL_error(GetScripting()->GetState(), "%s", ex.what());
+			throw;  // Never actually reached (luaL_error doesn't return).
 		}
+	}
 
-		void LClear();
+public:
+	std::shared_ptr<Display::Chronometer> LAddChronometer(int align,
+		const std::string &title, std::shared_ptr<Util::Clock> clock);
 
-		void LUseRaceDefault();
+	std::shared_ptr<Display::Counter> LAddCounter_V(int align,
+		const std::string &title, double initValue);
+	std::shared_ptr<Display::Counter> LAddCounter_VT(int align,
+		const std::string &title, double initValue, double total);
 
-	private:
-		Display::Display &display;
-		std::weak_ptr<Display::Hud> hud;
+	std::shared_ptr<Display::HudText> LAddText(int align,
+		const std::string &text);
+
+	template<class T>
+	std::shared_ptr<T> LAddDecor(int align)
+	{
+		HudAlignment::type ha = ValidateAlignment(align);
+		if (auto sp = hud.lock()) {
+			return sp->AddHudChild(ha, new T(display));
+		}
+		else {
+			return std::shared_ptr<T>();
+		}
+	}
+
+	void LClear();
+
+	void LUseRaceDefault();
+
+private:
+	Display::Display &display;
+	std::weak_ptr<Display::Hud> hud;
 };
 
 }  // namespace HoverScript
