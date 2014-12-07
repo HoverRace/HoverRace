@@ -1,8 +1,7 @@
 
 // ClassicObjStream.cpp
-// Standard HoverRace 1.x parcel data stream.
 //
-// Copyright (c) 2010, 2012 Michael Imamura.
+// Copyright (c) 2010, 2012, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -22,12 +21,17 @@
 
 #include "../StdAfx.h"
 
+#include "../Util/Log.h"
 #include "../Exception.h"
 
 #include "ClassicObjStream.h"
 
 namespace HoverRace {
 namespace Parcel {
+
+namespace {
+const size_t MAX_STRING_LEN = 16 * 1024;  ///< Maximum length of a string.
+}
 
 ClassicObjStream::ClassicObjStream(FILE *stream, const Util::OS::path_t &name, bool writing) :
 	SUPER(name, 1, writing),
@@ -67,9 +71,19 @@ void ClassicObjStream::WriteUInt32(MR_UInt32 i)
 
 void ClassicObjStream::WriteString(const std::string &s)
 {
-	MR_UInt32 len = s.length();
-	WriteStringLength(len);
-	WriteBuf(s.c_str(), len);
+	auto realLen = s.length();
+	if (realLen > MAX_STRING_LEN) {
+		HR_LOG(warning) << "String length (" << realLen << ") exceeds max (" <<
+			MAX_STRING_LEN << "); truncated: " << s.substr(0, 64) << "...";
+		MR_UInt32 len = static_cast<MR_UInt32>(MAX_STRING_LEN);
+		WriteStringLength(len);
+		WriteBuf(s.substr(0, MAX_STRING_LEN).c_str(), len);
+	}
+	else {
+		MR_UInt32 len = static_cast<MR_UInt32>(s.length());
+		WriteStringLength(len);
+		WriteBuf(s.c_str(), len);
+	}
 }
 
 void ClassicObjStream::WriteStringLength(MR_UInt32 len)
@@ -125,11 +139,23 @@ void ClassicObjStream::ReadUInt32(MR_UInt32 &i)
 void ClassicObjStream::ReadString(std::string &s)
 {
 	MR_UInt32 len = ReadStringLength();
+	MR_UInt32 remaining = 0;
+	if (len > MAX_STRING_LEN) {
+		HR_LOG(warning) << "String length (" << len << ") exceeds max (" <<
+			MAX_STRING_LEN << "); truncatng.";
+		remaining = len - MAX_STRING_LEN;
+		len = MAX_STRING_LEN;
+	}
 
 	char *buf = new char[len];
 	ReadBuf(buf, len);
 	s.assign(buf, len);
 	delete[] buf;
+
+	// Skip excess.
+	if (remaining > 0) {
+		fseek(stream, remaining, SEEK_CUR);
+	}
 }
 
 MR_UInt32 ClassicObjStream::ReadStringLength()
