@@ -86,7 +86,7 @@ static void DumpTrack(const OS::path_t &path, const std::string &name)
 	InspectAndPrint("Track", track.get());
 }
 
-int main(int argc, char **argv)
+int main(int argc, char**)
 {
 #	ifdef _WIN32
 		/*

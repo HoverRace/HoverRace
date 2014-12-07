@@ -75,7 +75,7 @@ static void PrintUsage();
 // Local data
 static ResourceLibBuilder gsLib;
 
-int main(int pArgc, char *pArgs[])
+int main(int pArgc, char**)
 {
 	BOOL lReturnValue = TRUE;
 
