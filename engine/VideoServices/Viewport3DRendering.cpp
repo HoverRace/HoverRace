@@ -943,7 +943,7 @@ void Viewport3D::RenderHorizontalSurface(int pNbVertex, const MR_2DCoordinate * 
 							gsLineBltParam.mBuffer = lLineBuffer + lLeft;
 							gsLineBltParam.mBltLen = lRight - lLeft;
 							gsLineBltParam.mZBuffer = lZLineBuffer + lLeft;
-							gsLineBltParam.mZ = lDepth_8 / (8 * MR_ZBUFFER_UNIT);
+							gsLineBltParam.mZ = static_cast<MR_UInt16>(lDepth_8 / (8 * MR_ZBUFFER_UNIT));
 
 							gsLineBltParam.mLightIntensity = MR_NORMAL_INTENSITY;
 
@@ -1459,7 +1459,7 @@ void BltTriangle()
 
 						while(lXLeft < lXRight) {
 							if(lLineZBuffer[lXLeft] >= lLocalZ_4096 / (4096 * MR_ZBUFFER_UNIT)) {
-								lLineZBuffer[lXLeft] = lLocalZ_4096 / (4096 * MR_ZBUFFER_UNIT);
+								lLineZBuffer[lXLeft] = static_cast<MR_UInt16>(lLocalZ_4096 / (4096 * MR_ZBUFFER_UNIT));
 								lLineBuffer[lXLeft] = gsTriangleBltParam.mBitmap[(lLocalU_4096 / 4096) & gsTriangleBltParam.mBitmapColMask]
 									[(lLocalV_4096 / 4096) & gsTriangleBltParam.mBitmapRowMask];
 							}
@@ -1623,7 +1623,7 @@ void BltTriangle()
 
 				while(lXLeft < lXRight) {
 					if(lLineZBuffer[lXLeft] >= lLocalZ_4096 / (4096 * MR_ZBUFFER_UNIT)) {
-						lLineZBuffer[lXLeft] = lLocalZ_4096 / (4096 * MR_ZBUFFER_UNIT);
+						lLineZBuffer[lXLeft] = static_cast<MR_UInt16>(lLocalZ_4096 / (4096 * MR_ZBUFFER_UNIT));
 						lLineBuffer[lXLeft] = gsTriangleBltParam.mBitmap[(lLocalU_4096 / 4096) & gsTriangleBltParam.mBitmapColMask]
 							[(lLocalV_4096 / 4096) & gsTriangleBltParam.mBitmapRowMask];
 					}
