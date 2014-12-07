@@ -54,6 +54,9 @@ public:
 public:
 	struct Resolution
 	{
+		Resolution(int xRes, int yRes, int refreshRate) :
+			xRes(xRes), yRes(yRes), refreshRate(refreshRate) { }
+
 		int xRes;
 		int yRes;
 		int refreshRate;
@@ -80,9 +83,7 @@ public:
 	void OnOk() override;
 
 private:
-	int reqXRes;
-	int reqYRes;
-	int reqRefreshRate;
+	Resolution reqRes;
 	Display::RadioGroup<int> monitorGroup;
 	std::unique_ptr<Display::RadioGroup<Resolution>> resGroup;
 	std::shared_ptr<Display::FlexGrid> resGrid;

@@ -170,7 +170,7 @@ DisplaySelectScene::DisplaySelectScene(Display::Display &display,
 	int monitorIdx, int xRes, int yRes, int refreshRate) :
 	SUPER(display, director, JoinTitles(parentTitle, _("Select Resolution")),
 		"Display Select"),
-	reqXRes(xRes), reqYRes(yRes), reqRefreshRate(refreshRate),
+	reqRes(xRes, yRes, refreshRate),
 	monitorGroup()
 {
 	using namespace Display;
@@ -208,8 +208,6 @@ DisplaySelectScene::DisplaySelectScene(Display::Display &display,
 			&DisplaySelectScene::UpdateResGrid, this));
 	}
 	UpdateResGrid();
-
-	resGroup->SetValue({ xRes, yRes, refreshRate });
 }
 
 int DisplaySelectScene::GetMonitorIdx() const
@@ -278,6 +276,18 @@ void DisplaySelectScene::UpdateResGrid()
 		for (auto &bucket : buckets) {
 			if (bucket->Add({ mode.w, mode.h, mode.refresh_rate })) break;
 		}
+	}
+
+	// Find the closest match to the previous resolution.
+	SDL_DisplayMode reqMode;
+	reqMode.format = 0;
+	reqMode.w = reqRes.xRes;
+	reqMode.h = reqRes.yRes;
+	reqMode.refresh_rate = reqRes.refreshRate;
+	reqMode.driverdata = nullptr;
+	SDL_DisplayMode closest;
+	if (SDL_GetClosestDisplayMode(selMonitor, &reqMode, &closest) != nullptr) {
+		resGroup->SetValue({ closest.w, closest.h, closest.refresh_rate });
 	}
 }
 
