@@ -38,16 +38,17 @@ namespace HoverScript {
  * @author Michael Imamura
  */
 class RuntimeEnv : public Script::Env {
-	typedef Script::Env SUPER;
-	public:
-		RuntimeEnv(Script::Core *scripting);
-		virtual ~RuntimeEnv();
+	using SUPER = Script::Env;
 
-	private:
-		Script::Core::OutHandle outHandle;
+public:
+	RuntimeEnv(Script::Core *scripting);
+	virtual ~RuntimeEnv();
 
-		class LogStreamBuf;
-		class LogStream;
+private:
+	Script::Core::OutHandle outHandle;
+
+	class LogStreamBuf;
+	class LogStream;
 };
 
 }  // namespace HoverScript

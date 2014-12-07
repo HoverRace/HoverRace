@@ -45,22 +45,23 @@ namespace Script {
  * Base class for script peers that extend Object
  * @author Michael Imamura
  */
-class MR_DllDeclare Peer {
-	public:
-		Peer(Core *scripting, const std::string &name);
-		virtual ~Peer();
+class MR_DllDeclare Peer
+{
+public:
+	Peer(Core *scripting, const std::string &name);
+	virtual ~Peer();
 
-		static void Register(Core *scripting);
+	static void Register(Core *scripting);
 
-		Core *GetScripting() const { return scripting; }
+	Core *GetScripting() const { return scripting; }
 
-	public:
-		void LHelp();
-		void LHelp_M(const std::string &methodName);
+public:
+	void LHelp();
+	void LHelp_M(const std::string &methodName);
 
-	private:
-		Core *scripting;
-		std::string name;
+private:
+	Core *scripting;
+	std::string name;
 };
 
 }  // namespace Script

@@ -46,37 +46,38 @@ namespace HoverScript {
  * @author Michael Imamura
  */
 class RulebookEnv : public RuntimeEnv {
-	typedef RuntimeEnv SUPER;
-	public:
-		RulebookEnv(Script::Core *scripting, const Util::OS::path_t &basePath,
-			Rulebook &rulebook);
-		virtual ~RulebookEnv();
+	using SUPER = RuntimeEnv;
 
-	protected:
-		virtual void InitEnv();
+public:
+	RulebookEnv(Script::Core *scripting, const Util::OS::path_t &basePath,
+		Rulebook &rulebook);
+	virtual ~RulebookEnv();
 
-	public:
-		void DefineRulebook(const std::string &name, const luabind::object &defn);
-	private:
-		void DefineRules(const luabind::object &rulesObj);
-	public:
-		bool RunRulebookScript();
+protected:
+	virtual void InitEnv();
 
-	private:
-		static int GenerateSubclass(lua_State *L, const std::string &base,
-			const std::string &name);
+public:
+	void DefineRulebook(const std::string &name, const luabind::object &defn);
+private:
+	void DefineRules(const luabind::object &rulesObj);
+public:
+	bool RunRulebookScript();
 
-	public:
-		static int LPlayer(lua_State *L);
-		static int LRequire(lua_State *L);
-		static int LRulebookStage1(lua_State *L);
-		static int LRulebookStage2(lua_State *L);
-		static int LSession(lua_State *L);
+private:
+	static int GenerateSubclass(lua_State *L, const std::string &base,
+		const std::string &name);
 
-	private:
-		Util::OS::path_t basePath;
-		Rulebook &rulebook;
-		Script::RegistryRef requireCache;
+public:
+	static int LPlayer(lua_State *L);
+	static int LRequire(lua_State *L);
+	static int LRulebookStage1(lua_State *L);
+	static int LRulebookStage2(lua_State *L);
+	static int LSession(lua_State *L);
+
+private:
+	Util::OS::path_t basePath;
+	Rulebook &rulebook;
+	Script::RegistryRef requireCache;
 };
 
 }  // namespace HoverScript

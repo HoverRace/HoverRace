@@ -44,32 +44,32 @@ namespace {
 
 class ConsoleScene::LogLines /*{{{*/
 {
-	public:
-		LogLines(Display::Display &display, const Vec2 &charSize);
-		~LogLines();
+public:
+	LogLines(Display::Display &display, const Vec2 &charSize);
+	~LogLines();
 
-	public:
-		void ScrollTop();
-		void Scroll(int i);
-		void ScrollBottom();
+public:
+	void ScrollTop();
+	void Scroll(int i);
+	void ScrollBottom();
 
-	public:
-		void Add(const std::string &s, const Display::UiFont &font, Display::Color color);
-		void Clear();
+public:
+	void Add(const std::string &s, const Display::UiFont &font, Display::Color color);
+	void Clear();
 
-	public:
-		void PrepareRender();
-		void Render();
+public:
+	void PrepareRender();
+	void Render();
 
-	private:
-		Display::Display &display;
+private:
+	Display::Display &display;
 
-		const Vec2 &charSize;
-		std::deque<Display::Label*> lines;
-		unsigned int pos;
-		unsigned int num;
+	const Vec2 &charSize;
+	std::deque<Display::Label*> lines;
+	unsigned int pos;
+	unsigned int num;
 
-		static const unsigned int MAX_LINES = 100;
+	static const unsigned int MAX_LINES = 100;
 }; //}}}
 
 ConsoleScene::ConsoleScene(Display::Display &display, GameDirector &director,
