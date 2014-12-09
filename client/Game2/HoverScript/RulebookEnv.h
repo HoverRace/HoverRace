@@ -55,6 +55,7 @@ public:
 
 protected:
 	virtual void InitEnv();
+	void InitCFn(const char *name, lua_CFunction fn);
 
 public:
 	void DefineRulebook(const std::string &name, const luabind::object &defn);

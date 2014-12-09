@@ -178,37 +178,45 @@ void RulebookEnv::InitEnv()
 
 	SUPER::InitEnv();
 
-	Script::Core *scripting = GetScripting();
-	lua_State *L = scripting->GetState();
-
 	// Start with the standard global environment.
 	CopyGlobals();
 
 	// Register our MetaPlayer subclasser.
-	lua_pushlightuserdata(L, this);  // table this
-	lua_pushcclosure(L, RulebookEnv::LPlayer, 1);  // table fn
-	lua_pushstring(L, "Player");  // table fn str
-	lua_insert(L, -2);  // table str fn
-	lua_rawset(L, -3);  // table
+	InitCFn("Player", RulebookEnv::LPlayer);
 
 	// Register our MetaSession subclasser.
-	lua_pushlightuserdata(L, this);  // table this
-	lua_pushcclosure(L, RulebookEnv::LSession, 1);  // table fn
-	lua_pushstring(L, "Session");  // table fn str
-	lua_insert(L, -2);  // table str fn
-	lua_rawset(L, -3);  // table
+	InitCFn("Session", RulebookEnv::LSession);
 
 	// Register our custom rulebook-aware "require()".
-	lua_pushlightuserdata(L, this);  // table this
-	lua_pushcclosure(L, RulebookEnv::LRequire, 1);  // table fn
-	lua_pushstring(L, "require");  // table fn str
-	lua_insert(L, -2);  // table str fn
-	lua_rawset(L, -3);  // table
+	InitCFn("require", RulebookEnv::LRequire);
 
 	// Register our Rulebook factory.
+	InitCFn("Rulebook", RulebookEnv::LRulebookStage1);
+}
+
+/**
+ * Register a member function in a table.
+ *
+ * This is expected to be called from InitEnv() to add global functions to
+ * the environment.
+ *
+ * The top of the Lua stack must be the destination table.
+ *
+ * The function being registered will receive a single upvalue, which is the
+ * @c this pointer.
+ *
+ * @param name The Lua name of the function.
+ * @param fn The function to register.
+ */
+void RulebookEnv::InitCFn(const char *name, lua_CFunction fn)
+{
+	lua_State *L = GetScripting()->GetState();
+
+	// Initial stack: table
+	
 	lua_pushlightuserdata(L, this);  // table this
-	lua_pushcclosure(L, RulebookEnv::LRulebookStage1, 1);  // table fn
-	lua_pushstring(L, "Rulebook");  // table fn str
+	lua_pushcclosure(L, fn, 1);  // table fn
+	lua_pushstring(L, name);  // table fn str
 	lua_insert(L, -2);  // table str fn
 	lua_rawset(L, -3);  // table
 }
