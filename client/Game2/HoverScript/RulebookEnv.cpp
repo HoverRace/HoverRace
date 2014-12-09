@@ -47,101 +47,103 @@ namespace Client {
 namespace HoverScript {
 
 namespace {
-	/**
-	 * Convert a Lua index into an absolute index.
-	 * @param L The current Lua state.
-	 * @param i The index to convert (may be relative or absolute).
-	 * @return The absolute index.
-	 */
-	int LuaAbsIndex(lua_State *L, int i)
-	{
-		// Same logic as lauxlib's abs_index macro.
-		return (i > 0 || i <= LUA_REGISTRYINDEX ? i : lua_gettop(L) + i + 1);
-	}
 
-	/**
-	 * Copy the contents of one Lua table into another.
-	 * The stack is unchanged upon return.
-	 * @param destIdx The stack index of the destination table.
-	 * @param srcIdx The stack index of the source table.
-	 */
-	void LuaMergeTables(lua_State *L, int destIdx, int srcIdx)
-	{
-		destIdx = LuaAbsIndex(L, destIdx);
-		srcIdx = LuaAbsIndex(L, srcIdx);
-
-		// Initial stack: (empty)
-
-		lua_pushnil(L);  // nil
-
-		while (lua_next(L, srcIdx)) {
-			// key value
-			lua_pushvalue(L, -2);  // key value key
-			lua_insert(L, -2); // key key value
-			lua_settable(L, destIdx); // key
-		}
-		// (empty)
-	}
-
-	const luabind::object ExpectHandler(Script::Core *scripting,
-	                                     const luabind::object &props,
-	                                     const char *name)
-	{
-		using namespace luabind;
-
-		const object obj = props[name];
-
-		int objType = type(obj);
-		if (objType != LUA_TNIL && objType != LUA_TFUNCTION) {
-			luaL_error(scripting->GetState(),
-				"'%s' is required to be a function or nil", name);
-			return *scripting->NIL;
-		}
-
-		return obj;
-	}
-
-	/**
-	 * Generate a unique name for a Lua subclass for class registration.
-	 *
-	 * This name is only for debugging purposes; subclasses generated via
-	 * the "Player", "Session", etc. functions are returned as values, so the
-	 * script can choose whatever "name" it wants, or leave it unnamed
-	 * altogether (which is the common case).
-	 *
-	 * @return The new unique global name.
-	 */
-	std::string AutoName()
-	{
-		static int idx = 0;
-		std::ostringstream oss;
-		oss << "[RulebookEnv]#autoclass_" << idx++;
-		return oss.str();
-	}
-
-	/**
-	 * Check if the module path passed to @c require() is allowed.
-	 * @param s The module path.
-	 * @return @c true if valid, @c false if not.
-	 */
-	bool IsValidModulePath(const std::string &s)
-	{
-		MR_UInt32 ch;
-		for (auto iter = s.cbegin(), iend = s.cend(); iter != iend;) {
-			ch = utf8::next(iter, iend);
-
-			if (!(ch == '-' ||
-				(ch >= '0' && ch <= '9') ||
-				(ch >= 'A' && ch <= 'Z') ||
-				ch == '_' ||
-				(ch >= 'a' && ch <= 'z')))
-			{
-				return false;
-			}
-		}
-		return true;
-	}
+/**
+ * Convert a Lua index into an absolute index.
+ * @param L The current Lua state.
+ * @param i The index to convert (may be relative or absolute).
+ * @return The absolute index.
+ */
+int LuaAbsIndex(lua_State *L, int i)
+{
+	// Same logic as lauxlib's abs_index macro.
+	return (i > 0 || i <= LUA_REGISTRYINDEX ? i : lua_gettop(L) + i + 1);
 }
+
+/**
+ * Copy the contents of one Lua table into another.
+ * The stack is unchanged upon return.
+ * @param destIdx The stack index of the destination table.
+ * @param srcIdx The stack index of the source table.
+ */
+void LuaMergeTables(lua_State *L, int destIdx, int srcIdx)
+{
+	destIdx = LuaAbsIndex(L, destIdx);
+	srcIdx = LuaAbsIndex(L, srcIdx);
+
+	// Initial stack: (empty)
+
+	lua_pushnil(L);  // nil
+
+	while (lua_next(L, srcIdx)) {
+		// key value
+		lua_pushvalue(L, -2);  // key value key
+		lua_insert(L, -2); // key key value
+		lua_settable(L, destIdx); // key
+	}
+	// (empty)
+}
+
+const luabind::object ExpectHandler(Script::Core *scripting,
+									 const luabind::object &props,
+									 const char *name)
+{
+	using namespace luabind;
+
+	const object obj = props[name];
+
+	int objType = type(obj);
+	if (objType != LUA_TNIL && objType != LUA_TFUNCTION) {
+		luaL_error(scripting->GetState(),
+			"'%s' is required to be a function or nil", name);
+		return *scripting->NIL;
+	}
+
+	return obj;
+}
+
+/**
+ * Generate a unique name for a Lua subclass for class registration.
+ *
+ * This name is only for debugging purposes; subclasses generated via
+ * the "Player", "Session", etc. functions are returned as values, so the
+ * script can choose whatever "name" it wants, or leave it unnamed
+ * altogether (which is the common case).
+ *
+ * @return The new unique global name.
+ */
+std::string AutoName()
+{
+	static int idx = 0;
+	std::ostringstream oss;
+	oss << "[RulebookEnv]#autoclass_" << idx++;
+	return oss.str();
+}
+
+/**
+ * Check if the module path passed to @c require() is allowed.
+ * @param s The module path.
+ * @return @c true if valid, @c false if not.
+ */
+bool IsValidModulePath(const std::string &s)
+{
+	MR_UInt32 ch;
+	for (auto iter = s.cbegin(), iend = s.cend(); iter != iend;) {
+		ch = utf8::next(iter, iend);
+
+		if (!(ch == '-' ||
+			(ch >= '0' && ch <= '9') ||
+			(ch >= 'A' && ch <= 'Z') ||
+			ch == '_' ||
+			(ch >= 'a' && ch <= 'z')))
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+}  // namespace
 
 /**
  * Constructor.
