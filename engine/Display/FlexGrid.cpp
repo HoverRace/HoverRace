@@ -211,7 +211,9 @@ void FlexGrid::Layout()
 					padding.x, padding.y);
 			}
 			x += *widthIter + padding2x.x;
-			totalSize.x = x;
+			if (x > totalSize.x) {
+				totalSize.x = x;
+			}
 			x += margin.x;
 			++widthIter;
 		}
