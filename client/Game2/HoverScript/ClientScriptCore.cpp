@@ -24,6 +24,7 @@
 #include <luabind/class_info.hpp>
 #include <luabind/operator.hpp>
 
+#include "../../../engine/Display/UiFont.h"
 #include "../../../engine/Util/Clock.h"
 #include "../../../engine/Util/Duration.h"
 #include "../../../engine/Util/Stopwatch.h"
@@ -54,6 +55,13 @@ void ClientScriptCore::RegisterMiscClasses()
 	using namespace luabind;
 	lua_State *L = GetState();
 
+	{
+		using namespace HoverRace::Display;
+		module(L) [
+			class_<UiFont, UiFont*>("UiFont")
+				.def(tostring(self))
+		];
+	}
 	{
 		using namespace HoverRace::Util;
 		module(L) [
