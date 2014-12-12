@@ -57,9 +57,20 @@ void ClientScriptCore::RegisterMiscClasses()
 
 	{
 		using namespace HoverRace::Display;
+		using Style = UiFont::Style;
+
 		module(L) [
 			class_<UiFont, UiFont*>("UiFont")
+				.enum_("Style") [
+					value("PLAIN", 0),
+					value("BOLD", Style::BOLD),
+					value("ITALIC", Style::ITALIC),
+					value("BOLD_ITALIC", Style::BOLD | Style::ITALIC)
+				]
 				.def(tostring(self))
+				.def_readwrite("name", &UiFont::name)
+				.def_readwrite("size", &UiFont::size)
+				.def_readwrite("style", &UiFont::style)
 		];
 	}
 	{
