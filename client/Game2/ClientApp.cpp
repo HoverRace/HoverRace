@@ -51,6 +51,7 @@
 #include "HoverScript/GamePeer.h"
 #include "HoverScript/InputPeer.h"
 #include "HoverScript/SessionPeer.h"
+#include "HoverScript/StyleEnv.h"
 #include "HoverScript/SysConsole.h"
 #include "HoverScript/SysEnv.h"
 #include "ClientSession.h"
@@ -178,6 +179,13 @@ ClientApp::ClientApp() :
 	//TODO: Select which display to use.
 	display = new Display::SDL::SdlDisplay(GetWindowTitle());
 	display->OnDesktopModeChanged(desktopMode.w, desktopMode.h);
+
+	// Run the stylesheet, if it exists.
+	auto stylesheetPath = cfg->GetMediaPath();
+	stylesheetPath /= Str::UP("styles");
+	stylesheetPath /= Str::UP("default");
+	StyleEnv(scripting, *display, stylesheetPath).RunStylesheet();
+	HR_LOG(info) << display->styles.bodyFont;
 
 	// Set window position and icon (platform-dependent).
 	// We don't throw an exception if this fails since it's not critical.
