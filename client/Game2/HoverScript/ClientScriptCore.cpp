@@ -71,7 +71,16 @@ void ClientScriptCore::RegisterMiscClasses()
 				.def(tostring(self))
 				.def_readwrite("name", &UiFont::name)
 				.def_readwrite("size", &UiFont::size)
-				.def_readwrite("style", &UiFont::style)
+				.def_readwrite("style", &UiFont::style),
+			class_<Vec2, Vec2*>("Vec2")
+				.def(tostring(self))
+				.def_readwrite("x", &Vec2::x)
+				.def_readwrite("y", &Vec2::y),
+			class_<Vec3, Vec3*>("Vec3")
+				.def(tostring(self))
+				.def_readwrite("x", &Vec3::x)
+				.def_readwrite("y", &Vec3::y)
+				.def_readwrite("z", &Vec3::z)
 		];
 	}
 	{
