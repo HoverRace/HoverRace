@@ -38,7 +38,7 @@
 #include "MetaSession.h"
 #include "PlayerPeer.h"
 #include "SessionPeer.h"
-#include "StylePeer.h"
+#include "StyleEnv.h"
 #include "TrackPeer.h"
 
 #include "ClientScriptCore.h"
@@ -117,7 +117,7 @@ Script::Core *ClientScriptCore::Reset()
 		MetaSession::Register(this);
 		PlayerPeer::Register(this);
 		SessionPeer::Register(this);
-		StylePeer::Register(this);
+		StyleEnv::Register(this);
 		TrackPeer::Register(this);
 		RegisterMiscClasses();
 

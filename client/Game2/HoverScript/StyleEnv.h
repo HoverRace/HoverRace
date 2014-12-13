@@ -51,6 +51,9 @@ public:
 		const Util::OS::path_t &basePath);
 	virtual ~StyleEnv() { }
 
+public:
+	static void Register(Script::Core *scripting);
+
 protected:
 	virtual void InitEnv();
 
