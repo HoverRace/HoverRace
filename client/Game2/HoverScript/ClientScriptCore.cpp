@@ -47,6 +47,34 @@ namespace HoverRace {
 namespace Client {
 namespace HoverScript {
 
+namespace {
+
+/**
+ * Populate a UiFont from a Lua object.
+ * @param font The font to populate.
+ * @param obj The Lua object.
+ */
+void UiFontSetObj(Display::UiFont *font, const luabind::object &obj)
+{
+	using namespace luabind;
+
+	assert(font);
+
+	if (type(obj) == LUA_TTABLE) {
+		if (auto name = object_cast_nothrow<std::string>(obj["name"])) {
+			font->name = *name;
+		}
+		if (auto size = object_cast_nothrow<double>(obj["size"])) {
+			font->size = *size;
+		}
+		if (auto style = object_cast_nothrow<int>(obj["style"])) {
+			font->style = *style;
+		}
+	}
+}
+
+}  // namespace
+
 /**
  * Register miscellaneous classes that don't have peers and aren't
  * associated with anything else.
@@ -69,6 +97,7 @@ void ClientScriptCore::RegisterMiscClasses()
 					value("BOLD_ITALIC", Style::BOLD | Style::ITALIC)
 				]
 				.def(tostring(self))
+				.def("set", &UiFontSetObj)
 				.def_readwrite("name", &UiFont::name)
 				.def_readwrite("size", &UiFont::size)
 				.def_readwrite("style", &UiFont::style),
