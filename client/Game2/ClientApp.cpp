@@ -185,7 +185,6 @@ ClientApp::ClientApp() :
 	stylesheetPath /= Str::UP("styles");
 	stylesheetPath /= Str::UP("default");
 	StyleEnv(scripting, *display, stylesheetPath).RunStylesheet();
-	HR_LOG(info) << display->styles.bodyFont;
 
 	// Set window position and icon (platform-dependent).
 	// We don't throw an exception if this fails since it's not critical.
