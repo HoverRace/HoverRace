@@ -96,7 +96,12 @@ MR_DllDeclare inline bool operator!=(const UiFont &a, const UiFont &b)
 MR_DllDeclare inline std::ostream &operator<<(std::ostream &os,
                                               const UiFont &fs)
 {
-	os << fs.name;
+	if (fs.name.empty()) {
+		os << "(default)";
+	}
+	else {
+		os << fs.name;
+	}
 	if (fs.isBold()) os << " Bold";
 	if (fs.isItalic()) os << " Italic";
 	os << ' ' << fs.size;
