@@ -957,7 +957,7 @@ void Config::video_t::ResetToDefaults()
 	gamma = 1.2;
 	contrast = 0.95;
 	brightness = 0.95;
-	textScale = 1.0;
+	textScale = 0.7;
 	xPos = 150;
 	yPos = 150;
 	xRes = 800;
