@@ -229,7 +229,85 @@ namespace {
 			return b.score < a.score;
 		}
 	}
+
+/**
+ * Searches for the closest supported display mode.
+ * @param displayIdx Zero-based index of the display.
+ * @param w The width.
+ * @param h The height.
+ * @param refreshRate The refresh rate.
+ * @return The found display mode, if available.
+ */
+boost::optional<SDL_DisplayMode> FindDisplayMode(int displayIdx,
+	int w, int h, int refreshRate)
+{
+	SDL_DisplayMode req;
+	req.format = 0;
+	req.w = w;
+	req.h = h;
+	req.refresh_rate = refreshRate;
+	req.driverdata = nullptr;
+
+	SDL_DisplayMode closest;
+	if (SDL_GetClosestDisplayMode(displayIdx, &req, &closest)) {
+		return { closest };
+	}
+	else {
+		return {};
+	}
 }
+
+/**
+ * Searches for the best fullscreen mode.
+ * @param displayIdx Zero-based index of the display.
+ * @return The found best fullscreen mode, if available.
+ */
+boost::optional<SDL_DisplayMode> FindBestFullscreenMode(int displayIdx)
+{
+	const auto &vidCfg = Config::GetInstance()->video;
+
+	if (auto mode = FindDisplayMode(displayIdx,
+		vidCfg.xResFullscreen, vidCfg.yResFullscreen,
+		vidCfg.fullscreenRefreshRate))
+	{
+		return mode;
+	}
+
+	HR_LOG(warning) << "No fullscreen mode for " << vidCfg.xResFullscreen <<
+		'x' << vidCfg.yResFullscreen << " (" << vidCfg.fullscreenRefreshRate <<
+		" Hz on display " << displayIdx << "; trying default.";
+
+	if (auto mode = FindDisplayMode(displayIdx, 1280, 720, 0)) {
+		return mode;
+	}
+
+	HR_LOG(warning) << "No fullscreen mode for 1280x720; picking the first "
+		"fullscreen mode we can find.";
+
+	int numRes = SDL_GetNumDisplayModes(displayIdx);
+	if (numRes < 1) {
+		HR_LOG(error) << "No fullscreen resolutions found; "
+			"disabling fullscreen mode.";
+		return {};
+	}
+
+	for (int i = 0; i < numRes; i++) {
+		SDL_DisplayMode mode;
+		if (SDL_GetDisplayMode(displayIdx, i, &mode) < 0) {
+			HR_LOG(warning) << "Failed to retrieve resolution info "
+				"for monitor " << displayIdx << " and mode " << i;
+			continue;
+		}
+
+		return { mode };
+	}
+
+	HR_LOG(error) << "No available display modes for monitor " << displayIdx <<
+		"; disabling fullscreen mode";
+	return {};
+}
+
+}  // namespace
 
 /**
  * Constructor.
@@ -471,19 +549,53 @@ void SdlDisplay::Screenshot()
 void SdlDisplay::ApplyVideoMode()
 {
 	auto *cfg = Config::GetInstance();
-	const auto &vidCfg = cfg->video;
+	auto &vidCfg = cfg->video;
+
+	int flags = SDL_WINDOW_RESIZABLE;
+	boost::optional<SDL_DisplayMode> fullscreenMode;
+	if (vidCfg.fullscreen) {
+		// We don't set SDL_WINDOW_FULLSCREEN since we want to specify the
+		// display and mode for fullscreen.
+		//TODO: Support SDL_WINDOW_FULLSCREEN_DESKTOP.
+
+		int idx = vidCfg.fullscreenMonitorIndex;
+		if (idx >= SDL_GetNumVideoDisplays()) {
+			HR_LOG(warning) << "Configured monitor (" << idx << ") is not "
+				"available; using monitor 0.";
+			idx = 0;
+		}
+
+		fullscreenMode = FindBestFullscreenMode(idx);
+		if (!fullscreenMode) {
+			vidCfg.fullscreen = false;
+		}
+	}
 
 	// First try to enable OpenGL support, otherwise go on without it.
 	if (cfg->runtime.noAccel ||
 		(window = SDL_CreateWindow(windowTitle.c_str(),
 			vidCfg.xPos, vidCfg.yPos, vidCfg.xRes, vidCfg.yRes,
-			SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL)) == nullptr)
+			flags | SDL_WINDOW_OPENGL)) == nullptr)
 	{
 		if ((window = SDL_CreateWindow(windowTitle.c_str(),
-				vidCfg.xPos, vidCfg.yPos, vidCfg.xRes, vidCfg.yRes,
-				SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE)) == nullptr)
+			vidCfg.xPos, vidCfg.yPos, vidCfg.xRes, vidCfg.yRes,
+			flags)) == nullptr)
 		{
 			throw Exception(SDL_GetError());
+		}
+	}
+
+	// Activate fullscreen mode if requested.
+	if (vidCfg.fullscreen) {
+		if (SDL_SetWindowDisplayMode(window, &*fullscreenMode) < 0) {
+			HR_LOG(error) << "Unable to set fullscreen mode: " <<
+				SDL_GetError();
+			vidCfg.fullscreen = false;
+		}
+		else if (SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN) < 0) {
+			HR_LOG(error) << "Unable to enable fullscreen mode: " <<
+				SDL_GetError();
+			vidCfg.fullscreen = false;
 		}
 	}
 
