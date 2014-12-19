@@ -82,153 +82,153 @@ namespace SDL {
 
 namespace {
 
-	/**
-	 * Wraps an istream in a SDL_RWops struct.
-	 */
-	class InputStreamRwOps
+/**
+ * Wraps an istream in a SDL_RWops struct.
+ */
+class InputStreamRwOps
+{
+public:
+	InputStreamRwOps(std::istream *is) :
+		ops(SDL_AllocRW())
 	{
-		public:
-			InputStreamRwOps(std::istream *is) :
-				ops(SDL_AllocRW())
-			{
-				ops->size = &InputStreamRwOps::RSize;
-				ops->seek = &InputStreamRwOps::RSeek;
-				ops->read = &InputStreamRwOps::RRead;
-				ops->write = &InputStreamRwOps::RWrite;
-				ops->close = &InputStreamRwOps::RClose;
-				ops->type = SDL_RWOPS_UNKNOWN;
-				ops->hidden.unknown.data1 = this;
-				ops->hidden.unknown.data2 = is;
-			}
+		ops->size = &InputStreamRwOps::RSize;
+		ops->seek = &InputStreamRwOps::RSeek;
+		ops->read = &InputStreamRwOps::RRead;
+		ops->write = &InputStreamRwOps::RWrite;
+		ops->close = &InputStreamRwOps::RClose;
+		ops->type = SDL_RWOPS_UNKNOWN;
+		ops->hidden.unknown.data1 = this;
+		ops->hidden.unknown.data2 = is;
+	}
 
-			~InputStreamRwOps()
-			{
-				if (ops) {
-					SDL_FreeRW(ops);
-				}
-			}
-
-		private:
-			static InputStreamRwOps *Self(SDL_RWops *ctx)
-			{
-				return static_cast<InputStreamRwOps*>(
-					ctx->hidden.unknown.data1);
-			}
-
-			static std::istream *Stream(SDL_RWops *ctx)
-			{
-				return static_cast<std::istream*>(
-					ctx->hidden.unknown.data2);
-			}
-
-			static MR_Int64 RSize(SDL_RWops *ctx)
-			{
-				auto is = Stream(ctx);
-				auto pos = is->tellg();
-
-				is->seekg(0, std::ios::end);
-				if (!is) return -1;
-
-				MR_Int64 retv = is->tellg();
-				is->seekg(pos, std::ios::beg);
-				return is ? retv : -1;
-			}
-
-			static MR_Int64 RSeek(SDL_RWops *ctx, MR_Int64 offset, int whence)
-			{
-				auto is = Stream(ctx);
-				switch (whence) {
-					case RW_SEEK_SET:
-						is->seekg(offset, std::ios::beg);
-						break;
-					case RW_SEEK_CUR:
-						is->seekg(offset, std::ios::cur);
-						break;
-					case RW_SEEK_END:
-						is->seekg(offset, std::ios::end);
-						break;
-					default: {
-						std::ostringstream oss;
-						oss << "Unknown SDL_RWops seek whence: " << whence;
-						throw UnimplementedExn(oss.str());
-					}
-				}
-				return is ? static_cast<MR_Int64>(is->tellg()) : -1;
-			}
-
-			static size_t RRead(SDL_RWops *ctx, void *ptr,
-				size_t size, size_t maxnum)
-			{
-				auto is = Stream(ctx);
-				auto buf = static_cast<char*>(ptr);
-				size_t num = 0;
-				for (size_t i = 0; i < maxnum; i++) {
-					is->read(buf, static_cast<std::streamsize>(size));
-					if (is) {
-						buf += size;
-						num++;
-					}
-					else {
-						break;
-					}
-				}
-				return num;
-			}
-
-			static size_t RWrite(SDL_RWops*, const void*, size_t, size_t)
-			{
-				return 0;
-			}
-
-			static int RClose(SDL_RWops *ctx)
-			{
-				auto self = Self(ctx);
-				SDL_FreeRW(self->ops);
-				self->ops = nullptr;
-				return 0;
-			}
-
-		public:
-			SDL_RWops *ops;
-	};
-
-	struct RendererInfo {
-		RendererInfo(int idx) : idx(idx), score(0) {
-			SDL_GetRenderDriverInfo(idx, &info);
-
-			// Blacklisting the Direct3D driver since we prefer an OpenGL one.
-			// This also fixes issue #201 where SDL_SetTextureAlphaMod seems to stop
-			// working after a screen resize.
-			blacklisted = (strncmp(info.name, "direct3d", 8) == 0);
-
-			bool noAccel = Config::GetInstance()->runtime.noAccel;
-			if (noAccel && (info.flags & SDL_RENDERER_ACCELERATED)) blacklisted = true;
-
-			score += (blacklisted ? 1000 : 9000);
-
-			if (info.flags & SDL_RENDERER_ACCELERATED) score += 900;
-			else if (info.flags & SDL_RENDERER_SOFTWARE) score += 100;
-			else score += 500;
-
-			if (info.flags & SDL_RENDERER_TARGETTEXTURE) score += 50;
-
-			if (info.flags & SDL_RENDERER_PRESENTVSYNC) score += 5;
-		}
-
-		SDL_RendererInfo info;
-		int idx;
-		int score;
-		bool blacklisted;
-	};
-
-	bool operator<(const RendererInfo &a, const RendererInfo &b) {
-		if (a.score == b.score) {
-			return strcmp(a.info.name, b.info.name) < 0;
-		}
-		else {
-			return b.score < a.score;
+	~InputStreamRwOps()
+	{
+		if (ops) {
+			SDL_FreeRW(ops);
 		}
 	}
+
+private:
+	static InputStreamRwOps *Self(SDL_RWops *ctx)
+	{
+		return static_cast<InputStreamRwOps*>(
+			ctx->hidden.unknown.data1);
+	}
+
+	static std::istream *Stream(SDL_RWops *ctx)
+	{
+		return static_cast<std::istream*>(
+			ctx->hidden.unknown.data2);
+	}
+
+	static MR_Int64 RSize(SDL_RWops *ctx)
+	{
+		auto is = Stream(ctx);
+		auto pos = is->tellg();
+
+		is->seekg(0, std::ios::end);
+		if (!is) return -1;
+
+		MR_Int64 retv = is->tellg();
+		is->seekg(pos, std::ios::beg);
+		return is ? retv : -1;
+	}
+
+	static MR_Int64 RSeek(SDL_RWops *ctx, MR_Int64 offset, int whence)
+	{
+		auto is = Stream(ctx);
+		switch (whence) {
+			case RW_SEEK_SET:
+				is->seekg(offset, std::ios::beg);
+				break;
+			case RW_SEEK_CUR:
+				is->seekg(offset, std::ios::cur);
+				break;
+			case RW_SEEK_END:
+				is->seekg(offset, std::ios::end);
+				break;
+			default: {
+				std::ostringstream oss;
+				oss << "Unknown SDL_RWops seek whence: " << whence;
+				throw UnimplementedExn(oss.str());
+			}
+		}
+		return is ? static_cast<MR_Int64>(is->tellg()) : -1;
+	}
+
+	static size_t RRead(SDL_RWops *ctx, void *ptr,
+		size_t size, size_t maxnum)
+	{
+		auto is = Stream(ctx);
+		auto buf = static_cast<char*>(ptr);
+		size_t num = 0;
+		for (size_t i = 0; i < maxnum; i++) {
+			is->read(buf, static_cast<std::streamsize>(size));
+			if (is) {
+				buf += size;
+				num++;
+			}
+			else {
+				break;
+			}
+		}
+		return num;
+	}
+
+	static size_t RWrite(SDL_RWops*, const void*, size_t, size_t)
+	{
+		return 0;
+	}
+
+	static int RClose(SDL_RWops *ctx)
+	{
+		auto self = Self(ctx);
+		SDL_FreeRW(self->ops);
+		self->ops = nullptr;
+		return 0;
+	}
+
+public:
+	SDL_RWops *ops;
+};
+
+struct RendererInfo {
+	RendererInfo(int idx) : idx(idx), score(0) {
+		SDL_GetRenderDriverInfo(idx, &info);
+
+		// Blacklisting the Direct3D driver since we prefer an OpenGL one.
+		// This also fixes issue #201 where SDL_SetTextureAlphaMod seems to stop
+		// working after a screen resize.
+		blacklisted = (strncmp(info.name, "direct3d", 8) == 0);
+
+		bool noAccel = Config::GetInstance()->runtime.noAccel;
+		if (noAccel && (info.flags & SDL_RENDERER_ACCELERATED)) blacklisted = true;
+
+		score += (blacklisted ? 1000 : 9000);
+
+		if (info.flags & SDL_RENDERER_ACCELERATED) score += 900;
+		else if (info.flags & SDL_RENDERER_SOFTWARE) score += 100;
+		else score += 500;
+
+		if (info.flags & SDL_RENDERER_TARGETTEXTURE) score += 50;
+
+		if (info.flags & SDL_RENDERER_PRESENTVSYNC) score += 5;
+	}
+
+	SDL_RendererInfo info;
+	int idx;
+	int score;
+	bool blacklisted;
+};
+
+bool operator<(const RendererInfo &a, const RendererInfo &b) {
+	if (a.score == b.score) {
+		return strcmp(a.info.name, b.info.name) < 0;
+	}
+	else {
+		return b.score < a.score;
+	}
+}
 
 /**
  * Searches for the closest supported display mode.
