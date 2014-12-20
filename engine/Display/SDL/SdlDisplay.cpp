@@ -562,7 +562,7 @@ void SdlDisplay::ApplyVideoMode()
 		if (idx >= SDL_GetNumVideoDisplays()) {
 			HR_LOG(warning) << "Configured monitor (" << idx << ") is not "
 				"available; using monitor 0.";
-			idx = 0;
+			vidCfg.fullscreenMonitorIndex = idx = 0;
 		}
 
 		fullscreenMode = FindBestFullscreenMode(idx);
