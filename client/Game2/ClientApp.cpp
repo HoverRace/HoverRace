@@ -169,15 +169,14 @@ ClientApp::ClientApp() :
 	sysConsole = new SysConsole(scripting, *this,
 		debugPeer, gamePeer, inputPeer);
 
-	//TODO: Select which display to use.
+	// Create the main window and SDL surface.
+	display = new Display::SDL::SdlDisplay(GetWindowTitle());
 	SDL_DisplayMode desktopMode;
-	if (SDL_GetDesktopDisplayMode(0, &desktopMode) < 0) {
+	int monitorIdx = cfg->video.fullscreen ?
+		cfg->video.fullscreenMonitorIndex : 0;
+	if (SDL_GetCurrentDisplayMode(monitorIdx, &desktopMode) < 0) {
 		throw Exception(SDL_GetError());
 	}
-
-	// Create the main window and SDL surface.
-	//TODO: Select which display to use.
-	display = new Display::SDL::SdlDisplay(GetWindowTitle());
 	display->OnDesktopModeChanged(desktopMode.w, desktopMode.h);
 
 	// Run the stylesheet, if it exists.
