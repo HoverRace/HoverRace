@@ -719,6 +719,7 @@ void SdlDisplay::DrawUiTexture(SDL_Texture *texture, const Vec2 &relPos,
 		SDL_RenderCopy(renderer, texture, nullptr, &destRect);
 	}
 }
+
 /**
  * Blit a scaled SDL texture to the backbuffer with the current layout state.
  * @param texture The texture to blit (may be @c NULL).
