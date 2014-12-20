@@ -551,6 +551,8 @@ void SdlDisplay::ApplyVideoMode()
 	auto *cfg = Config::GetInstance();
 	auto &vidCfg = cfg->video;
 
+	SDL_Rect winRect = { vidCfg.xPos, vidCfg.yPos, vidCfg.xRes, vidCfg.yRes };
+
 	int flags = SDL_WINDOW_RESIZABLE;
 	boost::optional<SDL_DisplayMode> fullscreenMode;
 	if (vidCfg.fullscreen) {
@@ -569,16 +571,27 @@ void SdlDisplay::ApplyVideoMode()
 		if (!fullscreenMode) {
 			vidCfg.fullscreen = false;
 		}
+		else {
+			SDL_Rect bounds;
+			if (SDL_GetDisplayBounds(idx, &bounds) == 0) {
+				winRect = bounds;
+			}
+			else {
+				HR_LOG(warning) << "Could not get bounds for monitor " << idx <<
+					"; disabling fullscreen.";
+				vidCfg.fullscreen = false;
+			}
+		}
 	}
 
 	// First try to enable OpenGL support, otherwise go on without it.
 	if (cfg->runtime.noAccel ||
 		(window = SDL_CreateWindow(windowTitle.c_str(),
-			vidCfg.xPos, vidCfg.yPos, vidCfg.xRes, vidCfg.yRes,
+			winRect.x, winRect.y, winRect.w, winRect.h,
 			flags | SDL_WINDOW_OPENGL)) == nullptr)
 	{
 		if ((window = SDL_CreateWindow(windowTitle.c_str(),
-			vidCfg.xPos, vidCfg.yPos, vidCfg.xRes, vidCfg.yRes,
+			winRect.x, winRect.y, winRect.w, winRect.h,
 			flags)) == nullptr)
 		{
 			throw Exception(SDL_GetError());
@@ -591,11 +604,13 @@ void SdlDisplay::ApplyVideoMode()
 			HR_LOG(error) << "Unable to set fullscreen mode: " <<
 				SDL_GetError();
 			vidCfg.fullscreen = false;
+			//TODO: Restore configured position and size.
 		}
 		else if (SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN) < 0) {
 			HR_LOG(error) << "Unable to enable fullscreen mode: " <<
 				SDL_GetError();
 			vidCfg.fullscreen = false;
+			//TODO: Restore configured position and size.
 		}
 	}
 
