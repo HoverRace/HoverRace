@@ -89,7 +89,7 @@ void ClientScriptCore::RegisterMiscClasses()
 		using Style = UiFont::Style;
 
 		module(L) [
-			class_<UiFont, UiFont*>("UiFont")
+			class_<UiFont, UiFont*>("Font")
 				.enum_("Style") [
 					value("PLAIN", 0),
 					value("BOLD", Style::BOLD),
