@@ -83,6 +83,35 @@ namespace SDL {
 namespace {
 
 /**
+ * Defines aliases for font names.
+ */
+class FontAliasMap
+{
+public:
+	FontAliasMap()
+	{
+		auto cfg = Config::GetInstance();
+		map.emplace("", cfg->GetDefaultFontName());
+		map.emplace("monospace", cfg->GetDefaultMonospaceFontName());
+	}
+
+public:
+	/**
+	 * Maps a possibly-aliased font name to it's real font name.
+	 * @param name The name.
+	 * @return The real font name.  If there is no alias, this is the name.
+	 */
+	const std::string &Lookup(const std::string &name)
+	{
+		const auto &iter = map.find(name);
+		return iter == map.cend() ? name : iter->second;
+	}
+
+private:
+	std::unordered_map<std::string, std::string> map;
+};
+
+/**
  * Wraps an istream in a SDL_RWops struct.
  */
 class InputStreamRwOps
@@ -694,6 +723,8 @@ void SdlDisplay::ApplyVideoMode()
  */
 TTF_Font *SdlDisplay::LoadTtfFont(const UiFont &font, bool uiScale)
 {
+	static FontAliasMap aliasMap;
+
 	const Config *cfg = Config::GetInstance();
 
 	// Scale the font size to match the DPI we use in SDL_Pango.
@@ -702,11 +733,7 @@ TTF_Font *SdlDisplay::LoadTtfFont(const UiFont &font, bool uiScale)
 	if (uiScale) dsize *= cfg->video.textScale;
 	int size = static_cast<int>(dsize / 75.0);
 
-	std::string fullFontName = font.name;
-	if (fullFontName.empty()) {
-		fullFontName = cfg->GetDefaultFontName();
-	}
-
+	std::string fullFontName = aliasMap.Lookup(font.name);
 	if (font.isBold()) fullFontName += "Bold";
 	if (font.isItalic()) fullFontName += "Oblique";
 	fullFontName += ".ttf";
