@@ -181,7 +181,7 @@ ClientApp::ClientApp() :
 
 	// Run the stylesheet, if it exists.
 	auto stylesheetPath = cfg->GetMediaPath();
-	stylesheetPath /= Str::UP("styles");
+	stylesheetPath /= Str::UP("themes");
 	stylesheetPath /= Str::UP("default");
 	StyleEnv(scripting, *display, stylesheetPath).RunStylesheet();
 
