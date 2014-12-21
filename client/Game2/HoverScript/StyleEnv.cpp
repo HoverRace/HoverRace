@@ -31,6 +31,37 @@ using namespace HoverRace::Script;
 using namespace HoverRace::Util;
 namespace fs = boost::filesystem;
 
+namespace luabind {
+
+// Treat Color in Lua as a simple number.
+
+template<>
+struct default_converter<HoverRace::Display::Color> :
+	native_converter_base<HoverRace::Display::Color>
+{
+	static int compute_score(lua_State* L, int index)
+	{
+		return lua_type(L, index) == LUA_TNUMBER ? 0 : -1;
+	}
+
+	HoverRace::Display::Color from(lua_State* L, int index)
+	{
+		return static_cast<MR_UInt32>(lua_tonumber(L, index));
+	}
+
+	void to(lua_State* L, HoverRace::Display::Color const& x)
+	{
+		lua_pushnumber(L, x.argb);
+	}
+};
+
+template<>
+struct default_converter<HoverRace::Display::Color const&> :
+	default_converter<HoverRace::Display::Color>
+{ };
+
+}  // namespace luabind
+
 namespace HoverRace {
 namespace Client {
 namespace HoverScript {
