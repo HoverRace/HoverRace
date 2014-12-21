@@ -307,6 +307,31 @@ boost::optional<SDL_DisplayMode> FindBestFullscreenMode(int displayIdx)
 	return {};
 }
 
+/**
+ * Activates fullscreen mode.
+ * @param window The window (may not be @c nullptr).
+ * @param mode The fullscreen display mode.
+ * @return @c true if it succeeds, @c false if it fails.
+ */
+bool ActivateFullscreen(SDL_Window *window, SDL_DisplayMode &mode)
+{
+	assert(window);
+
+	if (SDL_SetWindowDisplayMode(window, &mode) < 0) {
+		HR_LOG(error) << "Unable to set fullscreen mode: " <<
+			SDL_GetError();
+		return false;
+	}
+
+	if (SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN) < 0) {
+		HR_LOG(error) << "Unable to enable fullscreen mode: " <<
+			SDL_GetError();
+		return false;
+	}
+
+	return true;
+}
+
 }  // namespace
 
 /**
@@ -600,17 +625,11 @@ void SdlDisplay::ApplyVideoMode()
 
 	// Activate fullscreen mode if requested.
 	if (vidCfg.fullscreen) {
-		if (SDL_SetWindowDisplayMode(window, &*fullscreenMode) < 0) {
-			HR_LOG(error) << "Unable to set fullscreen mode: " <<
-				SDL_GetError();
+		if (!ActivateFullscreen(window, *fullscreenMode)) {
 			vidCfg.fullscreen = false;
-			//TODO: Restore configured position and size.
-		}
-		else if (SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN) < 0) {
-			HR_LOG(error) << "Unable to enable fullscreen mode: " <<
-				SDL_GetError();
-			vidCfg.fullscreen = false;
-			//TODO: Restore configured position and size.
+			// Restore configured position and size.
+			SDL_SetWindowPosition(window, vidCfg.xPos, vidCfg.yPos);
+			SDL_SetWindowSize(window, vidCfg.xRes, vidCfg.yRes);
 		}
 	}
 
