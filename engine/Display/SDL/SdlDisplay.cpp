@@ -607,7 +607,7 @@ void SdlDisplay::ApplyVideoMode()
 
 	SDL_Rect winRect = { vidCfg.xPos, vidCfg.yPos, vidCfg.xRes, vidCfg.yRes };
 
-	int flags = SDL_WINDOW_RESIZABLE;
+	MR_UInt32 flags = SDL_WINDOW_RESIZABLE;
 	boost::optional<SDL_DisplayMode> fullscreenMode;
 	if (vidCfg.fullscreen) {
 		// We don't set SDL_WINDOW_FULLSCREEN since we want to specify the
