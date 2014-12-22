@@ -50,31 +50,32 @@ class MR_DllDeclare SymbolIcon : public FillBox
 {
 	typedef FillBox SUPER;
 
-	public:
-		struct Props
+public:
+	struct Props
+	{
+		enum
 		{
-			enum {
-				SYMBOL = SUPER::Props::NEXT_,
-				NEXT_,  ///< First index for subclasses.
-			};
+			SYMBOL = SUPER::Props::NEXT_,
+			NEXT_,  ///< First index for subclasses.
 		};
+	};
 
-	public:
-		SymbolIcon(const Vec2 &size, int symbol,
-			const Color color=COLOR_WHITE, uiLayoutFlags_t layoutFlags=0);
-		SymbolIcon(double w, double h, int symbol,
-			const Color color=COLOR_WHITE, uiLayoutFlags_t layoutFlags=0);
-		virtual ~SymbolIcon() { }
+public:
+	SymbolIcon(const Vec2 &size, int symbol,
+		const Color color = COLOR_WHITE, uiLayoutFlags_t layoutFlags = 0);
+	SymbolIcon(double w, double h, int symbol,
+		const Color color = COLOR_WHITE, uiLayoutFlags_t layoutFlags = 0);
+	virtual ~SymbolIcon() { }
 
-	public:
-		virtual void AttachView(Display &disp) { AttachViewDynamic(disp, this); }
+public:
+	virtual void AttachView(Display &disp) { AttachViewDynamic(disp, this); }
 
-	public:
-		int GetSymbol() const { return symbol; }
-		void SetSymbol(int symbol);
+public:
+	int GetSymbol() const { return symbol; }
+	void SetSymbol(int symbol);
 
-	private:
-		int symbol;
+private:
+	int symbol;
 };
 
 }  // namespace Display

@@ -52,31 +52,32 @@ namespace SDL {
 class MR_DllDeclare SdlSymbolIconView : public SdlView<SymbolIcon>
 {
 	typedef SdlView<SymbolIcon> SUPER;
-	public:
-		SdlSymbolIconView(SdlDisplay &disp, SymbolIcon &model);
-		virtual ~SdlSymbolIconView();
 
-	public:
-		virtual void OnModelUpdate(int prop);
-		void OnUiScaleChanged();
+public:
+	SdlSymbolIconView(SdlDisplay &disp, SymbolIcon &model);
+	virtual ~SdlSymbolIconView();
 
-	public:
-		virtual Vec3 Measure();
-		virtual void PrepareRender();
-		virtual void Render();
+public:
+	virtual void OnModelUpdate(int prop);
+	void OnUiScaleChanged();
 
-	private:
-		void UpdateTexture();
-		void UpdateTextureColor();
+public:
+	virtual Vec3 Measure();
+	virtual void PrepareRender();
+	virtual void Render();
 
-	private:
-		SDL_Texture *texture;  //TODO: Cache the symbols in a single texture.
-		bool colorChanged;
-		int width;
-		int height;
-		double unscaledWidth;
-		double unscaledHeight;
-		boost::signals2::scoped_connection uiScaleChangedConnection;
+private:
+	void UpdateTexture();
+	void UpdateTextureColor();
+
+private:
+	SDL_Texture *texture;  //TODO: Cache the symbols in a single texture.
+	bool colorChanged;
+	int width;
+	int height;
+	double unscaledWidth;
+	double unscaledHeight;
+	boost::signals2::scoped_connection uiScaleChangedConnection;
 };
 
 }  // namespace SDL

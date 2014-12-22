@@ -39,7 +39,7 @@ namespace Display {
  * @param layoutFlags Optional layout flags.
  */
 SymbolIcon::SymbolIcon(const Vec2 &size, int symbol, Color color,
-                       uiLayoutFlags_t layoutFlags) :
+	uiLayoutFlags_t layoutFlags) :
 	SUPER(size, color, layoutFlags),
 	symbol(symbol)
 {
@@ -54,7 +54,7 @@ SymbolIcon::SymbolIcon(const Vec2 &size, int symbol, Color color,
  * @param layoutFlags Optional layout flags.
  */
 SymbolIcon::SymbolIcon(double w, double h, int symbol, Color color,
-                       uiLayoutFlags_t layoutFlags) :
+	uiLayoutFlags_t layoutFlags) :
 	SUPER(w, h, color, layoutFlags),
 	symbol(symbol)
 {
