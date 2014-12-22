@@ -123,6 +123,7 @@ void SdlSymbolIconView::UpdateTexture()
 
 	// Render the text onto a fresh new surface.
 	SdlSurfaceText textRenderer(display, font);
+	textRenderer.SetFixedScale(true);
 	SDL_Surface *tempSurface = textRenderer.RenderToNewSurface(text);
 	width = textRenderer.GetWidth();
 	height = textRenderer.GetHeight();
