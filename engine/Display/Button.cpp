@@ -102,9 +102,9 @@ void Button::Layout()
 	// If there is an icon, resize it and shift the text to make room.
 	if (icon) {
 		double iconSize = size.y - (paddingTop + paddingBottom);
-		icon->SetSize(iconSize, iconSize);
+		icon->AdjustHeight(iconSize);
 		icon->SetPos(paddingLeft, paddingTop);
-		midX += (iconSize + iconGap) / 2.0;
+		midX += (icon->Measure().x + iconGap) / 2.0;
 	}
 
 	if (!IsEnabled()) {
