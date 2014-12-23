@@ -78,5 +78,23 @@ void FillBox::SetSize(const Vec2 &size)
 	}
 }
 
+/**
+ * Adjust the height, preserving the preferred aspect ratio.
+ * @param h The new height.
+ */
+void FillBox::AdjustHeight(double h)
+{
+	SetSize(size.x * (h / size.y), h);
+}
+
+/**
+ * Adjust the width, preserving the preferred aspect ratio.
+ * @param w The new width.
+ */
+void FillBox::AdjustWidth(double w)
+{
+	SetSize(w, size.y * (w / size.x));
+}
+
 }  // namespace Display
 }  // namespace HoverRace

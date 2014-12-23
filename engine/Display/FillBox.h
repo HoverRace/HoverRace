@@ -85,6 +85,9 @@ public:
 	/// Convenience function for SetSize(const Vec2&).
 	void SetSize(double w, double h) { SetSize(Vec2(w, h)); }
 
+	virtual void AdjustHeight(double h);
+	virtual void AdjustWidth(double w);
+
 public:
 	virtual Vec3 Measure() { return size.Promote(); }
 
