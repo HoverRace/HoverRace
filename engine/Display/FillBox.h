@@ -52,43 +52,45 @@ class MR_DllDeclare FillBox : public UiViewModel
 {
 	typedef UiViewModel SUPER;
 
-	public:
-		struct Props
-		{
-			enum {
-				SIZE = SUPER::Props::NEXT_,
-				COLOR,
-				NEXT_,  ///< First index for subclasses.
-			};
+public:
+	struct Props
+	{
+		enum {
+			SIZE = SUPER::Props::NEXT_,
+			COLOR,
+			NEXT_,  ///< First index for subclasses.
 		};
+	};
 
-	public:
-		FillBox(const Vec2 &size, const Color color, uiLayoutFlags_t layoutFlags=0);
-		FillBox(double w, double h, const Color color, uiLayoutFlags_t layoutFlags=0);
-		virtual ~FillBox() { }
+public:
+	FillBox(const Vec2 &size, const Color color,
+		uiLayoutFlags_t layoutFlags = 0);
+	FillBox(double w, double h, const Color color,
+		uiLayoutFlags_t layoutFlags = 0);
+	virtual ~FillBox() { }
 
-	public:
-		virtual void AttachView(Display &disp) { AttachViewDynamic(disp, this); }
+public:
+	virtual void AttachView(Display &disp) { AttachViewDynamic(disp, this); }
 
-	public:
-		const Color GetColor() const { return color; }
-		void SetColor(const Color color);
+public:
+	const Color GetColor() const { return color; }
+	void SetColor(const Color color);
 
-		/**
-		 * Retrieve the size of the box.
-		 * @return The size, where @c x is the width and @c y is the height.
-		 */
-		const Vec2 &GetSize() const { return size; }
-		void SetSize(const Vec2 &size);
-		/// Convenience function for SetSize(const Vec2&).
-		void SetSize(double w, double h) { SetSize(Vec2(w, h)); }
+	/**
+	 * Retrieve the size of the box.
+	 * @return The size, where @c x is the width and @c y is the height.
+	 */
+	const Vec2 &GetSize() const { return size; }
+	void SetSize(const Vec2 &size);
+	/// Convenience function for SetSize(const Vec2&).
+	void SetSize(double w, double h) { SetSize(Vec2(w, h)); }
 
-	public:
-		virtual Vec3 Measure() { return size.Promote(); }
+public:
+	virtual Vec3 Measure() { return size.Promote(); }
 
-	private:
-		Vec2 size;
-		Color color;
+private:
+	Vec2 size;
+	Color color;
 };
 
 }  // namespace Display
