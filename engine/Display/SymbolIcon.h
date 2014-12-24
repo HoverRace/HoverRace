@@ -48,7 +48,7 @@ namespace Display {
  */
 class MR_DllDeclare SymbolIcon : public FillBox
 {
-	typedef FillBox SUPER;
+	using SUPER = FillBox;
 
 public:
 	struct Props

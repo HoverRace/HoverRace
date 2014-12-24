@@ -50,7 +50,7 @@ namespace Display {
  */
 class MR_DllDeclare FillBox : public UiViewModel
 {
-	typedef UiViewModel SUPER;
+	using SUPER = UiViewModel;
 
 public:
 	struct Props
