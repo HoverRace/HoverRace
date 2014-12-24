@@ -1,8 +1,7 @@
 
 // ScriptExn.h
-// Generic script engine exception.
 //
-// Copyright (c) 2009 Michael Imamura.
+// Copyright (c) 2009, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -35,21 +34,25 @@
 namespace HoverRace {
 namespace Script {
 
+/**
+ * Generic script engine exception.
+ * @author Michael Imamura
+ */
 class MR_DllDeclare ScriptExn : public std::exception
 {
-	typedef std::exception SUPER;
+	using SUPER = std::exception;
 
-	public:
-		ScriptExn() : SUPER() { }
-		ScriptExn(const char* const msg) : SUPER(), msg(msg) { }
-		ScriptExn(const std::string &msg) : SUPER(), msg(msg) { }
-		virtual ~ScriptExn() throw() { }
+public:
+	ScriptExn() : SUPER() { }
+	ScriptExn(const char* const msg) : SUPER(), msg(msg) { }
+	ScriptExn(const std::string &msg) : SUPER(), msg(msg) { }
+	virtual ~ScriptExn() noexcept { }
 
-		virtual const char* what() const throw() { return msg.c_str(); }
-		virtual const std::string &GetMessage() const throw() { return msg; }
+	const char* what() const noexcept override { return msg.c_str(); }
+	virtual const std::string &GetMessage() const noexcept { return msg; }
 
-	private:
-		std::string msg;
+private:
+	std::string msg;
 };
 
 }  // namespace Script

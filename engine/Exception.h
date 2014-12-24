@@ -41,21 +41,21 @@ namespace HoverRace {
  */
 class MR_DllDeclare Exception : public std::exception
 {
-	typedef std::exception SUPER;
+	using SUPER = std::exception;
 
-	public:
-		Exception() : SUPER() { }
-		Exception(const std::string &msg) : SUPER(), msg(msg) { }
-		Exception(const char *msg) : SUPER(), msg(msg) { }
-		virtual ~Exception() noexcept { }
+public:
+	Exception() : SUPER() { }
+	Exception(const std::string &msg) : SUPER(), msg(msg) { }
+	Exception(const char *msg) : SUPER(), msg(msg) { }
+	virtual ~Exception() noexcept { }
 
-		virtual const char* what() const noexcept { return msg.c_str(); }
+	const char* what() const noexcept override { return msg.c_str(); }
 
-	protected:
-		std::string &GetMessage() { return msg; }
+protected:
+	std::string &GetMessage() { return msg; }
 
-	private:
-		std::string msg;
+private:
+	std::string msg;
 };
 
 /**
@@ -64,13 +64,13 @@ class MR_DllDeclare Exception : public std::exception
  */
 class MR_DllDeclare UnimplementedExn : public Exception
 {
-	typedef Exception SUPER;
+	using SUPER = Exception;
 
-	public:
-		UnimplementedExn() : SUPER() { }
-		UnimplementedExn(const std::string &msg) : SUPER(msg) { }
-		UnimplementedExn(const char *msg) : SUPER(msg) { }
-		virtual ~UnimplementedExn() noexcept { }
+public:
+	UnimplementedExn() : SUPER() { }
+	UnimplementedExn(const std::string &msg) : SUPER(msg) { }
+	UnimplementedExn(const char *msg) : SUPER(msg) { }
+	virtual ~UnimplementedExn() noexcept { }
 };
 
 }  // namespace HoverRace
