@@ -1,7 +1,7 @@
 
 // Action.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -43,30 +43,34 @@ namespace HoverRace {
 namespace Control {
 
 namespace TextControl {
-	/// Keycodes used for text input control.
-	enum key_t {
-		BACKSPACE = SDLK_BACKSPACE,
-		ENTER = SDLK_RETURN
-	};
-}
+
+/// Keycodes used for text input control.
+enum key_t {
+	BACKSPACE = SDLK_BACKSPACE,
+	ENTER = SDLK_RETURN
+};
+
+}  // namepsace TextControl
 
 namespace Mouse {
-	/// Mouse buttons.
-	enum button_t {
-		LEFT = SDL_BUTTON_LEFT,
-		MIDDLE = SDL_BUTTON_MIDDLE,
-		RIGHT = SDL_BUTTON_RIGHT,
-		B4 = SDL_BUTTON_X1,
-		B5 = SDL_BUTTON_X2
-	};
 
-	/// Mouse click events.
-	struct Click {
-		Click(double x, double y, button_t btn) : pos(x, y), btn(btn) { }
-		Vec2 pos;
-		button_t btn;
-	};
-}
+/// Mouse buttons.
+enum button_t {
+	LEFT = SDL_BUTTON_LEFT,
+	MIDDLE = SDL_BUTTON_MIDDLE,
+	RIGHT = SDL_BUTTON_RIGHT,
+	B4 = SDL_BUTTON_X1,
+	B5 = SDL_BUTTON_X2
+};
+
+/// Mouse click events.
+struct Click {
+	Click(double x, double y, button_t btn) : pos(x, y), btn(btn) { }
+	Vec2 pos;
+	button_t btn;
+};
+
+}  // namespace Mouse
 
 /// Signals which are self-contained (no payload).
 typedef boost::signals2::signal<void()> voidSignal_t;
@@ -155,47 +159,48 @@ inline void PerformAction<mouseClickSignal_t, const Mouse::Click&>(
 template<class T, class Val=int>
 class Action : public ControlAction<Val>
 {
-	typedef ControlAction<Val> SUPER;
-	public:
-		Action(const std::string &name, int listOrder) :
-			SUPER(name, listOrder), primaryTrigger(0) { }
-		virtual ~Action() { }
+	using SUPER = ControlAction<Val>;
+	
+public:
+	Action(const std::string &name, int listOrder) :
+		SUPER(name, listOrder), primaryTrigger(0) { }
+	virtual ~Action() { }
 
-		virtual void operator()(Val value) {
-			PerformAction<T, Val>(signal, value);
-		}
+	virtual void operator()(Val value) {
+		PerformAction<T, Val>(signal, value);
+	}
 
-		/**
-		 * Connect a slot to the signal.
-		 * This is a convenience function.  To access the signal directly,
-		 * see GetSignal().
-		 */
-		template<class U>
-		boost::signals2::connection Connect(U &&del) {
-			return signal.connect(std::forward<U>(del));
-		}
+	/**
+	 * Connect a slot to the signal.
+	 * This is a convenience function.  To access the signal directly,
+	 * see GetSignal().
+	 */
+	template<class U>
+	boost::signals2::connection Connect(U &&del) {
+		return signal.connect(std::forward<U>(del));
+	}
 
-		/**
-		 * Retrieve the hash of the key or button assigned to this action by
-		 * the InputEventController.
-		 * @return The hash (see InputEventController::HashToString) or 0 if no key
-		 *         or button has been assigned.
-		 */
-		int GetPrimaryTrigger() const { return primaryTrigger; }
+	/**
+	 * Retrieve the hash of the key or button assigned to this action by
+	 * the InputEventController.
+	 * @return The hash (see InputEventController::HashToString) or 0 if no key
+	 *         or button has been assigned.
+	 */
+	int GetPrimaryTrigger() const { return primaryTrigger; }
 
-		/**
-		 * Set the hash of the key or button assigned to this action.
-		 * This should only be called by the InputEventController that owns this
-		 * Action (if any).
-		 * @param hash The input hash or 0 if none is assigned.
-		 */
-		void SetPrimaryTrigger(int hash) { primaryTrigger = hash; }
+	/**
+	 * Set the hash of the key or button assigned to this action.
+	 * This should only be called by the InputEventController that owns this
+	 * Action (if any).
+	 * @param hash The input hash or 0 if none is assigned.
+	 */
+	void SetPrimaryTrigger(int hash) { primaryTrigger = hash; }
 
-		T &GetSignal() { return signal; }
+	T &GetSignal() { return signal; }
 
-	private:
-		int primaryTrigger;
-		T signal;
+private:
+	int primaryTrigger;
+	T signal;
 };
 
 } // namespace Control
