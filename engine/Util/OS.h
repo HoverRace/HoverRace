@@ -93,8 +93,6 @@ struct MR_DllDeclare OS
 	static bool OpenPath(const path_t &path);
 
 	static FILE *FOpen(const path_t &path, const char *mode);
-
-	static void Free(void *buf);
 };
 
 }  // namespace Util

@@ -48,7 +48,7 @@ class MR_DllDeclare UW
 public:
 	UW(const char *s=NULL) throw() : cs(Utf8ToWide(s)) { }
 	explicit UW(const std::string &s) throw() : cs(Utf8ToWide(s.c_str())) { }
-	~UW() throw() { OS::Free(cs); }
+	~UW() throw() { free(cs); }
 	operator const wchar_t*() const throw() { return cs; }
 	operator const std::wstring() const { return cs; }
 };
@@ -60,7 +60,7 @@ class MR_DllDeclare WU
 public:
 	WU(const wchar_t *ws=NULL) throw() : cs(WideToUtf8(ws)) { }
 	explicit WU(const std::wstring &s) throw() : cs(WideToUtf8(s.c_str())) { }
-	~WU() throw() { OS::Free(cs); }
+	~WU() throw() { free(cs); }
 	operator const char*() const throw() { return cs; }
 	operator const std::string() const { return cs; }
 };

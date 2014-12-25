@@ -252,15 +252,6 @@ void OS::TimeShutdown()
 }
 
 /**
- * Free a memory buffer created by a function from this class.
- * @param buf The buffer to free (may be NULL).
- */
-void OS::Free(void *buf)
-{
-	free(buf);
-}
-
-/**
  * Open a URL.
  * @param url The URL (UTF-8 encoded).
  * @return @c true if successful, @c false otherwise.
