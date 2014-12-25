@@ -28,6 +28,7 @@ if(MSVC)
 	elseif(MSVC_VERSION EQUAL 1800)
 		message(STATUS "Enabling Visual C++ November 2013 CTP compiler")
 		set(CMAKE_GENERATOR_TOOLSET "CTP_Nov2013" CACHE STRING "Platform Toolset" FORCE)
+		set(CMAKE_VS_PLATFORM_TOOLSET "CTP_Nov2013" CACHE STRING "Platform Toolset" FORCE)
 
 		# Check that the toolset is available.
 		if(NOT HAVE_NOV_2013_CTP)
