@@ -71,18 +71,6 @@ namespace {
 
 }  // namespace
 
-/// Lookup table for converting from hex.
-int OS::nibbles[256] = {
-	 0,  0,  0,  0,  0,  0,  0,  0,   0,  0,  0,  0,  0,  0,  0,  0, // 00
-	 0,  0,  0,  0,  0,  0,  0,  0,   0,  0,  0,  0,  0,  0,  0,  0, // 10
-	 0,  0,  0,  0,  0,  0,  0,  0,   0,  0,  0,  0,  0,  0,  0,  0, // 20
-	 0,  1,  2,  3,  4,  5,  6,  7,   8,  9,  0,  0,  0,  0,  0,  0, // 30
-	 0, 10, 11, 12, 13, 14, 15,  0,   0,  0,  0,  0,  0,  0,  0,  0, // 40
-	 0,  0,  0,  0,  0,  0,  0,  0,   0,  0,  0,  0,  0,  0,  0,  0, // 50
-	 0, 10, 11, 12, 13, 14, 15,  0,   0,  0,  0,  0,  0,  0,  0,  0, // 60
-	 0,  0,  0,  0,  0,  0,  0,  0,   0,  0,  0,  0,  0,  0,  0,  0, // 70
-	};
-
 /**
  * Global reference to the current locale.
  * Defaults to "C" until OS::SetLocale() is called.
@@ -91,16 +79,6 @@ std::locale OS::locale("C");
 
 /// The standard "C" locale for things that should be not be affected by locale.
 const std::locale OS::stdLocale("C");
-
-#ifdef _WIN32
-static inline bool isHex(const char &c)
-{
-	return
-		(c >= '0' && c <= '9') ||
-		(c >= 'A' && c <= 'F') ||
-		(c >= 'a' && c <= 'f');
-}
-#endif
 
 /**
  * Set an environment variable.
