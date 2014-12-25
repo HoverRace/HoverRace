@@ -49,7 +49,6 @@ namespace Util {
  */
 struct MR_DllDeclare OS
 {
-	static int nibbles[256];
 	static std::locale locale;
 	static const std::locale stdLocale;
 
