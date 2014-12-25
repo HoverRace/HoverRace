@@ -15,6 +15,18 @@ set(HR_EXTRA_WARNINGS FALSE CACHE BOOL
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMakeModules)
 
+if(MSVC)
+	if(MSVC_VERSION EQUAL 1800)
+		if(NOT CMAKE_GENERATOR_TOOLSET STREQUAL "CTP_Nov2013")
+			message(STATUS "Enabling Visual C++ November 2013 CTP compiler")
+			set(CMAKE_GENERATOR_TOOLSET "CTP_Nov2013" CACHE STRING "Platform Toolset" FORCE)
+			set(CMAKE_VS_PLATFORM_TOOLSET "CTP_Nov2013" CACHE STRING "Platform Toolset" FORCE)
+			message(FATAL_ERROR "Platform toolset configuration updated.
+** Please run the Configure step again to apply the changes. **")
+		endif()
+	endif()
+endif()
+
 include(CheckCXXSourceCompiles)
 include(CXX11)
 include(GNUInstallDirs)
@@ -27,8 +39,6 @@ if(MSVC)
 		message(FATAL_ERROR "Visual Studio 2013 (aka Visual Studio 12) or later is required.")
 	elseif(MSVC_VERSION EQUAL 1800)
 		message(STATUS "Enabling Visual C++ November 2013 CTP compiler")
-		set(CMAKE_GENERATOR_TOOLSET "CTP_Nov2013" CACHE STRING "Platform Toolset" FORCE)
-		set(CMAKE_VS_PLATFORM_TOOLSET "CTP_Nov2013" CACHE STRING "Platform Toolset" FORCE)
 
 		# Check that the toolset is available.
 		if(NOT HAVE_NOV_2013_CTP)
