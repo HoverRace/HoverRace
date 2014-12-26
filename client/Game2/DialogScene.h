@@ -57,11 +57,14 @@ protected:
 	Display::Container *GetContentRoot() const { return contentRoot.get(); }
 	Display::Container *GetStatusRoot() const { return statusRoot.get(); }
 
+	void ActivateExtraAction(const std::string &label);
+
 	void SetBackground(Display::Background *fader);
 
 protected:
 	virtual void OnOk();
 	virtual void OnCancel();
+	virtual void OnExtra();
 
 protected:
 	static std::string JoinTitles(const std::string &parent,
@@ -90,9 +93,11 @@ private:
 	std::shared_ptr<Display::FlexGrid> actionGrid;
 	std::shared_ptr<Display::ActionButton> okBtn;
 	std::shared_ptr<Display::ActionButton> cancelBtn;
+	std::shared_ptr<Display::ActionButton> extraBtn;
 
 	boost::signals2::connection okConn;
 	boost::signals2::connection cancelConn;
+	boost::signals2::connection extraConn;
 };
 
 }  // namespace Client

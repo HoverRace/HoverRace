@@ -112,6 +112,25 @@ void DialogScene::SetStoppingTransitionEnabled(bool enabled)
 }
 
 /**
+ * Enable the "extra" action for this scene.
+ *
+ * By default, scenes do not have an "extra" action, only OK and Cancel.
+ * Activating this action will add a button to the status bar with the
+ * specified label.
+ *
+ * This must only be called from the constructor, and must only be called
+ * once.
+ *
+ * @param label The label for the button.
+ */
+void DialogScene::ActivateExtraAction(const std::string &label)
+{
+	assert(!extraBtn);
+
+	extraBtn = statusRoot->AddChild(new Display::ActionButton(display, label));
+}
+
+/**
  * Set the background, replacing the currently set background.
  * @param fader The background of the scene
  *              (may be @c nullptr for no background).
@@ -135,6 +154,12 @@ void DialogScene::OnOk()
 void DialogScene::OnCancel()
 {
 	director.RequestPopScene();
+}
+
+/// Called when the scene-specific extra action is fired.
+void DialogScene::OnExtra()
+{
+	// Do nothing by default.
 }
 
 /**
@@ -161,14 +186,20 @@ void DialogScene::AttachController(Control::InputEventController &controller)
 
 	auto &menuOkAction = controller.actions.ui.menuOk;
 	auto &menuCancelAction = controller.actions.ui.menuCancel;
+	auto &menuExtraAction = controller.actions.ui.menuExtra;
 
 	okConn = menuOkAction->Connect(
 		std::bind(&DialogScene::OnOk, this));
 	cancelConn = menuCancelAction->Connect(
 		std::bind(&DialogScene::OnCancel, this));
+	extraConn = menuExtraAction->Connect(
+		std::bind(&DialogScene::OnExtra, this));
 
 	okBtn->AttachAction(controller, menuOkAction);
 	cancelBtn->AttachAction(controller, menuCancelAction);
+	if (extraBtn) {
+		extraBtn->AttachAction(controller, menuExtraAction);
+	}
 
 	statusRoot->SetVisible(true);
 
@@ -178,6 +209,7 @@ void DialogScene::AttachController(Control::InputEventController &controller)
 
 void DialogScene::DetachController(Control::InputEventController &controller)
 {
+	extraConn.disconnect();
 	cancelConn.disconnect();
 	okConn.disconnect();
 
