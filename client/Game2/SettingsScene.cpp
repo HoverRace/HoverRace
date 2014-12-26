@@ -44,12 +44,7 @@ SettingsScene::SettingsScene(Display::Display &display, GameDirector &director,
 
 	auto statusRoot = GetStatusRoot();
 
-	auto resetBtn = statusRoot->AddChild(
-		new Button(display, _("Reset to defaults")));
-	resetConn = resetBtn->GetClickedSignal().connect([&](ClickRegion&) {
-		ResetToDefaults();
-		LoadFromConfig();
-	});
+	ActivateExtraAction(_("Reset to defaults"));
 
 	auto root = GetContentRoot();
 
@@ -75,6 +70,12 @@ void SettingsScene::AddSettingLabel(size_t row, const std::string &label)
 
 	settingsGrid->AddGridCell(row, 0,
 		new Display::Label(label, s.bodyFont, s.bodyFg));
+}
+
+void SettingsScene::OnExtra()
+{
+	ResetToDefaults();
+	LoadFromConfig();
 }
 
 void SettingsScene::PrepareRender()

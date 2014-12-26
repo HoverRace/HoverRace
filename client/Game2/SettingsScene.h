@@ -74,6 +74,9 @@ public:
 		return cell->GetContents();
 	}
 
+protected:
+	void OnExtra() override;
+
 public:
 	void PrepareRender() override;
 
@@ -84,8 +87,6 @@ private:
 	std::shared_ptr<Display::FlexGrid> settingsGrid;
 	size_t curRow;
 	bool needsLoadFromConfig;
-
-	boost::signals2::scoped_connection resetConn;
 };
 
 }  // namespace Client
