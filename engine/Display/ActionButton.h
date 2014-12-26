@@ -1,7 +1,7 @@
 
 // ActionButton.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -51,23 +51,24 @@ namespace Display {
  */
 class MR_DllDeclare ActionButton : public Button
 {
-	typedef Button SUPER;
-	public:
-		ActionButton(Display &display, uiLayoutFlags_t layoutFlags=0);
-		ActionButton(Display &display, const Vec2 &size,
-			uiLayoutFlags_t layoutFlags=0);
-		virtual ~ActionButton();
+	using SUPER = Button;
 
-	public:
-		void AttachAction(Control::InputEventController &controller,
-			Control::InputEventController::VoidActionPtr action);
-		void DetachAction();
+public:
+	ActionButton(Display &display, uiLayoutFlags_t layoutFlags = 0);
+	ActionButton(Display &display, const Vec2 &size,
+		uiLayoutFlags_t layoutFlags = 0);
+	virtual ~ActionButton();
 
-	protected:
-		virtual void FireClickedSignal();
+public:
+	void AttachAction(Control::InputEventController &controller,
+		Control::InputEventController::VoidActionPtr action);
+	void DetachAction();
 
-	private:
-		std::weak_ptr<Control::InputEventController::VoidActionPtr::element_type> action;
+protected:
+	virtual void FireClickedSignal();
+
+private:
+	std::weak_ptr<Control::InputEventController::VoidActionPtr::element_type> action;
 };
 
 }  // namespace Display
