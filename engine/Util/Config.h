@@ -285,6 +285,7 @@ public:
 		int consoleHelp;
 		int menuOk;
 		int menuCancel;
+		int menuExtra;
 
 		void Load(yaml::MapNode*);
 		void Save(yaml::Emitter*) const;

@@ -749,6 +749,7 @@ void Config::ResetToDefaults()
 
 	ui.menuOk = InputEventController::HashKeyboardEvent(SDLK_RETURN);
 	ui.menuCancel = InputEventController::HashKeyboardEvent(SDLK_ESCAPE);
+	ui.menuExtra = InputEventController::HashKeyboardEvent(SDLK_BACKSPACE);
 
 	runtime.silent = false;
 	runtime.verboseLog = false;
@@ -1244,6 +1245,7 @@ void Config::ui_t::Load(yaml::MapNode* root)
 
 	READ_INT(root, menuOk, 0, INT_MAX);
 	READ_INT(root, menuCancel, 0, INT_MAX);
+	READ_INT(root, menuExtra, 0, INT_MAX);
 }
 
 void Config::ui_t::Save(yaml::Emitter* emitter) const
@@ -1260,6 +1262,7 @@ void Config::ui_t::Save(yaml::Emitter* emitter) const
 
 	EMIT_VAR(emitter, menuOk);
 	EMIT_VAR(emitter, menuCancel);
+	EMIT_VAR(emitter, menuExtra);
 
 	emitter->EndMap();
 }

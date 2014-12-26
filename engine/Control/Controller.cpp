@@ -42,6 +42,7 @@ namespace Control {
 InputEventController::actions_t::ui_t::ui_t() :
 	menuOk(std::make_shared<Action<voidSignal_t>>(_("OK"), 0)),
 	menuCancel(std::make_shared<Action<voidSignal_t>>(_("Cancel"), 0)),
+	menuExtra(std::make_shared<Action<voidSignal_t>>(_("Extra"), 0)),
 	consoleUp(std::make_shared<Action<voidSignal_t>>(_("Page Up"), 0)),
 	consoleDown(std::make_shared<Action<voidSignal_t>>(_("Page Down"), 1)),
 	consoleTop(std::make_shared<Action<voidSignal_t>>(_("Top"), 2)),
@@ -594,6 +595,7 @@ void InputEventController::LoadMenuMap()
 
 	AssignAction(cmap, config->ui.menuOk, actions.ui.menuOk);
 	AssignAction(cmap, config->ui.menuCancel, actions.ui.menuCancel);
+	AssignAction(cmap, config->ui.menuExtra, actions.ui.menuExtra);
 }
 
 /// Set up the console toggle control.

@@ -309,6 +309,7 @@ class MR_DllDeclare InputEventController {
 				ui_t();
 				VoidActionPtr menuOk;
 				VoidActionPtr menuCancel;
+				VoidActionPtr menuExtra;  ///< Scene-specific extra action.
 
 				// Console scrolling.
 				VoidActionPtr consoleUp;
