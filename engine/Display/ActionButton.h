@@ -55,7 +55,11 @@ class MR_DllDeclare ActionButton : public Button
 
 public:
 	ActionButton(Display &display, uiLayoutFlags_t layoutFlags = 0);
+	ActionButton(Display &display, const std::string &text,
+		uiLayoutFlags_t layoutFlags = 0);
 	ActionButton(Display &display, const Vec2 &size,
+		uiLayoutFlags_t layoutFlags = 0);
+	ActionButton(Display &display, const Vec2 &size, const std::string &text,
 		uiLayoutFlags_t layoutFlags = 0);
 	virtual ~ActionButton();
 
@@ -68,6 +72,7 @@ protected:
 	virtual void FireClickedSignal();
 
 private:
+	std::string fixedText;
 	std::weak_ptr<Control::InputEventController::VoidActionPtr::element_type> action;
 };
 

@@ -1,7 +1,7 @@
 
 // ActionButton.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2014 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -27,26 +27,43 @@ namespace HoverRace {
 namespace Display {
 
 /**
- * Constructor for automatically-sized button.
+ * Constructor for automatically-sized button with automatic label.
  * @note The button will have no text until an action is attached.
  * @param display The display child elements will be attached to.
  * @param layoutFlags Optional layout flags.
  */
 ActionButton::ActionButton(Display &display, uiLayoutFlags_t layoutFlags) :
-	SUPER(display, "", layoutFlags)
+	SUPER(display, "", layoutFlags),
+	fixedText()
 {
 }
 
 /**
- * Constructor for fixed-sized button.
+ * Constructor for automatically-sized button with fixed label.
+ * @note The button will have no text until an action is attached.
+ * @param display The display child elements will be attached to.
+ * @param text The fixed label (will not be set from controller).
+ * @param layoutFlags Optional layout flags.
+ */
+ActionButton::ActionButton(Display &display, const std::string &text,
+	uiLayoutFlags_t layoutFlags) :
+	SUPER(display, "", layoutFlags),
+	fixedText(text)
+{
+}
+
+/**
+ * Constructor for fixed-sized button with fixed label.
  * @note The button will have no text until an action is attached.
  * @param display The display child elements will be attached to.
  * @param size The fixed button size.
+ * @param text The fixed label (will not be set from controller).
  * @param layoutFlags Optional layout flags.
  */
 ActionButton::ActionButton(Display &display, const Vec2 &size,
-                           uiLayoutFlags_t layoutFlags) :
-	SUPER(display, size, "", layoutFlags)
+	const std::string &text, uiLayoutFlags_t layoutFlags) :
+	SUPER(display, size, "", layoutFlags),
+	fixedText(text)
 {
 }
 
@@ -69,7 +86,7 @@ void ActionButton::AttachAction(Control::InputEventController &controller,
 
 	std::ostringstream oss;
 	oss << '[' << controller.HashToString(action->GetPrimaryTrigger()) <<
-		"] " << action->GetName();
+		"] " << (fixedText.empty() ? action->GetName() : fixedText);
 	SetText(oss.str());
 }
 
