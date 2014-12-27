@@ -39,42 +39,46 @@ namespace HoverRace {
 namespace Control {
 
 /***
- * \class ControlAction
- *
- * This is an abstract base class which allows us a simple reference to arbitrary
- * functors of type ControlActionImpl (which bind a class via a template
- * parameter).  Unfortunately, this must use virtual functions to work correctly,
- * which is not optimal, but is the best the language can do.
+ * Abstract base class which allows us a simple reference to arbitrary functors
+ * of type ControlActionImpl (which bind a class via a template parameter).
+ * Unfortunately, this must use virtual functions to work correctly, which is
+ * not optimal, but is the best the language can do.
  *
  * To create a functor, derive the ControlAction class.
+ *
+ * @author Ryan Curtin
  */
 template<class T>
-class ControlAction {
-	public:
-		ControlAction(const std::string &name, int listOrder) : name(name), listOrder(listOrder) { }
-		virtual ~ControlAction() { }
+class ControlAction
+{
+public:
+	ControlAction(const std::string &name, int listOrder) :
+		name(name), listOrder(listOrder) { }
+	virtual ~ControlAction() { }
 
-		virtual void operator()(T eventValue) = 0;
+	virtual void operator()(T eventValue) = 0;
 
-		const std::string &GetName() { return name; }
-		int GetListOrder() { return listOrder; }
+	const std::string &GetName() { return name; }
+	int GetListOrder() { return listOrder; }
 
-	protected:
-		std::string name;
-		int listOrder;
+protected:
+	std::string name;
+	int listOrder;
 };
-typedef std::shared_ptr<ControlAction<int>> ControlActionPtr;
+using ControlActionPtr = std::shared_ptr<ControlAction<int>>;
 
 /***
- * \class BlankAction
  * An action performer that does absolutely nothing.
  * Provides a template for other classes that will be used as an
  * ActionPerformer.
  */
-class MR_DllDeclare BlankAction : public ControlAction<int> {
-	public:
-		BlankAction(std::string name, int listOrder) : ControlAction(name, listOrder) { }
-		virtual void operator()(int) { }
+class MR_DllDeclare BlankAction : public ControlAction<int>
+{
+public:
+	BlankAction(std::string name, int listOrder) :
+		ControlAction(name, listOrder) { }
+
+	virtual void operator()(int) { }
 };
 
 } // namespace Control
