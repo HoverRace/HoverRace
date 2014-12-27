@@ -43,6 +43,7 @@ namespace HoverRace {
 		class ClickRegion;
 		class Container;
 		class FillBox;
+		class KeycapIcon;
 		class Label;
 		class Picture;
 		class RuleLine;
@@ -73,6 +74,7 @@ class MR_DllDeclare Display :
 	public ViewAttacher<ClickRegion>,
 	public ViewAttacher<Container>,
 	public ViewAttacher<FillBox>,
+	public ViewAttacher<KeycapIcon>,
 	public ViewAttacher<Label>,
 	public ViewAttacher<Picture>,
 	public ViewAttacher<RuleLine>,

@@ -71,6 +71,7 @@ public:
 	void AttachView(ClickRegion &model) override;
 	void AttachView(Container &model) override;
 	void AttachView(FillBox &model) override;
+	void AttachView(KeycapIcon &model) override;
 	void AttachView(Label &model) override;
 	void AttachView(Picture &model) override;
 	void AttachView(RuleLine &model) override;

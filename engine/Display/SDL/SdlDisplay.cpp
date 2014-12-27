@@ -32,6 +32,7 @@
 #include "../ClickRegion.h"
 #include "../Container.h"
 #include "../FillBox.h"
+#include "../KeycapIcon.h"
 #include "../Label.h"
 #include "../Picture.h"
 #include "../Res.h"
@@ -45,6 +46,7 @@
 #include "SdlClickRegionView.h"
 #include "SdlContainerView.h"
 #include "SdlFillBoxView.h"
+#include "SdlKeycapIconView.h"
 #include "SdlLabelView.h"
 #include "SdlPictureView.h"
 #include "SdlRuleLineView.h"
@@ -405,6 +407,11 @@ void SdlDisplay::AttachView(ClickRegion &model)
 void SdlDisplay::AttachView(Container &model)
 {
 	model.SetView(std::unique_ptr<View>(new SdlContainerView(*this, model)));
+}
+
+void SdlDisplay::AttachView(KeycapIcon &model)
+{
+	model.SetView(std::unique_ptr<View>(new SdlKeycapIconView(*this, model)));
 }
 
 void SdlDisplay::AttachView(FillBox &model)
