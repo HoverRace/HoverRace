@@ -69,6 +69,12 @@ public:
 	void AdjustHeight(double h) override;
 	void AdjustWidth(double w) override;
 	
+public:
+	Vec3 Measure() override
+	{
+		return GetView() ? GetView()->Measure() : Vec3(0, 0, 0);
+	}
+
 private:
 	int keyHash;
 };
