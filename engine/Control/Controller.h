@@ -321,7 +321,8 @@ private:
 	std::string captureMap; ///< name of the map we are capturing for
 
 public:
-	struct actions_t {
+	struct actions_t
+	{
 		struct ui_t
 		{
 			ui_t();
