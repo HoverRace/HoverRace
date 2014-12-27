@@ -21,6 +21,8 @@
 
 #include "../StdAfx.h"
 
+#include "KeycapIcon.h"
+
 #include "ActionButton.h"
 
 namespace HoverRace {
@@ -36,6 +38,7 @@ ActionButton::ActionButton(Display &display, uiLayoutFlags_t layoutFlags) :
 	SUPER(display, "", layoutFlags),
 	fixedText()
 {
+	InitKeycap();
 }
 
 /**
@@ -50,6 +53,7 @@ ActionButton::ActionButton(Display &display, const std::string &text,
 	SUPER(display, "", layoutFlags),
 	fixedText(text)
 {
+	InitKeycap();
 }
 
 /**
@@ -65,10 +69,20 @@ ActionButton::ActionButton(Display &display, const Vec2 &size,
 	SUPER(display, size, "", layoutFlags),
 	fixedText(text)
 {
+	InitKeycap();
 }
 
 ActionButton::~ActionButton()
 {
+}
+
+void ActionButton::InitKeycap()
+{
+	using Controller = Control::InputEventController;
+	keycap = std::make_shared<KeycapIcon>(1,
+		Controller::HashKeyboardEvent(SDLK_UNKNOWN));
+	keycap->AttachView(display);
+	SetIcon(keycap);
 }
 
 /**
@@ -85,10 +99,9 @@ void ActionButton::AttachAction(Control::InputEventController &controller,
 	using Controller = Control::InputEventController;
 	this->action = action;
 
-	std::ostringstream oss;
-	oss << '[' << Controller::HashToString(action->GetPrimaryTrigger()) <<
-		"] " << (fixedText.empty() ? action->GetName() : fixedText);
-	SetText(oss.str());
+	SetText(fixedText.empty() ? action->GetName() : fixedText);
+	keycap->SetKeyHash(action->GetPrimaryTrigger());
+	RequestLayout();
 }
 
 /**

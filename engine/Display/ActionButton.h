@@ -36,6 +36,12 @@
 #endif
 
 namespace HoverRace {
+	namespace Display {
+		class KeycapIcon;
+	}
+}
+
+namespace HoverRace {
 namespace Display {
 
 /**
@@ -63,6 +69,9 @@ public:
 		uiLayoutFlags_t layoutFlags = 0);
 	virtual ~ActionButton();
 
+private:
+	void InitKeycap();
+
 public:
 	void AttachAction(Control::InputEventController &controller,
 		Control::InputEventController::VoidActionPtr action);
@@ -73,6 +82,7 @@ protected:
 
 private:
 	std::string fixedText;
+	std::shared_ptr<KeycapIcon> keycap;
 	std::weak_ptr<Control::InputEventController::VoidActionPtr::element_type> action;
 };
 
