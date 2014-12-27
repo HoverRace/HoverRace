@@ -93,7 +93,7 @@ void ActionButton::InitKeycap()
  * @param controller The controller that owns the action.
  * @param action The action to attach.
  */
-void ActionButton::AttachAction(Control::InputEventController &controller,
+void ActionButton::AttachAction(Control::InputEventController&,
 	Control::InputEventController::VoidActionPtr action)
 {
 	using Controller = Control::InputEventController;
