@@ -51,7 +51,7 @@ namespace SDL {
  */
 class MR_DllDeclare SdlSymbolIconView : public SdlView<SymbolIcon>
 {
-	typedef SdlView<SymbolIcon> SUPER;
+	using SUPER = SdlView<SymbolIcon>;
 
 public:
 	SdlSymbolIconView(SdlDisplay &disp, SymbolIcon &model);
