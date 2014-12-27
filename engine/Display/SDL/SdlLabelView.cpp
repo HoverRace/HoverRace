@@ -39,7 +39,7 @@ SdlLabelView::SdlLabelView(SdlDisplay &disp, Label &model) :
 	texture(), colorChanged(true), width(0), height(0)
 {
 	uiScaleChangedConnection = disp.GetUiScaleChangedSignal().connect(
-		std::bind(&SdlLabelView::OnUiScaleChanged, this));
+		std::bind(&decltype(texture)::release, &texture));
 }
 
 SdlLabelView::~SdlLabelView()
@@ -59,11 +59,6 @@ void SdlLabelView::OnModelUpdate(int prop)
 			texture.release();
 			break;
 	}
-}
-
-void SdlLabelView::OnUiScaleChanged()
-{
-	texture.release();
 }
 
 Vec3 SdlLabelView::Measure()

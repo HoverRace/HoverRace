@@ -55,7 +55,6 @@ public:
 
 public:
 	void OnModelUpdate(int prop) override;
-	void OnUiScaleChanged();
 
 public:
 	Vec3 Measure() override;
