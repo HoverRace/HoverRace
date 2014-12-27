@@ -43,14 +43,11 @@ SdlSymbolIconView::SdlSymbolIconView(SdlDisplay &disp, SymbolIcon &model) :
 	texture(), colorChanged(true), width(0), height(0)
 {
 	uiScaleChangedConnection = disp.GetUiScaleChangedSignal().connect(
-		std::bind(&SdlSymbolIconView::OnUiScaleChanged, this));
+		std::bind(&decltype(texture)::release, &texture));
 }
 
 SdlSymbolIconView::~SdlSymbolIconView()
 {
-	if (texture) {
-		SDL_DestroyTexture(texture);
-	}
 }
 
 void SdlSymbolIconView::OnModelUpdate(int prop)
@@ -62,19 +59,8 @@ void SdlSymbolIconView::OnModelUpdate(int prop)
 
 		case FillBox::Props::SIZE:
 		case SymbolIcon::Props::SYMBOL:
-			if (texture) {
-				SDL_DestroyTexture(texture);
-				texture = nullptr;
-			}
+			texture.release();
 			break;
-	}
-}
-
-void SdlSymbolIconView::OnUiScaleChanged()
-{
-	if (texture) {
-		SDL_DestroyTexture(texture);
-		texture = nullptr;
 	}
 }
 
@@ -94,17 +80,13 @@ void SdlSymbolIconView::PrepareRender()
 
 void SdlSymbolIconView::Render()
 {
-	int w, h;
-	SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
-	display.DrawUiTexture(texture,
+	display.DrawUiTexture(texture->Get(),
 		model.GetAlignedPos(unscaledWidth, unscaledHeight),
 		model.GetLayoutFlags());
 }
 
 void SdlSymbolIconView::UpdateTexture()
 {
-	if (texture) SDL_DestroyTexture(texture);
-
 	double scale = 1.0;
 
 	Config *cfg = Config::GetInstance();
@@ -129,9 +111,11 @@ void SdlSymbolIconView::UpdateTexture()
 	height = textRenderer.GetHeight();
 
 	// Convert the surface to the display format.
-	texture = SDL_CreateTextureFromSurface(display.GetRenderer(), tempSurface);
+	SDL_Texture *texture = SDL_CreateTextureFromSurface(
+		display.GetRenderer(), tempSurface);
 	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 	SDL_FreeSurface(tempSurface);
+	this->texture.reset(new SdlTexture(display, texture));
 
 	// We pre-scale the texture (by adjusting the font size) so that would
 	// normally throw off the size adjustments later, so we need to keep track
@@ -146,8 +130,8 @@ void SdlSymbolIconView::UpdateTexture()
 void SdlSymbolIconView::UpdateTextureColor()
 {
 	const Color cm = model.GetColor();
-	SDL_SetTextureColorMod(texture, cm.bits.r, cm.bits.g, cm.bits.b);
-	SDL_SetTextureAlphaMod(texture, cm.bits.a);
+	SDL_SetTextureColorMod(texture->Get(), cm.bits.r, cm.bits.g, cm.bits.b);
+	SDL_SetTextureAlphaMod(texture->Get(), cm.bits.a);
 
 	colorChanged = false;
 }

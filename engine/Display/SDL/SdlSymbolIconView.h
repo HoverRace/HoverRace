@@ -22,6 +22,7 @@
 #pragma once
 
 #include "SdlDisplay.h"
+#include "SdlTexture.h"
 #include "SdlView.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
@@ -59,7 +60,6 @@ public:
 
 public:
 	virtual void OnModelUpdate(int prop);
-	void OnUiScaleChanged();
 
 public:
 	virtual Vec3 Measure();
@@ -71,7 +71,8 @@ private:
 	void UpdateTextureColor();
 
 private:
-	SDL_Texture *texture;  //TODO: Cache the symbols in a single texture.
+	//TODO: Cache the symbols in a single texture.
+	std::unique_ptr<SdlTexture> texture;
 	bool colorChanged;
 	int width;
 	int height;
