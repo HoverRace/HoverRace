@@ -157,7 +157,7 @@ Vec3 Button::Measure()
 {
 	if (IsAutoSize()) {
 		const Vec3 labelSize = label->Measure();
-		double iconPart = icon ? (labelSize.y + iconGap) : 0;
+		double iconPart = icon ? (icon->Measure().x + iconGap) : 0;
 		return Vec3(
 			labelSize.x + paddingLeft + paddingRight + iconPart,
 			labelSize.y + paddingTop + paddingBottom,
