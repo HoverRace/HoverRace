@@ -236,7 +236,7 @@ public:
 
 	VoidActionPtr Hotkey(const std::string &key);
 
-	std::string HashToString(int hash);
+	static std::string HashToString(int hash);
 	SDL_Keycode StringToKey(const std::string &s);
 
 private:

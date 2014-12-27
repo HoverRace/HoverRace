@@ -82,10 +82,11 @@ ActionButton::~ActionButton()
 void ActionButton::AttachAction(Control::InputEventController &controller,
 	Control::InputEventController::VoidActionPtr action)
 {
+	using Controller = Control::InputEventController;
 	this->action = action;
 
 	std::ostringstream oss;
-	oss << '[' << controller.HashToString(action->GetPrimaryTrigger()) <<
+	oss << '[' << Controller::HashToString(action->GetPrimaryTrigger()) <<
 		"] " << (fixedText.empty() ? action->GetName() : fixedText);
 	SetText(oss.str());
 }
