@@ -119,6 +119,7 @@ public:
 	virtual Vec3 Measure() { return size.Promote(); }
 
 protected:
+	void RequestSizing();
 	bool TestHit(const Vec2 &pos);
 	Vec2 ScreenPosToRel(const Vec2 &pos);
 

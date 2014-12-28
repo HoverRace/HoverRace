@@ -179,6 +179,19 @@ void ClickRegion::SetEnabled(bool enabled)
 }
 
 /**
+ * Indicate that the size of the button may have changed, when auto-sizing
+ * is enabled.
+ *
+ * If auto-sizing is not enabled, then this does nothing.
+ */
+void ClickRegion::RequestSizing()
+{
+	if (autoSize) {
+		needsSizing = true;
+	}
+}
+
+/**
  * Check if the coordinates of an event are within the bounds of this component.
  * @param pos The screen-space position.
  * @return true if the test passes, false if the test fails.
