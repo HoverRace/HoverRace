@@ -99,10 +99,8 @@ void Button::Layout()
 	double midX = size.x / 2.0;
 	double midY = size.y / 2.0;
 
-	// If there is an icon, resize it and shift the text to make room.
+	// If there is an icon, position it and shift the text to make room.
 	if (icon) {
-		double iconSize = size.y - (paddingTop + paddingBottom);
-		icon->AdjustHeight(iconSize);
 		icon->SetPos(paddingLeft, paddingTop);
 		midX += (icon->Measure().x + iconGap) / 2.0;
 	}
@@ -157,7 +155,13 @@ Vec3 Button::Measure()
 {
 	if (IsAutoSize()) {
 		const Vec3 labelSize = label->Measure();
-		double iconPart = icon ? (icon->Measure().x + iconGap) : 0;
+		double iconPart = 0;
+		if (icon) {
+			// The icon's width may vary depending on the height, so set the
+			// height now and measure the new width.
+			icon->AdjustHeight(labelSize.y);
+			iconPart = icon->Measure().x + iconGap;
+		}
 		return Vec3(
 			labelSize.x + paddingLeft + paddingRight + iconPart,
 			labelSize.y + paddingTop + paddingBottom,
