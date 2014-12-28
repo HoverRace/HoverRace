@@ -37,7 +37,7 @@ namespace Display {
 namespace {
 	const double DEFAULT_PADDING_HEIGHT = 10;
 	const double DEFAULT_PADDING_WIDTH = 30;
-	const double DEFAULT_ICON_GAP = 15;
+	const double DEFAULT_ICON_GAP = 10;
 }
 
 /**
