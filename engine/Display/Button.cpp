@@ -147,6 +147,7 @@ void Button::SetIcon(std::shared_ptr<FillBox> icon)
 	if (this->icon != icon) {
 		this->icon = std::move(icon);
 		FireModelUpdate(Props::ICON);
+		RequestSizing();
 		RequestLayout();
 	}
 }
