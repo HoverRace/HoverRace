@@ -37,7 +37,10 @@ class KeyToString
 	std::unordered_map<SDL_Keycode, std::string> k2s;
 	/// Canonical key name to keycode.
 	std::unordered_map<std::string, SDL_Keycode> s2k;
-	std::string unknown;
+	const std::string unknown;
+
+public:
+	KeyToString &operator=(const KeyToString&) = delete;
 
 protected:
 	template<class Name>
@@ -184,22 +187,22 @@ public:
 		MapKey(SDLK_MEDIASELECT, _("Media Select"));
 	}
 
-	const std::string &Lookup(SDL_Keycode key)
+	const std::string &Lookup(SDL_Keycode key) const
 	{
 		auto iter = k2s.find(key);
 		return (iter == k2s.end()) ? unknown : iter->second;
 	}
 
-	SDL_Keycode Lookup(const std::string &s)
+	SDL_Keycode Lookup(const std::string &s) const
 	{
 		auto iter = s2k.find(s);
 		return (iter == s2k.end()) ? SDLK_UNKNOWN : iter->second;
 	}
 };
 
-KeyToString &GetKeyToString()
+const KeyToString &GetKeyToString()
 {
-	static KeyToString keyToString;
+	static const KeyToString keyToString;
 	return keyToString;
 }
 
@@ -213,7 +216,7 @@ KeyToString &GetKeyToString()
  */
 std::string InputEventController::HashToString(int hash)
 {
-	KeyToString &keyToString = GetKeyToString();
+	const KeyToString &keyToString = GetKeyToString();
 
 	switch((hash & 0x00C00000) >> 22) {
 		case 0: // keyboard keycode event
