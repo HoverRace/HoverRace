@@ -32,8 +32,6 @@ include(CXX11)
 include(GNUInstallDirs)
 include(cotire)
 
-message(STATUS "${CLANG_VERSION_MAJOR} ${CLANG_VERSION_MINOR}")
-
 if(MSVC)
 	if(MSVC_VERSION LESS 1800)
 		message(FATAL_ERROR "Visual Studio 2013 (aka Visual Studio 12) or later is required.")
