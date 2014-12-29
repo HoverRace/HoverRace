@@ -30,178 +30,180 @@ namespace HoverRace {
 namespace Control {
 
 namespace {
-	class KeyToString
+
+class KeyToString
+{
+	/// Keycode to user-visible name.
+	std::unordered_map<SDL_Keycode, std::string> k2s;
+	/// Canonical key name to keycode.
+	std::unordered_map<std::string, SDL_Keycode> s2k;
+	std::string unknown;
+
+protected:
+	template<class Name>
+	void MapKey(SDL_Keycode key, Name &&name)
 	{
-		/// Keycode to user-visible name.
-		std::unordered_map<SDL_Keycode, std::string> k2s;
-		/// Canonical key name to keycode.
-		std::unordered_map<std::string, SDL_Keycode> s2k;
-		std::string unknown;
-
-		protected:
-			template<class Name>
-			void MapKey(SDL_Keycode key, Name &&name)
-			{
-				k2s.emplace(key, std::forward<Name>(name));
-			}
-
-			template<class Name, class Val>
-			void MapKey(SDL_Keycode key, Name &&name, Val &&val)
-			{
-				MapKey(key, std::forward<Name>(name));
-				s2k.emplace(std::forward<Val>(val), key);
-			}
-
-		public:
-			KeyToString() : unknown(_("Unknown"))
-			{
-				// Note: By convention, the user-visible key names are
-				//       mixed-case, while the canonical key names are
-				//       lower-case with underscores.
-
-				MapKey(SDLK_UNKNOWN, _("Unknown"));
-				MapKey(SDLK_BACKSPACE, _("Backspace"), "backspace");
-				MapKey(SDLK_TAB, _("Tab"), "tab");
-				MapKey(SDLK_RETURN, _("Enter"), "enter");
-				MapKey(SDLK_ESCAPE, _("Esc"), "esc");
-				MapKey(SDLK_SPACE, _("Space"), "space");
-				for (SDL_Keycode i = SDLK_EXCLAIM; i <= SDLK_AT; i++) {
-					std::string c(1, static_cast<char>(i));
-					MapKey(i, c, c);
-				}
-				for (SDL_Keycode i = SDLK_LEFTBRACKET; i <= SDLK_BACKQUOTE; i++) {
-					std::string c(1, static_cast<char>(i));
-					MapKey(i, c, c);
-				}
-				for (SDL_Keycode i = SDLK_a; i <= SDLK_z; i++) {
-					MapKey(i,
-						std::string(1, static_cast<char>(i - 32)),
-						std::string(1, static_cast<char>(i)));
-				}
-				MapKey(SDLK_DELETE, _("Del"), "del");
-				MapKey(SDLK_CAPSLOCK, _("Caps Lock"), "caps_lock");
-				MapKey(SDLK_F1, _("F1"), "f1");
-				MapKey(SDLK_F2, _("F2"), "f2");
-				MapKey(SDLK_F3, _("F3"), "f3");
-				MapKey(SDLK_F4, _("F4"), "f4");
-				MapKey(SDLK_F5, _("F5"), "f5");
-				MapKey(SDLK_F6, _("F6"), "f6");
-				MapKey(SDLK_F7, _("F7"), "f7");
-				MapKey(SDLK_F8, _("F8"), "f8");
-				MapKey(SDLK_F9, _("F9"), "f9");
-				MapKey(SDLK_F10, _("F10"), "f10");
-				MapKey(SDLK_F11, _("F11"), "f11");
-				MapKey(SDLK_F12, _("F12"), "f12");
-				MapKey(SDLK_PRINTSCREEN, _("Print Screen"), "prtscr");
-				MapKey(SDLK_SCROLLLOCK, _("Scroll Lock"), "scroll_lock");
-				MapKey(SDLK_PAUSE, _("Pause"), "pause");
-				MapKey(SDLK_INSERT, _("Ins"), "ins");
-				MapKey(SDLK_HOME, _("Home"), "home");
-				MapKey(SDLK_PAGEUP, _("PgUp"), "pgup");
-				MapKey(SDLK_END, _("End"), "end");
-				MapKey(SDLK_PAGEDOWN, _("PgDn"), "pgdn");
-				MapKey(SDLK_RIGHT, std::string("\xe2\x86\x92"));  // UTF-8: RIGHTWARDS ARROW
-				MapKey(SDLK_LEFT, std::string("\xe2\x86\x90"));   // UTF-8: LEFTWARDS ARROW
-				MapKey(SDLK_DOWN, std::string("\xe2\x86\x93"));   // UTF-8: DOWNWARDS ARROW
-				MapKey(SDLK_UP, std::string("\xe2\x86\x91"));     // UTF-8: UPWARDS ARROW
-				MapKey(SDLK_NUMLOCKCLEAR, _("Num Lock"), "num_lock");
-				MapKey(SDLK_KP_DIVIDE, _("Numpad /"));
-				MapKey(SDLK_KP_MULTIPLY, _("Numpad *"));
-				MapKey(SDLK_KP_MINUS, _("Numpad -"));
-				MapKey(SDLK_KP_PLUS, _("Numpad +"));
-				MapKey(SDLK_KP_ENTER, _("Numpad Enter"));
-				MapKey(SDLK_KP_1, _("Numpad 1"));
-				MapKey(SDLK_KP_2, _("Numpad 2"));
-				MapKey(SDLK_KP_3, _("Numpad 3"));
-				MapKey(SDLK_KP_4, _("Numpad 4"));
-				MapKey(SDLK_KP_5, _("Numpad 5"));
-				MapKey(SDLK_KP_6, _("Numpad 6"));
-				MapKey(SDLK_KP_7, _("Numpad 7"));
-				MapKey(SDLK_KP_8, _("Numpad 8"));
-				MapKey(SDLK_KP_9, _("Numpad 9"));
-				MapKey(SDLK_KP_0, _("Numpad 0"));
-				MapKey(SDLK_KP_PERIOD, _("Numpad ."));
-				MapKey(SDLK_APPLICATION, _("App"));
-				MapKey(SDLK_POWER, _("Power"));
-				MapKey(SDLK_KP_EQUALS, _("Numpad ="));
-				MapKey(SDLK_F13, _("F13"), "f13");
-				MapKey(SDLK_F14, _("F14"), "f14");
-				MapKey(SDLK_F15, _("F15"), "f15");
-				MapKey(SDLK_F16, _("F16"), "f16");
-				MapKey(SDLK_F17, _("F17"), "f17");
-				MapKey(SDLK_F18, _("F18"), "f18");
-				MapKey(SDLK_F19, _("F19"), "f19");
-				MapKey(SDLK_F20, _("F20"), "f20");
-				MapKey(SDLK_F21, _("F21"), "f21");
-				MapKey(SDLK_F22, _("F22"), "f22");
-				MapKey(SDLK_F23, _("F23"), "f23");
-				MapKey(SDLK_F24, _("F24"), "f24");
-				MapKey(SDLK_EXECUTE, _("Execute"));
-				MapKey(SDLK_HELP, _("Help"));
-				MapKey(SDLK_MENU, _("Menu"));
-				MapKey(SDLK_SELECT, _("Select"));
-				MapKey(SDLK_STOP, _("Stop"));
-				MapKey(SDLK_AGAIN, _("Again"));
-				MapKey(SDLK_UNDO, _("Undo"));
-				MapKey(SDLK_CUT, _("Cut"));
-				MapKey(SDLK_COPY, _("Copy"));
-				MapKey(SDLK_PASTE, _("Paste"));
-				MapKey(SDLK_FIND, _("Find"));
-				MapKey(SDLK_MUTE, _("Mute"));
-				MapKey(SDLK_VOLUMEUP, _("Volume Up"));
-				MapKey(SDLK_VOLUMEDOWN, _("Volume Down"));
-				MapKey(SDLK_KP_COMMA, _("Numpad ,"));
-				//MapKey(SDLK_KP_EQUALSAS400, _(""));
-				//MapKey(SDLK_ALTERASE, _("Alt Erase"));
-				MapKey(SDLK_SYSREQ, _("SysReq"));
-				MapKey(SDLK_CANCEL, _("Cancel"));
-				MapKey(SDLK_CLEAR, _("Clear"));
-				MapKey(SDLK_PRIOR, _("Prior"));
-				//MapKey(SDLK_RETURN2, _("Return 2"));
-				//MapKey(SDLK_SEPARATOR, _("Separator"));
-				//MapKey(SDLK_OUT, _("Out"));
-				//MapKey(SDLK_OPER, _("Oper"));
-				//MapKey(SDLK_CLEARAGAIN, _("Clear Again"));
-				//MapKey(SDLK_CRSEL, _("CrSel"));
-				//MapKey(SDLK_EXSEL, _("ExSel"));
-				MapKey(SDLK_KP_00, _("Numpad 00"));
-				MapKey(SDLK_KP_000, _("Numpad 000"));
-				MapKey(SDLK_LCTRL, _("Left Ctrl"));
-				MapKey(SDLK_LSHIFT, _("Left Shift"));
-				MapKey(SDLK_LALT, _("Left Alt"));
-				MapKey(SDLK_LGUI, _("Left GUI"));
-				MapKey(SDLK_RCTRL, _("Right Ctrl"));
-				MapKey(SDLK_RSHIFT, _("Right Shift"));
-				MapKey(SDLK_RALT, _("Right Alt"));
-				MapKey(SDLK_RGUI, _("Right GUI"));
-				MapKey(SDLK_MODE, _("Mode"));
-				MapKey(SDLK_AUDIONEXT, _("Next Track"));
-				MapKey(SDLK_AUDIOPREV, _("Prev Track"));
-				MapKey(SDLK_AUDIOSTOP, _("Stop"));
-				MapKey(SDLK_AUDIOPLAY, _("Play"));
-				MapKey(SDLK_AUDIOMUTE, _("Mute"));
-				MapKey(SDLK_MEDIASELECT, _("Media Select"));
-			}
-
-			const std::string &Lookup(SDL_Keycode key)
-			{
-				auto iter = k2s.find(key);
-				return (iter == k2s.end()) ? unknown : iter->second;
-			}
-
-			SDL_Keycode Lookup(const std::string &s)
-			{
-				auto iter = s2k.find(s);
-				return (iter == s2k.end()) ? SDLK_UNKNOWN : iter->second;
-			}
-	};
-
-	KeyToString &GetKeyToString()
-	{
-		static KeyToString keyToString;
-		return keyToString;
+		k2s.emplace(key, std::forward<Name>(name));
 	}
+
+	template<class Name, class Val>
+	void MapKey(SDL_Keycode key, Name &&name, Val &&val)
+	{
+		MapKey(key, std::forward<Name>(name));
+		s2k.emplace(std::forward<Val>(val), key);
+	}
+
+public:
+	KeyToString() : unknown(_("Unknown"))
+	{
+		// Note: By convention, the user-visible key names are
+		//       mixed-case, while the canonical key names are
+		//       lower-case with underscores.
+
+		MapKey(SDLK_UNKNOWN, _("Unknown"));
+		MapKey(SDLK_BACKSPACE, _("Backspace"), "backspace");
+		MapKey(SDLK_TAB, _("Tab"), "tab");
+		MapKey(SDLK_RETURN, _("Enter"), "enter");
+		MapKey(SDLK_ESCAPE, _("Esc"), "esc");
+		MapKey(SDLK_SPACE, _("Space"), "space");
+		for (SDL_Keycode i = SDLK_EXCLAIM; i <= SDLK_AT; i++) {
+			std::string c(1, static_cast<char>(i));
+			MapKey(i, c, c);
+		}
+		for (SDL_Keycode i = SDLK_LEFTBRACKET; i <= SDLK_BACKQUOTE; i++) {
+			std::string c(1, static_cast<char>(i));
+			MapKey(i, c, c);
+		}
+		for (SDL_Keycode i = SDLK_a; i <= SDLK_z; i++) {
+			MapKey(i,
+				std::string(1, static_cast<char>(i - 32)),
+				std::string(1, static_cast<char>(i)));
+		}
+		MapKey(SDLK_DELETE, _("Del"), "del");
+		MapKey(SDLK_CAPSLOCK, _("Caps Lock"), "caps_lock");
+		MapKey(SDLK_F1, _("F1"), "f1");
+		MapKey(SDLK_F2, _("F2"), "f2");
+		MapKey(SDLK_F3, _("F3"), "f3");
+		MapKey(SDLK_F4, _("F4"), "f4");
+		MapKey(SDLK_F5, _("F5"), "f5");
+		MapKey(SDLK_F6, _("F6"), "f6");
+		MapKey(SDLK_F7, _("F7"), "f7");
+		MapKey(SDLK_F8, _("F8"), "f8");
+		MapKey(SDLK_F9, _("F9"), "f9");
+		MapKey(SDLK_F10, _("F10"), "f10");
+		MapKey(SDLK_F11, _("F11"), "f11");
+		MapKey(SDLK_F12, _("F12"), "f12");
+		MapKey(SDLK_PRINTSCREEN, _("Print Screen"), "prtscr");
+		MapKey(SDLK_SCROLLLOCK, _("Scroll Lock"), "scroll_lock");
+		MapKey(SDLK_PAUSE, _("Pause"), "pause");
+		MapKey(SDLK_INSERT, _("Ins"), "ins");
+		MapKey(SDLK_HOME, _("Home"), "home");
+		MapKey(SDLK_PAGEUP, _("PgUp"), "pgup");
+		MapKey(SDLK_END, _("End"), "end");
+		MapKey(SDLK_PAGEDOWN, _("PgDn"), "pgdn");
+		MapKey(SDLK_RIGHT, std::string("\xe2\x86\x92"));  // UTF-8: RIGHTWARDS ARROW
+		MapKey(SDLK_LEFT, std::string("\xe2\x86\x90"));   // UTF-8: LEFTWARDS ARROW
+		MapKey(SDLK_DOWN, std::string("\xe2\x86\x93"));   // UTF-8: DOWNWARDS ARROW
+		MapKey(SDLK_UP, std::string("\xe2\x86\x91"));     // UTF-8: UPWARDS ARROW
+		MapKey(SDLK_NUMLOCKCLEAR, _("Num Lock"), "num_lock");
+		MapKey(SDLK_KP_DIVIDE, _("Numpad /"));
+		MapKey(SDLK_KP_MULTIPLY, _("Numpad *"));
+		MapKey(SDLK_KP_MINUS, _("Numpad -"));
+		MapKey(SDLK_KP_PLUS, _("Numpad +"));
+		MapKey(SDLK_KP_ENTER, _("Numpad Enter"));
+		MapKey(SDLK_KP_1, _("Numpad 1"));
+		MapKey(SDLK_KP_2, _("Numpad 2"));
+		MapKey(SDLK_KP_3, _("Numpad 3"));
+		MapKey(SDLK_KP_4, _("Numpad 4"));
+		MapKey(SDLK_KP_5, _("Numpad 5"));
+		MapKey(SDLK_KP_6, _("Numpad 6"));
+		MapKey(SDLK_KP_7, _("Numpad 7"));
+		MapKey(SDLK_KP_8, _("Numpad 8"));
+		MapKey(SDLK_KP_9, _("Numpad 9"));
+		MapKey(SDLK_KP_0, _("Numpad 0"));
+		MapKey(SDLK_KP_PERIOD, _("Numpad ."));
+		MapKey(SDLK_APPLICATION, _("App"));
+		MapKey(SDLK_POWER, _("Power"));
+		MapKey(SDLK_KP_EQUALS, _("Numpad ="));
+		MapKey(SDLK_F13, _("F13"), "f13");
+		MapKey(SDLK_F14, _("F14"), "f14");
+		MapKey(SDLK_F15, _("F15"), "f15");
+		MapKey(SDLK_F16, _("F16"), "f16");
+		MapKey(SDLK_F17, _("F17"), "f17");
+		MapKey(SDLK_F18, _("F18"), "f18");
+		MapKey(SDLK_F19, _("F19"), "f19");
+		MapKey(SDLK_F20, _("F20"), "f20");
+		MapKey(SDLK_F21, _("F21"), "f21");
+		MapKey(SDLK_F22, _("F22"), "f22");
+		MapKey(SDLK_F23, _("F23"), "f23");
+		MapKey(SDLK_F24, _("F24"), "f24");
+		MapKey(SDLK_EXECUTE, _("Execute"));
+		MapKey(SDLK_HELP, _("Help"));
+		MapKey(SDLK_MENU, _("Menu"));
+		MapKey(SDLK_SELECT, _("Select"));
+		MapKey(SDLK_STOP, _("Stop"));
+		MapKey(SDLK_AGAIN, _("Again"));
+		MapKey(SDLK_UNDO, _("Undo"));
+		MapKey(SDLK_CUT, _("Cut"));
+		MapKey(SDLK_COPY, _("Copy"));
+		MapKey(SDLK_PASTE, _("Paste"));
+		MapKey(SDLK_FIND, _("Find"));
+		MapKey(SDLK_MUTE, _("Mute"));
+		MapKey(SDLK_VOLUMEUP, _("Volume Up"));
+		MapKey(SDLK_VOLUMEDOWN, _("Volume Down"));
+		MapKey(SDLK_KP_COMMA, _("Numpad ,"));
+		//MapKey(SDLK_KP_EQUALSAS400, _(""));
+		//MapKey(SDLK_ALTERASE, _("Alt Erase"));
+		MapKey(SDLK_SYSREQ, _("SysReq"));
+		MapKey(SDLK_CANCEL, _("Cancel"));
+		MapKey(SDLK_CLEAR, _("Clear"));
+		MapKey(SDLK_PRIOR, _("Prior"));
+		//MapKey(SDLK_RETURN2, _("Return 2"));
+		//MapKey(SDLK_SEPARATOR, _("Separator"));
+		//MapKey(SDLK_OUT, _("Out"));
+		//MapKey(SDLK_OPER, _("Oper"));
+		//MapKey(SDLK_CLEARAGAIN, _("Clear Again"));
+		//MapKey(SDLK_CRSEL, _("CrSel"));
+		//MapKey(SDLK_EXSEL, _("ExSel"));
+		MapKey(SDLK_KP_00, _("Numpad 00"));
+		MapKey(SDLK_KP_000, _("Numpad 000"));
+		MapKey(SDLK_LCTRL, _("Left Ctrl"));
+		MapKey(SDLK_LSHIFT, _("Left Shift"));
+		MapKey(SDLK_LALT, _("Left Alt"));
+		MapKey(SDLK_LGUI, _("Left GUI"));
+		MapKey(SDLK_RCTRL, _("Right Ctrl"));
+		MapKey(SDLK_RSHIFT, _("Right Shift"));
+		MapKey(SDLK_RALT, _("Right Alt"));
+		MapKey(SDLK_RGUI, _("Right GUI"));
+		MapKey(SDLK_MODE, _("Mode"));
+		MapKey(SDLK_AUDIONEXT, _("Next Track"));
+		MapKey(SDLK_AUDIOPREV, _("Prev Track"));
+		MapKey(SDLK_AUDIOSTOP, _("Stop"));
+		MapKey(SDLK_AUDIOPLAY, _("Play"));
+		MapKey(SDLK_AUDIOMUTE, _("Mute"));
+		MapKey(SDLK_MEDIASELECT, _("Media Select"));
+	}
+
+	const std::string &Lookup(SDL_Keycode key)
+	{
+		auto iter = k2s.find(key);
+		return (iter == k2s.end()) ? unknown : iter->second;
+	}
+
+	SDL_Keycode Lookup(const std::string &s)
+	{
+		auto iter = s2k.find(s);
+		return (iter == s2k.end()) ? SDLK_UNKNOWN : iter->second;
+	}
+};
+
+KeyToString &GetKeyToString()
+{
+	static KeyToString keyToString;
+	return keyToString;
 }
+
+}  // namespace
 
 /**
  * Convert a hash into an internationalized string.
