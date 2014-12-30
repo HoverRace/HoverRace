@@ -290,6 +290,10 @@ bool OS::OpenLink(const std::string &url)
 
 /**
  * Open a filesystem path.
+ * 
+ * Only directories may be opened; they will be opened using the native file
+ * navigator.
+ *
  * @param path The path to open.
  * @return @c true if successful, @c false otherwise.
  */
