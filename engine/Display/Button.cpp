@@ -38,6 +38,7 @@ namespace {
 	const double DEFAULT_PADDING_HEIGHT = 10;
 	const double DEFAULT_PADDING_WIDTH = 30;
 	const double DEFAULT_ICON_GAP = 10;
+	const double DEFAULT_PRESS_DEPTH = 4;
 }
 
 /**
@@ -101,7 +102,11 @@ void Button::Layout()
 
 	// If there is an icon, position it and shift the text to make room.
 	if (icon) {
-		icon->SetPos(paddingLeft, paddingTop);
+		double iconY = paddingTop;
+		if (IsPressed()) {
+			iconY += DEFAULT_PRESS_DEPTH;
+		}
+		icon->SetPos(paddingLeft, iconY);
 		midX += (icon->Measure().x + iconGap) / 2.0;
 	}
 
@@ -113,7 +118,7 @@ void Button::Layout()
 	else if (IsPressed()) {
 		background->SetColor(s.buttonPressedBg);
 		label->SetColor(s.formFg);
-		label->SetPos(midX, midY + 4.0);
+		label->SetPos(midX, midY + DEFAULT_PRESS_DEPTH);
 	}
 	else {
 		background->SetColor(s.buttonBg);
