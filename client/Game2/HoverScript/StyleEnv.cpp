@@ -69,13 +69,11 @@ namespace HoverScript {
 /**
  * Constructor.
  *
- * The root directory of the rulebook is where the rulebook scripts will be
- * found; a rulebook is not allowed to access any scripts outside of its
- * root directory.
+ * The base path is the directory of the theme that will be loaded.
  *
  * @param scripting The scripting context.
- * @param basePath The root directory of the rulebook.
- * @param rulebook The rulebook bound to this environment.
+ * @param display The display to which the styles will be applied.
+ * @param basePath The root directory of the theme.
  */
 StyleEnv::StyleEnv(Script::Core *scripting, Display::Display &display,
 	const Util::OS::path_t &basePath) :
