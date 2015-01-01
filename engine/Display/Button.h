@@ -50,12 +50,13 @@ namespace Display {
  */
 class MR_DllDeclare Button : public ClickRegion
 {
-	typedef ClickRegion SUPER;
+	using SUPER = ClickRegion;
 
 public:
 	struct Props
 	{
-		enum {
+		enum
+		{
 			TEXT = SUPER::Props::NEXT_,
 			ICON,
 			NEXT_,  ///< First index for subclasses.
@@ -64,16 +65,16 @@ public:
 
 public:
 	Button(Display &display, const std::string &text,
-		uiLayoutFlags_t layoutFlags=0);
+		uiLayoutFlags_t layoutFlags = 0);
 	Button(Display &display, const Vec2 &size, const std::string &text,
-		uiLayoutFlags_t layoutFlags=0);
+		uiLayoutFlags_t layoutFlags = 0);
 	virtual ~Button();
 
 private:
 	void Init(const std::string &text);
 
 public:
-	virtual void AttachView(Display &disp) { AttachViewDynamic(disp, this); }
+	void AttachView(Display &disp) override { AttachViewDynamic(disp, this); }
 
 public:
 	const std::string &GetText() const;
@@ -88,11 +89,11 @@ public:
 	FillBox *GetIconChild() const { return icon.get(); }
 
 protected:
-	virtual void Layout();
+	void Layout() override;
 
 public:
-	virtual Vec3 Measure();
-	virtual void FireModelUpdate(int prop);
+	Vec3 Measure() override;
+	void FireModelUpdate(int prop) override;
 
 private:
 	std::unique_ptr<FillBox> background;
