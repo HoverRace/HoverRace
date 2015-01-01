@@ -1,7 +1,7 @@
 
 // VideoSettingsScene.h
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include "../../engine/Display/RadioButton.h"
 #include "../../engine/Util/Config.h"
 
 #include "SettingsScene.h"
@@ -69,6 +70,7 @@ private:
 	std::shared_ptr<Display::Button> displayBtn;
 	std::shared_ptr<Display::Slider> textScaleSlider;
 	std::shared_ptr<Display::Label> textScalePreviewLbl;
+	Display::RadioGroup<bool> splitModeGroup;
 
 	boost::signals2::scoped_connection fullscreenConn;
 	boost::signals2::scoped_connection displayConn;

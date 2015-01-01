@@ -1,7 +1,7 @@
 
 // VideoSettingsScene.cpp
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -40,7 +40,8 @@ namespace Client {
 VideoSettingsScene::VideoSettingsScene(Display::Display &display,
 	GameDirector &director, const std::string &parentTitle) :
 	SUPER(display, director, parentTitle, _("Video"), "Video Settings"),
-	videoCfg(Config::GetInstance()->video), origVideoCfg(videoCfg)
+	videoCfg(Config::GetInstance()->video), origVideoCfg(videoCfg),
+	splitModeGroup()
 {
 	using namespace Display;
 	const auto &s = display.styles;
@@ -72,6 +73,16 @@ VideoSettingsScene::VideoSettingsScene(Display::Display &display,
 		new Label(_("This is sample text."), scaledFont, s.bodyFg));
 	textScalePreviewLbl->SetFixedScale(true);
 	textScalePreviewLbl->SetScale(videoCfg.textScale / 2.0);
+
+	auto splitModeGrid = AddSetting(_("Split-screen mode"),
+		new FlexGrid(display));
+	splitModeGroup.Add(
+		splitModeGrid->AddGridCell(0, 0,
+			new RadioButton<bool>(display, _("Stacked"), true))->GetContents());
+	splitModeGroup.Add(
+		splitModeGrid->AddGridCell(0, 1,
+			new RadioButton<bool>(display, _("Side-by-side"), false))->
+				GetContents());
 }
 
 void VideoSettingsScene::LoadFromConfig()
@@ -79,6 +90,7 @@ void VideoSettingsScene::LoadFromConfig()
 	fullscreenChk->SetChecked(videoCfg.fullscreen);
 	UpdateDisplayButton();
 	textScaleSlider->SetValue(videoCfg.textScale);
+	splitModeGroup.SetValue(videoCfg.stackedSplitscreen);
 }
 
 void VideoSettingsScene::ResetToDefaults()
@@ -104,7 +116,8 @@ void VideoSettingsScene::OnOk()
 		origVideoCfg.yResFullscreen != videoCfg.yResFullscreen ||
 		origVideoCfg.fullscreenRefreshRate != videoCfg.fullscreenRefreshRate;
 	const bool needsMainMenu =
-		origVideoCfg.textScale != videoCfg.textScale;
+		origVideoCfg.textScale != videoCfg.textScale ||
+		origVideoCfg.stackedSplitscreen != videoCfg.stackedSplitscreen;
 
 	if (needsSoftRestart) {
 		auto confirmScene = std::make_shared<MessageScene>(display, director,
