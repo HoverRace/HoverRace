@@ -96,7 +96,6 @@ void ActionButton::InitKeycap()
 void ActionButton::AttachAction(Control::InputEventController&,
 	Control::InputEventController::VoidActionPtr action)
 {
-	using Controller = Control::InputEventController;
 	this->action = action;
 
 	SetText(fixedText.empty() ? action->GetName() : fixedText);
