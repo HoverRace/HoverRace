@@ -513,8 +513,15 @@ ClickablesModule::ClickablesModule(Display::Display &display, GameDirector &dire
 		new Button(display, "Button With Icon"))->GetContents();
 	btn->SetIcon(icon);
 
-	btn = grid->AddGridCell(row++, 0,
+	auto toggleChk = grid->AddGridCell(row++, 0,
 		new Checkbox(display, "Checkbox"))->GetContents();
+	auto chk = grid->AddGridCell(row++, 0,
+		new Checkbox(display, "Disableable"))->GetContents();
+	chk->SetChecked(true);
+	chk->SetEnabled(false);
+	toggleChk->GetClickedSignal().connect([=](ClickRegion&) {
+		chk->SetEnabled(toggleChk->IsChecked());
+	});
 
 	slider = AddSlider(new Slider(display, 0, 100, 10));
 	slider->SetValue(30);
