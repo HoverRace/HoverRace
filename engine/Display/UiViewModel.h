@@ -1,7 +1,7 @@
 
 // UiViewModel.h
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -53,117 +53,118 @@ namespace Display {
  */
 class MR_DllDeclare UiViewModel : public ViewModel
 {
-	typedef ViewModel SUPER;
+	using SUPER = ViewModel;
 
-	public:
-		struct Props
+public:
+	struct Props
+	{
+		enum
 		{
-			enum {
-				POS,
-				ALIGNMENT,
-				NEXT_,  ///< First index for subclasses.
-			};
+			POS,
+			ALIGNMENT,
+			NEXT_,  ///< First index for subclasses.
 		};
+	};
 
-		/**
-		 * Imagine the component pinned to the container with a thumbtack.
-		 * The thumbtack's position is at GetPos(), and the alignment determines
-		 * which corner the component hangs from.
-		 */
-		enum class Alignment
-		{
-			NW,  ///< Northwest corner (default).
-			N,  ///< North (horizontally-centered).
-			NE,  ///< Northeast corner.
-			E,  ///< East (vertically-centered).
-			SE,  ///< Southeast corner.
-			S,  ///< South (horizontally-centered).
-			SW,  ///< Southwest corner.
-			W,  ///< West (vertically-centered).
-			CENTER,  ///< Horizontally @e and vertically centered.
-		};
+	/**
+	 * Imagine the component pinned to the container with a thumbtack.
+	 * The thumbtack's position is at GetPos(), and the alignment determines
+	 * which corner the component hangs from.
+	 */
+	enum class Alignment
+	{
+		NW,  ///< Northwest corner (default).
+		N,  ///< North (horizontally-centered).
+		NE,  ///< Northeast corner.
+		E,  ///< East (vertically-centered).
+		SE,  ///< Southeast corner.
+		S,  ///< South (horizontally-centered).
+		SW,  ///< Southwest corner.
+		W,  ///< West (vertically-centered).
+		CENTER,  ///< Horizontally @e and vertically centered.
+	};
 
-	public:
-		UiViewModel(uiLayoutFlags_t layoutFlags=0) :
-			SUPER(), pos(0, 0), translation(0, 0), alignment(Alignment::NW),
-			layoutFlags(layoutFlags), id(0) { }
-		virtual ~UiViewModel() { }
+public:
+	UiViewModel(uiLayoutFlags_t layoutFlags = 0) :
+		SUPER(), pos(0, 0), translation(0, 0), alignment(Alignment::NW),
+		layoutFlags(layoutFlags), id(0) { }
+	virtual ~UiViewModel() { }
 
-	public:
-		virtual bool OnMouseMoved(const Vec2&) { return false; }
-		virtual bool OnMousePressed(const Control::Mouse::Click&) { return false; }
-		virtual bool OnMouseReleased(const Control::Mouse::Click&) { return false; }
+public:
+	virtual bool OnMouseMoved(const Vec2&) { return false; }
+	virtual bool OnMousePressed(const Control::Mouse::Click&) { return false; }
+	virtual bool OnMouseReleased(const Control::Mouse::Click&) { return false; }
 
-	public:
-		/**
-		 * Get the position of the component.
-		 * @return The position, relative to the parent (if any).
-		 * @see GetAlignment()
-		 */
-		const Vec2 &GetPos() const { return pos; }
-		void SetPos(const Vec2 &pos);
-		/// Convenience function for SetPos(const Vec2&).
-		void SetPos(double x, double y) { SetPos(Vec2(x, y)); }
+public:
+	/**
+	 * Get the position of the component.
+	 * @return The position, relative to the parent (if any).
+	 * @see GetAlignment()
+	 */
+	const Vec2 &GetPos() const { return pos; }
+	void SetPos(const Vec2 &pos);
+	/// Convenience function for SetPos(const Vec2&).
+	void SetPos(double x, double y) { SetPos(Vec2(x, y)); }
 
-		/**
-		 * Retrieves the position translation.
-		 * @return The translation.
-		 */
-		const Vec2 &GetTranslation() const { return translation; }
-		void SetTranslation(const Vec2 &translation);
-		/// Convenience function for SetTranslation(const Vec2&).
-		void SetTranslation(double x, double y) { SetTranslation(Vec2(x, y)); }
+	/**
+	 * Retrieves the position translation.
+	 * @return The translation.
+	 */
+	const Vec2 &GetTranslation() const { return translation; }
+	void SetTranslation(const Vec2 &translation);
+	/// Convenience function for SetTranslation(const Vec2&).
+	void SetTranslation(double x, double y) { SetTranslation(Vec2(x, y)); }
 
-		/**
-		 * Retrieve the alignment of the component.
-		 * @return The alignment.
-		 * @see UiViewModel::Alignment
-		 */
-		Alignment GetAlignment() const { return alignment; }
-		void SetAlignment(Alignment alignment);
+	/**
+	 * Retrieve the alignment of the component.
+	 * @return The alignment.
+	 * @see UiViewModel::Alignment
+	 */
+	Alignment GetAlignment() const { return alignment; }
+	void SetAlignment(Alignment alignment);
 
-		Vec2 GetAlignedPos(const Vec2 &pos, double w, double h) const;
+	Vec2 GetAlignedPos(const Vec2 &pos, double w, double h) const;
 
-		/**
-		 * Retrieve the position adjusted by the current alignment.
-		 * @param w The width of the component.
-		 * @param h The height of the component.
-		 * @return The adjusted position.
-		 */
-		Vec2 GetAlignedPos(double w, double h) const
-		{
-			return GetAlignedPos(pos + translation, w, h);
-		}
+	/**
+	 * Retrieve the position adjusted by the current alignment.
+	 * @param w The width of the component.
+	 * @param h The height of the component.
+	 * @return The adjusted position.
+	 */
+	Vec2 GetAlignedPos(double w, double h) const
+	{
+		return GetAlignedPos(pos + translation, w, h);
+	}
 
-		/**
-		 * Retrieve the layout flags.
-		 * @see UiViewModel::LayoutFlags
-		 */
-		uiLayoutFlags_t GetLayoutFlags() const { return layoutFlags; }
+	/**
+	 * Retrieve the layout flags.
+	 * @see UiViewModel::LayoutFlags
+	 */
+	uiLayoutFlags_t GetLayoutFlags() const { return layoutFlags; }
 
-		// Convenience functions for querying layout flags.
-		uiLayoutFlags_t IsLayoutUnscaled() const { return layoutFlags & UiLayoutFlags::UNSCALED; }
-		uiLayoutFlags_t IsLayoutFloating() const { return layoutFlags & UiLayoutFlags::FLOATING; }
+	// Convenience functions for querying layout flags.
+	uiLayoutFlags_t IsLayoutUnscaled() const { return layoutFlags & UiLayoutFlags::UNSCALED; }
+	uiLayoutFlags_t IsLayoutFloating() const { return layoutFlags & UiLayoutFlags::FLOATING; }
 
-		/**
-		 * Retrieve the non-unique identifier for this widget.
-		 * @return The identifier.
-		 */
-		MR_UInt32 GetId() const { return id; }
+	/**
+	 * Retrieve the non-unique identifier for this widget.
+	 * @return The identifier.
+	 */
+	MR_UInt32 GetId() const { return id; }
 
-		/**
-		 * Set the non-unique identifier for this widget.
-		 * This is used mainly for debugging.  Default ID is zero.
-		 * @param id The identifier.
-		 */
-		void SetId(MR_UInt32 id) { this->id = id; }
+	/**
+	 * Set the non-unique identifier for this widget.
+	 * This is used mainly for debugging.  Default ID is zero.
+	 * @param id The identifier.
+	 */
+	void SetId(MR_UInt32 id) { this->id = id; }
 
-	private:
-		Vec2 pos;
-		Vec2 translation;
-		Alignment alignment;
-		uiLayoutFlags_t layoutFlags;
-		MR_UInt32 id;
+private:
+	Vec2 pos;
+	Vec2 translation;
+	Alignment alignment;
+	uiLayoutFlags_t layoutFlags;
+	MR_UInt32 id;
 };
 typedef std::shared_ptr<UiViewModel> UiViewModelPtr;
 
