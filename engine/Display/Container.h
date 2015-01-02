@@ -205,7 +205,7 @@ public:
 	bool IsVisible() const { return visible; }
 	void SetVisible(bool visible);
 
-	const std::vector<UiViewModelPtr> &GetChildren() const { return children; }
+	const std::vector<std::shared_ptr<UiViewModel>> &GetChildren() const { return children; }
 
 public:
 	Vec3 Measure() override { return size.Promote(); }
@@ -217,7 +217,7 @@ private:
 	bool clip;
 	double opacity;
 	bool visible;
-	std::vector<UiViewModelPtr> children;
+	std::vector<std::shared_ptr<UiViewModel>> children;
 };
 
 }  // namespace Display

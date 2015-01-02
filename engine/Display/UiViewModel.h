@@ -166,7 +166,6 @@ private:
 	uiLayoutFlags_t layoutFlags;
 	MR_UInt32 id;
 };
-typedef std::shared_ptr<UiViewModel> UiViewModelPtr;
 
 }  // namespace Display
 }  // namespace HoverRace
