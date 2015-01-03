@@ -163,13 +163,6 @@ private:
 	size_t col;
 }; //}}}
 
-template<class T>
-void AddModule(TestLabScene &scene, Display::Display &display,
-	GameDirector &director, const std::string &name)
-{
-	scene.AddModuleButton(new ModuleButton<T>(display, director, name));
-}
-
 }  // namespace
 
 namespace Module {
