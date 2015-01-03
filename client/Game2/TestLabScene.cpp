@@ -130,8 +130,9 @@ class ModuleMenuGrid : public Display::FlexGrid /*{{{*/
 public:
 	ModuleMenuGrid(Display::Display &display, GameDirector &director,
 		const std::string &startingModuleName) :
-		SUPER(display), director(director), row(0), col(0),
-		startingModuleName(startingModuleName), startingModuleBtn() { }
+		SUPER(display), director(director),
+		startingModuleName(startingModuleName), startingModuleBtn(),
+		row(0), col(0) { }
 	virtual ~ModuleMenuGrid() { }
 
 public:
