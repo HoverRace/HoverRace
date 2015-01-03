@@ -69,10 +69,10 @@ private:
 	void OnCancel();
 
 public:
-	virtual void AttachController(Control::InputEventController &controller);
-	virtual void DetachController(Control::InputEventController &controller);
-	virtual void PrepareRender();
-	virtual void Render();
+	void AttachController(Control::InputEventController &controller) override;
+	void DetachController(Control::InputEventController &controller) override;
+	void PrepareRender() override;
+	void Render() override;
 
 protected:
 	Display::Display &display;
@@ -117,7 +117,7 @@ public:
 		GetClickedSignal().connect(std::bind(&ModuleButton::LaunchScene, this));
 	}
 
-	virtual void LaunchScene()
+	void LaunchScene() override
 	{
 		director.RequestPushScene(std::make_shared<Module>(display, director));
 	}
@@ -213,10 +213,10 @@ public:
 	virtual ~TransitionModule() { }
 
 protected:
-	virtual void OnPhaseChanged(Phase oldPhase);
-	virtual void OnStateChanged(State oldState);
-	virtual void OnPhaseTransition(double progress);
-	virtual void OnStateTransition(double progress);
+	void OnPhaseChanged(Phase oldPhase) override;
+	void OnStateChanged(State oldState) override;
+	void OnPhaseTransition(double progress) override;
+	void OnStateTransition(double progress) override;
 
 private:
 	std::shared_ptr<Display::Label> phaseLbl;
@@ -237,9 +237,9 @@ private:
 	static std::unique_ptr<Player::Player> InitPlayer();
 
 public:
-	virtual void Advance(Util::OS::timestamp_t tick);
-	virtual void PrepareRender();
-	virtual void Render();
+	void Advance(Util::OS::timestamp_t tick) override;
+	void PrepareRender() override;
+	void Render() override;
 
 private:
 	std::shared_ptr<Player::Player> player;
