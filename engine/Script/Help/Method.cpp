@@ -20,8 +20,6 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
-#include "../../StdAfx.h"
-
 #include <boost/algorithm/string/trim.hpp>
 
 #include "../../Util/yaml/MapNode.h"

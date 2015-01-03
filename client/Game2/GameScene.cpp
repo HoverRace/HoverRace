@@ -19,8 +19,6 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
-#include "../StdAfx.h"
-
 #include "../../engine/Display/Display.h"
 #include "../../engine/Display/Hud.h"
 #include "../../engine/Model/Track.h"

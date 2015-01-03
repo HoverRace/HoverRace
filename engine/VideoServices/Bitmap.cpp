@@ -20,8 +20,6 @@
 // and limitations under the License.
 //
 
-#include "../StdAfx.h"
-
 #include "Bitmap.h"
 
 namespace HoverRace {

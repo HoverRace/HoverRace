@@ -19,8 +19,6 @@
 // and limitations under the License.
 //
 
-#include "../StdAfx.h"
-
 #include "GameSession.h"
 #include "ObstacleCollisionReport.h"
 

@@ -19,8 +19,6 @@
 // and limitations under the License.
 //
 
-#include "../StdAfx.h"
-
 #include <map>
 
 #include "../ObjFac1/ObjFac1.h"

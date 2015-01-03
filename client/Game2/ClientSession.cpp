@@ -20,8 +20,6 @@
 // and limitations under the License.
 //
 
-#include "../StdAfx.h"
-
 #include <boost/thread/locks.hpp>
 
 #include "../../engine/MainCharacter/MainCharacter.h"

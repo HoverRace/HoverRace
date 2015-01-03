@@ -50,8 +50,6 @@
 //     #define <Character string> <Integer constant>
 //
 
-#include "StdAfx.h"
-
 #ifdef _WIN32
 #	include <shellapi.h>
 #endif

@@ -19,8 +19,6 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
-#include "../StdAfx.h"
-
 #include <SDL2/SDL.h>
 
 #include "../../engine/Display/Button.h"

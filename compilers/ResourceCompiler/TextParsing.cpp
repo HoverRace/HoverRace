@@ -19,8 +19,6 @@
 // and limitations under the License.
 //
 
-#include "StdAfx.h"
-
 #include "TextParsing.h"
 
 namespace HoverRace {

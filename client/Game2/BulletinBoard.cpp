@@ -19,8 +19,6 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
-#include "../StdAfx.h"
-
 #include "../../engine/Display/ClickRegion.h"
 #include "../../engine/Display/FillBox.h"
 #include "../../engine/Display/FlexGrid.h"

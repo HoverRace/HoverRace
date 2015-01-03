@@ -22,8 +22,6 @@
 // and limitations under the License.
 //
 
-#include "../StdAfx.h"
-
 #include "../MainCharacter/MainCharacter.h"
 
 #include "ActionPerformers.h"

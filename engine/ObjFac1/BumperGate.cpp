@@ -19,8 +19,6 @@
 // and limitations under the License.
 //
 
-#include "../StdAfx.h"
-
 #include "BumperGate.h"
 #include "ObjFac1Res.h"
 #include "../Model/ConcreteShape.h"

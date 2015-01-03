@@ -19,8 +19,6 @@
 // and limitations under the License.
 //
 
-#include "../StdAfx.h"
-
 #include "../../engine/VideoServices/VideoBuffer.h"
 #include "ClientSession.h"
 #include "Observer.h"

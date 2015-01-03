@@ -20,8 +20,6 @@
 // and limitations under the License.
 //
 
-#include "../StdAfx.h"
-
 #include <SDL2/SDL.h>
 
 #include "../Display/Display.h"

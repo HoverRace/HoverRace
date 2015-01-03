@@ -19,8 +19,6 @@
 // and limitations under the License.
 //
 
-#include "StdAfx.h"
-
 #include "../../engine/Exception.h"
 
 #include "ResActorBuilder.h"

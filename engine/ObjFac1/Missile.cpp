@@ -19,8 +19,6 @@
 // and limitations under the License.
 //
 
-#include "../StdAfx.h"
-
 #include "Missile.h"
 #include "ObjFac1Res.h"
 #include "../Model/ConcreteShape.h"

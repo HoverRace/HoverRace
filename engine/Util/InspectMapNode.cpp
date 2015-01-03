@@ -20,8 +20,6 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
-#include "../StdAfx.h"
-
 #include "yaml/Emitter.h"
 #include "yaml/MapNode.h"
 #include "yaml/ScalarNode.h"

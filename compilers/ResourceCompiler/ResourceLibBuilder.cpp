@@ -19,8 +19,6 @@
 // and limitations under the License.
 //
 
-#include "StdAfx.h"
-
 #include <boost/foreach.hpp>
 
 #include "../../engine/Parcel/ClassicRecordFile.h"

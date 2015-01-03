@@ -19,8 +19,6 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
-#include "../StdAfx.h"
-
 #include "../../engine/Display/Slider.h"
 #include "../../engine/ObjFac1/ObjFac1Res.h"
 #include "../../engine/ObjFacTools/ResourceLib.h"

@@ -19,8 +19,6 @@
 // and limitations under the License.
 //
 
-#include "../StdAfx.h"
-
 #include "TestElement.h"
 #include "../Model/ObstacleCollisionReport.h"
 

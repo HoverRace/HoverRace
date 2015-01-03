@@ -19,8 +19,6 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
-#include "../../StdAfx.h"
-
 #include "../../../engine/Script/Core.h"
 #include "../../../engine/Display/Chronometer.h"
 #include "../../../engine/Display/Counter.h"
