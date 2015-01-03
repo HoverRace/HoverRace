@@ -33,7 +33,7 @@
 #	include <assert.h>
 #	define ASSERT(e) assert(e)
 
-#	include "../include/config-win32.h"
+#	include "../include/util/config-win32.h"
 
 #else
 

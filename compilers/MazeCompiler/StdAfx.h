@@ -31,7 +31,7 @@
 #	define ASSERT(e) assert(e)
 #	define TRACE __noop
 
-#	include "../../include/config-win32.h"
+#	include "../../include/util/config-win32.h"
 
 #else
 

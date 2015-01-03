@@ -28,7 +28,7 @@
 #	pragma warning(disable: 4702)  // unreachable code
 #	pragma warning(disable: 4714)  // function marked as __forceinline not inlined
 
-#	include "../../include/config-win32.h"
+#	include "../../include/util/config-win32.h"
 
 #else
 
