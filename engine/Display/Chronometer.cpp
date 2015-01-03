@@ -1,7 +1,7 @@
 
 // Chronometer.cpp
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -51,12 +51,12 @@ Chronometer::Chronometer(Display &display, const std::string &title,
 {
 	const auto &s = display.styles;
 
-	bg = AddChild(new FillBox(0, 0, BG_COLOR));
+	bg = NewChild<FillBox>(0, 0, BG_COLOR);
 
-	titleLbl = AddChild(new Label(title, s.hudNormalHeadFont, TITLE_COLOR));
+	titleLbl = NewChild<Label>(title, s.hudNormalHeadFont, TITLE_COLOR);
 	titleLbl->SetAlignment(Alignment::W);
 
-	valueLbl = AddChild(new Label("", s.hudNormalFont, VALUE_COLOR));
+	valueLbl = NewChild<Label>("", s.hudNormalFont, VALUE_COLOR);
 }
 
 void Chronometer::OnHudRescaled(const Vec2 &hudScale)

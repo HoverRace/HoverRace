@@ -1,7 +1,7 @@
 
 // PauseMenuScene.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -83,9 +83,10 @@ PauseMenuScene::~PauseMenuScene()
 std::shared_ptr<Display::Button> PauseMenuScene::AddButton(
 	const std::string &text, double &y)
 {
-	typedef Display::UiViewModel::Alignment Alignment;
+	using namespace Display;
+	using Alignment = UiViewModel::Alignment;
 
-	auto btn = GetRoot()->AddChild(new Display::Button(display, text));
+	auto btn = GetRoot()->NewChild<Button>(display, text);
 	btn->SetPos(640, y);
 	btn->SetAlignment(Alignment::N);
 

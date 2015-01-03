@@ -51,8 +51,8 @@ void MessageAnnouncement::CreateContents(Display::Display &display,
 
 	const auto &s = display.styles;
 
-	grid->AddGridCell(0, 0,
-		new Display::Label(text, s.announcementBodyFont, s.announcementBodyFg));
+	grid->At(0, 0).NewChild<Display::Label>(
+		text, s.announcementBodyFont, s.announcementBodyFg);
 }
 
 }  // namespace Client

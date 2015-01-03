@@ -1,7 +1,7 @@
 
 // Minimap.cpp
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -52,10 +52,10 @@ Minimap::Minimap(Display &display) :
 	SetSize(MAP_WIDTH, MAP_HEIGHT);
 	SetClip(false);
 
-	mapPic = AddChild(new Picture(std::shared_ptr<Res<Texture>>(),
-		MAP_WIDTH, MAP_HEIGHT));
+	mapPic = NewChild<Picture>(std::shared_ptr<Res<Texture>>(),
+		MAP_WIDTH, MAP_HEIGHT);
 
-	playerIcon = AddChild(new SymbolIcon(10, 10, ICON_SYMBOL));
+	playerIcon = NewChild<SymbolIcon>(10, 10, ICON_SYMBOL);
 	playerIcon->SetAlignment(Alignment::CENTER);
 }
 

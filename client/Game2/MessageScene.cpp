@@ -1,7 +1,7 @@
 
 // MessageScene.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -52,32 +52,32 @@ MessageScene::MessageScene(Display::Display &display,
 	director(director),
 	hasCancel(hasCancel)
 {
+	using namespace Display;
+
 	SetPhaseTransitionDuration(200);
 
-	fader.reset(new Display::ScreenFade(0xcc000000, 0.0));
+	fader.reset(new ScreenFade(0xcc000000, 0.0));
 	fader->AttachView(display);
 
 	const auto &s = display.styles;
 
-	Display::Container *root = GetRoot();
+	auto root = GetRoot();
 
 	const double textWidth = 1280 - (HORZ_PADDING * 2);
 
-	titleLbl = root->AddChild(new Display::Label(title,
-		s.headingFont, s.headingFg));
+	titleLbl = root->NewChild<Label>(title, s.headingFont, s.headingFg);
 	titleLbl->SetPos(HORZ_PADDING, 180);
 	titleLbl->SetWrapWidth(textWidth);
 
-	messageLbl = root->AddChild(new Display::Label(message,
-		s.bodyFont, s.bodyFg));
+	messageLbl = root->NewChild<Label>(message, s.bodyFont, s.bodyFg);
 	messageLbl->SetWrapWidth(textWidth);
 	// messageLbl position will be set in Layout().
 
-	okBtn = root->AddChild(new Display::ActionButton(display));
+	okBtn = root->NewChild<ActionButton>(display);
 	okBtn->SetPos(HORZ_PADDING, 480);
 
 	if (hasCancel) {
-		cancelBtn = root->AddChild(new Display::ActionButton(display));
+		cancelBtn = root->NewChild<ActionButton>(display);
 		cancelBtn->SetPos(HORZ_PADDING + 200, 480);
 	}
 }

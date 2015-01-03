@@ -1,7 +1,7 @@
 
 // SettingsScene.cpp
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ SettingsScene::SettingsScene(Display::Display &display, GameDirector &director,
 
 	auto root = GetContentRoot();
 
-	settingsGrid = root->AddChild(new FlexGrid(display));
+	settingsGrid = root->NewChild<FlexGrid>(display);
 	settingsGrid->SetPos(640, 60);
 	settingsGrid->SetMargin(20, 10);
 	settingsGrid->SetAlignment(Alignment::N);
@@ -62,10 +62,10 @@ SettingsScene::SettingsScene(Display::Display &display, GameDirector &director,
 
 void SettingsScene::AddSettingLabel(size_t row, const std::string &label)
 {
+	using namespace Display;
 	const auto &s = display.styles;
 
-	settingsGrid->AddGridCell(row, 0,
-		new Display::Label(label, s.bodyFont, s.bodyFg));
+	settingsGrid->At(row, 0).NewChild<Label>(label, s.bodyFont, s.bodyFg);
 }
 
 void SettingsScene::OnExtra()

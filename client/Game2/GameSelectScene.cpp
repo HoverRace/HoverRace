@@ -1,7 +1,7 @@
 
 // GameSelectScene.cpp
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -53,6 +53,8 @@ GameSelectScene::GameSelectScene(Display::Display &display,
 	display(display), director(director),
 	trackSelected(false)
 {
+	using namespace Display;
+
 	SetPhaseTransitionDuration(1000);
 	SetStateTransitionDuration(1000);
 
@@ -74,15 +76,15 @@ GameSelectScene::GameSelectScene(Display::Display &display,
 
 	double numRulebooks = static_cast<double>(rulebooks.size());
 	double panelWidth = (numRulebooks * (BTN_WIDTH + BTN_GAP)) - BTN_GAP;
-	rulebookPanel = root->AddChild(new Display::Container(display,
-		Vec2(panelWidth, BTN_HEIGHT)));
+	rulebookPanel = root->NewChild<Container>(display,
+		Vec2(panelWidth, BTN_HEIGHT));
 	rulebookPanel->SetPos(DialogScene::MARGIN_WIDTH, 0);
 
 	const Vec2 btnSize(BTN_WIDTH, BTN_HEIGHT);
 	double x = 0;
 	for (auto rulebook : rulebooks) {
-		auto btn = rulebookPanel->AddChild(
-			new Display::Button(display, btnSize, rulebook->GetTitle()));
+		auto btn = rulebookPanel->NewChild<Button>(
+			display, btnSize, rulebook->GetTitle());
 		btn->SetPos(x, 0);
 		btn->GetClickedSignal().connect(std::bind(
 			&GameSelectScene::OnRulebookSelected, this, rulebook));

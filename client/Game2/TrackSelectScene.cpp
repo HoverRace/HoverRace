@@ -1,7 +1,7 @@
 
 // TrackSelectScene.cpp
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -86,34 +86,33 @@ TrackSelectScene::TrackSelectScene(Display::Display &display,
 
 	auto root = GetContentRoot();
 
-	subtitleGrid = root->AddChild(new FlexGrid(display));
+	subtitleGrid = root->NewChild<FlexGrid>(display);
 	subtitleGrid->SetMargin(10, 0);
 	subtitleGrid->SetPadding(0, 0);
 	subtitleGrid->SetFixedHeight(40);
 	subtitleGrid->SetPos(DialogScene::MARGIN_WIDTH, 0);
 
-	rulebookLbl = subtitleGrid->AddGridCell(0, 0, new Label(
+	rulebookLbl = subtitleGrid->At(0, 0).NewChild<Label>(
 		rulebook->GetTitle() + " //",
-		UiFont(30), 0xffd0d0d0))->GetContents();
+		UiFont(30), 0xffd0d0d0)->GetContents();
 	rulebookLbl->SetAlignment(Alignment::SW);
 	rulebookLbl->SetFixedScale(true);
 
-	rulebookDescLbl = subtitleGrid->AddGridCell(0, 1, new Label(
+	rulebookDescLbl = subtitleGrid->At(0, 1).NewChild<Label>(
 		rulebook->GetDescription(),
-		UiFont(25), 0xff6d6d6d))->GetContents();
+		UiFont(25), 0xff6d6d6d)->GetContents();
 	rulebookDescLbl->SetAlignment(Alignment::SW);
 	rulebookDescLbl->SetFixedScale(true);
 
-	subtitleRule = root->AddChild(new RuleLine(
-		RuleLine::Direction::H,
-		1280 - (DialogScene::MARGIN_WIDTH * 2), 1, 0xffffffff));
+	subtitleRule = root->NewChild<RuleLine>(RuleLine::Direction::H,
+		1280 - (DialogScene::MARGIN_WIDTH * 2), 1, 0xffffffff);
 	subtitleRule->SetPos(DialogScene::MARGIN_WIDTH, 60);
 
-	trackPanel = root->AddChild(new Container(display));
+	trackPanel = root->NewChild<Container>(display);
 	trackPanel->SetPos(DialogScene::MARGIN_WIDTH, 100);
 
 	//TODO: A better list UI (categories, sorting, etc.).
-	trackGrid = trackPanel->AddChild(new FlexGrid(display));
+	trackGrid = trackPanel->NewChild<FlexGrid>(display);
 	trackGrid->SetFixedWidth(360);
 
 	auto &cell = trackGrid->GetColumnDefault(0);
@@ -121,32 +120,32 @@ TrackSelectScene::TrackSelectScene(Display::Display &display,
 
 	size_t row = 0;
 	for (TrackEntryPtr ent : trackList) {
-		auto trackCell = trackGrid->AddGridCell(row++, 0,
-			new TrackSelButton(display, ent));
+		auto trackCell = trackGrid->At(row++, 0).NewChild<TrackSelButton>(
+			display, ent);
 		trackCell->GetContents()->GetClickedSignal().connect(std::bind(
 			&TrackSelectScene::OnTrackSelected, this, ent));
 	}
 
-	selTrackPanel = trackPanel->AddChild(new Container(display));
+	selTrackPanel = trackPanel->NewChild<Container>(display);
 	selTrackPanel->SetPos(380, 0);
 	selTrackPanel->SetVisible(false);
 
-	trackPic = selTrackPanel->AddChild(new Picture(
-		std::shared_ptr<Res<Texture>>(), 260, 260));
+	trackPic = selTrackPanel->NewChild<Picture>(
+		std::shared_ptr<Res<Texture>>(), 260, 260);
 	trackPic->SetPos(0, 20);
 
-	trackMetaGrid = selTrackPanel->AddChild(new FlexGrid(display));
+	trackMetaGrid = selTrackPanel->NewChild<FlexGrid>(display);
 	trackMetaGrid->SetPos(280, 20);
 	trackMetaGrid->SetMargin(0, 0);
 	trackMetaGrid->SetPadding(0, 0);
 
-	trackNameLbl = trackMetaGrid->AddGridCell(0, 0,
-		new Label(520, "Name", s.bodyHeadFont, s.bodyHeadFg))->GetContents();
+	trackNameLbl = trackMetaGrid->At(0, 0).NewChild<Label>(
+		520, "Name", s.bodyHeadFont, s.bodyHeadFg)->GetContents();
 
-	trackDescLbl = trackMetaGrid->AddGridCell(1, 0,
-		new Label(520, "Desc", s.bodyAsideFont, s.bodyAsideFg))->GetContents();
+	trackDescLbl = trackMetaGrid->At(1, 0).NewChild<Label>(
+		520, "Desc", s.bodyAsideFont, s.bodyAsideFg)->GetContents();
 
-	readyBtn = trackPanel->AddChild(new Button(display, _("Ready")));
+	readyBtn = trackPanel->NewChild<Button>(display, _("Ready"));
 	readyBtn->SetPos(1280 - (MARGIN_WIDTH * 2), 360);
 	readyBtn->SetAlignment(Alignment::NE);
 	readyBtn->SetEnabled(false);

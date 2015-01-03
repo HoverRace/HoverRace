@@ -75,12 +75,11 @@ VideoSettingsScene::VideoSettingsScene(Display::Display &display,
 	auto splitModeGrid = AddSetting(_("Split-screen mode"),
 		new FlexGrid(display));
 	splitModeGroup.Add(
-		splitModeGrid->AddGridCell(0, 0,
-			new RadioButton<bool>(display, _("Stacked"), true))->GetContents());
+		splitModeGrid->At(0, 0).NewChild<RadioButton<bool>>(
+			display, _("Stacked"), true)->GetContents());
 	splitModeGroup.Add(
-		splitModeGrid->AddGridCell(0, 1,
-			new RadioButton<bool>(display, _("Side-by-side"), false))->
-				GetContents());
+		splitModeGrid->At(0, 1).NewChild<RadioButton<bool>>(
+			display, _("Side-by-side"), false)->GetContents());
 }
 
 void VideoSettingsScene::LoadFromConfig()

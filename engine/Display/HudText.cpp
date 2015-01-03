@@ -1,7 +1,7 @@
 
 // HudText.cpp
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -44,9 +44,9 @@ namespace {
 HudText::HudText(Display &display, const std::string &text) :
 	SUPER(display)
 {
-	bg = AddChild(new FillBox(0, 0, BG_COLOR));
+	bg = NewChild<FillBox>(0, 0, BG_COLOR);
 
-	textLbl = AddChild(new Label(text, display.styles.hudNormalFont, FG_COLOR));
+	textLbl = NewChild<Label>(text, display.styles.hudNormalFont, FG_COLOR);
 }
 
 void HudText::OnHudRescaled(const Vec2 &hudScale)

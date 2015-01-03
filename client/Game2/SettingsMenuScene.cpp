@@ -1,7 +1,7 @@
 
 // SettingsMenuScene.cpp
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -65,32 +65,27 @@ SettingsMenuScene::SettingsMenuScene(Display::Display &display,
 	GameDirector &director) :
 	SUPER(display, director, _("Settings"), "Settings")
 {
-	typedef Display::UiViewModel::Alignment Alignment;
+	using Alignment = Display::UiViewModel::Alignment;
 
 	auto root = GetContentRoot();
 
-	menuGrid = root->AddChild(new Display::FlexGrid(display));
+	menuGrid = root->NewChild<Display::FlexGrid>(display);
 	menuGrid->SetPos(640, 140);
 	menuGrid->SetAlignment(Alignment::N);
 
 	menuGrid->GetColumnDefault(0).SetFill(true);
 
 	size_t row = 0;
-	menuGrid->AddGridCell(row++, 0,
-		new MenuItemButton<AudioSettingsScene>(display, director, GetTitle(),
-			_("Profile"), false));
-	menuGrid->AddGridCell(row++, 0,
-		new MenuItemButton<AudioSettingsScene>(display, director, GetTitle(),
-			_("Audio")));
-	menuGrid->AddGridCell(row++, 0,
-		new MenuItemButton<VideoSettingsScene>(display, director, GetTitle(),
-			_("Video")));
-	menuGrid->AddGridCell(row++, 0,
-		new MenuItemButton<AudioSettingsScene>(display, director, GetTitle(),
-			_("Network"), false));
-	menuGrid->AddGridCell(row++, 0,
-		new MenuItemButton<AudioSettingsScene>(display, director, GetTitle(),
-			_("Advanced"), false));
+	menuGrid->At(row++, 0).NewChild<MenuItemButton<AudioSettingsScene>>(
+		display, director, GetTitle(), _("Profile"), false);
+	menuGrid->At(row++, 0).NewChild<MenuItemButton<AudioSettingsScene>>(
+		display, director, GetTitle(), _("Audio"));
+	menuGrid->At(row++, 0).NewChild<MenuItemButton<VideoSettingsScene>>(
+		display, director, GetTitle(), _("Video"));
+	menuGrid->At(row++, 0).NewChild<MenuItemButton<AudioSettingsScene>>(
+		display, director, GetTitle(), _("Network"), false);
+	menuGrid->At(row++, 0).NewChild<MenuItemButton<AudioSettingsScene>>(
+		display, director, GetTitle(), _("Advanced"), false);
 }
 
 SettingsMenuScene::~SettingsMenuScene()

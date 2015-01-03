@@ -1,7 +1,7 @@
 
 // BulletinBoard.cpp
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -83,7 +83,7 @@ BulletinBoard::~BulletinBoard()
  */
 void BulletinBoard::Announce(std::shared_ptr<Announcement> ann)
 {
-	bulletins.emplace_front(AddChild(new Bulletin(this, display, ann)));
+	bulletins.emplace_front(NewChild<Bulletin>(this, display, ann));
 	RequestLayout();
 }
 
@@ -125,14 +125,14 @@ BulletinBoard::Bulletin::Bulletin(BulletinBoard *board,
 	// it's not displayed until the first layout.
 	SetVisible(false);
 
-	bg = AddChild(new FillBox(580, 100, s.announcementBg));
+	bg = NewChild<FillBox>(580, 100, s.announcementBg);
 
-	clickBox = AddChild(new ClickRegion(display, Vec2(580, 100)));
+	clickBox = NewChild<ClickRegion>(display, Vec2(580, 100));
 	clickBox->GetClickedSignal().connect(std::bind(&Announcement::OnClick,
 		ann.get()));
 
-	labelLbl = AddChild(new Label(420, ann->GetLabel(),
-		s.announcementHeadFont, s.announcementHeadFg));
+	labelLbl = NewChild<Label>(420, ann->GetLabel(),
+		s.announcementHeadFont, s.announcementHeadFg);
 	labelLbl->SetPos(120, 20);
 
 	auto icon = AddChild(ann->CreateIcon(display));
@@ -141,7 +141,7 @@ BulletinBoard::Bulletin::Bulletin(BulletinBoard *board,
 
 	//TODO: Player avatar.
 
-	contentGrid = AddChild(new FlexGrid(display));
+	contentGrid = NewChild<FlexGrid>(display);
 	contentGrid->SetMargin(3, 0);
 	contentGrid->SetPos(120, 60);
 	contentGrid->SetFixedWidth(420);

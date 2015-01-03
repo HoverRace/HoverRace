@@ -1,7 +1,7 @@
 
 // DialogScene.cpp
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -61,34 +61,32 @@ DialogScene::DialogScene(Display::Display &display, GameDirector &director,
 
 	auto root = GetRoot();
 
-	contentRoot = root->AddChild(
-		new Container(display, Vec2(1280, 720 - 200)));
+	contentRoot = root->NewChild<Container>(display, Vec2(1280, 720 - 200));
 	contentRoot->SetPos(0, 100);
 
-	statusRoot = root->AddChild(
-		new Container(display, Vec2(1280 - (MARGIN_WIDTH * 2), 40), false));
+	statusRoot = root->NewChild<Container>(
+		display, Vec2(1280 - (MARGIN_WIDTH * 2), 40), false);
 	statusRoot->SetPos(MARGIN_WIDTH, 720 - 80);
 	statusRoot->SetVisible(false);
 
-	auto titleLbl = root->AddChild(
-		new Label(title, s.headingFont, s.headingFg));
+	auto titleLbl = root->NewChild<Label>(title, s.headingFont, s.headingFg);
 	titleLbl->SetPos(MARGIN_WIDTH, 80);
 	titleLbl->SetAlignment(Alignment::SW);
 	titleLbl->SetFixedScale(true);
 
 	// The default action buttons (OK, Cancel).
 
-	actionGrid = statusRoot->AddChild(new FlexGrid(display));
+	actionGrid = statusRoot->NewChild<FlexGrid>(display);
 	actionGrid->SetPos(1280 - (MARGIN_WIDTH * 2), 0);
 	actionGrid->SetAlignment(Alignment::NE);
 
 	size_t r = 0;
 	size_t c = 0;
 
-	okBtn = actionGrid->AddGridCell(r, c++,
-		new ActionButton(display))->GetContents();
-	cancelBtn = actionGrid->AddGridCell(r, c++,
-		new ActionButton(display))->GetContents();
+	okBtn = actionGrid->At(r, c++).NewChild<ActionButton>(display)->
+		GetContents();
+	cancelBtn = actionGrid->At(r, c++).NewChild<ActionButton>(display)->
+		GetContents();
 }
 
 DialogScene::~DialogScene()
@@ -125,7 +123,7 @@ void DialogScene::ActivateExtraAction(const std::string &label)
 {
 	assert(!extraBtn);
 
-	extraBtn = statusRoot->AddChild(new Display::ActionButton(display, label));
+	extraBtn = statusRoot->NewChild<Display::ActionButton>(display, label);
 }
 
 /**
