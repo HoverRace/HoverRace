@@ -74,9 +74,28 @@ public:
 
 public:
 	/**
+	 * Create and append a new child widget to the end of the list.
+	 * @tparam T The type of the child widget.
+	 * @tparam Args The types of the arguments.
+	 * @param args The arguments to pass to the child widget's constructor.
+	 * @return A shared pointer to the newly-constructed widget.
+	 */
+	template<class T, class... Args>
+	typename std::enable_if<std::is_base_of<UiViewModel, T>::value,
+		std::shared_ptr<T>>::type
+	NewChild(Args&&... args)
+	{
+		auto sharedChild = std::make_shared<T>(std::forward<Args>(args)...);
+		children.emplace_back(sharedChild);
+		sharedChild->AttachView(display);
+		return sharedChild;
+	}
+
+	/**
 	 * Append a child element to the end of the list.
 	 * @param child The child element; must be a subclass of UiViewModel.
 	 * @return The child element, wrapped in a @c std::shared_ptr.
+	 * @deprecated Use NewChild() instead.
 	 */
 	template<typename T>
 	typename std::enable_if<std::is_base_of<UiViewModel, T>::value, std::shared_ptr<T>>::type
