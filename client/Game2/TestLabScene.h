@@ -53,7 +53,6 @@ public:
 public:
 	class LabModule;
 	class ModuleButtonBase;
-	void AddModuleButton(ModuleButtonBase *btn);
 
 public:
 	void OnScenePushed() override;
@@ -62,7 +61,6 @@ public:
 
 private:
 	const std::string startingModuleName;
-	double btnPosY;
 	std::unique_ptr<Display::ScreenFade> fader;
 	std::shared_ptr<ModuleButtonBase> startingModuleBtn;
 };

@@ -123,6 +123,45 @@ public:
 	}
 }; //}}}
 
+class ModuleMenuGrid : public Display::FlexGrid /*{{{*/
+{
+	using SUPER = Display::FlexGrid;
+
+public:
+	ModuleMenuGrid(Display::Display &display, GameDirector &director,
+		const std::string &startingModuleName) :
+		SUPER(display), director(director), row(0), col(0),
+		startingModuleName(startingModuleName), startingModuleBtn() { }
+	virtual ~ModuleMenuGrid() { }
+
+public:
+	template<class T>
+	void AddModule(const std::string &name)
+	{
+		auto btn = At(row, col).NewChild<ModuleButton<T>>(
+			display, director, name)->GetContents();
+
+		if (name == startingModuleName) {
+			startingModuleBtn = btn;
+		}
+
+		++col;
+		if (col == 6) {
+			++row;
+			col = 0;
+		}
+	}
+
+	std::shared_ptr<TestLabScene::ModuleButtonBase> ShareStartingModuleBtn() const { return startingModuleBtn; }
+
+private:
+	GameDirector &director;
+	std::string startingModuleName;
+	std::shared_ptr<TestLabScene::ModuleButtonBase> startingModuleBtn;
+	size_t row;
+	size_t col;
+}; //}}}
+
 template<class T>
 void AddModule(TestLabScene &scene, Display::Display &display,
 	GameDirector &director, const std::string &name)
@@ -280,7 +319,7 @@ private:
 TestLabScene::TestLabScene(Display::Display &display, GameDirector &director,
 	const std::string &startingModuleName) :
 	SUPER(display, "Test Lab"),
-	startingModuleName(startingModuleName), btnPosY(60)
+	startingModuleName(startingModuleName)
 {
 	using namespace Display;
 
@@ -288,14 +327,20 @@ TestLabScene::TestLabScene(Display::Display &display, GameDirector &director,
 	fader.reset(new ScreenFade(COLOR_BLACK, 1.0));
 	fader->AttachView(display);
 
-	AddModule<Module::LayoutModule>(*this, display, director, "Layout");
-	AddModule<Module::ClickablesModule>(*this, display, director, "Clickables");
-	AddModule<Module::LabelModule>(*this, display, director, "Label");
-	AddModule<Module::IconModule>(*this, display, director, "Icon");
-	AddModule<Module::TransitionModule>(*this, display, director, "Transition");
-	AddModule<Module::HudModule>(*this, display, director, "HUD");
-	AddModule<Module::FlexGridModule>(*this, display, director, "FlexGrid");
-	AddModule<Module::PictureModule>(*this, display, director, "Picture");
+	auto grid = GetRoot()->NewChild<ModuleMenuGrid>(
+		display, director, startingModuleName);
+	grid->SetPos(100, 100);
+
+	grid->AddModule<Module::LayoutModule>("Layout");
+	grid->AddModule<Module::ClickablesModule>("Clickables");
+	grid->AddModule<Module::LabelModule>("Label");
+	grid->AddModule<Module::IconModule>("Icon");
+	grid->AddModule<Module::TransitionModule>("Transition");
+	grid->AddModule<Module::HudModule>("HUD");
+	grid->AddModule<Module::FlexGridModule>("FlexGrid");
+	grid->AddModule<Module::PictureModule>("Picture");
+
+	startingModuleBtn = grid->ShareStartingModuleBtn();
 
 	if (!startingModuleName.empty() && !startingModuleBtn) {
 		Log::Warn("Not a test lab module: %s", startingModuleName.c_str());
@@ -304,17 +349,6 @@ TestLabScene::TestLabScene(Display::Display &display, GameDirector &director,
 
 TestLabScene::~TestLabScene()
 {
-}
-
-void TestLabScene::AddModuleButton(ModuleButtonBase *btn)
-{
-	auto mbtn = GetRoot()->AddChild(btn);
-	btn->SetPos(0, btnPosY);
-	btnPosY += 60;
-
-	if (btn->GetText() == startingModuleName) {
-		startingModuleBtn = mbtn;
-	}
 }
 
 void TestLabScene::OnScenePushed()
