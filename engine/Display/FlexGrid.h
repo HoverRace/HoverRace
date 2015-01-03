@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include "../Exception.h"
 #include "Container.h"
 #include "MPL.h"
 
@@ -245,7 +246,104 @@ protected:
 		bool fill;
 	};
 
+	/**
+	 * This is used to reference a cell of the grid without directly accessing
+	 * it; useful for adding new widgets to the grid.
+	 */
+	class CellProxy : public Cell
+	{
+		using SUPER = Cell;
+
+	public:
+		CellProxy(size_t row, size_t col, FlexGrid &grid, Cell *cell) :
+			SUPER(), row(row), col(col), grid(grid), cell(cell) { }
+		CellProxy(const CellProxy&) = default;
+		CellProxy(CellProxy&&) = default;
+		virtual ~CellProxy() { }
+
+	public:
+		CellProxy &operator=(const CellProxy&) = delete;
+		CellProxy &operator=(CellProxy&&) = delete;
+
+	private:
+		Cell *CheckCell()
+		{
+			if (!cell) {
+				std::ostringstream oss;
+				oss << "Cell at row=" << row << ", col=" << col <<
+					" is empty.";
+				throw Exception(oss.str());
+			}
+			else {
+				return cell;
+			}
+		}
+
+	public:
+		void SetAlignment(Alignment alignment) override
+		{
+			CheckCell()->SetAlignment(alignment);
+		}
+
+		void SetFill(bool fill) override
+		{
+			CheckCell()->SetFill(fill);
+		}
+
+	protected:
+		void SetExtents(double x, double y,
+			double w, double h,
+			double paddingX, double paddingY) override
+		{
+			CheckCell()->SetExtents(x, y, w, h, paddingX, paddingY);
+		}
+
+		Vec3 Measure() override
+		{
+			return CheckCell()->Measure();
+		}
+
+	public:
+		template<class T, class... Args>
+		typename std::enable_if<
+			std::is_base_of<UiViewModel, T>::value,
+			std::shared_ptr<BasicCell<T>>
+			>::type
+		NewChild(Args&&... args)
+		{
+			return grid.NewGridCell<T>(row, col, std::forward<Args>(args)...);
+		}
+
+	private:
+		size_t row;
+		size_t col;
+		FlexGrid &grid;
+		Cell *cell;
+	};
+
 public:
+	/**
+	 * Access a cell of the grid.
+	 *
+	 * This is usually used to add new widgets to the grid, but can also be
+	 * used to change attributes of the cell without accessing the contents.
+	 * If adding new widgets, the row and column don't need to already exist.
+	 *
+	 * @param row The row index.
+	 * @param col The column index.
+	 * @return A proxy to the cell.
+	 */
+	CellProxy At(size_t row, size_t col)
+	{
+		Cell *cell = nullptr;
+		if (row < rows.size()) {
+			if (col < rows[row].size()) {
+				cell = rows[row][col].get();
+			}
+		}
+		return { row, col, *this, cell };
+	}
+
 	/**
 	 * Set the default cell settings for a column.
 	 *
@@ -264,27 +362,11 @@ public:
 		return defaultCols[col];
 	}
 
-	/**
-	 * Append a child element to the grid.
-	 *
-	 * If the cell coordinates are outside of the current grid size, then
-	 * the grid is automatically resized to fit the cell.
-	 *
-	 * @param row The row coordinate (starting at zero).
-	 * @param col The column coordinate (starting at zero).
-	 * @param child The child element; must be a subclass of UiViewModel.
-	 * @return The child element, wrapped in a @c std::shared_ptr, wrapped
-	 *         in the table cell.
-	 */
-	template<typename T>
-	typename std::enable_if<
-		std::is_base_of<UiViewModel, T>::value,
-		std::shared_ptr<BasicCell<T>>
-		>::type
-	AddGridCell(size_t row, size_t col, T *child)
+private:
+	template<class T>
+	std::shared_ptr<BasicCell<T>> InitCell(size_t row, size_t col,
+		std::shared_ptr<T> sharedChild)
 	{
-		std::shared_ptr<T> sharedChild = AddChild(child);
-
 		// Resize the grid to accomodate the cell.
 		if (row >= rows.size()) {
 			rows.resize(row + 1);
@@ -307,6 +389,41 @@ public:
 		RequestLayout();
 
 		return cell;
+	}
+
+protected:
+	template<class T, class... Args>
+	typename std::enable_if<
+		std::is_base_of<UiViewModel, T>::value,
+		std::shared_ptr<BasicCell<T>>
+		>::type
+	NewGridCell(size_t row, size_t col, Args&&... args)
+	{
+		return InitCell(row, col, NewChild<T>(std::forward<Args>(args)...));
+	}
+
+public:
+	/**
+	 * Append a child element to the grid.
+	 *
+	 * If the cell coordinates are outside of the current grid size, then
+	 * the grid is automatically resized to fit the cell.
+	 *
+	 * @param row The row coordinate (starting at zero).
+	 * @param col The column coordinate (starting at zero).
+	 * @param child The child element; must be a subclass of UiViewModel.
+	 * @return The child element, wrapped in a @c std::shared_ptr, wrapped
+	 *         in the table cell.
+	 * @deprecated Use operator(size_t, size_t) instead.
+	 */
+	template<typename T>
+	typename std::enable_if<
+		std::is_base_of<UiViewModel, T>::value,
+		std::shared_ptr<BasicCell<T>>
+		>::type
+	AddGridCell(size_t row, size_t col, T *child)
+	{
+		return InitCell(row, col, AddChild(child));
 	}
 
 	void Clear() override;
