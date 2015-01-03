@@ -105,18 +105,18 @@ void Display::styles_t::Reload()
 	const Color WHITE(cfg->runtime.noAccel ? 0xfffefefe : COLOR_WHITE);
 
 	bodyFont.Set(30, 0);
-	bodyFg = Color(0xffbfbfbf);
+	bodyFg = 0xffbfbfbf;
 	bodyHeadFont.Set(30, 0);
 	bodyHeadFg = WHITE;
 	bodyAsideFont.Set(20, 0);
-	bodyAsideFg = Color(0xffbfbfbf);
+	bodyAsideFg = 0xffbfbfbf;
 
 	announcementHeadFont.Set(30);
 	announcementHeadFg = WHITE;
 	announcementBodyFont.Set(20);
-	announcementBodyFg = Color(0xff7f7f7f);
-	announcementSymbolFg = Color(0xbfffffff);
-	announcementBg = Color(0xbf000000);
+	announcementBodyFg = 0xff7f7f7f;
+	announcementSymbolFg = 0xbfffffff;
+	announcementBg = 0xbf000000;
 
 	// 100% HUD scale.
 	hudNormalFont.Set(30, UiFont::BOLD);
