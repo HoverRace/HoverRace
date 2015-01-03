@@ -204,7 +204,8 @@ public:
 	virtual ~ClickablesModule() { }
 
 private:
-	std::shared_ptr<Display::Slider> AddSlider(Display::Slider *slider);
+	std::shared_ptr<Display::Slider> AddSlider(double min, double max,
+		double step);
 
 private:
 	void OnMessageClicked();
@@ -384,7 +385,7 @@ TestLabScene::LabModule::LabModule(Display::Display &display,
 	fader.reset(new ScreenFade(COLOR_BLACK, 1.0));
 	fader->AttachView(display);
 
-	cancelBtn = GetRoot()->AddChild(new ActionButton(display));
+	cancelBtn = GetRoot()->NewChild<ActionButton>(display);
 	cancelBtn->SetPos(1280, 0);
 	cancelBtn->SetAlignment(Alignment::NE);
 }
@@ -450,7 +451,7 @@ LayoutModule::LayoutModule(Display::Display &display, GameDirector &director) :
 	// beginning of the list so we don't render on top of the "Close" button.
 	displayInfoBox = root->InsertChild(0, new FillBox(1280, 720, 0xff3f3f3f));
 
-	displayInfoLbl = root->AddChild(new Label("Res", UiFont(20), COLOR_WHITE));
+	displayInfoLbl = root->NewChild<Label>("Res", UiFont(20), COLOR_WHITE);
 	displayInfoLbl->SetPos(640, 360);
 	displayInfoLbl->SetAlignment(Alignment::CENTER);
 	OnDisplayConfigChanged();
@@ -458,23 +459,22 @@ LayoutModule::LayoutModule(Display::Display &display, GameDirector &director) :
 	std::shared_ptr<FillBox> fillBox;
 	std::shared_ptr<Label> lbl;
 
-	fillBox = root->AddChild(new FillBox(100, 100, 0x7fff0000));
+	fillBox = root->NewChild<FillBox>(100, 100, 0x7fff0000);
 	fillBox->SetPos(100, 20);
-	fillBox = root->AddChild(new FillBox(100, 100, 0x7f00ff00));
+	fillBox = root->NewChild<FillBox>(100, 100, 0x7f00ff00);
 	fillBox->SetPos(150, 70);
 
 	AddAlignmentTestElem(Alignment::SW, "| Southwest", 0, 719);
 	AddAlignmentTestElem(Alignment::S, "South", 639, 719);
 	AddAlignmentTestElem(Alignment::SE, "Southeast |", 1279, 719);
 
-	lbl = root->AddChild(new Label("Red 20 Normal", UiFont(20), 0xffff0000));
+	lbl = root->NewChild<Label>("Red 20 Normal", UiFont(20), 0xffff0000);
 	lbl->SetPos(0, 20);
-	lbl = root->AddChild(new Label("Yellow (75%) 25 Italic",
-		UiFont(25, UiFont::ITALIC), 0xbfffff00));
+	lbl = root->NewChild<Label>("Yellow (75%) 25 Italic",
+		UiFont(25, UiFont::ITALIC), 0xbfffff00);
 	lbl->SetPos(0, 40);
-	lbl = root->AddChild(new Label("Magenta (50%) 30 Bold+Italic",
-		UiFont(30, UiFont::BOLD_ITALIC),
-		0x7fff00ff));
+	lbl = root->NewChild<Label>("Magenta (50%) 30 Bold+Italic",
+		UiFont(30, UiFont::BOLD_ITALIC), 0x7fff00ff);
 	lbl->SetPos(0, 65);
 }
 
@@ -484,11 +484,11 @@ void LayoutModule::AddAlignmentTestElem(
 {
 	using namespace Display;
 
-	auto fillBox = GetRoot()->AddChild(new FillBox(50, 50, 0x7f00ffff));
+	auto fillBox = GetRoot()->NewChild<FillBox>(50, 50, 0x7f00ffff);
 	fillBox->SetAlignment(alignment);
 	fillBox->SetPos(x, y);
 
-	auto lbl = GetRoot()->AddChild(new Label(label, UiFont(40), 0xffffffff));
+	auto lbl = GetRoot()->NewChild<Label>(label, UiFont(40), 0xffffffff);
 	lbl->SetAlignment(alignment);
 	lbl->SetPos(x, y);
 }
@@ -516,13 +516,13 @@ ClickablesModule::ClickablesModule(Display::Display &display, GameDirector &dire
 
 	Container *root = GetRoot();
 
-	grid = root->AddChild(new FlexGrid(display));
+	grid = root->NewChild<FlexGrid>(display);
 	grid->SetPos(640, 360);
 	grid->SetAlignment(Alignment::CENTER);
 
-	grid->AddGridCell(0, 0, new Label("Buttons", s.bodyHeadFont, s.bodyHeadFg));
-	grid->AddGridCell(0, 1, new Label("Sliders", s.bodyHeadFont, s.bodyHeadFg));
-	grid->AddGridCell(0, 2, new Label("Radio", s.bodyHeadFont, s.bodyHeadFg));
+	grid->At(0, 0).NewChild<Label>("Buttons", s.bodyHeadFont, s.bodyHeadFg);
+	grid->At(0, 1).NewChild<Label>("Sliders", s.bodyHeadFont, s.bodyHeadFg);
+	grid->At(0, 2).NewChild<Label>("Radio", s.bodyHeadFont, s.bodyHeadFg);
 
 	std::shared_ptr<Button> btn;
 	std::shared_ptr<Slider> slider;
@@ -530,13 +530,13 @@ ClickablesModule::ClickablesModule(Display::Display &display, GameDirector &dire
 
 	size_t row = 1;
 
-	messageBtn = grid->AddGridCell(row++, 0,
-		new Button(display, "Show Message"))->GetContents();
+	messageBtn = grid->At(row++, 0).NewChild<Button>(display, "Show Message")->
+		GetContents();
 	messageBtn->GetClickedSignal().connect(
 		std::bind(&ClickablesModule::OnMessageClicked, this));
 
-	btn = grid->AddGridCell(row++, 0,
-		new Button(display, "Disabled Button"))->GetContents();
+	btn = grid->At(row++, 0).NewChild<Button>(display, "Disabled Button")->
+		GetContents();
 	btn->SetEnabled(false);
 	btn->GetClickedSignal().connect([](ClickRegion&) {
 		Log::Error("Clicked on disabled button :(");
@@ -545,43 +545,43 @@ ClickablesModule::ClickablesModule(Display::Display &display, GameDirector &dire
 	auto icon = std::make_shared<SymbolIcon>(60, 60, 0xf0ad, 0xbfffffff);
 	icon->AttachView(display);
 
-	btn = grid->AddGridCell(row++, 0,
-		new Button(display, "Button With Icon"))->GetContents();
+	btn = grid->At(row++, 0).NewChild<Button>(display, "Button With Icon")->
+		GetContents();
 	btn->SetIcon(icon);
 
-	auto toggleChk = grid->AddGridCell(row++, 0,
-		new Checkbox(display, "Checkbox"))->GetContents();
-	auto chk = grid->AddGridCell(row++, 0,
-		new Checkbox(display, "Disableable"))->GetContents();
+	auto toggleChk = grid->At(row++, 0).NewChild<Checkbox>(
+		display, "Checkbox")->GetContents();
+	auto chk = grid->At(row++, 0).NewChild<Checkbox>(
+		display, "Disableable")->GetContents();
 	chk->SetChecked(true);
 	chk->SetEnabled(false);
 	toggleChk->GetClickedSignal().connect([=](ClickRegion&) {
 		chk->SetEnabled(toggleChk->IsChecked());
 	});
 
-	slider = AddSlider(new Slider(display, 0, 100, 10));
+	slider = AddSlider(0, 100, 10);
 	slider->SetValue(30);
 
-	slider = AddSlider(new Slider(display, -50, 50, 10));
+	slider = AddSlider(-50, 50, 10);
 	slider->SetValue(-30);
 
-	slider = AddSlider(new Slider(display, -100, 0, 10));
+	slider = AddSlider(-100, 0, 10);
 	slider->SetValue(-30);
 
-	slider = AddSlider(new Slider(display, 50, 150, 10));
+	slider = AddSlider(50, 150, 10);
 	slider->SetValue(80);
 
-	slider = AddSlider(new Slider(display, -150, -50, 10));
+	slider = AddSlider(-150, -50, 10);
 	slider->SetValue(-80);
 
 	row = 1;
 
-	radio = grid->AddGridCell(row++, 2,
-		new RadioButton<int>(display, "Radio 1", 1))->GetContents();
+	radio = grid->At(row++, 2).NewChild<RadioButton<int>>(
+		display, "Radio 1", 1)->GetContents();
 	group->Add(radio);
 
-	radio = grid->AddGridCell(row++, 2,
-		new RadioButton<int>(display, "Radio 2", 2))->GetContents();
+	radio = grid->At(row++, 2).NewChild<RadioButton<int>>(
+		display, "Radio 2", 2)->GetContents();
 	group->Add(radio);
 
 	groupValueConn = group->GetValueChangedSignal().connect([&]() {
@@ -590,9 +590,10 @@ ClickablesModule::ClickablesModule(Display::Display &display, GameDirector &dire
 }
 
 std::shared_ptr<Display::Slider> ClickablesModule::AddSlider(
-	Display::Slider *slider)
+	double min, double max, double step)
 {
-	auto retv = grid->AddGridCell(curSliderRow++, 1, slider)->GetContents();
+	auto retv = grid->At(curSliderRow++, 1).NewChild<Display::Slider>(
+		display, min, max, step)->GetContents();
 	retv->SetSize(200, 20);
 	return retv;
 }
@@ -621,27 +622,26 @@ LabelModule::LabelModule(Display::Display &display, GameDirector &director) :
 	std::shared_ptr<Button> btn;
 	std::shared_ptr<Label> lbl;
 
-	lbl = root->AddChild(new Label("Red 20 Normal", UiFont(20), 0xffff0000));
+	lbl = root->NewChild<Label>("Red 20 Normal", UiFont(20), 0xffff0000);
 	lbl->SetPos(0, 20);
-	lbl = root->AddChild(new Label("Yellow (75%) 25 Italic",
-		UiFont(25, UiFont::ITALIC), 0xbfffff00));
+	lbl = root->NewChild<Label>("Yellow (75%) 25 Italic",
+		UiFont(25, UiFont::ITALIC), 0xbfffff00);
 	lbl->SetPos(0, 40);
-	lbl = root->AddChild(new Label("Magenta (50%) 30 Bold+Italic",
-		UiFont(30, UiFont::BOLD_ITALIC),
-		0x7fff00ff));
+	lbl = root->NewChild<Label>("Magenta (50%) 30 Bold+Italic",
+		UiFont(30, UiFont::BOLD_ITALIC), 0x7fff00ff);
 	lbl->SetPos(0, 65);
 
-	lbl = root->AddChild(new Label("Default Font", UiFont(30), 0xffbfbfbf));
+	lbl = root->NewChild<Label>("Default Font", UiFont(30), 0xffbfbfbf);
 	lbl->SetPos(640, 20);
-	lbl = root->AddChild(new Label("Monospace Font",
-		UiFont(monospaceFontName, 30), 0xffbfbfbf));
+	lbl = root->NewChild<Label>("Monospace Font",
+		UiFont(monospaceFontName, 30), 0xffbfbfbf);
 	lbl->SetPos(640, 50);
-	lbl = root->AddChild(new Label("< "
+	lbl = root->NewChild<Label>("< "
 		"\xef\x84\x9b "  // gamepad
 		"\xef\x82\x91 "  // trophy
 		"\xef\x83\xa4 "  // dashboard
 		">",
-		UiFont(symbolFontName, 30), 0xffbfbfbf));
+		UiFont(symbolFontName, 30), 0xffbfbfbf);
 	lbl->SetPos(640, 80);
 
 	// Wrapped text (with a background to visualize the width).
@@ -652,21 +652,21 @@ LabelModule::LabelModule(Display::Display &display, GameDirector &director) :
 		"ThisIsAVeryLongWordThatShouldBeClippedToTheFixedWidthOfTheLabel.\n\n"
 		"This is the third line of the text.";
 
-	wrapBox = root->AddChild(new FillBox(1280 / 4, 720 - 150, 0xff3f3f3f));
+	wrapBox = root->NewChild<FillBox>(1280 / 4, 720 - 150, 0xff3f3f3f);
 	wrapBox->SetPos(100, 150);
 
-	wrapLbl = root->AddChild(new Label(1280 / 4, wrapText,
-		UiFont(30), 0xffffffff));
+	wrapLbl = root->NewChild<Label>(1280 / 4, wrapText,
+		UiFont(30), 0xffffffff);
 	wrapLbl->SetPos(100, 150);
 
 	// Buttons to increase / decrease the wrap width.
 
-	btn = root->AddChild(new Button(display, "->|"));
+	btn = root->NewChild<Button>(display, "->|");
 	btn->SetPos(0, 150);
 	btn->GetClickedSignal().connect(std::bind(
 		&LabelModule::AdjustWrapWidth, this, 50));
 
-	btn = root->AddChild(new Button(display, "|<-"));
+	btn = root->NewChild<Button>(display, "|<-");
 	btn->SetPos(0, 200);
 	btn->GetClickedSignal().connect(std::bind(
 		&LabelModule::AdjustWrapWidth, this, -50));
@@ -697,9 +697,9 @@ IconModule::IconModule(Display::Display &display, GameDirector &director) :
 	std::shared_ptr<FillBox> box;
 	std::shared_ptr<FillBox> icon;
 
-	box = root->AddChild(new FillBox(60, 60, 0xff007f7f));
+	box = root->NewChild<FillBox>(60, 60, 0xff007f7f);
 	box->SetPos(0, 40);
-	icon = root->AddChild(new SymbolIcon(60, 60, 0xf046, 0xbfffffff));
+	icon = root->NewChild<SymbolIcon>(60, 60, 0xf046, 0xbfffffff);
 	icon->SetPos(0, 40);
 }
 
@@ -722,19 +722,19 @@ TransitionModule::TransitionModule(Display::Display &display,
 	const std::string &fontName = cfg->GetDefaultFontName();
 	UiFont font(fontName, 40);
 
-	phaseLbl = root->AddChild(new Label("", font, 0xffffff00));
+	phaseLbl = root->NewChild<Label>("", font, 0xffffff00);
 	phaseLbl->SetPos(60, 120);
 
-	phaseBox = root->AddChild(new FillBox(0, 40, 0xffbfbf00));
+	phaseBox = root->NewChild<FillBox>(0, 40, 0xffbfbf00);
 	phaseBox->SetPos(60, 160);
 
-	stateLbl = root->AddChild(new Label("", font, 0xff00ffff));
+	stateLbl = root->NewChild<Label>("", font, 0xff00ffff);
 	stateLbl->SetPos(60, 200);
 
-	stateBox = root->AddChild(new FillBox(0, 40, 0xff00bfbf));
+	stateBox = root->NewChild<FillBox>(0, 40, 0xff00bfbf);
 	stateBox->SetPos(60, 240);
 
-	auto msgBtn = root->AddChild(new Button(display, "Click"));
+	auto msgBtn = root->NewChild<Button>(display, "Click");
 	msgBtn->SetPos(60, 300);
 	msgBtn->GetClickedSignal().connect([&](ClickRegion&) {
 		director.RequestPushScene(std::make_shared<MessageScene>(display, director,
@@ -851,9 +851,9 @@ FlexGridModule::FlexGridModule(Display::Display &display, GameDirector &director
 
 	auto root = GetRoot();
 
-	gridSizeBox = root->AddChild(new FillBox(0, 0, 0xff00003f));
+	gridSizeBox = root->NewChild<FillBox>(0, 0, 0xff00003f);
 
-	grid = root->AddChild(new FlexGrid(display));
+	grid = root->NewChild<FlexGrid>(display);
 
 	size_t r = 0;
 	size_t c = 0;
@@ -882,48 +882,39 @@ FlexGridModule::FlexGridModule(Display::Display &display, GameDirector &director
 	}
 
 	c = 1;
-	grid->AddGridCell(r, c++, new Label("Name",
-		s.headingFont, s.headingFg));
-	grid->AddGridCell(r, c++, new Label("Time",
-		s.headingFont, s.headingFg));
+	grid->At(r, c++).NewChild<Label>("Name", s.headingFont, s.headingFg);
+	grid->At(r, c++).NewChild<Label>("Time", s.headingFont, s.headingFg);
 	c++;
-	grid->AddGridCell(r, c++, new Label("P",
-		s.headingFont, s.headingFg));
+	grid->At(r, c++).NewChild<Label>("P", s.headingFont, s.headingFg);
 
 	r++;
 	c = 0;
-	grid->AddGridCell(r, c++, new Label("1.",
-		s.bodyFont, s.bodyFg));
-	grid->AddGridCell(r, c++, new Label("Foo Bar",
-		s.bodyFont, s.bodyFg));
-	grid->AddGridCell(r, c++, new Label("3:44",
-		s.bodyFont, s.bodyFg));
-	grid->AddGridCell(r, c++, new Button(display, "Profile"));
-	grid->AddGridCell(r, c++, new Button(display, "View Statistics"));
+	grid->At(r, c++).NewChild<Label>("1.", s.bodyFont, s.bodyFg);
+	grid->At(r, c++).NewChild<Label>("Foo Bar", s.bodyFont, s.bodyFg);
+	grid->At(r, c++).NewChild<Label>("3:44", s.bodyFont, s.bodyFg);
+	grid->At(r, c++).NewChild<Button>(display, "Profile");
+	grid->At(r, c++).NewChild<Button>(display, "View Statistics");
 
 	r++;
 	c = 0;
-	grid->AddGridCell(r, c++, new Label("2.",
-		s.bodyFont, s.bodyFg));
-	grid->AddGridCell(r, c++, new Label("Baz Quux",
-		s.bodyFont, s.bodyFg));
-	grid->AddGridCell(r, c++, new Label("12:33",
-		s.bodyFont, s.bodyFg));
-	grid->AddGridCell(r, c++, new Checkbox(display, "Save Friend"));
-	grid->AddGridCell(r, c++, new Button(display, "Spectate"));
+	grid->At(r, c++).NewChild<Label>("2.", s.bodyFont, s.bodyFg);
+	grid->At(r, c++).NewChild<Label>("Baz Quux", s.bodyFont, s.bodyFg);
+	grid->At(r, c++).NewChild<Label>("12:33", s.bodyFont, s.bodyFg);
+	grid->At(r, c++).NewChild<Checkbox>(display, "Save Friend");
+	grid->At(r, c++).NewChild<Button>(display, "Spectate");
 
-	sideGrid = root->AddChild(new FlexGrid(display));
+	sideGrid = root->NewChild<FlexGrid>(display);
 	sideGrid->SetPos(1280, 400);
 	sideGrid->SetAlignment(Alignment::E);
 
 	const auto AUTOSIZE = FlexGrid::AUTOSIZE;
 
 	r = 0;
-	sideGrid->AddGridCell(r++, 0, new Button(display, "Width"))->
+	sideGrid->At(r++, 0).NewChild<Button>(display, "Width")->
 		GetContents()->GetClickedSignal().connect([&](ClickRegion&) {
 			grid->SetFixedWidth(grid->IsFixedWidth() ? AUTOSIZE : 1280.0);
 		});
-	sideGrid->AddGridCell(r++, 0, new Button(display, "Height"))->
+	sideGrid->At(r++, 0).NewChild<Button>(display, "Height")->
 		GetContents()->GetClickedSignal().connect([&](ClickRegion&) {
 			grid->SetFixedHeight(grid->IsFixedHeight() ? AUTOSIZE : 720.0);
 		});
@@ -947,7 +938,7 @@ PictureModule::PictureModule(Display::Display &display, GameDirector &director) 
 	auto root = GetRoot();
 
 	auto tex = std::make_shared<MediaRes<Texture>>("ui/bg/practice.png");
-	root->AddChild(new Picture(tex, 640, 360));
+	root->NewChild<Picture>(tex, 640, 360);
 }
 
 //}}} PictureModule

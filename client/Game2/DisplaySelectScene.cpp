@@ -1,7 +1,7 @@
 
 // DisplaySelectScene.cpp
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -98,8 +98,8 @@ public:
 
 		// Add heading if necessary.
 		if (row == 0) {
-			grid.AddGridCell(0, col,
-				new Label(FormatTitle(), s.bodyHeadFont, s.bodyHeadFg));
+			grid.At(0, col).NewChild<Label>(
+				FormatTitle(), s.bodyHeadFont, s.bodyHeadFg);
 			row = 1;
 		}
 
@@ -111,9 +111,8 @@ public:
 		}
 
 		resGroup.Add(
-			grid.AddGridCell(row++, col,
-				new RadioButton<Resolution>(display, oss.str(), res))->
-					GetContents());
+			grid.At(row++, col).NewChild<RadioButton<Resolution>>(
+				display, oss.str(), res)->GetContents());
 
 		return true;
 	}
@@ -178,7 +177,7 @@ DisplaySelectScene::DisplaySelectScene(Display::Display &display,
 
 	auto root = GetContentRoot();
 
-	auto monGrid = root->AddChild(new FlexGrid(display));
+	auto monGrid = root->NewChild<FlexGrid>(display);
 	monGrid->SetPos(640, 0);
 	monGrid->SetAlignment(Alignment::N);
 
@@ -193,8 +192,8 @@ DisplaySelectScene::DisplaySelectScene(Display::Display &display,
 	for (int i = 0; i < numMonitors; i++) {
 		auto name = boost::str(boost::format(_("Monitor %d")) % (i + 1));
 
-		auto cell = monGrid->AddGridCell(0, static_cast<size_t>(i),
-			new RadioButton<int>(display, name, i));
+		auto cell = monGrid->At(0, static_cast<size_t>(i))
+			.NewChild<RadioButton<int>>(display, name, i);
 		auto radio = cell->GetContents();
 		if (numMonitors == 1) {
 			radio->SetEnabled(false);
@@ -230,7 +229,7 @@ void DisplaySelectScene::UpdateResGrid()
 	if (resGrid) {
 		root->RemoveChild(resGrid);
 	}
-	resGrid = root->AddChild(new FlexGrid(display));
+	resGrid = root->NewChild<FlexGrid>(display);
 	resGrid->SetPos(640, 60);
 	resGrid->SetAlignment(Alignment::N);
 

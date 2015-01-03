@@ -60,23 +60,23 @@ MainMenuScene::MainMenuScene(Display::Display &display, GameDirector &director,
 
 	double sliderHeight = 120;
 
-	titleContainer = root->AddChild(new Container(display,
-		Vec2(1280, sliderHeight)));
+	titleContainer = root->NewChild<Container>(display,
+		Vec2(1280, sliderHeight));
 
-	titleContainer->AddChild(new FillBox(titleContainer->GetSize(), 0xff000000));
+	titleContainer->NewChild<FillBox>(titleContainer->GetSize(), 0xff000000);
 
-	auto titleLbl = titleContainer->AddChild(new Label(
+	auto titleLbl = titleContainer->NewChild<Label>(
 		"HoverRace",
 		UiFont(40, UiFont::BOLD | UiFont::ITALIC),
-		0xffffffff));
+		0xffffffff);
 	titleLbl->SetPos(40, sliderHeight);
 	titleLbl->SetAlignment(Alignment::SW);
 	titleLbl->SetFixedScale(true);
 
-	menuContainer = root->AddChild(new Container(display,
-		Vec2(1280, sliderHeight)));
+	menuContainer = root->NewChild<Container>(display,
+		Vec2(1280, sliderHeight));
 
-	menuContainer->AddChild(new FillBox(menuContainer->GetSize(), 0xff000000));
+	menuContainer->NewChild<FillBox>(menuContainer->GetSize(), 0xff000000);
 
 	AddButton(_("Practice"))->GetClickedSignal().connect(
 		std::bind(&MainMenuScene::OnPracticeClicked, this));
@@ -95,8 +95,8 @@ MainMenuScene::MainMenuScene(Display::Display &display, GameDirector &director,
 		auto icon = std::make_shared<SymbolIcon>(1, 1, 0xf026, COLOR_WHITE);
 		icon->AttachView(display);
 
-		auto mutedBtn = titleContainer->AddChild(
-			new Button(display, _("Silent Mode")));
+		auto mutedBtn = titleContainer->NewChild<Button>(
+			display, _("Silent Mode"));
 		mutedBtn->SetIcon(icon);
 		mutedBtn->SetAlignment(Alignment::NE);
 		mutedBtn->SetPos(1280, 0);
@@ -111,9 +111,12 @@ MainMenuScene::~MainMenuScene()
 
 std::shared_ptr<Display::Button> MainMenuScene::AddButton(const std::string &text, bool enabled)
 {
-	menuButtons.emplace_back(menuContainer->AddChild(new Display::Button(display, text)));
-	std::shared_ptr<Display::Button> &btn = menuButtons.back();
+	using namespace Display;
+
+	menuButtons.emplace_back(menuContainer->NewChild<Button>(display, text));
+	std::shared_ptr<Button> &btn = menuButtons.back();
 	btn->SetEnabled(enabled);
+
 	return btn;
 }
 
