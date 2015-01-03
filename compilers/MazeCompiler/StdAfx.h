@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "../include/util/os.h"
+#include "../../include/util/os.h"
 
 #define BOOST_FILESYSTEM_NO_DEPRECATED
 
@@ -27,11 +27,5 @@
 #	pragma warning(pop)
 #endif
 
-#ifndef _WIN32
-	// Xlib.h must be included *after* boost/foreach.hpp as a workaround for
-	// https://svn.boost.org/trac/boost/ticket/3000
-#	include <X11/Xlib.h>
-#endif
-
-#include "../include/util/i18n.h"
-#include "../include/util/util.h"
+#include "../../include/util/i18n.h"
+#include "../../include/util/util.h"
