@@ -282,8 +282,10 @@ TestLabScene::TestLabScene(Display::Display &display, GameDirector &director,
 	SUPER(display, "Test Lab"),
 	startingModuleName(startingModuleName), btnPosY(60)
 {
+	using namespace Display;
+
 	// Clear the screen on every frame.
-	fader.reset(new Display::ScreenFade(Display::COLOR_BLACK, 1.0));
+	fader.reset(new ScreenFade(COLOR_BLACK, 1.0));
 	fader->AttachView(display);
 
 	AddModule<Module::LayoutModule>(*this, display, director, "Layout");
@@ -342,12 +344,13 @@ TestLabScene::LabModule::LabModule(Display::Display &display,
 	SUPER(display, "Lab Module (" + title + ")"),
 	display(display), director(director), title(title)
 {
-	typedef Display::UiViewModel::Alignment Alignment;
+	using namespace Display;
+	using Alignment = UiViewModel::Alignment;
 
-	fader.reset(new Display::ScreenFade(Display::COLOR_BLACK, 1.0));
+	fader.reset(new ScreenFade(COLOR_BLACK, 1.0));
 	fader->AttachView(display);
 
-	cancelBtn = GetRoot()->AddChild(new Display::ActionButton(display));
+	cancelBtn = GetRoot()->AddChild(new ActionButton(display));
 	cancelBtn->SetPos(1280, 0);
 	cancelBtn->SetAlignment(Alignment::NE);
 }
@@ -401,44 +404,42 @@ namespace Module {
 LayoutModule::LayoutModule(Display::Display &display, GameDirector &director) :
 	SUPER(display, director, "Layout")
 {
-	typedef Display::UiViewModel::Alignment Alignment;
+	using namespace Display;
+	using Alignment = UiViewModel::Alignment;
 
-	Display::Container *root = GetRoot();
+	auto root = GetRoot();
 
 	displayConfigChangedConn = display.GetDisplayConfigChangedSignal().
 		connect(std::bind(&LayoutModule::OnDisplayConfigChanged, this));
 
 	// This box takes up the entire UI viewport, so we insert it at the
 	// beginning of the list so we don't render on top of the "Close" button.
-	displayInfoBox = root->InsertChild(0, new Display::FillBox(1280, 720, 0xff3f3f3f));
+	displayInfoBox = root->InsertChild(0, new FillBox(1280, 720, 0xff3f3f3f));
 
-	displayInfoLbl = root->AddChild(new Display::Label("Res",
-		Display::UiFont(20),
-		Display::COLOR_WHITE));
+	displayInfoLbl = root->AddChild(new Label("Res", UiFont(20), COLOR_WHITE));
 	displayInfoLbl->SetPos(640, 360);
 	displayInfoLbl->SetAlignment(Alignment::CENTER);
 	OnDisplayConfigChanged();
 
-	std::shared_ptr<Display::FillBox> fillBox;
-	std::shared_ptr<Display::Label> lbl;
+	std::shared_ptr<FillBox> fillBox;
+	std::shared_ptr<Label> lbl;
 
-	fillBox = root->AddChild(new Display::FillBox(100, 100, 0x7fff0000));
+	fillBox = root->AddChild(new FillBox(100, 100, 0x7fff0000));
 	fillBox->SetPos(100, 20);
-	fillBox = root->AddChild(new Display::FillBox(100, 100, 0x7f00ff00));
+	fillBox = root->AddChild(new FillBox(100, 100, 0x7f00ff00));
 	fillBox->SetPos(150, 70);
 
 	AddAlignmentTestElem(Alignment::SW, "| Southwest", 0, 719);
 	AddAlignmentTestElem(Alignment::S, "South", 639, 719);
 	AddAlignmentTestElem(Alignment::SE, "Southeast |", 1279, 719);
 
-	lbl = root->AddChild(new Display::Label("Red 20 Normal",
-		Display::UiFont(20), 0xffff0000));
+	lbl = root->AddChild(new Label("Red 20 Normal", UiFont(20), 0xffff0000));
 	lbl->SetPos(0, 20);
-	lbl = root->AddChild(new Display::Label("Yellow (75%) 25 Italic",
-		Display::UiFont(25, Display::UiFont::ITALIC), 0xbfffff00));
+	lbl = root->AddChild(new Label("Yellow (75%) 25 Italic",
+		UiFont(25, UiFont::ITALIC), 0xbfffff00));
 	lbl->SetPos(0, 40);
-	lbl = root->AddChild(new Display::Label("Magenta (50%) 30 Bold+Italic",
-		Display::UiFont(30, Display::UiFont::BOLD | Display::UiFont::ITALIC),
+	lbl = root->AddChild(new Label("Magenta (50%) 30 Bold+Italic",
+		UiFont(30, UiFont::BOLD_ITALIC),
 		0x7fff00ff));
 	lbl->SetPos(0, 65);
 }
@@ -447,12 +448,13 @@ void LayoutModule::AddAlignmentTestElem(
 	Display::UiViewModel::Alignment alignment,
 	const std::string &label, double x, double y)
 {
-	auto fillBox = GetRoot()->AddChild(new Display::FillBox(50, 50, 0x7f00ffff));
+	using namespace Display;
+
+	auto fillBox = GetRoot()->AddChild(new FillBox(50, 50, 0x7f00ffff));
 	fillBox->SetAlignment(alignment);
 	fillBox->SetPos(x, y);
 
-	auto lbl = GetRoot()->AddChild(new Display::Label(label,
-		Display::UiFont(40), 0xffffffff));
+	auto lbl = GetRoot()->AddChild(new Label(label, UiFont(40), 0xffffffff));
 	lbl->SetAlignment(alignment);
 	lbl->SetPos(x, y);
 }
@@ -574,38 +576,38 @@ void ClickablesModule::OnMessageClicked()
 LabelModule::LabelModule(Display::Display &display, GameDirector &director) :
 	SUPER(display, director, "Label")
 {
+	using namespace Display;
+
 	Config *cfg = Config::GetInstance();
 	const std::string &monospaceFontName = cfg->GetDefaultMonospaceFontName();
 	const std::string &symbolFontName = cfg->GetDefaultSymbolFontName();
 
-	Display::Container *root = GetRoot();
+	auto root = GetRoot();
 
-	std::shared_ptr<Display::Button> btn;
-	std::shared_ptr<Display::Label> lbl;
+	std::shared_ptr<Button> btn;
+	std::shared_ptr<Label> lbl;
 
-	lbl = root->AddChild(new Display::Label("Red 20 Normal",
-		Display::UiFont(20), 0xffff0000));
+	lbl = root->AddChild(new Label("Red 20 Normal", UiFont(20), 0xffff0000));
 	lbl->SetPos(0, 20);
-	lbl = root->AddChild(new Display::Label("Yellow (75%) 25 Italic",
-		Display::UiFont(25, Display::UiFont::ITALIC), 0xbfffff00));
+	lbl = root->AddChild(new Label("Yellow (75%) 25 Italic",
+		UiFont(25, UiFont::ITALIC), 0xbfffff00));
 	lbl->SetPos(0, 40);
-	lbl = root->AddChild(new Display::Label("Magenta (50%) 30 Bold+Italic",
-		Display::UiFont(30, Display::UiFont::BOLD | Display::UiFont::ITALIC),
+	lbl = root->AddChild(new Label("Magenta (50%) 30 Bold+Italic",
+		UiFont(30, UiFont::BOLD_ITALIC),
 		0x7fff00ff));
 	lbl->SetPos(0, 65);
 
-	lbl = root->AddChild(new Display::Label("Default Font",
-		Display::UiFont(30), 0xffbfbfbf));
+	lbl = root->AddChild(new Label("Default Font", UiFont(30), 0xffbfbfbf));
 	lbl->SetPos(640, 20);
-	lbl = root->AddChild(new Display::Label("Monospace Font",
-		Display::UiFont(monospaceFontName, 30), 0xffbfbfbf));
+	lbl = root->AddChild(new Label("Monospace Font",
+		UiFont(monospaceFontName, 30), 0xffbfbfbf));
 	lbl->SetPos(640, 50);
-	lbl = root->AddChild(new Display::Label("< "
+	lbl = root->AddChild(new Label("< "
 		"\xef\x84\x9b "  // gamepad
 		"\xef\x82\x91 "  // trophy
 		"\xef\x83\xa4 "  // dashboard
 		">",
-		Display::UiFont(symbolFontName, 30), 0xffbfbfbf));
+		UiFont(symbolFontName, 30), 0xffbfbfbf));
 	lbl->SetPos(640, 80);
 
 	// Wrapped text (with a background to visualize the width).
@@ -616,21 +618,21 @@ LabelModule::LabelModule(Display::Display &display, GameDirector &director) :
 		"ThisIsAVeryLongWordThatShouldBeClippedToTheFixedWidthOfTheLabel.\n\n"
 		"This is the third line of the text.";
 
-	wrapBox = root->AddChild(new Display::FillBox(1280 / 4, 720 - 150, 0xff3f3f3f));
+	wrapBox = root->AddChild(new FillBox(1280 / 4, 720 - 150, 0xff3f3f3f));
 	wrapBox->SetPos(100, 150);
 
-	wrapLbl = root->AddChild(new Display::Label(1280 / 4, wrapText,
-		Display::UiFont(30), 0xffffffff));
+	wrapLbl = root->AddChild(new Label(1280 / 4, wrapText,
+		UiFont(30), 0xffffffff));
 	wrapLbl->SetPos(100, 150);
 
 	// Buttons to increase / decrease the wrap width.
 
-	btn = root->AddChild(new Display::Button(display, "->|"));
+	btn = root->AddChild(new Button(display, "->|"));
 	btn->SetPos(0, 150);
 	btn->GetClickedSignal().connect(std::bind(
 		&LabelModule::AdjustWrapWidth, this, 50));
 
-	btn = root->AddChild(new Display::Button(display, "|<-"));
+	btn = root->AddChild(new Button(display, "|<-"));
 	btn->SetPos(0, 200);
 	btn->GetClickedSignal().connect(std::bind(
 		&LabelModule::AdjustWrapWidth, this, -50));
@@ -654,14 +656,16 @@ void LabelModule::AdjustWrapWidth(double amt)
 IconModule::IconModule(Display::Display &display, GameDirector &director) :
 	SUPER(display, director, "Icon")
 {
-	Display::Container *root = GetRoot();
+	using namespace Display;
 
-	std::shared_ptr<Display::FillBox> box;
-	std::shared_ptr<Display::FillBox> icon;
+	auto root = GetRoot();
 
-	box = root->AddChild(new Display::FillBox(60, 60, 0xff007f7f));
+	std::shared_ptr<FillBox> box;
+	std::shared_ptr<FillBox> icon;
+
+	box = root->AddChild(new FillBox(60, 60, 0xff007f7f));
 	box->SetPos(0, 40);
-	icon = root->AddChild(new Display::SymbolIcon(60, 60, 0xf046, 0xbfffffff));
+	icon = root->AddChild(new SymbolIcon(60, 60, 0xf046, 0xbfffffff));
 	icon->SetPos(0, 40);
 }
 
@@ -673,30 +677,32 @@ TransitionModule::TransitionModule(Display::Display &display,
 	GameDirector &director) :
 	SUPER(display, director, "Transition")
 {
+	using namespace Display;
+
 	SetPhaseTransitionDuration(3000);
 	SetStateTransitionDuration(3000);
 
-	Display::Container *root = GetRoot();
+	auto root = GetRoot();
 
 	Config *cfg = Config::GetInstance();
 	const std::string &fontName = cfg->GetDefaultFontName();
-	Display::UiFont font(fontName, 40);
+	UiFont font(fontName, 40);
 
-	phaseLbl = root->AddChild(new Display::Label("", font, 0xffffff00));
+	phaseLbl = root->AddChild(new Label("", font, 0xffffff00));
 	phaseLbl->SetPos(60, 120);
 
-	phaseBox = root->AddChild(new Display::FillBox(0, 40, 0xffbfbf00));
+	phaseBox = root->AddChild(new FillBox(0, 40, 0xffbfbf00));
 	phaseBox->SetPos(60, 160);
 
-	stateLbl = root->AddChild(new Display::Label("", font, 0xff00ffff));
+	stateLbl = root->AddChild(new Label("", font, 0xff00ffff));
 	stateLbl->SetPos(60, 200);
 
-	stateBox = root->AddChild(new Display::FillBox(0, 40, 0xff00bfbf));
+	stateBox = root->AddChild(new FillBox(0, 40, 0xff00bfbf));
 	stateBox->SetPos(60, 240);
 
-	auto msgBtn = root->AddChild(new Display::Button(display, "Click"));
+	auto msgBtn = root->AddChild(new Button(display, "Click"));
 	msgBtn->SetPos(60, 300);
-	msgBtn->GetClickedSignal().connect([&](Display::ClickRegion&) {
+	msgBtn->GetClickedSignal().connect([&](ClickRegion&) {
 		director.RequestPushScene(std::make_shared<MessageScene>(display, director,
 			"Test Lab", "The lab module has been moved to the background."));
 	});
@@ -754,14 +760,15 @@ HudModule::HudModule(Display::Display &display, GameDirector &director) :
 	hud(new Display::Hud(display, player, std::shared_ptr<Model::Track>(),
 		Display::UiLayoutFlags::FLOATING))
 {
+	using namespace Display;
+
 	hud->AttachView(display);
 
 	// A common HUD style.
-	typedef Display::Hud::HudAlignment HudAlignment;
-	auto fuelGauge = hud->AddHudChild(HudAlignment::NE,
-		new Display::FuelGauge(display));
+	using HudAlignment = Hud::HudAlignment;
+	auto fuelGauge = hud->AddHudChild(HudAlignment::NE, new FuelGauge(display));
 	auto speedometer = hud->AddHudChild(HudAlignment::NW,
-		new Display::Speedometer(display));
+		new Speedometer(display));
 }
 
 HudModule::~HudModule()
@@ -803,15 +810,16 @@ void HudModule::Render()
 FlexGridModule::FlexGridModule(Display::Display &display, GameDirector &director) :
 	SUPER(display, director, "FlexGrid")
 {
-	typedef Display::UiViewModel::Alignment Alignment;
+	using namespace Display;
+	using Alignment = UiViewModel::Alignment;
 
 	const auto &s = display.styles;
 
-	Display::Container *root = GetRoot();
+	auto root = GetRoot();
 
-	gridSizeBox = root->AddChild(new Display::FillBox(0, 0, 0xff00003f));
+	gridSizeBox = root->AddChild(new FillBox(0, 0, 0xff00003f));
 
-	grid = root->AddChild(new Display::FlexGrid(display));
+	grid = root->AddChild(new FlexGrid(display));
 
 	size_t r = 0;
 	size_t c = 0;
@@ -840,49 +848,49 @@ FlexGridModule::FlexGridModule(Display::Display &display, GameDirector &director
 	}
 
 	c = 1;
-	grid->AddGridCell(r, c++, new Display::Label("Name",
+	grid->AddGridCell(r, c++, new Label("Name",
 		s.headingFont, s.headingFg));
-	grid->AddGridCell(r, c++, new Display::Label("Time",
+	grid->AddGridCell(r, c++, new Label("Time",
 		s.headingFont, s.headingFg));
 	c++;
-	grid->AddGridCell(r, c++, new Display::Label("P",
+	grid->AddGridCell(r, c++, new Label("P",
 		s.headingFont, s.headingFg));
 
 	r++;
 	c = 0;
-	grid->AddGridCell(r, c++, new Display::Label("1.",
+	grid->AddGridCell(r, c++, new Label("1.",
 		s.bodyFont, s.bodyFg));
-	grid->AddGridCell(r, c++, new Display::Label("Foo Bar",
+	grid->AddGridCell(r, c++, new Label("Foo Bar",
 		s.bodyFont, s.bodyFg));
-	grid->AddGridCell(r, c++, new Display::Label("3:44",
+	grid->AddGridCell(r, c++, new Label("3:44",
 		s.bodyFont, s.bodyFg));
-	grid->AddGridCell(r, c++, new Display::Button(display, "Profile"));
-	grid->AddGridCell(r, c++, new Display::Button(display, "View Statistics"));
+	grid->AddGridCell(r, c++, new Button(display, "Profile"));
+	grid->AddGridCell(r, c++, new Button(display, "View Statistics"));
 
 	r++;
 	c = 0;
-	grid->AddGridCell(r, c++, new Display::Label("2.",
+	grid->AddGridCell(r, c++, new Label("2.",
 		s.bodyFont, s.bodyFg));
-	grid->AddGridCell(r, c++, new Display::Label("Baz Quux",
+	grid->AddGridCell(r, c++, new Label("Baz Quux",
 		s.bodyFont, s.bodyFg));
-	grid->AddGridCell(r, c++, new Display::Label("12:33",
+	grid->AddGridCell(r, c++, new Label("12:33",
 		s.bodyFont, s.bodyFg));
-	grid->AddGridCell(r, c++, new Display::Checkbox(display, "Save Friend"));
-	grid->AddGridCell(r, c++, new Display::Button(display, "Spectate"));
+	grid->AddGridCell(r, c++, new Checkbox(display, "Save Friend"));
+	grid->AddGridCell(r, c++, new Button(display, "Spectate"));
 
-	sideGrid = root->AddChild(new Display::FlexGrid(display));
+	sideGrid = root->AddChild(new FlexGrid(display));
 	sideGrid->SetPos(1280, 400);
 	sideGrid->SetAlignment(Alignment::E);
 
-	const auto AUTOSIZE = Display::FlexGrid::AUTOSIZE;
+	const auto AUTOSIZE = FlexGrid::AUTOSIZE;
 
 	r = 0;
-	sideGrid->AddGridCell(r++, 0, new Display::Button(display, "Width"))->
-		GetContents()->GetClickedSignal().connect([&](Display::ClickRegion&) {
+	sideGrid->AddGridCell(r++, 0, new Button(display, "Width"))->
+		GetContents()->GetClickedSignal().connect([&](ClickRegion&) {
 			grid->SetFixedWidth(grid->IsFixedWidth() ? AUTOSIZE : 1280.0);
 		});
-	sideGrid->AddGridCell(r++, 0, new Display::Button(display, "Height"))->
-		GetContents()->GetClickedSignal().connect([&](Display::ClickRegion&) {
+	sideGrid->AddGridCell(r++, 0, new Button(display, "Height"))->
+		GetContents()->GetClickedSignal().connect([&](ClickRegion&) {
 			grid->SetFixedHeight(grid->IsFixedHeight() ? AUTOSIZE : 720.0);
 		});
 }
