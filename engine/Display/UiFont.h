@@ -1,7 +1,7 @@
 
 // UiFont.h
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -73,6 +73,7 @@ struct MR_DllDeclare UiFont
 	enum Style {
 		BOLD = 0x01,
 		ITALIC = 0x02,
+		BOLD_ITALIC = BOLD | ITALIC,
 	};
 
 	std::string name;
