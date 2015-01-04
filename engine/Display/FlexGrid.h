@@ -246,6 +246,7 @@ protected:
 		bool fill;
 	};
 
+public:
 	/**
 	 * This is used to reference a cell of the grid without directly accessing
 	 * it; useful for adding new widgets to the grid.
