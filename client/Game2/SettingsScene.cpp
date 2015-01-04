@@ -60,12 +60,22 @@ SettingsScene::SettingsScene(Display::Display &display, GameDirector &director,
 	}
 }
 
-void SettingsScene::AddSettingLabel(size_t row, const std::string &label)
+/**
+ * Add a new setting row.
+ * @param label The label for the setting.
+ * @return A reference to the content cell for the row.
+ */
+Display::FlexGrid::CellProxy SettingsScene::AddSetting(const std::string &label)
 {
 	using namespace Display;
-	const auto &s = display.styles;
 
-	settingsGrid->At(row, 0).NewChild<Label>(label, s.bodyFont, s.bodyFg);
+	if (!label.empty()) {
+		const auto &s = display.styles;
+		settingsGrid->At(curRow, 0).
+			NewChild<Label>(label, s.bodyFont, s.bodyFg);
+	}
+
+	return settingsGrid->At(curRow++, 1);
 }
 
 void SettingsScene::OnExtra()

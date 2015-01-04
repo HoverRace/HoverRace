@@ -1,7 +1,7 @@
 
 // SettingsScene.h
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -42,9 +42,6 @@ public:
 		const std::string &name);
 	virtual ~SettingsScene() { }
 
-private:
-	void AddSettingLabel(size_t row, const std::string &label);
-
 protected:
 	/// Refresh the form widgets with values from the config.
 	virtual void LoadFromConfig() = 0;
@@ -59,20 +56,7 @@ protected:
 	virtual void ResetToDefaults() = 0;
 
 public:
-	template<typename T>
-	typename std::enable_if<
-		std::is_base_of<Display::UiViewModel, T>::value,
-		std::shared_ptr<T>
-		>::type
-		AddSetting(const std::string &label, T *child)
-	{
-		if (!label.empty()) {
-			AddSettingLabel(curRow, label);
-		}
-		auto cell = settingsGrid->AddGridCell(curRow, 1, child);
-		curRow++;
-		return cell->GetContents();
-	}
+	Display::FlexGrid::CellProxy AddSetting(const std::string &label);
 
 protected:
 	void OnExtra() override;

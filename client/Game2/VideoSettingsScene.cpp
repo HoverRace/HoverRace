@@ -44,19 +44,19 @@ VideoSettingsScene::VideoSettingsScene(Display::Display &display,
 	using namespace Display;
 	const auto &s = display.styles;
 
-	fullscreenChk = AddSetting(_("Display Mode"),
-		new Checkbox(display, _("Fullscreen")));
+	fullscreenChk = AddSetting(_("Display Mode")).
+		NewChild<Checkbox>(display, _("Fullscreen"))->GetContents();
 	fullscreenConn = fullscreenChk->GetClickedSignal().connect([&](ClickRegion&) {
 		videoCfg.fullscreen = !videoCfg.fullscreen;
 	});
 
-	displayBtn = AddSetting(_("Fullscreen Resolution"),
-		new Button(display, "Select"));
+	displayBtn = AddSetting(_("Fullscreen Resolution")).
+		NewChild<Button>(display, "Select")->GetContents();
 	displayConn = displayBtn->GetClickedSignal().connect(std::bind(
 		&VideoSettingsScene::OnDisplayClicked, this));
 
-	textScaleSlider = AddSetting(_("Text Scale"),
-		new Slider(display, 0.5, 1.5, 0.1));
+	textScaleSlider = AddSetting(_("Text Scale")).
+		NewChild<Slider>(display, 0.5, 1.5, 0.1)->GetContents();
 	textScaleSlider->SetSize(SLIDER_SIZE);
 	textScaleConn = textScaleSlider->GetValueChangedSignal().connect([&](double val) {
 		this->textScalePreviewLbl->SetScale(val / 2.0);
@@ -67,13 +67,14 @@ VideoSettingsScene::VideoSettingsScene(Display::Display &display,
 	auto scaledFont = s.bodyFont;
 	scaledFont.size *= 2;
 
-	textScalePreviewLbl = AddSetting("",
-		new Label(_("This is sample text."), scaledFont, s.bodyFg));
+	textScalePreviewLbl = AddSetting("").
+		NewChild<Label>(_("This is sample text."), scaledFont, s.bodyFg)->
+		GetContents();
 	textScalePreviewLbl->SetFixedScale(true);
 	textScalePreviewLbl->SetScale(videoCfg.textScale / 2.0);
 
-	auto splitModeGrid = AddSetting(_("Split-screen mode"),
-		new FlexGrid(display));
+	auto splitModeGrid = AddSetting(_("Split-screen mode")).
+		NewChild<FlexGrid>(display)->GetContents();
 	splitModeGroup.Add(
 		splitModeGrid->At(0, 0).NewChild<RadioButton<bool>>(
 			display, _("Stacked"), true)->GetContents());

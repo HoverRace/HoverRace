@@ -1,7 +1,7 @@
 
 // AudioSettingsScene.cpp
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -42,8 +42,8 @@ AudioSettingsScene::AudioSettingsScene(Display::Display &display,
 {
 	using namespace Display;
 
-	sfxVolumeSlider = AddSetting(_("Sound Effects"),
-		new Slider(display, 0, 1.0, 0.1));
+	sfxVolumeSlider = AddSetting(_("Sound Effects")).
+		NewChild<Slider>(display, 0, 1.0, 0.1)->GetContents();
 	sfxVolumeSlider->SetSize(SLIDER_SIZE);
 	sfxVolumeConn = sfxVolumeSlider->GetValueChangedSignal().connect([&](double val) {
 		audioCfg.sfxVolume = val;
