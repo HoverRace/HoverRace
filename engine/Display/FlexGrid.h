@@ -305,6 +305,17 @@ public:
 		}
 
 	public:
+		/**
+		 * Creates a new child widget in this cell.
+		 *
+		 * If the cell coordinates are outside of the current grid size, then
+		 * the grid is automatically resized to fit the cell.
+		 *
+		 * @tparam T The type of the child widget.
+		 * @tparam Args The types of the arguments.
+		 * @param args The arguments to pass to the child widget's constructor.
+		 * @return The actual grid cell 
+		 */
 		template<class T, class... Args>
 		typename std::enable_if<
 			std::is_base_of<UiViewModel, T>::value,
