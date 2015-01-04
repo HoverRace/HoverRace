@@ -404,29 +404,6 @@ protected:
 	}
 
 public:
-	/**
-	 * Append a child element to the grid.
-	 *
-	 * If the cell coordinates are outside of the current grid size, then
-	 * the grid is automatically resized to fit the cell.
-	 *
-	 * @param row The row coordinate (starting at zero).
-	 * @param col The column coordinate (starting at zero).
-	 * @param child The child element; must be a subclass of UiViewModel.
-	 * @return The child element, wrapped in a @c std::shared_ptr, wrapped
-	 *         in the table cell.
-	 * @deprecated Use operator(size_t, size_t) instead.
-	 */
-	template<typename T>
-	typename std::enable_if<
-		std::is_base_of<UiViewModel, T>::value,
-		std::shared_ptr<BasicCell<T>>
-		>::type
-	AddGridCell(size_t row, size_t col, T *child)
-	{
-		return InitCell(row, col, AddChild(child));
-	}
-
 	void Clear() override;
 
 protected:
