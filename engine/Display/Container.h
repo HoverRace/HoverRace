@@ -98,6 +98,7 @@ public:
 	 * @deprecated Use NewChild() instead.
 	 */
 	template<typename T>
+	HR_DEPRECATED
 	typename std::enable_if<std::is_base_of<UiViewModel, T>::value, std::shared_ptr<T>>::type
 	AddChild(T *child)
 	{
