@@ -71,6 +71,7 @@ private:
 	std::shared_ptr<Display::FlexGrid> settingsGrid;
 	size_t curRow;
 	bool needsLoadFromConfig;
+	boost::signals2::scoped_connection confirmOkConn;
 };
 
 }  // namespace Client

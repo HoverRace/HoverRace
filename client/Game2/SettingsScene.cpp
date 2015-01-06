@@ -21,6 +21,7 @@
 
 #include "../../engine/Display/Button.h"
 #include "../../engine/Display/Label.h"
+#include "MessageScene.h"
 
 #include "SettingsScene.h"
 
@@ -80,8 +81,15 @@ Display::FlexGrid::CellProxy SettingsScene::AddSetting(const std::string &label)
 
 void SettingsScene::OnExtra()
 {
-	ResetToDefaults();
-	LoadFromConfig();
+	auto confirmScene = std::make_shared<MessageScene>(display, director,
+		_("Reset to defaults"),
+		_("Reset all settings on this screen to their default values?"),
+		true);
+	confirmOkConn = confirmScene->GetOkSignal().connect([&]() {
+		ResetToDefaults();
+		LoadFromConfig();
+	});
+	director.RequestPushScene(confirmScene);
 }
 
 void SettingsScene::PrepareRender()
