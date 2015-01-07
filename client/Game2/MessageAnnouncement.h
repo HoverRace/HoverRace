@@ -1,7 +1,7 @@
 
 // MessageAnnouncement.h
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -32,24 +32,25 @@ namespace Client {
  */
 class MessageAnnouncement : public Announcement
 {
-	typedef Announcement SUPER;
-	public:
-		MessageAnnouncement(const std::string &label,
-			std::shared_ptr<Player::Player> player =
-				std::shared_ptr<Player::Player>()) :
-			MessageAnnouncement(label, "", std::move(player)) { }
-		MessageAnnouncement(const std::string &label, const std::string &text,
-			std::shared_ptr<Player::Player> player =
-				std::shared_ptr<Player::Player>());
-		virtual ~MessageAnnouncement() { }
+	using SUPER = Announcement;
 
-	public:
-		Display::FillBox *CreateIcon(Display::Display &display) const override;
-		void CreateContents(Display::Display &display,
-			Display::FlexGrid *grid) const override;
+public:
+	MessageAnnouncement(const std::string &label,
+		std::shared_ptr<Player::Player> player =
+			std::shared_ptr<Player::Player>()) :
+		MessageAnnouncement(label, "", std::move(player)) { }
+	MessageAnnouncement(const std::string &label, const std::string &text,
+		std::shared_ptr<Player::Player> player =
+			std::shared_ptr<Player::Player>());
+	virtual ~MessageAnnouncement() { }
 
-	private:
-		const std::string text;
+public:
+	Display::FillBox *CreateIcon(Display::Display &display) const override;
+	void CreateContents(Display::Display &display,
+		Display::FlexGrid *grid) const override;
+
+private:
+	const std::string text;
 };
 
 }  // namespace Client
