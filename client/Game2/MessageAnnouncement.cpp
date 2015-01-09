@@ -36,12 +36,14 @@ MessageAnnouncement::MessageAnnouncement(const std::string &label,
 {
 }
 
-Display::FillBox *MessageAnnouncement::CreateIcon(Display::Display &display) const
+std::shared_ptr<Display::FillBox> MessageAnnouncement::CreateIcon(
+	Display::Display &display, Display::Container &parent) const
 {
 	const auto &s = display.styles;
 
 	// Info icon (will be resized by the container).
-	return new Display::SymbolIcon(1, 1, 0xf05a, s.announcementSymbolFg);
+	return parent.NewChild<Display::SymbolIcon>(
+		1, 1, 0xf05a, s.announcementSymbolFg);
 }
 
 void MessageAnnouncement::CreateContents(Display::Display &display,

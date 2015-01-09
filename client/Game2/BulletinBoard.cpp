@@ -135,7 +135,7 @@ BulletinBoard::Bulletin::Bulletin(BulletinBoard *board,
 		s.announcementHeadFont, s.announcementHeadFg);
 	labelLbl->SetPos(120, 20);
 
-	auto icon = AddChild(ann->CreateIcon(display));
+	auto icon = ann->CreateIcon(display, *this);
 	icon->SetPos(40, 20);
 	icon->SetSize(60, 60);
 
