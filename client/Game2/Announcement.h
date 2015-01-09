@@ -85,7 +85,7 @@ public:
 	 *             be added.
 	 */
 	virtual void CreateContents(Display::Display &display,
-		Display::FlexGrid *grid) const = 0;
+		Display::FlexGrid &grid) const = 0;
 
 	/**
 	 * Handle when the announcement is clicked.

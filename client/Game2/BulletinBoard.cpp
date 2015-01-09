@@ -145,7 +145,7 @@ BulletinBoard::Bulletin::Bulletin(BulletinBoard *board,
 	contentGrid->SetMargin(3, 0);
 	contentGrid->SetPos(120, 60);
 	contentGrid->SetFixedWidth(420);
-	ann->CreateContents(display, contentGrid.get());
+	ann->CreateContents(display, *contentGrid);
 }
 
 void BulletinBoard::Bulletin::Layout()

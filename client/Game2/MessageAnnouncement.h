@@ -48,7 +48,7 @@ public:
 	std::shared_ptr<Display::FillBox> CreateIcon(Display::Display &display,
 		Display::Container &parent) const override;
 	void CreateContents(Display::Display &display,
-		Display::FlexGrid *grid) const override;
+		Display::FlexGrid &grid) const override;
 
 private:
 	const std::string text;

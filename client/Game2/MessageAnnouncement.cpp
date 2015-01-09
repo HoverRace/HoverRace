@@ -47,13 +47,13 @@ std::shared_ptr<Display::FillBox> MessageAnnouncement::CreateIcon(
 }
 
 void MessageAnnouncement::CreateContents(Display::Display &display,
-	Display::FlexGrid *grid) const
+	Display::FlexGrid &grid) const
 {
 	if (text.empty()) return;
 
 	const auto &s = display.styles;
 
-	grid->At(0, 0).NewChild<Display::Label>(
+	grid.At(0, 0).NewChild<Display::Label>(
 		text, s.announcementBodyFont, s.announcementBodyFg);
 }
 
