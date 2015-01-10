@@ -41,6 +41,8 @@ SettingsScene::SettingsScene(Display::Display &display, GameDirector &director,
 	using namespace Display;
 	using Alignment = UiViewModel::Alignment;
 
+	SupportOkAction(_("Save Settings"));
+	SupportCancelAction();
 	SupportExtraAction(_("Reset to defaults"));
 
 	auto root = GetContentRoot();

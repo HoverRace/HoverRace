@@ -67,6 +67,8 @@ SettingsMenuScene::SettingsMenuScene(Display::Display &display,
 {
 	using Alignment = Display::UiViewModel::Alignment;
 
+	SupportCancelAction(_("Back"));
+
 	auto root = GetContentRoot();
 
 	menuGrid = root->NewChild<Display::FlexGrid>(display);
