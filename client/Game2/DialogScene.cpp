@@ -119,7 +119,7 @@ void DialogScene::SetStoppingTransitionEnabled(bool enabled)
  *
  * @param label The label for the button.
  */
-void DialogScene::ActivateExtraAction(const std::string &label)
+void DialogScene::SupportExtraAction(const std::string &label)
 {
 	assert(!extraBtn);
 

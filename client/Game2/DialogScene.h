@@ -1,7 +1,7 @@
 
 // DialogScene.h
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ protected:
 	Display::Container *GetContentRoot() const { return contentRoot.get(); }
 	Display::Container *GetStatusRoot() const { return statusRoot.get(); }
 
-	void ActivateExtraAction(const std::string &label);
+	void SupportExtraAction(const std::string &label);
 
 	void SetBackground(Display::Background *fader);
 
