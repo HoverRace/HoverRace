@@ -57,6 +57,8 @@ protected:
 	Display::Container *GetContentRoot() const { return contentRoot.get(); }
 	Display::Container *GetStatusRoot() const { return statusRoot.get(); }
 
+	void SupportOkAction(const std::string &label = "");
+	void SupportCancelAction(const std::string &label = "");
 	void SupportExtraAction(const std::string &label);
 
 	void SetBackground(Display::Background *fader);
@@ -86,6 +88,7 @@ protected:
 private:
 	std::string title;
 	bool stoppingTransitionEnabled;
+	size_t actionGridCol;
 
 	std::unique_ptr<Display::Background> fader;
 	std::shared_ptr<Display::Container> contentRoot;

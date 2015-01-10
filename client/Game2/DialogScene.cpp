@@ -47,7 +47,7 @@ DialogScene::DialogScene(Display::Display &display, GameDirector &director,
 	const std::string &title, const std::string &name) :
 	SUPER(display, name),
 	director(director), title(title),
-	stoppingTransitionEnabled(false)
+	stoppingTransitionEnabled(false), actionGridCol(0)
 {
 	using namespace Display;
 	using Alignment = UiViewModel::Alignment;
@@ -79,14 +79,6 @@ DialogScene::DialogScene(Display::Display &display, GameDirector &director,
 	actionGrid = statusRoot->NewChild<FlexGrid>(display);
 	actionGrid->SetPos(1280 - (MARGIN_WIDTH * 2), 0);
 	actionGrid->SetAlignment(Alignment::NE);
-
-	size_t r = 0;
-	size_t c = 0;
-
-	okBtn = actionGrid->At(r, c++).NewChild<ActionButton>(display)->
-		GetContents();
-	cancelBtn = actionGrid->At(r, c++).NewChild<ActionButton>(display)->
-		GetContents();
 }
 
 DialogScene::~DialogScene()
@@ -105,6 +97,32 @@ DialogScene::~DialogScene()
 void DialogScene::SetStoppingTransitionEnabled(bool enabled)
 {
 	stoppingTransitionEnabled = enabled;
+}
+
+/**
+ * Enable the "OK" action for this scene.
+ * @param label The optional fixed label for the button (will use default
+ *              action name if empty).
+ */
+void DialogScene::SupportOkAction(const std::string &label)
+{
+	assert(!okBtn);
+
+	okBtn = actionGrid->At(0, actionGridCol++).
+		NewChild<Display::ActionButton>(display, label)->GetContents();
+}
+
+/**
+ * Enable the "Cancel" action for this scene.
+ * @param label The optional fixed label for the button (will use default
+ *              action name if empty).
+ */
+void DialogScene::SupportCancelAction(const std::string &label)
+{
+	assert(!cancelBtn);
+
+	cancelBtn = actionGrid->At(0, actionGridCol++).
+		NewChild<Display::ActionButton>(display, label)->GetContents();
 }
 
 /**
@@ -180,20 +198,22 @@ void DialogScene::AttachController(Control::InputEventController &controller)
 	// If the cancel button is not enabled, then both the "OK" and "Cancel"
 	// actions map to the "OnOk" handler.
 
-	auto &menuOkAction = controller.actions.ui.menuOk;
-	auto &menuCancelAction = controller.actions.ui.menuCancel;
-	auto &menuExtraAction = controller.actions.ui.menuExtra;
-
-	okConn = menuOkAction->Connect(
-		std::bind(&DialogScene::OnOk, this));
-	cancelConn = menuCancelAction->Connect(
-		std::bind(&DialogScene::OnCancel, this));
-	extraConn = menuExtraAction->Connect(
-		std::bind(&DialogScene::OnExtra, this));
-
-	okBtn->AttachAction(controller, menuOkAction);
-	cancelBtn->AttachAction(controller, menuCancelAction);
+	if (okBtn) {
+		auto &menuOkAction = controller.actions.ui.menuOk;
+		okConn = menuOkAction->Connect(
+			std::bind(&DialogScene::OnOk, this));
+		okBtn->AttachAction(controller, menuOkAction);
+	}
+	if (cancelBtn) {
+		auto &menuCancelAction = controller.actions.ui.menuCancel;
+		cancelConn = menuCancelAction->Connect(
+			std::bind(&DialogScene::OnCancel, this));
+		cancelBtn->AttachAction(controller, menuCancelAction);
+	}
 	if (extraBtn) {
+		auto &menuExtraAction = controller.actions.ui.menuExtra;
+		extraConn = menuExtraAction->Connect(
+			std::bind(&DialogScene::OnExtra, this));
 		extraBtn->AttachAction(controller, menuExtraAction);
 	}
 
