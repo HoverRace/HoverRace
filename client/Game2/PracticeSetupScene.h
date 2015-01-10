@@ -1,7 +1,7 @@
 
 // PracticeSetupScene.h
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -46,20 +46,21 @@ namespace Client {
  */
 class PracticeSetupScene : public DialogScene
 {
-	typedef DialogScene SUPER;
-	public:
-		PracticeSetupScene(Display::Display &display, GameDirector &director,
-			RulebookLibrary &rulebookLibrary);
-		virtual ~PracticeSetupScene();
+	using SUPER = DialogScene;
 
-	public:
-		void OnScenePushed() override;
+public:
+	PracticeSetupScene(Display::Display &display, GameDirector &director,
+		RulebookLibrary &rulebookLibrary);
+	virtual ~PracticeSetupScene();
 
-	private:
-		Display::Display &display;
-		GameDirector &director;
-		RulebookLibrary &rulebookLibrary;
-		std::shared_ptr<Display::Res<Display::Texture>> bgTex;
+public:
+	void OnScenePushed() override;
+
+private:
+	Display::Display &display;
+	GameDirector &director;
+	RulebookLibrary &rulebookLibrary;
+	std::shared_ptr<Display::Res<Display::Texture>> bgTex;
 };
 
 }  // namespace Client

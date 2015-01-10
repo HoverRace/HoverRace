@@ -1,7 +1,7 @@
 
 // GameSelectScene.h
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -50,42 +50,43 @@ namespace Client {
  */
 class GameSelectScene : public DialogScene
 {
-	typedef DialogScene SUPER;
-	public:
-		GameSelectScene(Display::Display &display, GameDirector &director,
-			RulebookLibrary &rulebookLibrary, bool multiplayer);
-		virtual ~GameSelectScene();
+	using SUPER = DialogScene;
 
-	private:
-		void OnRulebookSelected(std::shared_ptr<const Rulebook> rulebook);
+public:
+	GameSelectScene(Display::Display &display, GameDirector &director,
+		RulebookLibrary &rulebookLibrary, bool multiplayer);
+	virtual ~GameSelectScene();
 
-	protected:
-		void OnOk() override;
-		void OnCancel() override;
+private:
+	void OnRulebookSelected(std::shared_ptr<const Rulebook> rulebook);
 
-	protected:
-		void OnPhaseTransition(double progress) override;
-		void OnStateTransition(double progress) override;
+protected:
+	void OnOk() override;
+	void OnCancel() override;
 
-	public:
-		typedef boost::signals2::signal<void(std::shared_ptr<Rules>, std::shared_ptr<Display::Res<Display::Texture>>)> okSignal_t;
-		okSignal_t &GetOkSignal() { return okSignal; }
+protected:
+	void OnPhaseTransition(double progress) override;
+	void OnStateTransition(double progress) override;
 
-		typedef boost::signals2::signal<void()> cancelSignal_t;
-		cancelSignal_t &GetCancelSignal() { return cancelSignal; }
+public:
+	using okSignal_t = boost::signals2::signal<void(std::shared_ptr<Rules>, std::shared_ptr<Display::Res<Display::Texture>>)>;
+	okSignal_t &GetOkSignal() { return okSignal; }
 
-	public:
-		void Render() override;
+	using cancelSignal_t = boost::signals2::signal<void()>;
+	cancelSignal_t &GetCancelSignal() { return cancelSignal; }
 
-	private:
-		Display::Display &display;
-		GameDirector &director;
-		bool trackSelected;  ///< Are we exiting because a track was selected?
+public:
+	void Render() override;
 
-		std::shared_ptr<Display::Container> rulebookPanel;
+private:
+	Display::Display &display;
+	GameDirector &director;
+	bool trackSelected;  ///< Are we exiting because a track was selected?
 
-		okSignal_t okSignal;
-		cancelSignal_t cancelSignal;
+	std::shared_ptr<Display::Container> rulebookPanel;
+
+	okSignal_t okSignal;
+	cancelSignal_t cancelSignal;
 };
 
 }  // namespace Client

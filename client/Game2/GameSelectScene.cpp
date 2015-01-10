@@ -40,15 +40,16 @@ namespace HoverRace {
 namespace Client {
 
 namespace {
-	const double BTN_WIDTH = 240;
-	const double BTN_HEIGHT = 520;
-	const double BTN_GAP = 20;
+
+const double BTN_WIDTH = 240;
+const double BTN_HEIGHT = 520;
+const double BTN_GAP = 20;
+
 }
 
 GameSelectScene::GameSelectScene(Display::Display &display,
-                                 GameDirector &director,
-                                 RulebookLibrary &rulebookLibrary,
-                                 bool multiplayer) :
+	GameDirector &director, RulebookLibrary &rulebookLibrary,
+	bool multiplayer) :
 	SUPER(display, director, "", "Rulebook Select"),
 	display(display), director(director),
 	trackSelected(false)
