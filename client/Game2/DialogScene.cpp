@@ -201,6 +201,8 @@ void DialogScene::AttachController(Control::InputEventController &controller)
 {
 	SUPER::AttachController(controller);
 
+	assert((okBtn || cancelBtn) && "Either OK or Cancel must be enabled.");
+
 	controller.AddMenuMaps();
 
 	// If the cancel button is not enabled, then both the "OK" and "Cancel"
