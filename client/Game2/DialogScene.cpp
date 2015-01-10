@@ -101,6 +101,10 @@ void DialogScene::SetStoppingTransitionEnabled(bool enabled)
 
 /**
  * Enable the "OK" action for this scene.
+ *
+ * This must only be called from the constructor, and must only be called
+ * once.
+ *
  * @param label The optional fixed label for the button (will use default
  *              action name if empty).
  */
@@ -114,6 +118,10 @@ void DialogScene::SupportOkAction(const std::string &label)
 
 /**
  * Enable the "Cancel" action for this scene.
+ *
+ * This must only be called from the constructor, and must only be called
+ * once.
+ *
  * @param label The optional fixed label for the button (will use default
  *              action name if empty).
  */
