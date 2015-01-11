@@ -2,7 +2,7 @@
 // Controller.h
 //
 // Copyright (c) 2010 Ryan Curtin.
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -53,8 +53,9 @@ class InputHandler;
 typedef std::shared_ptr<InputHandler> InputHandlerPtr;
 
 /***
- * Contains information on the current control state.  Eventually, its members should
- * be made analog instead of digital (well, the ones that can, at least).
+ * Tracks actions which are either engaged (@c true) or disengaged (@c false).
+ * In other words, whether the key or button is currently pressed or not.
+ * @todo Analog instead of digital (well, the ones that can, at least).
  */
 struct MR_DllDeclare ControlState {
 	// TODO: make these inputs analog, not digital
