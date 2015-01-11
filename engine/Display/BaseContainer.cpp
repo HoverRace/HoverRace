@@ -64,6 +64,21 @@ void BaseContainer::ShrinkWrap()
 	SetSize(max);
 }
 
+bool BaseContainer::TryFocus()
+{
+	if (IsFocused()) return true;
+	if (!IsVisible()) return false;
+
+	// Attempt to focus the first focusable widget.
+	for (auto &child : children) {
+		if (child->TryFocus()) {
+			SetFocused(true);
+			return true;
+		}
+	}
+	return false;
+}
+
 /**
  * Set the size of the container.
  * @param size The size of the container, where @c x is the width

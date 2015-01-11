@@ -90,6 +90,8 @@ protected:
 	virtual void FireClickedSignal();
 
 public:
+	bool TryFocus() override;
+
 	const Vec2 &GetSize();
 	void SetSize(const Vec2 &size);
 	/// Convenience function for SetSize(const Vec2&).

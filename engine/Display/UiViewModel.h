@@ -62,6 +62,7 @@ public:
 		{
 			POS,
 			ALIGNMENT,
+			FOCUSED,
 			NEXT_,  ///< First index for subclasses.
 		};
 	};
@@ -87,7 +88,7 @@ public:
 public:
 	UiViewModel(uiLayoutFlags_t layoutFlags = 0) :
 		SUPER(), pos(0, 0), translation(0, 0), alignment(Alignment::NW),
-		layoutFlags(layoutFlags), id(0) { }
+		layoutFlags(layoutFlags), id(0), focused(false) { }
 	virtual ~UiViewModel() { }
 
 public:
@@ -159,12 +160,33 @@ public:
 	 */
 	void SetId(MR_UInt32 id) { this->id = id; }
 
+	/**
+	 * Check if this widget currently has input focus.
+	 * @return @c true if focused, @c false if not.
+	 */
+	bool IsFocused() const { return focused; }
+
+	/**
+	 * Attempts to give this widget focus.
+	 *
+	 * Subclasses should override this with logic to determine if the widget
+	 * is focusable.
+	 *
+	 * @return @c true if it succeeds (widget is now focused),
+	 *         @c false if it fails (widget did not take focus).
+	 */
+	virtual bool TryFocus() { return false; }
+
+protected:
+	void SetFocused(bool focused);
+
 private:
 	Vec2 pos;
 	Vec2 translation;
 	Alignment alignment;
 	uiLayoutFlags_t layoutFlags;
 	MR_UInt32 id;
+	bool focused;
 };
 
 }  // namespace Display

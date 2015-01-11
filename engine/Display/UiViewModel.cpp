@@ -1,7 +1,7 @@
 
 // UiViewModel.cpp
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -90,6 +90,18 @@ Vec2 UiViewModel::GetAlignedPos(const Vec2 &pos, double w, double h) const
 		default:
 			throw Exception("Unknown alignment: " +
 				boost::lexical_cast<std::string>(static_cast<int>(alignment)));
+	}
+}
+
+/**
+ * Set the focused state.
+ * @param focused @c true if focused, @c false otherwise.
+ */
+void UiViewModel::SetFocused(bool focused)
+{
+	if (this->focused != focused) {
+		this->focused = focused;
+		FireModelUpdate(Props::FOCUSED);
 	}
 }
 

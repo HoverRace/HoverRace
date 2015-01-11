@@ -195,6 +195,8 @@ public:
 public:
 	void ShrinkWrap();
 
+	bool TryFocus() override;
+
 	/**
 	 * Retrieve the size of the container.
 	 * @note If clipping is turned off, the size is undefined.

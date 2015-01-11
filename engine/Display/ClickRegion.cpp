@@ -105,6 +105,15 @@ void ClickRegion::FireClickedSignal()
 	clickedSignal(*this);
 }
 
+bool ClickRegion::TryFocus()
+{
+	if (IsFocused()) return true;
+	if (!IsEnabled()) return false;
+	
+	SetFocused(true);
+	return true;
+}
+
 /**
  * Retrieve the size of the button.
  * If automatic sizing is enabled, then this will calculate the size
