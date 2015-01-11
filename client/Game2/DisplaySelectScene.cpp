@@ -22,6 +22,7 @@
 #include <SDL2/SDL.h>
 
 #include "../../engine/Display/Button.h"
+#include "../../engine/Display/Container.h"
 #include "../../engine/Display/FlexGrid.h"
 #include "../../engine/Display/Label.h"
 #include "../../engine/Util/Log.h"

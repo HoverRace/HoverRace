@@ -26,7 +26,7 @@
 #include "HudCell.h"
 #include "HudDecor.h"
 
-#include "Container.h"
+#include "BaseContainer.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
 #	ifdef MR_ENGINE
@@ -60,9 +60,9 @@ namespace Display {
  * The container for the heads-up display.
  * @author Michael Imamura
  */
-class MR_DllDeclare Hud : public Container
+class MR_DllDeclare Hud : public BaseContainer
 {
-	typedef Container SUPER;
+	using SUPER = BaseContainer;
 
 public:
 	struct Props

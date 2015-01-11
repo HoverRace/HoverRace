@@ -20,6 +20,7 @@
 // and limitations under the License.
 
 #include "../../engine/Display/Display.h"
+#include "../../engine/Display/Container.h"
 #include "../../engine/Display/FlexGrid.h"
 #include "../../engine/Display/Label.h"
 #include "../../engine/Display/SymbolIcon.h"

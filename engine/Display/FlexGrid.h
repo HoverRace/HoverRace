@@ -22,7 +22,7 @@
 #pragma once
 
 #include "../Exception.h"
-#include "Container.h"
+#include "BaseContainer.h"
 #include "MPL.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
@@ -49,9 +49,9 @@ namespace Display {
  * sized to the contents.
  * @author Michael Imamura
  */
-class MR_DllDeclare FlexGrid : public Container
+class MR_DllDeclare FlexGrid : public BaseContainer
 {
-	using SUPER = Container;
+	using SUPER = BaseContainer;
 
 public:
 	struct Props

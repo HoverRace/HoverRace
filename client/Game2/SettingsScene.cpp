@@ -20,6 +20,7 @@
 // and limitations under the License.
 
 #include "../../engine/Display/Button.h"
+#include "../../engine/Display/Container.h"
 #include "../../engine/Display/Label.h"
 #include "MessageScene.h"
 
