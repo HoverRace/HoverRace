@@ -73,7 +73,7 @@ public:
 	/**
 	 * Create the optional icon to display next to the announcement.
 	 * @param display The display the announcement will appear on.
-	 * @param container The container the icon will be added to.
+	 * @param parent The container the icon will be added to.
 	 * @return The created icon (may be @c nullptr).
 	 */
 	virtual std::shared_ptr<Display::FillBox> CreateIcon(
