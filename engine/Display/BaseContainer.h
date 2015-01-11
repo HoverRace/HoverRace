@@ -72,7 +72,10 @@ public:
 public:
 	void AttachView(Display &disp) override { AttachViewDynamic(disp, this); }
 
-public:
+protected:
+	// These are marked as protected so that subclasses can restrict how and
+	// what types of widgets can be added / removed from the container.
+
 	/**
 	 * Create and append a new child widget to the end of the list.
 	 * @tparam T The type of the child widget.

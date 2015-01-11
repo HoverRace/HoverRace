@@ -57,6 +57,44 @@ public:
 		uiLayoutFlags_t layoutFlags = 0) :
 		SUPER(display, size, clip, layoutFlags) { }
 	virtual ~Container() { }
+
+public:
+	// Public forwards of container manipulation functions.
+
+	/// @copydoc BaseContainer::NewChild
+	template<class T, class... Args>
+	typename std::enable_if<std::is_base_of<UiViewModel, T>::value,
+		std::shared_ptr<T>>::type
+	NewChild(Args&&... args)
+	{
+		return SUPER::NewChild<T>(std::forward<Args>(args)...);
+	}
+
+	/// @copydoc BaseContainer::InsertChild
+	template<class T>
+	HR_DEPRECATED
+	typename std::enable_if<std::is_base_of<UiViewModel, T>::value,
+		std::shared_ptr<T>
+		>::type
+	InsertChild(int pos, T *child)
+	{
+		return SUPER::InsertChild(pos, child);
+	}
+
+	/// @copydoc BaseContainer::RemoveChild
+	template<class T>
+	typename std::enable_if<std::is_base_of<UiViewModel, T>::value,
+		std::shared_ptr<T>
+		>::type
+	RemoveChild(const std::shared_ptr<T> &child)
+	{
+		return SUPER::RemoveChild(child);
+	}
+
+	void Clear() override
+	{
+		SUPER::Clear();
+	}
 };
 
 }  // namespace Display
