@@ -80,6 +80,8 @@ TrackSelectScene::TrackSelectScene(Display::Display &display,
 	SetStoppingTransitionEnabled(true);
 	SetBackground(nullptr);
 
+	SupportCancelAction(_("Back"));
+
 	trackList.Reload(Config::GetInstance()->GetTrackBundle());
 
 	const auto &s = display.styles;

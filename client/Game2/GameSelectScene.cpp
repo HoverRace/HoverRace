@@ -62,6 +62,8 @@ GameSelectScene::GameSelectScene(Display::Display &display,
 	SetStoppingTransitionEnabled(true);
 	SetBackground(nullptr);
 
+	SupportCancelAction(_("Back"));
+
 	auto root = GetContentRoot();
 
 	// Build the list of valid rulebooks.

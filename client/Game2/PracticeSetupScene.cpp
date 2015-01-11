@@ -49,6 +49,8 @@ PracticeSetupScene::PracticeSetupScene(Display::Display &display,
 {
 	using namespace Display;
 
+	SupportCancelAction(_("Back"));
+
 	bgTex = std::make_shared<MediaRes<Texture>>("ui/bg/practice.png");
 	SetBackground(new Wallpaper(bgTex, Wallpaper::Fill::ZOOM, 1.0, 0xff333333));
 }
