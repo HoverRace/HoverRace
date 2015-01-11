@@ -95,26 +95,6 @@ protected:
 	}
 
 	/**
-	 * Insert a child element to an arbitrary position in the list.
-	 * @param pos The insert position.  Zero inserts at the beginning of
-	 *            the list, meaning it will be rendered first.
-	 * @param child The child element; must be a subclass of UiViewModel.
-	 * @return The child element, wrapped in a @c std::shared_ptr.
-	 */
-	template<typename T>
-	HR_DEPRECATED
-	typename std::enable_if<std::is_base_of<UiViewModel, T>::value, std::shared_ptr<T>>::type
-	InsertChild(int pos, T *child)
-	{
-		std::shared_ptr<T> sharedChild(child);
-		auto iter = children.begin();
-		iter += pos;
-		children.emplace(iter, sharedChild);
-		child->AttachView(display);
-		return sharedChild;
-	}
-
-	/**
 	 * Remove a child element.
 	 * @param child The child element; must be a shared_ptr to a subclass
 	 *              of UiViewModel.

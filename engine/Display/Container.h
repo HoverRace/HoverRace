@@ -70,17 +70,6 @@ public:
 		return SUPER::NewChild<T>(std::forward<Args>(args)...);
 	}
 
-	/// @copydoc BaseContainer::InsertChild
-	template<class T>
-	HR_DEPRECATED
-	typename std::enable_if<std::is_base_of<UiViewModel, T>::value,
-		std::shared_ptr<T>
-		>::type
-	InsertChild(int pos, T *child)
-	{
-		return SUPER::InsertChild(pos, child);
-	}
-
 	/// @copydoc BaseContainer::RemoveChild
 	template<class T>
 	typename std::enable_if<std::is_base_of<UiViewModel, T>::value,
