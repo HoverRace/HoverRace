@@ -133,7 +133,8 @@ protected:
 
 		auto iter = std::find(children.begin(), children.end(), child);
 		if (iter != children.end()) {
-			auto dest = children.begin() + idx;
+			auto dest = children.begin();
+			std::advance(dest, idx);
 			if (dest < iter) {
 				std::rotate(dest, iter, iter + 1);
 			}
