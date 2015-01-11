@@ -23,6 +23,7 @@
 
 namespace HoverRace {
 	namespace Display {
+		class Container;
 		class Display;
 		class FillBox;
 		class FlexGrid;

@@ -1,7 +1,7 @@
 
-// SdlContainerView.h
+// SdlBaseContainerView.h
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@
 
 namespace HoverRace {
 	namespace Display {
-		class Container;
+		class BaseContainer;
 		namespace SDL {
 			class SdlTexture;
 		}
@@ -48,29 +48,29 @@ namespace Display {
 namespace SDL {
 
 /**
- * SDL view for Container.
+ * SDL view for BaseContainer.
  * @author Michael Imamura
  */
-class MR_DllDeclare SdlContainerView : public SdlView<Container>
+class MR_DllDeclare SdlBaseContainerView : public SdlView<BaseContainer>
 {
-	typedef SdlView<Container> SUPER;
-	public:
-		SdlContainerView(SdlDisplay &disp, Container &model);
-		virtual ~SdlContainerView();
+	using SUPER = SdlView<BaseContainer>;
+public:
+	SdlBaseContainerView(SdlDisplay &disp, BaseContainer &model);
+	virtual ~SdlBaseContainerView();
 
-	public:
-		void OnModelUpdate(int prop) override;
+public:
+	void OnModelUpdate(int prop) override;
 
-	public:
-		Vec3 Measure() override;
-		void PrepareRender() override;
-		void Render() override;
+public:
+	Vec3 Measure() override;
+	void PrepareRender() override;
+	void Render() override;
 
-	private:
-		bool rttChanged;  ///< Render-to-texture may need to be re-evaluated.
-		bool rttSizeChanged;
-		std::unique_ptr<SdlTexture> rttTarget;
-		boost::signals2::scoped_connection displayConfigChangedConn;
+private:
+	bool rttChanged;  ///< Render-to-texture may need to be re-evaluated.
+	bool rttSizeChanged;
+	std::unique_ptr<SdlTexture> rttTarget;
+	boost::signals2::scoped_connection displayConfigChangedConn;
 };
 
 }  // namespace SDL

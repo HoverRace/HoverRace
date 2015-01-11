@@ -1,7 +1,7 @@
 
-// SdlContainerView.cpp
+// SdlBaseContainerView.cpp
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -22,16 +22,17 @@
 #include <SDL2/SDL.h>
 
 #include "../../Util/Log.h"
-#include "../Container.h"
+#include "../BaseContainer.h"
 #include "SdlTexture.h"
 
-#include "SdlContainerView.h"
+#include "SdlBaseContainerView.h"
 
 namespace HoverRace {
 namespace Display {
 namespace SDL {
 
-SdlContainerView::SdlContainerView(SdlDisplay &disp, Container &model) :
+SdlBaseContainerView::SdlBaseContainerView(SdlDisplay &disp,
+	BaseContainer &model) :
 	SUPER(disp, model), rttChanged(true), rttSizeChanged(true)
 {
 	displayConfigChangedConn =
@@ -41,21 +42,21 @@ SdlContainerView::SdlContainerView(SdlDisplay &disp, Container &model) :
 		});
 }
 
-SdlContainerView::~SdlContainerView()
+SdlBaseContainerView::~SdlBaseContainerView()
 {
 }
 
-void SdlContainerView::OnModelUpdate(int prop)
+void SdlBaseContainerView::OnModelUpdate(int prop)
 {
 	switch (prop) {
-		case Container::Props::CLIP:
-		case Container::Props::OPACITY:
+		case BaseContainer::Props::CLIP:
+		case BaseContainer::Props::OPACITY:
 			rttChanged = true;
 			break;
 	}
 }
 
-void SdlContainerView::PrepareRender()
+void SdlBaseContainerView::PrepareRender()
 {
 	if (!model.IsVisible()) return;
 
@@ -102,7 +103,7 @@ void SdlContainerView::PrepareRender()
 		std::mem_fn(&ViewModel::PrepareRender));
 }
 
-void SdlContainerView::Render()
+void SdlBaseContainerView::Render()
 {
 	if (!model.IsVisible()) return;
 
@@ -194,7 +195,7 @@ void SdlContainerView::Render()
 	}
 }
 
-Vec3 SdlContainerView::Measure()
+Vec3 SdlBaseContainerView::Measure()
 {
 	return model.GetSize().Promote();
 }

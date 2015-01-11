@@ -1,7 +1,7 @@
 
 // Display.h
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -39,9 +39,9 @@
 
 namespace HoverRace {
 	namespace Display {
+		class BaseContainer;
 		class Button;
 		class ClickRegion;
-		class Container;
 		class FillBox;
 		class KeycapIcon;
 		class Label;
@@ -70,9 +70,9 @@ namespace Display {
  * @author Michael Imamura
  */
 class MR_DllDeclare Display :
+	public ViewAttacher<BaseContainer>,
 	public ViewAttacher<Button>,
 	public ViewAttacher<ClickRegion>,
-	public ViewAttacher<Container>,
 	public ViewAttacher<FillBox>,
 	public ViewAttacher<KeycapIcon>,
 	public ViewAttacher<Label>,

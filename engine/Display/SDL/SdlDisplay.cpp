@@ -1,7 +1,7 @@
 
 // SdlDisplay.cpp
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -26,9 +26,9 @@
 #include "../../Util/Log.h"
 #include "../../Util/Str.h"
 #include "../../Exception.h"
+#include "../BaseContainer.h"
 #include "../Button.h"
 #include "../ClickRegion.h"
-#include "../Container.h"
 #include "../FillBox.h"
 #include "../KeycapIcon.h"
 #include "../Label.h"
@@ -40,9 +40,9 @@
 #include "../SymbolIcon.h"
 #include "../UiFont.h"
 #include "../Wallpaper.h"
+#include "SdlBaseContainerView.h"
 #include "SdlButtonView.h"
 #include "SdlClickRegionView.h"
-#include "SdlContainerView.h"
 #include "SdlFillBoxView.h"
 #include "SdlKeycapIconView.h"
 #include "SdlLabelView.h"
@@ -392,6 +392,11 @@ SdlDisplay::~SdlDisplay()
 	if (window) SDL_DestroyWindow(window);
 }
 
+void SdlDisplay::AttachView(BaseContainer &model)
+{
+	model.SetView(std::unique_ptr<View>(new SdlBaseContainerView(*this, model)));
+}
+
 void SdlDisplay::AttachView(Button &model)
 {
 	model.SetView(std::unique_ptr<View>(new SdlButtonView(*this, model)));
@@ -400,11 +405,6 @@ void SdlDisplay::AttachView(Button &model)
 void SdlDisplay::AttachView(ClickRegion &model)
 {
 	model.SetView(std::unique_ptr<View>(new SdlClickRegionView(*this, model)));
-}
-
-void SdlDisplay::AttachView(Container &model)
-{
-	model.SetView(std::unique_ptr<View>(new SdlContainerView(*this, model)));
 }
 
 void SdlDisplay::AttachView(KeycapIcon &model)

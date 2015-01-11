@@ -1,5 +1,5 @@
 
-// Container.cpp
+// BaseContainer.cpp
 //
 // Copyright (c) 2013, 2014 Michael Imamura.
 //
@@ -19,7 +19,7 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
-#include "Container.h"
+#include "BaseContainer.h"
 
 namespace HoverRace {
 namespace Display {
@@ -29,8 +29,8 @@ namespace Display {
  * @param display The display child elements will be attached to.
  * @param layoutFlags Optional layout flags.
  */
-Container::Container(Display &display, uiLayoutFlags_t layoutFlags) :
-	Container(display, Vec2(0, 0), false, layoutFlags)
+BaseContainer::BaseContainer(Display &display, uiLayoutFlags_t layoutFlags) :
+	BaseContainer(display, Vec2(0, 0), false, layoutFlags)
 {
 }
 
@@ -41,7 +41,7 @@ Container::Container(Display &display, uiLayoutFlags_t layoutFlags) :
  * @param clip Enable (default) or disable clipping of child widgets.
  * @param layoutFlags Optional layout flags.
  */
-Container::Container(Display &display, const Vec2 &size, bool clip,
+BaseContainer::BaseContainer(Display &display, const Vec2 &size, bool clip,
                      uiLayoutFlags_t layoutFlags) :
 	SUPER(layoutFlags), display(display), size(size), clip(clip),
 	opacity(1.0), visible(true)
@@ -52,7 +52,7 @@ Container::Container(Display &display, const Vec2 &size, bool clip,
  * Resize the container to the minimum size that will fit all of the
  * child elements.
  */
-void Container::ShrinkWrap()
+void BaseContainer::ShrinkWrap()
 {
 	Vec2 max(0, 0);
 	for (auto &child : children) {
@@ -69,7 +69,7 @@ void Container::ShrinkWrap()
  * @param size The size of the container, where @c x is the width
  *             and @c y is the height.
  */
-void Container::SetSize(const Vec2 &size)
+void BaseContainer::SetSize(const Vec2 &size)
 {
 	if (this->size != size) {
 		this->size = size;
@@ -82,7 +82,7 @@ void Container::SetSize(const Vec2 &size)
  * @param clip @c true if clipping is enabled, @c false if elements are
  *             allowed to render outside of the bounds.
  */
-void Container::SetClip(bool clip)
+void BaseContainer::SetClip(bool clip)
 {
 	if (this->clip != clip) {
 		this->clip = clip;
@@ -101,7 +101,7 @@ void Container::SetClip(bool clip)
  * 
  * @param opacity The opacity (1.0 is fully-opaque, 0.0 is fully-transparent).
  */
-void Container::SetOpacity(double opacity)
+void BaseContainer::SetOpacity(double opacity)
 {
 	if (opacity < 0.0) opacity = 0.0;
 	else if (opacity > 1.0) opacity = 1.0;
@@ -116,7 +116,7 @@ void Container::SetOpacity(double opacity)
  * Sets whether the widgets in this container are visible.
  * @param visible @c true to show, @c false to hide.
  */
-void Container::SetVisible(bool visible)
+void BaseContainer::SetVisible(bool visible)
 {
 	if (this->visible != visible) {
 		this->visible = visible;

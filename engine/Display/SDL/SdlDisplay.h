@@ -1,7 +1,7 @@
 
 // SdlDisplay.h
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -67,9 +67,9 @@ public:
 
 public:
 	// ViewAttacher
+	void AttachView(BaseContainer &model) override;
 	void AttachView(Button &model) override;
 	void AttachView(ClickRegion &model) override;
-	void AttachView(Container &model) override;
 	void AttachView(FillBox &model) override;
 	void AttachView(KeycapIcon &model) override;
 	void AttachView(Label &model) override;
