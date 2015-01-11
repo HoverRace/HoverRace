@@ -91,6 +91,16 @@ public:
 		return SUPER::RemoveChild(child);
 	}
 
+	/// @copydoc BaseContainer::ReorderChild
+	template<class T>
+	typename std::enable_if<std::is_base_of<UiViewModel, T>::value,
+		std::shared_ptr<T>
+		>::type
+	ReorderChild(const std::shared_ptr<T> &child, size_t idx)
+	{
+		return SUPER::ReorderChild(child, idx);
+	}
+
 	void Clear() override
 	{
 		SUPER::Clear();

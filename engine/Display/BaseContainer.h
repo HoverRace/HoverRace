@@ -132,6 +132,40 @@ protected:
 	}
 
 	/**
+	 * Move a widget to a different position in the list.
+	 * @param child The child.
+	 * @param idx The destination index.  If beyond the end, then the child will
+	 *            be moved to the end of the list.
+	 * @return The same child element that was passed in.
+	 */
+	template<class T>
+	typename std::enable_if<std::is_base_of<UiViewModel, T>::value,
+		std::shared_ptr<T>
+		>::type
+	ReorderChild(const std::shared_ptr<T> &child, size_t idx)
+	{
+		auto sz = children.size();
+		if (sz == 0) return child;
+
+		if (idx >= sz) {
+			idx = sz - 1;
+		}
+
+		auto iter = std::find(children.begin(), children.end(), child);
+		if (iter != children.end()) {
+			auto dest = children.begin() + idx;
+			if (dest < iter) {
+				std::rotate(dest, iter, iter + 1);
+			}
+			else if (dest > iter) {
+				std::rotate(iter, iter + 1, dest + 1);
+			}
+		}
+
+		return child;
+	}
+
+	/**
 	 * Remove all child elements.
 	 */
 	virtual void Clear()
