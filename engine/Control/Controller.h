@@ -330,6 +330,10 @@ public:
 			VoidActionPtr menuOk;
 			VoidActionPtr menuCancel;
 			VoidActionPtr menuExtra;  ///< Scene-specific extra action.
+			VoidActionPtr menuUp;
+			VoidActionPtr menuDown;
+			VoidActionPtr menuLeft;
+			VoidActionPtr menuRight;
 
 			// Console scrolling.
 			VoidActionPtr consoleUp;

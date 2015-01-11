@@ -2,7 +2,7 @@
 // Controller.cpp
 //
 // Copyright (c) 2010 Ryan Curtin.
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -41,6 +41,10 @@ InputEventController::actions_t::ui_t::ui_t() :
 	menuOk(std::make_shared<Action<voidSignal_t>>(_("OK"), 0)),
 	menuCancel(std::make_shared<Action<voidSignal_t>>(_("Cancel"), 0)),
 	menuExtra(std::make_shared<Action<voidSignal_t>>(_("Extra"), 0)),
+	menuUp(std::make_shared<Action<voidSignal_t>>(_("Up"), 0)),
+	menuDown(std::make_shared<Action<voidSignal_t>>(_("Down"), 0)),
+	menuLeft(std::make_shared<Action<voidSignal_t>>(_("Left"), 0)),
+	menuRight(std::make_shared<Action<voidSignal_t>>(_("Right"), 0)),
 	consoleUp(std::make_shared<Action<voidSignal_t>>(_("Page Up"), 0)),
 	consoleDown(std::make_shared<Action<voidSignal_t>>(_("Page Down"), 1)),
 	consoleTop(std::make_shared<Action<voidSignal_t>>(_("Top"), 2)),
@@ -594,6 +598,10 @@ void InputEventController::LoadMenuMap()
 	AssignAction(cmap, config->ui.menuOk, actions.ui.menuOk);
 	AssignAction(cmap, config->ui.menuCancel, actions.ui.menuCancel);
 	AssignAction(cmap, config->ui.menuExtra, actions.ui.menuExtra);
+	AssignAction(cmap, config->ui.menuOk, actions.ui.menuUp);
+	AssignAction(cmap, config->ui.menuDown, actions.ui.menuDown);
+	AssignAction(cmap, config->ui.menuLeft, actions.ui.menuLeft);
+	AssignAction(cmap, config->ui.menuRight, actions.ui.menuRight);
 }
 
 /// Set up the console toggle control.

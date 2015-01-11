@@ -1,7 +1,7 @@
 
 // Config.cpp
 //
-// Copyright (c) 2008-2010, 2012-2014 Michael Imamura.
+// Copyright (c) 2008-2010, 2012-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -748,6 +748,10 @@ void Config::ResetToDefaults()
 	ui.menuOk = InputEventController::HashKeyboardEvent(SDLK_RETURN);
 	ui.menuCancel = InputEventController::HashKeyboardEvent(SDLK_ESCAPE);
 	ui.menuExtra = InputEventController::HashKeyboardEvent(SDLK_BACKSPACE);
+	ui.menuUp = InputEventController::HashKeyboardEvent(SDLK_UP);
+	ui.menuDown = InputEventController::HashKeyboardEvent(SDLK_DOWN);
+	ui.menuLeft = InputEventController::HashKeyboardEvent(SDLK_LEFT);
+	ui.menuRight = InputEventController::HashKeyboardEvent(SDLK_RIGHT);
 
 	runtime.silent = false;
 	runtime.verboseLog = false;
@@ -1244,6 +1248,10 @@ void Config::ui_t::Load(yaml::MapNode* root)
 	READ_INT(root, menuOk, 0, INT_MAX);
 	READ_INT(root, menuCancel, 0, INT_MAX);
 	READ_INT(root, menuExtra, 0, INT_MAX);
+	READ_INT(root, menuUp, 0, INT_MAX);
+	READ_INT(root, menuDown, 0, INT_MAX);
+	READ_INT(root, menuLeft, 0, INT_MAX);
+	READ_INT(root, menuRight, 0, INT_MAX);
 }
 
 void Config::ui_t::Save(yaml::Emitter* emitter) const
@@ -1261,6 +1269,10 @@ void Config::ui_t::Save(yaml::Emitter* emitter) const
 	EMIT_VAR(emitter, menuOk);
 	EMIT_VAR(emitter, menuCancel);
 	EMIT_VAR(emitter, menuExtra);
+	EMIT_VAR(emitter, menuUp);
+	EMIT_VAR(emitter, menuDown);
+	EMIT_VAR(emitter, menuLeft);
+	EMIT_VAR(emitter, menuRight);
 
 	emitter->EndMap();
 }

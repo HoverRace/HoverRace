@@ -1,7 +1,7 @@
 
 // Config.h
 //
-// Copyright (c) 2008-2010, 2012-2014 Michael Imamura.
+// Copyright (c) 2008-2010, 2012-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -286,6 +286,10 @@ public:
 		int menuOk;
 		int menuCancel;
 		int menuExtra;
+		int menuUp;
+		int menuDown;
+		int menuLeft;
+		int menuRight;
 
 		void Load(yaml::MapNode*);
 		void Save(yaml::Emitter*) const;
