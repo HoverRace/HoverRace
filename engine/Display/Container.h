@@ -99,6 +99,7 @@ public:
 	 * @return The child element, wrapped in a @c std::shared_ptr.
 	 */
 	template<typename T>
+	HR_DEPRECATED
 	typename std::enable_if<std::is_base_of<UiViewModel, T>::value, std::shared_ptr<T>>::type
 	InsertChild(int pos, T *child)
 	{
