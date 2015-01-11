@@ -792,9 +792,8 @@ HudModule::HudModule(Display::Display &display, GameDirector &director) :
 
 	// A common HUD style.
 	using HudAlignment = Hud::HudAlignment;
-	auto fuelGauge = hud->AddHudChild(HudAlignment::NE, new FuelGauge(display));
-	auto speedometer = hud->AddHudChild(HudAlignment::NW,
-		new Speedometer(display));
+	auto fuelGauge = hud->At(HudAlignment::NE).NewChild<FuelGauge>(display);
+	auto speedometer = hud->At(HudAlignment::NW).NewChild<Speedometer>(display);
 }
 
 HudModule::~HudModule()

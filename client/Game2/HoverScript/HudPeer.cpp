@@ -112,8 +112,7 @@ std::shared_ptr<Display::Chronometer> HudPeer::LAddChronometer(int align,
 {
 	HudAlignment::type ha = ValidateAlignment(align);
 	if (auto sp = hud.lock()) {
-		return sp->AddHudChild(ha,
-			new Display::Chronometer(display, title, clock));
+		return sp->At(ha).NewChild<Display::Chronometer>(display, title, clock);
 	}
 	else {
 		return std::shared_ptr<Display::Chronometer>();
@@ -125,8 +124,8 @@ std::shared_ptr<Display::Counter> HudPeer::LAddCounter_V(int align,
 {
 	HudAlignment::type ha = ValidateAlignment(align);
 	if (auto sp = hud.lock()) {
-		return sp->AddHudChild(ha,
-			new Display::Counter(display, title, initValue));
+		return sp->At(ha).NewChild<Display::Counter>(
+			display, title, initValue);
 	}
 	else {
 		return std::shared_ptr<Display::Counter>();
@@ -138,8 +137,8 @@ std::shared_ptr<Display::Counter> HudPeer::LAddCounter_VT(int align,
 {
 	HudAlignment::type ha = ValidateAlignment(align);
 	if (auto sp = hud.lock()) {
-		return sp->AddHudChild(ha,
-			new Display::Counter(display, title, initValue, total));
+		return sp->At(ha).NewChild<Display::Counter>(
+			display, title, initValue, total);
 	}
 	else {
 		return std::shared_ptr<Display::Counter>();
@@ -151,7 +150,7 @@ std::shared_ptr<Display::HudText> HudPeer::LAddText(int align,
 {
 	HudAlignment::type ha = ValidateAlignment(align);
 	if (auto sp = hud.lock()) {
-		return sp->AddHudChild(ha, new Display::HudText(display, text));
+		return sp->At(ha).NewChild<Display::HudText>(display, text);
 	}
 	else {
 		return std::shared_ptr<Display::HudText>();
@@ -168,11 +167,13 @@ void HudPeer::LClear()
 void HudPeer::LUseRaceDefault()
 {
 	if (auto sp = hud.lock()) {
-		typedef Display::Hud::HudAlignment HudAlignment;
+		using namespace Display;
+		using HudAlignment = Hud::HudAlignment;
+
 		sp->Clear();
-		sp->AddHudChild(HudAlignment::NE, new Display::FuelGauge(display));
-		sp->AddHudChild(HudAlignment::NW, new Display::Speedometer(display));
-		sp->AddHudChild(HudAlignment::WNW, new Display::Minimap(display));
+		sp->At(HudAlignment::NE).NewChild<FuelGauge>(display);
+		sp->At(HudAlignment::NW).NewChild<Speedometer>(display);
+		sp->At(HudAlignment::WNW).NewChild<Minimap>(display);
 	}
 }
 

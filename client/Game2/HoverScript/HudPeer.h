@@ -96,7 +96,7 @@ public:
 	{
 		HudAlignment::type ha = ValidateAlignment(align);
 		if (auto sp = hud.lock()) {
-			return sp->AddHudChild(ha, new T(display));
+			return sp->At(ha).NewChild<T>(display);
 		}
 		else {
 			return std::shared_ptr<T>();

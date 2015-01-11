@@ -1,7 +1,7 @@
 
 // Hud.h
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -166,6 +166,45 @@ protected:
 		boost::signals2::scoped_connection sizeChangedConn;
 	};
 
+	/**
+	 * A reference to a HUD location; useful for adding new HUD elements.
+	 */
+	class MR_DllDeclare HudLocProxy
+	{
+	public:
+		HudLocProxy(Hud &hud, HudAlignment::type alignment) :
+			hud(hud), alignment(alignment)
+		{ }
+		HudLocProxy(const HudLocProxy&) = default;
+		HudLocProxy(HudLocProxy&&) = default;
+
+	public:
+		HudLocProxy &operator=(const HudLocProxy&) = delete;
+		HudLocProxy &operator=(HudLocProxy&&) = delete;
+
+	public:
+		/**
+		 * Append a child element at this location.
+		 * @tparam T The type of the child widget.
+		 * @tparam Args The types of the arguments.
+		 * @param args The arguments to pass to the child widget's constructor.
+		 * @return The actual grid cell 
+		 */
+		template<class T, class... Args>
+		typename std::enable_if<
+			std::is_base_of<HudDecor, T>::value,
+			std::shared_ptr<T>
+			>::type
+		NewChild(Args&&... args)
+		{
+			return hud.NewHudChild<T>(alignment, std::forward<Args>(args)...);
+		}
+
+	private:
+		Hud &hud;
+		HudAlignment::type alignment;
+	};
+
 public:
 	Hud(Display &display, std::shared_ptr<Player::Player> player,
 		std::shared_ptr<Model::Track> track,
@@ -179,16 +218,35 @@ public:
 
 public:
 	/**
+	 * Access a HUD location.
+	 *
+	 * This is usually used to add new widgets to the HUD.
+	 *
+	 * @param alignment The HUD location.
+	 * @return A reference to the location.
+	 */
+	HudLocProxy At(HudAlignment::type alignment)
+	{
+		return { *this, alignment };
+	}
+
+private:
+	/**
 	 * Append a child element to the end of the list.
+	 * @tparam T The type of the child widget.
+	 * @tparam Args The types of the arguments.
 	 * @param alignment Where to place the child element in the HUD.
-	 * @param child The child element; must be a subclass of UiViewModel.
+	 * @param args The arguments to pass to the child widget's constructor.
 	 * @return The child element, wrapped in a @c std::shared_ptr.
 	 */
-	template<typename T>
-	typename std::enable_if<std::is_base_of<HudDecor, T>::value, std::shared_ptr<T>>::type
-	AddHudChild(HudAlignment::type alignment, T *child)
+	template<class T, class... Args>
+	typename std::enable_if<
+		std::is_base_of<HudDecor, T>::value,
+		std::shared_ptr<T>
+		>::type
+	NewHudChild(HudAlignment::type alignment, Args&&... args)
 	{
-		std::shared_ptr<T> sharedChild = AddChild(child);
+		auto sharedChild = NewChild<T>(std::forward<Args>(args)...);
 		sharedChild->SetPlayer(player);
 		sharedChild->SetTrack(track);
 		sharedChild->SetHudScale(hudScale);
@@ -216,6 +274,7 @@ public:
 		return sharedChild;
 	}
 
+public:
 	virtual void Clear()
 	{
 		for (auto &children : hudChildren) {
