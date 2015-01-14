@@ -1,7 +1,7 @@
 
 // StatusOverlayScene.h
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -48,42 +48,43 @@ namespace Client {
  */
 class StatusOverlayScene : public UiScene
 {
-	typedef UiScene SUPER;
-	public:
-		StatusOverlayScene(Display::Display &display, GameDirector &director);
-		virtual ~StatusOverlayScene();
+	using SUPER = UiScene;
 
-	public:
-		bool IsMouseCursorEnabled() const override { return true; }
+public:
+	StatusOverlayScene(Display::Display &display, GameDirector &director);
+	virtual ~StatusOverlayScene();
 
-	public:
-		void Announce(std::shared_ptr<Announcement> ann);
+public:
+	bool IsMouseCursorEnabled() const override { return true; }
 
-	public:
-		void AttachController(Control::InputEventController &controller) override;
-		void DetachController(Control::InputEventController &controller) override;
+public:
+	void Announce(std::shared_ptr<Announcement> ann);
 
-	private:
-		void OnDisplayConfigChanged();
-		void OnMouseMoved(const Vec2 &pos);
-		void OnMousePressed(const Control::Mouse::Click &click);
-		void OnMouseReleased(const Control::Mouse::Click &click);
+public:
+	void AttachController(Control::InputEventController &controller) override;
+	void DetachController(Control::InputEventController &controller) override;
 
-	public:
-		void Layout() override;
-		void Advance(Util::OS::timestamp_t tick) override;
-		void PrepareRender() override;
-		void Render() override;
+private:
+	void OnDisplayConfigChanged();
+	void OnMouseMoved(const Vec2 &pos);
+	void OnMousePressed(const Control::Mouse::Click &click);
+	void OnMouseReleased(const Control::Mouse::Click &click);
 
-	private:
-		Display::Display &display;
-		GameDirector &director;
-		std::unique_ptr<BulletinBoard> bulletinBoard;
-		std::unique_ptr<PlayerBar> playerBar;
-		boost::signals2::scoped_connection displayConfigChangedConn;
-		boost::signals2::connection mouseMovedConn;
-		boost::signals2::connection mousePressedConn;
-		boost::signals2::connection mouseReleasedConn;
+public:
+	void Layout() override;
+	void Advance(Util::OS::timestamp_t tick) override;
+	void PrepareRender() override;
+	void Render() override;
+
+private:
+	Display::Display &display;
+	GameDirector &director;
+	std::unique_ptr<BulletinBoard> bulletinBoard;
+	std::unique_ptr<PlayerBar> playerBar;
+	boost::signals2::scoped_connection displayConfigChangedConn;
+	boost::signals2::connection mouseMovedConn;
+	boost::signals2::connection mousePressedConn;
+	boost::signals2::connection mouseReleasedConn;
 };
 
 }  // namespace HoverScript
