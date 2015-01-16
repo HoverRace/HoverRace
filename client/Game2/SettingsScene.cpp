@@ -49,7 +49,7 @@ SettingsScene::SettingsScene(Display::Display &display, GameDirector &director,
 
 	auto mainGrid = root->NewChild<FlexGrid>(display);
 	mainGrid->SetPos(640, 60);
-	mainGrid->SetMargin(20, 10);
+	mainGrid->SetMargin(0, 30);
 	mainGrid->SetAlignment(Alignment::N);
 
 	auto settingsGridCell = mainGrid->At(0, 0).NewChild<FlexGrid>(display);
