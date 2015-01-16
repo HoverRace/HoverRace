@@ -72,6 +72,7 @@ private:
 	size_t curRow;
 	bool needsLoadFromConfig;
 	boost::signals2::scoped_connection confirmOkConn;
+	boost::signals2::scoped_connection saveConn;
 };
 
 }  // namespace Client
