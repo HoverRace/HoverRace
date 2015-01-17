@@ -1,7 +1,7 @@
 
 // MainMenuScene.cpp
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -76,7 +76,7 @@ MainMenuScene::MainMenuScene(Display::Display &display, GameDirector &director,
 
 	menuContainer->NewChild<FillBox>(menuContainer->GetSize(), 0xff000000);
 
-	AddButton(_("Practice"))->GetClickedSignal().connect(
+	AddButton(_("Practice"), true, true)->GetClickedSignal().connect(
 		std::bind(&MainMenuScene::OnPracticeClicked, this));
 	AddButton(_("Multiplayer"), false)->GetClickedSignal().connect(
 		std::bind(&MainMenuScene::OnMultiplayerClicked, this));
@@ -107,13 +107,18 @@ MainMenuScene::~MainMenuScene()
 {
 }
 
-std::shared_ptr<Display::Button> MainMenuScene::AddButton(const std::string &text, bool enabled)
+std::shared_ptr<Display::Button> MainMenuScene::AddButton(
+	const std::string &text, bool enabled, bool focused)
 {
 	using namespace Display;
 
 	menuButtons.emplace_back(menuContainer->NewChild<Button>(display, text));
 	std::shared_ptr<Button> &btn = menuButtons.back();
 	btn->SetEnabled(enabled);
+	if (focused) {
+		//TODO: Use RequestFocus() on container when it's ready.
+		btn->TryFocus();
+	}
 
 	return btn;
 }
