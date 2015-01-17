@@ -80,11 +80,15 @@ void SdlLabelView::Render()
 {
 	if (model.GetText().empty()) return;
 
+	auto oldFlags = display.AddUiLayoutFlags(model.GetLayoutFlags());
+
 	double scale = model.GetScale();
 	display.DrawUiTexture(texture->Get(),
 		model.GetAlignedPos(unscaledWidth, unscaledHeight),
 		Vec2(scale, scale),
 		model.GetLayoutFlags());
+
+	display.SetUiLayoutFlags(oldFlags);
 }
 
 /**

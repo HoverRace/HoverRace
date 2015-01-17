@@ -42,16 +42,19 @@ SettingsScene::SettingsScene(Display::Display &display, GameDirector &director,
 	using namespace Display;
 	using Alignment = UiViewModel::Alignment;
 
-	SupportOkAction(_("Save Settings"));
 	SupportCancelAction();
 	SupportExtraAction(_("Reset to defaults"));
 
 	auto root = GetContentRoot();
 
-	settingsGrid = root->NewChild<FlexGrid>(display);
-	settingsGrid->SetPos(640, 60);
-	settingsGrid->SetMargin(20, 10);
-	settingsGrid->SetAlignment(Alignment::N);
+	auto mainGrid = root->NewChild<FlexGrid>(display);
+	mainGrid->SetPos(640, 60);
+	mainGrid->SetMargin(0, 30);
+	mainGrid->SetAlignment(Alignment::N);
+
+	auto settingsGridCell = mainGrid->At(0, 0).NewChild<FlexGrid>(display);
+	settingsGridCell->SetAlignment(Alignment::N);
+	settingsGrid = settingsGridCell->GetContents();
 
 	size_t col = 0;
 	{
@@ -62,6 +65,12 @@ SettingsScene::SettingsScene(Display::Display &display, GameDirector &director,
 		auto &cell = settingsGrid->GetColumnDefault(col++);
 		cell.SetAlignment(Alignment::W);
 	}
+
+	auto saveCell = mainGrid->At(1, 0).
+		NewChild<Button>(display, _("Save Settings"));
+	saveCell->SetAlignment(Alignment::N);
+	saveConn = saveCell->GetContents()->GetClickedSignal().connect(
+		std::bind(&SettingsScene::OnOk, this));
 }
 
 /**
