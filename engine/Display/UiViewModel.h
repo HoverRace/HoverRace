@@ -180,6 +180,13 @@ public:
 protected:
 	void SetFocused(bool focused);
 
+public:
+	using focusRequestedSignal_t =
+		boost::signals2::signal<void(UiViewModel&)>;
+	focusRequestedSignal_t &GetFocusRequestedSignal() { return focusRequestedSignal; }
+
+	void RequestFocus();
+
 private:
 	Vec2 pos;
 	Vec2 translation;
@@ -187,6 +194,7 @@ private:
 	uiLayoutFlags_t layoutFlags;
 	MR_UInt32 id;
 	bool focused;
+	focusRequestedSignal_t focusRequestedSignal;
 };
 
 }  // namespace Display

@@ -105,5 +105,17 @@ void UiViewModel::SetFocused(bool focused)
 	}
 }
 
+/**
+ * Attempt to hand over the input focus to this widget.
+ *
+ * The request may not be successful, possibly leaving no widget focused.
+ */
+void UiViewModel::RequestFocus()
+{
+	if (!focused) {
+		focusRequestedSignal(*this);
+	}
+}
+
 }  // namespace Display
 }  // namespace HoverRace

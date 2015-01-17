@@ -91,6 +91,11 @@ protected:
 		auto sharedChild = std::make_shared<T>(std::forward<Args>(args)...);
 		children.emplace_back(sharedChild);
 		sharedChild->AttachView(display);
+		focusRequestedConns.emplace_back(
+			new boost::signals2::scoped_connection(
+				sharedChild->GetFocusRequestedSignal().connect(
+					std::bind(&BaseContainer::OnChildRequestedFocus, this,
+						std::placeholders::_1))));
 		return sharedChild;
 	}
 
@@ -192,6 +197,9 @@ public:
 		return PropagateMouseEvent<const Control::Mouse::Click&, &UiViewModel::OnMouseReleased>(click);
 	}
 
+private:
+	void OnChildRequestedFocus(UiViewModel &child);
+
 public:
 	void ShrinkWrap();
 
@@ -242,6 +250,9 @@ private:
 	double opacity;
 	bool visible;
 	std::vector<std::shared_ptr<UiViewModel>> children;
+	using scopedConnList =
+		std::vector<std::unique_ptr<boost::signals2::scoped_connection>>;
+	scopedConnList focusRequestedConns;
 };
 
 }  // namespace Display

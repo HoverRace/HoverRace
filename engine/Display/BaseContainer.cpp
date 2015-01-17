@@ -64,6 +64,18 @@ void BaseContainer::ShrinkWrap()
 	SetSize(max);
 }
 
+void BaseContainer::OnChildRequestedFocus(UiViewModel &child)
+{
+	if (!IsFocused()) {
+		RequestFocus();
+	}
+
+	if (IsFocused()) {
+		//TODO: Unfocus the currently-focused element.
+		child.TryFocus();
+	}
+}
+
 bool BaseContainer::TryFocus()
 {
 	if (IsFocused()) return true;
