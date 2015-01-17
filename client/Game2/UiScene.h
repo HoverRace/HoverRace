@@ -1,7 +1,7 @@
 
 // UiScene.h
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -32,53 +32,54 @@ namespace Client {
  */
 class UiScene : public Scene
 {
-	typedef Scene SUPER;
-	public:
-		UiScene(const std::string &name="") :
-			SUPER(name), needsLayout(true) { }
-		virtual ~UiScene() { }
+	using SUPER = Scene;
 
-	public:
-		bool IsMouseCursorEnabled() const override { return true; }
+public:
+	UiScene(const std::string &name = "") :
+		SUPER(name), needsLayout(true) { }
+	virtual ~UiScene() { }
 
-	public:
-		void AttachController(Control::InputEventController &controller) override;
-		void DetachController(Control::InputEventController &controller) override;
+public:
+	bool IsMouseCursorEnabled() const override { return true; }
 
-	protected:
-		/**
-		 * Indicate that the current layout is out-of-date and needs to be adjusted.
-		 * Subclasses should call this when a property changes that affects the
-		 * layout (such as the size).
-		 */
-		void RequestLayout() { needsLayout = true; }
+public:
+	void AttachController(Control::InputEventController &controller) override;
+	void DetachController(Control::InputEventController &controller) override;
 
-		/**
-		 * Adjust the size and position of any child elements.
-		 *
-		 * Subclasses with child elements that are relative to each other should
-		 * override this function.
-		 *
-		 * This is called automatically during the PrepareRender() phase if
-		 * RequestLayout() has been called.  It is also called the first time
-		 * PrepareRender() is invoked.  After this function is called, it
-		 * will not be called again until another call to RequestLayout().
-		 */
-		virtual void Layout() { }
+protected:
+	/**
+	 * Indicate that the current layout is out-of-date and needs to be adjusted.
+	 * Subclasses should call this when a property changes that affects the
+	 * layout (such as the size).
+	 */
+	void RequestLayout() { needsLayout = true; }
 
-	public:
-		void PrepareRender() override
-		{
-			if (needsLayout) {
-				Layout();
-				needsLayout = false;
-			}
+	/**
+	 * Adjust the size and position of any child elements.
+	 *
+	 * Subclasses with child elements that are relative to each other should
+	 * override this function.
+	 *
+	 * This is called automatically during the PrepareRender() phase if
+	 * RequestLayout() has been called.  It is also called the first time
+	 * PrepareRender() is invoked.  After this function is called, it
+	 * will not be called again until another call to RequestLayout().
+	 */
+	virtual void Layout() { }
+
+public:
+	void PrepareRender() override
+	{
+		if (needsLayout) {
+			Layout();
+			needsLayout = false;
 		}
+	}
 
-		void Render() override { }
+	void Render() override { }
 
-	private:
-		bool needsLayout;
+private:
+	bool needsLayout;
 };
 
 }  // namespace Client
