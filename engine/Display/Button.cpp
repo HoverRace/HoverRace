@@ -1,7 +1,7 @@
 
 // Button.cpp
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -119,7 +119,12 @@ void Button::Layout()
 		label->SetPos(midX, midY + DEFAULT_PRESS_DEPTH);
 	}
 	else {
-		background->SetColor(s.buttonBg);
+		if (IsFocused()) {
+			background->SetColor(0xff00007f);
+		}
+		else {
+			background->SetColor(s.buttonBg);
+		}
 		label->SetColor(s.formFg);
 		label->SetPos(midX, midY);
 	}
