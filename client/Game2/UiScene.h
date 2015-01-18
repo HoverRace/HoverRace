@@ -24,6 +24,12 @@
 #include "Scene.h"
 
 namespace HoverRace {
+	namespace Display {
+		class UiViewModel;
+	}
+}
+
+namespace HoverRace {
 namespace Client {
 
 /**
@@ -47,6 +53,8 @@ public:
 	void DetachController(Control::InputEventController &controller) override;
 
 protected:
+	void SetFocusRoot(std::shared_ptr<Display::UiViewModel> root);
+
 	/**
 	 * Indicate that the current layout is out-of-date and needs to be adjusted.
 	 * Subclasses should call this when a property changes that affects the
@@ -80,6 +88,8 @@ public:
 
 private:
 	bool needsLayout;
+	std::shared_ptr<Display::UiViewModel> focusRoot;
+	boost::signals2::scoped_connection focusReqConn;
 };
 
 }  // namespace Client

@@ -1,7 +1,7 @@
 
 // UiScene.cpp
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
+#include "../../engine/Display/UiViewModel.h"
+
 #include "UiScene.h"
 
 namespace HoverRace {
@@ -32,6 +34,28 @@ void UiScene::AttachController(Control::InputEventController&)
 void UiScene::DetachController(Control::InputEventController&)
 {
 	//TODO
+}
+
+/**
+ * Set the widget used as the root for all focus management.
+ *
+ * Widgets which are not under this widget will not be able to receive input
+ * focus.
+ *
+ * @param root The root widget.
+ */
+void UiScene::SetFocusRoot(std::shared_ptr<Display::UiViewModel> root)
+{
+	if (focusRoot) {
+		focusReqConn.disconnect();
+	}
+
+	focusRoot = std::move(root);
+
+	if (focusRoot) {
+		focusReqConn = focusRoot->GetFocusRequestedSignal().connect(
+			[&](Display::UiViewModel &widget) { widget.TryFocus(); });
+	}
 }
 
 }  // namespace Client
