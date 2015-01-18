@@ -1,7 +1,7 @@
 
 // FormScene.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -46,35 +46,36 @@ namespace Client {
  */
 class FormScene : public UiScene
 {
-	typedef UiScene SUPER;
-	public:
-		FormScene(Display::Display &display, const std::string &name="");
-		virtual ~FormScene();
+	using SUPER = UiScene;
 
-	public:
-		void AttachController(Control::InputEventController &controller) override;
-		void DetachController(Control::InputEventController &controller) override;
+public:
+	FormScene(Display::Display &display, const std::string &name = "");
+	virtual ~FormScene();
 
-	private:
-		void OnMouseMoved(const Vec2 &pos);
-		void OnMousePressed(const Control::Mouse::Click &click);
-		void OnMouseReleased(const Control::Mouse::Click &click);
+public:
+	void AttachController(Control::InputEventController &controller) override;
+	void DetachController(Control::InputEventController &controller) override;
 
-	protected:
-		Display::Container *GetRoot() const { return root.get(); }
+private:
+	void OnMouseMoved(const Vec2 &pos);
+	void OnMousePressed(const Control::Mouse::Click &click);
+	void OnMouseReleased(const Control::Mouse::Click &click);
 
-	public:
-		void PrepareRender() override;
-		void Render() override;
+protected:
+	Display::Container *GetRoot() const { return root.get(); }
 
-	protected:
-		Display::Display &display;
-	private:
-		std::unique_ptr<Display::Container> root;
+public:
+	void PrepareRender() override;
+	void Render() override;
 
-		boost::signals2::connection mouseMovedConn;
-		boost::signals2::connection mousePressedConn;
-		boost::signals2::connection mouseReleasedConn;
+protected:
+	Display::Display &display;
+private:
+	std::unique_ptr<Display::Container> root;
+
+	boost::signals2::connection mouseMovedConn;
+	boost::signals2::connection mousePressedConn;
+	boost::signals2::connection mouseReleasedConn;
 };
 
 }  // namespace Client
