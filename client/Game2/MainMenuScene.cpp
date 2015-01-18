@@ -116,8 +116,7 @@ std::shared_ptr<Display::Button> MainMenuScene::AddButton(
 	std::shared_ptr<Button> &btn = menuButtons.back();
 	btn->SetEnabled(enabled);
 	if (focused) {
-		//TODO: Use RequestFocus() on container when it's ready.
-		btn->TryFocus();
+		btn->RequestFocus();
 	}
 
 	return btn;
