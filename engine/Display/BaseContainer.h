@@ -237,7 +237,21 @@ public:
 	bool IsVisible() const { return visible; }
 	void SetVisible(bool visible);
 
-	const std::vector<std::shared_ptr<UiViewModel>> &GetChildren() const { return children; }
+	/**
+	 * Check if this container is devoid of child widgets.
+	 * @return @c true if empty, @c false if not.
+	 */
+	bool IsEmpty() const { return children.empty(); }
+
+	/**
+	 * Iterate over each child widget.
+	 * @param fn The function to execute for each widget.
+	 */
+	template<class Fn>
+	void ForEachChild(Fn fn) const
+	{
+		std::for_each(children.cbegin(), children.cend(), fn);
+	}
 
 public:
 	Vec3 Measure() override { return size.Promote(); }

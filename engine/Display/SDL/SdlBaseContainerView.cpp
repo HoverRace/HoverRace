@@ -58,10 +58,7 @@ void SdlBaseContainerView::OnModelUpdate(int prop)
 
 void SdlBaseContainerView::PrepareRender()
 {
-	if (!model.IsVisible()) return;
-
-	auto &children = model.GetChildren();
-	if (children.empty()) return;
+	if (!model.IsVisible() || model.IsEmpty()) return;
 
 	// Determine if we need to render to a texture first then draw later.
 	if (rttChanged) {
@@ -99,16 +96,12 @@ void SdlBaseContainerView::PrepareRender()
 		rttSizeChanged = false;
 	}
 
-	std::for_each(children.begin(), children.end(),
-		std::mem_fn(&ViewModel::PrepareRender));
+	model.ForEachChild(std::mem_fn(&ViewModel::PrepareRender));
 }
 
 void SdlBaseContainerView::Render()
 {
-	if (!model.IsVisible()) return;
-
-	auto &children = model.GetChildren();
-	if (children.empty()) return;
+	if (!model.IsVisible() || model.IsEmpty()) return;
 
 	SDL_Renderer *renderer = display.GetRenderer();
 
@@ -172,8 +165,7 @@ void SdlBaseContainerView::Render()
 	const Vec2 &size = model.GetSize();
 	Vec2 oldOrigin = display.AddUiOrigin(model.GetAlignedPos(size.x, size.y));
 	auto oldFlags = display.AddUiLayoutFlags(model.GetLayoutFlags());
-	std::for_each(children.begin(), children.end(),
-		std::mem_fn(&ViewModel::Render));
+	model.ForEachChild(std::mem_fn(&ViewModel::Render));
 	display.SetUiLayoutFlags(oldFlags);
 	display.SetUiOrigin(oldOrigin);
 
