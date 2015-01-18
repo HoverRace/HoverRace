@@ -71,7 +71,7 @@ public:
 protected:
 	Display::Display &display;
 private:
-	std::unique_ptr<Display::Container> root;
+	std::shared_ptr<Display::Container> root;
 
 	boost::signals2::connection mouseMovedConn;
 	boost::signals2::connection mousePressedConn;

@@ -32,9 +32,10 @@ namespace Client {
 
 FormScene::FormScene(Display::Display &display, const std::string &name) :
 	SUPER(name), display(display),
-	root(new Display::Container(display, Vec2(1280, 720)))
+	root(std::make_shared<Display::Container>(display, Vec2(1280, 720)))
 {
 	root->AttachView(display);
+	SetFocusRoot(root);
 }
 
 FormScene::~FormScene()
