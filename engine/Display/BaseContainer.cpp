@@ -56,8 +56,9 @@ void BaseContainer::ShrinkWrap()
 {
 	Vec2 max(0, 0);
 	for (auto &child : children) {
-		Vec3 measured = child->Measure();
-		measured += child->GetAlignedPos(measured.x, measured.y);
+		auto &c = child.child;
+		Vec3 measured = c->Measure();
+		measured += c->GetAlignedPos(measured.x, measured.y);
 		if (measured.x > max.x) max.x = measured.x;
 		if (measured.y > max.y) max.y = measured.y;
 	}
@@ -83,7 +84,7 @@ bool BaseContainer::TryFocus()
 
 	// Attempt to focus the first focusable widget.
 	for (auto &child : children) {
-		if (child->TryFocus()) {
+		if (child.child->TryFocus()) {
 			SetFocused(true);
 			return true;
 		}

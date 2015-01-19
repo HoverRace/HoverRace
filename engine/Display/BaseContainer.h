@@ -73,6 +73,32 @@ public:
 	void AttachView(Display &disp) override { AttachViewDynamic(disp, this); }
 
 protected:
+	class Child
+	{
+	public:
+		Child(BaseContainer &bc, std::shared_ptr<UiViewModel> child) :
+			child(std::move(child))
+		{
+			// Route focus request events back to the container.
+			focusRequestedConn.reset(
+				new boost::signals2::scoped_connection(
+					this->child->GetFocusRequestedSignal().connect(
+						std::bind(&BaseContainer::OnChildRequestedFocus, &bc,
+							std::placeholders::_1))));
+		}
+		Child(const Child&) = delete;
+		Child(Child&&) = default;
+
+		Child &operator=(const Child&) = delete;
+		Child &operator=(Child&&) = default;
+
+	public:
+		std::shared_ptr<UiViewModel> child;
+	private:
+		// scoped_connection is not movable, so we wrap in a unique_ptr.
+		std::unique_ptr<boost::signals2::scoped_connection> focusRequestedConn;
+	};
+
 	// These are marked as protected so that subclasses can restrict how and
 	// what types of widgets can be added / removed from the container.
 
@@ -89,13 +115,8 @@ protected:
 	NewChild(Args&&... args)
 	{
 		auto sharedChild = std::make_shared<T>(std::forward<Args>(args)...);
-		children.emplace_back(sharedChild);
+		children.emplace_back(*this, sharedChild);
 		sharedChild->AttachView(display);
-		focusRequestedConns.emplace_back(
-			new boost::signals2::scoped_connection(
-				sharedChild->GetFocusRequestedSignal().connect(
-					std::bind(&BaseContainer::OnChildRequestedFocus, this,
-						std::placeholders::_1))));
 		return sharedChild;
 	}
 
@@ -109,9 +130,11 @@ protected:
 	typename std::enable_if<std::is_base_of<UiViewModel, T>::value, std::shared_ptr<T>>::type
 	RemoveChild(const std::shared_ptr<T> &child)
 	{
-		auto iter = std::find(children.begin(), children.end(), child);
-		if (iter != children.end()) {
-			children.erase(iter);
+		for (auto iter = children.begin(); iter != children.end(); ++iter) {
+			if (iter->child == child) {
+				children.erase(iter);
+				break;
+			}
 		}
 		return child;
 	}
@@ -136,15 +159,17 @@ protected:
 			idx = sz - 1;
 		}
 
-		auto iter = std::find(children.begin(), children.end(), child);
-		if (iter != children.end()) {
-			auto dest = children.begin();
-			std::advance(dest, idx);
-			if (dest < iter) {
-				std::rotate(dest, iter, iter + 1);
-			}
-			else if (dest > iter) {
-				std::rotate(iter, iter + 1, dest + 1);
+		for (auto iter = children.begin(); iter != children.end(); ++iter) {
+			if (iter->child == child) {
+				auto dest = children.begin();
+				std::advance(dest, idx);
+				if (dest < iter) {
+					std::rotate(dest, iter, iter + 1);
+				}
+				else if (dest > iter) {
+					std::rotate(iter, iter + 1, dest + 1);
+				}
+				break;
 			}
 		}
 
@@ -173,7 +198,7 @@ private:
 		for (auto iter = children.rbegin();
 			iter != children.rend(); ++iter)
 		{
-			auto &child = *iter;
+			auto &child = iter->child;
 			oldOrigin = display.AddUiOrigin(child->GetPos());
 			bool retv = (child.get()->*F)(param);
 			display.SetUiOrigin(oldOrigin);
@@ -250,7 +275,9 @@ public:
 	template<class Fn>
 	void ForEachChild(Fn fn) const
 	{
-		std::for_each(children.cbegin(), children.cend(), fn);
+		for (auto &child : children) {
+			fn(child.child);
+		}
 	}
 
 public:
@@ -263,10 +290,7 @@ private:
 	bool clip;
 	double opacity;
 	bool visible;
-	std::vector<std::shared_ptr<UiViewModel>> children;
-	using scopedConnList =
-		std::vector<std::unique_ptr<boost::signals2::scoped_connection>>;
-	scopedConnList focusRequestedConns;
+	std::vector<Child> children;
 };
 
 }  // namespace Display
