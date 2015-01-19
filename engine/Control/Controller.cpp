@@ -598,7 +598,7 @@ void InputEventController::LoadMenuMap()
 	AssignAction(cmap, config->ui.menuOk, actions.ui.menuOk);
 	AssignAction(cmap, config->ui.menuCancel, actions.ui.menuCancel);
 	AssignAction(cmap, config->ui.menuExtra, actions.ui.menuExtra);
-	AssignAction(cmap, config->ui.menuOk, actions.ui.menuUp);
+	AssignAction(cmap, config->ui.menuUp, actions.ui.menuUp);
 	AssignAction(cmap, config->ui.menuDown, actions.ui.menuDown);
 	AssignAction(cmap, config->ui.menuLeft, actions.ui.menuLeft);
 	AssignAction(cmap, config->ui.menuRight, actions.ui.menuRight);
