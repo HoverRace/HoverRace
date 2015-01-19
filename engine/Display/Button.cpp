@@ -184,6 +184,7 @@ Vec3 Button::Measure()
 void Button::FireModelUpdate(int prop)
 {
 	switch (prop) {
+		case UiViewModel::Props::FOCUSED:
 		case SUPER::Props::SIZE:
 		case SUPER::Props::ENABLED:
 		case SUPER::Props::PRESSED:
