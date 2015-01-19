@@ -104,6 +104,19 @@ private:
 	dir_t dir;
 };
 
+inline std::ostream &operator<<(std::ostream &os, const Nav &nav)
+{
+	switch (nav.AsDigital()) {
+		case Nav::NEUTRAL: os << "NEUTRAL"; break;
+		case Nav::UP: os << "UP"; break;
+		case Nav::DOWN: os << "DOWN"; break;
+		case Nav::LEFT: os << "LEFT"; break;
+		case Nav::RIGHT: os << "RIGHT"; break;
+		default: os << static_cast<int>(nav.AsDigital());
+	}
+	return os;
+}
+
 /// Signals which are self-contained (no payload).
 typedef boost::signals2::signal<void()> voidSignal_t;
 
