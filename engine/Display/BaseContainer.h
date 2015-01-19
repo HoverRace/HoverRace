@@ -247,8 +247,10 @@ private:
 	void OnChildRequestedFocus(UiViewModel &child);
 	void OnChildRelinquishedFocus(UiViewModel &child, const Control::Nav &nav);
 
-	void FocusPrevFrom(children_t::iterator startingPoint);
-	void FocusNextFrom(children_t::iterator startingPoint);
+	void FocusPrevFrom(children_t::iterator startingPoint,
+		const Control::Nav &nav);
+	void FocusNextFrom(children_t::iterator startingPoint,
+		const Control::Nav &nav);
 
 public:
 	void ShrinkWrap();

@@ -95,8 +95,11 @@ public:
 
 private:
 	bool needsLayout;
+
 	std::shared_ptr<Display::UiViewModel> focusRoot;
 	boost::signals2::scoped_connection focusReqConn;
+	boost::signals2::scoped_connection focusRelConn;
+
 	boost::signals2::scoped_connection okConn;
 	boost::signals2::scoped_connection upConn;
 	boost::signals2::scoped_connection downConn;

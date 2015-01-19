@@ -83,13 +83,23 @@ void UiScene::SetFocusRoot(std::shared_ptr<Display::UiViewModel> root)
 {
 	if (focusRoot) {
 		focusReqConn.disconnect();
+		focusRelConn.disconnect();
 	}
 
 	focusRoot = std::move(root);
 
 	if (focusRoot) {
+		// By assigning a focus root, we act as if we are a one-element
+		// container that is always focused.
+
 		focusReqConn = focusRoot->GetFocusRequestedSignal().connect(
 			[&](Display::UiViewModel &widget) { widget.TryFocus(); });
+
+		focusRelConn = focusRoot->GetFocusRelinquishedSignal().
+			connect([&](Display::UiViewModel &widget, const Control::Nav&) {
+				widget.DropFocus();
+				widget.TryFocus();
+			});
 	}
 }
 

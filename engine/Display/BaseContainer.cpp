@@ -131,12 +131,12 @@ void BaseContainer::OnChildRelinquishedFocus(
 
 		case Nav::UP:
 		case Nav::LEFT:
-			FocusPrevFrom(iter);
+			FocusPrevFrom(iter, nav);
 			break;
 
 		case Nav::DOWN:
 		case Nav::RIGHT:
-			FocusNextFrom(iter);
+			FocusNextFrom(iter, nav);
 			break;
 
 		default:
@@ -148,13 +148,14 @@ void BaseContainer::OnChildRelinquishedFocus(
 /**
  * Shift focus to the first focusable widget previous to the child.
  * @param startingPoint
+ * @param nav The current navigation direction (either Nav::UP or Nav::LEFT).
  */
-void BaseContainer::FocusPrevFrom(children_t::iterator startingPoint)
+void BaseContainer::FocusPrevFrom(children_t::iterator startingPoint,
+	const Control::Nav &nav)
 {
-	auto iter = startingPoint;
-	do {
+	for (auto iter = startingPoint;;) {
 		if (iter == children.begin()) {
-			iter = children.end();
+			break;
 		}
 		--iter;
 
@@ -162,33 +163,34 @@ void BaseContainer::FocusPrevFrom(children_t::iterator startingPoint)
 			focusedChild = iter->child.get();
 			return;
 		}
-	} while (iter != startingPoint);
+	}
 
 	// No widget could be focused; relinquish our own focus.
-	RelinquishFocus(Control::Nav(Control::Nav::UP));
+	RelinquishFocus(nav);
 }
 
 /**
  * Shift focus to the first focusable widget after the child.
  * @param startingPoint
+ * @param nav The current navigation direction (either Nav::RIGHT or Nav::DOWN).
  */
-void BaseContainer::FocusNextFrom(children_t::iterator startingPoint)
+void BaseContainer::FocusNextFrom(children_t::iterator startingPoint,
+	const Control::Nav &nav)
 {
-	auto iter = startingPoint;
-	do {
+	for (auto iter = startingPoint;;) {
 		++iter;
 		if (iter == children.end()) {
-			iter = children.begin();
+			break;
 		}
 
 		if (iter->child->TryFocus()) {
 			focusedChild = iter->child.get();
 			return;
 		}
-	} while (iter != startingPoint);
+	}
 
 	// No widget could be focused; relinquish our own focus.
-	RelinquishFocus(Control::Nav(Control::Nav::DOWN));
+	RelinquishFocus(nav);
 }
 
 bool BaseContainer::TryFocus()
