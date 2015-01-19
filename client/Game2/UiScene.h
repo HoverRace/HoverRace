@@ -52,6 +52,9 @@ public:
 	void AttachController(Control::InputEventController &controller) override;
 	void DetachController(Control::InputEventController &controller) override;
 
+private:
+	void OnAction();
+
 protected:
 	void SetFocusRoot(std::shared_ptr<Display::UiViewModel> root);
 
@@ -90,6 +93,7 @@ private:
 	bool needsLayout;
 	std::shared_ptr<Display::UiViewModel> focusRoot;
 	boost::signals2::scoped_connection focusReqConn;
+	boost::signals2::scoped_connection okConn;
 };
 
 }  // namespace Client

@@ -75,6 +75,7 @@ public:
 	bool OnMouseMoved(const Vec2 &pos) override;
 	bool OnMousePressed(const Control::Mouse::Click &click) override;
 	bool OnMouseReleased(const Control::Mouse::Click &click) override;
+	bool OnAction() override;
 
 protected:
 	/**

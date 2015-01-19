@@ -220,6 +220,13 @@ public:
 	{
 		return PropagateMouseEvent<const Control::Mouse::Click&, &UiViewModel::OnMouseReleased>(click);
 	}
+	bool OnAction() override
+	{
+		if (focusedChild) {
+			return focusedChild->OnAction();
+		}
+		return false;
+	}
 
 private:
 	void OnChildRequestedFocus(UiViewModel &child);

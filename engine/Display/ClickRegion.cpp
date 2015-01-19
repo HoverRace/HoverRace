@@ -104,6 +104,12 @@ bool ClickRegion::OnMouseReleased(const Control::Mouse::Click &click)
 	return retv;
 }
 
+bool ClickRegion::OnAction()
+{
+	FireClickedSignal();
+	return true;
+}
+
 void ClickRegion::FireClickedSignal()
 {
 	clickedSignal(*this);

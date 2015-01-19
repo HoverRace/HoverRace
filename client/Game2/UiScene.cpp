@@ -19,6 +19,7 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
+#include "../../engine/Control/Controller.h"
 #include "../../engine/Display/UiViewModel.h"
 
 #include "UiScene.h"
@@ -26,14 +27,24 @@
 namespace HoverRace {
 namespace Client {
 
-void UiScene::AttachController(Control::InputEventController&)
+void UiScene::AttachController(Control::InputEventController &controller)
 {
-	//TODO
+	controller.AddMenuMaps();
+
+	auto &menuOkAction = controller.actions.ui.menuOk;
+	okConn = menuOkAction->Connect(std::bind(&UiScene::OnAction, this));
 }
 
 void UiScene::DetachController(Control::InputEventController&)
 {
-	//TODO
+	okConn.disconnect();
+}
+
+void UiScene::OnAction()
+{
+	if (focusRoot) {
+		focusRoot->OnAction();
+	}
 }
 
 /**

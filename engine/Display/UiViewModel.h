@@ -95,6 +95,7 @@ public:
 	virtual bool OnMouseMoved(const Vec2&) { return false; }
 	virtual bool OnMousePressed(const Control::Mouse::Click&) { return false; }
 	virtual bool OnMouseReleased(const Control::Mouse::Click&) { return false; }
+	virtual bool OnAction() { return false; }
 
 public:
 	/**
