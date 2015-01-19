@@ -1,7 +1,7 @@
 
 // ClickRegion.cpp
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -67,7 +67,11 @@ bool ClickRegion::OnMouseMoved(const Vec2 &pos)
 		if (IsPressed()) {
 			OnMouseDrag(ScreenPosToRel(pos));
 		}
-		return TestHit(pos);
+		bool hit = TestHit(pos);
+		if (hit && !IsFocused()) {
+			RequestFocus();
+		}
+		return hit;
 	}
 	else {
 		//TODO: Unset focus.
