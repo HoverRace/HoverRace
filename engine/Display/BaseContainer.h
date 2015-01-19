@@ -227,6 +227,13 @@ public:
 		}
 		return false;
 	}
+	bool OnNavigate(const Control::Nav &nav) override
+	{
+		if (focusedChild) {
+			return focusedChild->OnNavigate(nav);
+		}
+		return false;
+	}
 
 private:
 	void OnChildRequestedFocus(UiViewModel &child);

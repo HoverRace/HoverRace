@@ -29,14 +29,31 @@ namespace Client {
 
 void UiScene::AttachController(Control::InputEventController &controller)
 {
+	// Standard digital directions.
+	static Control::Nav NAV_U(Control::Nav::UP);
+	static Control::Nav NAV_D(Control::Nav::DOWN);
+	static Control::Nav NAV_L(Control::Nav::LEFT);
+	static Control::Nav NAV_R(Control::Nav::RIGHT);
+
 	controller.AddMenuMaps();
 
-	auto &menuOkAction = controller.actions.ui.menuOk;
-	okConn = menuOkAction->Connect(std::bind(&UiScene::OnAction, this));
+	auto &ui = controller.actions.ui;
+
+	okConn = ui.menuOk->Connect(std::bind(&UiScene::OnAction, this));
+
+	upConn = ui.menuUp->Connect(std::bind(&UiScene::OnNav, this, NAV_U));
+	downConn = ui.menuDown->Connect(std::bind(&UiScene::OnNav, this, NAV_D));
+	leftConn = ui.menuLeft->Connect(std::bind(&UiScene::OnNav, this, NAV_L));
+	rightConn = ui.menuRight->Connect(std::bind(&UiScene::OnNav, this, NAV_R));
 }
 
 void UiScene::DetachController(Control::InputEventController&)
 {
+	rightConn.disconnect();
+	leftConn.disconnect();
+	downConn.disconnect();
+	upConn.disconnect();
+
 	okConn.disconnect();
 }
 
@@ -44,6 +61,13 @@ void UiScene::OnAction()
 {
 	if (focusRoot) {
 		focusRoot->OnAction();
+	}
+}
+
+void UiScene::OnNav(Control::Nav &nav)
+{
+	if (focusRoot) {
+		focusRoot->OnNavigate(nav);
 	}
 }
 

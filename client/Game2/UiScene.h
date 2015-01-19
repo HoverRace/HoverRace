@@ -24,6 +24,9 @@
 #include "Scene.h"
 
 namespace HoverRace {
+	namespace Control {
+		class Nav;
+	}
 	namespace Display {
 		class UiViewModel;
 	}
@@ -54,6 +57,7 @@ public:
 
 private:
 	void OnAction();
+	void OnNav(Control::Nav &nav);
 
 protected:
 	void SetFocusRoot(std::shared_ptr<Display::UiViewModel> root);
@@ -94,6 +98,10 @@ private:
 	std::shared_ptr<Display::UiViewModel> focusRoot;
 	boost::signals2::scoped_connection focusReqConn;
 	boost::signals2::scoped_connection okConn;
+	boost::signals2::scoped_connection upConn;
+	boost::signals2::scoped_connection downConn;
+	boost::signals2::scoped_connection leftConn;
+	boost::signals2::scoped_connection rightConn;
 };
 
 }  // namespace Client
