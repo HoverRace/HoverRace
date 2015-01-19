@@ -1,7 +1,7 @@
 
 // StyleEnv.cpp
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -120,6 +120,7 @@ void StyleEnv::Register(Script::Core *scripting)
 			.def_readwrite("grid_margin", &Styles::gridMargin)
 			.def_readwrite("grid_padding", &Styles::gridPadding)
 			.def_readwrite("button_bg", &Styles::buttonBg)
+			.def_readwrite("button_focused_bg", &Styles::buttonFocusedBg)
 			.def_readwrite("button_disabled_bg", &Styles::buttonDisabledBg)
 			.def_readwrite("button_pressed_bg", &Styles::buttonPressedBg)
 			.def_readwrite("heading_font", &Styles::headingFont)

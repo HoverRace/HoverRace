@@ -279,6 +279,7 @@ public:
 
 		// Colors specific to button-like widgets.
 		Color buttonBg;
+		Color buttonFocusedBg;
 		Color buttonDisabledBg;
 		Color buttonPressedBg;
 

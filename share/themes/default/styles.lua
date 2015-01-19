@@ -51,6 +51,7 @@ styles.grid_padding.x = 1
 styles.grid_padding.y = 1
 
 styles.button_bg = 0x3f00007f
+styles.button_focused_bg = 0xff00007f
 styles.button_disabled_bg = 0x3f7f7f7f
 styles.button_pressed_bg = 0x7f00007f
 

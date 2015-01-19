@@ -140,6 +140,7 @@ void Display::styles_t::Reload()
 	gridPadding.y = 1;
 
 	buttonBg = 0x3f00007f;
+	buttonFocusedBg = 0xff00007f;
 	buttonDisabledBg = 0x3f7f7f7f;
 	buttonPressedBg = 0x7f00007f;
 

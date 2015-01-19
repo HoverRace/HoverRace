@@ -119,12 +119,7 @@ void Button::Layout()
 		label->SetPos(midX, midY + DEFAULT_PRESS_DEPTH);
 	}
 	else {
-		if (IsFocused()) {
-			background->SetColor(0xff00007f);
-		}
-		else {
-			background->SetColor(s.buttonBg);
-		}
+		background->SetColor(IsFocused() ? s.buttonFocusedBg : s.buttonBg);
 		label->SetColor(s.formFg);
 		label->SetPos(midX, midY);
 	}
