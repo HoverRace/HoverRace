@@ -176,7 +176,7 @@ void Slider::Layout()
 	}
 	else {
 		background->SetColor(s.buttonBg);
-		indicator->SetColor(s.buttonBg);
+		indicator->SetColor(IsFocused() ? s.buttonFocusedBg : s.buttonBg);
 	}
 }
 
@@ -188,6 +188,7 @@ Vec3 Slider::Measure()
 void Slider::FireModelUpdate(int prop)
 {
 	switch (prop) {
+		case UiViewModel::Props::FOCUSED:
 		case SUPER::Props::SIZE:
 		case SUPER::Props::ENABLED:
 		case SUPER::Props::PRESSED:
