@@ -44,6 +44,8 @@ FormScene::~FormScene()
 
 void FormScene::AttachController(Control::InputEventController &controller)
 {
+	SUPER::AttachController(controller);
+
 	mouseMovedConn = controller.actions.ui.mouseMoved->Connect(
 		std::bind(&FormScene::OnMouseMoved, this, std::placeholders::_1));
 	mousePressedConn = controller.actions.ui.mousePressed->Connect(
@@ -52,11 +54,13 @@ void FormScene::AttachController(Control::InputEventController &controller)
 		std::bind(&FormScene::OnMouseReleased, this, std::placeholders::_1));
 }
 
-void FormScene::DetachController(Control::InputEventController&)
+void FormScene::DetachController(Control::InputEventController &controller)
 {
 	mouseReleasedConn.disconnect();
 	mousePressedConn.disconnect();
 	mouseMovedConn.disconnect();
+
+	SUPER::DetachController(controller);
 }
 
 void FormScene::OnMouseMoved(const Vec2 &pos)
