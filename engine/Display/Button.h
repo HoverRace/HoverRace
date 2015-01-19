@@ -77,6 +77,9 @@ public:
 	void AttachView(Display &disp) override { AttachViewDynamic(disp, this); }
 
 public:
+	bool OnNavigate(const Control::Nav &nav) override;
+
+public:
 	const std::string &GetText() const;
 	void SetText(const std::string &text);
 

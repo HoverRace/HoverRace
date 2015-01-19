@@ -85,6 +85,11 @@ protected:
 					this->child->GetFocusRequestedSignal().connect(
 						std::bind(&BaseContainer::OnChildRequestedFocus, &bc,
 							std::placeholders::_1))));
+			focusRelinquishedConn.reset(
+				new boost::signals2::scoped_connection(
+					this->child->GetFocusRelinquishedSignal().connect(
+						std::bind(&BaseContainer::OnChildRelinquishedFocus, &bc,
+							std::placeholders::_1, std::placeholders::_2))));
 		}
 		Child(const Child&) = delete;
 		Child(Child&&) = default;
@@ -97,7 +102,10 @@ protected:
 	private:
 		// scoped_connection is not movable, so we wrap in a unique_ptr.
 		std::unique_ptr<boost::signals2::scoped_connection> focusRequestedConn;
+		std::unique_ptr<boost::signals2::scoped_connection> focusRelinquishedConn;
 	};
+
+	using children_t = std::vector<Child>;
 
 	// These are marked as protected so that subclasses can restrict how and
 	// what types of widgets can be added / removed from the container.
@@ -237,6 +245,10 @@ public:
 
 private:
 	void OnChildRequestedFocus(UiViewModel &child);
+	void OnChildRelinquishedFocus(UiViewModel &child, const Control::Nav &nav);
+
+	void FocusPrevFrom(children_t::iterator startingPoint);
+	void FocusNextFrom(children_t::iterator startingPoint);
 
 public:
 	void ShrinkWrap();
@@ -304,7 +316,7 @@ private:
 	bool clip;
 	double opacity;
 	bool visible;
-	std::vector<Child> children;
+	children_t children;
 	UiViewModel *focusedChild;
 };
 

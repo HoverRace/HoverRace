@@ -200,6 +200,14 @@ public:
 
 	void RequestFocus();
 
+public:
+	using focusRelinquishedSignal_t =
+		boost::signals2::signal<void(UiViewModel&, const Control::Nav&)>;
+	focusRelinquishedSignal_t &GetFocusRelinquishedSignal() { return focusRelinquishedSignal; }
+
+protected:
+	void RelinquishFocus(const Control::Nav &nav);
+
 private:
 	Vec2 pos;
 	Vec2 translation;
@@ -208,6 +216,7 @@ private:
 	MR_UInt32 id;
 	bool focused;
 	focusRequestedSignal_t focusRequestedSignal;
+	focusRelinquishedSignal_t focusRelinquishedSignal;
 };
 
 }  // namespace Display

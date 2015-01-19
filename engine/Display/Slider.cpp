@@ -78,10 +78,8 @@ bool Slider::OnNavigate(const Control::Nav &nav)
 			return true;
 
 		case Nav::UP:
-			//TODO: Relinquish focus.
-			return true;
 		case Nav::DOWN:
-			//TODO: Relinquish focus.
+			RelinquishFocus(nav);
 			return true;
 
 		case Nav::LEFT:

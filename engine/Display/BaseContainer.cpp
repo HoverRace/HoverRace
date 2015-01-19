@@ -19,6 +19,8 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
+#include "../../engine/Control/Action.h"
+
 #include "BaseContainer.h"
 
 namespace HoverRace {
@@ -97,6 +99,96 @@ void BaseContainer::OnChildRequestedFocus(UiViewModel &child)
 			//TODO: Relinquish focus.
 		}
 	}
+}
+
+void BaseContainer::OnChildRelinquishedFocus(
+	UiViewModel &child, const Control::Nav &nav)
+{
+	using Nav = Control::Nav;
+
+	if (focusedChild) {
+		focusedChild->DropFocus();
+		focusedChild = nullptr;
+	}
+
+	// Find the child in the list of children.
+	// We assume that there won't be hundreds of children in each container,
+	// so a simple linear search will do.
+	auto iter = children.begin();
+	for (; iter != children.end(); ++iter) {
+		if (iter->child.get() == &child) break;
+	}
+	if (iter == children.end()) {
+		RelinquishFocus(Control::Nav(Control::Nav::NEUTRAL));
+		return;
+	}
+
+	auto dir = nav.AsDigital();
+	switch (dir) {
+		case Nav::NEUTRAL:
+			RelinquishFocus(nav);
+			break;
+
+		case Nav::UP:
+		case Nav::LEFT:
+			FocusPrevFrom(iter);
+			break;
+
+		case Nav::DOWN:
+		case Nav::RIGHT:
+			FocusNextFrom(iter);
+			break;
+
+		default:
+			throw UnimplementedExn(boost::str(boost::format(
+				"BaseContainer::OnChildRelinquishedFocus(%s)") % nav));
+	}
+}
+
+/**
+ * Shift focus to the first focusable widget previous to the child.
+ * @param startingPoint
+ */
+void BaseContainer::FocusPrevFrom(children_t::iterator startingPoint)
+{
+	auto iter = startingPoint;
+	do {
+		if (iter == children.begin()) {
+			iter = children.end();
+		}
+		--iter;
+
+		if (iter->child->TryFocus()) {
+			focusedChild = iter->child.get();
+			return;
+		}
+	} while (iter != startingPoint);
+
+	// No widget could be focused; relinquish our own focus.
+	RelinquishFocus(Control::Nav(Control::Nav::UP));
+}
+
+/**
+ * Shift focus to the first focusable widget after the child.
+ * @param startingPoint
+ */
+void BaseContainer::FocusNextFrom(children_t::iterator startingPoint)
+{
+	auto iter = startingPoint;
+	do {
+		++iter;
+		if (iter == children.end()) {
+			iter = children.begin();
+		}
+
+		if (iter->child->TryFocus()) {
+			focusedChild = iter->child.get();
+			return;
+		}
+	} while (iter != startingPoint);
+
+	// No widget could be focused; relinquish our own focus.
+	RelinquishFocus(Control::Nav(Control::Nav::DOWN));
 }
 
 bool BaseContainer::TryFocus()

@@ -87,6 +87,17 @@ void Button::Init(const std::string &text)
 	background->AttachView(display);
 }
 
+bool Button::OnNavigate(const Control::Nav &nav)
+{
+	if (nav.AsDigital() != Control::Nav::NEUTRAL) {
+		RelinquishFocus(nav);
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 void Button::Layout()
 {
 	const Vec2 size = GetSize();

@@ -117,5 +117,16 @@ void UiViewModel::RequestFocus()
 	}
 }
 
+/**
+ * Voluntarily give up input focus, passing it on to the next widget.
+ * @param nav The direction in which focus should shift, if possible.
+ */
+void UiViewModel::RelinquishFocus(const Control::Nav &nav)
+{
+	if (focused) {
+		focusRelinquishedSignal(*this, nav);
+	}
+}
+
 }  // namespace Display
 }  // namespace HoverRace
