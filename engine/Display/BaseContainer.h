@@ -132,6 +132,11 @@ protected:
 	{
 		for (auto iter = children.begin(); iter != children.end(); ++iter) {
 			if (iter->child == child) {
+				if (child.get() == focusedChild) {
+					child->DropFocus();
+					focusedChild = nullptr;
+					//TODO: Relinquish focus.
+				}
 				children.erase(iter);
 				break;
 			}
@@ -176,13 +181,7 @@ protected:
 		return child;
 	}
 
-	/**
-	 * Remove all child elements.
-	 */
-	virtual void Clear()
-	{
-		children.clear();
-	}
+	virtual void Clear();
 
 private:
 	template<typename P, bool(UiViewModel::*F)(P)>
@@ -229,6 +228,7 @@ public:
 	void ShrinkWrap();
 
 	bool TryFocus() override;
+	void DropFocus() override;
 
 	/**
 	 * Retrieve the size of the container.
@@ -291,6 +291,7 @@ private:
 	double opacity;
 	bool visible;
 	std::vector<Child> children;
+	UiViewModel *focusedChild;
 };
 
 }  // namespace Display

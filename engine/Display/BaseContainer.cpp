@@ -1,7 +1,7 @@
 
 // BaseContainer.cpp
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ BaseContainer::BaseContainer(Display &display, uiLayoutFlags_t layoutFlags) :
 BaseContainer::BaseContainer(Display &display, const Vec2 &size, bool clip,
                      uiLayoutFlags_t layoutFlags) :
 	SUPER(layoutFlags), display(display), size(size), clip(clip),
-	opacity(1.0), visible(true)
+	opacity(1.0), visible(true), focusedChild(nullptr)
 {
 }
 
@@ -65,6 +65,19 @@ void BaseContainer::ShrinkWrap()
 	SetSize(max);
 }
 
+/**
+ * Remove all child elements.
+ */
+void BaseContainer::Clear()
+{
+	if (focusedChild) {
+		focusedChild->DropFocus();
+		focusedChild = nullptr;
+		//TODO: Relinquish focus.
+	}
+	children.clear();
+}
+
 void BaseContainer::OnChildRequestedFocus(UiViewModel &child)
 {
 	if (!IsFocused()) {
@@ -72,8 +85,17 @@ void BaseContainer::OnChildRequestedFocus(UiViewModel &child)
 	}
 
 	if (IsFocused()) {
-		//TODO: Unfocus the currently-focused element.
-		child.TryFocus();
+		// Switch focus to the new child, if possible.
+		if (focusedChild) {
+			focusedChild->DropFocus();
+			focusedChild = nullptr;
+		}
+		if (child.TryFocus()) {
+			focusedChild = &child;
+		}
+		else {
+			//TODO: Relinquish focus.
+		}
 	}
 }
 
@@ -85,11 +107,21 @@ bool BaseContainer::TryFocus()
 	// Attempt to focus the first focusable widget.
 	for (auto &child : children) {
 		if (child.child->TryFocus()) {
+			focusedChild = child.child.get();
 			SetFocused(true);
 			return true;
 		}
 	}
 	return false;
+}
+
+void BaseContainer::DropFocus()
+{
+	if (focusedChild) {
+		focusedChild->DropFocus();
+		focusedChild = nullptr;
+	}
+	SUPER::DropFocus();
 }
 
 /**

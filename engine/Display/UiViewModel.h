@@ -172,10 +172,20 @@ public:
 	 * Subclasses should override this with logic to determine if the widget
 	 * is focusable.
 	 *
+	 * This is called by the parent container if focus has been requested.
+	 *
 	 * @return @c true if it succeeds (widget is now focused),
 	 *         @c false if it fails (widget did not take focus).
 	 */
 	virtual bool TryFocus() { return false; }
+
+	/**
+	 * Force this widget to give up focus, if it is currently focused.
+	 *
+	 * This is called by the parent container if focus is shifting away to
+	 * another widget.
+	 */
+	virtual void DropFocus() { SetFocused(false); }
 
 protected:
 	void SetFocused(bool focused);
