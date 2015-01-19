@@ -68,6 +68,35 @@ Slider::~Slider()
 {
 }
 
+bool Slider::OnNavigate(const Control::Nav &nav)
+{
+	using Nav = Control::Nav;
+
+	auto dir = nav.AsDigital();
+	switch (dir) {
+		case Nav::NEUTRAL:
+			return true;
+
+		case Nav::UP:
+			//TODO: Relinquish focus.
+			return true;
+		case Nav::DOWN:
+			//TODO: Relinquish focus.
+			return true;
+
+		case Nav::LEFT:
+			SetValue(value - step);
+			return true;
+		case Nav::RIGHT:
+			SetValue(value + step);
+			return true;
+
+		default:
+			HR_LOG(warning) << "Unhandled navigation direction: " << dir;
+			return false;
+	}
+}
+
 void Slider::OnMouseDrag(const Vec2 &relPos)
 {
 	SetValue(((relPos.x * (max - min)) / GetSize().x) + min);

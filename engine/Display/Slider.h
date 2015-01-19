@@ -1,7 +1,7 @@
 
 // Slider.h
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -70,6 +70,8 @@ public:
 public:
 	virtual void AttachView(Display &disp) { AttachViewDynamic(disp, this); }
 
+public:
+	bool OnNavigate(const Control::Nav &nav) override;
 protected:
 	void OnMouseDrag(const Vec2 &relPos) override;
 
