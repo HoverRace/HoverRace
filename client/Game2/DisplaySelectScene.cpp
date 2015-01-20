@@ -174,6 +174,9 @@ DisplaySelectScene::DisplaySelectScene(Display::Display &display,
 	using namespace Display;
 	using Alignment = UiViewModel::Alignment;
 
+	SupportOkAction();
+	SupportCancelAction();
+
 	auto root = GetContentRoot();
 
 	auto monGrid = root->NewChild<FlexGrid>(display);
