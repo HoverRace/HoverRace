@@ -255,7 +255,7 @@ private:
 public:
 	void ShrinkWrap();
 
-	bool TryFocus() override;
+	bool TryFocus(const Control::Nav &nav = Control::Nav::NEUTRAL) override;
 	void DropFocus() override;
 
 	/**

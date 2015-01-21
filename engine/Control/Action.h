@@ -72,51 +72,6 @@ struct Click {
 
 }  // namespace Mouse
 
-/**
- * A navigation direction.
- *
- * This is a placeholder for future support for analog directional controls.
- * For now, only digital (cardinal directions) are supported.
- *
- * @author Michael Imamura
- */
-class Nav
-{
-public:
-	enum dir_t { NEUTRAL, UP, DOWN, LEFT, RIGHT };
-
-public:
-	Nav(dir_t dir) : dir(dir) { }
-	Nav(const Nav&) = default;
-	Nav(Nav&&) = default;
-
-	Nav &operator=(const Nav&) = default;
-	Nav &operator=(Nav&&) = default;
-
-public:
-	/**
-	 * Converts this direction into one of the cardinal directions.
-	 * @return The direction.
-	 */
-	dir_t AsDigital() const { return dir; }
-	
-private:
-	dir_t dir;
-};
-
-inline std::ostream &operator<<(std::ostream &os, const Nav &nav)
-{
-	switch (nav.AsDigital()) {
-		case Nav::NEUTRAL: os << "NEUTRAL"; break;
-		case Nav::UP: os << "UP"; break;
-		case Nav::DOWN: os << "DOWN"; break;
-		case Nav::LEFT: os << "LEFT"; break;
-		case Nav::RIGHT: os << "RIGHT"; break;
-		default: os << static_cast<int>(nav.AsDigital());
-	}
-	return os;
-}
-
 /// Signals which are self-contained (no payload).
 typedef boost::signals2::signal<void()> voidSignal_t;
 

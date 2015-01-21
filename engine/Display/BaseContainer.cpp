@@ -193,20 +193,48 @@ void BaseContainer::FocusNextFrom(children_t::iterator startingPoint,
 	RelinquishFocus(nav);
 }
 
-bool BaseContainer::TryFocus()
+bool BaseContainer::TryFocus(const Control::Nav &nav)
 {
+	using Nav = Control::Nav;
+
 	if (IsFocused()) return true;
 	if (!IsVisible()) return false;
 
 	// Attempt to focus the first focusable widget.
-	for (auto &child : children) {
-		if (child.child->TryFocus()) {
-			focusedChild = child.child.get();
-			SetFocused(true);
-			return true;
-		}
+	auto dir = nav.AsDigital();
+	switch (dir) {
+		case Nav::NEUTRAL:
+		case Nav::RIGHT:
+		case Nav::DOWN:
+			// Search forward.
+			for (auto &child : children) {
+				if (child.child->TryFocus(nav)) {
+					focusedChild = child.child.get();
+					SetFocused(true);
+					return true;
+				}
+			}
+			return false;
+
+		case Nav::LEFT:
+		case Nav::UP:
+			// Search backwards.
+			for (auto iter = children.rbegin();
+				iter != children.rend(); ++iter)
+			{
+				auto &child = iter->child;
+				if (child->TryFocus(nav)) {
+					focusedChild = child.get();
+					SetFocused(true);
+					return true;
+				}
+			}
+			return false;
+
+		default:
+			throw UnimplementedExn(boost::str(
+				boost::format("BaseContainer::TryFocus: Unhandled: ") % nav));
 	}
-	return false;
 }
 
 void BaseContainer::DropFocus()

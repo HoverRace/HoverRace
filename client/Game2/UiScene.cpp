@@ -96,9 +96,9 @@ void UiScene::SetFocusRoot(std::shared_ptr<Display::UiViewModel> root)
 			[&](Display::UiViewModel &widget) { widget.TryFocus(); });
 
 		focusRelConn = focusRoot->GetFocusRelinquishedSignal().
-			connect([&](Display::UiViewModel &widget, const Control::Nav&) {
+			connect([&](Display::UiViewModel &widget, const Control::Nav &nav) {
 				widget.DropFocus();
-				widget.TryFocus();
+				widget.TryFocus(nav);
 			});
 	}
 }

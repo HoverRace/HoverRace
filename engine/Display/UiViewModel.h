@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include "../Control/Nav.h"
 #include "../Util/MR_Types.h"
 #include "../Vec.h"
 #include "UiLayoutFlags.h"
@@ -41,7 +42,6 @@ namespace HoverRace {
 		namespace Mouse {
 			struct Click;
 		}
-		class Nav;
 	}
 }
 
@@ -177,10 +177,15 @@ public:
 	 *
 	 * This is called by the parent container if focus has been requested.
 	 *
+	 * @param nav The direction in which the focus is heading.
 	 * @return @c true if it succeeds (widget is now focused),
 	 *         @c false if it fails (widget did not take focus).
 	 */
-	virtual bool TryFocus() { return false; }
+	virtual bool TryFocus(const Control::Nav &nav = Control::Nav::NEUTRAL)
+	{
+		HR_UNUSED(nav);
+		return false;
+	}
 
 	/**
 	 * Force this widget to give up focus, if it is currently focused.

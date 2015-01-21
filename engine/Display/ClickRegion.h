@@ -91,7 +91,7 @@ protected:
 	virtual void FireClickedSignal();
 
 public:
-	bool TryFocus() override;
+	bool TryFocus(const Control::Nav &nav = Control::Nav::NEUTRAL) override;
 
 	const Vec2 &GetSize();
 	void SetSize(const Vec2 &size);

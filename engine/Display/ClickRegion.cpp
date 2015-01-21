@@ -115,7 +115,7 @@ void ClickRegion::FireClickedSignal()
 	clickedSignal(*this);
 }
 
-bool ClickRegion::TryFocus()
+bool ClickRegion::TryFocus(const Control::Nav&)
 {
 	if (IsFocused()) return true;
 	if (!IsEnabled()) return false;
