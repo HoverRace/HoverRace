@@ -149,7 +149,8 @@ void DialogScene::SupportExtraAction(const std::string &label)
 {
 	assert(!extraBtn);
 
-	extraBtn = statusRoot->NewChild<Display::ActionButton>(display, label);
+	extraBtn = actionGrid->At(0, actionGridCol++).
+		NewChild<Display::ActionButton>(display, label)->GetContents();
 }
 
 /**
