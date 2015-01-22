@@ -140,11 +140,6 @@ protected:
 	{
 		for (auto iter = children.begin(); iter != children.end(); ++iter) {
 			if (iter->child == child) {
-				if (child.get() == focusedChild) {
-					child->DropFocus();
-					focusedChild = nullptr;
-					//TODO: Relinquish focus.
-				}
 				children.erase(iter);
 				break;
 			}
@@ -189,7 +184,13 @@ protected:
 		return child;
 	}
 
-	virtual void Clear();
+	/**
+	 * Remove all child elements.
+	 */
+	virtual void Clear()
+	{
+		children.clear();
+	}
 
 private:
 	template<typename P, bool(UiViewModel::*F)(P)>
@@ -228,35 +229,24 @@ public:
 	{
 		return PropagateMouseEvent<const Control::Mouse::Click&, &UiViewModel::OnMouseReleased>(click);
 	}
-	bool OnAction() override
-	{
-		if (focusedChild) {
-			return focusedChild->OnAction();
-		}
-		return false;
-	}
-	bool OnNavigate(const Control::Nav &nav) override
-	{
-		if (focusedChild) {
-			return focusedChild->OnNavigate(nav);
-		}
-		return false;
-	}
 
-private:
-	void OnChildRequestedFocus(UiViewModel &child);
-	void OnChildRelinquishedFocus(UiViewModel &child, const Control::Nav &nav);
+protected:
+	/**
+	 * Called when a child widget requests input focus.
+	 * @param child The child widget.
+	 */
+	virtual void OnChildRequestedFocus(UiViewModel &child) { HR_UNUSED(child); }
 
-	void FocusPrevFrom(children_t::iterator startingPoint,
-		const Control::Nav &nav);
-	void FocusNextFrom(children_t::iterator startingPoint,
-		const Control::Nav &nav);
+	/**
+	 * Called when a child widget passes input focus to another widget.
+	 * @param child The child widget.
+	 * @param nav The navigation direction.
+	 */
+	virtual void OnChildRelinquishedFocus(UiViewModel &child,
+		const Control::Nav &nav) { HR_UNUSED(child); HR_UNUSED(nav); }
 
 public:
 	void ShrinkWrap();
-
-	bool TryFocus(const Control::Nav &nav = Control::Nav::NEUTRAL) override;
-	void DropFocus() override;
 
 	/**
 	 * Retrieve the size of the container.
@@ -308,6 +298,9 @@ public:
 		}
 	}
 
+protected:
+	children_t &GetChildren() { return children; }
+
 public:
 	Vec3 Measure() override { return size.Promote(); }
 
@@ -319,7 +312,6 @@ private:
 	double opacity;
 	bool visible;
 	children_t children;
-	UiViewModel *focusedChild;
 };
 
 }  // namespace Display

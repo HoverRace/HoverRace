@@ -52,11 +52,43 @@ class MR_DllDeclare Container : public BaseContainer
 
 public:
 	Container(Display &display, uiLayoutFlags_t layoutFlags = 0) :
-		SUPER(display, layoutFlags) { }
+		SUPER(display, layoutFlags), focusedChild(nullptr) { }
 	Container(Display &display, const Vec2 &size, bool clip = true,
 		uiLayoutFlags_t layoutFlags = 0) :
-		SUPER(display, size, clip, layoutFlags) { }
+		SUPER(display, size, clip, layoutFlags), focusedChild(nullptr) { }
 	virtual ~Container() { }
+
+public:
+	bool OnAction() override
+	{
+		if (focusedChild) {
+			return focusedChild->OnAction();
+		}
+		return false;
+	}
+
+	bool OnNavigate(const Control::Nav &nav) override
+	{
+		if (focusedChild) {
+			return focusedChild->OnNavigate(nav);
+		}
+		return false;
+	}
+
+protected:
+	void OnChildRequestedFocus(UiViewModel &child) override;
+	void OnChildRelinquishedFocus(UiViewModel &child,
+		const Control::Nav &nav) override;
+
+private:
+	void FocusPrevFrom(children_t::iterator startingPoint,
+		const Control::Nav &nav);
+	void FocusNextFrom(children_t::iterator startingPoint,
+		const Control::Nav &nav);
+
+public:
+	bool TryFocus(const Control::Nav &nav = Control::Nav::NEUTRAL) override;
+	void DropFocus() override;
 
 public:
 	// Public forwards of container manipulation functions.
@@ -77,6 +109,11 @@ public:
 		>::type
 	RemoveChild(const std::shared_ptr<T> &child)
 	{
+		if (child.get() == focusedChild) {
+			child->DropFocus();
+			focusedChild = nullptr;
+			//TODO: Relinquish focus?  Focus next?
+		}
 		return SUPER::RemoveChild(child);
 	}
 
@@ -90,10 +127,10 @@ public:
 		return SUPER::ReorderChild(child, idx);
 	}
 
-	void Clear() override
-	{
-		SUPER::Clear();
-	}
+	void Clear() override;
+
+private:
+	UiViewModel *focusedChild;
 };
 
 }  // namespace Display
