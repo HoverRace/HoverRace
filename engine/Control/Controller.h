@@ -334,6 +334,8 @@ public:
 			VoidActionPtr menuDown;
 			VoidActionPtr menuLeft;
 			VoidActionPtr menuRight;
+			VoidActionPtr menuNext;
+			VoidActionPtr menuPrev;
 
 			// Console scrolling.
 			VoidActionPtr consoleUp;

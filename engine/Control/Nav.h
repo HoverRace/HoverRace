@@ -45,7 +45,7 @@ namespace Control {
 class MR_DllDeclare Nav
 {
 public:
-	enum dir_t { NEUTRAL, UP, DOWN, LEFT, RIGHT };
+	enum dir_t { NEUTRAL, UP, DOWN, LEFT, RIGHT, NEXT, PREV };
 
 public:
 	Nav(dir_t dir) : dir(dir) { }
@@ -74,6 +74,8 @@ inline std::ostream &operator<<(std::ostream &os, const Nav &nav)
 		case Nav::DOWN: os << "DOWN"; break;
 		case Nav::LEFT: os << "LEFT"; break;
 		case Nav::RIGHT: os << "RIGHT"; break;
+		case Nav::NEXT: os << "NEXT"; break;
+		case Nav::PREV: os << "PREV"; break;
 		default: os << static_cast<int>(nav.AsDigital());
 	}
 	return os;

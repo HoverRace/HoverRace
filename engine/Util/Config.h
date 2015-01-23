@@ -290,6 +290,8 @@ public:
 		int menuDown;
 		int menuLeft;
 		int menuRight;
+		int menuNext;
+		int menuPrev;
 
 		void Load(yaml::MapNode*);
 		void Save(yaml::Emitter*) const;

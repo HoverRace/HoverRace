@@ -45,6 +45,8 @@ InputEventController::actions_t::ui_t::ui_t() :
 	menuDown(std::make_shared<Action<voidSignal_t>>(_("Down"), 0)),
 	menuLeft(std::make_shared<Action<voidSignal_t>>(_("Left"), 0)),
 	menuRight(std::make_shared<Action<voidSignal_t>>(_("Right"), 0)),
+	menuNext(std::make_shared<Action<voidSignal_t>>(_("Next"), 0)),
+	menuPrev(std::make_shared<Action<voidSignal_t>>(_("Previous"), 0)),
 	consoleUp(std::make_shared<Action<voidSignal_t>>(_("Page Up"), 0)),
 	consoleDown(std::make_shared<Action<voidSignal_t>>(_("Page Down"), 1)),
 	consoleTop(std::make_shared<Action<voidSignal_t>>(_("Top"), 2)),
@@ -602,6 +604,8 @@ void InputEventController::LoadMenuMap()
 	AssignAction(cmap, config->ui.menuDown, actions.ui.menuDown);
 	AssignAction(cmap, config->ui.menuLeft, actions.ui.menuLeft);
 	AssignAction(cmap, config->ui.menuRight, actions.ui.menuRight);
+	AssignAction(cmap, config->ui.menuNext, actions.ui.menuNext);
+	AssignAction(cmap, config->ui.menuPrev, actions.ui.menuPrev);
 }
 
 /// Set up the console toggle control.

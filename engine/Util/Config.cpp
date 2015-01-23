@@ -752,6 +752,8 @@ void Config::ResetToDefaults()
 	ui.menuDown = InputEventController::HashKeyboardEvent(SDLK_DOWN);
 	ui.menuLeft = InputEventController::HashKeyboardEvent(SDLK_LEFT);
 	ui.menuRight = InputEventController::HashKeyboardEvent(SDLK_RIGHT);
+	ui.menuNext = InputEventController::HashKeyboardEvent(SDLK_TAB);
+	ui.menuPrev = InputEventController::HashKeyboardEvent(SDLK_SELECT);
 
 	runtime.silent = false;
 	runtime.verboseLog = false;
@@ -1252,6 +1254,8 @@ void Config::ui_t::Load(yaml::MapNode* root)
 	READ_INT(root, menuDown, 0, INT_MAX);
 	READ_INT(root, menuLeft, 0, INT_MAX);
 	READ_INT(root, menuRight, 0, INT_MAX);
+	READ_INT(root, menuNext, 0, INT_MAX);
+	READ_INT(root, menuPrev, 0, INT_MAX);
 }
 
 void Config::ui_t::Save(yaml::Emitter* emitter) const
@@ -1273,6 +1277,8 @@ void Config::ui_t::Save(yaml::Emitter* emitter) const
 	EMIT_VAR(emitter, menuDown);
 	EMIT_VAR(emitter, menuLeft);
 	EMIT_VAR(emitter, menuRight);
+	EMIT_VAR(emitter, menuNext);
+	EMIT_VAR(emitter, menuPrev);
 
 	emitter->EndMap();
 }
