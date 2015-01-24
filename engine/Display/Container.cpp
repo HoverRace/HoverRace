@@ -42,7 +42,8 @@ void Container::OnChildRequestedFocus(UiViewModel &child)
 			focusedChild = &child;
 		}
 		else {
-			//TODO: Relinquish focus.
+			// The child that requested focus refused to take the focus.
+			RelinquishFocus(Control::Nav::NEUTRAL);
 		}
 	}
 }
