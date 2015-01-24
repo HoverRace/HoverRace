@@ -341,20 +341,9 @@ bool InputEventController::AddActionMap(
 	auto iter = allActionMaps.find(mapname);
 	if (iter == allActionMaps.end()) return false;
 
-	auto &maps = allActionMaps[mapname];
-	for (auto &map : maps) {
-		actionMap[map.first] = map.second;
+	for (auto &map : iter->second) {
+		actionMap.insert(map);
 	}
-
-	/*
-	if(allActionMaps.count(mapname) != 1)
-		return false;
-
-	for(ActionMap::iterator it = allActionMaps[mapname].begin(); it != allActionMaps[mapname].end(); it++)
-		actionMap[it->first] = it->second; // add to active controls
-
-	activeMaps.emplace(mapname);
-	*/
 
 	activeMaps |= static_cast<size_t>(mapId);
 
