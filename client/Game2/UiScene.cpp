@@ -34,6 +34,8 @@ void UiScene::AttachController(Control::InputEventController &controller)
 	static Control::Nav NAV_D(Control::Nav::DOWN);
 	static Control::Nav NAV_L(Control::Nav::LEFT);
 	static Control::Nav NAV_R(Control::Nav::RIGHT);
+	static Control::Nav NAV_P(Control::Nav::PREV);
+	static Control::Nav NAV_N(Control::Nav::NEXT);
 
 	controller.AddMenuMaps();
 
@@ -45,10 +47,14 @@ void UiScene::AttachController(Control::InputEventController &controller)
 	downConn = ui.menuDown->Connect(std::bind(&UiScene::OnNav, this, NAV_D));
 	leftConn = ui.menuLeft->Connect(std::bind(&UiScene::OnNav, this, NAV_L));
 	rightConn = ui.menuRight->Connect(std::bind(&UiScene::OnNav, this, NAV_R));
+	prevConn = ui.menuPrev->Connect(std::bind(&UiScene::OnNav, this, NAV_P));
+	nextConn = ui.menuNext->Connect(std::bind(&UiScene::OnNav, this, NAV_N));
 }
 
 void UiScene::DetachController(Control::InputEventController&)
 {
+	nextConn.disconnect();
+	prevConn.disconnect();
 	rightConn.disconnect();
 	leftConn.disconnect();
 	downConn.disconnect();

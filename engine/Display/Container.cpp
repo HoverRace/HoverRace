@@ -78,11 +78,13 @@ void Container::OnChildRelinquishedFocus(
 
 		case Nav::UP:
 		case Nav::LEFT:
+		case Nav::PREV:
 			FocusPrevFrom(iter, nav);
 			break;
 
 		case Nav::DOWN:
 		case Nav::RIGHT:
+		case Nav::NEXT:
 			FocusNextFrom(iter, nav);
 			break;
 
@@ -158,6 +160,7 @@ bool Container::TryFocus(const Control::Nav &nav)
 		case Nav::NEUTRAL:
 		case Nav::RIGHT:
 		case Nav::DOWN:
+		case Nav::NEXT:
 			// Search forward.
 			for (auto &child : children) {
 				if (child.child->TryFocus(nav)) {
@@ -170,6 +173,7 @@ bool Container::TryFocus(const Control::Nav &nav)
 
 		case Nav::LEFT:
 		case Nav::UP:
+		case Nav::PREV:
 			// Search backwards.
 			for (auto iter = children.rbegin();
 				iter != children.rend(); ++iter)

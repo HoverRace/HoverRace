@@ -105,6 +105,8 @@ private:
 	boost::signals2::scoped_connection downConn;
 	boost::signals2::scoped_connection leftConn;
 	boost::signals2::scoped_connection rightConn;
+	boost::signals2::scoped_connection prevConn;
+	boost::signals2::scoped_connection nextConn;
 };
 
 }  // namespace Client
