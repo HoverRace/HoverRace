@@ -73,7 +73,7 @@ InputEventController::actions_t::camera_t::camera_t() :
 	{ }
 
 InputEventController::InputEventController() :
-	nextAvailableDisabledHash(0),
+	activeMaps(0), nextAvailableDisabledHash(0),
 	captureNextInput(false), captureOldHash(0), captureMap()
 {
 	LoadConfig();
@@ -322,23 +322,33 @@ void InputEventController::ClearActionMap()
 {
 	// remove all active bindings
 	actionMap.clear();
-	activeMaps.clear();
+	activeMaps = 0;
 }
 
-bool InputEventController::AddActionMap(string mapname)
+bool InputEventController::AddActionMap(
+	const string &mapname, ActionMapId mapId)
 {
+	auto iter = allActionMaps.find(mapname);
+	if (iter == allActionMaps.end()) return false;
+
+	auto &maps = allActionMaps[mapname];
+	for (auto &map : maps) {
+		actionMap[map.first] = map.second;
+	}
+
+	/*
 	if(allActionMaps.count(mapname) != 1)
 		return false;
 
 	for(ActionMap::iterator it = allActionMaps[mapname].begin(); it != allActionMaps[mapname].end(); it++)
 		actionMap[it->first] = it->second; // add to active controls
-	activeMaps.push_back(mapname);
-	return true;
-}
 
-const vector<string>& InputEventController::GetActiveMaps()
-{
-	return activeMaps;
+	activeMaps.emplace(mapname);
+	*/
+
+	activeMaps |= static_cast<size_t>(mapId);
+
+	return true;
 }
 
 InputEventController::ActionMap& InputEventController::GetActionMap(string key)
@@ -376,32 +386,32 @@ void InputEventController::AddPlayerMaps(int numPlayers, MainCharacter::MainChar
 				perf->SetMainCharacter(mcs[i]);
 			actionMap[it->first] = it->second; // add to active controls
 		}
-		activeMaps.push_back(mapname);
+		activeMaps |= static_cast<size_t>(ActionMapId::PLAYER);
 	}
 }
 
 /// Enable camera controls.
 void InputEventController::AddCameraMaps()
 {
-	AddActionMap(_("Camera"));
+	AddActionMap(_("Camera"), ActionMapId::CAMERA);
 }
 
 /// Enable menu controls.
 void InputEventController::AddMenuMaps()
 {
-	AddActionMap(_("Menu"));
+	AddActionMap(_("Menu"), ActionMapId::MENU);
 }
 
 /// Enable console toggle.
 void InputEventController::AddConsoleToggleMaps()
 {
-	AddActionMap(_("ConsoleToggle"));
+	AddActionMap(_("ConsoleToggle"), ActionMapId::CONSOLE_TOGGLE);
 }
 
 /// Enable console scroll controls.
 void InputEventController::AddConsoleMaps()
 {
-	AddActionMap(_("Console"));
+	AddActionMap(_("Console"), ActionMapId::CONSOLE);
 }
 
 /**
@@ -519,7 +529,7 @@ void InputEventController::SaveConfig()
 void InputEventController::ReloadConfig()
 {
 	allActionMaps.clear();
-	activeMaps.clear();
+	activeMaps = 0;
 	actionMap.clear();
 	LoadConfig();
 	LoadConsoleMap();

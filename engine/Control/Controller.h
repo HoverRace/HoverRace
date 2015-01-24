@@ -120,6 +120,15 @@ public:
 		AXIS_WHEEL_Y,
 	};
 
+	enum class ActionMapId : size_t
+	{
+		CAMERA = 0x01,
+		CONSOLE = 0x02,
+		CONSOLE_TOGGLE = 0x04,
+		MENU = 0x08,
+		PLAYER = 0x10,
+	};
+
 	using VoidActionPtr = std::shared_ptr<Action<voidSignal_t>>;
 	using ValueActionPtr = std::shared_ptr<Action<valueSignal_t>>;
 	using StringActionPtr =
@@ -199,14 +208,21 @@ public:
 	 *
 	 * "player1" ... "player4"
 	 *
+	 * @param mapname The action map name.
+	 * @param mapId The action map ID.
 	 * @return @c false if the map is not found
 	 */
-	bool AddActionMap(std::string mapname);
+	bool AddActionMap(const std::string &mapname, ActionMapId mapId);
 
 	/**
-	 * Return a vector containing the current maps.
+	 * Check if a control map is active.
+	 * @param id The map to look up.
+	 * @return @c true if active, @c false if inactive.
 	 */
-	const std::vector<std::string>& GetActiveMaps();
+	bool IsMapActive(ActionMapId id)
+	{
+		return (activeMaps | static_cast<size_t>(id)) != 0;
+	}
 
 	/**
 	 * Return the map with the given key.
@@ -311,7 +327,7 @@ private:
 	 * They are referenced by string.  See ClearActionMap(), AddActionMap().
 	 */
 	ActionMap actionMap;
-	std::vector<std::string> activeMaps;
+	size_t activeMaps;
 	std::map<std::string, ActionMap> allActionMaps;
 	std::unordered_map<SDL_Keycode, VoidActionPtr> hotkeys;
 
