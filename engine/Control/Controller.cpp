@@ -143,7 +143,17 @@ bool InputEventController::OnKeyPressed(const SDL_KeyboardEvent& arg)
 		}
 	}
 
-	HandleEvent(HashKeyboardEvent(kc), 1);
+	auto hash = HashKeyboardEvent(kc);
+
+	// Flip the meaning of menuNext if shift is held down.
+	if (IsMapActive(ActionMapId::MENU) &&
+		hash == actions.ui.menuNext->GetPrimaryTrigger() &&
+		(SDL_GetModState() & KMOD_SHIFT))
+	{
+		hash = actions.ui.menuPrev->GetPrimaryTrigger();
+	}
+
+	HandleEvent(hash, 1);
 	return true;
 }
 
