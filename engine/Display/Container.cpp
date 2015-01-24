@@ -207,7 +207,7 @@ void Container::Clear()
 	if (focusedChild) {
 		focusedChild->DropFocus();
 		focusedChild = nullptr;
-		//TODO: Relinquish focus.
+		RelinquishFocus(Control::Nav::NEUTRAL);
 	}
 
 	SUPER::Clear();
