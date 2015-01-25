@@ -190,7 +190,7 @@ bool Container::TryFocus(const Control::Nav &nav)
 
 		default:
 			throw UnimplementedExn(boost::str(
-				boost::format("Container::TryFocus: Unhandled: ") % nav));
+				boost::format("Container::TryFocus: Unhandled: %s") % nav));
 	}
 }
 
