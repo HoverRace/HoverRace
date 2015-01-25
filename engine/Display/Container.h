@@ -112,7 +112,7 @@ public:
 		if (child.get() == focusedChild) {
 			child->DropFocus();
 			focusedChild = nullptr;
-			//TODO: Relinquish focus?  Focus next?
+			RelinquishFocus(Control::Nav::NEUTRAL);
 		}
 		return SUPER::RemoveChild(child);
 	}
