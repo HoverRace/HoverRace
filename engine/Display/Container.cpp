@@ -91,7 +91,7 @@ void Container::OnChildRelinquishedFocus(
 
 		default:
 			throw UnimplementedExn(boost::str(boost::format(
-				"BaseContainer::OnChildRelinquishedFocus(%s)") % nav));
+				"Container::OnChildRelinquishedFocus(%s)") % nav));
 	}
 }
 
@@ -190,7 +190,7 @@ bool Container::TryFocus(const Control::Nav &nav)
 
 		default:
 			throw UnimplementedExn(boost::str(
-				boost::format("BaseContainer::TryFocus: Unhandled: ") % nav));
+				boost::format("Container::TryFocus: Unhandled: ") % nav));
 	}
 }
 
