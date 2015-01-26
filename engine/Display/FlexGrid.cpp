@@ -191,7 +191,7 @@ bool FlexGrid::TryFocus(const Control::Nav &nav)
 	using Nav = Control::Nav;
 
 	if (IsFocused()) return true;
-	if (IsEmpty() && !IsVisible()) return false;
+	if (IsEmpty() || !IsVisible()) return false;
 
 	size_t row;
 	size_t col;
