@@ -84,6 +84,7 @@ void FlexGrid::OnChildRequestedFocus(UiViewModel &child)
 		if (child.TryFocus()) {
 			//TODO: Track focus on the cell, and track coords in the cell.
 			focusedCell = FindChild(&child);
+			SetFocused(true);
 		}
 		else {
 			// The child that requested focus refused to take the focus.
@@ -143,6 +144,12 @@ void FlexGrid::OnChildRelinquishedFocus(UiViewModel&, const Control::Nav &nav)
 			throw UnimplementedExn(boost::str(boost::format(
 				"FlexGrid::OnChildRelinquishedFocus(%s)") % nav));
 	}
+}
+
+void FlexGrid::SetFocusedCell(size_t row, size_t col)
+{
+	focusedCell = boost::make_optional(std::make_pair(row, col));
+	SetFocused(true);
 }
 
 bool FlexGrid::FocusUpFrom(size_t row, size_t col, const Control::Nav &nav)
@@ -224,6 +231,7 @@ bool FlexGrid::TryFocus(const Control::Nav &nav)
 		auto &cell = cols[col];
 		if (cell && cell->TryFocus(nav)) {
 			focusedCell = boost::make_optional(std::make_pair(row, col));
+			SetFocusedCell(row, col);
 			return true;
 		}
 	}

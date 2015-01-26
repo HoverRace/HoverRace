@@ -92,6 +92,8 @@ protected:
 		const Control::Nav &nav) override;
 
 private:
+	void SetFocusedCell(size_t row, size_t col);
+
 	template<class Fn>
 	bool FocusFrom(size_t row, size_t col, const Control::Nav &nav, Fn nextFn)
 	{
