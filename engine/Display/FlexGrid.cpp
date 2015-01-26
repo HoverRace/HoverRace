@@ -1,7 +1,7 @@
 
 // FlexGrid.cpp
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -65,8 +65,199 @@ const double FlexGrid::AUTOSIZE = std::numeric_limits<double>::quiet_NaN();
 FlexGrid::FlexGrid(Display &display, uiLayoutFlags_t layoutFlags) :
 	SUPER(display, layoutFlags),
 	margin(display.styles.gridMargin), padding(display.styles.gridPadding),
-	size(0, 0), fixedSize(AUTOSIZE, AUTOSIZE)
+	size(0, 0), fixedSize(AUTOSIZE, AUTOSIZE), focusedCell()
 {
+}
+
+void FlexGrid::OnChildRequestedFocus(UiViewModel &child)
+{
+	if (!IsFocused()) {
+		RequestFocus();
+	}
+
+	if (IsFocused()) {
+		// Switch focus to the new child, if possible.
+		if (focusedCell) {
+			rows[focusedCell->first][focusedCell->second]->DropFocus();
+			focusedCell = boost::none;
+		}
+		if (child.TryFocus()) {
+			//TODO: Track focus on the cell, and track coords in the cell.
+			focusedCell = FindChild(&child);
+		}
+		else {
+			// The child that requested focus refused to take the focus.
+			RelinquishFocus(Control::Nav::NEUTRAL);
+		}
+	}
+}
+
+void FlexGrid::OnChildRelinquishedFocus(UiViewModel&, const Control::Nav &nav)
+{
+	using Nav = Control::Nav;
+
+	if (!focusedCell) {
+		RelinquishFocus(nav);
+		return;
+	}
+	auto row = focusedCell->first;
+	auto col = focusedCell->second;
+	rows[row][col]->DropFocus();
+	focusedCell = boost::none;
+
+	auto dir = nav.AsDigital();
+	switch (dir) {
+		case Nav::NEUTRAL:
+			RelinquishFocus(nav);
+			break;
+
+		case Nav::UP:
+			if (!FocusUpFrom(row, col, nav)) {
+				RelinquishFocus(nav);
+			}
+			break;
+
+		case Nav::DOWN:
+			if (!FocusDownFrom(row, col, nav)) {
+				RelinquishFocus(nav);
+			}
+			break;
+
+		case Nav::PREV:
+		case Nav::LEFT:
+			if (!FocusLeftFrom(row, col, nav)) {
+				RelinquishFocus(nav);
+			}
+			break;
+
+		case Nav::NEXT:
+		case Nav::RIGHT:
+			if (!FocusRightFrom(row, col, nav)) {
+				RelinquishFocus(nav);
+			}
+			break;
+
+		//TODO: Wraparound PREV and NEXT.
+
+		default:
+			throw UnimplementedExn(boost::str(boost::format(
+				"FlexGrid::OnChildRelinquishedFocus(%s)") % nav));
+	}
+}
+
+bool FlexGrid::FocusUpFrom(size_t row, size_t col, const Control::Nav &nav)
+{
+	return FocusFrom(row, col, nav, [&](size_t &r, size_t&) -> bool {
+		if (r == 0) return false;
+		--r;
+		return true;
+	});
+}
+
+bool FlexGrid::FocusDownFrom(size_t row, size_t col, const Control::Nav &nav)
+{
+	return FocusFrom(row, col, nav, [&](size_t &r, size_t&) -> bool {
+		r++;
+		return r != rows.size();
+	});
+}
+
+bool FlexGrid::FocusLeftFrom(size_t row, size_t col, const Control::Nav &nav)
+{
+	return FocusFrom(row, col, nav, [&](size_t&, size_t &c) -> bool {
+		if (c == 0) return false;
+		--c;
+		return true;
+	});
+}
+
+bool FlexGrid::FocusRightFrom(size_t row, size_t col, const Control::Nav &nav)
+{
+	return FocusFrom(row, col, nav, [&](size_t &r, size_t &c) -> bool {
+		c++;
+		return c != rows[r].size();
+	});
+}
+
+bool FlexGrid::TryFocus(const Control::Nav &nav)
+{
+	using Nav = Control::Nav;
+
+	if (IsFocused()) return true;
+	if (IsEmpty() && !IsVisible()) return false;
+
+	size_t row;
+	size_t col;
+
+	auto dir = nav.AsDigital();
+	switch (dir) {
+		case Nav::NEUTRAL:
+		case Nav::DOWN:
+		case Nav::RIGHT:
+		case Nav::NEXT:
+			row = 0;
+			col = 0;
+			break;
+
+		case Nav::UP:
+			row = rows.size() - 1;
+			col = 0;
+			break;
+
+		case Nav::LEFT:
+			row = 0;
+			col = defaultCols.size() - 1;
+			break;
+
+		case Nav::PREV:
+			row = rows.size() - 1;
+			col = defaultCols.size() - 1;
+			break;
+
+		default:
+			throw UnimplementedExn(boost::str(
+				boost::format("FlexGrid::TryFocus: Unhandled: %s") % nav));
+	}
+
+	auto &cols = rows[row];
+	if (col < cols.size()) {
+		auto &cell = cols[col];
+		if (cell && cell->TryFocus(nav)) {
+			focusedCell = boost::make_optional(std::make_pair(row, col));
+			return true;
+		}
+	}
+
+	// Search for a focusable cell.
+	switch (dir) {
+		case Nav::UP:
+			return FocusUpFrom(row, col, nav);
+
+		case Nav::DOWN:
+			return FocusDownFrom(row, col, nav);
+
+		case Nav::PREV:
+		case Nav::LEFT:
+			return FocusLeftFrom(row, col, nav);
+
+		case Nav::NEUTRAL:
+		case Nav::NEXT:
+		case Nav::RIGHT:
+			return FocusRightFrom(row, col, nav);
+
+		default:
+			throw UnimplementedExn(boost::str(
+				boost::format("FlexGrid::TryFocus: Unhandled: %s") % nav));
+	}
+}
+
+void FlexGrid::DropFocus()
+{
+	if (focusedCell) {
+		rows[focusedCell->first][focusedCell->second]->DropFocus();
+		focusedCell = boost::none;
+	}
+	SUPER::DropFocus();
 }
 
 void FlexGrid::SetMargin(double width, double height)
@@ -146,6 +337,25 @@ Vec2 FlexGrid::AlignCellContents(double x, double y, double w, double h,
 			throw Exception("Unknown alignment: " +
 				boost::lexical_cast<std::string>(static_cast<int>(alignment)));
 	}
+}
+
+/**
+ * Find the coordinates of a child widget.
+ * @param child The widget to search for (may be @c nullptr).
+ * @return The coordinates (row, col) if found.
+ */
+boost::optional<std::pair<size_t, size_t>> FlexGrid::FindChild(
+	UiViewModel *child)
+{
+	for (size_t row = 0; rows.size(); row++) {
+		auto &cols = rows[row];
+		for (size_t col = 0; cols.size(); col++) {
+			if (cols[col]->Contains(child)) {
+				return boost::make_optional(std::make_pair(row, col));
+			}
+		}
+	}
+	return boost::none;
 }
 
 void FlexGrid::Clear()

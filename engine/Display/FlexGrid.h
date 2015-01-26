@@ -69,6 +69,56 @@ public:
 	virtual ~FlexGrid() { }
 
 public:
+	bool OnAction() override
+	{
+		if (focusedCell) {
+			return rows[focusedCell->first][focusedCell->second]->OnAction();
+		}
+		return false;
+	}
+
+	bool OnNavigate(const Control::Nav &nav) override
+	{
+		if (focusedCell) {
+			return rows[focusedCell->first][focusedCell->second]->
+				OnNavigate(nav);
+		}
+		return false;
+	}
+
+protected:
+	void OnChildRequestedFocus(UiViewModel &child) override;
+	void OnChildRelinquishedFocus(UiViewModel &child,
+		const Control::Nav &nav) override;
+
+private:
+	template<class Fn>
+	bool FocusFrom(size_t row, size_t col, const Control::Nav &nav, Fn nextFn)
+	{
+		while (nextFn(row, col)) {
+			auto &cols = rows[row];
+			if (col >= cols.size()) break;
+
+			auto &cell = cols[col];
+			if (cell && cell->TryFocus(nav)) {
+				focusedCell = boost::make_optional(std::make_pair(row, col));
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	bool FocusUpFrom(size_t row, size_t col, const Control::Nav &nav);
+	bool FocusDownFrom(size_t row, size_t col, const Control::Nav &nav);
+	bool FocusLeftFrom(size_t row, size_t col, const Control::Nav &nav);
+	bool FocusRightFrom(size_t row, size_t col, const Control::Nav &nav);
+
+public:
+	bool TryFocus(const Control::Nav &nav = Control::Nav::NEUTRAL) override;
+	void DropFocus() override;
+
+public:
 	const Vec2 &GetMargin() const { return margin; }
 	void SetMargin(double width, double height);
 
@@ -131,6 +181,25 @@ public:
 		 * @return The size (may be zero).
 		 */
 		virtual Vec3 Measure() = 0;
+
+		/// Trigger TryFocus() on the contents.
+		virtual bool TryFocus(const Control::Nav &nav) = 0;
+
+		/// Trigger DropFocus() on the contents.
+		virtual void DropFocus() = 0;
+
+		/// Trigger OnAction() on the contents.
+		virtual bool OnAction() = 0;
+
+		/// Trigger OnNavigate() on the contents.
+		virtual bool OnNavigate(const Control::Nav&) = 0;
+
+		/**
+		 * Check if this contains the specified widget. 
+		 * @param child The child to check (may be @c nullptr).
+		 * @return @c true if the cell contains the widget, @c false otherwise.
+		 */
+		virtual bool Contains(const UiViewModel *child) = 0;
 	};
 
 protected:
@@ -171,6 +240,11 @@ protected:
 		void SetExtents(double, double, double, double,
 			double, double) override { }
 		Vec3 Measure() override { return Vec3(0, 0, 0);  }
+		bool TryFocus(const Control::Nav&) override { return false; }
+		void DropFocus() override { }
+		bool OnAction() override { return false; }
+		bool OnNavigate(const Control::Nav&) override { return false; }
+		bool Contains(const UiViewModel*) override { return false; }
 
 	private:
 		Alignment alignment;
@@ -235,6 +309,31 @@ protected:
 		Vec3 Measure() override
 		{
 			return contents->Measure();
+		}
+
+		bool TryFocus(const Control::Nav &nav) override
+		{
+			return contents->TryFocus(nav);
+		}
+
+		void DropFocus() override
+		{
+			contents->DropFocus();
+		}
+
+		bool OnAction() override
+		{
+			return contents->OnAction();
+		}
+
+		bool OnNavigate(const Control::Nav &nav) override
+		{
+			return contents->OnNavigate(nav);
+		}
+
+		bool Contains(const UiViewModel *child) override
+		{
+			return contents.get() == child;
 		}
 
 	public:
@@ -302,6 +401,31 @@ public:
 		Vec3 Measure() override
 		{
 			return CheckCell()->Measure();
+		}
+
+		bool TryFocus(const Control::Nav &nav) override
+		{
+			return CheckCell()->TryFocus(nav);
+		}
+
+		void DropFocus() override
+		{
+			CheckCell()->DropFocus();
+		}
+
+		bool OnAction() override
+		{
+			return CheckCell()->OnAction();
+		}
+
+		bool OnNavigate(const Control::Nav &nav) override
+		{
+			return CheckCell()->OnNavigate(nav);
+		}
+
+		bool Contains(const UiViewModel *child) override
+		{
+			return CheckCell()->Contains(child);
 		}
 
 	public:
@@ -414,6 +538,8 @@ protected:
 		return InitCell(row, col, NewChild<T>(std::forward<Args>(args)...));
 	}
 
+	boost::optional<std::pair<size_t, size_t>> FindChild(UiViewModel *child);
+
 public:
 	void Clear() override;
 
@@ -431,6 +557,7 @@ private:
 	using cells_t = std::vector<std::shared_ptr<Cell>>;
 	std::vector<DefaultCell> defaultCols;
 	std::vector<cells_t> rows;
+	boost::optional<std::pair<size_t, size_t>> focusedCell;
 };
 
 }  // namespace Display
