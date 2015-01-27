@@ -204,7 +204,7 @@ public:
 		 * @param child The child to check (may be @c nullptr).
 		 * @return @c true if the cell contains the widget, @c false otherwise.
 		 */
-		virtual bool Contains(const UiViewModel *child) = 0;
+		virtual bool Contains(const UiViewModel *child) const = 0;
 	};
 
 protected:
@@ -249,7 +249,7 @@ protected:
 		void DropFocus() override { }
 		bool OnAction() override { return false; }
 		bool OnNavigate(const Control::Nav&) override { return false; }
-		bool Contains(const UiViewModel*) override { return false; }
+		bool Contains(const UiViewModel*) const override { return false; }
 
 	private:
 		Alignment alignment;
@@ -336,7 +336,7 @@ protected:
 			return contents->OnNavigate(nav);
 		}
 
-		bool Contains(const UiViewModel *child) override
+		bool Contains(const UiViewModel *child) const override
 		{
 			return contents.get() == child;
 		}
@@ -371,7 +371,7 @@ public:
 		CellProxy &operator=(CellProxy&&) = delete;
 
 	private:
-		Cell *CheckCell()
+		Cell *CheckCell() const
 		{
 			if (!cell) {
 				std::ostringstream oss;
@@ -428,7 +428,7 @@ public:
 			return CheckCell()->OnNavigate(nav);
 		}
 
-		bool Contains(const UiViewModel *child) override
+		bool Contains(const UiViewModel *child) const override
 		{
 			return CheckCell()->Contains(child);
 		}
@@ -543,7 +543,8 @@ protected:
 		return InitCell(row, col, NewChild<T>(std::forward<Args>(args)...));
 	}
 
-	boost::optional<std::pair<size_t, size_t>> FindChild(UiViewModel *child);
+	boost::optional<std::pair<size_t, size_t>> FindChild(
+		UiViewModel *child) const;
 
 public:
 	void Clear() override;

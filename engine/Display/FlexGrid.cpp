@@ -397,7 +397,7 @@ Vec2 FlexGrid::AlignCellContents(double x, double y, double w, double h,
  * @return The coordinates (row, col) if found.
  */
 boost::optional<std::pair<size_t, size_t>> FlexGrid::FindChild(
-	UiViewModel *child)
+	UiViewModel *child) const
 {
 	for (size_t row = 0; row < rows.size(); row++) {
 		auto &cols = rows[row];
@@ -493,9 +493,7 @@ void FlexGrid::Layout()
 
 Vec3 FlexGrid::Measure()
 {
-	//FIXME: Measure() really should be non-const because we already document
-	//       the caveat that this operation may change state.
-	const_cast<FlexGrid*>(this)->PrepareRender();
+	PrepareRender();
 	return size.Promote();
 }
 
