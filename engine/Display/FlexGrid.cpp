@@ -355,9 +355,9 @@ Vec2 FlexGrid::AlignCellContents(double x, double y, double w, double h,
 boost::optional<std::pair<size_t, size_t>> FlexGrid::FindChild(
 	UiViewModel *child)
 {
-	for (size_t row = 0; rows.size(); row++) {
+	for (size_t row = 0; row < rows.size(); row++) {
 		auto &cols = rows[row];
-		for (size_t col = 0; cols.size(); col++) {
+		for (size_t col = 0; col < cols.size(); col++) {
 			if (cols[col]->Contains(child)) {
 				return boost::make_optional(std::make_pair(row, col));
 			}
