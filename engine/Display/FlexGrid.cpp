@@ -19,6 +19,7 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
+#include "../Util/Log.h"
 #include "../Exception.h"
 
 #include "FlexGrid.h"
@@ -124,21 +125,29 @@ void FlexGrid::OnChildRelinquishedFocus(UiViewModel&, const Control::Nav &nav)
 			}
 			break;
 
-		case Nav::PREV:
 		case Nav::LEFT:
 			if (!FocusLeftFrom(row, col, nav)) {
 				RelinquishFocus(nav);
 			}
 			break;
 
-		case Nav::NEXT:
 		case Nav::RIGHT:
 			if (!FocusRightFrom(row, col, nav)) {
 				RelinquishFocus(nav);
 			}
 			break;
 
-		//TODO: Wraparound PREV and NEXT.
+		case Nav::PREV:
+			if (!FocusPrevFrom(row, col, nav)) {
+				RelinquishFocus(nav);
+			}
+			break;
+
+		case Nav::NEXT:
+			if (!FocusNextFrom(row, col, nav)) {
+				RelinquishFocus(nav);
+			}
+			break;
 
 		default:
 			throw UnimplementedExn(boost::str(boost::format(
@@ -186,6 +195,38 @@ bool FlexGrid::FocusRightFrom(size_t row, size_t col, const Control::Nav &nav)
 	});
 }
 
+bool FlexGrid::FocusNextFrom(size_t row, size_t col, const Control::Nav &nav)
+{
+	return FocusFrom(row, col, nav, [&](size_t &r, size_t &c) -> bool {
+		c++;
+		if (c >= rows[r].size()) {
+			do {
+				r++;
+				if (r >= rows.size()) return false;
+			} while (rows[r].empty());
+			c = 0;
+		}
+		return true;
+	});
+}
+
+bool FlexGrid::FocusPrevFrom(size_t row, size_t col, const Control::Nav &nav)
+{
+	return FocusFrom(row, col, nav, [&](size_t &r, size_t &c) -> bool {
+		if (c == 0) {
+			do {
+				if (r == 0) return false;
+				r--;
+			} while (rows[r].empty());
+			c = rows[r].size() - 1;
+		}
+		else {
+			c--;
+		}
+		return true;
+	});
+}
+
 bool FlexGrid::TryFocus(const Control::Nav &nav)
 {
 	using Nav = Control::Nav;
@@ -230,7 +271,6 @@ bool FlexGrid::TryFocus(const Control::Nav &nav)
 	if (col < cols.size()) {
 		auto &cell = cols[col];
 		if (cell && cell->TryFocus(nav)) {
-			focusedCell = boost::make_optional(std::make_pair(row, col));
 			SetFocusedCell(row, col);
 			return true;
 		}
@@ -244,14 +284,18 @@ bool FlexGrid::TryFocus(const Control::Nav &nav)
 		case Nav::DOWN:
 			return FocusDownFrom(row, col, nav);
 
-		case Nav::PREV:
 		case Nav::LEFT:
 			return FocusLeftFrom(row, col, nav);
 
-		case Nav::NEUTRAL:
-		case Nav::NEXT:
 		case Nav::RIGHT:
 			return FocusRightFrom(row, col, nav);
+
+		case Nav::PREV:
+			return FocusPrevFrom(row, col, nav);
+
+		case Nav::NEUTRAL:
+		case Nav::NEXT:
+			return FocusNextFrom(row, col, nav);
 
 		default:
 			throw UnimplementedExn(boost::str(

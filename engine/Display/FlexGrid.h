@@ -116,6 +116,8 @@ private:
 	bool FocusDownFrom(size_t row, size_t col, const Control::Nav &nav);
 	bool FocusLeftFrom(size_t row, size_t col, const Control::Nav &nav);
 	bool FocusRightFrom(size_t row, size_t col, const Control::Nav &nav);
+	bool FocusNextFrom(size_t row, size_t col, const Control::Nav &nav);
+	bool FocusPrevFrom(size_t row, size_t col, const Control::Nav &nav);
 
 public:
 	bool TryFocus(const Control::Nav &nav = Control::Nav::NEUTRAL) override;
