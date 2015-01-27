@@ -412,6 +412,12 @@ boost::optional<std::pair<size_t, size_t>> FlexGrid::FindChild(
 
 void FlexGrid::Clear()
 {
+	if (focusedCell) {
+		rows[focusedCell->first][focusedCell->second]->DropFocus();
+		focusedCell = boost::none;
+		RelinquishFocus(Control::Nav::NEUTRAL);
+	}
+
 	defaultCols.clear();
 	rows.clear();
 
