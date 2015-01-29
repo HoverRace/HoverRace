@@ -76,7 +76,7 @@ inline std::ostream &operator<<(std::ostream &os, const Nav &nav)
 		case Nav::RIGHT: os << "RIGHT"; break;
 		case Nav::NEXT: os << "NEXT"; break;
 		case Nav::PREV: os << "PREV"; break;
-		default: os << static_cast<int>(nav.AsDigital());
+		default: os << "Unknown(" << nav.AsDigital() << ")";
 	}
 	return os;
 }
