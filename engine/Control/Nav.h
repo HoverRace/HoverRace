@@ -48,7 +48,7 @@ public:
 	enum dir_t { NEUTRAL, UP, DOWN, LEFT, RIGHT, NEXT, PREV };
 
 public:
-	Nav(dir_t dir) : dir(dir) { }
+	Nav(dir_t dir = NEUTRAL) : dir(dir) { }
 	Nav(const Nav&) = default;
 	Nav(Nav&&) = default;
 
