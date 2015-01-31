@@ -153,6 +153,8 @@ TrackSelectScene::TrackSelectScene(Display::Display &display,
 	readyBtn->SetEnabled(false);
 	readyBtn->GetClickedSignal().connect(std::bind(
 		&TrackSelectScene::OnReady, this));
+
+	trackPanel->RequestFocus();
 }
 
 TrackSelectScene::~TrackSelectScene()

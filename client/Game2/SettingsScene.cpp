@@ -71,6 +71,8 @@ SettingsScene::SettingsScene(Display::Display &display, GameDirector &director,
 	saveCell->SetAlignment(Alignment::N);
 	saveConn = saveCell->GetContents()->GetClickedSignal().connect(
 		std::bind(&SettingsScene::OnOk, this));
+
+	settingsGrid->RequestFocus();
 }
 
 /**

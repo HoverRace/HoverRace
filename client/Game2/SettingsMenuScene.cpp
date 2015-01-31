@@ -89,6 +89,8 @@ SettingsMenuScene::SettingsMenuScene(Display::Display &display,
 		display, director, GetTitle(), _("Network"), false);
 	menuGrid->At(row++, 0).NewChild<MenuItemButton<AudioSettingsScene>>(
 		display, director, GetTitle(), _("Advanced"), false);
+
+	menuGrid->RequestFocus();
 }
 
 SettingsMenuScene::~SettingsMenuScene()

@@ -74,6 +74,8 @@ PauseMenuScene::PauseMenuScene(Display::Display &display,
 		&PauseMenuScene::OnQuitToMainMenu, this));
 	AddButton(_("Quit to Desktop"), y)->GetClickedSignal().connect(std::bind(
 		&PauseMenuScene::OnQuitToDesktop, this));
+
+	GetRoot()->RequestFocus();
 }
 
 PauseMenuScene::~PauseMenuScene()

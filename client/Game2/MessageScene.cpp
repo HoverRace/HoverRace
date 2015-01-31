@@ -80,6 +80,8 @@ MessageScene::MessageScene(Display::Display &display,
 		cancelBtn = root->NewChild<ActionButton>(display);
 		cancelBtn->SetPos(HORZ_PADDING + 200, 480);
 	}
+
+	okBtn->RequestFocus();
 }
 
 MessageScene::~MessageScene()

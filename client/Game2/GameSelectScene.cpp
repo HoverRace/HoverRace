@@ -94,6 +94,8 @@ GameSelectScene::GameSelectScene(Display::Display &display,
 
 		x += BTN_WIDTH + BTN_GAP;
 	}
+
+	rulebookPanel->RequestFocus();
 }
 
 GameSelectScene::~GameSelectScene()
