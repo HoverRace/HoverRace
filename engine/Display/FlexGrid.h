@@ -94,6 +94,30 @@ protected:
 private:
 	void SetFocusedCell(size_t row, size_t col);
 
+	/**
+	 * Find the next focusable widget in a given direction.
+	 *
+	 * The starting coordinates are @e not focused; instead, the @e next
+	 * widget in the direction @p nav is the first to be focused.
+	 *
+	 * The @p nextFn callback function will take the row and column as
+	 * references, so it can advance them to the next coordinate.  It returns
+	 * @c true if it was successful, @c false if we advanced off the edge of
+	 * the grid.
+	 *
+	 * @param row The starting row.
+	 * @param col The starting column.
+	 * @param nav The navigation direction.
+	 * @param nextFn The function to advance the coordinates.
+	 * @return @c true if it succeeded in focusing a widget,
+	 *         @c false if it failed (could not find a focusable widget).
+	 * @see FocusUpFrom()
+	 * @see FocusDownFrom()
+	 * @see FocusLeftFrom()
+	 * @see FocusRightFrom()
+	 * @see FocusNextFrom()
+	 * @see FocusPrevFrom()
+	 */
 	template<class Fn>
 	bool FocusFrom(size_t row, size_t col, const Control::Nav &nav, Fn nextFn)
 	{
