@@ -526,11 +526,16 @@ public:
 		return defaultCols[col];
 	}
 
-private:
-	template<class T>
-	std::shared_ptr<BasicCell<T>> InitCell(size_t row, size_t col,
-		std::shared_ptr<T> sharedChild)
+protected:
+	template<class T, class... Args>
+	typename std::enable_if<
+		std::is_base_of<UiViewModel, T>::value,
+		std::shared_ptr<BasicCell<T>>
+		>::type
+	NewGridCell(size_t row, size_t col, Args&&... args)
 	{
+		auto sharedChild = NewChild<T>(std::forward<Args>(args)...);
+
 		// Resize the grid to accomodate the cell.
 		if (row >= rows.size()) {
 			rows.resize(row + 1);
@@ -553,17 +558,6 @@ private:
 		RequestLayout();
 
 		return cell;
-	}
-
-protected:
-	template<class T, class... Args>
-	typename std::enable_if<
-		std::is_base_of<UiViewModel, T>::value,
-		std::shared_ptr<BasicCell<T>>
-		>::type
-	NewGridCell(size_t row, size_t col, Args&&... args)
-	{
-		return InitCell(row, col, NewChild<T>(std::forward<Args>(args)...));
 	}
 
 	boost::optional<std::pair<size_t, size_t>> FindChild(
