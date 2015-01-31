@@ -157,7 +157,7 @@ void FlexGrid::OnChildRelinquishedFocus(UiViewModel&, const Control::Nav &nav)
 
 void FlexGrid::SetFocusedCell(size_t row, size_t col)
 {
-	focusedCell = boost::make_optional(std::make_pair(row, col));
+	focusedCell = std::make_pair(row, col);
 	SetFocused(true);
 }
 
@@ -404,7 +404,7 @@ boost::optional<std::pair<size_t, size_t>> FlexGrid::FindChild(
 		for (size_t col = 0; col < cols.size(); col++) {
 			auto &cell = cols[col];
 			if (cell && cell->Contains(child)) {
-				return boost::make_optional(std::make_pair(row, col));
+				return std::make_pair(row, col);
 			}
 		}
 	}
