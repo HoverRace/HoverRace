@@ -114,7 +114,7 @@ void VideoSettingsScene::OnOk()
 		origVideoCfg.yResFullscreen != videoCfg.yResFullscreen ||
 		origVideoCfg.fullscreenRefreshRate != videoCfg.fullscreenRefreshRate;
 	const bool needsMainMenu =
-		origVideoCfg.textScale != videoCfg.textScale ||
+		fabs(origVideoCfg.textScale - videoCfg.textScale) > 0.05 ||
 		origVideoCfg.stackedSplitscreen != videoCfg.stackedSplitscreen;
 
 	if (needsSoftRestart) {
