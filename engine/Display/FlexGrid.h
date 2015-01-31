@@ -127,8 +127,7 @@ private:
 
 			auto &cell = cols[col];
 			if (cell && cell->TryFocus(nav)) {
-				focusedCell = boost::make_optional(std::make_pair(row, col));
-				SetFocused(true);
+				SetFocusedCell(row, col);
 				return true;
 			}
 		}
