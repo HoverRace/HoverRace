@@ -402,7 +402,8 @@ boost::optional<std::pair<size_t, size_t>> FlexGrid::FindChild(
 	for (size_t row = 0; row < rows.size(); row++) {
 		auto &cols = rows[row];
 		for (size_t col = 0; col < cols.size(); col++) {
-			if (cols[col]->Contains(child)) {
+			auto &cell = cols[col];
+			if (cell && cell->Contains(child)) {
 				return boost::make_optional(std::make_pair(row, col));
 			}
 		}
