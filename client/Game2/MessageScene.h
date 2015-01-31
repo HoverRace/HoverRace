@@ -1,7 +1,7 @@
 
 // MessageScene.h
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@
 namespace HoverRace {
 	namespace Display {
 		class ActionButton;
+		class Button;
 		class Display;
 		class Label;
 		class ScreenFade;
@@ -83,10 +84,10 @@ private:
 	std::unique_ptr<Display::ScreenFade> fader;
 	std::shared_ptr<Display::Label> titleLbl;
 	std::shared_ptr<Display::Label> messageLbl;
-	std::shared_ptr<Display::ActionButton> okBtn;
+	std::shared_ptr<Display::Button> okBtn;
 	std::shared_ptr<Display::ActionButton> cancelBtn;
 
-	boost::signals2::connection okConn;
+	boost::signals2::scoped_connection okConn;
 	boost::signals2::connection cancelConn;
 
 	static const int HORZ_PADDING = 40;

@@ -73,8 +73,10 @@ MessageScene::MessageScene(Display::Display &display,
 	messageLbl->SetWrapWidth(textWidth);
 	// messageLbl position will be set in Layout().
 
-	okBtn = root->NewChild<ActionButton>(display);
+	okBtn = root->NewChild<Button>(display, _("OK"));
 	okBtn->SetPos(HORZ_PADDING, 480);
+	okConn = okBtn->GetClickedSignal().connect(
+		std::bind(&MessageScene::OnOk, this));
 
 	if (hasCancel) {
 		cancelBtn = root->NewChild<ActionButton>(display);
@@ -109,14 +111,11 @@ void MessageScene::AttachController(Control::InputEventController &controller)
 	// If the cancel button is not enabled, then both the "OK" and "Cancel"
 	// actions map to the "OnOk" handler.
 
-	auto &menuOkAction = controller.actions.ui.menuOk;
 	auto &menuCancelAction = controller.actions.ui.menuCancel;
 
-	okConn = menuOkAction->Connect(std::bind(&MessageScene::OnOk, this));
 	cancelConn = menuCancelAction->Connect(std::bind(
 		hasCancel ? &MessageScene::OnCancel : &MessageScene::OnOk, this));
 
-	okBtn->AttachAction(controller, menuOkAction);
 	if (hasCancel) {
 		cancelBtn->AttachAction(controller, menuCancelAction);
 	}
@@ -128,7 +127,6 @@ void MessageScene::AttachController(Control::InputEventController &controller)
 void MessageScene::DetachController(Control::InputEventController &controller)
 {
 	cancelConn.disconnect();
-	okConn.disconnect();
 
 	SUPER::DetachController(controller);
 }
