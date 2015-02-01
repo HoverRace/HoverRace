@@ -1,8 +1,7 @@
 
-// yaml/Parser.cpp
-// Implementation for the LibYAML parser wrapper.
+// Parser.cpp
 //
-// Copyright (c) 2008, 2009 Michael Imamura.
+// Copyright (c) 2008, 2009, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -24,7 +23,9 @@
 
 #include "Parser.h"
 
-using namespace yaml;
+namespace HoverRace {
+namespace Util {
+namespace yaml {
 
 /**
  * Create a new parser.
@@ -85,4 +86,8 @@ void Parser::Cleanup()
 
 	yaml_parser_delete(&parser);
 }
+
+}  // namespace yaml
+}  // namespace Util
+}  // namespace HoverRace
 

@@ -1,8 +1,7 @@
 
-// yaml/YamlExn.h
-// Header for yaml::YamlExn.
+// YamlExn.h
 //
-// Copyright (c) 2008, 2009 Michael Imamura.
+// Copyright (c) 2008, 2009, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -22,22 +21,27 @@
 
 #pragma once
 
-namespace yaml
+namespace HoverRace {
+namespace Util {
+namespace yaml {
+	
+class YamlExn : public std::exception
 {
-	class YamlExn : public std::exception
-	{
-		typedef std::exception SUPER;
+	using SUPER = std::exception;
 
-		public:
-			YamlExn() : SUPER() { }
-			YamlExn(const char* const &msg) : SUPER(), msg(msg) { }
-			YamlExn(const std::string &msg) : SUPER(), msg(msg) { }
-			virtual ~YamlExn() throw() { }
+public:
+	YamlExn() : SUPER() { }
+	YamlExn(const char* const &msg) : SUPER(), msg(msg) { }
+	YamlExn(const std::string &msg) : SUPER(), msg(msg) { }
+	virtual ~YamlExn() noexcept { }
 
-			virtual const char* what() const throw() { return msg.c_str(); }
+	const char* what() const noexcept override { return msg.c_str(); }
 
-		private:
-			std::string msg;
-	};
-}
+private:
+	std::string msg;
+};
+
+}  // namespace yaml
+}  // namespace Util
+}  // namespace HoverRace
 

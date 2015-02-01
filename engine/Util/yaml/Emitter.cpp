@@ -1,7 +1,7 @@
 
-// yaml/Emitter.cpp
+// Emitter.cpp
 //
-// Copyright (c) 2008, 2009, 2014 Michael Imamura.
+// Copyright (c) 2008, 2009, 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -27,21 +27,26 @@
 #include "Emitter.h"
 
 using namespace HoverRace::Util;
-using namespace yaml;
 
 #define YAML_STR(s) ((yaml_char_t*)(s))
 
+namespace HoverRace {
+namespace Util {
+namespace yaml {
+
 namespace {
-	const std::string trueStr("true");
-	const std::string falseStr("false");
 
-	// Always use the "C" locale for writing numbers.
-	const std::locale stdLocale("C");
-	boost::format intFmt("%d", stdLocale);
-	boost::format floatFmt("%g", stdLocale);
+const std::string trueStr("true");
+const std::string falseStr("false");
 
-	const size_t MAX_STRING_LEN = 65536;
-}
+// Always use the "C" locale for writing numbers.
+const std::locale stdLocale("C");
+boost::format intFmt("%d", stdLocale);
+boost::format floatFmt("%g", stdLocale);
+
+const size_t MAX_STRING_LEN = 65536;
+
+}  // namespace
 
 /**
  * Create a new emitter for a file handle.
@@ -336,3 +341,7 @@ void Emitter::Value(const HoverRace::Util::OS::path_t &path)
 {
 	Value(static_cast<const char*>(Str::PU(path)));
 }
+
+}  // namespace yaml
+}  // namespace Util
+}  // namespace HoverRace

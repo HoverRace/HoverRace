@@ -1,8 +1,7 @@
 
 // Class.h
-// Help text for a class in the scripting API.
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -34,8 +33,12 @@
 #	define MR_DllDeclare
 #endif
 
-namespace yaml {
-	class MapNode;
+namespace HoverRace {
+	namespace Util {
+		namespace yaml {
+			class MapNode;
+		}
+	}
 }
 
 namespace HoverRace {
@@ -54,7 +57,7 @@ class MR_DllDeclare Class
 		Class(const std::string &name);
 		~Class();
 
-		void Load(yaml::MapNode *node);
+		void Load(Util::yaml::MapNode *node);
 
 	public:
 		const std::string &GetName() const;

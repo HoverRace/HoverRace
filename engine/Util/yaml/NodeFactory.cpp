@@ -1,8 +1,7 @@
 
-// yaml/NodeFactory.cpp
-// Generates wrapper instances for LibYAML nodes.
+// NodeFactory.cpp
 //
-// Copyright (c) 2008, 2009 Michael Imamura.
+// Copyright (c) 2008, 2009, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -27,7 +26,9 @@
 
 #include "NodeFactory.h"
 
-using namespace yaml;
+namespace HoverRace {
+namespace Util {
+namespace yaml {
 
 /**
  * Wrap a LibYAML node in a new yaml::Node instance.
@@ -50,3 +51,7 @@ Node *NodeFactory::MakeNode(yaml_document_t *doc, yaml_node_t *node)
 			return new Node(doc, node);
 	}
 }
+
+}  // namespace yaml
+}  // namespace Util
+}  // namespace HoverRace

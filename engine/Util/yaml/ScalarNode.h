@@ -1,8 +1,7 @@
 
-// yaml/ScalarNode.h
-// Header for yaml::ScalarNode.
+// ScalarNode.h
 //
-// Copyright (c) 2008, 2009 Michael Imamura.
+// Copyright (c) 2008, 2009, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -28,26 +27,31 @@
 
 #include "Node.h"
 
-namespace yaml
+namespace HoverRace {
+namespace Util {
+namespace yaml {
+
+/// Wrapper for LibYAML scalar nodes.
+class ScalarNode : public Node
 {
-	/// Wrapper for LibYAML scalar nodes.
-	class ScalarNode : public Node
-	{
-		typedef Node SUPER;
+	using SUPER = Node;
 
-		public:
-			ScalarNode(yaml_document_t *doc, yaml_node_t *node);
-			virtual ~ScalarNode();
+public:
+	ScalarNode(yaml_document_t *doc, yaml_node_t *node);
+	virtual ~ScalarNode();
 
-		public:
-			std::string AsString() const;
-			bool AsBool(bool def) const;
-			double AsDouble(double def, double min, double max) const;
-			float AsFloat(float def, float min, float max) const;
-			int AsInt(int def, int min=INT_MIN, int max=INT_MAX) const;
-			HoverRace::Util::OS::path_t AsPath() const;
+public:
+	std::string AsString() const;
+	bool AsBool(bool def) const;
+	double AsDouble(double def, double min, double max) const;
+	float AsFloat(float def, float min, float max) const;
+	int AsInt(int def, int min = INT_MIN, int max = INT_MAX) const;
+	HoverRace::Util::OS::path_t AsPath() const;
 
-		private:
-			char *value;
-	};
-}
+private:
+	char *value;
+};
+
+}  // namespace yaml
+}  // namespace Util
+}  // namespace HoverRace

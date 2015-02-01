@@ -1,8 +1,7 @@
 
-// yaml/NodeFactory.h
-// Header for yaml::NodeFactory.
+// NodeFactory.h
 //
-// Copyright (c) 2008, 2009 Michael Imamura.
+// Copyright (c) 2008, 2009, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -24,12 +23,17 @@
 
 #include "Node.h"
 
-namespace yaml
+namespace HoverRace {
+namespace Util {
+namespace yaml {
+
+/// Generates the appropriate wrapper for LibYAML nodes.
+class NodeFactory
 {
-	/// Generates the appropriate wrapper for LibYAML nodes.
-	class NodeFactory
-	{
-		public:
-			static Node *MakeNode(yaml_document_t *doc, yaml_node_t *node);
-	};
-}
+public:
+	static Node *MakeNode(yaml_document_t *doc, yaml_node_t *node);
+};
+
+}  // namespace yaml
+}  // namespace Util
+}  // namespace HoverRace

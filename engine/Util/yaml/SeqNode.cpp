@@ -1,8 +1,7 @@
 
-// yaml/SeqNode.cpp
-// Wrapper for LibYAML sequence nodes.
+// SeqNode.cpp
 //
-// Copyright (c) 2008, 2009 Michael Imamura.
+// Copyright (c) 2008, 2009, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -24,7 +23,9 @@
 
 #include "SeqNode.h"
 
-using namespace yaml;
+namespace HoverRace {
+namespace Util {
+namespace yaml {
 
 /**
  * Constructor.
@@ -56,9 +57,9 @@ void SeqNode::Init() const
 	yaml_node_t *node = GetNode();
 
 	children = new children_t();
-	
+
 	// Note: This unfortunately relies on some implementation details of how
-	//       LibYAML implements stacks, since there doesn't appear to be a 
+	//       LibYAML implements stacks, since there doesn't appear to be a
 	//       public API for iterating over the stack.
 	for (yaml_node_item_t *item = node->data.sequence.items.start;
 		item < node->data.sequence.items.top; ++item)
@@ -94,3 +95,7 @@ SeqNode::iterator SeqNode::end()
 	if (children == NULL) Init();
 	return children->end();
 }
+
+}  // namespace yaml
+}  // namespace Util
+}  // namespace HoverRace

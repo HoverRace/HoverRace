@@ -1,8 +1,7 @@
 
 // Event.h
-// Help text for an event method in the scripting API.
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -49,7 +48,7 @@ class MR_DllDeclare Event : public Method
 		Event(const std::string &name);
 		virtual ~Event();
 
-		virtual void Load(yaml::MapNode *node);
+		virtual void Load(Util::yaml::MapNode *node);
 };
 typedef std::shared_ptr<Event> EventPtr;
 

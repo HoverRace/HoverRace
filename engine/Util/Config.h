@@ -41,16 +41,18 @@
 #endif
 
 // Forward declarations.
-namespace yaml {
-	class Emitter;
-	class MapNode;
-}
 namespace HoverRace {
 	namespace Parcel {
 		class Bundle;
 		typedef std::shared_ptr<Bundle> BundlePtr;
 		class TrackBundle;
 		typedef std::shared_ptr<TrackBundle> TrackBundlePtr;
+	}
+	namespace Util {
+		namespace yaml {
+			class Emitter;
+			class MapNode;
+		}
 	}
 }
 

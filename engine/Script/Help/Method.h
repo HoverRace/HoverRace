@@ -1,8 +1,7 @@
 
 // Method.h
-// Help text for a method in the scripting API.
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -32,8 +31,12 @@
 #	define MR_DllDeclare
 #endif
 
-namespace yaml {
-	class MapNode;
+namespace HoverRace {
+	namespace Util {
+		namespace yaml {
+			class MapNode;
+		}
+	}
 }
 
 namespace HoverRace {
@@ -52,7 +55,7 @@ class MR_DllDeclare Method
 		Method(const std::string &name);
 		virtual ~Method();
 
-		virtual void Load(yaml::MapNode *node);
+		virtual void Load(Util::yaml::MapNode *node);
 
 	public:
 		typedef std::vector<std::string> sigs_t;

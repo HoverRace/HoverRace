@@ -1,7 +1,7 @@
 
 // Core.cpp
 //
-// Copyright (c) 2009, 2010, 2014 Michael Imamura.
+// Copyright (c) 2009, 2010, 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -40,9 +40,7 @@
 #include "Core.h"
 
 using namespace HoverRace::Script;
-using HoverRace::Util::OS;
-namespace Log = HoverRace::Util::Log;
-namespace Str = HoverRace::Util::Str;
+using namespace HoverRace::Util;
 
 #define REG_LUA_LIB(st, name, fn) \
 	lua_pushcfunction((st), (fn)); \

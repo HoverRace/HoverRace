@@ -1,8 +1,7 @@
 
-// yaml/Node.h
-// Header for yaml::Node.
+// Node.h
 //
-// Copyright (c) 2008, 2009 Michael Imamura.
+// Copyright (c) 2008, 2009, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -23,26 +22,30 @@
 #pragma once
 
 #include <yaml.h>
-#include <string>
 
-namespace yaml
+namespace HoverRace {
+namespace Util {
+namespace yaml {
+
+/// Base class for LibYAML document nodes.
+class Node
 {
-	/// Base class for LibYAML document nodes.
-	class Node
-	{
-		private:
-			Node() : doc(NULL), node(NULL) { }
-		public:
-			Node(yaml_document_t *doc, yaml_node_t *node) :
-				doc(doc), node(node) { };
-			virtual ~Node() { }
+private:
+	Node() : doc(nullptr), node(nullptr) { }
+public:
+	Node(yaml_document_t *doc, yaml_node_t *node) :
+		doc(doc), node(node) { };
+	virtual ~Node() { }
 
-		protected:
-			yaml_document_t *GetDocument() const { return doc; }
-			yaml_node_t *GetNode() const { return node; }
+protected:
+	yaml_document_t *GetDocument() const { return doc; }
+	yaml_node_t *GetNode() const { return node; }
 
-		private:
-			yaml_document_t *doc;
-			yaml_node_t *node;
-	};
-}
+private:
+	yaml_document_t *doc;
+	yaml_node_t *node;
+};
+
+}  // namespace yaml
+}  // namespace Util
+}  // namespace HoverRace

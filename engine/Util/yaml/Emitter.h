@@ -1,8 +1,7 @@
 
-// yaml/Emitter.h
-// Header for yaml::Emitter.
+// Emitter.h
 //
-// Copyright (c) 2008, 2009 Michael Imamura.
+// Copyright (c) 2008, 2009, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -30,55 +29,62 @@
 #include "../OS.h"
 #include "YamlExn.h"
 
-namespace yaml
+namespace HoverRace {
+namespace Util {
+namespace yaml {
+
+/// Standard exception thrown for emitter errors.
+class EmitterExn : public YamlExn
 {
-	/// Standard exception thrown for emitter errors.
-	class EmitterExn : public YamlExn
-	{
-		typedef YamlExn SUPER;
+	using SUPER = YamlExn;
 
-		public:
-			EmitterExn() : SUPER() { }
-			EmitterExn(const char *const &msg) : SUPER(msg)  { }
-			virtual ~EmitterExn() throw() { }
-	};
+public:
+	EmitterExn() : SUPER() { }
+	EmitterExn(const char *const &msg) : SUPER(msg)  { }
+	virtual ~EmitterExn() noexcept { }
+};
 
-	/// Wrapper for the LibYAML emitter.
-	class Emitter
-	{
-		private:
-			Emitter() { }
-		public:
-			Emitter(FILE *file, bool versionDirective=true);
-			Emitter(std::ostream &os, bool versionDirective=true);
-			Emitter(std::string &s, bool versionDirective=true);
-			virtual ~Emitter();
+/// Wrapper for the LibYAML emitter.
+class Emitter
+{
+private:
+	Emitter() = delete;
+public:
+	Emitter(FILE *file, bool versionDirective = true);
+	Emitter(std::ostream &os, bool versionDirective = true);
+	Emitter(std::string &s, bool versionDirective = true);
+	virtual ~Emitter();
 
-		protected:
-			void InitEmitter();
-			void InitStream(bool versionDirective);
+protected:
+	void InitEmitter();
+	void InitStream(bool versionDirective);
 
-		private:
-			static int OutputStreamHandler(void *data, unsigned char *buffer, size_t size);
-			static int OutputStringHandler(void *data, unsigned char *buffer, size_t size);
+private:
+	static int OutputStreamHandler(void *data, unsigned char *buffer,
+		size_t size);
+	static int OutputStringHandler(void *data, unsigned char *buffer,
+		size_t size);
 
-		public:
-			void StartMap();
-			void MapKey(const std::string &s);
-			void EndMap();
+public:
+	void StartMap();
+	void MapKey(const std::string &s);
+	void EndMap();
 
-			void StartSeq();
-			void EndSeq();
+	void StartSeq();
+	void EndSeq();
 
-			void Value(const std::string &val);
-			void Value(const char *val);
-			void Value(bool val);
-			void Value(int val);
-			void Value(double val);
-			void Value(float val);
-			void Value(const HoverRace::Util::OS::path_t &path);
+	void Value(const std::string &val);
+	void Value(const char *val);
+	void Value(bool val);
+	void Value(int val);
+	void Value(double val);
+	void Value(float val);
+	void Value(const HoverRace::Util::OS::path_t &path);
 
-		private:
-			yaml_emitter_t emitter;
-	};
-}
+private:
+	yaml_emitter_t emitter;
+};
+
+}  // namespace yaml
+}  // namespace Util
+}  // namespace HoverRace

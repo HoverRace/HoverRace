@@ -1,8 +1,7 @@
 
-// yaml/SeqNode.h
-// Header for yaml::SeqNode.
+// SeqNode.h
 //
-// Copyright (c) 2008, 2009 Michael Imamura.
+// Copyright (c) 2008, 2009, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -26,32 +25,37 @@
 
 #include <vector>
 
-namespace yaml
+namespace HoverRace {
+namespace Util {
+namespace yaml {
+
+class SeqNode : public Node
 {
-	class SeqNode : public Node
-	{
-		typedef Node SUPER;
+	using SUPER = Node;
 
-		public:
-			SeqNode(yaml_document_t *doc, yaml_node_t *node);
-			virtual ~SeqNode();
+public:
+	SeqNode(yaml_document_t *doc, yaml_node_t *node);
+	virtual ~SeqNode();
 
-		private:
-			void Init() const;
+private:
+	void Init() const;
 
-			typedef std::vector<Node*> children_t;
+	using children_t = std::vector<Node*>;
 
-		public:
-			// STL-like iteration, so we can use range-for on the node itself.
-			typedef children_t::iterator iterator;
-			typedef children_t::const_iterator const_iterator;
-			typedef children_t::value_type value_type;
-			const_iterator begin() const;
-			iterator begin();
-			const_iterator end() const;
-			iterator end();
-			
-		private:
-			mutable children_t *children;
-	};
-}
+public:
+	// STL-like iteration, so we can use range-for on the node itself.
+	using iterator = children_t::iterator;
+	using const_iterator = children_t::const_iterator;
+	using value_type = children_t::value_type;
+	const_iterator begin() const;
+	iterator begin();
+	const_iterator end() const;
+	iterator end();
+
+private:
+	mutable children_t *children;
+};
+
+}  // namespace yaml
+}  // namespace Util
+}  // namespace HoverRace

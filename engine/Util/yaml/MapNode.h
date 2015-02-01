@@ -1,8 +1,7 @@
 
-// yaml/MapNode.h
-// Header for yaml::MapNode.
+// MapNode.h
 //
-// Copyright (c) 2008, 2009 Michael Imamura.
+// Copyright (c) 2008, 2009, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -26,36 +25,41 @@
 
 #include "Node.h"
 
-namespace yaml
+namespace HoverRace {
+namespace Util {
+namespace yaml {
+
+class MapNode : public Node
 {
-	class MapNode : public Node
-	{
-		typedef Node SUPER;
+	using SUPER = Node;
 
-		public:
-			MapNode(yaml_document_t *doc, yaml_node_t *node);
-			virtual ~MapNode();
+public:
+	MapNode(yaml_document_t *doc, yaml_node_t *node);
+	virtual ~MapNode();
 
-		private:
-			void Init() const;
+private:
+	void Init() const;
 
-			typedef std::map<std::string,Node*> children_t;
+	using children_t = std::map<std::string, Node*>;
 
-		public:
-			Node *Get(const std::string &key) const;
+public:
+	Node *Get(const std::string &key) const;
 
-			void ReadString(const std::string &key, std::string &dest) const;
+	void ReadString(const std::string &key, std::string &dest) const;
 
-			// STL-like iteration, so we can use range-for on the node itself.
-			typedef children_t::iterator iterator;
-			typedef children_t::const_iterator const_iterator;
-			typedef children_t::value_type value_type;
-			const_iterator begin() const;
-			iterator begin();
-			const_iterator end() const;
-			iterator end();
+	// STL-like iteration, so we can use range-for on the node itself.
+	using iterator = children_t::iterator;
+	using const_iterator = children_t::const_iterator;
+	using value_type = children_t::value_type;
+	const_iterator begin() const;
+	iterator begin();
+	const_iterator end() const;
+	iterator end();
 
-		private:
-			mutable children_t *children;
-	};
-}
+private:
+	mutable children_t *children;
+};
+
+}  // namespace yaml
+}  // namespace Util
+}  // namespace HoverRace

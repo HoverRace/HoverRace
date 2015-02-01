@@ -1,8 +1,7 @@
 
-// yaml/ScalarNode.cpp
-// Wrapper for LibYAML scalar nodes.
+// ScalarNode.cpp
 //
-// Copyright (c) 2008, 2009 Michael Imamura.
+// Copyright (c) 2008, 2009, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -26,18 +25,20 @@
 
 #include "ScalarNode.h"
 
-namespace Str = HoverRace::Util::Str;
-using HoverRace::Util::OS;
-using namespace yaml;
-
 #ifndef _WIN32
 #	include <strings.h>
 #	define _stricmp strcasecmp
 #endif
 
+namespace HoverRace {
+namespace Util {
+namespace yaml {
+
 namespace {
-	// Always use the "C" locale for reading numbers.
-	const std::locale stdLocale("C");
+
+// Always use the "C" locale for reading numbers.
+const std::locale stdLocale("C");
+
 }
 
 /**
@@ -152,3 +153,7 @@ OS::path_t ScalarNode::AsPath() const
 {
 	return Str::UP(value);
 }
+
+}  // namespace yaml
+}  // namespace Util
+}  // namespace HoverRace

@@ -1,8 +1,7 @@
 
-// yaml/Parser.h
-// Header for yaml::Parser.
+// Parser.h
 //
-// Copyright (c) 2008, 2009 Michael Imamura.
+// Copyright (c) 2008, 2009, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -29,48 +28,54 @@
 #include "Node.h"
 #include "YamlExn.h"
 
-namespace yaml
+namespace HoverRace {
+namespace Util {
+namespace yaml {
+
+/// Standard exception thrown for parser errors.
+class ParserExn : public YamlExn
 {
-	/// Standard exception thrown for parser errors.
-	class ParserExn : public YamlExn
-	{
-		typedef YamlExn SUPER;
+	using SUPER = YamlExn;
 
-		public:
-			ParserExn() : SUPER() { }
-			ParserExn(const char *const &s) : SUPER(s) { }
-			virtual ~ParserExn() throw() { }
-	};
+public:
+	ParserExn() : SUPER() { }
+	ParserExn(const char *const &s) : SUPER(s) { }
+	virtual ~ParserExn() noexcept { }
+};
 
-	/// Exception for when the document is empty or missing the header.
-	class EmptyDocParserExn : public ParserExn
-	{
-		typedef ParserExn SUPER;
+/// Exception for when the document is empty or missing the header.
+class EmptyDocParserExn : public ParserExn
+{
+	using SUPER = ParserExn;
 
-		public:
-			EmptyDocParserExn() : SUPER() { }
-			EmptyDocParserExn(const char *const &s) : SUPER(s) { }
-			virtual ~EmptyDocParserExn() throw() { }
-	};
+public:
+	EmptyDocParserExn() : SUPER() { }
+	EmptyDocParserExn(const char *const &s) : SUPER(s) { }
+	virtual ~EmptyDocParserExn() noexcept { }
+};
 
-	/// Wrapper for the LibYAML parser.
-	class Parser
-	{
-		private:
-			Parser() { }
-		public:
-			Parser(FILE *file);
-			virtual ~Parser();
+/// Wrapper for the LibYAML parser.
+class Parser
+{
+private:
+	Parser() = delete;
+public:
+	Parser(FILE *file);
+	virtual ~Parser();
 
-		private:
-			void Cleanup();
+private:
+	void Cleanup();
 
-		public:
-			Node *GetRootNode() const { return root; }
+public:
+	Node *GetRootNode() const { return root; }
 
-		private:
-			yaml_parser_t parser;
-			yaml_document_t *doc;
-			Node *root;
-	};
-}
+private:
+	yaml_parser_t parser;
+	yaml_document_t *doc;
+	Node *root;
+};
+
+}  // namespace yaml
+}  // namespace Util
+}  // namespace HoverRace
+
