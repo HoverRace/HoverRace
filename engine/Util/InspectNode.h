@@ -21,8 +21,6 @@
 
 #pragma once
 
-#include <boost/lexical_cast.hpp>
-
 #include "Inspectable.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
@@ -48,14 +46,13 @@ namespace Util {
 
 class MR_DllDeclare InspectNode
 {
-	public:
-		InspectNode() { }
-		virtual ~InspectNode() { }
+public:
+	InspectNode() { }
+	virtual ~InspectNode() { }
 
-	public:
-		virtual void RenderToYaml(yaml::Emitter &emitter) = 0;
+public:
+	virtual void RenderToYaml(yaml::Emitter &emitter) = 0;
 };
-typedef std::shared_ptr<InspectNode> InspectNodePtr;
 
 }  // namespace Util
 }  // namespace HoverRace

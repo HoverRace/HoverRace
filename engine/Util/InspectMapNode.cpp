@@ -1,8 +1,7 @@
 
 // InspectMapNode.cpp
-// Inspection state for an object.
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -29,15 +28,6 @@
 
 namespace HoverRace {
 namespace Util {
-
-InspectMapNode::InspectMapNode() :
-	SUPER()
-{
-}
-
-InspectMapNode::~InspectMapNode()
-{
-}
 
 /**
  * Render this node to an output stream.
@@ -78,9 +68,9 @@ void InspectMapNode::RenderToString(std::string &s)
 void InspectMapNode::RenderToYaml(yaml::Emitter &emitter)
 {
 	emitter.StartMap();
-	for (fields_t::value_type &ent : fields) {
+	for (auto &ent : fields) {
 		emitter.MapKey(ent.first);
-		if (ent.second.get() == NULL) {
+		if (!ent.second) {
 			emitter.Value("NULL");
 		}
 		else {
@@ -90,18 +80,22 @@ void InspectMapNode::RenderToYaml(yaml::Emitter &emitter)
 	emitter.EndMap();
 }
 
-void InspectMapNode::AddStringField(const std::string &name, const std::string &value)
+void InspectMapNode::AddStringField(
+	const std::string &name,
+	const std::string &value)
 {
-	fields.push_back(fields_t::value_type(name,
-		std::make_shared<InspectScalarNode>(value)));
+	fields.emplace_back(name, std::make_shared<InspectScalarNode>(value));
 }
 
-InspectMapNode &InspectMapNode::AddSubobject(const std::string &name, const Inspectable *obj)
+InspectMapNode &InspectMapNode::AddSubobject(
+	const std::string &name,
+	const Inspectable *obj)
 {
-	InspectMapNodePtr node = std::make_shared<InspectMapNode>();
-	if (obj != NULL)
+	auto node = std::make_shared<InspectMapNode>();
+	if (obj) {
 		obj->Inspect(*node);
-	fields.push_back(fields_t::value_type(name, node));
+	}
+	fields.emplace_back(name, node);
 	return *this;
 }
 
@@ -113,8 +107,8 @@ void InspectScalarNode::RenderToYaml(yaml::Emitter &emitter)
 void InspectSeqNode::RenderToYaml(yaml::Emitter &emitter)
 {
 	emitter.StartSeq();
-	for (InspectNodePtr field : fields) {
-		if (field.get() == NULL) {
+	for (auto &field : fields) {
+		if (!field) {
 			emitter.Value("NULL");
 		}
 		else {

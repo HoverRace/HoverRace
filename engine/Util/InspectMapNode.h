@@ -40,45 +40,45 @@ namespace Util {
 
 class Inspectable;
 
-class InspectScalarNode : public InspectNode {
-	typedef InspectNode SUPER;
-	public:
-		InspectScalarNode(const std::string &value) :
-			SUPER(), value(value) { }
-		virtual ~InspectScalarNode() { }
+class InspectScalarNode : public InspectNode
+{
+	using SUPER = InspectNode;
 
-	public:
-		virtual void RenderToYaml(yaml::Emitter &emitter);
+public:
+	InspectScalarNode(const std::string &value) :
+		SUPER(), value(value) { }
+	virtual ~InspectScalarNode() { }
 
-	private:
-		std::string value;
+public:
+	void RenderToYaml(yaml::Emitter &emitter) override;
+
+private:
+	std::string value;
 };
-typedef std::shared_ptr<InspectScalarNode> InspectScalarNodePtr;
 
 class InspectSeqNode : public InspectNode
 {
-	typedef InspectNode SUPER;
-	public:
-		InspectSeqNode(size_t sz) : SUPER()
-		{
-			fields.reserve(sz);
-		}
-		virtual ~InspectSeqNode() { }
+	using SUPER = InspectNode;
 
-	public:
-		void Add(InspectNodePtr s)
-		{
-			fields.push_back(s);
-		}
+public:
+	InspectSeqNode(size_t sz) : SUPER()
+	{
+		fields.reserve(sz);
+	}
+	virtual ~InspectSeqNode() { }
 
-	public:
-		virtual void RenderToYaml(yaml::Emitter &emitter);
+public:
+	void Add(std::shared_ptr<InspectNode> s)
+	{
+		fields.emplace_back(std::move(s));
+	}
 
-	private:
-		typedef std::vector<InspectNodePtr> fields_t;
-		fields_t fields;
+public:
+	void RenderToYaml(yaml::Emitter &emitter) override;
+
+private:
+	std::vector<std::shared_ptr<InspectNode>> fields;
 };
-typedef std::shared_ptr<InspectSeqNode> InspectSeqNodePtr;
 
 /**
  * An inspection node which maps field names to values
@@ -87,66 +87,65 @@ typedef std::shared_ptr<InspectSeqNode> InspectSeqNodePtr;
  */
 class MR_DllDeclare InspectMapNode : public InspectNode
 {
-	typedef InspectNode SUPER;
-	public:
-		InspectMapNode();
-		virtual ~InspectMapNode();
+	using SUPER = InspectNode;
 
-	protected:
-		void AddStringField(const std::string &name, const std::string &value);
+public:
+	InspectMapNode() : SUPER() { }
+	virtual ~InspectMapNode() { }
 
-	public:
-		void RenderToStream(std::ostream &os);
-		void RenderToString(std::string &s);
+protected:
+	void AddStringField(const std::string &name, const std::string &value);
 
-	public:
-		virtual void RenderToYaml(yaml::Emitter &emitter);
+public:
+	void RenderToStream(std::ostream &os);
+	void RenderToString(std::string &s);
 
-	public:
-		template<typename T>
-		InspectMapNode &AddField(const std::string &name, const T &value)
-		{
-			AddStringField(name, boost::lexical_cast<std::string>(value));
-			return *this;
-		}
+public:
+	void RenderToYaml(yaml::Emitter &emitter) override;
 
-		InspectMapNode &AddField(const std::string &name, const char *value)
-		{
-			AddStringField(name, value);
-			return *this;
-		}
+public:
+	template<typename T>
+	InspectMapNode &AddField(const std::string &name, const T &value)
+	{
+		AddStringField(name, boost::lexical_cast<std::string>(value));
+		return *this;
+	}
 
-		InspectMapNode &AddField(const std::string &name, const std::string &value)
-		{
-			AddStringField(name, value);
-			return *this;
-		}
+	InspectMapNode &AddField(const std::string &name, const char *value)
+	{
+		AddStringField(name, value);
+		return *this;
+	}
 
-		InspectMapNode &AddField(const std::string &name, bool value)
-		{
-			AddStringField(name, value ? "true" : "false");
-			return *this;
-		}
+	InspectMapNode &AddField(const std::string &name, const std::string &value)
+	{
+		AddStringField(name, value);
+		return *this;
+	}
 
-		template<typename T>
-		InspectMapNode &AddArray(const std::string &name, T *elems,
-			size_t startIndex, size_t size)
-		{
-			InspectSeqNodePtr node = std::make_shared<InspectSeqNode>(size);
-			for (size_t i = startIndex; i < size; ++i)
-				node->Add(std::make_shared<InspectScalarNode>(
-					boost::lexical_cast<std::string>(elems[i])));
-			fields.push_back(fields_t::value_type(name, node));
-			return *this;
-		}
+	InspectMapNode &AddField(const std::string &name, bool value)
+	{
+		AddStringField(name, value ? "true" : "false");
+		return *this;
+	}
 
-		InspectMapNode &AddSubobject(const std::string &name, const Inspectable *obj);
+	template<typename T>
+	InspectMapNode &AddArray(const std::string &name, T *elems,
+		size_t startIndex, size_t size)
+	{
+		auto node = std::make_shared<InspectSeqNode>(size);
+		for (size_t i = startIndex; i < size; ++i)
+			node->Add(std::make_shared<InspectScalarNode>(
+				boost::lexical_cast<std::string>(elems[i])));
+		fields.emplace_back(name, node);
+		return *this;
+	}
 
-	private:
-		typedef std::vector<std::pair<std::string,InspectNodePtr> > fields_t;
-		fields_t fields;
+	InspectMapNode &AddSubobject(const std::string &name, const Inspectable *obj);
+
+private:
+	std::vector<std::pair<std::string, std::shared_ptr<InspectNode>>> fields;
 };
-typedef std::shared_ptr<InspectMapNode> InspectMapNodePtr;
 
 }  // namespace Util
 }  // namespace HoverRace
