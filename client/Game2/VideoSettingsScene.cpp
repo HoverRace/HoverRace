@@ -81,6 +81,8 @@ VideoSettingsScene::VideoSettingsScene(Display::Display &display,
 	splitModeGroup.Add(
 		splitModeGrid->At(0, 1).NewChild<RadioButton<bool>>(
 			display, _("Side-by-side"), false)->GetContents());
+
+	GetSettingsGrid()->RequestFocus();
 }
 
 void VideoSettingsScene::LoadFromConfig()

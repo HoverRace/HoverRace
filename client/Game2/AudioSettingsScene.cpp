@@ -49,6 +49,8 @@ AudioSettingsScene::AudioSettingsScene(Display::Display &display,
 		audioCfg.sfxVolume = val;
 		SoundServer::Play(testSound);
 	});
+
+	GetSettingsGrid()->RequestFocus();
 }
 
 void AudioSettingsScene::LoadFromConfig()
