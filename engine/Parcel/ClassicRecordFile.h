@@ -1,8 +1,7 @@
 
 // ClassicRecordFile.h
-// Standard HoverRace 1.x parcel format.
 //
-// Copyright (c) 2010, 2012 Michael Imamura.
+// Copyright (c) 2010, 2012, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -47,37 +46,40 @@ class ClassicRecordFileHeader;
  */
 class MR_DllDeclare ClassicRecordFile : public RecordFile
 {
-	typedef RecordFile SUPER;
-	public:
-		ClassicRecordFile();
-		virtual ~ClassicRecordFile();
+	using SUPER = RecordFile;
 
-		virtual bool CreateForWrite(const Util::OS::path_t &filename, int numRecords, const char *title=NULL);
-		virtual bool OpenForWrite(const Util::OS::path_t &filename);
-		virtual bool OpenForRead(const Util::OS::path_t &filename, bool validateChecksum=false);
+public:
+	ClassicRecordFile();
+	virtual ~ClassicRecordFile();
 
-	protected:
-		static DWORD ComputeSum(const Util::OS::path_t &filename);
-	public:
-		virtual bool ApplyChecksum(const Util::OS::path_t &filename);
+	bool CreateForWrite(const Util::OS::path_t &filename, int numRecords,
+		const char *title = nullptr) override;
+	bool OpenForWrite(const Util::OS::path_t &filename) override;
+	bool OpenForRead(const Util::OS::path_t &filename,
+		bool validateChecksum = false) override;
 
-		virtual DWORD GetAlignMode();
+protected:
+	static DWORD ComputeSum(const Util::OS::path_t &filename);
+public:
+	bool ApplyChecksum(const Util::OS::path_t &filename) override;
 
-		virtual int GetNbRecords() const;
-		virtual void SelectRecord(int i);
-		virtual bool BeginANewRecord();
+	DWORD GetAlignMode() override;
 
-		virtual void Inspect(Util::InspectMapNode &node) const;
+	int GetNbRecords() const override;
+	void SelectRecord(int i) override;
+	bool BeginANewRecord() override;
 
-		virtual ObjStreamPtr StreamIn();
-		virtual ObjStreamPtr StreamOut();
+	void Inspect(Util::InspectMapNode &node) const override;
 
-	private:
-		bool constructionMode;
-		int curRecord;
-		ClassicRecordFileHeader *header;
-		FILE *fileStream;
-		Util::OS::path_t filename;
+	ObjStreamPtr StreamIn() override;
+	ObjStreamPtr StreamOut() override;
+
+private:
+	bool constructionMode;
+	int curRecord;
+	ClassicRecordFileHeader *header;
+	FILE *fileStream;
+	Util::OS::path_t filename;
 };
 
 }  // namespace Parcel
