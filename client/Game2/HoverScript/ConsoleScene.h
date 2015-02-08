@@ -1,7 +1,7 @@
 
 // ConsoleScene.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -46,76 +46,77 @@ namespace HoverScript {
  */
 class ConsoleScene : public UiScene
 {
-	typedef UiScene SUPER;
-	public:
-		ConsoleScene(Display::Display &display, GameDirector &director,
-			SysConsole &console);
-		virtual ~ConsoleScene();
+	using SUPER = UiScene;
 
-	private:
-		void OnDisplayConfigChanged();
+public:
+	ConsoleScene(Display::Display &display, GameDirector &director,
+		SysConsole &console);
+	virtual ~ConsoleScene();
 
-		void OnConsoleToggle();
-		void OnConsoleUp();
-		void OnConsoleDown();
-		void OnConsoleTop();
-		void OnConsoleBottom();
-		void OnConsolePrevCmd();
-		void OnConsoleNextCmd();
-		void OnTextInput(const std::string &s);
-		void OnTextControl(Control::TextControl::key_t key);
+private:
+	void OnDisplayConfigChanged();
 
-		void OnLogCleared();
-		void OnLogAdded(int idx);
+	void OnConsoleToggle();
+	void OnConsoleUp();
+	void OnConsoleDown();
+	void OnConsoleTop();
+	void OnConsoleBottom();
+	void OnConsolePrevCmd();
+	void OnConsoleNextCmd();
+	void OnTextInput(const std::string &s);
+	void OnTextControl(Control::TextControl::key_t key);
 
-		void AppendLogLine(const SysConsole::LogLine &line);
-		void UpdateCommandLine();
-		void Layout();
+	void OnLogCleared();
+	void OnLogAdded(int idx);
 
-	public:
-		// Scene
-		virtual void AttachController(Control::InputEventController &controller);
-		virtual void DetachController(Control::InputEventController &controller);
-	public:
-		virtual void Advance(Util::OS::timestamp_t tick);
-		virtual void PrepareRender();
-		virtual void Render();
+	void AppendLogLine(const SysConsole::LogLine &line);
+	void UpdateCommandLine();
+	void Layout();
 
-	private:
-		GameDirector &director;
-		SysConsole &console;
+public:
+	// Scene
+	virtual void AttachController(Control::InputEventController &controller);
+	virtual void DetachController(Control::InputEventController &controller);
+public:
+	virtual void Advance(Util::OS::timestamp_t tick);
+	virtual void PrepareRender();
+	virtual void Render();
 
-		boost::signals2::connection displayConfigChangedConn;
+private:
+	GameDirector &director;
+	SysConsole &console;
 
-		boost::signals2::connection consoleToggleConn;
-		boost::signals2::connection consoleUpConn;
-		boost::signals2::connection consoleDownConn;
-		boost::signals2::connection consoleTopConn;
-		boost::signals2::connection consoleBottomConn;
-		boost::signals2::connection consolePrevCmdConn;
-		boost::signals2::connection consoleNextCmdConn;
-		boost::signals2::connection textInputConn;
-		boost::signals2::connection textControlConn;
+	boost::signals2::connection displayConfigChangedConn;
 
-		boost::signals2::connection logClearedConn;
-		boost::signals2::connection logAddedConn;
+	boost::signals2::connection consoleToggleConn;
+	boost::signals2::connection consoleUpConn;
+	boost::signals2::connection consoleDownConn;
+	boost::signals2::connection consoleTopConn;
+	boost::signals2::connection consoleBottomConn;
+	boost::signals2::connection consolePrevCmdConn;
+	boost::signals2::connection consoleNextCmdConn;
+	boost::signals2::connection textInputConn;
+	boost::signals2::connection textControlConn;
 
-		class LogLines;
-		LogLines *logLines;
-		int lastLogIdx;
-		bool logsChanged;
+	boost::signals2::connection logClearedConn;
+	boost::signals2::connection logAddedConn;
 
-		bool layoutChanged;
+	class LogLines;
+	LogLines *logLines;
+	int lastLogIdx;
+	bool logsChanged;
 
-		std::unique_ptr<Display::ScreenFade> fader;
-		Display::Label *inputLbl;
+	bool layoutChanged;
 
-		bool cursorOn;
-		Util::OS::timestamp_t cursorTick;
-		Display::Label *cursorLbl;
+	std::unique_ptr<Display::ScreenFade> fader;
+	Display::Label *inputLbl;
 
-		Display::Label *measureLbl;  ///< Used to measure the size of glyphs.
-		Vec2 charSize;
+	bool cursorOn;
+	Util::OS::timestamp_t cursorTick;
+	Display::Label *cursorLbl;
+
+	Display::Label *measureLbl;  ///< Used to measure the size of glyphs.
+	Vec2 charSize;
 };
 
 }  // namespace HoverScript

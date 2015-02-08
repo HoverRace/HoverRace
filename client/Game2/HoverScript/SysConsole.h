@@ -1,7 +1,7 @@
 
 // SysConsole.h
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -59,151 +59,152 @@ namespace HoverScript {
  */
 class SysConsole : public Console
 {
-	typedef Console SUPER;
-	public:
-		SysConsole(Script::Core *scripting, GameDirector &director,
-			DebugPeer *debugPeer, GamePeer *gamePeer, InputPeer *inputPeer,
-			int maxLogLines=512,
-			int maxHistory=64);
-		virtual ~SysConsole();
+	using SUPER = Console;
 
-	protected:
-		virtual void InitEnv();
+public:
+	SysConsole(Script::Core *scripting, GameDirector &director,
+		DebugPeer *debugPeer, GamePeer *gamePeer, InputPeer *inputPeer,
+		int maxLogLines = 512,
+		int maxHistory = 64);
+	virtual ~SysConsole();
 
-	public:
-		void Advance(Util::OS::timestamp_t tick) override { HR_UNUSED(tick); }
+protected:
+	virtual void InitEnv();
 
-	private:
-		void OnSessionChanged(std::shared_ptr<MetaSession> metaSession);
+public:
+	void Advance(Util::OS::timestamp_t tick) override { HR_UNUSED(tick); }
 
-	public:
-		virtual void Clear();
-		void SubmitChunkWithHistory(const std::string &s);
+private:
+	void OnSessionChanged(std::shared_ptr<MetaSession> metaSession);
 
-	public:
-		enum class LogLevel { HISTORY, NOTE, INFO, ERROR };
-		struct LogLine
-		{
-			LogLine(int idx, LogLevel level, const std::string &line) :
-				idx(idx), level(level), line(line) { }
+public:
+	virtual void Clear();
+	void SubmitChunkWithHistory(const std::string &s);
 
-			LogLine &operator=(const LogLine&) = delete;
+public:
+	enum class LogLevel { HISTORY, NOTE, INFO, ERROR };
+	struct LogLine
+	{
+		LogLine(int idx, LogLevel level, const std::string &line) :
+			idx(idx), level(level), line(line) { }
 
-			const int idx;
-			const LogLevel level;
-			const std::string line;
-		};
-	private:
-		void OnLog(const Util::Log::Entry &entry);
-		void AddLogLine(LogLevel level, const std::string &line);
-	public:
-		void AddIntroLines();
-		void LogHistory(const std::string &s);
-		void LogNote(const std::string &s);
-		virtual void LogInfo(const std::string &s);
-		virtual void LogError(const std::string &s);
+		LogLine &operator=(const LogLine&) = delete;
 
-		void LoadPrevCmd();
-		void LoadNextCmd();
+		const int idx;
+		const LogLevel level;
+		const std::string line;
+	};
+private:
+	void OnLog(const Util::Log::Entry &entry);
+	void AddLogLine(LogLevel level, const std::string &line);
+public:
+	void AddIntroLines();
+	void LogHistory(const std::string &s);
+	void LogNote(const std::string &s);
+	virtual void LogInfo(const std::string &s);
+	virtual void LogError(const std::string &s);
 
-	public:
-		int GetEndLogIndex() const;
+	void LoadPrevCmd();
+	void LoadNextCmd();
 
-		/**
-		 * Read all log entries.
-		 * @param fn The callback function (will be passed a LogLine reference).
-		 */
-		template<class Function>
-		void ReadLogs(Function fn)
-		{
-			if (!logLines.empty()) {
-				std::for_each(logLines.cbegin(), logLines.cend(), fn);
-			}
+public:
+	int GetEndLogIndex() const;
+
+	/**
+	 * Read all log entries.
+	 * @param fn The callback function (will be passed a LogLine reference).
+	 */
+	template<class Function>
+	void ReadLogs(Function fn)
+	{
+		if (!logLines.empty()) {
+			std::for_each(logLines.cbegin(), logLines.cend(), fn);
 		}
+	}
 
-		/**
-		 * Read a subset of log entries, from a starting index to the end.
-		 * @param start The starting log index (inclusive).
-		 * @param fn The callback function (will be passed a LogLine reference).
-		 */
-		template<class Function>
-		void ReadLogs(int start, Function fn)
-		{
-			if (!logLines.empty()) {
-				if (start < baseLogIdx) {
-					ReadLogs(fn);
-				}
-				else {
-					ReadLogs(start, GetEndLogIndex(), fn);
-				}
+	/**
+	 * Read a subset of log entries, from a starting index to the end.
+	 * @param start The starting log index (inclusive).
+	 * @param fn The callback function (will be passed a LogLine reference).
+	 */
+	template<class Function>
+	void ReadLogs(int start, Function fn)
+	{
+		if (!logLines.empty()) {
+			if (start < baseLogIdx) {
+				ReadLogs(fn);
 			}
-		}
-
-		/**
-		 * Read a subset of log entries, for a specific range.
-		 * @param start The starting log index (inclusive).
-		 * @param end The ending log index (inclusive).
-		 * @param fn The callback function (will be passed a LogLine reference).
-		 */
-		template<class Function>
-		void ReadLogs(int start, int end, Function fn)
-		{
-			if (logLines.empty()) return;
-			if (start > end) return;
-			int endIdx = baseLogIdx + logLines.size() - 1;
-			if (start > endIdx) return;
-			if (start == end) fn(logLines.at(start - baseLogIdx));
 			else {
-				if (start < baseLogIdx) start = baseLogIdx;
-				auto startIter = logLines.begin() + (start - baseLogIdx);
-				auto endIter = (end > endIdx) ? logLines.end() : startIter + (end - start + 1);
-				std::for_each(startIter, endIter, fn);
+				ReadLogs(start, GetEndLogIndex(), fn);
 			}
 		}
+	}
 
-		std::string &GetCommandLine() { return commandLine; }
+	/**
+	 * Read a subset of log entries, for a specific range.
+	 * @param start The starting log index (inclusive).
+	 * @param end The ending log index (inclusive).
+	 * @param fn The callback function (will be passed a LogLine reference).
+	 */
+	template<class Function>
+	void ReadLogs(int start, int end, Function fn)
+	{
+		if (logLines.empty()) return;
+		if (start > end) return;
+		int endIdx = baseLogIdx + logLines.size() - 1;
+		if (start > endIdx) return;
+		if (start == end) fn(logLines.at(start - baseLogIdx));
+		else {
+			if (start < baseLogIdx) start = baseLogIdx;
+			auto startIter = logLines.begin() + (start - baseLogIdx);
+			auto endIter = (end > endIdx) ? logLines.end() : startIter + (end - start + 1);
+			std::for_each(startIter, endIter, fn);
+		}
+	}
 
-	public:
-		/// Fired when the log is cleared.
-		typedef boost::signals2::signal<void()> logClearedSignal_t;
-		logClearedSignal_t &GetLogClearedSignal() { return logClearedSignal; }
+	std::string &GetCommandLine() { return commandLine; }
 
-		/// Fired when a log line is added.  Parameter is the log index.
-		typedef boost::signals2::signal<void(int)> logAddedSignal_t;
-		logAddedSignal_t &GetLogAddedSignal() { return logAddedSignal; }
+public:
+	/// Fired when the log is cleared.
+	typedef boost::signals2::signal<void()> logClearedSignal_t;
+	logClearedSignal_t &GetLogClearedSignal() { return logClearedSignal; }
 
-	public:
-		// HelpHandler.
-		virtual void HelpClass(const Script::Help::Class &cls);
-		virtual void HelpMethod(const Script::Help::Class &cls, const Script::Help::Method &method);
+	/// Fired when a log line is added.  Parameter is the log index.
+	typedef boost::signals2::signal<void(int)> logAddedSignal_t;
+	logAddedSignal_t &GetLogAddedSignal() { return logAddedSignal; }
 
-	public:
-		static int LQuit(lua_State *L);
+public:
+	// HelpHandler.
+	virtual void HelpClass(const Script::Help::Class &cls);
+	virtual void HelpMethod(const Script::Help::Class &cls, const Script::Help::Method &method);
 
-	private:
-		GameDirector &director;
-		DebugPeer *debugPeer;
-		GamePeer *gamePeer;
-		InputPeer *inputPeer;
-		std::shared_ptr<MetaSession> metaSession;
+public:
+	static int LQuit(lua_State *L);
 
-		boost::signals2::scoped_connection sessionChangedConn;
+private:
+	GameDirector &director;
+	DebugPeer *debugPeer;
+	GamePeer *gamePeer;
+	InputPeer *inputPeer;
+	std::shared_ptr<MetaSession> metaSession;
 
-		bool introWritten;
-		int maxLogLines;
-		std::deque<LogLine> logLines;
-		int baseLogIdx;  ///< Index of the first item in logLines.
+	boost::signals2::scoped_connection sessionChangedConn;
 
-		typedef boost::circular_buffer<std::string> history_t;
-		history_t history;
-		history_t::iterator curHistory;
+	bool introWritten;
+	int maxLogLines;
+	std::deque<LogLine> logLines;
+	int baseLogIdx;  ///< Index of the first item in logLines.
 
-		std::string commandLine;
+	typedef boost::circular_buffer<std::string> history_t;
+	history_t history;
+	history_t::iterator curHistory;
 
-		boost::signals2::scoped_connection logConn;
+	std::string commandLine;
 
-		logClearedSignal_t logClearedSignal;
-		logAddedSignal_t logAddedSignal;
+	boost::signals2::scoped_connection logConn;
+
+	logClearedSignal_t logClearedSignal;
+	logAddedSignal_t logAddedSignal;
 };
 
 }  // namespace HoverScript

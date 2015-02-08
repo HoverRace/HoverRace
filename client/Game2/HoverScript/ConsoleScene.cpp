@@ -36,8 +36,10 @@ namespace Client {
 namespace HoverScript {
 
 namespace {
-	static const std::string COMMAND_PROMPT(">> ");
-	static const std::string CONTINUE_PROMPT(":> ");
+
+static const std::string COMMAND_PROMPT(">> ");
+static const std::string CONTINUE_PROMPT(":> ");
+
 }
 
 class ConsoleScene::LogLines /*{{{*/
@@ -73,7 +75,7 @@ private:
 }; //}}}
 
 ConsoleScene::ConsoleScene(Display::Display &display, GameDirector &director,
-                           SysConsole &console) :
+	SysConsole &console) :
 	SUPER("Console"),
 	director(director), console(console),
 	lastLogIdx(-1), logsChanged(true), layoutChanged(true),
@@ -477,7 +479,9 @@ void ConsoleScene::LogLines::PrepareRender()
 void ConsoleScene::LogLines::Render()
 {
 	unsigned int i = 0;
-	for (auto iter = lines.rbegin() + pos; iter != lines.rend() && i < num; ++iter, ++i) {
+	for (auto iter = lines.rbegin() + pos;
+		iter != lines.rend() && i < num; ++iter, ++i)
+	{
 		(*iter)->Render();
 	}
 }
