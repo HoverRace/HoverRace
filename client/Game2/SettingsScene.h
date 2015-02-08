@@ -55,7 +55,9 @@ protected:
 	/// Reset the config values to their defaults (if possible).
 	virtual void ResetToDefaults() = 0;
 
-public:
+protected:
+	Display::FlexGrid *GetSettingsGrid() { return settingsGrid.get(); }
+
 	Display::FlexGrid::CellProxy AddSetting(const std::string &label);
 
 protected:

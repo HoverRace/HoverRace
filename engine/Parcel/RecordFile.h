@@ -1,8 +1,7 @@
 
 // RecordFile.h
-// Base class for parcel implementations.
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -44,40 +43,44 @@ namespace Parcel {
  * Base class for parcel implementations.
  * @author Michael Imamura
  */
-class MR_DllDeclare RecordFile : public Util::Inspectable {
-	typedef Util::Inspectable SUPER;
-	public:
-		RecordFile() : SUPER() { }
-		virtual ~RecordFile() { }
+class MR_DllDeclare RecordFile : public Util::Inspectable
+{
+	using SUPER = Util::Inspectable;
 
-		virtual bool CreateForWrite(const Util::OS::path_t &filename, int numRecords, const char *title=NULL) = 0;
-		virtual bool OpenForWrite(const Util::OS::path_t &filename) = 0;
-		virtual bool OpenForRead(const Util::OS::path_t &filename, bool validateChecksum=false) = 0;
+public:
+	RecordFile() : SUPER() { }
+	virtual ~RecordFile() { }
 
-		// Checksum stuff
-		virtual bool ApplyChecksum(const Util::OS::path_t &filename) = 0;
+	virtual bool CreateForWrite(const Util::OS::path_t &filename,
+		int numRecords, const char *title = nullptr) = 0;
+	virtual bool OpenForWrite(const Util::OS::path_t &filename) = 0;
+	virtual bool OpenForRead(const Util::OS::path_t &filename,
+		bool validateChecksum = false) = 0;
 
-		virtual DWORD GetAlignMode() = 0;
+	// Checksum stuff
+	virtual bool ApplyChecksum(const Util::OS::path_t &filename) = 0;
 
-		virtual int GetNbRecords() const = 0;
-		virtual void SelectRecord(int i) = 0;
-		virtual bool BeginANewRecord() = 0;
+	virtual DWORD GetAlignMode() = 0;
 
-		/**
-		 * Open an object stream for reading at the current record.
-		 * It is the caller's responsibility to ensure that only one stream
-		 * (input or output) exists at a time.
-		 * @return A shared pointer to the new input stream (never @c NULL).
-		 */
-		virtual ObjStreamPtr StreamIn() = 0;
+	virtual int GetNbRecords() const = 0;
+	virtual void SelectRecord(int i) = 0;
+	virtual bool BeginANewRecord() = 0;
 
-		/**
-		 * Open an object stream for writing at the current record.
-		 * It is the caller's responsibility to ensure that only one stream
-		 * (input or output) exists at a time.
-		 * @return A shared pointer to the new output stream (never @c NULL).
-		 */
-		virtual ObjStreamPtr StreamOut() = 0;
+	/**
+	 * Open an object stream for reading at the current record.
+	 * It is the caller's responsibility to ensure that only one stream
+	 * (input or output) exists at a time.
+	 * @return A shared pointer to the new input stream (never @c NULL).
+	 */
+	virtual ObjStreamPtr StreamIn() = 0;
+
+	/**
+	 * Open an object stream for writing at the current record.
+	 * It is the caller's responsibility to ensure that only one stream
+	 * (input or output) exists at a time.
+	 * @return A shared pointer to the new output stream (never @c NULL).
+	 */
+	virtual ObjStreamPtr StreamOut() = 0;
 };
 typedef std::shared_ptr<RecordFile> RecordFilePtr;
 

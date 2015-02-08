@@ -1,7 +1,7 @@
 
 // Scene.h
 //
-// Copyright (c) 2010, 2013, 2014 Michael Imamura.
+// Copyright (c) 2010, 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -79,14 +79,16 @@ public:
 	 * This is called whenever the scene becomes the foreground scene
 	 * or the controller config needs to be rebuilt.
 	 * @param controller The current controller being used.  It can be assumed
-	 *                   that the controller's action mappings have been cleared.
+	 *                   that the controller's action mappings have been
+	 *                   cleared.
 	 */
 	virtual void AttachController(Control::InputEventController &controller) = 0;
 
 	/**
 	 * Remove the controller mappings.
 	 * @param controller The current controller being used.  It can be assumed
-	 *                   that the controller's action mappings have been cleared.
+	 *                   that the controller's action mappings have been
+	 *                   cleared.
 	 */
 	virtual void DetachController(Control::InputEventController &controller) = 0;
 
@@ -262,11 +264,11 @@ private:
 	Util::OS::timestamp_t prevTick;
 	Phase phase;
 	double phaseTransitionDuration;
-	Util::OS::timestamp_t phaseTs;  ///< Timestamp of when current phase was started.
+	Util::OS::timestamp_t phaseTs;  ///< When current phase was started.
 	Util::OS::timestamp_t startingPhaseTime;
 	State state;
 	Util::OS::timestamp_t stateTransitionDuration;
-	Util::OS::timestamp_t stateTs;  ///< Timestamp of when current state was started.
+	Util::OS::timestamp_t stateTs;  ///< When current state was started.
 	double stateTransitionVelocity;
 	double statePosition;
 };

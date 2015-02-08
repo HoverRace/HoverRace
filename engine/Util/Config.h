@@ -67,9 +67,9 @@ public:
 	ConfigExn() : SUPER() { }
 	ConfigExn(const char* const &msg) : SUPER(), msg(msg) { }
 	ConfigExn(const std::string &msg) : SUPER(), msg(msg) { }
-	virtual ~ConfigExn() throw() { }
+	virtual ~ConfigExn() noexcept { }
 
-	const char* what() const throw() override { return msg.c_str(); }
+	const char* what() const noexcept override { return msg.c_str(); }
 
 private:
 	std::string msg;

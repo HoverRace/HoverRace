@@ -87,7 +87,7 @@ StyleEnv::StyleEnv(Script::Core *scripting, Display::Display &display,
 void StyleEnv::Register(Script::Core *scripting)
 {
 	using namespace luabind;
-	using Styles = Display::Display::styles_t;
+	using Styles = Display::Styles;
 	lua_State *L = scripting->GetState();
 
 	// Register base classes.

@@ -1,8 +1,7 @@
 
 // ClassicRecordFile.cpp
-// Standard HoverRace 1.x parcel format.
 //
-// Copyright (c) 2010, 2012 Michael Imamura.
+// Copyright (c) 2010, 2012, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -35,23 +34,24 @@ namespace Parcel {
 
 class ClassicRecordFileHeader : public Util::Inspectable /*{{{*/
 {
-	typedef Util::Inspectable SUPER;
-	public:
-		ClassicRecordFileHeader();
-		ClassicRecordFileHeader(MR_UInt32 numRecords);
-		virtual ~ClassicRecordFileHeader();
+	using SUPER = Util::Inspectable;
 
-		void Serialize(ObjStream &os);
+public:
+	ClassicRecordFileHeader();
+	ClassicRecordFileHeader(MR_UInt32 numRecords);
+	virtual ~ClassicRecordFileHeader();
 
-		virtual void Inspect(Util::InspectMapNode &node) const;
+	void Serialize(ObjStream &os);
 
-	public:
-		std::string title;
-		bool sumValid;
-		MR_UInt32 checksum;
-		MR_UInt32 recordsUsed;
-		MR_UInt32 recordsMax;
-		MR_UInt32 *recordList;
+	void Inspect(Util::InspectMapNode &node) const override;
+
+public:
+	std::string title;
+	bool sumValid;
+	MR_UInt32 checksum;
+	MR_UInt32 recordsUsed;
+	MR_UInt32 recordsMax;
+	MR_UInt32 *recordList;
 };
 
 ClassicRecordFileHeader::ClassicRecordFileHeader() :
@@ -62,7 +62,8 @@ ClassicRecordFileHeader::ClassicRecordFileHeader() :
 
 ClassicRecordFileHeader::ClassicRecordFileHeader(MR_UInt32 numRecords) :
 	SUPER(), sumValid(false), checksum(0),
-	recordsUsed(0), recordsMax(numRecords), recordList(new MR_UInt32[numRecords])
+	recordsUsed(0), recordsMax(numRecords),
+	recordList(new MR_UInt32[numRecords])
 {
 	ASSERT(numRecords > 0);
 

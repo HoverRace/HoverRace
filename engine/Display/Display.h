@@ -22,8 +22,7 @@
 #pragma once
 
 #include "../Vec.h"
-#include "UiFont.h"
-#include "Color.h"
+#include "Styles.h"
 #include "UiLayoutFlags.h"
 #include "ViewAttacher.h"
 
@@ -234,61 +233,7 @@ private:
 	uiScaleChangedSignal_t uiScaleChangedSignal;
 
 public:
-	struct styles_t {
-		styles_t();
-
-		// Standard text.
-		UiFont bodyFont;
-		Color bodyFg;
-		UiFont bodyHeadFont;
-		Color bodyHeadFg;
-		UiFont bodyAsideFont;
-		Color bodyAsideFg;
-
-		// Announcements.
-		UiFont announcementHeadFont;
-		Color announcementHeadFg;
-		UiFont announcementBodyFont;
-		Color announcementBodyFg;
-		Color announcementSymbolFg;
-		Color announcementBg;
-
-		// HUD text.
-		UiFont hudNormalFont;
-		UiFont hudNormalHeadFont;
-		UiFont hudSmallFont;
-		UiFont hudSmallHeadFont;
-
-		// Console text.
-		UiFont consoleFont;
-		Color consoleFg;
-		Color consoleCursorFg;
-		Color consoleBg;
-
-		// UI widgets (buttons, etc.).
-		UiFont formFont;
-		Color formFg;
-		Color formDisabledFg;
-
-		// Dialog background shading color.
-		Color dialogBg;
-
-		// Attributes for grid containers.
-		Vec2 gridMargin;
-		Vec2 gridPadding;
-
-		// Colors specific to button-like widgets.
-		Color buttonBg;
-		Color buttonFocusedBg;
-		Color buttonDisabledBg;
-		Color buttonPressedBg;
-
-		// Headings, titles.
-		UiFont headingFont;
-		Color headingFg;
-
-		void Reload();
-	} styles;
+	Styles styles;
 };
 
 }  // namespace Display
