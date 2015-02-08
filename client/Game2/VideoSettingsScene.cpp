@@ -165,10 +165,11 @@ void VideoSettingsScene::OnDisplayClicked()
 		videoCfg.yResFullscreen,
 		videoCfg.fullscreenRefreshRate);
 
+	auto sp = scene.get();  // Prevent circular reference.
 	displaySelConn = scene->GetOkSignal().connect([=]() {
-		videoCfg.fullscreenMonitorIndex = scene->GetMonitorIdx();
+		videoCfg.fullscreenMonitorIndex = sp->GetMonitorIdx();
 
-		const auto &res = scene->GetResolution();
+		const auto &res = sp->GetResolution();
 		videoCfg.xResFullscreen = res.xRes;
 		videoCfg.yResFullscreen = res.yRes;
 		videoCfg.fullscreenRefreshRate = res.refreshRate;
