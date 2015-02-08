@@ -165,28 +165,6 @@ private:
 
 namespace Module {
 
-class LayoutModule : public TestLabScene::LabModule /*{{{*/
-{
-	using SUPER = TestLabScene::LabModule;
-
-public:
-	LayoutModule(Display::Display &display, GameDirector &director);
-	virtual ~LayoutModule() { }
-
-private:
-	void AddAlignmentTestElem(
-		Display::UiViewModel::Alignment alignment,
-		const std::string &label, double x, double y);
-
-public:
-	void OnDisplayConfigChanged();
-
-private:
-	boost::signals2::scoped_connection displayConfigChangedConn;
-	std::shared_ptr<Display::FillBox> displayInfoBox;
-	std::shared_ptr<Display::Label> displayInfoLbl;
-}; //}}}
-
 class ClickablesModule : public TestLabScene::LabModule /*{{{*/
 {
 	using SUPER = TestLabScene::LabModule;
@@ -211,50 +189,21 @@ private:
 	boost::signals2::scoped_connection groupValueConn;
 }; //}}}
 
-class LabelModule : public TestLabScene::LabModule /*{{{*/
+class FlexGridModule : public TestLabScene::LabModule /*{{{*/
 {
 	using SUPER = TestLabScene::LabModule;
 
 public:
-	LabelModule(Display::Display &display, GameDirector &director);
-	virtual ~LabelModule() { }
-
-private:
-	void AdjustWrapWidth(double amt);
-
-private:
-	std::shared_ptr<Display::FillBox> wrapBox;
-	std::shared_ptr<Display::Label> wrapLbl;
-}; //}}}
-
-class IconModule : public TestLabScene::LabModule /*{{{*/
-{
-	using SUPER = TestLabScene::LabModule;
+	FlexGridModule(Display::Display &display, GameDirector &director);
+	virtual ~FlexGridModule() { }
 
 public:
-	IconModule(Display::Display &display, GameDirector &director);
-	virtual ~IconModule() { }
-}; //}}}
-
-class TransitionModule : public TestLabScene::LabModule /*{{{*/
-{
-	using SUPER = TestLabScene::LabModule;
-
-public:
-	TransitionModule(Display::Display &display, GameDirector &director);
-	virtual ~TransitionModule() { }
-
-protected:
-	void OnPhaseChanged(Phase oldPhase) override;
-	void OnStateChanged(State oldState) override;
-	void OnPhaseTransition(double progress) override;
-	void OnStateTransition(double progress) override;
+	void Layout() override;
 
 private:
-	std::shared_ptr<Display::Label> phaseLbl;
-	std::shared_ptr<Display::FillBox> phaseBox;
-	std::shared_ptr<Display::Label> stateLbl;
-	std::shared_ptr<Display::FillBox> stateBox;
+	std::shared_ptr<Display::FlexGrid> grid;
+	std::shared_ptr<Display::FlexGrid> sideGrid;
+	std::shared_ptr<Display::FillBox> gridSizeBox;
 }; //}}}
 
 class HudModule : public TestLabScene::LabModule /*{{{*/
@@ -278,21 +227,51 @@ private:
 	std::unique_ptr<Display::Hud> hud;
 }; //}}}
 
-class FlexGridModule : public TestLabScene::LabModule /*{{{*/
+class IconModule : public TestLabScene::LabModule /*{{{*/
 {
 	using SUPER = TestLabScene::LabModule;
 
 public:
-	FlexGridModule(Display::Display &display, GameDirector &director);
-	virtual ~FlexGridModule() { }
+	IconModule(Display::Display &display, GameDirector &director);
+	virtual ~IconModule() { }
+}; //}}}
+
+class LabelModule : public TestLabScene::LabModule /*{{{*/
+{
+	using SUPER = TestLabScene::LabModule;
 
 public:
-	void Layout() override;
+	LabelModule(Display::Display &display, GameDirector &director);
+	virtual ~LabelModule() { }
 
 private:
-	std::shared_ptr<Display::FlexGrid> grid;
-	std::shared_ptr<Display::FlexGrid> sideGrid;
-	std::shared_ptr<Display::FillBox> gridSizeBox;
+	void AdjustWrapWidth(double amt);
+
+private:
+	std::shared_ptr<Display::FillBox> wrapBox;
+	std::shared_ptr<Display::Label> wrapLbl;
+}; //}}}
+
+class LayoutModule : public TestLabScene::LabModule /*{{{*/
+{
+	using SUPER = TestLabScene::LabModule;
+
+public:
+	LayoutModule(Display::Display &display, GameDirector &director);
+	virtual ~LayoutModule() { }
+
+private:
+	void AddAlignmentTestElem(
+		Display::UiViewModel::Alignment alignment,
+		const std::string &label, double x, double y);
+
+public:
+	void OnDisplayConfigChanged();
+
+private:
+	boost::signals2::scoped_connection displayConfigChangedConn;
+	std::shared_ptr<Display::FillBox> displayInfoBox;
+	std::shared_ptr<Display::Label> displayInfoLbl;
 }; //}}}
 
 class PictureModule : public TestLabScene::LabModule /*{{{*/
@@ -305,6 +284,27 @@ public:
 
 private:
 	std::shared_ptr<Display::Picture> picture;
+}; //}}}
+
+class TransitionModule : public TestLabScene::LabModule /*{{{*/
+{
+	using SUPER = TestLabScene::LabModule;
+
+public:
+	TransitionModule(Display::Display &display, GameDirector &director);
+	virtual ~TransitionModule() { }
+
+protected:
+	void OnPhaseChanged(Phase oldPhase) override;
+	void OnStateChanged(State oldState) override;
+	void OnPhaseTransition(double progress) override;
+	void OnStateTransition(double progress) override;
+
+private:
+	std::shared_ptr<Display::Label> phaseLbl;
+	std::shared_ptr<Display::FillBox> phaseBox;
+	std::shared_ptr<Display::Label> stateLbl;
+	std::shared_ptr<Display::FillBox> stateBox;
 }; //}}}
 
 }  // namespace Module
@@ -324,14 +324,14 @@ TestLabScene::TestLabScene(Display::Display &display, GameDirector &director,
 		display, director, startingModuleName);
 	grid->SetPos(100, 100);
 
-	grid->AddModule<Module::LayoutModule>("Layout");
 	grid->AddModule<Module::ClickablesModule>("Clickables");
-	grid->AddModule<Module::LabelModule>("Label");
-	grid->AddModule<Module::IconModule>("Icon");
-	grid->AddModule<Module::TransitionModule>("Transition");
-	grid->AddModule<Module::HudModule>("HUD");
 	grid->AddModule<Module::FlexGridModule>("FlexGrid");
+	grid->AddModule<Module::HudModule>("HUD");
+	grid->AddModule<Module::IconModule>("Icon");
+	grid->AddModule<Module::LabelModule>("Label");
+	grid->AddModule<Module::LayoutModule>("Layout");
 	grid->AddModule<Module::PictureModule>("Picture");
+	grid->AddModule<Module::TransitionModule>("Transition");
 
 	startingModuleBtn = grid->ShareStartingModuleBtn();
 
@@ -425,77 +425,6 @@ void TestLabScene::LabModule::Render()
 //}}} TestLabScene::LabModule
 
 namespace Module {
-
-//{{{ LayoutModule /////////////////////////////////////////////////////////////
-
-LayoutModule::LayoutModule(Display::Display &display, GameDirector &director) :
-	SUPER(display, director, "Layout")
-{
-	using namespace Display;
-	using Alignment = UiViewModel::Alignment;
-
-	auto root = GetRoot();
-
-	displayConfigChangedConn = display.GetDisplayConfigChangedSignal().
-		connect(std::bind(&LayoutModule::OnDisplayConfigChanged, this));
-
-	// This box takes up the entire UI viewport, so we move it to the
-	// beginning of the list so we don't render on top of the "Close" button.
-	displayInfoBox = root->NewChild<FillBox>(1280, 720, 0xff3f3f3f);
-	root->ReorderChild(displayInfoBox, 0);
-
-	displayInfoLbl = root->NewChild<Label>("Res", UiFont(20), COLOR_WHITE);
-	displayInfoLbl->SetPos(640, 360);
-	displayInfoLbl->SetAlignment(Alignment::CENTER);
-	OnDisplayConfigChanged();
-
-	std::shared_ptr<FillBox> fillBox;
-	std::shared_ptr<Label> lbl;
-
-	fillBox = root->NewChild<FillBox>(100, 100, 0x7fff0000);
-	fillBox->SetPos(100, 20);
-	fillBox = root->NewChild<FillBox>(100, 100, 0x7f00ff00);
-	fillBox->SetPos(150, 70);
-
-	AddAlignmentTestElem(Alignment::SW, "| Southwest", 0, 719);
-	AddAlignmentTestElem(Alignment::S, "South", 639, 719);
-	AddAlignmentTestElem(Alignment::SE, "Southeast |", 1279, 719);
-
-	lbl = root->NewChild<Label>("Red 20 Normal", UiFont(20), 0xffff0000);
-	lbl->SetPos(0, 20);
-	lbl = root->NewChild<Label>("Yellow (75%) 25 Italic",
-		UiFont(25, UiFont::ITALIC), 0xbfffff00);
-	lbl->SetPos(0, 40);
-	lbl = root->NewChild<Label>("Magenta (50%) 30 Bold+Italic",
-		UiFont(30, UiFont::BOLD_ITALIC), 0x7fff00ff);
-	lbl->SetPos(0, 65);
-}
-
-void LayoutModule::AddAlignmentTestElem(
-	Display::UiViewModel::Alignment alignment,
-	const std::string &label, double x, double y)
-{
-	using namespace Display;
-
-	auto fillBox = GetRoot()->NewChild<FillBox>(50, 50, 0x7f00ffff);
-	fillBox->SetAlignment(alignment);
-	fillBox->SetPos(x, y);
-
-	auto lbl = GetRoot()->NewChild<Label>(label, UiFont(40), 0xffffffff);
-	lbl->SetAlignment(alignment);
-	lbl->SetPos(x, y);
-}
-
-void LayoutModule::OnDisplayConfigChanged()
-{
-	double uiScale = display.GetUiScale();
-	const Vec2 &uiOffset = display.GetUiOffset();
-
-	static boost::format resFmt("UI Scale: %0.2f  Offset: %d,%d");
-	displayInfoLbl->SetText(boost::str(resFmt % uiScale % uiOffset.x % uiOffset.y));
-}
-
-//}}} LayoutModule
 
 //{{{ ClickablesModule /////////////////////////////////////////////////////////////
 
@@ -599,238 +528,6 @@ void ClickablesModule::OnMessageClicked()
 
 //}}} ClickablesModule
 
-//{{{ LabelModule //////////////////////////////////////////////////////////////
-
-LabelModule::LabelModule(Display::Display &display, GameDirector &director) :
-	SUPER(display, director, "Label")
-{
-	using namespace Display;
-
-	Config *cfg = Config::GetInstance();
-	const std::string &monospaceFontName = cfg->GetDefaultMonospaceFontName();
-	const std::string &symbolFontName = cfg->GetDefaultSymbolFontName();
-
-	auto root = GetRoot();
-
-	std::shared_ptr<Button> btn;
-	std::shared_ptr<Label> lbl;
-
-	lbl = root->NewChild<Label>("Red 20 Normal", UiFont(20), 0xffff0000);
-	lbl->SetPos(0, 20);
-	lbl = root->NewChild<Label>("Yellow (75%) 25 Italic",
-		UiFont(25, UiFont::ITALIC), 0xbfffff00);
-	lbl->SetPos(0, 40);
-	lbl = root->NewChild<Label>("Magenta (50%) 30 Bold+Italic",
-		UiFont(30, UiFont::BOLD_ITALIC), 0x7fff00ff);
-	lbl->SetPos(0, 65);
-
-	lbl = root->NewChild<Label>("Default Font", UiFont(30), 0xffbfbfbf);
-	lbl->SetPos(640, 20);
-	lbl = root->NewChild<Label>("Monospace Font",
-		UiFont(monospaceFontName, 30), 0xffbfbfbf);
-	lbl->SetPos(640, 50);
-	lbl = root->NewChild<Label>("< "
-		"\xef\x84\x9b "  // gamepad
-		"\xef\x82\x91 "  // trophy
-		"\xef\x83\xa4 "  // dashboard
-		">",
-		UiFont(symbolFontName, 30), 0xffbfbfbf);
-	lbl->SetPos(640, 80);
-
-	// Wrapped text (with a background to visualize the width).
-
-	std::string wrapText =
-		"This is a string which should be wrapped to multiple lines to fit "
-		"the fixed width label.\n\n"
-		"ThisIsAVeryLongWordThatShouldBeClippedToTheFixedWidthOfTheLabel.\n\n"
-		"This is the third line of the text.";
-
-	wrapBox = root->NewChild<FillBox>(1280 / 4, 720 - 150, 0xff3f3f3f);
-	wrapBox->SetPos(100, 150);
-
-	wrapLbl = root->NewChild<Label>(1280 / 4, wrapText,
-		UiFont(30), 0xffffffff);
-	wrapLbl->SetPos(100, 150);
-
-	// Buttons to increase / decrease the wrap width.
-
-	btn = root->NewChild<Button>(display, "->|");
-	btn->SetPos(0, 150);
-	btn->GetClickedSignal().connect(std::bind(
-		&LabelModule::AdjustWrapWidth, this, 50));
-
-	btn = root->NewChild<Button>(display, "|<-");
-	btn->SetPos(0, 200);
-	btn->GetClickedSignal().connect(std::bind(
-		&LabelModule::AdjustWrapWidth, this, -50));
-}
-
-void LabelModule::AdjustWrapWidth(double amt)
-{
-	const Vec2 &curSize = wrapBox->GetSize();
-	double newWidth = curSize.x + amt;
-
-	if (newWidth > 0 && newWidth < (1280.0 - wrapBox->GetPos().x)) {
-		wrapBox->SetSize(newWidth, curSize.y);
-		wrapLbl->SetWrapWidth(newWidth);
-	}
-}
-
-//}}} LabelModule
-
-//{{{ IconModule //////////////////////////////////////////////////////////////
-
-IconModule::IconModule(Display::Display &display, GameDirector &director) :
-	SUPER(display, director, "Icon")
-{
-	using namespace Display;
-
-	auto root = GetRoot();
-
-	std::shared_ptr<FillBox> box;
-	std::shared_ptr<FillBox> icon;
-
-	box = root->NewChild<FillBox>(60, 60, 0xff007f7f);
-	box->SetPos(0, 40);
-	icon = root->NewChild<SymbolIcon>(60, 60, 0xf046, 0xbfffffff);
-	icon->SetPos(0, 40);
-}
-
-//}}} IconModule
-
-//{{{ TransitionModule ////////////////////////////////////////////////////////
-
-TransitionModule::TransitionModule(Display::Display &display,
-	GameDirector &director) :
-	SUPER(display, director, "Transition")
-{
-	using namespace Display;
-
-	SetPhaseTransitionDuration(3000);
-	SetStateTransitionDuration(3000);
-
-	auto root = GetRoot();
-
-	Config *cfg = Config::GetInstance();
-	const std::string &fontName = cfg->GetDefaultFontName();
-	UiFont font(fontName, 40);
-
-	phaseLbl = root->NewChild<Label>("", font, 0xffffff00);
-	phaseLbl->SetPos(60, 120);
-
-	phaseBox = root->NewChild<FillBox>(0, 40, 0xffbfbf00);
-	phaseBox->SetPos(60, 160);
-
-	stateLbl = root->NewChild<Label>("", font, 0xff00ffff);
-	stateLbl->SetPos(60, 200);
-
-	stateBox = root->NewChild<FillBox>(0, 40, 0xff00bfbf);
-	stateBox->SetPos(60, 240);
-
-	auto msgBtn = root->NewChild<Button>(display, "Click");
-	msgBtn->SetPos(60, 300);
-	msgBtn->GetClickedSignal().connect([&](ClickRegion&) {
-		director.RequestPushScene(std::make_shared<MessageScene>(display, director,
-			"Test Lab", "The lab module has been moved to the background."));
-	});
-}
-
-void TransitionModule::OnPhaseChanged(Phase oldPhase)
-{
-	SUPER::OnPhaseChanged(oldPhase);
-
-	std::string s = "Phase: ";
-	switch (GetPhase()) {
-		case Phase::STARTING: s += "STARTING"; break;
-		case Phase::RUNNING: s += "RUNNING"; break;
-		case Phase::STOPPING: s += "STOPPING"; break;
-		case Phase::STOPPED: s += "STOPPED"; break;
-		default:
-			s += boost::str(boost::format("UNKNOWN: %d") % (int)GetPhase());
-	}
-	phaseLbl->SetText(s);
-}
-
-void TransitionModule::OnStateChanged(State oldState)
-{
-	SUPER::OnStateChanged(oldState);
-
-	std::string s = "State: ";
-	switch (GetState()) {
-		case State::BACKGROUND: s += "BACKGROUND"; break;
-		case State::RAISING: s += "RAISING"; break;
-		case State::FOREGROUND: s += "FOREGROUND"; break;
-		case State::LOWERING: s += "LOWERING"; break;
-		default:
-			s += boost::str(boost::format("UNKNOWN: %d") % (int)GetState());
-	}
-	stateLbl->SetText(s);
-}
-
-void TransitionModule::OnPhaseTransition(double progress)
-{
-	phaseBox->SetSize(progress * 200, 40);
-}
-
-void TransitionModule::OnStateTransition(double progress)
-{
-	stateBox->SetSize(progress * 200, 40);
-}
-
-//}}} TransitionModule
-
-//{{{ HudModule ///////////////////////////////////////////////////////////////
-
-HudModule::HudModule(Display::Display &display, GameDirector &director) :
-	SUPER(display, director, "HUD"),
-	player(InitPlayer()),
-	hud(new Display::Hud(display, player, std::shared_ptr<Model::Track>(),
-		Display::UiLayoutFlags::FLOATING))
-{
-	using namespace Display;
-
-	hud->AttachView(display);
-
-	// A common HUD style.
-	using HudAlignment = Hud::HudAlignment;
-	auto fuelGauge = hud->At(HudAlignment::NE).NewChild<FuelGauge>(display);
-	auto speedometer = hud->At(HudAlignment::NW).NewChild<Speedometer>(display);
-}
-
-HudModule::~HudModule()
-{
-	player->DetachMainCharacter();
-}
-
-std::unique_ptr<Player::Player> HudModule::InitPlayer()
-{
-	auto player = new Player::LocalPlayer(
-		std::make_shared<Player::DemoProfile>(), false, true);
-	player->AttachMainCharacter(MainCharacter::MainCharacter::New(0, 0x7f));
-
-	return std::unique_ptr<Player::Player>(player);
-}
-
-void HudModule::Advance(Util::OS::timestamp_t tick)
-{
-	SUPER::Advance(tick);
-	hud->Advance(tick);
-}
-
-void HudModule::PrepareRender()
-{
-	SUPER::PrepareRender();
-	hud->PrepareRender();
-}
-
-void HudModule::Render()
-{
-	SUPER::Render();
-	hud->Render();
-}
-
-//}}} HudModule
-
 //{{{ FlexGridModule //////////////////////////////////////////////////////////
 
 FlexGridModule::FlexGridModule(Display::Display &display, GameDirector &director) :
@@ -920,6 +617,228 @@ void FlexGridModule::Layout()
 
 //}}} FlexGridModule
 
+//{{{ HudModule ///////////////////////////////////////////////////////////////
+
+HudModule::HudModule(Display::Display &display, GameDirector &director) :
+	SUPER(display, director, "HUD"),
+	player(InitPlayer()),
+	hud(new Display::Hud(display, player, std::shared_ptr<Model::Track>(),
+		Display::UiLayoutFlags::FLOATING))
+{
+	using namespace Display;
+
+	hud->AttachView(display);
+
+	// A common HUD style.
+	using HudAlignment = Hud::HudAlignment;
+	auto fuelGauge = hud->At(HudAlignment::NE).NewChild<FuelGauge>(display);
+	auto speedometer = hud->At(HudAlignment::NW).NewChild<Speedometer>(display);
+}
+
+HudModule::~HudModule()
+{
+	player->DetachMainCharacter();
+}
+
+std::unique_ptr<Player::Player> HudModule::InitPlayer()
+{
+	auto player = new Player::LocalPlayer(
+		std::make_shared<Player::DemoProfile>(), false, true);
+	player->AttachMainCharacter(MainCharacter::MainCharacter::New(0, 0x7f));
+
+	return std::unique_ptr<Player::Player>(player);
+}
+
+void HudModule::Advance(Util::OS::timestamp_t tick)
+{
+	SUPER::Advance(tick);
+	hud->Advance(tick);
+}
+
+void HudModule::PrepareRender()
+{
+	SUPER::PrepareRender();
+	hud->PrepareRender();
+}
+
+void HudModule::Render()
+{
+	SUPER::Render();
+	hud->Render();
+}
+
+//}}} HudModule
+
+//{{{ IconModule //////////////////////////////////////////////////////////////
+
+IconModule::IconModule(Display::Display &display, GameDirector &director) :
+	SUPER(display, director, "Icon")
+{
+	using namespace Display;
+
+	auto root = GetRoot();
+
+	std::shared_ptr<FillBox> box;
+	std::shared_ptr<FillBox> icon;
+
+	box = root->NewChild<FillBox>(60, 60, 0xff007f7f);
+	box->SetPos(0, 40);
+	icon = root->NewChild<SymbolIcon>(60, 60, 0xf046, 0xbfffffff);
+	icon->SetPos(0, 40);
+}
+
+//}}} IconModule
+
+//{{{ LabelModule //////////////////////////////////////////////////////////////
+
+LabelModule::LabelModule(Display::Display &display, GameDirector &director) :
+	SUPER(display, director, "Label")
+{
+	using namespace Display;
+
+	Config *cfg = Config::GetInstance();
+	const std::string &monospaceFontName = cfg->GetDefaultMonospaceFontName();
+	const std::string &symbolFontName = cfg->GetDefaultSymbolFontName();
+
+	auto root = GetRoot();
+
+	std::shared_ptr<Button> btn;
+	std::shared_ptr<Label> lbl;
+
+	lbl = root->NewChild<Label>("Red 20 Normal", UiFont(20), 0xffff0000);
+	lbl->SetPos(0, 20);
+	lbl = root->NewChild<Label>("Yellow (75%) 25 Italic",
+		UiFont(25, UiFont::ITALIC), 0xbfffff00);
+	lbl->SetPos(0, 40);
+	lbl = root->NewChild<Label>("Magenta (50%) 30 Bold+Italic",
+		UiFont(30, UiFont::BOLD_ITALIC), 0x7fff00ff);
+	lbl->SetPos(0, 65);
+
+	lbl = root->NewChild<Label>("Default Font", UiFont(30), 0xffbfbfbf);
+	lbl->SetPos(640, 20);
+	lbl = root->NewChild<Label>("Monospace Font",
+		UiFont(monospaceFontName, 30), 0xffbfbfbf);
+	lbl->SetPos(640, 50);
+	lbl = root->NewChild<Label>("< "
+		"\xef\x84\x9b "  // gamepad
+		"\xef\x82\x91 "  // trophy
+		"\xef\x83\xa4 "  // dashboard
+		">",
+		UiFont(symbolFontName, 30), 0xffbfbfbf);
+	lbl->SetPos(640, 80);
+
+	// Wrapped text (with a background to visualize the width).
+
+	std::string wrapText =
+		"This is a string which should be wrapped to multiple lines to fit "
+		"the fixed width label.\n\n"
+		"ThisIsAVeryLongWordThatShouldBeClippedToTheFixedWidthOfTheLabel.\n\n"
+		"This is the third line of the text.";
+
+	wrapBox = root->NewChild<FillBox>(1280 / 4, 720 - 150, 0xff3f3f3f);
+	wrapBox->SetPos(100, 150);
+
+	wrapLbl = root->NewChild<Label>(1280 / 4, wrapText,
+		UiFont(30), 0xffffffff);
+	wrapLbl->SetPos(100, 150);
+
+	// Buttons to increase / decrease the wrap width.
+
+	btn = root->NewChild<Button>(display, "->|");
+	btn->SetPos(0, 150);
+	btn->GetClickedSignal().connect(std::bind(
+		&LabelModule::AdjustWrapWidth, this, 50));
+
+	btn = root->NewChild<Button>(display, "|<-");
+	btn->SetPos(0, 200);
+	btn->GetClickedSignal().connect(std::bind(
+		&LabelModule::AdjustWrapWidth, this, -50));
+}
+
+void LabelModule::AdjustWrapWidth(double amt)
+{
+	const Vec2 &curSize = wrapBox->GetSize();
+	double newWidth = curSize.x + amt;
+
+	if (newWidth > 0 && newWidth < (1280.0 - wrapBox->GetPos().x)) {
+		wrapBox->SetSize(newWidth, curSize.y);
+		wrapLbl->SetWrapWidth(newWidth);
+	}
+}
+
+//}}} LabelModule
+
+//{{{ LayoutModule /////////////////////////////////////////////////////////////
+
+LayoutModule::LayoutModule(Display::Display &display, GameDirector &director) :
+	SUPER(display, director, "Layout")
+{
+	using namespace Display;
+	using Alignment = UiViewModel::Alignment;
+
+	auto root = GetRoot();
+
+	displayConfigChangedConn = display.GetDisplayConfigChangedSignal().
+		connect(std::bind(&LayoutModule::OnDisplayConfigChanged, this));
+
+	// This box takes up the entire UI viewport, so we move it to the
+	// beginning of the list so we don't render on top of the "Close" button.
+	displayInfoBox = root->NewChild<FillBox>(1280, 720, 0xff3f3f3f);
+	root->ReorderChild(displayInfoBox, 0);
+
+	displayInfoLbl = root->NewChild<Label>("Res", UiFont(20), COLOR_WHITE);
+	displayInfoLbl->SetPos(640, 360);
+	displayInfoLbl->SetAlignment(Alignment::CENTER);
+	OnDisplayConfigChanged();
+
+	std::shared_ptr<FillBox> fillBox;
+	std::shared_ptr<Label> lbl;
+
+	fillBox = root->NewChild<FillBox>(100, 100, 0x7fff0000);
+	fillBox->SetPos(100, 20);
+	fillBox = root->NewChild<FillBox>(100, 100, 0x7f00ff00);
+	fillBox->SetPos(150, 70);
+
+	AddAlignmentTestElem(Alignment::SW, "| Southwest", 0, 719);
+	AddAlignmentTestElem(Alignment::S, "South", 639, 719);
+	AddAlignmentTestElem(Alignment::SE, "Southeast |", 1279, 719);
+
+	lbl = root->NewChild<Label>("Red 20 Normal", UiFont(20), 0xffff0000);
+	lbl->SetPos(0, 20);
+	lbl = root->NewChild<Label>("Yellow (75%) 25 Italic",
+		UiFont(25, UiFont::ITALIC), 0xbfffff00);
+	lbl->SetPos(0, 40);
+	lbl = root->NewChild<Label>("Magenta (50%) 30 Bold+Italic",
+		UiFont(30, UiFont::BOLD_ITALIC), 0x7fff00ff);
+	lbl->SetPos(0, 65);
+}
+
+void LayoutModule::AddAlignmentTestElem(
+	Display::UiViewModel::Alignment alignment,
+	const std::string &label, double x, double y)
+{
+	using namespace Display;
+
+	auto fillBox = GetRoot()->NewChild<FillBox>(50, 50, 0x7f00ffff);
+	fillBox->SetAlignment(alignment);
+	fillBox->SetPos(x, y);
+
+	auto lbl = GetRoot()->NewChild<Label>(label, UiFont(40), 0xffffffff);
+	lbl->SetAlignment(alignment);
+	lbl->SetPos(x, y);
+}
+
+void LayoutModule::OnDisplayConfigChanged()
+{
+	double uiScale = display.GetUiScale();
+	const Vec2 &uiOffset = display.GetUiOffset();
+
+	static boost::format resFmt("UI Scale: %0.2f  Offset: %d,%d");
+	displayInfoLbl->SetText(boost::str(resFmt % uiScale % uiOffset.x % uiOffset.y));
+}
+
+//}}} LayoutModule
+
 //{{{ PictureModule ////////////////////////////////////////////////////////////
 
 PictureModule::PictureModule(Display::Display &display, GameDirector &director) :
@@ -934,6 +853,87 @@ PictureModule::PictureModule(Display::Display &display, GameDirector &director) 
 }
 
 //}}} PictureModule
+
+//{{{ TransitionModule ////////////////////////////////////////////////////////
+
+TransitionModule::TransitionModule(Display::Display &display,
+	GameDirector &director) :
+	SUPER(display, director, "Transition")
+{
+	using namespace Display;
+
+	SetPhaseTransitionDuration(3000);
+	SetStateTransitionDuration(3000);
+
+	auto root = GetRoot();
+
+	Config *cfg = Config::GetInstance();
+	const std::string &fontName = cfg->GetDefaultFontName();
+	UiFont font(fontName, 40);
+
+	phaseLbl = root->NewChild<Label>("", font, 0xffffff00);
+	phaseLbl->SetPos(60, 120);
+
+	phaseBox = root->NewChild<FillBox>(0, 40, 0xffbfbf00);
+	phaseBox->SetPos(60, 160);
+
+	stateLbl = root->NewChild<Label>("", font, 0xff00ffff);
+	stateLbl->SetPos(60, 200);
+
+	stateBox = root->NewChild<FillBox>(0, 40, 0xff00bfbf);
+	stateBox->SetPos(60, 240);
+
+	auto msgBtn = root->NewChild<Button>(display, "Click");
+	msgBtn->SetPos(60, 300);
+	msgBtn->GetClickedSignal().connect([&](ClickRegion&) {
+		director.RequestPushScene(std::make_shared<MessageScene>(display, director,
+			"Test Lab", "The lab module has been moved to the background."));
+	});
+}
+
+void TransitionModule::OnPhaseChanged(Phase oldPhase)
+{
+	SUPER::OnPhaseChanged(oldPhase);
+
+	std::string s = "Phase: ";
+	switch (GetPhase()) {
+		case Phase::STARTING: s += "STARTING"; break;
+		case Phase::RUNNING: s += "RUNNING"; break;
+		case Phase::STOPPING: s += "STOPPING"; break;
+		case Phase::STOPPED: s += "STOPPED"; break;
+		default:
+			s += boost::str(boost::format("UNKNOWN: %d") % (int)GetPhase());
+	}
+	phaseLbl->SetText(s);
+}
+
+void TransitionModule::OnStateChanged(State oldState)
+{
+	SUPER::OnStateChanged(oldState);
+
+	std::string s = "State: ";
+	switch (GetState()) {
+		case State::BACKGROUND: s += "BACKGROUND"; break;
+		case State::RAISING: s += "RAISING"; break;
+		case State::FOREGROUND: s += "FOREGROUND"; break;
+		case State::LOWERING: s += "LOWERING"; break;
+		default:
+			s += boost::str(boost::format("UNKNOWN: %d") % (int)GetState());
+	}
+	stateLbl->SetText(s);
+}
+
+void TransitionModule::OnPhaseTransition(double progress)
+{
+	phaseBox->SetSize(progress * 200, 40);
+}
+
+void TransitionModule::OnStateTransition(double progress)
+{
+	stateBox->SetSize(progress * 200, 40);
+}
+
+//}}} TransitionModule
 
 }  // namespace Module
 
