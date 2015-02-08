@@ -64,8 +64,8 @@ class SysConsole : public Console
 public:
 	SysConsole(Script::Core *scripting, GameDirector &director,
 		DebugPeer *debugPeer, GamePeer *gamePeer, InputPeer *inputPeer,
-		int maxLogLines = 512,
-		int maxHistory = 64);
+		size_t maxLogLines = 512,
+		size_t maxHistory = 64);
 	virtual ~SysConsole();
 
 protected:
@@ -128,14 +128,16 @@ public:
 	 * @param fn The callback function (will be passed a LogLine reference).
 	 */
 	template<class Function>
-	void ReadLogs(int start, Function fn)
+	void ReadLogs(size_t start, Function fn)
 	{
 		if (!logLines.empty()) {
 			if (start < baseLogIdx) {
 				ReadLogs(fn);
 			}
 			else {
-				ReadLogs(start, GetEndLogIndex(), fn);
+				// Safe case since the end log index only returns -1 if empty.
+				size_t endIdx = static_cast<size_t>(GetEndLogIndex());
+				ReadLogs(start, endIdx, fn);
 			}
 		}
 	}
@@ -147,17 +149,26 @@ public:
 	 * @param fn The callback function (will be passed a LogLine reference).
 	 */
 	template<class Function>
-	void ReadLogs(int start, int end, Function fn)
+	void ReadLogs(size_t start, size_t end, Function fn)
 	{
 		if (logLines.empty()) return;
 		if (start > end) return;
-		int endIdx = baseLogIdx + logLines.size() - 1;
+		size_t endIdx = baseLogIdx + logLines.size() - 1;
 		if (start > endIdx) return;
-		if (start == end) fn(logLines.at(start - baseLogIdx));
+		size_t idx = start - baseLogIdx;
+
+		if (start == end) {
+			fn(logLines.at(idx));
+		}
 		else {
 			if (start < baseLogIdx) start = baseLogIdx;
-			auto startIter = logLines.begin() + (start - baseLogIdx);
-			auto endIter = (end > endIdx) ? logLines.end() : startIter + (end - start + 1);
+			auto startIter = logLines.begin();
+			std::advance(startIter, start - baseLogIdx);
+			auto endIter = logLines.end();
+			if (end <= endIdx) {
+				endIter = startIter;
+				std::advance(endIter, end - start + 1);
+			}
 			std::for_each(startIter, endIter, fn);
 		}
 	}
@@ -170,7 +181,7 @@ public:
 	logClearedSignal_t &GetLogClearedSignal() { return logClearedSignal; }
 
 	/// Fired when a log line is added.  Parameter is the log index.
-	typedef boost::signals2::signal<void(int)> logAddedSignal_t;
+	typedef boost::signals2::signal<void(size_t)> logAddedSignal_t;
 	logAddedSignal_t &GetLogAddedSignal() { return logAddedSignal; }
 
 public:
@@ -191,9 +202,9 @@ private:
 	boost::signals2::scoped_connection sessionChangedConn;
 
 	bool introWritten;
-	int maxLogLines;
+	size_t maxLogLines;
 	std::deque<LogLine> logLines;
-	int baseLogIdx;  ///< Index of the first item in logLines.
+	size_t baseLogIdx;  ///< Index of the first item in logLines.
 
 	typedef boost::circular_buffer<std::string> history_t;
 	history_t history;

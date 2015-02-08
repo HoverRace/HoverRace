@@ -53,7 +53,7 @@ SysConsole::SysConsole(Script::Core *scripting,
 	GameDirector &director,
 	DebugPeer *debugPeer, GamePeer *gamePeer,
 	InputPeer *inputPeer,
-	int maxLogLines, int maxHistory) :
+	size_t maxLogLines, size_t maxHistory) :
 	SUPER(scripting), director(director),
 	debugPeer(debugPeer), gamePeer(gamePeer), inputPeer(inputPeer),
 	introWritten(false), maxLogLines(maxLogLines), logLines(), baseLogIdx(0),
@@ -165,8 +165,8 @@ void SysConsole::OnLog(const Util::Log::Entry &entry)
 
 void SysConsole::AddLogLine(LogLevel level, const std::string &line)
 {
-	int sz = logLines.size();
-	int idx = baseLogIdx + sz;
+	size_t sz = logLines.size();
+	size_t idx = baseLogIdx + sz;
 
 	// Trim excess old log lines.
 	while (sz >= maxLogLines) {
