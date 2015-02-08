@@ -32,6 +32,7 @@
 #include "../../engine/Display/Label.h"
 #include "../../engine/Display/MediaRes.h"
 #include "../../engine/Display/Picture.h"
+#include "../../engine/Display/PickList.h"
 #include "../../engine/Display/RadioButton.h"
 #include "../../engine/Display/ScreenFade.h"
 #include "../../engine/Display/Slider.h"
@@ -274,6 +275,18 @@ private:
 	std::shared_ptr<Display::Label> displayInfoLbl;
 }; //}}}
 
+class PickListModule : public TestLabScene::LabModule /*{{{*/
+{
+	using SUPER = TestLabScene::LabModule;
+
+public:
+	PickListModule(Display::Display &display, GameDirector &director);
+	virtual ~PickListModule() { }
+
+private:
+	std::shared_ptr<Display::PickList<int>> list;
+}; //}}}
+
 class PictureModule : public TestLabScene::LabModule /*{{{*/
 {
 	using SUPER = TestLabScene::LabModule;
@@ -330,6 +343,7 @@ TestLabScene::TestLabScene(Display::Display &display, GameDirector &director,
 	grid->AddModule<Module::IconModule>("Icon");
 	grid->AddModule<Module::LabelModule>("Label");
 	grid->AddModule<Module::LayoutModule>("Layout");
+	grid->AddModule<Module::PickListModule>("PickList");
 	grid->AddModule<Module::PictureModule>("Picture");
 	grid->AddModule<Module::TransitionModule>("Transition");
 
@@ -838,6 +852,50 @@ void LayoutModule::OnDisplayConfigChanged()
 }
 
 //}}} LayoutModule
+
+//{{{ PickListModule ///////////////////////////////////////////////////////////
+
+PickListModule::PickListModule(Display::Display &display, GameDirector &director) :
+	SUPER(display, director, "PickList")
+{
+	using namespace Display;
+
+	auto root = GetRoot();
+
+	list = root->NewChild<PickList<int>>(display, Vec2(200, 400));
+	list->SetPos(60, 60);
+	list->GetValueChangedSignal().connect([&]() {
+		HR_LOG(info) << "Selected value: " << list->GetValue();
+	});
+	list->Add("1: Foo", 1);
+	list->Add("2: Bar", 2);
+	list->Add("3: Baz", 3);
+	list->Add("4: Quux", 4);
+	list->Add(5);
+	list->Add(6);
+	list->Add(7);
+
+	auto grid = root->NewChild<FlexGrid>(display);
+	grid->SetPos(300, 60);
+	
+	size_t r = 0;
+	size_t c = 0;
+
+	grid->At(r++, c).NewChild<Button>(display, "Filter: All")->
+		GetContents()->GetClickedSignal().connect([&](ClickRegion&) {
+			//TODO
+		});
+	grid->At(r++, c).NewChild<Button>(display, "Filter: Even")->
+		GetContents()->GetClickedSignal().connect([&](ClickRegion&) {
+			//TODO
+		});
+	grid->At(r++, c).NewChild<Button>(display, "Filter: Odd")->
+		GetContents()->GetClickedSignal().connect([&](ClickRegion&) {
+			//TODO
+		});
+}
+
+//}}} PickListModule
 
 //{{{ PictureModule ////////////////////////////////////////////////////////////
 
