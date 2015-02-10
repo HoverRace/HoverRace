@@ -1,8 +1,7 @@
 
 // ObjStream.cpp
-// Base class for parcel serializers.
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -29,7 +28,8 @@ namespace Str = HoverRace::Util::Str;
 namespace HoverRace {
 namespace Parcel {
 
-ObjStreamExn::ObjStreamExn(const Util::OS::path_t &path, const std::string &details) :
+ObjStreamExn::ObjStreamExn(const Util::OS::path_t &path,
+	const std::string &details) :
 	SUPER((const char*)Str::PU(path))
 {
 	std::string &msg = GetMessage();
