@@ -26,6 +26,13 @@
 namespace HoverRace {
 namespace ObjFacTools {
 
+namespace {
+
+int MAX_BITMAP_WIDTH = 4096;
+int MAX_BITMAP_HEIGHT = 4096;
+
+}
+
 ResBitmap::ResBitmap(int pResourceId)
 {
 	mResourceId = pResourceId;
@@ -185,7 +192,17 @@ void ResBitmap::SubBitmap::Serialize(Parcel::ObjStream &pArchive)
 		pArchive << mYResShiftFactor;
 		pArchive << mHaveTransparent;
 
-		pArchive.Write(mBuffer, mXRes * mYRes);
+		if (mXRes < 0 || mXRes > MAX_BITMAP_WIDTH ||
+			mYRes < 0 || mYRes > MAX_BITMAP_HEIGHT)
+		{
+			throw Parcel::ObjStreamExn(
+				pArchive.GetName(),
+				boost::str(boost::format(
+					"Writing invalid ResBitmap size: %dx%d") %
+						mXRes % mYRes));
+		}
+
+		pArchive.Write(mBuffer, static_cast<size_t>(mXRes * mYRes));
 	}
 	else {
 		delete[] mBuffer;
@@ -197,7 +214,18 @@ void ResBitmap::SubBitmap::Serialize(Parcel::ObjStream &pArchive)
 		pArchive >> mYResShiftFactor;
 		pArchive >> mHaveTransparent;
 
-		mBuffer = new MR_UInt8[mXRes * mYRes];
+		if (mXRes < 0 || mXRes > MAX_BITMAP_WIDTH ||
+			mYRes < 0 || mYRes > MAX_BITMAP_HEIGHT)
+		{
+			throw Parcel::ObjStreamExn(
+				pArchive.GetName(),
+				boost::str(boost::format(
+					"Writing invalid ResBitmap size: %dx%d") %
+						mXRes % mYRes));
+		}
+		auto sz = static_cast<size_t>(mXRes * mYRes);
+
+		mBuffer = new MR_UInt8[sz];
 		mColumnPtr = new MR_UInt8 *[mXRes];
 
 		MR_UInt8 *lPtr = mBuffer;
@@ -206,7 +234,7 @@ void ResBitmap::SubBitmap::Serialize(Parcel::ObjStream &pArchive)
 			mColumnPtr[lCounter] = lPtr;
 			lPtr += mYRes;
 		}
-		pArchive.Read(mBuffer, mXRes * mYRes);
+		pArchive.Read(mBuffer, sz);
 	}
 }
 
