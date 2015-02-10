@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include "../Exception.h"
 #include "BaseContainer.h"
 #include "StateButton.h"
 
