@@ -116,7 +116,7 @@ namespace Log {
 		va_end(ap);
 	}
 
-}
+}  // namespace Log
 
 }  // namespace Util
 }  // namespace HoverRace
