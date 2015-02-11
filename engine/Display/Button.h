@@ -83,6 +83,9 @@ public:
 	const std::string &GetText() const;
 	void SetText(const std::string &text);
 
+	Alignment getTextAlignment() const;
+	void SetTextAlignment(Alignment textAlignment);
+
 	FillBox *GetIcon() const { return icon.get(); }
 	std::shared_ptr<FillBox> ShareIcon() const { return icon; }
 	void SetIcon(std::shared_ptr<FillBox> icon);

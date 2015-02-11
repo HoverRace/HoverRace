@@ -39,6 +39,41 @@ namespace {
 	const double DEFAULT_PRESS_DEPTH = 4;
 }
 
+namespace {
+
+/**
+ * Determine the position coordinates for a widget.
+ * @param x The upper-left corner of the bounding box.
+ * @param y The upper-left corner of the bounding box.
+ * @param w The width of the bounding box.
+ * @param h The height of the bounding box.
+ * @param alignment The alignment of the contained widget.
+ * @return The position.
+ */
+Vec2 AlignToBounds(
+	double x, double y, double w, double h,
+	UiViewModel::Alignment alignment)
+{
+	using Alignment = UiViewModel::Alignment;
+
+	switch (alignment) {
+		case Alignment::NW: return Vec2(x, y);
+		case Alignment::N: return Vec2(x + (w / 2.0), y);
+		case Alignment::NE: return Vec2(x + w, y);
+		case Alignment::E: return Vec2(x + w, y + (h / 2.0));
+		case Alignment::SE: return Vec2(x + w, y + h);
+		case Alignment::S: return Vec2(x + (w / 2.0), y + h);
+		case Alignment::SW: return Vec2(x, y + h);
+		case Alignment::W: return Vec2(x, y + (h / 2.0));
+		case Alignment::CENTER: return Vec2(x + (w / 2.0), y + (h / 2.0));
+		default:
+			throw Exception("Unknown alignment: " +
+				boost::lexical_cast<std::string>(static_cast<int>(alignment)));
+	}
+}
+
+}
+
 /**
  * Constructor for automatically-sized button.
  * @param display The display child elements will be attached to.
@@ -109,6 +144,11 @@ void Button::Layout()
 	double midX = size.x / 2.0;
 	double midY = size.y / 2.0;
 
+	Vec2 boundsPos(paddingLeft, paddingTop);
+	Vec2 boundsSize(
+		size.x - (paddingLeft + paddingRight),
+		size.y - (paddingTop + paddingBottom));
+
 	// If there is an icon, position it and shift the text to make room.
 	if (icon) {
 		double iconY = paddingTop;
@@ -116,23 +156,30 @@ void Button::Layout()
 			iconY += DEFAULT_PRESS_DEPTH;
 		}
 		icon->SetPos(paddingLeft, iconY);
-		midX += (icon->Measure().x + iconGap) / 2.0;
+		double iw = icon->Measure().x + iconGap;
+		boundsPos.x += iw;
+		boundsSize.x -= iw;
 	}
+
+	Vec2 labelPos = AlignToBounds(
+		boundsPos.x, boundsPos.y,
+		boundsSize.x, boundsSize.y,
+		label->GetAlignment());
 
 	if (!IsEnabled()) {
 		background->SetColor(s.buttonDisabledBg);
 		label->SetColor(s.formDisabledFg);
-		label->SetPos(midX, midY);
+		label->SetPos(labelPos);
 	}
 	else if (IsPressed()) {
 		background->SetColor(s.buttonPressedBg);
 		label->SetColor(s.formFg);
-		label->SetPos(midX, midY + DEFAULT_PRESS_DEPTH);
+		label->SetPos(labelPos.x, labelPos.y + DEFAULT_PRESS_DEPTH);
 	}
 	else {
 		background->SetColor(IsFocused() ? s.buttonFocusedBg : s.buttonBg);
 		label->SetColor(s.formFg);
-		label->SetPos(midX, midY);
+		label->SetPos(labelPos);
 	}
 }
 
@@ -144,6 +191,23 @@ const std::string &Button::GetText() const
 void Button::SetText(const std::string &text)
 {
 	label->SetText(text);
+}
+
+UiViewModel::Alignment Button::getTextAlignment() const
+{
+	return label->GetAlignment();
+}
+
+/**
+ * Sets the alignment of the text within the button.
+ * @param textAlignment The text alignment.
+ */
+void Button::SetTextAlignment(Alignment textAlignment)
+{
+	if (label->GetAlignment() != textAlignment) {
+		label->SetAlignment(textAlignment);
+		RequestLayout();
+	}
 }
 
 /**
