@@ -30,6 +30,7 @@ PickListItem::PickListItem(Display &display, const std::string &text,
 	uiLayoutFlags_t layoutFlags) :
 	SUPER(display, text, layoutFlags)
 {
+	SetTextAlignment(Alignment::W);
 }
 
 }  // namespace Display
