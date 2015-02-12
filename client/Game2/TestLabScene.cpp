@@ -865,7 +865,7 @@ PickListModule::PickListModule(Display::Display &display, GameDirector &director
 	list = root->NewChild<PickList<int>>(display, Vec2(200, 400));
 	list->SetPos(60, 60);
 	list->GetValueChangedSignal().connect([&]() {
-		HR_LOG(info) << "Selected value: " << list->GetValue();
+		HR_LOG(info) << "Selected value: " << *(list->GetValue());
 	});
 	list->Add("1: Foo", 1);
 	list->Add("2: Bar", 2);

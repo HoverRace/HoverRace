@@ -192,13 +192,13 @@ public:
 
 	/**
 	 * Get the value of the selected item.
-	 * @exception Exception When the list does not have anything selected.
 	 * @return The value.
 	 */
-	const T &GetValue() const
+	boost::optional<const T&> GetValue() const
 	{
-		if (!selItem) throw Exception("No selected value");
-		return selItem->GetValue();
+		return selItem ?
+			boost::make_optional<const T&>(selItem->GetValue()) :
+			boost::none;
 	}
 
 public:
