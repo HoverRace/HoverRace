@@ -58,6 +58,9 @@ void ScaleDimension(std::vector<double> &measured, double desired,
  */
 const double FlexGrid::AUTOSIZE = std::numeric_limits<double>::quiet_NaN();
 
+const size_t FlexGrid::BOTTOM = std::numeric_limits<size_t>::max();
+const size_t FlexGrid::RIGHT = std::numeric_limits<size_t>::max();
+
 /**
  * Constructor.
  * @param display The display child elements will be attached to.
@@ -234,37 +237,46 @@ bool FlexGrid::TryFocus(const Control::Nav &nav)
 	if (IsFocused()) return true;
 	if (IsEmpty() || !IsVisible()) return false;
 
-	size_t row;
-	size_t col;
+	// Starting cell to begin the search for a focusable widget.
+	size_t row, col;
 
 	auto dir = nav.AsDigital();
-	switch (dir) {
-		case Nav::NEUTRAL:
-		case Nav::DOWN:
-		case Nav::RIGHT:
-		case Nav::NEXT:
-			row = 0;
-			col = 0;
-			break;
 
-		case Nav::UP:
-			row = rows.size() - 1;
-			col = 0;
-			break;
+	auto iter = focusHints.find(dir);
+	if (iter != focusHints.end()) {
+		std::tie(row, col) = iter->second;
+		row = std::min(row, rows.size() - 1);
+		col = std::min(col, defaultCols.size() - 1);
+	}
+	else {
+		switch (dir) {
+			case Nav::NEUTRAL:
+			case Nav::DOWN:
+			case Nav::RIGHT:
+			case Nav::NEXT:
+				row = 0;
+				col = 0;
+				break;
 
-		case Nav::LEFT:
-			row = 0;
-			col = defaultCols.size() - 1;
-			break;
+			case Nav::UP:
+				row = rows.size() - 1;
+				col = 0;
+				break;
 
-		case Nav::PREV:
-			row = rows.size() - 1;
-			col = defaultCols.size() - 1;
-			break;
+			case Nav::LEFT:
+				row = 0;
+				col = defaultCols.size() - 1;
+				break;
 
-		default:
-			throw UnimplementedExn(boost::str(
-				boost::format("FlexGrid::TryFocus: Unhandled: %s") % nav));
+			case Nav::PREV:
+				row = rows.size() - 1;
+				col = defaultCols.size() - 1;
+				break;
+
+			default:
+				throw UnimplementedExn(boost::str(
+					boost::format("FlexGrid::TryFocus: Unhandled: %s") % nav));
+		}
 	}
 
 	auto &cols = rows[row];
@@ -360,6 +372,49 @@ void FlexGrid::SetFixedHeight(double h)
 {
 	fixedSize.y = h;
 	RequestLayout();
+}
+
+/**
+ * Get the focus hint for a given focus navigation direction.
+ * @param nav The navigation direction.
+ * @return The cell coordinates, if set.
+ */
+boost::optional<std::pair<size_t, size_t>> FlexGrid::GetFocusHint(
+	const Control::Nav &nav)
+{
+	auto iter = focusHints.find(nav.AsDigital());
+	return iter == focusHints.end() ?
+		boost::none :
+		boost::make_optional(iter->second);
+}
+
+/**
+ * Set a hint about what cell to focus when this grid is focused.
+ *
+ * When the grid takes focus, the grid searches for a focusable cell.
+ * This automatic search may not produce results which are "natural" for the
+ * grid position, so this provides a way to set a hint about what cell to
+ * start the search from.
+ *
+ * Because the size of the grid can change, the constants BOTTOM and RIGHT
+ * can be used to refer to bottommost or rightmost row or column, respectively.
+ *
+ * @param nav The navigation direction.
+ * @param row The row (may be BOTTOM to refer to the bottom row).
+ * @param col The col.
+ */
+void FlexGrid::SetFocusHint(const Control::Nav &nav, size_t row, size_t col)
+{
+	focusHints[nav.AsDigital()] = std::make_pair(row, col);
+}
+
+/**
+ * Clears the focus hint for a navigation direction.
+ * @param nav The navigation.
+ */
+void FlexGrid::ClearFocusHint(const Control::Nav &nav)
+{
+	focusHints.erase(nav.AsDigital());
 }
 
 /**

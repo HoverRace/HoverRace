@@ -161,6 +161,14 @@ public:
 	void SetFixedWidth(double w);
 	void SetFixedHeight(double h);
 
+	static const size_t BOTTOM;
+	static const size_t RIGHT;
+
+	boost::optional<std::pair<size_t, size_t>> GetFocusHint(
+		const Control::Nav &nav);
+	void SetFocusHint(const Control::Nav &nav, size_t row, size_t col);
+	void ClearFocusHint(const Control::Nav &nav);
+
 public:
 	static Vec2 AlignCellContents(double x, double y, double w, double h,
 		Alignment alignment);
@@ -577,6 +585,7 @@ private:
 	Vec2 padding;
 	Vec2 size;
 	Vec2 fixedSize;
+	std::map<Control::Nav::dir_t, std::pair<size_t, size_t>> focusHints;
 	using cells_t = std::vector<std::shared_ptr<Cell>>;
 	std::vector<DefaultCell> defaultCols;
 	std::vector<cells_t> rows;
