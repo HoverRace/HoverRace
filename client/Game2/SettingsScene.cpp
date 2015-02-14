@@ -41,6 +41,7 @@ SettingsScene::SettingsScene(Display::Display &display, GameDirector &director,
 {
 	using namespace Display;
 	using Alignment = UiViewModel::Alignment;
+	using Nav = Control::Nav;
 
 	SupportCancelAction();
 	SupportExtraAction(_("Reset to defaults"));
@@ -55,6 +56,11 @@ SettingsScene::SettingsScene(Display::Display &display, GameDirector &director,
 	auto settingsGridCell = mainGrid->At(0, 0).NewChild<FlexGrid>(display);
 	settingsGridCell->SetAlignment(Alignment::N);
 	settingsGrid = settingsGridCell->GetContents();
+
+	// Normally, navigating up into the grid starts the search at the
+	// bottom-left, but the leftmost column is only labels, so the search
+	// fails.  Instead, we start the search from the bottom-right.
+	settingsGrid->SetFocusHint(Nav::UP, FlexGrid::BOTTOM, FlexGrid::RIGHT);
 
 	size_t col = 0;
 	{
