@@ -111,7 +111,7 @@ void Container::FocusPrevFrom(children_t::iterator startingPoint,
 		}
 		--iter;
 
-		if (iter->child->TryFocus()) {
+		if (iter->child->TryFocus(nav)) {
 			focusedChild = iter->child.get();
 			return;
 		}
@@ -137,7 +137,7 @@ void Container::FocusNextFrom(children_t::iterator startingPoint,
 			break;
 		}
 
-		if (iter->child->TryFocus()) {
+		if (iter->child->TryFocus(nav)) {
 			focusedChild = iter->child.get();
 			return;
 		}
