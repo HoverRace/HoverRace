@@ -137,12 +137,8 @@ void Button::Layout()
 {
 	const Vec2 size = GetSize();
 	const auto &s = display.styles;
-	
-	background->SetSize(size);
 
-	// Move label to center.
-	double midX = size.x / 2.0;
-	double midY = size.y / 2.0;
+	background->SetSize(size);
 
 	Vec2 boundsPos(paddingLeft, paddingTop);
 	Vec2 boundsSize(
