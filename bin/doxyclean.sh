@@ -14,7 +14,8 @@ cd "$(dirname "$0")"/..
 # are in the directory.
 if [[ -d srcdoc/html ]]; then
 	pushd srcdoc/html
-	rm *.css \
+	rm -- \
+		*.css \
 		*.html \
 		*.js \
 		*.map \
