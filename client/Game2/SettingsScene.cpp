@@ -62,6 +62,10 @@ SettingsScene::SettingsScene(Display::Display &display, GameDirector &director,
 	// fails.  Instead, we start the search from the bottom-right.
 	settingsGrid->SetFocusHint(Nav::UP, FlexGrid::BOTTOM, FlexGrid::RIGHT);
 
+	// Likewise, navigating down into the grid (usually via wraparound from
+	// the action bar) needs to search from the top-right.
+	settingsGrid->SetFocusHint(Nav::DOWN, 0, FlexGrid::RIGHT);
+
 	size_t col = 0;
 	{
 		auto &cell = settingsGrid->GetColumnDefault(col++);
