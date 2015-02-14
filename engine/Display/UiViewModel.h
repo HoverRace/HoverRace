@@ -89,7 +89,7 @@ public:
 public:
 	UiViewModel(uiLayoutFlags_t layoutFlags = 0) :
 		SUPER(), pos(0, 0), translation(0, 0), alignment(Alignment::NW),
-		layoutFlags(layoutFlags), id(0), focused(false) { }
+		layoutFlags(layoutFlags), focused(false) { }
 	virtual ~UiViewModel() { }
 
 public:
@@ -150,18 +150,20 @@ public:
 	uiLayoutFlags_t IsLayoutUnscaled() const { return layoutFlags & UiLayoutFlags::UNSCALED; }
 	uiLayoutFlags_t IsLayoutFloating() const { return layoutFlags & UiLayoutFlags::FLOATING; }
 
-	/**
-	 * Retrieve the non-unique identifier for this widget.
-	 * @return The identifier.
-	 */
-	MR_UInt32 GetId() const { return id; }
+#	ifdef _DEBUG
+		/**
+		 * Retrieve the non-unique identifier for this widget.
+		 * @return The identifier.
+		 */
+		std::string GetId() const { return id; }
 
-	/**
-	 * Set the non-unique identifier for this widget.
-	 * This is used mainly for debugging.  Default ID is zero.
-	 * @param id The identifier.
-	 */
-	void SetId(MR_UInt32 id) { this->id = id; }
+		/**
+		 * Set the non-unique identifier for this widget.
+		 * This is used only for debugging.  Default ID is empty.
+		 * @param id The identifier.
+		 */
+		void SetId(std::string id) { this->id = id; }
+#	endif
 
 	/**
 	 * Check if this widget currently has input focus.
@@ -218,7 +220,9 @@ private:
 	Vec2 translation;
 	Alignment alignment;
 	uiLayoutFlags_t layoutFlags;
-	MR_UInt32 id;
+#	ifdef _DEBUG
+		std::string id;
+#	endif
 	bool focused;
 	focusRequestedSignal_t focusRequestedSignal;
 	focusRelinquishedSignal_t focusRelinquishedSignal;
