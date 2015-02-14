@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-cd `dirname $0`/../share
+cd "$(dirname "$0")/../share"
 
 rm -rf locale
 mkdir locale
 for lingua in "$@"; do
-	lingua=`basename "$lingua" .gmo`
+	lingua="$(basename "$lingua" .gmo)"
 	gmofile="../po/$lingua.gmo"
 	if [ -f "$gmofile" ]; then
 		echo -n "$lingua "
