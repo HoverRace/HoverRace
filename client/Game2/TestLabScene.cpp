@@ -812,6 +812,10 @@ LayoutModule::LayoutModule(Display::Display &display, GameDirector &director) :
 	fillBox->SetPos(100, 20);
 	fillBox = root->NewChild<FillBox>(100, 100, 0x7f00ff00);
 	fillBox->SetPos(150, 70);
+	fillBox = root->NewChild<FillBox>(100, 100, 0x7fff0000, 10, 0x3fffffff);
+	fillBox->SetPos(400, 20);
+	fillBox = root->NewChild<FillBox>(100, 100, 0x7f0000ff, 1, 0x3f00ff00);
+	fillBox->SetPos(450, 70);
 
 	AddAlignmentTestElem(Alignment::SW, "| Southwest", 0, 719);
 	AddAlignmentTestElem(Alignment::S, "South", 639, 719);
