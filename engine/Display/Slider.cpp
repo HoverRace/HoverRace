@@ -174,7 +174,15 @@ void Slider::Layout()
 	}
 	else {
 		background->SetColor(s.buttonBg);
-		indicator->SetColor(IsFocused() ? s.buttonFocusedBg : s.buttonBg);
+		indicator->SetColor(s.buttonBg);
+	}
+
+	if (IsFocused()) {
+		background->SetBorder(4);
+		background->SetBorderColor(s.buttonFocusedBg);
+	}
+	else {
+		background->SetBorder(0);
 	}
 }
 

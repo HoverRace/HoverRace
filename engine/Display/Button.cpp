@@ -164,6 +164,7 @@ void Button::Layout()
 
 	if (!IsEnabled()) {
 		background->SetColor(s.buttonDisabledBg);
+		background->SetBorder(0);
 		label->SetColor(s.formDisabledFg);
 		label->SetPos(labelPos);
 	}
@@ -173,9 +174,17 @@ void Button::Layout()
 		label->SetPos(labelPos.x, labelPos.y + DEFAULT_PRESS_DEPTH);
 	}
 	else {
-		background->SetColor(IsFocused() ? s.buttonFocusedBg : s.buttonBg);
+		background->SetColor(s.buttonBg);
 		label->SetColor(s.formFg);
 		label->SetPos(labelPos);
+	}
+
+	if (IsFocused()) {
+		background->SetBorder(4);
+		background->SetBorderColor(s.buttonFocusedBg);
+	}
+	else {
+		background->SetBorder(0);
 	}
 }
 
