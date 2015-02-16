@@ -1,7 +1,7 @@
 
 // SdlTexture.h
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -53,25 +53,27 @@ namespace SDL {
  */
 class MR_DllDeclare SdlTexture : public Texture
 {
-	typedef Texture SUPER;
-	public:
-		SdlTexture(SdlDisplay &display, SDL_Texture *texture) :
-			SUPER(), texture(texture), display(display) { }
-		SdlTexture(const SdlTexture&) = delete;
+	using SUPER = Texture;
 
-		virtual ~SdlTexture()
-		{
-			if (texture) SDL_DestroyTexture(texture);
-		}
+public:
+	SdlTexture() = delete;
+	SdlTexture(SdlDisplay &display, SDL_Texture *texture) :
+		SUPER(), texture(texture), display(display) { }
+	SdlTexture(const SdlTexture&) = delete;
 
-		SdlTexture &operator=(const SdlTexture&) = delete;
+	virtual ~SdlTexture()
+	{
+		if (texture) SDL_DestroyTexture(texture);
+	}
 
-	public:
-		SDL_Texture *Get() const { return texture; }
+	SdlTexture &operator=(const SdlTexture&) = delete;
 
-	protected:
-		SDL_Texture *texture;
-		SdlDisplay &display;
+public:
+	SDL_Texture *Get() const { return texture; }
+
+protected:
+	SDL_Texture *texture;
+	SdlDisplay &display;
 };
 
 }  // namespace SDL
