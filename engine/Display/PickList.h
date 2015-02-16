@@ -110,6 +110,20 @@ protected:
 		boost::signals2::scoped_connection clickedConn;
 	};
 
+	/// Maps the container child wrapper to each item.
+	class ItemChild
+	{
+	public:
+		ItemChild(Child &child, DefaultItem &item) :
+			child(child), item(item) { }
+
+		ItemChild &operator=(const ItemChild&) = delete;
+
+	public:
+		Child &child;
+		DefaultItem &item;
+	};
+
 private:
 	void SetSelectedItem(DefaultItem *sel)
 	{
@@ -136,7 +150,7 @@ public:
 	{
 		//TODO: Check if matches current filter.
 		auto item = NewChild<DefaultItem>(*this, display, value, label);
-		items.push_back(item);
+		items.emplace_back(*(GetChildren().back()), *item);
 		RequestLayout();
 	}
 
@@ -201,6 +215,24 @@ public:
 			boost::none;
 	}
 
+	/**
+	 * Apply a filter to the list items.
+	 *
+	 * This filter is one-time; any items added later will not have the filter
+	 * applied.
+	 *
+	 * @param fn The filter function.  Takes the value and returns either
+	 *           @c true if the item is visible, @c false otherwise.
+	 */
+	template<class Fn>
+	void ApplyFilter(Fn fn)
+	{
+		for (auto &item : items) {
+			item.child.visible = fn(item.item.GetValue());
+		}
+		RequestLayout();
+	}
+
 public:
 	using valueChangedSignal_t = boost::signals2::signal<void()>;
 	valueChangedSignal_t &GetValueChangedSignal() { return valueChangedSignal; }
@@ -211,7 +243,7 @@ protected:
 		double cx = 0;
 		double w = GetSize().x;
 
-		ForEachChild([&](const std::shared_ptr<UiViewModel> &model) {
+		ForEachVisibleChild([&](const std::shared_ptr<UiViewModel> &model) {
 			auto item = static_cast<DefaultItem*>(model.get());
 
 			auto size = item->Measure();
@@ -223,7 +255,7 @@ protected:
 	}
 
 private:
-	std::vector<std::shared_ptr<DefaultItem>> items;
+	std::vector<ItemChild> items;
 	DefaultItem *selItem;
 	valueChangedSignal_t valueChangedSignal;
 };
