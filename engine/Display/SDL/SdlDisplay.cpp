@@ -527,8 +527,8 @@ std::shared_ptr<SdlTexture> SdlDisplay::LoadRes(std::shared_ptr<Res<Texture>> re
 	}
 
 	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+	SDL_FreeSurface(surface);
 	if (!texture) {
-		SDL_FreeSurface(surface);
 		throw ResLoadExn(res->GetId() + ": " + SDL_GetError());
 	}
 
