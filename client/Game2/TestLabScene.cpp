@@ -881,17 +881,18 @@ PickListModule::PickListModule(Display::Display &display, GameDirector &director
 	size_t r = 0;
 	size_t c = 0;
 
+	auto lp = list.get();
 	grid->At(r++, c).NewChild<Button>(display, "Filter: All")->
-		GetContents()->GetClickedSignal().connect([&](ClickRegion&) {
-			//TODO
+		GetContents()->GetClickedSignal().connect([=](ClickRegion&) {
+			lp->ApplyFilter([](int) { return true; });
 		});
 	grid->At(r++, c).NewChild<Button>(display, "Filter: Even")->
-		GetContents()->GetClickedSignal().connect([&](ClickRegion&) {
-			//TODO
+		GetContents()->GetClickedSignal().connect([=](ClickRegion&) {
+			lp->ApplyFilter([](int x) { return x % 2 == 0; });
 		});
 	grid->At(r++, c).NewChild<Button>(display, "Filter: Odd")->
-		GetContents()->GetClickedSignal().connect([&](ClickRegion&) {
-			//TODO
+		GetContents()->GetClickedSignal().connect([=](ClickRegion&) {
+			lp->ApplyFilter([](int x) { return x % 2 == 1; });
 		});
 }
 
