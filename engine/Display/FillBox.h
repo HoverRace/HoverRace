@@ -1,7 +1,7 @@
 
 // FillBox.h
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -58,6 +58,8 @@ public:
 		enum {
 			SIZE = SUPER::Props::NEXT_,
 			COLOR,
+			BORDER,
+			BORDER_COLOR,
 			NEXT_,  ///< First index for subclasses.
 		};
 	};
@@ -67,6 +69,10 @@ public:
 		uiLayoutFlags_t layoutFlags = 0);
 	FillBox(double w, double h, const Color color,
 		uiLayoutFlags_t layoutFlags = 0);
+	FillBox(const Vec2 &size, const Color color, double border,
+		const Color borderColor, uiLayoutFlags_t layoutFlags = 0);
+	FillBox(double w, double h, const Color color, double border,
+		const Color borderColor, uiLayoutFlags_t layoutFlags = 0);
 	virtual ~FillBox() { }
 
 public:
@@ -85,6 +91,13 @@ public:
 	/// Convenience function for SetSize(const Vec2&).
 	void SetSize(double w, double h) { SetSize(Vec2(w, h)); }
 
+	double GetBorder() const { return border; }
+	void SetBorder(double border);
+
+	const Color GetBorderColor() const { return borderColor; }
+	void SetBorderColor(const Color color);
+
+public:
 	virtual void AdjustHeight(double h);
 	virtual void AdjustWidth(double w);
 
@@ -94,6 +107,8 @@ public:
 private:
 	Vec2 size;
 	Color color;
+	double border;
+	Color borderColor;
 };
 
 }  // namespace Display
