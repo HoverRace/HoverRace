@@ -1,7 +1,7 @@
 
 // SdlFillBoxView.h
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -50,26 +50,27 @@ namespace SDL {
  */
 class MR_DllDeclare SdlFillBoxView : public SdlView<FillBox>
 {
-	typedef SdlView<FillBox> SUPER;
-	public:
-		SdlFillBoxView(SdlDisplay &disp, FillBox &model) :
-			SUPER(disp, model),
-			screenPos(0, 0), screenSize(0, 0) { }
-		virtual ~SdlFillBoxView() { }
+	using SUPER = SdlView<FillBox>;
 
-	public:
-		void OnModelUpdate(int) override { }
+public:
+	SdlFillBoxView(SdlDisplay &disp, FillBox &model) :
+		SUPER(disp, model),
+		screenPos(0, 0), screenSize(0, 0) { }
+	virtual ~SdlFillBoxView() { }
 
-	public:
-		Vec2 GetScreenPos() const override { return screenPos; }
-		Vec2 GetScreenSize() const override { return screenSize; }
-		Vec3 Measure() override;
-		void PrepareRender() override { }
-		void Render() override;
+public:
+	void OnModelUpdate(int) override { }
 
-	private:
-		Vec2 screenPos;
-		Vec2 screenSize;
+public:
+	Vec2 GetScreenPos() const override { return screenPos; }
+	Vec2 GetScreenSize() const override { return screenSize; }
+	Vec3 Measure() override;
+	void PrepareRender() override { }
+	void Render() override;
+
+private:
+	Vec2 screenPos;
+	Vec2 screenSize;
 };
 
 }  // namespace SDL
