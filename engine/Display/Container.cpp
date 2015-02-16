@@ -64,7 +64,7 @@ void Container::OnChildRelinquishedFocus(
 	auto &children = GetChildren();
 	auto iter = children.begin();
 	for (; iter != children.end(); ++iter) {
-		if (iter->child.get() == &child) break;
+		if ((*iter)->child.get() == &child) break;
 	}
 	if (iter == children.end()) {
 		RelinquishFocus(Control::Nav(Control::Nav::NEUTRAL));
@@ -111,8 +111,8 @@ void Container::FocusPrevFrom(children_t::iterator startingPoint,
 		}
 		--iter;
 
-		if (iter->child->TryFocus(nav)) {
-			focusedChild = iter->child.get();
+		if ((*iter)->child->TryFocus(nav)) {
+			focusedChild = (*iter)->child.get();
 			return;
 		}
 	}
@@ -137,8 +137,8 @@ void Container::FocusNextFrom(children_t::iterator startingPoint,
 			break;
 		}
 
-		if (iter->child->TryFocus(nav)) {
-			focusedChild = iter->child.get();
+		if ((*iter)->child->TryFocus(nav)) {
+			focusedChild = (*iter)->child.get();
 			return;
 		}
 	}
@@ -164,8 +164,8 @@ bool Container::TryFocus(const Control::Nav &nav)
 		case Nav::NEXT:
 			// Search forward.
 			for (auto &child : children) {
-				if (child.child->TryFocus(nav)) {
-					focusedChild = child.child.get();
+				if (child->child->TryFocus(nav)) {
+					focusedChild = child->child.get();
 					SetFocused(true);
 					return true;
 				}
@@ -179,7 +179,7 @@ bool Container::TryFocus(const Control::Nav &nav)
 			for (auto iter = children.rbegin();
 				iter != children.rend(); ++iter)
 			{
-				auto &child = iter->child;
+				auto &child = (*iter)->child;
 				if (child->TryFocus(nav)) {
 					focusedChild = child.get();
 					SetFocused(true);

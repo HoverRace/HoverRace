@@ -96,7 +96,7 @@ void SdlBaseContainerView::PrepareRender()
 		rttSizeChanged = false;
 	}
 
-	model.ForEachChild(std::mem_fn(&ViewModel::PrepareRender));
+	model.ForEachVisibleChild(std::mem_fn(&ViewModel::PrepareRender));
 }
 
 void SdlBaseContainerView::Render()
@@ -165,7 +165,7 @@ void SdlBaseContainerView::Render()
 	const Vec2 &size = model.GetSize();
 	Vec2 oldOrigin = display.AddUiOrigin(model.GetAlignedPos(size.x, size.y));
 	auto oldFlags = display.AddUiLayoutFlags(model.GetLayoutFlags());
-	model.ForEachChild(std::mem_fn(&ViewModel::Render));
+	model.ForEachVisibleChild(std::mem_fn(&ViewModel::Render));
 	display.SetUiLayoutFlags(oldFlags);
 	display.SetUiOrigin(oldOrigin);
 

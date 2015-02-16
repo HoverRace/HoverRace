@@ -77,7 +77,7 @@ protected:
 	{
 	public:
 		Child(BaseContainer &bc, std::shared_ptr<UiViewModel> child) :
-			child(std::move(child))
+			child(std::move(child)), visible(true)
 		{
 			// Route focus request events back to the container.
 			focusRequestedConn.reset(
@@ -99,13 +99,14 @@ protected:
 
 	public:
 		std::shared_ptr<UiViewModel> child;
+		bool visible;  ///< Used for filtering in subclasses.
 	private:
 		// scoped_connection is not movable, so we wrap in a unique_ptr.
 		std::unique_ptr<boost::signals2::scoped_connection> focusRequestedConn;
 		std::unique_ptr<boost::signals2::scoped_connection> focusRelinquishedConn;
 	};
 
-	using children_t = std::vector<Child>;
+	using children_t = std::vector<std::unique_ptr<Child>>;
 
 	// These are marked as protected so that subclasses can restrict how and
 	// what types of widgets can be added / removed from the container.
@@ -123,7 +124,7 @@ protected:
 	NewChild(Args&&... args)
 	{
 		auto sharedChild = std::make_shared<T>(std::forward<Args>(args)...);
-		children.emplace_back(*this, sharedChild);
+		children.emplace_back(new Child(*this, sharedChild));
 		sharedChild->AttachView(display);
 		return sharedChild;
 	}
@@ -139,7 +140,7 @@ protected:
 	RemoveChild(const std::shared_ptr<T> &child)
 	{
 		for (auto iter = children.begin(); iter != children.end(); ++iter) {
-			if (iter->child == child) {
+			if ((*iter)->child == child) {
 				children.erase(iter);
 				break;
 			}
@@ -168,7 +169,7 @@ protected:
 		}
 
 		for (auto iter = children.begin(); iter != children.end(); ++iter) {
-			if (iter->child == child) {
+			if ((*iter)->child == child) {
 				auto dest = children.begin();
 				std::advance(dest, idx);
 				if (dest < iter) {
@@ -206,7 +207,7 @@ private:
 		for (auto iter = children.rbegin();
 			iter != children.rend(); ++iter)
 		{
-			auto &child = iter->child;
+			auto &child = (*iter)->child;
 			oldOrigin = display.AddUiOrigin(child->GetPos());
 			bool retv = (child.get()->*F)(param);
 			display.SetUiOrigin(oldOrigin);
@@ -294,7 +295,21 @@ public:
 	void ForEachChild(Fn fn) const
 	{
 		for (auto &child : children) {
-			fn(child.child);
+			fn(child->child);
+		}
+	}
+
+	/**
+	 * Iterate over each visible child widget.
+	 * @param fn The function to execute for each widget.
+	 */
+	template<class Fn>
+	void ForEachVisibleChild(Fn fn) const
+	{
+		for (auto &child : children) {
+			if (child->visible) {
+				fn(child->child);
+			}
 		}
 	}
 

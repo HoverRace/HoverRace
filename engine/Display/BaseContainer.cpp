@@ -56,7 +56,7 @@ void BaseContainer::ShrinkWrap()
 {
 	Vec2 max(0, 0);
 	for (auto &child : children) {
-		auto &c = child.child;
+		auto &c = child->child;
 		Vec3 measured = c->Measure();
 		measured += c->GetAlignedPos(measured.x, measured.y);
 		if (measured.x > max.x) max.x = measured.x;
