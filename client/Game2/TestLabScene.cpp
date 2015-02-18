@@ -886,6 +886,15 @@ PickListModule::PickListModule(Display::Display &display, GameDirector &director
 	size_t c = 0;
 
 	auto lp = list.get();
+	grid->At(r++, c).NewChild<Button>(display, "Log Value")->
+		GetContents()->GetClickedSignal().connect([=](ClickRegion&) {
+			if (auto val = lp->GetValue()) {
+				HR_LOG(info) << *val;
+			}
+			else {
+				HR_LOG(info) << "Nothing selected.";
+			}
+		});
 	grid->At(r++, c).NewChild<Button>(display, "Filter: All")->
 		GetContents()->GetClickedSignal().connect([=](ClickRegion&) {
 			lp->ApplyFilter([](int) { return true; });

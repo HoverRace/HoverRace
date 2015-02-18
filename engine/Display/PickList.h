@@ -74,7 +74,7 @@ class PickList : public BaseContainer
 public:
 	PickList(Display &display, const Vec2 &size,
 		uiLayoutFlags_t layoutFlags = 0) :
-		SUPER(display, size, true, layoutFlags), selItem(nullptr) { }
+		SUPER(display, size, true, layoutFlags), selItem() { }
 	virtual ~PickList() { }
 
 protected:
@@ -84,10 +84,10 @@ protected:
 
 	public:
 		DefaultItem(PickList<T> &pickList, Display &display,
-			const T &value, const std::string &text,
+			size_t idx, const T &value, const std::string &text,
 			uiLayoutFlags_t layoutFlags = 0) :
 			SUPER(display, text, layoutFlags),
-			pickList(pickList), value(value)
+			pickList(pickList), idx(idx), value(value)
 		{
 			clickedConn = GetClickedSignal().connect([&](ClickRegion&) {
 				pickList.SetSelectedItem(this);
@@ -102,11 +102,13 @@ protected:
 		DefaultItem &operator=(DefaultItem&&) = delete;
 
 	public:
+		const size_t GetIndex() const { return idx; }
 		const T &GetValue() const { return value; }
 
 	private:
 		PickList<T> &pickList;
-		T value;
+		const size_t idx;
+		const T value;
 		boost::signals2::scoped_connection clickedConn;
 	};
 
@@ -127,11 +129,15 @@ protected:
 private:
 	void SetSelectedItem(DefaultItem *sel)
 	{
-		if (selItem != sel) {
+		boost::optional<size_t> newSel = sel ?
+			boost::make_optional(sel->GetIndex()) :
+			boost::none;
+
+		if (selItem != newSel) {
 			if (selItem) {
-				selItem->SetChecked(false);
+				items[*selItem].item.SetChecked(false);
 			}
-			selItem = sel;
+			selItem = newSel;
 			if (sel) {
 				sel->SetChecked(true);
 			}
@@ -148,9 +154,10 @@ public:
 	 */
 	void Add(const std::string &label, const T &value)
 	{
-		//TODO: Check if matches current filter.
-		auto item = NewChild<DefaultItem>(*this, display, value, label);
+		size_t idx = items.size();
+		auto item = NewChild<DefaultItem>(*this, display, idx, value, label);
 		items.emplace_back(*(GetChildren().back()), *item);
+		filteredItems.push_back(items.size() - 1);
 		RequestLayout();
 	}
 
@@ -176,11 +183,10 @@ public:
 		// Find the first item matching this value.
 		// We assume that the list is small enough that we don't need a
 		// lookup table.
-		DefaultItem *newSel = nullptr;
-		for (const auto &item : items) {
-			if (item->GetValue() == val) {
-				newSel = item.get();
-				break;
+		boost::optional<size_t> newSel;
+		for (auto idx : filteredItems) {
+			if (items[idx]->GetValue() == val) {
+				newSel = boost::make_optional(idx);
 			}
 		}
 
@@ -211,7 +217,7 @@ public:
 	boost::optional<const T&> GetValue() const
 	{
 		return selItem ?
-			boost::make_optional<const T&>(selItem->GetValue()) :
+			boost::make_optional<const T&>(items[*selItem].item.GetValue()) :
 			boost::none;
 	}
 
@@ -227,9 +233,19 @@ public:
 	template<class Fn>
 	void ApplyFilter(Fn fn)
 	{
+		filteredItems.clear();
+		size_t idx = 0;
 		for (auto &item : items) {
-			item.child.visible = fn(item.item.GetValue());
+			bool visible = item.child.visible = fn(item.item.GetValue());
+			if (visible) {
+				filteredItems.push_back(idx);
+			}
+			else if (selItem && *selItem == idx) {
+				selItem = boost::none;
+			}
+			idx++;
 		}
+
 		RequestLayout();
 	}
 
@@ -256,7 +272,8 @@ protected:
 
 private:
 	std::vector<ItemChild> items;
-	DefaultItem *selItem;
+	std::vector<size_t> filteredItems;  ///< Indexes of filtered items.
+	boost::optional<size_t> selItem;  ///< Index of selected item.
 	valueChangedSignal_t valueChangedSignal;
 };
 
