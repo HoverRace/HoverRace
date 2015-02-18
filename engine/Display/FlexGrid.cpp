@@ -486,7 +486,7 @@ void FlexGrid::Clear()
  * The internal capacity will be increased (never decreased).
  * This is useful as a hint to prevent re-allocation due to resizing the
  * internal storage.
- * 
+ *
  * This function assumes that every cell of the grid will be filled.
  * If the grid is sparse, then it is better to not call this function and
  * let the automatic resizing occur.
@@ -496,7 +496,7 @@ void FlexGrid::Clear()
  */
 void FlexGrid::Reserve(size_t rowCapacity, size_t colCapacity)
 {
-	size_t newCap = 
+	size_t newCap =
 		(rowCapacity != 0 &&
 			(std::numeric_limits<size_t>::max() / rowCapacity) < colCapacity) ?
 		std::numeric_limits<size_t>::max() :
