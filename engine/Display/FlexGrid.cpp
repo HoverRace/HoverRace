@@ -491,7 +491,8 @@ void FlexGrid::Clear()
  * If the grid is sparse, then it is better to not call this function and
  * let the automatic resizing occur.
  *
- * @param capacity The new capacity.
+ * @param rowCapacity The estimated number of rows.
+ * @param colCapacity The estimated number of columns per row.
  */
 void FlexGrid::Reserve(size_t rowCapacity, size_t colCapacity)
 {
