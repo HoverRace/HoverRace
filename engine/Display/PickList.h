@@ -249,6 +249,13 @@ public:
 		RequestLayout();
 	}
 
+	void Reserve(size_t capacity) override
+	{
+		SUPER::Reserve(capacity);
+		items.reserve(capacity);
+		filteredItems.reserve(capacity);
+	}
+
 public:
 	using valueChangedSignal_t = boost::signals2::signal<void()>;
 	valueChangedSignal_t &GetValueChangedSignal() { return valueChangedSignal; }

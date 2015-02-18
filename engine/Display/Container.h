@@ -129,6 +129,8 @@ public:
 
 	void Clear() override;
 
+	void Reserve(size_t capacity) override { SUPER::Reserve(capacity); }
+
 private:
 	UiViewModel *focusedChild;
 };

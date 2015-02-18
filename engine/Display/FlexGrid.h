@@ -546,7 +546,15 @@ protected:
 
 		// Resize the grid to accomodate the cell.
 		if (row >= rows.size()) {
+			size_t oldSize = rows.size();
 			rows.resize(row + 1);
+			if (colReserve > 0) {
+				auto iter = rows.begin();
+				std::advance(iter, oldSize);
+				for (; iter != rows.end(); ++iter) {
+					iter->reserve(colReserve);
+				}
+			}
 		}
 		auto &cols = rows[row];
 		if (col >= cols.size()) {
@@ -574,6 +582,8 @@ protected:
 public:
 	void Clear() override;
 
+	void Reserve(size_t rows, size_t cols);
+
 protected:
 	void Layout() override;
 
@@ -585,6 +595,7 @@ private:
 	Vec2 padding;
 	Vec2 size;
 	Vec2 fixedSize;
+	size_t colReserve;
 	std::map<Control::Nav::dir_t, std::pair<size_t, size_t>> focusHints;
 	using cells_t = std::vector<std::shared_ptr<Cell>>;
 	std::vector<DefaultCell> defaultCols;

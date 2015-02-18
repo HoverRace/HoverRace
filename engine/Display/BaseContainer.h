@@ -193,6 +193,24 @@ protected:
 		children.clear();
 	}
 
+	/**
+	 * Increase the capacity of the of this container.
+	 *
+	 * The internal capacity will be increased (never decreased).
+	 * This is useful as a hint to prevent re-allocation due to resizing the
+	 * internal storage.
+	 * It's not required; the internal storage will be resized as necessary
+	 * anyway, at the cost of re-allocation.  Containers with a lot of
+	 * child elements will benefit the most from specifying the capacity
+	 * early.
+	 *
+	 * @param capacity The new capacity.
+	 */
+	virtual void Reserve(size_t capacity)
+	{
+		children.reserve(capacity);
+	}
+
 private:
 	template<typename P, bool(UiViewModel::*F)(P)>
 	bool PropagateMouseEvent(P param)

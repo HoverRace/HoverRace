@@ -69,7 +69,7 @@ const size_t FlexGrid::RIGHT = std::numeric_limits<size_t>::max();
 FlexGrid::FlexGrid(Display &display, uiLayoutFlags_t layoutFlags) :
 	SUPER(display, layoutFlags),
 	margin(display.styles.gridMargin), padding(display.styles.gridPadding),
-	size(0, 0), fixedSize(AUTOSIZE, AUTOSIZE), focusedCell()
+	size(0, 0), fixedSize(AUTOSIZE, AUTOSIZE), colReserve(0), focusedCell()
 {
 }
 
@@ -478,6 +478,38 @@ void FlexGrid::Clear()
 	rows.clear();
 
 	SUPER::Clear();
+}
+
+/**
+ * Set a hint about how many rows and columns will be in the grid.
+ *
+ * The internal capacity will be increased (never decreased).
+ * This is useful as a hint to prevent re-allocation due to resizing the
+ * internal storage.
+ * 
+ * This function assumes that every cell of the grid will be filled.
+ * If the grid is sparse, then it is better to not call this function and
+ * let the automatic resizing occur.
+ *
+ * @param capacity The new capacity.
+ */
+void FlexGrid::Reserve(size_t rowCapacity, size_t colCapacity)
+{
+	size_t newCap = 
+		(rowCapacity != 0 &&
+			(std::numeric_limits<size_t>::max() / rowCapacity) < colCapacity) ?
+		std::numeric_limits<size_t>::max() :
+		static_cast<size_t>(rowCapacity * colCapacity);
+
+	SUPER::Reserve(newCap);
+
+	rows.reserve(rowCapacity);
+	defaultCols.reserve(colCapacity);
+
+	colReserve = colCapacity;
+	for (auto &cols : rows) {
+		cols.reserve(colCapacity);
+	}
 }
 
 void FlexGrid::Layout()

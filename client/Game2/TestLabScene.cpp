@@ -557,6 +557,7 @@ FlexGridModule::FlexGridModule(Display::Display &display, GameDirector &director
 	gridSizeBox = root->NewChild<FillBox>(0, 0, 0xff00003f);
 
 	grid = root->NewChild<FlexGrid>(display);
+	grid->Reserve(3, 5);
 
 	size_t r = 0;
 	size_t c = 0;
@@ -871,6 +872,7 @@ PickListModule::PickListModule(Display::Display &display, GameDirector &director
 	list->GetValueChangedSignal().connect([&]() {
 		HR_LOG(info) << "Selected value: " << *(list->GetValue());
 	});
+	list->Reserve(7);
 	list->Add("1: Foo", 1);
 	list->Add("2: Bar", 2);
 	list->Add("3: Baz", 3);
