@@ -55,7 +55,7 @@ Env::~Env()
 
 void Env::LogScriptError(const Script::ScriptExn &ex)
 {
-	Log::Error("%s", ex.what());
+	HR_LOG(error) << ex.what();
 }
 
 /**
