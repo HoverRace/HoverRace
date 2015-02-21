@@ -203,9 +203,9 @@ void ClickRegion::SetEnabled(bool enabled)
  */
 void ClickRegion::RequestSizing()
 {
-	if (autoSize) {
-		needsSizing = true;
-	}
+	//FIXME: Always requesting sizing now to fix icon sizing when fixed size.
+	//       We need a better way of dealing with this, really...
+	needsSizing = true;
 }
 
 /**
