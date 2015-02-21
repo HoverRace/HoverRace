@@ -21,7 +21,6 @@
 
 #include "../Control/Action.h"
 #include "../Util/Config.h"
-#include "../Util/Log.h"
 #include "UiFont.h"
 #include "FillBox.h"
 #include "Label.h"
@@ -244,7 +243,6 @@ Vec3 Button::Measure()
 		// The icon's width may vary depending on the height, so set the
 		// height now and measure the new width.
 		icon->AdjustHeight(labelSize.y);
-		HR_LOG(info) << "Icon resized to: " << labelSize.y;
 		iconPart = icon->Measure().x + iconGap;
 	}
 
