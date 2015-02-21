@@ -57,6 +57,10 @@ public:
 	PickListItem(Display &display, const std::string &text,
 		uiLayoutFlags_t layoutFlags = 0);
 	virtual ~PickListItem() { }
+
+private:
+	void Init();
+	void InitIcon(bool enabled, bool checked);
 };
 
 /**

@@ -19,6 +19,9 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
+#include "../Util/Symbol.h"
+#include "SymbolIcon.h"
+
 #include "PickList.h"
 
 using namespace HoverRace::Util;
@@ -31,6 +34,33 @@ PickListItem::PickListItem(Display &display, const std::string &text,
 	SUPER(display, text, layoutFlags)
 {
 	SetTextAlignment(Alignment::W);
+	Init();
+}
+
+void PickListItem::Init()
+{
+	InitIcon(false, false);
+	InitIcon(false, true);
+	InitIcon(true, false);
+	InitIcon(true, true);
+}
+
+/**
+ * Generate and register the icon for a given combination of states.
+ * @param enabled @c true for the enabled state, @c false for disabled.
+ * @param checked @c true for the checked state, @c false for unchecked.
+ */
+void PickListItem::InitIcon(bool enabled, bool checked)
+{
+	// Using the same symbols as radio buttons for now.
+
+	auto icon = std::make_shared<SymbolIcon>(
+		1, 1,  // Size will be set in the superclass in Layout().
+		checked ? Symbol::DOT_CIRCLE_O : Symbol::CIRCLE_O,
+		enabled ? COLOR_WHITE : 0x7fffffff);
+	icon->AttachView(display);
+
+	SetStateIcon(enabled, checked, icon);
 }
 
 }  // namespace Display
