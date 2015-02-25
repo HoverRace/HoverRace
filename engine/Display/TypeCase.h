@@ -41,6 +41,23 @@ namespace Display {
 class TypeCase;
 
 /**
+ * A single glyph in the backing texture.
+ * @author Michael Imamura
+ */
+class GlyphEntry
+{
+public:
+	GlyphEntry() : page(0) { srcRect.h = -1; }
+
+public:
+	bool IsInitialized() const { return srcRect.h < 0; }
+
+public:
+	unsigned int page;  ///< Index of the texture that contains the character.
+	SDL_Rect srcRect;  ///< The bounds of the glyph in the texture.
+};
+
+/**
  * A line of text, prepared by a TypeCase.
  *
  * This is intended to be a reusable buffer; i.e., it can be cleared and a
@@ -55,7 +72,7 @@ public:
 
 public:
 	TypeCase *typeCase;  // Owning TypeCase, for sanity checking.
-	std::vector<SDL_Rect*> srcRects;
+	std::vector<GlyphEntry*> glyphs;
 };
 
 /**
