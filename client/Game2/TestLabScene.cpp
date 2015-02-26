@@ -883,7 +883,7 @@ PickListModule::PickListModule(Display::Display &display, GameDirector &director
 
 	auto grid = root->NewChild<FlexGrid>(display);
 	grid->SetPos(300, 60);
-	
+
 	size_t r = 0;
 	size_t c = 0;
 
@@ -896,6 +896,10 @@ PickListModule::PickListModule(Display::Display &display, GameDirector &director
 			else {
 				HR_LOG(info) << "Nothing selected.";
 			}
+		});
+	grid->At(r++, c).NewChild<Button>(display, "SetValue(5)")->
+		GetContents()->GetClickedSignal().connect([=](ClickRegion&) {
+			lp->SetValue(5);
 		});
 	grid->At(r++, c).NewChild<Button>(display, "Filter: All")->
 		GetContents()->GetClickedSignal().connect([=](ClickRegion&) {
