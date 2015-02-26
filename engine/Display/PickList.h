@@ -191,6 +191,7 @@ public:
 		for (auto idx : filteredItems) {
 			if (items[idx].item.GetValue() == val) {
 				newSel = boost::make_optional(idx);
+				break;
 			}
 		}
 
