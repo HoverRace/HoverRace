@@ -190,7 +190,7 @@ void ClickRegion::SetEnabled(bool enabled)
 		// Change back to unpressed and unfocused if disabled.
 		if (!enabled) {
 			SetPressed(false);
-			//TODO: Unset focus.
+			RelinquishFocus(Control::Nav::NEUTRAL);
 		}
 	}
 }

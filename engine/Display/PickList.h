@@ -106,7 +106,7 @@ protected:
 		DefaultItem &operator=(DefaultItem&&) = delete;
 
 	public:
-		const size_t GetIndex() const { return idx; }
+		size_t GetIndex() const { return idx; }
 		const T &GetValue() const { return value; }
 
 	private:
@@ -189,18 +189,19 @@ public:
 		// lookup table.
 		boost::optional<size_t> newSel;
 		for (auto idx : filteredItems) {
-			if (items[idx]->GetValue() == val) {
+			if (items[idx].item.GetValue() == val) {
 				newSel = boost::make_optional(idx);
+				break;
 			}
 		}
 
 		if (selItem != newSel) {
 			if (selItem) {
-				selItem->SetChecked(false);
+				items[*selItem].item.SetChecked(false);
 				selItem = newSel;
 			}
 			if (newSel) {
-				newSel->SetChecked(true);
+				items[*newSel].item.SetChecked(true);
 			}
 		}
 	}
