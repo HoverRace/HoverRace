@@ -582,6 +582,11 @@ protected:
 public:
 	void Clear() override;
 
+protected:
+	// We define this here to silence warnings about Reserve(size_t, size_t)
+	// hiding the superclass' Reserve(size_t).
+	void Reserve(size_t capacity) override { SUPER::Reserve(capacity); }
+public:
 	void Reserve(size_t rows, size_t cols);
 
 protected:
