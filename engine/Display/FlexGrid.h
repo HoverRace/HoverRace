@@ -231,7 +231,7 @@ public:
 		virtual bool OnNavigate(const Control::Nav&) = 0;
 
 		/**
-		 * Check if this contains the specified widget. 
+		 * Check if this contains the specified widget.
 		 * @param child The child to check (may be @c nullptr).
 		 * @return @c true if the cell contains the widget, @c false otherwise.
 		 */
@@ -474,7 +474,7 @@ public:
 		 * @tparam T The type of the child widget.
 		 * @tparam Args The types of the arguments.
 		 * @param args The arguments to pass to the child widget's constructor.
-		 * @return The actual grid cell 
+		 * @return The actual grid cell
 		 */
 		template<class T, class... Args>
 		typename std::enable_if<
