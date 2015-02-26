@@ -106,7 +106,7 @@ protected:
 		DefaultItem &operator=(DefaultItem&&) = delete;
 
 	public:
-		const size_t GetIndex() const { return idx; }
+		size_t GetIndex() const { return idx; }
 		const T &GetValue() const { return value; }
 
 	private:
