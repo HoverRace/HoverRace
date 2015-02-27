@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include "../../Exception.h"
+
 #include "SdlTexture.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)

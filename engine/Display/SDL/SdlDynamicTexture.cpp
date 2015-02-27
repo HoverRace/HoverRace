@@ -20,7 +20,6 @@
 // and limitations under the License.
 
 #include "../../Util/MR_Types.h"
-#include "../../Exception.h"
 
 #include "SdlDynamicTexture.h"
 
@@ -57,7 +56,7 @@ SDL_Surface *InitSurface(SDL_Texture *texture)
 			std::string("Invalid pixel format for dynamic texture: ") +
 			SDL_GetError());
 	}
-	
+
 	SDL_Surface *retv;
 	if ((retv = SDL_CreateRGBSurface(0, w, h, bpp, rm, gm, bm, am)) == nullptr)
 	{
