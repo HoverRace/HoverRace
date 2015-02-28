@@ -86,7 +86,17 @@ public:
 	template<class Fn>
 	void Update(Fn fn)
 	{
-		if (fn(surface)) Update();
+		bool retv;
+		if (SDL_MUSTLOCK(surface)) SDL_LockSurface(surface);
+		try {
+			retv = static_cast<bool>(fn(surface));
+		}
+		catch (...) {
+			if (SDL_MUSTLOCK(surface)) SDL_UnlockSurface(surface);
+			throw;
+		}
+		if (SDL_MUSTLOCK(surface)) SDL_UnlockSurface(surface);
+		if (retv) Update();
 	}
 
 protected:
