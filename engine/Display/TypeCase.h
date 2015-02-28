@@ -98,6 +98,13 @@ public:
 
 public:
 	/**
+	 * Count the number of active backing textures.
+	 * @return The total number of textures (may be zero).
+	 */
+	virtual MR_UInt32 CountTextures() const = 0;
+
+public:
+	/**
 	 * Prepare a string to be rendered.
 	 *
 	 * If @p rects is omitted, then this can be used to preemptively add
@@ -119,6 +126,16 @@ public:
 	 * @param y The screen Y coordinate of the upper-left corner.
 	 */
 	virtual void Render(const TypeLine &s, int x, int y) = 0;
+
+	/**
+	 * Renders the backing texture (for debugging purposes).
+	 * @param idx The texture index.
+	 * @param x The x coordinate.
+	 * @param y The y coordinate.
+	 * @param scale The scaling factor.
+	 */
+	virtual void RenderTexture(MR_UInt32 idx, int x, int y,
+		double scale = 1.0) = 0;
 
 protected:
 	const UiFont font;
