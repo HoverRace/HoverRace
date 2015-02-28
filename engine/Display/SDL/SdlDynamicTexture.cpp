@@ -100,7 +100,7 @@ SDL_Texture *InitTexture(SdlDisplay &display, int width, int height)
  */
 SdlDynamicTexture::SdlDynamicTexture(SdlDisplay &display,
 	SDL_Texture *texture) :
-	SUPER(display, texture)
+	SUPER(display, texture), needsUpdate(false)
 {
 	try {
 		surface = InitSurface(texture);

@@ -74,6 +74,7 @@ public:
 	 */
 	void Update()
 	{
+		if (!needsUpdate) return;
 		SDL_UpdateTexture(texture, nullptr, surface->pixels, surface->pitch);
 	}
 
@@ -86,6 +87,8 @@ public:
 	template<class Fn>
 	void Update(Fn fn)
 	{
+		needsUpdate = true;
+
 		bool retv;
 		if (SDL_MUSTLOCK(surface)) SDL_LockSurface(surface);
 		try {
@@ -101,6 +104,7 @@ public:
 
 protected:
 	SDL_Surface *surface;
+	bool needsUpdate;
 };
 
 /**
