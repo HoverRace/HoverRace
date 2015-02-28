@@ -81,13 +81,19 @@ public:
 public:
 	/**
 	 * Updates the texture from the backing surface.
+	 * @return @c true if an update was performed (dirty flag was set),
+	 *         @c false if no update was needed.
 	 */
-	void Update()
+	bool Update()
 	{
 		if (dirty) {
 			SDL_UpdateTexture(texture, nullptr,
 				surface->pixels, surface->pitch);
 			dirty = false;
+			return true;
+		}
+		else {
+			return false;
 		}
 	}
 
