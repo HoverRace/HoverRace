@@ -58,6 +58,7 @@ class MR_DllDeclare SdlDynamicTexture : public SdlTexture
 public:
 	SdlDynamicTexture() = delete;
 	SdlDynamicTexture(SdlDisplay &display, SDL_Texture *texture);
+	SdlDynamicTexture(SdlDisplay &display, int width, int height);
 	SdlDynamicTexture(const SdlDynamicTexture&) = delete;
 
 	virtual ~SdlDynamicTexture()
