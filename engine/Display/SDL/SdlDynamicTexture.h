@@ -70,12 +70,25 @@ public:
 
 public:
 	/**
+	 * Check if this texture has changes that haven't been updated yet.
+	 *
+	 * Call Update() to write the commit the changes to the texture.
+	 *
+	 * @return @c true if dirty, @c false if not.
+	 */
+	bool IsDirty() const { return dirty; }
+
+public:
+	/**
 	 * Updates the texture from the backing surface.
 	 */
 	void Update()
 	{
-		if (!needsUpdate) return;
-		SDL_UpdateTexture(texture, nullptr, surface->pixels, surface->pitch);
+		if (dirty) {
+			SDL_UpdateTexture(texture, nullptr,
+				surface->pixels, surface->pitch);
+			dirty = false;
+		}
 	}
 
 	/**
@@ -87,7 +100,7 @@ public:
 	template<class Fn>
 	void Update(Fn fn)
 	{
-		needsUpdate = true;
+		dirty = true;
 
 		bool retv;
 		if (SDL_MUSTLOCK(surface)) SDL_LockSurface(surface);
@@ -104,7 +117,7 @@ public:
 
 protected:
 	SDL_Surface *surface;
-	bool needsUpdate;
+	bool dirty;
 };
 
 /**
