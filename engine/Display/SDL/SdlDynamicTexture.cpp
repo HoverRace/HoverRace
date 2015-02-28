@@ -47,8 +47,7 @@ SDL_Surface *InitSurface(SDL_Texture *texture)
 	int w, h;
 	if (SDL_QueryTexture(texture, &fmt, nullptr, &w, &h) < 0) {
 		throw DynamicTextureExn(
-			std::string("Failed to query source for dynamic texture: ") +
-			SDL_GetError());
+			"Failed to query source for dynamic texture: ", SDL_GetError());
 	}
 
 	int bpp;
@@ -56,16 +55,14 @@ SDL_Surface *InitSurface(SDL_Texture *texture)
 	if (SDL_PixelFormatEnumToMasks(fmt, &bpp, &rm, &gm, &bm, &am) == SDL_FALSE)
 	{
 		throw DynamicTextureExn(
-			std::string("Invalid pixel format for dynamic texture: ") +
-			SDL_GetError());
+			"Invalid pixel format for dynamic texture: ", SDL_GetError());
 	}
 
 	SDL_Surface *retv;
 	if ((retv = SDL_CreateRGBSurface(0, w, h, bpp, rm, gm, bm, am)) == nullptr)
 	{
 		throw DynamicTextureExn(
-			std::string("Failed to create surface for dynamic texture: ") +
-			SDL_GetError());
+			"Failed to create surface for dynamic texture: ", SDL_GetError());
 	}
 
 	return retv;
@@ -86,7 +83,7 @@ SDL_Texture *InitTexture(SdlDisplay &display, int width, int height)
 
 	if (!retv) {
 		throw DynamicTextureExn(
-			std::string("Failed to create dynamic texture: ") + SDL_GetError());
+			"Failed to create dynamic texture: ", SDL_GetError());
 	}
 
 	return retv;

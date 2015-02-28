@@ -115,6 +115,8 @@ public:
 	DynamicTextureExn() : SUPER() { }
 	DynamicTextureExn(const std::string &msg) : SUPER(msg) { }
 	DynamicTextureExn(const char *msg) : SUPER(msg) { }
+	DynamicTextureExn(const std::string &msg, const std::string &sdlError) :
+		SUPER(msg + sdlError) { }
 	virtual ~DynamicTextureExn() noexcept { }
 };
 
