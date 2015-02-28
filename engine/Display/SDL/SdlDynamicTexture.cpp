@@ -65,6 +65,8 @@ SDL_Surface *InitSurface(SDL_Texture *texture)
 			"Failed to create surface for dynamic texture: ", SDL_GetError());
 	}
 
+	SDL_FillRect(retv, nullptr, SDL_MapRGBA(retv->format, 0, 0, 0, 0));
+
 	return retv;
 }
 
@@ -100,7 +102,7 @@ SDL_Texture *InitTexture(SdlDisplay &display, int width, int height)
  */
 SdlDynamicTexture::SdlDynamicTexture(SdlDisplay &display,
 	SDL_Texture *texture) :
-	SUPER(display, texture), needsUpdate(false)
+	SUPER(display, texture), needsUpdate(true)
 {
 	try {
 		surface = InitSurface(texture);
@@ -108,6 +110,8 @@ SdlDynamicTexture::SdlDynamicTexture(SdlDisplay &display,
 	catch (...) {
 		if (texture) SDL_DestroyTexture(texture);
 	}
+
+	Update();
 }
 
 /**
