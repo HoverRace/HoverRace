@@ -82,6 +82,9 @@ GlyphEntry &SdlTypeCase::AddGlyph(GlyphEntry &ent, const std::string &s)
 		if (curY + h >= height) {
 			curY = 0;
 			curMap++;
+			HR_LOG(debug) << "Spilling type case for font [" << font << "] "
+				"into new texture (" << curMap << " total, " <<
+				width << "x" << height << ")";
 		}
 		else {
 			curY += fontHeight + 1;
