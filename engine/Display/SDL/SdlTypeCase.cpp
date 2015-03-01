@@ -79,7 +79,7 @@ GlyphEntry &SdlTypeCase::AddGlyph(GlyphEntry &ent, const std::string &s)
 
 	if (curX + w >= width) {
 		curX = 0;
-		if (curY + h >= height) {
+		if (curY + fontHeight + h >= height) {
 			curY = 0;
 			curMap++;
 			HR_LOG(debug) << "Spilling type case for font [" << font << "] "
