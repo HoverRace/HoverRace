@@ -49,6 +49,7 @@ namespace HoverRace {
 		class ScreenFade;
 		class Slider;
 		class SymbolIcon;
+		class TypeCase;
 		class Wallpaper;
 	}
 	namespace VideoServices {
@@ -86,6 +87,25 @@ public:
 	Display() : uiOrigin(0, 0), uiLayoutFlags(0), uiScale(1.0),
 		uiOffset(0, 0), uiScreenSize(1280, 720) { }
 	virtual ~Display() { }
+
+public:
+	/**
+	 * Retrieve or create the TypeCase for a particular font.
+	 * @param font The font.
+	 * @return The TypeCase, never @c nullptr.
+	 */
+	std::shared_ptr<TypeCase> GetTypeCase(const UiFont &font);
+
+protected:
+	/**
+	 * Create a new TypeCase for a given font.
+	 *
+	 * This is called by GetTypeCase() when the TypeCase is not in the cache.
+	 *
+	 * @param font The normalized font.
+	 * @return The TypeCase, never @c nullptr.
+	 */
+	virtual std::shared_ptr<TypeCase> MakeTypeCase(const UiFont &font) = 0;
 
 public:
 	/**

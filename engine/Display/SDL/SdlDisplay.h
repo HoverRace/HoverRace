@@ -80,6 +80,8 @@ public:
 	void AttachView(SymbolIcon &model) override;
 	void AttachView(Wallpaper &model) override;
 
+protected:
+	std::shared_ptr<TypeCase> MakeTypeCase(const UiFont &font) override;
 public:
 	std::shared_ptr<SdlTexture> LoadRes(std::shared_ptr<Res<Texture>> res);
 

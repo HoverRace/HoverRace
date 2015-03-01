@@ -20,6 +20,7 @@
 // and limitations under the License.
 
 #include "../Util/Config.h"
+#include "TypeCase.h"
 
 #include "Display.h"
 
@@ -31,6 +32,34 @@ namespace Display {
 namespace {
 	const double MIN_VIRT_WIDTH = 1280.0;
 	const double MIN_VIRT_HEIGHT = 720.0;
+}
+
+namespace {
+
+const std::string TYPE_CASE_INIT =
+	" !\"#$%&'()*+,-./0123456789:;<=>?"
+	"@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_"
+	"`abcdefghijklmnopqrstuvwxyz{|}~"
+	"\xc2\xa1"  // INVERTED EXCLAMATION MARK
+	"\xc2\xa9"  // COPYRIGHT SIGN
+	"\xc2\xb0"  // DEGREE SIGN
+	"\xc2\xb7"  // MIDDLE DOT
+	"\xc2\xbf"  // INVERTED QUESTION MARK
+	;
+
+}  // namespace
+
+std::shared_ptr<TypeCase> Display::GetTypeCase(const UiFont &font)
+{
+	UiFont normalizedFont = font;
+	normalizedFont.size = floor(font.size);
+
+	//TODO: Cache instances.
+
+	auto retv = MakeTypeCase(normalizedFont);
+	retv->Prepare(TYPE_CASE_INIT);
+
+	return retv;
 }
 
 void Display::OnDisplayConfigChanged()

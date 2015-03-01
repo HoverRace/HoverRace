@@ -52,6 +52,7 @@
 #include "SdlSliderView.h"
 #include "SdlSymbolIconView.h"
 #include "SdlTexture.h"
+#include "SdlTypeCase.h"
 #include "SdlLegacyDisplay.h"
 #include "SdlWallpaperView.h"
 
@@ -450,6 +451,12 @@ void SdlDisplay::AttachView(SymbolIcon &model)
 void SdlDisplay::AttachView(Wallpaper &model)
 {
 	model.SetView(std::unique_ptr<View>(new SdlWallpaperView(*this, model)));
+}
+
+std::shared_ptr<TypeCase> SdlDisplay::MakeTypeCase(const UiFont &font)
+{
+	//TODO: Decide texture size based on font size.
+	return std::make_shared<SdlTypeCase>(*this, font, 512, 512);
 }
 
 /**
