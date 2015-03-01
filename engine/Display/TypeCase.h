@@ -62,7 +62,7 @@ public:
  * Character-by-character text renderer.
  * @author Michael Imamura
  */
-class MR_DllDeclare TypeCase
+class MR_DllDeclare TypeCase : protected std::enable_shared_from_this<TypeCase>
 {
 public:
 	/**
@@ -137,7 +137,7 @@ protected:
 class MR_DllDeclare TypeLine
 {
 public:
-	TypeLine() : typeCase(nullptr) { }
+	TypeLine() { }
 
 public:
 	/**
@@ -145,7 +145,7 @@ public:
 	 * @return @c true if prepared, @c false if not.
 	 */
 	bool IsPrepared() const {
-		return typeCase != nullptr;
+		return static_cast<bool>(typeCase);
 	}
 
 	/**
@@ -161,7 +161,7 @@ public:
 	}
 
 public:
-	TypeCase *typeCase;  // Owning TypeCase, for sanity checking.
+	std::shared_ptr<TypeCase> typeCase;  // Owning TypeCase, for sanity checking.
 	std::vector<GlyphEntry*> glyphs;
 };
 

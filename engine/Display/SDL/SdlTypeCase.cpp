@@ -153,7 +153,7 @@ void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
 	HR_LOG(debug) << "Preparing: " << s;
 
 	if (rects) {
-		rects->typeCase = this;
+		rects->typeCase = shared_from_this();
 		rects->glyphs.clear();
 	}
 
@@ -194,7 +194,7 @@ void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
 
 void SdlTypeCase::Render(const TypeLine &s, int x, int y)
 {
-	if (s.typeCase != this) {
+	if (s.typeCase.get() != this) {
 		throw Exception("TypeLine owner mismatch.");
 	}
 
