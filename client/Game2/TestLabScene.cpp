@@ -335,6 +335,7 @@ public:
 
 private:
 	std::shared_ptr<Display::TypeCase> mainTypeCase;
+	Display::TypeLine exampleLine;
 }; //}}}
 
 }  // namespace Module
@@ -1046,12 +1047,16 @@ TypeCaseModule::TypeCaseModule(Display::Display &display,
 void TypeCaseModule::PrepareRender()
 {
 	SUPER::PrepareRender();
+	if (!exampleLine.IsPrepared()) {
+		mainTypeCase->Prepare("This is an example line of text.", &exampleLine);
+	}
 }
 
 void TypeCaseModule::Render()
 {
 	SUPER::Render();
 	mainTypeCase->RenderTexture(0, 0, 60);
+	exampleLine.Render(0, 20);
 }
 
 //}}} TypeCaseModule
