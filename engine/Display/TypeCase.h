@@ -39,6 +39,7 @@ namespace HoverRace {
 namespace Display {
 
 class TypeCase;
+class TypeLine;
 
 /**
  * A single glyph in the backing texture.
@@ -55,24 +56,6 @@ public:
 public:
 	unsigned int page;  ///< Index of the texture that contains the character.
 	SDL_Rect srcRect;  ///< The bounds of the glyph in the texture.
-};
-
-/**
- * A line of text, prepared by a TypeCase.
- *
- * This is intended to be a reusable buffer; i.e., it can be cleared and a
- * new prepared line of text loaded in place.
- *
- * @author Michael Imamura
- */
-class TypeLine
-{
-public:
-	TypeLine() : typeCase(nullptr) { }
-
-public:
-	TypeCase *typeCase;  // Owning TypeCase, for sanity checking.
-	std::vector<GlyphEntry*> glyphs;
 };
 
 /**
@@ -141,6 +124,37 @@ protected:
 	const UiFont font;
 	const int width;
 	const int height;
+};
+
+/**
+ * A line of text, prepared by a TypeCase.
+ *
+ * This is intended to be a reusable buffer; i.e., it can be cleared and a
+ * new prepared line of text loaded in place.
+ *
+ * @author Michael Imamura
+ */
+class MR_DllDeclare TypeLine
+{
+public:
+	TypeLine() : typeCase(nullptr) { }
+
+public:
+	/**
+	 * Render this line using the owning TypeCase.
+	 * @param x The screen X coordinate of the upper-left corner.
+	 * @param y The screen Y coordinate of the upper-left corner.
+	 */
+	void Render(int x, int y)
+	{
+		if (typeCase) {
+			typeCase->Render(*this, x, y);
+		}
+	}
+
+public:
+	TypeCase *typeCase;  // Owning TypeCase, for sanity checking.
+	std::vector<GlyphEntry*> glyphs;
 };
 
 }  // namespace Display
