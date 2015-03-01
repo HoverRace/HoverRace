@@ -194,10 +194,20 @@ void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
 
 void SdlTypeCase::Render(const TypeLine &s, int x, int y)
 {
-	HR_UNUSED(s);
-	HR_UNUSED(x);
-	HR_UNUSED(y);
-	//TODO
+	if (s.typeCase != this) {
+		throw Exception("TypeLine owner mismatch.");
+	}
+
+	auto renderer = display.GetRenderer();
+	SDL_Rect destRect = { x, y, 0, 0 };
+	for (const auto &glyph : s.glyphs) {
+		SDL_Texture *texture = maps[glyph->page].get()->Get();
+		const auto &srcRect = glyph->srcRect;
+		destRect.w = srcRect.w;
+		destRect.h = srcRect.h;
+		SDL_RenderCopy(renderer, texture, &srcRect, &destRect);
+		destRect.x += srcRect.w;
+	}
 }
 
 void SdlTypeCase::RenderTexture(MR_UInt32 idx, int x, int y, double scale)
