@@ -141,6 +141,14 @@ public:
 
 public:
 	/**
+	 * Check if this instance has been prepared.
+	 * @return @c true if prepared, @c false if not.
+	 */
+	bool IsPrepared() const {
+		return typeCase != nullptr;
+	}
+
+	/**
 	 * Render this line using the owning TypeCase.
 	 * @param x The screen X coordinate of the upper-left corner.
 	 * @param y The screen Y coordinate of the upper-left corner.
