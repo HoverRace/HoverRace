@@ -62,7 +62,7 @@ public:
  * Character-by-character text renderer.
  * @author Michael Imamura
  */
-class MR_DllDeclare TypeCase : protected std::enable_shared_from_this<TypeCase>
+class MR_DllDeclare TypeCase
 {
 public:
 	/**

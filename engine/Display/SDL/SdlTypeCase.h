@@ -52,7 +52,9 @@ namespace SDL {
  * SDL implementation of TypeCase.
  * @author Michael Imamura
  */
-class MR_DllDeclare SdlTypeCase : public TypeCase
+class MR_DllDeclare SdlTypeCase :
+	public TypeCase,
+	public std::enable_shared_from_this<SdlTypeCase>
 {
 	using SUPER = TypeCase;
 
