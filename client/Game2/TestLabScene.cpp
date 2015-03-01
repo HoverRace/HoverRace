@@ -1055,8 +1055,14 @@ void TypeCaseModule::PrepareRender()
 void TypeCaseModule::Render()
 {
 	SUPER::Render();
-	mainTypeCase->RenderTexture(0, 0, 60);
 	exampleLine.Render(0, 20);
+
+	int w = mainTypeCase->GetWidth() + 50;
+	int x = 0;
+	auto numTextures = mainTypeCase->CountTextures();
+	for (MR_UInt32 i = 0; i < numTextures; i++, x += w) {
+		mainTypeCase->RenderTexture(i, x, 60);
+	}
 }
 
 //}}} TypeCaseModule
