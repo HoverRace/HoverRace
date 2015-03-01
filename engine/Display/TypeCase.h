@@ -50,7 +50,7 @@ public:
 	GlyphEntry() : page(0) { srcRect.h = -1; }
 
 public:
-	bool IsInitialized() const { return srcRect.h < 0; }
+	bool IsInitialized() const { return srcRect.h >= 0; }
 
 public:
 	unsigned int page;  ///< Index of the texture that contains the character.
