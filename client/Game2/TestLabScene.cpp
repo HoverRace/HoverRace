@@ -38,6 +38,7 @@
 #include "../../engine/Display/Slider.h"
 #include "../../engine/Display/Speedometer.h"
 #include "../../engine/Display/SymbolIcon.h"
+#include "../../engine/Display/TypeCase.h"
 #include "../../engine/MainCharacter/MainCharacter.h"
 #include "../../engine/Player/DemoProfile.h"
 #include "../../engine/Player/LocalPlayer.h"
@@ -320,6 +321,22 @@ private:
 	std::shared_ptr<Display::FillBox> stateBox;
 }; //}}}
 
+class TypeCaseModule : public TestLabScene::LabModule /*{{{*/
+{
+	using SUPER = TestLabScene::LabModule;
+
+public:
+	TypeCaseModule(Display::Display &display, GameDirector &director);
+	virtual ~TypeCaseModule() { }
+
+public:
+	void PrepareRender() override;
+	void Render() override;
+
+private:
+	std::shared_ptr<Display::TypeCase> mainTypeCase;
+}; //}}}
+
 }  // namespace Module
 
 TestLabScene::TestLabScene(Display::Display &display, GameDirector &director,
@@ -346,6 +363,7 @@ TestLabScene::TestLabScene(Display::Display &display, GameDirector &director,
 	grid->AddModule<Module::PickListModule>("PickList");
 	grid->AddModule<Module::PictureModule>("Picture");
 	grid->AddModule<Module::TransitionModule>("Transition");
+	grid->AddModule<Module::TypeCaseModule>("TypeCase");
 
 	startingModuleBtn = grid->ShareStartingModuleBtn();
 
@@ -1012,6 +1030,31 @@ void TransitionModule::OnStateTransition(double progress)
 }
 
 //}}} TransitionModule
+
+//{{{ TypeCaseModule //////////////////////////////////////////////////////////
+
+TypeCaseModule::TypeCaseModule(Display::Display &display,
+	GameDirector &director) :
+	SUPER(display, director, "TypeCase")
+{
+	using namespace Display;
+
+	mainTypeCase = display.GetTypeCase({ "", 20, UiFont::BOLD });
+	mainTypeCase->Prepare("abcdefghijklmnopqrstuvxyz");
+}
+
+void TypeCaseModule::PrepareRender()
+{
+	SUPER::PrepareRender();
+}
+
+void TypeCaseModule::Render()
+{
+	SUPER::Render();
+	mainTypeCase->RenderTexture(0, 0, 60);
+}
+
+//}}} TypeCaseModule
 
 }  // namespace Module
 
