@@ -455,8 +455,19 @@ void SdlDisplay::AttachView(Wallpaper &model)
 
 std::shared_ptr<TypeCase> SdlDisplay::MakeTypeCase(const UiFont &font)
 {
-	//TODO: Decide texture size based on font size.
-	return std::make_shared<SdlTypeCase>(*this, font, 512, 512);
+	// Decide texture size based on font size.
+	int sz;
+	if (font.size < 15) {
+		sz = 128;
+	}
+	else if (font.size < 25) {
+		sz = 256;
+	}
+	else {
+		sz = 512;
+	}
+
+	return std::make_shared<SdlTypeCase>(*this, font, sz, sz);
 }
 
 /**
