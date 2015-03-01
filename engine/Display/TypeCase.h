@@ -81,6 +81,18 @@ public:
 
 public:
 	/**
+	 * Retrieve the width of each of the backing textures.
+	 * @return The width, in pixels.
+	 */
+	int GetWidth() const { return width; }
+
+	/**
+	 * Retrieve the height of each of the backing textures.
+	 * @return The height, in pixels.
+	 */
+	int GetHeight() const { return height; }
+
+	/**
 	 * Count the number of active backing textures.
 	 * @return The total number of textures (may be zero).
 	 */
