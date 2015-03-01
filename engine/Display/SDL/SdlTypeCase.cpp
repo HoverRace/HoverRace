@@ -152,6 +152,11 @@ void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
 
 	HR_LOG(debug) << "Preparing: " << s;
 
+	if (rects) {
+		rects->typeCase = this;
+		rects->glyphs.clear();
+	}
+
 	auto prev = s.begin();
 	auto iter = prev;
 	auto end = s.end();
