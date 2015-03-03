@@ -31,6 +31,12 @@ namespace HoverRace {
 namespace Display {
 namespace SDL {
 
+namespace {
+
+const MR_UInt32 MAX_MAPS = 32;
+
+}  // namespace
+
 /**
  * Constructor.
  * @param display The SDL display for rendering.
@@ -92,11 +98,11 @@ GlyphEntry &SdlTypeCase::AddGlyph(GlyphEntry &ent, const std::string &s)
 	}
 
 	if (curMap == maps.size()) {
-		if (curMap == updatedMaps.size()) {
+		if (curMap == MAX_MAPS) {
 			SDL_FreeSurface(src);
 			throw Exception(boost::str(boost::format(
 				"Exceeded maximum number of textures (%u) for font: %s") %
-				updatedMaps.size() % font));
+				MAX_MAPS % font));
 		}
 		maps.emplace_back(new SdlDynamicTexture(display, width, height));
 	}
@@ -110,8 +116,6 @@ GlyphEntry &SdlTypeCase::AddGlyph(GlyphEntry &ent, const std::string &s)
 		SDL_BlitSurface(src, nullptr, surface, &destRect);
 		return false;  // Update later, when all glyphs have been added.
 	});
-
-	updatedMaps.set(curMap);
 
 	SDL_FreeSurface(src);
 
@@ -185,13 +189,10 @@ void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
 		HR_LOG(warning) << "Invalid UTF-8 sequence: " << ex.what();
 	}
 
-	if (updatedMaps.any()) {
-		for (size_t i = 0; i < maps.size(); i++) {
-			if (updatedMaps[i]) {
-				maps[i]->Update();
-			}
-		}
-		updatedMaps.reset();
+	// All maps that need update will be at the end, so update in reverse
+	// order until we find one that didn't need updating.
+	for (auto iter = maps.rbegin(); iter != maps.rend(); ++iter) {
+		if (!(*iter)->Update()) break;
 	}
 }
 

@@ -21,8 +21,6 @@
 
 #pragma once
 
-#include <bitset>
-
 #include "../TypeCase.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
@@ -83,7 +81,6 @@ protected:
 	int fontHeight;
 	std::array<GlyphEntry, 0x250> common;
 	std::vector<std::unique_ptr<SdlDynamicTexture>> maps;
-	std::bitset<32> updatedMaps;
 	MR_UInt32 curMap;
 	int curX, curY;
 };
