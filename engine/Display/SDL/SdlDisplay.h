@@ -121,8 +121,8 @@ private:
 	int width, height;
 	VideoServices::VideoBuffer *legacyDisplay;
 
-	typedef std::pair<std::string, int> loadedFontKey;
-	typedef std::map<loadedFontKey, TTF_Font*> loadedFonts_t;
+	using loadedFontKey = std::pair<std::string, int>;
+	using loadedFonts_t = std::map<loadedFontKey, TTF_Font*>;
 	loadedFonts_t loadedFonts;
 };
 
