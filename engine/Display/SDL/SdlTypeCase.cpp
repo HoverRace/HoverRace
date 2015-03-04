@@ -139,16 +139,21 @@ GlyphEntry &SdlTypeCase::AddGlyph(GlyphEntry &ent, const std::string &s)
  */
 GlyphEntry &SdlTypeCase::FindGlyph(const std::string &s, MR_UInt32 cp)
 {
-	// Find the GlyphEntry for this glyph.
-	if (cp < common.size()) {
-		GlyphEntry &ent = common[cp];
-		return ent.IsInitialized() ? ent : AddGlyph(ent, s);
-	}
-	else {
+	if (cp > 65535) {
 		throw UnimplementedExn(boost::str(
-			boost::format("AddGlyph(): code point (%u) > %u") %
-				cp % common.size()));
+			boost::format("AddGlyph(): code point (%u) > %u") % cp % 65535));
 	}
+
+	// Find the GlyphEntry for this glyph.
+	// Glyphs are organized into "pages" of 256 glyphs.
+	MR_UInt32 pageIdx = cp / 256;
+	auto &page = glyphs[pageIdx];
+	if (!page) {
+		page.reset(new glyphPage_t());
+	}
+	GlyphEntry &ent = (*page)[cp % 256];
+
+	return ent.IsInitialized() ? ent : AddGlyph(ent, s);
 }
 
 void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)

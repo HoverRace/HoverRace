@@ -78,8 +78,10 @@ public:
 
 protected:
 	SdlDisplay &display;
+private:
 	int fontHeight;
-	std::array<GlyphEntry, 0x250> common;
+	using glyphPage_t = std::array<GlyphEntry, 256>;
+	std::array<std::unique_ptr<glyphPage_t>, 256> glyphs;
 	std::vector<std::unique_ptr<SdlDynamicTexture>> maps;
 	MR_UInt32 curMap;
 	int curX, curY;
