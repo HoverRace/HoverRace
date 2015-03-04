@@ -72,7 +72,7 @@ private:
 
 public:
 	void Prepare(const std::string &s, TypeLine *rects = nullptr) override;
-	void Render(const TypeLine &s, int x, int y) override;
+	void Render(const TypeLine &s, const Color color, int x, int y) override;
 	void RenderTexture(MR_UInt32 idx, int x, int y,
 		double scale = 1.0) override;
 

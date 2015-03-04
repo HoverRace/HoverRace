@@ -1055,7 +1055,7 @@ void TypeCaseModule::PrepareRender()
 void TypeCaseModule::Render()
 {
 	SUPER::Render();
-	exampleLine.Render(0, 20);
+	exampleLine.Render(0xbf00ff00, 0, 20);
 
 	int w = mainTypeCase->GetWidth() + 50;
 	int x = 0;

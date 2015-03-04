@@ -19,6 +19,8 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
+#include <bitset>
+
 #include <utf8/utf8.h>
 
 #include "../../Util/Log.h"
@@ -201,16 +203,27 @@ void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
 	}
 }
 
-void SdlTypeCase::Render(const TypeLine &s, int x, int y)
+void SdlTypeCase::Render(const TypeLine &s, const Color cm, int x, int y)
 {
 	if (s.typeCase.get() != this) {
 		throw Exception("TypeLine owner mismatch.");
 	}
 
+	std::bitset<MAX_MAPS> usedTextures;
+	usedTextures.reset();
+
 	auto renderer = display.GetRenderer();
 	SDL_Rect destRect = { x, y, 0, 0 };
 	for (const auto &glyph : s.glyphs) {
-		SDL_Texture *texture = maps[glyph->page].get()->Get();
+		auto page = glyph->page;
+		SDL_Texture *texture = maps[page].get()->Get();
+
+		if (!usedTextures.at(page)) {
+			SDL_SetTextureColorMod(texture, cm.bits.r, cm.bits.g, cm.bits.b);
+			SDL_SetTextureAlphaMod(texture, cm.bits.a);
+			usedTextures.set(page);
+		}
+
 		const auto &srcRect = glyph->srcRect;
 		destRect.w = srcRect.w;
 		destRect.h = srcRect.h;
@@ -232,7 +245,11 @@ void SdlTypeCase::RenderTexture(MR_UInt32 idx, int x, int y, double scale)
 		static_cast<int>(scale * width),
 		static_cast<int>(scale * height) };
 
-	SDL_RenderCopy(renderer, maps[idx]->Get(), nullptr, &destRect);
+	SDL_Texture *texture = maps[idx]->Get();
+	SDL_SetTextureColorMod(texture, 0xff, 0xff, 0xff);
+	SDL_SetTextureAlphaMod(texture, 0xff);
+
+	SDL_RenderCopy(renderer, texture, nullptr, &destRect);
 }
 
 }  // namespace SDL

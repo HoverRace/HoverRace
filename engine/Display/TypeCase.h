@@ -23,6 +23,8 @@
 
 #include <SDL2/SDL.h>
 
+#include "Color.h"
+
 #include "UiFont.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
@@ -117,10 +119,11 @@ public:
 	 * be rendered.
 	 *
 	 * @param s The string to render.
+	 * @param color The color of the string.
 	 * @param x The screen X coordinate of the upper-left corner.
 	 * @param y The screen Y coordinate of the upper-left corner.
 	 */
-	virtual void Render(const TypeLine &s, int x, int y) = 0;
+	virtual void Render(const TypeLine &s, const Color color, int x, int y) = 0;
 
 	/**
 	 * Renders the backing texture (for debugging purposes).
@@ -162,13 +165,14 @@ public:
 
 	/**
 	 * Render this line using the owning TypeCase.
+	 * @param color The color of the string.
 	 * @param x The screen X coordinate of the upper-left corner.
 	 * @param y The screen Y coordinate of the upper-left corner.
 	 */
-	void Render(int x, int y)
+	void Render(const Color color, int x, int y)
 	{
 		if (typeCase) {
-			typeCase->Render(*this, x, y);
+			typeCase->Render(*this, color, x, y);
 		}
 	}
 
