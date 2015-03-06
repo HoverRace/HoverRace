@@ -218,7 +218,7 @@ void SdlTypeCase::Render(const TypeLine &s, const Color cm, int x, int y)
 		auto page = glyph->page;
 		SDL_Texture *texture = maps[page].get()->Get();
 
-		if (!usedTextures.at(page)) {
+		if (!usedTextures[page]) {
 			SDL_SetTextureColorMod(texture, cm.bits.r, cm.bits.g, cm.bits.b);
 			SDL_SetTextureAlphaMod(texture, cm.bits.a);
 			usedTextures.set(page);
