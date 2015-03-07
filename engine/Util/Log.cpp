@@ -56,11 +56,10 @@ namespace {
 #ifdef _WIN32
 // Backend similar to boost::log::sinks::basic_debug_output_backend that
 // properly converts our UTF-8 strings to wide strings.
-class WindowsDebugBackend :
+struct WindowsDebugBackend :
 	public boost::log::sinks::basic_formatted_sink_backend<
 		char, boost::log::sinks::concurrent_feeding>
 {
-public:
 	void consume(const boost::log::record_view&, const string_type &msg)
 	{
 		OutputDebugStringW((const wchar_t*)Str::UW(msg));
@@ -176,8 +175,7 @@ void AddWindowsDebugLog()
 	using namespace boost::log;
 	namespace expr = boost::log::expressions;
 
-	typedef WindowsDebugBackend backend_t;
-	typedef sinks::synchronous_sink<backend_t> sink_t;
+	using sink_t = sinks::synchronous_sink<WindowsDebugBackend>;
 	auto sink = boost::make_shared<sink_t>();
 	sink->set_filter(expr::is_debugger_present());
 	sink->set_formatter(expr::stream << L'[' << trivial::severity << L"] " <<
