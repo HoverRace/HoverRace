@@ -1,7 +1,7 @@
 
 // SdlSymbolIconView.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@
 #include "../../Util/Config.h"
 #include "../../Util/Str.h"
 #include "../SymbolIcon.h"
+#include "../TypeCase.h"
 #include "SdlSurfaceText.h"
 
 #include "SdlSymbolIconView.h"
@@ -38,10 +39,10 @@ namespace SDL {
 
 SdlSymbolIconView::SdlSymbolIconView(SdlDisplay &disp, SymbolIcon &model) :
 	SUPER(disp, model),
-	texture(), colorChanged(true), width(0), height(0)
+	colorChanged(true), width(0), height(0)
 {
 	uiScaleChangedConnection = disp.GetUiScaleChangedSignal().connect(
-		std::bind(&decltype(texture)::release, &texture));
+		std::bind(&decltype(typeLine)::reset, &typeLine, nullptr));
 }
 
 SdlSymbolIconView::~SdlSymbolIconView()
@@ -57,7 +58,7 @@ void SdlSymbolIconView::OnModelUpdate(int prop)
 
 		case FillBox::Props::SIZE:
 		case SymbolIcon::Props::SYMBOL:
-			texture.release();
+			typeLine.reset();
 			break;
 	}
 }
@@ -69,7 +70,7 @@ Vec3 SdlSymbolIconView::Measure()
 
 void SdlSymbolIconView::PrepareRender()
 {
-	if (!texture) {
+	if (!typeLine) {
 		UpdateTexture();
 	} else if (colorChanged) {
 		UpdateTextureColor();
@@ -78,9 +79,14 @@ void SdlSymbolIconView::PrepareRender()
 
 void SdlSymbolIconView::Render()
 {
-	display.DrawUiTexture(texture->Get(),
-		model.GetAlignedPos(unscaledWidth, unscaledHeight),
-		model.GetLayoutFlags());
+	if (typeLine) {
+		Vec2 aligned = display.LayoutUiPosition(
+			model.GetAlignedPos(unscaledWidth, unscaledHeight));
+		typeLine->Render(
+			model.GetColor(),
+			static_cast<int>(aligned.x),
+			static_cast<int>(aligned.y));
+	}
 }
 
 void SdlSymbolIconView::UpdateTexture()
@@ -101,19 +107,14 @@ void SdlSymbolIconView::UpdateTexture()
 	std::string text;
 	utf8::utf32to8(wtext, wtext + 1, std::back_inserter(text));
 
-	// Render the text onto a fresh new surface.
-	SdlSurfaceText textRenderer(display, font);
-	textRenderer.SetFixedScale(true);
-	SDL_Surface *tempSurface = textRenderer.RenderToNewSurface(text);
-	width = textRenderer.GetWidth();
-	height = textRenderer.GetHeight();
+	std::unique_ptr<TypeLine> newLine(new TypeLine());
+	auto typeCase = display.GetTypeCase(font);
+	typeCase->Prepare(text, newLine.get());
+	typeLine.swap(newLine);
 
-	// Convert the surface to the display format.
-	SDL_Texture *texture = SDL_CreateTextureFromSurface(
-		display.GetRenderer(), tempSurface);
-	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
-	SDL_FreeSurface(tempSurface);
-	this->texture.reset(new SdlTexture(display, texture));
+	auto &glyphRect = typeLine->glyphs[0]->srcRect;
+	width = glyphRect.w;
+	height = glyphRect.h;
 
 	// We pre-scale the texture (by adjusting the font size) so that would
 	// normally throw off the size adjustments later, so we need to keep track
@@ -127,11 +128,13 @@ void SdlSymbolIconView::UpdateTexture()
 
 void SdlSymbolIconView::UpdateTextureColor()
 {
+	/*TODO
 	const Color cm = model.GetColor();
 	SDL_SetTextureColorMod(texture->Get(), cm.bits.r, cm.bits.g, cm.bits.b);
 	SDL_SetTextureAlphaMod(texture->Get(), cm.bits.a);
 
 	colorChanged = false;
+	*/
 }
 
 }  // namespace SDL

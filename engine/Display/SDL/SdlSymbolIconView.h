@@ -1,7 +1,7 @@
 
 // SdlSymbolIconView.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@
 namespace HoverRace {
 	namespace Display {
 		class SymbolIcon;
+		class TypeLine;
 	}
 }
 struct SDL_Surface;
@@ -71,8 +72,7 @@ private:
 	void UpdateTextureColor();
 
 private:
-	//TODO: Cache the symbols in a single texture.
-	std::unique_ptr<SdlTexture> texture;
+	std::unique_ptr<TypeLine> typeLine;
 	bool colorChanged;
 	int width;
 	int height;
