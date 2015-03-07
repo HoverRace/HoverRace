@@ -1040,6 +1040,10 @@ TypeCaseModule::TypeCaseModule(Display::Display &display,
 {
 	using namespace Display;
 
+	auto root = GetRoot();
+
+	root->NewChild<FillBox>(640, 720, 0xff00005f);
+
 	mainTypeCase = display.GetTypeCase({ "", 20, UiFont::BOLD });
 	mainTypeCase->Prepare("abcdefghijklmnopqrstuvxyz");
 }
