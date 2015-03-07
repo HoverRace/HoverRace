@@ -75,6 +75,7 @@ GlyphEntry &SdlTypeCase::AddGlyph(GlyphEntry &ent, const std::string &s)
 	TTF_Font *ttfFont = display.LoadTtfFont(font, false);
 	SDL_Color color = { 0xff, 0xff, 0xff, 0xff };
 	SDL_Surface *src = TTF_RenderUTF8_Blended(ttfFont, s.c_str(), color);
+	SDL_SetSurfaceBlendMode(src, SDL_BLENDMODE_NONE);
 	int w = src->w;
 	int h = src->h;
 
@@ -221,6 +222,7 @@ void SdlTypeCase::Render(const TypeLine &s, const Color cm, int x, int y)
 		if (!usedTextures[page]) {
 			SDL_SetTextureColorMod(texture, cm.bits.r, cm.bits.g, cm.bits.b);
 			SDL_SetTextureAlphaMod(texture, cm.bits.a);
+			SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 			usedTextures.set(page);
 		}
 
@@ -248,6 +250,7 @@ void SdlTypeCase::RenderTexture(MR_UInt32 idx, int x, int y, double scale)
 	SDL_Texture *texture = maps[idx]->Get();
 	SDL_SetTextureColorMod(texture, 0xff, 0xff, 0xff);
 	SDL_SetTextureAlphaMod(texture, 0xff);
+	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 
 	SDL_RenderCopy(renderer, texture, nullptr, &destRect);
 }
