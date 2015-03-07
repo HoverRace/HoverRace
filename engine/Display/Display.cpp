@@ -20,7 +20,8 @@
 // and limitations under the License.
 
 #include "../Util/Config.h"
-#include "../Util/Log.h"
+#include "../Util/Str.h"
+#include "../Util/Symbol.h"
 #include "TypeCase.h"
 
 #include "Display.h"
@@ -48,6 +49,17 @@ const std::string TYPE_CASE_INIT =
 	"\xc2\xbf"  // INVERTED QUESTION MARK
 	;
 
+// Symbols to initialize the symbol font TypeCase with.
+const wchar_t COMMON_SYMBOLS[] = {
+	Symbol::DOT_CIRCLE_O,
+	Symbol::CIRCLE_O,
+	Symbol::CHECK_SQUARE_O,
+	Symbol::SQUARE_O,
+	0
+};
+
+const std::string TYPE_CASE_SYMBOL_INIT((const char*)Str::WU(COMMON_SYMBOLS));
+
 }  // namespace
 
 std::shared_ptr<TypeCase> Display::GetTypeCase(const UiFont &font)
@@ -60,7 +72,14 @@ std::shared_ptr<TypeCase> Display::GetTypeCase(const UiFont &font)
 	}
 
 	auto retv = MakeTypeCase(font);
-	retv->Prepare(TYPE_CASE_INIT);
+
+	if (font.name == Config::GetInstance()->GetDefaultSymbolFontName()) {
+		retv->Prepare(TYPE_CASE_SYMBOL_INIT);
+	}
+	else {
+		retv->Prepare(TYPE_CASE_INIT);
+	}
+
 	typeCases.emplace_hint(iter, font, retv);
 	return retv;
 }
