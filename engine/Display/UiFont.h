@@ -84,7 +84,7 @@ struct MR_DllDeclare UiFont
 MR_DllDeclare inline bool operator==(const UiFont &a, const UiFont &b)
 {
 	return
-		a.size == b.size &&
+		static_cast<int>(a.size) == static_cast<int>(b.size) &&
 		a.style == b.style &&
 		a.name == b.name;
 }
