@@ -69,11 +69,9 @@ public:
 
 private:
 	void UpdateTexture();
-	void UpdateTextureColor();
 
 private:
 	std::unique_ptr<TypeLine> typeLine;
-	bool colorChanged;
 	int width;
 	int height;
 	double unscaledWidth;

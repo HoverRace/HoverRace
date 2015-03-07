@@ -39,7 +39,7 @@ namespace SDL {
 
 SdlSymbolIconView::SdlSymbolIconView(SdlDisplay &disp, SymbolIcon &model) :
 	SUPER(disp, model),
-	colorChanged(true), width(0), height(0)
+	width(0), height(0)
 {
 	uiScaleChangedConnection = disp.GetUiScaleChangedSignal().connect(
 		std::bind(&decltype(typeLine)::reset, &typeLine, nullptr));
@@ -52,10 +52,6 @@ SdlSymbolIconView::~SdlSymbolIconView()
 void SdlSymbolIconView::OnModelUpdate(int prop)
 {
 	switch (prop) {
-		case FillBox::Props::COLOR:
-			colorChanged = true;
-			break;
-
 		case FillBox::Props::SIZE:
 		case SymbolIcon::Props::SYMBOL:
 			typeLine.reset();
@@ -72,8 +68,6 @@ void SdlSymbolIconView::PrepareRender()
 {
 	if (!typeLine) {
 		UpdateTexture();
-	} else if (colorChanged) {
-		UpdateTextureColor();
 	}
 }
 
@@ -122,19 +116,6 @@ void SdlSymbolIconView::UpdateTexture()
 	// texture.
 	unscaledWidth = width / scale;
 	unscaledHeight = height / scale;
-
-	UpdateTextureColor();
-}
-
-void SdlSymbolIconView::UpdateTextureColor()
-{
-	/*TODO
-	const Color cm = model.GetColor();
-	SDL_SetTextureColorMod(texture->Get(), cm.bits.r, cm.bits.g, cm.bits.b);
-	SDL_SetTextureAlphaMod(texture->Get(), cm.bits.a);
-
-	colorChanged = false;
-	*/
 }
 
 }  // namespace SDL
