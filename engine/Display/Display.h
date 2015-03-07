@@ -249,6 +249,7 @@ private:
 	double uiScale;
 	Vec2 uiOffset;
 	Vec2 uiScreenSize;
+	std::unordered_map<UiFont, std::weak_ptr<TypeCase>> typeCases;
 	displayConfigChangedSignal_t displayConfigChangedSignal;
 	uiScaleChangedSignal_t uiScaleChangedSignal;
 

@@ -20,6 +20,7 @@
 // and limitations under the License.
 
 #include "../Util/Config.h"
+#include "../Util/Log.h"
 #include "TypeCase.h"
 
 #include "Display.h"
@@ -51,14 +52,16 @@ const std::string TYPE_CASE_INIT =
 
 std::shared_ptr<TypeCase> Display::GetTypeCase(const UiFont &font)
 {
-	UiFont normalizedFont = font;
-	normalizedFont.size = floor(font.size);
+	auto iter = typeCases.find(font);
+	if (iter != typeCases.end()) {
+		if (auto retv = iter->second.lock()) {
+			return retv;
+		}
+	}
 
-	//TODO: Cache instances.
-
-	auto retv = MakeTypeCase(normalizedFont);
+	auto retv = MakeTypeCase(font);
 	retv->Prepare(TYPE_CASE_INIT);
-
+	typeCases.emplace_hint(iter, font, retv);
 	return retv;
 }
 
