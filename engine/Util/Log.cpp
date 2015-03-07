@@ -40,6 +40,7 @@
 #include <SDL2/SDL_log.h>
 
 #include "Config.h"
+#include "Str.h"
 
 #include "Log.h"
 
@@ -51,6 +52,21 @@ namespace Log {
 logAdded_t logAddedSignal;
 
 namespace {
+
+#ifdef _WIN32
+// Backend similar to boost::log::sinks::basic_debug_output_backend that
+// properly converts our UTF-8 strings to wide strings.
+class WindowsDebugBackend :
+	public boost::log::sinks::basic_formatted_sink_backend<
+		char, boost::log::sinks::concurrent_feeding>
+{
+public:
+	void consume(const boost::log::record_view&, const string_type &msg)
+	{
+		OutputDebugStringW((const wchar_t*)Str::UW(msg));
+	}
+};
+#endif
 
 /**
  * Query if there is anybody listening to log events.
@@ -160,8 +176,7 @@ void AddWindowsDebugLog()
 	using namespace boost::log;
 	namespace expr = boost::log::expressions;
 
-	// Make sure we log using the wchar_t version.
-	typedef sinks::basic_debug_output_backend<wchar_t> backend_t;
+	typedef WindowsDebugBackend backend_t;
 	typedef sinks::synchronous_sink<backend_t> sink_t;
 	auto sink = boost::make_shared<sink_t>();
 	sink->set_filter(expr::is_debugger_present());
