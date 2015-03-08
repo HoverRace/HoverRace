@@ -20,6 +20,7 @@
 // and limitations under the License.
 
 #include "../Util/Config.h"
+#include "../Util/Log.h"
 #include "../Util/Str.h"
 #include "../Util/Symbol.h"
 #include "TypeCase.h"
@@ -69,6 +70,9 @@ std::shared_ptr<TypeCase> Display::GetTypeCase(const UiFont &font)
 		if (auto retv = iter->second.lock()) {
 			return retv;
 		}
+		else {
+			typeCases.erase(iter);
+		}
 	}
 
 	auto retv = MakeTypeCase(font);
@@ -80,7 +84,7 @@ std::shared_ptr<TypeCase> Display::GetTypeCase(const UiFont &font)
 		retv->Prepare(TYPE_CASE_INIT);
 	}
 
-	typeCases.emplace_hint(iter, font, retv);
+	typeCases.emplace(font, retv);
 	return retv;
 }
 
