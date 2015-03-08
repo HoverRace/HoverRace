@@ -56,6 +56,7 @@ SdlTypeCase::SdlTypeCase(SdlDisplay &display, const UiFont &font,
 
 SdlTypeCase::~SdlTypeCase()
 {
+	HR_LOG(debug) << "Type case [" << font << "] destroyed.";
 }
 
 MR_UInt32 SdlTypeCase::CountTextures() const
@@ -68,9 +69,11 @@ MR_UInt32 SdlTypeCase::CountTextures() const
  * Adds a glyph to the backing textures.
  * @param [in,out] ent The glyph entry to initialize.
  * @param s A single UTF-8 character.
+ * @param added Buffer of added glyphs.
  * @return The same glyph entry that was passed in.
  */
-GlyphEntry &SdlTypeCase::AddGlyph(GlyphEntry &ent, const std::string &s)
+GlyphEntry &SdlTypeCase::AddGlyph(GlyphEntry &ent, const std::string &s,
+	std::string &added)
 {
 	TTF_Font *ttfFont = display.LoadTtfFont(font, false);
 	SDL_Color color = { 0xff, 0xff, 0xff, 0xff };
@@ -131,6 +134,8 @@ GlyphEntry &SdlTypeCase::AddGlyph(GlyphEntry &ent, const std::string &s)
 
 	curX += w + 1;
 
+	added += s;
+
 	return ent;
 }
 
@@ -138,9 +143,11 @@ GlyphEntry &SdlTypeCase::AddGlyph(GlyphEntry &ent, const std::string &s)
  * Finds a glyph in the backing textures, creating it if necessary.
  * @param s A single UTF-8 character.
  * @param cp The Unicode code point represented by the character.
+ * @param added Buffer of added glyphs.
  * @return The entry for the glyph.
  */
-GlyphEntry &SdlTypeCase::FindGlyph(const std::string &s, MR_UInt32 cp)
+GlyphEntry &SdlTypeCase::FindGlyph(const std::string &s, MR_UInt32 cp,
+	std::string &added)
 {
 	if (cp > 65535) {
 		throw UnimplementedExn(boost::str(
@@ -156,7 +163,7 @@ GlyphEntry &SdlTypeCase::FindGlyph(const std::string &s, MR_UInt32 cp)
 	}
 	GlyphEntry &ent = (*page)[cp % 256];
 
-	return ent.IsInitialized() ? ent : AddGlyph(ent, s);
+	return ent.IsInitialized() ? ent : AddGlyph(ent, s, added);
 }
 
 void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
@@ -165,13 +172,14 @@ void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
 
 	std::string buf;
 
-	HR_LOG(debug) << "Preparing: " << s;
+	HR_LOG(trace) << "Preparing: " << s;
 
 	if (rects) {
 		rects->typeCase = shared_from_this();
 		rects->glyphs.clear();
 	}
 
+	std::string added;
 	auto prev = s.begin();
 	auto iter = prev;
 	auto end = s.end();
@@ -183,7 +191,7 @@ void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
 
 			HR_LOG(trace) << "Finding: " << cp;
 
-			auto &entry = FindGlyph(buf, cp);
+			auto &entry = FindGlyph(buf, cp, added);
 			if (rects) {
 				rects->glyphs.push_back(&entry);
 			}
@@ -201,6 +209,12 @@ void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
 	// order until we find one that didn't need updating.
 	for (auto iter = maps.rbegin(); iter != maps.rend(); ++iter) {
 		if (!(*iter)->Update()) break;
+	}
+
+	if (!added.empty()) {
+		HR_LOG(debug) << "Type case [" << font << "] added "
+			"[" << utf8::distance(added.cbegin(), added.cend()) << "] "
+			"glyphs: " << added;
 	}
 }
 

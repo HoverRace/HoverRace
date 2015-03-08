@@ -67,8 +67,10 @@ public:
 	MR_UInt32 CountTextures() const override;
 
 private:
-	GlyphEntry &AddGlyph(GlyphEntry &ent, const std::string &s);
-	GlyphEntry &FindGlyph(const std::string &s, MR_UInt32 cp);
+	GlyphEntry &AddGlyph(GlyphEntry &ent, const std::string &s,
+		std::string &added);
+	GlyphEntry &FindGlyph(const std::string &s, MR_UInt32 cp,
+		std::string &added);
 
 public:
 	void Prepare(const std::string &s, TypeLine *rects = nullptr) override;
