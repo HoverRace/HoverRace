@@ -1,7 +1,7 @@
 
 // Str.cpp
 //
-// Copyright (c) 2009, 2014 Michael Imamura.
+// Copyright (c) 2009, 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -98,8 +98,7 @@ wchar_t *Str::Utf8ToWide(const char *s)
 		Widen<sizeof(wchar_t)>(s, s + len, std::back_inserter(ws));
 	}
 	catch (utf8::exception &e) {
-		Log::Warn("UTF-8 to wide string failed: %s", e.what());
-		return wcsdup(L"<invalid UTF-8 string>");
+		HR_LOG(warning) << "UTF-8 to wide string failed: " << e.what();
 	}
 
 	return wcsdup(ws.c_str());
@@ -129,7 +128,7 @@ char *Str::WideToUtf8(const wchar_t *ws)
 		Narrow<sizeof(wchar_t)>(ws, ws + len, std::back_inserter(s));
 	}
 	catch (utf8::exception &e) {
-		Log::Warn("Wide string to UTF-8 failed: %s", e.what());
+		HR_LOG(warning) << "Wide string to UTF-8 failed: " << e.what();
 		return strdup("<invalid wide string>");
 	}
 
