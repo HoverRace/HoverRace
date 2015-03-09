@@ -750,7 +750,7 @@ TTF_Font *SdlDisplay::LoadTtfFont(const UiFont &font, bool uiScale)
 
 	const Config *cfg = Config::GetInstance();
 
-	// Scale the font size to match the DPI we use in SDL_Pango.
+	// Scale the font size to match the DPI we used in SDL_Pango.
 	// SDL_ttf always assumes a DPI of 75.
 	double dsize = font.size * 60.0;
 	if (uiScale) dsize *= cfg->video.textScale;
