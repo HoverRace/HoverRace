@@ -21,3 +21,11 @@
 *.PDF	 diff=astextplain
 *.rtf	 diff=astextplain
 *.RTF	 diff=astextplain
+
+# Overrides for GitHub Linguist.
+# https://github.com/github/linguist#overrides
+*.cpp linguist-language=C++
+*.h linguist-language=C++
+external/* linguist-vendored
+include/* linguist-vendored
+lib/* linguist-vendored
