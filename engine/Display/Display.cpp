@@ -88,6 +88,25 @@ std::shared_ptr<TypeCase> Display::GetTypeCase(const UiFont &font)
 	return retv;
 }
 
+/**
+ * Clean up the cache of TypeCase instances.
+ *
+ * This only should be called when the font rendering has changed in some way
+ * (e.g., the global font scale changes, a new style is loaded, etc.) that
+ * may cause many of the TypeCase instances to no longer be used.
+ */
+void Display::CleanTypeCaseCache()
+{
+	for (auto iter = typeCases.begin(); iter != typeCases.end();) {
+		if (iter->second.expired()) {
+			iter = typeCases.erase(iter);
+		}
+		else {
+			++iter;
+		}
+	}
+}
+
 void Display::OnDisplayConfigChanged()
 {
 	const auto &vidCfg = Config::GetInstance()->video;

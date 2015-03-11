@@ -96,6 +96,8 @@ public:
 	 */
 	std::shared_ptr<TypeCase> GetTypeCase(const UiFont &font);
 
+	void CleanTypeCaseCache();
+
 protected:
 	/**
 	 * Create a new TypeCase for a given font.
