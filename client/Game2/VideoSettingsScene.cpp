@@ -114,9 +114,10 @@ void VideoSettingsScene::OnOk()
 		origVideoCfg.fullscreenMonitorIndex != videoCfg.fullscreenMonitorIndex ||
 		origVideoCfg.xResFullscreen != videoCfg.xResFullscreen ||
 		origVideoCfg.yResFullscreen != videoCfg.yResFullscreen ||
-		origVideoCfg.fullscreenRefreshRate != videoCfg.fullscreenRefreshRate;
+		origVideoCfg.fullscreenRefreshRate != videoCfg.fullscreenRefreshRate ||
+		// Changing the text scale invalidates the TypeCase cache.
+		fabs(origVideoCfg.textScale - videoCfg.textScale) > 0.05;
 	const bool needsMainMenu =
-		fabs(origVideoCfg.textScale - videoCfg.textScale) > 0.05 ||
 		origVideoCfg.stackedSplitscreen != videoCfg.stackedSplitscreen;
 
 	if (needsSoftRestart) {
