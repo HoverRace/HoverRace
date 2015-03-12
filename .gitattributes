@@ -29,5 +29,6 @@
 external/* linguist-vendored
 include/* linguist-vendored
 lib/* linguist-vendored
+srcdoc/* linguist-documentation
 updater/bzlib/* linguist-vendored
 
