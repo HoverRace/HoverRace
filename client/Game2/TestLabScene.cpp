@@ -510,8 +510,10 @@ ClickablesModule::ClickablesModule(Display::Display &display, GameDirector &dire
 		display, "Disableable")->GetContents();
 	chk->SetChecked(true);
 	chk->SetEnabled(false);
+	auto toggleChkPtr = toggleChk.get();
+	auto chkPtr = chk.get();
 	toggleChk->GetClickedSignal().connect([=](ClickRegion&) {
-		chk->SetEnabled(toggleChk->IsChecked());
+		chkPtr->SetEnabled(toggleChkPtr->IsChecked());
 	});
 
 	slider = AddSlider(0, 100, 10);
