@@ -459,7 +459,7 @@ void TestLabScene::LabModule::Render()
 
 namespace Module {
 
-//{{{ ClickablesModule /////////////////////////////////////////////////////////////
+//{{{ ClickablesModule /////////////////////////////////////////////////////////
 
 ClickablesModule::ClickablesModule(Display::Display &display, GameDirector &director) :
 	SUPER(display, director, "Button"),
