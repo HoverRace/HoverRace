@@ -54,8 +54,10 @@ logAdded_t logAddedSignal;
 namespace {
 
 #ifdef _WIN32
-// Backend similar to boost::log::sinks::basic_debug_output_backend that
-// properly converts our UTF-8 strings to wide strings.
+/**
+ * Backend similar to boost::log::sinks::basic_debug_output_backend that
+ * properly converts our UTF-8 strings to wide strings.
+ */
 struct WindowsDebugBackend :
 	public boost::log::sinks::basic_formatted_sink_backend<
 		char, boost::log::sinks::concurrent_feeding>
