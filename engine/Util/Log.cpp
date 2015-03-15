@@ -178,8 +178,8 @@ void AddWindowsDebugLog()
 	using sink_t = sinks::synchronous_sink<WindowsDebugBackend>;
 	auto sink = boost::make_shared<sink_t>();
 	sink->set_filter(expr::is_debugger_present());
-	sink->set_formatter(expr::stream << L'[' << trivial::severity << L"] " <<
-		expr::message << L'\n');
+	sink->set_formatter(expr::stream << '[' << trivial::severity << "] " <<
+		expr::message << '\n');
 	core::get()->add_sink(sink);
 }
 #endif
