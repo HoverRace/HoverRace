@@ -133,13 +133,13 @@ void AddStreamLog()
 	using namespace boost::log;
 	namespace expr = boost::log::expressions;
 
-	typedef sinks::text_ostream_backend backend_t;
+	using backend_t = sinks::text_ostream_backend;
 	auto backend = boost::make_shared<backend_t>();
 	backend->add_stream(boost::shared_ptr<std::ostream>(
 		&std::clog, [](const void*){}));
 	backend->auto_flush(true);
 
-	typedef sinks::synchronous_sink<backend_t> sink_t;
+	using sink_t = sinks::synchronous_sink<backend_t>;
 	auto sink = boost::make_shared<sink_t>(backend);
 	sink->set_formatter(expr::stream << '[' << trivial::severity << "] " <<
 		expr::message);
@@ -154,10 +154,10 @@ void AddLogSignalLog()
 	using namespace boost::log;
 	namespace expr = boost::log::expressions;
 
-	typedef LogSignalSinkBackend backend_t;
+	using backend_t = LogSignalSinkBackend;
 	auto backend = boost::make_shared<backend_t>();
 
-	typedef sinks::synchronous_sink<backend_t> sink_t;
+	using sink_t = sinks::synchronous_sink<backend_t>;
 	auto sink = boost::make_shared<sink_t>(backend);
 	// Only fire the backend if there are any actual listeners.
 	// Using std::bind here to throw away the parameters since we don't use
