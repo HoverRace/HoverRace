@@ -20,6 +20,7 @@
 // and limitations under the License.
 
 #include "../Util/InspectMapNode.h"
+#include "../Util/Log.h"
 #include "../Util/Str.h"
 #include "ClassicObjStream.h"
 
@@ -296,7 +297,18 @@ bool ClassicRecordFile::BeginANewRecord()
 
 	fseek(fileStream, 0, SEEK_END);
 	curRecord = header->recordsUsed++;
-	header->recordList[curRecord] = ftell(fileStream);
+
+	auto pos = ftell(fileStream);
+	if (pos < 0) {
+		HR_LOG(error) << filename << ": " << OS::StrError(errno);
+		return false;
+	}
+	if (pos >= std::numeric_limits<MR_UInt32>::max()) {
+		HR_LOG(error) << filename << ": Too large!";
+		return false;
+	}
+
+	header->recordList[curRecord] = static_cast<MR_UInt32>(pos);
 
 	return true;
 }
