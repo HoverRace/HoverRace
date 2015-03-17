@@ -225,12 +225,20 @@ const char *TrackSpecParser::GetNextStrParam(const char *pDefault)
 	}
 
 	// Remove white space that could be the end of the line
-	for(int lCounter = strlen(mReturnBuffer) - 1; lCounter >= 0; lCounter--) {
-		if(mReturnBuffer[lCounter] == ' ') {
-			mReturnBuffer[lCounter] = 0;
-		}
-		else {
-			break;
+	size_t rsz = strlen(mReturnBuffer);
+	if (rsz > 0) {
+		size_t lCounter = rsz - 1;
+		for (;;) {
+			if (mReturnBuffer[lCounter] == ' ') {
+				mReturnBuffer[lCounter] = 0;
+			}
+
+			if (lCounter == 0) {
+				break;
+			}
+			else {
+				--lCounter;
+			}
 		}
 	}
 
