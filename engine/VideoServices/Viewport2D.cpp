@@ -1,5 +1,5 @@
+
 // Viewport2D.cpp
-//
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
@@ -114,10 +114,11 @@ void Viewport2D::Setup(VideoBuffer * pBuffer, int pX0, int pY0, int pSizeX, int 
 
 void Viewport2D::Clear(MR_UInt8 pColor)
 {
+	assert(mXRes >= 0);
 	MR_UInt8 *lBuffer = mBuffer;
 
 	for(int lCounter = 0; lCounter < mYRes; lCounter++) {
-		memset(lBuffer, pColor, mXRes);
+		memset(lBuffer, pColor, static_cast<size_t>(mXRes));
 		lBuffer += mLineLen;
 	}
 }
@@ -151,7 +152,9 @@ void Viewport2D::DrawHorizontalLine(int pY, int pX0, int pX1, MR_UInt8 pColor)
 				pX1 = mXRes - 1;
 			}
 
-			memset(mBuffer + mLineLen * pY + pX0, pColor, pX1 - pX0 + 1);
+			assert(pX1 >= pX0);
+			memset(mBuffer + mLineLen * pY + pX0, pColor,
+				static_cast<size_t>(pX1 - pX0 + 1));
 		}
 	}
 }

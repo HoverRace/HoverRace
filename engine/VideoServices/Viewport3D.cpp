@@ -1,5 +1,5 @@
+
 // Viewport3D.cpp
-//
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
@@ -287,11 +287,11 @@ void Viewport3D::ApplyPositionMatrix(const PositionMatrix & pMatrix, const MR_3D
 
 void Viewport3D::ClearZ()
 {
-
+	assert(mXRes >= 0);
 	MR_UInt16 *lZBuffer = mZBuffer;
 
 	for(int lCounter = 0; lCounter < mYRes; lCounter++) {
-		memset(lZBuffer, -1, 2 * mXRes);
+		memset(lZBuffer, -1, static_cast<size_t>(2 * mXRes));
 		lZBuffer += mZLineLen;
 	}
 }

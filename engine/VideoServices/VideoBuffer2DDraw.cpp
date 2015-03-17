@@ -1,5 +1,5 @@
+
 // VideoBuffer2DDraw.cpp
-//
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
@@ -54,7 +54,9 @@ void VideoBuffer::DrawHorizontalLine(int pY, int pX0, int pX1, MR_UInt8 pColor)
 				pX1 = width - 1;
 			}
 
-			memset(vbuf + pitch * pY + pX0, pColor, pX1 - pX0 + 1);
+			assert(pX1 >= pX0);
+			memset(vbuf + pitch * pY + pX0, pColor,
+				static_cast<size_t>(pX1 - pX0 + 1));
 		}
 	}
 
