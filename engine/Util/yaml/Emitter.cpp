@@ -319,12 +319,6 @@ void Emitter::Value(bool val)
 void Emitter::Value(int val)
 {
 	Value(boost::str(intFmt % val));
-	/*
-	char buf[256];
-	_snprintf(buf, 255, "%d", val);
-	buf[255] = 0;
-	Value(buf);
-	*/
 }
 
 /**
@@ -334,12 +328,6 @@ void Emitter::Value(int val)
 void Emitter::Value(double val)
 {
 	Value(boost::str(floatFmt % val));
-	/*
-	char buf[256];
-	_snprintf(buf, 255, "%g", val);
-	buf[255] = 0;
-	Value(buf);
-	*/
 }
 
 /**
