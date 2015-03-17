@@ -57,8 +57,7 @@ void ResShortSound::Serialize(Parcel::ObjStream &pArchive)
 	if(pArchive.IsWriting()) {
 		pArchive << mNbCopy;
 		pArchive << mDataLen;
-		pArchive.Write(mData, mDataLen);
-
+		pArchive.Write(mData, static_cast<size_t>(mDataLen));
 	}
 	else {
 		SoundServer::DeleteShortSound(mSound);
@@ -69,10 +68,15 @@ void ResShortSound::Serialize(Parcel::ObjStream &pArchive)
 
 		pArchive >> mNbCopy;
 		pArchive >> mDataLen;
+		if (mDataLen < 0) {
+			throw Parcel::ObjStreamExn(boost::str(boost::format(
+				"%s: Invalid short sound length: %d") %
+				pArchive.GetName() % mDataLen));
+		}
 
 		mData = new char[mDataLen];
 
-		pArchive.Read(mData, mDataLen);
+		pArchive.Read(mData, static_cast<size_t>(mDataLen));
 
 		mSound = SoundServer::CreateShortSound(mData, mNbCopy);
 
@@ -112,7 +116,7 @@ void ResContinuousSound::Serialize(Parcel::ObjStream &pArchive)
 	if(pArchive.IsWriting()) {
 		pArchive << mNbCopy;
 		pArchive << mDataLen;
-		pArchive.Write(mData, mDataLen);
+		pArchive.Write(mData, static_cast<size_t>(mDataLen));
 
 	}
 	else {
@@ -124,10 +128,15 @@ void ResContinuousSound::Serialize(Parcel::ObjStream &pArchive)
 
 		pArchive >> mNbCopy;
 		pArchive >> mDataLen;
+		if (mDataLen < 0) {
+			throw Parcel::ObjStreamExn(boost::str(boost::format(
+				"%s: Invalid continuous sound length: %d") %
+				pArchive.GetName() % mDataLen));
+		}
 
 		mData = new char[mDataLen];
 
-		pArchive.Read(mData, mDataLen);
+		pArchive.Read(mData, static_cast<size_t>(mDataLen));
 
 		mSound = SoundServer::CreateContinuousSound(mData, mNbCopy);
 
