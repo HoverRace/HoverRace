@@ -46,6 +46,10 @@ boost::format floatFmt("%g", stdLocale);
 
 const size_t MAX_STRING_LEN = 65536;
 
+// Arbitrary limit on the maximum buffer we'll emit.
+// This must be lower than numeric_limits<std::streamsize>::max().
+const size_t MAX_OUTPUT_BUFFER_SIZE = 16 * 1024 * 1024;
+
 }  // namespace
 
 /**
@@ -153,13 +157,27 @@ void Emitter::InitStream(bool versionDirective)
 int Emitter::OutputStreamHandler(void *data, unsigned char *buffer, size_t size)
 {
 	std::ostream *os = (std::ostream*)data;
-	os->write((const char*)buffer, size);
+
+	if (size > MAX_OUTPUT_BUFFER_SIZE) {
+		HR_LOG(warning) << "Output buffer size (" << size <<
+			") exceeds maximum (" << MAX_OUTPUT_BUFFER_SIZE << "); truncating.";
+		size = MAX_OUTPUT_BUFFER_SIZE;
+	}
+
+	os->write((const char*)buffer, static_cast<std::streamsize>(size));
 	return 1;
 }
 
 int Emitter::OutputStringHandler(void *data, unsigned char *buffer, size_t size)
 {
 	std::string *s = (std::string*)data;
+
+	if (size > MAX_OUTPUT_BUFFER_SIZE) {
+		HR_LOG(warning) << "Output buffer size (" << size <<
+			") exceeds maximum (" << MAX_OUTPUT_BUFFER_SIZE << "); truncating.";
+		size = MAX_OUTPUT_BUFFER_SIZE;
+	}
+
 	s->append((const char*)buffer, size);
 	return 1;
 }
