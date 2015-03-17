@@ -221,14 +221,14 @@ DWORD ClassicRecordFile::ComputeSum(const OS::path_t &filename)
 	FILE *lFile = OS::FOpen(filename, "rb");
 
 	if(lFile != NULL) {
-		int lDataLen = fread(lBuffer, 1, sizeof(lBuffer), lFile);
+		size_t lDataLen = fread(lBuffer, 1, sizeof(lBuffer), lFile);
 
 		if(lDataLen > 0) {
 			lDataLen /= sizeof(DWORD);
 
 			BOOL lSkippedDo = FALSE;
 
-			for(int lCounter = 0; lCounter < lDataLen; lCounter++) {
+			for(size_t lCounter = 0; lCounter < lDataLen; lCounter++) {
 				if(!lSkippedDo && (lBuffer[lCounter] == 0)) {
 					lSkippedDo = TRUE;
 					lCounter += 6;
