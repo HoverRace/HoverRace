@@ -33,6 +33,23 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace Parcel {
 
+namespace {
+
+/**
+ * Used internally to signal errors in ClassicRecordFileHeader.
+ */
+class ClassicRecordFileExn : public Exception
+{
+	using SUPER = Exception;
+
+public:
+	ClassicRecordFileExn() : SUPER() { }
+	ClassicRecordFileExn(const std::string &msg) : SUPER(msg) { }
+	virtual ~ClassicRecordFileExn() noexcept { }
+};
+
+}  // namespace
+
 class ClassicRecordFileHeader : public Util::Inspectable /*{{{*/
 {
 	using SUPER = Util::Inspectable;
@@ -111,8 +128,7 @@ void ClassicRecordFileHeader::Serialize(ObjStream &os)
 		if (title.find("HoverRace track file") == std::string::npos &&
 			title.find("Fireball object factory resource file") == std::string::npos)
 		{
-			//TODO: Log error.
-			ASSERT(FALSE);
+			throw ClassicRecordFileExn("Missing or corrupt header");
 		}
 		else {
 			if (recordsMax > 0) {
@@ -152,7 +168,12 @@ ClassicRecordFile::~ClassicRecordFile()
 		if (constructionMode) {
 			fseek(fileStream, 0, SEEK_SET);
 			ClassicObjStream objStream(fileStream, filename, true);
-			header->Serialize(objStream);
+			try {
+				header->Serialize(objStream);
+			}
+			catch (ClassicRecordFileExn &ex) {
+				HR_LOG(error) << filename << ": " << ex.what();
+			}
 		}
 
 		fclose(fileStream);
@@ -173,7 +194,13 @@ bool ClassicRecordFile::CreateForWrite(const Util::OS::path_t &filename,
 	ClassicObjStream objStream(fileStream, filename, true);
 	header = new ClassicRecordFileHeader(numRecords);
 	header->title = title;
-	header->Serialize(objStream);
+	try {
+		header->Serialize(objStream);
+	}
+	catch (ClassicRecordFileExn &ex) {
+		HR_LOG(error) << filename << ": " << ex.what();
+		return false;
+	}
 
 	constructionMode = true;
 
@@ -191,7 +218,13 @@ bool ClassicRecordFile::OpenForWrite(const Util::OS::path_t &filename)
 
 	ClassicObjStream objStream(fileStream, filename, false);
 	header = new ClassicRecordFileHeader();
-	header->Serialize(objStream);
+	try {
+		header->Serialize(objStream);
+	}
+	catch (ClassicRecordFileExn &ex) {
+		HR_LOG(error) << filename << ": " << ex.what();
+		return false;
+	}
 
 	if (header->recordList == NULL) { fclose(fileStream); return false; }
 
