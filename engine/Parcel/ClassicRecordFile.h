@@ -52,7 +52,7 @@ public:
 	ClassicRecordFile();
 	virtual ~ClassicRecordFile();
 
-	bool CreateForWrite(const Util::OS::path_t &filename, int numRecords,
+	bool CreateForWrite(const Util::OS::path_t &filename, MR_UInt32 numRecords,
 		const char *title = nullptr) override;
 	bool OpenForWrite(const Util::OS::path_t &filename) override;
 	bool OpenForRead(const Util::OS::path_t &filename,
@@ -65,8 +65,8 @@ public:
 
 	DWORD GetAlignMode() override;
 
-	int GetNbRecords() const override;
-	void SelectRecord(int i) override;
+	MR_UInt32 GetNbRecords() const override;
+	void SelectRecord(MR_UInt32 i) override;
 	bool BeginANewRecord() override;
 
 	void Inspect(Util::InspectMapNode &node) const override;
@@ -76,7 +76,7 @@ public:
 
 private:
 	bool constructionMode;
-	int curRecord;
+	MR_UInt32 curRecord;
 	ClassicRecordFileHeader *header;
 	FILE *fileStream;
 	Util::OS::path_t filename;

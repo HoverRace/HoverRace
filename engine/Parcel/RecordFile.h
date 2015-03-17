@@ -52,7 +52,7 @@ public:
 	virtual ~RecordFile() { }
 
 	virtual bool CreateForWrite(const Util::OS::path_t &filename,
-		int numRecords, const char *title = nullptr) = 0;
+		MR_UInt32 numRecords, const char *title = nullptr) = 0;
 	virtual bool OpenForWrite(const Util::OS::path_t &filename) = 0;
 	virtual bool OpenForRead(const Util::OS::path_t &filename,
 		bool validateChecksum = false) = 0;
@@ -62,8 +62,8 @@ public:
 
 	virtual DWORD GetAlignMode() = 0;
 
-	virtual int GetNbRecords() const = 0;
-	virtual void SelectRecord(int i) = 0;
+	virtual MR_UInt32 GetNbRecords() const = 0;
+	virtual void SelectRecord(MR_UInt32 i) = 0;
 	virtual bool BeginANewRecord() = 0;
 
 	/**

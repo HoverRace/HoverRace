@@ -140,7 +140,7 @@ void ClassicRecordFileHeader::Inspect(Util::InspectMapNode &node) const
 // ClassicRecordFile
 
 ClassicRecordFile::ClassicRecordFile() :
-	SUPER(), constructionMode(false), curRecord(-1), header(NULL)
+	SUPER(), constructionMode(false), curRecord(0), header(NULL)
 {
 }
 
@@ -159,7 +159,8 @@ ClassicRecordFile::~ClassicRecordFile()
 	}
 }
 
-bool ClassicRecordFile::CreateForWrite(const Util::OS::path_t &filename, int numRecords, const char *title)
+bool ClassicRecordFile::CreateForWrite(const Util::OS::path_t &filename,
+	MR_UInt32 numRecords, const char *title)
 {
 	if (header != NULL) return false;
 
@@ -262,12 +263,12 @@ DWORD ClassicRecordFile::GetAlignMode()
 	return (header != NULL && header->recordList != NULL) ? header->checksum : 0;
 }
 
-int ClassicRecordFile::GetNbRecords() const
+MR_UInt32 ClassicRecordFile::GetNbRecords() const
 {
 	return (header != NULL && header->recordList != NULL) ? header->recordsUsed : 0;
 }
 
-void ClassicRecordFile::SelectRecord(int i)
+void ClassicRecordFile::SelectRecord(MR_UInt32 i)
 {
 	if (header != NULL) {
 		if ((unsigned)i < header->recordsUsed) {
