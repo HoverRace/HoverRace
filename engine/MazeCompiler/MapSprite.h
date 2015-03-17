@@ -1,3 +1,4 @@
+
 // MapSprite.h
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
@@ -39,20 +40,20 @@ namespace MazeCompiler {
 
 class MR_DllDeclare MapSprite : public VideoServices::Sprite
 {
-	typedef VideoServices::Sprite SUPER;
-	protected:
-		int mXMin;
-		int mXMax;
-		int mYMin;
-		int mYMax;
+	using SUPER = VideoServices::Sprite;
 
-		void ComputeMinMax(Model::Level *pLevel);
-		void DrawMap(Model::Level *pLevel);
+protected:
+	int mXMin;
+	int mXMax;
+	int mYMin;
+	int mYMax;
 
-	public:
+	void ComputeMinMax(Model::Level *pLevel);
+	void DrawMap(Model::Level *pLevel);
 
-		BOOL CreateMap(Model::Level *pLevel, int &pX0, int &pY0, int &pX1, int &pY1);
-
+public:
+	BOOL CreateMap(Model::Level *pLevel,
+		int &pX0, int &pY0, int &pX1, int &pY1);
 };
 
 }  // namespace MazeCompiler
