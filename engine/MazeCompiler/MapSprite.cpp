@@ -20,6 +20,8 @@
 // and limitations under the License.
 //
 
+#include "../Exception.h"
+
 #include "MapSprite.h"
 
 using std::min;
@@ -90,7 +92,16 @@ void MapSprite::ComputeMinMax(Model::Level *pLevel)
 void MapSprite::DrawMap(Model::Level *pLevel)
 {
 	// Clr the map
-	memset(mData, 0, mTotalHeight * mWidth);
+	if (mTotalHeight <= 0) {
+		throw Exception(boost::str(
+			boost::format("Invalid map sprite total height: %d") %
+				mTotalHeight));
+	}
+	if (mWidth <= 0) {
+		throw Exception(boost::str(
+			boost::format("Invalid map sprite width: %d") % mWidth));
+	}
+	memset(mData, 0, static_cast<size_t>(mTotalHeight * mWidth));
 
 	// Do a kind of ray tracing
 	int lRoomCount = pLevel->GetRoomCount();
