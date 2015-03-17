@@ -1,8 +1,7 @@
 
 // RoomList.cpp
-// The server room list.
 //
-// Copyright (c) 2009 Michael Imamura.
+// Copyright (c) 2009, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -153,13 +152,24 @@ void RoomList::SetSelectedRoom(size_t index)
  */
 RoomList::Banner *RoomList::NextBanner()
 {
-	return (curBanner =
-		banners.empty() ? NULL : banners.at((++curBannerIdx) % banners.size()));
+	if (banners.empty()) {
+		curBanner = nullptr;
+	}
+	else {
+		curBanner = banners.at((++curBannerIdx) % banners.size());
+	}
+
+	return curBanner;
 }
 
 RoomList::Banner *RoomList::PeekNextBanner() const
 {
-	return banners.empty() ? NULL : banners.at((curBannerIdx + 1) % banners.size());
+	if (banners.empty()) {
+		return nullptr;
+	}
+	else {
+		return banners.at((curBannerIdx + 1) % banners.size());
+	}
 }
 
 std::istream &HoverRace::Client::operator>>(std::istream &in, RoomList::IpAddr &ip)
@@ -178,7 +188,7 @@ std::istream &HoverRace::Client::operator>>(std::istream &in, RoomList::IpAddr &
 	{
 		char c = *iter;
 		if (c >= '0' && c <= '9') {
-			nibble = (nibble * 10) + (c - '0');
+			nibble = (nibble * 10) + static_cast<unsigned>(c - '0');
 		}
 		else if (c == '.') {
 			i = (i << 8) + nibble;
