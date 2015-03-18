@@ -207,6 +207,7 @@ bool ClassicRecordFile::CreateForWrite(const Util::OS::path_t &filename,
 	}
 	catch (ClassicRecordFileExn &ex) {
 		HR_LOG(error) << filename << ": " << ex.what();
+		fclose(fileStream);
 		return false;
 	}
 
@@ -238,6 +239,7 @@ bool ClassicRecordFile::OpenForWrite(const Util::OS::path_t &filename)
 	}
 	catch (ClassicRecordFileExn &ex) {
 		HR_LOG(error) << filename << ": " << ex.what();
+		fclose(fileStream);
 		return false;
 	}
 
