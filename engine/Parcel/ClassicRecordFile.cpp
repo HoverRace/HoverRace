@@ -184,12 +184,20 @@ ClassicRecordFile::~ClassicRecordFile()
 bool ClassicRecordFile::CreateForWrite(const Util::OS::path_t &filename,
 	MR_UInt32 numRecords, const char *title)
 {
-	if (header != NULL) return false;
+	if (header) {
+		HR_LOG(error) << filename << ": "
+			"Cannot create for writing (already open).";
+		return false;
+	}
 
 	this->filename = filename;
 
 	fileStream = OS::FOpen(filename, "w+b");
-	if (fileStream == NULL) return false;
+	if (!fileStream) {
+		HR_LOG(error) << filename << ": Failed to open: " <<
+			OS::StrError(errno);
+		return false;
+	}
 
 	ClassicObjStream objStream(fileStream, filename, true);
 	header = new ClassicRecordFileHeader(numRecords);
@@ -209,12 +217,19 @@ bool ClassicRecordFile::CreateForWrite(const Util::OS::path_t &filename,
 
 bool ClassicRecordFile::OpenForWrite(const Util::OS::path_t &filename)
 {
-	if (header != NULL) return false;
+	if (header) {
+		HR_LOG(error) << filename << ": Cannot open (already open).";
+		return false;
+	}
 
 	this->filename = filename;
 
 	fileStream = OS::FOpen(filename, "r+b");
-	if (fileStream == NULL) return false;
+	if (!fileStream) {
+		HR_LOG(error) << filename << ": Failed to open: " <<
+			OS::StrError(errno);
+		return false;
+	}
 
 	ClassicObjStream objStream(fileStream, filename, false);
 	header = new ClassicRecordFileHeader();
@@ -226,7 +241,11 @@ bool ClassicRecordFile::OpenForWrite(const Util::OS::path_t &filename)
 		return false;
 	}
 
-	if (header->recordList == NULL) { fclose(fileStream); return false; }
+	if (!header->recordList) {
+		HR_LOG(error) << filename << ": Failed to read header or no records.";
+		fclose(fileStream);
+		return false;
+	}
 
 	curRecord = 0;
 
@@ -305,12 +324,13 @@ MR_UInt32 ClassicRecordFile::GetNbRecords() const
 void ClassicRecordFile::SelectRecord(MR_UInt32 i)
 {
 	if (header != NULL) {
-		if ((unsigned)i < header->recordsUsed) {
+		if (i < header->recordsUsed) {
 			curRecord = i;
 			fseek(fileStream, header->recordList[i], SEEK_SET);
 		}
 		else {
-			ASSERT(FALSE);
+			HR_LOG(error) << filename << "Invalid record (" << i << ") out of "
+				"allocated records (" << header->recordsUsed << ").";
 		}
 	}
 }
@@ -318,13 +338,13 @@ void ClassicRecordFile::SelectRecord(MR_UInt32 i)
 bool ClassicRecordFile::BeginANewRecord()
 {
 	if (header == NULL) {
-		ASSERT(FALSE);
+		HR_LOG(error) << filename << ": Not initialized for writing.";
 		return false;
 	}
 
 	if (header->recordsUsed >= header->recordsMax) {
-		// Exceeded preallocated record count.
-		ASSERT(FALSE);
+		HR_LOG(error) << filename << ": Exceeded preallocated record count: " <<
+			header->recordsMax;
 		return false;
 	}
 
