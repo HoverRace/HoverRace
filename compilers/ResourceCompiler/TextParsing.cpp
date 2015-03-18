@@ -1,3 +1,4 @@
+
 // TextParsing.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
@@ -87,7 +88,8 @@ const std::string MR_PreProcLine(const char *pLine)
 				case '\t':
 
 					if(lTokenStart) {
-						std::string key(lTokenStart, lPtr - lTokenStart);
+						std::string key(lTokenStart,
+							static_cast<size_t>(lPtr - lTokenStart));
 
 						lTokenStart = NULL;
 
