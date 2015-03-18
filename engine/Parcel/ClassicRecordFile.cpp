@@ -336,7 +336,7 @@ bool ClassicRecordFile::BeginANewRecord()
 		HR_LOG(error) << filename << ": " << OS::StrError(errno);
 		return false;
 	}
-	if (pos >= std::numeric_limits<MR_UInt32>::max()) {
+	if (static_cast<MR_UInt64>(pos) >= std::numeric_limits<MR_UInt32>::max()) {
 		HR_LOG(error) << filename << ": Too large!";
 		return false;
 	}
