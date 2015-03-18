@@ -143,7 +143,6 @@ void OS::SetLocale()
 	std::locale::global(locale);
 }
 
-#ifndef _WIN32
 /**
  * Convert an error number to a string.
  * @param errnum The error number, usually @c errno.
@@ -153,7 +152,6 @@ std::string OS::StrError(int errnum)
 {
 	return std::error_code(errnum, std::generic_category()).message();
 }
-#endif
 
 /**
  * Initialize the OS time source.
@@ -288,7 +286,7 @@ bool OS::OpenLink(const std::string &url)
 
 /**
  * Open a filesystem path.
- * 
+ *
  * Only directories may be opened; they will be opened using the native file
  * navigator.
  *

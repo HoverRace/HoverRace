@@ -66,9 +66,7 @@ struct MR_DllDeclare OS
 	static void SetEnv(const char *key, const char *val);
 	static void SetLocale();
 
-#	ifndef _WIN32
-		static std::string StrError(int errnum);
-#	endif
+	static std::string StrError(int errnum);
 
 	static void TimeInit();
 	static timestamp_t Time();
