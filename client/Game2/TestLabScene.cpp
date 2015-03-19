@@ -901,6 +901,7 @@ PickListModule::PickListModule(Display::Display &display, GameDirector &director
 	list->Add(5);
 	list->Add(6);
 	list->Add(7);
+	list->RequestFocus();
 
 	auto grid = root->NewChild<FlexGrid>(display);
 	grid->SetPos(300, 60);
