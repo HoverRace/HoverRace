@@ -131,6 +131,171 @@ protected:
 	};
 
 private:
+	/**
+	 * Gets the focused child widget.
+	 * @return The focused child, or @c nullptr if nothing is focused.
+	 */
+	UiViewModel *GetFocusedChild() const
+	{
+		return focusedItem ?
+			items[filteredItems[*focusedItem]].child.child.get() :
+			nullptr;
+	}
+
+public:
+	bool OnAction() override
+	{
+		if (auto focusedChild = GetFocusedChild()) {
+			return focusedChild->OnAction();
+		}
+		return false;
+	}
+
+	bool OnNavigate(const Control::Nav &nav) override
+	{
+		if (auto focusedChild = GetFocusedChild()) {
+			return focusedChild->OnNavigate(nav);
+		}
+		return false;
+	}
+
+protected:
+	void OnChildRequestedFocus(UiViewModel &child) override
+	{
+		if (!IsFocused()) {
+			RequestFocus();
+		}
+
+		if (IsFocused()) {
+			// Switch focus to the new child, if possible.
+			size_t oldFocusIdx = *focusedItem;
+			GetFocusedChild()->DropFocus();
+			focusedItem = boost::none;
+
+			// Find the index of the child.
+			for (auto i : filteredItems) {
+				if (items[i].child.child.get() == &child) {
+					focusedItem = boost::make_optional(i);
+					break;
+				}
+			}
+
+			if (!focusedItem || !child.TryFocus()) {
+				// The child that requested focus refused to take the focus, or
+				// the child was not one the filtered items.
+				// Either way, this shouldn't happen.
+				focusedItem = boost::none;
+				RelinquishFocus(Control::Nav::NEUTRAL);
+			}
+		}
+	}
+
+	void OnChildRelinquishedFocus(UiViewModel&,
+		const Control::Nav &nav) override
+	{
+		using Nav = Control::Nav;
+
+		size_t oldFocusIdx;
+		if (auto focusedChild = GetFocusedChild()) {
+			oldFocusIdx = *focusedItem;
+			focusedChild->DropFocus();
+			focusedItem = boost::none;
+		}
+		else {
+			RelinquishFocus(nav);
+			return;
+		}
+
+		auto dir = nav.AsDigital();
+		switch (dir) {
+			case Nav::NEUTRAL:
+			case Nav::LEFT:
+			case Nav::RIGHT:
+				RelinquishFocus(nav);
+				return;
+
+			case Nav::UP:
+			case Nav::PREV:
+				if (oldFocusIdx == 0) {
+					RelinquishFocus(nav);
+					return;
+				}
+				else {
+					focusedItem = boost::make_optional(oldFocusIdx - 1);
+					break;
+				}
+
+			case Nav::DOWN:
+			case Nav::NEXT:
+				if (oldFocusIdx == filteredItems.size() - 1) {
+					RelinquishFocus(nav);
+					return;
+				}
+				else {
+					focusedItem = boost::make_optional(oldFocusIdx + 1);
+				}
+				break;
+
+			default:
+				throw UnimplementedExn(boost::str(boost::format(
+					"PickList::OnChildRelinquishedFocus(%s)") % nav));
+		}
+
+		// All child widgets should be focusable, but check just in case.
+		if (!GetFocusedChild()->TryFocus()) {
+			focusedItem = boost::none;
+		}
+	}
+
+public:
+	bool TryFocus(const Control::Nav &nav = Control::Nav::NEUTRAL) override
+	{
+		using Nav = Control::Nav;
+
+		if (IsFocused()) return true;
+		if (!IsVisible()) return false;
+		if (filteredItems.empty()) return false;
+
+		auto dir = nav.AsDigital();
+		switch (dir) {
+			case Nav::NEUTRAL:
+			case Nav::RIGHT:
+			case Nav::DOWN:
+			case Nav::NEXT:
+				focusedItem = boost::make_optional<size_t>(0);
+				break;
+
+			case Nav::LEFT:
+			case Nav::UP:
+			case Nav::PREV:
+				focusedItem =
+					boost::make_optional<size_t>(filteredItems.size() - 1);
+				break;
+
+			default:
+				throw UnimplementedExn(boost::str(
+					boost::format("PickList::TryFocus: Unhandled: %s") % nav));
+		}
+
+		// All child widgets should be focusable, but check just in case.
+		if (!GetFocusedChild()->TryFocus()) {
+			focusedItem = boost::none;
+			return false;
+		}
+
+		return true;
+	}
+
+	void DropFocus() override
+	{
+		if (auto focusedChild = GetFocusedChild()) {
+			focusedChild->DropFocus();
+			focusedItem = boost::none;
+		}
+		SUPER::DropFocus();
+	}
+
+private:
 	void SetSelectedItem(DefaultItem *sel)
 	{
 		boost::optional<size_t> newSel = sel ?
@@ -286,6 +451,7 @@ private:
 	std::vector<ItemChild> items;
 	std::vector<size_t> filteredItems;  ///< Indexes of filtered items.
 	boost::optional<size_t> selItem;  ///< Index of selected item.
+	boost::optional<size_t> focusedItem;  ///< Filtered item index of focused.
 	valueChangedSignal_t valueChangedSignal;
 };
 
