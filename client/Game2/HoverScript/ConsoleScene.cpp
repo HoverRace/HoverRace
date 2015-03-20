@@ -373,7 +373,10 @@ void ConsoleScene::PrepareRender()
 	}
 
 	if (cursorOn) {
-		cursorLbl->SetPos(inputLbl->GetText().length() * charSize.x, 719);
+		double x =
+			static_cast<double>(inputLbl->GetText().length()) *
+			charSize.x;
+		cursorLbl->SetPos(x, 719);
 	}
 
 	inputLbl->PrepareRender();
