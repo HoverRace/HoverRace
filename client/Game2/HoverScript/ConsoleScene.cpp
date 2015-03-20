@@ -470,23 +470,29 @@ void ConsoleScene::LogLines::PrepareRender()
 	double y = 720.0 - charHeight;
 
 	num = 0;
-	for (auto iter = lines.rbegin() + pos;
-		iter != lines.rend() && y >= charHeight;
-		++iter, ++num, y -= charHeight)
-	{
+	auto iter = lines.rbegin();
+	std::advance(iter, pos);
+	while (iter != lines.rend() && y >= charHeight) {
 		Display::Label *lbl = *iter;
 		lbl->SetPos(0, y);
 		lbl->PrepareRender();
+
+		++iter;
+		++num;
+		y -= charHeight;
 	}
 }
 
 void ConsoleScene::LogLines::Render()
 {
 	unsigned int i = 0;
-	for (auto iter = lines.rbegin() + pos;
-		iter != lines.rend() && i < num; ++iter, ++i)
-	{
+	auto iter = lines.rbegin();
+	std::advance(iter, pos);
+	while (iter != lines.rend() && i < num) {
 		(*iter)->Render();
+
+		++iter;
+		++i;
 	}
 }
 
