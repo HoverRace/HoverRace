@@ -259,13 +259,13 @@ public:
 		auto dir = nav.AsDigital();
 		switch (dir) {
 			case Nav::NEUTRAL:
+			case Nav::LEFT:
 			case Nav::RIGHT:
 			case Nav::DOWN:
 			case Nav::NEXT:
 				focusedItem = boost::make_optional<size_t>(0);
 				break;
 
-			case Nav::LEFT:
 			case Nav::UP:
 			case Nav::PREV:
 				focusedItem =
