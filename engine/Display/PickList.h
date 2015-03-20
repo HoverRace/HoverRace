@@ -168,7 +168,6 @@ protected:
 
 		if (IsFocused()) {
 			// Switch focus to the new child, if possible.
-			size_t oldFocusIdx = *focusedItem;
 			GetFocusedChild()->DropFocus();
 			focusedItem = boost::none;
 
