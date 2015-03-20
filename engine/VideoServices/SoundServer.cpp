@@ -305,7 +305,8 @@ BOOL SoundBuffer::Init(const char *pData, int pNbCopy)
 		} else {
 			alGenSources(mNbCopy, mSoundBuffer);
 			for (int i = 0; i < mNbCopy; ++i) {
-				alSourcei(mSoundBuffer[i], AL_BUFFER, mBuffer);
+				alSourcei(mSoundBuffer[i], AL_BUFFER,
+					static_cast<ALint>(mBuffer));
 			}
 		}
 #	endif
