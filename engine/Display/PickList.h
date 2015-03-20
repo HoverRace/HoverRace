@@ -172,11 +172,13 @@ protected:
 			focusedItem = boost::none;
 
 			// Find the index of the child.
+			size_t fi = 0;
 			for (auto i : filteredItems) {
 				if (items[i].child.child.get() == &child) {
-					focusedItem = boost::make_optional(i);
+					focusedItem = boost::make_optional(fi);
 					break;
 				}
+				fi++;
 			}
 
 			if (focusedItem && !child.TryFocus()) {
