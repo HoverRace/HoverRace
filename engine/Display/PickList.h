@@ -180,11 +180,13 @@ protected:
 				}
 			}
 
-			if (!focusedItem || !child.TryFocus()) {
-				// The child that requested focus refused to take the focus, or
-				// the child was not one the filtered items.
-				// Either way, this shouldn't happen.
+			if (focusedItem && !child.TryFocus()) {
 				focusedItem = boost::none;
+			}
+			if (!focusedItem) {
+				// The child that requested focus refused to take the focus, or
+				// the child was not one of the filtered items.
+				// Either way, this shouldn't happen.
 				RelinquishFocus(Control::Nav::NEUTRAL);
 			}
 		}
@@ -200,6 +202,7 @@ protected:
 			oldFocusIdx = *focusedItem;
 			focusedChild->DropFocus();
 			focusedItem = boost::none;
+			SetFocused(false);
 		}
 		else {
 			RelinquishFocus(nav);
@@ -245,6 +248,9 @@ protected:
 		if (!GetFocusedChild()->TryFocus()) {
 			focusedItem = boost::none;
 		}
+		else {
+			SetFocused(true);
+		}
 	}
 
 public:
@@ -283,6 +289,7 @@ public:
 			return false;
 		}
 
+		SetFocused(true);
 		return true;
 	}
 
