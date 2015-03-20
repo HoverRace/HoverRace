@@ -1,7 +1,7 @@
 
 // ConsoleScene.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -68,8 +68,8 @@ private:
 
 	const Vec2 &charSize;
 	std::deque<Display::Label*> lines;
-	unsigned int pos;
-	unsigned int num;
+	size_t pos;
+	size_t num;
 
 	static const unsigned int MAX_LINES = 100;
 }; //}}}
@@ -219,7 +219,10 @@ void ConsoleScene::OnLogAdded(int idx)
 	}
 
 	if (idx > lastLogIdx) {
-		console.ReadLogs(lastLogIdx + 1, idx,
+		// Casts are safe since lastLogIdx can only be as low as -1.
+		console.ReadLogs(
+			static_cast<size_t>(lastLogIdx + 1),
+			static_cast<size_t>(idx),
 			std::bind(&ConsoleScene::AppendLogLine, this, std::placeholders::_1));
 	}
 }
@@ -364,7 +367,7 @@ void ConsoleScene::PrepareRender()
 	// in Layout(), then we need to read them now to catch up.
 	if (logsChanged) {
 		console.AddIntroLines();
-		console.ReadLogs(lastLogIdx + 1,
+		console.ReadLogs(static_cast<size_t>(lastLogIdx + 1),
 			std::bind(&ConsoleScene::AppendLogLine, this, std::placeholders::_1));
 		logsChanged = false;
 	}
@@ -414,15 +417,16 @@ void ConsoleScene::LogLines::Scroll(int i)
 			ScrollBottom();
 		}
 		else {
-			pos += i;
+			pos -= static_cast<size_t>(-i);
 		}
 	}
 	else if (lines.size() > num) {
-		if (pos + i > lines.size() - num) {
+		size_t ct = static_cast<size_t>(i);
+		if (pos + ct > lines.size() - num) {
 			ScrollTop();
 		}
 		else {
-			pos += i;
+			pos += ct;
 		}
 	}
 }
