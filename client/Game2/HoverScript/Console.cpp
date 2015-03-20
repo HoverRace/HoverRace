@@ -1,7 +1,7 @@
 
 // Console.cpp
 //
-// Copyright (c) 2009, 2014 Michael Imamura.
+// Copyright (c) 2009, 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -33,25 +33,27 @@ namespace HoverScript {
 
 class Console::LogStreamBuf : public std::stringbuf /*{{{*/
 {
-	typedef std::stringbuf SUPER;
-	public:
-		LogStreamBuf(Console *console);
-		virtual ~LogStreamBuf();
+	using SUPER = std::stringbuf;
 
-	protected:
-		virtual int sync();
+public:
+	LogStreamBuf(Console *console);
+	virtual ~LogStreamBuf();
 
-	private:
-		Console *console;
+protected:
+	virtual int sync();
+
+private:
+	Console *console;
 }; //}}}
 
 class Console::LogStream : public std::ostream /*{{{*/
 {
-	typedef std::ostream SUPER;
-	public:
-		LogStream(Console *console) :
-			SUPER(new LogStreamBuf(console)) { }
-		virtual ~LogStream() { delete rdbuf(); }
+	using SUPER = std::ostream;
+
+public:
+	LogStream(Console *console) :
+		SUPER(new LogStreamBuf(console)) { }
+	virtual ~LogStream() { delete rdbuf(); }
 }; //}}}
 
 Console::Console(Script::Core *scripting) :

@@ -1,7 +1,7 @@
 
 // Console.h
 //
-// Copyright (c) 2009, 2014 Michael Imamura.
+// Copyright (c) 2009, 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -44,50 +44,50 @@ namespace HoverScript {
  */
 class Console : public Script::Env, public Script::Help::HelpHandler
 {
-	typedef Script::Env SUPER;
+	using SUPER = Script::Env;
 
-	public:
-		Console(Script::Core *scripting);
-		virtual ~Console();
+public:
+	Console(Script::Core *scripting);
+	virtual ~Console();
 
-	protected:
-		virtual void InitEnv();
+protected:
+	virtual void InitEnv();
 
-	public:
-		virtual void Advance(Util::OS::timestamp_t tick) = 0;
+public:
+	virtual void Advance(Util::OS::timestamp_t tick) = 0;
 
-		void SubmitChunk(const std::string &s);
+	void SubmitChunk(const std::string &s);
 
-		/// Clear the console.
-		virtual void Clear() = 0;
+	/// Clear the console.
+	virtual void Clear() = 0;
 
-	protected:
-		virtual void LogInfo(const std::string &s) = 0;
-		virtual void LogError(const std::string &s) = 0;
+protected:
+	virtual void LogInfo(const std::string &s) = 0;
+	virtual void LogError(const std::string &s) = 0;
 
-	public:
-		enum class InputState {
-			COMMAND,
-			CONTINUE,
-		};
-		InputState GetInputState() const;
-	protected:
-		void SetInputState(InputState newState);
+public:
+	enum class InputState {
+		COMMAND,
+		CONTINUE,
+	};
+	InputState GetInputState() const;
+protected:
+	void SetInputState(InputState newState);
 
-	private:
-		static int LClear(lua_State *state);
-		/*
-		static int LReset(lua_State *state);
-		static int LSandbox(lua_State *state);
-		*/
+private:
+	static int LClear(lua_State *state);
+	/*
+	static int LReset(lua_State *state);
+	static int LSandbox(lua_State *state);
+	*/
 
-	private:
-		InputState inputState;
-		Script::Core::OutHandle outHandle;
-		std::string chunk;
+private:
+	InputState inputState;
+	Script::Core::OutHandle outHandle;
+	std::string chunk;
 
-		class LogStreamBuf;
-		class LogStream;
+	class LogStreamBuf;
+	class LogStream;
 };
 
 }  // namespace HoverScript
