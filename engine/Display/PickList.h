@@ -412,17 +412,49 @@ public:
 	template<class Fn>
 	void ApplyFilter(Fn fn)
 	{
+		auto prevFocusedChild = GetFocusedChild();
+		auto prevFocusedIdx = focusedItem;
+
+		bool foundFocusedChild = false;
 		filteredItems.clear();
 		size_t idx = 0;
 		for (auto &item : items) {
 			bool visible = item.child.visible = fn(item.item.GetValue());
 			if (visible) {
+				if (item.child.child.get() == prevFocusedChild) {
+					// Found the previously-focused child widget in the
+					// new filtered list; just update the index (the widget
+					// was already focused, so no need to TryFocus() it).
+					foundFocusedChild = true;
+					focusedItem = boost::make_optional(filteredItems.size());
+				}
 				filteredItems.push_back(idx);
 			}
 			else if (selItem && *selItem == idx) {
 				selItem = boost::none;
 			}
 			idx++;
+		}
+
+		if (prevFocusedChild && !foundFocusedChild) {
+			prevFocusedChild->DropFocus();
+			focusedItem = boost::none;
+
+			// An item was previously focused, but is no longer included
+			// in the filtered list.
+			if (filteredItems.empty()) {
+				RelinquishFocus(Control::Nav::NEUTRAL);
+			}
+			else {
+				// Move focus to another item.
+				focusedItem = boost::make_optional(
+					std::min(*focusedItem, filteredItems.size() - 1));
+				if (!GetFocusedChild()->TryFocus()) {
+					// Should never happen, but just in case...
+					focusedItem = boost::none;
+					SetFocused(false);
+				}
+			}
 		}
 
 		RequestLayout();
