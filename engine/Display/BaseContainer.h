@@ -226,6 +226,7 @@ private:
 			iter != children.rend(); ++iter)
 		{
 			auto &child = (*iter)->child;
+			if (!(*iter)->visible) continue;
 			oldOrigin = display.AddUiOrigin(child->GetPos());
 			bool retv = (child.get()->*F)(param);
 			display.SetUiOrigin(oldOrigin);
