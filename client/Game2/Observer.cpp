@@ -1111,7 +1111,8 @@ void Observer::RenderNormalDisplay(VideoServices::VideoBuffer * pDest, const Cli
 	}
 
 												  // rounded to 32 bit boundary for best performances
-	int lXMargin = (mXMargin_1024 * lXRes / 1024) & 0xFFFFFFFC;
+	int lXMargin = static_cast<int>(
+		static_cast<MR_UInt32>(mXMargin_1024 * lXRes / 1024) & 0xFFFFFFFCu);
 	int lYMargin = lYMargin_1024 * lYRes / 1024;
 
 	m3DView.Setup(pDest, lXOffset + lXMargin, lYOffset + lYMargin, lXRes - 2 * lXMargin, lYRes - 2 * lYMargin, mApperture);
