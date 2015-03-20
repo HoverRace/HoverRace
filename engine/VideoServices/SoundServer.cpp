@@ -2,7 +2,7 @@
 // SoundServer.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -280,7 +280,7 @@ BOOL SoundBuffer::Init(const char *pData, int pNbCopy)
 	const char *lSoundData = pData + sizeof(MR_UInt32);
 
 	// Temporary WAV format buffer to pass to ALUT.
-	int bufSize = 12 + (8 + 18) + (8 + lBufferLen);
+	MR_UInt32 bufSize = 12 + (8 + 18) + (8 + lBufferLen);
 	MR_UInt32 chunkSize = bufSize - 8;
 	char *buf = (char*)malloc(bufSize);
 	memcpy(buf, waveHeader, 12 + (8 + 18) + 8);
@@ -297,7 +297,8 @@ BOOL SoundBuffer::Init(const char *pData, int pNbCopy)
 			lReturnValue = FALSE;
 		}
 #	else
-		mBuffer = alutCreateBufferFromFileImage(buf, bufSize);
+		mBuffer = alutCreateBufferFromFileImage(buf,
+			static_cast<ALsizei>(bufSize));
 		if (mBuffer == AL_NONE) {
 			ASSERT(FALSE);
 			lReturnValue = FALSE;
