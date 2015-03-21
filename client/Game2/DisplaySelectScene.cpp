@@ -40,120 +40,46 @@ const int MIN_RES_H = 576;
 namespace HoverRace {
 namespace Client {
 
-namespace {
-
-/**
- * A column in the resolution selection grid.
- *
- * This base class represents the "Other" column for non-standard aspect ratios.
- *
- * @author Michael Imamura
- */
-class ResBucket
+class DisplaySelectScene::ResBucket
 {
-protected:
-	using Resolution = DisplaySelectScene::Resolution;
-
 public:
-	ResBucket(Display::Display &display, Display::FlexGrid &grid,
-		Display::RadioGroup<Resolution> &resGroup, size_t col) :
-		display(display), grid(grid), resGroup(resGroup), col(col), row(0) { }
-	ResBucket(const ResBucket&) = delete;
 	virtual ~ResBucket() { }
 
-	ResBucket &operator=(const ResBucket&) = delete;
-
-protected:
-	/**
-	 * Determine if a monitor resolution belongs to this column.
-	 * @param res The resolution.
-	 * @return @c true if the resolution matches, @c false otherwise.
-	 */
-	virtual bool Match(const Resolution &res)
-	{
-		HR_UNUSED(res);
-		return true;
-	}
-
-	/**
-	 * Generate the column heading.
-	 * @return The formatted title.
-	 */
-	virtual std::string FormatTitle() const { return _("Other"); }
-
 public:
-	/**
-	 * Try to add a resolution to the column.
-	 * @param res The resolution.
-	 * @return @c true if the resolution was added,
-	 *         @c false if it was ignored (belongs to another column).
-	 */
-	bool Add(const Resolution &res)
-	{
-		using namespace Display;
-		const auto &s = display.styles;
+	using Resolution = DisplaySelectScene::Resolution;
 
-		if (!Match(res)) return false;
-
-		// Add heading if necessary.
-		if (row == 0) {
-			grid.At(0, col).NewChild<Label>(
-				FormatTitle(), s.bodyHeadFont, s.bodyHeadFg);
-			row = 1;
-		}
-
-		std::ostringstream oss;
-		oss.imbue(OS::stdLocale);
-		oss << res.xRes << 'x' << res.yRes;
-		if (res.refreshRate > 0) {
-			oss << " (" << res.refreshRate << " Hz)";
-		}
-
-		resGroup.Add(
-			grid.At(row++, col).NewChild<RadioButton<Resolution>>(
-				display, oss.str(), res)->GetContents());
-
-		return true;
-	}
-
-private:
-	Display::Display &display;
-	Display::FlexGrid &grid;
-	Display::RadioGroup<Resolution> &resGroup;
-	size_t col;
-	size_t row;
+	virtual void FilterResList(Display::PickList<Resolution> *list) = 0;
 };
 
-/**
- * A column for a specific aspect ratio.
- * @author Michael Imamura
- */
-class AspectBucket : public ResBucket
+namespace {
+
+class AllBucket : public DisplaySelectScene::ResBucket
 {
-	using SUPER = ResBucket;
+public:
+	virtual ~AllBucket() { }
 
 public:
-	AspectBucket(Display::Display &display, Display::FlexGrid &grid,
-		Display::RadioGroup<Resolution> &resGroup, size_t col, int rx, int ry) :
-		SUPER(display, grid, resGroup, col), rx(rx), ry(ry) { }
-	AspectBucket(const AspectBucket&) = delete;
+	void FilterResList(Display::PickList<Resolution> *list) override
+	{
+		list->RemoveFilter();
+	}
+};
+
+class AspectBucket : public DisplaySelectScene::ResBucket
+{
+public:
+	AspectBucket(int rx, int ry) : rx(rx), ry(ry) { }
 	virtual ~AspectBucket() { }
 
 public:
-	bool Match(const Resolution &res) override
+	void FilterResList(Display::PickList<Resolution> *list) override
 	{
-		return
-			(res.xRes % rx) == 0 &&
-			(res.yRes % ry) == 0 &&
-			(res.xRes / rx) == (res.yRes / ry);
-	}
-
-	std::string FormatTitle() const override
-	{
-		std::ostringstream oss;
-		oss.imbue(OS::stdLocale);
-		oss << rx << ':' << ry;
-		return oss.str();
+		list->ApplyFilter([=](const Resolution &res) {
+			return
+				(res.xRes % rx) == 0 &&
+				(res.yRes % ry) == 0 &&
+				(res.xRes / rx) == (res.yRes / ry);
+		});
 	}
 
 private:
@@ -168,20 +94,17 @@ DisplaySelectScene::DisplaySelectScene(Display::Display &display,
 	int monitorIdx, int xRes, int yRes, int refreshRate) :
 	SUPER(display, director, JoinTitles(parentTitle, _("Select Resolution")),
 		"Display Select"),
-	reqRes(xRes, yRes, refreshRate),
-	monitorGroup()
+	reqRes(xRes, yRes, refreshRate)
 {
 	using namespace Display;
 	using Alignment = UiViewModel::Alignment;
 
-	SupportOkAction();
 	SupportCancelAction();
 
 	auto root = GetContentRoot();
 
-	auto monGrid = root->NewChild<FlexGrid>(display);
-	monGrid->SetPos(640, 0);
-	monGrid->SetAlignment(Alignment::N);
+	monitorList = root->NewChild<PickList<int>>(display, Vec2(260, 520));
+	monitorList->SetPos(40, 0);
 
 	int numMonitors = SDL_GetNumVideoDisplays();
 	if (numMonitors == 0) {
@@ -193,32 +116,51 @@ DisplaySelectScene::DisplaySelectScene(Display::Display &display,
 
 	for (int i = 0; i < numMonitors; i++) {
 		auto name = boost::str(boost::format(_("Monitor %d")) % (i + 1));
-
-		auto cell = monGrid->At(0, static_cast<size_t>(i))
-			.NewChild<RadioButton<int>>(display, name, i);
-		auto radio = cell->GetContents();
-		if (numMonitors == 1) {
-			radio->SetEnabled(false);
-		}
-		monitorGroup.Add(radio);
+		monitorList->Add(name, i);
 	}
-	monitorGroup.SetValue(monitorIdx);
+	monitorList->SetValue(monitorIdx);
 
 	if (numMonitors > 1) {
-		monitorConn = monitorGroup.GetValueChangedSignal().connect(std::bind(
+		monitorConn = monitorList->GetValueChangedSignal().connect(std::bind(
 			&DisplaySelectScene::UpdateResGrid, this));
 	}
+
+	bucketList = root->NewChild<PickList<std::shared_ptr<ResBucket>>>(
+		display, Vec2(260, 520));
+	auto allBucket = std::make_shared<AllBucket>();
+	bucketList->Add(_("All"), allBucket);
+	bucketList->Add("4:3", std::make_shared<AspectBucket>(4, 3));
+	bucketList->Add("16:9", std::make_shared<AspectBucket>(16, 9));
+	bucketList->Add("16:10", std::make_shared<AspectBucket>(16, 10));
+	bucketList->SetPos(320, 0);
+	bucketList->SetValue(allBucket);
+	bucketConn = bucketList->GetValueChangedSignal().connect(std::bind(
+		&DisplaySelectScene::FilterResGrid, this));
+
+	resList = root->NewChild<PickList<Resolution>>(display, Vec2(260, 520));
+	resList->SetPos(600, 0);
+
 	UpdateResGrid();
 }
 
 int DisplaySelectScene::GetMonitorIdx() const
 {
-	return monitorGroup.GetValue();
+	return *(monitorList->GetValue());
 }
 
 const DisplaySelectScene::Resolution &DisplaySelectScene::GetResolution() const
 {
-	return resGroup->GetValue();
+	return *(resList->GetValue());
+}
+
+/**
+ * Apply the selected filter to the resolution list.
+ */
+void DisplaySelectScene::FilterResGrid()
+{
+	if (auto bucket = bucketList->GetValue()) {
+		(*bucket)->FilterResList(resList.get());
+	}
 }
 
 void DisplaySelectScene::UpdateResGrid()
@@ -226,18 +168,9 @@ void DisplaySelectScene::UpdateResGrid()
 	using namespace Display;
 	using Alignment = UiViewModel::Alignment;
 
-	auto root = GetContentRoot();
+	resList->Clear();
 
-	if (resGrid) {
-		root->RemoveChild(resGrid);
-	}
-	resGrid = root->NewChild<FlexGrid>(display);
-	resGrid->SetPos(640, 60);
-	resGrid->SetAlignment(Alignment::N);
-
-	resGroup.reset(new RadioGroup<Resolution>());
-
-	int selMonitor = monitorGroup.GetValue();
+	int selMonitor = *(monitorList->GetValue());
 	int numRes = SDL_GetNumDisplayModes(selMonitor);
 	if (numRes == 0) {
 		throw Exception(boost::str(boost::format(
@@ -249,16 +182,7 @@ void DisplaySelectScene::UpdateResGrid()
 			SDL_GetError()));
 	}
 
-	std::vector<std::unique_ptr<ResBucket>> buckets;
-	size_t col = 0;
-	buckets.emplace_back(
-		new AspectBucket(display, *resGrid, *resGroup, col++, 4, 3));
-	buckets.emplace_back(
-		new AspectBucket(display, *resGrid, *resGroup, col++, 16, 9));
-	buckets.emplace_back(
-		new AspectBucket(display, *resGrid, *resGroup, col++, 16, 10));
-	buckets.emplace_back(
-		new ResBucket(display, *resGrid, *resGroup, col));
+	resList->Reserve(numRes);
 
 	for (int i = 0; i < numRes; i++) {
 		SDL_DisplayMode mode;
@@ -274,10 +198,17 @@ void DisplaySelectScene::UpdateResGrid()
 			continue;
 		}
 
-		for (auto &bucket : buckets) {
-			if (bucket->Add({ mode.w, mode.h, mode.refresh_rate })) break;
+		std::ostringstream oss;
+		oss.imbue(OS::stdLocale);
+		oss << mode.w << 'x' << mode.h;
+		if (mode.refresh_rate > 0) {
+			oss << " (" << mode.refresh_rate << " Hz)";
 		}
+
+		resList->Add(oss.str(), { mode.w, mode.h, mode.refresh_rate });
 	}
+
+	FilterResGrid();
 
 	// Find the closest match to the previous resolution.
 	SDL_DisplayMode reqMode;
@@ -288,7 +219,7 @@ void DisplaySelectScene::UpdateResGrid()
 	reqMode.driverdata = nullptr;
 	SDL_DisplayMode closest;
 	if (SDL_GetClosestDisplayMode(selMonitor, &reqMode, &closest) != nullptr) {
-		resGroup->SetValue({ closest.w, closest.h, closest.refresh_rate });
+		resList->SetValue({ closest.w, closest.h, closest.refresh_rate });
 	}
 }
 

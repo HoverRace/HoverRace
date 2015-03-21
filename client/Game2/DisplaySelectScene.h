@@ -1,7 +1,7 @@
 
 // DisplaySelectScene.h
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include "../../engine/Display/PickList.h"
 #include "../../engine/Display/RadioButton.h"
 
 #include "DialogScene.h"
@@ -70,10 +71,14 @@ public:
 	};
 
 public:
+	class ResBucket;
+
+public:
 	int GetMonitorIdx() const;
 	const Resolution &GetResolution() const;
 
 private:
+	void FilterResGrid();
 	void UpdateResGrid();
 
 public:
@@ -84,13 +89,14 @@ public:
 
 private:
 	Resolution reqRes;
-	Display::RadioGroup<int> monitorGroup;
-	std::unique_ptr<Display::RadioGroup<Resolution>> resGroup;
-	std::shared_ptr<Display::FlexGrid> resGrid;
+	std::shared_ptr<Display::PickList<int>> monitorList;
+	std::shared_ptr<Display::PickList<std::shared_ptr<ResBucket>>> bucketList;
+	std::shared_ptr<Display::PickList<Resolution>> resList;
 
 	okSignal_t okSignal;
 
 	boost::signals2::scoped_connection monitorConn;
+	boost::signals2::scoped_connection bucketConn;
 };
 
 }  // namespace Client
