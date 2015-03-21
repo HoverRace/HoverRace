@@ -431,6 +431,7 @@ public:
 				filteredItems.push_back(idx);
 			}
 			else if (selItem && *selItem == idx) {
+				items[*selItem].item.SetChecked(false);
 				selItem = boost::none;
 			}
 			idx++;
