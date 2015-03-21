@@ -460,6 +460,14 @@ public:
 		RequestLayout();
 	}
 
+	/**
+	 * Undo any applied filter (so all items are visible).
+	 */
+	void RemoveFilter()
+	{
+		ApplyFilter([](const T&){ return true; });
+	}
+
 	void Reserve(size_t capacity) override
 	{
 		SUPER::Reserve(capacity);
