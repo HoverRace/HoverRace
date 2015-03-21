@@ -371,11 +371,11 @@ public:
 		if (selItem != newSel) {
 			if (selItem) {
 				items[*selItem].item.SetChecked(false);
-				selItem = newSel;
 			}
 			if (newSel) {
 				items[*newSel].item.SetChecked(true);
 			}
+			selItem = newSel;
 		}
 	}
 
