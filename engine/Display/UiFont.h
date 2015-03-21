@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include "../Util/Hash.h"
 #include "../Util/SelFmt.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
@@ -118,22 +119,14 @@ namespace std {
 template<>
 struct hash<HoverRace::Display::UiFont>
 {
-private:
-	// Based on boost::hash_combine.
-	template<class T>
-	static void HashCombine(std::size_t &seed, const T &v)
-	{
-		std::hash<T> hasher;
-		seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-	}
-
-public:
 	std::size_t operator()(const HoverRace::Display::UiFont &font) const
 	{
+		using namespace HoverRace::Util;
+
 		std::size_t seed = 0;
-		HashCombine(seed, font.name);
-		HashCombine(seed, static_cast<int>(font.size));
-		HashCombine(seed, font.style);
+		Hash::Combine(seed, font.name);
+		Hash::Combine(seed, static_cast<int>(font.size));
+		Hash::Combine(seed, font.style);
 		return seed;
 	}
 };
