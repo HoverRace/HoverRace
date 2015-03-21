@@ -469,6 +469,22 @@ public:
 		ApplyFilter([](const T&){ return true; });
 	}
 
+	void Clear() override
+	{
+		if (focusedItem) {
+			RelinquishFocus(Control::Nav::NEUTRAL);
+		}
+		if (selItem) {
+			items[*selItem].item.SetChecked(false);
+			selItem = boost::none;
+		}
+
+		filteredItems.clear();
+		items.clear();
+
+		SUPER::Clear();
+	}
+
 	void Reserve(size_t capacity) override
 	{
 		SUPER::Reserve(capacity);
