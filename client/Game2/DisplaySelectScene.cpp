@@ -23,10 +23,13 @@
 
 #include "../../engine/Display/Button.h"
 #include "../../engine/Display/Container.h"
+#include "../../engine/Display/FillBox.h"
 #include "../../engine/Display/FlexGrid.h"
 #include "../../engine/Display/Label.h"
 #include "../../engine/Util/Log.h"
 #include "../../engine/Util/OS.h"
+
+#include "MessageScene.h"
 
 #include "DisplaySelectScene.h"
 
@@ -140,6 +143,25 @@ DisplaySelectScene::DisplaySelectScene(Display::Display &display,
 	resList = root->NewChild<PickList<Resolution>>(display, Vec2(260, 520));
 	resList->SetPos(600, 0);
 
+	auto infoBox = root->NewChild<FillBox>(360, 520, 0, 1, COLOR_WHITE);
+	infoBox->SetPos(880, 0);
+
+	auto goGrid = root->NewChild<FlexGrid>(display);
+	goGrid->SetPos(940, 340);
+	goGrid->SetFixedWidth(240);
+	goGrid->SetMargin(0, 20);
+	goGrid->GetColumnDefault(0).SetFill(true);
+
+	size_t r = 0;
+	testConn = goGrid->At(r++, 0).NewChild<Button>(display,
+		pgettext("Display Resolution", "Test"))->
+		GetContents()->GetClickedSignal().connect(
+			std::bind(&DisplaySelectScene::OnResTest, this));
+	confirmConn = goGrid->At(r++, 0).NewChild<Button>(display,
+		pgettext("Display Resolution", "Confirm"))->
+		GetContents()->GetClickedSignal().connect(
+			std::bind(&DisplaySelectScene::OnResConfirm, this));
+
 	UpdateResGrid();
 }
 
@@ -223,10 +245,18 @@ void DisplaySelectScene::UpdateResGrid()
 	}
 }
 
-void DisplaySelectScene::OnOk()
+void DisplaySelectScene::OnResTest()
 {
-	okSignal();
-	SUPER::OnOk();
+	director.RequestPushScene(
+		std::make_shared<MessageScene>(display, director,
+			"Test Resolution",
+			"This function is not implemented yet. :)"));
+}
+
+void DisplaySelectScene::OnResConfirm()
+{
+	confirmSignal();
+	director.RequestPopScene();
 }
 
 }  // namespace Client

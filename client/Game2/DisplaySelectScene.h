@@ -82,10 +82,11 @@ private:
 	void UpdateResGrid();
 
 public:
-	using okSignal_t = boost::signals2::signal<void()>;
-	okSignal_t &GetOkSignal() { return okSignal; }
+	void OnResTest();
+	void OnResConfirm();
 
-	void OnOk() override;
+	using confirmSignal_t = boost::signals2::signal<void()>;
+	confirmSignal_t &GetConfirmSignal() { return confirmSignal; }
 
 private:
 	Resolution reqRes;
@@ -93,10 +94,12 @@ private:
 	std::shared_ptr<Display::PickList<std::shared_ptr<ResBucket>>> bucketList;
 	std::shared_ptr<Display::PickList<Resolution>> resList;
 
-	okSignal_t okSignal;
+	confirmSignal_t confirmSignal;
 
 	boost::signals2::scoped_connection monitorConn;
 	boost::signals2::scoped_connection bucketConn;
+	boost::signals2::scoped_connection testConn;
+	boost::signals2::scoped_connection confirmConn;
 };
 
 }  // namespace Client
