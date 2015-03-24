@@ -285,6 +285,9 @@ public:
 	virtual ~PickListModule() { }
 
 private:
+	void LogValue();
+
+private:
 	std::shared_ptr<Display::PickList<int>> list;
 }; //}}}
 
@@ -890,9 +893,8 @@ PickListModule::PickListModule(Display::Display &display, GameDirector &director
 
 	list = root->NewChild<PickList<int>>(display, Vec2(200, 400));
 	list->SetPos(60, 60);
-	list->GetValueChangedSignal().connect([&]() {
-		HR_LOG(info) << "Selected value: " << *(list->GetValue());
-	});
+	list->GetValueChangedSignal().connect(
+		std::bind(&PickListModule::LogValue, this));
 	list->Reserve(7);
 	list->Add("1: Foo", 1);
 	list->Add("2: Bar", 2);
@@ -911,17 +913,15 @@ PickListModule::PickListModule(Display::Display &display, GameDirector &director
 
 	auto lp = list.get();
 	grid->At(r++, c).NewChild<Button>(display, "Log Value")->
-		GetContents()->GetClickedSignal().connect([=](ClickRegion&) {
-			if (auto val = lp->GetValue()) {
-				HR_LOG(info) << *val;
-			}
-			else {
-				HR_LOG(info) << "Nothing selected.";
-			}
-		});
+		GetContents()->GetClickedSignal().connect(
+			std::bind(&PickListModule::LogValue, this));
 	grid->At(r++, c).NewChild<Button>(display, "SetValue(5)")->
 		GetContents()->GetClickedSignal().connect([=](ClickRegion&) {
 			lp->SetValue(5);
+		});
+	grid->At(r++, c).NewChild<Button>(display, "Clear Selection")->
+		GetContents()->GetClickedSignal().connect([=](ClickRegion&) {
+			lp->ClearSelection();
 		});
 	grid->At(r++, c).NewChild<Button>(display, "Filter: All")->
 		GetContents()->GetClickedSignal().connect([=](ClickRegion&) {
@@ -935,6 +935,16 @@ PickListModule::PickListModule(Display::Display &display, GameDirector &director
 		GetContents()->GetClickedSignal().connect([=](ClickRegion&) {
 			lp->ApplyFilter([](int x) { return x % 2 == 1; });
 		});
+}
+
+void PickListModule::LogValue()
+{
+	if (auto val = list->GetValue()) {
+		HR_LOG(info) << *val;
+	}
+	else {
+		HR_LOG(info) << "Nothing selected.";
+	}
 }
 
 //}}} PickListModule
