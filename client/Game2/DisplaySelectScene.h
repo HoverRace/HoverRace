@@ -80,11 +80,12 @@ public:
 private:
 	void FilterResGrid();
 	void UpdateResGrid();
+	void UpdateConfirmButtons();
 
-public:
 	void OnResTest();
 	void OnResConfirm();
 
+public:
 	using confirmSignal_t = boost::signals2::signal<void()>;
 	confirmSignal_t &GetConfirmSignal() { return confirmSignal; }
 
@@ -93,11 +94,14 @@ private:
 	std::shared_ptr<Display::PickList<int>> monitorList;
 	std::shared_ptr<Display::PickList<std::shared_ptr<ResBucket>>> bucketList;
 	std::shared_ptr<Display::PickList<Resolution>> resList;
+	std::shared_ptr<Display::Button> testBtn;
+	std::shared_ptr<Display::Button> confirmBtn;
 
 	confirmSignal_t confirmSignal;
 
 	boost::signals2::scoped_connection monitorConn;
 	boost::signals2::scoped_connection bucketConn;
+	boost::signals2::scoped_connection resConn;
 	boost::signals2::scoped_connection testConn;
 	boost::signals2::scoped_connection confirmConn;
 };

@@ -153,14 +153,21 @@ DisplaySelectScene::DisplaySelectScene(Display::Display &display,
 	goGrid->GetColumnDefault(0).SetFill(true);
 
 	size_t r = 0;
-	testConn = goGrid->At(r++, 0).NewChild<Button>(display,
+
+	testBtn = goGrid->At(r++, 0).NewChild<Button>(display,
 		pgettext("Display Resolution", "Test"))->
-		GetContents()->GetClickedSignal().connect(
-			std::bind(&DisplaySelectScene::OnResTest, this));
-	confirmConn = goGrid->At(r++, 0).NewChild<Button>(display,
+		GetContents();
+	testConn = testBtn->GetClickedSignal().connect(
+		std::bind(&DisplaySelectScene::OnResTest, this));
+
+	confirmBtn = goGrid->At(r++, 0).NewChild<Button>(display,
 		pgettext("Display Resolution", "Confirm"))->
-		GetContents()->GetClickedSignal().connect(
-			std::bind(&DisplaySelectScene::OnResConfirm, this));
+		GetContents();
+	confirmConn = confirmBtn->GetClickedSignal().connect(
+		std::bind(&DisplaySelectScene::OnResConfirm, this));
+
+	resConn = resList->GetValueChangedSignal().connect(
+		std::bind(&DisplaySelectScene::UpdateConfirmButtons, this));
 
 	UpdateResGrid();
 }
@@ -243,6 +250,13 @@ void DisplaySelectScene::UpdateResGrid()
 	if (SDL_GetClosestDisplayMode(selMonitor, &reqMode, &closest) != nullptr) {
 		resList->SetValue({ closest.w, closest.h, closest.refresh_rate });
 	}
+}
+
+void DisplaySelectScene::UpdateConfirmButtons()
+{
+	bool resSelected = resList->HasSelected();
+	testBtn->SetEnabled(resSelected);
+	confirmBtn->SetEnabled(resSelected);
 }
 
 void DisplaySelectScene::OnResTest()
