@@ -375,6 +375,7 @@ public:
 				items[*newSel].item.SetChecked(true);
 			}
 			selItem = newSel;
+			valueChangedSignal();
 		}
 	}
 
@@ -427,6 +428,7 @@ public:
 		auto prevFocusedChild = GetFocusedChild();
 		auto prevFocusedIdx = focusedItem;
 
+		bool deselected = false;
 		bool foundFocusedChild = false;
 		filteredItems.clear();
 		size_t idx = 0;
@@ -445,6 +447,7 @@ public:
 			else if (selItem && *selItem == idx) {
 				items[*selItem].item.SetChecked(false);
 				selItem = boost::none;
+				deselected = true;
 			}
 			idx++;
 		}
@@ -470,6 +473,10 @@ public:
 		}
 
 		RequestLayout();
+
+		if (deselected) {
+			valueChangedSignal();
+		}
 	}
 
 	/**
@@ -485,15 +492,17 @@ public:
 		if (focusedItem) {
 			RelinquishFocus(Control::Nav::NEUTRAL);
 		}
-		if (selItem) {
-			items[*selItem].item.SetChecked(false);
-			selItem = boost::none;
-		}
 
 		filteredItems.clear();
 		items.clear();
 
 		SUPER::Clear();
+
+		if (selItem) {
+			// The selected item was removed, so no need to uncheck it :)
+			selItem = boost::none;
+			valueChangedSignal();
+		}
 	}
 
 	void Reserve(size_t capacity) override
