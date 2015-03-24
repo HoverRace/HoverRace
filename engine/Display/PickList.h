@@ -175,7 +175,7 @@ protected:
 			size_t fi = 0;
 			for (auto i : filteredItems) {
 				if (items[i].child.child.get() == &child) {
-					focusedItem = boost::make_optional(fi);
+					focusedItem = fi;
 					break;
 				}
 				fi++;
@@ -225,7 +225,7 @@ protected:
 					return;
 				}
 				else {
-					focusedItem = boost::make_optional(oldFocusIdx - 1);
+					focusedItem = oldFocusIdx - 1;
 					break;
 				}
 
@@ -236,7 +236,7 @@ protected:
 					return;
 				}
 				else {
-					focusedItem = boost::make_optional(oldFocusIdx + 1);
+					focusedItem = oldFocusIdx + 1;
 				}
 				break;
 
@@ -270,13 +270,12 @@ public:
 			case Nav::RIGHT:
 			case Nav::DOWN:
 			case Nav::NEXT:
-				focusedItem = boost::make_optional<size_t>(0);
+				focusedItem = 0;
 				break;
 
 			case Nav::UP:
 			case Nav::PREV:
-				focusedItem =
-					boost::make_optional<size_t>(filteredItems.size() - 1);
+				focusedItem = filteredItems.size() - 1;
 				break;
 
 			default:
@@ -363,7 +362,7 @@ public:
 		boost::optional<size_t> newSel;
 		for (auto idx : filteredItems) {
 			if (items[idx].item.GetValue() == val) {
-				newSel = boost::make_optional(idx);
+				newSel = idx;
 				break;
 			}
 		}
@@ -426,7 +425,7 @@ public:
 					// new filtered list; just update the index (the widget
 					// was already focused, so no need to TryFocus() it).
 					foundFocusedChild = true;
-					focusedItem = boost::make_optional(filteredItems.size());
+					focusedItem = filteredItems.size();
 				}
 				filteredItems.push_back(idx);
 			}
@@ -448,8 +447,7 @@ public:
 			}
 			else {
 				// Move focus to another item.
-				focusedItem = boost::make_optional(
-					std::min(*focusedItem, filteredItems.size() - 1));
+				focusedItem = std::min(*focusedItem, filteredItems.size() - 1);
 				if (!GetFocusedChild()->TryFocus()) {
 					// Should never happen, but just in case...
 					focusedItem = boost::none;
