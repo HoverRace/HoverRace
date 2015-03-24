@@ -536,8 +536,8 @@ protected:
 private:
 	std::vector<ItemChild> items;
 	std::vector<size_t> filteredItems;  ///< Indexes of filtered items.
-	boost::optional<size_t> selItem;  ///< Index of selected item.
-	boost::optional<size_t> focusedItem;  ///< Filtered item index of focused.
+	boost::optional<size_t> selItem;  ///< items index of selected.
+	boost::optional<size_t> focusedItem;  ///< filteredItems index of focused.
 	valueChangedSignal_t valueChangedSignal;
 };
 
