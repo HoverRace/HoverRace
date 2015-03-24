@@ -388,6 +388,19 @@ public:
 	}
 
 	/**
+	 * If an item is selected, unset the selection so that nothing is selected.
+	 */
+	void ClearSelection()
+	{
+		if (selItem) {
+			items[*selItem].item.SetChecked(false);
+			selItem = boost::none;
+
+			valueChangedSignal();
+		}
+	}
+
+	/**
 	 * Get the value of the selected item.
 	 * @return The value.
 	 */
