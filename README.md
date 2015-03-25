@@ -18,7 +18,7 @@ Features
 Portability
 -----------
 
-HoverRace currently runs on Windows (XP or later) and modern Linux distributions.  Other platforms including mobile may be supported in the future.
+HoverRace currently runs on Windows (7 or later) and modern Linux distributions.  Other platforms including mobile may be supported in the future.
 
 Links
 -----
