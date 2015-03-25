@@ -919,6 +919,10 @@ PickListModule::PickListModule(Display::Display &display, GameDirector &director
 		GetContents()->GetClickedSignal().connect([=](ClickRegion&) {
 			lp->SetValue(5);
 		});
+	grid->At(r++, c).NewChild<Button>(display, "SetIndex(1)")->
+		GetContents()->GetClickedSignal().connect([=](ClickRegion&) {
+			lp->SetIndex(1);
+		});
 	grid->At(r++, c).NewChild<Button>(display, "Clear Selection")->
 		GetContents()->GetClickedSignal().connect([=](ClickRegion&) {
 			lp->ClearSelection();
