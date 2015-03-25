@@ -346,6 +346,22 @@ public:
 		Add(boost::lexical_cast<std::string>(value), value);
 	}
 
+private:
+	void SetSelection(const boost::optional<size_t> &newSel)
+	{
+		if (selItem != newSel) {
+			if (selItem) {
+				items[*selItem].item.SetChecked(false);
+			}
+			if (newSel) {
+				items[*newSel].item.SetChecked(true);
+			}
+			selItem = newSel;
+			valueChangedSignal();
+		}
+	}
+
+public:
 	/**
 	 * Set the selected value.
 	 *
@@ -367,16 +383,25 @@ public:
 			}
 		}
 
-		if (selItem != newSel) {
-			if (selItem) {
-				items[*selItem].item.SetChecked(false);
-			}
-			if (newSel) {
-				items[*newSel].item.SetChecked(true);
-			}
-			selItem = newSel;
-			valueChangedSignal();
+		SetSelection(newSel);
+	}
+
+	/**
+	 * Select an item by index.
+	 *
+	 * If @p idx is out of range of the current list, then nothing will be
+	 * selected.
+	 *
+	 * @param idx The index of the current (filtered) list.
+	 */
+	void SetIndex(size_t idx)
+	{
+		boost::optional<size_t> newSel;
+		if (idx < filteredItems.size()) {
+			newSel = filteredItems[idx];
 		}
+
+		SetSelection(newSel);
 	}
 
 	/**
