@@ -203,7 +203,6 @@ protected:
 			oldFocusIdx = *focusedItem;
 			focusedChild->DropFocus();
 			focusedItem = boost::none;
-			SetFocused(false);
 		}
 		else {
 			RelinquishFocus(nav);
@@ -248,6 +247,7 @@ protected:
 		// All child widgets should be focusable, but check just in case.
 		if (!GetFocusedChild()->TryFocus()) {
 			focusedItem = boost::none;
+			SetFocused(false);
 		}
 		else {
 			SetFocused(true);
