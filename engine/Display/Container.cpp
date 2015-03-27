@@ -19,9 +19,11 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
-#include "../../engine/Exception.h"
+#include "../Exception.h"
 
 #include "Container.h"
+
+using namespace HoverRace::Util;
 
 namespace HoverRace {
 namespace Display {
