@@ -67,7 +67,7 @@ void Container::OnChildRelinquishedFocus(
 		if ((*iter)->child.get() == &child) break;
 	}
 	if (iter == children.end()) {
-		RelinquishFocus(Control::Nav(Control::Nav::NEUTRAL));
+		RelinquishFocus(Control::Nav::NEUTRAL);
 		return;
 	}
 
