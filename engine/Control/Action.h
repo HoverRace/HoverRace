@@ -73,22 +73,22 @@ struct Click {
 }  // namespace Mouse
 
 /// Signals which are self-contained (no payload).
-typedef boost::signals2::signal<void()> voidSignal_t;
+using voidSignal_t = boost::signals2::signal<void()>;
 
 /// Signals which have a single (action-dependent) payload.
-typedef boost::signals2::signal<void(int)> valueSignal_t;
+using valueSignal_t = boost::signals2::signal<void(int)>;
 
 /// Signals which have a single string payload.
-typedef boost::signals2::signal<void(const std::string&)> stringSignal_t;
+using stringSignal_t = boost::signals2::signal<void(const std::string&)>;
 
 /// Signals for text input control.
-typedef boost::signals2::signal<void(TextControl::key_t)> textControlSignal_t;
+using textControlSignal_t = boost::signals2::signal<void(TextControl::key_t)>;
 
 /// Signals with have a Vec2 payload.
-typedef boost::signals2::signal<void(const Vec2&)> vec2Signal_t;
+using vec2Signal_t = boost::signals2::signal<void(const Vec2&)>;
 
 /// Signals for mouse clicks.
-typedef boost::signals2::signal<void(const Mouse::Click&)> mouseClickSignal_t;
+using mouseClickSignal_t = boost::signals2::signal<void(const Mouse::Click&)>;
 
 template<class T, class Val>
 inline void PerformAction(const T&, Val)
@@ -160,7 +160,7 @@ template<class T, class Val=int>
 class Action : public ControlAction<Val>
 {
 	using SUPER = ControlAction<Val>;
-	
+
 public:
 	Action(const std::string &name, int listOrder) :
 		SUPER(name, listOrder), primaryTrigger(0) { }
