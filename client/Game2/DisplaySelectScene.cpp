@@ -122,6 +122,7 @@ DisplaySelectScene::DisplaySelectScene(Display::Display &display,
 		monitorList->Add(name, i);
 	}
 	monitorList->SetValue(monitorIdx);
+	monitorList->RequestFocus();
 
 	if (numMonitors > 1) {
 		monitorConn = monitorList->GetValueChangedSignal().connect(std::bind(
