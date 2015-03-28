@@ -214,11 +214,12 @@ protected:
 			case Nav::NEUTRAL:
 			case Nav::LEFT:
 			case Nav::RIGHT:
+			case Nav::PREV:
+			case Nav::NEXT:
 				RelinquishFocus(nav);
 				return;
 
 			case Nav::UP:
-			case Nav::PREV:
 				if (oldFocusIdx == 0) {
 					RelinquishFocus(nav);
 					return;
@@ -229,7 +230,6 @@ protected:
 				}
 
 			case Nav::DOWN:
-			case Nav::NEXT:
 				if (oldFocusIdx == filteredItems.size() - 1) {
 					RelinquishFocus(nav);
 					return;
@@ -270,11 +270,11 @@ public:
 			case Nav::RIGHT:
 			case Nav::DOWN:
 			case Nav::NEXT:
+			case Nav::PREV:
 				focusedItem = 0;
 				break;
 
 			case Nav::UP:
-			case Nav::PREV:
 				focusedItem = filteredItems.size() - 1;
 				break;
 
