@@ -939,6 +939,12 @@ PickListModule::PickListModule(Display::Display &display, GameDirector &director
 		GetContents()->GetClickedSignal().connect([=](ClickRegion&) {
 			lp->ApplyFilter([](int x) { return x % 2 == 1; });
 		});
+	grid->At(r++, c).NewChild<Button>(display, "Add 10 items")->
+		GetContents()->GetClickedSignal().connect([=](ClickRegion&) {
+			for (int i = 0; i < 10; i++) {
+				lp->Add(rand() % 1000);
+			}
+		});
 }
 
 void PickListModule::LogValue()
