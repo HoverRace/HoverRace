@@ -84,7 +84,7 @@ using stringSignal_t = boost::signals2::signal<void(const std::string&)>;
 /// Signals for text input control.
 using textControlSignal_t = boost::signals2::signal<void(TextControl::key_t)>;
 
-/// Signals with have a Vec2 payload.
+/// Signals which have a Vec2 payload.
 using vec2Signal_t = boost::signals2::signal<void(const Vec2&)>;
 
 /// Signals for mouse clicks.
