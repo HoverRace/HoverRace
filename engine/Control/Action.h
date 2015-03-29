@@ -70,6 +70,15 @@ struct Click {
 	button_t btn;
 };
 
+/// Mouse scroll events.
+struct Scroll
+{
+	Scroll(double x, double y, double dx, double dy) :
+		pos(x, y), motion(dx, dy) { }
+	Vec2 pos;
+	Vec2 motion;
+};
+
 }  // namespace Mouse
 
 /// Signals which are self-contained (no payload).
@@ -89,6 +98,9 @@ using vec2Signal_t = boost::signals2::signal<void(const Vec2&)>;
 
 /// Signals for mouse clicks.
 using mouseClickSignal_t = boost::signals2::signal<void(const Mouse::Click&)>;
+
+/// Signals for mouse scrolling.
+using mouseScrollSignal_t = boost::signals2::signal<void(const Mouse::Scroll&)>;
 
 template<class T, class Val>
 inline void PerformAction(const T&, Val)
@@ -143,6 +155,13 @@ inline void PerformAction<mouseClickSignal_t, const Mouse::Click&>(
 	const mouseClickSignal_t &signal, const Mouse::Click &vec)
 {
 	signal(vec);
+}
+
+template<>
+inline void PerformAction<mouseScrollSignal_t, const Mouse::Scroll&>(
+	const mouseScrollSignal_t &signal, const Mouse::Scroll &scroll)
+{
+	signal(scroll);
 }
 
 /**

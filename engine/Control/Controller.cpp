@@ -58,7 +58,7 @@ InputEventController::actions_t::ui_t::ui_t() :
 	mouseMoved(std::make_shared<Action<vec2Signal_t, const Vec2&>>("", 0)),
 	mousePressed(std::make_shared<Action<mouseClickSignal_t, const Mouse::Click&>>("", 0)),
 	mouseReleased(std::make_shared<Action<mouseClickSignal_t, const Mouse::Click&>>("", 0)),
-	mouseScrolled(std::make_shared<Action<vec2Signal_t, const Vec2&>>("", 0))
+	mouseScrolled(std::make_shared<Action<mouseScrollSignal_t, const Mouse::Scroll&>>("", 0))
 	{ }
 
 InputEventController::actions_t::sys_t::sys_t() :
@@ -75,7 +75,8 @@ InputEventController::actions_t::camera_t::camera_t() :
 
 InputEventController::InputEventController() :
 	activeMaps(0), nextAvailableDisabledHash(0),
-	captureNextInput(false), captureOldHash(0), captureMap()
+	captureNextInput(false), captureOldHash(0), captureMap(),
+	mousePos(0, 0)
 {
 	LoadConfig();
 	LoadCameraMap();
@@ -198,7 +199,13 @@ bool InputEventController::OnMouseMoved(const SDL_MouseMotionEvent& evt)
 	if (ay > 0)
 		HandleEvent(HashMouseAxisEvent(AXIS_Y, (y > 0) ? 1 : 0), ay);
 
-	(*actions.ui.mouseMoved)(Vec2(evt.x, evt.y));
+	// For some events (e.g. mouse wheel), we want to pass the mouse position
+	// but the SDL event doesn't pass it along.  So, we just keep track of the
+	// last recorded mouse position and use that.
+	mousePos.x = evt.x;
+	mousePos.y = evt.y;
+
+	(*actions.ui.mouseMoved)(mousePos);
 
 	return true;
 }
@@ -232,7 +239,7 @@ bool InputEventController::OnMouseWheel(const SDL_MouseWheelEvent &evt)
 	if (ay > 0)
 		HandleEvent(HashMouseAxisEvent(AXIS_WHEEL_Y, (y > 0) ? 1 : 0), ay);
 
-	(*actions.ui.mouseScrolled)(Vec2(x, y));
+	(*actions.ui.mouseScrolled)(Mouse::Scroll(mousePos.x, mousePos.y, x, y));
 
 	return true;
 }

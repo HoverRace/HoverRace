@@ -29,6 +29,7 @@ namespace HoverRace {
 	namespace Control {
 		namespace Mouse {
 			struct Click;
+			struct Scroll;
 		}
 	}
 	namespace Display {
@@ -60,7 +61,7 @@ private:
 	void OnMouseMoved(const Vec2 &pos);
 	void OnMousePressed(const Control::Mouse::Click &click);
 	void OnMouseReleased(const Control::Mouse::Click &click);
-	void OnMouseScrolled(const Vec2 &motion);
+	void OnMouseScrolled(const Control::Mouse::Scroll &scroll);
 
 protected:
 	Display::Container *GetRoot() const { return root.get(); }

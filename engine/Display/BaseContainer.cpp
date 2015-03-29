@@ -74,11 +74,12 @@ bool BaseContainer::OnMouseReleased(const Control::Mouse::Click &click)
 		&UiViewModel::OnMouseReleased>(click);
 }
 
-bool BaseContainer::OnMouseScrolled(const Vec2 &motion)
+bool BaseContainer::OnMouseScrolled(const Control::Mouse::Scroll &scroll)
 {
+	if (clip && !TestHit(scroll.pos)) return false;
 	return PropagateMouseEvent<
-		const Vec2&,
-		&UiViewModel::OnMouseScrolled>(motion);
+		const Control::Mouse::Scroll&,
+		&UiViewModel::OnMouseScrolled>(scroll);
 }
 
 /**

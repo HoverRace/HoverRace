@@ -81,9 +81,9 @@ void FormScene::OnMouseReleased(const Control::Mouse::Click &click)
 	root->OnMouseReleased(click);
 }
 
-void FormScene::OnMouseScrolled(const Vec2 &motion)
+void FormScene::OnMouseScrolled(const Control::Mouse::Scroll &scroll)
 {
-	root->OnMouseScrolled(motion);
+	root->OnMouseScrolled(scroll);
 }
 
 void FormScene::PrepareRender()

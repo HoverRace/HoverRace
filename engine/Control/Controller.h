@@ -138,6 +138,8 @@ public:
 	using Vec2ActionPtr = std::shared_ptr<Action<vec2Signal_t, const Vec2&>>;
 	using MouseClickActionPtr =
 		std::shared_ptr<Action<mouseClickSignal_t, const Mouse::Click&>>;
+	using MouseScrollActionPtr =
+		std::shared_ptr<Action<mouseScrollSignal_t, const Mouse::Scroll&>>;
 
 	// event handlers
 	bool OnKeyPressed(const SDL_KeyboardEvent &arg);
@@ -337,6 +339,8 @@ private:
 	int  captureOldHash; ///< stores the value of the hash we will be replacing when capturing input
 	std::string captureMap; ///< name of the map we are capturing for
 
+	Vec2 mousePos;  ///< Track most-recent mouse position for lookup later.
+
 public:
 	struct actions_t
 	{
@@ -370,7 +374,7 @@ public:
 			Vec2ActionPtr mouseMoved;
 			MouseClickActionPtr mousePressed;
 			MouseClickActionPtr mouseReleased;
-			Vec2ActionPtr mouseScrolled;
+			MouseScrollActionPtr mouseScrolled;
 		} ui;
 		struct sys_t
 		{
