@@ -156,12 +156,13 @@ inline void PerformAction<mouseClickSignal_t, const Mouse::Click&>(
  * @tparam Val The type of the value passed to the signal.
  * @author Michael Imamura
  */
-template<class T, class Val=int>
+template<class T, class Val = int>
 class Action : public ControlAction<Val>
 {
 	using SUPER = ControlAction<Val>;
 
 public:
+	Action() : SUPER(), primaryTrigger(0) { }
 	Action(const std::string &name, int listOrder) :
 		SUPER(name, listOrder), primaryTrigger(0) { }
 	virtual ~Action() { }

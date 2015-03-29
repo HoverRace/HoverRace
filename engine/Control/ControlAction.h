@@ -1,8 +1,8 @@
+
 // ControlAction.h
-// Define an action to be performed by a control.  This is essentially a functor,
-// and should be bound to a control.
 //
-// Copyright (c) 2010 Ryan Curtin
+// Copyright (c) 2010 Ryan Curtin.
+// Copyright (c) 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -22,8 +22,6 @@
 //
 
 #pragma once
-
-#include <string>
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
 #	ifdef MR_ENGINE
@@ -52,6 +50,7 @@ template<class T>
 class ControlAction
 {
 public:
+	ControlAction() : name(), listOrder(0) { }
 	ControlAction(const std::string &name, int listOrder) :
 		name(name), listOrder(listOrder) { }
 	virtual ~ControlAction() { }
@@ -74,9 +73,13 @@ using ControlActionPtr = std::shared_ptr<ControlAction<int>>;
  */
 class MR_DllDeclare BlankAction : public ControlAction<int>
 {
+	using SUPER = ControlAction<int>;
+
 public:
-	BlankAction(std::string name, int listOrder) :
-		ControlAction(name, listOrder) { }
+	BlankAction() : SUPER() { }
+	BlankAction(const std::string &name, int listOrder) :
+		SUPER(name, listOrder) { }
+	virtual ~BlankAction() { }
 
 	virtual void operator()(int) { }
 };
