@@ -370,6 +370,7 @@ public:
 			Vec2ActionPtr mouseMoved;
 			MouseClickActionPtr mousePressed;
 			MouseClickActionPtr mouseReleased;
+			Vec2ActionPtr mouseScrolled;
 		} ui;
 		struct sys_t
 		{

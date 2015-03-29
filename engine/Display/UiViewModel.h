@@ -96,6 +96,7 @@ public:
 	virtual bool OnMouseMoved(const Vec2&) { return false; }
 	virtual bool OnMousePressed(const Control::Mouse::Click&) { return false; }
 	virtual bool OnMouseReleased(const Control::Mouse::Click&) { return false; }
+	virtual bool OnMouseScrolled(const Vec2&) { return false; }
 	virtual bool OnAction() { return false; }
 	virtual bool OnNavigate(const Control::Nav&) { return false; }
 

@@ -1,7 +1,7 @@
 
 // FormScene.cpp
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -52,10 +52,13 @@ void FormScene::AttachController(Control::InputEventController &controller)
 		std::bind(&FormScene::OnMousePressed, this, std::placeholders::_1));
 	mouseReleasedConn = controller.actions.ui.mouseReleased->Connect(
 		std::bind(&FormScene::OnMouseReleased, this, std::placeholders::_1));
+	mouseScrolledConn = controller.actions.ui.mouseScrolled->Connect(
+		std::bind(&FormScene::OnMouseScrolled, this, std::placeholders::_1));
 }
 
 void FormScene::DetachController(Control::InputEventController &controller)
 {
+	mouseScrolledConn.disconnect();
 	mouseReleasedConn.disconnect();
 	mousePressedConn.disconnect();
 	mouseMovedConn.disconnect();
@@ -76,6 +79,11 @@ void FormScene::OnMousePressed(const Control::Mouse::Click &click)
 void FormScene::OnMouseReleased(const Control::Mouse::Click &click)
 {
 	root->OnMouseReleased(click);
+}
+
+void FormScene::OnMouseScrolled(const Vec2 &motion)
+{
+	root->OnMouseScrolled(motion);
 }
 
 void FormScene::PrepareRender()

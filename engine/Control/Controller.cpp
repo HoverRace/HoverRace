@@ -57,7 +57,8 @@ InputEventController::actions_t::ui_t::ui_t() :
 	control(std::make_shared<Action<textControlSignal_t, TextControl::key_t>>("", 0)),
 	mouseMoved(std::make_shared<Action<vec2Signal_t, const Vec2&>>("", 0)),
 	mousePressed(std::make_shared<Action<mouseClickSignal_t, const Mouse::Click&>>("", 0)),
-	mouseReleased(std::make_shared<Action<mouseClickSignal_t, const Mouse::Click&>>("", 0))
+	mouseReleased(std::make_shared<Action<mouseClickSignal_t, const Mouse::Click&>>("", 0)),
+	mouseScrolled(std::make_shared<Action<vec2Signal_t, const Vec2&>>("", 0))
 	{ }
 
 InputEventController::actions_t::sys_t::sys_t() :
@@ -97,6 +98,7 @@ void InputEventController::ProcessInputEvent(const SDL_Event &evt)
 		case SDL_MOUSEMOTION: OnMouseMoved(evt.motion); break;
 		case SDL_MOUSEBUTTONDOWN: OnMousePressed(evt.button); break;
 		case SDL_MOUSEBUTTONUP: OnMouseReleased(evt.button); break;
+		case SDL_MOUSEWHEEL: OnMouseWheel(evt.wheel); break;
 
 		default:
 			Log::Info("Unhandled input event type: %d", evt.type);
@@ -229,6 +231,8 @@ bool InputEventController::OnMouseWheel(const SDL_MouseWheelEvent &evt)
 		HandleEvent(HashMouseAxisEvent(AXIS_WHEEL_X, (x > 0) ? 1 : 0), ax);
 	if (ay > 0)
 		HandleEvent(HashMouseAxisEvent(AXIS_WHEEL_Y, (y > 0) ? 1 : 0), ay);
+
+	(*actions.ui.mouseScrolled)(Vec2(x, y));
 
 	return true;
 }

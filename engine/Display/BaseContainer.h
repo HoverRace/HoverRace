@@ -249,6 +249,10 @@ public:
 	{
 		return PropagateMouseEvent<const Control::Mouse::Click&, &UiViewModel::OnMouseReleased>(click);
 	}
+	bool OnMouseScrolled(const Vec2 &motion) override
+	{
+		return PropagateMouseEvent<const Vec2&, &UiViewModel::OnMouseScrolled>(motion);
+	}
 
 protected:
 	/**

@@ -60,6 +60,7 @@ private:
 	void OnMouseMoved(const Vec2 &pos);
 	void OnMousePressed(const Control::Mouse::Click &click);
 	void OnMouseReleased(const Control::Mouse::Click &click);
+	void OnMouseScrolled(const Vec2 &motion);
 
 protected:
 	Display::Container *GetRoot() const { return root.get(); }
@@ -76,6 +77,7 @@ private:
 	boost::signals2::connection mouseMovedConn;
 	boost::signals2::connection mousePressedConn;
 	boost::signals2::connection mouseReleasedConn;
+	boost::signals2::connection mouseScrolledConn;
 };
 
 }  // namespace Client
