@@ -90,6 +90,16 @@ protected:
 	 */
 	virtual boost::optional<size_t> FindChildIndex(const UiViewModel &child) const = 0;
 
+	/**
+	 * Set the selected item by index.
+	 *
+	 * The implementation should update the child widget state and trigger
+	 * the valueChanged signal.
+	 *
+	 * @param newSel The new selected index.
+	 */
+	virtual void SetSelection(const boost::optional<size_t> &newSel) = 0;
+
 public:
 	bool OnAction() override;
 	bool OnNavigate(const Control::Nav &nav) override;
@@ -102,6 +112,41 @@ protected:
 public:
 	bool TryFocus(const Control::Nav &nav = Control::Nav::NEUTRAL) override;
 	void DropFocus() override;
+
+	/**
+	 * Select an item by index.
+	 *
+	 * If @p idx is out of range of the current list, then nothing will be
+	 * selected.
+	 *
+	 * @param idx The index of the current (filtered) list.
+	 */
+	void SetIndex(size_t idx)
+	{
+		boost::optional<size_t> newSel;
+		if (idx < filteredItems.size()) {
+			newSel = filteredItems[idx];
+		}
+
+		SetSelection(newSel);
+	}
+
+	/**
+	 * Check if this list has a selected item.
+	 * @return @c true if an item is selected, @c false if not.
+	 */
+	bool HasSelected() const
+	{
+		return selItem;
+	}
+
+	/**
+	 * If an item is selected, unset the selection so that nothing is selected.
+	 */
+	void ClearSelection()
+	{
+		SetSelection(boost::none);
+	}
 
 public:
 	using valueChangedSignal_t = boost::signals2::signal<void()>;
@@ -209,6 +254,21 @@ protected:
 		return boost::none;
 	}
 
+protected:
+	void SetSelection(const boost::optional<size_t> &newSel) override
+	{
+		if (selItem != newSel) {
+			if (selItem) {
+				items[*selItem].item.SetChecked(false);
+			}
+			if (newSel) {
+				items[*newSel].item.SetChecked(true);
+			}
+			selItem = newSel;
+			valueChangedSignal();
+		}
+	}
+
 private:
 	void SetSelectedItem(DefaultItem *sel)
 	{
@@ -253,21 +313,6 @@ public:
 		Add(boost::lexical_cast<std::string>(value), value);
 	}
 
-private:
-	void SetSelection(const boost::optional<size_t> &newSel)
-	{
-		if (selItem != newSel) {
-			if (selItem) {
-				items[*selItem].item.SetChecked(false);
-			}
-			if (newSel) {
-				items[*newSel].item.SetChecked(true);
-			}
-			selItem = newSel;
-			valueChangedSignal();
-		}
-	}
-
 public:
 	/**
 	 * Set the selected value.
@@ -291,46 +336,6 @@ public:
 		}
 
 		SetSelection(newSel);
-	}
-
-	/**
-	 * Select an item by index.
-	 *
-	 * If @p idx is out of range of the current list, then nothing will be
-	 * selected.
-	 *
-	 * @param idx The index of the current (filtered) list.
-	 */
-	void SetIndex(size_t idx)
-	{
-		boost::optional<size_t> newSel;
-		if (idx < filteredItems.size()) {
-			newSel = filteredItems[idx];
-		}
-
-		SetSelection(newSel);
-	}
-
-	/**
-	 * Check if this list has a selected item.
-	 * @return @c true if an item is selected, @c false if not.
-	 */
-	bool HasSelected() const
-	{
-		return selItem;
-	}
-
-	/**
-	 * If an item is selected, unset the selection so that nothing is selected.
-	 */
-	void ClearSelection()
-	{
-		if (selItem) {
-			items[*selItem].item.SetChecked(false);
-			selItem = boost::none;
-
-			valueChangedSignal();
-		}
 	}
 
 	/**
