@@ -212,7 +212,7 @@ void DisplaySelectScene::UpdateResGrid()
 			SDL_GetError()));
 	}
 
-	resList->Reserve(numRes);
+	resList->Reserve(static_cast<size_t>(numRes));
 
 	for (int i = 0; i < numRes; i++) {
 		SDL_DisplayMode mode;
