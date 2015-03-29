@@ -67,7 +67,6 @@ private:
  * Scrollable list of selectable items.
  * @tparam T The type of the values held by the list items.
  * @todo Scrolling.
- * @todo Filtering.
  * @author Michael Imamura
  */
 template<class T>
