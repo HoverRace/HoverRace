@@ -19,6 +19,8 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
+#include "../Control/Action.h"
+
 #include "BaseContainer.h"
 
 namespace HoverRace {
@@ -46,6 +48,37 @@ BaseContainer::BaseContainer(Display &display, const Vec2 &size, bool clip,
 	SUPER(layoutFlags), display(display), size(size), clip(clip),
 	opacity(1.0), visible(true)
 {
+}
+
+bool BaseContainer::OnMouseMoved(const Vec2 &pos)
+{
+	if (clip && !TestHit(pos)) return false;
+	return PropagateMouseEvent<
+		const Vec2&,
+		&UiViewModel::OnMouseMoved>(pos);
+}
+
+bool BaseContainer::OnMousePressed(const Control::Mouse::Click &click)
+{
+	if (clip && !TestHit(click.pos)) return false;
+	return PropagateMouseEvent<
+		const Control::Mouse::Click&,
+		&UiViewModel::OnMousePressed>(click);
+}
+
+bool BaseContainer::OnMouseReleased(const Control::Mouse::Click &click)
+{
+	if (clip && !TestHit(click.pos)) return false;
+	return PropagateMouseEvent<
+		const Control::Mouse::Click&,
+		&UiViewModel::OnMouseReleased>(click);
+}
+
+bool BaseContainer::OnMouseScrolled(const Vec2 &motion)
+{
+	return PropagateMouseEvent<
+		const Vec2&,
+		&UiViewModel::OnMouseScrolled>(motion);
 }
 
 /**
@@ -93,13 +126,13 @@ void BaseContainer::SetClip(bool clip)
 
 /**
  * Set the opacity of the container.
- * 
+ *
  * The opacity is applied to the container as a whole; the container is first
  * rendered off-screen, then the opacity is applied when drawing the buffer
  * to the screen.
- * 
+ *
  * The value will be clamped to the range 0.0 to 1.0 inclusive.
- * 
+ *
  * @param opacity The opacity (1.0 is fully-opaque, 0.0 is fully-transparent).
  */
 void BaseContainer::SetOpacity(double opacity)
@@ -123,6 +156,22 @@ void BaseContainer::SetVisible(bool visible)
 		this->visible = visible;
 		FireModelUpdate(Props::VISIBLE);
 	}
+}
+
+/**
+ * Check if the coordinates of an event are within the bounds of this component.
+ * @param pos The screen-space position.
+ * @return true if the test passes, false if the test fails.
+ */
+bool BaseContainer::TestHit(const Vec2 &pos)
+{
+	// We assume that the view has made the screen-space bounds available.
+	Vec2 boundsPos = GetView()->GetScreenPos();
+	Vec2 boundsSize = GetView()->GetScreenSize();
+	return pos.x >= boundsPos.x &&
+		pos.y >= boundsPos.y &&
+		(pos.x < boundsPos.x + boundsSize.x) &&
+		(pos.y < boundsPos.y + boundsSize.y);
 }
 
 }  // namespace Display

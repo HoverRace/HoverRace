@@ -62,11 +62,18 @@ public:
 	void OnModelUpdate(int prop) override;
 
 public:
+	// Note: These are only calculated if the container is clipping so that
+	//       we can check if coordinate are inside the bounds.
+	Vec2 GetScreenPos() const override { return screenPos; }
+	Vec2 GetScreenSize() const override { return screenSize; }
+
 	Vec3 Measure() override;
 	void PrepareRender() override;
 	void Render() override;
 
 private:
+	Vec2 screenPos;
+	Vec2 screenSize;
 	bool rttChanged;  ///< Render-to-texture may need to be re-evaluated.
 	bool rttSizeChanged;
 	std::unique_ptr<SdlTexture> rttTarget;

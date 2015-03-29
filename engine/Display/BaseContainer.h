@@ -237,22 +237,10 @@ private:
 	}
 
 public:
-	bool OnMouseMoved(const Vec2 &pos) override
-	{
-		return PropagateMouseEvent<const Vec2&, &UiViewModel::OnMouseMoved>(pos);
-	}
-	bool OnMousePressed(const Control::Mouse::Click &click) override
-	{
-		return PropagateMouseEvent<const Control::Mouse::Click&, &UiViewModel::OnMousePressed>(click);
-	}
-	bool OnMouseReleased(const Control::Mouse::Click &click) override
-	{
-		return PropagateMouseEvent<const Control::Mouse::Click&, &UiViewModel::OnMouseReleased>(click);
-	}
-	bool OnMouseScrolled(const Vec2 &motion) override
-	{
-		return PropagateMouseEvent<const Vec2&, &UiViewModel::OnMouseScrolled>(motion);
-	}
+	bool OnMouseMoved(const Vec2 &pos) override;
+	bool OnMousePressed(const Control::Mouse::Click &click) override;
+	bool OnMouseReleased(const Control::Mouse::Click &click) override;
+	bool OnMouseScrolled(const Vec2 &motion) override;
 
 protected:
 	/**
@@ -341,6 +329,9 @@ protected:
 
 public:
 	Vec3 Measure() override { return size.Promote(); }
+
+protected:
+	bool TestHit(const Vec2 &pos);
 
 protected:
 	Display &display;

@@ -33,7 +33,9 @@ namespace SDL {
 
 SdlBaseContainerView::SdlBaseContainerView(SdlDisplay &disp,
 	BaseContainer &model) :
-	SUPER(disp, model), rttChanged(true), rttSizeChanged(true)
+	SUPER(disp, model),
+	screenPos(0, 0), screenSize(0, 0),
+	rttChanged(true), rttSizeChanged(true)
 {
 	displayConfigChangedConn =
 		disp.GetDisplayConfigChangedSignal().connect([&](int, int) {
@@ -130,6 +132,10 @@ void SdlBaseContainerView::Render()
 			w *= uiScale;
 			h *= uiScale;
 		}
+
+		screenPos = pos;
+		screenSize.x = w;
+		screenSize.y = h;
 
 		SDL_RenderGetClipRect(renderer, &oldClip);
 		SDL_Rect ourClip = {
