@@ -29,6 +29,8 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace Display {
 
+//{{{ PickListItem /////////////////////////////////////////////////////////////
+
 PickListItem::PickListItem(Display &display, const std::string &text,
 	uiLayoutFlags_t layoutFlags) :
 	SUPER(display, text, layoutFlags)
@@ -63,5 +65,184 @@ void PickListItem::InitIcon(bool enabled, bool checked)
 	SetStateIcon(enabled, checked, icon);
 }
 
-}  // namespace Display
+//}}} PickListItem
+
+//{{{ BasePickList /////////////////////////////////////////////////////////////
+
+BasePickList::BasePickList(Display &display, const Vec2 &size,
+	uiLayoutFlags_t layoutFlags) :
+	SUPER(display, size, true, layoutFlags),
+	listHeight(0)
+{
+}
+
+bool BasePickList::OnAction()
+{
+	if (auto focusedChild = GetFocusedChild()) {
+		return focusedChild->OnAction();
+	}
+	return false;
+}
+
+bool BasePickList::OnNavigate(const Control::Nav &nav)
+{
+	if (auto focusedChild = GetFocusedChild()) {
+		return focusedChild->OnNavigate(nav);
+	}
+	return false;
+}
+
+void BasePickList::OnChildRequestedFocus(UiViewModel &child)
+{
+	if (!IsFocused()) {
+		RequestFocus();
+	}
+
+	if (IsFocused()) {
+		// Switch focus to the new child, if possible.
+		GetFocusedChild()->DropFocus();
+		focusedItem = FindChildIndex(child);
+
+		if (focusedItem && !child.TryFocus()) {
+			focusedItem = boost::none;
+		}
+		if (!focusedItem) {
+			// The child that requested focus refused to take the focus, or
+			// the child was not one of the filtered items.
+			// Either way, this shouldn't happen.
+			RelinquishFocus(Control::Nav::NEUTRAL);
+		}
+	}
+}
+
+void BasePickList::OnChildRelinquishedFocus(UiViewModel&,
+	const Control::Nav &nav)
+{
+	using Nav = Control::Nav;
+
+	size_t oldFocusIdx;
+	if (auto focusedChild = GetFocusedChild()) {
+		oldFocusIdx = *focusedItem;
+		focusedChild->DropFocus();
+		focusedItem = boost::none;
+	}
+	else {
+		RelinquishFocus(nav);
+		return;
+	}
+
+	auto dir = nav.AsDigital();
+	switch (dir) {
+		case Nav::NEUTRAL:
+		case Nav::LEFT:
+		case Nav::RIGHT:
+		case Nav::PREV:
+		case Nav::NEXT:
+			RelinquishFocus(nav);
+			return;
+
+		case Nav::UP:
+			if (oldFocusIdx == 0) {
+				RelinquishFocus(nav);
+				return;
+			}
+			else {
+				focusedItem = oldFocusIdx - 1;
+				break;
+			}
+
+		case Nav::DOWN:
+			if (oldFocusIdx == filteredItems.size() - 1) {
+				RelinquishFocus(nav);
+				return;
+			}
+			else {
+				focusedItem = oldFocusIdx + 1;
+			}
+			break;
+
+		default:
+			throw UnimplementedExn(boost::str(boost::format(
+				"PickList::OnChildRelinquishedFocus(%s)") % nav));
+	}
+
+	// All child widgets should be focusable, but check just in case.
+	if (!GetFocusedChild()->TryFocus()) {
+		focusedItem = boost::none;
+		SetFocused(false);
+	}
+	else {
+		SetFocused(true);
+	}
+}
+
+
+bool BasePickList::TryFocus(const Control::Nav &nav)
+{
+	using Nav = Control::Nav;
+
+	if (IsFocused()) return true;
+	if (!IsVisible()) return false;
+	if (filteredItems.empty()) return false;
+
+	auto dir = nav.AsDigital();
+	switch (dir) {
+		case Nav::NEUTRAL:
+		case Nav::LEFT:
+		case Nav::RIGHT:
+		case Nav::DOWN:
+		case Nav::NEXT:
+		case Nav::PREV:
+			focusedItem = 0;
+			break;
+
+		case Nav::UP:
+			focusedItem = filteredItems.size() - 1;
+			break;
+
+		default:
+			throw UnimplementedExn(boost::str(
+				boost::format("PickList::TryFocus: Unhandled: %s") % nav));
+	}
+
+	// All child widgets should be focusable, but check just in case.
+	if (!GetFocusedChild()->TryFocus()) {
+		focusedItem = boost::none;
+		return false;
+	}
+
+	SetFocused(true);
+	return true;
+}
+
+void BasePickList::DropFocus()
+{
+	if (auto focusedChild = GetFocusedChild()) {
+		focusedChild->DropFocus();
+		focusedItem = boost::none;
+	}
+	SUPER::DropFocus();
+}
+
+void BasePickList::Layout()
+{
+	double cx = 0;
+	double w = GetSize().x;
+
+	ForEachVisibleChild([&](const std::shared_ptr<UiViewModel> &model) {
+		auto item = static_cast<PickListItem*>(model.get());
+
+		auto size = item->Measure();
+		item->SetSize(w, size.y);
+		item->SetPos(0, cx);
+
+		cx += size.y;
+	});
+
+	listHeight = cx;
+}
+
+//}}} BasePickList
+
+}   ///< namespace Display
 }  // namespace HoverRace

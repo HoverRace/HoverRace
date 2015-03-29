@@ -64,21 +64,75 @@ private:
 };
 
 /**
+ * Generic base for PickList.
+ * @author Michael
+ */
+class BasePickList : public BaseContainer
+{
+	using SUPER = BaseContainer;
+
+public:
+	BasePickList(Display &display, const Vec2 &size,
+		uiLayoutFlags_t layoutFlags = 0);
+	virtual ~BasePickList() { }
+
+protected:
+	/**
+	 * Get the focused child widget.
+	 * @return The focused child, or @c nullptr if nothing is focused.
+	 */
+	virtual UiViewModel *GetFocusedChild() const = 0;
+
+	/**
+	 * Search for the index of the given child widget.
+	 * @param child The child widget.
+	 * @return The found child index, if the widget was found.
+	 */
+	virtual boost::optional<size_t> FindChildIndex(const UiViewModel &child) const = 0;
+
+public:
+	bool OnAction() override;
+	bool OnNavigate(const Control::Nav &nav) override;
+
+protected:
+	void OnChildRequestedFocus(UiViewModel &child) override;
+	void OnChildRelinquishedFocus(UiViewModel&,
+		const Control::Nav &nav) override;
+
+public:
+	bool TryFocus(const Control::Nav &nav = Control::Nav::NEUTRAL) override;
+	void DropFocus() override;
+
+public:
+	using valueChangedSignal_t = boost::signals2::signal<void()>;
+	valueChangedSignal_t &GetValueChangedSignal() { return valueChangedSignal; }
+
+protected:
+	void Layout() override;
+
+protected:
+	std::vector<size_t> filteredItems;  ///< Indexes of filtered items.
+	boost::optional<size_t> selItem;  ///< items index of selected.
+	boost::optional<size_t> focusedItem;  ///< filteredItems index of focused.
+	double listHeight;
+	valueChangedSignal_t valueChangedSignal;
+};
+
+/**
  * Scrollable list of selectable items.
  * @tparam T The type of the values held by the list items.
  * @todo Scrolling.
  * @author Michael Imamura
  */
 template<class T>
-class PickList : public BaseContainer
+class PickList : public BasePickList
 {
-	using SUPER = BaseContainer;
+	using SUPER = BasePickList;
 
 public:
 	PickList(Display &display, const Vec2 &size,
 		uiLayoutFlags_t layoutFlags = 0) :
-		SUPER(display, size, true, layoutFlags),
-		selItem(), focusedItem(), listHeight(0) { }
+		SUPER(display, size, layoutFlags) { }
 	virtual ~PickList() { }
 
 protected:
@@ -130,176 +184,29 @@ protected:
 		DefaultItem &item;
 	};
 
-private:
-	/**
-	 * Gets the focused child widget.
-	 * @return The focused child, or @c nullptr if nothing is focused.
-	 */
-	UiViewModel *GetFocusedChild() const
+protected:
+	UiViewModel *GetFocusedChild() const override
 	{
 		return focusedItem ?
 			items[filteredItems[*focusedItem]].child.child.get() :
 			nullptr;
 	}
 
-public:
-	bool OnAction() override
+	boost::optional<size_t> FindChildIndex(const UiViewModel &child) const override
 	{
-		if (auto focusedChild = GetFocusedChild()) {
-			return focusedChild->OnAction();
-		}
-		return false;
-	}
+		// Currently using a simple linear search.
+		// If this gets prohibitive later due to the number of child elements,
+		// we'll need to rethink this.
 
-	bool OnNavigate(const Control::Nav &nav) override
-	{
-		if (auto focusedChild = GetFocusedChild()) {
-			return focusedChild->OnNavigate(nav);
-		}
-		return false;
-	}
-
-protected:
-	void OnChildRequestedFocus(UiViewModel &child) override
-	{
-		if (!IsFocused()) {
-			RequestFocus();
-		}
-
-		if (IsFocused()) {
-			// Switch focus to the new child, if possible.
-			GetFocusedChild()->DropFocus();
-			focusedItem = boost::none;
-
-			// Find the index of the child.
-			size_t fi = 0;
-			for (auto i : filteredItems) {
-				if (items[i].child.child.get() == &child) {
-					focusedItem = fi;
-					break;
-				}
-				fi++;
+		size_t fi = 0;
+		for (auto i : filteredItems) {
+			if (items[i].child.child.get() == &child) {
+				return fi;
 			}
-
-			if (focusedItem && !child.TryFocus()) {
-				focusedItem = boost::none;
-			}
-			if (!focusedItem) {
-				// The child that requested focus refused to take the focus, or
-				// the child was not one of the filtered items.
-				// Either way, this shouldn't happen.
-				RelinquishFocus(Control::Nav::NEUTRAL);
-			}
-		}
-	}
-
-	void OnChildRelinquishedFocus(UiViewModel&,
-		const Control::Nav &nav) override
-	{
-		using Nav = Control::Nav;
-
-		size_t oldFocusIdx;
-		if (auto focusedChild = GetFocusedChild()) {
-			oldFocusIdx = *focusedItem;
-			focusedChild->DropFocus();
-			focusedItem = boost::none;
-		}
-		else {
-			RelinquishFocus(nav);
-			return;
+			fi++;
 		}
 
-		auto dir = nav.AsDigital();
-		switch (dir) {
-			case Nav::NEUTRAL:
-			case Nav::LEFT:
-			case Nav::RIGHT:
-			case Nav::PREV:
-			case Nav::NEXT:
-				RelinquishFocus(nav);
-				return;
-
-			case Nav::UP:
-				if (oldFocusIdx == 0) {
-					RelinquishFocus(nav);
-					return;
-				}
-				else {
-					focusedItem = oldFocusIdx - 1;
-					break;
-				}
-
-			case Nav::DOWN:
-				if (oldFocusIdx == filteredItems.size() - 1) {
-					RelinquishFocus(nav);
-					return;
-				}
-				else {
-					focusedItem = oldFocusIdx + 1;
-				}
-				break;
-
-			default:
-				throw UnimplementedExn(boost::str(boost::format(
-					"PickList::OnChildRelinquishedFocus(%s)") % nav));
-		}
-
-		// All child widgets should be focusable, but check just in case.
-		if (!GetFocusedChild()->TryFocus()) {
-			focusedItem = boost::none;
-			SetFocused(false);
-		}
-		else {
-			SetFocused(true);
-		}
-	}
-
-public:
-	bool TryFocus(const Control::Nav &nav = Control::Nav::NEUTRAL) override
-	{
-		using Nav = Control::Nav;
-
-		if (IsFocused()) return true;
-		if (!IsVisible()) return false;
-		if (filteredItems.empty()) return false;
-
-		auto dir = nav.AsDigital();
-		switch (dir) {
-			case Nav::NEUTRAL:
-			case Nav::LEFT:
-			case Nav::RIGHT:
-			case Nav::DOWN:
-			case Nav::NEXT:
-			case Nav::PREV:
-				focusedItem = 0;
-				break;
-
-			case Nav::UP:
-				focusedItem = filteredItems.size() - 1;
-				break;
-
-			default:
-				throw UnimplementedExn(boost::str(
-					boost::format("PickList::TryFocus: Unhandled: %s") % nav));
-		}
-
-		// All child widgets should be focusable, but check just in case.
-		if (!GetFocusedChild()->TryFocus()) {
-			focusedItem = boost::none;
-			return false;
-		}
-
-		SetFocused(true);
-		return true;
-	}
-
-	void DropFocus() override
-	{
-		if (auto focusedChild = GetFocusedChild()) {
-			focusedChild->DropFocus();
-			focusedItem = boost::none;
-		}
-		SUPER::DropFocus();
+		return boost::none;
 	}
 
 private:
@@ -410,7 +317,7 @@ public:
 	 */
 	bool HasSelected() const
 	{
-		return selItem != nullptr;
+		return selItem;
 	}
 
 	/**
@@ -537,36 +444,8 @@ public:
 		filteredItems.reserve(capacity);
 	}
 
-public:
-	using valueChangedSignal_t = boost::signals2::signal<void()>;
-	valueChangedSignal_t &GetValueChangedSignal() { return valueChangedSignal; }
-
-protected:
-	void Layout() override
-	{
-		double cx = 0;
-		double w = GetSize().x;
-
-		ForEachVisibleChild([&](const std::shared_ptr<UiViewModel> &model) {
-			auto item = static_cast<DefaultItem*>(model.get());
-
-			auto size = item->Measure();
-			item->SetSize(w, size.y);
-			item->SetPos(0, cx);
-
-			cx += size.y;
-		});
-
-		listHeight = cx;
-	}
-
 private:
 	std::vector<ItemChild> items;
-	std::vector<size_t> filteredItems;  ///< Indexes of filtered items.
-	boost::optional<size_t> selItem;  ///< items index of selected.
-	boost::optional<size_t> focusedItem;  ///< filteredItems index of focused.
-	double listHeight;
-	valueChangedSignal_t valueChangedSignal;
 };
 
 }  // namespace Display
