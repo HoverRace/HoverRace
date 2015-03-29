@@ -77,7 +77,8 @@ class PickList : public BaseContainer
 public:
 	PickList(Display &display, const Vec2 &size,
 		uiLayoutFlags_t layoutFlags = 0) :
-		SUPER(display, size, true, layoutFlags), selItem() { }
+		SUPER(display, size, true, layoutFlags),
+		selItem(), focusedItem(), listHeight(0) { }
 	virtual ~PickList() { }
 
 protected:
@@ -555,6 +556,8 @@ protected:
 
 			cx += size.y;
 		});
+
+		listHeight = cx;
 	}
 
 private:
@@ -562,6 +565,7 @@ private:
 	std::vector<size_t> filteredItems;  ///< Indexes of filtered items.
 	boost::optional<size_t> selItem;  ///< items index of selected.
 	boost::optional<size_t> focusedItem;  ///< filteredItems index of focused.
+	double listHeight;
 	valueChangedSignal_t valueChangedSignal;
 };
 
