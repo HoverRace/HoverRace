@@ -159,12 +159,6 @@ void SdlBaseContainerView::Render()
 			}
 		}
 
-		/*
-		Util::Log::Info("Clip: <%d, %d> (%d x %d)",
-			clipRect.x, clipRect.y,
-			clipRect.w, clipRect.h);
-		*/
-
 		SDL_RenderSetClipRect(renderer, &clipRect);
 	}
 
