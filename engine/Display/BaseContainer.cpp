@@ -46,7 +46,7 @@ BaseContainer::BaseContainer(Display &display, uiLayoutFlags_t layoutFlags) :
 BaseContainer::BaseContainer(Display &display, const Vec2 &size, bool clip,
                      uiLayoutFlags_t layoutFlags) :
 	SUPER(layoutFlags), display(display), size(size), clip(clip),
-	opacity(1.0), visible(true)
+	opacity(1.0), visible(true), childOffset(0, 0)
 {
 }
 
@@ -156,6 +156,18 @@ void BaseContainer::SetVisible(bool visible)
 	if (this->visible != visible) {
 		this->visible = visible;
 		FireModelUpdate(Props::VISIBLE);
+	}
+}
+
+/**
+ * Sets the position offset of child widgets.
+ * @param childOffset The child offset.
+ */
+void BaseContainer::SetChildOffset(const Vec2 &childOffset)
+{
+	if (this->childOffset != childOffset) {
+		this->childOffset = childOffset;
+		FireModelUpdate(Props::CHILD_OFFSET);
 	}
 }
 

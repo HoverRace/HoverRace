@@ -163,7 +163,10 @@ void SdlBaseContainerView::Render()
 	}
 
 	const Vec2 &size = model.GetSize();
-	Vec2 oldOrigin = display.AddUiOrigin(model.GetAlignedPos(size.x, size.y));
+	Vec2 origin = model.GetAlignedPos(size.x, size.y);
+	origin += model.GetChildOffset();
+
+	Vec2 oldOrigin = display.AddUiOrigin(origin);
 	auto oldFlags = display.AddUiLayoutFlags(model.GetLayoutFlags());
 	model.ForEachVisibleChild(std::mem_fn(&ViewModel::Render));
 	display.SetUiLayoutFlags(oldFlags);

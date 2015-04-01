@@ -59,6 +59,7 @@ public:
 			CLIP,
 			OPACITY,
 			VISIBLE,
+			CHILD_OFFSET,
 			NEXT_,  ///< First index for subclasses.
 		};
 	};
@@ -293,6 +294,15 @@ public:
 	void SetVisible(bool visible);
 
 	/**
+	 * Retrieve the offset to the position of the child widgets.
+	 * @return The child offset.
+	 */
+	const Vec2 &GetChildOffset() const { return childOffset; }
+protected:
+	void SetChildOffset(const Vec2 &offset);
+
+public:
+	/**
 	 * Check if this container is devoid of child widgets.
 	 * @return @c true if empty, @c false if not.
 	 */
@@ -340,6 +350,7 @@ private:
 	bool clip;
 	double opacity;
 	bool visible;
+	Vec2 childOffset;
 	children_t children;
 };
 
