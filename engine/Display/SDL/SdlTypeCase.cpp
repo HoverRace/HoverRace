@@ -220,9 +220,11 @@ void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
 
 void SdlTypeCase::Render(const TypeLine &s, const Color cm, int x, int y)
 {
-	if (s.typeCase.get() != this) {
-		throw Exception("TypeLine owner mismatch.");
-	}
+#	ifdef _DEBUG
+		if (s.typeCase.get() != this) {
+			throw Exception("TypeLine owner mismatch.");
+		}
+#	endif
 
 	std::bitset<MAX_MAPS> usedTextures;
 	usedTextures.reset();
