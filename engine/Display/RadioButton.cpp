@@ -35,7 +35,7 @@ namespace Display {
  * @param text The text for the button label.
  * @param layoutFlags Optional layout flags.
  */
-RadioButtonBase::RadioButtonBase(Display &display, const std::string &text,
+BaseRadioButton::BaseRadioButton(Display &display, const std::string &text,
 	uiLayoutFlags_t layoutFlags) :
 	SUPER(display, text, layoutFlags)
 {
@@ -49,14 +49,14 @@ RadioButtonBase::RadioButtonBase(Display &display, const std::string &text,
  * @param text The text for the button label.
  * @param layoutFlags Optional layout flags.
  */
-RadioButtonBase::RadioButtonBase(Display &display, const Vec2 &size,
+BaseRadioButton::BaseRadioButton(Display &display, const Vec2 &size,
 	const std::string &text, uiLayoutFlags_t layoutFlags) :
 	SUPER(display, size, text, layoutFlags)
 {
 	Init();
 }
 
-void RadioButtonBase::Init()
+void BaseRadioButton::Init()
 {
 	InitIcon(false, false);
 	InitIcon(false, true);
@@ -69,7 +69,7 @@ void RadioButtonBase::Init()
  * @param enabled @c true for the enabled state, @c false for disabled.
  * @param checked @c true for the checked state, @c false for unchecked.
  */
-void RadioButtonBase::InitIcon(bool enabled, bool checked)
+void BaseRadioButton::InitIcon(bool enabled, bool checked)
 {
 	//TODO: Share this set of icons with all radio button instances.
 

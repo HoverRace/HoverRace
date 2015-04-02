@@ -48,16 +48,16 @@ namespace Display {
  * Base class for radio buttons.
  * @author Michael Imamura
  */
-class MR_DllDeclare RadioButtonBase : public StateButton
+class MR_DllDeclare BaseRadioButton : public StateButton
 {
 	using SUPER = StateButton;
 
 public:
-	RadioButtonBase(Display &display, const std::string &text,
+	BaseRadioButton(Display &display, const std::string &text,
 		uiLayoutFlags_t layoutFlags = 0);
-	RadioButtonBase(Display &display, const Vec2 &size, const std::string &text,
+	BaseRadioButton(Display &display, const Vec2 &size, const std::string &text,
 		uiLayoutFlags_t layoutFlags = 0);
-	virtual ~RadioButtonBase() { }
+	virtual ~BaseRadioButton() { }
 
 private:
 	void Init();
@@ -75,9 +75,9 @@ private:
  * @author Michael Imamura
  */
 template<class T>
-class RadioButton : public RadioButtonBase
+class RadioButton : public BaseRadioButton
 {
-	using SUPER = RadioButtonBase;
+	using SUPER = BaseRadioButton;
 
 public:
 	RadioButton(Display &display, const std::string &text, const T &value,
