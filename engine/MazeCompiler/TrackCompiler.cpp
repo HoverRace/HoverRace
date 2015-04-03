@@ -40,24 +40,27 @@ namespace HoverRace {
 namespace MazeCompiler {
 
 namespace {
-	// Temporary until this is rewritten.
-	void sfread(void *buf, size_t sz, size_t num, FILE *file)
-	{
-		if (fread(buf, sz, num, file) < num) {
-			if (feof(file)) {
-				throw Exception("Unexpected end of file");
-			}
-			else if (ferror(file)) {
-				throw Exception("Read error");
-			}
-			else {
-				throw Exception("Unknown read error");
-			}
+
+// Temporary until this is rewritten.
+void sfread(void *buf, size_t sz, size_t num, FILE *file)
+{
+	if (fread(buf, sz, num, file) < num) {
+		if (feof(file)) {
+			throw Exception("Unexpected end of file");
+		}
+		else if (ferror(file)) {
+			throw Exception("Read error");
+		}
+		else {
+			throw Exception("Unknown read error");
 		}
 	}
 }
 
-TrackCompiler::TrackCompiler(const TrackCompilationLogPtr &log, const Util::OS::path_t &outputFilename) :
+}
+
+TrackCompiler::TrackCompiler(const TrackCompilationLogPtr &log,
+	const Util::OS::path_t &outputFilename) :
 	outputFilename(outputFilename), log(log)
 {
 }
@@ -163,7 +166,8 @@ void TrackCompiler::Compile(std::istream &in) const
 	log->Info(_("Compiled track successfully!"));
 }
 
-void TrackCompiler::CreateHeader(std::istream &in, Parcel::ObjStream &archive) const
+void TrackCompiler::CreateHeader(std::istream &in,
+	Parcel::ObjStream &archive) const
 {
 	std::string desc;
 	int sortOrder = 50;
@@ -177,7 +181,7 @@ void TrackCompiler::CreateHeader(std::istream &in, Parcel::ObjStream &archive) c
 	sortOrder = 40;
 #endif
 
-	if (lParser.GetNextClass("HEADER") == NULL) {
+	if (lParser.GetNextClass("HEADER") == nullptr) {
 		throw TrackCompileExn(_("Unable to find [HEADER] section"));
 	}
 
@@ -202,11 +206,12 @@ void TrackCompiler::CreateHeader(std::istream &in, Parcel::ObjStream &archive) c
 	}
 }
 
-void TrackCompiler::AddBackgroundImage(std::istream &in, Parcel::ObjStream &archive)
+void TrackCompiler::AddBackgroundImage(std::istream &in,
+	Parcel::ObjStream &archive)
 {
 	TrackSpecParser parser(in);
 
-	if(parser.GetNextClass("HEADER") == NULL) {
+	if(parser.GetNextClass("HEADER") == nullptr) {
 		throw TrackCompileExn(_("Unable to find [HEADER] section"));
 	}
 	if(!parser.GetNextAttrib("Background")) {
@@ -215,7 +220,7 @@ void TrackCompiler::AddBackgroundImage(std::istream &in, Parcel::ObjStream &arch
 	std::string bgFilename = parser.GetParams();
 
 	FILE *bgFile = fopen(bgFilename.c_str(), "rb");
-	if (bgFile == NULL) {
+	if (bgFile == nullptr) {
 		throw TrackCompileExn(boost::str(
 			boost::format(_("Unable to find background image: %s")) %
 				bgFilename));
@@ -276,7 +281,7 @@ std::string TrackCompiler::FormatStr(const char *pSrc)
 
 MR_UInt8 *TrackCompiler::LoadPalette(FILE * pFile)
 {
-	MR_UInt8 *lReturnValue = NULL;
+	MR_UInt8 *lReturnValue = nullptr;
 
 	fseek(pFile, -769, SEEK_END);
 
@@ -297,20 +302,20 @@ MR_UInt8 *TrackCompiler::LoadPalette(FILE * pFile)
 
 MR_UInt8 *TrackCompiler::LoadBitmap(FILE * pFile)
 {
-	MR_UInt8 *lReturnValue = NULL;
+	MR_UInt8 *lReturnValue = nullptr;
 
 	int pXRes;
 	int pYRes;
 
 	lReturnValue = PCXRead(pFile, pXRes, pYRes);
 
-	if(lReturnValue) {
-		if((pXRes != MR_BACK_X_RES) || (pYRes != MR_BACK_Y_RES)) {
+	if (lReturnValue) {
+		if ((pXRes != MR_BACK_X_RES) || (pYRes != MR_BACK_Y_RES)) {
 			throw TrackCompileExn(_("Incorrect background resolution"));
 		}
 	}
 
-	if(lReturnValue != NULL) {
+	if (lReturnValue) {
 		// Make the invertion of the image pixels and add the pixel offset
 		MR_UInt8 *lOldBuffer = lReturnValue;
 
@@ -318,11 +323,11 @@ MR_UInt8 *TrackCompiler::LoadBitmap(FILE * pFile)
 
 		int lDestIndex = 0;
 
-		for(int lX = 0; lX < pXRes; lX++) {
+		for (int lX = 0; lX < pXRes; lX++) {
 			MR_UInt8 *lSource = lOldBuffer + lX;
 
-			for(int lY = pYRes - 1; lY >= 0; lY--) {
-				if(*lSource >= 128) {
+			for (int lY = pYRes - 1; lY >= 0; lY--) {
+				if (*lSource >= 128) {
 					// To correct a bug of Paint Shop Pro
 					*lSource = 0;
 				}
@@ -340,7 +345,7 @@ MR_UInt8 *TrackCompiler::LoadBitmap(FILE * pFile)
 
 MR_UInt8 *TrackCompiler::PCXRead(FILE * pFile, int &pXRes, int &pYRes)
 {
-	MR_UInt8 *lReturnValue = NULL;
+	MR_UInt8 *lReturnValue = nullptr;
 
 	MR_Int16 lStartX;
 	MR_Int16 lStartY;
