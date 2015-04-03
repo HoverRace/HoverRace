@@ -50,7 +50,7 @@ struct MR_Connection
 };
 
 // Helper variables
-static LevelBuilder *gsCurrentLevelBuilder = NULL;
+static LevelBuilder *gsCurrentLevelBuilder = nullptr;
 
 // Local helper functions
 static Model::SurfaceElement *sLoadTexture(TrackSpecParser * pParser);

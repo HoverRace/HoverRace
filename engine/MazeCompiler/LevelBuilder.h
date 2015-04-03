@@ -42,35 +42,34 @@ class VisibleStep;
 
 class MR_DllDeclare LevelBuilder : public Model::Level
 {
-	typedef Model::Level SUPER;
-	public:
-		LevelBuilder(const TrackCompilationLogPtr &log);
-		virtual ~LevelBuilder() {}
+	using SUPER = Model::Level;
 
-	protected:
-		// Implementation helpers
-		static double ComputeShapeConst(Section * pSection);
+public:
+	LevelBuilder(const TrackCompilationLogPtr &log);
+	virtual ~LevelBuilder() {}
 
-		// Main methods
+protected:
+	static double ComputeShapeConst(Section * pSection);
 
-		bool Parse(std::istream &in);
-		bool ComputeVisibleZones();
-		bool ComputeAudibleZones();
+	bool Parse(std::istream &in);
+	bool ComputeVisibleZones();
+	bool ComputeAudibleZones();
 
-		void OrderVisibleSurfaces();
+	void OrderVisibleSurfaces();
 
-	private:
-		void TestForVisibility(VisibleStep *pPreviousStep, int *pDestArray, int &pDestIndex, int pNewLeftNodeIndex);
+private:
+	void TestForVisibility(VisibleStep *pPreviousStep, int *pDestArray,
+		int &pDestIndex, int pNewLeftNodeIndex);
 
-		static int OrderFloor(const void *pSurface0, const void *pSurface1);
-		static int OrderCeiling(const void *pSurface0, const void *pSurface1);
+	static int OrderFloor(const void *pSurface0, const void *pSurface1);
+	static int OrderCeiling(const void *pSurface0, const void *pSurface1);
 
-	public:
-		bool InitFromFile(const Util::OS::path_t &filename);
-		bool InitFromStream(std::istream &in);
+public:
+	bool InitFromFile(const Util::OS::path_t &filename);
+	bool InitFromStream(std::istream &in);
 
-	private:
-		TrackCompilationLogPtr log;
+private:
+	TrackCompilationLogPtr log;
 };
 
 }  // namespace MazeCompiler
