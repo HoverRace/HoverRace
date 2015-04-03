@@ -71,7 +71,7 @@ HoverRender::HoverRender(const Util::ObjectFromFactoryId &pId, ResourceLib *reso
 
 void HoverRender::Render(VideoServices::Viewport3D *pDest,
 	const MR_3DCoordinate &pPosition, MR_Angle pOrientation,
-	BOOL pMotorOn, int pHoverId, int pModel)
+	BOOL pMotorOn, int pHoverId, unsigned int pModel)
 {
 	// Compute the required rotation matrix
 	PositionMatrix lMatrix;

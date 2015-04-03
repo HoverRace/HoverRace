@@ -62,7 +62,9 @@ public:
 		ObjFacTools::ResourceLib *resourceLib);
 	virtual ~HoverRender() { }
 
-	void Render(VideoServices::Viewport3D *pDest, const MR_3DCoordinate &pPosition, MR_Angle pOrientation, BOOL pMotorOn, int pHoverId, int pModel);
+	void Render(VideoServices::Viewport3D *pDest,
+		const MR_3DCoordinate &pPosition, MR_Angle pOrientation,
+		BOOL pMotorOn, int pHoverId, unsigned int pModel) override;
 
 	VideoServices::ShortSound *GetLineCrossingSound() override;
 	VideoServices::ShortSound *GetStartSound() override;

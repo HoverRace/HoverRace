@@ -50,7 +50,7 @@ public:
 
 	virtual void Render(VideoServices::Viewport3D *pDest,
 		const MR_3DCoordinate &pPosition, MR_Angle pOrientation,
-		BOOL pMotorOn, int pHoverId, int pModel) = 0;
+		BOOL pMotorOn, int pHoverId, unsigned int pModel) = 0;
 
 	// Sound list
 	virtual VideoServices::ShortSound *GetLineCrossingSound() = 0;

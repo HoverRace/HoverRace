@@ -177,8 +177,8 @@ public:
 	void SetHoverId(int pId);
 	int GetHoverId() const;
 
-	void SetHoverModel(int pModel);
-	int GetHoverModel() const;
+	void SetHoverModel(unsigned int pModel);
+	unsigned int GetHoverModel() const;
 
 	void SetOrientation(MR_Angle pOrientation);
 

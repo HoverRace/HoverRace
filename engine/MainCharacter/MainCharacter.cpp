@@ -261,12 +261,12 @@ void MainCharacter::SetHoverId(int pId)
 	mHoverId = pId;
 }
 
-void MainCharacter::SetHoverModel(int pModel)
+void MainCharacter::SetHoverModel(unsigned int pModel)
 {
 	mHoverModel = pModel;
 }
 
-int MainCharacter::GetHoverModel() const
+unsigned int MainCharacter::GetHoverModel() const
 {
 	return mHoverModel;
 }
