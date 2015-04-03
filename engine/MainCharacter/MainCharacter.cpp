@@ -388,7 +388,7 @@ void MainCharacter::SetNetState(int /*pDataLen */ , const MR_UInt8 *pData)
 	mRoom = lState.Get(MC_ROOM);
 
 	if(mRoom < -1)
-		mRoom = lState.Getu(MC_ROOM);
+		mRoom = lState.Get(MC_ROOM);
 
 	mOrientation = static_cast<MR_Angle>(lState.Getu(MC_ORIENTATION));
 
