@@ -1,6 +1,5 @@
+
 // HoverRender.h
-//
-//
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
@@ -31,50 +30,52 @@ namespace ObjFac1 {
 
 class HoverRender : public MainCharacter::MainCharacterRenderer
 {
-	typedef MainCharacter::MainCharacterRenderer SUPER;
-	protected:
-		const ObjFacTools::ResActor *mActor0;
-		const ObjFacTools::ResActor *mActor1;
-		const ObjFacTools::ResActor *mActor2;
-		const ObjFacTools::ResActor *mActor3;
+	using SUPER = MainCharacter::MainCharacterRenderer;
 
-		int mFrame;
+protected:
+	const ObjFacTools::ResActor *mActor0;
+	const ObjFacTools::ResActor *mActor1;
+	const ObjFacTools::ResActor *mActor2;
+	const ObjFacTools::ResActor *mActor3;
 
-		VideoServices::ShortSound *mLineCrossingSound;
-		VideoServices::ShortSound *mStartSound;
-		VideoServices::ShortSound *mFinishSound;
-		VideoServices::ShortSound *mBumpSound;
-		VideoServices::ShortSound *mJumpSound;
-		VideoServices::ShortSound *mFireSound;
-		VideoServices::ShortSound *mMisJumpSound;
-		VideoServices::ShortSound *mMisFireSound;
-		VideoServices::ShortSound *mOutOfCtrlSound;
-		VideoServices::ShortSound *pickupSound;
-		VideoServices::ContinuousSound *mMotorSound;
-		VideoServices::ContinuousSound *mFrictionSound;
+	int mFrame;
 
-		const ObjFacTools::ResBitmap *mCockpitBitmap[10];
-		const ObjFacTools::ResBitmap *mCockpitBitmap2[10];
-		const ObjFacTools::ResBitmap *mEonCockpitBitmap[10];
+	VideoServices::ShortSound *mLineCrossingSound;
+	VideoServices::ShortSound *mStartSound;
+	VideoServices::ShortSound *mFinishSound;
+	VideoServices::ShortSound *mBumpSound;
+	VideoServices::ShortSound *mJumpSound;
+	VideoServices::ShortSound *mFireSound;
+	VideoServices::ShortSound *mMisJumpSound;
+	VideoServices::ShortSound *mMisFireSound;
+	VideoServices::ShortSound *mOutOfCtrlSound;
+	VideoServices::ShortSound *pickupSound;
+	VideoServices::ContinuousSound *mMotorSound;
+	VideoServices::ContinuousSound *mFrictionSound;
 
-	public:
-		HoverRender(const Util::ObjectFromFactoryId &pId, ObjFacTools::ResourceLib *resourceLib);
-		~HoverRender();
+	const ObjFacTools::ResBitmap *mCockpitBitmap[10];
+	const ObjFacTools::ResBitmap *mCockpitBitmap2[10];
+	const ObjFacTools::ResBitmap *mEonCockpitBitmap[10];
 
-		void Render(VideoServices::Viewport3D *pDest, const MR_3DCoordinate &pPosition, MR_Angle pOrientation, BOOL pMotorOn, int pHoverId, int pModel);
+public:
+	HoverRender(const Util::ObjectFromFactoryId &pId,
+		ObjFacTools::ResourceLib *resourceLib);
+	virtual ~HoverRender() { }
 
-		virtual VideoServices::ShortSound *GetLineCrossingSound();
-		virtual VideoServices::ShortSound *GetStartSound();
-		virtual VideoServices::ShortSound *GetFinishSound();
-		virtual VideoServices::ShortSound *GetBumpSound();
-		virtual VideoServices::ShortSound *GetJumpSound();
-		virtual VideoServices::ShortSound *GetFireSound();
-		virtual VideoServices::ShortSound *GetMisJumpSound();
-		virtual VideoServices::ShortSound *GetMisFireSound();
-		virtual VideoServices::ShortSound *GetOutOfCtrlSound();
-		virtual VideoServices::ShortSound *GetPickupSound();
-		virtual VideoServices::ContinuousSound *GetMotorSound();
-		virtual VideoServices::ContinuousSound *GetFrictionSound();
+	void Render(VideoServices::Viewport3D *pDest, const MR_3DCoordinate &pPosition, MR_Angle pOrientation, BOOL pMotorOn, int pHoverId, int pModel);
+
+	VideoServices::ShortSound *GetLineCrossingSound() override;
+	VideoServices::ShortSound *GetStartSound() override;
+	VideoServices::ShortSound *GetFinishSound() override;
+	VideoServices::ShortSound *GetBumpSound() override;
+	VideoServices::ShortSound *GetJumpSound() override;
+	VideoServices::ShortSound *GetFireSound() override;
+	VideoServices::ShortSound *GetMisJumpSound() override;
+	VideoServices::ShortSound *GetMisFireSound() override;
+	VideoServices::ShortSound *GetOutOfCtrlSound() override;
+	VideoServices::ShortSound *GetPickupSound() override;
+	VideoServices::ContinuousSound *GetMotorSound() override;
+	VideoServices::ContinuousSound *GetFrictionSound() override;
 
 };
 

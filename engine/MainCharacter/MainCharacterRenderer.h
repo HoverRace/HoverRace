@@ -1,5 +1,5 @@
+
 // MainCharacterRenderer.h
-//
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
@@ -41,27 +41,30 @@ namespace MainCharacter {
 
 class MR_DllDeclare MainCharacterRenderer : public Util::ObjectFromFactory
 {
-	public:
-		// Construction
-		MainCharacterRenderer(const Util::ObjectFromFactoryId & pId);
-		~MainCharacterRenderer();
+	using SUPER = Util::ObjectFromFactory;
 
-		virtual void Render(VideoServices::Viewport3D *pDest, const MR_3DCoordinate &pPosition, MR_Angle pOrientation, BOOL pMotorOn, int pHoverId, int pModel) = 0;
+public:
+	// Construction
+	MainCharacterRenderer(const Util::ObjectFromFactoryId &pId);
+	virtual ~MainCharacterRenderer() { }
 
-		// Sound list
-		virtual VideoServices::ShortSound *GetLineCrossingSound() = 0;
-		virtual VideoServices::ShortSound *GetStartSound() = 0;
-		virtual VideoServices::ShortSound *GetFinishSound() = 0;
-		virtual VideoServices::ShortSound *GetBumpSound() = 0;
-		virtual VideoServices::ShortSound *GetJumpSound() = 0;
-		virtual VideoServices::ShortSound *GetFireSound() = 0;
-		virtual VideoServices::ShortSound *GetMisJumpSound() = 0;
-		virtual VideoServices::ShortSound *GetMisFireSound() = 0;
-		virtual VideoServices::ShortSound *GetOutOfCtrlSound() = 0;
-		virtual VideoServices::ShortSound *GetPickupSound() = 0;
-		virtual VideoServices::ContinuousSound *GetMotorSound() = 0;
-		virtual VideoServices::ContinuousSound *GetFrictionSound() = 0;
+	virtual void Render(VideoServices::Viewport3D *pDest,
+		const MR_3DCoordinate &pPosition, MR_Angle pOrientation,
+		BOOL pMotorOn, int pHoverId, int pModel) = 0;
 
+	// Sound list
+	virtual VideoServices::ShortSound *GetLineCrossingSound() = 0;
+	virtual VideoServices::ShortSound *GetStartSound() = 0;
+	virtual VideoServices::ShortSound *GetFinishSound() = 0;
+	virtual VideoServices::ShortSound *GetBumpSound() = 0;
+	virtual VideoServices::ShortSound *GetJumpSound() = 0;
+	virtual VideoServices::ShortSound *GetFireSound() = 0;
+	virtual VideoServices::ShortSound *GetMisJumpSound() = 0;
+	virtual VideoServices::ShortSound *GetMisFireSound() = 0;
+	virtual VideoServices::ShortSound *GetOutOfCtrlSound() = 0;
+	virtual VideoServices::ShortSound *GetPickupSound() = 0;
+	virtual VideoServices::ContinuousSound *GetMotorSound() = 0;
+	virtual VideoServices::ContinuousSound *GetFrictionSound() = 0;
 };
 
 }  // namespace MainCharacter

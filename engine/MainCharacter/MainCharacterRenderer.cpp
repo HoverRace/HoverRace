@@ -1,3 +1,4 @@
+
 // MainCharacterRenderer.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
@@ -24,12 +25,9 @@
 namespace HoverRace {
 namespace MainCharacter {
 
-MainCharacterRenderer::MainCharacterRenderer(const Util::ObjectFromFactoryId & pId) :
-	Util::ObjectFromFactory(pId)
-{
-}
-
-MainCharacterRenderer::~MainCharacterRenderer()
+MainCharacterRenderer::MainCharacterRenderer(
+	const Util::ObjectFromFactoryId &pId) :
+	SUPER(pId)
 {
 }
 

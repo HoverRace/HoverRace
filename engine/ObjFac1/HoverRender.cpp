@@ -1,3 +1,4 @@
+
 // HoverRender.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
@@ -33,8 +34,10 @@ namespace ObjFac1 {
 
 class ResActorFriend
 {
-	public:
-		static void Draw(const ObjFacTools::ResActor *pActor, Viewport3D *pDest, const PositionMatrix &pMatrix, int pSequence, int pFrame, const VideoServices::Bitmap *pCockpitBitmap);
+public:
+	static void Draw(const ObjFacTools::ResActor *pActor, Viewport3D *pDest,
+		const PositionMatrix &pMatrix, int pSequence, int pFrame,
+		const VideoServices::Bitmap *pCockpitBitmap);
 };
 
 HoverRender::HoverRender(const Util::ObjectFromFactoryId &pId, ResourceLib *resourceLib) :
@@ -66,12 +69,9 @@ HoverRender::HoverRender(const Util::ObjectFromFactoryId &pId, ResourceLib *reso
 	}
 }
 
-HoverRender::~HoverRender()
-{
-
-}
-
-void HoverRender::Render(VideoServices::Viewport3D *pDest, const MR_3DCoordinate &pPosition, MR_Angle pOrientation, BOOL pMotorOn, int pHoverId, int pModel)
+void HoverRender::Render(VideoServices::Viewport3D *pDest,
+	const MR_3DCoordinate &pPosition, MR_Angle pOrientation,
+	BOOL pMotorOn, int pHoverId, int pModel)
 {
 	// Compute the required rotation matrix
 	PositionMatrix lMatrix;
@@ -158,18 +158,26 @@ ContinuousSound *HoverRender::GetFrictionSound()
 	return mFrictionSound;
 }
 
-void ResActorFriend::Draw(const ObjFacTools::ResActor *pActor, Viewport3D *pDest, const PositionMatrix &pMatrix, int pSequence, int pFrame, const VideoServices::Bitmap *pCockpitBitmap)
+void ResActorFriend::Draw(const ObjFacTools::ResActor *pActor,
+	Viewport3D *pDest, const PositionMatrix &pMatrix, int pSequence,
+	int pFrame, const VideoServices::Bitmap *pCockpitBitmap)
 {
-	ObjFacTools::ResActor::Frame * lFrame = &(pActor->mSequenceList[pSequence].mFrameList[pFrame]);
+	ObjFacTools::ResActor::Frame *lFrame =
+		&(pActor->mSequenceList[pSequence].mFrameList[pFrame]);
 
 	ASSERT(lFrame != NULL);
 
 	for(int lCounter = 0; lCounter < lFrame->mNbComponent; lCounter++) {
-		ObjFacTools::ResActor::Patch *lPatch = (ObjFacTools::ResActor::Patch *) lFrame->mComponentList[lCounter];
+		ObjFacTools::ResActor::Patch *lPatch =
+			static_cast<ObjFacTools::ResActor::Patch*>(
+				lFrame->mComponentList[lCounter]);
 
 		int lBitmapResId = lPatch->mBitmap->GetResourceId();
 
-		if((lBitmapResId == MR_CAR_COCKPIT) || (lBitmapResId == MR_CAR2_COCKPIT) ||(lBitmapResId == MR_EON_COCKPIT)) {
+		if ((lBitmapResId == MR_CAR_COCKPIT) ||
+			(lBitmapResId == MR_CAR2_COCKPIT) ||
+			(lBitmapResId == MR_EON_COCKPIT))
+		{
 			pDest->RenderPatch(*lPatch, pMatrix, pCockpitBitmap);
 		}
 		else {
