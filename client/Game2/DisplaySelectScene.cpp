@@ -100,7 +100,6 @@ DisplaySelectScene::DisplaySelectScene(Display::Display &display,
 	reqRes(xRes, yRes, refreshRate)
 {
 	using namespace Display;
-	using Alignment = UiViewModel::Alignment;
 
 	SupportCancelAction();
 
@@ -196,7 +195,6 @@ void DisplaySelectScene::FilterResGrid()
 void DisplaySelectScene::UpdateResGrid()
 {
 	using namespace Display;
-	using Alignment = UiViewModel::Alignment;
 
 	resList->Clear();
 
