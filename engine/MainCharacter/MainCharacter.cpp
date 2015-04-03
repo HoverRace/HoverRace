@@ -819,6 +819,7 @@ int MainCharacter::InternalSimulate(MR_SimulationTime pDuration, Model::Level *p
 
 const Model::ShapeInterface *MainCharacter::GetObstacleShape()
 {
+	//FIXME: Wait, what?  Is this correct?
 	return NULL;
 	mCollisionShape.mPosition = mPosition;
 	return &mCollisionShape;
