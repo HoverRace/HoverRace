@@ -103,7 +103,7 @@ bool LevelBuilder::Parse(std::istream &in)
 						lRoomId % lParser.GetErrorLine()));
 			}
 			else {
-				lRoomList[lRoomId] = lRoomList.size();
+				lRoomList[lRoomId] = static_cast<int>(lRoomList.size());
 			}
 		}
 	}
@@ -124,17 +124,17 @@ bool LevelBuilder::Parse(std::istream &in)
 						lFeatureId % lParser.GetErrorLine()));
 			}
 			else {
-				lFeatureList[lFeatureId] = lFeatureList.size();
+				lFeatureList[lFeatureId] = static_cast<int>(lFeatureList.size());
 			}
 		}
 	}
 
 	if(lReturnValue) {
 		// Create the room and feature lists
-		mNbRoom = lRoomList.size();
+		mNbRoom = static_cast<int>(lRoomList.size());
 		mRoomList = new Room[mNbRoom];
 
-		mNbFeature = lFeatureList.size();
+		mNbFeature = static_cast<int>(lFeatureList.size());
 		mFeatureList = new Feature[mNbFeature];
 
 		mFreeElementClassifiedByRoomList = new Model::Level::FreeElementList*[mNbRoom];
@@ -412,7 +412,7 @@ bool LevelBuilder::Parse(std::istream &in)
 					lConnection.mRoom0));
 			}
 			int lRoom0 = iter->second;
-			
+
 			iter = lRoomList.find(lConnection.mRoom1);
 			if (iter == lRoomList.end()) {
 				throw TrackCompileExn(str(
@@ -673,10 +673,12 @@ void LevelBuilder::OrderVisibleSurfaces()
 		// Order the surfaces list
 		gsCurrentLevelBuilder = this;
 
-		qsort(mRoomList[lRoomId].mVisibleFloorList, mRoomList[lRoomId].mNbVisibleSurface, sizeof(Model::SectionId), OrderFloor);
-
-		qsort(mRoomList[lRoomId].mVisibleCeilingList, mRoomList[lRoomId].mNbVisibleSurface, sizeof(Model::SectionId), OrderCeiling);
-
+		auto &room = mRoomList[lRoomId];
+		size_t numVisible = static_cast<size_t>(room.mNbVisibleSurface);
+		qsort(room.mVisibleFloorList, numVisible,
+			sizeof(Model::SectionId), OrderFloor);
+		qsort(room.mVisibleCeilingList, numVisible,
+			sizeof(Model::SectionId), OrderCeiling);
 	}
 }
 
