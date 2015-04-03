@@ -1,7 +1,7 @@
 // MainCharacter.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ namespace MainCharacter {
 
 #define MR_NB_HOVER_MODEL 8
 
-typedef Util::BitPack<23> MainCharacterState;
+using MainCharacterState = Util::BitPack<23>;
 
 // Packing description
 //                     Offset  len   Prec
@@ -57,7 +57,8 @@ typedef Util::BitPack<23> MainCharacterState;
 //   #define  MC_SOUNDFX      141,    5,     0
 // Total                 184  = 23 bytes
 
-static_assert(std::is_pod<MainCharacterState>::value, "MainCharacterState must be a POD type");
+static_assert(std::is_pod<MainCharacterState>::value,
+	"MainCharacterState must be a POD type");
 
 // Local constants
 #define TIME_SLICE                     5
@@ -67,7 +68,8 @@ const int eCharacterMovementRay = 1100;
 const int eCharacterRay = 1300;
 const int eCharacterHeight = 1500;
 const int eCharacterContactRay = 1450;
-const int eCharacterWeight[MR_NB_HOVER_MODEL] = { 300, 250, 450, 300, 300, 300, 300, 300 };
+const int eCharacterWeight[MR_NB_HOVER_MODEL] =
+	{ 300, 250, 450, 300, 300, 300, 300, 300 };
 const int eMissileRefillTime = 10000;
 const int ePwrUpDuration = 5000;
 
@@ -151,42 +153,45 @@ const double eFuelConsuming[MR_NB_HOVER_MODEL] =
 };
 
 namespace {
-	/// An invalid game config slipped through.
-	class TrackConfigExn : public Exception
-	{
-		typedef Exception SUPER;
 
-		public:
-			TrackConfigExn() : SUPER() { }
-			TrackConfigExn(const std::string &msg) : SUPER(msg) { }
-			TrackConfigExn(const char *msg) : SUPER(msg) { }
-			virtual ~TrackConfigExn() throw() { }
-	};
+/// An invalid game config slipped through.
+class TrackConfigExn : public Exception
+{
+	using SUPER = Exception;
 
-	/**
-	 * Find the next craft that's allowed by the config.
-	 * @param gameOpts The current game options.
-	 * @param curCraft The currently-selected craft ID.
-	 * @param step The direction to search (1 = forwards, -1 backwards).
-	 * @return The next allowed craft ID.
-	 */
-	unsigned int NextAllowedCraft(char gameOpts, unsigned int curCraft, int step=1)
-	{
-		if ((gameOpts & 0x0f) == 0) {
-			throw TrackConfigExn("All crafts have been disabled");
-		}
+public:
+	TrackConfigExn() : SUPER() { }
+	TrackConfigExn(const std::string &msg) : SUPER(msg) { }
+	TrackConfigExn(const char *msg) : SUPER(msg) { }
+	virtual ~TrackConfigExn() throw() { }
+};
 
-		do {
-			curCraft = ((curCraft + step + 4) % 4);
-		} while (!(gameOpts & (1 << curCraft)));
-
-		return curCraft;
+/**
+ * Find the next craft that's allowed by the config.
+ * @param gameOpts The current game options.
+ * @param curCraft The currently-selected craft ID.
+ * @param step The direction to search (1 = forwards, -1 backwards).
+ * @return The next allowed craft ID.
+ */
+unsigned int NextAllowedCraft(char gameOpts, unsigned int curCraft,
+	int step = 1)
+{
+	if ((gameOpts & 0x0f) == 0) {
+		throw TrackConfigExn("All crafts have been disabled");
 	}
+
+	do {
+		curCraft = ((curCraft + step + 4) % 4);
+	} while (!(gameOpts & (1 << curCraft)));
+
+	return curCraft;
 }
+
+}  // namespace
 
 // Functions implementations
 
-MainCharacter::MainCharacter(const Util::ObjectFromFactoryId & pId) :
+MainCharacter::MainCharacter(const Util::ObjectFromFactoryId &pId) :
 	Model::FreeElement(pId),
 	playerIdx(0), started(false), finished(false)
 {
@@ -508,7 +513,8 @@ void MainCharacter::SetLookBackState(bool lookBackState)
 	}
 }
 
-int MainCharacter::Simulate(MR_SimulationTime pDuration, Model::Level *pLevel, int pRoom)
+int MainCharacter::Simulate(MR_SimulationTime pDuration,
+	Model::Level *pLevel, int pRoom)
 {
 	mRoom = pRoom;
 
@@ -819,12 +825,9 @@ const Model::ShapeInterface *MainCharacter::GetObstacleShape()
 }
 
 void MainCharacter::ApplyEffect(const MR_ContactEffect *pEffect,
-                                MR_SimulationTime pTime,
-                                MR_SimulationTime pDuration,
-                                BOOL pValidDirection,
-                                MR_Angle pHorizontalDirection,
-                                MR_Int32, MR_Int32,
-                                Model::Level * pLevel)
+	MR_SimulationTime pTime, MR_SimulationTime pDuration,
+	BOOL pValidDirection, MR_Angle pHorizontalDirection,
+	MR_Int32, MR_Int32, Model::Level *pLevel)
 {
 	MR_ContactEffect *lEffect = (MR_ContactEffect *) pEffect;
 	const MR_PhysicalCollision *lPhysCollision = dynamic_cast<MR_PhysicalCollision*>(lEffect);

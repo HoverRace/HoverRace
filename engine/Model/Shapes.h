@@ -1,5 +1,5 @@
+
 // Shapes.h
-//
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
@@ -49,90 +49,87 @@ namespace Model {
 
 class MR_DllDeclare ShapeInterface
 {
-	public:
-		virtual ~ShapeInterface() { }
+public:
+	virtual ~ShapeInterface() { }
 
-		enum eShape { eCylinder = 0, eLineSegment = 1, ePolygon = 2 };
+	enum eShape { eCylinder = 0, eLineSegment = 1, ePolygon = 2 };
 
-		// Shape position
-		virtual MR_Int32 XPos() const = 0;
-		virtual MR_Int32 YPos() const = 0;
+	// Shape position
+	virtual MR_Int32 XPos() const = 0;
+	virtual MR_Int32 YPos() const = 0;
 
-		// Basic bonding attributes (Bonding box)
-		virtual MR_Int32 XMin() const = 0;
-		virtual MR_Int32 XMax() const = 0;
-		virtual MR_Int32 YMin() const = 0;
-		virtual MR_Int32 YMax() const = 0;
+	// Basic bonding attributes (Bonding box)
+	virtual MR_Int32 XMin() const = 0;
+	virtual MR_Int32 XMax() const = 0;
+	virtual MR_Int32 YMin() const = 0;
+	virtual MR_Int32 YMax() const = 0;
 
-		virtual MR_Int32 ZMin() const = 0;
-		virtual MR_Int32 ZMax() const = 0;
+	virtual MR_Int32 ZMin() const = 0;
+	virtual MR_Int32 ZMax() const = 0;
 
-		virtual eShape ShapeType() const = 0;
+	virtual eShape ShapeType() const = 0;
 };
 
 // List of availlable shapes
 
 class MR_DllDeclare CylinderShape : public ShapeInterface
 {
-	public:
-		virtual MR_Int32 AxisX() const = 0;
-		virtual MR_Int32 AxisY() const = 0;
-		virtual MR_Int32 RayLen() const = 0;
+public:
+	virtual MR_Int32 AxisX() const = 0;
+	virtual MR_Int32 AxisY() const = 0;
+	virtual MR_Int32 RayLen() const = 0;
 
-		// Pre overloaded
-		MR_Int32 XPos() const;
-		MR_Int32 YPos() const;
+	// ShapeInterface
+	MR_Int32 XPos() const override;
+	MR_Int32 YPos() const override;
 
-		MR_Int32 XMin() const;
-		MR_Int32 XMax() const;
-		MR_Int32 YMin() const;
-		MR_Int32 YMax() const;
+	MR_Int32 XMin() const override;
+	MR_Int32 XMax() const override;
+	MR_Int32 YMin() const override;
+	MR_Int32 YMax() const override;
 
-		eShape ShapeType() const;
-
+	eShape ShapeType() const override;
 };
 
 class MR_DllDeclare LineSegmentShape : public ShapeInterface
 {
-	public:
+public:
+	virtual MR_Int32 X0() const = 0;
+	virtual MR_Int32 Y0() const = 0;
+	virtual MR_Int32 Z0() const = 0;
 
-		virtual MR_Int32 X0() const = 0;
-		virtual MR_Int32 Y0() const = 0;
-		virtual MR_Int32 Z0() const = 0;
+	virtual MR_Int32 X1() const = 0;
+	virtual MR_Int32 Y1() const = 0;
+	virtual MR_Int32 Z1() const = 0;
 
-		virtual MR_Int32 X1() const = 0;
-		virtual MR_Int32 Y1() const = 0;
-		virtual MR_Int32 Z1() const = 0;
+	virtual MR_Int32 HorizontalLen() const = 0;
 
-		virtual MR_Int32 HorizontalLen() const = 0;
+	// ShapeInterface
+	MR_Int32 XPos() const override;
+	MR_Int32 YPos() const override;
 
-		// Pre overloaded
-		MR_Int32 XPos() const;
-		MR_Int32 YPos() const;
+	MR_Int32 XMin() const override;
+	MR_Int32 XMax() const override;
+	MR_Int32 YMin() const override;
+	MR_Int32 YMax() const override;
 
-		MR_Int32 XMin() const;
-		MR_Int32 XMax() const;
-		MR_Int32 YMin() const;
-		MR_Int32 YMax() const;
-
-		eShape ShapeType() const;
+	eShape ShapeType() const override;
 
 };
 
 class MR_DllDeclare PolygonShape : public ShapeInterface
 {
-	public:
-		virtual int VertexCount() const = 0;
-		virtual MR_Int32 X(int pIndex) const = 0;
-		virtual MR_Int32 Y(int pIndex) const = 0;
-		virtual MR_Int32 SideLen(int pIndex) const = 0;
+public:
+	virtual int VertexCount() const = 0;
+	virtual MR_Int32 X(int pIndex) const = 0;
+	virtual MR_Int32 Y(int pIndex) const = 0;
+	virtual MR_Int32 SideLen(int pIndex) const = 0;
 
-		// Pre overloaded
-		MR_Int32 XPos() const;
-		MR_Int32 YPos() const;
+	// ShapeInterface
+	MR_Int32 XPos() const override;
+	MR_Int32 YPos() const override;
 
-		eShape ShapeType() const;
-
+	eShape ShapeType() const override;
 };
 
 }  // namespace Model

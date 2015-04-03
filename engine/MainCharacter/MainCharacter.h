@@ -1,7 +1,7 @@
 // MainCharacter.h
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -55,214 +55,219 @@ namespace MainCharacter {
 
 class MR_DllDeclare MainCharacter : public Model::FreeElement
 {
+public:
+	enum : unsigned int {
+		eMotorOn = 1,
+		eRight = 2,
+		eLeft = 4,
+		eStraffleRight = 8,
+		eLookBack = 8,						  // Control added 12/1/2006; eStraffleRight seems unused
+		eStraffleLeft = 16,
+		eBreakDirection = 32,
+		eJump = 64,
+		eFire = 128,
+		eSlowRotation = 1024,				  // Used internally
+		eSelectWeapon = 2048
+	};
+
+	enum eWeapon
+	{
+		eMissile,
+		eMine,
+		ePowerUp,
+		eNotAWeapon
+	};
+
+private:
+	class Cylinder : public Model::CylinderShape
+	{
 	public:
-		enum : unsigned int {
-			eMotorOn = 1,
-			eRight = 2,
-			eLeft = 4,
-			eStraffleRight = 8,
-			eLookBack = 8,						  // Control added 12/1/2006; eStraffleRight seems unused
-			eStraffleLeft = 16,
-			eBreakDirection = 32,
-			eJump = 64,
-			eFire = 128,
-			eSlowRotation = 1024,				  // Used internally
-			eSelectWeapon = 2048
-		};
+		MR_Int32 mRay;
+		MR_3DCoordinate mPosition;
 
-		enum eWeapon
-		{
-			eMissile,
-			eMine,
-			ePowerUp,
-			eNotAWeapon
-		};
-	private:
-		class Cylinder : public Model::CylinderShape
-		{
-			public:
-				MR_Int32 mRay;
-				MR_3DCoordinate mPosition;
+		MR_Int32 ZMin() const override;
+		MR_Int32 ZMax() const override;
+		MR_Int32 AxisX() const override;
+		MR_Int32 AxisY() const override;
+		MR_Int32 RayLen() const override;
+	};
 
-				MR_Int32 ZMin() const;
-				MR_Int32 ZMax() const;
-				MR_Int32 AxisX() const;
-				MR_Int32 AxisY() const;
-				MR_Int32 RayLen() const;
-		};
+public:
+	// Position complement
+	int mRoom;
 
-	public:
-		// Position complement
-		int mRoom;
+	// Network helper
+	BOOL mNetPriority;  // Indicate that the hover position must
+	// be resent as soon as possible due to a collision
+	// with a moving object (used only in server mode)
 
-		// Network helper
-		BOOL mNetPriority;						  // Indicate that the hover position must
-		// be resent as soon as possible due to a collision
-		// with a moving object (used only in server mode)
+	MR_SimulationTime mLastCollisionTime;  // Time of the last collision with a moving object
+	// Used to ignore out-of date refresh messages
+	// This time is only used in slave mode
 
-		MR_SimulationTime mLastCollisionTime;	  // Time of the last collision with a moving object
-		// Used to ignore out-of date refresh messages
-		// This time is only used in slave mode
+private:
+	BOOL mMasterMode;
+	unsigned mHoverModel;					  // HoverRace model
+	MainCharacterRenderer *mRenderer;
+	unsigned int mControlState;
+	BOOL mMotorOnState;
+	int mMotorDisplay;
+	int playerIdx;
+	char mGameOpts;
 
-	private:
-		BOOL mMasterMode;
-		unsigned mHoverModel;					  // HoverRace model
-		MainCharacterRenderer *mRenderer;
-		unsigned int mControlState;
-		BOOL mMotorOnState;
-		int mMotorDisplay;
-		int playerIdx;
-		char mGameOpts;
+	double mXSpeed;
+	double mYSpeed;
+	double mZSpeed;
+	double mXSpeedBeforeCollision;
+	double mYSpeedBeforeCollision;
 
-		double mXSpeed;
-		double mYSpeed;
-		double mZSpeed;
-		double mXSpeedBeforeCollision;
-		double mYSpeedBeforeCollision;
+	BOOL mOnFloor;
+	MR_Angle mCabinOrientation;
+	MR_SimulationTime mOutOfControlDuration;  // Countdown
 
-		BOOL mOnFloor;
-		MR_Angle mCabinOrientation;
-		MR_SimulationTime mOutOfControlDuration;  // Countdown
+	BOOL mFireDone;
 
-		BOOL mFireDone;
+	eWeapon mCurrentWeapon;
+	MR_SimulationTime mMissileRefillDuration;  // Countdown
+	MR_FixedFastFifo<int, 2> mMineList;
+	MR_FixedFastFifo<int, 4> mPowerUpList;
+	MR_SimulationTime mPowerUpLeft;
 
-		eWeapon mCurrentWeapon;
-		MR_SimulationTime mMissileRefillDuration;  // Countdown
-		MR_FixedFastFifo<int, 2> mMineList;
-		MR_FixedFastFifo<int, 4> mPowerUpList;
-		MR_SimulationTime mPowerUpLeft;
+	double mFuelLevel;
 
-		double mFuelLevel;
+	MR_PhysicalCollision mContactEffect;
+	MR_ContactEffectList mContactEffectList;
+	Cylinder mCollisionShape;
+	Cylinder mContactShape;
 
-		MR_PhysicalCollision mContactEffect;
-		MR_ContactEffectList mContactEffectList;
-		Cylinder mCollisionShape;
-		Cylinder mContactShape;
+	int mHoverId;
 
-		int mHoverId;
+	// Race stats
+	MR_SimulationTime mLastLapCompletion;
+	MR_SimulationTime mLastLapDuration;
+	MR_SimulationTime mBestLapDuration;
+	MR_SimulationTime mCurrentTime;
 
-		// Race stats
-		MR_SimulationTime mLastLapCompletion;
-		MR_SimulationTime mLastLapDuration;
-		MR_SimulationTime mBestLapDuration;
-		MR_SimulationTime mCurrentTime;
+	BOOL mCheckPoint1;
+	BOOL mCheckPoint2;
 
-		BOOL mCheckPoint1;
-		BOOL mCheckPoint2;
+	MR_FixedFastFifo<int, 6> mLastHits;
 
-		MR_FixedFastFifo<int, 6> mLastHits;
+	// Sound events list
+	MR_FixedFastFifo<VideoServices::ShortSound*, 6> mInternalSoundList;
+	MR_FixedFastFifo<VideoServices::ShortSound*, 6> mExternalSoundList;
 
-		// Sound events list
-		MR_FixedFastFifo<VideoServices::ShortSound*, 6> mInternalSoundList;
-		MR_FixedFastFifo<VideoServices::ShortSound*, 6> mExternalSoundList;
+	MainCharacter(const Util::ObjectFromFactoryId &pId);
 
-		MainCharacter(const Util::ObjectFromFactoryId & pId);
+	static Util::ObjectFromFactory *FactoryFunc(MR_UInt16 pElemenType);
 
-		static Util::ObjectFromFactory *FactoryFunc(MR_UInt16 pElemenType);
+	int InternalSimulate(MR_SimulationTime pDuration, Model::Level *pLevel,
+		int pRoom);
 
-		int InternalSimulate(MR_SimulationTime pDuration, Model::Level * pLevel, int pRoom);
+public:
+	// Construction
+	static void RegisterFactory();
+	static MainCharacter *New(int idx, char pGameOpts);
 
-	public:
-		// Construction
-		static void RegisterFactory();
-		static MainCharacter *New(int idx, char pGameOpts);
+	virtual ~MainCharacter();
 
-		virtual ~MainCharacter();
+	void SetAsMaster();
+	void SetAsSlave();
 
-		void SetAsMaster();
-		void SetAsSlave();
+	void SetHoverId(int pId);
+	int GetHoverId() const;
 
-		void SetHoverId(int pId);
-		int GetHoverId() const;
+	void SetHoverModel(int pModel);
+	int GetHoverModel() const;
 
-		void SetHoverModel(int pModel);
-		int GetHoverModel() const;
+	void SetOrientation(MR_Angle pOrientation);
 
-		void SetOrientation(MR_Angle pOrientation);
+	void AddRenderer();
+	void Render(VideoServices::Viewport3D *pDest, MR_SimulationTime pTime);
 
-		void AddRenderer();
-		void Render(VideoServices::Viewport3D * pDest, MR_SimulationTime pTime);
+	Model::ElementNetState GetNetState() const;
+	void SetNetState(int pDataLen, const MR_UInt8 * pData);
+	void SetNbLapForRace(int pNbLap);
 
-		Model::ElementNetState GetNetState() const;
-		void SetNetState(int pDataLen, const MR_UInt8 * pData);
-		void SetNbLapForRace(int pNbLap);
+	// Movement inputs
+	void SetSimulationTime(MR_SimulationTime pTime);
+	void SetEngineState(bool engineState); // TODO: analog
+	void SetTurnLeftState(bool leftState); // TODO: analog
+	void SetTurnRightState(bool rightState); // TODO: analog
+	void SetJump();
+	void SetPowerup();
+	void SetChangeItem();
+	void SetBrakeState(bool brakeState); // TODO: analog? maybe not
+	void SetLookBackState(bool lookBackState);
 
-		// Movement inputs
-		void SetSimulationTime(MR_SimulationTime pTime);
-		void SetEngineState(bool engineState); // TODO: analog
-		void SetTurnLeftState(bool leftState); // TODO: analog
-		void SetTurnRightState(bool rightState); // TODO: analog
-		void SetJump();
-		void SetPowerup();
-		void SetChangeItem();
-		void SetBrakeState(bool brakeState); // TODO: analog? maybe not
-		void SetLookBackState(bool lookBackState);
+	// State interogation functions
+	MR_Angle GetCabinOrientation() const;
 
-		// State interogation functions
-		MR_Angle GetCabinOrientation() const;
+	double GetFuelLevel() const;
+	double GetAbsoluteSpeed() const;
+	double GetDirectionalSpeed() const;
 
-		double GetFuelLevel() const;
-		double GetAbsoluteSpeed() const;
-		double GetDirectionalSpeed() const;
+	eWeapon GetCurrentWeapon() const;
+	int GetMissileRefillLevel(int pNbLevel) const;
+	int GetMineCount() const;
+	int GetPowerUpCount() const;
+	int GetPowerUpFraction(int pNbLevel) const;
 
-		eWeapon GetCurrentWeapon() const;
-		int GetMissileRefillLevel(int pNbLevel) const;
-		int GetMineCount() const;
-		int GetPowerUpCount() const;
-		int GetPowerUpFraction(int pNbLevel) const;
+	int GetPlayerIndex() const { return playerIdx; }
 
-		int GetPlayerIndex() const { return playerIdx; }
+	MR_SimulationTime GetTotalTime() const;
+	MR_SimulationTime GetBestLapDuration() const;
+	MR_SimulationTime GetLastLapDuration() const;
+	MR_SimulationTime GetLastLapCompletion() const;
+	bool HasStarted() const;
+	void Finish();
+	bool HasFinish() const;
 
-		MR_SimulationTime GetTotalTime() const;
-		MR_SimulationTime GetBestLapDuration() const;
-		MR_SimulationTime GetLastLapDuration() const;
-		MR_SimulationTime GetLastLapCompletion() const;
-		bool HasStarted() const;
-		void Finish();
-		bool HasFinish() const;
+	int HitQueueCount() const;
+	int GetHitQueue();
 
-		int HitQueueCount() const;
-		int GetHitQueue();
+protected:
+	// Logic interface
+	int Simulate(MR_SimulationTime pDuration, Model::Level *pLevel, int pRoom);
 
-	protected:
-		// Logic interface
-		int Simulate(MR_SimulationTime pDuration, Model::Level * pLevel, int pRoom);
+	const Model::ShapeInterface *GetObstacleShape();
 
-		const Model::ShapeInterface *GetObstacleShape();
+	// ContactEffectShapeInterface
+	void ApplyEffect(const MR_ContactEffect *pEffect, MR_SimulationTime pTime,
+		MR_SimulationTime pDuration,
+		BOOL pValidDirection, MR_Angle pHorizontalDirection,
+		MR_Int32 pZMin, MR_Int32 pZMax, Model::Level *pLevel);
 
-		// ContactEffectShapeInterface
-		void ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 pZMin, MR_Int32 pZMax, Model::Level * pLevel);
+	const MR_ContactEffectList *GetEffectList();
 
-		const MR_ContactEffectList *GetEffectList();
+	const Model::ShapeInterface *GetReceivingContactEffectShape();
+	const Model::ShapeInterface *GetGivingContactEffectShape();
 
-		const Model::ShapeInterface *GetReceivingContactEffectShape();
-		const Model::ShapeInterface *GetGivingContactEffectShape();
+public:
+	// Sounds
+	void PlayInternalSounds();
+	void PlayExternalSounds(int pDB, int pPan);
 
-	public:
-		// Sounds
-		void PlayInternalSounds();
-		void PlayExternalSounds(int pDB, int pPan);
+public:
+	using startedSignal_t = boost::signals2::signal<void(MainCharacter*)>;
+	startedSignal_t &GetStartedSignal() { return startedSignal; }
 
-	public:
-		typedef boost::signals2::signal<void(MainCharacter*)> startedSignal_t;
-		startedSignal_t &GetStartedSignal() { return startedSignal; }
+	using finishedSignal_t = boost::signals2::signal<void(MainCharacter*)>;
+	finishedSignal_t &GetFinishedSignal() { return finishedSignal; }
 
-		typedef boost::signals2::signal<void(MainCharacter*)> finishedSignal_t;
-		finishedSignal_t &GetFinishedSignal() { return finishedSignal; }
+	using checkpointSignal_t =  boost::signals2::signal<void(MainCharacter*, int)>;
+	checkpointSignal_t &GetCheckpointSignal() { return checkpointSignal; }
 
-		typedef boost::signals2::signal<void(MainCharacter*, int)> checkpointSignal_t;
-		checkpointSignal_t &GetCheckpointSignal() { return checkpointSignal; }
+	using finishLineSignal_t = boost::signals2::signal<void(MainCharacter*)>;
+	finishLineSignal_t &GetFinishLineSignal() { return finishLineSignal; }
 
-		typedef boost::signals2::signal<void(MainCharacter*)> finishLineSignal_t;
-		finishLineSignal_t &GetFinishLineSignal() { return finishLineSignal; }
-
-	private:
-		bool started;
-		bool finished;
-		startedSignal_t startedSignal;
-		finishedSignal_t finishedSignal;
-		checkpointSignal_t checkpointSignal;
-		finishLineSignal_t finishLineSignal;
+private:
+	bool started;
+	bool finished;
+	startedSignal_t startedSignal;
+	finishedSignal_t finishedSignal;
+	checkpointSignal_t checkpointSignal;
+	finishLineSignal_t finishLineSignal;
 };
 
 }  // namespace MainCharacter
