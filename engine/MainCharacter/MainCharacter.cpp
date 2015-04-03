@@ -181,7 +181,8 @@ unsigned int NextAllowedCraft(char gameOpts, unsigned int curCraft,
 	}
 
 	do {
-		curCraft = ((curCraft + step + 4) % 4);
+		curCraft = static_cast<unsigned int>(
+			(static_cast<int>(curCraft) + step + 4) % 4);
 	} while (!(gameOpts & (1 << curCraft)));
 
 	return curCraft;
