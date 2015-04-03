@@ -202,8 +202,6 @@ MainCharacter::MainCharacter(const Util::ObjectFromFactoryId &pId) :
 	mNetPriority = FALSE;
 	mLastCollisionTime = 0;
 
-	mRenderer = NULL;
-
 	mControlState = 0;
 	mMotorOnState = FALSE;
 	mMotorDisplay = 0;
@@ -243,7 +241,6 @@ MainCharacter::MainCharacter(const Util::ObjectFromFactoryId &pId) :
 
 MainCharacter::~MainCharacter()
 {
-	delete mRenderer;
 }
 
 void MainCharacter::SetAsMaster()
@@ -284,15 +281,16 @@ int MainCharacter::GetHoverId() const
 
 void MainCharacter::AddRenderer()
 {
-	if(mRenderer == NULL) {
+	if (!mRenderer) {
 		Util::ObjectFromFactoryId lId = { 1, 100 };
-		mRenderer = (MainCharacterRenderer *) Util::DllObjectFactory::CreateObject(lId);
+		mRenderer.reset(static_cast<MainCharacterRenderer*>(
+			Util::DllObjectFactory::CreateObject(lId)));
 	}
 }
 
 void MainCharacter::Render(VideoServices::Viewport3D * pDest, MR_SimulationTime /*pTime */ )
 {
-	if(mRenderer != NULL)
+	if (mRenderer)
 		mRenderer->Render(pDest, mPosition, mCabinOrientation, mMotorDisplay > 0, mHoverId, mHoverModel);
 }
 
@@ -472,11 +470,11 @@ void MainCharacter::SetJump()
 	if(!(mControlState & eJump)) {
 		if(mOnFloor) {
 			mZSpeed = 1.1 * eMaxZSpeed[mHoverModel];
-			if(mRenderer != NULL)
+			if (mRenderer)
 				mInternalSoundList.Add(mRenderer->GetJumpSound());
 		}
 		else {
-			if(mRenderer != NULL)
+			if (mRenderer)
 				mInternalSoundList.Add(mRenderer->GetMisJumpSound());
 		}
 	}
@@ -600,7 +598,7 @@ int MainCharacter::Simulate(MR_SimulationTime pDuration,
 
 						pLevel->InsertElement(lMissile, mRoom, TRUE);
 
-						if(mRenderer != NULL) {
+						if (mRenderer) {
 							mInternalSoundList.Add(mRenderer->GetFireSound());
 							mExternalSoundList.Add(mRenderer->GetFireSound());
 						}
@@ -912,7 +910,7 @@ void MainCharacter::ApplyEffect(const MR_ContactEffect *pEffect,
 
 		mOutOfControlDuration = 2000;
 
-		if(mRenderer != NULL) {
+		if (mRenderer) {
 			mInternalSoundList.Add(mRenderer->GetOutOfCtrlSound());
 			mExternalSoundList.Add(mRenderer->GetOutOfCtrlSound());
 		}
@@ -970,7 +968,7 @@ void MainCharacter::ApplyEffect(const MR_ContactEffect *pEffect,
 					{
 						mBestLapDuration = mLastLapDuration;
 					}
-					if(mRenderer != NULL) {
+					if (mRenderer) {
 						if (finished) {
 							mInternalSoundList.Add(mRenderer->GetFinishSound());
 							mExternalSoundList.Add(mRenderer->GetFinishSound());
@@ -1169,7 +1167,7 @@ int MainCharacter::GetHitQueue()
 
 void MainCharacter::PlayInternalSounds()
 {
-	if(mRenderer != NULL) {
+	if (mRenderer) {
 		// Sound events
 		while(!mInternalSoundList.IsEmpty()) {
 			SoundServer::Play(mInternalSoundList.GetHead());
@@ -1190,7 +1188,7 @@ void MainCharacter::PlayInternalSounds()
 
 void MainCharacter::PlayExternalSounds(int pDB, int pPan)
 {
-	if(mRenderer != NULL) {
+	if (mRenderer) {
 		// Sound events
 		while(!mExternalSoundList.IsEmpty()) {
 			SoundServer::Play(mExternalSoundList.GetHead(), pDB, 1.0, pPan);

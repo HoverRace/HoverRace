@@ -108,7 +108,7 @@ public:
 private:
 	BOOL mMasterMode;
 	unsigned mHoverModel;					  // HoverRace model
-	MainCharacterRenderer *mRenderer;
+	std::unique_ptr<MainCharacterRenderer> mRenderer;
 	unsigned int mControlState;
 	BOOL mMotorOnState;
 	int mMotorDisplay;
