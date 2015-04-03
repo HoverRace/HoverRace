@@ -1,6 +1,6 @@
 // TrackCompiler.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -326,7 +326,9 @@ MR_UInt8 *TrackCompiler::LoadBitmap(FILE * pFile)
 					// To correct a bug of Paint Shop Pro
 					*lSource = 0;
 				}
-				lReturnValue[lDestIndex + lY] = (*lSource) + MR_RESERVED_COLORS_BEGINNING + MR_BASIC_COLORS;
+				lReturnValue[lDestIndex + lY] = static_cast<MR_UInt8>(
+					(*lSource) +
+					MR_RESERVED_COLORS_BEGINNING + MR_BASIC_COLORS);
 				lSource += pXRes;
 			}
 			lDestIndex += pYRes;
