@@ -57,8 +57,8 @@ public:
 
 	virtual void operator()(T eventValue) = 0;
 
-	const std::string &GetName() { return name; }
-	int GetListOrder() { return listOrder; }
+	const std::string &GetName() const { return name; }
+	int GetListOrder() const { return listOrder; }
 
 protected:
 	std::string name;
