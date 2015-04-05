@@ -53,12 +53,12 @@ InputEventController::actions_t::ui_t::ui_t() :
 	consoleBottom(std::make_shared<Action<voidSignal_t>>(_("Bottom"), 3)),
 	consolePrevCmd(std::make_shared<Action<voidSignal_t>>(_("Prev Cmd"), 4)),
 	consoleNextCmd(std::make_shared<Action<voidSignal_t>>(_("Next Cmd"), 5)),
-	text(std::make_shared<Action<stringSignal_t, const std::string&>>("", 0)),
-	control(std::make_shared<Action<textControlSignal_t, TextControl::key_t>>("", 0)),
-	mouseMoved(std::make_shared<Action<vec2Signal_t, const Vec2&>>("", 0)),
-	mousePressed(std::make_shared<Action<mouseClickSignal_t, const Mouse::Click&>>("", 0)),
-	mouseReleased(std::make_shared<Action<mouseClickSignal_t, const Mouse::Click&>>("", 0)),
-	mouseScrolled(std::make_shared<Action<mouseScrollSignal_t, const Mouse::Scroll&>>("", 0))
+	text(std::make_shared<Action<stringSignal_t, const std::string&>>()),
+	control(std::make_shared<Action<textControlSignal_t, TextControl::key_t>>()),
+	mouseMoved(std::make_shared<Action<vec2Signal_t, const Vec2&>>()),
+	mousePressed(std::make_shared<Action<mouseClickSignal_t, const Mouse::Click&>>()),
+	mouseReleased(std::make_shared<Action<mouseClickSignal_t, const Mouse::Click&>>()),
+	mouseScrolled(std::make_shared<Action<mouseScrollSignal_t, const Mouse::Scroll&>>())
 	{ }
 
 InputEventController::actions_t::sys_t::sys_t() :
