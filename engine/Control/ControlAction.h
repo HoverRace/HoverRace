@@ -36,7 +36,7 @@
 namespace HoverRace {
 namespace Control {
 
-/***
+/**
  * Abstract base class which allows us a simple reference to arbitrary functors
  * of type ControlActionImpl (which bind a class via a template parameter).
  * Unfortunately, this must use virtual functions to work correctly, which is
@@ -66,7 +66,7 @@ protected:
 };
 using ControlActionPtr = std::shared_ptr<ControlAction<int>>;
 
-/***
+/**
  * An action performer that does absolutely nothing.
  * Provides a template for other classes that will be used as an
  * ActionPerformer.
