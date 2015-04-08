@@ -37,6 +37,17 @@ using namespace std;
 namespace HoverRace {
 namespace Control {
 
+namespace {
+
+template<class T>
+void AssignAction(InputEventController::ActionMap &cmap, int hash, const T &action)
+{
+	cmap[hash] = action;
+	action->SetPrimaryTrigger(hash);
+}
+
+}  // namespace
+
 InputEventController::actions_t::ui_t::ui_t() :
 	menuOk(std::make_shared<Action<voidSignal_t>>(_("OK"), 0)),
 	menuCancel(std::make_shared<Action<voidSignal_t>>(_("Cancel"), 0)),

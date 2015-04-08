@@ -258,14 +258,6 @@ public:
 	static std::string HashToString(int hash);
 	SDL_Keycode StringToKey(const std::string &s);
 
-private:
-	template<class T>
-	static void AssignAction(ActionMap &cmap, int hash, const T &action)
-	{
-		cmap[hash] = action;
-		action->SetPrimaryTrigger(hash);
-	}
-
 public:
 	void LoadCameraMap();
 	void LoadMenuMap();
