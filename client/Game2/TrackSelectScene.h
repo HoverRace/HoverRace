@@ -66,10 +66,10 @@ protected:
 	void OnPhaseTransition(double progress) override;
 
 public:
-	typedef boost::signals2::signal<void(std::shared_ptr<Rules>, std::shared_ptr<Display::Res<Display::Texture>>)> okSignal_t;
+	using okSignal_t = boost::signals2::signal<void(std::shared_ptr<Rules>, std::shared_ptr<Display::Res<Display::Texture>>)>;
 	okSignal_t &GetOkSignal() { return okSignal; }
 
-	typedef boost::signals2::signal<void()> cancelSignal_t;
+	using cancelSignal_t = boost::signals2::signal<void()>;
 	cancelSignal_t &GetCancelSignal() { return cancelSignal; }
 
 private:
