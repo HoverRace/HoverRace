@@ -112,7 +112,8 @@ public:
 	// Typedef for the maps of hashes to controls
 	using ActionMap = std::map<int, ControlActionPtr>;
 
-	enum axis_t {
+	enum axis_t
+	{
 		AXIS_X = 1,
 		AXIS_Y,
 		AXIS_Z,
