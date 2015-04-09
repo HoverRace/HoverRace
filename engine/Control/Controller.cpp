@@ -113,7 +113,7 @@ void InputEventController::ProcessInputEvent(const SDL_Event &evt)
 		case SDL_MOUSEWHEEL: OnMouseWheel(evt.wheel); break;
 
 		default:
-			Log::Info("Unhandled input event type: %d", evt.type);
+			HR_LOG(info) << "Unhandled input event type: " << evt.type;
 	}
 }
 
