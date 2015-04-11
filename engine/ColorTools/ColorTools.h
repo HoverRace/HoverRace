@@ -1,3 +1,4 @@
+
 // ColorTools.h
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
@@ -19,8 +20,7 @@
 // and limitations under the License.
 //
 
-#ifndef MR_COLOR_TOOLS_H
-#define MR_COLOR_TOOLS_H
+#pragma once
 
 #include "../Util/MR_Types.h"
 
@@ -34,16 +34,20 @@
 #	define MR_DllDeclare
 #endif
 
-namespace MR_ColorTools
-{
+namespace MR_ColorTools {
 
-	MR_DllDeclare void Init();
-	MR_DllDeclare MR_UInt8 GetNearest(double pRed, double pGreen, double pBlue);
-	MR_DllDeclare void GetComponents(MR_UInt8 pColor, double &pRed, double &pGreen, double &pBlue);
-	MR_DllDeclare void GetIntComponents(MR_UInt8 pColor, int &pRed, int &pGreen, int &pBlue);
-	MR_DllDeclare int GetNbColors();
+MR_DllDeclare void Init();
+
+MR_DllDeclare MR_UInt8 GetNearest(double pRed, double pGreen, double pBlue);
+
+MR_DllDeclare void GetComponents(MR_UInt8 pColor,
+	double &pRed, double &pGreen, double &pBlue);
+
+MR_DllDeclare void GetIntComponents(MR_UInt8 pColor,
+	int &pRed, int &pGreen, int &pBlue);
+
+MR_DllDeclare int GetNbColors();
 
 };
 
 #undef MR_DllDeclare
-#endif
