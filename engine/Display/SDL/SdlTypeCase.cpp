@@ -183,6 +183,7 @@ void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
 	auto prev = s.begin();
 	auto iter = prev;
 	auto end = s.end();
+	int sx = 0, sy = 0;
 	try {
 		while (iter != end) {
 			MR_UInt32 cp = utf8::next(iter, end);
@@ -194,6 +195,8 @@ void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
 			auto &entry = FindGlyph(buf, cp, added);
 			if (rects) {
 				rects->glyphs.push_back(&entry);
+				sx += entry.srcRect.x;
+				sy = entry.srcRect.y;
 			}
 		}
 	}
@@ -203,6 +206,11 @@ void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
 	}
 	catch (utf8::invalid_utf8 &ex) {
 		HR_LOG(warning) << "Invalid UTF-8 sequence: " << ex.what();
+	}
+
+	if (rects) {
+		rects->width = sx;
+		rects->height = sy;
 	}
 
 	// All maps that need update will be at the end, so update in reverse

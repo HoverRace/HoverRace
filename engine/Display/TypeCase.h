@@ -152,7 +152,7 @@ protected:
 class MR_DllDeclare TypeLine
 {
 public:
-	TypeLine() { }
+	TypeLine() : width(0), height(0) { }
 
 public:
 	/**
@@ -179,6 +179,8 @@ public:
 public:
 	std::shared_ptr<TypeCase> typeCase;  // Owning TypeCase, for sanity checking.
 	std::vector<GlyphEntry*> glyphs;
+	int width;
+	int height;
 };
 
 }  // namespace Display
