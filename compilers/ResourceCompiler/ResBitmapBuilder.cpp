@@ -25,6 +25,7 @@
 
 #include "../../engine/ColorTools/ColorTools.h"
 #include "../../engine/VideoServices/ColorPalette.h"
+#include "../../engine/Exception.h"
 
 namespace HoverRace {
 namespace ResourceCompiler {
@@ -57,7 +58,10 @@ MR_UInt8 GetBestColor(MR_UInt8 *pSrc, int pStripeLenToScan, int pNbStripeToScan,
 				double lPointGreen;
 				double lPointBlue;
 
-				MR_ColorTools::GetComponents(pSrc[lCounter] - MR_RESERVED_COLORS_BEGINNING, lPointRed, lPointGreen, lPointBlue);
+				MR_UInt8 color = static_cast<MR_UInt8>(
+					pSrc[lCounter] - MR_RESERVED_COLORS_BEGINNING);
+				MR_ColorTools::GetComponents(color,
+					lPointRed, lPointGreen, lPointBlue);
 
 				lStripeRed += lPointRed;
 				lStripeGreen += lPointGreen;
@@ -76,7 +80,12 @@ MR_UInt8 GetBestColor(MR_UInt8 *pSrc, int pStripeLenToScan, int pNbStripeToScan,
 		pTransparentFlag = TRUE;
 	}
 	else {
-		lReturnValue = MR_RESERVED_COLORS_BEGINNING + MR_ColorTools::GetNearest(lTotalRed / (lNbPoints - lNbTransparent), lTotalGreen / (lNbPoints - lNbTransparent), lTotalBlue / (lNbPoints - lNbTransparent));
+		lReturnValue = static_cast<MR_UInt8>(
+			MR_RESERVED_COLORS_BEGINNING +
+			MR_ColorTools::GetNearest(
+				lTotalRed / (lNbPoints - lNbTransparent),
+				lTotalGreen / (lNbPoints - lNbTransparent),
+				lTotalBlue / (lNbPoints - lNbTransparent)));
 
 	}
 	return lReturnValue;
@@ -132,7 +141,10 @@ MR_UInt8 GetBestColorWithError(MR_UInt8 *pSrc, int pStripeLenToScan,
 				double lPointGreen;
 				double lPointBlue;
 
-				MR_ColorTools::GetComponents(pSrc[lCounter] - MR_RESERVED_COLORS_BEGINNING, lPointRed, lPointGreen, lPointBlue);
+				MR_UInt8 color = static_cast<MR_UInt8>(
+					pSrc[lCounter] - MR_RESERVED_COLORS_BEGINNING);
+				MR_ColorTools::GetComponents(color,
+					lPointRed, lPointGreen, lPointBlue);
 
 				// Give more weight to central points
 
@@ -183,9 +195,12 @@ MR_UInt8 GetBestColorWithError(MR_UInt8 *pSrc, int pStripeLenToScan,
 		lTotalGreen += pGreenError;
 		lTotalBlue += pBlueError;
 
-		lReturnValue = MR_RESERVED_COLORS_BEGINNING + MR_ColorTools::GetNearest(lTotalRed, lTotalGreen, lTotalBlue);
+		lReturnValue = static_cast<MR_UInt8>(MR_RESERVED_COLORS_BEGINNING +
+			MR_ColorTools::GetNearest(lTotalRed, lTotalGreen, lTotalBlue));
 
-		MR_ColorTools::GetComponents(lReturnValue - MR_RESERVED_COLORS_BEGINNING, pRedError, pGreenError, pBlueError);
+		MR_UInt8 color = static_cast<MR_UInt8>(
+			lReturnValue - MR_RESERVED_COLORS_BEGINNING);
+		MR_ColorTools::GetComponents(color, pRedError, pGreenError, pBlueError);
 
 		pRedError = lTotalRed - pRedError;
 		pGreenError = lTotalGreen - pGreenError;
@@ -436,10 +451,17 @@ void ResBitmapBuilder::ComputeIntermediateImages(MR_UInt8 *pBuffer)
 	// First copy the original image
 
 	if(mSubBitmapCount != 0) {
-		int lBitmapSize;
-		int lCounter;
+		size_t lBitmapSize;
+		size_t lCounter;
 
-		lBitmapSize = mSubBitmapList[0].mXRes * mSubBitmapList[0].mYRes;
+		auto &sub = mSubBitmapList[0];
+
+		if (sub.mXRes < 0 || sub.mYRes < 0) {
+			std::ostringstream oss;
+			oss << "Invalid bitmap size: " << sub.mXRes << 'x' << sub.mYRes;
+			throw Exception(oss.str());
+		}
+		lBitmapSize = static_cast<size_t>(sub.mXRes * sub.mYRes);
 
 		// Put 0 in all transparent bit
 		int lNbTransparent = 0;
@@ -462,12 +484,13 @@ void ResBitmapBuilder::ComputeIntermediateImages(MR_UInt8 *pBuffer)
 			printf("%s: %s.\n", _("INFO"), _("This image has transparent pixels"));
 		}
 		// First copy the original image
-		memcpy(mSubBitmapList[0].mBuffer, pBuffer, lBitmapSize);
+		memcpy(sub.mBuffer, pBuffer, lBitmapSize);
 
 		// Resample the sub bitmaps
-		for(lCounter = 1; lCounter < mSubBitmapCount; lCounter++) {
+		size_t subCount = static_cast<size_t>(mSubBitmapCount);
+		for(lCounter = 1; lCounter < subCount; lCounter++) {
 			printf("%s: %s...\n", _("INFO"), _("resampling"));
-			Resample(&mSubBitmapList[0], &mSubBitmapList[lCounter]);
+			Resample(&sub, &mSubBitmapList[lCounter]);
 		}
 
 		// Init the plain color
@@ -475,7 +498,8 @@ void ResBitmapBuilder::ComputeIntermediateImages(MR_UInt8 *pBuffer)
 
 		printf("%s: %s...\n", _("INFO"), _("computing plain color"));
 
-		mPlainColor = GetBestColor(mSubBitmapList[0].mBuffer, mSubBitmapList[0].mYRes, mSubBitmapList[0].mXRes, mSubBitmapList[0].mYRes, lDummyBool);
+		mPlainColor = GetBestColor(sub.mBuffer, sub.mYRes, sub.mXRes, sub.mYRes,
+			lDummyBool);
 	}
 	else {
       printf("%s: %s.\n", _("WARNING"), _("bitmap too small; using single color"));
