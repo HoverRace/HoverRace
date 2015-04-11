@@ -1,7 +1,7 @@
 
 // Label.h
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -21,10 +21,7 @@
 
 #pragma once
 
-#include "Color.h"
-#include "UiFont.h"
-
-#include "UiViewModel.h"
+#include "BaseText.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
 #	ifdef MR_ENGINE
@@ -51,20 +48,18 @@ namespace Display {
  * visibility.
  * @author Michael Imamura
  */
-class MR_DllDeclare Label : public UiViewModel
+class MR_DllDeclare Label : public BaseText
 {
-	using SUPER = UiViewModel;
+	using SUPER = BaseText;
 
 public:
 	struct Props
 	{
-		enum {
-			COLOR = SUPER::Props::NEXT_,
-			FONT,
-			TEXT,
-			WRAP_WIDTH,  ///< Fired when a fixed width is set or auto-width is enabled.
-			FIXED_SCALE,
+		enum
+		{
+			FIXED_SCALE = SUPER::Props::NEXT_,
 			SCALE,
+			WRAP_WIDTH,  ///< Fired when a fixed width is set or auto-width is enabled.
 			NEXT_,  ///< First index for subclasses.
 		};
 	};
@@ -74,10 +69,10 @@ public:
 		uiLayoutFlags_t layoutFlags = 0);
 	Label(double wrapWidth, const std::string &text, const UiFont &font,
 		const Color color, uiLayoutFlags_t layoutFlags = 0);
-	virtual ~Label();
+	virtual ~Label() { }
 
 public:
-	virtual void AttachView(Display &disp) { AttachViewDynamic(disp, this); }
+	void AttachView(Display &disp) override { AttachViewDynamic(disp, this); }
 
 public:
 	/**
@@ -89,9 +84,6 @@ public:
 	bool IsAutoWidth() const { return wrapWidth <= 0; }
 	void SetAutoWidth();
 
-	const Color GetColor() const { return color; }
-	void SetColor(const Color color);
-
 	/**
 	 * Check if the scaling is fixed (i.e., ignores user text scale config).
 	 * @return @c true if fixed scale, @c false if not.
@@ -99,18 +91,12 @@ public:
 	bool IsFixedScale() const { return fixedScale; }
 	void SetFixedScale(bool fixedScale);
 
-	const UiFont &GetFont() const { return font; }
-	void SetFont(const UiFont &font);
-
 	/**
 	 * Gets the scaling of this label.
 	 * @return The scale.
 	 */
 	double GetScale() const { return scale; }
 	void SetScale(const double scale);
-
-	const std::string &GetText() const { return text; }
-	void SetText(const std::string &text);
 
 	/**
 	 * Returns the set width, if a fixed width is set.
@@ -121,12 +107,9 @@ public:
 	void SetWrapWidth(double wrapWidth);
 
 private:
-	std::string text;
-	double wrapWidth;
-	UiFont font;
-	Color color;
 	bool fixedScale;
 	double scale;
+	double wrapWidth;
 };
 
 }  // namespace Display

@@ -47,12 +47,12 @@ SdlLabelView::~SdlLabelView()
 void SdlLabelView::OnModelUpdate(int prop)
 {
 	switch (prop) {
-		case Label::Props::COLOR:
+		case BaseText::Props::COLOR:
 			colorChanged = true;
 			break;
 
-		case Label::Props::FONT:
-		case Label::Props::TEXT:
+		case BaseText::Props::FONT:
+		case BaseText::Props::TEXT:
 		case Label::Props::WRAP_WIDTH:
 			texture.release();
 			break;

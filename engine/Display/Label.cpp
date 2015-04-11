@@ -1,7 +1,7 @@
 
 // Label.cpp
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -37,10 +37,8 @@ Label::Label(const std::string &text,
 	const UiFont &font,
 	Color color,
 	uiLayoutFlags_t layoutFlags) :
-	SUPER(layoutFlags),
-	text(text),
-	wrapWidth(-1), font(font), color(color), 
-	fixedScale(false), scale(1.0)
+	SUPER(text, font, color, layoutFlags),
+	fixedScale(false), scale(1.0), wrapWidth(-1)
 {
 }
 
@@ -57,14 +55,8 @@ Label::Label(double wrapWidth,
 	const UiFont &font,
 	Color color,
 	uiLayoutFlags_t layoutFlags) :
-	SUPER(layoutFlags),
-	text(text),
-	wrapWidth(wrapWidth), font(font), color(color),
-	fixedScale(false), scale(1.0)
-{
-}
-
-Label::~Label()
+	SUPER(text, font, color, layoutFlags),
+	fixedScale(false), scale(1.0), wrapWidth(wrapWidth)
 {
 }
 
@@ -80,14 +72,6 @@ void Label::SetAutoWidth()
 	}
 }
 
-void Label::SetColor(const Color color)
-{
-	if (this->color != color) {
-		this->color = color;
-		FireModelUpdate(Props::COLOR);
-	}
-}
-
 void Label::SetFixedScale(bool fixedScale)
 {
 	if (this->fixedScale != fixedScale) {
@@ -96,27 +80,11 @@ void Label::SetFixedScale(bool fixedScale)
 	}
 }
 
-void Label::SetFont(const UiFont &font)
-{
-	if (this->font != font) {
-		this->font = font;
-		FireModelUpdate(Props::FONT);
-	}
-}
-
 void Label::SetScale(double scale)
 {
 	if (this->scale != scale) {
 		this->scale = scale;
 		FireModelUpdate(Props::SCALE);
-	}
-}
-
-void Label::SetText(const std::string &text)
-{
-	if (this->text != text) {
-		this->text = text;
-		FireModelUpdate(Props::TEXT);
 	}
 }
 
