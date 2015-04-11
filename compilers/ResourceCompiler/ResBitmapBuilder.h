@@ -28,16 +28,16 @@ namespace ResourceCompiler {
 
 class ResBitmapBuilder : public ObjFacTools::ResBitmap
 {
-	typedef ObjFacTools::ResBitmap SUPER;
-	protected:
-		void Resample(const SubBitmap * pSrc, SubBitmap * pDest);
-		void ComputeIntermediateImages(MR_UInt8 * pBuffer);
+	using SUPER = ObjFacTools::ResBitmap;
 
-	public:
-		ResBitmapBuilder(int pResourceId, int pWidth, int pHeight);
+protected:
+	void Resample(const SubBitmap *pSrc, SubBitmap *pDest);
+	void ComputeIntermediateImages(MR_UInt8 *pBuffer);
 
-		BOOL BuildFromFile(const char *pFile, int pAntiAliasScheme);
+public:
+	ResBitmapBuilder(int pResourceId, int pWidth, int pHeight);
 
+	BOOL BuildFromFile(const char *pFile, int pAntiAliasScheme);
 };
 
 }  // namespace ResourceCompiler

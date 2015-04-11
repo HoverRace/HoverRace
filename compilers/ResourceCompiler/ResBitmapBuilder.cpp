@@ -1,3 +1,4 @@
+
 // ResBitmapBuilder.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
@@ -28,9 +29,173 @@
 namespace HoverRace {
 namespace ResourceCompiler {
 
-// Local prototypes
-static MR_UInt8 GetBestColor(MR_UInt8 * pSrc, int pStripeLenToScan, int pNbStripeToScan, int pStripeLen, BOOL & pTransparentFlag);
-static MR_UInt8 GetBestColorWithError(MR_UInt8 * pSrc, int pStripeLenToScan, int pNbStripeToScan, int pStripeLen, BOOL & pTransparentFlag, double &mRedError, double &mGreenError, double &mBlueError);
+namespace {
+
+MR_UInt8 GetBestColor(MR_UInt8 *pSrc, int pStripeLenToScan, int pNbStripeToScan,
+	int pStripeLen, BOOL &pTransparentFlag)
+{
+	MR_UInt8 lReturnValue;
+	int lNbPoints = pStripeLenToScan * pNbStripeToScan;
+	int lNbTransparent = 0;
+
+	double lTotalRed = 0;
+	double lTotalGreen = 0;
+	double lTotalBlue = 0;
+
+	for(int lStripe = 0; lStripe < pNbStripeToScan; lStripe++) {
+
+		double lStripeRed = 0;					  // Intermediate results to reduce rounding errors
+		double lStripeGreen = 0;
+		double lStripeBlue = 0;
+
+		for(int lCounter = 0; lCounter < pStripeLenToScan; lCounter++) {
+			if(pSrc[lCounter] == 0) {
+				lNbTransparent++;
+			}
+			else {
+				double lPointRed;
+				double lPointGreen;
+				double lPointBlue;
+
+				MR_ColorTools::GetComponents(pSrc[lCounter] - MR_RESERVED_COLORS_BEGINNING, lPointRed, lPointGreen, lPointBlue);
+
+				lStripeRed += lPointRed;
+				lStripeGreen += lPointGreen;
+				lStripeBlue += lPointBlue;
+			}
+		}
+		pSrc += pStripeLen;
+
+		lTotalRed += lStripeRed;
+		lTotalGreen += lStripeGreen;
+		lTotalBlue += lStripeBlue;
+	}
+
+	if(lNbTransparent > lNbPoints / 2) {
+		lReturnValue = 0;
+		pTransparentFlag = TRUE;
+	}
+	else {
+		lReturnValue = MR_RESERVED_COLORS_BEGINNING + MR_ColorTools::GetNearest(lTotalRed / (lNbPoints - lNbTransparent), lTotalGreen / (lNbPoints - lNbTransparent), lTotalBlue / (lNbPoints - lNbTransparent));
+
+	}
+	return lReturnValue;
+}
+
+MR_UInt8 GetBestColorWithError(MR_UInt8 *pSrc, int pStripeLenToScan,
+	int pNbStripeToScan, int pStripeLen, BOOL &pTransparentFlag,
+	double &pRedError, double &pGreenError, double &pBlueError)
+{
+	MR_UInt8 lReturnValue;
+	int lNbPoints = pStripeLenToScan * pNbStripeToScan;
+	int lNbTransparent = 0;
+
+	double lTotalRed = 0;
+	double lTotalGreen = 0;
+	double lTotalBlue = 0;
+
+	// remove error peeks
+
+	if(pRedError < -0.20) {
+		pRedError = -0.20;
+	}
+	else if(pRedError > 0.20) {
+		pRedError = 0.20;
+	}
+
+	if(pGreenError < -0.20) {
+		pGreenError = -0.20;
+	}
+	else if(pGreenError > 0.20) {
+		pGreenError = 0.20;
+	}
+
+	if(pBlueError < -0.20) {
+		pBlueError = -0.20;
+	}
+	else if(pBlueError > 0.20) {
+		pBlueError = 0.20;
+	}
+
+	for(int lStripe = 0; lStripe < pNbStripeToScan; lStripe++) {
+
+		double lStripeRed = 0;					  // Intermediate results to reduce rounding errors
+		double lStripeGreen = 0;
+		double lStripeBlue = 0;
+
+		for(int lCounter = 0; lCounter < pStripeLenToScan; lCounter++) {
+			if(pSrc[lCounter] == 0) {
+				lNbTransparent++;
+			}
+			else {
+				double lPointRed;
+				double lPointGreen;
+				double lPointBlue;
+
+				MR_ColorTools::GetComponents(pSrc[lCounter] - MR_RESERVED_COLORS_BEGINNING, lPointRed, lPointGreen, lPointBlue);
+
+				// Give more weight to central points
+
+				/*
+				   if( (pStripeLenToScan>=3)&&(pNbStripeToScan >= 3) )
+				   {
+				   if( (lCounter >= pStripeLenToScan/3)&&(lCounter <= (pStripeLenToScan-pStripeLenToScan/3) ))
+				   {
+				   if( (lStripe >= pNbStripeToScan/3)&&(lStripe <= (pNbStripeToScan-pNbStripeToScan/3) ))
+				   {
+				   lNbPoints++;
+
+				   lStripeRed   += lPointRed;
+				   lStripeGreen += lPointGreen;
+				   lStripeBlue  += lPointBlue;
+				   }
+				   }
+				   }
+				 */
+
+				lStripeRed += lPointRed;
+				lStripeGreen += lPointGreen;
+				lStripeBlue += lPointBlue;
+			}
+		}
+		pSrc += pStripeLen;
+
+		lTotalRed += lStripeRed;
+		lTotalGreen += lStripeGreen;
+		lTotalBlue += lStripeBlue;
+	}
+
+	if(lNbTransparent > lNbPoints / 2) {
+		lReturnValue = 0;
+		pTransparentFlag = TRUE;
+
+		pRedError = 0.0;
+		pGreenError = 0.0;
+		pBlueError = 0.0;
+
+	}
+	else {
+		lTotalRed /= (lNbPoints - lNbTransparent);
+		lTotalGreen /= (lNbPoints - lNbTransparent);
+		lTotalBlue /= (lNbPoints - lNbTransparent);
+
+		lTotalRed += pRedError;
+		lTotalGreen += pGreenError;
+		lTotalBlue += pBlueError;
+
+		lReturnValue = MR_RESERVED_COLORS_BEGINNING + MR_ColorTools::GetNearest(lTotalRed, lTotalGreen, lTotalBlue);
+
+		MR_ColorTools::GetComponents(lReturnValue - MR_RESERVED_COLORS_BEGINNING, pRedError, pGreenError, pBlueError);
+
+		pRedError = lTotalRed - pRedError;
+		pGreenError = lTotalGreen - pGreenError;
+		pBlueError = lTotalBlue - pBlueError;
+
+	}
+	return lReturnValue;
+}
+
+}  // namespace
 
 ResBitmapBuilder::ResBitmapBuilder(int pResourceId, int pWidth, int pHeight) :
 	SUPER(pResourceId)
@@ -172,7 +337,7 @@ void ResBitmapBuilder::Resample( const SubBitmap* pSrc, SubBitmap* pDest )
 }
 */
 
-void ResBitmapBuilder::Resample(const SubBitmap * pSrc, SubBitmap * pDest)
+void ResBitmapBuilder::Resample(const SubBitmap *pSrc, SubBitmap *pDest)
 {
 
 	int lX;
@@ -265,7 +430,7 @@ void ResBitmapBuilder::Resample(const SubBitmap * pSrc, SubBitmap * pDest)
 	delete[]lSrc;
 }
 
-void ResBitmapBuilder::ComputeIntermediateImages(MR_UInt8 * pBuffer)
+void ResBitmapBuilder::ComputeIntermediateImages(MR_UInt8 *pBuffer)
 {
 
 	// First copy the original image
@@ -317,169 +482,6 @@ void ResBitmapBuilder::ComputeIntermediateImages(MR_UInt8 * pBuffer)
 
 		mPlainColor = *pBuffer;
 	}
-}
-
-// Local functions implementation
-
-MR_UInt8 GetBestColor(MR_UInt8 * pSrc, int pStripeLenToScan, int pNbStripeToScan, int pStripeLen, BOOL & pTransparentFlag)
-{
-	MR_UInt8 lReturnValue;
-	int lNbPoints = pStripeLenToScan * pNbStripeToScan;
-	int lNbTransparent = 0;
-
-	double lTotalRed = 0;
-	double lTotalGreen = 0;
-	double lTotalBlue = 0;
-
-	for(int lStripe = 0; lStripe < pNbStripeToScan; lStripe++) {
-
-		double lStripeRed = 0;					  // Intermediate results to reduce rounding errors
-		double lStripeGreen = 0;
-		double lStripeBlue = 0;
-
-		for(int lCounter = 0; lCounter < pStripeLenToScan; lCounter++) {
-			if(pSrc[lCounter] == 0) {
-				lNbTransparent++;
-			}
-			else {
-				double lPointRed;
-				double lPointGreen;
-				double lPointBlue;
-
-				MR_ColorTools::GetComponents(pSrc[lCounter] - MR_RESERVED_COLORS_BEGINNING, lPointRed, lPointGreen, lPointBlue);
-
-				lStripeRed += lPointRed;
-				lStripeGreen += lPointGreen;
-				lStripeBlue += lPointBlue;
-			}
-		}
-		pSrc += pStripeLen;
-
-		lTotalRed += lStripeRed;
-		lTotalGreen += lStripeGreen;
-		lTotalBlue += lStripeBlue;
-	}
-
-	if(lNbTransparent > lNbPoints / 2) {
-		lReturnValue = 0;
-		pTransparentFlag = TRUE;
-	}
-	else {
-		lReturnValue = MR_RESERVED_COLORS_BEGINNING + MR_ColorTools::GetNearest(lTotalRed / (lNbPoints - lNbTransparent), lTotalGreen / (lNbPoints - lNbTransparent), lTotalBlue / (lNbPoints - lNbTransparent));
-
-	}
-	return lReturnValue;
-}
-
-MR_UInt8 GetBestColorWithError(MR_UInt8 * pSrc, int pStripeLenToScan, int pNbStripeToScan, int pStripeLen, BOOL & pTransparentFlag, double &pRedError, double &pGreenError, double &pBlueError)
-{
-	MR_UInt8 lReturnValue;
-	int lNbPoints = pStripeLenToScan * pNbStripeToScan;
-	int lNbTransparent = 0;
-
-	double lTotalRed = 0;
-	double lTotalGreen = 0;
-	double lTotalBlue = 0;
-
-	// remove error peeks
-
-	if(pRedError < -0.20) {
-		pRedError = -0.20;
-	}
-	else if(pRedError > 0.20) {
-		pRedError = 0.20;
-	}
-
-	if(pGreenError < -0.20) {
-		pGreenError = -0.20;
-	}
-	else if(pGreenError > 0.20) {
-		pGreenError = 0.20;
-	}
-
-	if(pBlueError < -0.20) {
-		pBlueError = -0.20;
-	}
-	else if(pBlueError > 0.20) {
-		pBlueError = 0.20;
-	}
-
-	for(int lStripe = 0; lStripe < pNbStripeToScan; lStripe++) {
-
-		double lStripeRed = 0;					  // Intermediate results to reduce rounding errors
-		double lStripeGreen = 0;
-		double lStripeBlue = 0;
-
-		for(int lCounter = 0; lCounter < pStripeLenToScan; lCounter++) {
-			if(pSrc[lCounter] == 0) {
-				lNbTransparent++;
-			}
-			else {
-				double lPointRed;
-				double lPointGreen;
-				double lPointBlue;
-
-				MR_ColorTools::GetComponents(pSrc[lCounter] - MR_RESERVED_COLORS_BEGINNING, lPointRed, lPointGreen, lPointBlue);
-
-				// Give more weight to central points
-
-				/*
-				   if( (pStripeLenToScan>=3)&&(pNbStripeToScan >= 3) )
-				   {
-				   if( (lCounter >= pStripeLenToScan/3)&&(lCounter <= (pStripeLenToScan-pStripeLenToScan/3) ))
-				   {
-				   if( (lStripe >= pNbStripeToScan/3)&&(lStripe <= (pNbStripeToScan-pNbStripeToScan/3) ))
-				   {
-				   lNbPoints++;
-
-				   lStripeRed   += lPointRed;
-				   lStripeGreen += lPointGreen;
-				   lStripeBlue  += lPointBlue;
-				   }
-				   }
-				   }
-				 */
-
-				lStripeRed += lPointRed;
-				lStripeGreen += lPointGreen;
-				lStripeBlue += lPointBlue;
-			}
-		}
-		pSrc += pStripeLen;
-
-		lTotalRed += lStripeRed;
-		lTotalGreen += lStripeGreen;
-		lTotalBlue += lStripeBlue;
-	}
-
-	if(lNbTransparent > lNbPoints / 2) {
-		lReturnValue = 0;
-		pTransparentFlag = TRUE;
-
-		pRedError = 0.0;
-		pGreenError = 0.0;
-		pBlueError = 0.0;
-
-	}
-	else {
-		lTotalRed /= (lNbPoints - lNbTransparent);
-		lTotalGreen /= (lNbPoints - lNbTransparent);
-		lTotalBlue /= (lNbPoints - lNbTransparent);
-
-		lTotalRed += pRedError;
-		lTotalGreen += pGreenError;
-		lTotalBlue += pBlueError;
-
-		lReturnValue = MR_RESERVED_COLORS_BEGINNING + MR_ColorTools::GetNearest(lTotalRed, lTotalGreen, lTotalBlue);
-
-		MR_ColorTools::GetComponents(lReturnValue - MR_RESERVED_COLORS_BEGINNING, pRedError, pGreenError, pBlueError);
-
-		pRedError = lTotalRed - pRedError;
-		pGreenError = lTotalGreen - pGreenError;
-		pBlueError = lTotalBlue - pBlueError;
-
-	}
-	return lReturnValue;
 }
 
 }  // namespace ResourceCompiler
