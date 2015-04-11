@@ -41,7 +41,6 @@ namespace HoverRace {
 		class TypeLine;
 	}
 }
-struct SDL_Surface;
 
 namespace HoverRace {
 namespace Display {
