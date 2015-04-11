@@ -34,7 +34,8 @@
 #	define MR_DllDeclare
 #endif
 
-namespace MR_ColorTools {
+namespace HoverRace {
+namespace ColorTools {
 
 MR_DllDeclare void Init();
 
@@ -48,6 +49,7 @@ MR_DllDeclare void GetIntComponents(MR_UInt8 pColor,
 
 MR_DllDeclare int GetNbColors();
 
-};
+}  // namespace ColorTools
+}  // namespace HoverRace
 
 #undef MR_DllDeclare

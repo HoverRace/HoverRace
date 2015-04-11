@@ -22,6 +22,8 @@
 
 #include "ColorTools.h"
 
+namespace HoverRace {
+
 namespace {
 
 // Constants
@@ -137,7 +139,7 @@ MR_UInt8 GetNearestColor(double pRed, double pGreen, double pBlue)
 
 } // namespace
 
-void MR_ColorTools::Init()
+void ColorTools::Init()
 {
 
 	// init gsColors
@@ -233,7 +235,7 @@ void MR_ColorTools::Init()
 	}
 }
 
-MR_UInt8 MR_ColorTools::GetNearest(double pRed, double pGreen, double pBlue)
+MR_UInt8 ColorTools::GetNearest(double pRed, double pGreen, double pBlue)
 {
 
 	int lRed = int (pRed * double (MR_COLOR_COMP));
@@ -265,14 +267,14 @@ MR_UInt8 MR_ColorTools::GetNearest(double pRed, double pGreen, double pBlue)
 
 }
 
-void MR_ColorTools::GetComponents(MR_UInt8 pColor, double &pRed, double &pGreen, double &pBlue)
+void ColorTools::GetComponents(MR_UInt8 pColor, double &pRed, double &pGreen, double &pBlue)
 {
 	pRed = gsColors[pColor].mRed;
 	pGreen = gsColors[pColor].mGreen;
 	pBlue = gsColors[pColor].mBlue;
 }
 
-void MR_ColorTools::GetIntComponents(MR_UInt8 pColor, int &pRed, int &pGreen, int &pBlue)
+void ColorTools::GetIntComponents(MR_UInt8 pColor, int &pRed, int &pGreen, int &pBlue)
 {
 	pRed = int (gsColors[pColor].mRed * 256.0);
 	pGreen = int (gsColors[pColor].mGreen * 256.0);
@@ -300,8 +302,10 @@ void MR_ColorTools::GetIntComponents(MR_UInt8 pColor, int &pRed, int &pGreen, in
 	}
 }
 
-int MR_ColorTools::GetNbColors()
+int ColorTools::GetNbColors()
 {
 	return eNbColors;
 }
+
+}  // namespace HoverRace
 

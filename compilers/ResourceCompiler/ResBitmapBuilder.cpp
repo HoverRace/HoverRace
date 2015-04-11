@@ -60,7 +60,7 @@ MR_UInt8 GetBestColor(MR_UInt8 *pSrc, int pStripeLenToScan, int pNbStripeToScan,
 
 				MR_UInt8 color = static_cast<MR_UInt8>(
 					pSrc[lCounter] - MR_RESERVED_COLORS_BEGINNING);
-				MR_ColorTools::GetComponents(color,
+				ColorTools::GetComponents(color,
 					lPointRed, lPointGreen, lPointBlue);
 
 				lStripeRed += lPointRed;
@@ -82,7 +82,7 @@ MR_UInt8 GetBestColor(MR_UInt8 *pSrc, int pStripeLenToScan, int pNbStripeToScan,
 	else {
 		lReturnValue = static_cast<MR_UInt8>(
 			MR_RESERVED_COLORS_BEGINNING +
-			MR_ColorTools::GetNearest(
+			ColorTools::GetNearest(
 				lTotalRed / (lNbPoints - lNbTransparent),
 				lTotalGreen / (lNbPoints - lNbTransparent),
 				lTotalBlue / (lNbPoints - lNbTransparent)));
@@ -143,7 +143,7 @@ MR_UInt8 GetBestColorWithError(MR_UInt8 *pSrc, int pStripeLenToScan,
 
 				MR_UInt8 color = static_cast<MR_UInt8>(
 					pSrc[lCounter] - MR_RESERVED_COLORS_BEGINNING);
-				MR_ColorTools::GetComponents(color,
+				ColorTools::GetComponents(color,
 					lPointRed, lPointGreen, lPointBlue);
 
 				// Give more weight to central points
@@ -196,11 +196,11 @@ MR_UInt8 GetBestColorWithError(MR_UInt8 *pSrc, int pStripeLenToScan,
 		lTotalBlue += pBlueError;
 
 		lReturnValue = static_cast<MR_UInt8>(MR_RESERVED_COLORS_BEGINNING +
-			MR_ColorTools::GetNearest(lTotalRed, lTotalGreen, lTotalBlue));
+			ColorTools::GetNearest(lTotalRed, lTotalGreen, lTotalBlue));
 
 		MR_UInt8 color = static_cast<MR_UInt8>(
 			lReturnValue - MR_RESERVED_COLORS_BEGINNING);
-		MR_ColorTools::GetComponents(color, pRedError, pGreenError, pBlueError);
+		ColorTools::GetComponents(color, pRedError, pGreenError, pBlueError);
 
 		pRedError = lTotalRed - pRedError;
 		pGreenError = lTotalGreen - pGreenError;

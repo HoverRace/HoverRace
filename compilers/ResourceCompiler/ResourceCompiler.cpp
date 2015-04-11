@@ -79,7 +79,7 @@ int main(int pArgc, char **pArgs)
 
 	printf("Resources Compiler               (C)Copyright GrokkSoft inc, 1996\n");
 
-	MR_ColorTools::Init();
+	HoverRace::ColorTools::Init();
 
 #	ifdef ENABLE_NLS
 		// Gettext initialization.
