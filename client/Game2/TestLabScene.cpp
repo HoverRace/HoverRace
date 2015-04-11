@@ -238,22 +238,6 @@ public:
 	virtual ~IconModule() { }
 }; //}}}
 
-class LabelModule : public TestLabScene::LabModule /*{{{*/
-{
-	using SUPER = TestLabScene::LabModule;
-
-public:
-	LabelModule(Display::Display &display, GameDirector &director);
-	virtual ~LabelModule() { }
-
-private:
-	void AdjustWrapWidth(double amt);
-
-private:
-	std::shared_ptr<Display::FillBox> wrapBox;
-	std::shared_ptr<Display::Label> wrapLbl;
-}; //}}}
-
 class LayoutModule : public TestLabScene::LabModule /*{{{*/
 {
 	using SUPER = TestLabScene::LabModule;
@@ -301,6 +285,22 @@ public:
 
 private:
 	std::shared_ptr<Display::Picture> picture;
+}; //}}}
+
+class TextModule : public TestLabScene::LabModule /*{{{*/
+{
+	using SUPER = TestLabScene::LabModule;
+
+public:
+	TextModule(Display::Display &display, GameDirector &director);
+	virtual ~TextModule() { }
+
+private:
+	void AdjustWrapWidth(double amt);
+
+private:
+	std::shared_ptr<Display::FillBox> wrapBox;
+	std::shared_ptr<Display::Label> wrapLbl;
 }; //}}}
 
 class TransitionModule : public TestLabScene::LabModule /*{{{*/
@@ -362,10 +362,10 @@ TestLabScene::TestLabScene(Display::Display &display, GameDirector &director,
 	grid->AddModule<Module::FlexGridModule>("FlexGrid");
 	grid->AddModule<Module::HudModule>("HUD");
 	grid->AddModule<Module::IconModule>("Icon");
-	grid->AddModule<Module::LabelModule>("Label");
 	grid->AddModule<Module::LayoutModule>("Layout");
 	grid->AddModule<Module::PickListModule>("PickList");
 	grid->AddModule<Module::PictureModule>("Picture");
+	grid->AddModule<Module::TextModule>("Text");
 	grid->AddModule<Module::TransitionModule>("Transition");
 	grid->AddModule<Module::TypeCaseModule>("TypeCase");
 
@@ -728,85 +728,6 @@ IconModule::IconModule(Display::Display &display, GameDirector &director) :
 
 //}}} IconModule
 
-//{{{ LabelModule //////////////////////////////////////////////////////////////
-
-LabelModule::LabelModule(Display::Display &display, GameDirector &director) :
-	SUPER(display, director, "Label")
-{
-	using namespace Display;
-
-	Config *cfg = Config::GetInstance();
-	const std::string &monospaceFontName = cfg->GetDefaultMonospaceFontName();
-	const std::string &symbolFontName = cfg->GetDefaultSymbolFontName();
-
-	auto root = GetRoot();
-
-	std::shared_ptr<Button> btn;
-	std::shared_ptr<Label> lbl;
-
-	lbl = root->NewChild<Label>("Red 20 Normal", UiFont(20), 0xffff0000);
-	lbl->SetPos(0, 20);
-	lbl = root->NewChild<Label>("Yellow (75%) 25 Italic",
-		UiFont(25, UiFont::ITALIC), 0xbfffff00);
-	lbl->SetPos(0, 40);
-	lbl = root->NewChild<Label>("Magenta (50%) 30 Bold+Italic",
-		UiFont(30, UiFont::BOLD_ITALIC), 0x7fff00ff);
-	lbl->SetPos(0, 65);
-
-	lbl = root->NewChild<Label>("Default Font", UiFont(30), 0xffbfbfbf);
-	lbl->SetPos(640, 20);
-	lbl = root->NewChild<Label>("Monospace Font",
-		UiFont(monospaceFontName, 30), 0xffbfbfbf);
-	lbl->SetPos(640, 50);
-	lbl = root->NewChild<Label>("< "
-		"\xef\x84\x9b "  // gamepad
-		"\xef\x82\x91 "  // trophy
-		"\xef\x83\xa4 "  // dashboard
-		">",
-		UiFont(symbolFontName, 30), 0xffbfbfbf);
-	lbl->SetPos(640, 80);
-
-	// Wrapped text (with a background to visualize the width).
-
-	std::string wrapText =
-		"This is a string which should be wrapped to multiple lines to fit "
-		"the fixed width label.\n\n"
-		"ThisIsAVeryLongWordThatShouldBeClippedToTheFixedWidthOfTheLabel.\n\n"
-		"This is the third line of the text.";
-
-	wrapBox = root->NewChild<FillBox>(1280 / 4, 720 - 150, 0xff3f3f3f);
-	wrapBox->SetPos(100, 150);
-
-	wrapLbl = root->NewChild<Label>(1280 / 4, wrapText,
-		UiFont(30), 0xffffffff);
-	wrapLbl->SetPos(100, 150);
-
-	// Buttons to increase / decrease the wrap width.
-
-	btn = root->NewChild<Button>(display, "->|");
-	btn->SetPos(0, 150);
-	btn->GetClickedSignal().connect(std::bind(
-		&LabelModule::AdjustWrapWidth, this, 50));
-
-	btn = root->NewChild<Button>(display, "|<-");
-	btn->SetPos(0, 200);
-	btn->GetClickedSignal().connect(std::bind(
-		&LabelModule::AdjustWrapWidth, this, -50));
-}
-
-void LabelModule::AdjustWrapWidth(double amt)
-{
-	const Vec2 &curSize = wrapBox->GetSize();
-	double newWidth = curSize.x + amt;
-
-	if (newWidth > 0 && newWidth < (1280.0 - wrapBox->GetPos().x)) {
-		wrapBox->SetSize(newWidth, curSize.y);
-		wrapLbl->SetWrapWidth(newWidth);
-	}
-}
-
-//}}} LabelModule
-
 //{{{ LayoutModule /////////////////////////////////////////////////////////////
 
 LayoutModule::LayoutModule(Display::Display &display, GameDirector &director) :
@@ -973,6 +894,85 @@ PictureModule::PictureModule(Display::Display &display, GameDirector &director) 
 }
 
 //}}} PictureModule
+
+//{{{ TextModule ///////////////////////////////////////////////////////////////
+
+TextModule::TextModule(Display::Display &display, GameDirector &director) :
+	SUPER(display, director, "Text")
+{
+	using namespace Display;
+
+	Config *cfg = Config::GetInstance();
+	const std::string &monospaceFontName = cfg->GetDefaultMonospaceFontName();
+	const std::string &symbolFontName = cfg->GetDefaultSymbolFontName();
+
+	auto root = GetRoot();
+
+	std::shared_ptr<Button> btn;
+	std::shared_ptr<Label> lbl;
+
+	lbl = root->NewChild<Label>("Red 20 Normal", UiFont(20), 0xffff0000);
+	lbl->SetPos(0, 20);
+	lbl = root->NewChild<Label>("Yellow (75%) 25 Italic",
+		UiFont(25, UiFont::ITALIC), 0xbfffff00);
+	lbl->SetPos(0, 40);
+	lbl = root->NewChild<Label>("Magenta (50%) 30 Bold+Italic",
+		UiFont(30, UiFont::BOLD_ITALIC), 0x7fff00ff);
+	lbl->SetPos(0, 65);
+
+	lbl = root->NewChild<Label>("Default Font", UiFont(30), 0xffbfbfbf);
+	lbl->SetPos(640, 20);
+	lbl = root->NewChild<Label>("Monospace Font",
+		UiFont(monospaceFontName, 30), 0xffbfbfbf);
+	lbl->SetPos(640, 50);
+	lbl = root->NewChild<Label>("< "
+		"\xef\x84\x9b "  // gamepad
+		"\xef\x82\x91 "  // trophy
+		"\xef\x83\xa4 "  // dashboard
+		">",
+		UiFont(symbolFontName, 30), 0xffbfbfbf);
+	lbl->SetPos(640, 80);
+
+	// Wrapped text (with a background to visualize the width).
+
+	std::string wrapText =
+		"This is a string which should be wrapped to multiple lines to fit "
+		"the fixed width label.\n\n"
+		"ThisIsAVeryLongWordThatShouldBeClippedToTheFixedWidthOfTheLabel.\n\n"
+		"This is the third line of the text.";
+
+	wrapBox = root->NewChild<FillBox>(1280 / 4, 720 - 150, 0xff3f3f3f);
+	wrapBox->SetPos(100, 150);
+
+	wrapLbl = root->NewChild<Label>(1280 / 4, wrapText,
+		UiFont(30), 0xffffffff);
+	wrapLbl->SetPos(100, 150);
+
+	// Buttons to increase / decrease the wrap width.
+
+	btn = root->NewChild<Button>(display, "->|");
+	btn->SetPos(0, 150);
+	btn->GetClickedSignal().connect(std::bind(
+		&TextModule::AdjustWrapWidth, this, 50));
+
+	btn = root->NewChild<Button>(display, "|<-");
+	btn->SetPos(0, 200);
+	btn->GetClickedSignal().connect(std::bind(
+		&TextModule::AdjustWrapWidth, this, -50));
+}
+
+void TextModule::AdjustWrapWidth(double amt)
+{
+	const Vec2 &curSize = wrapBox->GetSize();
+	double newWidth = curSize.x + amt;
+
+	if (newWidth > 0 && newWidth < (1280.0 - wrapBox->GetPos().x)) {
+		wrapBox->SetSize(newWidth, curSize.y);
+		wrapLbl->SetWrapWidth(newWidth);
+	}
+}
+
+//}}} TextModule
 
 //{{{ TransitionModule ////////////////////////////////////////////////////////
 
