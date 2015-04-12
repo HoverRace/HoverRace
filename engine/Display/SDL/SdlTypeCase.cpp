@@ -193,7 +193,7 @@ void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
 	auto prev = s.begin();
 	auto iter = prev;
 	auto end = s.end();
-	int sx = 0, sy = 0;
+	int sx = 0;
 	try {
 		while (iter != end) {
 			MR_UInt32 cp = utf8::next(iter, end);
@@ -206,7 +206,6 @@ void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
 			if (rects) {
 				rects->glyphs.push_back(&entry);
 				sx += entry.srcRect.x;
-				sy = entry.srcRect.y;
 			}
 		}
 	}
@@ -220,7 +219,7 @@ void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
 
 	if (rects) {
 		rects->width = sx;
-		rects->height = sy;
+		rects->height = fontHeight;
 	}
 
 	// All maps that need update will be at the end, so update in reverse
