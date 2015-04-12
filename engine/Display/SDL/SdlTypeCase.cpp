@@ -78,7 +78,16 @@ GlyphEntry &SdlTypeCase::AddGlyph(GlyphEntry &ent, const std::string &s,
 	TTF_Font *ttfFont = display.LoadTtfFont(font, false);
 	SDL_Color color = { 0xff, 0xff, 0xff, 0xff };
 	SDL_Surface *src = TTF_RenderUTF8_Blended(ttfFont, s.c_str(), color);
-	//TODO: Handle when "Text has zero width".
+	if (!src) {
+		// No need to log the error; SDL_ttf will log the error itself.
+		ent.page = 0;
+		auto &rect = ent.srcRect;
+		rect.x = 0;
+		rect.y = 0;
+		rect.w = 0;
+		rect.h = 0;
+		return ent;
+	}
 	SDL_SetSurfaceBlendMode(src, SDL_BLENDMODE_NONE);
 	int w = src->w;
 	int h = src->h;
