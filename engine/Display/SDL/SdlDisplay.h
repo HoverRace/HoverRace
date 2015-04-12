@@ -67,6 +67,7 @@ public:
 
 public:
 	// ViewAttacher
+	void AttachView(ActiveText &model) override;
 	void AttachView(BaseContainer &model) override;
 	void AttachView(Button &model) override;
 	void AttachView(ClickRegion &model) override;

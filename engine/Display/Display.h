@@ -38,6 +38,7 @@
 
 namespace HoverRace {
 	namespace Display {
+		class ActiveText;
 		class BaseContainer;
 		class Button;
 		class ClickRegion;
@@ -70,6 +71,7 @@ namespace Display {
  * @author Michael Imamura
  */
 class MR_DllDeclare Display :
+	public ViewAttacher<ActiveText>,
 	public ViewAttacher<BaseContainer>,
 	public ViewAttacher<Button>,
 	public ViewAttacher<ClickRegion>,

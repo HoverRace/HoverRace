@@ -20,6 +20,7 @@
 // and limitations under the License.
 
 #include "../../engine/Control/Controller.h"
+#include "../../engine/Display/ActiveText.h"
 #include "../../engine/Display/ActionButton.h"
 #include "../../engine/Display/Button.h"
 #include "../../engine/Display/Checkbox.h"
@@ -298,9 +299,13 @@ public:
 private:
 	void AdjustWrapWidth(double amt);
 
+public:
+	void Advance(Util::OS::timestamp_t tick) override;
+
 private:
 	std::shared_ptr<Display::FillBox> wrapBox;
 	std::shared_ptr<Display::Label> wrapLbl;
+	std::shared_ptr<Display::ActiveText> randomLbl;
 }; //}}}
 
 class TransitionModule : public TestLabScene::LabModule /*{{{*/
@@ -959,6 +964,9 @@ TextModule::TextModule(Display::Display &display, GameDirector &director) :
 	btn->SetPos(0, 200);
 	btn->GetClickedSignal().connect(std::bind(
 		&TextModule::AdjustWrapWidth, this, -50));
+
+	randomLbl = root->NewChild<ActiveText>("0", UiFont(), 0xffffffff);
+	randomLbl->SetPos(640, 150);
 }
 
 void TextModule::AdjustWrapWidth(double amt)
@@ -970,6 +978,14 @@ void TextModule::AdjustWrapWidth(double amt)
 		wrapBox->SetSize(newWidth, curSize.y);
 		wrapLbl->SetWrapWidth(newWidth);
 	}
+}
+
+void TextModule::Advance(Util::OS::timestamp_t tick)
+{
+	SUPER::Advance(tick);
+
+	static boost::format rfmt{ "Random: %d" };
+	randomLbl->SetText(boost::str(rfmt % rand()));
 }
 
 //}}} TextModule

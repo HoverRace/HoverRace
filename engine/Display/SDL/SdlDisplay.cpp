@@ -26,6 +26,7 @@
 #include "../../Util/Log.h"
 #include "../../Util/Str.h"
 #include "../../Exception.h"
+#include "../ActiveText.h"
 #include "../BaseContainer.h"
 #include "../Button.h"
 #include "../ClickRegion.h"
@@ -40,6 +41,7 @@
 #include "../SymbolIcon.h"
 #include "../UiFont.h"
 #include "../Wallpaper.h"
+#include "SdlActiveTextView.h"
 #include "SdlBaseContainerView.h"
 #include "SdlButtonView.h"
 #include "SdlClickRegionView.h"
@@ -391,6 +393,11 @@ SdlDisplay::~SdlDisplay()
 
 	if (renderer) SDL_DestroyRenderer(renderer);
 	if (window) SDL_DestroyWindow(window);
+}
+
+void SdlDisplay::AttachView(ActiveText &model)
+{
+	model.SetView(std::unique_ptr<View>(new SdlActiveTextView(*this, model)));
 }
 
 void SdlDisplay::AttachView(BaseContainer &model)
