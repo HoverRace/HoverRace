@@ -54,8 +54,8 @@ namespace HoverRace {
 		class InputEventController;
 	}
 	namespace Display {
+		class ActiveText;
 		class Display;
-		class Label;
 	}
 	namespace Script {
 		class Core;
@@ -153,7 +153,7 @@ private:
 	boost::signals2::connection consoleToggleConn;
 
 	// Stats counters.
-	Display::Label *fpsLbl;
+	Display::ActiveText *fpsLbl;
 	unsigned int frameCount;
 	Util::OS::timestamp_t lastTimestamp;
 	double fps;

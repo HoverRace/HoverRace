@@ -26,7 +26,7 @@
 
 #include "../../engine/Exception.h"
 #include "../../engine/Control/Controller.h"
-#include "../../engine/Display/Label.h"
+#include "../../engine/Display/ActiveText.h"
 #include "../../engine/Display/UiLayoutFlags.h"
 #include "../../engine/Display/SDL/SdlDisplay.h"
 #include "../../engine/MainCharacter/MainCharacter.h"
@@ -220,7 +220,7 @@ ClientApp::ClientApp() :
 	gamePeer->SetDisplay(display);
 
 	namespace LayoutFlags = Display::UiLayoutFlags;
-	fpsLbl = new Display::Label("FPS:",
+	fpsLbl = new Display::ActiveText("FPS:",
 		Display::UiFont(20, Display::UiFont::BOLD),
 		Display::Color(0xff, 0xff, 0x7f, 0x00),
 		LayoutFlags::UNSCALED | LayoutFlags::FLOATING);
