@@ -21,13 +21,10 @@
 
 #include <SDL2/SDL.h>
 
-#include "../../Util/Config.h"
 #include "../ActiveText.h"
 #include "../TypeCase.h"
 
 #include "SdlActiveTextView.h"
-
-using namespace HoverRace::Util;
 
 namespace HoverRace {
 namespace Display {
@@ -89,8 +86,6 @@ void SdlActiveTextView::Render()
 void SdlActiveTextView::UpdateTexture()
 {
 	double scale = 1.0;
-
-	Config *cfg = Config::GetInstance();
 
 	UiFont font = model.GetFont();
 	if (!model.IsLayoutUnscaled()) {
