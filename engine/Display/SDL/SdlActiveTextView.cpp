@@ -21,10 +21,14 @@
 
 #include <SDL2/SDL.h>
 
+#include "../../Util/Config.h"
+
 #include "../ActiveText.h"
 #include "../TypeCase.h"
 
 #include "SdlActiveTextView.h"
+
+using namespace HoverRace::Util;
 
 namespace HoverRace {
 namespace Display {
@@ -91,6 +95,10 @@ void SdlActiveTextView::UpdateTexture()
 	if (!model.IsLayoutUnscaled()) {
 		font.size *= (scale = display.GetUiScale());
 	}
+
+	// Apply text scale since SdlTypeCase always uses unscaled fonts for
+	// cache reasons.
+	font.size *= Config::GetInstance()->video.textScale;
 
 	if (!typeCase) {
 		typeCase = display.GetTypeCase(font);
