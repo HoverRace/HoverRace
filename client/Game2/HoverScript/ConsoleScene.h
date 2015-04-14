@@ -75,12 +75,12 @@ private:
 
 public:
 	// Scene
-	virtual void AttachController(Control::InputEventController &controller);
-	virtual void DetachController(Control::InputEventController &controller);
+	void AttachController(Control::InputEventController &controller) override;
+	void DetachController(Control::InputEventController &controller) override;
 public:
-	virtual void Advance(Util::OS::timestamp_t tick);
-	virtual void PrepareRender();
-	virtual void Render();
+	void Advance(Util::OS::timestamp_t tick) override;
+	void PrepareRender() override;
+	void Render() override;
 
 private:
 	GameDirector &director;
