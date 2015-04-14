@@ -30,6 +30,7 @@ namespace HoverRace {
 		class GameDirector;
 	}
 	namespace Display {
+		class ActiveText;
 		class Display;
 		class Label;
 		class ScreenFade;
@@ -109,7 +110,7 @@ private:
 	bool layoutChanged;
 
 	std::unique_ptr<Display::ScreenFade> fader;
-	Display::Label *inputLbl;
+	Display::ActiveText *inputLbl;
 
 	bool cursorOn;
 	Util::OS::timestamp_t cursorTick;

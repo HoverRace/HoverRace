@@ -20,6 +20,7 @@
 // and limitations under the License.
 
 #include "../../../engine/Control/Controller.h"
+#include "../../../engine/Display/ActiveText.h"
 #include "../../../engine/Display/Display.h"
 #include "../../../engine/Display/Label.h"
 #include "../../../engine/Display/ScreenFade.h"
@@ -67,7 +68,7 @@ private:
 	Display::Display &display;
 
 	const Vec2 &charSize;
-	std::deque<Display::Label*> lines;
+	std::deque<Display::ActiveText*> lines;
 	size_t pos;
 	size_t num;
 
@@ -93,7 +94,7 @@ ConsoleScene::ConsoleScene(Display::Display &display, GameDirector &director,
 
 	const auto &font = s.consoleFont;
 
-	inputLbl = new Display::Label(COMMAND_PROMPT, font, s.consoleFg);
+	inputLbl = new Display::ActiveText(COMMAND_PROMPT, font, s.consoleFg);
 	inputLbl->SetPos(0, 719);
 	inputLbl->SetAlignment(Alignment::SW);
 	inputLbl->AttachView(display);
@@ -449,7 +450,8 @@ void ConsoleScene::LogLines::Add(const std::string &s,
 		lines.pop_front();
 	}
 
-	Display::Label *lbl = new Display::Label(s.empty() ? " " : s, font, color);
+	Display::ActiveText *lbl = new Display::ActiveText(
+		s.empty() ? " " : s, font, color);
 	lbl->SetAlignment(Display::UiViewModel::Alignment::SW);
 	lbl->AttachView(display);
 
@@ -476,7 +478,7 @@ void ConsoleScene::LogLines::PrepareRender()
 	auto iter = lines.rbegin();
 	std::advance(iter, pos);
 	while (iter != lines.rend() && y >= charHeight) {
-		Display::Label *lbl = *iter;
+		Display::ActiveText *lbl = *iter;
 		lbl->SetPos(0, y);
 		lbl->PrepareRender();
 
