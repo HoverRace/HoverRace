@@ -1,7 +1,7 @@
 
 // Chronometer.h
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -34,6 +34,10 @@
 #endif
 
 namespace HoverRace {
+	namespace Display {
+		class ActiveText;
+		class Label;
+	}
 	namespace Util {
 		class Clock;
 	}
@@ -70,7 +74,7 @@ private:
 
 	std::shared_ptr<FillBox> bg;
 	std::shared_ptr<Label> titleLbl;
-	std::shared_ptr<Label> valueLbl;
+	std::shared_ptr<ActiveText> valueLbl;
 };
 
 }  // namespace Display

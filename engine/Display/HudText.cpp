@@ -20,7 +20,7 @@
 // and limitations under the License.
 
 #include "FillBox.h"
-#include "Label.h"
+#include "ActiveText.h"
 
 #include "HudText.h"
 
@@ -46,7 +46,8 @@ HudText::HudText(Display &display, const std::string &text) :
 {
 	bg = NewChild<FillBox>(0, 0, BG_COLOR);
 
-	textLbl = NewChild<Label>(text, display.styles.hudNormalFont, FG_COLOR);
+	textLbl = NewChild<ActiveText>(text,
+		display.styles.hudNormalFont, FG_COLOR);
 }
 
 void HudText::OnHudRescaled(const Vec2 &hudScale)

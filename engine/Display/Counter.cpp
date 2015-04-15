@@ -19,6 +19,7 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
+#include "ActiveText.h"
 #include "FillBox.h"
 #include "Label.h"
 
@@ -64,7 +65,7 @@ Counter::Counter(Display &display, const std::string &title, double initValue,
 	titleLbl = NewChild<Label>(title, s.hudNormalHeadFont, TITLE_COLOR);
 	titleLbl->SetAlignment(Alignment::W);
 
-	valueLbl = NewChild<Label>("", s.hudNormalFont, VALUE_COLOR);
+	valueLbl = NewChild<ActiveText>("", s.hudNormalFont, VALUE_COLOR);
 }
 
 void Counter::OnHudRescaled(const Vec2 &hudScale)

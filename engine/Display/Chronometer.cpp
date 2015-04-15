@@ -20,6 +20,7 @@
 // and limitations under the License.
 
 #include "../Util/Clock.h"
+#include "ActiveText.h"
 #include "FillBox.h"
 #include "Label.h"
 
@@ -56,7 +57,7 @@ Chronometer::Chronometer(Display &display, const std::string &title,
 	titleLbl = NewChild<Label>(title, s.hudNormalHeadFont, TITLE_COLOR);
 	titleLbl->SetAlignment(Alignment::W);
 
-	valueLbl = NewChild<Label>("", s.hudNormalFont, VALUE_COLOR);
+	valueLbl = NewChild<ActiveText>("", s.hudNormalFont, VALUE_COLOR);
 }
 
 void Chronometer::OnHudRescaled(const Vec2 &hudScale)
