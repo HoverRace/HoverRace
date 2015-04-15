@@ -118,15 +118,15 @@ ConsoleScene::ConsoleScene(Display::Display &display, GameDirector &director,
 
 ConsoleScene::~ConsoleScene()
 {
+	logAddedConn.disconnect();
+	logClearedConn.disconnect();
+	displayConfigChangedConn.disconnect();
+
 	delete logLines;
 
 	delete measureLbl;
 	delete cursorLbl;
 	delete inputLbl;
-
-	logAddedConn.disconnect();
-	logClearedConn.disconnect();
-	displayConfigChangedConn.disconnect();
 }
 
 void ConsoleScene::OnDisplayConfigChanged()
