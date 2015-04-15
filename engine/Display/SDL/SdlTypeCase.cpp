@@ -205,7 +205,7 @@ void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
 			auto &entry = FindGlyph(buf, cp, added);
 			if (rects) {
 				rects->glyphs.push_back(&entry);
-				sx += entry.srcRect.x;
+				sx += entry.srcRect.w;
 			}
 		}
 	}
