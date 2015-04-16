@@ -51,14 +51,14 @@ namespace Display {
  */
 class MR_DllDeclare Counter : public HudDecor
 {
-	typedef HudDecor SUPER;
+	using SUPER = HudDecor;
 
 private:
 	static const double NO_TOTAL;
 
 public:
 	Counter(Display &display, const std::string &title, double initValue,
-		double total=NO_TOTAL);
+		double total = NO_TOTAL);
 	virtual ~Counter() { }
 
 protected:

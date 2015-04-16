@@ -52,7 +52,7 @@ namespace Display {
  */
 class MR_DllDeclare Chronometer : public HudDecor
 {
-	typedef HudDecor SUPER;
+	using SUPER = HudDecor;
 
 public:
 	Chronometer(Display &display, const std::string &title,

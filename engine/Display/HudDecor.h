@@ -1,7 +1,7 @@
 
 // HudDecor.h
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -57,12 +57,13 @@ namespace Display {
  */
 class MR_DllDeclare HudDecor : public Container
 {
-	typedef Container SUPER;
+	using SUPER = Container;
 
 public:
 	struct Props
 	{
-		enum {
+		enum
+		{
 			PLAYER = SUPER::Props::NEXT_,
 			TRACK,
 			HUD_SCALE,
@@ -75,7 +76,7 @@ public:
 	virtual ~HudDecor() { }
 
 public:
-	typedef boost::signals2::signal<void(const Vec2&)> sizeChangedSignal_t;
+	using sizeChangedSignal_t = boost::signals2::signal<void(const Vec2&)>;
 	sizeChangedSignal_t &GetSizeChangedSignal() { return sizeChangedSignal; }
 
 protected:

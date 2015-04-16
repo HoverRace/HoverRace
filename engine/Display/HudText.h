@@ -48,7 +48,7 @@ namespace Display {
  */
 class MR_DllDeclare HudText : public HudDecor
 {
-	typedef HudDecor SUPER;
+	using SUPER = HudDecor;
 
 public:
 	HudText(Display &display, const std::string &text);
