@@ -22,6 +22,7 @@
 
 #include <math.h>
 
+#include "MainCharacterRenderer.h"
 #include "MainCharacter.h"
 #include "../Model/RaceEffects.h"
 #include "../Model/ObstacleCollisionReport.h"

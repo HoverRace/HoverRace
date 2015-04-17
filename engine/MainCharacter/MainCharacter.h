@@ -22,7 +22,6 @@
 
 #pragma once
 
-#include "MainCharacterRenderer.h"
 #include "../Display/Color.h"
 #include "../Model/MazeElement.h"
 #include "../Model/PhysicalCollision.h"
@@ -37,6 +36,15 @@
 #else
 #	define MR_DllDeclare
 #endif
+
+namespace HoverRace {
+	namespace MainCharacter {
+		class MainCharacterRenderer;
+	}
+	namespace VideoServices {
+		class ShortSound;
+	}
+}
 
 namespace HoverRace {
 namespace MainCharacter {
