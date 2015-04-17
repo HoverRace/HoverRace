@@ -957,8 +957,10 @@ void Viewport3D::RenderHorizontalSurface(int pNbVertex, const MR_2DCoordinate * 
 								int lRowShift = pBitmap->GetYResShiftFactor(lSelectedBitmap);
 
 								gsLineBltParam.mBitmap = pBitmap->GetColumnBufferTable(lSelectedBitmap);
-								gsLineBltParam.mBitmapColMask = pBitmap->GetXRes(lSelectedBitmap) - 1;
-								gsLineBltParam.mBitmapRowMask = pBitmap->GetYRes(lSelectedBitmap) - 1;
+								gsLineBltParam.mBitmapColMask =
+									static_cast<MR_UInt32>(pBitmap->GetXRes(lSelectedBitmap) - 1);
+								gsLineBltParam.mBitmapRowMask =
+									static_cast<MR_UInt32>(pBitmap->GetYRes(lSelectedBitmap) - 1);
 
 								gsLineBltParam.mBitmapColInc_4096 = ((lBitmapHColVariation_16384_64 * lDepth_8) >> lColShift) / (8 * 4 * 64);
 								gsLineBltParam.mBitmapRowInc_4096 = ((lBitmapHRowVariation_16384_64 * lDepth_8) >> lRowShift) / (8 * 4 * 64);
