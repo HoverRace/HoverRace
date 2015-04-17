@@ -1008,8 +1008,9 @@ void Viewport3D::RenderHorizontalSurface(int pNbVertex, const MR_2DCoordinate * 
 
 void BltPlainLineNoZCheck()
 {
-	if(gsLineBltParam.mBltLen > 0) {
-		memset(gsLineBltParam.mBuffer, gsLineBltParam.mColor, gsLineBltParam.mBltLen);
+	if (gsLineBltParam.mBltLen > 0) {
+		memset(gsLineBltParam.mBuffer, gsLineBltParam.mColor,
+			static_cast<size_t>(gsLineBltParam.mBltLen));
 
 		for(int lCounter = 0; lCounter < gsLineBltParam.mBltLen; lCounter++) {
 			gsLineBltParam.mZBuffer[lCounter] = gsLineBltParam.mZ;
