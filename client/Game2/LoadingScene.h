@@ -59,7 +59,7 @@ public:
 	virtual ~LoadingScene();
 
 public:
-	std::shared_ptr<Util::Loader> GetLoader() const { return loader; }
+	std::shared_ptr<Util::Loader> ShareLoader() const { return loader; }
 
 public:
 	bool IsMouseCursorEnabled() const override { return false; }

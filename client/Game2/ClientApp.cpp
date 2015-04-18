@@ -674,7 +674,7 @@ void ClientApp::RequestMainMenu(std::shared_ptr<LoadingScene> loadingScene)
 
 	try {
 		RequestReplaceScene(std::make_shared<DemoGameScene>(
-			*display, *this, scripting, loadingScene->GetLoader()));
+			*display, *this, scripting, loadingScene->ShareLoader()));
 	}
 	catch (Parcel::ObjStreamExn&) {
 		throw;
@@ -682,7 +682,7 @@ void ClientApp::RequestMainMenu(std::shared_ptr<LoadingScene> loadingScene)
 
 	RequestPushScene(std::make_shared<MainMenuScene>(*display, *this, *rulebookLibrary));
 
-	loadingScene->GetLoader()->GetFinishedLoadingSignal().connect([&]() {
+	loadingScene->ShareLoader()->GetFinishedLoadingSignal().connect([&]() {
 		if (needsDevWarning) {
 			needsDevWarning = false;
 			RequestPushScene(std::make_shared<MessageScene>(*display, *this,
@@ -707,7 +707,7 @@ void ClientApp::RequestNewPracticeSession(std::shared_ptr<Rules> rules,
 
 	try {
 		RequestReplaceScene(std::make_shared<PlayGameScene>(
-			*display, *this, scripting, rules, loadingScene->GetLoader()));
+			*display, *this, scripting, rules, loadingScene->ShareLoader()));
 		RequestPushScene(loadingScene);
 	}
 	catch (Parcel::ObjStreamExn&) {
