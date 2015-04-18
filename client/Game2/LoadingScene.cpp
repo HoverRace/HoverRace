@@ -1,7 +1,7 @@
 
 // LoadingScene.cpp
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ namespace HoverRace {
 namespace Client {
 
 LoadingScene::LoadingScene(Display::Display &display, GameDirector &director,
-                           const std::string &name) :
+	const std::string &name) :
 	SUPER(display, name),
 	director(director), loading(false),
 	loader(std::make_shared<Util::Loader>())

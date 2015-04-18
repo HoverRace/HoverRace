@@ -1,7 +1,7 @@
 
 // LoadingScene.h
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ namespace Client {
  *
  * These scenes provide a way to wait for the previous scene stack to finish
  * unloading resources then allow the new scene to load.
- * 
+ *
  * To use this scene, enqueue tasks to the loader, then push the scene that
  * depends on the loader, then push this scene.  When all of the resources
  * have been loaded, this scene will automatically pop itself.
@@ -51,31 +51,32 @@ namespace Client {
  */
 class LoadingScene : public FormScene
 {
-	typedef FormScene SUPER;
-	public:
-		LoadingScene(Display::Display &display, GameDirector &director,
-			const std::string &name="Loading");
-		virtual ~LoadingScene();
+	using SUPER = FormScene;
 
-	public:
-		std::shared_ptr<Util::Loader> GetLoader() const { return loader; }
+public:
+	LoadingScene(Display::Display &display, GameDirector &director,
+		const std::string &name = "Loading");
+	virtual ~LoadingScene();
 
-	public:
-		bool IsMouseCursorEnabled() const override { return false; }
+public:
+	std::shared_ptr<Util::Loader> GetLoader() const { return loader; }
 
-	protected:
-		void OnPhaseChanged(Phase oldPhase) override;
+public:
+	bool IsMouseCursorEnabled() const override { return false; }
 
-	public:
-		void OnPhaseTransition(double progress) override;
-		void PrepareRender() override;
-		void Render() override;
+protected:
+	void OnPhaseChanged(Phase oldPhase) override;
 
-	private:
-		GameDirector &director;
-		bool loading;
-		std::shared_ptr<Util::Loader> loader;
-		std::unique_ptr<Display::ScreenFade> fader;
+public:
+	void OnPhaseTransition(double progress) override;
+	void PrepareRender() override;
+	void Render() override;
+
+private:
+	GameDirector &director;
+	bool loading;
+	std::shared_ptr<Util::Loader> loader;
+	std::unique_ptr<Display::ScreenFade> fader;
 };
 
 }  // namespace Client
