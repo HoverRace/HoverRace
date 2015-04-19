@@ -50,73 +50,73 @@ class MR_DllDeclare Duration :
 	private boost::totally_ordered<Duration, Duration>,
 	private boost::totally_ordered<Duration, MR_Int64>
 {
-	public:
-		typedef MR_Int64 dur_t;
+public:
+	using dur_t = MR_Int64;
 
-		/**
-		 * Constructor from two timestamps.
-		 * @param later The later of the two timestamps.
-		 * @param earlier The earlier of the two timestamps.
-		 */
-		Duration(OS::timestamp_t later, OS::timestamp_t earlier) :
-			duration(OS::TimeDiff(later, earlier)) { }
+	/**
+	 * Constructor from two timestamps.
+	 * @param later The later of the two timestamps.
+	 * @param earlier The earlier of the two timestamps.
+	 */
+	Duration(OS::timestamp_t later, OS::timestamp_t earlier) :
+		duration(OS::TimeDiff(later, earlier)) { }
 
-		/**
-		 * Constructor from two durations.
-		 * @param later The later of the two durations.
-		 * @param earlier The earlier of the two durations.
-		 */
-		Duration(const Duration &later, const Duration &earlier) :
-			duration(later.duration - earlier.duration) { }
+	/**
+	 * Constructor from two durations.
+	 * @param later The later of the two durations.
+	 * @param earlier The earlier of the two durations.
+	 */
+	Duration(const Duration &later, const Duration &earlier) :
+		duration(later.duration - earlier.duration) { }
 
-		/**
-		 * Constructor.
-		 * @param duration The time in milliseconds.
-		 */
-		Duration(dur_t duration=0) : duration(duration) { }
+	/**
+	 * Constructor.
+	 * @param duration The time in milliseconds.
+	 */
+	Duration(dur_t duration=0) : duration(duration) { }
 
-		Duration(const std::string &s) : Duration(ParseDuration(s)) { }
+	Duration(const std::string &s) : Duration(ParseDuration(s)) { }
 
-		// Fix ambiguity between char* and dur_t.
-		// See specialization for T=char below.
-		template<class T>
-		Duration(const T *s);
+	// Fix ambiguity between char* and dur_t.
+	// See specialization for T=char below.
+	template<class T>
+	Duration(const T *s);
 
-		Duration(const Duration&) = default;
-		Duration(Duration&&) = default;
+	Duration(const Duration&) = default;
+	Duration(Duration&&) = default;
 
-		Duration &operator=(const Duration&) = default;
-		Duration &operator=(Duration&&) = default;
+	Duration &operator=(const Duration&) = default;
+	Duration &operator=(Duration&&) = default;
 
-		Duration operator-() const
-		{
-			return Duration(-duration);
-		}
+	Duration operator-() const
+	{
+		return Duration(-duration);
+	}
 
-		/**
-		 * Convert the duration to milliseconds.
-		 * @return This duration.
-		 */
-		dur_t ToMs() const { return duration; }
+	/**
+	 * Convert the duration to milliseconds.
+	 * @return This duration.
+	 */
+	dur_t ToMs() const { return duration; }
 
-	private:
-		static dur_t ParseDuration(const std::string &s);
+private:
+	static dur_t ParseDuration(const std::string &s);
 
-	public:
-		std::ostream &FmtLong(std::ostream &os) const;
-		std::string FmtLong() const;
-		std::ostream &FmtShort(std::ostream &os) const;
-		std::string FmtShort() const;
+public:
+	std::ostream &FmtLong(std::ostream &os) const;
+	std::string FmtLong() const;
+	std::ostream &FmtShort(std::ostream &os) const;
+	std::string FmtShort() const;
 
-	private:
-		dur_t duration;
+private:
+	dur_t duration;
 
-		friend bool operator==(const Duration &a, const Duration &b);
-		friend bool operator==(const Duration &duration, Duration::dur_t ts);
-		friend bool operator==(Duration::dur_t ts, const Duration &duration);
-		friend bool operator<(const Duration &a, const Duration &b);
-		friend bool operator<(const Duration &duration, Duration::dur_t ts);
-		friend bool operator<(Duration::dur_t ts, const Duration &duration);
+	friend bool operator==(const Duration &a, const Duration &b);
+	friend bool operator==(const Duration &duration, Duration::dur_t ts);
+	friend bool operator==(Duration::dur_t ts, const Duration &duration);
+	friend bool operator<(const Duration &a, const Duration &b);
+	friend bool operator<(const Duration &duration, Duration::dur_t ts);
+	friend bool operator<(Duration::dur_t ts, const Duration &duration);
 };
 
 template<>
