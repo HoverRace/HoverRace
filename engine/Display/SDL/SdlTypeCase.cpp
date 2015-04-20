@@ -160,8 +160,8 @@ GlyphEntry &SdlTypeCase::FindGlyph(const std::string &s, MR_UInt32 cp,
 	std::string &added)
 {
 	if (cp > 65535) {
-		throw UnimplementedExn(boost::str(
-			boost::format("AddGlyph(): code point (%u) > %u") % cp % 65535));
+		HR_LOG(warning) << "AddGlyph(): code point (" << cp << ") > 65535";
+		cp = 0;
 	}
 
 	// Find the GlyphEntry for this glyph.
