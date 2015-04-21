@@ -19,6 +19,7 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
+#include "../Control/Action.h"
 #include "../Util/Symbol.h"
 #include "SymbolIcon.h"
 
@@ -28,6 +29,12 @@ using namespace HoverRace::Util;
 
 namespace HoverRace {
 namespace Display {
+
+namespace {
+
+const double SCROLL_STEP = 15;
+
+}  // namespace
 
 //{{{ PickListItem /////////////////////////////////////////////////////////////
 
@@ -74,6 +81,18 @@ BasePickList::BasePickList(Display &display, const Vec2 &size,
 	SUPER(display, size, true, layoutFlags),
 	listHeight(0)
 {
+}
+
+bool BasePickList::OnMouseScrolled(const Control::Mouse::Scroll &scroll)
+{
+	if (scroll.motion.y != 0) {
+		double y = GetChildOffset().y + (SCROLL_STEP * scroll.motion.y);
+		SetChildOffset({ 0, y });
+
+		// Simulate a mouse move to update the focus.
+		OnMouseMoved(scroll.pos);
+	}
+	return true;
 }
 
 bool BasePickList::OnAction()

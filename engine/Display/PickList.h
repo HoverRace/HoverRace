@@ -101,6 +101,7 @@ protected:
 	virtual void SetSelection(const boost::optional<size_t> &newSel) = 0;
 
 public:
+	bool OnMouseScrolled(const Control::Mouse::Scroll&) override;
 	bool OnAction() override;
 	bool OnNavigate(const Control::Nav &nav) override;
 
