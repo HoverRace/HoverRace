@@ -86,8 +86,9 @@ BasePickList::BasePickList(Display &display, const Vec2 &size,
 bool BasePickList::OnMouseScrolled(const Control::Mouse::Scroll &scroll)
 {
 	if (scroll.motion.y != 0) {
-		double y = GetChildOffset().y + (SCROLL_STEP * scroll.motion.y);
-		SetChildOffset({ 0, y });
+		// Positive Y is moving the wheel upwards, so we invert the motion.
+		double y = GetScroll() - (SCROLL_STEP * scroll.motion.y);
+		ScrollTo(y);
 
 		// Simulate a mouse move to update the focus.
 		OnMouseMoved(scroll.pos);
@@ -241,6 +242,23 @@ void BasePickList::DropFocus()
 		focusedItem = boost::none;
 	}
 	SUPER::DropFocus();
+}
+
+/**
+ * Scroll the list to the specified UI-space position.
+ * @param y The position (positive values scroll down the list).
+ */
+void BasePickList::ScrollTo(double y)
+{
+	auto sy = GetSize().y;
+	if (y < 0 || listHeight <= sy) {
+		y = 0;
+	} else if (y > listHeight - sy) {
+		y = listHeight - sy;
+	}
+
+	// Offset is the inverse of position.
+	SetChildOffset({ 0, -y });
 }
 
 void BasePickList::Layout()

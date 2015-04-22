@@ -149,6 +149,15 @@ public:
 		SetSelection(boost::none);
 	}
 
+protected:
+	/**
+	 * Retrieve how far down the list we have scrolled.
+	 * @return The position (always greater than or equal to zero).
+	 */
+	double GetScroll() const { return -(GetChildOffset().y); }
+
+	void ScrollTo(double y);
+
 public:
 	using valueChangedSignal_t = boost::signals2::signal<void()>;
 	valueChangedSignal_t &GetValueChangedSignal() { return valueChangedSignal; }
