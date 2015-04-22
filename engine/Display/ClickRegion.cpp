@@ -81,7 +81,9 @@ bool ClickRegion::OnMouseMoved(const Vec2 &pos)
 
 bool ClickRegion::OnMousePressed(const Control::Mouse::Click &click)
 {
-	if (IsEnabled() && TestHit(click.pos)) {
+	using namespace Control;
+
+	if (IsEnabled() && click.btn == Mouse::LEFT && TestHit(click.pos)) {
 		SetPressed(true);
 		OnMouseDrag(ScreenPosToRel(click.pos));
 		return true;
@@ -93,13 +95,17 @@ bool ClickRegion::OnMousePressed(const Control::Mouse::Click &click)
 
 bool ClickRegion::OnMouseReleased(const Control::Mouse::Click &click)
 {
+	using namespace Control;
+
 	bool retv = false;
 
-	if (IsPressed() && TestHit(click.pos)) {
-		FireClickedSignal();
-		retv = true;
+	if (click.btn == Mouse::LEFT) {
+		if (IsPressed() && TestHit(click.pos)) {
+			FireClickedSignal();
+			retv = true;
+		}
+		SetPressed(false);
 	}
-	SetPressed(false);
 
 	return retv;
 }
@@ -119,7 +125,7 @@ bool ClickRegion::TryFocus(const Control::Nav&)
 {
 	if (IsFocused()) return true;
 	if (!IsEnabled()) return false;
-	
+
 	SetFocused(true);
 	return true;
 }
