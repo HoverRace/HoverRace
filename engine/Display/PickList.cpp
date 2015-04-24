@@ -276,7 +276,14 @@ void BasePickList::Layout()
 		cx += size.y;
 	});
 
-	listHeight = cx;
+	if (listHeight != cx) {
+		listHeight = cx;
+
+		// Height changed, so we may be scrolled off the edge of the list.
+		// This call to ScrollTo() will re-apply the rules for scrolling off
+		// the edge.
+		ScrollTo(GetScroll());
+	}
 }
 
 //}}} BasePickList
