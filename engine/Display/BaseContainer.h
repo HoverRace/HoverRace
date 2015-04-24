@@ -43,7 +43,21 @@ namespace HoverRace {
 namespace Display {
 
 /**
- * An invisible container for other UI widgets.
+ * Base class for widgets that contain other widgets.
+ *
+ * Most containers differ only in how their child widgets are managed (i.e.,
+ * layout, visibility, navigation, etc.) but share a common view and, beneath
+ * it all, just need a way to keep track of the child widgets and propagate
+ * events.
+ *
+ * The majority of the member functions regarding adding, removing, or otherwise
+ * manipulating the list of child widgets are marked as protected, since each
+ * subclass will want to control what operations are allowed and what the
+ * side-effects are.  For example, Container simply redefines the functions
+ * as public, while FlexGrid requires children to be placed into cells in the
+ * grid, while PickList treats child widgets as an implementation detail.  All
+ * of them share the same view.
+ *
  * @author Michael Imamura
  */
 class MR_DllDeclare BaseContainer : public UiViewModel
