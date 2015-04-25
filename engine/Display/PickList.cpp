@@ -168,6 +168,7 @@ void BasePickList::OnChildRelinquishedFocus(UiViewModel&,
 			}
 			else {
 				focusedItem = oldFocusIdx - 1;
+				ScrollToFocused();
 				break;
 			}
 
@@ -178,6 +179,7 @@ void BasePickList::OnChildRelinquishedFocus(UiViewModel&,
 			}
 			else {
 				focusedItem = oldFocusIdx + 1;
+				ScrollToFocused();
 			}
 			break;
 
@@ -259,6 +261,27 @@ void BasePickList::ScrollTo(double y)
 
 	// Offset is the inverse of position.
 	SetChildOffset({ 0, -y });
+}
+
+/**
+ * Scroll the list to ensure the focused item is visible.
+ */
+void BasePickList::ScrollToFocused()
+{
+	auto child = GetFocusedChild();
+	if (!child) return;
+
+	double scroll = GetScroll();
+	double height = GetSize().y;
+	double childTop = child->GetPos().y;
+	double childBottom = childTop + child->Measure().y;
+
+	if (childTop < scroll) {
+		ScrollTo(childTop);
+	}
+	else if (childBottom > (scroll + height)) {
+		ScrollTo(childBottom - height);
+	}
 }
 
 void BasePickList::Layout()

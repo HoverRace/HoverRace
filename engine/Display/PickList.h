@@ -157,6 +157,7 @@ protected:
 	double GetScroll() const { return -(GetChildOffset().y); }
 
 	void ScrollTo(double y);
+	void ScrollToFocused();
 
 public:
 	using valueChangedSignal_t = boost::signals2::signal<void()>;
