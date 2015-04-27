@@ -1,7 +1,7 @@
 
 // Loader.h
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -44,86 +44,87 @@ namespace Util {
  */
 class Loader
 {
-	public:
-		Loader() { }
-		~Loader() { }
+public:
+	Loader() { }
+	~Loader() { }
 
-	public:
-		bool IsEmpty() const { return loaders.empty(); }
+public:
+	bool IsEmpty() const { return loaders.empty(); }
 
-	public:
-		typedef boost::signals2::signal<void()> finishedLoadingSignal_t;
-		/**
-		 * Fired when all resources have been loaded and the loading scene
-		 * is shutting down.
-		 * @return The finished loading signal.
-		 */ 
-		finishedLoadingSignal_t &GetFinishedLoadingSignal()
-		{
-			return finishedLoadingSignal;
+public:
+	using finishedLoadingSignal_t = boost::signals2::signal<void()>;
+
+	/**
+	 * Fired when all resources have been loaded and the loading scene
+	 * is shutting down.
+	 * @return The finished loading signal.
+	 */
+	finishedLoadingSignal_t &GetFinishedLoadingSignal()
+	{
+		return finishedLoadingSignal;
+	}
+
+	void FireFinishedLoadingSignal()
+	{
+		finishedLoadingSignal();
+	}
+
+private:
+	using loader_t = std::pair<std::string, std::function<void()>>;
+public:
+	/**
+	 * Add a new named loader.
+	 * The loader name is used for logging purposes only.
+	 * @param s The name of the loader.
+	 * @param fn The loader function.
+	 */
+	template<class Fn>
+	void AddLoader(const std::string &s, Fn fn)
+	{
+		loaders.emplace(s, fn);
+	}
+
+	/**
+	 * Add a new unnamed loader.
+	 * @param fn The loader function.
+	 */
+	template<class Fn>
+	void AddLoader(Fn fn)
+	{
+		std::ostringstream oss;
+		oss << "Loader " << loaders.size();
+		loaders.emplace(oss.str(), fn);
+	}
+
+public:
+	/**
+	 * Load the next item.
+	 *
+	 * If all of the loaders have been executed, then the
+	 * finishedLoadingSignal will *not* be fired automatically, since the
+	 * owner of the loader may want to perform some actions before
+	 * notifying the listeners.
+	 *
+	 * @return @c true if there are any loaders remaining,
+	 *         @c false if all loaders have executed.
+	 */
+	bool LoadNext()
+	{
+		if (loaders.empty()) {
+			return false;
 		}
 
-		void FireFinishedLoadingSignal()
-		{
-			finishedLoadingSignal();
-		}
+		auto &loader = loaders.front();
+		HR_LOG(info) << "Loading: " << loader.first;
+		loader.second();
+		loaders.pop();
 
-	private:
-		typedef std::pair<std::string, std::function<void()>> loader_t;
-	public:
-		/**
-		 * Add a new named loader.
-		 * The loader name is used for logging purposes only.
-		 * @param s The name of the loader.
-		 * @param fn The loader function.
-		 */
-		template<class Fn>
-		void AddLoader(const std::string &s, Fn fn)
-		{
-			loaders.emplace(s, fn);
-		}
+		return !loaders.empty();
+	}
 
-		/**
-		 * Add a new unnamed loader.
-		 * @param fn The loader function.
-		 */
-		template<class Fn>
-		void AddLoader(Fn fn)
-		{
-			std::ostringstream oss;
-			oss << "Loader " << loaders.size();
-			loaders.emplace(oss.str(), fn);
-		}
-
-	public:
-		/**
-		 * Load the next item.
-		 *
-		 * If all of the loaders have been executed, then the
-		 * finishedLoadingSignal will *not* be fired automatically, since the
-		 * owner of the loader may want to perform some actions before
-		 * notifying the listeners.
-		 *
-		 * @return @c true if there are any loaders remaining,
-		 *         @c false if all loaders have executed.
-		 */
-		bool LoadNext()
-		{
-			if (loaders.empty()) {
-				return false;
-			}
-
-			auto &loader = loaders.front();
-			Log::Info("Loading: %s", loader.first.c_str());
-			loader.second();
-			loaders.pop();
-
-			return !loaders.empty();
-		}
-
-	private:
-		std::queue<loader_t> loaders;
-		finishedLoadingSignal_t finishedLoadingSignal;
+private:
+	std::queue<loader_t> loaders;
+	finishedLoadingSignal_t finishedLoadingSignal;
 };
 
 }  // namespace Util
