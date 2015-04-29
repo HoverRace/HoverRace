@@ -27,7 +27,9 @@
 #	include <time.h>
 #endif
 
-#include <chrono>
+#ifdef WITH_CHRONO_TIMESTAMP
+#	include <chrono>
+#endif
 #include <iomanip>
 #include <iostream>
 #include <string>
