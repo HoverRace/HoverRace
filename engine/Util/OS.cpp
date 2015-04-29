@@ -58,7 +58,7 @@ namespace Util {
 namespace {
 
 #ifdef WITH_CHRONO_TIMESTAMP
-	typedef std::chrono::high_resolution_clock clock_t;
+	using clock_t = std::chrono::high_resolution_clock;
 	clock_t::time_point chronoStart;
 #elif defined(_WIN32)
 	LARGE_INTEGER qpcFreq = { 0 };
