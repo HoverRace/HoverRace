@@ -27,9 +27,7 @@
 #	include <time.h>
 #endif
 
-#ifdef WITH_CHRONO_TIMESTAMP
-#	include <chrono>
-#endif
+#include <chrono>
 #include <iomanip>
 #include <iostream>
 #include <string>
@@ -59,15 +57,8 @@ namespace Util {
 
 namespace {
 
-#ifdef WITH_CHRONO_TIMESTAMP
-	using clock_t = std::chrono::high_resolution_clock;
-	clock_t::time_point chronoStart;
-#elif defined(_WIN32)
-	LARGE_INTEGER qpcFreq = { 0 };
-	LARGE_INTEGER qpcStart = { 0 };
-#else
-	timeval tvStart = { 0, 0 };
-#endif
+using clock_t = std::chrono::high_resolution_clock;
+clock_t::time_point chronoStart;
 
 }  // namespace
 
@@ -161,21 +152,7 @@ std::string OS::StrError(int errnum)
  */
 void OS::TimeInit()
 {
-#	ifdef WITH_CHRONO_TIMESTAMP
-		chronoStart = clock_t::now();
-#	elif defined(_WIN32)
-		if (QueryPerformanceFrequency(&qpcFreq) == FALSE) {
-			throw Exception("High-resolution timer not available.");
-		}
-		else {
-			QueryPerformanceCounter(&qpcStart);
-		}
-#	else
-		if (gettimeofday(&tvStart, nullptr) < 0) {
-			throw Exception("High-resolution timer not available: " +
-				StrError(errno));
-		}
-#	endif
+	chronoStart = clock_t::now();
 }
 
 /**
@@ -186,30 +163,9 @@ void OS::TimeInit()
  */
 OS::timestamp_t OS::Time()
 {
-#	ifdef WITH_CHRONO_TIMESTAMP
-		return static_cast<timestamp_t>(
-			std::chrono::duration_cast<std::chrono::milliseconds>(
-				clock_t::now() - chronoStart).count());
-#	elif defined(_WIN32)
-		LARGE_INTEGER count;
-		QueryPerformanceCounter(&count);
-
-		// Try to keep the values low, for sanity's sake when debugging.
-		count.QuadPart -= qpcStart.QuadPart;
-
-		count.QuadPart *= 1000;
-		return static_cast<timestamp_t>(count.QuadPart / qpcFreq.QuadPart);
-#	else
-		timeval count;
-		gettimeofday(&count, nullptr);
-
-		timestamp_t retv = static_cast<timestamp_t>(
-			count.tv_sec - tvStart.tv_sec) * 1000;
-		retv += static_cast<timestamp_t>(
-			count.tv_usec - tvStart.tv_usec) / 1000;
-
-		return retv;
-#	endif
+	return static_cast<timestamp_t>(
+		std::chrono::duration_cast<std::chrono::milliseconds>(
+			clock_t::now() - chronoStart).count());
 }
 
 /**
