@@ -307,6 +307,7 @@ public:
 		bool enableHud;
 		bool noAccel;  ///< Disable accelerated (OpenGL) rendering.
 		bool skipStartupWarning;
+		bool profiling;
 		std::vector<OS::path_t> initScripts;
 	} runtime;
 };
