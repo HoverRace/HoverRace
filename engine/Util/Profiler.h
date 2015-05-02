@@ -69,11 +69,24 @@ public:
 		clock_t::time_point start;
 	};
 
+	struct LapTime
+	{
+		LapTime() :
+			time(dur_t::zero()),
+			pctParent(std::numeric_limits<double>::quiet_NaN()) { }
+
+		dur_t time;
+		double pctParent;
+	};
+
 public:
 	const std::string &GetName() const { return name; }
 	dur_t GetDuration() const { return dur; }
+	const LapTime &GetLastLap() const { return lap; }
 
 	void Reset();
+
+	void Lap(const Profiler *parent = nullptr);
 
 public:
 	std::shared_ptr<Profiler> AddSub(const std::string &name);
@@ -83,12 +96,20 @@ private:
 	std::string name;
 	using subs_t = std::map<std::string, std::shared_ptr<Profiler>>;
 	std::unique_ptr<subs_t> subs;
+	LapTime lap;
 };
 
 MR_DllDeclare inline std::ostream &operator<<(std::ostream &os,
 	const Profiler &p)
 {
 	os << p.GetName() << ' ' << p.GetDuration().count();
+	return os;
+}
+
+MR_DllDeclare inline std::ostream &operator<<(std::ostream &os,
+	const Profiler::LapTime &lp)
+{
+	os << lp.pctParent << " (" << lp.time.count() << ')';
 	return os;
 }
 

@@ -46,6 +46,38 @@ void Profiler::Reset()
 }
 
 /**
+ * Calculate the statistics for the current period, then reset the counters
+ * to start the next period.
+ * @param parent The parent profiler (@c nullptr if this is the root profiler).
+ */
+void Profiler::Lap(const Profiler *parent)
+{
+	lap.time = dur;
+	if (parent) {
+		auto parentDur = parent->GetDuration().count();
+		if (parentDur == 0) {
+			lap.pctParent = 0;
+		}
+		else {
+			lap.pctParent =
+				static_cast<double>(dur.count() * 100) /
+				static_cast<double>(parentDur);
+		}
+	}
+	else {
+		lap.pctParent = 100;
+	}
+
+	if (subs) {
+		for (auto &ent : *subs) {
+			ent.second->Lap(this);
+		}
+	}
+
+	dur = dur_t::zero();
+}
+
+/**
  * Add a new subset.
  * @param name The name of the subset.
  * @return The created subset (never @c nullptr).

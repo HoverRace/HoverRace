@@ -459,6 +459,13 @@ ClientApp::ExitMode ClientApp::MainLoop()
 
 		AdvanceScenes(tick);
 		RenderScenes();
+
+		if (runtimeCfg.profiling && frameCount == 0) {
+			rootProfiler->Lap();
+			HR_LOG(info) << rootProfiler->GetName() << "  " << rootProfiler->GetLastLap();
+			HR_LOG(info) << "  " << advanceProfiler->GetName() << "  " << advanceProfiler->GetLastLap();
+			HR_LOG(info) << "  " << renderProfiler->GetName() << "  " << renderProfiler->GetLastLap();
+		}
 	}
 
 	TerminateAllScenes();
@@ -466,7 +473,7 @@ ClientApp::ExitMode ClientApp::MainLoop()
 
 	gamePeer->OnShutdown();
 
-	if (Config::GetInstance()->runtime.profiling) {
+	if (runtimeCfg.profiling) {
 		HR_LOG(info) << *rootProfiler;
 		HR_LOG(info) << "  " << *advanceProfiler;
 		HR_LOG(info) << "  " << *renderProfiler;
