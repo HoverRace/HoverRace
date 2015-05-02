@@ -60,6 +60,9 @@ namespace HoverRace {
 	namespace Script {
 		class Core;
 	}
+	namespace Util {
+		class Profiler;
+	}
 }
 
 namespace HoverRace {
@@ -157,6 +160,9 @@ private:
 	unsigned int frameCount;
 	Util::OS::timestamp_t lastTimestamp;
 	double fps;
+	std::shared_ptr<Util::Profiler> rootProfiler;
+	std::shared_ptr<Util::Profiler> advanceProfiler;
+	std::shared_ptr<Util::Profiler> renderProfiler;
 };
 
 }  // namespace HoverScript

@@ -38,6 +38,7 @@
 #include "../../engine/Util/DllObjectFactory.h"
 #include "../../engine/Util/FuzzyLogic.h"
 #include "../../engine/Util/Loader.h"
+#include "../../engine/Util/Profiler.h"
 #include "../../engine/Util/Str.h"
 #include "../../engine/Util/WorldCoordinates.h"
 #include "../../engine/VideoServices/SoundServer.h"
@@ -116,7 +117,10 @@ ClientApp::ClientApp() :
 	needsDevWarning(false),
 	userEventId(SDL_RegisterEvents(1)),
 	sceneStack(), fgScene(), statusOverlayScene(), showOverlay(false),
-	fpsLbl(), frameCount(0), lastTimestamp(0), fps(0.0)
+	fpsLbl(), frameCount(0), lastTimestamp(0), fps(0.0),
+	rootProfiler(std::make_shared<Profiler>("ROOT")),
+	advanceProfiler(rootProfiler->AddSub("advance")),
+	renderProfiler(rootProfiler->AddSub("render"))
 {
 	Config *cfg = Config::GetInstance();
 
@@ -315,6 +319,8 @@ void ClientApp::IncFrameCount()
 
 void ClientApp::AdvanceScenes(Util::OS::timestamp_t tick)
 {
+	Profiler::Sampler sampler(*advanceProfiler);
+
 	auto iter = sceneStack.begin();
 	while (iter != sceneStack.end()) {
 		Scene &scene = **iter;
@@ -339,6 +345,8 @@ void ClientApp::AdvanceScenes(Util::OS::timestamp_t tick)
 
 void ClientApp::RenderScenes()
 {
+	Profiler::Sampler sampler(*renderProfiler);
+
 	bool showFps = Config::GetInstance()->runtime.showFramerate;
 
 	IncFrameCount();
@@ -388,6 +396,8 @@ ClientApp::ExitMode ClientApp::MainLoop()
 	gamePeer->OnInit();
 
 	while (!quit) {
+		Profiler::Sampler sampler(*rootProfiler);
+
 		OS::timestamp_t tick = OS::Time();
 
 		while (SDL_PollEvent(&evt) && !quit) {
@@ -455,6 +465,12 @@ ClientApp::ExitMode ClientApp::MainLoop()
 	statusOverlayScene.reset();
 
 	gamePeer->OnShutdown();
+
+	if (Config::GetInstance()->runtime.profiling) {
+		HR_LOG(info) << *rootProfiler;
+		HR_LOG(info) << "  " << *advanceProfiler;
+		HR_LOG(info) << "  " << *renderProfiler;
+	}
 
 	return retv;
 }
