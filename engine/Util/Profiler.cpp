@@ -38,10 +38,8 @@ void Profiler::Reset()
 {
 	dur = dur_t::zero();
 
-	if (subs) {
-		for (auto &ent : *subs) {
-			ent.second->Reset();
-		}
+	for (auto &ent : subs) {
+		ent->Reset();
 	}
 }
 
@@ -68,10 +66,8 @@ void Profiler::Lap(const Profiler *parent)
 		lap.pctParent = 100;
 	}
 
-	if (subs) {
-		for (auto &ent : *subs) {
-			ent.second->Lap(this);
-		}
+	for (auto &ent : subs) {
+		ent->Lap(this);
 	}
 
 	dur = dur_t::zero();
@@ -84,13 +80,8 @@ void Profiler::Lap(const Profiler *parent)
  */
 std::shared_ptr<Profiler> Profiler::AddSub(const std::string &name)
 {
-	if (!subs) {
-		subs.reset(new subs_t());
-	}
-
-	auto retv = std::make_shared<Profiler>(name);
-	subs->emplace(name, retv);
-	return retv;
+	subs.emplace_back(std::make_shared<Profiler>(name));
+	return subs.back();
 }
 
 }  // namespace Util

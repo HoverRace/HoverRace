@@ -94,8 +94,7 @@ public:
 private:
 	dur_t dur;
 	std::string name;
-	using subs_t = std::map<std::string, std::shared_ptr<Profiler>>;
-	std::unique_ptr<subs_t> subs;
+	std::vector<std::shared_ptr<Profiler>> subs;
 	LapTime lap;
 };
 
