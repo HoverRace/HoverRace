@@ -761,7 +761,7 @@ void Config::ResetToDefaults()
 	runtime.enableConsole = true;
 	runtime.enableHud = true;
 	runtime.skipStartupWarning = false;
-	runtime.profiling = true;
+	runtime.profiling = false;
 }
 
 void Config::LoadSystem()
