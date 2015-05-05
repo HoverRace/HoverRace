@@ -25,7 +25,7 @@ namespace HoverRace {
 namespace Util {
 
 Profiler::Profiler(const std::string &name) :
-	dur(dur_t::zero()), name(name)
+	dur(dur_t::zero()), name(name), sampling(0)
 {
 }
 
