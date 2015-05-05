@@ -85,7 +85,9 @@ private:
 	void OnWindowResize(int w, int h);
 	void IncFrameCount();
 	void AdvanceScenes(Util::OS::timestamp_t tick);
+	void PrepareScenes();
 	void RenderScenes();
+	void RenderFrame();
 
 public:
 	enum class ExitMode
@@ -139,6 +141,7 @@ private:
 	ScenePtr fgScene;  ///< The scene that currently has input focus.
 	std::unique_ptr<StatusOverlayScene> statusOverlayScene;
 	bool showOverlay;
+	const bool &showFps;
 	std::list<std::shared_ptr<Announcement>> announcements;
 
 	RulebookLibrary *rulebookLibrary;

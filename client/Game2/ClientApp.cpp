@@ -117,6 +117,7 @@ ClientApp::ClientApp() :
 	needsDevWarning(false),
 	userEventId(SDL_RegisterEvents(1)),
 	sceneStack(), fgScene(), statusOverlayScene(), showOverlay(false),
+	showFps(Config::GetInstance()->runtime.showFramerate),
 	fpsLbl(), frameCount(0), lastTimestamp(0), fps(0.0),
 	rootProfiler(std::make_shared<Profiler>("ROOT")),
 	advanceProfiler(rootProfiler->AddSub("advance")),
@@ -343,11 +344,32 @@ void ClientApp::AdvanceScenes(Util::OS::timestamp_t tick)
 	if (showOverlay) statusOverlayScene->Advance(tick);
 }
 
+void ClientApp::PrepareScenes()
+{
+	for (const ScenePtr &scene : sceneStack) {
+		scene->PrepareRender();
+	}
+	if (showOverlay) statusOverlayScene->PrepareRender();
+	if (showFps) fpsLbl->PrepareRender();
+}
+
 void ClientApp::RenderScenes()
 {
-	Profiler::Sampler sampler(*renderProfiler);
+	for (const ScenePtr &scene : sceneStack) {
+		Scene::Phase phase = scene->GetPhase();
+		if (phase != Scene::Phase::INITIALIZING &&
+			phase != Scene::Phase::STOPPED)
+		{
+			scene->Render();
+		}
+	}
+	if (showOverlay) statusOverlayScene->Render();
+	if (showFps) fpsLbl->Render();
+}
 
-	bool showFps = Config::GetInstance()->runtime.showFramerate;
+void ClientApp::RenderFrame()
+{
+	Profiler::Sampler sampler(*renderProfiler);
 
 	IncFrameCount();
 
@@ -356,22 +378,8 @@ void ClientApp::RenderScenes()
 		display->GetLegacyDisplay().Clear();
 	}
 	else {
-		for (const ScenePtr &scene : sceneStack) {
-			scene->PrepareRender();
-		}
-		if (showOverlay) statusOverlayScene->PrepareRender();
-		if (showFps) fpsLbl->PrepareRender();
-
-		for (const ScenePtr &scene : sceneStack) {
-			Scene::Phase phase = scene->GetPhase();
-			if (phase != Scene::Phase::INITIALIZING &&
-				phase != Scene::Phase::STOPPED)
-			{
-				scene->Render();
-			}
-		}
-		if (showOverlay) statusOverlayScene->Render();
-		if (showFps) fpsLbl->Render();
+		PrepareScenes();
+		RenderScenes();
 	}
 
 	display->Flip();
@@ -458,7 +466,7 @@ ClientApp::ExitMode ClientApp::MainLoop()
 		if (quit) break;
 
 		AdvanceScenes(tick);
-		RenderScenes();
+		RenderFrame();
 
 		if (runtimeCfg.profiling && frameCount == 0) {
 			rootProfiler->Lap();
