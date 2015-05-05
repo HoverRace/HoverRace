@@ -165,6 +165,7 @@ private:
 	double fps;
 	std::shared_ptr<Util::Profiler> rootProfiler;
 	std::shared_ptr<Util::Profiler> advanceProfiler;
+	std::shared_ptr<Util::Profiler> prepareProfiler;
 	std::shared_ptr<Util::Profiler> renderProfiler;
 };
 

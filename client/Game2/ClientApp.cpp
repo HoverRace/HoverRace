@@ -121,6 +121,7 @@ ClientApp::ClientApp() :
 	fpsLbl(), frameCount(0), lastTimestamp(0), fps(0.0),
 	rootProfiler(std::make_shared<Profiler>("ROOT")),
 	advanceProfiler(rootProfiler->AddSub("advance")),
+	prepareProfiler(rootProfiler->AddSub("prepare")),
 	renderProfiler(rootProfiler->AddSub("render"))
 {
 	Config *cfg = Config::GetInstance();
@@ -346,6 +347,8 @@ void ClientApp::AdvanceScenes(Util::OS::timestamp_t tick)
 
 void ClientApp::PrepareScenes()
 {
+	Profiler::Sampler sampler(*prepareProfiler);
+
 	for (const ScenePtr &scene : sceneStack) {
 		scene->PrepareRender();
 	}
@@ -355,6 +358,8 @@ void ClientApp::PrepareScenes()
 
 void ClientApp::RenderScenes()
 {
+	Profiler::Sampler sampler(*renderProfiler);
+
 	for (const ScenePtr &scene : sceneStack) {
 		Scene::Phase phase = scene->GetPhase();
 		if (phase != Scene::Phase::INITIALIZING &&
@@ -369,8 +374,6 @@ void ClientApp::RenderScenes()
 
 void ClientApp::RenderFrame()
 {
-	Profiler::Sampler sampler(*renderProfiler);
-
 	IncFrameCount();
 
 	if (sceneStack.empty()) {
@@ -472,6 +475,7 @@ ClientApp::ExitMode ClientApp::MainLoop()
 			rootProfiler->Lap();
 			HR_LOG(info) << rootProfiler->GetName() << "  " << rootProfiler->GetLastLap();
 			HR_LOG(info) << "  " << advanceProfiler->GetName() << "  " << advanceProfiler->GetLastLap();
+			HR_LOG(info) << "  " << prepareProfiler->GetName() << "  " << prepareProfiler->GetLastLap();
 			HR_LOG(info) << "  " << renderProfiler->GetName() << "  " << renderProfiler->GetLastLap();
 		}
 	}
@@ -484,6 +488,7 @@ ClientApp::ExitMode ClientApp::MainLoop()
 	if (runtimeCfg.profiling) {
 		HR_LOG(info) << *rootProfiler;
 		HR_LOG(info) << "  " << *advanceProfiler;
+		HR_LOG(info) << "  " << *prepareProfiler;
 		HR_LOG(info) << "  " << *renderProfiler;
 	}
 
