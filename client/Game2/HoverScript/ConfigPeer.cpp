@@ -1,8 +1,7 @@
 
 // ConfigPeer.cpp
-// Scripting peer for access to the game configuration.
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -53,6 +52,7 @@ void ConfigPeer::Register(Script::Core *scripting)
 			.def("unlink", &ConfigPeer::LUnlink)
 			.def("get_video_res", &ConfigPeer::LGetVideoRes)
 			.def("set_video_res", &ConfigPeer::LSetVideoRes)
+			.property("profiling", &ConfigPeer::LIsProfiling, &ConfigPeer::LSetProfiling)
 			.property("stacked_splitscreen", &ConfigPeer::LIsStackedSplitscreen, &ConfigPeer::LSetStackedSplitscreen)
 	];
 }
@@ -86,6 +86,16 @@ void ConfigPeer::LSetVideoRes(int w, int h)
 	Config *cfg = Config::GetInstance();
 	cfg->video.xRes = w;
 	cfg->video.yRes = h;
+}
+
+bool ConfigPeer::LIsProfiling() const
+{
+	return Config::GetInstance()->runtime.profiling;
+}
+
+void ConfigPeer::LSetProfiling(bool profiling)
+{
+	Config::GetInstance()->runtime.profiling = profiling;
 }
 
 bool ConfigPeer::LIsStackedSplitscreen() const
