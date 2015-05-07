@@ -22,6 +22,7 @@
 #pragma once
 
 #include "../../engine/Util/OS.h"
+#include "../../engine/Util/Profiler.h"
 
 namespace HoverRace {
 	namespace Control {
@@ -255,6 +256,28 @@ protected:
 	virtual void OnStateTransition(double progress) { HR_UNUSED(progress); }
 
 public:
+	void AdvanceScene(Util::OS::timestamp_t tick)
+	{
+		Util::Profiler::Sampler rootSampler(*rootProfiler);
+		Util::Profiler::Sampler sampler(*advanceProfiler);
+		Advance(tick);
+	}
+
+	void PrepareScene()
+	{
+		Util::Profiler::Sampler rootSampler(*rootProfiler);
+		Util::Profiler::Sampler sampler(*prepareProfiler);
+		PrepareRender();
+	}
+
+	void RenderScene()
+	{
+		Util::Profiler::Sampler rootSampler(*rootProfiler);
+		Util::Profiler::Sampler sampler(*renderProfiler);
+		Render();
+	}
+
+protected:
 	virtual void Advance(Util::OS::timestamp_t tick);
 	virtual void PrepareRender() { }
 	virtual void Render() = 0;
@@ -271,6 +294,11 @@ private:
 	Util::OS::timestamp_t stateTs;  ///< When current state was started.
 	double stateTransitionVelocity;
 	double statePosition;
+protected:
+	std::shared_ptr<Util::Profiler> rootProfiler;
+	std::shared_ptr<Util::Profiler> advanceProfiler;
+	std::shared_ptr<Util::Profiler> prepareProfiler;
+	std::shared_ptr<Util::Profiler> renderProfiler;
 };
 typedef std::shared_ptr<Scene> ScenePtr;
 

@@ -1,7 +1,7 @@
 
 // Scene.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -41,7 +41,11 @@ Scene::Scene(const std::string &name) :
 	phase(Phase::INITIALIZING), phaseTransitionDuration(0),
 	phaseTs(0), startingPhaseTime(0),
 	state(State::INITIALIZING), stateTransitionDuration(0),
-	stateTs(0), stateTransitionVelocity(1), statePosition(0)
+	stateTs(0), stateTransitionVelocity(1), statePosition(0),
+	rootProfiler(std::make_shared<Profiler>("ROOT")),
+	advanceProfiler(rootProfiler->AddSub("advance")),
+	prepareProfiler(rootProfiler->AddSub("prepare")),
+	renderProfiler(rootProfiler->AddSub("render"))
 {
 }
 

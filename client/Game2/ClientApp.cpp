@@ -330,7 +330,7 @@ void ClientApp::AdvanceScenes(Util::OS::timestamp_t tick)
 		if (phase != Scene::Phase::INITIALIZING &&
 			phase != Scene::Phase::STOPPED)
 		{
-			scene.Advance(tick);
+			scene.AdvanceScene(tick);
 		}
 
 		// If the scene has entered the STOPPED state, it's deletable.
@@ -342,7 +342,7 @@ void ClientApp::AdvanceScenes(Util::OS::timestamp_t tick)
 		}
 	}
 
-	if (showOverlay) statusOverlayScene->Advance(tick);
+	if (showOverlay) statusOverlayScene->AdvanceScene(tick);
 }
 
 void ClientApp::PrepareScenes()
@@ -350,9 +350,9 @@ void ClientApp::PrepareScenes()
 	Profiler::Sampler sampler(*prepareProfiler);
 
 	for (const ScenePtr &scene : sceneStack) {
-		scene->PrepareRender();
+		scene->PrepareScene();
 	}
-	if (showOverlay) statusOverlayScene->PrepareRender();
+	if (showOverlay) statusOverlayScene->PrepareScene();
 	if (showFps) fpsLbl->PrepareRender();
 }
 
@@ -365,10 +365,10 @@ void ClientApp::RenderScenes()
 		if (phase != Scene::Phase::INITIALIZING &&
 			phase != Scene::Phase::STOPPED)
 		{
-			scene->Render();
+			scene->RenderScene();
 		}
 	}
-	if (showOverlay) statusOverlayScene->Render();
+	if (showOverlay) statusOverlayScene->RenderScene();
 	if (showFps) fpsLbl->Render();
 }
 
