@@ -56,15 +56,17 @@ public:
 		Sampler() = delete;
 
 		Sampler(Profiler &profiler) :
-			profiler(profiler), start(clock_t::now())
+			profiler(profiler)
 		{
-			profiler.sampling++;
+			if ((++(profiler.sampling)) == 1) {
+				profiler.sampleStart = clock_t::now();
+			}
 		}
 
 		~Sampler()
 		{
 			if ((--(profiler.sampling)) == 0) {
-				profiler.dur += (clock_t::now() - start);
+				profiler.dur += (clock_t::now() - profiler.sampleStart);
 			}
 		}
 
@@ -76,7 +78,6 @@ public:
 
 	private:
 		Profiler &profiler;
-		clock_t::time_point start;
 	};
 
 	struct LapTime
@@ -106,6 +107,7 @@ private:
 	std::string name;
 	std::vector<std::shared_ptr<Profiler>> subs;
 	int sampling;
+	clock_t::time_point sampleStart;
 	LapTime lap;
 };
 
