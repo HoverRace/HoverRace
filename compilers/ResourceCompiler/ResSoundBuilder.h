@@ -28,21 +28,22 @@ namespace ResourceCompiler {
 
 class ResShortSoundBuilder : public ObjFacTools::ResShortSound
 {
-	typedef ObjFacTools::ResShortSound SUPER;
-	public:
-		ResShortSoundBuilder(int pResourceId);
+	using SUPER = ObjFacTools::ResShortSound;
 
-		bool BuildFromFile(const char *pFile, int pNbCopy);
+public:
+	ResShortSoundBuilder(int pResourceId);
 
+	bool BuildFromFile(const char *pFile, int pNbCopy);
 };
 
 class ResContinuousSoundBuilder : public ObjFacTools::ResContinuousSound
 {
-	typedef ObjFacTools::ResContinuousSound SUPER;
-	public:
-		ResContinuousSoundBuilder(int pResourceId);
+	using SUPER = ObjFacTools::ResContinuousSound;
 
-		bool BuildFromFile(const char *pFile, int pNbCopy);
+public:
+	ResContinuousSoundBuilder(int pResourceId);
+
+	bool BuildFromFile(const char *pFile, int pNbCopy);
 };
 
 }  // namespace ResourceCompiler

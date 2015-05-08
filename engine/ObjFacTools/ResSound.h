@@ -43,48 +43,46 @@ namespace HoverRace {
 namespace HoverRace {
 namespace ObjFacTools {
 
-class ResShortSound
+class MR_DllDeclare ResShortSound
 {
-	protected:
-		int mResourceId;
-		VideoServices::ShortSound *mSound;
+protected:
+	int mResourceId;
+	VideoServices::ShortSound *mSound;
 
-		int mNbCopy;
-		int mDataLen;
-		char *mData;
+	int mNbCopy;
+	int mDataLen;
+	char *mData;
 
-	public:
-												  // Only availlable for resourceLib and construction
-		MR_DllDeclare ResShortSound(int pResourceId);
-		MR_DllDeclare ~ResShortSound();
+public:
+	// Only available for resourceLib and construction
+	ResShortSound(int pResourceId);
+	~ResShortSound();
 
-		MR_DllDeclare int GetResourceId() const;
-		MR_DllDeclare void Serialize(Parcel::ObjStream &pArchive);
+	int GetResourceId() const { return mResourceId; }
+	void Serialize(Parcel::ObjStream &pArchive);
 
-		MR_DllDeclare VideoServices::ShortSound *GetSound() const;
-
+	VideoServices::ShortSound *GetSound() const { return mSound; }
 };
 
-class ResContinuousSound
+class MR_DllDeclare ResContinuousSound
 {
-	protected:
-		int mResourceId;
-		HoverRace::VideoServices::ContinuousSound *mSound;
+protected:
+	int mResourceId;
+	HoverRace::VideoServices::ContinuousSound *mSound;
 
-		int mNbCopy;
-		int mDataLen;
-		char *mData;
+	int mNbCopy;
+	int mDataLen;
+	char *mData;
 
-	public:
-												  // Only availlable for resourceLib and construction
-		MR_DllDeclare ResContinuousSound(int pResourceId);
-		MR_DllDeclare ~ResContinuousSound();
+public:
+	// Only available for resourceLib and construction
+	ResContinuousSound(int pResourceId);
+	~ResContinuousSound();
 
-		MR_DllDeclare int GetResourceId() const;
-		MR_DllDeclare void Serialize(Parcel::ObjStream &pArchive);
+	int GetResourceId() const { return mResourceId; }
+	void Serialize(Parcel::ObjStream &pArchive);
 
-		MR_DllDeclare VideoServices::ContinuousSound *GetSound() const;
-
+	VideoServices::ContinuousSound *GetSound() const { return mSound; }
 };
 
 }  // namespace ObjFacTools

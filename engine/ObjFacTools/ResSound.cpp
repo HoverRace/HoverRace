@@ -28,28 +28,16 @@ using namespace HoverRace::VideoServices;
 namespace HoverRace {
 namespace ObjFacTools {
 
-ResShortSound::ResShortSound(int pResourceId)
+ResShortSound::ResShortSound(int pResourceId) :
+	mResourceId(pResourceId),
+	mSound(nullptr), mNbCopy(0), mDataLen(0), mData(nullptr)
 {
-	mResourceId = pResourceId;
-	mNbCopy = 0;
-	mDataLen = 0;
-	mData = NULL;
-	mSound = NULL;
-
 }
 
 ResShortSound::~ResShortSound()
 {
 	SoundServer::DeleteShortSound(mSound);
-	mSound = NULL;
-
-	delete[]mData;
-	mData = NULL;
-}
-
-int ResShortSound::GetResourceId() const
-{
-	return mResourceId;
+	delete[] mData;
 }
 
 void ResShortSound::Serialize(Parcel::ObjStream &pArchive)
@@ -61,10 +49,10 @@ void ResShortSound::Serialize(Parcel::ObjStream &pArchive)
 	}
 	else {
 		SoundServer::DeleteShortSound(mSound);
-		mSound = NULL;
+		mSound = nullptr;
 
-		delete[]mData;
-		mData = NULL;
+		delete[] mData;
+		mData = nullptr;
 
 		pArchive >> mNbCopy;
 		pArchive >> mDataLen;
@@ -83,32 +71,16 @@ void ResShortSound::Serialize(Parcel::ObjStream &pArchive)
 	}
 }
 
-ShortSound *ResShortSound::GetSound() const
+ResContinuousSound::ResContinuousSound(int pResourceId) :
+	mResourceId(pResourceId),
+	mSound(nullptr), mNbCopy(0), mDataLen(0), mData(nullptr)
 {
-	return mSound;
-}
-
-ResContinuousSound::ResContinuousSound(int pResourceId)
-{
-	mResourceId = pResourceId;
-	mNbCopy = 0;
-	mDataLen = 0;
-	mData = NULL;
-	mSound = NULL;
 }
 
 ResContinuousSound::~ResContinuousSound()
 {
 	SoundServer::DeleteContinuousSound(mSound);
-	mSound = NULL;
-
-	delete[]mData;
-	mData = NULL;
-}
-
-int ResContinuousSound::GetResourceId() const
-{
-	return mResourceId;
+	delete[] mData;
 }
 
 void ResContinuousSound::Serialize(Parcel::ObjStream &pArchive)
@@ -121,10 +93,10 @@ void ResContinuousSound::Serialize(Parcel::ObjStream &pArchive)
 	}
 	else {
 		SoundServer::DeleteContinuousSound(mSound);
-		mSound = NULL;
+		mSound = nullptr;
 
-		delete[]mData;
-		mData = NULL;
+		delete[] mData;
+		mData = nullptr;
 
 		pArchive >> mNbCopy;
 		pArchive >> mDataLen;
@@ -139,13 +111,7 @@ void ResContinuousSound::Serialize(Parcel::ObjStream &pArchive)
 		pArchive.Read(mData, static_cast<size_t>(mDataLen));
 
 		mSound = SoundServer::CreateContinuousSound(mData, mNbCopy);
-
 	}
-}
-
-VideoServices::ContinuousSound *ResContinuousSound::GetSound() const
-{
-	return mSound;
 }
 
 }  // namespace ObjFacTools
