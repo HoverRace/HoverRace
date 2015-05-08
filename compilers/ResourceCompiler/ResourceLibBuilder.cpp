@@ -33,7 +33,8 @@ namespace {
 template<class T>
 void WriteRes(ObjStream &os, T &res)
 {
-	MR_UInt32 num = res.size();
+	// We assume that the size won't exceed 4GB.
+	MR_UInt32 num = static_cast<MR_UInt32>(res.size());
 	os << num;
 	for (auto &ent : res) {
 		MR_Int32 key = ent.first;
