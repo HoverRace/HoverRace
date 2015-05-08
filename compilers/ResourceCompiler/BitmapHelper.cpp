@@ -129,9 +129,10 @@ MR_UInt8 *BMPRead(FILE * pFile, int &pXRes, int &pYRes)
 	ASSERT(pXRes > 0);
 	ASSERT(pYRes > 0);
 
-	lReturnValue = new MR_UInt8[pXRes * pYRes];
+	size_t sz = static_cast<size_t>(pXRes * pYRes);
+	lReturnValue = new MR_UInt8[sz];
 
-	sfread(lReturnValue, pXRes * pYRes, 1, pFile);
+	sfread(lReturnValue, sz, 1, pFile);
 
 	return lReturnValue;
 
