@@ -29,31 +29,23 @@
 using namespace HoverRace::Parcel;
 
 namespace {
-	template<class T>
-	void WriteRes(ObjStream &os, T &res)
-	{
-		MR_UInt32 num = res.size();
-		os << num;
-		BOOST_FOREACH(const typename T::value_type &ent, res) {
-			MR_Int32 key = ent.first;
-			os << key;
-			ent.second->Serialize(os);
-		}
+
+template<class T>
+void WriteRes(ObjStream &os, T &res)
+{
+	MR_UInt32 num = res.size();
+	os << num;
+	for (auto &ent : res) {
+		MR_Int32 key = ent.first;
+		os << key;
+		ent.second->Serialize(os);
 	}
 }
 
+}  // namespace
+
 namespace HoverRace {
 namespace ResourceCompiler {
-
-ResourceLibBuilder::ResourceLibBuilder()
-{
-	// Notting to do
-}
-
-ResourceLibBuilder::~ResourceLibBuilder()
-{
-	// Notting to do
-}
 
 void ResourceLibBuilder::AddBitmap(ObjFacTools::ResBitmap *pBitmap)
 {

@@ -34,19 +34,19 @@ namespace ResourceCompiler {
 
 class ResourceLibBuilder : public ObjFacTools::ResourceLib
 {
-	// Each module can have its own MR_BitmapLib
-	public:
-		ResourceLibBuilder();
-		~ResourceLibBuilder();
+	using SUPER = ObjFacTools::ResourceLib;
 
-		void AddBitmap(ObjFacTools::ResBitmap *pBitmap);
-		void AddActor(ObjFacTools::ResActor *pActor);
-		void AddSprite(ObjFacTools::ResSprite *pSprite);
-		void AddSound(ObjFacTools::ResShortSound *pSound);
-		void AddSound(ObjFacTools::ResContinuousSound *pSound);
+public:
+	ResourceLibBuilder() : SUPER() { }
+	~ResourceLibBuilder() { }
 
-		bool Export(const HoverRace::Util::OS::path_t &filename);
+	void AddBitmap(ObjFacTools::ResBitmap *pBitmap);
+	void AddActor(ObjFacTools::ResActor *pActor);
+	void AddSprite(ObjFacTools::ResSprite *pSprite);
+	void AddSound(ObjFacTools::ResShortSound *pSound);
+	void AddSound(ObjFacTools::ResContinuousSound *pSound);
 
+	bool Export(const HoverRace::Util::OS::path_t &filename);
 };
 
 }  // namespace ResourceCompiler
