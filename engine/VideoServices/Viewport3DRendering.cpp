@@ -962,8 +962,8 @@ void Viewport3D::RenderHorizontalSurface(int pNbVertex, const MR_2DCoordinate * 
 								gsLineBltParam.mBitmapRowMask =
 									static_cast<MR_UInt32>(pBitmap->GetYRes(lSelectedBitmap) - 1);
 
-								gsLineBltParam.mBitmapColInc_4096 = ((lBitmapHColVariation_16384_64 * lDepth_8) >> lColShift) / (8 * 4 * 64);
-								gsLineBltParam.mBitmapRowInc_4096 = ((lBitmapHRowVariation_16384_64 * lDepth_8) >> lRowShift) / (8 * 4 * 64);
+								gsLineBltParam.mBitmapColInc_4096 = static_cast<MR_UInt32>(((lBitmapHColVariation_16384_64 * lDepth_8) >> lColShift) / (8 * 4 * 64));
+								gsLineBltParam.mBitmapRowInc_4096 = static_cast<MR_UInt32>(((lBitmapHRowVariation_16384_64 * lDepth_8) >> lRowShift) / (8 * 4 * 64));
 
 								gsLineBltParam.mBitmapCol_4096 = (lLeft - mXRes / 2) * gsLineBltParam.mBitmapColInc_4096 + (((lBitmapVColVariation_16384 * lDepth_8 / (4 * 8)) + lBitmapCol0_4096) >> lColShift);
 								gsLineBltParam.mBitmapRow_4096 = (lLeft - mXRes / 2) * gsLineBltParam.mBitmapRowInc_4096 + (((lBitmapVRowVariation_16384 * lDepth_8 / (4 * 8)) + lBitmapRow0_4096) >> lRowShift);
@@ -1100,8 +1100,8 @@ void Viewport3D::RenderPatch(const Patch & pPatch, const PositionMatrix & pMatri
 	lBitmapYRes = pBitmap->GetYRes(lSelectedBitmap);
 
 	gsTriangleBltParam.mBitmap = pBitmap->GetColumnBufferTable(lSelectedBitmap);
-	gsTriangleBltParam.mBitmapColMask = lBitmapXRes - 1;
-	gsTriangleBltParam.mBitmapRowMask = lBitmapYRes - 1;
+	gsTriangleBltParam.mBitmapColMask = static_cast<MR_UInt32>(lBitmapXRes - 1);
+	gsTriangleBltParam.mBitmapRowMask = static_cast<MR_UInt32>(lBitmapYRes - 1);
 
 	gsTriangleBltParam.mLightIntensity = MR_NORMAL_INTENSITY;
 	gsTriangleBltParam.mColor = pBitmap->GetPlainColor();
