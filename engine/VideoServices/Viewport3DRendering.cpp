@@ -965,8 +965,9 @@ void Viewport3D::RenderHorizontalSurface(int pNbVertex, const MR_2DCoordinate * 
 								gsLineBltParam.mBitmapColInc_4096 = static_cast<MR_UInt32>(((lBitmapHColVariation_16384_64 * lDepth_8) >> lColShift) / (8 * 4 * 64));
 								gsLineBltParam.mBitmapRowInc_4096 = static_cast<MR_UInt32>(((lBitmapHRowVariation_16384_64 * lDepth_8) >> lRowShift) / (8 * 4 * 64));
 
-								gsLineBltParam.mBitmapCol_4096 = (lLeft - mXRes / 2) * gsLineBltParam.mBitmapColInc_4096 + (((lBitmapVColVariation_16384 * lDepth_8 / (4 * 8)) + lBitmapCol0_4096) >> lColShift);
-								gsLineBltParam.mBitmapRow_4096 = (lLeft - mXRes / 2) * gsLineBltParam.mBitmapRowInc_4096 + (((lBitmapVRowVariation_16384 * lDepth_8 / (4 * 8)) + lBitmapRow0_4096) >> lRowShift);
+								MR_UInt32 scaleX = static_cast<MR_UInt32>(lLeft - mXRes / 2);
+								gsLineBltParam.mBitmapCol_4096 = scaleX * gsLineBltParam.mBitmapColInc_4096 + static_cast<MR_UInt32>(((lBitmapVColVariation_16384 * lDepth_8 / (4 * 8)) + lBitmapCol0_4096) >> lColShift);
+								gsLineBltParam.mBitmapRow_4096 = scaleX * gsLineBltParam.mBitmapRowInc_4096 + static_cast<MR_UInt32>(((lBitmapVRowVariation_16384 * lDepth_8 / (4 * 8)) + lBitmapRow0_4096) >> lRowShift);
 
 								BltLineNoZCheck();
 							}
@@ -1460,9 +1461,11 @@ void BltTriangle()
 
 						while(lXLeft < lXRight) {
 							if(lLineZBuffer[lXLeft] >= lLocalZ_4096 / (4096 * MR_ZBUFFER_UNIT)) {
+								MR_UInt32 scaledU = static_cast<MR_UInt32>(lLocalU_4096 / 4096);
+								MR_UInt32 scaledV = static_cast<MR_UInt32>(lLocalV_4096 / 4096);
 								lLineZBuffer[lXLeft] = static_cast<MR_UInt16>(lLocalZ_4096 / (4096 * MR_ZBUFFER_UNIT));
-								lLineBuffer[lXLeft] = gsTriangleBltParam.mBitmap[(lLocalU_4096 / 4096) & gsTriangleBltParam.mBitmapColMask]
-									[(lLocalV_4096 / 4096) & gsTriangleBltParam.mBitmapRowMask];
+								lLineBuffer[lXLeft] = gsTriangleBltParam.mBitmap[scaledU & gsTriangleBltParam.mBitmapColMask]
+									[scaledV & gsTriangleBltParam.mBitmapRowMask];
 							}
 
 							lXLeft++;
@@ -1624,9 +1627,11 @@ void BltTriangle()
 
 				while(lXLeft < lXRight) {
 					if(lLineZBuffer[lXLeft] >= lLocalZ_4096 / (4096 * MR_ZBUFFER_UNIT)) {
+						MR_UInt32 scaledU = static_cast<MR_UInt32>(lLocalU_4096 / 4096);
+						MR_UInt32 scaledV = static_cast<MR_UInt32>(lLocalV_4096 / 4096);
 						lLineZBuffer[lXLeft] = static_cast<MR_UInt16>(lLocalZ_4096 / (4096 * MR_ZBUFFER_UNIT));
-						lLineBuffer[lXLeft] = gsTriangleBltParam.mBitmap[(lLocalU_4096 / 4096) & gsTriangleBltParam.mBitmapColMask]
-							[(lLocalV_4096 / 4096) & gsTriangleBltParam.mBitmapRowMask];
+						lLineBuffer[lXLeft] = gsTriangleBltParam.mBitmap[scaledU & gsTriangleBltParam.mBitmapColMask]
+							[scaledV & gsTriangleBltParam.mBitmapRowMask];
 					}
 
 					lXLeft++;
