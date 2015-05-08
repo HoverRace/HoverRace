@@ -23,6 +23,7 @@
 #pragma once
 
 #include "../VideoServices/SoundServer.h"
+#include "../Util/MR_Types.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
 #	ifdef MR_ENGINE
@@ -50,7 +51,7 @@ protected:
 	VideoServices::ShortSound *mSound;
 
 	int mNbCopy;
-	int mDataLen;
+	MR_UInt32 mDataLen;
 	char *mData;
 
 public:
@@ -71,7 +72,7 @@ protected:
 	HoverRace::VideoServices::ContinuousSound *mSound;
 
 	int mNbCopy;
-	int mDataLen;
+	MR_UInt32 mDataLen;
 	char *mData;
 
 public:

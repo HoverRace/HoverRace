@@ -27,7 +27,7 @@
 namespace HoverRace {
 namespace ResourceCompiler {
 
-bool ParseSoundFile(const char *filename, const char *&destData, int &destLen);
+bool ParseSoundFile(const char *filename, const char *&destData, MR_UInt32 &destLen);
 
 ResShortSoundBuilder::ResShortSoundBuilder(int pResourceId) :
 	SUPER(pResourceId)
@@ -53,7 +53,7 @@ bool ResContinuousSoundBuilder::BuildFromFile(const char *pFile, int pNbCopy)
 	return ParseSoundFile(pFile, (const char *&) mData, mDataLen);
 }
 
-bool ParseSoundFile(const char *filename, const char *&destData, int &destLen)
+bool ParseSoundFile(const char *filename, const char *&destData, MR_UInt32 &destLen)
 {
 	SDL_AudioSpec spec;
 	MR_UInt8 *audioBuf;
@@ -63,7 +63,8 @@ bool ParseSoundFile(const char *filename, const char *&destData, int &destLen)
 		return false;
 	}
 
-	destLen = sizeof(MR_UInt32) +
+	destLen =
+		4 +  // sizeof(MR_UInt32)
 		18 +  // sizeof(WAVEFORMATEX)
 		bufLen;
 	destData = new char[destLen]();
@@ -74,8 +75,8 @@ bool ParseSoundFile(const char *filename, const char *&destData, int &destLen)
 	const char *hdr = destData + sizeof(MR_UInt32);
 	*(MR_UInt16*)(hdr + 0) = 1;  // wFormatTag = WAVE_FORMAT_PCM
 	*(MR_UInt16*)(hdr + 2) = spec.channels;  // nChannels
-	*(MR_UInt32*)(hdr + 4) = spec.freq;  // nSamplesPerSec
-	*(MR_UInt32*)(hdr + 8) = spec.freq * spec.channels * (bitsPerSample / 8);  // nAvgBytesPerSec
+	*(MR_UInt32*)(hdr + 4) = static_cast<MR_UInt32>(spec.freq);  // nSamplesPerSec
+	*(MR_UInt32*)(hdr + 8) = static_cast<MR_UInt32>(spec.freq * spec.channels) * (bitsPerSample / 8);  // nAvgBytesPerSec
 	*(MR_UInt16*)(hdr + 12) =  // nBlockAlign
 		static_cast<MR_UInt16>(spec.channels * (bitsPerSample / 8));
 	*(MR_UInt16*)(hdr + 14) =  // wBitsPerSample
