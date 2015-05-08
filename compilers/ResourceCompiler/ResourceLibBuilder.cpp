@@ -49,27 +49,27 @@ namespace ResourceCompiler {
 
 void ResourceLibBuilder::AddBitmap(ObjFacTools::ResBitmap *pBitmap)
 {
-	bitmaps.insert(bitmaps_t::value_type(pBitmap->GetResourceId(), pBitmap));
+	bitmaps.emplace(pBitmap->GetResourceId(), pBitmap);
 }
 
 void ResourceLibBuilder::AddActor(ObjFacTools::ResActor *pActor)
 {
-	actors.insert(actors_t::value_type(pActor->GetResourceId(), pActor));
+	actors.emplace(pActor->GetResourceId(), pActor);
 }
 
 void ResourceLibBuilder::AddSprite(ObjFacTools::ResSprite *pSprite)
 {
-	sprites.insert(sprites_t::value_type(pSprite->GetResourceId(), pSprite));
+	sprites.emplace(pSprite->GetResourceId(), pSprite);
 }
 
 void ResourceLibBuilder::AddSound(ObjFacTools::ResShortSound *pSound)
 {
-	shortSounds.insert(shortSounds_t::value_type(pSound->GetResourceId(), pSound));
+	shortSounds.emplace(pSound->GetResourceId(), pSound);
 }
 
 void ResourceLibBuilder::AddSound(ObjFacTools::ResContinuousSound *pSound)
 {
-	continuousSounds.insert(continuousSounds_t::value_type(pSound->GetResourceId(), pSound));
+	continuousSounds.emplace(pSound->GetResourceId(), pSound);
 }
 
 /**
