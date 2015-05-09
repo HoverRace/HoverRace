@@ -128,7 +128,7 @@ MR_DllDeclare inline std::ostream &operator<<(std::ostream &os,
 MR_DllDeclare inline std::ostream &operator<<(std::ostream &os,
 	const Profiler::LapTime &lp)
 {
-	os << lp.pctParent << " (" << lp.time.count() << ')';
+	os << lp.pctParent << "% (" << lp.time.count() << ')';
 	return os;
 }
 
