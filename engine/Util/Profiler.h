@@ -97,7 +97,7 @@ public:
 
 	void Reset();
 
-	void Lap(const Profiler *parent = nullptr);
+	const LapTime &Lap(const Profiler *parent = nullptr);
 
 public:
 	std::shared_ptr<Profiler> AddSub(const std::string &name);

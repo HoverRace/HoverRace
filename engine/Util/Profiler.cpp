@@ -47,8 +47,9 @@ void Profiler::Reset()
  * Calculate the statistics for the current period, then reset the counters
  * to start the next period.
  * @param parent The parent profiler (@c nullptr if this is the root profiler).
+ * @return The lap statistics (also available via GetLastLap()).
  */
-void Profiler::Lap(const Profiler *parent)
+const Profiler::LapTime &Profiler::Lap(const Profiler *parent)
 {
 	lap.time = dur;
 	if (parent) {
@@ -71,6 +72,8 @@ void Profiler::Lap(const Profiler *parent)
 	}
 
 	dur = dur_t::zero();
+
+	return lap;
 }
 
 /**
