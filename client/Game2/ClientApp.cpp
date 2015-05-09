@@ -477,6 +477,7 @@ ClientApp::ExitMode ClientApp::MainLoop()
 			HR_LOG(info) << "  " << advanceProfiler->GetName() << "  " << advanceProfiler->GetLastLap();
 			HR_LOG(info) << "  " << prepareProfiler->GetName() << "  " << prepareProfiler->GetLastLap();
 			HR_LOG(info) << "  " << renderProfiler->GetName() << "  " << renderProfiler->GetLastLap();
+			HR_LOG(info) << "  other  " << rootProfiler->GetOtherTime();
 		}
 	}
 

@@ -95,6 +95,12 @@ public:
 	dur_t GetDuration() const { return dur; }
 	const LapTime &GetLastLap() const { return lap; }
 
+	/**
+	 * Retrieve the unaccounted-for time from the last call to Lap().
+	 * @return The other time.
+	 */
+	const LapTime &GetOtherTime() const { return otherTime; }
+
 	void Reset();
 
 	const LapTime &Lap(const Profiler *parent = nullptr);
@@ -109,6 +115,7 @@ private:
 	int sampling;
 	clock_t::time_point sampleStart;
 	LapTime lap;
+	LapTime otherTime;
 };
 
 MR_DllDeclare inline std::ostream &operator<<(std::ostream &os,

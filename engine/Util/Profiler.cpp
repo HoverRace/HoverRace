@@ -67,8 +67,12 @@ const Profiler::LapTime &Profiler::Lap(const Profiler *parent)
 		lap.pctParent = 100;
 	}
 
+	otherTime.time = dur;
+	otherTime.pctParent = 100.0;
 	for (auto &ent : subs) {
-		ent->Lap(this);
+		auto &subLap = ent->Lap(this);
+		otherTime.time -= subLap.time;
+		otherTime.pctParent -= subLap.pctParent;
 	}
 
 	dur = dur_t::zero();
