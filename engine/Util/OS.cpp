@@ -1,7 +1,7 @@
 
 // OS.cpp
 //
-// Copyright (c) 2009, 2014 Michael Imamura.
+// Copyright (c) 2009, 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -163,9 +163,19 @@ void OS::TimeInit()
  */
 OS::timestamp_t OS::Time()
 {
+	static auto lastTime = clock_t::now();
+
+	auto now = clock_t::now();
+	if (now < lastTime) {
+		now = lastTime;
+	}
+	else {
+		lastTime = now;
+	}
+
 	return static_cast<timestamp_t>(
 		std::chrono::duration_cast<std::chrono::milliseconds>(
-			clock_t::now() - chronoStart).count());
+			now - chronoStart).count());
 }
 
 /**
