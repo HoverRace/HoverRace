@@ -40,8 +40,6 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/format.hpp>
 
-#include <SDL2/SDL.h>
-
 #include "../Exception.h"
 #include "Log.h"
 #include "Str.h"
