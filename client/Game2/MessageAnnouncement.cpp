@@ -24,8 +24,11 @@
 #include "../../engine/Display/FlexGrid.h"
 #include "../../engine/Display/Label.h"
 #include "../../engine/Display/SymbolIcon.h"
+#include "../../engine/Util/Symbol.h"
 
 #include "MessageAnnouncement.h"
+
+using namespace HoverRace::Util;
 
 namespace HoverRace {
 namespace Client {
@@ -44,7 +47,7 @@ std::shared_ptr<Display::FillBox> MessageAnnouncement::CreateIcon(
 
 	// Info icon (will be resized by the container).
 	return parent.NewChild<Display::SymbolIcon>(
-		1, 1, 0xf05a, s.announcementSymbolFg);
+		1, 1, Symbol::INFO_CIRCLE, s.announcementSymbolFg);
 }
 
 void MessageAnnouncement::CreateContents(Display::Display &display,
