@@ -1,7 +1,7 @@
 
 // StatusOverlayScene.cpp
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -97,14 +97,14 @@ void StatusOverlayScene::OnMouseMoved(const Vec2 &pos)
 	bulletinBoard->OnMouseMoved(pos);
 }
 
-void StatusOverlayScene::OnMousePressed(const Control::Mouse::Click &click)
+bool StatusOverlayScene::OnMousePressed(const Control::Mouse::Click &click)
 {
-	bulletinBoard->OnMousePressed(click);
+	return bulletinBoard->OnMousePressed(click);
 }
 
-void StatusOverlayScene::OnMouseReleased(const Control::Mouse::Click &click)
+bool StatusOverlayScene::OnMouseReleased(const Control::Mouse::Click &click)
 {
-	bulletinBoard->OnMouseReleased(click);
+	return bulletinBoard->OnMouseReleased(click);
 }
 
 void StatusOverlayScene::Layout()

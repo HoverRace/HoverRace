@@ -71,19 +71,19 @@ void FormScene::OnMouseMoved(const Vec2 &pos)
 	root->OnMouseMoved(pos);
 }
 
-void FormScene::OnMousePressed(const Control::Mouse::Click &click)
+bool FormScene::OnMousePressed(const Control::Mouse::Click &click)
 {
-	root->OnMousePressed(click);
+	return root->OnMousePressed(click);
 }
 
-void FormScene::OnMouseReleased(const Control::Mouse::Click &click)
+bool FormScene::OnMouseReleased(const Control::Mouse::Click &click)
 {
-	root->OnMouseReleased(click);
+	return root->OnMouseReleased(click);
 }
 
-void FormScene::OnMouseScrolled(const Control::Mouse::Scroll &scroll)
+bool FormScene::OnMouseScrolled(const Control::Mouse::Scroll &scroll)
 {
-	root->OnMouseScrolled(scroll);
+	return root->OnMouseScrolled(scroll);
 }
 
 void FormScene::PrepareRender()

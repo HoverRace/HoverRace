@@ -81,6 +81,25 @@ struct Scroll
 
 }  // namespace Mouse
 
+/**
+ * Combiner that allows slots to cancel the remaining slots by
+ * returning @c true.
+ */
+struct CancelCombiner
+{
+	using result_type = bool;
+
+	template<typename InputIterator>
+	bool operator()(InputIterator first, InputIterator last) const
+	{
+		while (first != last) {
+			if (*first) return true;
+			++first;
+		}
+		return false;
+	}
+};
+
 /// Signals which are self-contained (no payload).
 using voidSignal_t = boost::signals2::signal<void()>;
 
@@ -97,10 +116,12 @@ using textControlSignal_t = boost::signals2::signal<void(TextControl::key_t)>;
 using vec2Signal_t = boost::signals2::signal<void(const Vec2&)>;
 
 /// Signals for mouse clicks.
-using mouseClickSignal_t = boost::signals2::signal<void(const Mouse::Click&)>;
+using mouseClickSignal_t =
+	boost::signals2::signal<bool(const Mouse::Click&), CancelCombiner>;
 
 /// Signals for mouse scrolling.
-using mouseScrollSignal_t = boost::signals2::signal<void(const Mouse::Scroll&)>;
+using mouseScrollSignal_t =
+	boost::signals2::signal<bool(const Mouse::Scroll&), CancelCombiner>;
 
 template<class T, class Val>
 inline void PerformAction(const T&, Val)

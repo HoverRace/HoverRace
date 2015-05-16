@@ -59,9 +59,9 @@ public:
 
 private:
 	void OnMouseMoved(const Vec2 &pos);
-	void OnMousePressed(const Control::Mouse::Click &click);
-	void OnMouseReleased(const Control::Mouse::Click &click);
-	void OnMouseScrolled(const Control::Mouse::Scroll &scroll);
+	bool OnMousePressed(const Control::Mouse::Click &click);
+	bool OnMouseReleased(const Control::Mouse::Click &click);
+	bool OnMouseScrolled(const Control::Mouse::Scroll &scroll);
 
 protected:
 	Display::Container *GetRoot() const { return root.get(); }
