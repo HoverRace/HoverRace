@@ -1,7 +1,7 @@
 
 // Track.h
 //
-// Copyright (c) 2010, 2014 Michael Imamura.
+// Copyright (c) 2010, 2014-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -55,52 +55,53 @@ namespace Model {
  */
 class MR_DllDeclare Track : public Util::Inspectable
 {
-	typedef Util::Inspectable SUPER;
-	private:
-		Track() = delete;
-	public:
-		Track(const std::string &name, Parcel::RecordFilePtr recFile);
-		virtual ~Track();
+	using SUPER = Util::Inspectable;
 
-		Parcel::RecordFilePtr GetRecordFile() const { return recFile; }
-		const TrackEntry &GetHeader() const { return header; }
-		Level *GetLevel() const { return level; }
+private:
+	Track() = delete;
+public:
+	Track(const std::string &name, Parcel::RecordFilePtr recFile);
+	virtual ~Track();
 
-		/**
-		 * Retrieve the coordinates of the north-west corner of the track.
-		 * @return The coordinates, or (0, 0) if the track hasn't been loaded.
-		 */
-		const Vec2 &GetOffset() const { return offset; }
+	Parcel::RecordFilePtr GetRecordFile() const { return recFile; }
+	const TrackEntry &GetHeader() const { return header; }
+	Level *GetLevel() const { return level; }
 
-		/**
-		 * Retrieve the size of the track.
-		 * @return The size, or (0, 0) if the track hasn't been loaded.
-		 */
-		const Vec2 &GetSize() const { return size; }
+	/**
+	 * Retrieve the coordinates of the north-west corner of the track.
+	 * @return The coordinates, or (0, 0) if the track hasn't been loaded.
+	 */
+	const Vec2 &GetOffset() const { return offset; }
 
-		std::shared_ptr<Display::Res<Display::Texture>> GetMap() const { return map; }
+	/**
+	 * Retrieve the size of the track.
+	 * @return The size, or (0, 0) if the track hasn't been loaded.
+	 */
+	const Vec2 &GetSize() const { return size; }
 
-		double GetGravity() const;
-		void SetGravity(double gravity);
+	std::shared_ptr<Display::Res<Display::Texture>> GetMap() const { return map; }
 
-		virtual void Inspect(Util::InspectMapNode &node) const;
+	double GetGravity() const;
+	void SetGravity(double gravity);
 
-	private:
-		void LoadLevel(bool allowRendering, char gameOpts);
-		void LoadMap();
+	virtual void Inspect(Util::InspectMapNode &node) const;
 
-	public:
-		void Load(bool allowRendering, char gameOpts);
+private:
+	void LoadLevel(bool allowRendering, char gameOpts);
+	void LoadMap();
 
-	private:
-		Parcel::RecordFilePtr recFile;
-		TrackEntry header;
-		Level *level;
-		Vec2 offset;
-		Vec2 size;
-		std::shared_ptr<Display::Res<Display::Texture>> map;
+public:
+	void Load(bool allowRendering, char gameOpts);
+
+private:
+	Parcel::RecordFilePtr recFile;
+	TrackEntry header;
+	Level *level;
+	Vec2 offset;
+	Vec2 size;
+	std::shared_ptr<Display::Res<Display::Texture>> map;
 };
-typedef std::shared_ptr<Track> TrackPtr;
+using TrackPtr = std::shared_ptr<Track>;
 
 }  // namespace Model
 }  // namespace HoverRace
