@@ -1,7 +1,7 @@
 
 // Track.cpp
 //
-// Copyright (c) 2010, 2014 Michael Imamura.
+// Copyright (c) 2010, 2014-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -107,13 +107,15 @@ void Track::LoadMap()
 
 	MR_Int32 x0, x1, y0, y1;
 	archive >> x0 >> x1 >> y0 >> y1;
-	Log::Debug("Track bounds: x = <%d, %d>  y = <%d, %d>", x0, y0, x1, y1);
+	HR_LOG(debug) << "Track bounds: "
+		"x = <" << x0 << ", " << y0 << ">  "
+		"y = <" << x1 << ", " << y1 << ">";
 
 	offset.x = static_cast<double>(x0);
 	offset.y = static_cast<double>(y0);
 	size.x = static_cast<double>(x1) - offset.x;
 	size.y = static_cast<double>(y1) - offset.y;
-	
+
 	map = std::make_shared<Display::SpriteTextureRes>(
 		"map:" + header.name, archive);
 }
