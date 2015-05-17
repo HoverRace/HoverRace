@@ -28,11 +28,10 @@ using HoverRace::Parcel::ObjStream;
 namespace HoverRace {
 namespace Model {
 
-// Level implementation
 Level::Level(BOOL pAllowRendering, char pGameOpts) :
 	gravity(1.0)
 {
-	// Initialisation of an empty level
+	// Initialization of an empty level
 	mAllowRendering = pAllowRendering;
 
 	mNbRoom = 0;
@@ -172,7 +171,7 @@ void Level::Serialize(ObjStream &pArchive)
 	for(lCounter = 0; lCounter < mNbRoom; lCounter++) {
 		if(!pArchive.IsWriting()) {
 			FreeElementList *lCurrentElem = mFreeElementClassifiedByRoomList[lCounter];
-			
+
 
 			while(lCurrentElem != NULL) {
 				FreeElementList *lNext = lCurrentElem->mNext;
@@ -368,8 +367,8 @@ SurfaceElement *Level::GetFeatureTopElement(int pFeatureId) const
 	return mFeatureList[pFeatureId].mCeilingTexture;
 }
 
-// FreeElements manipulation 
-MR_FreeElementHandle Level::GetFirstFreeElement(int pRoom) const 
+// FreeElements manipulation
+MR_FreeElementHandle Level::GetFirstFreeElement(int pRoom) const
 {
 	FreeElementList *lReturnValue;
 
@@ -559,7 +558,7 @@ MR_Int32 Level::SectionShape::SideLen(int pIndex) const
 	return mSection->mWallLen[pIndex];
 }
 
-// class Level::Section::AudibleRoom 
+// class Level::Section::AudibleRoom
 Level::Room::AudibleRoom::AudibleRoom()
 {
 	mSectionSource = -1;
