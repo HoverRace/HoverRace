@@ -36,44 +36,46 @@ namespace fs = boost::filesystem;
 using namespace HoverRace::Util;
 
 namespace {
-	class LogStreamBuf : public std::stringbuf /*{{{*/
+
+class LogStreamBuf : public std::stringbuf /*{{{*/
+{
+	using SUPER = std::stringbuf;
+
+public:
+	LogStreamBuf() { }
+	virtual ~LogStreamBuf() { sync(); }
+
+protected:
+	int sync() override
 	{
-		typedef std::stringbuf SUPER;
-		public:
-			LogStreamBuf() { }
-			virtual ~LogStreamBuf() { sync(); }
+#		ifdef _WIN32
+			OutputDebugString(str().c_str());
+#		else
+			std::cout << str() << std::flush;
+#		endif
 
-		protected:
-			virtual int sync()
-			{
-				std::string s = str();
+		str({});
+		return 0;
+	}
+}; //}}}
 
-#				ifdef _WIN32
-					OutputDebugString(s.c_str());
-#				else
-					std::cout << s << std::flush;
-#				endif
+class LogStream : public std::ostream /*{{{*/
+{
+	using SUPER = std::ostream;
 
-				str(std::string());
-				return 0;
-			}
-	}; //}}}
+public:
+	LogStream() : SUPER(new LogStreamBuf()) { }
+	virtual ~LogStream() { delete rdbuf(); }
+}; //}}}
 
-	class LogStream : public std::ostream /*{{{*/
-	{
-		typedef std::ostream SUPER;
-		public:
-			LogStream() : SUPER(new LogStreamBuf()) { }
-			virtual ~LogStream() { delete rdbuf(); }
-	}; //}}}
-}
+}  // namespace
 
 namespace HoverRace {
 namespace Client {
 namespace HoverScript {
 
 SysEnv::SysEnv(Script::Core *scripting, DebugPeer *debugPeer,
-               GamePeer *gamePeer, InputPeer *inputPeer) :
+	GamePeer *gamePeer, InputPeer *inputPeer) :
 	SUPER(scripting), debugPeer(debugPeer), gamePeer(gamePeer),
 	inputPeer(inputPeer),
 	outHandle(scripting->AddOutput(std::make_shared<LogStream>()))

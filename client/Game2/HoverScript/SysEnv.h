@@ -1,7 +1,7 @@
 
 // SysEnv.h
 //
-// Copyright (c) 2010, 2013, 2014 Michael Imamura.
+// Copyright (c) 2010, 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -46,29 +46,29 @@ namespace HoverScript {
  */
 class SysEnv : private Script::Env
 {
-	typedef Script::Env SUPER;
+	using SUPER = Script::Env;
 
-	public:
-		SysEnv(Script::Core *scripting, DebugPeer *debugPeer,
-			GamePeer *gamePeer, InputPeer *inputPeer);
-		virtual ~SysEnv();
+public:
+	SysEnv(Script::Core *scripting, DebugPeer *debugPeer,
+		GamePeer *gamePeer, InputPeer *inputPeer);
+	virtual ~SysEnv();
 
-	protected:
-		virtual void InitEnv();
+protected:
+	void InitEnv() override;
 
-	protected:
-		virtual void LogInfo(const std::string &s);
-		virtual void LogError(const std::string &s);
+protected:
+	virtual void LogInfo(const std::string &s);
+	virtual void LogError(const std::string &s);
 
-	public:
-		// Expose privately-inherited function.
-		void RunScript(const Util::OS::path_t &filename) { SUPER::RunScript(filename); }
+public:
+	// Expose privately-inherited function.
+	void RunScript(const Util::OS::path_t &filename) { SUPER::RunScript(filename); }
 
-	private:
-		DebugPeer *debugPeer;
-		GamePeer *gamePeer;
-		InputPeer *inputPeer;
-		Script::Core::OutHandle outHandle;
+private:
+	DebugPeer *debugPeer;
+	GamePeer *gamePeer;
+	InputPeer *inputPeer;
+	Script::Core::OutHandle outHandle;
 };
 
 }  // namespace HoverScript
