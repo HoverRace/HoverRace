@@ -1,7 +1,7 @@
 
 // ClientApp.h
 //
-// Copyright (c) 2010, 2014 Michael Imamura.
+// Copyright (c) 2010, 2014-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -111,6 +111,7 @@ private:
 
 public:
 	// GameDirector
+	Scene *GetForegroundScene() const override { return sceneStack.empty() ? nullptr : sceneStack.back().get(); }
 	void RequestPushScene(const ScenePtr &scene) override;
 	void RequestPopScene() override;
 	void RequestReplaceScene(const ScenePtr &scene) override;
