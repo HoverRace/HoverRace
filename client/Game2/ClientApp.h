@@ -36,7 +36,7 @@ namespace HoverRace {
 			class HighConsole;
 			class InputPeer;
 			class SessionPeer;
-			typedef std::shared_ptr<SessionPeer> SessionPeerPtr;
+			using SessionPeerPtr = std::shared_ptr<SessionPeer>;
 			class SysConsole;
 			class SysEnv;
 		}
@@ -44,10 +44,10 @@ namespace HoverRace {
 		class HighObserver;
 		class LoadingScene;
 		class Rulebook;
-		typedef std::shared_ptr<Rulebook> RulebookPtr;
+		using RulebookPtr = std::shared_ptr<Rulebook>;
 		class RulebookLibrary;
 		class Scene;
-		typedef std::shared_ptr<Scene> ScenePtr;
+		using ScenePtr = std::shared_ptr<Scene>;
 		class StatusOverlayScene;
 	}
 	namespace Control {
@@ -74,7 +74,7 @@ namespace Client {
  */
 class ClientApp : public GameDirector
 {
-	typedef GameDirector SUPER;
+	using SUPER = GameDirector;
 
 public:
 	ClientApp();
@@ -101,7 +101,7 @@ private:
 	void OnConsoleToggle();
 
 private:
-	typedef std::list<ScenePtr> sceneStack_t;
+	using sceneStack_t = std::list<ScenePtr>;
 	void SetForegroundScene();
 	void SetForegroundScene(const ScenePtr &iter);
 	void PushScene(const ScenePtr &scene);
