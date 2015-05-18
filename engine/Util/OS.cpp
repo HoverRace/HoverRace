@@ -22,11 +22,6 @@
 #include <locale.h>
 #include <stdlib.h>
 
-#ifndef _WIN32
-#	include <sys/time.h>
-#	include <time.h>
-#endif
-
 #include <chrono>
 #include <iomanip>
 #include <iostream>
