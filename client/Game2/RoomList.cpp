@@ -27,7 +27,7 @@
 
 using namespace HoverRace;
 using namespace HoverRace::Client;
-using HoverRace::Util::OS;
+using namespace HoverRace::Util;
 
 RoomList::RoomList() :
 	selectedRoom(NULL), curBanner(NULL), curBannerIdx(0)

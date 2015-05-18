@@ -1,7 +1,7 @@
 
 // TrackBundle.cpp
 //
-// Copyright (c) 2010, 2013, 2014 Michael Imamura.
+// Copyright (c) 2010, 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -32,8 +32,7 @@
 
 #include "TrackBundle.h"
 
-using HoverRace::Util::Config;
-using HoverRace::Util::OS;
+using namespace HoverRace::Util;
 
 namespace HoverRace {
 namespace Parcel {
@@ -96,7 +95,7 @@ std::shared_ptr<Display::Res<Display::Texture>> TrackBundle::LoadMap(
 	// Ignore track bounds.
 	MR_Int32 i;
 	archive >> i >> i >> i >> i;
-	
+
 	return std::make_shared<Display::SpriteTextureRes>(
 		"map:" + entry->name, archive);
 }

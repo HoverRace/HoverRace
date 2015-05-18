@@ -33,7 +33,7 @@
 #	define _stricmp strcasecmp
 #endif
 
-using HoverRace::Util::OS;
+using namespace HoverRace::Util;
 using boost::str;
 using boost::format;
 

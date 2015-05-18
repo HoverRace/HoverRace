@@ -1,7 +1,7 @@
 
 // OS.h
 //
-// Copyright (c) 2009, 2014 Michael Imamura.
+// Copyright (c) 2009, 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -47,50 +47,53 @@ namespace Util {
  * Operating system support utilities.
  * @author Michael Imamura
  */
-struct MR_DllDeclare OS
+namespace OS {
+
+extern std::locale locale;
+extern const std::locale stdLocale;
+
+using timestamp_t = MR_Int64;
+
+using path_t = boost::filesystem::path;
+using dirIter_t = boost::filesystem::directory_iterator;
+using dirEnt_t = boost::filesystem::directory_entry;
+
+using fs_error_t = boost::filesystem::filesystem_error;
+
+using pstr_t = path_t::value_type*;
+using cpstr_t = const path_t::value_type*;
+
+void SetEnv(const char *key, const char *val);
+void SetLocale();
+
+std::string StrError(int errnum);
+
+void TimeInit();
+timestamp_t Time();
+
+/**
+ * Calculate the difference between two timestamps.
+ * This properly handles wraparound in timestamps.
+ * @param laterTs The later timestamp.
+ * @param earlierTs The earlier timestamp.
+ * @return @p laterTs - @p earlierTs
+ */
+inline timestamp_t TimeDiff(timestamp_t laterTs, timestamp_t earlierTs)
 {
-	static std::locale locale;
-	static const std::locale stdLocale;
+	// We assume that signed 64-bit values won't have to deal with
+	// wraparound.
+	return laterTs - earlierTs;
+}
 
-	using timestamp_t = MR_Int64;
+std::string FileTimeString();
+void TimeShutdown();
 
-	using path_t = boost::filesystem::path;
-	using dirIter_t = boost::filesystem::directory_iterator;
-	using dirEnt_t =  boost::filesystem::directory_entry;
+bool OpenLink(const std::string &url);
+bool OpenPath(const path_t &path);
 
-	using fs_error_t = boost::filesystem::filesystem_error;
+FILE *FOpen(const path_t &path, const char *mode);
 
-	using pstr_t = path_t::value_type*;
-	using cpstr_t = const path_t::value_type*;
-
-	static void SetEnv(const char *key, const char *val);
-	static void SetLocale();
-
-	static std::string StrError(int errnum);
-
-	static void TimeInit();
-	static timestamp_t Time();
-	/**
-	 * Calculate the difference between two timestamps.
-	 * This properly handles wraparound in timestamps.
-	 * @param laterTs The later timestamp.
-	 * @param earlierTs The earlier timestamp.
-	 * @return @p laterTs - @p earlierTs
-	 */
-	static timestamp_t TimeDiff(timestamp_t laterTs, timestamp_t earlierTs)
-	{
-		// We assume that signed 64-bit values won't have to deal with
-		// wraparound.
-		return laterTs - earlierTs;
-	}
-	static std::string FileTimeString();
-	static void TimeShutdown();
-
-	static bool OpenLink(const std::string &url);
-	static bool OpenPath(const path_t &path);
-
-	static FILE *FOpen(const path_t &path, const char *mode);
-};
+}  // namespace OS
 
 }  // namespace Util
 }  // namespace HoverRace

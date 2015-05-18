@@ -2,7 +2,7 @@
 // main.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -41,10 +41,7 @@ using boost::format;
 using boost::str;
 
 using HoverRace::Client::ClientApp;
-using HoverRace::Util::Config;
-namespace Log = HoverRace::Util::Log;
-using HoverRace::Util::OS;
-namespace Str = HoverRace::Util::Str;
+using namespace HoverRace::Util;
 
 namespace {
 
