@@ -49,7 +49,7 @@ protected:
 	int sync() override
 	{
 #		ifdef _WIN32
-			OutputDebugString(str().c_str());
+			OutputDebugStringW((const wchar_t*)Str::UW(str()));
 #		else
 			std::cout << str() << std::flush;
 #		endif
