@@ -76,6 +76,14 @@ public:
 	const std::string &GetName() const { return name; }
 
 	/**
+	 * Output a stream of debug information describing this scene.
+	 * The output text may include newlines.
+	 * @param [in,out] oss The output stream to write to.
+	 * @return The same output stream as was passed in.
+	 */
+	virtual std::ostream &OutputDebugText(std::ostream &oss) const { return oss; }
+
+	/**
 	 * Configure the controller mappings.
 	 * This is called whenever the scene becomes the foreground scene
 	 * or the controller config needs to be rebuilt.

@@ -54,6 +54,7 @@
 #include "HoverScript/SysConsole.h"
 #include "HoverScript/SysEnv.h"
 #include "ClientSession.h"
+#include "DebugScene.h"
 #include "DemoGameScene.h"
 #include "LoadingScene.h"
 #include "MainMenuScene.h"
@@ -116,7 +117,9 @@ ClientApp::ClientApp() :
 	SUPER(),
 	needsDevWarning(false),
 	userEventId(SDL_RegisterEvents(1)),
-	sceneStack(), fgScene(), statusOverlayScene(), showOverlay(false),
+	sceneStack(), fgScene(),
+	statusOverlayScene(), showOverlay(false),
+	debugScene(), showDebug(false),
 	showFps(Config::GetInstance()->runtime.showFramerate),
 	fpsLbl(), frameCount(0), lastTimestamp(0), fps(0.0),
 	rootProfiler(std::make_shared<Profiler>("ROOT")),
@@ -343,6 +346,7 @@ void ClientApp::AdvanceScenes(Util::OS::timestamp_t tick)
 	}
 
 	if (showOverlay) statusOverlayScene->AdvanceScene(tick);
+	if (showDebug) debugScene->AdvanceScene(tick);
 }
 
 void ClientApp::PrepareScenes()
@@ -353,6 +357,7 @@ void ClientApp::PrepareScenes()
 		scene->PrepareScene();
 	}
 	if (showOverlay) statusOverlayScene->PrepareScene();
+	if (showDebug) debugScene->PrepareScene();
 	if (showFps) fpsLbl->PrepareRender();
 }
 
@@ -369,6 +374,7 @@ void ClientApp::RenderScenes()
 		}
 	}
 	if (showOverlay) statusOverlayScene->RenderScene();
+	if (showDebug) debugScene->RenderScene();
 	if (showFps) fpsLbl->Render();
 }
 
@@ -395,6 +401,7 @@ ClientApp::ExitMode ClientApp::MainLoop()
 	SDL_Event evt;
 
 	statusOverlayScene.reset(new StatusOverlayScene(*display, *this));
+	debugScene.reset(new DebugScene(*display, *this));
 
 	const auto &runtimeCfg = Config::GetInstance()->runtime;
 	needsDevWarning =
