@@ -261,11 +261,20 @@ void SdlTypeCase::Render(const TypeLine &s, const Color cm, int x, int y)
 			usedTextures.set(page);
 		}
 
-		const auto &srcRect = glyph->srcRect;
-		destRect.w = srcRect.w;
-		destRect.h = srcRect.h;
-		SDL_RenderCopy(renderer, texture, &srcRect, &destRect);
-		destRect.x += srcRect.w;
+		switch (glyph->cp) {
+			case '\n':
+				destRect.x = x;
+				destRect.y += fontHeight;
+				break;
+
+			default: {
+				const auto &srcRect = glyph->srcRect;
+				destRect.w = srcRect.w;
+				destRect.h = srcRect.h;
+				SDL_RenderCopy(renderer, texture, &srcRect, &destRect);
+				destRect.x += srcRect.w;
+			}
+		}
 	}
 }
 
