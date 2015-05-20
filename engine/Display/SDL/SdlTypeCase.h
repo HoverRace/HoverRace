@@ -68,7 +68,7 @@ public:
 
 private:
 	GlyphEntry &AddGlyph(GlyphEntry &ent, const std::string &s,
-		std::string &added);
+		MR_UInt32 cp, std::string &added);
 	GlyphEntry &FindGlyph(const std::string &s, MR_UInt32 cp,
 		std::string &added);
 

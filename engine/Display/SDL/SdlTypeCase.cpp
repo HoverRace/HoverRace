@@ -69,11 +69,12 @@ MR_UInt32 SdlTypeCase::CountTextures() const
  * Adds a glyph to the backing textures.
  * @param [in,out] ent The glyph entry to initialize.
  * @param s A single UTF-8 character.
+ * @param cp The Unicode code point represented by the character.
  * @param added Buffer of added glyphs.
  * @return The same glyph entry that was passed in.
  */
 GlyphEntry &SdlTypeCase::AddGlyph(GlyphEntry &ent, const std::string &s,
-	std::string &added)
+	MR_UInt32 cp, std::string &added)
 {
 	TTF_Font *ttfFont = display.LoadTtfFont(font, false);
 	SDL_Color color = { 0xff, 0xff, 0xff, 0xff };
@@ -135,6 +136,7 @@ GlyphEntry &SdlTypeCase::AddGlyph(GlyphEntry &ent, const std::string &s,
 
 	SDL_FreeSurface(src);
 
+	ent.cp = cp;
 	ent.page = curMap;
 	auto &rect = ent.srcRect;
 	rect.x = curX;
@@ -173,7 +175,7 @@ GlyphEntry &SdlTypeCase::FindGlyph(const std::string &s, MR_UInt32 cp,
 	}
 	GlyphEntry &ent = (*page)[cp % 256];
 
-	return ent.IsInitialized() ? ent : AddGlyph(ent, s, added);
+	return ent.IsInitialized() ? ent : AddGlyph(ent, s, cp, added);
 }
 
 void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
