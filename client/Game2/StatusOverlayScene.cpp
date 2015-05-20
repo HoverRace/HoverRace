@@ -46,7 +46,7 @@ StatusOverlayScene::StatusOverlayScene(Display::Display &display,
 	playerBar(new PlayerBar(display, director, Display::UiLayoutFlags::FLOATING))
 {
 	using namespace Display;
-	typedef UiViewModel::Alignment Alignment;
+	using Alignemnt = UiViewModel::Alignment;
 
 	bulletinBoard->AttachView(display);
 	bulletinBoard->SetAlignment(Alignment::N);
