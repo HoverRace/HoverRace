@@ -179,7 +179,7 @@ public:
 
 public:
 	std::shared_ptr<TypeCase> typeCase;  // Owning TypeCase, for sanity checking.
-	std::vector<GlyphEntry*> glyphs;
+	std::vector<std::pair<GlyphEntry*, SDL_Rect>> glyphs;
 	int width;
 	int height;
 };

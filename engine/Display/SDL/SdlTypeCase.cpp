@@ -196,6 +196,7 @@ void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
 	auto iter = prev;
 	auto end = s.end();
 	int sx = 0;
+	int cx = 0, cy = 0;
 	try {
 		while (iter != end) {
 			MR_UInt32 cp = utf8::next(iter, end);
@@ -204,10 +205,21 @@ void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
 
 			HR_LOG(trace) << "Finding: " << cp;
 
-			auto &entry = FindGlyph(buf, cp, added);
-			if (rects) {
-				rects->glyphs.push_back(&entry);
-				sx += entry.srcRect.w;
+			switch (cp) {
+				case '\n':
+					cx = 0;
+					cy += fontHeight;
+					break;
+
+				default:
+					auto &entry = FindGlyph(buf, cp, added);
+					if (rects) {
+						const auto &gr = entry.srcRect;
+						rects->glyphs.emplace_back(&entry,
+							SDL_Rect{ cx, cy, gr.w, gr.h });
+						cx += gr.w;
+						sx += entry.srcRect.w;
+					}
 			}
 		}
 	}
@@ -221,7 +233,7 @@ void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
 
 	if (rects) {
 		rects->width = sx;
-		rects->height = fontHeight;
+		rects->height = cy + fontHeight;
 	}
 
 	// All maps that need update will be at the end, so update in reverse
@@ -251,7 +263,7 @@ void SdlTypeCase::Render(const TypeLine &s, const Color cm, int x, int y)
 	auto renderer = display.GetRenderer();
 	SDL_Rect destRect = { x, y, 0, 0 };
 	for (const auto &glyph : s.glyphs) {
-		auto page = glyph->page;
+		auto page = glyph.first->page;
 		SDL_Texture *texture = maps[page].get()->Get();
 
 		if (!usedTextures[page]) {
@@ -261,20 +273,13 @@ void SdlTypeCase::Render(const TypeLine &s, const Color cm, int x, int y)
 			usedTextures.set(page);
 		}
 
-		switch (glyph->cp) {
-			case '\n':
-				destRect.x = x;
-				destRect.y += fontHeight;
-				break;
-
-			default: {
-				const auto &srcRect = glyph->srcRect;
-				destRect.w = srcRect.w;
-				destRect.h = srcRect.h;
-				SDL_RenderCopy(renderer, texture, &srcRect, &destRect);
-				destRect.x += srcRect.w;
-			}
-		}
+		const auto &srcRect = glyph.first->srcRect;
+		destRect.x = x + glyph.second.x;
+		destRect.y = y + glyph.second.y;
+		destRect.w = srcRect.w;
+		destRect.h = srcRect.h;
+		SDL_RenderCopy(renderer, texture, &srcRect, &destRect);
+		destRect.x += srcRect.w;
 	}
 }
 

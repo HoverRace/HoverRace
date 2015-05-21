@@ -106,7 +106,7 @@ void SdlSymbolIconView::UpdateTexture()
 	typeCase->Prepare(text, newLine.get());
 	typeLine.swap(newLine);
 
-	auto &glyphRect = typeLine->glyphs[0]->srcRect;
+	auto &glyphRect = typeLine->glyphs[0].first->srcRect;
 	width = glyphRect.w;
 	height = glyphRect.h;
 
