@@ -67,6 +67,7 @@ public:
 	MR_UInt32 CountTextures() const override;
 
 private:
+	static int MeasureSpaceWidth(SdlDisplay &display, const UiFont &font);
 	GlyphEntry &AddGlyph(GlyphEntry &ent, const std::string &s,
 		MR_UInt32 cp, std::string &added);
 	GlyphEntry &FindGlyph(const std::string &s, MR_UInt32 cp,
@@ -82,6 +83,7 @@ protected:
 	SdlDisplay &display;
 private:
 	int fontHeight;
+	int spaceWidth;
 	using glyphPage_t = std::array<GlyphEntry, 256>;
 	std::array<std::unique_ptr<glyphPage_t>, 256> glyphs;
 	std::vector<std::unique_ptr<SdlDynamicTexture>> maps;

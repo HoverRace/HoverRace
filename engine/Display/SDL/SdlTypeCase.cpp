@@ -50,6 +50,7 @@ SdlTypeCase::SdlTypeCase(SdlDisplay &display, const UiFont &font,
 	int width, int height) :
 	SUPER(font, width, height), display(display),
 	fontHeight(TTF_FontHeight(display.LoadTtfFont(font, false))),
+	spaceWidth(MeasureSpaceWidth(display, font)),
 	curMap(0), curX(0), curY(0)
 {
 }
@@ -63,6 +64,28 @@ MR_UInt32 SdlTypeCase::CountTextures() const
 {
 	// Safe cast since we constrain the maximum number of maps.
 	return static_cast<MR_UInt32>(maps.size());
+}
+
+/**
+ * Measure the width of a space.
+ *
+ * We don't actually render spaces, so we need to know how wide it is for
+ * layout purposes.
+ *
+ * @param display The SDL display for rendering.
+ * @param font The font.
+ * @return The width, in pixels.
+ */
+int SdlTypeCase::MeasureSpaceWidth(SdlDisplay &display, const UiFont &font)
+{
+	TTF_Font *ttfFont = display.LoadTtfFont(font, false);
+	int advance = 0;
+	if (TTF_GlyphMetrics(ttfFont, ' ', nullptr, nullptr, nullptr, nullptr,
+		&advance) < 0)
+	{
+		return 0;
+	}
+	return advance;
 }
 
 /**
@@ -206,6 +229,11 @@ void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
 			HR_LOG(trace) << "Finding: " << cp;
 
 			switch (cp) {
+				case ' ':
+					cx += spaceWidth;
+					sx += spaceWidth;
+					break;
+
 				case '\n':
 					cx = 0;
 					cy += fontHeight;
