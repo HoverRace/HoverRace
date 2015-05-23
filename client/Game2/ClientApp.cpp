@@ -119,7 +119,7 @@ ClientApp::ClientApp() :
 	userEventId(SDL_RegisterEvents(1)),
 	sceneStack(), fgScene(),
 	statusOverlayScene(), showOverlay(false),
-	debugScene(), showDebug(false),
+	debugScene(), showDebug(Config::GetInstance()->runtime.enableDebugOverlay),
 	showFps(Config::GetInstance()->runtime.showFramerate),
 	fpsLbl(), frameCount(0), lastTimestamp(0), fps(0.0),
 	rootProfiler(std::make_shared<Profiler>("ROOT")),

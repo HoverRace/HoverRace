@@ -144,7 +144,7 @@ private:
 	std::unique_ptr<StatusOverlayScene> statusOverlayScene;
 	bool showOverlay;
 	std::unique_ptr<DebugScene> debugScene;
-	bool showDebug;
+	const bool &showDebug;
 	const bool &showFps;
 	std::list<std::shared_ptr<Announcement>> announcements;
 

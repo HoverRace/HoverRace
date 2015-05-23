@@ -304,6 +304,7 @@ public:
 		bool verboseLog;
 		bool showFramerate;
 		bool enableConsole;
+		bool enableDebugOverlay;
 		bool enableHud;
 		bool noAccel;  ///< Disable accelerated (OpenGL) rendering.
 		bool skipStartupWarning;

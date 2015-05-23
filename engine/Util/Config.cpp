@@ -759,6 +759,7 @@ void Config::ResetToDefaults()
 	runtime.verboseLog = false;
 	runtime.showFramerate = false;
 	runtime.enableConsole = true;
+	runtime.enableDebugOverlay = false;
 	runtime.enableHud = true;
 	runtime.skipStartupWarning = false;
 	runtime.profiling = false;
