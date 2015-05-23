@@ -42,3 +42,16 @@ start_test_lab:
     
     Optionally, the name of a test lab module may be passed to start it
     automatically.
+
+toggle_debug_overlay:
+  type: method
+  sig:
+    - visible = game:toggle_debug_overlay()
+  brief: >
+    Toggle the debug overlay.
+  desc: >
+    This toggles the visibility of the debugging overlay, which displays
+    information about the current scene.
+
+    The return value is true if the overlay is now visible, false if the
+    overlay is now hidden.

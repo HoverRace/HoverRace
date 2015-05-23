@@ -64,6 +64,8 @@ public:
 	void LShowPalette();
 	void LStartTestLab();
 	void LStartTestLab_N(const std::string &startingModuleName);
+	bool LToggleDebugOverlay();
+
 	void LTest();
 
 private:

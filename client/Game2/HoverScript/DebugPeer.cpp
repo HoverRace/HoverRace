@@ -60,6 +60,7 @@ void DebugPeer::Register(Script::Core *scripting)
 			.def("show_palette", &DebugPeer::LShowPalette)
 			.def("start_test_lab", &DebugPeer::LStartTestLab)
 			.def("start_test_lab", &DebugPeer::LStartTestLab_N)
+			.def("toggle_debug_overlay", &DebugPeer::LToggleDebugOverlay)
 			.def("test", &DebugPeer::LTest)
 	];
 }
@@ -89,6 +90,12 @@ void DebugPeer::LStartTestLab_N(const std::string &startingModuleName)
 	gameDirector.RequestReplaceScene(
 		std::make_shared<TestLabScene>(
 			*gameDirector.GetDisplay(), gameDirector, startingModuleName));
+}
+
+bool DebugPeer::LToggleDebugOverlay()
+{
+	auto &enabled = Config::GetInstance()->runtime.enableDebugOverlay;
+	return (enabled = !enabled);
 }
 
 void DebugPeer::LTest()
