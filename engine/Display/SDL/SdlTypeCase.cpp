@@ -229,6 +229,10 @@ void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
 			HR_LOG(trace) << "Finding: " << cp;
 
 			switch (cp) {
+				case '\r':
+					// Ignore CR; only LF is used for newlines.
+					break;
+
 				case ' ':
 					cx += spaceWidth;
 					sx += spaceWidth;
