@@ -32,7 +32,7 @@ namespace Client {
 DebugScene::DebugScene(Display::Display &display,
 	GameDirector &director) :
 	SUPER("Debug Overlay"),
-	display(display), director(director), prevUpdateTick(0)
+	director(director), prevUpdateTick(0)
 {
 	using namespace Display;
 

@@ -59,7 +59,6 @@ public:
 	void Render() override;
 
 private:
-	Display::Display &display;
 	GameDirector &director;
 	Util::OS::timestamp_t prevUpdateTick;
 	std::unique_ptr<Display::ActiveText> debugLbl;
