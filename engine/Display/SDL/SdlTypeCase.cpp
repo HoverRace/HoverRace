@@ -195,7 +195,8 @@ void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
 	auto prev = s.begin();
 	auto iter = prev;
 	auto end = s.end();
-	int sx = 0;
+	int sx = 0;  // Width of current line.
+	int mx = 0;  // Max length of all lines.
 	int cx = 0, cy = 0;
 	try {
 		while (iter != end) {
@@ -218,6 +219,10 @@ void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
 				case '\n':
 					cx = 0;
 					cy += metrics.lineHeight;
+					if (sx > mx) {
+						mx = sx;
+					}
+					sx = 0;
 					break;
 
 				default:
@@ -240,8 +245,12 @@ void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
 		HR_LOG(warning) << "Invalid UTF-8 sequence: " << ex.what();
 	}
 
+	if (sx > mx) {
+		mx = sx;
+	}
+
 	if (rects) {
-		rects->width = sx;
+		rects->width = mx;
 		rects->height = cy + metrics.fontHeight;
 	}
 
