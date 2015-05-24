@@ -86,6 +86,7 @@ private:
 		Metrics(SdlDisplay &display, const UiFont &font);
 
 		int fontHeight;  ///< The maximum height of a glyph.
+		int lineHeight;  ///< Total height of a line (including line spacing).
 		int spaceWidth;  ///< The width of a space character.
 	} metrics;
 	using glyphPage_t = std::array<GlyphEntry, 256>;

@@ -217,7 +217,7 @@ void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
 
 				case '\n':
 					cx = 0;
-					cy += metrics.fontHeight;
+					cy += metrics.lineHeight;
 					break;
 
 				default:
@@ -321,6 +321,10 @@ SdlTypeCase::Metrics::Metrics(SdlDisplay &display, const UiFont &font)
 
 	if ((fontHeight = TTF_FontHeight(ttfFont)) < 0) {
 		fontHeight = 0;
+	}
+
+	if ((lineHeight = TTF_FontLineSkip(ttfFont)) < 0) {
+		lineHeight = 0;
 	}
 
 	if (TTF_GlyphMetrics(ttfFont, ' ',
