@@ -49,8 +49,7 @@ const MR_UInt32 MAX_MAPS = 32;
 SdlTypeCase::SdlTypeCase(SdlDisplay &display, const UiFont &font,
 	int width, int height) :
 	SUPER(font, width, height), display(display),
-	fontHeight(TTF_FontHeight(display.LoadTtfFont(font, false))),
-	spaceWidth(MeasureSpaceWidth(display, font)),
+	metrics(display, font),
 	curMap(0), curX(0), curY(0)
 {
 }
@@ -64,28 +63,6 @@ MR_UInt32 SdlTypeCase::CountTextures() const
 {
 	// Safe cast since we constrain the maximum number of maps.
 	return static_cast<MR_UInt32>(maps.size());
-}
-
-/**
- * Measure the width of a space.
- *
- * We don't actually render spaces, so we need to know how wide it is for
- * layout purposes.
- *
- * @param display The SDL display for rendering.
- * @param font The font.
- * @return The width, in pixels.
- */
-int SdlTypeCase::MeasureSpaceWidth(SdlDisplay &display, const UiFont &font)
-{
-	TTF_Font *ttfFont = display.LoadTtfFont(font, false);
-	int advance = 0;
-	if (TTF_GlyphMetrics(ttfFont, ' ', nullptr, nullptr, nullptr, nullptr,
-		&advance) < 0)
-	{
-		return 0;
-	}
-	return advance;
 }
 
 /**
@@ -125,7 +102,7 @@ GlyphEntry &SdlTypeCase::AddGlyph(GlyphEntry &ent, const std::string &s,
 
 	if (curX + w >= width) {
 		curX = 0;
-		if (curY + fontHeight + h >= height) {
+		if (curY + metrics.fontHeight + h >= height) {
 			curY = 0;
 			curMap++;
 			HR_LOG(debug) << "Spilling type case for font [" << font << "] "
@@ -133,7 +110,7 @@ GlyphEntry &SdlTypeCase::AddGlyph(GlyphEntry &ent, const std::string &s,
 				width << "x" << height << ")";
 		}
 		else {
-			curY += fontHeight + 1;
+			curY += metrics.fontHeight + 1;
 		}
 	}
 
@@ -234,13 +211,13 @@ void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
 					break;
 
 				case ' ':
-					cx += spaceWidth;
-					sx += spaceWidth;
+					cx += metrics.spaceWidth;
+					sx += metrics.spaceWidth;
 					break;
 
 				case '\n':
 					cx = 0;
-					cy += fontHeight;
+					cy += metrics.fontHeight;
 					break;
 
 				default:
@@ -265,7 +242,7 @@ void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
 
 	if (rects) {
 		rects->width = sx;
-		rects->height = cy + fontHeight;
+		rects->height = cy + metrics.fontHeight;
 	}
 
 	// All maps that need update will be at the end, so update in reverse
@@ -335,6 +312,25 @@ void SdlTypeCase::RenderTexture(MR_UInt32 idx, int x, int y, double scale)
 
 	SDL_RenderCopy(renderer, texture, nullptr, &destRect);
 }
+
+//{{{ Metrics //////////////////////////////////////////////////////////////////
+
+SdlTypeCase::Metrics::Metrics(SdlDisplay &display, const UiFont &font)
+{
+	TTF_Font *ttfFont = display.LoadTtfFont(font, false);
+
+	if ((fontHeight = TTF_FontHeight(ttfFont)) < 0) {
+		fontHeight = 0;
+	}
+
+	if (TTF_GlyphMetrics(ttfFont, ' ',
+		nullptr, nullptr, nullptr, nullptr, &spaceWidth) < 0)
+	{
+		spaceWidth = 0;
+	}
+}
+
+//}}} Metrics
 
 }  // namespace SDL
 }  // namespace Display
