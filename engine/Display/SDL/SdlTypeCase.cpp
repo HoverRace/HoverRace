@@ -136,12 +136,16 @@ GlyphEntry &SdlTypeCase::AddGlyph(GlyphEntry &ent, const std::string &s,
 
 	SDL_FreeSurface(src);
 
+	// Determine the character width (how far to advance when laying out each
+	// character in a line).  If we can't determine this, then we fall back
+	// to using the glyph width.
 	if (cp > 65535) {
 		ent.advance = w;
 	}
 	else if (TTF_GlyphMetrics(ttfFont, static_cast<MR_UInt16>(cp),
 		nullptr, nullptr, nullptr, nullptr, &ent.advance) < 0)
 	{
+		// No need to log the error; SDL_ttf will log the error itself.
 		ent.advance = w;
 	}
 
