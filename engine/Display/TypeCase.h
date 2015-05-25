@@ -50,13 +50,14 @@ class TypeLine;
 class GlyphEntry
 {
 public:
-	GlyphEntry() : cp(0), page(0) { srcRect.h = -1; }
+	GlyphEntry() : cp(0), advance(0), page(0) { srcRect.h = -1; }
 
 public:
 	bool IsInitialized() const { return srcRect.h >= 0; }
 
 public:
 	MR_UInt32 cp;  ///< The Unicode character point represented by this glyph.
+	int advance;  ///< The width of the glyph when placed next to other glyphs.
 	unsigned int page;  ///< Index of the texture that contains the character.
 	SDL_Rect srcRect;  ///< The bounds of the glyph in the texture.
 };

@@ -136,6 +136,15 @@ GlyphEntry &SdlTypeCase::AddGlyph(GlyphEntry &ent, const std::string &s,
 
 	SDL_FreeSurface(src);
 
+	if (cp > 65535) {
+		ent.advance = w;
+	}
+	else if (TTF_GlyphMetrics(ttfFont, static_cast<MR_UInt16>(cp),
+		nullptr, nullptr, nullptr, nullptr, &ent.advance) < 0)
+	{
+		ent.advance = w;
+	}
+
 	ent.cp = cp;
 	ent.page = curMap;
 	auto &rect = ent.srcRect;
@@ -231,8 +240,8 @@ void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
 						const auto &gr = entry.srcRect;
 						rects->glyphs.emplace_back(&entry,
 							SDL_Rect{ cx, cy, gr.w, gr.h });
-						cx += gr.w;
-						sx += entry.srcRect.w;
+						cx += entry.advance;
+						sx += entry.advance;
 					}
 			}
 		}
