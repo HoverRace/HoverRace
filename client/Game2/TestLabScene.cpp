@@ -1093,7 +1093,7 @@ void TypeCaseModule::PrepareRender()
 	if (!exampleLine.IsPrepared()) {
 		mainTypeCase->Prepare(
 			"This is an example line of text.\n"
-			"    This line 2",
+			"    This is line 2",
 			&exampleLine);
 	}
 }
