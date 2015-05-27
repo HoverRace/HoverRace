@@ -650,7 +650,7 @@ void ClientApp::PopScene()
 		}
 
 		if (!found) {
-			Log::Error("No foreground scene; entering failsafe mode.");
+			HR_LOG(error) << "No foreground scene; entering failsafe mode.";
 			SetForegroundScene();
 		}
 	}

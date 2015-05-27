@@ -377,7 +377,7 @@ TestLabScene::TestLabScene(Display::Display &display, GameDirector &director,
 	startingModuleBtn = grid->ShareStartingModuleBtn();
 
 	if (!startingModuleName.empty() && !startingModuleBtn) {
-		Log::Warn("Not a test lab module: %s", startingModuleName.c_str());
+		HR_LOG(warning) << "Not a test lab module: " << startingModuleName;
 	}
 }
 
@@ -502,7 +502,7 @@ ClickablesModule::ClickablesModule(Display::Display &display, GameDirector &dire
 		GetContents();
 	btn->SetEnabled(false);
 	btn->GetClickedSignal().connect([](ClickRegion&) {
-		Log::Error("Clicked on disabled button :(");
+		HR_LOG(error) << "Clicked on disabled button :(";
 	});
 
 	auto icon = std::make_shared<SymbolIcon>(60, 60, 0xf0ad, 0xbfffffff);
