@@ -87,6 +87,22 @@ GameScene::~GameScene()
 	Cleanup();
 }
 
+std::ostream &GameScene::OutputDebugText(std::ostream &oss) const
+{
+	size_t viewportIdx = 0;
+	for (auto &viewport : viewports) {
+		auto &player = viewport.player;
+		auto mainChar = player->GetMainCharacter();
+
+		oss << "View " << viewportIdx << ": " << player->GetName() << "\n" <<
+			"Position: " << mainChar->mPosition << "\n\n";
+
+		viewportIdx++;
+	}
+
+	return SUPER::OutputDebugText(oss);
+}
+
 void GameScene::Cleanup()
 {
 	director.GetSessionChangedSignal()(nullptr);
@@ -326,9 +342,9 @@ void GameScene::OnRaceFinish()
 {
 	// Check if all players are finished.
 	// If not all players have finished, then we're just entering postgame.
-	
+
 	bool done = true;
-	
+
 	for (int i = 0; i < session->GetNbPlayers(); i++) {
 		auto player = session->GetPlayer(i);
 		if (!player) continue;  // Player slot may have been vacated.

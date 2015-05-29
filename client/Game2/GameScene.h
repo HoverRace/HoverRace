@@ -97,6 +97,9 @@ public:
 		std::shared_ptr<Util::Loader> loader);
 	virtual ~GameScene();
 
+public:
+	std::ostream &OutputDebugText(std::ostream &oss) const override;
+
 private:
 	void Cleanup();
 
