@@ -28,7 +28,7 @@
 
 using HoverRace::Parcel::ObjStream;
 
-// Data intanciation
+// Data instantiation
 MR_Int16 MR_Sin[MR_2PI];
 MR_Int16 MR_Cos[MR_2PI];
 
@@ -47,7 +47,7 @@ void MR_InitTrigoTables()
 void MR_2DCoordinate::Serialize(ObjStream &pArchive)
 {
 
-	if(pArchive.IsWriting()) {
+	if (pArchive.IsWriting()) {
 		pArchive << mX << mY;
 	}
 	else {
@@ -55,21 +55,21 @@ void MR_2DCoordinate::Serialize(ObjStream &pArchive)
 	}
 }
 
-BOOL MR_2DCoordinate::operator ==(const MR_2DCoordinate & pCoordinate) const
+BOOL MR_2DCoordinate::operator==(const MR_2DCoordinate &pCoordinate) const
 {
 	return (mX == pCoordinate.mX) && (mY == pCoordinate.mY);
 }
 
-BOOL MR_2DCoordinate::operator !=(const MR_2DCoordinate & pCoordinate) const
+BOOL MR_2DCoordinate::operator!=(const MR_2DCoordinate &pCoordinate) const
 {
 	return (mX != pCoordinate.mX) || (mY != pCoordinate.mY);
 }
 
 void MR_3DCoordinate::Serialize(ObjStream &pArchive)
 {
-	MR_2DCoordinate::Serialize(pArchive);
+	SUPER::Serialize(pArchive);
 
-	if(pArchive.IsWriting()) {
+	if (pArchive.IsWriting()) {
 		pArchive << mZ;
 	}
 	else {

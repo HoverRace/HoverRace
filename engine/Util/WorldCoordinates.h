@@ -41,51 +41,40 @@ namespace HoverRace {
 	}
 }
 
-// All geometrical coordinates are in milimeters,
+// All geometrical coordinates are in millimeters.
 
 class MR_DllDeclare MR_2DCoordinate
 {
-	public:
-		MR_Int32 mX;
-		MR_Int32 mY;
+public:
+	MR_2DCoordinate() { }
+	MR_2DCoordinate(MR_Int32 pX, MR_Int32 pY) : mX(pX), mY(pY) { }
 
-		void Serialize(HoverRace::Parcel::ObjStream &pArchive);
+	void Serialize(HoverRace::Parcel::ObjStream &pArchive);
 
-		// Comparaison operator
-		BOOL operator ==(const MR_2DCoordinate & pCoordinate) const;
-		BOOL operator !=(const MR_2DCoordinate & pCoordinate) const;
+	// Comparison operators
+	BOOL operator ==(const MR_2DCoordinate &pCoordinate) const;
+	BOOL operator !=(const MR_2DCoordinate &pCoordinate) const;
 
-		// Inline constructors
-		MR_2DCoordinate() {
-		};
-		MR_2DCoordinate(MR_Int32 pX, MR_Int32 pY) {
-			mX = pX;
-			mY = pY;
-		};
+	MR_Int32 mX;
+	MR_Int32 mY;
 };
 
-class MR_DllDeclare MR_3DCoordinate:public MR_2DCoordinate
+class MR_DllDeclare MR_3DCoordinate : public MR_2DCoordinate
 {
-	public:
-		MR_Int32 mZ;
+	using SUPER = MR_2DCoordinate;
 
-		void Serialize(HoverRace::Parcel::ObjStream &pArchive);
+public:
+	MR_3DCoordinate() { }
+	MR_3DCoordinate(MR_Int32 pX, MR_Int32 pY, MR_Int32 pZ) :
+		SUPER(pX, pY), mZ(pZ) { }
 
-		// Comparaison operator
+	void Serialize(HoverRace::Parcel::ObjStream &pArchive);
 
-		// Inline constructors
-		MR_3DCoordinate() {
-		};
-		MR_3DCoordinate(MR_Int32 pX, MR_Int32 pY, MR_Int32 pZ) {
-			mX = pX;
-			mY = pY;
-			mZ = pZ;
-		};
-
+	MR_Int32 mZ;
 };
 
 // Angles
-typedef MR_Int16 MR_Angle;
+using MR_Angle = MR_Int16;
 
 #define MR_PI             2048
 #define MR_2PI            4096
@@ -94,8 +83,8 @@ typedef MR_Int16 MR_Angle;
 
 #define RAD_2_MR_ANGLE( pAngle ) ((MR_Angle)( (static_cast<unsigned int>(pAngle*static_cast<double>(MR_2PI)*0.5/3.1415926536)+MR_2PI)%static_cast<unsigned int>(MR_2PI) ))
 
-// Temporal unities
-typedef MR_Int32 MR_SimulationTime;				  // In 1/1000th of seconds
+// Temporal units
+using MR_SimulationTime = MR_Int32;  // In 1/1000th of seconds
 // Do not stay in a maze for more than 49 days
 // or the time will wrap-up
 
