@@ -19,7 +19,10 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
+#include <boost/algorithm/string.hpp>
+
 #include "../../engine/Display/ActiveText.h"
+#include "../../engine/Display/FillBox.h"
 #include "../../engine/Display/Display.h"
 
 #include "DebugScene.h"
@@ -38,9 +41,13 @@ DebugScene::DebugScene(Display::Display &display,
 
 	const auto &s = display.styles;
 
-	debugLbl.reset(new ActiveText("", s.bodyFont, s.bodyFg));
+	debugBox.reset(new FillBox(1, 1, 0x3f000000));
+	debugBox->AttachView(display);
+	debugBox->SetPos(0, 30);
+
+	debugLbl.reset(new ActiveText("", s.bodyFont, COLOR_WHITE));
 	debugLbl->AttachView(display);
-	debugLbl->SetPos(0, 40);
+	debugLbl->SetPos(10, 40);
 }
 
 DebugScene::~DebugScene()
@@ -61,8 +68,13 @@ void DebugScene::Advance(Util::OS::timestamp_t tick)
 			std::ostringstream oss;
 			oss << "Scene: " << scene->GetName();
 			scene->OutputDebugText(oss);
-			debugLbl->SetText(oss.str());
+			auto s = oss.str();
+			boost::trim_right(s);
+			debugLbl->SetText(s);
 		}
+
+		auto sz = debugLbl->Measure();
+		debugBox->SetSize(sz.x + 20, sz.y + 20);
 	}
 
 	SUPER::Advance(tick);
@@ -72,6 +84,7 @@ void DebugScene::PrepareRender()
 {
 	SUPER::PrepareRender();
 
+	debugBox->PrepareRender();
 	debugLbl->PrepareRender();
 }
 
@@ -79,6 +92,7 @@ void DebugScene::Render()
 {
 	SUPER::Render();
 
+	debugBox->Render();
 	debugLbl->Render();
 }
 

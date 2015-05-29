@@ -32,6 +32,7 @@ namespace HoverRace {
 	namespace Display {
 		class Display;
 		class ActiveText;
+		class FillBox;
 	}
 }
 
@@ -62,6 +63,7 @@ private:
 	GameDirector &director;
 	Util::OS::timestamp_t prevUpdateTick;
 	std::unique_ptr<Display::ActiveText> debugLbl;
+	std::unique_ptr<Display::FillBox> debugBox;
 };
 
 }  // namespace HoverScript
