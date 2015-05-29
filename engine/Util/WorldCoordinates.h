@@ -66,6 +66,12 @@ public:
 	MR_Int32 mY;
 };
 
+inline std::ostream &operator<<(std::ostream &os, const MR_2DCoordinate &c)
+{
+	os << '<' << c.mX << ", " << c.mY << '>';
+	return os;
+}
+
 class MR_DllDeclare MR_3DCoordinate : public MR_2DCoordinate
 {
 	using SUPER = MR_2DCoordinate;
@@ -79,6 +85,12 @@ public:
 
 	MR_Int32 mZ;
 };
+
+inline std::ostream &operator<<(std::ostream &os, const MR_3DCoordinate &c)
+{
+	os << '<' << c.mX << ", " << c.mY << ", " << c.mZ << '>';
+	return os;
+}
 
 // Angles
 using MR_Angle = MR_Int16;
