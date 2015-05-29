@@ -52,8 +52,15 @@ public:
 	void Serialize(HoverRace::Parcel::ObjStream &pArchive);
 
 	// Comparison operators
-	BOOL operator ==(const MR_2DCoordinate &pCoordinate) const;
-	BOOL operator !=(const MR_2DCoordinate &pCoordinate) const;
+	bool operator==(const MR_2DCoordinate &pCoordinate) const
+	{
+		return (mX == pCoordinate.mX) && (mY == pCoordinate.mY);
+	}
+
+	bool operator!=(const MR_2DCoordinate &pCoordinate) const
+	{
+		return (mX != pCoordinate.mX) || (mY != pCoordinate.mY);
+	}
 
 	MR_Int32 mX;
 	MR_Int32 mY;

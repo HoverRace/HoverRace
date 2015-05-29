@@ -55,16 +55,6 @@ void MR_2DCoordinate::Serialize(ObjStream &pArchive)
 	}
 }
 
-BOOL MR_2DCoordinate::operator==(const MR_2DCoordinate &pCoordinate) const
-{
-	return (mX == pCoordinate.mX) && (mY == pCoordinate.mY);
-}
-
-BOOL MR_2DCoordinate::operator!=(const MR_2DCoordinate &pCoordinate) const
-{
-	return (mX != pCoordinate.mX) || (mY != pCoordinate.mY);
-}
-
 void MR_3DCoordinate::Serialize(ObjStream &pArchive)
 {
 	SUPER::Serialize(pArchive);
