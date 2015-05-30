@@ -50,10 +50,10 @@ class TypeLine;
 class GlyphEntry
 {
 public:
-	GlyphEntry() : cp(0), advance(0), page(0) { srcRect.h = -1; }
+	GlyphEntry() : cp(0), advance(0), page(0) { }
 
 public:
-	bool IsInitialized() const { return srcRect.h >= 0; }
+	bool IsInitialized() const { return cp > 0; }
 
 public:
 	MR_UInt32 cp;  ///< The Unicode character point represented by this glyph.
