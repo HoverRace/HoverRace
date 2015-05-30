@@ -66,7 +66,7 @@ void DebugScene::Advance(Util::OS::timestamp_t tick)
 		}
 		else {
 			std::ostringstream oss;
-			oss << "Scene: " << scene->GetName();
+			oss << "Scene: " << scene->GetName() << "\n\n";
 			scene->OutputDebugText(oss);
 			auto s = oss.str();
 			boost::trim_right(s);
