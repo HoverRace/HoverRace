@@ -45,26 +45,6 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace Client {
 
-namespace {
-
-class TrackSelButton : public Display::Button
-{
-	using SUPER = Display::Button;
-
-public:
-	TrackSelButton(Display::Display &display, TrackEntryPtr entry) :
-		SUPER(display, entry->name), entry(entry) { }
-	virtual ~TrackSelButton() { }
-
-public:
-	TrackEntry *GetTrackEntry() const { return entry.get(); }
-
-private:
-	TrackEntryPtr entry;
-};
-
-}  // namespace
-
 TrackSelectScene::TrackSelectScene(Display::Display &display,
 	GameDirector &director, std::shared_ptr<const Rulebook> rulebook) :
 	SUPER(display, director, "", "Track Select"),
