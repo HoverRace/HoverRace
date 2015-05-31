@@ -136,7 +136,7 @@ TrackSelectScene::~TrackSelectScene()
 
 void TrackSelectScene::OnTrackSelected(std::shared_ptr<Model::TrackEntry> entry)
 {
-	Log::Info("Selected track: %s", entry->name.c_str());
+	HR_LOG(info) << "Selected track: " << entry->name;
 
 	auto trackBundle = Config::GetInstance()->GetTrackBundle();
 
