@@ -1,7 +1,7 @@
 
 // TrackSelectScene.h
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include "../../engine/Display/PickList.h"
 #include "../../engine/Display/Res.h"
 #include "../../engine/Model/TrackList.h"
 #include "GameDirector.h"
@@ -59,7 +60,8 @@ public:
 	virtual ~TrackSelectScene();
 
 private:
-	void OnTrackSelected(Model::TrackEntryPtr entry);
+	void OnTrackSelected(std::shared_ptr<Model::TrackEntry> entry);
+	void OnTrackChanged();
 	void OnReady();
 
 protected:
@@ -84,7 +86,8 @@ private:
 	std::shared_ptr<Display::Label> rulebookDescLbl;
 	std::shared_ptr<Display::RuleLine> subtitleRule;
 	std::shared_ptr<Display::Container> trackPanel;
-	std::shared_ptr<Display::FlexGrid> trackGrid;
+	std::shared_ptr<Display::PickList<
+		std::shared_ptr<Model::TrackEntry>>> trackPick;
 
 	std::shared_ptr<Display::Container> selTrackPanel;
 	std::shared_ptr<Display::Picture> trackPic;

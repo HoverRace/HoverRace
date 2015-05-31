@@ -113,20 +113,13 @@ TrackSelectScene::TrackSelectScene(Display::Display &display,
 	trackPanel = root->NewChild<Container>(display);
 	trackPanel->SetPos(DialogScene::MARGIN_WIDTH, 100);
 
-	//TODO: A better list UI (categories, sorting, etc.).
-	trackGrid = trackPanel->NewChild<FlexGrid>(display);
-	trackGrid->SetFixedWidth(360);
-
-	auto &cell = trackGrid->GetColumnDefault(0);
-	cell.SetFill(true);
-
-	size_t row = 0;
-	for (TrackEntryPtr ent : trackList) {
-		auto trackCell = trackGrid->At(row++, 0).NewChild<TrackSelButton>(
-			display, ent);
-		trackCell->GetContents()->GetClickedSignal().connect(std::bind(
-			&TrackSelectScene::OnTrackSelected, this, ent));
+	trackPick = trackPanel->NewChild<PickList<std::shared_ptr<TrackEntry>>>(
+		display, Vec2(360, 420));
+	for (auto ent : trackList) {
+		trackPick->Add(ent->name, ent);
 	}
+	trackPick->GetValueChangedSignal().connect(std::bind(
+		&TrackSelectScene::OnTrackChanged, this));
 
 	selTrackPanel = trackPanel->NewChild<Container>(display);
 	selTrackPanel->SetPos(380, 0);
@@ -161,7 +154,7 @@ TrackSelectScene::~TrackSelectScene()
 {
 }
 
-void TrackSelectScene::OnTrackSelected(Model::TrackEntryPtr entry)
+void TrackSelectScene::OnTrackSelected(std::shared_ptr<Model::TrackEntry> entry)
 {
 	Log::Info("Selected track: %s", entry->name.c_str());
 
@@ -177,6 +170,13 @@ void TrackSelectScene::OnTrackSelected(Model::TrackEntryPtr entry)
 	trackDescLbl->SetText(entry->description);
 
 	readyBtn->SetEnabled(true);
+}
+
+void TrackSelectScene::OnTrackChanged()
+{
+	if (auto entry = trackPick->GetValue()) {
+		OnTrackSelected(*entry);
+	}
 }
 
 void TrackSelectScene::OnReady()
