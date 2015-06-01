@@ -263,11 +263,10 @@ void Missile::ApplyEffect(const MR_ContactEffect *pEffect,
 	BOOL pValidDirection, MR_Angle pHorizontalDirection,
 	MR_Int32, MR_Int32, Model::Level*)
 {
-	MR_ContactEffect *lEffect = (MR_ContactEffect *) pEffect;
 	const MR_PhysicalCollision *lPhysCollision =
-		dynamic_cast<MR_PhysicalCollision*>(lEffect);
+		dynamic_cast<const MR_PhysicalCollision*>(pEffect);
 
-	if(lPhysCollision && pValidDirection) {
+	if (lPhysCollision && pValidDirection) {
 
 		if(lPhysCollision->mWeight < MR_PhysicalCollision::eInfiniteWeight) {
 			if(mLived >= cIgnitionTime) {
