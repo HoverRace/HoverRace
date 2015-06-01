@@ -73,14 +73,14 @@ MR_Int32 Missile::RayLen() const
 	return cMissileRay;
 }
 
-Missile::Missile(const Util::ObjectFromFactoryId & pId, ResourceLib* resourceLib) :
+Missile::Missile(const Util::ObjectFromFactoryId &pId, ResourceLib *resourceLib) :
 	SUPER(pId)
 {
 	mHoverId = -1;
 	mLived = 0;
 	mXSpeed = 0;
 	mYSpeed = 0;
-	mBounceSoundEvent = FALSE;
+	mBounceSoundEvent = false;
 	mEffectList.push_back(&mCollisionEffect);
 	mEffectList.push_back(&mLostOfControlEffect);
 	mActor = resourceLib->GetActor(MR_MISSILE);
@@ -91,11 +91,6 @@ Missile::Missile(const Util::ObjectFromFactoryId & pId, ResourceLib* resourceLib
 	mLostOfControlEffect.mType = MR_LostOfControl::eMissile;
 	mLostOfControlEffect.mElementId = -1;
 	mLostOfControlEffect.mHoverId = mHoverId;
-
-}
-
-Missile::~Missile()
-{
 }
 
 void Missile::SetOwnerId(int pHoverId)
@@ -116,22 +111,13 @@ const MR_ContactEffectList *Missile::GetEffectList()
 		return &mEffectList;
 	}
 	else {
-		return NULL;
+		return nullptr;
 	}
 }
 
-const Model::ShapeInterface *Missile::GetReceivingContactEffectShape()
-{
-	return this;
-}
-
-const Model::ShapeInterface *Missile::GetGivingContactEffectShape()
-{
-	return this;
-}
-
 // Simulation
-int Missile::Simulate(MR_SimulationTime pDuration, Model::Level * pLevel, int pRoom)
+int Missile::Simulate(MR_SimulationTime pDuration,
+	Model::Level *pLevel, int pRoom)
 {
 
 	// Do the simulation
@@ -179,7 +165,8 @@ int Missile::Simulate(MR_SimulationTime pDuration, Model::Level * pLevel, int pR
 	return pRoom;
 }
 
-int Missile::InternalSimulate(MR_SimulationTime pDuration, Model::Level * pLevel, int pRoom)
+int Missile::InternalSimulate(MR_SimulationTime pDuration,
+	Model::Level *pLevel, int pRoom)
 {
 
 	mLived += pDuration;
@@ -272,14 +259,15 @@ int Missile::InternalSimulate(MR_SimulationTime pDuration, Model::Level * pLevel
 }
 
 void Missile::ApplyEffect(const MR_ContactEffect *pEffect,
-                          MR_SimulationTime, MR_SimulationTime,
-                          BOOL pValidDirection, MR_Angle pHorizontalDirection,
-                          MR_Int32, MR_Int32, Model::Level*)
+	MR_SimulationTime, MR_SimulationTime,
+	BOOL pValidDirection, MR_Angle pHorizontalDirection,
+	MR_Int32, MR_Int32, Model::Level*)
 {
 	MR_ContactEffect *lEffect = (MR_ContactEffect *) pEffect;
-	const MR_PhysicalCollision *lPhysCollision = dynamic_cast < MR_PhysicalCollision * >(lEffect);
+	const MR_PhysicalCollision *lPhysCollision =
+		dynamic_cast<MR_PhysicalCollision*>(lEffect);
 
-	if((lPhysCollision != NULL) && pValidDirection) {
+	if(lPhysCollision && pValidDirection) {
 
 		if(lPhysCollision->mWeight < MR_PhysicalCollision::eInfiniteWeight) {
 			if(mLived >= cIgnitionTime) {
@@ -294,7 +282,7 @@ void Missile::ApplyEffect(const MR_ContactEffect *pEffect,
 
 			if((lDiff < (MR_PI / 2)) || (lDiff > (MR_PI + MR_PI / 2))) {
 				mOrientation = MR_NORMALIZE_ANGLE(pHorizontalDirection + lDiff);
-				mBounceSoundEvent = TRUE;
+				mBounceSoundEvent = true;
 			}
 		}
 	}
@@ -302,16 +290,19 @@ void Missile::ApplyEffect(const MR_ContactEffect *pEffect,
 
 // State broadcast
 
-class MissileState
-{
-	public:
-		MR_Int32 mPosX;							  // 4    4
-		MR_Int32 mPosY;							  // 4    8
-		MR_Int32 mPosZ;							  // 4   12
+namespace {
 
-		MR_Angle mOrientation;					  // 2   14
-		MR_Int8 mHoverId;						  // 1   16
+struct MissileState
+{
+	MR_Int32 mPosX;							  // 4    4
+	MR_Int32 mPosY;							  // 4    8
+	MR_Int32 mPosZ;							  // 4   12
+
+	MR_Angle mOrientation;					  // 2   14
+	MR_Int8 mHoverId;						  // 1   16
 };
+
+}  // namespace
 
 Model::ElementNetState Missile::GetNetState() const
 {
@@ -331,10 +322,10 @@ Model::ElementNetState Missile::GetNetState() const
 	lsState.mHoverId = static_cast<MR_Int8>(mHoverId);
 
 	return lReturnValue;
+}
 
-} void Missile::SetNetState(int pDataLen, const MR_UInt8 * pData)
+void Missile::SetNetState(int pDataLen, const MR_UInt8 *pData)
 {
-
 	const MissileState *lState = (const MissileState *) pData;
 
 	mPosition.mX = lState->mPosX;
@@ -343,7 +334,7 @@ Model::ElementNetState Missile::GetNetState() const
 
 	mOrientation = lState->mOrientation;
 
-	if(static_cast<unsigned>(pDataLen) >= sizeof(MissileState)) {
+	if (static_cast<unsigned>(pDataLen) >= sizeof(MissileState)) {
 		mHoverId = lState->mHoverId;
 		mLostOfControlEffect.mHoverId = mHoverId;
 	}
@@ -353,7 +344,7 @@ Model::ElementNetState Missile::GetNetState() const
 void Missile::PlayExternalSounds(int pDB, int pPan)
 {
 	if(mBounceSoundEvent) {
-		mBounceSoundEvent = FALSE;
+		mBounceSoundEvent = false;
 
 		SoundServer::Play(mBounceSound, pDB, 1.0, pPan);
 	}

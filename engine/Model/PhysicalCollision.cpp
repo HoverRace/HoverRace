@@ -23,7 +23,8 @@
 
 // class MR_InertialMoment
 
-void MR_InertialMoment::ComputeCollision(const MR_InertialMoment * pObstacle, MR_Angle pHorizontalDirection)
+void MR_InertialMoment::ComputeCollision(const MR_InertialMoment *pObstacle,
+	MR_Angle pHorizontalDirection)
 {
 
 	// Compute the speed component in the direction of the Impact direction

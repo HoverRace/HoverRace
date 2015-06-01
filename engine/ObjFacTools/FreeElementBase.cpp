@@ -24,26 +24,12 @@
 namespace HoverRace {
 namespace ObjFacTools {
 
-FreeElementBase::FreeElementBase(const HoverRace::Util::ObjectFromFactoryId & pId) :
-	HoverRace::Model::FreeElement(pId)
-{
-	// The task of initialising the data members is done by the superclass
-	mActor = NULL;
-	mCurrentSequence = 0;
-	mCurrentFrame = 0;
-
-}
-
-FreeElementBase::~FreeElementBase()
-{
-}
-
-void FreeElementBase::Render(HoverRace::VideoServices::Viewport3D *pDest, MR_SimulationTime /*pTime */ )
+void FreeElementBase::Render(VideoServices::Viewport3D *pDest, MR_SimulationTime)
 {
 	// Compute the required rotation matrix
-	HoverRace::VideoServices::PositionMatrix lMatrix;
+	VideoServices::PositionMatrix lMatrix;
 
-	if(pDest->ComputePositionMatrix(lMatrix, mPosition, mOrientation, 1000 /* TODO Object ray must be precomputed at compilation */ )) {
+	if (pDest->ComputePositionMatrix(lMatrix, mPosition, mOrientation, 1000)) {
 		mActor->Draw(pDest, lMatrix, mCurrentSequence, mCurrentFrame);
 	}
 }

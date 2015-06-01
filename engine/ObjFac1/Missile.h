@@ -29,56 +29,65 @@
 namespace HoverRace {
 namespace ObjFac1 {
 
-class Missile : public ObjFacTools::FreeElementBase, protected Model::CylinderShape
+class Missile :
+	public ObjFacTools::FreeElementBase,
+	protected Model::CylinderShape
 {
-	typedef ObjFacTools::FreeElementBase SUPER;
-	protected:
-		// Shape interface
-		MR_Int32 ZMin() const;
-		MR_Int32 ZMax() const;
-		MR_Int32 AxisX() const;
-		MR_Int32 AxisY() const;
-		MR_Int32 RayLen() const;
+	using SUPER = ObjFacTools::FreeElementBase;
 
-	private:
+public:
+	Missile(const Util::ObjectFromFactoryId &pId,
+		ObjFacTools::ResourceLib *resourceLib);
+	~Missile() { }
 
-		int mHoverId;
-		MR_SimulationTime mLived;
-		MR_PhysicalCollision mCollisionEffect;
-		MR_LostOfControl mLostOfControlEffect;
-		MR_ContactEffectList mEffectList;
+protected:
+	// Shape interface
+	MR_Int32 ZMin() const override;
+	MR_Int32 ZMax() const override;
+	MR_Int32 AxisX() const override;
+	MR_Int32 AxisY() const override;
+	MR_Int32 RayLen() const override;
 
-		double mXSpeed;
-		double mYSpeed;
+protected:
+	// Init interface
+	void SetOwnerId(int pOwner) override;
 
-		BOOL mBounceSoundEvent;
-		VideoServices::ShortSound *mBounceSound;
-		VideoServices::ContinuousSound *mMotorSound;
+	// ContactEffectShapeInterface
+	const MR_ContactEffectList *GetEffectList() override;
+	const Model::ShapeInterface *GetGivingContactEffectShape() override { return this; }
+	const Model::ShapeInterface *GetReceivingContactEffectShape() override { return this; }
 
-	public:
-		Missile(const Util::ObjectFromFactoryId & pId, ObjFacTools::ResourceLib* resourceLib);
-		~Missile();
+	int Simulate(MR_SimulationTime pTimeSlice,
+		Model::Level *pLevel, int pRoom) override;
+	int InternalSimulate(MR_SimulationTime pDuration,
+		Model::Level *pLevel, int pRoom);
 
-	protected:
-		// Init interface
-		void SetOwnerId(int pOwner);
+	void ApplyEffect(const MR_ContactEffect *pEffect,
+		MR_SimulationTime pTime, MR_SimulationTime pDuration,
+		BOOL pValidDirection, MR_Angle pHorizontalDirection,
+		MR_Int32 pZMin, MR_Int32 pZMax,
+		Model::Level *pLevel) override;
 
-		// ContactEffectShapeInterface
-		const MR_ContactEffectList *GetEffectList();
-		const Model::ShapeInterface *GetGivingContactEffectShape();
-		const Model::ShapeInterface *GetReceivingContactEffectShape();
+	// Network state
+	Model::ElementNetState GetNetState() const override;
+	void SetNetState(int pDataLen, const MR_UInt8 *pData) override;
 
-		int Simulate(MR_SimulationTime pTimeSlice, Model::Level * pLevel, int pRoom);
-		int InternalSimulate(MR_SimulationTime pDuration, Model::Level * pLevel, int pRoom);
+	// Sounds
+	void PlayExternalSounds(int pDB, int pPan) override;
 
-		void ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 pZMin, MR_Int32 pZMax, Model::Level * pLevel);
+private:
+	int mHoverId;
+	MR_SimulationTime mLived;
+	MR_PhysicalCollision mCollisionEffect;
+	MR_LostOfControl mLostOfControlEffect;
+	MR_ContactEffectList mEffectList;
 
-		// Network state
-		Model::ElementNetState GetNetState() const;
-		void SetNetState(int pDataLen, const MR_UInt8 * pData);
+	double mXSpeed;
+	double mYSpeed;
 
-		// Sounds
-		void PlayExternalSounds(int pDB, int pPan);
+	bool mBounceSoundEvent;
+	VideoServices::ShortSound *mBounceSound;
+	VideoServices::ContinuousSound *mMotorSound;
 };
 
 }  // namespace ObjFac1

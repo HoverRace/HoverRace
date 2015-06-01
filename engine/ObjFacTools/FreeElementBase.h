@@ -44,20 +44,23 @@
 namespace HoverRace {
 namespace ObjFacTools {
 
-class FreeElementBase : public HoverRace::Model::FreeElement
+class MR_DllDeclare FreeElementBase : public Model::FreeElement
 {
-	protected:
-		const ResActor *mActor;
-		int mCurrentSequence;
-		int mCurrentFrame;
+	using SUPER = Model::FreeElement;
 
-	public:
-		MR_DllDeclare FreeElementBase(const Util::ObjectFromFactoryId & pId);
-		MR_DllDeclare ~FreeElementBase();
+public:
+	FreeElementBase(const Util::ObjectFromFactoryId &id) :
+		SUPER(id), mActor(nullptr), mCurrentSequence(0), mCurrentFrame(0) { }
+	~FreeElementBase() { }
 
-		// Rendering stuff
-		MR_DllDeclare void Render(VideoServices::Viewport3D *pDest, MR_SimulationTime pTime);
+	// Rendering stuff
+	void Render(VideoServices::Viewport3D *pDest,
+		MR_SimulationTime pTime) override;
 
+protected:
+	const ResActor *mActor;
+	int mCurrentSequence;
+	int mCurrentFrame;
 };
 
 }  // namespace ObjFacTools

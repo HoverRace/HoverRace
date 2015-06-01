@@ -24,8 +24,6 @@
 
 #include <vector>
 
-#include "../Model/Shapes.h"
-
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
 #	ifdef MR_ENGINE
 #		define MR_DllDeclare   __declspec( dllexport )
@@ -42,15 +40,16 @@
  */
 class MR_DllDeclare MR_ContactEffect
 {
-	public:
-		virtual ~ MR_ContactEffect();
+public:
+	virtual ~MR_ContactEffect() { }
 
-		/**
-		 * If the effect is unknown, use that one instead.
-		 * @return Usually @c NULL.
-		 */
-		virtual const MR_ContactEffect *GetAlternate() const;
+	/**
+	 * If the effect is unknown, use that one instead.
+	 * @return Usually @c nullptr.
+	 */
+	virtual const MR_ContactEffect *GetAlternate() const { return nullptr; }
 };
-typedef std::vector<MR_ContactEffect*> MR_ContactEffectList;
+
+using MR_ContactEffectList = std::vector<MR_ContactEffect*>;
 
 #undef MR_DllDeclare

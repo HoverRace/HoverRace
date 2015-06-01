@@ -24,6 +24,8 @@
 
 #include "ContactEffect.h"
 
+#include "../Model/Shapes.h"
+
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
 #	ifdef MR_ENGINE
 #		define MR_DllDeclare   __declspec( dllexport )
@@ -36,23 +38,22 @@
 
 class MR_DllDeclare MR_InertialMoment
 {
-	public:
-		enum { eInfiniteWeight = 1000000 };
+public:
+	enum { eInfiniteWeight = 1000000 };
 
-		double mWeight;							  // in Kg
+	double mWeight;  ///< Weight in Kg.
 
-		MR_Int32 mXSpeed;
-		MR_Int32 mYSpeed;
-		MR_Int32 mZSpeed;						  // in mm/sec, negative mean down
+	MR_Int32 mXSpeed;  // X-axis speed in mm/sec.
+	MR_Int32 mYSpeed;  // Y-axis speed in mm/sec.
+	MR_Int32 mZSpeed;  // Vertical speed in mm/sec, negative means down.
 
-		// Helper functions
-		void ComputeCollision(const MR_InertialMoment * pObstacle, MR_Angle pHorizontalDirection);
-
+	// Helper functions
+	void ComputeCollision(const MR_InertialMoment *pObstacle,
+		MR_Angle pHorizontalDirection);
 };
 
 class MR_PhysicalCollision : public MR_ContactEffect, public MR_InertialMoment
 {
-
 };
 
 #undef MR_DllDeclare
