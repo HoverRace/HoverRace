@@ -830,13 +830,12 @@ void MainCharacter::ApplyEffect(const MR_ContactEffect *pEffect,
 	BOOL pValidDirection, MR_Angle pHorizontalDirection,
 	MR_Int32, MR_Int32, Model::Level *pLevel)
 {
-	MR_ContactEffect *lEffect = (MR_ContactEffect *) pEffect;
-	const MR_PhysicalCollision *lPhysCollision = dynamic_cast<MR_PhysicalCollision*>(lEffect);
-	const MR_SpeedDoubler *lSpeedDoubler = dynamic_cast<MR_SpeedDoubler*>(lEffect);
-	const MR_FuelGain *lFuelGain = dynamic_cast<MR_FuelGain*>(lEffect);
-	const MR_LostOfControl *lLostOfControl = dynamic_cast<MR_LostOfControl*>(lEffect);
-	const MR_CheckPoint *lLapCompleted = dynamic_cast<MR_CheckPoint*>(lEffect);
-	const MR_PowerUpEffect *lPowerUp = dynamic_cast<MR_PowerUpEffect*>(lEffect);
+	const MR_PhysicalCollision *lPhysCollision = dynamic_cast<const MR_PhysicalCollision*>(pEffect);
+	const MR_SpeedDoubler *lSpeedDoubler = dynamic_cast<const MR_SpeedDoubler*>(pEffect);
+	const MR_FuelGain *lFuelGain = dynamic_cast<const MR_FuelGain*>(pEffect);
+	const MR_LostOfControl *lLostOfControl = dynamic_cast<const MR_LostOfControl*>(pEffect);
+	const MR_CheckPoint *lLapCompleted = dynamic_cast<const MR_CheckPoint*>(pEffect);
+	const MR_PowerUpEffect *lPowerUp = dynamic_cast<const MR_PowerUpEffect*>(pEffect);
 
 	if((lPhysCollision != NULL) && pValidDirection) {
 		/*
