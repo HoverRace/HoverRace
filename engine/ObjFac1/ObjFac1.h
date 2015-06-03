@@ -19,12 +19,12 @@ public:
 	ObjFac1();
 	~ObjFac1();
 
-	ObjFacTools::ResourceLib *GetResourceLib() const { return resourceLib; }
+	ObjFacTools::ResourceLib *GetResourceLib() const { return resourceLib.get(); }
 
 	Util::ObjectFromFactory *GetObject(int pClassId);
 
 private:
-	ObjFacTools::ResourceLib *resourceLib;
+	std::unique_ptr<ObjFacTools::ResourceLib> resourceLib;
 };
 
 } // namespace ObjFac1

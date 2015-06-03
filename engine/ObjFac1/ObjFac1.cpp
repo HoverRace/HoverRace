@@ -44,15 +44,13 @@ using namespace HoverRace::ObjFac1;
 using HoverRace::ObjFacTools::ResourceLib;
 using HoverRace::Util::Config;
 
-ObjFac1::ObjFac1()
+ObjFac1::ObjFac1() :
+	resourceLib(new ResourceLib(Config::GetInstance()->GetMediaPath("ObjFac1.dat")))
 {
-	Config *cfg = Config::GetInstance();
-	resourceLib = new ResourceLib(cfg->GetMediaPath("ObjFac1.dat"));
 }
 
 ObjFac1::~ObjFac1()
 {
-	delete resourceLib;
 }
 
 HoverRace::Util::ObjectFromFactory *ObjFac1::GetObject(int pClassId)
@@ -60,13 +58,15 @@ HoverRace::Util::ObjectFromFactory *ObjFac1::GetObject(int pClassId)
 	Util::ObjectFromFactory *lReturnValue = NULL;
 	Util::ObjectFromFactoryId lId = { 1, static_cast<MR_UInt16>(pClassId) };
 
+	auto resLib = resourceLib.get();
+
 	switch (pClassId) {
 		case 1:
-			lReturnValue = new DefaultSurface(lId, resourceLib);
+			lReturnValue = new DefaultSurface(lId, resLib);
 			break;
 
 		case 2:
-			lReturnValue = new WoodSurface(lId, resourceLib);
+			lReturnValue = new WoodSurface(lId, resLib);
 			break;
 
 		case 3:
@@ -82,7 +82,7 @@ HoverRace::Util::ObjectFromFactory *ObjFac1::GetObject(int pClassId)
 			break;
 
 		case 10:
-			lReturnValue = new TestElement(lId, resourceLib, MR_DEMO_FIGHTER);
+			lReturnValue = new TestElement(lId, resLib, MR_DEMO_FIGHTER);
 			break;
 
 		case 11:
@@ -90,11 +90,11 @@ HoverRace::Util::ObjectFromFactory *ObjFac1::GetObject(int pClassId)
 			break;
 
 		case 12:
-			lReturnValue = new BallElement(lId, resourceLib);
+			lReturnValue = new BallElement(lId, resLib);
 			break;
 
 		case 13:
-			lReturnValue = new TestElement(lId, resourceLib, MR_ELECTRO_CAR);
+			lReturnValue = new TestElement(lId, resLib, MR_ELECTRO_CAR);
 			break;
 
 		case 50:
@@ -194,23 +194,23 @@ HoverRace::Util::ObjectFromFactory *ObjFac1::GetObject(int pClassId)
 			break;
 
 		case 100:
-			lReturnValue = new HoverRender(lId, resourceLib);
+			lReturnValue = new HoverRender(lId, resLib);
 			break;
 
 		case 150:
-			lReturnValue = new Missile(lId, resourceLib);
+			lReturnValue = new Missile(lId, resLib);
 			break;
 
 		case 151:
-			lReturnValue = new Mine(lId, resourceLib);
+			lReturnValue = new Mine(lId, resLib);
 			break;
 
 		case 152:
-			lReturnValue = new PowerUp(lId, resourceLib);
+			lReturnValue = new PowerUp(lId, resLib);
 			break;
 
 		case 170:
-			lReturnValue = new BumperGate(lId, resourceLib);
+			lReturnValue = new BumperGate(lId, resLib);
 			break;
 
 		case 200:
