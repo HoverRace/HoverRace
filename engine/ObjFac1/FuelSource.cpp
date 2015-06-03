@@ -64,7 +64,7 @@ FuelSource::~FuelSource()
 {
 }
 
-const MR_ContactEffectList *FuelSource::GetEffectList()
+const Model::ContactEffectList *FuelSource::GetEffectList()
 {
 	return &mContactEffectList;
 }

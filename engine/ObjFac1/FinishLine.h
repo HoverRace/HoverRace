@@ -43,17 +43,18 @@ class FinishLine : public Model::FreeElement, protected Model::CylinderShape
 
 	private:
 
-		MR_CheckPoint mEffect;
-		MR_ContactEffectList mContactEffectList;
+		Model::CheckPoint mEffect;
+		Model::ContactEffectList mContactEffectList;
 
 	public:
-		FinishLine(const Util::ObjectFromFactoryId & pId, MR_CheckPoint::CheckPointType pType);
+		FinishLine(const Util::ObjectFromFactoryId &pId,
+			Model::CheckPoint::CheckPointType pType);
 		~FinishLine();
 
 	protected:
 
 		// ContactEffectShapeInterface
-		const MR_ContactEffectList *GetEffectList();
+		const Model::ContactEffectList *GetEffectList();
 		const Model::ShapeInterface *GetReceivingContactEffectShape();
 
 };

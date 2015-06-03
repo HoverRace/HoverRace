@@ -34,22 +34,28 @@
 #	define MR_DllDeclare
 #endif
 
+namespace HoverRace {
+namespace Model {
+
 /**
  * Base class for all contact effects.
  * You must use typeinfo to determine the real type of the effect.
  */
-class MR_DllDeclare MR_ContactEffect
+class MR_DllDeclare ContactEffect
 {
 public:
-	virtual ~MR_ContactEffect() { }
+	virtual ~ContactEffect() { }
 
 	/**
 	 * If the effect is unknown, use that one instead.
 	 * @return Usually @c nullptr.
 	 */
-	virtual const MR_ContactEffect *GetAlternate() const { return nullptr; }
+	virtual const ContactEffect *GetAlternate() const { return nullptr; }
 };
 
-using MR_ContactEffectList = std::vector<MR_ContactEffect*>;
+using ContactEffectList = std::vector<ContactEffect*>;
+
+}  // namespace Model
+}  // namespace HoverRace
 
 #undef MR_DllDeclare

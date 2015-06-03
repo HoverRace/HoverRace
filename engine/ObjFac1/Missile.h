@@ -53,7 +53,7 @@ protected:
 	void SetOwnerId(int pOwner) override;
 
 	// ContactEffectShapeInterface
-	const MR_ContactEffectList *GetEffectList() override;
+	const Model::ContactEffectList *GetEffectList() override;
 	const Model::ShapeInterface *GetGivingContactEffectShape() override { return this; }
 	const Model::ShapeInterface *GetReceivingContactEffectShape() override { return this; }
 
@@ -62,7 +62,7 @@ protected:
 	int InternalSimulate(MR_SimulationTime pDuration,
 		Model::Level *pLevel, int pRoom);
 
-	void ApplyEffect(const MR_ContactEffect *pEffect,
+	void ApplyEffect(const Model::ContactEffect *pEffect,
 		MR_SimulationTime pTime, MR_SimulationTime pDuration,
 		BOOL pValidDirection, MR_Angle pHorizontalDirection,
 		MR_Int32 pZMin, MR_Int32 pZMax,
@@ -78,9 +78,9 @@ protected:
 private:
 	int mHoverId;
 	MR_SimulationTime mLived;
-	MR_PhysicalCollision mCollisionEffect;
-	MR_LostOfControl mLostOfControlEffect;
-	MR_ContactEffectList mEffectList;
+	Model::MR_PhysicalCollision mCollisionEffect;
+	Model::LostOfControl mLostOfControlEffect;
+	Model::ContactEffectList mEffectList;
 
 	double mXSpeed;
 	double mYSpeed;

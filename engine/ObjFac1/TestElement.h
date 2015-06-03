@@ -60,8 +60,8 @@ class TestElement : public ObjFacTools::FreeElementBase
 		Cylinder mCollisionShape;
 		Cylinder mContactShape;
 
-		MR_PhysicalCollision mContactEffect;
-		MR_ContactEffectList mContactEffectList;
+		Model::MR_PhysicalCollision mContactEffect;
+		Model::ContactEffectList mContactEffectList;
 
 	public:
 		TestElement(const Util::ObjectFromFactoryId & pId, ObjFacTools::ResourceLib* resourceLib, int pActorRes);
@@ -72,9 +72,9 @@ class TestElement : public ObjFacTools::FreeElementBase
 	protected:
 
 		// ContactEffectShapeInterface
-		void ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 pZMin, MR_Int32 pZMax, Model::Level * pLevel);
+		void ApplyEffect(const Model::ContactEffect *pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 pZMin, MR_Int32 pZMax, Model::Level * pLevel);
 
-		const MR_ContactEffectList *GetEffectList();
+		const Model::ContactEffectList *GetEffectList();
 
 		const Model::ShapeInterface *GetObstacleShape();
 		const Model::ShapeInterface *GetReceivingContactEffectShape();

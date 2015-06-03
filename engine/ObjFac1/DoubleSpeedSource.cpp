@@ -62,7 +62,7 @@ DoubleSpeedSource::~DoubleSpeedSource()
 {
 }
 
-const MR_ContactEffectList *DoubleSpeedSource::GetEffectList()
+const Model::ContactEffectList *DoubleSpeedSource::GetEffectList()
 {
 	return &mContactEffectList;
 }

@@ -88,7 +88,7 @@ Missile::Missile(const Util::ObjectFromFactoryId &pId, ResourceLib *resourceLib)
 	mBounceSound = resourceLib->GetShortSound(MR_SND_MISSILE_BOUNCE)->GetSound();
 	mMotorSound = resourceLib->GetContinuousSound(MR_SND_MISSILE_MOTOR)->GetSound();
 
-	mLostOfControlEffect.mType = MR_LostOfControl::eMissile;
+	mLostOfControlEffect.mType = Model::LostOfControl::eMissile;
 	mLostOfControlEffect.mElementId = -1;
 	mLostOfControlEffect.mHoverId = mHoverId;
 }
@@ -99,7 +99,7 @@ void Missile::SetOwnerId(int pHoverId)
 	mLostOfControlEffect.mHoverId = mHoverId;
 }
 
-const MR_ContactEffectList *Missile::GetEffectList()
+const Model::ContactEffectList *Missile::GetEffectList()
 {
 
 	if(mLived > cIgnitionTime) {
@@ -258,11 +258,13 @@ int Missile::InternalSimulate(MR_SimulationTime pDuration,
 	return pRoom;
 }
 
-void Missile::ApplyEffect(const MR_ContactEffect *pEffect,
+void Missile::ApplyEffect(const Model::ContactEffect *pEffect,
 	MR_SimulationTime, MR_SimulationTime,
 	BOOL pValidDirection, MR_Angle pHorizontalDirection,
 	MR_Int32, MR_Int32, Model::Level*)
 {
+	using namespace HoverRace::Model;
+
 	const MR_PhysicalCollision *lPhysCollision =
 		dynamic_cast<const MR_PhysicalCollision*>(pEffect);
 

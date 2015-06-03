@@ -67,7 +67,7 @@ Mine::Mine(const Util::ObjectFromFactoryId & pId, ResourceLib* resourceLib) :
 	mOnGround = FALSE;
 	mOrientation = 0;
 
-	mEffect.mType = MR_LostOfControl::eMine;
+	mEffect.mType = Model::LostOfControl::eMine;
 	mEffect.mElementId = -1;
 	mEffect.mHoverId = -1;
 }
@@ -82,7 +82,7 @@ BOOL Mine::AssignPermNumber(int pNumber)
 	return TRUE;
 }
 
-const MR_ContactEffectList *Mine::GetEffectList()
+const Model::ContactEffectList *Mine::GetEffectList()
 {
 	if(mOnGround) {
 		return &mEffectList;

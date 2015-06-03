@@ -77,7 +77,7 @@ BOOL PowerUp::AssignPermNumber(int pNumber)
 	return TRUE;
 }
 
-const MR_ContactEffectList *PowerUp::GetEffectList()
+const Model::ContactEffectList *PowerUp::GetEffectList()
 {
 	return &mEffectList;
 }
@@ -105,9 +105,9 @@ int PowerUp::Simulate(MR_SimulationTime pDuration, Model::Level * /*pLevel */ , 
 }
 
 /*
-void PowerUp::ApplyEffect( const MR_ContactEffect* pEffect,  MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, Model::Level* pLevel )
+void PowerUp::ApplyEffect( const ContactEffect* pEffect,  MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, Model::Level* pLevel )
 {
-   MR_ContactEffect* lEffect = (MR_ContactEffect*)pEffect;
+   ContactEffect* lEffect = (ContactEffect*)pEffect;
    const MR_PhysicalCollision* lPhysCollision = dynamic_cast<MR_PhysicalCollision*>(lEffect);
 
    if( (lPhysCollision != NULL)&&pValidDirection )

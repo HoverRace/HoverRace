@@ -102,7 +102,7 @@ public:
 	}
 
 	// Contact effect interface
-	virtual void ApplyEffect(const MR_ContactEffect *pEffect,
+	virtual void ApplyEffect(const ContactEffect *pEffect,
 		MR_SimulationTime pTime, MR_SimulationTime pDuration,
 		BOOL pValidDirection, MR_Angle pHorizontalDirection,
 		MR_Int32 pZMin, MR_Int32 pZMax,
@@ -113,10 +113,10 @@ public:
 			pZMin, pZMax, pLevel);
 	}
 
-	virtual const MR_ContactEffectList *GetEffectList() { return nullptr; }
+	virtual const ContactEffectList *GetEffectList() { return nullptr; }
 
 	// Helper functions
-	void ApplyEffects(const MR_ContactEffectList *pList,
+	void ApplyEffects(const ContactEffectList *pList,
 		MR_SimulationTime pTime, MR_SimulationTime pDuration,
 		BOOL pValidDirection, MR_Angle pHorizontalDirection,
 		MR_Int32 pZMin, MR_Int32 pZMax,

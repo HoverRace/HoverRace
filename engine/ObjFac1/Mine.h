@@ -43,8 +43,8 @@ class Mine : public ObjFacTools::FreeElementBase, protected Model::CylinderShape
 	private:
 
 		BOOL mOnGround;
-		MR_LostOfControl mEffect;
-		MR_ContactEffectList mEffectList;
+		Model::LostOfControl mEffect;
+		Model::ContactEffectList mEffectList;
 
 	public:
 		Mine(const Util::ObjectFromFactoryId & pId, ObjFacTools::ResourceLib* resourceLib);
@@ -53,7 +53,7 @@ class Mine : public ObjFacTools::FreeElementBase, protected Model::CylinderShape
 	protected:
 
 		// ContactEffectShapeInterface
-		const MR_ContactEffectList *GetEffectList();
+		const Model::ContactEffectList *GetEffectList();
 		const Model::ShapeInterface *GetGivingContactEffectShape();
 		const Model::ShapeInterface *GetReceivingContactEffectShape();
 
@@ -61,7 +61,7 @@ class Mine : public ObjFacTools::FreeElementBase, protected Model::CylinderShape
 
 		void Render(VideoServices::Viewport3D * pDest, MR_SimulationTime pTime);
 
-		// void  ApplyEffect( const MR_ContactEffect* pEffect,  MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Int32 pZMin, MR_Int32 pZMax, MR_Angle pHorizontalDirection );
+		// void  ApplyEffect( const ContactEffect* pEffect,  MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Int32 pZMin, MR_Int32 pZMax, MR_Angle pHorizontalDirection );
 
 		// Network state
 		Model::ElementNetState GetNetState() const;

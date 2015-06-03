@@ -266,8 +266,8 @@ void GameSession::ComputeShapeContactEffects(int pCurrentRoom, FreeElement * pAc
 				lValidDirection = mCurrentLevel->GetFeatureContactOrientation(lFeatureId, lActorShape, lDirectionAngle);
 			}
 
-			// const MR_ContactEffectList* lActorEffectList    = pActor->GetEffectList();
-			const MR_ContactEffectList *lObstacleEffectList = lFloor->GetEffectList();
+			// const ContactEffectList* lActorEffectList    = pActor->GetEffectList();
+			const ContactEffectList *lObstacleEffectList = lFloor->GetEffectList();
 
 			// Apply feature effects to the actor
 			pActor->ApplyEffects(lObstacleEffectList, mSimulationTime, pDuration, lValidDirection, lDirectionAngle, lSpec.mZMin, lSpec.mZMax, mCurrentLevel);
@@ -301,8 +301,8 @@ void GameSession::ComputeShapeContactEffects(int pCurrentRoom, FreeElement * pAc
 					lValidDirection = GetActorForceLongitude(lActorShape, lObstacleElem->GetReceivingContactEffectShape(), lDirectionAngle);
 				}
 
-				const MR_ContactEffectList *lActorEffectList = pActor->GetEffectList();
-				const MR_ContactEffectList *lObstacleEffectList = lObstacleElem->GetEffectList();
+				const ContactEffectList *lActorEffectList = pActor->GetEffectList();
+				const ContactEffectList *lObstacleEffectList = lObstacleElem->GetEffectList();
 
 				// Apply feature effects to the actor
 				pActor->ApplyEffects(lObstacleEffectList, mSimulationTime, pDuration, lValidDirection, lDirectionAngle, lSpec.mZMin, lSpec.mZMax, mCurrentLevel);
@@ -364,8 +364,8 @@ void GameSession::ComputeShapeContactEffects(int pCurrentRoom, FreeElement * pAc
 			// Apply the effect of the wall
 			if(mCurrentLevel->GetRoomWallContactOrientation(pCurrentRoom, pLastSpec.mWallContact[lCounter], lActorShape, lDirectionAngle)) {
 				SurfaceElement *lWall = mCurrentLevel->GetRoomWallElement(pCurrentRoom, pLastSpec.mWallContact[lCounter]);
-				// const MR_ContactEffectList* lActorEffectList    = pActor->GetEffectList();
-				const MR_ContactEffectList *lWallEffectList = lWall->GetEffectList();
+				// const ContactEffectList* lActorEffectList    = pActor->GetEffectList();
+				const ContactEffectList *lWallEffectList = lWall->GetEffectList();
 
 				// Apply feature effects to the actor
 				pActor->ApplyEffects(lWallEffectList, mSimulationTime, pDuration, TRUE, lDirectionAngle, lContactBottom, lContactTop, mCurrentLevel);

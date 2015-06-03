@@ -42,7 +42,7 @@ BOOL Element::InitString(const char *pInitStr)
 	return lReturnValue;
 }
 
-void Element::ApplyEffects(const MR_ContactEffectList *pList,
+void Element::ApplyEffects(const ContactEffectList *pList,
 	MR_SimulationTime pTime, MR_SimulationTime pDuration,
 	BOOL pValidDirection, MR_Angle pHorizontalDirection,
 	MR_Int32 pZMin, MR_Int32 pZMax,

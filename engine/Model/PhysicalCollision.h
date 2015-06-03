@@ -36,6 +36,9 @@
 #	define MR_DllDeclare
 #endif
 
+namespace HoverRace {
+namespace Model {
+
 class MR_DllDeclare MR_InertialMoment
 {
 public:
@@ -52,8 +55,11 @@ public:
 		MR_Angle pHorizontalDirection);
 };
 
-class MR_PhysicalCollision : public MR_ContactEffect, public MR_InertialMoment
+class MR_PhysicalCollision : public ContactEffect, public MR_InertialMoment
 {
 };
+
+}  // namespace Model
+}  // namespace HoverRace
 
 #undef MR_DllDeclare

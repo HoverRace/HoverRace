@@ -41,8 +41,8 @@ class DoubleSpeedSource : public Model::FreeElement, protected Model::CylinderSh
 
 	private:
 
-		MR_SpeedDoubler mSpeedEffect;
-		MR_ContactEffectList mContactEffectList;
+		Model::SpeedDoubler mSpeedEffect;
+		Model::ContactEffectList mContactEffectList;
 
 	public:
 		DoubleSpeedSource(const Util::ObjectFromFactoryId & pId);
@@ -51,7 +51,7 @@ class DoubleSpeedSource : public Model::FreeElement, protected Model::CylinderSh
 	protected:
 
 		// ContactEffectShapeInterface
-		const MR_ContactEffectList *GetEffectList();
+		const Model::ContactEffectList *GetEffectList();
 		const Model::ShapeInterface *GetReceivingContactEffectShape();
 
 };

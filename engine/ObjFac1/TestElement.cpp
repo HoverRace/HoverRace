@@ -127,13 +127,15 @@ const Model::ShapeInterface *TestElement::GetObstacleShape()
 	return &mCollisionShape;
 }
 
-void TestElement::ApplyEffect(const MR_ContactEffect *pEffect,
+void TestElement::ApplyEffect(const Model::ContactEffect *pEffect,
                               MR_SimulationTime, MR_SimulationTime,
                               BOOL pValidDirection,
                               MR_Angle pHorizontalDirection,
                               MR_Int32, MR_Int32, Model::Level*)
 {
-	MR_ContactEffect *lEffect = (MR_ContactEffect *) pEffect;
+	using namespace Model;
+
+	ContactEffect *lEffect = (ContactEffect *) pEffect;
 	const MR_PhysicalCollision *lPhysCollision = dynamic_cast < MR_PhysicalCollision * >(lEffect);
 
 	if((lPhysCollision != NULL) && pValidDirection) {
@@ -153,7 +155,7 @@ void TestElement::ApplyEffect(const MR_ContactEffect *pEffect,
 
 }
 
-const MR_ContactEffectList *TestElement::GetEffectList()
+const Model::ContactEffectList *TestElement::GetEffectList()
 {
 	*(int *) &mContactEffect.mXSpeed = mXSpeed;
 	*(int *) &mContactEffect.mYSpeed = mYSpeed;

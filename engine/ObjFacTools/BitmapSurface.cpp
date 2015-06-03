@@ -26,8 +26,8 @@ namespace HoverRace {
 namespace ObjFac1 {
 
 static BOOL gLocalInitialized = FALSE;
-static MR_PhysicalCollision gEffect;
-static MR_ContactEffectList gEffectList;
+static Model::MR_PhysicalCollision gEffect;
+static Model::ContactEffectList gEffectList;
 
 BitmapSurface::BitmapSurface(const Util::ObjectFromFactoryId & pId) :
 	Model::SurfaceElement(pId)
@@ -42,7 +42,7 @@ BitmapSurface::BitmapSurface(const Util::ObjectFromFactoryId & pId) :
 		gLocalInitialized = TRUE;
 		gEffectList.push_back(&gEffect);
 
-		gEffect.mWeight = MR_InertialMoment::eInfiniteWeight;
+		gEffect.mWeight = Model::MR_InertialMoment::eInfiniteWeight;
 		gEffect.mXSpeed = 0;
 		gEffect.mYSpeed = 0;
 		gEffect.mZSpeed = 0;
@@ -62,7 +62,7 @@ BitmapSurface::BitmapSurface(const Util::ObjectFromFactoryId & pId, /*const */ O
 		gLocalInitialized = TRUE;
 		gEffectList.push_back(&gEffect);
 
-		gEffect.mWeight = MR_InertialMoment::eInfiniteWeight;
+		gEffect.mWeight = Model::MR_InertialMoment::eInfiniteWeight;
 		gEffect.mXSpeed = 0;
 		gEffect.mYSpeed = 0;
 		gEffect.mZSpeed = 0;
@@ -83,7 +83,7 @@ BitmapSurface::BitmapSurface(const Util::ObjectFromFactoryId & pId, ObjFacTools:
 		gLocalInitialized = TRUE;
 		gEffectList.push_back(&gEffect);
 
-		gEffect.mWeight = MR_InertialMoment::eInfiniteWeight;
+		gEffect.mWeight = Model::MR_InertialMoment::eInfiniteWeight;
 		gEffect.mXSpeed = 0;
 		gEffect.mYSpeed = 0;
 		gEffect.mZSpeed = 0;
@@ -123,7 +123,7 @@ void BitmapSurface::RenderHorizontalSurface(VideoServices::Viewport3D * pDest, i
 	}
 }
 
-const MR_ContactEffectList *BitmapSurface::GetEffectList()
+const Model::ContactEffectList *BitmapSurface::GetEffectList()
 {
 	return &gEffectList;
 }

@@ -50,8 +50,11 @@ MR_Int32 FinishLine::AxisY() const
 MR_Int32 FinishLine::RayLen() const
 {
 	return cSourceRay;
-} FinishLine::FinishLine(const Util::ObjectFromFactoryId & pId, MR_CheckPoint::CheckPointType pType)
-:Model::FreeElement(pId)
+}
+
+FinishLine::FinishLine(const Util::ObjectFromFactoryId &pId,
+	Model::CheckPoint::CheckPointType pType) :
+	Model::FreeElement(pId)
 {
 	mEffect.mType = pType;
 	mContactEffectList.push_back(&mEffect);
@@ -61,7 +64,7 @@ FinishLine::~FinishLine()
 {
 }
 
-const MR_ContactEffectList *FinishLine::GetEffectList()
+const Model::ContactEffectList *FinishLine::GetEffectList()
 {
 	return &mContactEffectList;
 }

@@ -65,7 +65,7 @@ class MR_DllDeclare BitmapSurface : public Model::SurfaceElement
 		void RenderHorizontalSurface(VideoServices::Viewport3D * pDest, int pNbVertex, const MR_2DCoordinate * pVertexList, MR_Int32 pLevel, BOOL pTop, MR_SimulationTime pTime);
 
 		// Logic stuff
-		const MR_ContactEffectList *GetEffectList();
+		const Model::ContactEffectList *GetEffectList();
 
 };
 

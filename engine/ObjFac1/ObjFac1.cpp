@@ -222,15 +222,15 @@ HoverRace::Util::ObjectFromFactory *ObjFac1::GetObject(int pClassId)
 			break;
 
 		case 202:
-			lReturnValue = new FinishLine(lId, MR_CheckPoint::eFinishLine);
+			lReturnValue = new FinishLine(lId, Model::CheckPoint::eFinishLine);
 			break;
 
 		case 203:
-			lReturnValue = new FinishLine(lId, MR_CheckPoint::eCheck1);
+			lReturnValue = new FinishLine(lId, Model::CheckPoint::eCheck1);
 			break;
 
 		case 204:
-			lReturnValue = new FinishLine(lId, MR_CheckPoint::eCheck2);
+			lReturnValue = new FinishLine(lId, Model::CheckPoint::eCheck2);
 			break;
 
 		case 1000:

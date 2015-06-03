@@ -41,8 +41,8 @@ class FuelSource : public Model::FreeElement, protected Model::CylinderShape
 
 	private:
 
-		MR_FuelGain mFuelEffect;
-		MR_ContactEffectList mContactEffectList;
+		Model::FuelGain mFuelEffect;
+		Model::ContactEffectList mContactEffectList;
 
 	public:
 		FuelSource(const Util::ObjectFromFactoryId & pId);
@@ -51,7 +51,7 @@ class FuelSource : public Model::FreeElement, protected Model::CylinderShape
 	protected:
 
 		// ContactEffectShapeInterface
-		const MR_ContactEffectList *GetEffectList();
+		const Model::ContactEffectList *GetEffectList();
 		const Model::ShapeInterface *GetReceivingContactEffectShape();
 
 };

@@ -143,8 +143,8 @@ private:
 
 	double mFuelLevel;
 
-	MR_PhysicalCollision mContactEffect;
-	MR_ContactEffectList mContactEffectList;
+	Model::MR_PhysicalCollision mContactEffect;
+	Model::ContactEffectList mContactEffectList;
 	Cylinder mCollisionShape;
 	Cylinder mContactShape;
 
@@ -241,12 +241,12 @@ protected:
 	const Model::ShapeInterface *GetObstacleShape();
 
 	// ContactEffectShapeInterface
-	void ApplyEffect(const MR_ContactEffect *pEffect, MR_SimulationTime pTime,
-		MR_SimulationTime pDuration,
+	void ApplyEffect(const Model::ContactEffect *pEffect,
+		MR_SimulationTime pTime, MR_SimulationTime pDuration,
 		BOOL pValidDirection, MR_Angle pHorizontalDirection,
 		MR_Int32 pZMin, MR_Int32 pZMax, Model::Level *pLevel);
 
-	const MR_ContactEffectList *GetEffectList();
+	const Model::ContactEffectList *GetEffectList();
 
 	const Model::ShapeInterface *GetReceivingContactEffectShape();
 	const Model::ShapeInterface *GetGivingContactEffectShape();

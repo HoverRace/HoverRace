@@ -825,17 +825,19 @@ const Model::ShapeInterface *MainCharacter::GetObstacleShape()
 	return &mCollisionShape;
 }
 
-void MainCharacter::ApplyEffect(const MR_ContactEffect *pEffect,
+void MainCharacter::ApplyEffect(const Model::ContactEffect *pEffect,
 	MR_SimulationTime pTime, MR_SimulationTime pDuration,
 	BOOL pValidDirection, MR_Angle pHorizontalDirection,
 	MR_Int32, MR_Int32, Model::Level *pLevel)
 {
+	using namespace HoverRace::Model;
+
 	const MR_PhysicalCollision *lPhysCollision = dynamic_cast<const MR_PhysicalCollision*>(pEffect);
-	const MR_SpeedDoubler *lSpeedDoubler = dynamic_cast<const MR_SpeedDoubler*>(pEffect);
-	const MR_FuelGain *lFuelGain = dynamic_cast<const MR_FuelGain*>(pEffect);
-	const MR_LostOfControl *lLostOfControl = dynamic_cast<const MR_LostOfControl*>(pEffect);
-	const MR_CheckPoint *lLapCompleted = dynamic_cast<const MR_CheckPoint*>(pEffect);
-	const MR_PowerUpEffect *lPowerUp = dynamic_cast<const MR_PowerUpEffect*>(pEffect);
+	const SpeedDoubler *lSpeedDoubler = dynamic_cast<const SpeedDoubler*>(pEffect);
+	const FuelGain *lFuelGain = dynamic_cast<const FuelGain*>(pEffect);
+	const LostOfControl *lLostOfControl = dynamic_cast<const LostOfControl*>(pEffect);
+	const CheckPoint *lLapCompleted = dynamic_cast<const CheckPoint*>(pEffect);
+	const PowerUpEffect *lPowerUp = dynamic_cast<const PowerUpEffect*>(pEffect);
 
 	if((lPhysCollision != NULL) && pValidDirection) {
 		/*
@@ -915,7 +917,7 @@ void MainCharacter::ApplyEffect(const MR_ContactEffect *pEffect,
 			mExternalSoundList.Add(mRenderer->GetOutOfCtrlSound());
 		}
 
-		if(lLostOfControl->mType == MR_LostOfControl::eMine) {
+		if(lLostOfControl->mType == LostOfControl::eMine) {
 			mZSpeed = 1.1 * eMaxZSpeed[0];
 
 			if((lLostOfControl->mElementId != -1) && !mMineList.Full() && (mGameOpts & OPT_ALLOW_MINES)) {
@@ -936,21 +938,21 @@ void MainCharacter::ApplyEffect(const MR_ContactEffect *pEffect,
 
 	if((lLapCompleted != NULL) && mMasterMode && !finished) {
 		switch (lLapCompleted->mType) {
-			case MR_CheckPoint::eCheck1:
+			case CheckPoint::eCheck1:
 				if (!mCheckPoint1 && !mCheckPoint2) {
 					checkpointSignal(this, 1);
 					mCheckPoint1 = TRUE;
 					mCheckPoint2 = FALSE;
 				}
 				break;
-			case MR_CheckPoint::eCheck2:
+			case CheckPoint::eCheck2:
 				if (mCheckPoint1)
 					if (!mCheckPoint2) {
 						checkpointSignal(this, 2);
 						mCheckPoint2 = TRUE;
 					}
 				break;
-			case MR_CheckPoint::eFinishLine:
+			case CheckPoint::eFinishLine:
 				if(mCheckPoint2) {
 					mCheckPoint1 = FALSE;
 					mCheckPoint2 = FALSE;
@@ -983,7 +985,7 @@ void MainCharacter::ApplyEffect(const MR_ContactEffect *pEffect,
 	}
 }
 
-const MR_ContactEffectList *MainCharacter::GetEffectList()
+const Model::ContactEffectList *MainCharacter::GetEffectList()
 {
 	mContactEffect.mWeight = eCharacterWeight[mHoverModel];
 	mContactEffect.mXSpeed = (int)(mXSpeed * 256);

@@ -45,8 +45,8 @@ class BumperGate : public ObjFacTools::FreeElementBase, protected Model::Cylinde
 
 		MR_SimulationTime mTimeSinceLastCollision;
 		int mLastState;
-		MR_PhysicalCollision mCollisionEffect;
-		MR_ContactEffectList mEffectList;
+		Model::MR_PhysicalCollision mCollisionEffect;
+		Model::ContactEffectList mEffectList;
 
 	public:
 		BumperGate(const Util::ObjectFromFactoryId &pId, ObjFacTools::ResourceLib* resourceLib);
@@ -55,13 +55,13 @@ class BumperGate : public ObjFacTools::FreeElementBase, protected Model::Cylinde
 	protected:
 
 		// ContactEffectShapeInterface
-		const MR_ContactEffectList *GetEffectList();
+		const Model::ContactEffectList *GetEffectList();
 		const Model::ShapeInterface *GetGivingContactEffectShape();
 		const Model::ShapeInterface *GetReceivingContactEffectShape();
 
 		int Simulate(MR_SimulationTime pTimeSlice, Model::Level * pLevel, int pRoom);
 
-		void ApplyEffect(const MR_ContactEffect * pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 pZMin, MR_Int32 pZMax, Model::Level * pLevel);
+		void ApplyEffect(const Model::ContactEffect * pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 pZMin, MR_Int32 pZMax, Model::Level * pLevel);
 
 };
 

@@ -42,8 +42,8 @@ class PowerUp : public ObjFacTools::FreeElementBase, protected Model::CylinderSh
 
 	private:
 
-		MR_PowerUpEffect mPowerUpEffect;
-		MR_ContactEffectList mEffectList;
+		Model::PowerUpEffect mPowerUpEffect;
+		Model::ContactEffectList mEffectList;
 
 	public:
 		PowerUp(const Util::ObjectFromFactoryId & pId, ObjFacTools::ResourceLib* resourceLib);
@@ -52,13 +52,13 @@ class PowerUp : public ObjFacTools::FreeElementBase, protected Model::CylinderSh
 	protected:
 
 		// ContactEffectShapeInterface
-		const MR_ContactEffectList *GetEffectList();
+		const Model::ContactEffectList *GetEffectList();
 		const Model::ShapeInterface *GetGivingContactEffectShape();
 		const Model::ShapeInterface *GetReceivingContactEffectShape();
 
 		int Simulate(MR_SimulationTime pTimeSlice, Model::Level * pLevel, int pRoom);
 
-		// void  ApplyEffect( const MR_ContactEffect* pEffect,  MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection );
+		// void  ApplyEffect( const ContactEffect* pEffect,  MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection );
 
 		// Network state
 		Model::ElementNetState GetNetState() const;

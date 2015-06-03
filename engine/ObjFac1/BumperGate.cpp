@@ -37,7 +37,7 @@ const MR_Int32 cGateRayMax = 2500;
 const MR_Int32 cGateHeightMin = 1500;
 const MR_Int32 cGateHeightMax = 3000;
 
-const MR_Int32 cGateWeight = MR_PhysicalCollision::eInfiniteWeight;
+const MR_Int32 cGateWeight = Model::MR_PhysicalCollision::eInfiniteWeight;
 
 MR_Int32 BumperGate::ZMin() const
 {
@@ -83,7 +83,7 @@ BumperGate::~BumperGate()
 {
 }
 
-const MR_ContactEffectList *BumperGate::GetEffectList()
+const Model::ContactEffectList *BumperGate::GetEffectList()
 {
 
 	mCollisionEffect.mWeight = cGateWeight;
@@ -130,12 +130,14 @@ int BumperGate::Simulate(MR_SimulationTime pDuration, Model::Level*, int pRoom)
 	return pRoom;
 }
 
-void BumperGate::ApplyEffect(const MR_ContactEffect *pEffect,
+void BumperGate::ApplyEffect(const Model::ContactEffect *pEffect,
                              MR_SimulationTime, MR_SimulationTime,
                              BOOL, MR_Angle,
                              MR_Int32, MR_Int32, Model::Level*)
 {
-	MR_ContactEffect *lEffect = (MR_ContactEffect *) pEffect;
+	using namespace Model;
+
+	ContactEffect *lEffect = (ContactEffect *) pEffect;
 	const MR_PhysicalCollision *lPhysCollision = dynamic_cast < MR_PhysicalCollision * >(lEffect);
 
 	if(lPhysCollision != NULL) {

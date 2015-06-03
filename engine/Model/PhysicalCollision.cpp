@@ -21,7 +21,8 @@
 
 #include "PhysicalCollision.h"
 
-// class MR_InertialMoment
+namespace HoverRace {
+namespace Model {
 
 void MR_InertialMoment::ComputeCollision(const MR_InertialMoment *pObstacle,
 	MR_Angle pHorizontalDirection)
@@ -53,3 +54,6 @@ void MR_InertialMoment::ComputeCollision(const MR_InertialMoment *pObstacle,
 	}
 
 }
+
+}  // namespace Model
+}  // namespace HoverRace

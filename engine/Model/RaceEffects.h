@@ -34,19 +34,22 @@
 #	define MR_DllDeclare
 #endif
 
-class MR_SpeedDoubler:public MR_ContactEffect
+namespace HoverRace {
+namespace Model {
+
+class SpeedDoubler : public ContactEffect
 {
 	public:
 		// No parameter
 };
 
-class MR_FuelGain:public MR_ContactEffect
+class FuelGain : public ContactEffect
 {
 	public:
 		double mFuelQty;						  // in seconds per millisecond at the pump
 };
 
-class MR_LostOfControl:public MR_ContactEffect
+class LostOfControl : public ContactEffect
 {
 	public:
 		enum mType { eMissile, eMine };
@@ -55,17 +58,20 @@ class MR_LostOfControl:public MR_ContactEffect
 		int mHoverId;							  // Craft that created the effect
 };
 
-class MR_CheckPoint:public MR_ContactEffect
+class CheckPoint : public ContactEffect
 {
 	public:
 		enum CheckPointType { eFinishLine, eCheck1, eCheck2 };
 		CheckPointType mType;
 };
 
-class MR_PowerUpEffect:public MR_ContactEffect
+class PowerUpEffect : public ContactEffect
 {
 	public:
 		int mElementPermId;
 };
+
+}  // namespace Model
+}  // namespace HoverRace
 
 #undef MR_DllDeclare
