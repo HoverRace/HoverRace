@@ -39,36 +39,34 @@ namespace Model {
 
 class SpeedDoubler : public ContactEffect
 {
-	public:
-		// No parameter
 };
 
 class FuelGain : public ContactEffect
 {
-	public:
-		double mFuelQty;						  // in seconds per millisecond at the pump
+public:
+	double mFuelQty;  ///< Seconds per millisecond at the pump.
 };
 
 class LostOfControl : public ContactEffect
 {
-	public:
-		enum mType { eMissile, eMine };
-		int mType;
-		int mElementId;							  // Used for mines only
-		int mHoverId;							  // Craft that created the effect
+public:
+	enum mType { eMissile, eMine };
+	int mType;
+	int mElementId;  ///< Used for mines only.
+	int mHoverId;  ///< Craft that created the effect.
 };
 
 class CheckPoint : public ContactEffect
 {
-	public:
-		enum CheckPointType { eFinishLine, eCheck1, eCheck2 };
-		CheckPointType mType;
+public:
+	enum CheckPointType { eFinishLine, eCheck1, eCheck2 };
+	CheckPointType mType;
 };
 
 class PowerUpEffect : public ContactEffect
 {
-	public:
-		int mElementPermId;
+public:
+	int mElementPermId;
 };
 
 }  // namespace Model
