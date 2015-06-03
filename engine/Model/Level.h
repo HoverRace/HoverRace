@@ -157,20 +157,18 @@ protected:
 
 		class AudibleRoom
 		{
-			public:
+		public:
+			AudibleRoom();
+			~AudibleRoom();
 
-				// This class will have be modified if we want to take in account the
-				// fact that a closed door do not let pass the sound
-				int mSectionSource;
-				int mNbVertexSources;	  // Number of connection from where the sound is comming
-				int *mVertexList;		  // List of the connections from where the sound is comming
-				BYTE *mSoundCoefficient;  // Attenuation factor of the sound
+			void Serialize(Parcel::ObjStream &pArchive);
 
-				AudibleRoom();
-				~AudibleRoom();
-
-				void Serialize(Parcel::ObjStream &pArchive);
-
+			// This class will have be modified if we want to take in account the
+			// fact that a closed door do not let pass the sound
+			int mSectionSource;
+			int mNbVertexSources;	  // Number of connection from where the sound is comming
+			int *mVertexList;		  // List of the connections from where the sound is comming
+			BYTE *mSoundCoefficient;  // Attenuation factor of the sound
 		};
 
 		// Connectivity

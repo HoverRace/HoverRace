@@ -559,18 +559,16 @@ MR_Int32 Level::SectionShape::SideLen(int pIndex) const
 }
 
 // class Level::Section::AudibleRoom
-Level::Room::AudibleRoom::AudibleRoom()
+Level::Room::AudibleRoom::AudibleRoom() :
+	mSectionSource(-1), mNbVertexSources(0),
+	mVertexList(nullptr), mSoundCoefficient(nullptr)
 {
-	mSectionSource = -1;
-	mNbVertexSources = 0;
-	mVertexList = NULL;
-	mSoundCoefficient = NULL;
 }
 
 Level::Room::AudibleRoom::~AudibleRoom()
 {
-	delete[]mVertexList;
-	delete[]mSoundCoefficient;
+	delete[] mVertexList;
+	delete[] mSoundCoefficient;
 }
 
 void Level::Room::AudibleRoom::Serialize(ObjStream & pArchive)
