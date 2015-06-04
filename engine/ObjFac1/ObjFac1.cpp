@@ -23,7 +23,6 @@
 #include "DefaultSurface.h"
 #include "WoodSurface.h"
 #include "BallElement.h"
-//#include "BabeElement.h"
 #include "TestElement.h"
 #include "GenericRenderer.h"
 #include "FuelSource.h"
@@ -70,15 +69,9 @@ HoverRace::Util::ObjectFromFactory *ObjFac1::GetObject(int pClassId)
 			break;
 
 		case 3:
-			//         lReturnValue = new BitmapSurface( lId, resourceLib->GetBitmap( MR_FIRE ) );
-			break;
-
 		case 4:
-			//         lReturnValue = new BitmapSurface( lId, resourceLib->GetBitmap( MR_BIG_BRICK ) );
-			break;
-
 		case 5:
-			//         lReturnValue = new BitmapSurface( lId, resourceLib->GetBitmap( MR_RED_BRICK ) );
+			// Unused.
 			break;
 
 		case 10:
@@ -86,7 +79,7 @@ HoverRace::Util::ObjectFromFactory *ObjFac1::GetObject(int pClassId)
 			break;
 
 		case 11:
-			//         lReturnValue = new MR_BabeElement( lId );
+			// Unused.
 			break;
 
 		case 12:
