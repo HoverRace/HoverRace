@@ -143,7 +143,7 @@ private:
 
 	double mFuelLevel;
 
-	Model::MR_PhysicalCollision mContactEffect;
+	Model::PhysicalCollision mContactEffect;
 	Model::ContactEffectList mContactEffectList;
 	Cylinder mCollisionShape;
 	Cylinder mContactShape;

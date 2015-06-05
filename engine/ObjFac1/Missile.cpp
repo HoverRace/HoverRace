@@ -265,12 +265,12 @@ void Missile::ApplyEffect(const Model::ContactEffect *pEffect,
 {
 	using namespace HoverRace::Model;
 
-	const MR_PhysicalCollision *lPhysCollision =
-		dynamic_cast<const MR_PhysicalCollision*>(pEffect);
+	const PhysicalCollision *lPhysCollision =
+		dynamic_cast<const PhysicalCollision*>(pEffect);
 
 	if (lPhysCollision && pValidDirection) {
 
-		if(lPhysCollision->mWeight < MR_PhysicalCollision::eInfiniteWeight) {
+		if(lPhysCollision->mWeight < PhysicalCollision::eInfiniteWeight) {
 			if(mLived >= cIgnitionTime) {
 				// Hitted a free object
 				// Must died

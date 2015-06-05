@@ -39,7 +39,7 @@
 namespace HoverRace {
 namespace Model {
 
-class MR_DllDeclare MR_InertialMoment
+class MR_DllDeclare InertialMoment
 {
 public:
 	enum { eInfiniteWeight = 1000000 };
@@ -51,11 +51,11 @@ public:
 	MR_Int32 mZSpeed;  // Vertical speed in mm/sec, negative means down.
 
 	// Helper functions
-	void ComputeCollision(const MR_InertialMoment *pObstacle,
+	void ComputeCollision(const InertialMoment *pObstacle,
 		MR_Angle pHorizontalDirection);
 };
 
-class MR_PhysicalCollision : public ContactEffect, public MR_InertialMoment
+class PhysicalCollision : public ContactEffect, public InertialMoment
 {
 };
 

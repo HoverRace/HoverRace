@@ -45,7 +45,7 @@ class BumperGate : public ObjFacTools::FreeElementBase, protected Model::Cylinde
 
 		MR_SimulationTime mTimeSinceLastCollision;
 		int mLastState;
-		Model::MR_PhysicalCollision mCollisionEffect;
+		Model::PhysicalCollision mCollisionEffect;
 		Model::ContactEffectList mEffectList;
 
 	public:

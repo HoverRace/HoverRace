@@ -108,12 +108,12 @@ int PowerUp::Simulate(MR_SimulationTime pDuration, Model::Level * /*pLevel */ , 
 void PowerUp::ApplyEffect( const ContactEffect* pEffect,  MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, Model::Level* pLevel )
 {
    ContactEffect* lEffect = (ContactEffect*)pEffect;
-   const MR_PhysicalCollision* lPhysCollision = dynamic_cast<MR_PhysicalCollision*>(lEffect);
+   const PhysicalCollision* lPhysCollision = dynamic_cast<PhysicalCollision*>(lEffect);
 
    if( (lPhysCollision != NULL)&&pValidDirection )
    {
 
-	  if( lPhysCollision->mWeight < MR_PhysicalCollision::eInfiniteWeight )
+	  if( lPhysCollision->mWeight < PhysicalCollision::eInfiniteWeight )
 	  {
 		 if( mLived >= cIgnitionTime )
 		 {

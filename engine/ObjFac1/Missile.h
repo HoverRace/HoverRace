@@ -78,7 +78,7 @@ protected:
 private:
 	int mHoverId;
 	MR_SimulationTime mLived;
-	Model::MR_PhysicalCollision mCollisionEffect;
+	Model::PhysicalCollision mCollisionEffect;
 	Model::LostOfControl mLostOfControlEffect;
 	Model::ContactEffectList mEffectList;
 

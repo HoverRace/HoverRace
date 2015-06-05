@@ -832,7 +832,7 @@ void MainCharacter::ApplyEffect(const Model::ContactEffect *pEffect,
 {
 	using namespace HoverRace::Model;
 
-	const MR_PhysicalCollision *lPhysCollision = dynamic_cast<const MR_PhysicalCollision*>(pEffect);
+	const PhysicalCollision *lPhysCollision = dynamic_cast<const PhysicalCollision*>(pEffect);
 	const SpeedDoubler *lSpeedDoubler = dynamic_cast<const SpeedDoubler*>(pEffect);
 	const FuelGain *lFuelGain = dynamic_cast<const FuelGain*>(pEffect);
 	const LostOfControl *lLostOfControl = dynamic_cast<const LostOfControl*>(pEffect);
@@ -854,7 +854,7 @@ void MainCharacter::ApplyEffect(const Model::ContactEffect *pEffect,
 		 */
 
 		if(pValidDirection) {
-			MR_InertialMoment lMoment;
+			InertialMoment lMoment;
 
 			lMoment.mWeight = eCharacterWeight[mHoverModel];
 			lMoment.mXSpeed = (int)(mXSpeed * 256);

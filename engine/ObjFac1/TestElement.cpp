@@ -136,10 +136,10 @@ void TestElement::ApplyEffect(const Model::ContactEffect *pEffect,
 	using namespace Model;
 
 	ContactEffect *lEffect = (ContactEffect *) pEffect;
-	const MR_PhysicalCollision *lPhysCollision = dynamic_cast < MR_PhysicalCollision * >(lEffect);
+	const PhysicalCollision *lPhysCollision = dynamic_cast < PhysicalCollision * >(lEffect);
 
 	if((lPhysCollision != NULL) && pValidDirection) {
-		MR_InertialMoment lMoment;
+		InertialMoment lMoment;
 
 		lMoment.mWeight = 90;
 		lMoment.mXSpeed = mXSpeed;

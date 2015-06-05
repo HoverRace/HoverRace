@@ -60,7 +60,7 @@ class TestElement : public ObjFacTools::FreeElementBase
 		Cylinder mCollisionShape;
 		Cylinder mContactShape;
 
-		Model::MR_PhysicalCollision mContactEffect;
+		Model::PhysicalCollision mContactEffect;
 		Model::ContactEffectList mContactEffectList;
 
 	public:

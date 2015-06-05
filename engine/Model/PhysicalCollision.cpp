@@ -24,7 +24,7 @@
 namespace HoverRace {
 namespace Model {
 
-void MR_InertialMoment::ComputeCollision(const MR_InertialMoment *pObstacle,
+void InertialMoment::ComputeCollision(const InertialMoment *pObstacle,
 	MR_Angle pHorizontalDirection)
 {
 
