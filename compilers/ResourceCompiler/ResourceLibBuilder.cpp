@@ -48,29 +48,29 @@ void WriteRes(ObjStream &os, T &res)
 namespace HoverRace {
 namespace ResourceCompiler {
 
-void ResourceLibBuilder::AddBitmap(ObjFacTools::ResBitmap *pBitmap)
+void ResourceLibBuilder::AddBitmap(std::unique_ptr<ObjFacTools::ResBitmap> &&pBitmap)
 {
-	bitmaps.emplace(pBitmap->GetResourceId(), pBitmap);
+	bitmaps.emplace(pBitmap->GetResourceId(), std::move(pBitmap));
 }
 
-void ResourceLibBuilder::AddActor(ObjFacTools::ResActor *pActor)
+void ResourceLibBuilder::AddActor(std::unique_ptr<ObjFacTools::ResActor> &&pActor)
 {
-	actors.emplace(pActor->GetResourceId(), pActor);
+	actors.emplace(pActor->GetResourceId(), std::move(pActor));
 }
 
-void ResourceLibBuilder::AddSprite(ObjFacTools::ResSprite *pSprite)
+void ResourceLibBuilder::AddSprite(std::unique_ptr<ObjFacTools::ResSprite> &&pSprite)
 {
-	sprites.emplace(pSprite->GetResourceId(), pSprite);
+	sprites.emplace(pSprite->GetResourceId(), std::move(pSprite));
 }
 
-void ResourceLibBuilder::AddSound(ObjFacTools::ResShortSound *pSound)
+void ResourceLibBuilder::AddSound(std::unique_ptr<ObjFacTools::ResShortSound> &&pSound)
 {
-	shortSounds.emplace(pSound->GetResourceId(), pSound);
+	shortSounds.emplace(pSound->GetResourceId(), std::move(pSound));
 }
 
-void ResourceLibBuilder::AddSound(ObjFacTools::ResContinuousSound *pSound)
+void ResourceLibBuilder::AddSound(std::unique_ptr<ObjFacTools::ResContinuousSound> &&pSound)
 {
-	continuousSounds.emplace(pSound->GetResourceId(), pSound);
+	continuousSounds.emplace(pSound->GetResourceId(), std::move(pSound));
 }
 
 /**

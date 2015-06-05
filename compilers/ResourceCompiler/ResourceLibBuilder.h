@@ -40,11 +40,11 @@ public:
 	ResourceLibBuilder() : SUPER() { }
 	~ResourceLibBuilder() { }
 
-	void AddBitmap(ObjFacTools::ResBitmap *pBitmap);
-	void AddActor(ObjFacTools::ResActor *pActor);
-	void AddSprite(ObjFacTools::ResSprite *pSprite);
-	void AddSound(ObjFacTools::ResShortSound *pSound);
-	void AddSound(ObjFacTools::ResContinuousSound *pSound);
+	void AddBitmap(std::unique_ptr<ObjFacTools::ResBitmap> &&pBitmap);
+	void AddActor(std::unique_ptr<ObjFacTools::ResActor> &&pActor);
+	void AddSprite(std::unique_ptr<ObjFacTools::ResSprite> &&pSprite);
+	void AddSound(std::unique_ptr<ObjFacTools::ResShortSound> &&pSound);
+	void AddSound(std::unique_ptr<ObjFacTools::ResContinuousSound> &&pSound);
 
 	bool Export(const HoverRace::Util::OS::path_t &filename);
 };

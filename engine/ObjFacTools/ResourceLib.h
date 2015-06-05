@@ -1,7 +1,7 @@
 
 // ResourceLib.h
 //
-// Copyright (c) 2010, 2014 Michael Imamura.
+// Copyright (c) 2010, 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -54,35 +54,30 @@ namespace ObjFacTools {
  */
 class MR_DllDeclare ResourceLib
 {
-	protected:
-		ResourceLib() { }
-	public:
-		ResourceLib(const Util::OS::path_t &filename);
-		~ResourceLib();
+protected:
+	ResourceLib();
+public:
+	ResourceLib(const Util::OS::path_t &filename);
+	~ResourceLib();
 
-	public:
-		ResBitmap * GetBitmap(int id);
-		const ResActor *GetActor(int id);
-		const ResSprite *GetSprite(int id);
-		const ResShortSound *GetShortSound(int id);
-		const ResContinuousSound *GetContinuousSound(int id);
+public:
+	ResBitmap *GetBitmap(int id);
+	const ResActor *GetActor(int id);
+	const ResSprite *GetSprite(int id);
+	const ResShortSound *GetShortSound(int id);
+	const ResContinuousSound *GetContinuousSound(int id);
 
-	protected:
-		Parcel::RecordFile *recordFile;
+protected:
+	std::unique_ptr<Parcel::RecordFile> recordFile;
 
-		typedef std::map<int, ResBitmap*> bitmaps_t;
-		bitmaps_t bitmaps;
-		typedef std::map<int, ResActor*> actors_t;
-		actors_t actors;
-		typedef std::map<int, ResSprite*> sprites_t;
-		sprites_t sprites;
-		typedef std::map<int, ResShortSound*> shortSounds_t;
-		shortSounds_t shortSounds;
-		typedef std::map<int, ResContinuousSound*> continuousSounds_t;
-		continuousSounds_t continuousSounds;
+	std::map<int, std::unique_ptr<ResBitmap>> bitmaps;
+	std::map<int, std::unique_ptr<ResActor>> actors;
+	std::map<int, std::unique_ptr<ResSprite>> sprites;
+	std::map<int, std::unique_ptr<ResShortSound>> shortSounds;
+	std::map<int, std::unique_ptr<ResContinuousSound>> continuousSounds;
 
-	protected:
-		static const MR_UInt32 FILE_MAGIC = 12345;
+protected:
+	static const MR_UInt32 FILE_MAGIC = 12345;
 };
 
 }  // namespace HoverRace

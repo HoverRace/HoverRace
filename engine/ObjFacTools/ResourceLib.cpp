@@ -1,7 +1,7 @@
 
 // ResourceLib.cpp
 //
-// Copyright (c) 2010, 2014 Michael Imamura.
+// Copyright (c) 2010, 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -30,43 +30,52 @@ namespace HoverRace {
 namespace ObjFacTools {
 
 namespace {
-	template<class T>
-	void NewRes(T *val, ObjStream &os, ResourceLib*)
-	{
-		val->Serialize(os);
-	}
 
-	template<>
-	void NewRes<ResActor>(ResActor *val, ObjStream &os, ResourceLib *self)
-	{
-		val->Serialize(os, self);
-	}
+template<class T>
+void NewRes(T *val, ObjStream &os, ResourceLib*)
+{
+	val->Serialize(os);
+}
 
-	template<class T>
-	void LoadRes(ObjStream &os, std::map<int, T*> &res, ResourceLib *self)
-	{
-		MR_UInt32 num;
-		os >> num;
-		for (MR_UInt32 i = 0; i < num; ++i) {
-			MR_Int32 key;
-			os >> key;
+template<>
+void NewRes<ResActor>(ResActor *val, ObjStream &os, ResourceLib *self)
+{
+	val->Serialize(os, self);
+}
 
-			T *val = new T(key);
-			NewRes(val, os, self);
+template<class T>
+void LoadRes(ObjStream &os, std::map<int, std::unique_ptr<T>> &res, ResourceLib *self)
+{
+	MR_UInt32 num;
+	os >> num;
+	for (MR_UInt32 i = 0; i < num; ++i) {
+		MR_Int32 key;
+		os >> key;
 
-			res.insert(typename std::map<int, T*>::value_type(key, val));
-		}
+		T *val = new T(key);
+		NewRes(val, os, self);
+
+		res.emplace(key, std::unique_ptr<T>(val));
 	}
 }
 
+}  // namespace
+
 /**
- * Constructor.
+ * Constructor for empty library.
  * @param filename The resource data file.
  */
-ResourceLib::ResourceLib(const Util::OS::path_t &filename)
+ResourceLib::ResourceLib()
 {
-	recordFile = new ClassicRecordFile();
+}
 
+/**
+ * Constructor for loaded library.
+ * @param filename The resource data file.
+ */
+ResourceLib::ResourceLib(const Util::OS::path_t &filename) :
+	recordFile(new ClassicRecordFile())
+{
 	if (!recordFile->OpenForRead(filename)) {
 		throw ObjStreamExn(filename, "File not found or not readable");
 	}
@@ -95,43 +104,36 @@ ResourceLib::ResourceLib(const Util::OS::path_t &filename)
 
 ResourceLib::~ResourceLib()
 {
-	for (const auto &ent : bitmaps) delete ent.second;
-	for (const auto &ent : actors) delete ent.second;
-	for (const auto &ent : sprites) delete ent.second;
-	for (const auto &ent : shortSounds) delete ent.second;
-	for (const auto &ent : continuousSounds) delete ent.second;
-
-	delete recordFile;
 }
 
 ResBitmap *ResourceLib::GetBitmap(int id)
 {
-	bitmaps_t::const_iterator iter = bitmaps.find(id);
-	return (iter == bitmaps.end()) ? NULL : iter->second;
+	auto iter = bitmaps.find(id);
+	return (iter == bitmaps.end()) ? nullptr : iter->second.get();
 }
 
 const ResActor *ResourceLib::GetActor(int id)
 {
-	actors_t::const_iterator iter = actors.find(id);
-	return (iter == actors.end()) ? NULL : iter->second;
+	auto iter = actors.find(id);
+	return (iter == actors.end()) ? nullptr : iter->second.get();
 }
 
 const ResSprite *ResourceLib::GetSprite(int id)
 {
-	sprites_t::const_iterator iter = sprites.find(id);
-	return (iter == sprites.end()) ? NULL : iter->second;
+	auto iter = sprites.find(id);
+	return (iter == sprites.end()) ? nullptr : iter->second.get();
 }
 
 const ResShortSound *ResourceLib::GetShortSound(int id)
 {
-	shortSounds_t::const_iterator iter = shortSounds.find(id);
-	return (iter == shortSounds.end()) ? NULL : iter->second;
+	auto iter = shortSounds.find(id);
+	return (iter == shortSounds.end()) ? nullptr : iter->second.get();
 }
 
 const ResContinuousSound *ResourceLib::GetContinuousSound(int id)
 {
-	continuousSounds_t::const_iterator iter = continuousSounds.find(id);
-	return (iter == continuousSounds.end()) ? NULL : iter->second;
+	auto iter = continuousSounds.find(id);
+	return (iter == continuousSounds.end()) ? nullptr : iter->second.get();
 }
 
 }  // namespace HoverRace

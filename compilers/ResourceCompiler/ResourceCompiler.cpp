@@ -134,6 +134,8 @@ void PrintUsage()
 
 BOOL ParseInputFile(const OS::path_t &pFileName)
 {
+	using namespace HoverRace::ObjFacTools;
+
 	static const char *lKeywordList[] = { "BITMAP", "ACTOR", "SPRITE", "SHORT_SOUND", "CONT_SOUND", NULL };
 
 	BOOL lReturnValue = TRUE;
@@ -164,17 +166,14 @@ BOOL ParseInputFile(const OS::path_t &pFileName)
 						lReturnValue = FALSE;
 					}
 					else {
-						ResBitmapBuilder *lBitmap =
+						std::unique_ptr<ResBitmapBuilder> lBitmap(
 							new ResBitmapBuilder(lResourceId,
-								(int)(lWidth * 1000), (int)(lHeight * 1000));
+								(int)(lWidth * 1000), (int)(lHeight * 1000)));
 
 						lReturnValue = lBitmap->BuildFromFile(lLineBuffer, lAntiAliasScheme);
 
 						if(lReturnValue) {
-							gsLib.AddBitmap(lBitmap);
-						}
-						else {
-							delete lBitmap;
+							gsLib.AddBitmap(std::move(lBitmap));
 						}
 					}
 					break;
@@ -184,15 +183,13 @@ BOOL ParseInputFile(const OS::path_t &pFileName)
 						fprintf(stderr, "%s: %s.\n", _("ERROR"), _("problem reading actor parameters"));
 					}
 					else {
-						ResActorBuilder *lActor = new ResActorBuilder(lResourceId);
+						std::unique_ptr<ResActorBuilder> lActor(
+							new ResActorBuilder(lResourceId));
 
 						lReturnValue = lActor->BuildFromFile(lLineBuffer, &gsLib);
 
 						if(lReturnValue) {
-							gsLib.AddActor(lActor);
-						}
-						else {
-							delete lActor;
+							gsLib.AddActor(std::move(lActor));
 						}
 					}
 					break;
@@ -203,15 +200,13 @@ BOOL ParseInputFile(const OS::path_t &pFileName)
 						lReturnValue = FALSE;
 					}
 					else {
-						ResSpriteBuilder *lSprite = new ResSpriteBuilder(lResourceId);
+						std::unique_ptr<ResSpriteBuilder> lSprite(
+							new ResSpriteBuilder(lResourceId));
 
 						lReturnValue = lSprite->BuildFromFile(lLineBuffer, lNbItem);
 
 						if(lReturnValue) {
-							gsLib.AddSprite(lSprite);
-						}
-						else {
-							delete lSprite;
+							gsLib.AddSprite(std::move(lSprite));
 						}
 					}
 					break;
@@ -222,15 +217,13 @@ BOOL ParseInputFile(const OS::path_t &pFileName)
 						lReturnValue = FALSE;
 					}
 					else {
-						ResShortSoundBuilder *lSound = new ResShortSoundBuilder(lResourceId);
+						std::unique_ptr<ResShortSoundBuilder> lSound(
+							new ResShortSoundBuilder(lResourceId));
 
 						lReturnValue = lSound->BuildFromFile(lLineBuffer, lNbCopy) ? TRUE : FALSE;
 
 						if(lReturnValue) {
-							gsLib.AddSound(lSound);
-						}
-						else {
-							delete lSound;
+							gsLib.AddSound(std::move(lSound));
 						}
 					}
 					break;
@@ -241,15 +234,13 @@ BOOL ParseInputFile(const OS::path_t &pFileName)
 						lReturnValue = FALSE;
 					}
 					else {
-						ResContinuousSoundBuilder *lSound = new ResContinuousSoundBuilder(lResourceId);
+						std::unique_ptr<ResContinuousSoundBuilder> lSound(
+							new ResContinuousSoundBuilder(lResourceId));
 
 						lReturnValue = lSound->BuildFromFile(lLineBuffer, lNbCopy) ? TRUE : FALSE;
 
 						if(lReturnValue) {
-							gsLib.AddSound(lSound);
-						}
-						else {
-							delete lSound;
+							gsLib.AddSound(std::move(lSound));
 						}
 					}
 					break;
