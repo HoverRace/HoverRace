@@ -27,15 +27,11 @@ using HoverRace::ObjFacTools::ResourceLib;
 namespace HoverRace {
 namespace ObjFac1 {
 
-DefaultSurface::DefaultSurface(const Util::ObjectFromFactoryId & pId, ResourceLib* resourceLib) :
-	BitmapSurface(pId)
+DefaultSurface::DefaultSurface(const Util::ObjectFromFactoryId &pId,
+	ResourceLib &resourceLib) :
+	SUPER(pId)
 {
-	mBitmap = resourceLib->GetBitmap(MR_ETALON);
-}
-
-DefaultSurface::~DefaultSurface()
-{
-
+	mBitmap = resourceLib.GetBitmap(MR_ETALON);
 }
 
 }  // namespace ObjFac1

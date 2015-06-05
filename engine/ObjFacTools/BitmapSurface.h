@@ -47,38 +47,53 @@ namespace ObjFac1 {
 
 class MR_DllDeclare BitmapSurface : public Model::SurfaceElement
 {
-	protected:
-		ObjFacTools::ResBitmap * mBitmap;
-		ObjFacTools::ResBitmap *mBitmap2;
-		int mRotationSpeed;						  // negative values mean left to right rotation
-		int mRotationLen;
+	using SUPER = Model::SurfaceElement;
 
-	public:
-												  // old constructor..obsolete
-		BitmapSurface(const Util::ObjectFromFactoryId & pId);
-		BitmapSurface(const Util::ObjectFromFactoryId & pId, /*const */ ObjFacTools::ResBitmap * pBitmap);
-		BitmapSurface(const Util::ObjectFromFactoryId & pId, ObjFacTools::ResBitmap * pBitmap1, ObjFacTools::ResBitmap * pBitmap2, int pRotationSpeed, int pRotationLen);
-		~BitmapSurface();
+public:
+	BitmapSurface(const Util::ObjectFromFactoryId &pId) :
+		BitmapSurface(pId, nullptr, nullptr, 0, 1) { }
 
-		// Rendering stuff
-		void RenderWallSurface(VideoServices::Viewport3D * pDest, const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, MR_SimulationTime pTime);
-		void RenderHorizontalSurface(VideoServices::Viewport3D * pDest, int pNbVertex, const MR_2DCoordinate * pVertexList, MR_Int32 pLevel, BOOL pTop, MR_SimulationTime pTime);
+	BitmapSurface(const Util::ObjectFromFactoryId &pId,
+		ObjFacTools::ResBitmap *pBitmap) :
+		BitmapSurface(pId, pBitmap, pBitmap, 0, 1) { }
 
-		// Logic stuff
-		const Model::ContactEffectList *GetEffectList();
+	BitmapSurface(const Util::ObjectFromFactoryId &pId,
+		ObjFacTools::ResBitmap *pBitmap1, ObjFacTools::ResBitmap *pBitmap2,
+		int pRotationSpeed, int pRotationLen);
 
+	~BitmapSurface() { }
+
+	// Rendering stuff
+	void RenderWallSurface(VideoServices::Viewport3D * pDest, const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, MR_SimulationTime pTime);
+	void RenderHorizontalSurface(VideoServices::Viewport3D * pDest, int pNbVertex, const MR_2DCoordinate * pVertexList, MR_Int32 pLevel, BOOL pTop, MR_SimulationTime pTime);
+
+	// Logic stuff
+	const Model::ContactEffectList *GetEffectList();
+
+protected:
+	ObjFacTools::ResBitmap *mBitmap;
+	ObjFacTools::ResBitmap *mBitmap2;
+	int mRotationSpeed;  ///< Negative values mean left to right rotation.
+	int mRotationLen;
 };
 
 class MR_DllDeclare VStretchBitmapSurface : public BitmapSurface
 {
-	private:
-		int mMaxHeight;
+	using SUPER = BitmapSurface;
 
-	public:
+public:
+	VStretchBitmapSurface(const Util::ObjectFromFactoryId &pId,
+		ObjFacTools::ResBitmap *pBitmap, int pMaxHeight);
+	VStretchBitmapSurface(const Util::ObjectFromFactoryId &pId,
+		ObjFacTools::ResBitmap *pBitmap1, ObjFacTools::ResBitmap *pBitmap2,
+		int pRotationSpeed, int pRotationLen, int pMaxHeight);
 
-		VStretchBitmapSurface(const Util::ObjectFromFactoryId & pId, /*const */ ObjFacTools::ResBitmap * pBitmap, int pMaxHeight);
-		VStretchBitmapSurface(const Util::ObjectFromFactoryId & pId, ObjFacTools::ResBitmap * pBitmap1, ObjFacTools::ResBitmap * pBitmap2, int pRotationSpeed, int pRotationLen, int pMaxHeight);
-		void RenderWallSurface(VideoServices::Viewport3D * pDest, const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, MR_SimulationTime pTime);
+	void RenderWallSurface(VideoServices::Viewport3D *pDest,
+		const MR_3DCoordinate &pUpperLeft, const MR_3DCoordinate &pLowerRight,
+		MR_Int32 pLen, MR_SimulationTime pTime);
+
+private:
+	int mMaxHeight;
 };
 
 }  // namespace Model

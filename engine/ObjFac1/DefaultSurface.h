@@ -30,9 +30,12 @@ namespace ObjFac1 {
 
 class DefaultSurface : public BitmapSurface
 {
-	public:
-		DefaultSurface(const Util::ObjectFromFactoryId & pId, ObjFacTools::ResourceLib* resourceLib);
-		~DefaultSurface();
+	using SUPER = BitmapSurface;
+
+public:
+	DefaultSurface(const Util::ObjectFromFactoryId &pId,
+		ObjFacTools::ResourceLib &resourceLib);
+	~DefaultSurface() { }
 };
 
 }  // namespace ObjFac1

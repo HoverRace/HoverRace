@@ -34,52 +34,54 @@ namespace ObjFac1 {
 
 class TestElement : public ObjFacTools::FreeElementBase
 {
-	typedef ObjFacTools::FreeElementBase SUPER;
+	using SUPER = ObjFacTools::FreeElementBase;
 
-	class Cylinder : public Model::CylinderShape
+	struct Cylinder : public Model::CylinderShape
 	{
-		public:
+		MR_Int32 mRay;
+		MR_3DCoordinate mPosition;
 
-			MR_Int32 mRay;
-			MR_3DCoordinate mPosition;
-
-			MR_Int32 ZMin() const;
-			MR_Int32 ZMax() const;
-			MR_Int32 AxisX() const;
-			MR_Int32 AxisY() const;
-			MR_Int32 RayLen() const;
+		MR_Int32 ZMin() const override { return mPosition.mZ; }
+		MR_Int32 ZMax() const override { return mPosition.mZ + 1800; }
+		MR_Int32 AxisX() const override { return mPosition.mX; }
+		MR_Int32 AxisY() const override { return mPosition.mY; }
+		MR_Int32 RayLen() const override { return mRay; }
 	};
 
-	private:
-		MR_SimulationTime mElapsedFrameTime;
+public:
+	TestElement(const Util::ObjectFromFactoryId &pId,
+		ObjFacTools::ResourceLib &resourceLib, int pActorRes);
+	~TestElement() { }
 
-		// Logic part (Always present.. who cares it is a test
-		int mXSpeed;
-		int mYSpeed;
+	int Simulate(MR_SimulationTime pDuration, Model::Level *pLevel,
+		int pRoom) override;
 
-		Cylinder mCollisionShape;
-		Cylinder mContactShape;
+protected:
 
-		Model::PhysicalCollision mContactEffect;
-		Model::ContactEffectList mContactEffectList;
+	// ContactEffectShapeInterface
+	void ApplyEffect(const Model::ContactEffect *pEffect,
+		MR_SimulationTime pTime, MR_SimulationTime pDuration,
+		BOOL pValidDirection, MR_Angle pHorizontalDirection,
+		MR_Int32 pZMin, MR_Int32 pZMax, Model::Level *pLevel) override;
 
-	public:
-		TestElement(const Util::ObjectFromFactoryId & pId, ObjFacTools::ResourceLib* resourceLib, int pActorRes);
-		~TestElement();
+	const Model::ContactEffectList *GetEffectList() override;
 
-		int Simulate(MR_SimulationTime pDuration, Model::Level * pLevel, int pRoom);
+	const Model::ShapeInterface *GetObstacleShape() override;
+	const Model::ShapeInterface *GetReceivingContactEffectShape() override;
+	const Model::ShapeInterface *GetGivingContactEffectShape() override;
 
-	protected:
+private:
+	MR_SimulationTime mElapsedFrameTime;
 
-		// ContactEffectShapeInterface
-		void ApplyEffect(const Model::ContactEffect *pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 pZMin, MR_Int32 pZMax, Model::Level * pLevel);
+	// Logic part (Always present.. who cares it is a test
+	int mXSpeed;
+	int mYSpeed;
 
-		const Model::ContactEffectList *GetEffectList();
+	Cylinder mCollisionShape;
+	Cylinder mContactShape;
 
-		const Model::ShapeInterface *GetObstacleShape();
-		const Model::ShapeInterface *GetReceivingContactEffectShape();
-		const Model::ShapeInterface *GetGivingContactEffectShape();
-
+	Model::PhysicalCollision mContactEffect;
+	Model::ContactEffectList mContactEffectList;
 };
 
 }  // namespace ObjFac1

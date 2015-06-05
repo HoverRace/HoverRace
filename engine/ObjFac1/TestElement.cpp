@@ -27,15 +27,13 @@ using HoverRace::ObjFacTools::ResourceLib;
 namespace HoverRace {
 namespace ObjFac1 {
 
-TestElement::TestElement(const Util::ObjectFromFactoryId & pId, ResourceLib* resourceLib, int pActorRes) :
-	SUPER(pId)
+TestElement::TestElement(const Util::ObjectFromFactoryId &pId,
+	ResourceLib &resourceLib, int pActorRes) :
+	SUPER(pId),
+	mElapsedFrameTime(0),
+	mXSpeed(0), mYSpeed(0)
 {
-	mElapsedFrameTime = 0;
-	mActor = resourceLib->GetActor(pActorRes);
-
-	// Init the state of the logic part
-	mXSpeed = 0;
-	mYSpeed = 0;
+	mActor = resourceLib.GetActor(pActorRes);
 
 	mCollisionShape.mRay = 250;
 	mContactShape.mRay = 300;
@@ -44,12 +42,8 @@ TestElement::TestElement(const Util::ObjectFromFactoryId & pId, ResourceLib* res
 	mContactEffectList.push_back(&mContactEffect);
 }
 
-TestElement::~TestElement()
-{
-
-}
-
-int TestElement::Simulate(MR_SimulationTime pDuration, Model::Level * pLevel, int pRoom)
+int TestElement::Simulate(MR_SimulationTime pDuration,
+	Model::Level *pLevel, int pRoom)
 {
 	mElapsedFrameTime += pDuration;
 
@@ -128,17 +122,17 @@ const Model::ShapeInterface *TestElement::GetObstacleShape()
 }
 
 void TestElement::ApplyEffect(const Model::ContactEffect *pEffect,
-                              MR_SimulationTime, MR_SimulationTime,
-                              BOOL pValidDirection,
-                              MR_Angle pHorizontalDirection,
-                              MR_Int32, MR_Int32, Model::Level*)
+	MR_SimulationTime, MR_SimulationTime,
+	BOOL pValidDirection,
+	MR_Angle pHorizontalDirection,
+	MR_Int32, MR_Int32, Model::Level*)
 {
 	using namespace Model;
 
 	ContactEffect *lEffect = (ContactEffect *) pEffect;
 	const PhysicalCollision *lPhysCollision = dynamic_cast < PhysicalCollision * >(lEffect);
 
-	if((lPhysCollision != NULL) && pValidDirection) {
+	if (lPhysCollision && pValidDirection) {
 		InertialMoment lMoment;
 
 		lMoment.mWeight = 90;
@@ -175,31 +169,6 @@ const Model::ShapeInterface *TestElement::GetGivingContactEffectShape()
 {
 	mContactShape.mPosition = mPosition;
 	return &mContactShape;
-}
-
-MR_Int32 TestElement::Cylinder::ZMin() const
-{
-	return mPosition.mZ;
-}
-
-MR_Int32 TestElement::Cylinder::ZMax() const
-{
-	return mPosition.mZ + 1800;
-}
-
-MR_Int32 TestElement::Cylinder::AxisX() const
-{
-	return mPosition.mX;
-}
-
-MR_Int32 TestElement::Cylinder::AxisY() const
-{
-	return mPosition.mY;
-}
-
-MR_Int32 TestElement::Cylinder::RayLen() const
-{
-	return mRay;
 }
 
 }  // namespace ObjFac1

@@ -61,11 +61,11 @@ HoverRace::Util::ObjectFromFactory *ObjFac1::GetObject(int pClassId)
 
 	switch (pClassId) {
 		case 1:
-			lReturnValue = new DefaultSurface(lId, resLib);
+			lReturnValue = new DefaultSurface(lId, *resourceLib);
 			break;
 
 		case 2:
-			lReturnValue = new WoodSurface(lId, resLib);
+			lReturnValue = new WoodSurface(lId, *resourceLib);
 			break;
 
 		case 3:
@@ -75,7 +75,7 @@ HoverRace::Util::ObjectFromFactory *ObjFac1::GetObject(int pClassId)
 			break;
 
 		case 10:
-			lReturnValue = new TestElement(lId, resLib, MR_DEMO_FIGHTER);
+			lReturnValue = new TestElement(lId, *resourceLib, MR_DEMO_FIGHTER);
 			break;
 
 		case 11:
@@ -87,11 +87,11 @@ HoverRace::Util::ObjectFromFactory *ObjFac1::GetObject(int pClassId)
 			break;
 
 		case 13:
-			lReturnValue = new TestElement(lId, resLib, MR_ELECTRO_CAR);
+			lReturnValue = new TestElement(lId, *resourceLib, MR_ELECTRO_CAR);
 			break;
 
 		case 50:
-			lReturnValue = new BitmapSurface(lId, NULL);
+			lReturnValue = new BitmapSurface(lId, nullptr);
 			break;
 
 		case 51:

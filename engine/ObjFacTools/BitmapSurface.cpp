@@ -25,21 +25,23 @@
 namespace HoverRace {
 namespace ObjFac1 {
 
-static BOOL gLocalInitialized = FALSE;
-static Model::PhysicalCollision gEffect;
-static Model::ContactEffectList gEffectList;
+namespace {
 
-BitmapSurface::BitmapSurface(const Util::ObjectFromFactoryId & pId) :
-	Model::SurfaceElement(pId)
+bool gLocalInitialized = false;
+Model::PhysicalCollision gEffect;
+Model::ContactEffectList gEffectList;
+
+}  // namespace
+
+BitmapSurface::BitmapSurface(const Util::ObjectFromFactoryId &pId,
+	ObjFacTools::ResBitmap *pBitmap1, ObjFacTools::ResBitmap *pBitmap2,
+	int pRotationSpeed, int pRotationLen) :
+	SUPER(pId),
+	mBitmap(pBitmap1), mBitmap2(pBitmap2),
+	mRotationSpeed(pRotationSpeed), mRotationLen(pRotationLen)
 {
-	// The task of initialising the data members is done by the superclass
-	mBitmap = NULL;
-	mBitmap2 = NULL;
-	mRotationSpeed = 0;
-	mRotationLen = 1;
-
-	if(!gLocalInitialized) {
-		gLocalInitialized = TRUE;
+	if (!gLocalInitialized) {
+		gLocalInitialized = true;
 		gEffectList.push_back(&gEffect);
 
 		gEffect.mWeight = Model::InertialMoment::eInfiniteWeight;
@@ -49,53 +51,9 @@ BitmapSurface::BitmapSurface(const Util::ObjectFromFactoryId & pId) :
 	}
 }
 
-BitmapSurface::BitmapSurface(const Util::ObjectFromFactoryId & pId, /*const */ ObjFacTools::ResBitmap * pBitmap)
-:Model::SurfaceElement(pId)
-{
-	// The task of initialising the data members i
-	mBitmap = pBitmap;
-	mBitmap2 = pBitmap;
-	mRotationSpeed = 0;
-	mRotationLen = 1;
-
-	if(!gLocalInitialized) {
-		gLocalInitialized = TRUE;
-		gEffectList.push_back(&gEffect);
-
-		gEffect.mWeight = Model::InertialMoment::eInfiniteWeight;
-		gEffect.mXSpeed = 0;
-		gEffect.mYSpeed = 0;
-		gEffect.mZSpeed = 0;
-	}
-
-}
-
-BitmapSurface::BitmapSurface(const Util::ObjectFromFactoryId & pId, ObjFacTools::ResBitmap * pBitmap1, ObjFacTools::ResBitmap * pBitmap2, int pRotationSpeed, int pRotationLen)
-:Model::SurfaceElement(pId)
-{
-	// The task of initialising the data members i
-	mBitmap = pBitmap1;
-	mBitmap2 = pBitmap2;
-	mRotationSpeed = pRotationSpeed;
-	mRotationLen = pRotationLen;
-
-	if(!gLocalInitialized) {
-		gLocalInitialized = TRUE;
-		gEffectList.push_back(&gEffect);
-
-		gEffect.mWeight = Model::InertialMoment::eInfiniteWeight;
-		gEffect.mXSpeed = 0;
-		gEffect.mYSpeed = 0;
-		gEffect.mZSpeed = 0;
-	}
-
-}
-
-BitmapSurface::~BitmapSurface()
-{
-}
-
-void BitmapSurface::RenderWallSurface(VideoServices::Viewport3D * pDest, const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, MR_SimulationTime pTime)
+void BitmapSurface::RenderWallSurface(VideoServices::Viewport3D *pDest,
+	const MR_3DCoordinate &pUpperLeft, const MR_3DCoordinate &pLowerRight,
+	MR_Int32 pLen, MR_SimulationTime pTime)
 {
 	if(mBitmap != NULL) {
 		if(mRotationSpeed != 0) {
@@ -107,7 +65,8 @@ void BitmapSurface::RenderWallSurface(VideoServices::Viewport3D * pDest, const M
 			else {
 				lStartPos = (lStartPos) % mRotationLen;
 			}
-			pDest->RenderAlternateWallSurface(pUpperLeft, pLowerRight, pLen, mBitmap, mBitmap2, mRotationLen, lStartPos);
+			pDest->RenderAlternateWallSurface(pUpperLeft, pLowerRight,
+				pLen, mBitmap, mBitmap2, mRotationLen, lStartPos);
 
 		}
 		else {
@@ -116,10 +75,13 @@ void BitmapSurface::RenderWallSurface(VideoServices::Viewport3D * pDest, const M
 	}
 }
 
-void BitmapSurface::RenderHorizontalSurface(VideoServices::Viewport3D * pDest, int pNbVertex, const MR_2DCoordinate * pVertexList, MR_Int32 pLevel, BOOL pTop, MR_SimulationTime /*pTime */ )
+void BitmapSurface::RenderHorizontalSurface(VideoServices::Viewport3D *pDest,
+	int pNbVertex, const MR_2DCoordinate *pVertexList,
+	MR_Int32 pLevel, BOOL pTop, MR_SimulationTime)
 {
-	if(mBitmap != NULL) {
-		pDest->RenderHorizontalSurface(pNbVertex, pVertexList, pLevel, pTop, mBitmap);
+	if (mBitmap) {
+		pDest->RenderHorizontalSurface(pNbVertex, pVertexList, pLevel,
+			pTop, mBitmap);
 	}
 }
 
@@ -128,35 +90,43 @@ const Model::ContactEffectList *BitmapSurface::GetEffectList()
 	return &gEffectList;
 }
 
-// VStretchBitmapSurface:public
+// VStretchBitmapSurface
 
-VStretchBitmapSurface::VStretchBitmapSurface(const Util::ObjectFromFactoryId & pId, /*const */ ObjFacTools::ResBitmap * pBitmap, int pMaxHeight)
-:BitmapSurface(pId, pBitmap)
+VStretchBitmapSurface::VStretchBitmapSurface(
+	const Util::ObjectFromFactoryId &pId, ObjFacTools::ResBitmap *pBitmap,
+	int pMaxHeight) :
+	SUPER(pId, pBitmap),
+	mMaxHeight(pMaxHeight)
 {
-	mMaxHeight = pMaxHeight;
 }
 
-VStretchBitmapSurface::VStretchBitmapSurface(const Util::ObjectFromFactoryId & pId, ObjFacTools::ResBitmap * pBitmap1, ObjFacTools::ResBitmap * pBitmap2, int pRotationSpeed, int pRotationLen, int pMaxHeight)
-:BitmapSurface(pId, pBitmap1, pBitmap2, pRotationSpeed, pRotationLen)
+VStretchBitmapSurface::VStretchBitmapSurface(
+	const Util::ObjectFromFactoryId &pId,
+	ObjFacTools::ResBitmap *pBitmap1, ObjFacTools::ResBitmap *pBitmap2,
+	int pRotationSpeed, int pRotationLen, int pMaxHeight) :
+	SUPER(pId, pBitmap1, pBitmap2, pRotationSpeed, pRotationLen),
+	mMaxHeight(pMaxHeight)
 {
-	mMaxHeight = pMaxHeight;
 }
 
-void VStretchBitmapSurface::RenderWallSurface(VideoServices::Viewport3D * pDest, const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, MR_SimulationTime pTime)
+void VStretchBitmapSurface::RenderWallSurface(VideoServices::Viewport3D *pDest,
+	const MR_3DCoordinate &pUpperLeft, const MR_3DCoordinate &pLowerRight,
+	MR_Int32 pLen, MR_SimulationTime pTime)
 {
-	if(mBitmap != NULL) {
+	if (mBitmap) {
 		int lHeight = pUpperLeft.mZ - pLowerRight.mZ;
 
-		if(lHeight > 0) {
+		if (lHeight > 0) {
 			int lDivisor = 1 + (lHeight - 1) / mMaxHeight;
 
-			if(lDivisor > 1) {
+			if (lDivisor > 1) {
 				lHeight = lHeight / lDivisor;
 			}
 
 			mBitmap->SetWidthHeight(lHeight, lHeight);
 
-			BitmapSurface::RenderWallSurface(pDest, pUpperLeft, pLowerRight, pLen, pTime);
+			SUPER::RenderWallSurface(pDest, pUpperLeft, pLowerRight,
+				pLen, pTime);
 		}
 	}
 }
