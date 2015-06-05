@@ -28,46 +28,47 @@
 namespace HoverRace {
 namespace ObjFac1 {
 
-class Mine : public ObjFacTools::FreeElementBase, protected Model::CylinderShape
+class Mine :
+	public ObjFacTools::FreeElementBase,
+	protected Model::CylinderShape
 {
-	typedef ObjFacTools::FreeElementBase SUPER;
-	protected:
+	using SUPER = ObjFacTools::FreeElementBase;
 
-		// Shape interface
-		MR_Int32 ZMin() const;
-		MR_Int32 ZMax() const;
-		MR_Int32 AxisX() const;
-		MR_Int32 AxisY() const;
-		MR_Int32 RayLen() const;
+protected:
+	// Shape interface
+	MR_Int32 ZMin() const override;
+	MR_Int32 ZMax() const override;
+	MR_Int32 AxisX() const override;
+	MR_Int32 AxisY() const override;
+	MR_Int32 RayLen() const override;
 
-	private:
+public:
+	Mine(const Util::ObjectFromFactoryId &pId,
+		ObjFacTools::ResourceLib &resourceLib);
+	~Mine();
 
-		BOOL mOnGround;
-		Model::LostOfControl mEffect;
-		Model::ContactEffectList mEffectList;
+protected:
+	// ContactEffectShapeInterface
+	const Model::ContactEffectList *GetEffectList() override;
+	const Model::ShapeInterface *GetGivingContactEffectShape() override;
+	const Model::ShapeInterface *GetReceivingContactEffectShape() override;
 
-	public:
-		Mine(const Util::ObjectFromFactoryId & pId, ObjFacTools::ResourceLib* resourceLib);
-		~Mine();
+	int Simulate(MR_SimulationTime pTimeSlice,
+		Model::Level *pLevel, int pRoom) override;
 
-	protected:
+	void Render(VideoServices::Viewport3D *pDest,
+		MR_SimulationTime pTime) override;
 
-		// ContactEffectShapeInterface
-		const Model::ContactEffectList *GetEffectList();
-		const Model::ShapeInterface *GetGivingContactEffectShape();
-		const Model::ShapeInterface *GetReceivingContactEffectShape();
+	// Network state
+	Model::ElementNetState GetNetState() const override;
+	void SetNetState(int pDataLen, const MR_UInt8 *pData) override;
 
-		int Simulate(MR_SimulationTime pTimeSlice, Model::Level * pLevel, int pRoom);
+	BOOL AssignPermNumber(int pNumber) override;
 
-		void Render(VideoServices::Viewport3D * pDest, MR_SimulationTime pTime);
-
-		// void  ApplyEffect( const ContactEffect* pEffect,  MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Int32 pZMin, MR_Int32 pZMax, MR_Angle pHorizontalDirection );
-
-		// Network state
-		Model::ElementNetState GetNetState() const;
-		void SetNetState(int pDataLen, const MR_UInt8 * pData);
-
-		BOOL AssignPermNumber(int pNumber);
+private:
+	bool mOnGround;
+	Model::LostOfControl mEffect;
+	Model::ContactEffectList mEffectList;
 };
 
 }  // namespace ObjFac1

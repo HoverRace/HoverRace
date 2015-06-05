@@ -195,7 +195,7 @@ HoverRace::Util::ObjectFromFactory *ObjFac1::GetObject(int pClassId)
 			break;
 
 		case 151:
-			lReturnValue = new Mine(lId, resLib);
+			lReturnValue = new Mine(lId, *resourceLib);
 			break;
 
 		case 152:

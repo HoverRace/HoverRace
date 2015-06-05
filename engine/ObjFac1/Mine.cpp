@@ -30,8 +30,12 @@ using HoverRace::ObjFacTools::ResourceLib;
 namespace HoverRace {
 namespace ObjFac1 {
 
+namespace {
+
 const MR_Int32 cMineRay = 400;
 const MR_Int32 cMineHeight = 140;
+
+}  // namespace
 
 MR_Int32 Mine::ZMin() const
 {
@@ -58,13 +62,13 @@ MR_Int32 Mine::RayLen() const
 	return cMineRay;
 }
 
-Mine::Mine(const Util::ObjectFromFactoryId & pId, ResourceLib* resourceLib) :
-	SUPER(pId)
+Mine::Mine(const Util::ObjectFromFactoryId &pId, ResourceLib &resourceLib) :
+	SUPER(pId),
+	mOnGround(false)
 {
 	mEffectList.push_back(&mEffect);
-	mActor = resourceLib->GetActor(MR_MINE);
+	mActor = resourceLib.GetActor(MR_MINE);
 
-	mOnGround = FALSE;
 	mOrientation = 0;
 
 	mEffect.mType = Model::LostOfControl::eMine;
@@ -104,10 +108,10 @@ const Model::ShapeInterface *Mine::GetGivingContactEffectShape()
 }
 
 // Simulation
-int Mine::Simulate(MR_SimulationTime pDuration, Model::Level * pLevel, int pRoom)
+int Mine::Simulate(MR_SimulationTime pDuration, Model::Level *pLevel, int pRoom)
 {
 	if(pRoom == -1) {
-		mOnGround = FALSE;
+		mOnGround = false;
 	}
 	else if(!mOnGround && (pDuration > 0)) {
 		// FreeFall computation
@@ -120,7 +124,7 @@ int Mine::Simulate(MR_SimulationTime pDuration, Model::Level * pLevel, int pRoom
 
 		if(!lReport.IsInMaze()) {
 			ASSERT(FALSE);
-			mOnGround = TRUE;
+			mOnGround = true;
 		}
 		else {
 			if(lReport.HaveContact()) {
@@ -128,7 +132,7 @@ int Mine::Simulate(MR_SimulationTime pDuration, Model::Level * pLevel, int pRoom
 				ASSERT(lStepHeight >= 0);
 				ASSERT(lStepHeight <= 1000);
 
-				mOnGround = TRUE;
+				mOnGround = true;
 				mPosition.mZ += lStepHeight;
 			}
 		}
@@ -136,7 +140,7 @@ int Mine::Simulate(MR_SimulationTime pDuration, Model::Level * pLevel, int pRoom
 	return pRoom;
 }
 
-void Mine::Render(VideoServices::Viewport3D * pDest, MR_SimulationTime pTime)
+void Mine::Render(VideoServices::Viewport3D *pDest, MR_SimulationTime pTime)
 {
 	mCurrentFrame = (pTime >> 9) & 1;
 	SUPER::Render(pDest, pTime);
@@ -144,18 +148,16 @@ void Mine::Render(VideoServices::Viewport3D * pDest, MR_SimulationTime pTime)
 
 // State broadcast
 
-class MineState
+struct MineState
 {
-	public:
-		MR_Int32 mPosX;							  // 4    4
-		MR_Int32 mPosY;							  // 4    8
-		MR_Int32 mPosZ;							  // 4   12
-
+	MR_Int32 mPosX;							  // 4    4
+	MR_Int32 mPosY;							  // 4    8
+	MR_Int32 mPosZ;							  // 4   12
 };
 
 Model::ElementNetState Mine::GetNetState() const
 {
-	static MineState lsState;				  // Static is ok because the variable will be used immediatly
+	static MineState lsState;  // Static is ok because the variable will be used immediatly
 
 	Model::ElementNetState lReturnValue;
 
@@ -169,9 +171,8 @@ Model::ElementNetState Mine::GetNetState() const
 	return lReturnValue;
 }
 
-void Mine::SetNetState(int /*pDataLen */ , const MR_UInt8 * pData)
+void Mine::SetNetState(int, const MR_UInt8 *pData)
 {
-
 	const MineState *lState = (const MineState *) pData;
 
 	mPosition.mX = lState->mPosX;
@@ -179,7 +180,6 @@ void Mine::SetNetState(int /*pDataLen */ , const MR_UInt8 * pData)
 	mPosition.mZ = lState->mPosZ;
 
 	mOrientation = 0;
-
 }
 
 }  // namespace ObjFac1
