@@ -129,8 +129,8 @@ void TestElement::ApplyEffect(const Model::ContactEffect *pEffect,
 {
 	using namespace Model;
 
-	ContactEffect *lEffect = (ContactEffect *) pEffect;
-	const PhysicalCollision *lPhysCollision = dynamic_cast < PhysicalCollision * >(lEffect);
+	const PhysicalCollision *lPhysCollision =
+		dynamic_cast<const PhysicalCollision*>(pEffect);
 
 	if (lPhysCollision && pValidDirection) {
 		InertialMoment lMoment;
