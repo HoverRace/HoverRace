@@ -191,7 +191,7 @@ HoverRace::Util::ObjectFromFactory *ObjFac1::GetObject(int pClassId)
 			break;
 
 		case 150:
-			lReturnValue = new Missile(lId, resLib);
+			lReturnValue = new Missile(lId, *resourceLib);
 			break;
 
 		case 151:

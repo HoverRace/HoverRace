@@ -37,7 +37,7 @@ class Missile :
 
 public:
 	Missile(const Util::ObjectFromFactoryId &pId,
-		ObjFacTools::ResourceLib *resourceLib);
+		ObjFacTools::ResourceLib &resourceLib);
 	~Missile() { }
 
 protected:

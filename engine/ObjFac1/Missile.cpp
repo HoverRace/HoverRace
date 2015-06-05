@@ -30,19 +30,15 @@ using namespace HoverRace::VideoServices;
 namespace HoverRace {
 namespace ObjFac1 {
 
-const MR_Int32 cMissileRay = 300;				  // the missile have a diameter of 60cm
-const MR_Int32 cMissileWeight = 100;
-const MR_Int32 cLifeTime = 7500;				  // 7.6 sec..was 10 sec before
-const MR_Int32 cStopTime = 1200;				  // 1.2 sec
-const MR_Int32 cIgnitionTime = 175;				  // 0.175 sec
+namespace {
 
-/*
-const MR_Int32 cMissileRay    = 1;       // the missile have a diameter of 60cm
-const MR_Int32 cMissileWeight = 130;
-const MR_Int32 cLifeTime      = 500;      // 7.6 sec..was 10 sec before
-const MR_Int32 cStopTime      = 10;      // 1.2 sec
-const MR_Int32 cIgnitionTime  = 110;       // 0.175 sec
-*/
+const MR_Int32 cMissileRay = 300;  ///< The missile have a diameter of 60cm.
+const MR_Int32 cMissileWeight = 100;
+const MR_Int32 cLifeTime = 7500;  // 7.5 sec
+const MR_Int32 cStopTime = 1200;  // 1.2 sec
+const MR_Int32 cIgnitionTime = 175;  // 0.175 sec
+
+}  // namespace
 
 #define TIME_SLICE                     5
 #define MINIMUM_SPLITTABLE_TIME_SLICE  6
@@ -73,20 +69,18 @@ MR_Int32 Missile::RayLen() const
 	return cMissileRay;
 }
 
-Missile::Missile(const Util::ObjectFromFactoryId &pId, ResourceLib *resourceLib) :
-	SUPER(pId)
+Missile::Missile(const Util::ObjectFromFactoryId &pId,
+	ResourceLib &resourceLib) :
+	SUPER(pId),
+	mHoverId(-1), mLived(0), mXSpeed(0), mYSpeed(0),
+	mBounceSoundEvent(false),
+	mBounceSound(resourceLib.GetShortSound(MR_SND_MISSILE_BOUNCE)->GetSound()),
+	mMotorSound(resourceLib.
+		GetContinuousSound(MR_SND_MISSILE_MOTOR)->GetSound())
 {
-	mHoverId = -1;
-	mLived = 0;
-	mXSpeed = 0;
-	mYSpeed = 0;
-	mBounceSoundEvent = false;
 	mEffectList.push_back(&mCollisionEffect);
 	mEffectList.push_back(&mLostOfControlEffect);
-	mActor = resourceLib->GetActor(MR_MISSILE);
-
-	mBounceSound = resourceLib->GetShortSound(MR_SND_MISSILE_BOUNCE)->GetSound();
-	mMotorSound = resourceLib->GetContinuousSound(MR_SND_MISSILE_MOTOR)->GetSound();
+	mActor = resourceLib.GetActor(MR_MISSILE);
 
 	mLostOfControlEffect.mType = Model::LostOfControl::eMissile;
 	mLostOfControlEffect.mElementId = -1;
