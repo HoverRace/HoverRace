@@ -39,9 +39,11 @@
 
 #include "ObjFac1.h"
 
-using namespace HoverRace::ObjFac1;
+using namespace HoverRace::Util;
 using HoverRace::ObjFacTools::ResourceLib;
-using HoverRace::Util::Config;
+
+namespace HoverRace {
+namespace ObjFac1 {
 
 ObjFac1::ObjFac1() :
 	resourceLib(new ResourceLib(Config::GetInstance()->GetMediaPath("ObjFac1.dat")))
@@ -52,10 +54,10 @@ ObjFac1::~ObjFac1()
 {
 }
 
-HoverRace::Util::ObjectFromFactory *ObjFac1::GetObject(int pClassId)
+ObjectFromFactory *ObjFac1::GetObject(int pClassId)
 {
-	Util::ObjectFromFactory *lReturnValue = NULL;
-	Util::ObjectFromFactoryId lId = { 1, static_cast<MR_UInt16>(pClassId) };
+	ObjectFromFactory *lReturnValue = nullptr;
+	ObjectFromFactoryId lId = { 1, static_cast<MR_UInt16>(pClassId) };
 
 	auto resLib = resourceLib.get();
 
@@ -250,3 +252,6 @@ HoverRace::Util::ObjectFromFactory *ObjFac1::GetObject(int pClassId)
 
 	return lReturnValue;
 }
+
+} // namespace ObjFac1
+} // namespace HoverRace
