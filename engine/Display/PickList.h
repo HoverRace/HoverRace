@@ -365,7 +365,7 @@ public:
 	 *
 	 * This filter is is applied immediately; it does not affect items added
 	 * after this call is made.  It is up to the owner of this list to
-	 * re-apply the filter whenever an item added.
+	 * re-apply the filter whenever an item is added.
 	 *
 	 * @param fn The filter function.  Takes the value and returns either
 	 *           @c true if the item is visible, @c false otherwise.
