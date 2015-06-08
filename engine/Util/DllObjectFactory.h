@@ -55,57 +55,62 @@ namespace HoverRace {
 namespace Util {
 
 /// Unique identifier for a Factory Object.
-class ObjectFromFactoryId
+struct ObjectFromFactoryId
 {
-	public:
-		MR_UInt16 mDllId;
-		MR_UInt16 mClassId;
+	MR_UInt16 mDllId;
+	MR_UInt16 mClassId;
 
-		void Serialize(HoverRace::Parcel::ObjStream &pArchive);
+	void Serialize(Parcel::ObjStream &pArchive);
 
-		MR_DllDeclare int operator==(const ObjectFromFactoryId &pId) const;
+	bool operator==(const ObjectFromFactoryId &pId) const
+	{
+		return
+			mDllId == pId.mDllId &&
+			mClassId == pId.mClassId;
+	}
 };
 
 /// Base class for object created with a Dll Factory
 class MR_DllDeclare ObjectFromFactory
 {
-	private:
-		ObjectFromFactoryId mId;
+private:
+	ObjectFromFactoryId mId;
 
-	public:
-		ObjectFromFactory(const ObjectFromFactoryId &pId);
-		virtual ~ObjectFromFactory();
+public:
+	ObjectFromFactory(const ObjectFromFactoryId &pId);
+	virtual ~ObjectFromFactory();
 
-		const ObjectFromFactoryId &GetTypeId() const;
+	const ObjectFromFactoryId &GetTypeId() const;
 
-		// Serialisation functions
-		//
-		// Warning this module do not support multiple references to objects
-		// or looped structures
-		static void SerializePtr(HoverRace::Parcel::ObjStream &pArchive, ObjectFromFactory * &pPtr);
-		virtual void Serialize(HoverRace::Parcel::ObjStream &pArchive);
-
+	// Serialisation functions
+	//
+	// Warning this module do not support multiple references to objects
+	// or looped structures
+	static void SerializePtr(HoverRace::Parcel::ObjStream &pArchive, ObjectFromFactory * &pPtr);
+	virtual void Serialize(HoverRace::Parcel::ObjStream &pArchive);
 };
 
-namespace DllObjectFactory
-{
-	typedef ObjectFromFactory* (*getObject_t) (MR_UInt16);
+namespace DllObjectFactory {
 
-	MR_DllDeclare void Init();					  ///< Must be called at the begining of the program
-	MR_DllDeclare void Clean(BOOL pOnlyDynamic);  ///< Must be called at the end of the program
+typedef ObjectFromFactory* (*getObject_t) (MR_UInt16);
 
-	MR_DllDeclare void IncrementReferenceCount(int pDllId);
-	MR_DllDeclare void DecrementReferenceCount(int pDllId);
+/// Must be called at the beginning of the program.
+MR_DllDeclare void Init();
+/// Must be called at the end of the program.
+MR_DllDeclare void Clean(BOOL pOnlyDynamic);
 
-	/// Fast Object Creation function
-	MR_DllDeclare ObjectFromFactory *CreateObject(const ObjectFromFactoryId &pId);
+MR_DllDeclare void IncrementReferenceCount(int pDllId);
+MR_DllDeclare void DecrementReferenceCount(int pDllId);
 
-	MR_DllDeclare ObjFacTools::ResourceLib &GetResourceLib(MR_UInt16 dllId = 1);
+/// Fast Object Creation function
+MR_DllDeclare ObjectFromFactory *CreateObject(const ObjectFromFactoryId &pId);
 
-	// Local Dll
-	MR_DllDeclare void RegisterLocalDll(int pDLLId, getObject_t pFunc);
+MR_DllDeclare ObjFacTools::ResourceLib &GetResourceLib(MR_UInt16 dllId = 1);
 
-}
+// Local Dll
+MR_DllDeclare void RegisterLocalDll(int pDLLId, getObject_t pFunc);
+
+}  // namespace DllObjectFactory
 
 }  // namespace Util
 }  // namespace HoverRace

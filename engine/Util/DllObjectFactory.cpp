@@ -1,3 +1,4 @@
+
 // DllObjectFactory.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
@@ -38,68 +39,71 @@ namespace Util {
 // (Originally, these were real DLLs which were loaded at runtime).
 class FactoryDll
 {
-	public:
-		BOOL mDynamic;
-		int mRefCount;
+public:
+	// Initialisation
+	FactoryDll();
+	virtual ~FactoryDll();
 
-		virtual ObjectFromFactory* GetObject(int classId) const = 0;
-		virtual ObjFacTools::ResourceLib &GetResourceLib() const = 0;
+	virtual ObjectFromFactory* GetObject(int classId) const = 0;
+	virtual ObjFacTools::ResourceLib &GetResourceLib() const = 0;
 
-		// Initialisation
-		FactoryDll();
-		virtual ~FactoryDll();
-
+public:
+	bool mDynamic;
+	int mRefCount;
 };
 
 // Using ObjFac1 (read from package file).
 class PackageFactoryDll : public FactoryDll
 {
-	typedef FactoryDll SUPER;
+	using SUPER = FactoryDll;
 
-	public:
-		PackageFactoryDll();
-		virtual ~PackageFactoryDll();
+public:
+	PackageFactoryDll();
+	virtual ~PackageFactoryDll();
 
-		ObjectFromFactory* GetObject(int classId) const override;
+	ObjectFromFactory* GetObject(int classId) const override;
 
-		ObjFacTools::ResourceLib &GetResourceLib() const override
-		{
-			return *(package->GetResourceLib());
-		}
+	ObjFacTools::ResourceLib &GetResourceLib() const override
+	{
+		return *(package->GetResourceLib());
+	}
 
-	private:
-		ObjFac1::ObjFac1 *package;
+private:
+	ObjFac1::ObjFac1 *package;
 };
 
 // Using function pointer callback.
 class LocalFactoryDll : public FactoryDll
 {
-	typedef FactoryDll SUPER;
+	using SUPER = FactoryDll;
 
-	private:
-		LocalFactoryDll() {}
-	public:
-		LocalFactoryDll(DllObjectFactory::getObject_t getObject);
-		virtual ~LocalFactoryDll();
+private:
+	LocalFactoryDll() = delete;
+public:
+	LocalFactoryDll(DllObjectFactory::getObject_t getObject);
+	virtual ~LocalFactoryDll();
 
-		ObjectFromFactory* GetObject(int classId) const override;
+	ObjectFromFactory* GetObject(int classId) const override;
 
-		ObjFacTools::ResourceLib &GetResourceLib() const override
-		{
-			throw UnimplementedExn("LocalFactoryDll::GetResourceLib");
-		}
+	ObjFacTools::ResourceLib &GetResourceLib() const override
+	{
+		throw UnimplementedExn("LocalFactoryDll::GetResourceLib");
+	}
 
-	private:
-		DllObjectFactory::getObject_t getObject;
+private:
+	DllObjectFactory::getObject_t getObject;
 };
 
 // Local functions declarations
 static FactoryDll *GetDll(MR_UInt16 pDllId, BOOL pTrowOnError);
 
+namespace {
+
 // Module variables
-//TODO: Use a std::map instead.
-typedef std::map<int,FactoryDll*> gsDllList_t;
-static gsDllList_t gsDllList;
+using gsDllList_t = std::map<int, FactoryDll*>;
+gsDllList_t gsDllList;
+
+}  // namespace
 
 // Module functions
 void DllObjectFactory::Init()
@@ -122,13 +126,6 @@ void DllObjectFactory::Clean(BOOL pOnlyDynamic)
 	}
 }
 
-/*
-BOOL DllObjectFactory::OpenDll(MR_UInt16 pDllId)
-{
-	return (GetDll(pDllId, FALSE) != NULL);
-}
-*/
-
 void DllObjectFactory::RegisterLocalDll(int pDllId, getObject_t pFunc)
 {
 
@@ -140,7 +137,7 @@ void DllObjectFactory::RegisterLocalDll(int pDllId, getObject_t pFunc)
 
 	lDllPtr = new LocalFactoryDll(pFunc);
 
-	bool inserted = gsDllList.insert(gsDllList_t::value_type(pDllId, lDllPtr)).second;
+	bool inserted = gsDllList.emplace(pDllId, lDllPtr).second;
 	ASSERT(inserted);
 }
 
@@ -188,7 +185,8 @@ ObjFacTools::ResourceLib &DllObjectFactory::GetResourceLib(MR_UInt16 dllId)
 }
 
 /**
- * Get a handle to the factory DLL.  The option of choosing which DLL has been deprecated.
+ * Get a handle to the factory DLL.
+ * The option of choosing which DLL has been deprecated.
  */
 FactoryDll *GetDll(MR_UInt16 pDllId, BOOL)
 {
@@ -211,14 +209,13 @@ FactoryDll *GetDll(MR_UInt16 pDllId, BOOL)
 }
 
 // ObjectFromFactory methods
-ObjectFromFactory::ObjectFromFactory(const ObjectFromFactoryId & pId)
+ObjectFromFactory::ObjectFromFactory(const ObjectFromFactoryId &pId)
 {
 	mId = pId;
 
 	// Increment this object dll reference count
 	// This will prevent the Dll from being discarted
 	DllObjectFactory::IncrementReferenceCount(mId.mDllId);
-
 }
 
 ObjectFromFactory::~ObjectFromFactory()
@@ -227,7 +224,6 @@ ObjectFromFactory::~ObjectFromFactory()
 	// Decrement this object dll reference count
 	// This will allow the dll to be freed if not needed anymore
 	DllObjectFactory::DecrementReferenceCount(mId.mDllId);
-
 }
 
 const ObjectFromFactoryId &ObjectFromFactory::GetTypeId() const
@@ -235,7 +231,7 @@ const ObjectFromFactoryId &ObjectFromFactory::GetTypeId() const
 	return mId;
 }
 
-void ObjectFromFactory::SerializePtr(ObjStream & pArchive, ObjectFromFactory * &pPtr)
+void ObjectFromFactory::SerializePtr(ObjStream &pArchive, ObjectFromFactory *&pPtr)
 {
 	ObjectFromFactoryId lId = { 0, 0 };
 
@@ -265,11 +261,7 @@ void ObjectFromFactory::SerializePtr(ObjStream & pArchive, ObjectFromFactory * &
 
 void ObjectFromFactory::Serialize(ObjStream&)
 {
-	//CObject::Serialize(pArchive);
-
-	// Notting to serialize at that point
-	// Object type should be already initialize if Loading
-
+	// Nothing to serialize at that point.
 }
 
 // ObjectFromFactoryId
@@ -284,15 +276,9 @@ void ObjectFromFactoryId::Serialize(ObjStream &pArchive)
 	}
 }
 
-int ObjectFromFactoryId::operator ==(const ObjectFromFactoryId & pId) const
-{
-	return ((mDllId == pId.mDllId) && (mClassId == pId.mClassId));
-}
-
-
 // class FactoryDll methods
 FactoryDll::FactoryDll() :
-	mDynamic(FALSE), mRefCount(0)
+	mDynamic(false), mRefCount(0)
 {
 }
 
@@ -304,7 +290,7 @@ FactoryDll::~FactoryDll()
 PackageFactoryDll::PackageFactoryDll() :
 	SUPER()
 {
-	mDynamic = TRUE;
+	mDynamic = true;
 	package = new ObjFac1::ObjFac1();
 }
 
@@ -313,7 +299,7 @@ PackageFactoryDll::~PackageFactoryDll()
 	delete package;
 }
 
-ObjectFromFactory* PackageFactoryDll::GetObject(int classId) const
+ObjectFromFactory *PackageFactoryDll::GetObject(int classId) const
 {
 	return package->GetObject(classId);
 }
@@ -327,7 +313,7 @@ LocalFactoryDll::~LocalFactoryDll()
 {
 }
 
-ObjectFromFactory* LocalFactoryDll::GetObject(int classId) const
+ObjectFromFactory *LocalFactoryDll::GetObject(int classId) const
 {
 	if (classId < 0 ||
 		classId > static_cast<int>(std::numeric_limits<MR_UInt16>::max()))
