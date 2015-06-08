@@ -214,8 +214,10 @@ ObjectFromFactory::ObjectFromFactory(const ObjectFromFactoryId &pId)
 	mId = pId;
 
 	// Increment this object dll reference count
-	// This will prevent the Dll from being discarted
-	DllObjectFactory::IncrementReferenceCount(mId.mDllId);
+	// This will prevent the Dll from being discarded
+	if (mId.mDllId <= 1) {
+		DllObjectFactory::IncrementReferenceCount(mId.mDllId);
+	}
 }
 
 ObjectFromFactory::~ObjectFromFactory()
@@ -223,7 +225,9 @@ ObjectFromFactory::~ObjectFromFactory()
 
 	// Decrement this object dll reference count
 	// This will allow the dll to be freed if not needed anymore
-	DllObjectFactory::DecrementReferenceCount(mId.mDllId);
+	if (mId.mDllId <= 1) {
+		DllObjectFactory::DecrementReferenceCount(mId.mDllId);
+	}
 }
 
 const ObjectFromFactoryId &ObjectFromFactory::GetTypeId() const

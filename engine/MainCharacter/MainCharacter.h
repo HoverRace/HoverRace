@@ -174,7 +174,6 @@ private:
 
 public:
 	// Construction
-	static void RegisterFactory();
 	static MainCharacter *New(int idx, char pGameOpts);
 
 	virtual ~MainCharacter();

@@ -295,18 +295,6 @@ void MainCharacter::Render(VideoServices::Viewport3D * pDest, MR_SimulationTime 
 		mRenderer->Render(pDest, mPosition, mCabinOrientation, mMotorDisplay > 0, mHoverId, mHoverModel);
 }
 
-Util::ObjectFromFactory *MainCharacter::FactoryFunc(MR_UInt16)
-{
-	Util::ObjectFromFactoryId lId = { MR_MAIN_CHARACTER_DLL_ID, MR_MAIN_CHARACTER_CLASS_ID };
-
-	return new MainCharacter(lId);
-}
-
-void MainCharacter::RegisterFactory()
-{
-	Util::DllObjectFactory::RegisterLocalDll(MR_MAIN_CHARACTER_DLL_ID, FactoryFunc);
-}
-
 /**
  * Create a new player.
  * @param idx The player index (starting at 0 for player 1).
@@ -316,7 +304,7 @@ MainCharacter *MainCharacter::New(int idx, char gameopts)
 {
 	Util::ObjectFromFactoryId lId = { MR_MAIN_CHARACTER_DLL_ID, MR_MAIN_CHARACTER_CLASS_ID };
 
-	MainCharacter *lReturnValue = (MainCharacter *) Util::DllObjectFactory::CreateObject(lId);
+	MainCharacter *lReturnValue = new MainCharacter(lId);
 
 	if (lReturnValue) {
 		lReturnValue->playerIdx = idx;

@@ -133,7 +133,6 @@ ClientApp::ClientApp() :
 	MR_InitTrigoTables();
 	MR_InitFuzzyModule();
 	DllObjectFactory::Init();
-	MainCharacter::MainCharacter::RegisterFactory();
 
 	if (SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) == -1)
 		throw Exception("SDL initialization failed");
