@@ -37,6 +37,9 @@ using namespace HoverRace::VideoServices;
 namespace HoverRace {
 namespace MainCharacter {
 
+#define MR_MAIN_CHARACTER_DLL_ID     5000
+#define MR_MAIN_CHARACTER_CLASS_ID      1
+
 #define MR_NB_HOVER_MODEL 8
 
 using MainCharacterState = Util::BitPack<23>;

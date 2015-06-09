@@ -49,9 +49,6 @@ namespace HoverRace {
 namespace HoverRace {
 namespace MainCharacter {
 
-#define MR_MAIN_CHARACTER_DLL_ID     5000
-#define MR_MAIN_CHARACTER_CLASS_ID      1
-
 // for game options (also found in TrackSelect.h)
 #define OPT_ALLOW_WEAPONS	0x40
 #define OPT_ALLOW_MINES		0x20
