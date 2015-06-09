@@ -35,69 +35,42 @@ using HoverRace::Parcel::ObjStream;
 namespace HoverRace {
 namespace Util {
 
-// Base class for object factory "DLLs".
-// (Originally, these were real DLLs which were loaded at runtime).
-class FactoryDll
-{
-public:
-	// Initialisation
-	FactoryDll() { }
-	virtual ~FactoryDll() { }
-
-	virtual ObjectFromFactory* GetObject(int classId) const = 0;
-	virtual ObjFacTools::ResourceLib &GetResourceLib() const = 0;
-};
-
-// Using ObjFac1 (read from package file).
-class PackageFactoryDll : public FactoryDll
-{
-	using SUPER = FactoryDll;
-
-public:
-	PackageFactoryDll();
-	virtual ~PackageFactoryDll();
-
-	ObjectFromFactory* GetObject(int classId) const override;
-
-	ObjFacTools::ResourceLib &GetResourceLib() const override
-	{
-		return *(package->GetResourceLib());
-	}
-
-private:
-	ObjFac1::ObjFac1 *package;
-};
-
-// Local functions declarations
-static FactoryDll *GetDll(MR_UInt16 pDllId);
-
 namespace {
 
-// Module variables
-using gsDllList_t = std::map<int, std::shared_ptr<FactoryDll>>;
-gsDllList_t gsDllList;
+std::unique_ptr<ObjFac1::ObjFac1> dll;
+
+/**
+ * Lazy-initialize the object factory.
+ * The option of choosing which DLL has been deprecated.
+ * @param dllId The DLL ID (must be 1).
+ * @return The object factory.
+ */
+ObjFac1::ObjFac1 &GetDll(MR_UInt16 dllId)
+{
+	assert(dllId == 1);
+
+	if (!dll) {
+		dll.reset(new ObjFac1::ObjFac1());
+	}
+
+	return *dll;
+}
 
 }  // namespace
 
 void DllObjectFactory::Init()
 {
-	// Nothing to do
+	// Nothing to do; will be lazily-initialized.
 }
 
 void DllObjectFactory::Clean()
 {
-	gsDllList.clear();
+	dll.reset();
 }
 
 ObjectFromFactory *DllObjectFactory::CreateObject(const ObjectFromFactoryId &pId)
 {
-	ObjectFromFactory *lReturnValue;
-
-	FactoryDll *lDllPtr = GetDll(pId.mDllId);
-
-	lReturnValue = lDllPtr->GetObject(pId.mClassId);
-
-	return lReturnValue;
+	return GetDll(pId.mDllId).GetObject(pId.mClassId);
 }
 
 /**
@@ -107,32 +80,7 @@ ObjectFromFactory *DllObjectFactory::CreateObject(const ObjectFromFactoryId &pId
  */
 ObjFacTools::ResourceLib &DllObjectFactory::GetResourceLib(MR_UInt16 dllId)
 {
-	return GetDll(dllId)->GetResourceLib();
-}
-
-/**
- * Get a handle to the factory DLL.
- * The option of choosing which DLL has been deprecated.
- */
-FactoryDll *GetDll(MR_UInt16 pDllId)
-{
-	FactoryDll *lDllPtr;
-
-	ASSERT(pDllId != 0);						  // Number 0 is reserved for NULL entry
-
-	// Create the factory DLL if it doesn't exist already.
-	gsDllList_t::iterator iter = gsDllList.find(pDllId);
-	if (iter == gsDllList.end()) {
-		ASSERT(pDllId == 1);  // Number 1 is the package (ObjFac1) by convention from original code.
-		lDllPtr =
-			gsDllList.emplace(pDllId,
-				std::make_shared<PackageFactoryDll>()).first->second.get();
-	}
-	else {
-		return iter->second.get();
-	}
-
-	return lDllPtr;
+	return *(GetDll(dllId).GetResourceLib());
 }
 
 void ObjectFromFactory::SerializePtr(ObjStream &pArchive, ObjectFromFactory *&pPtr)
@@ -178,22 +126,6 @@ void ObjectFromFactoryId::Serialize(ObjStream &pArchive)
 	else {
 		pArchive >> mDllId >> mClassId;
 	}
-}
-
-PackageFactoryDll::PackageFactoryDll() :
-	SUPER(),
-	package(new ObjFac1::ObjFac1())
-{
-}
-
-PackageFactoryDll::~PackageFactoryDll()
-{
-	delete package;
-}
-
-ObjectFromFactory *PackageFactoryDll::GetObject(int classId) const
-{
-	return package->GetObject(classId);
 }
 
 }  // namespace Util

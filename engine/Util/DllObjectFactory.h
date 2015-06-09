@@ -92,10 +92,9 @@ public:
 
 namespace DllObjectFactory {
 
-typedef ObjectFromFactory* (*getObject_t) (MR_UInt16);
-
 /// Must be called at the beginning of the program.
 MR_DllDeclare void Init();
+
 /// Must be called at the end of the program.
 MR_DllDeclare void Clean();
 
