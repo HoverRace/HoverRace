@@ -155,7 +155,7 @@ int main(int pArgCount, char *pArgStrings[])
 		PrintUsage();
 	}
 
-	Util::DllObjectFactory::Clean(FALSE);
+	Util::DllObjectFactory::Clean();
 	VideoServices::SoundServer::Close();
 
 	Config::Shutdown();

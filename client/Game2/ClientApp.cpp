@@ -256,7 +256,7 @@ ClientApp::~ClientApp()
 	delete controller;
 
 	// Engine shutdown.
-	DllObjectFactory::Clean(FALSE);
+	DllObjectFactory::Clean();
 	SoundServer::Close();
 
 	TTF_Quit();

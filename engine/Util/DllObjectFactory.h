@@ -77,10 +77,10 @@ private:
 	ObjectFromFactoryId mId;
 
 public:
-	ObjectFromFactory(const ObjectFromFactoryId &pId);
-	virtual ~ObjectFromFactory();
+	ObjectFromFactory(const ObjectFromFactoryId &pId) : mId(pId) { }
+	virtual ~ObjectFromFactory() { }
 
-	const ObjectFromFactoryId &GetTypeId() const;
+	const ObjectFromFactoryId &GetTypeId() const { return mId; }
 
 	// Serialisation functions
 	//
@@ -97,10 +97,7 @@ typedef ObjectFromFactory* (*getObject_t) (MR_UInt16);
 /// Must be called at the beginning of the program.
 MR_DllDeclare void Init();
 /// Must be called at the end of the program.
-MR_DllDeclare void Clean(BOOL pOnlyDynamic);
-
-MR_DllDeclare void IncrementReferenceCount(int pDllId);
-MR_DllDeclare void DecrementReferenceCount(int pDllId);
+MR_DllDeclare void Clean();
 
 /// Fast Object Creation function
 MR_DllDeclare ObjectFromFactory *CreateObject(const ObjectFromFactoryId &pId);

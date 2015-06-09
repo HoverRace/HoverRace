@@ -41,15 +41,11 @@ class FactoryDll
 {
 public:
 	// Initialisation
-	FactoryDll();
-	virtual ~FactoryDll();
+	FactoryDll() { }
+	virtual ~FactoryDll() { }
 
 	virtual ObjectFromFactory* GetObject(int classId) const = 0;
 	virtual ObjFacTools::ResourceLib &GetResourceLib() const = 0;
-
-public:
-	bool mDynamic;
-	int mRefCount;
 };
 
 // Using ObjFac1 (read from package file).
@@ -73,64 +69,31 @@ private:
 };
 
 // Local functions declarations
-static FactoryDll *GetDll(MR_UInt16 pDllId, BOOL pTrowOnError);
+static FactoryDll *GetDll(MR_UInt16 pDllId);
 
 namespace {
 
 // Module variables
-using gsDllList_t = std::map<int, FactoryDll*>;
+using gsDllList_t = std::map<int, std::shared_ptr<FactoryDll>>;
 gsDllList_t gsDllList;
 
 }  // namespace
 
-// Module functions
 void DllObjectFactory::Init()
 {
 	// Nothing to do
 }
 
-void DllObjectFactory::Clean(BOOL pOnlyDynamic)
+void DllObjectFactory::Clean()
 {
-	for (gsDllList_t::iterator iter = gsDllList.begin(); iter != gsDllList.end(); ) {
-		FactoryDll* dllPtr = iter->second;
-
-		if ((dllPtr->mRefCount <= 0) && (dllPtr->mDynamic || !pOnlyDynamic)) {
-			gsDllList.erase(iter++);
-			delete dllPtr;
-		}
-		else {
-			++iter;
-		}
-	}
-}
-
-void DllObjectFactory::IncrementReferenceCount(int pDllId)
-{
-	gsDllList_t::iterator iter = gsDllList.find(pDllId);
-	if (iter != gsDllList.end()) {
-		iter->second->mRefCount++;
-	}
-	else {
-		ASSERT(FALSE);							  // Dll not loaded
-	}
-}
-
-void DllObjectFactory::DecrementReferenceCount(int pDllId)
-{
-	gsDllList_t::iterator iter = gsDllList.find(pDllId);
-	if (iter != gsDllList.end()) {
-		iter->second->mRefCount--;
-	}
-	else {
-		ASSERT(FALSE);							  // Dll discarded
-	}
+	gsDllList.clear();
 }
 
 ObjectFromFactory *DllObjectFactory::CreateObject(const ObjectFromFactoryId &pId)
 {
 	ObjectFromFactory *lReturnValue;
 
-	FactoryDll *lDllPtr = GetDll(pId.mDllId, TRUE);
+	FactoryDll *lDllPtr = GetDll(pId.mDllId);
 
 	lReturnValue = lDllPtr->GetObject(pId.mClassId);
 
@@ -144,14 +107,14 @@ ObjectFromFactory *DllObjectFactory::CreateObject(const ObjectFromFactoryId &pId
  */
 ObjFacTools::ResourceLib &DllObjectFactory::GetResourceLib(MR_UInt16 dllId)
 {
-	return GetDll(dllId, TRUE)->GetResourceLib();
+	return GetDll(dllId)->GetResourceLib();
 }
 
 /**
  * Get a handle to the factory DLL.
  * The option of choosing which DLL has been deprecated.
  */
-FactoryDll *GetDll(MR_UInt16 pDllId, BOOL)
+FactoryDll *GetDll(MR_UInt16 pDllId)
 {
 	FactoryDll *lDllPtr;
 
@@ -161,41 +124,15 @@ FactoryDll *GetDll(MR_UInt16 pDllId, BOOL)
 	gsDllList_t::iterator iter = gsDllList.find(pDllId);
 	if (iter == gsDllList.end()) {
 		ASSERT(pDllId == 1);  // Number 1 is the package (ObjFac1) by convention from original code.
-		lDllPtr = new PackageFactoryDll();
-		gsDllList.insert(gsDllList_t::value_type(pDllId, lDllPtr));
+		lDllPtr =
+			gsDllList.emplace(pDllId,
+				std::make_shared<PackageFactoryDll>()).first->second.get();
 	}
 	else {
-		return iter->second;
+		return iter->second.get();
 	}
 
 	return lDllPtr;
-}
-
-// ObjectFromFactory methods
-ObjectFromFactory::ObjectFromFactory(const ObjectFromFactoryId &pId)
-{
-	mId = pId;
-
-	// Increment this object dll reference count
-	// This will prevent the Dll from being discarded
-	if (mId.mDllId <= 1) {
-		DllObjectFactory::IncrementReferenceCount(mId.mDllId);
-	}
-}
-
-ObjectFromFactory::~ObjectFromFactory()
-{
-
-	// Decrement this object dll reference count
-	// This will allow the dll to be freed if not needed anymore
-	if (mId.mDllId <= 1) {
-		DllObjectFactory::DecrementReferenceCount(mId.mDllId);
-	}
-}
-
-const ObjectFromFactoryId &ObjectFromFactory::GetTypeId() const
-{
-	return mId;
 }
 
 void ObjectFromFactory::SerializePtr(ObjStream &pArchive, ObjectFromFactory *&pPtr)
@@ -243,22 +180,10 @@ void ObjectFromFactoryId::Serialize(ObjStream &pArchive)
 	}
 }
 
-// class FactoryDll methods
-FactoryDll::FactoryDll() :
-	mDynamic(false), mRefCount(0)
-{
-}
-
-FactoryDll::~FactoryDll()
-{
-	ASSERT(mRefCount == 0);
-}
-
 PackageFactoryDll::PackageFactoryDll() :
-	SUPER()
+	SUPER(),
+	package(new ObjFac1::ObjFac1())
 {
-	mDynamic = true;
-	package = new ObjFac1::ObjFac1();
 }
 
 PackageFactoryDll::~PackageFactoryDll()
