@@ -72,28 +72,6 @@ private:
 	ObjFac1::ObjFac1 *package;
 };
 
-// Using function pointer callback.
-class LocalFactoryDll : public FactoryDll
-{
-	using SUPER = FactoryDll;
-
-private:
-	LocalFactoryDll() = delete;
-public:
-	LocalFactoryDll(DllObjectFactory::getObject_t getObject);
-	virtual ~LocalFactoryDll();
-
-	ObjectFromFactory* GetObject(int classId) const override;
-
-	ObjFacTools::ResourceLib &GetResourceLib() const override
-	{
-		throw UnimplementedExn("LocalFactoryDll::GetResourceLib");
-	}
-
-private:
-	DllObjectFactory::getObject_t getObject;
-};
-
 // Local functions declarations
 static FactoryDll *GetDll(MR_UInt16 pDllId, BOOL pTrowOnError);
 
@@ -124,21 +102,6 @@ void DllObjectFactory::Clean(BOOL pOnlyDynamic)
 			++iter;
 		}
 	}
-}
-
-void DllObjectFactory::RegisterLocalDll(int pDllId, getObject_t pFunc)
-{
-
-	FactoryDll *lDllPtr;
-
-	ASSERT(pDllId != 0);						  // Number 0 is reserved for NULL entry
-	ASSERT(pDllId != 1);						  // Number 1 is reserved for ObjFac1
-	ASSERT(pFunc != NULL);
-
-	lDllPtr = new LocalFactoryDll(pFunc);
-
-	bool inserted = gsDllList.emplace(pDllId, lDllPtr).second;
-	ASSERT(inserted);
 }
 
 void DllObjectFactory::IncrementReferenceCount(int pDllId)
@@ -306,28 +269,6 @@ PackageFactoryDll::~PackageFactoryDll()
 ObjectFromFactory *PackageFactoryDll::GetObject(int classId) const
 {
 	return package->GetObject(classId);
-}
-
-LocalFactoryDll::LocalFactoryDll(DllObjectFactory::getObject_t getObject) :
-	SUPER(), getObject(getObject)
-{
-}
-
-LocalFactoryDll::~LocalFactoryDll()
-{
-}
-
-ObjectFromFactory *LocalFactoryDll::GetObject(int classId) const
-{
-	if (classId < 0 ||
-		classId > static_cast<int>(std::numeric_limits<MR_UInt16>::max()))
-	{
-		HR_LOG(warning) << "Out-of-range classId: " << classId;
-		return nullptr;
-	}
-	else {
-		return getObject(static_cast<MR_UInt16>(classId));
-	}
 }
 
 }  // namespace Util

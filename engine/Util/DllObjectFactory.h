@@ -107,9 +107,6 @@ MR_DllDeclare ObjectFromFactory *CreateObject(const ObjectFromFactoryId &pId);
 
 MR_DllDeclare ObjFacTools::ResourceLib &GetResourceLib(MR_UInt16 dllId = 1);
 
-// Local Dll
-MR_DllDeclare void RegisterLocalDll(int pDLLId, getObject_t pFunc);
-
 }  // namespace DllObjectFactory
 
 }  // namespace Util
