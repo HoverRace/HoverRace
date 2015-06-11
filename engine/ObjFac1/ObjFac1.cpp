@@ -189,7 +189,7 @@ ObjectFromFactory *ObjFac1::GetObject(int pClassId)
 			break;
 
 		case 100:
-			lReturnValue = new HoverRender(lId, resLib);
+			lReturnValue = new HoverRender(lId, *resourceLib);
 			break;
 
 		case 150:

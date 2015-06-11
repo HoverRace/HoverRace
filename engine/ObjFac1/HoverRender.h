@@ -59,7 +59,7 @@ protected:
 
 public:
 	HoverRender(const Util::ObjectFromFactoryId &pId,
-		ObjFacTools::ResourceLib *resourceLib);
+		ObjFacTools::ResourceLib &resourceLib);
 	virtual ~HoverRender() { }
 
 	void Render(VideoServices::Viewport3D *pDest,
