@@ -86,8 +86,9 @@ public:
 	//
 	// Warning this module do not support multiple references to objects
 	// or looped structures
-	static void SerializePtr(HoverRace::Parcel::ObjStream &pArchive, ObjectFromFactory * &pPtr);
-	virtual void Serialize(HoverRace::Parcel::ObjStream &pArchive);
+	static void SerializePtr(Parcel::ObjStream &pArchive,
+		ObjectFromFactory *&pPtr);
+	virtual void Serialize(Parcel::ObjStream &pArchive);
 };
 
 namespace DllObjectFactory {
