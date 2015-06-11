@@ -29,8 +29,24 @@ using HoverRace::ObjFacTools::ResourceLib;
 namespace HoverRace {
 namespace ObjFac1 {
 
+namespace {
+
 const MR_Int32 cPowerUpRay = 550;
 const MR_Int32 cPowerUpHalfHeight = 550;
+
+}  // namespace
+
+
+PowerUp::PowerUp(const Util::ObjectFromFactoryId &pId,
+	ResourceLib &resourceLib) :
+	SUPER(pId)
+{
+	mEffectList.push_back(&mPowerUpEffect);
+	mActor = resourceLib.GetActor(MR_PWRUP);
+
+	mOrientation = 0;
+	mPowerUpEffect.mElementPermId = -1;
+}
 
 MR_Int32 PowerUp::ZMin() const
 {
@@ -57,20 +73,6 @@ MR_Int32 PowerUp::RayLen() const
 	return cPowerUpRay;
 }
 
-PowerUp::PowerUp(const Util::ObjectFromFactoryId &pId, ResourceLib* resourceLib) :
-	SUPER(pId)
-{
-	mEffectList.push_back(&mPowerUpEffect);
-	mActor = resourceLib->GetActor(MR_PWRUP);
-
-	mOrientation = 0;
-	mPowerUpEffect.mElementPermId = -1;
-}
-
-PowerUp::~PowerUp()
-{
-}
-
 BOOL PowerUp::AssignPermNumber(int pNumber)
 {
 	mPowerUpEffect.mElementPermId = pNumber;
@@ -89,12 +91,11 @@ const Model::ShapeInterface *PowerUp::GetReceivingContactEffectShape()
 
 const Model::ShapeInterface *PowerUp::GetGivingContactEffectShape()
 {
-	// return this;
-	return NULL;
+	return nullptr;
 }
 
 // Simulation
-int PowerUp::Simulate(MR_SimulationTime pDuration, Model::Level * /*pLevel */ , int pRoom)
+int PowerUp::Simulate(MR_SimulationTime pDuration, Model::Level*, int pRoom)
 {
 	// Just rotate on ourself
 	if(pDuration != 0) {
@@ -104,48 +105,13 @@ int PowerUp::Simulate(MR_SimulationTime pDuration, Model::Level * /*pLevel */ , 
 	return pRoom;
 }
 
-/*
-void PowerUp::ApplyEffect( const ContactEffect* pEffect,  MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, Model::Level* pLevel )
-{
-   ContactEffect* lEffect = (ContactEffect*)pEffect;
-   const PhysicalCollision* lPhysCollision = dynamic_cast<PhysicalCollision*>(lEffect);
-
-   if( (lPhysCollision != NULL)&&pValidDirection )
-   {
-
-	  if( lPhysCollision->mWeight < PhysicalCollision::eInfiniteWeight )
-	  {
-		 if( mLived >= cIgnitionTime )
-		 {
-			// Hitted a free object
-			// Must died
-			mLived = cLifeTime+cStopTime;
-		 }
-	  }
-	  else
-	  {
-		 // Hitted structure..make a perfect bounce
-		 MR_Angle lDiff = MR_NORMALIZE_ANGLE( pHorizontalDirection-mOrientation+MR_PI );
-
-		 if( (lDiff < (MR_PI/2) ) || ( lDiff > (MR_PI+MR_PI/2)) )
-		 {
-			mOrientation = MR_NORMALIZE_ANGLE( pHorizontalDirection + lDiff );
-			mBounceSoundEvent = TRUE;
-		 }
-	  }
-   }
-}
-*/
-
 // State broadcast
 
-class MR_PowerUpState
+struct MR_PowerUpState
 {
-	public:
-		MR_Int32 mPosX;							  // 4    4
-		MR_Int32 mPosY;							  // 4    8
-		MR_Int32 mPosZ;							  // 4   12
-
+	MR_Int32 mPosX;							  // 4    4
+	MR_Int32 mPosY;							  // 4    8
+	MR_Int32 mPosZ;							  // 4   12
 };
 
 Model::ElementNetState PowerUp::GetNetState() const
@@ -155,7 +121,7 @@ Model::ElementNetState PowerUp::GetNetState() const
 	Model::ElementNetState lReturnValue;
 
 	lReturnValue.mDataLen = sizeof(lsState);
-	lReturnValue.mData = (MR_UInt8 *) & lsState;
+	lReturnValue.mData = (MR_UInt8*)&lsState;
 
 	lsState.mPosX = mPosition.mX;
 	lsState.mPosY = mPosition.mY;
@@ -164,10 +130,9 @@ Model::ElementNetState PowerUp::GetNetState() const
 	return lReturnValue;
 }
 
-void PowerUp::SetNetState(int /*pDataLen */ , const MR_UInt8 * pData)
+void PowerUp::SetNetState(int, const MR_UInt8 *pData)
 {
-
-	const MR_PowerUpState *lState = (const MR_PowerUpState *) pData;
+	const MR_PowerUpState *lState = (const MR_PowerUpState*)pData;
 
 	mPosition.mX = lState->mPosX;
 	mPosition.mY = lState->mPosY;

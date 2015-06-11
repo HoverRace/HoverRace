@@ -30,11 +30,12 @@ namespace ObjFac1 {
 
 class BallElement : public ObjFacTools::FreeElementBase
 {
-	typedef ObjFacTools::FreeElementBase SUPER;
-	public:
-		BallElement(const Util::ObjectFromFactoryId & pId, ObjFacTools::ResourceLib* resourceLib);
-		~BallElement();
+	using SUPER = ObjFacTools::FreeElementBase;
 
+public:
+	BallElement(const Util::ObjectFromFactoryId &pId,
+		ObjFacTools::ResourceLib &resourceLib);
+	~BallElement() { }
 };
 
 }  // namespace Model

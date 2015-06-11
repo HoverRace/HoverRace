@@ -1,3 +1,4 @@
+
 // BallElement.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
@@ -27,14 +28,11 @@ using HoverRace::ObjFacTools::ResourceLib;
 namespace HoverRace {
 namespace ObjFac1 {
 
-BallElement::BallElement(const Util::ObjectFromFactoryId & pId, ResourceLib* resourceLib) :
+BallElement::BallElement(const Util::ObjectFromFactoryId &pId,
+	ResourceLib &resourceLib) :
 	SUPER(pId)
 {
-	mActor = resourceLib->GetActor(MR_BALL);
-}
-
-BallElement::~BallElement()
-{
+	mActor = resourceLib.GetActor(MR_BALL);
 }
 
 }  // namespace Model

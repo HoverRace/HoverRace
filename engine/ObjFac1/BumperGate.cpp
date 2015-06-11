@@ -31,6 +31,8 @@ namespace ObjFac1 {
 
 #define NB_STATE 10
 
+namespace {
+
 const MR_Int32 cGateRayMin = 200;
 const MR_Int32 cGateRayMax = 2500;
 
@@ -38,6 +40,24 @@ const MR_Int32 cGateHeightMin = 1500;
 const MR_Int32 cGateHeightMax = 3000;
 
 const MR_Int32 cGateWeight = Model::PhysicalCollision::eInfiniteWeight;
+
+}  // namespace
+
+
+BumperGate::BumperGate(const Util::ObjectFromFactoryId &pId,
+	ResourceLib &resourceLib) :
+	SUPER(pId)
+{
+	mActor = resourceLib.GetActor(MR_BUMPERGATE);
+
+	mTimeSinceLastCollision = +1000000;
+	mLastState = mActor->GetFrameCount(0) - 1;
+
+	mCurrentFrame = mLastState;
+	mCurrentSequence = 0;
+
+	mEffectList.push_back(&mCollisionEffect);
+}
 
 MR_Int32 BumperGate::ZMin() const
 {
@@ -64,28 +84,8 @@ MR_Int32 BumperGate::RayLen() const
 	return cGateRayMin + mCurrentFrame * (cGateRayMax - cGateRayMin) / (mLastState);
 }
 
-BumperGate::BumperGate(const Util::ObjectFromFactoryId & pId, ResourceLib* resourceLib) :
-	SUPER(pId)
-{
-	mActor = resourceLib->GetActor(MR_BUMPERGATE);
-
-	mTimeSinceLastCollision = +1000000;
-	mLastState = mActor->GetFrameCount(0) - 1;
-
-	mCurrentFrame = mLastState;
-	mCurrentSequence = 0;
-
-	mEffectList.push_back(&mCollisionEffect);
-
-}
-
-BumperGate::~BumperGate()
-{
-}
-
 const Model::ContactEffectList *BumperGate::GetEffectList()
 {
-
 	mCollisionEffect.mWeight = cGateWeight;
 	mCollisionEffect.mXSpeed = 0;
 	mCollisionEffect.mYSpeed = 0;
@@ -101,9 +101,7 @@ const Model::ShapeInterface *BumperGate::GetReceivingContactEffectShape()
 
 const Model::ShapeInterface *BumperGate::GetGivingContactEffectShape()
 {
-	// return this;
-	// ASSERT( FALSE );
-	return NULL;
+	return nullptr;
 }
 
 // Simulation
@@ -131,17 +129,17 @@ int BumperGate::Simulate(MR_SimulationTime pDuration, Model::Level*, int pRoom)
 }
 
 void BumperGate::ApplyEffect(const Model::ContactEffect *pEffect,
-                             MR_SimulationTime, MR_SimulationTime,
-                             BOOL, MR_Angle,
-                             MR_Int32, MR_Int32, Model::Level*)
+	MR_SimulationTime, MR_SimulationTime,
+	BOOL, MR_Angle,
+	MR_Int32, MR_Int32, Model::Level*)
 {
 	using namespace Model;
 
-	ContactEffect *lEffect = (ContactEffect *) pEffect;
-	const PhysicalCollision *lPhysCollision = dynamic_cast < PhysicalCollision * >(lEffect);
+	const PhysicalCollision *lPhysCollision =
+		dynamic_cast<const PhysicalCollision*>(pEffect);
 
-	if(lPhysCollision != NULL) {
-		if(mCurrentFrame >= mLastState) {
+	if (lPhysCollision) {
+		if (mCurrentFrame >= mLastState) {
 			mTimeSinceLastCollision = 0;
 		}
 		else {

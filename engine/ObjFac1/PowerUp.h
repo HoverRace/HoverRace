@@ -28,43 +28,43 @@
 namespace HoverRace {
 namespace ObjFac1 {
 
-class PowerUp : public ObjFacTools::FreeElementBase, protected Model::CylinderShape
+class PowerUp :
+	public ObjFacTools::FreeElementBase,
+	protected Model::CylinderShape
 {
-	typedef ObjFacTools::FreeElementBase SUPER;
-	protected:
+	using SUPER = ObjFacTools::FreeElementBase;
 
-		// Shape interface
-		MR_Int32 ZMin() const;
-		MR_Int32 ZMax() const;
-		MR_Int32 AxisX() const;
-		MR_Int32 AxisY() const;
-		MR_Int32 RayLen() const;
+public:
+	PowerUp(const Util::ObjectFromFactoryId &pId,
+		ObjFacTools::ResourceLib &resourceLib);
+	~PowerUp() { }
 
-	private:
+protected:
+	// Shape interface
+	MR_Int32 ZMin() const override;
+	MR_Int32 ZMax() const override;
+	MR_Int32 AxisX() const override;
+	MR_Int32 AxisY() const override;
+	MR_Int32 RayLen() const override;
 
-		Model::PowerUpEffect mPowerUpEffect;
-		Model::ContactEffectList mEffectList;
+protected:
+	// ContactEffectShapeInterface
+	const Model::ContactEffectList *GetEffectList() override;
+	const Model::ShapeInterface *GetGivingContactEffectShape() override;
+	const Model::ShapeInterface *GetReceivingContactEffectShape() override;
 
-	public:
-		PowerUp(const Util::ObjectFromFactoryId & pId, ObjFacTools::ResourceLib* resourceLib);
-		~PowerUp();
+	int Simulate(MR_SimulationTime pTimeSlice, Model::Level *pLevel,
+		int pRoom) override;
 
-	protected:
+	// Network state
+	Model::ElementNetState GetNetState() const override;
+	void SetNetState(int pDataLen, const MR_UInt8 *pData) override;
 
-		// ContactEffectShapeInterface
-		const Model::ContactEffectList *GetEffectList();
-		const Model::ShapeInterface *GetGivingContactEffectShape();
-		const Model::ShapeInterface *GetReceivingContactEffectShape();
+	BOOL AssignPermNumber(int pNumber) override;
 
-		int Simulate(MR_SimulationTime pTimeSlice, Model::Level * pLevel, int pRoom);
-
-		// void  ApplyEffect( const ContactEffect* pEffect,  MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection );
-
-		// Network state
-		Model::ElementNetState GetNetState() const;
-		void SetNetState(int pDataLen, const MR_UInt8 * pData);
-
-		BOOL AssignPermNumber(int pNumber);
+private:
+	Model::PowerUpEffect mPowerUpEffect;
+	Model::ContactEffectList mEffectList;
 };
 
 }  // namespace ObjFac1

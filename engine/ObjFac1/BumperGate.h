@@ -29,39 +29,44 @@
 namespace HoverRace {
 namespace ObjFac1 {
 
-class BumperGate : public ObjFacTools::FreeElementBase, protected Model::CylinderShape
+class BumperGate :
+	public ObjFacTools::FreeElementBase,
+	protected Model::CylinderShape
 {
-	typedef ObjFacTools::FreeElementBase SUPER;
-	protected:
+	using SUPER = ObjFacTools::FreeElementBase;
 
-		// Shape interface
-		MR_Int32 ZMin() const;
-		MR_Int32 ZMax() const;
-		MR_Int32 AxisX() const;
-		MR_Int32 AxisY() const;
-		MR_Int32 RayLen() const;
+public:
+	BumperGate(const Util::ObjectFromFactoryId &pId,
+		ObjFacTools::ResourceLib &resourceLib);
+	~BumperGate() { }
 
-	private:
+protected:
+	// Shape interface
+	MR_Int32 ZMin() const override;
+	MR_Int32 ZMax() const override;
+	MR_Int32 AxisX() const override;
+	MR_Int32 AxisY() const override;
+	MR_Int32 RayLen() const override;
 
-		MR_SimulationTime mTimeSinceLastCollision;
-		int mLastState;
-		Model::PhysicalCollision mCollisionEffect;
-		Model::ContactEffectList mEffectList;
+protected:
+	// ContactEffectShapeInterface
+	const Model::ContactEffectList *GetEffectList() override;
+	const Model::ShapeInterface *GetGivingContactEffectShape() override;
+	const Model::ShapeInterface *GetReceivingContactEffectShape() override;
 
-	public:
-		BumperGate(const Util::ObjectFromFactoryId &pId, ObjFacTools::ResourceLib* resourceLib);
-		~BumperGate();
+	int Simulate(MR_SimulationTime pTimeSlice, Model::Level *pLevel,
+		int pRoom) override;
 
-	protected:
+	void ApplyEffect(const Model::ContactEffect *pEffect,
+		MR_SimulationTime pTime, MR_SimulationTime pDuration,
+		BOOL pValidDirection, MR_Angle pHorizontalDirection,
+		MR_Int32 pZMin, MR_Int32 pZMax, Model::Level *pLevel) override;
 
-		// ContactEffectShapeInterface
-		const Model::ContactEffectList *GetEffectList();
-		const Model::ShapeInterface *GetGivingContactEffectShape();
-		const Model::ShapeInterface *GetReceivingContactEffectShape();
-
-		int Simulate(MR_SimulationTime pTimeSlice, Model::Level * pLevel, int pRoom);
-
-		void ApplyEffect(const Model::ContactEffect * pEffect, MR_SimulationTime pTime, MR_SimulationTime pDuration, BOOL pValidDirection, MR_Angle pHorizontalDirection, MR_Int32 pZMin, MR_Int32 pZMax, Model::Level * pLevel);
+private:
+	MR_SimulationTime mTimeSinceLastCollision;
+	int mLastState;
+	Model::PhysicalCollision mCollisionEffect;
+	Model::ContactEffectList mEffectList;
 
 };
 

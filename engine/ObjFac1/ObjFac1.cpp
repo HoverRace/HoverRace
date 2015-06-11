@@ -59,8 +59,6 @@ ObjectFromFactory *ObjFac1::GetObject(int pClassId)
 	ObjectFromFactory *lReturnValue = nullptr;
 	ObjectFromFactoryId lId = { 1, static_cast<MR_UInt16>(pClassId) };
 
-	auto resLib = resourceLib.get();
-
 	switch (pClassId) {
 		case 1:
 			lReturnValue = new DefaultSurface(lId, *resourceLib);
@@ -85,7 +83,7 @@ ObjectFromFactory *ObjFac1::GetObject(int pClassId)
 			break;
 
 		case 12:
-			lReturnValue = new BallElement(lId, resLib);
+			lReturnValue = new BallElement(lId, *resourceLib);
 			break;
 
 		case 13:
@@ -201,11 +199,11 @@ ObjectFromFactory *ObjFac1::GetObject(int pClassId)
 			break;
 
 		case 152:
-			lReturnValue = new PowerUp(lId, resLib);
+			lReturnValue = new PowerUp(lId, *resourceLib);
 			break;
 
 		case 170:
-			lReturnValue = new BumperGate(lId, resLib);
+			lReturnValue = new BumperGate(lId, *resourceLib);
 			break;
 
 		case 200:
