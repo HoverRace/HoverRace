@@ -87,33 +87,28 @@ void ObjectFromFactory::SerializePtr(ObjStream &pArchive, ObjectFromFactory *&pP
 {
 	ObjectFromFactoryId lId = { 0, 0 };
 
-	if(pArchive.IsWriting()) {
-		if(pPtr != NULL) {
+	if (pArchive.IsWriting()) {
+		if (pPtr) {
 			lId = pPtr->mId;
 		}
 
 		lId.Serialize(pArchive);
 
-		if(pPtr != NULL) {
+		if (pPtr) {
 			pPtr->Serialize(pArchive);
 		}
 	}
 	else {
 		lId.Serialize(pArchive);
 
-		if(lId.mDllId == 0) {
-			pPtr = NULL;
+		if (lId.mDllId == 0) {
+			pPtr = nullptr;
 		}
 		else {
 			pPtr = DllObjectFactory::CreateObject(lId);
 			pPtr->Serialize(pArchive);
 		}
 	}
-}
-
-void ObjectFromFactory::Serialize(ObjStream&)
-{
-	// Nothing to serialize at that point.
 }
 
 // ObjectFromFactoryId

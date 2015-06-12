@@ -88,7 +88,7 @@ public:
 	// or looped structures
 	static void SerializePtr(Parcel::ObjStream &pArchive,
 		ObjectFromFactory *&pPtr);
-	virtual void Serialize(Parcel::ObjStream &pArchive);
+	virtual void Serialize(Parcel::ObjStream &archive) { HR_UNUSED(archive); }
 };
 
 namespace DllObjectFactory {
