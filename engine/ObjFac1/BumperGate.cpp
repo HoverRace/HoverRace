@@ -29,8 +29,6 @@ using HoverRace::ObjFacTools::ResourceLib;
 namespace HoverRace {
 namespace ObjFac1 {
 
-#define NB_STATE 10
-
 namespace {
 
 const MR_Int32 cGateRayMin = 200;
