@@ -64,11 +64,15 @@ public:
 	~BitmapSurface() { }
 
 	// Rendering stuff
-	void RenderWallSurface(VideoServices::Viewport3D * pDest, const MR_3DCoordinate & pUpperLeft, const MR_3DCoordinate & pLowerRight, MR_Int32 pLen, MR_SimulationTime pTime);
-	void RenderHorizontalSurface(VideoServices::Viewport3D * pDest, int pNbVertex, const MR_2DCoordinate * pVertexList, MR_Int32 pLevel, BOOL pTop, MR_SimulationTime pTime);
+	void RenderWallSurface(VideoServices::Viewport3D *pDest,
+		const MR_3DCoordinate &pUpperLeft, const MR_3DCoordinate &pLowerRight,
+		MR_Int32 pLen, MR_SimulationTime pTime) override;
+	void RenderHorizontalSurface(VideoServices::Viewport3D *pDest,
+		int pNbVertex, const MR_2DCoordinate *pVertexList, MR_Int32 pLevel,
+		BOOL pTop, MR_SimulationTime pTime) override;
 
 	// Logic stuff
-	const Model::ContactEffectList *GetEffectList();
+	const Model::ContactEffectList *GetEffectList() override;
 
 protected:
 	ObjFacTools::ResBitmap *mBitmap;
@@ -90,7 +94,7 @@ public:
 
 	void RenderWallSurface(VideoServices::Viewport3D *pDest,
 		const MR_3DCoordinate &pUpperLeft, const MR_3DCoordinate &pLowerRight,
-		MR_Int32 pLen, MR_SimulationTime pTime);
+		MR_Int32 pLen, MR_SimulationTime pTime) override;
 
 private:
 	int mMaxHeight;
