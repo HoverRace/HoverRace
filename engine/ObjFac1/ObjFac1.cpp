@@ -56,6 +56,10 @@ ObjFac1::~ObjFac1()
 
 ObjectFromFactory *ObjFac1::GetObject(int pClassId)
 {
+	if (pClassId < 1 || pClassId > 65535) {
+		return nullptr;
+	}
+
 	ObjectFromFactory *lReturnValue = nullptr;
 	ObjectFromFactoryId lId = { 1, static_cast<MR_UInt16>(pClassId) };
 
