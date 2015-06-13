@@ -24,8 +24,12 @@
 namespace HoverRace {
 namespace ObjFac1 {
 
+namespace {
+
 const MR_Int32 cSourceRay = 20000;				  // the source have a diameter of 40 meters
 const MR_Int32 cSourceHeight = 2000;			  // 2 meters
+
+}  // namespace
 
 MR_Int32 DoubleSpeedSource::ZMin() const
 {
