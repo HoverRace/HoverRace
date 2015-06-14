@@ -63,7 +63,6 @@ void LoadRes(ObjStream &os, std::map<int, std::unique_ptr<T>> &res, ResourceLib 
 
 /**
  * Constructor for empty library.
- * @param filename The resource data file.
  */
 ResourceLib::ResourceLib()
 {
