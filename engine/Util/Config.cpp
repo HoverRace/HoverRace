@@ -387,7 +387,7 @@ OS::path_t Config::GetDefaultBasePath()
 		return OS::path_t(dpath);
 	}
 	else {
-		throw ConfigExn(_("Unable to determine configuration directory"));
+		throw ConfigExn("Unable to determine configuration directory");
 	}
 #else
 	char *home = getenv("HOME");
@@ -400,8 +400,8 @@ OS::path_t Config::GetDefaultBasePath()
 	}
 	else {
 		throw ConfigExn(
-			_("Unable to determine configuration directory "
-			"(HOME environment variable not set)"));
+			"Unable to determine configuration directory "
+			"(HOME environment variable not set)");
 	}
 #endif
 }
