@@ -95,20 +95,20 @@ protected:
 	public:
 		SectionShape(Section * pSection);
 
-		MR_Int32 XMin() const;
-		MR_Int32 XMax() const;
-		MR_Int32 YMin() const;
-		MR_Int32 YMax() const;
-		MR_Int32 ZMin() const;
-		MR_Int32 ZMax() const;
+		MR_Int32 XMin() const override;
+		MR_Int32 XMax() const override;
+		MR_Int32 YMin() const override;
+		MR_Int32 YMax() const override;
+		MR_Int32 ZMin() const override;
+		MR_Int32 ZMax() const override;
 
-		int VertexCount() const;
+		int VertexCount() const override;
 		MR_Int32 XCenter() const;
 		MR_Int32 YCenter() const;
 
-		MR_Int32 X(int pIndex) const;
-		MR_Int32 Y(int pIndex) const;
-		MR_Int32 SideLen(int pIndex) const;
+		MR_Int32 X(int pIndex) const override;
+		MR_Int32 Y(int pIndex) const override;
+		MR_Int32 SideLen(int pIndex) const override;
 	};
 
 	// Private structures
