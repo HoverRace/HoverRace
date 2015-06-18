@@ -23,7 +23,6 @@
 
 #include "MazeElement.h"
 #include "ShapeCollisions.h"
-#include "../Util/FastArray.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
 #	ifdef MR_ENGINE

@@ -36,6 +36,9 @@
 #	define MR_DllDeclare
 #endif
 
+template<class T>
+class MR_FastArrayBase;
+
 namespace HoverRace {
 namespace Model {
 
