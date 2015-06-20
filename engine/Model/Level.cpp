@@ -400,7 +400,7 @@ void Level::MoveElement(MR_FreeElementHandle pHandle, int pNewRoom)
 	}
 }
 
-MR_FreeElementHandle Level::InsertElement(FreeElement * pElement, int pRoom, BOOL pBroadcast)
+MR_FreeElementHandle Level::InsertElement(FreeElement *pElement, int pRoom, BOOL pBroadcast)
 {
 	FreeElementList *lReturnValue = new FreeElementList;
 
@@ -899,7 +899,7 @@ void Level::FreeElementList::Unlink()
 	mPrevLink = NULL;
 }
 
-void Level::FreeElementList::LinkTo(FreeElementList ** pPrevLink)
+void Level::FreeElementList::LinkTo(FreeElementList **pPrevLink)
 {
 	Unlink();
 
@@ -912,13 +912,15 @@ void Level::FreeElementList::LinkTo(FreeElementList ** pPrevLink)
 	}
 }
 
-void Level::FreeElementList::SerializeList(ObjStream & pArchive, FreeElementList ** pListHead)
+void Level::FreeElementList::SerializeList(ObjStream &pArchive,
+	FreeElementList **pListHead)
 {
 	if(pArchive.IsWriting()) {
 		FreeElementList *lFreeElement = *pListHead;
 
 		while(lFreeElement) {
-			Util::ObjectFromFactory::SerializePtr(pArchive, (Util::ObjectFromFactory * &)lFreeElement->mElement);
+			Util::ObjectFromFactory::SerializePtr(pArchive,
+				(Util::ObjectFromFactory*&)lFreeElement->mElement);
 
 			lFreeElement->mElement->mPosition.Serialize(pArchive);
 			pArchive << lFreeElement->mElement->mOrientation;

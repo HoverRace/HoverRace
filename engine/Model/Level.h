@@ -200,7 +200,7 @@ protected:
 	class FreeElementList
 	{
 	public:
-		FreeElementList ** mPrevLink;
+		FreeElementList **mPrevLink;
 		FreeElementList *mNext;
 		FreeElement *mElement;
 
@@ -208,9 +208,10 @@ protected:
 		~FreeElementList();
 
 		void Unlink();
-		void LinkTo(FreeElementList ** pPrevLink);
+		void LinkTo(FreeElementList **pPrevLink);
 
-		static void SerializeList(Parcel::ObjStream &pArchive, FreeElementList **pListHead);
+		static void SerializeList(Parcel::ObjStream &pArchive,
+			FreeElementList **pListHead);
 	};
 
 	// Private Data
