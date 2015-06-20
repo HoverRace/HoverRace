@@ -200,18 +200,20 @@ protected:
 	class FreeElementList
 	{
 	public:
-		FreeElementList **mPrevLink;
-		FreeElementList *mNext;
-		FreeElement *mElement;
-
-		FreeElementList();
+		FreeElementList() : mPrevLink(nullptr), mNext(nullptr) { }
 		~FreeElementList();
 
+	public:
 		void Unlink();
 		void LinkTo(FreeElementList **pPrevLink);
 
 		static void SerializeList(Parcel::ObjStream &pArchive,
 			FreeElementList **pListHead);
+
+	public:
+		FreeElementList **mPrevLink;
+		FreeElementList *mNext;
+		std::shared_ptr<FreeElement> mElement;
 	};
 
 	// Private Data

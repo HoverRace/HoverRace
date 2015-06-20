@@ -387,7 +387,7 @@ MR_FreeElementHandle Level::GetNextFreeElement(MR_FreeElementHandle pHandle)
 
 FreeElement *Level::GetFreeElement(MR_FreeElementHandle pHandle)
 {
-	return ((FreeElementList *) pHandle)->mElement;
+	return ((FreeElementList *) pHandle)->mElement.get();
 }
 
 void Level::MoveElement(MR_FreeElementHandle pHandle, int pNewRoom)
@@ -408,7 +408,7 @@ MR_FreeElementHandle Level::InsertElement(FreeElement *pElement, int pRoom, BOOL
 		pElement->AddRenderer();
 	}
 
-	lReturnValue->mElement = pElement;
+	lReturnValue->mElement.reset(pElement);
 
 	MoveElement((MR_FreeElementHandle) lReturnValue, pRoom);
 
@@ -441,8 +441,10 @@ void Level::SetPermElementPos(int pPermElement, int pRoom, const MR_3DCoordinate
 		// MoveElement( (MR_FreeElementHandle)mPermNetActor[ pPermElement ], pRoom );
 
 		mPermNetActor[pPermElement]->mElement->mPosition = pNewPos;
-		if(mPermElementStateBroadcastHook != NULL) {
-			mPermElementStateBroadcastHook(mPermNetActor[pPermElement]->mElement, pRoom, pPermElement, mBroadcastHookData);
+		if (mPermElementStateBroadcastHook) {
+			mPermElementStateBroadcastHook(
+				mPermNetActor[pPermElement]->mElement.get(),
+				pRoom, pPermElement, mBroadcastHookData);
 		}
 		// Insert the element in the moving cache
 		mPermActorIndexCache[mPermActorCacheCount] = pPermElement;
@@ -873,30 +875,24 @@ void Level::Feature::SerializeStructure(ObjStream & pArchive)
 }
 
 // class Level::FreeElementList
-Level::FreeElementList::FreeElementList()
-{
-	mPrevLink = NULL;
-	mNext = NULL;
-	mElement = NULL;
-}
 
 Level::FreeElementList::~FreeElementList()
 {
 	Unlink();
-	delete mElement;
+	mElement.reset();
 }
 
 void Level::FreeElementList::Unlink()
 {
-	if(mNext != NULL) {
+	if (mNext) {
 		mNext->mPrevLink = mPrevLink;
 	}
 
-	if(mPrevLink != NULL) {
+	if (mPrevLink) {
 		*mPrevLink = mNext;
 	}
-	mNext = NULL;
-	mPrevLink = NULL;
+	mNext = nullptr;
+	mPrevLink = nullptr;
 }
 
 void Level::FreeElementList::LinkTo(FreeElementList **pPrevLink)
@@ -907,7 +903,7 @@ void Level::FreeElementList::LinkTo(FreeElementList **pPrevLink)
 	mNext = *mPrevLink;
 	*mPrevLink = this;
 
-	if(mNext != NULL) {
+	if (mNext) {
 		mNext->mPrevLink = &mNext;
 	}
 }
@@ -915,12 +911,13 @@ void Level::FreeElementList::LinkTo(FreeElementList **pPrevLink)
 void Level::FreeElementList::SerializeList(ObjStream &pArchive,
 	FreeElementList **pListHead)
 {
-	if(pArchive.IsWriting()) {
+	if (pArchive.IsWriting()) {
 		FreeElementList *lFreeElement = *pListHead;
 
-		while(lFreeElement) {
+		while (lFreeElement) {
+			auto elem = lFreeElement->mElement.get();
 			Util::ObjectFromFactory::SerializePtr(pArchive,
-				(Util::ObjectFromFactory*&)lFreeElement->mElement);
+				(Util::ObjectFromFactory*&)elem);
 
 			lFreeElement->mElement->mPosition.Serialize(pArchive);
 			pArchive << lFreeElement->mElement->mOrientation;
@@ -928,30 +925,31 @@ void Level::FreeElementList::SerializeList(ObjStream &pArchive,
 			lFreeElement = lFreeElement->mNext;
 		}
 
-		Util::ObjectFromFactory *lNullPtr = NULL;
+		Util::ObjectFromFactory *lNullPtr = nullptr;
 
 		Util::ObjectFromFactory::SerializePtr(pArchive, lNullPtr);
 
 	}
 	else {
-		ASSERT(*pListHead == NULL);
+		assert(*pListHead == nullptr);
 
-		FreeElement *lCurrentElement;
+		FreeElement *newElem = nullptr;
 
 		do {
-			Util::ObjectFromFactory::SerializePtr(pArchive, (Util::ObjectFromFactory * &)lCurrentElement);
+			Util::ObjectFromFactory::SerializePtr(pArchive,
+				(Util::ObjectFromFactory*&)newElem);
 
-			if(lCurrentElement != NULL) {
-				FreeElementList *lFreeElement = new FreeElementList;
+			if (newElem) {
+				FreeElementList *lFreeElement = new FreeElementList();
 
-				lCurrentElement->mPosition.Serialize(pArchive);
-				pArchive >> lCurrentElement->mOrientation;
+				newElem->mPosition.Serialize(pArchive);
+				pArchive >> newElem->mOrientation;
 
-				lFreeElement->mElement = lCurrentElement;
+				lFreeElement->mElement.reset(newElem);
 				lFreeElement->LinkTo(pListHead);
 			}
 
-		} while(lCurrentElement != NULL);
+		} while (newElem);
 	}
 }
 
