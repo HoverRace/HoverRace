@@ -879,7 +879,6 @@ void Level::Feature::SerializeStructure(ObjStream & pArchive)
 Level::FreeElementList::~FreeElementList()
 {
 	Unlink();
-	mElement.reset();
 }
 
 void Level::FreeElementList::Unlink()
