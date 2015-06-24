@@ -55,7 +55,8 @@ void GameSession::Clean()
 	mCurrentLevelNumber = -1;
 }
 
-bool GameSession::LoadNew(const char *pTitle, std::shared_ptr<Track> track, char pGameOpts)
+bool GameSession::LoadNew(const char *pTitle, std::shared_ptr<Track> track,
+	char pGameOpts)
 {
 	bool lReturnValue = false;
 
@@ -128,7 +129,8 @@ void GameSession::Simulate()
 	mLastSimulateCallTime = lSimulateCallTime - lTimeToSimulate;
 }
 
-void GameSession::SimulateLateElement(MR_FreeElementHandle pElement, MR_SimulationTime pDuration, int pRoom)
+void GameSession::SimulateLateElement(MR_FreeElementHandle pElement,
+	MR_SimulationTime pDuration, int pRoom)
 {
 	Level *mCurrentLevel = track->GetLevel();
 	ASSERT(mCurrentLevel != nullptr);
@@ -169,7 +171,8 @@ void GameSession::SimulateSurfaceElems(MR_SimulationTime /*pTimeToSimulate */ )
 
 }
 
-int GameSession::SimulateOneFreeElem(MR_SimulationTime pTimeToSimulate, MR_FreeElementHandle pElementHandle, int pRoom)
+int GameSession::SimulateOneFreeElem(MR_SimulationTime pTimeToSimulate,
+	MR_FreeElementHandle pElementHandle, int pRoom)
 {
 	Level *mCurrentLevel = track->GetLevel();
 
@@ -230,7 +233,10 @@ void GameSession::SimulateFreeElems(MR_SimulationTime pTimeToSimulate)
 	mCurrentLevel->FlushPermElementPosCache();
 }
 
-void GameSession::ComputeShapeContactEffects(int pCurrentRoom, FreeElement * pActor, const RoomContactSpec & pLastSpec, MR_FastArrayBase < int >*pVisitedRooms, int pMaxDepth, MR_SimulationTime pDuration)
+void GameSession::ComputeShapeContactEffects(int pCurrentRoom,
+	FreeElement *pActor, const RoomContactSpec &pLastSpec,
+	MR_FastArrayBase<int> *pVisitedRooms, int pMaxDepth,
+	MR_SimulationTime pDuration)
 {
 	Level *mCurrentLevel = track->GetLevel();
 

@@ -44,40 +44,46 @@ namespace Model {
 
 class MR_DllDeclare GameSession
 {
-	public:
-		GameSession(bool pAllowRendering = true);
-		~GameSession();
+public:
+	GameSession(bool pAllowRendering = true);
+	~GameSession();
 
-		bool LoadNew(const char *pTitle, std::shared_ptr<Track> track, char pGameOpts);
+	bool LoadNew(const char *pTitle, std::shared_ptr<Track> track,
+		char pGameOpts);
 
-		void SetSimulationTime(MR_SimulationTime);
-		MR_SimulationTime GetSimulationTime() const;
-		void Simulate();
-		void SimulateLateElement(MR_FreeElementHandle pElement, MR_SimulationTime pDuration, int pRoom);
+	void SetSimulationTime(MR_SimulationTime);
+	MR_SimulationTime GetSimulationTime() const;
+	void Simulate();
+	void SimulateLateElement(MR_FreeElementHandle pElement,
+		MR_SimulationTime pDuration, int pRoom);
 
-		Level *GetCurrentLevel() const;
-		const char *GetTitle() const;
+	Level *GetCurrentLevel() const;
+	const char *GetTitle() const;
 
-	private:
-		bool LoadLevel(char gameOpts);
-		void Clean();							  // Clean up before destruction or clean-up
+private:
+	bool LoadLevel(char gameOpts);
+	void Clean();  // Clean up before destruction or clean-up
 
-		void SimulateFreeElems(MR_SimulationTime pDuration);
-		int SimulateOneFreeElem(MR_SimulationTime pTimeToSimulate, MR_FreeElementHandle pElementHandle, int pRoom);
-		void SimulateSurfaceElems(MR_SimulationTime pDuration);
+	void SimulateFreeElems(MR_SimulationTime pDuration);
+	int SimulateOneFreeElem(MR_SimulationTime pTimeToSimulate,
+		MR_FreeElementHandle pElementHandle, int pRoom);
+	void SimulateSurfaceElems(MR_SimulationTime pDuration);
 
-		// SimulateFreeElem sub-functions
-		void ComputeShapeContactEffects(int pCurrentRoom, FreeElement *pActor, const RoomContactSpec &pLastSpec, MR_FastArrayBase<int> *pVisitedRooms, int pMaxDepth, MR_SimulationTime pDuration);
+	// SimulateFreeElem sub-functions
+	void ComputeShapeContactEffects(int pCurrentRoom,
+		FreeElement *pActor, const RoomContactSpec &pLastSpec,
+		MR_FastArrayBase<int> *pVisitedRooms, int pMaxDepth,
+		MR_SimulationTime pDuration);
 
-	private:
-		bool mAllowRendering;
-		int mCurrentLevelNumber;
+private:
+	bool mAllowRendering;
+	int mCurrentLevelNumber;
 
-		std::string mTitle;
-		std::shared_ptr<Track> track;
+	std::string mTitle;
+	std::shared_ptr<Track> track;
 
-		MR_SimulationTime mSimulationTime;  ///< Time simulated since the session start
-		Util::OS::timestamp_t mLastSimulateCallTime;  ///< Time in ms obtained by timeGetTime
+	MR_SimulationTime mSimulationTime;  ///< Time simulated since the session start
+	Util::OS::timestamp_t mLastSimulateCallTime;  ///< Time in ms obtained by timeGetTime
 };
 
 }  // namespace Model
