@@ -20,6 +20,7 @@
 //
 
 #include "../Parcel/ObjStream.h"
+#include "Track.h"
 
 #include "Level.h"
 
@@ -28,8 +29,8 @@ using HoverRace::Parcel::ObjStream;
 namespace HoverRace {
 namespace Model {
 
-Level::Level(BOOL pAllowRendering, char pGameOpts) :
-	gravity(1.0)
+Level::Level(Track &track, BOOL pAllowRendering, char pGameOpts) :
+	track(track), gravity(1.0)
 {
 	// Initialization of an empty level
 	mAllowRendering = pAllowRendering;

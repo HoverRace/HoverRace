@@ -81,7 +81,7 @@ void Track::LoadLevel(bool allowRendering, char gameOpts)
 {
 	using namespace HoverRace::Parcel;
 
-	level.reset(new Level(allowRendering, gameOpts));
+	level.reset(new Level(*this, allowRendering, gameOpts));
 
 	recFile->SelectRecord(1);
 	ObjStreamPtr archivePtr(recFile->StreamIn());

@@ -49,6 +49,9 @@
 
 // Class declaration
 namespace HoverRace {
+	namespace Model {
+		class Track;
+	}
 	namespace Parcel {
 		class ObjStream;
 	}
@@ -89,7 +92,7 @@ protected:
 	class MR_DllDeclare SectionShape : public Model::PolygonShape
 	{
 	private:
-		Section * mSection;
+		Section *mSection;
 
 	public:
 		SectionShape(Section * pSection);
@@ -256,8 +259,11 @@ protected:
 	int GetRealRoomRecursive(const MR_2DCoordinate & pPosition, int pOriginalSection, int = -1) const;
 
 public:
-	Level(BOOL pAllowRendering = FALSE, char pGameOpts = 1);
+	Level(Track &track, BOOL pAllowRendering = FALSE, char pGameOpts = 1);
+	Level(const Level&) = delete;
 	~Level();
+
+	Level &operator=(const Level&) = delete;
 
 	// Network stuff
 	void SetBroadcastHook(void (*pCreationHook) (FreeElement *, int, void *), void (*pStateHook) (FreeElement *, int, int, void *), void *pHookData);
@@ -347,6 +353,7 @@ public:
 	void SetGravity(double gravity) { this->gravity = gravity; }
 
 private:
+	Track &track;
 	double gravity;
 };
 
