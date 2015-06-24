@@ -22,6 +22,7 @@
 #include <boost/filesystem/fstream.hpp>
 #include <boost/scoped_array.hpp>
 
+#include "../Model/Track.h"
 #include "../Model/TrackFileCommon.h"
 #include "../Parcel/ClassicRecordFile.h"
 #include "../Parcel/ObjStream.h"
@@ -114,7 +115,8 @@ void TrackCompiler::Compile(std::istream &in) const
 	in.seekg(0, std::ios::beg);
 
 	// The track itself.
-	LevelBuilder builder(log);
+	Model::Track track("");  // Dummy track with default properties.
+	LevelBuilder builder(track, log);
 	if (!outFile.BeginANewRecord()) {
 		throw TrackCompileExn(_("Unable to add the track to the output file"));
 	}

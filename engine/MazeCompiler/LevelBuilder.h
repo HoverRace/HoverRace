@@ -45,7 +45,7 @@ class MR_DllDeclare LevelBuilder : public Model::Level
 	using SUPER = Model::Level;
 
 public:
-	LevelBuilder(const TrackCompilationLogPtr &log);
+	LevelBuilder(Model::Track &track, const TrackCompilationLogPtr &log);
 	virtual ~LevelBuilder() {}
 
 protected:

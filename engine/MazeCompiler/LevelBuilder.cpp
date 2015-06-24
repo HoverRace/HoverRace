@@ -55,8 +55,9 @@ static LevelBuilder *gsCurrentLevelBuilder = nullptr;
 // Local helper functions
 static Model::SurfaceElement *sLoadTexture(TrackSpecParser * pParser);
 
-LevelBuilder::LevelBuilder(const TrackCompilationLogPtr &log) :
-	SUPER(), log(log)
+LevelBuilder::LevelBuilder(Model::Track &track,
+	const TrackCompilationLogPtr &log) :
+	SUPER(track), log(log)
 {
 }
 
