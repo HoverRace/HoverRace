@@ -60,7 +60,9 @@ class MR_DllDeclare Track : public Util::Inspectable
 private:
 	Track() = delete;
 public:
-	Track(const std::string &name, Parcel::RecordFilePtr recFile);
+	Track(const std::string &name,
+		std::shared_ptr<Parcel::RecordFile> recFile =
+			std::shared_ptr<Parcel::RecordFile>());
 	virtual ~Track();
 
 	Parcel::RecordFilePtr GetRecordFile() const { return recFile; }
@@ -87,6 +89,7 @@ public:
 	virtual void Inspect(Util::InspectMapNode &node) const;
 
 private:
+	void LoadHeader();
 	void LoadLevel(bool allowRendering, char gameOpts);
 	void LoadMap();
 

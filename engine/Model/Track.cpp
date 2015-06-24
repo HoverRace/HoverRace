@@ -36,14 +36,15 @@ namespace Model {
 /**
  * Constructor.
  * @param name The name of the track.
- * @param recFile The record file to load the track from (may not be @c NULL).
+ * @param recFile The record file to load the track from
+ *                (may be @c nullptr if in-memory only).
  * @throw Parcel::ObjStreamExn
  */
-Track::Track(const std::string &name, Parcel::RecordFilePtr recFile) :
-	SUPER(), recFile(recFile), level(nullptr), offset(0, 0), size(0, 0), map()
+Track::Track(const std::string &name,
+	std::shared_ptr<Parcel::RecordFile> recFile) :
+	SUPER(), recFile(std::move(recFile)), offset(0, 0), size(0, 0), map()
 {
-	recFile->SelectRecord(0);
-	header.Serialize(*recFile->StreamIn());
+	LoadHeader();
 	header.name = name;
 }
 
@@ -77,21 +78,37 @@ void Track::Inspect(Util::InspectMapNode &node) const
 		AddSubobject("metadata", &header);
 }
 
+void Track::LoadHeader()
+{
+	if (recFile) {
+		recFile->SelectRecord(0);
+		header.Serialize(*recFile->StreamIn());
+	}
+}
+
 void Track::LoadLevel(bool allowRendering, char gameOpts)
 {
 	using namespace HoverRace::Parcel;
 
 	level.reset(new Level(*this, allowRendering, gameOpts));
 
-	recFile->SelectRecord(1);
-	ObjStreamPtr archivePtr(recFile->StreamIn());
-	ObjStream &archive = *archivePtr;
-	level->Serialize(archive);
+	if (recFile) {
+		recFile->SelectRecord(1);
+		ObjStreamPtr archivePtr(recFile->StreamIn());
+		ObjStream &archive = *archivePtr;
+		level->Serialize(archive);
+	}
 }
 
 void Track::LoadMap()
 {
 	using namespace HoverRace::Parcel;
+
+	if (!recFile) {
+		HR_LOG(debug) << "Skipping map load for in-memory track: " <<
+			header.name;
+		return;
+	}
 
 	if (recFile->GetNbRecords() < 4) {
 		Log::Warn("Track does not have a map: %s", header.name.c_str());
