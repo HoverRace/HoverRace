@@ -265,7 +265,7 @@ public:
 	// Serialisation functions
 	void Serialize(Parcel::ObjStream &pArchive);
 
-	// Strucre Interrocation functions
+	// Structure interrogation functions
 	int GetRoomCount() const;
 
 	// Starting pos related stuff
