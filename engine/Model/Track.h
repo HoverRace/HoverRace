@@ -65,7 +65,7 @@ public:
 
 	Parcel::RecordFilePtr GetRecordFile() const { return recFile; }
 	const TrackEntry &GetHeader() const { return header; }
-	Level *GetLevel() const { return level; }
+	Level *GetLevel() const { return level.get(); }
 
 	/**
 	 * Retrieve the coordinates of the north-west corner of the track.
@@ -96,7 +96,7 @@ public:
 private:
 	Parcel::RecordFilePtr recFile;
 	TrackEntry header;
-	Level *level;
+	std::unique_ptr<Level> level;
 	Vec2 offset;
 	Vec2 size;
 	std::shared_ptr<Display::Res<Display::Texture>> map;

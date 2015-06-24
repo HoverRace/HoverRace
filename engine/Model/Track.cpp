@@ -49,7 +49,6 @@ Track::Track(const std::string &name, Parcel::RecordFilePtr recFile) :
 
 Track::~Track()
 {
-	if (level) delete level;
 }
 
 /**
@@ -82,7 +81,7 @@ void Track::LoadLevel(bool allowRendering, char gameOpts)
 {
 	using namespace HoverRace::Parcel;
 
-	level = new Level(allowRendering, gameOpts);
+	level.reset(new Level(allowRendering, gameOpts));
 
 	recFile->SelectRecord(1);
 	ObjStreamPtr archivePtr(recFile->StreamIn());
@@ -122,8 +121,8 @@ void Track::LoadMap()
 
 void Track::Load(bool allowRendering, char gameOpts)
 {
-	if (level) delete level;
-	if (map) map.reset();
+	level.reset();
+	map.reset();
 
 	LoadLevel(allowRendering, gameOpts);
 	LoadMap();
