@@ -111,7 +111,7 @@ void Track::LoadMap()
 	}
 
 	if (recFile->GetNbRecords() < 4) {
-		Log::Warn("Track does not have a map: %s", header.name.c_str());
+		HR_LOG(warning) << "Track does not have a map: " << header.name;
 		return;
 	}
 
