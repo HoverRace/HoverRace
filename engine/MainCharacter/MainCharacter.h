@@ -164,8 +164,6 @@ private:
 
 	MainCharacter(const Util::ObjectFromFactoryId &pId);
 
-	static Util::ObjectFromFactory *FactoryFunc(MR_UInt16 pElemenType);
-
 	int InternalSimulate(MR_SimulationTime pDuration, Model::Level *pLevel,
 		int pRoom);
 
@@ -232,20 +230,21 @@ public:
 
 protected:
 	// Logic interface
-	int Simulate(MR_SimulationTime pDuration, Model::Level *pLevel, int pRoom);
+	int Simulate(MR_SimulationTime pDuration, Model::Level *pLevel, int pRoom)
+		override;
 
-	const Model::ShapeInterface *GetObstacleShape();
+	const Model::ShapeInterface *GetObstacleShape() override;
 
 	// ContactEffectShapeInterface
 	void ApplyEffect(const Model::ContactEffect *pEffect,
 		MR_SimulationTime pTime, MR_SimulationTime pDuration,
 		BOOL pValidDirection, MR_Angle pHorizontalDirection,
-		MR_Int32 pZMin, MR_Int32 pZMax, Model::Level *pLevel);
+		MR_Int32 pZMin, MR_Int32 pZMax, Model::Level *pLevel) override;
 
-	const Model::ContactEffectList *GetEffectList();
+	const Model::ContactEffectList *GetEffectList() override;
 
-	const Model::ShapeInterface *GetReceivingContactEffectShape();
-	const Model::ShapeInterface *GetGivingContactEffectShape();
+	const Model::ShapeInterface *GetReceivingContactEffectShape() override;
+	const Model::ShapeInterface *GetGivingContactEffectShape() override;
 
 public:
 	// Sounds
