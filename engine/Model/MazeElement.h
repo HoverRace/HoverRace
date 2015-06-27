@@ -86,13 +86,6 @@ public:
 	virtual void AddRenderer() { }
 
 	/**
-	 * Init string used during maze creation.
-	 * @param pInitStr The init string.
-	 * @return @c true if it succeeds, @c false if it fails.
-	 */
-	virtual BOOL InitString(const char *pInitStr = nullptr);
-
-	/**
 	 * Serialize the logic component and the body of the component.
 	 * @param [in,out] pArchive The archive.
 	 */

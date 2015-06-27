@@ -30,18 +30,6 @@ namespace Model {
 
 // Element default behavior
 
-BOOL Element::InitString(const char *pInitStr)
-{
-	BOOL lReturnValue = TRUE;
-
-	// Return an error if this function have not been
-	// overridden and if the parameters are not null
-	if (pInitStr && strlen(pInitStr) > 0)
-		lReturnValue = FALSE;
-
-	return lReturnValue;
-}
-
 void Element::ApplyEffects(const ContactEffectList *pList,
 	MR_SimulationTime pTime, MR_SimulationTime pDuration,
 	BOOL pValidDirection, MR_Angle pHorizontalDirection,
