@@ -189,18 +189,6 @@ void Level::Serialize(ObjStream &pArchive)
 			}
 		}
 	}
-
-	// the logic state of each element can now be serialized because all
-	// elements are now created (this is only a precaution in case that some
-	// elements have a link between them
-	for(lCounter = 0; lCounter < mNbRoom; lCounter++) {
-		mRoomList[lCounter].SerializeSurfacesLogicState(pArchive);
-	}
-
-	for(lCounter = 0; lCounter < mNbFeature; lCounter++) {
-		mFeatureList[lCounter].SerializeSurfacesLogicState(pArchive);
-	}
-
 }
 
 // Internal helper functions
@@ -728,24 +716,6 @@ void Level::Section::SerializeStructure(ObjStream & pArchive)
 
 	for(lCounter = 0; lCounter < mNbVertex; lCounter++) {
 		Util::ObjectFromFactory::SerializePtr(pArchive, (Util::ObjectFromFactory * &)mWallTexture[lCounter]);
-	}
-}
-
-void Level::Section::SerializeSurfacesLogicState(ObjStream & pArchive)
-{
-	// Serialize the textures state
-	if(mFloorTexture != NULL) {
-		mFloorTexture->SerializeLogicState(pArchive);
-	}
-
-	if(mCeilingTexture != NULL) {
-		mCeilingTexture->SerializeLogicState(pArchive);
-	}
-
-	for(int lCounter = 0; lCounter < mNbVertex; lCounter++) {
-		if(mWallTexture[lCounter] != NULL) {
-			mWallTexture[lCounter]->SerializeLogicState(pArchive);
-		}
 	}
 }
 

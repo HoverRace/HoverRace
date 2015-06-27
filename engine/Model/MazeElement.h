@@ -85,15 +85,6 @@ public:
 
 	virtual void AddRenderer() { }
 
-	/**
-	 * Serialize the logic component and the body of the component.
-	 * @param [in,out] pArchive The archive.
-	 */
-	virtual void SerializeLogicState(HoverRace::Parcel::ObjStream &pArchive)
-	{
-		HR_UNUSED(pArchive);
-	}
-
 	// Contact effect interface
 	virtual void ApplyEffect(const ContactEffect *pEffect,
 		MR_SimulationTime pTime, MR_SimulationTime pDuration,

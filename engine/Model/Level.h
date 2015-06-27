@@ -139,7 +139,6 @@ protected:
 		~Section();
 
 		void SerializeStructure(Parcel::ObjStream &pArchive);
-		void SerializeSurfacesLogicState(Parcel::ObjStream &pArchive);
 	};
 
 	class Feature : public Section
