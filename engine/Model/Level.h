@@ -62,9 +62,8 @@ using MR_FreeElementHandle = MR_FreeElementHandleClass*;
 namespace HoverRace {
 namespace Model {
 
-class SectionId
+struct SectionId
 {
-public:
 	enum eSectionType { eRoom, eFeature };
 
 	eSectionType mType;

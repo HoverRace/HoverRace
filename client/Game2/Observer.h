@@ -31,7 +31,7 @@ namespace HoverRace {
 		class ClientSession;
 	}
 	namespace Model {
-		class SectionId;
+		struct SectionId;
 	}
 }
 
