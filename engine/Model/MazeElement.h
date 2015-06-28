@@ -105,7 +105,16 @@ public:
 		MR_SimulationTime pTime, MR_SimulationTime pDuration,
 		BOOL pValidDirection, MR_Angle pHorizontalDirection,
 		MR_Int32 pZMin, MR_Int32 pZMax,
-		Track &track);
+		Track &track)
+	{
+		if (pList) {
+			for (auto lEffect : *pList) {
+				ApplyEffect(lEffect, pTime, pDuration,
+					pValidDirection, pHorizontalDirection,
+					pZMin, pZMax, track);
+			}
+		}
+	}
 
 public:
 	// Prevent overriding of the Serialize function.
@@ -155,8 +164,16 @@ public:
 	virtual void PlayInternalSounds() { }
 	virtual void PlayExternalSounds(int pDB, int pPan) { HR_UNUSED(pDB, pPan); }
 
-	virtual ElementNetState GetNetState() const;
-	virtual void SetNetState(int pDataLen, const MR_UInt8 *pData);
+	virtual ElementNetState GetNetState() const
+	{
+		return { 0, nullptr };
+	}
+
+	virtual void SetNetState(int pDataLen, const MR_UInt8 *pData)
+	{
+		HR_UNUSED(pDataLen, pData);
+		assert(pDataLen == 0);
+	}
 
 	// Logic interface (For simulation)
 
