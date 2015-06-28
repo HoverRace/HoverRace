@@ -1,3 +1,4 @@
+
 // MainCharacter.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
