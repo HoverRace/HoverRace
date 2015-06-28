@@ -24,6 +24,7 @@
 
 #include "MainCharacterRenderer.h"
 #include "MainCharacter.h"
+#include "../Model/Track.h"
 #include "../Model/RaceEffects.h"
 #include "../Model/ObstacleCollisionReport.h"
 #include "../Util/BitPacking.h"
@@ -505,9 +506,10 @@ void MainCharacter::SetLookBackState(bool lookBackState)
 }
 
 int MainCharacter::Simulate(MR_SimulationTime pDuration,
-	Model::Level *pLevel, int pRoom)
+	Model::Track &track, int pRoom)
 {
 	mRoom = pRoom;
+	auto *level = track.GetLevel();
 
 	if(pDuration > 0) {
 		if(mMasterMode) {
@@ -553,9 +555,9 @@ int MainCharacter::Simulate(MR_SimulationTime pDuration,
 
 		while(lDuration > 0) {
 			if(lDuration > TIME_SLICE)
-				pRoom = InternalSimulate(TIME_SLICE, pLevel, pRoom);
+				pRoom = InternalSimulate(TIME_SLICE, track, pRoom);
 			else
-				pRoom = InternalSimulate(lDuration, pLevel, pRoom);
+				pRoom = InternalSimulate(lDuration, track, pRoom);
 			lDuration -= TIME_SLICE;
 		}
 
@@ -588,7 +590,7 @@ int MainCharacter::Simulate(MR_SimulationTime pDuration,
 						lMissile->mPosition.mZ += 1100;
 						lMissile->mOrientation = mCabinOrientation;
 
-						pLevel->InsertElement(lMissile, mRoom, TRUE);
+						level->InsertElement(lMissile, mRoom, TRUE);
 
 						if (mRenderer) {
 							mInternalSoundList.Add(mRenderer->GetFireSound());
@@ -601,7 +603,7 @@ int MainCharacter::Simulate(MR_SimulationTime pDuration,
 				if(!mMineList.IsEmpty() && (mGameOpts & OPT_ALLOW_MINES)) {
 					MR_3DCoordinate lPos = mPosition;
 					lPos.mZ += 800;
-					pLevel->SetPermElementPos(mMineList.GetHead(), mRoom, lPos);
+					level->SetPermElementPos(mMineList.GetHead(), mRoom, lPos);
 					mMineList.Remove();
 				}
 			}
@@ -610,7 +612,7 @@ int MainCharacter::Simulate(MR_SimulationTime pDuration,
 					MR_3DCoordinate lPos = mPosition;
 					lPos.mZ += 1200;
 
-					pLevel->SetPermElementPos(mPowerUpList.GetHead(), mRoom, lPos);
+					level->SetPermElementPos(mPowerUpList.GetHead(), mRoom, lPos);
 					mPowerUpList.Remove();
 
 					mPowerUpLeft = ePwrUpDuration;
@@ -618,13 +620,16 @@ int MainCharacter::Simulate(MR_SimulationTime pDuration,
 			}
 		}
 	} else									  // Slave mode
-		pRoom = InternalSimulate(pDuration, pLevel, pRoom);
+		pRoom = InternalSimulate(pDuration, track, pRoom);
 
 	return pRoom;
 }
 
-int MainCharacter::InternalSimulate(MR_SimulationTime pDuration, Model::Level *pLevel, int pRoom)
+int MainCharacter::InternalSimulate(MR_SimulationTime pDuration,
+	Model::Track &track, int pRoom)
 {
+	auto level = track.GetLevel();
+
 	// Determine new speed (PosVar and OrientationVar
 	double lAbsoluteSpeed = sqrt(mXSpeed * mXSpeed + mYSpeed * mYSpeed);
 
@@ -648,7 +653,7 @@ int MainCharacter::InternalSimulate(MR_SimulationTime pDuration, Model::Level *p
 		}
 	}
 
-	mZSpeed += (pDuration * eZAccell[mHoverModel]) * pLevel->GetGravity();
+	mZSpeed += (pDuration * eZAccell[mHoverModel]) * level->GetGravity();
 
 	if(mZSpeed < -eMaxZSpeed[mHoverModel])
 		mZSpeed = -eMaxZSpeed[mHoverModel];
@@ -731,7 +736,7 @@ int MainCharacter::InternalSimulate(MR_SimulationTime pDuration, Model::Level *p
 	for (;;) {
 		lSuccessfullTry = FALSE;
 
-		lReport.GetContactWithObstacles(pLevel, &lShape, pRoom, this);
+		lReport.GetContactWithObstacles(level, &lShape, pRoom, this);
 		if(lReport.IsInMaze()) {
 			if(!lReport.HaveContact()) {
 				mPosition = lShape.mPosition;
@@ -743,7 +748,7 @@ int MainCharacter::InternalSimulate(MR_SimulationTime pDuration, Model::Level *p
 				// Determine if we can go on the object
 				if((lReport.SpaceToCeiling() > 0) && (lReport.StepHeight() <= 1 - lTranslation.mZ)) {
 					lShape.mPosition.mZ += lReport.StepHeight();
-					lReport.GetContactWithObstacles(pLevel, &lShape, pRoom, this);
+					lReport.GetContactWithObstacles(level, &lShape, pRoom, this);
 
 					if(lReport.IsInMaze()) {
 						if(!lReport.HaveContact()) {
@@ -763,7 +768,7 @@ int MainCharacter::InternalSimulate(MR_SimulationTime pDuration, Model::Level *p
 				else if((mZSpeed > 0) && (lReport.SpaceToFloor() > 0) && (lReport.CeilingStepHeight() <= lTranslation.mZ)) {
 					lShape.mPosition.mZ -= lReport.CeilingStepHeight() + 1;
 
-					lReport.GetContactWithObstacles(pLevel, &lShape, pRoom, this);
+					lReport.GetContactWithObstacles(level, &lShape, pRoom, this);
 
 					if(lReport.IsInMaze()) {
 						if(!lReport.HaveContact())

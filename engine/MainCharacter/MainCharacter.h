@@ -164,7 +164,7 @@ private:
 
 	MainCharacter(const Util::ObjectFromFactoryId &pId);
 
-	int InternalSimulate(MR_SimulationTime pDuration, Model::Level *pLevel,
+	int InternalSimulate(MR_SimulationTime pDuration, Model::Track &track,
 		int pRoom);
 
 public:
@@ -230,7 +230,7 @@ public:
 
 protected:
 	// Logic interface
-	int Simulate(MR_SimulationTime pDuration, Model::Level *pLevel, int pRoom)
+	int Simulate(MR_SimulationTime pDuration, Model::Track &track, int pRoom)
 		override;
 
 	const Model::ShapeInterface *GetObstacleShape() override;

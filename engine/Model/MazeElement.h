@@ -39,6 +39,7 @@
 namespace HoverRace {
 	namespace Model {
 		class Level;
+		class Track;
 	}
 	namespace Parcel {
 		class ObjStream;
@@ -162,14 +163,13 @@ public:
 	/**
 	 * Advance the simulation.
 	 * @param pTimeSlice The time slice to simulate over.
-	 * @param [in,out] pLevel The level (may be @c nullptr).
+	 * @param track The track.
 	 * @param pRoom The room number.
 	 * @return The new room number.
 	 */
-	virtual int Simulate(MR_SimulationTime pTimeSlice,
-		Level *pLevel, int pRoom)
+	virtual int Simulate(MR_SimulationTime pTimeSlice, Track &track, int pRoom)
 	{
-		HR_UNUSED(pTimeSlice, pLevel);
+		HR_UNUSED(pTimeSlice, track);
 		return pRoom;
 	}
 

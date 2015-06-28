@@ -58,9 +58,9 @@ protected:
 	const Model::ShapeInterface *GetReceivingContactEffectShape() override { return this; }
 
 	int Simulate(MR_SimulationTime pTimeSlice,
-		Model::Level *pLevel, int pRoom) override;
+		Model::Track &track, int pRoom) override;
 	int InternalSimulate(MR_SimulationTime pDuration,
-		Model::Level *pLevel, int pRoom);
+		Model::Track &track, int pRoom);
 
 	void ApplyEffect(const Model::ContactEffect *pEffect,
 		MR_SimulationTime pTime, MR_SimulationTime pDuration,

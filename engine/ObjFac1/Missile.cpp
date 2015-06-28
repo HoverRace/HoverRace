@@ -23,6 +23,7 @@
 #include "ObjFac1Res.h"
 #include "../Model/ConcreteShape.h"
 #include "../Model/ObstacleCollisionReport.h"
+#include "../Model/Track.h"
 
 using HoverRace::ObjFacTools::ResourceLib;
 using namespace HoverRace::VideoServices;
@@ -111,16 +112,16 @@ const Model::ContactEffectList *Missile::GetEffectList()
 
 // Simulation
 int Missile::Simulate(MR_SimulationTime pDuration,
-	Model::Level *pLevel, int pRoom)
+	Model::Track &track, int pRoom)
 {
 
 	// Do the simulation
 	while(pDuration > 0) {
 		if(pDuration > TIME_SLICE) {
-			pRoom = InternalSimulate(TIME_SLICE, pLevel, pRoom);
+			pRoom = InternalSimulate(TIME_SLICE, track, pRoom);
 		}
 		else {
-			pRoom = InternalSimulate(pDuration, pLevel, pRoom);
+			pRoom = InternalSimulate(pDuration, track, pRoom);
 		}
 		pDuration -= TIME_SLICE;
 	}
@@ -160,7 +161,7 @@ int Missile::Simulate(MR_SimulationTime pDuration,
 }
 
 int Missile::InternalSimulate(MR_SimulationTime pDuration,
-	Model::Level *pLevel, int pRoom)
+	Model::Track &track, int pRoom)
 {
 
 	mLived += pDuration;
@@ -213,7 +214,7 @@ int Missile::InternalSimulate(MR_SimulationTime pDuration,
 	for (;;) {
 		lSuccessfullTry = FALSE;
 
-		lReport.GetContactWithObstacles(pLevel, &lShape, pRoom, this);
+		lReport.GetContactWithObstacles(track.GetLevel(), &lShape, pRoom, this);
 
 		if(lReport.IsInMaze()) {
 			if(!lReport.HaveContact()) {

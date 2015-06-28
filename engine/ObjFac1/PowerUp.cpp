@@ -95,7 +95,7 @@ const Model::ShapeInterface *PowerUp::GetGivingContactEffectShape()
 }
 
 // Simulation
-int PowerUp::Simulate(MR_SimulationTime pDuration, Model::Level*, int pRoom)
+int PowerUp::Simulate(MR_SimulationTime pDuration, Model::Track&, int pRoom)
 {
 	// Just rotate on ourself
 	if(pDuration != 0) {

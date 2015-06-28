@@ -21,6 +21,7 @@
 
 #include "TestElement.h"
 #include "../Model/ObstacleCollisionReport.h"
+#include "../Model/Track.h"
 
 using HoverRace::ObjFacTools::ResourceLib;
 
@@ -43,8 +44,10 @@ TestElement::TestElement(const Util::ObjectFromFactoryId &pId,
 }
 
 int TestElement::Simulate(MR_SimulationTime pDuration,
-	Model::Level *pLevel, int pRoom)
+	Model::Track &track, int pRoom)
 {
+	auto level = track.GetLevel();
+
 	mElapsedFrameTime += pDuration;
 
 	int lFrameIncrement = mElapsedFrameTime / 75;
@@ -84,7 +87,7 @@ int TestElement::Simulate(MR_SimulationTime pDuration,
 	lShape.mRay = mCollisionShape.mRay;
 	lShape.mPosition = lNewPos;
 
-	lReport.GetContactWithObstacles(pLevel, &lShape, pRoom, this);
+	lReport.GetContactWithObstacles(level, &lShape, pRoom, this);
 
 	if(lReport.IsInMaze()) {
 		if(!lReport.HaveContact()) {
@@ -99,7 +102,7 @@ int TestElement::Simulate(MR_SimulationTime pDuration,
 
 				lShape.mPosition = lNewPos;
 
-				lReport.GetContactWithObstacles(pLevel, &lShape, pRoom, this);
+				lReport.GetContactWithObstacles(level, &lShape, pRoom, this);
 
 				if(lReport.IsInMaze()) {
 					if(!lReport.HaveContact()) {

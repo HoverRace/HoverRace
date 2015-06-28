@@ -103,7 +103,7 @@ const Model::ShapeInterface *BumperGate::GetGivingContactEffectShape()
 }
 
 // Simulation
-int BumperGate::Simulate(MR_SimulationTime pDuration, Model::Level*, int pRoom)
+int BumperGate::Simulate(MR_SimulationTime pDuration, Model::Track&, int pRoom)
 {
 
 	if(pDuration >= 0) {

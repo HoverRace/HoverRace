@@ -53,7 +53,7 @@ protected:
 	const Model::ShapeInterface *GetGivingContactEffectShape() override;
 	const Model::ShapeInterface *GetReceivingContactEffectShape() override;
 
-	int Simulate(MR_SimulationTime pTimeSlice, Model::Level *pLevel,
+	int Simulate(MR_SimulationTime pTimeSlice, Model::Track &track,
 		int pRoom) override;
 
 	// Network state

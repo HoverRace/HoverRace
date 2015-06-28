@@ -24,6 +24,7 @@
 #include "ObjFac1Res.h"
 #include "../Model/ConcreteShape.h"
 #include "../Model/ObstacleCollisionReport.h"
+#include "../Model/Track.h"
 
 using HoverRace::ObjFacTools::ResourceLib;
 
@@ -108,7 +109,7 @@ const Model::ShapeInterface *Mine::GetGivingContactEffectShape()
 }
 
 // Simulation
-int Mine::Simulate(MR_SimulationTime pDuration, Model::Level *pLevel, int pRoom)
+int Mine::Simulate(MR_SimulationTime pDuration, Model::Track &track, int pRoom)
 {
 	if(pRoom == -1) {
 		mOnGround = false;
@@ -120,7 +121,7 @@ int Mine::Simulate(MR_SimulationTime pDuration, Model::Level *pLevel, int pRoom)
 
 		mPosition.mZ -= static_cast<int>(pDuration * 0.6);
 
-		lReport.GetContactWithObstacles(pLevel, this, pRoom, this);
+		lReport.GetContactWithObstacles(track.GetLevel(), this, pRoom, this);
 
 		if(!lReport.IsInMaze()) {
 			ASSERT(FALSE);

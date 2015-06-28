@@ -53,7 +53,7 @@ public:
 		ObjFacTools::ResourceLib &resourceLib, int pActorRes);
 	~TestElement() { }
 
-	int Simulate(MR_SimulationTime pDuration, Model::Level *pLevel,
+	int Simulate(MR_SimulationTime pDuration, Model::Track &track,
 		int pRoom) override;
 
 protected:

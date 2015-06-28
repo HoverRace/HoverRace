@@ -54,7 +54,7 @@ protected:
 	const Model::ShapeInterface *GetReceivingContactEffectShape() override;
 
 	int Simulate(MR_SimulationTime pTimeSlice,
-		Model::Level *pLevel, int pRoom) override;
+		Model::Track &track, int pRoom) override;
 
 	void Render(VideoServices::Viewport3D *pDest,
 		MR_SimulationTime pTime) override;

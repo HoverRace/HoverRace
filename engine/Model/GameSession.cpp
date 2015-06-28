@@ -180,7 +180,7 @@ int GameSession::SimulateOneFreeElem(MR_SimulationTime pTimeToSimulate,
 	FreeElement *lElement = mCurrentLevel->GetFreeElement(pElementHandle);
 
 	// Ask the element to simulate its movement
-	int lNewRoom = lElement->Simulate(pTimeToSimulate, mCurrentLevel, pRoom);
+	int lNewRoom = lElement->Simulate(pTimeToSimulate, *track, pRoom);
 	int lReturnValue = lNewRoom;
 
 	if(lNewRoom == Level::eMustBeDeleted) {
