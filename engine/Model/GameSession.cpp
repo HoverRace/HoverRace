@@ -22,6 +22,8 @@
 
 #include "GameSession.h"
 #include "ObstacleCollisionReport.h"
+#include "../Model/Level.h"
+#include "../Model/Track.h"
 #include "../Util/FastArray.h"
 
 #define MR_SIMULATION_SLICE             15

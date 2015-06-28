@@ -21,10 +21,11 @@
 
 #pragma once
 
-#include "Level.h"
-#include "Track.h"
-#include "ContactEffect.h"
 #include "../Parcel/RecordFile.h"
+#include "../Util/WorldCoordinates.h"
+#include "ContactEffect.h"
+#include "MazeElement.h"
+#include "ShapeCollisions.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
 #	ifdef MR_ENGINE
@@ -35,6 +36,13 @@
 #else
 #	define MR_DllDeclare
 #endif
+
+namespace HoverRace {
+	namespace Model {
+		class Level;
+		class Track;
+	}
+}
 
 template<class T>
 class MR_FastArrayBase;

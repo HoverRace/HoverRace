@@ -1,7 +1,7 @@
 // ClientSession.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@
 #include <boost/thread/locks.hpp>
 
 #include "../../engine/MainCharacter/MainCharacter.h"
+#include "../../engine/Model/Level.h"
 #include "../../engine/Model/Track.h"
 #include "../../engine/Model/TrackFileCommon.h"
 #include "../../engine/Player/Player.h"

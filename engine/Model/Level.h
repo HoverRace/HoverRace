@@ -57,8 +57,6 @@ namespace HoverRace {
 		class ObjStream;
 	}
 }
-class MR_FreeElementHandleClass;
-using MR_FreeElementHandle = MR_FreeElementHandleClass*;
 
 namespace HoverRace {
 namespace Model {
