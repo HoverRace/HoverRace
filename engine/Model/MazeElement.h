@@ -106,9 +106,9 @@ public:
 		MR_Int32 pZMin, MR_Int32 pZMax,
 		Level *pLevel);
 
-private:
+public:
 	// Prevent overriding of the Serialize function.
-	void Serialize(HoverRace::Parcel::ObjStream &pArchive) override
+	void Serialize(HoverRace::Parcel::ObjStream &pArchive) override final
 	{
 		SUPER::Serialize(pArchive);
 	}
