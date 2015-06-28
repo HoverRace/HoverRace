@@ -91,11 +91,11 @@ public:
 		MR_SimulationTime pTime, MR_SimulationTime pDuration,
 		BOOL pValidDirection, MR_Angle pHorizontalDirection,
 		MR_Int32 pZMin, MR_Int32 pZMax,
-		Level *pLevel)
+		Track &track)
 	{
 		HR_UNUSED(pEffect, pTime, pDuration,
 			pValidDirection, pHorizontalDirection,
-			pZMin, pZMax, pLevel);
+			pZMin, pZMax, track);
 	}
 
 	virtual const ContactEffectList *GetEffectList() { return nullptr; }
@@ -105,7 +105,7 @@ public:
 		MR_SimulationTime pTime, MR_SimulationTime pDuration,
 		BOOL pValidDirection, MR_Angle pHorizontalDirection,
 		MR_Int32 pZMin, MR_Int32 pZMax,
-		Level *pLevel);
+		Track &track);
 
 public:
 	// Prevent overriding of the Serialize function.

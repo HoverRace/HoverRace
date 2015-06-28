@@ -129,7 +129,7 @@ int BumperGate::Simulate(MR_SimulationTime pDuration, Model::Track&, int pRoom)
 void BumperGate::ApplyEffect(const Model::ContactEffect *pEffect,
 	MR_SimulationTime, MR_SimulationTime,
 	BOOL, MR_Angle,
-	MR_Int32, MR_Int32, Model::Level*)
+	MR_Int32, MR_Int32, Model::Track&)
 {
 	using namespace Model;
 

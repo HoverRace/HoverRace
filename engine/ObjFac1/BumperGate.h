@@ -60,7 +60,7 @@ protected:
 	void ApplyEffect(const Model::ContactEffect *pEffect,
 		MR_SimulationTime pTime, MR_SimulationTime pDuration,
 		BOOL pValidDirection, MR_Angle pHorizontalDirection,
-		MR_Int32 pZMin, MR_Int32 pZMax, Model::Level *pLevel) override;
+		MR_Int32 pZMin, MR_Int32 pZMax, Model::Track &track) override;
 
 private:
 	MR_SimulationTime mTimeSinceLastCollision;

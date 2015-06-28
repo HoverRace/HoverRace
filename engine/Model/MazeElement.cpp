@@ -33,14 +33,13 @@ namespace Model {
 void Element::ApplyEffects(const ContactEffectList *pList,
 	MR_SimulationTime pTime, MR_SimulationTime pDuration,
 	BOOL pValidDirection, MR_Angle pHorizontalDirection,
-	MR_Int32 pZMin, MR_Int32 pZMax,
-	Level *pLevel)
+	MR_Int32 pZMin, MR_Int32 pZMax, Track &track)
 {
 	if (pList) {
 		for (auto lEffect : *pList) {
 			ApplyEffect(lEffect, pTime, pDuration,
 				pValidDirection, pHorizontalDirection,
-				pZMin, pZMax, pLevel);
+				pZMin, pZMax, track);
 		}
 	}
 }

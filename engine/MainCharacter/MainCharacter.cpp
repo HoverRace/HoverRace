@@ -825,9 +825,11 @@ const Model::ShapeInterface *MainCharacter::GetObstacleShape()
 void MainCharacter::ApplyEffect(const Model::ContactEffect *pEffect,
 	MR_SimulationTime pTime, MR_SimulationTime pDuration,
 	BOOL pValidDirection, MR_Angle pHorizontalDirection,
-	MR_Int32, MR_Int32, Model::Level *pLevel)
+	MR_Int32, MR_Int32, Model::Track &track)
 {
 	using namespace HoverRace::Model;
+
+	auto level = track.GetLevel();
 
 	const PhysicalCollision *lPhysCollision = dynamic_cast<const PhysicalCollision*>(pEffect);
 	const SpeedDoubler *lSpeedDoubler = dynamic_cast<const SpeedDoubler*>(pEffect);
@@ -919,7 +921,7 @@ void MainCharacter::ApplyEffect(const Model::ContactEffect *pEffect,
 
 			if((lLostOfControl->mElementId != -1) && !mMineList.Full() && (mGameOpts & OPT_ALLOW_MINES)) {
 				mMineList.Add(lLostOfControl->mElementId);
-				pLevel->SetPermElementPos(lLostOfControl->mElementId, -1, mPosition);
+				level->SetPermElementPos(lLostOfControl->mElementId, -1, mPosition);
 			}
 		}
 	}
@@ -927,7 +929,7 @@ void MainCharacter::ApplyEffect(const Model::ContactEffect *pEffect,
 	if(((lPowerUp != NULL) && mMasterMode) && (mGameOpts & OPT_ALLOW_CANS)) {
 		if((mPowerUpLeft == 0) && (lPowerUp->mElementPermId != -1) && !mPowerUpList.Full()) {
 			mPowerUpList.Add(lPowerUp->mElementPermId);
-			pLevel->SetPermElementPos(lPowerUp->mElementPermId, -1, mPosition);
+			level->SetPermElementPos(lPowerUp->mElementPermId, -1, mPosition);
 			mInternalSoundList.Add(mRenderer->GetPickupSound());
 			mExternalSoundList.Add(mRenderer->GetPickupSound());
 		}

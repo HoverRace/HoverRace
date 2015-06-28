@@ -278,7 +278,10 @@ void GameSession::ComputeShapeContactEffects(int pCurrentRoom,
 			const ContactEffectList *lObstacleEffectList = lFloor->GetEffectList();
 
 			// Apply feature effects to the actor
-			pActor->ApplyEffects(lObstacleEffectList, mSimulationTime, pDuration, lValidDirection, lDirectionAngle, lSpec.mZMin, lSpec.mZMax, mCurrentLevel);
+			pActor->ApplyEffects(lObstacleEffectList,
+				mSimulationTime, pDuration,
+				lValidDirection, lDirectionAngle,
+				lSpec.mZMin, lSpec.mZMax, *track);
 
 			// Apply actor effects to the feature
 			// if( lValidDirection )
@@ -313,11 +316,17 @@ void GameSession::ComputeShapeContactEffects(int pCurrentRoom,
 				const ContactEffectList *lObstacleEffectList = lObstacleElem->GetEffectList();
 
 				// Apply feature effects to the actor
-				pActor->ApplyEffects(lObstacleEffectList, mSimulationTime, pDuration, lValidDirection, lDirectionAngle, lSpec.mZMin, lSpec.mZMax, mCurrentLevel);
+				pActor->ApplyEffects(lObstacleEffectList,
+					mSimulationTime, pDuration,
+					lValidDirection, lDirectionAngle,
+					lSpec.mZMin, lSpec.mZMax, *track);
 
 				// Apply actor effects to the feature
 				lDirectionAngle = MR_NORMALIZE_ANGLE(lDirectionAngle + MR_PI);
-				lObstacleElem->ApplyEffects(lActorEffectList, mSimulationTime, pDuration, lValidDirection, lDirectionAngle, lSpec.mZMin, lSpec.mZMax, mCurrentLevel);
+				lObstacleElem->ApplyEffects(lActorEffectList,
+					mSimulationTime, pDuration,
+					lValidDirection, lDirectionAngle,
+					lSpec.mZMin, lSpec.mZMax, *track);
 
 			}
 		}
@@ -376,7 +385,10 @@ void GameSession::ComputeShapeContactEffects(int pCurrentRoom,
 				const ContactEffectList *lWallEffectList = lWall->GetEffectList();
 
 				// Apply feature effects to the actor
-				pActor->ApplyEffects(lWallEffectList, mSimulationTime, pDuration, TRUE, lDirectionAngle, lContactBottom, lContactTop, mCurrentLevel);
+				pActor->ApplyEffects(lWallEffectList,
+					mSimulationTime, pDuration,
+					TRUE, lDirectionAngle,
+					lContactBottom, lContactTop, *track);
 
 				// Apply actor effects to the feature
 				// lDirectionAngle = MR_NORMALIZE_ANGLE( lDirectionAngle+MR_PI );

@@ -66,7 +66,7 @@ protected:
 		MR_SimulationTime pTime, MR_SimulationTime pDuration,
 		BOOL pValidDirection, MR_Angle pHorizontalDirection,
 		MR_Int32 pZMin, MR_Int32 pZMax,
-		Model::Level *pLevel) override;
+		Model::Track &pLevel) override;
 
 	// Network state
 	Model::ElementNetState GetNetState() const override;

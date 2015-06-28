@@ -128,7 +128,7 @@ void TestElement::ApplyEffect(const Model::ContactEffect *pEffect,
 	MR_SimulationTime, MR_SimulationTime,
 	BOOL pValidDirection,
 	MR_Angle pHorizontalDirection,
-	MR_Int32, MR_Int32, Model::Level*)
+	MR_Int32, MR_Int32, Model::Track&)
 {
 	using namespace Model;
 
