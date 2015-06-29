@@ -654,7 +654,7 @@ int MainCharacter::InternalSimulate(MR_SimulationTime pDuration,
 		}
 	}
 
-	mZSpeed += (pDuration * eZAccell[mHoverModel]) * level->GetGravity();
+	mZSpeed += (pDuration * eZAccell[mHoverModel]) * track.GetGravity();
 
 	if(mZSpeed < -eMaxZSpeed[mHoverModel])
 		mZSpeed = -eMaxZSpeed[mHoverModel];

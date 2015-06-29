@@ -42,7 +42,8 @@ namespace Model {
  */
 Track::Track(const std::string &name,
 	std::shared_ptr<Parcel::RecordFile> recFile) :
-	SUPER(), recFile(std::move(recFile)), offset(0, 0), size(0, 0), map()
+	SUPER(), recFile(std::move(recFile)), offset(0, 0), size(0, 0), map(),
+	gravity(1.0)
 {
 	LoadHeader();
 	header.name = name;
@@ -50,26 +51,6 @@ Track::Track(const std::string &name,
 
 Track::~Track()
 {
-}
-
-/**
- * Gets the gravity multiplier.
- * @return The gravity multiplier (1.0 is normal gravity).
- */
-double Track::GetGravity() const
-{
-	return level ? level->GetGravity() : 1.0;
-}
-
-/**
- * Set the current gravity multiplier.
- * @param gravity The gravity multiplier (1.0 is normal gravity).
- */
-void Track::SetGravity(double gravity)
-{
-	if (level) {
-		level->SetGravity(gravity);
-	}
 }
 
 void Track::Inspect(Util::InspectMapNode &node) const

@@ -31,7 +31,7 @@ namespace HoverRace {
 namespace Model {
 
 Level::Level(Track &track, BOOL pAllowRendering, char pGameOpts) :
-	track(track), gravity(1.0)
+	track(track)
 {
 	// Initialization of an empty level
 	mAllowRendering = pAllowRendering;

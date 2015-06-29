@@ -337,21 +337,8 @@ public:
 
 	BOOL GetFeatureContactOrientation(int pFeature, const ShapeInterface * pShape, MR_Angle & pAnswer);
 
-	/**
-	 * Gets the gravity multiplier.
-	 * @return The gravity multiplier (1.0 is normal gravity).
-	 */
-	double GetGravity() const { return gravity; }
-
-	/**
-	 * Set the current gravity multiplier.
-	 * @param gravity The gravity multiplier (1.0 is normal gravity).
-	 */
-	void SetGravity(double gravity) { this->gravity = gravity; }
-
 private:
 	Track &track;
-	double gravity;
 };
 
 }  // namespace Model
