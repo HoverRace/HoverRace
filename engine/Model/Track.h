@@ -87,13 +87,13 @@ public:
 	 * Gets the gravity multiplier.
 	 * @return The gravity multiplier (1.0 is normal gravity).
 	 */
-	double GetGravity() const { return gravity; }
+	double GetGravity() const { return physics.gravity; }
 
 	/**
 	 * Set the current gravity multiplier.
 	 * @param gravity The gravity multiplier (1.0 is normal gravity).
 	 */
-	void SetGravity(double gravity) { this->gravity = gravity; }
+	void SetGravity(double gravity) { this->physics.gravity = gravity; }
 
 	virtual void Inspect(Util::InspectMapNode &node) const;
 
@@ -112,7 +112,13 @@ private:
 	Vec2 offset;
 	Vec2 size;
 	std::shared_ptr<Display::Res<Display::Texture>> map;
-	double gravity;
+
+	struct Physics
+	{
+		Physics();
+
+		double gravity;
+	} physics;
 };
 using TrackPtr = std::shared_ptr<Track>;
 

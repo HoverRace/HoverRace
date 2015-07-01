@@ -33,6 +33,11 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace Model {
 
+Track::Physics::Physics() :
+	gravity(1.0)
+{
+}
+
 /**
  * Constructor.
  * @param name The name of the track.
@@ -43,7 +48,7 @@ namespace Model {
 Track::Track(const std::string &name,
 	std::shared_ptr<Parcel::RecordFile> recFile) :
 	SUPER(), recFile(std::move(recFile)), offset(0, 0), size(0, 0), map(),
-	gravity(1.0)
+	physics()
 {
 	LoadHeader();
 	header.name = name;
@@ -119,6 +124,7 @@ void Track::LoadMap()
 
 void Track::Load(bool allowRendering, char gameOpts)
 {
+	physics = Physics();
 	level.reset();
 	map.reset();
 
