@@ -1,7 +1,7 @@
 
 // Rules.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -39,40 +39,42 @@ namespace Client {
  * The options and settings for a single game session.
  * @author Michael Imamura
  */
-class Rules {
-	public:
-		Rules(std::shared_ptr<const Rulebook> rulebook=std::shared_ptr<const Rulebook>());
+class Rules
+{
+public:
+	Rules(std::shared_ptr<const Rulebook> rulebook =
+		std::shared_ptr<const Rulebook>());
 
-	public:
-		std::shared_ptr<const Rulebook> GetRulebook() const { return rulebook; }
-		void SetRulebook(std::shared_ptr<const Rulebook> rulebook);
+public:
+	std::shared_ptr<const Rulebook> GetRulebook() const { return rulebook; }
+	void SetRulebook(std::shared_ptr<const Rulebook> rulebook);
 
-		std::shared_ptr<const Model::TrackEntry> GetTrackEntry() const { return trackEntry; }
-		void SetTrackEntry(std::shared_ptr<const Model::TrackEntry> trackEntry) { this->trackEntry = std::move(trackEntry); }
+	std::shared_ptr<const Model::TrackEntry> GetTrackEntry() const { return trackEntry; }
+	void SetTrackEntry(std::shared_ptr<const Model::TrackEntry> trackEntry) { this->trackEntry = std::move(trackEntry); }
 
-		/** Retrieve the the Lua view of the rules. */
-		luabind::object &GetRules() { return rules; }
+	/// Retrieve the the Lua view of the rules.
+	luabind::object &GetRules() { return rules; }
 
-		// Temporary; will be removed once all logic is moved into Lua.
-		int GetLaps() const
-		{
-			try {
-				return luabind::object_cast<int>(rules["laps"]);
-			} catch (luabind::cast_failed&) {
-				return 1;
-			}
+	// Temporary; will be removed once all logic is moved into Lua.
+	int GetLaps() const
+	{
+		try {
+			return luabind::object_cast<int>(rules["laps"]);
+		} catch (luabind::cast_failed&) {
+			return 1;
 		}
-		void SetLaps(int laps) { rules["laps"] = laps; }
-		char GetGameOpts() const { return gameOpts; }
-		void SetGameOpts(char gameOpts) { this->gameOpts = gameOpts; }
+	}
+	void SetLaps(int laps) { rules["laps"] = laps; }
+	char GetGameOpts() const { return gameOpts; }
+	void SetGameOpts(char gameOpts) { this->gameOpts = gameOpts; }
 
-	private:
-		std::shared_ptr<const Rulebook> rulebook;
-		std::shared_ptr<const Model::TrackEntry> trackEntry;
+private:
+	std::shared_ptr<const Rulebook> rulebook;
+	std::shared_ptr<const Model::TrackEntry> trackEntry;
 
-		luabind::object rules;
+	luabind::object rules;
 
-		char gameOpts;
+	char gameOpts;
 };
 
 }  // namespace Client
