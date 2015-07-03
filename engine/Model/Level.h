@@ -84,7 +84,7 @@ public:
 	enum { eNonClassified = -1, eMustBeDeleted = -2 };
 
 protected:
-	class Section;
+	struct Section;
 
 	// Helper structure
 	class MR_DllDeclare SectionShape : public Model::PolygonShape
@@ -113,9 +113,8 @@ protected:
 
 	// Private structures
 
-	class MR_DllDeclare Section
+	struct Section
 	{
-	public:
 		int mNbVertex;					  // Number of vertex that compose the section
 
 		// Geometry
@@ -140,21 +139,17 @@ protected:
 		void SerializeStructure(Parcel::ObjStream &pArchive);
 	};
 
-	class Feature : public Section
+	struct Feature : public Section
 	{
-	public:
 		// Connectivity
 		int mParentSectionIndex;
 
 		void SerializeStructure(Parcel::ObjStream &pArchive);
 	};
 
-	class MR_DllDeclare Room : public Section
+	struct Room : public Section
 	{
-	public:
-		// Local structures
-
-		class AudibleRoom
+		struct AudibleRoom
 		{
 		public:
 			AudibleRoom();
