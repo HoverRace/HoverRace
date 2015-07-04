@@ -111,6 +111,27 @@ void ObjectFromFactory::SerializePtr(ObjStream &pArchive, ObjectFromFactory *&pP
 	}
 }
 
+void ObjectFromFactory::SerializePtr(ObjStream &archive,
+	std::shared_ptr<ObjectFromFactory> &obj)
+{
+	if (archive.IsWriting()) {
+		ObjectFromFactory *ptr = obj.get();
+		SerializePtr(archive, ptr);
+	}
+	else {
+		ObjectFromFactoryId oid = { 0, 0 };
+		oid.Serialize(archive);
+
+		if (oid.mDllId == 0) {
+			obj.reset();
+		}
+		else {
+			obj.reset(DllObjectFactory::CreateObject(oid));
+			obj->Serialize(archive);
+		}
+	}
+}
+
 // ObjectFromFactoryId
 void ObjectFromFactoryId::Serialize(ObjStream &pArchive)
 {

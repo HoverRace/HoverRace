@@ -86,8 +86,12 @@ public:
 	//
 	// Warning this module do not support multiple references to objects
 	// or looped structures
+
 	static void SerializePtr(Parcel::ObjStream &pArchive,
 		ObjectFromFactory *&pPtr);
+	static void SerializePtr(Parcel::ObjStream &archive,
+		std::shared_ptr<ObjectFromFactory> &obj);
+
 	virtual void Serialize(Parcel::ObjStream &archive) { HR_UNUSED(archive); }
 };
 
