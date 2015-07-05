@@ -100,6 +100,8 @@ public:
 	 * @tparam T The expected shared pointer type.
 	 * @param archive The archive.
 	 * @param [in,out] obj The object.
+	 * @throw Parcel::ObjStreamExn The object being read from the stream is
+	 *                             not the expected type.
 	 */
 	template<class T>
 	static void SerializeShared(Parcel::ObjStream &archive,
@@ -120,14 +122,19 @@ public:
 			}
 			else {
 				auto *newObj = DllObjectFactory::CreateObject(oid);
+
 				T *dynObj = dynamic_cast<T*>(newObj);
-				if (dynObj) {
-					obj.reset(dynObj);
-				}
-				else {
+				if (!dynObj) {
 					obj.reset();
 					delete newObj;
+					// The ID is probably corrupt or unsupported, so we can't
+					// rely on the rest of the stream (we don't know where the
+					// next object starts!).
+					throw Parcel::ObjStreamExn(boost::str(boost::format(
+						"Unexpected object type in stream: {%d, %d}") %
+						oid.mDllId % oid.mClassId));
 				}
+				obj.reset(dynObj);
 				obj->Serialize(archive);
 			}
 		}
