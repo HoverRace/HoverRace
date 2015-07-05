@@ -89,8 +89,49 @@ public:
 
 	static void SerializePtr(Parcel::ObjStream &pArchive,
 		ObjectFromFactory *&pPtr);
-	static void SerializePtr(Parcel::ObjStream &archive,
-		std::shared_ptr<ObjectFromFactory> &obj);
+
+	/**
+	 * Serialize a shared pointer to a serializable object.
+	 *
+	 * When reading, the created object is checked against the expected type.
+	 * If the created object is not the correct type, then the object pointer
+	 * is set to @c nullptr.
+	 *
+	 * @tparam T The expected shared pointer type.
+	 * @param archive The archive.
+	 * @param [in,out] obj The object.
+	 */
+	template<class T>
+	static void SerializeShared(Parcel::ObjStream &archive,
+		typename std::enable_if<
+			std::is_base_of<ObjectFromFactory, T>::value,
+			std::shared_ptr<T>>::type &obj)
+	{
+		if (archive.IsWriting()) {
+			ObjectFromFactory *ptr = obj.get();
+			SerializePtr(archive, ptr);
+		}
+		else {
+			ObjectFromFactoryId oid = { 0, 0 };
+			oid.Serialize(archive);
+
+			if (oid.mDllId == 0) {
+				obj.reset();
+			}
+			else {
+				auto *newObj = DllObjectFactory::CreateObject(oid);
+				T *dynObj = dynamic_cast<T*>(newObj);
+				if (dynObj) {
+					obj.reset(dynObj);
+				}
+				else {
+					obj.reset();
+					delete newObj;
+				}
+				obj->Serialize(archive);
+			}
+		}
+	}
 
 	virtual void Serialize(Parcel::ObjStream &archive) { HR_UNUSED(archive); }
 };
