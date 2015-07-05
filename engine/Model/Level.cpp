@@ -25,6 +25,7 @@
 
 #include "Level.h"
 
+using namespace HoverRace::Util;
 using HoverRace::Parcel::ObjStream;
 
 namespace HoverRace {
@@ -886,12 +887,11 @@ void Level::FreeElementList::SerializeList(ObjStream &pArchive,
 		FreeElementList *lFreeElement = *pListHead;
 
 		while (lFreeElement) {
-			auto elem = lFreeElement->mElement.get();
-			Util::ObjectFromFactory::SerializePtr(pArchive,
-				(Util::ObjectFromFactory*&)elem);
+			auto &elem = lFreeElement->mElement;
+			ObjectFromFactory::SerializeShared<FreeElement>(pArchive, elem);
 
-			lFreeElement->mElement->mPosition.Serialize(pArchive);
-			pArchive << lFreeElement->mElement->mOrientation;
+			elem->mPosition.Serialize(pArchive);
+			pArchive << elem->mOrientation;
 
 			lFreeElement = lFreeElement->mNext;
 		}
@@ -904,11 +904,10 @@ void Level::FreeElementList::SerializeList(ObjStream &pArchive,
 	else {
 		assert(*pListHead == nullptr);
 
-		FreeElement *newElem = nullptr;
+		std::shared_ptr<FreeElement> newElem;
 
 		do {
-			Util::ObjectFromFactory::SerializePtr(pArchive,
-				(Util::ObjectFromFactory*&)newElem);
+			ObjectFromFactory::SerializeShared<FreeElement>(pArchive, newElem);
 
 			if (newElem) {
 				FreeElementList *lFreeElement = new FreeElementList();
@@ -916,7 +915,7 @@ void Level::FreeElementList::SerializeList(ObjStream &pArchive,
 				newElem->mPosition.Serialize(pArchive);
 				pArchive >> newElem->mOrientation;
 
-				lFreeElement->mElement.reset(newElem);
+				lFreeElement->mElement.swap(newElem);
 				lFreeElement->LinkTo(pListHead);
 			}
 
