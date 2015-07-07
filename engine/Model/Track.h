@@ -120,7 +120,6 @@ private:
 		double gravity;
 	} physics;
 };
-using TrackPtr = std::shared_ptr<Track>;
 
 }  // namespace Model
 }  // namespace HoverRace
