@@ -1,7 +1,7 @@
 
 // DemoGameScene.h
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -32,19 +32,20 @@ namespace Client {
  */
 class DemoGameScene : public GameScene
 {
-	typedef GameScene SUPER;
-	public:
-		DemoGameScene(Display::Display &display, GameDirector &director,
-			Script::Core *scripting,
-			std::shared_ptr<Util::Loader> loader);
-		virtual ~DemoGameScene();
+	using SUPER = GameScene;
 
-	public:
-		void AttachController(Control::InputEventController&) override { }
-		void DetachController(Control::InputEventController&) override { }
+public:
+	DemoGameScene(Display::Display &display, GameDirector &director,
+		Script::Core *scripting,
+		std::shared_ptr<Util::Loader> loader);
+	virtual ~DemoGameScene();
 
-	protected:
-		void OnFinishedLoading() override;
+public:
+	void AttachController(Control::InputEventController&) override { }
+	void DetachController(Control::InputEventController&) override { }
+
+protected:
+	void OnFinishedLoading() override;
 };
 
 }  // namespace Client

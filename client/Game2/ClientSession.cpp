@@ -45,28 +45,30 @@ namespace HoverRace {
 namespace Client {
 
 namespace {
-	using Phase = ClientSession::Phase;
 
-	/**
-	 * Determine next phase for a given phase.
-	 * @param phase The phase.
-	 * @return The next phase, if there is one.
-	 */
-	Phase NextPhase(Phase phase)
-	{
-		if (phase == Phase::DONE) {
-			return Phase::DONE;
-		}
-		else {
-			return static_cast<Phase>(static_cast<int>(phase) + 1);
-		}
+using Phase = ClientSession::Phase;
+
+/**
+ * Determine next phase for a given phase.
+ * @param phase The phase.
+ * @return The next phase, if there is one.
+ */
+Phase NextPhase(Phase phase)
+{
+	if (phase == Phase::DONE) {
+		return Phase::DONE;
 	}
-
-	MainCharacter::MainCharacter *GetMainChar(Player::Player *player)
-	{
-		return player ? player->GetMainCharacter() : nullptr;
+	else {
+		return static_cast<Phase>(static_cast<int>(phase) + 1);
 	}
 }
+
+MainCharacter::MainCharacter *GetMainChar(Player::Player *player)
+{
+	return player ? player->GetMainCharacter() : nullptr;
+}
+
+}  // namespace
 
 ClientSession::ClientSession(std::shared_ptr<Rules> rules) :
 	phase(Phase::INIT),
@@ -191,8 +193,7 @@ void ClientSession::ReadLevelAttrib(Parcel::RecordFilePtr pRecordFile, VideoServ
 }
 
 bool ClientSession::LoadNew(const char *pTitle, Script::Core *scripting,
-                            std::shared_ptr<Model::Track> track,
-                            VideoServices::VideoBuffer *pVideo)
+	std::shared_ptr<Model::Track> track, VideoServices::VideoBuffer *pVideo)
 {
 	bool retv = mSession.LoadNew(pTitle, track, rules->GetGameOpts());
 
@@ -299,8 +300,7 @@ int ClientSession::ResultAvaillable() const
 
 /** @deprecated */
 void ClientSession::GetResult(int, const char *&pPlayerName, int&, BOOL&,
-                              int&, MR_SimulationTime&,
-                              MR_SimulationTime&) const
+	int&, MR_SimulationTime&, MR_SimulationTime&) const
 {
 	pPlayerName = "?";
 	ASSERT(FALSE);
@@ -308,7 +308,7 @@ void ClientSession::GetResult(int, const char *&pPlayerName, int&, BOOL&,
 
 /** @deprecated */
 void ClientSession::GetHitResult(int, const char *&pPlayerName,
-                                 int&, BOOL&, int&, int&) const
+	int&, BOOL&, int&, int&) const
 {
 	pPlayerName = "?";
 	ASSERT(FALSE);
