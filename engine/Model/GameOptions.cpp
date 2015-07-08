@@ -27,17 +27,31 @@ namespace HoverRace {
 namespace Model {
 
 /**
+ * Pick a random craft from the list of all crafts.
+ * @return A craft.
+ */
+GameOptions::Craft GameOptions::PickRandomCraft()
+{
+	return static_cast<Craft>(rand() % 4);
+}
+
+/**
  * Converts this instance to legacy "gameOpts" flags.
  * @return This instance as a char.
  */
 char GameOptions::ToFlags() const
 {
-	char retv = 0x0f;  // Allow all vehicle types for now.
+	char retv = 0;
 
 	if (weaponsEnabled) retv |= OPT_ALLOW_WEAPONS;
 
-	if (IsAllowed(152)) retv |= OPT_ALLOW_CANS;
-	if (IsAllowed(151)) retv |= OPT_ALLOW_MINES;
+	if (IsCraftAllowed(Craft::EON)) retv |= OPT_ALLOW_EON;
+	if (IsCraftAllowed(Craft::CX)) retv |= OPT_ALLOW_CX;
+	if (IsCraftAllowed(Craft::BI)) retv |= OPT_ALLOW_BI;
+	if (IsCraftAllowed(Craft::BASIC)) retv |= OPT_ALLOW_BASIC;
+
+	if (IsObjectAllowed(152)) retv |= OPT_ALLOW_CANS;
+	if (IsObjectAllowed(151)) retv |= OPT_ALLOW_MINES;
 
 	return retv;
 }
