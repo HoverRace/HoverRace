@@ -125,13 +125,15 @@ bool ClientSession::AdvancePhase(Phase nextPhase)
 				case Phase::POSTGAME: meta->OnPostgame(); break;
 				case Phase::DONE: meta->OnDone(); break;
 				default:
-					Log::Warn("No MetaSession event for phase: %d", phase);
+					HR_LOG(warning) <<
+						"No MetaSession event for phase:" <<
+							static_cast<int>(phase);
 			}
 		} while (phase < nextPhase);
 		return true;
 	}
 	else if (nextPhase < phase) {
-		Log::Error("Attempted to go backwards in phase!");
+		HR_LOG(error) << "Attempted to go backwards in phase!";
 	}
 	return false;
 }
