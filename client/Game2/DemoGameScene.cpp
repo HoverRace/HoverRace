@@ -46,16 +46,16 @@ std::shared_ptr<Rules> GenRules(Script::Core *scripting)
 	const char *trackName = tracks[(unsigned)rand() % (sizeof(tracks) / sizeof(tracks[0]))];
 	Log::Info("Selected main menu track: %s", trackName);
 
-	// Pick a random craft.
-	char craftId = static_cast<char>(1 << (rand() % 4));
-
 	// Use a special "dummy" rulebook for the demo mode.
 	auto rulebook = std::make_shared<Rulebook>(scripting, OS::path_t());
 	rulebook->SetMetadata("Demo", "Demo", "", 1);
 	auto rules = std::make_shared<Rules>(rulebook);
 	rules->SetTrackEntry(Config::GetInstance()->GetTrackBundle()->
 		OpenTrackEntry(trackName));
-	rules->SetGameOpts(static_cast<char>(0x70 + craftId));
+
+	Model::GameOptions gameOpts;
+	gameOpts.AllowOnlyCraft(Model::GameOptions::PickRandomCraft());
+	rules->SetGameOpts(gameOpts);
 
 	return rules;
 }

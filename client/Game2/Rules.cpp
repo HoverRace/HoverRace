@@ -28,7 +28,7 @@ namespace Client {
 
 Rules::Rules(std::shared_ptr<const Rulebook> rulebook) :
 	rulebook(rulebook), rules(),
-	gameOpts(0x7f)
+	gameOpts()
 {
 	if (rulebook) {
 		rules = rulebook->CreateDefaultRules();

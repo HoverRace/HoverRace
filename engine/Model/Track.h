@@ -38,6 +38,7 @@
 
 namespace HoverRace {
 	namespace Model {
+		class GameOptions;
 		class Level;
 	}
 	namespace Parcel {
@@ -99,11 +100,11 @@ public:
 
 private:
 	void LoadHeader();
-	void LoadLevel(bool allowRendering, char gameOpts);
+	void LoadLevel(bool allowRendering, const GameOptions &gameOpts);
 	void LoadMap();
 
 public:
-	void Load(bool allowRendering, char gameOpts);
+	void Load(bool allowRendering, const GameOptions &gameOpts);
 
 private:
 	Parcel::RecordFilePtr recFile;

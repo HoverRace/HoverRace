@@ -23,6 +23,8 @@
 
 #include <luabind/object.hpp>
 
+#include "../../engine/Model/GameOptions.h"
+
 namespace HoverRace {
 	namespace Client {
 		class Rulebook;
@@ -65,8 +67,8 @@ public:
 		}
 	}
 	void SetLaps(int laps) { rules["laps"] = laps; }
-	char GetGameOpts() const { return gameOpts; }
-	void SetGameOpts(char gameOpts) { this->gameOpts = gameOpts; }
+	const Model::GameOptions &GetGameOpts() const { return gameOpts; }
+	void SetGameOpts(const Model::GameOptions &gameOpts) { this->gameOpts = gameOpts; }
 
 private:
 	std::shared_ptr<const Rulebook> rulebook;
@@ -74,7 +76,7 @@ private:
 
 	luabind::object rules;
 
-	char gameOpts;
+	Model::GameOptions gameOpts;
 };
 
 }  // namespace Client

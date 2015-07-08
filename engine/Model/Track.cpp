@@ -23,7 +23,7 @@
 #include "../Parcel/RecordFile.h"
 #include "../Util/InspectMapNode.h"
 #include "../Util/Log.h"
-
+#include "GameOptions.h"
 #include "Level.h"
 
 #include "Track.h"
@@ -72,11 +72,11 @@ void Track::LoadHeader()
 	}
 }
 
-void Track::LoadLevel(bool allowRendering, char gameOpts)
+void Track::LoadLevel(bool allowRendering, const GameOptions &gameOpts)
 {
 	using namespace HoverRace::Parcel;
 
-	level.reset(new Level(*this, allowRendering, gameOpts));
+	level.reset(new Level(*this, allowRendering, gameOpts.ToFlags()));
 
 	if (recFile) {
 		recFile->SelectRecord(1);
@@ -122,7 +122,7 @@ void Track::LoadMap()
 		"map:" + header.name, archive);
 }
 
-void Track::Load(bool allowRendering, char gameOpts)
+void Track::Load(bool allowRendering, const GameOptions &gameOpts)
 {
 	physics = Physics();
 	level.reset();

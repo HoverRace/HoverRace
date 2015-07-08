@@ -47,7 +47,7 @@ GameSession::~GameSession()
 	Clean();
 }
 
-bool GameSession::LoadLevel(char gameOpts)
+bool GameSession::LoadLevel(const Model::GameOptions &gameOpts)
 {
 	track->Load(mAllowRendering, gameOpts);
 	return true;
@@ -59,7 +59,7 @@ void GameSession::Clean()
 }
 
 bool GameSession::LoadNew(const char *pTitle, std::shared_ptr<Track> track,
-	char pGameOpts)
+	const Model::GameOptions &gameOpts)
 {
 	bool lReturnValue = false;
 
@@ -67,7 +67,7 @@ bool GameSession::LoadNew(const char *pTitle, std::shared_ptr<Track> track,
 	if (track) {
 		mTitle = pTitle;
 		this->track = track;
-		lReturnValue = LoadLevel(pGameOpts);
+		lReturnValue = LoadLevel(gameOpts);
 
 		if(!lReturnValue)
 			Clean();

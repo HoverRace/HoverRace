@@ -230,7 +230,7 @@ void ClientSession::AttachPlayer(int i, std::shared_ptr<Player::Player> player)
 	ASSERT(curLevel);
 
 	MainCharacter::MainCharacter *ch =
-		MainCharacter::MainCharacter::New(i, rules->GetGameOpts());
+		MainCharacter::MainCharacter::New(i, rules->GetGameOpts().ToFlags());
 	playerSlot->AttachMainCharacter(ch);
 
 	int startingRoom = curLevel->GetStartingRoom(i);

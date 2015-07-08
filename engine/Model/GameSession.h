@@ -39,6 +39,7 @@
 
 namespace HoverRace {
 	namespace Model {
+		class GameOptions;
 		class Level;
 		class Track;
 	}
@@ -57,7 +58,7 @@ public:
 	~GameSession();
 
 	bool LoadNew(const char *pTitle, std::shared_ptr<Track> track,
-		char pGameOpts);
+		const Model::GameOptions &gameOpts);
 
 	void SetSimulationTime(MR_SimulationTime);
 	MR_SimulationTime GetSimulationTime() const;
@@ -69,7 +70,7 @@ public:
 	const char *GetTitle() const;
 
 private:
-	bool LoadLevel(char gameOpts);
+	bool LoadLevel(const Model::GameOptions &gameOpts);
 	void Clean();  // Clean up before destruction or clean-up
 
 	void SimulateFreeElems(MR_SimulationTime pDuration);
