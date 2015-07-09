@@ -1,7 +1,7 @@
 
 // Profile.h
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -51,42 +51,42 @@ namespace Player {
  */
 class MR_DllDeclare Profile
 {
-	public:
-		Profile();
-		Profile(const boost::uuids::uuid &uid, const std::string &name,
-			Display::Color primaryColor, Display::Color secondaryColor) :
-			uid(uid), name(name),
-			primaryColor(primaryColor), secondaryColor(secondaryColor) { }
-		virtual ~Profile() { }
+public:
+	Profile();
+	Profile(const boost::uuids::uuid &uid, const std::string &name,
+		Display::Color primaryColor, Display::Color secondaryColor) :
+		uid(uid), name(name),
+		primaryColor(primaryColor), secondaryColor(secondaryColor) { }
+	virtual ~Profile() { }
 
-	public:
-		/**
-		 * Retrieve the globally unique identifier for this profile.
-		 * @return The ID (may be @c nil if uninitialized).
-		 */
-		const boost::uuids::uuid &GetUid() const { return uid; }
+public:
+	/**
+	 * Retrieve the globally unique identifier for this profile.
+	 * @return The ID (may be @c nil if uninitialized).
+	 */
+	const boost::uuids::uuid &GetUid() const { return uid; }
 
-		/**
-		 * Retrieve the name of the player.
-		 * @return The name (never empty).
-		 */
-		const std::string &GetName() const { return name; }
+	/**
+	 * Retrieve the name of the player.
+	 * @return The name (never empty).
+	 */
+	const std::string &GetName() const { return name; }
 
-		Display::Color GetPrimaryColor() const { return primaryColor; }
+	Display::Color GetPrimaryColor() const { return primaryColor; }
 
-		Display::Color GetSecondaryColor() const { return secondaryColor; }
+	Display::Color GetSecondaryColor() const { return secondaryColor; }
 
-		virtual std::shared_ptr<Display::Res<Display::Texture>>
-			GetAvatar() const;
+	virtual std::shared_ptr<Display::Res<Display::Texture>>
+		GetAvatar() const;
 
-	public:
-		virtual void Save() = 0;
+public:
+	virtual void Save() = 0;
 
-	private:
-		boost::uuids::uuid uid;
-		std::string name;
-		Display::Color primaryColor;
-		Display::Color secondaryColor;
+private:
+	boost::uuids::uuid uid;
+	std::string name;
+	Display::Color primaryColor;
+	Display::Color secondaryColor;
 };
 
 }  // namespace Player
