@@ -1,7 +1,7 @@
 
 // TrackList.h
 //
-// Copyright (c) 2010, 2014 Michael Imamura.
+// Copyright (c) 2010, 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -36,7 +36,6 @@
 namespace HoverRace {
 	namespace Parcel {
 		class TrackBundle;
-		typedef std::shared_ptr<TrackBundle> TrackBundlePtr;
 	}
 }
 
@@ -49,32 +48,32 @@ namespace Model {
  */
 class MR_DllDeclare TrackList
 {
-	public:
-		TrackList();
+public:
+	TrackList();
 
-	public:
-		void Reload(Parcel::TrackBundlePtr trackBundle);
+public:
+	void Reload(std::shared_ptr<Parcel::TrackBundle> trackBundle);
 
-		/** Clear the list of available tracks. */
-		void Clear() { tracks.clear(); }
-		bool IsEmpty() const { return tracks.empty(); }
+	/** Clear the list of available tracks. */
+	void Clear() { tracks.clear(); }
+	bool IsEmpty() const { return tracks.empty(); }
 
-		TrackEntryPtr &operator[](size_t i) { return tracks[i]; }
+	std::shared_ptr<TrackEntry> &operator[](size_t i) { return tracks[i]; }
 
-	private:
-		typedef std::vector<TrackEntryPtr> tracks_t;
-	public:
-		typedef tracks_t::iterator iterator;
-		typedef tracks_t::const_iterator const_iterator;
-		typedef TrackEntryPtr value_type;
+private:
+	using tracks_t = std::vector<TrackEntryPtr>;
+public:
+	using iterator = tracks_t::iterator;
+	using const_iterator = tracks_t::const_iterator;
+	using value_type = std::shared_ptr<TrackEntry>;
 
-		iterator begin() { return tracks.begin(); }
-		iterator end() { return tracks.end(); }
-		const_iterator begin() const { return tracks.begin(); }
-		const_iterator end() const { return tracks.end(); }
+	iterator begin() { return tracks.begin(); }
+	iterator end() { return tracks.end(); }
+	const_iterator begin() const { return tracks.begin(); }
+	const_iterator end() const { return tracks.end(); }
 
-	private:
-		tracks_t tracks;
+private:
+	tracks_t tracks;
 };
 
 }  // namespace Model

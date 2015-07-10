@@ -1,8 +1,7 @@
 
 // TrackList.cpp
-// Sorted list of track headers.
 //
-// Copyright (c) 2010, 2013 Michael Imamura.
+// Copyright (c) 2010, 2013, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -37,19 +36,27 @@ namespace HoverRace {
 namespace Model {
 
 namespace {
-	inline bool NameCmpFunc(const TrackEntryPtr &ent1, const TrackEntryPtr &ent2)
-	{
-		return ent1->name < ent2->name;
-	}
-	inline bool NameEqFunc(const TrackEntryPtr &ent1, const TrackEntryPtr &ent2)
-	{
-		return ent1->name == ent2->name;
-	}
-	inline bool NaturalCmpFunc(const TrackEntryPtr &ent1, const TrackEntryPtr &ent2)
-	{
-		return *ent1 < *ent2;
-	}
+
+inline bool NameCmpFunc(
+	const std::shared_ptr<TrackEntry> &ent1,
+	const std::shared_ptr<TrackEntry> &ent2)
+{
+	return ent1->name < ent2->name;
 }
+inline bool NameEqFunc(
+	const std::shared_ptr<TrackEntry> &ent1,
+	const std::shared_ptr<TrackEntry> &ent2)
+{
+	return ent1->name == ent2->name;
+}
+inline bool NaturalCmpFunc(
+	const std::shared_ptr<TrackEntry> &ent1,
+	const std::shared_ptr<TrackEntry> &ent2)
+{
+	return *ent1 < *ent2;
+}
+
+}  // namespace
 
 TrackList::TrackList()
 {
@@ -59,16 +66,16 @@ TrackList::TrackList()
 /**
  * Load the list of available tracks from the track bundle.
  * Any previously-loaded list is cleared.
- * @param trackBundle The track bundle (may not be @c NULL).
+ * @param trackBundle The track bundle (may not be @c nullptr).
  */
-void TrackList::Reload(Parcel::TrackBundlePtr trackBundle)
+void TrackList::Reload(std::shared_ptr<Parcel::TrackBundle> trackBundle)
 {
 	Clear();
 
 	for (const OS::dirEnt_t &ent : *trackBundle) {
 		std::string name((const char*)Str::PU(ent.path().filename().c_str()));
 		try {
-			TrackEntryPtr trackEnt = trackBundle->OpenTrackEntry(name);
+			auto trackEnt = trackBundle->OpenTrackEntry(name);
 			if (trackEnt) {
 				tracks.emplace_back(trackEnt);
 #				ifdef _DEBUG
@@ -87,7 +94,9 @@ void TrackList::Reload(Parcel::TrackBundlePtr trackBundle)
 	// Then, when we remove duplicates, the lower-priority entries will be
 	// the ones which are removed.
 	std::stable_sort(tracks.begin(), tracks.end(), NameCmpFunc);
-	tracks.erase(std::unique(tracks.begin(), tracks.end(), NameEqFunc), tracks.end());
+	tracks.erase(
+		std::unique(tracks.begin(), tracks.end(), NameEqFunc),
+		tracks.end());
 
 	// Re-sort using the natural ordering.
 	std::sort(tracks.begin(), tracks.end(), NaturalCmpFunc);
