@@ -72,8 +72,8 @@ void TrackList::Reload(std::shared_ptr<Parcel::TrackBundle> trackBundle)
 {
 	Clear();
 
-	for (const OS::dirEnt_t &ent : *trackBundle) {
-		std::string name((const char*)Str::PU(ent.path().filename().c_str()));
+	for (const auto &ent : *trackBundle) {
+		std::string name((const char*)Str::PU(ent.path().filename()));
 		try {
 			auto trackEnt = trackBundle->OpenTrackEntry(name);
 			if (trackEnt) {
