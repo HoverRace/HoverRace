@@ -75,8 +75,8 @@ static void InspectAndPrint(const std::string &label, const Inspectable *insp)
 static void DumpTrack(const OS::path_t &path, const std::string &name)
 {
 	TrackBundle trackBundle(path);
-	TrackPtr track = trackBundle.OpenTrack(name);
-	if (track.get() == NULL) {
+	auto track = trackBundle.OpenTrack(name);
+	if (!track) {
 		std::cerr << "Corrupted track file." << std::endl;
 		return;
 	}
