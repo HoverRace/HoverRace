@@ -82,7 +82,6 @@ public:
 	 */
 	virtual ObjStreamPtr StreamOut() = 0;
 };
-typedef std::shared_ptr<RecordFile> RecordFilePtr;
 
 }  // namespace Parcel
 }  // namespace HoverRace

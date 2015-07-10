@@ -46,7 +46,7 @@ TrackBundle::~TrackBundle()
 {
 }
 
-RecordFilePtr TrackBundle::OpenParcel(const std::string &name, bool writing) const
+std::shared_ptr<RecordFile> TrackBundle::OpenParcel(const std::string &name, bool writing) const
 {
 	return SUPER::OpenParcel(
 		boost::ends_with(name, Config::TRACK_EXT) ? name : name + Config::TRACK_EXT,
@@ -61,7 +61,7 @@ RecordFilePtr TrackBundle::OpenParcel(const std::string &name, bool writing) con
  */
 Model::TrackPtr TrackBundle::OpenTrack(const std::string &name) const
 {
-	RecordFilePtr recFile(OpenParcel(name));
+	auto recFile = OpenParcel(name);
 	return !recFile ?
 		Model::TrackPtr() :
 		std::make_shared<Model::Track>(name, recFile);
@@ -81,7 +81,7 @@ Model::TrackPtr TrackBundle::OpenTrack(const std::shared_ptr<const Model::TrackE
 std::shared_ptr<Display::Res<Display::Texture>> TrackBundle::LoadMap(
 	std::shared_ptr<const Model::TrackEntry> entry) const
 {
-	RecordFilePtr recFile(OpenParcel(entry->name));
+	auto recFile = OpenParcel(entry->name);
 	if (!recFile || recFile->GetNbRecords() < 4) {
 		return std::shared_ptr<Display::Res<Display::Texture>>();
 	}
@@ -109,7 +109,7 @@ std::shared_ptr<Display::Res<Display::Texture>> TrackBundle::LoadMap(
  */
 Model::TrackEntryPtr TrackBundle::OpenTrackEntry(const std::string &name) const
 {
-	RecordFilePtr recFile(OpenParcel(name));
+	auto recFile = OpenParcel(name);
 	if (!recFile) {
 		return Model::TrackEntryPtr();
 	}

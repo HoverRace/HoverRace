@@ -1,8 +1,7 @@
 
 // Bundle.h
-// A source of parcels.
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -40,7 +39,6 @@ namespace Parcel {
 class Bundle;
 typedef std::shared_ptr<Bundle> BundlePtr;
 class RecordFile;
-typedef std::shared_ptr<RecordFile> RecordFilePtr;
 
 /**
  * A source of parcels.
@@ -52,7 +50,7 @@ class MR_DllDeclare Bundle
 		Bundle(const Util::OS::path_t &dir, BundlePtr subBundle=BundlePtr());
 		virtual ~Bundle() { }
 
-		virtual RecordFilePtr OpenParcel(const std::string &name, bool writing=false) const;
+		virtual std::shared_ptr<RecordFile> OpenParcel(const std::string &name, bool writing=false) const;
 
 	private:
 		class MR_DllDeclare Iterator :

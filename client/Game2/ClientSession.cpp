@@ -164,7 +164,8 @@ void ClientSession::Process()
 	mSession.Simulate();
 }
 
-void ClientSession::ReadLevelAttrib(Parcel::RecordFilePtr pRecordFile, VideoServices::VideoBuffer * pVideo)
+void ClientSession::ReadLevelAttrib(Parcel::RecordFile *pRecordFile,
+	VideoServices::VideoBuffer *pVideo)
 {
 	// Read level background palette
 	if((pVideo != NULL) && (pRecordFile->GetNbRecords() >= 3)) {

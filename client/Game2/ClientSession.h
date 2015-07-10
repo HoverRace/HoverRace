@@ -157,7 +157,8 @@ private:
 	boost::signals2::scoped_connection countdownConn;
 	std::shared_ptr<Rules> rules;
 
-	void ReadLevelAttrib(Parcel::RecordFilePtr pFile, VideoServices::VideoBuffer *pVideo);
+	void ReadLevelAttrib(Parcel::RecordFile *pFile,
+		VideoServices::VideoBuffer *pVideo);
 };
 
 }  // namespace Client

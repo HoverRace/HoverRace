@@ -1,8 +1,7 @@
 
 // Bundle.cpp
-// A source of parcels.
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -51,7 +50,8 @@ Bundle::Bundle(const OS::path_t &dir, BundlePtr subBundle) :
  * @param writing @c true if the parcel will be written to, @c false if read-only.
  * @return The parcel (may be @c NULL if parcel does not exist).
  */
-RecordFilePtr Bundle::OpenParcel(const std::string &name, bool writing) const
+std::shared_ptr<RecordFile> Bundle::OpenParcel(
+	const std::string &name, bool writing) const
 {
 	OS::path_t pt = dir / Str::UP(name.c_str());
 
@@ -63,11 +63,11 @@ RecordFilePtr Bundle::OpenParcel(const std::string &name, bool writing) const
 		else {
 			rec->OpenForRead(pt);
 		}
-		return RecordFilePtr(rec);
+		return std::shared_ptr<RecordFile>(rec);
 	}
 	else {
-		if (subBundle.get() == NULL) {
-			return RecordFilePtr();
+		if (!subBundle) {
+			return std::shared_ptr<RecordFile>();
 		}
 		else {
 			return subBundle->OpenParcel(name, writing);

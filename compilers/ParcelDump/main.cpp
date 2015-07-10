@@ -1,7 +1,7 @@
 
 // main.cpp
 //
-// Copyright (c) 2010, 2014 Michael Imamura.
+// Copyright (c) 2010, 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -81,7 +81,7 @@ static void DumpTrack(const OS::path_t &path, const std::string &name)
 		return;
 	}
 
-	InspectAndPrint("Header", track->GetRecordFile().get());
+	InspectAndPrint("Header", track->GetRecordFile());
 	InspectAndPrint("Track", track.get());
 }
 
