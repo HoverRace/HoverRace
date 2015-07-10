@@ -532,15 +532,6 @@ OS::path_t Config::GetUserTrackPath(const std::string &name) const
 }
 
 /**
- * Retrieve the track bundle.
- * @return The track bundle (never @c NULL).
- */
-Parcel::TrackBundlePtr Config::GetTrackBundle() const
-{
-	return trackBundle;
-}
-
-/**
  * Retrieve the path to the help file for a class in the scripting API.
  * @param className The name of the class.
  * @return The directory path (may be relative).

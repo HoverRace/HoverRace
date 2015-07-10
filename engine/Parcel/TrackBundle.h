@@ -76,7 +76,6 @@ public:
 
 	MR_TrackAvail CheckAvail(const std::string &name) const;
 };
-typedef std::shared_ptr<TrackBundle> TrackBundlePtr;
 
 }  // namespace Parcel
 }  // namespace HoverRace

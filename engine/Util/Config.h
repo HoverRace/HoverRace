@@ -44,9 +44,7 @@
 namespace HoverRace {
 	namespace Parcel {
 		class Bundle;
-		typedef std::shared_ptr<Bundle> BundlePtr;
 		class TrackBundle;
-		typedef std::shared_ptr<TrackBundle> TrackBundlePtr;
 	}
 	namespace Util {
 		namespace yaml {
@@ -118,7 +116,12 @@ public:
 
 	const OS::path_t &GetUserTrackPath() const;
 	OS::path_t GetUserTrackPath(const std::string &name) const;
-	Parcel::TrackBundlePtr GetTrackBundle() const;
+
+	/**
+	 * Retrieve the track bundle.
+	 * @return The track bundle (never @c nullptr).
+	 */
+	std::shared_ptr<Parcel::TrackBundle> GetTrackBundle() const { return trackBundle; }
 
 	OS::path_t GetScriptHelpPath(const std::string &className) const;
 
@@ -159,7 +162,7 @@ private:
 	OS::path_t mediaPath;
 	OS::path_t sysCfgPath;
 	OS::path_t userTrackPath;
-	Parcel::TrackBundlePtr trackBundle;
+	std::shared_ptr<Parcel::TrackBundle> trackBundle;
 	int verBuild;
 	bool prerelease;
 	std::string shortVersion;
