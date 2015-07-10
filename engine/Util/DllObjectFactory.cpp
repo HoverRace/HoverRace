@@ -83,6 +83,13 @@ ObjFacTools::ResourceLib &DllObjectFactory::GetResourceLib(MR_UInt16 dllId)
 	return *(GetDll(dllId).GetResourceLib());
 }
 
+void ObjectFromFactory::ThrowUnexpected(const ObjectFromFactoryId &oid)
+{
+	throw Parcel::ObjStreamExn(boost::str(boost::format(
+		"Unexpected object type in stream: {%d, %d}") %
+		oid.mDllId % oid.mClassId));
+}
+
 void ObjectFromFactory::SerializePtr(ObjStream &pArchive, ObjectFromFactory *&pPtr)
 {
 	ObjectFromFactoryId lId = { 0, 0 };

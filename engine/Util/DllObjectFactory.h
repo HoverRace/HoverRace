@@ -30,6 +30,8 @@
 
 #pragma once
 
+#include "../Parcel/ObjStream.h"
+
 #include "MR_Types.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
@@ -43,9 +45,6 @@
 #endif
 
 namespace HoverRace {
-	namespace Parcel {
-		class ObjStream;
-	}
 	namespace ObjFacTools {
 		class ResourceLib;
 	}
@@ -70,6 +69,23 @@ struct ObjectFromFactoryId
 	}
 };
 
+class ObjectFromFactory;
+
+namespace DllObjectFactory {
+
+/// Must be called at the beginning of the program.
+MR_DllDeclare void Init();
+
+/// Must be called at the end of the program.
+MR_DllDeclare void Clean();
+
+/// Fast Object Creation function
+MR_DllDeclare ObjectFromFactory *CreateObject(const ObjectFromFactoryId &pId);
+
+MR_DllDeclare ObjFacTools::ResourceLib &GetResourceLib(MR_UInt16 dllId = 1);
+
+}  // namespace DllObjectFactory
+
 /// Base class for object created with a Dll Factory
 class MR_DllDeclare ObjectFromFactory
 {
@@ -82,6 +98,10 @@ public:
 
 	const ObjectFromFactoryId &GetTypeId() const { return mId; }
 
+private:
+	static void ThrowUnexpected(const ObjectFromFactoryId &oid);
+
+public:
 	// Serialisation functions
 	//
 	// Warning this module do not support multiple references to objects
@@ -130,9 +150,7 @@ public:
 					// The ID is probably corrupt or unsupported, so we can't
 					// rely on the rest of the stream (we don't know where the
 					// next object starts!).
-					throw Parcel::ObjStreamExn(boost::str(boost::format(
-						"Unexpected object type in stream: {%d, %d}") %
-						oid.mDllId % oid.mClassId));
+					ThrowUnexpected(oid);
 				}
 				obj.reset(dynObj);
 				obj->Serialize(archive);
@@ -142,21 +160,6 @@ public:
 
 	virtual void Serialize(Parcel::ObjStream &archive) { HR_UNUSED(archive); }
 };
-
-namespace DllObjectFactory {
-
-/// Must be called at the beginning of the program.
-MR_DllDeclare void Init();
-
-/// Must be called at the end of the program.
-MR_DllDeclare void Clean();
-
-/// Fast Object Creation function
-MR_DllDeclare ObjectFromFactory *CreateObject(const ObjectFromFactoryId &pId);
-
-MR_DllDeclare ObjFacTools::ResourceLib &GetResourceLib(MR_UInt16 dllId = 1);
-
-}  // namespace DllObjectFactory
 
 }  // namespace Util
 }  // namespace HoverRace
