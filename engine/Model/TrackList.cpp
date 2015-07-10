@@ -66,16 +66,16 @@ TrackList::TrackList()
 /**
  * Load the list of available tracks from the track bundle.
  * Any previously-loaded list is cleared.
- * @param trackBundle The track bundle (may not be @c nullptr).
+ * @param trackBundle The track bundle.
  */
-void TrackList::Reload(std::shared_ptr<Parcel::TrackBundle> trackBundle)
+void TrackList::Reload(const Parcel::TrackBundle &trackBundle)
 {
 	Clear();
 
-	for (const auto &ent : *trackBundle) {
+	for (const auto &ent : trackBundle) {
 		std::string name((const char*)Str::PU(ent.path().filename()));
 		try {
-			auto trackEnt = trackBundle->OpenTrackEntry(name);
+			auto trackEnt = trackBundle.OpenTrackEntry(name);
 			if (trackEnt) {
 				tracks.emplace_back(trackEnt);
 #				ifdef _DEBUG

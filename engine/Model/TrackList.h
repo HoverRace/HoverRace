@@ -52,7 +52,7 @@ public:
 	TrackList();
 
 public:
-	void Reload(std::shared_ptr<Parcel::TrackBundle> trackBundle);
+	void Reload(const Parcel::TrackBundle &trackBundle);
 
 	/** Clear the list of available tracks. */
 	void Clear() { tracks.clear(); }

@@ -62,7 +62,7 @@ TrackSelectScene::TrackSelectScene(Display::Display &display,
 
 	SupportCancelAction(_("Back"));
 
-	trackList.Reload(Config::GetInstance()->GetTrackBundle());
+	trackList.Reload(*Config::GetInstance()->GetTrackBundle());
 
 	const auto &s = display.styles;
 
