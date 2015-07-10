@@ -142,8 +142,9 @@ OS::path_t FindPersonalDir()
 		}
 		else {
 			if (!loggedWarning) {
-				Log::Warn("Unable to look up the \"My Documents\" folder: %s",
-					_com_error(hr).ErrorMessage());
+				HR_LOG(warning) <<
+					"Unable to look up the \"My Documents\" folder: " <<
+					_com_error(hr).ErrorMessage();
 				loggedWarning = true;
 			}
 			return OS::path_t();
@@ -155,7 +156,7 @@ OS::path_t FindPersonalDir()
 		}
 		else {
 			if (!loggedWarning) {
-				Log::Warn("Unable to look up the home directory.");
+				HR_LOG(warning) << "Unable to look up the home directory.";
 				loggedWarning = true;
 			}
 			return OS::path_t();
