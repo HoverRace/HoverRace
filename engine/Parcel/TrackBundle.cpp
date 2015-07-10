@@ -42,14 +42,13 @@ TrackBundle::TrackBundle(const OS::path_t &dir, BundlePtr subBundle) :
 {
 }
 
-TrackBundle::~TrackBundle()
-{
-}
-
-std::shared_ptr<RecordFile> TrackBundle::OpenParcel(const std::string &name, bool writing) const
+std::shared_ptr<RecordFile> TrackBundle::OpenParcel(
+	const std::string &name, bool writing) const
 {
 	return SUPER::OpenParcel(
-		boost::ends_with(name, Config::TRACK_EXT) ? name : name + Config::TRACK_EXT,
+		boost::ends_with(name, Config::TRACK_EXT) ?
+			name :
+			name + Config::TRACK_EXT,
 		writing);
 }
 
@@ -59,21 +58,24 @@ std::shared_ptr<RecordFile> TrackBundle::OpenParcel(const std::string &name, boo
  * @return The track or @c nullptr if the track does not exist.
  * @throws ObjStreamExn The track failed to load.
  */
-Model::TrackPtr TrackBundle::OpenTrack(const std::string &name) const
+std::shared_ptr<Model::Track> TrackBundle::OpenTrack(
+	const std::string &name) const
 {
 	auto recFile = OpenParcel(name);
 	return !recFile ?
-		Model::TrackPtr() :
+		std::shared_ptr<Model::Track>() :
 		std::make_shared<Model::Track>(name, recFile);
 }
 
 /**
  * Load a track by track header.
- * @param entry The entry for the track (may not be @c nullptr, see OpenTrackEntry).
+ * @param entry The entry for the track
+ *              (may not be @c nullptr, see OpenTrackEntry()).
  * @return The track or @c nullptr if the track does not exist.
  * @throws ObjStreamExn The track failed to load.
  */
-Model::TrackPtr TrackBundle::OpenTrack(const std::shared_ptr<const Model::TrackEntry> &entry) const
+std::shared_ptr<Model::Track> TrackBundle::OpenTrack(
+	const std::shared_ptr<const Model::TrackEntry> &entry) const
 {
 	return OpenTrack(entry->name);
 }
@@ -104,10 +106,11 @@ std::shared_ptr<Display::Res<Display::Texture>> TrackBundle::LoadMap(
 /**
  * Load a track header.
  * @param name The name of the track.  The ".trk" suffix may be omitted.
- * @return The track or @c NULL if the track does not exist.
+ * @return The track or @c nullptr if the track does not exist.
  * @throws ObjStreamExn The track failed to load.
  */
-Model::TrackEntryPtr TrackBundle::OpenTrackEntry(const std::string &name) const
+std::shared_ptr<Model::TrackEntry> TrackBundle::OpenTrackEntry(
+	const std::string &name) const
 {
 	auto recFile = OpenParcel(name);
 	if (!recFile) {
@@ -131,7 +134,8 @@ Model::TrackEntryPtr TrackBundle::OpenTrackEntry(const std::string &name) const
 /**
  * Check if a track is available.
  * @param name The name of the track.  The ".trk" suffix may be omitted.
- * @return @c eTrackAvail if the track is available, @c eTrackNotFound otherwise.
+ * @return @c eTrackAvail if the track is available,
+ *         @c eTrackNotFound otherwise.
  */
 MR_TrackAvail TrackBundle::CheckAvail(const std::string &name) const
 {

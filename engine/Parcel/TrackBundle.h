@@ -38,9 +38,7 @@
 namespace HoverRace {
 	namespace Model {
 		class Track;
-		typedef std::shared_ptr<Track> TrackPtr;
 		class TrackEntry;
-		typedef std::shared_ptr<TrackEntry> TrackEntryPtr;
 	}
 }
 
@@ -59,20 +57,24 @@ namespace Parcel {
  */
 class MR_DllDeclare TrackBundle : public Bundle
 {
-	typedef Bundle SUPER;
-	public:
-		TrackBundle(const Util::OS::path_t &dir, BundlePtr subBundle=BundlePtr());
-		virtual ~TrackBundle();
+	using SUPER = Bundle;
+public:
+	TrackBundle(const Util::OS::path_t &dir,
+		std::shared_ptr<Bundle> subBundle = std::shared_ptr<Bundle>());
+	virtual ~TrackBundle() { }
 
-		std::shared_ptr<RecordFile> OpenParcel(const std::string &name, bool writing=false) const override;
+	std::shared_ptr<RecordFile> OpenParcel(const std::string &name,
+		bool writing = false) const override;
 
-		Model::TrackPtr OpenTrack(const std::string &name) const;
-		Model::TrackPtr OpenTrack(const std::shared_ptr<const Model::TrackEntry> &entry) const;
-		std::shared_ptr<Display::Res<Display::Texture>> LoadMap(
-			std::shared_ptr<const Model::TrackEntry> entry) const;
-		Model::TrackEntryPtr OpenTrackEntry(const std::string &name) const;
+	std::shared_ptr<Model::Track> OpenTrack(const std::string &name) const;
+	std::shared_ptr<Model::Track> OpenTrack(
+		const std::shared_ptr<const Model::TrackEntry> &entry) const;
+	std::shared_ptr<Display::Res<Display::Texture>> LoadMap(
+		std::shared_ptr<const Model::TrackEntry> entry) const;
+	std::shared_ptr<Model::TrackEntry> OpenTrackEntry(
+		const std::string &name) const;
 
-		MR_TrackAvail CheckAvail(const std::string &name) const;
+	MR_TrackAvail CheckAvail(const std::string &name) const;
 };
 typedef std::shared_ptr<TrackBundle> TrackBundlePtr;
 
