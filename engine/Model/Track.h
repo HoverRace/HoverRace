@@ -43,7 +43,6 @@ namespace HoverRace {
 	}
 	namespace Parcel {
 		class RecordFile;
-		typedef std::shared_ptr<RecordFile> RecordFilePtr;
 	}
 }
 
@@ -66,7 +65,8 @@ public:
 			std::shared_ptr<Parcel::RecordFile>());
 	virtual ~Track();
 
-	Parcel::RecordFilePtr GetRecordFile() const { return recFile; }
+	Parcel::RecordFile *GetRecordFile() const { return recFile.get(); }
+	std::shared_ptr<Parcel::RecordFile> ShareRecordFile() const { return recFile; }
 	const TrackEntry &GetHeader() const { return header; }
 	Level *GetLevel() const { return level.get(); }
 
@@ -107,7 +107,7 @@ public:
 	void Load(bool allowRendering, const GameOptions &gameOpts);
 
 private:
-	Parcel::RecordFilePtr recFile;
+	std::shared_ptr<Parcel::RecordFile> recFile;
 	TrackEntry header;
 	std::unique_ptr<Level> level;
 	Vec2 offset;
