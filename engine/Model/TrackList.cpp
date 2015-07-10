@@ -85,7 +85,8 @@ void TrackList::Reload(std::shared_ptr<Parcel::TrackBundle> trackBundle)
 		}
 		catch (Parcel::ObjStreamExn &ex) {
 			// Ignore this bad track and continue.
-			Log::Warn("Skipping invalid track: %s: %s", name.c_str(), ex.what());
+			HR_LOG(warning) << "Skipping invalid track: " << name << ": " <<
+				ex.what();
 		}
 	}
 
