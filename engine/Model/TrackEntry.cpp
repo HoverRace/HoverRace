@@ -1,7 +1,7 @@
 
 // TrackEntry.cpp
 //
-// Copyright (c) 2010, 2014 Michael Imamura.
+// Copyright (c) 2010, 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -67,7 +67,8 @@ void TrackEntry::Inspect(Util::InspectMapNode &node) const
 		AddField("description", description).
 		AddField("regMinor", regMinor).
 		AddField("regMajor", regMajor).
-		AddField("registrationMode", (registrationMode == MR_FREE_TRACK) ? "free" : "registered").
+		AddField("registrationMode",
+			(registrationMode == MR_FREE_TRACK) ? "free" : "registered").
 		AddField("sortingIndex", sortingIndex);
 }
 

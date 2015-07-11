@@ -1,7 +1,7 @@
 
 // Rulebook.h
 //
-// Copyright (c) 2010, 2013, 2014 Michael Imamura.
+// Copyright (c) 2010, 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -41,7 +41,6 @@ namespace HoverRace {
 	}
 	namespace Model {
 		class TrackEntry;
-		typedef std::shared_ptr<TrackEntry> TrackEntryPtr;
 	}
 	namespace Script {
 		class Core;
@@ -58,91 +57,90 @@ namespace Client {
  */
 class Rulebook
 {
-	public:
-		Rulebook(Script::Core *scripting,
-			const Util::OS::path_t &basePath);
-		Rulebook(const Rulebook&) = delete;
-		~Rulebook();
+public:
+	Rulebook(Script::Core *scripting,
+		const Util::OS::path_t &basePath);
+	Rulebook(const Rulebook&) = delete;
+	~Rulebook() { }
 
-		Rulebook &operator=(const Rulebook&) = delete;
+	Rulebook &operator=(const Rulebook&) = delete;
 
-	public:
-		const Util::OS::path_t &GetBasePath() const { return basePath; }
+public:
+	const Util::OS::path_t &GetBasePath() const { return basePath; }
 
-		void SetMetadata(const std::string &name, const std::string &title,
-			const std::string &description, int maxPlayers)
-		{
-			this->name = name;
-			this->title = title;
-			this->description = description;
-			this->maxPlayers = maxPlayers;
+	void SetMetadata(const std::string &name, const std::string &title,
+		const std::string &description, int maxPlayers)
+	{
+		this->name = name;
+		this->title = title;
+		this->description = description;
+		this->maxPlayers = maxPlayers;
+	}
+
+	const std::string &GetName() const { return name; }
+	const std::string &GetTitle() const { return title; }
+	const std::string &GetDescription() const { return description; }
+
+public:
+	struct metas_t
+	{
+		metas_t(Script::Core *scripting) :
+			player(scripting), session(scripting) { }
+		metas_t(const metas_t&) = default;
+		metas_t(metas_t&&) = default;
+
+		metas_t &operator=(const metas_t&) = default;
+		metas_t &operator=(metas_t&&) = default;
+
+		Script::WrapperFactory<HoverScript::PlayerPeer, HoverScript::MetaPlayer> player;
+		Script::WrapperFactory<HoverScript::SessionPeer, HoverScript::MetaSession> session;
+	};
+
+	const metas_t &GetMetas() const
+	{
+		if (!loaded) {
+			Load();
 		}
+		return metas;
+	}
 
-		const std::string &GetName() const { return name; }
-		const std::string &GetTitle() const { return title; }
-		const std::string &GetDescription() const { return description; }
+	int GetMaxPlayers() const { return maxPlayers; }
 
-	public:
-		struct metas_t
-		{
-			metas_t(Script::Core *scripting) :
-				player(scripting), session(scripting) { }
-			metas_t(const metas_t&) = default;
-			metas_t(metas_t&&) = default;
+public:
+	// Temporary until we get real rule classes.
+	void AddRule(const std::string &name, const luabind::object &obj);
 
-			metas_t &operator=(const metas_t&) = default;
-			metas_t &operator=(metas_t&&) = default;
+	luabind::object CreateDefaultRules() const;
 
-			Script::WrapperFactory<HoverScript::PlayerPeer, HoverScript::MetaPlayer> player;
-			Script::WrapperFactory<HoverScript::SessionPeer, HoverScript::MetaSession> session;
-		};
+	bool LoadMetadata();
+	void Load() const;
 
-		const metas_t &GetMetas() const
-		{
-			if (!loaded) {
-				Load();
-			}
-			return metas;
-		}
+public:
+	void SetOnLoad(const luabind::object &fn);
+protected:
+	void OnLoad() const;
 
-		int GetMaxPlayers() const { return maxPlayers; }
+public:
+	friend bool operator==(const Rulebook &lhs, const Rulebook &rhs);
+	friend bool operator<(const Rulebook &lhs, const Rulebook &rhs);
 
-	public:
-		// Temporary until we get real rule classes.
-		void AddRule(const std::string &name, const luabind::object &obj);
+private:
+	Script::Core *scripting;
+	Util::OS::path_t basePath;
+	std::shared_ptr<HoverScript::RulebookEnv> env;
+	std::string defaultName;
+	std::string name;
+	std::string title;
+	std::string description;
+	int maxPlayers;
 
-		luabind::object CreateDefaultRules() const;
+	std::map<std::string, std::shared_ptr<Rule>> rules;
 
-		bool LoadMetadata();
-		void Load() const;
+	Script::RegistryRef onLoad;
 
-	public:
-		void SetOnLoad(const luabind::object &fn);
-	protected:
-		void OnLoad() const;
+	mutable metas_t metas;
 
-	public:
-		friend bool operator==(const Rulebook &lhs, const Rulebook &rhs);
-		friend bool operator<(const Rulebook &lhs, const Rulebook &rhs);
-
-	private:
-		Script::Core *scripting;
-		Util::OS::path_t basePath;
-		std::shared_ptr<HoverScript::RulebookEnv> env;
-		std::string defaultName;
-		std::string name;
-		std::string title;
-		std::string description;
-		int maxPlayers;
-
-		typedef std::map<std::string, std::shared_ptr<Rule>> rules_t;
-		rules_t rules;
-
-		Script::RegistryRef onLoad;
-
-		mutable metas_t metas;
-
-		mutable bool loaded;
+	mutable bool loaded;
 };
 typedef std::shared_ptr<Rulebook> RulebookPtr;
 

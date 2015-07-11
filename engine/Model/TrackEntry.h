@@ -1,8 +1,7 @@
 
 // TrackEntry.h
-// Track metadata.
 //
-// Copyright (c) 2010, 2014 Michael Imamura.
+// Copyright (c) 2010, 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -54,42 +53,43 @@ namespace Model {
  */
 class MR_DllDeclare TrackEntry : public Util::Inspectable
 {
-	typedef Util::Inspectable SUPER;
-	public:
-		TrackEntry() : SUPER() { }
-		virtual ~TrackEntry() { }
+	using SUPER = Util::Inspectable;
 
-		void Serialize(Parcel::ObjStream &os);
+public:
+	TrackEntry() : SUPER() { }
+	virtual ~TrackEntry() { }
 
-		virtual void Inspect(Util::InspectMapNode &node) const;
+	void Serialize(Parcel::ObjStream &os);
 
-		bool operator<(const TrackEntry &elem2) const
-		{
-			return name < elem2.name;
-		}
+	virtual void Inspect(Util::InspectMapNode &node) const;
 
-		bool operator==(const TrackEntry &elem2) const
-		{
-			return ((name == elem2.name) && 
-					(description == elem2.description));
-		}
+	bool operator<(const TrackEntry &elem2) const
+	{
+		return name < elem2.name;
+	}
 
-	public:
-		/**
-		 * The name of the track.
-		 * @note This is not contained in the track itself; it is up to the
-		 *       owner of this instance to fill this in if possible.
-		 */
-		std::string name;
+	bool operator==(const TrackEntry &elem2) const
+	{
+		return ((name == elem2.name) &&
+				(description == elem2.description));
+	}
 
-#		ifdef _DEBUG
-			Util::OS::path_t path;  // For parcel debugging.
-#		endif
-		std::string description;
-		MR_Int32 regMinor;
-		MR_Int32 regMajor;
-		MR_Int32 registrationMode;
-		MR_Int32 sortingIndex;
+public:
+	/**
+	 * The name of the track.
+	 * @note This is not contained in the track itself; it is up to the
+	 *       owner of this instance to fill this in if possible.
+	 */
+	std::string name;
+
+#	ifdef _DEBUG
+		Util::OS::path_t path;  // For parcel debugging.
+#	endif
+	std::string description;
+	MR_Int32 regMinor;
+	MR_Int32 regMajor;
+	MR_Int32 registrationMode;
+	MR_Int32 sortingIndex;
 };
 typedef std::shared_ptr<TrackEntry> TrackEntryPtr;
 

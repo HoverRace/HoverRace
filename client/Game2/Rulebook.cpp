@@ -1,7 +1,7 @@
 
 // Rulebook.cpp
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -36,20 +36,23 @@ namespace HoverRace {
 namespace Client {
 
 namespace {
-	class ConstantRule : public Rule
-	{
-		typedef Rule SUPER;
-		public:
-			ConstantRule(const luabind::object &val) : SUPER(), val(val) { }
-			virtual ~ConstantRule() { }
 
-		public:
-			virtual luabind::object GetDefault() const { return val; }
+class ConstantRule : public Rule
+{
+	using SUPER = Rule;
 
-		private:
-			luabind::object val;
-	};
-}
+public:
+	ConstantRule(const luabind::object &val) : SUPER(), val(val) { }
+	virtual ~ConstantRule() { }
+
+public:
+	virtual luabind::object GetDefault() const { return val; }
+
+private:
+	luabind::object val;
+};
+
+}  // namespace
 
 Rulebook::Rulebook(Script::Core *scripting, const Util::OS::path_t &basePath) :
 	scripting(scripting),
@@ -65,13 +68,9 @@ Rulebook::Rulebook(Script::Core *scripting, const Util::OS::path_t &basePath) :
 	env = std::make_shared<HoverScript::RulebookEnv>(scripting, basePath, *this);
 }
 
-Rulebook::~Rulebook()
-{
-}
-
 void Rulebook::AddRule(const std::string &name, const luabind::object &obj)
 {
-	rules.insert(rules_t::value_type(name, std::make_shared<ConstantRule>(obj)));
+	rules.emplace(name, std::make_shared<ConstantRule>(obj));
 }
 
 luabind::object Rulebook::CreateDefaultRules() const
