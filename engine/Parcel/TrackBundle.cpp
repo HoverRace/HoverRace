@@ -114,11 +114,11 @@ std::shared_ptr<Model::TrackEntry> TrackBundle::OpenTrackEntry(
 {
 	auto recFile = OpenParcel(name);
 	if (!recFile) {
-		return Model::TrackEntryPtr();
+		return std::shared_ptr<Model::TrackEntry>();
 	}
 	else {
 		recFile->SelectRecord(0);
-		Model::TrackEntryPtr retv = std::make_shared<Model::TrackEntry>();
+		auto retv = std::make_shared<Model::TrackEntry>();
 		if (boost::ends_with(name, Config::TRACK_EXT)) {
 			// Trim off ".trk".
 			retv->name.assign(name, 0, name.length() - Config::TRACK_EXT.length());

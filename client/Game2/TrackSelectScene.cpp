@@ -39,7 +39,6 @@
 #include "TrackSelectScene.h"
 
 using HoverRace::Model::TrackEntry;
-using HoverRace::Model::TrackEntryPtr;
 using namespace HoverRace::Util;
 
 namespace HoverRace {

@@ -61,7 +61,7 @@ public:
 	std::shared_ptr<TrackEntry> &operator[](size_t i) { return tracks[i]; }
 
 private:
-	using tracks_t = std::vector<TrackEntryPtr>;
+	using tracks_t = std::vector<std::shared_ptr<TrackEntry>>;
 public:
 	using iterator = tracks_t::iterator;
 	using const_iterator = tracks_t::const_iterator;

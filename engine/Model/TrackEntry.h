@@ -91,7 +91,6 @@ public:
 	MR_Int32 registrationMode;
 	MR_Int32 sortingIndex;
 };
-typedef std::shared_ptr<TrackEntry> TrackEntryPtr;
 
 }  // namespace Model
 }  // namespace HoverRace
