@@ -53,13 +53,11 @@ void RulebookLibrary::Reload()
 	dir /= Str::UP("rulebooks");
 
 	if (!fs::exists(dir)) {
-		Log::Error("Rulebook path does not exist: %s",
-			(const char*)Str::PU(dir));
+		HR_LOG(error) << "Rulebook path does not exist: " << dir;
 		return;
 	}
 	if (!fs::is_directory(dir)) {
-		Log::Error("Rulebook path is not a directory (skipping): %s",
-			(const char*)Str::PU(dir));
+		HR_LOG(error) << "Rulebook path is not a directory (skipping): " << dir;
 		return;
 	}
 
@@ -69,8 +67,8 @@ void RulebookLibrary::Reload()
 		const OS::path_t &path = iter->path();
 
 		if (!fs::is_directory(path)) {
-			Log::Warn("Ignored file in rulebook dir (old rulebook?): %s",
-				(const char*)Str::PU(path));
+			HR_LOG(warning) <<
+				"Ignored file in rulebook dir (old rulebook?): " << path;
 			continue;
 		}
 
@@ -82,13 +80,11 @@ void RulebookLibrary::Reload()
 	}
 
 	if (rulebooksLoaded == 0) {
-		Log::Error("Rulebook path contains no rulebooks: %s",
-			(const char*)Str::PU(dir));
+		HR_LOG(error) << "Rulebook path contains no rulebooks: " << dir;
 	}
 	else {
-		Log::Info("Loaded %d rulebook(s): %s",
-			rulebooksLoaded,
-			(const char*)Str::PU(dir));
+		HR_LOG(info) << "Loaded " << rulebooksLoaded <<
+			" rulebooks(s): " << dir;
 	}
 }
 
