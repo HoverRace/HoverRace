@@ -142,7 +142,6 @@ private:
 
 	mutable bool loaded;
 };
-typedef std::shared_ptr<Rulebook> RulebookPtr;
 
 inline bool operator==(const Rulebook &lhs, const Rulebook &rhs)
 {

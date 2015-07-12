@@ -45,7 +45,6 @@ namespace HoverRace {
 		class HighObserver;
 		class LoadingScene;
 		class Rulebook;
-		using RulebookPtr = std::shared_ptr<Rulebook>;
 		class RulebookLibrary;
 		class Scene;
 		using ScenePtr = std::shared_ptr<Scene>;

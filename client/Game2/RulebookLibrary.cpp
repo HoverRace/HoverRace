@@ -120,13 +120,13 @@ std::shared_ptr<const Rulebook> RulebookLibrary::GetDefault() const
 /**
  * Search for the Rulebook with the given name.
  * @param name The name to search for (case-sensitive).
- * @return The requested Rulebook, or a null RulebookPtr if
+ * @return The requested Rulebook, or @c nullptr if
  *         there is no Rulebook with that name.
  */
 std::shared_ptr<const Rulebook> RulebookLibrary::Find(const std::string &name)
 {
 	auto iter = library.find(name);
-	return iter == library.end() ? RulebookPtr() : iter->second;
+	return iter == library.end() ? std::shared_ptr<Rulebook>() : iter->second;
 }
 
 }  // namespace Client
