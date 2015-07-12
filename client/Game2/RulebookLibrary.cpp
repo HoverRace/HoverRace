@@ -1,7 +1,7 @@
 
 // RulebookLibrary.cpp
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -92,9 +92,9 @@ void RulebookLibrary::Reload()
 	}
 }
 
-void RulebookLibrary::Add(RulebookPtr &rulebook)
+void RulebookLibrary::Add(std::shared_ptr<Rulebook> &rulebook)
 {
-	library.insert(library_t::value_type(rulebook->GetName(), rulebook));
+	library.emplace(rulebook->GetName(), rulebook);
 	sorted.insert(rulebook);
 
 	if (rulebook->GetName() == "Race") {

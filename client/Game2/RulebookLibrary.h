@@ -1,7 +1,7 @@
 
 // RulebookLibrary.h
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@
 namespace HoverRace {
 	namespace Client {
 		class Rulebook;
-		typedef std::shared_ptr<Rulebook> RulebookPtr;
 	}
 	namespace Script {
 		class Core;
@@ -39,32 +38,33 @@ namespace Client {
  * @author Michael Imamura
  */
 class RulebookLibrary {
-	public:
-		RulebookLibrary(Script::Core *scripting);
+public:
+	RulebookLibrary(Script::Core *scripting);
 
-	public:
-		void Reload();
-		void Add(RulebookPtr &rulebook);
-		std::shared_ptr<const Rulebook> GetDefault() const;
-		std::shared_ptr<const Rulebook> Find(const std::string &name);
+public:
+	void Reload();
+	void Add(std::shared_ptr<Rulebook> &rulebook);
+	std::shared_ptr<const Rulebook> GetDefault() const;
+	std::shared_ptr<const Rulebook> Find(const std::string &name);
 
-	private:
-		typedef std::set<std::shared_ptr<const Rulebook>, boost::less_pointees_t<std::shared_ptr<const Rulebook>>> sorted_t;
-	public:
-		typedef sorted_t::const_iterator const_iterator;
-		typedef sorted_t::value_type value_type;
+private:
+	using sorted_t = std::set<
+		std::shared_ptr<const Rulebook>,
+		boost::less_pointees_t<std::shared_ptr<const Rulebook>>>;
+public:
+	using const_iterator = sorted_t::const_iterator;
+	using value_type = sorted_t::value_type;
 
-		const_iterator begin() const { return sorted.cbegin(); }
-		const_iterator end() const { return sorted.cend(); }
-		const_iterator cbegin() const { return sorted.cbegin(); }
-		const_iterator cend() const { return sorted.cend(); }
+	const_iterator begin() const { return sorted.cbegin(); }
+	const_iterator end() const { return sorted.cend(); }
+	const_iterator cbegin() const { return sorted.cbegin(); }
+	const_iterator cend() const { return sorted.cend(); }
 
-	private:
-		Script::Core *scripting;
-		typedef std::map<std::string, RulebookPtr> library_t;
-		library_t library;
-		sorted_t sorted;
-		RulebookPtr defaultRulebook;
+private:
+	Script::Core *scripting;
+	std::map<std::string, std::shared_ptr<Rulebook>> library;
+	sorted_t sorted;
+	std::shared_ptr<Rulebook> defaultRulebook;
 };
 
 }  // namespace Client
