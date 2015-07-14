@@ -121,7 +121,7 @@ void OS::SetLocale()
 		locale = std::locale("");
 	}
 	catch (std::runtime_error&) {
-		Log::Warn("Unsupported locale (falling back to default).");
+		HR_LOG(warning) << "Unsupported locale (falling back to default).";
 		locale = std::locale("C");
 	}
 
@@ -257,7 +257,7 @@ bool OS::OpenLink(const std::string &url)
 bool OS::OpenPath(const path_t &path)
 {
 	if (!(fs::exists(path) && fs::is_directory(path))) return false;
-	Log::Info("Opening path: %s", (const char*)Str::PU(path));
+	HR_LOG(info) << "Opening path: " << path;
 #	ifdef _WIN32
 		std::wstring s((const wchar_t*)Str::PW(path));
 		return (int)ShellExecuteW(NULL, L"open", s.c_str(), NULL, NULL, SW_SHOWNORMAL) > 32;
