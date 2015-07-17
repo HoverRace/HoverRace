@@ -44,7 +44,7 @@ std::shared_ptr<Rules> GenRules(Script::Core *scripting)
 		"The River",
 	};
 	const char *trackName = tracks[(unsigned)rand() % (sizeof(tracks) / sizeof(tracks[0]))];
-	Log::Info("Selected main menu track: %s", trackName);
+	HR_LOG(info) << "Selected main menu track: " << trackName;
 
 	// Use a special "dummy" rulebook for the demo mode.
 	auto rulebook = std::make_shared<Rulebook>(scripting, OS::path_t());
