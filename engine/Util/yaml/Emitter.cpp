@@ -99,7 +99,7 @@ Emitter::~Emitter()
 	yaml_document_end_event_initialize(&event, 1);
 	if(!yaml_emitter_emit(&emitter, &event)) {
 		yaml_emitter_delete(&emitter);
-		Log::Error("Unable to end document.");
+		HR_LOG(error) << "Unable to end document.";
 		return;
 	}
 
@@ -107,7 +107,7 @@ Emitter::~Emitter()
 	yaml_stream_end_event_initialize(&event);
 	if(!yaml_emitter_emit(&emitter, &event)) {
 		yaml_emitter_delete(&emitter);
-		Log::Error("Unable to end document.");
+		HR_LOG(error) << "Unable to end document.";
 		return;
 	}
 
