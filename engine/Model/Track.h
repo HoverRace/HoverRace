@@ -107,7 +107,7 @@ public:
 	}
 
 public:
-	virtual void Inspect(Util::InspectMapNode &node) const;
+	void Inspect(Util::InspectMapNode &node) const override;
 
 private:
 	void LoadHeader();
