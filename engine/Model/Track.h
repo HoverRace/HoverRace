@@ -38,6 +38,7 @@
 
 namespace HoverRace {
 	namespace Model {
+		class FreeElementBase;
 		class GameOptions;
 		class Level;
 	}
@@ -96,6 +97,16 @@ public:
 	 */
 	void SetGravity(double gravity) { this->physics.gravity = gravity; }
 
+	/**
+	 * Add a FreeElement to be managed by this Track.
+	 * @param elem The element.
+	 */
+	void AddFreeElement(std::shared_ptr<Model::FreeElementBase> elem)
+	{
+		freeElements.emplace_back(std::move(elem));
+	}
+
+public:
 	virtual void Inspect(Util::InspectMapNode &node) const;
 
 private:
@@ -113,6 +124,7 @@ private:
 	Vec2 offset;
 	Vec2 size;
 	std::shared_ptr<Display::Res<Display::Texture>> map;
+	std::list<std::shared_ptr<Model::FreeElementBase>> freeElements;
 
 	struct Physics
 	{
