@@ -178,6 +178,8 @@ public:
 		assert(pDataLen == 0);
 	}
 
+	//TODO: Track physics & collision data in a separate heap.
+
 	// Logic interface (For simulation)
 
 	/**
