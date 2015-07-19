@@ -55,6 +55,9 @@ std::shared_ptr<Rules> GenRules(Script::Core *scripting)
 
 	Model::GameOptions gameOpts;
 	gameOpts.AllowOnlyCraft(Model::GameOptions::PickRandomCraft());
+	gameOpts.SetWeaponsEnabled(false);
+	gameOpts.BlacklistObject(151);  // Cans
+	gameOpts.BlacklistObject(152);  // Mines
 	rules->SetGameOpts(gameOpts);
 
 	return rules;
