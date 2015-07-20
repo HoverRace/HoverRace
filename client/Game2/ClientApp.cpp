@@ -98,8 +98,8 @@ namespace {
 	 */
 	struct SceneHolder
 	{
-		SceneHolder(const ScenePtr &scene) : scene(scene) { }
-		ScenePtr scene;
+		SceneHolder(std::shared_ptr<Scene> scene) : scene(std::move(scene)) { }
+		std::shared_ptr<Scene> scene;
 	};
 
 	/**
@@ -352,7 +352,7 @@ void ClientApp::PrepareScenes()
 {
 	Profiler::Sampler sampler(*prepareProfiler);
 
-	for (const ScenePtr &scene : sceneStack) {
+	for (const auto &scene : sceneStack) {
 		scene->PrepareScene();
 	}
 	if (showOverlay) statusOverlayScene->PrepareScene();
@@ -364,7 +364,7 @@ void ClientApp::RenderScenes()
 {
 	Profiler::Sampler sampler(*renderProfiler);
 
-	for (const ScenePtr &scene : sceneStack) {
+	for (const auto &scene : sceneStack) {
 		Scene::Phase phase = scene->GetPhase();
 		if (phase != Scene::Phase::INITIALIZING &&
 			phase != Scene::Phase::STOPPED)
@@ -560,7 +560,7 @@ void ClientApp::SetForegroundScene()
  * @note This must only be called from the main thread.
  * @param scene The new foreground scene.
  */
-void ClientApp::SetForegroundScene(const ScenePtr &scene)
+void ClientApp::SetForegroundScene(const std::shared_ptr<Scene> &scene)
 {
 	if (!scene) {
 		SetForegroundScene();
@@ -606,7 +606,7 @@ void ClientApp::SetForegroundScene(const ScenePtr &scene)
  * @note This must only be called from the main thread.
  * @param scene The scene to push.
  */
-void ClientApp::PushScene(const ScenePtr &scene)
+void ClientApp::PushScene(const std::shared_ptr<Scene> &scene)
 {
 	// If the console is visible, then the new scene replaces it.
 	if (Config::GetInstance()->runtime.enableConsole) {
@@ -661,9 +661,9 @@ void ClientApp::PopScene()
  * @note This must only be called from the main thread.
  * @param scene The scene to push.
  */
-void ClientApp::ReplaceScene(const ScenePtr &scene)
+void ClientApp::ReplaceScene(const std::shared_ptr<Scene> &scene)
 {
-	for (ScenePtr &s : sceneStack) {
+	for (auto &s : sceneStack) {
 		s->SetPhase(Scene::Phase::STOPPING);
 	}
 	PushScene(scene);
@@ -679,7 +679,7 @@ void ClientApp::TerminateAllScenes()
 	sceneStack.clear();
 }
 
-void ClientApp::RequestPushScene(const ScenePtr &scene)
+void ClientApp::RequestPushScene(const std::shared_ptr<Scene> &scene)
 {
 	SDL_Event evt;
 	evt.type = userEventId;
@@ -696,7 +696,7 @@ void ClientApp::RequestPopScene()
 	SDL_PushEvent(&evt);
 }
 
-void ClientApp::RequestReplaceScene(const ScenePtr &scene)
+void ClientApp::RequestReplaceScene(const std::shared_ptr<Scene> &scene)
 {
 	SDL_Event evt;
 	evt.type = userEventId;

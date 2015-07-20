@@ -31,7 +31,6 @@ namespace HoverRace {
 		class Roster;
 		class Rules;
 		class Scene;
-		typedef std::shared_ptr<Scene> ScenePtr;
 	}
 	namespace Control {
 		class InputEventController;
@@ -67,7 +66,7 @@ public:
 	 * @note This may be called from any thread.
 	 * @param scene The scene to push.
 	 */
-	virtual void RequestPushScene(const ScenePtr &scene) = 0;
+	virtual void RequestPushScene(const std::shared_ptr<Scene> &scene) = 0;
 
 	/**
 	 * Return to the previous scene, if any.
@@ -81,7 +80,7 @@ public:
 	 * @note This may be called from any thread.
 	 * @param scene The scene to push.
 	 */
-	virtual void RequestReplaceScene(const ScenePtr &scene) = 0;
+	virtual void RequestReplaceScene(const std::shared_ptr<Scene> &scene) = 0;
 
 	/**
 	 * Request a return to the main menu.

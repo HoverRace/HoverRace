@@ -308,7 +308,6 @@ protected:
 	std::shared_ptr<Util::Profiler> prepareProfiler;
 	std::shared_ptr<Util::Profiler> renderProfiler;
 };
-typedef std::shared_ptr<Scene> ScenePtr;
 
 }  // namespace HoverScript
 }  // namespace Client

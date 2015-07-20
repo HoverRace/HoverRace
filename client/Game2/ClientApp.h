@@ -47,7 +47,6 @@ namespace HoverRace {
 		class Rulebook;
 		class RulebookLibrary;
 		class Scene;
-		using ScenePtr = std::shared_ptr<Scene>;
 		class StatusOverlayScene;
 	}
 	namespace Control {
@@ -101,20 +100,20 @@ private:
 	void OnConsoleToggle();
 
 private:
-	using sceneStack_t = std::list<ScenePtr>;
+	using sceneStack_t = std::list<std::shared_ptr<Scene>>;
 	void SetForegroundScene();
-	void SetForegroundScene(const ScenePtr &iter);
-	void PushScene(const ScenePtr &scene);
+	void SetForegroundScene(const std::shared_ptr<Scene> &iter);
+	void PushScene(const std::shared_ptr<Scene> &scene);
 	void PopScene();
-	void ReplaceScene(const ScenePtr &scene);
+	void ReplaceScene(const std::shared_ptr<Scene> &scene);
 	void TerminateAllScenes();
 
 public:
 	// GameDirector
 	Scene *GetForegroundScene() const override { return sceneStack.empty() ? nullptr : sceneStack.back().get(); }
-	void RequestPushScene(const ScenePtr &scene) override;
+	void RequestPushScene(const std::shared_ptr<Scene> &scene) override;
 	void RequestPopScene() override;
-	void RequestReplaceScene(const ScenePtr &scene) override;
+	void RequestReplaceScene(const std::shared_ptr<Scene> &scene) override;
 	void RequestMainMenu(
 		std::shared_ptr<LoadingScene> loadingScene =
 			std::shared_ptr<LoadingScene>()) override;
@@ -139,7 +138,7 @@ private:
 	Control::InputEventController *controller;
 	Roster *party;
 	sceneStack_t sceneStack;
-	ScenePtr fgScene;  ///< The scene that currently has input focus.
+	std::shared_ptr<Scene> fgScene;  ///< The scene that currently has input focus.
 	std::unique_ptr<StatusOverlayScene> statusOverlayScene;
 	bool showOverlay;
 	std::unique_ptr<DebugScene> debugScene;
