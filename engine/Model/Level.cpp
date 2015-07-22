@@ -867,6 +867,8 @@ void Level::FreeElementList::LinkTo(FreeElementList **pPrevLink)
 void Level::FreeElementList::SerializeList(ObjStream &pArchive,
 	FreeElementList **pListHead)
 {
+	static std::shared_ptr<ObjectFromFactory> NULL_OBJ;
+
 	if (pArchive.IsWriting()) {
 		FreeElementList *lFreeElement = *pListHead;
 
@@ -880,10 +882,7 @@ void Level::FreeElementList::SerializeList(ObjStream &pArchive,
 			lFreeElement = lFreeElement->mNext;
 		}
 
-		Util::ObjectFromFactory *lNullPtr = nullptr;
-
-		Util::ObjectFromFactory::SerializePtr(pArchive, lNullPtr);
-
+		ObjectFromFactory::SerializeShared<ObjectFromFactory>(pArchive, NULL_OBJ);
 	}
 	else {
 		assert(*pListHead == nullptr);
