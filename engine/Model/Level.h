@@ -151,7 +151,6 @@ protected:
 	{
 		struct AudibleRoom
 		{
-		public:
 			AudibleRoom();
 			~AudibleRoom();
 
