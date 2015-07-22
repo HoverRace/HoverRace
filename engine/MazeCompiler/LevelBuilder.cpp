@@ -177,9 +177,10 @@ bool LevelBuilder::Parse(std::istream &in)
 						mRoomList[lRoomIndex].mFloorLevel = (MR_Int32) (lParser.GetNextNumParam() * 1000.0);
 
 						// Create the associated texture
-						mRoomList[lRoomIndex].mFloorTexture = sLoadTexture(&lParser);
+						mRoomList[lRoomIndex].mFloorTexture.reset(
+							sLoadTexture(&lParser));
 
-						if(mRoomList[lRoomIndex].mFloorTexture == NULL) {
+						if (!(mRoomList[lRoomIndex].mFloorTexture)) {
 							lReturnValue = false;
 						}
 					}
@@ -188,9 +189,10 @@ bool LevelBuilder::Parse(std::istream &in)
 						mRoomList[lRoomIndex].mCeilingLevel = (MR_Int32) (lParser.GetNextNumParam() * 1000.0);
 
 						// Create the associated texture
-						mRoomList[lRoomIndex].mCeilingTexture = sLoadTexture(&lParser);
+						mRoomList[lRoomIndex].mCeilingTexture.reset(
+							sLoadTexture(&lParser));
 
-						if(mRoomList[lRoomIndex].mCeilingTexture == NULL) {
+						if (!(mRoomList[lRoomIndex].mCeilingTexture)) {
 							lReturnValue = false;
 						}
 					}
@@ -230,9 +232,10 @@ bool LevelBuilder::Parse(std::istream &in)
 						mFeatureList[lFeatureIndex].mFloorLevel = (MR_Int32) (lParser.GetNextNumParam() * 1000.0);
 
 						// Create the associated texture
-						mFeatureList[lFeatureIndex].mFloorTexture = sLoadTexture(&lParser);
+						mFeatureList[lFeatureIndex].mFloorTexture.reset(
+							sLoadTexture(&lParser));
 
-						if(mFeatureList[lFeatureIndex].mFloorTexture == NULL) {
+						if (!(mFeatureList[lFeatureIndex].mFloorTexture)) {
 							lReturnValue = false;
 						}
 					}
@@ -241,9 +244,10 @@ bool LevelBuilder::Parse(std::istream &in)
 						mFeatureList[lFeatureIndex].mCeilingLevel = (MR_Int32) (lParser.GetNextNumParam() * 1000.0);
 
 						// Create the associated texture
-						mFeatureList[lFeatureIndex].mCeilingTexture = sLoadTexture(&lParser);
+						mFeatureList[lFeatureIndex].mCeilingTexture.reset(
+							sLoadTexture(&lParser));
 
-						if(mFeatureList[lFeatureIndex].mCeilingTexture == NULL) {
+						if (!(mFeatureList[lFeatureIndex].mCeilingTexture)) {
 							lReturnValue = false;
 						}
 					}
@@ -279,7 +283,7 @@ bool LevelBuilder::Parse(std::istream &in)
 			for(int lNeighbor = 0; lNeighbor < mRoomList[lCounter].mNbVertex; lNeighbor++) {
 				mRoomList[lCounter].mNeighborList[lNeighbor] = -1;
 			}
-			mRoomList[lCounter].mWallTexture = new Model::SurfaceElement *[mRoomList[lCounter].mNbVertex];
+			mRoomList[lCounter].mWallTexture.resize(mRoomList[lCounter].mNbVertex);
 
 			mRoomList[lCounter].mChildList = new int[mRoomList[lCounter].mNbChild];
 
@@ -292,7 +296,7 @@ bool LevelBuilder::Parse(std::istream &in)
 			mFeatureList[lCounter].mVertexList = new MR_2DCoordinate[mFeatureList[lCounter].mNbVertex];
 			mFeatureList[lCounter].mWallLen = new MR_Int32[mFeatureList[lCounter].mNbVertex];
 
-			mFeatureList[lCounter].mWallTexture = new Model::SurfaceElement *[mFeatureList[lCounter].mNbVertex];
+			mFeatureList[lCounter].mWallTexture.resize(mFeatureList[lCounter].mNbVertex);
 
 			// Create the Parent->Child relations
 			int lParentIndex = mFeatureList[lCounter].mParentSectionIndex;
@@ -328,9 +332,10 @@ bool LevelBuilder::Parse(std::istream &in)
 					mRoomList[lRoomIndex].mVertexList[lVertex].mY = (MR_Int32) (lParser.GetNextNumParam() * 1000.0);
 
 					// Create the associated texture
-					mRoomList[lRoomIndex].mWallTexture[lVertex] = sLoadTexture(&lParser);
+					mRoomList[lRoomIndex].mWallTexture[lVertex].reset(
+						sLoadTexture(&lParser));
 
-					if(mRoomList[lRoomIndex].mWallTexture[lVertex] == NULL) {
+					if (!(mRoomList[lRoomIndex].mWallTexture[lVertex])) {
 						lReturnValue = false;
 					}
 					lVertex++;
@@ -367,9 +372,10 @@ bool LevelBuilder::Parse(std::istream &in)
 					mFeatureList[lFeatureIndex].mVertexList[lVertex].mY = (MR_Int32) (lParser.GetNextNumParam() * 1000.0);
 
 					// Create the associated texture
-					mFeatureList[lFeatureIndex].mWallTexture[lVertex] = sLoadTexture(&lParser);
+					mFeatureList[lFeatureIndex].mWallTexture[lVertex].reset(
+						sLoadTexture(&lParser));
 
-					if(mFeatureList[lFeatureIndex].mWallTexture[lVertex] == NULL) {
+					if (!(mFeatureList[lFeatureIndex].mWallTexture[lVertex])) {
 						lReturnValue = false;
 					}
 

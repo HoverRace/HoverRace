@@ -330,32 +330,32 @@ int Level::GetFeature(int pRoomId, int pChildIndex) const
 
 SurfaceElement *Level::GetRoomWallElement(int pRoomId, int pVertex) const
 {
-	return mRoomList[pRoomId].mWallTexture[pVertex];
+	return mRoomList[pRoomId].mWallTexture[pVertex].get();
 }
 
 SurfaceElement *Level::GetFeatureWallElement(int pFeatureId, int pVertex) const
 {
-	return mFeatureList[pFeatureId].mWallTexture[pVertex];
+	return mFeatureList[pFeatureId].mWallTexture[pVertex].get();
 }
 
 SurfaceElement *Level::GetRoomBottomElement(int pRoomId) const
 {
-	return mRoomList[pRoomId].mFloorTexture;
+	return mRoomList[pRoomId].mFloorTexture.get();
 }
 
 SurfaceElement *Level::GetFeatureBottomElement(int pFeatureId) const
 {
-	return mFeatureList[pFeatureId].mFloorTexture;
+	return mFeatureList[pFeatureId].mFloorTexture.get();
 }
 
 SurfaceElement *Level::GetRoomTopElement(int pRoomId) const
 {
-	return mRoomList[pRoomId].mCeilingTexture;
+	return mRoomList[pRoomId].mCeilingTexture.get();
 }
 
 SurfaceElement *Level::GetFeatureTopElement(int pFeatureId) const
 {
-	return mFeatureList[pFeatureId].mCeilingTexture;
+	return mFeatureList[pFeatureId].mCeilingTexture.get();
 }
 
 // FreeElements manipulation
@@ -641,32 +641,15 @@ int Level::FindRoomForPoint(const MR_2DCoordinate & pPosition, int pStartingRoom
 
 // class Level::Section
 
-Level::Section::Section()
+Level::Section::Section() :
+	mNbVertex(0), mVertexList(nullptr), mWallLen(nullptr)
 {
-
-	mNbVertex = 0;
-	mVertexList = NULL;
-	mWallLen = NULL;
-
-	mWallTexture = NULL;
-	mFloorTexture = NULL;
-	mCeilingTexture = NULL;
-
 }
 
 Level::Section::~Section()
 {
-	delete[]mVertexList;
-	delete[]mWallLen;
-
-	delete mFloorTexture;
-	delete mCeilingTexture;
-
-	for(int lCounter = 0; lCounter < mNbVertex; lCounter++) {
-		delete mWallTexture[lCounter];
-	}
-	delete[]mWallTexture;
-
+	delete[] mVertexList;
+	delete[] mWallLen;
 }
 
 void Level::Section::SerializeStructure(ObjStream & pArchive)
@@ -709,15 +692,16 @@ void Level::Section::SerializeStructure(ObjStream & pArchive)
 	}
 
 	// Serialize the textures
-	Util::ObjectFromFactory::SerializePtr(pArchive, (Util::ObjectFromFactory * &)mFloorTexture);
-	Util::ObjectFromFactory::SerializePtr(pArchive, (Util::ObjectFromFactory * &)mCeilingTexture);
+	ObjectFromFactory::SerializeShared<SurfaceElement>(pArchive, mFloorTexture);
+	ObjectFromFactory::SerializeShared<SurfaceElement>(pArchive, mCeilingTexture);
 
-	if(!pArchive.IsWriting()) {
-		mWallTexture = new SurfaceElement *[mNbVertex];
+	if (!pArchive.IsWriting()) {
+		mWallTexture.resize(mNbVertex);
 	}
 
-	for(lCounter = 0; lCounter < mNbVertex; lCounter++) {
-		Util::ObjectFromFactory::SerializePtr(pArchive, (Util::ObjectFromFactory * &)mWallTexture[lCounter]);
+	for (lCounter = 0; lCounter < mNbVertex; lCounter++) {
+		ObjectFromFactory::SerializeShared<SurfaceElement>(pArchive,
+			mWallTexture[lCounter]);
 	}
 }
 

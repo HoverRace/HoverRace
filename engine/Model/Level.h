@@ -128,9 +128,9 @@ protected:
 		MR_2DCoordinate mMax;
 
 		// Wall textures
-		SurfaceElement **mWallTexture;
-		SurfaceElement *mFloorTexture;
-		SurfaceElement *mCeilingTexture;
+		std::vector<std::shared_ptr<SurfaceElement>> mWallTexture;
+		std::shared_ptr<SurfaceElement> mFloorTexture;
+		std::shared_ptr<SurfaceElement> mCeilingTexture;
 
 		// Methods
 		Section();
