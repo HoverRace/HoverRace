@@ -129,12 +129,18 @@ public:
 			std::is_base_of<ObjectFromFactory, T>::value,
 			std::shared_ptr<T>>::type &obj)
 	{
+		ObjectFromFactoryId oid = { 0, 0 };
+
 		if (archive.IsWriting()) {
-			ObjectFromFactory *ptr = obj.get();
-			SerializePtr(archive, ptr);
+			if (obj) {
+				oid = obj->mId;
+			}
+			oid.Serialize(archive);
+			if (obj) {
+				obj->Serialize(archive);
+			}
 		}
 		else {
-			ObjectFromFactoryId oid = { 0, 0 };
 			oid.Serialize(archive);
 
 			if (oid.mDllId == 0) {
