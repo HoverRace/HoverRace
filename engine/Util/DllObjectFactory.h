@@ -107,9 +107,6 @@ public:
 	// Warning this module do not support multiple references to objects
 	// or looped structures
 
-	static void SerializePtr(Parcel::ObjStream &pArchive,
-		ObjectFromFactory *&pPtr);
-
 	/**
 	 * Serialize a shared pointer to a serializable object.
 	 *

@@ -90,34 +90,6 @@ void ObjectFromFactory::ThrowUnexpected(const ObjectFromFactoryId &oid)
 		oid.mDllId % oid.mClassId));
 }
 
-void ObjectFromFactory::SerializePtr(ObjStream &pArchive, ObjectFromFactory *&pPtr)
-{
-	ObjectFromFactoryId lId = { 0, 0 };
-
-	if (pArchive.IsWriting()) {
-		if (pPtr) {
-			lId = pPtr->mId;
-		}
-
-		lId.Serialize(pArchive);
-
-		if (pPtr) {
-			pPtr->Serialize(pArchive);
-		}
-	}
-	else {
-		lId.Serialize(pArchive);
-
-		if (lId.mDllId == 0) {
-			pPtr = nullptr;
-		}
-		else {
-			pPtr = DllObjectFactory::CreateObject(lId);
-			pPtr->Serialize(pArchive);
-		}
-	}
-}
-
 // ObjectFromFactoryId
 void ObjectFromFactoryId::Serialize(ObjStream &pArchive)
 {
