@@ -313,7 +313,8 @@ public:
 												// -1 mean non classified
 	void MoveElement(MR_FreeElementHandle pHandle, int pNewRoom);
 												// -1 mean non classified
-	MR_FreeElementHandle InsertElement(FreeElement * pElement, int pNewRoom, BOOL Broadcast = FALSE);
+	MR_FreeElementHandle InsertElement(std::shared_ptr<FreeElement> pElement,
+		int pNewRoom, BOOL Broadcast = FALSE);
 	static void DeleteElement(MR_FreeElementHandle pHandle);
 
 												// Set and broadcast the newporition

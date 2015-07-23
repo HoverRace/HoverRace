@@ -53,7 +53,7 @@ struct MR_Connection
 static LevelBuilder *gsCurrentLevelBuilder = nullptr;
 
 // Local helper functions
-static Model::SurfaceElement *sLoadTexture(TrackSpecParser * pParser);
+static std::shared_ptr<Model::SurfaceElement> sLoadTexture(TrackSpecParser *pParser);
 
 LevelBuilder::LevelBuilder(Model::Track &track,
 	const TrackCompilationLogPtr &log) :
@@ -177,8 +177,8 @@ bool LevelBuilder::Parse(std::istream &in)
 						mRoomList[lRoomIndex].mFloorLevel = (MR_Int32) (lParser.GetNextNumParam() * 1000.0);
 
 						// Create the associated texture
-						mRoomList[lRoomIndex].mFloorTexture.reset(
-							sLoadTexture(&lParser));
+						mRoomList[lRoomIndex].mFloorTexture =
+							sLoadTexture(&lParser);
 
 						if (!(mRoomList[lRoomIndex].mFloorTexture)) {
 							lReturnValue = false;
@@ -189,8 +189,8 @@ bool LevelBuilder::Parse(std::istream &in)
 						mRoomList[lRoomIndex].mCeilingLevel = (MR_Int32) (lParser.GetNextNumParam() * 1000.0);
 
 						// Create the associated texture
-						mRoomList[lRoomIndex].mCeilingTexture.reset(
-							sLoadTexture(&lParser));
+						mRoomList[lRoomIndex].mCeilingTexture =
+							sLoadTexture(&lParser);
 
 						if (!(mRoomList[lRoomIndex].mCeilingTexture)) {
 							lReturnValue = false;
@@ -232,8 +232,8 @@ bool LevelBuilder::Parse(std::istream &in)
 						mFeatureList[lFeatureIndex].mFloorLevel = (MR_Int32) (lParser.GetNextNumParam() * 1000.0);
 
 						// Create the associated texture
-						mFeatureList[lFeatureIndex].mFloorTexture.reset(
-							sLoadTexture(&lParser));
+						mFeatureList[lFeatureIndex].mFloorTexture =
+							sLoadTexture(&lParser);
 
 						if (!(mFeatureList[lFeatureIndex].mFloorTexture)) {
 							lReturnValue = false;
@@ -244,8 +244,8 @@ bool LevelBuilder::Parse(std::istream &in)
 						mFeatureList[lFeatureIndex].mCeilingLevel = (MR_Int32) (lParser.GetNextNumParam() * 1000.0);
 
 						// Create the associated texture
-						mFeatureList[lFeatureIndex].mCeilingTexture.reset(
-							sLoadTexture(&lParser));
+						mFeatureList[lFeatureIndex].mCeilingTexture =
+							sLoadTexture(&lParser);
 
 						if (!(mFeatureList[lFeatureIndex].mCeilingTexture)) {
 							lReturnValue = false;
@@ -332,8 +332,8 @@ bool LevelBuilder::Parse(std::istream &in)
 					mRoomList[lRoomIndex].mVertexList[lVertex].mY = (MR_Int32) (lParser.GetNextNumParam() * 1000.0);
 
 					// Create the associated texture
-					mRoomList[lRoomIndex].mWallTexture[lVertex].reset(
-						sLoadTexture(&lParser));
+					mRoomList[lRoomIndex].mWallTexture[lVertex] =
+						sLoadTexture(&lParser);
 
 					if (!(mRoomList[lRoomIndex].mWallTexture[lVertex])) {
 						lReturnValue = false;
@@ -372,8 +372,8 @@ bool LevelBuilder::Parse(std::istream &in)
 					mFeatureList[lFeatureIndex].mVertexList[lVertex].mY = (MR_Int32) (lParser.GetNextNumParam() * 1000.0);
 
 					// Create the associated texture
-					mFeatureList[lFeatureIndex].mWallTexture[lVertex].reset(
-						sLoadTexture(&lParser));
+					mFeatureList[lFeatureIndex].mWallTexture[lVertex] =
+						sLoadTexture(&lParser);
 
 					if (!(mFeatureList[lFeatureIndex].mWallTexture[lVertex])) {
 						lReturnValue = false;
@@ -589,9 +589,10 @@ bool LevelBuilder::Parse(std::istream &in)
 
 		if(lReturnValue) {
 
-			Model::FreeElement *lElement = (Model::FreeElement*)Util::DllObjectFactory::CreateObject(lElementType);
+			auto lElement = std::dynamic_pointer_cast<Model::FreeElement>(
+				DllObjectFactory::CreateObject(lElementType));
 
-			if(lElement == NULL) {
+			if (!lElement) {
 				throw TrackCompileExn(str(
 					format(_("Unable to create free element on line %d\n")) %
 					lParser.GetErrorLine()));
@@ -785,27 +786,27 @@ double LevelBuilder::ComputeShapeConst(Section * pSection)
 }
 
 // Helpers implementation
-Model::SurfaceElement *sLoadTexture(TrackSpecParser *pParser)
+std::shared_ptr<Model::SurfaceElement> sLoadTexture(TrackSpecParser *pParser)
 {
-	Model::SurfaceElement *lReturnValue = NULL;
-	Util::ObjectFromFactory *lTempPtr = NULL;
+	std::shared_ptr<Model::SurfaceElement> lReturnValue;
 
 	Util::ObjectFromFactoryId lType;
 
 	lType.mDllId = (MR_UInt16) pParser->GetNextNumParam();
 	lType.mClassId = (MR_UInt16) pParser->GetNextNumParam();
 
-	lTempPtr = Util::DllObjectFactory::CreateObject(lType);
+	auto lTempPtr =
+		Util::DllObjectFactory::CreateObject(lType);
 
-	if(lTempPtr != NULL) {
-		lReturnValue = dynamic_cast < Model::SurfaceElement * >(lTempPtr);
+	if (lTempPtr) {
+		lReturnValue = std::dynamic_pointer_cast<Model::SurfaceElement>(lTempPtr);
 
-		if(lReturnValue == NULL) {
-			lTempPtr = NULL;
+		if (!lReturnValue) {
+			lTempPtr.reset();
 		}
 	}
 
-	if(lReturnValue == NULL) {
+	if (!lReturnValue) {
 		throw TrackCompileExn(str(
 			format(_("Unable to load texture %d %d on line %d\n")) %
 				lType.mDllId %

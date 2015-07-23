@@ -80,7 +80,8 @@ MR_DllDeclare void Init();
 MR_DllDeclare void Clean();
 
 /// Fast Object Creation function
-MR_DllDeclare ObjectFromFactory *CreateObject(const ObjectFromFactoryId &pId);
+MR_DllDeclare std::shared_ptr<ObjectFromFactory> CreateObject(
+	const ObjectFromFactoryId &pId);
 
 MR_DllDeclare ObjFacTools::ResourceLib &GetResourceLib(MR_UInt16 dllId = 1);
 
@@ -144,18 +145,16 @@ public:
 				obj.reset();
 			}
 			else {
-				auto *newObj = DllObjectFactory::CreateObject(oid);
-
-				T *dynObj = dynamic_cast<T*>(newObj);
+				auto dynObj = std::dynamic_pointer_cast<T>(
+					DllObjectFactory::CreateObject(oid));
 				if (!dynObj) {
 					obj.reset();
-					delete newObj;
 					// The ID is probably corrupt or unsupported, so we can't
 					// rely on the rest of the stream (we don't know where the
 					// next object starts!).
 					ThrowUnexpected(oid);
 				}
-				obj.reset(dynObj);
+				obj = std::move(dynObj);
 				obj->Serialize(archive);
 			}
 		}

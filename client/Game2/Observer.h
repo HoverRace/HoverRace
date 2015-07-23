@@ -62,15 +62,15 @@ class Observer
 		int mDispPlayers;						  // Index of the players list to display
 		// 0 mean do not display
 
-		ObjFac1::SpriteHandle *mBaseFont;
-		ObjFac1::SpriteHandle *mMissileLevel;
-		ObjFac1::SpriteHandle *mMineDisp;
-		ObjFac1::SpriteHandle *mPowerUpDisp;
-		ObjFac1::SpriteHandle *mHoverIcons;
+		std::shared_ptr<ObjFac1::SpriteHandle> mBaseFont;
+		std::shared_ptr<ObjFac1::SpriteHandle> mMissileLevel;
+		std::shared_ptr<ObjFac1::SpriteHandle> mMineDisp;
+		std::shared_ptr<ObjFac1::SpriteHandle> mPowerUpDisp;
+		std::shared_ptr<ObjFac1::SpriteHandle> mHoverIcons;
 
 	public:
 		Observer();
-		~Observer();
+		~Observer() { }
 
 	private:
 		void Render2DDebugView(VideoServices::VideoBuffer * pDest, const Model::Level * pLevel, const MainCharacter::MainCharacter * pViewingCharacter);

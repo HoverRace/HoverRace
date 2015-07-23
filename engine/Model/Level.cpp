@@ -391,7 +391,8 @@ void Level::MoveElement(MR_FreeElementHandle pHandle, int pNewRoom)
 	}
 }
 
-MR_FreeElementHandle Level::InsertElement(FreeElement *pElement, int pRoom, BOOL pBroadcast)
+MR_FreeElementHandle Level::InsertElement(std::shared_ptr<FreeElement> pElement,
+	int pRoom, BOOL pBroadcast)
 {
 	FreeElementList *lReturnValue = new FreeElementList;
 
@@ -399,13 +400,14 @@ MR_FreeElementHandle Level::InsertElement(FreeElement *pElement, int pRoom, BOOL
 		pElement->AddRenderer();
 	}
 
-	lReturnValue->mElement.reset(pElement);
+	lReturnValue->mElement = pElement;
 
 	MoveElement((MR_FreeElementHandle) lReturnValue, pRoom);
 
 	// Broadcast element creation if needed
 	if(pBroadcast && (mElementCreationBroadcastHook != NULL)) {
-		mElementCreationBroadcastHook(pElement, pRoom, mBroadcastHookData);
+		mElementCreationBroadcastHook(lReturnValue->mElement.get(), pRoom,
+			mBroadcastHookData);
 	}
 	return (MR_FreeElementHandle) lReturnValue;
 }

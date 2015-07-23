@@ -113,32 +113,28 @@ Observer::Observer() :
 	mCockpitView = FALSE;
 
 	Util::ObjectFromFactoryId lBaseFontId = { 1, 1000 };
-	mBaseFont = (ObjFac1::SpriteHandle *) Util::DllObjectFactory::CreateObject(lBaseFontId);
+	mBaseFont = std::dynamic_pointer_cast<ObjFac1::SpriteHandle>(
+		Util::DllObjectFactory::CreateObject(lBaseFontId));
 
 	Util::ObjectFromFactoryId lMissileLevelId = { 1, 1100 };
-	mMissileLevel = (ObjFac1::SpriteHandle *) Util::DllObjectFactory::CreateObject(lMissileLevelId);
+	mMissileLevel = std::dynamic_pointer_cast<ObjFac1::SpriteHandle>(
+		Util::DllObjectFactory::CreateObject(lMissileLevelId));
 
 	Util::ObjectFromFactoryId lMineDispId = { 1, 1102 };
-	mMineDisp = (ObjFac1::SpriteHandle *) Util::DllObjectFactory::CreateObject(lMineDispId);
+	mMineDisp = std::dynamic_pointer_cast<ObjFac1::SpriteHandle>(
+		Util::DllObjectFactory::CreateObject(lMineDispId));
 
 	Util::ObjectFromFactoryId lPowerUpDispId = { 1, 1103 };
-	mPowerUpDisp = (ObjFac1::SpriteHandle *) Util::DllObjectFactory::CreateObject(lPowerUpDispId);
+	mPowerUpDisp = std::dynamic_pointer_cast<ObjFac1::SpriteHandle>(
+		Util::DllObjectFactory::CreateObject(lPowerUpDispId));
 
 	Util::ObjectFromFactoryId lHoverIconsId = { 1, 1101 };
-	mHoverIcons = (ObjFac1::SpriteHandle *) Util::DllObjectFactory::CreateObject(lHoverIconsId);
+	mHoverIcons = std::dynamic_pointer_cast<ObjFac1::SpriteHandle>(
+		Util::DllObjectFactory::CreateObject(lHoverIconsId));
 
 	std::string selectStr("<==   ");
 	selectStr += _("Select your craft with the arrow keys");
 	selectStr += "   ==>";
-}
-
-Observer::~Observer()
-{
-	delete mBaseFont;
-	delete mMissileLevel;
-	delete mMineDisp;
-	delete mPowerUpDisp;
-	delete mHoverIcons;
 }
 
 void Observer::SetCockpitView(BOOL pOn)
@@ -559,7 +555,7 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 	int lYRes = m3DView.GetYRes();
 
 	// MissileLevel
-	ObjFac1::SpriteHandle *lWeaponSprite = NULL;
+	std::shared_ptr<ObjFac1::SpriteHandle> lWeaponSprite;
 	int lWeaponSpriteIndex = 0;
 
 	if(pViewingCharacter->GetCurrentWeapon() == MainCharacter::MainCharacter::eMissile) {

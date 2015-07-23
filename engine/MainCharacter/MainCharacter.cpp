@@ -289,8 +289,8 @@ void MainCharacter::AddRenderer()
 {
 	if (!mRenderer) {
 		Util::ObjectFromFactoryId lId = { 1, 100 };
-		mRenderer.reset(static_cast<MainCharacterRenderer*>(
-			Util::DllObjectFactory::CreateObject(lId)));
+		mRenderer = std::dynamic_pointer_cast<MainCharacterRenderer>(
+			Util::DllObjectFactory::CreateObject(lId));
 	}
 }
 
@@ -583,9 +583,10 @@ int MainCharacter::Simulate(MR_SimulationTime pDuration,
 
 					Util::ObjectFromFactoryId lObjectId = { 1, 150 };
 					// Create a new missile
-					FreeElement *lMissile = (FreeElement *) Util::DllObjectFactory::CreateObject(lObjectId);
+					auto lMissile = std::dynamic_pointer_cast<FreeElement>(
+						Util::DllObjectFactory::CreateObject(lObjectId));
 
-					if(lMissile != NULL) {
+					if (lMissile) {
 						lMissile->SetOwnerId(mHoverId);
 						lMissile->mPosition = mPosition;
 						lMissile->mPosition.mZ += 1100;
