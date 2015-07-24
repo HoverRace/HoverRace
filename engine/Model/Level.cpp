@@ -900,7 +900,7 @@ void Level::FreeElementList::SerializeList(ObjStream &pArchive,
 				newElem->mPosition.Serialize(pArchive);
 				pArchive >> newElem->mOrientation;
 
-				lFreeElement->mElement.swap(newElem);
+				lFreeElement->mElement = newElem;
 				lFreeElement->LinkTo(pListHead);
 			}
 
