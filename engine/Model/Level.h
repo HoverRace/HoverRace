@@ -296,11 +296,11 @@ public:
 	int GetFeatureCount(int pRoomId) const;
 	int GetFeature(int pRoomId, int pChildIndex) const;
 
-	SurfaceElement *GetRoomWallElement(int pRoomId, int pVertex) const;
+	SurfaceElement *GetRoomWallElement(int pRoomId, size_t pVertex) const;
 	SurfaceElement *GetRoomBottomElement(int pRoomId) const;
 	SurfaceElement *GetRoomTopElement(int pRoomId) const;
 
-	SurfaceElement *GetFeatureWallElement(int pFeatureId, int pVertex) const;
+	SurfaceElement *GetFeatureWallElement(int pFeatureId, size_t pVertex) const;
 	SurfaceElement *GetFeatureBottomElement(int pFeatureId) const;
 	SurfaceElement *GetFeatureTopElement(int pFeatureId) const;
 

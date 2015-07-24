@@ -328,12 +328,12 @@ int Level::GetFeature(int pRoomId, int pChildIndex) const
 	return mRoomList[pRoomId].mChildList[pChildIndex];
 }
 
-SurfaceElement *Level::GetRoomWallElement(int pRoomId, int pVertex) const
+SurfaceElement *Level::GetRoomWallElement(int pRoomId, size_t pVertex) const
 {
 	return mRoomList[pRoomId].mWallTexture[pVertex].get();
 }
 
-SurfaceElement *Level::GetFeatureWallElement(int pFeatureId, int pVertex) const
+SurfaceElement *Level::GetFeatureWallElement(int pFeatureId, size_t pVertex) const
 {
 	return mFeatureList[pFeatureId].mWallTexture[pVertex].get();
 }
@@ -698,12 +698,12 @@ void Level::Section::SerializeStructure(ObjStream & pArchive)
 	ObjectFromFactory::SerializeShared<SurfaceElement>(pArchive, mCeilingTexture);
 
 	if (!pArchive.IsWriting()) {
-		mWallTexture.resize(mNbVertex);
+		mWallTexture.resize(static_cast<size_t>(mNbVertex));
 	}
 
-	for (lCounter = 0; lCounter < mNbVertex; lCounter++) {
+	for (size_t i = 0; i < static_cast<size_t>(mNbVertex); i++) {
 		ObjectFromFactory::SerializeShared<SurfaceElement>(pArchive,
-			mWallTexture[lCounter]);
+			mWallTexture[i]);
 	}
 }
 

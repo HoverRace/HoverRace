@@ -283,7 +283,8 @@ bool LevelBuilder::Parse(std::istream &in)
 			for(int lNeighbor = 0; lNeighbor < mRoomList[lCounter].mNbVertex; lNeighbor++) {
 				mRoomList[lCounter].mNeighborList[lNeighbor] = -1;
 			}
-			mRoomList[lCounter].mWallTexture.resize(mRoomList[lCounter].mNbVertex);
+			mRoomList[lCounter].mWallTexture.resize(
+				static_cast<size_t>(mRoomList[lCounter].mNbVertex));
 
 			mRoomList[lCounter].mChildList = new int[mRoomList[lCounter].mNbChild];
 
@@ -296,7 +297,8 @@ bool LevelBuilder::Parse(std::istream &in)
 			mFeatureList[lCounter].mVertexList = new MR_2DCoordinate[mFeatureList[lCounter].mNbVertex];
 			mFeatureList[lCounter].mWallLen = new MR_Int32[mFeatureList[lCounter].mNbVertex];
 
-			mFeatureList[lCounter].mWallTexture.resize(mFeatureList[lCounter].mNbVertex);
+			mFeatureList[lCounter].mWallTexture.resize(
+				static_cast<size_t>(mFeatureList[lCounter].mNbVertex));
 
 			// Create the Parent->Child relations
 			int lParentIndex = mFeatureList[lCounter].mParentSectionIndex;
@@ -322,10 +324,10 @@ bool LevelBuilder::Parse(std::istream &in)
 			}
 			else {
 				lRoomIndex = iter->second;
-				int lVertex = 0;
+				size_t lVertex = 0;
 
 				while(lParser.GetNextAttrib("Wall") != NULL) {
-					ASSERT(lVertex < mRoomList[lRoomIndex].mNbVertex);
+					assert(lVertex < static_cast<size_t>(mRoomList[lRoomIndex].mNbVertex));
 
 					// Load the associated position (and convert it from meters to milimeters)
 					mRoomList[lRoomIndex].mVertexList[lVertex].mX = (MR_Int32) (lParser.GetNextNumParam() * 1000.0);
@@ -362,10 +364,10 @@ bool LevelBuilder::Parse(std::istream &in)
 			}
 			else {
 				lFeatureIndex = iter->second;
-				int lVertex = 0;
+				size_t lVertex = 0;
 
 				while(lParser.GetNextAttrib("Wall") != NULL) {
-					ASSERT(lVertex < mFeatureList[lFeatureIndex].mNbVertex);
+					assert(lVertex < static_cast<size_t>(mFeatureList[lFeatureIndex].mNbVertex));
 
 					// Load the associated position (and convert it from meters to milimeters)
 					mFeatureList[lFeatureIndex].mVertexList[lVertex].mX = (MR_Int32) (lParser.GetNextNumParam() * 1000.0);

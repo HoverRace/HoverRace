@@ -382,7 +382,7 @@ void GameSession::ComputeShapeContactEffects(int pCurrentRoom,
 		if(lNeighbor == -1) {
 			// Apply the effect of the wall
 			if(mCurrentLevel->GetRoomWallContactOrientation(pCurrentRoom, pLastSpec.mWallContact[lCounter], lActorShape, lDirectionAngle)) {
-				SurfaceElement *lWall = mCurrentLevel->GetRoomWallElement(pCurrentRoom, pLastSpec.mWallContact[lCounter]);
+				SurfaceElement *lWall = mCurrentLevel->GetRoomWallElement(pCurrentRoom, static_cast<size_t>(pLastSpec.mWallContact[static_cast<size_t>(lCounter)]));
 				// const ContactEffectList* lActorEffectList    = pActor->GetEffectList();
 				const ContactEffectList *lWallEffectList = lWall->GetEffectList();
 

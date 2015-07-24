@@ -789,7 +789,7 @@ void Observer::RenderRoomWalls(const Model::Level * pLevel, int lRoomId, MR_Simu
 {
 	Model::PolygonShape *lSectionShape = pLevel->GetRoomShape(lRoomId);
 
-	int lVertexCount = lSectionShape->VertexCount();
+	auto lVertexCount = lSectionShape->VertexCount();
 
 	// Draw the walls
 	MR_3DCoordinate lP0;
@@ -802,7 +802,7 @@ void Observer::RenderRoomWalls(const Model::Level * pLevel, int lRoomId, MR_Simu
 	lP0.mY = lSectionShape->Y(0);
 
 	for(int lVertex = 0; lVertex < lVertexCount; lVertex++) {
-		int lNext = lVertex + 1;
+		auto lNext = lVertex + 1;
 
 		if(lNext == lVertexCount) {
 			lNext = 0;
@@ -811,7 +811,8 @@ void Observer::RenderRoomWalls(const Model::Level * pLevel, int lRoomId, MR_Simu
 		lP1.mX = lSectionShape->X(lNext);
 		lP1.mY = lSectionShape->Y(lNext);
 
-		Model::SurfaceElement *lElement = pLevel->GetRoomWallElement(lRoomId, lVertex);
+		Model::SurfaceElement *lElement =
+			pLevel->GetRoomWallElement(lRoomId, static_cast<size_t>(lVertex));
 
 		if(lElement != NULL) {
 			int lNeighbor = pLevel->GetNeighbor(lRoomId, lVertex);
@@ -876,7 +877,9 @@ void Observer::RenderFeatureWalls(const Model::Level * pLevel, int lFeatureId, M
 		lP0.mX = lSectionShape->X(lNext);
 		lP0.mY = lSectionShape->Y(lNext);
 
-		Model::SurfaceElement *lElement = pLevel->GetFeatureWallElement(lFeatureId, lVertex);
+		Model::SurfaceElement *lElement =
+			pLevel->GetFeatureWallElement(lFeatureId,
+				static_cast<size_t>(lVertex));
 
 		if(lElement != NULL) {
 			lElement->RenderWallSurface(&m3DView, lP0, lP1, pLevel->GetFeatureWallLen(lFeatureId, lVertex), pTime);
