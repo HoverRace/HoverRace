@@ -41,7 +41,7 @@ public:
 
 	ObjFacTools::ResourceLib *GetResourceLib() const { return resourceLib.get(); }
 
-	Util::ObjectFromFactory *GetObject(int pClassId);
+	std::shared_ptr<Util::ObjectFromFactory> GetObject(int pClassId);
 
 private:
 	std::unique_ptr<ObjFacTools::ResourceLib> resourceLib;

@@ -54,7 +54,7 @@ ObjFac1::~ObjFac1()
 {
 }
 
-ObjectFromFactory *ObjFac1::GetObject(int pClassId)
+std::shared_ptr<ObjectFromFactory> ObjFac1::GetObject(int pClassId)
 {
 	if (pClassId < 1 || pClassId > 65535) {
 		return nullptr;
@@ -252,7 +252,7 @@ ObjectFromFactory *ObjFac1::GetObject(int pClassId)
 
 	}
 
-	return lReturnValue;
+	return std::shared_ptr<ObjectFromFactory>(lReturnValue);
 }
 
 } // namespace ObjFac1

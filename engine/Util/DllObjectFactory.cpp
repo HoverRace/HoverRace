@@ -71,8 +71,7 @@ void DllObjectFactory::Clean()
 std::shared_ptr<ObjectFromFactory> DllObjectFactory::CreateObject(
 	const ObjectFromFactoryId &pId)
 {
-	return std::shared_ptr<ObjectFromFactory>{
-		GetDll(pId.mDllId).GetObject(pId.mClassId)};
+	return GetDll(pId.mDllId).GetObject(pId.mClassId);
 }
 
 /**
