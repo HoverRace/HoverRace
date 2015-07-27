@@ -60,7 +60,6 @@ std::shared_ptr<ObjectFromFactory> ObjFac1::GetObject(int pClassId)
 		return nullptr;
 	}
 
-	ObjectFromFactory *lReturnValue = nullptr;
 	ObjectFromFactoryId lId = { 1, static_cast<MR_UInt16>(pClassId) };
 
 	switch (pClassId) {
