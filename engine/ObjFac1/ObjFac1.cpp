@@ -65,194 +65,142 @@ std::shared_ptr<ObjectFromFactory> ObjFac1::GetObject(int pClassId)
 
 	switch (pClassId) {
 		case 1:
-			lReturnValue = new DefaultSurface(lId, *resourceLib);
-			break;
+			return std::make_shared<DefaultSurface>(lId, *resourceLib);
 
 		case 2:
-			lReturnValue = new WoodSurface(lId, *resourceLib);
-			break;
-
-		case 3:
-		case 4:
-		case 5:
-			// Unused.
-			break;
+			return std::make_shared<WoodSurface>(lId, *resourceLib);
 
 		case 10:
-			lReturnValue = new TestElement(lId, *resourceLib, MR_DEMO_FIGHTER);
-			break;
-
-		case 11:
-			// Unused.
-			break;
+			return std::make_shared<TestElement>(lId, *resourceLib, MR_DEMO_FIGHTER);
 
 		case 12:
-			lReturnValue = new BallElement(lId, *resourceLib);
-			break;
+			return std::make_shared<BallElement>(lId, *resourceLib);
 
 		case 13:
-			lReturnValue = new TestElement(lId, *resourceLib, MR_ELECTRO_CAR);
-			break;
+			return std::make_shared<TestElement>(lId, *resourceLib, MR_ELECTRO_CAR);
 
 		case 50:
-			lReturnValue = new BitmapSurface(lId, nullptr);
-			break;
+			return std::make_shared<BitmapSurface>(lId, nullptr);
 
 		case 51:
-			lReturnValue = new BitmapSurface(lId, resourceLib->GetBitmap(MR_STD_FLOOR));
-			break;
+			return std::make_shared<BitmapSurface>(lId, resourceLib->GetBitmap(MR_STD_FLOOR));
 
 		case 52:
-			lReturnValue = new VStretchBitmapSurface(lId, resourceLib->GetBitmap(MR_STD_RIGHT_WALL), 4000);
-			break;
+			return std::make_shared<VStretchBitmapSurface>(lId, resourceLib->GetBitmap(MR_STD_RIGHT_WALL), 4000);
 
 		case 53:
-			lReturnValue = new VStretchBitmapSurface(lId, resourceLib->GetBitmap(MR_STD_LEFT_WALL), 4000);
-			break;
+			return std::make_shared<VStretchBitmapSurface>(lId, resourceLib->GetBitmap(MR_STD_LEFT_WALL), 4000);
 
 		case 54:
-			lReturnValue = new VStretchBitmapSurface(lId, resourceLib->GetBitmap(MR_RED_RIGHT_WALL_OFF), resourceLib->GetBitmap(MR_RED_RIGHT_WALL), 200, 4, 4000);
-			break;
+			return std::make_shared<VStretchBitmapSurface>(lId, resourceLib->GetBitmap(MR_RED_RIGHT_WALL_OFF), resourceLib->GetBitmap(MR_RED_RIGHT_WALL), 200, 4, 4000);
 
 		case 55:
-			lReturnValue = new VStretchBitmapSurface(lId, resourceLib->GetBitmap(MR_RED_LEFT_WALL_OFF), resourceLib->GetBitmap(MR_RED_LEFT_WALL), -200, 4, 4000);
-			break;
+			return std::make_shared<VStretchBitmapSurface>(lId, resourceLib->GetBitmap(MR_RED_LEFT_WALL_OFF), resourceLib->GetBitmap(MR_RED_LEFT_WALL), -200, 4, 4000);
 
 		case 56:
-			lReturnValue = new VStretchBitmapSurface(lId, resourceLib->GetBitmap(MR_GREEN_RIGHT_WALL_OFF), resourceLib->GetBitmap(MR_GREEN_RIGHT_WALL), 200, 4, 4000);
-			break;
+			return std::make_shared<VStretchBitmapSurface>(lId, resourceLib->GetBitmap(MR_GREEN_RIGHT_WALL_OFF), resourceLib->GetBitmap(MR_GREEN_RIGHT_WALL), 200, 4, 4000);
 
 		case 57:
-			lReturnValue = new VStretchBitmapSurface(lId, resourceLib->GetBitmap(MR_GREEN_LEFT_WALL_OFF), resourceLib->GetBitmap(MR_GREEN_LEFT_WALL), -200, 4, 4000);
-			break;
+			return std::make_shared<VStretchBitmapSurface>(lId, resourceLib->GetBitmap(MR_GREEN_LEFT_WALL_OFF), resourceLib->GetBitmap(MR_GREEN_LEFT_WALL), -200, 4, 4000);
 
 		case 58:
-			lReturnValue = new BitmapSurface(lId, resourceLib->GetBitmap(MR_STEP_WALL));
-			break;
+			return std::make_shared<BitmapSurface>(lId, resourceLib->GetBitmap(MR_STEP_WALL));
 
 		case 59:
-			lReturnValue = new BitmapSurface(lId, resourceLib->GetBitmap(MR_PASS_RIGHT_WALL));
-			break;
+			return std::make_shared<BitmapSurface>(lId, resourceLib->GetBitmap(MR_PASS_RIGHT_WALL));
 
 		case 60:
-			lReturnValue = new BitmapSurface(lId, resourceLib->GetBitmap(MR_PASS_LEFT_WALL));
-			break;
+			return std::make_shared<BitmapSurface>(lId, resourceLib->GetBitmap(MR_PASS_LEFT_WALL));
 
 		case 61:
-			lReturnValue = new BitmapSurface(lId, resourceLib->GetBitmap(MR_DO_NOT_ENTER_WALL1));
-			break;
+			return std::make_shared<BitmapSurface>(lId, resourceLib->GetBitmap(MR_DO_NOT_ENTER_WALL1));
 
 		case 62:
-			lReturnValue = new BitmapSurface(lId, resourceLib->GetBitmap(MR_DO_NOT_ENTER_WALL2));
-			break;
+			return std::make_shared<BitmapSurface>(lId, resourceLib->GetBitmap(MR_DO_NOT_ENTER_WALL2));
 
 		case 63:
-			lReturnValue = new BitmapSurface(lId, resourceLib->GetBitmap(MR_BLUE_BUBBLE_FLOOR));
-			break;
+			return std::make_shared<BitmapSurface>(lId, resourceLib->GetBitmap(MR_BLUE_BUBBLE_FLOOR));
 
 		case 64:
-			lReturnValue = new BitmapSurface(lId, resourceLib->GetBitmap(MR_SPEED_ZONE));
-			break;
+			return std::make_shared<BitmapSurface>(lId, resourceLib->GetBitmap(MR_SPEED_ZONE));
 
 		case 65:
-			lReturnValue = new BitmapSurface(lId, resourceLib->GetBitmap(MR_FUEL_ZONE));
-			break;
+			return std::make_shared<BitmapSurface>(lId, resourceLib->GetBitmap(MR_FUEL_ZONE));
 
 		case 66:
-			lReturnValue = new BitmapSurface(lId, resourceLib->GetBitmap(MR_YELLOW_STEP));
-			break;
+			return std::make_shared<BitmapSurface>(lId, resourceLib->GetBitmap(MR_YELLOW_STEP));
 
 		case 67:
-			lReturnValue = new BitmapSurface(lId, resourceLib->GetBitmap(MR_CHECKER));
-			break;
+			return std::make_shared<BitmapSurface>(lId, resourceLib->GetBitmap(MR_CHECKER));
 
 		case 68:
-			lReturnValue = new BitmapSurface(lId, resourceLib->GetBitmap(MR_PIT_WORD));
-			break;
+			return std::make_shared<BitmapSurface>(lId, resourceLib->GetBitmap(MR_PIT_WORD));
 
 		case 69:
-			lReturnValue = new BitmapSurface(lId, resourceLib->GetBitmap(MR_FINISH_WORD));
-			break;
+			return std::make_shared<BitmapSurface>(lId, resourceLib->GetBitmap(MR_FINISH_WORD));
 
 		case 70:
-			lReturnValue = new BitmapSurface(lId, resourceLib->GetBitmap(MR_YELLOW_NEON), resourceLib->GetBitmap(MR_YELLOW_NEON_FLASH), 50, 20);
-			break;
+			return std::make_shared<BitmapSurface>(lId, resourceLib->GetBitmap(MR_YELLOW_NEON), resourceLib->GetBitmap(MR_YELLOW_NEON_FLASH), 50, 20);
 
 		case 71:
-			lReturnValue = new BitmapSurface(lId, resourceLib->GetBitmap(MR_YELLOW_NEON), resourceLib->GetBitmap(MR_YELLOW_NEON_FLASH), -50, 20);
-			break;
+			return std::make_shared<BitmapSurface>(lId, resourceLib->GetBitmap(MR_YELLOW_NEON), resourceLib->GetBitmap(MR_YELLOW_NEON_FLASH), -50, 20);
 
 		case 72:
-			lReturnValue = new VStretchBitmapSurface(lId, resourceLib->GetBitmap(MR_STD_WALL), 4000);
-			break;
+			return std::make_shared<VStretchBitmapSurface>(lId, resourceLib->GetBitmap(MR_STD_WALL), 4000);
 
 		case 73:
-			lReturnValue = new VStretchBitmapSurface(lId, resourceLib->GetBitmap(MR_STD_WALL_TOP), 6000);
-			break;
+			return std::make_shared<VStretchBitmapSurface>(lId, resourceLib->GetBitmap(MR_STD_WALL_TOP), 6000);
 
 		case 100:
-			lReturnValue = new HoverRender(lId, *resourceLib);
-			break;
+			return std::make_shared<HoverRender>(lId, *resourceLib);
 
 		case 150:
-			lReturnValue = new Missile(lId, *resourceLib);
-			break;
+			return std::make_shared<Missile>(lId, *resourceLib);
 
 		case 151:
-			lReturnValue = new Mine(lId, *resourceLib);
-			break;
+			return std::make_shared<Mine>(lId, *resourceLib);
 
 		case 152:
-			lReturnValue = new PowerUp(lId, *resourceLib);
-			break;
+			return std::make_shared<PowerUp>(lId, *resourceLib);
 
 		case 170:
-			lReturnValue = new BumperGate(lId, *resourceLib);
-			break;
+			return std::make_shared<BumperGate>(lId, *resourceLib);
 
 		case 200:
-			lReturnValue = new FuelSource(lId);
-			break;
+			return std::make_shared<FuelSource>(lId);
 
 		case 201:
-			lReturnValue = new DoubleSpeedSource(lId);
-			break;
+			return std::make_shared<DoubleSpeedSource>(lId);
 
 		case 202:
-			lReturnValue = new FinishLine(lId, Model::CheckPoint::eFinishLine);
-			break;
+			return std::make_shared<FinishLine>(lId, Model::CheckPoint::eFinishLine);
 
 		case 203:
-			lReturnValue = new FinishLine(lId, Model::CheckPoint::eCheck1);
-			break;
+			return std::make_shared<FinishLine>(lId, Model::CheckPoint::eCheck1);
 
 		case 204:
-			lReturnValue = new FinishLine(lId, Model::CheckPoint::eCheck2);
-			break;
+			return std::make_shared<FinishLine>(lId, Model::CheckPoint::eCheck2);
 
 		case 1000:
-			lReturnValue = new SpriteHandle(lId, resourceLib->GetSprite(MR_FONT1));
-			break;
+			return std::make_shared<SpriteHandle>(lId, resourceLib->GetSprite(MR_FONT1));
 
 		case 1100:
-			lReturnValue = new SpriteHandle(lId, resourceLib->GetSprite(MR_MISSILE_STAT));
-			break;
+			return std::make_shared<SpriteHandle>(lId, resourceLib->GetSprite(MR_MISSILE_STAT));
 
 		case 1101:
-			lReturnValue = new SpriteHandle(lId, resourceLib->GetSprite(MR_HOVER_ICONS));
-			break;
+			return std::make_shared<SpriteHandle>(lId, resourceLib->GetSprite(MR_HOVER_ICONS));
 
 		case 1102:
-			lReturnValue = new SpriteHandle(lId, resourceLib->GetSprite(MR_MINE_STAT));
-			break;
+			return std::make_shared<SpriteHandle>(lId, resourceLib->GetSprite(MR_MINE_STAT));
 
 		case 1103:
-			lReturnValue = new SpriteHandle(lId, resourceLib->GetSprite(MR_PWRUP_STAT));
-			break;
+			return std::make_shared<SpriteHandle>(lId, resourceLib->GetSprite(MR_PWRUP_STAT));
 
+		default:
+			return std::shared_ptr<ObjectFromFactory>();
 	}
 
-	return std::shared_ptr<ObjectFromFactory>(lReturnValue);
+	return std::shared_ptr<ObjectFromFactory>();
 }
 
 } // namespace ObjFac1
