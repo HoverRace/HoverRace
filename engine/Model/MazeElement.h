@@ -150,7 +150,9 @@ public:
 	}
 };
 
-class MR_DllDeclare FreeElement : public Element
+class MR_DllDeclare FreeElement :
+	public Element,
+	public std::enable_shared_from_this<FreeElement>
 {
 	using SUPER = Element;
 
