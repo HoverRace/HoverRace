@@ -242,12 +242,12 @@ protected:
 	int mPermActorNewRoomCache[MR_NB_PERNET_ACTORS];
 
 	// Broadcast hook
-	void (*mElementCreationBroadcastHook) (FreeElement * pElement, int pRoom, void *pHookData);
-	void (*mPermElementStateBroadcastHook) (FreeElement * pElement, int pRoom, int pPermId, void *pHookData);
+	void (*mElementCreationBroadcastHook) (FreeElement *pElement, int pRoom, void *pHookData);
+	void (*mPermElementStateBroadcastHook) (FreeElement *pElement, int pRoom, int pPermId, void *pHookData);
 	void *mBroadcastHookData;
 
 	// Helper functions
-	int GetRealRoomRecursive(const MR_2DCoordinate & pPosition, int pOriginalSection, int = -1) const;
+	int GetRealRoomRecursive(const MR_2DCoordinate &pPosition, int pOriginalSection, int = -1) const;
 
 public:
 	Level(Track &track, BOOL pAllowRendering = FALSE, char pGameOpts = 1);
@@ -257,7 +257,10 @@ public:
 	Level &operator=(const Level&) = delete;
 
 	// Network stuff
-	void SetBroadcastHook(void (*pCreationHook) (FreeElement *, int, void *), void (*pStateHook) (FreeElement *, int, int, void *), void *pHookData);
+	void SetBroadcastHook(
+		void (*pCreationHook)(FreeElement*, int, void*),
+		void (*pStateHook)(FreeElement*, int, int, void*),
+		void *pHookData);
 
 	// Serialisation functions
 	void Serialize(Parcel::ObjStream &pArchive);
@@ -269,7 +272,7 @@ public:
 	int GetPlayerCount() const;
 	int GetPlayerTeam(int pPlayerId) const;
 	int GetStartingRoom(int pPlayerId) const;
-	const MR_3DCoordinate & GetStartingPos(int pPlayerId) const;
+	const MR_3DCoordinate &GetStartingPos(int pPlayerId) const;
 	MR_Angle GetStartingOrientation(int pPlayerId) const;
 
 	// Structural information
@@ -277,14 +280,14 @@ public:
 	MR_Int32 GetRoomWallLen(int pRoomId, int pVertex) const;
 	MR_Int32 GetRoomBottomLevel(int pRoomId) const;
 	MR_Int32 GetRoomTopLevel(int pRoomId) const;
-	const MR_2DCoordinate & GetRoomVertex(int pRoomId, int pVertex) const;
+	const MR_2DCoordinate &GetRoomVertex(int pRoomId, int pVertex) const;
 	int GetRoomVertexCount(int pRoomId) const;
 
 	PolygonShape *GetFeatureShape(int pFeatureId) const;
 	MR_Int32 GetFeatureWallLen(int pFeatureId, int pVertex) const;
 	MR_Int32 GetFeatureBottomLevel(int pFeatureId) const;
 	MR_Int32 GetFeatureTopLevel(int pFeatureId) const;
-	const MR_2DCoordinate & GetFeatureVertex(int pFeatureId, int pVertex) const;
+	const MR_2DCoordinate &GetFeatureVertex(int pFeatureId, int pVertex) const;
 	int GetFeatureVertexCount(int pFeatureId) const;
 
 	const int *GetVisibleZones(int pRoomId, int &pNbVisibleZones) const;
@@ -318,19 +321,19 @@ public:
 	static void DeleteElement(MR_FreeElementHandle pHandle);
 
 												// Set and broadcast the newporition
-	void SetPermElementPos(int pPermElement, int pRoom, const MR_3DCoordinate & pNewPos);
+	void SetPermElementPos(int pPermElement, int pRoom, const MR_3DCoordinate &pNewPos);
 	void FlushPermElementPosCache();
 
 	// Element movement functions
-	int FindRoomForPoint(const MR_2DCoordinate & pPosition, int pStartingRoom) const;
+	int FindRoomForPoint(const MR_2DCoordinate &pPosition, int pStartingRoom) const;
 
-	void GetRoomContact(int pRoom, const ShapeInterface * pShape, RoomContactSpec & pAnswer);
+	void GetRoomContact(int pRoom, const ShapeInterface *pShape, RoomContactSpec &pAnswer);
 
-	BOOL GetRoomWallContactOrientation(int pRoom, int pWall, const ShapeInterface * pShape, MR_Angle & pAnswer);
+	BOOL GetRoomWallContactOrientation(int pRoom, int pWall, const ShapeInterface *pShape, MR_Angle &pAnswer);
 
-	BOOL GetFeatureContact(int pFeature, const ShapeInterface * pShape, ContactSpec & pAnswer);
+	BOOL GetFeatureContact(int pFeature, const ShapeInterface *pShape, ContactSpec &pAnswer);
 
-	BOOL GetFeatureContactOrientation(int pFeature, const ShapeInterface * pShape, MR_Angle & pAnswer);
+	BOOL GetFeatureContactOrientation(int pFeature, const ShapeInterface *pShape, MR_Angle &pAnswer);
 
 private:
 	Track &track;
