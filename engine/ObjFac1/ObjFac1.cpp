@@ -57,7 +57,7 @@ ObjFac1::~ObjFac1()
 std::shared_ptr<ObjectFromFactory> ObjFac1::GetObject(int pClassId)
 {
 	if (pClassId < 1 || pClassId > 65535) {
-		return nullptr;
+		return std::shared_ptr<ObjectFromFactory>();
 	}
 
 	ObjectFromFactoryId lId = { 1, static_cast<MR_UInt16>(pClassId) };
