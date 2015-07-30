@@ -194,9 +194,6 @@ std::shared_ptr<ObjectFromFactory> ObjFac1::GetObject(int pClassId)
 
 		case 1103:
 			return std::make_shared<SpriteHandle>(lId, resourceLib->GetSprite(MR_PWRUP_STAT));
-
-		default:
-			return std::shared_ptr<ObjectFromFactory>();
 	}
 
 	return std::shared_ptr<ObjectFromFactory>();
