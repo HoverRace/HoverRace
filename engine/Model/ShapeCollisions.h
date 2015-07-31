@@ -58,25 +58,23 @@ namespace Model {
 
 // Collisions description
 
-class ContactSpec
+struct ContactSpec
 {
-	public:
-		MR_Int32 mZMin;
-		MR_Int32 mZMax;
+	MR_Int32 mZMin;
+	MR_Int32 mZMax;
 };
 
-class RoomContactSpec
+struct RoomContactSpec
 {
-	public:
-		enum { eMaxWallContact = 6 };
+	enum { eMaxWallContact = 6 };
 
-		BOOL mTouchingRoom;
+	BOOL mTouchingRoom;
 
-		MR_Int32 mDistanceFromFloor;			  // Can be negative
-		MR_Int32 mDistanceFromCeiling;			  // Can be negative
+	MR_Int32 mDistanceFromFloor;			  // Can be negative
+	MR_Int32 mDistanceFromCeiling;			  // Can be negative
 
-		int mNbWallContact;						  // 0 mean no collision
-		int mWallContact[eMaxWallContact];
+	int mNbWallContact;						  // 0 mean no collision
+	int mWallContact[eMaxWallContact];
 };
 
 BOOL MR_DllDeclare GetPolygonInclusion(const PolygonShape &pPolygon, const MR_2DCoordinate &pPosition);
