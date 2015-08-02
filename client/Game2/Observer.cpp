@@ -42,57 +42,59 @@ namespace HoverRace {
 namespace Client {
 
 namespace {
-	// Global table of formatted HUD strings.
-	struct GlobalFmts
+
+// Global table of formatted HUD strings.
+struct GlobalFmts
+{
+	std::string rankTitle;
+	std::string hitTitle;
+
+	std::string firstLap;
+	std::string chartFinish;
+	std::string chart;
+	std::string hitChart;
+	std::string countdown;
+	std::string finish;
+	std::string finishSingle;
+	std::string bestLap;
+	std::string header;
+	std::string lastLap;
+	std::string curLap;
+
+	// This is initialized once via Observer's constructor.
+	// We have to defer the initialization until first use because the
+	// locale isn't set until the app is initialized.
+	void Init()
 	{
-		std::string rankTitle;
-		std::string hitTitle;
+		static bool initialized = false;
+		if (initialized) return;
 
-		std::string firstLap;
-		std::string chartFinish;
-		std::string chart;
-		std::string hitChart;
-		std::string countdown;
-		std::string finish;
-		std::string finishSingle;
-		std::string bestLap;
-		std::string header;
-		std::string lastLap;
-		std::string curLap;
+		std::string s;
 
-		// This is initialized once via Observer's constructor.
-		// We have to defer the initialization until first use because the
-		// locale isn't set until the app is initialized.
-		void Init()
-		{
-			static bool initialized = false;
-			if (initialized) return;
+		//TODO: This is the original hard-coded spacing.
+		//      The revamped HUD will render these bits separately.
+		s = _("Rank"); s += "            "; s += _("Result"); s += "   "; s += _("Best Lap");
+		rankTitle = Ascii2Simple(s.c_str());
+		s = _("Rank"); s += "                 "; s += _("For"); s += "   "; s += _("Against");
+		hitTitle = Ascii2Simple(s.c_str());
 
-			std::string s;
+		firstLap = _("%d %-0.10s #%d%*s   --First lap--  %c");
+		chartFinish = _("%d %-0.10s #%d%*s %2d.%02d.%03d %2d.%02d.%03d%c");
+		chart = _("%d %-0.10s #%d%*s lap:%-2d   %2d.%02d.%03d%c");
+		hitChart = _("%d %-0.10s #%d%*s  %2d      %2d");
+		countdown = _("Starting in %02d.%02d sec. for %d laps");
+		finish = _("Finished in %d.%02d.%03d, placed %d of %d");
+		finishSingle = _("Finished in %d.%02d.%03d");
+		bestLap = _("Best lap %d.%02d.%03d");
+		header = _("%d.%02d.%02d  Lap:%d/%d");
+		lastLap = _("Last lap %d.%02d.%03d  Best %d.%02d.%03d");
+		curLap = _("Current lap %d.%02d.%03d  Best %d.%02d.%03d");
 
-			//TODO: This is the original hard-coded spacing.
-			//      The revamped HUD will render these bits separately.
-			s = _("Rank"); s += "            "; s += _("Result"); s += "   "; s += _("Best Lap");
-			rankTitle = Ascii2Simple(s.c_str());
-			s = _("Rank"); s += "                 "; s += _("For"); s += "   "; s += _("Against");
-			hitTitle = Ascii2Simple(s.c_str());
+		initialized = true;
+	}
+} globalFmts;
 
-			firstLap = _("%d %-0.10s #%d%*s   --First lap--  %c");
-			chartFinish = _("%d %-0.10s #%d%*s %2d.%02d.%03d %2d.%02d.%03d%c");
-			chart = _("%d %-0.10s #%d%*s lap:%-2d   %2d.%02d.%03d%c");
-			hitChart = _("%d %-0.10s #%d%*s  %2d      %2d");
-			countdown = _("Starting in %02d.%02d sec. for %d laps");
-			finish = _("Finished in %d.%02d.%03d, placed %d of %d");
-			finishSingle = _("Finished in %d.%02d.%03d");
-			bestLap = _("Best lap %d.%02d.%03d");
-			header = _("%d.%02d.%02d  Lap:%d/%d");
-			lastLap = _("Last lap %d.%02d.%03d  Best %d.%02d.%03d");
-			curLap = _("Current lap %d.%02d.%03d  Best %d.%02d.%03d");
-
-			initialized = true;
-		}
-	} globalFmts;
-}
+}  // namespace
 
 Observer::Observer() :
 	hudVisible(true), demoMode(false),
