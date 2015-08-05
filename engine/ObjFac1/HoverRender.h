@@ -24,6 +24,7 @@
 
 #include "../ObjFacTools/FreeElementBase.h"
 #include "../MainCharacter/MainCharacterRenderer.h"
+#include "../Exception.h"
 
 namespace HoverRace {
 namespace ObjFac1 {
@@ -79,6 +80,11 @@ public:
 	VideoServices::ContinuousSound *GetMotorSound() override;
 	VideoServices::ContinuousSound *GetFrictionSound() override;
 
+public:
+	void Serialize(Parcel::ObjStream&) override
+	{
+		throw UnimplementedExn("HoverRender::Serialize()");
+	}
 };
 
 }  // namespace ObjFac1

@@ -27,6 +27,7 @@
 
 #pragma once
 
+#include "../Exception.h"
 #include "ResourceLib.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
@@ -52,7 +53,14 @@ public:
 		SUPER(pId), mSprite(pSprite) { }
 	virtual ~SpriteHandle() { }
 
+public:
 	const VideoServices::Sprite *GetSprite() const { return mSprite; }
+
+public:
+	void Serialize(Parcel::ObjStream&) override
+	{
+		throw UnimplementedExn("SpriteHandle::Serialize()");
+	}
 
 protected:
 	const ObjFacTools::ResSprite *mSprite;
