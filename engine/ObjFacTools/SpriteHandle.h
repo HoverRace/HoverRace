@@ -1,5 +1,5 @@
+
 // SpriteHandle.h
-//
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
@@ -42,17 +42,20 @@
 namespace HoverRace {
 namespace ObjFac1 {
 
-class SpriteHandle : public Util::ObjectFromFactory
+class MR_DllDeclare SpriteHandle : public Util::ObjectFromFactory
 {
-	protected:
-		const ObjFacTools::ResSprite *mSprite;
+	using SUPER = Util::ObjectFromFactory;
 
-	public:
-		MR_DllDeclare SpriteHandle(const Util::ObjectFromFactoryId & pId, const ObjFacTools::ResSprite * pSprite);
-		MR_DllDeclare ~SpriteHandle();
+public:
+	SpriteHandle(const Util::ObjectFromFactoryId &pId,
+		const ObjFacTools::ResSprite *pSprite) :
+		SUPER(pId), mSprite(pSprite) { }
+	virtual ~SpriteHandle() { }
 
-		MR_DllDeclare const VideoServices::Sprite *GetSprite() const;
+	const VideoServices::Sprite *GetSprite() const { return mSprite; }
 
+protected:
+	const ObjFacTools::ResSprite *mSprite;
 };
 
 }  // namespace ObjFac1
