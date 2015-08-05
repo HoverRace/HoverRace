@@ -121,10 +121,7 @@ public:
 
 public:
 	// Prevent overriding of the Serialize function.
-	void Serialize(HoverRace::Parcel::ObjStream &pArchive) override final
-	{
-		SUPER::Serialize(pArchive);
-	}
+	void Serialize(Parcel::ObjStream&) override final { }
 };
 
 class MR_DllDeclare SurfaceElement : public Element

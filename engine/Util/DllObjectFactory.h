@@ -160,7 +160,7 @@ public:
 		}
 	}
 
-	virtual void Serialize(Parcel::ObjStream &archive) { HR_UNUSED(archive); }
+	virtual void Serialize(Parcel::ObjStream &archive) = 0;
 };
 
 }  // namespace Util
