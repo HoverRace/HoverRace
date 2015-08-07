@@ -84,35 +84,6 @@ public:
 	enum { eNonClassified = -1, eMustBeDeleted = -2 };
 
 protected:
-	struct Section;
-
-	// Helper structure
-	class MR_DllDeclare SectionShape : public Model::PolygonShape
-	{
-	private:
-		Section *mSection;
-
-	public:
-		SectionShape(Section * pSection);
-
-		MR_Int32 XMin() const override;
-		MR_Int32 XMax() const override;
-		MR_Int32 YMin() const override;
-		MR_Int32 YMax() const override;
-		MR_Int32 ZMin() const override;
-		MR_Int32 ZMax() const override;
-
-		int VertexCount() const override;
-		MR_Int32 XCenter() const;
-		MR_Int32 YCenter() const;
-
-		MR_Int32 X(int pIndex) const override;
-		MR_Int32 Y(int pIndex) const override;
-		MR_Int32 SideLen(int pIndex) const override;
-	};
-
-	// Private structures
-
 	struct Section
 	{
 		int mNbVertex;					  // Number of vertex that compose the section
@@ -189,6 +160,30 @@ protected:
 		~Room();
 
 		void SerializeStructure(Parcel::ObjStream &pArchive);
+	};
+
+	class SectionShape : public Model::PolygonShape
+	{
+		using SUPER = Model::PolygonShape;
+
+	public:
+		SectionShape(Section *section) : SUPER(), section(section) { }
+
+		MR_Int32 XMin() const override { return section->mMin.mX; }
+		MR_Int32 XMax() const override { return section->mMax.mX; }
+		MR_Int32 YMin() const override { return section->mMin.mY; }
+		MR_Int32 YMax() const override { return section->mMax.mY; }
+		MR_Int32 ZMin() const override { return section->mFloorLevel; }
+		MR_Int32 ZMax() const override { return section->mCeilingLevel; }
+
+		int VertexCount() const override { return section->mNbVertex; }
+
+		MR_Int32 X(int pIndex) const override { return section->mVertexList[pIndex].mX ; }
+		MR_Int32 Y(int pIndex) const override { return section->mVertexList[pIndex].mY; }
+		MR_Int32 SideLen(int pIndex) const override { return section->mWallLen[pIndex]; }
+
+	private:
+		Section *section;
 	};
 
 	class FreeElementList
