@@ -55,7 +55,12 @@ class ElemHeap
 {
 public:
 	ElemHeap() { }
+	ElemHeap(const ElemHeap&) = default;
+	ElemHeap(ElemHeap&&) = default;
 	~ElemHeap() { }
+
+	ElemHeap &operator=(const ElemHeap&) = default;
+	ElemHeap &operator=(ElemHeap&&) = default;
 
 private:
 	using elems_t = std::list<std::shared_ptr<FreeElement>>;
