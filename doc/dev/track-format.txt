@@ -123,4 +123,4 @@ Records:
 		int width
 		byte[width * totalHeight] image
 
-4: MIDI stream (never implemented?)
+4: MIDI stream (never implemented)
