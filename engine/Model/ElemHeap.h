@@ -75,7 +75,7 @@ public:
 	}
 
 public:
-	static std::unique_ptr<ElemHeap> StreamIn(Parcel::ObjStream &pArchive);
+	void StreamIn(Parcel::ObjStream &pArchive);
 	void StreamOut(Parcel::ObjStream &pArchive) const;
 
 private:

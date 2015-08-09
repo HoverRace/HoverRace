@@ -30,24 +30,22 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace Model {
 
-std::unique_ptr<ElemHeap> ElemHeap::StreamIn(Parcel::ObjStream &archive)
+void ElemHeap::StreamIn(Parcel::ObjStream &archive)
 {
 	assert(!archive.IsWriting());
 
-	std::unique_ptr<ElemHeap> retv{ new ElemHeap() };
-
 	std::shared_ptr<FreeElement> newElem;
+
+	elems.clear();
 
 	do {
 		ObjectFromFactory::SerializeShared<FreeElement>(archive, newElem);
 		if (newElem) {
 			newElem->mPosition.Serialize(archive);
 			archive >> newElem->mOrientation;
-			retv->elems.push_back(newElem);
+			elems.push_back(newElem);
 		}
 	} while (newElem);
-
-	return retv;
 }
 
 void ElemHeap::StreamOut(Parcel::ObjStream &archive) const
