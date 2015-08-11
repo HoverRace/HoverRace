@@ -1,8 +1,7 @@
 
 // ClientScriptCore.h
-// Scripting core configured for the client.
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -30,18 +29,19 @@ namespace HoverScript {
 
 class ClientScriptCore : public Script::Core
 {
-	typedef Script::Core SUPER;
-	public:
-		ClientScriptCore() : SUPER(), classesRegistered(false) { }
-		virtual ~ClientScriptCore() { }
+	using SUPER = Script::Core;
 
-	private:
-		void RegisterMiscClasses();
-	public:
-		virtual Script::Core *Reset();
+public:
+	ClientScriptCore() : SUPER(), classesRegistered(false) { }
+	virtual ~ClientScriptCore() { }
 
-	private:
-		bool classesRegistered;
+private:
+	void RegisterMiscClasses();
+public:
+	Script::Core *Reset() override;
+
+private:
+	bool classesRegistered;
 };
 
 }  // namespace HoverScript
