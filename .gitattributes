@@ -2,25 +2,11 @@
 * text=auto
 
 # Custom for Visual Studio
-*.cs     diff=csharp
 *.rc     text eol=crlf
-*.sln    merge=union
-*.csproj merge=union
-*.vbproj merge=union
-*.fsproj merge=union
-*.dbproj merge=union
 
 # Standard to msysgit
 *.doc	 diff=astextplain
 *.DOC	 diff=astextplain
-*.docx diff=astextplain
-*.DOCX diff=astextplain
-*.dot  diff=astextplain
-*.DOT  diff=astextplain
-*.pdf  diff=astextplain
-*.PDF	 diff=astextplain
-*.rtf	 diff=astextplain
-*.RTF	 diff=astextplain
 
 # Overrides for GitHub Linguist.
 # https://github.com/github/linguist#overrides
