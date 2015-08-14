@@ -1,7 +1,7 @@
 
 // ClientScriptCore.cpp
 //
-// Copyright (c) 2010, 2014 Michael Imamura.
+// Copyright (c) 2010, 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@
 
 #include "ConfigPeer.h"
 #include "DebugPeer.h"
+#include "ElemBinding.h"
 #include "GamePeer.h"
 #include "HudPeer.h"
 #include "InputPeer.h"
@@ -146,6 +147,7 @@ Script::Core *ClientScriptCore::Reset()
 
 		ConfigPeer::Register(this);
 		DebugPeer::Register(this);
+		ElemBinding::Register(this);
 		GamePeer::Register(this);
 		HudPeer::Register(this);
 		InputPeer::Register(this);
