@@ -1,7 +1,7 @@
 
 // MetaPlayer.h
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -40,29 +40,29 @@ namespace HoverScript {
  */
 class MetaPlayer
 {
-	public:
-		MetaPlayer(std::shared_ptr<PlayerPeer> player);
-		virtual ~MetaPlayer();
+public:
+	MetaPlayer(std::shared_ptr<PlayerPeer> player);
+	virtual ~MetaPlayer();
 
-	public:
-		std::shared_ptr<PlayerPeer> GetPlayer() const { return player; }
+public:
+	std::shared_ptr<PlayerPeer> GetPlayer() const { return player; }
 
-	public:
-		virtual void OnInit() { }
+public:
+	virtual void OnInit() { }
 
-		virtual void OnJoined(std::shared_ptr<MetaSession>) { }
-		virtual void OnStart() { }
-		virtual void OnCheckpoint(int) { }
-		virtual void OnFinishLine() { }
-		virtual void OnFinish() { }
+	virtual void OnJoined(std::shared_ptr<MetaSession>) { }
+	virtual void OnStart() { }
+	virtual void OnCheckpoint(int) { }
+	virtual void OnFinishLine() { }
+	virtual void OnFinish() { }
 
-	public:
-		static void Register(Script::Core *scripting);
+public:
+	static void Register(Script::Core *scripting);
 
-	private:
-		std::shared_ptr<PlayerPeer> player;
-		boost::signals2::scoped_connection checkpointConn;
-		boost::signals2::scoped_connection finishLineConn;
+private:
+	std::shared_ptr<PlayerPeer> player;
+	boost::signals2::scoped_connection checkpointConn;
+	boost::signals2::scoped_connection finishLineConn;
 };
 
 }  // namespace HoverScript

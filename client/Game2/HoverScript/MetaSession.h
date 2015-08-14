@@ -1,7 +1,7 @@
 
 // MetaSession.h
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -42,27 +42,27 @@ namespace HoverScript {
  */
 class MetaSession
 {
-	public:
-		MetaSession(std::shared_ptr<SessionPeer> session);
-		virtual ~MetaSession();
+public:
+	MetaSession(std::shared_ptr<SessionPeer> session);
+	virtual ~MetaSession();
 
-	public:
-		std::shared_ptr<SessionPeer> GetSession() const { return session; }
+public:
+	std::shared_ptr<SessionPeer> GetSession() const { return session; }
 
-	public:
-		virtual void OnInit() { }
+public:
+	virtual void OnInit() { }
 
-		// Phases
-		virtual void OnPregame() { }
-		virtual void OnPlaying() { }
-		virtual void OnPostgame() { }
-		virtual void OnDone() { }
+	// Phases
+	virtual void OnPregame() { }
+	virtual void OnPlaying() { }
+	virtual void OnPostgame() { }
+	virtual void OnDone() { }
 
-	public:
-		static void Register(Script::Core *scripting);
+public:
+	static void Register(Script::Core *scripting);
 
-	private:
-		std::shared_ptr<SessionPeer> session;
+private:
+	std::shared_ptr<SessionPeer> session;
 };
 
 }  // namespace HoverScript

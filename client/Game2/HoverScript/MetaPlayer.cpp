@@ -1,7 +1,7 @@
 
 // MetaPlayer.cpp
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -37,33 +37,36 @@ namespace Client {
 namespace HoverScript {
 
 namespace {
-	class Wrapper : public MetaPlayer, public Script::Wrapper
-	{
-		typedef MetaPlayer SUPER;
-		public:
-			Wrapper(std::shared_ptr<PlayerPeer> player) : SUPER(player) { }
-			virtual ~Wrapper() { }
 
-		public:
-			void OnInit() override { pcall<void>("on_init"); }
-			static void OnInit_def(SUPER *super) { super->SUPER::OnInit(); }
+class Wrapper : public MetaPlayer, public Script::Wrapper
+{
+	using SUPER = MetaPlayer;
 
-			void OnJoined(std::shared_ptr<MetaSession> session) override { pcall<void>("on_joined", session); }
-			static void OnJoined_def(SUPER *super, std::shared_ptr<MetaSession> session) { super->SUPER::OnJoined(session); }
+public:
+	Wrapper(std::shared_ptr<PlayerPeer> player) : SUPER(player) { }
+	virtual ~Wrapper() { }
 
-			void OnStart() override { pcall<void>("on_start"); }
-			static void OnStart_def(SUPER *super) { super->SUPER::OnStart(); }
+public:
+	void OnInit() override { pcall<void>("on_init"); }
+	static void OnInit_def(SUPER *super) { super->SUPER::OnInit(); }
 
-			void OnCheckpoint(int i) override { pcall<void>("on_checkpoint", i); }
-			static void OnCheckpoint_def(SUPER *super, int i) { super->SUPER::OnCheckpoint(i); }
+	void OnJoined(std::shared_ptr<MetaSession> session) override { pcall<void>("on_joined", session); }
+	static void OnJoined_def(SUPER *super, std::shared_ptr<MetaSession> session) { super->SUPER::OnJoined(session); }
 
-			void OnFinishLine() override { pcall<void>("on_finish_line"); }
-			static void OnFinishLine_def(SUPER *super) { super->SUPER::OnFinishLine(); }
+	void OnStart() override { pcall<void>("on_start"); }
+	static void OnStart_def(SUPER *super) { super->SUPER::OnStart(); }
 
-			void OnFinish() override { pcall<void>("on_finish"); }
-			static void OnFinish_def(SUPER *super) { super->SUPER::OnFinish(); }
-	};
-}
+	void OnCheckpoint(int i) override { pcall<void>("on_checkpoint", i); }
+	static void OnCheckpoint_def(SUPER *super, int i) { super->SUPER::OnCheckpoint(i); }
+
+	void OnFinishLine() override { pcall<void>("on_finish_line"); }
+	static void OnFinishLine_def(SUPER *super) { super->SUPER::OnFinishLine(); }
+
+	void OnFinish() override { pcall<void>("on_finish"); }
+	static void OnFinish_def(SUPER *super) { super->SUPER::OnFinish(); }
+};
+
+}  // namespace
 
 MetaPlayer::MetaPlayer(std::shared_ptr<PlayerPeer> player) :
 	player(std::move(player))

@@ -1,7 +1,7 @@
 
 // MetaSession.cpp
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -34,30 +34,33 @@ namespace Client {
 namespace HoverScript {
 
 namespace {
-	class Wrapper : public MetaSession, public Script::Wrapper
-	{
-		typedef MetaSession SUPER;
-		public:
-			Wrapper(std::shared_ptr<SessionPeer> session) : SUPER(session) { }
-			virtual ~Wrapper() { }
 
-		public:
-			void OnInit() override { pcall<void>("on_init"); }
-			static void OnInit_def(SUPER *super) { super->SUPER::OnInit(); }
+class Wrapper : public MetaSession, public Script::Wrapper
+{
+	using SUPER = MetaSession;
 
-			void OnPregame() override { pcall<void>("on_pregame"); }
-			static void OnPregame_def(SUPER *super) { super->SUPER::OnPregame(); }
+public:
+	Wrapper(std::shared_ptr<SessionPeer> session) : SUPER(session) { }
+	virtual ~Wrapper() { }
 
-			void OnPlaying() override { pcall<void>("on_playing"); }
-			static void OnPlaying_def(SUPER *super) { super->SUPER::OnPlaying(); }
+public:
+	void OnInit() override { pcall<void>("on_init"); }
+	static void OnInit_def(SUPER *super) { super->SUPER::OnInit(); }
 
-			void OnPostgame() override { pcall<void>("on_postgame"); }
-			static void OnPostgame_def(SUPER *super) { super->SUPER::OnPostgame(); }
+	void OnPregame() override { pcall<void>("on_pregame"); }
+	static void OnPregame_def(SUPER *super) { super->SUPER::OnPregame(); }
 
-			void OnDone() override { pcall<void>("on_done"); }
-			static void OnDone_def(SUPER *super) { super->SUPER::OnDone(); }
-	};
-}
+	void OnPlaying() override { pcall<void>("on_playing"); }
+	static void OnPlaying_def(SUPER *super) { super->SUPER::OnPlaying(); }
+
+	void OnPostgame() override { pcall<void>("on_postgame"); }
+	static void OnPostgame_def(SUPER *super) { super->SUPER::OnPostgame(); }
+
+	void OnDone() override { pcall<void>("on_done"); }
+	static void OnDone_def(SUPER *super) { super->SUPER::OnDone(); }
+};
+
+}  // namespace
 
 MetaSession::MetaSession(std::shared_ptr<SessionPeer> session) :
 	session(std::move(session))
