@@ -841,19 +841,19 @@ void Level::FreeElementList::SerializeList(ObjStream &pArchive,
 }
 
 // class SectionId
-void SectionId::Serialize(ObjStream & pArchive)
+void SectionId::Serialize(ObjStream &pArchive)
 {
 	if(pArchive.IsWriting()) {
-		pArchive << (int) mType;
+		pArchive << static_cast<MR_Int32>(mType);
 		pArchive << mId;
 	}
 	else {
-		int lType;
+		MR_Int32 lType;
 
 		pArchive >> lType;
 		pArchive >> mId;
 
-		mType = (eSectionType) lType;
+		mType = static_cast<eSectionType>(lType);
 	}
 }
 

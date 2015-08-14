@@ -63,10 +63,10 @@ namespace Model {
 
 struct SectionId
 {
-	enum eSectionType { eRoom, eFeature };
+	enum eSectionType : MR_Int32 { eRoom, eFeature };
 
 	eSectionType mType;
-	int mId;
+	MR_Int32 mId;
 
 	void Serialize(Parcel::ObjStream &pArchive);
 };
