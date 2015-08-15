@@ -35,7 +35,7 @@ void ElemBinding::Register(Script::Core &scripting)
 	lua_State *L = scripting.GetState();
 
 	module(L) [
-		class_<FreeElement, std::shared_ptr<FreeElement>>("FreeElement")
+		class_<FreeElement, std::shared_ptr<FreeElement>>("Actor")
 	];
 }
 
