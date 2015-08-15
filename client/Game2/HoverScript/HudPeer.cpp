@@ -39,7 +39,7 @@ namespace Client {
 namespace HoverScript {
 
 HudPeer::HudPeer(Script::Core *scripting, Display::Display &display,
-                 std::weak_ptr<Display::Hud> hud) :
+	std::weak_ptr<Display::Hud> hud) :
 	SUPER(scripting, "Hud"),
 	display(display), hud(std::move(hud))
 {
