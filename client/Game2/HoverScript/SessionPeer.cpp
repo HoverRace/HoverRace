@@ -1,7 +1,7 @@
 
 // SessionPeer.cpp
 //
-// Copyright (c) 2010, 2013, 2014 Michael Imamura.
+// Copyright (c) 2010, 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -77,11 +77,12 @@ SessionPeer::~SessionPeer()
 
 /**
  * Register this peer in an environment.
+ * @param scripting The target environment.
  */
-void SessionPeer::Register(Script::Core *scripting)
+void SessionPeer::Register(Script::Core &scripting)
 {
 	using namespace luabind;
-	lua_State *L = scripting->GetState();
+	lua_State *L = scripting.GetState();
 
 	module(L) [
 		class_<SessionPeer,SUPER,std::shared_ptr<SessionPeer>>("Session")

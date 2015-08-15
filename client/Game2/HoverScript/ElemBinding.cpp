@@ -28,11 +28,11 @@ namespace HoverRace {
 namespace Client {
 namespace HoverScript {
 
-void ElemBinding::Register(Script::Core *scripting)
+void ElemBinding::Register(Script::Core &scripting)
 {
 	using namespace luabind;
 	using namespace HoverRace::Model;
-	lua_State *L = scripting->GetState();
+	lua_State *L = scripting.GetState();
 
 	module(L) [
 		class_<FreeElement, std::shared_ptr<FreeElement>>("FreeElement")

@@ -38,7 +38,7 @@ namespace HoverScript {
 class ElemBinding
 {
 public:
-	static void Register(Script::Core *scripting);
+	static void Register(Script::Core &scripting);
 };
 
 }  // namespace HoverScript

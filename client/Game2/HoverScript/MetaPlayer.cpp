@@ -91,11 +91,12 @@ MetaPlayer::~MetaPlayer()
 
 /**
  * Register this peer in an environment.
+ * @param scripting The target environment.
  */
-void MetaPlayer::Register(Script::Core *scripting)
+void MetaPlayer::Register(Script::Core &scripting)
 {
 	using namespace luabind;
-	lua_State *L = scripting->GetState();
+	lua_State *L = scripting.GetState();
 
 	module(L)[
 		class_<MetaPlayer, Wrapper, std::shared_ptr<MetaPlayer>>("MetaPlayer")

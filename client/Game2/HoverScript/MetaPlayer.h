@@ -57,7 +57,7 @@ public:
 	virtual void OnFinish() { }
 
 public:
-	static void Register(Script::Core *scripting);
+	static void Register(Script::Core &scripting);
 
 private:
 	std::shared_ptr<PlayerPeer> player;

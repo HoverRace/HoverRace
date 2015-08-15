@@ -45,11 +45,12 @@ InputPeer::InputPeer(Script::Core *scripting,
 
 /**
  * Register this peer in an environment.
+ * @param scripting The target environment.
  */
-void InputPeer::Register(Script::Core *scripting)
+void InputPeer::Register(Script::Core &scripting)
 {
 	using namespace luabind;
-	lua_State *L = scripting->GetState();
+	lua_State *L = scripting.GetState();
 
 	module(L)[
 		class_<InputPeer, SUPER, std::shared_ptr<InputPeer>>("Input")

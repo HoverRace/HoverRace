@@ -1,7 +1,7 @@
 
 // TrackPeer.cpp
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -52,11 +52,12 @@ TrackPeer::~TrackPeer()
 
 /**
  * Register this peer in an environment.
+ * @param scripting The target environment.
  */
-void TrackPeer::Register(Script::Core *scripting)
+void TrackPeer::Register(Script::Core &scripting)
 {
 	using namespace luabind;
-	lua_State *L = scripting->GetState();
+	lua_State *L = scripting.GetState();
 
 	module(L)[
 		class_<TrackPeer, SUPER, std::shared_ptr<TrackPeer>>("Track")

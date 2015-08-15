@@ -59,7 +59,7 @@ public:
 	virtual void OnDone() { }
 
 public:
-	static void Register(Script::Core *scripting);
+	static void Register(Script::Core &scripting);
 
 private:
 	std::shared_ptr<SessionPeer> session;

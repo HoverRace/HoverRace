@@ -75,11 +75,12 @@ MetaSession::~MetaSession()
 
 /**
  * Register this peer in an environment.
+ * @param scripting The target environment.
  */
-void MetaSession::Register(Script::Core *scripting)
+void MetaSession::Register(Script::Core &scripting)
 {
 	using namespace luabind;
-	lua_State *L = scripting->GetState();
+	lua_State *L = scripting.GetState();
 
 	module(L)[
 		class_<MetaSession, Wrapper, std::shared_ptr<MetaSession>>("MetaSession")

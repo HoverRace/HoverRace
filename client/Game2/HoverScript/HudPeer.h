@@ -1,7 +1,7 @@
 
 // HudPeer.h
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ public:
 	virtual ~HudPeer();
 
 public:
-	static void Register(Script::Core *scripting);
+	static void Register(Script::Core &scripting);
 
 private:
 	/**

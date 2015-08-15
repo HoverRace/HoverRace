@@ -1,7 +1,7 @@
 
 // PlayerPeer.cpp
 //
-// Copyright (c) 2010, 2014 Michael Imamura.
+// Copyright (c) 2010, 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -57,11 +57,12 @@ PlayerPeer::~PlayerPeer()
 
 /**
  * Register this peer in an environment.
+ * @param scripting The target environment.
  */
-void PlayerPeer::Register(Script::Core *scripting)
+void PlayerPeer::Register(Script::Core &scripting)
 {
 	using namespace luabind;
-	lua_State *L = scripting->GetState();
+	lua_State *L = scripting.GetState();
 
 	module(L) [
 		class_<PlayerPeer, SUPER, std::shared_ptr<PlayerPeer>>("Player")

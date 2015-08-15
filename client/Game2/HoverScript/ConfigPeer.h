@@ -49,7 +49,7 @@ public:
 	virtual ~ConfigPeer();
 
 public:
-	static void Register(Script::Core *scripting);
+	static void Register(Script::Core &scripting);
 
 public:
 	void LUnlink();

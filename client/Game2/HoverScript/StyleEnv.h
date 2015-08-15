@@ -1,7 +1,7 @@
 
 // StyleEnv.h
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ public:
 	virtual ~StyleEnv() { }
 
 public:
-	static void Register(Script::Core *scripting);
+	static void Register(Script::Core &scripting);
 
 protected:
 	virtual void InitEnv();

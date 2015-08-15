@@ -145,18 +145,18 @@ Script::Core *ClientScriptCore::Reset()
 			luabind::bind_class_info(L);
 #		endif
 
-		ConfigPeer::Register(this);
-		DebugPeer::Register(this);
-		ElemBinding::Register(this);
-		GamePeer::Register(this);
-		HudPeer::Register(this);
-		InputPeer::Register(this);
-		MetaPlayer::Register(this);
-		MetaSession::Register(this);
-		PlayerPeer::Register(this);
-		SessionPeer::Register(this);
-		StyleEnv::Register(this);
-		TrackPeer::Register(this);
+		ConfigPeer::Register(*this);
+		DebugPeer::Register(*this);
+		ElemBinding::Register(*this);
+		GamePeer::Register(*this);
+		HudPeer::Register(*this);
+		InputPeer::Register(*this);
+		MetaPlayer::Register(*this);
+		MetaSession::Register(*this);
+		PlayerPeer::Register(*this);
+		SessionPeer::Register(*this);
+		StyleEnv::Register(*this);
+		TrackPeer::Register(*this);
 		RegisterMiscClasses();
 
 		classesRegistered = true;

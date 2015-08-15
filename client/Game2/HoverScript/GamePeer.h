@@ -64,7 +64,7 @@ public:
 	virtual ~GamePeer();
 
 public:
-	static void Register(Script::Core *scripting);
+	static void Register(Script::Core &scripting);
 
 public:
 	void SetDisplay(Display::Display *display) { this->display = display; }

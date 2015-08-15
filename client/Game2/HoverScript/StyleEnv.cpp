@@ -84,11 +84,11 @@ StyleEnv::StyleEnv(Script::Core *scripting, Display::Display &display,
  * Register bindings in an environment.
  * @param scripting The target environment.
  */
-void StyleEnv::Register(Script::Core *scripting)
+void StyleEnv::Register(Script::Core &scripting)
 {
 	using namespace luabind;
 	using Styles = Display::Styles;
-	lua_State *L = scripting->GetState();
+	lua_State *L = scripting.GetState();
 
 	// Register base classes.
 	module(L) [

@@ -41,11 +41,12 @@ ConfigPeer::~ConfigPeer()
 
 /**
  * Register this peer in an environment.
+ * @param scripting The target environment.
  */
-void ConfigPeer::Register(Script::Core *scripting)
+void ConfigPeer::Register(Script::Core &scripting)
 {
 	using namespace luabind;
-	lua_State *L = scripting->GetState();
+	lua_State *L = scripting.GetState();
 
 	module(L) [
 		class_<ConfigPeer,SUPER,std::shared_ptr<ConfigPeer>>("Config")

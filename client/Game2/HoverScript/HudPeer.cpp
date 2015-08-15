@@ -1,7 +1,7 @@
 
 // HudPeer.cpp
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -51,11 +51,12 @@ HudPeer::~HudPeer()
 
 /**
  * Register this peer in an environment.
+ * @param scripting The target environment.
  */
-void HudPeer::Register(Script::Core *scripting)
+void HudPeer::Register(Script::Core &scripting)
 {
 	using namespace luabind;
-	lua_State *L = scripting->GetState();
+	lua_State *L = scripting.GetState();
 
 	// Register base classes.
 	module(L) [
