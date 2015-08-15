@@ -63,7 +63,7 @@ protected:
 	Model::ElementNetState GetNetState() const override;
 	void SetNetState(int pDataLen, const MR_UInt8 *pData) override;
 
-	BOOL AssignPermNumber(int pNumber) override;
+	bool AssignPermNumber(int pNumber) override;
 
 private:
 	bool mOnGround;

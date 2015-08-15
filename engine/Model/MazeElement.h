@@ -219,10 +219,10 @@ public:
 	 * @param pNumber The hook number.
 	 * @return @c true if accepted, @c false otherwise.
 	 */
-	virtual BOOL AssignPermNumber(int pNumber)
+	virtual bool AssignPermNumber(int pNumber)
 	{
 		HR_UNUSED(pNumber);
-		return FALSE;
+		return false;
 	}
 
 	virtual void SetOwnerId(int pOwnerId) { HR_UNUSED(pOwnerId); }

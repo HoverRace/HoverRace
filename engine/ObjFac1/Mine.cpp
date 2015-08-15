@@ -81,10 +81,10 @@ Mine::~Mine()
 {
 }
 
-BOOL Mine::AssignPermNumber(int pNumber)
+bool Mine::AssignPermNumber(int pNumber)
 {
 	mEffect.mElementId = pNumber;
-	return TRUE;
+	return true;
 }
 
 const Model::ContactEffectList *Mine::GetEffectList()

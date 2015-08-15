@@ -73,10 +73,10 @@ MR_Int32 PowerUp::RayLen() const
 	return cPowerUpRay;
 }
 
-BOOL PowerUp::AssignPermNumber(int pNumber)
+bool PowerUp::AssignPermNumber(int pNumber)
 {
 	mPowerUpEffect.mElementPermId = pNumber;
-	return TRUE;
+	return true;
 }
 
 const Model::ContactEffectList *PowerUp::GetEffectList()
