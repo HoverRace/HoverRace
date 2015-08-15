@@ -138,7 +138,7 @@ public:
 	 */
 	bool HasSelected() const
 	{
-		return selItem;
+		return static_cast<bool>(selItem);
 	}
 
 	/**
