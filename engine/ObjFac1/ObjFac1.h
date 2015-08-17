@@ -39,7 +39,7 @@ public:
 	ObjFac1();
 	~ObjFac1();
 
-	ObjFacTools::ResourceLib *GetResourceLib() const { return resourceLib.get(); }
+	ObjFacTools::ResourceLib &GetResourceLib() const { return *resourceLib; }
 
 	std::shared_ptr<Util::ObjectFromFactory> GetObject(int pClassId);
 

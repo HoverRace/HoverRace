@@ -81,7 +81,7 @@ std::shared_ptr<ObjectFromFactory> DllObjectFactory::CreateObject(
  */
 ObjFacTools::ResourceLib &DllObjectFactory::GetResourceLib(MR_UInt16 dllId)
 {
-	return *(GetDll(dllId).GetResourceLib());
+	return GetDll(dllId).GetResourceLib();
 }
 
 void ObjectFromFactory::ThrowUnexpected(const ObjectFromFactoryId &oid)
