@@ -493,7 +493,7 @@ ClientApp::ExitMode ClientApp::MainLoop()
 	gamePeer->OnShutdown();
 
 	if (runtimeCfg.profiling) {
-		HR_LOG(info) << *rootProfiler;
+		HR_LOG(info) << "" << *rootProfiler;
 		HR_LOG(info) << "  " << *advanceProfiler;
 		HR_LOG(info) << "  " << *prepareProfiler;
 		HR_LOG(info) << "  " << *renderProfiler;

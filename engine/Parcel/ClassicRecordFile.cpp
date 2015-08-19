@@ -172,7 +172,7 @@ ClassicRecordFile::~ClassicRecordFile()
 				header->Serialize(objStream);
 			}
 			catch (ClassicRecordFileExn &ex) {
-				HR_LOG(error) << filename << ": " << ex.what();
+				HR_LOG(error) << "" << filename << ": " << ex.what();
 			}
 		}
 
@@ -185,7 +185,7 @@ bool ClassicRecordFile::CreateForWrite(const Util::OS::path_t &filename,
 	MR_UInt32 numRecords, const char *title)
 {
 	if (header) {
-		HR_LOG(error) << filename << ": "
+		HR_LOG(error) << "" << filename << ": "
 			"Cannot create for writing (already open).";
 		return false;
 	}
@@ -194,7 +194,7 @@ bool ClassicRecordFile::CreateForWrite(const Util::OS::path_t &filename,
 
 	fileStream = OS::FOpen(filename, "w+b");
 	if (!fileStream) {
-		HR_LOG(error) << filename << ": Failed to open: " <<
+		HR_LOG(error) << "" << filename << ": Failed to open: " <<
 			OS::StrError(errno);
 		return false;
 	}
@@ -206,7 +206,7 @@ bool ClassicRecordFile::CreateForWrite(const Util::OS::path_t &filename,
 		header->Serialize(objStream);
 	}
 	catch (ClassicRecordFileExn &ex) {
-		HR_LOG(error) << filename << ": " << ex.what();
+		HR_LOG(error) << "" << filename << ": " << ex.what();
 		fclose(fileStream);
 		return false;
 	}
@@ -219,7 +219,7 @@ bool ClassicRecordFile::CreateForWrite(const Util::OS::path_t &filename,
 bool ClassicRecordFile::OpenForWrite(const Util::OS::path_t &filename)
 {
 	if (header) {
-		HR_LOG(error) << filename << ": Cannot open (already open).";
+		HR_LOG(error) << "" << filename << ": Cannot open (already open).";
 		return false;
 	}
 
@@ -227,7 +227,7 @@ bool ClassicRecordFile::OpenForWrite(const Util::OS::path_t &filename)
 
 	fileStream = OS::FOpen(filename, "r+b");
 	if (!fileStream) {
-		HR_LOG(error) << filename << ": Failed to open: " <<
+		HR_LOG(error) << "" << filename << ": Failed to open: " <<
 			OS::StrError(errno);
 		return false;
 	}
@@ -238,13 +238,13 @@ bool ClassicRecordFile::OpenForWrite(const Util::OS::path_t &filename)
 		header->Serialize(objStream);
 	}
 	catch (ClassicRecordFileExn &ex) {
-		HR_LOG(error) << filename << ": " << ex.what();
+		HR_LOG(error) << "" << filename << ": " << ex.what();
 		fclose(fileStream);
 		return false;
 	}
 
 	if (!header->recordList) {
-		HR_LOG(error) << filename << ": Failed to read header or no records.";
+		HR_LOG(error) << "" << filename << ": Failed to read header or no records.";
 		fclose(fileStream);
 		return false;
 	}
@@ -331,7 +331,7 @@ void ClassicRecordFile::SelectRecord(MR_UInt32 i)
 			fseek(fileStream, header->recordList[i], SEEK_SET);
 		}
 		else {
-			HR_LOG(error) << filename << "Invalid record (" << i << ") out of "
+			HR_LOG(error) << "" << filename << "Invalid record (" << i << ") out of "
 				"allocated records (" << header->recordsUsed << ").";
 		}
 	}
@@ -340,12 +340,12 @@ void ClassicRecordFile::SelectRecord(MR_UInt32 i)
 bool ClassicRecordFile::BeginANewRecord()
 {
 	if (header == NULL) {
-		HR_LOG(error) << filename << ": Not initialized for writing.";
+		HR_LOG(error) << "" << filename << ": Not initialized for writing.";
 		return false;
 	}
 
 	if (header->recordsUsed >= header->recordsMax) {
-		HR_LOG(error) << filename << ": Exceeded preallocated record count: " <<
+		HR_LOG(error) << "" << filename << ": Exceeded preallocated record count: " <<
 			header->recordsMax;
 		return false;
 	}
@@ -355,11 +355,11 @@ bool ClassicRecordFile::BeginANewRecord()
 
 	auto pos = ftell(fileStream);
 	if (pos < 0) {
-		HR_LOG(error) << filename << ": " << OS::StrError(errno);
+		HR_LOG(error) << "" << filename << ": " << OS::StrError(errno);
 		return false;
 	}
 	if (static_cast<MR_UInt64>(pos) >= std::numeric_limits<MR_UInt32>::max()) {
-		HR_LOG(error) << filename << ": Too large!";
+		HR_LOG(error) << "" << filename << ": Too large!";
 		return false;
 	}
 
