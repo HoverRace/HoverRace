@@ -1,7 +1,7 @@
 
 // Log.cpp
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -86,21 +86,21 @@ class LogSignalSinkBackend :
 		char,
 		boost::log::sinks::synchronized_feeding>
 {
-	public:
-		void consume(const boost::log::record_view &rec, const string_type &s)
-		{
-			using namespace boost::log;
+public:
+	void consume(const boost::log::record_view &rec, const string_type &s)
+	{
+		using namespace boost::log;
 
-			Level pri = Level::INFO;
-			visit(trivial::severity, rec, [&pri](trivial::severity_level sev) {
-				// Level and boost::log::severity_level intentionally line up.
-				pri = static_cast<Level>(sev);
-			});
+		Level pri = Level::INFO;
+		visit(trivial::severity, rec, [&pri](trivial::severity_level sev) {
+			// Level and boost::log::severity_level intentionally line up.
+			pri = static_cast<Level>(sev);
+		});
 
-			// Broadcast the log message to all subscribers.
-			Entry entry = { pri, s.c_str() };
-			logAddedSignal(entry);
-		}
+		// Broadcast the log message to all subscribers.
+		Entry entry = { pri, s.c_str() };
+		logAddedSignal(entry);
+	}
 };
 
 void LogCallback(void*, int, SDL_LogPriority priority, const char *message)

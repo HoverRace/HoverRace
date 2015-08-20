@@ -1,7 +1,7 @@
 
 // Log.h
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -46,75 +46,77 @@ namespace Util {
 
 namespace Log {
 
-	namespace detail {
-		const size_t MAX_LOG = 512; ///< The maximum length of a vararg log.
+namespace detail {
 
-		MR_DllDeclare std::string Fmt(const char *fmt, va_list ap);
-	}
+const size_t MAX_LOG = 512; ///< The maximum length of a vararg log.
 
-	MR_DllDeclare void Init();
+MR_DllDeclare std::string Fmt(const char *fmt, va_list ap);
 
-	enum class Level {
-		// Intentionally aligned with boost::log::trivial to avoid conversions.
-		TRACE = boost::log::trivial::trace,
-		DEBUG = boost::log::trivial::debug,
-		INFO = boost::log::trivial::info,
-		WARN = boost::log::trivial::warning,
-		ERROR = boost::log::trivial::error,
-		FATAL = boost::log::trivial::fatal,
-	};
+}  // namespace detail
 
-	struct Entry {
-		Entry(const Level level, const char *message) :
-			level(level), message(message) { }
-		Entry &operator=(const Entry&) = delete;
+MR_DllDeclare void Init();
 
-		const Level level;
-		const char *message;
-	};
+enum class Level {
+	// Intentionally aligned with boost::log::trivial to avoid conversions.
+	TRACE = boost::log::trivial::trace,
+	DEBUG = boost::log::trivial::debug,
+	INFO = boost::log::trivial::info,
+	WARN = boost::log::trivial::warning,
+	ERROR = boost::log::trivial::error,
+	FATAL = boost::log::trivial::fatal,
+};
 
-	typedef boost::signals2::signal<void(const Entry&)> logAdded_t;
-	MR_DllDeclare extern logAdded_t logAddedSignal;
+struct Entry {
+	Entry(const Level level, const char *message) :
+		level(level), message(message) { }
+	Entry &operator=(const Entry&) = delete;
 
-	inline void Debug(const char *fmt, ...)
-	{
-		va_list ap;
-		va_start(ap, fmt);
-		BOOST_LOG_TRIVIAL(debug) << detail::Fmt(fmt, ap);
-		va_end(ap);
-	}
+	const Level level;
+	const char *message;
+};
 
-	inline void Info(const char *fmt, ...)
-	{
-		va_list ap;
-		va_start(ap, fmt);
-		BOOST_LOG_TRIVIAL(info) << detail::Fmt(fmt, ap);
-		va_end(ap);
-	}
+using logAdded_t = boost::signals2::signal<void(const Entry&)>;
+MR_DllDeclare extern logAdded_t logAddedSignal;
 
-	inline void Warn(const char *fmt, ...)
-	{
-		va_list ap;
-		va_start(ap, fmt);
-		BOOST_LOG_TRIVIAL(warning) << detail::Fmt(fmt, ap);
-		va_end(ap);
-	}
+inline void Debug(const char *fmt, ...)
+{
+	va_list ap;
+	va_start(ap, fmt);
+	BOOST_LOG_TRIVIAL(debug) << detail::Fmt(fmt, ap);
+	va_end(ap);
+}
 
-	inline void Error(const char *fmt, ...)
-	{
-		va_list ap;
-		va_start(ap, fmt);
-		BOOST_LOG_TRIVIAL(error) << detail::Fmt(fmt, ap);
-		va_end(ap);
-	}
+inline void Info(const char *fmt, ...)
+{
+	va_list ap;
+	va_start(ap, fmt);
+	BOOST_LOG_TRIVIAL(info) << detail::Fmt(fmt, ap);
+	va_end(ap);
+}
 
-	inline void Fatal(const char *fmt, ...)
-	{
-		va_list ap;
-		va_start(ap, fmt);
-		BOOST_LOG_TRIVIAL(fatal) << detail::Fmt(fmt, ap);
-		va_end(ap);
-	}
+inline void Warn(const char *fmt, ...)
+{
+	va_list ap;
+	va_start(ap, fmt);
+	BOOST_LOG_TRIVIAL(warning) << detail::Fmt(fmt, ap);
+	va_end(ap);
+}
+
+inline void Error(const char *fmt, ...)
+{
+	va_list ap;
+	va_start(ap, fmt);
+	BOOST_LOG_TRIVIAL(error) << detail::Fmt(fmt, ap);
+	va_end(ap);
+}
+
+inline void Fatal(const char *fmt, ...)
+{
+	va_list ap;
+	va_start(ap, fmt);
+	BOOST_LOG_TRIVIAL(fatal) << detail::Fmt(fmt, ap);
+	va_end(ap);
+}
 
 }  // namespace Log
 
