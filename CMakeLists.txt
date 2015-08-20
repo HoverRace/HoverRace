@@ -99,7 +99,7 @@ endif()
 set(Boost_USE_MULTITHREADED ON)
 set(BOOST_MIN_VER 1.54)
 find_package(Boost ${BOOST_MIN_VER} REQUIRED COMPONENTS
-	filesystem log system thread)
+	filesystem locale log system thread)
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
