@@ -23,6 +23,9 @@
 #	pragma warning(push, 0)
 #endif
 
+#undef pgettext
+
+#include <boost/locale.hpp>
 #include <boost/log/core.hpp>
 #include <boost/log/expressions.hpp>
 #include <boost/log/sinks/sync_frontend.hpp>
@@ -52,6 +55,10 @@ namespace Log {
 logAdded_t logAddedSignal;
 
 namespace {
+
+// Log messages are developer-oriented; we standardize on a single
+// locale for all log sinks to use.
+auto sinkLocale = boost::locale::generator()("en_US.UTF-8");
 
 #ifdef _WIN32
 /**
@@ -143,6 +150,7 @@ void AddStreamLog()
 	auto sink = boost::make_shared<sink_t>(backend);
 	sink->set_formatter(expr::stream << '[' << trivial::severity << "] " <<
 		expr::message);
+	sink->imbue(sinkLocale);
 	core::get()->add_sink(sink);
 }
 
@@ -165,6 +173,7 @@ void AddLogSignalLog()
 	sink->set_filter(std::bind(HasLogAddedSlots));
 	sink->set_formatter(expr::stream << '[' << trivial::severity << "] " <<
 		expr::message);
+	sink->imbue(sinkLocale);
 	core::get()->add_sink(sink);
 }
 
