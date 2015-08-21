@@ -20,10 +20,6 @@
 // and limitations under the License.
 //
 
-//
-// This element is used to test and build new FreeElements
-//
-
 #pragma once
 
 #include "../ObjFac1/ObjFac1Res.h"
@@ -33,6 +29,9 @@
 namespace HoverRace {
 namespace ObjFac1 {
 
+/**
+ * Used to test and build new FreeElements.
+ */
 class TestElement : public ObjFacTools::FreeElementBase
 {
 	using SUPER = ObjFacTools::FreeElementBase;
