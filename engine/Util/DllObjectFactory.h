@@ -1,5 +1,5 @@
+
 // DllObjectFactory.h
-//
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
@@ -20,13 +20,10 @@
 // and limitations under the License.
 //
 
-//
 // This file constais fonctions for creating objects from
 // two integer numbers. One of this number identify the
 // dll containing the object to create and the other contain
 // factory class
-//
-//
 
 #pragma once
 
