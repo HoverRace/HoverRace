@@ -1,5 +1,5 @@
+
 // DoubleSpeedSource.h
-//
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
@@ -28,32 +28,32 @@
 namespace HoverRace {
 namespace ObjFac1 {
 
-class DoubleSpeedSource : public Model::FreeElement, protected Model::CylinderShape
+class DoubleSpeedSource :
+	public Model::FreeElement,
+	protected Model::CylinderShape
 {
-	protected:
+	using SUPER = Model::FreeElement;
 
-		// Shape interface
-		MR_Int32 ZMin() const;
-		MR_Int32 ZMax() const;
-		MR_Int32 AxisX() const;
-		MR_Int32 AxisY() const;
-		MR_Int32 RayLen() const;
+public:
+	DoubleSpeedSource(const Util::ObjectFromFactoryId &pId);
+	~DoubleSpeedSource() { }
 
-	private:
+protected:
+	// Shape interface
+	MR_Int32 ZMin() const override;
+	MR_Int32 ZMax() const override;
+	MR_Int32 AxisX() const override;
+	MR_Int32 AxisY() const override;
+	MR_Int32 RayLen() const override;
 
-		Model::SpeedDoubler mSpeedEffect;
-		Model::ContactEffectList mContactEffectList;
+protected:
+	// ContactEffectShapeInterface
+	const Model::ContactEffectList *GetEffectList() override { return &mContactEffectList; }
+	const Model::ShapeInterface *GetReceivingContactEffectShape() override { return this; }
 
-	public:
-		DoubleSpeedSource(const Util::ObjectFromFactoryId & pId);
-		~DoubleSpeedSource();
-
-	protected:
-
-		// ContactEffectShapeInterface
-		const Model::ContactEffectList *GetEffectList();
-		const Model::ShapeInterface *GetReceivingContactEffectShape();
-
+private:
+	Model::SpeedDoubler mSpeedEffect;
+	Model::ContactEffectList mContactEffectList;
 };
 
 }  // namespace ObjFac1

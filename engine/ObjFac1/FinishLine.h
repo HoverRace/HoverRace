@@ -1,5 +1,5 @@
+
 // FinishLine.h
-//
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
@@ -28,35 +28,36 @@
 namespace HoverRace {
 namespace ObjFac1 {
 
-// Note.. finish lines are not finish lines..they are check points
-
-class FinishLine : public Model::FreeElement, protected Model::CylinderShape
+/**
+ * @note Finish lines are not finish lines; they are checkpoints.
+ */
+class FinishLine :
+	public Model::FreeElement,
+	protected Model::CylinderShape
 {
-	protected:
+	using SUPER = Model::FreeElement;
 
-		// Shape interface
-		MR_Int32 ZMin() const;
-		MR_Int32 ZMax() const;
-		MR_Int32 AxisX() const;
-		MR_Int32 AxisY() const;
-		MR_Int32 RayLen() const;
+public:
+	FinishLine(const Util::ObjectFromFactoryId &pId,
+		Model::CheckPoint::CheckPointType pType);
+	~FinishLine() { }
 
-	private:
+protected:
+	// Shape interface
+	MR_Int32 ZMin() const override;
+	MR_Int32 ZMax() const override;
+	MR_Int32 AxisX() const override;
+	MR_Int32 AxisY() const override;
+	MR_Int32 RayLen() const override;
 
-		Model::CheckPoint mEffect;
-		Model::ContactEffectList mContactEffectList;
+protected:
+	// ContactEffectShapeInterface
+	const Model::ContactEffectList *GetEffectList() override { return &mContactEffectList; }
+	const Model::ShapeInterface *GetReceivingContactEffectShape() override { return this; }
 
-	public:
-		FinishLine(const Util::ObjectFromFactoryId &pId,
-			Model::CheckPoint::CheckPointType pType);
-		~FinishLine();
-
-	protected:
-
-		// ContactEffectShapeInterface
-		const Model::ContactEffectList *GetEffectList();
-		const Model::ShapeInterface *GetReceivingContactEffectShape();
-
+private:
+	Model::CheckPoint mEffect;
+	Model::ContactEffectList mContactEffectList;
 };
 
 }  // namespace ObjFac1

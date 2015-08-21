@@ -1,3 +1,4 @@
+
 // DoubleSpeedSource.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
@@ -57,23 +58,9 @@ MR_Int32 DoubleSpeedSource::RayLen() const
 }
 
 DoubleSpeedSource::DoubleSpeedSource(const Util::ObjectFromFactoryId &pId) :
-	Model::FreeElement(pId)
+	SUPER(pId)
 {
 	mContactEffectList.push_back(&mSpeedEffect);
-}
-
-DoubleSpeedSource::~DoubleSpeedSource()
-{
-}
-
-const Model::ContactEffectList *DoubleSpeedSource::GetEffectList()
-{
-	return &mContactEffectList;
-}
-
-const Model::ShapeInterface *DoubleSpeedSource::GetReceivingContactEffectShape()
-{
-	return this;
 }
 
 }  // namespace ObjFac1

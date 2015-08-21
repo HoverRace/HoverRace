@@ -1,3 +1,4 @@
+
 // FuelSource.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
@@ -54,24 +55,10 @@ MR_Int32 FuelSource::RayLen() const
 }
 
 FuelSource::FuelSource(const Util::ObjectFromFactoryId &pId) :
-	Model::FreeElement(pId)
+	SUPER(pId)
 {
 	mFuelEffect.mFuelQty = cFuelGain;
 	mContactEffectList.push_back(&mFuelEffect);
-}
-
-FuelSource::~FuelSource()
-{
-}
-
-const Model::ContactEffectList *FuelSource::GetEffectList()
-{
-	return &mContactEffectList;
-}
-
-const Model::ShapeInterface *FuelSource::GetReceivingContactEffectShape()
-{
-	return this;
 }
 
 }  // namespace ObjFac1

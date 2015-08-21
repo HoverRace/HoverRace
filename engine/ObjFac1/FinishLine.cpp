@@ -1,3 +1,4 @@
+
 // FinishLine.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
@@ -54,24 +55,10 @@ MR_Int32 FinishLine::RayLen() const
 
 FinishLine::FinishLine(const Util::ObjectFromFactoryId &pId,
 	Model::CheckPoint::CheckPointType pType) :
-	Model::FreeElement(pId)
+	SUPER(pId)
 {
 	mEffect.mType = pType;
 	mContactEffectList.push_back(&mEffect);
-}
-
-FinishLine::~FinishLine()
-{
-}
-
-const Model::ContactEffectList *FinishLine::GetEffectList()
-{
-	return &mContactEffectList;
-}
-
-const Model::ShapeInterface *FinishLine::GetReceivingContactEffectShape()
-{
-	return this;
 }
 
 }  // namespace ObjFac1

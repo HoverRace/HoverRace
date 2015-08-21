@@ -1,5 +1,5 @@
+
 // FuelSource.h
-//
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
@@ -28,32 +28,32 @@
 namespace HoverRace {
 namespace ObjFac1 {
 
-class FuelSource : public Model::FreeElement, protected Model::CylinderShape
+class FuelSource :
+	public Model::FreeElement,
+	protected Model::CylinderShape
 {
-	protected:
+	using SUPER = Model::FreeElement;
 
-		// Shape interface
-		MR_Int32 ZMin() const;
-		MR_Int32 ZMax() const;
-		MR_Int32 AxisX() const;
-		MR_Int32 AxisY() const;
-		MR_Int32 RayLen() const;
+public:
+	FuelSource(const Util::ObjectFromFactoryId &pId);
+	~FuelSource() { }
 
-	private:
+protected:
+	// Shape interface
+	MR_Int32 ZMin() const override;
+	MR_Int32 ZMax() const override;
+	MR_Int32 AxisX() const override;
+	MR_Int32 AxisY() const override;
+	MR_Int32 RayLen() const override;
 
-		Model::FuelGain mFuelEffect;
-		Model::ContactEffectList mContactEffectList;
+protected:
+	// ContactEffectShapeInterface
+	const Model::ContactEffectList *GetEffectList() override { return &mContactEffectList; }
+	const Model::ShapeInterface *GetReceivingContactEffectShape() override { return this; }
 
-	public:
-		FuelSource(const Util::ObjectFromFactoryId & pId);
-		~FuelSource();
-
-	protected:
-
-		// ContactEffectShapeInterface
-		const Model::ContactEffectList *GetEffectList();
-		const Model::ShapeInterface *GetReceivingContactEffectShape();
-
+private:
+	Model::FuelGain mFuelEffect;
+	Model::ContactEffectList mContactEffectList;
 };
 
 }  // namespace ObjFac1
