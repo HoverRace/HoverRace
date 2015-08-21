@@ -63,8 +63,8 @@ MR_Int32 Mine::RayLen() const
 	return cMineRay;
 }
 
-Mine::Mine(const Util::ObjectFromFactoryId &pId, ResourceLib &resourceLib) :
-	SUPER(pId),
+Mine::Mine(ResourceLib &resourceLib) :
+	SUPER({ 1, 151 }),
 	mOnGround(false)
 {
 	mEffectList.push_back(&mEffect);

@@ -1,5 +1,5 @@
+
 // TestElement.h
-//
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
@@ -26,6 +26,7 @@
 
 #pragma once
 
+#include "../ObjFac1/ObjFac1Res.h"
 #include "../ObjFacTools/FreeElementBase.h"
 #include "../Model/PhysicalCollision.h"
 
@@ -49,8 +50,7 @@ class TestElement : public ObjFacTools::FreeElementBase
 	};
 
 public:
-	TestElement(const Util::ObjectFromFactoryId &pId,
-		ObjFacTools::ResourceLib &resourceLib, int pActorRes);
+	TestElement(ObjFacTools::ResourceLib &resourceLib, int pActorRes);
 	~TestElement() { }
 
 	int Simulate(MR_SimulationTime pDuration, Model::Track &track,

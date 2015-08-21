@@ -1,3 +1,4 @@
+
 // TestElement.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
@@ -28,9 +29,21 @@ using HoverRace::ObjFacTools::ResourceLib;
 namespace HoverRace {
 namespace ObjFac1 {
 
-TestElement::TestElement(const Util::ObjectFromFactoryId &pId,
-	ResourceLib &resourceLib, int pActorRes) :
-	SUPER(pId),
+namespace {
+
+MR_UInt16 ActorResToId(int actorRes) {
+	switch (actorRes) {
+		case MR_DEMO_FIGHTER: return 10;
+		case MR_ELECTRO_CAR: return 13;
+	}
+	throw UnimplementedExn("ActorResToId: actor resource: " +
+		boost::lexical_cast<std::string>(actorRes));
+}
+
+}  // namespace
+
+TestElement::TestElement(ResourceLib &resourceLib, int pActorRes) :
+	SUPER({ 1, ActorResToId(pActorRes) }),
 	mElapsedFrameTime(0),
 	mXSpeed(0), mYSpeed(0)
 {

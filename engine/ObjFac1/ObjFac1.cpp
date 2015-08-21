@@ -70,13 +70,13 @@ std::shared_ptr<ObjectFromFactory> ObjFac1::GetObject(int pClassId)
 			return std::make_shared<WoodSurface>(lId, *resourceLib);
 
 		case 10:
-			return std::make_shared<TestElement>(lId, *resourceLib, MR_DEMO_FIGHTER);
+			return std::make_shared<TestElement>(*resourceLib, MR_DEMO_FIGHTER);
 
 		case 12:
-			return std::make_shared<BallElement>(lId, *resourceLib);
+			return std::make_shared<BallElement>(*resourceLib);
 
 		case 13:
-			return std::make_shared<TestElement>(lId, *resourceLib, MR_ELECTRO_CAR);
+			return std::make_shared<TestElement>(*resourceLib, MR_ELECTRO_CAR);
 
 		case 50:
 			return std::make_shared<BitmapSurface>(lId, nullptr);
@@ -154,31 +154,31 @@ std::shared_ptr<ObjectFromFactory> ObjFac1::GetObject(int pClassId)
 			return std::make_shared<HoverRender>(lId, *resourceLib);
 
 		case 150:
-			return std::make_shared<Missile>(lId, *resourceLib);
+			return std::make_shared<Missile>(*resourceLib);
 
 		case 151:
-			return std::make_shared<Mine>(lId, *resourceLib);
+			return std::make_shared<Mine>(*resourceLib);
 
 		case 152:
-			return std::make_shared<PowerUp>(lId, *resourceLib);
+			return std::make_shared<PowerUp>(*resourceLib);
 
 		case 170:
-			return std::make_shared<BumperGate>(lId, *resourceLib);
+			return std::make_shared<BumperGate>(*resourceLib);
 
 		case 200:
-			return std::make_shared<FuelSource>(lId);
+			return std::make_shared<FuelSource>();
 
 		case 201:
-			return std::make_shared<DoubleSpeedSource>(lId);
+			return std::make_shared<DoubleSpeedSource>();
 
 		case 202:
-			return std::make_shared<FinishLine>(lId, Model::CheckPoint::eFinishLine);
+			return std::make_shared<FinishLine>(Model::CheckPoint::eFinishLine);
 
 		case 203:
-			return std::make_shared<FinishLine>(lId, Model::CheckPoint::eCheck1);
+			return std::make_shared<FinishLine>(Model::CheckPoint::eCheck1);
 
 		case 204:
-			return std::make_shared<FinishLine>(lId, Model::CheckPoint::eCheck2);
+			return std::make_shared<FinishLine>(Model::CheckPoint::eCheck2);
 
 		case 1000:
 			return std::make_shared<SpriteHandle>(lId, resourceLib->GetSprite(MR_FONT1));

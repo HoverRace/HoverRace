@@ -54,8 +54,8 @@ MR_Int32 FuelSource::RayLen() const
 	return cSourceRay;
 }
 
-FuelSource::FuelSource(const Util::ObjectFromFactoryId &pId) :
-	SUPER(pId)
+FuelSource::FuelSource() :
+	SUPER({ 1, 200 })
 {
 	mFuelEffect.mFuelQty = cFuelGain;
 	mContactEffectList.push_back(&mFuelEffect);

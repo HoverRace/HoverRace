@@ -35,7 +35,7 @@ class DoubleSpeedSource :
 	using SUPER = Model::FreeElement;
 
 public:
-	DoubleSpeedSource(const Util::ObjectFromFactoryId &pId);
+	DoubleSpeedSource();
 	~DoubleSpeedSource() { }
 
 protected:

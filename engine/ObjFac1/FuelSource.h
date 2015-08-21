@@ -35,7 +35,7 @@ class FuelSource :
 	using SUPER = Model::FreeElement;
 
 public:
-	FuelSource(const Util::ObjectFromFactoryId &pId);
+	FuelSource();
 	~FuelSource() { }
 
 protected:

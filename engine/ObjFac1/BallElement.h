@@ -1,6 +1,5 @@
+
 // BallElement.h
-//
-//
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
@@ -33,8 +32,7 @@ class BallElement : public ObjFacTools::FreeElementBase
 	using SUPER = ObjFacTools::FreeElementBase;
 
 public:
-	BallElement(const Util::ObjectFromFactoryId &pId,
-		ObjFacTools::ResourceLib &resourceLib);
+	BallElement(ObjFacTools::ResourceLib &resourceLib);
 	~BallElement() { }
 };
 

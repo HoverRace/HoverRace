@@ -163,7 +163,7 @@ private:
 	MR_FixedFastFifo<VideoServices::ShortSound*, 6> mInternalSoundList;
 	MR_FixedFastFifo<VideoServices::ShortSound*, 6> mExternalSoundList;
 
-	MainCharacter(const Util::ObjectFromFactoryId &pId);
+	MainCharacter();
 
 	int InternalSimulate(MR_SimulationTime pDuration, Model::Track &track,
 		int pRoom);

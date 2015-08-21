@@ -1,3 +1,4 @@
+
 // Missile.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
@@ -70,9 +71,8 @@ MR_Int32 Missile::RayLen() const
 	return cMissileRay;
 }
 
-Missile::Missile(const Util::ObjectFromFactoryId &pId,
-	ResourceLib &resourceLib) :
-	SUPER(pId),
+Missile::Missile(ResourceLib &resourceLib) :
+	SUPER({ 1, 150 }),
 	mHoverId(-1), mLived(0), mXSpeed(0), mYSpeed(0),
 	mBounceSoundEvent(false),
 	mBounceSound(resourceLib.GetShortSound(MR_SND_MISSILE_BOUNCE)->GetSound()),

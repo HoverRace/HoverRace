@@ -1,3 +1,4 @@
+
 // BumperGate.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
@@ -42,9 +43,8 @@ const MR_Int32 cGateWeight = Model::PhysicalCollision::eInfiniteWeight;
 }  // namespace
 
 
-BumperGate::BumperGate(const Util::ObjectFromFactoryId &pId,
-	ResourceLib &resourceLib) :
-	SUPER(pId)
+BumperGate::BumperGate(ResourceLib &resourceLib) :
+	SUPER({ 1, 170 })
 {
 	mActor = resourceLib.GetActor(MR_BUMPERGATE);
 

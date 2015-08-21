@@ -36,8 +36,7 @@ class Missile :
 	using SUPER = ObjFacTools::FreeElementBase;
 
 public:
-	Missile(const Util::ObjectFromFactoryId &pId,
-		ObjFacTools::ResourceLib &resourceLib);
+	Missile(ObjFacTools::ResourceLib &resourceLib);
 	~Missile() { }
 
 protected:

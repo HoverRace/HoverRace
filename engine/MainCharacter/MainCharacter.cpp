@@ -39,9 +39,6 @@ using namespace HoverRace::VideoServices;
 namespace HoverRace {
 namespace MainCharacter {
 
-#define MR_MAIN_CHARACTER_DLL_ID     5000
-#define MR_MAIN_CHARACTER_CLASS_ID      1
-
 #define MR_NB_HOVER_MODEL 8
 
 using MainCharacterState = Util::BitPack<23>;
@@ -160,6 +157,8 @@ const double eFuelConsuming[MR_NB_HOVER_MODEL] =
 
 namespace {
 
+const Util::ObjectFromFactoryId MAINCHAR_ID = { 5000, 1 };
+
 /// An invalid game config slipped through.
 class TrackConfigExn : public Exception
 {
@@ -198,8 +197,8 @@ unsigned int NextAllowedCraft(char gameOpts, unsigned int curCraft,
 
 // Functions implementations
 
-MainCharacter::MainCharacter(const Util::ObjectFromFactoryId &pId) :
-	Model::FreeElement(pId),
+MainCharacter::MainCharacter() :
+	Model::FreeElement(MAINCHAR_ID),
 	playerIdx(0), started(false), finished(false)
 {
 	mMasterMode = TRUE;
@@ -307,9 +306,7 @@ void MainCharacter::Render(VideoServices::Viewport3D * pDest, MR_SimulationTime 
  */
 MainCharacter *MainCharacter::New(int idx, char gameopts)
 {
-	Util::ObjectFromFactoryId lId = { MR_MAIN_CHARACTER_DLL_ID, MR_MAIN_CHARACTER_CLASS_ID };
-
-	MainCharacter *lReturnValue = new MainCharacter(lId);
+	MainCharacter *lReturnValue = new MainCharacter();
 
 	if (lReturnValue) {
 		lReturnValue->playerIdx = idx;

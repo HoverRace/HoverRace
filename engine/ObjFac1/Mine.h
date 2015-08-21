@@ -34,6 +34,10 @@ class Mine :
 {
 	using SUPER = ObjFacTools::FreeElementBase;
 
+public:
+	Mine(ObjFacTools::ResourceLib &resourceLib);
+	~Mine();
+
 protected:
 	// Shape interface
 	MR_Int32 ZMin() const override;
@@ -41,11 +45,6 @@ protected:
 	MR_Int32 AxisX() const override;
 	MR_Int32 AxisY() const override;
 	MR_Int32 RayLen() const override;
-
-public:
-	Mine(const Util::ObjectFromFactoryId &pId,
-		ObjFacTools::ResourceLib &resourceLib);
-	~Mine();
 
 protected:
 	// ContactEffectShapeInterface

@@ -38,9 +38,8 @@ const MR_Int32 cPowerUpHalfHeight = 550;
 }  // namespace
 
 
-PowerUp::PowerUp(const Util::ObjectFromFactoryId &pId,
-	ResourceLib &resourceLib) :
-	SUPER(pId)
+PowerUp::PowerUp(ResourceLib &resourceLib) :
+	SUPER({ 1, 152 })
 {
 	mEffectList.push_back(&mPowerUpEffect);
 	mActor = resourceLib.GetActor(MR_PWRUP);

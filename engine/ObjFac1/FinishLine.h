@@ -38,8 +38,7 @@ class FinishLine :
 	using SUPER = Model::FreeElement;
 
 public:
-	FinishLine(const Util::ObjectFromFactoryId &pId,
-		Model::CheckPoint::CheckPointType pType);
+	FinishLine(Model::CheckPoint::CheckPointType pType);
 	~FinishLine() { }
 
 protected:

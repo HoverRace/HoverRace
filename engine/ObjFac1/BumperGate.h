@@ -1,5 +1,5 @@
+
 // BumperGate.h
-//
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
@@ -36,8 +36,7 @@ class BumperGate :
 	using SUPER = ObjFacTools::FreeElementBase;
 
 public:
-	BumperGate(const Util::ObjectFromFactoryId &pId,
-		ObjFacTools::ResourceLib &resourceLib);
+	BumperGate(ObjFacTools::ResourceLib &resourceLib);
 	~BumperGate() { }
 
 protected:

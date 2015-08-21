@@ -28,9 +28,8 @@ using HoverRace::ObjFacTools::ResourceLib;
 namespace HoverRace {
 namespace ObjFac1 {
 
-BallElement::BallElement(const Util::ObjectFromFactoryId &pId,
-	ResourceLib &resourceLib) :
-	SUPER(pId)
+BallElement::BallElement(ResourceLib &resourceLib) :
+	SUPER({ 1, 12 })
 {
 	mActor = resourceLib.GetActor(MR_BALL);
 }
