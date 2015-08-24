@@ -63,9 +63,9 @@ void Method::Load(yaml::MapNode *node)
 		yaml::SeqNode *seq = dynamic_cast<yaml::SeqNode*>(sigNode);
 		if (seq != NULL) {
 			for (yaml::Node *seqNode : *seq) {
-				yaml::ScalarNode *scalar = dynamic_cast<yaml::ScalarNode*>(seqNode);
-				if (scalar != NULL) {
-					sigs.push_back(scalar->AsString());
+				yaml::ScalarNode *seqScalar = dynamic_cast<yaml::ScalarNode*>(seqNode);
+				if (seqScalar) {
+					sigs.push_back(seqScalar->AsString());
 				}
 			}
 		}

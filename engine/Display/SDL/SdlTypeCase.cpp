@@ -272,8 +272,8 @@ void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
 
 	// All maps that need update will be at the end, so update in reverse
 	// order until we find one that didn't need updating.
-	for (auto iter = maps.rbegin(); iter != maps.rend(); ++iter) {
-		if (!(*iter)->Update()) break;
+	for (auto miter = maps.rbegin(); miter != maps.rend(); ++miter) {
+		if (!(*miter)->Update()) break;
 	}
 
 	if (!added.empty()) {

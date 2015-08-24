@@ -845,8 +845,8 @@ void Config::Load()
 			yaml::SeqNode *ctlseqh = dynamic_cast<yaml::SeqNode*>(root->Get("controls_hash"));
 			if (ctlseqh != NULL) {
 				int i = 0;
-				for (yaml::Node *node : *ctlseqh) {
-					controlsHash[i++].Load(dynamic_cast<yaml::MapNode*>(node));
+				for (yaml::Node *ynode : *ctlseqh) {
+					controlsHash[i++].Load(dynamic_cast<yaml::MapNode*>(ynode));
 				}
 			}
 
