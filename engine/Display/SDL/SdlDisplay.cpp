@@ -771,7 +771,6 @@ TTF_Font *SdlDisplay::LoadTtfFont(const UiFont &font, bool uiScale)
 
 	auto iter = loadedFonts.find(key);
 	if (iter == loadedFonts.end()) {
-		Config *cfg = Config::GetInstance();
 		OS::path_t fontPath = cfg->GetMediaPath();
 		fontPath /= Str::UP("fonts");
 		fontPath /= Str::UP(fullFontName);
