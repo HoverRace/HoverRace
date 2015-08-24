@@ -23,6 +23,7 @@
 
 #	pragma warning(disable: 4251)
 #	pragma warning(disable: 4275)
+#	pragma warning(disable: 4458)
 
 	// Common warnings from system / library headers.
 #	pragma warning(disable: 4503)  // decorated name length exceeded, name was truncated
