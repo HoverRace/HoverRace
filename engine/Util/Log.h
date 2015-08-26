@@ -37,6 +37,9 @@
 #ifdef ERROR
 #	undef ERROR
 #endif
+#ifdef TRACE
+#	undef TRACE
+#endif
 
 /// Alias for BOOST_LOG_TRIVIAL.
 #define HR_LOG(lvl) BOOST_LOG_TRIVIAL(lvl)
