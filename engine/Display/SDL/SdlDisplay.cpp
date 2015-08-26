@@ -282,7 +282,7 @@ boost::optional<SDL_DisplayMode> FindDisplayMode(int displayIdx,
 
 	SDL_DisplayMode closest;
 	if (SDL_GetClosestDisplayMode(displayIdx, &req, &closest)) {
-		return { closest };
+		return closest;
 	}
 	else {
 		return {};
@@ -331,7 +331,7 @@ boost::optional<SDL_DisplayMode> FindBestFullscreenMode(int displayIdx)
 			continue;
 		}
 
-		return { mode };
+		return mode;
 	}
 
 	HR_LOG(error) << "No available display modes for monitor " << displayIdx <<
