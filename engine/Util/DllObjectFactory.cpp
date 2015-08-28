@@ -41,14 +41,11 @@ std::unique_ptr<ObjFac1::ObjFac1> dll;
 
 /**
  * Lazy-initialize the object factory.
- * The option of choosing which DLL has been deprecated.
- * @param dllId The DLL ID (must be 1).
+ * The option of choosing which DLL has been obsoleted.
  * @return The object factory.
  */
-ObjFac1::ObjFac1 &GetDll(MR_UInt16 dllId)
+ObjFac1::ObjFac1 &GetDll()
 {
-	assert(dllId == 1);
-
 	if (!dll) {
 		dll.reset(new ObjFac1::ObjFac1());
 	}
@@ -71,7 +68,8 @@ void DllObjectFactory::Clean()
 std::shared_ptr<ObjectFromFactory> DllObjectFactory::CreateObject(
 	const ObjectFromFactoryId &pId)
 {
-	return GetDll(pId.mDllId).GetObject(pId.mClassId);
+	assert(pId.mDllId == 1);
+	return GetDll().GetObject(pId.mClassId);
 }
 
 /**
@@ -81,7 +79,8 @@ std::shared_ptr<ObjectFromFactory> DllObjectFactory::CreateObject(
  */
 ObjFacTools::ResourceLib &DllObjectFactory::GetResourceLib(MR_UInt16 dllId)
 {
-	return GetDll(dllId).GetResourceLib();
+	HR_UNUSED(dllId);
+	return GetDll().GetResourceLib();
 }
 
 void ObjectFromFactory::ThrowUnexpected(const ObjectFromFactoryId &oid)
