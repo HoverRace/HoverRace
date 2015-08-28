@@ -72,8 +72,8 @@ const std::locale OS::stdLocale("C");
  */
 void OS::SetEnv(const char *key, const char *val)
 {
-	ASSERT(key != NULL);
-	ASSERT(val != NULL);
+	assert(key);
+	assert(val);
 
 #	ifdef _WIN32
 		std::string combined(key);
