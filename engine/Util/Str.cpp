@@ -82,10 +82,11 @@ struct Narrow<4>
  */
 wchar_t *Str::Utf8ToWide(const char *s)
 {
-	ASSERT(s != NULL);
+	assert(s);
 
 	if (*s == '\0') {
 		wchar_t *retv = (wchar_t*)malloc(sizeof(wchar_t));
+		if (!retv) throw std::bad_alloc();
 		*retv = L'\0';
 		return retv;
 	}
@@ -112,10 +113,11 @@ wchar_t *Str::Utf8ToWide(const char *s)
  */
 char *Str::WideToUtf8(const wchar_t *ws)
 {
-	ASSERT(ws != NULL);
+	assert(ws);
 
 	if (*ws == L'\0') {
 		char *retv = (char*)malloc(1);
+		if (!retv) throw std::bad_alloc();
 		*retv = '\0';
 		return retv;
 	}

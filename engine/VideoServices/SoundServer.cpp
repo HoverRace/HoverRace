@@ -283,6 +283,7 @@ BOOL SoundBuffer::Init(const char *pData, int pNbCopy)
 	MR_UInt32 bufSize = 12 + (8 + 18) + (8 + lBufferLen);
 	MR_UInt32 chunkSize = bufSize - 8;
 	char *buf = (char*)malloc(bufSize);
+	if (!buf) throw std::bad_alloc();
 	memcpy(buf, waveHeader, 12 + (8 + 18) + 8);
 	memcpy(buf + 0x04, &chunkSize, 4);
 	memcpy(buf + 0x14, lSoundData, 16);
