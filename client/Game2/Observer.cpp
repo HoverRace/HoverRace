@@ -684,33 +684,54 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 				int lNbFor;
 				int lNbAgain;
 
-				if(lShowHits) {
-					pSession->GetHitResult(lCounter, lPlayerName, lHoverId, lConnected, lNbFor, lNbAgain);
+				if (lShowHits) {
+					pSession->GetHitResult(lCounter, lPlayerName, lHoverId,
+						lConnected, lNbFor, lNbAgain);
 				}
 				else {
-					pSession->GetResult(lCounter, lPlayerName, lHoverId, lConnected, lNbLap, lFinishTime, lBestLap);
+					pSession->GetResult(lCounter, lPlayerName, lHoverId,
+						lConnected, lNbLap, lFinishTime, lBestLap);
 				}
 
-				size_t lPlayerNameLen = std::min(strlen(lPlayerName), static_cast<size_t>(10));
+				size_t lPlayerNameLen = std::min(strlen(lPlayerName),
+					static_cast<size_t>(10));
 
-				if(lShowHits) {
-					sprintf(lBuffer, globalFmts.hitChart.c_str(), lCounter + 1, lPlayerName, lHoverId + 1, 10 - lPlayerNameLen, "", lNbFor, lNbAgain);
+				if (lShowHits) {
+					sprintf(lBuffer, globalFmts.hitChart.c_str(),
+						lCounter + 1, lPlayerName, lHoverId + 1,
+						10 - lPlayerNameLen, "", lNbFor, lNbAgain);
+				}
+				else if (lNbLap == 0) {
+					sprintf(lBuffer, globalFmts.firstLap.c_str(),
+						lCounter + 1, lPlayerName, lHoverId + 1,
+						10 - lPlayerNameLen, "", lConnected ? '*' : '-');
 
 				}
-				else if(lNbLap == 0) {
-					sprintf(lBuffer, globalFmts.firstLap.c_str(), lCounter + 1, lPlayerName, lHoverId + 1, 10 - lPlayerNameLen, "", lConnected ? '*' : '-');
-
-				}
-				else if(lNbLap == -1) {
-					sprintf(lBuffer, globalFmts.chartFinish.c_str(), lCounter + 1, lPlayerName, lHoverId + 1, 10 - lPlayerNameLen, "", lFinishTime / 60000, (lFinishTime % 60000) / 1000, (lFinishTime % 1000), lBestLap / 60000, (lBestLap % 60000) / 1000, (lBestLap % 1000), lConnected ? '*' : '-');
-
+				else if (lNbLap == -1) {
+					sprintf(lBuffer, globalFmts.chartFinish.c_str(),
+						lCounter + 1, lPlayerName, lHoverId + 1,
+						10 - lPlayerNameLen, "",
+						lFinishTime / 60000,
+						(lFinishTime % 60000) / 1000,
+						(lFinishTime % 1000), lBestLap / 60000,
+						(lBestLap % 60000) / 1000,
+						(lBestLap % 1000),
+						lConnected ? '*' : '-');
 				}
 				else {
-					sprintf(lBuffer, globalFmts.chart.c_str(), lCounter + 1, lPlayerName, lHoverId + 1, 10 - lPlayerNameLen, "", lNbLap + 1, lBestLap / 60000, (lBestLap % 60000) / 1000, (lBestLap % 1000), lConnected ? '*' : '-');
-
+					sprintf(lBuffer, globalFmts.chart.c_str(),
+						lCounter + 1, lPlayerName, lHoverId + 1,
+						10 - lPlayerNameLen, "",
+						lNbLap + 1,
+						lBestLap / 60000,
+						(lBestLap % 60000) / 1000,
+						(lBestLap % 1000),
+						lConnected ? '*' : '-');
 				}
 
-				mBaseFont->GetSprite()->StrBlt(lXRes / 2, lCurrentLine, Ascii2Simple(lBuffer), &m3DView, Sprite::eCenter, Sprite::eTop, lFontScaling);
+				mBaseFont->GetSprite()->StrBlt(lXRes / 2,
+					lCurrentLine, Ascii2Simple(lBuffer), &m3DView,
+					Sprite::eCenter, Sprite::eTop, lFontScaling);
 				lCurrentLine += lLineSpacing;
 			}
 		}
