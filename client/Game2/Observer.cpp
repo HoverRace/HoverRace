@@ -672,7 +672,7 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 			lCurrentLine += lLineSpacing;
 
 			// Display list
-			for(int lCounter = lFirstPlayer; lCounter < lLastPlayer; lCounter++) {
+			for(int pi = lFirstPlayer; pi < lLastPlayer; pi++) {
 				char lBuffer[80];
 
 				const char *lPlayerName;
@@ -685,11 +685,11 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 				int lNbAgain;
 
 				if (lShowHits) {
-					pSession->GetHitResult(lCounter, lPlayerName, lHoverId,
+					pSession->GetHitResult(pi, lPlayerName, lHoverId,
 						lConnected, lNbFor, lNbAgain);
 				}
 				else {
-					pSession->GetResult(lCounter, lPlayerName, lHoverId,
+					pSession->GetResult(pi, lPlayerName, lHoverId,
 						lConnected, lNbLap, lFinishTime, lBestLap);
 				}
 
@@ -698,18 +698,18 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 
 				if (lShowHits) {
 					sprintf(lBuffer, globalFmts.hitChart.c_str(),
-						lCounter + 1, lPlayerName, lHoverId + 1,
+						pi + 1, lPlayerName, lHoverId + 1,
 						10 - lPlayerNameLen, "", lNbFor, lNbAgain);
 				}
 				else if (lNbLap == 0) {
 					sprintf(lBuffer, globalFmts.firstLap.c_str(),
-						lCounter + 1, lPlayerName, lHoverId + 1,
+						pi + 1, lPlayerName, lHoverId + 1,
 						10 - lPlayerNameLen, "", lConnected ? '*' : '-');
 
 				}
 				else if (lNbLap == -1) {
 					sprintf(lBuffer, globalFmts.chartFinish.c_str(),
-						lCounter + 1, lPlayerName, lHoverId + 1,
+						pi + 1, lPlayerName, lHoverId + 1,
 						10 - lPlayerNameLen, "",
 						lFinishTime / 60000,
 						(lFinishTime % 60000) / 1000,
@@ -720,7 +720,7 @@ void Observer::Render3DView(const ClientSession *pSession, const MainCharacter::
 				}
 				else {
 					sprintf(lBuffer, globalFmts.chart.c_str(),
-						lCounter + 1, lPlayerName, lHoverId + 1,
+						pi + 1, lPlayerName, lHoverId + 1,
 						10 - lPlayerNameLen, "",
 						lNbLap + 1,
 						lBestLap / 60000,

@@ -349,11 +349,11 @@ void GameSession::ComputeShapeContactEffects(int pCurrentRoom,
 
 		if(lNeighbor != -1) {
 			if(!pVisitedRooms->Contains(lNeighbor)) {
-				RoomContactSpec lSpec;
+				RoomContactSpec cspec;
 
 				// Recursively call this function
 
-				mCurrentLevel->GetRoomContact(lNeighbor, lActorShape, lSpec);
+				mCurrentLevel->GetRoomContact(lNeighbor, lActorShape, cspec);
 
 				/*
 				   if( lSpec.mDistanceFromFloor < 0 )
@@ -370,11 +370,12 @@ void GameSession::ComputeShapeContactEffects(int pCurrentRoom,
 
 				   if( lNeighbor != -1 )
 				 */
-				if((lSpec.mDistanceFromFloor < 0) || (lSpec.mDistanceFromCeiling < 0)) {
+				if((cspec.mDistanceFromFloor < 0) || (cspec.mDistanceFromCeiling < 0)) {
 					lNeighbor = -1;
 				}
 				else {
-					ComputeShapeContactEffects(lNeighbor, pActor, lSpec, pVisitedRooms, pMaxDepth - 1, pDuration);
+					ComputeShapeContactEffects(lNeighbor, pActor, cspec,
+						pVisitedRooms, pMaxDepth - 1, pDuration);
 				}
 			}
 		}

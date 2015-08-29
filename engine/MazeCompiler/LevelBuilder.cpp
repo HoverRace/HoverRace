@@ -254,14 +254,14 @@ bool LevelBuilder::Parse(std::istream &in)
 					else if(!_stricmp(lAttrib, "Parent")) {
 						int lParentId = (int) lParser.GetNextNumParam();
 
-						lRoomList_t::const_iterator iter = lRoomList.find(lParentId);
-						if (iter == lRoomList.end()) {
+						lRoomList_t::const_iterator roomIter = lRoomList.find(lParentId);
+						if (roomIter == lRoomList.end()) {
 							throw TrackCompileExn(str(
 								format(_("Invalid parent room reference on line %d\n")) %
 								lParser.GetErrorLine()));
 						}
 						else {
-							mFeatureList[lFeatureIndex].mParentSectionIndex = iter->second;
+							mFeatureList[lFeatureIndex].mParentSectionIndex = roomIter->second;
 							mRoomList[mFeatureList[lFeatureIndex].mParentSectionIndex].mNbChild++;
 						}
 					}
