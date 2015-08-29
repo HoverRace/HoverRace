@@ -154,7 +154,10 @@ class MR_DllDeclare FreeElement :
 	using SUPER = Element;
 
 public:
-	FreeElement(const Util::ObjectFromFactoryId &id) : SUPER(id) { }
+	//HACK: Temporary default value for scripting.
+	FreeElement(const Util::ObjectFromFactoryId &id = { 0, 0 }) : SUPER(id)
+	{
+	}
 	virtual ~FreeElement() { }
 
 	virtual void Render(VideoServices::Viewport3D *pDest,
