@@ -355,21 +355,6 @@ void GameSession::ComputeShapeContactEffects(int pCurrentRoom,
 
 				mCurrentLevel->GetRoomContact(lNeighbor, lActorShape, cspec);
 
-				/*
-				   if( lSpec.mDistanceFromFloor < 0 )
-				   {
-				   lNeighbor = -1;
-				   lContactTop = lActorShape->ZMin() - lSpec.mDistanceFromFloor;
-				   }
-
-				   if( lSpec.mDistanceFromCeiling < 0 )
-				   {
-				   lNeighbor = -1;
-				   lContactBottom = lActorShape->ZMax()-lSpec.mDistanceFromCeiling;
-				   }
-
-				   if( lNeighbor != -1 )
-				 */
 				if((cspec.mDistanceFromFloor < 0) || (cspec.mDistanceFromCeiling < 0)) {
 					lNeighbor = -1;
 				}
