@@ -36,6 +36,7 @@ void ElemBinding::Register(Script::Core &scripting)
 
 	module(L) [
 		class_<FreeElement, std::shared_ptr<FreeElement>>("Actor")
+			.def(constructor<>())
 	];
 }
 
