@@ -1,3 +1,4 @@
+
 // MazeElement.h
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
@@ -21,10 +22,10 @@
 
 #pragma once
 
-#include "Shapes.h"
-#include "ContactEffect.h"
 #include "../Util/DllObjectFactory.h"
 #include "../VideoServices/Viewport3D.h"
+#include "ContactEffect.h"
+#include "Shapes.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
 #	ifdef MR_ENGINE
