@@ -101,7 +101,6 @@ private:
 	std::shared_ptr<Bundle> subBundle;
 	static const iterator END;
 };
-using BundlePtr = std::shared_ptr<Bundle>;
 
 }  // namespace Parcel
 }  // namespace HoverRace

@@ -37,7 +37,8 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace Parcel {
 
-TrackBundle::TrackBundle(const OS::path_t &dir, BundlePtr subBundle) :
+TrackBundle::TrackBundle(const OS::path_t &dir,
+	std::shared_ptr<Bundle> subBundle) :
 	SUPER(dir, subBundle)
 {
 }

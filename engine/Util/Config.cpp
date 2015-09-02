@@ -243,7 +243,8 @@ Config::Config(int verMajor, int verMinor, int verPatch, int verBuild,
 
 	userTrackPath = this->dataPath / tracksDirName;
 
-	Parcel::BundlePtr mediaTrackBundle(new Parcel::Bundle(this->mediaPath / tracksDirName));
+	auto mediaTrackBundle =
+		std::make_shared<Parcel::Bundle>(this->mediaPath / tracksDirName);
 #	ifdef _WIN32
 		trackBundle = std::make_shared<Parcel::TrackBundle>(userTrackPath,
 			std::make_shared<Parcel::Bundle>(Str::UP("track_source"),  // Historical.
