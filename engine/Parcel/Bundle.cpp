@@ -38,8 +38,8 @@ const Bundle::iterator Bundle::END;
  * @param dir The directory (does not need to exist).
  * @param subBundle Optional fall-back bundle.
  */
-Bundle::Bundle(const OS::path_t &dir, BundlePtr subBundle) :
-	dir(dir), subBundle(subBundle)
+Bundle::Bundle(const OS::path_t &dir, std::shared_ptr<Bundle> subBundle) :
+	dir(dir), subBundle(std::move(subBundle))
 {
 }
 
@@ -47,8 +47,9 @@ Bundle::Bundle(const OS::path_t &dir, BundlePtr subBundle) :
  * Open an existing parcel.
  * All parcels, including sub-bundles, will be searched.
  * @param name The name of the parcel.
- * @param writing @c true if the parcel will be written to, @c false if read-only.
- * @return The parcel (may be @c NULL if parcel does not exist).
+ * @param writing @c true if the parcel will be written to,
+ *                @c false if read-only.
+ * @return The parcel (may be @c nullptr if parcel does not exist).
  */
 std::shared_ptr<RecordFile> Bundle::OpenParcel(
 	const std::string &name, bool writing) const
@@ -108,7 +109,7 @@ Bundle::Iterator::Iterator(const Bundle *bundle) :
 	bundle(bundle), iter(END)
 {
 	FindNextValidBundle();
-	if (this->bundle != NULL)
+	if (this->bundle)
 		iter = OS::dirIter_t(this->bundle->dir);
 }
 
@@ -119,7 +120,7 @@ Bundle::Iterator &Bundle::Iterator::operator++()
 		if (iter == END) {
 			bundle = bundle->subBundle.get();
 			FindNextValidBundle();
-			iter = (bundle == NULL) ? END : OS::dirIter_t(bundle->dir);
+			iter = (!bundle) ? END : OS::dirIter_t(bundle->dir);
 		}
 	}
 	return *this;
@@ -134,11 +135,14 @@ Bundle::Iterator Bundle::Iterator::operator++(int)
 
 void Bundle::Iterator::FindNextValidBundle()
 {
-	if (bundle == NULL) return;
+	if (!bundle) return;
 
-	while (!(fs::exists(bundle->dir) && fs::is_directory(bundle->dir) && !fs::is_empty(bundle->dir))) {
+	while (!(fs::exists(bundle->dir) &&
+		fs::is_directory(bundle->dir) &&
+		!fs::is_empty(bundle->dir)))
+	{
 		bundle = bundle->subBundle.get();
-		if (bundle == NULL) return;
+		if (!bundle) return;
 	}
 }
 

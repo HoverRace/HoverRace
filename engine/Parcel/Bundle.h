@@ -36,8 +36,6 @@
 namespace HoverRace {
 namespace Parcel {
 
-class Bundle;
-typedef std::shared_ptr<Bundle> BundlePtr;
 class RecordFile;
 
 /**
@@ -46,59 +44,62 @@ class RecordFile;
  */
 class MR_DllDeclare Bundle
 {
+public:
+	Bundle(const Util::OS::path_t &dir,
+		std::shared_ptr<Bundle> subBundle = std::shared_ptr<Bundle>());
+	virtual ~Bundle() { }
+
+	virtual std::shared_ptr<RecordFile> OpenParcel(
+		const std::string &name, bool writing = false) const;
+
+private:
+	class MR_DllDeclare Iterator :
+		public std::iterator<std::input_iterator_tag, Util::OS::dirEnt_t>
+	{
 	public:
-		Bundle(const Util::OS::path_t &dir, BundlePtr subBundle=BundlePtr());
-		virtual ~Bundle() { }
+		Iterator();
+		Iterator(const Bundle *bundle);
 
-		virtual std::shared_ptr<RecordFile> OpenParcel(const std::string &name, bool writing=false) const;
-
-	private:
-		class MR_DllDeclare Iterator :
-			public std::iterator<std::input_iterator_tag, Util::OS::dirEnt_t>
+	public:
+		bool operator==(const Iterator &other) const
 		{
-			public:
-				Iterator();
-				Iterator(const Bundle *bundle);
+			return (bundle == other.bundle) && (iter == other.iter);
+		}
+		bool operator!=(const Iterator &other) const
+		{
+			return (bundle != other.bundle) || (iter != other.iter);
+		}
 
-			public:
-				bool operator==(const Iterator &other) const
-				{
-					return (bundle == other.bundle) && (iter == other.iter);
-				}
-				bool operator!=(const Iterator &other) const
-				{
-					return (bundle != other.bundle) || (iter != other.iter);
-				}
+		Util::OS::dirEnt_t &operator*() const { return *iter; }
+		Util::OS::dirEnt_t *operator->() const { return &*iter; }
 
-				Util::OS::dirEnt_t &operator*() const { return *iter; }
-				Util::OS::dirEnt_t *operator->() const { return &*iter; }
-
-				Iterator &operator++();
-				Iterator operator++(int);
-
-			private:
-				void FindNextValidBundle();
-
-			private:
-				const Bundle *bundle;
-				Util::OS::dirIter_t iter;
-				static const Util::OS::dirIter_t END;
-		};
-	public:
-		typedef Iterator iterator;
-		typedef Iterator const_iterator;
-		typedef Util::OS::dirEnt_t value_type;
-
-		iterator begin();
-		iterator end();
-		const_iterator begin() const;
-		const_iterator end() const;
+		Iterator &operator++();
+		Iterator operator++(int);
 
 	private:
-		Util::OS::path_t dir;
-		BundlePtr subBundle;
-		static const iterator END;
+		void FindNextValidBundle();
+
+	private:
+		const Bundle *bundle;
+		Util::OS::dirIter_t iter;
+		static const Util::OS::dirIter_t END;
+	};
+public:
+	using iterator = Iterator;
+	using const_iterator = Iterator;
+	using value_type = Util::OS::dirEnt_t;
+
+	iterator begin();
+	iterator end();
+	const_iterator begin() const;
+	const_iterator end() const;
+
+private:
+	Util::OS::path_t dir;
+	std::shared_ptr<Bundle> subBundle;
+	static const iterator END;
 };
+using BundlePtr = std::shared_ptr<Bundle>;
 
 }  // namespace Parcel
 }  // namespace HoverRace
