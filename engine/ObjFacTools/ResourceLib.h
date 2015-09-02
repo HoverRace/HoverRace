@@ -49,7 +49,7 @@ namespace HoverRace {
 namespace ObjFacTools {
 
 /**
- * Loadable resource manager.
+ * Legacy resource manager for ObjFac1.dat resources.
  * @author Michael Imamura
  */
 class MR_DllDeclare ResourceLib
