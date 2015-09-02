@@ -44,6 +44,7 @@
 namespace HoverRace {
 	namespace Parcel {
 		class Bundle;
+		class ResBundle;
 		class TrackBundle;
 	}
 	namespace Util {
@@ -117,6 +118,8 @@ public:
 	const OS::path_t &GetUserTrackPath() const;
 	OS::path_t GetUserTrackPath(const std::string &name) const;
 
+	std::shared_ptr<Parcel::ResBundle> ShareResBundle() const { return resBundle; }
+
 	/**
 	 * Retrieve the track bundle.
 	 * @return The track bundle (never @c nullptr).
@@ -162,6 +165,7 @@ private:
 	OS::path_t mediaPath;
 	OS::path_t sysCfgPath;
 	OS::path_t userTrackPath;
+	std::shared_ptr<Parcel::ResBundle> resBundle;
 	std::shared_ptr<Parcel::TrackBundle> trackBundle;
 	int verBuild;
 	bool prerelease;

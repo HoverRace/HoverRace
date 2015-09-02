@@ -52,6 +52,7 @@
 
 #include "../Control/Controller.h"
 #include "../Parcel/Bundle.h"
+#include "../Parcel/ResBundle.h"
 #include "../Parcel/TrackBundle.h"
 #include "Log.h"
 #include "Str.h"
@@ -238,6 +239,10 @@ Config::Config(int verMajor, int verMinor, int verPatch, int verBuild,
 
 	// Set initial defaults.
 	ResetToDefaults();
+
+	OS::path_t resDirName = Str::UP("res");
+	resBundle =
+		std::make_shared<Parcel::ResBundle>(this->mediaPath / resDirName);
 
 	OS::path_t tracksDirName = Str::UP("tracks");
 
