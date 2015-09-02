@@ -76,26 +76,6 @@ std::shared_ptr<RecordFile> Bundle::OpenParcel(
 	}
 }
 
-Bundle::iterator Bundle::begin()
-{
-	return iterator(this);
-}
-
-Bundle::iterator Bundle::end()
-{
-	return END;
-}
-
-Bundle::const_iterator Bundle::begin() const
-{
-	return iterator(this);
-}
-
-Bundle::const_iterator Bundle::end() const
-{
-	return END;
-}
-
 // class Iterator
 
 const OS::dirIter_t Bundle::Iterator::END;

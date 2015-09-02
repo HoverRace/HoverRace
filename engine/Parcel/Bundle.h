@@ -89,10 +89,12 @@ public:
 	using const_iterator = Iterator;
 	using value_type = Util::OS::dirEnt_t;
 
-	iterator begin();
-	iterator end();
-	const_iterator begin() const;
-	const_iterator end() const;
+	iterator begin() { return iterator(this); }
+	iterator end() { return END; }
+	const_iterator begin() const { return iterator(this); }
+	const_iterator end() const { return END; }
+	const_iterator cbegin() const { return iterator(this); }
+	const_iterator cend() const { return END; }
 
 private:
 	Util::OS::path_t dir;
