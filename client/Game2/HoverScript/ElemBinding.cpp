@@ -20,6 +20,12 @@
 // and limitations under the License.
 
 #include "../../../engine/Model/MazeElement.h"
+#include "../../../engine/ObjFac1/BallElement.h"
+#include "../../../engine/ObjFac1/BumperGate.h"
+#include "../../../engine/ObjFac1/FuelSource.h"
+#include "../../../engine/ObjFac1/Mine.h"
+#include "../../../engine/ObjFac1/Missile.h"
+#include "../../../engine/ObjFac1/PowerUp.h"
 #include "../../../engine/Script/Core.h"
 
 #include "ElemBinding.h"
@@ -32,11 +38,18 @@ void ElemBinding::Register(Script::Core &scripting)
 {
 	using namespace luabind;
 	using namespace HoverRace::Model;
+	using namespace HoverRace::ObjFac1;
 	lua_State *L = scripting.GetState();
 
 	module(L) [
 		class_<FreeElement, std::shared_ptr<FreeElement>>("Actor")
-			.def(constructor<>())
+			.def(constructor<>()),
+		class_<BallElement, FreeElement, std::shared_ptr<FreeElement>>("Ball"),
+		class_<BumperGate, FreeElement, std::shared_ptr<FreeElement>>("BumperGate"),
+		class_<FuelSource, FreeElement, std::shared_ptr<FreeElement>>("FuelSource"),
+		class_<Mine, FreeElement, std::shared_ptr<FreeElement>>("Mine"),
+		class_<Missile, FreeElement, std::shared_ptr<FreeElement>>("Missile"),
+		class_<PowerUp, FreeElement, std::shared_ptr<FreeElement>>("PowerUp")
 	];
 }
 
