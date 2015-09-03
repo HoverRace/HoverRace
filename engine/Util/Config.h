@@ -118,6 +118,7 @@ public:
 	const OS::path_t &GetUserTrackPath() const;
 	OS::path_t GetUserTrackPath(const std::string &name) const;
 
+	Parcel::ResBundle &GetResBundle() const { return *resBundle; }
 	std::shared_ptr<Parcel::ResBundle> ShareResBundle() const { return resBundle; }
 
 	/**
