@@ -20,7 +20,9 @@
 // and limitations under the License.
 //
 
+#include "../ObjFacTools/ResourceLib.h"
 #include "../ObjFacTools/SpriteHandle.h"
+#include "../Parcel/ResBundle.h"
 #include "../Util/Config.h"
 #include "BallElement.h"
 #include "BumperGate.h"
@@ -45,8 +47,7 @@ using HoverRace::ObjFacTools::ResourceLib;
 namespace HoverRace {
 namespace ObjFac1 {
 
-ObjFac1::ObjFac1() :
-	resourceLib(new ResourceLib(Config::GetInstance()->GetMediaPath("ObjFac1.dat")))
+ObjFac1::ObjFac1()
 {
 }
 
@@ -54,11 +55,19 @@ ObjFac1::~ObjFac1()
 {
 }
 
+ObjFacTools::ResourceLib &ObjFac1::GetResourceLib() const
+{
+	return Config::GetInstance()->GetResBundle().GetResourceLib();
+}
+
 std::shared_ptr<ObjectFromFactory> ObjFac1::GetObject(int pClassId)
 {
 	if (pClassId < 1 || pClassId > 65535) {
 		return std::shared_ptr<ObjectFromFactory>();
 	}
+
+	auto &rlib = Config::GetInstance()->GetResBundle().GetResourceLib();
+	auto resourceLib = &rlib;
 
 	ObjectFromFactoryId lId = { 1, static_cast<MR_UInt16>(pClassId) };
 
