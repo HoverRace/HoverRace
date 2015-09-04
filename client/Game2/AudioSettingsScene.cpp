@@ -22,7 +22,8 @@
 #include "../../engine/Display/Slider.h"
 #include "../../engine/ObjFac1/ObjFac1Res.h"
 #include "../../engine/ObjFacTools/ResourceLib.h"
-#include "../../engine/Util/DllObjectFactory.h"
+#include "../../engine/Parcel/ResBundle.h"
+#include "../../engine/Util/Config.h"
 #include "../../engine/Util/Log.h"
 #include "../../engine/VideoServices/SoundServer.h"
 
@@ -70,7 +71,8 @@ void AudioSettingsScene::ResetToDefaults()
  */
 VideoServices::ShortSound *AudioSettingsScene::LoadSound(int id)
 {
-	auto res = DllObjectFactory::GetResourceLib().GetShortSound(id);
+	auto cfg = Config::GetInstance();
+	auto res = cfg->GetResBundle().GetResourceLib().GetShortSound(id);
 	if (!res) {
 		HR_LOG(warning) << "Unable to load sound ID: " << id;
 		return nullptr;
