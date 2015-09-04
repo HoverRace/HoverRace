@@ -80,8 +80,6 @@ MR_DllDeclare void Clean();
 MR_DllDeclare std::shared_ptr<ObjectFromFactory> CreateObject(
 	const ObjectFromFactoryId &pId);
 
-MR_DllDeclare ObjFacTools::ResourceLib &GetResourceLib(MR_UInt16 dllId = 1);
-
 }  // namespace DllObjectFactory
 
 /// Base class for object created with a Dll Factory

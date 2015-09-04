@@ -36,11 +36,6 @@ namespace ObjFac1 {
 class ObjFac1
 {
 public:
-	ObjFac1();
-	~ObjFac1();
-
-	ObjFacTools::ResourceLib &GetResourceLib() const;
-
 	std::shared_ptr<Util::ObjectFromFactory> GetObject(int pClassId);
 };
 

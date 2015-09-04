@@ -72,17 +72,6 @@ std::shared_ptr<ObjectFromFactory> DllObjectFactory::CreateObject(
 	return GetDll().GetObject(pId.mClassId);
 }
 
-/**
- * Gets the resource library for an object factory.
- * @param dllId Identifier for the DLL.
- * @return The resource library.
- */
-ObjFacTools::ResourceLib &DllObjectFactory::GetResourceLib(MR_UInt16 dllId)
-{
-	HR_UNUSED(dllId);
-	return GetDll().GetResourceLib();
-}
-
 void ObjectFromFactory::ThrowUnexpected(const ObjectFromFactoryId &oid)
 {
 	throw Parcel::ObjStreamExn(boost::str(boost::format(

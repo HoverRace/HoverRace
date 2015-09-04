@@ -47,19 +47,6 @@ using HoverRace::ObjFacTools::ResourceLib;
 namespace HoverRace {
 namespace ObjFac1 {
 
-ObjFac1::ObjFac1()
-{
-}
-
-ObjFac1::~ObjFac1()
-{
-}
-
-ObjFacTools::ResourceLib &ObjFac1::GetResourceLib() const
-{
-	return Config::GetInstance()->GetResBundle().GetResourceLib();
-}
-
 std::shared_ptr<ObjectFromFactory> ObjFac1::GetObject(int pClassId)
 {
 	if (pClassId < 1 || pClassId > 65535) {
