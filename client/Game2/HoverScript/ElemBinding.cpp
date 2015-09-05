@@ -48,7 +48,8 @@ void ElemBinding::Register(Script::Core &scripting)
 		class_<BumperGate, FreeElement, std::shared_ptr<FreeElement>>("BumperGate"),
 		class_<FuelSource, FreeElement, std::shared_ptr<FreeElement>>("FuelSource"),
 		class_<Mine, FreeElement, std::shared_ptr<FreeElement>>("Mine"),
-		class_<Missile, FreeElement, std::shared_ptr<FreeElement>>("Missile"),
+		class_<Missile, FreeElement, std::shared_ptr<FreeElement>>("Missile")
+			.def(constructor<>()),
 		class_<PowerUp, FreeElement, std::shared_ptr<FreeElement>>("PowerUp")
 	];
 }
