@@ -20,9 +20,11 @@
 // and limitations under the License.
 //
 
-#include "TestElement.h"
 #include "../Model/ObstacleCollisionReport.h"
 #include "../Model/Track.h"
+#include "../ObjFacTools/ResourceLib.h"
+
+#include "TestElement.h"
 
 using HoverRace::ObjFacTools::ResourceLib;
 

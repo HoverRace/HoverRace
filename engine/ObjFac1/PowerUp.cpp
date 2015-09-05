@@ -20,10 +20,12 @@
 // and limitations under the License.
 //
 
-#include "PowerUp.h"
-#include "ObjFac1Res.h"
 #include "../Model/ConcreteShape.h"
 #include "../Model/ObstacleCollisionReport.h"
+#include "../ObjFacTools/ResourceLib.h"
+#include "ObjFac1Res.h"
+
+#include "PowerUp.h"
 
 using HoverRace::ObjFacTools::ResourceLib;
 

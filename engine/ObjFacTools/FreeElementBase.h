@@ -29,7 +29,6 @@
 #pragma once
 
 #include "../Model/MazeElement.h"
-#include "ResourceLib.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
 #	ifdef MR_ENGINE
@@ -43,6 +42,8 @@
 
 namespace HoverRace {
 namespace ObjFacTools {
+
+class ResActor;
 
 class MR_DllDeclare FreeElementBase : public Model::FreeElement
 {

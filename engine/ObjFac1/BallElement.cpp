@@ -20,8 +20,10 @@
 // and limitations under the License.
 //
 
-#include "BallElement.h"
+#include "../ObjFacTools/ResourceLib.h"
 #include "ObjFac1Res.h"
+
+#include "BallElement.h"
 
 using HoverRace::ObjFacTools::ResourceLib;
 

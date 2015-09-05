@@ -20,11 +20,13 @@
 // and limitations under the License.
 //
 
-#include "Mine.h"
-#include "ObjFac1Res.h"
 #include "../Model/ConcreteShape.h"
 #include "../Model/ObstacleCollisionReport.h"
 #include "../Model/Track.h"
+#include "../ObjFacTools/ResourceLib.h"
+#include "ObjFac1Res.h"
+
+#include "Mine.h"
 
 using HoverRace::ObjFacTools::ResourceLib;
 

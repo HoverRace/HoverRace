@@ -27,6 +27,14 @@
 #include "../Exception.h"
 
 namespace HoverRace {
+	namespace ObjFacTools {
+		class ResActor;
+		class ResBitmap;
+	}
+}
+
+
+namespace HoverRace {
 namespace ObjFac1 {
 
 class HoverRender : public MainCharacter::MainCharacterRenderer

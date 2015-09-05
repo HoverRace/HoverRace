@@ -19,6 +19,8 @@
 // and limitations under the License.
 //
 
+#include "ResActor.h"
+
 #include "FreeElementBase.h"
 
 namespace HoverRace {

@@ -20,9 +20,11 @@
 // and limitations under the License.
 //
 
-#include "HoverRender.h"
-#include "ObjFac1Res.h"
+#include "../ObjFacTools/ResourceLib.h"
 #include "../Util/FuzzyLogic.h"
+#include "ObjFac1Res.h"
+
+#include "HoverRender.h"
 
 using HoverRace::ObjFacTools::ResourceLib;
 using namespace HoverRace::VideoServices;
