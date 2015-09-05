@@ -27,6 +27,14 @@
 #include "../Model/PhysicalCollision.h"
 
 namespace HoverRace {
+	namespace VideoServices {
+		class ShortSound;
+		class ContinuousSound;
+	}
+}
+
+
+namespace HoverRace {
 namespace ObjFac1 {
 
 class Missile :
@@ -36,7 +44,7 @@ class Missile :
 	using SUPER = ObjFacTools::FreeElementBase;
 
 public:
-	Missile(ObjFacTools::ResourceLib &resourceLib);
+	Missile();
 	~Missile() { }
 
 protected:

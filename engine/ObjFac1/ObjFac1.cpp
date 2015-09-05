@@ -150,7 +150,7 @@ std::shared_ptr<ObjectFromFactory> ObjFac1::GetObject(int pClassId)
 			return std::make_shared<HoverRender>(lId, *resourceLib);
 
 		case 150:
-			return std::make_shared<Missile>(*resourceLib);
+			return std::make_shared<Missile>();
 
 		case 151:
 			return std::make_shared<Mine>(*resourceLib);

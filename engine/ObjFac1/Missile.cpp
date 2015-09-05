@@ -20,13 +20,18 @@
 // and limitations under the License.
 //
 
-#include "Missile.h"
-#include "ObjFac1Res.h"
 #include "../Model/ConcreteShape.h"
 #include "../Model/ObstacleCollisionReport.h"
 #include "../Model/Track.h"
+#include "../ObjFacTools/ResourceLib.h"
+#include "../Parcel/ResBundle.h"
+#include "../Util/Config.h"
+#include "ObjFac1Res.h"
+
+#include "Missile.h"
 
 using HoverRace::ObjFacTools::ResourceLib;
+using namespace HoverRace::Util;
 using namespace HoverRace::VideoServices;
 
 namespace HoverRace {
@@ -71,17 +76,18 @@ MR_Int32 Missile::RayLen() const
 	return cMissileRay;
 }
 
-Missile::Missile(ResourceLib &resourceLib) :
+Missile::Missile() :
 	SUPER({ 1, 150 }),
 	mHoverId(-1), mLived(0), mXSpeed(0), mYSpeed(0),
-	mBounceSoundEvent(false),
-	mBounceSound(resourceLib.GetShortSound(MR_SND_MISSILE_BOUNCE)->GetSound()),
-	mMotorSound(resourceLib.
-		GetContinuousSound(MR_SND_MISSILE_MOTOR)->GetSound())
+	mBounceSoundEvent(false)
 {
+	auto &resLib = Config::GetInstance()->GetResBundle().GetResourceLib();
+	mBounceSound = resLib.GetShortSound(MR_SND_MISSILE_BOUNCE)->GetSound();
+	mMotorSound = resLib.GetContinuousSound(MR_SND_MISSILE_MOTOR)->GetSound();
+
 	mEffectList.push_back(&mCollisionEffect);
 	mEffectList.push_back(&mLostOfControlEffect);
-	mActor = resourceLib.GetActor(MR_MISSILE);
+	mActor = resLib.GetActor(MR_MISSILE);
 
 	mLostOfControlEffect.mType = Model::LostOfControl::eMissile;
 	mLostOfControlEffect.mElementId = -1;
