@@ -35,7 +35,7 @@ class Mine :
 	using SUPER = ObjFacTools::FreeElementBase;
 
 public:
-	Mine(ObjFacTools::ResourceLib &resourceLib);
+	Mine();
 	~Mine();
 
 protected:

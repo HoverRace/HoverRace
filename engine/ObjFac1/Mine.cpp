@@ -24,10 +24,13 @@
 #include "../Model/ObstacleCollisionReport.h"
 #include "../Model/Track.h"
 #include "../ObjFacTools/ResourceLib.h"
+#include "../Parcel/ResBundle.h"
+#include "../Util/Config.h"
 #include "ObjFac1Res.h"
 
 #include "Mine.h"
 
+using namespace HoverRace::Util;
 using HoverRace::ObjFacTools::ResourceLib;
 
 namespace HoverRace {
@@ -65,12 +68,14 @@ MR_Int32 Mine::RayLen() const
 	return cMineRay;
 }
 
-Mine::Mine(ResourceLib &resourceLib) :
+Mine::Mine() :
 	SUPER({ 1, 151 }),
 	mOnGround(false)
 {
+	auto &resLib = Config::GetInstance()->GetResBundle().GetResourceLib();
+
 	mEffectList.push_back(&mEffect);
-	mActor = resourceLib.GetActor(MR_MINE);
+	mActor = resLib.GetActor(MR_MINE);
 
 	mOrientation = 0;
 

@@ -23,10 +23,13 @@
 #include "../Model/ConcreteShape.h"
 #include "../Model/ObstacleCollisionReport.h"
 #include "../ObjFacTools/ResourceLib.h"
+#include "../Parcel/ResBundle.h"
+#include "../Util/Config.h"
 #include "ObjFac1Res.h"
 
 #include "PowerUp.h"
 
+using namespace HoverRace::Util;
 using HoverRace::ObjFacTools::ResourceLib;
 
 namespace HoverRace {
@@ -40,11 +43,13 @@ const MR_Int32 cPowerUpHalfHeight = 550;
 }  // namespace
 
 
-PowerUp::PowerUp(ResourceLib &resourceLib) :
+PowerUp::PowerUp() :
 	SUPER({ 1, 152 })
 {
+	auto &resLib = Config::GetInstance()->GetResBundle().GetResourceLib();
+
 	mEffectList.push_back(&mPowerUpEffect);
-	mActor = resourceLib.GetActor(MR_PWRUP);
+	mActor = resLib.GetActor(MR_PWRUP);
 
 	mOrientation = 0;
 	mPowerUpEffect.mElementPermId = -1;

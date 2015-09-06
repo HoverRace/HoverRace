@@ -35,7 +35,7 @@ class PowerUp :
 	using SUPER = ObjFacTools::FreeElementBase;
 
 public:
-	PowerUp(ObjFacTools::ResourceLib &resourceLib);
+	PowerUp();
 	~PowerUp() { }
 
 protected:

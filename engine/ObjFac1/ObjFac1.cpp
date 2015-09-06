@@ -153,10 +153,10 @@ std::shared_ptr<ObjectFromFactory> ObjFac1::GetObject(int pClassId)
 			return std::make_shared<Missile>();
 
 		case 151:
-			return std::make_shared<Mine>(*resourceLib);
+			return std::make_shared<Mine>();
 
 		case 152:
-			return std::make_shared<PowerUp>(*resourceLib);
+			return std::make_shared<PowerUp>();
 
 		case 170:
 			return std::make_shared<BumperGate>(*resourceLib);
