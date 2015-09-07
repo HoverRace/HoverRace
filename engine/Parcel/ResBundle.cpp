@@ -21,6 +21,7 @@
 
 #include "../ObjFacTools/ResourceLib.h"
 #include "../Util/Config.h"
+#include "../Util/Str.h"
 
 #include "ResBundle.h"
 
@@ -32,13 +33,32 @@ namespace Parcel {
 ResBundle::ResBundle(const Util::OS::path_t &dir,
 	std::shared_ptr<ResBundle> subBundle) :
 	SUPER(dir, subBundle),
-	resourceLib(new ObjFacTools::ResourceLib(
-		Config::GetInstance()->GetMediaPath("ObjFac1.dat")))
+	resourceLib()
 {
 }
 
 ResBundle::~ResBundle()
 {
+}
+
+/**
+ * Unload all loaded resources.
+ * This should be performed on exit (before the subsystems shut down), and
+ * whenever it would be beneficial to free memory to load new resources.
+ */
+void ResBundle::FreeResources()
+{
+	resourceLib.reset();
+}
+
+ObjFacTools::ResourceLib &ResBundle::GetResourceLib() const
+{
+	if (!resourceLib) {
+		resourceLib.reset(
+			new ObjFacTools::ResourceLib(
+				Config::GetInstance()->GetMediaPath("ObjFac1.dat")));
+	}
+	return *resourceLib;
 }
 
 }  // namespace Parcel

@@ -56,10 +56,13 @@ public:
 	virtual ~ResBundle();
 
 public:
-	ObjFacTools::ResourceLib &GetResourceLib() const { return *resourceLib; }
+	void FreeResources();
+
+public:
+	ObjFacTools::ResourceLib &GetResourceLib() const;
 
 private:
-	std::unique_ptr<ObjFacTools::ResourceLib> resourceLib;
+	mutable std::unique_ptr<ObjFacTools::ResourceLib> resourceLib;
 };
 
 }  // namespace Parcel

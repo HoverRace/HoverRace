@@ -31,6 +31,7 @@
 #include "../../engine/Display/SDL/SdlDisplay.h"
 #include "../../engine/MainCharacter/MainCharacter.h"
 #include "../../engine/Model/Track.h"
+#include "../../engine/Parcel/ResBundle.h"
 #include "../../engine/Parcel/TrackBundle.h"
 #include "../../engine/Player/DemoProfile.h"
 #include "../../engine/Player/LocalPlayer.h"
@@ -256,6 +257,7 @@ ClientApp::~ClientApp()
 	delete controller;
 
 	// Engine shutdown.
+	Config::GetInstance()->GetResBundle().FreeResources();
 	DllObjectFactory::Clean();
 	SoundServer::Close();
 
