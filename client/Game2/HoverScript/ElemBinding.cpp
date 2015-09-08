@@ -30,20 +30,44 @@
 
 #include "ElemBinding.h"
 
+using namespace HoverRace::Model;
+using namespace HoverRace::Util;
+
 namespace HoverRace {
 namespace Client {
 namespace HoverScript {
 
+namespace Actor {
+
+void LGetPos(const FreeElement &actor, lua_State *L)
+{
+	auto &pos = actor.mPosition;
+	lua_pushnumber(L, pos.mX);
+	lua_pushnumber(L, pos.mY);
+	lua_pushnumber(L, pos.mZ);
+}
+
+void LSetPos(FreeElement &actor, MR_Int32 x, MR_Int32 y, MR_Int32 z)
+{
+	auto &pos = actor.mPosition;
+	pos.mX = x;
+	pos.mY = y;
+	pos.mZ = z;
+}
+
+}  // namespace Actor
+
 void ElemBinding::Register(Script::Core &scripting)
 {
 	using namespace luabind;
-	using namespace HoverRace::Model;
 	using namespace HoverRace::ObjFac1;
 	lua_State *L = scripting.GetState();
 
 	module(L) [
 		class_<FreeElement, std::shared_ptr<FreeElement>>("Actor")
-			.def(constructor<>()),
+			.def(constructor<>())
+			.def("get_pos", &Actor::LGetPos)
+			.def("set_pos", &Actor::LSetPos),
 		class_<BallElement, FreeElement, std::shared_ptr<FreeElement>>("Ball"),
 		class_<BumperGate, FreeElement, std::shared_ptr<FreeElement>>("BumperGate"),
 		class_<FuelSource, FreeElement, std::shared_ptr<FreeElement>>("FuelSource"),

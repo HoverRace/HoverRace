@@ -1,0 +1,14 @@
+get_pos:
+  type: method
+  sig:
+    - x, y, z = actor:get_pos()
+  brief: >
+    Retrieve the current position of the actor, all at once.
+
+set_pos:
+  type: method
+  sig:
+    - actor:set_pos(x, y, z)
+  brief: >
+    Set the position of the actor in the track.
+
