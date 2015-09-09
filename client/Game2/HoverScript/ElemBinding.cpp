@@ -27,6 +27,7 @@
 #include "../../../engine/ObjFac1/Missile.h"
 #include "../../../engine/ObjFac1/PowerUp.h"
 #include "../../../engine/Script/Core.h"
+#include "../../../engine/Script/Wrapper.h"
 
 #include "ElemBinding.h"
 
@@ -38,6 +39,15 @@ namespace Client {
 namespace HoverScript {
 
 namespace Actor {
+
+class Wrapper : public FreeElement, public Script::Wrapper
+{
+	using SUPER = FreeElement;
+
+public:
+	Wrapper() : SUPER({0, 0}) { }
+	virtual ~Wrapper() { }
+};
 
 void LGetPos(const FreeElement &actor, lua_State *L)
 {
@@ -64,7 +74,7 @@ void ElemBinding::Register(Script::Core &scripting)
 	lua_State *L = scripting.GetState();
 
 	module(L) [
-		class_<FreeElement, std::shared_ptr<FreeElement>>("Actor")
+		class_<FreeElement, Actor::Wrapper, std::shared_ptr<FreeElement>>("Actor")
 			.def(constructor<>())
 			.def("get_pos", &Actor::LGetPos)
 			.def("set_pos", &Actor::LSetPos),
