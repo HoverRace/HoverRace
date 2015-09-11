@@ -332,7 +332,7 @@ void GamePeer::LStartPractice_RO(const std::string &track,
 		return;
 	}
 	auto rules = std::make_shared<Rules>(rulebook);
-	rules->SetTrackEntry(Config::GetInstance()->GetTrackBundle()->OpenTrackEntry(
+	rules->SetTrackEntry(Config::GetInstance()->GetTrackBundle().OpenTrackEntry(
 		hasExtension ? track : (track + Config::TRACK_EXT)));
 	rules->SetLaps(laps);
 

@@ -546,7 +546,7 @@ void GameApp::DisplayPrefs()
 
 	SetVideoMode(0, 0);
 	PrefsDialog(This).ShowModal(mInstance, mMainWindow);
-	
+
 	if (ftest->ShouldActivateTest(mMainWindow)) {
 		DeleteMovieWnd();
 
@@ -754,7 +754,7 @@ bool GameApp::CreateMainMenu()
 	if (!AppendMenuW(fileMenu, MF_SEPARATOR, NULL, NULL)) return false;
 	if (!AppendMenuW(fileMenu, MF_STRING, ID_GAME_EXIT,
 		Str::UW(MENUFMT("Menu|File", "E&xit", false, "Alt+F4").c_str()))) return false;
-	
+
 	HMENU viewMenu = CreatePopupMenu();
 	if (viewMenu == NULL) return false;
 	if (!AppendMenuW(viewMenu, MF_STRING, ID_VIEW_3DACTION,
@@ -900,12 +900,12 @@ BOOL GameApp::InitGame()
 	if(lReturnValue) {
 		if(!mVideoBuffer->SetVideoMode()) {		  // try to set the video mode
 			BOOL lSwitchTo256 = FALSE;
-			if(MessageBoxW(mMainWindow, 
+			if(MessageBoxW(mMainWindow,
 				Str::UW(_("You can play HoverRace in a Window or Fullscreen;\n"
 				"to play in a Window, HoverRace will have to switch to 256 color mode.\n"
 				"It is recommended you use Fullscreen mode instead.\n\n"
-				"Do you want to play in Window mode and switch to 256 color?")), 
-				PACKAGE_NAME_L, 
+				"Do you want to play in Window mode and switch to 256 color?")),
+				PACKAGE_NAME_L,
 				MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2) == IDYES) {
 
 				if(mVideoBuffer->TryToSetColorMode(8)) {
@@ -914,7 +914,7 @@ BOOL GameApp::InitGame()
 				}
 				if(!lSwitchTo256) {				  // mode switch failed, tell the user
 					MessageBoxW(mMainWindow,
-						Str::UW(_("HoverRace was unable to switch the video mode. You will need to play in full screen.")), 
+						Str::UW(_("HoverRace was unable to switch the video mode. You will need to play in full screen.")),
 						PACKAGE_NAME_L,
 						MB_OK);
 				}
@@ -1217,7 +1217,7 @@ void GameApp::NewLocalSession(RulebookPtr rules)
 		if(lSuccess) {
 			try {
 				Model::TrackPtr track = Config::GetInstance()->
-					GetTrackBundle()->OpenTrack(rules->GetTrackName());
+					GetTrackBundle().OpenTrack(rules->GetTrackName());
 				if (track.get() == NULL) throw Parcel::ObjStreamExn("Track does not exist.");
 				lSuccess = (lCurrentSession->LoadNew(
 					rules->GetTrackName().c_str(), track->GetRecordFile(),
@@ -1228,7 +1228,7 @@ void GameApp::NewLocalSession(RulebookPtr rules)
 				lSuccess = false;
 			}
 		}
-		
+
 		if(lSuccess)
 			lCurrentSession->SetSimulationTime(-6000);
 
@@ -1316,7 +1316,7 @@ void GameApp::NewSplitSession(int pSplitPlayers)
 		if(lSuccess) {
 			try {
 				Model::TrackPtr track = Config::GetInstance()->
-					GetTrackBundle()->OpenTrack(rules->GetTrackName());
+					GetTrackBundle().OpenTrack(rules->GetTrackName());
 				if (track.get() == NULL) throw Parcel::ObjStreamExn("Track does not exist.");
 				lSuccess = (lCurrentSession->LoadNew(
 					lCurrentTrack.c_str(), track->GetRecordFile(),
@@ -1428,7 +1428,7 @@ void GameApp::NewNetworkSession(BOOL pServer)
 			if(lCurrentTrack[lCounter] == ' ') {
 				lSpaceCount++;
 
-				if(lSpaceCount == 1) { 
+				if(lSpaceCount == 1) {
 					/* extract crafts allowed */
 					lGameOpts |= ((lCurrentTrack.c_str())[lCounter + 1] == 'B') ? OPT_ALLOW_BASIC : 0;
 					lGameOpts |= ((lCurrentTrack.c_str())[lCounter + 2] == '2') ? OPT_ALLOW_BI : 0;
@@ -1463,7 +1463,7 @@ void GameApp::NewNetworkSession(BOOL pServer)
 
 		try {
 			track = Config::GetInstance()->
-				GetTrackBundle()->OpenTrack(lCurrentTrack.c_str());
+				GetTrackBundle().OpenTrack(lCurrentTrack.c_str());
 		}
 		catch (Parcel::ObjStreamExn&) {
 			// Ignore -- force a re-download.
@@ -1477,7 +1477,7 @@ void GameApp::NewNetworkSession(BOOL pServer)
 				lSuccess = TrackDownloadDialog(lCurrentTrack).ShowModal(mInstance, mMainWindow);
 				if (lSuccess) {
 					Model::TrackPtr track = Config::GetInstance()->
-						GetTrackBundle()->OpenTrack(lCurrentTrack.c_str());
+						GetTrackBundle().OpenTrack(lCurrentTrack.c_str());
 					if (track.get() == NULL) {
 						throw Parcel::ObjStreamExn("Track failed to download.");
 					}
@@ -1499,7 +1499,7 @@ void GameApp::NewNetworkSession(BOOL pServer)
 	if(lSuccess) {
 		if(pServer) {
 			/*CRUFT
-			lNameBuffer.Format("%s %d %s; options %c%c%c, %c%c%c%c", lCurrentTrack.c_str(), lNbLap, lNbLap > 1 ? "laps" : "lap", 
+			lNameBuffer.Format("%s %d %s; options %c%c%c, %c%c%c%c", lCurrentTrack.c_str(), lNbLap, lNbLap > 1 ? "laps" : "lap",
 				(lGameOpts & OPT_ALLOW_WEAPONS) ? 'W' : '_',
 				(lGameOpts & OPT_ALLOW_MINES)   ? 'M' : '_',
 				(lGameOpts & OPT_ALLOW_CANS)    ? 'C' : '_',
@@ -1808,12 +1808,12 @@ LRESULT CALLBACK GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam
 			}
 			break;
 
-			/* 
+			/*
 			   case WM_STYLECHANGING:
 			   if( This->mVideoBuffer != NULL )
 				   {
 				   STYLESTRUCT* lStyle = (LPSTYLESTRUCT)pLParam;
-	
+
 				   if( pWParam == GWL_EXSTYLE )
 				   {
 				   ASSERT( FALSE );
@@ -1826,7 +1826,7 @@ LRESULT CALLBACK GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam
 				   }
 				   // else
 				   {
-	
+
 				   // lStyle->styleNew &= ~(WS_EX_DLGMODALFRAME|WS_EX_WINDOWEDGE);
 				   return 0;
 				   }
@@ -1966,13 +1966,13 @@ LRESULT CALLBACK GameApp::DispatchFunc(HWND pWindow, UINT pMsgId, WPARAM pWParam
 							if (obs != NULL) obs->PlayersListPageDn();
 						}
 						return 0;
-	
+
 					case ID_VIEW_MOREMESSAGES:
 						for (Observer *obs : This->observers) {
 							if (obs != NULL) obs->MoreMessages();
 						}
 						return 0;
-	
+
 				case ID_HELP_CONTENTS:
 					This->DisplayHelp();
 					break;

@@ -121,11 +121,13 @@ public:
 	Parcel::ResBundle &GetResBundle() const { return *resBundle; }
 	std::shared_ptr<Parcel::ResBundle> ShareResBundle() const { return resBundle; }
 
+	Parcel::TrackBundle &GetTrackBundle() const { return *trackBundle; }
+
 	/**
 	 * Retrieve the track bundle.
 	 * @return The track bundle (never @c nullptr).
 	 */
-	std::shared_ptr<Parcel::TrackBundle> GetTrackBundle() const { return trackBundle; }
+	std::shared_ptr<Parcel::TrackBundle> ShareTrackBundle() const { return trackBundle; }
 
 	OS::path_t GetScriptHelpPath(const std::string &className) const;
 

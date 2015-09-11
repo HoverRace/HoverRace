@@ -50,7 +50,7 @@ std::shared_ptr<Rules> GenRules(Script::Core *scripting)
 	auto rulebook = std::make_shared<Rulebook>(scripting, OS::path_t());
 	rulebook->SetMetadata("Demo", "Demo", "", 1);
 	auto rules = std::make_shared<Rules>(rulebook);
-	rules->SetTrackEntry(Config::GetInstance()->GetTrackBundle()->
+	rules->SetTrackEntry(Config::GetInstance()->GetTrackBundle().
 		OpenTrackEntry(trackName));
 
 	Model::GameOptions gameOpts;

@@ -61,7 +61,7 @@ TrackSelectScene::TrackSelectScene(Display::Display &display,
 
 	SupportCancelAction(_("Back"));
 
-	trackList.Reload(*Config::GetInstance()->GetTrackBundle());
+	trackList.Reload(Config::GetInstance()->GetTrackBundle());
 
 	const auto &s = display.styles;
 
@@ -137,10 +137,10 @@ void TrackSelectScene::OnTrackSelected(std::shared_ptr<Model::TrackEntry> entry)
 {
 	HR_LOG(info) << "Selected track: " << entry->name;
 
-	auto trackBundle = Config::GetInstance()->GetTrackBundle();
+	auto &trackBundle = Config::GetInstance()->GetTrackBundle();
 
 	rules->SetTrackEntry(entry);
-	mapTexture = trackBundle->LoadMap(entry);
+	mapTexture = trackBundle.LoadMap(entry);
 
 	selectedTrack = entry;
 	selTrackPanel->SetVisible(true);

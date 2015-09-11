@@ -1,7 +1,7 @@
 
 // GameScene.cpp
 //
-// Copyright (c) 2010, 2013, 2014 Michael Imamura.
+// Copyright (c) 2010, 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -125,7 +125,7 @@ void GameScene::ScheduleLoad(std::shared_ptr<Loader> loader)
 
 		auto entry = this->rules->GetTrackEntry();
 		if (!entry) throw Parcel::ObjStreamExn("Track does not exist.");
-		track = Config::GetInstance()->GetTrackBundle()->OpenTrack(entry);
+		track = Config::GetInstance()->GetTrackBundle().OpenTrack(entry);
 		if (!track) throw Parcel::ObjStreamExn(
 			"Track does not exist: " + entry->name);
 		if (!session->LoadNew(entry->name.c_str(), scripting,
