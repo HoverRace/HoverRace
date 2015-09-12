@@ -61,7 +61,8 @@ MR_UInt8 *LoadBitmap(const char *lFileName, int &pXRes, int &pYRes, bool pRevers
 	FILE *lFile = fopen(lFileName, "rb");
 
 	if(lFile == NULL) {
-		printf("%s: %s.\n", _("ERROR"), _("Unable to open input file"));
+		std::cerr << _("ERROR") << ": " << _("Unable to open input file") <<
+			std::endl;
 	}
 	else {
 		const char *lExtension = strrchr(lFileName, '.');
@@ -77,7 +78,8 @@ MR_UInt8 *LoadBitmap(const char *lFileName, int &pXRes, int &pYRes, bool pRevers
 				lReturnValue = IMGRead(lFile, pXRes, pYRes);
 			}
 			else {
-				printf("%s: %s.\n", _("ERROR"), _("Invalid file type"));
+				std::cerr << _("ERROR") << ": " <<  _("Invalid file type") <<
+					std::endl;
 			}
 		}
 		catch (...) {
@@ -140,7 +142,7 @@ MR_UInt8 *BMPRead(FILE * pFile, int &pXRes, int &pYRes)
 
 MR_UInt8 *IMGRead(FILE * /*pFile */ , int & /*pXRes */ , int & /*pYRes */ )
 {
-	printf("%s: %s.\n", _("ERROR"), _("Unsupported format"));
+	std::cerr << _("ERROR") << ": " << _("Unsupported format") << std::endl;
 
 	return NULL;
 

@@ -479,9 +479,11 @@ void ResBitmapBuilder::ComputeIntermediateImages(MR_UInt8 *pBuffer)
 
 		if(lNbTransparent != 0) {
 			if(lNbBadColors > 0) {
-				printf("%s: %s.\n", _("WARNING"), _("This image has invalid colors"));
+				std::cerr << _("WARNING") << ": " <<
+					_("This image has invalid colors") << std::endl;
 			}
-			printf("%s: %s.\n", _("INFO"), _("This image has transparent pixels"));
+			std::cout << _("INFO") << ": " <<
+				_("This image has transparent pixels") << std::endl;
 		}
 		// First copy the original image
 		memcpy(sub.mBuffer, pBuffer, lBitmapSize);
@@ -489,20 +491,22 @@ void ResBitmapBuilder::ComputeIntermediateImages(MR_UInt8 *pBuffer)
 		// Resample the sub bitmaps
 		size_t subCount = static_cast<size_t>(mSubBitmapCount);
 		for(lCounter = 1; lCounter < subCount; lCounter++) {
-			printf("%s: %s...\n", _("INFO"), _("resampling"));
+			std::cout << _("INFO") << ": " << _("resampling...") << std::endl;
 			Resample(&sub, &mSubBitmapList[lCounter]);
 		}
 
 		// Init the plain color
 		BOOL lDummyBool;
 
-		printf("%s: %s...\n", _("INFO"), _("computing plain color"));
+		std::cout << _("INFO") << ": " << _("computing plain color...") <<
+			std::endl;
 
 		mPlainColor = GetBestColor(sub.mBuffer, sub.mYRes, sub.mXRes, sub.mYRes,
 			lDummyBool);
 	}
 	else {
-      printf("%s: %s.\n", _("WARNING"), _("bitmap too small; using single color"));
+		std::cerr << _("WARNING") << ": " <<
+			_("bitmap too small; using single color") << std::endl;
 
 		mPlainColor = *pBuffer;
 	}

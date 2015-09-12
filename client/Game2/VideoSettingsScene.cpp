@@ -123,9 +123,9 @@ void VideoSettingsScene::OnOk()
 	if (needsSoftRestart) {
 		auto confirmScene = std::make_shared<MessageScene>(display, director,
 			_("Settings changed"),
-			std::string(_("To apply these changes, the game must restart.")) +
+			_("To apply these changes, the game must restart.").str() +
 			"\n\n" +
-			_("This will abandon any race in progress."),
+			_("This will abandon any race in progress.").str(),
 			true);
 		confirmOkConn = confirmScene->GetOkSignal().connect([&]() {
 			Config::GetInstance()->Save();
@@ -136,10 +136,10 @@ void VideoSettingsScene::OnOk()
 	else if (needsMainMenu) {
 		auto confirmScene = std::make_shared<MessageScene>(display, director,
 			_("Settings changed"),
-			std::string(_("To apply these changes, the game must return "
-			"to the main menu.")) +
+			_("To apply these changes, the game must return "
+			"to the main menu.").str() +
 			"\n\n" +
-			_("This will abandon any race in progress."),
+			_("This will abandon any race in progress.").str(),
 			true);
 		confirmOkConn = confirmScene->GetOkSignal().connect([&]() {
 			Config::GetInstance()->Save();

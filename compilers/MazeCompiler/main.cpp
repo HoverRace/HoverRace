@@ -1,7 +1,7 @@
 // main.cpp                              MazeCompiler main file
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
-// Copyright (c) 2012-2014 Michael Imamura.
+// Copyright (c) 2012-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -68,8 +68,7 @@ namespace {
 
 static void PrintUsage()
 {
-	// this should be redone, it's horrible
-	puts(_("Usage: MazeCompiler <outputfile> <inputfile>"));
+	std::cerr << _("Usage: MazeCompiler <outputfile> <inputfile>");
 }
 
 int main(int pArgCount, char *pArgStrings[])
@@ -106,7 +105,7 @@ int main(int pArgCount, char *pArgStrings[])
 	// Analyse the input parameters
 	if(pArgCount != 3) {
 		lPrintUsage = true;
-		puts(_("Wrong argument count"));
+		std::cerr << _("Wrong argument count");
 	}
 	else {
 #		ifdef _WIN32
@@ -150,7 +149,7 @@ int main(int pArgCount, char *pArgStrings[])
 
 	if(lPrintUsage) {
 		if(lError) {
-			puts(_("Command line error"));
+			std::cerr << _("Command line error");
 		}
 		PrintUsage();
 	}

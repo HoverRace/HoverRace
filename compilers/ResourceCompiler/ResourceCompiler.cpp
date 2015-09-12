@@ -144,7 +144,8 @@ BOOL ParseInputFile(const OS::path_t &pFileName)
 
 	if(lFile == NULL) {
 		lReturnValue = FALSE;
-		fprintf(stderr, "%s: %s (%s).\n", _("ERROR"), _("unable to open input file"), (const char*)Str::PU(pFileName));
+		std::cerr << _("ERROR") << ": " <<
+			_("unable to open input file") << pFileName;
 	}
 	else {
 		char lLineBuffer[250];
@@ -162,7 +163,8 @@ BOOL ParseInputFile(const OS::path_t &pFileName)
 			switch (MR_ContainsKeyword(lLine.c_str(), lKeywordList)) {
 				case 0:  // BITMAP
 					if(sscanf(lLine.c_str(), " %*s %249s %d %f %f %d", lLineBuffer, &lResourceId, &lWidth, &lHeight, &lAntiAliasScheme) != 5) {
-						fprintf(stderr, "%s: %s.\n", _("ERROR"), _("problem reading bitmap parameters"));
+						std::cerr << _("ERROR") << ": " <<
+							_("problem reading bitmap parameters") << std::endl;
 						lReturnValue = FALSE;
 					}
 					else {
@@ -180,7 +182,8 @@ BOOL ParseInputFile(const OS::path_t &pFileName)
 
 				case 1:  // ACTOR
 					if(sscanf(lLine.c_str(), " %*s %249s %d ", lLineBuffer, &lResourceId) != 2) {
-						fprintf(stderr, "%s: %s.\n", _("ERROR"), _("problem reading actor parameters"));
+						std::cerr << _("error") << ": " <<
+							_("problem reading actor parameters") << std::endl;
 					}
 					else {
 						std::unique_ptr<ResActorBuilder> lActor(
@@ -196,7 +199,8 @@ BOOL ParseInputFile(const OS::path_t &pFileName)
 
 				case 2:  // SPRITE
 					if(sscanf(lLine.c_str(), " %*s %249s %d %d", lLineBuffer, &lResourceId, &lNbItem) != 3) {
-						fprintf(stderr, "%s: %s.\n", _("ERROR"), _("problem reading sprite parameters"));
+						std::cerr << _("error") << ": " <<
+							_("problem reading sprite parameters") << std::endl;
 						lReturnValue = FALSE;
 					}
 					else {
@@ -213,7 +217,8 @@ BOOL ParseInputFile(const OS::path_t &pFileName)
 
 				case 3:  // SHORT_SOUND
 					if(sscanf(lLine.c_str(), " %*s %249s %d %d", lLineBuffer, &lResourceId, &lNbCopy) != 3) {
-						fprintf(stderr, "%s: %s.\n", _("ERROR"), _("problem reading sound parameters"));
+						std::cerr << _("error") << ": " <<
+							_("problem reading sound parameters") << std::endl;
 						lReturnValue = FALSE;
 					}
 					else {
@@ -230,7 +235,8 @@ BOOL ParseInputFile(const OS::path_t &pFileName)
 
 				case 4:  // CONT_SOUND
 					if(sscanf(lLine.c_str(), " %*s %249s %d %d", lLineBuffer, &lResourceId, &lNbCopy) != 3) {
-						fprintf(stderr, "%s: %s.\n", _("ERROR"), _("problem reading sound parameters"));
+						std::cerr << _("error") << ": " <<
+							_("problem reading sound parameters") << std::endl;
 						lReturnValue = FALSE;
 					}
 					else {

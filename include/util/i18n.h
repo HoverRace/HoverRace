@@ -7,28 +7,24 @@
 #	undef _
 #endif
 #ifdef ENABLE_NLS
-#	include <libintl.h>
-
-	// The gettext custom versions of printf (and the like) sometimes cause
-	// crashes on Win32.  We use Boost Format for translated strings anyway,
-	// so we don't need these.
 #	ifdef _WIN32
-#		undef printf
-#		undef vprintf
-#		undef fprintf
-#		undef vfprintf
-#		undef snprintf
-#		undef vsnprintf
+#		pragma warning(push, 0)
 #	endif
 
-#	define _(x) gettext(x)
+#	include <boost/locale.hpp>
+
+#	ifdef _WIN32
+#		pragma warning(pop)
+#	endif
+
+#	define _(x) ::boost::locale::translate(x)
 
 	// Our own little version of pgettext() so we don't need all of gettext.h.
 #	define pgettext(p,x) pgettextImpl(p "\004" x, x)
-	static inline const char *pgettextImpl(const char *full, const char *msg)
+	static inline std::string pgettextImpl(const char *full, const char *msg)
 	{
-		const char *retv = _(full);
-		return (retv == full) ? msg : retv;
+		auto retv = static_cast<std::string>(_(full));
+		return (retv == full) ? std::string(msg) : retv;
 	}
 
 #else

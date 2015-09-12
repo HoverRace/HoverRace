@@ -37,7 +37,8 @@ BOOL MR_ReadPredefinedConstants(const Util::OS::path_t &pFileName)
 	if(lFile == NULL) {
 		lReturnValue = FALSE;
 
-		fprintf(stderr, "%s: %s.\n", _("ERROR"), _("unable to open defines file"));
+		std::cerr << _("ERROR") <<
+			_("unable to open defines file") << std::endl;
 	}
 	else {
 		char lBuffer[250];
@@ -53,7 +54,9 @@ BOOL MR_ReadPredefinedConstants(const Util::OS::path_t &pFileName)
 				if(sscanf(lLine.c_str(), " #define %99s %99s ", lKey, lValue) != 2) {
 					lReturnValue = FALSE;
 
-					fprintf(stderr, "%s: %s, %s %d.\n", _("ERROR"), _("syntax error in defines file"), _("line"), lLineNo);
+					std::cerr << _("ERROR") << ": " <<
+						_("syntax error in defines file") << ": " <<
+						_("line") << lLineNo << std::endl;
 				}
 				else {
 					gDefineMap[lKey] = lValue;
