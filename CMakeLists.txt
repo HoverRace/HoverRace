@@ -21,45 +21,14 @@ set(HR_EXTRA_WARNINGS FALSE CACHE BOOL
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMakeModules)
 
-if(MSVC)
-	if(MSVC_VERSION EQUAL 1800)
-		if(NOT CMAKE_GENERATOR_TOOLSET STREQUAL "CTP_Nov2013")
-			message(STATUS "Enabling Visual C++ November 2013 CTP compiler")
-			set(CMAKE_GENERATOR_TOOLSET "CTP_Nov2013" CACHE STRING "Platform Toolset" FORCE)
-			set(CMAKE_VS_PLATFORM_TOOLSET "CTP_Nov2013" CACHE STRING "Platform Toolset" FORCE)
-			message(FATAL_ERROR "Platform toolset configuration updated.
-** Please run the Configure step again to apply the changes. **")
-		endif()
-	endif()
-endif()
-
 include(CheckCXXSourceCompiles)
 include(CXX11)
 include(GNUInstallDirs)
 include(cotire)
 
 if(MSVC)
-	if(MSVC_VERSION LESS 1800)
-		message(FATAL_ERROR "Visual Studio 2013 (aka Visual Studio 12) or later is required.")
-	elseif(MSVC_VERSION EQUAL 1800)
-		message(STATUS "Enabling Visual C++ November 2013 CTP compiler")
-
-		# Check that the toolset is available.
-		if(NOT HAVE_NOV_2013_CTP)
-			unset(HAVE_NOV_2013_CTP CACHE)  # Force recheck.
-			check_cxx_source_compiles(
-				"// Default move ops are only available in the CTP.
-				struct TestMove {
-					TestMove(TestMove&&) = default;
-					TestMove &operator=(TestMove&&) = default;
-				};
-				int main() { return 0; }" HAVE_NOV_2013_CTP)
-			if(NOT HAVE_NOV_2013_CTP)
-				message(FATAL_ERROR "The Visual C++ November 2013 CTP compiler is not installed.
-The compiler update can be downloaded from:
-	http://www.microsoft.com/en-us/download/details.aspx?id=41151")
-			endif()
-		endif()
+	if(MSVC_VERSION LESS 1900)
+		message(FATAL_ERROR "Visual Studio 2015 (aka Visual Studio 14) or later is required.")
 	endif()
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 	execute_process(COMMAND ${CMAKE_CXX_COMPILER} --version
