@@ -9,7 +9,7 @@
 
 CPPCHECK=cppcheck
 
-cd "$(dirname "$0")/.."
+cd "$(dirname "$0")/.." || exit 1
 
 ( find client/Game2 -name '*.cpp' ; find engine -name '*.cpp' ) | \
 	"$CPPCHECK" --file-list=- 2> >(tee cppcheck_report.txt >&2)

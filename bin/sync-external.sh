@@ -14,14 +14,17 @@
 # then merge into master.
 
 # git-subtree must be run from the root of the repo.
-cd "$(dirname "$0")"/..
+cd "$(dirname "$0")"/.. || exit 1
 
 if [[ $1 = '' ]]; then
 	echo 'Usage:' >&2
 	echo "  $0 libs..." >&2
 	echo >&2
 	echo 'To update all external libraries at once (be careful!):' >&2
-	echo "  $0 $(cd external ; find . -mindepth 1 -maxdepth 1 -type d -exec basename \{\} \; | sort | xargs echo)"
+	alllibs=( $(cd external &&
+		find . -mindepth 1 -maxdepth 1 -type d -exec basename \{\} \; | \
+			sort) )
+	echo "  $0 ${alllibs[*]}"
 	exit 1
 fi
 
