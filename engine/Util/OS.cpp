@@ -114,11 +114,16 @@ void OS::SetEnv(const char *key, const char *val)
  */
 void OS::SetLocale()
 {
+	//TODO: Pass desired locale from config if set instead of using
+	//      env vars.
+
 	// Common setting.
 	setlocale(LC_ALL, "");
 
+	boost::locale::generator gen;
+
 	try {
-		locale = std::locale("");
+		locale = gen("");
 	}
 	catch (std::runtime_error&) {
 		HR_LOG(warning) << "Unsupported locale (falling back to default).";
