@@ -145,7 +145,6 @@ elseif(WIN32)
 		optimized SDL2_image debug SDL2_imageD
 		optimized SDL2_ttf debug SDL2_ttfD
 		alut
-		intl
 		optimized libcurl debug libcurlD
 		optimized yaml debug yamlD)
 
