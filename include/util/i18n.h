@@ -23,7 +23,7 @@
 #	define pgettext(p,x) pgettextImpl(p "\004" x, x)
 	static inline std::string pgettextImpl(const char *full, const char *msg)
 	{
-		auto retv = static_cast<std::string>(_(full));
+		auto retv = _(full).str();
 		return (retv == full) ? std::string(msg) : retv;
 	}
 
