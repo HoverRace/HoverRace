@@ -1,6 +1,8 @@
 .dirstamp
 .ruby-version
+.suo
 .vim-template*
+.vs
 *~
 *.bak
 *.swo

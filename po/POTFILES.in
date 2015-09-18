@@ -7,6 +7,7 @@ client/Game2/CheckUpdateServerDialog.cpp
 client/Game2/ClientApp.cpp
 client/Game2/ClientSession.cpp
 client/Game2/ControlPrefsPage.cpp
+client/Game2/DebugScene.cpp
 client/Game2/DemoGameScene.cpp
 client/Game2/DialogScene.cpp
 client/Game2/DisplaySelectScene.cpp
@@ -21,6 +22,7 @@ client/Game2/HoverScript/ConfigPeer.cpp
 client/Game2/HoverScript/Console.cpp
 client/Game2/HoverScript/ConsoleScene.cpp
 client/Game2/HoverScript/DebugPeer.cpp
+client/Game2/HoverScript/ElemBinding.cpp
 client/Game2/HoverScript/GamePeer.cpp
 client/Game2/HoverScript/HudPeer.cpp
 client/Game2/HoverScript/InputPeer.cpp
@@ -86,9 +88,11 @@ engine/Control/ActionPerformers.cpp
 engine/Control/Controller.cpp
 engine/Control/ControllerStrings.cpp
 engine/Display/ActionButton.cpp
+engine/Display/ActiveText.cpp
 engine/Display/AvatarTextureRes.cpp
 engine/Display/Background.cpp
 engine/Display/BaseContainer.cpp
+engine/Display/BaseText.cpp
 engine/Display/Button.cpp
 engine/Display/Checkbox.cpp
 engine/Display/Chronometer.cpp
@@ -110,6 +114,7 @@ engine/Display/PickList.cpp
 engine/Display/Picture.cpp
 engine/Display/RadioButton.cpp
 engine/Display/RuleLine.cpp
+engine/Display/SDL/SdlActiveTextView.cpp
 engine/Display/SDL/SdlBaseContainerView.cpp
 engine/Display/SDL/SdlButtonView.cpp
 engine/Display/SDL/SdlClickRegionView.cpp
@@ -144,10 +149,10 @@ engine/MazeCompiler/MapSprite.cpp
 engine/MazeCompiler/TrackCompiler.cpp
 engine/MazeCompiler/TrackSpecParser.cpp
 engine/Model/ConcreteShape.cpp
-engine/Model/ContactEffect.cpp
+engine/Model/ElemHeap.cpp
+engine/Model/GameOptions.cpp
 engine/Model/GameSession.cpp
 engine/Model/Level.cpp
-engine/Model/MazeElement.cpp
 engine/Model/ObstacleCollisionReport.cpp
 engine/Model/PhysicalCollision.cpp
 engine/Model/ShapeCollisions.cpp
@@ -180,11 +185,11 @@ engine/ObjFacTools/ResBitmap.cpp
 engine/ObjFacTools/ResSound.cpp
 engine/ObjFacTools/ResSprite.cpp
 engine/ObjFacTools/ResourceLib.cpp
-engine/ObjFacTools/SpriteHandle.cpp
 engine/Parcel/Bundle.cpp
 engine/Parcel/ClassicObjStream.cpp
 engine/Parcel/ClassicRecordFile.cpp
 engine/Parcel/ObjStream.cpp
+engine/Parcel/ResBundle.cpp
 engine/Parcel/TrackBundle.cpp
 engine/Player/DemoProfile.cpp
 engine/Player/LocalPlayer.cpp
@@ -206,6 +211,7 @@ engine/Util/FuzzyLogic.cpp
 engine/Util/InspectMapNode.cpp
 engine/Util/Log.cpp
 engine/Util/OS.cpp
+engine/Util/Profiler.cpp
 engine/Util/SelFmt.cpp
 engine/Util/Stopwatch.cpp
 engine/Util/Str.cpp
@@ -219,7 +225,6 @@ engine/Util/yaml/SeqNode.cpp
 engine/VideoServices/Bitmap.cpp
 engine/VideoServices/ColorPalette.cpp
 engine/VideoServices/ColorTab.cpp
-engine/VideoServices/FontSpec.cpp
 engine/VideoServices/SoundServer.cpp
 engine/VideoServices/Sprite.cpp
 engine/VideoServices/VideoBuffer.cpp

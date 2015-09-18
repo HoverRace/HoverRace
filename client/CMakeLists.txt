@@ -56,13 +56,7 @@ endif()
 
 # Increase memory for precompiled header.
 if(MSVC)
-	if(MSVC_VERSION EQUAL 1800)
-		# Using /Xm option instead of /Zm for the Nov 2013 CTP compiler.
-		# https://connect.microsoft.com/VisualStudio/feedback/details/808945/torino-error-c3859-c1076
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Xm300")
-	else()
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zm300")
-	endif()
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zm300")
 endif()
 
 # Bump the warning level.

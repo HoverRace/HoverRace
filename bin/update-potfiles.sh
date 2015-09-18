@@ -6,7 +6,7 @@
 # Usage:
 #   bin/update-potfiles > po/POTFILES.in
 
-cd "$(dirname "$0")"/..
+cd "$(dirname "$0")"/.. || exit 1
 
 SRCDIRS=(
 	client/Game2
