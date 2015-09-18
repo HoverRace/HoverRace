@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cd "$(dirname "$0")/../share"
+cd "$(dirname "$0")/../share" || exit 1
 
 rm -rf locale
 mkdir locale
