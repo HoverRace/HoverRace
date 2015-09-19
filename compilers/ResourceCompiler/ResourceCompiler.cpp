@@ -82,11 +82,7 @@ int main(int pArgc, char **pArgs)
 	HoverRace::ColorTools::Init();
 
 #	ifdef ENABLE_NLS
-		// Gettext initialization.
-		OS::SetLocale();
-		bind_textdomain_codeset(PACKAGE, "UTF-8");
-		bindtextdomain(PACKAGE, LOCALEDIR);
-		textdomain(PACKAGE);
+		OS::SetLocale(Str::UP(LOCALEDIR), PACKAGE);
 #	endif
 
 #	ifdef _WIN32

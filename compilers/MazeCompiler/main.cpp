@@ -82,11 +82,7 @@ int main(int pArgCount, char *pArgStrings[])
 	cfg->runtime.silent = true;
 
 #	ifdef ENABLE_NLS
-		// Gettext initialization.
-		OS::SetLocale();
-		bind_textdomain_codeset(PACKAGE, "UTF-8");
-		bindtextdomain(PACKAGE, LOCALEDIR);
-		textdomain(PACKAGE);
+		OS::SetLocale(Str::UP(LOCALEDIR), PACKAGE);
 #	endif
 
 	puts("HoverRace Track Compiler      (c)1996-1997 GrokkSoft Inc.");

@@ -92,7 +92,7 @@ int main(int argc, char **argv)
 		_setmode(_fileno(stdout), _O_U8TEXT);
 		*/
 #	endif
-	OS::SetLocale();
+	OS::SetLocale(Str::UP(LOCALEDIR), PACKAGE);
 #	ifndef _WIN32
 		if (strcmp(nl_langinfo(CODESET), "UTF-8") != 0) {
 			std::cerr << "Warning: Locale is not UTF-8." << std::endl;

@@ -278,13 +278,9 @@ int main(int argc, char** argv)
 	cfg->runtime.skipStartupWarning = skipStartupWarning;
 	cfg->runtime.initScripts = initScripts;
 
-#ifdef ENABLE_NLS
-	// Gettext initialization.
-	OS::SetLocale();
-	bind_textdomain_codeset(PACKAGE, "UTF-8");
-	bindtextdomain(PACKAGE, debugMode ? "share/locale" : LOCALEDIR);
-	textdomain(PACKAGE);
-#endif
+#	ifdef ENABLE_NLS
+		OS::SetLocale(Str::UP(debugMode ? "share/locale" : LOCALEDIR), PACKAGE);
+#	endif
 
 	// If --version was passed, output the version and exit.
 	if (showVersion) {

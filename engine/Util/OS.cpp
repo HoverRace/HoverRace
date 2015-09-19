@@ -111,8 +111,10 @@ void OS::SetEnv(const char *key, const char *val)
 
 /**
  * Set the locale based on the current environment.
+ * @param path The path to where compiled translations can be found.
+ * @param domain The translation domain to use.
  */
-void OS::SetLocale()
+void OS::SetLocale(const path_t &path, const std::string &domain)
 {
 	//TODO: Pass desired locale from config if set instead of using
 	//      env vars.
@@ -121,6 +123,8 @@ void OS::SetLocale()
 	setlocale(LC_ALL, "");
 
 	boost::locale::generator gen;
+	gen.add_messages_path(Str::PU(path));
+	gen.add_messages_domain(domain);
 
 	try {
 		locale = gen("");
