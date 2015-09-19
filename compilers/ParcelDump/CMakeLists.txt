@@ -11,6 +11,12 @@ set_target_properties(hoverrace-parceldump PROPERTIES
 target_link_libraries(hoverrace-parceldump ${Boost_LIBRARIES} ${DEPS_LIBRARIES}
 	hrengine)
 
+if(NOT WIN32)
+	set_property(TARGET hoverrace-parceldump
+		APPEND PROPERTY COMPILE_DEFINITIONS
+		LOCALEDIR="${CMAKE_INSTALL_LOCALEDIR}")
+endif()
+
 # Bump the warning level.
 include(SetWarningLevel)
 set_full_warnings(TARGET hoverrace-parceldump)
