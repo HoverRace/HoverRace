@@ -125,6 +125,7 @@ void OS::SetLocale(const path_t &path, const std::string &domain)
 	boost::locale::generator gen;
 	gen.add_messages_path(Str::PU(path));
 	gen.add_messages_domain(domain);
+	// Boost.Locale uses UTF-8 by default.
 
 	try {
 		locale = gen("");
@@ -136,6 +137,11 @@ void OS::SetLocale(const path_t &path, const std::string &domain)
 
 	// Update the current locale instance.
 	std::locale::global(locale);
+
+	// Set locale for Boost.Filesystem v3.
+	// This is important for Windows, so that the internal UTF-8 is converted
+	// to wide paths.
+	fs::path::imbue(std::locale());
 }
 
 /**
