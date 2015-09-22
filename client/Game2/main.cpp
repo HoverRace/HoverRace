@@ -278,6 +278,10 @@ int main(int argc, char** argv)
 	cfg->runtime.skipStartupWarning = skipStartupWarning;
 	cfg->runtime.initScripts = initScripts;
 
+	Log::Init();
+	Log::Info("INFO level logging enabled.");
+	Log::Debug("DEBUG level logging enabled.");
+
 #	ifdef ENABLE_NLS
 		OS::SetLocale(Str::UP(debugMode ? "share/locale" : LOCALEDIR), PACKAGE);
 #	endif
@@ -294,10 +298,6 @@ int main(int argc, char** argv)
 	curl_global_init(CURL_GLOBAL_ALL);
 
 	OS::TimeInit();
-
-	Log::Init();
-	Log::Info("INFO level logging enabled.");
-	Log::Debug("DEBUG level logging enabled.");
 
 	try {
 		lErrorCode = RunClient();
