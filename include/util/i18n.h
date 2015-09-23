@@ -18,14 +18,7 @@
 #	endif
 
 #	define _(x) ::boost::locale::translate(x)
-
-	// Our own little version of pgettext() so we don't need all of gettext.h.
-#	define pgettext(p,x) pgettextImpl(p "\004" x, x)
-	static inline std::string pgettextImpl(const char *full, const char *msg)
-	{
-		auto retv = _(full).str();
-		return (retv == full) ? std::string(msg) : retv;
-	}
+#	define pgettext(p, x) ::boost::locale::translate(p, x)
 
 #else
 
