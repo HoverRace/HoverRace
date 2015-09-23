@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# update-potfiles
+# update-potfiles.sh
 #   Generates a list of files which might contain translatable strings.
 #
 # Usage:
-#   bin/update-potfiles > po/POTFILES.in
+#   bin/update-potfiles.sh > po/POTFILES.in
 
 cd "$(dirname "$0")"/.. || exit 1
 
