@@ -155,13 +155,13 @@ DisplaySelectScene::DisplaySelectScene(Display::Display &display,
 	size_t r = 0;
 
 	testBtn = goGrid->At(r++, 0).NewChild<Button>(display,
-		pgettext("Display Resolution", "Test"))->
+		_("Display Resolution", "Test"))->
 		GetContents();
 	testConn = testBtn->GetClickedSignal().connect(
 		std::bind(&DisplaySelectScene::OnResTest, this));
 
 	confirmBtn = goGrid->At(r++, 0).NewChild<Button>(display,
-		pgettext("Display Resolution", "Confirm"))->
+		_("Display Resolution", "Confirm"))->
 		GetContents();
 	confirmConn = confirmBtn->GetClickedSignal().connect(
 		std::bind(&DisplaySelectScene::OnResConfirm, this));

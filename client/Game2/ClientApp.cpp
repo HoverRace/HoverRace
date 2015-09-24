@@ -273,7 +273,7 @@ std::string ClientApp::GetWindowTitle()
 	std::ostringstream oss;
 	oss << PACKAGE_NAME " " << cfg->GetVersion();
 	if (cfg->IsPrerelease()) {
-		oss << " (" << pgettext("Version", "testing") << ')';
+		oss << " (" << _("Version", "testing") << ')';
 	}
 	if (SoundServer::IsDisabled()) {
 		oss << " (" << _("Silent Mode") << ')';

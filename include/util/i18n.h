@@ -17,8 +17,7 @@
 #		pragma warning(pop)
 #	endif
 
-#	define _(x) ::boost::locale::translate(x)
-#	define pgettext(p, x) ::boost::locale::translate(p, x)
+#	define _(...) ::boost::locale::translate(__VA_ARGS__)
 
 #else
 
