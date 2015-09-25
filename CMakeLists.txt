@@ -72,6 +72,9 @@ find_package(Boost ${BOOST_MIN_VER} REQUIRED COMPONENTS
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
+include(FindGettext)
+set(ENABLE_NLS ${GETTEXT_FOUND})
+
 # Gather the build artifacts into common directories.
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -80,8 +83,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 # Use bundled Lua and Luabind from source.
 add_subdirectory(external)
 include_directories(SYSTEM ${HR_EXTERNAL_INCLUDE_DIRS})
-
-set(ENABLE_NLS TRUE)
 
 if(UNIX)
 	include(FindPkgConfig)
@@ -143,4 +144,7 @@ include_directories(SYSTEM ${CONFIG_HEADER_DIR})
 add_subdirectory(client)
 add_subdirectory(engine)
 add_subdirectory(compilers)
+if(ENABLE_NLS)
+	add_subdirectory(po)
+endif()
 
