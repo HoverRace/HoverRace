@@ -35,6 +35,7 @@
 #	define TRACE __noop
 
 #	include "config-win32.h"
+#	include <hoverrace/hr-config.h>
 
 #else
 
