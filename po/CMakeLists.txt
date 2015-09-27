@@ -1,5 +1,5 @@
 
-set(SRCS
+set(PO_SRCS
 	de.po
 	en_AU.po
 	en_GB.po
@@ -18,6 +18,18 @@ set(SRCS
 	ro.po
 	sr.po
 	tlh.po)
-source_group(Translations FILES ${SRCS})
+source_group(Translations FILES ${PO_SRCS})
+set(POT_FILE ${CMAKE_CURRENT_SOURCE_DIR}/hoverrace.pot)
+file(STRINGS potfiles.txt SRCS NO_HEX_CONVERSION)
 
-GETTEXT_CREATE_TRANSLATIONS(hoverrace.pot ALL ${SRCS})
+include(FindXGettext)
+
+xgettext_create_pot_file(${POT_FILE} ALL CPP
+	INPUT ${SRCS} "--boost" "--sort-by-file"
+	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+	KEYWORDS "_:1,1t" "_:1c,2,2t" "_:1,2,3t" "_:1c,2,3,4t"
+	PACKAGE_NAME hoverrace
+	COPYRIGHT_HOLDER "HoverRace contributors")
+
+gettext_create_translations(${POT_FILE} ALL ${PO_SRCS})
+
