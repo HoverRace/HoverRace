@@ -4,7 +4,7 @@
 #   Generates a list of files which might contain translatable strings.
 #
 # Usage:
-#   bin/update-potfiles.sh > po/POTFILES.in
+#   bin/update-potfiles.sh > po/potfiles.txt
 
 cd "$(dirname "$0")"/.. || exit 1
 
