@@ -283,7 +283,7 @@ int main(int argc, char** argv)
 	Log::Debug("DEBUG level logging enabled.");
 
 #	ifdef ENABLE_NLS
-		OS::SetLocale(Str::UP(debugMode ? "share/locale" : LOCALEDIR), PACKAGE);
+		OS::SetLocale(cfg->app.localePath, PACKAGE);
 #	endif
 
 	// If --version was passed, output the version and exit.
