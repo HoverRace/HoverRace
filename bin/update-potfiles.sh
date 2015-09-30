@@ -15,7 +15,6 @@ SRCDIRS=(
 	engine
 	)
 
-echo '# List of source files which contain translatable strings.'
 for srcdir in "${SRCDIRS[@]}"; do
 	find "$srcdir" -type f -name '*.cpp' \
 		-not -name 'StdAfx.*' \
