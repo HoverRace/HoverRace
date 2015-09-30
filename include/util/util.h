@@ -13,3 +13,10 @@ template<class... T> void HR_UNUSED(T&&...) { }
 #else
 #	define HR_DEPRECATED __attribute__((deprecated))
 #endif
+
+#ifndef _DEBUG
+#	ifndef NDEBUG
+#		define _DEBUG
+#	endif
+#endif
+
