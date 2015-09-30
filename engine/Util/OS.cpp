@@ -131,8 +131,10 @@ void OS::SetLocale(const path_t &path, const std::string &domain)
 		locale = gen("");
 		// locale.name() will typically be "*" when using Boost.Locale,
 		// so we need to use the specific facet.
-		HR_LOG(debug) << "Using locale: " <<
-			std::use_facet<boost::locale::info>(locale).name();
+		const auto &facet = std::use_facet<boost::locale::info>(locale);
+		HR_LOG(debug) << "Using locale: " << facet.name() << ": " <<
+			facet.language() << " (" << facet.country() << ") - " <<
+			facet.variant();
 	}
 	catch (std::runtime_error&) {
 		HR_LOG(warning) << "Unsupported locale (falling back to default).";
