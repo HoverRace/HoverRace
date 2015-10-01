@@ -113,14 +113,14 @@ void OS::SetEnv(const char *key, const char *val)
  * Set the locale based on the current environment.
  * @param path The path to where compiled translations can be found.
  * @param domain The translation domain to use.
+ * @param reqLocale The requested locale.
+ *                  If blank, the system default will be used.
  */
-void OS::SetLocale(const path_t &path, const std::string &domain)
+void OS::SetLocale(const path_t &path, const std::string &domain,
+	const std::string &reqLocale)
 {
-	//TODO: Pass desired locale from config if set instead of using
-	//      env vars.
-
 	// Common setting.
-	setlocale(LC_ALL, "");
+	setlocale(LC_ALL, reqLocale.c_str());
 
 	boost::locale::generator gen;
 	gen.add_messages_path(Str::PU(path));
@@ -128,7 +128,7 @@ void OS::SetLocale(const path_t &path, const std::string &domain)
 	// Boost.Locale uses UTF-8 by default.
 
 	try {
-		locale = gen("");
+		locale = gen(reqLocale.c_str());
 		// locale.name() will typically be "*" when using Boost.Locale,
 		// so we need to use the specific facet.
 		const auto &facet = std::use_facet<boost::locale::info>(locale);
