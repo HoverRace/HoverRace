@@ -59,6 +59,7 @@ bool verboseLog = false;
 bool showFramerate = false;
 bool noAccel = false;
 bool skipStartupWarning = false;
+std::string reqLocale;
 
 /**
  * Display a simple error message to the user.
@@ -121,16 +122,7 @@ bool ProcessCmdLine(int argc, char **argv)
 		}
 		else if (strcmp("-L", arg) == 0) {
 			if (i < argc) {
-				arg = argv[i++];
-				// Set the language by updating the environment.
-				// This may allow for more languages than setlocale() allows.
-				try {
-					OS::SetEnv("LC_ALL", arg);
-				}
-				catch (HoverRace::Exception &ex) {
-					ShowMessage(std::string("Unable to set locale: ") + ex.what());
-					return false;
-				}
+				reqLocale = argv[i++];
 			}
 			else {
 				ShowMessage("Expected: -L (language)");
@@ -283,7 +275,7 @@ int main(int argc, char** argv)
 	Log::Debug("DEBUG level logging enabled.");
 
 #	ifdef ENABLE_NLS
-		OS::SetLocale(cfg->app.localePath, PACKAGE);
+		OS::SetLocale(cfg->app.localePath, PACKAGE, reqLocale);
 #	endif
 
 	// If --version was passed, output the version and exit.
