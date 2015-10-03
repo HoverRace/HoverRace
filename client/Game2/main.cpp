@@ -86,7 +86,7 @@ void ShowMessage(const std::string &s)
  */
 bool ProcessCmdLine(int argc, char **argv)
 {
-	int i;
+	int i = 0;
 
 #	ifdef _WIN32
 		int wargc;
