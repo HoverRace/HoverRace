@@ -1,4 +1,3 @@
-# Set of available languages.
 de
 en_AU
 en_GB
