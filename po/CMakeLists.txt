@@ -21,6 +21,7 @@ set(PO_SRCS
 source_group(Translations FILES ${PO_SRCS})
 set(POT_FILE ${CMAKE_CURRENT_SOURCE_DIR}/hoverrace.pot)
 file(STRINGS potfiles.txt SRCS NO_HEX_CONVERSION)
+file(STRINGS linguas.txt LINGUAS NO_HEX_CONVERSION)
 
 include(FindXGettext)
 
@@ -33,4 +34,15 @@ xgettext_create_pot_file(${POT_FILE} ALL CPP
 	COPYRIGHT_HOLDER "HoverRace contributors")
 
 gettext_create_translations(${POT_FILE} ALL ${PO_SRCS})
+
+# Install the compiled locales into the resource directory so that they're
+# available during development.
+foreach(lang ${LINGUAS})
+	set(gmoFile ${CMAKE_CURRENT_BINARY_DIR}/${lang}.gmo)
+	set(moFile
+		${CMAKE_SOURCE_DIR}/share/locale/${lang}/LC_MESSAGES/hoverrace.mo)
+
+	add_custom_command(TARGET translations_1 POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy ${gmoFile} ${moFile})
+endforeach()
 

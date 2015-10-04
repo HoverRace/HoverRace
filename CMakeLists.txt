@@ -134,7 +134,7 @@ string(REPLACE "\"" "\\\"" HR_MEDIA_PATH "${HR_MEDIA_PATH}")
 string(REPLACE "\n" "\\\n" HR_MEDIA_PATH "${HR_MEDIA_PATH}")
 file(WRITE ${CMAKE_BINARY_DIR}/etc/config.yml
 	"app:\n"
-	"  localePath: \"${CMAKE_BINARY_DIR}/po\"\n"
+	"  localePath: \"${HR_MEDIA_PATH}/locale\"\n"
 	"  mediaPath: \"${HR_MEDIA_PATH}\"\n")
 
 set(CONFIG_HEADER_DIR ${CMAKE_BINARY_DIR}/config)
