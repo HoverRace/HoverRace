@@ -136,8 +136,9 @@ void OS::SetLocale(const path_t &path, const std::string &domain,
 			facet.language() << " (" << facet.country() << ") - " <<
 			facet.variant();
 	}
-	catch (std::runtime_error&) {
-		HR_LOG(warning) << "Unsupported locale (falling back to default).";
+	catch (std::runtime_error &ex) {
+		HR_LOG(warning) << "Unsupported locale (falling back to default): " <<
+			ex.what();
 		locale = std::locale("C");
 	}
 
