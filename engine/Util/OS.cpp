@@ -34,6 +34,7 @@
 
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/format.hpp>
+#include <boost/locale/util.hpp>
 
 #include "../Exception.h"
 #include "Log.h"
@@ -52,6 +53,34 @@ namespace {
 
 using clock_t = std::chrono::high_resolution_clock;
 clock_t::time_point chronoStart;
+
+/**
+ * Parse the requested locale ID and generate a new locale ID.
+ *
+ * The main purpose of this is to ensure that the locale ID we pass to
+ * Boost.Locale specifies UTF-8.  If not specified, the default encoding
+ * "us-ascii", which will cause Boost.Locale to fail generate the locale.
+ *
+ * @param reqLocale The requested locale.
+ * @return The normalized locale.
+ */
+std::string NormalizeLocale(const std::string &reqLocale)
+{
+	auto built = boost::locale::util::create_info(std::locale(), reqLocale);
+	const auto &facet = std::use_facet<boost::locale::info>(built);
+	std::ostringstream oss;
+
+	oss << facet.language();
+	if (!facet.country().empty()) {
+		oss << '_' << facet.country();
+	}
+	oss << ".UTF-8";  // Force UTF-8.
+	if (!facet.variant().empty()) {
+		oss << '@' << facet.variant();
+	}
+
+	return oss.str();
+}
 
 }  // namespace
 
@@ -128,13 +157,11 @@ void OS::SetLocale(const path_t &path, const std::string &domain,
 	// Boost.Locale uses UTF-8 by default.
 
 	try {
-		locale = gen(reqLocale.c_str());
+		locale = gen(NormalizeLocale(reqLocale));
 		// locale.name() will typically be "*" when using Boost.Locale,
 		// so we need to use the specific facet.
-		const auto &facet = std::use_facet<boost::locale::info>(locale);
-		HR_LOG(debug) << "Using locale: " << facet.name() << ": " <<
-			facet.language() << " (" << facet.country() << ") - " <<
-			facet.variant();
+		HR_LOG(debug) << "Using locale: " <<
+			std::use_facet<boost::locale::info>(locale).name();
 	}
 	catch (std::runtime_error &ex) {
 		HR_LOG(warning) << "Unsupported locale (falling back to default): " <<
