@@ -4,11 +4,6 @@
 
 #include "ntverp.h"
 
-#define PACKAGE "hoverrace"
-#define PACKAGE_NAME "HoverRace"
-#define PLATFORM_NAME "Win32"
-
-#define ENABLE_NLS 1
 #define LOCALEDIR "../share/locale"
 
 #define HAVE_LUA 1
@@ -23,5 +18,3 @@
 
 // Uncomment this to use SDL_Mixer instead of OpenAL.
 //#define WITH_SDL_MIXER
-
-#define WITH_CHRONO_TIMESTAMP

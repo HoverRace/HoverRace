@@ -953,6 +953,12 @@ void Config::app_t::Load(yaml::MapNode *root)
 	if (!mediaPath.empty()) {
 		this->mediaPath = Str::UP(mediaPath);
 	}
+
+	std::string localePath;
+	READ_STRING(root, localePath);
+	if (!localePath.empty()) {
+		this->localePath = Str::UP(localePath);
+	}
 }
 
 // video ///////////////////////////////////////////////////////////////////////

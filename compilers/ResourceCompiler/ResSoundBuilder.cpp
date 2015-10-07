@@ -59,7 +59,8 @@ bool ParseSoundFile(const char *filename, const char *&destData, MR_UInt32 &dest
 	MR_UInt8 *audioBuf;
 	MR_UInt32 bufLen;
 	if (SDL_LoadWAV(filename, &spec, &audioBuf, &bufLen) == NULL) {
-		fprintf(stderr, "%s: %s: %s: %s\n", _("ERROR"), _("invalid WAV file"), filename, SDL_GetError());
+		std::cerr << _("ERROR") << ": " << _("invalid WAV file") << ": " <<
+			filename << ": " << SDL_GetError();
 		return false;
 	}
 

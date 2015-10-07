@@ -59,6 +59,7 @@ bool verboseLog = false;
 bool showFramerate = false;
 bool noAccel = false;
 bool skipStartupWarning = false;
+std::string reqLocale;
 
 /**
  * Display a simple error message to the user.
@@ -85,7 +86,7 @@ void ShowMessage(const std::string &s)
  */
 bool ProcessCmdLine(int argc, char **argv)
 {
-	int i;
+	int i = 0;
 
 #	ifdef _WIN32
 		int wargc;
@@ -121,16 +122,7 @@ bool ProcessCmdLine(int argc, char **argv)
 		}
 		else if (strcmp("-L", arg) == 0) {
 			if (i < argc) {
-				arg = argv[i++];
-				// Set the language by updating the environment.
-				// This may allow for more languages than setlocale() allows.
-				try {
-					OS::SetEnv("LC_ALL", arg);
-				}
-				catch (HoverRace::Exception &ex) {
-					ShowMessage(std::string("Unable to set locale: ") + ex.what());
-					return false;
-				}
+				reqLocale = argv[i++];
 			}
 			else {
 				ShowMessage("Expected: -L (language)");
@@ -278,13 +270,13 @@ int main(int argc, char** argv)
 	cfg->runtime.skipStartupWarning = skipStartupWarning;
 	cfg->runtime.initScripts = initScripts;
 
-#ifdef ENABLE_NLS
-	// Gettext initialization.
-	OS::SetLocale();
-	bind_textdomain_codeset(PACKAGE, "UTF-8");
-	bindtextdomain(PACKAGE, debugMode ? "share/locale" : LOCALEDIR);
-	textdomain(PACKAGE);
-#endif
+	Log::Init();
+	Log::Info("INFO level logging enabled.");
+	Log::Debug("DEBUG level logging enabled.");
+
+#	ifdef ENABLE_NLS
+		OS::SetLocale(cfg->app.localePath, PACKAGE, reqLocale);
+#	endif
 
 	// If --version was passed, output the version and exit.
 	if (showVersion) {
@@ -298,10 +290,6 @@ int main(int argc, char** argv)
 	curl_global_init(CURL_GLOBAL_ALL);
 
 	OS::TimeInit();
-
-	Log::Init();
-	Log::Info("INFO level logging enabled.");
-	Log::Debug("DEBUG level logging enabled.");
 
 	try {
 		lErrorCode = RunClient();

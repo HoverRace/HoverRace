@@ -184,6 +184,7 @@ private:
 
 public:
 	struct app_t {
+		OS::path_t localePath;
 		OS::path_t mediaPath;
 
 		void Load(yaml::MapNode*);

@@ -1,4 +1,3 @@
-# List of source files which contain translatable strings.
 client/Game2/AboutDialog.cpp
 client/Game2/AudioSettingsScene.cpp
 client/Game2/BulletinBoard.cpp

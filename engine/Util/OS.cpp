@@ -34,6 +34,7 @@
 
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/format.hpp>
+#include <boost/locale/util.hpp>
 
 #include "../Exception.h"
 #include "Log.h"
@@ -52,6 +53,34 @@ namespace {
 
 using clock_t = std::chrono::high_resolution_clock;
 clock_t::time_point chronoStart;
+
+/**
+ * Parse the requested locale ID and generate a new locale ID.
+ *
+ * The main purpose of this is to ensure that the locale ID we pass to
+ * Boost.Locale specifies UTF-8.  If not specified, the default encoding
+ * "us-ascii", which will cause Boost.Locale to fail generate the locale.
+ *
+ * @param reqLocale The requested locale.
+ * @return The normalized locale.
+ */
+std::string NormalizeLocale(const std::string &reqLocale)
+{
+	auto built = boost::locale::util::create_info(std::locale(), reqLocale);
+	const auto &facet = std::use_facet<boost::locale::info>(built);
+	std::ostringstream oss;
+
+	oss << facet.language();
+	if (!facet.country().empty()) {
+		oss << '_' << facet.country();
+	}
+	oss << ".UTF-8";  // Force UTF-8.
+	if (!facet.variant().empty()) {
+		oss << '@' << facet.variant();
+	}
+
+	return oss.str();
+}
 
 }  // namespace
 
@@ -111,22 +140,42 @@ void OS::SetEnv(const char *key, const char *val)
 
 /**
  * Set the locale based on the current environment.
+ * @param path The path to where compiled translations can be found.
+ * @param domain The translation domain to use.
+ * @param reqLocale The requested locale.
+ *                  If blank, the system default will be used.
  */
-void OS::SetLocale()
+void OS::SetLocale(const path_t &path, const std::string &domain,
+	const std::string &reqLocale)
 {
 	// Common setting.
-	setlocale(LC_ALL, "");
+	setlocale(LC_ALL, reqLocale.c_str());
+
+	boost::locale::generator gen;
+	gen.add_messages_path(Str::PU(path));
+	gen.add_messages_domain(domain);
+	// Boost.Locale uses UTF-8 by default.
 
 	try {
-		locale = std::locale("");
+		locale = gen(NormalizeLocale(reqLocale));
+		// locale.name() will typically be "*" when using Boost.Locale,
+		// so we need to use the specific facet.
+		HR_LOG(debug) << "Using locale: " <<
+			std::use_facet<boost::locale::info>(locale).name();
 	}
-	catch (std::runtime_error&) {
-		HR_LOG(warning) << "Unsupported locale (falling back to default).";
+	catch (std::runtime_error &ex) {
+		HR_LOG(warning) << "Unsupported locale (falling back to default): " <<
+			ex.what();
 		locale = std::locale("C");
 	}
 
 	// Update the current locale instance.
 	std::locale::global(locale);
+
+	// Set locale for Boost.Filesystem v3.
+	// This is important for Windows, so that the internal UTF-8 is converted
+	// to wide paths.
+	fs::path::imbue(std::locale());
 }
 
 /**

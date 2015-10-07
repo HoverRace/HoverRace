@@ -41,16 +41,7 @@ desktop.ini
 /lib/*.pdb
 
 # /po/
-/po/*.gmo
-/po/*.mo
 /po/*.pot
-/po/*.sed
-/po/Makevars.template
-/po/POTFILES
-/po/Rules-quot
-/po/en@boldquot.header
-/po/en@quot.header
-/po/stamp-po
 
 # /share/
 /share/*.db

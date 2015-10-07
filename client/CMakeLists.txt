@@ -49,11 +49,6 @@ if(WIN32)
 	target_link_libraries(hoverrace version comctl32)
 endif()
 
-if(NOT WIN32)
-	set_property(TARGET hoverrace APPEND PROPERTY COMPILE_DEFINITIONS
-		LOCALEDIR="${CMAKE_INSTALL_LOCALEDIR}")
-endif()
-
 # Increase memory for precompiled header.
 if(MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zm300")

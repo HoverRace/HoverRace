@@ -56,7 +56,7 @@ target_link_libraries(hrengine ${Boost_LIBRARIES} ${DEPS_LIBRARIES}
 if(WIN32)
 	# DLLs that have only release versions.
 	set(COMMON_DLLS
-		alut intl libfreetype-6 libjpeg-9 libpng16-16 LiteUnzip LiteZip
+		alut libfreetype-6 libjpeg-9 libpng16-16 LiteUnzip LiteZip
 		OpenAL32 zlib1)
 	# DLLs that have both debug and release versions.
 	set(CONFIGURED_DLLS
