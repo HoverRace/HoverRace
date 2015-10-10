@@ -30,6 +30,7 @@
 
 #include "../../engine/Exception.h"
 #include "../../engine/Util/Config.h"
+#include "../../engine/Util/Locale.h"
 #include "../../engine/Util/Log.h"
 #include "../../engine/Util/OS.h"
 #include "../../engine/Util/Str.h"
@@ -274,9 +275,7 @@ int main(int argc, char** argv)
 	Log::Info("INFO level logging enabled.");
 	Log::Debug("DEBUG level logging enabled.");
 
-#	ifdef ENABLE_NLS
-		OS::SetLocale(cfg->app.localePath, PACKAGE, reqLocale);
-#	endif
+	Locale(cfg->app.localePath, PACKAGE).RequestLocale(reqLocale);
 
 	// If --version was passed, output the version and exit.
 	if (showVersion) {

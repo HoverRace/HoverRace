@@ -64,7 +64,7 @@ using pstr_t = path_t::value_type*;
 using cpstr_t = const path_t::value_type*;
 
 void SetEnv(const char *key, const char *val);
-void SetLocale(const path_t &path, const std::string &domain,
+const std::locale &SetLocale(const path_t &path, const std::string &domain,
 	const std::string &reqLocale = {});
 
 std::string StrError(int errnum);

@@ -144,8 +144,9 @@ void OS::SetEnv(const char *key, const char *val)
  * @param domain The translation domain to use.
  * @param reqLocale The requested locale.
  *                  If blank, the system default will be used.
+ * @return The selected locale.
  */
-void OS::SetLocale(const path_t &path, const std::string &domain,
+const std::locale &OS::SetLocale(const path_t &path, const std::string &domain,
 	const std::string &reqLocale)
 {
 	// Common setting.
@@ -176,6 +177,8 @@ void OS::SetLocale(const path_t &path, const std::string &domain,
 	// This is important for Windows, so that the internal UTF-8 is converted
 	// to wide paths.
 	fs::path::imbue(std::locale());
+
+	return locale;
 }
 
 /**
