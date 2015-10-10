@@ -167,7 +167,7 @@ const std::locale &OS::SetLocale(const path_t &path, const std::string &domain,
 	catch (std::runtime_error &ex) {
 		HR_LOG(warning) << "Unsupported locale (falling back to default): " <<
 			ex.what();
-		locale = std::locale("C");
+		locale = std::locale("en_US.UTF-8");
 	}
 
 	// Update the current locale instance.
