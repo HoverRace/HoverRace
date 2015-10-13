@@ -25,7 +25,7 @@ file(STRINGS linguas.txt LINGUAS NO_HEX_CONVERSION)
 
 include(FindXGettext)
 
-xgettext_create_pot_file(${POT_FILE} ALL CPP
+xgettext_create_pot_file(${POT_FILE} CPP
 	INPUT ${SRCS} "--boost" "--sort-by-file"
 		"--msgid-bugs-address" "https://github.com/HoverRace/HoverRace"
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
@@ -33,7 +33,7 @@ xgettext_create_pot_file(${POT_FILE} ALL CPP
 	PACKAGE_NAME hoverrace
 	COPYRIGHT_HOLDER "HoverRace contributors")
 
-gettext_create_translations(${POT_FILE} ALL ${PO_SRCS})
+gettext_create_translations(${POT_FILE} ${PO_SRCS})
 
 # Install the compiled locales into the resource directory so that they're
 # available during development.
