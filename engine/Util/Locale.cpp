@@ -22,8 +22,11 @@
 #include <boost/filesystem.hpp>
 
 #include "Log.h"
+#include "Str.h"
 
 #include "Locale.h"
+
+namespace fs = boost::filesystem;
 
 namespace HoverRace {
 namespace Util {
@@ -63,7 +66,7 @@ const std::map<std::string, std::string> LOCALE_NAMES = {
 Locale::Locale(const OS::path_t &path, const std::string &domain) :
 	path(path), domain(domain), selectedLocaleId("en_US")
 {
-	//TODO: Scan locale path for available locales.
+	ScanLocales();
 }
 
 /**
@@ -111,15 +114,63 @@ void Locale::RequestLocale(const std::string &id)
 #	endif
 }
 
+/**
+ * Scan the locale directory for available locales.
+ * This will invalidate all iterators.
+ */
+void Locale::ScanLocales() const
+{
+	availableLocales.clear();
+	availableLocales.insert(*(LOCALE_NAMES.find("en_US")));
+
+#	ifdef ENABLE_NLS
+		if (!fs::exists(path)) {
+			HR_LOG(debug) <<
+				"Locale path does not exist (skipping scan): " << path;
+			return;
+		}
+
+		if (!fs::is_directory(path)) {
+			HR_LOG(error) <<
+				"Locale path is not a directory (skipping scan): " << path;
+			return;
+		}
+
+		auto domainPath =
+			Str::UP("LC_MESSAGES") /
+			Str::UP(domain + ".mo");
+
+		fs::directory_iterator iterEnd;
+		for (fs::directory_iterator iter{path}; iter != iterEnd; ++iter) {
+			auto lpath = iter->path();
+			auto id = lpath.filename().string();
+			HR_LOG(debug) << "Scanning locale dir: " << id;
+
+			auto dpath = lpath / domainPath;
+			if (fs::exists(dpath)) {
+				HR_LOG(debug) << "Found locale " << id << " at: " << dpath;
+
+				auto nameIter = LOCALE_NAMES.find(id);
+				if (nameIter != LOCALE_NAMES.end()) {
+					availableLocales.emplace(id, nameIter->second);
+				}
+				else {
+					HR_LOG(warning) << "No name for locale: " << id;
+					availableLocales.emplace(id, id);
+				}
+			}
+		}
+#	endif
+}
+
 Locale::const_iterator Locale::cbegin() const
 {
-	//TODO: Use scanned list.
-	return LOCALE_NAMES.cbegin();
+	return availableLocales.cbegin();
 }
 
 Locale::const_iterator Locale::cend() const
 {
-	return LOCALE_NAMES.cend();
+	return availableLocales.cend();
 }
 
 }  // namespace Util

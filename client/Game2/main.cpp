@@ -275,7 +275,12 @@ int main(int argc, char** argv)
 	Log::Info("INFO level logging enabled.");
 	Log::Debug("DEBUG level logging enabled.");
 
-	Locale(cfg->app.localePath, PACKAGE).RequestLocale(reqLocale);
+	Locale loc{cfg->app.localePath, PACKAGE};
+	loc.RequestLocale(reqLocale);
+	HR_LOG(info) << "Locales:";
+	for (auto &info : loc) {
+		HR_LOG(info) << info.first << ": " << info.second;
+	}
 
 	// If --version was passed, output the version and exit.
 	if (showVersion) {
