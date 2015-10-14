@@ -19,6 +19,8 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
+#include <boost/filesystem.hpp>
+
 #include "Log.h"
 
 #include "Locale.h"
@@ -28,6 +30,10 @@ namespace Util {
 
 namespace {
 
+/**
+ * Locale ID to full language name.
+ * Note: These strings are intentionally *not* localized.
+ */
 const std::map<std::string, std::string> LOCALE_NAMES = {
 	{ "en_US", "English (United States)" },
 #ifdef ENABLE_NLS
