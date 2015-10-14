@@ -50,7 +50,7 @@ namespace Util {
 namespace OS {
 
 extern std::locale locale;
-extern const std::locale stdLocale;
+extern const std::locale &stdLocale;
 
 using timestamp_t = MR_Int64;
 
