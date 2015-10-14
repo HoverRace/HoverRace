@@ -61,12 +61,17 @@ clock_t::time_point chronoStart;
  * Boost.Locale specifies UTF-8.  If not specified, the default encoding
  * "us-ascii", which will cause Boost.Locale to fail generate the locale.
  *
+ * @param gen The locale generator.
  * @param reqLocale The requested locale.
  * @return The normalized locale.
  */
-std::string NormalizeLocale(const std::string &reqLocale)
+std::string NormalizeLocale(const boost::locale::generator &gen,
+	const std::string &reqLocale)
 {
-	auto built = boost::locale::util::create_info(std::locale(), reqLocale);
+	auto basic = gen("");
+	auto built = reqLocale.empty() ?
+		basic :
+		boost::locale::util::create_info(basic, reqLocale);
 	const auto &facet = std::use_facet<boost::locale::info>(built);
 	std::ostringstream oss;
 
@@ -88,9 +93,10 @@ std::string NormalizeLocale(const std::string &reqLocale)
  * Global reference to the current locale.
  * Defaults to "C" until OS::SetLocale() is called.
  */
-std::locale OS::locale("C");
+std::locale OS::locale{""};
 
 /// The standard "C" locale for things that should be not be affected by locale.
+//TODO: Replace this with std::locale::classic.
 const std::locale OS::stdLocale("C");
 
 /**
@@ -150,7 +156,7 @@ const std::locale &OS::SetLocale(const path_t &path, const std::string &domain,
 	const std::string &reqLocale)
 {
 	// Common setting.
-	setlocale(LC_ALL, reqLocale.c_str());
+	//setlocale(LC_ALL, reqLocale.c_str());
 
 	boost::locale::generator gen;
 	gen.add_messages_path(Str::PU(path));
@@ -158,9 +164,11 @@ const std::locale &OS::SetLocale(const path_t &path, const std::string &domain,
 	// Boost.Locale uses UTF-8 by default.
 
 	try {
-		locale = gen(NormalizeLocale(reqLocale));
+		auto normalized = NormalizeLocale(gen, reqLocale);
+		locale = gen(normalized);
 		// locale.name() will typically be "*" when using Boost.Locale,
 		// so we need to use the specific facet.
+		HR_LOG(debug) << "Normalized requested locale: " << normalized;
 		HR_LOG(debug) << "Using locale: " <<
 			std::use_facet<boost::locale::info>(locale).name();
 	}
