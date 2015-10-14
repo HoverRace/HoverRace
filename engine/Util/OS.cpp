@@ -96,7 +96,6 @@ std::string NormalizeLocale(const boost::locale::generator &gen,
 std::locale OS::locale{""};
 
 /// The standard "C" locale for things that should be not be affected by locale.
-//TODO: Replace this with std::locale::classic.
 const std::locale &OS::stdLocale = std::locale::classic();
 
 /**
