@@ -91,7 +91,6 @@ public:
 		bool prerelease, const OS::path_t &mediaPath,
 		const OS::path_t &sysCfgPath,
 		const OS::path_t &path=OS::path_t());
-	static void Shutdown();
 
 	bool IsUnlinked() const;
 	void SetUnlinked(bool unlinked);
@@ -143,7 +142,11 @@ public:
 	const std::string &GetDefaultSymbolFontName() const;
 
 public:
-	static Config *GetInstance() { return instance; }
+	static Config *GetInstance()
+	{
+		assert(instance);
+		return instance.get();
+	}
 
 	void ResetToDefaults();
 
@@ -161,7 +164,7 @@ public:
 	static const std::string TRACK_EXT;
 
 private:
-	static Config *instance;
+	static std::unique_ptr<Config> instance;
 	bool unlinked;  ///< if @c true, will prevent saving config.
 	OS::path_t dataPath;  ///< Base path for data files.
 	OS::path_t cfgPath;  ///< Base path for config files.

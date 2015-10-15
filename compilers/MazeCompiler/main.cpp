@@ -153,7 +153,5 @@ int main(int pArgCount, char *pArgStrings[])
 	Util::DllObjectFactory::Clean();
 	VideoServices::SoundServer::Close();
 
-	Config::Shutdown();
-
 	return lError ? 255 : 0;
 }

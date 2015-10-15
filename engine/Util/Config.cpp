@@ -169,7 +169,7 @@ OS::path_t FindPersonalDir()
 
 const std::string Config::TRACK_EXT(".trk");
 
-Config *Config::instance = NULL;
+std::unique_ptr<Config> Config::instance{};
 
 /**
  * Create a new instance using the specified directory.
@@ -290,25 +290,15 @@ Config::~Config()
  * @return The config instance.
  */
 Config *Config::Init(int verMajor, int verMinor, int verPatch, int verBuild,
-                     bool prerelease, const OS::path_t &mediaPath,
-                     const OS::path_t &sysCfgPath,
-                     const OS::path_t &path)
+	 bool prerelease, const OS::path_t &mediaPath,
+	 const OS::path_t &sysCfgPath, const OS::path_t &path)
 {
-	if (instance == NULL) {
-		instance = new Config(verMajor, verMinor, verPatch, verBuild, prerelease, mediaPath, sysCfgPath, path);
+	if (!instance) {
+		instance.reset(
+			new Config(verMajor, verMinor, verPatch, verBuild,
+				prerelease, mediaPath, sysCfgPath, path));
 	}
-	return instance;
-}
-
-/**
- * Destroy the singleton instance.
- */
-void Config::Shutdown()
-{
-	if (instance != NULL) {
-		delete instance;
-		instance = NULL;
-	}
+	return instance.get();
 }
 
 /**

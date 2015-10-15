@@ -318,7 +318,5 @@ int main(int argc, char** argv)
 	// Library cleanup.
 	curl_global_cleanup();
 
-	Config::Shutdown();
-
 	return lErrorCode;
 }
