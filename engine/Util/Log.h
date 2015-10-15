@@ -59,7 +59,8 @@ MR_DllDeclare std::string Fmt(const char *fmt, va_list ap);
 
 MR_DllDeclare void Init();
 
-enum class Level {
+enum class Level
+{
 	// Intentionally aligned with boost::log::trivial to avoid conversions.
 	TRACE = boost::log::trivial::trace,
 	DEBUG = boost::log::trivial::debug,
@@ -69,7 +70,8 @@ enum class Level {
 	FATAL = boost::log::trivial::fatal,
 };
 
-struct Entry {
+struct Entry
+{
 	Entry(const Level level, const char *message) :
 		level(level), message(message) { }
 	Entry &operator=(const Entry&) = delete;
