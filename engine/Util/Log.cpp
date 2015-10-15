@@ -42,7 +42,6 @@
 
 #include <SDL2/SDL_log.h>
 
-#include "Config.h"
 #include "Str.h"
 
 #include "Log.h"
@@ -218,12 +217,12 @@ std::string Fmt(const char *fmt, va_list ap)
 
 /**
  * Initialize the system log.
+ * @param verboseLog Enable DEBUG-level logging.
  */
-void Init()
+void Init(bool verboseLog)
 {
 	using namespace boost::log;
 
-	const bool verboseLog = Config::GetInstance()->runtime.verboseLog;
 	auto core = core::get();
 
 	AddStreamLog();

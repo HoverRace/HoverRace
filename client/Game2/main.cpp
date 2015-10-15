@@ -263,6 +263,10 @@ int main(int argc, char** argv)
 	if (!ProcessCmdLine(argc, argv))
 		return EXIT_FAILURE;
 
+	Log::Init(verboseLog);
+	Log::Info("INFO level logging enabled.");
+	Log::Debug("DEBUG level logging enabled.");
+
 	Config *cfg = InitConfig();
 	cfg->runtime.silent = silentMode;
 	cfg->runtime.verboseLog = verboseLog;
@@ -270,10 +274,6 @@ int main(int argc, char** argv)
 	cfg->runtime.noAccel = noAccel;
 	cfg->runtime.skipStartupWarning = skipStartupWarning;
 	cfg->runtime.initScripts = initScripts;
-
-	Log::Init();
-	Log::Info("INFO level logging enabled.");
-	Log::Debug("DEBUG level logging enabled.");
 
 	Locale loc{cfg->app.localePath, PACKAGE};
 	loc.RequestLocale(reqLocale);

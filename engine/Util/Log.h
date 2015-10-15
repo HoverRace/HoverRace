@@ -57,7 +57,7 @@ MR_DllDeclare std::string Fmt(const char *fmt, va_list ap);
 
 }  // namespace detail
 
-MR_DllDeclare void Init();
+MR_DllDeclare void Init(bool verboseLog = false);
 
 enum class Level
 {
