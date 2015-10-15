@@ -277,10 +277,6 @@ int main(int argc, char** argv)
 
 	Locale loc{cfg->app.localePath, PACKAGE};
 	loc.RequestLocale(reqLocale);
-	HR_LOG(info) << "Locales:";
-	for (auto &info : loc) {
-		HR_LOG(info) << info.first << ": " << info.second;
-	}
 
 	// If --version was passed, output the version and exit.
 	if (showVersion) {
