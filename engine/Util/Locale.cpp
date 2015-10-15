@@ -64,7 +64,7 @@ const std::map<std::string, std::string> LOCALE_NAMES = {
 }  // namespace
 
 Locale::Locale(const OS::path_t &path, const std::string &domain) :
-	path(path), domain(domain), selectedLocaleId("en_US")
+	path(path), domain(domain)
 {
 	ScanLocales();
 }
@@ -75,10 +75,13 @@ Locale::Locale(const OS::path_t &path, const std::string &domain) :
  */
 void Locale::RequestLocale(const std::string &id)
 {
-#	ifdef ENABLE_NLS
+#	ifndef ENABLE_NLS
+		selectedLocaleId = "en_US";
+#	else
 		auto &locale = OS::SetLocale(path, domain, id);
 
 		// Try to determine which of our supported locales (if any) were chosen.
+		selectedLocaleId = boost::none;
 		const auto &facet = std::use_facet<boost::locale::info>(locale);
 		const auto language = facet.language();
 		const auto country = facet.country();

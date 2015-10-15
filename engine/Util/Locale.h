@@ -52,9 +52,11 @@ public:
 
 	/**
 	 * Return the ID of the locale that was selected by RequestLocale().
-	 * @return The locale ID (never empty).
+	 * @return The locale ID, if set.
+	 *         If not set, then the requested locale was unavailable, so
+	 *         the default is being used instead.
 	 */
-	const std::string &GetSelectedLocaleId() const { return selectedLocaleId; }
+	const boost::optional<std::string> &GetSelectedLocaleId() const { return selectedLocaleId; }
 
 private:
 	using locales_t = std::map<std::string, std::string>;
@@ -74,7 +76,7 @@ public:
 private:
 	OS::path_t path;
 	std::string domain;
-	std::string selectedLocaleId;
+	boost::optional<std::string> selectedLocaleId;
 	locales_t availableLocales;  ///< Cached list of available locales.
 };
 
