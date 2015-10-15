@@ -118,7 +118,7 @@ void Locale::RequestLocale(const std::string &id)
  * Scan the locale directory for available locales.
  * This will invalidate all iterators.
  */
-void Locale::ScanLocales() const
+void Locale::ScanLocales()
 {
 	availableLocales.clear();
 	availableLocales.insert(*(LOCALE_NAMES.find("en_US")));

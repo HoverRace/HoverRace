@@ -59,7 +59,7 @@ public:
 private:
 	using locales_t = std::map<std::string, std::string>;
 
-	void ScanLocales() const;
+	void ScanLocales();
 
 public:
 	// STL-like iteration.
@@ -75,7 +75,7 @@ private:
 	OS::path_t path;
 	std::string domain;
 	std::string selectedLocaleId;
-	mutable locales_t availableLocales;  ///< Cached list of available locales.
+	locales_t availableLocales;  ///< Cached list of available locales.
 };
 
 }  // namespace Util
