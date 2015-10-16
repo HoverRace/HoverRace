@@ -49,11 +49,6 @@ if(WIN32)
 	target_link_libraries(hoverrace version comctl32)
 endif()
 
-# Increase memory for precompiled header.
-if(MSVC)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zm300")
-endif()
-
 # Bump the warning level.
 include(SetWarningLevel)
 set_full_warnings(TARGET hoverrace)
@@ -70,6 +65,8 @@ set_target_properties(hoverrace PROPERTIES
 	COTIRE_ADD_UNITY_BUILD FALSE)
 set_target_properties(hoverrace PROPERTIES
 	COTIRE_CXX_PREFIX_HEADER_INIT StdAfx.h)
+set_target_properties(hoverrace PROPERTIES
+	COTIRE_PCH_MEMORY_SCALING_FACTOR 300)
 cotire(hoverrace LANGUAGES CXX)
 
 # Install convenience wrapper scripts.

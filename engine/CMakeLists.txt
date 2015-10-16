@@ -80,11 +80,6 @@ if(WIN32)
 	endforeach()
 endif(WIN32)
 
-# Increase memory for precompiled header.
-if(MSVC)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zm150")
-endif()
-
 # Bump the warning level.
 include(SetWarningLevel)
 set_full_warnings(TARGET hrengine)
@@ -95,4 +90,6 @@ set_target_properties(hrengine PROPERTIES
 	COTIRE_ADD_UNITY_BUILD FALSE)
 set_target_properties(hrengine PROPERTIES
 	COTIRE_CXX_PREFIX_HEADER_INIT StdAfx.h)
+set_target_properties(hoverrace PROPERTIES
+	COTIRE_PCH_MEMORY_SCALING_FACTOR 170)
 cotire(hrengine LANGUAGES CXX)
