@@ -191,7 +191,7 @@ bool ProcessCmdLine(int argc, char **argv)
 // Initialize (but not load) the config system.
 Config *InitConfig()
 {
-	return Config::Init(HR_APP_VERSION, HR_APP_VERSION_PRERELEASE,
+	return Config::Init(PACKAGE, HR_APP_VERSION, HR_APP_VERSION_PRERELEASE,
 		mediaPath, sysCfgPath);
 }
 
@@ -273,9 +273,7 @@ int main(int argc, char** argv)
 	cfg->runtime.noAccel = noAccel;
 	cfg->runtime.skipStartupWarning = skipStartupWarning;
 	cfg->runtime.initScripts = initScripts;
-
-	Locale loc{cfg->app.localePath, PACKAGE};
-	loc.RequestLocale(reqLocale);
+	cfg->GetLocale().RequestLocale(reqLocale);
 
 	// If --version was passed, output the version and exit.
 	if (showVersion) {

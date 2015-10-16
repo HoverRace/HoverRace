@@ -21,8 +21,6 @@
 
 #pragma once
 
-#include <string>
-
 #ifndef _WIN32
 	// Use XDG base directories on non-Win32.
 #	include <basedir.h>
@@ -48,6 +46,7 @@ namespace HoverRace {
 		class TrackBundle;
 	}
 	namespace Util {
+		class Locale;
 		namespace yaml {
 			class Emitter;
 			class MapNode;
@@ -80,17 +79,19 @@ private:
 class MR_DllDeclare Config
 {
 private:
-	Config(int verMajor, int verMinor, int verPatch, int verBuild,
+	Config(const std::string &packageName,
+		int verMajor, int verMinor, int verPatch, int verBuild,
 		bool prerelease, const OS::path_t &mediaPath,
 		const OS::path_t &sysCfgPath,
-		const OS::path_t &file=OS::path_t());
+		const OS::path_t &path = { });
 public:
 	~Config();
 
-	static Config *Init(int verMajor, int verMinor, int verPatch, int verBuild,
+	static Config *Init(const std::string &packageName,
+		int verMajor, int verMinor, int verPatch, int verBuild,
 		bool prerelease, const OS::path_t &mediaPath,
 		const OS::path_t &sysCfgPath,
-		const OS::path_t &path=OS::path_t());
+		const OS::path_t &path = { });
 
 	bool IsUnlinked() const;
 	void SetUnlinked(bool unlinked);
@@ -127,6 +128,8 @@ public:
 	 * @return The track bundle (never @c nullptr).
 	 */
 	std::shared_ptr<Parcel::TrackBundle> ShareTrackBundle() const { return trackBundle; }
+
+	Locale &GetLocale() { return *locale; }
 
 	OS::path_t GetScriptHelpPath(const std::string &className) const;
 
@@ -165,6 +168,7 @@ public:
 
 private:
 	static std::unique_ptr<Config> instance;
+	std::string packageName;
 	bool unlinked;  ///< if @c true, will prevent saving config.
 	OS::path_t dataPath;  ///< Base path for data files.
 	OS::path_t cfgPath;  ///< Base path for config files.
@@ -173,6 +177,7 @@ private:
 	OS::path_t userTrackPath;
 	std::shared_ptr<Parcel::ResBundle> resBundle;
 	std::shared_ptr<Parcel::TrackBundle> trackBundle;
+	std::unique_ptr<Locale> locale;
 	int verBuild;
 	bool prerelease;
 	std::string shortVersion;

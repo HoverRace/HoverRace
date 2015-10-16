@@ -54,6 +54,7 @@
 #include "../Parcel/Bundle.h"
 #include "../Parcel/ResBundle.h"
 #include "../Parcel/TrackBundle.h"
+#include "Locale.h"
 #include "Log.h"
 #include "Str.h"
 
@@ -173,6 +174,7 @@ std::unique_ptr<Config> Config::instance{};
 
 /**
  * Create a new instance using the specified directory.
+ * @param packageName The name of the application for shared data files.
  * @param verMajor The major (first) component of the version number.
  * @param verMinor The minor (second) component of the version number.
  * @param verPatch The patch (third) component of the version number.
@@ -187,10 +189,12 @@ std::unique_ptr<Config> Config::instance{};
  *             The default is to use {@link #GetBaseDataPath()} and
  *             {@link #GetBaseConfigPath()}.
  */
-Config::Config(int verMajor, int verMinor, int verPatch, int verBuild,
-               bool prerelease, const OS::path_t &mediaPath,
-               const OS::path_t &sysCfgPath,
-               const OS::path_t &path) :
+Config::Config(const std::string &packageName,
+	int verMajor, int verMinor, int verPatch, int verBuild,
+	bool prerelease, const OS::path_t &mediaPath,
+	const OS::path_t &sysCfgPath,
+	const OS::path_t &path) :
+	packageName(packageName),
 	unlinked(false),
 	sysCfgPath(sysCfgPath),
 	verBuild(verBuild),
@@ -237,6 +241,8 @@ Config::Config(int verMajor, int verMinor, int verPatch, int verBuild,
 	defaultMonospaceFontName = "freefont/FreeMono";
 	defaultSymbolFontName = "fontawesome/fontawesome-webfont";
 
+	locale.reset(new Locale(app.localePath, packageName));
+
 	// Set initial defaults.
 	ResetToDefaults();
 
@@ -274,6 +280,7 @@ Config::~Config()
 
 /**
  * Initialize the singleton instance.
+ * @param packageName The name of the application for shared data files.
  * @param verMajor The major (first) component of the version number.
  * @param verMinor The minor (second) component of the version number.
  * @param verPatch The patch (third) component of the version number.
@@ -289,13 +296,14 @@ Config::~Config()
  *             {@link #GetBaseConfigPath()}.
  * @return The config instance.
  */
-Config *Config::Init(int verMajor, int verMinor, int verPatch, int verBuild,
-	 bool prerelease, const OS::path_t &mediaPath,
-	 const OS::path_t &sysCfgPath, const OS::path_t &path)
+Config *Config::Init(const std::string &packageName,
+	int verMajor, int verMinor, int verPatch, int verBuild,
+	bool prerelease, const OS::path_t &mediaPath,
+	const OS::path_t &sysCfgPath, const OS::path_t &path)
 {
 	if (!instance) {
 		instance.reset(
-			new Config(verMajor, verMinor, verPatch, verBuild,
+			new Config(packageName, verMajor, verMinor, verPatch, verBuild,
 				prerelease, mediaPath, sysCfgPath, path));
 	}
 	return instance.get();
