@@ -315,7 +315,6 @@ public:
 
 	struct runtime_t {
 		bool silent;
-		bool verboseLog;
 		bool showFramerate;
 		bool enableConsole;
 		bool enableDebugOverlay;

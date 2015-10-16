@@ -269,7 +269,6 @@ int main(int argc, char** argv)
 
 	Config *cfg = InitConfig();
 	cfg->runtime.silent = silentMode;
-	cfg->runtime.verboseLog = verboseLog;
 	cfg->runtime.showFramerate = showFramerate;
 	cfg->runtime.noAccel = noAccel;
 	cfg->runtime.skipStartupWarning = skipStartupWarning;

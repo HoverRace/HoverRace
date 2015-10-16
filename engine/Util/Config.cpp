@@ -744,7 +744,6 @@ void Config::ResetToDefaults()
 	ui.menuPrev = InputEventController::HashKeyboardEvent(SDLK_SELECT);
 
 	runtime.silent = false;
-	runtime.verboseLog = false;
 	runtime.showFramerate = false;
 	runtime.enableConsole = true;
 	runtime.enableDebugOverlay = false;
