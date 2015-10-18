@@ -19,3 +19,6 @@ indent_brace_style = K&R
 indent_style = space
 indent_size = 2
 
+[.git/{COMMIT_EDIT,MERGE}MSG]
+max_line_length = 72
+
