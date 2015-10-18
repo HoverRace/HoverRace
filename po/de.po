@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hoverrace 2.0\n"
 "Report-Msgid-Bugs-To: https://github.com/HoverRace/HoverRace\n"
-"POT-Creation-Date: 2015-10-03 16:31-0400\n"
+"POT-Creation-Date: 2015-10-18 17:41-0400\n"
 "PO-Revision-Date: 2009-07-13 14:54-0400\n"
 "Last-Translator: Ryan Curtin <ryan@tortoise.igglybob.com>\n"
 "Language-Team: German\n"
@@ -18,759 +18,560 @@ msgstr ""
 "X-Generator: Pootle 1.2.1\n"
 "X-Poedit-Language: German\n"
 
-#: client/Game2/NetInterface.cpp:1774
 msgid " are using the same IP and port!"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:1799
 msgid " at IP "
 msgstr ""
 
-#: client/Game2/Observer.cpp:81
 #, c-format, boost-format
 msgid "%d %-0.10s #%d%*s   --First lap--  %c"
 msgstr ""
 
-#: client/Game2/Observer.cpp:84
 #, c-format, boost-format
 msgid "%d %-0.10s #%d%*s  %2d      %2d"
 msgstr ""
 
-#: client/Game2/Observer.cpp:82
 #, c-format, boost-format
 msgid "%d %-0.10s #%d%*s %2d.%02d.%03d %2d.%02d.%03d%c"
 msgstr ""
 
-#: client/Game2/Observer.cpp:83
 #, c-format, boost-format
 msgid "%d %-0.10s #%d%*s lap:%-2d   %2d.%02d.%03d%c"
 msgstr ""
 
-#: client/Game2/Observer.cpp:89
 #, c-format, boost-format
 msgid "%d.%02d.%02d  Lap:%d/%d"
 msgstr ""
 
-#: client/Game2/NetworkSession.cpp:689
 #, c-format, boost-format
 msgid "%s has left"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:800
 msgctxt "Menu"
 msgid "&File"
 msgstr "&Datei"
 
-#: client/Game2/GameApp.cpp:1709
 msgctxt "Menu|Setting"
 msgid "&Fullscreen"
 msgstr "&Vollbild"
 
-#: client/Game2/GameApp.cpp:806
 msgctxt "Menu"
 msgid "&Help"
 msgstr "&Hilfe"
 
-#: client/Game2/MultiplayerPrefsPage.cpp:74
 msgid "&Log all chat sessions to:"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:753
 msgctxt "Menu|File"
 msgid "&Network"
 msgstr "&Netzwerk"
 
-#: client/Game2/GameApp.cpp:804
 msgctxt "Menu"
 msgid "&Setting"
 msgstr "&Einstellung"
 
-#: client/Game2/GameApp.cpp:751
 msgctxt "Menu|File"
 msgid "&Split Screen"
 msgstr "&Geteilter Bildschirm"
 
-#: client/Game2/GameApp.cpp:802
 msgctxt "Menu"
 msgid "&View"
 msgstr "&Ansicht"
 
-#: client/Game2/NetInterface.cpp:1735
 msgid ""
 "; perhaps they are behind a firewall and need to forward ports 9530 and 9531 "
 "TCP and UDP?"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:481
 msgid "Abort current game?"
 msgstr "Spiel abrechen?"
 
-#: client/Game2/AboutDialog.cpp:67
 msgid "About HoverRace"
 msgstr "Über HoverRace"
 
-#: client/Game2/ControlPrefsPage.cpp:149
 #, fuzzy
 msgid "Action"
 msgstr "Strecke Auswahl"
 
-#: client/Game2/NetworkPrefsPage.cpp:77
 msgid "Address of Server Roomlist:"
 msgstr "Addresse vom Server raumliste:"
 
-#: client/Game2/NetworkPrefsPage.cpp:82
 #, fuzzy
 msgid "Address of Update Server List:"
 msgstr "Addresse vom Server raumliste:"
 
-#: client/Game2/SettingsMenuScene.cpp:91
 msgid "Advanced"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:146
 msgid "Again"
 msgstr ""
 
-#: client/Game2/Observer.cpp:78
 msgid "Against"
 msgstr ""
 
-#: client/Game2/DisplaySelectScene.cpp:134
 msgid "All"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1023
 msgid "Already used key (report for investigation)"
 msgstr ""
 
-#: client/Game2/PauseMenuScene.cpp:48
 msgid "Any unsaved race records will be lost."
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:126
 msgid "App"
 msgstr ""
 
-#: client/Game2/PauseMenuScene.cpp:117
 msgid "Are you sure you want to abandon the race and exit the game?"
 msgstr ""
 
-#: client/Game2/PauseMenuScene.cpp:109
 msgid "Are you sure you want to abandon the race and return to the main menu?"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:1851
 msgid "Ask me this each time I launch a game alone"
 msgstr ""
 
-#: client/Game2/AudioSettingsScene.cpp:40
-#: client/Game2/SettingsMenuScene.cpp:85
-#: client/Game2/VideoAudioPrefsPage.cpp:199
 msgid "Audio"
 msgstr ""
 
-#: client/Game2/NetworkPrefsPage.cpp:85
 msgid "Automatically check for HoverRace updates"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1249
 msgid "Availability:"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:820
 msgid "Available"
 msgstr "Verfügbar"
 
-#: client/Game2/CheckUpdateServerDialog.cpp:99
 #, fuzzy
 msgid "Available version: "
 msgstr "Die Version ist nicht kompatibel"
 
-#: client/Game2/GameSelectScene.cpp:65 client/Game2/PracticeSetupScene.cpp:52
-#: client/Game2/SettingsMenuScene.cpp:71 client/Game2/TrackSelectScene.cpp:62
 #, fuzzy
 msgid "Back"
 msgstr "Zurück Schauen:"
 
-#: engine/Control/ControllerStrings.cpp:65
 msgid "Backspace"
 msgstr ""
 
-#: compilers/ResourceCompiler/ResActorBuilder.cpp:235
 msgid "Bad bitmap ID"
 msgstr ""
 
-#: engine/MazeCompiler/TrackCompiler.cpp:295
 msgid "Bad palette format for background file"
 msgstr ""
 
-#: client/Game2/Observer.cpp:150
 msgid "Basic craft"
 msgstr "Basic-Schiff"
 
-#: client/Game2/Observer.cpp:76
 msgid "Best Lap"
 msgstr ""
 
-#: client/Game2/Observer.cpp:88
 #, c-format, boost-format
 msgid "Best lap %d.%02d.%03d"
 msgstr ""
 
-#: client/Game2/Observer.cpp:152
 msgid "Bi-Turbo craft"
 msgstr "Bi-Turbo-Schiff"
 
-#: client/Game2/ControlPrefsPage.cpp:155
 msgid "Binding"
 msgstr ""
 
-#: engine/Control/Controller.cpp:64
 msgid "Bottom"
 msgstr ""
 
-#: engine/Control/Controller.cpp:573
 #, fuzzy
 msgid "Brake"
 msgstr "Bremse:"
 
-#: client/Game2/VideoAudioPrefsPage.cpp:197
 msgid "Brightness"
 msgstr "Helligkeit"
 
-#: client/Game2/Observer.cpp:151
 msgid "CX craft"
 msgstr "CX-Schiff"
 
-#: engine/Control/Controller.cpp:417 engine/Control/Controller.cpp:528
-#: engine/Control/Controller.cpp:611
 msgid "Camera"
 msgstr ""
 
-#: client/Game2/CheckRoomListDialog.cpp:89
-#: client/Game2/CheckUpdateServerDialog.cpp:170
-#: client/Game2/SelectRoomDialog.cpp:121 engine/Control/Controller.cpp:53
-#: engine/Control/ControllerStrings.cpp:159
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: client/Game2/CheckRoomListDialog.cpp:97
-#: client/Game2/CheckUpdateServerDialog.cpp:178
-#: client/Game2/SelectRoomDialog.cpp:133
 #, fuzzy
 msgid "Canceling..."
 msgstr "Abbrechen"
 
-#: client/Game2/NetInterface.cpp:1797
 msgid "Cannot connect to peer "
 msgstr ""
 
-#: client/Game2/DownloadUpdateDialog.cpp:200
 #, c-format, boost-format
 msgid "Cannot open file %s for writing!"
 msgstr ""
 
-#: client/Game2/DownloadUpdateDialog.cpp:244
 #, c-format, boost-format
 msgid "Cannot update!  File %s not found.  Contact a site administrator."
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:84
 msgid "Caps Lock"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:744
 msgid "Chat log started at:"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1251
 #, fuzzy
 msgid "Chat section"
 msgstr "Strecke Auswahl"
 
-#: client/Game2/NetworkPrefsPage.cpp:79
 msgid "Check URL"
 msgstr ""
 
-#: client/Game2/NetworkPrefsPage.cpp:84
 msgid "Check for updates"
 msgstr ""
 
-#: client/Game2/CheckRoomListDialog.cpp:88
 msgid "Checking roomlist URL.  Please wait."
 msgstr ""
 
-#: client/Game2/CheckUpdateServerDialog.cpp:169
 msgid "Checking server for updates.  Please wait."
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:160
 msgid "Clear"
 msgstr ""
 
-#: client/Game2/AboutDialog.cpp:123
 msgid "Close"
 msgstr "Schließen"
 
-#: compilers/MazeCompiler/main.cpp:148
 #, fuzzy
 msgid "Command line error"
 msgstr "Kommunikations fehler"
 
-#: client/Game2/InternetRoom.cpp:997
 msgid "Communication error"
 msgstr "Kommunikations fehler"
 
-#: engine/MazeCompiler/TrackCompiler.cpp:168
 msgid "Compiled track successfully!"
 msgstr ""
 
-#: engine/MazeCompiler/TrackCompiler.cpp:102
 #, c-format, boost-format
 msgid "Compiling track (%s)"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:1426 client/Game2/NetInterface.cpp:1496
 msgid "Computing lag"
 msgstr ""
 
-#: engine/MazeCompiler/LevelBuilderVisiblesZones.cpp:81
 msgid "Computing visible zones... be patient"
 msgstr ""
 
-#: client/Game2/DisplaySelectScene.cpp:164
 msgctxt "Display Resolution"
 msgid "Confirm"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:1093 client/Game2/NetInterface.cpp:1630
-#: client/Game2/NetInterface.cpp:1650 client/Game2/NetInterface.cpp:1660
 msgid "Connected"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:1427 client/Game2/NetInterface.cpp:1497
 msgid "Connecting"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:868
 #, fuzzy
 msgid "Connecting to server..."
 msgstr "&Verbund mit dem Server"
 
-#: client/Game2/InternetRoom.cpp:468
 msgid "Connecting to the Internet Meeting Room..."
 msgstr "Verbindet mit einem Internet Besprechungsraum..."
 
-#: client/Game2/SelectRoomDialog.cpp:116
 #, fuzzy
 msgid "Connecting..."
 msgstr "Strecke Auswahl"
 
-#: client/Game2/NetworkPrefsPage.cpp:88
 #, fuzzy
 msgid "Connection"
 msgstr "Strecke Auswahl"
 
-#: engine/MazeCompiler/LevelBuilder.cpp:454
 #, c-format, boost-format
 msgid "Connection between sections %d and %d do not match"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:1809
 msgid "Connection error with "
 msgstr ""
 
-#: engine/MazeCompiler/LevelBuilder.cpp:399
 #, fuzzy
 msgid "Connection list not found"
 msgstr "Verbindet mit einem Internet Besprechungsraum..."
 
-#: client/Game2/NetInterface.cpp:1733
 msgid "Connection refused by peer"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1966 client/Game2/InternetRoom.cpp:2107
 msgid "Connection timeout"
 msgstr ""
 
-#: engine/MazeCompiler/LevelBuilder.cpp:420
-#: engine/MazeCompiler/LevelBuilder.cpp:428
 #, fuzzy, c-format, boost-format
 msgid "Connection to a nonexistent section %d"
 msgstr "Verbindet mit einem Internet Besprechungsraum..."
 
-#: engine/Control/Controller.cpp:435 engine/Control/Controller.cpp:504
-#: engine/Control/Controller.cpp:656
 #, fuzzy
 msgid "Console"
 msgstr "Schließen"
 
-#: engine/Control/Controller.cpp:429 engine/Control/Controller.cpp:645
 #, fuzzy
 msgid "ConsoleToggle"
 msgstr "Schließen"
 
-#: client/Game2/VideoAudioPrefsPage.cpp:196
 msgid "Contrast"
 msgstr "Kontrast"
 
-#: client/Game2/ControlPrefsPage.cpp:290
 msgid "Control Assignment"
 msgstr ""
 
-#: client/Game2/ControlPrefsPage.cpp:52
 msgid "Controls"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:149
 msgid "Copy"
 msgstr ""
 
-#: client/Game2/MainMenuScene.cpp:85
 msgid "Credits"
 msgstr ""
 
-#: client/Game2/Observer.cpp:91
 #, c-format, boost-format
 msgid "Current lap %d.%02d.%03d  Best %d.%02d.%03d"
 msgstr ""
 
-#: client/Game2/CheckUpdateServerDialog.cpp:96
 #, fuzzy
 msgid "Current version: "
 msgstr "HoverRace Version "
 
-#: engine/Control/ControllerStrings.cpp:148
 msgid "Cut"
 msgstr ""
 
-#: client/Game2/VideoAudioPrefsPage.cpp:151
 msgid "Default Monitor"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:83
 msgid "Del"
 msgstr ""
 
-#: client/Game2/FolderViewer.cpp:90
 msgid "Directory does not exist."
 msgstr ""
 
-#: client/Game2/MiscPrefsPage.cpp:61
 msgid "Disable Intro Movie"
 msgstr "Intro (film) abstellen"
 
-#: client/Game2/MiscPrefsPage.cpp:63
 msgid ""
 "Disable the prompt to connect to the Internet each time HoverRace starts"
 msgstr ""
 "Die aufforderung ob man mit dem internet verbinden will, dass jedes mal wenn "
 "man das program aufstartet kommt, deaktiviren "
 
-#: engine/Control/ControllerStrings.cpp:222
 msgid "Disabled"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:1354
 msgid "Disconnected"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:510
 msgid "Disconnecting from the Internet Meeting Room..."
 msgstr "Verbinden vom Internet Besprechungsraum..."
 
-#: client/Game2/VideoSettingsScene.cpp:47
 msgid "Display Mode"
 msgstr ""
 
-#: engine/Control/Controller.cpp:56
 msgid "Down"
 msgstr ""
 
-#: client/Game2/DownloadUpdateDialog.cpp:114
-#: client/Game2/DownloadUpdateDialog.cpp:171
-#: client/Game2/TrackDownloadDialog.cpp:122
-#: client/Game2/TrackDownloadDialog.cpp:180
 msgid "Downloading"
 msgstr ""
 
-#: client/Game2/TrackDownloadDialog.cpp:273
 msgid "Downloading Track:"
 msgstr ""
 
-#: client/Game2/DownloadUpdateDialog.cpp:272
 msgid "Downloading Update:"
 msgstr ""
 
-#: engine/MazeCompiler/LevelBuilder.cpp:103
-#: engine/MazeCompiler/LevelBuilder.cpp:124
 #, c-format, boost-format
 msgid "Duplicate section ID (%d) on line %d"
 msgstr ""
 
-#: compilers/ResourceCompiler/BitmapHelper.cpp:64
-#: compilers/ResourceCompiler/BitmapHelper.cpp:81
-#: compilers/ResourceCompiler/BitmapHelper.cpp:145
-#: compilers/ResourceCompiler/ResActorBuilder.cpp:69
-#: compilers/ResourceCompiler/ResActorBuilder.cpp:225
-#: compilers/ResourceCompiler/ResActorBuilder.cpp:235
-#: compilers/ResourceCompiler/ResSoundBuilder.cpp:62
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:143
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:162
-#: compilers/ResourceCompiler/ResourceLibBuilder.cpp:96
-#: compilers/ResourceCompiler/TextParsing.cpp:40
-#: compilers/ResourceCompiler/TextParsing.cpp:57
 msgid "ERROR"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:953
 msgid "ERROR Unable to connect to server..."
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:103
 msgid "End"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:67
 msgid "Enter"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1051
 msgid "Entry is no longer available"
 msgstr ""
 
-#: client/Game2/Observer.cpp:153
 msgid "Eon craft"
 msgstr "Eon-Schiff"
 
-#: client/Game2/CheckUpdateServerDialog.cpp:149
 msgid "Error while checking for updates:"
 msgstr ""
 
-#: client/Game2/RoomListDialog.cpp:85
 msgid "Error while retrieving roomlist:"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:68
 msgid "Esc"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:141
 msgid "Execute"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1019
 msgid "Expired key"
 msgstr "Abgelaufener schlüssel"
 
-#: engine/Control/Controller.cpp:54
 msgid "Extra"
 msgstr ""
 
-#: client/Game2/TrackDownloadDialog.cpp:123
 msgid "Extracting"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:85
 msgid "F1"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:94
 msgid "F10"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:95
 msgid "F11"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:96
 msgid "F12"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:129
 msgid "F13"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:130
 msgid "F14"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:131
 msgid "F15"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:132
 msgid "F16"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:133
 msgid "F17"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:134
 msgid "F18"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:135
 msgid "F19"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:86
 msgid "F2"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:136
 msgid "F20"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:137
 msgid "F21"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:138
 msgid "F22"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:139
 msgid "F23"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:140
 msgid "F24"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:87
 msgid "F3"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:88
 msgid "F4"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:89
 msgid "F5"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:90
 msgid "F6"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:91
 msgid "F7"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:92
 msgid "F8"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:93
 msgid "F9"
 msgstr ""
 
-#: client/Game2/FolderViewer.cpp:102
 #, fuzzy
 msgid "Failed to create directory."
 msgstr "Fehler beim hinzufügen vom User"
 
-#: engine/Control/ControllerStrings.cpp:151
 msgid "Find"
 msgstr ""
 
-#: client/Game2/DownloadUpdateDialog.cpp:115
-#: client/Game2/TrackDownloadDialog.cpp:124
 msgid "Finished"
 msgstr ""
 
-#: client/Game2/Observer.cpp:87
 #, c-format, boost-format
 msgid "Finished in %d.%02d.%03d"
 msgstr ""
 
-#: client/Game2/Observer.cpp:86
 #, c-format, boost-format
 msgid "Finished in %d.%02d.%03d, placed %d of %d"
 msgstr ""
 
-#: engine/Control/Controller.cpp:577
 msgid "Fire"
 msgstr ""
 
-#: client/Game2/Observer.cpp:78
 msgid "For"
 msgstr ""
 
-#: client/Game2/HoverScript/SysConsole.cpp:214
 #, c-format, boost-format
 msgid "For help on a class or method, call the %s method: %s"
 msgstr ""
 
-#: client/Game2/VideoSettingsScene.cpp:48
 #, fuzzy
 msgid "Fullscreen"
 msgstr "&Vollbild"
 
-#: client/Game2/VideoAudioPrefsPage.cpp:204
 #, fuzzy
 msgid "Fullscreen Monitor"
 msgstr "Vollbild auflösung"
 
-#: client/Game2/VideoAudioPrefsPage.cpp:205
-#: client/Game2/VideoSettingsScene.cpp:53
 msgid "Fullscreen Resolution"
 msgstr "Vollbild auflösung"
 
-#: client/Game2/VideoAudioPrefsPage.cpp:203
 #, fuzzy
 msgid "Fullscreen Settings"
 msgstr "Vollbild auflösung"
 
-#: client/Game2/NetInterface.cpp:1693
 msgid "Game cancelled by server"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1245
 msgid "Game details"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1067
 msgid "Game is full"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1063 client/Game2/InternetRoom.cpp:1080
-#: client/Game2/InternetRoom.cpp:1097 client/Game2/InternetRoom.cpp:1123
 msgid "Game is no longer available"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1243
 msgid "Game list"
 msgstr ""
 
-#: client/Game2/VideoAudioPrefsPage.cpp:195
 msgid "Gamma"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:142
 #, fuzzy
 msgid "Help"
 msgstr "&Hilfe"
 
-#: engine/Control/ControllerStrings.cpp:101
 msgid "Home"
 msgstr ""
 
-#: client/Game2/AboutDialog.cpp:86
 msgid "HoverRace is brought to you by:"
 msgstr "HoverRace von: "
 
-#: client/Game2/VideoAudioPrefsPage.cpp:332
 msgid "HoverRace is currently in silent mode."
 msgstr ""
 
-#: client/Game2/AboutDialog.cpp:70
 msgid "HoverRace version "
 msgstr "HoverRace Version "
 
-#: client/Game2/GameApp.cpp:917
 msgid ""
 "HoverRace was unable to switch the video mode. You will need to play in full "
 "screen."
@@ -778,22 +579,16 @@ msgstr ""
 "Ein fehler ist beim wechseln des Anzeige-Modus vorgekommen.\n"
 "Sie müssen im Vollbild-Modus spielen."
 
-#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:485
-#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:494
-#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:501
 msgid "INFO"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:884
 msgid ""
 "If this is your first time running HoverRace, try restarting your computer."
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1015
 msgid "Incompatible version"
 msgstr "Die Version ist nicht kompatibel"
 
-#: client/Game2/GameApp.cpp:2060
 msgid ""
 "Incompatible video mode. Select a compatible video mode by pressing F8 or F9 "
 "once a game is started"
@@ -801,777 +596,574 @@ msgstr ""
 "Nicht kompatibele abspiel modus. wählen sie eine bessere abspiel modus mit "
 "F8 oder F9 während einem laufendem Spiel"
 
-#: engine/MazeCompiler/TrackCompiler.cpp:316
 msgid "Incorrect background resolution"
 msgstr ""
 
-#: client/Game2/DownloadUpdateDialog.cpp:113
-#: client/Game2/TrackDownloadDialog.cpp:121
 msgid "Initializing"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:100
 msgid "Ins"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1159 client/Game2/InternetRoom.cpp:1240
-#: client/Game2/InternetRoom.cpp:1967 client/Game2/MultiplayerPrefsPage.cpp:67
-#: client/Game2/SelectRoomDialog.cpp:115
 msgid "Internet Meeting Room"
 msgstr "Internet Besprechungsraum"
 
-#: compilers/ResourceCompiler/BitmapHelper.cpp:81
 msgid "Invalid file type"
 msgstr ""
 
-#: engine/MazeCompiler/LevelBuilder.cpp:260
 #, fuzzy, c-format, boost-format
 msgid "Invalid parent room reference on line %d\n"
 msgstr "Fehler beim hinzufügen vom User"
 
-#: client/Game2/VideoAudioPrefsPage.cpp:283
 msgid "Invalid resolution; reverting to default"
 msgstr "Ungültige auflösung; wechselt zum standard"
 
-#: engine/MazeCompiler/LevelBuilder.cpp:571
 #, fuzzy, c-format, boost-format
 msgid "Invalid room index on line %d"
 msgstr "Fehler beim hinzufügen vom User"
 
-#: engine/MazeCompiler/LevelBuilder.cpp:517
 #, c-format, boost-format
 msgid "Invalid starting position room %d"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:1886
 msgid ""
 "It is highly preferable to wait until all players have successfully "
 "connected to the game before pressing the start button."
 msgstr ""
 
-#: engine/Control/Controller.cpp:578
 msgid "Item"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1252
 msgid "Join Game..."
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:824
 msgid "Join game to download from hoverrace.com"
 msgstr ""
 
-#: engine/Control/Controller.cpp:576
 #, fuzzy
 msgid "Jump"
 msgstr "Springen:"
 
-#: client/Game2/NetInterface.cpp:1071
 msgid "Lag (ms)"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1247
 msgid "Laps:"
 msgstr "Runden"
 
-#: client/Game2/Observer.cpp:90
 #, c-format, boost-format
 msgid "Last lap %d.%02d.%03d  Best %d.%02d.%03d"
 msgstr ""
 
-#: engine/Control/Controller.cpp:57
 #, fuzzy
 msgid "Left"
 msgstr "Links drehen:"
 
-#: engine/Control/ControllerStrings.cpp:173
 msgid "Left Alt"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:171
 msgid "Left Ctrl"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:174
 msgid "Left GUI"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:239
 msgid "Left Mouse Btn"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:172
 msgid "Left Shift"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:1092
 msgid "Local"
 msgstr ""
 
-#: engine/Control/Controller.cpp:579
 #, fuzzy
 msgid "Look Back"
 msgstr "Zurück Schauen:"
 
-#: client/Game2/NetInterface.cpp:1772
 msgid "Main server and peer "
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:185
 #, fuzzy
 msgid "Media Select"
 msgstr "Waffe Auswählen:"
 
-#: engine/Control/Controller.cpp:423 engine/Control/Controller.cpp:626
-#: engine/Control/ControllerStrings.cpp:143
 msgid "Menu"
 msgstr ""
 
-#: client/Game2/HoverScript/SysConsole.cpp:280
 #, c-format, boost-format
 msgid "Methods for class %s:"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:243
 msgid "Middle Mouse Btn"
 msgstr ""
 
-#: client/Game2/MiscPrefsPage.cpp:43
 msgid "Miscellaneous"
 msgstr ""
 
-#: engine/MazeCompiler/LevelBuilder.cpp:436
 #, fuzzy
 msgid "Mismatched connections"
 msgstr "Strecke Auswahl"
 
-#: engine/Control/ControllerStrings.cpp:179
 msgid "Mode"
 msgstr ""
 
-#: client/Game2/DisplaySelectScene.cpp:120
 #, fuzzy, c-format, boost-format
 msgid "Monitor %d"
 msgstr "Motor an:"
 
-#: client/Game2/VideoSettingsScene.cpp:104
 #, c-format, boost-format
 msgid "Monitor %d: %dx%d"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:245
 msgid "Mouse Button 4"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:247
 msgid "Mouse Button 5"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:275
 msgid "Mouse Wheel Down"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:272
 msgid "Mouse Wheel Left"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:270
 msgid "Mouse Wheel Right"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:277
 msgid "Mouse Wheen Up"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:255
 msgid "Mouse X+ Axis"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:257
 msgid "Mouse X- Axis"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:260
 msgid "Mouse Y+ Axis"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:262
 msgid "Mouse Y- Axis"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:265
 msgid "Mouse Z+ Axis"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:267
 msgid "Mouse Z- Axis"
 msgstr ""
 
-#: client/Game2/MainMenuScene.cpp:81 client/Game2/MultiplayerPrefsPage.cpp:50
 msgid "Multiplayer"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1102
 msgid "Must join first"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:152
-#: engine/Control/ControllerStrings.cpp:184
 msgid "Mute"
 msgstr ""
 
-#: client/Game2/NetworkPrefsPage.cpp:48 client/Game2/SettingsMenuScene.cpp:89
 #, fuzzy
 msgid "Network"
 msgstr "&Netzwerk"
 
-#: client/Game2/InternetRoom.cpp:1945 client/Game2/InternetRoom.cpp:2014
-#: client/Game2/InternetRoom.cpp:2081 client/Game2/NetInterface.cpp:858
 msgid "Network Transaction Progress"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1253
 msgid "New Game..."
 msgstr ""
 
-#: client/Game2/CheckUpdateServerDialog.cpp:94
 msgid "New version of HoverRace available."
 msgstr ""
 
-#: engine/Control/Controller.cpp:59
 msgid "Next"
 msgstr ""
 
-#: engine/Control/Controller.cpp:66
 msgid "Next Cmd"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:180
 #, fuzzy
 msgid "Next Track"
 msgstr "Strecken"
 
-#: client/Game2/NetInterface.cpp:1853
 msgid "No"
 msgstr ""
 
-#: compilers/ResourceCompiler/ResActorBuilder.cpp:226
 msgid "No bitmap associated with the patch"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1007
 msgid "No more Shareware users allowed"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1011
 msgid "No more user allowed"
 msgstr "Keine users mehr erlaubt"
 
-#: engine/MazeCompiler/LevelBuilder.cpp:543
 msgid "No starting positions found"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1139
 msgid "Not authorized"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1031 client/Game2/InternetRoom.cpp:1039
-#: client/Game2/InternetRoom.cpp:1047 client/Game2/InternetRoom.cpp:1059
-#: client/Game2/InternetRoom.cpp:1075 client/Game2/InternetRoom.cpp:1092
-#: client/Game2/InternetRoom.cpp:1110 client/Game2/InternetRoom.cpp:1119
-#: client/Game2/InternetRoom.cpp:1135
 msgid "Not online"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1084 client/Game2/InternetRoom.cpp:1127
 msgid "Not owner"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:109
 msgid "Num Lock"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:111
 msgid "Numpad *"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:113
 msgid "Numpad +"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:155
 msgid "Numpad ,"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:112
 msgid "Numpad -"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:125
 msgid "Numpad ."
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:110
 msgid "Numpad /"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:124
 msgid "Numpad 0"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:169
 msgid "Numpad 00"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:170
 msgid "Numpad 000"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:115
 msgid "Numpad 1"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:116
 msgid "Numpad 2"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:117
 msgid "Numpad 3"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:118
 msgid "Numpad 4"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:119
 msgid "Numpad 5"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:120
 msgid "Numpad 6"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:121
 msgid "Numpad 7"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:122
 msgid "Numpad 8"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:123
 msgid "Numpad 9"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:128
 msgid "Numpad ="
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:114
 msgid "Numpad Enter"
 msgstr ""
 
-#: client/Game2/MessageScene.cpp:76 client/Game2/NetInterface.cpp:1888
-#: client/Game2/PathSelector.cpp:94 client/Game2/SelectRoomDialog.cpp:120
-#: engine/Control/Controller.cpp:52
 msgid "OK"
 msgstr "OK"
 
-#: client/Game2/MultiplayerPrefsPage.cpp:71
 msgid "Only play sound when not &foreground window"
 msgstr ""
 
-#: client/Game2/MultiplayerPrefsPage.cpp:77
 msgid "Open Folder"
 msgstr ""
 
-#: engine/Control/Controller.cpp:62
 msgid "Page Down"
 msgstr ""
 
-#: engine/Control/Controller.cpp:61
 msgid "Page Up"
 msgstr ""
 
-#: engine/Control/Controller.cpp:83
 msgid "Pan Down"
 msgstr ""
 
-#: engine/Control/Controller.cpp:82
 msgid "Pan Up"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:150
 msgid "Paste"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:99
 msgid "Pause"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:104
 msgid "PgDn"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:102
 msgid "PgUp"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:183
 #, fuzzy
 msgid "Play"
 msgstr "&2 Spielern"
 
-#: client/Game2/MultiplayerPrefsPage.cpp:69
 msgid "Play a sound when a &message is received"
 msgstr ""
 
-#: client/Game2/ControlPrefsPage.cpp:135 client/Game2/NetInterface.cpp:1069
-#: engine/Control/Controller.cpp:399 engine/Control/Controller.cpp:469
-#: engine/Control/Controller.cpp:569
 #, fuzzy
 msgid "Player"
 msgstr "&2 Spielern"
 
-#: client/Game2/InternetRoom.cpp:1250
 msgid "Player list:"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:749
 msgid "Port value must be greater than 0"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:127
 msgid "Power"
 msgstr ""
 
-#: client/Game2/MainMenuScene.cpp:79
 #, fuzzy
 msgid "Practice"
 msgstr "Üb&en"
 
-#: client/Game2/NetworkSession.cpp:658 client/Game2/NetworkSession.cpp:695
 msgid "Press F2 when ready to return to the Meeting Room"
 msgstr ""
 
-#: client/Game2/ControlPrefsPage.cpp:293
 msgid "Press a control or wait 3 seconds to disable..."
 msgstr ""
 
-#: engine/Control/Controller.cpp:65
 msgid "Prev Cmd"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:181
 #, fuzzy
 msgid "Prev Track"
 msgstr "Strecken"
 
-#: engine/Control/Controller.cpp:60
 msgid "Previous"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:97
 #, fuzzy
 msgid "Print Screen"
 msgstr "&Geteilter Bildschirm"
 
-#: engine/Control/ControllerStrings.cpp:161
 msgid "Prior"
 msgstr ""
 
-#: client/Game2/CheckUpdateServerDialog.cpp:138
 msgid "Problem running updater.exe!"
 msgstr ""
 
-#: client/Game2/DownloadUpdateDialog.cpp:167
-#: client/Game2/TrackDownloadDialog.cpp:176
 msgid "Processing..."
 msgstr ""
 
-#: client/Game2/SettingsMenuScene.cpp:83
 msgid "Profile"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1254 client/Game2/MainMenuScene.cpp:88
 msgid "Quit"
 msgstr ""
 
-#: client/Game2/PauseMenuScene.cpp:75 client/Game2/PauseMenuScene.cpp:116
 msgid "Quit to Desktop"
 msgstr ""
 
-#: client/Game2/PauseMenuScene.cpp:73 client/Game2/PauseMenuScene.cpp:108
 msgid "Quit to Main Menu"
 msgstr ""
 
-#: client/Game2/Observer.cpp:76 client/Game2/Observer.cpp:78
 msgid "Rank"
 msgstr ""
 
-#: client/Game2/TrackSelectScene.cpp:122
 msgid "Ready"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:530
 msgid "Registering game with the Internet Meeting Room..."
 msgstr "Meldet das spiel dem Internet Besprechungsraum..."
 
-#: client/Game2/InternetRoom.cpp:588
 msgid "Registering with the Internet Meeting Room..."
 msgstr "Den Internet Besprechungsraum anmelden..."
 
-#: client/Game2/InternetRoom.cpp:2082
 msgid "Registering your best lap time to the server"
 msgstr ""
 
-#: engine/Control/Controller.cpp:84
 msgid "Reset Camera"
 msgstr ""
 
-#: client/Game2/SettingsScene.cpp:108
 msgid "Reset all settings on this screen to their default values?"
 msgstr ""
 
-#: client/Game2/NetworkPrefsPage.cpp:95 client/Game2/NetworkPrefsPage.cpp:96
 msgid "Reset to Default"
 msgstr ""
 
-#: client/Game2/NetworkPrefsPage.cpp:97
 msgid "Reset to Defaults"
 msgstr ""
 
-#: client/Game2/SettingsScene.cpp:47 client/Game2/SettingsScene.cpp:107
 msgid "Reset to defaults"
 msgstr ""
 
-#: client/Game2/Observer.cpp:76
 msgid "Result"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:911
 msgid "Retrieving game info..."
 msgstr ""
 
-#: client/Game2/PauseMenuScene.cpp:68
 msgid "Return to Race"
 msgstr ""
 
-#: engine/Control/Controller.cpp:58
 #, fuzzy
 msgid "Right"
 msgstr "Rechts drehen:"
 
-#: engine/Control/ControllerStrings.cpp:177
 msgid "Right Alt"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:175
 msgid "Right Ctrl"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:178
 msgid "Right GUI"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:241
 msgid "Right Mouse Btn"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:176
 msgid "Right Shift"
 msgstr ""
 
-#: client/Game2/SelectRoomDialog.cpp:118
 msgid "Room:"
 msgstr ""
 
-#: client/Game2/CheckRoomListDialog.cpp:64
 msgid "Roomlist URL is valid!"
 msgstr ""
 
-#: client/Game2/SettingsScene.cpp:80
 #, fuzzy
 msgid "Save Settings"
 msgstr "&Einstellung"
 
-#: client/Game2/InternetRoom.cpp:747
 msgid "Saving chat session to:"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:98
 msgid "Scroll Lock"
 msgstr ""
 
-#: engine/MazeCompiler/LevelBuilder.cpp:95
-#: engine/MazeCompiler/LevelBuilder.cpp:116
 #, c-format, boost-format
 msgid "Section ID missing on line %d"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:144
 #, fuzzy
 msgid "Select"
 msgstr "Waffe Auswählen:"
 
-#: client/Game2/DisplaySelectScene.cpp:98
 #, fuzzy
 msgid "Select Resolution"
 msgstr "Vollbild auflösung"
 
-#: client/Game2/MultiplayerPrefsPage.cpp:87
 msgid "Select a destination folder for saved chat sessions."
 msgstr ""
 
-#: client/Game2/Observer.cpp:138
 msgid "Select your craft with the arrow keys"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:633
 msgid "Sending message to the Internet Meeting Room..."
 msgstr "Schickt nachricht zum Internet Besprechungsraum"
 
-#: client/Game2/NetworkPrefsPage.cpp:74
 msgid "Server Options"
 msgstr ""
 
-#: client/Game2/MainMenuScene.cpp:83 client/Game2/SettingsMenuScene.cpp:67
 #, fuzzy
 msgid "Settings"
 msgstr "&Einstellung"
 
-#: client/Game2/VideoSettingsScene.cpp:125
-#: client/Game2/VideoSettingsScene.cpp:138
 #, fuzzy
 msgid "Settings changed"
 msgstr "&Einstellung"
 
-#: client/Game2/VideoSettingsScene.cpp:83
 msgid "Side-by-side"
 msgstr ""
 
-#: client/Game2/ClientApp.cpp:279 client/Game2/MainMenuScene.cpp:97
-#: client/Game2/MainMenuScene.cpp:157
 msgid "Silent Mode"
 msgstr ""
 
-#: client/Game2/TrackDownloadDialog.cpp:242
 #, c-format, boost-format
 msgid "Sorry, track \"%s\" is not available from %s"
 msgstr ""
 
-#: client/Game2/AudioSettingsScene.cpp:46
 msgid "Sound Effects"
 msgstr ""
 
-#: client/Game2/MainMenuScene.cpp:146
 msgid ""
 "Sound has been disabled because the --silent command-line parameter was set."
 msgstr ""
 
-#: client/Game2/GameApp.cpp:882
 msgid "Sound will be disabled for this session."
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:69
 msgid "Space"
 msgstr ""
 
-#: client/Game2/VideoSettingsScene.cpp:76
 #, fuzzy
 msgid "Split-screen mode"
 msgstr "&Geteilter Bildschirm"
 
-#: client/Game2/VideoSettingsScene.cpp:80
 msgid "Stacked"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:1887
 msgid "Start NOW!"
 msgstr ""
 
-#: client/Game2/Observer.cpp:85
 #, c-format, boost-format
 msgid "Starting in %02d.%02d sec. for %d laps"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:1073
 msgid "Status"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:145
-#: engine/Control/ControllerStrings.cpp:182
 msgid "Stop"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:158
 msgid "SysReq"
 msgstr ""
 
-#: client/Game2/HoverScript/SysConsole.cpp:65
 msgid "System console initialized."
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:1737 client/Game2/NetInterface.cpp:1776
-#: client/Game2/NetInterface.cpp:1802 client/Game2/NetInterface.cpp:1812
 msgid "TCP Client"
 msgstr ""
 
-#: client/Game2/NetworkPrefsPage.cpp:91
 msgid "TCP Receive Port:"
 msgstr "TCP empfangs Port:"
 
-#: client/Game2/NetInterface.cpp:502 client/Game2/NetInterface.cpp:523
-#: client/Game2/NetInterface.cpp:535 client/Game2/NetInterface.cpp:593
-#: client/Game2/NetInterface.cpp:613 client/Game2/NetInterface.cpp:656
-#: client/Game2/NetInterface.cpp:669 client/Game2/NetInterface.cpp:749
-#: client/Game2/NetInterface.cpp:759 client/Game2/NetInterface.cpp:932
-#: client/Game2/NetInterface.cpp:1693
 msgid "TCP Server"
 msgstr ""
 
 # its the same but i think any normal german would understand that lol...
-#: client/Game2/NetworkPrefsPage.cpp:90
 msgid "TCP Server Port:"
 msgstr "TCP Server Port:"
 
-#: engine/Control/ControllerStrings.cpp:66
 msgid "Tab"
 msgstr ""
 
-#: client/Game2/DisplaySelectScene.cpp:158
 msgctxt "Display Resolution"
 msgid "Test"
 msgstr ""
 
-#: client/Game2/VideoSettingsScene.cpp:58
 msgid "Text Scale"
 msgstr ""
 
-#: client/Game2/AboutDialog.cpp:103
 msgid "Thanks also to the following projects"
 msgstr "Dank gebührt auch die folgenden Projekten"
 
-#: client/Game2/FolderViewer.cpp:81
 msgid "The path is not a directory."
 msgstr ""
 
-#: client/Game2/GameApp.cpp:886
 msgid "The specific error was:"
 msgstr ""
 
-#: client/Game2/TrackDownloadDialog.cpp:333
 #, c-format, boost-format
 msgid ""
 "There was a problem downloading the track from %s\n"
 "Please visit %s and download the track manually."
 msgstr ""
 
-#: client/Game2/GameApp.cpp:880
 msgid "There was a problem setting up the sound device."
 msgstr ""
 
-#: client/Game2/MainMenuScene.cpp:151
 #, c-format, boost-format
 msgid ""
 "There was a problem starting the sound system.\n"
@@ -1580,44 +1172,33 @@ msgid ""
 "%s"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:1990
 msgid "This build of HoverRace is not official; updates are not available."
 msgstr ""
 
-#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:483
 msgid "This image has invalid colors"
 msgstr ""
 
-#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:486
 msgid "This image has transparent pixels"
 msgstr ""
 
-#: client/Game2/VideoSettingsScene.cpp:71
 msgid "This is sample text."
 msgstr ""
 
-#: engine/MazeCompiler/LevelBuilder.cpp:617
 msgid "This level contains:"
 msgstr ""
 
-#: client/Game2/VideoSettingsScene.cpp:128
-#: client/Game2/VideoSettingsScene.cpp:142
 msgid "This will abandon any race in progress."
 msgstr ""
 
-#: engine/Control/Controller.cpp:572
 msgid "Throttle"
 msgstr ""
 
-#: client/Game2/VideoSettingsScene.cpp:126
 msgid "To apply these changes, the game must restart."
 msgstr ""
 
-#: client/Game2/VideoSettingsScene.cpp:139
 msgid "To apply these changes, the game must return to the main menu."
 msgstr ""
 
-#: client/Game2/GameApp.cpp:516
 msgid ""
 "To be able to display HoverRace Help\n"
 "you must have a Word document viewer installed\n"
@@ -1627,370 +1208,279 @@ msgstr ""
 "müssen Sie ein MS-Word-Dokumentbeschauer\n"
 "auf ihrem Computer installiert haben."
 
-#: engine/Control/Controller.cpp:76
 #, fuzzy
 msgid "Toggle Console"
 msgstr "Schließen"
 
-#: engine/Control/Controller.cpp:63
 msgid "Top"
 msgstr ""
 
-#: client/Game2/TrackDownloadDialog.cpp:103
-#: client/Game2/TrackDownloadDialog.cpp:272
 msgid "Track Download"
 msgstr ""
 
-#: engine/MazeCompiler/TrackCompiler.cpp:125
 #, fuzzy
 msgid "Track creation error"
 msgstr "Strecke Auswahl"
 
-#: client/Game2/TrackDownloadDialog.cpp:248
 #, c-format, boost-format
 msgid ""
 "Track download failed: The file \"%s\" was not found in the archive "
 "downloaded from %s"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1246
 msgid "Track name:"
 msgstr "Strecke:"
 
-#: engine/Control/Controller.cpp:574
 #, fuzzy
 msgid "Turn Left"
 msgstr "Links drehen:"
 
-#: engine/Control/Controller.cpp:575
 #, fuzzy
 msgid "Turn Right"
 msgstr "Rechts drehen:"
 
-#: engine/MazeCompiler/LevelBuilderVisiblesZones.cpp:320
 msgid "Two nodes with same position"
 msgstr ""
 
-#: client/Game2/NetworkPrefsPage.cpp:92
 msgid "UDP Receive Port:"
 msgstr "UDP empfangs Port:"
 
-#: engine/MazeCompiler/TrackCompiler.cpp:137
 #, fuzzy
 msgid "Unable to add a background image record"
 msgstr "Fehler beim hinzufügen vom User"
 
-#: engine/MazeCompiler/TrackCompiler.cpp:107
 #, fuzzy
 msgid "Unable to add a header to the output file"
 msgstr "Fehler beim hinzufügen vom User"
 
-#: engine/MazeCompiler/TrackCompiler.cpp:149
 #, fuzzy
 msgid "Unable to add a map record"
 msgstr "Fehler beim hinzufügen vom User"
 
-#: client/Game2/InternetRoom.cpp:1035
 msgid "Unable to add chat message"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1043
 msgid "Unable to add game"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1131
 msgid "Unable to add message"
 msgstr ""
 
-#: engine/MazeCompiler/TrackCompiler.cpp:121
 #, fuzzy
 msgid "Unable to add the track to the output file"
 msgstr "Fehler beim hinzufügen vom User"
 
-#: client/Game2/InternetRoom.cpp:1003 client/Game2/InternetRoom.cpp:1055
 msgid "Unable to add user"
 msgstr "Fehler beim hinzufügen vom User"
 
-#: client/Game2/InternetRoom.cpp:711 client/Game2/InternetRoom.cpp:732
 msgid "Unable to create chat log file:"
 msgstr ""
 
-#: engine/Util/Config.cpp:898
 #, fuzzy
 msgid "Unable to create configuration file"
 msgstr "Fehler beim hinzufügen vom User"
 
-#: engine/Util/Config.cpp:889
 #, fuzzy
 msgid "Unable to create directory"
 msgstr "Fehler beim hinzufügen vom User"
 
-#: client/Game2/InternetRoom.cpp:712
 #, fuzzy
 msgid "Unable to create directory:"
 msgstr "Fehler beim hinzufügen vom User"
 
-#: engine/MazeCompiler/LevelBuilder.cpp:599
 #, fuzzy, c-format, boost-format
 msgid "Unable to create free element on line %d\n"
 msgstr "Fehler beim hinzufügen vom User"
 
-#: client/Game2/NetInterface.cpp:502 client/Game2/NetInterface.cpp:593
-#: client/Game2/NetInterface.cpp:656 client/Game2/NetInterface.cpp:864
-#: client/Game2/NetInterface.cpp:932
 msgid "Unable to create socket"
 msgstr ""
 
-#: engine/MazeCompiler/TrackCompiler.cpp:98
 #, fuzzy, c-format, boost-format
 msgid "Unable to create the output file: %s"
 msgstr "Fehler beim hinzufügen vom User"
 
-#: client/Game2/InternetRoom.cpp:1071
 msgid "Unable to delete game"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1106
 msgid "Unable to delete user"
 msgstr ""
 
-#: engine/MazeCompiler/TrackCompiler.cpp:187
-#: engine/MazeCompiler/TrackCompiler.cpp:217
 msgid "Unable to find [HEADER] section"
 msgstr ""
 
-#: engine/MazeCompiler/TrackCompiler.cpp:220
 #, fuzzy
 msgid "Unable to find background image filename"
 msgstr "Fehler beim hinzufügen vom User"
 
-#: engine/MazeCompiler/TrackCompiler.cpp:227
 #, fuzzy, c-format, boost-format
 msgid "Unable to find background image: %s"
 msgstr "Fehler beim hinzufügen vom User"
 
-#: client/Game2/GameApp.cpp:841
 msgid "Unable to initialize: Unable to find suitable rich text DLL."
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1088
 msgid "Unable to leave game"
 msgstr ""
 
-#: engine/MazeCompiler/LevelBuilder.cpp:813
 #, fuzzy, c-format, boost-format
 msgid "Unable to load texture %d %d on line %d\n"
 msgstr "Fehler beim hinzufügen vom User"
 
-#: client/Game2/GameApp.cpp:495 client/Game2/InternetRoom.cpp:1222
 #, c-format, boost-format
 msgid "Unable to load track \"%s\".  Error details:"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:733
 msgid "Unable to open file for writing:"
 msgstr ""
 
-#: compilers/ResourceCompiler/BitmapHelper.cpp:64
 #, fuzzy
 msgid "Unable to open input file"
 msgstr "Fehler beim hinzufügen vom User"
 
-#: engine/MazeCompiler/TrackCompiler.cpp:79
 #, fuzzy, c-format, boost-format
 msgid "Unable to open the input file: %s"
 msgstr "Fehler beim hinzufügen vom User"
 
-#: client/Game2/InternetRoom.cpp:1027
 msgid "Unable to send refresh info"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1115
 msgid "Unable to start game"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:534 client/Game2/NetInterface.cpp:612
-#: client/Game2/NetInterface.cpp:668
 msgid ""
 "Unable to use UDP recv port; choose a different port or close some Winsock "
 "applications."
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:522 client/Game2/NetInterface.cpp:759
 msgid "Unable to use the port, try to close some WINSOCK applications"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:147
 msgid "Undo"
 msgstr ""
 
-#: engine/ObjFacTools/ResActor.cpp:188
 msgid "Unhandled component type"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:58
-#: engine/Control/ControllerStrings.cpp:64
-#: engine/Control/ControllerStrings.cpp:367
 msgid "Unknown"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:280
 msgid "Unknown Mouse Axis +"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:282
 msgid "Unknown Mouse Axis -"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:249
 #, fuzzy
 msgid "Unknown Mouse Button"
 msgstr " nichts ist ausgewählt"
 
-#: client/Game2/Observer.cpp:155
 msgid "Unknown craft"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1147
 msgid "Unknown error code"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:613
 msgid "Unregistering from the Internet Meeting Room..."
 msgstr "Den Internet Besprechungsraum abmelden..."
 
-#: client/Game2/InternetRoom.cpp:568
 msgid "Unregistering game from the Internet Meeting Room..."
 msgstr "Meldet das Spiel vom Internet Besprechungsraum ab..."
 
-#: compilers/ResourceCompiler/BitmapHelper.cpp:145
 msgid "Unsupported format"
 msgstr ""
 
-#: engine/Control/Controller.cpp:55
 msgid "Up"
 msgstr ""
 
-#: client/Game2/DownloadUpdateDialog.cpp:271
 msgid "Update Download"
 msgstr ""
 
-#: compilers/MazeCompiler/main.cpp:71
 msgid "Usage: MazeCompiler <outputfile> <inputfile>"
 msgstr ""
 
-#: client/Game2/MiscPrefsPage.cpp:65
 msgid "Use desktop &color depth when switching to fullscreen"
 msgstr "Desktop farbtiefe, im vollbild modus, benutzen"
 
-#: client/Game2/InternetRoom.cpp:1244
 msgid "User list"
 msgstr ""
 
-#: client/Game2/SettingsMenuScene.cpp:87
-#: client/Game2/VideoAudioPrefsPage.cpp:194
-#: client/Game2/VideoSettingsScene.cpp:40
 msgid "Video"
 msgstr ""
 
-#: client/Game2/VideoAudioPrefsPage.cpp:49
 msgid "Video and Audio"
 msgstr ""
 
-#: client/Game2/VideoAudioPrefsPage.cpp:200
 msgid "Volume"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:154
 msgid "Volume Down"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp:153
 msgid "Volume Up"
 msgstr ""
 
-#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:482
-#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:508
 msgid "WARNING"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:1647
 msgid "Waiting acknowledgement"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:1846 client/Game2/NetInterface.cpp:1884
 msgid "Warning!"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1411 client/Game2/InternetRoom.cpp:1448
 msgid "Warning: communication timeout"
 msgstr ""
 
-#: engine/MazeCompiler/LevelBuilder.cpp:496
 #, c-format, boost-format
 msgid "Warning: feature %d seems to be very large"
 msgstr ""
 
-#: engine/MazeCompiler/LevelBuilder.cpp:492
 #, c-format, boost-format
 msgid "Warning: feature %d seems to be very small"
 msgstr ""
 
-#: engine/MazeCompiler/LevelBuilder.cpp:479
 #, c-format, boost-format
 msgid "Warning: room %d seems to be very large"
 msgstr ""
 
-#: engine/MazeCompiler/LevelBuilder.cpp:475
 #, c-format, boost-format
 msgid "Warning: room %d seems to be very small"
 msgstr ""
 
-#: engine/MazeCompiler/TrackCompiler.cpp:193
 msgid "Warning: unable to find description"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:1248
 msgid "Weapons:"
 msgstr "Waffen"
 
-#: client/Game2/InternetRoom.cpp:493
 msgid "Welcome to the HoverRace Internet Meeting Room"
 msgstr "Wilkommen in dem Internet Besprechungsraum"
 
-#: client/Game2/FolderViewer.cpp:92
 msgid "Would you like to create it?"
 msgstr ""
 
-#: client/Game2/TrackDownloadDialog.cpp:101
 #, c-format, boost-format
 msgid "Would you like to download the track \"%s\" now?"
 msgstr ""
 
-#: compilers/MazeCompiler/main.cpp:104
 msgid "Wrong argument count"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:1852
 msgid "Yes"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:1850
 msgid ""
 "You are about to launch the race without any opponents.  You will be on your "
 "own.  It is preferable to wait for other players to join your game.  Are you "
 "sure?"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:492
 msgid "You are connected"
 msgstr "Sie sind verbunden"
 
-#: client/Game2/NetworkSession.cpp:698
 msgid "You are now alone"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:904
 msgid ""
 "You can play HoverRace in a Window or Fullscreen;\n"
 "to play in a Window, HoverRace will have to switch to 256 color mode.\n"
@@ -2004,28 +1494,21 @@ msgstr ""
 "\n"
 "Wollen sie im Fenster modus spielen und farben wechseln?"
 
-#: client/Game2/main.cpp:303 client/Game2/main.cpp:309
-#: compilers/MazeCompiler/main.cpp:131
 msgid "You found a bug!"
 msgstr ""
 
-#: client/Game2/SelectRoomDialog.cpp:117
 msgid "Your alias:"
 msgstr ""
 
-#: engine/Control/Controller.cpp:80
 msgid "Zoom In"
 msgstr ""
 
-#: engine/Control/Controller.cpp:81
 msgid "Zoom Out"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp:806
 msgid "[no selection]"
 msgstr "[nichts ist ausgewählt]"
 
-#: client/Game2/AboutDialog.cpp:97
 msgid ""
 "and with the help of the many testers willing to put up with bugs and other "
 "strange happenings."
@@ -2033,118 +1516,88 @@ msgstr ""
 "und mit der Hilfe vielen Prüfer, die Fehler und Merkwürdigkeiten toleriert "
 "haben."
 
-#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:509
 msgid "bitmap too small; using single color"
 msgstr ""
 
-#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:501
 msgid "computing plain color..."
 msgstr ""
 
-#: engine/MazeCompiler/LevelBuilder.cpp:620
 #, fuzzy
 msgid "connections"
 msgstr "Strecke Auswahl"
 
-#: engine/MazeCompiler/LevelBuilder.cpp:621
 msgid "elements"
 msgstr ""
 
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:181
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:198
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:216
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:234
 msgid "error"
 msgstr ""
 
-#: engine/MazeCompiler/LevelBuilder.cpp:619
 msgid "features"
 msgstr ""
 
-#: compilers/ResourceCompiler/ResSoundBuilder.cpp:62
 msgid "invalid WAV file"
 msgstr ""
 
-#: compilers/ResourceCompiler/TextParsing.cpp:59
 msgid "line"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp:2417
 msgid "no network connection"
 msgstr ""
 
-#: client/Game2/AboutDialog.cpp:88
 msgid "original author"
 msgstr "der Urheber"
 
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:182
 msgid "problem reading actor parameters"
 msgstr ""
 
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:163
 msgid "problem reading bitmap parameters"
 msgstr ""
 
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:217
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:235
 msgid "problem reading sound parameters"
 msgstr ""
 
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:199
 msgid "problem reading sprite parameters"
 msgstr ""
 
-#: compilers/ResourceCompiler/ResBitmapBuilder.cpp:494
 #, fuzzy
 msgid "resampling..."
 msgstr "Abbrechen"
 
-#: engine/MazeCompiler/LevelBuilder.cpp:618
 msgid "rooms"
 msgstr ""
 
-#: client/Game2/GameApp.cpp:822
 msgid "silent mode"
 msgstr ""
 
-#: engine/MazeCompiler/LevelBuilder.cpp:622
 msgid "starting positions"
 msgstr ""
 
-#: compilers/ResourceCompiler/TextParsing.cpp:58
 msgid "syntax error in defines file"
 msgstr ""
 
-#: client/Game2/ClientApp.cpp:276 client/Game2/GameApp.cpp:819
 msgctxt "Version"
 msgid "testing"
 msgstr "prüfen"
 
-#: compilers/ResourceCompiler/ResourceLibBuilder.cpp:97
 #, fuzzy
 msgid "unable to create output file"
 msgstr "Fehler beim hinzufügen vom User"
 
-#: compilers/ResourceCompiler/ResActorBuilder.cpp:69
 #, fuzzy
 msgid "unable to open actor file"
 msgstr "Fehler beim hinzufügen vom User"
 
-#: compilers/ResourceCompiler/TextParsing.cpp:41
 #, fuzzy
 msgid "unable to open defines file"
 msgstr "Fehler beim hinzufügen vom User"
 
-#: compilers/ResourceCompiler/ResourceCompiler.cpp:144
 #, fuzzy
 msgid "unable to open input file"
 msgstr "Fehler beim hinzufügen vom User"
 
-#: client/Game2/AboutDialog.cpp:99
 msgid "visit us at"
 msgstr "besuchen Sie uns auf"
 
-#: client/Game2/AboutDialog.cpp:91
 msgid "with contributions from (in alphabetical order)"
 msgstr "unter Mitwirkung von (in alphabetischer Reihenfolge)"
 

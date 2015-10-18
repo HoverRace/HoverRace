@@ -26,7 +26,7 @@ file(STRINGS linguas.txt LINGUAS NO_HEX_CONVERSION)
 include(FindXGettext)
 
 xgettext_create_pot_file(${POT_FILE} CPP
-	INPUT ${SRCS} "--boost" "--sort-by-file"
+	INPUT ${SRCS} "--boost" "--no-location" "--sort-output"
 		"--msgid-bugs-address" "https://github.com/HoverRace/HoverRace"
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 	KEYWORDS "_:1,1t" "_:1c,2,2t" "_:1,2,3t" "_:1c,2,3,4t"
