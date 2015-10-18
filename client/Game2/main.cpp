@@ -68,12 +68,12 @@ std::string reqLocale;
  * On Windows, this will pop up a message box, elsewhere this will just
  * output to the console.
  *
- * @param s The message (ASCII-only, no Unicode).
+ * @param s The message.
  */
 void ShowMessage(const std::string &s)
 {
 #ifdef _WIN32
-	MessageBox(NULL, s.c_str(), PACKAGE_NAME, MB_OK);
+	MessageBoxW(nullptr, (const wchar_t*)Str::UW(s), PACKAGE_NAME_L, MB_OK);
 #else
 	std::cout << s << std::endl;
 #endif
