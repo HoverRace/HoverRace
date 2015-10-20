@@ -7,8 +7,6 @@ es
 et
 fi
 fr
-ja
-ko
 nb
 nl
 pt
