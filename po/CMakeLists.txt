@@ -18,6 +18,10 @@ xgettext_create_pot_file(${POT_FILE} CPP
 	PACKAGE_NAME hoverrace
 	COPYRIGHT_HOLDER "HoverRace contributors")
 
+add_custom_command(TARGET _potFile_1 POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -P CleanPot.cmake
+	WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
+
 gettext_create_translations(${POT_FILE} ${PO_SRCS})
 
 # Install the compiled locales into the resource directory so that they're
