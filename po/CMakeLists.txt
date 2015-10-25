@@ -11,7 +11,7 @@ source_group(Translations FILES ${PO_SRCS})
 include(FindXGettext)
 
 xgettext_create_pot_file(${POT_FILE} CPP
-	INPUT ${SRCS} "--boost" "--no-location" "--sort-output"
+	INPUT ${SRCS} "--boost" "--sort-by-file"
 		"--msgid-bugs-address" "https://github.com/HoverRace/HoverRace"
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 	KEYWORDS "_:1,1t" "_:1c,2,2t" "_:1,2,3t" "_:1c,2,3,4t"
@@ -28,10 +28,21 @@ add_custom_command(OUTPUT ${POT_FILE}
 # Install the compiled locales into the resource directory so that they're
 # available during development.
 foreach(lang ${LINGUAS})
+	set(poFile ${CMAKE_CURRENT_SOURCE_DIR}/${lang}.po)
 	set(gmoFile ${CMAKE_CURRENT_BINARY_DIR}/${lang}.gmo)
 	set(moFile
 		${CMAKE_SOURCE_DIR}/share/locale/${lang}/LC_MESSAGES/hoverrace.mo)
 
+	# Post-process the .po file to reduce the number of changes.
+	# Note that we hang this step on the .gmo file output, since that's when
+	# the .po file is is updated as a side-effect.
+	add_custom_command(OUTPUT ${gmoFile}
+		COMMAND ${CMAKE_COMMAND} "-DPO_FILE=${poFile}"
+			-P "${CMAKE_CURRENT_SOURCE_DIR}/CleanPo.cmake"
+		APPEND)
+
+	# Copy the compiled .mo file to where the client will find it when
+	# debugging.
 	add_custom_command(TARGET translations_1 POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy ${gmoFile} ${moFile})
 endforeach()
