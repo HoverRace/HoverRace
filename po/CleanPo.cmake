@@ -9,7 +9,7 @@ file(READ "${PO_FILE}" po_in)
 # We assume that there are at most two filenames on a single line.
 string(REGEX REPLACE
 	"(#: [^ \r\n]+) ([^\r\n]+)(\r?\n)" "\\1\\3#: \\2\\3"
-	po_split "${po_in}")
+	po_in "${po_in}")
 
 # Remove the line number from the comment, leaving only the filename.
 # The line numbers change often so they clutter the history.
@@ -17,7 +17,7 @@ string(REGEX REPLACE
 # 0.18 compatibility, so we'll do it ourselves.
 string(REGEX REPLACE
 	"(#: [^:]+):[0-9]+([^\r\n]*\r?\n)" "\\1\\2"
-	po_out "${po_split}")
+	po_in "${po_in}")
 
-file(WRITE "${PO_FILE}" "${po_out}")
+file(WRITE "${PO_FILE}" "${po_in}")
 
