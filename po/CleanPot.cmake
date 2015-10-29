@@ -1,6 +1,4 @@
 
-set(POT_FILE ${CMAKE_CURRENT_SOURCE_DIR}/po/hoverrace.pot)
-
 message(STATUS "Cleaning up ${POT_FILE}")
 
 file(READ "${POT_FILE}" pot_in)

@@ -22,7 +22,7 @@ gettext_create_translations(${POT_FILE} ${PO_SRCS})
 
 # Post-process the .pot file to reduce the number of changes.
 add_custom_command(OUTPUT ${POT_FILE}
-	COMMAND ${CMAKE_COMMAND} -P po/CleanPot.cmake
+	COMMAND ${CMAKE_COMMAND} "-DPOT_FILE=${POT_FILE}" -P po/CleanPot.cmake
 	APPEND)
 
 # Install the compiled locales into the resource directory so that they're
