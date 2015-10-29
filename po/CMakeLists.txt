@@ -18,7 +18,7 @@ xgettext_create_pot_file(${POT_FILE} CPP
 	PACKAGE_NAME hoverrace
 	COPYRIGHT_HOLDER "HoverRace contributors")
 
-gettext_create_translations(${POT_FILE} ${PO_SRCS})
+gettext_create_translations(${POT_FILE} ALL ${PO_SRCS})
 
 # Post-process the .pot file to reduce the number of changes.
 add_custom_command(OUTPUT ${POT_FILE}
