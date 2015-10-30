@@ -47,3 +47,7 @@ foreach(lang ${LINGUAS})
 		COMMAND ${CMAKE_COMMAND} -E copy ${gmoFile} ${moFile})
 endforeach()
 
+# Remove the copied .mo files on clean.
+set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES
+	${CMAKE_SOURCE_DIR}/share/locale)
+
