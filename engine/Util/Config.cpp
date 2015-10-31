@@ -79,37 +79,37 @@ using HoverRace::Control::InputEventController;
 #define READ_BOOL(root,name) \
 	{\
 		yaml::ScalarNode *_scalar = dynamic_cast<yaml::ScalarNode*>((root)->Get(#name)); \
-		if (_scalar != NULL) (name) = _scalar->AsBool(name); \
+		if (_scalar) (name) = _scalar->AsBool(name); \
 	}
 
 #define READ_INT(root,name,min,max) \
 	{\
 		yaml::ScalarNode *_scalar = dynamic_cast<yaml::ScalarNode*>((root)->Get(#name)); \
-		if (_scalar != NULL) (name) = _scalar->AsInt(name, min, max); \
+		if (_scalar) (name) = _scalar->AsInt(name, min, max); \
 	}
 
 #define READ_FLOAT(root,name,min,max) \
 	{\
 		yaml::ScalarNode *_scalar = dynamic_cast<yaml::ScalarNode*>((root)->Get(#name)); \
-		if (_scalar != NULL) (name) = _scalar->AsFloat(name, min, max); \
+		if (_scalar) (name) = _scalar->AsFloat(name, min, max); \
 	}
 
 #define READ_DOUBLE(root,name,min,max) \
 	{\
 		yaml::ScalarNode *_scalar = dynamic_cast<yaml::ScalarNode*>((root)->Get(#name)); \
-		if (_scalar != NULL) (name) = _scalar->AsDouble(name, min, max); \
+		if (_scalar) (name) = _scalar->AsDouble(name, min, max); \
 	}
 
 #define READ_STRING(root,name) \
 	{\
 		yaml::ScalarNode *_scalar = dynamic_cast<yaml::ScalarNode*>((root)->Get(#name)); \
-		if (_scalar != NULL) (name) = _scalar->AsString(); \
+		if (_scalar) (name) = _scalar->AsString(); \
 	}
 
 #define READ_PATH(root,name) \
 	{\
 		yaml::ScalarNode *_scalar = dynamic_cast<yaml::ScalarNode*>((root)->Get(#name)); \
-		if (_scalar != NULL) (name) = _scalar->AsPath(); \
+		if (_scalar) (name) = _scalar->AsPath(); \
 	}
 
 #define EMIT_VAR(emitter,name) \
