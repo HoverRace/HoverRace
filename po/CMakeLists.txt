@@ -36,6 +36,8 @@ foreach(lang ${LINGUAS})
 	# Post-process the .po file to reduce the number of changes.
 	# Note that we hang this step on the .gmo file output, since that's when
 	# the .po file is is updated as a side-effect.
+	#FIXME: Since this runs after msgfmt, the .po file will always be newer
+	#       than the .gmo file, so it will always be rebuilt.
 	add_custom_command(OUTPUT ${gmoFile}
 		COMMAND ${CMAKE_COMMAND} "-DPO_FILE=${poFile}"
 			-P "${CMAKE_CURRENT_SOURCE_DIR}/CleanPo.cmake"
