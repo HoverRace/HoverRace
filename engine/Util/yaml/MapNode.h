@@ -21,7 +21,9 @@
 
 #pragma once
 
-#include <map>
+#include <limits.h>
+
+#include "../OS.h"
 
 #include "Node.h"
 
@@ -46,6 +48,14 @@ public:
 	Node *Get(const std::string &key) const;
 
 	void ReadString(const std::string &key, std::string &dest) const;
+	void ReadBool(const std::string &key, bool &dest) const;
+	void ReadDouble(const std::string &key, double &dest,
+		double min, double max) const;
+	void ReadFloat(const std::string &key, float &dest,
+		float min, float max) const;
+	void ReadInt(const std::string &key, int &dest,
+		int min = INT_MIN, int max = INT_MAX) const;
+	void ReadPath(const std::string &key, OS::path_t &dest) const;
 
 	// STL-like iteration, so we can use range-for on the node itself.
 	using iterator = children_t::iterator;

@@ -104,10 +104,53 @@ Node *MapNode::Get(const std::string &key) const
  */
 void MapNode::ReadString(const std::string &key, std::string &dest) const
 {
-	if (children == NULL) Init();
+	if (!children) Init();
 
 	ScalarNode *scalar = dynamic_cast<ScalarNode*>(Get(key));
-	if (scalar != NULL) dest = scalar->AsString();
+	if (scalar) dest = scalar->AsString();
+}
+
+void MapNode::ReadBool(const std::string &key, bool &dest) const
+{
+	if (!children) Init();
+
+	ScalarNode *scalar = dynamic_cast<ScalarNode*>(Get(key));
+	if (scalar) dest = scalar->AsBool(dest);
+}
+
+void MapNode::ReadDouble(const std::string &key, double &dest,
+	double min, double max) const
+{
+	if (!children) Init();
+
+	ScalarNode *scalar = dynamic_cast<ScalarNode*>(Get(key));
+	if (scalar) dest = scalar->AsDouble(dest, min, max);
+}
+
+void MapNode::ReadFloat(const std::string &key, float &dest,
+	float min, float max) const
+{
+	if (!children) Init();
+
+	ScalarNode *scalar = dynamic_cast<ScalarNode*>(Get(key));
+	if (scalar) dest = scalar->AsFloat(dest, min, max);
+}
+
+void MapNode::ReadInt(const std::string &key, int &dest,
+	int min, int max) const
+{
+	if (!children) Init();
+
+	ScalarNode *scalar = dynamic_cast<ScalarNode*>(Get(key));
+	if (scalar) dest = scalar->AsInt(dest, min, max);
+}
+
+void MapNode::ReadPath(const std::string &key, OS::path_t &dest) const
+{
+	if (!children) Init();
+
+	ScalarNode *scalar = dynamic_cast<ScalarNode*>(Get(key));
+	if (scalar) dest = scalar->AsPath();
 }
 
 MapNode::const_iterator MapNode::begin() const

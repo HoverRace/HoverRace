@@ -76,43 +76,37 @@ using HoverRace::Control::InputEventController;
 #define DEFAULT_UPDATE_SERVER	"www.hoverrace.com/updates/updates.php"
 #define OLD_MAIN_SERVER			"66.197.183.245/~sirbrock/imr/rl.php"
 
-#define READ_BOOL(root,name) \
+#define READ_BOOL(root, name) \
 	{\
-		yaml::ScalarNode *_scalar = dynamic_cast<yaml::ScalarNode*>((root)->Get(#name)); \
-		if (_scalar) (name) = _scalar->AsBool(name); \
+		root->ReadBool(#name, name);\
 	}
 
-#define READ_INT(root,name,min,max) \
+#define READ_INT(root, name, min, max) \
 	{\
-		yaml::ScalarNode *_scalar = dynamic_cast<yaml::ScalarNode*>((root)->Get(#name)); \
-		if (_scalar) (name) = _scalar->AsInt(name, min, max); \
+		root->ReadInt(#name, name, min, max);\
 	}
 
-#define READ_FLOAT(root,name,min,max) \
+#define READ_FLOAT(root, name, min, max) \
 	{\
-		yaml::ScalarNode *_scalar = dynamic_cast<yaml::ScalarNode*>((root)->Get(#name)); \
-		if (_scalar) (name) = _scalar->AsFloat(name, min, max); \
+		root->ReadFloat(#name, name, min, max);\
 	}
 
-#define READ_DOUBLE(root,name,min,max) \
+#define READ_DOUBLE(root, name, min, max) \
 	{\
-		yaml::ScalarNode *_scalar = dynamic_cast<yaml::ScalarNode*>((root)->Get(#name)); \
-		if (_scalar) (name) = _scalar->AsDouble(name, min, max); \
+		root->ReadDouble(#name, name, min, max);\
 	}
 
-#define READ_STRING(root,name) \
+#define READ_STRING(root, name) \
 	{\
-		yaml::ScalarNode *_scalar = dynamic_cast<yaml::ScalarNode*>((root)->Get(#name)); \
-		if (_scalar) (name) = _scalar->AsString(); \
+		root->ReadString(#name, name);\
 	}
 
-#define READ_PATH(root,name) \
+#define READ_PATH(root, name) \
 	{\
-		yaml::ScalarNode *_scalar = dynamic_cast<yaml::ScalarNode*>((root)->Get(#name)); \
-		if (_scalar) (name) = _scalar->AsPath(); \
+		root->ReadPath(#name, name);\
 	}
 
-#define EMIT_VAR(emitter,name) \
+#define EMIT_VAR(emitter, name) \
 	(emitter)->MapKey(#name); \
 	(emitter)->Value(name);
 
