@@ -129,12 +129,13 @@ OS::path_t FindPersonalDir()
 	static bool loggedWarning = false;
 
 #	ifdef _WIN32
-		//TODO: SHGetFolderPath is deprecated; use SHGetKnownFolderPath.
-		wchar_t dpath[MAX_PATH] = L"";
-		HRESULT hr = SHGetFolderPathW(NULL, CSIDL_PERSONAL, NULL,
-			SHGFP_TYPE_CURRENT, dpath);
+		wchar_t *dpath;
+		HRESULT hr = SHGetKnownFolderPath(FOLDERID_Documents,
+			0, nullptr, &dpath);
 		if (SUCCEEDED(hr)) {
-			return OS::path_t(dpath);
+			auto retv = OS::path_t(dpath);
+			CoTaskMemFree(dpath);
+			return retv;
 		}
 		else {
 			if (!loggedWarning) {
