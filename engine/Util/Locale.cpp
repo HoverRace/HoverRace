@@ -70,6 +70,14 @@ Locale::Locale(const OS::path_t &path, const std::string &domain) :
 }
 
 /**
+ * Attempt to change the global locale to the preferred locale.
+ */
+void Locale::RequestPreferredLocale()
+{
+	RequestLocale(preferredLocale);
+}
+
+/**
  * Attempt to change the global locale.
  * @param id The locale ID.
  */
