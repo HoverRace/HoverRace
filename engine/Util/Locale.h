@@ -36,6 +36,15 @@
 #endif
 
 namespace HoverRace {
+	namespace Util {
+		namespace yaml {
+			class Emitter;
+			class MapNode;
+		}
+	}
+}
+
+namespace HoverRace {
 namespace Util {
 
 /**
@@ -67,6 +76,10 @@ private:
 	using locales_t = std::map<std::string, std::string>;
 
 	void ScanLocales();
+
+public:
+	void Load(yaml::MapNode *root);
+	void Save(yaml::Emitter *emitter);
 
 public:
 	// STL-like iteration.

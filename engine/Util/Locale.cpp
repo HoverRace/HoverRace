@@ -21,6 +21,9 @@
 
 #include <boost/filesystem.hpp>
 
+#include "yaml/Emitter.h"
+#include "yaml/MapNode.h"
+
 #include "Log.h"
 #include "Str.h"
 
@@ -172,6 +175,19 @@ void Locale::ScanLocales()
 			}
 		}
 #	endif
+}
+
+void Locale::Load(yaml::MapNode *root)
+{
+	if (!root) return;
+
+	root->ReadString("preferredLocale", preferredLocale);
+}
+
+void Locale::Save(yaml::Emitter *emitter)
+{
+	emitter->MapKey("preferredLocale");
+	emitter->Value(preferredLocale);
 }
 
 Locale::const_iterator Locale::cbegin() const
