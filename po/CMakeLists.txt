@@ -29,7 +29,6 @@ add_custom_command(OUTPUT ${POT_FILE}
 # Install the compiled locales into the resource directory so that they're
 # available during development.
 foreach(lang ${LINGUAS})
-	set(poFile ${CMAKE_CURRENT_SOURCE_DIR}/${lang}.po)
 	set(gmoFile ${CMAKE_CURRENT_BINARY_DIR}/${lang}.gmo)
 	set(moFile
 		${CMAKE_SOURCE_DIR}/share/locale/${lang}/LC_MESSAGES/hoverrace.mo)
