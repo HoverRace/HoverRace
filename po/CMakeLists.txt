@@ -41,6 +41,6 @@ foreach(lang ${LINGUAS})
 endforeach()
 
 # Remove the copied .mo files on clean.
-set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES
+set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
 	${CMAKE_SOURCE_DIR}/share/locale)
 
