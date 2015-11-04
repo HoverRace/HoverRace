@@ -9,6 +9,7 @@ endforeach()
 source_group(Translations FILES ${PO_SRCS})
 
 include(FindXGettext)
+include(CustomGettext)
 
 xgettext_create_pot_file(${POT_FILE} CPP
 	INPUT ${SRCS} "--boost" "--sort-by-file"
@@ -18,7 +19,7 @@ xgettext_create_pot_file(${POT_FILE} CPP
 	PACKAGE_NAME hoverrace
 	COPYRIGHT_HOLDER "HoverRace contributors")
 
-gettext_create_translations(${POT_FILE} ALL ${PO_SRCS})
+hr_gettext_create_translations(${POT_FILE} ALL ${PO_SRCS})
 
 # Post-process the .pot file to reduce the number of changes.
 add_custom_command(OUTPUT ${POT_FILE}
@@ -32,16 +33,6 @@ foreach(lang ${LINGUAS})
 	set(gmoFile ${CMAKE_CURRENT_BINARY_DIR}/${lang}.gmo)
 	set(moFile
 		${CMAKE_SOURCE_DIR}/share/locale/${lang}/LC_MESSAGES/hoverrace.mo)
-
-	# Post-process the .po file to reduce the number of changes.
-	# Note that we hang this step on the .gmo file output, since that's when
-	# the .po file is is updated as a side-effect.
-	#FIXME: Since this runs after msgfmt, the .po file will always be newer
-	#       than the .gmo file, so it will always be rebuilt.
-	add_custom_command(OUTPUT ${gmoFile}
-		COMMAND ${CMAKE_COMMAND} "-DPO_FILE=${poFile}"
-			-P "${CMAKE_CURRENT_SOURCE_DIR}/CleanPo.cmake"
-		APPEND)
 
 	# Copy the compiled .mo file to where the client will find it when
 	# debugging.
