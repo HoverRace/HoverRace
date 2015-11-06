@@ -186,8 +186,13 @@ void Locale::Load(yaml::MapNode *root)
 
 void Locale::Save(yaml::Emitter *emitter)
 {
+	emitter->MapKey("locale");
+	emitter->StartMap();
+
 	emitter->MapKey("preferredLocale");
 	emitter->Value(preferredLocale);
+
+	emitter->EndMap();
 }
 
 Locale::const_iterator Locale::cbegin() const

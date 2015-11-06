@@ -838,6 +838,7 @@ void Config::Load()
 			misc.Load(dynamic_cast<yaml::MapNode*>(root->Get("misc")));
 			player.Load(dynamic_cast<yaml::MapNode*>(root->Get("player")));
 			net.Load(dynamic_cast<yaml::MapNode*>(root->Get("net")));
+			locale->Load(dynamic_cast<yaml::MapNode*>(root->Get("locale")));
 
 			// Get the controls.
 			yaml::SeqNode *ctlseqh = dynamic_cast<yaml::SeqNode*>(root->Get("controls_hash"));
@@ -904,6 +905,7 @@ void Config::Save() const
 		misc.Save(emitter);
 		player.Save(emitter);
 		net.Save(emitter);
+		locale->Save(emitter);
 
 		// Save list of controls.
 		emitter->MapKey("controls_hash");
