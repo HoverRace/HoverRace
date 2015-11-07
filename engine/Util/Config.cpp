@@ -77,34 +77,22 @@ using HoverRace::Control::InputEventController;
 #define OLD_MAIN_SERVER			"66.197.183.245/~sirbrock/imr/rl.php"
 
 #define READ_BOOL(root, name) \
-	{\
-		root->ReadBool(#name, name);\
-	}
+	root->ReadBool(#name, name)
 
 #define READ_INT(root, name, min, max) \
-	{\
-		root->ReadInt(#name, name, min, max);\
-	}
+	root->ReadInt(#name, name, min, max)
 
 #define READ_FLOAT(root, name, min, max) \
-	{\
-		root->ReadFloat(#name, name, min, max);\
-	}
+	root->ReadFloat(#name, name, min, max)
 
 #define READ_DOUBLE(root, name, min, max) \
-	{\
-		root->ReadDouble(#name, name, min, max);\
-	}
+	root->ReadDouble(#name, name, min, max)
 
 #define READ_STRING(root, name) \
-	{\
-		root->ReadString(#name, name);\
-	}
+	root->ReadString(#name, name)
 
 #define READ_PATH(root, name) \
-	{\
-		root->ReadPath(#name, name);\
-	}
+	root->ReadPath(#name, name)
 
 #define EMIT_VAR(emitter, name) \
 	(emitter)->MapKey(#name); \
