@@ -273,6 +273,7 @@ int main(int argc, char** argv)
 	cfg->runtime.noAccel = noAccel;
 	cfg->runtime.skipStartupWarning = skipStartupWarning;
 	cfg->runtime.initScripts = initScripts;
+	cfg->Load();
 	cfg->GetLocale().RequestLocale(reqLocale);
 
 	// If --version was passed, output the version and exit.
