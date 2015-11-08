@@ -670,6 +670,7 @@ void Config::ResetToDefaults()
 	misc.ResetToDefaults();
 	player.ResetToDefaults();
 	net.ResetToDefaults();
+	locale->ResetToDefaults();
 
 	// Default controls.
 	controlsHash[0].motorOn  = InputEventController::HashKeyboardEvent(SDLK_LSHIFT);

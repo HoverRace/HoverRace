@@ -177,6 +177,11 @@ void Locale::ScanLocales()
 #	endif
 }
 
+void Locale::ResetToDefaults()
+{
+	preferredLocale.clear();
+}
+
 void Locale::Load(yaml::MapNode *root)
 {
 	if (!root) return;

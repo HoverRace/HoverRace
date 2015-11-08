@@ -78,6 +78,7 @@ private:
 	void ScanLocales();
 
 public:
+	void ResetToDefaults();
 	void Load(yaml::MapNode *root);
 	void Save(yaml::Emitter *emitter);
 
