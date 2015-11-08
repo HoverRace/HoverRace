@@ -25,6 +25,7 @@
 
 #include "AudioSettingsScene.h"
 #include "GameDirector.h"
+#include "LocaleSettingsScene.h"
 #include "VideoSettingsScene.h"
 
 #include "SettingsMenuScene.h"
@@ -81,6 +82,8 @@ SettingsMenuScene::SettingsMenuScene(Display::Display &display,
 	size_t row = 0;
 	menuGrid->At(row++, 0).NewChild<MenuItemButton<AudioSettingsScene>>(
 		display, director, GetTitle(), _("Profile"), false);
+	menuGrid->At(row++, 0).NewChild<MenuItemButton<LocaleSettingsScene>>(
+		display, director, GetTitle(), _("Language and Units"));
 	menuGrid->At(row++, 0).NewChild<MenuItemButton<AudioSettingsScene>>(
 		display, director, GetTitle(), _("Audio"));
 	menuGrid->At(row++, 0).NewChild<MenuItemButton<VideoSettingsScene>>(
