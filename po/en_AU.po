@@ -170,6 +170,10 @@ msgstr "Ask me this each time I launch a game alone"
 msgid "Audio"
 msgstr "Audio"
 
+#: client/Game2/LocaleSettingsScene.cpp
+msgid "Auto-detect"
+msgstr ""
+
 #: client/Game2/NetworkPrefsPage.cpp
 msgid "Automatically check for HoverRace updates"
 msgstr "Automatically check for HoverRace updates"
@@ -874,6 +878,15 @@ msgstr ""
 #: client/Game2/NetInterface.cpp
 msgid "Lag (ms)"
 msgstr "Lag (ms)"
+
+#: client/Game2/LocaleSettingsScene.cpp
+msgid "Language"
+msgstr ""
+
+#: client/Game2/LocaleSettingsScene.cpp
+#: client/Game2/SettingsMenuScene.cpp
+msgid "Language and Units"
+msgstr ""
 
 #: client/Game2/InternetRoom.cpp
 msgid "Laps:"
