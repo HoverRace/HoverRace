@@ -129,6 +129,19 @@ void Locale::RequestLocale(const std::string &id)
 }
 
 /**
+ * Find the locale name for the given locale ID.
+ * @param id The locale ID.
+ * @return The locale name (never empty).
+ */
+const std::string &Locale::IdToName(const std::string &id) const
+{
+	static const std::string UNKNOWN = "Unknown";
+
+	auto iter = availableLocales.find(id);
+	return iter == availableLocales.end() ? UNKNOWN : iter->second;
+}
+
+/**
  * Scan the locale directory for available locales.
  * This will invalidate all iterators.
  */

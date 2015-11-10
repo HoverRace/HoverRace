@@ -72,6 +72,8 @@ public:
 	 */
 	const boost::optional<std::string> &GetSelectedLocaleId() const { return selectedLocaleId; }
 
+	const std::string &IdToName(const std::string &id) const;
+
 private:
 	using locales_t = std::map<std::string, std::string>;
 
