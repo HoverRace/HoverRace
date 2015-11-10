@@ -37,7 +37,7 @@ macro(HR_GETTEXT_CREATE_TRANSLATIONS _potFile _firstPoFileArg)
          COMMAND ${GETTEXT_MSGMERGE_EXECUTABLE} --quiet --update --backup=none -s ${_absFile} ${_absPotFile}
          COMMAND ${CMAKE_COMMAND} "-DPO_FILE=${_absFile}"
             -P "${CMAKE_CURRENT_SOURCE_DIR}/CleanPo.cmake"
-         COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} -o ${_gmoFile} ${_absFile}
+         COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} -c -o ${_gmoFile} ${_absFile}
          DEPENDS ${_absPotFile} ${_absFile}
       )
 
