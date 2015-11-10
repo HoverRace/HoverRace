@@ -47,8 +47,10 @@ void LocaleSettingsScene::LoadFromConfig()
 	auto preferredLocale = localeCfg.GetPreferredLocale();
 	if (preferredLocale.empty()) {
 		std::ostringstream oss;
-		oss << _("Auto-detect") <<
-			" (" << *(localeCfg.GetSelectedLocaleId()) << ")";
+		oss << _("Auto-detect");
+		if (auto selLocale = localeCfg.GetSelectedLocaleId()) {
+			oss << " [" << localeCfg.IdToName(*selLocale) << "]";
+		}
 		preferredLocale = oss.str();
 	}
 
