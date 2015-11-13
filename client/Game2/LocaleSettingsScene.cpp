@@ -19,8 +19,10 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
-#include "../../engine/Display/Label.h"
+#include "../../engine/Display/Button.h"
 #include "../../engine/Util/Locale.h"
+
+#include "LocaleSelectScene.h"
 
 #include "LocaleSettingsScene.h"
 
@@ -36,10 +38,11 @@ LocaleSettingsScene::LocaleSettingsScene(Display::Display &display,
 	localeCfg(Config::GetInstance()->GetLocale())
 {
 	using namespace Display;
-	const auto &s = display.styles;
 
-	localeLbl = AddSetting(_("Language")).
-		NewChild<Label>(" ", s.bodyFont, s.bodyFg)->GetContents();
+	langBtn = AddSetting(_("Language")).
+		NewChild<Button>(display, " ")->GetContents();
+	langConn = langBtn->GetClickedSignal().connect(std::bind(
+		&LocaleSettingsScene::OnLangClicked, this));
 }
 
 void LocaleSettingsScene::LoadFromConfig()
@@ -54,12 +57,28 @@ void LocaleSettingsScene::LoadFromConfig()
 		preferredLocale = oss.str();
 	}
 
-	localeLbl->SetText(preferredLocale);
+	langBtn->SetText(preferredLocale);
 }
 
 void LocaleSettingsScene::ResetToDefaults()
 {
 	localeCfg.ResetToDefaults();
+}
+
+void LocaleSettingsScene::OnLangClicked()
+{
+	auto scene = std::make_shared<LocaleSelectScene>(display, director,
+		GetTitle(), localeCfg, localeCfg.GetPreferredLocale());
+
+	/*TODO
+	auto sp = scene.get();  // Prevent circular reference.
+	langSelConn = scene->GetOkSignal().connect([=]() {
+		localeCfg.SetPreferredLocale(sp->GetLocaleId());
+		RequestLoadFromConfig();
+	});
+	*/
+
+	director.RequestPushScene(scene);
 }
 
 }  // namespace Client
