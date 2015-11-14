@@ -56,6 +56,9 @@ void LocaleSettingsScene::LoadFromConfig()
 		}
 		preferredLocale = oss.str();
 	}
+	else {
+		preferredLocale = localeCfg.IdToName(preferredLocale);
+	}
 
 	langBtn->SetText(preferredLocale);
 }
