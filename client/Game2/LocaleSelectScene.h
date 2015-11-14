@@ -57,9 +57,18 @@ public:
 public:
 	std::string GetLocaleId() const;
 
+public:
+	void OnLocaleSelected();
+
+public:
+	using confirmSignal_t = boost::signals2::signal<void()>;
+	confirmSignal_t &GetConfirmSignal() { return confirmSignal; }
+
 private:
 	const Util::Locale &locale;
 	std::shared_ptr<Display::PickList<std::string>> localeList;
+
+	confirmSignal_t confirmSignal;
 };
 
 }  // namespace Client

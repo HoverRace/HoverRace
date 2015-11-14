@@ -70,13 +70,11 @@ void LocaleSettingsScene::OnLangClicked()
 	auto scene = std::make_shared<LocaleSelectScene>(display, director,
 		GetTitle(), localeCfg, localeCfg.GetPreferredLocale());
 
-	/*TODO
 	auto sp = scene.get();  // Prevent circular reference.
-	langSelConn = scene->GetOkSignal().connect([=]() {
+	langSelConn = scene->GetConfirmSignal().connect([=]() {
 		localeCfg.SetPreferredLocale(sp->GetLocaleId());
 		RequestLoadFromConfig();
 	});
-	*/
 
 	director.RequestPushScene(scene);
 }

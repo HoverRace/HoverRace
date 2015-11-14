@@ -33,7 +33,7 @@ namespace Client {
 LocaleSelectScene::LocaleSelectScene(Display::Display &display,
 	GameDirector &director,
 	const std::string &parentTitle, const Util::Locale &locale,
-	const std::string &localeId) :
+	const std::string&) :
 	SUPER(display, director, JoinTitles(parentTitle, _("Select Language")),
 		"Locale Select"),
 	locale(locale)
@@ -41,7 +41,6 @@ LocaleSelectScene::LocaleSelectScene(Display::Display &display,
 	using namespace Display;
 	using Alignment = UiViewModel::Alignment;
 
-	SupportOkAction();
 	SupportCancelAction();
 
 	auto root = GetContentRoot();
@@ -54,7 +53,9 @@ LocaleSelectScene::LocaleSelectScene(Display::Display &display,
 	for (const auto &loc : locale) {
 		localeList->Add(loc.second, loc.first);
 	}
-	localeList->SetValue(localeId);
+
+	localeList->GetValueChangedSignal().connect(
+		std::bind(&LocaleSelectScene::OnLocaleSelected, this));
 }
 
 std::string LocaleSelectScene::GetLocaleId() const
@@ -65,6 +66,12 @@ std::string LocaleSelectScene::GetLocaleId() const
 	else {
 		return "";
 	}
+}
+
+void LocaleSelectScene::OnLocaleSelected()
+{
+	confirmSignal();
+	director.RequestPopScene();
 }
 
 }  // namespace Client
