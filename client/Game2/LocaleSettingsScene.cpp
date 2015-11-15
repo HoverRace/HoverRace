@@ -39,9 +39,11 @@ LocaleSettingsScene::LocaleSettingsScene(Display::Display &display,
 {
 	using namespace Display;
 
+	const auto &videoCfg = Config::GetInstance()->video;
+
 	langBtn = AddSetting(_("Language")).
 		NewChild<Button>(display, " ")->GetContents();
-	langBtn->SetFixedWidth(320);
+	langBtn->SetFixedWidth(640.0 * videoCfg.textScale);
 	langConn = langBtn->GetClickedSignal().connect(std::bind(
 		&LocaleSettingsScene::OnLangClicked, this));
 }
