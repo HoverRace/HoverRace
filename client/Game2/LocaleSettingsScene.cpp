@@ -43,7 +43,7 @@ LocaleSettingsScene::LocaleSettingsScene(Display::Display &display,
 
 	langBtn = AddSetting(_("Language")).
 		NewChild<Button>(display, " ")->GetContents();
-	langBtn->SetFixedWidth(640.0 * videoCfg.textScale);
+	langBtn->SetFixedWidth(std::min(960.0, 640.0 * videoCfg.textScale));
 	langConn = langBtn->GetClickedSignal().connect(std::bind(
 		&LocaleSettingsScene::OnLangClicked, this));
 }
