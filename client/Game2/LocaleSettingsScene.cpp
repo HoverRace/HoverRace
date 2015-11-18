@@ -35,7 +35,8 @@ LocaleSettingsScene::LocaleSettingsScene(Display::Display &display,
 	GameDirector &director, const std::string &parentTitle) :
 	SUPER(display, director, parentTitle, _("Language and Units"),
 		"Locale Settings"),
-	localeCfg(Config::GetInstance()->GetLocale())
+	locale(Config::GetInstance()->GetLocale()),
+	i18nCfg(Config::GetInstance()->i18n), origI18nCfg(i18nCfg)
 {
 	using namespace Display;
 
@@ -50,17 +51,17 @@ LocaleSettingsScene::LocaleSettingsScene(Display::Display &display,
 
 void LocaleSettingsScene::LoadFromConfig()
 {
-	auto preferredLocale = localeCfg.GetPreferredLocale();
+	auto preferredLocale = i18nCfg.preferredLocale;
 	if (preferredLocale.empty()) {
 		std::ostringstream oss;
 		oss << _("Auto-detect");
-		if (auto selLocale = localeCfg.GetSelectedLocaleId()) {
-			oss << " [" << localeCfg.IdToName(*selLocale) << "]";
+		if (auto selLocale = locale.GetSelectedLocaleId()) {
+			oss << " [" << locale.IdToName(*selLocale) << "]";
 		}
 		preferredLocale = oss.str();
 	}
 	else {
-		preferredLocale = localeCfg.IdToName(preferredLocale);
+		preferredLocale = locale.IdToName(preferredLocale);
 	}
 
 	langBtn->SetText(preferredLocale);
@@ -68,17 +69,18 @@ void LocaleSettingsScene::LoadFromConfig()
 
 void LocaleSettingsScene::ResetToDefaults()
 {
-	localeCfg.ResetToDefaults();
+	i18nCfg.ResetToDefaults();
 }
 
 void LocaleSettingsScene::OnLangClicked()
 {
 	auto scene = std::make_shared<LocaleSelectScene>(display, director,
-		GetTitle(), localeCfg, localeCfg.GetPreferredLocale());
+		GetTitle(), locale, i18nCfg.preferredLocale);
 
 	auto sp = scene.get();  // Prevent circular reference.
 	langSelConn = scene->GetConfirmSignal().connect([=]() {
-		localeCfg.SetPreferredLocale(sp->GetLocaleId());
+		i18nCfg.preferredLocale = sp->GetLocaleId();
+
 		RequestLoadFromConfig();
 	});
 

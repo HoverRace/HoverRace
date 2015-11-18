@@ -667,10 +667,10 @@ void Config::ResetToDefaults()
 {
 	video.ResetToDefaults();
 	audio.ResetToDefaults();
+	i18n.ResetToDefaults();
 	misc.ResetToDefaults();
 	player.ResetToDefaults();
 	net.ResetToDefaults();
-	locale->ResetToDefaults();
 
 	// Default controls.
 	controlsHash[0].motorOn  = InputEventController::HashKeyboardEvent(SDLK_LSHIFT);
@@ -824,10 +824,10 @@ void Config::Load()
 
 			video.Load(dynamic_cast<yaml::MapNode*>(root->Get("video")));
 			audio.Load(dynamic_cast<yaml::MapNode*>(root->Get("audio")));
+			i18n.Load(dynamic_cast<yaml::MapNode*>(root->Get("i18n")));
 			misc.Load(dynamic_cast<yaml::MapNode*>(root->Get("misc")));
 			player.Load(dynamic_cast<yaml::MapNode*>(root->Get("player")));
 			net.Load(dynamic_cast<yaml::MapNode*>(root->Get("net")));
-			locale->Load(dynamic_cast<yaml::MapNode*>(root->Get("locale")));
 
 			// Get the controls.
 			yaml::SeqNode *ctlseqh = dynamic_cast<yaml::SeqNode*>(root->Get("controls_hash"));
@@ -891,10 +891,10 @@ void Config::Save() const
 		SaveVersion(emitter);
 		video.Save(emitter);
 		audio.Save(emitter);
+		i18n.Save(emitter);
 		misc.Save(emitter);
 		player.Save(emitter);
 		net.Save(emitter);
-		locale->Save(emitter);
 
 		// Save list of controls.
 		emitter->MapKey("controls_hash");
@@ -1038,6 +1038,30 @@ void Config::audio_t::Save(yaml::Emitter *emitter) const
 	emitter->StartMap();
 
 	EMIT_VAR(emitter, sfxVolume);
+
+	emitter->EndMap();
+}
+
+// i18n ////////////////////////////////////////////////////////////////////////
+
+void Config::i18n_t::ResetToDefaults()
+{
+	preferredLocale.clear();  // Auto-detect.
+}
+
+void Config::i18n_t::Load(yaml::MapNode *root)
+{
+	if (!root) return;
+
+	READ_STRING(root, preferredLocale);
+}
+
+void Config::i18n_t::Save(yaml::Emitter *emitter) const
+{
+	emitter->MapKey("i18n");
+	emitter->StartMap();
+
+	EMIT_VAR(emitter, preferredLocale);
 
 	emitter->EndMap();
 }

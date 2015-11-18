@@ -24,6 +24,7 @@
 #include "yaml/Emitter.h"
 #include "yaml/MapNode.h"
 
+#include "Config.h"
 #include "Log.h"
 #include "Str.h"
 
@@ -77,7 +78,7 @@ Locale::Locale(const OS::path_t &path, const std::string &domain) :
  */
 void Locale::RequestPreferredLocale()
 {
-	RequestLocale(preferredLocale);
+	RequestLocale(Config::GetInstance()->i18n.preferredLocale);
 }
 
 /**
@@ -188,29 +189,6 @@ void Locale::ScanLocales()
 			}
 		}
 #	endif
-}
-
-void Locale::ResetToDefaults()
-{
-	preferredLocale.clear();
-}
-
-void Locale::Load(yaml::MapNode *root)
-{
-	if (!root) return;
-
-	root->ReadString("preferredLocale", preferredLocale);
-}
-
-void Locale::Save(yaml::Emitter *emitter)
-{
-	emitter->MapKey("locale");
-	emitter->StartMap();
-
-	emitter->MapKey("preferredLocale");
-	emitter->Value(preferredLocale);
-
-	emitter->EndMap();
 }
 
 Locale::const_iterator Locale::cbegin() const

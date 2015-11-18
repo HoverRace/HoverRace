@@ -57,7 +57,9 @@ protected:
 	void OnLangClicked();
 
 private:
-	Util::Locale &localeCfg;
+	Util::Locale &locale;
+	Util::Config::i18n_t &i18nCfg;
+	Util::Config::i18n_t origI18nCfg;
 
 	std::shared_ptr<Display::Button> langBtn;
 
