@@ -13,6 +13,7 @@
 *.cpp linguist-language=C++
 *.h linguist-language=C++
 external/* linguist-vendored
+hovercad/* linguist-vendored
 include/* linguist-vendored
 lib/* linguist-vendored
 srcdoc/* linguist-documentation
