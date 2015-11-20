@@ -23,6 +23,7 @@
 #include "../../engine/Util/Locale.h"
 
 #include "LocaleSelectScene.h"
+#include "MessageScene.h"
 
 #include "LocaleSettingsScene.h"
 
@@ -70,6 +71,35 @@ void LocaleSettingsScene::LoadFromConfig()
 void LocaleSettingsScene::ResetToDefaults()
 {
 	i18nCfg.ResetToDefaults();
+}
+
+void LocaleSettingsScene::OnOk()
+{
+	if (origI18nCfg.preferredLocale != i18nCfg.preferredLocale) {
+		auto confirmScene = std::make_shared<MessageScene>(display, director,
+			_("Settings changed"),
+			_("To apply these changes, the game must restart.").str() +
+			"\n\n" +
+			_("This will abandon any race in progress.").str(),
+			true);
+		confirmOkConn = confirmScene->GetOkSignal().connect([&]() {
+			locale.RequestPreferredLocale();
+
+			Config::GetInstance()->Save();
+			director.RequestSoftRestart();
+		});
+		director.RequestPushScene(confirmScene);
+	}
+	else {
+		Config::GetInstance()->Save();
+		SUPER::OnOk();
+	}
+}
+
+void LocaleSettingsScene::OnCancel()
+{
+	i18nCfg = origI18nCfg;
+	SUPER::OnCancel();
 }
 
 void LocaleSettingsScene::OnLangClicked()

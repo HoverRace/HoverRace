@@ -54,6 +54,9 @@ protected:
 	void LoadFromConfig() override;
 	void ResetToDefaults() override;
 
+	void OnOk() override;
+	void OnCancel() override;
+
 	void OnLangClicked();
 
 private:
@@ -65,6 +68,7 @@ private:
 
 	boost::signals2::scoped_connection langConn;
 	boost::signals2::scoped_connection langSelConn;
+	boost::signals2::scoped_connection confirmOkConn;
 };
 
 }  // namespace Client
