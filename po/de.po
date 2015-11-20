@@ -1490,6 +1490,7 @@ msgstr ""
 msgid "Settings"
 msgstr "&Einstellung"
 
+#: client/Game2/LocaleSettingsScene.cpp
 #: client/Game2/VideoSettingsScene.cpp
 #: client/Game2/VideoSettingsScene.cpp
 #, fuzzy
@@ -1658,6 +1659,7 @@ msgstr ""
 msgid "This level contains:"
 msgstr ""
 
+#: client/Game2/LocaleSettingsScene.cpp
 #: client/Game2/VideoSettingsScene.cpp
 #: client/Game2/VideoSettingsScene.cpp
 msgid "This will abandon any race in progress."
@@ -1667,6 +1669,7 @@ msgstr ""
 msgid "Throttle"
 msgstr ""
 
+#: client/Game2/LocaleSettingsScene.cpp
 #: client/Game2/VideoSettingsScene.cpp
 msgid "To apply these changes, the game must restart."
 msgstr ""
