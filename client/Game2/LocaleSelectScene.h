@@ -1,5 +1,5 @@
 
-// LocaleSettingsScene.h
+// LocaleSelectScene.h
 //
 // Copyright (c) 2015 Michael Imamura.
 //
@@ -21,13 +21,16 @@
 
 #pragma once
 
-#include "../../engine/Util/Config.h"
+#include "../../engine/Display/PickList.h"
 
-#include "SettingsScene.h"
+#include "DialogScene.h"
 
 namespace HoverRace {
+	namespace Client {
+		class GameDirector;
+	}
 	namespace Display {
-		class Button;
+		class Display;
 	}
 	namespace Util {
 		class Locale;
@@ -38,37 +41,34 @@ namespace HoverRace {
 namespace Client {
 
 /**
-* Locale settings dialog.
+* Selector for locale.
 * @author Michael Imamura
 */
-class LocaleSettingsScene : public SettingsScene
+class LocaleSelectScene : public DialogScene
 {
-	using SUPER = SettingsScene;
+	using SUPER = DialogScene;
 
 public:
-	LocaleSettingsScene(Display::Display &display, GameDirector &director,
-		const std::string &parentTitle);
-	virtual ~LocaleSettingsScene() { }
+	LocaleSelectScene(Display::Display &display, GameDirector &director,
+		const std::string &parentTitle, const Util::Locale &locale,
+		const std::string &localeId);
+	virtual ~LocaleSelectScene() { }
 
-protected:
-	void LoadFromConfig() override;
-	void ResetToDefaults() override;
+public:
+	std::string GetLocaleId() const;
 
-	void OnOk() override;
-	void OnCancel() override;
+public:
+	void OnLocaleSelected();
 
-	void OnLangClicked();
+public:
+	using confirmSignal_t = boost::signals2::signal<void()>;
+	confirmSignal_t &GetConfirmSignal() { return confirmSignal; }
 
 private:
-	Util::Locale &locale;
-	Util::Config::i18n_t &i18nCfg;
-	Util::Config::i18n_t origI18nCfg;
+	const Util::Locale &locale;
+	std::shared_ptr<Display::PickList<std::string>> localeList;
 
-	std::shared_ptr<Display::Button> langBtn;
-
-	boost::signals2::scoped_connection langConn;
-	boost::signals2::scoped_connection langSelConn;
-	boost::signals2::scoped_connection confirmOkConn;
+	confirmSignal_t confirmSignal;
 };
 
 }  // namespace Client

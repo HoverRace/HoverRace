@@ -233,6 +233,15 @@ public:
 		void Save(yaml::Emitter*) const;
 	} audio;
 
+	struct i18n_t
+	{
+		std::string preferredLocale;
+
+		void ResetToDefaults();
+		void Load(yaml::MapNode*);
+		void Save(yaml::Emitter*) const;
+	} i18n;
+
 	struct misc_t
 	{
 		OS::path_t screenshotPath;

@@ -57,9 +57,6 @@ public:
 	Locale(const OS::path_t &path, const std::string &domain);
 
 public:
-	const std::string &GetPreferredLocale() const { return preferredLocale; }
-	void SetPreferredLocale(const std::string &id) { preferredLocale = id; }
-
 	void RequestPreferredLocale();
 
 	void RequestLocale(const std::string &id);
@@ -80,11 +77,6 @@ private:
 	void ScanLocales();
 
 public:
-	void ResetToDefaults();
-	void Load(yaml::MapNode *root);
-	void Save(yaml::Emitter *emitter);
-
-public:
 	// STL-like iteration.
 	using iterator = locales_t::iterator;
 	using const_iterator = locales_t::const_iterator;
@@ -97,7 +89,6 @@ public:
 private:
 	OS::path_t path;
 	std::string domain;
-	std::string preferredLocale;
 	boost::optional<std::string> selectedLocaleId;
 	locales_t availableLocales;  ///< Cached list of available locales.
 };

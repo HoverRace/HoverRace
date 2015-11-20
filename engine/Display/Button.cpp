@@ -235,6 +235,20 @@ void Button::SetIcon(std::shared_ptr<FillBox> icon)
 	}
 }
 
+/**
+ * Enable auto-sizing on the height only (i.e. fixed width, auto height).
+ * This only has an effect if auto-sizing is enabled.
+ * @param width The width.
+ */
+void Button::SetFixedWidth(double width)
+{
+	if (!fixedWidth || *fixedWidth != width) {
+		fixedWidth = width;
+		RequestSizing();
+		FireModelUpdate(SUPER::Props::SIZE);
+	}
+}
+
 Vec3 Button::Measure()
 {
 	const Vec3 labelSize = label->Measure();
@@ -247,10 +261,18 @@ Vec3 Button::Measure()
 	}
 
 	if (IsAutoSize()) {
-		return Vec3(
-			labelSize.x + paddingLeft + paddingRight + iconPart,
-			labelSize.y + paddingTop + paddingBottom,
-			0);
+		if (fixedWidth) {
+			return {
+				*fixedWidth,
+				labelSize.y + paddingTop + paddingBottom,
+				0 };
+		}
+		else {
+			return {
+				labelSize.x + paddingLeft + paddingRight + iconPart,
+				labelSize.y + paddingTop + paddingBottom,
+				0 };
+		}
 	}
 	else {
 		return SUPER::Measure();

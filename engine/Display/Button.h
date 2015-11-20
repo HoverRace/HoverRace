@@ -94,6 +94,8 @@ public:
 	Label *GetLabelChild() const { return label.get(); }
 	FillBox *GetIconChild() const { return icon.get(); }
 
+	void SetFixedWidth(double width);
+
 protected:
 	void Layout() override;
 
@@ -105,6 +107,7 @@ private:
 	std::unique_ptr<FillBox> background;
 	std::unique_ptr<Label> label;
 	std::shared_ptr<FillBox> icon;
+	boost::optional<double> fixedWidth;
 	double paddingTop, paddingRight, paddingBottom, paddingLeft, iconGap;
 };
 

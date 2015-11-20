@@ -19,8 +19,11 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
-#include "../../engine/Display/Label.h"
+#include "../../engine/Display/Button.h"
 #include "../../engine/Util/Locale.h"
+
+#include "LocaleSelectScene.h"
+#include "MessageScene.h"
 
 #include "LocaleSettingsScene.h"
 
@@ -33,33 +36,85 @@ LocaleSettingsScene::LocaleSettingsScene(Display::Display &display,
 	GameDirector &director, const std::string &parentTitle) :
 	SUPER(display, director, parentTitle, _("Language and Units"),
 		"Locale Settings"),
-	localeCfg(Config::GetInstance()->GetLocale())
+	locale(Config::GetInstance()->GetLocale()),
+	i18nCfg(Config::GetInstance()->i18n), origI18nCfg(i18nCfg)
 {
 	using namespace Display;
-	const auto &s = display.styles;
 
-	localeLbl = AddSetting(_("Language")).
-		NewChild<Label>(" ", s.bodyFont, s.bodyFg)->GetContents();
+	const auto &videoCfg = Config::GetInstance()->video;
+
+	langBtn = AddSetting(_("Language")).
+		NewChild<Button>(display, " ")->GetContents();
+	langBtn->SetFixedWidth(std::min(960.0, 640.0 * videoCfg.textScale));
+	langConn = langBtn->GetClickedSignal().connect(std::bind(
+		&LocaleSettingsScene::OnLangClicked, this));
 }
 
 void LocaleSettingsScene::LoadFromConfig()
 {
-	auto preferredLocale = localeCfg.GetPreferredLocale();
+	auto preferredLocale = i18nCfg.preferredLocale;
 	if (preferredLocale.empty()) {
 		std::ostringstream oss;
 		oss << _("Auto-detect");
-		if (auto selLocale = localeCfg.GetSelectedLocaleId()) {
-			oss << " [" << localeCfg.IdToName(*selLocale) << "]";
+		if (auto selLocale = locale.GetSelectedLocaleId()) {
+			oss << " [" << locale.IdToName(*selLocale) << "]";
 		}
 		preferredLocale = oss.str();
 	}
+	else {
+		preferredLocale = locale.IdToName(preferredLocale);
+	}
 
-	localeLbl->SetText(preferredLocale);
+	langBtn->SetText(preferredLocale);
 }
 
 void LocaleSettingsScene::ResetToDefaults()
 {
-	localeCfg.ResetToDefaults();
+	i18nCfg.ResetToDefaults();
+}
+
+void LocaleSettingsScene::OnOk()
+{
+	if (origI18nCfg.preferredLocale != i18nCfg.preferredLocale) {
+		auto confirmScene = std::make_shared<MessageScene>(display, director,
+			_("Settings changed"),
+			_("To apply these changes, the game must restart.").str() +
+			"\n\n" +
+			_("This will abandon any race in progress.").str(),
+			true);
+		confirmOkConn = confirmScene->GetOkSignal().connect([&]() {
+			locale.RequestPreferredLocale();
+
+			Config::GetInstance()->Save();
+			director.RequestSoftRestart();
+		});
+		director.RequestPushScene(confirmScene);
+	}
+	else {
+		Config::GetInstance()->Save();
+		SUPER::OnOk();
+	}
+}
+
+void LocaleSettingsScene::OnCancel()
+{
+	i18nCfg = origI18nCfg;
+	SUPER::OnCancel();
+}
+
+void LocaleSettingsScene::OnLangClicked()
+{
+	auto scene = std::make_shared<LocaleSelectScene>(display, director,
+		GetTitle(), locale, i18nCfg.preferredLocale);
+
+	auto sp = scene.get();  // Prevent circular reference.
+	langSelConn = scene->GetConfirmSignal().connect([=]() {
+		i18nCfg.preferredLocale = sp->GetLocaleId();
+
+		RequestLoadFromConfig();
+	});
+
+	director.RequestPushScene(scene);
 }
 
 }  // namespace Client
