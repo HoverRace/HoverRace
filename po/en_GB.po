@@ -170,6 +170,7 @@ msgstr "Ask me this each time I launch a game alone"
 msgid "Audio"
 msgstr "Audio"
 
+#: client/Game2/LocaleSelectScene.cpp
 #: client/Game2/LocaleSettingsScene.cpp
 msgid "Auto-detect"
 msgstr ""
@@ -1445,6 +1446,10 @@ msgstr ""
 msgid "Select"
 msgstr ""
 
+#: client/Game2/LocaleSelectScene.cpp
+msgid "Select Language"
+msgstr ""
+
 #: client/Game2/DisplaySelectScene.cpp
 #, fuzzy
 msgid "Select Resolution"
@@ -1471,9 +1476,8 @@ msgstr "Server Options"
 msgid "Settings"
 msgstr "Settings"
 
-#: client/Game2/LocaleSettingsScene.cpp
-#: client/Game2/VideoSettingsScene.cpp
-#: client/Game2/VideoSettingsScene.cpp
+#: client/Game2/SettingsScene.cpp
+#: client/Game2/SettingsScene.cpp
 #, fuzzy
 msgid "Settings changed"
 msgstr "Settings"
@@ -1642,9 +1646,8 @@ msgstr ""
 msgid "This level contains:"
 msgstr ""
 
-#: client/Game2/LocaleSettingsScene.cpp
-#: client/Game2/VideoSettingsScene.cpp
-#: client/Game2/VideoSettingsScene.cpp
+#: client/Game2/SettingsScene.cpp
+#: client/Game2/SettingsScene.cpp
 msgid "This will abandon any race in progress."
 msgstr ""
 
@@ -1652,12 +1655,11 @@ msgstr ""
 msgid "Throttle"
 msgstr ""
 
-#: client/Game2/LocaleSettingsScene.cpp
-#: client/Game2/VideoSettingsScene.cpp
+#: client/Game2/SettingsScene.cpp
 msgid "To apply these changes, the game must restart."
 msgstr ""
 
-#: client/Game2/VideoSettingsScene.cpp
+#: client/Game2/SettingsScene.cpp
 #, fuzzy
 msgid "To apply these changes, the game must return to the main menu."
 msgstr "Are you sure you want to abandon the race and return to the main menu?"
