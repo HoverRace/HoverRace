@@ -274,7 +274,12 @@ int main(int argc, char** argv)
 	cfg->runtime.skipStartupWarning = skipStartupWarning;
 	cfg->runtime.initScripts = initScripts;
 	cfg->Load();
-	cfg->GetLocale().RequestLocale(reqLocale);
+	if (reqLocale.empty()) {
+		cfg->GetLocale().RequestPreferredLocale();
+	}
+	else {
+		cfg->GetLocale().RequestLocale(reqLocale);
+	}
 
 	// If --version was passed, output the version and exit.
 	if (showVersion) {
