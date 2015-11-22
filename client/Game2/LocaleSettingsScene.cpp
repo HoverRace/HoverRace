@@ -76,12 +76,7 @@ void LocaleSettingsScene::ResetToDefaults()
 void LocaleSettingsScene::OnOk()
 {
 	if (origI18nCfg.preferredLocale != i18nCfg.preferredLocale) {
-		auto confirmScene = std::make_shared<MessageScene>(display, director,
-			_("Settings changed"),
-			_("To apply these changes, the game must restart.").str() +
-			"\n\n" +
-			_("This will abandon any race in progress.").str(),
-			true);
+		auto confirmScene = NewSoftRestartConfirmScene();
 		confirmOkConn = confirmScene->GetOkSignal().connect([&]() {
 			locale.RequestPreferredLocale();
 

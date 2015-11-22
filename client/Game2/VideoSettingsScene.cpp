@@ -121,12 +121,7 @@ void VideoSettingsScene::OnOk()
 		origVideoCfg.stackedSplitscreen != videoCfg.stackedSplitscreen;
 
 	if (needsSoftRestart) {
-		auto confirmScene = std::make_shared<MessageScene>(display, director,
-			_("Settings changed"),
-			_("To apply these changes, the game must restart.").str() +
-			"\n\n" +
-			_("This will abandon any race in progress.").str(),
-			true);
+		auto confirmScene = NewSoftRestartConfirmScene();
 		confirmOkConn = confirmScene->GetOkSignal().connect([&]() {
 			Config::GetInstance()->Save();
 			director.RequestSoftRestart();
@@ -134,13 +129,7 @@ void VideoSettingsScene::OnOk()
 		director.RequestPushScene(confirmScene);
 	}
 	else if (needsMainMenu) {
-		auto confirmScene = std::make_shared<MessageScene>(display, director,
-			_("Settings changed"),
-			_("To apply these changes, the game must return "
-			"to the main menu.").str() +
-			"\n\n" +
-			_("This will abandon any race in progress.").str(),
-			true);
+		auto confirmScene = NewMainMenuConfirmScene();
 		confirmOkConn = confirmScene->GetOkSignal().connect([&]() {
 			Config::GetInstance()->Save();
 			director.RequestMainMenu();

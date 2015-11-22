@@ -101,6 +101,36 @@ Display::FlexGrid::CellProxy SettingsScene::AddSetting(const std::string &label)
 	return settingsGrid->At(curRow++, 1);
 }
 
+/**
+ * Generate a new confirmation scene for when a soft restart is required.
+ * @return The constructed scene.
+ */
+std::shared_ptr<MessageScene> SettingsScene::NewSoftRestartConfirmScene() const
+{
+	return std::make_shared<MessageScene>(display, director,
+		_("Settings changed"),
+		_("To apply these changes, the game must restart.").str() +
+		"\n\n" +
+		_("This will abandon any race in progress.").str(),
+		true);
+}
+
+/**
+ * Generate a new confirmation scene for when a return to the main menu is
+ * required.
+ * @return The constructed scene.
+ */
+std::shared_ptr<MessageScene> SettingsScene::NewMainMenuConfirmScene() const
+{
+	return std::make_shared<MessageScene>(display, director,
+		_("Settings changed"),
+		_("To apply these changes, the game must return "
+			"to the main menu.").str() +
+		"\n\n" +
+		_("This will abandon any race in progress.").str(),
+		true);
+}
+
 void SettingsScene::OnExtra()
 {
 	auto confirmScene = std::make_shared<MessageScene>(display, director,

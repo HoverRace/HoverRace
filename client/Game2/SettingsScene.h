@@ -26,6 +26,12 @@
 #include "DialogScene.h"
 
 namespace HoverRace {
+	namespace Client {
+		class MessageScene;
+	}
+}
+
+namespace HoverRace {
 namespace Client {
 
 /**
@@ -59,6 +65,9 @@ protected:
 	Display::FlexGrid *GetSettingsGrid() { return settingsGrid.get(); }
 
 	Display::FlexGrid::CellProxy AddSetting(const std::string &label);
+
+	std::shared_ptr<MessageScene> NewSoftRestartConfirmScene() const;
+	std::shared_ptr<MessageScene> NewMainMenuConfirmScene() const;
 
 protected:
 	void OnExtra() override;
