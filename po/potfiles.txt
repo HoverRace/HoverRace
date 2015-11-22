@@ -37,6 +37,7 @@ client/Game2/HoverScript/SysEnv.cpp
 client/Game2/HoverScript/TrackPeer.cpp
 client/Game2/InternetRoom.cpp
 client/Game2/LoadingScene.cpp
+client/Game2/LocaleSelectScene.cpp
 client/Game2/LocaleSettingsScene.cpp
 client/Game2/MainMenuScene.cpp
 client/Game2/MatchReport.cpp
