@@ -39,6 +39,7 @@
 #include "../../engine/Util/DllObjectFactory.h"
 #include "../../engine/Util/FuzzyLogic.h"
 #include "../../engine/Util/Loader.h"
+#include "../../engine/Util/Locale.h"
 #include "../../engine/Util/Profiler.h"
 #include "../../engine/Util/Str.h"
 #include "../../engine/Util/WorldCoordinates.h"
@@ -728,6 +729,15 @@ void ClientApp::RequestMainMenu(std::shared_ptr<LoadingScene> loadingScene)
 	RequestPushScene(std::make_shared<MainMenuScene>(*display, *this, *rulebookLibrary));
 
 	loadingScene->ShareLoader()->GetFinishedLoadingSignal().connect([&]() {
+		if (!Config::GetInstance()->GetLocale().GetSelectedLocaleId()) {
+			// This message is intentionally not translatable --
+			// we're here precisely because the locale isn't available.
+			RequestPushScene(std::make_shared<MessageScene>(*display, *this,
+				"Locale not available",
+				"Your preferred locale is not installed.\n"
+				"\n"
+				"You may select a new locale from the Settings menu."));
+		}
 		if (needsDevWarning) {
 			needsDevWarning = false;
 			RequestPushScene(std::make_shared<MessageScene>(*display, *this,
