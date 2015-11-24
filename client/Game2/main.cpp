@@ -274,12 +274,10 @@ int main(int argc, char** argv)
 	cfg->runtime.skipStartupWarning = skipStartupWarning;
 	cfg->runtime.initScripts = initScripts;
 	cfg->Load();
-	if (reqLocale.empty()) {
-		cfg->GetLocale().RequestPreferredLocale();
+	if (!reqLocale.empty()) {
+		cfg->i18n.preferredLocale = reqLocale;
 	}
-	else {
-		cfg->GetLocale().RequestLocale(reqLocale);
-	}
+	cfg->GetLocale().RequestPreferredLocale();
 
 	// If --version was passed, output the version and exit.
 	if (showVersion) {
