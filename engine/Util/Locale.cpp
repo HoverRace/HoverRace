@@ -125,7 +125,6 @@ void Locale::RequestLocale(const std::string &id)
 		if (check(language)) return;
 
 		HR_LOG(debug) << "Locale did not match known locale; using en_US.";
-		selectedLocaleId = "en_US";
 #	endif
 }
 
