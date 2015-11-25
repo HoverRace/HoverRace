@@ -65,7 +65,6 @@ public:
 	confirmSignal_t &GetConfirmSignal() { return confirmSignal; }
 
 private:
-	const Util::Locale &locale;
 	std::shared_ptr<Display::PickList<std::string>> localeList;
 
 	confirmSignal_t confirmSignal;

@@ -35,8 +35,7 @@ LocaleSelectScene::LocaleSelectScene(Display::Display &display,
 	const std::string &parentTitle, const Util::Locale &locale,
 	const std::string&) :
 	SUPER(display, director, JoinTitles(parentTitle, _("Select Language")),
-		"Locale Select"),
-	locale(locale)
+		"Locale Select")
 {
 	using namespace Display;
 	using Alignment = UiViewModel::Alignment;
