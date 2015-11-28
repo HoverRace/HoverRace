@@ -758,7 +758,7 @@ void ClientApp::RequestMainMenu(std::shared_ptr<LoadingScene> loadingScene)
 }
 
 void ClientApp::RequestNewPracticeSession(std::shared_ptr<Rules> rules,
-                                          std::shared_ptr<LoadingScene> loadingScene)
+	std::shared_ptr<LoadingScene> loadingScene)
 {
 	if (!loadingScene) {
 		loadingScene = std::make_shared<LoadingScene>(*display, *this, "Load");
