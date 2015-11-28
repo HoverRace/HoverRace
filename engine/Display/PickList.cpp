@@ -39,11 +39,13 @@ const double SCROLL_STEP = 15;
 //{{{ PickListItem /////////////////////////////////////////////////////////////
 
 PickListItem::PickListItem(Display &display, const std::string &text,
-	uiLayoutFlags_t layoutFlags) :
+	bool showIcon, uiLayoutFlags_t layoutFlags) :
 	SUPER(display, text, layoutFlags)
 {
 	SetTextAlignment(Alignment::W);
-	Init();
+	if (showIcon) {
+		Init();
+	}
 }
 
 void PickListItem::Init()

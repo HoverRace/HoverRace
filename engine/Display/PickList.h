@@ -54,7 +54,7 @@ class PickListItem : public StateButton
 	using SUPER = StateButton;
 
 public:
-	PickListItem(Display &display, const std::string &text,
+	PickListItem(Display &display, const std::string &text, bool showIcon,
 		uiLayoutFlags_t layoutFlags = 0);
 	virtual ~PickListItem() { }
 
@@ -75,6 +75,13 @@ public:
 	BasePickList(Display &display, const Vec2 &size,
 		uiLayoutFlags_t layoutFlags = 0);
 	virtual ~BasePickList() { }
+
+public:
+	enum class Mode
+	{
+		RADIO,  ///< List of radio buttons (default).
+		LIST,  ///< Plain list, no icons.
+	};
 
 protected:
 	/**
@@ -188,7 +195,10 @@ class PickList : public BasePickList
 public:
 	PickList(Display &display, const Vec2 &size,
 		uiLayoutFlags_t layoutFlags = 0) :
-		SUPER(display, size, layoutFlags) { }
+		PickList(display, Mode::RADIO, size, layoutFlags) { }
+	PickList(Display &display, Mode mode, const Vec2 &size,
+		uiLayoutFlags_t layoutFlags = 0) :
+		SUPER(display, size, layoutFlags), mode(mode) { }
 	virtual ~PickList() { }
 
 protected:
@@ -199,8 +209,8 @@ protected:
 	public:
 		DefaultItem(PickList<T> &pickList, Display &display,
 			size_t idx, const T &value, const std::string &text,
-			uiLayoutFlags_t layoutFlags = 0) :
-			SUPER(display, text, layoutFlags),
+			bool showIcon, uiLayoutFlags_t layoutFlags = 0) :
+			SUPER(display, text, showIcon, layoutFlags),
 			pickList(pickList), idx(idx), value(value)
 		{
 			clickedConn = GetClickedSignal().connect([&](ClickRegion&) {
@@ -309,7 +319,8 @@ public:
 	void Add(const std::string &label, const T &value)
 	{
 		size_t idx = items.size();
-		auto item = NewChild<DefaultItem>(*this, display, idx, value, label);
+		auto item = NewChild<DefaultItem>(*this, display, idx, value, label,
+			(mode == Mode::RADIO));
 		items.emplace_back(*(GetChildren().back()), *item);
 		filteredItems.push_back(items.size() - 1);
 		RequestLayout();
@@ -461,6 +472,7 @@ public:
 	}
 
 private:
+	Mode mode;
 	std::vector<ItemChild> items;
 };
 
