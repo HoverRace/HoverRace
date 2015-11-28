@@ -44,7 +44,8 @@ LocaleSelectScene::LocaleSelectScene(Display::Display &display,
 
 	auto root = GetContentRoot();
 
-	localeList = root->NewChild<PickList<std::string>>(display, Vec2(260, 520));
+	localeList = root->NewChild<PickList<std::string>>(display,
+		BasePickList::Mode::LIST, Vec2(260, 520));
 	localeList->SetPos(640, 0);
 	localeList->SetAlignment(Alignment::N);
 
