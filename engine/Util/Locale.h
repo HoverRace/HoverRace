@@ -57,6 +57,9 @@ public:
 	Locale(const OS::path_t &path, const std::string &domain);
 
 public:
+	static std::string NormalizeId(const std::string &s);
+
+public:
 	void RequestPreferredLocale();
 
 	void RequestLocale(const std::string &id);

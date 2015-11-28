@@ -736,7 +736,8 @@ void ClientApp::RequestMainMenu(std::shared_ptr<LoadingScene> loadingScene)
 			// we're here precisely because the locale isn't available.
 			RequestPushScene(std::make_shared<MessageScene>(*display, *this,
 				"Locale not available",
-				"Your preferred locale (" + cfg->i18n.preferredLocale +
+				"Your preferred locale (" +
+				Locale::NormalizeId(cfg->i18n.preferredLocale) +
 				") is not installed.\n"
 				"\n"
 				"You may select a new locale from the Settings menu."));

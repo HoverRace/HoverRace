@@ -20,6 +20,7 @@
 // and limitations under the License.
 
 #include <boost/filesystem.hpp>
+#include <utf8/utf8.h>
 
 #include "yaml/Emitter.h"
 #include "yaml/MapNode.h"
@@ -74,6 +75,31 @@ Locale::Locale(const OS::path_t &path, const std::string &domain) :
 }
 
 /**
+ * Normalize the locale ID.
+ * This removes extraneous whitespace and invalid characters.
+ * @param s The original locale ID.
+ * @return The normalized ID.
+ */
+std::string Locale::NormalizeId(const std::string &s)
+{
+	std::string retv;
+	auto appender = std::back_inserter(retv);
+
+	for (auto iter = s.cbegin(), iend = s.cend(); iter != iend;) {
+		MR_UInt32 ch = utf8::next(iter, iend);
+
+		if ((ch >= 'A' && ch <= 'Z') ||
+			(ch >= 'a' && ch <= 'z') ||
+			ch == '_' || ch == '@' || ch == '.')
+		{
+			utf8::append(ch, appender);
+		}
+	}
+
+	return retv;
+}
+
+/**
  * Attempt to change the global locale to the preferred locale.
  */
 void Locale::RequestPreferredLocale()
@@ -90,7 +116,7 @@ void Locale::RequestLocale(const std::string &id)
 #	ifndef ENABLE_NLS
 		selectedLocaleId = "en_US";
 #	else
-		auto &locale = OS::SetLocale(path, domain, id);
+		auto &locale = OS::SetLocale(path, domain, NormalizeId(id));
 
 		// Try to determine which of our supported locales (if any) were chosen.
 		selectedLocaleId = boost::none;
