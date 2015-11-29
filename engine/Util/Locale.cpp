@@ -85,6 +85,7 @@ std::string Locale::NormalizeId(const std::string &s)
 	std::string retv;
 	auto appender = std::back_inserter(retv);
 
+	size_t n = 0;
 	for (auto iter = s.cbegin(), iend = s.cend(); iter != iend;) {
 		MR_UInt32 ch = utf8::next(iter, iend);
 
@@ -93,6 +94,9 @@ std::string Locale::NormalizeId(const std::string &s)
 			ch == '_' || ch == '@' || ch == '.')
 		{
 			utf8::append(ch, appender);
+
+			n++;
+			if (n >= 32) break;
 		}
 	}
 
