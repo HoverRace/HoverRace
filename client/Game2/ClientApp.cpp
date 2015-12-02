@@ -117,7 +117,7 @@ namespace {
 
 ClientApp::ClientApp() :
 	SUPER(),
-	needsDevWarning(false),
+	needsDevWarning(false), needsLocaleCheck(true),
 	userEventId(SDL_RegisterEvents(1)),
 	sceneStack(), fgScene(),
 	statusOverlayScene(), showOverlay(false),
@@ -731,7 +731,9 @@ void ClientApp::RequestMainMenu(std::shared_ptr<LoadingScene> loadingScene)
 	loadingScene->ShareLoader()->GetFinishedLoadingSignal().connect([&]() {
 		const auto cfg = Config::GetInstance();
 
-		if (!cfg->GetLocale().GetSelectedLocaleId()) {
+		if (needsLocaleCheck && !cfg->GetLocale().GetSelectedLocaleId()) {
+			needsLocaleCheck = false; // Only display warning once.
+
 			// This message is intentionally not translatable --
 			// we're here precisely because the locale isn't available.
 			RequestPushScene(std::make_shared<MessageScene>(*display, *this,

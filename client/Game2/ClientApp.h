@@ -133,6 +133,7 @@ public:
 
 private:
 	bool needsDevWarning;  ///< Display dev release warning on next menu.
+	bool needsLocaleCheck;  ///< Check locale and warn on next menu.
 	MR_UInt32 userEventId;
 	Display::Display *display;
 	Control::InputEventController *controller;
