@@ -19,6 +19,8 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
+#include <boost/algorithm/string/predicate.hpp>
+
 #include "../../engine/Display/Button.h"
 #include "../../engine/Display/Container.h"
 #include "../../engine/Util/Locale.h"
@@ -50,8 +52,18 @@ LocaleSelectScene::LocaleSelectScene(Display::Display &display,
 	localeList->SetAlignment(Alignment::N);
 
 	localeList->Add(_("Auto-detect"), "");
+
+	// Produce a list sorted by user-friendly name, instead of by locale ID.
+	using item_t = const Util::Locale::value_type*;
+	std::vector<item_t> sorted;
 	for (const auto &loc : locale) {
-		localeList->Add(loc.second, loc.first);
+		sorted.push_back(&loc);
+	}
+	std::sort(sorted.begin(), sorted.end(), [](item_t &a, item_t &b) {
+		return boost::algorithm::ilexicographical_compare(a->second, b->second);
+	});
+	for (const auto &loc : sorted) {
+		localeList->Add(loc->second, loc->first);
 	}
 
 	localeList->GetValueChangedSignal().connect(
