@@ -138,7 +138,8 @@ public:
 	 */
 	virtual Roster *GetParty() const = 0;
 
-	typedef boost::signals2::signal<void(std::shared_ptr<HoverScript::MetaSession>)> sessionChangedSignal_t;
+	using sessionChangedSignal_t =
+		boost::signals2::signal<void(std::shared_ptr<HoverScript::MetaSession>)>;
 
 	/**
 	 * Access the signal that indicates that the gameplay session
