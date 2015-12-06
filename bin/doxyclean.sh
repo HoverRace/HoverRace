@@ -13,16 +13,17 @@ cd "$(dirname "$0")"/..
 # We just remove the outputs to preserve any source control files that
 # are in the directory.
 if [[ -d srcdoc/html ]]; then
-	pushd srcdoc/html
-	rm -f -- \
-		*.css \
-		*.html \
-		*.js \
-		*.map \
-		*.md5 \
-		*.png \
-		*.svg
-	popd
+	(
+		cd srcdoc/html
+		rm -f -- \
+			*.css \
+			*.html \
+			*.js \
+			*.map \
+			*.md5 \
+			*.png \
+			*.svg
+	)
 fi
 
 # Run Doxygen twice.
