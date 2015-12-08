@@ -59,9 +59,11 @@ LocaleSelectScene::LocaleSelectScene(Display::Display &display,
 	for (const auto &loc : locale) {
 		sorted.push_back(&loc);
 	}
-	std::sort(sorted.begin(), sorted.end(), [](item_t &a, item_t &b) {
-		return boost::algorithm::ilexicographical_compare(a->second, b->second);
-	});
+	std::sort(sorted.begin(), sorted.end(),
+		[](const item_t &a, const item_t &b) {
+			return boost::algorithm::ilexicographical_compare(
+				a->second, b->second);
+		});
 	for (const auto &loc : sorted) {
 		localeList->Add(loc->second, loc->first);
 	}
