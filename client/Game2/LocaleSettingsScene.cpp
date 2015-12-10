@@ -48,6 +48,8 @@ LocaleSettingsScene::LocaleSettingsScene(Display::Display &display,
 	langBtn->SetFixedWidth(std::min(960.0, 640.0 * videoCfg.textScale));
 	langConn = langBtn->GetClickedSignal().connect(std::bind(
 		&LocaleSettingsScene::OnLangClicked, this));
+
+	GetSettingsGrid()->RequestFocus();
 }
 
 void LocaleSettingsScene::LoadFromConfig()

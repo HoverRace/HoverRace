@@ -70,6 +70,7 @@ LocaleSelectScene::LocaleSelectScene(Display::Display &display,
 
 	localeList->GetValueChangedSignal().connect(
 		std::bind(&LocaleSelectScene::OnLocaleSelected, this));
+	localeList->RequestFocus();
 }
 
 std::string LocaleSelectScene::GetLocaleId() const
