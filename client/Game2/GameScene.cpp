@@ -95,7 +95,11 @@ std::ostream &GameScene::OutputDebugText(std::ostream &oss) const
 		auto mainChar = player->GetMainCharacter();
 
 		oss << "View " << viewportIdx << ": " << player->GetName() << "\n" <<
-			"Position: " << mainChar->mPosition << "\n\n";
+			"Position: " << mainChar->mPosition <<
+				"  Orientation: " << mainChar->GetCabinOrientation() << "\n"
+			"Speed: abs=" << mainChar->GetAbsoluteSpeed() << ", "
+				"dir=" << mainChar->GetDirectionalSpeed() <<
+			"\n\n";
 
 		viewportIdx++;
 	}
