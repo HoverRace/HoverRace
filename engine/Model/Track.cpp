@@ -110,8 +110,8 @@ void Track::LoadMap()
 	MR_Int32 x0, x1, y0, y1;
 	archive >> x0 >> x1 >> y0 >> y1;
 	HR_LOG(debug) << "Track bounds: "
-		"x = <" << x0 << ", " << y0 << ">  "
-		"y = <" << x1 << ", " << y1 << ">";
+		"nw = <" << x0 << ", " << y0 << ">  "
+		"se = <" << x1 << ", " << y1 << ">";
 
 	offset.x = static_cast<double>(x0);
 	offset.y = static_cast<double>(y0);
