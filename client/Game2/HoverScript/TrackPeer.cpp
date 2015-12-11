@@ -63,6 +63,7 @@ void TrackPeer::Register(Script::Core &scripting)
 		class_<TrackPeer, SUPER, std::shared_ptr<TrackPeer>>("Track")
 			.def(tostring(self))
 			.property("description", &TrackPeer::LGetDescription)
+			.def("get_bounds", &TrackPeer::LGetBounds)
 			.property("gravity", &TrackPeer::LGetGravity, &TrackPeer::LSetGravity)
 			.property("name", &TrackPeer::LGetName)
 	];
@@ -71,6 +72,19 @@ void TrackPeer::Register(Script::Core &scripting)
 const std::string &TrackPeer::LGetDescription() const
 {
 	return track->GetHeader().description;
+}
+
+void TrackPeer::LGetBounds() const
+{
+	lua_State *L = GetScripting()->GetState();
+
+	const auto &offset = track->GetOffset();
+	const auto &size = track->GetSize();
+
+	lua_pushnumber(L, offset.x);
+	lua_pushnumber(L, offset.y);
+	lua_pushnumber(L, size.x);
+	lua_pushnumber(L, size.y);
 }
 
 double TrackPeer::LGetGravity() const

@@ -56,6 +56,7 @@ public:
 
 public:
 	const std::string &LGetDescription() const;
+	void LGetBounds() const;
 	double LGetGravity() const;
 	void LSetGravity(double gravity);
 	const std::string &LGetName() const;
