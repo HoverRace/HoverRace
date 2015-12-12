@@ -62,8 +62,7 @@ private:
 	Track() = delete;
 public:
 	Track(const std::string &name,
-		std::shared_ptr<Parcel::RecordFile> recFile =
-			std::shared_ptr<Parcel::RecordFile>());
+		std::shared_ptr<Parcel::RecordFile> recFile = {});
 	virtual ~Track();
 
 	Parcel::RecordFile *GetRecordFile() const { return recFile.get(); }
