@@ -19,6 +19,8 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
+#include <luabind/operator.hpp>
+
 #include "../../../engine/Script/Core.h"
 #include "../../../engine/Script/Wrapper.h"
 #include "../../../engine/Util/Log.h"
@@ -62,6 +64,12 @@ public:
 
 }  // namespace
 
+std::ostream &operator<<(std::ostream &os, const MetaSession&)
+{
+	os << "MetaSession";
+	return os;
+}
+
 MetaSession::MetaSession(std::shared_ptr<SessionPeer> session) :
 	session(std::move(session))
 {
@@ -85,6 +93,7 @@ void MetaSession::Register(Script::Core &scripting)
 	module(L)[
 		class_<MetaSession, Wrapper, std::shared_ptr<MetaSession>>("MetaSession")
 			.def(constructor<std::shared_ptr<SessionPeer>>())
+			.def(tostring(self))
 			.def("on_init", &MetaSession::OnInit, &Wrapper::OnInit_def)
 			.def("on_pregame", &MetaSession::OnPregame, &Wrapper::OnPregame_def)
 			.def("on_playing", &MetaSession::OnPlaying, &Wrapper::OnPlaying_def)

@@ -19,6 +19,8 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
+#include <luabind/operator.hpp>
+
 #include "../../../engine/MainCharacter/MainCharacter.h"
 #include "../../../engine/Player/Player.h"
 #include "../../../engine/Script/Core.h"
@@ -68,6 +70,12 @@ public:
 
 }  // namespace
 
+std::ostream &operator<<(std::ostream &os, const MetaPlayer&)
+{
+	os << "MetaPlayer";
+	return os;
+}
+
 MetaPlayer::MetaPlayer(std::shared_ptr<PlayerPeer> player) :
 	player(std::move(player))
 {
@@ -101,6 +109,7 @@ void MetaPlayer::Register(Script::Core &scripting)
 	module(L)[
 		class_<MetaPlayer, Wrapper, std::shared_ptr<MetaPlayer>>("MetaPlayer")
 			.def(constructor<std::shared_ptr<PlayerPeer>>())
+			.def(tostring(self))
 			.def("on_init", &MetaPlayer::OnInit, &Wrapper::OnInit_def)
 			.def("on_joined", &MetaPlayer::OnJoined, &Wrapper::OnJoined_def)
 			.def("on_start", &MetaPlayer::OnStart, &Wrapper::OnStart_def)
