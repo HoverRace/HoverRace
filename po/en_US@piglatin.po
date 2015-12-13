@@ -18,14 +18,6 @@ msgstr ""
 "X-Poedit-Language: English\n"
 "X-Poedit-Country: UNITED STATES\n"
 
-#: client/Game2/NetInterface.cpp
-msgid " are using the same IP and port!"
-msgstr "areay usingay ethay amesay IP anday ortpay!"
-
-#: client/Game2/NetInterface.cpp
-msgid " at IP "
-msgstr " atay IP"
-
 #: client/Game2/Observer.cpp
 #, c-format, boost-format
 msgid "%d %-0.10s #%d%*s   --First lap--  %c"
@@ -51,79 +43,6 @@ msgstr ""
 msgid "%d.%02d.%02d  Lap:%d/%d"
 msgstr ""
 
-#: client/Game2/NetworkSession.cpp
-#, c-format, boost-format
-msgid "%s has left"
-msgstr ""
-
-#: client/Game2/GameApp.cpp
-msgctxt "Menu"
-msgid "&File"
-msgstr "Ile&fay"
-
-#: client/Game2/GameApp.cpp
-msgctxt "Menu|Setting"
-msgid "&Fullscreen"
-msgstr "Ullscreen&fay"
-
-#: client/Game2/GameApp.cpp
-msgctxt "Menu"
-msgid "&Help"
-msgstr "Elp&hay"
-
-#: client/Game2/MultiplayerPrefsPage.cpp
-msgid "&Log all chat sessions to:"
-msgstr ""
-
-#: client/Game2/GameApp.cpp
-msgctxt "Menu|File"
-msgid "&Network"
-msgstr "Etwork&nay"
-
-#: client/Game2/GameApp.cpp
-msgctxt "Menu"
-msgid "&Setting"
-msgstr "Etting&say"
-
-#: client/Game2/GameApp.cpp
-msgctxt "Menu|File"
-msgid "&Split Screen"
-msgstr "Lit&spay Eenscray"
-
-#: client/Game2/GameApp.cpp
-msgctxt "Menu"
-msgid "&View"
-msgstr "Iew&vay"
-
-#: client/Game2/NetInterface.cpp
-msgid ""
-"; perhaps they are behind a firewall and need to forward ports 9530 and 9531 "
-"TCP and UDP?"
-msgstr ""
-"; erhapspay eythay areay ehindbay a irewallfay anday eednay otay orwardfay "
-"ortspay 9530 anday 9531 TCP anday UDP?"
-
-#: client/Game2/GameApp.cpp
-msgid "Abort current game?"
-msgstr "Ixnay on the urrentcay amegay?"
-
-#: client/Game2/AboutDialog.cpp
-msgid "About HoverRace"
-msgstr "Aboutlay HoverRace"
-
-#: client/Game2/ControlPrefsPage.cpp
-#, fuzzy
-msgid "Action"
-msgstr "Onnectioncay erroray ithway"
-
-#: client/Game2/NetworkPrefsPage.cpp
-msgid "Address of Server Roomlist:"
-msgstr ""
-
-#: client/Game2/NetworkPrefsPage.cpp
-msgid "Address of Update Server List:"
-msgstr ""
-
 #: client/Game2/SettingsMenuScene.cpp
 msgid "Advanced"
 msgstr ""
@@ -138,10 +57,6 @@ msgstr ""
 
 #: client/Game2/DisplaySelectScene.cpp
 msgid "All"
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-msgid "Already used key (report for investigation)"
 msgstr ""
 
 #: client/Game2/PauseMenuScene.cpp
@@ -160,13 +75,8 @@ msgstr ""
 msgid "Are you sure you want to abandon the race and return to the main menu?"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp
-msgid "Ask me this each time I launch a game alone"
-msgstr ""
-
 #: client/Game2/AudioSettingsScene.cpp
 #: client/Game2/SettingsMenuScene.cpp
-#: client/Game2/VideoAudioPrefsPage.cpp
 msgid "Audio"
 msgstr "Audioway"
 
@@ -174,23 +84,6 @@ msgstr "Audioway"
 #: client/Game2/LocaleSettingsScene.cpp
 msgid "Auto-detect"
 msgstr ""
-
-#: client/Game2/NetworkPrefsPage.cpp
-msgid "Automatically check for HoverRace updates"
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-msgid "Availability:"
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-msgid "Available"
-msgstr ""
-
-#: client/Game2/CheckUpdateServerDialog.cpp
-#, fuzzy
-msgid "Available version: "
-msgstr "HoverRace ersionvay "
 
 #: client/Game2/GameSelectScene.cpp
 #: client/Game2/PracticeSetupScene.cpp
@@ -229,10 +122,6 @@ msgstr ""
 msgid "Bi-Turbo craft"
 msgstr "Bi-Turbo aftcray"
 
-#: client/Game2/ControlPrefsPage.cpp
-msgid "Binding"
-msgstr ""
-
 #: engine/Control/Controller.cpp
 msgid "Bottom"
 msgstr ""
@@ -240,10 +129,6 @@ msgstr ""
 #: engine/Control/Controller.cpp
 msgid "Brake"
 msgstr ""
-
-#: client/Game2/VideoAudioPrefsPage.cpp
-msgid "Brightness"
-msgstr "Ightnessbray"
 
 #: client/Game2/Observer.cpp
 msgid "CX craft"
@@ -255,80 +140,22 @@ msgstr "CX aftcray"
 msgid "Camera"
 msgstr ""
 
-#: client/Game2/CheckRoomListDialog.cpp
-#: client/Game2/CheckUpdateServerDialog.cpp
-#: client/Game2/SelectRoomDialog.cpp
 #: engine/Control/Controller.cpp
 #: engine/Control/ControllerStrings.cpp
 msgid "Cancel"
 msgstr "Ancelcay"
 
-#: client/Game2/CheckRoomListDialog.cpp
-#: client/Game2/CheckUpdateServerDialog.cpp
-#: client/Game2/SelectRoomDialog.cpp
-#, fuzzy
-msgid "Canceling..."
-msgstr "Ancelcay"
-
-#: client/Game2/NetInterface.cpp
-msgid "Cannot connect to peer "
-msgstr "Annotcay onnectpay otay eerpay"
-
-#: client/Game2/DownloadUpdateDialog.cpp
-#, fuzzy, c-format, boost-format
-msgid "Cannot open file %s for writing!"
-msgstr "Unablay otay eatecray ocketsay"
-
-#: client/Game2/DownloadUpdateDialog.cpp
-#, c-format, boost-format
-msgid "Cannot update!  File %s not found.  Contact a site administrator."
-msgstr ""
-
 #: engine/Control/ControllerStrings.cpp
 msgid "Caps Lock"
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-msgid "Chat log started at:"
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-#, fuzzy
-msgid "Chat section"
-msgstr "Acktray electionsay"
-
-#: client/Game2/NetworkPrefsPage.cpp
-msgid "Check URL"
-msgstr ""
-
-#: client/Game2/NetworkPrefsPage.cpp
-msgid "Check for updates"
-msgstr ""
-
-#: client/Game2/CheckRoomListDialog.cpp
-msgid "Checking roomlist URL.  Please wait."
-msgstr ""
-
-#: client/Game2/CheckUpdateServerDialog.cpp
-msgid "Checking server for updates.  Please wait."
 msgstr ""
 
 #: engine/Control/ControllerStrings.cpp
 msgid "Clear"
 msgstr ""
 
-#: client/Game2/AboutDialog.cpp
-msgid "Close"
-msgstr "Oseclay"
-
 #: compilers/MazeCompiler/main.cpp
 #, fuzzy
 msgid "Command line error"
-msgstr "Onnectioncay erroray ithway"
-
-#: client/Game2/InternetRoom.cpp
-#, fuzzy
-msgid "Communication error"
 msgstr "Onnectioncay erroray ithway"
 
 #: engine/MazeCompiler/TrackCompiler.cpp
@@ -340,11 +167,6 @@ msgstr ""
 msgid "Compiling track (%s)"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-msgid "Computing lag"
-msgstr ""
-
 #: engine/MazeCompiler/LevelBuilderVisiblesZones.cpp
 msgid "Computing visible zones... be patient"
 msgstr ""
@@ -354,61 +176,14 @@ msgctxt "Display Resolution"
 msgid "Confirm"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-msgid "Connected"
-msgstr ""
-
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-msgid "Connecting"
-msgstr ""
-
-#: client/Game2/NetInterface.cpp
-#, fuzzy
-msgid "Connecting to server..."
-msgstr "Onnect&cay otay erversay"
-
-#: client/Game2/InternetRoom.cpp
-#, fuzzy
-msgid "Connecting to the Internet Meeting Room..."
-msgstr "&Internetway Eetingmay Oomray"
-
-#: client/Game2/SelectRoomDialog.cpp
-#, fuzzy
-msgid "Connecting..."
-msgstr "Onnectioncay erroray ithway"
-
-#: client/Game2/NetworkPrefsPage.cpp
-#, fuzzy
-msgid "Connection"
-msgstr "Onnectioncay erroray ithway"
-
 #: engine/MazeCompiler/LevelBuilder.cpp
 #, c-format, boost-format
 msgid "Connection between sections %d and %d do not match"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp
-msgid "Connection error with "
-msgstr "Onnectioncay erroray ithway"
-
 #: engine/MazeCompiler/LevelBuilder.cpp
 #, fuzzy
 msgid "Connection list not found"
-msgstr "Onnectioncay erroray ithway"
-
-#: client/Game2/NetInterface.cpp
-#, fuzzy
-msgid "Connection refused by peer"
-msgstr "Onnectioncay efusedray ybay eerpay"
-
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-#, fuzzy
-msgid "Connection timeout"
 msgstr "Onnectioncay erroray ithway"
 
 #: engine/MazeCompiler/LevelBuilder.cpp
@@ -430,19 +205,6 @@ msgstr "Oseclay"
 msgid "ConsoleToggle"
 msgstr "Oseclay"
 
-#: client/Game2/VideoAudioPrefsPage.cpp
-msgid "Contrast"
-msgstr "Ontrastcay"
-
-#: client/Game2/ControlPrefsPage.cpp
-#, fuzzy
-msgid "Control Assignment"
-msgstr "Ontrolscay"
-
-#: client/Game2/ControlPrefsPage.cpp
-msgid "Controls"
-msgstr "Ontrolscay"
-
 #: engine/Control/ControllerStrings.cpp
 msgid "Copy"
 msgstr ""
@@ -456,50 +218,17 @@ msgstr ""
 msgid "Current lap %d.%02d.%03d  Best %d.%02d.%03d"
 msgstr ""
 
-#: client/Game2/CheckUpdateServerDialog.cpp
-#, fuzzy
-msgid "Current version: "
-msgstr "HoverRace ersionvay "
-
 #: engine/Control/ControllerStrings.cpp
 msgid "Cut"
 msgstr ""
-
-#: client/Game2/VideoAudioPrefsPage.cpp
-msgid "Default Monitor"
-msgstr "Efaultday Onitormay"
 
 #: engine/Control/ControllerStrings.cpp
 msgid "Del"
 msgstr ""
 
-#: client/Game2/FolderViewer.cpp
-msgid "Directory does not exist."
-msgstr ""
-
-#: client/Game2/MiscPrefsPage.cpp
-msgid "Disable Intro Movie"
-msgstr "Isableday Introway Oviemay"
-
-#: client/Game2/MiscPrefsPage.cpp
-msgid ""
-"Disable the prompt to connect to the Internet each time HoverRace starts"
-msgstr ""
-"Isableday the omptpray otay onnectcay otay the Interneyway eachlay imetay "
-"HoverRace artstay"
-
 #: engine/Control/ControllerStrings.cpp
 msgid "Disabled"
 msgstr ""
-
-#: client/Game2/NetInterface.cpp
-msgid "Disconnected"
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-#, fuzzy
-msgid "Disconnecting from the Internet Meeting Room..."
-msgstr "&Internetway Eetingmay Oomray"
 
 #: client/Game2/VideoSettingsScene.cpp
 msgid "Display Mode"
@@ -509,21 +238,6 @@ msgstr ""
 #, fuzzy
 msgid "Down"
 msgstr "Olumevay"
-
-#: client/Game2/DownloadUpdateDialog.cpp
-#: client/Game2/DownloadUpdateDialog.cpp
-#: client/Game2/TrackDownloadDialog.cpp
-#: client/Game2/TrackDownloadDialog.cpp
-msgid "Downloading"
-msgstr ""
-
-#: client/Game2/TrackDownloadDialog.cpp
-msgid "Downloading Track:"
-msgstr ""
-
-#: client/Game2/DownloadUpdateDialog.cpp
-msgid "Downloading Update:"
-msgstr ""
 
 #: engine/MazeCompiler/LevelBuilder.cpp
 #: engine/MazeCompiler/LevelBuilder.cpp
@@ -546,10 +260,6 @@ msgstr ""
 msgid "ERROR"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp
-msgid "ERROR Unable to connect to server..."
-msgstr "ERRORAY Unablay otay onnectcay otay erversay..."
-
 #: engine/Control/ControllerStrings.cpp
 msgid "End"
 msgstr ""
@@ -558,21 +268,9 @@ msgstr ""
 msgid "Enter"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp
-msgid "Entry is no longer available"
-msgstr ""
-
 #: client/Game2/Observer.cpp
 msgid "Eon craft"
 msgstr "Eon aftcray"
-
-#: client/Game2/CheckUpdateServerDialog.cpp
-msgid "Error while checking for updates:"
-msgstr ""
-
-#: client/Game2/RoomListDialog.cpp
-msgid "Error while retrieving roomlist:"
-msgstr ""
 
 #: engine/Control/ControllerStrings.cpp
 msgid "Esc"
@@ -582,16 +280,8 @@ msgstr ""
 msgid "Execute"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp
-msgid "Expired key"
-msgstr ""
-
 #: engine/Control/Controller.cpp
 msgid "Extra"
-msgstr ""
-
-#: client/Game2/TrackDownloadDialog.cpp
-msgid "Extracting"
 msgstr ""
 
 #: engine/Control/ControllerStrings.cpp
@@ -690,18 +380,8 @@ msgstr ""
 msgid "F9"
 msgstr ""
 
-#: client/Game2/FolderViewer.cpp
-#, fuzzy
-msgid "Failed to create directory."
-msgstr "Unablay otay eatecray ocketsay"
-
 #: engine/Control/ControllerStrings.cpp
 msgid "Find"
-msgstr ""
-
-#: client/Game2/DownloadUpdateDialog.cpp
-#: client/Game2/TrackDownloadDialog.cpp
-msgid "Finished"
 msgstr ""
 
 #: client/Game2/Observer.cpp
@@ -732,46 +412,9 @@ msgstr ""
 msgid "Fullscreen"
 msgstr "Ullscreen&fay"
 
-#: client/Game2/VideoAudioPrefsPage.cpp
-msgid "Fullscreen Monitor"
-msgstr "Ullscreenfay Onitormay"
-
-#: client/Game2/VideoAudioPrefsPage.cpp
 #: client/Game2/VideoSettingsScene.cpp
 msgid "Fullscreen Resolution"
 msgstr "Ullscreenfay Esolutionray"
-
-#: client/Game2/VideoAudioPrefsPage.cpp
-msgid "Fullscreen Settings"
-msgstr "Ullscreenfay Ettingsfay"
-
-#: client/Game2/NetInterface.cpp
-msgid "Game cancelled by server"
-msgstr "Amegay ancelledcay ybay erversay"
-
-#: client/Game2/InternetRoom.cpp
-msgid "Game details"
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-msgid "Game is full"
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-msgid "Game is no longer available"
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-#, fuzzy
-msgid "Game list"
-msgstr "Ayers&play istlay"
-
-#: client/Game2/VideoAudioPrefsPage.cpp
-msgid "Gamma"
-msgstr "Ammagay"
 
 #: engine/Control/ControllerStrings.cpp
 #, fuzzy
@@ -782,66 +425,19 @@ msgstr "Elp&hay"
 msgid "Home"
 msgstr ""
 
-#: client/Game2/AboutDialog.cpp
-msgid "HoverRace is brought to you by:"
-msgstr "HoverRace is oughtbray otay ouyay ybay:"
-
-#: client/Game2/VideoAudioPrefsPage.cpp
-msgid "HoverRace is currently in silent mode."
-msgstr ""
-
-#: client/Game2/AboutDialog.cpp
-msgid "HoverRace version "
-msgstr "HoverRace ersionvay "
-
-#: client/Game2/GameApp.cpp
-msgid ""
-"HoverRace was unable to switch the video mode. You will need to play in full "
-"screen."
-msgstr ""
-
 #: compilers/ResourceCompiler/ResBitmapBuilder.cpp
 #: compilers/ResourceCompiler/ResBitmapBuilder.cpp
 #: compilers/ResourceCompiler/ResBitmapBuilder.cpp
 msgid "INFO"
 msgstr ""
 
-#: client/Game2/GameApp.cpp
-msgid ""
-"If this is your first time running HoverRace, try restarting your computer."
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-msgid "Incompatible version"
-msgstr ""
-
-#: client/Game2/GameApp.cpp
-msgid ""
-"Incompatible video mode. Select a compatible video mode by pressing F8 or F9 "
-"once a game is started"
-msgstr ""
-
 #: engine/MazeCompiler/TrackCompiler.cpp
 msgid "Incorrect background resolution"
-msgstr ""
-
-#: client/Game2/DownloadUpdateDialog.cpp
-#: client/Game2/TrackDownloadDialog.cpp
-msgid "Initializing"
 msgstr ""
 
 #: engine/Control/ControllerStrings.cpp
 msgid "Ins"
 msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/MultiplayerPrefsPage.cpp
-#: client/Game2/SelectRoomDialog.cpp
-#, fuzzy
-msgid "Internet Meeting Room"
-msgstr "&Internetway Eetingmay Oomray"
 
 #: compilers/ResourceCompiler/BitmapHelper.cpp
 msgid "Invalid file type"
@@ -851,10 +447,6 @@ msgstr ""
 #, fuzzy, c-format, boost-format
 msgid "Invalid parent room reference on line %d\n"
 msgstr "Unablay otay eatecray ocketsay"
-
-#: client/Game2/VideoAudioPrefsPage.cpp
-msgid "Invalid resolution; reverting to default"
-msgstr ""
 
 #: engine/MazeCompiler/LevelBuilder.cpp
 #, fuzzy, c-format, boost-format
@@ -866,30 +458,12 @@ msgstr "Unablay otay eatecray ocketsay"
 msgid "Invalid starting position room %d"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp
-msgid ""
-"It is highly preferable to wait until all players have successfully "
-"connected to the game before pressing the start button."
-msgstr ""
-
 #: engine/Control/Controller.cpp
 msgid "Item"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp
-msgid "Join Game..."
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-msgid "Join game to download from hoverrace.com"
-msgstr ""
-
 #: engine/Control/Controller.cpp
 msgid "Jump"
-msgstr ""
-
-#: client/Game2/NetInterface.cpp
-msgid "Lag (ms)"
 msgstr ""
 
 #: client/Game2/LocaleSettingsScene.cpp
@@ -900,11 +474,6 @@ msgstr ""
 #: client/Game2/SettingsMenuScene.cpp
 msgid "Language and Units"
 msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-#, fuzzy
-msgid "Laps:"
-msgstr "Apslay"
 
 #: client/Game2/Observer.cpp
 #, c-format, boost-format
@@ -935,17 +504,9 @@ msgstr ""
 msgid "Left Shift"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp
-msgid "Local"
-msgstr ""
-
 #: engine/Control/Controller.cpp
 msgid "Look Back"
 msgstr ""
-
-#: client/Game2/NetInterface.cpp
-msgid "Main server and peer "
-msgstr "Ainmay erversay anday eerpay"
 
 #: engine/Control/ControllerStrings.cpp
 msgid "Media Select"
@@ -965,10 +526,6 @@ msgstr ""
 #: engine/Control/ControllerStrings.cpp
 msgid "Middle Mouse Btn"
 msgstr ""
-
-#: client/Game2/MiscPrefsPage.cpp
-msgid "Miscellaneous"
-msgstr "Iscellaneousmay"
 
 #: engine/MazeCompiler/LevelBuilder.cpp
 #, fuzzy
@@ -1038,12 +595,7 @@ msgid "Mouse Z- Axis"
 msgstr ""
 
 #: client/Game2/MainMenuScene.cpp
-#: client/Game2/MultiplayerPrefsPage.cpp
 msgid "Multiplayer"
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-msgid "Must join first"
 msgstr ""
 
 #: engine/Control/ControllerStrings.cpp
@@ -1051,26 +603,10 @@ msgstr ""
 msgid "Mute"
 msgstr ""
 
-#: client/Game2/NetworkPrefsPage.cpp
 #: client/Game2/SettingsMenuScene.cpp
 #, fuzzy
 msgid "Network"
 msgstr "Etwork&nay"
-
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/NetInterface.cpp
-msgid "Network Transaction Progress"
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-msgid "New Game..."
-msgstr ""
-
-#: client/Game2/CheckUpdateServerDialog.cpp
-msgid "New version of HoverRace available."
-msgstr ""
 
 #: engine/Control/Controller.cpp
 msgid "Next"
@@ -1085,45 +621,12 @@ msgstr ""
 msgid "Next Track"
 msgstr "Ackstray"
 
-#: client/Game2/NetInterface.cpp
-msgid "No"
-msgstr ""
-
 #: compilers/ResourceCompiler/ResActorBuilder.cpp
 msgid "No bitmap associated with the patch"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp
-msgid "No more Shareware users allowed"
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-msgid "No more user allowed"
-msgstr ""
-
 #: engine/MazeCompiler/LevelBuilder.cpp
 msgid "No starting positions found"
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-msgid "Not authorized"
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-msgid "Not online"
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-msgid "Not owner"
 msgstr ""
 
 #: engine/Control/ControllerStrings.cpp
@@ -1211,20 +714,9 @@ msgid "Numpad Enter"
 msgstr ""
 
 #: client/Game2/MessageScene.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/PathSelector.cpp
-#: client/Game2/SelectRoomDialog.cpp
 #: engine/Control/Controller.cpp
 msgid "OK"
 msgstr "OK"
-
-#: client/Game2/MultiplayerPrefsPage.cpp
-msgid "Only play sound when not &foreground window"
-msgstr ""
-
-#: client/Game2/MultiplayerPrefsPage.cpp
-msgid "Open Folder"
-msgstr ""
 
 #: engine/Control/Controller.cpp
 #, fuzzy
@@ -1266,26 +758,11 @@ msgstr ""
 msgid "Play"
 msgstr "Ayerplay"
 
-#: client/Game2/MultiplayerPrefsPage.cpp
-msgid "Play a sound when a &message is received"
-msgstr ""
-
-#: client/Game2/ControlPrefsPage.cpp
-#: client/Game2/NetInterface.cpp
 #: engine/Control/Controller.cpp
 #: engine/Control/Controller.cpp
 #: engine/Control/Controller.cpp
 msgid "Player"
 msgstr "Ayerplay"
-
-#: client/Game2/InternetRoom.cpp
-#, fuzzy
-msgid "Player list:"
-msgstr "Ayers&play istlay"
-
-#: client/Game2/NetInterface.cpp
-msgid "Port value must be greater than 0"
-msgstr "Ortpay aluevay ustmay ebay eatergray anthay 0"
 
 #: engine/Control/ControllerStrings.cpp
 msgid "Power"
@@ -1295,15 +772,6 @@ msgstr ""
 #, fuzzy
 msgid "Practice"
 msgstr "Actice&pray"
-
-#: client/Game2/NetworkSession.cpp
-#: client/Game2/NetworkSession.cpp
-msgid "Press F2 when ready to return to the Meeting Room"
-msgstr ""
-
-#: client/Game2/ControlPrefsPage.cpp
-msgid "Press a control or wait 3 seconds to disable..."
-msgstr ""
 
 #: engine/Control/Controller.cpp
 msgid "Prev Cmd"
@@ -1327,20 +795,10 @@ msgstr "Lit&spay Eenscray"
 msgid "Prior"
 msgstr ""
 
-#: client/Game2/CheckUpdateServerDialog.cpp
-msgid "Problem running updater.exe!"
-msgstr ""
-
-#: client/Game2/DownloadUpdateDialog.cpp
-#: client/Game2/TrackDownloadDialog.cpp
-msgid "Processing..."
-msgstr ""
-
 #: client/Game2/SettingsMenuScene.cpp
 msgid "Profile"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp
 #: client/Game2/MainMenuScene.cpp
 msgid "Quit"
 msgstr ""
@@ -1364,34 +822,12 @@ msgstr ""
 msgid "Ready"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp
-msgid "Registering game with the Internet Meeting Room..."
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-#, fuzzy
-msgid "Registering with the Internet Meeting Room..."
-msgstr "&Internetway Eetingmay Oomray"
-
-#: client/Game2/InternetRoom.cpp
-msgid "Registering your best lap time to the server"
-msgstr ""
-
 #: engine/Control/Controller.cpp
 msgid "Reset Camera"
 msgstr ""
 
 #: client/Game2/SettingsScene.cpp
 msgid "Reset all settings on this screen to their default values?"
-msgstr ""
-
-#: client/Game2/NetworkPrefsPage.cpp
-#: client/Game2/NetworkPrefsPage.cpp
-msgid "Reset to Default"
-msgstr ""
-
-#: client/Game2/NetworkPrefsPage.cpp
-msgid "Reset to Defaults"
 msgstr ""
 
 #: client/Game2/SettingsScene.cpp
@@ -1401,10 +837,6 @@ msgstr ""
 
 #: client/Game2/Observer.cpp
 msgid "Result"
-msgstr ""
-
-#: client/Game2/NetInterface.cpp
-msgid "Retrieving game info..."
 msgstr ""
 
 #: client/Game2/PauseMenuScene.cpp
@@ -1435,22 +867,10 @@ msgstr ""
 msgid "Right Shift"
 msgstr ""
 
-#: client/Game2/SelectRoomDialog.cpp
-msgid "Room:"
-msgstr ""
-
-#: client/Game2/CheckRoomListDialog.cpp
-msgid "Roomlist URL is valid!"
-msgstr ""
-
 #: client/Game2/SettingsScene.cpp
 #, fuzzy
 msgid "Save Settings"
 msgstr "Etting&say"
-
-#: client/Game2/InternetRoom.cpp
-msgid "Saving chat session to:"
-msgstr ""
 
 #: engine/Control/ControllerStrings.cpp
 msgid "Scroll Lock"
@@ -1475,22 +895,9 @@ msgstr ""
 msgid "Select Resolution"
 msgstr "Ullscreenfay Esolutionray"
 
-#: client/Game2/MultiplayerPrefsPage.cpp
-msgid "Select a destination folder for saved chat sessions."
-msgstr ""
-
 #: client/Game2/Observer.cpp
 msgid "Select your craft with the arrow keys"
 msgstr "Electsay ouryay aftcray ithway ethey arrowyay eyskay"
-
-#: client/Game2/InternetRoom.cpp
-#, fuzzy
-msgid "Sending message to the Internet Meeting Room..."
-msgstr "&Internetway Eetingmay Oomray"
-
-#: client/Game2/NetworkPrefsPage.cpp
-msgid "Server Options"
-msgstr ""
 
 #: client/Game2/MainMenuScene.cpp
 #: client/Game2/SettingsMenuScene.cpp
@@ -1514,11 +921,6 @@ msgstr ""
 msgid "Silent Mode"
 msgstr ""
 
-#: client/Game2/TrackDownloadDialog.cpp
-#, c-format, boost-format
-msgid "Sorry, track \"%s\" is not available from %s"
-msgstr ""
-
 #: client/Game2/AudioSettingsScene.cpp
 msgid "Sound Effects"
 msgstr ""
@@ -1526,10 +928,6 @@ msgstr ""
 #: client/Game2/MainMenuScene.cpp
 msgid ""
 "Sound has been disabled because the --silent command-line parameter was set."
-msgstr ""
-
-#: client/Game2/GameApp.cpp
-msgid "Sound will be disabled for this session."
 msgstr ""
 
 #: engine/Control/ControllerStrings.cpp
@@ -1545,17 +943,9 @@ msgstr "Lit&spay Eenscray"
 msgid "Stacked"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp
-msgid "Start NOW!"
-msgstr ""
-
 #: client/Game2/Observer.cpp
 #, c-format, boost-format
 msgid "Starting in %02d.%02d sec. for %d laps"
-msgstr ""
-
-#: client/Game2/NetInterface.cpp
-msgid "Status"
 msgstr ""
 
 #: engine/Control/ControllerStrings.cpp
@@ -1571,36 +961,6 @@ msgstr ""
 msgid "System console initialized."
 msgstr ""
 
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-msgid "TCP Client"
-msgstr "TCP Ientclay"
-
-#: client/Game2/NetworkPrefsPage.cpp
-msgid "TCP Receive Port:"
-msgstr ""
-
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-msgid "TCP Server"
-msgstr "TCP Erversay"
-
-#: client/Game2/NetworkPrefsPage.cpp
-#, fuzzy
-msgid "TCP Server Port:"
-msgstr "TCP Erversay"
-
 #: engine/Control/ControllerStrings.cpp
 msgid "Tab"
 msgstr ""
@@ -1614,29 +974,6 @@ msgstr ""
 msgid "Text Scale"
 msgstr ""
 
-#: client/Game2/AboutDialog.cpp
-msgid "Thanks also to the following projects"
-msgstr "Anksthay also otay the ollowingfay ojectspray"
-
-#: client/Game2/FolderViewer.cpp
-msgid "The path is not a directory."
-msgstr ""
-
-#: client/Game2/GameApp.cpp
-msgid "The specific error was:"
-msgstr ""
-
-#: client/Game2/TrackDownloadDialog.cpp
-#, c-format, boost-format
-msgid ""
-"There was a problem downloading the track from %s\n"
-"Please visit %s and download the track manually."
-msgstr ""
-
-#: client/Game2/GameApp.cpp
-msgid "There was a problem setting up the sound device."
-msgstr ""
-
 #: client/Game2/MainMenuScene.cpp
 #, c-format, boost-format
 msgid ""
@@ -1644,10 +981,6 @@ msgid ""
 "\n"
 "The error was:\n"
 "%s"
-msgstr ""
-
-#: client/Game2/GameApp.cpp
-msgid "This build of HoverRace is not official; updates are not available."
 msgstr ""
 
 #: compilers/ResourceCompiler/ResBitmapBuilder.cpp
@@ -1683,16 +1016,6 @@ msgstr ""
 msgid "To apply these changes, the game must return to the main menu."
 msgstr ""
 
-#: client/Game2/GameApp.cpp
-msgid ""
-"To be able to display HoverRace Help\n"
-"you must have a Word document viewer installed\n"
-"on your system."
-msgstr ""
-"Otay ebay ableway otay isplayday HoverRace Elphay\n"
-"ouyay ustmay avehay a Word ocumentday iewervay installedway\n"
-"onway ouryay ystemsay."
-
 #: engine/Control/Controller.cpp
 #, fuzzy
 msgid "Toggle Console"
@@ -1702,26 +1025,10 @@ msgstr "Oseclay"
 msgid "Top"
 msgstr ""
 
-#: client/Game2/TrackDownloadDialog.cpp
-#: client/Game2/TrackDownloadDialog.cpp
-msgid "Track Download"
-msgstr ""
-
 #: engine/MazeCompiler/TrackCompiler.cpp
 #, fuzzy
 msgid "Track creation error"
 msgstr "Acktray electionsay"
-
-#: client/Game2/TrackDownloadDialog.cpp
-#, c-format, boost-format
-msgid ""
-"Track download failed: The file \"%s\" was not found in the archive "
-"downloaded from %s"
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-msgid "Track name:"
-msgstr ""
 
 #: engine/Control/Controller.cpp
 msgid "Turn Left"
@@ -1733,10 +1040,6 @@ msgstr ""
 
 #: engine/MazeCompiler/LevelBuilderVisiblesZones.cpp
 msgid "Two nodes with same position"
-msgstr ""
-
-#: client/Game2/NetworkPrefsPage.cpp
-msgid "UDP Receive Port:"
 msgstr ""
 
 #: engine/MazeCompiler/TrackCompiler.cpp
@@ -1754,36 +1057,9 @@ msgstr "Unablay otay eatecray ocketsay"
 msgid "Unable to add a map record"
 msgstr "Unablay otay eatecray ocketsay"
 
-#: client/Game2/InternetRoom.cpp
-#, fuzzy
-msgid "Unable to add chat message"
-msgstr "Unablay otay eatecray ocketsay"
-
-#: client/Game2/InternetRoom.cpp
-#, fuzzy
-msgid "Unable to add game"
-msgstr "Unablay otay eatecray ocketsay"
-
-#: client/Game2/InternetRoom.cpp
-#, fuzzy
-msgid "Unable to add message"
-msgstr "Unablay otay eatecray ocketsay"
-
 #: engine/MazeCompiler/TrackCompiler.cpp
 #, fuzzy
 msgid "Unable to add the track to the output file"
-msgstr "Unablay otay eatecray ocketsay"
-
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-#, fuzzy
-msgid "Unable to add user"
-msgstr "Unablay otay eatecray ocketsay"
-
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-#, fuzzy
-msgid "Unable to create chat log file:"
 msgstr "Unablay otay eatecray ocketsay"
 
 #: engine/Util/Config.cpp
@@ -1796,37 +1072,14 @@ msgstr "Unablay otay eatecray ocketsay"
 msgid "Unable to create directory"
 msgstr "Unablay otay eatecray ocketsay"
 
-#: client/Game2/InternetRoom.cpp
-#, fuzzy
-msgid "Unable to create directory:"
-msgstr "Unablay otay eatecray ocketsay"
-
 #: engine/MazeCompiler/LevelBuilder.cpp
 #, fuzzy, c-format, boost-format
 msgid "Unable to create free element on line %d\n"
 msgstr "Unablay otay eatecray ocketsay"
 
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-msgid "Unable to create socket"
-msgstr "Unablay otay eatecray ocketsay"
-
 #: engine/MazeCompiler/TrackCompiler.cpp
 #, fuzzy, c-format, boost-format
 msgid "Unable to create the output file: %s"
-msgstr "Unablay otay eatecray ocketsay"
-
-#: client/Game2/InternetRoom.cpp
-#, fuzzy
-msgid "Unable to delete game"
-msgstr "Unablay otay eatecray ocketsay"
-
-#: client/Game2/InternetRoom.cpp
-#, fuzzy
-msgid "Unable to delete user"
 msgstr "Unablay otay eatecray ocketsay"
 
 #: engine/MazeCompiler/TrackCompiler.cpp
@@ -1844,29 +1097,9 @@ msgstr "Unablay otay eatecray ocketsay"
 msgid "Unable to find background image: %s"
 msgstr "Unablay otay eatecray ocketsay"
 
-#: client/Game2/GameApp.cpp
-msgid "Unable to initialize: Unable to find suitable rich text DLL."
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-#, fuzzy
-msgid "Unable to leave game"
-msgstr "Unablay otay eatecray ocketsay"
-
 #: engine/MazeCompiler/LevelBuilder.cpp
 #, fuzzy, c-format, boost-format
 msgid "Unable to load texture %d %d on line %d\n"
-msgstr "Unablay otay eatecray ocketsay"
-
-#: client/Game2/GameApp.cpp
-#: client/Game2/InternetRoom.cpp
-#, c-format, boost-format
-msgid "Unable to load track \"%s\".  Error details:"
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-#, fuzzy
-msgid "Unable to open file for writing:"
 msgstr "Unablay otay eatecray ocketsay"
 
 #: compilers/ResourceCompiler/BitmapHelper.cpp
@@ -1878,33 +1111,6 @@ msgstr "Unablay otay eatecray ocketsay"
 #, fuzzy, c-format, boost-format
 msgid "Unable to open the input file: %s"
 msgstr "Unablay otay eatecray ocketsay"
-
-#: client/Game2/InternetRoom.cpp
-#, fuzzy
-msgid "Unable to send refresh info"
-msgstr "Unablay otay eatecray ocketsay"
-
-#: client/Game2/InternetRoom.cpp
-#, fuzzy
-msgid "Unable to start game"
-msgstr "Unablay otay eatecray ocketsay"
-
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-msgid ""
-"Unable to use UDP recv port; choose a different port or close some Winsock "
-"applications."
-msgstr ""
-"Unablay otay useay UDP eceiveray ortpay; oosechay a ifferentday ortpay oray "
-"oseclay omesay Winsock applicationsay."
-
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-msgid "Unable to use the port, try to close some WINSOCK applications"
-msgstr ""
-"Unablay otay useay ethay ortpay, ytray otay oseclay omesay WINSOCK "
-"applicationsay"
 
 #: engine/Control/ControllerStrings.cpp
 msgid "Undo"
@@ -1938,19 +1144,6 @@ msgstr "Unknownway aftcray"
 msgid "Unknown craft"
 msgstr "Unknownway aftcray"
 
-#: client/Game2/InternetRoom.cpp
-msgid "Unknown error code"
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-#, fuzzy
-msgid "Unregistering from the Internet Meeting Room..."
-msgstr "&Internetway Eetingmay Oomray"
-
-#: client/Game2/InternetRoom.cpp
-msgid "Unregistering game from the Internet Meeting Room..."
-msgstr ""
-
 #: compilers/ResourceCompiler/BitmapHelper.cpp
 msgid "Unsupported format"
 msgstr ""
@@ -1959,36 +1152,14 @@ msgstr ""
 msgid "Up"
 msgstr ""
 
-#: client/Game2/DownloadUpdateDialog.cpp
-msgid "Update Download"
-msgstr ""
-
 #: compilers/MazeCompiler/main.cpp
 msgid "Usage: MazeCompiler <outputfile> <inputfile>"
 msgstr ""
 
-#: client/Game2/MiscPrefsPage.cpp
-msgid "Use desktop &color depth when switching to fullscreen"
-msgstr "Useway esktopday oler&cay epthday enwhay itchingsway otay ullscreenfay"
-
-#: client/Game2/InternetRoom.cpp
-#, fuzzy
-msgid "User list"
-msgstr "Ayers&play istlay"
-
 #: client/Game2/SettingsMenuScene.cpp
-#: client/Game2/VideoAudioPrefsPage.cpp
 #: client/Game2/VideoSettingsScene.cpp
 msgid "Video"
 msgstr "Ideovay"
-
-#: client/Game2/VideoAudioPrefsPage.cpp
-msgid "Video and Audio"
-msgstr "Ideovay and Audioway"
-
-#: client/Game2/VideoAudioPrefsPage.cpp
-msgid "Volume"
-msgstr "Olumevay"
 
 #: engine/Control/ControllerStrings.cpp
 #, fuzzy
@@ -2003,20 +1174,6 @@ msgstr "Olumevay"
 #: compilers/ResourceCompiler/ResBitmapBuilder.cpp
 #: compilers/ResourceCompiler/ResBitmapBuilder.cpp
 msgid "WARNING"
-msgstr ""
-
-#: client/Game2/NetInterface.cpp
-msgid "Waiting acknowledgement"
-msgstr ""
-
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-msgid "Warning!"
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-msgid "Warning: communication timeout"
 msgstr ""
 
 #: engine/MazeCompiler/LevelBuilder.cpp
@@ -2043,65 +1200,14 @@ msgstr ""
 msgid "Warning: unable to find description"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp
-#, fuzzy
-msgid "Weapons:"
-msgstr "Eaponsway"
-
-#: client/Game2/InternetRoom.cpp
-#, fuzzy
-msgid "Welcome to the HoverRace Internet Meeting Room"
-msgstr "&Internetway Eetingmay Oomray"
-
-#: client/Game2/FolderViewer.cpp
-msgid "Would you like to create it?"
-msgstr ""
-
-#: client/Game2/TrackDownloadDialog.cpp
-#, c-format, boost-format
-msgid "Would you like to download the track \"%s\" now?"
-msgstr ""
-
 #: compilers/MazeCompiler/main.cpp
 msgid "Wrong argument count"
-msgstr ""
-
-#: client/Game2/NetInterface.cpp
-msgid "Yes"
-msgstr ""
-
-#: client/Game2/NetInterface.cpp
-msgid ""
-"You are about to launch the race without any opponents.  You will be on your "
-"own.  It is preferable to wait for other players to join your game.  Are you "
-"sure?"
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-msgid "You are connected"
-msgstr ""
-
-#: client/Game2/NetworkSession.cpp
-msgid "You are now alone"
-msgstr ""
-
-#: client/Game2/GameApp.cpp
-msgid ""
-"You can play HoverRace in a Window or Fullscreen;\n"
-"to play in a Window, HoverRace will have to switch to 256 color mode.\n"
-"It is recommended you use Fullscreen mode instead.\n"
-"\n"
-"Do you want to play in Window mode and switch to 256 color?"
 msgstr ""
 
 #: client/Game2/main.cpp
 #: client/Game2/main.cpp
 #: compilers/MazeCompiler/main.cpp
 msgid "You found a bug!"
-msgstr ""
-
-#: client/Game2/SelectRoomDialog.cpp
-msgid "Your alias:"
 msgstr ""
 
 #: engine/Control/Controller.cpp
@@ -2111,18 +1217,6 @@ msgstr ""
 #: engine/Control/Controller.cpp
 msgid "Zoom Out"
 msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-msgid "[no selection]"
-msgstr "[onay electionsay]"
-
-#: client/Game2/AboutDialog.cpp
-msgid ""
-"and with the help of the many testers willing to put up with bugs and other "
-"strange happenings."
-msgstr ""
-"andway ithway ethay elphay ofway ethay anymay esterstay illingway otay utpay "
-"upway ithway ugsbay andway otherway angestray appeningshay."
 
 #: compilers/ResourceCompiler/ResBitmapBuilder.cpp
 msgid "bitmap too small; using single color"
@@ -2160,14 +1254,6 @@ msgstr ""
 msgid "line"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp
-msgid "no network connection"
-msgstr ""
-
-#: client/Game2/AboutDialog.cpp
-msgid "original author"
-msgstr "originalway authorway"
-
 #: compilers/ResourceCompiler/ResourceCompiler.cpp
 msgid "problem reading actor parameters"
 msgstr ""
@@ -2194,10 +1280,6 @@ msgstr "Ancelcay"
 msgid "rooms"
 msgstr ""
 
-#: client/Game2/GameApp.cpp
-msgid "silent mode"
-msgstr ""
-
 #: engine/MazeCompiler/LevelBuilder.cpp
 msgid "starting positions"
 msgstr ""
@@ -2208,7 +1290,6 @@ msgid "syntax error in defines file"
 msgstr "Unablay otay eatecray ocketsay"
 
 #: client/Game2/ClientApp.cpp
-#: client/Game2/GameApp.cpp
 msgctxt "Version"
 msgid "testing"
 msgstr "estingtay"
@@ -2233,13 +1314,11 @@ msgstr "Unablay otay eatecray ocketsay"
 msgid "unable to open input file"
 msgstr "Unablay otay eatecray ocketsay"
 
-#: client/Game2/AboutDialog.cpp
-msgid "visit us at"
-msgstr "isitvay us at"
+#~ msgid " are using the same IP and port!"
+#~ msgstr "areay usingay ethay amesay IP anday ortpay!"
 
-#: client/Game2/AboutDialog.cpp
-msgid "with contributions from (in alphabetical order)"
-msgstr "ithway ontributionscay omfray (in alphabeticalay orderway)"
+#~ msgid " at IP "
+#~ msgstr " atay IP"
 
 #~ msgctxt "Menu|File|Split Screen"
 #~ msgid "&2 Player"
@@ -2269,9 +1348,21 @@ msgstr "ithway ontributionscay omfray (in alphabeticalay orderway)"
 #~ msgid "&Contents"
 #~ msgstr "Ontents&cay"
 
+#~ msgctxt "Menu"
+#~ msgid "&File"
+#~ msgstr "Ile&fay"
+
 #~ msgctxt "Menu|View"
 #~ msgid "&Following Camera"
 #~ msgstr "Ollowing&fay Ameracay"
+
+#~ msgctxt "Menu|Setting"
+#~ msgid "&Fullscreen"
+#~ msgstr "Ullscreen&fay"
+
+#~ msgctxt "Menu"
+#~ msgid "&Help"
+#~ msgstr "Elp&hay"
 
 #~ msgctxt "Menu|File"
 #~ msgid "&Internet"
@@ -2280,6 +1371,10 @@ msgstr "ithway ontributionscay omfray (in alphabeticalay orderway)"
 #~ msgctxt "Menu|File|Network"
 #~ msgid "&Internet Meeting Room"
 #~ msgstr "&Internetway Eetingmay Oomray"
+
+#~ msgctxt "Menu|File"
+#~ msgid "&Network"
+#~ msgstr "Etwork&nay"
 
 #~ msgctxt "Menu|View"
 #~ msgid "&Players list"
@@ -2297,9 +1392,42 @@ msgstr "ithway ontributionscay omfray (in alphabeticalay orderway)"
 #~ msgid "&Refresh colors"
 #~ msgstr "Efresh&ray olorscay"
 
+#~ msgctxt "Menu"
+#~ msgid "&Setting"
+#~ msgstr "Etting&say"
+
+#~ msgctxt "Menu|File"
+#~ msgid "&Split Screen"
+#~ msgstr "Lit&spay Eenscray"
+
+#~ msgctxt "Menu"
+#~ msgid "&View"
+#~ msgstr "Iew&vay"
+
 #~ msgctxt "Menu|Setting"
 #~ msgid "&Window"
 #~ msgstr "Indo&way"
+
+#~ msgid ""
+#~ "; perhaps they are behind a firewall and need to forward ports 9530 and "
+#~ "9531 TCP and UDP?"
+#~ msgstr ""
+#~ "; erhapspay eythay areay ehindbay a irewallfay anday eednay otay "
+#~ "orwardfay ortspay 9530 anday 9531 TCP anday UDP?"
+
+#~ msgid "Abort current game?"
+#~ msgstr "Ixnay on the urrentcay amegay?"
+
+#~ msgid "About HoverRace"
+#~ msgstr "Aboutlay HoverRace"
+
+#, fuzzy
+#~ msgid "Action"
+#~ msgstr "Onnectioncay erroray ithway"
+
+#, fuzzy
+#~ msgid "Available version: "
+#~ msgstr "HoverRace ersionvay "
 
 #~ msgid "Bad track file format"
 #~ msgstr "Adbay acktray ilefay ormatfay"
@@ -2312,6 +1440,68 @@ msgstr "ithway ontributionscay omfray (in alphabeticalay orderway)"
 #~ msgid "Bi-Turbo"
 #~ msgstr "Bi-Turbo aftcray"
 
+#~ msgid "Brightness"
+#~ msgstr "Ightnessbray"
+
+#, fuzzy
+#~ msgid "Canceling..."
+#~ msgstr "Ancelcay"
+
+#~ msgid "Cannot connect to peer "
+#~ msgstr "Annotcay onnectpay otay eerpay"
+
+#, fuzzy
+#~ msgid "Cannot open file %s for writing!"
+#~ msgstr "Unablay otay eatecray ocketsay"
+
+#, fuzzy
+#~ msgid "Chat section"
+#~ msgstr "Acktray electionsay"
+
+#~ msgid "Close"
+#~ msgstr "Oseclay"
+
+#, fuzzy
+#~ msgid "Communication error"
+#~ msgstr "Onnectioncay erroray ithway"
+
+#, fuzzy
+#~ msgid "Connecting to server..."
+#~ msgstr "Onnect&cay otay erversay"
+
+#, fuzzy
+#~ msgid "Connecting to the Internet Meeting Room..."
+#~ msgstr "&Internetway Eetingmay Oomray"
+
+#, fuzzy
+#~ msgid "Connecting..."
+#~ msgstr "Onnectioncay erroray ithway"
+
+#, fuzzy
+#~ msgid "Connection"
+#~ msgstr "Onnectioncay erroray ithway"
+
+#~ msgid "Connection error with "
+#~ msgstr "Onnectioncay erroray ithway"
+
+#, fuzzy
+#~ msgid "Connection refused by peer"
+#~ msgstr "Onnectioncay efusedray ybay eerpay"
+
+#, fuzzy
+#~ msgid "Connection timeout"
+#~ msgstr "Onnectioncay erroray ithway"
+
+#~ msgid "Contrast"
+#~ msgstr "Ontrastcay"
+
+#, fuzzy
+#~ msgid "Control Assignment"
+#~ msgstr "Ontrolscay"
+
+#~ msgid "Controls"
+#~ msgstr "Ontrolscay"
+
 #, fuzzy
 #~ msgid "Crafts"
 #~ msgstr "CX aftcray"
@@ -2320,16 +1510,59 @@ msgstr "ithway ontributionscay omfray (in alphabeticalay orderway)"
 #~ msgid "Create a &server"
 #~ msgstr "Eatecray a erver&say"
 
+#, fuzzy
+#~ msgid "Current version: "
+#~ msgstr "HoverRace ersionvay "
+
+#~ msgid "Default Monitor"
+#~ msgstr "Efaultday Onitormay"
+
 #~ msgid "Description"
 #~ msgstr "Escriptionday"
+
+#~ msgid "Disable Intro Movie"
+#~ msgstr "Isableday Introway Oviemay"
+
+#~ msgid ""
+#~ "Disable the prompt to connect to the Internet each time HoverRace starts"
+#~ msgstr ""
+#~ "Isableday the omptpray otay onnectcay otay the Interneyway eachlay imetay "
+#~ "HoverRace artstay"
+
+#, fuzzy
+#~ msgid "Disconnecting from the Internet Meeting Room..."
+#~ msgstr "&Internetway Eetingmay Oomray"
 
 #~ msgctxt "Menu|File"
 #~ msgid "E&xit"
 #~ msgstr "Amscra&y"
 
+#~ msgid "ERROR Unable to connect to server..."
+#~ msgstr "ERRORAY Unablay otay onnectcay otay erversay..."
+
+#, fuzzy
+#~ msgid "Failed to create directory."
+#~ msgstr "Unablay otay eatecray ocketsay"
+
 #, fuzzy
 #~ msgid "Fire Weapon:"
 #~ msgstr "Eaponsway"
+
+#~ msgid "Fullscreen Monitor"
+#~ msgstr "Ullscreenfay Onitormay"
+
+#~ msgid "Fullscreen Settings"
+#~ msgstr "Ullscreenfay Ettingsfay"
+
+#~ msgid "Game cancelled by server"
+#~ msgstr "Amegay ancelledcay ybay erversay"
+
+#, fuzzy
+#~ msgid "Game list"
+#~ msgstr "Ayers&play istlay"
+
+#~ msgid "Gamma"
+#~ msgstr "Ammagay"
 
 #, fuzzy
 #~ msgid "Hide"
@@ -2355,12 +1588,32 @@ msgstr "ithway ontributionscay omfray (in alphabeticalay orderway)"
 #~ msgid "HoverRace fullscreen test"
 #~ msgstr "HoverRace ersionvay "
 
+#~ msgid "HoverRace is brought to you by:"
+#~ msgstr "HoverRace is oughtbray otay ouyay ybay:"
+
 #, fuzzy
 #~ msgid "HoverRace track file"
 #~ msgstr "HoverRace ersionvay "
 
+#~ msgid "HoverRace version "
+#~ msgstr "HoverRace ersionvay "
+
+#, fuzzy
+#~ msgid "Internet Meeting Room"
+#~ msgstr "&Internetway Eetingmay Oomray"
+
 #~ msgid "Laps"
 #~ msgstr "Apslay"
+
+#, fuzzy
+#~ msgid "Laps:"
+#~ msgstr "Apslay"
+
+#~ msgid "Main server and peer "
+#~ msgstr "Ainmay erversay anday eerpay"
+
+#~ msgid "Miscellaneous"
+#~ msgstr "Iscellaneousmay"
 
 #~ msgctxt "Menu|View"
 #~ msgid "More &messages"
@@ -2382,8 +1635,45 @@ msgstr "ithway ontributionscay omfray (in alphabeticalay orderway)"
 #~ msgid "Player 4"
 #~ msgstr "Ayerplay 4"
 
+#, fuzzy
+#~ msgid "Player list:"
+#~ msgstr "Ayers&play istlay"
+
+#~ msgid "Port value must be greater than 0"
+#~ msgstr "Ortpay aluevay ustmay ebay eatergray anthay 0"
+
 #~ msgid "Preferences"
 #~ msgstr "Eferencespray"
+
+#, fuzzy
+#~ msgid "Registering with the Internet Meeting Room..."
+#~ msgstr "&Internetway Eetingmay Oomray"
+
+#, fuzzy
+#~ msgid "Sending message to the Internet Meeting Room..."
+#~ msgstr "&Internetway Eetingmay Oomray"
+
+#~ msgid "TCP Client"
+#~ msgstr "TCP Ientclay"
+
+#~ msgid "TCP Server"
+#~ msgstr "TCP Erversay"
+
+#, fuzzy
+#~ msgid "TCP Server Port:"
+#~ msgstr "TCP Erversay"
+
+#~ msgid "Thanks also to the following projects"
+#~ msgstr "Anksthay also otay the ollowingfay ojectspray"
+
+#~ msgid ""
+#~ "To be able to display HoverRace Help\n"
+#~ "you must have a Word document viewer installed\n"
+#~ "on your system."
+#~ msgstr ""
+#~ "Otay ebay ableway otay isplayday HoverRace Elphay\n"
+#~ "ouyay ustmay avehay a Word ocumentday iewervay installedway\n"
+#~ "onway ouryay ystemsay."
 
 #~ msgid "Track selection"
 #~ msgstr "Acktray electionsay"
@@ -2399,6 +1689,41 @@ msgstr "ithway ontributionscay omfray (in alphabeticalay orderway)"
 #~ "ouryay ebway owserbray andway ogay otay:"
 
 #, fuzzy
+#~ msgid "Unable to add chat message"
+#~ msgstr "Unablay otay eatecray ocketsay"
+
+#, fuzzy
+#~ msgid "Unable to add game"
+#~ msgstr "Unablay otay eatecray ocketsay"
+
+#, fuzzy
+#~ msgid "Unable to add message"
+#~ msgstr "Unablay otay eatecray ocketsay"
+
+#, fuzzy
+#~ msgid "Unable to add user"
+#~ msgstr "Unablay otay eatecray ocketsay"
+
+#, fuzzy
+#~ msgid "Unable to create chat log file:"
+#~ msgstr "Unablay otay eatecray ocketsay"
+
+#, fuzzy
+#~ msgid "Unable to create directory:"
+#~ msgstr "Unablay otay eatecray ocketsay"
+
+#~ msgid "Unable to create socket"
+#~ msgstr "Unablay otay eatecray ocketsay"
+
+#, fuzzy
+#~ msgid "Unable to delete game"
+#~ msgstr "Unablay otay eatecray ocketsay"
+
+#, fuzzy
+#~ msgid "Unable to delete user"
+#~ msgstr "Unablay otay eatecray ocketsay"
+
+#, fuzzy
 #~ msgid "Unable to determine configuration directory"
 #~ msgstr "Unablay otay eatecray ocketsay"
 
@@ -2408,9 +1733,82 @@ msgstr "ithway ontributionscay omfray (in alphabeticalay orderway)"
 #~ "not set)"
 #~ msgstr "Unablay otay eatecray ocketsay"
 
+#, fuzzy
+#~ msgid "Unable to leave game"
+#~ msgstr "Unablay otay eatecray ocketsay"
+
+#, fuzzy
+#~ msgid "Unable to open file for writing:"
+#~ msgstr "Unablay otay eatecray ocketsay"
+
+#, fuzzy
+#~ msgid "Unable to send refresh info"
+#~ msgstr "Unablay otay eatecray ocketsay"
+
+#, fuzzy
+#~ msgid "Unable to start game"
+#~ msgstr "Unablay otay eatecray ocketsay"
+
+#~ msgid ""
+#~ "Unable to use UDP recv port; choose a different port or close some "
+#~ "Winsock applications."
+#~ msgstr ""
+#~ "Unablay otay useay UDP eceiveray ortpay; oosechay a ifferentday ortpay "
+#~ "oray oseclay omesay Winsock applicationsay."
+
+#~ msgid "Unable to use the port, try to close some WINSOCK applications"
+#~ msgstr ""
+#~ "Unablay otay useay ethay ortpay, ytray otay oseclay omesay WINSOCK "
+#~ "applicationsay"
+
+#, fuzzy
+#~ msgid "Unregistering from the Internet Meeting Room..."
+#~ msgstr "&Internetway Eetingmay Oomray"
+
+#~ msgid "Use desktop &color depth when switching to fullscreen"
+#~ msgstr ""
+#~ "Useway esktopday oler&cay epthday enwhay itchingsway otay ullscreenfay"
+
+#, fuzzy
+#~ msgid "User list"
+#~ msgstr "Ayers&play istlay"
+
+#~ msgid "Video and Audio"
+#~ msgstr "Ideovay and Audioway"
+
+#~ msgid "Volume"
+#~ msgstr "Olumevay"
+
 #~ msgid "Weapons"
 #~ msgstr "Eaponsway"
 
 #, fuzzy
+#~ msgid "Weapons:"
+#~ msgstr "Eaponsway"
+
+#, fuzzy
+#~ msgid "Welcome to the HoverRace Internet Meeting Room"
+#~ msgstr "&Internetway Eetingmay Oomray"
+
+#~ msgid "[no selection]"
+#~ msgstr "[onay electionsay]"
+
+#~ msgid ""
+#~ "and with the help of the many testers willing to put up with bugs and "
+#~ "other strange happenings."
+#~ msgstr ""
+#~ "andway ithway ethay elphay ofway ethay anymay esterstay illingway otay "
+#~ "utpay upway ithway ugsbay andway otherway angestray appeningshay."
+
+#, fuzzy
 #~ msgid "no selection"
 #~ msgstr " onay electionsay"
+
+#~ msgid "original author"
+#~ msgstr "originalway authorway"
+
+#~ msgid "visit us at"
+#~ msgstr "isitvay us at"
+
+#~ msgid "with contributions from (in alphabetical order)"
+#~ msgstr "ithway ontributionscay omfray (in alphabeticalay orderway)"

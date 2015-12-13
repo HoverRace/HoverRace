@@ -18,14 +18,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 1.2.1\n"
 
-#: client/Game2/NetInterface.cpp
-msgid " are using the same IP and port!"
-msgstr " ¡Están usando el mismo puerto y la misma IP!"
-
-#: client/Game2/NetInterface.cpp
-msgid " at IP "
-msgstr " en la IP "
-
 #: client/Game2/Observer.cpp
 #, c-format, boost-format
 msgid "%d %-0.10s #%d%*s   --First lap--  %c"
@@ -51,82 +43,6 @@ msgstr "%d %-0.10s #%d%*s Vuelta:%-2d   %2d.%02d.%03d%c"
 msgid "%d.%02d.%02d  Lap:%d/%d"
 msgstr "%d.%02d.%02d  Vuelta:%d/%d"
 
-#: client/Game2/NetworkSession.cpp
-#, fuzzy, c-format, boost-format
-msgid "%s has left"
-msgstr "se ha marchado"
-
-#: client/Game2/GameApp.cpp
-msgctxt "Menu"
-msgid "&File"
-msgstr "&Archivo"
-
-#: client/Game2/GameApp.cpp
-msgctxt "Menu|Setting"
-msgid "&Fullscreen"
-msgstr "&Ver el juego en pantalla completa"
-
-#: client/Game2/GameApp.cpp
-msgctxt "Menu"
-msgid "&Help"
-msgstr "&Ayuda"
-
-#: client/Game2/MultiplayerPrefsPage.cpp
-msgid "&Log all chat sessions to:"
-msgstr ""
-
-#: client/Game2/GameApp.cpp
-msgctxt "Menu|File"
-msgid "&Network"
-msgstr "&Jugar en la Red (Red local)"
-
-#: client/Game2/GameApp.cpp
-msgctxt "Menu"
-msgid "&Setting"
-msgstr "&Opciones"
-
-# ¿Y esto? Se supone que ya se sabe que es con varios jguadores, por eso es MULTIJUGADOR. Tampoco es que el que vaya a jugar sea tonto...
-#: client/Game2/GameApp.cpp
-msgctxt "Menu|File"
-msgid "&Split Screen"
-msgstr "&Multijugador"
-
-#: client/Game2/GameApp.cpp
-msgctxt "Menu"
-msgid "&View"
-msgstr "&Ver"
-
-#: client/Game2/NetInterface.cpp
-msgid ""
-"; perhaps they are behind a firewall and need to forward ports 9530 and 9531 "
-"TCP and UDP?"
-msgstr ""
-"¿Quizás estén detrás de un firewall y necesitan permiso los puertos 9530 y "
-"9531 TCP y UDP?"
-
-# Falta mencionar si lo que va a hacer, es lo que quiere realizar, en inglés no se ocupa, por usan lógica para pensar en lo que se esta hablando, mientras esto debe ser más específico.
-#: client/Game2/GameApp.cpp
-msgid "Abort current game?"
-msgstr "¿Desea abortar el juego actual?"
-
-#: client/Game2/AboutDialog.cpp
-msgid "About HoverRace"
-msgstr "Todo sobre HoverRace"
-
-#: client/Game2/ControlPrefsPage.cpp
-#, fuzzy
-msgid "Action"
-msgstr "Conectando"
-
-#: client/Game2/NetworkPrefsPage.cpp
-msgid "Address of Server Roomlist:"
-msgstr "Dirección del servidor de salas:"
-
-#: client/Game2/NetworkPrefsPage.cpp
-#, fuzzy
-msgid "Address of Update Server List:"
-msgstr "Dirección del servidor de salas:"
-
 #: client/Game2/SettingsMenuScene.cpp
 msgid "Advanced"
 msgstr ""
@@ -142,10 +58,6 @@ msgstr ""
 #: client/Game2/DisplaySelectScene.cpp
 msgid "All"
 msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-msgid "Already used key (report for investigation)"
-msgstr "Clave ya usada (repórtelo para una futura investigación)"
 
 #: client/Game2/PauseMenuScene.cpp
 msgid "Any unsaved race records will be lost."
@@ -163,13 +75,8 @@ msgstr ""
 msgid "Are you sure you want to abandon the race and return to the main menu?"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp
-msgid "Ask me this each time I launch a game alone"
-msgstr "Preguntarme cada vez que inicio el juego solo"
-
 #: client/Game2/AudioSettingsScene.cpp
 #: client/Game2/SettingsMenuScene.cpp
-#: client/Game2/VideoAudioPrefsPage.cpp
 msgid "Audio"
 msgstr "Audio"
 
@@ -177,23 +84,6 @@ msgstr "Audio"
 #: client/Game2/LocaleSettingsScene.cpp
 msgid "Auto-detect"
 msgstr ""
-
-#: client/Game2/NetworkPrefsPage.cpp
-msgid "Automatically check for HoverRace updates"
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-msgid "Availability:"
-msgstr "Disponibilidad:"
-
-#: client/Game2/InternetRoom.cpp
-msgid "Available"
-msgstr "Disponible"
-
-#: client/Game2/CheckUpdateServerDialog.cpp
-#, fuzzy
-msgid "Available version: "
-msgstr "Versión incompatible"
 
 #: client/Game2/GameSelectScene.cpp
 #: client/Game2/PracticeSetupScene.cpp
@@ -233,10 +123,6 @@ msgstr "Mejor Vuelta %d.%02d.%03d"
 msgid "Bi-Turbo craft"
 msgstr "Nave Bi-Turbo"
 
-#: client/Game2/ControlPrefsPage.cpp
-msgid "Binding"
-msgstr ""
-
 #: engine/Control/Controller.cpp
 msgid "Bottom"
 msgstr ""
@@ -245,10 +131,6 @@ msgstr ""
 #, fuzzy
 msgid "Brake"
 msgstr "Frenar:"
-
-#: client/Game2/VideoAudioPrefsPage.cpp
-msgid "Brightness"
-msgstr "Brillo"
 
 #: client/Game2/Observer.cpp
 msgid "CX craft"
@@ -260,78 +142,22 @@ msgstr "Nave CX"
 msgid "Camera"
 msgstr ""
 
-#: client/Game2/CheckRoomListDialog.cpp
-#: client/Game2/CheckUpdateServerDialog.cpp
-#: client/Game2/SelectRoomDialog.cpp
 #: engine/Control/Controller.cpp
 #: engine/Control/ControllerStrings.cpp
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: client/Game2/CheckRoomListDialog.cpp
-#: client/Game2/CheckUpdateServerDialog.cpp
-#: client/Game2/SelectRoomDialog.cpp
-#, fuzzy
-msgid "Canceling..."
-msgstr "Cancelar"
-
-#: client/Game2/NetInterface.cpp
-msgid "Cannot connect to peer "
-msgstr "No se puede conectar al muelle"
-
-#: client/Game2/DownloadUpdateDialog.cpp
-#, fuzzy, c-format, boost-format
-msgid "Cannot open file %s for writing!"
-msgstr "Imposible de enviar la información actualizada"
-
-#: client/Game2/DownloadUpdateDialog.cpp
-#, c-format, boost-format
-msgid "Cannot update!  File %s not found.  Contact a site administrator."
-msgstr ""
-
 #: engine/Control/ControllerStrings.cpp
 msgid "Caps Lock"
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-msgid "Chat log started at:"
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-msgid "Chat section"
-msgstr "Selección de Chat"
-
-#: client/Game2/NetworkPrefsPage.cpp
-msgid "Check URL"
-msgstr ""
-
-#: client/Game2/NetworkPrefsPage.cpp
-msgid "Check for updates"
-msgstr ""
-
-#: client/Game2/CheckRoomListDialog.cpp
-msgid "Checking roomlist URL.  Please wait."
-msgstr ""
-
-#: client/Game2/CheckUpdateServerDialog.cpp
-msgid "Checking server for updates.  Please wait."
 msgstr ""
 
 #: engine/Control/ControllerStrings.cpp
 msgid "Clear"
 msgstr ""
 
-#: client/Game2/AboutDialog.cpp
-msgid "Close"
-msgstr "Cerrar"
-
 #: compilers/MazeCompiler/main.cpp
 #, fuzzy
 msgid "Command line error"
-msgstr "Error de comunicación"
-
-#: client/Game2/InternetRoom.cpp
-msgid "Communication error"
 msgstr "Error de comunicación"
 
 #: engine/MazeCompiler/TrackCompiler.cpp
@@ -343,11 +169,6 @@ msgstr ""
 msgid "Compiling track (%s)"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-msgid "Computing lag"
-msgstr "Calculando lag"
-
 #: engine/MazeCompiler/LevelBuilderVisiblesZones.cpp
 msgid "Computing visible zones... be patient"
 msgstr ""
@@ -357,57 +178,14 @@ msgctxt "Display Resolution"
 msgid "Confirm"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-msgid "Connected"
-msgstr "Conectado"
-
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-msgid "Connecting"
-msgstr "Conectando"
-
-#: client/Game2/NetInterface.cpp
-msgid "Connecting to server..."
-msgstr "Conectándose al servidor..."
-
-#: client/Game2/InternetRoom.cpp
-msgid "Connecting to the Internet Meeting Room..."
-msgstr "Conectando a una sala de Internet..."
-
-#: client/Game2/SelectRoomDialog.cpp
-#, fuzzy
-msgid "Connecting..."
-msgstr "Conectando"
-
-#: client/Game2/NetworkPrefsPage.cpp
-#, fuzzy
-msgid "Connection"
-msgstr "Conectando"
-
 #: engine/MazeCompiler/LevelBuilder.cpp
 #, c-format, boost-format
 msgid "Connection between sections %d and %d do not match"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp
-msgid "Connection error with "
-msgstr "Error de conexión con"
-
 #: engine/MazeCompiler/LevelBuilder.cpp
 #, fuzzy
 msgid "Connection list not found"
-msgstr "La conexión se interrumpió"
-
-#: client/Game2/NetInterface.cpp
-msgid "Connection refused by peer"
-msgstr "Conexión rechazada por igual"
-
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-msgid "Connection timeout"
 msgstr "La conexión se interrumpió"
 
 #: engine/MazeCompiler/LevelBuilder.cpp
@@ -429,18 +207,6 @@ msgstr "Cerrar"
 msgid "ConsoleToggle"
 msgstr "Cerrar"
 
-#: client/Game2/VideoAudioPrefsPage.cpp
-msgid "Contrast"
-msgstr "Contraste"
-
-#: client/Game2/ControlPrefsPage.cpp
-msgid "Control Assignment"
-msgstr "Asignar controles"
-
-#: client/Game2/ControlPrefsPage.cpp
-msgid "Controls"
-msgstr "Controles"
-
 #: engine/Control/ControllerStrings.cpp
 msgid "Copy"
 msgstr ""
@@ -454,49 +220,17 @@ msgstr ""
 msgid "Current lap %d.%02d.%03d  Best %d.%02d.%03d"
 msgstr "Vuelta Actual %d.%02d.%03d  Mejor %d.%02d.%03d"
 
-#: client/Game2/CheckUpdateServerDialog.cpp
-#, fuzzy
-msgid "Current version: "
-msgstr "Versión de HoverRace"
-
 #: engine/Control/ControllerStrings.cpp
 msgid "Cut"
 msgstr ""
-
-#: client/Game2/VideoAudioPrefsPage.cpp
-msgid "Default Monitor"
-msgstr "Monitor por defecto"
 
 #: engine/Control/ControllerStrings.cpp
 msgid "Del"
 msgstr ""
 
-#: client/Game2/FolderViewer.cpp
-msgid "Directory does not exist."
-msgstr ""
-
-#: client/Game2/MiscPrefsPage.cpp
-msgid "Disable Intro Movie"
-msgstr "Deshabilitar el vídeo inicial"
-
-#: client/Game2/MiscPrefsPage.cpp
-msgid ""
-"Disable the prompt to connect to the Internet each time HoverRace starts"
-msgstr ""
-"Deshabilitar la pregunta de conectarse a Internet cada vez que HoverRace es "
-"iniciado"
-
 #: engine/Control/ControllerStrings.cpp
 msgid "Disabled"
 msgstr ""
-
-#: client/Game2/NetInterface.cpp
-msgid "Disconnected"
-msgstr "Desconectado"
-
-#: client/Game2/InternetRoom.cpp
-msgid "Disconnecting from the Internet Meeting Room..."
-msgstr "Desconectando de la sala de encuentros por Internet..."
 
 #: client/Game2/VideoSettingsScene.cpp
 msgid "Display Mode"
@@ -506,22 +240,6 @@ msgstr ""
 #, fuzzy
 msgid "Down"
 msgstr "Volumen"
-
-#: client/Game2/DownloadUpdateDialog.cpp
-#: client/Game2/DownloadUpdateDialog.cpp
-#: client/Game2/TrackDownloadDialog.cpp
-#: client/Game2/TrackDownloadDialog.cpp
-msgid "Downloading"
-msgstr "Descargando"
-
-#: client/Game2/TrackDownloadDialog.cpp
-msgid "Downloading Track:"
-msgstr "Descargando Pista:"
-
-#: client/Game2/DownloadUpdateDialog.cpp
-#, fuzzy
-msgid "Downloading Update:"
-msgstr "Descargando Pista:"
 
 #: engine/MazeCompiler/LevelBuilder.cpp
 #: engine/MazeCompiler/LevelBuilder.cpp
@@ -544,10 +262,6 @@ msgstr ""
 msgid "ERROR"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp
-msgid "ERROR Unable to connect to server..."
-msgstr "ERROR Imposible de conectarse al servidor..."
-
 #: engine/Control/ControllerStrings.cpp
 #, fuzzy
 msgid "End"
@@ -557,21 +271,9 @@ msgstr "Eon"
 msgid "Enter"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp
-msgid "Entry is no longer available"
-msgstr "Su entrada ya no está disponible"
-
 #: client/Game2/Observer.cpp
 msgid "Eon craft"
 msgstr "Nave Eon"
-
-#: client/Game2/CheckUpdateServerDialog.cpp
-msgid "Error while checking for updates:"
-msgstr ""
-
-#: client/Game2/RoomListDialog.cpp
-msgid "Error while retrieving roomlist:"
-msgstr ""
 
 #: engine/Control/ControllerStrings.cpp
 msgid "Esc"
@@ -581,17 +283,9 @@ msgstr ""
 msgid "Execute"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp
-msgid "Expired key"
-msgstr "Clave Expirada"
-
 #: engine/Control/Controller.cpp
 #, fuzzy
 msgid "Extra"
-msgstr "Extrayendo"
-
-#: client/Game2/TrackDownloadDialog.cpp
-msgid "Extracting"
 msgstr "Extrayendo"
 
 #: engine/Control/ControllerStrings.cpp
@@ -690,19 +384,9 @@ msgstr ""
 msgid "F9"
 msgstr ""
 
-#: client/Game2/FolderViewer.cpp
-#, fuzzy
-msgid "Failed to create directory."
-msgstr "Imposible de crear socket"
-
 #: engine/Control/ControllerStrings.cpp
 msgid "Find"
 msgstr ""
-
-#: client/Game2/DownloadUpdateDialog.cpp
-#: client/Game2/TrackDownloadDialog.cpp
-msgid "Finished"
-msgstr "Terminado"
 
 #: client/Game2/Observer.cpp
 #, c-format, boost-format
@@ -732,45 +416,9 @@ msgstr ""
 msgid "Fullscreen"
 msgstr "&Ver el juego en pantalla completa"
 
-#: client/Game2/VideoAudioPrefsPage.cpp
-msgid "Fullscreen Monitor"
-msgstr "Monitor de pantalla completa"
-
-#: client/Game2/VideoAudioPrefsPage.cpp
 #: client/Game2/VideoSettingsScene.cpp
 msgid "Fullscreen Resolution"
 msgstr "La Resolución de pantalla completa"
-
-#: client/Game2/VideoAudioPrefsPage.cpp
-msgid "Fullscreen Settings"
-msgstr "Opciones de pantalla completa"
-
-#: client/Game2/NetInterface.cpp
-msgid "Game cancelled by server"
-msgstr "Juego cancelado por el servidor"
-
-#: client/Game2/InternetRoom.cpp
-msgid "Game details"
-msgstr "Detalles del juego"
-
-#: client/Game2/InternetRoom.cpp
-msgid "Game is full"
-msgstr "El juego está lleno"
-
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-msgid "Game is no longer available"
-msgstr "El juego ya no está disponible"
-
-#: client/Game2/InternetRoom.cpp
-msgid "Game list"
-msgstr "Lista de juegos"
-
-#: client/Game2/VideoAudioPrefsPage.cpp
-msgid "Gamma"
-msgstr "Gamma"
 
 #: engine/Control/ControllerStrings.cpp
 #, fuzzy
@@ -781,69 +429,19 @@ msgstr "&Ayuda"
 msgid "Home"
 msgstr ""
 
-#: client/Game2/AboutDialog.cpp
-msgid "HoverRace is brought to you by:"
-msgstr "HoverRace es traído a ustedes Por:"
-
-#: client/Game2/VideoAudioPrefsPage.cpp
-msgid "HoverRace is currently in silent mode."
-msgstr ""
-
-#: client/Game2/AboutDialog.cpp
-msgid "HoverRace version "
-msgstr "Versión de HoverRace"
-
-#: client/Game2/GameApp.cpp
-msgid ""
-"HoverRace was unable to switch the video mode. You will need to play in full "
-"screen."
-msgstr ""
-"HoverRace no pudo encender el modo video. Tendrás que jugarlo en pantalla "
-"completa."
-
 #: compilers/ResourceCompiler/ResBitmapBuilder.cpp
 #: compilers/ResourceCompiler/ResBitmapBuilder.cpp
 #: compilers/ResourceCompiler/ResBitmapBuilder.cpp
 msgid "INFO"
 msgstr ""
 
-#: client/Game2/GameApp.cpp
-msgid ""
-"If this is your first time running HoverRace, try restarting your computer."
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-msgid "Incompatible version"
-msgstr "Versión incompatible"
-
-#: client/Game2/GameApp.cpp
-msgid ""
-"Incompatible video mode. Select a compatible video mode by pressing F8 or F9 "
-"once a game is started"
-msgstr ""
-"Modo de video incompatible. Elije un modo de video compatible apretando F8 o "
-"F9 una vez que el juego empiece"
-
 #: engine/MazeCompiler/TrackCompiler.cpp
 msgid "Incorrect background resolution"
 msgstr ""
 
-#: client/Game2/DownloadUpdateDialog.cpp
-#: client/Game2/TrackDownloadDialog.cpp
-msgid "Initializing"
-msgstr "Inicializando"
-
 #: engine/Control/ControllerStrings.cpp
 msgid "Ins"
 msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/MultiplayerPrefsPage.cpp
-#: client/Game2/SelectRoomDialog.cpp
-msgid "Internet Meeting Room"
-msgstr "Sala de encuentros por Internet"
 
 #: compilers/ResourceCompiler/BitmapHelper.cpp
 msgid "Invalid file type"
@@ -853,12 +451,6 @@ msgstr ""
 #, fuzzy, c-format, boost-format
 msgid "Invalid parent room reference on line %d\n"
 msgstr "Imposible de crear socket"
-
-#: client/Game2/VideoAudioPrefsPage.cpp
-msgid "Invalid resolution; reverting to default"
-msgstr ""
-"Estás usando una resolución no válida; revirtiendo a la resolución por "
-"defecto"
 
 #: engine/MazeCompiler/LevelBuilder.cpp
 #, fuzzy, c-format, boost-format
@@ -870,34 +462,14 @@ msgstr "Imposible de crear socket"
 msgid "Invalid starting position room %d"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp
-msgid ""
-"It is highly preferable to wait until all players have successfully "
-"connected to the game before pressing the start button."
-msgstr ""
-"Es extremadamente preferible que esperes a que todos los jugadores hayan "
-"sido conectados al juego antes de presionar el boton Empezar"
-
 #: engine/Control/Controller.cpp
 msgid "Item"
 msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-msgid "Join Game..."
-msgstr "Unirse al juego..."
-
-#: client/Game2/InternetRoom.cpp
-msgid "Join game to download from hoverrace.com"
-msgstr "Unirse al juego para descargar desde la web hoverrace.com"
 
 #: engine/Control/Controller.cpp
 #, fuzzy
 msgid "Jump"
 msgstr "Saltar:"
-
-#: client/Game2/NetInterface.cpp
-msgid "Lag (ms)"
-msgstr "Lag (ms)"
 
 #: client/Game2/LocaleSettingsScene.cpp
 msgid "Language"
@@ -907,10 +479,6 @@ msgstr ""
 #: client/Game2/SettingsMenuScene.cpp
 msgid "Language and Units"
 msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-msgid "Laps:"
-msgstr "Vueltas:"
 
 #: client/Game2/Observer.cpp
 #, c-format, boost-format
@@ -942,18 +510,10 @@ msgstr ""
 msgid "Left Shift"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp
-msgid "Local"
-msgstr "Local"
-
 #: engine/Control/Controller.cpp
 #, fuzzy
 msgid "Look Back"
 msgstr "Mirar hacia atrás:"
-
-#: client/Game2/NetInterface.cpp
-msgid "Main server and peer "
-msgstr "Muelle y servidor principal"
 
 #: engine/Control/ControllerStrings.cpp
 #, fuzzy
@@ -974,10 +534,6 @@ msgstr ""
 #: engine/Control/ControllerStrings.cpp
 msgid "Middle Mouse Btn"
 msgstr ""
-
-#: client/Game2/MiscPrefsPage.cpp
-msgid "Miscellaneous"
-msgstr "Misceláneo"
 
 #: engine/MazeCompiler/LevelBuilder.cpp
 #, fuzzy
@@ -1048,40 +604,18 @@ msgid "Mouse Z- Axis"
 msgstr ""
 
 #: client/Game2/MainMenuScene.cpp
-#: client/Game2/MultiplayerPrefsPage.cpp
 msgid "Multiplayer"
 msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-msgid "Must join first"
-msgstr "Debe unirse primero"
 
 #: engine/Control/ControllerStrings.cpp
 #: engine/Control/ControllerStrings.cpp
 msgid "Mute"
 msgstr ""
 
-#: client/Game2/NetworkPrefsPage.cpp
 #: client/Game2/SettingsMenuScene.cpp
 #, fuzzy
 msgid "Network"
 msgstr "&Jugar en la Red (Red local)"
-
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/NetInterface.cpp
-msgid "Network Transaction Progress"
-msgstr "Progreso de transacción de red"
-
-#: client/Game2/InternetRoom.cpp
-msgid "New Game..."
-msgstr "Nuevo juego..."
-
-#: client/Game2/CheckUpdateServerDialog.cpp
-#, fuzzy
-msgid "New version of HoverRace available."
-msgstr "El juego ya no está disponible"
 
 #: engine/Control/Controller.cpp
 msgid "Next"
@@ -1096,46 +630,13 @@ msgstr ""
 msgid "Next Track"
 msgstr "Pistas"
 
-#: client/Game2/NetInterface.cpp
-msgid "No"
-msgstr "No"
-
 #: compilers/ResourceCompiler/ResActorBuilder.cpp
 msgid "No bitmap associated with the patch"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp
-msgid "No more Shareware users allowed"
-msgstr "No más usuarios gratis permitidos"
-
-#: client/Game2/InternetRoom.cpp
-msgid "No more user allowed"
-msgstr "No más usuarios permitidos"
-
 #: engine/MazeCompiler/LevelBuilder.cpp
 msgid "No starting positions found"
 msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-msgid "Not authorized"
-msgstr "No está autorizado"
-
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-msgid "Not online"
-msgstr "No está en línea"
-
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-msgid "Not owner"
-msgstr "No hay dueño"
 
 #: engine/Control/ControllerStrings.cpp
 msgid "Num Lock"
@@ -1222,20 +723,9 @@ msgid "Numpad Enter"
 msgstr ""
 
 #: client/Game2/MessageScene.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/PathSelector.cpp
-#: client/Game2/SelectRoomDialog.cpp
 #: engine/Control/Controller.cpp
 msgid "OK"
 msgstr "OK"
-
-#: client/Game2/MultiplayerPrefsPage.cpp
-msgid "Only play sound when not &foreground window"
-msgstr ""
-
-#: client/Game2/MultiplayerPrefsPage.cpp
-msgid "Open Folder"
-msgstr ""
 
 #: engine/Control/Controller.cpp
 #, fuzzy
@@ -1277,25 +767,11 @@ msgstr ""
 msgid "Play"
 msgstr "Jugador"
 
-#: client/Game2/MultiplayerPrefsPage.cpp
-msgid "Play a sound when a &message is received"
-msgstr ""
-
-#: client/Game2/ControlPrefsPage.cpp
-#: client/Game2/NetInterface.cpp
 #: engine/Control/Controller.cpp
 #: engine/Control/Controller.cpp
 #: engine/Control/Controller.cpp
 msgid "Player"
 msgstr "Jugador"
-
-#: client/Game2/InternetRoom.cpp
-msgid "Player list:"
-msgstr "Lista de jugadores:"
-
-#: client/Game2/NetInterface.cpp
-msgid "Port value must be greater than 0"
-msgstr "El número del puerto debe ser mayor que 0"
 
 #: engine/Control/ControllerStrings.cpp
 msgid "Power"
@@ -1305,15 +781,6 @@ msgstr ""
 #, fuzzy
 msgid "Practice"
 msgstr "&Practicar"
-
-#: client/Game2/NetworkSession.cpp
-#: client/Game2/NetworkSession.cpp
-msgid "Press F2 when ready to return to the Meeting Room"
-msgstr "Presione F2 cuando este listo para regresar a la sala de encuentros"
-
-#: client/Game2/ControlPrefsPage.cpp
-msgid "Press a control or wait 3 seconds to disable..."
-msgstr "Presione una tecla o espere 3 segundos para deshabilitar el control..."
 
 #: engine/Control/Controller.cpp
 msgid "Prev Cmd"
@@ -1338,20 +805,10 @@ msgstr "&Multijugador"
 msgid "Prior"
 msgstr ""
 
-#: client/Game2/CheckUpdateServerDialog.cpp
-msgid "Problem running updater.exe!"
-msgstr ""
-
-#: client/Game2/DownloadUpdateDialog.cpp
-#: client/Game2/TrackDownloadDialog.cpp
-msgid "Processing..."
-msgstr "Procesando..."
-
 #: client/Game2/SettingsMenuScene.cpp
 msgid "Profile"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp
 #: client/Game2/MainMenuScene.cpp
 msgid "Quit"
 msgstr "Salir"
@@ -1375,35 +832,12 @@ msgstr ""
 msgid "Ready"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp
-msgid "Registering game with the Internet Meeting Room..."
-msgstr "Registrando el juego con la sala de encuentros por Internet..."
-
-#: client/Game2/InternetRoom.cpp
-msgid "Registering with the Internet Meeting Room..."
-msgstr ""
-"Registrándose con la sala de encuentros por Internet...  Espere unos "
-"instantes"
-
-#: client/Game2/InternetRoom.cpp
-msgid "Registering your best lap time to the server"
-msgstr "Registrando su mejor vuelta en el servidor"
-
 #: engine/Control/Controller.cpp
 msgid "Reset Camera"
 msgstr ""
 
 #: client/Game2/SettingsScene.cpp
 msgid "Reset all settings on this screen to their default values?"
-msgstr ""
-
-#: client/Game2/NetworkPrefsPage.cpp
-#: client/Game2/NetworkPrefsPage.cpp
-msgid "Reset to Default"
-msgstr ""
-
-#: client/Game2/NetworkPrefsPage.cpp
-msgid "Reset to Defaults"
 msgstr ""
 
 #: client/Game2/SettingsScene.cpp
@@ -1414,10 +848,6 @@ msgstr ""
 #: client/Game2/Observer.cpp
 msgid "Result"
 msgstr ""
-
-#: client/Game2/NetInterface.cpp
-msgid "Retrieving game info..."
-msgstr "Recibiendo información del juego..."
 
 #: client/Game2/PauseMenuScene.cpp
 msgid "Return to Race"
@@ -1448,22 +878,10 @@ msgstr ""
 msgid "Right Shift"
 msgstr ""
 
-#: client/Game2/SelectRoomDialog.cpp
-msgid "Room:"
-msgstr "Sala:"
-
-#: client/Game2/CheckRoomListDialog.cpp
-msgid "Roomlist URL is valid!"
-msgstr ""
-
 #: client/Game2/SettingsScene.cpp
 #, fuzzy
 msgid "Save Settings"
 msgstr "&Opciones"
-
-#: client/Game2/InternetRoom.cpp
-msgid "Saving chat session to:"
-msgstr ""
 
 #: engine/Control/ControllerStrings.cpp
 msgid "Scroll Lock"
@@ -1489,22 +907,9 @@ msgstr ""
 msgid "Select Resolution"
 msgstr "La Resolución de pantalla completa"
 
-#: client/Game2/MultiplayerPrefsPage.cpp
-msgid "Select a destination folder for saved chat sessions."
-msgstr ""
-
 #: client/Game2/Observer.cpp
 msgid "Select your craft with the arrow keys"
 msgstr "Seleccione su nave con las flechas de dirección"
-
-#: client/Game2/InternetRoom.cpp
-msgid "Sending message to the Internet Meeting Room..."
-msgstr "Enviando mensaje a la sala de encuentros por internet..."
-
-#: client/Game2/NetworkPrefsPage.cpp
-#, fuzzy
-msgid "Server Options"
-msgstr "Opciones"
 
 #: client/Game2/MainMenuScene.cpp
 #: client/Game2/SettingsMenuScene.cpp
@@ -1528,11 +933,6 @@ msgstr ""
 msgid "Silent Mode"
 msgstr ""
 
-#: client/Game2/TrackDownloadDialog.cpp
-#, c-format, boost-format
-msgid "Sorry, track \"%s\" is not available from %s"
-msgstr "Lo sentimos, la pista \"%s\" no esta disponible desde %s"
-
 #: client/Game2/AudioSettingsScene.cpp
 msgid "Sound Effects"
 msgstr ""
@@ -1540,10 +940,6 @@ msgstr ""
 #: client/Game2/MainMenuScene.cpp
 msgid ""
 "Sound has been disabled because the --silent command-line parameter was set."
-msgstr ""
-
-#: client/Game2/GameApp.cpp
-msgid "Sound will be disabled for this session."
 msgstr ""
 
 #: engine/Control/ControllerStrings.cpp
@@ -1560,18 +956,10 @@ msgstr "&Multijugador"
 msgid "Stacked"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp
-msgid "Start NOW!"
-msgstr "¡Empieza AHORA!"
-
 #: client/Game2/Observer.cpp
 #, c-format, boost-format
 msgid "Starting in %02d.%02d sec. for %d laps"
 msgstr "Comenzando en %02d.%02d segundos. por %d vueltas"
-
-#: client/Game2/NetInterface.cpp
-msgid "Status"
-msgstr "Estado"
 
 #: engine/Control/ControllerStrings.cpp
 #: engine/Control/ControllerStrings.cpp
@@ -1586,35 +974,6 @@ msgstr ""
 msgid "System console initialized."
 msgstr ""
 
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-msgid "TCP Client"
-msgstr "Cliente TCP"
-
-#: client/Game2/NetworkPrefsPage.cpp
-msgid "TCP Receive Port:"
-msgstr "Puerto receptor TCP:"
-
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-msgid "TCP Server"
-msgstr "Servidor TCP"
-
-#: client/Game2/NetworkPrefsPage.cpp
-msgid "TCP Server Port:"
-msgstr "Puerto de servidor TCP:"
-
 #: engine/Control/ControllerStrings.cpp
 msgid "Tab"
 msgstr ""
@@ -1628,31 +987,6 @@ msgstr ""
 msgid "Text Scale"
 msgstr ""
 
-#: client/Game2/AboutDialog.cpp
-msgid "Thanks also to the following projects"
-msgstr "Gracias además a los siguientes proyectos"
-
-#: client/Game2/FolderViewer.cpp
-msgid "The path is not a directory."
-msgstr ""
-
-#: client/Game2/GameApp.cpp
-msgid "The specific error was:"
-msgstr ""
-
-#: client/Game2/TrackDownloadDialog.cpp
-#, c-format, boost-format
-msgid ""
-"There was a problem downloading the track from %s\n"
-"Please visit %s and download the track manually."
-msgstr ""
-"Hubo un problema descargando la pista desde %s\n"
-"Por favor visite %s y descargue la pista manualmente."
-
-#: client/Game2/GameApp.cpp
-msgid "There was a problem setting up the sound device."
-msgstr ""
-
 #: client/Game2/MainMenuScene.cpp
 #, c-format, boost-format
 msgid ""
@@ -1660,10 +994,6 @@ msgid ""
 "\n"
 "The error was:\n"
 "%s"
-msgstr ""
-
-#: client/Game2/GameApp.cpp
-msgid "This build of HoverRace is not official; updates are not available."
 msgstr ""
 
 #: compilers/ResourceCompiler/ResBitmapBuilder.cpp
@@ -1699,16 +1029,6 @@ msgstr ""
 msgid "To apply these changes, the game must return to the main menu."
 msgstr ""
 
-#: client/Game2/GameApp.cpp
-msgid ""
-"To be able to display HoverRace Help\n"
-"you must have a Word document viewer installed\n"
-"on your system."
-msgstr ""
-"Para poder ver el manual de ayuda de HoverRace\n"
-"debe tener un visor de documentos de Word instalado\n"
-"en su sistema."
-
 #: engine/Control/Controller.cpp
 #, fuzzy
 msgid "Toggle Console"
@@ -1718,28 +1038,10 @@ msgstr "Cerrar"
 msgid "Top"
 msgstr ""
 
-#: client/Game2/TrackDownloadDialog.cpp
-#: client/Game2/TrackDownloadDialog.cpp
-msgid "Track Download"
-msgstr "Descarga de pista"
-
 #: engine/MazeCompiler/TrackCompiler.cpp
 #, fuzzy
 msgid "Track creation error"
 msgstr "Selección de pista"
-
-#: client/Game2/TrackDownloadDialog.cpp
-#, c-format, boost-format
-msgid ""
-"Track download failed: The file \"%s\" was not found in the archive "
-"downloaded from %s"
-msgstr ""
-"La descarga de la pista ha fallado: El archivo \"%s\" no fue encontrado en "
-"el archivo descargado desde %s"
-
-#: client/Game2/InternetRoom.cpp
-msgid "Track name:"
-msgstr "Nombre de pista:"
 
 #: engine/Control/Controller.cpp
 #, fuzzy
@@ -1754,10 +1056,6 @@ msgstr "Girar a la derecha:"
 #: engine/MazeCompiler/LevelBuilderVisiblesZones.cpp
 msgid "Two nodes with same position"
 msgstr ""
-
-#: client/Game2/NetworkPrefsPage.cpp
-msgid "UDP Receive Port:"
-msgstr "Puerto receptor UDP:"
 
 #: engine/MazeCompiler/TrackCompiler.cpp
 #, fuzzy
@@ -1774,32 +1072,9 @@ msgstr "Imposible de crear socket"
 msgid "Unable to add a map record"
 msgstr "Imposible añadir el juego"
 
-#: client/Game2/InternetRoom.cpp
-msgid "Unable to add chat message"
-msgstr "Imposible añadir el mensaje al Chat"
-
-#: client/Game2/InternetRoom.cpp
-msgid "Unable to add game"
-msgstr "Imposible añadir el juego"
-
-#: client/Game2/InternetRoom.cpp
-msgid "Unable to add message"
-msgstr "Imposible de añadir un mensaje"
-
 #: engine/MazeCompiler/TrackCompiler.cpp
 #, fuzzy
 msgid "Unable to add the track to the output file"
-msgstr "Imposible de crear socket"
-
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-msgid "Unable to add user"
-msgstr "Imposible agregar usuario"
-
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-#, fuzzy
-msgid "Unable to create chat log file:"
 msgstr "Imposible de crear socket"
 
 #: engine/Util/Config.cpp
@@ -1812,36 +1087,15 @@ msgstr "Imposible de crear socket"
 msgid "Unable to create directory"
 msgstr "Imposible de crear socket"
 
-#: client/Game2/InternetRoom.cpp
-#, fuzzy
-msgid "Unable to create directory:"
-msgstr "Imposible de crear socket"
-
 #: engine/MazeCompiler/LevelBuilder.cpp
 #, fuzzy, c-format, boost-format
 msgid "Unable to create free element on line %d\n"
-msgstr "Imposible de crear socket"
-
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-msgid "Unable to create socket"
 msgstr "Imposible de crear socket"
 
 #: engine/MazeCompiler/TrackCompiler.cpp
 #, fuzzy, c-format, boost-format
 msgid "Unable to create the output file: %s"
 msgstr "Imposible de crear socket"
-
-#: client/Game2/InternetRoom.cpp
-msgid "Unable to delete game"
-msgstr "Juego imposible de borrar"
-
-#: client/Game2/InternetRoom.cpp
-msgid "Unable to delete user"
-msgstr "Imposible de borrar al usuario"
 
 #: engine/MazeCompiler/TrackCompiler.cpp
 #: engine/MazeCompiler/TrackCompiler.cpp
@@ -1858,29 +1112,10 @@ msgstr "Imposible de añadir un mensaje"
 msgid "Unable to find background image: %s"
 msgstr "Imposible de añadir un mensaje"
 
-#: client/Game2/GameApp.cpp
-msgid "Unable to initialize: Unable to find suitable rich text DLL."
-msgstr "Imposible de inicializar: No fue posible encontrar el archivo DLL"
-
-#: client/Game2/InternetRoom.cpp
-msgid "Unable to leave game"
-msgstr "Imposible dejar el juego"
-
 #: engine/MazeCompiler/LevelBuilder.cpp
 #, fuzzy, c-format, boost-format
 msgid "Unable to load texture %d %d on line %d\n"
 msgstr "Imposible de crear socket"
-
-#: client/Game2/GameApp.cpp
-#: client/Game2/InternetRoom.cpp
-#, c-format, boost-format
-msgid "Unable to load track \"%s\".  Error details:"
-msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-#, fuzzy
-msgid "Unable to open file for writing:"
-msgstr "Imposible de enviar la información actualizada"
 
 #: compilers/ResourceCompiler/BitmapHelper.cpp
 #, fuzzy
@@ -1891,30 +1126,6 @@ msgstr "Imposible de enviar la información actualizada"
 #, fuzzy, c-format, boost-format
 msgid "Unable to open the input file: %s"
 msgstr "Imposible de enviar la información actualizada"
-
-#: client/Game2/InternetRoom.cpp
-msgid "Unable to send refresh info"
-msgstr "Imposible de enviar la información actualizada"
-
-#: client/Game2/InternetRoom.cpp
-msgid "Unable to start game"
-msgstr "Imposible de iniciar el juego"
-
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-msgid ""
-"Unable to use UDP recv port; choose a different port or close some Winsock "
-"applications."
-msgstr ""
-"Imposible de usar el puerto receptor UDP; elija otro puerto o cierre algunas "
-"aplicaciones Winsock."
-
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-msgid "Unable to use the port, try to close some WINSOCK applications"
-msgstr ""
-"Imposible de usar ese puerto, pruebe cerrando algunas aplicaciones WINSOCK"
 
 #: engine/Control/ControllerStrings.cpp
 msgid "Undo"
@@ -1948,18 +1159,6 @@ msgstr "Nave Desconocida"
 msgid "Unknown craft"
 msgstr "Nave Desconocida"
 
-#: client/Game2/InternetRoom.cpp
-msgid "Unknown error code"
-msgstr "Error de código desconocido"
-
-#: client/Game2/InternetRoom.cpp
-msgid "Unregistering from the Internet Meeting Room..."
-msgstr "Dándose de baja de la sala de encuentros por Internet..."
-
-#: client/Game2/InternetRoom.cpp
-msgid "Unregistering game from the Internet Meeting Room..."
-msgstr "Dando de baja el juego de la sala de encuentros por Internet..."
-
 #: compilers/ResourceCompiler/BitmapHelper.cpp
 msgid "Unsupported format"
 msgstr ""
@@ -1968,36 +1167,14 @@ msgstr ""
 msgid "Up"
 msgstr ""
 
-#: client/Game2/DownloadUpdateDialog.cpp
-#, fuzzy
-msgid "Update Download"
-msgstr "Descarga de pista"
-
 #: compilers/MazeCompiler/main.cpp
 msgid "Usage: MazeCompiler <outputfile> <inputfile>"
 msgstr ""
 
-#: client/Game2/MiscPrefsPage.cpp
-msgid "Use desktop &color depth when switching to fullscreen"
-msgstr "Usar la profundidad de &colores cuando se cambia a pantalla completa"
-
-#: client/Game2/InternetRoom.cpp
-msgid "User list"
-msgstr "Lista de usuarios"
-
 #: client/Game2/SettingsMenuScene.cpp
-#: client/Game2/VideoAudioPrefsPage.cpp
 #: client/Game2/VideoSettingsScene.cpp
 msgid "Video"
 msgstr "Video"
-
-#: client/Game2/VideoAudioPrefsPage.cpp
-msgid "Video and Audio"
-msgstr "Video y Audio"
-
-#: client/Game2/VideoAudioPrefsPage.cpp
-msgid "Volume"
-msgstr "Volumen"
 
 #: engine/Control/ControllerStrings.cpp
 #, fuzzy
@@ -2013,20 +1190,6 @@ msgstr "Volumen"
 #: compilers/ResourceCompiler/ResBitmapBuilder.cpp
 msgid "WARNING"
 msgstr ""
-
-#: client/Game2/NetInterface.cpp
-msgid "Waiting acknowledgement"
-msgstr "Esperando reconocimiento"
-
-#: client/Game2/NetInterface.cpp
-#: client/Game2/NetInterface.cpp
-msgid "Warning!"
-msgstr "¡Atención!"
-
-#: client/Game2/InternetRoom.cpp
-#: client/Game2/InternetRoom.cpp
-msgid "Warning: communication timeout"
-msgstr "Advertencia: La comunicación se interrumpió"
 
 #: engine/MazeCompiler/LevelBuilder.cpp
 #, c-format, boost-format
@@ -2052,78 +1215,15 @@ msgstr ""
 msgid "Warning: unable to find description"
 msgstr ""
 
-#: client/Game2/InternetRoom.cpp
-msgid "Weapons:"
-msgstr "Armas:"
-
-#: client/Game2/InternetRoom.cpp
-msgid "Welcome to the HoverRace Internet Meeting Room"
-msgstr "Bienvenido a la sala de encuentros por Internet de HoverRace"
-
-#: client/Game2/FolderViewer.cpp
-#, fuzzy
-msgid "Would you like to create it?"
-msgstr "¿Le gustaría descargar la pista \"%s\"?"
-
-#: client/Game2/TrackDownloadDialog.cpp
-#, c-format, boost-format
-msgid "Would you like to download the track \"%s\" now?"
-msgstr "¿Le gustaría descargar la pista \"%s\"?"
-
 #: compilers/MazeCompiler/main.cpp
 msgid "Wrong argument count"
 msgstr ""
-
-#: client/Game2/NetInterface.cpp
-msgid "Yes"
-msgstr "Sí"
-
-#: client/Game2/NetInterface.cpp
-msgid ""
-"You are about to launch the race without any opponents.  You will be on your "
-"own.  It is preferable to wait for other players to join your game.  Are you "
-"sure?"
-msgstr ""
-"Vas a empezar la carrera sin ningún oponente. Serás el único participante. "
-"Es preferible que esperes a que otros jugadores entren en tu juego. ¿Estás "
-"seguro de empezar?"
-
-#: client/Game2/InternetRoom.cpp
-msgid "You are connected"
-msgstr "Ahora estás conectado"
-
-#: client/Game2/NetworkSession.cpp
-msgid "You are now alone"
-msgstr "Ahora estás solo"
-
-#: client/Game2/GameApp.cpp
-msgid ""
-"You can play HoverRace in a Window or Fullscreen;\n"
-"to play in a Window, HoverRace will have to switch to 256 color mode.\n"
-"It is recommended you use Fullscreen mode instead.\n"
-"\n"
-"Do you want to play in Window mode and switch to 256 color?"
-msgstr ""
-"Puedes jugar HoverRace en una ventana o en pantalla completa; \n"
-"Al jugar en una ventana, HoverRace cambiará la pantalla a 256 colores, en "
-"este momento debes estar usando 32 bits de colores, mucho más que estos. \n"
-"Recomendamos que en vez de ventana use \"Pantalla completa\" en su lugar. \n"
-"¿Quieres jugar en la misma ventana y habilitar los 256 colores, o prefieres "
-"jugarlo en pantalla completa? Recuerda, el computador actual usaría más de "
-"32 bits mucho más que los 256 colores del juego, al cambiarse, la "
-"computadora se verá con menos colores, pero es lo normal.Si prefieres mejor "
-"Pantalla Completa, debes pulsar F9 luego de elegir cada nivel. Para salir de "
-"Pantalla completa debes pulsar ESC"
 
 #: client/Game2/main.cpp
 #: client/Game2/main.cpp
 #: compilers/MazeCompiler/main.cpp
 msgid "You found a bug!"
 msgstr ""
-
-#: client/Game2/SelectRoomDialog.cpp
-msgid "Your alias:"
-msgstr "Tu alias:"
 
 #: engine/Control/Controller.cpp
 msgid "Zoom In"
@@ -2132,18 +1232,6 @@ msgstr ""
 #: engine/Control/Controller.cpp
 msgid "Zoom Out"
 msgstr ""
-
-#: client/Game2/InternetRoom.cpp
-msgid "[no selection]"
-msgstr "[ninguna selección]"
-
-#: client/Game2/AboutDialog.cpp
-msgid ""
-"and with the help of the many testers willing to put up with bugs and other "
-"strange happenings."
-msgstr ""
-"Y con ayuda de los muchos testers dispuestos a arreglar bugs y otras cosas "
-"raras que suceden en el juego."
 
 #: compilers/ResourceCompiler/ResBitmapBuilder.cpp
 msgid "bitmap too small; using single color"
@@ -2182,14 +1270,6 @@ msgstr ""
 msgid "line"
 msgstr ""
 
-#: client/Game2/NetInterface.cpp
-msgid "no network connection"
-msgstr "No hay conexión de red"
-
-#: client/Game2/AboutDialog.cpp
-msgid "original author"
-msgstr "Autor Original"
-
 #: compilers/ResourceCompiler/ResourceCompiler.cpp
 msgid "problem reading actor parameters"
 msgstr ""
@@ -2216,10 +1296,6 @@ msgstr "Procesando..."
 msgid "rooms"
 msgstr ""
 
-#: client/Game2/GameApp.cpp
-msgid "silent mode"
-msgstr ""
-
 #: engine/MazeCompiler/LevelBuilder.cpp
 msgid "starting positions"
 msgstr ""
@@ -2230,7 +1306,6 @@ msgid "syntax error in defines file"
 msgstr "Imposible de enviar la información actualizada"
 
 #: client/Game2/ClientApp.cpp
-#: client/Game2/GameApp.cpp
 msgctxt "Version"
 msgid "testing"
 msgstr "Probando"
@@ -2255,13 +1330,15 @@ msgstr "Imposible de enviar la información actualizada"
 msgid "unable to open input file"
 msgstr "Imposible de enviar la información actualizada"
 
-#: client/Game2/AboutDialog.cpp
-msgid "visit us at"
-msgstr "Visítenos en nuestro sitio web:"
+#~ msgid " are using the same IP and port!"
+#~ msgstr " ¡Están usando el mismo puerto y la misma IP!"
 
-#: client/Game2/AboutDialog.cpp
-msgid "with contributions from (in alphabetical order)"
-msgstr "Con contribuciones de (En orden alfabético)"
+#~ msgid " at IP "
+#~ msgstr " en la IP "
+
+#, fuzzy
+#~ msgid "%s has left"
+#~ msgstr "se ha marchado"
 
 # Aquí volvemos con la misma situación, nosotros podríamos poner lo mismo que en inglés, pero nosotros debemos ser más específicos que solo dando la idea, en este caso el "De a" y "Jugadores" es una forma de completar la coherencia.
 #~ msgctxt "Menu|File|Split Screen"
@@ -2292,9 +1369,21 @@ msgstr "Con contribuciones de (En orden alfabético)"
 #~ msgid "&Contents"
 #~ msgstr "&Contenidos"
 
+#~ msgctxt "Menu"
+#~ msgid "&File"
+#~ msgstr "&Archivo"
+
 #~ msgctxt "Menu|View"
 #~ msgid "&Following Camera"
 #~ msgstr "&Cámara rastreadora"
+
+#~ msgctxt "Menu|Setting"
+#~ msgid "&Fullscreen"
+#~ msgstr "&Ver el juego en pantalla completa"
+
+#~ msgctxt "Menu"
+#~ msgid "&Help"
+#~ msgstr "&Ayuda"
 
 # ¿Pero qué traducción es esta? En todo caso sería Jugar EN internet. Madre mía...
 #~ msgctxt "Menu|File"
@@ -2304,6 +1393,10 @@ msgstr "Con contribuciones de (En orden alfabético)"
 #~ msgctxt "Menu|File|Network"
 #~ msgid "&Internet Meeting Room"
 #~ msgstr "&Sala de encuentros en Internet"
+
+#~ msgctxt "Menu|File"
+#~ msgid "&Network"
+#~ msgstr "&Jugar en la Red (Red local)"
 
 #~ msgctxt "Menu|View"
 #~ msgid "&Players list"
@@ -2321,12 +1414,66 @@ msgstr "Con contribuciones de (En orden alfabético)"
 #~ msgid "&Refresh colors"
 #~ msgstr "&Actualizar los colores"
 
+#~ msgctxt "Menu"
+#~ msgid "&Setting"
+#~ msgstr "&Opciones"
+
+# ¿Y esto? Se supone que ya se sabe que es con varios jguadores, por eso es MULTIJUGADOR. Tampoco es que el que vaya a jugar sea tonto...
+#~ msgctxt "Menu|File"
+#~ msgid "&Split Screen"
+#~ msgstr "&Multijugador"
+
+#~ msgctxt "Menu"
+#~ msgid "&View"
+#~ msgstr "&Ver"
+
 #~ msgctxt "Menu|Setting"
 #~ msgid "&Window"
 #~ msgstr "&Ver el juego en una ventana"
 
+#~ msgid ""
+#~ "; perhaps they are behind a firewall and need to forward ports 9530 and "
+#~ "9531 TCP and UDP?"
+#~ msgstr ""
+#~ "¿Quizás estén detrás de un firewall y necesitan permiso los puertos 9530 "
+#~ "y 9531 TCP y UDP?"
+
+# Falta mencionar si lo que va a hacer, es lo que quiere realizar, en inglés no se ocupa, por usan lógica para pensar en lo que se esta hablando, mientras esto debe ser más específico.
+#~ msgid "Abort current game?"
+#~ msgstr "¿Desea abortar el juego actual?"
+
+#~ msgid "About HoverRace"
+#~ msgstr "Todo sobre HoverRace"
+
+#, fuzzy
+#~ msgid "Action"
+#~ msgstr "Conectando"
+
+#~ msgid "Address of Server Roomlist:"
+#~ msgstr "Dirección del servidor de salas:"
+
+#, fuzzy
+#~ msgid "Address of Update Server List:"
+#~ msgstr "Dirección del servidor de salas:"
+
+#~ msgid "Already used key (report for investigation)"
+#~ msgstr "Clave ya usada (repórtelo para una futura investigación)"
+
+#~ msgid "Ask me this each time I launch a game alone"
+#~ msgstr "Preguntarme cada vez que inicio el juego solo"
+
 #~ msgid "At least one craft must be selected"
 #~ msgstr "Por lo menos una nave tiene que ser seleccionada"
+
+#~ msgid "Availability:"
+#~ msgstr "Disponibilidad:"
+
+#~ msgid "Available"
+#~ msgstr "Disponible"
+
+#, fuzzy
+#~ msgid "Available version: "
+#~ msgstr "Versión incompatible"
 
 #~ msgid "Bad track file format"
 #~ msgstr "Formato erróneo del archivo la pista"
@@ -2340,8 +1487,72 @@ msgstr "Con contribuciones de (En orden alfabético)"
 #~ msgid "Boost Cans"
 #~ msgstr "Tanques de Nitro"
 
+#~ msgid "Brightness"
+#~ msgstr "Brillo"
+
+#, fuzzy
+#~ msgid "Canceling..."
+#~ msgstr "Cancelar"
+
+#~ msgid "Cannot connect to peer "
+#~ msgstr "No se puede conectar al muelle"
+
+#, fuzzy
+#~ msgid "Cannot open file %s for writing!"
+#~ msgstr "Imposible de enviar la información actualizada"
+
+#~ msgid "Chat section"
+#~ msgstr "Selección de Chat"
+
 #~ msgid "Click OK to play on the Internet against other people"
 #~ msgstr "Haga click en \"Ok\" para jugar en Internet contra otras personas"
+
+#~ msgid "Close"
+#~ msgstr "Cerrar"
+
+#~ msgid "Communication error"
+#~ msgstr "Error de comunicación"
+
+#~ msgid "Computing lag"
+#~ msgstr "Calculando lag"
+
+#~ msgid "Connected"
+#~ msgstr "Conectado"
+
+#~ msgid "Connecting"
+#~ msgstr "Conectando"
+
+#~ msgid "Connecting to server..."
+#~ msgstr "Conectándose al servidor..."
+
+#~ msgid "Connecting to the Internet Meeting Room..."
+#~ msgstr "Conectando a una sala de Internet..."
+
+#, fuzzy
+#~ msgid "Connecting..."
+#~ msgstr "Conectando"
+
+#, fuzzy
+#~ msgid "Connection"
+#~ msgstr "Conectando"
+
+#~ msgid "Connection error with "
+#~ msgstr "Error de conexión con"
+
+#~ msgid "Connection refused by peer"
+#~ msgstr "Conexión rechazada por igual"
+
+#~ msgid "Connection timeout"
+#~ msgstr "La conexión se interrumpió"
+
+#~ msgid "Contrast"
+#~ msgstr "Contraste"
+
+#~ msgid "Control Assignment"
+#~ msgstr "Asignar controles"
+
+#~ msgid "Controls"
+#~ msgstr "Controles"
 
 #~ msgid "Crafts"
 #~ msgstr "Naves"
@@ -2350,18 +1561,93 @@ msgstr "Con contribuciones de (En orden alfabético)"
 #~ msgid "Create a &server"
 #~ msgstr "Crear un &servidor"
 
+#, fuzzy
+#~ msgid "Current version: "
+#~ msgstr "Versión de HoverRace"
+
+#~ msgid "Default Monitor"
+#~ msgstr "Monitor por defecto"
+
 #~ msgid "Description"
 #~ msgstr "Descripción"
+
+#~ msgid "Disable Intro Movie"
+#~ msgstr "Deshabilitar el vídeo inicial"
+
+#~ msgid ""
+#~ "Disable the prompt to connect to the Internet each time HoverRace starts"
+#~ msgstr ""
+#~ "Deshabilitar la pregunta de conectarse a Internet cada vez que HoverRace "
+#~ "es iniciado"
+
+#~ msgid "Disconnected"
+#~ msgstr "Desconectado"
+
+#~ msgid "Disconnecting from the Internet Meeting Room..."
+#~ msgstr "Desconectando de la sala de encuentros por Internet..."
+
+#~ msgid "Downloading"
+#~ msgstr "Descargando"
+
+#~ msgid "Downloading Track:"
+#~ msgstr "Descargando Pista:"
+
+#, fuzzy
+#~ msgid "Downloading Update:"
+#~ msgstr "Descargando Pista:"
 
 #~ msgctxt "Menu|File"
 #~ msgid "E&xit"
 #~ msgstr "S&alir del juego"
 
+#~ msgid "ERROR Unable to connect to server..."
+#~ msgstr "ERROR Imposible de conectarse al servidor..."
+
+#~ msgid "Entry is no longer available"
+#~ msgstr "Su entrada ya no está disponible"
+
 #~ msgid "Eon"
 #~ msgstr "Eon"
 
+#~ msgid "Expired key"
+#~ msgstr "Clave Expirada"
+
+#~ msgid "Extracting"
+#~ msgstr "Extrayendo"
+
+#, fuzzy
+#~ msgid "Failed to create directory."
+#~ msgstr "Imposible de crear socket"
+
+#~ msgid "Finished"
+#~ msgstr "Terminado"
+
 #~ msgid "Fire Weapon:"
 #~ msgstr "Usar arma:"
+
+#~ msgid "Fullscreen Monitor"
+#~ msgstr "Monitor de pantalla completa"
+
+#~ msgid "Fullscreen Settings"
+#~ msgstr "Opciones de pantalla completa"
+
+#~ msgid "Game cancelled by server"
+#~ msgstr "Juego cancelado por el servidor"
+
+#~ msgid "Game details"
+#~ msgstr "Detalles del juego"
+
+#~ msgid "Game is full"
+#~ msgstr "El juego está lleno"
+
+#~ msgid "Game is no longer available"
+#~ msgstr "El juego ya no está disponible"
+
+#~ msgid "Game list"
+#~ msgstr "Lista de juegos"
+
+#~ msgid "Gamma"
+#~ msgstr "Gamma"
 
 #, fuzzy
 #~ msgid "Hide"
@@ -2389,21 +1675,80 @@ msgstr "Con contribuciones de (En orden alfabético)"
 #~ msgid "HoverRace fullscreen test"
 #~ msgstr "Versión de HoverRace"
 
+#~ msgid "HoverRace is brought to you by:"
+#~ msgstr "HoverRace es traído a ustedes Por:"
+
 #, fuzzy
 #~ msgid "HoverRace track file"
 #~ msgstr "Versión de HoverRace"
 
+#~ msgid "HoverRace version "
+#~ msgstr "Versión de HoverRace"
+
+#~ msgid ""
+#~ "HoverRace was unable to switch the video mode. You will need to play in "
+#~ "full screen."
+#~ msgstr ""
+#~ "HoverRace no pudo encender el modo video. Tendrás que jugarlo en pantalla "
+#~ "completa."
+
+#~ msgid "Incompatible version"
+#~ msgstr "Versión incompatible"
+
+#~ msgid ""
+#~ "Incompatible video mode. Select a compatible video mode by pressing F8 or "
+#~ "F9 once a game is started"
+#~ msgstr ""
+#~ "Modo de video incompatible. Elije un modo de video compatible apretando "
+#~ "F8 o F9 una vez que el juego empiece"
+
+#~ msgid "Initializing"
+#~ msgstr "Inicializando"
+
+#~ msgid "Internet Meeting Room"
+#~ msgstr "Sala de encuentros por Internet"
+
 #~ msgid "Invalid resolution; reverting to"
 #~ msgstr "Resolución invalida, volviendo a"
 
+#~ msgid "Invalid resolution; reverting to default"
+#~ msgstr ""
+#~ "Estás usando una resolución no válida; revirtiendo a la resolución por "
+#~ "defecto"
+
+#~ msgid ""
+#~ "It is highly preferable to wait until all players have successfully "
+#~ "connected to the game before pressing the start button."
+#~ msgstr ""
+#~ "Es extremadamente preferible que esperes a que todos los jugadores hayan "
+#~ "sido conectados al juego antes de presionar el boton Empezar"
+
+#~ msgid "Join Game..."
+#~ msgstr "Unirse al juego..."
+
+#~ msgid "Join game to download from hoverrace.com"
+#~ msgstr "Unirse al juego para descargar desde la web hoverrace.com"
+
+#~ msgid "Lag (ms)"
+#~ msgstr "Lag (ms)"
+
 #~ msgid "Laps"
 #~ msgstr "Vueltas"
+
+#~ msgid "Laps:"
+#~ msgstr "Vueltas:"
+
+#~ msgid "Local"
+#~ msgstr "Local"
 
 #~ msgid "Locating the main server..."
 #~ msgstr "Ubicando el servidor principal..."
 
 #~ msgid "Low CX"
 #~ msgstr "Low CX"
+
+#~ msgid "Main server and peer "
+#~ msgstr "Muelle y servidor principal"
 
 #~ msgid ""
 #~ "Make sure that you are connected to the Internet before clicking on OK.  "
@@ -2417,9 +1762,43 @@ msgstr "Con contribuciones de (En orden alfabético)"
 #~ msgid "Mines"
 #~ msgstr "Minas"
 
+#~ msgid "Miscellaneous"
+#~ msgstr "Misceláneo"
+
 #~ msgctxt "Menu|View"
 #~ msgid "More &messages"
 #~ msgstr "Más &mensajes"
+
+#~ msgid "Must join first"
+#~ msgstr "Debe unirse primero"
+
+#~ msgid "Network Transaction Progress"
+#~ msgstr "Progreso de transacción de red"
+
+#~ msgid "New Game..."
+#~ msgstr "Nuevo juego..."
+
+#, fuzzy
+#~ msgid "New version of HoverRace available."
+#~ msgstr "El juego ya no está disponible"
+
+#~ msgid "No"
+#~ msgstr "No"
+
+#~ msgid "No more Shareware users allowed"
+#~ msgstr "No más usuarios gratis permitidos"
+
+#~ msgid "No more user allowed"
+#~ msgstr "No más usuarios permitidos"
+
+#~ msgid "Not authorized"
+#~ msgstr "No está autorizado"
+
+#~ msgid "Not online"
+#~ msgstr "No está en línea"
+
+#~ msgid "Not owner"
+#~ msgstr "No hay dueño"
 
 #~ msgid "Number of laps should be greater than 1"
 #~ msgstr "El numero de vueltas debe ser mayor que 1"
@@ -2439,8 +1818,24 @@ msgstr "Con contribuciones de (En orden alfabético)"
 #~ msgid "Player 4"
 #~ msgstr "Jugador 4"
 
+#~ msgid "Player list:"
+#~ msgstr "Lista de jugadores:"
+
+#~ msgid "Port value must be greater than 0"
+#~ msgstr "El número del puerto debe ser mayor que 0"
+
 #~ msgid "Preferences"
 #~ msgstr "Preferencias"
+
+#~ msgid "Press F2 when ready to return to the Meeting Room"
+#~ msgstr "Presione F2 cuando este listo para regresar a la sala de encuentros"
+
+#~ msgid "Press a control or wait 3 seconds to disable..."
+#~ msgstr ""
+#~ "Presione una tecla o espere 3 segundos para deshabilitar el control..."
+
+#~ msgid "Processing..."
+#~ msgstr "Procesando..."
 
 #~ msgid "Rank                 For   Against"
 #~ msgstr "Posición                 Por   En Contra"
@@ -2448,12 +1843,89 @@ msgstr "Con contribuciones de (En orden alfabético)"
 #~ msgid "Rank            Result   Best Lap "
 #~ msgstr "Posición            Resultado   Mejor Vuelta"
 
+#~ msgid "Registering game with the Internet Meeting Room..."
+#~ msgstr "Registrando el juego con la sala de encuentros por Internet..."
+
+#~ msgid "Registering with the Internet Meeting Room..."
+#~ msgstr ""
+#~ "Registrándose con la sala de encuentros por Internet...  Espere unos "
+#~ "instantes"
+
+#~ msgid "Registering your best lap time to the server"
+#~ msgstr "Registrando su mejor vuelta en el servidor"
+
 #~ msgid "Resolution successfully set to"
 #~ msgstr "Resolución exitosamente puesta en"
+
+#~ msgid "Retrieving game info..."
+#~ msgstr "Recibiendo información del juego..."
+
+#~ msgid "Room:"
+#~ msgstr "Sala:"
+
+#~ msgid "Sending message to the Internet Meeting Room..."
+#~ msgstr "Enviando mensaje a la sala de encuentros por internet..."
+
+#, fuzzy
+#~ msgid "Server Options"
+#~ msgstr "Opciones"
 
 #~ msgid "Server error; please contact the server administrator"
 #~ msgstr ""
 #~ "Error del servidor; por favor, contacte con el administrador del servidor"
+
+#~ msgid "Sorry, track \"%s\" is not available from %s"
+#~ msgstr "Lo sentimos, la pista \"%s\" no esta disponible desde %s"
+
+#~ msgid "Start NOW!"
+#~ msgstr "¡Empieza AHORA!"
+
+#~ msgid "Status"
+#~ msgstr "Estado"
+
+#~ msgid "TCP Client"
+#~ msgstr "Cliente TCP"
+
+#~ msgid "TCP Receive Port:"
+#~ msgstr "Puerto receptor TCP:"
+
+#~ msgid "TCP Server"
+#~ msgstr "Servidor TCP"
+
+#~ msgid "TCP Server Port:"
+#~ msgstr "Puerto de servidor TCP:"
+
+#~ msgid "Thanks also to the following projects"
+#~ msgstr "Gracias además a los siguientes proyectos"
+
+#~ msgid ""
+#~ "There was a problem downloading the track from %s\n"
+#~ "Please visit %s and download the track manually."
+#~ msgstr ""
+#~ "Hubo un problema descargando la pista desde %s\n"
+#~ "Por favor visite %s y descargue la pista manualmente."
+
+#~ msgid ""
+#~ "To be able to display HoverRace Help\n"
+#~ "you must have a Word document viewer installed\n"
+#~ "on your system."
+#~ msgstr ""
+#~ "Para poder ver el manual de ayuda de HoverRace\n"
+#~ "debe tener un visor de documentos de Word instalado\n"
+#~ "en su sistema."
+
+#~ msgid "Track Download"
+#~ msgstr "Descarga de pista"
+
+#~ msgid ""
+#~ "Track download failed: The file \"%s\" was not found in the archive "
+#~ "downloaded from %s"
+#~ msgstr ""
+#~ "La descarga de la pista ha fallado: El archivo \"%s\" no fue encontrado "
+#~ "en el archivo descargado desde %s"
+
+#~ msgid "Track name:"
+#~ msgstr "Nombre de pista:"
 
 #~ msgid "Track selection"
 #~ msgstr "Selección de pista"
@@ -2461,11 +1933,43 @@ msgstr "Con contribuciones de (En orden alfabético)"
 #~ msgid "Tracks"
 #~ msgstr "Pistas"
 
+#~ msgid "UDP Receive Port:"
+#~ msgstr "Puerto receptor UDP:"
+
 #~ msgid ""
 #~ "Unable to activate your web browser. Please start your web browser and go "
 #~ "to:"
 #~ msgstr ""
 #~ "Imposible de activar su navegador web. Por favor inicielo y valla a:"
+
+#~ msgid "Unable to add chat message"
+#~ msgstr "Imposible añadir el mensaje al Chat"
+
+#~ msgid "Unable to add game"
+#~ msgstr "Imposible añadir el juego"
+
+#~ msgid "Unable to add message"
+#~ msgstr "Imposible de añadir un mensaje"
+
+#~ msgid "Unable to add user"
+#~ msgstr "Imposible agregar usuario"
+
+#, fuzzy
+#~ msgid "Unable to create chat log file:"
+#~ msgstr "Imposible de crear socket"
+
+#, fuzzy
+#~ msgid "Unable to create directory:"
+#~ msgstr "Imposible de crear socket"
+
+#~ msgid "Unable to create socket"
+#~ msgstr "Imposible de crear socket"
+
+#~ msgid "Unable to delete game"
+#~ msgstr "Juego imposible de borrar"
+
+#~ msgid "Unable to delete user"
+#~ msgstr "Imposible de borrar al usuario"
 
 #, fuzzy
 #~ msgid "Unable to determine configuration directory"
@@ -2488,8 +1992,121 @@ msgstr "Con contribuciones de (En orden alfabético)"
 #~ "Si el problema persiste, Usted puede reportarlo a los\n"
 #~ "Foros HoverRace, en la sección 'Help Desk'."
 
+#~ msgid "Unable to initialize: Unable to find suitable rich text DLL."
+#~ msgstr "Imposible de inicializar: No fue posible encontrar el archivo DLL"
+
+#~ msgid "Unable to leave game"
+#~ msgstr "Imposible dejar el juego"
+
+#, fuzzy
+#~ msgid "Unable to open file for writing:"
+#~ msgstr "Imposible de enviar la información actualizada"
+
+#~ msgid "Unable to send refresh info"
+#~ msgstr "Imposible de enviar la información actualizada"
+
+#~ msgid "Unable to start game"
+#~ msgstr "Imposible de iniciar el juego"
+
+#~ msgid ""
+#~ "Unable to use UDP recv port; choose a different port or close some "
+#~ "Winsock applications."
+#~ msgstr ""
+#~ "Imposible de usar el puerto receptor UDP; elija otro puerto o cierre "
+#~ "algunas aplicaciones Winsock."
+
+#~ msgid "Unable to use the port, try to close some WINSOCK applications"
+#~ msgstr ""
+#~ "Imposible de usar ese puerto, pruebe cerrando algunas aplicaciones WINSOCK"
+
+#~ msgid "Unknown error code"
+#~ msgstr "Error de código desconocido"
+
+#~ msgid "Unregistering from the Internet Meeting Room..."
+#~ msgstr "Dándose de baja de la sala de encuentros por Internet..."
+
+#~ msgid "Unregistering game from the Internet Meeting Room..."
+#~ msgstr "Dando de baja el juego de la sala de encuentros por Internet..."
+
+#, fuzzy
+#~ msgid "Update Download"
+#~ msgstr "Descarga de pista"
+
+#~ msgid "Use desktop &color depth when switching to fullscreen"
+#~ msgstr ""
+#~ "Usar la profundidad de &colores cuando se cambia a pantalla completa"
+
+#~ msgid "User list"
+#~ msgstr "Lista de usuarios"
+
+#~ msgid "Video and Audio"
+#~ msgstr "Video y Audio"
+
+#~ msgid "Volume"
+#~ msgstr "Volumen"
+
+#~ msgid "Waiting acknowledgement"
+#~ msgstr "Esperando reconocimiento"
+
+#~ msgid "Warning!"
+#~ msgstr "¡Atención!"
+
+#~ msgid "Warning: communication timeout"
+#~ msgstr "Advertencia: La comunicación se interrumpió"
+
 #~ msgid "Weapons"
 #~ msgstr "Armas"
+
+#~ msgid "Weapons:"
+#~ msgstr "Armas:"
+
+#~ msgid "Welcome to the HoverRace Internet Meeting Room"
+#~ msgstr "Bienvenido a la sala de encuentros por Internet de HoverRace"
+
+#, fuzzy
+#~ msgid "Would you like to create it?"
+#~ msgstr "¿Le gustaría descargar la pista \"%s\"?"
+
+#~ msgid "Would you like to download the track \"%s\" now?"
+#~ msgstr "¿Le gustaría descargar la pista \"%s\"?"
+
+#~ msgid "Yes"
+#~ msgstr "Sí"
+
+#~ msgid ""
+#~ "You are about to launch the race without any opponents.  You will be on "
+#~ "your own.  It is preferable to wait for other players to join your game.  "
+#~ "Are you sure?"
+#~ msgstr ""
+#~ "Vas a empezar la carrera sin ningún oponente. Serás el único "
+#~ "participante. Es preferible que esperes a que otros jugadores entren en "
+#~ "tu juego. ¿Estás seguro de empezar?"
+
+#~ msgid "You are connected"
+#~ msgstr "Ahora estás conectado"
+
+#~ msgid "You are now alone"
+#~ msgstr "Ahora estás solo"
+
+#~ msgid ""
+#~ "You can play HoverRace in a Window or Fullscreen;\n"
+#~ "to play in a Window, HoverRace will have to switch to 256 color mode.\n"
+#~ "It is recommended you use Fullscreen mode instead.\n"
+#~ "\n"
+#~ "Do you want to play in Window mode and switch to 256 color?"
+#~ msgstr ""
+#~ "Puedes jugar HoverRace en una ventana o en pantalla completa; \n"
+#~ "Al jugar en una ventana, HoverRace cambiará la pantalla a 256 colores, en "
+#~ "este momento debes estar usando 32 bits de colores, mucho más que "
+#~ "estos. \n"
+#~ "Recomendamos que en vez de ventana use \"Pantalla completa\" en su "
+#~ "lugar. \n"
+#~ "¿Quieres jugar en la misma ventana y habilitar los 256 colores, o "
+#~ "prefieres jugarlo en pantalla completa? Recuerda, el computador actual "
+#~ "usaría más de 32 bits mucho más que los 256 colores del juego, al "
+#~ "cambiarse, la computadora se verá con menos colores, pero es lo normal.Si "
+#~ "prefieres mejor Pantalla Completa, debes pulsar F9 luego de elegir cada "
+#~ "nivel. Para salir de Pantalla completa debes pulsar ESC"
 
 #~ msgid "You must enter an alias"
 #~ msgstr "Debe ingresar un alias"
@@ -2497,9 +2114,34 @@ msgstr "Con contribuciones de (En orden alfabético)"
 #~ msgid "You must select a room"
 #~ msgstr "Debe seleccionar una sala"
 
+#~ msgid "Your alias:"
+#~ msgstr "Tu alias:"
+
+#~ msgid "[no selection]"
+#~ msgstr "[ninguna selección]"
+
+#~ msgid ""
+#~ "and with the help of the many testers willing to put up with bugs and "
+#~ "other strange happenings."
+#~ msgstr ""
+#~ "Y con ayuda de los muchos testers dispuestos a arreglar bugs y otras "
+#~ "cosas raras que suceden en el juego."
+
+#~ msgid "no network connection"
+#~ msgstr "No hay conexión de red"
+
 #, fuzzy
 #~ msgid "no selection"
 #~ msgstr " sin Selección"
 
 #~ msgid "now?"
 #~ msgstr "ahora?"
+
+#~ msgid "original author"
+#~ msgstr "Autor Original"
+
+#~ msgid "visit us at"
+#~ msgstr "Visítenos en nuestro sitio web:"
+
+#~ msgid "with contributions from (in alphabetical order)"
+#~ msgstr "Con contribuciones de (En orden alfabético)"
