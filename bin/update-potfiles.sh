@@ -13,11 +13,18 @@ SRCDIRS=(
 	compilers/MazeCompiler
 	compilers/ResourceCompiler
 	engine
-	)
+)
+
+function filter_modern {
+	while read -r fn; do
+		# Ignore legacy source files.
+		! grep -q '#ifdef HR_LEGACY_BUILD' "$fn" && echo "$fn"
+	done
+}
 
 for srcdir in "${SRCDIRS[@]}"; do
 	find "$srcdir" -type f -name '*.cpp' \
 		-not -name 'StdAfx.*' \
 		-not -name '.*'
-done | sort
+done | sort | filter_modern
 
