@@ -235,7 +235,6 @@ MainCharacter::MainCharacter() :
 
 	mLastLapCompletion = 0;
 	mLastLapDuration = 0;
-	mBestLapDuration = 0;
 
 	mHoverId = 10;
 
@@ -962,11 +961,6 @@ void MainCharacter::ApplyEffect(const Model::ContactEffect *pEffect,
 					mLastLapDuration = pTime - mLastLapCompletion;
 					mLastLapCompletion = pTime;
 
-					if ((mLastLapDuration < mBestLapDuration) ||
-						(mBestLapDuration == 0))
-					{
-						mBestLapDuration = mLastLapDuration;
-					}
 					if (mRenderer) {
 						if (finished) {
 							mInternalSoundList.Add(mRenderer->GetFinishSound());
@@ -1103,11 +1097,6 @@ double MainCharacter::GetDirectionalSpeed() const
 MR_SimulationTime MainCharacter::GetTotalTime() const
 {
 	return mLastLapCompletion;
-}
-
-MR_SimulationTime MainCharacter::GetBestLapDuration() const
-{
-	return mBestLapDuration;
 }
 
 MR_SimulationTime MainCharacter::GetLastLapDuration() const

@@ -151,7 +151,6 @@ private:
 	// Race stats
 	MR_SimulationTime mLastLapCompletion;
 	MR_SimulationTime mLastLapDuration;
-	MR_SimulationTime mBestLapDuration;
 	MR_SimulationTime mCurrentTime;
 
 	BOOL mCheckPoint1;
@@ -218,7 +217,6 @@ public:
 	int GetPlayerIndex() const { return playerIdx; }
 
 	MR_SimulationTime GetTotalTime() const;
-	MR_SimulationTime GetBestLapDuration() const;
 	MR_SimulationTime GetLastLapDuration() const;
 	MR_SimulationTime GetLastLapCompletion() const;
 	bool HasStarted() const;
