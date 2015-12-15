@@ -190,7 +190,6 @@ public:
 
 	Model::ElementNetState GetNetState() const;
 	void SetNetState(int pDataLen, const MR_UInt8 * pData);
-	void SetNbLapForRace(int pNbLap);
 
 	// Movement inputs
 	void SetSimulationTime(MR_SimulationTime pTime);
