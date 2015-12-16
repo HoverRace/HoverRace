@@ -51,12 +51,42 @@ class ActiveText : public BaseText
 	using SUPER = BaseText;
 
 public:
+	struct Props
+	{
+		enum
+		{
+			CARET_VISIBLE = SUPER::Props::NEXT_,
+			CARET_POS,
+			NEXT_,  ///< First index for subclasses.
+		};
+	};
+
+public:
 	ActiveText(const std::string &text, const UiFont &font, const Color color,
 		uiLayoutFlags_t layoutFlags = 0);
 	virtual ~ActiveText() { }
 
 public:
 	void AttachView(Display &disp) override { AttachViewDynamic(disp, this); }
+
+public:
+	/**
+	 * Check if the caret is visible.
+	 * @return @c true if visible, @c false if hidden.
+	 */
+	bool IsCaretVisible() const { return caretVisible; }
+	void SetCaretVisible(bool visible);
+
+	/**
+	 * Retrieve the position of the caret.
+	 * @return The caret position (may be beyond the end of the text).
+	 */
+	size_t GetCaretPos() const { return caretPos; }
+	void SetCaretPos(size_t pos);
+
+private:
+	bool caretVisible;
+	size_t caretPos;
 };
 
 }  // namespace Display

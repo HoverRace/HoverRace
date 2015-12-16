@@ -35,8 +35,34 @@ ActiveText::ActiveText(const std::string &text,
 	const UiFont &font,
 	Color color,
 	uiLayoutFlags_t layoutFlags) :
-	SUPER(text, font, color, layoutFlags)
+	SUPER(text, font, color, layoutFlags),
+	caretVisible(false), caretPos(0)
 {
+}
+
+/**
+ * Set the visibility of the caret.
+ * @param visible @c true if visible, @c false otherwise.
+ */
+void ActiveText::SetCaretVisible(bool visible)
+{
+	if (caretVisible != visible) {
+		caretVisible = visible;
+		FireModelUpdate(Props::CARET_VISIBLE);
+	}
+}
+
+/**
+ * Set the caret position.
+ * @param pos The position (not clamped to the length of the text).
+ * @see SetCaretVisible(bool)
+ */
+void ActiveText::SetCaretPos(size_t pos)
+{
+	if (caretPos != pos) {
+		caretPos = pos;
+		FireModelUpdate(Props::CARET_POS);
+	}
 }
 
 }  // namespace Display
