@@ -228,11 +228,19 @@ void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
 					break;
 
 				case ' ':
+					if (rects) {
+						rects->glyphs.emplace_back(nullptr,
+							SDL_Rect{ cx, cy, 0, 0 });
+					}
 					cx += metrics.spaceWidth;
 					sx += metrics.spaceWidth;
 					break;
 
 				case '\n':
+					if (rects) {
+						rects->glyphs.emplace_back(nullptr,
+							SDL_Rect{ cx, cy, 0, 0 });
+					}
 					cx = 0;
 					cy += metrics.lineHeight;
 					if (sx > mx) {
@@ -297,6 +305,10 @@ void SdlTypeCase::Render(const TypeLine &s, const Color cm, int x, int y)
 	auto renderer = display.GetRenderer();
 	SDL_Rect destRect = { x, y, 0, 0 };
 	for (const auto &glyph : s.glyphs) {
+		//TODO: Render caret if in proper position.
+
+		if (!glyph.first) continue;
+
 		auto page = glyph.first->page;
 		SDL_Texture *texture = maps[page].get()->Get();
 
