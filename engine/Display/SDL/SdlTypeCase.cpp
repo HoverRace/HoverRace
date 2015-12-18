@@ -230,7 +230,7 @@ void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
 				case ' ':
 					if (rects) {
 						rects->glyphs.emplace_back(nullptr,
-							SDL_Rect{ cx, cy, 0, 0 });
+							SDL_Rect{ cx, cy, metrics.spaceWidth, 0 });
 					}
 					cx += metrics.spaceWidth;
 					sx += metrics.spaceWidth;
@@ -239,7 +239,7 @@ void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
 				case '\n':
 					if (rects) {
 						rects->glyphs.emplace_back(nullptr,
-							SDL_Rect{ cx, cy, 0, 0 });
+							SDL_Rect{ cx, cy, metrics.spaceWidth, 0 });
 					}
 					cx = 0;
 					cy += metrics.lineHeight;
@@ -336,7 +336,14 @@ void SdlTypeCase::Render(const TypeLine &s, const Color cm, int x, int y,
 		destRect.w = srcRect.w;
 		destRect.h = srcRect.h;
 		SDL_RenderCopy(renderer, texture, &srcRect, &destRect);
-		destRect.x += srcRect.w;
+	}
+
+	// If caret position wasn't within the text, we assume it's at the end.
+	if (caret && !foundCaretPos) {
+		foundCaretPos = true;
+		const auto &glyph = s.glyphs.back();
+		caretRect.x = x + glyph.second.x + glyph.second.w;
+		caretRect.y = y + glyph.second.y;
 	}
 
 	if (foundCaretPos) {
