@@ -124,8 +124,10 @@ public:
 	 * @param color The color of the string.
 	 * @param x The screen X coordinate of the upper-left corner.
 	 * @param y The screen Y coordinate of the upper-left corner.
+	 * @param caret The optional caret position.
 	 */
-	virtual void Render(const TypeLine &s, const Color color, int x, int y) = 0;
+	virtual void Render(const TypeLine &s, const Color color, int x, int y,
+		boost::optional<size_t> caret = {}) = 0;
 
 	/**
 	 * Renders the backing texture (for debugging purposes).

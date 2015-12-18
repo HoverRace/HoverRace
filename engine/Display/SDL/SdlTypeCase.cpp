@@ -291,7 +291,8 @@ void SdlTypeCase::Prepare(const std::string &s, TypeLine *rects)
 	}
 }
 
-void SdlTypeCase::Render(const TypeLine &s, const Color cm, int x, int y)
+void SdlTypeCase::Render(const TypeLine &s, const Color cm, int x, int y,
+	boost::optional<size_t> caret)
 {
 #	ifdef _DEBUG
 		if (s.typeCase.get() != this) {
@@ -304,8 +305,18 @@ void SdlTypeCase::Render(const TypeLine &s, const Color cm, int x, int y)
 
 	auto renderer = display.GetRenderer();
 	SDL_Rect destRect = { x, y, 0, 0 };
+	bool foundCaretPos = false;
+	SDL_Rect caretRect = { 0, 0, 2, metrics.lineHeight };
+	size_t pos = 0;
 	for (const auto &glyph : s.glyphs) {
-		//TODO: Render caret if in proper position.
+		// Note the caret position.
+		if (caret && *caret == pos) {
+			foundCaretPos = true;
+			caretRect.x = x + glyph.second.x;
+			caretRect.y = y + glyph.second.y;
+		}
+
+		pos++;
 
 		if (!glyph.first) continue;
 
@@ -326,6 +337,13 @@ void SdlTypeCase::Render(const TypeLine &s, const Color cm, int x, int y)
 		destRect.h = srcRect.h;
 		SDL_RenderCopy(renderer, texture, &srcRect, &destRect);
 		destRect.x += srcRect.w;
+	}
+
+	if (foundCaretPos) {
+		SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+		SDL_SetRenderDrawColor(renderer,
+			cm.bits.r, cm.bits.g, cm.bits.b, cm.bits.a);
+		SDL_RenderFillRect(renderer, &caretRect);
 	}
 }
 
