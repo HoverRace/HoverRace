@@ -172,11 +172,13 @@ public:
 	 * @param color The color of the string.
 	 * @param x The screen X coordinate of the upper-left corner.
 	 * @param y The screen Y coordinate of the upper-left corner.
+	 * @param caret The optional caret position.
 	 */
-	void Render(const Color color, int x, int y)
+	void Render(const Color color, int x, int y,
+		boost::optional<size_t> caret = {})
 	{
 		if (typeCase) {
-			typeCase->Render(*this, color, x, y);
+			typeCase->Render(*this, color, x, y, caret);
 		}
 	}
 
