@@ -181,6 +181,8 @@ void ConsoleScene::OnTextInput(const std::string &s)
 
 void ConsoleScene::OnTextControl(Control::TextControl::key_t key)
 {
+	cursorTick = OS::Time();
+
 	std::string &commandLine = console.GetCommandLine();
 	switch (key) {
 		case Control::TextControl::BACKSPACE:
