@@ -84,7 +84,10 @@ void SdlActiveTextView::Render()
 	typeLine.Render(
 		model.GetColor(),
 		static_cast<int>(aligned.x),
-		static_cast<int>(aligned.y));
+		static_cast<int>(aligned.y),
+		model.IsCaretVisible() ?
+			model.GetCaretPos() :
+			boost::optional<size_t>{});
 }
 
 void SdlActiveTextView::UpdateTexture()
