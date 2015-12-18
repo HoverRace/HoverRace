@@ -114,7 +114,6 @@ private:
 
 	bool cursorOn;
 	Util::OS::timestamp_t cursorTick;
-	Display::Label *cursorLbl;
 
 	Display::Label *measureLbl;  ///< Used to measure the size of glyphs.
 	Vec2 charSize;

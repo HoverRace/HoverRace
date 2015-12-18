@@ -99,10 +99,6 @@ ConsoleScene::ConsoleScene(Display::Display &display, GameDirector &director,
 	inputLbl->SetAlignment(Alignment::SW);
 	inputLbl->AttachView(display);
 
-	cursorLbl = new Display::Label("_", font, s.consoleCursorFg);
-	cursorLbl->SetAlignment(Alignment::SW);
-	cursorLbl->AttachView(display);
-
 	measureLbl = new Display::Label(" ", font, s.consoleFg);
 	measureLbl->AttachView(display);
 
@@ -125,7 +121,6 @@ ConsoleScene::~ConsoleScene()
 	delete logLines;
 
 	delete measureLbl;
-	delete cursorLbl;
 	delete inputLbl;
 }
 
@@ -373,15 +368,10 @@ void ConsoleScene::PrepareRender()
 		logsChanged = false;
 	}
 
-	if (cursorOn) {
-		double x =
-			static_cast<double>(inputLbl->GetText().length()) *
-			charSize.x;
-		cursorLbl->SetPos(x, 719);
-	}
+	inputLbl->SetCaretPos(inputLbl->GetText().length());
+	inputLbl->SetCaretVisible(cursorOn);
 
 	inputLbl->PrepareRender();
-	cursorLbl->PrepareRender();
 	logLines->PrepareRender();
 }
 
@@ -389,9 +379,6 @@ void ConsoleScene::Render()
 {
 	fader->Render();
 	inputLbl->Render();
-	if (cursorOn) {
-		cursorLbl->Render();
-	}
 	logLines->Render();
 }
 
