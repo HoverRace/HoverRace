@@ -82,24 +82,25 @@ ConsoleScene::ConsoleScene(Display::Display &display, GameDirector &director,
 	lastLogIdx(-1), logsChanged(true), layoutChanged(true),
 	cursorOn(true), cursorTick(0), charSize(0, 0)
 {
-	typedef Display::UiViewModel::Alignment Alignment;
+	using namespace Display;
+	using Alignment = UiViewModel::Alignment;
 
 	const auto &s = display.styles;
 
 	displayConfigChangedConn = display.GetDisplayConfigChangedSignal().
 		connect(std::bind(&ConsoleScene::OnDisplayConfigChanged, this));
 
-	fader.reset(new Display::ScreenFade(s.consoleBg, 1.0));
+	fader.reset(new ScreenFade(s.consoleBg, 1.0));
 	fader->AttachView(display);
 
 	const auto &font = s.consoleFont;
 
-	inputLbl.reset(new Display::ActiveText(COMMAND_PROMPT, font, s.consoleFg));
+	inputLbl.reset(new ActiveText(COMMAND_PROMPT, font, s.consoleFg));
 	inputLbl->SetPos(0, 719);
 	inputLbl->SetAlignment(Alignment::SW);
 	inputLbl->AttachView(display);
 
-	measureLbl.reset(new Display::Label(" ", font, s.consoleFg));
+	measureLbl.reset(new Label(" ", font, s.consoleFg));
 	measureLbl->AttachView(display);
 
 	logClearedConn = console.GetLogClearedSignal().connect(
@@ -382,7 +383,7 @@ void ConsoleScene::Render()
 //{{{ ConsoleScene::LogLines ///////////////////////////////////////////////////
 
 ConsoleScene::LogLines::LogLines(Display::Display &display,
-                                 const Vec2 &charSize) :
+	const Vec2 &charSize) :
 	display(display), charSize(charSize),
 	lines(), pos(0), num(10)
 {
@@ -425,8 +426,7 @@ void ConsoleScene::LogLines::ScrollBottom()
 }
 
 void ConsoleScene::LogLines::Add(const std::string &s,
-                                 const Display::UiFont &font,
-                                 Display::Color color)
+	const Display::UiFont &font, Display::Color color)
 {
 	// Remove the top line if we're full.
 	if (lines.size() == MAX_LINES) {
