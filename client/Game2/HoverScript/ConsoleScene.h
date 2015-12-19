@@ -103,19 +103,19 @@ private:
 	boost::signals2::connection logAddedConn;
 
 	class LogLines;
-	LogLines *logLines;
+	std::unique_ptr<LogLines> logLines;
 	int lastLogIdx;
 	bool logsChanged;
 
 	bool layoutChanged;
 
 	std::unique_ptr<Display::ScreenFade> fader;
-	Display::ActiveText *inputLbl;
+	std::unique_ptr<Display::ActiveText> inputLbl;
 
 	bool cursorOn;
 	Util::OS::timestamp_t cursorTick;
 
-	Display::Label *measureLbl;  ///< Used to measure the size of glyphs.
+	std::unique_ptr<Display::Label> measureLbl;  ///< Used to measure the size of glyphs.
 	Vec2 charSize;
 };
 

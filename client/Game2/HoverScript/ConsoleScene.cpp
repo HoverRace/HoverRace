@@ -94,12 +94,12 @@ ConsoleScene::ConsoleScene(Display::Display &display, GameDirector &director,
 
 	const auto &font = s.consoleFont;
 
-	inputLbl = new Display::ActiveText(COMMAND_PROMPT, font, s.consoleFg);
+	inputLbl.reset(new Display::ActiveText(COMMAND_PROMPT, font, s.consoleFg));
 	inputLbl->SetPos(0, 719);
 	inputLbl->SetAlignment(Alignment::SW);
 	inputLbl->AttachView(display);
 
-	measureLbl = new Display::Label(" ", font, s.consoleFg);
+	measureLbl.reset(new Display::Label(" ", font, s.consoleFg));
 	measureLbl->AttachView(display);
 
 	logClearedConn = console.GetLogClearedSignal().connect(
@@ -107,7 +107,7 @@ ConsoleScene::ConsoleScene(Display::Display &display, GameDirector &director,
 	logAddedConn = console.GetLogAddedSignal().connect(
 		std::bind(&ConsoleScene::OnLogAdded, this, std::placeholders::_1));
 
-	logLines = new LogLines(display, charSize);
+	logLines.reset(new LogLines(display, charSize));
 
 	UpdateCommandLine();
 }
@@ -117,11 +117,6 @@ ConsoleScene::~ConsoleScene()
 	logAddedConn.disconnect();
 	logClearedConn.disconnect();
 	displayConfigChangedConn.disconnect();
-
-	delete logLines;
-
-	delete measureLbl;
-	delete inputLbl;
 }
 
 void ConsoleScene::OnDisplayConfigChanged()
