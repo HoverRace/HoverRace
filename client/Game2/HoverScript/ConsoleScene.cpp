@@ -296,28 +296,33 @@ void ConsoleScene::Layout()
 
 void ConsoleScene::AttachController(Control::InputEventController &controller)
 {
+	conns.reset(new ConnList());
+
 	controller.AddConsoleToggleMaps();
-	consoleToggleConn = controller.actions.sys.consoleToggle->Connect(
-		std::bind(&ConsoleScene::OnConsoleToggle, this));
+	*conns <<
+		controller.actions.sys.consoleToggle->Connect(
+			std::bind(&ConsoleScene::OnConsoleToggle, this));
 
 	controller.AddConsoleMaps();
-	consoleUpConn = controller.actions.ui.consoleUp->Connect(
-		std::bind(&ConsoleScene::OnConsoleUp, this));
-	consoleDownConn = controller.actions.ui.consoleDown->Connect(
-		std::bind(&ConsoleScene::OnConsoleDown, this));
-	consoleTopConn = controller.actions.ui.consoleTop->Connect(
-		std::bind(&ConsoleScene::OnConsoleTop, this));
-	consoleBottomConn = controller.actions.ui.consoleBottom->Connect(
-		std::bind(&ConsoleScene::OnConsoleBottom, this));
-	consolePrevCmdConn = controller.actions.ui.consolePrevCmd->Connect(
-		std::bind(&ConsoleScene::OnConsolePrevCmd, this));
-	consoleNextCmdConn = controller.actions.ui.consoleNextCmd->Connect(
-		std::bind(&ConsoleScene::OnConsoleNextCmd, this));
+	*conns <<
+		controller.actions.ui.consoleUp->Connect(
+			std::bind(&ConsoleScene::OnConsoleUp, this)) <<
+		controller.actions.ui.consoleDown->Connect(
+			std::bind(&ConsoleScene::OnConsoleDown, this)) <<
+		controller.actions.ui.consoleTop->Connect(
+			std::bind(&ConsoleScene::OnConsoleTop, this)) <<
+		controller.actions.ui.consoleBottom->Connect(
+			std::bind(&ConsoleScene::OnConsoleBottom, this)) <<
+		controller.actions.ui.consolePrevCmd->Connect(
+			std::bind(&ConsoleScene::OnConsolePrevCmd, this)) <<
+		controller.actions.ui.consoleNextCmd->Connect(
+			std::bind(&ConsoleScene::OnConsoleNextCmd, this));
 
-	textControlConn = controller.actions.ui.control->Connect(
-		std::bind(&ConsoleScene::OnTextControl, this, std::placeholders::_1));
-	textInputConn = controller.actions.ui.text->Connect(
-		std::bind(&ConsoleScene::OnTextInput, this, std::placeholders::_1));
+	*conns <<
+		controller.actions.ui.control->Connect(
+			std::bind(&ConsoleScene::OnTextControl, this, std::placeholders::_1)) <<
+		controller.actions.ui.text->Connect(
+			std::bind(&ConsoleScene::OnTextInput, this, std::placeholders::_1));
 
 	SDL_StartTextInput();
 }
@@ -326,15 +331,7 @@ void ConsoleScene::DetachController(Control::InputEventController&)
 {
 	SDL_StopTextInput();
 
-	textInputConn.disconnect();
-	textControlConn.disconnect();
-	consoleUpConn.disconnect();
-	consoleDownConn.disconnect();
-	consoleTopConn.disconnect();
-	consoleBottomConn.disconnect();
-	consolePrevCmdConn.disconnect();
-	consoleNextCmdConn.disconnect();
-	consoleToggleConn.disconnect();
+	conns.reset();
 }
 
 void ConsoleScene::Advance(Util::OS::timestamp_t tick)

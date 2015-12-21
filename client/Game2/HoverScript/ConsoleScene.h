@@ -94,15 +94,7 @@ private:
 
 	boost::signals2::scoped_connection displayConfigChangedConn;
 
-	boost::signals2::connection consoleToggleConn;
-	boost::signals2::connection consoleUpConn;
-	boost::signals2::connection consoleDownConn;
-	boost::signals2::connection consoleTopConn;
-	boost::signals2::connection consoleBottomConn;
-	boost::signals2::connection consolePrevCmdConn;
-	boost::signals2::connection consoleNextCmdConn;
-	boost::signals2::connection textInputConn;
-	boost::signals2::connection textControlConn;
+	std::unique_ptr<ConnList> conns;
 
 	boost::signals2::scoped_connection logClearedConn;
 	boost::signals2::scoped_connection logAddedConn;
