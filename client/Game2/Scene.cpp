@@ -49,6 +49,16 @@ Scene::Scene(const std::string &name) :
 {
 }
 
+void Scene::AttachInput(Control::InputEventController &controller)
+{
+	AttachController(controller);
+}
+
+void Scene::DetachInput(Control::InputEventController &controller)
+{
+	DetachController(controller);
+}
+
 /**
  * Switch to another phase.
  * @warning Scenes should not switch to the @c STOPPING phase themselves.

@@ -105,6 +105,25 @@ public:
 	virtual std::ostream &OutputDebugText(std::ostream &oss) const { return oss; }
 
 	/**
+	 * Attach the user input to the scene.
+	 * This is called whenever the scene becomes the foreground scene
+	 * or the controller config needs to be rebuilt.
+	 * @param controller The current controller being used.  It can be assumed
+	 *                   that the controller's action mappings have been
+	 *                   cleared.
+	 */
+	void AttachInput(Control::InputEventController &controller);
+
+	/**
+	 * Detach the user input from the scene.
+	 * @param controller The current controller being used.  It can be assumed
+	 *                   that the controller's action mappings have been
+	 *                   cleared.
+	 */
+	void DetachInput(Control::InputEventController &controller);
+
+protected:
+	/**
 	 * Configure the controller mappings.
 	 * This is called whenever the scene becomes the foreground scene
 	 * or the controller config needs to be rebuilt.
@@ -122,6 +141,7 @@ public:
 	 */
 	virtual void DetachController(Control::InputEventController &controller) = 0;
 
+public:
 	/**
 	 * Called when the scene is actually pushed to the stage.
 	 *

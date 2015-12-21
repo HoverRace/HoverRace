@@ -533,13 +533,13 @@ void ClientApp::SetForegroundScene()
 	// Detach the controller from the previous foreground scene.
 	if (fgScene) {
 		consoleToggleConn.disconnect();
-		fgScene->DetachController(*controller);
+		fgScene->DetachInput(*controller);
 	}
 
 	// Don't display the overlay scene since we're in an unusual state and
 	// probably can't properly deal with overlay interactions.
 	if (showOverlay) {
-		statusOverlayScene->DetachController(*controller);
+		statusOverlayScene->DetachInput(*controller);
 		statusOverlayScene->MoveToBackground();
 		showOverlay = false;
 	}
@@ -574,11 +574,11 @@ void ClientApp::SetForegroundScene(const std::shared_ptr<Scene> &scene)
 		// Detach the controller from the previous foreground scene.
 		if (fgScene) {
 			consoleToggleConn.disconnect();
-			fgScene->DetachController(*controller);
+			fgScene->DetachInput(*controller);
 			fgScene->MoveToBackground();
 		}
 		if (showOverlay && !uiMode) {
-			statusOverlayScene->DetachController(*controller);
+			statusOverlayScene->DetachInput(*controller);
 			statusOverlayScene->MoveToBackground();
 		}
 
@@ -587,10 +587,10 @@ void ClientApp::SetForegroundScene(const std::shared_ptr<Scene> &scene)
 		// Load controller mapping from new foreground scene.
 		controller->ClearActionMap();
 		scene->MoveToForeground();
-		scene->AttachController(*controller);
+		scene->AttachInput(*controller);
 		if (!showOverlay && uiMode) {
 			statusOverlayScene->MoveToForeground();
-			statusOverlayScene->AttachController(*controller);
+			statusOverlayScene->AttachInput(*controller);
 		}
 
 		showOverlay = uiMode;
