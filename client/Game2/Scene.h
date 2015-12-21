@@ -61,6 +61,27 @@ public:
 	};
 
 public:
+	struct ConnList
+	{
+	public:
+		~ConnList()
+		{
+			// Disconnect the connections in reverse order of add.
+			while (!conns.empty()) {
+				conns.pop_back();
+			}
+		}
+
+		ConnList &operator<<(boost::signals2::connection conn)
+		{
+			conns.emplace_back(new boost::signals2::scoped_connection(conn));
+			return *this;
+		}
+	private:
+		std::list<std::unique_ptr<boost::signals2::scoped_connection>> conns;
+	};
+
+public:
 	Scene(const std::string &name = "Unnamed Scene");
 	virtual ~Scene() { }
 
