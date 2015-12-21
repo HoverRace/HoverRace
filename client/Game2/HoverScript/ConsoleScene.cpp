@@ -115,9 +115,6 @@ ConsoleScene::ConsoleScene(Display::Display &display, GameDirector &director,
 
 ConsoleScene::~ConsoleScene()
 {
-	logAddedConn.disconnect();
-	logClearedConn.disconnect();
-	displayConfigChangedConn.disconnect();
 }
 
 void ConsoleScene::OnDisplayConfigChanged()

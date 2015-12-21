@@ -87,7 +87,12 @@ private:
 	GameDirector &director;
 	SysConsole &console;
 
-	boost::signals2::connection displayConfigChangedConn;
+	class LogLines;
+	std::unique_ptr<LogLines> logLines;
+	int lastLogIdx;
+	bool logsChanged;
+
+	boost::signals2::scoped_connection displayConfigChangedConn;
 
 	boost::signals2::connection consoleToggleConn;
 	boost::signals2::connection consoleUpConn;
@@ -99,13 +104,8 @@ private:
 	boost::signals2::connection textInputConn;
 	boost::signals2::connection textControlConn;
 
-	boost::signals2::connection logClearedConn;
-	boost::signals2::connection logAddedConn;
-
-	class LogLines;
-	std::unique_ptr<LogLines> logLines;
-	int lastLogIdx;
-	bool logsChanged;
+	boost::signals2::scoped_connection logClearedConn;
+	boost::signals2::scoped_connection logAddedConn;
 
 	bool layoutChanged;
 
