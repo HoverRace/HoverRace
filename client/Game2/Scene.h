@@ -60,7 +60,7 @@ public:
 		LOWERING,  ///< Lost focus, transitioning to the background.
 	};
 
-public:
+protected:
 	struct ConnList
 	{
 	public:
