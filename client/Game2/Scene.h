@@ -72,9 +72,10 @@ public:
 			}
 		}
 
-		ConnList &operator<<(boost::signals2::connection conn)
+		ConnList &operator<<(boost::signals2::connection &&conn)
 		{
-			conns.emplace_back(new boost::signals2::scoped_connection(conn));
+			conns.emplace_back(new boost::signals2::scoped_connection(
+				std::forward<boost::signals2::connection>(conn)));
 			return *this;
 		}
 	private:
