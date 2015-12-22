@@ -61,6 +61,10 @@ public:
 	};
 
 protected:
+	/**
+	 * Tracks connections as a group.
+	 * Connections added to this group are automatically disconnected when destroyed.
+	 */
 	struct ConnList
 	{
 	public:
