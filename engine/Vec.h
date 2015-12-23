@@ -1,7 +1,7 @@
 
 // Vec.h
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -37,9 +37,9 @@ struct Vec3;
 
 struct Vec2
 {
-	Vec2(double x, double y) : x(x), y(y) { }
+	constexpr Vec2(double x, double y) noexcept : x(x), y(y) { }
 
-	Vec3 Promote(double z=0) const;
+	constexpr Vec3 Promote(double z = 0) const noexcept;
 
 	double x;
 	double y;
@@ -51,60 +51,60 @@ inline std::ostream &operator<<(std::ostream &os, const Vec2 &v)
 	return os;
 }
 
-inline bool operator==(const Vec2 &lhs, const Vec2 &rhs)
+inline constexpr bool operator==(const Vec2 &lhs, const Vec2 &rhs) noexcept
 {
 	return
 		lhs.x == rhs.x &&
 		lhs.y == rhs.y;
 }
 
-inline bool operator!=(const Vec2 &lhs, const Vec2 &rhs)
+inline constexpr bool operator!=(const Vec2 &lhs, const Vec2 &rhs) noexcept
 {
 	return !operator==(lhs, rhs);
 }
 
-inline Vec2 operator+(const Vec2 &lhs, const Vec2 &rhs)
+inline constexpr Vec2 operator+(const Vec2 &lhs, const Vec2 &rhs) noexcept
 {
-	return Vec2(lhs.x + rhs.x, lhs.y + rhs.y);
+	return { lhs.x + rhs.x, lhs.y + rhs.y };
 }
 
-inline Vec2 &operator+=(Vec2 &lhs, const Vec2 &rhs)
+inline Vec2 &operator+=(Vec2 &lhs, const Vec2 &rhs) noexcept
 {
 	lhs.x += rhs.x;
 	lhs.y += rhs.y;
 	return lhs;
 }
 
-inline Vec2 operator-(const Vec2 &lhs, const Vec2 &rhs)
+inline constexpr Vec2 operator-(const Vec2 &lhs, const Vec2 &rhs) noexcept
 {
-	return Vec2(lhs.x - rhs.x, lhs.y - rhs.y);
+	return { lhs.x - rhs.x, lhs.y - rhs.y };
 }
 
-inline Vec2 &operator-=(Vec2 &lhs, const Vec2 &rhs)
+inline Vec2 &operator-=(Vec2 &lhs, const Vec2 &rhs) noexcept
 {
 	lhs.x -= rhs.x;
 	lhs.y -= rhs.y;
 	return lhs;
 }
 
-inline Vec2 operator*(const Vec2 &lhs, double scale)
+inline constexpr Vec2 operator*(const Vec2 &lhs, double scale) noexcept
 {
-	return Vec2(lhs.x * scale, lhs.y * scale);
+	return { lhs.x * scale, lhs.y * scale };
 }
 
-inline Vec2 &operator*=(Vec2 &lhs, double scale)
+inline Vec2 &operator*=(Vec2 &lhs, double scale) noexcept
 {
 	lhs.x *= scale;
 	lhs.y *= scale;
 	return lhs;
 }
 
-inline Vec2 operator/(const Vec2 &lhs, double scale)
+inline constexpr Vec2 operator/(const Vec2 &lhs, double scale) noexcept
 {
-	return Vec2(lhs.x / scale, lhs.y / scale);
+	return { lhs.x / scale, lhs.y / scale };
 }
 
-inline Vec2 &operator/=(Vec2 &lhs, double scale)
+inline Vec2 &operator/=(Vec2 &lhs, double scale) noexcept
 {
 	lhs.x /= scale;
 	lhs.y /= scale;
@@ -113,7 +113,7 @@ inline Vec2 &operator/=(Vec2 &lhs, double scale)
 
 struct Vec3
 {
-	Vec3(double x, double y, double z) : x(x), y(y), z(z) { }
+	constexpr Vec3(double x, double y, double z) noexcept : x(x), y(y), z(z) { }
 
 	double x;
 	double y;
@@ -126,7 +126,7 @@ inline std::ostream &operator<<(std::ostream &os, const Vec3 &v)
 	return os;
 }
 
-inline bool operator==(const Vec3 &lhs, const Vec3 &rhs)
+inline constexpr bool operator==(const Vec3 &lhs, const Vec3 &rhs) noexcept
 {
 	return
 		lhs.x == rhs.x &&
@@ -134,17 +134,17 @@ inline bool operator==(const Vec3 &lhs, const Vec3 &rhs)
 		lhs.z == rhs.z;
 }
 
-inline bool operator!=(const Vec3 &lhs, const Vec3 &rhs)
+inline constexpr bool operator!=(const Vec3 &lhs, const Vec3 &rhs) noexcept
 {
 	return !operator==(lhs, rhs);
 }
 
-inline Vec3 operator+(const Vec3 &lhs, const Vec3 &rhs)
+inline constexpr Vec3 operator+(const Vec3 &lhs, const Vec3 &rhs) noexcept
 {
-	return Vec3(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z);
+	return { lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z };
 }
 
-inline Vec3 &operator+=(Vec3 &lhs, const Vec3 &rhs)
+inline Vec3 &operator+=(Vec3 &lhs, const Vec3 &rhs) noexcept
 {
 	lhs.x += rhs.x;
 	lhs.y += rhs.y;
@@ -152,24 +152,24 @@ inline Vec3 &operator+=(Vec3 &lhs, const Vec3 &rhs)
 	return lhs;
 }
 
-inline Vec3 operator+(const Vec3 &lhs, const Vec2 &rhs)
+inline constexpr Vec3 operator+(const Vec3 &lhs, const Vec2 &rhs) noexcept
 {
-	return Vec3(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z);
+	return { lhs.x + rhs.x, lhs.y + rhs.y, lhs.z };
 }
 
-inline Vec3 &operator+=(Vec3 &lhs, const Vec2 &rhs)
+inline Vec3 &operator+=(Vec3 &lhs, const Vec2 &rhs) noexcept
 {
 	lhs.x += rhs.x;
 	lhs.y += rhs.y;
 	return lhs;
 }
 
-inline Vec3 operator-(const Vec3 &lhs, const Vec3 &rhs)
+inline constexpr Vec3 operator-(const Vec3 &lhs, const Vec3 &rhs) noexcept
 {
 	return Vec3(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z);
 }
 
-inline Vec3 &operator-=(Vec3 &lhs, const Vec3 &rhs)
+inline Vec3 &operator-=(Vec3 &lhs, const Vec3 &rhs) noexcept
 {
 	lhs.x -= rhs.x;
 	lhs.y -= rhs.y;
@@ -177,12 +177,12 @@ inline Vec3 &operator-=(Vec3 &lhs, const Vec3 &rhs)
 	return lhs;
 }
 
-inline Vec3 operator*(const Vec3 &lhs, double scale)
+inline constexpr Vec3 operator*(const Vec3 &lhs, double scale) noexcept
 {
-	return Vec3(lhs.x * scale, lhs.y * scale, lhs.z * scale);
+	return { lhs.x * scale, lhs.y * scale, lhs.z * scale };
 }
 
-inline Vec3 &operator*=(Vec3 &lhs, double scale)
+inline Vec3 &operator*=(Vec3 &lhs, double scale) noexcept
 {
 	lhs.x *= scale;
 	lhs.y *= scale;
@@ -190,12 +190,12 @@ inline Vec3 &operator*=(Vec3 &lhs, double scale)
 	return lhs;
 }
 
-inline Vec3 operator/(const Vec3 &lhs, double scale)
+inline constexpr Vec3 operator/(const Vec3 &lhs, double scale) noexcept
 {
-	return Vec3(lhs.x / scale, lhs.y / scale, lhs.z / scale);
+	return { lhs.x / scale, lhs.y / scale, lhs.z / scale };
 }
 
-inline Vec3 &operator/=(Vec3 &lhs, double scale)
+inline Vec3 &operator/=(Vec3 &lhs, double scale) noexcept
 {
 	lhs.x /= scale;
 	lhs.y /= scale;
@@ -203,9 +203,9 @@ inline Vec3 &operator/=(Vec3 &lhs, double scale)
 	return lhs;
 }
 
-inline Vec3 Vec2::Promote(double z) const
+inline constexpr Vec3 Vec2::Promote(double z) const noexcept
 {
-	return Vec3(x, y, z);
+	return { x, y, z };
 }
 
 }  // namespace HoverRace
