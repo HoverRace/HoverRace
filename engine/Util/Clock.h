@@ -63,8 +63,8 @@ public:
 	/**
 	 * Retrieve the time of the last call to Advance().
 	 */
-	const Duration &GetTime() const { return lastRead; }
-	void SetTime(const Duration &duration=Duration());
+	const Duration &GetTime() const noexcept { return lastRead; }
+	void SetTime(const Duration &duration = {}) noexcept;
 
 	Duration Advance();
 
@@ -74,7 +74,7 @@ public:
 	/**
 	 * Remove all alarms.
 	 */
-	void ClearAlarms()
+	void ClearAlarms() noexcept
 	{
 		alarms.clear();
 	}

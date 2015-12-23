@@ -1,7 +1,7 @@
 
 // Clock.cpp
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ Clock::Clock(const Duration &init) :
 {
 }
 
-void Clock::SetTime(const Duration &duration)
+void Clock::SetTime(const Duration &duration) noexcept
 {
 	lastRead = duration;
 	start = Duration(OS::Time());
@@ -84,7 +84,7 @@ Duration Clock::Advance()
 		}
 	}
 
-	return Duration(lastRead, prev);
+	return { lastRead, prev };
 }
 
 }  // namespace Util

@@ -1,7 +1,7 @@
 
 // Duration.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -58,7 +58,8 @@ public:
 	 * @param later The later of the two timestamps.
 	 * @param earlier The earlier of the two timestamps.
 	 */
-	Duration(OS::timestamp_t later, OS::timestamp_t earlier) :
+	constexpr Duration(OS::timestamp_t later, OS::timestamp_t earlier)
+		noexcept :
 		duration(OS::TimeDiff(later, earlier)) { }
 
 	/**
@@ -66,14 +67,15 @@ public:
 	 * @param later The later of the two durations.
 	 * @param earlier The earlier of the two durations.
 	 */
-	Duration(const Duration &later, const Duration &earlier) :
+	constexpr Duration(const Duration &later, const Duration &earlier)
+		noexcept :
 		duration(later.duration - earlier.duration) { }
 
 	/**
 	 * Constructor.
 	 * @param duration The time in milliseconds.
 	 */
-	Duration(dur_t duration=0) : duration(duration) { }
+	constexpr Duration(dur_t duration = 0) noexcept : duration(duration) { }
 
 	Duration(const std::string &s) : Duration(ParseDuration(s)) { }
 
@@ -82,22 +84,22 @@ public:
 	template<class T>
 	Duration(const T *s);
 
-	Duration(const Duration&) = default;
-	Duration(Duration&&) = default;
+	constexpr Duration(const Duration&) noexcept = default;
+	constexpr Duration(Duration&&) noexcept = default;
 
-	Duration &operator=(const Duration&) = default;
-	Duration &operator=(Duration&&) = default;
+	Duration &operator=(const Duration&) noexcept = default;
+	Duration &operator=(Duration&&) noexcept = default;
 
-	Duration operator-() const
+	constexpr Duration operator-() const noexcept
 	{
-		return Duration(-duration);
+		return { -duration };
 	}
 
 	/**
 	 * Convert the duration to milliseconds.
 	 * @return This duration.
 	 */
-	dur_t ToMs() const { return duration; }
+	constexpr dur_t ToMs() const noexcept { return duration; }
 
 private:
 	static dur_t ParseDuration(const std::string &s);
@@ -111,12 +113,12 @@ public:
 private:
 	dur_t duration;
 
-	friend bool operator==(const Duration &a, const Duration &b);
-	friend bool operator==(const Duration &duration, Duration::dur_t ts);
-	friend bool operator==(Duration::dur_t ts, const Duration &duration);
-	friend bool operator<(const Duration &a, const Duration &b);
-	friend bool operator<(const Duration &duration, Duration::dur_t ts);
-	friend bool operator<(Duration::dur_t ts, const Duration &duration);
+	friend constexpr bool operator==(const Duration &a, const Duration &b) noexcept;
+	friend constexpr bool operator==(const Duration &duration, Duration::dur_t ts) noexcept;
+	friend constexpr bool operator==(Duration::dur_t ts, const Duration &duration) noexcept;
+	friend constexpr bool operator<(const Duration &a, const Duration &b) noexcept;
+	friend constexpr bool operator<(const Duration &duration, Duration::dur_t ts) noexcept;
+	friend constexpr bool operator<(Duration::dur_t ts, const Duration &duration) noexcept;
 };
 
 template<>
@@ -127,32 +129,32 @@ inline std::ostream &operator<<(std::ostream &os, const Duration &dur)
 	return dur.FmtShort(os);
 }
 
-inline bool operator==(const Duration &a, const Duration &b)
+inline constexpr bool operator==(const Duration &a, const Duration &b) noexcept
 {
 	return a.duration == b.duration;
 }
 
-inline bool operator==(const Duration &a, Duration::dur_t b)
+inline constexpr bool operator==(const Duration &a, Duration::dur_t b) noexcept
 {
 	return a.duration == b;
 }
 
-inline bool operator==(Duration::dur_t a, const Duration &b)
+inline constexpr bool operator==(Duration::dur_t a, const Duration &b) noexcept
 {
 	return a == b.duration;
 }
 
-inline bool operator<(const Duration &a, const Duration &b)
+inline constexpr bool operator<(const Duration &a, const Duration &b) noexcept
 {
 	return a.duration < b.duration;
 }
 
-inline bool operator<(const Duration &a, Duration::dur_t b)
+inline constexpr bool operator<(const Duration &a, Duration::dur_t b) noexcept
 {
 	return a.duration < b;
 }
 
-inline bool operator<(Duration::dur_t a, const Duration &b)
+inline constexpr bool operator<(Duration::dur_t a, const Duration &b) noexcept
 {
 	return a < b.duration;
 }

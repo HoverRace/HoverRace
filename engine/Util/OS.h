@@ -79,7 +79,8 @@ timestamp_t Time();
  * @param earlierTs The earlier timestamp.
  * @return @p laterTs - @p earlierTs
  */
-inline timestamp_t TimeDiff(timestamp_t laterTs, timestamp_t earlierTs)
+constexpr inline timestamp_t TimeDiff(timestamp_t laterTs,
+	timestamp_t earlierTs) noexcept
 {
 	// We assume that signed 64-bit values won't have to deal with
 	// wraparound.
