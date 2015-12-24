@@ -30,6 +30,10 @@
 #	pragma warning(disable: 4702)  // unreachable code
 #	pragma warning(disable: 4714)  // function marked as __forceinline not inlined
 
+	// Bugged warning introduced in VS2015 Update 1.
+	// http://stackoverflow.com/a/34027257
+#	pragma warning(disable: 4592)  // symbol will be dynamically initialized (implementation limitation)
+
 #	include <assert.h>
 #	define ASSERT(e) assert(e)
 #	define TRACE __noop
