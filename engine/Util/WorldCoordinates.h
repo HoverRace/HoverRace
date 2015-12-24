@@ -46,18 +46,18 @@ namespace HoverRace {
 class MR_DllDeclare MR_2DCoordinate
 {
 public:
-	MR_2DCoordinate() { }
-	MR_2DCoordinate(MR_Int32 pX, MR_Int32 pY) : mX(pX), mY(pY) { }
+	constexpr MR_2DCoordinate() noexcept : mX(0), mY(0) { }
+	constexpr MR_2DCoordinate(MR_Int32 pX, MR_Int32 pY) noexcept : mX(pX), mY(pY) { }
 
 	void Serialize(HoverRace::Parcel::ObjStream &pArchive);
 
 	// Comparison operators
-	bool operator==(const MR_2DCoordinate &pCoordinate) const
+	constexpr bool operator==(const MR_2DCoordinate &pCoordinate) const noexcept
 	{
 		return (mX == pCoordinate.mX) && (mY == pCoordinate.mY);
 	}
 
-	bool operator!=(const MR_2DCoordinate &pCoordinate) const
+	constexpr bool operator!=(const MR_2DCoordinate &pCoordinate) const noexcept
 	{
 		return (mX != pCoordinate.mX) || (mY != pCoordinate.mY);
 	}
@@ -77,8 +77,8 @@ class MR_DllDeclare MR_3DCoordinate : public MR_2DCoordinate
 	using SUPER = MR_2DCoordinate;
 
 public:
-	MR_3DCoordinate() { }
-	MR_3DCoordinate(MR_Int32 pX, MR_Int32 pY, MR_Int32 pZ) :
+	constexpr MR_3DCoordinate() noexcept : SUPER(0, 0), mZ(0) { }
+	constexpr MR_3DCoordinate(MR_Int32 pX, MR_Int32 pY, MR_Int32 pZ) noexcept :
 		SUPER(pX, pY), mZ(pZ) { }
 
 	void Serialize(HoverRace::Parcel::ObjStream &pArchive);
