@@ -1,7 +1,7 @@
 
 // View.h
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -63,14 +63,14 @@ public:
 	 * The availability of this information varies from view to view.
 	 * @return The screen position, or (0, 0) if unavailable..
 	 */
-	virtual Vec2 GetScreenPos() const { return Vec2(0, 0); }
+	virtual Vec2 GetScreenPos() const { return { 0, 0 }; }
 
 	/**
 	 * Retrieve the screen-space size, if available.
 	 * The availability of this information varies from view to view.
 	 * @return The screen size, or (0, 0) if unavailable.
 	 */
-	virtual Vec2 GetScreenSize() const { return Vec2(0, 0); }
+	virtual Vec2 GetScreenSize() const { return { 0, 0 }; }
 
 	virtual Vec3 Measure() = 0;
 	virtual void PrepareRender() = 0;
