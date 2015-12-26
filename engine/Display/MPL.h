@@ -1,7 +1,7 @@
 
 // MPL.h
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -40,19 +40,19 @@ namespace MPL {
 template<class C>
 struct HasSetSize
 {
-	private:
-		template<class T>
-		static auto check(T*) ->
-			decltype(std::declval<T>().SetSize(std::declval<Vec2>()),
-			std::true_type());
+private:
+	template<class T>
+	static auto check(T*) ->
+		decltype(std::declval<T>().SetSize(std::declval<Vec2>()),
+		std::true_type());
 
-		template<class>
-		static std::false_type check(...);
+	template<class>
+	static std::false_type check(...);
 
-		typedef decltype(check<C>(nullptr)) type;
+	using type = decltype(check<C>(nullptr));
 
-	public:
-		static const bool value = type::value;
+public:
+	static const bool value = type::value;
 };
 
 template<class T>
