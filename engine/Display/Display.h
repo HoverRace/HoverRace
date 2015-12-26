@@ -178,7 +178,7 @@ public:
 	 * Retrieve the current UI origin coordinates.
 	 * @return The coordinates, in UI-space.
 	 */
-	const Vec2 &GetUiOrigin() const { return uiOrigin; }
+	const Vec2 &GetUiOrigin() const noexcept { return uiOrigin; }
 
 	/**
 	 * Explicitly set the UI origin coordinates.
@@ -187,7 +187,7 @@ public:
 	 * coordinates (0.0, 0.0) are.
 	 * @param vec The coordinates (in UI-space).
 	 */
-	void SetUiOrigin(const Vec2 &vec) { uiOrigin = vec; }
+	void SetUiOrigin(const Vec2 &vec) noexcept { uiOrigin = vec; }
 
 	/**
 	 * Shift the current UI origin coordinates by an offset.
@@ -195,7 +195,7 @@ public:
 	 * @return The old offset, so it can be restored later.
 	 * @see #SetUiOrigin(const Vec2&)
 	 */
-	Vec2 AddUiOrigin(const Vec2 &vec)
+	Vec2 AddUiOrigin(const Vec2 &vec) noexcept
 	{
 		Vec2 oldOrigin = uiOrigin;
 		uiOrigin += vec;
@@ -208,7 +208,7 @@ public:
 	 * the widget layout flags when determining the adjusted position.
 	 * @param flags The new flags.
 	 */
-	void SetUiLayoutFlags(uiLayoutFlags_t flags) { uiLayoutFlags = flags; }
+	void SetUiLayoutFlags(uiLayoutFlags_t flags) noexcept { uiLayoutFlags = flags; }
 
 	/**
 	 * Combine the current UI layout flags with new flags.
@@ -216,17 +216,18 @@ public:
 	 * @return The old flags.
 	 * @see #SetUiLayoutFlags
 	 */
-	uiLayoutFlags_t AddUiLayoutFlags(uiLayoutFlags_t flags)
+	uiLayoutFlags_t AddUiLayoutFlags(uiLayoutFlags_t flags) noexcept
 	{
 		auto oldFlags = uiLayoutFlags;
 		uiLayoutFlags |= flags;
 		return oldFlags;
 	}
 
-	double GetUiScale() const { return uiScale; }
-	const Vec2 &GetUiOffset() const { return uiOffset; }
+	double GetUiScale() const noexcept { return uiScale; }
+	const Vec2 &GetUiOffset() const noexcept { return uiOffset; }
 
-	Vec2 LayoutUiPosition(const Vec2 &relPos, uiLayoutFlags_t layoutFlags=0)
+	Vec2 LayoutUiPosition(const Vec2 &relPos, uiLayoutFlags_t layoutFlags = 0)
+		noexcept
 	{
 		Vec2 adjustedPos = relPos;
 		adjustedPos += GetUiOrigin();
@@ -245,7 +246,7 @@ public:
 	 *
 	 * @return The dimensions.
 	 */
-	const Vec2 &GetUiScreenSize() const { return uiScreenSize; }
+	const Vec2 &GetUiScreenSize() const noexcept { return uiScreenSize; }
 
 private:
 	Vec2 uiOrigin;
