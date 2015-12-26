@@ -61,15 +61,15 @@ struct MR_DllDeclare UiFont
 		this->style = style;
 	}
 
-	void Set(double size = 20.0, int style = 0)
+	void Set(double size = 20.0, int style = 0) noexcept
 	{
 		this->name.clear();
 		this->size = size;
 		this->style = style;
 	}
 
-	bool isBold() const { return !!(style & BOLD); }
-	bool isItalic() const { return !!(style & ITALIC); }
+	bool isBold() const noexcept { return !!(style & BOLD); }
+	bool isItalic() const noexcept { return !!(style & ITALIC); }
 
 	enum Style {
 		BOLD = 0x01,

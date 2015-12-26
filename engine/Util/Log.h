@@ -72,7 +72,7 @@ enum class Level
 
 struct Entry
 {
-	Entry(const Level level, const char *message) :
+	constexpr Entry(const Level level, const char *message) noexcept :
 		level(level), message(message) { }
 	Entry &operator=(const Entry&) = delete;
 

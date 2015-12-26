@@ -1,7 +1,7 @@
 
 // Color.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -41,13 +41,16 @@ namespace Display {
 
 union MR_DllDeclare Color
 {
-	Color() : argb(0) { }
-	Color(MR_UInt32 argb) : argb(argb) { }
-	Color(MR_UInt8 a, MR_UInt8 r, MR_UInt8 g, MR_UInt8 b) :
-		argb(((MR_UInt32)a << 24) + ((MR_UInt32)r << 16) + ((MR_UInt32)g << 8) + (MR_UInt32)b)
+	constexpr Color() noexcept : argb(0) { }
+	constexpr Color(MR_UInt32 argb) noexcept : argb(argb) { }
+	constexpr Color(MR_UInt8 a, MR_UInt8 r, MR_UInt8 g, MR_UInt8 b) noexcept :
+		argb(((MR_UInt32)a << 24) +
+			((MR_UInt32)r << 16) +
+			((MR_UInt32)g << 8) +
+			(MR_UInt32)b)
 		{ }
 
-	Color &operator=(MR_UInt32 argb)
+	Color &operator=(MR_UInt32 argb) noexcept
 	{
 		this->argb = argb;
 		return *this;
@@ -63,12 +66,12 @@ union MR_DllDeclare Color
 extern MR_DllDeclare const Color COLOR_WHITE;
 extern MR_DllDeclare const Color COLOR_BLACK;
 
-MR_DllDeclare inline bool operator==(const Color &a, const Color &b)
+MR_DllDeclare inline constexpr bool operator==(const Color &a, const Color &b) noexcept
 {
 	return a.argb == b.argb;
 }
 
-MR_DllDeclare inline bool operator!=(const Color &a, const Color &b)
+MR_DllDeclare inline constexpr bool operator!=(const Color &a, const Color &b) noexcept
 {
 	return !operator==(a, b);
 }
