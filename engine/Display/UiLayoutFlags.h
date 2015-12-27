@@ -1,7 +1,7 @@
 
 // UiViewModel.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -43,12 +43,14 @@ namespace Display {
  * @see UiViewModel
  */
 namespace UiLayoutFlags {
-	enum {
-		UNSCALED = 0x01,  ///< Don't scale the component to the UI viewport.
-		FLOATING = 0x02,  ///< Use absolute (screen-space) coordinates.
-	};
+
+enum {
+	UNSCALED = 0x01,  ///< Don't scale the component to the UI viewport.
+	FLOATING = 0x02,  ///< Use absolute (screen-space) coordinates.
+};
+
 }
-typedef MR_UInt32 uiLayoutFlags_t;
+using uiLayoutFlags_t = MR_UInt32;
 
 }  // namespace Display
 }  // namespace HoverRace
