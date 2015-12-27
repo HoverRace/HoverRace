@@ -211,7 +211,7 @@ msgstr ""
 
 #: client/Game2/MainMenuScene.cpp
 msgid "Credits"
-msgstr ""
+msgstr "Editscray"
 
 #: client/Game2/Observer.cpp
 #, c-format, boost-format
@@ -596,7 +596,7 @@ msgstr ""
 
 #: client/Game2/MainMenuScene.cpp
 msgid "Multiplayer"
-msgstr ""
+msgstr "Ultiplayermay"
 
 #: engine/Control/ControllerStrings.cpp
 #: engine/Control/ControllerStrings.cpp
@@ -769,9 +769,8 @@ msgid "Power"
 msgstr ""
 
 #: client/Game2/MainMenuScene.cpp
-#, fuzzy
 msgid "Practice"
-msgstr "Actice&pray"
+msgstr "Acticepray"
 
 #: engine/Control/Controller.cpp
 msgid "Prev Cmd"
@@ -901,9 +900,8 @@ msgstr "Electsay ouryay aftcray ithway ethey arrowyay eyskay"
 
 #: client/Game2/MainMenuScene.cpp
 #: client/Game2/SettingsMenuScene.cpp
-#, fuzzy
 msgid "Settings"
-msgstr "Etting&say"
+msgstr "Ettingsay"
 
 #: client/Game2/SettingsScene.cpp
 #: client/Game2/SettingsScene.cpp
@@ -919,7 +917,7 @@ msgstr ""
 #: client/Game2/MainMenuScene.cpp
 #: client/Game2/MainMenuScene.cpp
 msgid "Silent Mode"
-msgstr ""
+msgstr "Ilentsay Odemay"
 
 #: client/Game2/AudioSettingsScene.cpp
 msgid "Sound Effects"
