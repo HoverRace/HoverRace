@@ -48,20 +48,20 @@ public:
 	enum dir_t { NEUTRAL, UP, DOWN, LEFT, RIGHT, NEXT, PREV };
 
 public:
-	Nav(dir_t dir = NEUTRAL) : dir(dir) { }
-	Nav(const Nav&) = default;
-	Nav(Nav&&) = default;
+	constexpr Nav(dir_t dir = NEUTRAL) noexcept : dir(dir) { }
+	constexpr Nav(const Nav&) noexcept = default;
+	constexpr Nav(Nav&&) noexcept = default;
 
-	Nav &operator=(const Nav&) = default;
-	Nav &operator=(Nav&&) = default;
+	Nav &operator=(const Nav&) noexcept = default;
+	Nav &operator=(Nav&&) noexcept = default;
 
 public:
 	/**
 	 * Converts this direction into one of the cardinal directions.
 	 * @return The direction.
 	 */
-	dir_t AsDigital() const { return dir; }
-	
+	constexpr dir_t AsDigital() const noexcept { return dir; }
+
 private:
 	dir_t dir;
 };
