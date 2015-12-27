@@ -49,7 +49,7 @@ struct MR_DllDeclare UiFont
 		name(), size(size), style(style) { }
 
 	UiFont(const UiFont &o) = default;
-	UiFont(UiFont &&o) = default;
+	UiFont(UiFont &&o) noexcept = default;
 
 	UiFont &operator=(const UiFont &o) = default;
 	UiFont &operator=(UiFont &&o) = default;
