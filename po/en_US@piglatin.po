@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: hoverrace 2.0\n"
 "Report-Msgid-Bugs-To: https://github.com/HoverRace/HoverRace\n"
 "POT-Creation-Date: 2015-10-18 17:41-0400\n"
-"PO-Revision-Date: 2009-03-22 02:37-0500\n"
+"PO-Revision-Date: 2015-12-28 18:06-0400\n"
 "Last-Translator: Michael Imamura <zoogie@lugatgt.org>\n"
 "Language-Team: English (Pig Latin)\n"
 "Language: en_US@piglatin\n"
@@ -468,12 +468,13 @@ msgstr ""
 
 #: client/Game2/LocaleSettingsScene.cpp
 msgid "Language"
-msgstr ""
+msgstr "Anguagelay"
 
 #: client/Game2/LocaleSettingsScene.cpp
 #: client/Game2/SettingsMenuScene.cpp
+#, fuzzy
 msgid "Language and Units"
-msgstr ""
+msgstr "Anguagelay and Nitsuay"
 
 #: client/Game2/Observer.cpp
 #, c-format, boost-format
@@ -604,9 +605,8 @@ msgid "Mute"
 msgstr ""
 
 #: client/Game2/SettingsMenuScene.cpp
-#, fuzzy
 msgid "Network"
-msgstr "Etwork&nay"
+msgstr "Etworknay"
 
 #: engine/Control/Controller.cpp
 msgid "Next"
@@ -796,21 +796,21 @@ msgstr ""
 
 #: client/Game2/SettingsMenuScene.cpp
 msgid "Profile"
-msgstr ""
+msgstr "Ofilepray"
 
 #: client/Game2/MainMenuScene.cpp
 msgid "Quit"
-msgstr ""
+msgstr "Itquay"
 
 #: client/Game2/PauseMenuScene.cpp
 #: client/Game2/PauseMenuScene.cpp
 msgid "Quit to Desktop"
-msgstr ""
+msgstr "Itquay otay Esktopday"
 
 #: client/Game2/PauseMenuScene.cpp
 #: client/Game2/PauseMenuScene.cpp
 msgid "Quit to Main Menu"
-msgstr ""
+msgstr "Itquay otay Ainmay Enumay"
 
 #: client/Game2/Observer.cpp
 #: client/Game2/Observer.cpp
@@ -819,7 +819,7 @@ msgstr ""
 
 #: client/Game2/TrackSelectScene.cpp
 msgid "Ready"
-msgstr ""
+msgstr "Eadyray"
 
 #: engine/Control/Controller.cpp
 msgid "Reset Camera"
@@ -869,7 +869,7 @@ msgstr ""
 #: client/Game2/SettingsScene.cpp
 #, fuzzy
 msgid "Save Settings"
-msgstr "Etting&say"
+msgstr "Avesay Ettings"
 
 #: engine/Control/ControllerStrings.cpp
 msgid "Scroll Lock"
@@ -1160,9 +1160,8 @@ msgid "Video"
 msgstr "Ideovay"
 
 #: engine/Control/ControllerStrings.cpp
-#, fuzzy
 msgid "Volume Down"
-msgstr "Olumevay"
+msgstr "Olumevay Ownday"
 
 #: engine/Control/ControllerStrings.cpp
 #, fuzzy
