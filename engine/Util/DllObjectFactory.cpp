@@ -55,12 +55,12 @@ ObjFac1::ObjFac1 &GetDll()
 
 }  // namespace
 
-void DllObjectFactory::Init()
+void DllObjectFactory::Init() noexcept
 {
 	// Nothing to do; will be lazily-initialized.
 }
 
-void DllObjectFactory::Clean()
+void DllObjectFactory::Clean() noexcept
 {
 	dll.reset();
 }

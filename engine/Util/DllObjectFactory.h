@@ -58,7 +58,7 @@ struct ObjectFromFactoryId
 
 	void Serialize(Parcel::ObjStream &pArchive);
 
-	bool operator==(const ObjectFromFactoryId &pId) const
+	constexpr bool operator==(const ObjectFromFactoryId &pId) const noexcept
 	{
 		return
 			mDllId == pId.mDllId &&
@@ -71,10 +71,10 @@ class ObjectFromFactory;
 namespace DllObjectFactory {
 
 /// Must be called at the beginning of the program.
-MR_DllDeclare void Init();
+MR_DllDeclare void Init() noexcept;
 
 /// Must be called at the end of the program.
-MR_DllDeclare void Clean();
+MR_DllDeclare void Clean() noexcept;
 
 /// Fast Object Creation function
 MR_DllDeclare std::shared_ptr<ObjectFromFactory> CreateObject(
@@ -89,10 +89,10 @@ private:
 	ObjectFromFactoryId mId;
 
 public:
-	ObjectFromFactory(const ObjectFromFactoryId &pId) : mId(pId) { }
+	ObjectFromFactory(const ObjectFromFactoryId &pId) noexcept : mId(pId) { }
 	virtual ~ObjectFromFactory() { }
 
-	const ObjectFromFactoryId &GetTypeId() const { return mId; }
+	const ObjectFromFactoryId &GetTypeId() const noexcept { return mId; }
 
 private:
 	static void ThrowUnexpected(const ObjectFromFactoryId &oid);
