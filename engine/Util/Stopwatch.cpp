@@ -1,7 +1,7 @@
 
 // Stopwatch.cpp
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -28,14 +28,14 @@ namespace Util {
 
 namespace {
 
-	std::shared_ptr<Clock> &CheckedClock(std::shared_ptr<Clock> &clock)
-	{
-		if (!clock) {
-			Log::Warn("Stopwatch created with null clock (using default)");
-			clock = std::make_shared<Clock>();
-		}
-		return clock;
+std::shared_ptr<Clock> &CheckedClock(std::shared_ptr<Clock> &clock)
+{
+	if (!clock) {
+		Log::Warn("Stopwatch created with null clock (using default)");
+		clock = std::make_shared<Clock>();
 	}
+	return clock;
+}
 
 }
 

@@ -1,7 +1,7 @@
 
 // Stopwatch.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -44,39 +44,39 @@ namespace Util {
  */
 class MR_DllDeclare Stopwatch
 {
-	public:
-		struct Lap
-		{
-			Lap(const std::string &name, const Duration &elapsed) :
-				name(name), elapsed(elapsed) { }
-			Lap(const Lap &o) = default;
-			Lap(Lap &&o) = default;
+public:
+	struct Lap
+	{
+		Lap(const std::string &name, const Duration &elapsed) :
+			name(name), elapsed(elapsed) { }
+		Lap(const Lap &o) = default;
+		Lap(Lap &&o) = default;
 
-			Lap &operator=(const Lap &o) = default;
-			Lap &operator=(Lap &&lap) = default;
+		Lap &operator=(const Lap &o) = default;
+		Lap &operator=(Lap &&lap) = default;
 
-			std::string name;
-			Duration elapsed;
-		};
+		std::string name;
+		Duration elapsed;
+	};
 
-	public:
-		Stopwatch(std::shared_ptr<Clock> clock);
-		Stopwatch(std::shared_ptr<Clock> clock, const Duration &start);
+public:
+	Stopwatch(std::shared_ptr<Clock> clock);
+	Stopwatch(std::shared_ptr<Clock> clock, const Duration &start);
 
-	public:
-		template<typename Fn>
-		void ForEachLap(Fn fn)
-		{
-			std::for_each(laps.cbegin(), laps.cend(), fn);
-		}
+public:
+	template<typename Fn>
+	void ForEachLap(Fn fn)
+	{
+		std::for_each(laps.cbegin(), laps.cend(), fn);
+	}
 
-	public:
-		Duration NextLap(const std::string &name);
+public:
+	Duration NextLap(const std::string &name);
 
-	private:
-		std::shared_ptr<Clock> clock;
-		Duration lastLap;
-		std::vector<Lap> laps;
+private:
+	std::shared_ptr<Clock> clock;
+	Duration lastLap;
+	std::vector<Lap> laps;
 };
 
 }  // namespace Util
