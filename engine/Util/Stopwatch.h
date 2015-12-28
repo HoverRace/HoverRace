@@ -50,7 +50,7 @@ public:
 		Lap(const std::string &name, const Duration &elapsed) :
 			name(name), elapsed(elapsed) { }
 		Lap(const Lap &o) = default;
-		Lap(Lap &&o) = default;
+		Lap(Lap &&o) noexcept = default;
 
 		Lap &operator=(const Lap &o) = default;
 		Lap &operator=(Lap &&lap) = default;
