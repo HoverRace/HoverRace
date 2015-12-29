@@ -23,7 +23,6 @@
 #include "../../engine/Display/Button.h"
 #include "../../engine/Display/Container.h"
 #include "../../engine/Display/Display.h"
-#include "../../engine/VideoServices/FontSpec.h"
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/Log.h"
 

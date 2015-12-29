@@ -25,7 +25,6 @@
 #include "../../engine/Display/Display.h"
 #include "../../engine/Display/Label.h"
 #include "../../engine/Display/ScreenFade.h"
-#include "../../engine/VideoServices/FontSpec.h"
 #include "../../engine/Util/Config.h"
 
 #include "MessageScene.h"

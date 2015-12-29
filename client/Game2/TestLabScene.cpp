@@ -43,7 +43,6 @@
 #include "../../engine/MainCharacter/MainCharacter.h"
 #include "../../engine/Player/DemoProfile.h"
 #include "../../engine/Player/LocalPlayer.h"
-#include "../../engine/VideoServices/FontSpec.h"
 #include "../../engine/VideoServices/VideoBuffer.h"
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/Log.h"
