@@ -20,7 +20,6 @@
 //
 
 #include "ObstacleCollisionReport.h"
-#include "../Util/FastArray.h"
 
 using std::min;
 using std::max;
