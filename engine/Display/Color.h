@@ -63,8 +63,8 @@ union MR_DllDeclare Color
 	} bits;
 };
 
-extern MR_DllDeclare const Color COLOR_WHITE;
-extern MR_DllDeclare const Color COLOR_BLACK;
+constexpr Color COLOR_WHITE{ 0xff, 0xff, 0xff, 0xff };
+constexpr Color COLOR_BLACK{ 0xff, 0x00, 0x00, 0x00 };
 
 MR_DllDeclare inline constexpr bool operator==(const Color &a, const Color &b) noexcept
 {
