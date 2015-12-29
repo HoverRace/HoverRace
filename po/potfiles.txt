@@ -78,7 +78,6 @@ engine/Display/Button.cpp
 engine/Display/Checkbox.cpp
 engine/Display/Chronometer.cpp
 engine/Display/ClickRegion.cpp
-engine/Display/Color.cpp
 engine/Display/Container.cpp
 engine/Display/Counter.cpp
 engine/Display/Display.cpp
