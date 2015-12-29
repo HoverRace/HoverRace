@@ -44,9 +44,8 @@ namespace VideoServices {
 #define MR_BACK_Y_RES  256
 
 // Helper class
-class PositionMatrix
+struct PositionMatrix
 {
-public:
 	MR_Int32 mRotation[2][2];
 	MR_3DCoordinate mDisplacement;
 };
@@ -54,9 +53,8 @@ public:
 class Viewport3D : public Viewport2D
 {
 protected:
-	class BackColumn
+	struct BackColumn
 	{
-	public:
 		MR_Int32 mBitmapColumn;
 		MR_Int32 mLineIncrement_1024;
 	};
