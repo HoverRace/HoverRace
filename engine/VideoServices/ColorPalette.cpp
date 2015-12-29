@@ -32,12 +32,15 @@ namespace VideoServices {
 namespace ColorPalette {
 
 namespace {
-	void AssignPaletteEntry(paletteEntry_t &ent, double r, double g, double b)
-	{
-		ent.r = static_cast<MR_UInt8>(r);
-		ent.g = static_cast<MR_UInt8>(g);
-		ent.b = static_cast<MR_UInt8>(b);
-	}
+
+void AssignPaletteEntry(paletteEntry_t &ent, double r, double g, double b)
+	noexcept
+{
+	ent.r = static_cast<MR_UInt8>(r);
+	ent.g = static_cast<MR_UInt8>(g);
+	ent.b = static_cast<MR_UInt8>(b);
+}
+
 }
 
 /**
@@ -107,7 +110,9 @@ paletteEntry_t *GetColors(double pGamma, double pIntensity, double pIntensityBas
  * @param pIntensityBase The base intensity (brightness - intensity).
  * @return The generated palette entry.
  */
-const paletteEntry_t &ConvertColor(MR_UInt8 pRed, MR_UInt8 pGreen, MR_UInt8 pBlue, double pGamma, double pIntensity, double pIntensityBase)
+const paletteEntry_t &ConvertColor(
+	MR_UInt8 pRed, MR_UInt8 pGreen, MR_UInt8 pBlue,
+	double pGamma, double pIntensity, double pIntensityBase) noexcept
 {
 	static paletteEntry_t lReturnValue;
 
