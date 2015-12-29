@@ -1,5 +1,5 @@
+
 // FastMemManip.h
-//
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
@@ -19,6 +19,8 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 //
+
+#pragma once
 
 #include "MR_Types.h"
 

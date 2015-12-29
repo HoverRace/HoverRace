@@ -1,5 +1,5 @@
+
 // FastFifo.h
-//
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
@@ -20,120 +20,126 @@
 // and limitations under the License.
 //
 
-#ifndef FAST_FIFO_H
-#define FAST_FIFO_H
+#pragma once
 
 #include "MR_Types.h"
 
 template <class pType>
 class MR_FastFifoBase
 {
+protected:
+	int mHead;
+	int mNbItem;
+	int mArraySize;
+	pType *mArray;
 
-	protected:
-		int mHead;
-		int mNbItem;
-		int mArraySize;
-		pType *mArray;
+public:
+	MR_FastFifoBase(int pSize, pType *pData) :
+		mHead(0), mNbItem(0), mArraySize(pSize), mArray(pData) { }
 
-	public:
+	void Add(pType pData)
+	{
+		mArray[(mHead + mNbItem) % mArraySize] = pData;
+		if(mNbItem == mArraySize) {
+			mHead = (mHead + 1) % mArraySize;
+		}
+		else {
+			mNbItem++;
+		}
+	};
 
-		MR_FastFifoBase<pType>(int pSize, pType * pData) {
-			mNbItem = 0;
-			mHead = 0;
-			mArraySize = pSize;
-			mArray = pData;
-		};
+	void Remove(int pCount = 1)
+	{
+		if(pCount > mNbItem) {
+			pCount = mNbItem;
+		}
+		mNbItem -= pCount;
+		mHead = (mHead + pCount) % mArraySize;
+	};
 
-		void Add(pType pData) {
-			mArray[(mHead + mNbItem) % mArraySize] = pData;
-			if(mNbItem == mArraySize) {
-				mHead = (mHead + 1) % mArraySize;
-			}
-			else {
-				mNbItem++;
-			}
-		};
-		void Remove(int pCount = 1) {
-			if(pCount > mNbItem) {
-				pCount = mNbItem;
-			}
-			mNbItem -= pCount;
-			mHead = (mHead + pCount) % mArraySize;
-		};
-		pType GetHead() {
-			return mArray[mHead];
-		};
-		void Clean() {
-			mNbItem = 0;
-		}
-		int Used() const
-		{
-			return mNbItem;
-		}
-		int TotalSize() const
-		{
-			return mArraySize;
-		}
-		int Full() const
-		{
-			return mNbItem == mArraySize;
-		}
-		BOOL CanAdd(int pCount = 1) const
-		{
-			return mNbItem + pCount <= mArraySize;
-		}
-		BOOL IsEmpty() const
-		{
-			return (mNbItem == 0);
-		}
-		const pType operator[] (int pIndex) const
-		{
-			return mArray[(mHead + pIndex) % mArraySize];
-		};
+	pType GetHead()
+	{
+		return mArray[mHead];
+	};
 
-		// Special functions to add at the head and remove at the tail
-		void AddHead(pType pData) {
-			mHead = (mHead + mArraySize - 1) % mArraySize;
-			mArray[mHead] = pData;
-			if(mNbItem != mArraySize) {
-				mNbItem++;
-			}
-		};
-		void RemoveTail(int pCount = 1) {
-			if(pCount > mNbItem) {
-				pCount = mNbItem;
-			}
-			mNbItem -= pCount;
-		};
+	void Clean()
+	{
+		mNbItem = 0;
+	}
 
+	int Used() const
+	{
+		return mNbItem;
+	}
+
+	int TotalSize() const
+	{
+		return mArraySize;
+	}
+
+	int Full() const
+	{
+		return mNbItem == mArraySize;
+	}
+
+	BOOL CanAdd(int pCount = 1) const
+	{
+		return mNbItem + pCount <= mArraySize;
+	}
+
+	BOOL IsEmpty() const
+	{
+		return (mNbItem == 0);
+	}
+
+	const pType operator[](int pIndex) const
+	{
+		return mArray[(mHead + pIndex) % mArraySize];
+	};
+
+	// Special functions to add at the head and remove at the tail
+	void AddHead(pType pData)
+	{
+		mHead = (mHead + mArraySize - 1) % mArraySize;
+		mArray[mHead] = pData;
+		if(mNbItem != mArraySize) {
+			mNbItem++;
+		}
+	};
+
+	void RemoveTail(int pCount = 1)
+	{
+		if(pCount > mNbItem) {
+			pCount = mNbItem;
+		}
+		mNbItem -= pCount;
+	};
 };
 
 template <class pType>
 class MR_FastFifo : public MR_FastFifoBase<pType>
 {
-	public:
-		MR_FastFifo<pType>(int pSize) :
-			MR_FastFifoBase<pType>(pSize, new pType[pSize])
-		{
-		};
-		~MR_FastFifo < pType > () {
-			delete[] MR_FastFifoBase<pType>::mArray;
-		};
+	using SUPER = MR_FastFifoBase<pType>;
+
+public:
+	MR_FastFifo(int pSize) : SUPER(pSize, new pType[pSize]) { };
+
+	~MR_FastFifo()
+	{
+		delete[] MR_FastFifoBase<pType>::mArray;
+	};
 };
 
 template <class pType, int pSize>
 class MR_FixedFastFifo : public MR_FastFifoBase<pType>
 {
-	protected:
-		pType mData[pSize];
+	using SUPER = MR_FastFifoBase<pType>;
 
-	public:
-		MR_FixedFastFifo<pType, pSize>() :
-			MR_FastFifoBase<pType>(pSize, mData)
-		{
-		};
+protected:
+	pType mData[pSize];
 
+public:
+	MR_FixedFastFifo() : SUPER(pSize, mData) { }
 };
 
 #undef MR_DllDeclare
-#endif

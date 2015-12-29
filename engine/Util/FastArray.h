@@ -1,5 +1,5 @@
+
 // FastArray.h
-//
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
@@ -20,83 +20,86 @@
 // and limitations under the License.
 //
 
-#ifndef FAST_ARRAY_H
-#define FAST_ARRAY_H
+#pragma once
 
 #include "MR_Types.h"
 
 template <class pType>
 class MR_FastArrayBase
 {
-	protected:
-		int mNbItem;
-		int mArraySize;
-		pType *mArray;
+protected:
+	int mNbItem;
+	int mArraySize;
+	pType *mArray;
 
-	public:
-		MR_FastArrayBase < pType > (int pSize, pType * pData) {
-			mNbItem = 0;
-			mArraySize = pSize;
-			mArray = pData;
-		};
+public:
+	MR_FastArrayBase(int pSize, pType *pData) :
+		mNbItem(0), mArraySize(pSize), mArray(pData) { }
 
-		void Add(pType pData) {
-			ASSERT(mNbItem < mArraySize);
-			mArray[mNbItem++] = pData;
-		};
-		void Use(int pCount = 1) {
-			mNbItem += pCount;
-			ASSERT(mNbItem <= mArraySize);
-		};
-		void Clean() {
-			mNbItem = 0;
-		}
-		int Used() const
-		{
-			return mNbItem;
-		}
-		int TotalSize() const
-		{
-			return mArraySize;
-		}
-		int Full() const
-		{
-			return mNbItem == mArraySize;
-		}
-		BOOL CanAdd(int pCount = 1) {
-			return mNbItem + pCount <= mArraySize;
-		}
+	void Add(pType pData)
+	{
+		ASSERT(mNbItem < mArraySize);
+		mArray[mNbItem++] = pData;
+	};
 
-		BOOL Contains(pType pData) const
-		{
-			for(int lCounter = 0; lCounter < mNbItem; lCounter++) {
-				if(mArray[lCounter] == pData)
-					return TRUE;
-			} return FALSE;
-		};
+	void Use(int pCount = 1)
+	{
+		mNbItem += pCount;
+		ASSERT(mNbItem <= mArraySize);
+	};
 
-		const pType operator[] (int pIndex) const
-		{
-			return mArray[pIndex];
-		}
-		const pType & operator[] (int pIndex) {
-			return mArray[pIndex];
-		}
+	void Clean()
+	{
+		mNbItem = 0;
+	}
 
+	int Used() const
+	{
+		return mNbItem;
+	}
+
+	int TotalSize() const
+	{
+		return mArraySize;
+	}
+
+	int Full() const
+	{
+		return mNbItem == mArraySize;
+	}
+
+	BOOL CanAdd(int pCount = 1)
+	{
+		return mNbItem + pCount <= mArraySize;
+	}
+
+	BOOL Contains(pType pData) const
+	{
+		for(int lCounter = 0; lCounter < mNbItem; lCounter++) {
+			if(mArray[lCounter] == pData)
+				return TRUE;
+		} return FALSE;
+	};
+
+	const pType operator[] (int pIndex) const
+	{
+		return mArray[pIndex];
+	}
+
+	const pType & operator[] (int pIndex)
+	{
+		return mArray[pIndex];
+	}
 };
 
 template <class pType, int pSize>
 class MR_FixedFastArray : public MR_FastArrayBase<pType>
 {
-	protected:
-		pType mData[pSize];
+	using SUPER = MR_FastArrayBase<pType>;
 
-	public:
-		MR_FixedFastArray<pType, pSize>() :
-			MR_FastArrayBase<pType>(pSize, mData)
-		{
-		};
+protected:
+	pType mData[pSize];
 
+public:
+	MR_FixedFastArray() : SUPER(pSize, mData) { };
 };
-
-#endif
