@@ -63,12 +63,25 @@ public:
 protected:
 	/**
 	 * Tracks connections as a group.
-	 * Connections added to this group are automatically disconnected when destroyed.
+	 * Connections added to this group are automatically disconnected
+	 * when destroyed, in the reverse order of add.
 	 */
 	struct ConnList
 	{
 	public:
 		~ConnList()
+		{
+			Clear();
+		}
+
+		ConnList &operator<<(boost::signals2::connection &&conn)
+		{
+			conns.emplace_back(
+				std::forward<boost::signals2::connection>(conn));
+			return *this;
+		}
+
+		void Clear()
 		{
 			// Disconnect the connections in reverse order of add.
 			while (!conns.empty()) {
@@ -76,14 +89,8 @@ protected:
 			}
 		}
 
-		ConnList &operator<<(boost::signals2::connection &&conn)
-		{
-			conns.emplace_back(new boost::signals2::scoped_connection(
-				std::forward<boost::signals2::connection>(conn)));
-			return *this;
-		}
 	private:
-		std::list<std::unique_ptr<boost::signals2::scoped_connection>> conns;
+		std::list<boost::signals2::scoped_connection> conns;
 	};
 
 public:
