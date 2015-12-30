@@ -37,7 +37,6 @@
 #include "../../engine/Player/LocalPlayer.h"
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/DllObjectFactory.h"
-#include "../../engine/Util/FuzzyLogic.h"
 #include "../../engine/Util/Loader.h"
 #include "../../engine/Util/Locale.h"
 #include "../../engine/Util/Profiler.h"
@@ -133,7 +132,6 @@ ClientApp::ClientApp() :
 
 	// Engine initialization.
 	MR_InitTrigoTables();
-	MR_InitFuzzyModule();
 	DllObjectFactory::Init();
 
 	if (SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) == -1)

@@ -29,7 +29,6 @@
 #include "../Model/RaceEffects.h"
 #include "../Model/ObstacleCollisionReport.h"
 #include "../Util/BitPacking.h"
-#include "../Util/FuzzyLogic.h"
 #include "../Util/Log.h"
 #include "../Exception.h"
 

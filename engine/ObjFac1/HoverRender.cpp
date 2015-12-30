@@ -21,7 +21,6 @@
 //
 
 #include "../ObjFacTools/ResourceLib.h"
-#include "../Util/FuzzyLogic.h"
 #include "ObjFac1Res.h"
 
 #include "HoverRender.h"
