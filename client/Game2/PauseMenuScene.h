@@ -45,33 +45,34 @@ namespace Client {
  */
 class PauseMenuScene : public FormScene
 {
-	typedef FormScene SUPER;
-	public:
-		PauseMenuScene(Display::Display &display, GameDirector &director);
-		virtual ~PauseMenuScene();
+	using SUPER = FormScene;
 
-	private:
-		std::shared_ptr<Display::Button> AddButton(const std::string &text, double &y);
+public:
+	PauseMenuScene(Display::Display &display, GameDirector &director);
+	virtual ~PauseMenuScene();
 
-	private:
-		void OnCancel();
-		void OnQuitToMainMenu();
-		void OnQuitToDesktop();
+private:
+	std::shared_ptr<Display::Button> AddButton(const std::string &text, double &y);
 
-	public:
-		// Scene
-		virtual void AttachController(Control::InputEventController &controller);
-		virtual void DetachController(Control::InputEventController &controller);
-		virtual void PrepareRender();
-		virtual void Render();
+private:
+	void OnCancel();
+	void OnQuitToMainMenu();
+	void OnQuitToDesktop();
 
-	private:
-		Display::Display &display;
-		GameDirector &director;
+public:
+	// Scene
+	virtual void AttachController(Control::InputEventController &controller);
+	virtual void DetachController(Control::InputEventController &controller);
+	virtual void PrepareRender();
+	virtual void Render();
 
-		std::unique_ptr<Display::ScreenFade> fader;
+private:
+	Display::Display &display;
+	GameDirector &director;
 
-		boost::signals2::connection returnConn;
+	std::unique_ptr<Display::ScreenFade> fader;
+
+	boost::signals2::connection returnConn;
 };
 
 }  // namespace Client
