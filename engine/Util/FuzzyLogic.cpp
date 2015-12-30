@@ -1,3 +1,4 @@
+
 // FuzzyLogic.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
@@ -19,7 +20,6 @@
 // and limitations under the License.
 //
 
-#include "../StdAfx.h"
 #include "FuzzyLogic.h"
 
 #define MR_RAND_TABLE_SIZE  4096

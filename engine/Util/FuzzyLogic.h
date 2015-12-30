@@ -1,5 +1,5 @@
-// FuzzyLogic.h// Class created for very fast fuzzzy logic
-//
+
+// FuzzyLogic.h
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
 //
@@ -20,8 +20,7 @@
 // and limitations under the License.
 //
 
-#ifndef FUZZY_LOGIC_H
-#define FUZZY_LOGIC_H
+#pragma once
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
 #	ifdef MR_ENGINE
@@ -36,21 +35,21 @@
 void MR_DllDeclare MR_InitFuzzyModule();
 int MR_DllDeclare MR_Rand();
 
+/// Class created for very fast fuzzzy logic
 class MR_DllDeclare MR_ProbTable
 {
-	private:
-		static const int NB_PROB_MAX = 16;
-		int mNbProb;
-		int mTotalProb;
-		int mProb[NB_PROB_MAX];
+private:
+	static const int NB_PROB_MAX = 16;
+	int mNbProb;
+	int mTotalProb;
+	int mProb[NB_PROB_MAX];
 
-	public:
-		MR_ProbTable();
-		void Clear();
+public:
+	MR_ProbTable();
+	void Clear();
 
-		void AddProb(int pWeight);
-		int GetVal();
+	void AddProb(int pWeight);
+	int GetVal();
 };
 
 #undef MR_DllDeclare
-#endif
