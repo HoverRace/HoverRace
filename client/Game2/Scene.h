@@ -142,16 +142,23 @@ protected:
 	 * @param controller The current controller being used.  It can be assumed
 	 *                   that the controller's action mappings have been
 	 *                   cleared.
+	 * @param conns The list to manage connections while the input is
+	 *              attached.  Any connections added to this list will be
+	 *              automatically disconnected when then the input is
+	 *              detached.
 	 */
-	virtual void AttachController(Control::InputEventController &controller) = 0;
+	virtual void AttachController(Control::InputEventController &controller,
+		ConnList &conns) = 0;
 
 	/**
 	 * Remove the controller mappings.
 	 * @param controller The current controller being used.  It can be assumed
 	 *                   that the controller's action mappings have been
 	 *                   cleared.
+	 * @param conns The same connection list passed to AttachController.
 	 */
-	virtual void DetachController(Control::InputEventController &controller) = 0;
+	virtual void DetachController(Control::InputEventController &controller,
+		ConnList &conns) = 0;
 
 public:
 	/**
@@ -355,6 +362,7 @@ private:
 	Util::OS::timestamp_t stateTs;  ///< When current state was started.
 	double stateTransitionVelocity;
 	double statePosition;
+	ConnList attachConns;  ///< Connected signals while controller is attached.
 protected:
 	std::shared_ptr<Util::Profiler> rootProfiler;
 	std::shared_ptr<Util::Profiler> advanceProfiler;

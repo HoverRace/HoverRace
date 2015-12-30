@@ -42,28 +42,24 @@ FormScene::~FormScene()
 {
 }
 
-void FormScene::AttachController(Control::InputEventController &controller)
+void FormScene::AttachController(Control::InputEventController &controller,
+	ConnList &conns)
 {
-	SUPER::AttachController(controller);
+	SUPER::AttachController(controller, conns);
 
-	mouseMovedConn = controller.actions.ui.mouseMoved->Connect(
-		std::bind(&FormScene::OnMouseMoved, this, std::placeholders::_1));
-	mousePressedConn = controller.actions.ui.mousePressed->Connect(
-		std::bind(&FormScene::OnMousePressed, this, std::placeholders::_1));
-	mouseReleasedConn = controller.actions.ui.mouseReleased->Connect(
-		std::bind(&FormScene::OnMouseReleased, this, std::placeholders::_1));
-	mouseScrolledConn = controller.actions.ui.mouseScrolled->Connect(
-		std::bind(&FormScene::OnMouseScrolled, this, std::placeholders::_1));
-}
-
-void FormScene::DetachController(Control::InputEventController &controller)
-{
-	mouseScrolledConn.disconnect();
-	mouseReleasedConn.disconnect();
-	mousePressedConn.disconnect();
-	mouseMovedConn.disconnect();
-
-	SUPER::DetachController(controller);
+	conns <<
+		controller.actions.ui.mouseMoved->Connect(
+			std::bind(&FormScene::OnMouseMoved, this,
+				std::placeholders::_1)) <<
+		controller.actions.ui.mousePressed->Connect(
+			std::bind(&FormScene::OnMousePressed, this,
+				std::placeholders::_1)) <<
+		controller.actions.ui.mouseReleased->Connect(
+			std::bind(&FormScene::OnMouseReleased, this,
+				std::placeholders::_1)) <<
+		controller.actions.ui.mouseScrolled->Connect(
+			std::bind(&FormScene::OnMouseScrolled, this,
+				std::placeholders::_1));
 }
 
 void FormScene::OnMouseMoved(const Vec2 &pos)

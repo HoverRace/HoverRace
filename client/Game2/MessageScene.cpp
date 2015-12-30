@@ -102,9 +102,10 @@ void MessageScene::OnCancel()
 	cancelSignal();
 }
 
-void MessageScene::AttachController(Control::InputEventController &controller)
+void MessageScene::AttachController(Control::InputEventController &controller,
+	ConnList &conns)
 {
-	SUPER::AttachController(controller);
+	SUPER::AttachController(controller, conns);
 
 	controller.AddMenuMaps();
 
@@ -113,7 +114,7 @@ void MessageScene::AttachController(Control::InputEventController &controller)
 
 	auto &menuCancelAction = controller.actions.ui.menuCancel;
 
-	cancelConn = menuCancelAction->Connect(std::bind(
+	conns << menuCancelAction->Connect(std::bind(
 		hasCancel ? &MessageScene::OnCancel : &MessageScene::OnOk, this));
 
 	if (hasCancel) {
@@ -122,13 +123,6 @@ void MessageScene::AttachController(Control::InputEventController &controller)
 
 	// Attaching the action may have changed the button size.
 	RequestLayout();
-}
-
-void MessageScene::DetachController(Control::InputEventController &controller)
-{
-	cancelConn.disconnect();
-
-	SUPER::DetachController(controller);
 }
 
 void MessageScene::OnPhaseTransition(double progress)

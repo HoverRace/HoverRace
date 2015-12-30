@@ -1,7 +1,7 @@
 
 // PlayGameScene.h
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ namespace Client {
  * This scene manages the lifetime of a single session, from start to finish.
  * Pushing this scene onto the stage starts a new game session, and likewise
  * popping this scene from the stage aborts the game session.
- * 
+ *
  * @author Michael Imamura
  */
 class PlayGameScene : public GameScene
@@ -46,23 +46,16 @@ public:
 	virtual ~PlayGameScene();
 
 public:
-	void AttachController(Control::InputEventController &controller) override;
-	void DetachController(Control::InputEventController &controller) override;
+	void AttachController(Control::InputEventController &controller,
+		ConnList &conns) override;
+	void DetachController(Control::InputEventController &controller,
+		ConnList &conns) override;
 
 private:
 	void OnCameraZoom(int increment);
 	void OnCameraPan(int increment);
 	void OnCameraReset();
 	void OnPause();
-
-public:
-	boost::signals2::connection cameraZoomInConn;
-	boost::signals2::connection cameraZoomOutConn;
-	boost::signals2::connection cameraPanUpConn;
-	boost::signals2::connection cameraPanDownConn;
-	boost::signals2::connection cameraResetConn;
-
-	boost::signals2::connection pauseConn;
 };
 
 }  // namespace Client

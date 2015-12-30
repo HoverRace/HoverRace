@@ -1,7 +1,7 @@
 
 // PaletteScene.h
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013-2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -55,17 +55,14 @@ class PaletteScene : public UiScene
 		virtual void OnOk();
 
 	public:
-		void AttachController(Control::InputEventController &controller) override;
-		void DetachController(Control::InputEventController &controller) override;
+		void AttachController(Control::InputEventController &controller,
+			ConnList &conns) override;
 		void PrepareRender() override { }
 		void Render() override;
 
 	private:
 		GameDirector &director;
 		Display::Display &display;
-
-		boost::signals2::connection okConn;
-		boost::signals2::connection cancelConn;
 };
 
 }  // namespace HoverScript

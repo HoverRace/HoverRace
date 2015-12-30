@@ -67,8 +67,8 @@ public:
 
 public:
 	// Scene
-	void AttachController(Control::InputEventController &controller) override;
-	void DetachController(Control::InputEventController &controller) override;
+	void AttachController(Control::InputEventController &controller,
+		ConnList &conns) override;
 	void OnPhaseTransition(double progress) override;
 	void Layout() override;
 	void PrepareRender() override;
@@ -88,7 +88,6 @@ private:
 	std::shared_ptr<Display::ActionButton> cancelBtn;
 
 	boost::signals2::scoped_connection okConn;
-	boost::signals2::connection cancelConn;
 
 	static const int HORZ_PADDING = 40;
 };

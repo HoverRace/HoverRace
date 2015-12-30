@@ -69,8 +69,8 @@ private:
 	void OnCancel();
 
 public:
-	void AttachController(Control::InputEventController &controller) override;
-	void DetachController(Control::InputEventController &controller) override;
+	void AttachController(Control::InputEventController &controller,
+		ConnList &conns) override;
 	void PrepareRender() override;
 	void Render() override;
 
@@ -81,7 +81,6 @@ protected:
 private:
 	std::unique_ptr<Display::ScreenFade> fader;
 	std::shared_ptr<Display::ActionButton> cancelBtn;
-	boost::signals2::connection cancelConn;
 }; //}}}
 
 class TestLabScene::ModuleButtonBase : public Display::Button /*{{{*/
@@ -428,26 +427,18 @@ void TestLabScene::LabModule::OnCancel()
 }
 
 void TestLabScene::LabModule::AttachController(
-	Control::InputEventController &controller)
+	Control::InputEventController &controller, ConnList &conns)
 {
-	SUPER::AttachController(controller);
+	SUPER::AttachController(controller, conns);
 
 	controller.AddMenuMaps();
 
 	auto &menuCancelAction = controller.actions.ui.menuCancel;
 
-	cancelConn = menuCancelAction->Connect(std::bind(
+	conns << menuCancelAction->Connect(std::bind(
 		&TestLabScene::LabModule::OnCancel, this));
 
 	cancelBtn->AttachAction(controller, menuCancelAction);
-}
-
-void TestLabScene::LabModule::DetachController(
-	Control::InputEventController &controller)
-{
-	cancelConn.disconnect();
-
-	SUPER::DetachController(controller);
 }
 
 void TestLabScene::LabModule::PrepareRender()

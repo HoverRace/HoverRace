@@ -51,12 +51,13 @@ Scene::Scene(const std::string &name) :
 
 void Scene::AttachInput(Control::InputEventController &controller)
 {
-	AttachController(controller);
+	AttachController(controller, attachConns);
 }
 
 void Scene::DetachInput(Control::InputEventController &controller)
 {
-	DetachController(controller);
+	DetachController(controller, attachConns);
+	attachConns.Clear();
 }
 
 /**

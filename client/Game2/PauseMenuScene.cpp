@@ -119,21 +119,15 @@ void PauseMenuScene::OnQuitToDesktop()
 		[&]() { director.RequestShutdown(); });
 }
 
-void PauseMenuScene::AttachController(Control::InputEventController &controller)
+void PauseMenuScene::AttachController(Control::InputEventController &controller,
+	ConnList &conns)
 {
-	SUPER::AttachController(controller);
+	SUPER::AttachController(controller, conns);
 
 	controller.AddMenuMaps();
 
-	returnConn = controller.actions.ui.menuCancel->Connect(
+	conns << controller.actions.ui.menuCancel->Connect(
 		std::bind(&PauseMenuScene::OnCancel, this));
-}
-
-void PauseMenuScene::DetachController(Control::InputEventController &controller)
-{
-	returnConn.disconnect();
-
-	SUPER::DetachController(controller);
 }
 
 void PauseMenuScene::PrepareRender()

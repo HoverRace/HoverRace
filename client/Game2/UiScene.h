@@ -52,8 +52,10 @@ public:
 	bool IsMouseCursorEnabled() const override { return true; }
 
 public:
-	void AttachController(Control::InputEventController &controller) override;
-	void DetachController(Control::InputEventController &controller) override;
+	void AttachController(Control::InputEventController &controller,
+		ConnList &conns) override;
+	void DetachController(Control::InputEventController&,
+		ConnList&) override { }
 
 private:
 	void OnAction();
@@ -99,14 +101,6 @@ private:
 	std::shared_ptr<Display::UiViewModel> focusRoot;
 	boost::signals2::scoped_connection focusReqConn;
 	boost::signals2::scoped_connection focusRelConn;
-
-	boost::signals2::scoped_connection okConn;
-	boost::signals2::scoped_connection upConn;
-	boost::signals2::scoped_connection downConn;
-	boost::signals2::scoped_connection leftConn;
-	boost::signals2::scoped_connection rightConn;
-	boost::signals2::scoped_connection prevConn;
-	boost::signals2::scoped_connection nextConn;
 };
 
 }  // namespace Client

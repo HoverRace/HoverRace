@@ -41,8 +41,10 @@ public:
 	virtual ~DemoGameScene();
 
 public:
-	void AttachController(Control::InputEventController&) override { }
-	void DetachController(Control::InputEventController&) override { }
+	void AttachController(Control::InputEventController&,
+		ConnList&) override { }
+	void DetachController(Control::InputEventController&,
+		ConnList&) override { }
 
 protected:
 	void OnFinishedLoading() override;

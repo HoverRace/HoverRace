@@ -47,19 +47,17 @@ void PaletteScene::OnOk()
 	director.RequestPopScene();
 }
 
-void PaletteScene::AttachController(Control::InputEventController &controller)
+void PaletteScene::AttachController(Control::InputEventController &controller,
+	ConnList &conns)
 {
 	controller.AddMenuMaps();
 
 	// Both "OK" and "Cancel" actions close the scene.
-	okConn = controller.actions.ui.menuOk->Connect(std::bind(&PaletteScene::OnOk, this));
-	cancelConn = controller.actions.ui.menuCancel->Connect(std::bind(&PaletteScene::OnOk, this));
-}
-
-void PaletteScene::DetachController(Control::InputEventController&)
-{
-	cancelConn.disconnect();
-	okConn.disconnect();
+	conns <<
+		controller.actions.ui.menuOk->Connect(
+			std::bind(&PaletteScene::OnOk, this)) <<
+		controller.actions.ui.menuCancel->Connect(
+			std::bind(&PaletteScene::OnOk, this));
 }
 
 void PaletteScene::Render()

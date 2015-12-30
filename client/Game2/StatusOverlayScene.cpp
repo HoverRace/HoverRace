@@ -75,21 +75,19 @@ void StatusOverlayScene::Announce(std::shared_ptr<Announcement> ann)
 	bulletinBoard->Announce(ann);
 }
 
-void StatusOverlayScene::AttachController(Control::InputEventController &controller)
+void StatusOverlayScene::AttachController(
+	Control::InputEventController &controller, ConnList &conns)
 {
-	mouseMovedConn = controller.actions.ui.mouseMoved->Connect(
-		std::bind(&StatusOverlayScene::OnMouseMoved, this, std::placeholders::_1));
-	mousePressedConn = controller.actions.ui.mousePressed->Connect(
-		std::bind(&StatusOverlayScene::OnMousePressed, this, std::placeholders::_1));
-	mouseReleasedConn = controller.actions.ui.mouseReleased->Connect(
-		std::bind(&StatusOverlayScene::OnMouseReleased, this, std::placeholders::_1));
-}
-
-void StatusOverlayScene::DetachController(Control::InputEventController&)
-{
-	mouseReleasedConn.disconnect();
-	mousePressedConn.disconnect();
-	mouseMovedConn.disconnect();
+	conns <<
+		controller.actions.ui.mouseMoved->Connect(
+			std::bind(&StatusOverlayScene::OnMouseMoved, this,
+				std::placeholders::_1)) <<
+		controller.actions.ui.mousePressed->Connect(
+			std::bind(&StatusOverlayScene::OnMousePressed, this,
+				std::placeholders::_1)) <<
+		controller.actions.ui.mouseReleased->Connect(
+			std::bind(&StatusOverlayScene::OnMouseReleased, this,
+				std::placeholders::_1));
 }
 
 void StatusOverlayScene::OnMouseMoved(const Vec2 &pos)

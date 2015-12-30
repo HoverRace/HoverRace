@@ -76,8 +76,10 @@ private:
 
 public:
 	// Scene
-	void AttachController(Control::InputEventController &controller) override;
-	void DetachController(Control::InputEventController &controller) override;
+	void AttachController(Control::InputEventController &controller,
+		ConnList &conns) override;
+	void DetachController(Control::InputEventController &controller,
+		ConnList &conns) override;
 public:
 	void Advance(Util::OS::timestamp_t tick) override;
 	void PrepareRender() override;
@@ -93,8 +95,6 @@ private:
 	bool logsChanged;
 
 	boost::signals2::scoped_connection displayConfigChangedConn;
-
-	std::unique_ptr<ConnList> conns;
 
 	boost::signals2::scoped_connection logClearedConn;
 	boost::signals2::scoped_connection logAddedConn;

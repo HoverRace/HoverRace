@@ -61,18 +61,16 @@ private:
 
 public:
 	// Scene
-	virtual void AttachController(Control::InputEventController &controller);
-	virtual void DetachController(Control::InputEventController &controller);
-	virtual void PrepareRender();
-	virtual void Render();
+	void AttachController(Control::InputEventController &controller,
+		ConnList &conns) override;
+	void PrepareRender() override;
+	void Render() override;
 
 private:
 	Display::Display &display;
 	GameDirector &director;
 
 	std::unique_ptr<Display::ScreenFade> fader;
-
-	boost::signals2::connection returnConn;
 };
 
 }  // namespace Client

@@ -198,9 +198,10 @@ std::string DialogScene::JoinTitles(const std::string &parent,
 }
 
 
-void DialogScene::AttachController(Control::InputEventController &controller)
+void DialogScene::AttachController(Control::InputEventController &controller,
+	ConnList &conns)
 {
-	SUPER::AttachController(controller);
+	SUPER::AttachController(controller, conns);
 
 	assert((okBtn || cancelBtn) && "Either OK or Cancel must be enabled.");
 
@@ -211,19 +212,19 @@ void DialogScene::AttachController(Control::InputEventController &controller)
 
 	if (okBtn) {
 		auto &menuOkAction = controller.actions.ui.menuOk;
-		okConn = menuOkAction->Connect(
+		conns << menuOkAction->Connect(
 			std::bind(&DialogScene::OnOk, this));
 		okBtn->AttachAction(controller, menuOkAction);
 	}
 	if (cancelBtn) {
 		auto &menuCancelAction = controller.actions.ui.menuCancel;
-		cancelConn = menuCancelAction->Connect(
+		conns << menuCancelAction->Connect(
 			std::bind(&DialogScene::OnCancel, this));
 		cancelBtn->AttachAction(controller, menuCancelAction);
 	}
 	if (extraBtn) {
 		auto &menuExtraAction = controller.actions.ui.menuExtra;
-		extraConn = menuExtraAction->Connect(
+		conns << menuExtraAction->Connect(
 			std::bind(&DialogScene::OnExtra, this));
 		extraBtn->AttachAction(controller, menuExtraAction);
 	}
@@ -234,15 +235,12 @@ void DialogScene::AttachController(Control::InputEventController &controller)
 	RequestLayout();
 }
 
-void DialogScene::DetachController(Control::InputEventController &controller)
+void DialogScene::DetachController(Control::InputEventController &controller,
+	ConnList &conns)
 {
-	extraConn.disconnect();
-	cancelConn.disconnect();
-	okConn.disconnect();
-
 	statusRoot->SetVisible(false);
 
-	SUPER::DetachController(controller);
+	SUPER::DetachController(controller, conns);
 }
 
 void DialogScene::OnPhaseTransition(double progress)

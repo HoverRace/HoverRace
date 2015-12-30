@@ -73,8 +73,10 @@ protected:
 		const std::string &title);
 
 public:
-	void AttachController(Control::InputEventController &controller) override;
-	void DetachController(Control::InputEventController &controller) override;
+	void AttachController(Control::InputEventController &controller,
+		ConnList &conns) override;
+	void DetachController(Control::InputEventController &controller,
+		ConnList &conns) override;
 	void OnPhaseTransition(double progress) override;
 	void PrepareRender() override;
 	void Render() override;
@@ -97,10 +99,6 @@ private:
 	std::shared_ptr<Display::ActionButton> okBtn;
 	std::shared_ptr<Display::ActionButton> cancelBtn;
 	std::shared_ptr<Display::ActionButton> extraBtn;
-
-	boost::signals2::connection okConn;
-	boost::signals2::connection cancelConn;
-	boost::signals2::connection extraConn;
 };
 
 }  // namespace Client

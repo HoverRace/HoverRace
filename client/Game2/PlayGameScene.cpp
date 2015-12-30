@@ -1,7 +1,7 @@
 
 // PlayGameScene.cpp
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2015 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -45,7 +45,8 @@ PlayGameScene::~PlayGameScene()
 {
 }
 
-void PlayGameScene::AttachController(Control::InputEventController &controller)
+void PlayGameScene::AttachController(Control::InputEventController &controller,
+	ConnList &conns)
 {
 	if (auto player = session->GetPlayer(0)) {
 		if (auto mc = player->GetMainCharacter()) {
@@ -57,22 +58,24 @@ void PlayGameScene::AttachController(Control::InputEventController &controller)
 	//TODO: Use separate action for pausing than ui.menuCancel.
 	controller.AddMenuMaps();
 
-	cameraZoomInConn = controller.actions.camera.zoomIn->Connect(
-		std::bind(&PlayGameScene::OnCameraZoom, this, 1));
-	cameraZoomOutConn = controller.actions.camera.zoomOut->Connect(
-		std::bind(&PlayGameScene::OnCameraZoom, this, -1));
-	cameraPanUpConn = controller.actions.camera.panUp->Connect(
-		std::bind(&PlayGameScene::OnCameraPan, this, 1));
-	cameraPanDownConn = controller.actions.camera.panDown->Connect(
-		std::bind(&PlayGameScene::OnCameraPan, this, -1));
-	cameraResetConn = controller.actions.camera.reset->Connect(
-		std::bind(&PlayGameScene::OnCameraReset, this));
+	conns <<
+		controller.actions.camera.zoomIn->Connect(
+			std::bind(&PlayGameScene::OnCameraZoom, this, 1)) <<
+		controller.actions.camera.zoomOut->Connect(
+			std::bind(&PlayGameScene::OnCameraZoom, this, -1)) <<
+		controller.actions.camera.panUp->Connect(
+			std::bind(&PlayGameScene::OnCameraPan, this, 1)) <<
+		controller.actions.camera.panDown->Connect(
+			std::bind(&PlayGameScene::OnCameraPan, this, -1)) <<
+		controller.actions.camera.reset->Connect(
+			std::bind(&PlayGameScene::OnCameraReset, this));
 
-	pauseConn = controller.actions.ui.menuCancel->Connect(
-		std::bind(&PlayGameScene::OnPause, this));
+	conns <<
+		controller.actions.ui.menuCancel->Connect(
+			std::bind(&PlayGameScene::OnPause, this));
 }
 
-void PlayGameScene::DetachController(Control::InputEventController&)
+void PlayGameScene::DetachController(Control::InputEventController&, ConnList&)
 {
 	// Shut off the engine when the controller is detached (e.g. when showing a
 	// dialog) otherwise we'll just keep accelerating into the wall.
@@ -85,14 +88,6 @@ void PlayGameScene::DetachController(Control::InputEventController&)
 			mc->SetLookBackState(false);
 		}
 	}
-
-	pauseConn.disconnect();
-
-	cameraResetConn.disconnect();
-	cameraPanDownConn.disconnect();
-	cameraPanUpConn.disconnect();
-	cameraZoomOutConn.disconnect();
-	cameraZoomInConn.disconnect();
 }
 
 void PlayGameScene::OnCameraZoom(int increment)

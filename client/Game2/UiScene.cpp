@@ -27,7 +27,8 @@
 namespace HoverRace {
 namespace Client {
 
-void UiScene::AttachController(Control::InputEventController &controller)
+void UiScene::AttachController(Control::InputEventController &controller,
+	ConnList &conns)
 {
 	// Standard digital directions.
 	static Control::Nav NAV_U(Control::Nav::UP);
@@ -41,26 +42,16 @@ void UiScene::AttachController(Control::InputEventController &controller)
 
 	auto &ui = controller.actions.ui;
 
-	okConn = ui.menuOk->Connect(std::bind(&UiScene::OnAction, this));
+	conns <<
+		ui.menuOk->Connect(std::bind(&UiScene::OnAction, this));
 
-	upConn = ui.menuUp->Connect(std::bind(&UiScene::OnNav, this, NAV_U));
-	downConn = ui.menuDown->Connect(std::bind(&UiScene::OnNav, this, NAV_D));
-	leftConn = ui.menuLeft->Connect(std::bind(&UiScene::OnNav, this, NAV_L));
-	rightConn = ui.menuRight->Connect(std::bind(&UiScene::OnNav, this, NAV_R));
-	prevConn = ui.menuPrev->Connect(std::bind(&UiScene::OnNav, this, NAV_P));
-	nextConn = ui.menuNext->Connect(std::bind(&UiScene::OnNav, this, NAV_N));
-}
-
-void UiScene::DetachController(Control::InputEventController&)
-{
-	nextConn.disconnect();
-	prevConn.disconnect();
-	rightConn.disconnect();
-	leftConn.disconnect();
-	downConn.disconnect();
-	upConn.disconnect();
-
-	okConn.disconnect();
+	conns <<
+		ui.menuUp->Connect(std::bind(&UiScene::OnNav, this, NAV_U)) <<
+		ui.menuDown->Connect(std::bind(&UiScene::OnNav, this, NAV_D)) <<
+		ui.menuLeft->Connect(std::bind(&UiScene::OnNav, this, NAV_L)) <<
+		ui.menuRight->Connect(std::bind(&UiScene::OnNav, this, NAV_R)) <<
+		ui.menuPrev->Connect(std::bind(&UiScene::OnNav, this, NAV_P)) <<
+		ui.menuNext->Connect(std::bind(&UiScene::OnNav, this, NAV_N));
 }
 
 void UiScene::OnAction()

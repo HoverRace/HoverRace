@@ -61,8 +61,8 @@ public:
 	void Announce(std::shared_ptr<Announcement> ann);
 
 public:
-	void AttachController(Control::InputEventController &controller) override;
-	void DetachController(Control::InputEventController &controller) override;
+	void AttachController(Control::InputEventController &controller,
+		ConnList &conns) override;
 
 private:
 	void OnDisplayConfigChanged();
@@ -82,9 +82,6 @@ private:
 	std::unique_ptr<BulletinBoard> bulletinBoard;
 	std::unique_ptr<PlayerBar> playerBar;
 	boost::signals2::scoped_connection displayConfigChangedConn;
-	boost::signals2::connection mouseMovedConn;
-	boost::signals2::connection mousePressedConn;
-	boost::signals2::connection mouseReleasedConn;
 };
 
 }  // namespace HoverScript

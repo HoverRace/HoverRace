@@ -54,8 +54,8 @@ public:
 	virtual ~FormScene();
 
 public:
-	void AttachController(Control::InputEventController &controller) override;
-	void DetachController(Control::InputEventController &controller) override;
+	void AttachController(Control::InputEventController &controller,
+		ConnList &conns) override;
 
 private:
 	void OnMouseMoved(const Vec2 &pos);
@@ -74,11 +74,6 @@ protected:
 	Display::Display &display;
 private:
 	std::shared_ptr<Display::Container> root;
-
-	boost::signals2::connection mouseMovedConn;
-	boost::signals2::connection mousePressedConn;
-	boost::signals2::connection mouseReleasedConn;
-	boost::signals2::connection mouseScrolledConn;
 };
 
 }  // namespace Client

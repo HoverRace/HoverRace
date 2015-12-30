@@ -294,17 +294,16 @@ void ConsoleScene::Layout()
 	layoutChanged = false;
 }
 
-void ConsoleScene::AttachController(Control::InputEventController &controller)
+void ConsoleScene::AttachController(Control::InputEventController &controller,
+	ConnList &conns)
 {
-	conns.reset(new ConnList());
-
 	controller.AddConsoleToggleMaps();
-	*conns <<
+	conns <<
 		controller.actions.sys.consoleToggle->Connect(
 			std::bind(&ConsoleScene::OnConsoleToggle, this));
 
 	controller.AddConsoleMaps();
-	*conns <<
+	conns <<
 		controller.actions.ui.consoleUp->Connect(
 			std::bind(&ConsoleScene::OnConsoleUp, this)) <<
 		controller.actions.ui.consoleDown->Connect(
@@ -318,7 +317,7 @@ void ConsoleScene::AttachController(Control::InputEventController &controller)
 		controller.actions.ui.consoleNextCmd->Connect(
 			std::bind(&ConsoleScene::OnConsoleNextCmd, this));
 
-	*conns <<
+	conns <<
 		controller.actions.ui.control->Connect(
 			std::bind(&ConsoleScene::OnTextControl, this, std::placeholders::_1)) <<
 		controller.actions.ui.text->Connect(
@@ -327,11 +326,9 @@ void ConsoleScene::AttachController(Control::InputEventController &controller)
 	SDL_StartTextInput();
 }
 
-void ConsoleScene::DetachController(Control::InputEventController&)
+void ConsoleScene::DetachController(Control::InputEventController&, ConnList&)
 {
 	SDL_StopTextInput();
-
-	conns.reset();
 }
 
 void ConsoleScene::Advance(Util::OS::timestamp_t tick)
