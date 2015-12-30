@@ -37,25 +37,27 @@ namespace HoverRace {
 namespace Client {
 
 namespace {
-	template<class FN>
-	void ShowConfirmDialog(Display::Display &display, GameDirector &director,
-		const std::string &title, const std::string &message,
-		const FN &callback)
-	{
-		std::string fullMsg = message;
-		fullMsg += "\n\n";
-		fullMsg += _("Any unsaved race records will be lost.");
 
-		auto scene = std::make_shared<MessageScene>(
-			display, director, title, fullMsg, true);
-		scene->GetOkSignal().connect(callback);
+template<class FN>
+void ShowConfirmDialog(Display::Display &display, GameDirector &director,
+	const std::string &title, const std::string &message,
+	const FN &callback)
+{
+	std::string fullMsg = message;
+	fullMsg += "\n\n";
+	fullMsg += _("Any unsaved race records will be lost.");
 
-		director.RequestPushScene(scene);
-	}
+	auto scene = std::make_shared<MessageScene>(
+		display, director, title, fullMsg, true);
+	scene->GetOkSignal().connect(callback);
+
+	director.RequestPushScene(scene);
 }
 
+}  // namespace
+
 PauseMenuScene::PauseMenuScene(Display::Display &display,
-                               GameDirector &director) :
+	GameDirector &director) :
 	SUPER(display, "Pause Menu"),
 	display(display), director(director)
 {
