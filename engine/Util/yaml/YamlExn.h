@@ -24,7 +24,7 @@
 namespace HoverRace {
 namespace Util {
 namespace yaml {
-	
+
 class YamlExn : public std::exception
 {
 	using SUPER = std::exception;
