@@ -78,10 +78,10 @@ protected:
 			Observer *observer, Display::Hud *hud);
 
 		Viewport(const Viewport &o) = delete;
-		Viewport(Viewport &&viewport) = default;
+		Viewport(Viewport &&viewport) noexcept = default;
 
 		Viewport &operator=(const Viewport &o) = delete;
-		Viewport &operator=(Viewport &&viewport) = default;
+		Viewport &operator=(Viewport &&viewport) noexcept = default;
 
 		void SetCell(Display::HudCell cell);
 
