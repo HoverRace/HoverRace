@@ -5,13 +5,14 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <!--BEGIN PROJECT_NAME--><title>$projectname: $title</title><!--END PROJECT_NAME-->
 <!--BEGIN !PROJECT_NAME--><title>$title</title><!--END !PROJECT_NAME-->
-<link href="$relpath$tabs.css" rel="stylesheet" type="text/css"/>
+<link href="$relpath^tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script type="text/javascript" src="$relpath$dynsections.js"></script>
+<script type="text/javascript" src="$relpath^dynsections.js"></script>
 $treeview
 $search
 $mathjax
-<link href="$relpath$customdoxygen.css" rel="stylesheet" type="text/css" />
+<link href="$relpath^customdoxygen.css" rel="stylesheet" type="text/css" />
+$extrastylesheet
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -22,10 +23,10 @@ $mathjax
  <tbody>
  <tr style="height: 56px;">
   <!--BEGIN PROJECT_LOGO-->
-  <td id="projectlogo"><img alt="Logo" src="$relpath$$projectlogo"/></td>
+  <td id="projectlogo"><img alt="Logo" src="$relpath^projectlogo"/></td>
   <!--END PROJECT_LOGO-->
   <!--BEGIN PROJECT_NAME-->
-  <td style="padding-left: 0.5em;">
+  <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">$projectname
    <!--BEGIN PROJECT_NUMBER-->&#160;<span id="projectnumber">$projectnumber</span><!--END PROJECT_NUMBER-->
    </div>
