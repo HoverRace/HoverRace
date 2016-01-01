@@ -64,9 +64,9 @@ void GameScene::Viewport::SetCell(Display::HudCell cell)
 }
 
 GameScene::GameScene(const std::string &name,
-                     Display::Display &display, GameDirector &director,
-                     Script::Core *scripting, std::shared_ptr<Rules> rules,
-                     std::shared_ptr<Loader> loader) :
+	Display::Display &display, GameDirector &director,
+	Script::Core *scripting, std::shared_ptr<Rules> rules,
+	std::shared_ptr<Loader> loader) :
 	SUPER(name),
 	display(display), director(director), scripting(scripting), rules(rules),
 	finishedLoading(false), muted(false),
