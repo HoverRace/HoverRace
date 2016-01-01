@@ -41,6 +41,7 @@ desktop.ini
 /lib/*.pdb
 
 # /po/
+/po/*.mo
 /po/*.pot
 
 # /share/
