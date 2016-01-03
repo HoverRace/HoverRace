@@ -1,7 +1,7 @@
 
 // Player.h
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -115,10 +115,10 @@ public:
 	}
 
 public:
-	typedef boost::signals2::signal<void()> nameChangedSignal_t;
+	using nameChangedSignal_t = boost::signals2::signal<void()>;
 	nameChangedSignal_t &GetNameChangedSignal() { return nameChangedSignal; }
 
-	typedef boost::signals2::signal<void()> connectionStateChanged_t;
+	using connectionStateChanged_t = boost::signals2::signal<void()>;
 	connectionStateChanged_t &GetConnectionStateChangedSignal() { return connectionStateChangedSignal; }
 
 protected:
