@@ -50,7 +50,7 @@ if(WIN32)
 		YAML_DECLARE_STATIC)  # Use static linking for libYAML.
 endif()
 target_link_libraries(hrengine ${Boost_LIBRARIES} ${DEPS_LIBRARIES}
-	liblua luabind)
+	liblua luabind SQLiteCpp)
 
 # Install prebuilt bundled DLLs into the right locations.
 if(WIN32)
