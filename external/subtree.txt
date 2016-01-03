@@ -2,4 +2,4 @@
 # dirname repository branch
 lua https://github.com/LuaDist/lua.git master
 luabind https://github.com/rpavlik/luabind.git master
-
+sqlitecpp https://github.com/SRombauts/SQLiteCpp.git 8f28c4c
