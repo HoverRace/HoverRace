@@ -1,0 +1,33 @@
+# Copyright (c) 2012-2015 Sebastien Rombauts (sebastien.rombauts@gmail.com)
+
+language: cpp
+
+# compilers to add to build matrix
+compiler:
+  - gcc
+  - clang
+
+sudo: false
+
+addons:
+  apt:
+    packages:
+    - cppcheck
+
+before_install:
+  - pip install --user cpp-coveralls
+
+# scripts to run before build
+before_script:
+  - mkdir build
+  - cd build
+  - cmake -DCMAKE_BUILD_TYPE=Debug -DSQLITECPP_USE_GCOV=ON -DSQLITECPP_BUILD_EXAMPLES=ON -DSQLITECPP_BUILD_TESTS=ON -DSQLITECPP_RUN_DOXYGEN=OFF ..
+
+# build examples, and run tests (ie make & make test)
+script:
+  - cmake --build .
+  - ctest --output-on-failure
+
+# publish GCov coveralls results
+after_success:
+  - coveralls -e build/CMakeFiles -e examples -e googletest -e sqlite3 -e tests
