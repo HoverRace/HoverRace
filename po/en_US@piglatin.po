@@ -77,16 +77,20 @@ msgstr ""
 "Areway ouyay uresay ouyay antway otay abandonway the aceray andway eternray "
 "otay the ainmay enumay?"
 
-#: client/Game2/AudioSettingsScene.cpp client/Game2/SettingsMenuScene.cpp
+#: client/Game2/AudioSettingsScene.cpp
+#: client/Game2/SettingsMenuScene.cpp
 msgid "Audio"
 msgstr "Audioway"
 
-#: client/Game2/LocaleSelectScene.cpp client/Game2/LocaleSettingsScene.cpp
+#: client/Game2/LocaleSelectScene.cpp
+#: client/Game2/LocaleSettingsScene.cpp
 msgid "Auto-detect"
 msgstr "Autoway-etectday"
 
-#: client/Game2/GameSelectScene.cpp client/Game2/PracticeSetupScene.cpp
-#: client/Game2/SettingsMenuScene.cpp client/Game2/TrackSelectScene.cpp
+#: client/Game2/GameSelectScene.cpp
+#: client/Game2/PracticeSetupScene.cpp
+#: client/Game2/SettingsMenuScene.cpp
+#: client/Game2/TrackSelectScene.cpp
 msgid "Back"
 msgstr ""
 
@@ -133,10 +137,13 @@ msgid "CX craft"
 msgstr "CX aftcray"
 
 #: engine/Control/Controller.cpp
+#: engine/Control/Controller.cpp
+#: engine/Control/Controller.cpp
 msgid "Camera"
 msgstr ""
 
-#: engine/Control/Controller.cpp engine/Control/ControllerStrings.cpp
+#: engine/Control/Controller.cpp
+#: engine/Control/ControllerStrings.cpp
 msgid "Cancel"
 msgstr "Ancelcay"
 
@@ -182,15 +189,19 @@ msgid "Connection list not found"
 msgstr "Onnectioncay erroray ithway"
 
 #: engine/MazeCompiler/LevelBuilder.cpp
+#: engine/MazeCompiler/LevelBuilder.cpp
 #, fuzzy, c-format, boost-format
 msgid "Connection to a nonexistent section %d"
 msgstr "&Internetway Eetingmay Oomray"
 
 #: engine/Control/Controller.cpp
+#: engine/Control/Controller.cpp
+#: engine/Control/Controller.cpp
 #, fuzzy
 msgid "Console"
 msgstr "Oseclay"
 
+#: engine/Control/Controller.cpp
 #: engine/Control/Controller.cpp
 #, fuzzy
 msgid "ConsoleToggle"
@@ -231,15 +242,22 @@ msgid "Down"
 msgstr "Olumevay"
 
 #: engine/MazeCompiler/LevelBuilder.cpp
+#: engine/MazeCompiler/LevelBuilder.cpp
 #, c-format, boost-format
 msgid "Duplicate section ID (%d) on line %d"
 msgstr ""
 
 #: compilers/ResourceCompiler/BitmapHelper.cpp
+#: compilers/ResourceCompiler/BitmapHelper.cpp
+#: compilers/ResourceCompiler/BitmapHelper.cpp
+#: compilers/ResourceCompiler/ResActorBuilder.cpp
+#: compilers/ResourceCompiler/ResActorBuilder.cpp
 #: compilers/ResourceCompiler/ResActorBuilder.cpp
 #: compilers/ResourceCompiler/ResSoundBuilder.cpp
 #: compilers/ResourceCompiler/ResourceCompiler.cpp
+#: compilers/ResourceCompiler/ResourceCompiler.cpp
 #: compilers/ResourceCompiler/ResourceLibBuilder.cpp
+#: compilers/ResourceCompiler/TextParsing.cpp
 #: compilers/ResourceCompiler/TextParsing.cpp
 msgid "ERROR"
 msgstr ""
@@ -410,6 +428,8 @@ msgid "Home"
 msgstr ""
 
 #: compilers/ResourceCompiler/ResBitmapBuilder.cpp
+#: compilers/ResourceCompiler/ResBitmapBuilder.cpp
+#: compilers/ResourceCompiler/ResBitmapBuilder.cpp
 msgid "INFO"
 msgstr ""
 
@@ -452,7 +472,8 @@ msgstr ""
 msgid "Language"
 msgstr "Anguagelay"
 
-#: client/Game2/LocaleSettingsScene.cpp client/Game2/SettingsMenuScene.cpp
+#: client/Game2/LocaleSettingsScene.cpp
+#: client/Game2/SettingsMenuScene.cpp
 #, fuzzy
 msgid "Language and Units"
 msgstr "Anguagelay and Nitsuay"
@@ -494,7 +515,9 @@ msgstr ""
 msgid "Media Select"
 msgstr ""
 
-#: engine/Control/Controller.cpp engine/Control/ControllerStrings.cpp
+#: engine/Control/Controller.cpp
+#: engine/Control/Controller.cpp
+#: engine/Control/ControllerStrings.cpp
 msgid "Menu"
 msgstr ""
 
@@ -578,6 +601,7 @@ msgstr ""
 msgid "Multiplayer"
 msgstr "Ultiplayermay"
 
+#: engine/Control/ControllerStrings.cpp
 #: engine/Control/ControllerStrings.cpp
 msgid "Mute"
 msgstr ""
@@ -691,7 +715,8 @@ msgstr ""
 msgid "Numpad Enter"
 msgstr ""
 
-#: client/Game2/MessageScene.cpp engine/Control/Controller.cpp
+#: client/Game2/MessageScene.cpp
+#: engine/Control/Controller.cpp
 msgid "OK"
 msgstr "OK"
 
@@ -736,6 +761,8 @@ msgid "Play"
 msgstr "Ayerplay"
 
 #: engine/Control/Controller.cpp
+#: engine/Control/Controller.cpp
+#: engine/Control/Controller.cpp
 msgid "Player"
 msgstr "Ayerplay"
 
@@ -778,13 +805,16 @@ msgid "Quit"
 msgstr "Itquay"
 
 #: client/Game2/PauseMenuScene.cpp
+#: client/Game2/PauseMenuScene.cpp
 msgid "Quit to Desktop"
 msgstr "Itquay otay Esktopday"
 
 #: client/Game2/PauseMenuScene.cpp
+#: client/Game2/PauseMenuScene.cpp
 msgid "Quit to Main Menu"
 msgstr "Itquay otay Ainmay Enumay"
 
+#: client/Game2/Observer.cpp
 #: client/Game2/Observer.cpp
 msgid "Rank"
 msgstr ""
@@ -801,6 +831,7 @@ msgstr ""
 msgid "Reset all settings on this screen to their default values?"
 msgstr ""
 
+#: client/Game2/SettingsScene.cpp
 #: client/Game2/SettingsScene.cpp
 msgid "Reset to defaults"
 msgstr ""
@@ -847,6 +878,7 @@ msgid "Scroll Lock"
 msgstr ""
 
 #: engine/MazeCompiler/LevelBuilder.cpp
+#: engine/MazeCompiler/LevelBuilder.cpp
 #, c-format, boost-format
 msgid "Section ID missing on line %d"
 msgstr ""
@@ -868,10 +900,12 @@ msgstr "Ullscreenfay Esolutionray"
 msgid "Select your craft with the arrow keys"
 msgstr "Electsay ouryay aftcray ithway ethey arrowyay eyskay"
 
-#: client/Game2/MainMenuScene.cpp client/Game2/SettingsMenuScene.cpp
+#: client/Game2/MainMenuScene.cpp
+#: client/Game2/SettingsMenuScene.cpp
 msgid "Settings"
 msgstr "Ettingsay"
 
+#: client/Game2/SettingsScene.cpp
 #: client/Game2/SettingsScene.cpp
 #, fuzzy
 msgid "Settings changed"
@@ -881,7 +915,9 @@ msgstr "Etting&say"
 msgid "Side-by-side"
 msgstr ""
 
-#: client/Game2/ClientApp.cpp client/Game2/MainMenuScene.cpp
+#: client/Game2/ClientApp.cpp
+#: client/Game2/MainMenuScene.cpp
+#: client/Game2/MainMenuScene.cpp
 msgid "Silent Mode"
 msgstr "Ilentsay Odemay"
 
@@ -912,6 +948,7 @@ msgstr ""
 msgid "Starting in %02d.%02d sec. for %d laps"
 msgstr ""
 
+#: engine/Control/ControllerStrings.cpp
 #: engine/Control/ControllerStrings.cpp
 msgid "Stop"
 msgstr ""
@@ -962,6 +999,7 @@ msgstr ""
 msgid "This level contains:"
 msgstr ""
 
+#: client/Game2/SettingsScene.cpp
 #: client/Game2/SettingsScene.cpp
 msgid "This will abandon any race in progress."
 msgstr ""
@@ -1045,6 +1083,7 @@ msgid "Unable to create the output file: %s"
 msgstr "Unablay otay eatecray ocketsay"
 
 #: engine/MazeCompiler/TrackCompiler.cpp
+#: engine/MazeCompiler/TrackCompiler.cpp
 msgid "Unable to find [HEADER] section"
 msgstr ""
 
@@ -1082,6 +1121,8 @@ msgid "Unhandled component type"
 msgstr ""
 
 #: engine/Control/ControllerStrings.cpp
+#: engine/Control/ControllerStrings.cpp
+#: engine/Control/ControllerStrings.cpp
 msgid "Unknown"
 msgstr "Unknownway"
 
@@ -1113,7 +1154,8 @@ msgstr ""
 msgid "Usage: MazeCompiler <outputfile> <inputfile>"
 msgstr ""
 
-#: client/Game2/SettingsMenuScene.cpp client/Game2/VideoSettingsScene.cpp
+#: client/Game2/SettingsMenuScene.cpp
+#: client/Game2/VideoSettingsScene.cpp
 msgid "Video"
 msgstr "Ideovay"
 
@@ -1125,6 +1167,7 @@ msgstr "Olumevay Ownday"
 msgid "Volume Up"
 msgstr "Olumevay Upway"
 
+#: compilers/ResourceCompiler/ResBitmapBuilder.cpp
 #: compilers/ResourceCompiler/ResBitmapBuilder.cpp
 msgid "WARNING"
 msgstr ""
@@ -1157,7 +1200,9 @@ msgstr ""
 msgid "Wrong argument count"
 msgstr ""
 
-#: client/Game2/main.cpp compilers/MazeCompiler/main.cpp
+#: client/Game2/main.cpp
+#: client/Game2/main.cpp
+#: compilers/MazeCompiler/main.cpp
 msgid "You found a bug!"
 msgstr "Ouyay oundfay a ugbay!"
 
@@ -1187,6 +1232,9 @@ msgid "elements"
 msgstr ""
 
 #: compilers/ResourceCompiler/ResourceCompiler.cpp
+#: compilers/ResourceCompiler/ResourceCompiler.cpp
+#: compilers/ResourceCompiler/ResourceCompiler.cpp
+#: compilers/ResourceCompiler/ResourceCompiler.cpp
 msgid "error"
 msgstr ""
 
@@ -1210,6 +1258,7 @@ msgstr ""
 msgid "problem reading bitmap parameters"
 msgstr ""
 
+#: compilers/ResourceCompiler/ResourceCompiler.cpp
 #: compilers/ResourceCompiler/ResourceCompiler.cpp
 msgid "problem reading sound parameters"
 msgstr ""

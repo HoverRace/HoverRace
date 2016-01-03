@@ -1,7 +1,7 @@
 
 // LocalPlayer.h
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -42,7 +42,8 @@ namespace Player {
  */
 class MR_DllDeclare LocalPlayer : public Player
 {
-	typedef Player SUPER;
+	using SUPER = Player;
+
 public:
 	LocalPlayer() = delete;
 	LocalPlayer(std::shared_ptr<Profile> profile, bool human, bool competing);
