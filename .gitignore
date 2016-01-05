@@ -2,6 +2,7 @@
 .ruby-version
 .suo
 .vim-template*
+.vimrc
 .vs
 *~
 *.bak
@@ -14,7 +15,6 @@ Thumbs.db
 desktop.ini
 
 # /
-/.vimrc
 /*.log
 /*.old
 /build
