@@ -1,7 +1,7 @@
 
 // Profile.h
 //
-// Copyright (c) 2014, 2015 Michael Imamura.
+// Copyright (c) 2014-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -53,6 +53,8 @@ class MR_DllDeclare Profile
 {
 public:
 	Profile();
+	Profile(const boost::uuids::uuid &uid) :
+		Profile(uid, "Player", Display::COLOR_WHITE, Display::COLOR_BLACK) { }
 	Profile(const boost::uuids::uuid &uid, const std::string &name,
 		Display::Color primaryColor, Display::Color secondaryColor) :
 		uid(uid), name(name),
