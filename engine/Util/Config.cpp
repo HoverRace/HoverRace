@@ -1,7 +1,7 @@
 
 // Config.cpp
 //
-// Copyright (c) 2008-2010, 2012-2015 Michael Imamura.
+// Copyright (c) 2008-2010, 2012-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -769,23 +769,19 @@ void Config::LoadSystem(const OS::path_t &path)
 		return;
 	}
 
-	yaml::Parser *parser = NULL;
 	try {
-		parser = new yaml::Parser(in);
-		yaml::Node *node = parser->GetRootNode();
+		yaml::Parser parser{in};
+		yaml::Node *node = parser.GetRootNode();
 
 		yaml::MapNode *root = dynamic_cast<yaml::MapNode*>(node);
 		if (root != NULL) {
 			app.Load(dynamic_cast<yaml::MapNode*>(root->Get("app")));
 		}
-
-		delete parser;
 	}
 	catch (yaml::EmptyDocParserExn&) {
 		// Ignore.
 	}
 	catch (yaml::ParserExn &ex) {
-		if (parser != NULL) delete parser;
 		fclose(in);
 		throw ConfigExn(ex.what());
 	}
@@ -809,10 +805,9 @@ void Config::Load()
 		return;
 	}
 
-	yaml::Parser *parser = NULL;
 	try {
-		parser = new yaml::Parser(in);
-		yaml::Node *node = parser->GetRootNode();
+		yaml::Parser parser{in};
+		yaml::Node *node = parser.GetRootNode();
 
 		yaml::MapNode *root = dynamic_cast<yaml::MapNode*>(node);
 		if (root != NULL) {
@@ -840,14 +835,11 @@ void Config::Load()
 
 			cameraHash.Load(dynamic_cast<yaml::MapNode*>(root->Get("camera_hash")));
 		}
-
-		delete parser;
 	}
 	catch (yaml::EmptyDocParserExn&) {
 		// Ignore.
 	}
 	catch (yaml::ParserExn &ex) {
-		if (parser != NULL) delete parser;
 		fclose(in);
 		throw ConfigExn(ex.what());
 	}
@@ -883,35 +875,32 @@ void Config::Save() const
 		throw ConfigExn(msg.c_str());
 	}
 
-	yaml::Emitter *emitter = NULL;
 	try {
-		emitter = new yaml::Emitter(out);
-		emitter->StartMap();
+		yaml::Emitter emitter{out};
+		emitter.StartMap();
 
-		SaveVersion(emitter);
-		video.Save(emitter);
-		audio.Save(emitter);
-		i18n.Save(emitter);
-		misc.Save(emitter);
-		player.Save(emitter);
-		net.Save(emitter);
+		SaveVersion(&emitter);
+		video.Save(&emitter);
+		audio.Save(&emitter);
+		i18n.Save(&emitter);
+		misc.Save(&emitter);
+		player.Save(&emitter);
+		net.Save(&emitter);
 
 		// Save list of controls.
-		emitter->MapKey("controls_hash");
-		emitter->StartSeq();
+		emitter.MapKey("controls_hash");
+		emitter.StartSeq();
 		for (int i = 0; i < MAX_PLAYERS; ++i) {
-			controlsHash[i].Save(emitter);
+			controlsHash[i].Save(&emitter);
 		}
-		emitter->EndSeq();
+		emitter.EndSeq();
 
-		cameraHash.Save(emitter);
-		ui.Save(emitter);
+		cameraHash.Save(&emitter);
+		ui.Save(&emitter);
 
-		emitter->EndMap();
-		delete emitter;
+		emitter.EndMap();
 	}
 	catch (yaml::EmitterExn &ex) {
-		if (emitter != NULL) delete emitter;
 		fclose(out);
 		throw std::exception(ex);
 	}
