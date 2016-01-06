@@ -95,8 +95,8 @@ using HoverRace::Control::InputEventController;
 	root->ReadPath(#name, name)
 
 #define EMIT_VAR(emitter, name) \
-	(emitter)->MapKey(#name); \
-	(emitter)->Value(name);
+	(emitter).MapKey(#name); \
+	(emitter).Value(name);
 
 namespace HoverRace {
 namespace Util {
@@ -879,24 +879,24 @@ void Config::Save() const
 		yaml::Emitter emitter{out};
 		emitter.StartMap();
 
-		SaveVersion(&emitter);
-		video.Save(&emitter);
-		audio.Save(&emitter);
-		i18n.Save(&emitter);
-		misc.Save(&emitter);
-		player.Save(&emitter);
-		net.Save(&emitter);
+		SaveVersion(emitter);
+		video.Save(emitter);
+		audio.Save(emitter);
+		i18n.Save(emitter);
+		misc.Save(emitter);
+		player.Save(emitter);
+		net.Save(emitter);
 
 		// Save list of controls.
 		emitter.MapKey("controls_hash");
 		emitter.StartSeq();
 		for (int i = 0; i < MAX_PLAYERS; ++i) {
-			controlsHash[i].Save(&emitter);
+			controlsHash[i].Save(emitter);
 		}
 		emitter.EndSeq();
 
-		cameraHash.Save(&emitter);
-		ui.Save(&emitter);
+		cameraHash.Save(emitter);
+		ui.Save(emitter);
 
 		emitter.EndMap();
 	}
@@ -908,7 +908,7 @@ void Config::Save() const
 	fclose(out);
 }
 
-void Config::SaveVersion(yaml::Emitter *emitter) const
+void Config::SaveVersion(yaml::Emitter &emitter) const
 {
 	const auto &version = shortVersion;
 	EMIT_VAR(emitter, version);
@@ -981,10 +981,10 @@ void Config::video_t::Load(yaml::MapNode *root)
 	READ_BOOL(root, stackedSplitscreen);
 }
 
-void Config::video_t::Save(yaml::Emitter *emitter) const
+void Config::video_t::Save(yaml::Emitter &emitter) const
 {
-	emitter->MapKey("video");
-	emitter->StartMap();
+	emitter.MapKey("video");
+	emitter.StartMap();
 
 	EMIT_VAR(emitter, gamma);
 	EMIT_VAR(emitter, contrast);
@@ -1004,7 +1004,7 @@ void Config::video_t::Save(yaml::Emitter *emitter) const
 
 	EMIT_VAR(emitter, stackedSplitscreen);
 
-	emitter->EndMap();
+	emitter.EndMap();
 }
 
 // audio ///////////////////////////////////////////////////////////////////////
@@ -1021,14 +1021,14 @@ void Config::audio_t::Load(yaml::MapNode *root)
 	READ_DOUBLE(root, sfxVolume, 0.0f, 1.0f);
 }
 
-void Config::audio_t::Save(yaml::Emitter *emitter) const
+void Config::audio_t::Save(yaml::Emitter &emitter) const
 {
-	emitter->MapKey("audio");
-	emitter->StartMap();
+	emitter.MapKey("audio");
+	emitter.StartMap();
 
 	EMIT_VAR(emitter, sfxVolume);
 
-	emitter->EndMap();
+	emitter.EndMap();
 }
 
 // i18n ////////////////////////////////////////////////////////////////////////
@@ -1045,14 +1045,14 @@ void Config::i18n_t::Load(yaml::MapNode *root)
 	READ_STRING(root, preferredLocale);
 }
 
-void Config::i18n_t::Save(yaml::Emitter *emitter) const
+void Config::i18n_t::Save(yaml::Emitter &emitter) const
 {
-	emitter->MapKey("i18n");
-	emitter->StartMap();
+	emitter.MapKey("i18n");
+	emitter.StartMap();
 
 	EMIT_VAR(emitter, preferredLocale);
 
-	emitter->EndMap();
+	emitter.EndMap();
 }
 
 // misc ////////////////////////////////////////////////////////////////////////
@@ -1069,14 +1069,14 @@ void Config::misc_t::Load(yaml::MapNode *root)
 	READ_PATH(root, screenshotPath);
 }
 
-void Config::misc_t::Save(yaml::Emitter *emitter) const
+void Config::misc_t::Save(yaml::Emitter &emitter) const
 {
-	emitter->MapKey("misc");
-	emitter->StartMap();
+	emitter.MapKey("misc");
+	emitter.StartMap();
 
 	EMIT_VAR(emitter, screenshotPath);
 
-	emitter->EndMap();
+	emitter.EndMap();
 }
 
 // player //////////////////////////////////////////////////////////////////////
@@ -1113,14 +1113,14 @@ void Config::player_t::Load(yaml::MapNode *root)
 	READ_STRING(root, nickName);
 }
 
-void Config::player_t::Save(yaml::Emitter *emitter) const
+void Config::player_t::Save(yaml::Emitter &emitter) const
 {
-	emitter->MapKey("player");
-	emitter->StartMap();
+	emitter.MapKey("player");
+	emitter.StartMap();
 
 	EMIT_VAR(emitter, nickName);
 
-	emitter->EndMap();
+	emitter.EndMap();
 }
 
 // net /////////////////////////////////////////////////////////////////////////
@@ -1162,10 +1162,10 @@ void Config::net_t::Load(yaml::MapNode *root)
 	}
 }
 
-void Config::net_t::Save(yaml::Emitter *emitter) const
+void Config::net_t::Save(yaml::Emitter &emitter) const
 {
-	emitter->MapKey("net");
-	emitter->StartMap();
+	emitter.MapKey("net");
+	emitter.StartMap();
 
 	EMIT_VAR(emitter, mainServer);
 	EMIT_VAR(emitter, updateServer);
@@ -1178,12 +1178,12 @@ void Config::net_t::Save(yaml::Emitter *emitter) const
 	EMIT_VAR(emitter, tcpRecvPort);
 	EMIT_VAR(emitter, tcpServPort);
 
-	emitter->EndMap();
+	emitter.EndMap();
 }
 
 // controls ////////////////////////////////////////////////////////////////////
 
-void Config::controlsHash_t::Load(yaml::MapNode* root)
+void Config::controlsHash_t::Load(yaml::MapNode *root)
 {
 	if (root == NULL) return;
 
@@ -1197,9 +1197,9 @@ void Config::controlsHash_t::Load(yaml::MapNode* root)
 	READ_INT(root, lookBack, 0, INT_MAX);
 }
 
-void Config::controlsHash_t::Save(yaml::Emitter* emitter) const
+void Config::controlsHash_t::Save(yaml::Emitter &emitter) const
 {
-	emitter->StartMap();
+	emitter.StartMap();
 
 	EMIT_VAR(emitter, motorOn);
 	EMIT_VAR(emitter, right);
@@ -1210,10 +1210,10 @@ void Config::controlsHash_t::Save(yaml::Emitter* emitter) const
 	EMIT_VAR(emitter, weapon);
 	EMIT_VAR(emitter, lookBack);
 
-	emitter->EndMap();
+	emitter.EndMap();
 }
 
-void Config::cameraHash_t::Load(yaml::MapNode* root)
+void Config::cameraHash_t::Load(yaml::MapNode *root)
 {
 	if (root == NULL) return;
 
@@ -1224,10 +1224,10 @@ void Config::cameraHash_t::Load(yaml::MapNode* root)
 	READ_INT(root, reset, 0, INT_MAX);
 }
 
-void Config::cameraHash_t::Save(yaml::Emitter* emitter) const
+void Config::cameraHash_t::Save(yaml::Emitter &emitter) const
 {
-	emitter->MapKey("camera_hash");
-	emitter->StartMap();
+	emitter.MapKey("camera_hash");
+	emitter.StartMap();
 
 	EMIT_VAR(emitter, zoomIn);
 	EMIT_VAR(emitter, zoomOut);
@@ -1235,10 +1235,10 @@ void Config::cameraHash_t::Save(yaml::Emitter* emitter) const
 	EMIT_VAR(emitter, panDown);
 	EMIT_VAR(emitter, reset);
 
-	emitter->EndMap();
+	emitter.EndMap();
 }
 
-void Config::ui_t::Load(yaml::MapNode* root)
+void Config::ui_t::Load(yaml::MapNode *root)
 {
 	if (root == NULL) return;
 
@@ -1260,10 +1260,10 @@ void Config::ui_t::Load(yaml::MapNode* root)
 	READ_INT(root, menuPrev, 0, INT_MAX);
 }
 
-void Config::ui_t::Save(yaml::Emitter* emitter) const
+void Config::ui_t::Save(yaml::Emitter &emitter) const
 {
-	emitter->MapKey("ui");
-	emitter->StartMap();
+	emitter.MapKey("ui");
+	emitter.StartMap();
 
 	EMIT_VAR(emitter, consoleToggle);
 	EMIT_VAR(emitter, consoleUp);
@@ -1282,7 +1282,7 @@ void Config::ui_t::Save(yaml::Emitter* emitter) const
 	EMIT_VAR(emitter, menuNext);
 	EMIT_VAR(emitter, menuPrev);
 
-	emitter->EndMap();
+	emitter.EndMap();
 }
 
 }  // namespace Util

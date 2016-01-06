@@ -1,7 +1,7 @@
 
 // Config.h
 //
-// Copyright (c) 2008-2010, 2012-2015 Michael Imamura.
+// Copyright (c) 2008-2010, 2012-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -161,7 +161,7 @@ public:
 	void Save() const;
 
 private:
-	void SaveVersion(yaml::Emitter*) const;
+	void SaveVersion(yaml::Emitter&) const;
 
 public:
 	static const std::string TRACK_EXT;
@@ -221,7 +221,7 @@ public:
 
 		void ResetToDefaults();
 		void Load(yaml::MapNode*);
-		void Save(yaml::Emitter*) const;
+		void Save(yaml::Emitter&) const;
 	} video;
 
 	struct audio_t
@@ -230,7 +230,7 @@ public:
 
 		void ResetToDefaults();
 		void Load(yaml::MapNode*);
-		void Save(yaml::Emitter*) const;
+		void Save(yaml::Emitter&) const;
 	} audio;
 
 	struct i18n_t
@@ -239,7 +239,7 @@ public:
 
 		void ResetToDefaults();
 		void Load(yaml::MapNode*);
-		void Save(yaml::Emitter*) const;
+		void Save(yaml::Emitter&) const;
 	} i18n;
 
 	struct misc_t
@@ -248,7 +248,7 @@ public:
 
 		void ResetToDefaults();
 		void Load(yaml::MapNode*);
-		void Save(yaml::Emitter*) const;
+		void Save(yaml::Emitter&) const;
 	} misc;
 
 	struct player_t
@@ -257,7 +257,7 @@ public:
 
 		void ResetToDefaults();
 		void Load(yaml::MapNode*);
-		void Save(yaml::Emitter*) const;
+		void Save(yaml::Emitter&) const;
 	} player;
 
 	struct net_t
@@ -279,7 +279,7 @@ public:
 
 		void ResetToDefaults();
 		void Load(yaml::MapNode*);
-		void Save(yaml::Emitter*) const;
+		void Save(yaml::Emitter&) const;
 	} net;
 
 	static const int MAX_PLAYERS = 4;
@@ -297,7 +297,7 @@ public:
 		int lookBack;
 
 		void Load(yaml::MapNode*);
-		void Save(yaml::Emitter*) const;
+		void Save(yaml::Emitter&) const;
 	} controlsHash[MAX_PLAYERS];
 
 	struct cameraHash_t
@@ -309,7 +309,7 @@ public:
 		int reset;
 
 		void Load(yaml::MapNode*);
-		void Save(yaml::Emitter*) const;
+		void Save(yaml::Emitter&) const;
 	} cameraHash;
 
 	struct ui_t
@@ -333,7 +333,7 @@ public:
 		int menuPrev;
 
 		void Load(yaml::MapNode*);
-		void Save(yaml::Emitter*) const;
+		void Save(yaml::Emitter&) const;
 	} ui;
 
 	struct runtime_t
