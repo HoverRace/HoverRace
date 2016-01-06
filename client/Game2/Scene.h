@@ -74,10 +74,10 @@ protected:
 			Clear();
 		}
 
-		ConnList &operator<<(boost::signals2::connection &&conn)
+		template<class T>
+		ConnList &operator<<(T &&conn)
 		{
-			conns.emplace_back(
-				std::forward<boost::signals2::connection>(conn));
+			conns.emplace_back(std::forward<decltype(conn)>(conn));
 			return *this;
 		}
 
