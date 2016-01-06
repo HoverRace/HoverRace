@@ -16,6 +16,7 @@
 #include <array>
 #include <chrono>
 #include <exception>
+#include <forward_list>
 #include <functional>
 #include <map>
 #include <memory>
