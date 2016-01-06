@@ -77,7 +77,7 @@ protected:
 		template<class T>
 		ConnList &operator<<(T &&conn)
 		{
-			conns.emplace_back(std::forward<decltype(conn)>(conn));
+			conns.emplace_front(std::forward<decltype(conn)>(conn));
 			return *this;
 		}
 
@@ -85,12 +85,12 @@ protected:
 		{
 			// Disconnect the connections in reverse order of add.
 			while (!conns.empty()) {
-				conns.pop_back();
+				conns.pop_front();
 			}
 		}
 
 	private:
-		std::list<boost::signals2::scoped_connection> conns;
+		std::forward_list<boost::signals2::scoped_connection> conns;
 	};
 
 public:
