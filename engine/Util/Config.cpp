@@ -422,7 +422,7 @@ OS::path_t Config::GetBaseDataPath() const
 #	ifdef _WIN32
 		OS::path_t retv = GetDefaultBasePath();
 #	else
-		OS::path_t retv = (xdg == NULL) ? GetDefaultBasePath() : xdgDataHome(xdg);
+		OS::path_t retv = xdg ? xdgDataHome(xdg) : GetDefaultBasePath();
 #	endif
 	AppendPackageSubdir(retv);
 	return retv;
@@ -437,7 +437,7 @@ OS::path_t Config::GetBaseConfigPath() const
 #	ifdef _WIN32
 		OS::path_t retv = GetDefaultBasePath();
 #	else
-		OS::path_t retv = (xdg == NULL) ? GetDefaultBasePath() : xdgConfigHome(xdg);
+		OS::path_t retv = xdg ? xdgConfigHome(xdg) : GetDefaultBasePath();
 #	endif
 	AppendPackageSubdir(retv);
 	return retv;
