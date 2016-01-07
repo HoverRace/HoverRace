@@ -81,7 +81,8 @@ protected:
 			return *this;
 		}
 
-		void Clear()
+		// This can be noexcept since we check for empty().
+		void Clear() noexcept
 		{
 			// Disconnect the connections in reverse order of add.
 			while (!conns.empty()) {
