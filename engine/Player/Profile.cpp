@@ -33,6 +33,21 @@ Profile::Profile() :
 {
 }
 
+void Profile::SetName(const std::string &name)
+{
+	this->name = name;
+}
+
+void Profile::SetPrimaryColor(Display::Color color)
+{
+	primaryColor = color;
+}
+
+void Profile::SetSecondaryColor(Display::Color color)
+{
+	secondaryColor = color;
+}
+
 /**
  * Retrieve the user's avatar, if available.
  * @return The avatar resource (may be @c nullptr).

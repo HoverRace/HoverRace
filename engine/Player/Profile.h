@@ -73,11 +73,20 @@ public:
 	 * @return The name (never empty).
 	 */
 	const std::string &GetName() const { return name; }
+protected:
+	void SetName(const std::string &name);
 
+public:
 	Display::Color GetPrimaryColor() const { return primaryColor; }
+protected:
+	void SetPrimaryColor(Display::Color color);
 
+public:
 	Display::Color GetSecondaryColor() const { return secondaryColor; }
+protected:
+	void SetSecondaryColor(Display::Color color);
 
+public:
 	virtual std::shared_ptr<Display::Res<Display::Texture>>
 		GetAvatar() const;
 
