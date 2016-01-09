@@ -118,6 +118,9 @@ public:
 	const OS::path_t &GetUserTrackPath() const;
 	OS::path_t GetUserTrackPath(const std::string &name) const;
 
+	const OS::path_t &GetProfilePath() const;
+	OS::path_t GetProfilePath(const std::string &uid) const;
+
 	Parcel::ResBundle &GetResBundle() const { return *resBundle; }
 	std::shared_ptr<Parcel::ResBundle> ShareResBundle() const { return resBundle; }
 
@@ -175,6 +178,7 @@ private:
 	OS::path_t mediaPath;
 	OS::path_t sysCfgPath;
 	OS::path_t userTrackPath;
+	OS::path_t profilePath;
 	std::shared_ptr<Parcel::ResBundle> resBundle;
 	std::shared_ptr<Parcel::TrackBundle> trackBundle;
 	std::unique_ptr<Locale> locale;

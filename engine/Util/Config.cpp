@@ -23,6 +23,7 @@
 #include <stdlib.h>
 
 #include <iomanip>
+#include <regex>
 #include <string>
 #include <sstream>
 #include <exception>
@@ -54,6 +55,7 @@
 #include "../Parcel/Bundle.h"
 #include "../Parcel/ResBundle.h"
 #include "../Parcel/TrackBundle.h"
+#include "../Player/ProfileLoadExn.h"
 #include "Locale.h"
 #include "Log.h"
 #include "Str.h"
@@ -248,6 +250,9 @@ Config::Config(const std::string &packageName,
 		trackBundle = std::make_shared<Parcel::TrackBundle>(userTrackPath,
 			mediaTrackBundle);
 #	endif
+
+	OS::path_t profilesDirName = Str::UP("profiles");
+	profilePath = this->dataPath / profilesDirName;
 }
 
 Config::~Config()
@@ -512,11 +517,45 @@ const OS::path_t &Config::GetUserTrackPath() const
  */
 OS::path_t Config::GetUserTrackPath(const std::string &name) const
 {
+	//TODO: Validate track name.
 	std::string filename(name);
 	if (!boost::ends_with(filename, TRACK_EXT)) {
 		filename += TRACK_EXT;
 	}
 	return userTrackPath / Str::UP(filename.c_str());
+}
+
+/**
+ * Retrieve the path to where local user profiles are stored.
+ * @return The path (never empty, may be relative).
+ */
+const OS::path_t &Config::GetProfilePath() const
+{
+	return profilePath;
+}
+
+/**
+ * Retrieve the path to a specific user profile.
+ * @note The path is returned even if it does not exist.  It is up to the caller
+ *       to create the directory if necessary.
+ * @param uid The UID of the profile, as a string.
+ * @return The path (never empty, may be relative).
+ * @throw Player::ProfileLoadExn The UID was in an invalid format.
+ */
+OS::path_t Config::GetProfilePath(const std::string &uid) const
+{
+	static const std::regex UID_RX{
+		"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+		std::regex::extended | std::regex::optimize };
+
+	if (uid.empty()) {
+		throw Player::ProfileLoadExn("Missing UID");
+	}
+	if (!std::regex_match(uid, UID_RX)) {
+		throw Player::ProfileLoadExn("Invalid profile UID: " + uid);
+	}
+
+	return profilePath / Str::UP(uid.c_str());
 }
 
 /**
