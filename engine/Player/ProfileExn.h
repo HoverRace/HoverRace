@@ -1,5 +1,5 @@
 
-// ProfileLoadExn.h
+// ProfileExn.h
 //
 // Copyright (c) 2016 Michael Imamura.
 //
@@ -37,18 +37,18 @@ namespace HoverRace {
 namespace Player {
 
 /**
- * Exception thrown when a profile cannot be loaded.
+ * Exception thrown when a profile cannot be loaded or saved.
  * @author Michael Imamura
  */
-class MR_DllDeclare ProfileLoadExn : public Exception
+class MR_DllDeclare ProfileExn : public Exception
 {
 	using SUPER = Exception;
 
 public:
-	ProfileLoadExn() : SUPER() { }
-	ProfileLoadExn(const std::string &msg) : SUPER(msg) { }
-	ProfileLoadExn(const char *msg) : SUPER(msg) { }
-	virtual ~ProfileLoadExn() noexcept { }
+	ProfileExn() : SUPER() { }
+	ProfileExn(const std::string &msg) : SUPER(msg) { }
+	ProfileExn(const char *msg) : SUPER(msg) { }
+	virtual ~ProfileExn() noexcept { }
 };
 
 }  // Player

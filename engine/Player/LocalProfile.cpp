@@ -26,7 +26,7 @@
 #include "../Util/yaml/ScalarNode.h"
 #include "../Util/yaml/SeqNode.h"
 #include "../Util/yaml/Parser.h"
-#include "ProfileLoadExn.h"
+#include "ProfileExn.h"
 
 #include "LocalProfile.h"
 
@@ -47,7 +47,7 @@ LocalProfile::LocalProfile() :
 
 /**
  * Load a profile from the local filesystem.
- * @throw ProfileLoadExn The profile could not be loaded.
+ * @throw ProfileExn The profile could not be loaded.
  */
 LocalProfile::LocalProfile(const boost::uuids::uuid &uid) :
 	SUPER(uid), loaded(false)

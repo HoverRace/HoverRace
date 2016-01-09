@@ -55,7 +55,7 @@
 #include "../Parcel/Bundle.h"
 #include "../Parcel/ResBundle.h"
 #include "../Parcel/TrackBundle.h"
-#include "../Player/ProfileLoadExn.h"
+#include "../Player/ProfileExn.h"
 #include "Locale.h"
 #include "Log.h"
 #include "Str.h"
@@ -540,7 +540,7 @@ const OS::path_t &Config::GetProfilePath() const
  *       to create the directory if necessary.
  * @param uid The UID of the profile, as a string.
  * @return The path (never empty, may be relative).
- * @throw Player::ProfileLoadExn The UID was in an invalid format.
+ * @throw Player::ProfileExn The UID was in an invalid format.
  */
 OS::path_t Config::GetProfilePath(const std::string &uid) const
 {
@@ -549,10 +549,10 @@ OS::path_t Config::GetProfilePath(const std::string &uid) const
 		std::regex::extended | std::regex::optimize };
 
 	if (uid.empty()) {
-		throw Player::ProfileLoadExn("Missing UID");
+		throw Player::ProfileExn("Missing UID");
 	}
 	if (!std::regex_match(uid, UID_RX)) {
-		throw Player::ProfileLoadExn("Invalid profile UID: " + uid);
+		throw Player::ProfileExn("Invalid profile UID: " + uid);
 	}
 
 	return profilePath / Str::UP(uid.c_str());
