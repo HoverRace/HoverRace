@@ -89,9 +89,6 @@ MR_SimulationTime GameSession::GetSimulationTime() const
 
 void GameSession::Simulate()
 {
-	Level *mCurrentLevel = track->GetLevel();
-	ASSERT(mCurrentLevel != nullptr);
-
 	Util::OS::timestamp_t lSimulateCallTime = Util::OS::Time();
 	MR_SimulationTime lTimeToSimulate;
 
@@ -135,9 +132,6 @@ void GameSession::Simulate()
 void GameSession::SimulateLateElement(MR_FreeElementHandle pElement,
 	MR_SimulationTime pDuration, int pRoom)
 {
-	Level *mCurrentLevel = track->GetLevel();
-	ASSERT(mCurrentLevel != nullptr);
-
 	MR_SimulationTime lTimeToSimulate = pDuration;
 
 	if(lTimeToSimulate < 0) {
