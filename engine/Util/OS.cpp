@@ -358,5 +358,22 @@ FILE *OS::FOpen(const path_t &path, const char *mode)
 #	endif
 }
 
+/**
+ * Display a simple error message to the user.
+ *
+ * On Windows, this will pop up a message box, elsewhere this will just
+ * output to the console.
+ *
+ * @param s The message.
+ */
+void OS::ShowMessage(const std::string &s)
+{
+#	ifdef _WIN32
+		MessageBoxW(nullptr, (const wchar_t*)Str::UW(s), L"HoverRace", MB_OK);
+#	else
+		std::cout << s << std::endl;
+#	endif
+}
+
 }  // namespace Util
 }  // namespace HoverRace

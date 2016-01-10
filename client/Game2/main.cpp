@@ -63,23 +63,6 @@ bool skipStartupWarning = false;
 std::string reqLocale;
 
 /**
- * Display a simple error message to the user.
- *
- * On Windows, this will pop up a message box, elsewhere this will just
- * output to the console.
- *
- * @param s The message.
- */
-void ShowMessage(const std::string &s)
-{
-#ifdef _WIN32
-	MessageBoxW(nullptr, (const wchar_t*)Str::UW(s), PACKAGE_NAME_L, MB_OK);
-#else
-	std::cout << s << std::endl;
-#endif
-}
-
-/**
  * Process command-line options.
  * @param argc The arg count.
  * @param argv The original argument list.
@@ -117,7 +100,7 @@ bool ProcessCmdLine(int argc, char **argv)
 				initScripts.push_back(argPath());
 			}
 			else {
-				ShowMessage("Expected: --exec (script filename)");
+				OS::ShowMessage("Expected: --exec (script filename)");
 				return false;
 			}
 		}
@@ -126,7 +109,7 @@ bool ProcessCmdLine(int argc, char **argv)
 				reqLocale = argv[i++];
 			}
 			else {
-				ShowMessage("Expected: -L (language)");
+				OS::ShowMessage("Expected: -L (language)");
 				return false;
 			}
 		}
@@ -141,7 +124,7 @@ bool ProcessCmdLine(int argc, char **argv)
 				mediaPath = argPath();
 			}
 			else {
-				ShowMessage("Expected: --media-path (path to media files)");
+				OS::ShowMessage("Expected: --media-path (path to media files)");
 				return false;
 			}
 		}
@@ -162,7 +145,7 @@ bool ProcessCmdLine(int argc, char **argv)
 				sysCfgPath = argPath();
 			}
 			else {
-				ShowMessage("Expected: --sys-cfg-path (path to system "
+				OS::ShowMessage("Expected: --sys-cfg-path (path to system "
 					"config files)");
 				return false;
 			}
@@ -176,7 +159,7 @@ bool ProcessCmdLine(int argc, char **argv)
 		else {
 			std::ostringstream oss;
 			oss << "Unknown option: " << arg;
-			ShowMessage(oss.str());
+			OS::ShowMessage(oss.str());
 			return false;
 		}
 	}
@@ -207,7 +190,7 @@ OS::path_t FindExePath()
 	for (;;) {
 		DWORD ret = GetModuleFileNameW(NULL, exePath, curSize);
 		if (ret == 0) {
-			ShowMessage("Internal Error: GetModuleFileName() failed.");
+			OS::ShowMessage("Internal Error: GetModuleFileName() failed.");
 			exit(EXIT_FAILURE);
 		}
 		else if (ret >= curSize) {
@@ -283,7 +266,7 @@ int main(int argc, char** argv)
 	if (showVersion) {
 		// We intentionally do not localize this string since scripts
 		// may want to parse it (for whatever reason).
-		ShowMessage(PACKAGE_NAME " version " + cfg->GetVersion());
+		OS::ShowMessage(PACKAGE_NAME " version " + cfg->GetVersion());
 		return EXIT_SUCCESS;
 	}
 

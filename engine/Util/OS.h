@@ -95,6 +95,8 @@ bool OpenPath(const path_t &path);
 
 FILE *FOpen(const path_t &path, const char *mode);
 
+void ShowMessage(const std::string &s);
+
 }  // namespace OS
 
 }  // namespace Util
