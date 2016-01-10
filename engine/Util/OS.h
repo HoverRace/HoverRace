@@ -97,6 +97,8 @@ FILE *FOpen(const path_t &path, const char *mode);
 
 void ShowMessage(const std::string &s);
 
+OS::path_t FindExePath();
+
 }  // namespace OS
 
 }  // namespace Util

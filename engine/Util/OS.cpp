@@ -375,5 +375,37 @@ void OS::ShowMessage(const std::string &s)
 #	endif
 }
 
+/**
+ * Find the path of the executable itself.
+ * @return The path, including the executable name.
+ */
+OS::path_t OS::FindExePath()
+{
+#	ifdef _WIN32
+		DWORD curSize = MAX_PATH;
+		wchar_t *exePath = new wchar_t[curSize];
+		for (;;) {
+			DWORD ret = GetModuleFileNameW(nullptr, exePath, curSize);
+			if (ret == 0) {
+				ShowMessage("Internal Error: GetModuleFileName() failed.");
+				exit(EXIT_FAILURE);
+			}
+			else if (ret >= curSize) {
+				curSize *= 2;
+				delete[] exePath;
+				exePath = new wchar_t[curSize];
+			}
+			else {
+				break;
+			}
+		}
+		OS::path_t retv(exePath);
+		delete[] exePath;
+		return retv;
+#	else
+		throw UnimplementedExn("OS::FindExePath");
+#	endif
+}
+
 }  // namespace Util
 }  // namespace HoverRace

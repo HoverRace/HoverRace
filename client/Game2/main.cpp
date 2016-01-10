@@ -178,36 +178,6 @@ Config *InitConfig()
 		mediaPath, sysCfgPath);
 }
 
-#ifdef _WIN32
-/**
- * Find the path of the executable itself.
- * @return The path, including the executable name.
- */
-OS::path_t FindExePath()
-{
-	DWORD curSize = MAX_PATH;
-	wchar_t *exePath = new wchar_t[curSize];
-	for (;;) {
-		DWORD ret = GetModuleFileNameW(NULL, exePath, curSize);
-		if (ret == 0) {
-			OS::ShowMessage("Internal Error: GetModuleFileName() failed.");
-			exit(EXIT_FAILURE);
-		}
-		else if (ret >= curSize) {
-			curSize *= 2;
-			delete[] exePath;
-			exePath = new wchar_t[curSize];
-		}
-		else {
-			break;
-		}
-	}
-	OS::path_t retv(exePath);
-	delete[] exePath;
-	return retv;
-}
-#endif
-
 int RunClient()
 {
 	while (ClientApp().MainLoop() == ClientApp::ExitMode::SOFT_RESTART) {
@@ -232,7 +202,7 @@ int main(int argc, char** argv)
 	std::ios::sync_with_stdio(false);
 
 #ifdef _WIN32
-	OS::path_t exePath = FindExePath();
+	OS::path_t exePath = OS::FindExePath();
 
 	// Change the working directory to the app's directory.
 	_wchdir(Str::PW(exePath.parent_path()));
