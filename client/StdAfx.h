@@ -18,6 +18,7 @@
 #include <exception>
 #include <forward_list>
 #include <functional>
+#include <locale>
 #include <map>
 #include <memory>
 #include <set>

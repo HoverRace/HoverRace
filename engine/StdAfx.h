@@ -18,6 +18,7 @@
 #include <chrono>
 #include <exception>
 #include <list>
+#include <locale>
 #include <map>
 #include <memory>
 #include <set>
