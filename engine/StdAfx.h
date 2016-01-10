@@ -37,8 +37,7 @@
 #include "../include/compat/luabind_cxx11.h"
 #include "../include/compat/boost_cxx11.h"
 
-#include <boost/filesystem/convenience.hpp>
-#include <boost/filesystem/path.hpp>
+#include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/log/trivial.hpp>
