@@ -250,21 +250,15 @@ int main(int argc, char** argv)
 	}
 	catch (HoverRace::Exception &ex) {
 		lErrorCode = EXIT_FAILURE;
+
 		//TODO: Managed error handler.
-#		ifdef _WIN32
-			std::ostringstream oss;
-			oss <<
-				_("You found a bug!") << "\r\n\r\n" <<
-				ex.what();
-			MessageBoxW(NULL, Str::UW(oss.str()), PACKAGE_NAME_L, MB_OK | MB_ICONERROR);
-#		else
-			std::cerr <<
-				"***\n\n" <<
-				_("You found a bug!") << "\n\n" <<
-				ex.what() << "\n\n"
-				"***\n" <<
-				std::endl;
-#		endif
+		std::ostringstream oss;
+		oss <<
+			"***\n\n" <<
+			_("You found a bug!") << "\n\n" <<
+			ex.what() << "\n\n"
+			"***";
+		OS::ShowMessage(oss.str(), true);
 	}
 
 	OS::TimeShutdown();
