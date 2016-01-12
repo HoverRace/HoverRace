@@ -95,7 +95,7 @@ bool OpenPath(const path_t &path);
 
 FILE *FOpen(const path_t &path, const char *mode);
 
-void ShowMessage(const std::string &s);
+void ShowMessage(const std::string &s, bool error = false);
 
 OS::path_t FindExePath();
 

@@ -365,13 +365,15 @@ FILE *OS::FOpen(const path_t &path, const char *mode)
  * output to the console.
  *
  * @param s The message.
+ * @param error @c true to indicate this is an error message.
  */
-void OS::ShowMessage(const std::string &s)
+void OS::ShowMessage(const std::string &s, bool error)
 {
 #	ifdef _WIN32
-		MessageBoxW(nullptr, (const wchar_t*)Str::UW(s), L"HoverRace", MB_OK);
+		MessageBoxW(nullptr, (const wchar_t*)Str::UW(s), L"HoverRace",
+			MB_OK | (error ? MB_ICONERROR : 0));
 #	else
-		std::cout << s << std::endl;
+		(error ? std::cerr : std::cout) << s << std::endl;
 #	endif
 }
 
