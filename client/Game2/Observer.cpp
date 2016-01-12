@@ -1139,14 +1139,6 @@ void Observer::RenderNormalDisplay(VideoServices::VideoBuffer * pDest, const Cli
 
 	m3DView.Setup(pDest, lXOffset + lXMargin, lYOffset + lYMargin, lXRes - 2 * lXMargin, lYRes - 2 * lYMargin, mApperture);
 
-	// Clear screen if needed
-	if(lXMargin > 0) {
-
-	}
-
-	if(lYMargin > 0) {
-	}
-
 	if(pViewingCharacter->mRoom != -1) {
 		Render3DView(pSession, pViewingCharacter, pTime, pBackImage);
 	}
