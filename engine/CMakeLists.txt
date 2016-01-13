@@ -5,6 +5,8 @@ set(HR_ENGINE_SRCS
 source_group("Precompiled Header" FILES ${HR_ENGINE_SRCS})
 
 set(TOPLEVEL_SRCS
+	Engine.cpp
+	Engine.h
 	Exception.h
 	Vec.h)
 source_group("" FILES ${TOPLEVEL_SRCS})

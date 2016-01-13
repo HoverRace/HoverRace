@@ -2,7 +2,7 @@
 // main.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
-// Copyright (c) 2013-2015 Michael Imamura.
+// Copyright (c) 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -22,8 +22,6 @@
 
 #include <iostream>
 
-#include <curl/curl.h>
-
 #ifdef _WIN32
 #	include <shellapi.h>
 #endif
@@ -34,6 +32,7 @@
 #include "../../engine/Util/Log.h"
 #include "../../engine/Util/OS.h"
 #include "../../engine/Util/Str.h"
+#include "../../engine/Engine.h"
 #include "ClientApp.h"
 
 #include <hoverrace/hr-version.h>
@@ -198,7 +197,6 @@ int main(int argc, char** argv)
 	// initialize return variables
 	int lErrorCode = EXIT_SUCCESS;
 
-	srand(static_cast<unsigned int>(time(nullptr)));
 	std::ios::sync_with_stdio(false);
 
 #ifdef _WIN32
@@ -240,18 +238,8 @@ int main(int argc, char** argv)
 		return EXIT_SUCCESS;
 	}
 
-	// Library initialization.
-	auto curlErrCode = curl_global_init(CURL_GLOBAL_ALL);
-	if (curlErrCode != 0) {
-		std::ostringstream oss;
-		oss << "libcurl initialization failed: " << curlErrCode;
-		OS::ShowMessage(oss.str(), true);
-		return EXIT_FAILURE;
-	}
-
-	OS::TimeInit();
-
 	try {
+		HoverRace::Engine engine{};
 		lErrorCode = RunClient();
 	}
 	catch (HoverRace::Exception &ex) {
@@ -266,11 +254,6 @@ int main(int argc, char** argv)
 			"***";
 		OS::ShowMessage(oss.str(), true);
 	}
-
-	OS::TimeShutdown();
-
-	// Library cleanup.
-	curl_global_cleanup();
 
 	return lErrorCode;
 }
