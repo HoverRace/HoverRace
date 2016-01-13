@@ -241,7 +241,13 @@ int main(int argc, char** argv)
 	}
 
 	// Library initialization.
-	curl_global_init(CURL_GLOBAL_ALL);
+	auto curlErrCode = curl_global_init(CURL_GLOBAL_ALL);
+	if (curlErrCode != 0) {
+		std::ostringstream oss;
+		oss << "libcurl initialization failed: " << curlErrCode;
+		OS::ShowMessage(oss.str(), true);
+		return EXIT_FAILURE;
+	}
 
 	OS::TimeInit();
 
