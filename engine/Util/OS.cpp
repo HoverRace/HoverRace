@@ -36,6 +36,7 @@
 #include <boost/format.hpp>
 #include <boost/locale/util.hpp>
 
+#include "../Engine.h"
 #include "../Exception.h"
 #include "Log.h"
 #include "Str.h"
@@ -370,7 +371,8 @@ FILE *OS::FOpen(const path_t &path, const char *mode)
 void OS::ShowMessage(const std::string &s, bool error)
 {
 #	ifdef _WIN32
-		MessageBoxW(nullptr, (const wchar_t*)Str::UW(s), L"HoverRace",
+		MessageBoxW(nullptr, (const wchar_t*)Str::UW(s),
+			(const wchar_t*)Str::UW(Engine::GetModuleName()),
 			MB_OK | (error ? MB_ICONERROR : 0));
 #	else
 		(error ? std::cerr : std::cout) << s << std::endl;
