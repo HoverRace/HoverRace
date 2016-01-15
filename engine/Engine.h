@@ -40,8 +40,11 @@ namespace HoverRace {
 class MR_DllDeclare Engine
 {
 public:
-	Engine();
+	Engine(const std::string &moduleName = {});
 	~Engine();
+
+public:
+	static const std::string &GetModuleName();
 };
 
 }  // namespace HoverRace

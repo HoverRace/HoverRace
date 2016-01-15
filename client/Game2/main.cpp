@@ -239,7 +239,7 @@ int main(int argc, char** argv)
 	}
 
 	try {
-		HoverRace::Engine engine{};
+		HoverRace::Engine engine{ PACKAGE_NAME };
 		lErrorCode = RunClient();
 	}
 	catch (HoverRace::Exception &ex) {

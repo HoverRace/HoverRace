@@ -30,12 +30,21 @@ using namespace HoverRace::Util;
 
 namespace HoverRace {
 
+namespace {
+
+std::string globalModuleName;
+
+}  // namespace
+
 /**
  * Initialize the engine.
+ * @param moduleName The name of the application.
  * @throw Exception An engine component failed to initialize.
  */
-Engine::Engine()
+Engine::Engine(const std::string &moduleName)
 {
+	globalModuleName = moduleName;
+
 	srand(static_cast<unsigned int>(time(nullptr)));
 
 	auto curlErrCode = curl_global_init(CURL_GLOBAL_ALL);
@@ -53,6 +62,11 @@ Engine::~Engine()
 	OS::TimeShutdown();
 
 	curl_global_cleanup();
+}
+
+const std::string &Engine::GetModuleName()
+{
+	return globalModuleName;
 }
 
 }  // namespace HoverRace
