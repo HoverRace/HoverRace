@@ -22,6 +22,7 @@
 #include <curl/curl.h>
 
 #include "Util/OS.h"
+#include "Util/WorldCoordinates.h"
 #include "Exception.h"
 
 #include "Engine.h"
@@ -55,6 +56,8 @@ Engine::Engine(const std::string &moduleName)
 	}
 
 	OS::TimeInit();
+
+	MR_InitTrigoTables();
 }
 
 Engine::~Engine()

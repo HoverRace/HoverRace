@@ -1,7 +1,7 @@
 
 // ClientApp.cpp
 //
-// Copyright (c) 2010, 2013-2015 Michael Imamura.
+// Copyright (c) 2010, 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -41,7 +41,6 @@
 #include "../../engine/Util/Locale.h"
 #include "../../engine/Util/Profiler.h"
 #include "../../engine/Util/Str.h"
-#include "../../engine/Util/WorldCoordinates.h"
 #include "../../engine/VideoServices/SoundServer.h"
 #include "../../engine/VideoServices/VideoBuffer.h"
 
@@ -131,7 +130,6 @@ ClientApp::ClientApp() :
 	Config *cfg = Config::GetInstance();
 
 	// Engine initialization.
-	MR_InitTrigoTables();
 	DllObjectFactory::Init();
 
 	if (SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) == -1)
