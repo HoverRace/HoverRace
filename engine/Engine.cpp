@@ -21,8 +21,17 @@
 
 #include <curl/curl.h>
 
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_syswm.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
+
+#include "Parcel/ResBundle.h"
+#include "Util/Config.h"
+#include "Util/DllObjectFactory.h"
 #include "Util/OS.h"
 #include "Util/WorldCoordinates.h"
+#include "VideoServices/SoundServer.h"
 #include "Exception.h"
 
 #include "Engine.h"
@@ -58,10 +67,35 @@ Engine::Engine(const std::string &moduleName)
 	OS::TimeInit();
 
 	MR_InitTrigoTables();
+
+	if (SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) == -1)
+		throw Exception("SDL initialization failed");
+
+	int imgInit = IMG_INIT_JPG | IMG_INIT_PNG;
+	int imgInitActual = IMG_Init(imgInit);
+	if ((imgInitActual & imgInit) != imgInit) {
+		throw Exception(IMG_GetError());
+	}
+
+	if (TTF_Init() == -1) {
+		throw Exception(TTF_GetError());
+	}
+
+	VideoServices::SoundServer::Init();
+	DllObjectFactory::Init();
 }
 
 Engine::~Engine()
 {
+	// Resources must be freed before SDL is shut down.
+	Config::GetInstance()->GetResBundle().FreeResources();
+	DllObjectFactory::Clean();
+	VideoServices::SoundServer::Close();
+
+	TTF_Quit();
+	IMG_Quit();
+	SDL_Quit();
+
 	OS::TimeShutdown();
 
 	curl_global_cleanup();

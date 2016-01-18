@@ -21,8 +21,6 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_syswm.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
 
 #include "../../engine/Exception.h"
 #include "../../engine/Control/Controller.h"
@@ -31,17 +29,14 @@
 #include "../../engine/Display/SDL/SdlDisplay.h"
 #include "../../engine/MainCharacter/MainCharacter.h"
 #include "../../engine/Model/Track.h"
-#include "../../engine/Parcel/ResBundle.h"
 #include "../../engine/Parcel/TrackBundle.h"
 #include "../../engine/Player/DemoProfile.h"
 #include "../../engine/Player/LocalPlayer.h"
 #include "../../engine/Util/Config.h"
-#include "../../engine/Util/DllObjectFactory.h"
 #include "../../engine/Util/Loader.h"
 #include "../../engine/Util/Locale.h"
 #include "../../engine/Util/Profiler.h"
 #include "../../engine/Util/Str.h"
-#include "../../engine/VideoServices/SoundServer.h"
 #include "../../engine/VideoServices/VideoBuffer.h"
 
 #include "HoverScript/ClientScriptCore.h"
@@ -128,23 +123,6 @@ ClientApp::ClientApp() :
 	renderProfiler(rootProfiler->AddSub("render"))
 {
 	Config *cfg = Config::GetInstance();
-
-	// Engine initialization.
-	DllObjectFactory::Init();
-
-	if (SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) == -1)
-		throw Exception("SDL initialization failed");
-	SoundServer::Init();
-
-	int imgInit = IMG_INIT_JPG | IMG_INIT_PNG;
-	int imgInitActual = IMG_Init(imgInit);
-	if ((imgInitActual & imgInit) != imgInit) {
-		throw Exception(IMG_GetError());
-	}
-
-	if (TTF_Init() == -1) {
-		throw Exception(TTF_GetError());
-	}
 
 	controller = new InputEventController();
 
@@ -252,15 +230,6 @@ ClientApp::~ClientApp()
 	delete display;
 	delete party;
 	delete controller;
-
-	// Engine shutdown.
-	Config::GetInstance()->GetResBundle().FreeResources();
-	DllObjectFactory::Clean();
-	SoundServer::Close();
-
-	TTF_Quit();
-	IMG_Quit();
-	SDL_Quit();
 }
 
 std::string ClientApp::GetWindowTitle()
