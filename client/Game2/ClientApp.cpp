@@ -77,35 +77,37 @@ namespace HoverRace {
 namespace Client {
 
 namespace {
-	// SDL user event codes.
-	enum {
-		REQ_EVT_SCENE_PUSH,
-		REQ_EVT_SCENE_POP,
-		REQ_EVT_SCENE_REPLACE,
-		REQ_EVT_ANN_ADD,
-		REQ_EVT_SOFT_RESTART,
-	};
 
-	/**
-	 * Used by @c REQ_EVT_SCENE_PUSH and @c REQ_SCENE_REPLACE to transfer
-	 * the requested scene.
-	 */
-	struct SceneHolder
-	{
-		SceneHolder(std::shared_ptr<Scene> scene) : scene(std::move(scene)) { }
-		std::shared_ptr<Scene> scene;
-	};
+// SDL user event codes.
+enum {
+	REQ_EVT_SCENE_PUSH,
+	REQ_EVT_SCENE_POP,
+	REQ_EVT_SCENE_REPLACE,
+	REQ_EVT_ANN_ADD,
+	REQ_EVT_SOFT_RESTART,
+};
 
-	/**
-	 * Used by @c REQ_EVT_ANN_ADD to transfer the requested announcement.
-	 */
-	struct AnnouncementHolder
-	{
-		AnnouncementHolder(std::shared_ptr<Announcement> ann) :
-			ann(std::move(ann)) { }
-		std::shared_ptr<Announcement> ann;
-	};
-}
+/**
+ * Used by @c REQ_EVT_SCENE_PUSH and @c REQ_SCENE_REPLACE to transfer
+ * the requested scene.
+ */
+struct SceneHolder
+{
+	SceneHolder(std::shared_ptr<Scene> scene) : scene(std::move(scene)) { }
+	std::shared_ptr<Scene> scene;
+};
+
+/**
+ * Used by @c REQ_EVT_ANN_ADD to transfer the requested announcement.
+ */
+struct AnnouncementHolder
+{
+	AnnouncementHolder(std::shared_ptr<Announcement> ann) :
+		ann(std::move(ann)) { }
+	std::shared_ptr<Announcement> ann;
+};
+
+}  // namespace
 
 ClientApp::ClientApp() :
 	SUPER(),
