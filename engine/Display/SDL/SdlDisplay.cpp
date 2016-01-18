@@ -384,6 +384,17 @@ SdlDisplay::SdlDisplay(const std::string &windowTitle) :
 	legacyDisplay = new SdlLegacyDisplay(*this);
 	SUPER::OnDisplayConfigChanged();
 	legacyDisplay->CreatePalette();
+
+	// Set window icon.
+	// We don't throw an exception if this fails since it's not critical.
+	const auto cfg = Config::GetInstance();
+	if (auto icon = IMG_Load(Str::PU(cfg->GetMediaPath("ui/icon.png")))) {
+		SDL_SetWindowIcon(window, icon);
+		SDL_FreeSurface(icon);
+	}
+	else {
+		HR_LOG(error) << IMG_GetError();
+	}
 }
 
 SdlDisplay::~SdlDisplay()

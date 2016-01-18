@@ -20,7 +20,6 @@
 // and limitations under the License.
 
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_syswm.h>
 
 #include "../../engine/Exception.h"
 #include "../../engine/Control/Controller.h"
@@ -166,40 +165,6 @@ ClientApp::ClientApp() :
 	stylesheetPath /= Str::UP("themes");
 	stylesheetPath /= Str::UP("default");
 	StyleEnv(scripting, *display, stylesheetPath).RunStylesheet();
-
-	// Set window position and icon (platform-dependent).
-	// We don't throw an exception if this fails since it's not critical.
-	//TODO: Move to SdlDisplay.
-	SDL_SysWMinfo wm;
-	SDL_VERSION(&wm.version);
-	if (SDL_GetWindowWMInfo(static_cast<Display::SDL::SdlDisplay*>(display)->GetWindow(), &wm)) {
-#		ifdef _WIN32
-			HWND hwnd = wm.info.win.window;
-
-			// Set icon.
-			// On Windows, the icon is embedded as a resource.
-			HMODULE hmod = GetModuleHandleW(NULL);
-			LPWSTR iconRes = MAKEINTRESOURCEW(IDI_HOVER_ICON);
-			HANDLE ico;
-			ico = LoadImageW(hmod, iconRes, IMAGE_ICON,
-				GetSystemMetrics(SM_CXICON), GetSystemMetrics(SM_CYICON), 0);
-			if (ico != NULL)
-				SendMessageW(hwnd, WM_SETICON, ICON_BIG, reinterpret_cast<LPARAM>(ico));
-			ico = LoadImageW(hmod, iconRes, IMAGE_ICON,
-				GetSystemMetrics(SM_CXSMICON), GetSystemMetrics(SM_CYSMICON), 0);
-			if (ico != NULL)
-				SendMessageW(hwnd, WM_SETICON, ICON_SMALL, reinterpret_cast<LPARAM>(ico));
-#		else
-			// On non-Win32 we prefer to let the window manager decide the
-			// position of the window.
-			/*TODO
-			SDL_WM_SetIcon(SDL_LoadBMP(cfg->GetMediaPath("icon.bmp").file_string().c_str()), 0);
-			*/
-#		endif
-	}
-	else {
-		throw Exception(SDL_GetError());
-	}
 
 	gamePeer->SetDisplay(display);
 
