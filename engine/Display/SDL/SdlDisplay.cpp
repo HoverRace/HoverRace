@@ -63,7 +63,8 @@
 using namespace HoverRace::Util;
 using HoverRace::VideoServices::VideoBuffer;
 
-static std::ostream &operator<<(std::ostream &oss, const SDL_RendererInfo &info) {
+static std::ostream &operator<<(std::ostream &oss, const SDL_RendererInfo &info)
+{
 	oss << info.name << " (";
 	if (info.flags & SDL_RENDERER_SOFTWARE) oss << ":SW";
 	if (info.flags & SDL_RENDERER_ACCELERATED) oss << ":Accel";
@@ -225,7 +226,9 @@ public:
 };
 
 struct RendererInfo {
-	RendererInfo(int idx) : idx(idx), score(0) {
+	RendererInfo(int idx) :
+		idx(idx), score(0)
+	{
 		SDL_GetRenderDriverInfo(idx, &info);
 
 		// Blacklisting the Direct3D driver since we prefer an OpenGL one.
