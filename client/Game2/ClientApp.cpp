@@ -113,6 +113,8 @@ ClientApp::ClientApp() :
 	SUPER(),
 	needsDevWarning(false), needsLocaleCheck(true),
 	userEventId(SDL_RegisterEvents(1)),
+	controller(new InputEventController()),
+	party(new Roster()),
 	sceneStack(), fgScene(),
 	statusOverlayScene(), showOverlay(false),
 	debugScene(), showDebug(Config::GetInstance()->runtime.enableDebugOverlay),
@@ -123,11 +125,7 @@ ClientApp::ClientApp() :
 	prepareProfiler(rootProfiler->AddSub("prepare")),
 	renderProfiler(rootProfiler->AddSub("render"))
 {
-	Config *cfg = Config::GetInstance();
-
-	controller = new InputEventController();
-
-	party = new Roster();
+	auto cfg = Config::GetInstance();
 
 	// Add an initial single player with a fake profile.
 	// Later, this will be done at the title scene, but for now we'll have
@@ -137,23 +135,24 @@ ClientApp::ClientApp() :
 
 	// Create the system console and execute the initialization scripts.
 	// This allows the script to modify the configuration (e.g. for unit tests).
-	scripting = (new ClientScriptCore())->Reset();
-	rulebookLibrary = new RulebookLibrary(scripting);
+	scripting.reset((new ClientScriptCore())->Reset());
+	rulebookLibrary.reset(new RulebookLibrary(scripting.get()));
 	rulebookLibrary->Reload();
-	debugPeer = new DebugPeer(scripting, *this);
-	gamePeer = new GamePeer(scripting, *this, *rulebookLibrary);
-	inputPeer = new InputPeer(scripting, controller);
-	sysEnv = new SysEnv(scripting, debugPeer, gamePeer, inputPeer);
+	debugPeer.reset(new DebugPeer(scripting.get(), *this));
+	gamePeer.reset(new GamePeer(scripting.get(), *this, *rulebookLibrary));
+	inputPeer.reset(new InputPeer(scripting.get(), controller.get()));
+	sysEnv.reset(new SysEnv(scripting.get(),
+		debugPeer.get(), gamePeer.get(), inputPeer.get()));
 	for (OS::path_t &initScript : cfg->runtime.initScripts) {
 		if (!initScript.empty()) {
 			sysEnv->RunScript(initScript);
 		}
 	}
-	sysConsole = new SysConsole(scripting, *this,
-		debugPeer, gamePeer, inputPeer);
+	sysConsole.reset(new SysConsole(scripting.get(), *this,
+		debugPeer.get(), gamePeer.get(), inputPeer.get()));
 
 	// Create the main window and SDL surface.
-	display = new Display::SDL::SdlDisplay(GetWindowTitle());
+	display.reset(new Display::SDL::SdlDisplay(GetWindowTitle()));
 	SDL_DisplayMode desktopMode;
 	int monitorIdx = cfg->video.fullscreen ?
 		cfg->video.fullscreenMonitorIndex : 0;
@@ -166,15 +165,15 @@ ClientApp::ClientApp() :
 	auto stylesheetPath = cfg->GetMediaPath();
 	stylesheetPath /= Str::UP("themes");
 	stylesheetPath /= Str::UP("default");
-	StyleEnv(scripting, *display, stylesheetPath).RunStylesheet();
+	StyleEnv(scripting.get(), *display, stylesheetPath).RunStylesheet();
 
-	gamePeer->SetDisplay(display);
+	gamePeer->SetDisplay(display.get());
 
 	namespace LayoutFlags = Display::UiLayoutFlags;
-	fpsLbl = new Display::ActiveText("FPS:",
+	fpsLbl.reset(new Display::ActiveText("FPS:",
 		Display::UiFont(20, Display::UiFont::BOLD),
 		Display::Color(0xff, 0xff, 0x7f, 0x00),
-		LayoutFlags::UNSCALED | LayoutFlags::FLOATING);
+		LayoutFlags::UNSCALED | LayoutFlags::FLOATING));
 	fpsLbl->AttachView(*display);
 
 	// SDL2 automatically initiates text input mode.
@@ -185,18 +184,6 @@ ClientApp::ClientApp() :
 ClientApp::~ClientApp()
 {
 	gamePeer->SetDisplay(nullptr);
-
-	delete fpsLbl;
-	delete sysConsole;
-	delete sysEnv;
-	delete inputPeer;
-	delete gamePeer;
-	delete debugPeer;
-	delete rulebookLibrary;
-	delete scripting;
-	delete display;
-	delete party;
-	delete controller;
 }
 
 std::string ClientApp::GetWindowTitle()
@@ -652,7 +639,7 @@ void ClientApp::RequestMainMenu(std::shared_ptr<LoadingScene> loadingScene)
 
 	try {
 		RequestReplaceScene(std::make_shared<DemoGameScene>(
-			*display, *this, scripting, loadingScene->ShareLoader()));
+			*display, *this, scripting.get(), loadingScene->ShareLoader()));
 	}
 	catch (Parcel::ObjStreamExn&) {
 		throw;
@@ -700,7 +687,7 @@ void ClientApp::RequestNewPracticeSession(std::shared_ptr<Rules> rules,
 
 	try {
 		RequestReplaceScene(std::make_shared<PlayGameScene>(
-			*display, *this, scripting, rules, loadingScene->ShareLoader()));
+			*display, *this, scripting.get(), rules, loadingScene->ShareLoader()));
 		RequestPushScene(loadingScene);
 	}
 	catch (Parcel::ObjStreamExn&) {
@@ -740,8 +727,8 @@ VideoServices::VideoBuffer *ClientApp::GetVideoBuffer() const
 Control::InputEventController *ClientApp::ReloadController()
 {
 	//TODO: Notify current scene that controller is changing.
-	delete controller;
-	return (controller = new InputEventController());
+	controller.reset(new InputEventController());
+	return controller.get();
 }
 
 }  // namespace HoverScript

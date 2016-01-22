@@ -1,7 +1,7 @@
 
 // ClientApp.h
 //
-// Copyright (c) 2010, 2014-2015 Michael Imamura.
+// Copyright (c) 2010, 2014-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -124,20 +124,37 @@ public:
 	void RequestAnnouncement(std::shared_ptr<Announcement> ann) override;
 	void RequestShutdown() override;
 	void RequestSoftRestart() override;
-	Display::Display *GetDisplay() const override { return display; }
+	Display::Display *GetDisplay() const override { return display.get(); }
 	VideoServices::VideoBuffer *GetVideoBuffer() const override;
-	Control::InputEventController *GetController() const override { return controller; }
+	Control::InputEventController *GetController() const override { return controller.get(); }
 	Control::InputEventController *ReloadController() override;
-	Roster *GetParty() const override { return party; }
+	Roster *GetParty() const override { return party.get(); }
 	sessionChangedSignal_t &GetSessionChangedSignal() override { return sessionChangedSignal; }
 
 private:
 	bool needsDevWarning;  ///< Display dev release warning on next menu.
 	bool needsLocaleCheck;  ///< Check locale and warn on next menu.
 	MR_UInt32 userEventId;
-	Display::Display *display;
-	Control::InputEventController *controller;
-	Roster *party;
+
+	std::unique_ptr<Control::InputEventController> controller;
+	std::unique_ptr<Roster> party;
+
+	std::unique_ptr<Script::Core> scripting;
+	std::unique_ptr<RulebookLibrary> rulebookLibrary;
+	std::unique_ptr<HoverScript::DebugPeer> debugPeer;
+	std::unique_ptr<HoverScript::GamePeer> gamePeer;
+	std::unique_ptr<HoverScript::InputPeer> inputPeer;
+	std::unique_ptr<HoverScript::SysEnv> sysEnv;
+	std::unique_ptr<HoverScript::SysConsole> sysConsole;
+
+	std::unique_ptr<Display::Display> display;
+
+	// Stats counters.
+	std::unique_ptr<Display::ActiveText> fpsLbl;
+	unsigned int frameCount;
+	Util::OS::timestamp_t lastTimestamp;
+	double fps;
+
 	sceneStack_t sceneStack;
 	std::shared_ptr<Scene> fgScene;  ///< The scene that currently has input focus.
 	std::unique_ptr<StatusOverlayScene> statusOverlayScene;
@@ -147,25 +164,12 @@ private:
 	const bool &showFps;
 	std::list<std::shared_ptr<Announcement>> announcements;
 
-	RulebookLibrary *rulebookLibrary;
-
-	Script::Core *scripting;
-	HoverScript::DebugPeer *debugPeer;
-	HoverScript::GamePeer *gamePeer;
-	HoverScript::InputPeer *inputPeer;
-	HoverScript::SysEnv *sysEnv;
-	HoverScript::SysConsole *sysConsole;
 	std::weak_ptr<HoverScript::ConsoleScene> consoleScene;
 
 	sessionChangedSignal_t sessionChangedSignal;
 
 	boost::signals2::connection consoleToggleConn;
 
-	// Stats counters.
-	Display::ActiveText *fpsLbl;
-	unsigned int frameCount;
-	Util::OS::timestamp_t lastTimestamp;
-	double fps;
 	std::shared_ptr<Util::Profiler> rootProfiler;
 	std::shared_ptr<Util::Profiler> advanceProfiler;
 	std::shared_ptr<Util::Profiler> prepareProfiler;
