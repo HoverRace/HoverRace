@@ -1,7 +1,7 @@
 
 // Class.h
 //
-// Copyright (c) 2010, 2015 Michael Imamura.
+// Copyright (c) 2010, 2015-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -51,27 +51,26 @@ namespace Help {
  */
 class MR_DllDeclare Class
 {
-	private:
-		Class() { }
-	public:
-		Class(const std::string &name);
-		~Class();
+private:
+	Class() = delete;
+public:
+	Class(const std::string &name);
 
-		void Load(Util::yaml::MapNode *node);
+	void Load(Util::yaml::MapNode *node);
 
-	public:
-		const std::string &GetName() const;
+public:
+	const std::string &GetName() const { return name; }
 
-	public:
-		typedef std::map<const std::string,MethodPtr> methods_t;
-		const methods_t &GetMethods() const;
+public:
+	using methods_t = std::map<const std::string, std::shared_ptr<Method>>;
+	const methods_t &GetMethods() const { return methods; }
 
-		void AddMethod(MethodPtr method);
-		MethodPtr GetMethod(const std::string &methodName) const;
+	void AddMethod(std::shared_ptr<Method> method);
+	std::shared_ptr<Method> GetMethod(const std::string &methodName) const;
 
-	private:
-		std::string name;
-		methods_t methods;
+private:
+	std::string name;
+	methods_t methods;
 };
 typedef std::shared_ptr<Class> ClassPtr;
 

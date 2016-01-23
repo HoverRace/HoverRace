@@ -1,7 +1,7 @@
 
 // Method.h
 //
-// Copyright (c) 2010, 2015 Michael Imamura.
+// Copyright (c) 2010, 2015-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -49,34 +49,34 @@ namespace Help {
  */
 class MR_DllDeclare Method
 {
-	private:
-		Method() { }
-	public:
-		Method(const std::string &name);
-		virtual ~Method();
+private:
+	Method() = delete;
+public:
+	Method(const std::string &name);
+	virtual ~Method() { }
 
-		virtual void Load(Util::yaml::MapNode *node);
+	virtual void Load(Util::yaml::MapNode *node);
 
-	public:
-		typedef std::vector<std::string> sigs_t;
-		typedef std::vector<std::string> examples_t;
-	protected:
-		void SetBrief(const std::string &s);
-		void SetDesc(const std::string &s);
-		sigs_t &GetSigs();
+public:
+	using sigs_t = std::vector<std::string>;
+	using examples_t = std::vector<std::string>;
+protected:
+	void SetBrief(const std::string &s);
+	void SetDesc(const std::string &s);
+	sigs_t &GetSigs() { return sigs; }
 
-	public:
-		const std::string &GetName() const;
-		const std::string &GetBrief() const;
-		const std::string &GetDesc() const;
-		const sigs_t &GetSigs() const;
+public:
+	const std::string &GetName() const { return name; }
+	const std::string &GetBrief() const { return brief; }
+	const std::string &GetDesc() const { return desc; }
+	const sigs_t &GetSigs() const { return sigs; }
 
-	private:
-		std::string name;
-		std::string brief;
-		std::string desc;
-		sigs_t sigs;
-		examples_t examples;
+private:
+	std::string name;
+	std::string brief;
+	std::string desc;
+	sigs_t sigs;
+	examples_t examples;
 };
 typedef std::shared_ptr<Method> MethodPtr;
 

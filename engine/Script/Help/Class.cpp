@@ -1,7 +1,7 @@
 
 // Class.cpp
 //
-// Copyright (c) 2010, 2015 Michael Imamura.
+// Copyright (c) 2010, 2015-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -41,22 +41,16 @@ Class::Class(const std::string &name) :
 {
 }
 
-Class::~Class()
-{
-}
-
 void Class::Load(yaml::MapNode *node)
 {
 	for (const yaml::MapNode::value_type &ent : *node) {
-		yaml::MapNode *root = dynamic_cast<yaml::MapNode*>(ent.second);
-
-		if (root != NULL) {
+		if (auto root = dynamic_cast<yaml::MapNode*>(ent.second)) {
 			const std::string &methodName = ent.first;
 
 			// Determine the type of method.
 			std::string type;
 			root->ReadString("type", type);
-			MethodPtr method;
+			std::shared_ptr<Method> method;
 			if (type == "event") {
 				method = std::make_shared<Event>(methodName);
 			}
@@ -74,29 +68,18 @@ void Class::Load(yaml::MapNode *node)
 	}
 }
 
-const std::string &Class::GetName() const
-{
-	return name;
-}
-
-const Class::methods_t &Class::GetMethods() const
-{
-	return methods;
-}
-
-void Class::AddMethod(MethodPtr method)
+void Class::AddMethod(std::shared_ptr<Method> method)
 {
 	if (!method) return;
 
 	methods.insert(methods_t::value_type(method->GetName(), method));
 }
 
-MethodPtr Class::GetMethod(const std::string &methodName) const
+std::shared_ptr<Method> Class::GetMethod(const std::string &methodName) const
 {
 	methods_t::const_iterator iter = methods.find(methodName);
-	return (iter == methods.end()) ? MethodPtr() : iter->second;
+	return (iter == methods.end()) ? std::shared_ptr<Method>() : iter->second;
 }
-
 
 }  // namespace Help
 }  // namespace Script

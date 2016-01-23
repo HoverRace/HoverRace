@@ -1,7 +1,7 @@
 
 // Method.cpp
 //
-// Copyright (c) 2010, 2015 Michael Imamura.
+// Copyright (c) 2010, 2015-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -43,10 +43,6 @@ Method::Method(const std::string &name) :
 {
 }
 
-Method::~Method()
-{
-}
-
 void Method::Load(yaml::MapNode *node)
 {
 	node->ReadString("brief", brief);
@@ -55,26 +51,16 @@ void Method::Load(yaml::MapNode *node)
 	trim(desc);
 
 	yaml::Node *sigNode = node->Get("sig");
-	yaml::ScalarNode *scalar = dynamic_cast<yaml::ScalarNode*>(sigNode);
-	if (scalar != NULL) {
+	if (auto scalar = dynamic_cast<yaml::ScalarNode*>(sigNode)) {
 		sigs.push_back(scalar->AsString());
 	}
-	else {
-		yaml::SeqNode *seq = dynamic_cast<yaml::SeqNode*>(sigNode);
-		if (seq != NULL) {
-			for (yaml::Node *seqNode : *seq) {
-				yaml::ScalarNode *seqScalar = dynamic_cast<yaml::ScalarNode*>(seqNode);
-				if (seqScalar) {
-					sigs.push_back(seqScalar->AsString());
-				}
+	else if (auto seq = dynamic_cast<yaml::SeqNode*>(sigNode)) {
+		for (yaml::Node *seqNode : *seq) {
+			if (auto seqScalar = dynamic_cast<yaml::ScalarNode*>(seqNode)) {
+				sigs.push_back(seqScalar->AsString());
 			}
 		}
 	}
-}
-
-const std::string &Method::GetName() const
-{
-	return name;
 }
 
 void Method::SetBrief(const std::string &s)
@@ -82,29 +68,9 @@ void Method::SetBrief(const std::string &s)
 	brief = s;
 }
 
-const std::string &Method::GetBrief() const
-{
-	return brief;
-}
-
 void Method::SetDesc(const std::string &s)
 {
 	desc = s;
-}
-
-const std::string &Method::GetDesc() const
-{
-	return desc;
-}
-
-Method::sigs_t &Method::GetSigs()
-{
-	return sigs;
-}
-
-const Method::sigs_t &Method::GetSigs() const
-{
-	return sigs;
 }
 
 }  // namespace Help
