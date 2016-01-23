@@ -1,7 +1,7 @@
 
 // Env.cpp
 //
-// Copyright (c) 2010, 2014 Michael Imamura.
+// Copyright (c) 2010, 2014, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -37,10 +37,11 @@ namespace Script {
 
 /**
  * Constructor.
- * @param scripting The scripting engine (may not be @c NULL).
+ * @param scripting The scripting engine (may not be @c nullptr).
  */
 Env::Env(Core *scripting) :
-	scripting(scripting), initialized(false), envRef(scripting)
+	scripting(scripting), initialized(false), envRef(scripting),
+	helpHandler(nullptr)
 {
 	lua_State *state = scripting->GetState();
 
