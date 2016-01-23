@@ -55,6 +55,7 @@ class MR_DllDeclare Env
 {
 public:
 	Env(Core *scripting);
+	Env(const Env&) = delete;
 	virtual ~Env();
 
 	Env &operator=(const Env&) = delete;
