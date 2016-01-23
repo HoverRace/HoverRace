@@ -49,6 +49,7 @@ class MR_DllDeclare Peer
 {
 public:
 	Peer(Core &scripting, const std::string &name);
+	Peer(const Peer&) = delete;
 	virtual ~Peer() { }
 
 	Peer &operator=(const Peer&) = delete;
