@@ -62,7 +62,7 @@ namespace Script {
 const std::string Core::DEFAULT_CHUNK_NAME("=lua");
 
 Core::Core() :
-	NIL(nullptr), curHelpHandler(NULL)
+	NIL(nullptr), curHelpHandler(nullptr)
 {
 	state = luaL_newstate();
 
@@ -355,7 +355,7 @@ void Core::ReqHelp(const std::string &className)
  */
 void Core::ReqHelp(const std::string &className, const std::string &methodName)
 {
-	if (curHelpHandler == NULL) return;
+	if (!curHelpHandler) return;
 
 	// Find the class documentation in the cache.
 	helpClasses_t::const_iterator iter = helpClasses.find(className);
@@ -369,13 +369,13 @@ void Core::ReqHelp(const std::string &className, const std::string &methodName)
 			return;
 		}
 	}
-	Help::ClassPtr cls = iter->second;
+	auto &cls = iter->second;
 
 	if (methodName.empty()) {
 		curHelpHandler->HelpClass(*cls);
 	}
 	else {
-		Help::MethodPtr method = cls->GetMethod(methodName);
+		auto method = cls->GetMethod(methodName);
 		if (!method) {
 			luaL_error(state, "Class \"%s\" %s \"%s\"",
 				className.c_str(), "has no method", methodName.c_str());
