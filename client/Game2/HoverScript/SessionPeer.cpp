@@ -1,7 +1,7 @@
 
 // SessionPeer.cpp
 //
-// Copyright (c) 2010, 2013-2015 Michael Imamura.
+// Copyright (c) 2010, 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -61,7 +61,7 @@ SessionPeer::PlayerRef::PlayerRef(std::shared_ptr<MetaPlayer> meta) :
 		std::bind(&MetaPlayer::OnFinish, pmeta));
 }
 
-SessionPeer::SessionPeer(Script::Core *scripting, ClientSession *session) :
+SessionPeer::SessionPeer(Script::Core &scripting, ClientSession *session) :
 	SUPER(scripting, "Session"), session(session), meta(nullptr),
 	rules(),
 	players()
@@ -110,10 +110,10 @@ void SessionPeer::OnSessionStart(ClientSession *session)
 	}
 	this->session = session;
 
-	auto scripting = GetScripting();
+	auto &scripting = GetScripting();
 
 	rules = session->GetRules()->GetRules();
-	players = luabind::newtable(scripting->GetState());
+	players = luabind::newtable(scripting.GetState());
 
 	playerRefs.clear();
 	for (int i = 0; i < session->GetNbPlayers(); i++) {
@@ -146,7 +146,7 @@ void SessionPeer::OnSessionEnd()
 void SessionPeer::VerifySession() const
 {
 	if (!session) {
-		luaL_error(GetScripting()->GetState(), "Session has ended.");
+		luaL_error(GetScripting().GetState(), "Session has ended.");
 	}
 }
 

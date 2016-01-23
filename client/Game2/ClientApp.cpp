@@ -138,9 +138,9 @@ ClientApp::ClientApp() :
 	scripting.reset((new ClientScriptCore())->Reset());
 	rulebookLibrary.reset(new RulebookLibrary(scripting.get()));
 	rulebookLibrary->Reload();
-	debugPeer.reset(new DebugPeer(scripting.get(), *this));
-	gamePeer.reset(new GamePeer(scripting.get(), *this, *rulebookLibrary));
-	inputPeer.reset(new InputPeer(scripting.get(), controller.get()));
+	debugPeer.reset(new DebugPeer(*scripting, *this));
+	gamePeer.reset(new GamePeer(*scripting, *this, *rulebookLibrary));
+	inputPeer.reset(new InputPeer(*scripting, *controller));
 	sysEnv.reset(new SysEnv(scripting.get(),
 		debugPeer.get(), gamePeer.get(), inputPeer.get()));
 	for (OS::path_t &initScript : cfg->runtime.initScripts) {

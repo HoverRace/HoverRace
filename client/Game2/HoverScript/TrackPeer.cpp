@@ -1,7 +1,7 @@
 
 // TrackPeer.cpp
 //
-// Copyright (c) 2014, 2015 Michael Imamura.
+// Copyright (c) 2014-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -40,13 +40,9 @@ std::ostream &operator<<(std::ostream &os, const TrackPeer &peer)
 	return os;
 }
 
-TrackPeer::TrackPeer(Script::Core *scripting,
-                     std::shared_ptr<Model::Track> track) :
+TrackPeer::TrackPeer(Script::Core &scripting,
+	std::shared_ptr<Model::Track> track) :
 	SUPER(scripting, "Track"), track(track)
-{
-}
-
-TrackPeer::~TrackPeer()
 {
 }
 
@@ -76,7 +72,7 @@ const std::string &TrackPeer::LGetDescription() const
 
 void TrackPeer::LGetBounds() const
 {
-	lua_State *L = GetScripting()->GetState();
+	lua_State *L = GetScripting().GetState();
 
 	const auto &offset = track->GetOffset();
 	const auto &size = track->GetSize();

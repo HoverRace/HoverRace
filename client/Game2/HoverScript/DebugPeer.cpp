@@ -1,7 +1,7 @@
 
 // DebugPeer.cpp
 //
-// Copyright (c) 2013-2015 Michael Imamura.
+// Copyright (c) 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -35,13 +35,9 @@ namespace HoverRace {
 namespace Client {
 namespace HoverScript {
 
-DebugPeer::DebugPeer(Script::Core *scripting, GameDirector &gameDirector) :
+DebugPeer::DebugPeer(Script::Core &scripting, GameDirector &gameDirector) :
 	SUPER(scripting, "Debug"),
 	gameDirector(gameDirector)
-{
-}
-
-DebugPeer::~DebugPeer()
 {
 }
 

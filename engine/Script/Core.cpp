@@ -1,7 +1,7 @@
 
 // Core.cpp
 //
-// Copyright (c) 2009, 2010, 2014, 2015 Michael Imamura.
+// Copyright (c) 2009, 2010, 2014-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -113,7 +113,7 @@ Core *Core::Reset()
 	// Startup Luabind.
 	luabind::open(state);
 	luabind::set_pcall_callback(&Core::ErrorFunc);
-	Peer::Register(this);
+	Peer::Register(*this);
 
 	if (NIL) delete NIL;
 	NIL = new luabind::object();

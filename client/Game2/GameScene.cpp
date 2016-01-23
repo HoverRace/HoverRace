@@ -1,7 +1,7 @@
 
 // GameScene.cpp
 //
-// Copyright (c) 2010, 2013-2015 Michael Imamura.
+// Copyright (c) 2010, 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -168,7 +168,7 @@ void GameScene::ScheduleLoad(std::shared_ptr<Loader> loader)
 
 	loader->AddLoader("Session", [=]{
 		metaSession = rulebook->GetMetas().session(
-			std::make_shared<SessionPeer>(scripting, session));
+			std::make_shared<SessionPeer>(*scripting, session));
 		metaSession->OnInit();
 		session->SetMeta(metaSession);
 
@@ -184,7 +184,7 @@ void GameScene::ScheduleLoad(std::shared_ptr<Loader> loader)
 			for (auto &viewport : viewports) {
 				if (viewport.player.get() == playerPeer->GetPlayer()) {
 					playerPeer->SetHud(
-						std::make_shared<HudPeer>(scripting, display,
+						std::make_shared<HudPeer>(*scripting, display,
 							viewport.hud));
 					break;
 				}

@@ -1,7 +1,7 @@
 
 // PlayerPeer.cpp
 //
-// Copyright (c) 2010, 2014, 2015 Michael Imamura.
+// Copyright (c) 2010, 2014-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -44,14 +44,10 @@ std::ostream &operator<<(std::ostream &os, const PlayerPeer &playerPeer)
 }
 
 
-PlayerPeer::PlayerPeer(Script::Core *scripting,
+PlayerPeer::PlayerPeer(Script::Core &scripting,
 	std::shared_ptr<Player::Player> player) :
 	SUPER(scripting, "Player"),
 	player(std::move(player)), meta(nullptr)
-{
-}
-
-PlayerPeer::~PlayerPeer()
 {
 }
 
@@ -85,7 +81,7 @@ MainCharacter::MainCharacter *PlayerPeer::VerifyAttached() const
 {
 	auto mchar = player->GetMainCharacter();
 	if (!mchar) {
-		luaL_error(GetScripting()->GetState(),
+		luaL_error(GetScripting().GetState(),
 			"Player is not attached to the current session.");
 	}
 	return mchar;
@@ -130,7 +126,7 @@ const std::string &PlayerPeer::LGetName() const
 
 void PlayerPeer::LGetPos()
 {
-	lua_State *L = GetScripting()->GetState();
+	lua_State *L = GetScripting().GetState();
 
 	if (auto mchar = VerifyAttached()) {
 		MR_3DCoordinate &pos = mchar->mPosition;

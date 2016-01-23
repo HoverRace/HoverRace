@@ -1,7 +1,7 @@
 
 // HudPeer.cpp
 //
-// Copyright (c) 2013-2015 Michael Imamura.
+// Copyright (c) 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -38,14 +38,10 @@ namespace HoverRace {
 namespace Client {
 namespace HoverScript {
 
-HudPeer::HudPeer(Script::Core *scripting, Display::Display &display,
+HudPeer::HudPeer(Script::Core &scripting, Display::Display &display,
 	std::weak_ptr<Display::Hud> hud) :
 	SUPER(scripting, "Hud"),
 	display(display), hud(std::move(hud))
-{
-}
-
-HudPeer::~HudPeer()
 {
 }
 

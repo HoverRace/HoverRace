@@ -1,7 +1,7 @@
 
 // ConfigPeer.h
 //
-// Copyright (c) 2010, 2014, 2015 Michael Imamura.
+// Copyright (c) 2010, 2014-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -45,8 +45,8 @@ class ConfigPeer : public Script::Peer
 	using SUPER = Script::Peer;
 
 public:
-	ConfigPeer(Script::Core *scripting);
-	virtual ~ConfigPeer();
+	ConfigPeer(Script::Core &scripting);
+	virtual ~ConfigPeer() { }
 
 public:
 	static void Register(Script::Core &scripting);

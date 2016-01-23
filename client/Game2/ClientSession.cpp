@@ -1,7 +1,7 @@
 // ClientSession.cpp
 //
 // Copyright (c) 1995-1998 - Richard Langlois and Grokksoft Inc.
-// Copyright (c) 2013-2015 Michael Imamura.
+// Copyright (c) 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -202,7 +202,7 @@ bool ClientSession::LoadNew(const char *pTitle, Script::Core *scripting,
 
 	if (retv) {
 		ReadLevelAttrib(track->GetRecordFile(), pVideo);
-		trackPeer = std::make_shared<HoverScript::TrackPeer>(scripting, track);
+		trackPeer = std::make_shared<HoverScript::TrackPeer>(*scripting, track);
 	}
 
 	return retv;

@@ -1,7 +1,7 @@
 
 // SessionPeer.h
 //
-// Copyright (c) 2010, 2013-2015 Michael Imamura.
+// Copyright (c) 2010, 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ protected:
 	};
 
 public:
-	SessionPeer(Script::Core *scripting, ClientSession *session);
+	SessionPeer(Script::Core &scripting, ClientSession *session);
 	virtual ~SessionPeer();
 
 public:

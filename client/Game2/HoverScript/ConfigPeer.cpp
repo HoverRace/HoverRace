@@ -1,7 +1,7 @@
 
 // ConfigPeer.cpp
 //
-// Copyright (c) 2010, 2015 Michael Imamura.
+// Copyright (c) 2010, 2015-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -30,12 +30,8 @@ namespace HoverRace {
 namespace Client {
 namespace HoverScript {
 
-ConfigPeer::ConfigPeer(Script::Core *scripting) :
+ConfigPeer::ConfigPeer(Script::Core &scripting) :
 	SUPER(scripting, "Config")
-{
-}
-
-ConfigPeer::~ConfigPeer()
 {
 }
 
@@ -73,7 +69,7 @@ void ConfigPeer::LGetVideoRes()
 	// function width, height = get_video_res()
 	// Returns the width and height of the game window when in windowed mode.
 	Config *cfg = Config::GetInstance();
-	lua_State *L = GetScripting()->GetState();
+	lua_State *L = GetScripting().GetState();
 	lua_pushnumber(L, cfg->video.xRes);
 	lua_pushnumber(L, cfg->video.yRes);
 }

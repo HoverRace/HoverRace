@@ -1,7 +1,7 @@
 
 // InputPeer.cpp
 //
-// Copyright (c) 2010, 2014, 2015 Michael Imamura.
+// Copyright (c) 2010, 2014-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -36,8 +36,8 @@ std::ostream &operator<<(std::ostream &os, const InputPeer&)
 	return os;
 }
 
-InputPeer::InputPeer(Script::Core *scripting,
-	Control::InputEventController *controller) :
+InputPeer::InputPeer(Script::Core &scripting,
+	Control::InputEventController &controller) :
 	SUPER(scripting, "Input"),
 	controller(controller)
 {
@@ -63,15 +63,15 @@ void InputPeer::LHotkey(const std::string &key, const luabind::object &fn)
 {
 	using namespace luabind;
 
-	auto scripting = GetScripting();
-	auto L = scripting->GetState();
+	auto &scripting = GetScripting();
+	auto L = scripting.GetState();
 
-	auto action = controller->Hotkey(key);
+	auto action = controller.Hotkey(key);
 	if (!action) {
 		luaL_error(L, "Invalid hotkey: %s", key.c_str());
 	}
 	else {
-		hotkeyHandlers.emplace_back(scripting);
+		hotkeyHandlers.emplace_back(&scripting);
 		auto &handler = hotkeyHandlers.back();
 		handler.AddHandler(fn);
 

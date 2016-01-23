@@ -1,7 +1,7 @@
 
 // GamePeer.h
 //
-// Copyright (c) 2010, 2014, 2015 Michael Imamura.
+// Copyright (c) 2010, 2014-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -59,9 +59,9 @@ class GamePeer : public Script::Peer
 	using SUPER = Script::Peer;
 
 public:
-	GamePeer(Script::Core *scripting, GameDirector &director,
+	GamePeer(Script::Core &scripting, GameDirector &director,
 		RulebookLibrary &rulebookLibrary);
-	virtual ~GamePeer();
+	virtual ~GamePeer() { }
 
 public:
 	static void Register(Script::Core &scripting);
@@ -105,8 +105,10 @@ public:
 	void LStartMenuMenu();
 
 	void LStartPractice(const std::string &track);
-	void LStartPractice_O(const std::string &track, const luabind::object &opts);
-	void LStartPractice_RO(const std::string &track, const std::string &rulebookName, const luabind::object &opts);
+	void LStartPractice_O(const std::string &track,
+		const luabind::object &opts);
+	void LStartPractice_RO(const std::string &track,
+		const std::string &rulebookName, const luabind::object &opts);
 
 	void LShutdown();
 

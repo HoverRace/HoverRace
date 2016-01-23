@@ -1,8 +1,7 @@
 
 // Peer.h
-// Base class for script peers that extend Object.
 //
-// Copyright (c) 2009, 2010 Michael Imamura.
+// Copyright (c) 2009, 2010, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -29,20 +28,16 @@
 namespace HoverRace {
 namespace Script {
 
-Peer::Peer(Core *scripting, const std::string &name) :
+Peer::Peer(Core &scripting, const std::string &name) :
 	scripting(scripting), name(name)
 {
 }
 
-Peer::~Peer()
-{
-}
-
-void Peer::Register(Core *scripting)
+void Peer::Register(Core &scripting)
 {
 	using namespace luabind;
 
-	lua_State *L = scripting->GetState();
+	lua_State *L = scripting.GetState();
 
 	module(L) [
 		class_<Peer,std::shared_ptr<Peer>>("Object")
@@ -53,12 +48,12 @@ void Peer::Register(Core *scripting)
 
 void Peer::LHelp()
 {
-	scripting->ReqHelp(name);
+	scripting.ReqHelp(name);
 }
 
 void Peer::LHelp_M(const std::string &methodName)
 {
-	scripting->ReqHelp(name, methodName);
+	scripting.ReqHelp(name, methodName);
 }
 
 }  // namespace Script

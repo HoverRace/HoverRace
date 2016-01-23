@@ -1,7 +1,7 @@
 
 // GamePeer.cpp
 //
-// Copyright (c) 2010, 2013-2015 Michael Imamura.
+// Copyright (c) 2010, 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -47,17 +47,13 @@ namespace HoverRace {
 namespace Client {
 namespace HoverScript {
 
-GamePeer::GamePeer(Script::Core *scripting, GameDirector &director,
-                   RulebookLibrary &rulebookLibrary) :
+GamePeer::GamePeer(Script::Core &scripting, GameDirector &director,
+	RulebookLibrary &rulebookLibrary) :
 	SUPER(scripting, "Game"),
 	director(director), rulebookLibrary(rulebookLibrary), display(nullptr),
 	initialized(false),
-	onInit(scripting), onShutdown(scripting),
-	onSessionStart(scripting), onSessionEnd(scripting)
-{
-}
-
-GamePeer::~GamePeer()
+	onInit(&scripting), onShutdown(&scripting),
+	onSessionStart(&scripting), onSessionEnd(&scripting)
 {
 }
 
@@ -125,7 +121,7 @@ void GamePeer::OnShutdown()
  */
 void GamePeer::OnSessionStart(SessionPeerPtr sessionPeer)
 {
-	luabind::object sessionObj(GetScripting()->GetState(), sessionPeer);
+	luabind::object sessionObj(GetScripting().GetState(), sessionPeer);
 	onSessionStart.CallHandlers(sessionObj);
 }
 
@@ -137,14 +133,14 @@ void GamePeer::OnSessionStart(SessionPeerPtr sessionPeer)
  */
 void GamePeer::OnSessionEnd(SessionPeerPtr sessionPeer)
 {
-	luabind::object sessionObj(GetScripting()->GetState(), sessionPeer);
+	luabind::object sessionObj(GetScripting().GetState(), sessionPeer);
 	onSessionEnd.CallHandlers(sessionObj);
 }
 
 void GamePeer::VerifyInitialized() const
 {
 	if (!initialized) {
-		luaL_error(GetScripting()->GetState(), "Game is not yet initialized.");
+		luaL_error(GetScripting().GetState(), "Game is not yet initialized.");
 		return;
 	}
 }
@@ -153,7 +149,7 @@ void GamePeer::LAddLocalPlayer()
 {
 	auto party = director.GetParty();
 	if (!party) {
-		luaL_error(GetScripting()->GetState(), "Not ready to connect players.");
+		luaL_error(GetScripting().GetState(), "Not ready to connect players.");
 		return;
 	}
 
@@ -230,7 +226,7 @@ void GamePeer::LOnSessionEnd_N(const std::string &name, const luabind::object &f
 void GamePeer::LScreenshot()
 {
 	if (!display) {
-		luaL_error(GetScripting()->GetState(),
+		luaL_error(GetScripting().GetState(),
 			"Cannot take screenshot because window hasn't been created yet.");
 		return;
 	}
@@ -249,7 +245,7 @@ void GamePeer::LStartPractice(const std::string &track)
 	// Start a new single-player practice session with default rules.
 	//   track - The track name to load (e.g. "ClassicH").
 	using namespace luabind;
-	lua_State *L = GetScripting()->GetState();
+	lua_State *L = GetScripting().GetState();
 	lua_pushnil(L);
 	object nilobj(from_stack(L, -1));
 	LStartPractice_RO(track, "", nilobj);
@@ -257,7 +253,7 @@ void GamePeer::LStartPractice(const std::string &track)
 }
 
 void GamePeer::LStartPractice_O(const std::string &track,
-                                const luabind::object &opts)
+	const luabind::object &opts)
 {
 	// This actually represents two different overloads, depending on the type
 	// of the second parameter.
@@ -269,7 +265,7 @@ void GamePeer::LStartPractice_O(const std::string &track,
 		// Start a new single-player practice session with default rules.
 		//   track - The track name to load (e.g. "ClassicH").
 		//   rulebook - The rulebook name (e.g. "Race").
-		lua_State *L = GetScripting()->GetState();
+		lua_State *L = GetScripting().GetState();
 		lua_pushnil(L);
 		object nilobj(from_stack(L, -1));
 		LStartPractice_RO(track, object_cast<std::string>(opts), nilobj);
@@ -287,8 +283,7 @@ void GamePeer::LStartPractice_O(const std::string &track,
 }
 
 void GamePeer::LStartPractice_RO(const std::string &track,
-                                 const std::string &rulebookName,
-                                 const luabind::object &opts)
+	const std::string &rulebookName, const luabind::object &opts)
 {
 	// function start_practice(track, rulebook, opts)
 	// Start a new single-player practice session.
@@ -300,7 +295,7 @@ void GamePeer::LStartPractice_RO(const std::string &track,
 
 	VerifyInitialized();
 
-	lua_State *L = GetScripting()->GetState();
+	lua_State *L = GetScripting().GetState();
 
 	bool hasExtension = boost::ends_with(track, Config::TRACK_EXT);
 

@@ -1,7 +1,7 @@
 
 // TrackPeer.h
 //
-// Copyright (c) 2014, 2015 Michael Imamura.
+// Copyright (c) 2014-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -48,8 +48,8 @@ class TrackPeer : public Script::Peer
 	using SUPER = Script::Peer;
 
 public:
-	TrackPeer(Script::Core *scripting, std::shared_ptr<Model::Track> track);
-	virtual ~TrackPeer();
+	TrackPeer(Script::Core &scripting, std::shared_ptr<Model::Track> track);
+	virtual ~TrackPeer() { }
 
 public:
 	static void Register(Script::Core &scripting);

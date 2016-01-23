@@ -1,7 +1,7 @@
 
 // HudPeer.h
 //
-// Copyright (c) 2013-2015 Michael Imamura.
+// Copyright (c) 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -54,9 +54,9 @@ class HudPeer : public Script::Peer
 	using HudAlignment = Display::Hud::HudAlignment;
 
 public:
-	HudPeer(Script::Core *scripting, Display::Display &display,
+	HudPeer(Script::Core &scripting, Display::Display &display,
 		std::weak_ptr<Display::Hud> hud);
-	virtual ~HudPeer();
+	virtual ~HudPeer() { }
 
 public:
 	static void Register(Script::Core &scripting);
@@ -74,7 +74,7 @@ private:
 			return HudAlignment::FromInt(align);
 		}
 		catch (Exception &ex) {
-			luaL_error(GetScripting()->GetState(), "%s", ex.what());
+			luaL_error(GetScripting().GetState(), "%s", ex.what());
 			throw;  // Never actually reached (luaL_error doesn't return).
 		}
 	}

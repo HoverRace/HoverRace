@@ -1,8 +1,8 @@
 
 // Peer.h
-// Base class for script peers that extend Object.
+// Base class for script peers.
 //
-// Copyright (c) 2009, 2010 Michael Imamura.
+// Copyright (c) 2009, 2010, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -42,27 +42,27 @@ namespace HoverRace {
 namespace Script {
 
 /**
- * Base class for script peers that extend Object
+ * Base class for script peers.
  * @author Michael Imamura
  */
 class MR_DllDeclare Peer
 {
 public:
-	Peer(Core *scripting, const std::string &name);
-	virtual ~Peer();
+	Peer(Core &scripting, const std::string &name);
+	virtual ~Peer() { }
 
 	Peer &operator=(const Peer&) = delete;
 
-	static void Register(Core *scripting);
+	static void Register(Core &scripting);
 
-	Core *GetScripting() const { return scripting; }
+	Core &GetScripting() const { return scripting; }
 
 public:
 	void LHelp();
 	void LHelp_M(const std::string &methodName);
 
 private:
-	Core *scripting;
+	Core &scripting;
 	std::string name;
 };
 
