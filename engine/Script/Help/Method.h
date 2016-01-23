@@ -78,7 +78,6 @@ private:
 	sigs_t sigs;
 	examples_t examples;
 };
-typedef std::shared_ptr<Method> MethodPtr;
 
 }  // namespace Help
 }  // namespace Script

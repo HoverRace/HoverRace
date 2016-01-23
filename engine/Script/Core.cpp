@@ -409,7 +409,7 @@ void Core::LoadClassHelp(const std::string &className)
 			throw yaml::ParserExn(
 				(filenamestr + ": Expected root node to be a map.").c_str());
 		}
-		Help::ClassPtr cls = std::make_shared<Help::Class>(className);
+		auto cls = std::make_shared<Help::Class>(className);
 		cls->Load(root);
 		helpClasses.insert(helpClasses_t::value_type(className, cls));
 

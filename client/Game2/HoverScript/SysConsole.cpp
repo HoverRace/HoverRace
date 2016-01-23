@@ -1,7 +1,7 @@
 
 // SysConsole.cpp
 //
-// Copyright (c) 2013-2015 Michael Imamura.
+// Copyright (c) 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -275,14 +275,13 @@ int SysConsole::GetEndLogIndex() const
 void SysConsole::HelpClass(const Script::Help::Class &cls)
 {
 	using Script::Help::Class;
-	using Script::Help::MethodPtr;
 
 	LogInfo(boost::str(boost::format(_("Methods for class %s:")) % cls.GetName()));
 
 	std::string s;
 	s.reserve(1024);
 	for (const auto &ent : cls.GetMethods()) {
-		MethodPtr method = ent.second;
+		auto &method = ent.second;
 		s.clear();
 		s += "  ";
 		s += method->GetName();

@@ -72,7 +72,6 @@ private:
 	std::string name;
 	methods_t methods;
 };
-typedef std::shared_ptr<Class> ClassPtr;
 
 }  // namespace Help
 }  // namespace Script
