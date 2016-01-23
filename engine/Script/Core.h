@@ -67,7 +67,10 @@ class MR_DllDeclare Core
 {
 public:
 	Core();
+	Core(const Core &core) = delete;
 	virtual ~Core();
+
+	Core &operator=(const Core&) = delete;
 
 public:
 	lua_State *GetState() const { return state; }
