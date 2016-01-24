@@ -36,22 +36,23 @@ namespace HoverScript {
 
 class RuntimeEnv::LogStreamBuf : public std::stringbuf /*{{{*/
 {
-	typedef std::stringbuf SUPER;
-	public:
-		LogStreamBuf() : SUPER() { }
-		virtual ~LogStreamBuf() { sync(); }
+	using SUPER = std::stringbuf;
 
-	protected:
-		virtual int sync();
+public:
+	LogStreamBuf() : SUPER() { }
+	virtual ~LogStreamBuf() { sync(); }
+
+protected:
+	virtual int sync();
 }; //}}}
 
 class RuntimeEnv::LogStream : public std::ostream /*{{{*/
 {
-	typedef std::ostream SUPER;
-	public:
-		LogStream() :
-			SUPER(new LogStreamBuf()) { }
-		virtual ~LogStream() { delete rdbuf(); }
+	using SUPER = std::ostream;
+
+public:
+	LogStream() : SUPER(new LogStreamBuf()) { }
+	virtual ~LogStream() { delete rdbuf(); }
 }; //}}}
 
 RuntimeEnv::RuntimeEnv(Script::Core &scripting) :
