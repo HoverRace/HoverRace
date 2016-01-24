@@ -1,7 +1,7 @@
 
 // SysConsole.h
 //
-// Copyright (c) 2013-2015 Michael Imamura.
+// Copyright (c) 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -177,11 +177,11 @@ public:
 
 public:
 	/// Fired when the log is cleared.
-	typedef boost::signals2::signal<void()> logClearedSignal_t;
+	using logClearedSignal_t = boost::signals2::signal<void()>;
 	logClearedSignal_t &GetLogClearedSignal() { return logClearedSignal; }
 
 	/// Fired when a log line is added.  Parameter is the log index.
-	typedef boost::signals2::signal<void(size_t)> logAddedSignal_t;
+	using logAddedSignal_t = boost::signals2::signal<void(size_t)>;
 	logAddedSignal_t &GetLogAddedSignal() { return logAddedSignal; }
 
 public:
@@ -206,7 +206,7 @@ private:
 	std::deque<LogLine> logLines;
 	size_t baseLogIdx;  ///< Index of the first item in logLines.
 
-	typedef boost::circular_buffer<std::string> history_t;
+	using history_t = boost::circular_buffer<std::string>;
 	history_t history;
 	history_t::iterator curHistory;
 
