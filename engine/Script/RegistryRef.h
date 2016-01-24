@@ -1,7 +1,7 @@
 
 // RegistryRef.h
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -49,53 +49,53 @@ namespace Script {
  */
 class MR_DllDeclare RegistryRef
 {
-	public:
-		RegistryRef(Core *scripting) : scripting(scripting), ref(LUA_NOREF) { }
-		RegistryRef(const RegistryRef &o);
-		RegistryRef(RegistryRef &&o) : scripting(o.scripting), ref(o.ref)
-		{
-			o.ref = LUA_NOREF;
-		}
+public:
+	RegistryRef(Core *scripting) : scripting(scripting), ref(LUA_NOREF) { }
+	RegistryRef(const RegistryRef &o);
+	RegistryRef(RegistryRef &&o) : scripting(o.scripting), ref(o.ref)
+	{
+		o.ref = LUA_NOREF;
+	}
 
-		~RegistryRef()
-		{
-			Clear();
-		}
+	~RegistryRef()
+	{
+		Clear();
+	}
 
-		RegistryRef &operator=(const RegistryRef &o);
-		RegistryRef &operator=(RegistryRef &&o)
-		{
-			scripting = o.scripting;
-			ref = o.ref;
-			o.ref = LUA_NOREF;
-			return *this;
-		}
+	RegistryRef &operator=(const RegistryRef &o);
+	RegistryRef &operator=(RegistryRef &&o)
+	{
+		scripting = o.scripting;
+		ref = o.ref;
+		o.ref = LUA_NOREF;
+		return *this;
+	}
 
-		RegistryRef &operator=(const luabind::object &obj)
-		{
-			Set(obj);
-			return *this;
-		}
+	RegistryRef &operator=(const luabind::object &obj)
+	{
+		Set(obj);
+		return *this;
+	}
 
-		operator bool() const
-		{
-			return ref != LUA_NOREF && ref != LUA_REFNIL;
-		}
+	operator bool() const
+	{
+		return ref != LUA_NOREF && ref != LUA_REFNIL;
+	}
 
-	public:
-		Core *GetScripting() const { return scripting; }
+public:
+	Core *GetScripting() const { return scripting; }
 
-	public:
-		void Clear();
+public:
+	void Clear();
 
-		void SetFromStack();
-		void Set(const luabind::object &obj);
+	void SetFromStack();
+	void Set(const luabind::object &obj);
 
-		void Push() const;
+	void Push() const;
 
-	private:
-		Core *scripting;
-		int ref;
+private:
+	Core *scripting;
+	int ref;
 };
 
 }  // namespace Script
