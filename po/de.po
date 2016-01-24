@@ -1208,7 +1208,6 @@ msgid "Wrong argument count"
 msgstr ""
 
 #: client/Game2/main.cpp
-#: client/Game2/main.cpp
 #: compilers/MazeCompiler/main.cpp
 msgid "You found a bug!"
 msgstr ""

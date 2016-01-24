@@ -154,6 +154,7 @@ private:
 	unsigned int frameCount;
 	Util::OS::timestamp_t lastTimestamp;
 	double fps;
+	const bool &showFps;
 
 	sceneStack_t sceneStack;
 	std::shared_ptr<Scene> fgScene;  ///< The scene that currently has input focus.
@@ -161,7 +162,6 @@ private:
 	bool showOverlay;
 	std::unique_ptr<DebugScene> debugScene;
 	const bool &showDebug;
-	const bool &showFps;
 	std::list<std::shared_ptr<Announcement>> announcements;
 
 	std::weak_ptr<HoverScript::ConsoleScene> consoleScene;
