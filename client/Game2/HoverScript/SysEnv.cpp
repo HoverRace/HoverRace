@@ -1,7 +1,7 @@
 
 // SysEnv.cpp
 //
-// Copyright (c) 2010, 2013-2015 Michael Imamura.
+// Copyright (c) 2010, 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -74,33 +74,32 @@ namespace HoverRace {
 namespace Client {
 namespace HoverScript {
 
-SysEnv::SysEnv(Script::Core *scripting, DebugPeer *debugPeer,
-	GamePeer *gamePeer, InputPeer *inputPeer) :
+SysEnv::SysEnv(Script::Core &scripting, DebugPeer &debugPeer,
+	GamePeer &gamePeer, InputPeer &inputPeer) :
 	SUPER(scripting), debugPeer(debugPeer), gamePeer(gamePeer),
 	inputPeer(inputPeer),
-	outHandle(scripting->AddOutput(std::make_shared<LogStream>()))
+	outHandle(scripting.AddOutput(std::make_shared<LogStream>()))
 {
 }
 
 SysEnv::~SysEnv()
 {
-	GetScripting()->RemoveOutput(outHandle);
+	GetScripting().RemoveOutput(outHandle);
 }
 
 void SysEnv::InitEnv()
 {
 	using namespace luabind;
 
-	Script::Core *scripting = GetScripting();
-	lua_State *L = scripting->GetState();
+	lua_State *L = GetScripting().GetState();
 
 	// Start with the standard global environment.
 	CopyGlobals();
 
 	object env(from_stack(L, -1));
-	env["debug"] = debugPeer;
-	env["game"] = gamePeer;
-	env["input"] = inputPeer;
+	env["debug"] = &debugPeer;
+	env["game"] = &gamePeer;
+	env["input"] = &inputPeer;
 }
 
 void SysEnv::LogInfo(const std::string &s)

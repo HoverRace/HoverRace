@@ -141,15 +141,14 @@ ClientApp::ClientApp() :
 	debugPeer.reset(new DebugPeer(*scripting, *this));
 	gamePeer.reset(new GamePeer(*scripting, *this, *rulebookLibrary));
 	inputPeer.reset(new InputPeer(*scripting, *controller));
-	sysEnv.reset(new SysEnv(scripting.get(),
-		debugPeer.get(), gamePeer.get(), inputPeer.get()));
+	sysEnv.reset(new SysEnv(*scripting, *debugPeer, *gamePeer, *inputPeer));
 	for (OS::path_t &initScript : cfg->runtime.initScripts) {
 		if (!initScript.empty()) {
 			sysEnv->RunScript(initScript);
 		}
 	}
-	sysConsole.reset(new SysConsole(scripting.get(), *this,
-		debugPeer.get(), gamePeer.get(), inputPeer.get()));
+	sysConsole.reset(new SysConsole(*scripting, *this,
+		*debugPeer, *gamePeer, *inputPeer));
 
 	// Create the main window and SDL surface.
 	display.reset(new Display::SDL::SdlDisplay(GetWindowTitle()));
@@ -165,7 +164,7 @@ ClientApp::ClientApp() :
 	auto stylesheetPath = cfg->GetMediaPath();
 	stylesheetPath /= Str::UP("themes");
 	stylesheetPath /= Str::UP("default");
-	StyleEnv(scripting.get(), *display, stylesheetPath).RunStylesheet();
+	StyleEnv(*scripting, *display, stylesheetPath).RunStylesheet();
 
 	gamePeer->SetDisplay(display.get());
 

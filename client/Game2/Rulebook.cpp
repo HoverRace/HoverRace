@@ -1,7 +1,7 @@
 
 // Rulebook.cpp
 //
-// Copyright (c) 2013-2015 Michael Imamura.
+// Copyright (c) 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -65,7 +65,8 @@ Rulebook::Rulebook(Script::Core *scripting, const Util::OS::path_t &basePath) :
 	metas(scripting),
 	loaded(false)
 {
-	env = std::make_shared<HoverScript::RulebookEnv>(scripting, basePath, *this);
+	env = std::make_shared<HoverScript::RulebookEnv>(
+		*scripting, basePath, *this);
 }
 
 void Rulebook::AddRule(const std::string &name, const luabind::object &obj)

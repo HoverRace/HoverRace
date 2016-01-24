@@ -1,7 +1,7 @@
 
 // Console.h
 //
-// Copyright (c) 2009, 2014, 2015 Michael Imamura.
+// Copyright (c) 2009, 2014-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ class Console : public Script::Env, public Script::Help::HelpHandler
 	using SUPER = Script::Env;
 
 public:
-	Console(Script::Core *scripting);
+	Console(Script::Core &scripting);
 	virtual ~Console();
 
 protected:

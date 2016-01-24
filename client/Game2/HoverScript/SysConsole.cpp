@@ -49,10 +49,9 @@ namespace HoverScript {
  *                    log history.
  * @param maxHistory The maximum number of commands to keep in the history.
  */
-SysConsole::SysConsole(Script::Core *scripting,
+SysConsole::SysConsole(Script::Core &scripting,
 	GameDirector &director,
-	DebugPeer *debugPeer, GamePeer *gamePeer,
-	InputPeer *inputPeer,
+	DebugPeer &debugPeer, GamePeer &gamePeer, InputPeer &inputPeer,
 	size_t maxLogLines, size_t maxHistory) :
 	SUPER(scripting), director(director),
 	debugPeer(debugPeer), gamePeer(gamePeer), inputPeer(inputPeer),
@@ -82,7 +81,7 @@ void SysConsole::InitEnv()
 
 	SUPER::InitEnv();
 
-	lua_State *L = GetScripting()->GetState();
+	lua_State *L = GetScripting().GetState();
 
 	// Start with the standard global environment.
 	CopyGlobals();
@@ -95,9 +94,9 @@ void SysConsole::InitEnv()
 	lua_rawset(L, -3);  // table
 
 	object env(from_stack(L, -1));
-	env["debug"] = debugPeer;
-	env["game"] = gamePeer;
-	env["input"] = inputPeer;
+	env["debug"] = &debugPeer;
+	env["game"] = &gamePeer;
+	env["input"] = &inputPeer;
 	env["session"] = metaSession;
 }
 
@@ -105,7 +104,7 @@ void SysConsole::OnSessionChanged(std::shared_ptr<MetaSession> metaSession)
 {
 	using namespace luabind;
 
-	lua_State *L = GetScripting()->GetState();
+	lua_State *L = GetScripting().GetState();
 
 	PushEnv();
 
@@ -203,8 +202,7 @@ void SysConsole::AddIntroLines()
 	LogNote(heading);
 	LogNote(headingDecor);
 
-	Script::Core *env = GetScripting();
-	std::string intro = env->GetVersionString();
+	std::string intro = GetScripting().GetVersionString();
 	intro += " :: Console active.";
 	LogNote(intro);
 

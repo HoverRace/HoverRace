@@ -1,7 +1,7 @@
 
 // Console.cpp
 //
-// Copyright (c) 2009, 2014, 2015 Michael Imamura.
+// Copyright (c) 2009, 2014-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -36,14 +36,14 @@ class Console::LogStreamBuf : public std::stringbuf /*{{{*/
 	using SUPER = std::stringbuf;
 
 public:
-	LogStreamBuf(Console *console);
+	LogStreamBuf(Console &console);
 	virtual ~LogStreamBuf();
 
 protected:
 	virtual int sync();
 
 private:
-	Console *console;
+	Console &console;
 }; //}}}
 
 class Console::LogStream : public std::ostream /*{{{*/
@@ -51,29 +51,29 @@ class Console::LogStream : public std::ostream /*{{{*/
 	using SUPER = std::ostream;
 
 public:
-	LogStream(Console *console) :
+	LogStream(Console &console) :
 		SUPER(new LogStreamBuf(console)) { }
 	virtual ~LogStream() { delete rdbuf(); }
 }; //}}}
 
-Console::Console(Script::Core *scripting) :
+Console::Console(Script::Core &scripting) :
 	SUPER(scripting), Script::Help::HelpHandler(),
 	inputState(InputState::COMMAND)
 {
 	chunk.reserve(1024);
-	outHandle = scripting->AddOutput(std::make_shared<LogStream>(this));
+	outHandle = scripting.AddOutput(std::make_shared<LogStream>(*this));
 
 	SetHelpHandler(this);
 }
 
 Console::~Console()
 {
-	GetScripting()->RemoveOutput(outHandle);
+	GetScripting().RemoveOutput(outHandle);
 }
 
 void Console::InitEnv()
 {
-	lua_State *state = GetScripting()->GetState();
+	lua_State *state = GetScripting().GetState();
 
 	// Start with the standard global environment.
 	CopyGlobals();
@@ -169,7 +169,7 @@ int Console::LSandbox(lua_State *state)
 
 //{{{ Console::LogStreamBuf ////////////////////////////////////////////////////
 
-Console::LogStreamBuf::LogStreamBuf(Console *console) :
+Console::LogStreamBuf::LogStreamBuf(Console &console) :
 	SUPER(), console(console)
 {
 }
@@ -190,14 +190,14 @@ int Console::LogStreamBuf::sync()
 		iter != s.end(); ++iter)
 	{
 		if (*iter == '\n') {
-			console->LogInfo(line);
+			console.LogInfo(line);
 			line.clear();
 		}
 		else {
 			line += *iter;
 		}
 	}
-	if (!line.empty()) console->LogInfo(line);
+	if (!line.empty()) console.LogInfo(line);
 
 	// Reset the string buffer.
 	str(std::string());

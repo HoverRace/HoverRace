@@ -1,7 +1,7 @@
 
 // RuntimeEnv.cpp
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ class RuntimeEnv::LogStream : public std::ostream /*{{{*/
 		virtual ~LogStream() { delete rdbuf(); }
 }; //}}}
 
-RuntimeEnv::RuntimeEnv(Script::Core *scripting) :
+RuntimeEnv::RuntimeEnv(Script::Core &scripting) :
 	SUPER(scripting)
 {
 	//outHandle = scripting->AddOutput(std::make_shared<LogStream>());

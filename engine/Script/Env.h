@@ -1,7 +1,7 @@
 
 // Env.h
 //
-// Copyright (c) 2010, 2014 Michael Imamura.
+// Copyright (c) 2010, 2014, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -54,14 +54,14 @@ namespace Script {
 class MR_DllDeclare Env
 {
 public:
-	Env(Core *scripting);
+	Env(Core &scripting);
 	Env(const Env&) = delete;
-	virtual ~Env();
+	virtual ~Env() { }
 
 	Env &operator=(const Env&) = delete;
 
 protected:
-	Core *GetScripting() const { return scripting; }
+	Core &GetScripting() const { return scripting; }
 
 	void LogScriptError(const Script::ScriptExn &ex);
 
@@ -89,18 +89,18 @@ protected:
 	 * @throw ScriptExn The code either failed to compile or signaled an
 	 *                  error while executing.
 	 */
-	template<class ReturnPolicy=Core::PrintReturn>
-	int Execute(const Core::Chunk &chunk, ReturnPolicy rp=ReturnPolicy())
+	template<class ReturnPolicy = Core::PrintReturn>
+	int Execute(const Core::Chunk &chunk, ReturnPolicy rp = ReturnPolicy())
 	{
 		// May throw ScriptExn or IncompleteExn, in which case the stack
 		// will be unchanged.
-		scripting->Compile(chunk);
+		scripting.Compile(chunk);
 
 		SetupEnv();
 
 		// May throw ScriptExn, but the function on the stack will be
 		// consumed anyway.
-		return scripting->Invoke(0, helpHandler, rp);
+		return scripting.Invoke(0, helpHandler, rp);
 	}
 
 protected:
@@ -130,7 +130,7 @@ public:
 	}
 
 private:
-	Core *scripting;
+	Core &scripting;
 	bool initialized;
 	RegistryRef envRef;
 	Help::HelpHandler *helpHandler;

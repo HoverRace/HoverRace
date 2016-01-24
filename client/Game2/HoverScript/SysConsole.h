@@ -62,8 +62,8 @@ class SysConsole : public Console
 	using SUPER = Console;
 
 public:
-	SysConsole(Script::Core *scripting, GameDirector &director,
-		DebugPeer *debugPeer, GamePeer *gamePeer, InputPeer *inputPeer,
+	SysConsole(Script::Core &scripting, GameDirector &director,
+		DebugPeer &debugPeer, GamePeer &gamePeer, InputPeer &inputPeer,
 		size_t maxLogLines = 512,
 		size_t maxHistory = 64);
 	virtual ~SysConsole();
@@ -194,9 +194,9 @@ public:
 
 private:
 	GameDirector &director;
-	DebugPeer *debugPeer;
-	GamePeer *gamePeer;
-	InputPeer *inputPeer;
+	DebugPeer &debugPeer;
+	GamePeer &gamePeer;
+	InputPeer &inputPeer;
 	std::shared_ptr<MetaSession> metaSession;
 
 	boost::signals2::scoped_connection sessionChangedConn;

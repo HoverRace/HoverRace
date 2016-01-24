@@ -1,7 +1,7 @@
 
 // RulebookEnv.h
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013, 2014, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ class RulebookEnv : public RuntimeEnv {
 	using SUPER = RuntimeEnv;
 
 public:
-	RulebookEnv(Script::Core *scripting, const Util::OS::path_t &basePath,
+	RulebookEnv(Script::Core &scripting, const Util::OS::path_t &basePath,
 		Rulebook &rulebook);
 	virtual ~RulebookEnv();
 

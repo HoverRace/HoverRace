@@ -1,7 +1,7 @@
 
 // RulebookEnv.cpp
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013, 2014, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -82,9 +82,8 @@ void LuaMergeTables(lua_State *L, int destIdx, int srcIdx)
 	// (empty)
 }
 
-const luabind::object ExpectHandler(Script::Core *scripting,
-									 const luabind::object &props,
-									 const char *name)
+const luabind::object ExpectHandler(Script::Core &scripting,
+	const luabind::object &props, const char *name)
 {
 	using namespace luabind;
 
@@ -92,9 +91,9 @@ const luabind::object ExpectHandler(Script::Core *scripting,
 
 	int objType = type(obj);
 	if (objType != LUA_TNIL && objType != LUA_TFUNCTION) {
-		luaL_error(scripting->GetState(),
+		luaL_error(scripting.GetState(),
 			"'%s' is required to be a function or nil", name);
-		return *scripting->NIL;
+		return *scripting.NIL;
 	}
 
 	return obj;
@@ -154,15 +153,14 @@ bool IsValidModulePath(const std::string &s)
  * @param basePath The root directory of the rulebook.
  * @param rulebook The rulebook bound to this environment.
  */
-RulebookEnv::RulebookEnv(Script::Core *scripting,
-                         const Util::OS::path_t &basePath,
-                         Rulebook &rulebook) :
+RulebookEnv::RulebookEnv(Script::Core &scripting,
+	const Util::OS::path_t &basePath, Rulebook &rulebook) :
 	SUPER(scripting),
 	basePath(basePath),
 	rulebook(rulebook),
-	requireCache(scripting)
+	requireCache(&scripting)
 {
-	lua_newtable(scripting->GetState());
+	lua_newtable(scripting.GetState());
 	requireCache.SetFromStack();
 }
 
@@ -208,10 +206,10 @@ void RulebookEnv::InitEnv()
  */
 void RulebookEnv::InitCFn(const char *name, lua_CFunction fn)
 {
-	lua_State *L = GetScripting()->GetState();
+	lua_State *L = GetScripting().GetState();
 
 	// Initial stack: table
-	
+
 	lua_pushlightuserdata(L, this);  // table this
 	lua_pushcclosure(L, fn, 1);  // table fn
 	lua_pushstring(L, name);  // table fn str
@@ -220,12 +218,12 @@ void RulebookEnv::InitCFn(const char *name, lua_CFunction fn)
 }
 
 void RulebookEnv::DefineRulebook(const std::string &name,
-                                 const luabind::object &defn)
+	const luabind::object &defn)
 {
 	using namespace luabind;
 
-	Script::Core *scripting = GetScripting();
-	lua_State *L = scripting->GetState();
+	Script::Core &scripting = GetScripting();
+	lua_State *L = scripting.GetState();
 
 	if (type(defn) != LUA_TTABLE) {
 		luaL_error(L, "Expected table.");
@@ -328,13 +326,13 @@ bool RulebookEnv::RunRulebookScript()
  * @return The number of return values left on the Lua stack.
  */
 int RulebookEnv::GenerateSubclass(lua_State *L, const std::string &base,
-                                  const std::string &name)
+	const std::string &name)
 {
 	using namespace luabind;
 
 	RulebookEnv *self = static_cast<RulebookEnv*>(
 		lua_touserdata(L, lua_upvalueindex(1)));
-	auto scripting = self->GetScripting();
+	auto &scripting = self->GetScripting();
 
 	auto numParams = lua_gettop(L);
 	if (numParams < 1) {
@@ -370,12 +368,12 @@ int RulebookEnv::GenerateSubclass(lua_State *L, const std::string &base,
 
 	// Define a constructor for the newly-created subclass.
 	rep->get_table(L);  // defn class ctable
-	scripting->Compile(Script::Core::Chunk(
+	scripting.Compile(Script::Core::Chunk(
 		boost::str(boost::format(
 			"return function(self, peer) %s.__init(self, peer) end") % base),
 		boost::str(boost::format("=%s(Internal)") % name)));
 	// defn class ctable fn
-	scripting->Call();  // defn class ctable ctor
+	scripting.Call();  // defn class ctable ctor
 	lua_setfield(L, -2, "__init");  // defn class ctable
 	lua_pop(L, 1);  // defn class
 

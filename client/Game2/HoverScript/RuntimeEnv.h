@@ -1,7 +1,7 @@
 
 // RuntimeEnv.h
 //
-// Copyright (c) 2013 Michael Imamura.
+// Copyright (c) 2013, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ class RuntimeEnv : public Script::Env {
 	using SUPER = Script::Env;
 
 public:
-	RuntimeEnv(Script::Core *scripting);
+	RuntimeEnv(Script::Core &scripting);
 	virtual ~RuntimeEnv();
 
 private:

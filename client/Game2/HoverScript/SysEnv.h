@@ -1,7 +1,7 @@
 
 // SysEnv.h
 //
-// Copyright (c) 2010, 2013-2015 Michael Imamura.
+// Copyright (c) 2010, 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -49,8 +49,8 @@ class SysEnv : private Script::Env
 	using SUPER = Script::Env;
 
 public:
-	SysEnv(Script::Core *scripting, DebugPeer *debugPeer,
-		GamePeer *gamePeer, InputPeer *inputPeer);
+	SysEnv(Script::Core &scripting, DebugPeer &debugPeer,
+		GamePeer &gamePeer, InputPeer &inputPeer);
 	virtual ~SysEnv();
 
 protected:
@@ -65,9 +65,9 @@ public:
 	void RunScript(const Util::OS::path_t &filename) { SUPER::RunScript(filename); }
 
 private:
-	DebugPeer *debugPeer;
-	GamePeer *gamePeer;
-	InputPeer *inputPeer;
+	DebugPeer &debugPeer;
+	GamePeer &gamePeer;
+	InputPeer &inputPeer;
 	Script::Core::OutHandle outHandle;
 };
 

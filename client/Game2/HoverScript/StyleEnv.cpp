@@ -1,7 +1,7 @@
 
 // StyleEnv.cpp
 //
-// Copyright (c) 2014, 2015 Michael Imamura.
+// Copyright (c) 2014-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -73,7 +73,7 @@ namespace HoverScript {
  * @param display The display to which the styles will be applied.
  * @param basePath The root directory of the theme.
  */
-StyleEnv::StyleEnv(Script::Core *scripting, Display::Display &display,
+StyleEnv::StyleEnv(Script::Core &scripting, Display::Display &display,
 	const Util::OS::path_t &basePath) :
 	SUPER(scripting),
 	display(display), basePath(basePath)
@@ -134,7 +134,7 @@ void StyleEnv::InitEnv()
 
 	SUPER::InitEnv();
 
-	lua_State *L = GetScripting()->GetState();
+	lua_State *L = GetScripting().GetState();
 
 	// Start with the standard global environment.
 	CopyGlobals();
