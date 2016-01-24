@@ -1,6 +1,5 @@
 
 // Peer.h
-// Base class for script peers.
 //
 // Copyright (c) 2009, 2010, 2016 Michael Imamura.
 //
