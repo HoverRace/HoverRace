@@ -19,5 +19,32 @@ string(REGEX REPLACE
 	"(#: [^:]+):[0-9]+([^\r\n]*\r?\n)" "\\1\\2"
 	po_in "${po_in}")
 
-file(WRITE "${PO_FILE}" "${po_in}")
+# Remove duplicate filename comments.
+# We split the filename into lines by inserting semicolons, then reconstruct
+# each line (since a line may already contain a semicolon).
+string(REGEX REPLACE "(\r?\n)" "\\1;" po_list "${po_in}")
+set(po_out "")
+set(curline "")
+set(lastline "")
+foreach(line ${po_list})
+	if(NOT "${line}" MATCHES "\r?\n${sep}")
+		set(curline "${curline}${line};")
+	else()
+		set(curline "${curline}${line}")
+
+		if(curline MATCHES "^#: ")
+			if(NOT lastline STREQUAL curline)
+				set(po_out "${po_out}${curline}")
+			endif()
+			set(lastline "${curline}")
+		else()
+			set(lastline "")
+			set(po_out "${po_out}${curline}")
+		endif()
+
+		set(curline "")
+	endif()
+endforeach()
+
+file(WRITE "${PO_FILE}" "${po_out}")
 
