@@ -137,8 +137,6 @@ msgid "CX craft"
 msgstr "Nave CX"
 
 #: engine/Control/Controller.cpp
-#: engine/Control/Controller.cpp
-#: engine/Control/Controller.cpp
 msgid "Camera"
 msgstr ""
 
@@ -189,19 +187,15 @@ msgid "Connection list not found"
 msgstr "La conexión se interrumpió"
 
 #: engine/MazeCompiler/LevelBuilder.cpp
-#: engine/MazeCompiler/LevelBuilder.cpp
 #, fuzzy, c-format, boost-format
 msgid "Connection to a nonexistent section %d"
 msgstr "Conectando a una sala de Internet..."
 
 #: engine/Control/Controller.cpp
-#: engine/Control/Controller.cpp
-#: engine/Control/Controller.cpp
 #, fuzzy
 msgid "Console"
 msgstr "Cerrar"
 
-#: engine/Control/Controller.cpp
 #: engine/Control/Controller.cpp
 #, fuzzy
 msgid "ConsoleToggle"
@@ -242,22 +236,15 @@ msgid "Down"
 msgstr "Volumen"
 
 #: engine/MazeCompiler/LevelBuilder.cpp
-#: engine/MazeCompiler/LevelBuilder.cpp
 #, c-format, boost-format
 msgid "Duplicate section ID (%d) on line %d"
 msgstr ""
 
 #: compilers/ResourceCompiler/BitmapHelper.cpp
-#: compilers/ResourceCompiler/BitmapHelper.cpp
-#: compilers/ResourceCompiler/BitmapHelper.cpp
-#: compilers/ResourceCompiler/ResActorBuilder.cpp
-#: compilers/ResourceCompiler/ResActorBuilder.cpp
 #: compilers/ResourceCompiler/ResActorBuilder.cpp
 #: compilers/ResourceCompiler/ResSoundBuilder.cpp
 #: compilers/ResourceCompiler/ResourceCompiler.cpp
-#: compilers/ResourceCompiler/ResourceCompiler.cpp
 #: compilers/ResourceCompiler/ResourceLibBuilder.cpp
-#: compilers/ResourceCompiler/TextParsing.cpp
 #: compilers/ResourceCompiler/TextParsing.cpp
 msgid "ERROR"
 msgstr ""
@@ -430,8 +417,6 @@ msgid "Home"
 msgstr ""
 
 #: compilers/ResourceCompiler/ResBitmapBuilder.cpp
-#: compilers/ResourceCompiler/ResBitmapBuilder.cpp
-#: compilers/ResourceCompiler/ResBitmapBuilder.cpp
 msgid "INFO"
 msgstr ""
 
@@ -521,7 +506,6 @@ msgid "Media Select"
 msgstr "Seleccionar arma:"
 
 #: engine/Control/Controller.cpp
-#: engine/Control/Controller.cpp
 #: engine/Control/ControllerStrings.cpp
 msgid "Menu"
 msgstr ""
@@ -607,7 +591,6 @@ msgstr ""
 msgid "Multiplayer"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp
 #: engine/Control/ControllerStrings.cpp
 msgid "Mute"
 msgstr ""
@@ -768,8 +751,6 @@ msgid "Play"
 msgstr "Jugador"
 
 #: engine/Control/Controller.cpp
-#: engine/Control/Controller.cpp
-#: engine/Control/Controller.cpp
 msgid "Player"
 msgstr "Jugador"
 
@@ -814,16 +795,13 @@ msgid "Quit"
 msgstr "Salir"
 
 #: client/Game2/PauseMenuScene.cpp
-#: client/Game2/PauseMenuScene.cpp
 msgid "Quit to Desktop"
 msgstr ""
 
 #: client/Game2/PauseMenuScene.cpp
-#: client/Game2/PauseMenuScene.cpp
 msgid "Quit to Main Menu"
 msgstr ""
 
-#: client/Game2/Observer.cpp
 #: client/Game2/Observer.cpp
 msgid "Rank"
 msgstr ""
@@ -840,7 +818,6 @@ msgstr ""
 msgid "Reset all settings on this screen to their default values?"
 msgstr ""
 
-#: client/Game2/SettingsScene.cpp
 #: client/Game2/SettingsScene.cpp
 msgid "Reset to defaults"
 msgstr ""
@@ -888,7 +865,6 @@ msgid "Scroll Lock"
 msgstr ""
 
 #: engine/MazeCompiler/LevelBuilder.cpp
-#: engine/MazeCompiler/LevelBuilder.cpp
 #, c-format, boost-format
 msgid "Section ID missing on line %d"
 msgstr ""
@@ -918,7 +894,6 @@ msgid "Settings"
 msgstr "&Opciones"
 
 #: client/Game2/SettingsScene.cpp
-#: client/Game2/SettingsScene.cpp
 #, fuzzy
 msgid "Settings changed"
 msgstr "&Opciones"
@@ -928,7 +903,6 @@ msgid "Side-by-side"
 msgstr ""
 
 #: client/Game2/ClientApp.cpp
-#: client/Game2/MainMenuScene.cpp
 #: client/Game2/MainMenuScene.cpp
 msgid "Silent Mode"
 msgstr ""
@@ -961,7 +935,6 @@ msgstr ""
 msgid "Starting in %02d.%02d sec. for %d laps"
 msgstr "Comenzando en %02d.%02d segundos. por %d vueltas"
 
-#: engine/Control/ControllerStrings.cpp
 #: engine/Control/ControllerStrings.cpp
 msgid "Stop"
 msgstr ""
@@ -1012,7 +985,6 @@ msgstr ""
 msgid "This level contains:"
 msgstr ""
 
-#: client/Game2/SettingsScene.cpp
 #: client/Game2/SettingsScene.cpp
 msgid "This will abandon any race in progress."
 msgstr ""
@@ -1098,7 +1070,6 @@ msgid "Unable to create the output file: %s"
 msgstr "Imposible de crear socket"
 
 #: engine/MazeCompiler/TrackCompiler.cpp
-#: engine/MazeCompiler/TrackCompiler.cpp
 msgid "Unable to find [HEADER] section"
 msgstr ""
 
@@ -1135,8 +1106,6 @@ msgstr ""
 msgid "Unhandled component type"
 msgstr ""
 
-#: engine/Control/ControllerStrings.cpp
-#: engine/Control/ControllerStrings.cpp
 #: engine/Control/ControllerStrings.cpp
 #, fuzzy
 msgid "Unknown"
@@ -1186,7 +1155,6 @@ msgstr "Volumen"
 msgid "Volume Up"
 msgstr "Volumen"
 
-#: compilers/ResourceCompiler/ResBitmapBuilder.cpp
 #: compilers/ResourceCompiler/ResBitmapBuilder.cpp
 msgid "WARNING"
 msgstr ""
@@ -1251,9 +1219,6 @@ msgid "elements"
 msgstr ""
 
 #: compilers/ResourceCompiler/ResourceCompiler.cpp
-#: compilers/ResourceCompiler/ResourceCompiler.cpp
-#: compilers/ResourceCompiler/ResourceCompiler.cpp
-#: compilers/ResourceCompiler/ResourceCompiler.cpp
 msgid "error"
 msgstr ""
 
@@ -1277,7 +1242,6 @@ msgstr ""
 msgid "problem reading bitmap parameters"
 msgstr ""
 
-#: compilers/ResourceCompiler/ResourceCompiler.cpp
 #: compilers/ResourceCompiler/ResourceCompiler.cpp
 msgid "problem reading sound parameters"
 msgstr ""
