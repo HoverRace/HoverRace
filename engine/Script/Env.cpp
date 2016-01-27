@@ -43,7 +43,7 @@ Env::Env(Core &scripting) :
 	scripting(scripting), initialized(false), envRef(&scripting),
 	helpHandler(nullptr)
 {
-	lua_State *state = scripting.GetState();
+	lua_State *state = GetState();
 
 	// Store a placeholder at the registry location.
 	lua_pushinteger(state, 1);
@@ -73,7 +73,7 @@ void Env::InitEnv()
  */
 void Env::CopyGlobals()
 {
-	lua_State *state = scripting.GetState();
+	lua_State *state = GetState();
 
 	lua_rawgeti(state, LUA_REGISTRYINDEX, LUA_RIDX_GLOBALS); // table _G
 	lua_pushnil(state);  // table _G nil
@@ -98,7 +98,7 @@ void Env::SetHelpHandler(Help::HelpHandler *handler)
  */
 void Env::PushEnv()
 {
-	lua_State *L = scripting.GetState();
+	lua_State *L = GetState();
 
 	if (initialized) {
 		envRef.Push();  // env
@@ -121,7 +121,7 @@ void Env::PushEnv()
  */
 void Env::SetupEnv()
 {
-	lua_State *state = scripting.GetState();
+	lua_State *state = GetState();
 
 	// fn - The compiled function.
 	// env - The table that will be the environment for the function.

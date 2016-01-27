@@ -206,7 +206,7 @@ void RulebookEnv::InitEnv()
  */
 void RulebookEnv::InitCFn(const char *name, lua_CFunction fn)
 {
-	lua_State *L = GetScripting().GetState();
+	lua_State *L = GetState();
 
 	// Initial stack: table
 

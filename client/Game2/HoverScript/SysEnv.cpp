@@ -91,7 +91,7 @@ void SysEnv::InitEnv()
 {
 	using namespace luabind;
 
-	lua_State *L = GetScripting().GetState();
+	lua_State *L = GetState();
 
 	// Start with the standard global environment.
 	CopyGlobals();

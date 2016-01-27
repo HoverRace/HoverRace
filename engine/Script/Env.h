@@ -62,6 +62,7 @@ public:
 
 protected:
 	Core &GetScripting() const { return scripting; }
+	lua_State *GetState() const { return scripting.GetState(); }
 
 	void LogScriptError(const Script::ScriptExn &ex);
 

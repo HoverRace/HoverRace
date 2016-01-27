@@ -81,7 +81,7 @@ void SysConsole::InitEnv()
 
 	SUPER::InitEnv();
 
-	lua_State *L = GetScripting().GetState();
+	lua_State *L = GetState();
 
 	// Start with the standard global environment.
 	CopyGlobals();
@@ -104,7 +104,7 @@ void SysConsole::OnSessionChanged(std::shared_ptr<MetaSession> metaSession)
 {
 	using namespace luabind;
 
-	lua_State *L = GetScripting().GetState();
+	lua_State *L = GetState();
 
 	PushEnv();
 

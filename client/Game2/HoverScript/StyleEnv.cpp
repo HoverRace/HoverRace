@@ -134,7 +134,7 @@ void StyleEnv::InitEnv()
 
 	SUPER::InitEnv();
 
-	lua_State *L = GetScripting().GetState();
+	lua_State *L = GetState();
 
 	// Start with the standard global environment.
 	CopyGlobals();
