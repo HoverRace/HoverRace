@@ -50,9 +50,11 @@ namespace Script {
 class MR_DllDeclare RegistryRef
 {
 public:
-	RegistryRef(Core *scripting) : scripting(scripting), ref(LUA_NOREF) { }
-	RegistryRef(const RegistryRef &o);
-	RegistryRef(RegistryRef &&o) : scripting(o.scripting), ref(o.ref)
+	constexpr RegistryRef(Core *scripting) noexcept :
+		scripting(scripting), ref(LUA_NOREF) { }
+	RegistryRef(const RegistryRef &o) noexcept;
+	RegistryRef(RegistryRef &&o) noexcept :
+		scripting(o.scripting), ref(o.ref)
 	{
 		o.ref = LUA_NOREF;
 	}
@@ -62,8 +64,8 @@ public:
 		Clear();
 	}
 
-	RegistryRef &operator=(const RegistryRef &o);
-	RegistryRef &operator=(RegistryRef &&o)
+	RegistryRef &operator=(const RegistryRef &o) noexcept;
+	RegistryRef &operator=(RegistryRef &&o) noexcept
 	{
 		scripting = o.scripting;
 		ref = o.ref;
@@ -77,21 +79,21 @@ public:
 		return *this;
 	}
 
-	operator bool() const
+	constexpr operator bool() const noexcept
 	{
 		return ref != LUA_NOREF && ref != LUA_REFNIL;
 	}
 
 public:
-	Core *GetScripting() const { return scripting; }
+	constexpr Core *GetScripting() const noexcept { return scripting; }
 
 public:
-	void Clear();
+	void Clear() noexcept;
 
-	void SetFromStack();
+	void SetFromStack() noexcept;
 	void Set(const luabind::object &obj);
 
-	void Push() const;
+	void Push() const noexcept;
 
 private:
 	Core *scripting;

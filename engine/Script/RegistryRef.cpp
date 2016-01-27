@@ -1,7 +1,7 @@
 
 // RegistryRef.cpp
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -26,14 +26,14 @@
 namespace HoverRace {
 namespace Script {
 
-RegistryRef::RegistryRef(const RegistryRef &o) :
+RegistryRef::RegistryRef(const RegistryRef &o) noexcept :
 	scripting(o.scripting)
 {
 	o.Push();
 	ref = luaL_ref(scripting->GetState(), LUA_REGISTRYINDEX);
 }
 
-RegistryRef &RegistryRef::operator=(const RegistryRef &o)
+RegistryRef &RegistryRef::operator=(const RegistryRef &o) noexcept
 {
 	scripting = o.scripting;
 
@@ -46,7 +46,7 @@ RegistryRef &RegistryRef::operator=(const RegistryRef &o)
 /**
  * Unset the value stored by this reference.
  */
-void RegistryRef::Clear()
+void RegistryRef::Clear() noexcept
 {
 	// luaL_unref ignores invalid refs.
 	luaL_unref(scripting->GetState(), LUA_REGISTRYINDEX, ref);
@@ -55,7 +55,7 @@ void RegistryRef::Clear()
 /**
  * Pop a value from the Lua stack and store it in the registry.
  */
-void RegistryRef::SetFromStack()
+void RegistryRef::SetFromStack() noexcept
 {
 	lua_State *L = scripting->GetState();
 
@@ -81,7 +81,7 @@ void RegistryRef::Set(const luabind::object &obj)
  * Pushes the value stored by the reference onto the Lua stack.
  * If there is no value stored, then @c nil is pushed.
  */
-void RegistryRef::Push() const
+void RegistryRef::Push() const noexcept
 {
 	lua_State *L = scripting->GetState();
 
