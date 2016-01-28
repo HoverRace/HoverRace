@@ -41,6 +41,7 @@
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem/convenience.hpp>
+#include <boost/filesystem/fstream.hpp>
 #include <boost/filesystem/path.hpp>
 
 #include <SDL2/SDL_keycode.h>
@@ -906,16 +907,9 @@ void Config::Save() const
 		}
 	}
 
-	FILE *out = OS::FOpen(cfgfile, "wb");
-	if (out == NULL) {
-		std::string msg(_("Unable to create configuration file"));
-		msg += ": ";
-		msg += (const char*)Str::PU(cfgfile);
-		throw ConfigExn(msg.c_str());
-	}
-
 	try {
-		yaml::Emitter emitter{out};
+		fs::ofstream out{ cfgPath };
+		yaml::Emitter emitter{ out };
 		emitter.StartMap();
 
 		SaveVersion(emitter);
@@ -940,11 +934,8 @@ void Config::Save() const
 		emitter.EndMap();
 	}
 	catch (yaml::EmitterExn &ex) {
-		fclose(out);
 		throw std::exception(ex);
 	}
-
-	fclose(out);
 }
 
 void Config::SaveVersion(yaml::Emitter &emitter) const
