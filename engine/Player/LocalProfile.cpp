@@ -19,8 +19,13 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
+#include <boost/filesystem/convenience.hpp>
+#include <boost/filesystem/path.hpp>
 #include <boost/uuid/random_generator.hpp>
+#include <boost/uuid/uuid_io.hpp>
 
+#include "../Util/Config.h"
+#include "../Util/Str.h"
 #include "../Util/yaml/Emitter.h"
 #include "../Util/yaml/MapNode.h"
 #include "../Util/yaml/ScalarNode.h"
@@ -30,6 +35,7 @@
 
 #include "LocalProfile.h"
 
+namespace fs = boost::filesystem;
 using namespace HoverRace::Util;
 
 namespace HoverRace {
@@ -52,6 +58,28 @@ LocalProfile::LocalProfile() :
 LocalProfile::LocalProfile(const boost::uuids::uuid &uid) :
 	SUPER(uid), loaded(false)
 {
+	const auto *cfg = Config::GetInstance();
+	auto path = cfg->GetProfilePath(boost::uuids::to_string(uid));
+
+	if (!fs::is_directory(path)) {
+		throw ProfileExn(
+			"Profile path does not exist or is not a directory: " +
+			(const std::string&)Str::PU(path));
+	}
+
+	//TODO
+}
+
+void LocalProfile::Save()
+{
+	const auto *cfg = Config::GetInstance();
+	auto path = cfg->GetProfilePath(boost::uuids::to_string(GetUid()));
+
+	if (!fs::create_directories(path)) {
+		throw ProfileExn("Unable to create profile directory: " +
+			(const std::string&)Str::PU(path));
+	}
+
 	//TODO
 }
 
