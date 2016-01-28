@@ -907,8 +907,13 @@ void Config::Save() const
 		}
 	}
 
+	fs::ofstream out{ cfgPath };
+	if (!out.is_open()) {
+		throw ConfigExn("Unable to create config file: " +
+			(const std::string&)Str::PU(cfgPath));
+	}
+
 	try {
-		fs::ofstream out{ cfgPath };
 		yaml::Emitter emitter{ out };
 		emitter.StartMap();
 

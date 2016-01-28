@@ -89,8 +89,13 @@ void LocalProfile::Save()
 
 	path /= "profile.yml";
 
+	fs::ofstream out{ path };
+	if (!out.is_open()) {
+		throw ProfileExn("Unable to create profile file: " +
+			(const std::string&)Str::PU(path));
+	}
+
 	try {
-		fs::ofstream out{ path };
 		yaml::Emitter emitter{ out };
 
 		emitter.StartMap();
