@@ -20,6 +20,7 @@
 // and limitations under the License.
 
 #include <boost/filesystem/convenience.hpp>
+#include <boost/filesystem/fstream.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/uuid/random_generator.hpp>
 #include <boost/uuid/uuid_io.hpp>
@@ -37,6 +38,10 @@
 
 namespace fs = boost::filesystem;
 using namespace HoverRace::Util;
+
+#define EMIT_VAR(emitter, name) \
+	(emitter).MapKey(#name); \
+	(emitter).Value(name);
 
 namespace HoverRace {
 namespace Player {
@@ -75,12 +80,38 @@ void LocalProfile::Save()
 	const auto *cfg = Config::GetInstance();
 	auto path = cfg->GetProfilePath(boost::uuids::to_string(GetUid()));
 
-	if (!fs::create_directories(path)) {
-		throw ProfileExn("Unable to create profile directory: " +
-			(const std::string&)Str::PU(path));
+	if (!fs::exists(path)) {
+		if (!fs::create_directories(path)) {
+			throw ProfileExn("Unable to create profile directory: " +
+				(const std::string&)Str::PU(path));
+		}
 	}
 
-	//TODO
+	path /= "profile.yml";
+
+	try {
+		fs::ofstream out{ path };
+		yaml::Emitter emitter{ out };
+
+		emitter.StartMap();
+
+		emitter.MapKey("uid");
+		emitter.Value(boost::uuids::to_string(GetUid()));
+
+		emitter.MapKey("name");
+		emitter.Value(GetName());
+
+		emitter.MapKey("colors");
+		emitter.StartSeq();
+		emitter.Value(boost::lexical_cast<std::string>(GetPrimaryColor()));
+		emitter.Value(boost::lexical_cast<std::string>(GetSecondaryColor()));
+		emitter.EndSeq();
+
+		emitter.EndMap();
+	}
+	catch (yaml::EmitterExn &ex) {
+		throw std::exception(ex);
+	}
 }
 
 }  // namespace Player
