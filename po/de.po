@@ -1040,16 +1040,6 @@ msgstr "Fehler beim hinzufügen vom User"
 msgid "Unable to add the track to the output file"
 msgstr "Fehler beim hinzufügen vom User"
 
-#: engine/Util/Config.cpp
-#, fuzzy
-msgid "Unable to create configuration file"
-msgstr "Fehler beim hinzufügen vom User"
-
-#: engine/Util/Config.cpp
-#, fuzzy
-msgid "Unable to create directory"
-msgstr "Fehler beim hinzufügen vom User"
-
 #: engine/MazeCompiler/LevelBuilder.cpp
 #, fuzzy, c-format, boost-format
 msgid "Unable to create free element on line %d\n"
@@ -1628,6 +1618,14 @@ msgstr "Fehler beim hinzufügen vom User"
 #~ msgstr "UDP empfangs Port:"
 
 #~ msgid "Unable to add user"
+#~ msgstr "Fehler beim hinzufügen vom User"
+
+#, fuzzy
+#~ msgid "Unable to create configuration file"
+#~ msgstr "Fehler beim hinzufügen vom User"
+
+#, fuzzy
+#~ msgid "Unable to create directory"
 #~ msgstr "Fehler beim hinzufügen vom User"
 
 #, fuzzy

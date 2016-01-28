@@ -900,10 +900,8 @@ void Config::Save() const
 	// Create the config directory.
 	if (!fs::exists(cfgPath)) {
 		if (!fs::create_directories(cfgPath)) {
-			std::string msg(_("Unable to create directory"));
-			msg += ": ";
-			msg += (const char*)Str::PU(cfgPath);
-			throw ConfigExn(msg.c_str());
+			throw ConfigExn("Unable to create config directory: " +
+				(const std::string&)Str::PU(cfgPath));
 		}
 	}
 

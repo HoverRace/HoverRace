@@ -1034,16 +1034,6 @@ msgstr "Unablay otay eatecray ocketsay"
 msgid "Unable to add the track to the output file"
 msgstr "Unablay otay eatecray ocketsay"
 
-#: engine/Util/Config.cpp
-#, fuzzy
-msgid "Unable to create configuration file"
-msgstr "Unablay otay eatecray ocketsay"
-
-#: engine/Util/Config.cpp
-#, fuzzy
-msgid "Unable to create directory"
-msgstr "Unablay otay eatecray ocketsay"
-
 #: engine/MazeCompiler/LevelBuilder.cpp
 #, fuzzy, c-format, boost-format
 msgid "Unable to create free element on line %d\n"
@@ -1665,6 +1655,14 @@ msgstr "Unablay otay eatecray ocketsay"
 
 #, fuzzy
 #~ msgid "Unable to create chat log file:"
+#~ msgstr "Unablay otay eatecray ocketsay"
+
+#, fuzzy
+#~ msgid "Unable to create configuration file"
+#~ msgstr "Unablay otay eatecray ocketsay"
+
+#, fuzzy
+#~ msgid "Unable to create directory"
 #~ msgstr "Unablay otay eatecray ocketsay"
 
 #, fuzzy
