@@ -78,7 +78,7 @@ MR_DllDeclare inline constexpr bool operator!=(const Color &a, const Color &b) n
 
 MR_DllDeclare inline std::ostream &operator<<(std::ostream &os, const Color &c)
 {
-	os << "0x" << boost::format("%08x") % c.argb;
+	os << '#' << boost::format("%08x") % c.argb;
 	return os;
 }
 
