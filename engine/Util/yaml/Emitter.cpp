@@ -165,7 +165,7 @@ int Emitter::OutputStreamHandler(void *data, unsigned char *buffer, size_t size)
 	}
 
 	os->write((const char*)buffer, static_cast<std::streamsize>(size));
-	return 1;
+	return os ? 1 : 0;
 }
 
 int Emitter::OutputStringHandler(void *data, unsigned char *buffer, size_t size)
