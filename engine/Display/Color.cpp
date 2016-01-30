@@ -28,7 +28,9 @@ namespace Display {
 
 std::ostream &operator<<(std::ostream &os, const Color &c)
 {
-	os << '#' << boost::format("%08x") % c.argb;
+	static boost::format FMT{ "%08x" };
+
+	os << '#' << FMT % c.argb;
 	return os;
 }
 
