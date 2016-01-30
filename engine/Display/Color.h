@@ -21,8 +21,6 @@
 
 #pragma once
 
-#include <boost/format.hpp>
-
 #include "../Util/MR_Types.h"
 #include "../Util/SelFmt.h"
 
@@ -76,11 +74,7 @@ MR_DllDeclare inline constexpr bool operator!=(const Color &a, const Color &b) n
 	return !operator==(a, b);
 }
 
-MR_DllDeclare inline std::ostream &operator<<(std::ostream &os, const Color &c)
-{
-	os << '#' << boost::format("%08x") % c.argb;
-	return os;
-}
+MR_DllDeclare std::ostream &operator<<(std::ostream &os, const Color &c);
 
 }  // namespace Display
 }  // namespace HoverRace
