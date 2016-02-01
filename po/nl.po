@@ -1042,6 +1042,16 @@ msgstr "Kan spel niet toevoegen"
 msgid "Unable to add the track to the output file"
 msgstr "Kan geen socket creëren"
 
+#: engine/Util/Config.cpp
+#, fuzzy
+msgid "Unable to create configuration file"
+msgstr "Kan geen socket creëren"
+
+#: engine/Util/Config.cpp
+#, fuzzy
+msgid "Unable to create directory"
+msgstr "Kan geen socket creëren"
+
 #: engine/MazeCompiler/LevelBuilder.cpp
 #, fuzzy, c-format, boost-format
 msgid "Unable to create free element on line %d\n"
@@ -1820,14 +1830,6 @@ msgstr "Kan vernieuw-informatie niet verzenden"
 
 #, fuzzy
 #~ msgid "Unable to create chat log file:"
-#~ msgstr "Kan geen socket creëren"
-
-#, fuzzy
-#~ msgid "Unable to create configuration file"
-#~ msgstr "Kan geen socket creëren"
-
-#, fuzzy
-#~ msgid "Unable to create directory"
 #~ msgstr "Kan geen socket creëren"
 
 #, fuzzy

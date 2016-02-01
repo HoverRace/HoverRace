@@ -1028,6 +1028,16 @@ msgstr "Unable to add game"
 msgid "Unable to add the track to the output file"
 msgstr "Unable to create chat log file:"
 
+#: engine/Util/Config.cpp
+#, fuzzy
+msgid "Unable to create configuration file"
+msgstr "Unable to create chat log file:"
+
+#: engine/Util/Config.cpp
+#, fuzzy
+msgid "Unable to create directory"
+msgstr "Unable to create directory:"
+
 #: engine/MazeCompiler/LevelBuilder.cpp
 #, fuzzy, c-format, boost-format
 msgid "Unable to create free element on line %d\n"
@@ -1873,14 +1883,6 @@ msgstr "Unable to open file for writing:"
 
 #~ msgid "Unable to create chat log file:"
 #~ msgstr "Unable to create chat log file:"
-
-#, fuzzy
-#~ msgid "Unable to create configuration file"
-#~ msgstr "Unable to create chat log file:"
-
-#, fuzzy
-#~ msgid "Unable to create directory"
-#~ msgstr "Unable to create directory:"
 
 #~ msgid "Unable to create directory:"
 #~ msgstr "Unable to create directory:"
