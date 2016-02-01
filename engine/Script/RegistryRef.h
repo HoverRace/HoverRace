@@ -79,13 +79,13 @@ public:
 		return *this;
 	}
 
-	constexpr operator bool() const noexcept
+	operator bool() const noexcept
 	{
 		return ref != LUA_NOREF && ref != LUA_REFNIL;
 	}
 
 public:
-	constexpr Core *GetScripting() const noexcept { return scripting; }
+	Core *GetScripting() const noexcept { return scripting; }
 
 public:
 	void Clear() noexcept;
