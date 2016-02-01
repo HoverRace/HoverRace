@@ -1,7 +1,7 @@
 
 // Emitter.h
 //
-// Copyright (c) 2008, 2009, 2015 Michael Imamura.
+// Copyright (c) 2008, 2009, 2015-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -58,12 +58,6 @@ public:
 protected:
 	void InitEmitter();
 	void InitStream(bool versionDirective);
-
-private:
-	static int OutputStreamHandler(void *data, unsigned char *buffer,
-		size_t size);
-	static int OutputStringHandler(void *data, unsigned char *buffer,
-		size_t size);
 
 public:
 	void StartMap();

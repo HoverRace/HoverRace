@@ -1,7 +1,7 @@
 
 // Emitter.cpp
 //
-// Copyright (c) 2008, 2009, 2014, 2015 Michael Imamura.
+// Copyright (c) 2008, 2009, 2014-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -50,6 +50,34 @@ const size_t MAX_STRING_LEN = 65536;
 // This must be lower than numeric_limits<std::streamsize>::max().
 const size_t MAX_OUTPUT_BUFFER_SIZE = 16 * 1024 * 1024;
 
+int OutputStreamHandler(void *data, unsigned char *buffer, size_t size)
+{
+	std::ostream *os = (std::ostream*)data;
+
+	if (size > MAX_OUTPUT_BUFFER_SIZE) {
+		HR_LOG(warning) << "Output buffer size (" << size <<
+			") exceeds maximum (" << MAX_OUTPUT_BUFFER_SIZE << "); truncating.";
+		size = MAX_OUTPUT_BUFFER_SIZE;
+	}
+
+	os->write((const char*)buffer, static_cast<std::streamsize>(size));
+	return os ? 1 : 0;
+}
+
+int OutputStringHandler(void *data, unsigned char *buffer, size_t size)
+{
+	std::string *s = (std::string*)data;
+
+	if (size > MAX_OUTPUT_BUFFER_SIZE) {
+		HR_LOG(warning) << "Output buffer size (" << size <<
+			") exceeds maximum (" << MAX_OUTPUT_BUFFER_SIZE << "); truncating.";
+		size = MAX_OUTPUT_BUFFER_SIZE;
+	}
+
+	s->append((const char*)buffer, size);
+	return 1;
+}
+
 }  // namespace
 
 /**
@@ -74,7 +102,7 @@ Emitter::Emitter(FILE *file, bool versionDirective)
 Emitter::Emitter(std::ostream &os, bool versionDirective)
 {
 	InitEmitter();
-	yaml_emitter_set_output(&emitter, &Emitter::OutputStreamHandler, &os);
+	yaml_emitter_set_output(&emitter, &OutputStreamHandler, &os);
 	InitStream(versionDirective);
 }
 
@@ -86,7 +114,7 @@ Emitter::Emitter(std::ostream &os, bool versionDirective)
 Emitter::Emitter(std::string &s, bool versionDirective)
 {
 	InitEmitter();
-	yaml_emitter_set_output(&emitter, &Emitter::OutputStringHandler, &s);
+	yaml_emitter_set_output(&emitter, &OutputStringHandler, &s);
 	InitStream(versionDirective);
 }
 
@@ -152,34 +180,6 @@ void Emitter::InitStream(bool versionDirective)
 		&nullTag, &nullTag, 1);
 	if(!yaml_emitter_emit(&emitter, &event))
 		throw EmitterExn("Unable to start document");
-}
-
-int Emitter::OutputStreamHandler(void *data, unsigned char *buffer, size_t size)
-{
-	std::ostream *os = (std::ostream*)data;
-
-	if (size > MAX_OUTPUT_BUFFER_SIZE) {
-		HR_LOG(warning) << "Output buffer size (" << size <<
-			") exceeds maximum (" << MAX_OUTPUT_BUFFER_SIZE << "); truncating.";
-		size = MAX_OUTPUT_BUFFER_SIZE;
-	}
-
-	os->write((const char*)buffer, static_cast<std::streamsize>(size));
-	return os ? 1 : 0;
-}
-
-int Emitter::OutputStringHandler(void *data, unsigned char *buffer, size_t size)
-{
-	std::string *s = (std::string*)data;
-
-	if (size > MAX_OUTPUT_BUFFER_SIZE) {
-		HR_LOG(warning) << "Output buffer size (" << size <<
-			") exceeds maximum (" << MAX_OUTPUT_BUFFER_SIZE << "); truncating.";
-		size = MAX_OUTPUT_BUFFER_SIZE;
-	}
-
-	s->append((const char*)buffer, size);
-	return 1;
 }
 
 /**
