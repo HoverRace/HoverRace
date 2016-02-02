@@ -1049,16 +1049,6 @@ msgstr "Imposible añadir el juego"
 msgid "Unable to add the track to the output file"
 msgstr "Imposible de crear socket"
 
-#: engine/Util/Config.cpp
-#, fuzzy
-msgid "Unable to create configuration file"
-msgstr "Imposible de crear socket"
-
-#: engine/Util/Config.cpp
-#, fuzzy
-msgid "Unable to create directory"
-msgstr "Imposible de crear socket"
-
 #: engine/MazeCompiler/LevelBuilder.cpp
 #, fuzzy, c-format, boost-format
 msgid "Unable to create free element on line %d\n"

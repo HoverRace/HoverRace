@@ -1010,14 +1010,6 @@ msgstr ""
 msgid "Unable to add the track to the output file"
 msgstr ""
 
-#: engine/Util/Config.cpp
-msgid "Unable to create configuration file"
-msgstr ""
-
-#: engine/Util/Config.cpp
-msgid "Unable to create directory"
-msgstr ""
-
 #: engine/MazeCompiler/LevelBuilder.cpp
 #, c-format, boost-format
 msgid "Unable to create free element on line %d\n"
