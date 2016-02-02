@@ -74,6 +74,8 @@ MR_DllDeclare inline constexpr bool operator!=(const Color &a, const Color &b) n
 	return !operator==(a, b);
 }
 
+MR_DllDeclare std::istream &operator>>(std::istream &is, Color &c);
+
 MR_DllDeclare std::ostream &operator<<(std::ostream &os, const Color &c);
 
 }  // namespace Display

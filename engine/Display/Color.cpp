@@ -21,10 +21,42 @@
 
 #include <boost/format.hpp>
 
+#include "../Util/Log.h"
+
 #include "Color.h"
+
+using namespace HoverRace::Util;
 
 namespace HoverRace {
 namespace Display {
+
+std::istream &operator>>(std::istream &is, Color &c)
+{
+	if (!is) return is;
+
+	std::string ris;
+	ris.reserve(16);
+	is.width(ris.capacity());
+	is >> ris;
+
+	if (ris.empty()) return is;
+
+	const char *start = ris.c_str();
+	char *end;
+
+	// Skip initial "#".
+	if (*start == '#') ++start;
+
+	auto val = strtoul(start, &end, 16);
+	if (start == end || errno == ERANGE) {
+		HR_LOG(warning) << "Invalid color: " << ris;
+	}
+	else {
+		c.argb = static_cast<MR_UInt32>(val);
+	}
+
+	return is;
+}
 
 std::ostream &operator<<(std::ostream &os, const Color &c)
 {
