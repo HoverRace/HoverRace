@@ -1,7 +1,7 @@
 
 // Parser.cpp
 //
-// Copyright (c) 2008, 2009, 2015 Michael Imamura.
+// Copyright (c) 2008, 2009, 2015-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -27,8 +27,34 @@ namespace HoverRace {
 namespace Util {
 namespace yaml {
 
+namespace {
+
+int InputStreamHandler(void *data, unsigned char *buffer, size_t size,
+	size_t *sizeRead)
+{
+	std::istream &is = *static_cast<std::istream*>(data);
+
+	if (is.eof()) {
+		// "On EOF, the handler should set the size_read to 0 and return 1."
+		sizeRead = 0;
+		return 1;
+	}
+	else if (!is) {
+		return 0;
+	}
+
+	is.read(reinterpret_cast<char*>(buffer), size);
+	auto count = is.gcount();
+	if (count < 0) return 0;
+	*sizeRead = static_cast<size_t>(count);
+
+	return (is.eof() || is) ? 1 : 0;
+}
+
+}  // namespace
+
 /**
- * Create a new parser.
+ * Create a new parser for a file handle.
  * @param file An open file for reading (may not be null).
  *             It is the caller's job to close the file when the emitter
  *             is destroyed.
@@ -36,13 +62,40 @@ namespace yaml {
 Parser::Parser(FILE *file) :
 	doc(NULL), root(NULL)
 {
-	yaml_event_t event;
-	int yr;
+	InitParser();
+	yaml_parser_set_input_file(&parser, file);
+	InitStream();
+}
 
-	// Initialize the LibYAML parser.
+/**
+ * Create a new parser for an input stream.
+ * @param is The input stream.
+ */
+Parser::Parser(std::istream &is) :
+	doc(nullptr), root(nullptr)
+{
+	InitParser();
+	yaml_parser_set_input(&parser, InputStreamHandler, &is);
+	InitStream();
+}
+
+/// Destructor.
+Parser::~Parser()
+{
+	Cleanup();
+}
+
+/// Initialize the LibYAML parser.
+void Parser::InitParser()
+{
 	memset(&parser, 0, sizeof(parser));
 	yaml_parser_initialize(&parser);
-	yaml_parser_set_input_file(&parser, file);
+}
+
+void Parser::InitStream()
+{
+	yaml_event_t event;
+	int yr;
 
 	// Read the header.
 	yr = yaml_parser_parse(&parser, &event);
@@ -62,17 +115,11 @@ Parser::Parser(FILE *file) :
 
 	// Get the root node.
 	yaml_node_t *node = yaml_document_get_root_node(doc);
-	if (node == NULL) {
+	if (!node) {
 		Cleanup();
 		throw EmptyDocParserExn("Empty document");
 	}
 	root = NodeFactory::MakeNode(doc, node);
-}
-
-/// Destructor.
-Parser::~Parser()
-{
-	Cleanup();
 }
 
 void Parser::Cleanup()
