@@ -802,8 +802,8 @@ void Config::LoadSystem()
 
 void Config::LoadSystem(const OS::path_t &path)
 {
-	FILE *in = OS::FOpen(path, "rb");
-	if (in == NULL) {
+	fs::ifstream in{ path };
+	if (!in.is_open()) {
 		// File doesn't exist.
 		// That's perfectly fine; we'll use the defaults.
 		return;
@@ -822,11 +822,8 @@ void Config::LoadSystem(const OS::path_t &path)
 		// Ignore.
 	}
 	catch (yaml::ParserExn &ex) {
-		fclose(in);
 		throw ConfigExn(ex.what());
 	}
-
-	fclose(in);
 }
 
 /**
@@ -838,8 +835,8 @@ void Config::Load()
 {
 	const OS::path_t cfgfile(GetConfigFilename());
 
-	FILE *in = OS::FOpen(cfgfile, "rb");
-	if (in == NULL) {
+	fs::ifstream in{ cfgfile };
+	if (!in.is_open()) {
 		// File doesn't exist.
 		// That's perfectly fine; we'll use the defaults.
 		return;
@@ -880,11 +877,8 @@ void Config::Load()
 		// Ignore.
 	}
 	catch (yaml::ParserExn &ex) {
-		fclose(in);
 		throw ConfigExn(ex.what());
 	}
-
-	fclose(in);
 }
 
 /**
