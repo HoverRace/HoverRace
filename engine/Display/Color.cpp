@@ -36,7 +36,7 @@ std::istream &operator>>(std::istream &is, Color &c)
 
 	std::string ris;
 	ris.reserve(16);
-	is.width(ris.capacity());
+	is.width(static_cast<std::streamsize>(ris.capacity()));
 	is >> ris;
 
 	if (ris.empty()) return is;
