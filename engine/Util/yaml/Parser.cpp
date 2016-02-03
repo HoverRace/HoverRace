@@ -43,7 +43,15 @@ int InputStreamHandler(void *data, unsigned char *buffer, size_t size,
 		return 0;
 	}
 
-	is.read(reinterpret_cast<char*>(buffer), size);
+	std::streamsize chunksize;
+	if (size > std::numeric_limits<std::streamsize>::max()) {
+		chunksize = std::numeric_limits<std::streamsize>::max();
+	}
+	else {
+		chunksize = static_cast<std::streamsize>(size);
+	}
+
+	is.read(reinterpret_cast<char*>(buffer), chunksize);
 	auto count = is.gcount();
 	if (count < 0) return 0;
 	*sizeRead = static_cast<size_t>(count);
