@@ -21,6 +21,8 @@
 
 #include <iostream>
 
+#include <boost/filesystem/fstream.hpp>
+
 #include <luabind/luabind.hpp>
 
 #include "../Util/Config.h"
@@ -39,6 +41,7 @@
 
 #include "Core.h"
 
+namespace fs = boost::filesystem;
 using namespace HoverRace::Script;
 using namespace HoverRace::Util;
 
@@ -392,19 +395,18 @@ void Core::LoadClassHelp(const std::string &className)
 	Util::Config *cfg = Util::Config::GetInstance();
 	OS::path_t filename = cfg->GetScriptHelpPath(className);
 
-	FILE *in = OS::FOpen(filename, "rb");
-	if (in == NULL) {
+	fs::ifstream in{ filename };
+	if (!in.is_open()) {
 		Log::Warn("Class help file not found: %s", (const char*)Str::PU(filename));
 		return;
 	}
 
-	yaml::Parser *parser = NULL;
 	try {
-		parser = new yaml::Parser(in);
-		yaml::Node *node = parser->GetRootNode();
+		yaml::Parser parser{ in };
+		yaml::Node *node = parser.GetRootNode();
 
 		yaml::MapNode *root = dynamic_cast<yaml::MapNode*>(node);
-		if (root == NULL) {
+		if (!root) {
 			std::string filenamestr = (const char*)Str::PU(filename);
 			throw yaml::ParserExn(
 				(filenamestr + ": Expected root node to be a map.").c_str());
@@ -412,19 +414,13 @@ void Core::LoadClassHelp(const std::string &className)
 		auto cls = std::make_shared<Help::Class>(className);
 		cls->Load(root);
 		helpClasses.insert(helpClasses_t::value_type(className, cls));
-
-		delete parser;
 	}
 	catch (yaml::EmptyDocParserExn&) {
 		// Ignore.
 	}
 	catch (yaml::ParserExn &ex) {
 		Log::Error("%s", ex.what());
-		if (parser != NULL) delete parser;
-		fclose(in);
 	}
-
-	fclose(in);
 }
 
 /**
