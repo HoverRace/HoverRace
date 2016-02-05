@@ -154,7 +154,7 @@ public:
 
 	static const std::string DEFAULT_CHUNK_NAME;
 	void Compile(const Chunk &chunk);
-	int Call(int numParams=0, Help::HelpHandler *helpHandler = nullptr);
+	int Call(int numParams = 0, Help::HelpHandler *helpHandler = nullptr);
 
 	/**
 	 * Pop a function off the stack and execute it, printing any return values.
