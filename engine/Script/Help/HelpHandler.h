@@ -1,8 +1,7 @@
 
 // HelpHandler.h
-// Abstract base class for handlers of help requests.
 //
-// Copyright (c) 2010 Michael Imamura.
+// Copyright (c) 2010, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -39,10 +38,14 @@ namespace Help {
 class Class;
 class Method;
 
+/**
+ * Abstract base class for handlers of help requests.
+ * @author Michael Imamura
+ */
 class MR_DllDeclare HelpHandler {
-	public:
-		virtual void HelpClass(const Class &cls) = 0;
-		virtual void HelpMethod(const Class &cls, const Method &method) = 0;
+public:
+	virtual void HelpClass(const Class &cls) = 0;
+	virtual void HelpMethod(const Class &cls, const Method &method) = 0;
 };
 
 }  // namespace Help
