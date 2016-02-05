@@ -75,6 +75,12 @@ public:
 	void Value(float val);
 	void Value(const HoverRace::Util::OS::path_t &path);
 
+	template<class T>
+	void Value(T&& val)
+	{
+		Value(boost::lexical_cast<std::string>(val));
+	}
+
 private:
 	yaml_emitter_t emitter;
 };
