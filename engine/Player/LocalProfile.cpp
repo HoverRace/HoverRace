@@ -108,8 +108,8 @@ void LocalProfile::Save()
 
 		emitter.MapKey("colors");
 		emitter.StartSeq();
-		emitter.Value(boost::lexical_cast<std::string>(GetPrimaryColor()));
-		emitter.Value(boost::lexical_cast<std::string>(GetSecondaryColor()));
+		emitter.Value(GetPrimaryColor());
+		emitter.Value(GetSecondaryColor());
 		emitter.EndSeq();
 
 		emitter.EndMap();
