@@ -76,7 +76,7 @@ public:
 	void Value(const HoverRace::Util::OS::path_t &path);
 
 	template<class T>
-	void Value(T&& val)
+	void Value(const T &val)
 	{
 		Value(boost::lexical_cast<std::string>(val));
 	}
