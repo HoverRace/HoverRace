@@ -209,7 +209,7 @@ public:
 	void ReqHelp(const std::string &className, const std::string &methodName);
 
 public:
-	const luabind::object *NIL;
+	std::unique_ptr<luabind::object> NIL;
 private:
 	void LoadClassHelp(const std::string &className);
 	static std::string PopError(lua_State *state);

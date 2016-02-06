@@ -65,7 +65,7 @@ namespace Script {
 const std::string Core::DEFAULT_CHUNK_NAME("=lua");
 
 Core::Core() :
-	NIL(nullptr), curHelpHandler(nullptr)
+	curHelpHandler(nullptr)
 {
 	state = luaL_newstate();
 
@@ -74,7 +74,6 @@ Core::Core() :
 
 Core::~Core()
 {
-	delete NIL;
 	lua_close(state);
 }
 
@@ -118,8 +117,7 @@ Core *Core::Reset()
 	luabind::set_pcall_callback(&Core::ErrorFunc);
 	Peer::Register(*this);
 
-	if (NIL) delete NIL;
-	NIL = new luabind::object();
+	NIL.reset(new luabind::object());
 
 	return this;
 }
