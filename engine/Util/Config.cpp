@@ -813,8 +813,7 @@ void Config::LoadSystem(const OS::path_t &path)
 		yaml::Parser parser{in};
 		yaml::Node *node = parser.GetRootNode();
 
-		yaml::MapNode *root = dynamic_cast<yaml::MapNode*>(node);
-		if (root != NULL) {
+		if (auto root = dynamic_cast<yaml::MapNode*>(node)) {
 			app.Load(dynamic_cast<yaml::MapNode*>(root->Get("app")));
 		}
 	}
@@ -846,8 +845,7 @@ void Config::Load()
 		yaml::Parser parser{in};
 		yaml::Node *node = parser.GetRootNode();
 
-		yaml::MapNode *root = dynamic_cast<yaml::MapNode*>(node);
-		if (root != NULL) {
+		if (auto root = dynamic_cast<yaml::MapNode*>(node)) {
 			// Read the config's reported version so we can pass it to the
 			// section loaders, so they can translate if necessary.
 			// If no version, then assume the latest version.
