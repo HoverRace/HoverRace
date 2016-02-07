@@ -34,6 +34,14 @@
 #endif
 
 namespace HoverRace {
+	namespace Util {
+		namespace yaml {
+			class MapNode;
+		}
+	}
+}
+
+namespace HoverRace {
 namespace Player {
 
 /**
@@ -49,6 +57,11 @@ public:
 	LocalProfile(const boost::uuids::uuid &uid);
 	virtual ~LocalProfile() { }
 
+public:
+	bool isLoaded() const { return loaded; }
+
+private:
+	void Load(Util::yaml::MapNode *root, const std::string &filename);
 public:
 	void Save() override;
 

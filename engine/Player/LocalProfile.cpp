@@ -23,9 +23,11 @@
 #include <boost/filesystem/fstream.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/uuid/random_generator.hpp>
+#include <boost/uuid/string_generator.hpp>
 #include <boost/uuid/uuid_io.hpp>
 
 #include "../Util/Config.h"
+#include "../Util/Log.h"
 #include "../Util/Str.h"
 #include "../Util/yaml/Emitter.h"
 #include "../Util/yaml/MapNode.h"
@@ -37,14 +39,34 @@
 #include "LocalProfile.h"
 
 namespace fs = boost::filesystem;
+namespace uuid = boost::uuids;
 using namespace HoverRace::Util;
-
-#define EMIT_VAR(emitter, name) \
-	(emitter).MapKey(#name); \
-	(emitter).Value(name);
 
 namespace HoverRace {
 namespace Player {
+
+namespace {
+
+/**
+ * Attempt to read a color from a YAML node.
+ */
+boost::optional<Display::Color> ReadColor(yaml::Node *node)
+{
+	if (!node) return boost::none;
+
+	if (auto val = dynamic_cast<yaml::ScalarNode*>(node)) {
+		auto str = val->AsString();
+		return boost::lexical_cast<Display::Color>(val->AsString());
+	}
+	else {
+		HR_LOG(warning) << "Expected scalar in sequence.";
+	}
+
+	return boost::none;
+}
+
+}  // namespace
+
 
 /**
  * Constructor for a new local profile.
@@ -64,15 +86,82 @@ LocalProfile::LocalProfile(const boost::uuids::uuid &uid) :
 	SUPER(uid), loaded(false)
 {
 	const auto *cfg = Config::GetInstance();
-	auto path = cfg->GetProfilePath(boost::uuids::to_string(uid));
+	auto path = cfg->GetProfilePath(uuid::to_string(uid));
+	path /= "profile.yml";
 
-	if (!fs::is_directory(path)) {
+	const std::string pathStr = (const std::string&)Str::PU(path);
+
+	if (!fs::exists(path)) {
 		throw ProfileExn(
-			"Profile path does not exist or is not a directory: " +
-			(const std::string&)Str::PU(path));
+			"Profile does not exist: " + pathStr);
 	}
 
-	//TODO
+	fs::ifstream in{ path };
+	if (!in.is_open()) {
+		throw ProfileExn(
+			"Could not open profile: " + pathStr);
+	}
+
+	try {
+		yaml::Parser parser{ in };
+		auto node = parser.GetRootNode();
+
+		if (auto root = dynamic_cast<yaml::MapNode*>(node)) {
+			Load(root, pathStr);
+		}
+	}
+	catch (yaml::EmptyDocParserExn&) {
+		// Ignore.
+	}
+	catch (yaml::ParserExn &ex) {
+		throw ProfileExn(ex.what());
+	}
+
+	loaded = true;
+}
+
+void LocalProfile::Load(yaml::MapNode *root, const std::string &filename)
+{
+	std::string s;
+	uuid::uuid readUid;
+
+	// Verify that the UID matches.
+	root->ReadString("uid", s);
+	try {
+		readUid = uuid::string_generator()(s);
+	}
+	catch (...) {
+		throw ProfileExn("Invalid UID in profile: " + filename);
+	}
+	if (readUid != GetUid()) {
+		throw ProfileExn("Profile UID (" + uuid::to_string(readUid) + ") "
+			"does not match expected UID (" + uuid::to_string(GetUid()) + ")");
+	}
+
+	s = GetName();
+	root->ReadString("name", s);
+	SetName(s);
+
+	auto colorNode = root->Get("colors");
+	if (auto colorSeq = dynamic_cast<yaml::SeqNode*>(colorNode)) {
+		auto iter = colorSeq->begin();
+		auto endIter = colorSeq->end();
+		if (iter != endIter) {
+			if (auto color = ReadColor(*iter)) {
+				SetPrimaryColor(*color);
+			}
+			++iter;
+		}
+		if (iter != endIter) {
+			if (auto color = ReadColor(*iter)) {
+				SetSecondaryColor(*color);
+			}
+			++iter;
+		}
+	}
+	else {
+		HR_LOG(warning) << "\"colors\" is not a sequence: " << filename;
+	}
 }
 
 void LocalProfile::Save()
