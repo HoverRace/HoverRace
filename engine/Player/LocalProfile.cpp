@@ -55,7 +55,6 @@ boost::optional<Display::Color> ReadColor(yaml::Node *node)
 	if (!node) return boost::none;
 
 	if (auto val = dynamic_cast<yaml::ScalarNode*>(node)) {
-		auto str = val->AsString();
 		return boost::lexical_cast<Display::Color>(val->AsString());
 	}
 	else {
