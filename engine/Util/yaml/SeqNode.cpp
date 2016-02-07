@@ -71,6 +71,12 @@ void SeqNode::Init() const
 	}
 }
 
+size_t SeqNode::Size() const
+{
+	if (!children) Init();
+	return children->size();
+}
+
 SeqNode::const_iterator SeqNode::begin() const
 {
 	if (!children) Init();

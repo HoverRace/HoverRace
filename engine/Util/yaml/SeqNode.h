@@ -37,14 +37,14 @@ public:
 	SeqNode(yaml_document_t *doc, yaml_node_t *node);
 	virtual ~SeqNode();
 
-public:
-	bool IsEmpty() const { return !children || children->empty(); }
-
-	size_t Size() const { return children ? children->size() : 0; }
-
 private:
 	void Init() const;
 
+public:
+	bool IsEmpty() const { return Size() == 0; }
+	size_t Size() const;
+
+private:
 	using children_t = std::vector<Node*>;
 
 public:
@@ -58,7 +58,7 @@ public:
 	iterator end();
 
 private:
-	mutable children_t *children;
+	mutable std::unique_ptr<children_t> children;
 };
 
 }  // namespace yaml
