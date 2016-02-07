@@ -1,7 +1,7 @@
 
 // SeqNode.h
 //
-// Copyright (c) 2008, 2009, 2015 Michael Imamura.
+// Copyright (c) 2008, 2009, 2015-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -36,6 +36,11 @@ class SeqNode : public Node
 public:
 	SeqNode(yaml_document_t *doc, yaml_node_t *node);
 	virtual ~SeqNode();
+
+public:
+	bool IsEmpty() const { return !children || children->empty(); }
+
+	size_t Size() const { return children ? children->size() : 0; }
 
 private:
 	void Init() const;
