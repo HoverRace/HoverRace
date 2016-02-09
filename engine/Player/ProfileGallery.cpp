@@ -104,5 +104,37 @@ void ProfileGallery::Reload()
 	}
 }
 
+std::shared_ptr<Profile> ProfileGallery::FindUid(const std::string &uid)
+{
+	try {
+		return FindUid(uuid::string_generator()(uid));
+	}
+	catch (...) {
+		HR_LOG(warning) << "Invalid UID: " << uid;
+		return {};
+	}
+}
+
+// We don't expect there will be a lot of profiles, so a linear search
+// will do.
+
+std::shared_ptr<Profile> ProfileGallery::FindUid(const boost::uuids::uuid &uid)
+{
+	auto iter = std::find_if(profiles.begin(), profiles.end(),
+		[&uid](const std::shared_ptr<Profile> &profile) {
+			return profile->GetUid() == uid;
+		});
+	return (iter != profiles.end()) ? *iter : std::shared_ptr<Profile>{};
+}
+
+std::shared_ptr<Profile> ProfileGallery::FindName(const std::string &name)
+{
+	auto iter = std::find_if(profiles.begin(), profiles.end(),
+		[&name](const std::shared_ptr<Profile> &profile) {
+			return profile->GetName() == name;
+		});
+	return (iter != profiles.end()) ? *iter : std::shared_ptr<Profile>{};
+}
+
 }  // namespace Player
 }  // namespace HoverRace
