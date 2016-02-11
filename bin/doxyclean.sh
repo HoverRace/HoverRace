@@ -37,7 +37,7 @@ fi
 
 # Run Doxygen twice.
 # On some versions of Doxygen, the formatting of the headers and footers
-# change on the second run and beyond.  We thus always run it twice to
+# change on the second run.  We thus always run it twice to
 # minimize the number of changed lines.
 "$DOXYGEN" && "$DOXYGEN" || exit 1
 
