@@ -109,7 +109,7 @@ void ProfileGallery::Reload()
  * @param uid The UID as a string.
  * @return The profile or @c nullptr if the profile does not exist.
  */
-std::shared_ptr<Profile> ProfileGallery::FindUid(const std::string &uid)
+std::shared_ptr<Profile> ProfileGallery::FindUid(const std::string &uid) const
 {
 	try {
 		return FindUid(uuid::string_generator()(uid));
@@ -129,6 +129,7 @@ std::shared_ptr<Profile> ProfileGallery::FindUid(const std::string &uid)
  * @return The profile or @c nullptr if the profile does not exist.
  */
 std::shared_ptr<Profile> ProfileGallery::FindUid(const boost::uuids::uuid &uid)
+	const
 {
 	auto iter = std::find_if(profiles.begin(), profiles.end(),
 		[&uid](const std::shared_ptr<Profile> &profile) {
@@ -143,6 +144,7 @@ std::shared_ptr<Profile> ProfileGallery::FindUid(const boost::uuids::uuid &uid)
  * @return The profile or @c nullptr if the profile does not exist.
  */
 std::shared_ptr<Profile> ProfileGallery::FindName(const std::string &name)
+	const
 {
 	auto iter = std::find_if(profiles.begin(), profiles.end(),
 		[&name](const std::shared_ptr<Profile> &profile) {

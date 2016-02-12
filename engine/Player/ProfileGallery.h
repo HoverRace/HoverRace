@@ -52,9 +52,9 @@ public:
 	void Reload();
 
 public:
-	std::shared_ptr<Profile> FindUid(const std::string &uid);
-	std::shared_ptr<Profile> FindUid(const boost::uuids::uuid &uid);
-	std::shared_ptr<Profile> FindName(const std::string &name);
+	std::shared_ptr<Profile> FindUid(const std::string &uid) const;
+	std::shared_ptr<Profile> FindUid(const boost::uuids::uuid &uid) const;
+	std::shared_ptr<Profile> FindName(const std::string &name) const;
 
 private:
 	using profiles_t = std::vector<std::shared_ptr<Profile>>;
