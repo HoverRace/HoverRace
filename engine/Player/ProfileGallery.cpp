@@ -104,6 +104,11 @@ void ProfileGallery::Reload()
 	}
 }
 
+/**
+ * Find a profile by UID.
+ * @param uid The UID as a string.
+ * @return The profile or @c nullptr if the profile does not exist.
+ */
 std::shared_ptr<Profile> ProfileGallery::FindUid(const std::string &uid)
 {
 	try {
@@ -118,6 +123,11 @@ std::shared_ptr<Profile> ProfileGallery::FindUid(const std::string &uid)
 // We don't expect there will be a lot of profiles, so a linear search
 // will do.
 
+/**
+ * Find a profile by UID.
+ * @param uid The UID.
+ * @return The profile or @c nullptr if the profile does not exist.
+ */
 std::shared_ptr<Profile> ProfileGallery::FindUid(const boost::uuids::uuid &uid)
 {
 	auto iter = std::find_if(profiles.begin(), profiles.end(),
@@ -127,6 +137,11 @@ std::shared_ptr<Profile> ProfileGallery::FindUid(const boost::uuids::uuid &uid)
 	return (iter != profiles.end()) ? *iter : std::shared_ptr<Profile>{};
 }
 
+/**
+ * Find a profile by name.
+ * @param name The name.
+ * @return The profile or @c nullptr if the profile does not exist.
+ */
 std::shared_ptr<Profile> ProfileGallery::FindName(const std::string &name)
 {
 	auto iter = std::find_if(profiles.begin(), profiles.end(),
