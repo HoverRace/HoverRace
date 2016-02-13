@@ -849,8 +849,8 @@ void Config::Load()
 			// Read the config's reported version so we can pass it to the
 			// section loaders, so they can translate if necessary.
 			// If no version, then assume the latest version.
-			yaml::ScalarNode *verNode = dynamic_cast<yaml::ScalarNode*>(root->Get("version"));
-			std::string cfgVer((verNode == NULL) ? shortVersion : verNode->AsString());
+			auto verNode = dynamic_cast<yaml::ScalarNode*>(root->Get("version"));
+			std::string cfgVer(verNode ? verNode->AsString() : shortVersion);
 
 			video.Load(dynamic_cast<yaml::MapNode*>(root->Get("video")));
 			audio.Load(dynamic_cast<yaml::MapNode*>(root->Get("audio")));
@@ -860,8 +860,7 @@ void Config::Load()
 			net.Load(dynamic_cast<yaml::MapNode*>(root->Get("net")));
 
 			// Get the controls.
-			yaml::SeqNode *ctlseqh = dynamic_cast<yaml::SeqNode*>(root->Get("controls_hash"));
-			if (ctlseqh != NULL) {
+			if (auto ctlseqh = dynamic_cast<yaml::SeqNode*>(root->Get("controls_hash"))) {
 				int i = 0;
 				for (yaml::Node *ynode : *ctlseqh) {
 					controlsHash[i++].Load(dynamic_cast<yaml::MapNode*>(ynode));
