@@ -31,6 +31,7 @@
 #include "../../engine/Parcel/TrackBundle.h"
 #include "../../engine/Player/DemoProfile.h"
 #include "../../engine/Player/LocalPlayer.h"
+#include "../../engine/Player/ProfileGallery.h"
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/Loader.h"
 #include "../../engine/Util/Locale.h"
@@ -127,11 +128,18 @@ ClientApp::ClientApp() :
 {
 	auto cfg = Config::GetInstance();
 
-	// Add an initial single player with a fake profile.
-	// Later, this will be done at the title scene, but for now we'll have
-	// this hard-coded.
-	party->AddPlayer(std::make_shared<Player::LocalPlayer>(
-		std::make_shared<Player::DemoProfile>(), true, true));
+	// Attempt to load the default profile.
+	// If there's no default profile or the profile couldn't be loaded, we
+	// use a demo profile.
+	//TODO: Instead of demo profile, trigger profile selection scene for later.
+	auto profile = Player::ProfileGallery().FindUid(cfg->player.defaultProfile);
+	if (!profile) {
+		HR_LOG(info) << "Default profile does not exist, using demo: " <<
+			cfg->player.defaultProfile;
+		profile = std::make_shared<Player::DemoProfile>();
+	}
+	party->AddPlayer(
+		std::make_shared<Player::LocalPlayer>(profile, true, true));
 
 	// Create the system console and execute the initialization scripts.
 	// This allows the script to modify the configuration (e.g. for unit tests).
