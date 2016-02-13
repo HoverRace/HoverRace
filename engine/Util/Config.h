@@ -257,7 +257,7 @@ public:
 
 	struct player_t
 	{
-		std::string nickName;
+		std::string defaultProfile;
 
 		void ResetToDefaults();
 		void Load(yaml::MapNode*);

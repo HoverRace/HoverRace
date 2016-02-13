@@ -1105,15 +1105,14 @@ void Config::misc_t::Save(yaml::Emitter &emitter) const
 
 void Config::player_t::ResetToDefaults()
 {
-	// Get current user name as default nickname.
-	nickName = OS::GetUsername();
+	defaultProfile.clear();
 }
 
 void Config::player_t::Load(yaml::MapNode *root)
 {
-	if (root == NULL) return;
+	if (!root) return;
 
-	READ_STRING(root, nickName);
+	READ_STRING(root, defaultProfile);
 }
 
 void Config::player_t::Save(yaml::Emitter &emitter) const
@@ -1121,7 +1120,7 @@ void Config::player_t::Save(yaml::Emitter &emitter) const
 	emitter.MapKey("player");
 	emitter.StartMap();
 
-	EMIT_VAR(emitter, nickName);
+	EMIT_VAR(emitter, defaultProfile);
 
 	emitter.EndMap();
 }
