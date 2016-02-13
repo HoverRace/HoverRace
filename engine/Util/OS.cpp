@@ -1,7 +1,7 @@
 
 // OS.cpp
 //
-// Copyright (c) 2009, 2014, 2015 Michael Imamura.
+// Copyright (c) 2009, 2014-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@
 #include <system_error>
 
 #ifdef _WIN32
+#	include <lmcons.h>
 #	include <shellapi.h>
 #endif
 
@@ -51,6 +52,8 @@ namespace HoverRace {
 namespace Util {
 
 namespace {
+
+const std::string DEFAULT_NICKNAME{ "Player" };
 
 using clock_t = std::chrono::high_resolution_clock;
 clock_t::time_point chronoStart;
@@ -409,6 +412,37 @@ OS::path_t OS::FindExePath()
 #	else
 		throw UnimplementedExn("OS::FindExePath");
 #	endif
+}
+
+/**
+ * Get the username of the current OS user.
+ * @return The username, or a default if it could not be retrieved.
+ */
+std::string OS::GetUsername()
+{
+	std::string retv;
+
+#	ifdef _WIN32
+		wchar_t buf[UNLEN + 1];
+		DWORD bsize = static_cast<DWORD>(sizeof(buf));
+		if (GetUserNameW(buf, &bsize)) {
+			buf[UNLEN] = 0;
+			retv = (const std::string&)Str::WU(buf);
+		}
+		else {
+			retv = DEFAULT_NICKNAME;
+		}
+#	else
+		char buf[LOGIN_NAME_MAX];
+		if (getlogin_r(buf, sizeof(buf)) == 0) {
+			retv = buf;
+		}
+		else {
+			retv = DEFAULT_NICKNAME;
+		}
+#	endif
+
+	return retv;
 }
 
 }  // namespace Util

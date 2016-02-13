@@ -32,7 +32,6 @@
 #	include <windows.h>
 #	include <comdef.h>
 #	include <shlobj.h>
-#	include <lmcons.h>
 #else
 #	include <sys/types.h>
 #	include <pwd.h>
@@ -74,7 +73,6 @@ using HoverRace::Control::InputEventController;
 #define CONFIG_FILENAME			"config.yml"
 #define PREREL_CONFIG_FILENAME	"config-testing.yml"
 
-#define DEFAULT_NICKNAME		"Player"
 #define DEFAULT_MAIN_SERVER		"www.hoverrace.com/imr/rl.php"
 #define DEFAULT_UPDATE_SERVER	"www.hoverrace.com/updates/updates.php"
 #define OLD_MAIN_SERVER			"66.197.183.245/~sirbrock/imr/rl.php"
@@ -1108,26 +1106,7 @@ void Config::misc_t::Save(yaml::Emitter &emitter) const
 void Config::player_t::ResetToDefaults()
 {
 	// Get current user name as default nickname.
-#ifdef _WIN32
-	char buf[UNLEN + 1];
-	DWORD bsize = sizeof(buf);
-	//TODO: Handle Unicode names.
-	if (GetUserName(buf, &bsize)) {
-		buf[UNLEN] = '\0';
-		nickName = buf;
-	}
-	else {
-		nickName = DEFAULT_NICKNAME;
-	}
-#else
-	char buf[LOGIN_NAME_MAX];
-	if (getlogin_r(buf, sizeof(buf)) == 0) {
-		nickName = buf;
-	}
-	else {
-		nickName = DEFAULT_NICKNAME;
-	}
-#endif
+	nickName = OS::GetUsername();
 }
 
 void Config::player_t::Load(yaml::MapNode *root)
