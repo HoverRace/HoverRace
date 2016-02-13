@@ -106,11 +106,14 @@ void ProfileGallery::Reload()
 
 /**
  * Find a profile by UID.
- * @param uid The UID as a string.
+ * @param uid The UID as a string (may be empty).
  * @return The profile or @c nullptr if the profile does not exist.
  */
 std::shared_ptr<Profile> ProfileGallery::FindUid(const std::string &uid) const
 {
+	// Empty string is explicitly allowed without warning.
+	if (uid.empty()) return {};
+
 	try {
 		return FindUid(uuid::string_generator()(uid));
 	}
