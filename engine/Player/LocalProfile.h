@@ -60,6 +60,8 @@ public:
 public:
 	bool isLoaded() const { return loaded; }
 
+	std::shared_ptr<Display::Res<Display::Texture>> GetAvatar() const override;
+
 private:
 	void Load(Util::yaml::MapNode *root, const std::string &filename);
 public:

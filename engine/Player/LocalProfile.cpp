@@ -26,6 +26,7 @@
 #include <boost/uuid/string_generator.hpp>
 #include <boost/uuid/uuid_io.hpp>
 
+#include "../Display/MediaRes.h"
 #include "../Util/Config.h"
 #include "../Util/Log.h"
 #include "../Util/Str.h"
@@ -205,6 +206,17 @@ void LocalProfile::Save()
 	catch (yaml::EmitterExn &ex) {
 		throw std::exception(ex);
 	}
+}
+
+std::shared_ptr<Display::Res<Display::Texture>> LocalProfile::GetAvatar() const
+{
+	auto path = Config::GetInstance()->GetProfilePath(
+		uuid::to_string(GetUid()));
+	path /= "avatar.png";
+
+	return fs::exists(path) ?
+		std::make_shared<Display::MediaRes<Display::Texture>>(path) :
+		std::shared_ptr<Display::Res<Display::Texture>>{};
 }
 
 }  // namespace Player
