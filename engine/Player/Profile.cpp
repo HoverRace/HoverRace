@@ -41,11 +41,13 @@ void Profile::SetName(const std::string &name)
 void Profile::SetPrimaryColor(Display::Color color)
 {
 	primaryColor = color;
+	primaryColor.bits.a = 0xff;  // Must be fully-opaque.
 }
 
 void Profile::SetSecondaryColor(Display::Color color)
 {
 	secondaryColor = color;
+	secondaryColor.bits.a = 0xff;  // Must be fully-opaque.
 }
 
 /**
