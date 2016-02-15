@@ -77,6 +77,11 @@ protected:
 	void SetName(const std::string &name);
 
 public:
+	const std::string &GetAvatarName() const { return avatarName; }
+protected:
+	void SetAvatarName(const std::string &avatarName);
+
+public:
 	Display::Color GetPrimaryColor() const { return primaryColor; }
 protected:
 	void SetPrimaryColor(Display::Color color);
@@ -96,6 +101,7 @@ public:
 private:
 	boost::uuids::uuid uid;
 	std::string name;
+	std::string avatarName;
 	Display::Color primaryColor;
 	Display::Color secondaryColor;
 };

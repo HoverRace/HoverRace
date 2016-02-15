@@ -38,6 +38,11 @@ void Profile::SetName(const std::string &name)
 	this->name = name;
 }
 
+void Profile::SetAvatarName(const std::string &avatarName)
+{
+	this->avatarName = avatarName;
+}
+
 void Profile::SetPrimaryColor(Display::Color color)
 {
 	primaryColor = color;

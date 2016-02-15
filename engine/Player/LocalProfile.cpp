@@ -142,6 +142,10 @@ void LocalProfile::Load(yaml::MapNode *root, const std::string &filename)
 	root->ReadString("name", s);
 	SetName(s);
 
+	s = GetAvatarName();
+	root->ReadString("avatarName", s);
+	SetAvatarName(s);
+
 	auto colorNode = root->Get("colors");
 	if (auto colorSeq = dynamic_cast<yaml::SeqNode*>(colorNode)) {
 		auto iter = colorSeq->begin();
@@ -194,6 +198,9 @@ void LocalProfile::Save()
 
 		emitter.MapKey("name");
 		emitter.Value(GetName());
+
+		emitter.MapKey("avatarName");
+		emitter.Value(GetAvatarName());
 
 		emitter.MapKey("colors");
 		emitter.StartSeq();
