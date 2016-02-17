@@ -82,6 +82,7 @@ public:
 	ConfigPeer *LGetConfig();
 
 	void LAddLocalPlayer();
+	void LAddLocalPlayer_N(const std::string &name);
 
 	void LAnnounce(const std::string &label);
 	void LAnnounce_T(const std::string &label, const std::string &text);

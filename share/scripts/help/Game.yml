@@ -2,8 +2,12 @@ add_local_player:
   type: method
   sig:
     - game:add_local_player()
+    - game:add_local_player(name)
   brief: >
     Add a new local player.
+
+    If the player name is specified, then the profile for the player will be
+    loaded.
 
     The player will not be connected to a controller, but it can me manipulated
     from scripts.

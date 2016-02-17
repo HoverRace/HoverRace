@@ -27,6 +27,7 @@
 #include "../../../engine/Parcel/TrackBundle.h"
 #include "../../../engine/Player/DemoProfile.h"
 #include "../../../engine/Player/LocalPlayer.h"
+#include "../../../engine/Player/ProfileGallery.h"
 #include "../../../engine/Script/Core.h"
 #include "../../../engine/Util/Config.h"
 #include "../../../engine/Util/Log.h"
@@ -69,6 +70,7 @@ void GamePeer::Register(Script::Core &scripting)
 	module(L) [
 		class_<GamePeer,SUPER,std::shared_ptr<GamePeer>>("Game")
 			.def("add_local_player", &GamePeer::LAddLocalPlayer)
+			.def("add_local_player", &GamePeer::LAddLocalPlayer_N)
 			.def("announce", &GamePeer::LAnnounce)
 			.def("announce", &GamePeer::LAnnounce_T)
 			.def("is_initialized", &GamePeer::LIsInitialized)
@@ -153,11 +155,28 @@ void GamePeer::LAddLocalPlayer()
 		return;
 	}
 
-	//TODO: Use the same profile as the "main" player.
-
 	party->AddPlayer(
 		std::make_shared<Player::LocalPlayer>(
 			std::make_shared<Player::DemoProfile>(), true, true));
+}
+
+void GamePeer::LAddLocalPlayer_N(const std::string &name)
+{
+	auto party = director.GetParty();
+	if (!party) {
+		luaL_error(GetScripting().GetState(), "Not ready to connect players.");
+		return;
+	}
+
+	auto profile = Player::ProfileGallery().FindName(name);
+	if (!profile) {
+		luaL_error(GetScripting().GetState(),
+			"Profile not found: %s", name.c_str());
+		return;
+	}
+
+	party->AddPlayer(
+		std::make_shared<Player::LocalPlayer>(profile, true, true));
 }
 
 void GamePeer::LAnnounce(const std::string &label)
