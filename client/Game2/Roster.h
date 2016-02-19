@@ -1,7 +1,7 @@
 
 // Roster.h
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -40,8 +40,8 @@ public:
 	Roster();
 
 public:
-	typedef boost::signals2::signal<void(std::shared_ptr<Player::Player>)>
-		playerAddedSignal_t;
+	using playerAddedSignal_t =
+		boost::signals2::signal<void(std::shared_ptr<Player::Player>)>;
 	playerAddedSignal_t &GetPlayerAddedSignal() { return playerAddedSignal; }
 
 	void AddPlayer(std::shared_ptr<Player::Player> player);
