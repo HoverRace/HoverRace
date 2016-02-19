@@ -1,7 +1,7 @@
 
 // MediaRes.h
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -49,34 +49,35 @@ namespace Display {
 template<class T>
 class MediaRes : public Res<T>
 {
-	typedef Res<T> SUPER;
-	public:
-		/**
-		 * Constructor.
-		 * @param path File path, relative to the media directory.
-		 */
-		MediaRes(const Util::OS::path_t &path) : SUPER(), path(path),
-			id(std::string("media:") + (const char*)Util::Str::PU(path)) { }
-		virtual ~MediaRes() { }
+	using SUPER = Res<T>;
 
-	public:
-		std::string GetId() const override
-		{
-			return id;
-		}
+public:
+	/**
+	 * Constructor.
+	 * @param path File path, relative to the media directory.
+	 */
+	MediaRes(const Util::OS::path_t &path) : SUPER(), path(path),
+		id(std::string("media:") + (const char*)Util::Str::PU(path)) { }
+	virtual ~MediaRes() { }
 
-		std::unique_ptr<std::istream> Open() const override
-		{
-			namespace fs = boost::filesystem;
-			auto cfg = Util::Config::GetInstance();
-			return std::unique_ptr<std::istream>(new fs::ifstream(
-				cfg->GetMediaPath() / path,
-				std::ios_base::in | std::ios_base::binary));
-		}
+public:
+	std::string GetId() const override
+	{
+		return id;
+	}
 
-	private:
-		Util::OS::path_t path;
-		std::string id;
+	std::unique_ptr<std::istream> Open() const override
+	{
+		namespace fs = boost::filesystem;
+		auto cfg = Util::Config::GetInstance();
+		return std::unique_ptr<std::istream>(new fs::ifstream(
+			cfg->GetMediaPath() / path,
+			std::ios_base::in | std::ios_base::binary));
+	}
+
+private:
+	Util::OS::path_t path;
+	std::string id;
 };
 
 }  // namespace Display

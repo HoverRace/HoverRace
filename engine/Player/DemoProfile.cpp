@@ -1,7 +1,7 @@
 
 // DemoProfile.cpp
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -50,6 +50,7 @@ DemoProfile::DemoProfile() :
 
 std::shared_ptr<Display::Res<Display::Texture>> DemoProfile::GetAvatar() const
 {
+	//TODO: Rotate through the available built-in avatars.
 	return std::make_shared<Display::MediaRes<Display::Texture>>(
 		DEFAULT_AVATAR_PATH);
 }
