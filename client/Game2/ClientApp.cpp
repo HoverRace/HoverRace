@@ -31,6 +31,7 @@
 #include "../../engine/Parcel/TrackBundle.h"
 #include "../../engine/Player/DemoProfile.h"
 #include "../../engine/Player/LocalPlayer.h"
+#include "../../engine/Player/LocalProfile.h"
 #include "../../engine/Player/ProfileGallery.h"
 #include "../../engine/Util/Config.h"
 #include "../../engine/Util/Loader.h"
@@ -108,6 +109,18 @@ struct AnnouncementHolder
 	std::shared_ptr<Announcement> ann;
 };
 
+/// A new local profile using the current logged-in user.
+class NewProfile : public Player::LocalProfile
+{
+	using SUPER = Player::LocalProfile;
+
+public:
+	NewProfile() : SUPER()
+	{
+		SetName(OS::GetUsername());
+	}
+};
+
 }  // namespace
 
 ClientApp::ClientApp() :
@@ -128,18 +141,7 @@ ClientApp::ClientApp() :
 {
 	auto cfg = Config::GetInstance();
 
-	// Attempt to load the default profile.
-	// If there's no default profile or the profile couldn't be loaded, we
-	// use a demo profile.
-	//TODO: Instead of demo profile, trigger profile selection scene for later.
-	auto profile = Player::ProfileGallery().FindUid(cfg->player.defaultProfile);
-	if (!profile) {
-		HR_LOG(info) << "Default profile does not exist, using demo: " <<
-			cfg->player.defaultProfile;
-		profile = std::make_shared<Player::DemoProfile>();
-	}
-	party->AddPlayer(
-		std::make_shared<Player::LocalPlayer>(profile, true, true));
+	LoadInitialProfile();
 
 	// Create the system console and execute the initialization scripts.
 	// This allows the script to modify the configuration (e.g. for unit tests).
@@ -191,6 +193,41 @@ ClientApp::ClientApp() :
 ClientApp::~ClientApp()
 {
 	gamePeer->SetDisplay(nullptr);
+}
+
+/// Attempt to load the default profile to the roster.
+void ClientApp::LoadInitialProfile()
+{
+	Player::ProfileGallery gallery;
+	auto cfg = Config::GetInstance();
+	std::shared_ptr<Player::Profile> profile;
+
+	// If there are no profiles, then we'll create a fresh new one and set
+	// that as the default.
+	if (gallery.IsEmpty()) {
+		HR_LOG(info) << "No known profiles; creating new default profile.";
+		profile = std::make_shared<NewProfile>();
+		profile->Save();
+
+		cfg->player.defaultProfile = profile->GetUidStr();
+
+		HR_LOG(info) << "New default profile: " << profile->GetUidStr();
+	}
+	else {
+		// Attempt to load the default profile.
+		// If there's no default profile or the profile couldn't be loaded, we
+		// use a demo profile.
+		//TODO: Instead of demo profile, trigger profile selection scene for later.
+		profile = gallery.FindUid(cfg->player.defaultProfile);
+		if (!profile) {
+			HR_LOG(info) << "Default profile does not exist, using demo: " <<
+				cfg->player.defaultProfile;
+			profile = std::make_shared<Player::DemoProfile>();
+		}
+	}
+
+	party->AddPlayer(
+		std::make_shared<Player::LocalPlayer>(profile, true, true));
 }
 
 std::string ClientApp::GetWindowTitle()

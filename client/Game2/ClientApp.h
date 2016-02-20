@@ -80,6 +80,9 @@ public:
 	virtual ~ClientApp();
 
 private:
+	void LoadInitialProfile();
+
+private:
 	std::string GetWindowTitle();
 	void OnWindowResize(int w, int h);
 	void IncFrameCount();
