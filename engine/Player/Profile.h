@@ -68,6 +68,8 @@ public:
 	 */
 	const boost::uuids::uuid &GetUid() const { return uid; }
 
+	const std::string GetUidStr() const;
+
 	/**
 	 * Retrieve the name of the player.
 	 * @return The name (never empty).

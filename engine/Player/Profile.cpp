@@ -20,6 +20,7 @@
 // and limitations under the License.
 
 #include <boost/uuid/nil_generator.hpp>
+#include <boost/uuid/uuid_io.hpp>
 
 #include "../Display/MediaRes.h"
 
@@ -33,6 +34,15 @@ namespace Player {
 Profile::Profile() :
 	Profile(boost::uuids::nil_uuid())
 {
+}
+
+/**
+ * Retrieve the UID as a string.
+ * @return The UID (never blank).
+ */
+const std::string Profile::GetUidStr() const
+{
+	return boost::uuids::to_string(uid);
 }
 
 void Profile::SetName(const std::string &name)
