@@ -52,6 +52,9 @@ public:
 	void Reload();
 
 public:
+	bool IsEmpty() const { return profiles.empty(); }
+
+public:
 	std::shared_ptr<Profile> FindUid(const std::string &uid) const;
 	std::shared_ptr<Profile> FindUid(const boost::uuids::uuid &uid) const;
 	std::shared_ptr<Profile> FindName(const std::string &name) const;
