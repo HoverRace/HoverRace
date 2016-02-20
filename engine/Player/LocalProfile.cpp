@@ -217,6 +217,11 @@ void LocalProfile::Save()
 
 std::shared_ptr<Display::Res<Display::Texture>> LocalProfile::GetAvatar() const
 {
+	// Use the built-in avatar if set.
+	if (!GetAvatarName().empty()) return SUPER::GetAvatar();
+
+	// Otherwise, use the cached avatar from the profile.
+
 	auto path = Config::GetInstance()->GetProfilePath(
 		uuid::to_string(GetUid()));
 	path /= "avatar.png";

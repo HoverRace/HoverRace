@@ -21,6 +21,8 @@
 
 #include <boost/uuid/nil_generator.hpp>
 
+#include "../Display/MediaRes.h"
+
 #include "Profile.h"
 
 using namespace HoverRace::Util;
@@ -40,6 +42,7 @@ void Profile::SetName(const std::string &name)
 
 void Profile::SetAvatarName(const std::string &avatarName)
 {
+	//TODO: Trim and validate avatar name.
 	this->avatarName = avatarName;
 }
 
@@ -61,7 +64,11 @@ void Profile::SetSecondaryColor(Display::Color color)
  */
 std::shared_ptr<Display::Res<Display::Texture>> Profile::GetAvatar() const
 {
-	return { };
+	// Use the built-in avatar if specified.
+	return avatarName.empty() ?
+		std::shared_ptr<Display::Res<Display::Texture>>{} :
+		std::make_shared<Display::MediaRes<Display::Texture>>(
+			"avatars/" + avatarName);
 }
 
 }  // namespace Player
