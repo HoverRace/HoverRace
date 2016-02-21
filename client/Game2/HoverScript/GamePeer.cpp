@@ -121,7 +121,7 @@ void GamePeer::OnShutdown()
  * has been executed.
  * @param sessionPeer The session peer.
  */
-void GamePeer::OnSessionStart(SessionPeerPtr sessionPeer)
+void GamePeer::OnSessionStart(std::shared_ptr<SessionPeer> sessionPeer)
 {
 	luabind::object sessionObj(GetScripting().GetState(), sessionPeer);
 	onSessionStart.CallHandlers(sessionObj);
@@ -133,7 +133,7 @@ void GamePeer::OnSessionStart(SessionPeerPtr sessionPeer)
  * shut down.
  * @param sessionPeer The session peer.
  */
-void GamePeer::OnSessionEnd(SessionPeerPtr sessionPeer)
+void GamePeer::OnSessionEnd(std::shared_ptr<SessionPeer> sessionPeer)
 {
 	luabind::object sessionObj(GetScripting().GetState(), sessionPeer);
 	onSessionEnd.CallHandlers(sessionObj);

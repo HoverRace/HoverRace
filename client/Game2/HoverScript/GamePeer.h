@@ -32,7 +32,6 @@ namespace HoverRace {
 		namespace HoverScript {
 			class ConfigPeer;
 			class SessionPeer;
-			typedef std::shared_ptr<SessionPeer> SessionPeerPtr;
 		}
 		class GameDirector;
 		class Rulebook;
@@ -72,8 +71,8 @@ public:
 public:
 	void OnInit();
 	void OnShutdown();
-	void OnSessionStart(SessionPeerPtr sessionPeer);
-	void OnSessionEnd(SessionPeerPtr sessionPeer);
+	void OnSessionStart(std::shared_ptr<SessionPeer> sessionPeer);
+	void OnSessionEnd(std::shared_ptr<SessionPeer> sessionPeer);
 
 protected:
 	void VerifyInitialized() const;

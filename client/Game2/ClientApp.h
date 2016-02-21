@@ -36,7 +36,6 @@ namespace HoverRace {
 			class HighConsole;
 			class InputPeer;
 			class SessionPeer;
-			using SessionPeerPtr = std::shared_ptr<SessionPeer>;
 			class SysConsole;
 			class SysEnv;
 		}

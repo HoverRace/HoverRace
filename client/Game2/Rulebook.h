@@ -1,7 +1,7 @@
 
 // Rulebook.h
 //
-// Copyright (c) 2010, 2013-2015 Michael Imamura.
+// Copyright (c) 2010, 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -36,7 +36,6 @@ namespace HoverRace {
 			class PlayerPeer;
 			class RulebookEnv;
 			class SessionPeer;
-			typedef std::shared_ptr<SessionPeer> SessionPeerPtr;
 		}
 	}
 	namespace Model {

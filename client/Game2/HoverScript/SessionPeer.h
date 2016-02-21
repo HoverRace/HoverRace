@@ -113,7 +113,6 @@ private:
 	luabind::object players;
 	std::vector<std::unique_ptr<PlayerRef>> playerRefs;
 };
-typedef std::shared_ptr<SessionPeer> SessionPeerPtr;
 
 }  // namespace HoverScript
 }  // namespace Client
