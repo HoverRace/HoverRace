@@ -188,6 +188,10 @@ ClientApp::ClientApp() :
 	// SDL2 automatically initiates text input mode.
 	// We want to have each scene decide whether they expect text input or not.
 	SDL_StopTextInput();
+
+	// Save the config in case we set any initial options,
+	// such as the default profile.
+	cfg->Save();
 }
 
 ClientApp::~ClientApp()
