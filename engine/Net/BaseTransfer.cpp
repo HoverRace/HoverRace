@@ -1,5 +1,5 @@
 
-// BaseTransfer.h
+// BaseTransfer.cpp
 //
 // Copyright (c) 2009, 2016 Michael Imamura.
 //

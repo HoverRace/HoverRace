@@ -1,5 +1,5 @@
 
-// BlockingTransfer.h
+// BlockingTransfer.cpp
 //
 // Copyright (c) 2009, 2014, 2016 Michael Imamura.
 //
