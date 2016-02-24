@@ -1,8 +1,7 @@
 
 // CancelFlag.h
-// Interface for cancel checking.
 //
-// Copyright (c) 2009 Michael Imamura.
+// Copyright (c) 2009, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -43,8 +42,8 @@ namespace Net {
  */
 class MR_DllDeclare MR_PureVirtual CancelFlag
 {
-	public:
-		virtual bool IsCanceled() = 0;
+public:
+	virtual bool IsCanceled() = 0;
 };
 typedef std::shared_ptr<CancelFlag> CancelFlagPtr;
 
