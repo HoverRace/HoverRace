@@ -1,8 +1,7 @@
 
 // Agent.cpp
-// Network transfer agent (wrapper for libcurl).
 //
-// Copyright (c) 2009 Michael Imamura.
+// Copyright (c) 2009, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -56,7 +55,7 @@ void Agent::SetUrl(const std::string &url)
  * @param buf The string to store to.
  * @param cancelFlag Optional control to check for cancellation (may be @c NULL).
  */
-void Agent::Get(std::string &buf, CancelFlagPtr cancelFlag)
+void Agent::Get(std::string &buf, std::shared_ptr<CancelFlag> cancelFlag)
 {
 	BlockingTransfer(*this, buf, cancelFlag).Go();
 }
@@ -67,7 +66,7 @@ void Agent::Get(std::string &buf, CancelFlagPtr cancelFlag)
  * @param buf The stream to write to.
  * @param cancelFlag Optional control to check for cancellation (may be @c NULL).
  */
-void Agent::Get(std::ostream &buf, CancelFlagPtr cancelFlag)
+void Agent::Get(std::ostream &buf, std::shared_ptr<CancelFlag> cancelFlag)
 {
 	BlockingTransfer(*this, buf, cancelFlag).Go();
 }

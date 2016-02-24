@@ -1,8 +1,7 @@
 
 // BaseTransfer.h
-// Header for base class of standard transfers.
 //
-// Copyright (c) 2009 Michael Imamura.
+// Copyright (c) 2009, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -55,7 +54,8 @@ class MR_DllDeclare BaseTransfer : public Transfer
 		virtual ~BaseTransfer();
 
 	protected:
-		void AssertCurlSuccess(CURLcode code, CancelFlagPtr cancelFlag=CancelFlagPtr());
+		void AssertCurlSuccess(CURLcode code,
+			std::shared_ptr<CancelFlag> cancelFlag = {});
 
 	private:
 		char errorBuf[CURL_ERROR_SIZE];

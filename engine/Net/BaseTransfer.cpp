@@ -1,8 +1,7 @@
 
 // BaseTransfer.h
-// Base class of standard transfers.
 //
-// Copyright (c) 2009 Michael Imamura.
+// Copyright (c) 2009, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -53,7 +52,8 @@ BaseTransfer::~BaseTransfer()
 	curl_easy_cleanup(curl);
 }
 
-void BaseTransfer::AssertCurlSuccess(CURLcode code, CancelFlagPtr cancelFlag)
+void BaseTransfer::AssertCurlSuccess(CURLcode code,
+	std::shared_ptr<CancelFlag> cancelFlag)
 {
 	// One last check of the cancel flag.
 	if (cancelFlag && cancelFlag->IsCanceled()) {

@@ -1,7 +1,7 @@
 
 // BlockingTransfer.h
 //
-// Copyright (c) 2009, 2014 Michael Imamura.
+// Copyright (c) 2009, 2014, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ using namespace HoverRace::Net;
  * @param cancelFlag Control object to check for cancellation (may be @c NULL).
  */
 BlockingTransfer::BlockingTransfer(const Agent &agent, std::string &buf,
-                                   CancelFlagPtr cancelFlag) :
+                                   std::shared_ptr<CancelFlag> cancelFlag) :
 	SUPER(agent), cancelFlag(cancelFlag)
 {
 	Init();
@@ -45,7 +45,7 @@ BlockingTransfer::BlockingTransfer(const Agent &agent, std::string &buf,
  * @param cancelFlag Control object to check for cancellation (may be @c NULL).
  */
 BlockingTransfer::BlockingTransfer(const Agent &agent, std::ostream &buf,
-                                   CancelFlagPtr cancelFlag) :
+                                   std::shared_ptr<CancelFlag> cancelFlag) :
 	SUPER(agent), cancelFlag(cancelFlag)
 {
 	Init();

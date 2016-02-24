@@ -1,7 +1,7 @@
 
 // RoomList.h
 //
-// Copyright (c) 2009, 2014, 2015 Michael Imamura.
+// Copyright (c) 2009, 2014-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ class RoomList
 
 	public:
 		void LoadFromUrl(const std::string &url,
-			Net::CancelFlagPtr cancelFlag=Net::CancelFlagPtr());
+			std::shared_ptr<Net::CancelFlag> cancelFlag = {});
 		void LoadFromStream(std::istream &in);
 
 	public:

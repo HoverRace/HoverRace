@@ -1,8 +1,7 @@
 
 // BlockingTransfer.h
-// Header for the simple blocking transfer.
 //
-// Copyright (c) 2009 Michael Imamura.
+// Copyright (c) 2009, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -46,9 +45,9 @@ class MR_DllDeclare BlockingTransfer : public BaseTransfer
 	typedef BaseTransfer SUPER;
 	public:
 		BlockingTransfer(const Agent &agent, std::string &buf,
-			CancelFlagPtr cancelFlag);
+			std::shared_ptr<CancelFlag> cancelFlag);
 		BlockingTransfer(const Agent &agent, std::ostream &buf,
-			CancelFlagPtr cancelFlag);
+			std::shared_ptr<CancelFlag> cancelFlag);
 		virtual ~BlockingTransfer() { }
 	private:
 		void Init();
@@ -65,7 +64,7 @@ class MR_DllDeclare BlockingTransfer : public BaseTransfer
 		static size_t ProgressFunc(void *cancelFlag, double, double, double, double);
 
 	private:
-		CancelFlagPtr cancelFlag;
+		std::shared_ptr<CancelFlag> cancelFlag;
 };
 
 }  // namespace Net

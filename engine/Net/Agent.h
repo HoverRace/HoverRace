@@ -1,8 +1,7 @@
 
 // Agent.h
-// Header for the network transfer agent (wrapper for libcurl).
 //
-// Copyright (c) 2009 Michael Imamura.
+// Copyright (c) 2009, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -55,8 +54,8 @@ class MR_DllDeclare Agent
 		const std::string &GetUrl() const { return url; };
 
 	public:
-		void Get(std::string &buf, CancelFlagPtr cancelFlag=CancelFlagPtr());
-		void Get(std::ostream &buf, CancelFlagPtr cancelFlag=CancelFlagPtr());
+		void Get(std::string &buf, std::shared_ptr<CancelFlag> cancelFlag = {});
+		void Get(std::ostream &buf, std::shared_ptr<CancelFlag> cancelFlag = {});
 
 	private:
 		std::string url;
