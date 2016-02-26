@@ -204,7 +204,6 @@ std::string OS::StrError(int errnum)
 
 /**
  * Initialize the OS time source.
- * On Win32, this attempts to increase the precision to 1 ms.
  */
 void OS::TimeInit()
 {
