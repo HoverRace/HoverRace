@@ -78,9 +78,9 @@ int main(int pArgCount, char *pArgStrings[])
 
 	//TODO: Process command-line options.
 
-	Config *cfg = Config::Init(PACKAGE, 0, 0, 0, 0, true,
+	auto &cfg = Config::Init(PACKAGE, 0, 0, 0, 0, true,
 		OS::path_t{}, OS::path_t{});
-	cfg->runtime.silent = true;
+	cfg.runtime.silent = true;
 
 #	ifdef ENABLE_NLS
 		OS::SetLocale(Str::UP(LOCALEDIR), PACKAGE);
