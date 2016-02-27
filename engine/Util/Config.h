@@ -87,7 +87,7 @@ private:
 public:
 	~Config();
 
-	static Config *Init(const std::string &packageName,
+	static Config &Init(const std::string &packageName,
 		int verMajor, int verMinor, int verPatch, int verBuild,
 		bool prerelease, const OS::path_t &mediaPath,
 		const OS::path_t &sysCfgPath,

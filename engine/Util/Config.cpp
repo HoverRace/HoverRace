@@ -283,7 +283,7 @@ Config::~Config()
  *             {@link #GetBaseConfigPath()}.
  * @return The config instance.
  */
-Config *Config::Init(const std::string &packageName,
+Config &Config::Init(const std::string &packageName,
 	int verMajor, int verMinor, int verPatch, int verBuild,
 	bool prerelease, const OS::path_t &mediaPath,
 	const OS::path_t &sysCfgPath, const OS::path_t &path)
@@ -293,7 +293,7 @@ Config *Config::Init(const std::string &packageName,
 			new Config(packageName, verMajor, verMinor, verPatch, verBuild,
 				prerelease, mediaPath, sysCfgPath, path));
 	}
-	return instance.get();
+	return *instance;
 }
 
 /**

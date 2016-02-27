@@ -171,7 +171,7 @@ bool ProcessCmdLine(int argc, char **argv)
 }
 
 // Initialize (but not load) the config system.
-Config *InitConfig()
+Config &InitConfig()
 {
 	return Config::Init(PACKAGE, HR_APP_VERSION, HR_APP_VERSION_PRERELEASE,
 		mediaPath, sysCfgPath);
@@ -218,23 +218,23 @@ int main(int argc, char** argv)
 	Log::Info("INFO level logging enabled.");
 	Log::Debug("DEBUG level logging enabled.");
 
-	Config *cfg = InitConfig();
-	cfg->runtime.silent = silentMode;
-	cfg->runtime.showFramerate = showFramerate;
-	cfg->runtime.noAccel = noAccel;
-	cfg->runtime.skipStartupWarning = skipStartupWarning;
-	cfg->runtime.initScripts = initScripts;
-	cfg->Load();
+	auto &cfg = InitConfig();
+	cfg.runtime.silent = silentMode;
+	cfg.runtime.showFramerate = showFramerate;
+	cfg.runtime.noAccel = noAccel;
+	cfg.runtime.skipStartupWarning = skipStartupWarning;
+	cfg.runtime.initScripts = initScripts;
+	cfg.Load();
 	if (!reqLocale.empty()) {
-		cfg->i18n.preferredLocale = reqLocale;
+		cfg.i18n.preferredLocale = reqLocale;
 	}
-	cfg->GetLocale().RequestPreferredLocale();
+	cfg.GetLocale().RequestPreferredLocale();
 
 	// If --version was passed, output the version and exit.
 	if (showVersion) {
 		// We intentionally do not localize this string since scripts
 		// may want to parse it (for whatever reason).
-		OS::ShowMessage(PACKAGE_NAME " version " + cfg->GetVersion());
+		OS::ShowMessage(PACKAGE_NAME " version " + cfg.GetVersion());
 		return EXIT_SUCCESS;
 	}
 
