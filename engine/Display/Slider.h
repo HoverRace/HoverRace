@@ -1,7 +1,7 @@
 
 // Slider.h
 //
-// Copyright (c) 2014, 2015 Michael Imamura.
+// Copyright (c) 2014-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -68,7 +68,7 @@ public:
 	virtual ~Slider();
 
 public:
-	virtual void AttachView(Display &disp) { AttachViewDynamic(disp, this); }
+	void AttachView(Display &disp) override { AttachViewDynamic(disp, this); }
 
 public:
 	bool OnNavigate(const Control::Nav &nav) override;
@@ -92,11 +92,11 @@ public:
 	RuleLine *GetZeroLineChild() const { return zeroLine.get(); }
 
 protected:
-	virtual void Layout();
+	void Layout() override;
 
 public:
-	virtual Vec3 Measure();
-	virtual void FireModelUpdate(int prop);
+	Vec3 Measure() override;
+	void FireModelUpdate(int prop) override;
 
 private:
 	double min;

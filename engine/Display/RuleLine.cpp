@@ -1,7 +1,7 @@
 
 // RuleLine.cpp
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ namespace Display {
  * @param layoutFlags Optional layout flags.
  */
 RuleLine::RuleLine(Direction direction, double length, double width,
-                   const Color color, uiLayoutFlags_t layoutFlags) :
+	const Color color, uiLayoutFlags_t layoutFlags) :
 	SUPER(layoutFlags),
 	direction(direction), length(length), width(width), color(color)
 {

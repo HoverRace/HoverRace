@@ -1,7 +1,7 @@
 
 // ClickRegion.h
 //
-// Copyright (c) 2013, 2014 Michael Imamura.
+// Copyright (c) 2013, 2014, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -85,7 +85,7 @@ protected:
 	virtual void OnMouseDrag(const Vec2 &relPos) { HR_UNUSED(relPos); }
 
 public:
-	typedef boost::signals2::signal<void(ClickRegion&)> clickedSignal_t;
+	using clickedSignal_t = boost::signals2::signal<void(ClickRegion&)>;
 	clickedSignal_t &GetClickedSignal() { return clickedSignal; }
 protected:
 	virtual void FireClickedSignal();
@@ -119,7 +119,7 @@ protected:
 	void SetPressed(bool pressed);
 
 public:
-	virtual Vec3 Measure() { return size.Promote(); }
+	Vec3 Measure() override { return size.Promote(); }
 
 protected:
 	void RequestSizing();

@@ -1,7 +1,7 @@
 
 // RuleLine.h
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ namespace Display {
 /**
  * A horizontal or vertical line.
  *
- * Unlike a FillBox, this line is guaranteed to be at least one pixel in width. 
+ * Unlike a FillBox, this line is guaranteed to be at least one pixel in width.
  *
  * @author Michael Imamura
  */
@@ -75,7 +75,7 @@ public:
 	virtual ~RuleLine() { }
 
 public:
-	virtual void AttachView(Display &disp) { AttachViewDynamic(disp, this); }
+	void AttachView(Display &disp) override { AttachViewDynamic(disp, this); }
 
 public:
 	Direction GetDirection() const { return direction; }
