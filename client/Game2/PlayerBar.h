@@ -1,7 +1,7 @@
 
 // PlayerBar.h
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -50,10 +50,14 @@ public:
 		Display::uiLayoutFlags_t layoutFlags = 0);
 	virtual ~PlayerBar();
 
+public:
+	void PresentPlayers();
+
 private:
 	void OnPlayerAdded(std::shared_ptr<Player::Player> player);
 
 private:
+	GameDirector &director;
 	boost::signals2::scoped_connection playerAddedConn;
 };
 

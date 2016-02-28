@@ -1,7 +1,7 @@
 
 // MainMenuScene.cpp
 //
-// Copyright (c) 2013-2015 Michael Imamura.
+// Copyright (c) 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -155,6 +155,16 @@ void MainMenuScene::OnMutedClicked()
 
 	director.RequestPushScene(std::make_shared<MessageScene>(display, director,
 		_("Silent Mode"), msg));
+}
+
+void MainMenuScene::OnStateChanged(State oldState)
+{
+	// When we're finally visible (and all the initial dialog boxes are out
+	// of the way), display to the user the status.
+	if (GetState() == State::FOREGROUND) {
+		director.RequestStatusPresentation();
+	}
+	SUPER::OnStateChanged(oldState);
 }
 
 void MainMenuScene::OnStateTransition(double interval)

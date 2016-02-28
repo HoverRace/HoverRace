@@ -1,7 +1,7 @@
 
 // GameDirector.h
 //
-// Copyright (c) 2010, 2013-2015 Michael Imamura.
+// Copyright (c) 2010, 2013-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -89,6 +89,12 @@ public:
 	virtual void RequestMainMenu(
 		std::shared_ptr<LoadingScene> loadingScene =
 			std::shared_ptr<LoadingScene>()) = 0;
+
+	/**
+	 * Request that the status (logged-in players, etc.) be momentarily
+	 * displayed to remind the user what's going on.
+	 */
+	virtual void RequestStatusPresentation() = 0;
 
 	/**
 	 * Request a new local practice session.

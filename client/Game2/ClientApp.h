@@ -119,6 +119,7 @@ public:
 	void RequestMainMenu(
 		std::shared_ptr<LoadingScene> loadingScene =
 			std::shared_ptr<LoadingScene>()) override;
+	void RequestStatusPresentation() override;
 	void RequestNewPracticeSession(
 		std::shared_ptr<Rules> rules,
 		std::shared_ptr<LoadingScene> loadingScene =

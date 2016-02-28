@@ -743,6 +743,13 @@ void ClientApp::RequestNewPracticeSession(std::shared_ptr<Rules> rules,
 	}
 }
 
+void ClientApp::RequestStatusPresentation()
+{
+	if (statusOverlayScene) {
+		statusOverlayScene->PresentInitialState();
+	}
+}
+
 void ClientApp::RequestAnnouncement(std::shared_ptr<Announcement> ann)
 {
 	SDL_Event evt;

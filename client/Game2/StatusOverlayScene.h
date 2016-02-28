@@ -1,7 +1,7 @@
 
 // StatusOverlayScene.h
 //
-// Copyright (c) 2014, 2015 Michael Imamura.
+// Copyright (c) 2014-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -58,6 +58,7 @@ public:
 	bool IsMouseCursorEnabled() const override { return true; }
 
 public:
+	void PresentInitialState();
 	void Announce(std::shared_ptr<Announcement> ann);
 
 public:
@@ -79,6 +80,7 @@ public:
 private:
 	Display::Display &display;
 	GameDirector &director;
+	bool presentedInitialState;
 	std::unique_ptr<BulletinBoard> bulletinBoard;
 	std::unique_ptr<PlayerBar> playerBar;
 	boost::signals2::scoped_connection displayConfigChangedConn;

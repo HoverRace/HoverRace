@@ -1,7 +1,7 @@
 
 // PlayerBar.cpp
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -32,7 +32,8 @@ namespace Client {
 
 PlayerBar::PlayerBar(Display::Display &display, GameDirector &director,
 	Display::uiLayoutFlags_t layoutFlags) :
-	SUPER(display, layoutFlags)
+	SUPER(display, layoutFlags),
+	director(director)
 {
 	playerAddedConn =
 		director.GetParty()->GetPlayerAddedSignal().connect(
@@ -42,6 +43,16 @@ PlayerBar::PlayerBar(Display::Display &display, GameDirector &director,
 
 PlayerBar::~PlayerBar()
 {
+}
+
+/**
+ * Play animation to remind the user who is logged-in.
+ */
+void PlayerBar::PresentPlayers()
+{
+	director.GetParty()->ForEach([](std::shared_ptr<Player::Player> &player) {
+		HR_LOG(info) << "Active player: " << *player;
+	});
 }
 
 void PlayerBar::OnPlayerAdded(std::shared_ptr<Player::Player> player)
