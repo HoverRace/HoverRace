@@ -25,6 +25,7 @@
 
 #include "../Display/Color.h"
 #include "../Display/Res.h"
+#include "EditableProfile.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
 #	ifdef MR_ENGINE
@@ -49,7 +50,7 @@ namespace Player {
  * Base class for player profiles.
  * @author Michael Imamura
  */
-class MR_DllDeclare Profile
+class MR_DllDeclare Profile : protected EditableProfile
 {
 public:
 	Profile();
@@ -76,28 +77,35 @@ public:
 	 */
 	const std::string &GetName() const { return name; }
 protected:
-	void SetName(const std::string &name);
+	virtual void SetName(const std::string &name);
 
 public:
 	const std::string &GetAvatarName() const { return avatarName; }
 protected:
-	void SetAvatarName(const std::string &avatarName);
+	virtual void SetAvatarName(const std::string &avatarName);
 
 public:
 	Display::Color GetPrimaryColor() const { return primaryColor; }
 protected:
-	void SetPrimaryColor(Display::Color color);
+	virtual void SetPrimaryColor(Display::Color color);
 
 public:
 	Display::Color GetSecondaryColor() const { return secondaryColor; }
 protected:
-	void SetSecondaryColor(Display::Color color);
+	virtual void SetSecondaryColor(Display::Color color);
 
 public:
 	virtual std::shared_ptr<Display::Res<Display::Texture>>
 		GetAvatar() const;
 
 public:
+	/**
+	 * Retrieve an editable view of this profile.
+	 * @return An editable profile backed by this profile, or
+	 *         @c nullptr if this profile cannot be edited.
+	 */
+	virtual EditableProfile *Edit() { return nullptr; }
+protected:
 	virtual void Save() = 0;
 
 private:

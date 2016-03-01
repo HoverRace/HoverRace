@@ -211,7 +211,7 @@ void ClientApp::LoadInitialProfile()
 	if (gallery.IsEmpty()) {
 		HR_LOG(info) << "No known profiles; creating new default profile.";
 		profile = std::make_shared<NewProfile>();
-		profile->Save();
+		profile->Edit()->Save();
 
 		cfg->player.defaultProfile = profile->GetUidStr();
 

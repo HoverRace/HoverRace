@@ -1,5 +1,5 @@
 
-// LocalProfile.h
+// EditableProfile.h
 //
 // Copyright (c) 2016 Michael Imamura.
 //
@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include "Profile.h"
+#include "../Display/Color.h"
 
 #if defined(_WIN32) && defined(HR_ENGINE_SHARED)
 #	ifdef MR_ENGINE
@@ -34,43 +34,21 @@
 #endif
 
 namespace HoverRace {
-	namespace Util {
-		namespace yaml {
-			class MapNode;
-		}
-	}
-}
-
-namespace HoverRace {
 namespace Player {
 
 /**
- * A profile that is stored on the local filesystem.
+ * Interface for profile editing.
  * @author Michael Imamura
  */
-class MR_DllDeclare LocalProfile : public Profile
+class MR_DllDeclare EditableProfile
 {
-	using SUPER = Profile;
+public:
+	virtual void SetAvatarName(const std::string &avatarName) = 0;
+	virtual void SetPrimaryColor(Display::Color color) = 0;
+	virtual void SetSecondaryColor(Display::Color color) = 0;
 
 public:
-	LocalProfile();
-	LocalProfile(const boost::uuids::uuid &uid);
-	virtual ~LocalProfile() { }
-
-public:
-	bool isLoaded() const { return loaded; }
-
-	std::shared_ptr<Display::Res<Display::Texture>> GetAvatar() const override;
-
-private:
-	void Load(Util::yaml::MapNode *root, const std::string &filename);
-public:
-	EditableProfile *Edit() override { return this; }
-protected:
-	void Save() override;
-
-private:
-	bool loaded;
+	virtual void Save() = 0;
 };
 
 }  // namespace Player
