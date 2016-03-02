@@ -52,9 +52,9 @@ endif()
 # Bump the warning level.
 include(SetWarningLevel)
 set_full_warnings(TARGET hoverrace)
-# Temporarily disable deprecation warnings on Clang; the warnings are coming
+# Temporarily disable deprecation warnings; the warnings are coming
 # from the Luabind headers, which we're not touching for now.
-if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+if(CMAKE_COMPILER_IS_GNUCXX OR (CMAKE_CXX_COMPILER_ID STREQUAL "Clang"))
 	set_property(TARGET hoverrace APPEND_STRING PROPERTY COMPILE_FLAGS
 		" -Wno-deprecated-declarations ")
 endif()
