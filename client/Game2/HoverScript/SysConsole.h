@@ -69,7 +69,7 @@ public:
 	virtual ~SysConsole();
 
 protected:
-	virtual void InitEnv();
+	void InitEnv() override;
 
 public:
 	void Advance(Util::OS::timestamp_t tick) override { HR_UNUSED(tick); }
@@ -78,7 +78,7 @@ private:
 	void OnSessionChanged(std::shared_ptr<MetaSession> metaSession);
 
 public:
-	virtual void Clear();
+	void Clear() override;
 	void SubmitChunkWithHistory(const std::string &s);
 
 public:
@@ -101,8 +101,8 @@ public:
 	void AddIntroLines();
 	void LogHistory(const std::string &s);
 	void LogNote(const std::string &s);
-	virtual void LogInfo(const std::string &s);
-	virtual void LogError(const std::string &s);
+	void LogInfo(const std::string &s) override;
+	void LogError(const std::string &s) override;
 
 	void LoadPrevCmd();
 	void LoadNextCmd();
@@ -186,8 +186,9 @@ public:
 
 public:
 	// HelpHandler.
-	virtual void HelpClass(const Script::Help::Class &cls);
-	virtual void HelpMethod(const Script::Help::Class &cls, const Script::Help::Method &method);
+	void HelpClass(const Script::Help::Class &cls) override;
+	void HelpMethod(const Script::Help::Class &cls,
+		const Script::Help::Method &method) override;
 
 public:
 	static int LQuit(lua_State *L);

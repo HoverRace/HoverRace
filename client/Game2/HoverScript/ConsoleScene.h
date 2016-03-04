@@ -1,7 +1,7 @@
 
 // ConsoleScene.h
 //
-// Copyright (c) 2013, 2015 Michael Imamura.
+// Copyright (c) 2013, 2015-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -72,7 +72,7 @@ private:
 
 	void AppendLogLine(const SysConsole::LogLine &line);
 	void UpdateCommandLine();
-	void Layout();
+	void Layout() override;
 
 public:
 	// Scene
