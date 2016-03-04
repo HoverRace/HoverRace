@@ -184,11 +184,12 @@ public:
 
 	void SetOrientation(MR_Angle pOrientation);
 
-	void AddRenderer();
-	void Render(VideoServices::Viewport3D *pDest, MR_SimulationTime pTime);
+	void AddRenderer() override;
+	void Render(VideoServices::Viewport3D *pDest,
+		MR_SimulationTime pTime) override;
 
-	Model::ElementNetState GetNetState() const;
-	void SetNetState(int pDataLen, const MR_UInt8 * pData);
+	Model::ElementNetState GetNetState() const override;
+	void SetNetState(int pDataLen, const MR_UInt8 * pData) override;
 
 	// Movement inputs
 	void SetSimulationTime(MR_SimulationTime pTime);
@@ -246,8 +247,8 @@ protected:
 
 public:
 	// Sounds
-	void PlayInternalSounds();
-	void PlayExternalSounds(int pDB, int pPan);
+	void PlayInternalSounds() override;
+	void PlayExternalSounds(int pDB, int pPan) override;
 
 public:
 	using startedSignal_t = boost::signals2::signal<void(MainCharacter*)>;
