@@ -543,6 +543,8 @@ const OS::path_t &Config::GetProfilePath() const
  */
 OS::path_t Config::GetProfilePath(const std::string &uid) const
 {
+	//FIXME: std::regex is unimplemented in 4.8; use Boost.Regex.
+#ifdef _WIN32
 	static const std::regex UID_RX{
 		"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
 		std::regex::extended | std::regex::optimize };
@@ -553,6 +555,7 @@ OS::path_t Config::GetProfilePath(const std::string &uid) const
 	if (!std::regex_match(uid, UID_RX)) {
 		throw Player::ProfileExn("Invalid profile UID: " + uid);
 	}
+#endif
 
 	return profilePath / Str::UP(uid.c_str());
 }
