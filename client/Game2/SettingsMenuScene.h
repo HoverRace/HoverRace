@@ -49,6 +49,10 @@ public:
 	virtual ~SettingsMenuScene() { }
 
 private:
+	template<class T>
+	class MenuItemButton;
+
+private:
 	std::shared_ptr<Display::FlexGrid> menuGrid;
 };
 

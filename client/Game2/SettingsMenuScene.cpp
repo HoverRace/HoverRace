@@ -36,24 +36,22 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace Client {
 
-namespace {
-
 template<class T>
-class MenuItemButton : public Display::Button
+class SettingsMenuScene::MenuItemButton : public Display::Button
 {
 	using SUPER = Display::Button;
 
 public:
-	MenuItemButton(Display::Display &display, GameDirector &director,
-		const std::string &parentTitle, const std::string &label,
+	MenuItemButton(SettingsMenuScene &scene, const std::string &label,
 		bool enabled = true) :
-		SUPER(display, label)
+		SUPER(scene.display, label)
 	{
 		SetEnabled(enabled);
 
 		clickedConn = GetClickedSignal().connect([&](Display::ClickRegion&) {
-			director.RequestPushScene(
-				std::make_shared<T>(display, director, parentTitle));
+			scene.director.RequestPushScene(
+				std::make_shared<T>(scene.display, scene.director,
+					scene.GetTitle()));
 		});
 	}
 	virtual ~MenuItemButton() { }
@@ -61,8 +59,6 @@ public:
 private:
 	boost::signals2::scoped_connection clickedConn;
 };
-
-}  // namespace
 
 SettingsMenuScene::SettingsMenuScene(Display::Display &display,
 	GameDirector &director) :
@@ -82,17 +78,17 @@ SettingsMenuScene::SettingsMenuScene(Display::Display &display,
 
 	size_t row = 0;
 	menuGrid->At(row++, 0).NewChild<MenuItemButton<AudioSettingsScene>>(
-		display, director, GetTitle(), _("Profile"), false);
+		*this, _("Profile"), false);
 	menuGrid->At(row++, 0).NewChild<MenuItemButton<LocaleSettingsScene>>(
-		display, director, GetTitle(), _("Language and Units"));
+		*this, _("Language and Units"));
 	menuGrid->At(row++, 0).NewChild<MenuItemButton<AudioSettingsScene>>(
-		display, director, GetTitle(), _("Audio"));
+		*this, _("Audio"));
 	menuGrid->At(row++, 0).NewChild<MenuItemButton<VideoSettingsScene>>(
-		display, director, GetTitle(), _("Video"));
+		*this, _("Video"));
 	menuGrid->At(row++, 0).NewChild<MenuItemButton<AudioSettingsScene>>(
-		display, director, GetTitle(), _("Network"), false);
+		*this, _("Network"), false);
 	menuGrid->At(row++, 0).NewChild<MenuItemButton<AudioSettingsScene>>(
-		display, director, GetTitle(), _("Advanced"), false);
+		*this, _("Advanced"), false);
 
 	menuGrid->RequestFocus();
 }
