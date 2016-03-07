@@ -1,7 +1,7 @@
 
 // SettingsMenuScene.h
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ class SettingsMenuScene : public DialogScene
 
 public:
 	SettingsMenuScene(Display::Display &display, GameDirector &director);
-	virtual ~SettingsMenuScene();
+	virtual ~SettingsMenuScene() { }
 
 private:
 	std::shared_ptr<Display::FlexGrid> menuGrid;

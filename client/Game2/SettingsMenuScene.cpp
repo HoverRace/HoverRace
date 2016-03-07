@@ -1,7 +1,7 @@
 
 // SettingsMenuScene.cpp
 //
-// Copyright (c) 2014, 2015 Michael Imamura.
+// Copyright (c) 2014-2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@
 #include "AudioSettingsScene.h"
 #include "GameDirector.h"
 #include "LocaleSettingsScene.h"
+#include "ProfileEditScene.h"
 #include "VideoSettingsScene.h"
 
 #include "SettingsMenuScene.h"
@@ -94,10 +95,6 @@ SettingsMenuScene::SettingsMenuScene(Display::Display &display,
 		display, director, GetTitle(), _("Advanced"), false);
 
 	menuGrid->RequestFocus();
-}
-
-SettingsMenuScene::~SettingsMenuScene()
-{
 }
 
 }  // namespace Client
