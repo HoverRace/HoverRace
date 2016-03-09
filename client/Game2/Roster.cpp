@@ -1,7 +1,7 @@
 
 // Roster.cpp
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -20,8 +20,11 @@
 // and limitations under the License.
 
 #include "../../engine/Player/Player.h"
+#include "../../engine/Exception.h"
 
 #include "Roster.h"
+
+using namespace HoverRace::Util;
 
 namespace HoverRace {
 namespace Client {
@@ -32,6 +35,10 @@ Roster::Roster()
 
 void Roster::AddPlayer(std::shared_ptr<Player::Player> player)
 {
+	if (!player) {
+		throw Exception("Attempted to add a null player.");
+	}
+
 	players.emplace_back(player);
 	playerAddedSignal(player);
 }
