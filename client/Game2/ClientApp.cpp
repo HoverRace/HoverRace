@@ -786,5 +786,13 @@ Control::InputEventController *ClientApp::ReloadController()
 	return controller.get();
 }
 
+std::shared_ptr<Player::Player> ClientApp::ShareUiPilot() const
+{
+	//TODO: Keep track of which of the local players is in control.
+	// For now, we assume all players are local and the first player in the
+	// roster is the only human.
+	return party->ShareFirst();
+}
+
 }  // namespace HoverScript
 }  // namespace Client

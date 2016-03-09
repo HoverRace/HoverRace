@@ -38,6 +38,9 @@ namespace HoverRace {
 	namespace Display {
 		class Display;
 	}
+	namespace Player {
+		class Player;
+	}
 	namespace VideoServices {
 		class VideoBuffer;
 	}
@@ -143,6 +146,13 @@ public:
 	 * @return The list (may be @c nullptr).
 	 */
 	virtual Roster *GetParty() const = 0;
+
+	/**
+	 * Retrieve the current local player who is in control of the
+	 * UI at the moment.
+	 * @return The player (may be @c nullptr if nobody has seized control).
+	 */
+	virtual std::shared_ptr<Player::Player> ShareUiPilot() const = 0;
 
 	using sessionChangedSignal_t =
 		boost::signals2::signal<void(std::shared_ptr<HoverScript::MetaSession>)>;

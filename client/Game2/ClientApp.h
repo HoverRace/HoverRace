@@ -132,6 +132,7 @@ public:
 	Control::InputEventController *GetController() const override { return controller.get(); }
 	Control::InputEventController *ReloadController() override;
 	Roster *GetParty() const override { return party.get(); }
+	std::shared_ptr<Player::Player> ShareUiPilot() const override;
 	sessionChangedSignal_t &GetSessionChangedSignal() override { return sessionChangedSignal; }
 
 private:
