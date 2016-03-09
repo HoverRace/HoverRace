@@ -55,10 +55,12 @@ class MR_DllDeclare Profile : protected EditableProfile
 public:
 	Profile();
 	Profile(const boost::uuids::uuid &uid) :
-		Profile(uid, "Player", Display::COLOR_WHITE, Display::COLOR_BLACK) { }
+		Profile(uid, "Player", {}, Display::COLOR_WHITE, Display::COLOR_BLACK)
+		{ }
 	Profile(const boost::uuids::uuid &uid, const std::string &name,
+		const std::string &avatarName,
 		Display::Color primaryColor, Display::Color secondaryColor) :
-		uid(uid), name(name),
+		uid(uid), name(name), avatarName(avatarName),
 		primaryColor(primaryColor), secondaryColor(secondaryColor) { }
 	virtual ~Profile() { }
 

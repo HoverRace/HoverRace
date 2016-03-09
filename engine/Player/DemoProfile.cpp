@@ -44,7 +44,7 @@ const OS::path_t DEFAULT_AVATAR_PATH("avatars/icon1.png");
 }  // namespace
 
 DemoProfile::DemoProfile() :
-	SUPER(DEMO_UUID, "Player", 0xffd8063b, Display::COLOR_BLACK)
+	SUPER(DEMO_UUID, "Player", {}, 0xffd8063b, Display::COLOR_BLACK)
 {
 }
 

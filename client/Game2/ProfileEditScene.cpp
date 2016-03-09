@@ -39,8 +39,8 @@ class FormProfile : public Player::Profile
 
 public:
 	FormProfile(Player::Profile &profile) :
-		SUPER(profile.GetUid(), profile.GetName(), profile.GetPrimaryColor(),
-			profile.GetSecondaryColor()),
+		SUPER(profile.GetUid(), profile.GetName(), profile.GetAvatarName(),
+			profile.GetPrimaryColor(), profile.GetSecondaryColor()),
 		profile(profile)
 	{
 	}
