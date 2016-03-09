@@ -83,6 +83,8 @@ public:
 
 	Profile *GetProfile() const { return profile.get(); }
 
+	std::shared_ptr<Profile> ShareProfile() const { return profile; }
+
 	bool IsLocal() const { return local; }
 
 	bool IsHuman() const { return human; }
