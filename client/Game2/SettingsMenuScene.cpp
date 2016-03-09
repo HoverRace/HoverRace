@@ -22,6 +22,7 @@
 #include "../../engine/Display/Button.h"
 #include "../../engine/Display/Container.h"
 #include "../../engine/Display/FlexGrid.h"
+#include "../../engine/Player/Player.h"
 
 #include "AudioSettingsScene.h"
 #include "GameDirector.h"
@@ -36,6 +37,28 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace Client {
 
+namespace {
+
+template<class T>
+void LaunchScene(Display::Display &display, GameDirector &director,
+	const std::string &parentTitle)
+{
+	director.RequestPushScene(
+		std::make_shared<T>(display, director, parentTitle));
+}
+
+// Specialization for profile editor, which takes a profile.
+template<>
+void LaunchScene<ProfileEditScene>(Display::Display &display,
+	GameDirector &director, const std::string &parentTitle)
+{
+	director.RequestPushScene(
+		std::make_shared<ProfileEditScene>(display, director, parentTitle,
+			director.ShareUiPilot()->ShareProfile()));
+}
+
+}  // namespace
+
 template<class T>
 class SettingsMenuScene::MenuItemButton : public Display::Button
 {
@@ -49,9 +72,7 @@ public:
 		SetEnabled(enabled);
 
 		clickedConn = GetClickedSignal().connect([&](Display::ClickRegion&) {
-			scene.director.RequestPushScene(
-				std::make_shared<T>(scene.display, scene.director,
-					scene.GetTitle()));
+			LaunchScene<T>(scene.display, scene.director, scene.GetTitle());
 		});
 	}
 	virtual ~MenuItemButton() { }
@@ -76,9 +97,16 @@ SettingsMenuScene::SettingsMenuScene(Display::Display &display,
 
 	menuGrid->GetColumnDefault(0).SetFill(true);
 
+	// If there's no active player piloting the UI, then only enable
+	// settings which are global to everybody.
+	bool hasProfile = false;
+	if (auto pilot = director.ShareUiPilot()) {
+		hasProfile = !!pilot->ShareProfile();
+	}
+
 	size_t row = 0;
-	menuGrid->At(row++, 0).NewChild<MenuItemButton<AudioSettingsScene>>(
-		*this, _("Profile"), false);
+	menuGrid->At(row++, 0).NewChild<MenuItemButton<ProfileEditScene>>(
+		*this, _("Profile"), hasProfile);
 	menuGrid->At(row++, 0).NewChild<MenuItemButton<LocaleSettingsScene>>(
 		*this, _("Language and Units"));
 	menuGrid->At(row++, 0).NewChild<MenuItemButton<AudioSettingsScene>>(
