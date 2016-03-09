@@ -46,6 +46,8 @@ public:
 
 	void AddPlayer(std::shared_ptr<Player::Player> player);
 
+	std::shared_ptr<Player::Player> ShareFirst() const;
+
 	template<typename Fn>
 	void ForEach(Fn fn)
 	{

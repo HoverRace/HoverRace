@@ -43,5 +43,16 @@ void Roster::AddPlayer(std::shared_ptr<Player::Player> player)
 	playerAddedSignal(player);
 }
 
+/**
+ * Retrieve just the first player in the roster.
+ * @return The player (or @c nullptr if roster is empty).
+ */
+std::shared_ptr<Player::Player> Roster::ShareFirst() const
+{
+	if (players.empty()) return {};
+
+	return players.front();
+}
+
 }  // namespace Client
 }  // namespace HoverRace
