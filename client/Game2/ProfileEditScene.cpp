@@ -19,6 +19,8 @@
 // See the License for the specific language governing permissions
 // and limitations under the License.
 
+#include "../../engine/Display/FillBox.h"
+#include "../../engine/Display/Label.h"
 #include "../../engine/Player/Profile.h"
 #include "../../engine/Player/ProfileExn.h"
 #include "../../engine/Util/Config.h"
@@ -79,7 +81,15 @@ ProfileEditScene::ProfileEditScene(Display::Display &display,
 {
 	using namespace Display;
 
-	//TODO: Init widgets.
+	auto &s = display.styles;
+
+	AddSetting(_("Name")).
+		NewChild<Label>(this->origProfile->GetName(), s.bodyFont, s.bodyFg);
+
+	AddSetting(_("Primary Color")).
+		NewChild<FillBox>(20, 20, this->origProfile->GetPrimaryColor());
+	AddSetting(_("Secondary Color")).
+		NewChild<FillBox>(20, 20, this->origProfile->GetSecondaryColor());
 
 	GetSettingsGrid()->RequestFocus();
 }
