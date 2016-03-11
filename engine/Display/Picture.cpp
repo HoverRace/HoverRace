@@ -35,7 +35,7 @@ namespace Display {
  * @param layoutFlags Optional layout flags.
  */
 Picture::Picture(std::shared_ptr<Res<Texture>> texture, const Vec2 &size,
-                 Color color, uiLayoutFlags_t layoutFlags) :
+	Color color, uiLayoutFlags_t layoutFlags) :
 	SUPER(layoutFlags),
 	texture(std::move(texture)), size(size), color(color)
 {
@@ -50,8 +50,8 @@ Picture::Picture(std::shared_ptr<Res<Texture>> texture, const Vec2 &size,
  * @param layoutFlags Optional layout flags.
  */
 Picture::Picture(std::shared_ptr<Res<Texture>> texture, double w, double h,
-                 Color color, uiLayoutFlags_t layoutFlags) :
-	Picture(texture, Vec2(w, h), color, layoutFlags)
+	Color color, uiLayoutFlags_t layoutFlags) :
+	Picture(texture, { w, h }, color, layoutFlags)
 {
 }
 

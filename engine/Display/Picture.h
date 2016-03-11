@@ -1,7 +1,7 @@
 
 // Picture.h
 //
-// Copyright (c) 2014 Michael Imamura.
+// Copyright (c) 2014, 2016 Michael Imamura.
 //
 // Licensed under GrokkSoft HoverRace SourceCode License v1.0(the "License");
 // you may not use this file except in compliance with the License.
@@ -52,55 +52,55 @@ namespace Display {
  */
 class MR_DllDeclare Picture : public UiViewModel
 {
-	typedef UiViewModel SUPER;
+	using SUPER = UiViewModel;
 
-	public:
-		struct Props
+public:
+	struct Props
+	{
+		enum
 		{
-			enum
-			{
-				TEXTURE = SUPER::Props::NEXT_,
-				SIZE,
-				COLOR,
-				NEXT_,  ///< First index for subclasses.
-			};
+			TEXTURE = SUPER::Props::NEXT_,
+			SIZE,
+			COLOR,
+			NEXT_,  ///< First index for subclasses.
 		};
+	};
 
-	public:
-		Picture(std::shared_ptr<Res<Texture>> texture,
-			const Vec2 &size, const Color color = COLOR_WHITE,
-			uiLayoutFlags_t layoutFlags = 0);
-		Picture(std::shared_ptr<Res<Texture>> texture,
-			double w, double h, const Color color = COLOR_WHITE,
-			uiLayoutFlags_t layoutFlags = 0);
-		virtual ~Picture() { }
+public:
+	Picture(std::shared_ptr<Res<Texture>> texture,
+		const Vec2 &size, const Color color = COLOR_WHITE,
+		uiLayoutFlags_t layoutFlags = 0);
+	Picture(std::shared_ptr<Res<Texture>> texture,
+		double w, double h, const Color color = COLOR_WHITE,
+		uiLayoutFlags_t layoutFlags = 0);
+	virtual ~Picture() { }
 
-	public:
-		virtual void AttachView(Display &disp) { AttachViewDynamic(disp, this); }
+public:
+	virtual void AttachView(Display &disp) { AttachViewDynamic(disp, this); }
 
-	public:
-		std::shared_ptr<Res<Texture>> GetTexture() const { return texture; }
-		void SetTexture(std::shared_ptr<Res<Texture>> texture);
+public:
+	std::shared_ptr<Res<Texture>> GetTexture() const { return texture; }
+	void SetTexture(std::shared_ptr<Res<Texture>> texture);
 
-		const Color GetColor() const { return color; }
-		void SetColor(const Color color);
+	const Color GetColor() const { return color; }
+	void SetColor(const Color color);
 
-		/**
-		 * Retrieve the size of the box.
-		 * @return The size, where @c x is the width and @c y is the height.
-		 */
-		const Vec2 &GetSize() const { return size; }
-		void SetSize(const Vec2 &size);
-		/// Convenience function for SetSize(const Vec2&).
-		void SetSize(double w, double h) { SetSize(Vec2(w, h)); }
+	/**
+	 * Retrieve the size of the box.
+	 * @return The size, where @c x is the width and @c y is the height.
+	 */
+	const Vec2 &GetSize() const { return size; }
+	void SetSize(const Vec2 &size);
+	/// Convenience function for SetSize(const Vec2&).
+	void SetSize(double w, double h) { SetSize(Vec2(w, h)); }
 
-	public:
-		virtual Vec3 Measure() { return size.Promote(); }
+public:
+	virtual Vec3 Measure() { return size.Promote(); }
 
-	private:
-		std::shared_ptr<Res<Texture>> texture;
-		Vec2 size;
-		Color color;
+private:
+	std::shared_ptr<Res<Texture>> texture;
+	Vec2 size;
+	Color color;
 };
 
 }  // namespace Display
