@@ -34,8 +34,6 @@ using namespace HoverRace::Util;
 namespace HoverRace {
 namespace Client {
 
-const double DialogScene::MARGIN_WIDTH = 40;
-
 /**
  * Constructor.
  * @param display The display.

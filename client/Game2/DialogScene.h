@@ -82,7 +82,7 @@ public:
 	void Render() override;
 
 public:
-	static const double MARGIN_WIDTH;
+	static constexpr double MARGIN_WIDTH = 40;
 
 protected:
 	GameDirector &director;
